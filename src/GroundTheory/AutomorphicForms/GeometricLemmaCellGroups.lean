@@ -592,7 +592,7 @@ theorem isSmooth_cellRepA (hσ : IsSmooth σ) : IsSmooth (cellRepA β γ w σ) :
   · show IsOpen (Subtype.val ⁻¹' ((fun x : GL (Fin n) F => permGL F w * x * (permGL F w)⁻¹) ⁻¹'
       (congruenceSubgroup F n j : Set (GL (Fin n) F))))
     exact ((isOpen_congruenceSubgroup F n j).preimage (continuous_permGL_conj w)).preimage
-      continuous_subtype_val
+      continuous_subtypeVal
 
 end Smooth
 
@@ -639,7 +639,7 @@ theorem exists_compactOpen_subgroupOf {H : Subgroup (GL (Fin n) F)}
       simp only [Subgroup.mem_subgroupOf, unipotentCompactG_eq, Subgroup.mem_inf]
       exact ⟨fun h => h.2, fun h => ⟨hHN x.2, h⟩⟩
     rw [this, Subgroup.coe_subgroupOf]
-    exact (isOpen_conj_integralGL _).preimage continuous_subtype_val
+    exact (isOpen_conj_integralGL _).preimage continuous_subtypeVal
 
 theorem isClosed_cellUnipotent {β γ : Fin n → ℕ} {w : Equiv.Perm (Fin n)} :
     IsClosed (cellUnipotent F β γ w : Set (GL (Fin n) F)) :=

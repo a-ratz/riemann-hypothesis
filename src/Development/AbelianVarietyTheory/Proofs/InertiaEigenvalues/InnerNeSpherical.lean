@@ -153,7 +153,7 @@ theorem ip_eq_of_sq {X : Type} [MeasurableSpace X] (ν : Measure X) (a b c d : X
       (Filter.Eventually.of_forall fun x => by simp only [Pi.zero_apply]; positivity) (hm.norm.pow 2)]
     congr 1
     refine lintegral_congr fun x => ?_
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   have expand : ∀ (f g : X → ℂ), MemLp f 2 ν → MemLp g 2 ν →
       ∫ x, star (f x) * g x ∂ν = (1/4 : ℂ) * ((((∫⁻ x, ‖f x + 1 * g x‖ₑ ^ 2 ∂ν).toReal : ℝ) : ℂ)
         - (((∫⁻ x, ‖f x + (-1) * g x‖ₑ ^ 2 ∂ν).toReal : ℝ) : ℂ)
@@ -202,8 +202,8 @@ theorem memLp_two_of_lintegral {X : Type} [MeasurableSpace X] {ν : Measure X} {
     (hm : AEStronglyMeasurable f ν) (h : ∫⁻ x, ‖f x‖ₑ ^ 2 ∂ν < ⊤) : MemLp f 2 ν := by
   rw [memLp_two_iff_integrable_sq_norm hm]
   refine ⟨hm.norm.pow 2, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
-  simpa [enorm_pow] using h
+  rw [hasFiniteIntegral_iff_eNorm]
+  simpa [eNorm_pow] using h
 
 end GlobalTheory.RawLift.CoefLeft
 
@@ -211,7 +211,7 @@ namespace GlobalTheory.RawLift.CoefLeft
 
 theorem aesm_of_theta {D : D7} {S T' : HSp D} {ψ : AddChar (AF D.host.F) ℂ} {f : WO S T' → ℂ} (ν : Measure (WO S T'))
     (hf : IsThetaFunO ψ S T' f) : AEStronglyMeasurable f ν := by
-  haveI : OpensMeasurableSpace (WO S T') := ⟨le_rfl⟩
+  have : OpensMeasurableSpace (WO S T') := ⟨le_rfl⟩
   exact hf.cont.aestronglyMeasurable
 
 theorem thetaInner_weilRep {D : D7} {S T' : HSp D} {ψ : AddChar (AF D.host.F) ℂ} {χS χT : (AE D)ˣ →* Circle}
@@ -235,8 +235,8 @@ theorem thetaIP₂ {D : D7} {S T' : HSp D} {μ : Measure (WO S T')} {𝓕 : Set 
     by_contra hn
     exact h (integral_undef hn)
   have := hi.hasFiniteIntegral
-  rw [hasFiniteIntegral_iff_enorm] at this
-  simpa [enorm_mul, sq] using this
+  rw [hasFiniteIntegral_iff_eNorm] at this
+  simpa [eNorm_mul, sq] using this
 
 end GlobalTheory.RawLift.CoefLeft
 
@@ -722,7 +722,7 @@ theorem isFinIdem_fid (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) : IsFinId
 theorem exists_primeIdem {v : HeightOneSpectrum (𝓞 D.host.F)} {f : AE D} (hf : IsFinIdem D v f) :
     ∃ P e, P.under (𝓞 D.host.F) = v ∧ IsPrimeIdem P e f := by
   obtain ⟨Φ, hΦ⟩ := GlobalTheory.IdemSupport.exists_comp D
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQ, hQv⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 D.host.E) v.asIdeal
   have hne : Q ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q
   let P : HeightOneSpectrum (𝓞 D.host.E) := ⟨Q, hQ.isPrime, hne⟩
@@ -849,7 +849,7 @@ theorem zop_eigen : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
   have hrep : ∀ x : Eu.LX R i v, Eu.rep x ∈ S := fun x => (hS _).2 (Quotient.out x).2.2
   have hsum := (ContinuousLinearMap.apply ℂ _ y).hasSum hs.hasSum
   refine mem_of_fibres hsum (fun x => DoubleCoset.mk (levW R i ⊓ S) (levW R i ⊓ S) (Eu.rep x)) _
-    (Submodule.closed_of_finiteDimensional _) fun x₀ => ?_
+    (Submodule.isClosed_of_finiteDimensional _) fun x₀ => ?_
   have hα : SuppF (Wc D i) (Eu.fid D v) (Eu.rep x₀) := (hS _).1 (hrep x₀)
   obtain ⟨C, hC, hCR⟩ := hTL.1 v _ hf _ hα
   have hK : ∀ k, k ∈ {k | k ∈ levW R i ∧ SuppF (Wc D i) (Eu.fid D v) k} ↔ k ∈ levW R i ⊓ S := fun k =>
@@ -886,7 +886,7 @@ theorem zop_eigen : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
         rw [e1, Model.coef_mul_lev R i t hLF μ 𝓕 _ _ hk₂.1, hleft _ hk₁.1]
       have e3 : Eu.Bop R i (Eu.rep (φ δ)) = Eu.Bop R i δ := by
         rw [← bop_mul_lev hLP hTL (hCR.1 δ hδ).1 ((hφ δ hδ _).1 rfl).1, mul_inv_cancel_left]
-      rw [ContinuousLinearMap.apply_apply, e2, e3, ContinuousLinearMap.smul_apply]
+      rw [ContinuousLinearMap.apply_apply, e2, e3, smul_apply]
     · intro δ hδ δ' hδ' h
       obtain ⟨k₁, hk₁, k₂, hk₂, e1⟩ := hdc δ hδ
       obtain ⟨δ₀, -, hu⟩ := hCR.2 _ ⟨k₁, (hK _).2 hk₁, k₂, (hK _).2 hk₂, e1⟩
@@ -1149,7 +1149,7 @@ theorem rightTranslatePairingOperator_hecke_relation {R : RealDat D A Ks} {i : F
     rw [inner_sum, ← hTL.2.2.2.2.2 x y', hy' 1 (GfC (Wc D i)).one_mem x]
     refine Finset.sum_congr rfl fun δ hδ => ?_
     rw [one_mul, rightTranslatePairingOperator_spec hTL (hCG δ hδ)]
-  rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, ← e1]
+  rw [mul_apply_eq_comp, sum_apply, sum_apply, ← e1]
   apply ext_inner_left ℂ; intro x
   rw [inner_sum, ← rightTranslatePairingOperator_spec hTL hγ, hy' γ hγ x]
   refine Finset.sum_congr rfl fun δ hδ => ?_
@@ -1336,7 +1336,7 @@ theorem localCoefficient_fiber_sum_eq {R : RealDat D A Ks} {i : Fin D.R.m} {t : 
           apply ContinuousLinearMap.ext; intro y
           show coef R i t μ 𝓕 (rep (Quotient.out b)) • Bop R i γ (Bop R i δ y) =
             Bop R i γ ((coef R i t μ 𝓕 (rep (Quotient.out b)) • Bop R i δ) y)
-          rw [ContinuousLinearMap.smul_apply, map_smul]
+          rw [smul_apply, map_smul]
     _ = ∑ δ : ↥(C b), Bop R i γ * (coef R i t μ 𝓕 (rep (Quotient.out b)) • Bop R i δ.1) :=
           (Finset.sum_coe_sort (C b) (fun δ => Bop R i γ * (coef R i t μ 𝓕 (rep (Quotient.out b)) • Bop R i δ))).symm
     _ = ∑ δ : ↥(C b), Bop R i γ * (acoef R i t μ 𝓕 v (dcMap C hCs hC ⟨b, δ⟩) • Bop R i (rep (dcMap C hCs hC ⟨b, δ⟩))) := by
@@ -1380,7 +1380,7 @@ theorem bop_mul_zop_hasSum : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     exact (e.hasSum_iff).mp g2
   · have h0 := chosenFinitePlaceIdempotent_eq_zero_of_not_exists hex
     have hall : ∀ x : LX R i v, rep x = 1 := fun x => supportedAtIdempotent_zero_eq_one _ (h0 ▸ (levelCosetRepresentative_mem_supportedSet x).2)
-    haveI : Subsingleton (LX R i v) := ⟨fun x y => (levelCoset_eq_iff_representative_rel x y).mpr (by
+    have : Subsingleton (LX R i v) := ⟨fun x y => (levelCoset_eq_iff_representative_rel x y).mpr (by
       rw [hall x, hall y, inv_one, one_mul]; exact (levW R i).one_mem)⟩
     have hs1 : Summable (fun x : LX R i v => acoef R i t μ 𝓕 v x • Bop R i (rep x)) := Summable.of_finite
     have hF : (fun x : LX R i v => acoef R i t μ 𝓕 v x • Bop R i (γ * rep x)) =
@@ -1389,7 +1389,7 @@ theorem bop_mul_zop_hasSum : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
       rw [hall x, mul_one, bop_one hTL]
       apply ContinuousLinearMap.ext; intro y
       show (acoef R i t μ 𝓕 v x • Bop R i γ) y = Bop R i γ ((acoef R i t μ 𝓕 v x • (1 : (R.HW i (sg0 D A)).H →L[ℂ] (R.HW i (sg0 D A)).H)) y)
-      rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, map_smul]
+      rw [smul_apply, smul_apply, map_smul]
       rfl
     rw [hF]
     exact hs1.hasSum.mul_left (Bop R i γ)

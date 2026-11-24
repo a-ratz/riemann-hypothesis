@@ -310,8 +310,8 @@ theorem exists_cover {O K R : Type} [CommRing O] [IsDomain O] [Field K] [CommRin
   let iF : F →+* K := IsFractionRing.lift hi
   let jF : F →+* R := IsLocalization.lift (M := nonZeroDivisors O) (g := j)
     fun y => hj y (nonZeroDivisors.ne_zero y.2)
-  letI : Algebra F K := iF.toAlgebra
-  letI : Algebra F R := jF.toAlgebra
+  let : Algebra F K := iF.toAlgebra
+  let : Algebra F R := jF.toAlgebra
   refine ⟨R ⊗[F] K, inferInstance, algebraMap R (R ⊗[F] K),
     (Algebra.TensorProduct.includeRight : K →ₐ[F] R ⊗[F] K).toRingHom, ?_, ?_⟩
   · rw [RingHom.faithfullyFlat_algebraMap_iff]

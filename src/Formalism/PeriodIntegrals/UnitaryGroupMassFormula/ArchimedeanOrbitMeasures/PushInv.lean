@@ -90,7 +90,7 @@ theorem fd_of {D : D7} (X : HidaSetting D) : FiniteDimensional X.B.I.F X.B.I.E :
 
 theorem continuous_smul_tupI {D : D7} (X : HidaSetting D) (g : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :
     Continuous (fun y : TupI X => g • y) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   refine continuous_pi fun a => ?_
   change Continuous fun y : TupI X =>
     ((HA.mat (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J g : GL (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :
@@ -98,7 +98,7 @@ theorem continuous_smul_tupI {D : D7} (X : HidaSetting D) (g : HA (Ainf X.B.I.F)
   exact continuous_const.matrix_mulVec (continuous_apply a)
 
 theorem continuous_orbM {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) : Continuous (orbM X u') := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   refine continuous_pi fun a => ?_
   change Continuous fun h : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J =>
     ((HA.mat (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J h : GL (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :
@@ -109,19 +109,19 @@ theorem continuous_orbM {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) : Con
 
 theorem measurable_smul_tupI {D : D7} (X : HidaSetting D) (g : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :
     Measurable (fun y : TupI X => g • y) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   exact (continuous_smul_tupI X g).measurable
 
 theorem measurable_orbM {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) : Measurable (orbM X u') := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   exact (continuous_orbM X u').measurable
 
 theorem measurable_mul_leftHA {D : D7} (X : HidaSetting D) (g : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :
     Measurable (fun h : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J => g * h) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
-  haveI : ContinuousMul (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
+  have : ContinuousMul (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
     inferInstanceAs (ContinuousMul (HR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J))
   exact (continuous_const_mul g).measurable
 

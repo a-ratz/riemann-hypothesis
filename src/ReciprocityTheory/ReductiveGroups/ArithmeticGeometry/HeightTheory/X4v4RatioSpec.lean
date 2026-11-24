@@ -83,7 +83,7 @@ theorem x4v4_eq_smul (hd : d.AxH 𝒜) (c : ι) {f : A c} (hf : f ∈ 𝒜 c d.w
     intro h0
     apply hw0
     simpa using congrArg Subtype.val h0
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hv).1 (hd.finrank_one c d.wL) ⟨f, hf⟩
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hv).1 (hd.finrank_one c d.wL) ⟨f, hf⟩
   have hfa : f = a • d.w (d.jc c) c := by
     have h1 := congrArg Subtype.val ha
     simpa using h1.symm
@@ -97,7 +97,7 @@ theorem x4v4_ratio_ne (hd : d.AxH 𝒜) (c : ι) {f : A c} (hf : f ∈ 𝒜 c d.
   rw [x4v4_eq_smul d hd c hf, h0, zero_smul]
 
 theorem x4v4_wx_mem (hd : d.AxH 𝒜) (x : Fin (d.N + 1) → K) (c : ι) : d.wx x c ∈ 𝒜 c d.wL := by
-  haveI := hd.tower c
+  have := hd.tower c
   have e : d.wx x c = ∑ j, x j • d.w j c := by
     simp only [Data.wx, Finset.sum_apply, Pi.smul_apply]
   rw [e]

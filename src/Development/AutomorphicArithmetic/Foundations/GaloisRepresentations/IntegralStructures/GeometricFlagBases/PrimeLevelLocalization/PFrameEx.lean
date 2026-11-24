@@ -740,7 +740,7 @@ private theorem conj_finiteAdeleMap {E : Type} [Field E] [NumberField E] [IsCMFi
   have key : ∀ (u : Plc E) (_ : below ℚ u = below ℚ w) (f : u.adicCompletion E →+* w.adicCompletion E),
       Continuous f → f (pLoc E u (finiteAdeleMap ℚ E a)) = pLoc E w (finiteAdeleMap ℚ E a) := by
     intro u hu f hf
-    haveI : w.asIdeal.LiesOver (below ℚ u).asIdeal := (GroundTheory.Global.AdeleBaseChange.below_eq_iff w _).1 hu.symm
+    have : w.asIdeal.LiesOver (below ℚ u).asIdeal := (GroundTheory.Global.AdeleBaseChange.below_eq_iff w _).1 hu.symm
     change f (completionMap (below ℚ u) u (a (below ℚ u))) = completionMap (below ℚ w) w (a (below ℚ w))
     rw [← GroundTheory.Global.AdeleBaseChange.completionMap_congr hu w a]
     exact ringHom_eq_of_continuous (below ℚ u) (f.comp (completionMap (below ℚ u) u)) (completionMap (below ℚ u) w)
@@ -1226,7 +1226,7 @@ theorem UpperTheory.Gal.W2.Seed.pVecCoord :
   let vec : ∀ w : Plc E, AfP p ⊗[ℚ] VQ S.D →+ (Fin n → w.adicCompletion E) := fun w =>
     if hw : (p : 𝓞 E) ∉ w.asIdeal then co w hw else 0
   have hvec : ∀ w (hw : (p : 𝓞 E) ∉ w.asIdeal) v i, vec w v i = ev w hw (ν v i) := fun w hw v i => by
-    simp only [vec, dif_pos hw]; rfl
+    simp only [vec, dite_eq_left hw]; rfl
   have hE : ∀ w (hw : (p : 𝓞 E) ∉ w.asIdeal) (c : 𝓞 E), ev w hw ((1 : AfP p) ⊗ₜ[ℚ] (c : E)) = algebraMap (𝓞 E) (w.adicCompletion E) c := by
     intro w hw c
     rw [← T.Φ_E, hev]

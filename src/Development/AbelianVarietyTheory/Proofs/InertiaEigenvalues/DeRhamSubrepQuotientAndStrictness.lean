@@ -78,8 +78,8 @@ theorem mem_of_invariant {G K B M ι : Type} [Field K] [CommRing B] [Algebra K B
   | _ n ih =>
   intro s hn b hb hy
   by_cases hli : LinearIndepOn K e s
-  · haveI := hF.isDomain
-    haveI : Module.IsTorsionFree B M := ⟨fun r hr x y hxy => by
+  · have := hF.isDomain
+    have : Module.IsTorsionFree B M := ⟨fun r hr x y hxy => by
       obtain ⟨u, hu⟩ := hF.mul_inv_cancel hr.ne_zero
       have := congrArg (u • ·) hxy
       simpa only [smul_smul, mul_comm u r, hu, one_smul] using this⟩
@@ -173,9 +173,9 @@ theorem strict_of_surjective (hF : IsField F) (hs : Function.Surjective f) (h : 
       map_mul' := fun x y => by ext; simp [mul_assoc]
       map_zero' := by ext; simp
       map_add' := fun x y => by ext; simp [add_mul, tmul_add] }
-  letI : Module F (V' ⊗[Qp] F) := Module.compHom _ φ
-  letI : Module K (V' ⊗[Qp] F) := Module.compHom _ (algebraMap K F)
-  haveI : IsScalarTower K F (V' ⊗[Qp] F) := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module F (V' ⊗[Qp] F) := Module.compHom _ φ
+  let : Module K (V' ⊗[Qp] F) := Module.compHom _ (algebraMap K F)
+  have : IsScalarTower K F (V' ⊗[Qp] F) := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   have hsm : ∀ (b : F) (x : V' ⊗[Qp] F), b • x = mulR Qp F LL V' b x := fun _ _ => rfl
   obtain ⟨x, hx, rfl⟩ := exists_ext_mem_FilV PD f hs hy.2
   obtain ⟨m, k, b, d, hd, rfl⟩ := h a x hx

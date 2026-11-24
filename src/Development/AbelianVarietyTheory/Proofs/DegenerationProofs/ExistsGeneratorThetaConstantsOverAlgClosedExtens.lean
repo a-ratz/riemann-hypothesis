@@ -111,7 +111,7 @@ theorem exists_gen_thG_generic : Laws → Laws2 → ∀ (S : Scheme.{0}) (G : Ov
   have hx' : ∀ i, x i ^ (m ^ 2) = 1 := fun i => (hx _).2 ⟨i, rfl⟩
   obtain ⟨thP, hg, hth⟩ := GlobalTheory.T.exists_generator_thetaPoint_normalised_thetaConstants K P ρ' hρ' m Ix x v hx' hv
   let τ : (baseOver (Sp K)).left ⟶ (Over.mk x₀).left := 𝟙 (Sp K)
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
   have hτ : τ ≫ (Over.mk x₀).hom = (baseOver (Sp K)).hom ≫ x₀ := rfl
   have hi : inv τ = 𝟙 (Sp K) := IsIso.inv_eq_of_hom_inv_id (Category.id_comp _)
   obtain ⟨th, hrel⟩ := exists_secRel_up hp τ hτ hw hL hL₁ thP
@@ -126,7 +126,7 @@ theorem exists_gen_thG_generic : Laws → Laws2 → ∀ (S : Scheme.{0}) (G : Ov
   let τ' : T'.left ⟶ (Over.mk x₀).left := spMap e
   have hτ' : τ' ≫ (Over.mk x₀).hom = T'.hom ≫ x₀ := rfl
   let σ : T'.left ⟶ (Over.mk x').left := 𝟙 (Sp F)
-  haveI : IsIso σ := inferInstanceAs (IsIso (𝟙 (Sp F)))
+  have : IsIso σ := inferInstanceAs (IsIso (𝟙 (Sp F)))
   have hσ : σ ≫ (Over.mk x').hom = T'.hom ≫ x₀ := (Category.id_comp _).trans h.symm
   have hj : inv σ = 𝟙 (Sp F) := IsIso.inv_eq_of_hom_inv_id (Category.id_comp _)
   obtain ⟨t, ht⟩ := exists_secRel hp τ' hτ' hw hL hL₁ th

@@ -389,12 +389,12 @@ theorem exists_transport (I : AutInst) (T : HA (AF I.F) I.cm.sig I.J ≃ₜ* I.G
       IsFundamentalDomain (HFinIn (AF I.F) I.cm.sig I.J) S μ ∧ Measurable T ∧ μ S = I.muA μf fund ∧
       ∀ f : I.GA → ENNReal, ∫⁻ h in S, f (T h) ∂μ = ∫⁻ x in fund, f x ∂(I.muA μf) := by
   obtain ⟨_, _, _, -⟩ := GlobalTheory.CongTop.adelic_topology I
-  haveI : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => by unfold Formalism.REAL.muG; infer_instance
-  haveI : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := Measure.pi.isHaarMeasure _
-  haveI : (I.muA μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
-  haveI : BorelSpace I.GA := inferInstance
-  haveI : BorelSpace (HA (AF I.F) I.cm.sig I.J) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (HA (AF I.F) I.cm.sig I.J) := inferInstance
+  have : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => by unfold Formalism.REAL.muG; infer_instance
+  have : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := Measure.pi.isHaarMeasure _
+  have : (I.muA μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
+  have : BorelSpace I.GA := inferInstance
+  have : BorelSpace (HA (AF I.F) I.cm.sig I.J) := ⟨rfl⟩
+  have : IsTopologicalGroup (HA (AF I.F) I.cm.sig I.J) := inferInstance
   obtain ⟨Γ, hΓ, -, -, hF⟩ := GlobalTheory.RatDiscrete.rational_points I
   let e : HA (AF I.F) I.cm.sig I.J ≃ᵐ I.GA := T.toHomeomorph.toMeasurableEquiv
   have hp : MeasurePreserving e ((I.muA μf).map e.symm) (I.muA μf) :=
@@ -529,11 +529,11 @@ theorem eq_zero_of_isDens {n : ℕ} {ε : Fin n → Bool} {φ : (Fin n → ℂ) 
   have ha0 : 0 < a := by positivity
   have hq := continuous_qEps ε
   have hnb : {p : ℝ × (Fin n → ℂ) | a < φ (p.1 • p.2)} ∈ 𝓝 ((1 : ℝ), y₀) :=
-    (isOpen_lt continuous_const (by fun_prop)).mem_nhds (by simp only [Set.mem_setOf_eq, one_smul]; linarith)
+    (isOpen_lt continuous_const (by fun_prop)).mem_nhds (by simp only [Set.mem_ofPred_eq, one_smul]; linarith)
   obtain ⟨V, hV, U', hU', hVU⟩ := mem_nhds_prod_iff.1 hnb
   obtain ⟨ρ, hρ, hU⟩ := Metric.mem_nhds_iff.1 hU'
   set U := Metric.ball y₀ ρ
-  haveI : IsFiniteMeasure (volume.restrict U) := ⟨by simpa using measure_ball_lt_top⟩
+  have : IsFiniteMeasure (volume.restrict U) := ⟨by simpa using measure_ball_lt_top⟩
   let m : Measure ℝ := (volume.restrict U).map (qEps ε)
   let J : Set ℝ := (fun t => √(β / t)) ⁻¹' (V ∩ Set.Icc (1 / 2) 2) ∩ Metric.ball β 1
   have hJ : J ∈ 𝓝 β := by
@@ -633,7 +633,7 @@ theorem measurable_term (hc : ∀ v, Continuous (φ v)) (y : Fin I.n → I.E) :
       φ v (((uMat g)⁻¹ * (I.P v)⁻¹) *ᵥ fun i => I.φ v (y i)) := fun v => by
     have hc' : Continuous fun g : Formalism.REAL.UJ (I.ε v) => (uMat g)⁻¹ := by
       simp only [GlobalTheory.StabUnfold.uMat_inv_eq]
-      exact Units.continuous_coe_inv.comp continuous_subtype_val
+      exact Units.continuous_coe_inv.comp continuous_subtypeVal
     exact ((hc v).comp ((hc'.matrix_mul continuous_const).matrix_mulVec continuous_const)).measurable
   unfold term
   exact (Measurable.ite (measurable_snd h1.measurableSet)
@@ -651,8 +651,8 @@ theorem finite_term (hK : ∀ v, HasCompactSupport (φ v)) (x : I.GA) : {y | ter
   unfold term at hy
   have hx : y ∈ lamX I x := by
     by_contra hx
-    exact hy (if_neg hx)
-  rw [if_pos hx] at hy
+    exact hy (ite_eq_right hx)
+  rw [ite_eq_left hx] at hy
   refine ⟨hx, fun τ i => ?_⟩
   obtain ⟨v, hv⟩ := GlobalTheory.RatDiscrete.exists_place I τ
   have h1 := hC v _ (subset_tsupport _ (Finset.prod_ne_zero_iff.1 hy v (Finset.mem_univ v)))
@@ -699,8 +699,8 @@ theorem sum_eq (β : I.E) (x : I.GA) :
     change _ = ENNReal.ofReal (term I φ x y)
     unfold term
     by_cases hy : y ∈ lamX I x
-    · rw [Set.indicator_of_mem (by exact ⟨hy, h⟩), if_pos hy]
-    · rw [Set.indicator_of_notMem (by exact fun h' => hy h'.1), if_neg hy, ENNReal.ofReal_zero]
+    · rw [Set.indicator_of_mem (by exact ⟨hy, h⟩), ite_eq_left hy]
+    · rw [Set.indicator_of_notMem (by exact fun h' => hy h'.1), ite_eq_right hy, ENNReal.ofReal_zero]
   · have h1 : (Equiv.funUnique (Fin 1) (Fin I.n → I.E)).symm y ∉
         {X : Fin 1 → Fin I.n → I.E | hE I.cm.sig I.J (X 0) (X 0) = β} := fun h' => by
       have h'' : hE I.cm.sig I.J y y = β := h'
@@ -756,9 +756,9 @@ theorem test_eq_term (θ : InfinitePlace I.F → (Ainf I.F ⊗[I.F] I.E →+* �
     rfl
   unfold term
   by_cases hx : X 0 ∈ lamX I (T h)
-  · rw [if_pos hx, Set.indicator_of_mem (by exact e1.2 hx), Pi.one_apply, mul_one]
+  · rw [ite_eq_left hx, Set.indicator_of_mem (by exact e1.2 hx), Pi.one_apply, mul_one]
     simp only [e2]
-  · rw [if_neg hx, Set.indicator_of_notMem (by exact fun h' => hx (e1.1 h')), mul_zero, Complex.ofReal_zero]
+  · rw [ite_eq_right hx, Set.indicator_of_notMem (by exact fun h' => hx (e1.1 h')), mul_zero, Complex.ofReal_zero]
 
 theorem test_smooth (θ : InfinitePlace I.F → (Ainf I.F ⊗[I.F] I.E →+* ℂ))
     (hθ : ∀ v, Formalism.MainNotions.StandardLattice.IsInfEmb (I.φ v) (θ v))
@@ -806,7 +806,7 @@ theorem siegelMeanCc_of_oneVectorCc : OneVectorCc → SiegelMeanCc := by
   have hL : Submodule.IsLattice I.E I.L := Submodule.IsLattice.of_fg I.E I.L_fg
   have hLfull : Submodule.IsFullLattice I.E I.L :=
     { toIsLattice := hL, span_eq_top := I.L_span }
-  haveI : FiniteDimensional I.F I.E := Module.finite_of_finrank_eq_succ hCM.2.2.1
+  have : FiniteDimensional I.F I.E := Module.finite_of_finrank_eq_succ hCM.2.2.1
   let b := Module.finBasis I.F I.E
   obtain ⟨g1, g2, g3⟩ := test_smooth I φ θ hθ (fun v => (hφ v).1) hK _ rfl
   have hΦ := test_eq_term I φ θ hθ T hT2 fun v => hT3 v (θ v) (hθ v)
@@ -835,7 +835,7 @@ theorem siegelMeanCc_of_oneVectorCc : OneVectorCc → SiegelMeanCc := by
     (fun u => zero_lt_one.trans (GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.one_lt_resCard I.F u))
     m hm _ _ hE1 lam _ hlam (Formalism.HermitianLatticesTheory.vInv I.E) hw I.n I.f n5 (by rw [← hE2]; exact hprod)] at hmean
   rw [← hint, ← hvol]
-  haveI : Countable I.E := (Module.finBasis ℚ I.E).equivFun.toEquiv.countable_iff.2 inferInstance
+  have : Countable I.E := (Module.finBasis ℚ I.E).equivFun.toEquiv.countable_iff.2 inferInstance
   simp only [sum_eq I φ]
   have hG : Measurable fun h : HA (AF I.F) I.cm.sig I.J =>
       ∑' X : {X : Fin 1 → Fin I.n → I.E | hE I.cm.sig I.J (X 0) (X 0) = sgn I.E s},
@@ -1150,7 +1150,7 @@ namespace GlobalTheory.GaussMean.Limit
 theorem tendsto_tsum_of_monotone {ι : Type*} (f : ℕ → ι → ENNReal) (g : ι → ENNReal)
     (hm : ∀ y, Monotone fun k => f k y) (ht : ∀ y, Tendsto (fun k => f k y) atTop (𝓝 (g y))) :
     Tendsto (fun k => ∑' y, f k y) atTop (𝓝 (∑' y, g y)) := by
-  letI : MeasurableSpace ι := ⊤
+  let : MeasurableSpace ι := ⊤
   have h := lintegral_tendsto_of_tendsto_of_monotone (μ := (Measure.count : Measure ι)) (f := f) (F := g)
     (fun k => (measurable_from_top).aemeasurable) (ae_of_all _ hm) (ae_of_all _ ht)
   simpa only [lintegral_count] using h
@@ -1174,7 +1174,7 @@ theorem tendsto_lintegral_tsum {α ι : Type*} [MeasurableSpace α] [Countable �
 theorem measurable_coord (I : AutInst) (v : InfinitePlace I.F) (w : Fin I.n → ℂ) :
     Measurable fun x : I.GA => ((uMat (x.1 v))⁻¹ * (I.P v)⁻¹) *ᵥ w := by
   have h0 : Continuous fun g : Formalism.REAL.UJ (I.ε v) => uMat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have h1 : Continuous fun g : Formalism.REAL.UJ (I.ε v) => (uMat g)⁻¹ := by
     have e : (fun g : Formalism.REAL.UJ (I.ε v) => (uMat g)⁻¹) = fun g => uMat g⁻¹ := by
       funext g
@@ -1190,7 +1190,7 @@ theorem siegelMean_of_cc : SiegelMeanCc → SiegelMean := by
   obtain ⟨hfin, hH⟩ := H I hn s μf fund hfund
   refine ⟨hfin, ?_⟩
   choose φ D h1 h2 h3 using fun v => _root_.GlobalTheory.GaussMean.Trunc.exists_truncated I.n (I.ε v)
-  haveI := countable_V I
+  have := countable_V I
   have hs : sgn ℝ s ≠ 0 := by cases s <;> simp [sgn]
   have hL := tendsto_lintegral_tsum ((I.muA μf).restrict fund)
     (fun (y : Fin I.n → I.E) (x : I.GA) => y ∈ lamX I x ∧ star y ⬝ᵥ (I.J *ᵥ y) = sgn I.E s)

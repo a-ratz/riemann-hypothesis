@@ -78,8 +78,8 @@ namespace GlobalTheory.TwoPoint
 theorem nef_pull (hN : GlobalTheory.Published.NefNumerics) {F E : Type} [Field F] [Field E] {X Y : Scheme.{0}} (pX : X ⟶ Sp F)
     (pY : Y ⟶ Sp E) (g : Y ⟶ X) (hX : IsProjOver pX) (hY : IsProjOver pY) (L : LB X)
     (hL : letI := algebraΓOfHom pX; IsNef F L) : letI := algebraΓOfHom pY; IsNef E (L.pull g) := by
-  letI := algebraΓOfHom pX
-  letI := algebraΓOfHom pY
+  let := algebraΓOfHom pX
+  let := algebraΓOfHom pY
   obtain ⟨hpp, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB pX).1 hX
   obtain ⟨B, hB⟩ := exists_isAmpleLB_of_isProjOver hY
   have : IsProper (strHom F (X := X)) := by rw [strHom_eq (f := pX) fun _ => rfl]; exact hpp
@@ -103,7 +103,7 @@ theorem sum_val_pull_eq_zero {F : Type} [Field F] [Algebra F ℂ] {Y : Scheme.{0
   let π : Z ⟶ Y := pullback.fst p (spMap (algebraMap F ℂ))
   let q : Z ⟶ Sp ℂ := pullback.snd p (spMap (algebraMap F ℂ))
   let S : LinSys F := ⟨Y, p, n, T, hT, 0, Fin.elim0⟩
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   obtain ⟨N, b, hb⟩ : ∃ (N : ℕ) (b : Fin N → T.Sec), ∀ t : (T.pull π).Sec, ∃ u : Fin N → ℂ,
       ∑ i, algebraMap ℂ Γ(Z, ⊤) (u i) • secPull (b i) π = t :=
     SectionsFieldChange.exists_pullSecs_spanning F ℂ S ⟨inferInstance, hp, hc, hn⟩
@@ -195,7 +195,7 @@ theorem separate_complex (hS : SeparatesOnSmooth) (hNN : GlobalTheory.Published.
         topologicalKrullDim (Z : Set X) = e → 1 ≤ interNumRed ℂ Z (fun _ : Fin e => N)) →
       cls B hB = m • cls N hN + cls N' hN' → ∃ s : (tens K.bundle B).Sec,
         (x₁ ∈ nonzeroLocus s ∧ x₂ ∉ nonzeroLocus s) ∨ (x₂ ∈ nonzeroLocus s ∧ x₁ ∉ nonzeroLocus s) := by
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   intro K N N' B hN hN' hB m x₁ x₂ h₁ h₂ hne hNn hNb hN'n hm hpos hBc
   have hc : 0 < (D + 2).choose 2 := Nat.choose_pos (by omega)
   have hBc' : cls B hB = m • cls N hN + 1 • cls N' hN' := by rw [hBc, one_smul]
@@ -222,20 +222,20 @@ theorem separate_two (hS : SeparatesOnSmooth) (hNN : GlobalTheory.Published.NefN
     (hc0 : ∀ j, c j ≠ 0) :
     ¬ ∀ g : H0 p (tens K.bundle B) ⊤, ∑ j, c j * H0.val (z j) (k j) le_top (hk j) g = 0 := by
   intro h
-  letI : Algebra F ℂ := σ.toAlgebra
+  let : Algebra F ℂ := σ.toAlgebra
   let π := pullback.fst p (spMap (algebraMap F ℂ))
   let q := pullback.snd p (spMap (algebraMap F ℂ))
   have H : IsPullback π q p (spMap (algebraMap F ℂ)) := IsPullback.of_hasPullback _ _
   obtain ⟨hXi, hXn, hsm, hq, -⟩ := BaseChangeVariety.baseChange_props F ℂ Y _ p q π D H hp hc
-  haveI := hXi; haveI := hXn; haveI := hsm
-  haveI : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
+  have := hXi; have := hXn; have := hsm
+  have : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
   let zC : Fin 2 → (Sp ℂ ⟶ pullback p (spMap (algebraMap F ℂ))) := fun j =>
     H.lift (z j) (𝟙 _) (by rw [hzp j, Category.id_comp])
   have hz₁ : ∀ j, zC j ≫ π = z j := fun j => H.lift_fst _ _ _
   have hz₂ : ∀ j, zC j ≫ q = 𝟙 _ := fun j => H.lift_snd _ _ _
   let s₀ : Sp ℂ := IsLocalRing.closedPoint ℂ
   have hπx : ∀ j, π (zC j s₀) = z j s₀ := fun j => congrArg (fun g => g s₀) (hz₁ j)
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   have hNC := LB.isLB_pull hN π
   have hA : ∀ j, AmpleAt (N₁.pull π) (zC j s₀) := fun j =>
     AmplePull.ampleAt_pull Y _ π N₁ h₁ _ (by rw [hπx]; exact hzA j s₀)
@@ -319,7 +319,7 @@ theorem exists_two_embeddings (L Ω : Type) [Field L] [Field Ω] [Algebra L Ω] 
     exact ((Set.countable_range _).union (Set.countable_range _)).to_subtype
   let k₁ : Ω →+* S := j₁.codRestrict S fun x => Subfield.subset_closure (Or.inl ⟨x, rfl⟩)
   let k₂ : Ω →+* S := j₂.codRestrict S fun x => Subfield.subset_closure (Or.inr ⟨x, rfl⟩)
-  haveI : CharZero S := (RingHom.charZero_iff (k₁.comp (algebraMap L Ω)).injective).1 inferInstance
+  have : CharZero S := (RingHom.charZero_iff (k₁.comp (algebraMap L Ω)).injective).1 inferInstance
   obtain ⟨e⟩ := nonempty_ringHom_complex S
   refine ⟨e.comp k₁, e.comp k₂, RingHom.ext fun x => congrArg e (Subtype.ext (RingHom.congr_fun hj x)), fun h => hne ?_⟩
   exact congrArg Subtype.val (e.injective (RingHom.congr_fun h a))
@@ -374,10 +374,10 @@ theorem separatesOnSmooth_of_pair (h : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLo
       ∃ s : M.Sec, (x₁ ∈ nonzeroLocus s ∧ x₂ ∉ nonzeroLocus s) ∨ (x₂ ∈ nonzeroLocus s ∧ x₁ ∉ nonzeroLocus s)) :
     SeparatesOnSmooth := by
   intro X _ _ q D _ hproj hD K B x₁ x₂ hnef hbig h₁ h₂ hne hZ
-  letI := algebraΓOfHom q
-  haveI := SmoothOfRelativeDimension.smooth D q
-  haveI : IsNormalScheme X := isNormalScheme_of_smooth q
-  haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hproj
+  let := algebraΓOfHom q
+  have := SmoothOfRelativeDimension.smooth D q
+  have : IsNormalScheme X := isNormalScheme_of_smooth q
+  have : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hproj
   have hdim := NadelApp.topologicalKrullDim_eq_of_smooth X q D
   have hK := K.isLB
   have hB := hnef.isLB

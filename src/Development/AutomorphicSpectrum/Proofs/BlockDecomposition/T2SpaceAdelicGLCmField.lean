@@ -172,7 +172,7 @@ theorem measure_inter_le [MeasurableSpace G] [MeasurableMul G] [Countable D] {ι
     {μ : Measure G} [μ.IsMulLeftInvariant] {F S C : Set G}
     (hF : IsFundamentalDomain ι.range F μ) (hSC : S ⊆ (ι.range : Set G) * C) :
     μ (S ∩ F) ≤ μ C := by
-  haveI : Countable ι.range := (Set.countable_range ι).to_subtype
+  have : Countable ι.range := (Set.countable_range ι).to_subtype
   rw [hF.measure_eq_tsum C]
   refine le_trans (measure_mono ?_) (measure_iUnion_le _)
   rintro x ⟨hx, hxF⟩
@@ -236,7 +236,7 @@ theorem abstract_unfold
         simp_rw [hshift]
         exact (twEquiv θD g).tsum_eq fun d => ‖h c d‖ₑ
       rw [e1, tsum_eq_sum (s := P) fun d hd => by
-        rw [enorm_eq_zero]; by_contra h0; exact hd (hmemP c hc d h0)]
+        rw [eNorm_eq_zero]; by_contra h0; exact hd (hmemP c hc d h0)]
       refine (Finset.sum_le_card_nsmul _ _ _ fun d _ => enorm_hh_le hM c d).trans ?_
       simp [hB]
     · simp [hdef, hh_of_notMem hx, Set.indicator_of_notMem hx]
@@ -261,7 +261,7 @@ theorem abstract_unfold
   have hint : ∀ c, IntegrableOn (gc c) F μ := fun c => by
     refine ⟨AEStronglyMeasurable.tsum fun d => (hmeas d).aestronglyMeasurable, ?_⟩
     refine lt_of_le_of_lt (lintegral_mono fun x => ?_) hA
-    exact enorm_tsum_le_tsum_enorm.trans
+    exact eNorm_tsum_le_tsum_eNorm.trans
       (ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective fun d => ‖h x d‖ₑ)
   have hclass : ∀ c, Tm (Quot.out c) = ∫ x in F, gc c x ∂μ := fun c => by
     obtain ⟨e, he⟩ := exists_class_equiv ι hι θD (Quot.out c)
@@ -324,13 +324,13 @@ section Top
 variable {E : Type} [Field E] [NumberField E] {n : ℕ}
 
 theorem secondCountable_GA : SecondCountableTopology (GA E n) := by
-  haveI := GlobalTheory.AdelicFourierUniq.secondCountable_inf E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
-  haveI : SecondCountableTopology (Ad E) :=
+  have := GlobalTheory.AdelicFourierUniq.secondCountable_inf E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
+  have : SecondCountableTopology (Ad E) :=
     inferInstanceAs (SecondCountableTopology (InfiniteAdeleRing E × FiniteAdeleRing (𝓞 E) E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E)) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → Ad E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
@@ -338,30 +338,30 @@ theorem locallyCompact_GA : LocallyCompactSpace (GA E n) :=
   GroundTheory.Automorphic.AdelicGLn.locallyCompactSpace E n
 
 theorem t2Space_adelicGL_cmField : T2Space (GA E n) := by
-  haveI := GlobalTheory.AdelicFourierUniq.t2Space_infiniteAdeleRing_of_numberField E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
-  haveI : T2Space (Ad E) :=
+  have := GlobalTheory.AdelicFourierUniq.t2Space_infiniteAdeleRing_of_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
+  have : T2Space (Ad E) :=
     inferInstanceAs (T2Space (InfiniteAdeleRing E × FiniteAdeleRing (𝓞 E) E))
-  haveI : T2Space (Matrix (Fin n) (Fin n) (Ad E)) :=
+  have : T2Space (Matrix (Fin n) (Fin n) (Ad E)) :=
     inferInstanceAs (T2Space (Fin n → Fin n → Ad E))
-  haveI : T2Space (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
+  have : T2Space (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.t2Space
   exact Units.isEmbedding_embedProduct.t2Space
 
 theorem countable_GL : Countable (GL (Fin n) E) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
   exact Units.val_injective.countable
 
 end Top
 
 theorem unfold_of_mahler (hM : Mahler) : Unfold := by
   intro E _ _ _ n _ _ μ _ F τ φ hF hφ
-  haveI := secondCountable_GA (E := E) (n := n)
-  haveI := locallyCompact_GA (E := E) (n := n)
-  haveI := t2Space_adelicGL_cmField (E := E) (n := n)
-  haveI := countable_GL (E := E) (n := n)
-  haveI : Countable (ratGL E n).range := (Set.countable_range (ratGL E n)).to_subtype
+  have := secondCountable_GA (E := E) (n := n)
+  have := locallyCompact_GA (E := E) (n := n)
+  have := t2Space_adelicGL_cmField (E := E) (n := n)
+  have := countable_GL (E := E) (n := n)
+  have : Countable (ratGL E n).range := (Set.countable_range (ratGL E n)).to_subtype
   obtain ⟨hcl, hinv, C, hCc, hSC⟩ := hM E n τ
   obtain ⟨M, hMb⟩ := hφ.supp.exists_bound_of_continuous hφ.cont
   have hθ : ∀ d, thetaA E n (ratGL E n d) = ratGL E n (thetaE E n d) := fun d =>
@@ -385,7 +385,7 @@ theorem unfold_of_mahler (hM : Mahler) : Unfold := by
     simp only [cutTerm, this]
     simp [quotIntegral]
   · intro δ hfin
-    haveI : DiscreteTopology (ratCent δ) :=
+    have : DiscreteTopology (ratCent δ) :=
       DiscreteTopology.of_subset (s := ((ratGL E n).range : Set (GA E n)))
         GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (fun _ ⟨t, _, e⟩ => ⟨t, e⟩)
     exact GlobalTheory.CompanionTheory.QuotUnfold.quotIntegral_unfold (Γ := (ratGL E n).range) (Γ₀ := ratCent δ)

@@ -104,7 +104,7 @@ theorem pair_cutIdem_mul_self {F : Type} [Field F] [NumberField F] (A : Finset (
 theorem tendsto_cut_mul {D : D7} {z : AE D} (hz : infPart D z = 0) :
     Tendsto (fun A : Finset (HeightOneSpectrum (𝓞 D.host.F)) =>
       algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 (GlobalTheory.LevelClosure.cutIdem A)) * z) atTop (𝓝 z) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have h : Tendsto (fun A : Finset (HeightOneSpectrum (𝓞 D.host.F)) =>
       pairA D.host.F 0 (GlobalTheory.LevelClosure.cutIdem A)) atTop (𝓝 (pairA D.host.F 0 1)) := by
     have := GlobalTheory.LevelClosure.tendsto_cutIdem_mul (1 : Af D.host.F)
@@ -122,8 +122,8 @@ theorem tendsto_mix {D : D7} (V : HSp D) {g : GA D V} (hg : g ∈ GfC V) :
       algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 (GlobalTheory.LevelClosure.cutIdem A)) • Formalism.L2.Theta.mt V g +
         (1 - algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 (GlobalTheory.LevelClosure.cutIdem A))) •
           (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D))) atTop (𝓝 (Formalism.L2.Theta.mt V g)) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) _
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) _
   refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun j => ?_
   have h1 : infPart D (Formalism.L2.Theta.mt V g i j) = (1 : Matrix (Fin V.rank) (Fin V.rank) _) i j :=
     congrArg (fun u : GL (Fin V.rank) (Ainf D.host.F ⊗[D.host.F] D.host.E) => u.1 i j) (show infHom V g = 1 from hg)

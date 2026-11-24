@@ -268,7 +268,7 @@ theorem lines : Lines := by
     exact (key γ γ').1 h
   have hFsurj : Function.Surjective F := by
     intro l
-    obtain ⟨g, hg⟩ := GlobalTheory.CompanionTheory.RgEisLines.exists_inv_mulVec_eq (k := k) i l.rep_nonzero
+    obtain ⟨g, hg⟩ := GlobalTheory.CompanionTheory.RgEisLines.exists_inv_mulVec_eq (k := k) i l.rep_ne_zero
     have hmem : Matrix.GeneralLinearGroup.map (n := ι) (algebraMap k 𝔸[k]) g ∈ (adStd k).ratGL ι :=
       MonoidHom.mem_range.mpr ⟨g, rfl⟩
     obtain ⟨γ, hγ, hst⟩ := hS.trans _ hmem

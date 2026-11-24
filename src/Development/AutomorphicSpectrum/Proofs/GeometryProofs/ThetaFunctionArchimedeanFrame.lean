@@ -661,7 +661,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Sl
 
 theorem rank_eq_unif_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (L : Type) [Field L] [NumberField L] (D : PPData H L) (σ : L →+* ℂ) (A : Over (Sp ℂ)) [GrpObj A] (φ : A.left ⟶ D.t.G.left) (M : LB A.left) (g : ℕ) (u : HolUnif A M g), IsGrpPullback A D.t.G (emb σ) φ → (∀ v, IsTangent v → ∃! w, u.IsDiff w v) → (∀ w, ∃! v, IsTangent v ∧ u.IsDiff w v) → D.g = g := by
   intro E _ _ _ H L _ _ D σ A _ φ M g u hp h1 h2
-  haveI : Smooth D.t.G.hom := D.t.semi.smooth
+  have : Smooth D.t.G.hom := D.t.semi.smooth
   obtain ⟨Mσ, -⟩ := GlobalTheory.CompanionTheory.Ar.LieSigma.lieModel_fibre (Sp (𝓞 L)) D.t.G L (𝟙 _) D.B.carrier D.MB σ
   have hp' : IsGrpPullback A D.t.G (spMap (σ.comp (algebraMap (𝓞 L) L)) ≫ 𝟙 _) φ := by
     rwa [Category.comp_id]
@@ -714,7 +714,7 @@ theorem linLift_injective {M : LB A.left} {M' : LB A'.left} {g g' : ℕ} (u : Ho
       exact (u.ker 0).2 u.Λ.zero_mem
     have : (u'.ex (c • z) ≫ e.hom) ≫ e.inv = ((1 : 𝟙_ (Over (Sp ℂ)) ⟶ A') ≫ e.hom) ≫ e.inv := by rw [h0, hone]
     simpa only [Category.assoc, e.hom_inv_id, Category.comp_id] using this
-  haveI := u'.discrete
+  have := u'.discrete
   let φ : ℂ → u'.Λ := fun c => ⟨c • z, hmem c⟩
   have hφ : Continuous φ := Continuous.subtype_mk (continuous_id.smul continuous_const) _
   have h := PreconnectedSpace.constant (inferInstance : PreconnectedSpace ℂ) hφ (x := 1) (y := 0)
@@ -804,7 +804,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Sl.frames_main : ∀ (E : Type) [Field E
   subst hg
   refine ⟨GlobalTheory.T.exists_archimedean_frame _ D.t.G D.t.PP (emb σ) t'.G m.φ D.g u Hm χ hcart hAH, fun a => ?_⟩
   obtain ⟨e, hmon, -⟩ := grpPullback_iso a.cart hcart
-  haveI := hmon
+  have := hmon
   obtain ⟨a₁, a₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.TanIso.tangentCoords_of_iso t'.G a.A _ _ D.g u a.u e hab d₁ d₂
   refine ⟨fun n s => _root_.GlobalTheory.CompanionTheory.Ar.Sl.frame_fn_existsUnique _ D.t.G D.t.PP (emb σ) D.g a n s,
     fun n s θ h => ⟨GlobalTheory.T.theta_function_differentiable _ D.t.G D.t.PP (emb σ) D.g a n s θ h,

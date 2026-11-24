@@ -66,11 +66,11 @@ theorem isGrp_pi (K : ∀ v, Set (G v)) (hK : ∀ v, IsGrp (K v)) : IsGrp (Set.p
 
 theorem invOn_pi (K : ∀ v, Set (G v)) (μ : ∀ v, Measure (G v)) (h : ∀ v, InvOn (μ v) (K v)) :
     InvOn (Measure.pi μ) (Set.pi univ K) := by
-  haveI : ∀ v, SigmaFinite (μ v) := fun v => (h v).1
+  have : ∀ v, SigmaFinite (μ v) := fun v => (h v).1
   refine ⟨inferInstance, ?_, ?_, ?_⟩
   · intro h0
     have h1 := congrArg (fun m : Measure (∀ v, G v) => m univ) h0
-    simp only [Measure.pi_univ, Measure.coe_zero, Pi.zero_apply, Finset.prod_eq_zero_iff,
+    simp only [Measure.pi_univ, FunLike.coe_zero, Pi.zero_apply, Finset.prod_eq_zero_iff,
       Finset.mem_univ, true_and] at h1
     obtain ⟨v, hv⟩ := h1
     exact (h v).2.1 (Measure.measure_univ_eq_zero.1 hv)
@@ -81,7 +81,7 @@ theorem invOn_pi (K : ∀ v, Set (G v)) (μ : ∀ v, Measure (G v)) (h : ∀ v, 
     exact measure_iUnion_null fun v => Measure.pi_eval_preimage_null μ ((h v).2.2.1)
   · intro s hs
     have hmap : ∀ v, (μ v).map (fun x => s v * x) = μ v := fun v => (h v).2.2.2 (s v) (hs v trivial)
-    haveI : ∀ v, SigmaFinite ((μ v).map (fun x => s v * x)) := fun v => by
+    have : ∀ v, SigmaFinite ((μ v).map (fun x => s v * x)) := fun v => by
       rw [hmap v]
       infer_instance
     have e : (fun x : (∀ v, G v) => s * x) = fun x v => (fun y => s v * y) (x v) := rfl
@@ -115,9 +115,9 @@ theorem weil_quotient_global_assumptions : GlobAsm := by
   have hloc := fun v => hL (Formalism.REAL.UJ (ε v)) (Formalism.REAL.muG (ε v)) (N v) (H v) (hNc v) (hHc v)
     (hNg v) (hHg v) (hnorm v) (hunim v)
   choose μN μH β hμN hμH hμS hβm hβ1 hLW using hloc
-  haveI := fun v => (hμN v).1
-  haveI := fun v => (hμH v).1
-  haveI := fun v => (hμS v).1
+  have := fun v => (hμN v).1
+  have := fun v => (hμH v).1
+  have := fun v => (hμS v).1
   obtain ⟨cN, hcN0, hcNt, hcN⟩ := hU (∀ v, Formalism.REAL.UJ (ε v)) (Set.pi univ N)
     (isClosed_set_pi fun v _ => hNc v) (isGrp_pi N hNg) muN (Measure.pi μN) hmuN
     (invOn_pi N μN hμN)

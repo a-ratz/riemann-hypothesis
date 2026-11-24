@@ -62,10 +62,10 @@ theorem emb_inj_range : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
       (fun i j => hb i j)
   refine ⟨?_, ?_⟩
   · obtain ⟨hdom, -, -⟩ := GlobalTheory.K5.OnDVR.isDVR_On p m hm
-    haveI : Module.Finite (O0 p) (On p m) := Module.Finite.of_basis b
-    haveI : Algebra.IsIntegral (O0 p) (On p m) := Algebra.IsIntegral.of_finite _ _
+    have : Module.Finite (O0 p) (On p m) := Module.Finite.of_basis b
+    have : Algebra.IsIntegral (O0 p) (On p m) := Algebra.IsIntegral.of_finite _ _
     have hk : RingHom.ker (ι : On p m →+* Ω) = ⊥ := by
-      apply Ideal.eq_bot_of_comap_eq_bot (R := O0 p)
+      apply Ideal.eq_bot_of_under_eq_bot (R := O0 p)
       rw [eq_bot_iff]
       intro a ha
       rw [Ideal.mem_comap, RingHom.mem_ker] at ha

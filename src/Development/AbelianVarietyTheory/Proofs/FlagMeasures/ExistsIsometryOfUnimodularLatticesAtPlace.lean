@@ -99,7 +99,7 @@ theorem exists_unitary [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 
       rw [Units.val_mul, UnramifiedHermitian.congr_mul, hT', ← UnramifiedHermitian.congr_mul, Units.mul_inv]
       simp
     rw [Units.val_mul, UnramifiedHermitian.congr_mul, e, Matrix.mul_one, ← hPA]
-  haveI : IsArtinianRing (LocAlg v) := IsArtinianRing.of_finite (v.adicCompletion (maximalRealSubfield E)) _
+  have : IsArtinianRing (LocAlg v) := IsArtinianRing.of_finite (v.adicCompletion (maximalRealSubfield E)) _
   obtain ⟨lam, hlam, hlu⟩ := (infinite_norm_one E).exists_notMem_finite
     (finite_not_isUnit_one_add_smul (locEmb v) u.1)
   obtain ⟨γ, hγ, hγX⟩ := exists_unitary_congr_pi (T := Unit) (A := fun _ => LocAlg v) (fun _ => locEmb v)
@@ -283,7 +283,7 @@ theorem exists_isom_of_isUnimodularAt : ∀ (K V : Type) [Field K] [NumberField 
     rw [show t = θ from RingOfIntegers.ext (e1.trans e), sub_self]
     exact zero_mem _⟩
   have hst' : ∀ x : K, star x = cc x := congrFun hst
-  haveI := Formalism.L2.Pj.unramBridge_holds K fun Q hQ => by
+  have := Formalism.L2.Pj.unramBridge_holds K fun Q hQ => by
     obtain ⟨θ, t, e1, e2⟩ := hc.2.2 Q hQ
     refine ⟨θ, ?_⟩
     have : RingOfIntegers.mapRingEquiv (IsCMField.complexConj K : K ≃+* K) θ = t :=

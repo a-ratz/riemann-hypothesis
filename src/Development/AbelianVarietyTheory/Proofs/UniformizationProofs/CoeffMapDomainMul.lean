@@ -99,7 +99,7 @@ theorem exists_mem_support_coeffSup_eq {c : ι →₀ M} (hc : c ≠ 0) :
 
 theorem coeffSup_eq_zero_iff (h0 : N 0 = 0) {c : ι →₀ M} :
     coeffSup N c = 0 ↔ ∀ i, N (c i) = 0 := by
-  simp only [← le_zero_iff, coeffSup_le_iff h0]
+  simp only [← nonpos_iff_eq_zero, coeffSup_le_iff h0]
 
 theorem coeffSup_single (h0 : N 0 = 0) (i : ι) (a : M) :
     coeffSup N (Finsupp.single i a) = N a := by
@@ -147,7 +147,7 @@ theorem coeffSup_coeff_mul [Add G] [UniqueSums G] (f g : AddMonoidAlgebra R G) :
   obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha₀
   obtain ⟨hb₁, hb₂⟩ := Finset.mem_filter.mp hb₀
   refine le_trans (le_of_eq ?_) (le_coeffSup v.map_zero _ (a₀ + b₀))
-  have hpos : 0 < coeffSup v f.coeff * coeffSup v g.coeff := zero_lt_iff.mpr (mul_ne_zero hf hg)
+  have hpos : 0 < coeffSup v f.coeff * coeffSup v g.coeff := pos_iff_ne_zero.mpr (mul_ne_zero hf hg)
   rw [AddMonoidAlgebra.coeff_mul]
   simp_rw [Finsupp.sum]
   rw [← Finset.sum_product', v.map_sum_eq_of_lt (j := (a₀, b₀))
@@ -157,7 +157,7 @@ theorem coeffSup_coeff_mul [Add G] [UniqueSums G] (f g : AddMonoidAlgebra R G) :
     obtain ⟨hp, hne⟩ := Finset.mem_sdiff.mp hp
     obtain ⟨hp₁, hp₂⟩ := Finset.mem_product.mp hp
     rw [Finset.mem_singleton] at hne
-    simp only [if_true, map_mul, ha₂, hb₂]
+    simp only [ite_true, map_mul, ha₂, hb₂]
     split_ifs with he
     · rw [map_mul]
       have h₁ := le_coeffSup v.map_zero f.coeff p.1
@@ -166,9 +166,9 @@ theorem coeffSup_coeff_mul [Add G] [UniqueSums G] (f g : AddMonoidAlgebra R G) :
       · rcases h₂.eq_or_lt with h₂ | h₂
         · have := hu (Finset.mem_filter.mpr ⟨hp₁, h₁⟩) (Finset.mem_filter.mpr ⟨hp₂, h₂⟩) he
           exact absurd (Prod.ext this.1 this.2) hne
-        · rw [h₁]; exact mul_lt_mul_of_pos_left h₂ (zero_lt_iff.mpr hf)
+        · rw [h₁]; exact mul_lt_mul_of_pos_left h₂ (pos_iff_ne_zero.mpr hf)
       · exact lt_of_le_of_lt (mul_le_mul_right h₂ _)
-          (mul_lt_mul_of_pos_right h₁ (zero_lt_iff.mpr hg))
+          (mul_lt_mul_of_pos_right h₁ (pos_iff_ne_zero.mpr hg))
     · rw [map_zero]; exact hpos
 
 variable [AddMonoid G] [UniqueSums G]
@@ -244,7 +244,7 @@ theorem gaussVal_sum_C_mul_X (s : Finset σ) (a : σ → R) :
     rw [coeff_sum, Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [coeff_C_mul, coeff_X, if_neg, mul_zero]
+      rw [coeff_C_mul, coeff_X, ite_eq_right, mul_zero]
       exact fun h => hj (Finsupp.single_left_injective one_ne_zero h)
     · exact fun h => absurd hi h
 
@@ -440,7 +440,7 @@ variable {F : Type} [Field F] {v : AddValuation F (WithTop ℚ)}
 theorem exists_addGauss (v : AddValuation F (WithTop ℚ)) (X : Type) [AddCommGroup X] [Module.Free ℤ X] :
     ∃ w : AddValuation (AddMonoidAlgebra F X) (WithTop ℚ),
       ∀ (f : AddMonoidAlgebra F X) (g : WithTop ℚ), g ≤ w f ↔ ∀ m, g ≤ v (f.coeff m) := by
-  haveI : UniqueSums X :=
+  have : UniqueSums X :=
     (AddEquiv.uniqueSums_iff (Module.Free.chooseBasis ℤ X).repr.toAddEquiv).mpr inferInstance
   exact ⟨AddValuation.ofValuation (GlobalTheory.gaussValAlg (G := X) (AddValuation.toValuation v)),
     fun f g => GlobalTheory.gaussValAlg_le_iff (G := X) (AddValuation.toValuation v) (f := f)⟩
@@ -466,7 +466,7 @@ theorem NullV.exists_trunc {X : Type} {A : X → F} (hA : NullV v A) (N : ℚ) :
     fun χ hχ => ?_⟩
   · rw [Set.Finite.mem_toFinset]
     by_contra hn
-    exact hχ (if_neg hn)
+    exact hχ (ite_eq_right hn)
   · simp only [Finsupp.onFinset_apply]
     split_ifs with hχ
     · simp
@@ -475,7 +475,7 @@ theorem NullV.exists_trunc {X : Type} {A : X → F} (hA : NullV v A) (N : ℚ) :
     split_ifs with hχ
     · exact le_rfl
     · simp
-  · simp only [Finsupp.onFinset_apply, if_pos hχ]
+  · simp only [Finsupp.onFinset_apply, ite_eq_left hχ]
 
 theorem coeff_mapDomain_mul {X : Type} [AddCommGroup X] (h : X →+ X) (a c : AddMonoidAlgebra F X)
     (T : Finset X) (hT : a.coeff.support ⊆ T) (α : X) :

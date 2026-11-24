@@ -223,7 +223,7 @@ lemma vNormSq_lt (p : ℕ) (ε : Fin n → Bool) (hε : ∀ a, ε a = decide ((a
         simp only [decide_eq_false_iff_not] at this
         rw [Fin.lt_def] at hij
         omega
-      simp only [root, Pi.sub_apply, Pi.single_apply, if_neg hi, if_neg hj]
+      simp only [root, Pi.sub_apply, Pi.single_apply, ite_eq_right hi, ite_eq_right hj]
       split_ifs <;> norm_num)
     simp only [mul_comm _ (root c0 a0 _)] at this
     rw [sum_root_mul] at this
@@ -285,7 +285,7 @@ lemma inner_kset (hσ : IsURepOn (UJset ε) σ) {g : Mt n} (hg : g ∈ Kset ε) 
 lemma exists_wt_of_inner_ne (hσ : IsURepOn (UJset ε) σ) {S : Submodule ℂ H} [FiniteDimensional ℂ S]
     (hS : IsKStableOn ε σ S) {ν : Fin n → ℝ} {y : H} (hy : IsWtOn (Kset ε) σ ν y) {w : H} (hw : w ∈ S)
     (hwy : ⟪w, y⟫_ℂ ≠ 0) : ∃ y' ∈ S, y' ≠ 0 ∧ IsWtOn (Kset ε) σ ν y' := by
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   have key : ∀ s ∈ S, ⟪s, S.starProjection y⟫_ℂ = ⟪s, y⟫_ℂ := by
     intro s hs
     rw [← Submodule.inner_starProjection_left_eq_right, Submodule.starProjection_eq_self_iff.2 hs]
@@ -397,7 +397,7 @@ lemma cdom_of_inner_ne (hσ : IsURepOn (UJset ε) σ) (lam : Fin n → ℝ) {ν 
     refine sSup_le fun S hS x hx => ?_
     rw [Submodule.mem_orthogonal_singleton_iff_inner_left]
     by_contra hx0
-    haveI := hS.1
+    have := hS.1
     obtain ⟨y', h1, h2, h3⟩ := exists_wt_of_inner_ne hσ hS.2.1 hy hx hx0
     exact hn (hS.2.2.2.2 ν y' h1 h2 h3)
   exact hwy (Submodule.mem_orthogonal_singleton_iff_inner_left.1 (h hw))
@@ -443,7 +443,7 @@ theorem lowK_killed : ∀ (n p : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ
   set J := Formalism.REAL.Jm ε with hJ
   let V : Submodule ℂ H := W ⊓ Submodule.span ℂ {w | SmoothVec (lieH J) σ w}
   have hVs : ∀ w ∈ V, SmoothVec (lieH J) σ w := fun w hw => hspan w hw.2
-  haveI : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le inf_le_left
   have hVK : ∀ g ∈ Kset ε, ∀ w ∈ V, σ g w ∈ V := fun g hg w hw =>
     ⟨hWK g hg w hw.1, Submodule.subset_span ((hsmv w (hVs w hw)).1 g (kset_sub hg))⟩
   have hs0 : SmoothVec (lieH J) σ 0 := hspan 0 (Submodule.zero_mem _)
@@ -534,12 +534,12 @@ theorem lowK_killed : ∀ (n p : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ
         · have := congrFun (congrFun hZ1 i) j
           simp only [hJ, Formalism.REAL.Jm, Matrix.mul_diagonal] at this
           by_contra hj
-          rw [if_neg hj] at this
+          rw [ite_eq_right hj] at this
           exact hij (by linear_combination (-1 / 2 : ℂ) * this)
         · have := congrFun (congrFun hZ2 i) j
           simp only [hJ, Formalism.REAL.Jm, Matrix.diagonal_mul, Matrix.neg_apply] at this
           by_contra hi
-          rw [if_pos (by simpa using hi)] at this
+          rw [ite_eq_left (by simpa using hi)] at this
           exact hij (by linear_combination (1 / 2 : ℂ) * this)
     exact hu0 (inner_self_eq_zero.1 (Submodule.mem_orthogonal_singleton_iff_inner_left.1 (h huS)))
   obtain ⟨a', c', ha', hc', w, hw, hwu⟩ := hex

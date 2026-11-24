@@ -219,7 +219,7 @@ theorem finIdx_at {p : PlF D} (hA : Agree δ M p) (L U : Formalism.L2.SG.PairVal
   obtain ⟨s4, hs40, hs4O, hs4⟩ := bounded_mat (L := D.s.atP p) Upi
   have hRO : ∀ {x : (D.s.atP p).Ep}, x ∈ (M p).R → x ∈ (D.s.atP p).O := fun hx => R_sub_O M δ hA hx
   refine ⟨?_, ?_⟩
-  · haveI := finite_quot M δ hA c0 hc00 hc0O
+  · have := finite_quot M δ hA c0 hc00 hc0O
     refine relIndex_ne_zero_of_code _ _
       (fun k : ProdE.AP M δ u u' w p =>
         ((fun i j => (QuotientAddGroup.mk (⟨((k : ProdE.StP M δ u u' w p).1.1 : ProdE.MP p) i j,
@@ -257,7 +257,7 @@ theorem finIdx_at {p : PlF D} (hA : Agree δ M p) (L U : Formalism.L2.SG.PairVal
     have hc1O : c1 ∈ 𝒪[(D.s.atP p).Fp] := Subring.mul_mem _ (Subring.mul_mem _ hs2O (Subring.mul_mem _ hs1O hc0O))
       (Subring.mul_mem _ hs3O hs4O)
     have hc10 : c1 ≠ 0 := mul_ne_zero (mul_ne_zero hs20 (mul_ne_zero hs10 hc00)) (mul_ne_zero hs30 hs40)
-    haveI := finite_quot M δ hA c1 hc10 hc1O
+    have := finite_quot M δ hA c1 hc10 hc1O
     refine relIndex_ne_zero_of_code _ _
       (fun k : ProdE.CPL M δ u u' w hA L U hL hU =>
         ((fun i j => (QuotientAddGroup.mk (⟨(Lp * ((k : ProdE.StP M δ u u' w p).1.1 : ProdE.MP p) * Lpi) i j,
@@ -894,16 +894,16 @@ theorem approx_core (hA : ∀ p, Agree δ M p) (L U : Formalism.L2.SG.PairVal.Ma
     intro i j
     refine ⟨fun hij => ?_, fun hij => ?_⟩
     · have : ¬ (j < i ∧ σ i < σ j) := fun h' => absurd h'.1 (not_lt.2 hij.le)
-      simp only [had, if_neg this]
+      simp only [had, ite_eq_right this]
       exact Matrix.one_apply_ne (ne_of_lt hij)
     · subst hij
       have : ¬ (i < i ∧ σ i < σ i) := fun h' => lt_irrefl _ h'.1
-      simp only [had, if_neg this, Matrix.one_apply_eq]
+      simp only [had, ite_eq_right this, Matrix.one_apply_eq]
   have hpat : ∀ i j, σ j < σ i → a i j = 0 := by
     intro i j hij
     have hne : i ≠ j := fun e => by subst e; exact lt_irrefl _ hij
     have : ¬ (j < i ∧ σ i < σ j) := fun h' => absurd h'.2 (not_lt.2 hij.le)
-    simp only [had, if_neg this]
+    simp only [had, ite_eq_right this]
     exact Matrix.one_apply_ne hne
   have hdet : IsUnit a.det := by rw [ZsVolGrp.det_lo (fun x => (ha x x).2 rfl) (fun x y hxy => (ha x y).1 hxy)]; exact isUnit_one
   obtain ⟨b, hb, hab⟩ := mem_stSet_of_pat w a ha hpat
@@ -917,9 +917,9 @@ theorem approx_core (hA : ∀ p, Agree δ M p) (L U : Formalism.L2.SG.PairVal.Ma
       intro i j
       rw [hgv', Matrix.sub_apply, Matrix.map_apply]
       by_cases hz : j < i ∧ σ i < σ j
-      · simp only [had, if_pos hz]
+      · simp only [had, ite_eq_left hz]
         exact mem_latS.2 (ht1 (i, j) p hp)
-      · simp only [had, if_neg hz]
+      · simp only [had, ite_eq_right hz]
         have e : (D.s.atP p).ιE ((1 : Formalism.L2.SG.PairVal.MatR D) i j) - τ p i j = 0 := by
           rcases lt_trichotomy i j with hij | hij | hij
           · rw [Matrix.one_apply_ne (ne_of_lt hij), map_zero, hτ1 p i j hij, sub_zero]
@@ -936,9 +936,9 @@ theorem approx_core (hA : ∀ p, Agree δ M p) (L U : Formalism.L2.SG.PairVal.Ma
   · intro i j
     rw [hgv']
     by_cases hz : j < i ∧ σ i < σ j
-    · simp only [had, if_pos hz]
+    · simp only [had, ite_eq_left hz]
       exact ht2 (i, j) p hp
-    · simp only [had, if_neg hz]
+    · simp only [had, ite_eq_right hz]
       rw [Matrix.one_apply]
       split_ifs
       · rw [map_one]; exact (D.s.atP p).O.one_mem

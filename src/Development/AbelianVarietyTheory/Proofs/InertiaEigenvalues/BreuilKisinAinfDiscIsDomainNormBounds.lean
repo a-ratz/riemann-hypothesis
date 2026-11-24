@@ -316,7 +316,7 @@ private theorem gauge_mul_le_of_mem_ball (y z : PreDisc l u ρ) {s : ℝ} (hs : 
 private theorem algebraMap_natCast_mem_ball_inv (hl0 : (0 : ℝ) < l) :
     algebraMap A (PreDisc l u ρ) (l : A) ∈ ball l u ρ ((l : ℝ)⁻¹) := by
   refine Submodule.subset_span ?_
-  rw [monos, Set.mem_setOf_eq]
+  rw [monos, Set.mem_ofPred_eq]
   refine ⟨1, 0, 0, ?_, ?_⟩
   · rw [pow_zero, pow_zero, pow_one, one_mul, inv_mul_cancel₀ hl0.ne']
   · simp
@@ -324,7 +324,7 @@ private theorem algebraMap_natCast_mem_ball_inv (hl0 : (0 : ℝ) < l) :
 private theorem invSelf_mem_ball :
     (IsLocalization.Away.invSelf (l : A) : PreDisc l u ρ) ∈ ball l u ρ (l : ℝ) := by
   refine Submodule.subset_span ?_
-  rw [monos, Set.mem_setOf_eq]
+  rw [monos, Set.mem_ofPred_eq]
   refine ⟨0, 0, 1, ?_, ?_⟩
   · simp
   · simp
@@ -405,8 +405,8 @@ theorem isDomain_disc (l : ℕ) [hl : Fact l.Prime] (A : Type) [CommRing A] (u :
     have h' := hle (l : A)
     rw [h, norm_zero, hNl] at h'
     linarith
-  haveI : Nontrivial (Disc l u ρ) := ⟨⟨_, _, hne⟩⟩
-  haveI : NoZeroDivisors (Disc l u ρ) := by
+  have : Nontrivial (Disc l u ρ) := ⟨⟨_, _, hne⟩⟩
+  have : NoZeroDivisors (Disc l u ρ) := by
     refine ⟨fun {x y} hxy => ?_⟩
     have h := hmain x y
     rw [hxy, norm_zero] at h

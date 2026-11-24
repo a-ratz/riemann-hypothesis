@@ -52,7 +52,7 @@ theorem UpperTheory.Gal.G3.pPolDesc :
     PolDesc := by
   intro G₀ R _ _ gb S S' s s' c _ _ _ N₁ N₂ o₁ o₂ o₁' o₂' m₁ m₂ ψ ψ' hψ hcomm e h'
   obtain ⟨h'⟩ := h'
-  haveI := hψ
+  have := hψ
   have hpb : IsPullback m₁.φ o₁'.A.hom o₁.A.hom c := m₁.cart.1
   let Y' : Over S := Over.mk (m₁.φ ≫ o₁.A.hom)
   let cO : Y' ⟶ o₁.A := Over.homMk m₁.φ rfl

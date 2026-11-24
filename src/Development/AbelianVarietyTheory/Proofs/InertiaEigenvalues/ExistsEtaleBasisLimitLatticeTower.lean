@@ -665,7 +665,7 @@ namespace GlobalTheory.CardJ
 
 theorem exists_cols_of_rightInv_WCb : ∀ (l : ℕ) [Fact l.Prime] (d d' n : ℕ) (Q : Matrix (Fin d) (Fin d') (WCb l)) (S : Matrix (Fin d') (Fin d) (WCb l)) (U Uinv : Matrix (Fin d') (Fin d') (WCb l)) (J : Finset (Fin d')), 1 ≤ n → (∀ i j, (l : WCb l) ^ n ∣ (Q * S - (1 : Matrix (Fin d) (Fin d) (WCb l))) i j) → Uinv * U = 1 → U * Uinv = 1 → (∀ j ∉ J, ∀ i, (l : WCb l) ^ n ∣ (Q * U) i j) → (∀ v : Fin d' → WCb l, (∀ i, (l : WCb l) ^ n ∣ (Q *ᵥ v) i) → ∀ j ∈ J, (l : WCb l) ∣ (Uinv *ᵥ v) j) → ∃ e : Fin d ≃ J, IsUnit (Q * U.submatrix id (fun k => (e k : Fin d'))) ∧ ∀ i j, (l : WCb l) ^ n ∣ (Q - (Q * U.submatrix id (fun k => (e k : Fin d'))) * Uinv.submatrix (fun k => (e k : Fin d')) id) i j := by
   intro l _ d d' n Q S U Uinv J hn hQS hUU hUU' hJ hker
-  haveI : PerfectRing (Cb l) l := GlobalTheory.OEDvr.perfectRing_Cb
+  have : PerfectRing (Cb l) l := GlobalTheory.OEDvr.perfectRing_Cb
   exact exists_cols_of_rightInv (l : WCb l) (WittVector.irreducible l).not_isUnit d d' n Q S U Uinv J
     hn hQS hUU hUU' hJ hker
 
@@ -685,7 +685,7 @@ namespace GlobalTheory.SmithQuot
 
 theorem oe_dvr : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K), IsDiscreteValuationRing ↥bk.OE := by
   intro l _ K bk
-  haveI : PerfectRing (Cb l) l := GlobalTheory.OEDvr.perfectRing_Cb
+  have : PerfectRing (Cb l) l := GlobalTheory.OEDvr.perfectRing_Cb
   obtain ⟨hdivl, -, -, hfac, -⟩ := GlobalTheory.OEDvr.main l K bk
   have hlW : Irreducible ((l : ℕ) : WCb l) := WittVector.irreducible l (k := Cb l)
   have hlO : (l : WCb l) ∈ bk.OE := natCast_mem _ l
@@ -764,7 +764,7 @@ theorem flatKer {l : ℕ} [Fact l.Prime] {d d' n : ℕ} (Pi : Matrix (Fin d) (Fi
     (hker : ∀ v : Fin d' → ℤ_[l], (∀ i, (l : ℤ_[l]) ^ n ∣ (Pi *ᵥ v) i) ↔ ∃ w, v = f *ᵥ w)
     (u : Fin d' → WCb l) (hu : ∀ i, (l : WCb l) ^ n ∣ (zW Pi *ᵥ u) i) : ∃ w, u = zW f *ᵥ w := by
   classical
-  haveI : Module.IsTorsionFree ℤ_[l] (WCb l) := by
+  have : Module.IsTorsionFree ℤ_[l] (WCb l) := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]
     exact (WittVector.map_injective _ (ZMod.castHom_injective (Cb l))).comp (WittVector.equiv l).symm.injective
   choose y hy using hu
@@ -904,7 +904,7 @@ theorem not_isUnit_l : ¬ IsUnit (l : WCb l) := by
   exact not_isUnit_zero h2
 
 theorem complete : IsAdicComplete (Ideal.span {(l : WCb l)}) (WCb l) := by
-  haveI := GlobalTheory.BSP.DescentStep.perfectRing_Cb (l := l)
+  have := GlobalTheory.BSP.DescentStep.perfectRing_Cb (l := l)
   exact WittVector.isAdicCompleteIdealSpanP
 
 theorem isUnit_of_cong {d : ℕ} {A B : Matrix (Fin d) (Fin d) (WCb l)} (hB : IsUnit B)
@@ -917,7 +917,7 @@ theorem isUnit_of_cong {d : ℕ} {A B : Matrix (Fin d) (Fin d) (WCb l)} (hB : Is
   rw [Ideal.Quotient.eq, Ideal.mem_span_singleton, pow_one] at hd
   rw [Matrix.isUnit_iff_isUnit_det] at hB ⊢
   obtain ⟨b, hb⟩ := hB
-  haveI := complete (l := l)
+  have := complete (l := l)
   have hj : (A.det - B.det) * ((b⁻¹ : (WCb l)ˣ) : WCb l) ∈ Ideal.jacobson ⊥ :=
     IsAdicComplete.le_jacobson_bot (Ideal.span {(l : WCb l)})
       (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton.2 hd))
@@ -941,7 +941,7 @@ theorem mul_mem {S : Subring (WCb l)} {m k o : Type} [Fintype k] {A : Matrix m k
 theorem exists_lim {d : ℕ} (S : ℕ → Matrix (Fin d) (Fin d) (WCb l))
     (h : ∀ k i j, (l : WCb l) ^ (k + 1) ∣ (S (k + 1) - S k) i j) :
     ∃ L : Matrix (Fin d) (Fin d) (WCb l), ∀ k i j, (l : WCb l) ^ (k + 1) ∣ (L - S k) i j := by
-  haveI := complete (l := l)
+  have := complete (l := l)
   have hc : ∀ i j m n, m ≤ n → (l : WCb l) ^ m ∣ S n i j - S m i j := by
     intro i j m n hmn
     induction n, hmn using Nat.le_induction with

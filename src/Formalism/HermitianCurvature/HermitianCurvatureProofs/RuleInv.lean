@@ -152,7 +152,7 @@ theorem _root_.Formalism.FourierDecayAlt.R.LevelData.inv_Dr_Dri : L.Dr * L.Dri =
 theorem _root_.Formalism.FourierDecayAlt.R.LevelData.inv_hR_bar (Y : ℂ) :
     L.G * L.Dbi * L.Dbi * L.Ahatv Y = L.Dr * L.GG * (L.ζbi * L.ζbi * L.Avr Y) := by
   open scoped IsMulCommutative in
-  letI : IsMulCommutative (Algebra.adjoin ℂ L.fns) := Algebra.isMulCommutative_adjoin ℂ (by
+  let : IsMulCommutative (Algebra.adjoin ℂ L.fns) := Algebra.isMulCommutative_adjoin ℂ (by
     intro x hx y hy _
     exact L.fns_comm x hx y hy)
   let Dr' : Algebra.adjoin ℂ L.fns := ⟨L.Dr, L.inv_S_prod L.inv_mem_c⟩
@@ -176,7 +176,7 @@ theorem _root_.Formalism.FourierDecayAlt.R.LevelData.inv_hR_bar (Y : ℂ) :
 theorem _root_.Formalism.FourierDecayAlt.R.LevelData.inv_hR_hol (Y : ℂ) :
     L.G * L.Di * L.Di * L.Ahat Y = L.Drb * L.GG * (L.ζi * L.ζi * L.Ar Y) := by
   open scoped IsMulCommutative in
-  letI : IsMulCommutative (Algebra.adjoin ℂ L.fns) := Algebra.isMulCommutative_adjoin ℂ (by
+  let : IsMulCommutative (Algebra.adjoin ℂ L.fns) := Algebra.isMulCommutative_adjoin ℂ (by
     intro x hx y hy _
     exact L.fns_comm x hx y hy)
   let Dr' : Algebra.adjoin ℂ L.fns := ⟨L.Dr, L.inv_S_prod L.inv_mem_c⟩

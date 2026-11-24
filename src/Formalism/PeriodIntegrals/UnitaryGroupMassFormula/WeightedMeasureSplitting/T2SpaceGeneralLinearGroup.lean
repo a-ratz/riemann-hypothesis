@@ -83,7 +83,7 @@ theorem isClosed_Nsub {r : ℕ} (P : Frame E n r) : IsClosed (Nsub R σ J P : Se
         (fun g : HA R σ J => lin R σ J g v - v) ⁻¹'
           (spanR (F := F) R P.e Set.univ : Set (Fin n → R ⊗[F] E)) := by
     ext g
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq, SetLike.mem_coe]
     rfl
   rw [hset]
   refine (isClosed_uniFlag R σ J P.e).inter (isClosed_biInter fun v _ => ?_)

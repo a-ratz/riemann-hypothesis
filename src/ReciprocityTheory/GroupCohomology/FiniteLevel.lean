@@ -171,14 +171,14 @@ theorem sum_neg_one_pow (k : ℕ) :
   | zero => simp
   | succ k ih =>
     rw [Fin.sum_univ_castSucc, ← add_assoc]
-    simp only [Fin.coe_castSucc, Fin.val_last]
+    simp only [Fin.val_castSucc, Fin.val_last]
     rw [ih]
     rcases Nat.even_or_odd k with hk | hk
     · have h1 : ¬ Even (k + 1) := Nat.not_even_iff_odd.2 (Even.add_one hk)
-      rw [if_pos hk, if_neg h1, pow_succ, pow_succ, Even.neg_one_pow hk]
+      rw [ite_eq_left hk, ite_eq_right h1, pow_succ, pow_succ, Even.neg_one_pow hk]
       ring
     · have h1 : Even (k + 1) := Odd.add_one hk
-      rw [if_neg (Nat.not_even_iff_odd.2 hk), if_pos h1, pow_succ, pow_succ, Odd.neg_one_pow hk]
+      rw [ite_eq_right (Nat.not_even_iff_odd.2 hk), ite_eq_left h1, pow_succ, pow_succ, Odd.neg_one_pow hk]
       ring
 
 theorem dn_subsingleton {K : Type u} [Group K] [TopologicalSpace K] [Subsingleton K]
@@ -204,7 +204,7 @@ theorem H_succ_trivial {K : Type u} [Group K] [TopologicalSpace K] [IsTopologica
   rcases Nat.even_or_odd m with hm | hm
   · have h1 : w.1.1 (fun _ => 1) = 0 := by
       have h := hwf (fun _ => 1)
-      rwa [dn_subsingleton, if_neg (Nat.even_add_one.not.mpr (not_not.mpr hm)), one_smul] at h
+      rwa [dn_subsingleton, ite_eq_right (Nat.even_add_one.not.mpr (not_not.mpr hm)), one_smul] at h
     refine ⟨0, ?_⟩
     rw [map_zero]
     symm
@@ -218,7 +218,7 @@ theorem H_succ_trivial {K : Type u} [Group K] [TopologicalSpace K] [IsTopologica
     · apply Subtype.ext
       funext g
       show dn M.rho m (fun _ => w.1.1 (fun _ => 1)) g = w.1.1 g
-      rw [dn_subsingleton, if_neg (Nat.not_even_iff_odd.mpr hm), one_smul]
+      rw [dn_subsingleton, ite_eq_right (Nat.not_even_iff_odd.mpr hm), one_smul]
       rw [Subsingleton.elim g (fun _ => 1)]
 
 theorem torsion_finite {H : Type u} [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
@@ -228,7 +228,7 @@ theorem torsion_finite {H : Type u} [Group H] [TopologicalSpace H] [IsTopologica
     ⟨fun a b => Subtype.ext ((Subgroup.mem_bot.1 a.2).trans (Subgroup.mem_bot.1 b.2).symm)⟩
   obtain ⟨cor, -, hcor⟩ := cor_holds R H Q ⊥ (isOpen_discrete _)
   have h := hcor (m + 1) y
-  rw [H_succ_trivial _ m ((Pair.res Q (⊥ : Subgroup H).subtype continuous_subtype_val).hom.H (m + 1) y),
+  rw [H_succ_trivial _ m ((Pair.res Q (⊥ : Subgroup H).subtype continuous_subtypeVal).hom.H (m + 1) y),
     map_zero, Subgroup.index_bot] at h
   exact h.symm
 
@@ -239,8 +239,8 @@ theorem finiteLevel_holds : FiniteLevelStatement.{u} := by
   obtain ⟨N, hN, hNo, hlev⟩ := FiniteLevelCohomology.exists_level M n x
   refine ⟨⟨N, hN, hNo, hlev⟩, fun hn => ?_⟩
   obtain ⟨y, hy⟩ := hlev _ _ (InflationRestrictionInvariants.invariants_isInvRep M N)
-  haveI : DiscreteTopology (G ⧸ N) := QuotientGroup.discreteTopology hNo
-  haveI : Finite (G ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
+  have : DiscreteTopology (G ⧸ N) := QuotientGroup.discreteTopology hNo
+  have : Finite (G ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
   refine ⟨Nat.card (G ⧸ N), Nat.card_pos, ?_⟩
   rw [← hy, ← map_nsmul, FiniteLevelCohomology.torsion_finite _ m y, map_zero]

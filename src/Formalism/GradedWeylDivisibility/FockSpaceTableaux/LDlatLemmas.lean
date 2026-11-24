@@ -120,7 +120,7 @@ lemma ldlat_linInd_field {F K : Type*} [Field F] [Field K] [Algebra F K] {σ ι 
 lemma ldlat_linInd_base {R K : Type*} [CommRing R] [IsDomain R] [Field K] [Algebra R K]
     (hinj : Function.Injective (algebraMap R K)) {σ ι : Type*} {b : ι → MvPolynomial σ R}
     (hb : LinearIndependent R b) : LinearIndependent K (fun i => map (algebraMap R K) (b i)) := by
-  letI : Algebra (FractionRing R) K := (IsFractionRing.lift hinj).toAlgebra
+  let : Algebra (FractionRing R) K := (IsFractionRing.lift hinj).toAlgebra
   have h1 : LinearIndependent R (fun i => map (algebraMap R (FractionRing R)) (b i)) := by
     have := hb.map' (mapAlgHom (Algebra.ofId R (FractionRing R))).toLinearMap (by
       rw [LinearMap.ker_eq_bot]

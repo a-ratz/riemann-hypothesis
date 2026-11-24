@@ -535,8 +535,8 @@ theorem rank_of_lattice {M : Type} [AddCommGroup M] {g : ℕ} (P : M →+ (Fin g
     (hd : DiscreteTopology P.range) (hs : Submodule.span ℝ (Set.range P) = ⊤) :
     finrank ℤ M = 2 * g := by
   let L : Submodule ℤ (Fin g → ℂ) := P.range.toIntSubmodule
-  haveI : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨hs⟩
+  have : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨hs⟩
   have h := ZLattice.rank ℝ L
   have e : M ≃ₗ[ℤ] L := (AddMonoidHom.ofInjective hi).toIntLinearEquiv
   rw [e.finrank_eq, h, Module.finrank_pi_fintype]
@@ -578,8 +578,8 @@ open GlobalTheory.TwoLattices in
 theorem GlobalTheory.datum_commensurable_period :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D D' : Datum H) (r : ℕ) (ξ : E) (Gm : Matrix (Fin r) (Fin r) E) (φ : D.La →ₗ[𝓞 E] (Fin r → E)) (φ' : D'.La →ₗ[𝓞 E] (Fin r → E)) (g : ℕ) (ty : Fin g → (E →+* ℂ)), FD.cc ξ = -ξ → (Function.Injective φ ∧ Submodule.span E (Set.range φ) = ⊤ ∧ (∀ a b, FD.cc (Gm a b) = Gm b a) ∧ Gm.det ≠ 0 ∧ ∀ x y, ((D.EF x y : ℤ) : ℚ) = Algebra.trace ℚ E (ξ * FD.herm Gm (φ x) (φ y))) → (Function.Injective φ' ∧ Submodule.span E (Set.range φ') = ⊤ ∧ (∀ a b, FD.cc (Gm a b) = Gm b a) ∧ Gm.det ≠ 0 ∧ ∀ x y, ((D'.EF x y : ℤ) : ℚ) = Algebra.trace ℚ E (ξ * FD.herm Gm (φ' x) (φ' y))) → ∀ P, IsPeriod D ty P → ∃ (N : ℕ) (j : D.La →ₗ[𝓞 E] D'.La) (j' : D'.La →ₗ[𝓞 E] D.La) (P' : D'.La →+ (Fin g → ℂ)), (0 < N ∧ (∀ a, j' (j a) = (N ^ 2) • a) ∧ (∀ a, j (j' a) = (N ^ 2) • a) ∧ (∀ a b, D'.EF (j a) (j b) = (N : ℤ) ^ 2 * D.EF a b) ∧ (∀ a b, D.EF (j' a) (j' b) = (N : ℤ) ^ 2 * D'.EF a b) ∧ Nat.card (D'.La ⧸ LinearMap.range j) = N ^ (2 * g)) ∧ IsPeriod D' ty P' ∧ (∀ a, P' (j a) = (N : ℂ) • P a) ∧ ∀ a, P (j' a) = (N : ℂ) • P' a := by
   intro E _ _ _ H D D' r ξ Gm φ φ' g ty _ ⟨hi, hs, _, _, hE⟩ ⟨hi', hs', _, _, hE'⟩ P ⟨hPl, hPi, hPd, hPs, Hm, hH, hpos, hIm⟩
-  haveI := D.fin
-  haveI := D'.fin
+  have := D.fin
+  have := D'.fin
   obtain ⟨N₁, hN₁, h₁⟩ := exists_mul_le φ φ' hs'
   obtain ⟨N₂, hN₂, h₂⟩ := exists_mul_le φ' φ hs
   set N := N₁ * N₂ with hNdef
@@ -621,7 +621,7 @@ theorem GlobalTheory.datum_commensurable_period :
       obtain ⟨a, ha⟩ := x.2
       exact ⟨j' a, by rw [p₂, ha]⟩⟩
     refine DiscreteTopology.of_continuous_injective (f := f) ?_ ?_
-    · exact Continuous.subtype_mk (continuous_subtype_val.const_smul (N : ℂ)) _
+    · exact Continuous.subtype_mk (continuous_subtypeVal.const_smul (N : ℂ)) _
     · intro x y h
       exact Subtype.ext (smul_right_injective _ hNC (congrArg Subtype.val h))
   have P's : Submodule.span ℝ (Set.range P') = ⊤ := by
@@ -643,10 +643,10 @@ theorem GlobalTheory.datum_commensurable_period :
       rw [hP', hP', e, hermForm_real_smul, Complex.im_ofReal_mul, hIm, f₂]
       push_cast
       field_simp
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) _
-  haveI : Module.Finite ℤ D'.La := Module.Finite.trans (𝓞 E) _
-  haveI : Module.IsTorsionFree ℤ D.La := hPi.moduleIsTorsionFree P (fun c x => map_zsmul P c x)
-  haveI : Module.IsTorsionFree ℤ D'.La := P'i.moduleIsTorsionFree P' (fun c x => map_zsmul P' c x)
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) _
+  have : Module.Finite ℤ D'.La := Module.Finite.trans (𝓞 E) _
+  have : Module.IsTorsionFree ℤ D.La := hPi.moduleIsTorsionFree P (fun c x => map_zsmul P c x)
+  have : Module.IsTorsionFree ℤ D'.La := P'i.moduleIsTorsionFree P' (fun c x => map_zsmul P' c x)
   refine ⟨N, j, j', P', ⟨hN, c₁, c₂, f₁, f₂, ?_⟩, hper, p₁, p₂⟩
   exact index_similitude D.EF D'.EF D.unimod D'.unimod j.toAddMonoidHom ji (2 * g) N
     (rank_of_lattice P hPi hPd hPs) (rank_of_lattice P' P'i P'd P's) f₁
@@ -1391,7 +1391,7 @@ theorem exists_pkgLaws : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.
   obtain ⟨dict, hd⟩ := GlobalTheory.T.exists_dictionary_by_marking_rule D H Dw l Xo c σ V r C hC
   obtain ⟨mu, hval, hmul, hnorm, hrat, hcont⟩ := GlobalTheory.T.exists_unitaryAdelicChar_of_heckeChar D V χ hχ hχF
   have hU := GlobalTheory.FrameUnif.isUnf_built hS _ H Dw l Xo c σ C.g C.e C.F r C.M un hC.good hC.base hneg hun
-  haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   refine ⟨un, dict, mu, hd, hun, ?_⟩
   refine
     { unf := (Formalism.L2.PjFree.isUnf_ofPj (C.unf un)).1 hU

@@ -114,11 +114,11 @@ private theorem two_pow_mul_factorial_sq_le_pow_two_mul (m : ℕ) (hm : 2 ≤ m)
 theorem two_pow_le_host (H : Host E) : 2 ^ Module.finrank ℚ E ≤ (discr E).natAbs := by
   let F := maximalRealSubfield E
   have hdiff : differentIdeal (𝓞 F) (𝓞 E) = ⊤ := by
-    letI := FractionRing.liftAlgebra (𝓞 F) (FractionRing (𝓞 E))
-    haveI := H.unram
+    let := FractionRing.liftAlgebra (𝓞 F) (FractionRing (𝓞 E))
+    have := H.unram
     by_contra hne
     obtain ⟨P, hP, hle⟩ := Ideal.exists_le_maximal _ hne
-    haveI := hP.isPrime
+    have := hP.isPrime
     have hdvd : P ∣ differentIdeal (𝓞 F) (𝓞 E) := Ideal.dvd_iff_le.mpr hle
     have hun : Algebra.IsUnramifiedAt (𝓞 F) P :=
       Algebra.FormallyUnramified.comp (𝓞 F) (𝓞 E) (Localization.AtPrime P)

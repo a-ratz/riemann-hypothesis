@@ -108,7 +108,7 @@ theorem periodic_strip_shift_nonneg (c : ℝ) (f : ℂ → ℂ) (m : ℤ)
     refine hcont.comp (by fun_prop) ?_
     intro x hx
     rw [Set.uIcc_of_le h12] at hx
-    simp only [Set.mem_setOf_eq, ofReal_re]
+    simp only [Set.mem_ofPred_eq, ofReal_re]
     linarith [hx.2]
   have hVim : ∀ x : ℝ, x < c → 0 ≤ (∫ y : ℝ in (0:ℝ)..(2 * Real.pi), f (x + y * I)).im := by
     intro x hx
@@ -197,7 +197,7 @@ theorem monodromy_dotProduct_nonneg : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : 
     · intro i
       by_cases hi : i = j
       · subst hi
-        simp only [u, Function.update_self, hjlt, if_true]
+        simp only [u, Function.update_self, hjlt, ite_true]
         linarith
       · simp only [u, Function.update_of_ne hi, s₀]
         split_ifs with h
@@ -207,7 +207,7 @@ theorem monodromy_dotProduct_nonneg : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : 
       intro i
       by_cases hi : i = j
       · subst hi
-        simp only [logExp, u, Function.update_self, hjlt, if_true, Complex.norm_exp]
+        simp only [logExp, u, Function.update_self, hjlt, ite_true, Complex.norm_exp]
         calc Real.exp t.re < Real.exp (Real.log ρ₁) := Real.exp_lt_exp.2 ht
           _ = ρ₁ := Real.exp_log hρ0
       · simp only [logExp, u, Function.update_of_ne hi, s₀]
@@ -286,9 +286,9 @@ theorem mem_logDom_of_mem_ball {n a : ℕ} {ρ : ℝ} (hρ1 : ρ ≤ 1) (s : Fin
   have hz := mem_ball_zero_iff.1 hs
   have hk' := (norm_le_pi_norm (logExp a s) k).trans_lt hz
   split_ifs with hk
-  · simp only [logExp, hk, if_true, Complex.norm_exp] at hk'
+  · simp only [logExp, hk, ite_true, Complex.norm_exp] at hk'
     exact Real.exp_lt_one_iff.mp (lt_of_lt_of_le hk' hρ1)
-  · simp only [logExp, hk, if_false] at hk'
+  · simp only [logExp, hk, ite_false] at hk'
     exact lt_of_lt_of_le hk' hρ1
 
 theorem logExp_shift {n a : ℕ} (s : Fin n → ℂ) (k : Fin n) (hk : (k : ℕ) < a) (m : ℤ) :
@@ -296,7 +296,7 @@ theorem logExp_shift {n a : ℕ} (s : Fin n → ℂ) (k : Fin n) (hk : (k : ℕ)
   funext j
   by_cases hj : j = k
   · subst hj
-    simp only [logExp, hk, if_true, Pi.add_apply, Pi.single_eq_same]
+    simp only [logExp, hk, ite_true, Pi.add_apply, Pi.single_eq_same]
     rw [Complex.exp_add, Complex.exp_int_mul_two_pi_mul_I, mul_one]
   · simp [logExp, Pi.single_eq_of_ne hj]
 
@@ -358,7 +358,7 @@ theorem key (hρ1 : ρ ≤ 1)
     rw [h1]
     have hs2 : logExp a s'' ∈ Metric.ball (0 : Fin n → ℂ) ρ := he'' ▸ hs
     by_cases hja : (j : ℕ) < a
-    · simp only [logExp, hja, if_true] at hej
+    · simp only [logExp, hja, ite_true] at hej
       obtain ⟨m, hm⟩ := Complex.exp_eq_exp_iff_exists_int.1 hej.symm
       have e : s' = s'' + Pi.single j ((m : ℂ) * (2 * Real.pi * Complex.I)) := by
         funext k
@@ -366,7 +366,7 @@ theorem key (hρ1 : ρ ≤ 1)
         · subst hkj; simp [hs'', hm]
         · simp [hs'', Function.update_of_ne hkj, Pi.single_eq_of_ne hkj]
       rw [e, inv_int hρ1 hinv s'' hs2 j hja m]
-    · simp only [logExp, hja, if_false] at hej
+    · simp only [logExp, hja, ite_false] at hej
       congr 1
       rw [hs'', hej, Function.update_eq_self]
 
@@ -395,7 +395,7 @@ theorem logExp_logSecAt (z₀ z : Fin n → ℂ) (hz₀ : ∀ k : Fin n, (k : �
     (hz : ∀ k : Fin n, (k : ℕ) < a → z k ≠ 0) : logExp a (logSecAt a z₀ z) = z := by
   funext k
   by_cases hk : (k : ℕ) < a
-  · simp only [logExp, logSecAt, hk, if_true]
+  · simp only [logExp, logSecAt, hk, ite_true]
     rw [Complex.exp_add, Complex.exp_log (hz₀ k hk), Complex.exp_log (div_ne_zero (hz k hk) (hz₀ k hk))]
     field_simp [hz₀ k hk]
   · simp [logExp, logSecAt, hk]
@@ -406,7 +406,7 @@ theorem differentiableAt_logSecAt (z₀ : Fin n → ℂ) (hz₀ : ∀ k : Fin n,
   intro k
   have hpk : DifferentiableAt ℂ (fun z : Fin n → ℂ => z k) z₀ := differentiableAt_apply k z₀
   by_cases hk : (k : ℕ) < a
-  · simp only [logSecAt, hk, if_true]
+  · simp only [logSecAt, hk, ite_true]
     refine (differentiableAt_const _).add ?_
     have hq : DifferentiableAt ℂ (fun z : Fin n → ℂ => z k / z₀ k) z₀ := by
       simpa [div_eq_mul_inv] using hpk.mul_const (z₀ k)⁻¹
@@ -448,7 +448,7 @@ theorem descent : ∀ (n a : ℕ) (ρ : ℝ) (h : (Fin n → ℂ) → ℂ), 0 < 
     exact (hcomp.congr_of_eventuallyEq hEq).differentiableWithinAt
   · intro s _ hs
     have hn : ∀ k : Fin n, (k : ℕ) < a → logExp a s k ≠ 0 := fun k hk => by
-      simp only [logExp, hk, if_true]; exact Complex.exp_ne_zero _
+      simp only [logExp, hk, ite_true]; exact Complex.exp_ne_zero _
     refine key hρ1 hinv _ _ hs ?_
     rw [logExp_logSec _ hn]
 
@@ -605,7 +605,7 @@ theorem holomorphic_extension_of_exp_two_pi_I_bound :
         rw [hG'eq z h2] at h1
         exact mul_ne_zero (pow_ne_zero _ h2) (Complex.exp_ne_zero _) h1
       exact hF.exists.elim fun _ h => h
-    obtain ⟨k, u, hu, hu0, hGu⟩ := (ha.exists_eventuallyEq_pow_smul_nonzero_iff).2 hnz
+    obtain ⟨k, u, hu, hu0, hGu⟩ := (ha.exists_eventuallyEq_pow_smul_ne_zero_iff).2 hnz
     have hpos : 0 < ‖u 0‖ := norm_pos_iff.2 hu0
     have huc : ContinuousAt u 0 := hu.continuousAt
     have hup : ∀ᶠ z in 𝓝 (0:ℂ), ‖u z‖ < ‖u 0‖ + 1 :=
@@ -791,7 +791,7 @@ theorem locally_bounded : (∀ (H : ℂ → ℂ) (r C : ℝ) (N : ℕ), 0 < r �
   set K := closedBall z₀ r ∩ {ζ : Fin n → ℂ | ∀ k : Fin n, (k : ℕ) < a → z₀ k = 0 → ‖ζ k‖ = r}
     with hK
   have hKc : IsCompact K := (isCompact_closedBall z₀ r).inter_right (by
-    simp only [setOf_forall]
+    simp only [ofPred_forall]
     exact isClosed_iInter fun k => isClosed_iInter fun _ => isClosed_iInter fun _ =>
       isClosed_eq (continuous_norm.comp (continuous_apply k)) continuous_const)
   have hKU : K ⊆ {z | z ∈ Metric.ball (0 : Fin n → ℂ) ρ ∧ ∀ k : Fin n, (k : ℕ) < a → z k ≠ 0} := by
@@ -840,8 +840,8 @@ theorem locally_bounded : (∀ (H : ℂ → ℂ) (r C : ℝ) (N : ℕ), 0 < r �
   let w : ℂ → Fin n → ℂ := fun s j => if z j = 0 then s else z j
   have hwc : Continuous w := continuous_pi fun j => by
     by_cases h : z j = 0
-    · simp only [w, h, if_true]; exact continuous_id
-    · simp only [w, h, if_false]; exact continuous_const
+    · simp only [w, h, ite_true]; exact continuous_id
+    · simp only [w, h, ite_false]; exact continuous_const
   have hw0 : w 0 = z := funext fun j => by by_cases h : z j = 0 <;> simp [w, h]
   have hΦz : ContinuousAt Φ z := (hΦ.differentiableAt (hUo.mem_nhds hzU)).continuousAt
   have hT : Tendsto (fun s => Φ (w s)) (𝓝[≠] (0 : ℂ)) (𝓝 (Φ z)) := by
@@ -930,8 +930,8 @@ theorem cauchy_slice_removable_extension :
   rw [hcongr] at hcauchy
   rw [hcauchy]
   by_cases h0 : z k = 0
-  · rw [if_pos h0, h0, hg_def, Function.update_self]
-  · rw [if_neg h0, hg_def, Function.update_of_ne h0, hs_def]
+  · rw [ite_eq_left h0, h0, hg_def, Function.update_self]
+  · rw [ite_eq_right h0, hg_def, Function.update_of_ne h0, hs_def]
     simp only [Function.update_eq_self]
 
 end GlobalTheory
@@ -1272,7 +1272,7 @@ theorem periodVec_extends : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ :
       simp only [Pi.add_apply, add_mul, add_div, Finset.sum_add_distrib]
       congr 1
       simp only [Pi.single_apply, (Fin.castLE_injective ha).eq_iff, ite_mul, zero_mul, ite_div, zero_div,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       field_simp
     rw [hsum]; ring
   obtain ⟨H, hHd, hHe⟩ := _root_.GlobalTheory.LogDescent.descent n a ρ₁ h hρ0 hρ1 hdh hinv
@@ -1291,7 +1291,7 @@ theorem periodVec_extends : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ :
       · exact Complex.exp_log (hz0 j hj)
       · rfl
     have hsD : s ∈ logDom n a := by
-      simp only [logDom, Set.mem_setOf_eq]
+      simp only [logDom, Set.mem_ofPred_eq]
       intro j; simp only [s]; split_ifs with hj
       · rw [Complex.log_re]
         exact Real.log_neg (norm_pos_iff.2 (hz0 j hj)) (lt_of_lt_of_le (hzj j) hρ1)
@@ -1307,14 +1307,14 @@ theorem periodVec_extends : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ :
         have : ¬ (j : ℕ) < a := by
           intro hlt; apply hj; exact ⟨⟨j, hlt⟩, by simp, Fin.ext rfl⟩
         simp [m', this]
-      · intro k _; simp [m', Fin.coe_castLE, k.isLt]
+      · intro k _; simp [m', Fin.val_castLE, k.isLt]
     have hexp : ∀ k : Fin a, (z (Fin.castLE ha k)) ^ (m k).toNat
         = Complex.exp (s (Fin.castLE ha k) * ((m k : ℤ) : ℂ)) := by
       intro k
       have hk : ((Fin.castLE ha k : Fin n) : ℕ) < a := by simp
-      rw [mul_comm, ← hm0 k, Complex.exp_nat_mul]
+      rw [mul_comm, ← hm0 k, Complex.exp_natCast_mul]
       congr 1
-      simp only [s, if_pos hk]; exact (Complex.exp_log (hz0 _ hk)).symm
+      simp only [s, ite_eq_left hk]; exact (Complex.exp_log (hz0 _ hk)).symm
     calc ‖Complex.exp (2 * Real.pi * Complex.I * H z)‖ * ∏ k, ‖z k‖ ^ m' k
         = ‖Complex.exp (2 * Real.pi * Complex.I * h s) * ∏ k, z k ^ m' k‖ := by
           rw [norm_mul, norm_prod, hHz]; simp only [norm_pow]
@@ -1435,7 +1435,7 @@ theorem mem_logDom_add_single {n a : ℕ} {s : Fin n → ℂ} (hs : s ∈ logDom
   have := hs k
   by_cases hk : k = j
   · subst hk
-    simp only [if_pos hj] at this ⊢
+    simp only [ite_eq_left hj] at this ⊢
     simpa using this
   · simpa [Pi.single_apply, hk] using this
 
@@ -1468,13 +1468,13 @@ theorem periodMatrix_extension : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) 
     refine ⟨fun k => if (k : ℕ) < a then ((Real.log (ρ₁ / 2) : ℝ) : ℂ) else 0, ?_, ?_⟩
     · intro k
       by_cases hk : (k : ℕ) < a
-      · simp only [if_pos hk, Complex.ofReal_re]
+      · simp only [ite_eq_left hk, Complex.ofReal_re]
         exact Real.log_neg (by positivity) (by linarith)
       · simp [hk]
     · rw [mem_ball_zero_iff, pi_norm_lt_iff hρ]
       intro k
       by_cases hk : (k : ℕ) < a
-      · simp only [logExp, if_pos hk]
+      · simp only [logExp, ite_eq_left hk]
         rw [← Complex.ofReal_exp, Real.exp_log (by positivity), Complex.norm_real, Real.norm_eq_abs,
           abs_of_pos (by positivity)]
         linarith
@@ -1508,8 +1508,8 @@ theorem periodMatrix_extension : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) 
     fun i j => ?_, fun z _ => ?_, fun s hs hsB => ?_⟩
   · simp only [Matrix.of_apply]
     by_cases hij : i = j
-    · simp only [if_pos hij]; exact hFd _
-    · simp only [if_neg hij]
+    · simp only [ite_eq_left hij]; exact hFd _
+    · simp only [ite_eq_right hij]
       have h1 := hFd (e i + e j)
       have h2 := hFd (e i)
       have h3 := hFd (e j)
@@ -1518,7 +1518,7 @@ theorem periodMatrix_extension : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) 
     simp only [Matrix.of_apply]
     by_cases hij : i = j
     · subst hij; rfl
-    · rw [if_neg (Ne.symm hij), if_neg hij, add_comm (e j)]
+    · rw [ite_eq_right (Ne.symm hij), ite_eq_right hij, add_comm (e j)]
       ring
   · refine Matrix.ext fun i j => ?_
     beta_reduce
@@ -1534,11 +1534,11 @@ theorem periodMatrix_extension : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) 
       fun l => Finset.sum_congr rfl fun k _ => by ring
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       have hee : F (e i) (logExp a s) = F (Pi.single i 1) (logExp a s) := rfl
       rw [hee, ← hi, hsum1 i]
       ring
-    · simp only [if_neg hij]
+    · simp only [ite_eq_right hij]
       have hp := hFe (e i + e j) s hs hsB
       simp only [e, cast_single_add, quad_add] at hp
       have hsi : (τ s) j i = (τ s) i j := ((hsym s hs hsB).1.apply i j)

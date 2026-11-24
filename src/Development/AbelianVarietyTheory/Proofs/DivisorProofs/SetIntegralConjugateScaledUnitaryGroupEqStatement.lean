@@ -83,9 +83,9 @@ theorem setIntegral_conjU_eq : ∀ {D : D7} (V : HSp D) {J : Matrix (Fin V.rank)
   have e1 : ∫ x in conjU V c h '' fd, f x ∂(ν.map (conjU V c h)) = ∫ u in fd, f (conjU V c h u) ∂ν := by
     rw [hme.setIntegral_map, Set.preimage_image_eq _ hme.injective]
   rw [← e1]
-  haveI := GlobalTheory.UnitaryVol.countable_ratU D.sp.cm.sig J
-  haveI := hH
-  haveI : SMulInvariantMeasure (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ratU D.sp.cm.sig J) (UB J) (ν.map (conjU V c h)) :=
+  have := GlobalTheory.UnitaryVol.countable_ratU D.sp.cm.sig J
+  have := hH
+  have : SMulInvariantMeasure (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ratU D.sp.cm.sig J) (UB J) (ν.map (conjU V c h)) :=
     ⟨fun γ A _ => measure_preimage_mul (ν.map (conjU V c h)) γ.1 A⟩
   exact hfd'.setIntegral_eq hdom fun γ x => hf γ.1 γ.2 x
 

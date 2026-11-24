@@ -100,7 +100,7 @@ theorem _root_.GlobalTheory.DoubledFlag.sum_eq_dimN_and_layerProd_eq : ∀ (n a 
       · simp [h, h.ne', not_lt.2 h.le]; ring
     rw [hJ, Finset.sum_mul_sum]
     rw [Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun k _ => hsplit i k]
-    simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_filter, Finset.mem_univ, if_true]
+    simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_filter, Finset.mem_univ, ite_true]
     rw [Finset.sum_comm (f := fun i k => if k < i then j k * j i else 0)]
     ring
   refine ⟨?_, ?_⟩
@@ -134,7 +134,7 @@ theorem _root_.GlobalTheory.DoubledFlag.sum_eq_dimN_and_layerProd_eq : ∀ (n a 
       have hi := i.isLt
       have e : ∀ k : Fin a, (j k : ℝ) = ν ((k : ℕ) + 1) - ν k := fun k => by
         rw [hν k]; push_cast; ring
-      simp only [e, Finset.sum_filter, Fin.lt_iff_val_lt_val]
+      simp only [e, Finset.sum_filter, Fin.lt_def]
       rw [Fin.sum_univ_eq_sum_range (fun x => if (i : ℕ) < x then (ν (x + 1) : ℝ) - ν x else 0) a,
         ← Finset.sum_filter,
         show (range a).filter (fun x => (i : ℕ) < x) = Ico ((i : ℕ) + 1) a by
@@ -144,7 +144,7 @@ theorem _root_.GlobalTheory.DoubledFlag.sum_eq_dimN_and_layerProd_eq : ∀ (n a 
       ring
     simp only [hc]
     unfold _root_.GlobalTheory.Count.layerProd
-    simp only [id, ← Real.exp_nat_mul, ← Real.exp_sub, ← Real.exp_add, ← Real.exp_sum, ← Real.exp_neg,
+    simp only [id, ← Real.exp_natCast_mul, ← Real.exp_sub, ← Real.exp_add, ← Real.exp_sum, ← Real.exp_neg,
       pow_one, mul_one]
     rw [Real.exp_eq_exp, ← hJ, _root_.GlobalTheory.DoubledFlag.sum_range_double, eq_neg_iff_add_eq_zero, ← add_assoc,
       ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,

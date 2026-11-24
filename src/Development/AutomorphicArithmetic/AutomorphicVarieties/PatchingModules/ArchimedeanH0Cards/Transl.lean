@@ -267,9 +267,9 @@ theorem urLift {l : ℕ} {J : Subgroup Γ} (H : UrAx l J) (M : FRep A Γ) (hl : 
     (hJ : ∀ g ∈ J, ∀ m, M.ρ g m = m) (S : Submodule A M.X) (hS : ∀ g, S ≤ S.comap (M.ρ g)) (x : Γ → M.X)
     (hx : Continuous x) (hd : ∀ s, d1 M.ρ x s ∈ S) (h0 : ∀ g ∈ J, x g ∈ S) :
     ∃ b ∈ Z1 M.ρ, (∀ g ∈ J, b g = 0) ∧ ∀ g, x g - b g ∈ S := by
-  letI : TopologicalSpace (M.X ⧸ S) := ⊥
-  haveI : DiscreteTopology (M.X ⧸ S) := ⟨rfl⟩
-  haveI : Finite (M.X ⧸ S) := Finite.of_surjective _ S.mkQ_surjective
+  let : TopologicalSpace (M.X ⧸ S) := ⊥
+  have : DiscreteTopology (M.X ⧸ S) := ⟨rfl⟩
+  have : Finite (M.X ⧸ S) := Finite.of_surjective _ S.mkQ_surjective
   let M' : FRep A Γ :=
     { X := M.X ⧸ S
       ρ := Representation.quotient M.ρ S hS
@@ -543,13 +543,13 @@ theorem UpperTheory.V.Pa.B2.transl :
     simpa only [MonoidHom.one_apply, map_one, one_smul] using hadE.1 g Z
   have hcE : ∀ Z : Ev x.A X n x.a, (repE G.c Z : Matrix (Fin n) (Fin n) X) = -(Z : Matrix (Fin n) (Fin n) X)ᵀ :=
     fun Z => by simpa only [MonoidHom.one_apply, map_one, one_smul] using hadE.2 Z
-  have hp : Continuous h.p₀ := (h.cont.comp continuous_subtype_val).subtype_mk _
+  have hp : Continuous h.p₀ := (h.cont.comp continuous_subtypeVal).subtype_mk _
   have hφ : ∀ v g, h.p₀ (G.φ v g) = G0.φ v g := fun v g => Subtype.ext (h.φ v g)
   have hφu : ∀ v g, h.p₀ (G.φu v g) = G0.φu v g := fun v g => Subtype.ext (h.φu v g)
   obtain ⟨r1, -, -, -, r5⟩ := rho1 l G0.frame n x k X
-  letI : TopologicalSpace (W2 n x.A X k.g x.a) := ⊥
-  haveI : DiscreteTopology (W2 n x.A X k.g x.a) := ⟨rfl⟩
-  haveI : Finite (DD X k.g) := Finite.of_equiv _ DD.equiv.symm
+  let : TopologicalSpace (W2 n x.A X k.g x.a) := ⊥
+  have : DiscreteTopology (W2 n x.A X k.g x.a) := ⟨rfl⟩
+  have : Finite (DD X k.g) := Finite.of_equiv _ DD.equiv.symm
   have hcont : ContAction rep := by
     refine cont_rep rep ?_
     filter_upwards [((isLocallyConstant_rho1_of_algebraMap_pow_eq_zero k X m hm).comp_continuous hp).eventually_eq 1,
@@ -613,7 +613,7 @@ theorem UpperTheory.V.Pa.B2.transl :
       ∀ g g', b (g * g') = b g + rep (G.φu u g) (b g')) ∧ (∀ g ∈ L.Ju u, b g = 0) ∧
       ∀ g, xs i (G.φu u g) - b g ∈ LinearMap.range (iota k o) := by
     intro i u
-    have cφ : Continuous fun g => (G.φu u g : G.Γ) := continuous_subtype_val.comp (G.φu_cont u)
+    have cφ : Continuous fun g => (G.φu u g : G.Γ) := continuous_subtypeVal.comp (G.φu_cont u)
     refine urLift (hur u) { X := W2 n x.A X k.g x.a, ρ := rep.comp (G.η.ker.subtype.comp (G.φu u))
                             cont := hcont.comp (cφ.prodMap continuous_id) }
       (fun m => by rw [← Nat.cast_smul_eq_nsmul x.A, hA, zero_smul]) (hJ u) (LinearMap.range (iota k o)) ?_
@@ -663,7 +663,7 @@ theorem UpperTheory.V.Pa.B2.transl :
       exact ⟨_, rfl⟩
     refine ⟨fun g => (Ψ g : W2 n x.A X k.g x.a), ⟨fun g => (Ψ g).2, fun a b => ?_, fun g g' => ?_, fun g => ?_,
       ?_, fun v => ?_⟩, fun j γ a b => ?_⟩
-    · exact fun s => (lcΨ.comp_continuous continuous_subtype_val).comp fun Z : W2 n x.A X k.g x.a =>
+    · exact fun s => (lcΨ.comp_continuous continuous_subtypeVal).comp fun Z : W2 n x.A X k.g x.a =>
         Ideal.Quotient.mk _ ((Z : Matrix (Fin n) (Fin n) (DD X k.g)) a b)
     · exact (congrArg Subtype.val (h1.2 g g')).trans (congrArg (_ + ·) (ha g _))
     · simpa only [MonoidHom.one_apply, map_one, one_smul] using
@@ -721,7 +721,7 @@ theorem UpperTheory.V.Pa.B2.transl :
     · exact (map_eq_zero_iff _ (o.kerU u)).trans
         ((map_eq_zero_iff _ (iota_inj k o)).symm.trans (Submodule.mem_bot _).symm)
   · rintro i (v | u)
-    · exact (hcont.comp ((continuous_subtype_val.comp (G.φ_cont v)).prodMk continuous_const)).sub continuous_const
+    · exact (hcont.comp ((continuous_subtypeVal.comp (G.φ_cont v)).prodMk continuous_const)).sub continuous_const
     · exact (hb1 i u).1
   · rintro i (v | u)
     · intro (g : L.Gv v) (g' : L.Gv v)

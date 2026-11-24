@@ -119,7 +119,7 @@ lemma aF_sum {M : Type*} [AddCommMonoid M] {n : ℕ} (S : Finset (Finset (Fin n)
     (h : (Fin n → ℤ) → ℂ → M) (h0 : ∀ ν, h ν 0 = 0) : (aF S co).sum h = ∑ I ∈ S, h (eI I) (co I) := by
   unfold aF
   rw [Finsupp.sum_mapDomain_index_inj eI_inj, Finsupp.onFinset_sum _ (fun a => h0 _)]
-  exact Finset.sum_congr rfl fun I hI => by rw [if_pos hI]
+  exact Finset.sum_congr rfl fun I hI => by rw [ite_eq_left hI]
 
 lemma mem_supp_aF {n : ℕ} (S : Finset (Finset (Fin n))) (co : Finset (Fin n) → ℂ) (ν : Fin n → ℤ)
     (hν : ν ∈ (aF S co).support) : ∃ I ∈ S, ν = eI I := by
@@ -161,7 +161,7 @@ lemma Ew_csmul (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (c 
   have hr : ¬ (P.r + 1 ≤ P.r) := by omega
   have hRR : p.RR (fun g => c • F g) (P.r + 1) [] γ γ = ((‖c‖ ^ 2 : ℝ) : ℂ) * p.RR F (P.r + 1) [] γ γ := by
     by_cases h : D.IsLocPt γ (P.r + 1)
-    · simp only [KB.Pl.RR, D.RRplace, h, and_self, hr, dite_true, dite_false, if_true]
+    · simp only [KB.Pl.RR, D.RRplace, h, and_self, hr, dite_true, dite_false, ite_true]
       rw [hV]
       unfold B.hsInner
       rw [hv, inner_smul_left, inner_smul_right, ← mul_assoc, Complex.conj_mul']

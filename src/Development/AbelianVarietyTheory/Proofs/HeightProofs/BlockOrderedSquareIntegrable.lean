@@ -127,7 +127,7 @@ theorem isProperMap_covU {e : Ix p q ≃ Fin n} {ε : Fin n → Bool} (h : Block
     have : z ≠ 0 := by rintro rfl; simp at hz
     exact ⟨Units.mk0 z this, rfl⟩
   have hK' : IsCompact ((fun g : Formalism.REAL.UJ ε => (Units.map (reixHom e.symm) g.1 : GL (Ix p q) ℂ)) '' K) :=
-    hK.image (((continuous_reixHom e.symm).units_map _).comp continuous_subtype_val)
+    hK.image (((continuous_reixHom e.symm).units_map _).comp continuous_subtypeVal)
   refine ((isClosedEmbedding_emb T).isCompact_preimage (hK'.prod hS)).of_isClosed_subset
     (hK.isClosed.preimage (continuous_covU h T)) fun x hx => ⟨⟨covU h T x, hx, Units.ext ?_⟩, ?_⟩
   · change Matrix.reindex e.symm e.symm (Matrix.reindex e e ((T.cov x : GL (Ix p q) ℂ) : Mat p q)) = _
@@ -148,7 +148,7 @@ theorem isSqIntOn_of_factors : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin n) (ε : Fi
   have hc1 : Continuous fun g => (inner ℂ w (R.U.π g v) : ℂ) := continuous_const.inner (R.U.cont v)
   have hq := (isProperMap_covU h T).isClosedMap.isQuotientMap (continuous_covU h T) (surjective_covU h T)
   have hc2 : Continuous (coefOn (ε := ε) σ v w) := hq.continuous_iff.2 (hc ▸ hc1)
-  haveI := isHaarMeasure_map_covU h T
+  have := isHaarMeasure_map_covU h T
   rw [Measure.isMulLeftInvariant_eq_smul (Formalism.REAL.muG ε) (T.haar.map (covU h T))]
   refine MemLp.smul_measure ?_ ENNReal.coe_ne_top
   rw [memLp_map_measure_iff hc2.aestronglyMeasurable (continuous_covU h T).measurable.aemeasurable, hc,

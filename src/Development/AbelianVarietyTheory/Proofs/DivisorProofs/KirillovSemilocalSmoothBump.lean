@@ -176,7 +176,7 @@ theorem iwasawa_lastRow : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     exact eq_inv_of_mul_eq_one_left h1
   have hrow : ∀ l, Y (Fin.last m) l v = r v * kv v (Fin.last m) l := fun l => hℓ v l
   have hu := congrFun (congrFun (mem_unitaryGroup_iff.mp (hkv v)) (Fin.last m)) j
-  simp only [Units.val_mul, Units.coe_map_inv, MonoidHom.coe_coe, hinv]
+  simp only [Units.val_mul, Units.coe_map_inv, MonoidHom.coe_ofClass, hinv]
   rw [← hY]
   show (Y * star K * Matrix.scalar (Fin (m + 1)) ((hρ.unit⁻¹ : (Cinf E)ˣ) : Cinf E)) (Fin.last m) j v = _
   rw [Matrix.scalar_apply, Matrix.mul_diagonal]
@@ -252,15 +252,15 @@ theorem whit_infGL_growth {F : GA E a → ℂ} (hc : Continuous F)
       (C := C * height y ^ N) (f := f y) (by rw [vecMeasure_vecDomain]; exact ENNReal.one_lt_top) (hb y)
     rwa [measureReal_def, vecMeasure_vecDomain, ENNReal.toReal_one, mul_one, ← hwf] at h
   refine ⟨?_, C, N, hbound⟩
-  haveI : IsFiniteMeasure ((vecMeasure E (Pos a)).restrict (vecDomain E (Pos a))) :=
+  have : IsFiniteMeasure ((vecMeasure E (Pos a)).restrict (vecDomain E (Pos a))) :=
     ⟨by rw [Measure.restrict_apply_univ, vecMeasure_vecDomain]; exact ENNReal.one_lt_top⟩
   have hchar : Continuous fun X : Pos a → Ad E => (GroundTheory.Global.adelicChar E (-supSum 0 X) : ℂ) :=
-    continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_supSum 0).neg)
+    continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_supSum 0).neg)
   have hfc : ∀ y, Continuous (f y) := fun y =>
     (hc.comp (continuous_uGL.mul continuous_const)).mul hchar
-  haveI : FirstCountableTopology (MulOpposite (Matrix (Fin a) (Fin a) (Cinf E))) :=
+  have : FirstCountableTopology (MulOpposite (Matrix (Fin a) (Fin a) (Cinf E))) :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin a) (Fin a) (Cinf E))).symm.isInducing.firstCountableTopology
-  haveI : FirstCountableTopology (GL (Fin a) (Cinf E)) :=
+  have : FirstCountableTopology (GL (Fin a) (Cinf E)) :=
     Units.isEmbedding_embedProduct.isInducing.firstCountableTopology
   rw [continuous_iff_continuousAt]
   intro y₀

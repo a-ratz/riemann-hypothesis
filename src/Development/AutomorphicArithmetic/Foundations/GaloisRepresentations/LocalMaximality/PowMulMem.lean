@@ -91,7 +91,7 @@ private lemma pow_mul_mem (h : IsFinCover ℂ K (xv x)) (i i' : Fin (d + 1)) (b 
 
 private lemma gens (h : IsFinCover ℂ K (xv x)) (i : Fin (d + 1)) :
     ∃ G : Finset K, Algebra.adjoin ℂ (G : Set K) = rB ℂ K (xv x) {i} := by
-  haveI := h.smooth i
+  have := h.smooth i
   exact (Subalgebra.fg_iff_finiteType _).mpr inferInstance
 
 private lemma tensor_id (a a' a'' b : K) (ha' : a' ≠ 0) (ha'' : a'' ≠ 0) (N : ℕ) :

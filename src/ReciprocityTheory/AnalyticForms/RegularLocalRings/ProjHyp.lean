@@ -353,14 +353,14 @@ instance isNoetherian_projX {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : Is
 
 theorem isReduced_projX {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
     (hrad : P.IsRadical) : IsReduced (projX P hP) := by
-  haveI : ∀ x : projX P hP, _root_.IsReduced ((projX P hP).presheaf.stalk x) := by
+  have : ∀ x : projX P hP, _root_.IsReduced ((projX P hP).presheaf.stalk x) := by
     intro x
     obtain ⟨p, hp⟩ := chartOpen_cover hP x
     have hU := (chartOpen hP p).2
     let x' : ((chartOpen hP p).1 : Set (projX P hP)) := ⟨x, hp⟩
     show _root_.IsReduced ((projX P hP).presheaf.stalk (x' : projX P hP))
-    letI := TopCat.Presheaf.algebra_section_stalk (projX P hP).presheaf x'
-    haveI := hU.isLocalization_stalk x'
+    let := TopCat.Presheaf.algebra_section_stalk (projX P hP).presheaf x'
+    have := hU.isLocalization_stalk x'
     exact isReduced_localizationPreserves (hU.primeIdealOf x').asIdeal.primeCompl _
       (isReduced_gammaChart hP hrad p)
   exact AlgebraicGeometry.isReduced_of_isReduced_stalk _
@@ -395,7 +395,7 @@ theorem mem_projB_iff {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMult
     (hD : IsMultiHomogIdeal D) (p : (k : K) → ι k) (x : projX P hP) (hx : x ∈ (chartOpen hP p).1) :
     x ∈ projB P D hP ↔
       ∀ f ∈ D, (projX P hP).evaluation _ x hx ((gammaChart hP p).symm (Ideal.Quotient.mk _ f)) = 0 := by
-  letI := segreGraded hP
+  let := segreGraded hP
   have hsec : ∀ f, (gammaChart hP p).symm (Ideal.Quotient.mk _ f) =
       Proj.awayToSection (segreGrading P) (segreW P p) (polyToAway hP p f) := fun f => rfl
   show (Ideal.Quotient.mk (segreIdeal P) '' (segreIdeal D : Set _)) ⊆
@@ -525,7 +525,7 @@ theorem interior_projB {P D : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMul
     · have : θ f = 0 := by rw [← RingHom.mem_ker, hθk]; exact hf
       show θ f ∈ 𝔮
       rw [this]; exact 𝔮.zero_mem
-    · haveI := hJ.1
+    · have := hJ.1
       have hk : RingHom.ker θ ≤ J := hθk ▸ hJ.2
       have hJ' : (J.map θ).IsPrime := Ideal.map_isPrime_of_surjective hθs hk
       have hle : J.map θ ≤ 𝔮 := Ideal.map_le_iff_le_comap.mpr hJM

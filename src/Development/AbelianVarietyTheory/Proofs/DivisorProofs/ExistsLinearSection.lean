@@ -101,7 +101,7 @@ theorem vec_law (hρ : ∀ h x y, inner ℂ (ρ h x) (ρ h y) = inner ℂ x y) {
   rfl
 
 theorem exists_dual [FiniteDimensional ℂ W] (u : W →ₗ[ℂ] ℂ) : ∃ a : W, ∀ w, inner ℂ a w = u w :=
-  haveI := FiniteDimensional.complete ℂ W
+  haveI := FiniteDimensional.completeSpace ℂ W
   ⟨(InnerProductSpace.toDual ℂ W).symm (LinearMap.toContinuousLinearMap u), fun _ => InnerProductSpace.toDual_symm_apply⟩
 
 theorem exists_linear_section {X Y : Type} [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y] (p : X → Y → Prop)

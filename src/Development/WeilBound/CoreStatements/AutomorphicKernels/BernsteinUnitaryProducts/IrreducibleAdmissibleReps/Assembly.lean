@@ -104,7 +104,7 @@ theorem isSmooth_sub {ρ : Representation ℂ G X} (hρ : IsSmooth ρ) (S : Subr
   intro v
   convert hρ (v : X) using 1
   ext g
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   exact Subtype.ext_iff
 
 

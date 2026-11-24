@@ -537,7 +537,7 @@ theorem level_ratio_bound (D : D7) (C0 C1 : ℝ) (hD : StandingNumericalData D C
   have hsm : Real.exp (2 * x) * C0 ^ 2 ≤ (C0 * Real.exp 1) ^ (D.R.k * D.R.f) := by
     rw [mul_pow, mul_comm]
     apply mul_le_mul (pow_le_pow_right₀ hC0 hkf2) _ (Real.exp_pos _).le (by positivity)
-    rw [← Real.exp_nat_mul, mul_one]
+    rw [← Real.exp_natCast_mul, mul_one]
     exact Real.exp_le_exp.2 hx2
   have hmain : Tr D u ^ (D.R.k * D.R.f) ≤ (C1 * (C0 * Real.exp 1) * Tr D u') ^ (D.R.k * D.R.f) := by
     have h1 : Tr D u ^ (D.R.k * D.R.f) * A u ≤ (C1 * (C0 * Real.exp 1) * Tr D u') ^ (D.R.k * D.R.f) * A u := by

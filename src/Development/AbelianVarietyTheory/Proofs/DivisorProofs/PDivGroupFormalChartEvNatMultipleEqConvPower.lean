@@ -79,9 +79,9 @@ theorem ev_nmul : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
     ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d), ∀ (n k : ℕ) (i : Fin d),
       c.ev n (nmul c.μ k i) = PDiv.mulBy O (G.A n) k (c.x n i) := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ G d c n k
-  haveI : IsAdicComplete (Ideal.span {(p : O)}) (G.A n) :=
+  have : IsAdicComplete (Ideal.span {(p : O)}) (G.A n) :=
     GlobalTheory.isAdicComplete_of_finite_projective _ _
-  haveI : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) := isAdicComplete_ring_of_module (O := O) p
+  have : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) := isAdicComplete_ring_of_module (O := O) p
   have hT := (_root_.GlobalTheory.CEval.continuous_eval p O (G.A n) (Fin d) (c.x n) (c.nil n)).2 (c.ev n) (c.isEval n)
   have hsucc : ∀ (k : ℕ) (j : Fin d), nmul c.μ (k + 1) j =
       subst (Sum.elim (nmul c.μ k) fun i => (X i : MvPowerSeries (Fin d) O)) (c.μ j) := by

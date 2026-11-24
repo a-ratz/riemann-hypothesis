@@ -145,7 +145,7 @@ theorem trace_one_tmul [FiniteDimensional F E] (e : E) :
 theorem traceMatrix_base (bs : Module.Basis (Fin d) F E) :
     Algebra.traceMatrix K (Algebra.TensorProduct.basis K bs) =
       (Algebra.traceMatrix F bs).map (algebraMap F K) := by
-  haveI : FiniteDimensional F E := Module.Basis.finiteDimensional_of_finite bs
+  have : FiniteDimensional F E := Module.Basis.finiteDimensional_of_finite bs
   ext i j
   simp only [Algebra.traceMatrix_apply, Algebra.traceForm_apply, Matrix.map_apply,
     Algebra.TensorProduct.basis_apply, Algebra.TensorProduct.tmul_mul_tmul, one_mul, trace_one_tmul]

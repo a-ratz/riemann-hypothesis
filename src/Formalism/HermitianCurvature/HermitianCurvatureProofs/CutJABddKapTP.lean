@@ -124,7 +124,7 @@ theorem typeProj_of (hPE : PRho.PRhoExists) (hGL : PRho.GaugeLines) (hDU : SSn.R
       · have hO : IsOpen {a | PRho.nrmW S.G.k S.G.r (T v).base.z a < 1 / 3} :=
           isOpen_lt hnc.continuous continuous_const
         have hmem : a₀ ∈ {a | PRho.nrmW S.G.k S.G.r (T v).base.z a < 1 / 3} := by
-          simp only [Set.mem_setOf_eq]; linarith [not_lt.1 h]
+          simp only [Set.mem_ofPred_eq]; linarith [not_lt.1 h]
         refine (contDiffAt_const (c := (0 : (Wq (S.pl v) →L[ℂ] Wp (S.pl v)) →L[ℂ] (Wq (S.pl v) →L[ℂ] Wp (S.pl v))))).congr_of_eventuallyEq ?_
         filter_upwards [hO.mem_nhds hmem] with a ha
         simp [kcut_zero (le_of_lt ha)]
@@ -132,7 +132,7 @@ theorem typeProj_of (hPE : PRho.PRhoExists) (hGL : PRho.GaugeLines) (hDU : SSn.R
       intro σ a A B'
       dsimp only
       by_cases h : 0 < PRho.nrmW S.G.k S.G.r (T v).base.z a
-      · rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, kap_hsInner_smul_left,
+      · rw [smul_apply, smul_apply, kap_hsInner_smul_left,
           kap_hsInner_smul_right, Complex.conj_ofReal, hsInner_lmul _ ((hrest a h).2.1 σ)]
       · have h0 : kcut (PRho.nrmW S.G.k S.G.r (T v).base.z a) = 0 := kcut_zero (by linarith [not_lt.1 h])
         simp [h0, B.hsInner, kap_hsVec_zero]
@@ -174,17 +174,17 @@ theorem typeProj_of (hPE : PRho.PRhoExists) (hGL : PRho.GaugeLines) (hDU : SSn.R
         intro Fr hFrm w
         rw [hP1] at hFrm
         exact hGL Cc E Wp Wq S T f χ ν' m₀ top A₀ v e ⟨hB, hFr, hGa, hQQ⟩ hk x.2 hx.2 ρ Fr hFrm w y
-      rw [ContinuousLinearMap.smul_apply, hN, kcut_one (by norm_num), lmul_apply, hscale]
+      rw [smul_apply, hN, kcut_one (by norm_num), lmul_apply, hscale]
       simp only [Complex.ofReal_one, one_smul]
       by_cases hσ : σ = ρ
       · subst hσ
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         ext y
         exact hfix y
-      · rw [if_neg hσ]
+      · rw [ite_eq_right hσ]
         ext y
         have horth := (hrest n0 (by rw [hN0]; norm_num)).2.2.1 σ ρ
-        rw [if_neg hσ] at horth
+        rw [ite_eq_right hσ] at horth
         rw [ContinuousLinearMap.comp_apply, ← hfix y, ← ContinuousLinearMap.comp_apply (Pr σ n0), horth]
         rfl
   ·
@@ -198,7 +198,7 @@ theorem typeProj_of (hPE : PRho.PRhoExists) (hGL : PRho.GaugeLines) (hDU : SSn.R
     refine ⟨fun _ _ => ContinuousLinearMap.id ℂ _, fun σ => contDiff_const, fun σ a A B' => rfl,
       fun σ h _ h' _ a X => rfl, ?_⟩
     intro x _ σ ρ
-    rw [if_pos (hsub σ ρ)]
+    rw [ite_eq_left (hsub σ ρ)]
     rfl
 
 end

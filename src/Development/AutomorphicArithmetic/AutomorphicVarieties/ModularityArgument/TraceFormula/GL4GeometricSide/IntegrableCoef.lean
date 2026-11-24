@@ -96,7 +96,7 @@ private theorem exists_avg [CompactSpace (Un n)] [MeasurableSpace (Un n)] [Borel
 
 theorem avgEx : AvgEx := by
   intro n _ _ ν _ V _ _ σ hσ E T
-  haveI : CompactSpace (Un n) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
+  have : CompactSpace (Un n) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
   have hf := cont_tr E T
   choose p hp using fun v : V => exists_avg ν σ hσ hf v
   have hI := fun v w : V => integrable_coef ν σ hσ hf v w

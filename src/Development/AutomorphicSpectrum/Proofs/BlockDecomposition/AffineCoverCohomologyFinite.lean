@@ -470,11 +470,11 @@ theorem coc_of_VB : Coc V.g := by
       (fun k' => if k = k' then 1 else 0) (fun w => by
         obtain ⟨x, rfl⟩ := exists_e V 0 0 (fun _ : Fin 1 => α) w
         have := V.e_chg 0 0 0 x (fun _ : Fin 1 => α) k
-        simp only [ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
         exact this.symm) v
     have e2 : ∀ k', rs hW (if k = k' then (1 : Γ(X, capO U (fun _ : Fin 1 => α))) else 0) =
         if k = k' then 1 else 0 := fun k' => by split_ifs <;> simp
-    simp only [rs_trans, e2, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true] at key
+    simp only [rs_trans, e2, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at key
     exact key
   · intro α β γ W h₁ h₂ h₃ v k
     refine coc3 V ![α, β, γ] W (le_iInf fun a => ?_) h₁ h₂ h₃ v k
@@ -573,7 +573,7 @@ theorem finite_H_cx : ∀ {O : Type} [CommRing O] [IsNoetherianRing O] {X : Sche
     (K : Cos.{1} O) (V : VB (fun W => ((Scheme.ΓSpecIso (CommRingCat.of O)).inv ≫ q.appLE ⊤ W le_top).hom) U K) (p : ℕ),
     Module.Finite O (K.cx.H p) := by
   intro O _ _ X q _ ι _ U hU ha K V p
-  letI : X.Over (Spec (.of O)) := ⟨q⟩
+  let : X.Over (Spec (.of O)) := ⟨q⟩
   have hprop : IsProper (X ↘ Spec (.of O)) := ‹IsProper q›
   have hc := coc_of_VB V
   have haff : ∀ α, IsAffineOpen (U α) := fun α => by

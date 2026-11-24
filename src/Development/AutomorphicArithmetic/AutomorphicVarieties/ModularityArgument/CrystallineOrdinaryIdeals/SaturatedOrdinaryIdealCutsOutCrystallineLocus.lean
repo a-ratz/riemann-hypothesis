@@ -180,10 +180,10 @@ theorem _root_.GlobalTheory.T.crystallineDeformation_amalgamate_over_fibre_produ
     have : IsTopologicalRing (T ⧸ I) := IsModuleTopology.isTopologicalRing ℚ_[l] (T ⧸ I)
     have c₁ : ContAction (resCoef ℚ_[l] (colRep ρ₁)) := OrdinaryDeformation.cont_col ρ₁ fun a b => by
       simp only [hρ₁]
-      exact (hr₁.cont a b).comp (continuous_subtype_val (p := fun g => g ∈ D.HL))
+      exact (hr₁.cont a b).comp (continuous_subtypeVal (p := fun g => g ∈ D.HL))
     have c₂ : ContAction (resCoef ℚ_[l] (colRep ρ₂)) := OrdinaryDeformation.cont_col ρ₂ fun a b => by
       simp only [hρ₂]
-      exact (hr₂.cont a b).comp (continuous_subtype_val (p := fun g => g ∈ D.HL))
+      exact (hr₂.cont a b).comp (continuous_subtypeVal (p := fun g => g ∈ D.HL))
     have cprod : ContAction ((resCoef ℚ_[l] (colRep ρ₁)).prod (resCoef ℚ_[l] (colRep ρ₂))) :=
       (c₁.comp (continuous_fst.prodMk (continuous_fst.comp continuous_snd))).prodMk
         (c₂.comp (continuous_fst.prodMk (continuous_snd.comp continuous_snd)))
@@ -193,7 +193,7 @@ theorem _root_.GlobalTheory.T.crystallineDeformation_amalgamate_over_fibre_produ
     refine ((isCrys_isDR_sub_quot _ hHL _ _ (OrdinaryDeformation.cont_col _ fun a b => ?_) cprod
       ((L₁.compLeft (Fin 3)).prod (L₂.compLeft (Fin 3))) fun g x => ?_).1
       (fun x y h => ?_)).1 hprod
-    · exact (hc a b).comp continuous_subtype_val
+    · exact (hc a b).comp continuous_subtypeVal
     · refine Prod.ext (funext fun a => ?_) (funext fun a => ?_)
       · change _ = Matrix.mulVec (ρ₁ g : Matrix (Fin 3) (Fin 3) B) _ a
         rw [hρ₁]
@@ -253,7 +253,7 @@ theorem cont_prod {G V V' : Type} [Group G] [TopologicalSpace G] [AddCommGroup V
 
 theorem isCr_char (H : Subgroup (GQ l)) (hH : IsOpen (H : Set (GQ l))) (κ : GQ l →* Aˣ) (hκ : Continuous κ)
     (w : ℤ) (hw : ∀ g ∈ H, g ∈ Iq l → κ g = cycA l l A g ^ w) : IsCr H.subtype (chRep (κ.comp H.subtype)) :=
-  crUnr H.subtype hH.isOpenEmbedding_subtypeVal _ (cont_ch (hκ.comp continuous_subtype_val)) w fun g hg x => by
+  crUnr H.subtype hH.isOpenEmbedding_subtypeVal _ (cont_ch (hκ.comp continuous_subtypeVal)) w fun g hg x => by
     rw [Subgroup.subtype_apply, ← hw g g.2 hg]
     rfl
 
@@ -264,7 +264,7 @@ theorem isCr_diag (H : Subgroup (GQ l)) (hH : IsOpen (H : Set (GQ l))) (κ : Fin
     IsCr H.subtype (colRep ρ) := by
   have hφ : IsOpenEmbedding H.subtype := hH.isOpenEmbedding_subtypeVal
   have hc : ∀ a, ContAction (chRep ((κ a).comp H.subtype)) := fun a =>
-    cont_ch ((hκ a).comp continuous_subtype_val)
+    cont_ch ((hκ a).comp continuous_subtypeVal)
   have hcr := fun a => isCr_char H hH (κ a) (hκ a) (w a) (hw a)
   have hp := fun a g x => R0.proj_diag (κ := fun a => (κ a).comp H.subtype) hρ a g x
   have h0 : ContAction (colRep ρ) := continuous_pi fun a => by
@@ -288,9 +288,9 @@ end GlobalTheory.OrdTwist
 
 theorem GlobalTheory.OrdTwist.twist_inDcr : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] (B : Type) [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra O B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] O B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower O E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (u : GQ l →* Bˣ), QCont l (fun g => (u g : B)) → (∀ g ∈ Iq l, u g = 1) → (∀ g, IsNilpotent ((u g : B) - 1)) → D.InDcr (π : B →+* E) (r0 D.η ((Units.map (algebraMap O B : O →* B)).comp D.Ψ * u)) := by
   intro l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _ B _ _ _ _ _ _ _ _ _ _ π _ u hc hI hu
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
   let j : Oˣ →* Bˣ := Units.map (algebraMap O B : O →* B)
   let ψ : GQ l →* Bˣ := j.comp D.Ψ * u
   have hψv : ∀ g, (ψ g : B) = algebraMap O B (D.Ψ g : O) * (u g : B) := fun g => rfl
@@ -329,7 +329,7 @@ theorem GlobalTheory.OrdTwist.twist_inDcr : ∀ {l : ℕ} [Fact l.Prime] {O : Ty
   · have hker : D.η.ker = GK D.Kv := Subgroup.ext D.η_ker
     have hH : IsOpen (D.HL : Set (GQ l)) := by
       have h1 : IsOpen (GK D.Kv : Set (GQ l)) := by
-        haveI := D.Kv.2
+        have := D.Kv.2
         exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
       have := h1.inter D.τ_open
       rwa [← hker] at this
@@ -360,7 +360,7 @@ open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Mod
 theorem _root_.GlobalTheory.T.exists_truncated_polynomial_thickening_fibre_square : ∀ {E B : Type} [Field E] [CommRing B] [Algebra E B] [Module.Finite E B] (π : B →ₐ[E] E), (∀ a, π a = 0 → IsNilpotent a) → ∀ J : ℕ, ∃ (C : Type) (_ : CommRing C) (_ : Algebra E C) (_ : Module.Finite E C) (T : Type) (_ : CommRing T) (_ : Algebra E T) (_ : Module.Finite E T) (πC : C →ₐ[E] E) (p₁ : T →ₐ[E] B) (p₂ : T →ₐ[E] C) (t : C), IsNilpotent t ∧ (∀ a, πC a = 0 → IsNilpotent a) ∧ (∀ a, π (p₁ a) = 0 → IsNilpotent a) ∧ π.comp p₁ = πC.comp p₂ ∧ (∀ b c, π b = πC c → ∃ s, p₁ s = b ∧ p₂ s = c) ∧ ∀ (P y : T) (j : ℕ) (v : Cˣ), j ≤ J → p₂ P = t ^ j * v → P * y = 0 → p₁ y = 0 := by
   intro E B _ _ _ _ π hπ J
   classical
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite E B
+  have : IsArtinianRing B := IsArtinianRing.of_finite E B
   obtain ⟨e, he⟩ : IsNilpotent (RingHom.ker (π : B →+* E)) := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
     intro c hc
@@ -368,11 +368,11 @@ theorem _root_.GlobalTheory.T.exists_truncated_polynomial_thickening_fibre_squar
   set I := RingHom.ker (π : B →+* E) with hIdef
   set N := J * e + 1 with hN
   have hN0 : N ≠ 0 := by omega
-  haveI : Module.Finite E (AdjoinRoot ((X : E[X]) ^ N)) :=
+  have : Module.Finite E (AdjoinRoot ((X : E[X]) ^ N)) :=
     (AdjoinRoot.powerBasis' (monic_X_pow N)).finite
-  haveI : Module.Finite B (AdjoinRoot ((X : B[X]) ^ N)) :=
+  have : Module.Finite B (AdjoinRoot ((X : B[X]) ^ N)) :=
     (AdjoinRoot.powerBasis' (monic_X_pow N)).finite
-  haveI : Module.Finite E (AdjoinRoot ((X : B[X]) ^ N)) := Module.Finite.trans B _
+  have : Module.Finite E (AdjoinRoot ((X : B[X]) ^ N)) := Module.Finite.trans B _
   have hrootE : (AdjoinRoot.root ((X : E[X]) ^ N)) ^ N = 0 := by
     rw [← AdjoinRoot.mk_X, ← map_pow, AdjoinRoot.mk_self]
   have hrootB : (AdjoinRoot.root ((X : B[X]) ^ N)) ^ N = 0 := by
@@ -642,11 +642,11 @@ theorem GlobalTheory.unr_unip_char_frob :
         (∀ g ∈ Iq l, u g = 1) ∧ (∀ g, IsNilpotent ((u g : B) - 1)) ∧
         ∃ v : Bˣ, ∀ m : ℕ, ∃ b : B, (u (σ ^ m) : B) - 1 = t * ((m : B) * v + t * b) := by
   intro l _ B _ _ _ x hx σ hσ
-  letI : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup B := IsModuleTopology.topologicalAddGroup ℚ_[l] B
-  haveI : ContinuousSMul ℚ_[l] B := IsModuleTopology.toContinuousSMul ℚ_[l] B
+  let : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsTopologicalAddGroup B := IsModuleTopology.isTopologicalAddGroup ℚ_[l] B
+  have : ContinuousSMul ℚ_[l] B := IsModuleTopology.toContinuousSMul ℚ_[l] B
   obtain ⟨c, ⟨hc, hcI, hcσ⟩, -⟩ := existsUnique_unramified_cocycle_frobenius_value (v := l) (l := l) (A := ℚ_[l]) (V := ℚ_[l])
     (1 : Representation ℚ_[l] (GQ l) ℚ_[l]) continuous_snd (fun _ _ => rfl) σ hσ 1
   have hadd : ∀ g h, c (g * h) = c g + c h := fun g h => hc.2 g h
@@ -730,7 +730,7 @@ theorem isUnit_algebraMap_of_ne_zero {l : ℕ} [Fact l.Prime] {O : Type} [CommRi
     [Algebra ℤ_[l] C] [IsScalarTower ℤ_[l] O C] [IsScalarTower ℤ_[l] ℚ_[l] C] {c : O} (hc : c ≠ 0) :
     IsUnit (algebraMap O C c) := by
   have hI : (Ideal.span {c}).comap (algebraMap ℤ_[l] O) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hc (Ideal.mem_span_singleton_self c) (Algebra.IsIntegral.isIntegral c)
+    Ideal.under_ne_bot_of_integral_mem hc (Ideal.mem_span_singleton_self c) (Algebra.IsIntegral.isIntegral c)
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   rw [Ideal.mem_comap, Ideal.mem_span_singleton] at hn
   obtain ⟨d, hd⟩ := hn
@@ -807,7 +807,7 @@ theorem GlobalTheory.OrdLoc.del_unr_twist {l : ℕ} [Fact l.Prime] {O : Type} [C
   rw [e12, w1, w2, zpow_zero, zpow_neg_one, Units.val_one] at h1
   have hyv : (((Units.map (algebraMap O C : O →* C)).comp D.Ψ (fr D) * u (fr D) : Cˣ) : C) =
       algebraMap O C (D.Ψ (fr D) : O) * (1 + t * ((m : C) * v + t * b)) := by
-    rw [Units.val_mul, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, huσ, ← hb]
+    rw [Units.val_mul, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, huσ, ← hb]
     ring
   have hl : IsUnit (l : C) := by
     have : IsUnit ((l : ℚ_[l])) := isUnit_iff_ne_zero.mpr (by exact_mod_cast (Fact.out : l.Prime).ne_zero)
@@ -910,28 +910,28 @@ theorem main (hL : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {O : Type} [
     [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (f : U.R →ₐ[O] B)
     (hf : D.InDcr (π : B →+* E) (push f U.r.hom)) : GlobalTheory.OrdLoc.IY D U ≤ RingHom.ker f := by
   rintro a ⟨k, hk⟩
-  haveI : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
+  have : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
   obtain ⟨C, _, _, _, T, _, _, _, πC, p₁, p₂, t, ht, hπC, hπT, hcomp, hsurj, hcanc⟩ := GlobalTheory.T.exists_truncated_polynomial_thickening_fibre_square π hπ (2 * k)
-  letI : Algebra O C := Algebra.compHom C (algebraMap O E)
-  letI : Algebra ℚ_[l] C := Algebra.compHom C (algebraMap ℚ_[l] E)
-  letI : Algebra ℤ_[l] C := Algebra.compHom C (algebraMap ℤ_[l] E)
-  haveI : IsScalarTower O E C := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℚ_[l] E C := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℤ_[l] O C := IsScalarTower.of_algebraMap_eq fun x =>
+  let : Algebra O C := Algebra.compHom C (algebraMap O E)
+  let : Algebra ℚ_[l] C := Algebra.compHom C (algebraMap ℚ_[l] E)
+  let : Algebra ℤ_[l] C := Algebra.compHom C (algebraMap ℤ_[l] E)
+  have : IsScalarTower O E C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℚ_[l] E C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℤ_[l] O C := IsScalarTower.of_algebraMap_eq fun x =>
     congrArg (algebraMap E C) (IsScalarTower.algebraMap_apply ℤ_[l] O E x)
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] C := IsScalarTower.of_algebraMap_eq fun x =>
+  have : IsScalarTower ℤ_[l] ℚ_[l] C := IsScalarTower.of_algebraMap_eq fun x =>
     congrArg (algebraMap E C) (IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] E x)
-  haveI : Module.Finite ℚ_[l] C := Module.Finite.trans E C
-  letI : Algebra O T := Algebra.compHom T (algebraMap O E)
-  letI : Algebra ℚ_[l] T := Algebra.compHom T (algebraMap ℚ_[l] E)
-  letI : Algebra ℤ_[l] T := Algebra.compHom T (algebraMap ℤ_[l] E)
-  haveI : IsScalarTower O E T := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℚ_[l] E T := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℤ_[l] O T := IsScalarTower.of_algebraMap_eq fun x =>
+  have : Module.Finite ℚ_[l] C := Module.Finite.trans E C
+  let : Algebra O T := Algebra.compHom T (algebraMap O E)
+  let : Algebra ℚ_[l] T := Algebra.compHom T (algebraMap ℚ_[l] E)
+  let : Algebra ℤ_[l] T := Algebra.compHom T (algebraMap ℤ_[l] E)
+  have : IsScalarTower O E T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℚ_[l] E T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℤ_[l] O T := IsScalarTower.of_algebraMap_eq fun x =>
     congrArg (algebraMap E T) (IsScalarTower.algebraMap_apply ℤ_[l] O E x)
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] T := IsScalarTower.of_algebraMap_eq fun x =>
+  have : IsScalarTower ℤ_[l] ℚ_[l] T := IsScalarTower.of_algebraMap_eq fun x =>
     congrArg (algebraMap E T) (IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] E x)
-  haveI : Module.Finite ℚ_[l] T := Module.Finite.trans E T
+  have : Module.Finite ℚ_[l] T := Module.Finite.trans E T
   exact core hL D U E B π hπ f hf C T πC p₁ p₂ t ht hπC hπT hcomp hsurj k hcanc a hk
 
 end GlobalTheory.CrFrac
@@ -1032,7 +1032,7 @@ theorem reduce (hP : LocalPublishedTheorems)
       map_zero' := rfl
       map_add' := fun _ _ => rfl
       commutes' := fun _ => rfl }
-  haveI : Module.Finite ℚ_[l] B₀ := Module.Finite.of_injective val'.toLinearMap Subtype.val_injective
+  have : Module.Finite ℚ_[l] B₀ := Module.Finite.of_injective val'.toLinearMap Subtype.val_injective
   have hD' : D.InDcrAt (π : B →+* E) (D.rz E) ((GG.map (val' : B₀ →+* B)).comp (push f₀ U.r.hom)) := hD
   have hq := OrdinaryDeformation.dcr_pair val' val' (fun a b h _ => Subtype.ext h) hD' hD'
   have h1 : (π₀.restrictScalars O).comp f₀ = (Algebra.ofId O E₀).comp x := AlgHom.ext fun a => hinj (by
@@ -1062,29 +1062,29 @@ theorem GlobalTheory.OrdLoc.crPts_IY : LocalPublishedTheorems → ∀ {l : ℕ} 
     have hm : (Ideal.comap (algebraMap ℤ_[l] O) ⊥).IsMaximal := hp.isMaximal h
     have h2 : (⊥ : Ideal O).IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := ℤ_[l]) ⊥ hm
     exact IsDiscreteValuationRing.not_a_field O (IsLocalRing.eq_maximalIdeal h2).symm
-  haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+  have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have hi2 : Function.Injective (algebraMap ℤ_[l] (FractionRing O)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] O (FractionRing O)]
     exact (IsFractionRing.injective O _).comp hi
-  letI : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
+  let : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
     IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi2 x).symm
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
-  haveI : Module.Finite ℚ_[l] (FractionRing O) :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
+  have : Module.Finite ℚ_[l] (FractionRing O) :=
     Module.Finite.of_isLocalization ℤ_[l] O (nonZeroDivisors ℤ_[l])
   have hOE : Function.Injective (algebraMap O E) := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ_[l]) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ_[l]) ?_
     change Ideal.comap (algebraMap ℤ_[l] O) (RingHom.ker (algebraMap O E)) = ⊥
     rw [RingHom.comap_ker, ← IsScalarTower.algebraMap_eq, ← RingHom.injective_iff_ker_eq_bot,
       IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] E]
     exact (algebraMap ℚ_[l] E).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
-  letI : Algebra (FractionRing O) E := (IsFractionRing.lift hOE).toAlgebra
-  haveI : IsScalarTower O (FractionRing O) E :=
+  let : Algebra (FractionRing O) E := (IsFractionRing.lift hOE).toAlgebra
+  have : IsScalarTower O (FractionRing O) E :=
     IsScalarTower.of_algebraMap_eq fun c => (IsFractionRing.lift_algebraMap hOE c).symm
-  letI : Algebra (FractionRing O) B := ((algebraMap E B).comp (algebraMap (FractionRing O) E)).toAlgebra
-  haveI : IsScalarTower (FractionRing O) E B := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower O (FractionRing O) B := IsScalarTower.of_algebraMap_eq fun c => by
+  let : Algebra (FractionRing O) B := ((algebraMap E B).comp (algebraMap (FractionRing O) E)).toAlgebra
+  have : IsScalarTower (FractionRing O) E B := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower O (FractionRing O) B := IsScalarTower.of_algebraMap_eq fun c => by
     change _ = algebraMap E B (algebraMap (FractionRing O) E (algebraMap O (FractionRing O) c))
     rw [← IsScalarTower.algebraMap_apply O (FractionRing O) E, ← IsScalarTower.algebraMap_apply O E B]
   have hQ : (algebraMap (FractionRing O) E).comp (algebraMap ℚ_[l] (FractionRing O)) = algebraMap ℚ_[l] E :=
@@ -1094,10 +1094,10 @@ theorem GlobalTheory.OrdLoc.crPts_IY : LocalPublishedTheorems → ∀ {l : ℕ} 
         IsScalarTower.algebraMap_apply ℤ_[l] O (FractionRing O),
         ← IsScalarTower.algebraMap_apply O (FractionRing O) E, ← IsScalarTower.algebraMap_apply ℤ_[l] O E,
         IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] E])
-  haveI : IsScalarTower ℚ_[l] (FractionRing O) B := IsScalarTower.of_algebraMap_eq fun q => by
+  have : IsScalarTower ℚ_[l] (FractionRing O) B := IsScalarTower.of_algebraMap_eq fun q => by
     rw [IsScalarTower.algebraMap_apply ℚ_[l] E B, ← hQ]
     rfl
-  haveI : IsScalarTower ℤ_[l] (FractionRing O) B := IsScalarTower.of_algebraMap_eq fun z => by
+  have : IsScalarTower ℤ_[l] (FractionRing O) B := IsScalarTower.of_algebraMap_eq fun z => by
     change _ = algebraMap E B (algebraMap (FractionRing O) E (algebraMap ℤ_[l] (FractionRing O) z))
     rw [IsScalarTower.algebraMap_apply ℤ_[l] O (FractionRing O), ← IsScalarTower.algebraMap_apply O (FractionRing O) E,
       ← IsScalarTower.algebraMap_apply O E B, ← IsScalarTower.algebraMap_apply ℤ_[l] O B]

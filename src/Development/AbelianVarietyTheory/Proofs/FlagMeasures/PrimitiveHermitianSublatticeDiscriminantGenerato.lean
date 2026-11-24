@@ -88,7 +88,7 @@ omit [StarRing K] [FiniteDimensional K V] in
 theorem lat_map (A : Submodule K V) (p : V →ₗ[K] A) (hp : Function.Surjective p)
     (N : Submodule (𝓞 K) V) (hN : Submodule.IsFullLattice K N) :
     Submodule.IsFullLattice K (N.map (p.restrictScalars (𝓞 K))) := by
-  haveI : Submodule.IsLattice K (N.map (p.restrictScalars (𝓞 K))) :=
+  have : Submodule.IsLattice K (N.map (p.restrictScalars (𝓞 K))) :=
     Submodule.IsLattice.of_fg K (hN.fg.map _)
   refine ⟨?_⟩
   change Submodule.span K (p '' (N : Set V)) = ⊤

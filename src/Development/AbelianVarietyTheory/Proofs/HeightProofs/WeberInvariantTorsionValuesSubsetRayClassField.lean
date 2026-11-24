@@ -70,12 +70,12 @@ private theorem weberSet_subset_of_isRay_span_natCast :
     exact_mod_cast hn0.ne'
   have hMR : IntermediateField.adjoin (↥K) (_root_.GlobalTheory.FieldSize.weberSet L n) ≤ R := by
     apply _root_.GlobalTheory.Bauer.le_of_finite_split_not_split (↥K) ℂ R _
-    refine ((Ideal.finite_setOfPred_absNorm_le (S := 𝓞 K)
+    refine ((Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K)
       (S.sup id + Ideal.absNorm (Ideal.span {(n : 𝓞 K)}))).preimage
       (f := fun v : HeightOneSpectrum (𝓞 K) => v.asIdeal)
       (fun a _ b _ h => HeightOneSpectrum.ext h)).subset ?_
     rintro 𝔭 ⟨hp, hsplit, hnot⟩
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     by_cases hpS : Ideal.absNorm 𝔭.asIdeal ∈ S
     · exact le_add_right (Finset.le_sup (f := id) hpS)
     by_cases hn𝔭 : (n : 𝓞 K) ∈ 𝔭.asIdeal

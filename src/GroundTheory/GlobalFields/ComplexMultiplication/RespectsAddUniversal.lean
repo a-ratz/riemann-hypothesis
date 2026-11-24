@@ -224,10 +224,10 @@ theorem halfUniversal (hQ : UnivAdd Q) {L M : Type*} [Field L] [Algebra F L] [Fi
         Point.map (genEval E B hB.isGenPt) Q := by
   set Fv := E.toAffine.FunctionField
   set σA := genEval E A hA
-  letI : Algebra Fv L := σA.toRingHom.toAlgebra
-  letI : Algebra Fv M := ((algebraMap L M).comp σA.toRingHom).toAlgebra
-  haveI : IsScalarTower Fv L M := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower F Fv M := IsScalarTower.of_algebraMap_eq fun c => by
+  let : Algebra Fv L := σA.toRingHom.toAlgebra
+  let : Algebra Fv M := ((algebraMap L M).comp σA.toRingHom).toAlgebra
+  have : IsScalarTower Fv L M := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower F Fv M := IsScalarTower.of_algebraMap_eq fun c => by
     show algebraMap F M c = algebraMap L M (σA (algebraMap F Fv c))
     rw [σA.commutes, ← IsScalarTower.algebraMap_apply]
   cases B with

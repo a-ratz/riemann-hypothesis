@@ -70,17 +70,17 @@ namespace GlobalTheory.HaarExist
 theorem haar_exists : ∀ (D : D7) (V : HSp D), (∃ μ : Measure (GfC V), μ.IsHaarMeasure) ∧ ∀ (V₀ : HSp D) (ρ : ℕ) (d : HypDec V V₀ ρ), (∃ μ : Measure ((jacGrp d).subgroupOf (GfC V)), μ.IsHaarMeasure) ∧ ∀ (A L : HSp D) (o : OrthDec V₀ A L), ∃ μ : Measure ((besGrp d o).subgroupOf (GfC V)), μ.IsHaarMeasure := by
   intro D V
   have hf := GlobalTheory.AdelicSplit.isClosed_GfC' V
-  haveI : LocallyCompactSpace (GfC V) := hf.locallyCompactSpace
+  have : LocallyCompactSpace (GfC V) := hf.locallyCompactSpace
   refine ⟨⟨Measure.haar, inferInstance⟩, fun V₀ ρ d => ⟨?_, fun A L o => ?_⟩⟩
   · have hJ := GlobalTheory.jacGrp_isClosed D V V₀ ρ d
     have hc : IsClosed (((jacGrp d).subgroupOf (GfC V) : Subgroup (GfC V)) : Set (GfC V)) :=
-      hJ.preimage continuous_subtype_val
-    haveI : LocallyCompactSpace ((jacGrp d).subgroupOf (GfC V)) := hc.locallyCompactSpace
+      hJ.preimage continuous_subtypeVal
+    have : LocallyCompactSpace ((jacGrp d).subgroupOf (GfC V)) := hc.locallyCompactSpace
     exact ⟨Measure.haar, inferInstance⟩
   · have hB := GlobalTheory.BesClosed.besGrp_isClosed D V V₀ A L ρ d o
     have hc : IsClosed (((besGrp d o).subgroupOf (GfC V) : Subgroup (GfC V)) : Set (GfC V)) :=
-      hB.preimage continuous_subtype_val
-    haveI : LocallyCompactSpace ((besGrp d o).subgroupOf (GfC V)) := hc.locallyCompactSpace
+      hB.preimage continuous_subtypeVal
+    have : LocallyCompactSpace ((besGrp d o).subgroupOf (GfC V)) := hc.locallyCompactSpace
     exact ⟨Measure.haar, inferInstance⟩
 
 end GlobalTheory.HaarExist

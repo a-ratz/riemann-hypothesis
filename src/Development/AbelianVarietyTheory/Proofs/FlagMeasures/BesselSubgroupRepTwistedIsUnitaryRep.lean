@@ -139,9 +139,9 @@ theorem hPart_mul {z : Fin (2 * r + k + 1) → ℂ} {h m : Mat k r} (hh : h ∈ 
   ext i j
   unfold hPart
   by_cases H1 : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)
-  · rw [if_pos H1]
+  · rw [ite_eq_left H1]
     exact block_mul_col hb hc i j H1.2.2 (Or.inr H1.1.1)
-  · rw [if_neg H1, block_entry hb H1]
+  · rw [ite_eq_right H1, block_entry hb H1]
 
 theorem PiS_mul {Wp : Type*} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] (ψ : Mat k r → ℂ)
     (π : Mat k r → (Wp →L[ℂ] Wp)) {z : Fin (2 * r + k + 1) → ℂ} {h m : Mat k r}
@@ -153,9 +153,9 @@ theorem hPart_continuous : Continuous (hPart k r) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   show Continuous fun s : Mat k r => hPart k r s i j
   by_cases H1 : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)
-  · simp only [hPart, if_pos H1]
+  · simp only [hPart, ite_eq_left H1]
     exact (continuous_apply j).comp (continuous_apply i)
-  · simp only [hPart, if_neg H1]
+  · simp only [hPart, ite_eq_right H1]
     exact continuous_const
 
 theorem adjoint_eq_of_isometry {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
@@ -165,7 +165,7 @@ theorem adjoint_eq_of_isometry {E : Type*} [NormedAddCommGroup E] [InnerProductS
   ext v
   have e1 := congrArg (fun T : E →L[ℂ] E => T (B v)) h1
   have e2 := congrArg (fun T : E →L[ℂ] E => T v) hAB
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at e1 e2
+  simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self] at e1 e2
   rw [e2] at e1
   exact e1
 
@@ -216,7 +216,7 @@ theorem piS_unitary : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [Inner
         psiGen_block z c (uw_block (uw_inv hh')) (uw_block hh') hh'.2.2, hπ.1.2 h hh h' hh',
         ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_smul]
     · rintro _ ⟨h, hh, m, hm, rfl⟩ v
-      rw [PiS_mul (psiGen k r z c) π hh hm, ContinuousLinearMap.smul_apply, norm_smul, norm_psiGen, one_mul,
+      rw [PiS_mul (psiGen k r z c) π hh hm, smul_apply, norm_smul, norm_psiGen, one_mul,
         hπ.2.1 h hh v]
     · intro v
       have hmaps : Set.MapsTo (hPart k r) (Sset k r z) (UWset k r z) := by
@@ -229,7 +229,7 @@ theorem piS_unitary : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [Inner
       refine hc.congr ?_
       rintro _ ⟨h, hh, m, hm, rfl⟩
       show PiS (psiGen k r z c) π (h * m) v = (psiGen k r z c) (h * m) • π (hPart k r (h * m)) v
-      rw [PiS_mul (psiGen k r z c) π hh hm, hPart_mul hh hm, psiGen_uw_mul z c hh, ContinuousLinearMap.smul_apply]
+      rw [PiS_mul (psiGen k r z c) π hh hm, hPart_mul hh hm, psiGen_uw_mul z c hh, smul_apply]
   have hiso : ∀ s ∈ Sset k r z, ∀ v, ‖PiS (psiGen k r z c) π s v‖ = ‖v‖ := hrep.2.1
   refine ⟨fun h hh m hm => ⟨hPart_mul hh hm, PiS_mul (psiGen k r z c) π hh hm⟩, hrep, fun s hs => ⟨?_, ?_⟩, ?_, hchar⟩
   · exact ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun v => by rw [hiso s hs v, one_mul]

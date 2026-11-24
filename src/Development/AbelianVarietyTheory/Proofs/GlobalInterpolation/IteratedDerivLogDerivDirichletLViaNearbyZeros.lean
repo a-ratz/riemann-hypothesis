@@ -140,7 +140,7 @@ lemma iter (f : ℕ → ℂ) (hf : LSeries.abscissaOfAbsConv f ≤ 1) (e : ℂ) 
       exact ih z hz
     rw [iteratedDeriv_succ, hev.deriv_eq]
     have a1 : LSeries.abscissaOfAbsConv (LSeries.logMul^[k] f) < s.re := by
-      rw [LSeries.absicssaOfAbsConv_logPowMul]
+      rw [LSeries.abscissaOfAbsConv_logPowMul]
       exact hf.trans_lt (by exact_mod_cast hs)
     have d1 := LSeries_hasDerivAt a1
     have d2 := hasDerivAt_pole e 1 s k (by rintro rfl; simp at hs)
@@ -262,7 +262,7 @@ lemma exists_entire : ∃ B : ℝ, 0 < B ∧ ∀ (q : ℕ) [NeZero q] (χ : Diri
       have h2 : LFunction (1 : DirichletCharacter ℂ q) s ≠ 0 :=
         LFunction_ne_zero_of_one_le_re _ (Or.inr h1) hs.le
       have h3 := sub_ne_zero.2 h1
-      rw [deriv_LFunctionTrivChar₁_apply_of_ne_one q h1, hF s h1, if_pos rfl, LFunctionTrivChar]
+      rw [deriv_LFunctionTrivChar₁_apply_of_ne_one q h1, hF s h1, ite_eq_left rfl, LFunctionTrivChar]
       field_simp
   · refine ⟨LFunction χ, differentiable_LFunction hχ, fun z hz => ?_, fun _ _ => le_rfl,
       fun z => by simp [hχ], fun _ _ => rfl, fun s _ => by simp [hχ]⟩
@@ -330,7 +330,7 @@ theorem main : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCh
   set K := C * (2 * (1 + |Real.log (2048 * B)|) + 5) * Real.log X with hK
   have hset : zerosDisc χ c 3 = {w : ℂ | ‖w - c‖ ≤ 3 ∧ F w = 0} := by
     ext w
-    simp only [zerosDisc, Set.mem_setOf_eq, f3]
+    simp only [zerosDisc, Set.mem_ofPred_eq, f3]
   rw [hset]
   simp only [finsum_mem_eq_finite_toFinset_sum _ h1] at h2 h3 ⊢
   set Z := h1.toFinset with hZ

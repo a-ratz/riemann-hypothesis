@@ -236,7 +236,7 @@ private theorem diag_ex {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [
     (hM : (res O R).mapMatrix M = diagonal a) :
     ∃ (P Q : Matrix (Fin n) (Fin n) R) (d : Fin n → R), P * Q = 1 ∧ (res O R).mapMatrix P = 1 ∧
       (res O R).mapMatrix Q = 1 ∧ Q * M * P = diagonal d := by
-  haveI : HenselianLocalRing R := ⟨fun f hf a₀ h1 h2 => HenselianRing.is_henselian f hf a₀ h1 (h2.map _)⟩
+  have : HenselianLocalRing R := ⟨fun f hf a₀ h1 h2 => HenselianRing.is_henselian f hf a₀ h1 (h2.map _)⟩
   have hu : ∀ x : R, res O R x ≠ 0 → IsUnit x := fun x hx => by
     by_contra h
     exact hx ((res_eq_zero_iff O R x).2 h)
@@ -277,23 +277,23 @@ theorem UpperTheory.V.Fr.space_ex :
     rwa [map_mul, map_inv, inv_mul_eq_one, eq_comm] at h
   have hc : IsLocallyConstant ρ₀.r := by
     rw [show (ρ₀.r : F.G0 → _) = _ from funext hr0]
-    exact (hΨ.comp_continuous continuous_subtype_val).comp
+    exact (hΨ.comp_continuous continuous_subtypeVal).comp
       fun x => diagonal fun i => ((x ^ w n i : (ResidueField O)ˣ) : ResidueField O)
-  haveI : CompactSpace F.G0 := isCompact_iff_compactSpace.1 (F.del.ker.isClosed_of_isOpen hF.del_open).isCompact
+  have : CompactSpace F.G0 := isCompact_iff_compactSpace.1 (F.del.ker.isClosed_of_isOpen hF.del_open).isCompact
   have hphi : PhiCond (Γ := F.G0) l := by
     unfold PhiCond at *
     intro K hK
     have hK' : IsOpen ((K.map F.del.ker.subtype : Subgroup F.Γ) : Set F.Γ) := by
       rw [Subgroup.coe_map]
-      exact hF.del_open.isOpenMap_subtype_val _ hK
-    haveI := hF.phi (K.map F.del.ker.subtype) hK'
+      exact hF.del_open.isOpenMap_subtypeVal _ hK
+    have := hF.phi (K.map F.del.ker.subtype) hK'
     let e := Subgroup.equivMapOfInjective K F.del.ker.subtype F.del.ker.subtype_injective
     have he : ∀ y : K.map F.del.ker.subtype, (((e.symm y : K) : F.G0) : F.Γ) = (y : F.Γ) :=
       fun y => congrArg Subtype.val (e.apply_symm_apply y)
     have hc : Continuous fun y : K.map F.del.ker.subtype => (e.symm y : K) := by
       apply continuous_induced_rng.2
       apply continuous_induced_rng.2
-      exact continuous_subtype_val.congr fun y => (he y).symm
+      exact continuous_subtypeVal.congr fun y => (he y).symm
     refine Finite.of_injective
       (β := {ψ : K.map F.del.ker.subtype →* Multiplicative (ZMod l) //
         IsOpen (ψ.ker : Set (K.map F.del.ker.subtype))})
@@ -336,10 +336,10 @@ theorem UpperTheory.V.Fr.space_ex :
       rwa [← h1, ← h1, ← map_sub] at this
     · exact h2 v s i j h
   have h0 := hI _ (res O R) ρ₀ hres fun v s i j h => (congrFun (congrFun (hT v s) i) j).trans (hdg _ i j h.ne')
-  haveI : Nontrivial (R ⧸ Ideal.span S) := Ideal.Quotient.nontrivial_iff.2 fun e => by
+  have : Nontrivial (R ⧸ Ideal.span S) := Ideal.Quotient.nontrivial_iff.2 fun e => by
     simpa using h0 1 (e ▸ Submodule.mem_top)
   let p := Ideal.Quotient.mkₐ O (Ideal.span S)
-  haveI : IsCO O (R ⧸ Ideal.span S) := co_quot O R _ p (Ideal.Quotient.mkₐ_surjective O _)
+  have : IsCO O (R ⧸ Ideal.span S) := co_quot O R _ p (Ideal.Quotient.mkₐ_surjective O _)
   have hp : ∀ x ∈ S, p x = 0 := fun x hx => Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span hx)
   have hTf : ∀ (C : Type) [CommRing C] [Algebra O C] (f : R →ₐ[O] C) v s i j,
       (f.mapMatrix (Q v) * f.mapMatrix (u.hom (F.loc0 v s)) * f.mapMatrix (P v)) i j = f (T v s i j) :=

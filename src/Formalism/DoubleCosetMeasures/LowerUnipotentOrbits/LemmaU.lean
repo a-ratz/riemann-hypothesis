@@ -84,7 +84,7 @@ private theorem phiU_eq_zero_of_not_mem_support {O : Subring F} {ϖ : F} {J' : S
 
 theorem II_mul (O : Subring F) (ϖ : F) (y : Matrix (Fin t) (Fin a) F) (hy : y ∈ IIset O ϖ)
     (g : Matrix (Fin a) (Fin a) F) (hg : ∀ i j, g i j ∈ O) : y * g ∈ IIset O ϖ := by
-  simp only [Formalism.DoubleCosetMeasures.IIset, Set.mem_setOf_eq] at hy ⊢
+  simp only [Formalism.DoubleCosetMeasures.IIset, Set.mem_ofPred_eq] at hy ⊢
   choose o ho hyo using hy
   intro i j
   refine ⟨∑ k, o i k * g k j, O.sum_mem fun k _ => O.mul_mem (ho i k) (hg k j), ?_⟩
@@ -124,12 +124,12 @@ theorem lemmaU : LemmaUSplit := by
   have hMatrixOpensMeasurable : ∀ (m n : Type) [Fintype m] [Fintype n],
       OpensMeasurableSpace (Matrix m n F) := fun m n _ _ =>
     inferInstanceAs (OpensMeasurableSpace (m → n → F))
-  haveI := hMatrixOpensMeasurable (Fin a) (Fin a)
+  have := hMatrixOpensMeasurable (Fin a) (Fin a)
   have hJm : MeasurableSet (Jset J') :=
     ((hJc.image Units.continuous_val).isClosed).measurableSet
   have hOpen1 : IsOpen {z : F | ∃ o ∈ O, z = ϖ * o} := by
     have : {z : F | ∃ o ∈ O, z = ϖ * o} = (fun z => ϖ⁻¹ * z) ⁻¹' (O : Set F) := by
-      ext z; simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+      ext z; simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
       constructor
       · rintro ⟨o, ho, rfl⟩; rwa [← mul_assoc, inv_mul_cancel₀ hϖ, one_mul]
       · intro h; exact ⟨_, h, by rw [← mul_assoc, mul_inv_cancel₀ hϖ, one_mul]⟩

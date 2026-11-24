@@ -110,7 +110,7 @@ theorem cmpt_set_eq {ε : Fin n → Bool} (he : ∀ a b, ε a = ε b) :
     Formalism.MainNotions.S.UJset ε = Formalism.REAL.Kset ε := by
   have hJ : Formalism.REAL.Jm ε = Jm ε := rfl
   ext g
-  simp only [Formalism.MainNotions.S.UJset, Formalism.REAL.Kset, Formalism.REAL.inUJ, Set.mem_setOf_eq, hJ]
+  simp only [Formalism.MainNotions.S.UJset, Formalism.REAL.Kset, Formalism.REAL.inUJ, Set.mem_ofPred_eq, hJ]
   constructor
   · intro h
     exact cmpt_inUJ_Kset he h
@@ -273,8 +273,8 @@ theorem cmpt_casU (he : ∀ a b, ε a = ε b) (v : T.V) :
   have hd : ∀ p w, dS (HW.torepSig T) (casGen ε p) w = T.dτ (casGen ε p) w :=
     fun p w => cmpt_dS T (cmpt_inK_casGen he p) w
   have hs := congrArg (fun L : T.V →L[ℂ] T.V => L v) (cmpt_sum T he)
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.mul_apply, ContinuousLinearMap.neg_apply] at hs
+  simp only [sum_apply, smul_apply,
+    mul_apply_eq_comp, neg_apply] at hs
   simp only [casU, hd, hs, neg_neg, casimir, HW.kunits]
   first
   | simp only [LinearMap.coeFn_sum, Finset.sum_apply, Module.End.mul_apply,

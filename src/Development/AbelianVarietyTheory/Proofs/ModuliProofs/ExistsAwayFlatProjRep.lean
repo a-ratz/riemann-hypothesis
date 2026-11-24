@@ -64,7 +64,7 @@ open MvPolynomial in
 theorem homogeneousComponent_mem_vanIdeal {R σ Hh : Type} [CommRing R] (d : ℕ) (p : Hh → σ → R)
     (F : MvPolynomial σ R) (hF : F ∈ vanIdeal d p) (e : ℕ) : homogeneousComponent e F ∈ vanIdeal d p := by
   classical
-  letI := (MvPolynomial.gradedAlgebra : GradedAlgebra (homogeneousSubmodule σ R))
+  let := (MvPolynomial.gradedAlgebra : GradedAlgebra (homogeneousSubmodule σ R))
   have h : (vanIdeal d p).IsHomogeneous (homogeneousSubmodule σ R) :=
     Ideal.homogeneous_span _ _ fun x hx => ⟨d, hx.1⟩
   have := h e hF

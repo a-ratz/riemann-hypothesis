@@ -254,8 +254,8 @@ private theorem exp_mem_uwset_of_inLieW {z : Fin (2 * r + k + 1) → ℂ} {X : Q
   have h1 : (1 : Q.Mx k r) ∈ Glev k r (Fin.last r) := by
     simp [Glev, UH]
   have h := Formalism.FourierDecayAlt.P.LeftDerivativeCurves.lcurve_lev h1 hX1 1
-  simp only [Complex.ofReal_one, one_smul, mul_one, Glev, Set.mem_setOf_eq] at h
-  simp only [UWset, Set.mem_setOf_eq]
+  simp only [Complex.ofReal_one, one_smul, mul_one, Glev, mem_ofPred_eq] at h
+  simp only [UWset, mem_ofPred_eq]
   exact ⟨h.1, fun a => h.2 a (by simp), exp_mulVec_eq_self_of_mulVec_eq_zero hX2⟩
 
 theorem locLogOp (z : Fin (2 * r + k + 1) → ℂ) :
@@ -264,8 +264,8 @@ theorem locLogOp (z : Fin (2 * r + k + 1) → ℂ) :
   classical
 
   let L := lieU k r z
-  haveI : FiniteDimensional ℝ (Q.Mx k r) := inferInstance
-  haveI : CompleteSpace L := (Submodule.complete_of_finiteDimensional L).completeSpace_coe
+  have : FiniteDimensional ℝ (Q.Mx k r) := inferInstance
+  have : CompleteSpace L := (Submodule.isComplete_of_finiteDimensional L).completeSpace_coe
   obtain ⟨p, hp⟩ := LinearMap.exists_leftInverse_of_injective L.subtype (Submodule.ker_subtype L)
   let P : Q.Mx k r →L[ℝ] L := LinearMap.toContinuousLinearMap p
   have hP : ∀ Y : L, P (Y : Q.Mx k r) = Y := fun Y => by

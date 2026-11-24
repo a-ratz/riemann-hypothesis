@@ -81,7 +81,7 @@ theorem derivation_extend_localization_atPrime (F A R : Type) [CommRing F] [Comm
     [Algebra F A] [Algebra A R] [Algebra F R] [IsScalarTower F A R] (P : Ideal A) [P.IsPrime]
     [IsLocalization.AtPrime R P] (D : Derivation F A R) :
     ∃ D' : Derivation F R R, ∀ a, D' (algebraMap A R a) = D a := by
-  haveI : Algebra.FormallyEtale A R := Algebra.FormallyEtale.of_isLocalization P.primeCompl
+  have : Algebra.FormallyEtale A R := Algebra.FormallyEtale.of_isLocalization P.primeCompl
   have hb := KaehlerDifferential.isBaseChange_of_formallyEtale F A R
   refine ⟨(hb.lift D.liftKaehlerDifferential).compDer (KaehlerDifferential.D F R), fun a => ?_⟩
   show hb.lift D.liftKaehlerDifferential (KaehlerDifferential.D F R (algebraMap A R a)) = D a

@@ -335,7 +335,7 @@ namespace GlobalTheory.PowE8
 
 theorem exists_cp_e8LB : ∀ (S : Scheme.{0}) (G₀ : Over S) [GrpObj G₀] [IsCommMonObj G₀] (P : GlobalTheory.UU.CP G₀) (W : Matrix (Fin 8) (Fin 8) ℤ), ∃ Q : GlobalTheory.UU.CP (powObj G₀ 8), Q.L.L = GlobalTheory.PowE8.e8LB G₀ P.L.L W := by
   intro S G₀ _ _ P W
-  haveI hm : ∀ k : (Fin 8 × Fin 8) × Fin 4,
+  have hm : ∀ k : (Fin 8 × Fin 8) × Fin 4,
       IsMonHom ((![powPr G₀ k.1.1 * powPr G₀ k.1.2, powPr G₀ k.1.1, powPr G₀ k.1.2, 1] :
         Fin 4 → (powObj G₀ 8 ⟶ G₀)) k.2) := by
     rintro ⟨⟨a, b⟩, i⟩

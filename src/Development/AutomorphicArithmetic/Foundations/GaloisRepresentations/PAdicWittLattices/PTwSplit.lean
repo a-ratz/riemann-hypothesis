@@ -112,7 +112,7 @@ theorem UpperTheory.Gal.G3.pTwSplit :
       y ≫ X.tr i j 1 a.1 a.2 = x ≫ X.tr m j 1 b.1 b.2 → ∃! x0, x ≫ X.tr m i (r x0) (c x0).1 (c x0).2 = y := by
     intro Ω _ _ x y hxy
     have p1 := X.isAdmissibleIntegralBasisChange_one hmi
-    haveI := X.fin m i p1.1 p1.2
+    have := X.fin m i p1.1 p1.2
     obtain ⟨v, hv⟩ := (X.onto m i p1.1 p1.2).surj (UpperTheory.Gal.TranscendenceTraces.pt (X := X.Z i) (Ω := Ω) y)
     obtain ⟨z, hz, -⟩ := UpperTheory.Gal.TranscendenceTraces.ptLift_holds (X.tr m i 1 p1.1 p1.2) Ω y v hv
     have hzj : x ≫ X.tr m j 1 b.1 b.2 = z ≫ X.tr m j 1 b.1 b.2 := by
@@ -124,6 +124,6 @@ theorem UpperTheory.Gal.G3.pTwSplit :
       rw [← hz, hk, Category.assoc, tower_tr_comp_tr_eq_tr_mul,
         tower_tr_eq_of_eq_mul_of_mem_K X hx0 (c x0) (show (1:G) * k = k * (r x0)⁻¹ * r x0 by group)]
     exact ⟨x0, ex, fun x2 h2 => U Ω x x2 x0 (h2.trans ex.symm)⟩
-  haveI := X.fin i j a.1 a.2
-  haveI := X.etale i j a.1 a.2
+  have := X.fin i j a.1 a.2
+  have := X.etale i j a.1 a.2
   exact hS _ _ J _ hcomp hpts

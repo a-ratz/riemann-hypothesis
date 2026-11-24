@@ -128,8 +128,8 @@ theorem degree_quotient : DegQuot := by
   intro E _ _ _ L N hL hsat
   classical
   obtain ⟨hNL, hsat'⟩ := hsat
-  haveI := hL
-  haveI : DiscreteTopology N := discreteTopology_of_le hNL
+  have := hL
+  have : DiscreteTopology N := discreteTopology_of_le hNL
   let W : Submodule ℝ E := Submodule.span ℝ (N : Set E)
   let P : E →L[ℝ] E := Wᗮ.starProjection
   have hPmem : ∀ x : E, P x ∈ Wᗮ := fun x => by
@@ -163,12 +163,12 @@ theorem degree_quotient : DegQuot := by
     show y ∈ L.map _ ↔ _
     rw [Submodule.mem_map]
     rfl
-  haveI : Module.Finite ℤ Q := by
+  have : Module.Finite ℤ Q := by
     show Module.Finite ℤ (L.map _)
     first
       | exact Module.Finite.map L _
       | exact Module.Finite.iff_fg.mpr (Submodule.FG.map _ (Module.Finite.iff_fg.mp inferInstance))
-  haveI : Module.IsTorsionFree ℤ Q := Module.IsTorsionFree.mk fun r hr x y hxy => by
+  have : Module.IsTorsionFree ℤ Q := Module.IsTorsionFree.mk fun r hr x y hxy => by
     have hr0 : r ≠ 0 := hr.ne_zero
     apply Subtype.ext
     have h : ((r • x : Q) : E) = ((r • y : Q) : E) := congrArg Subtype.val hxy
@@ -177,7 +177,7 @@ theorem degree_quotient : DegQuot := by
       rw [Int.cast_smul_eq_zsmul, Int.cast_smul_eq_zsmul]
       exact h
     exact smul_right_injective E (Int.cast_ne_zero.mpr hr0) h'
-  haveI : Module.Free ℤ Q := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ Q := Module.free_of_finite_type_torsion_free'
   let eQ := Module.Free.chooseBasis ℤ Q
   let bN := Module.Free.chooseBasis ℤ N
   have hlift : ∀ j, ∃ x ∈ L, P x = (eQ j : E) := fun j => (hQmem _).1 (eQ j).2
@@ -284,7 +284,7 @@ theorem degree_quotient : DegQuot := by
       exact neg_add_cancel _
     intro j
     exact Fintype.linearIndependent_iff.1 hindR _ hrel (Sum.inr j)
-  haveI hQd : DiscreteTopology Q := by
+  have hQd : DiscreteTopology Q := by
     have h := discreteTopology_span_range_of_linearIndependent (fun j => (eQ j : E)) heQ
     rwa [span_range_coe_basis' Q eQ] at h
   have hrk : rk L = rk N + rk Q := by
@@ -310,11 +310,11 @@ theorem degree_quotient : DegQuot := by
     | inl i0 =>
       simp only [M, v2, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₁, Sum.elim_inl,
         Sum.elim_inr, Matrix.zero_apply, zero_smul, Finset.sum_const_zero, add_zero,
-        Matrix.one_apply, ite_smul, one_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Matrix.one_apply, ite_smul, one_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     | inr j0 =>
       simp only [M, v2, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₂, Sum.elim_inl,
         Sum.elim_inr, Matrix.of_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rw [hα, sub_add_cancel]
   have hdetM : M.det = 1 := by
     simp only [M]

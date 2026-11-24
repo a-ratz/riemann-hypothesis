@@ -179,7 +179,7 @@ private theorem main (D : Dat F E) (v : P F) (w w' : P E) [hl : w.asIdeal.LiesOv
   have hτv : Valued.v τ = 1 := by
     have h := hG.del
     rw [← hτ2, map_pow] at h
-    exact (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 h
+    exact (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 h
   have hτ0 : τ ≠ 0 := fun h => by simp [h] at hτv
   have h20 : (2 : Kv v) ≠ 0 := fun h => by simpa [h] using hG.two
   have hτ' : j τ = -algebraMap E (Kv w') D.θ := by
@@ -248,8 +248,8 @@ theorem UpperTheory.exists_localCharacter_of_split_pair_rat :
           (∀ w'' : H.P E, w''.under (𝓞 ℚ) = v → w'' = w ∨ w'' = w') → H.Gd D.δ v →
           ∃ χ : H.Kv w → ℂ, H.Good χ ∧ ∀ x, ∃ u t, H.sg w x = D.mkE u t ∧ ψ (-t) = χ x := by
   intro E _ _ D v w w' hne hw hw' h1 h2 hu hG
-  haveI hl : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw]; rfl⟩
-  haveI hl' : w'.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw']; rfl⟩
+  have hl : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw]; rfl⟩
+  have hl' : w'.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw']; rfl⟩
   exact UpperTheory.AdeleBaseChangeSplitting.main D v w w' hne h1 h2
     (fun u h => hu u (HeightOneSpectrum.ext h.1.symm)) hG
 end -- clump:auto
@@ -325,8 +325,8 @@ theorem UpperTheory.ideleEmbedding_uniformizer_of_split_place_pair :
           ∀ ϖ : (H.Kv v)ˣ, H.IsU ϖ → ∃ (ϖ₁ : (H.Kv w)ˣ) (ϖ₂ : (H.Kv w')ˣ), H.IsU ϖ₁ ∧ H.IsU ϖ₂ ∧
             ideleEmbedding ℚ E (H.idl v ϖ) = H.idl w ϖ₁ * H.idl w' ϖ₂ := by
   intro E _ _ D v w w' hne hw hw' _ _ hall ϖ hϖ
-  haveI hl : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw]; rfl⟩
-  haveI hl' : w'.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw']; rfl⟩
+  have hl : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw]; rfl⟩
+  have hl' : w'.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw']; rfl⟩
   have hn : (⟨w, hl⟩ : PlacesOver E v) ≠ ⟨w', hl'⟩ := fun h => hne (congrArg Subtype.val h)
   obtain ⟨-, -, -, hi, -, -, -, -, -, -⟩ := sgLaws ℚ v
   obtain ⟨-, -, -, hi₁, -, -, -, -, -, -⟩ := sgLaws E w
@@ -341,7 +341,7 @@ theorem UpperTheory.ideleEmbedding_uniformizer_of_split_place_pair :
   · obtain ⟨h1, h2⟩ := map_sg v w w' hne (fun u hu => hall u (HeightOneSpectrum.ext hu.over.symm)) ((ϖ : Kv v) - 1)
     change adeleMap ℚ E ((idl v ϖ : (A ℚ)ˣ) : A ℚ) = _
     rw [Units.val_mul, hi, hi₁, hi₂, map_add (f := _), map_one, h1, map_sub, map_sub, map_one, map_one, add_mul, mul_add, mul_add, h2]
-    simp only [one_mul, mul_one, add_zero, Units.coe_map, MonoidHom.coe_coe]
+    simp only [one_mul, mul_one, add_zero, Units.coe_map, MonoidHom.coe_ofClass]
     abel
 end -- clump:auto
 end -- clump:auto
@@ -415,7 +415,7 @@ private theorem UpperTheory.product_four_geometric_series (x y x' y' c : ℂ) (S
   · simp only [UpperTheory.powerSeriesFirstDifferenceSeq, hS, hT, hS0, hT0]
     norm_num
     ring
-  · rw [if_neg (by omega), if_neg (by omega)]
+  · rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     simp only [UpperTheory.powerSeriesFirstDifferenceSeq, hS2, hT2]
     ring
 

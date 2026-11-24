@@ -143,7 +143,7 @@ theorem eventually_natCast_notMem {F : Type} [Field F] [NumberField F] {M : ℕ}
     exact hM'
   refine (Ideal.finite_factors hI).subset ?_
   intro w hw
-  simp only [Set.mem_setOf_eq, not_not] at hw ⊢
+  simp only [Set.mem_ofPred_eq, not_not] at hw ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hw
 

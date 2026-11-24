@@ -183,7 +183,7 @@ theorem cong_on_adjoin : ∀ (W K : Type) [CommRing W] [IsDomain W] [IsDiscreteV
     exact hvpos ϖ hϖ0 (by rw [hx, map_zero])
   set t := O.valuation x with ht
   have htl : O.valuation (algebraMap K F ϖK) = t ^ l := by rw [← hx', map_pow]
-  have ht0 : 0 < t := zero_lt_iff.mpr (by simpa [ht] using hx0)
+  have ht0 : 0 < t := pos_iff_ne_zero.mpr (by simpa [ht] using hx0)
   have ht1 : t < 1 := by
     have := hϖlt
     rw [IsScalarTower.algebraMap_apply W K F, ← hϖK, htl] at this
@@ -257,7 +257,7 @@ theorem exists_inert_moves_root (W K F : Type) [CommRing W] [IsDomain W] [IsDisc
   have hmin := GlobalTheory.TameKummer.minpoly_eq K hϖ hl (ρ := π) hπ'
   have hmin' := GlobalTheory.TameKummer.minpoly_eq K hϖ hl (ρ := ζ * π)
     (by rw [mul_pow, hζ.pow_eq_one, _root_.one_mul]; exact hπ')
-  haveI : IsGalois K F := {}
+  have : IsGalois K F := {}
   obtain ⟨g, hg⟩ := (Normal.minpoly_eq_iff_mem_orbit (F := K) F (x := ζ * π) (y := π)).1
     (hmin'.trans hmin.symm)
   change g π = ζ * π at hg
@@ -265,9 +265,9 @@ theorem exists_inert_moves_root (W K F : Type) [CommRing W] [IsDomain W] [IsDisc
   have hc : SMulCommClass (F ≃ₐ[K] F) W F := ⟨fun g v x => by
     rw [← IsScalarTower.algebraMap_smul K v x, ← IsScalarTower.algebraMap_smul K v (g • x)]
     simp only [AlgEquiv.smul_def, Algebra.smul_def, _root_.map_mul, AlgEquiv.commutes]⟩
-  letI : TopologicalSpace S := ⊥
-  haveI : DiscreteTopology S := ⟨rfl⟩
-  haveI : ContinuousSMul (F ≃ₐ[K] F) S := by
+  let : TopologicalSpace S := ⊥
+  have : DiscreteTopology S := ⟨rfl⟩
+  have : ContinuousSMul (F ≃ₐ[K] F) S := by
     rw [continuousSMul_iff_stabilizer_isOpen]
     intro x
     have := stabilizer_isOpen_of_isIntegral (K := K) (x : F)
@@ -278,7 +278,7 @@ theorem exists_inert_moves_root (W K F : Type) [CommRing W] [IsDomain W] [IsDisc
   let H := MulAction.stabilizer (F ≃ₐ[K] F) π
   have hH : IsClosed (H : Set (F ≃ₐ[K] F)) :=
     H.isClosed_of_isOpen (stabilizer_isOpen_of_isIntegral (K := K) π)
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
+  have : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
   have hSO : ∀ b : F, IsIntegral W b → b ∈ O := fun b hb => GlobalTheory.ProlongConj.mem_of_isIntegral O h1 hb
   let incl : S →+* O := (S.val.toRingHom).codRestrict O (fun b => hSO b b.2)
   let Q : Ideal S := (IsLocalRing.maximalIdeal O).comap incl
@@ -311,9 +311,9 @@ theorem exists_unit_of_inert_fixes (W K Ω : Type) [CommRing W] [IsDomain W] [Is
     (w : K) (θ : Ω) (hw : w ≠ 0) (hθ : θ ^ N = algebraMap K Ω w)
     (hfix : ∀ g : Ω ≃ₐ[K] Ω, Inert B g → g θ = θ) :
     ∃ c : K, c ≠ 0 ∧ B.valuation (algebraMap K Ω (w / c ^ N)) = 1 := by
-  letI : Algebra W Ω := ((algebraMap K Ω).comp (algebraMap W K)).toAlgebra
-  haveI : IsScalarTower W K Ω := .of_algebraMap_eq fun _ => rfl
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  let : Algebra W Ω := ((algebraMap K Ω).comp (algebraMap W K)).toAlgebra
+  have : IsScalarTower W K Ω := .of_algebraMap_eq fun _ => rfl
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap W Ω ϖ) hN
   obtain ⟨σ, ξ, hσ, hξ, hσπ⟩ := exists_inert_moves_root W K Ω B h1 h2 ϖ hϖ N hN.ne' ζ π hζ hπ
@@ -358,7 +358,7 @@ theorem exists_unit_of_inert_fixes_dedekind (A K Ω : Type) [CommRing A] [IsDede
   let P : Ideal A := (IsLocalRing.maximalIdeal B).comap f
   have hP : ∀ a : A, a ∈ P ↔ B.valuation (algebraMap K Ω (algebraMap A K a)) < 1 := fun a =>
     B.valuation_lt_one_iff (f a)
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   have hone : ∀ a : A, a ∉ P → B.valuation (algebraMap K Ω (algebraMap A K a)) = 1 := fun a ha =>
     le_antisymm ((B.valuation_le_one_iff _).2 (hB a)) (not_lt.1 fun h => ha ((hP a).2 h))
   by_cases hP0 : P = ⊥
@@ -369,9 +369,9 @@ theorem exists_unit_of_inert_fixes_dedekind (A K Ω : Type) [CommRing A] [IsDede
       hone b (by rw [hP0]; simpa using nonZeroDivisors.ne_zero hb), div_one]
   let v : IsDedekindDomain.HeightOneSpectrum A := ⟨P, inferInstance, hP0⟩
   let W := v.valuationSubringAtPrime K
-  haveI : IsLocalization P.primeCompl W :=
+  have : IsLocalization P.primeCompl W :=
     Localization.subalgebra.isLocalization_ofField K P.primeCompl P.primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing W :=
+  have : IsDiscreteValuationRing W :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hP0 W
   have key : ∀ (a : A) (s : P.primeCompl), B.valuation (algebraMap K Ω (algebraMap W K (IsLocalization.mk' W a s))) =
       B.valuation (algebraMap K Ω (algebraMap A K a)) := fun a s => by
@@ -394,9 +394,9 @@ theorem exists_unit_of_kum_eq_zero : ∀ (k K Ω : Type) [Field k] [IsAlgClosed 
       (∀ g : Ω ≃ₐ[K] Ω, Inert B g → kum (N := N) ζ θ g = 0) →
       ∃ c : K, c ≠ 0 ∧ B.valuation (algebraMap K Ω (w / c ^ N)) = 1 := by
   intro k K Ω _ _ _ _ _ _ _ _ _ _ _ N ζ hN hζ w θ hw hθ B hB hk
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : CharZero K := (((algebraMap k[X] K).comp Polynomial.C).charZero_iff (RingHom.injective _)).1 inferInstance
-  haveI : CharZero (RatFunc k) := charZero_of_injective_algebraMap (algebraMap k (RatFunc k)).injective
+  have : NeZero N := ⟨hN.ne'⟩
+  have : CharZero K := (((algebraMap k[X] K).comp Polynomial.C).charZero_iff (RingHom.injective _)).1 inferInstance
+  have : CharZero (RatFunc k) := charZero_of_injective_algebraMap (algebraMap k (RatFunc k)).injective
   have hNK0 : (N : K) ≠ 0 := by exact_mod_cast hN.ne'
   have hNinv : (N : K)⁻¹ ∈ FunctionField.ringOfIntegers k K := by
     have : ((algebraMap k[X] K).comp Polynomial.C) ((N : k)⁻¹) = (N : K)⁻¹ := by
@@ -408,7 +408,7 @@ theorem exists_unit_of_kum_eq_zero : ∀ (k K Ω : Type) [Field k] [IsAlgClosed 
     have h2 := (B.valuation_le_one_iff _).2 (hB _ hNinv)
     have h0 : (N : Ω) ≠ 0 := by
       rw [← map_natCast (algebraMap K Ω)]; exact (_root_.map_ne_zero _).2 hNK0
-    rw [map_inv₀, map_natCast, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h0))] at h2
+    rw [map_inv₀, map_natCast, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h0))] at h2
     exact le_antisymm h1 h2
   have hθ0 : θ ≠ 0 := by
     rintro rfl
@@ -461,7 +461,7 @@ theorem exists_comap_eq {K L : Type} [Field K] [Field L] (f : K →+* L) (U : Va
     rw [ValuationSubring.mem_nonunits_iff, map_inv₀, map_inv₀] at h2
     have h3 : W.valuation (f x) ≤ 1 := (W.valuation_le_one_iff _).2 hx
     have h4 : 0 < W.valuation (f x) := by
-      rw [zero_lt_iff, Valuation.ne_zero_iff]; exact (map_ne_zero f).2 h0
+      rw [pos_iff_ne_zero, Valuation.ne_zero_iff]; exact (map_ne_zero f).2 h0
     exact absurd ((inv_lt_one₀ h4).1 h2) (not_lt.2 h3)
   · intro x hx
     exact hW ⟨x, hx⟩
@@ -475,7 +475,7 @@ theorem val_eq_one_iff {F : Type} [Field F] (T : ValuationSubring F) (y : F) :
     rw [h0, map_zero] at h
     exact zero_ne_one h
   · rintro ⟨h0, h₁, h₂⟩
-    have : 0 < T.valuation y := zero_lt_iff.2 ((_root_.map_ne_zero _).2 h0)
+    have : 0 < T.valuation y := pos_iff_ne_zero.2 ((_root_.map_ne_zero _).2 h0)
     exact le_antisymm h₁ ((inv_le_one₀ this).1 h₂)
 
 theorem val_comap_eq_one {K K' : Type} [Field K] [Field K'] (f : K →+* K') (S : ValuationSubring K') (x : K) :
@@ -487,7 +487,7 @@ theorem val_eq_one_of_pow {L : Type} [Field L] (A : ValuationSubring L) {x : L} 
     (h : A.valuation (x ^ n) = 1) : A.valuation x = 1 := by
   rw [map_pow] at h
   rcases lt_trichotomy (A.valuation x) 1 with h1 | h1 | h1
-  · exact absurd h (ne_of_lt (pow_lt_one₀ zero_le' h1 hn))
+  · exact absurd h (ne_of_lt (pow_lt_one₀ zero_le h1 hn))
   · exact h1
   · exact absurd h (ne_of_gt (one_lt_pow₀ h1 hn))
 
@@ -551,17 +551,17 @@ theorem core {k K L : Type} [Field k] [IsAlgClosed k] [CharZero k] [Field K] [Al
   classical
   let E : IntermediateField (RatFunc k) K := IntermediateField.adjoin (RatFunc k) ((insert f T : Finset K) : Set K)
   have hE : ∀ t ∈ insert f T, t ∈ E := fun t ht => IntermediateField.subset_adjoin _ _ (Finset.mem_coe.2 ht)
-  haveI : FiniteDimensional (RatFunc k) E :=
+  have : FiniteDimensional (RatFunc k) E :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
-  haveI : IsAlgClosed L := IsAlgClosure.isAlgClosed K
-  haveI : Algebra.IsAlgebraic K L := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic E K := inferInstance
-  haveI : Module.IsTorsionFree E L := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure E L := ⟨inferInstance, Algebra.IsAlgebraic.trans E K L⟩
-  haveI : CharZero K := charZero_of_injective_ringHom (algebraMap (RatFunc k) K).injective
-  haveI : CharZero L := charZero_of_injective_ringHom (algebraMap K L).injective
-  haveI : NeZero (l : L) := ⟨Nat.cast_ne_zero.2 hl.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
+  have : IsAlgClosed L := IsAlgClosure.isAlgClosed K
+  have : Algebra.IsAlgebraic K L := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic E K := inferInstance
+  have : Module.IsTorsionFree E L := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure E L := ⟨inferInstance, Algebra.IsAlgebraic.trans E K L⟩
+  have : CharZero K := charZero_of_injective_ringHom (algebraMap (RatFunc k) K).injective
+  have : CharZero L := charZero_of_injective_ringHom (algebraMap K L).injective
+  have : NeZero (l : L) := ⟨Nat.cast_ne_zero.2 hl.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot L l
   have hθ0 : θ ≠ 0 := by
     rintro rfl
@@ -601,10 +601,10 @@ theorem mem_Un_of_root_mem_adjoin : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] 
   obtain ⟨B, rfl⟩ := exists_comap_eq (algebraMap X.K (AlgebraicClosure X.K)) W
   let e := RatFunc.algEquivOfTranscendental X.jK (GlobalTheory.K4.jK_transcendental X)
   let ψ : RatFunc Ω →ₐ[Ω] X.K := (IntermediateField.val _).comp e.toAlgHom
-  letI : Algebra (RatFunc Ω) X.K := ψ.toRingHom.toAlgebra
-  letI : Algebra (Polynomial Ω) X.K := (ψ.toRingHom.comp (algebraMap (Polynomial Ω) (RatFunc Ω))).toAlgebra
-  haveI : IsScalarTower (Polynomial Ω) (RatFunc Ω) X.K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsAlgebraic (RatFunc Ω) X.K := ⟨fun x => by
+  let : Algebra (RatFunc Ω) X.K := ψ.toRingHom.toAlgebra
+  let : Algebra (Polynomial Ω) X.K := (ψ.toRingHom.comp (algebraMap (Polynomial Ω) (RatFunc Ω))).toAlgebra
+  have : IsScalarTower (Polynomial Ω) (RatFunc Ω) X.K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsAlgebraic (RatFunc Ω) X.K := ⟨fun x => by
     refine (X.alg_j x).ringHom_of_comp_eq (e.symm : _ →+* RatFunc Ω) (RingHom.id _) e.symm.injective ?_
     ext a
     show ((e (e.symm a) : _) : X.K) = a

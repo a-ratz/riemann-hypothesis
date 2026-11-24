@@ -79,7 +79,7 @@ variable [MeasurableSpace (GL (Fin n) F)] [BorelSpace (GL (Fin n) F)]
 theorem exists_ker_sphericalCharacter_eq (I : Ideal (SphericalHecke μ (F := F) (n := n)))
     [I.IsMaximal] : ∃ w : Fin n → ℂˣ,
       RingHom.ker (sphericalCharacter μ (isUnramified_unramifiedChar (F := F) w)) = I := by
-  haveI := isIntegral_satake (μ := μ) (F := F) (n := n)
+  have := isIntegral_satake (μ := μ) (F := F) (n := n)
   obtain ⟨w, hw⟩ := exists_ker_evalAt_comp_eq (satakeHom μ) satakeHom_injective I
   exact ⟨w, by rw [← evalAt_comp_satakeHom]; exact hw⟩
 
@@ -213,7 +213,7 @@ theorem exists_satakeParameter {V : Type*} [AddCommGroup V] [Module ℂ V]
     rw [Ideal.isMaximal_def]
     exact isSimpleModule_iff_isCoatom.1
       (IsSimpleModule.congr (LinearMap.quotKerEquivOfSurjective _ hsurj))
-  letI := hI
+  let := hI
   obtain ⟨w, hw⟩ := exists_ker_sphericalCharacter_eq (μ := μ) I
   refine ⟨w * (halfPoint F n)⁻¹, fun h v hv => ?_⟩
   rw [← sphericalCharacter_unramifiedChar_eq]

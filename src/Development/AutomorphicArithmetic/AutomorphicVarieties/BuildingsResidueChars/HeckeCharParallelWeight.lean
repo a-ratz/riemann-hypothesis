@@ -79,7 +79,7 @@ private theorem eventually_unit_pow_factorial_sub_one_mem {F : Type} [Field F] [
     (u : (NumberField.RingOfIntegers F)ˣ) (I : Ideal (NumberField.RingOfIntegers F))
     (hI : I ≠ ⊥) :
     ∀ᶠ k in Filter.atTop, ((u : NumberField.RingOfIntegers F) ^ (Nat.factorial k) - 1) ∈ I := by
-  haveI := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have := Ideal.finiteQuotientOfFreeOfNeBot I hI
   have hM : 0 < Nat.card (NumberField.RingOfIntegers F ⧸ I)ˣ := Nat.card_pos
   filter_upwards [Filter.eventually_ge_atTop (Nat.card (NumberField.RingOfIntegers F ⧸ I)ˣ)]
     with k hk
@@ -132,8 +132,8 @@ private theorem infDiag_inv_unit_eq_infinite_one {F : Type} [Field F] [NumberFie
       ((algebraMap F (NumberField.InfiniteAdeleRing F) u, 1) : NumberField.InfiniteAdeleRing F ×
         IsDedekindDomain.FiniteAdeleRing (NumberField.RingOfIntegers F) F) := by
   classical
-  letI : IsOneApply (Fˣ →* Neutral.B1.Ideles F) := ⟨fun _ => rfl⟩
-  letI : IsMulApply (Fˣ →* Neutral.B1.Ideles F) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply (Fˣ →* Neutral.B1.Ideles F) := ⟨fun _ => rfl⟩
+  let : IsMulApply (Fˣ →* Neutral.B1.Ideles F) := ⟨fun _ _ _ => rfl⟩
   rw [Formalism.L2.Host.infDiag, prod_apply, Units.coe_prod]
   let p2 : NumberField.AdeleRing (NumberField.RingOfIntegers F) F →*
       IsDedekindDomain.FiniteAdeleRing (NumberField.RingOfIntegers F) F :=
@@ -238,7 +238,7 @@ private theorem const_of_sum_mul_log_norm_unit_eq_zero {F : Type} [Field F] [Num
       ⟨fun φ ψ h => inj φ ψ h, fun w => ⟨w.embedding, NumberField.InfinitePlace.mk_embedding w⟩⟩
       _ _ (fun φ => ?_)
     simp [NumberField.IsTotallyReal.mult_eq, NumberField.InfinitePlace.apply]
-  haveI : Nonempty (F →+* ℂ) := ⟨(Classical.arbitrary (NumberField.InfinitePlace F)).embedding⟩
+  have : Nonempty (F →+* ℂ) := ⟨(Classical.arbitrary (NumberField.InfinitePlace F)).embedding⟩
   obtain ⟨φ₀, hφ₀⟩ := Finite.exists_min a
   obtain ⟨u, hu⟩ := NumberField.Units.dirichletUnitTheorem.exists_unit F
     (NumberField.InfinitePlace.mk φ₀)

@@ -105,7 +105,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.famLin_of :
     · change (τ.deg 0).app A _ + (τ'.deg 0).app A _ = _
       rw [hb, hb']
       exact (map_add _ _ _).symm
-    · haveI := Sq.finite A
+    · have := Sq.finite A
       have hfin := hF A.r Ω x
       rw [show Sec.res x (b + b') = Sec.res x b + Sec.res x b' from map_add _ _ _, hs Ω x, hs' Ω x,
         ← finsum_mem_add_distrib hfin]
@@ -118,7 +118,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.famLin_of :
     · change d • (τ.deg 0).app A _ = _
       rw [hb]
       exact (map_zsmul _ _ _).symm
-    · haveI := Sq.finite A
+    · have := Sq.finite A
       have hfin := hF A.r Ω x
       rw [show Sec.res x (d • b) = d • Sec.res x b from map_zsmul _ _ _, hs Ω x]
       have := (zsmulAddGroupHom (α := Sec (tw q i) (gp Ω)) d).map_finsum_mem
@@ -128,20 +128,20 @@ theorem UpperTheory.Gal.TranscendenceTraces.famLin_of :
       simp only [Wt.smul, mul_smul, zsmulAddGroupHom_apply]
   · intro S d
     refine ⟨famId S _ d, fun A a => ?_, fun n a => ?_⟩
-    · haveI := isIso_r A
+    · have := isIso_r A
       refine ⟨d • Sec.res (inv A.r) a, ?_, fun Ω _ _ x => ?_⟩
       · change d • resInv ((res _ (tw q i)).X 0) A (Sec.map (resι _ (tw q i)) a) = _
         rw [resInv_apply, ← map_res]
         exact (map_zsmul _ _ _).symm
       · have hf : fib A.r x = {x ≫ inv A.r} := by
           ext z
-          simp only [fib, Set.mem_setOf_eq, Set.mem_singleton_iff]
+          simp only [fib, Set.mem_ofPred_eq, Set.mem_singleton_iff]
           rw [IsIso.eq_comp_inv]
         rw [hf, finsum_mem_singleton]
         rw [show Sec.res x (d • Sec.res (inv A.r) a) = d • Sec.res x (Sec.res (inv A.r) a) from map_zsmul _ _ _, res_res]
         rfl
     · change d • resInv ((res _ (tw q i)).X n) (Sq.self (𝟙 S)) a = _
-      haveI := isIso_r (Sq.self (𝟙 S))
+      have := isIso_r (Sq.self (𝟙 S))
       rw [resInv_apply]
       have e : inv (Sq.self (𝟙 S)).r = 𝟙 _ := IsIso.inv_id
       rw [e]

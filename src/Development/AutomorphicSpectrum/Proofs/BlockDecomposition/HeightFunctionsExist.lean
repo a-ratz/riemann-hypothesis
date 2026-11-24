@@ -62,7 +62,7 @@ theorem continuous_of_decomp {Γ X : Type*} [Group Γ] [TopologicalSpace Γ] [Is
   rw [continuous_iff_isClosed]
   intro F hF
   have hQF : IsClosed ((Subtype.val : Q → Γ) '' (δ ⁻¹' F)) :=
-    hQ.isClosedMap_subtype_val _ (hF.preimage hδ)
+    hQ.isClosedMap_subtypeVal _ (hF.preimage hδ)
   have heq : H ⁻¹' F = Set.image2 (· * ·) ((Subtype.val : Q → Γ) '' (δ ⁻¹' F)) C := by
     ext g
     constructor

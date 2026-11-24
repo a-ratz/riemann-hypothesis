@@ -47,7 +47,7 @@ private theorem cnt {X Y : Type} [AddCommGroup X] [AddCommGroup Y] (Z B : AddSub
     (hf : ∀ b ∈ B, f b = 0) (S : Set Y) (hS : ∀ s ∈ S, ∃ z ∈ Z, f z = s) :
     S.Finite ∧ S.ncard * Nat.card B ≤ (Z : Set X).ncard := by
   let g : Z →+ Y := f.comp Z.subtype
-  haveI : Finite g.range := Finite.of_surjective _ g.rangeRestrict_surjective
+  have : Finite g.range := Finite.of_surjective _ g.rangeRestrict_surjective
   have hsub : S ⊆ (g.range : Set Y) := fun s hs => by
     obtain ⟨z, hz, rfl⟩ := hS s hs
     exact ⟨⟨z, hz⟩, rfl⟩
@@ -90,7 +90,7 @@ theorem UpperTheory.V.Th.selTr :
       neg_mem' := by
         rintro a ⟨a1, a2, a3⟩
         exact ⟨neg_mem a1, fun v => neg_mem (a2 v), fun u g hg => by rw [Pi.neg_apply, a3 u g hg, neg_zero]⟩ }
-  haveI : Finite Z := Finite.of_injective (fun z : Z => (⟨z.1, z.2.1⟩ : Zl rep))
+  have : Finite Z := Finite.of_injective (fun z : Z => (⟨z.1, z.2.1⟩ : Zl rep))
     fun a b e => Subtype.ext (congrArg (fun t : Zl rep => t.1) e)
   let f : (G.Γ → Mm O n m) →+ (G.G₀ → Om O m) :=
     { toFun := fun z => trFun h y m fun g => z g
@@ -122,7 +122,7 @@ theorem UpperTheory.V.Th.selTr :
       show (z' g * _).trace = (z g * _).trace
       rw [h3]⟩
     obtain ⟨Y, hY⟩ := z5 v
-    have hc : Continuous (G.η.ker.subtype.comp (G.φ v)) := continuous_subtype_val.comp (G.φ_cont v)
+    have hc : Continuous (G.η.ker.subtype.comp (G.φ v)) := continuous_subtypeVal.comp (G.φ_cont v)
     have e : z' ∘ (G.η.ker.subtype.comp (G.φ v)) = (fun g => rep (G.φ v g : G.G₀) Y - Y) +
         fun g => z' (G.φ v g : G.G₀) - (rep (G.φ v g : G.G₀) Y - Y) := funext fun g => by simp
     rw [e]

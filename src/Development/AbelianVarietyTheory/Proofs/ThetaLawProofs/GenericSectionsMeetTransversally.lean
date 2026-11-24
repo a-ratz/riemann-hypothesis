@@ -98,7 +98,7 @@ theorem injective_of_injective_comp_aeval_of_trdeg_le {k A κ ι : Type} [Field 
   intro a ha
   by_contra hne
   have hmem : a ∈ RingHom.ker χ := ha
-  refine Ideal.comap_ne_bot_of_algebraic_mem hne hmem
+  refine Ideal.under_ne_bot_of_algebraic_mem hne hmem
     (Algebra.IsAlgebraic.isAlgebraic (R := Algebra.adjoin k (Set.range b)) a) (eq_bot_iff.2 fun y hy => ?_)
   rw [Ideal.mem_comap, RingHom.mem_ker] at hy
   rw [Ideal.mem_bot]
@@ -222,7 +222,7 @@ theorem valT_eq_zero_of_notMem {K : Type} [Field K] {X : Scheme.{0}} (w : Sp K �
     (h : ⊤ ≤ w ⁻¹ᵁ U) (f : Γ(X, U)) (p : Sp K) (hp : w p ∉ X.basicOpen f) : valT (T := K) w U f = 0 := by
   by_contra hne
   have h1 : IsUnit ((Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom ((w.appLE U ⊤ h).hom f)) := by
-    have e : valT (T := K) w U f = _ := dif_pos h
+    have e : valT (T := K) w U f = _ := dite_eq_left h
     exact e ▸ Ne.isUnit hne
   have h2 : IsUnit ((w.appLE U ⊤ h).hom f) := by
     have := h1.map (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom

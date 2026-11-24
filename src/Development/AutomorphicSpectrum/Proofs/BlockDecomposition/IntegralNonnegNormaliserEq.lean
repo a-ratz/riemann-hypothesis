@@ -60,14 +60,14 @@ variable {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMul₂ G] [Measura
 theorem ae_lt_top_of_normaliser {ρ : G → ℝ≥0∞} (hρ : IsQuotNormaliser H μH ρ) :
     ∀ᵐ g ∂μG, ρ g < ∞ := by
   have hmulH : Measurable fun p : H × G => (p.1 : G) * p.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul measurable_snd
+    (measurable_subtypeVal.comp measurable_fst).mul measurable_snd
   set E : Set G := {g | ρ g = ∞} with hEdef
   have hE : MeasurableSet E := hρ.1 (measurableSet_singleton ∞)
   have hind : Measurable (E.indicator (1 : G → ℝ≥0∞)) := measurable_one.indicator hE
   have hzero : ∀ g : G, ∫⁻ h : H, E.indicator (1 : G → ℝ≥0∞) ((h : G) * g) ∂μH = 0 := by
     intro g
     have hm : Measurable fun h : H => ρ ((h : G) * g) :=
-      hρ.1.comp (measurable_subtype_coe.mul_const g)
+      hρ.1.comp (measurable_subtypeVal.mul_const g)
     have hfin : ∀ᵐ h : H ∂μH, ρ ((h : G) * g) < ∞ :=
       ae_lt_top hm (by rw [hρ.2 g]; exact ENNReal.one_ne_top)
     refine (lintegral_congr_ae ?_).trans lintegral_zero
@@ -117,14 +117,14 @@ theorem integrable_normaliser_iff {F : G → ℂ} (hF : Measurable F)
     intro σ hσ
     refine lintegral_congr_ae ?_
     filter_upwards [ae_lt_top_of_normaliser (μG := μG) hσ] with g hg
-    rw [enorm_mul, ← ofReal_norm_eq_enorm ((σ g).toReal : ℂ), Complex.norm_real,
+    rw [eNorm_mul, ← ofReal_norm ((σ g).toReal : ℂ), Complex.norm_real,
       Real.norm_of_nonneg ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hg.ne]
   have hm : ∀ {σ : G → ℝ≥0∞}, IsQuotNormaliser H μH σ →
       AEStronglyMeasurable (fun g => F g * ((σ g).toReal : ℂ)) μG := fun hσ =>
     (hF.mul (Complex.measurable_ofReal.comp hσ.1.ennreal_toReal)).aestronglyMeasurable
-  have heq := lintegral_normaliser_eq (μG := μG) (F := fun g => ‖F g‖ₑ) hF.enorm
+  have heq := lintegral_normaliser_eq (μG := μG) (F := fun g => ‖F g‖ₑ) hF.eNorm
     (fun h hh g => by simp only [hFH h hh g]) hρ hρ'
-  simp only [Integrable, hm hρ, hm hρ', true_and, hasFiniteIntegral_iff_enorm, aux hρ, aux hρ', heq]
+  simp only [Integrable, hm hρ, hm hρ', true_and, hasFiniteIntegral_iff_eNorm, aux hρ, aux hρ', heq]
 
 theorem integral_real_normaliser_eq {f : G → ℝ} (hf : Measurable f)
     (hfH : ∀ h ∈ H, ∀ g, f (h * g) = f g) {ρ ρ' : G → ℝ≥0∞}

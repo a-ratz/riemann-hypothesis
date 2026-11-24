@@ -251,20 +251,20 @@ theorem lattice_mass_fibre_eq : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   obtain ⟨g, hg, hlat⟩ := hv
   have hL := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨h1, h2, h3, h4, -⟩ := id hL
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := t8 n M
-  haveI := hlam.1
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := t8 n M
+  have := hlam.1
   obtain ⟨-, c2, c3⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam hlam.1
-  haveI := c2 n M
+  have := c2 n M
   obtain ⟨a1, a2, a3, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hσ d b n M v
   have hcont : ∀ k : GL (Fin M) (Fv F v ⊗[F] E),
       Continuous (actTup (Fv F v) (n := n) k) := by

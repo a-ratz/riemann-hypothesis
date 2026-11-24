@@ -58,7 +58,7 @@ theorem exists_stable_spanning_finset : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type)
   obtain ⟨t₀, ht₀⟩ := zl_span_image_finite l Γ a ρ hρ
   let e : Matrix (Fin a) (Fin a) L.1 →ₗ[ℚ_[l]] Matrix (Fin a) (Fin a) (Om l) :=
     LinearMap.mapMatrix L.1.val.toLinearMap
-  haveI : FiniteDimensional ℚ_[l] L.1 := L.2
+  have : FiniteDimensional ℚ_[l] L.1 := L.2
   let bM := Module.finBasis ℚ_[l] (Matrix (Fin a) (Fin a) L.1)
   let B : Finset (Matrix (Fin a) (Fin a) (Om l)) := insert 1 (Finset.univ.image (fun k => e (bM k)))
   let t₁ : Finset Γ := insert 1 t₀

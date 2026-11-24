@@ -83,7 +83,7 @@ theorem inv_inv_of_haar {m : ℕ} {ε : Fin m → Bool} (ν : Measure (UJ ε)) [
 
 theorem of_integral_holds : OfInt := by
   intro n ε lam ε' mu e hG H H' _ _ _ _ _ _ π σ ν hν hπ hσ w hw hw1 a b hI
-  haveI := hν
+  have := hν
   obtain ⟨κ, -, hS⟩ := schur_haar hσ ν
   have hm := coef_int hG.two hG.hc' hσ hG.gap' ν hw hw1
   obtain ⟨j, hj1, hj2⟩ := exists_intertwiner ν (uRep_emb hG.fits hπ.2.2.1) (uRep_self hσ.2.2.1)

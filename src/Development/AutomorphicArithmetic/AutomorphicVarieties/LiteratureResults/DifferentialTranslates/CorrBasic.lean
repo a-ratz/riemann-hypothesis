@@ -52,7 +52,7 @@ theorem UpperTheory.V.Lit.Dr.corrBasic :
       w s p (fun i => (2 : ℝ) • v i) = (∏ _i : Fin q, (2 : ℝ)) • w s p v := fun s p v =>
     (w s p).toContinuousMultilinearMap.map_smul_univ (fun _ => (2 : ℝ)) v
   have hs : ∀ (g : GL (Fin a) (Cinf E)) (p : HV E a), sand g (sand g⁻¹ p) = p := fun g p => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
   have hs' : ∀ (g : GL (Fin a) (Cinf E)) (p : HV E a), sand g⁻¹ (sand g p) = p := fun g p => by
     simpa using hs g⁻¹ p
   constructor

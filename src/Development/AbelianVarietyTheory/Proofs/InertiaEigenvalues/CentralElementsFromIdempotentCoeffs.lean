@@ -121,7 +121,7 @@ theorem main : StepCentral := by
     refine Finset.prod_congr rfl fun k _ => ?_
     change _ = ∏ _y : D.nd.PlG k, Nat.card (GL (Fin D.R.r) (ZMod (D.host.g k)))
     rw [Finset.prod_const, Finset.card_univ, D.nd.card_PlG k]
-  haveI : Finite (G0g D.nd) := Nat.finite_of_card_ne_zero (hcard ▸ D.what₂.restRowsFiniteGroupCard_pos.ne')
+  have : Finite (G0g D.nd) := Nat.finite_of_card_ne_zero (hcard ▸ D.what₂.restRowsFiniteGroupCard_pos.ne')
   have key : ∀ L : List (Σ k : Fin 2, D.nd.PlG k),
       let e := (L.map fun kv => ArithmeticCylinders.atPlace D kv.1 kv.2 (D.ntypes.eSer kv.1 (s kv))).prod
       e * e = e ∧ ∀ z, e * z = z * e := by

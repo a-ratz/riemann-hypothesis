@@ -127,7 +127,7 @@ theorem continuous_mapH [FiniteDimensional F E] (φ : R →ₐ[F] R') (hc : Cont
     Continuous (mapH σ J φ) := by
   have h : Continuous (Algebra.TensorProduct.map φ (AlgHom.id F E)) :=
     continuous_tensNU (E := E) φ.toLinearMap (map_mul φ) hc
-  refine Continuous.subtype_mk (Continuous.comp (g := bc _) ?_ continuous_subtype_val) _
+  refine Continuous.subtype_mk (Continuous.comp (g := bc _) ?_ continuous_subtypeVal) _
   exact Continuous.units_map _ (continuous_id.matrix_map h)
 
 theorem continuous_extH [FiniteDimensional F E] (j : R →ₗ[F] R') (hj : ∀ a b, j (a * b) = j a * j b)
@@ -135,7 +135,7 @@ theorem continuous_extH [FiniteDimensional F E] (j : R →ₗ[F] R') (hj : ∀ a
   have : IsModuleTopology R' (R' ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalRing (R' ⊗[F] E) := IsModuleTopology.isTopologicalRing R' _
   have h := continuous_tensNU (E := E) j hj hc
-  refine Continuous.subtype_mk (Continuous.comp (g := Units.map _) ?_ continuous_subtype_val) _
+  refine Continuous.subtype_mk (Continuous.comp (g := Units.map _) ?_ continuous_subtypeVal) _
   exact Continuous.units_map _ (continuous_const.add (continuous_id.matrix_map h))
 
 end Points

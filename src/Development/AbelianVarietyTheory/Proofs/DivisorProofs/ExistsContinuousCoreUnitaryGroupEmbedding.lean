@@ -64,8 +64,8 @@ namespace GlobalTheory.SphEis
 
 theorem continuous_of_frameCols : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (j m : ℕ) (C D : Matrix (Fin n) (Fin j) E) (Z : Matrix (Fin n) (Fin m) E) (J₀ : Matrix (Fin m) (Fin m) E), Fr σ J C D Z J₀ → ∀ (X : Type) [TopologicalSpace X] (f : X → GAd σ J), Continuous (fun x => (matHom _ σ J (f x)).1 * adMat F C) → Continuous (fun x => (matHom _ σ J (f x)).1 * adMat F Z) → Continuous (fun x => (matHom _ σ J (f x)).1 * adMat F D) → Continuous f := by
   intro F E _ _ _ _ _ σ n J j m C D Z J₀ hF X _ f hC hZ hD
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hs : adMat F C * adMat F (cT (σ : E →+* E) D * J) + adMat F Z * adMat F (J₀⁻¹ * (cT (σ : E →+* E) Z * J))
       + adMat F D * adMat F (cT (σ : E →+* E) C * J) = 1 := by
     simp only [adMat, ← Matrix.map_mul]
@@ -156,8 +156,8 @@ theorem core_embeds : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         _ = _ := by rw [hZ, map_mul, Units.val_mul, Matrix.mul_assoc]
     · rw [hD, map_mul, Units.val_mul, Matrix.mul_assoc, hD, hD]
   refine ⟨MonoidHom.mk' f hmul, ?_, fun g => ⟨hC g, hD g, hZ g⟩, ?_⟩
-  · haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-    haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  · have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+    have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
     apply _root_.GlobalTheory.SphEis.continuous_of_frameCols F E σ n J j m C D Z J₀ hF (GAd σ J₀) f
     · simp only [hC]; exact continuous_const
     · simp only [hZ]

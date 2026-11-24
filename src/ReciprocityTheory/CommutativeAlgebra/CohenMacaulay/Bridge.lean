@@ -192,7 +192,7 @@ theorem DepthGE.of_ringEquiv {S : Type*} [CommRing S] [IsLocalRing S] (e : R ≃
     intro hu
     apply hy'
     simpa using hu.map (e.symm : S →+* R)
-  · haveI h1 : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := ⟨by ext; simp, by ext; simp⟩
+  · have h1 : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := ⟨by ext; simp, by ext; simp⟩
     have h2 : RingHomInvPair (e.symm : S →+* R) (e : R →+* S) := ⟨by ext; simp, by ext; simp⟩
     exact (LinearEquiv.isRegular_congr' (σ' := (e.symm : S →+* R)) e.toSemilinearEquiv rs).mp hreg
 

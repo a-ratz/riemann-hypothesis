@@ -298,14 +298,14 @@ theorem sigmaFinite_inf (li : Measure (Ainf F)) (h : li.IsAddHaarMeasure) : Sigm
 
 theorem sigmaFinite_fin (v : HeightOneSpectrum (𝓞 F)) (l : Measure (Fv F v)) (h : l.IsAddHaarMeasure) :
     SigmaFinite l := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
   infer_instance
 
 theorem integral_mul_inf (li : Measure (Ainf F)) (h : li.IsAddHaarMeasure) (b : (Ainf F)ˣ)
     (G : Ainf F → ℝ) :
     ∫ y, G ((b : Ainf F) * y) ∂li = ‖((b⁻¹ : (Ainf F)ˣ) : Ainf F)‖ * ∫ y, G y ∂li := by
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hn : 0 ≤ ‖((b⁻¹ : (Ainf F)ˣ) : Ainf F)‖ := by
     rw [InfiniteAdeleRing.norm_def]
     exact Finset.prod_nonneg fun w _ => pow_nonneg (norm_nonneg _) _
@@ -315,7 +315,7 @@ theorem integral_mul_inf (li : Measure (Ainf F)) (h : li.IsAddHaarMeasure) (b : 
 theorem integral_mul_fin (v : HeightOneSpectrum (𝓞 F)) (l : Measure (Fv F v))
     (h : l.IsAddHaarMeasure) (c : Fv F v) (hc : c ≠ 0) (f : Fv F v → ℝ) :
     ∫ y, f (c * y) ∂l = ‖c‖⁻¹ * ∫ y, f y ∂l := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have h1 := integral_comp_unit_mul (Units.mk0 c hc) l f
   simp only [Units.val_mk0] at h1
   rw [h1, GlobalTheory.CompanionTheory.SW.ProdFormula.map_mul_left_finite v c hc l h, integral_smul_nnreal_measure,
@@ -325,7 +325,7 @@ theorem integral_mul_fin (v : HeightOneSpectrum (𝓞 F)) (l : Measure (Fv F v))
 theorem integral_ind (v : HeightOneSpectrum (𝓞 F)) (l : Measure (Fv F v)) (h : IsStdV v l)
     (c : Fv F v) (hc : c ≠ 0) :
     ∫ y, (if c * y ∈ v.adicCompletionIntegers F then (1 : ℝ) else 0) ∂l = ‖c‖⁻¹ := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hO : MeasurableSet (v.adicCompletionIntegers F : Set (Fv F v)) :=
     (Valued.isOpen_valuationSubring _).measurableSet
   have h0 := integral_mul_fin v l h.1 c hc
@@ -369,7 +369,7 @@ theorem integrals_translates : ∀ (F : Type) [Field F] [NumberField F] (li : Me
     (∫ y, phiA G a y ∂(Measure.pi fun _ : Unit => li)) * ∏ v ∈ T, ∫ y, psiA S g a v y ∂(Measure.pi fun _ : Unit => lam v) =
       (md a)⁻¹ * ((∫ y, G y ∂li) * ∏ v ∈ S, ∫ s, g v s ∂(lam v)) := by
   intro F _ _ li lam hli hlam S T G g a hST hoff
-  haveI := sigmaFinite_inf li hli.1
+  have := sigmaFinite_inf li hli.1
   have hI : ∫ y, phiA G a y ∂(Measure.pi fun _ : Unit => li) =
       ‖(((unitInf a)⁻¹ : (Ainf F)ˣ) : Ainf F)‖ * ∫ y, G y ∂li :=
     (integral_pi_unit li (fun x => G ((a : AF F).1 * x))).trans
@@ -378,16 +378,16 @@ theorem integrals_translates : ∀ (F : Type) [Field F] [NumberField F] (li : Me
   have hP : ∀ v ∈ T, ∫ y, psiA S g a v y ∂(Measure.pi fun _ : Unit => lam v) =
       ‖(a : AF F).2 v‖⁻¹ * (if v ∈ S then ∫ s, g v s ∂(lam v) else 1) := by
     intro v _
-    haveI := sigmaFinite_fin v (lam v) (hlam v).1
+    have := sigmaFinite_fin v (lam v) (hlam v).1
     by_cases hS : v ∈ S
     · have h1 := integral_pi_unit (lam v) (fun x => g v ((a : AF F).2 v * x))
       have h2 := integral_mul_fin v (lam v) (hlam v).1 _ (hv v) (g v)
-      simp only [psiA, hS, if_true]
+      simp only [psiA, hS, ite_true]
       rw [h1, h2]
     · have h1 := integral_pi_unit (lam v) (fun x =>
         if (a : AF F).2 v * x ∈ v.adicCompletionIntegers F then (1 : ℝ) else 0)
       have h2 := integral_ind v (lam v) (hlam v) _ (hv v)
-      simp only [psiA, hS, if_false]
+      simp only [psiA, hS, ite_false]
       rw [h1, h2, mul_one]
   have hS' : ∏ v ∈ T, (if v ∈ S then ∫ s, g v s ∂(lam v) else 1) = ∏ v ∈ S, ∫ s, g v s ∂(lam v) := by
     symm
@@ -446,17 +446,17 @@ theorem finite_contributing : ∀ (F : Type) [Field F] [NumberField F], IsTotall
   have hS : ∀ v ∈ S, algebraMap F (Fv F v) x * (↑a : AF F).2 v ∈ tsupport (g v) := by
     intro v hv
     have h := hpsi v (hST hv)
-    simp only [psiA, if_pos hv] at h
+    simp only [psiA, ite_eq_left hv] at h
     rw [mul_comm]
     exact subset_tsupport _ h
   have hnS : ∀ v ∉ S, algebraMap F (Fv F v) x * (↑a : AF F).2 v ∈ v.adicCompletionIntegers F := by
     intro v hv
     by_cases hvT : v ∈ T
     · have h := hpsi v hvT
-      simp only [psiA, if_neg hv] at h
+      simp only [psiA, ite_eq_right hv] at h
       rw [mul_comm]
       by_contra hc
-      exact h (if_neg hc)
+      exact h (ite_eq_right hc)
     · exact mul_mem (hxT v hvT) (ha v hvT).1
   obtain ⟨y, hy⟩ := hNint a (Set.mem_singleton a) x hS hnS
   have hN0 : (N : F) ≠ 0 := by exact_mod_cast hN.ne'
@@ -538,9 +538,9 @@ theorem pure_term : ∀ (F : Type) [Field F] [NumberField F] (θ : ℝ →+* Ain
   rw [GlobalTheory.T.pure_adelic_function_formula F S G g (pr t * (a * r δ))]
   simp only [c1, c2]
   by_cases ht : ∀ v, v ∉ T → algebraMap F (Fv F v) (t : F) ∈ v.adicCompletionIntegers F
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     by_cases h : ∀ v, v ∉ S → (a : AF F).2 v * algebraMap F (Fv F v) (t : F) ∈ v.adicCompletionIntegers F
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       have hp : ∏ v ∈ S, g v ((a : AF F).2 v * algebraMap F (Fv F v) (t : F)) =
           ∏ v ∈ T, psiA S g a v (fun _ => algebraMap F (Fv F v) (t : F)) := by
         rw [← Finset.prod_subset hST]
@@ -550,7 +550,7 @@ theorem pure_term : ∀ (F : Type) [Field F] [NumberField F] (θ : ℝ →+* Ain
           simp [psiA, hv, h v hv]
       rw [hp]
       rfl
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       push_neg at h
       obtain ⟨v, hvS, hv⟩ := h
       have hvT : v ∈ T := by
@@ -560,7 +560,7 @@ theorem pure_term : ∀ (F : Type) [Field F] [NumberField F] (θ : ℝ →+* Ain
         Finset.prod_eq_zero hvT (by simp [psiA, hvS, hv])
       rw [hz]
       simp
-  · rw [if_neg ht, if_neg]
+  · rw [ite_eq_right ht, ite_eq_right]
     intro h
     exact ht fun v hv => (key v hv).1 (h v fun hs => hv (hST hs))
 
@@ -641,8 +641,8 @@ theorem th_pure_rv_zero_bound : ∀ (F : Type) [Field F] [NumberField F], IsTota
       rw [this, hr1]
     by_cases hint : ∀ v, v ∉ S → ((pr t * (u * r δ) : (AF F)ˣ) : AF F).2 v ∈ v.adicCompletionIntegers F
     swap
-    · exact absurd (if_neg hint) ht
-    rw [if_pos hint] at ht
+    · exact absurd (ite_eq_right hint) ht
+    rw [ite_eq_left hint] at ht
     have hne : G ((pr t * (u * r δ) : (AF F)ˣ) : AF F).1 * ∏ v ∈ S, g v (((pr t * (u * r δ) : (AF F)ˣ) : AF F).2 v) ≠ 0 := by
       intro h
       exact ht (by rw [h]; simp)

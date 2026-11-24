@@ -94,7 +94,7 @@ theorem exists_ext_pairing [FiniteDimensional LL V] (m : V →ₗ[LL] V' →ₗ[
       conv_lhs => rw [← w.sum_repr y]
 
       simp only [map_sum, map_smul, hvw, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [h2, map_smul, h3]
     simp only [e, LinearEquiv.coe_coe, Basis.equiv_apply, Equiv.refl_apply, LinearMap.smul_apply,
       Basis.dualBasis_apply, w', Algebra.TensorProduct.basis_repr_tmul]
@@ -233,8 +233,8 @@ theorem tateDual_split (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l
   obtain ⟨c1, c2⟩ := GlobalTheory.DRDual.twisted_dual_deRham l P AI T K L W σ W' σ' n 1 hn
     (fun g x y => by rw [zpow_one]; exact hinv g x y) h
   refine ⟨c1, ?_⟩
-  haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K L W σ).1
-  haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K L W' σ').1
+  have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K L W σ).1
+  have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K L W' σ').1
   have hc : Fintype.card (↥K.1 →ₐ[ℚ_[l]] ↥L.1) = finrank ℚ_[l] ↥K.1 := by
     rw [← hcard, Nat.card_eq_fintype_card]
   obtain ⟨d1, d2⟩ := GlobalTheory.DeRhamSplit.finrank_split (P.PD K) hc σ
@@ -256,17 +256,17 @@ theorem tateDual (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
           finrank LL ↥(DdR (P.PD K) ρ) := by
   obtain ⟨L, ⟨f⟩, hcard, -⟩ := GlobalTheory.exists_finExt_embedding_splitting l K LL
   have := L.2
-  letI : Algebra LL ↥L.1 := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ_[l] LL ↥L.1 := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
-  haveI : FiniteDimensional LL ↥L.1 := Module.Finite.of_restrictScalars_finite ℚ_[l] LL ↥L.1
+  let : Algebra LL ↥L.1 := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ_[l] LL ↥L.1 := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
+  have : FiniteDimensional LL ↥L.1 := Module.Finite.of_restrictScalars_finite ℚ_[l] LL ↥L.1
   exact descend (P.PD K) ↥L.1 (tateDual_split l P AI T K L hcard) ρ ρ' m h hm
 
 theorem main : ∀ D : D7, Formalism.MainNotions.LocalSituation.adm8 D := by
   intro D l _ K
   refine ⟨fun LL _ _ _ O _ _ hO A A' m h hm => ?_, fun LL _ _ _ O _ _ hO A A' m h hm => ?_⟩
-  · haveI := hO.2.1
+  · have := hO.2.1
     exact (tateDual l (D.loc l) (D.locA l) (D.locT l) K LL A.ρ A'.ρ m h hm).1
-  · haveI := hO.2.1
+  · have := hO.2.1
     exact (tateDual l (D.loc l) (D.locA l) (D.locT l) K LL A.ρ A'.ρ m h hm).2
 
 end GlobalTheory.TateDualFil

@@ -104,8 +104,8 @@ namespace GlobalTheory.ClassFin
 theorem exists_algHom_algebraicClosure_ker_le (K A : Type) [Field K] [CommRing A] [Algebra K A]
     [Algebra.FiniteType K A] (m : Ideal A) [m.IsMaximal] :
     ∃ φ : A →ₐ[K] AlgebraicClosure K, ∀ x, φ x = 0 → x ∈ m := by
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite K (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (A ⧸ m)
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite K (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (A ⧸ m)
   let ι : (A ⧸ m) →ₐ[K] AlgebraicClosure K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -132,7 +132,7 @@ theorem mem_range_algebraMap_of_isNilpotent_tmul_sub (K A : Type) [Field K] [Cha
     intro σ
     exact h1 (σ.toAlgHom.comp φ₀) φ₀
   obtain ⟨c, hc⟩ := h2
-  haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := K)
+  have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := K)
   refine ⟨c, ?_⟩
   have h3 : f - algebraMap K A c ∈ (⊥ : Ideal A).jacobson := by
     rw [Ideal.jacobson, Submodule.mem_sInf]
@@ -165,13 +165,13 @@ theorem exists_denominator_of_isField_localization (B A : Type) [CommRing B] [Co
     (hF : IsField (Localization M)) (f : A)
     (hf : IsNilpotent (f ⊗ₜ[B] (1 : A) - (1 : A) ⊗ₜ[B] f)) :
     ∃ m ∈ M, ∃ b' : B, algebraMap B A m * f = algebraMap B A b' := by
-  letI : Field (Localization M) := hF.toField
-  haveI : CharZero (Localization M) := algebraRat.charZero _
+  let : Field (Localization M) := hF.toField
+  have : CharZero (Localization M) := algebraRat.charZero _
   let K := Localization M
   let A' := Localization (Algebra.algebraMapSubmonoid A M)
-  haveI : IsReduced A' := inferInstance
-  haveI : Algebra.FiniteType K A' := by
-    haveI : IsLocalization (Submonoid.map (algebraMap B A) M) A' :=
+  have : IsReduced A' := inferInstance
+  have : Algebra.FiniteType K A' := by
+    have : IsLocalization (Submonoid.map (algebraMap B A) M) A' :=
       inferInstanceAs (IsLocalization (Algebra.algebraMapSubmonoid A M) A')
     have h := RingHom.finiteType_localizationPreserves (algebraMap B A) M K A'
       (RingHom.finiteType_algebraMap.mpr inferInstance)
@@ -202,11 +202,11 @@ theorem exists_common_denominator_of_isNilpotent :
     ∀ (B A : Type) [CommRing B] [CommRing A] [Algebra ℚ B] [Algebra B A] [Algebra.FiniteType B A] [IsReduced A] [Nontrivial B], Function.Injective (algebraMap B A) → ∀ s : Finset A, (∀ f ∈ s, IsNilpotent (f ⊗ₜ[B] (1 : A) - (1 : A) ⊗ₜ[B] f)) → ∃ b : B, b ≠ 0 ∧ ∀ f ∈ s, ∃ b' : B, algebraMap B A b * f = algebraMap B A b' := by
   intro B A _ _ _ _ _ _ _ hinj s hs
   classical
-  haveI : IsReduced B := isReduced_of_injective (algebraMap B A) hinj
+  have : IsReduced B := isReduced_of_injective (algebraMap B A) hinj
   obtain ⟨m, hm⟩ := Ideal.exists_maximal B
   obtain ⟨p, hp, -⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal B)) (J := m) bot_le
-  haveI : p.IsPrime := hp.1.1
-  haveI : Ring.KrullDimLE 0 (Localization.AtPrime p) :=
+  have : p.IsPrime := hp.1.1
+  have : Ring.KrullDimLE 0 (Localization.AtPrime p) :=
     Ring.KrullDimLE.of_isLocalization p hp _
   have hF : IsField (Localization.AtPrime p) := Ring.KrullDimLE.isField_of_isReduced
   have key : ∃ b ∈ p.primeCompl, ∀ f ∈ s, ∃ b' : B, algebraMap B A b * f = algebraMap B A b' := by
@@ -311,10 +311,10 @@ theorem exists_multiplier_descend_of_closed {σ X : Type} [Fintype σ] [Nonempty
   have hπ : Function.Surjective π := φ.rangeRestrict_surjective
   have hπv : ∀ f x, ((π f : A) : X → ℂ) x = MvPolynomial.aeval (p x) f := fun _ _ => rfl
   let B : Subalgebra ℂ A := (π.comp (MvPolynomial.aeval q)).range
-  haveI : Algebra.FiniteType ℂ A := Algebra.FiniteType.of_surjective π hπ
-  haveI : Algebra.FiniteType B A := Algebra.FiniteType.of_restrictScalars_finiteType ℂ B A
-  haveI : IsReduced A := isReduced_of_injective A.val Subtype.val_injective
-  letI : Algebra ℚ B := ((algebraMap ℂ B).comp (algebraMap ℚ ℂ)).toAlgebra
+  have : Algebra.FiniteType ℂ A := Algebra.FiniteType.of_surjective π hπ
+  have : Algebra.FiniteType B A := Algebra.FiniteType.of_restrictScalars_finiteType ℂ B A
+  have : IsReduced A := isReduced_of_injective A.val Subtype.val_injective
+  let : Algebra ℚ B := ((algebraMap ℂ B).comp (algebraMap ℚ ℂ)).toAlgebra
   have hpt : ∀ χ : A →ₐ[ℂ] ℂ, ∃ x, ∀ f, χ (π f) = MvPolynomial.aeval (p x) f := by
     intro χ
     have h1 : χ.comp π = MvPolynomial.aeval (fun i => χ (π (MvPolynomial.X i))) := by
@@ -369,7 +369,7 @@ theorem exists_multiplier_descend_blk :
     ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ : Set (Matrix ι ι ℂ)) (e : Matrix ι ι ℚ), pts Γ ℂ ⊆ Γ → Γ.Nonempty → ∀ s : Finset (MvPolynomial (ι × ι) ℂ), (∀ f ∈ s, ∀ x ∈ Γ, ∀ x' ∈ Γ, blk e x = blk e x' → evC f x = evC f x') → ∃ b : MvPolynomial (ι × ι) ℂ, (∃ x ∈ Γ, evC b (blk e x) ≠ 0) ∧ ∀ f ∈ s, ∃ b' : MvPolynomial (ι × ι) ℂ, ∀ x ∈ Γ, evC b (blk e x) * evC f x = evC b' (blk e x) := by
   intro ι _ _ Γ e hΓ hne s hs
   obtain ⟨q, hq⟩ := exists_poly_blk_entries e
-  haveI : Nonempty Γ := hne.to_subtype
+  have : Nonempty Γ := hne.to_subtype
   have hev : ∀ (f : MvPolynomial (ι × ι) ℂ) (x : Matrix ι ι ℂ),
       evC f x = MvPolynomial.aeval (fun kl : ι × ι => x kl.1 kl.2) f := fun f x => rfl
   have hcomp : ∀ (b : MvPolynomial (ι × ι) ℂ) (x : Matrix ι ι ℂ),
@@ -1444,7 +1444,7 @@ private lemma exists_finset_integral_classes {R : Type} [CommRing R] [Algebra �
   obtain ⟨d, hd⟩ : ∃ d, d = Fintype.card ι - 1 := ⟨_, rfl⟩
   obtain ⟨L, hL⟩ : ∃ L, L = N * N ^ d := ⟨_, rfl⟩
   have hL0 : 0 < L := hL ▸ Nat.mul_pos hN (pow_pos hN d)
-  haveI : NeZero L := ⟨hL0.ne'⟩
+  have : NeZero L := ⟨hL0.ne'⟩
   have hLR : (L : R) = (N : R) * (N : R) ^ d := by rw [hL]; push_cast; ring
   let Cls : (ι → ι → ZMod L) → Matrix ι ι R → Prop := fun c w => w ∈ S ∧
     ∀ i j, ∃ z : ℤ, ∃ a ∈ R₀, (z : ZMod L) = c i j ∧ (N : R) * w i j = z + (L : R) * a
@@ -1458,7 +1458,7 @@ private lemma exists_finset_integral_classes {R : Type} [CommRing R] [Algebra �
     choose z a ha hza using fun i j => hi L hL0 _ (hwN i j)
     have hc : ∃ w', Cls (fun i j => (z i j : ZMod L)) w' :=
       ⟨w, hw, fun i j => ⟨z i j, a i j, ha i j, rfl, hza i j⟩⟩
-    refine ⟨hc.choose, Finset.mem_image.2 ⟨_, Finset.mem_univ _, dif_pos hc⟩, ?_⟩
+    refine ⟨hc.choose, Finset.mem_image.2 ⟨_, Finset.mem_univ _, dite_eq_left hc⟩, ?_⟩
     obtain ⟨htS, ht⟩ := hc.choose_spec
     obtain ⟨t, htdef⟩ : ∃ t, t = hc.choose := ⟨_, rfl⟩
     rw [← htdef] at htS ht ⊢

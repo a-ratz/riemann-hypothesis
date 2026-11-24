@@ -182,8 +182,8 @@ theorem mem_sSup_irrRep : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
   have h4 : ∀ h, ∀ x ∈ C, ρ h x ∈ C := fun h x hx => rt_mem_AFall h hx
   obtain ⟨N, hN, hxN⟩ := hx.2
   let core := GlobalTheory.IsotOrth.coreOf C (fun x y => B x y) h1 h2 h3
-  letI : NormedAddCommGroup C := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ C := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup C := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ C := InnerProductSpace.ofCore core.toCore
   let ρC := GlobalTheory.IsotOrth.rhoC ρ C h4
   have hρC : ∀ g (c : C), ((ρC g c : C) : GAf L n → a.W) = NG.rt L n g c := fun g c => rfl
   have hunit : ∀ g (x y : C), inner ℂ (ρC g x) (ρC g y) = inner ℂ x y :=
@@ -193,7 +193,7 @@ theorem mem_sSup_irrRep : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
       zero_mem' := fun k _ => map_zero _
       add_mem' := fun ha hb k hk => by rw [map_add (f := _), ha k hk, hb k hk]
       smul_mem' := fun c v hv k hk => by rw [map_smul, hv k hk] }
-  haveI := hfin N hN
+  have := hfin N hN
   let ι : F →ₗ[ℂ] ↥(Submodule.span ℂ {f | f ∈ NG.AFall L n a.ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g}) :=
     (C.subtype.comp F.subtype).codRestrict _ (fun w => Submodule.subset_span ⟨w.1.2, fun κ hκ g => by
       have := congrArg Subtype.val (w.2 κ hκ)
@@ -201,7 +201,7 @@ theorem mem_sSup_irrRep : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
   have hι : Function.Injective ι := fun a b h => by
     have h' := congrArg Subtype.val h
     exact Subtype.ext (Subtype.ext h')
-  haveI : FiniteDimensional ℂ F := FiniteDimensional.of_injective ι hι
+  have : FiniteDimensional ℂ F := FiniteDimensional.of_injective ι hι
   have hF : ∀ v, v ∈ F ↔ ∀ k ∈ GlobalTheory.IsotOrth.congSub L n N, ρC k v = v := fun v => Iff.rfl
   have horb : ∀ y : C, ((fun k => ρC k y) '' (GlobalTheory.IsotOrth.congSub L n N : Set (GAf L n))).Finite := by
     intro y
@@ -254,12 +254,12 @@ theorem typeSp_decomp : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
   intro L _ _ _ n a J χ hlev
   classical
   obtain ⟨N, hN, hNJ⟩ := hlev
-  haveI hW : FiniteDimensional ℂ a.W := a.alg.1
+  have hW : FiniteDimensional ℂ a.W := a.alg.1
   have hT := _root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n
   have hfin : ∀ N : ℕ, 0 < N → FiniteDimensional ℂ ↥(Submodule.span ℂ
       {f | f ∈ NG.AFall L n a.ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g}) := by
     intro M hM
-    haveI := GlobalTheory.AlgFormsFin.fixedForms_finite L n a.ρ hT hM
+    have := GlobalTheory.AlgFormsFin.fixedForms_finite L n a.ρ hT hM
     refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n a.ρ M) (Submodule.span_le.2 ?_)
     rintro f ⟨hf, hκ⟩
     exact ⟨hf.1, hκ⟩
@@ -275,8 +275,8 @@ theorem typeSp_decomp : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     have := congrFun (hf.2 ⟨κ, hJ⟩) g
     rw [h1] at this
     simpa [NG.rt] using this
-  haveI : FiniteDimensional ℂ ↥(Submodule.span ℂ {f | f ∈ NG.AFall L n a.ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g}) := hfin N hN
-  haveI hVfd : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le hVle
+  have : FiniteDimensional ℂ ↥(Submodule.span ℂ {f | f ∈ NG.AFall L n a.ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g}) := hfin N hN
+  have hVfd : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le hVle
   refine ⟨hVfd, ?_⟩
 
   let P : Set (Submodule ℂ (GAf L n → a.W)) := {q | q ≠ ⊥ ∧ ∃ S, NG.IsIrrRep a.ρ S ∧ q = NG.isoTyp a.ρ S ⊓ V}
@@ -324,7 +324,7 @@ theorem typeSp_decomp : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
   have hindep : iSupIndep fun i : P => NG.isoTyp a.ρ (S i) :=
     indep_of_orth (fun x => B x) _ (fun i x hx h0 => pos_zero hG (isoTyp_le _ hx) h0) horth
   refine ⟨P, hPfin, S, hSirr, hinj, hcover, hne, hindep, ?_⟩
-  haveI : Fintype P := Fintype.ofFinite P
+  have : Fintype P := Fintype.ofFinite P
   refine le_antisymm (iSup_le fun i => inf_le_right) fun x hx => ?_
   have hxA : x ∈ NG.AFall L n a.ρ := hx.1
   have hproj : ∀ i : P, ∃ p ∈ NG.isoTyp a.ρ (S i), ∀ w ∈ NG.isoTyp a.ρ (S i), B (x - p) w = 0 :=

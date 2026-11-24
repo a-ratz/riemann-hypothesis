@@ -148,12 +148,12 @@ private theorem fx_odd [IsAlgClosed Ω] [CharZero Ω] (h : ∀ ζ : Ω, ζ ^ M =
     exact ⟨1, rfl, rfl, fx_one⟩
   | prime p hp =>
     intro hodd hpM
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     have hp2 : p ≠ 2 := by
       rintro rfl
       simp at hodd
-    haveI : NeZero ((p : ℕ) : Ω) := ⟨by exact_mod_cast hp.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω p
+    have : NeZero ((p : ℕ) : Ω) := ⟨by exact_mod_cast hp.ne_zero⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω p
     obtain ⟨⟨x, hx⟩, hσ⟩ := UpperTheory.V.CF.gauss Ω p ζ hp2 hζ
     have hsζ : s ζ = ζ := fix_dvd h hpM hζ.pow_eq_one
     have hsx : s x = x := by
@@ -401,7 +401,7 @@ private theorem sub_smul_mul_sub_smul_eq_zero_of_quadratic {K : Type} [Field K] 
 
 theorem quadMu (K Ω : Type) [Field K] [NumberField K] [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Algebra K Ω]
     (hK : Module.finrank ℚ K = 2) (s : G ℚ Ω) (hs : ∀ ζ : Ω, ζ ^ (discr K).natAbs = 1 → s ζ = ζ) : s ∈ galOf ℚ K Ω := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨hd4, δ, hδ, hx⟩ := sub_smul_mul_sub_smul_eq_zero_of_quadratic hK
   have hD : discr K ≠ 0 := NumberField.discr_ne_zero K
   obtain ⟨δ', hδ'⟩ : ∃ δ' : Ω, δ' = algebraMap K Ω δ := ⟨_, rfl⟩

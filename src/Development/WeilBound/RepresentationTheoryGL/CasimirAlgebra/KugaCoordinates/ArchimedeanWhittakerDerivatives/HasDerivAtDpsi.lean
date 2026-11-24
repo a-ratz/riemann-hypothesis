@@ -248,7 +248,7 @@ theorem continuous_sInf' : Continuous (sInf E) :=
 
 theorem psi_nontriv {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (τ : E →+* ℂ) : ∃ z : ℂ, ψ (sInf E (atEmb τ z)) ≠ 1 := by
   classical
-  haveI : Nontrivial (Af E) := by
+  have : Nontrivial (Af E) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     let v : IsDedekindDomain.HeightOneSpectrum (𝓞 E) :=
       ⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩
@@ -422,7 +422,7 @@ private theorem integral_intervalIntegral_comm_of_continuous_norm_le {G : Type} 
     (F : G × ℝ → ℂ) (hF : Continuous F) (t C : ℝ)
     (hC : ∀ x, ∀ s ∈ Set.uIcc (0 : ℝ) t, ‖F (x, s)‖ ≤ C) :
     ∫ x, (∫ s in (0 : ℝ)..t, F (x, s)) ∂μ = ∫ s in (0 : ℝ)..t, ∫ x, F (x, s) ∂μ := by
-  haveI : IsFiniteMeasure (volume.restrict (Set.uIoc (0 : ℝ) t)) :=
+  have : IsFiniteMeasure (volume.restrict (Set.uIoc (0 : ℝ) t)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact measure_Ioc_lt_top⟩
   have hint : Integrable (Function.uncurry fun x s => F (x, s))
       (μ.prod (volume.restrict (Set.uIoc (0 : ℝ) t))) := by
@@ -452,11 +452,11 @@ theorem avg_intervalIntegral_swap {G : Type} [AddCommGroup G] [TopologicalSpace 
   borelize G
   unfold GlobalTheory.CuspGeneric.avg
   split_ifs with h
-  · try simp only [dif_pos h]
-    haveI : IsFiniteMeasure (h.choose.1.restrict h.choose.2) :=
+  · try simp only [dite_eq_left h]
+    have : IsFiniteMeasure (h.choose.1.restrict h.choose.2) :=
       ⟨by rw [Measure.restrict_apply_univ, h.choose_spec.2.2]; exact ENNReal.one_lt_top⟩
     exact integral_intervalIntegral_comm_of_continuous_norm_le _ F hF t C hbound
-  · simp only [dif_neg h, intervalIntegral.integral_zero]
+  · simp only [dite_eq_right h, intervalIntegral.integral_zero]
 
 end GlobalTheory.CompanionTheory.AvgSwap
 end -- clump:auto
@@ -878,7 +878,7 @@ theorem whitLie_holds : WhitLie := by
       (1 / 2 : ℂ) * (dpsi ψ (atEmb τ (β p q)) - Complex.I * dpsi ψ (atEmb τ (β p q * Complex.I))) else 0,
       fun p q hpq => ?_, fun p q hpq => ?_, fun p q hpq => ?_⟩
     · beta_reduce
-      rw [if_pos hpq]
+      rw [ite_eq_left hpq]
       refine mul_ne_zero (by norm_num) ?_
       have hu : IsUnit (b.val p p * (b⁻¹).val q q) :=
         (IsUnit.of_mul_eq_one _ (diag_inv b hb p)).mul (IsUnit.of_mul_eq_one_right _ (diag_inv b hb q))
@@ -889,7 +889,7 @@ theorem whitLie_holds : WhitLie := by
         (psi_nontriv hψ τ) (fun z => dpsi ψ (atEmb τ z))
         (fun z => by simpa only [atEmb_real_mul] using hasDerivAt_dpsi hψ (atEmb τ z)) _ hβ0
     · beta_reduce
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     · refine LinearMap.ext fun φ => ?_
       have hpq' : p ≠ q := ne_of_lt hpq
       have key : ∀ w : ℂ, ℓ (lieOp π (toL (Matrix.single p q (atEmb τ w))) φ) =

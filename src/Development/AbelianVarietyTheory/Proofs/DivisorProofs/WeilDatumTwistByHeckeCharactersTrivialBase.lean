@@ -76,7 +76,7 @@ theorem conjE_ne (hcm : IsCMExt F E σ) : conjE hcm ≠ 1 := fun h =>
     exact this
 
 theorem exists_trace (hcm : IsCMExt F E σ) (x : E) : ∃ t : F, algebraMap F E t = x + σ x := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
   have hfix : ∀ t : E ≃ₐ[F] E, t (x + σ x) = x + σ x := by
     intro t
     rcases GlobalTheory.AdLat.aut_eq_one_or_of_finrank_two (conjE hcm) hcm.2.2.1 (conjE_ne hcm) t with h | h
@@ -176,7 +176,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem root_near (hcm : IsCMExt F E σ) (hun : Algebra.Unramified (𝓞 F) (𝓞 E)) :
     ∀ W ∈ 𝓝 (1 : (AEF F E)ˣ), ∃ N ∈ 𝓝 (1 : (AEF F E)ˣ), ∀ u ∈ N, (u : AEF F E) * cAF σ (u : AEF F E) = 1 →
       ∃ x ∈ W, (x : AEF F E) = u * cAF σ (x : AEF F E) := by
-  haveI := hun
+  have := hun
   have hP : ∀ P : Ideal (𝓞 E), P.IsMaximal → ∃ t s : 𝓞 E, (s : E) = conjE hcm (t : E) ∧ t - s ∉ P := by
     intro P hP
     have hne : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (NumberField.RingOfIntegers.not_isField E)
@@ -200,15 +200,15 @@ theorem exists_muF (hcm : IsCMExt F E σ) (hun : Algebra.Unramified (𝓞 F) (�
   let m : GAF σ J →* Circle := MonoidHom.mk' (fun g => ν (r g)) hm
   have hmv : ∀ g x, IsRootF σ J g x → m g = ν x := hval
   have hcont : Continuous m := by
-    haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA σ J
-    haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := F) (E := E)
+    have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA σ J
+    have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := F) (E := E)
     refine continuous_of_continuousAt_one m ?_
     intro U hU
     rw [map_one] at hU
     have hW : ν ⁻¹' U ∈ 𝓝 (1 : (AEF F E)ˣ) := hν.1.continuousAt.preimage_mem_nhds (by rwa [map_one])
     obtain ⟨N, hN, hNW⟩ := root_near (σ := σ) hcm hun _ hW
     have hdc : Continuous fun g : GAF σ J => Matrix.GeneralLinearGroup.det (matHomF σ J g) :=
-      Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtype_val
+      Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtypeVal
     have hN' : (fun g : GAF σ J => Matrix.GeneralLinearGroup.det (matHomF σ J g)) ⁻¹' N ∈ 𝓝 (1 : GAF σ J) :=
       hdc.continuousAt.preimage_mem_nhds (by rwa [map_one, map_one])
     refine Filter.mem_map.2 (Filter.mem_of_superset hN' ?_)
@@ -301,7 +301,7 @@ theorem exists_weilDatumOF_twist : ∀ (F E : Type) [Field F] [NumberField F] [F
     rw [arat γ hγ, brat γ' hγ', mul_one, Circle.coe_one, one_mul]
     exact ho.om_aut γ hγ γ' hγ' f hf
   · intro f hf w
-    exact (continuous_subtype_val.comp ((acont.comp continuous_fst).mul (bcont.comp continuous_snd))).mul
+    exact (continuous_subtypeVal.comp ((acont.comp continuous_fst).mul (bcont.comp continuous_snd))).mul
       (ho.om_cont f hf w)
   · intro μ 𝓕 hμ h𝓕 p f hf
     rw [← ho.om_unit μ 𝓕 hμ h𝓕 p f hf]

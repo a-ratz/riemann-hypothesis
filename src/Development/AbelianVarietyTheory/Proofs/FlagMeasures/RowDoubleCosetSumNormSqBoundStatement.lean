@@ -322,13 +322,13 @@ theorem leadMinor_triMul {E : Type} [Field E] {m : ℕ} (A B Z : Matrix (Fin m) 
       · intro i hi
         rw [hB _ _ (by simp [Fin.lt_def]; omega), mul_zero]
     have hdA : (A.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
-      rw [Matrix.det_of_lowerTriangular]
+      rw [Matrix.det_of_isLowerTriangular]
       · simp [hA1]
       · intro i j hij
         have h2 : i < j := OrderDual.toDual_lt_toDual.1 hij
         exact hA _ _ (Fin.lt_def.2 (Fin.lt_def.1 h2))
     have hdB : (B.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
-      rw [Matrix.det_of_upperTriangular]
+      rw [Matrix.det_of_isUpperTriangular]
       · simp [hB1]
       · intro i j hij
         have h2 : j < i := hij
@@ -690,8 +690,8 @@ theorem generic_iff_gen : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
   have hW := ((_root_.GlobalTheory.HL.WCoordTerms.terms_orbits_heights_amps (Y.M p) hOK (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS D.R.k (FP p) (G.S p)
     (c.c p)).1 d _ hd)
   have hlat := (GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).2.2.2.2.1 ρ hρ p g t₀.lam hgExt
-  haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).lf
-  haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).char0
+  have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).lf
+  have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).char0
   have hlat' : (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat p (c.lat ρ t₀.lam) = (c.c p).lat
       (move g (locU (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p t₀.lam (lf D (X.Fu u)) t₀.frame (Tu D u) (Tu D u'))).abelian₂ := hlat
   have hdat := GlobalTheory.HL.DatumOf.datOf_term (G.S p) hW.1
@@ -823,7 +823,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
       (n ∈ NRat (lf D (X.Fu u)) ∧ m ∈ NRat (lf D (X.Fu u')) ∧ (τ o).lin = n⁻¹ * t₀.lin * m) ∧
       o.out = c.lat (ρ * n) (τ o).lam := by
     intro o h
-    have e : τ o = (hsurj o.out h).choose := dif_pos h
+    have e : τ o = (hsurj o.out h).choose := dite_eq_left h
     rw [e]
     exact (hsurj o.out h).choose_spec
   let Cf : Finset (Quot G.LRel) := hfin.toFinset.filter (fun o => Q (¬ G.Gen d₀ o.out))
@@ -901,7 +901,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     rw [PiLp.norm_sq_eq_of_L2]
     have : ∀ q, ‖(if q = q₀ then x else 0 : Formalism.L2.SG.PackageTie.HS (X.Vpi u') (X.Vpi u))‖ ^ 2 =
         if q = q₀ then ‖x‖ ^ 2 else 0 := fun q => by by_cases h : q = q₀ <;> simp [h]
-    simp only [this, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [this, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have hvec : ∀ o ∈ Cf, (Y.tO u u').vec (τ o) = V (((Formalism.L2.SG.TermOp.wt t₀ : ℝ) : ℂ) •
       Formalism.L2.SG.PackageTie.hsEmb ((((K * G.mu o.out : ℝ) : ℂ) * G.om d₀ o.out) • T)) := by
     intro o ho
@@ -928,9 +928,9 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
   have hampeq : G.amp d₀ (fun Γ => Q (¬ G.Gen d₀ Γ)) = ∑ o ∈ Cf, (G.mu o.out : ℂ) * G.om d₀ o.out := by
     unfold GFrames.amp
     rw [tsum_eq_sum (s := Cf)]
-    · exact Finset.sum_congr rfl fun o ho => if_pos ((hmemC o).1 ho)
+    · exact Finset.sum_congr rfl fun o ho => ite_eq_left ((hmemC o).1 ho)
     · intro o ho
-      exact if_neg fun h => ho ((hmemC o).2 h)
+      exact ite_eq_right fun h => ho ((hmemC o).2 h)
   rw [tsum_eq_sum hzero, Finset.sum_image hτinj]
   rw [Finset.sum_congr rfl fun o ho => by rw [Set.indicator_of_mem (hτS o ho), hvec o ho], hVsum, hVn]
   have hsum : ∑ o ∈ Cf, ((Formalism.L2.SG.TermOp.wt t₀ : ℝ) : ℂ) •

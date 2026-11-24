@@ -85,7 +85,7 @@ theorem ringKrullDim_eq_of_isIntegral (R S : Type*) [CommRing R] [CommRing S] [A
   · refine Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap R S)) ?_
     intro P Q hPQ
     have : P.asIdeal < Q.asIdeal := hPQ
-    exact Ideal.IsIntegral.comap_lt_comap this
+    exact Ideal.IsIntegral.under_lt_under this
   · refine iSup_le fun l ↦ ?_
     obtain ⟨P, hP⟩ := Algebra.IsIntegral.comap_surjective R S l.head
     have : P.asIdeal.LiesOver l.head.asIdeal := ⟨by rw [← hP]; rfl⟩
@@ -260,7 +260,7 @@ theorem trdeg_quotient_eq_of_mem_minimalPrimes (k : Type u) [Field k] [Algebra O
       have : φ (MvPolynomial.C ϖ) ∈ q' := this
       simpa using this
     · have : q'.map (Ideal.Quotient.mk q) = ⊥ := by
-        refine Ideal.eq_bot_of_comap_eq_bot (R := MvPolynomial (Fin s) k) (eq_bot_iff.mpr ?_)
+        refine Ideal.eq_bot_of_under_eq_bot (R := MvPolynomial (Fin s) k) (eq_bot_iff.mpr ?_)
         intro y hy
         obtain ⟨r, rfl⟩ := MvPolynomial.map_surjective _ hk y
         have hy : g (MvPolynomial.map (algebraMap O k) r) ∈ q'.map (Ideal.Quotient.mk q) := hy
@@ -304,7 +304,7 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 omit [IsDiscreteValuationRing O] in
 theorem ringKrullDim_genericFibre_eq (K : Type u) [Field K] [Algebra O K] [IsFractionRing O K]
     {d : ℕ} (hd : Algebra.trdeg O A = d) : ringKrullDim (K ⊗[O] A) = d := by
-  letI : Algebra A (K ⊗[O] A) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra A (K ⊗[O] A) := Algebra.TensorProduct.rightAlgebra
   have := IsLocalization.tensorRight (S := A) K (nonZeroDivisors O)
   have hle : Algebra.algebraMapSubmonoid A (nonZeroDivisors O) ≤ nonZeroDivisors A :=
     Submonoid.map_le_iff_le_comap.mpr fun x hx ↦ mem_nonZeroDivisors_of_ne_zero
@@ -424,7 +424,7 @@ theorem topologicalKrullDim_eq_of_forall_exists_isOpen {X : Type*} [TopologicalS
   apply le_antisymm
   · refine topologicalKrullDim_le_of_forall_exists_isOpen fun x ↦ ?_
     obtain ⟨U, hU, hxU, hd⟩ := h x x.2
-    exact ⟨_, hU.preimage continuous_subtype_val, hxU, ((key U).symm.trans hd).le⟩
+    exact ⟨_, hU.preimage continuous_subtypeVal, hxU, ((key U).symm.trans hd).le⟩
   · obtain ⟨x, hx⟩ := hZ
     obtain ⟨U, -, -, hd⟩ := h x hx
     rw [← hd, key]
@@ -443,7 +443,7 @@ private theorem ringKrullDim_genericFibre_eq_of_domain (A : Type u) [CommRing A]
     [Algebra O A] [Algebra.FiniteType O A] [FaithfulSMul O A]
     (K : Type u) [Field K] [Algebra O K] [IsFractionRing O K]
     {d : ℕ} (hd : Algebra.trdeg O A = d) : ringKrullDim (K ⊗[O] A) = d := by
-  letI : Algebra A (K ⊗[O] A) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra A (K ⊗[O] A) := Algebra.TensorProduct.rightAlgebra
   have := IsLocalization.tensorRight (S := A) K (nonZeroDivisors O)
   have hle : Algebra.algebraMapSubmonoid A (nonZeroDivisors O) ≤ nonZeroDivisors A :=
     Submonoid.map_le_iff_le_comap.mpr fun x hx ↦ mem_nonZeroDivisors_of_ne_zero
@@ -520,7 +520,7 @@ theorem topologicalKrullDim_preimage_genericPoint_eq {d : ℕ}
       (FaithfulSMul.algebraMap_injective O A))
   · obtain ⟨A, _, _, _, _, _, j, _, hx, hj, hA⟩ := exists_affine_chart_trdeg_eq f x
     refine ⟨Set.range j, j.isOpenEmbedding.isOpen_range, hx, ?_⟩
-    letI : Algebra A (FractionRing O ⊗[O] A) := Algebra.TensorProduct.rightAlgebra
+    let : Algebra A (FractionRing O ⊗[O] A) := Algebra.TensorProduct.rightAlgebra
     have := IsLocalization.tensorRight (S := A) (FractionRing O) (nonZeroDivisors O)
     rw [← ringKrullDim_genericFibre_eq_of_domain (A := A) (K := FractionRing O)
         (hA.trans hd),

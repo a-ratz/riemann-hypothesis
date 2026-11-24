@@ -69,8 +69,8 @@ theorem cmpForm_surjective (hP : GlobalTheory.Published.CrystallineSmoothLift) (
     Function.Surjective (cmpForm (A.hom ≫ 𝟙 (Sp R))) := by
   intro ω
   obtain ⟨-, hinj, -⟩ := (hH R A g hab hdim).2.2.2.2.1
-  haveI := hab.smooth
-  haveI := hab.proper
+  have := hab.smooth
+  have := hab.proper
   have hb := (cechDeRham_comparison_bijective_cup_smooth hP R A.left (A.hom ≫ 𝟙 (Sp R)) inferInstance inferInstance
     inferInstance).1
   obtain ⟨c, hc⟩ := hb.2 (clForm _ ω)
@@ -95,7 +95,7 @@ theorem lie_finite_projective (A : Over (Sp R)) [GrpObj A] [IsCommMonObj A] (g :
     (hdim : SmoothOfRelativeDimension g A.hom) (a : OAct ℤ A) :
     Module.Finite R (GlobalTheory.Serre.Lie a) ∧ Module.Projective R (GlobalTheory.Serre.Lie a) ∧
       ∀ p, Module.rankAtStalk (R := R) (GlobalTheory.Serre.Lie a) p = g := by
-  haveI : Smooth A.hom := hdim.smooth
+  have : Smooth A.hom := hdim.smooth
   refine GlobalTheory.LieProj.finite_projective_of_localBasis (M := GlobalTheory.Serre.Lie a) g fun p ↦ ?_
   obtain ⟨r, hr, ⟨C⟩, v, hv⟩ := GlobalTheory.LieProj.exists_chart_lieBasis A g hdim p
   refine ⟨r, hr, ?_⟩
@@ -140,14 +140,14 @@ theorem tangent_eq_of_tanVal_eq : GlobalTheory.Published.CrystallineSmoothLift �
       SmoothOfRelativeDimension g A.hom → ∀ v w : epsR R ⟶ A, IsTangent v → IsTangent w →
         (∀ f : Form (A.hom ≫ 𝟙 (Sp R)), tanVal v f = tanVal w f) → v = w := by
   intro hP hH R _ A _ g hab hdim v w hv hw hvw
-  haveI : IsCommMonObj A := hab.comm
+  have : IsCommMonObj A := hab.comm
   have hT := lie_finite_projective A g hdim (GlobalTheory.Serre.intAct A)
-  haveI := hT.1
-  haveI := hT.2.1
+  have := hT.1
+  have := hT.2.1
   have hcl : ClosedForm (A.hom ≫ 𝟙 (Sp R)) = ⊤ := (hH R A g hab hdim).2.2.2.2.1.1
   have hG := (hH R A g hab hdim).2.2.1
-  haveI : Module.Finite R (GlobForm (A.hom ≫ 𝟙 (Sp R))) := hG.1
-  haveI : Module.Projective R (GlobForm (A.hom ≫ 𝟙 (Sp R))) := hG.2.1
+  have : Module.Finite R (GlobForm (A.hom ≫ 𝟙 (Sp R))) := hG.1
+  have : Module.Projective R (GlobForm (A.hom ≫ 𝟙 (Sp R))) := hG.2.1
   have e1 : (Form (A.hom ≫ 𝟙 (Sp R)) ⧸ LinearMap.ker (cmpForm (A.hom ≫ 𝟙 (Sp R)))) ≃ₗ[R]
       GlobForm (A.hom ≫ 𝟙 (Sp R)) :=
     ((cmpForm (A.hom ≫ 𝟙 (Sp R))).quotKerEquivOfSurjective
@@ -155,9 +155,9 @@ theorem tangent_eq_of_tanVal_eq : GlobalTheory.Published.CrystallineSmoothLift �
   have eN : (LinearMap.ker (cmpForm (A.hom ≫ 𝟙 (Sp R)))).dualAnnihilator ≃ₗ[R]
       Module.Dual R (GlobForm (A.hom ≫ 𝟙 (Sp R))) :=
     (Submodule.dualQuotEquivDualAnnihilator _).symm.trans e1.symm.dualMap
-  haveI : Module.Finite R (LinearMap.ker (cmpForm (A.hom ≫ 𝟙 (Sp R)))).dualAnnihilator :=
+  have : Module.Finite R (LinearMap.ker (cmpForm (A.hom ≫ 𝟙 (Sp R)))).dualAnnihilator :=
     Module.Finite.equiv eN.symm
-  haveI : Module.Projective R (LinearMap.ker (cmpForm (A.hom ≫ 𝟙 (Sp R)))).dualAnnihilator :=
+  have : Module.Projective R (LinearMap.ker (cmpForm (A.hom ≫ 𝟙 (Sp R)))).dualAnnihilator :=
     Module.Projective.of_equiv eN.symm
   have hbij := Module.bijective_of_surjective_of_rankAtStalk_eq
     (valMap_surjective hP hH A g hab hdim (GlobalTheory.Serre.intAct A)) fun m _ ↦ by

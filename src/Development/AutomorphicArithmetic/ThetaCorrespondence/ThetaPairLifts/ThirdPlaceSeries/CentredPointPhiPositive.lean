@@ -324,7 +324,7 @@ theorem exists_dvr (hv : ∃ x : K, v x ≠ 0 ∧ v x < 1) :
       · right
         have : m = 0 := by omega
         rw [← hu', this, pow_zero, mul_one]; exact u'.isUnit
-  haveI hdvr : IsDiscreteValuationRing O :=
+  have hdvr : IsDiscreteValuationRing O :=
     IsDiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
       ⟨ϖ, hirr, fun {y} hy => by
         obtain ⟨n, u, hu, -⟩ := hfac y hy
@@ -364,7 +364,7 @@ theorem exists_cdvr_read :
   by_cases hm : maximalIdeal R = ⊥
   ·
     have hF : IsField R := IsLocalRing.isField_iff_maximalIdeal_eq.2 hm
-    letI : Field R := hF.toField
+    let : Field R := hF.toField
     let T := GlobalTheory.TrivialValuationTest.powerSeriesCDVR R
     let g : R →+* T.V := PowerSeries.C
     have hg : Function.Injective g := PowerSeries.C_injective
@@ -392,9 +392,9 @@ theorem exists_cdvr_read :
     obtain ⟨hdvr, d, hd, hread⟩ := exists_dvr w ⟨algebraMap R (FractionRing R) a0,
       by rw [hw]; exact fun h => ha00 (hz a0 h), by rw [hw]; exact hlt a0 ha0m⟩
     set O := w.valuationSubring
-    haveI : CharZero (FractionRing R) :=
+    have : CharZero (FractionRing R) :=
       charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
-    haveI : CharZero O := (algebraMap O (FractionRing R)).charZero
+    have : CharZero O := (algebraMap O (FractionRing R)).charZero
     let ι : R →+* O := (algebraMap R (FractionRing R)).codRestrict O fun a =>
       (w.mem_valuationSubring_iff _).2 (by rw [hw]; exact hle a)
     have hι : ∀ a, ((ι a : O) : FractionRing R) = algebraMap R (FractionRing R) a := fun _ => rfl
@@ -598,7 +598,7 @@ open IsLocalRing
 
 theorem exists_extension_integral_frame_uniformizer : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} (TF : TorFlag Xo c) (T : Formalism.L2.Pj.CDVR) (io : c.F →+* T.Fr), letI := io.toAlgebra; ∀ (P : FrPt Xo c T.Fr) (w : Sp T.V ⟶ TF.Y.X), spMap (algebraMap T.V T.Fr) ≫ w = TF.X.ptY P ≫ TF.X.π → ∃ (T' : Formalism.L2.Pj.CDVR) (i : T.Fr →+* T'.Fr) (j : T.V →+* T'.V) (r : ℕ) (y' : IntFr Xo c T' (i.comp io)) (G : SAB H (Sp T'.V)) (_ : SABMap G TF.Y.t (spMap j ≫ w)) (_ : PELUnif (IsLocalRing.maximalIdeal T'.V) G) (t' : SAB H (Sp T'.Fr)) (_ : letI := (i.comp io).toAlgebra; SABMap t' Xo.univ.t y'.1.x) (_ : SABMap t' G (spMap (algebraMap T'.V T'.Fr))), 0 < r ∧ (∀ x, Formalism.L2.Pj.vV T'.V (i x) = (r : ℤ) * Formalism.L2.Pj.vV T.V x) ∧ i.comp (algebraMap T.V T.Fr) = (algebraMap T'.V T'.Fr).comp j ∧ (∀ a ∈ IsLocalRing.maximalIdeal T.V, j a ∈ IsLocalRing.maximalIdeal T'.V) ∧ (letI := (i.comp io).toAlgebra; TF.X.ptY y'.1 = spMap i ≫ TF.X.ptY P) := by
   intro _ E _ _ _ H Dw l Xo c TF T io
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro P w hw
   have hz : FlagMod.frX P ≫ TF.Y.j = spMap (algebraMap T.V T.Fr) ≫ w := by
     rw [hw, (TF.X.lies_ptY P).1]
@@ -616,7 +616,7 @@ theorem exists_extension_integral_frame_uniformizer : _root_.GlobalTheory.CovTop
   let j : T.V →+* T'.V := algebraMap T.V W
   have hfin : j.Finite := RingHom.finite_algebraMap.2 hf
   obtain ⟨i, r, hr0, hφ, hv, -⟩ := GlobalTheory.EtaVal.finite_extension_ramification_embedding T T' j hi hfin
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
   obtain ⟨z', hz'⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.abelianSchemeLaws_all.1.secBaseChange E H Dw l Xo c
     T.Fr T'.Fr ψ y₀.1
@@ -946,8 +946,8 @@ theorem period_minimum_phi_pos : _root_.GlobalTheory.CovTop.PublishedHodgeBundle
     have : (1 : ℝ) ≤ Q a := by exact_mod_cast hQa
     simp at h1
     linarith
-  haveI : Module.Finite (𝓞 E) P.D.toPre.X := .of_restrictScalars_finite ℤ _ _
-  haveI : Module.Projective (𝓞 E) P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) P.D.toPre.X
+  have : Module.Finite (𝓞 E) P.D.toPre.X := .of_restrictScalars_finite ℤ _ _
+  have : Module.Projective (𝓞 E) P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) P.D.toPre.X
   have h1 := GlobalTheory.LeastExponentProbe.one_le_phiC (fun _ => rfl) β hint hpos hne
   linarith
 end GlobalTheory.PeriodMinPos
@@ -992,8 +992,8 @@ theorem degree_valuation_phi_pos (hP : _root_.GlobalTheory.CovTop.PublishedHodge
     (ν : Valuation ((Y₀ TF.X Z).presheaf.stalk y) (WithZero (Multiplicative ℤ))) (hν : Centred y ν) :
     ∃ φ : ℝ, 0 < φ ∧ PhiAt TF.X Z y ν φ := by
   obtain ⟨h1, h2, h3⟩ := hν
-  haveI := GlobalTheory.T.charZero_stalk_compactFlagSpaceOverComponent TF Z y
-  haveI : IsDomain ((Y₀ TF.X Z).presheaf.stalk y) := by
+  have := GlobalTheory.T.charZero_stalk_compactFlagSpaceOverComponent TF Z y
+  have : IsDomain ((Y₀ TF.X Z).presheaf.stalk y) := by
     refine @NoZeroDivisors.to_isDomain _ _ inferInstance ⟨fun {a b} hab => ?_⟩
     have := congrArg ν hab
     rw [map_mul, map_zero, mul_eq_zero] at this
@@ -1002,7 +1002,7 @@ theorem degree_valuation_phi_pos (hP : _root_.GlobalTheory.CovTop.PublishedHodge
   have hz := _root_.GlobalTheory.GenTrait.top_le_preimage_flagOpen TF Z y T.Fr ((algebraMap T.V T.Fr).comp g)
     ((IsFractionRing.injective T.V T.Fr).comp hinj)
   obtain ⟨io, hP'⟩ := _root_.GlobalTheory.CompHS.exists_frPt_of_flagOpen TF.X T.Fr _ hz
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨P, hPz⟩ := hP'
   let w : Sp T.V ⟶ TF.Y.X :=
     Spec.map (CommRingCat.ofHom g) ≫ (Y₀ TF.X Z).fromSpecStalk y ≫ inc₀ TF.X Z ≫ TF.X.π
@@ -1031,7 +1031,7 @@ theorem degree_valuation_phi_pos (hP : _root_.GlobalTheory.CovTop.PublishedHodge
     exact h
   refine ⟨(ρ / r) * φT, mul_pos (div_pos hρ (Nat.cast_pos.2 hr)) hpos, T', i.comp io, y', j.comp g, ρ / r, φT,
     div_pos hρ (Nat.cast_pos.2 hr), hφT, rfl, ?_, ?_⟩
-  · letI := (i.comp io).toAlgebra
+  · let := (i.comp io).toAlgebra
     rw [hpt, hPz, ← Category.assoc]
     congr 1
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]

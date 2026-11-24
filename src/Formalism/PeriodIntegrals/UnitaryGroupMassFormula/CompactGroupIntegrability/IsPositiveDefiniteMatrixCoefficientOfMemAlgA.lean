@@ -89,7 +89,7 @@ def orb (hst : IsKStableOn (allPos N) σ S) (u : S) : UG N → S :=
 lemma orb_cont (hrep : IsURepOn (Kset (allPos N)) σ) (hst : IsKStableOn (allPos N) σ S) (u : S) :
     Continuous (orb hst u) := by
   refine Continuous.subtype_mk ?_ _
-  exact (hrep.2.2 (u : H)).comp_continuous continuous_subtype_val fun x => memK x
+  exact (hrep.2.2 (u : H)).comp_continuous continuous_subtypeVal fun x => memK x
 
 lemma integrable_cont {E : Type*} [NormedAddCommGroup E] {F : UG N → E} (hF : Continuous F) :
     Integrable F (muU N) :=
@@ -120,7 +120,7 @@ lemma isPositiveDefinite_matrix_coefficient_of_mem_algA [FiniteDimensional ℂ S
     IsPD (fun h : UG N => ⟪w, σ h ((T hst f u : S) : H)⟫_ℂ) := by
   obtain ⟨ι, _, a, b, ha, hb, hab⟩ := sep_of_mem hf
   have hcont : Continuous (fun y : UG N => ⟪w, σ (y : Matrix (Fin N) (Fin N) ℂ) (u : H)⟫_ℂ) :=
-    continuous_const.inner (continuous_subtype_val.comp (orb_cont hrep hst u))
+    continuous_const.inner (continuous_subtypeVal.comp (orb_cont hrep hst u))
   have hfun : ∀ h : UG N, ⟪w, σ h ((T hst f u : S) : H)⟫_ℂ = ∑ i, a i h *
       ∫ y, b i y * ⟪w, σ (y : Matrix (Fin N) (Fin N) ℂ) (u : H)⟫_ℂ ∂(muU N) := by
     intro h
@@ -157,7 +157,7 @@ def Ugood : Submodule ℂ S where
 
 theorem Ugood_eq_top (hrep : IsURepOn (Kset (allPos N)) σ) (hfin : FiniteDimensional ℂ S)
     (hst : IsKStableOn (allPos N) σ S) : Ugood (σ := σ) (S := S) = ⊤ := by
-  haveI := hfin
+  have := hfin
   by_contra hne
   obtain ⟨φ, hφ0, hle⟩ := Submodule.exists_le_ker_of_lt_top _ (lt_top_iff_ne_top.mpr hne)
   let φC : S →L[ℂ] ℂ := LinearMap.toContinuousLinearMap φ

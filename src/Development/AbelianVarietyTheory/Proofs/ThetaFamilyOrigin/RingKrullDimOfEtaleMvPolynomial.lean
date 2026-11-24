@@ -68,9 +68,9 @@ namespace GlobalTheory.SmoothDim
 theorem isMaximal_under_of_finiteType (K R B : Type*) [Field K] [CommRing R] [CommRing B]
     [Algebra K R] [Algebra K B] [Algebra R B] [IsScalarTower K R B] [Algebra.FiniteType K B]
     (m : Ideal B) [m.IsMaximal] : (m.under R).IsMaximal := by
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite K (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (B ⧸ m)
-  haveI : Algebra.IsIntegral R (B ⧸ m) := Algebra.IsIntegral.tower_top K
+  let := Ideal.Quotient.field m
+  have : Module.Finite K (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (B ⧸ m)
+  have : Algebra.IsIntegral R (B ⧸ m) := Algebra.IsIntegral.tower_top K
   have h := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := R) (⊥ : Ideal (B ⧸ m))
   change (Ideal.comap (algebraMap R (B ⧸ m)) ⊥).IsMaximal at h
   rwa [IsScalarTower.algebraMap_eq R B (B ⧸ m), ← Ideal.comap_comap, Ideal.Quotient.algebraMap_eq,
@@ -89,16 +89,16 @@ theorem ringKrullDim_of_etale_mvPolynomial (K B : Type*) [Field K] [CommRing B] 
     exact PrimeSpectrum.ext (Algebra.QuasiFinite.eq_of_le_of_under_eq
       (R := MvPolynomial (Fin g) K) _ _ hPQ.le (congrArg PrimeSpectrum.asIdeal h))
   · obtain ⟨m, hm⟩ := Ideal.exists_maximal B
-    letI : Algebra K B := ((algebraMap (MvPolynomial (Fin g) K) B).comp
+    let : Algebra K B := ((algebraMap (MvPolynomial (Fin g) K) B).comp
       (algebraMap K (MvPolynomial (Fin g) K))).toAlgebra
-    haveI : IsScalarTower K (MvPolynomial (Fin g) K) B := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : Algebra.FiniteType K B := Algebra.FiniteType.trans
+    have : IsScalarTower K (MvPolynomial (Fin g) K) B := IsScalarTower.of_algebraMap_eq' rfl
+    have : Algebra.FiniteType K B := Algebra.FiniteType.trans
       (S := MvPolynomial (Fin g) K) inferInstance inferInstance
-    haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing K B
-    haveI hp := isMaximal_under_of_finiteType K (MvPolynomial (Fin g) K) B m
+    have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing K B
+    have hp := isMaximal_under_of_finiteType K (MvPolynomial (Fin g) K) B m
     have h1 := ReciprocityTheory.CA.height_add_ringKrullDim_quotient_mvPolynomial_field K g
       (m.under (MvPolynomial (Fin g) K))
-    letI := Ideal.Quotient.field (m.under (MvPolynomial (Fin g) K))
+    let := Ideal.Quotient.field (m.under (MvPolynomial (Fin g) K))
     rw [ringKrullDim_eq_zero_of_field, add_zero] at h1
     have h2 : (m.under (MvPolynomial (Fin g) K)).height ≤ m.height := by
       rw [Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown
@@ -110,7 +110,7 @@ theorem ringKrullDim_of_etale_mvPolynomial (K B : Type*) [Field K] [CommRing B] 
 theorem ringKrullDim_of_isStandardSmooth {K B : Type*} [CommRing K] (hK : IsField K) [CommRing B]
     [Nontrivial B] {g : ℕ} {f : K →+* B} (hf : f.IsStandardSmoothOfRelativeDimension g) :
     ringKrullDim B = g := by
-  letI := hK.toField
+  let := hK.toField
   obtain ⟨φ, -, hφ⟩ := hf.exists_etale_mvPolynomial
   algebraize [φ]
   exact ringKrullDim_of_etale_mvPolynomial K B g
@@ -153,7 +153,7 @@ theorem ringKrullDim_affineOpen :
       SmoothOfRelativeDimension g p → ∀ U : X.Opens, IsAffineOpen U → (U : Set X).Nonempty →
         ringKrullDim Γ(X, U) = g := by
   intro K _ X p g hp U hU hne
-  haveI : Nonempty U := hne.to_subtype
+  have : Nonempty U := hne.to_subtype
   have hK : IsField Γ(Sp K, ⊤) :=
     MulEquiv.isField (Field.toIsField K) (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.toMulEquiv
   obtain ⟨s, hs, h⟩ := HasRingHomProperty.appLE (@SmoothOfRelativeDimension g) p hp

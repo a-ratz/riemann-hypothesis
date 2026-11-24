@@ -122,7 +122,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : Deg
       GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.IsTauCoord D z b x' → GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.IsTauCoord D (a + k • z) b x'' →
       ∃ u : Rˣ, x'' = Units.map (algebraMap R (FractionRing R)).toMonoidHom u * (x * x' ^ k) := by
   intro R _ _ _ D hB a z b k x x' x'' hx hx' hx''
-  haveI : IsProper D.P.A.hom := D.P.isAb.proper
+  have : IsProper D.P.A.hom := D.P.isAb.proper
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨J, hJ, hJc⟩ := exists_good_integral ξ D.P.isLB D.P.A.hom
   have hind : ∀ n : ℕ, ∃ w : Rˣ, val (D.tau (a + n • z) b) (𝟙 (TK R).left) ξ J =

@@ -174,13 +174,13 @@ theorem exists_transport (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure] 
   have : (I.muA μf).IsMulRightInvariant := ⟨hrt⟩
   have : (I.muA μf).IsHaarMeasure := by
     unfold AutInst.muA
-    haveI : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := Measure.pi.isHaarMeasure _
+    have : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := Measure.pi.isHaarMeasure _
     exact Measure.prod.instIsHaarMeasure _ _
   have hr : ∀ y, ∃ γ : Γ, I.rep fund y = (γ : I.GA) * y ∧ I.rep fund y ∈ fund := by
     intro y
     have h := hfund.2.1 y
     have e : I.rep fund y = h.choose * y := by
-      unfold AutInst.rep; exact dif_pos h
+      unfold AutInst.rep; exact dite_eq_left h
     have hm : h.choose ∈ (Γ : Set I.GA) := by
       have k := h.choose_spec.1
       generalize h.choose = z at k ⊢
@@ -316,7 +316,7 @@ theorem exists_mmap {D : D7} {θ : InfFam D} {V : HSp D} (hθ : IsInfFam θ) {S 
   obtain ⟨R, L, hL, hR, hb⟩ := exists_adelic_rep hθ hμ hμ' hloc hlin hiso hρ htr hU
   have hsmM := GlobalTheory.T.equivariantMultilinear_maps_smoothVectors_intertwines D θ V hθ S M _ ρ Φ he
   have p := fun y : M.Vec => hR _ (hsmM y).1 (hfix _)
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
   have hH : ∀ τ, (gramAt D V τ).IsHermitian := GlobalTheory.SmoothAutCheck.gramAt_herm V
   have hdet : ∀ τ, (gramAt D V τ).det ≠ 0 := fun τ => (GlobalTheory.SmoothAutCheck.gramAt_unit V τ).ne_zero
   have hsv := fun τ => GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.1

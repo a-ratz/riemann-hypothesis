@@ -249,7 +249,7 @@ lemma card_units_int : Nat.card ℤˣ = 2 := by
     | simp [Nat.card_eq_fintype_card]
 
 lemma card_unitsTwoPow (n : ℕ) (hn : 1 ≤ n) : Nat.card (ZMod (2 ^ n))ˣ = 2 ^ (n - 1) := by
-  haveI : NeZero (2 ^ n) := ⟨by positivity⟩
+  have : NeZero (2 ^ n) := ⟨by positivity⟩
   rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient,
     Nat.totient_prime_pow Nat.prime_two (by omega)]
   simp
@@ -350,7 +350,7 @@ lemma orderOf_five_units_two_pow (k : ℕ) : orderOf (u5 (k + 2)) = 2 ^ k := by
 lemma unitsMap_five_mod_four (n : ℕ) (h : 4 ∣ 2 ^ n) : ZMod.unitsMap h (u5 n) = 1 := by
   apply Units.ext
   first
-    | (rw [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, MonoidHom.coe_coe, map_natCast]
+    | (rw [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, MonoidHom.coe_ofClass, map_natCast]
        decide)
     | (simp only [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, MonoidHom.coe_coe, map_natCast]
        decide)
@@ -486,7 +486,7 @@ private lemma chi8_unitsMap_u5_eq_neg_one (k : ℕ) (h : 8 ∣ 2 ^ (k + 3)) :
   rw [MulChar.coe_toUnitHom]
   have h5 : ((ZMod.unitsMap h (u5 (k + 3)) : (ZMod 8)ˣ) : ZMod 8) = 5 := by
     first
-      | (rw [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, MonoidHom.coe_coe, map_natCast]; rfl)
+      | (rw [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, MonoidHom.coe_ofClass, map_natCast]; rfl)
       | (simp only [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, MonoidHom.coe_coe, map_natCast]; rfl)
       | (rw [ZMod.unitsMap_def, Units.coe_map, u5, ZMod.coe_unitOfCoprime, ZMod.castHom_apply, ZMod.cast_natCast h]; rfl)
   rw [h5]
@@ -690,9 +690,9 @@ lemma ord5 (m : ℕ) : orderOf (u5 (m + 2)) = 2 ^ m := by
   rw [pv24] at h
   rw [← orderOf_units, five_unit_coe_int, h]
   rcases m with _ | k
-  · rw [if_pos ((intCast_five_zmod_two_pow_eq_one_iff (0 + 2)).2 ⟨1, by norm_num⟩)]
+  · rw [ite_eq_left ((intCast_five_zmod_two_pow_eq_one_iff (0 + 2)).2 ⟨1, by norm_num⟩)]
     rfl
-  · rw [if_neg]
+  · rw [ite_eq_right]
     · congr 1
     · intro h1
       have h2 := (intCast_five_zmod_two_pow_eq_one_iff (k + 1 + 2)).1 h1
@@ -722,7 +722,7 @@ lemma mod_four_reduction_five (n : ℕ) : r4 n (u5 (n + 2)) = 1 := by rw [r4, un
 lemma mod_four_reduction_neg_one (n : ℕ) : r4 n (-1) = -1 := by rw [r4, unitsMap_neg_one']
 
 lemma neg_one_ne_one_units_zmod_four : (-1 : (ZMod (2 ^ 2))ˣ) ≠ 1 := by
-  haveI : Fact (2 < 2 ^ 2) := ⟨by norm_num⟩
+  have : Fact (2 < 2 ^ 2) := ⟨by norm_num⟩
   intro h
   apply ZMod.neg_one_ne_one (n := 2 ^ 2)
   simpa using congrArg Units.val h

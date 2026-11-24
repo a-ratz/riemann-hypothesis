@@ -178,8 +178,8 @@ section DVR
 variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 
 private lemma prime_C_lemma (ϖ : O) (hϖ : Irreducible ϖ) : Prime (C ϖ : PowerSeries O) := by
-  haveI hmax : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  haveI : (Ideal.span {ϖ}).IsPrime := hmax.isPrime
+  have hmax : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  have : (Ideal.span {ϖ}).IsPrime := hmax.isPrime
   have key : ∀ f : PowerSeries O,
       C ϖ ∣ f ↔ PowerSeries.map (Ideal.Quotient.mk (Ideal.span {ϖ})) f = 0 := by
     intro f
@@ -214,7 +214,7 @@ theorem isSat_pow_of_unitDist (ϖ : O) (hϖ : Irreducible ϖ) (d : ℕ) (p : Pow
     intro h
     have h1 : C ϖ ∣ (E : PowerSeries O) := by
       rcases hpr.dvd_or_dvd (hpr.dvd_of_dvd_pow h) with h2 | h2
-      · exact absurd (isUnit_of_dvd_unit h2 hu) hpr.not_unit
+      · exact absurd (isUnit_of_dvd_unit h2 hu) hpr.not_isUnit
       · exact h2
     obtain ⟨g, hg⟩ := h1
     have h3 := congrArg (PowerSeries.coeff (R := O) E.natDegree) hg
@@ -374,8 +374,8 @@ theorem noZeroSMulDivisors_quot (ϖ : O) (hϖ : Irreducible ϖ) (V : Submodule O
 theorem exists_proj_of_saturated (ϖ : O) (hϖ : Irreducible ϖ) (V : Submodule O (Fin r → O))
     (hV : Saturated ϖ V) :
     ∃ f : (Fin r → O) →ₗ[O] (Fin r → O), (∀ v ∈ V, f v = 0) ∧ (∀ v, v - f v ∈ V) := by
-  haveI := noZeroSMulDivisors_quot ϖ hϖ V hV
-  haveI : Module.Free O ((Fin r → O) ⧸ V) := Module.free_of_finite_type_torsion_free'
+  have := noZeroSMulDivisors_quot ϖ hϖ V hV
+  have : Module.Free O ((Fin r → O) ⧸ V) := Module.free_of_finite_type_torsion_free'
   obtain ⟨s, hs⟩ := Module.projective_lifting_property V.mkQ (LinearMap.id) (Submodule.mkQ_surjective V)
   refine ⟨s ∘ₗ V.mkQ, fun v hv => ?_, fun v => ?_⟩
   · rw [LinearMap.comp_apply, Submodule.mkQ_apply, (Submodule.Quotient.mk_eq_zero V).mpr hv, map_zero]
@@ -396,8 +396,8 @@ theorem exists_const_decomp (ϖ : O) (hϖ : Irreducible ϖ) (F C : Submodule O (
       (∀ v ∈ C, φ v ∈ Ideal.span {ϖ ^ n}) → ϖ ^ (k + min n c) ∣ ϖ ^ c * φ d) :
     ∃ (lam lam' : Fin r → O), lam' ∈ C ∧ ϖ ^ c • d - ϖ ^ (k + c) • lam - ϖ ^ k • lam' ∈ F := by
   classical
-  haveI := noZeroSMulDivisors_quot ϖ hϖ F hF
-  haveI : Module.Free O ((Fin r → O) ⧸ F) := Module.free_of_finite_type_torsion_free'
+  have := noZeroSMulDivisors_quot ϖ hϖ F hF
+  have : Module.Free O ((Fin r → O) ⧸ F) := Module.free_of_finite_type_torsion_free'
   obtain ⟨m, snf⟩ := Submodule.smithNormalForm
     (Module.Free.chooseBasis O ((Fin r → O) ⧸ F)) (C.map F.mkQ)
   have hcoord : ∀ v ∈ C, ∀ j, ∃ t : Fin m → O,
@@ -435,10 +435,10 @@ theorem exists_const_decomp (ϖ : O) (hϖ : Irreducible ϖ) (F C : Submodule O (
         intro v hv
         obtain ⟨t, ht⟩ := hcoord v hv (snf.f i)
         rw [hΦ, ht, Finset.sum_eq_single i]
-        · rw [if_pos rfl, mul_one, hu]
+        · rw [ite_eq_left rfl, mul_one, hu]
           exact Ideal.mem_span_singleton'.mpr ⟨t i * u, by ring⟩
         · intro l _ hl
-          rw [if_neg (fun h => hl (snf.f.injective h)), mul_zero, mul_zero]
+          rw [ite_eq_right (fun h => hl (snf.f.injective h)), mul_zero, mul_zero]
         · intro h
           exact absurd (Finset.mem_univ i) h
       have key := hkey (Φ (snf.f i)) n (hΦF _) hC
@@ -460,7 +460,7 @@ theorem exists_const_decomp (ϖ : O) (hϖ : Irreducible ϖ) (F C : Submodule O (
         intro v hv
         obtain ⟨t, ht⟩ := hcoord v hv j
         have h0 : ∀ l, (if snf.f l = j then (1 : O) else 0) = 0 := fun l =>
-          if_neg (fun h => hjr ⟨l, h⟩)
+          ite_eq_right (fun h => hjr ⟨l, h⟩)
         rw [hΦ, ht]
         simp [h0]
       have key := hkey (Φ j) c (hΦF _) hC

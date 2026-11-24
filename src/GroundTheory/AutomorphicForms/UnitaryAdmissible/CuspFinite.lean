@@ -174,7 +174,7 @@ theorem finiteDimensional_of_eigen {ι : Type*} [Fintype ι]
   have hκccont : Continuous κc := by
     refine hκcont.mul (Complex.continuous_exp.comp (continuous_const.mul
       (Complex.continuous_ofReal.comp ?_)))
-    exact (continuous_subtype_val.comp continuous_detA).log fun a => (detA K n a).2.ne'
+    exact (continuous_subtypeVal.comp continuous_detA).log fun a => (detA K n a).2.ne'
   have hκcc : HasCompactSupport κc := hκc.mul_right
   obtain ⟨F₀, c', hc', -, hint⟩ := exists_cc_integral_mul_eq μ ν U hU κc hκccont hκcc
 
@@ -187,7 +187,7 @@ theorem finiteDimensional_of_eigen {ι : Type*} [Fintype ι]
       intro u hu z
       exact congrFun (congrArg Subtype.val ((hS φ hφ).2.2 u hu)) z
     rw [hint (fun x => (φ : AdelicGLn.AdelicGL K n → ℂ) ((y : AdelicGLn.AdelicGL K n) * x))
-      (φ.2.1.continuous.comp (continuous_const.mul continuous_subtype_val))
+      (φ.2.1.continuous.comp (continuous_const.mul continuous_subtypeVal))
       (fun u hu x => by
         show (φ : AdelicGLn.AdelicGL K n → ℂ) ((y : AdelicGLn.AdelicGL K n) *
           ((x : AdelicGLn.AdelicGL K n) * finEmb K n (u : AdelicGLn.FiniteAdelicGL K n))) = _

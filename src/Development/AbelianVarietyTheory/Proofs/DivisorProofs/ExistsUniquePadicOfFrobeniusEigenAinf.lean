@@ -184,7 +184,7 @@ theorem _root_.GlobalTheory.DieudonneTest.eigen_step [IsDomain (PreTilt O p)] {�
     | succ m => exact ⟨(p : _root_.GlobalTheory.Sandwich.Ainf p O) ^ m * b, by rw [hmb, pow_succ']; ring⟩
   obtain ⟨b, hb⟩ := hpd
   refine ⟨b, by rw [← hb, hd]; ring, ?_⟩
-  have hp0 : (p : _root_.GlobalTheory.Sandwich.Ainf p O) ≠ 0 := WittVector.p_nonzero p _
+  have hp0 : (p : _root_.GlobalTheory.Sandwich.Ainf p O) ≠ 0 := p_ne_zero p _
   apply mul_left_cancel₀ hp0
   have h4 := hφd
   rw [hb, map_mul, map_natCast] at h4
@@ -326,8 +326,8 @@ theorem existsUnique_padic_of_eigen : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [F
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε a ha
   have h1 : IsPrimitiveRoot (GlobalTheory.Sandwich.root ε).untilt p := by
     simpa [zeta] using hε 1
-  haveI : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
-  haveI : IsDomain (Ainf p O) := GlobalTheory.Sandwich.Model.isDomain_Ainf hv
+  have : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
+  have : IsDomain (Ainf p O) := GlobalTheory.Sandwich.Model.isDomain_Ainf hv
   have hμ : Sandwich.mu ε ≠ 0 := GlobalTheory.Sandwich.Model.mu_ne_zero (hε := h1) hv
   obtain ⟨c, hc⟩ := GlobalTheory.CompanionTheory.Ar.Prism.exists_padic_of_eigen h1 ha
   have hinj : Function.Injective (ofPadic p O) :=

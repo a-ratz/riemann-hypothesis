@@ -197,7 +197,7 @@ theorem alg (O B S D : Type) [CommRing O] [IsLocalRing O] [CommRing B] [Algebra 
       Algebra.trdeg (ResidueField O) (FractionRing D) = 1 := by
   let χ : B →+* D := π.comp (algebraMap B S)
   let p : Ideal B := RingHom.ker χ
-  haveI hp : p.IsPrime := RingHom.ker_isPrime χ
+  have hp : p.IsPrime := RingHom.ker_isPrime χ
   have hpm : p ≤ m := fun b hb => by
     by_contra hbm
     have hu : IsUnit (algebraMap B S b) := IsLocalization.map_units S (⟨b, hbm⟩ : m.primeCompl)
@@ -205,18 +205,18 @@ theorem alg (O B S D : Type) [CommRing O] [IsLocalRing O] [CommRing B] [Algebra 
   let B' := B ⧸ p
   let c : ResidueField O →+* B' := Ideal.Quotient.lift (maximalIdeal O)
     ((Ideal.Quotient.mk p).comp (algebraMap O B)) fun o ho => Ideal.Quotient.eq_zero_iff_mem.2 (h0 o ho)
-  letI : Algebra (ResidueField O) B' := c.toAlgebra
-  haveI : IsScalarTower O (ResidueField O) B' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType O B' := inferInstanceAs (Algebra.FiniteType O (B ⧸ p))
-  haveI : Algebra.FiniteType (ResidueField O) B' := Algebra.FiniteType.of_restrictScalars_finiteType O _ _
-  letI : Algebra B' D := (RingHom.kerLift χ).toAlgebra
+  let : Algebra (ResidueField O) B' := c.toAlgebra
+  have : IsScalarTower O (ResidueField O) B' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType O B' := inferInstanceAs (Algebra.FiniteType O (B ⧸ p))
+  have : Algebra.FiniteType (ResidueField O) B' := Algebra.FiniteType.of_restrictScalars_finiteType O _ _
+  let : Algebra B' D := (RingHom.kerLift χ).toAlgebra
   have hinj : Function.Injective (algebraMap B' D) := RingHom.kerLift_injective χ
   have hab : ∀ b : B, algebraMap B' D (Ideal.Quotient.mk p b) = π (algebraMap B S b) := fun _ => rfl
   let m' : Ideal B' := m.map (Ideal.Quotient.mk p)
   have hcm : m'.comap (Ideal.Quotient.mk p) = m := by
     rw [Ideal.comap_map_of_surjective _ Ideal.Quotient.mk_surjective, ← RingHom.ker_eq_comap_bot, Ideal.mk_ker,
       sup_eq_left.2 hpm]
-  haveI hm' : m'.IsMaximal :=
+  have hm' : m'.IsMaximal :=
     (Ideal.map_eq_top_or_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective hm).resolve_left fun h => by
       apply hm.ne_top
       rw [← hcm]
@@ -224,7 +224,7 @@ theorem alg (O B S D : Type) [CommRing O] [IsLocalRing O] [CommRing B] [Algebra 
       rw [h, Ideal.comap_top]
   have hmem : ∀ b : B, Ideal.Quotient.mk p b ∈ m' ↔ b ∈ m := fun b => by
     rw [← Ideal.mem_comap, hcm]
-  haveI : IsLocalization.AtPrime D m' := by
+  have : IsLocalization.AtPrime D m' := by
     refine ⟨⟨?_, ?_, ?_⟩⟩
     · rintro ⟨y, hy⟩
       obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -248,23 +248,23 @@ theorem alg (O B S D : Type) [CommRing O] [IsLocalRing O] [CommRing B] [Algebra 
     rw [hB'] at hn
     exact_mod_cast hn.symm
   subst hn1
-  letI : Algebra (ResidueField O) D := ((algebraMap B' D).comp c).toAlgebra
-  haveI : IsScalarTower (ResidueField O) B' D := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FaithfulSMul B' D := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : Algebra.IsAlgebraic B' D := IsLocalization.isAlgebraic D m'.primeCompl
-  haveI : FaithfulSMul (ResidueField O) B' := (faithfulSMul_iff_algebraMap_injective _ _).2 c.injective
+  let : Algebra (ResidueField O) D := ((algebraMap B' D).comp c).toAlgebra
+  have : IsScalarTower (ResidueField O) B' D := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FaithfulSMul B' D := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have : Algebra.IsAlgebraic B' D := IsLocalization.isAlgebraic D m'.primeCompl
+  have : FaithfulSMul (ResidueField O) B' := (faithfulSMul_iff_algebraMap_injective _ _).2 c.injective
   have hD : Algebra.trdeg (ResidueField O) D = 1 := by
     rw [← trdeg_add_eq (ResidueField O) B' (A := D), trdeg_eq_zero (R := B') (A := D), add_zero, htr, Nat.cast_one]
   refine ⟨inferInstance, fun o => rfl, ?_, ?_⟩
   · rw [IntermediateField.fg_top_iff]
-    haveI : Algebra.EssFiniteType B' D := Algebra.EssFiniteType.of_isLocalization D m'.primeCompl
-    haveI : Algebra.EssFiniteType D (FractionRing D) :=
+    have : Algebra.EssFiniteType B' D := Algebra.EssFiniteType.of_isLocalization D m'.primeCompl
+    have : Algebra.EssFiniteType D (FractionRing D) :=
       Algebra.EssFiniteType.of_isLocalization _ (nonZeroDivisors D)
-    haveI := Algebra.EssFiniteType.comp (ResidueField O) B' D
+    have := Algebra.EssFiniteType.comp (ResidueField O) B' D
     exact Algebra.EssFiniteType.comp (ResidueField O) D _
-  · haveI : FaithfulSMul D (FractionRing D) :=
+  · have : FaithfulSMul D (FractionRing D) :=
       (faithfulSMul_iff_algebraMap_injective _ _).2 (IsFractionRing.injective D (FractionRing D))
-    haveI : Algebra.IsAlgebraic D (FractionRing D) :=
+    have : Algebra.IsAlgebraic D (FractionRing D) :=
       IsLocalization.isAlgebraic (FractionRing D) (nonZeroDivisors D)
     rw [← trdeg_add_eq (ResidueField O) D (A := FractionRing D),
       trdeg_eq_zero (R := D) (A := FractionRing D), add_zero, hD]
@@ -291,11 +291,11 @@ theorem chart {X : Scheme.{0}} {O : Type} [CommRing O] [IsLocalRing O] (s : X �
   refine ⟨(ψ ≫ X.presheaf.germ U x hxU).hom, ?_, fun D _ _ π hπ hd h0 => ?_⟩
   · rw [← hU.fromSpecStalk_eq_fromSpecStalk hxU, IsAffineOpen.fromSpecStalk, Category.assoc, hψ, ← Spec.map_comp]
     rfl
-  · letI : Algebra O Γ(X, U) := ψ.hom.toAlgebra
-    haveI : Algebra.FiniteType O Γ(X, U) := hft
-    letI : Algebra Γ(X, U) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hxU⟩
-    haveI := hU.primeIdealOf_isMaximal_of_isClosed ⟨x, hxU⟩ hx
-    haveI := hU.isLocalization_stalk ⟨x, hxU⟩
+  · let : Algebra O Γ(X, U) := ψ.hom.toAlgebra
+    have : Algebra.FiniteType O Γ(X, U) := hft
+    let : Algebra Γ(X, U) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hxU⟩
+    have := hU.primeIdealOf_isMaximal_of_isClosed ⟨x, hxU⟩ hx
+    have := hU.isLocalization_stalk ⟨x, hxU⟩
     exact alg O Γ(X, U) (X.presheaf.stalk x) D (hU.primeIdealOf ⟨x, hxU⟩).asIdeal π hπ hd h0
 
 theorem val_stalk {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} (hξ : IsCptGen ξ)
@@ -321,7 +321,7 @@ end PositivityTheory.Xgn.CurveExistence
 open IsLocalRing PositivityTheory.Xgn.CurveExistence in
 theorem PositivityTheory.Xgn.exists_curve_through_special_point : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsProper s] (ϖ : O), Irreducible ϖ → Function.Injective (algebraMap O Ω) → ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → IsCptGen ξ → ∀ (y x : Cpt ξ) (g : Ω), ¬ unitAt ξ y (algebraMap O Ω ϖ) → y.1 ⤳ x.1 → IsClosed ({x.1} : Set X) → g ∈ regAt ξ x → unitAt ξ y g → ¬ unitAt ξ x g → ∃ (Γ : FibreCurve ξ (algebraMap O Ω ϖ)) (i : Γ.C.I), y.1 ⤳ centre Γ.η ∧ unitAt ξ ⟨centre Γ.η, Γ.η_spec⟩ g ∧ centre (Γ.z i) = x.1 := by
   intro X Ω _ ξ O _ _ _ _ s _ ϖ hϖ _ hs hξ y x g hy hyx hx hg hgy hgx
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   obtain ⟨β, hβ, hfun⟩ := chart s x.1 hx
   obtain ⟨γ, rfl⟩ := hg
   have hξx : Spec.map (CommRingCat.ofHom (genMap ξ x)) ≫ X.fromSpecStalk x.1 = ξ := by
@@ -340,7 +340,7 @@ theorem PositivityTheory.Xgn.exists_curve_through_special_point : ∀ (X : Schem
     exact (congrArg (fun f => f.hom o) (Spec.map_injective e)).symm
   let ρ : X.presheaf.stalk x.1 →+* X.presheaf.stalk y.1 := (X.presheaf.stalkSpecializes hyx).hom
   let q : Ideal (X.presheaf.stalk x.1) := (maximalIdeal _).comap ρ
-  haveI hq : q.IsPrime := Ideal.comap_isPrime _ _
+  have hq : q.IsPrime := Ideal.comap_isPrime _ _
   have hqm : ∀ σ, σ ∉ q ↔ unitAt ξ y (genMap ξ x σ) := fun σ => by
     have e0 : genMap ξ y (ρ σ) = genMap ξ x σ := ProjectiveLinePlaces.genMap_specializes hyx y.2 x.2 σ
     rw [← e0, CptModel.unitAt_iff]
@@ -352,9 +352,9 @@ theorem PositivityTheory.Xgn.exists_curve_through_special_point : ∀ (X : Schem
   have hϖq : β ϖ ∈ q := by
     by_contra h
     exact hy (hβo ϖ ▸ (hqm _).1 h)
-  haveI : IsLocalRing (X.presheaf.stalk x.1 ⧸ q) :=
+  have : IsLocalRing (X.presheaf.stalk x.1 ⧸ q) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk q) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk q) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   have hγ0 : Ideal.Quotient.mk q γ ≠ 0 := fun h => hγq (Ideal.Quotient.eq_zero_iff_mem.1 h)
   obtain ⟨P, hP, hγP, hd⟩ := PositivityTheory.Xgn.exists_prime_dim_one_avoiding (X.presheaf.stalk x.1 ⧸ q) (Ideal.Quotient.mk q γ) hγ0
     fun hF => by
@@ -410,7 +410,7 @@ theorem PositivityTheory.Xgn.exists_curve_through_special_point : ∀ (X : Schem
       rw [halg]
       exact hW (β o)
   let φ' : X.presheaf.stalk x.1 →+* (C.v i).valuationSubring := φ.codRestrict _ hW
-  haveI : IsLocalHom φ' := hloc
+  have : IsLocalHom φ' := hloc
   have hzi : Spec.map (CommRingCat.ofHom φ') ≫ X.fromSpecStalk x.1 = (hz i).choose :=
     (hz i).choose_spec.2 _ ⟨by
       rw [← Category.assoc, ← Spec.map_comp]
@@ -562,7 +562,7 @@ theorem subset_of_specializes {T : Type} [TopologicalSpace T] [TopologicalSpace.
     obtain ⟨S, hfin, hScl, hSirr, hU⟩ := TopologicalSpace.NoetherianSpace.exists_finite_set_isClosed_irreducible hZ
     have e : Z ∩ V = ⋃ t ∈ {t ∈ S | (t ∩ V).Nonempty}, t := by
       ext x
-      simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq, exists_prop]
+      simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_ofPred_eq, exists_prop]
       constructor
       · rintro ⟨hx, hxV⟩
         rw [hU] at hx
@@ -615,9 +615,9 @@ end PositivityTheory.Xgn.ProperZeroNumerical
 open PositivityTheory.Xgn.ProperZeroNumerical in
 theorem PositivityTheory.Xgn.normal_proper_line_order : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsProper s] (ϖ : O), Irreducible ϖ → Function.Injective (algebraMap O Ω) → ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → IsCptGen ξ → NormalCpt ξ → _root_.IsConnected (zeroSet ξ (algebraMap O Ω ϖ)) → ∀ (L : Lat ξ Ω) (σ : Ω), L.IsVB 1 ⊤ → NumTrivMod L (algebraMap O Ω ϖ) → (∀ p ∈ genFibre O ξ, L.IsGenAt p σ) → ∃ (M : ℕ) (a : ℤ), 0 < M ∧ ∀ p : Cpt ξ, OrderAt L σ (algebraMap O Ω ϖ) M a p := by
   intro X Ω _ ξ O _ _ _ _ s _ ϖ hϖ hinj hs hg hn hconn L σ hvb hnum hgen
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
-  haveI : IsNoetherian X := { }
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : IsNoetherian X := { }
   obtain ⟨M, a, hM, hreg, p₀, hp₀, -, e₀, c₀, he₀, hL₀, hσ₀, hu₀⟩ :=
     exists_regular_section_generator X Ω ξ O s ϖ hϖ hinj hs hg hn hconn.1 L σ hvb hgen
   have hunit : ∀ (p : Cpt ξ) (o : O), unitAt ξ p (algebraMap O Ω o) ↔ o ∉ (s p.1).asIdeal :=

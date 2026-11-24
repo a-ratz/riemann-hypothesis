@@ -157,7 +157,7 @@ namespace CompanionTheory.LocalTateOrthogonality.Gcoh
 
 theorem gcRep : SgcRep := by
   intro G _ _ _ R _ M _ _ _ _ rho hrho
-  letI : Module (ULift.{0} ℤ) M := Module.compHom M (ULift.ringEquiv : ULift.{0} ℤ ≃+* ℤ).toRingHom
+  let : Module (ULift.{0} ℤ) M := Module.compHom M (ULift.ringEquiv : ULift.{0} ℤ ≃+* ℤ).toRingHom
   let σ : Representation (ULift.{0} ℤ) G M :=
     { toFun := fun g =>
         { toFun := rho g

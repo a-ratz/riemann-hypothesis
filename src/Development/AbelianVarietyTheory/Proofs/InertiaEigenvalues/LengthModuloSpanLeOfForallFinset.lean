@@ -70,7 +70,7 @@ theorem height_map_span_le_of_finset {O M N : Type} [CommRing O] [AddCommGroup M
   intro p hp
 
   have hx : ∀ i : Fin p.length, ∃ x ∈ p i.succ, x ∉ p i.castSucc :=
-    fun i => SetLike.exists_of_lt (p.step i)
+    fun i => IsConcreteLE.exists_of_lt (p.step i)
   choose x hxin hxout using hx
 
   have hfin : ∀ i : Fin p.length, ∃ F : Finset M, (↑F : Set M) ⊆ S ∧

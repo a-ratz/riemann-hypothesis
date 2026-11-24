@@ -143,7 +143,7 @@ variable {ϖ ϖ' : kˣ}
 theorem val_div_sub_one (h : valuation k ((ϖ' : k) - (ϖ : k)) < valuation k (ϖ : k)) :
     valuation k ((ϖ : k)⁻¹ * ϖ' - 1) < 1 := by
   have e : (ϖ : k)⁻¹ * ϖ' - 1 = (ϖ : k)⁻¹ * ((ϖ' : k) - ϖ) := by field_simp
-  have h0 : 0 < valuation k (ϖ : k) := by simp [zero_lt_iff]
+  have h0 : 0 < valuation k (ϖ : k) := by simp [pos_iff_ne_zero]
   rwa [e, map_mul, map_inv₀, inv_mul_lt_one₀ h0]
 
 theorem near_typeFrame {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
@@ -181,7 +181,7 @@ theorem inv_sub_inv_mem (hϖ : IsUnif ϖ) (h : valuation k ((ϖ' : k) - (ϖ : k)
   have h1 := (hϖ _).1 (val_div_sub_one h)
   have e : ((ϖ'⁻¹ : kˣ) : k) - ((ϖ⁻¹ : kˣ) : k) = -((ϖ' : k)⁻¹ * ((ϖ : k)⁻¹ * ϖ' - 1)) := by
     simp only [Units.val_inv_eq_inv_val]; field_simp; ring
-  have h0 : 0 < valuation k (ϖ : k) := by simp [zero_lt_iff]
+  have h0 : 0 < valuation k (ϖ : k) := by simp [pos_iff_ne_zero]
   rwa [e, Valuation.map_neg, map_mul, map_inv₀, val_eq h, inv_mul_le_one₀ h0]
 
 theorem psi_inv_mul {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) (hϖ : IsUnif ϖ)

@@ -106,7 +106,7 @@ theorem span : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 
   ∀ (N : ℕ) (z : Ω), (∀ g ∈ Ggeo (p := p) Ω ⊓ MulAction.stabilizer (Gal p Ω) (T.qq N), g z = z) →
   ∃ c : ℕ → Ω, (∀ j, ∀ g ∈ Ggeo (p := p) Ω, g (c j) = c j) ∧ z = ∑ j ∈ Finset.range (p ^ N), c j * T.qq N ^ j := by
   intro p _ Ω _ _ hΩ T τ hτ hτq N z hz
-  haveI : CharZero Ω := charZero_of_injective_algebraMap hΩ.inj
+  have : CharZero Ω := charZero_of_injective_algebraMap hΩ.inj
   have hprim : IsPrimitiveRoot (T.ζ N) (p ^ N) := T.prim N
   have hMpos : 0 < p ^ N := pow_pos (Fact.out : p.Prime).pos N
   have hq0 : T.qq N ≠ 0 := Basic.qq_ne_zero T N
@@ -240,7 +240,7 @@ theorem kern_of (SPAN : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
   ∀ (k N : ℕ) (w o : Ω), IsInt (p := p) w → (∀ g ∈ Ggeo p Ω ⊓ MulAction.stabilizer (Gal p Ω) (T.qq N), g w = w) →
   (∀ g ∈ Ggeo p Ω, g o = o) → Cong (p := p) k (τ w - w) o → Cong (p := p) k o 0 := by
   intro p _ _ Ω _ _ hΩ T τ hτ hτq k N w o hw hwH ho hc
-  haveI : CharZero Ω := charZero_of_injective_algebraMap hΩ.inj
+  have : CharZero Ω := charZero_of_injective_algebraMap hΩ.inj
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
 
   have hζalg : IsAlgZp p (T.ζ N) := by
@@ -361,18 +361,18 @@ theorem exists_of_seq (h : IsClo p Ω) (P : ℕ → Ω → Set Ω)
     ∃ σ : Gal p Ω, ∀ n x, σ x ∈ P n x := by
   classical
   let K := FractionRing (O0 p)
-  letI : Algebra K Ω := (IsFractionRing.lift h.inj).toAlgebra
+  let : Algebra K Ω := (IsFractionRing.lift h.inj).toAlgebra
   have hK : ∀ a : O0 p, algebraMap K Ω (algebraMap (O0 p) K a) = algebraMap (O0 p) Ω a :=
     fun a => IsFractionRing.lift_algebraMap h.inj a
-  haveI : IsScalarTower (O0 p) K Ω := IsScalarTower.of_algebraMap_eq (fun a => (hK a).symm)
-  haveI : IsAlgClosed Ω := h.clo
-  haveI : Algebra.IsAlgebraic (O0 p) Ω := h.alg
-  haveI : Algebra.IsAlgebraic K Ω :=
+  have : IsScalarTower (O0 p) K Ω := IsScalarTower.of_algebraMap_eq (fun a => (hK a).symm)
+  have : IsAlgClosed Ω := h.clo
+  have : Algebra.IsAlgebraic (O0 p) Ω := h.alg
+  have : Algebra.IsAlgebraic K Ω :=
     Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective (O0 p) K)
-  haveI : IsAlgClosure K Ω := ⟨h.clo, inferInstance⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap h.inj
-  haveI : CharZero K := RingHom.charZero (algebraMap K Ω)
-  haveI : IsGalois K Ω := {}
+  have : IsAlgClosure K Ω := ⟨h.clo, inferInstance⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap h.inj
+  have : CharZero K := RingHom.charZero (algebraMap K Ω)
+  have : IsGalois K Ω := {}
   have hfix : ∀ σ : Gal p Ω, ∀ y : K, σ (algebraMap K Ω y) = algebraMap K Ω y := by
     intro σ y
     have e : ((σ : Ω →+* Ω).comp (algebraMap K Ω)) = algebraMap K Ω := by
@@ -406,7 +406,7 @@ theorem exists_finset_orbit (h : IsClo p Ω) (x : Ω) : ∃ R : Finset Ω, ∀ �
   rw [Multiset.mem_toFinset, mem_aroots']
   refine ⟨(Polynomial.map_ne_zero_iff h.inj).2 hP0, ?_⟩
   have e := Polynomial.aeval_algHom_apply (σ : Ω →ₐ[O0 p] Ω) x P
-  simp only [AlgEquiv.coe_algHom] at e
+  simp only [AlgEquiv.coe_toAlgHom] at e
   rw [e, hPx, map_zero]
 
 theorem isAlgZp_zeta (T : Tower p Ω) (n : ℕ) : IsAlgZp (p := p) (T.ζ n) := by
@@ -813,7 +813,7 @@ noncomputable def toGal (σ : Ω ≃ₐ[baseField p Ω] Ω) : Gal p Ω :=
 theorem toGal_apply (σ : Ω ≃ₐ[baseField p Ω] Ω) (x : Ω) : toGal σ x = σ x := rfl
 
 theorem isAlgebraic_baseField (h : IsClo p Ω) : Algebra.IsAlgebraic (baseField p Ω) Ω := by
-  haveI := h.alg
+  have := h.alg
   refine ⟨fun x => ?_⟩
   obtain ⟨P, hP0, hPx⟩ := Algebra.IsAlgebraic.isAlgebraic (R := O0 p) x
   let φ : O0 p →+* baseField p Ω :=
@@ -834,13 +834,13 @@ theorem GlobalTheory.K5.span_fixed_ggeo_stab : ∀ (p : ℕ) [Fact p.Prime] (Ω 
   ∃ c : ℕ → Ω, (∀ j, ∀ g ∈ Ggeo (p := p) Ω, g (c j) = c j) ∧
     y = ∑ j ∈ Finset.range (p ^ N), c j * T.qq N ^ j := by
   intro p _ Ω _ _ h T N y hy
-  haveI : CharZero Ω := Basic.charZero_of_isClo h
-  haveI := h.clo
+  have : CharZero Ω := Basic.charZero_of_isClo h
+  have := h.clo
   set L := baseField p Ω
-  haveI : CharZero L := inferInstance
-  haveI : Algebra.IsAlgebraic L Ω := isAlgebraic_baseField h
-  haveI : IsAlgClosure L Ω := ⟨h.clo, inferInstance⟩
-  haveI : IsGalois L Ω := IsAlgClosure.isGalois L Ω
+  have : CharZero L := inferInstance
+  have : Algebra.IsAlgebraic L Ω := isAlgebraic_baseField h
+  have : IsAlgClosure L Ω := ⟨h.clo, inferInstance⟩
+  have : IsGalois L Ω := IsAlgClosure.isGalois L Ω
   set M : IntermediateField L Ω := IntermediateField.adjoin L {T.qq N}
   have hyM : y ∈ M := by
     rw [← InfiniteGalois.fixedField_fixingSubgroup M, mem_fixedField_iff]
@@ -1134,7 +1134,7 @@ theorem zpow_val (T : Tower p Ω) (k n : ℕ) : T.ζ k ^ ((n : ZMod (p ^ k)).val
 theorem kum_eq (T : Tower p Ω) {k : ℕ} {H : Subgroup (Gal p Ω)} {κ : Gal p Ω → ZMod (p ^ k)}
     (hκ : IsKum T k H (T.qq k) κ) {g : Gal p Ω} (hg : g ∈ H) (x : ZMod (p ^ k))
     (hx : g (T.qq k) = T.ζ k ^ x.val * T.qq k) : κ g = x := by
-  haveI : NeZero (p ^ k) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ k) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   have h := (hκ g hg).symm.trans hx
   have h2 := mul_right_cancel₀ (qq_ne_zero T k) h
   exact ZMod.val_injective _ ((T.prim k).pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h2)
@@ -1142,7 +1142,7 @@ theorem kum_eq (T : Tower p Ω) {k : ℕ} {H : Subgroup (Gal p Ω)} {κ : Gal p 
 theorem kum_add (T : Tower p Ω) {k : ℕ} {κ : Gal p Ω → ZMod (p ^ k)}
     (hκ : IsKum T k (Ggeo p Ω) (T.qq k) κ) {g h : Gal p Ω} (hg : g ∈ Ggeo p Ω) (hh : h ∈ Ggeo p Ω) :
     κ (g * h) = κ g + κ h := by
-  haveI : NeZero (p ^ k) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ k) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   apply kum_eq T hκ (mul_mem hg hh)
   rw [AlgEquiv.mul_apply, hκ h hh, map_mul, map_pow, fix_zeta T k hg, hκ g hg]
   have : (κ g + κ h) = (((κ g).val + (κ h).val : ℕ) : ZMod (p ^ k)) := by
@@ -1152,7 +1152,7 @@ theorem kum_add (T : Tower p Ω) {k : ℕ} {κ : Gal p Ω → ZMod (p ^ k)}
 
 theorem cong_val_add {k : ℕ} (a b : ZMod (p ^ k)) {o : Ω} (ho : IsInt (p := p) o) :
     Cong (p := p) k (o * ((a + b).val : Ω)) (o * (a.val : Ω) + o * (b.val : Ω)) := by
-  haveI : NeZero (p ^ k) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ k) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   rw [ZMod.val_add]
   refine ⟨-(o * (((a.val + b.val) / p ^ k : ℕ) : Ω)), (ho.mul (isInt_natCast _)).neg, ?_⟩
   have e := Nat.mod_add_div (a.val + b.val) (p ^ k)
@@ -1195,7 +1195,7 @@ theorem kum_Hi (T : Tower p Ω) {k : ℕ} {κ : Gal p Ω → ZMod (p ^ k)}
 theorem kum_tau (T : Tower p Ω) {k : ℕ} (hk : 1 ≤ k) {κ : Gal p Ω → ZMod (p ^ k)}
     (hκ : IsKum T k (Ggeo p Ω) (T.qq k) κ) {τ : Gal p Ω} (hτG : τ ∈ Ggeo p Ω)
     (hτq : ∀ n, τ (T.qq n) = T.ζ n * T.qq n) : ((κ τ).val : Ω) = 1 := by
-  haveI : Fact (1 < p ^ k) := ⟨Nat.one_lt_pow (by omega) (Fact.out : p.Prime).one_lt⟩
+  have : Fact (1 < p ^ k) := ⟨Nat.one_lt_pow (by omega) (Fact.out : p.Prime).one_lt⟩
   have : κ τ = 1 := kum_eq T hκ hτG 1 (by rw [hτq k, ZMod.val_one, pow_one])
   rw [this, ZMod.val_one, Nat.cast_one]
 
@@ -1471,7 +1471,7 @@ theorem isInt_iff (hψ : IsReb T L ψ) (x : Ω) : @IsInt p _ (RebT Ω ψ) _ _ x 
       refine ⟨X ^ (p ^ L) - C (qO p), monic_X_pow_sub_C _ (pow_ne_zero _ (Fact.out : p.Prime).ne_zero), ?_⟩
       rw [← aeval_def]
       simp [GlobalTheory.K5.Basic.qq_pow]
-    haveI : Algebra.IsIntegral (O0 p) A := Algebra.IsIntegral.adjoin (by rintro _ rfl; exact hq)
+    have : Algebra.IsIntegral (O0 p) A := Algebra.IsIntegral.adjoin (by rintro _ rfl; exact hq)
     let g : O0 p →+* A := ψ.codRestrict A (fun b => by
       have := ψ.mem_range_self b
       rw [hψ.rng] at this

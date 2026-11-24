@@ -71,7 +71,7 @@ theorem map_one_c {a : Type} [DecidableEq a] : (1 : Matrix a a K).map c = 1 := M
 
 theorem exists_left_inv (hK : IsField K) {a b : Type} [Fintype a] [Fintype b] [DecidableEq a] [DecidableEq b] (C : Matrix a b K)
     (h : ∀ t, C *ᵥ t = 0 → t = 0) : ∃ L : Matrix b a K, L * C = 1 := by
-  letI := hK.toField
+  let := hK.toField
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective (Matrix.toLin' C)
     (LinearMap.ker_eq_bot'.2 fun t ht => h t ht)
   refine ⟨LinearMap.toMatrix' g, Matrix.toLin'.injective ?_⟩

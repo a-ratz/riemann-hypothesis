@@ -226,7 +226,7 @@ theorem orbit_heis : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
   have h4 := GlobalTheory.T.heisenbergArchimedeanDiffOperator_hasDerivAt_family (fun t => T t f) (fun t => (archCo G.M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)).1)
     (fun t => (archCo G.M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)).2) f' _ _ hsm hf'd hP hQ x
   simp only [hφ0, hT0] at h4
-  rw [SchwartzMap.add_apply, hg₁, hg₂]
+  rw [add_apply, hg₁, hg₂]
   exact h4.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => hrel t x)
 
 end GlobalTheory.HeisOrbit
@@ -326,7 +326,7 @@ theorem continuous_apply : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
     refine ⟨g (fun i => (xh i).2) • ((BoundedContinuousFunction.evalCLM ℂ x).comp
       (SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ ℂ)), fun h => ?_⟩
     show pureA F (⇑h) g xh = _
-    simp only [pureA, hxh, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [pureA, hxh, smul_apply, ContinuousLinearMap.comp_apply,
       BoundedContinuousFunction.evalCLM_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply, smul_eq_mul]
     exact mul_comm _ _
   have hφ : pureA F (⇑f) g₀ ∈ (adeleClass F).sp κ := Submodule.subset_span ⟨f, g₀, hg₀, rfl⟩
@@ -606,7 +606,7 @@ theorem smooth_vacuum_line : ∀ {F E : Type} [Field F] [NumberField F] [Field E
   obtain ⟨A, hAc, hAadd, hA0, hAint⟩ := GlobalTheory.T.one_parameter_weil_operator_derivative B G X om om' hT γ hγ T hTa
   have hC := GlobalTheory.T.continuous_archimedeanWeilOperator_line_triple B G X om om' hT γ hγ T hTa
   obtain ⟨J₀, hJ, hvac⟩ := GlobalTheory.T.exists_complexStructure_gaussVacuum_fockEquations B G X om om' hT f₀ hf₀
-  haveI : BorelSpace (Fin a × Fin (a + a') → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (Fin a × Fin (a + a') → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   obtain ⟨hsm, n, qs, qs', cs, c, hd⟩ := GlobalTheory.T.weilOneParam_moves_fockVacuum_smoothly (V := Fin a × Fin (a + a') → mixedEmbedding.mixedSpace F) Measure.addHaar (GlobalTheory.GaussLine.pairInf F (Fin a × Fin (a + a')))
     (GlobalTheory.T.tracePairingArchimedeanVars_nondegenerate_right F _) T h1 h0 hU A hAc hAadd hA0 hAint hC J₀ hJ f₀ hvac
   refine ⟨hsm, ?_⟩
@@ -616,7 +616,7 @@ theorem smooth_vacuum_line : ∀ {F E : Type} [Field F] [NumberField F] [Field E
   refine ⟨(∑ i, cs i • m (qs i) (m (qs' i) f₀ hf₀P) (hmP _ _ _)) + c • f₀,
     add_mem (sum_mem fun i _ => Submodule.smul_mem _ _ (hmP _ _ _)) (Submodule.smul_mem _ _ hf₀P), fun x => ?_⟩
   convert hd x using 1
-  simp only [SchwartzMap.add_apply, SchwartzMap.sum_apply, SchwartzMap.smul_apply, smul_eq_mul, hmE]
+  simp only [add_apply, sum_apply, smul_apply, smul_eq_mul, hmE]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   ring
@@ -692,7 +692,7 @@ theorem exists_lie_deriv_pol : ∀ {F E : Type} [Field F] [NumberField F] [Field
         rintro f g ⟨hf, hf1, f', hf', hf2⟩ ⟨hg, hg1, g', hg', hg2⟩
         refine ⟨add_mem hf hg, by simpa using hf1.add hg1, f' + g', add_mem hf' hg', fun x => ?_⟩
         show HasDerivAt (fun t => T t (f + g) x) ((f' + g') x) 0
-        simp only [map_add (f := _), SchwartzMap.add_apply]
+        simp only [map_add (f := _), add_apply]
         exact (hf2 x).add (hg2 x)
       smul_mem' := by
         rintro c f ⟨hf, hf1, f', hf', hf2⟩
@@ -715,7 +715,7 @@ theorem exists_lie_deriv_pol : ∀ {F E : Type} [Field F] [NumberField F] [Field
     { toFun := d
       map_add' := fun f g => huniq _ _ _ (hd (f + g)) (fun x => by
         show HasDerivAt (fun t => T t ((f : SInf F (Fin a × Fin (a + a'))) + g) x) ((d f + d g) x) 0
-        simp only [map_add (f := _), SchwartzMap.add_apply]
+        simp only [map_add (f := _), add_apply]
         exact (hd f x).add (hd g x))
       map_smul' := fun c f => huniq _ _ _ (hd (c • f)) (fun x => by simpa using (hd f x).const_mul c) }
   obtain ⟨δ, hδ⟩ := LinearMap.exists_extend δ₀

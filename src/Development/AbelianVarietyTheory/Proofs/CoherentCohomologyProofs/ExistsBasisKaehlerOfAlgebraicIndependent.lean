@@ -296,14 +296,14 @@ theorem exists_basis_kaehler_of_algebraicIndependent {K F ι : Type*} [Field K] 
   let P := MvPolynomial ι K
   let A := Algebra.adjoin K (Set.range v)
   let L := IntermediateField.adjoin K (Set.range v)
-  letI : Algebra P A := hv.aevalEquiv.toAlgHom.toRingHom.toAlgebra
-  haveI : IsScalarTower K P A :=
+  let : Algebra P A := hv.aevalEquiv.toAlgHom.toRingHom.toAlgebra
+  have : IsScalarTower K P A :=
     .of_algebraMap_eq fun r => (hv.aevalEquiv.commutes r).symm
-  haveI : Algebra.FormallyEtale P A :=
+  have : Algebra.FormallyEtale P A :=
     .of_equiv (AlgEquiv.ofBijective (Algebra.ofId P A) hv.aevalEquiv.bijective)
-  haveI : Algebra.FormallyEtale A L := .of_isLocalization (nonZeroDivisors _)
-  haveI : Algebra.FormallyEtale L F := Algebra.FormallyEtale.of_isSeparable _ F
-  haveI : Algebra.FormallyEtale A F := .comp A L F
+  have : Algebra.FormallyEtale A L := .of_isLocalization (nonZeroDivisors _)
+  have : Algebra.FormallyEtale L F := Algebra.FormallyEtale.of_isSeparable _ F
+  have : Algebra.FormallyEtale A F := .comp A L F
   let b₁ : Basis ι A Ω[A⁄K] :=
     ((mvPolynomialBasis K ι).baseChange A).map (tensorKaehlerEquivOfFormallyEtale K P A)
   refine ⟨(b₁.baseChange F).map (tensorKaehlerEquivOfFormallyEtale K A F), fun i => ?_⟩

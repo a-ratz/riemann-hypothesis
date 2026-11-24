@@ -85,7 +85,7 @@ theorem tjAt_id_iff (r : ℤ) (w : Ideal (𝓞 D.F)) (j : ℕ) (o o' : Obj b N s
 theorem IsPIsog.kerStableAt {c : ℕ} {o o' : Obj b N s} {ψ : o.A ⟶ o'.A} (h : IsPIsog c o o' ψ)
     {Tb : Scheme.{0}} (t : Tb ⟶ Y) : KerStableAt o ψ t := by
   intro T _ _ g hg a
-  haveI := o'.act.hom a
+  have := o'.act.hom a
   rw [h.2.2.1, ← Category.assoc, hg, one_comp]
 
 theorem IsPIsog.exists_quasiInv {c : ℕ} {o o' : Obj b N s} {ψ : o.A ⟶ o'.A} (h : IsPIsog c o o' ψ) :

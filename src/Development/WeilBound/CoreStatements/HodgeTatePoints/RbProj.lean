@@ -219,7 +219,7 @@ private theorem comp_smul_mem_sqIdeal_of_fStable {C : Type} [Field C] {R : Type}
 theorem proj_props : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable (F := F) AA.carrier → ∀ σ : MulChar F R, IsFund p σ → ∀ g ∈ augIdeal AA.carrier, (∀ χ : MulChar F R, proj χ g ∈ eig AA.carrier χ) ∧ g = ∑ m ∈ Finset.Icc 1 (p ^ f - 1), proj (σ ^ m) g ∧ (g ∈ afFun p AA.carrier → ∀ χ : MulChar F R, proj χ g ∈ afFun p AA.carrier) ∧ (∀ K : Submodule F N, g ∈ invFun AA.carrier K.toAddSubgroup → ∀ χ : MulChar F R, proj χ g ∈ invFun AA.carrier K.toAddSubgroup) ∧ (g ∈ sqIdeal (augIdeal AA.carrier) → ∀ χ : MulChar F R, proj χ g ∈ sqIdeal (augIdeal AA.carrier)) := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hc N _ _ _ _ AA hFS σ hσ g hg
   have hinj : Function.Injective (algebraMap R C) := hv.hom_inj
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hinj
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hinj
   obtain ⟨h0, w, hw⟩ := exists_inv_card (F := F) hv hp hc
   have hgA : g ∈ AA.carrier := (Submodule.mem_inf.1 hg).1
   have hg0 : g 0 = 0 := by simpa using LinearMap.mem_ker.1 (Submodule.mem_inf.1 hg).2
@@ -260,7 +260,7 @@ theorem proj_props : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClo
       rw [map_sum, Finset.sum_mul]
     rw [hsum]
     simp only [hz, apply_ite (algebraMap R C), ite_mul, map_zero, zero_mul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, Units.val_one, one_smul, map_natCast]
+      Finset.mem_univ, ite_true, Units.val_one, one_smul, map_natCast]
     rw [← hcardU, inv_mul_cancel_left₀ h0]
   · intro haf χ
     have hA : g ∈ AA.carrier := (Submodule.mem_inf.1 haf).1
@@ -278,7 +278,7 @@ theorem proj_props : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClo
 theorem proj_nf : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable (F := F) AA.carrier → ∀ g ∈ afFun p AA.carrier, ∀ χ : MulChar F R, ¬ IsFund p χ → proj χ g ∈ pFun R p N := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hc N _ _ _ _ AA hFS g hg χ hχ
   have hinj : Function.Injective (algebraMap R C) := hv.hom_inj
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hinj
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hinj
   obtain ⟨σ, hσ⟩ := fund_ex p C v R hv hp F f hc
   obtain ⟨-, -, hfrob, -, -⟩ := FundGen.main p C v R hv hp F f hc σ hσ
   obtain ⟨-, w, hw⟩ := exists_inv_card (F := F) hv hp hc

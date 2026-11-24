@@ -338,7 +338,7 @@ theorem measure_entry : ∀ (k : ℕ) (μ : Measure (PI.MtM (k + 1))), 1 ≤ k �
 
   have hEE : μ {g | |‖g (Fin.last k) (Fin.last k)‖ ^ 2 - 1| ≤ t} =
       μ {g : PI.MtM (k + 1) | 1 - t ≤ ‖g (Fin.last k) (Fin.last k)‖ ^ 2} := by
-    refine measure_congr (Filter.eventuallyEq_set.mpr ?_)
+    refine measure_congr (eventuallyEqSet_iff.mpr ?_)
     filter_upwards [hU] with g hg
     have hc : star (fun i => g i (Fin.last k)) ⬝ᵥ (fun i => g i (Fin.last k)) = 1 := by
       have h2 := congrFun (congrFun hg (Fin.last k)) (Fin.last k)
@@ -386,7 +386,7 @@ theorem measure_entry : ∀ (k : ℕ) (μ : Measure (PI.MtM (k + 1))), 1 ≤ k �
       calc μ ((fun g => (g, x)) ⁻¹'
             {q : PI.MtM (k + 1) × (Fin (k + 1) → ℂ) | q.2 ᵥ* Matrix.of q.1 ∈ cone k t})
           = μ (PI.lmulQ h ⁻¹' {g : PI.MtM (k + 1) | 1 - t ≤ ‖g (Fin.last k) (Fin.last k)‖ ^ 2}) := by
-            refine measure_congr (Filter.eventuallyEq_set.mpr ?_)
+            refine measure_congr (eventuallyEqSet_iff.mpr ?_)
             filter_upwards [hU] with g hg
             have e1 : sq (x ᵥ* Matrix.of g) = sq x := sq_vecMul _ hg x
             have hv : x ᵥ* Matrix.of g = √(sq x) • (h (Fin.last k) ᵥ* Matrix.of g) := by
@@ -467,18 +467,18 @@ theorem exists_prob_haar {m : ℕ} {G : Set (Matrix (Fin m) (Fin m) ℂ)} (hG : 
     ∃ μ : Measure (PI.MtM m), PI.IsHaarOnM G μ ∧ μ Set.univ = 1 := by
   have hc' : IsCompact (Set.range (MatHaar.inc : MatHaar.Grp G hG → PI.MtM m)) := by
     rw [MatHaar.range_inc]; exact hc
-  haveI : CompactSpace (MatHaar.Grp G hG) := ⟨by
+  have : CompactSpace (MatHaar.Grp G hG) := ⟨by
     rw [MatHaar.inc_closedEmb.isInducing.isCompact_iff, Set.image_univ]; exact hc'⟩
   let ν : Measure (MatHaar.Grp G hG) := Measure.haarMeasure ⊤
   have hν : ν Set.univ = 1 := Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (MatHaar.Grp G hG)))
   have h1 : (ν.map MatHaar.inc) Set.univ = 1 := by
     rw [MatHaar.inc_memb.map_apply, Set.preimage_univ, hν]
-  haveI : IsProbabilityMeasure (ν.map MatHaar.inc) := ⟨h1⟩
+  have : IsProbabilityMeasure (ν.map MatHaar.inc) := ⟨h1⟩
   refine ⟨ν.map MatHaar.inc, ⟨inferInstance, IsProbabilityMeasure.ne_zero _, ?_, fun s hs => ?_⟩, h1⟩
   · rw [MatHaar.inc_memb.map_apply]
     have : (MatHaar.inc : MatHaar.Grp G hG → PI.MtM m) ⁻¹' {x | Matrix.of x ∉ G} = ∅ := by
       ext x
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
       exact MatHaar.inc_mem x
     rw [this, measure_empty]
   · let a : MatHaar.Grp G hG := ⟨s, hs⟩
@@ -489,9 +489,9 @@ theorem exists_prob_haar {m : ℕ} {G : Set (Matrix (Fin m) (Fin m) ℂ)} (hG : 
 
 theorem hasDens_zero (S : Set (Matrix (Fin 0) (Fin 0) ℂ)) (μ : Measure (PI.MtM 0)) (h : μ Set.univ = 1) :
     HasDens S μ 1 := by
-  haveI : Subsingleton (EuclideanSpace ℝ (Fin 0 × Fin 0 × Bool)) :=
+  have : Subsingleton (EuclideanSpace ℝ (Fin 0 × Fin 0 × Bool)) :=
     ⟨fun a b => by ext p; exact p.1.elim0⟩
-  haveI : Subsingleton (lieE S) := inferInstance
+  have : Subsingleton (lieE S) := inferInstance
   have hu : (volume : Measure (lieE S)) Set.univ = 1 := by
     have hp := (stdOrthonormalBasis ℝ (lieE S)).volume_parallelepiped
     have he : parallelepiped (stdOrthonormalBasis ℝ (lieE S)) = Set.univ :=
@@ -581,7 +581,7 @@ theorem lieLine_surjective : Function.Surjective lieLine := by
 def par (x : AddCircle (2 * Real.pi)) : PI.MtM 1 := fun _ _ => (AddCircle.toCircle x : ℂ)
 
 theorem continuous_par : Continuous par :=
-  continuous_pi fun _ => continuous_pi fun _ => continuous_subtype_val.comp AddCircle.continuous_toCircle
+  continuous_pi fun _ => continuous_pi fun _ => continuous_subtypeVal.comp AddCircle.continuous_toCircle
 
 theorem par_injective : Function.Injective par := fun _ _ h =>
   AddCircle.injective_toCircle Real.two_pi_pos.ne' (Circle.ext (congrFun (congrFun h 0) 0))
@@ -610,7 +610,7 @@ theorem isHaar_par : PI.IsHaarOnM (UH (1 : Matrix (Fin 1) (Fin 1) ℂ)) (Measure
   · rw [par_memb.map_apply]
     have : par ⁻¹' {x | Matrix.of x ∉ UH (1 : Matrix (Fin 1) (Fin 1) ℂ)} = ∅ := by
       ext x
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
       rw [mem_UH_rank_one]
       exact Circle.norm_coe _
     rw [this, measure_empty]
@@ -648,7 +648,7 @@ theorem hasDens_one (μ : Measure (PI.MtM 1)) (hμ : PI.IsHaarOnM (UH (1 : Matri
     HasDens (UH (1 : Matrix (Fin 1) (Fin 1) ℂ)) μ (ENNReal.ofReal (2 * Real.pi)⁻¹) := by
   obtain ⟨c, -, -, hc⟩ := (MatHaar.haar_unique_locFinite_openPos 1 _ _ (isMatGroup_UH_one 1) isHaar_par).1 μ hμ
   have h1 : ∀ S, μ S = c * volume (par ⁻¹' S) := fun S => by
-    rw [hc, Measure.smul_apply, smul_eq_mul, par_memb.map_apply]
+    rw [hc, smul_apply, smul_eq_mul, par_memb.map_apply]
   have h2 := h1 Set.univ
   rw [h, Set.preimage_univ, AddCircle.measure_univ] at h2
   have h3 : c = ENNReal.ofReal (2 * Real.pi)⁻¹ := by

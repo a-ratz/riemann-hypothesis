@@ -564,7 +564,7 @@ theorem de_chi_eq {D : D7} {ρ : Setup D.ntw} (hρ : ρ.Good) (i : D.ntw.Tw) (j 
       ext σ
       cases b <;> simp [hψ, Formalism.MainNotions.BlochKatoReduction.Gen.psiAt, MonoidHom.mem_ker]
     rw [this]; exact D.ntw.delta_open i
-  haveI : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
+  have : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
   have hpow : ∀ σ, ψ σ ^ ψ.ker.index = 1 := fun σ => by
     rw [← map_pow]; exact ψ.ker.pow_index_mem σ
   obtain ⟨σ, hσ⟩ := ρ.rc.exists_sym x
@@ -712,7 +712,7 @@ theorem charPowPrimeOrder_embeddings_differ_by_coprime_power :
       ∀ (ψ : Γ →* Cˣ), (∀ g, ψ g ^ (l ^ n) = 1) → ∀ e e' : C →+* ℂ,
         ∃ a : ℕ, Nat.Coprime a l ∧ ∀ g, e' ((ψ g : Cˣ) : C) = e (((ψ g ^ a : Cˣ)) : C) := by
   intro Γ _ C _ _ l n hl ψ hψ e e'
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
   obtain ⟨ζ, hζ⟩ := IsCyclic.exists_generator (α := rootsOfUnity (l ^ n) C)
   set u : Cˣ := (ζ : Cˣ) with hu
   have hul : u ^ (l ^ n) = 1 := (mem_rootsOfUnity _ _).mp ζ.2
@@ -720,7 +720,7 @@ theorem charPowPrimeOrder_embeddings_differ_by_coprime_power :
   have hkd : k ∣ l ^ n := orderOf_dvd_of_pow_eq_one hul
   have hk0 : 0 < k := Nat.pos_of_ne_zero (fun h => by
     rw [h] at hkd; exact (NeZero.ne (l ^ n)) (Nat.eq_zero_of_zero_dvd hkd))
-  haveI : NeZero k := ⟨hk0.ne'⟩
+  have : NeZero k := ⟨hk0.ne'⟩
   have hpu : IsPrimitiveRoot (u : C) k := IsPrimitiveRoot.coe_units_iff.mpr (IsPrimitiveRoot.orderOf u)
   have h1 : IsPrimitiveRoot (e (u : C)) k := hpu.map_of_injective e.injective
   have h2 : IsPrimitiveRoot (e' (u : C)) k := hpu.map_of_injective e'.injective
@@ -826,7 +826,7 @@ theorem splitOff_iff {P : Pl D.host.E} {S : Set (Pl D.host.E)} : Bridge.SplitOff
 
 theorem exists_isRes {χ : HChar D.host.E} {P : Pl D.host.E} (ht : χ.TameAt P) : ∃ c, IsRes χ P c := by
   choose r hr using fun a : (kP P)ˣ => Ideal.Quotient.mk_surjective (a : kP P)
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   have hn : ∀ {b : 𝓞 D.host.E} {a : (kP P)ˣ}, Ideal.Quotient.mk P.asIdeal b = a → b ∉ P.asIdeal := fun {b a} e hb =>
     a.ne_zero (e ▸ Ideal.Quotient.eq_zero_iff_mem.2 hb)
   have h0 : ∀ {b : 𝓞 D.host.E}, b ∉ P.asIdeal → (b : D.host.E) ≠ 0 := fun {b} hb e =>
@@ -993,7 +993,7 @@ theorem exists_over {q : ℕ} (hq : q.Prime) : ∃ v : Pl D.host.E, (q : 𝓞 D.
 theorem exists_pow {ρ ρ' : Setup D.ntw} (hs : ρ'.rc = ρ.rc) {i : D.ntw.Tw} (b : Bool) {k : ℕ} {Q : Finset (Pl D.host.E)}
     {ψ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* (D.ntw.Ok i k)ˣ} (hψ : IntegralHeckeForms.TwOK i k Q ψ) :
     ∃ a : ℕ, a.Coprime (D.ntw.l i) ∧ (ρ'.tw i b k Q ψ).chi = (ρ.tw i b k Q ψ).chi ^ a := by
-  haveI : CharZero (FractionRing (D.ntw.Ok i k)) := (ρ.ek i b k).charZero
+  have : CharZero (FractionRing (D.ntw.Ok i k)) := (ρ.ek i b k).charZero
   have hn : D.ntw.l i ^ k ≠ 0 := pow_ne_zero _ (D.ntw.lPrime i).out.ne_zero
   have h1 : ∀ σ, ψ σ ^ (D.ntw.l i ^ k) = 1 := fun σ => by
     obtain ⟨n, hn⟩ := hψ.2.2.2.2.1 σ

@@ -70,7 +70,7 @@ theorem eff_nsmul' {X : Scheme.{0}} [IsIntegral X] {D : CartierDiv X} (h : D.Eff
 
 theorem qNum_smul : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℂ), IsProjOver p → ∀ (N : LB X) (a c : ℚ) (D : X → ℚ), 0 ≤ c → QNum p N a D → QNum p N (c * a) (c • D) := by
   intro X _ _ p hp N a c D hc hD
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   obtain ⟨m, D₀, hm, hE, rfl, hI⟩ := hD
   obtain ⟨u, v, hv, rfl⟩ : ∃ u v : ℕ, 0 < v ∧ c = (u : ℚ) / v := by
     refine ⟨c.num.toNat, c.den, c.den_pos, ?_⟩

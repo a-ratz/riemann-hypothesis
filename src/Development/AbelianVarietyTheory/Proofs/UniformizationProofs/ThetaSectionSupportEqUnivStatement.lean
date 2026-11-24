@@ -408,10 +408,10 @@ theorem exists_gen_of_eigen {X Y : Scheme.{0}} [IsIntegral Y] (hN : ∀ y : Y, I
 
 theorem main : ∀ (S : Scheme.{0}) (P : PolAV S) (F : Type) [Field F] (p : Spec (CommRingCat.of F) ⟶ S) (l : ℕ), 1 ≤ l → ∀ (th : EA P p 1) (t : EA P p l) (θ : ThetaGrp P.A P.L (l : ℤ) (Over.mk p)) (c : Fˣ), th ≠ 0 → (∀ z J, Good P.L z J → sval (L := P.L) (φ := fun _ : Fin 1 => (snd (Over.mk p) P.A).left) (ε := fun _ => ((l : ℕ) : ℤ)) t.sec (𝟙 _) z J = sval (L := P.L) (φ := fun _ : Fin 1 => (snd (Over.mk p) P.A).left) (ε := fun _ => ((1 : ℕ) : ℤ)) th.sec (𝟙 _) z J ^ l) → IsActOf P.A P.L (l : ℤ) θ t.sec (c.val • t).sec → θ.pt = 1 := by
   intro S P F _ p l hl th t θ c h0 hp hθ
-  haveI := P.isAb.smooth
-  haveI := P.isAb.geomConnected
-  haveI : IsIntegral (Over.mk p).left := inferInstanceAs (IsIntegral (Spec (CommRingCat.of F)))
-  haveI := isIntegral_tensor_left_of_smooth_grpObj S P.A (Over.mk p)
+  have := P.isAb.smooth
+  have := P.isAb.geomConnected
+  have : IsIntegral (Over.mk p).left := inferInstanceAs (IsIntegral (Spec (CommRingCat.of F)))
+  have := isIntegral_tensor_left_of_smooth_grpObj S P.A (Over.mk p)
   have hs : Smooth (fst (Over.mk p) P.A).left :=
     inferInstanceAs (Smooth (pullback.fst p P.A.hom))
   have hN := (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field F _ _ hs).2.1
@@ -536,7 +536,7 @@ theorem exists_injective_character (F : Type) [Field F] [IsAlgClosed F] (l : ℕ
     ∃ φ : Multiplicative (ZMod l) →* Fˣ, Function.Injective φ := by
   have : NeZero (l : F) := ⟨hl⟩
   have : NeZero l := NeZero.of_neZero_natCast F
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F l
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F l
   have hu : IsPrimitiveRoot (hζ.isUnit (NeZero.ne l)).unit l := hζ.isUnit_unit (NeZero.ne l)
   exact ⟨(Subgroup.subtype _).comp (AddEquiv.toMultiplicativeLeft hu.zmodEquivZPowers).toMonoidHom,
     Subtype.val_injective.comp (AddEquiv.toMultiplicativeLeft hu.zmodEquivZPowers).injective⟩

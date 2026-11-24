@@ -608,7 +608,7 @@ theorem topologicalKrullDim_le_of_irreducibleCloseds {T : Type*} [TopologicalSpa
   let q : LTSeries (IrreducibleCloseds L) := LTSeries.mk p.length
     (fun i ↦ ⟨Subtype.val ⁻¹' ((p i : IrreducibleCloseds T) : Set T),
       isIrreducible_of_image .subtypeVal
-      ((him i).symm ▸ (p i).isIrreducible), (p i).isClosed.preimage continuous_subtype_val⟩)
+      ((him i).symm ▸ (p i).isIrreducible), (p i).isClosed.preimage continuous_subtypeVal⟩)
     fun i j hij ↦ by
       refine lt_of_le_of_ne (fun z hz ↦ p.monotone hij.le hz) fun e ↦
         (p.strictMono hij).ne (IrreducibleCloseds.ext ?_)
@@ -626,7 +626,7 @@ theorem topologicalKrullDim_le_of_isIrreducible {T : Type*} [TopologicalSpace T]
     topologicalKrullDim s ≤ d := by
   refine topologicalKrullDim_le_of_irreducibleCloseds fun Z ↦ le_trans ?_
     (h (Subtype.val '' (Z : Set s)) (Subtype.coe_image_subset _ _)
-      (Z.isIrreducible.image _ continuous_subtype_val.continuousOn))
+      (Z.isIrreducible.image _ continuous_subtypeVal.continuousOn))
   exact (Topology.IsEmbedding.subtypeVal.homeomorphImage
     (Z : Set s)).isInducing.topologicalKrullDim_le
 
@@ -945,9 +945,9 @@ theorem flat_sections_iff_stalk [F.IsQuasicoherent] (hU : IsAffineOpen U) :
      Module.Flat R Γ(F, U)) ↔ ∀ x ∈ U,
       (letI := baseModuleStalk F ρ x
        Module.Flat R (F.presheaf.stalk x :)) := by
-  letI := baseModule F U ρ
-  letI := (baseHom U ρ).toAlgebra
-  haveI : IsScalarTower R Γ(X, U) Γ(F, U) := .of_algebraMap_smul fun _ _ ↦ rfl
+  let := baseModule F U ρ
+  let := (baseHom U ρ).toAlgebra
+  have : IsScalarTower R Γ(X, U) Γ(F, U) := .of_algebraMap_smul fun _ _ ↦ rfl
   have hst (x : U) : letI := baseModuleStalk F ρ x
       IsScalarTower R Γ(X, U) (F.presheaf.stalk (x : X) :) :=
     letI := baseModuleStalk F ρ x
@@ -955,7 +955,7 @@ theorem flat_sections_iff_stalk [F.IsQuasicoherent] (hU : IsAffineOpen U) :
   constructor
   · intro h x hx
     obtain ⟨x, rfl⟩ : ∃ x' : U, x' = x := ⟨⟨x, hx⟩, rfl⟩
-    letI := baseModuleStalk F ρ x
+    let := baseModuleStalk F ρ x
     have := hst x
     have := isLocalizedModule_germLinear F hU x
     exact flat_of_isLocalizedModule_of_flat (hU.primeIdealOf x).asIdeal.primeCompl
@@ -1001,10 +1001,10 @@ theorem IsFlatOver.of_sum_eq_id {ι : Type*} [Fintype ι] {A : ι → X.Modules}
     IsFlatOver F ρ := by
   classical
   intro U hU
-  letI := baseModule F U ρ
-  letI (i : ι) := baseModule (A i) U ρ
-  haveI (i : ι) : Module.Flat R Γ(A i, U) := hA i U hU
-  haveI : Module.Flat R (∀ i, Γ(A i, U)) :=
+  let := baseModule F U ρ
+  let (i : ι) := baseModule (A i) U ρ
+  have (i : ι) : Module.Flat R Γ(A i, U) := hA i U hU
+  have : Module.Flat R (∀ i, Γ(A i, U)) :=
     .of_linearEquiv (DirectSum.linearEquivFunOnFintype R ι fun i ↦ Γ(A i, U)).symm
   refine .of_retract (LinearMap.pi fun i ↦ sectionsBaseLinear ρ (p i) U)
     (LinearMap.lsum R (fun i ↦ Γ(A i, U)) ℕ fun i ↦ sectionsBaseLinear ρ (q i) U) ?_

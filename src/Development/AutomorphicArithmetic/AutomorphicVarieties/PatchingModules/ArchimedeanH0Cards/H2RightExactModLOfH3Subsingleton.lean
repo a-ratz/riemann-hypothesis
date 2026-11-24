@@ -114,7 +114,7 @@ theorem UpperTheory.V.Pa.B2.H2_right_exact_mod_l_of_H3_subsingleton :
         ext m
         simp }
   have hcont : ContAction ρK :=
-    continuous_induced_rng.2 (M.cont.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))
+    continuous_induced_rng.2 (M.cont.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))
   let K : FRep A G := FRep.mk N ρK hcont
   have hKl : ∀ m : K.X, l • m = 0 := by
     intro m
@@ -169,7 +169,7 @@ theorem UpperTheory.V.Pa.B2.H2_right_exact_mod_l_of_H3_subsingleton :
     fin_cases i <;> simp <;> fun_prop
   let c2 : G × G → M.X := fun p => c p - (b ![p.1, p.2] : M.X)
   have hc2 : c2 ∈ Z2 M.ρ := by
-    refine ⟨hc.sub (continuous_subtype_val.comp (hbc.comp hv)), ?_⟩
+    refine ⟨hc.sub (continuous_subtypeVal.comp (hbc.comp hv)), ?_⟩
     intro g g' g''
     have e := congrArg Subtype.val (congrFun hbf ![g, g', g''])
     rw [dn_two_apply'] at e

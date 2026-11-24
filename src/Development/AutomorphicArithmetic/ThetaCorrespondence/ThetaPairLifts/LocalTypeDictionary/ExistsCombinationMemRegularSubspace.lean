@@ -457,7 +457,7 @@ theorem decAlg : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
   refine ⟨m, fun k => c k • f k, φ, Finset.sum_congr rfl fun k _ => ?_, hSB, hvac⟩
   rw [hg k]
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, SchwartzMap.smul_apply, mul_assoc]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, smul_apply, mul_assoc]
 
 theorem datumComb : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (W W₁ X : HSp D) (A : Fr W) (A₁ : Fr W₁) (B : Fr X)
     (α β : (AE D)ˣ →* Circle) (ν : Measure (GA D W)) (𝓕 : Set (GA D W)) (ν₁ : Measure (GA D W₁)) (𝓕₁ : Set (GA D W₁))
@@ -682,7 +682,7 @@ theorem mem_latLoc_idealMap_smul_iff (F E : Type) [Field F] [NumberField F] [Fie
       · have h0 : algebraMap F (Fv F v) (d : F) = 0 := by
           have := hle d hd
           rw [hz, map_zero] at this
-          exact (Valuation.zero_iff _).1 (le_antisymm this zero_le')
+          exact (Valuation.zero_iff _).1 (le_antisymm this zero_le)
         rw [h0, zero_mul]
         simp only [TensorProduct.zero_tmul]
         exact zero_mem _
@@ -690,7 +690,7 @@ theorem mem_latLoc_idealMap_smul_iff (F E : Type) [Field F] [NumberField F] [Fie
           GlobalTheory.AdelicU.tmul_mem_latLoc ?_ hx₀, ?_⟩
         · rw [HeightOneSpectrum.mem_adicCompletionIntegers] at ha ⊢
           have hzv : Valued.v z ≠ 0 := (Valuation.ne_zero_iff _).2 hz
-          rw [map_div₀, map_mul, div_le_one₀ (zero_lt_iff.2 hzv)]
+          rw [map_div₀, map_mul, div_le_one₀ (pos_iff_ne_zero.2 hzv)]
           calc Valued.v (algebraMap F (Fv F v) (d : F)) * Valued.v a
               ≤ Valued.v z * 1 := mul_le_mul' (hle d hd) ha
             _ = Valued.v z := mul_one _
@@ -809,10 +809,10 @@ theorem traceDual_ringOfIntegers_iff_of_unramified : ∀ (F E : Type) [Field F] 
     { carrier := {x | IsIntegral ℤ (algebraMap (𝓞 E) E x * e)}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_add (f := _), add_mul] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _), add_mul] at *
         exact ha.add hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, map_zero, zero_mul]
+        simp only [Set.mem_ofPred_eq, map_zero, zero_mul]
         exact isIntegral_zero
       smul_mem' := by
         intro c x hx
@@ -976,15 +976,15 @@ theorem skewSplitDual : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     ∃ (z : (Fv F v)ˣ) (c₂ : GL (Fin d) (Fv F v)), (PsiUnr B.ψ v → z = 1) ∧
       (c₂⁻¹).1 = (z : Fv F v) • (c.1ᵀ * W.J.map t) ∧ IsSplitBasis (t.comp σ) W.L c₂ := by
   intro F E _ _ _ _ _ σ B d W r s hB hW v t c hc
-  haveI := hB.unram
+  have := hB.unram
   have hcm : IsCMExt F E σ := hB.cm
   have h𝔡0 : differentIdeal ℤ (𝓞 F) ≠ ⊥ := differentIdeal_ne_bot
   have hdet : W.J.det ≠ 0 := GlobalTheory.InertSelfDual.det_ne_zero_of_skew σ B hW
   have hdetT : W.Jᵀ.det ≠ 0 := by rw [Matrix.det_transpose]; exact hdet
   have hfull : Submodule.IsFullLattice E
       ((differentIdeal ℤ (𝓞 F)).map (algebraMap (𝓞 F) (𝓞 E)) • W.L) := by
-    haveI := hW.lat
-    haveI := GlobalTheory.T.ideal_map_smul_isLattice_of_ne_bot F E d W.L _ h𝔡0 hW.lat.toIsLattice
+    have := hW.lat
+    have := GlobalTheory.T.ideal_map_smul_isLattice_of_ne_bot F E d W.L _ h𝔡0 hW.lat.toIsLattice
     obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h𝔡0
     have haE : ((algebraMap (𝓞 F) (𝓞 E) a : 𝓞 E) : E) ≠ 0 := by
       intro h
@@ -1425,7 +1425,7 @@ theorem exists_linearFunctional_at_split_place : _root_.GlobalTheory.FunPr.Theta
   have hwM : ∀ z, wM z = GlobalTheory.LatVac.locCo M.co v (U 0 (Q z)) := fun _ => rfl
   have hform := fun (x u : Matrix (Fin n) (Fin d) (AE F E)) (hx : At (evFin F v) x) =>
     (locCo_form M.co v x u).trans (evFin_symp hcm X W hX hY t b c x u hx)
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F _).injective
   have hψc : Continuous (GlobalTheory.LatVac.psiAt B.ψ v) := GlobalTheory.SchrSB.continuous_psiAt B.ψ hstd.1 v
   have hψne : GlobalTheory.LatVac.psiAt B.ψ v ≠ 1 := GlobalTheory.PsiNontriv.psiAt_ne_one B.ψ hstd v
   obtain ⟨ι, hbij, htr, hmu⟩ := _root_.GlobalTheory.SvNAnyChar.stoneVonNeumann_any_char (GlobalTheory.LatVac.psiAt B.ψ v) hψc hψne wT wM
@@ -1632,7 +1632,7 @@ theorem conjLinearFunctional_sphericalVector_indicator : _root_.GlobalTheory.Fun
     | (rw [← hc2v]; exact congrArg Units.val (neg_inv c₂))
   ext Y i j
   rw [e1, e2]
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Matrix.transpose_mul, Matrix.scalar_apply,
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Matrix.transpose_mul, Matrix.scalar_apply,
     Matrix.transpose_neg, Matrix.transpose_smul, Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_smul, Matrix.smul_mul,
     Matrix.diagonal_transpose, Matrix.mul_assoc, neg_neg]
   simp [Matrix.mul_assoc, ← Matrix.smul_eq_diagonal_mul, Matrix.mul_smul, Matrix.smul_mul]
@@ -1682,8 +1682,8 @@ theorem regular_subspace_vacuum_at : _root_.GlobalTheory.FunPr.ThetaLocalInputs 
       G.M'.IsLinBar B.ψ t 1 1 ι ∧
       ∀ Y, ι (G.M'.vac v) Y = c * (GlobalTheory.SplitFlip.matLat (Fin a') Λ : Set _).indicator 1 (P.val * Y) := by
   intro hP F E _ _ _ _ _ σ B a a' G X om om' hT v t
-  haveI := hT.geo.hV'.lat
-  haveI := hT.geo.hW.lat
+  have := hT.geo.hV'.lat
+  have := hT.geo.hW.lat
   obtain ⟨b', hb'⟩ := exists_isSplitBasis t G.V'.L hT.base.cm
   obtain ⟨c, hc⟩ := exists_isSplitBasis t G.W.L hT.base.cm
   obtain ⟨b₁, -, ι', hι', hvac'⟩ :=

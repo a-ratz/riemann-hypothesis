@@ -209,7 +209,7 @@ theorem algebraMap_uU_zpow (W : LocWach PD LL O v n) (m : ℤ) :
     algebraMap O LL ((uU W ^ m : Oˣ) : O) = algebraMap O LL (W.χΓ W.gam : O) ^ m := by
   have h2 := congrArg Units.val (map_zpow (Units.map (algebraMap O LL).toMonoidHom) (uU W) m)
   rw [Units.val_zpow_eq_zpow_val] at h2
-  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at h2
+  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at h2
   exact h2
 
 end Generic

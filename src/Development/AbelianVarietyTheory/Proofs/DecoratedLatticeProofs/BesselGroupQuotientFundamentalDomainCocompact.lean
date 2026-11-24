@@ -81,7 +81,7 @@ theorem besGrp_quotient : ∀ (D : D7) (ρ : ℕ) (B : BesLev D ρ), B.μR.IsHaa
     simpa using h1
   set Ω : Set (GA D B.V) := (fun p : GA D B.V × GA D B.A => p.1 * embA B.d B.o p.2) '' ((Subtype.val '' KN) ×ˢ KA) with hΩ
   have hΩc : IsCompact Ω :=
-    ((hKN.image continuous_subtype_val).prod hKA).image (continuous_fst.mul (hsc.comp continuous_snd))
+    ((hKN.image continuous_subtypeVal).prod hKA).image (continuous_fst.mul (hsc.comp continuous_snd))
   have hΩsub : Ω ⊆ (besGrp B.d B.o : Set (GA D B.V)) := by
     rintro _ ⟨⟨_, a⟩, ⟨⟨k, hk, rfl⟩, -⟩, rfl⟩
     exact mul_mem (Subgroup.mem_sup_left k.2) (Subgroup.mem_sup_right ⟨a, rfl⟩)
@@ -130,7 +130,7 @@ theorem besGrp_quotient : ∀ (D : D7) (ρ : ℕ) (B : BesLev D ρ), B.μR.IsHaa
       · rw [hF', Set.piecewise_eq_of_notMem _ _ _ hx]; simp
     have hAC : AbsConv B.vA.μ B.vA.𝓕 B.vN.ν B.vN.𝓝 fun h n => F' (n.1 * embA B.d B.o h) := by
       refine Integrable.of_bound ?_ (max C 0) (Filter.Eventually.of_forall fun p => hb _)
-      exact (hF'm.comp ((continuous_subtype_val.comp continuous_snd).mul
+      exact (hF'm.comp ((continuous_subtypeVal.comp continuous_snd).mul
         (hsc.comp continuous_fst)).measurable).aestronglyMeasurable
     have hpt : ∀ r : ↥(flagN B.d ⊔ (embA B.d B.o).range), F' r = F r := fun r => Set.piecewise_eq_of_mem _ _ _ r.2
     have hpt2 : ∀ a (n : flagN B.d), F' (n.1 * embA B.d B.o a) = F (n.1 * embA B.d B.o a) := fun a n =>

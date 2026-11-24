@@ -53,8 +53,8 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 private lemma ring_eq {Ω B L : Type} [Field Ω] [IsAlgClosed Ω] [CommRing B] [Algebra Ω B] [Module.Finite Ω B] [Field L]
     (f f' : B →+* L) (h : f.comp (algebraMap Ω B) = f'.comp (algebraMap Ω B))
     (hk : RingHom.ker f = RingHom.ker f') : f = f' := by
-  haveI : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
-  haveI : IsDomain (B ⧸ RingHom.ker f) := Ideal.Quotient.isDomain _
+  have : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
+  have : IsDomain (B ⧸ RingHom.ker f) := Ideal.Quotient.isDomain _
   have hb := IsAlgClosed.algebraMap_bijective_of_isIntegral (k := Ω) (K := B ⧸ RingHom.ker f)
   ext b
   obtain ⟨c, hc⟩ := hb.2 (Ideal.Quotient.mk _ b)
@@ -83,7 +83,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.ptOne_of :
     Chart → PtOne := by
   intro hC V Ω _ _ r _ L _ a z z' hz hz' hp
   obtain ⟨B, _, _, v, hfin, hpb⟩ := hC r Ω (𝟙 _)
-  haveI : IsIso v := hpb.isIso_fst_of_isIso
+  have : IsIso v := hpb.isIso_fst_of_isIso
   have hs : inv v ≫ Spec.map (CommRingCat.ofHom (algebraMap Ω B)) = r := by
     have := hpb.w
     rw [Category.comp_id] at this

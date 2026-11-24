@@ -109,9 +109,9 @@ theorem isAdm_mul_left {w : ℂ} (hw : w ≠ 0) {F : L → ℂ} (hF : IsAdm w F)
   show F (c * x) = _
   rw [h2 _ (mul_ne_zero hc hx) (by omega), ho, neg_add, zpow_add₀ hw, mul_assoc]
 
-theorem sphFn_of_le {w : ℂ} {x : L} (hx : Valued.v x ≤ 1) : sphFn w x = 1 := if_pos hx
+theorem sphFn_of_le {w : ℂ} {x : L} (hx : Valued.v x ≤ 1) : sphFn w x = 1 := ite_eq_left hx
 
-theorem sphFn_of_lt {w : ℂ} {x : L} (hx : ¬ Valued.v x ≤ 1) : sphFn w x = w ^ (-ordL x) := if_neg hx
+theorem sphFn_of_lt {w : ℂ} {x : L} (hx : ¬ Valued.v x ≤ 1) : sphFn w x = w ^ (-ordL x) := ite_eq_right hx
 
 theorem isLocallyConstant_sphFn {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (w : ℂ) :
     IsLocallyConstant (sphFn (L := L) w) := by
@@ -121,7 +121,7 @@ theorem isLocallyConstant_sphFn {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 :
   · have : {y : L | Valued.v y ≤ 1} ∈ nhds x := (Valued.isOpen_integer L).mem_nhds hx
     filter_upwards [this] with y hy
     rw [sphFn_of_le hx, sphFn_of_le hy]
-  · have h0 : Valued.v x ≠ 0 := fun e => hx (by rw [e]; exact zero_le')
+  · have h0 : Valued.v x ≠ 0 := fun e => hx (by rw [e]; exact zero_le)
     have hx0 : x ≠ 0 := (map_ne_zero _).1 h0
     have ho : IsOpen ((fun y => y - x) ⁻¹' {z : L | Valued.v z ≤ WithZero.exp (-(ordL x + 1))}) :=
       (isOpen_vball hϖ (ordL x + 1)).preimage (continuous_id.sub continuous_const)
@@ -156,7 +156,7 @@ theorem real_ordBall_neg (h : IsUnramInv ϖ σ q) (μ : Measure L) [μ.IsAddHaar
   have hq : q ≠ 0 := by have := h.2.2.2.2.2.1; omega
   have hk : -(n : ℤ) ≤ 0 := by omega
   have e := relIndex_ordBall h hk
-  haveI : ((ordBall L 0).addSubgroupOf (ordBall L (-(n : ℤ)))).FiniteIndex :=
+  have : ((ordBall L 0).addSubgroupOf (ordBall L (-(n : ℤ)))).FiniteIndex :=
     ⟨ne_of_eq_of_ne e (pow_ne_zero _ (pow_ne_zero _ hq))⟩
   have := GlobalTheory.BaseModule.addRelIndex_mul_measure (ordBall L 0) (ordBall L (-(n : ℤ))) (ordBall_mono hk)
     (isOpen_vball h.2.2.2.1 0).measurableSet μ
@@ -169,7 +169,7 @@ theorem map_mul_left_eq (h : IsUnramInv ϖ σ q) (μ : Measure L) [μ.IsAddHaarM
     μ.map (fun x => c * x) = ((distribHaarChar L (Units.mk0 c hc)⁻¹ : NNReal) : ENNReal) • μ := by
   have hm : Measurable fun x : L => c * x := (continuous_const.mul continuous_id).measurable
   ext s hs
-  rw [Measure.map_apply hm hs, Measure.smul_apply, smul_eq_mul, distribHaarChar_mul]
+  rw [Measure.map_apply hm hs, smul_apply, smul_eq_mul, distribHaarChar_mul]
   congr 1
   ext x
   simp [Set.mem_inv_smul_set_iff, Units.smul_def]
@@ -215,14 +215,14 @@ theorem integrable_sphFn (h : IsUnramInv ϖ σ q) (μ : Measure L) [μ.IsAddHaar
     rw [setIntegral_congr_fun (hsm n) (hval n), setIntegral_const, smul_eq_mul, mul_pow, mul_comm]
     refine mul_le_mul_of_nonneg_left ?_ (by positivity)
     have h1 : μ.real (s n) ≤ μ.real (ordBall L (-((n + 1 : ℕ) : ℤ))) :=
-      measureReal_mono Set.diff_subset (isCompact_vball h _).measure_ne_top
+      measureReal_mono Set.sdiff_subset (isCompact_vball h _).measure_ne_top
     rwa [real_ordBall_neg h μ, hμ, mul_one] at h1
   have hsum : Summable fun n => ∫ x in s n, ‖sphFn w x‖ ∂μ := by
     refine Summable.of_nonneg_of_le (fun n => integral_nonneg fun _ => norm_nonneg _) hint ?_
     exact (summable_nat_add_iff 1).2 (summable_geometric_of_lt_one (by positivity) hw)
   have hU : IntegrableOn (sphFn (L := L) w) (Set.iUnion s) μ :=
     integrableOn_iUnion_of_summable_integral_norm
-      (fun n => (hbi _).mono_set Set.diff_subset) hsum
+      (fun n => (hbi _).mono_set Set.sdiff_subset) hsum
   have hcov : (ordBall L 0 : Set L) ∪ Set.iUnion s = Set.univ := by
     refine Set.eq_univ_of_forall fun x => ?_
     by_cases hx : x ∈ (ordBall L 0 : Set L)

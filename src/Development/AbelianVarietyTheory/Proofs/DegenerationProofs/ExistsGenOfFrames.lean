@@ -271,7 +271,7 @@ theorem trait_matrix (hL : L.IsLB) (hb : TraitBasis G L N U b) (hx : Set.range x
   have e₁ : M' * P' = 1 := (hM'.trans hP').unique hL hU Rel.refl
   have e₂ : P' * M' = 1 := (hP'.trans hM').unique hL hb' Rel.refl
   refine ⟨M', P', e₁, e₂, ?_⟩
-  haveI : CharZero W := hW.2.2
+  have : CharZero W := hW.2.2
   have r₁ := hM.pull (Over.homMk (spMap gam) h : Over.mk (jK W ≫ χ) ⟶ Over.mk x)
   have r₂ := (rel_one_of_lin hL hbb).1
   have r₃ := hP'.pull (Over.homMk (jK W) rfl : Over.mk (jK W ≫ χ) ⟶ Over.mk χ)

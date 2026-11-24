@@ -108,7 +108,7 @@ theorem isSmoothChar_whitChar {ψ : AddChar k Circle} (hψ : Continuous ψ) : Is
   obtain ⟨r, hr⟩ := GlobalTheory.SplitWeil.exists_cball_addChar_eq_one ψ hψ
   have hc : Continuous fun u : unipB k (Fin N) => superDiag u.1 :=
     continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
-      (Units.continuous_val.comp continuous_subtype_val).matrix_elem i j
+      (Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j
   have h0 : superDiag ((1 : unipB k (Fin N)) : GL (Fin N) k) = 0 :=
     Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun j hj =>
       Matrix.one_apply_ne fun e => by have := (Finset.mem_filter.1 hj).2; rw [e] at this; omega

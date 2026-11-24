@@ -227,7 +227,7 @@ theorem apply_one_fixed {f : IndSp e ρ} (hf : f ∈ fixed (parInd e ρ) (KO k n
     (hg : ∀ a, g a ∈ KO k (m a)) : ρ g (f.1.1 1) = f.1.1 1 := by
   have hm : leviEmb k e g ∈ parab k e := mem_parab_iff.2 fun _ _ i j hab => by
     classical
-    letI : DecidableEq α := Classical.decEq α
+    let : DecidableEq α := Classical.decEq α
     simp [leviEmb]
     exact Matrix.blockDiagonal'_apply_ne (fun a => (g a : Matrix (m a) (m a) k)) i j hab.ne'
   have hp : leviProj k e ⟨leviEmb k e g, hm⟩ = g := by

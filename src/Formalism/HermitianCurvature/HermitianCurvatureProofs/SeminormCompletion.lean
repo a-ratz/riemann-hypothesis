@@ -226,7 +226,7 @@ theorem corollary_u2_of_parts_holds : GermExpansionHypothesisFromComponents := b
   exact h3
 
 private theorem one_le_gN_of_mem_GV {k r : ℕ} (g : B.Mat k r) (hg : g ∈ B.GV k r) : 1 ≤ B.gN g := by
-  letI : NormedAddCommGroup (B.Mat k r) := Matrix.frobeniusNormedAddCommGroup
+  let : NormedAddCommGroup (B.Mat k r) := Matrix.frobeniusNormedAddCommGroup
   have hH : gᴴ * Hpk k r * g = Hpk k r := hg
   have hne : Hpk k r ≠ 0 := by
     intro h0
@@ -348,11 +348,11 @@ lemma cont_DjU (k j ρ : ℕ) : Continuous (DjU k j ρ) := by
 
 private theorem continuous_exp_real_smul_matrix {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) :
     Continuous fun t : ℝ => NormedSpace.exp ((t : ℂ) • X) := by
-  letI : SeminormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpSemiNormedRing
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  have hcs : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℂ _
+  let : SeminormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpSemiNormedRing
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  have hcs : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℂ _
   exact (@NormedSpace.exp_continuous _ _ _ hcs).comp (Complex.continuous_ofReal.smul continuous_const)
 
 lemma Rw_vanish {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {O : Set (B.Mat k r)} (hO : IsOpen O)

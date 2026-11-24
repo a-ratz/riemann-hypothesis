@@ -135,7 +135,7 @@ theorem dom_of_orth (X : Data E r) {u : Frame X.Ψ r} (hu : IsOrth X u) : u ∈ 
   have hd : dmin X.Gm u τ i = ((psgn X.p0 i : ℝ) : ℂ) := by
     unfold dmin lminor
     rw [hY, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
-    simp only [Function.comp_apply, Fin.coe_castLE, psgn, Complex.ofReal_prod]
+    simp only [Function.comp_apply, Fin.val_castLE, psgn, Complex.ofReal_prod]
     exact Fin.prod_univ_eq_prod_range (fun a => ((sgn X.p0 a : ℝ) : ℂ)) i
   rw [hd, Complex.ofReal_re]
   have hne : psgn X.p0 i ≠ 0 :=
@@ -191,7 +191,7 @@ theorem maj_orth (X : Data E r) {u : Frame X.Ψ r} (hu : IsOrth X u) (τ : X.Ψ)
       (fun h => absurd (Finset.mem_univ a) h)]
     rw [Matrix.one_apply_eq, mul_one, hsf]
     have ha : ((Fin.castLE X.p0_le a : Fin r) : ℕ) < X.p0 := by simp
-    simp only [sgn, ha, if_true, Complex.ofReal_one, one_mul]
+    simp only [sgn, ha, ite_true, Complex.ofReal_one, one_mul]
     rw [Complex.mul_conj, Complex.normSq_eq_norm_sq]
   have hww : (sf X.p0 w w).re = ∑ k : Fin r, sgn X.p0 (k : ℕ) * ‖w k‖ ^ 2 := by
     unfold sf

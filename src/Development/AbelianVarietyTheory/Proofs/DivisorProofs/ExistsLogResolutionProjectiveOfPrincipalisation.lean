@@ -87,8 +87,8 @@ theorem exists_logResolution : GlobalTheory.Published.Principalisation → ∀ (
     obtain ⟨N, i, hi, rfl⟩ := hp
     have := isProper_str F N
     infer_instance
-  have : Smooth (s ≫ p) := by haveI := hsm; exact SmoothOfRelativeDimension.smooth D _
-  have : Smooth (s' ≫ s ≫ p) := by haveI := hsm'; exact SmoothOfRelativeDimension.smooth D _
+  have : Smooth (s ≫ p) := by have := hsm; exact SmoothOfRelativeDimension.smooth D _
+  have : Smooth (s' ≫ s ≫ p) := by have := hsm'; exact SmoothOfRelativeDimension.smooth D _
   have hd₁ := GlobalTheory.OpenDim.topologicalKrullDim_eq_of_isIso_restrict F X W' p (s ≫ p) s hpL inferInstance rfl U hU hiso
   have hd₂ := GlobalTheory.OpenDim.topologicalKrullDim_eq_of_isIso_restrict F W' Y (s ≫ p) (s' ≫ s ≫ p) s' inferInstance
     inferInstance rfl _ hne hiso'

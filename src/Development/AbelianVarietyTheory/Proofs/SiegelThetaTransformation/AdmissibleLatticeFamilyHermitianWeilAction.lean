@@ -352,7 +352,7 @@ theorem weil_admissible : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hag : Agree (R * M) Λ Λ' :=
     ⟨s, hs0, hsM.of_dvd_right ⟨c * D * (2 * R₀), by ring⟩, h1, h2⟩
   obtain ⟨t, ht0, -, ht, -⟩ := hΛ'.2.2
-  haveI : Fintype (Quo Λ' N s) := by
+  have : Fintype (Quo Λ' N s) := by
     have := (relIndex_nsmul (cols Λ' N) ht0 (fun X hX k i => (mem_stdL _).1 (ht _ (hX i)) k) hs0).1
     haveI : Finite (Quo Λ' N s) := Nat.finite_of_card_ne_zero this
     exact Fintype.ofFinite _

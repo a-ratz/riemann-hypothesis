@@ -55,7 +55,7 @@ namespace GlobalTheory.CompanionTheory.HaarScale
 theorem unit_mul_map_haar : ∀ (F : Type) [Field F] [NumberField F] (e : Ainf F ≃+* (InfinitePlace F → ℝ)), IsHomeomorph e → ∀ (lam : Measure (Ainf F)), lam.IsAddHaarMeasure → ∀ t : Ainf F, IsUnit t → lam.map (fun y => t * y) = (∏ w, ‖e t w‖₊)⁻¹ • lam := by
   intro F _ _ e he lam hlam t ht
   classical
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hc : Continuous e := he.continuous
   let h : Ainf F ≃ₜ (InfinitePlace F → ℝ) := he.homeomorph e
   have hcs : Continuous e.symm := by
@@ -80,7 +80,7 @@ theorem unit_mul_map_haar : ∀ (F : Type) [Field F] [NumberField F] (e : Ainf F
       rw [hu] at this
       simpa using this
     exact left_ne_zero_of_mul_eq_one h1
-  haveI hμ : (lam.map e).IsAddHaarMeasure :=
+  have hμ : (lam.map e).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map lam e.toAddEquiv hc hcs
   let L : (InfinitePlace F → ℝ) →ₗ[ℝ] (InfinitePlace F → ℝ) := Matrix.toLin' (Matrix.diagonal D)
   have hL : ∀ x, L x = D * x := fun x => by

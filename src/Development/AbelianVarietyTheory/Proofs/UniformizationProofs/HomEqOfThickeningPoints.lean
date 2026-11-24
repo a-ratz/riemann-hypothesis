@@ -118,7 +118,7 @@ theorem _root_.GlobalTheory.grpObj_of_thickenings : ∀ (V : Type) [CommRing V] 
     _root_.GlobalTheory.isProper_tensorObj_over inferInstance (by simp; infer_instance)
   have hB1' : IsProper (𝟙_ _ ⊗ B).hom :=
     _root_.GlobalTheory.isProper_tensorObj_over (by simp; infer_instance) inferInstance
-  letI : MonObj B :=
+  let : MonObj B :=
     { one := un
       mul := mu
       one_mul := by
@@ -152,7 +152,7 @@ theorem _root_.GlobalTheory.grpObj_of_thickenings : ∀ (V : Type) [CommRing V] 
         ext
         rw [hmul e T _ _ (x * y) z (hmul e T _ _ x y hx hy) hz,
           hmul e T _ _ x (y * z) hx (hmul e T _ _ y z hy hz), _root_.mul_assoc] }
-  letI : GrpObj B :=
+  let : GrpObj B :=
     { inv := io
       left_inv := by
         refine hom_ext_of_thickenings V _ _ fun e T t => ?_

@@ -154,7 +154,7 @@ variable {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K))
 theorem resCh_prime : (WeightAlgebra.resCh la).Prime := by
   have := la.isMaximal
   have : Finite (𝓞 K ⧸ la.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ la.ne_bot
-  letI := Ideal.Quotient.field la.asIdeal
+  let := Ideal.Quotient.field la.asIdeal
   exact CharP.char_is_prime (𝓞 K ⧸ la.asIdeal) (ringChar _)
 
 theorem resCh_mem_maximalIdeal (T : CDVR) (io : K →+* T.Fr) (e : ℕ) (ho : OverLa la T.V io e) :
@@ -217,7 +217,7 @@ theorem exists_flag {Y : Model Xo c β} {p : ℕ} {C : SCF p} (P : PointsOfFlagM
     (h2 : P.y ≫ pullback.fst _ _ = spMap eF ≫ y.x) :
     ∃ F : P.Flag, ∀ τ i, ∃ u' : Sp (DualNumber ↥C.S) ⟶ Y.oF.t.G.left,
       u' ≫ Y.m.φ = (F.u τ i).left ∧ u' ≫ Y.m0.toSABMap.φ = spMap (dualMap eF) ≫ y.u τ i := by
-  letI : Algebra c.F ↥C.S := P.fK.toAlgebra
+  let : Algebra c.F ↥C.S := P.fK.toAlgebra
   let ψ : L →ₐ[c.F] ↥C.S := ⟨eF, fun a => DFunLike.congr_fun h1 a⟩
   obtain ⟨B0, l0, t0, e0, c0⟩ := exists_tangentEquiv Y.m0.toSABMap.cart Y.oF.t.act.act Xo.univ.t.act.act
     Y.m0.toSABMap.act P.y (spMap eF ≫ y.x) h2
@@ -288,7 +288,7 @@ theorem exists_factor {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
 
 theorem exists_lies_and_factor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (la : HeightOneSpectrum (𝓞 c.F)) (Tw : PointsOfFlagModel.Tower (WeightAlgebra.resCh la) Xo c), PointsOfFlagModel.TowerAt Tw → ∀ (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la T.V io e → ∀ y : IntFr Xo c T io, algCls Xo c T io y → (∃ z, LiesOverBaseChange la Tw T io y z) ∧ ∀ z, LiesOverBaseChange la Tw T io y z → ∃ (g : T.V →+* intO ↥z.2.1.S) (ιT : Sp T.V ⟶ (Tw.Y z.1).X), Function.Injective g ∧ (∀ a ∈ maximalIdeal T.V, ‖((g a : intO ↥z.2.1.S) : ↥z.2.1.S)‖ < 1) ∧ spMap g ≫ ιT = z.2.2.1.yt := by
   intro E _ _ _ H Dw l Xo c la Tw hTw T io e ho y hy
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hxs : y.1.x ≫ Xo.s = spMap (io.comp (IntermediateField.inclusion c.le).toRingHom) := y.1.x_over
   constructor
   · obtain ⟨C, eF, hle, hlt⟩ := (GlobalTheory.T.exists_embedding_completeAlgClosed_fixedCarrier T _ (resCh_prime la) hy (resCh_mem_maximalIdeal la T io e ho)).1

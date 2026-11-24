@@ -55,9 +55,9 @@ theorem topologicalKrullDim_add_one_le_of_ssubset (T : Type) [TopologicalSpace T
     topologicalKrullDim A + 1 ≤ topologicalKrullDim B := by
   have hsub : A ⊆ B := hAB.subset
   have hemb : Topology.IsClosedEmbedding (Set.inclusion hsub) :=
-    Topology.IsClosedEmbedding.inclusion hsub (hA.preimage continuous_subtype_val)
-  haveI : IrreducibleSpace A := Subtype.irreducibleSpace hAi
-  haveI : IrreducibleSpace B := Subtype.irreducibleSpace hBi
+    Topology.IsClosedEmbedding.inclusion hsub (hA.preimage continuous_subtypeVal)
+  have : IrreducibleSpace A := Subtype.irreducibleSpace hAi
+  have : IrreducibleSpace B := Subtype.irreducibleSpace hBi
   let f : IrreducibleCloseds A → IrreducibleCloseds B := fun Z =>
     ⟨Set.inclusion hsub '' (Z : Set A),
       Z.isIrreducible.image _ hemb.continuous.continuousOn,
@@ -78,7 +78,7 @@ theorem topologicalKrullDim_add_one_le_of_ssubset (T : Type) [TopologicalSpace T
     obtain ⟨y, -, hy⟩ := this
     have : (y : T) = x := congrArg Subtype.val hy
     exact hxA (this ▸ y.2)
-  haveI : Nonempty (IrreducibleCloseds A) :=
+  have : Nonempty (IrreducibleCloseds A) :=
     ⟨⟨Set.univ, IrreducibleSpace.isIrreducible_univ A, isClosed_univ⟩⟩
   let g : WithTop (IrreducibleCloseds A) → IrreducibleCloseds B := WithTop.recTopCoe top f
   have hg : StrictMono g := by

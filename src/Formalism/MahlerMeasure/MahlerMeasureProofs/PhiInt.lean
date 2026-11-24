@@ -93,7 +93,7 @@ theorem norm_natCast_inv_le (n : ℕ) (hn : n ≠ 0) :
 
   have hp1 : p.Prime := Fact.out
   rw [norm_inv, show ((n : ℚ_[p])) = ((n : ℚ) : ℚ_[p]) by push_cast; rfl, Padic.eq_padicNorm,
-    padicNorm.eq_zpow_of_nonzero (by exact_mod_cast hn), padicValRat.of_nat, Nat.factorization_def n hp1]
+    padicNorm.eq_zpow_of_ne_zero (by exact_mod_cast hn), padicValRat.of_nat, Nat.factorization_def n hp1]
   push_cast
   simp [padicValRat.of_nat]
 
@@ -235,7 +235,7 @@ theorem contr_E {r : ℕ} (w e : Fin r → σ) : Contr (p := p) 1 (Formalism.GM.
   refine bnd_linear _ zero_le_one (fun m => ?_) hu hB
   simp only [Formalism.GM.tieE, LinearMap.mulLeft_apply, Finset.sum_mul]
   refine bnd_sum _ _ zero_le_one fun c _ => ?_
-  rw [MvPolynomial.X, MvPolynomial.X, monomial_mul, monomial_mul,
+  rw [MvPolynomial.X, MvPolynomial.X, monomial_mul_monomial, monomial_mul_monomial,
     show (1 : ℚ_[p]) * 1 * 1 = ((1 : ℕ) : ℚ_[p]) by simp]
   exact bnd_monomial _ _
 

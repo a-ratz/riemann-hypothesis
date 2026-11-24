@@ -241,7 +241,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
       filter_upwards [hGae] with g hg
       have hxg : x0 * Matrix.of g ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) := DDSmoothness.uh_mul hx0 hg
       have hmem : Formalism.QuantumDeterminants.lmulM x0 g ∈ U := hxg
-      simp only [Function.comp, Φ', Set.piecewise, hmem, if_true, Φ]
+      simp only [Function.comp, Φ', Set.piecewise, hmem, ite_true, Φ]
       show _ = ⟪η, PI.BesselPeriodGGP.eFun μG σ w0 (x0⁻¹ * (x0 * Matrix.of g)) • W (x0 * Matrix.of g)⟫_ℂ
       rw [← Matrix.mul_assoc, hxx', Matrix.one_mul]
     have hmapEq : μG.map (Formalism.QuantumDeterminants.lmulM x0) = μG := hGh.2.2.2 x0 hx0
@@ -281,7 +281,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
       have hsx : Matrix.of p.1 * Matrix.of p.2 * Matrix.of x ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) :=
         DDSmoothness.uh_mul hs hx
       have hmem : mulMt (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j) x ∈ U := hsx
-      simp only [Φ', Set.piecewise, hmem, if_true, Φ]
+      simp only [Φ', Set.piecewise, hmem, ite_true, Φ]
       show ⟪η, PI.BesselPeriodGGP.eFun μG σ w0 (x0⁻¹ * (Matrix.of p.1 * Matrix.of p.2 * Matrix.of x)) •
           W (Matrix.of p.1 * Matrix.of p.2 * Matrix.of x)⟫_ℂ = _
       rw [hWeq _ hp.1 _ hp.2 _ hx]
@@ -293,7 +293,7 @@ theorem bessel_nonvanishing_from_L2 : CompanionTheory.D.Upq.BesselFunctionalCons
           ⟪v', σ (Matrix.of p.1 * Matrix.of p.2) u'⟫_ℂ := by
         rw [eσ, sigma_inner hσ hxi, Matrix.nonsing_inv_nonsing_inv x0 hdet]
       unfold PI.BesselPeriodGGP.eFun beInt
-      rw [eA, inner_smul_right, inner_smul_right, piW_inner hT hπ hp.1, ContinuousLinearMap.smul_apply,
+      rw [eA, inner_smul_right, inner_smul_right, piW_inner hT hπ hp.1, smul_apply,
         inner_smul_left]
       simp only [map_mul, Complex.star_def, Complex.conj_conj]
       ring
@@ -519,7 +519,7 @@ theorem normIdSm_of (hGS : Formalism.FourierDecayAlt.ThreeDimData.GrowthS) (hGG 
     rw [← heq, ofReal_integral_eq_lintegral_ofReal hint (ae_of_all _ fun _ => by positivity)]
     apply lintegral_congr
     intro y
-    simp only [ENNReal.ofReal_pow, norm_nonneg, ofReal_norm, enorm_eq_nnnorm]
+    simp only [ENNReal.ofReal_pow, norm_nonneg, ofReal_norm, eNorm_eq_nnNorm]
 
 end G
 
@@ -571,10 +571,10 @@ theorem phiReg_of (hSch : SchurH) (hNI : CompanionTheory.D.Upq.BesselFunctionalC
       have hb : ∀ᵐ g ∂νq, ((‖l (σ (Matrix.of g) x)‖₊ : ℝ≥0) : ℝ≥0∞) ≤
           (‖cc‖ₑ * ‖l v‖ₑ) * ∫⁻ p, ‖⟪v, σ (Matrix.of p.1 * Matrix.of p.2 * Matrix.of g) x⟫_ℂ‖ₑ ∂(μW.prod μN) := by
         filter_upwards [hae] with g hg
-        rw [← enorm_eq_nnnorm, hlx _ hg]
+        rw [← eNorm_eq_nnNorm, hlx _ hg]
         have hbe' := be_enorm_le (c := c) hds hT hπ hW hN (x := x) (v := v) hg
         calc ‖cc • (be z c π σ μW μN (σ (Matrix.of g) x) v) (l v)‖ₑ
-            = ‖cc‖ₑ * ‖(be z c π σ μW μN (σ (Matrix.of g) x) v) (l v)‖ₑ := enorm_smul _ _
+            = ‖cc‖ₑ * ‖(be z c π σ μW μN (σ (Matrix.of g) x) v) (l v)‖ₑ := eNorm_smul _ _
           _ ≤ ‖cc‖ₑ * (‖be z c π σ μW μN (σ (Matrix.of g) x) v‖ₑ * ‖l v‖ₑ) := by
             gcongr
             exact ContinuousLinearMap.le_opENorm _ _
@@ -598,7 +598,7 @@ theorem phiReg_of (hSch : SchurH) (hNI : CompanionTheory.D.Upq.BesselFunctionalC
               ((‖be z c π σ μW μN (σ (Matrix.of g) x) v (l v)‖₊ : ℝ≥0) : ℝ≥0∞) ^ 2 ∂νq := by
             apply lintegral_congr_ae
             filter_upwards [hae] with g hg
-            rw [hlx _ hg, nnnorm_smul, ENNReal.coe_mul, mul_pow]
+            rw [hlx _ hg, nnNorm_smul, ENNReal.coe_mul, mul_pow]
         _ = ((‖cc‖₊ : ℝ≥0) : ℝ≥0∞) ^ 2 *
               ∫⁻ g, ((‖be z c π σ μW μN (σ (Matrix.of g) x) v (l v)‖₊ : ℝ≥0) : ℝ≥0∞) ^ 2 ∂νq :=
             lintegral_const_mul' _ _ (by simp)
@@ -951,10 +951,10 @@ theorem quadA_of (hSch : SchurH) (hNIs : CompanionTheory.D.Upq.BesselFunctionalC
     have bl' : ‖l' (σ (Matrix.of zz') w0)‖ₑ ≤ K2 * Iint (Aext e2) (D.μW'.prod D.μN) zz' := by
       rw [hK2]; exact l_le_I (c := Formalism.QuantumDeterminants.cStd) hds hT' hπ' hW' hN hbe' hv' hlv' hw0DD hee2 hzz'
     have hc : ‖l (σ (Matrix.of zz) w0)‖ₑ * ‖l' (σ (Matrix.of zz') w0)‖ₑ ≠ ⊤ :=
-      ENNReal.mul_ne_top enorm_ne_top enorm_ne_top
+      ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top
     have hqi := quad_inner hds w0 he0 hee0 hγU hf1.2 hf2.2 hzz hzz'
     rw [← hLL] at hqi
-    simp only [← enorm_eq_nnnorm]
+    simp only [← eNorm_eq_nnNorm]
     calc ∫⁻ s, ∫⁻ s', ‖⟪σ (Matrix.of zz) w0, σ (Matrix.of s * γ * (Matrix.of s')⁻¹) (σ (Matrix.of zz') w0)⟫_ℂ‖ₑ *
           ‖l (σ (Matrix.of zz) w0)‖ₑ * ‖l' (σ (Matrix.of zz') w0)‖ₑ ∂(muSof D.μW' D.μN) ∂(muSof D.μW D.μN)
         = ∫⁻ s, ∫⁻ s', ‖⟪σ (Matrix.of zz) w0, σ (Matrix.of s * γ * (Matrix.of s')⁻¹) (σ (Matrix.of zz') w0)⟫_ℂ‖ₑ *
@@ -991,7 +991,7 @@ theorem quadA_of (hSch : SchurH) (hNIs : CompanionTheory.D.Upq.BesselFunctionalC
   obtain ⟨Fx, hFx⟩ : ∃ Fx : Formalism.QuantumDeterminants.Mt k r → ℝ≥0∞, Fx = fun x => ‖B.gN (Matrix.of x) ^ (-(aOf r h - bb))‖ₑ :=
     ⟨_, rfl⟩
   have hFxm : Measurable Fx := by
-    rw [hFx]; exact (((gN_cont.comp mt_cont).measurable).pow_const _).enorm
+    rw [hFx]; exact (((gN_cont.comp mt_cont).measurable).pow_const _).eNorm
   have hKg' : ∫⁻ x, Fx x ∂D.μG < ⊤ := by rw [hFx, hbbdef]; exact hKg
   obtain ⟨c, hcdef⟩ : ∃ c : ℝ≥0∞, c = ENNReal.ofReal |C1| * ENNReal.ofReal |C2| * (ENNReal.ofReal |C0| * La) :=
     ⟨_, rfl⟩
@@ -1003,7 +1003,7 @@ theorem quadA_of (hSch : SchurH) (hNIs : CompanionTheory.D.Upq.BesselFunctionalC
     fun x hx => lt_of_lt_of_le one_pos ((hNI k r).2 x hx).2
   have hpt : ∀ᵐ x ∂D.μG, Aext e1 x * ∫⁻ y, Aext e2 y * LL x y ∂D.μG ≤ ∫⁻ y, c * (Fx x * Fx y) ∂D.μG := by
     filter_upwards [hGc] with x hx
-    rw [← lintegral_const_mul' (Aext e1 x) _ (by unfold Aext; exact enorm_ne_top)]
+    rw [← lintegral_const_mul' (Aext e1 x) _ (by unfold Aext; exact eNorm_ne_top)]
     apply lintegral_mono_ae
     filter_upwards [hGc] with y hy
     have hL := lam_bound hNI hb0e hb0.le hba hγU hpUH hqUH hx hy
@@ -1149,10 +1149,10 @@ theorem quadB_of (hNI : NormInv) (hGS : GrowthS) (hGG : GrowthG) (hDD : Companio
     have bl' : ‖l (σ (Matrix.of zz') w0)‖ₑ ≤ K1 * Iint (Aext e1) (D.μW.prod D.μN) zz' := by
       rw [hK1]; exact l_le_I (c := Formalism.QuantumDeterminants.cStd) hds hT hπ hW hN hbe hv hlv hw0DD hee1 hzz'
     have hc : ‖l (σ (Matrix.of zz) w0)‖ₑ * ‖l (σ (Matrix.of zz') w0)‖ₑ ≠ ⊤ :=
-      ENNReal.mul_ne_top enorm_ne_top enorm_ne_top
+      ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top
     have hqi := quad_inner1 hds w0 he0 hee0 hf1.2 hzz hzz'
     rw [← hLL] at hqi
-    simp only [← enorm_eq_nnnorm]
+    simp only [← eNorm_eq_nnNorm]
     calc ∫⁻ s, ‖⟪σ (Matrix.of zz) w0, σ (Matrix.of s) (σ (Matrix.of zz') w0)⟫_ℂ‖ₑ *
           ‖l (σ (Matrix.of zz) w0)‖ₑ * ‖l (σ (Matrix.of zz') w0)‖ₑ ∂(muSof D.μW D.μN)
         = ∫⁻ s, ‖⟪σ (Matrix.of zz) w0, σ (Matrix.of s) (σ (Matrix.of zz') w0)⟫_ℂ‖ₑ *
@@ -1183,7 +1183,7 @@ theorem quadB_of (hNI : NormInv) (hGS : GrowthS) (hGG : GrowthG) (hDD : Companio
   obtain ⟨Fx, hFx⟩ : ∃ Fx : Formalism.QuantumDeterminants.Mt k r → ℝ≥0∞, Fx = fun x => ‖B.gN (Matrix.of x) ^ (-(aOf r h - ee))‖ₑ :=
     ⟨_, rfl⟩
   have hFxm : Measurable Fx := by
-    rw [hFx]; exact (((gN_cont.comp mt_cont).measurable).pow_const _).enorm
+    rw [hFx]; exact (((gN_cont.comp mt_cont).measurable).pow_const _).eNorm
   have hKg' : ∫⁻ x, Fx x ∂D.μG < ⊤ := by rw [hFx]; exact hKg
   obtain ⟨c, hcdef⟩ : ∃ c : ℝ≥0∞, c = ENNReal.ofReal |C1| * ENNReal.ofReal |C1| * (ENNReal.ofReal |C0| * Ls) :=
     ⟨_, rfl⟩
@@ -1195,7 +1195,7 @@ theorem quadB_of (hNI : NormInv) (hGS : GrowthS) (hGG : GrowthG) (hDD : Companio
     fun x hx => lt_of_lt_of_le one_pos ((hNI k r).2 x hx).2
   have hpt : ∀ᵐ x ∂D.μG, Aext e1 x * ∫⁻ y, Aext e1 y * LL x y ∂D.μG ≤ ∫⁻ y, c * (Fx x * Fx y) ∂D.μG := by
     filter_upwards [hGc] with x hx
-    rw [← lintegral_const_mul' (Aext e1 x) _ (by unfold Aext; exact enorm_ne_top)]
+    rw [← lintegral_const_mul' (Aext e1 x) _ (by unfold Aext; exact eNorm_ne_top)]
     apply lintegral_mono_ae
     filter_upwards [hGc] with y hy
     have hL := lambda_integral_bound hNI hb0e hee0' heea hpUH hx hy

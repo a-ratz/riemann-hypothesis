@@ -93,7 +93,7 @@ theorem UpperTheory.V.Chr.eigV :
   have hcont := (contTw k Ω l).2.2 O ψ⁻¹ (-(e : ℤ)) hopen
   unfold eigL V VS
   exact selEigBase O (G k Ω) (QO l O) _ (rho l e ψ) ψ (tw_apply l e ψ) hcont U ⊤ le_top
-    (fun u hu => hker hu) (hU.preimage continuous_subtype_val)
+    (fun u hu => hker hu) (hU.preimage continuous_subtypeVal)
     (by rw [Subgroup.relIndex_top_right]; exact hunit _ hind) _ (conjStable_shaFam k Ω l)
 end -- clump:auto
 end -- clump:auto

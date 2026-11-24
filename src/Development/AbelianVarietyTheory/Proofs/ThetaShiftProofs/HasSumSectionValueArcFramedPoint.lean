@@ -203,7 +203,7 @@ theorem hasSum_evR_arc : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Nu
     congr 2
     exact RingHom.ext fun x => (hK (β x)).symm
   obtain ⟨p, j, y₀, hch, hmem⟩ := _root_.GlobalTheory.Frames.exists_openChart_testRing hL1.secBaseChange E H Dw l Xo c (pt (IsLocalRing.closedPoint ℂ⸨X⸩))
-  haveI := hch.1
+  have := hch.1
   obtain ⟨φ, hφ⟩ := exists_algHom_of_mem_range j hch.2.2 pt hpt3 hmem
   obtain ⟨y₁, hy₁⟩ := hL.bc _ _ φ y₀
   obtain ⟨G, s, hGs⟩ := (frChg_exists_unique_units E H Dw l Xo c _ (fun _ => 1) 1 y₁).2.2.2 y

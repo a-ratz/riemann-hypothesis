@@ -104,7 +104,7 @@ theorem finite_over (p : Nat.Primes) : {v : HeightOneSpectrum (𝓞 k) | ((p : �
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast p.2.ne_zero
   refine (Ideal.finite_factors hI).subset fun v hv => ?_
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 
@@ -190,14 +190,14 @@ theorem exists_frac (la : HeightOneSpectrum (𝓞 K)) (a : K) (h : la.valuation 
   have hd1 : algebraMap (𝓞 K) K d ≠ 0 := by simpa using hd0
   have hsp : Ideal.span {d} ≠ 0 := by simpa [Ideal.zero_eq_bot] using hd0
   obtain ⟨m, B, hB, hs⟩ := WfDvdMonoid.max_power_factor hsp la.irreducible
-  obtain ⟨z, hzB, hzl⟩ := SetLike.not_le_iff_exists.1 (fun h' => hB (Ideal.dvd_iff_le.2 h'))
+  obtain ⟨z, hzB, hzl⟩ := IsConcreteLE.not_le_iff_exists.1 (fun h' => hB (Ideal.dvd_iff_le.2 h'))
   have hdm : d ∈ la.asIdeal ^ m := by
     have h1 : d ∈ Ideal.span {d} := Ideal.mem_span_singleton_self d
     rw [hs] at h1
     exact (Ideal.mul_le_inf.trans inf_le_left) h1
   have hv : la.intValuation n ≤ la.intValuation d := by
     have hv0 : 0 < la.valuation K (algebraMap (𝓞 K) K d) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hd1)
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hd1)
     rwa [map_div₀, div_le_one₀ hv0, val_algebraMap, val_algebraMap] at h
   have hnm : n ∈ la.asIdeal ^ m := by
     rw [← la.intValuation_le_pow_iff_mem]
@@ -250,7 +250,7 @@ theorem Lies.norm_lt_one_iff {κ : K →+* ℂ_[p]} {la : HeightOneSpectrum (�
   · rw [ha]; simp
   · have h1 := h (algebraMap (𝓞 K) K a)⁻¹
     have hv0 : 0 < la.valuation K (algebraMap (𝓞 K) K a) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ha)
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ha)
     have hn0 : 0 < ‖κ (algebraMap (𝓞 K) K a)‖ := norm_pos_iff.2 ((map_ne_zero κ).2 ha)
     rw [map_inv₀, map_inv₀, norm_inv, inv_le_one₀ hv0, inv_le_one₀ hn0] at h1
     rw [← not_le, ← not_le, h1]
@@ -260,7 +260,7 @@ theorem Lies.eq_placeOf {κ : K →+* ℂ_[p]} {la : HeightOneSpectrum (𝓞 K)}
 
 theorem Lies.norm_le_of_val_le {κ : K →+* ℂ_[p]} {la : HeightOneSpectrum (𝓞 K)} (h : Lies κ la) {a b : K}
     (hb : b ≠ 0) (hv : la.valuation K a ≤ la.valuation K b) : ‖κ a‖ ≤ ‖κ b‖ := by
-  have h0 : 0 < la.valuation K b := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb)
+  have h0 : 0 < la.valuation K b := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb)
   have h1 : la.valuation K (a / b) ≤ 1 := by rwa [map_div₀, div_le_one₀ h0]
   have h2 := (h _).1 h1
   rwa [map_div₀, norm_div, div_le_one₀ (norm_pos_iff.2 ((map_ne_zero κ).2 hb))] at h2
@@ -294,7 +294,7 @@ theorem exists_sep (la : HeightOneSpectrum (𝓞 K)) (hp : ((p : ℕ) : 𝓞 K) 
     (fun q => if q.1 = la then u else 1)
   refine ⟨y, ?_, fun q hq hne hmem => ?_⟩
   · have h1 := hy la (by simpa using hp)
-    simp only [if_true] at h1
+    simp only [ite_true] at h1
     have h2 : la.intValuation (y - u) < la.intValuation u := by
       rw [hu]
       refine ((la.intValuation_le_pow_iff_mem _ 2).2 h1).trans_lt ?_
@@ -303,7 +303,7 @@ theorem exists_sep (la : HeightOneSpectrum (𝓞 K)) (hp : ((p : ℕ) : 𝓞 K) 
     rw [sub_add_cancel] at h3
     rw [h3, hu]
   · have h1 := hy q (by simpa using hq)
-    simp only [if_neg hne, pow_one] at h1
+    simp only [ite_eq_right hne, pow_one] at h1
     have h2 : (1 : 𝓞 K) ∈ q.asIdeal := by
       have := q.asIdeal.sub_mem hmem h1
       simpa using this
@@ -312,8 +312,8 @@ theorem exists_sep (la : HeightOneSpectrum (𝓞 K)) (hp : ((p : ℕ) : 𝓞 K) 
 theorem exists_quot (I : Ideal (𝓞 K)) (hI : Ideal.absNorm I ≠ 0) {l : ℕ} (hl : l.Prime)
     (hd : l ∣ Ideal.absNorm I) : ∃ x : 𝓞 K ⧸ I, x ≠ 0 ∧ (l : 𝓞 K ⧸ I) * x = 0 := by
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hI hd
-  haveI := Nat.finite_of_card_ne_zero hI
-  haveI := Fact.mk hl
+  have := Nat.finite_of_card_ne_zero hI
+  have := Fact.mk hl
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' l hd
   refine ⟨x, fun h => ?_, ?_⟩
   · rw [h, addOrderOf_zero] at hx; exact hl.one_lt.ne hx
@@ -324,7 +324,7 @@ theorem absNorm_eq_pow (la : HeightOneSpectrum (𝓞 K)) (hp : ((p : ℕ) : 𝓞
   have h0 : Ideal.absNorm la.asIdeal ≠ 0 := fun h => la.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
   refine Nat.eq_prime_pow_of_unique_prime_dvd h0 fun {l} hl hd => ?_
   obtain ⟨x, hx0, hx⟩ := exists_quot la.asIdeal h0 hl hd
-  haveI := la.isPrime
+  have := la.isPrime
   have hl0 : ((l : 𝓞 K) : 𝓞 K ⧸ la.asIdeal) = 0 := (mul_eq_zero.1 hx).resolve_right hx0
   have hlm : (l : 𝓞 K) ∈ la.asIdeal := by
     rw [← Ideal.Quotient.eq_zero_iff_mem]; simpa using hl0
@@ -435,13 +435,13 @@ theorem deg_dict : ∀ (K : Type) [Field K] [NumberField K] (r : (K →+* ℂ) �
       by_cases hm : placeOf κ ∈ S
       · rw [Finset.sum_eq_single (placeOf κ)]
         · simp
-        · intro b _ hb; rw [if_neg (Ne.symm hb), mul_zero]
+        · intro b _ hb; rw [ite_eq_right (Ne.symm hb), mul_zero]
         · intro hn; exact absurd (Finset.mem_filter.2 ⟨hm, natCast_mem_placeOf κ⟩) hn
       · have h0 : ρ (placeOf κ) = 0 := by by_contra h0; exact hm (hS _ h0)
         rw [h0, zero_mul]
         refine (Finset.sum_eq_zero fun la hla => ?_).symm
         have : placeOf κ ≠ la := fun h => hm (h ▸ (Finset.mem_filter.1 hla).1)
-        rw [if_neg this, mul_zero]
+        rw [ite_eq_right this, mul_zero]
     unfold LogNorms.finSum
     simp_rw [e1]
     rw [Finset.sum_comm, ← Finset.sum_neg_distrib]
@@ -463,10 +463,10 @@ theorem deg_dict : ∀ (K : Type) [Field K] [NumberField K] (r : (K →+* ℂ) �
       have hne : ∑ κ : K →+* ℂ_[P la], (if placeOf κ = la then Real.log ‖κ (u la)‖ else 0) ≠ 0 := by
         rw [hs, neg_ne_zero]; exact (Real.log_pos (by exact_mod_cast h1)).ne'
       obtain ⟨κ, _, hκ⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
-      have hpl : placeOf κ = la := by by_contra h; rw [if_neg h] at hκ; exact hκ rfl
+      have hpl : placeOf κ = la := by by_contra h; rw [ite_eq_right h] at hκ; exact hκ rfl
       refine ⟨κ, ?_⟩
       rw [hf, hpl]
-      exact mul_ne_zero hla (by rwa [if_pos hpl] at hκ)
+      exact mul_ne_zero hla (by rwa [ite_eq_left hpl] at hκ)
     · intro hS
       refine (hS.image P).subset ?_
       rintro p ⟨κ, hκ⟩

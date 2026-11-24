@@ -75,13 +75,13 @@ theorem mem_sliceGroup {Φ : G ≃ₜ* G₁ × G₂} {Γ : Subgroup G} {K : Subg
     refine ⟨γ, hγ, ?_, rfl⟩
     have : (Φ γ).2 = s * k * s⁻¹ := by
       have := hks.symm
-      simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply] at this
+      simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply] at this
       exact this
     rw [this]
     simpa [mul_assoc] using hk
   · rintro ⟨γ, hγ, hk, rfl⟩
     refine ⟨γ, ⟨hγ, s⁻¹ * (Φ γ).2 * s, hk, ?_⟩, rfl⟩
-    simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply, mul_assoc,
+    simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply, mul_assoc,
       mul_inv_cancel, mul_one, mul_inv_cancel_left]
     rfl
 

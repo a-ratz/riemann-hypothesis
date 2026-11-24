@@ -80,9 +80,9 @@ open NumberField IsDedekindDomain IsDedekindDomain.HeightOneSpectrum Filter in
 open scoped RestrictedProduct in
 variable (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] in
 theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension.isCMField [h : _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension F E] : IsCMField E := by
-  haveI := h.totallyReal
-  haveI := h.totallyComplex
-  haveI := h.quadratic
+  have := h.totallyReal
+  have := h.totallyComplex
+  have := h.quadratic
   exact IsCMField.ofCMExtension F E
 
 instance isCMExtension_maximalRealSubfield (E : Type) [Field E] [NumberField E] [IsCMField E] :
@@ -108,7 +108,7 @@ open scoped RestrictedProduct in
 variable (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] in
 theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.embedding_conj [_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension F E] (φ : E →+* ℂ) (x : E) :
     φ (_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.conj F E x) = starRingEnd ℂ (φ (x)) := by
-  haveI := _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension.isCMField F E
+  have := _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension.isCMField F E
   exact (IsCMField.isConj_complexConj E φ).eq x
 
 open NumberField IsDedekindDomain IsDedekindDomain.HeightOneSpectrum Filter in
@@ -116,7 +116,7 @@ open scoped RestrictedProduct in
 variable (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] in
 theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.conj_conj [_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension F E] (x : E) :
     _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.conj F E (_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.conj F E x) = x := by
-  haveI := _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension.isCMField F E
+  have := _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsCMExtension.isCMField F E
   exact IsCMField.complexConj_apply_apply E x
 
 end CM
@@ -359,7 +359,7 @@ theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdel
     {ϖ : (P.adicCompletion E)ˣ} (hϖ : _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.IsUniformiser P ϖ) :
     χ.valueAt P = (χ.localComponent P ϖ : ℂ) := by
   have hc := (_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.exists_isUniformiser P).choose_spec
-  rw [_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.UnitaryHeckeChar.valueAt, if_pos h]
+  rw [_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.UnitaryHeckeChar.valueAt, ite_eq_left h]
   generalize (_root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.exists_isUniformiser P).choose = ϖ₀ at hc ⊢
   have hu : Valued.v ((ϖ₀ * ϖ⁻¹ : (P.adicCompletion E)ˣ) : P.adicCompletion E) = 1 := by
     rw [Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀, hc, hϖ,
@@ -385,7 +385,7 @@ theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdel
   classical
   have hprime : ∀ P : HeightOneSpectrum (𝓞 E), (Ideal.absNorm (P.asIdeal.under ℤ)).Prime :=
     fun P => by
-      haveI : NeZero P.asIdeal := ⟨P.ne_bot⟩
+      have : NeZero P.asIdeal := ⟨P.ne_bot⟩
       exact Nat.absNorm_under_prime P.asIdeal
   let pr : HeightOneSpectrum (𝓞 E) → Nat.Primes := fun P => ⟨_, hprime P⟩
   have hle : ∀ P : HeightOneSpectrum (𝓞 E),
@@ -406,7 +406,7 @@ theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdel
     have hq0 : Ideal.span {((m : ℕ) : ℤ)} ≠ ⊥ := by
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact_mod_cast m.prop.ne_zero
-    haveI hmax : (Ideal.span {((m : ℕ) : ℤ)}).IsMaximal :=
+    have hmax : (Ideal.span {((m : ℕ) : ℤ)}).IsMaximal :=
       (Ideal.span_singleton_prime (by exact_mod_cast m.prop.ne_zero)).mpr
         (Nat.prime_iff_prime_int.mp m.prop) |>.isMaximal hq0
     calc (u.filter (fun P => pr P = m)).card

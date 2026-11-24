@@ -130,7 +130,7 @@ theorem sq_le_of_finsum_eq {A : Type} [AddCommGroup A] {s t u : AddSubgroup A} (
   classical
   have hc : t.relIndex u = Nat.card (u.map (QuotientAddGroup.mk' t)) := by
     rw [← AddSubgroup.relIndex_ker, QuotientAddGroup.ker_mk']
-  haveI : Finite (u.map (QuotientAddGroup.mk' t)) := Nat.finite_of_card_ne_zero (hc ▸ hu)
+  have : Finite (u.map (QuotientAddGroup.mk' t)) := Nat.finite_of_card_ne_zero (hc ▸ hu)
   have hS : ((u.map (QuotientAddGroup.mk' t) : AddSubgroup (A ⧸ t)) : Set (A ⧸ t)).Finite :=
     Set.toFinite _
   have hcard : hS.toFinset.card = t.relIndex u := by
@@ -188,8 +188,8 @@ theorem relIndex_nsmul {K : Type} [Field K] [NumberField K] {κ ι : Type} [Fint
     have : ((j : K) • x.1) k i = ((j : K) • y.1) k i :=
       congrArg Subtype.val (congrFun (congrFun hxy k) i)
     exact mul_left_cancel₀ hj' this
-  haveI : Module.Finite ℤ L := Module.Finite.of_injective _ hf
-  haveI : Module.IsTorsionFree ℤ L := hf.moduleIsTorsionFree _ (fun _ _ => map_smul _ _ _)
+  have : Module.Finite ℤ L := Module.Finite.of_injective _ hf
+  have : Module.IsTorsionFree ℤ L := hf.moduleIsTorsionFree _ (fun _ _ => map_smul _ _ _)
   have hr := LinearMap.finrank_le_finrank_of_injective hf
   rw [Module.finrank_matrix, RingOfIntegers.rank] at hr
   have : (L.map (nsmulAddMonoidHom m)).relIndex L = m ^ Module.finrank ℤ L := by
@@ -335,7 +335,7 @@ theorem levelL_of_fix (hΛ : ∀ x, x ∈ Λ ↔ ∀ y ∈ Λ, IsIntegral ℤ (h
         refine Finset.sum_congr rfl fun k _ => ?_
         rw [Finset.sum_eq_single a (fun a' _ ha => by simp [hb, ha]) (by simp)]
         simp only [hb, smul_zero, Matrix.zero_apply, cc_zero, Matrix.smul_apply, Matrix.of_apply,
-          if_true, smul_eq_mul, Matrix.transpose_apply, Rat.smul_def, mul_zero]
+          ite_true, smul_eq_mul, Matrix.transpose_apply, Rat.smul_def, mul_zero]
         push_cast
         ring
       rw [heisH, e2, smul_zero, sub_zero, map_smul, mul_right_eq_self₀, or_iff_left hx,

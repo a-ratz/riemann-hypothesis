@@ -145,7 +145,7 @@ theorem ptAd_mul_lev_deco : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A 
     have e2 := hp₁.fnl P v hTv hov _ h2 z rfl
     have e3 : p₁.deco.1.f P (s • w) = p.deco.1.f P (s • w) := e2.trans e1.symm
     rw [p₁.deco.2.f_smul P _ w hw₁, p.deco.2.f_smul P _ w hw] at e3
-    haveI hP := P.1.isPrime
+    have hP := P.1.isPrime
     have hu : Ideal.Quotient.mk P.1.asIdeal s ≠ 0 := by
       rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
       exact hs
@@ -498,7 +498,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
   have hq := qOf_ne_zero (P := P.1)
   have hstd : lamYat (Pr := Pr) (R := R) j P.1 = stdAt X.E (R.N j + cOf R j) P.1 := by
     unfold lamYat
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     exact lamY_zero _ _ _
   have hD : j + 1 ≤ cst.D P := by
     have h1 := hL.depthQ' P hP
@@ -531,7 +531,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
     show (MulAut.conj (L.h j b P)⁻¹).toMonoidHom (CongLevel.extE (cOf R j) C.1) ∈ Jat (Pr := Pr) cst.sharp j P.1
     rw [e]
     unfold Jat
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     refine ⟨hs, ?_⟩
     have ep : LocE.parL P.1 (qOf P.1) (R.k + j) (R.N j) (cOf R j) =
         LocE.sclLat P.1 (qOf P.1) (R.N j + cOf R j)
@@ -565,7 +565,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
       · rfl
     rw [hn, hL.cst_ok.psi_int P 0 intAt_zero, inv_one, one_mul]
     unfold lamRow
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     unfold LocE.lamQB
     rw [GlobalTheory.LamRowCong.unitV_det_eq_one, inv_one]
     · intro s t
@@ -582,7 +582,7 @@ theorem cong_mem_prCat_twist : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} {Ch 
       by_cases hst : s = t
       · subst hst
         simp
-      · rw [if_neg (fun e => hst (Fin.ext (by omega))), if_neg hst]
+      · rw [ite_eq_right (fun e => hst (Fin.ext (by omega))), ite_eq_right hst]
 
 end GlobalTheory.TwistCong
 end -- clump:auto

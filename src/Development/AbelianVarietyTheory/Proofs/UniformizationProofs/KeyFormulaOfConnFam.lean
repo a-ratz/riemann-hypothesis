@@ -476,7 +476,7 @@ theorem exists_isValAt (ht : InFamilies t) (k : Type) [Field k] [CharZero k] [Co
     ∃ u, IsValAt t y u := by
   obtain ⟨s⟩ := nonempty_complex k
   obtain ⟨x, hx⟩ := exists_keyPB_ring y s
-  letI := s.toAlgebra
+  let := s.toAlgebra
   obtain ⟨u, hu⟩ := (FixedPoint.defined_over_of_fixed (K₀ := k) (K₁ := k) (L := ℂ)).1 (t x) fun σ => by
     obtain ⟨x', hx'⟩ := exists_keyPB_ring x (σ : ℂ →+* ℂ)
     have h₁ := ht ℂ x (RingHom.id ℂ) σ (t x) x x' Function.injective_id (keyPB_id _ x) hx' rfl
@@ -735,12 +735,12 @@ theorem exists_algHom_ne_zero_of_countable (E : Type) [CommRing E] [IsDomain E] 
     ∃ s : E →ₐ[ℂ] ℂ, ∀ r ∈ T, s r ≠ 0 := by
   classical
   obtain ⟨d, g, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg ℂ E
-  letI : Algebra (MvPolynomial (Fin d) ℂ) E := g.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin d) ℂ) E := hfin
+  let : Algebra (MvPolynomial (Fin d) ℂ) E := g.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin d) ℂ) E := hfin
   have hn : ∀ r : E, r ≠ 0 → ∃ n : MvPolynomial (Fin d) ℂ, n ≠ 0 ∧
       algebraMap (MvPolynomial (Fin d) ℂ) E n ∈ Ideal.span {r} := by
     intro r hr
-    have := Ideal.comap_ne_bot_of_integral_mem (R := MvPolynomial (Fin d) ℂ)
+    have := Ideal.under_ne_bot_of_integral_mem (R := MvPolynomial (Fin d) ℂ)
       (I := Ideal.span {r}) hr (Ideal.mem_span_singleton_self r)
       (Algebra.IsIntegral.isIntegral r)
     obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot this
@@ -752,7 +752,7 @@ theorem exists_algHom_ne_zero_of_countable (E : Type) [CommRing E] [IsDomain E] 
     exact hn0 r (hne r hr) h)
   have hsurj : Function.Surjective (MvPolynomial.eval c : MvPolynomial (Fin d) ℂ →+* ℂ) :=
     fun z => ⟨MvPolynomial.C z, by simp⟩
-  haveI hmax : (RingHom.ker (MvPolynomial.eval c : MvPolynomial (Fin d) ℂ →+* ℂ)).IsMaximal :=
+  have hmax : (RingHom.ker (MvPolynomial.eval c : MvPolynomial (Fin d) ℂ →+* ℂ)).IsMaximal :=
     RingHom.ker_isMaximal_of_surjective _ hsurj
   obtain ⟨Q, hQ, hQp⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := E)
     (RingHom.ker (MvPolynomial.eval c : MvPolynomial (Fin d) ℂ →+* ℂ)) (by
@@ -760,8 +760,8 @@ theorem exists_algHom_ne_zero_of_countable (E : Type) [CommRing E] [IsDomain E] 
         (RingHom.injective_iff_ker_eq_bot _).1 hinj
       rw [this]
       exact bot_le)
-  letI : Field (E ⧸ Q) := Ideal.Quotient.field Q
-  haveI : Module.Finite ℂ (E ⧸ Q) := finite_of_finite_type_of_isJacobsonRing ℂ (E ⧸ Q)
+  let : Field (E ⧸ Q) := Ideal.Quotient.field Q
+  have : Module.Finite ℂ (E ⧸ Q) := finite_of_finite_type_of_isJacobsonRing ℂ (E ⧸ Q)
   have hbij : Function.Bijective (Algebra.ofId ℂ (E ⧸ Q)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : ℂ ≃ₐ[ℂ] (E ⧸ Q) := AlgEquiv.ofBijective _ hbij
@@ -800,8 +800,8 @@ open TensorProduct in
 theorem exists_dominant_component :
     ∀ (R : Type) [CommRing R] [IsDomain R] [Algebra.FiniteType ℤ R] (g : R →+* ℂ), ∃ (E : Type) (_ : CommRing E) (_ : IsDomain E) (_ : Algebra ℂ E) (ρ : R →+* E) (e : E →ₐ[ℂ] ℂ), Algebra.FiniteType ℂ E ∧ Function.Injective ρ ∧ e.toRingHom.comp ρ = g := by
   intro R _ _ _ g
-  letI : Algebra R (ℂ ⊗[ℤ] R) := Algebra.TensorProduct.rightAlgebra
-  haveI : Module.Flat R (ℂ ⊗[ℤ] R) :=
+  let : Algebra R (ℂ ⊗[ℤ] R) := Algebra.TensorProduct.rightAlgebra
+  have : Module.Flat R (ℂ ⊗[ℤ] R) :=
     Module.Flat.of_linearEquiv (Algebra.TensorProduct.commRight ℤ R ℂ).symm.toLinearEquiv
   let e₀ : (ℂ ⊗[ℤ] R) →ₐ[ℂ] ℂ :=
     Algebra.TensorProduct.lift (AlgHom.id ℂ ℂ) g.toIntAlgHom (fun _ _ => Commute.all _ _)
@@ -810,7 +810,7 @@ theorem exists_dominant_component :
     change e₀ (1 ⊗ₜ r) = g r
     simp [e₀]
   let Q : Ideal (ℂ ⊗[ℤ] R) := RingHom.ker e₀.toRingHom
-  haveI : Q.IsPrime := RingHom.ker_isPrime _
+  have : Q.IsPrime := RingHom.ker_isPrime _
   obtain ⟨q, hqQ, hq, hlo⟩ := Ideal.exists_ideal_le_liesOver_of_le
     (p := (⊥ : Ideal R)) (q := Q.under R) Q bot_le
   refine ⟨(ℂ ⊗[ℤ] R) ⧸ q, inferInstance, inferInstance, inferInstance,
@@ -849,7 +849,7 @@ theorem exists_keyPB_scale : ∀ (R R' : Type) [CommRing R] [CommRing R'] (f : R
   obtain ⟨e⟩ : Nonempty (x.P.g = y.P.g) := by
     obtain ⟨_, _, _, hg, _⟩ := h
     exact ⟨hg⟩
-  haveI := y.P.isAb.comm
+  have := y.P.isAb.comm
   let N : Matrix (Fin y.P.g) (Fin y.P.g) R := Matrix.reindex (finCongr e) (finCongr e) M
   have hN : IsUnit N.det := by rwa [Matrix.det_reindex_self]
   obtain ⟨ex, -, -, -, bas⟩ := GlobalTheory.LieComb.lieComb_algebra R y.P.A y.P.g y.v y.basis.1
@@ -965,20 +965,20 @@ theorem exists_prime_dimensionLEOne_avoiding
     ∃ Q : Ideal E, Q.IsPrime ∧ Q ≤ RingHom.ker e ∧ (∀ r ∈ T, r ∉ Q) ∧
       Ring.DimensionLEOne (E ⧸ Q) := by
   obtain ⟨d, g, hinj, hint⟩ := exists_integral_inj_algHom_of_fg ℂ E
-  letI : Algebra (MvPolynomial (Fin d) ℂ) E := g.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin d) ℂ) E := ⟨hint⟩
-  haveI : FaithfulSMul (MvPolynomial (Fin d) ℂ) E :=
+  let : Algebra (MvPolynomial (Fin d) ℂ) E := g.toRingHom.toAlgebra
+  have : Algebra.IsIntegral (MvPolynomial (Fin d) ℂ) E := ⟨hint⟩
+  have : FaithfulSMul (MvPolynomial (Fin d) ℂ) E :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
   have hn : ∀ r : T, ∃ n : MvPolynomial (Fin d) ℂ, n ≠ 0 ∧
       algebraMap _ E n ∈ Ideal.span {(r : E)} := by
     intro r
     have hr : (r : E) ≠ 0 := fun h => h0 (h ▸ r.2)
-    have := Ideal.comap_ne_bot_of_integral_mem (R := MvPolynomial (Fin d) ℂ) hr
+    have := Ideal.under_ne_bot_of_integral_mem (R := MvPolynomial (Fin d) ℂ) hr
       (Ideal.mem_span_singleton_self (r : E)) (Algebra.IsIntegral.isIntegral _)
     obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot this
     exact ⟨n, hn0, hn⟩
   choose n hn0 hn using hn
-  haveI : Countable T := hT.to_subtype
+  have : Countable T := hT.to_subtype
   obtain ⟨c, hc⟩ := exists_common_nonroot d (Set.range n) (Set.countable_range n)
     (by rintro ⟨r, hr⟩; exact hn0 r hr)
   let a : Fin d → ℂ := fun i => e (g (MvPolynomial.X i))
@@ -990,8 +990,8 @@ theorem exists_prime_dimensionLEOne_avoiding
       simp [this]
     | add p q hp hq => simp [hp, hq]
     | mul_X p i hp => simp [hp, a]
-  haveI hpp : (RingHom.ker (lineMap a c)).IsPrime := RingHom.ker_isPrime _
-  haveI hM : (RingHom.ker e).IsPrime := RingHom.ker_isPrime _
+  have hpp : (RingHom.ker (lineMap a c)).IsPrime := RingHom.ker_isPrime _
+  have hM : (RingHom.ker e).IsPrime := RingHom.ker_isPrime _
   have hle : RingHom.ker (lineMap a c) ≤ (RingHom.ker e).under (MvPolynomial (Fin d) ℂ) := by
     intro f hf
     change e (g f) = 0
@@ -1011,7 +1011,7 @@ theorem exists_prime_dimensionLEOne_avoiding
       refine lt_of_le_of_ne (fun x hx => ?_) (fun h => hP0 ?_)
       · simp [Ideal.Quotient.eq_zero_iff_mem.2 hx]
       · rw [← Ideal.map_comap_of_surjective _ hs P, ← h, Ideal.map_quotient_self]
-    have hlt' := Ideal.IsIntegral.comap_lt_comap (R := MvPolynomial (Fin d) ℂ) hlt
+    have hlt' := Ideal.IsIntegral.under_lt_under (R := MvPolynomial (Fin d) ℂ) hlt
     change Q.comap (algebraMap (MvPolynomial (Fin d) ℂ) E) < _ at hlt'
     rw [hQc] at hlt'
     have hm := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := MvPolynomial (Fin d) ℂ) _
@@ -1038,7 +1038,7 @@ theorem exists_lift_of_isIntegral {k E E' : Type} [Field k] [IsAlgClosed k] [Com
     [Algebra.IsIntegral E E'] (hinj : Function.Injective (algebraMap E E')) (e : E →ₐ[k] k) :
     ∃ e' : E' →ₐ[k] k, e'.comp (IsScalarTower.toAlgHom k E E') = e := by
   have hsurj : Function.Surjective e := fun c => ⟨algebraMap k E c, by simp⟩
-  haveI hp : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
+  have hp : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
   obtain ⟨Q, -, hQ, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := E')
     (RingHom.ker e) ⊥ (by
       intro x hx
@@ -1049,7 +1049,7 @@ theorem exists_lift_of_isIntegral {k E E' : Type} [Field k] [IsAlgClosed k] [Com
     have h1 : algebraMap k E (e x) - x ∈ RingHom.ker e := by simp [RingHom.mem_ker]
     rw [← hQc, Ideal.mem_comap, map_sub, ← Ideal.Quotient.eq, ← IsScalarTower.algebraMap_apply] at h1
     exact h1
-  haveI : Algebra.IsIntegral k (E' ⧸ Q) := by
+  have : Algebra.IsIntegral k (E' ⧸ Q) := by
     constructor
     intro y
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -1073,15 +1073,15 @@ theorem exists_smooth_normalisation (E : Type) [CommRing E] [IsDomain E] [Algebr
       (e' : E' →ₐ[ℂ] ℂ), Algebra.Smooth ℂ E' ∧ Function.Injective ρ ∧ e'.comp ρ = e := by
   let F := FractionRing E
   let E' : Type := integralClosure E F
-  haveI : Module.Finite E E' := GlobalTheory.NormFin.finite_integralClosure_of_isAlgClosed ℂ E F
-  letI : Algebra ℂ E' := ((algebraMap E E').comp (algebraMap ℂ E)).toAlgebra
-  haveI : IsScalarTower ℂ E E' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType ℂ E' := Algebra.FiniteType.trans (S := E) inferInstance inferInstance
-  haveI : IsNoetherianRing E' := Algebra.FiniteType.isNoetherianRing ℂ E'
-  haveI : Ring.DimensionLEOne E' := Ring.DimensionLEOne.integralClosure E F
-  haveI : IsIntegrallyClosed E' := integralClosure.isIntegrallyClosedOfFiniteExtension F
-  haveI : IsDedekindRing E' := ⟨⟩
-  haveI : IsDedekindDomain E' := inferInstance
+  have : Module.Finite E E' := GlobalTheory.NormFin.finite_integralClosure_of_isAlgClosed ℂ E F
+  let : Algebra ℂ E' := ((algebraMap E E').comp (algebraMap ℂ E)).toAlgebra
+  have : IsScalarTower ℂ E E' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType ℂ E' := Algebra.FiniteType.trans (S := E) inferInstance inferInstance
+  have : IsNoetherianRing E' := Algebra.FiniteType.isNoetherianRing ℂ E'
+  have : Ring.DimensionLEOne E' := Ring.DimensionLEOne.integralClosure E F
+  have : IsIntegrallyClosed E' := integralClosure.isIntegrallyClosedOfFiniteExtension F
+  have : IsDedekindRing E' := ⟨⟩
+  have : IsDedekindDomain E' := inferInstance
   have hinj : Function.Injective (algebraMap E E') := by
     intro x y h
     apply IsFractionRing.injective E F
@@ -1238,16 +1238,16 @@ theorem exists_emb (R A B : Type) [CommRing R] [IsDomain R] [Field A] [Field B] 
     [Algebra R A] [Algebra R B] (hA : #A = 𝔠) (hB : #B = 𝔠)
     (ha : Function.Injective (algebraMap R A)) (hb : Function.Injective (algebraMap R B)) :
     ∃ (σ : A →+* ℂ) (σ' : B →+* ℂ), σ.comp (algebraMap R A) = σ'.comp (algebraMap R B) := by
-  haveI : Nontrivial (A ⊗[R] B) :=
+  have : Nontrivial (A ⊗[R] B) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain R A B ha hb
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (A ⊗[R] B)
-  letI : Field ((A ⊗[R] B) ⧸ m) := Ideal.Quotient.field m
+  let : Field ((A ⊗[R] B) ⧸ m) := Ideal.Quotient.field m
   let L := (A ⊗[R] B) ⧸ m
   let Ω := AlgebraicClosure L
   let p : (A ⊗[R] B) →+* Ω := (algebraMap L Ω).comp (Ideal.Quotient.mk m)
   let i : A →+* Ω := p.comp (Algebra.TensorProduct.includeLeftRingHom)
   let j : B →+* Ω := p.comp (Algebra.TensorProduct.includeRight (R := R) (A := A) (B := B)).toRingHom
-  haveI : CharZero Ω := charZero_of_injective_ringHom i.injective
+  have : CharZero Ω := charZero_of_injective_ringHom i.injective
   have hL : #L ≤ 𝔠 :=
     (Cardinal.mk_le_of_surjective Ideal.Quotient.mk_surjective).trans (mk_tensor_le R A B hA.le hB.le)
   have hΩ : #Ω = 𝔠 := by
@@ -1293,7 +1293,7 @@ theorem key_descends (hL : Out.Laws) (S : Type) [CommRing S] [IsDomain S] [IsLoc
     ∃ (R : Subring S) (y : KeyIn R), u ∈ R ∧ Algebra.FiniteType ℤ R ∧ KeyPB x y R.subtype := by
   classical
   obtain ⟨R₀, P₀, φ, hfg, hg, hφ, hiso⟩ := GlobalTheory.KeyTf.exists_polAV_finiteType_subring S x.P
-  haveI : IsNoetherianRing R₀ := Algebra.FiniteType.isNoetherianRing ℤ R₀
+  have : IsNoetherianRing R₀ := Algebra.FiniteType.isNoetherianRing ℤ R₀
   obtain ⟨r, hr, hnear⟩ := GlobalTheory.KeyNear.main hL R₀ P₀ (hg ▸ x.g_pos)
     (PrimeSpectrum.comap R₀.subtype (IsLocalRing.closedPoint S))
   have hru : IsUnit (r : S) := by
@@ -1317,7 +1317,7 @@ theorem key_descends (hL : Out.Laws) (S : Type) [CommRing S] [IsDomain S] [IsLoc
   obtain ⟨rig, hrig, th, hth, v, hv, hpb⟩ := GlobalTheory.KeyTf.exists_keyPB_on R₁ S R₁.subtype y x.P ψ x.g_pos (hg.symm.trans hyg.symm) hψ hψiso
   obtain ⟨a, t, ht, hta, hid⟩ := (GlobalTheory.KeyOnPol.main hL S).2 ⟨x.P, x.g_pos, rig, hrig, th, hth, v, hv⟩
     x.rig x.rig_gen x.th x.th_ne x.v x.basis
-  haveI := x.P.isAb.comm
+  have := x.P.isAb.comm
   choose M hM using fun i => (hv.2 (x.v i) (x.basis.1 i)).exists
   have hdet : IsUnit (Matrix.det (Matrix.of M)) :=
     ((GlobalTheory.LieComb.lieComb_algebra S x.P.A x.P.g v hv.1).2.2.2.2 (Matrix.of M) x.v hv hM).1 x.basis
@@ -1388,9 +1388,9 @@ theorem value_specialises : Out.Laws → ThetaUnifAV → Key.Chi.InversionStatem
   intro hL hT hI hN hE S _ _ _ _ x₀ f f' u x x' τ M a b c τ' M' a' b' c' hf hx hx' hab hab' hc hc' hn hn' hu
   obtain ⟨N, hN, hK⟩ := hN
   obtain ⟨R, y, huR, hfg, hy⟩ := key_descends hL S x₀ u
-  haveI : Countable R := by
+  have : Countable R := by
     obtain ⟨n, p, hp⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 hfg
-    haveI : Countable (MvPolynomial (Fin n) ℤ) := by
+    have : Countable (MvPolynomial (Fin n) ℤ) := by
       rw [← Cardinal.mk_le_aleph0_iff]
       exact MvPolynomial.cardinalMk_le_max_lift.trans (by simp)
     exact hp.countable
@@ -1519,7 +1519,7 @@ theorem exists_baseChange {K F : Type} [Field K] [Field F] (e : K →+* F) (A : 
     [Algebra.Smooth K A] (h : ∀ (L : Type) [Field L] [Algebra K L], IsDomain (L ⊗[K] A)) :
     ∃ (B : Type) (_ : CommRing B) (_ : IsDomain B) (_ : Algebra F B) (_ : Algebra.Smooth F B) (ψ : A →+* B),
       ∀ p : A →+* F, p.comp (algebraMap K A) = e → ∃ q : B →ₐ[F] F, q.toRingHom.comp ψ = p := by
-  letI := e.toAlgebra
+  let := e.toAlgebra
   refine ⟨F ⊗[K] A, inferInstance, h F, inferInstance, inferInstance,
     (Algebra.TensorProduct.includeRight (R := K) (A := F) (B := A)).toRingHom, fun p hp => ?_⟩
   let p' : A →ₐ[K] F := { p with commutes' := fun a => congr($hp a) }
@@ -1551,7 +1551,7 @@ theorem exists_root_prime (K : Type) [Field K] [IsAlgClosed K] [CharZero K] {n :
     have hmap : f.map (algebraMap R L) = X ^ n - C (algebraMap R L κ) := by simp [f]
     have hirr : Irreducible (f.map (algebraMap R L)) := by
       rw [hmap]
-      refine X_pow_sub_C_irreducible_of_prime hn fun b hb => h ?_
+      refine irreducible_X_pow_sub_C_of_prime hn fun b hb => h ?_
       have hb' : IsIntegral R b := by
         refine ⟨f, hf, ?_⟩
         simp [f, hb]

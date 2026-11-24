@@ -80,7 +80,7 @@ theorem sum_mapDomain_eq (d : ι → σ →₀ ℕ) :
   rw [expEquiv_apply, Finset.sum_apply', Finset.sum_eq_single a]
   · exact Finsupp.mapDomain_apply_of_injective (fun x y h => by simpa using h) _ _
   · intro τ _ hτ
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨c, hc⟩
     exact hτ (congrArg Prod.fst hc)
   · intro h; exact absurd (Finset.mem_univ a) h

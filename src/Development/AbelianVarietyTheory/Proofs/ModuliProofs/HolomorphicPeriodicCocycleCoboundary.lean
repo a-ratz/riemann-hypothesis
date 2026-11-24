@@ -543,7 +543,7 @@ theorem _root_.GlobalTheory.fourier_coeff_eq_zero_of_tsum_eq_zero_fin :
       ∀ ν, c ν = 0 := by
   intro n c hc h μ
   set m : MeasureTheory.Measure ℝ := MeasureTheory.volume.restrict (Set.Ioc (0 : ℝ) 1) with hm
-  haveI : MeasureTheory.IsProbabilityMeasure m := ⟨by simp [m]⟩
+  have : MeasureTheory.IsProbabilityMeasure m := ⟨by simp [m]⟩
   set P : MeasureTheory.Measure (Fin n → ℝ) := MeasureTheory.Measure.pi fun _ => m
   set G : (Fin n → ℤ) → (Fin n → ℝ) → ℂ := fun ν x =>
     c ν * ∏ k, cexp (2 * π * I * (((ν k - μ k : ℤ)) : ℂ) * (x k : ℂ)) with hG
@@ -564,7 +564,7 @@ theorem _root_.GlobalTheory.fourier_coeff_eq_zero_of_tsum_eq_zero_fin :
     by_cases hνμ : ν = μ
     · subst hνμ; simp
     · obtain ⟨k, hk⟩ := Function.ne_iff.mp hνμ
-      rw [if_neg hνμ, Finset.prod_eq_zero (Finset.mem_univ k) (by simp [sub_eq_zero, hk]), mul_zero]
+      rw [ite_eq_right hνμ, Finset.prod_eq_zero (Finset.mem_univ k) (by simp [sub_eq_zero, hk]), mul_zero]
   have hsum : ∀ x, ∑' ν, G ν x = 0 := by
     intro x
     have hx := h x
@@ -782,9 +782,9 @@ theorem torus_elliptic_system_solvable : ∀ (n m : ℕ) (p : Fin m → Fin n �
     have hn : 0 < ‖(2 * π * I : ℂ)‖ := norm_pos_iff.2 h2pi
     have hS : 0 ≤ ∑ a, C a := Finset.sum_nonneg fun a _ => hC0 a
     by_cases h : ν = 0
-    · simp only [d, dif_pos h, norm_zero, zero_mul]
+    · simp only [d, dite_eq_left h, norm_zero, zero_mul]
       positivity
-    · simp only [d, dif_neg h]
+    · simp only [d, dite_eq_right h]
       rw [norm_div, norm_mul (2 * π * I : ℂ), div_mul_eq_mul_div]
       have h1 := Finset.single_le_sum (f := C) (fun a _ => hC0 a) (Finset.mem_univ (α ν h))
       have h2 := hα ν h
@@ -804,8 +804,8 @@ theorem torus_elliptic_system_solvable : ∀ (n m : ℕ) (p : Fin m → Fin n �
     rw [h0, add_sub_cancel_left]
     refine tsum_congr fun ν => ?_
     by_cases h : ν = 0
-    · simp only [d, dif_pos h, if_pos h, mul_zero, zero_mul]
-    · simp only [d, dif_neg h, if_neg h]
+    · simp only [d, dite_eq_left h, ite_eq_left h, mul_zero, zero_mul]
+    · simp only [d, dite_eq_right h, ite_eq_right h]
       have h2 : (∑ k, p (α ν h) k * (ν k : ℂ)) ≠ 0 := by
         intro h0
         have := hα ν h
@@ -836,7 +836,7 @@ theorem exists_equiv_latticeCoords (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)
     ∃ (n : ℕ) (T : (Fin n → ℝ) ≃L[ℝ] (Fin g → ℂ)),
       (∀ ν : Fin n → ℤ, T (fun k => (ν k : ℝ)) ∈ Λ) ∧
       ∀ l : Λ, ∃ ν : Fin n → ℤ, T.symm l = fun k => (ν k : ℝ) := by
-  haveI : IsZLattice ℝ Λ := ⟨hΛ⟩
+  have : IsZLattice ℝ Λ := ⟨hΛ⟩
   let b0 := Module.finBasis ℤ Λ
   let b := b0.ofZLatticeBasis ℝ Λ
   refine ⟨_, b.equivFunL.symm, ?_, ?_⟩
@@ -956,7 +956,7 @@ theorem dbar_sub {a : Fin g} {f f' : (Fin g → ℂ) → ℂ} {z : Fin g → ℂ
     dbar a (fun x => f x - f' x) z = dbar a f z - dbar a f' z := by
   unfold dbar
   rw [fderiv_fun_sub h h']
-  simp only [ContinuousLinearMap.sub_apply]
+  simp only [sub_apply]
   ring
 
 theorem contDiffAt_fderiv {f : (Fin g → ℂ) → ℂ} {z : Fin g → ℂ} (h : ContDiffAt ℝ ∞ f z) :

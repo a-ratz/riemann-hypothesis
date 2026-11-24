@@ -163,7 +163,7 @@ theorem exists_equiv [TopologicalSpace S] (he : ∀ x i, e x i = θ i x) (hc : C
     exact this.matrix_elem a b
   let bw : (∀ i, UpqT (P i) (Q i)) → Formalism.UG.UJ s J := fun g =>
     ⟨⟨L g, L g⁻¹, by rw [hLmul, mul_inv_cancel, hL1], by rw [hLmul, inv_mul_cancel, hL1]⟩, hLu g⟩
-  haveI : ∀ i, IsTopologicalGroup (UpqT (P i) (Q i)) := fun i => (GlobalTheory.UpqTopology.upq_lcsc _ _).1
+  have : ∀ i, IsTopologicalGroup (UpqT (P i) (Q i)) := fun i => (GlobalTheory.UpqTopology.upq_lcsc _ _).1
   refine ⟨
     { toFun := fw
       invFun := bw
@@ -188,7 +188,7 @@ theorem exists_equiv [TopologicalSpace S] (he : ∀ x i, e x i = θ i x) (hc : C
     have : (UpqT.mat ∘ fun h => fw h i) = fun h : Formalism.UG.UJ s J => A i * h.1.1.map (θ i) * B i :=
       funext fun h => hfw h i
     rw [this]
-    exact (continuous_const.matrix_mul ((Units.continuous_val.comp continuous_subtype_val).matrix_map
+    exact (continuous_const.matrix_mul ((Units.continuous_val.comp continuous_subtypeVal).matrix_map
       (hθ i))).matrix_mul continuous_const
   · refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨hLc, hLc.comp continuous_inv⟩) _
   · change UpqT.mat (fw h i) * A i = _

@@ -250,11 +250,11 @@ theorem delta_topPart_eq_zero {ι : Type} [LinearOrder ι] {E : Type} [AddCommGr
     rw [Pi.zero_apply, ← h1]
     refine Finset.sum_congr rfl fun i hi => ?_
     have : (t.erase i).card = k := by rw [Finset.card_erase_of_mem hi]; omega
-    simp only [this, if_true]
+    simp only [this, ite_true]
   · refine Finset.sum_eq_zero fun i hi => ?_
     have h0 := Finset.card_erase_add_one hi
     have : (t.erase i).card ≠ k := by omega
-    simp only [this, if_false, smul_zero]
+    simp only [this, ite_false, smul_zero]
 
 theorem hypZero_of_cechZero : ∀ {ι : Type} [LinearOrder ι] {E : Type} [AddCommGroup E] (d : E →+ E) (T : ℕ → Finset ι → AddSubgroup E), (∀ x, d (d x) = 0) → (∀ q s t, s.Nonempty → s ⊆ t → T q s ≤ T q t) → (∀ q s x, x ∈ T q s → d x ∈ T (q + 1) s) → ∀ n, (∀ q b, q + b = n → CechZero (T q) b) → HypZero d T n := by
   intro ι _ E _ d T hdd hmono hdT n hC
@@ -278,9 +278,9 @@ theorem hypZero_of_cechZero : ∀ {ι : Type} [LinearOrder ι] {E : Type} [AddCo
       have hin : InCech (T q) (b + 1) (fun s => if s.card = b + 1 then c s else 0) := by
         refine ⟨by simp, fun s => ?_, fun s hs => by simp [hs]⟩
         by_cases hs : s.card = b + 1
-        · simp only [hs, if_true]
+        · simp only [hs, ite_true]
           exact hc.2.1 q s (by omega)
-        · simp only [hs, if_false]
+        · simp only [hs, ite_false]
           exact (T q s).zero_mem
       obtain ⟨y, hy, hyc⟩ := hC q b hq _ hin (delta_topPart_eq_zero d c (b + 1) hD h0)
       have hyT : InTot T n y := by
@@ -493,7 +493,7 @@ theorem LatModel.val_secEquiv {V : Type} [AddCommGroup V] [Module X.functionFiel
 
 theorem subsingleton_sec_of_not_gen (F : X.Modules) {U : X.Opens} (hU : genericPoint X ∉ U) :
     Subsingleton Γ(F, U) := by
-  haveI : Subsingleton Γ(X, U) := ⟨fun a b => fn_ext fun h => absurd h hU⟩
+  have : Subsingleton Γ(X, U) := ⟨fun a b => fn_ext fun h => absurd h hU⟩
   exact Module.subsingleton Γ(X, U) Γ(F, U)
 
 
@@ -824,7 +824,7 @@ theorem val_resHom {U W : X.Opens} (e : W ≤ U) (s : secGrp M U) :
   unfold resHom; simp only [AddMonoidHom.coe_mk, ZeroHom.coe_mk]; split_ifs <;> rfl
 
 theorem val_resHom_of_mem {U W : X.Opens} (e : W ≤ U) (h : genericPoint X ∈ W) (s : secGrp M U) :
-    ((resHom M e s : secGrp M W) : V) = s := by rw [val_resHom, if_pos h]
+    ((resHom M e s : secGrp M W) : V) = s := by rw [val_resHom, ite_eq_left h]
 
 def pre : TopCat.Presheaf Ab.{0} X where
   obj U := AddCommGrpCat.of (secGrp M U.unop)
@@ -872,8 +872,8 @@ theorem isSheaf_pre : (pre M).IsSheaf := by
   have key : ∀ k l, genericPoint X ∈ W k → genericPoint X ∈ W l →
       sv M _ (sf k) = sv M _ (sf l) := fun k l hk hl => by
     have := congrArg (sv M _) (hsf k l)
-    rw [sv_map, sv_map, if_pos (show genericPoint X ∈ W k ⊓ W l from ⟨hk, hl⟩),
-      if_pos (show genericPoint X ∈ W k ⊓ W l from ⟨hk, hl⟩)] at this
+    rw [sv_map, sv_map, ite_eq_left (show genericPoint X ∈ W k ⊓ W l from ⟨hk, hl⟩),
+      ite_eq_left (show genericPoint X ∈ W k ⊓ W l from ⟨hk, hl⟩)] at this
     exact this
   by_cases hg : genericPoint X ∈ iSup W
   · obtain ⟨k₀, hk₀⟩ := Opens.mem_iSup.1 hg
@@ -884,11 +884,11 @@ theorem isSheaf_pre : (pre M).IsSheaf := by
       exact (sv_mem M _ (sf k)).1 y hk
     refine ⟨mk M (Opposite.op (iSup W)) _ mem, fun k => ?_, fun t ht => ?_⟩
     · refine sv_ext M fun hk => ?_
-      rw [sv_map, if_pos hk, sv_mk]
+      rw [sv_map, ite_eq_left hk, sv_mk]
       exact key k₀ k hk₀ hk
     · refine sv_ext M fun _ => ?_
       have := congrArg (sv M _) (ht k₀)
-      rw [sv_map, if_pos hk₀] at this
+      rw [sv_map, ite_eq_left hk₀] at this
       rw [sv_mk]
       exact this
   · refine ⟨mk M (Opposite.op (iSup W)) 0 (zero_mem _), fun k => ?_, fun t _ => ?_⟩
@@ -1124,10 +1124,10 @@ theorem mem_chartForms_iff_sum_card {K : Type} [Field K] (A : Subring K) {n : �
         rw [e]
         exact hdA _
       · dsimp only
-        rw [dif_neg hI, zero_mul, zero_div]
+        rw [dite_eq_right hI, zero_mul, zero_div]
         exact zero_mem A
     · rw [hsplit (fun I => (if h : I.card = a then d ⟨I, h⟩ * ((t⁻¹ * ∏ j ∈ I \ J, x j : Kˣ) : K)
-          else 0) • logWedge x I) (fun I hI => by simp only [dif_neg hI, zero_smul])]
+          else 0) • logWedge x I) (fun I hI => by simp only [dite_eq_right hI, zero_smul])]
       refine Finset.sum_congr rfl fun I _ => ?_
       rw [dite_eq_left I.2, smul_smul]
 
@@ -1189,7 +1189,7 @@ open GlobalTheory.Twist GlobalTheory.LB GlobalTheory.QCoh
 theorem spanForms_eq_bot_of_isCoord {K : Type} [Field K] {n : ℕ} {x : Fin n → Kˣ} (hx : IsCoord x)
     (M : Set K) (H : Set Ω[K⁄ℤ]) {a : ℕ} (ha : n < a) : spanForms M H a = ⊥ := by
   let bs : Module.Basis (Fin n) K Ω[K⁄ℤ] := Module.Basis.mk hx.1 hx.2.ge
-  haveI : Module.Finite K Ω[K⁄ℤ] := Module.Finite.of_basis bs
+  have : Module.Finite K Ω[K⁄ℤ] := Module.Finite.of_basis bs
   have hfr : Module.finrank K Ω[K⁄ℤ] = n := by
     rw [Module.finrank_eq_card_basis bs, Fintype.card_fin]
   refine eq_bot_iff.2 ((AddSubgroup.closure_le _).2 ?_)
@@ -1223,29 +1223,29 @@ open GlobalTheory.Twist GlobalTheory.LB GlobalTheory.QCoh
 
 theorem exists_cechZero_cechFam_nsmul_add : ∀ (k : Type) [Field k] (X : Scheme.{0}) [IsIntegral X] (f : X ⟶ Sp k), IsProjOver f → ∀ {C : Type} [Fintype C] (E : C → CartierDiv X) {n : ℕ} {ι : Type} [Fintype ι] [LinearOrder ι] (𝒜 : SncAtlas E n ι) (H : CartierDiv X) (B : ℕ) (R : Fin B → CartierDiv X), IsAmpleLB (toLB H) → ∃ q₀ : ℕ, ∀ q, q₀ ≤ q → ∀ (j : Fin B) (a b : ℕ), 0 < b → DI.CechZero (cechFam 𝒜 (q • H + R j) a) b := by
   intro k _ X _ f hf C _ E n ι _ _ 𝒜 H B R hH
-  haveI : IsProper f := (isProper_and_exists_isAmpleLB_of_isProjOver hf).1
-  haveI : X.IsSeparated := by
+  have : IsProper f := (isProper_and_exists_isAmpleLB_of_isProjOver hf).1
+  have : X.IsSeparated := by
     constructor
     rw [show terminal.from X = f ≫ terminal.from _ from Subsingleton.elim _ _]
     infer_instance
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have key : ∀ (j : Fin B) (a : Fin (n + 2)), ∃ q₀ : ℕ, ∀ q, q₀ ≤ q → ∀ b : ℕ, 0 < b →
       DI.CechZero (cechFam 𝒜 (q • H + R j) a) b := by
     intro j a
     obtain ⟨F, ⟨lm⟩⟩ := _root_.GlobalTheory.LogDR.exists_latModel X (logAt (suppAll E) (R j) a)
       (fun y g v hg hv => logAt_smul_mem X _ _ _ y g v hg hv)
-    haveI : IsFiniteQC F := _root_.GlobalTheory.LogDR.latModel_logAt_isFiniteQC X E 𝒜 (R j) a F lm
+    have : IsFiniteQC F := _root_.GlobalTheory.LogDR.latModel_logAt_isFiniteQC X E 𝒜 (R j) a F lm
     have hev := eventually_subsingleton_coh_twistZ_of_isProjOver (f := f) (fun _ => rfl) F hf hH
     obtain ⟨q₀, hq₀⟩ := Filter.eventually_atTop.1 (tendsto_natCast_atTop_atTop.eventually hev)
     refine ⟨q₀, fun q hq b hb => ?_⟩
     obtain ⟨lm'⟩ := nonempty_latModel_twist X (logAt (suppAll E) (R j) a)
       (logAt (suppAll E) (q • H + R j) a) F (q • H) (toLB (q • H)) _ (presents_toLB _)
       (fun y g v hD => by rw [add_comm]; exact logtwist X _ _ _ _ y g v hD) lm
-    haveI : IsFiniteQC (twist F (toLB (q • H))) := isFiniteQC_twist (isLB_toLB _)
+    have : IsFiniteQC (twist F (toLB (q • H))) := isFiniteQC_twist (isLB_toLB _)
     have hc := _root_.GlobalTheory.cechZero_latSec_iff_subsingleton_coh X (logAt (suppAll E) (q • H + R j) a) (twist F (toLB (q • H))) 𝒜.U lm'
       𝒜.affine 𝒜.gen 𝒜.cover b hb
     refine hc.2 ?_
-    haveI hs : Subsingleton (coh (twist F (lbZPow (toLB H) (q : ℤ))) b) := hq₀ q hq b hb
+    have hs : Subsingleton (coh (twist F (lbZPow (toLB H) (q : ℤ))) b) := hq₀ q hq b hb
     obtain ⟨e⟩ := nonempty_twist_iso_of_cls_eq F (isLB_toLB (q • H)) (isLB_lbZPow (isLB_toLB H) q)
       (by rw [cls_lbZPow (isLB_toLB H), ← toPic_apply, ← toPic_apply, map_nsmul, natCast_zsmul])
     exact (cohOn.mapIso k ⊤ b e).injective.subsingleton
@@ -1304,9 +1304,9 @@ def omegaToAbs (α : k →+* K) (hk : Function.Surjective (Int.castRingHom k)) :
 
 @[simp] theorem omegaToAbs_dFun (α : k →+* K) (hk : Function.Surjective (Int.castRingHom k)) (f : K) :
     omegaToAbs α hk (dFun α f) = dK f := by
-  letI := α.toAlgebra
-  letI : Module k Ω[K⁄ℤ] := Module.compHom _ α
-  letI tw : IsScalarTower k K Ω[K⁄ℤ] := ⟨fun c a m => mul_smul (α c) a m⟩
+  let := α.toAlgebra
+  let : Module k Ω[K⁄ℤ] := Module.compHom _ α
+  let tw : IsScalarTower k K Ω[K⁄ℤ] := ⟨fun c a m => mul_smul (α c) a m⟩
   exact @Derivation.liftKaehlerDifferential_comp_D k K _ _ _ _ _ _ _ tw (absDer α hk) f
 
 def formsToLam (α : k →+* K) (hk : Function.Surjective (Int.castRingHom k)) (D : ℕ) :
@@ -1374,7 +1374,7 @@ theorem det_mem_subring {K : Type} [Field K] (A : Subring K) {n : ℕ} (c : Matr
 
 private theorem forms_mem_lemma {k A : Type} [CommRing k] [CommRing A] (α : k →+* A) (d : ℕ)
     (P : Submodule A (Forms α d)) (hgen : ∀ f : Fin d → A, dForm α f ∈ P) (ω : Forms α d) : ω ∈ P := by
-  letI := α.toAlgebra
+  let := α.toAlgebra
   have hω : ω ∈ Submodule.span A (Set.range (exteriorPower.ιMulti A d)) := by
     rw [exteriorPower.ιMulti_span]; trivial
   refine Submodule.span_induction (fun x hx => ?_) P.zero_mem (fun _ _ _ _ => P.add_mem)
@@ -1403,7 +1403,7 @@ private theorem ιMulti_eq_det_lemma_2 {K : Type} [Field K] {n : ℕ} (x : Fin n
   intro φ
   have h1 := congrArg (fun g => g v)
     (AlternatingMap.eq_smul_basis_det b (φ.compAlternatingMap (ExteriorAlgebra.ιMulti K n)))
-  simp only [AlternatingMap.smul_apply, LinearMap.compAlternatingMap_apply, smul_eq_mul] at h1
+  simp only [smul_apply, LinearMap.compAlternatingMap_apply, smul_eq_mul] at h1
   rw [map_sub, map_smul, h1, smul_eq_mul, mul_comm, sub_self]
 
 theorem formOf_eq_regAt_smul (p : ℕ) [Fact p.Prime] {X : Scheme.{0}} [IsIntegral X] (f : X ⟶ Sp (ZMod p))
@@ -1637,10 +1637,10 @@ private theorem logAt_top_lemma_6 {X : Scheme.{0}} [IsIntegral X] (Z : Set X) (G
       rw [hdx, map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul]
       by_cases hij : j = i
       · subst hij
-        simp only [s, hj, if_true, mul_one]
+        simp only [s, hj, ite_true, mul_one]
         rw [mul_inv_cancel₀ (x j).ne_zero]
         exact one_mem _
-      · rw [if_neg hij, mul_zero, mul_zero]
+      · rw [ite_eq_right hij, mul_zero, mul_zero]
         exact zero_mem _
   constructor
   · intro hη
@@ -1848,8 +1848,8 @@ theorem subsingleton_coh_of_decomp : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0
       IsAmpleLB (toLB H) → 0 < r → (∀ c, b c < r) → r • M = r • canonical f d + ∑ c, b c • E c + H →
       ∀ q : ℕ, 0 < q → Subsingleton (coh (LB.toMod (toLB M)) q) := by
   intro p _ X _ f d _ hproj _ C _ E ι _ _ 𝒜 hdec M H r b hH hr hb hM q hq
-  haveI : CharP X.functionField p := charP_of_injective_ringHom (Cartier.constFn f).injective p
-  haveI : X.IsSeparated := isSeparated_of_isProjOver hproj
+  have : CharP X.functionField p := charP_of_injective_ringHom (Cartier.constFn f).injective p
+  have : X.IsSeparated := isSeparated_of_isProjOver hproj
   let G : ℕ → CartierDiv X := fun e =>
     p ^ e • (M - canonical f d) - ∑ c, (p ^ e * b c / r) • E c - ∑ c, E c
   let R : Fin r → CartierDiv X := fun j =>
@@ -1891,7 +1891,7 @@ theorem subsingleton_coh_of_decomp : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0
       exact ⟨c, CartierDiv.mem_secOn.1 hc y rfl, rfl⟩
   obtain ⟨L0⟩ := nonempty_latModel_of_presents X M (toLB M) _ (presents_toLB M)
   obtain ⟨L1⟩ := (_root_.GlobalTheory.LogDR.latModel_map_and_unique X _ (LB.toMod (toLB M)) (LB.toMod (toLB M)) φ hφ L0).1
-  haveI := LB.isQuasicoherent_toMod (presents_toLB M).isLB
+  have := LB.isQuasicoherent_toMod (presents_toLB M).isLB
   refine (_root_.GlobalTheory.cechZero_latSec_iff_subsingleton_coh X _ (LB.toMod (toLB M)) 𝒜.U L1 𝒜.affine 𝒜.gen 𝒜.cover q hq).1 ?_
   have hfam : cechFam 𝒜 (G 0) d = fun s =>
       latSec (fun y => ((M.secOn {y}).toAddSubgroup).map φ.toAddMonoidHom) (inter 𝒜.U s) := by

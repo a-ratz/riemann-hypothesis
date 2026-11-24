@@ -67,8 +67,8 @@ theorem normDet_le_pow_finrank {R F : Type*} [NormedAddCommGroup R] [InnerProduc
     rw [hg0]
     positivity
   rw [g.normDet_eq_norm_det_toMatrix_rangeRestrict (stdOrthonormalBasis ℝ R) h.some]
-  letI : MeasurableSpace R := borel R
-  haveI : BorelSpace R := ⟨rfl⟩
+  let : MeasurableSpace R := borel R
+  have : BorelSpace R := ⟨rfl⟩
 
   let φ : LinearMap.range g ≃ₗᵢ[ℝ] R := h.some.repr.trans (stdOrthonormalBasis ℝ R).repr.symm
   let T : R →ₗ[ℝ] R := φ.toLinearEquiv.toLinearMap ∘ₗ g.rangeRestrict
@@ -204,7 +204,7 @@ theorem gram_det_le : GramDetLe := by
         E →ₗ[ℝ] LinearMap.range (linearCombinationMap v))
     have hP : ∀ y : LinearMap.range (linearCombinationMap v),
         (LinearMap.range (linearCombinationMap v)).orthogonalProjection (y : E) = y := fun y =>
-      Submodule.orthogonalProjection_mem_subspace_eq_self y
+      Submodule.orthogonalProjectionOnto_mem_subspace_eq_self y
     have hGf : G ∘ₗ linearCombinationMap v = linearCombinationMap w := by
       ext c
       have : linearCombinationMap v c = (e c : E) := (LinearEquiv.ofInjective_apply _ c).symm

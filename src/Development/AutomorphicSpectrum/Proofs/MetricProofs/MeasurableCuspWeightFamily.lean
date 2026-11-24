@@ -66,9 +66,9 @@ theorem measurable_cuspW (E : Type) [Field E] [NumberField E] [IsCMField E] (g :
     Measurable fun x => (R x).cuspW σ := by
   rcases isEmpty_or_nonempty X with hX | ⟨⟨x₀⟩⟩
   · exact measurable_of_empty _
-  haveI := (R x₀).free
-  haveI := (R x₀).fin
-  haveI : Countable (Submodule (𝓞 E) Λ) := countable_submodule (𝓞 E) Λ
+  have := (R x₀).free
+  have := (R x₀).fin
+  have : Countable (Submodule (𝓞 E) Λ) := countable_submodule (𝓞 E) Λ
   let C : Submodule (𝓞 E) Λ → Prop := fun I => I ≠ ⊥ ∧ GroundTheory.Heights₂.Heights.LowerBoundFree.IsSaturated I ∧
     GroundTheory.Heights₂.Heights.LowerBoundFree.IsIsoSub form I
   have hC : ∀ x I, (R x).IsCusp I ↔ C I := by

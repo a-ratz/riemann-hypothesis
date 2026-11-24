@@ -188,14 +188,14 @@ theorem hint1 {χ : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H : Hyp �
   classical
   set E := normOneFundamentalDomain F with hEdef
   set C : Set (Ideles F) := (fun u : normOneSubgroup F => (u : Ideles F)) '' closure E with hCdef
-  have hC : IsCompact C := (isCompact_closure_normOneFundamentalDomain (K := F)).image continuous_subtype_val
+  have hC : IsCompact C := (isCompact_closure_normOneFundamentalDomain (K := F)).image continuous_subtypeVal
   obtain ⟨d, hd0, hd⟩ := exists_den_row c g hC
   obtain ⟨k, U, hU, hdec⟩ := exists_decay_bound_two F hC d hd0 2
   set G' := ((g⁻¹ : GA F 2) : Matrix (Fin 2) (Fin 2) (Ad F)).map (UpperTheory.V.TR.pInf F) with hG'
   set K := ∑ i, ∑ j, ‖G' i j‖ with hKdef
   have hK : 0 ≤ K := by positivity
   refine ⟨k, ?_⟩
-  haveI : IsFiniteMeasure ((normOneMeasure F).restrict E) :=
+  have : IsFiniteMeasure ((normOneMeasure F).restrict E) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact normOneMeasure_normOneFundamentalDomain_lt_top F⟩
   set bnd : Pp F × Xi F → ℝ := fun q =>
     (K + 1) ^ k * (((((q.1.1 : ℝ) ^ 2)⁻¹ * (q.1.1 : ℝ)) * 1) * |U q.2.1|) with hbnddef
@@ -275,10 +275,10 @@ theorem hint2 {χ : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H : Hyp �
   classical
   set E := normOneFundamentalDomain F with hEdef
   set C : Set (Ideles F) := (fun u : normOneSubgroup F => (u : Ideles F)) '' closure E with hCdef
-  have hC : IsCompact C := (isCompact_closure_normOneFundamentalDomain (K := F)).image continuous_subtype_val
+  have hC : IsCompact C := (isCompact_closure_normOneFundamentalDomain (K := F)).image continuous_subtypeVal
   set C2 : Set (Ideles F) := (fun u : normOneSubgroup F => ((u : Ideles F))⁻¹) '' closure E with hC2def
   have hC2 : IsCompact C2 :=
-    (isCompact_closure_normOneFundamentalDomain (K := F)).image continuous_subtype_val.inv
+    (isCompact_closure_normOneFundamentalDomain (K := F)).image continuous_subtypeVal.inv
   obtain ⟨d, hd0, hd⟩ := exists_den_col c (finite_support_of_hyp H) g hC
   obtain ⟨k, U, hU, hdec⟩ := exists_decay_bound_two F hC2 d hd0 2
   set G := (g : Matrix (Fin 2) (Fin 2) (Ad F)).map (UpperTheory.V.TR.pInf F) with hG
@@ -286,7 +286,7 @@ theorem hint2 {χ : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H : Hyp �
   set K := ∑ i, ∑ j, ‖G i j‖ with hKdef
   have hK : 0 ≤ K := by positivity
   refine ⟨k, ?_⟩
-  haveI : IsFiniteMeasure ((normOneMeasure F).restrict E) :=
+  have : IsFiniteMeasure ((normOneMeasure F).restrict E) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact normOneMeasure_normOneFundamentalDomain_lt_top F⟩
   set bnd : Pp F × Xi F → ℝ := fun q =>
     (K + 1) ^ k * (((((q.1.1 : ℝ) ^ 2) * (q.1.1 : ℝ)⁻¹) * 1) * |U q.2.1|) with hbnddef

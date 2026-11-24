@@ -162,7 +162,7 @@ private theorem glob_norm {Ω : Type} [Field Ω] [Algebra K Ω] [Algebra L Ω] [
   rw [← hρ τ σ hσ, ← hx, eq_comm, ← mul_inv_eq_one]
   refine GlobalTheory.GabSep.eq_one_of_forall_isOpen_subgroup K Ω _ fun U hU => ?_
   let χ : Gab K Ω →* Gab K Ω ⧸ U := QuotientGroup.mk' U
-  haveI : DiscreteTopology (Gab K Ω ⧸ U) := QuotientGroup.discreteTopology hU
+  have : DiscreteTopology (Gab K Ω ⧸ U) := QuotientGroup.discreteTopology hU
   have hχ : Continuous χ := QuotientGroup.continuous_mk
   let Nm : Ideles L →* Ideles K := GroundTheory.Global.ideleNorm K L
   have hN : Continuous Nm := GroundTheory.Global.continuous_ideleNorm
@@ -201,17 +201,17 @@ open Classical in
 private theorem emb_norm {l : ℕ} [Fact l.Prime] (w : HeightOneSpectrum (𝓞 L)) (res : Emb l w → Emb l (below K w))
     (hres : ∀ τ' x, (res τ').1 x = τ'.1 (algebraMap _ _ x)) (τ : Emb l (below K w)) (y : w.adicCompletion L) :
     τ.1 (Algebra.norm ((below K w).adicCompletion K) y) = ∏ᶠ (τ' : Emb l w) (_ : res τ' = τ), τ'.1 y := by
-  letI := τ.1.toAlgebra
-  haveI : ContinuousSMul ((below K w).adicCompletion K) (Qbar l) := continuousSMul_of_algebraMap _ _ τ.2
-  haveI : ContinuousSMul ((below K w).adicCompletion K) (w.adicCompletion L) :=
+  let := τ.1.toAlgebra
+  have : ContinuousSMul ((below K w).adicCompletion K) (Qbar l) := continuousSMul_of_algebraMap _ _ τ.2
+  have : ContinuousSMul ((below K w).adicCompletion K) (w.adicCompletion L) :=
     continuousSMul_of_algebraMap _ _ (continuous_completionMap _ _)
-  haveI : FiniteDimensional ((below K w).adicCompletion K) (w.adicCompletion L) := inferInstance
-  haveI : CharZero ((below K w).adicCompletion K) := algebraRat.charZero _
+  have : FiniteDimensional ((below K w).adicCompletion K) (w.adicCompletion L) := inferInstance
+  have : CharZero ((below K w).adicCompletion K) := algebraRat.charZero _
   have h := Algebra.norm_eq_prod_embeddings ((below K w).adicCompletion K) (Qbar l) y
   refine h.trans ?_
   rw [← finprod_eq_prod_of_fintype, ← finprod_subtype_eq_finprod_cond (f := fun τ' : Emb l w => τ'.1 y) (fun τ' => res τ' = τ)]
   have hc : ∀ σ : w.adicCompletion L →ₐ[(below K w).adicCompletion K] Qbar l, Continuous σ := fun σ => by
-    letI : NontriviallyNormedField ((below K w).adicCompletion K) := Valued.toNontriviallyNormedField _ _
+    let : NontriviallyNormedField ((below K w).adicCompletion K) := Valued.toNontriviallyNormedField _ _
     have := LinearMap.continuous_of_finiteDimensional σ.toLinearMap
     exact this
   let e : (w.adicCompletion L →ₐ[(below K w).adicCompletion K] Qbar l) ≃ {τ' : Emb l w // res τ' = τ} :=
@@ -353,8 +353,8 @@ private theorem letter_lift {L U D M : Type} [Field L] [Field U] [AddCommGroup D
     (F : Type) [Field F] [Algebra L F] (τ : U →+* F) [AddCommGroup M] [Module F M] (g : D →+ M)
     (h1 : ∀ (a : L) x, g (a • x) = algebraMap L F a • g x) (h2 : ∀ c x, g (m c x) = τ c • g x) :
     ∃ Φ : Letter m F τ →ₗ[F] M, ∀ x, Φ (letterMk m F τ x) = g x := by
-  letI : Module L M := Module.compHom _ (algebraMap L F)
-  haveI : IsScalarTower L F M := ⟨fun a c y => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  let : Module L M := Module.compHom _ (algebraMap L F)
+  have : IsScalarTower L F M := ⟨fun a c y => by rw [Algebra.smul_def, mul_smul]; rfl⟩
   let g' : D →ₗ[L] M := { g with map_smul' := h1 }
   have e : ∀ (a : F) x, LinearMap.liftBaseChange F g' (a ⊗ₜ x) = a • g x := fun a x =>
     LinearMap.liftBaseChange_tmul _ _ _ _
@@ -373,7 +373,7 @@ private theorem line_smul {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDime
     (f : End ℂ W) (c : ℂ) (hc : c ∈ f.charpoly.roots) (v : W) : f v = c • v := by
   rw [mem_roots (LinearMap.charpoly_monic _).ne_zero, ← End.hasEigenvalue_iff_isRoot_charpoly] at hc
   obtain ⟨u, hu⟩ := hc.exists_hasEigenvector
-  obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_nonzero' (K := ℂ) u hu.2).mp hd v
+  obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_ne_zero' (K := ℂ) u hu.2).mp hd v
   rw [map_smul, hu.apply_eq_smul, smul_comm]
 
 section
@@ -436,7 +436,7 @@ private theorem exists_semi {K L₁ L₂ : FinExt l}
       ∀ x, Φ (wdMk P ι ρ₁ x) = wdMk P ι ρ₂ (S x) := by
   let θ : ℂ →+* ℂ := ι.toRingHom.comp ((g : Om l →+* Om l).comp ι.symm.toRingHom)
   have hθ : ∀ z, θ (ι z) = ι (g z) := fun z => congrArg (fun t => ι (g t)) (ι.symm_apply_apply z)
-  letI := algC ι L₁
+  let := algC ι L₁
   obtain ⟨Φ, hΦ⟩ := @letter_lift _ _ _ (WDSpace P ι ρ₂) _ _ _ _ (mulD P ρ₁) ℂ _ _ (urC ι) _ (Module.compHom _ θ)
     ((AddMonoidHom.mk' (wdMk P ι ρ₂) (wdMk_add P ι ρ₂)).comp S)
     (fun a x => by
@@ -466,8 +466,8 @@ private theorem eig_conj {L₁ L₂ : FinExt l}
     (hfs : ∀ (a : ↥L₁.1) v, f.toLinearMap (a • v) = s a • f.toLinearMap v) (hV₁ : IsPst P ρ₁)
     (σ : Weil h) (z : Om l) (hz : ι z ∈ (wdPst P ι B h hj ρ₁).eig σ) : ι (g z) ∈ (wdPst P ι B h hj ρ₂).eig σ := by
   have hV₂ := isPst_equiv P f hf hV₁
-  haveI := hV₁.finite
-  haveI := hV₂.finite
+  have := hV₁.finite
+  have := hV₂.finite
   obtain ⟨T, t1, t2, t3, -⟩ := BridgeParam.exists_isTwist P ρ₂ g
   obtain ⟨Φ, hΦ1, hΦ2⟩ := exists_semi P ι g ((T : End ↥L₂.1 ↥(Dpst P ρ₂)).toAddMonoidHom.comp (dQ P hf))
     (fun a => ⟨s a, hs a, fun x => by
@@ -610,15 +610,15 @@ private theorem eo_abs {k K Ω : Type} [Field k] [Field K] [Field Ω] [CharZero 
     [IsAlgClosure k Ω] (τ₀ : K →ₐ[k] Ω) :
     (∀ τ : K →ₐ[k] Ω, ∃ s : Ω ≃ₐ[k] Ω, ∀ x, τ x = s (τ₀ x)) ∧
     ∀ y : Ω, (∀ s : Ω ≃ₐ[k] Ω, (∀ x, τ₀ x = s (τ₀ x)) → y = s y) → ∃ u, y = τ₀ u := by
-  haveI : CharZero k := (algebraMap k K).charZero
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-  haveI : Algebra.IsAlgebraic k Ω := IsAlgClosure.isAlgebraic
-  haveI : Normal k Ω := inferInstance
-  haveI : IsGalois k Ω := inferInstance
+  have : CharZero k := (algebraMap k K).charZero
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : Algebra.IsAlgebraic k Ω := IsAlgClosure.isAlgebraic
+  have : Normal k Ω := inferInstance
+  have : IsGalois k Ω := inferInstance
   constructor
   · intro τ
-    letI : Algebra K Ω := τ₀.toRingHom.toAlgebra
-    haveI : IsScalarTower k K Ω := IsScalarTower.of_algebraMap_eq (fun r => (τ₀.commutes r).symm)
+    let : Algebra K Ω := τ₀.toRingHom.toAlgebra
+    have : IsScalarTower k K Ω := IsScalarTower.of_algebraMap_eq (fun r => (τ₀.commutes r).symm)
     let g := τ.liftNormal Ω
     refine ⟨AlgEquiv.ofBijective g (Algebra.IsAlgebraic.algHom_bijective g), fun x => ?_⟩
     have := τ.liftNormal_commutes Ω x
@@ -639,14 +639,14 @@ theorem UpperTheory.Lit.CharWD.embOrbit :
     EmbOrbit := by
   intro F _ _ l _ w c hc hne
   obtain ⟨τ₀⟩ := hne
-  haveI := eo_over τ₀
+  have := eo_over τ₀
   obtain ⟨f, φ, -, hφc, -, -, -⟩ := KStar.Ram.existsUnique_padic_hom w l
-  letI : Algebra ℚ_[l] (IsDedekindDomain.HeightOneSpectrum.adicCompletion F w) := φ.toAlgebra
+  let : Algebra ℚ_[l] (IsDedekindDomain.HeightOneSpectrum.adicCompletion F w) := φ.toAlgebra
   have toAlg : ∀ τ : UpperTheory.V.W.Emb l w,
       ∃ t : IsDedekindDomain.HeightOneSpectrum.adicCompletion F w →ₐ[ℚ_[l]] Formalism.ConjugateSelfDual.Qbar l,
         ∀ x, t x = τ.1 x :=
     fun τ => ⟨AlgHom.mk τ.1 (fun r => eo_comp τ φ hφc r), fun _ => rfl⟩
-  haveI : CharZero (IsDedekindDomain.HeightOneSpectrum.adicCompletion F w) :=
+  have : CharZero (IsDedekindDomain.HeightOneSpectrum.adicCompletion F w) :=
     charZero_of_injective_algebraMap
       (algebraMap F (IsDedekindDomain.HeightOneSpectrum.adicCompletion F w)).injective
   obtain ⟨t₀, ht₀⟩ := toAlg τ₀
@@ -691,19 +691,19 @@ private theorem place_above {F L Ω : Type} [Field F] [NumberField F] [Field L] 
     ext x
     rw [← hA x, IsScalarTower.algebraMap_apply F L Ω]
     exact hP (algebraMap (𝓞 F) (𝓞 L) x)
-  haveI : P.LiesOver v.asIdeal := ⟨hu⟩
+  have : P.LiesOver v.asIdeal := ⟨hu⟩
   have hne : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot _
   refine ⟨⟨P, inferInstance, hne⟩, hP, ?_⟩
-  haveI : Finite (𝓞 L ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
+  have : Finite (𝓞 L ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
   exact Nat.card_le_card_of_injective _ (FaithfulSMul.algebraMap_injective (𝓞 F ⧸ v.asIdeal) (𝓞 L ⧸ P))
 
 private theorem norm_le_of_pow {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) {q : ℕ}
     (hq : 1 < q) (h : ∀ x : 𝓞 K, x ^ q - x ∈ w.asIdeal) : normV w ≤ q := by
   classical
   have := w.isMaximal
-  letI : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
   have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
   have e : normV w = (Finset.univ : Finset (𝓞 K ⧸ w.asIdeal)).card := Nat.card_eq_fintype_card
   rw [e, ← Polynomial.natDegree_X_pow_sub_X (R := (𝓞 K ⧸ w.asIdeal)) hq]
   refine Polynomial.card_le_degree_of_subset_roots fun y _ => ?_
@@ -718,7 +718,7 @@ private theorem open_sub {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alg
       ∀ s : Weil h, (s : G F Ω) ∈ U → deg s = 0 → (s : G F Ω) ∈ t := by
   have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
   obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one ht h1
-  haveI : Finite (G F Ω ⧸ N.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ N.isOpen
+  have : Finite (G F Ω ⧸ N.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ N.isOpen
   obtain ⟨ζ, hζ⟩ := GlobalTheory.exists_fixed_dvd_deg F Ω A w h (Nat.card (G F Ω ⧸ N.toSubgroup)) Nat.card_pos
   have hst : IsOpen (MulAction.stabilizer (G F Ω) ζ : Set (G F Ω)) := stabilizer_isOpen_of_isIntegral ζ
   obtain ⟨N', hN'⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hst (Subgroup.one_mem _)
@@ -752,11 +752,11 @@ theorem UpperTheory.Lit.CharWD.exField :
   obtain ⟨U, hU, hσU, H⟩ := open_sub h σ hσ t ht h1t
   let F' := IntermediateField.fixedField U
   have hfix : F'.fixingSubgroup = U := InfiniteGalois.fixingSubgroup_fixedField ⟨U, U.isClosed_of_isOpen hU⟩
-  haveI : FiniteDimensional F F' := by
+  have : FiniteDimensional F F' := by
     rw [← InfiniteGalois.isOpen_iff_finite, hfix]
     exact hU
-  haveI nf : NumberField F' := NumberField.of_module_finite F F'
-  haveI ac : IsAlgClosure F' Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) _⟩
+  have nf : NumberField F' := NumberField.of_module_finite F F'
+  have ac : IsAlgClosure F' Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) _⟩
   obtain ⟨w', h', hle⟩ := place_above (L := F') h
   have hact : ActsAs A (normV w) (σ : G F Ω) 0 1 := actsAs_of_deg (by simpa using hσ)
   have hσF : ∀ x : F', (σ : G F Ω) (x : Ω) = x := fun x => x.2 ⟨_, hσU⟩
@@ -848,9 +848,9 @@ private theorem eig_res {F F' Ω : Type} [Field F] [NumberField F] [Field F'] [N
     (h2 : alpha l σ = alpha l σ') :
     (wdPst P ι B' h' hj' (resTo ρ hK)).eig σ' = (wdPst P ι B h hj ρ).eig σ := by
   have hV' : IsPst P (resTo ρ hK) := (GlobalTheory.PstLaws.isPst_resTo_iff P ρ hK).2 hV
-  haveI := hV.finite
-  haveI := hV'.finite
-  letI := algC ι L
+  have := hV.finite
+  have := hV'.finite
+  let := algC ι L
   let T : ↥(Dpst P (resTo ρ hK)) →ₗ[↥L.1] ↥(Dpst P ρ) := Submodule.inclusion (Dpst_resTo P ρ hK).le
   let Φ : WDSpace P ι (resTo ρ hK) →ₗ[ℂ] WDSpace P ι ρ :=
     EnlargeCoeff.chg (mulD P (resTo ρ hK)) (mulD P ρ) ℂ (urC ι) (RingHom.id _) (fun _ => rfl) T.toAddMonoidHom
@@ -941,7 +941,7 @@ theorem UpperTheory.Lit.CharWD.chRes :
       congrArg (fun s => Matrix.toLinAlgEquiv' (r₁ s : Matrix (Fin 1) (Fin 1) ↥L.1)) (hg g)
   have hV' : IsPst (Loc.PP l) (Bw'.repE L (r₁.comp f)) := by
     rw [hrep]; exact (GlobalTheory.PstLaws.isPst_resTo_iff _ _ hK).2 hV
-  haveI : Algebra.IsIntegral F' Ω := (IsAlgClosure.isAlgebraic (R := F') (K := Ω)).isIntegral
+  have : Algebra.IsIntegral F' Ω := (IsAlgClosure.isAlgebraic (R := F') (K := Ω)).isIntegral
   refine ⟨ξ.comp (resWeil h h'), ⟨⟨L, _, hm', hV'⟩, isSmooth_comp_resWeil h h' hs, ?_⟩, fun σ σ' H => ?_⟩
   · refine ParamAboveModel.eq_lpOfChar h' _ (GlobalTheory.Pst.Test.lpDim_wdAt _ ι Bw' h' hj' _) _ _ fun σ => ?_
     have h1 : weilToGK Bw h (resWeil h h' σ) = Subgroup.inclusion (GK_le hK) (weilToGK Bw' h' σ) := by
@@ -1018,8 +1018,8 @@ private theorem ord_zero [Nonempty (Emb l w)] (u : (w.adicCompletion F)ˣ) (hu :
     simpa using this
   have h1 := key u hu
   have h2 := key u⁻¹ (by rw [map_inv, hu, inv_one])
-  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_lt_one₀ (by simp [zero_lt_iff])] at h2
-  haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_lt_one₀ (by simp [pos_iff_ne_zero])] at h2
+  have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact GlobalTheory.SmGL.ord_eq_zero_iff.2 ((ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion F))
       (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ)))).eq_one_iff_eq_one.2
@@ -1143,7 +1143,7 @@ private theorem df_coef (hC : ChCoef) [DecidableEq (Emb l w)] {d d' : Weil h →
     (hC ι h Bw hj s ν _ hν (H ν hν ⟨ph, Hν⟩))) σ
   have e' := congrArg Units.val e
   simp only [MonoidHom.mul_apply, MonoidHom.comp_apply, Units.val_mul, map_mul, alg_val, S, Units.coe_map,
-    MonoidHom.coe_coe, k _ _ (fun n => n) rfl, zpow_one, hs] at e'
+    MonoidHom.coe_ofClass, k _ _ (fun n => n) rfl, zpow_one, hs] at e'
   exact mul_left_cancel₀ (by simp) e'
 
 include hG hB in
@@ -1151,8 +1151,8 @@ private theorem df_cyc (ha : IsLocalArtin h a) {d : Weil h →* (Qbar l)ˣ} (H :
   have hl := Loc.natCast_mem_of_induces h Bw hj
   have hc : Continuous ((cycBar F Ω l).comp (Dec (F := F) A).subtype) :=
     ((Continuous.units_map _ (show Continuous (fun x : ℤ_[l] => algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l])) from
-      (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ F Ω l)).comp
-      continuous_subtype_val
+      (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ F Ω l)).comp
+      continuous_subtypeVal
   refine MonoidHom.ext fun σ => Units.ext ?_
   have h1 := (hB ι h Bw hj).2.2 _ (H _ hc ⟨_, Loc.laCyc hG h hl⟩) σ
   have h2 := Loc.epsArt hG h hl a ha σ
@@ -1215,8 +1215,8 @@ private theorem df_res (hC : ChCoef) (hE : EmbOrbit) (hR : ChRes) (hN : ArtNorm)
   have hr : Continuous r := Af.continuous_restrictScalarsHom _ _ _
   let rD : Dec (F := F') A →* Dec (F := F) A := (r.comp (Dec (F := F') A).subtype).codRestrict _ fun g => g.2
   let rI : Ine (F := F') A →* Ine (F := F) A := (r.comp (Ine (F := F') A).subtype).codRestrict _ fun g => g.2
-  have hrD : Continuous rD := (hr.comp continuous_subtype_val).subtype_mk _
-  have hrI : Continuous rI := (hr.comp continuous_subtype_val).subtype_mk _
+  have hrD : Continuous rD := (hr.comp continuous_subtypeVal).subtype_mk _
+  have hrI : Continuous rI := (hr.comp continuous_subtypeVal).subtype_mk _
   obtain ⟨ν, hν, ph, Hν⟩ := exw ι h Bw hj hG wt
   have hν' : Continuous (ν.comp rD) := hν.comp hrD
   have H2 : IsLocAlg h' (ν.comp rD) (wt ∘ res) := by

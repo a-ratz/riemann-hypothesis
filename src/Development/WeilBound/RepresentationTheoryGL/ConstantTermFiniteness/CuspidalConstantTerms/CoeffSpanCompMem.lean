@@ -275,8 +275,8 @@ theorem bd_der (μ : Measure (GA D V)) [μ.IsHaarMeasure] (hθ : IsInfFam θ) {�
 theorem finite_of_polyGelf : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ → ∀ (V : HSp D) (U : Subgroup (GA D V)), IsOpen (U : Set (GA D V)) → ∀ (ε : D.what₂.Tau → Fin V.rank → Bool) (fr : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ), IsFrameFam V ε fr → ∀ (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] [∀ τ, FiniteDimensional ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (ε τ)) (W τ)), (∀ τ, IsContRep (ρ τ)) → ∀ A : D.what₂.Tau → List ℂ, FiniteDimensional ℂ (Submodule.span ℂ {φ : GA D V → ℂ | IsAutFunSm θ V φ ∧ (∀ u ∈ U, u ∈ GfC V → ∀ g, φ (g * u) = φ g) ∧ (∀ τ, HasTypeAt θ V τ (ε τ) (fr τ) (ρ τ) φ) ∧ IsCuspFun V φ ∧ ∀ τ, (A τ).foldr (fun a f => gelf θ V τ 1 f - a • f) φ = 0}) := by
   intro D θ hθ V U hU ε fr hfr W _ _ _ ρ hρ A
   obtain ⟨μ, -, hμ, -⟩ := PositivityTheory.MatrixIdentityOffBase.exists_meas V
-  haveI := hμ
-  haveI := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
+  have := hμ
+  have := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V μ hμ
   have hop := fun τ => exists_gelfOp (θ := θ) (V := V) (τ := τ) hθ (hfr τ).1 (hfr τ).2
   choose C hCg hCs using hop
   let E : Submodule ℂ (Mc θ V) :=
@@ -1847,7 +1847,7 @@ theorem finite_slices_core : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F
     convert this using 1
     funext h
     simp [Φ, s', LinearMap.funLeft]
-  haveI : FiniteDimensional ℂ (P.map Φ) := Submodule.finiteDimensional_of_le hle
+  have : FiniteDimensional ℂ (P.map Φ) := Submodule.finiteDimensional_of_le hle
   exact LinearEquiv.finiteDimensional (Submodule.equivMapOfInjective Φ hΦ P).symm
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UCore.Rg

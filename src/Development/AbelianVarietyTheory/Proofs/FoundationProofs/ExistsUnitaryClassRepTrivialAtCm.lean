@@ -66,7 +66,7 @@ theorem unit_of_integral {A R : Type} [CommRing A] [CommRing R] (φ : A →+* R)
   obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal (Ideal.span {1 + φ a * x})
     (fun h' => h (Ideal.span_singleton_eq_top.1 h'))
   have h1 : 1 + φ a * x ∈ m := hle (Ideal.mem_span_singleton_self _)
-  have hm' : (m.comap φ).IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' φ hφ m
+  have hm' : (m.comap φ).IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal φ hφ m
   have h2 : a ∈ m.comap φ := by
     by_contra hn
     obtain ⟨y, i, hi, e⟩ := hm'.exists_inv hn
@@ -81,8 +81,8 @@ theorem exists_unit_det {K B : Type} [Field K] [CommRing B] [IsArtinianRing B] (
   have key : ∀ m : MaximalSpectrum B, {z : K | (1 + ι z • h).det ∈ m.asIdeal}.Finite := by
     intro m
     classical
-    haveI := m.isMaximal
-    letI : Field (B ⧸ m.asIdeal) := Ideal.Quotient.field _
+    have := m.isMaximal
+    let : Field (B ⧸ m.asIdeal) := Ideal.Quotient.field _
     let π := Ideal.Quotient.mk m.asIdeal
     let P := ((-h).map π).charpolyRev
     have hP : P ≠ 0 := by
@@ -236,7 +236,7 @@ theorem incInt_integral : (incInt (F := F) (E := E)).IsIntegral := by
     · let ψ : 𝓞 E →+* 𝒮 := (RingHom.comp ιA (algebraMap (𝓞 E) E)).codRestrict _
         fun y => Subring.subset_closure (Or.inl ⟨⟨_, ⟨y, rfl⟩⟩, rfl⟩)
       have h : IsIntegral ℤ (ψ b) := map_isIntegral_int ψ (Algebra.IsIntegral.isIntegral b)
-      letI := (incInt (F := F) (E := E)).toAlgebra
+      let := (incInt (F := F) (E := E)).toAlgebra
       exact h.tower_top (A := intAd F)
     · exact RingHom.isIntegralElem_map (incInt (F := F) (E := E)) (x := y)
   · exact RingHom.isIntegralElem_zero _
@@ -302,11 +302,11 @@ theorem exists_rat (c : E →ₐ[F] E) (hc : ∀ x, c (c x) = x) (hne : ∃ z, c
     | tmul a y => simp [sigR, hc]
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
   have h1 : (1 : Matrix (Fin n) (Fin n) E).map ιA = 1 := Matrix.map_one _ (map_zero _) (map_one _)
-  haveI : Nontrivial (E ⊗[F] v.adicCompletion F) :=
+  have : Nontrivial (E ⊗[F] v.adicCompletion F) :=
     (Algebra.TensorProduct.includeRight_injective (R := F) (A := E) (B := v.adicCompletion F)
       (algebraMap F E).injective).nontrivial
-  haveI : IsArtinianRing (E ⊗[F] v.adicCompletion F) := by
-    haveI : IsArtinianRing (v.adicCompletion F ⊗[F] E) := IsArtinianRing.of_finite (v.adicCompletion F) _
+  have : IsArtinianRing (E ⊗[F] v.adicCompletion F) := by
+    have : IsArtinianRing (v.adicCompletion F ⊗[F] E) := IsArtinianRing.of_finite (v.adicCompletion F) _
     exact (Algebra.TensorProduct.comm F (v.adicCompletion F) E).surjective.isArtinianRing
   set h := (g.map (sigR c 𝔸))ᵀ with hh
   obtain ⟨lam, ⟨hl1, hl2⟩, hu⟩ := exists_unit_det (inclE (F := F) (E := E) (v.adicCompletion F))

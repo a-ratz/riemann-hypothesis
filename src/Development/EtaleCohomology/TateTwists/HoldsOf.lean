@@ -342,7 +342,7 @@ theorem LateralTheory.EtaleFoundations.etaleSimplicialScheme_cocycle_vanishing_a
         = (∑ i : Fin (p + 1 + 2), (-1 : ℤ) ^ (i : ℕ)) • ev α.1 (p + 1) t ht U
           (show Sx (sch.obj X) (p + 1) U from (x : U ⟶ X)) := by
       rw [Finset.sum_smul]; rfl
-    rw [hsum, cob_altsum, if_neg (by omega), one_smul, Int.negOnePow_succ, Units.smul_def] at e
+    rw [hsum, cob_altsum, ite_eq_right (by omega), one_smul, Int.negOnePow_succ, Units.smul_def] at e
     rw [eq_comm, add_eq_zero_iff_eq_neg] at e
     rw [e]; simp
   apply (hb R).2.2.1
@@ -373,7 +373,7 @@ theorem LateralTheory.EtaleFoundations.etaleSimplicialScheme_cocycle_vanishing_a
       have h2 : (2 * j + 1 + 2) % 2 = 1 := by omega
       have h3 : (2 * j + 1) % 2 = 1 := by omega
       simp only [cobB, h1, h2, h3, ↓reduceIte, one_ne_zero, one_smul, smul_smul]
-      rw [if_neg (by omega), cob_map_zero, zero_add, one_mul, hεε, one_smul]
+      rw [ite_eq_right (by omega), cob_map_zero, zero_add, one_mul, hεε, one_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.EtaleCohomology.TateTwists.EtaleSimplicialSchemeCocycleVanishingAtIdIsCobou =====
@@ -728,7 +728,7 @@ theorem umap_comp {W V U : Scheme.{0}} (k : W ⟶ V) (g : V ⟶ U) (a : (Γ(U, �
     Units.map (k ≫ g).appTop.hom.toMonoidHom a =
       Units.map k.appTop.hom.toMonoidHom (Units.map g.appTop.hom.toMonoidHom a) := by
   ext
-  simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   rfl
 
 theorem unit_q {V U : Scheme.{0}} (q : ℕ) (g : V ⟶ U) (hq : IsUnit (q : Γ(U, ⊤))) : IsUnit (q : Γ(V, ⊤)) := by
@@ -789,7 +789,7 @@ theorem D_change (hk : IsKum q (kumT q)) (hp : EtalePrimitiveRootsExistLocally) 
   set A' := Units.map k.appTop.hom.toMonoidHom (Units.map g.appTop.hom.toMonoidHom a')
   set B := Units.map k.appTop.hom.toMonoidHom (Units.map g.appTop.hom.toMonoidHom b)
   have key : (A' : Γ(W', ⊤)) = ζ''.1 ^ n * A := by
-    simp only [A, A', ζ'', Prim.map, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, hac,
+    simp only [A, A', ζ'', Prim.map, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, hac,
       Units.val_mul, map_mul]
     rw [hn]
   unfold D
@@ -1067,16 +1067,16 @@ theorem kum_pow_coc_of (hk : LkumTex) (hmk : LevMk) (hd : LevDelta) (he : kum_ex
     intro p s h V U g x
     by_cases hs : s = 0
     · subst hs
-      simp only [a, dif_pos]
+      simp only [a, dite_eq_left]
       rw [(hk q).1 V U g _ (isUnit_q_pull q x hq)]
       exact congrArg (kumT q V) (units_map_appTop_comp g x u)
-    · simp only [a, dif_neg hs, map_zero]
+    · simp only [a, dite_eq_right hs, map_zero]
   obtain ⟨α, hα⟩ := hmk (ZMod q) a ha
   refine ⟨Cocycle.mk (δ 0 1 α) 2 (by norm_num) (δ_δ 0 1 2 α), ⟨?_, ?_⟩, ?_⟩
   · have key : ∀ (U : Scheme.{0}) (x : Sx (sch.obj X) (0 + 1) U), ev (δ 0 1 α) (0 + 1) 0 (by simp) U x = 0 := by
       intro U x
       rw [(hd (ZMod q) (n := 0) (m := 1) (by norm_num) α U).2 0 (-1) 0 (by simp) (by simp) x, hα]
-      have z : a (0 + 1) (-1) (by simp) U x = 0 := dif_neg (by norm_num)
+      have z : a (0 + 1) (-1) (by simp) U x = 0 := dite_eq_right (by norm_num)
       have f0 : x.face 0 = x.face 1 := rfl
       rw [z, Fin.sum_univ_two, f0]
       simp [Sec.map]
@@ -1088,7 +1088,7 @@ theorem kum_pow_coc_of (hk : LkumTex) (hmk : LevMk) (hd : LevDelta) (he : kum_ex
     have h1 := (hd (ZMod q) (n := 0) (m := 1) (by norm_num) α U).1 x
     refine h1.trans ?_
     erw [hα]
-    simp only [a, dif_pos]
+    simp only [a, dite_eq_left]
     exact e2.symm.trans e1
   · rw [CohomologyClass.mk_eq_zero_iff]
     exact ⟨0, by norm_num, α, rfl⟩

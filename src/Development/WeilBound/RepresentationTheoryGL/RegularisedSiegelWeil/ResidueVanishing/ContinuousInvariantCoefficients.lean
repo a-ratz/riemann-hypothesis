@@ -124,7 +124,7 @@ theorem continuation_chart_defined : KillingPolyConst := by
   have hI := GlobalTheory.Eis.isIwasawa_Khat (GlobalTheory.Core.Rk.IP.hasIwasawa_Khat D A a ha)
   have hIw := GlobalTheory.Core.Rk.IP.hasIwasawa_Khat D A a ha
   obtain ⟨-, hκc'⟩ := GlobalTheory.T.continuous_standardUnitaryChart_and_symm D A μ hμ κ hκ
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   have h1 : Continuous (hgt A a) := hIw.continuous_hgtH continuous_absE (isCompact_Khat A a)
   refine ⟨⟨(h1.comp (hκc'.mul continuous_const)).mul continuous_const, fun g => mul_pos (hgtH_pos _) (hom_pos _ _),
     fun q hq α hα g => ?_⟩, ?_⟩
@@ -135,7 +135,7 @@ theorem continuation_chart_defined : KillingPolyConst := by
         absA D (aP A ⟨κ.symm q, hq'⟩) * hgt A a (κ.symm g * (p : GA D (dblSp A))⁻¹) := hI.iwAbs_left ⟨κ.symm q, hq'⟩ _
     simp only [hgtStd]
     rw [map_mul, mul_assoc (κ.symm q), e, hdet, mul_assoc]
-  · haveI : Submodule.IsFullLattice D.host.E (stdLattice D.host.E (A.rank + A.rank)) := isLattice_stdLattice
+  · have : Submodule.IsFullLattice D.host.E (stdLattice D.host.E (A.rank + A.rank)) := isLattice_stdLattice
     refine ⟨levelOpen D.sp.cm.sig (Jst D A.rank) (stdLattice D.host.E (A.rank + A.rank)), isOpen_levelOpen _ _ _,
       fun k hk hf g => ?_⟩
     have hkK : k ∈ K D A.rank := mem_levelAll.2 ⟨mem_levelOpen.1 hk, fun w => by

@@ -143,7 +143,7 @@ theorem isDiscreteValuationRing_of_maximalIdeal_mul_eq {R : Type*} [CommRing R] 
     refine isUnit_iff_exists_inv.mpr ⟨(J : FractionalIdeal R⁰ (FractionRing R)) *
         ((Ideal.span {t} : Ideal R) : FractionalIdeal R⁰ (FractionRing R))⁻¹, ?_⟩
     rw [← mul_assoc, ← FractionalIdeal.coeIdeal_mul, h,
-      FractionalIdeal.coe_ideal_span_singleton_mul_inv (FractionRing R) ht]
+      FractionalIdeal.coeIdeal_span_singleton_mul_inv (FractionRing R) ht]
   have hprinc := Ideal.IsPrincipal.of_finite_maximals_of_isUnit
     ((Set.finite_singleton (IsLocalRing.maximalIdeal R)).subset
       fun I hI => IsLocalRing.eq_maximalIdeal hI) hunit
@@ -166,7 +166,7 @@ variable [W.IsElliptic]
 theorem exists_eq_XYIdeal {P : Ideal W.toAffine.CoordinateRing} [hP : P.IsPrime] (hP0 : P ≠ ⊥) :
     ∃ x y, W.toAffine.Nonsingular x y ∧ P = XYIdeal W.toAffine x (C y) := by
   obtain ⟨Q, hQdef⟩ : ∃ Q, Q = P.comap (algebraMap F[X] W.toAffine.CoordinateRing) := ⟨_, rfl⟩
-  have hQ0 : Q ≠ ⊥ := fun h => hP0 (Ideal.eq_bot_of_comap_eq_bot (hQdef ▸ h))
+  have hQ0 : Q ≠ ⊥ := fun h => hP0 (Ideal.eq_bot_of_under_eq_bot (hQdef ▸ h))
   have hQ : Q.IsPrime := hQdef ▸ Ideal.IsPrime.comap _
   have hg := Submodule.IsPrincipal.prime_generator_of_isPrime Q hQ0
   obtain ⟨x, hx⟩ := IsAlgClosed.exists_root _ (degree_pos_of_irreducible hg.irreducible).ne'

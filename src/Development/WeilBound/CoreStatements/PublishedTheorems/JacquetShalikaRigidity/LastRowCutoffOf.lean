@@ -88,7 +88,7 @@ theorem integral_split {k : ℕ} (A : (Fin k → Cinf E) → ℂ) (B : (Fin k �
       (∫ x, A x ∂nuInf E k) * ∫ f, B f ∂nuFin E k := by
   have hmp := measurePreserving_arrowProdEquivProdArrow (InfiniteAdeleRing E) (Af E) (Fin k)
     (fun _ => GroundTheory.Global.infiniteAdeleMeasure E) (fun _ => GroundTheory.Global.finiteAdeleMeasure E)
-  haveI : SFinite (nuFin E k) := by unfold nuFin; infer_instance
+  have : SFinite (nuFin E k) := by unfold nuFin; infer_instance
   have e : (fun y : Fin k → Ad E => A (fun i => pInf E (y i)) * B (fun i => pFin E (y i))) =
       fun x => (A ∘ rowEquiv E k) ((MeasurableEquiv.arrowProdEquivProdArrow (InfiniteAdeleRing E) (Af E) (Fin k)) x).1 *
         B ((MeasurableEquiv.arrowProdEquivProdArrow (InfiniteAdeleRing E) (Af E) (Fin k)) x).2 := by
@@ -206,7 +206,7 @@ theorem val_le_one_of_cond {w : Pl E} (hw : Cond ψ w) {L : Set (Af E)}
   have ht : y / pLoc E w z ∈ Formalism.UG.Ov E w := by
     change Valued.v (y / pLoc E w z) ≤ 1
     rw [map_div₀]
-    exact div_le_one_of_le₀ hle zero_le'
+    exact div_le_one_of_le₀ hle zero_le
   have h2 := hz _ (hL _ ht)
   rw [sLoc_mul, div_mul_cancel₀ _ hzw] at h2
   exact hy h2
@@ -231,10 +231,10 @@ theorem exists_val_bound (hψ : StdPsi ψ) (w : Pl E) {L : Set (Af E)} {N : Set 
   have hb0 : Valued.v (pLoc E w z) ≠ 0 := by
     intro h
     rw [h, mul_zero] at h1
-    exact not_lt_of_ge zero_le' h1
+    exact not_lt_of_ge zero_le h1
   have hzw : pLoc E w z ≠ 0 := (map_ne_zero _).1 hb0
-  have hYpos : 0 < Valued.v y := zero_lt_iff.2 hY
-  have hbpos : 0 < Valued.v (pLoc E w z) := zero_lt_iff.2 hb0
+  have hYpos : 0 < Valued.v y := pos_iff_ne_zero.2 hY
+  have hbpos : 0 < Valued.v (pLoc E w z) := pos_iff_ne_zero.2 hb0
   have hdY : Valued.v d * Valued.v y ≤ g := (le_div_iff₀ hYpos).1 hd
   have ht : y / pLoc E w z ∈ N := by
     refine hγ ?_
@@ -333,7 +333,7 @@ theorem chiInf_nondeg {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (z : Cinf E)
     rw [e]
     exact h _
   obtain ⟨w⟩ := nonempty_pl (E := E)
-  haveI : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
+  have : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
   have h0 : ((pFin E).comp (algebraMap E (Ad E))) d = 0 := by
     change pFin E (algebraMap E (Ad E) d) = 0
     rw [← hd, pFin_sInf]
@@ -367,7 +367,7 @@ def dotL (E : Type) [Field E] [NumberField E] (k : ℕ) :
 
 theorem dotL_apply {E : Type} [Field E] [NumberField E] {k : ℕ} (x z : Fin k → Cinf E) :
     dotL E k x z = ∑ i, x i * z i := by
-  simp [dotL, ContinuousLinearMap.sum_apply]
+  simp [dotL, sum_apply]
 
 theorem exists_pairing : ∀ {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {k : ℕ} {ψ : AddChar (Ad E) ℂ}, S8 → StdPsi ψ → ∃ β : (Fin k → Cinf E) →L[ℝ] (Fin k → Cinf E) →L[ℝ] ℝ, (∀ y, (∀ x, β x y = 0) → y = 0) ∧ ∀ x z : Fin k → Cinf E, ψ (sInf E (∑ i, x i * z i)) = Complex.exp (-((β x z : ℝ) : ℂ) * Complex.I) := by
   intro E _ _ _ k ψ h8 hψ
@@ -606,9 +606,9 @@ theorem contDiff_lastEnt : ContDiff ℝ ∞ (lastEnt : (Fin k → Cinf E) → Ci
   unfold lastEnt
   refine ContDiff.sum fun c _ => ?_
   by_cases h : (c : ℕ) + 1 = k
-  · simp only [if_pos h]
+  · simp only [ite_eq_left h]
     exact contDiff_apply ℝ (fun _ : Fin k => Cinf E) c
-  · simp only [if_neg h]
+  · simp only [ite_eq_right h]
     exact contDiff_const
 
 theorem isOpen_lastEnt_unit : IsOpen {x : Fin k → Cinf E | IsUnit (lastEnt x)} :=
@@ -634,9 +634,9 @@ theorem contDiffOn_tauM :
   · have e : ∀ x : Fin k → Cinf E, tauM x i c = rowI x c := fun x => rowM_apply_last _ i c hi
     simp only [e]
     by_cases hc : (c : ℕ) + 1 = k
-    · simp only [rowI, if_pos hc]
+    · simp only [rowI, ite_eq_left hc]
       exact hinv
-    · simp only [rowI, if_neg hc]
+    · simp only [rowI, ite_eq_right hc]
       exact ((contDiff_apply ℝ (fun _ : Fin k => Cinf E) c).contDiffOn.mul hinv).neg
   · have e : ∀ x : Fin k → Cinf E, tauM x i c = (1 : Matrix (Fin k) (Fin k) (Cinf E)) i c :=
       fun x => rowM_apply_ne _ i c hi
@@ -840,7 +840,7 @@ theorem prod_rt (l : List (Pl E)) (u : ∀ w : Pl E, GL (Fin k) (w.adicCompletio
   induction l with
   | nil => simp
   | cons w t ih =>
-    simp only [List.map_cons, List.prod_cons, map_mul, ContinuousLinearMap.mul_apply]
+    simp only [List.map_cons, List.prod_cons, map_mul, mul_apply_eq_comp]
     rw [ih fun v hv => h v (List.mem_cons_of_mem _ hv)]
     exact h w List.mem_cons_self
 
@@ -851,7 +851,7 @@ theorem glue_rt (S : Finset (Pl E)) (a : GL (Fin k) (Cinf E))
   have h1 : Rt E k P φ = φ := prod_rt _ u φ fun w hw => h w (Finset.mem_toList.1 hw)
   have h2 : Rt E k P⁻¹ φ = φ := by
     conv_lhs => rw [← h1]
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]
     rfl
   have e : φ (g * (glue S a u)⁻¹) = Rt E k P⁻¹ φ (g * (infGL E k a)⁻¹) := by
     rw [Rt_apply, glue, _root_.mul_inv_rev, mul_assoc]
@@ -894,7 +894,7 @@ theorem inf_ft (h4 : S4) (h8 : S8) {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) {
       ‖∫ x, (b x : ℂ) * φ (g * (infGL E k (rowGL x))⁻¹) * ψ (sInf E (∑ i, x i * z i)) ∂nuInf E k‖ ≤
         C * ((1 + ‖z‖) ^ M)⁻¹ := by
   obtain ⟨β, hβ, hψβ⟩ := _root_.GlobalTheory.CompanionTheory.JSPair.exists_pairing (E := E) (k := k) h8 hψ
-  haveI := GlobalTheory.T.infinite_vector_measure_isAddHaar E k
+  have := GlobalTheory.T.infinite_vector_measure_isAddHaar E k
   set F : (Fin k → Cinf E) → XB E k := fun x => (b x : ℂ) • Rt E k (infGL E k (rowGL x))⁻¹ φ with hF
   have hFs : ContDiff ℝ ∞ F := GlobalTheory.T.smooth_cutoff_translate_contDiff hφ hb hu
   have hFc : HasCompactSupport F := by
@@ -954,7 +954,7 @@ theorem lastRowM_one {R : Type} [CommRing R] : lastRowM (1 : Matrix (Fin k) (Fin
       · exact Matrix.one_apply_ne hb
       · rfl
     · simp
-  · rw [lastRowM, eRow, if_neg hc]
+  · rw [lastRowM, eRow, ite_eq_right hc]
     refine Finset.sum_eq_zero fun i _ => ?_
     split_ifs with h
     · exact Matrix.one_apply_ne (fun e : i = c => hc (e ▸ h))
@@ -977,7 +977,7 @@ theorem boxL_isClopen {L : Set (Af E)} (h1 : IsOpen L) (h2 : IsClosed L) (c : Fi
 theorem boxL_isCompact {L : Set (Af E)} (h : IsCompact L) (c : Fin k → Af E) : IsCompact (boxL L c) := by
   have e : boxL L c = Set.pi Set.univ fun i => (fun t => t + c i) '' L := by
     ext f
-    simp only [boxL, Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_image]
+    simp only [boxL, Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_image]
     exact forall_congr' fun i => ⟨fun hf => ⟨_, hf, by simp⟩, by rintro ⟨t, ht, e⟩; rw [← e]; simpa using ht⟩
   rw [e]
   exact isCompact_univ_pi fun i => h.image (continuous_id.add continuous_const)
@@ -1211,7 +1211,7 @@ theorem cut_of (h0 : PositivityTheory.jumpWindows.G0) (h4 : S4) (h8 : S8) (hk : 
 
 theorem exists_cut : S4 → S8 → PositivityTheory.jumpWindows.G0 → LastRowCutoff := by
   intro h4 h8 h0 E _ _ _ k hk ψ hψ S hS U hU φ hφ hLv
-  haveI : LocallyCompactSpace (GA E k) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : LocallyCompactSpace (GA E k) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
   obtain ⟨C₀, hC₀n, hC₀U, hC₀c⟩ := local_compact_nhds hU
   obtain ⟨Wi, hWi, N, hN, hglue⟩ := glue_nhds h0 S hC₀n
   have hCi : ∀ᶠ x in 𝓝 (eRow (Cinf E) k), IsUnit (lastEnt x) ∧ rowGL x ∈ Wi :=
@@ -1228,7 +1228,7 @@ theorem exists_cut : S4 → S8 → PositivityTheory.jumpWindows.G0 → LastRowCu
   have hnorm : 1 ≤ ‖eRow (Cinf E) k‖ := by
     have hl : ((⟨k - 1, by omega⟩ : Fin k) : ℕ) + 1 = k := by simp; omega
     have h1 := norm_le_pi_norm (eRow (Cinf E) k) ⟨k - 1, by omega⟩
-    rw [eRow, if_pos hl, norm_one] at h1
+    rw [eRow, ite_eq_left hl, norm_one] at h1
     exact h1
   have hloc : ∀ w ∈ S, ∃ B : AddSubgroup (w.adicCompletion E), IsOpen (B : Set (w.adicCompletion E)) ∧
       (B : Set (w.adicCompletion E)) ⊆ (Formalism.UG.Ov E w : Set (w.adicCompletion E)) ∧
@@ -1254,7 +1254,7 @@ theorem exists_cut : S4 → S8 → PositivityTheory.jumpWindows.G0 → LastRowCu
     refine ⟨B, hBo, hB2, fun u hu => ?_⟩
     have hm : (u - eRow _ k) ∈ (I : Set (Fin k)).pi t := fun i _ => Set.mem_iInter.1 (hB1 (hu i)) i
     have := hts hm
-    simp only [Set.mem_setOf_eq, sub_add_cancel] at this
+    simp only [Set.mem_ofPred_eq, sub_add_cancel] at this
     exact ⟨⟨this.1, this.2.2⟩, this.2.1⟩
   choose! B hBo hBI hBu using hloc
   refine ⟨etaOf f (latS S B : Set (Af E)), sOf S, ?_⟩

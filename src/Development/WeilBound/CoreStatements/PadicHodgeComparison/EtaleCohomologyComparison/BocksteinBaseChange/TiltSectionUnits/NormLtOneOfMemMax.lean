@@ -219,7 +219,7 @@ theorem norm_lt_one_of_mem_max {m : OK l K} (hm : m ∈ IsLocalRing.maximalIdeal
 
 theorem exists_pow_mem_span : ∃ n : ℕ, ∀ y ∈ IsLocalRing.maximalIdeal (OK l K),
     okToOC l K y ^ l ^ n ∈ Ideal.span {((l : ℕ) : OC l)} := by
-  haveI := OK_dvr (l := l) (K := K)
+  have := OK_dvr (l := l) (K := K)
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (OK l K)
   have h1 := norm_lt_one_of_irreducible hϖ
   have h0 : 0 < ‖((l : ℕ) : ℂ_[l])‖ := norm_pos_iff.2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)

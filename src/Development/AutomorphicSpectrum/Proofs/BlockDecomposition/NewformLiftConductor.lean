@@ -85,7 +85,7 @@ theorem mem_unitFiltrationUnits_iff_inv_mul {j : ℕ} (hj : 1 ≤ j) {y : F} (hy
   have hy0 : ValuativeRel.valuation F y ≠ 0 := by simpa using hy
   have h1 : y⁻¹ * ((u : F) - 1) ∈ 𝒪[F] ↔ ValuativeRel.valuation F (y⁻¹ * ((u : F) - 1)) ≤ 1 := Iff.rfl
   rw [mem_unitFiltrationUnits_iff hj hϖ, h1, map_mul, map_inv₀, ← hval, mul_comm,
-    ← div_eq_mul_inv, div_le_one₀ (zero_lt_iff.2 hy0)]
+    ← div_eq_mul_inv, div_le_one₀ (pos_iff_ne_zero.2 hy0)]
 
 theorem ord_neg_one : ord (-1 : F) = 0 := by
   simp [ord]
@@ -329,7 +329,7 @@ theorem conductor_eq (h : Om N χ ω) (hχ : χ.IsPrimitive)
         exact (hpr v).one_lt.ne' (Nat.dvd_one.1 this)
       have hnn0 : nn ≠ 0 := by rintro h0; rw [h0] at hpn; exact hpn (dvd_zero p)
       have hMd : (M : ℤ) ∣ (nn : ℤ) - 1 := by
-        haveI : NeZero M := ⟨hM0⟩
+        have : NeZero M := ⟨hM0⟩
         rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
         have h1 : (((t : ZMod N)).cast : ZMod M) = 1 := by
           have := congrArg Units.val (MonoidHom.mem_ker.1 ht)
@@ -443,7 +443,7 @@ theorem sign_eq (h : Om N χ ω) (k : ℕ) (hk : χ (-1) = (-1) ^ k) (S : Finset
     split_ifs
     · simpa using ord_neg_one
     · exact ord_one' w
-  · rw [lf_eq, hd, if_pos (hS w hw)]
+  · rw [lf_eq, hd, ite_eq_left (hS w hw)]
     simp
 
 theorem f0b : Ad3.R.B0 → Ad3.R.F0b := by

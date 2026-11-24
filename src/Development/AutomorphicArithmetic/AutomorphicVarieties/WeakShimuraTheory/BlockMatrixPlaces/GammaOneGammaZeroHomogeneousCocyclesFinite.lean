@@ -90,19 +90,19 @@ private theorem killSub_closed (ρ : Representation R Γ M) (hρ : ∀ m, IsLoca
     (hz : ∀ g h, z (g * h) = z g + ρ g (z h)) (hl : IsLocallyConstant z) : IsClosed (killSub ρ hz : Set Γ) := by
   have e : (killSub ρ hz : Set Γ) = (⋂ m : M, {g | ρ g m = m}) ∩ {g | z g = 0} := by
     ext g
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     exact and_congr_left' LinearMap.ext_iff
   rw [e]
   exact IsClosed.inter (isClosed_iInter fun m => (hρ m).isClosed_fiber m) (hl.isClosed_fiber 0)
 
 private theorem module_finite_z1_padicInt [TopologicalSpace M] [DiscreteTopology M] [Finite M] (ρ : Representation R Γ M) [Finite (H1 ρ)] :
     Finite (Z1 ρ) := by
-  haveI : Finite (B1 ρ) := (Set.finite_range (d0 ρ)).to_subtype
-  haveI : Finite ((B1 ρ).comap (Z1 ρ).subtype) :=
+  have : Finite (B1 ρ) := (Set.finite_range (d0 ρ)).to_subtype
+  have : Finite ((B1 ρ).comap (Z1 ρ).subtype) :=
     Finite.of_injective (fun x => (⟨x.1.1, x.2⟩ : B1 ρ)) fun x y h =>
       Subtype.ext (Subtype.ext (congrArg (fun z : B1 ρ => z.1) h))
-  haveI : Finite ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup := this
-  haveI : Finite (Z1 ρ ⧸ ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup) := ‹Finite (H1 ρ)›
+  have : Finite ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup := this
+  have : Finite (Z1 ρ ⧸ ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup) := ‹Finite (H1 ρ)›
   exact Finite.of_addSubgroup_quotient ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup
 
 end
@@ -112,9 +112,9 @@ theorem UpperTheory.V.Ws.Bl.zcFin :
           ∀ K : Subgroup (G ℚ Ω), K ≤ ρ.ker → (∀ A, Raw.Away S A → Ine (F := ℚ) A ≤ K) → ∀ P : Set M, (Zc (fun g m => ρ g m) c (neSet l K) (Dec (F := ℚ) B) P).Finite := by
   intro hGF Ω _ _ _ l _ S c s B hP R M _ _ _ _ ρ r hr hρ K hK hI P
   obtain ⟨S', -, -, hS, -, -, -, hN⟩ := UpperTheory.V.Ws.Bl.placeSet S B hP.prime hP.mem hP.ovl
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
-  haveI : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
+  have : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hr' : ∀ m : M, (l ^ (r + 1)) • m = 0 := fun m => by rw [pow_succ', mul_smul, hr, smul_zero]
   obtain ⟨inst⟩ : Nonempty (Module (ZMod (l ^ (r + 1))) M) := ⟨AddCommGroup.zmodModule hr'⟩
   have h0 : ∀ g h : G ℚ Ω, (0 : G ℚ Ω → M) (g * h) = (0 : G ℚ Ω → M) g + ρ g ((0 : G ℚ Ω → M) h) := by simp
@@ -131,8 +131,8 @@ theorem UpperTheory.V.Ws.Bl.zcFin :
     rw [← QuotientGroup.isOpenQuotientMap_mk.continuous_comp_iff]
     exact (hρ m).continuous
   obtain ⟨-, f1, -⟩ := hGF ℚ Ω l (r + 1) M S' ρS r.succ_pos hS hρS
-  haveI := f1
-  haveI := module_finite_z1_padicInt ρS
+  have := f1
+  have := module_finite_z1_padicInt ρS
   refine (Set.finite_range fun z : Z1 ρS => z.1 ∘ toGS Ω (S' : Set (HeightOneSpectrum (𝓞 ℚ)))).subset ?_
   rintro z ⟨y, hz⟩
   have hle : NS Ω (S' : Set (HeightOneSpectrum (𝓞 ℚ))) ≤ killSub ρ hz.coc :=

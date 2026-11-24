@@ -307,7 +307,7 @@ theorem coefD_taylor (dual : Bool) (hσ : IsURepOn (UJset ε) σ) (hD : IsDerive
     have hσs : HasSum (fun k : ℕ => (s : ℂ) ^ k / (k.factorial : ℂ) * L c d k)
         (lc c (σ (NormedSpace.exp ((s : ℂ) • X)) ((w d : D) : H))) := by
       refine horb'.congr_fun fun k => ?_
-      simp only [L, Y, ContinuousLinearMap.one_apply, map_smul, smul_eq_mul, sub_zero]
+      simp only [L, Y, one_apply_eq_self, map_smul, smul_eq_mul, sub_zero]
       push_cast
       ring
     have hσ' : Summable fun k : ℕ => ‖(s : ℂ) ^ k / (k.factorial : ℂ) * L c d k‖ := by

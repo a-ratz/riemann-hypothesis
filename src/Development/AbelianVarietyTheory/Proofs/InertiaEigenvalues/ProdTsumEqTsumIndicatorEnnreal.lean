@@ -76,7 +76,7 @@ theorem tsum_pi_prod_ennreal' : ∀ {ι : Type} [Fintype ι] {X : ι → Type} (
     (P := fun ι _ => ∀ {X : ι → Type} (φ : ∀ i, X i → ℝ≥0∞),
       ∑' x : ∀ i, X i, ∏ i, φ i (x i) = ∏ i, ∑' y, φ i y) ?_ ?_ ?_ ι
   · intro α β _ e h X φ
-    letI : Fintype α := Fintype.ofEquiv β e.symm
+    let : Fintype α := Fintype.ofEquiv β e.symm
     have h1 := h (X := fun a => X (e a)) (fun a => φ (e a))
     rw [← (Equiv.piCongrLeft X e).tsum_eq]
     calc ∑' x : ∀ a, X (e a), ∏ b, φ b (Equiv.piCongrLeft X e x b)
@@ -192,7 +192,7 @@ theorem hasProd_tsum_finsupp_ennreal (f : I → X → ℝ≥0∞) (hf0 : ∀ v, 
   classical
   have hmono : Monotone (fun S : Finset I => ∏ v ∈ S, ∑' x, f v x) := by
     intro S T hST
-    exact Finset.prod_le_prod_of_subset_of_one_le' hST
+    exact Finset.prod_le_prod_of_subset_of_one_le hST
       (fun v _ _ => (hf0 v).symm.le.trans (ENNReal.le_tsum 0))
   have hsup : ⨆ S : Finset I, ∏ v ∈ S, ∑' x, f v x = ∑' l : I →₀ X, l.prod f := by
     simp_rw [prod_tsum_eq_tsum_indicator_ennreal f hf0]
@@ -220,7 +220,7 @@ theorem summable_norm_local (f : I → X → ℂ)
     Summable fun x => ‖f v x‖ := by
   have h1 : Summable fun x : {x : X // x ≠ 0} => ‖f v x‖ :=
     ((summable_prod_of_nonneg fun _ => norm_nonneg _).1 hsum).1 v
-  haveI : Finite ↥({x : X | x ≠ 0}ᶜ) :=
+  have : Finite ↥({x : X | x ≠ 0}ᶜ) :=
     ((Set.finite_singleton (0 : X)).subset (by intro x hx; simpa using hx)).to_subtype
   exact (summable_subtype_and_compl (s := {x : X | x ≠ 0})).1 ⟨h1, Summable.of_finite⟩
 

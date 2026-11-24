@@ -269,7 +269,7 @@ theorem ee_free : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l 
   have hφ : W.φ₀ = GlobalTheory.Cyc.phi l ↥(OL LL) :=
     (GlobalTheory.NL.CycRing.rings_cyclotomic D HW l K s LL h).choose_spec.2.1
   have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
-  haveI := W.EE_complete
+  have := W.EE_complete
   have hl0' : ((l : ℕ) : PowerSeries ↥(OL LL)) ≠ 0 := by
     intro h0
     apply hl0

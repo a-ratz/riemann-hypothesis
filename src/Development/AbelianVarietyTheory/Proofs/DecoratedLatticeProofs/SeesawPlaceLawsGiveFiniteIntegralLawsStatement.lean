@@ -104,7 +104,7 @@ theorem finite_res (v : HeightOneSpectrum (𝓞 F)) :
         rw [Valued.mem_nhds_zero]
         exact ⟨1, fun z hz => by simpa using hz⟩
       have h2 : Filter.Tendsto (fun z : v.adicCompletion F => z - x) (nhds (x : v.adicCompletion F)) (nhds 0) := by
-        have : IsTopologicalAddGroup (v.adicCompletion F) := IsUniformAddGroup.to_topologicalAddGroup
+        have : IsTopologicalAddGroup (v.adicCompletion F) := IsUniformAddGroup.isTopologicalAddGroup
         have : Continuous fun z : v.adicCompletion F => z - x := continuous_id.sub continuous_const
         simpa using this.tendsto (x : v.adicCompletion F)
       exact h2 h1
@@ -235,7 +235,7 @@ theorem glue [IsTopologicalGroup G] {p q r : G →* G} (hp : Continuous p) (hq :
       ext g
       exact ⟨fun h => h.2, fun h => ⟨g.2, h⟩⟩
     rw [this]
-    exact oU.preimage (hc.comp continuous_subtype_val)
+    exact oU.preimage (hc.comp continuous_subtypeVal)
 
 end Grp
 
@@ -320,7 +320,7 @@ theorem stab_compact_open [T2Space S] {φ : G →* GL n S} (hφ : IsClosedEmbedd
     (hP : ∀ g, g ∈ P ↔ cut e (φ g).val = (φ g).val) :
     ∃ K ≤ P, IsCompact (K : Set G) ∧ IsOpen (K.subgroupOf P : Set P) ∧
       ∀ g, g ∈ K ↔ g ∈ P ∧ ∀ y : n → S, e • y = y → (y ∈ Λ ↔ (φ g).val *ᵥ y ∈ Λ) := by
-  have tg : IsTopologicalGroup G := hφ.isInducing.topologicalGroup φ
+  have tg : IsTopologicalGroup G := hφ.isInducing.isTopologicalGroup φ
   have cm : Continuous fun g => (φ g).val := Units.continuous_val.comp hφ.continuous
   let T : Subgroup G :=
     { carrier := {g | (∀ z ∈ Λ, (φ g).val *ᵥ z ∈ Λ) ∧ ∀ z ∈ Λ, (φ g⁻¹).val *ᵥ z ∈ Λ}
@@ -363,7 +363,7 @@ theorem stab_compact_open [T2Space S] {φ : G →* GL n S} (hφ : IsClosedEmbedd
       ext g
       exact ⟨fun h => h.2, fun h => ⟨g.2, h⟩⟩
     rw [this]
-    exact oT.preimage continuous_subtype_val
+    exact oT.preimage continuous_subtypeVal
   · refine and_congr_right fun _ => ⟨fun h y _ => ⟨h.1 y, fun hy => ?_⟩, fun h => ⟨fun z hz => (h z (he z hz)).1 hz,
       fun z hz => (h _ ?_).2 ?_⟩⟩
     · have := h.2 _ hy
@@ -391,7 +391,7 @@ theorem level [T2Space S] {φ : G →* GL n S} (hφ : IsClosedEmbedding φ) {e f
     ∃ M ≤ Γ, IsCompact (M : Set G) ∧ IsOpen (M.subgroupOf Γ : Set Γ) ∧
       ∀ k, k ∈ M ↔ ∃ κ x y, (κ ∈ P ∧ ∀ y : n → S, e • y = y → (y ∈ Λ ↔ (φ κ).val *ᵥ y ∈ Λ)) ∧
         x ∈ J ∧ y ∈ L ∧ k = b⁻¹ * (κ * x * y) * b := by
-  have tg : IsTopologicalGroup G := hφ.isInducing.topologicalGroup φ
+  have tg : IsTopologicalGroup G := hφ.isInducing.isTopologicalGroup φ
   obtain ⟨K, lK, cK, oK, iK⟩ := stab_compact_open hφ hΛ ho hs hy iP
   obtain ⟨p, hp, ep⟩ := exists_proj hφ.isEmbedding he se
   obtain ⟨q, hq, eq⟩ := exists_proj hφ.isEmbedding hf sf
@@ -508,7 +508,7 @@ theorem lattice {n : ℕ} {N : Submodule (𝓞 E) (Fin n → E)} (hN : Submodule
       ∀ j, (e ⊗ₜ[F] (1 : E) : R ⊗[F] E) • Pi.single j (1 : R ⊗[F] E) ∈
         Submodule.span (R ⊗[F] E) (Λ : Set (Fin n → R ⊗[F] E)) := by
   have := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
-  have := IsModuleTopology.topologicalAddGroup R (R ⊗[F] E)
+  have := IsModuleTopology.isTopologicalAddGroup R (R ⊗[F] E)
   obtain ⟨m, x, hxN, hz, hF⟩ := span_lattice (F := F) hN
   set ψ := Fintype.linearCombination R fun k i => ((1 : R) ⊗ₜ[F] x k i : R ⊗[F] E) with hψ
   have hq := IsModuleTopology.isOpenQuotientMap_of_surjective (comb_surjective (R := R) hF)
@@ -628,8 +628,8 @@ def idemF (P : HeightOneSpectrum (𝓞 F) → Prop) : Af F :=
     · simp only [if_pos h]; exact (v.adicCompletionIntegers F).one_mem
     · simp only [if_neg h]; exact (v.adicCompletionIntegers F).zero_mem⟩
 
-theorem idemF_pos {P : HeightOneSpectrum (𝓞 F) → Prop} {v} (h : P v) : evalV F v (idemF P) = 1 := if_pos h
-theorem idemF_neg {P : HeightOneSpectrum (𝓞 F) → Prop} {v} (h : ¬ P v) : evalV F v (idemF P) = 0 := if_neg h
+theorem idemF_pos {P : HeightOneSpectrum (𝓞 F) → Prop} {v} (h : P v) : evalV F v (idemF P) = 1 := ite_eq_left h
+theorem idemF_neg {P : HeightOneSpectrum (𝓞 F) → Prop} {v} (h : ¬ P v) : evalV F v (idemF P) = 0 := ite_eq_right h
 
 def idem (P : HeightOneSpectrum (𝓞 F) → Prop) : AF F := pairA F 0 (idemF P)
 

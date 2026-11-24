@@ -79,7 +79,7 @@ theorem isCanonGauge_mapFB {S S' : Type} [CommRing S] [Algebra ℚ S] [CommRing 
     (ψ : S →+* S') {d : ℕ} {O : Type} [CommRing O] [StarRing O] (B : Germ.FB S d O)
     (h : Germ.PS S 2 d) (hh : B.IsCanonGauge S h) :
     (FBMap.mapFB ψ B).IsCanonGauge S' (MvPowerSeries.map ψ h) := by
-  letI : Algebra S S' := ψ.toAlgebra
+  let : Algebra S S' := ψ.toAlgebra
   have H : B.IsCanonGauge S' (MvPowerSeries.map ψ h) :=
     GaugeBaseChange.isCanonGauge_map B (Algebra.ofId S S') hh
   have hK : ∀ {n : ℕ} (f : Germ.PS S n d),

@@ -150,7 +150,7 @@ variable {l : ℕ} [hl : Fact l.Prime] {Ω : Type} [Field Ω] [CharZero Ω] [IsA
 private theorem dec_le {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 ℚ)} (hv : IsPlaceOver A v) {γ : G ℚ Ω}
     (hγ : IsFrob A (normV v) γ) (K : Subgroup (G ℚ Ω)) (hI : Ine (F := ℚ) A ≤ K) (hK : γ ∈ K) :
     Dec (F := ℚ) A ≤ K.topologicalClosure := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   have key := ProfiniteGrp.closedSubgroup_eq_sInf_open (G := G ℚ Ω) ⟨K.topologicalClosure, Subgroup.isClosed_topologicalClosure _⟩
   refine le_trans (le_sInf ?_) key.ge
   rintro N ⟨hNo, hN⟩

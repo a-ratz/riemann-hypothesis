@@ -134,10 +134,10 @@ theorem bddSec_tendsto_constTerm : ∀ (E : Type) [Field E] [NumberField E] [IsC
         exact tendsto_const_nhds
       by_cases hν : ν = 0
       · subst hν
-        simp only [hF', if_true, Finset.sum_const_zero, Pi.zero_apply, mul_zero, zero_mul, neg_zero,
+        simp only [hF', ite_true, Finset.sum_const_zero, Pi.zero_apply, mul_zero, zero_mul, neg_zero,
           Real.exp_zero, Complex.ofReal_one, _root_.mul_one]
         exact tendsto_const_nhds
-      · rw [if_neg hν]
+      · rw [ite_eq_right hν]
         have hnn := hsign ν h0
         obtain ⟨τ0, hτ0⟩ : ∃ τ0, ν τ0 ≠ 0 := by
           by_contra hc; push_neg at hc; exact hν (funext hc)
@@ -252,13 +252,13 @@ theorem finite_reps (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ)
   have hN0 : (N : E) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
   set A := X.Λ.toAddSubgroup
   have hfg : A.FG := by
-    haveI : Module.Finite (𝓞 E) X.Λ := Module.Finite.iff_fg.2 X.Λ_fg
-    haveI : Module.Finite ℤ X.Λ := Module.Finite.trans (𝓞 E) X.Λ
+    have : Module.Finite (𝓞 E) X.Λ := Module.Finite.iff_fg.2 X.Λ_fg
+    have : Module.Finite ℤ X.Λ := Module.Finite.trans (𝓞 E) X.Λ
     exact (AddGroup.fg_iff_addSubgroup_fg _).1 (Module.Finite.iff_addGroup_fg.1 this)
-  haveI : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg _).2 hfg
+  have : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg _).2 hfg
   set K := (nsmulAddMonoidHom (α := A) (N * N)).range
-  haveI : K.FiniteIndex := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg A (mul_ne_zero hN.ne' hN.ne')
-  haveI : Fintype (Set (A ⧸ K)) := Fintype.ofFinite _
+  have : K.FiniteIndex := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg A (mul_ne_zero hN.ne' hN.ne')
+  have : Fintype (Set (A ⧸ K)) := Fintype.ofFinite _
   let f : GL (Fin r) E → Set (A ⧸ K) := fun a =>
     (QuotientAddGroup.mk : A → A ⧸ K) '' {v | InL X' N a (v : Fin r → E)}
   have hf : ∀ a, QMatch X X' N a → ∀ v : A,
@@ -287,7 +287,7 @@ theorem finite_reps (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ)
   refine ⟨((Finset.univ ×ˢ S0).image fun p => p.2⁻¹ * rep p.1).filter (QMatch X X' N),
     fun s hs => (Finset.mem_filter.1 hs).2, fun a ha => ?_⟩
   have hex : ∃ a', QMatch X X' N a' ∧ f a' = f a := ⟨a, ha, rfl⟩
-  have hrep : rep (f a) = hex.choose := dif_pos hex
+  have hrep : rep (f a) = hex.choose := dite_eq_left hex
   obtain ⟨ha', hfa⟩ := hex.choose_spec
   have hP : ∀ v ∈ X.Λ, InL X' N hex.choose v ↔ InL X' N a v := by
     intro v hv
@@ -393,7 +393,7 @@ open GlobalTheory.HeckeEx.Dom in
 theorem GlobalTheory.HeckeEx.mem_SS_of_dom : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (I₀ : Type) [Finite I₀] (X' : I₀ → Data E r) (la : Wt X.Ψ r) (la' : ∀ j, Wt (X' j).Ψ r) (P : Frame X.Ψ r → ℂ) (Q : ∀ j, Frame (X' j).Ψ r → ℂ) (N : ℕ) (M : ℝ), 0 < N → 0 ≤ M → X.IsSec la P → (∀ j, Q j ∈ (X' j).SS (la' j)) → (∀ j a (h : QMatch X (X' j) N a) τ m, la' j τ m = la ⟨τ.1, h.mem τ⟩ m) → (∀ x ∈ X.dom, ∀ B : ℝ, 0 ≤ B → (∀ j a (h : QMatch X (X' j) N a), ‖Q j (lact a (castFr h.psi x))‖ ≤ B) → ‖P x‖ ≤ M * B) → P ∈ X.SS la := by
   intro E _ _ _ r X I₀ _ X' la la' P Q N M hN hM hP hQ hl hdom
   classical
-  haveI : Fintype I₀ := Fintype.ofFinite I₀
+  have : Fintype I₀ := Fintype.ofFinite I₀
 
   choose C hC using fun j => (hQ j).1.2
   have hbd : ∀ x ∈ X.dom, X.pnorm la P x ≤ M * ∑ j, |C j| := fun x hx => by

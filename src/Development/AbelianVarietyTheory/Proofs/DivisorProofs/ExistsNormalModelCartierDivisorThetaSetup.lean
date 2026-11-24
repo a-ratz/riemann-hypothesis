@@ -140,7 +140,7 @@ theorem subsingleton_lattice_of_extends : ∀ (g n : ℕ) (o : Type) [CommRing o
   intro g n o _ ζ F T ξ hξ
 
   have hB := GlobalTheory.isAbelianScheme_pullback_obj ξ F.univ.A F.univ.ab
-  haveI := T.U.gen_hom
+  have := T.U.gen_hom
 
   have h₁ := ((isGrpPullback_of_iso T.U.gen).comp T.cart).congr ((Category.id_comp _).trans hξ.symm) rfl
   have h₂ := (isGrpPullback_pullback ((Over.pullback ξ).obj F.univ.A) (jK T.V)).comp (isGrpPullback_pullback F.univ.A ξ)
@@ -157,7 +157,7 @@ theorem subsingleton_lattice_of_extends : ∀ (g n : ℕ) (o : Type) [CommRing o
     rw [zero_add, pow_one]; infer_instance
   have hF : IsField (T.V ⧸ maximalIdeal T.V ^ (0 + 1)) :=
     (Ideal.Quotient.maximal_ideal_iff_isField_quotient _).1 hmax
-  letI := hF.toField
+  let := hF.toField
   let k := T.U.gt 0
   have m : Mono k.i := ⟨fun a b h => k.isKernel.hom_ext h (CartesianMonoidalCategory.toUnit_unique _ _)⟩
   exact ArcNotAbelian.subsingleton_of_mem_abLocus T.G T.semi _ hF _ (closedPoint _)
@@ -419,7 +419,7 @@ theorem main : ∀ (Z : Scheme.{0}) (G₀ : Over Z) [GrpObj G₀] [IsCommMonObj 
   · exact GlobalTheory.LBIsoEnd.lbIso_trans_end _ _ _ _ U'.LG.isLB (pull_isLB U.LG.isLB β) hLB
       (LBIso.symm (GlobalTheory.GenSpread.lbIso_pull_of_lbIso hL β rfl))
   · intro f hf
-    haveI := hf
+    have := hf
     have e1 : ((Over.pullback (specOf ψ)).map ((Over.pullback ξ).map f)).left ≫ β =
         β ≫ ((Over.pullback ξ).map f).left := by
       show _ ≫ 𝟙 _ ≫ _ = (𝟙 _ ≫ _) ≫ _
@@ -556,17 +556,17 @@ theorem GlobalTheory.Poinc.Periods.main : ∀ (g n : ℕ) (o : Type) [CommRing o
   intro g n o _ ζ F W hW o' Ω _ _ _ hA S ρ u hu M U₀ EE FinalForm hO V v hv x
   obtain ⟨c, pr, hs⟩ := (sharpOver_iff F W ρ.P u).1 hu
   have hinjΩ := M.stalkHom_injective x
-  haveI : IsDomain (M.Z.presheaf.stalk x) := hinjΩ.isDomain
-  haveI : CharZero Ω := hA.char
-  haveI : CharZero (M.Z.presheaf.stalk x) := (RingHom.charZero_iff hinjΩ).2 inferInstance
-  haveI : IsIntegrallyClosed (M.Z.presheaf.stalk x) := (hO.normal x).2
-  haveI : Algebra.EssFiniteType ℤ (M.Z.presheaf.stalk x) := GlobalTheory.Poinc.CompletedStalk.essFiniteType_int_stalk M x
-  haveI : IsNoetherianRing (M.Z.presheaf.stalk x) := Algebra.EssFiniteType.isNoetherianRing ℤ _
+  have : IsDomain (M.Z.presheaf.stalk x) := hinjΩ.isDomain
+  have : CharZero Ω := hA.char
+  have : CharZero (M.Z.presheaf.stalk x) := (RingHom.charZero_iff hinjΩ).2 inferInstance
+  have : IsIntegrallyClosed (M.Z.presheaf.stalk x) := (hO.normal x).2
+  have : Algebra.EssFiniteType ℤ (M.Z.presheaf.stalk x) := GlobalTheory.Poinc.CompletedStalk.essFiniteType_int_stalk M x
+  have : IsNoetherianRing (M.Z.presheaf.stalk x) := Algebra.EssFiniteType.isNoetherianRing ℤ _
   have fg : (maximalIdeal (M.Z.presheaf.stalk x)).FG := IsNoetherian.noetherian _
-  haveI hloc : IsLocalRing (AdicCompletion (maximalIdeal (M.Z.presheaf.stalk x)) (M.Z.presheaf.stalk x)) :=
+  have hloc : IsLocalRing (AdicCompletion (maximalIdeal (M.Z.presheaf.stalk x)) (M.Z.presheaf.stalk x)) :=
     AdicCompletion.isLocalRing_of_fg fg
   obtain ⟨hRd, hRi⟩ := GlobalTheory.AnalyticNormality.completion_isDomain_and_isIntegrallyClosed (M.Z.presheaf.stalk x)
-  haveI hRn : IsNoetherianRing (AdicCompletion (maximalIdeal (M.Z.presheaf.stalk x)) (M.Z.presheaf.stalk x)) :=
+  have hRn : IsNoetherianRing (AdicCompletion (maximalIdeal (M.Z.presheaf.stalk x)) (M.Z.presheaf.stalk x)) :=
     GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ _
   have hm := AdicCompletion.maximalIdeal_eq_map_of_fg fg
   set R := AdicCompletion (maximalIdeal (M.Z.presheaf.stalk x)) (M.Z.presheaf.stalk x) with hR
@@ -575,7 +575,7 @@ theorem GlobalTheory.Poinc.Periods.main : ∀ (g n : ℕ) (o : Type) [CommRing o
     rw [hm]
     exact AdicCompletion.isAdicComplete_self _ fg
   have hinj : Function.Injective φ := AdicCompletion.of_injective _ _
-  haveI : CharZero R := (RingHom.charZero_iff hinj).1 inferInstance
+  have : CharZero R := (RingHom.charZero_iff hinj).1 inferInstance
   set ξ : Sp R ⟶ M.Z := spMap φ ≫ M.Z.fromSpecStalk x with hξ
   have hne : (ξ ⁻¹' abLocus FinalForm.G).Nonempty := by
     let w : Sp R := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum R)
@@ -600,7 +600,7 @@ theorem GlobalTheory.Poinc.Periods.main : ∀ (g n : ℕ) (o : Type) [CommRing o
     show ξ w ∈ abLocus FinalForm.G
     rw [FinalForm.ab]
     exact le_bot_iff.1 ((S.TT_anti M hsp).trans (ThetaSys.TT_genericPoint S M).le)
-  haveI : IsCommMonObj ((Over.pullback ξ).obj FinalForm.G) := Functor.isCommMonObj_obj
+  have : IsCommMonObj ((Over.pullback ξ).obj FinalForm.G) := Functor.isCommMonObj_obj
   obtain ⟨D, A, U, hL, hP⟩ := FinalForm.unif R hRn hRi hcpl ξ hne
   have hB : GlobalTheory.Mum.Base R := ⟨⟨hRn, hRd, hRi, hcpl⟩, inferInstance⟩
   have hGs : IsSemiAbelian ((Over.pullback ξ).obj FinalForm.G) := IsSemiAbelian.pullback _ FinalForm.G FinalForm.semi
@@ -746,14 +746,14 @@ theorem isCpl_props {O R : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing 
 
 theorem orders_extend : ∀ (g n : ℕ), 3 ≤ n → ∀ (F : SFam g n (zetaAway n)) (φ : InvFun ℤ), IsPolFan id g φ → ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [ArithBase o' Ω] (S : ThetaSys o' Ω) (ρ : S.Real) (u : Sp S.R ⟶ F.X), SharpOver F W ρ.P u → ∀ (M : RatModel o' Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (FinalForm : ZHOut ρ M U₀ EE), S.Over₀ M U₀ → ∀ (V : M.Z.Opens) (v : V.toScheme ⟶ F.X), (∀ x : Sp Ω ⟶ V.toScheme, x ≫ V.ι = M.pt → x ≫ v = spMap S.R.val.toRingHom ≫ u) → ∀ (D : GlobalTheory.EffCartierData M.Z) (ι : ℕ), (∀ z ∈ D.idealSheaf.support, z ∉ V) → (∀ (T : Trait F) (ξ : Sp T.V ⟶ M.Z) (γ : Ω →+* FractionRing T.V), jK T.V ≫ ξ = spMap γ ≫ M.pt → T.y = spMap γ ≫ spMap S.R.val.toRingHom ≫ u → ∃ a : ℕ, (a : ℝ) = ι * φ.evalZ T.β ∧ idlAlong D.idealSheaf ξ = Ideal.span {T.ϖ ^ a}) → ∀ (T : Trait F) (ξ : Sp T.V ⟶ M.Z), ThroughU M V v (𝟙 F.X) T ξ → ∃ a : ℕ, (a : ℝ) = ι * φ.evalZ T.β ∧ idlAlong D.idealSheaf ξ = Ideal.span {T.ϖ ^ a} := by
   intro g n hn F φ hφ W hW o' Ω _ _ _ _ S ρ u hu M U₀ EE FinalForm hU V v hv D ι hD hgen T ξ hT
-  haveI : CharZero Ω := ArithBase.char o'
-  haveI : IsDedekindDomain o' := ArithBase.ded Ω
-  haveI := M.lft
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : CharZero Ω := ArithBase.char o'
+  have : IsDedekindDomain o' := ArithBase.ded Ω
+  have := M.lft
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨R, _, _, _, j, Λ, _, p, c, hR, hj, hc, hper⟩ :=
     GlobalTheory.T.thetaModel_point_lattice_periods_traits g n _ _ F W hW o' Ω S ρ u hu M U₀ EE FinalForm hU V v hv (ξ (closedPoint T.V))
-  haveI := hR.1.1
-  haveI := hR.2
+  have := hR.1.1
+  have := hR.2
   obtain ⟨jinj, jloc, jext⟩ := isCpl_props hj
   obtain ⟨ψ, ψloc, hψ⟩ := jext T.V T.complete (Scheme.stalkClosedPointTo ξ).hom inferInstance
   have hξ : spMap (ψ.comp j) ≫ M.Z.fromSpecStalk (ξ (closedPoint T.V)) = ξ := by
@@ -775,7 +775,7 @@ theorem orders_extend : ∀ (g n : ℕ), 3 ≤ n → ∀ (F : SFam g n (zetaAway
   have hda : Associated (ψ (j d)) (T.ϖ ^ a) := Ideal.span_singleton_eq_span_singleton.1 (hid.symm.trans ha)
   obtain ⟨e, he⟩ := hper T ψ ψloc (by rw [hξ]; exact ⟨ξ₀, hξ₀, hξ₀'⟩)
   choose k hk hk' using he
-  haveI := T.D.toPre.finX
+  have := T.D.toPre.finX
   obtain ⟨N, b, hb⟩ := Module.Finite.exists_fin (R := ℤ) (M := T.D.toPre.X)
   obtain ⟨A, _, _, _, ϖ', ψ', m, m', k', hA, hϖ', ψ'inj, ψ'loc, hm, hm', hk''⟩ :=
     _root_.GlobalTheory.CompleteDiscreteValuationRing.main R T.V T.ϖ T.irr ψ ψloc (Option (Fin N × Fin N))
@@ -912,8 +912,8 @@ def toA {g n : ℕ} {o : Type} [CommRing o] {ζ : o} {F : SFam g n ζ} {X : Sche
 variable {g n : ℕ} {o : Type} [CommRing o] {ζ : o} {F : SFam g n ζ}
 
 theorem isLocallyNoetherian [ArithBase o' Ω] (M : RatModel o' Ω) : IsLocallyNoetherian M.Z := by
-  haveI := ArithBase.ded (o := o') (Ω := Ω)
-  haveI := M.lft
+  have := ArithBase.ded (o := o') (Ω := Ω)
+  have := M.lft
   exact LocallyOfFiniteType.isLocallyNoetherian M.s
 
 theorem exists_trait [CharZero Ω] (y₀ : Sp Ω ⟶ F.X) (x : M.Z) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V]
@@ -927,9 +927,9 @@ theorem exists_trait [CharZero Ω] (y₀ : Sp Ω ⟶ F.X) (x : M.Z) (V : Type) [
 theorem exists_trait_centre [ArithBase o' Ω] (y₀ : Sp Ω ⟶ F.X) (x : M.Z) :
     ∃ (T : Trait F) (ξ : Sp T.V ⟶ M.Z) (γ : Ω →+* FractionRing T.V),
       ξ (closedPoint T.V) = x ∧ jK T.V ≫ ξ = spMap γ ≫ M.pt ∧ T.y = spMap γ ≫ y₀ := by
-  haveI := ArithBase.char (o := o') (Ω := Ω)
-  haveI := isLocallyNoetherian M
-  haveI : CharZero (M.Z.presheaf.stalk x) := RingHom.charZero (M.stalkHom x)
+  have := ArithBase.char (o := o') (Ω := Ω)
+  have := isLocallyNoetherian M
+  have : CharZero (M.Z.presheaf.stalk x) := RingHom.charZero (M.stalkHom x)
   obtain ⟨V, _, _, _, θ, ⟨hd, hc, -⟩, hi, hl⟩ := GlobalTheory.DvrDom.exists_cdvr_dominating (M.Z.presheaf.stalk x)
   obtain ⟨T, f, ξ, γ, -, -, h₁, h₂, h₃, -⟩ := exists_trait y₀ x V hc θ hi
   exact ⟨T, ξ, γ, h₁, h₂, h₃⟩
@@ -949,10 +949,10 @@ theorem dvd_of_map_dvd {V V' : Type} [CommRing V] [IsDomain V] [IsDiscreteValuat
 theorem mem_O_of_traits [ArithBase o' Ω] (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z) (y₀ : Sp Ω ⟶ F.X) (x : M.Z) (s : Ω)
     (h : ∀ (T : Trait F) (ξ : Sp T.V ⟶ M.Z) (γ : Ω →+* FractionRing T.V), jK T.V ≫ ξ = spMap γ ≫ M.pt →
       T.y = spMap γ ≫ y₀ → ξ (closedPoint T.V) = x → ∃ w : T.V, γ s = algebraMap T.V (FractionRing T.V) w) : s ∈ M.O x := by
-  haveI := ArithBase.char (o := o') (Ω := Ω)
-  haveI := isLocallyNoetherian M
-  haveI : CharZero (M.Z.presheaf.stalk x) := RingHom.charZero (M.stalkHom x)
-  haveI := (hN x).2
+  have := ArithBase.char (o := o') (Ω := Ω)
+  have := isLocallyNoetherian M
+  have : CharZero (M.Z.presheaf.stalk x) := RingHom.charZero (M.stalkHom x)
+  have := (hN x).2
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := M.O x) s
   obtain ⟨a, rfl⟩ := (M.stalkEquiv x).surjective a
   obtain ⟨b, rfl⟩ := (M.stalkEquiv x).surjective b
@@ -974,7 +974,7 @@ theorem mem_O_of_traits [ArithBase o' Ω] (hN : ReciprocityTheory.ChartRestricti
 
 theorem glue : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ) (φ : InvFun ℤ) (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [ArithBase o' Ω] (M : RatModel o' Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (y₀ : Sp Ω ⟶ F.X) (V : M.Z.Opens) (v : V.toScheme ⟶ F.X), (V : Set M.Z).Nonempty → (∀ x : Sp Ω ⟶ V.toScheme, x ≫ V.ι = M.pt → x ≫ v = y₀) → ∀ (ι : ℕ) (K : Type) (Jk : K → Type) (t : ∀ k, Jk k → Ω), (∀ k, Nonempty (Jk k) → M.HasDiv (t k)) → (∀ x : M.Z, ∃ k, ∀ (T : Trait F) (ξ : Sp T.V ⟶ M.Z) (γ : Ω →+* FractionRing T.V), jK T.V ≫ ξ = spMap γ ≫ M.pt → T.y = spMap γ ≫ y₀ → ξ (closedPoint T.V) ⤳ x → ∃ a : ℕ, (a : ℝ) = ι * φ.evalZ T.β ∧ (∀ j, OrdGe M T ξ (t k j) a) ∧ ∃ j, OrdEq M T ξ (t k j) a) → ∃ D : GlobalTheory.EffCartierData M.Z, (∀ z ∈ D.idealSheaf.support, z ∉ V) ∧ ∀ (T : Trait F) (ξ : Sp T.V ⟶ M.Z) (γ : Ω →+* FractionRing T.V), jK T.V ≫ ξ = spMap γ ≫ M.pt → T.y = spMap γ ≫ y₀ → ∃ a : ℕ, (a : ℝ) = ι * φ.evalZ T.β ∧ idlAlong D.idealSheaf ξ = Ideal.span {T.ϖ ^ a} := by
   intro g n o _ ζ F φ o' Ω _ _ _ _ M hN y₀ V v hV hv ι K Jk t hdiv hloc
-  haveI := isLocallyNoetherian M
+  have := isLocallyNoetherian M
   have hpt : Set.range M.pt ⊆ Set.range V.ι := by
     rw [Scheme.Opens.range_ι]
     rintro _ ⟨w, rfl⟩
@@ -997,7 +997,7 @@ theorem glue : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ
     have hr' : Set.range ξ ⊆ Set.range V.ι := by rwa [Scheme.Opens.range_ι]
     have e : jK T.V ≫ IsOpenImmersion.lift V.ι ξ hr' = spMap γ ≫ IsOpenImmersion.lift V.ι M.pt hpt := by
       rw [← cancel_mono V.ι, Category.assoc, Category.assoc, IsOpenImmersion.lift_fac, IsOpenImmersion.lift_fac, h₁]
-    haveI := GlobalTheory.T.subsingleton_characterLattice_of_goodReduction_trait g n o ζ F T (IsOpenImmersion.lift V.ι ξ hr' ≫ v) (by
+    have := GlobalTheory.T.subsingleton_characterLattice_of_goodReduction_trait g n o ζ F T (IsOpenImmersion.lift V.ι ξ hr' ≫ v) (by
       rw [← Category.assoc, e, Category.assoc, hv _ (IsOpenImmersion.lift_fac _ _ _), h₂])
     rw [InvFun.evalZ, InvFun.eval_of_subsingleton, mul_zero] at ha
     exact_mod_cast ha
@@ -1069,7 +1069,7 @@ theorem GlobalTheory.Poinc.exists_model_divisor_of_orders : ∀ (g n : ℕ), 1 �
   obtain ⟨ι, K, _, Jk, _, t, hι, ht, hloc⟩ := GlobalTheory.Poinc.exists_locTuples_theta_of_adm g n hg hn hodd F φ hφ W8 hW
     X₁.o₁ X₁.Ω₁ X₁.S X₁.ρ X₁.u X₁.big X₁.sharp X₁.gen
   obtain ⟨Y, πY, U₀, EE, FinalForm, hhom, hprop, hAdm, hEE, hdiv⟩ := GlobalTheory.T.exists_admissible_projective_theta_model_over_model X₁.o₁ X₁.Ω₁ X₁.S X₁.ρ X₁.big X₁.M X₁.projM K Jk t ht
-  haveI := X₁.imm
+  have := X₁.imm
   let V : Y.Z.Opens := (πY ≫ X₁.π) ⁻¹ᵁ i.opensRange
   have hV : Set.range (V.ι ≫ πY ≫ X₁.π) ⊆ Set.range i := by
     rintro _ ⟨w, rfl⟩

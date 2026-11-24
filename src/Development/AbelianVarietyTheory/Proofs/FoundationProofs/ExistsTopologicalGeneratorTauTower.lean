@@ -114,7 +114,7 @@ theorem der_algZp : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra
     ∀ E : Derivation ℤ Ω Ω, (∀ r : ℤ_[p], E (algebraMap (O0 p) Ω (algebraMap ℤ_[p] (O0 p) r)) = 0) →
     ∀ x : Ω, IsAlgZp (p := p) x → E x = 0 := by
   intro p _ Ω _ _ hC E hE x hx
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hC
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hC
   obtain ⟨P, hP0, hPx⟩ := hx
   rw [aeval_def, eval₂_map] at hPx
   change eval₂ (phiZ p Ω) x P = 0 at hPx
@@ -191,7 +191,7 @@ theorem exists_extend_of_formallySmooth {R S : Type} [CommRing R] [CommRing S] [
         TrivSqZeroExt S S).snd = _
       simp only [TrivSqZeroExt.snd_add, TrivSqZeroExt.snd_inl, TrivSqZeroExt.snd_inr, zero_add]
   obtain ⟨l, h1, h2⟩ : ∃ l : S →+* TrivSqZeroExt S S, (∀ s, (l s).fst = s) ∧ ∀ r, l (algebraMap R S r) = g r := by
-    letI : Algebra R (TrivSqZeroExt S S) := g.toAlgebra
+    let : Algebra R (TrivSqZeroExt S S) := g.toAlgebra
     let π : TrivSqZeroExt S S →ₐ[R] S :=
       { (TrivSqZeroExt.fstHom S S S).toRingHom with commutes' := fun r ↦ (hg r).1 }
     have hs : Function.Surjective π := fun s ↦ ⟨TrivSqZeroExt.inl s, rfl⟩
@@ -222,19 +222,19 @@ theorem derivation_extend : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] 
     ∀ D : Derivation ℤ (O0 p) (O0 p),
     ∃ E : Derivation ℤ Ω Ω, ∀ x, E (algebraMap (O0 p) Ω x) = algebraMap (O0 p) Ω (D x) := by
   intro p _ Ω _ _ h D
-  haveI : IsDomain (O0 p) := h.inj.isDomain _
-  haveI : CharZero Ω := Basic.charZero_of_isClo h
+  have : IsDomain (O0 p) := h.inj.isDomain _
+  have : CharZero Ω := Basic.charZero_of_isClo h
   let K := FractionRing (O0 p)
-  letI : Algebra K Ω := (IsFractionRing.lift h.inj).toAlgebra
-  haveI : IsScalarTower (O0 p) K Ω := IsScalarTower.of_algebraMap_eq fun x ↦ by
+  let : Algebra K Ω := (IsFractionRing.lift h.inj).toAlgebra
+  have : IsScalarTower (O0 p) K Ω := IsScalarTower.of_algebraMap_eq fun x ↦ by
     change _ = IsFractionRing.lift h.inj (algebraMap (O0 p) K x)
     rw [IsFractionRing.lift_algebraMap]
-  haveI : Algebra.IsAlgebraic (O0 p) Ω := h.alg
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective (O0 p) K)
-  haveI : Algebra.IsSeparable K Ω := Algebra.IsSeparable.of_integral K Ω
-  haveI : Algebra.FormallyEtale K Ω := Algebra.FormallyEtale.of_isSeparable K Ω
-  haveI : Algebra.FormallySmooth (O0 p) K := Algebra.FormallySmooth.of_isLocalization (nonZeroDivisors (O0 p))
-  haveI : Algebra.FormallySmooth (O0 p) Ω := Algebra.FormallySmooth.comp (O0 p) K Ω
+  have : Algebra.IsAlgebraic (O0 p) Ω := h.alg
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective (O0 p) K)
+  have : Algebra.IsSeparable K Ω := Algebra.IsSeparable.of_integral K Ω
+  have : Algebra.FormallyEtale K Ω := Algebra.FormallyEtale.of_isSeparable K Ω
+  have : Algebra.FormallySmooth (O0 p) K := Algebra.FormallySmooth.of_isLocalization (nonZeroDivisors (O0 p))
+  have : Algebra.FormallySmooth (O0 p) Ω := Algebra.FormallySmooth.comp (O0 p) K Ω
   exact exists_extend_of_formallySmooth D
 
 end GlobalTheory.K5.DerExt
@@ -529,7 +529,7 @@ theorem natCast_dvd_iff_evalₐ_one (x : O0 p) :
   rw [GlobalTheory.ValCompletion.evalₐ_eq_zero_iff rfl, pow_one, map_natCast]
 
 theorem prime_natCast_completedLaurentRing : Prime (p : O0 p) := by
-  haveI : (pI p ^ 1).IsPrime := by
+  have : (pI p ^ 1).IsPrime := by
     rw [pow_one]; exact (Ideal.span_singleton_prime (Basic.prime_lau p).ne_zero).2 (Basic.prime_lau p)
   refine ⟨?_, Basic.not_isUnit_p p, ?_⟩
   · exact_mod_cast (Nat.Prime.ne_zero Fact.out : p ≠ 0)
@@ -611,7 +611,7 @@ theorem q_not_pow : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra
       b ^ p ≠ algebraMap (O0 p) Ω (qO p) := by
   intro p _ Ω _ _ h b hb hbp
   have hp : p.Prime := Fact.out
-  haveI : CharZero Ω := Basic.charZero_of_isClo h
+  have : CharZero Ω := Basic.charZero_of_isClo h
   obtain ⟨D, hDq, hDr⟩ := exists_derivation_fix_q_kill_padicInt p
   obtain ⟨E, hE⟩ := derExt p Ω h D
   have hEr : ∀ r : ℤ_[p], E (algebraMap (O0 p) Ω (algebraMap ℤ_[p] (O0 p) r)) = 0 := by
@@ -687,7 +687,7 @@ def geoF (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω] : S
 
 theorem isOpen_setOf_apply {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] [Algebra.IsAlgebraic F Ω]
     (x : Ω) (P : Ω → Prop) : IsOpen {σ : Ω ≃ₐ[F] Ω | P (σ x)} := by
-  haveI : FiniteDimensional F F⟮x⟯ := adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := F) x)
+  have : FiniteDimensional F F⟮x⟯ := adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := F) x)
   rw [isOpen_iff_mem_nhds]
   intro σ hσ
   have hU : IsOpen (((F⟮x⟯).fixingSubgroup : Subgroup (Ω ≃ₐ[F] Ω)) : Set (Ω ≃ₐ[F] Ω)) :=
@@ -709,8 +709,8 @@ theorem isOpen_setOf_apply {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] [Al
 theorem main : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∀ (Ω : Type) [Field Ω] [Algebra (O0 p) Ω], IsClo p Ω →
     ∀ T : Tower p Ω, ∃ τ ∈ Ggeo (p := p) Ω, ∀ n, τ (T.qq n) = T.ζ n * T.qq n := by
   intro p hp hp2 Ω _ _ hΩ T
-  haveI := hΩ.clo
-  haveI : CharZero Ω := Basic.charZero_of_isClo hΩ
+  have := hΩ.clo
+  have : CharZero Ω := Basic.charZero_of_isClo hΩ
   have hO : ∀ a : O0 p, algebraMap (O0 p) Ω a ∈ geoF p Ω := fun a =>
     Subfield.subset_closure (Or.inl ⟨a, rfl⟩)
   have hA : ∀ x : Ω, IsAlgZp (p := p) x → x ∈ geoF p Ω := fun x hx => Subfield.subset_closure (Or.inr hx)
@@ -718,15 +718,15 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∀ (Ω : Type) [Field 
   let φ : O0 p →+* F := (algebraMap (O0 p) Ω).codRestrict F hO
   have hφ : Function.Injective φ := fun a b h => hΩ.inj (congrArg Subtype.val h)
   have hcomp : (algebraMap F Ω).comp φ = algebraMap (O0 p) Ω := by ext a; rfl
-  haveI hal : Algebra.IsAlgebraic F Ω := by
+  have hal : Algebra.IsAlgebraic F Ω := by
     constructor
     intro x
     obtain ⟨P, hP, hx⟩ := hΩ.alg.isAlgebraic x
     refine ⟨P.map φ, (Polynomial.map_ne_zero_iff hφ).2 hP, ?_⟩
     rw [aeval_def, eval₂_map, hcomp, ← aeval_def, hx]
-  haveI : IsAlgClosure F Ω := ⟨inferInstance, hal⟩
-  haveI : IsGalois F Ω := {}
-  haveI : CompactSpace (Ω ≃ₐ[F] Ω) := inferInstance
+  have : IsAlgClosure F Ω := ⟨inferInstance, hal⟩
+  have : IsGalois F Ω := {}
+  have : CompactSpace (Ω ≃ₐ[F] Ω) := inferInstance
   let q' : F := ⟨algebraMap (O0 p) Ω (qO p), hO _⟩
   have hirr : ∀ n, Irreducible (X ^ (p ^ n) - C q') := fun n =>
     irreducible_X_pow_sub_C_of_prime_pow_of_ne_two hp.out hp2 n (fun b hb =>

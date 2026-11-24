@@ -211,18 +211,18 @@ theorem locBasic : LocBasic := by
   unfold loc localization₂
   have hne : ∀ (p : Ideal R), p.IsPrime → ∀ s ∈ hcompl (K := K) p, algebraMap R K s ≠ 0 := by
     intro p hp s hs h0
-    haveI := hp
+    have := hp
     apply locBasic_hcompl_not_mem (K := K) p s hs
     rw [← map_zero (algebraMap R K)] at h0
     rw [hinj h0]
     exact p.zero_mem
   have hnm : ∀ (p : Ideal R), p.IsMaximal → ∀ s ∈ hcompl (K := K) p, s ∉ p := by
     intro p hp s hs
-    haveI := hp.isPrime
+    have := hp.isPrime
     exact locBasic_hcompl_not_mem (K := K) p s hs
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro p hp L M
-    haveI := hp
+    have := hp
     exact ⟨locBasic_le_locS _ L, fun h => locBasic_locS_mono _ h, locBasic_locS_idem _ L,
       locBasic_locS_inf _ L M, locBasic_locS_sup (K := K) _ (hne p hp) L M⟩
   · intro L
@@ -238,7 +238,7 @@ theorem locBasic : LocBasic := by
     exact locBasic_locS_le_of_le (locBasic_hcompl_le (K := K) p) L
   · intro hstar p _
     have hc := locBasic_conj_eq hinj hstar p
-    haveI hpc : (conjIdeal (K := K) p).IsPrime := by
+    have hpc : (conjIdeal (K := K) p).IsPrime := by
       rw [hc]
       exact Ideal.comap_isPrime _ _
     refine ⟨hpc, fun L => ?_⟩

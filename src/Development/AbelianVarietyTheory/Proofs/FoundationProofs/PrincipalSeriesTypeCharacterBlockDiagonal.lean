@@ -271,8 +271,8 @@ theorem GlobalTheory.PsType.theta_emb₂_std : ∀ (k : Type) [Field k] [Valuati
   intro k _ _ _ _ r t ψ hord a ha b hb
   have hord₂ : Ordered (fun i => ψ (Fin.natAdd r i)) := by
     intro i a' b' j h1 h2 h3 x hx
-    exact hord (Fin.natAdd r i) (Fin.natAdd r a') (Fin.natAdd r b') (Fin.natAdd r j) (by rw [Fin.le_def] at h1 ⊢; simp only [Fin.coe_natAdd]; omega) (by rw [Fin.le_def] at h2 ⊢; simp only [Fin.coe_natAdd]; omega)
-      (by rw [Fin.le_def] at h3 ⊢; simp only [Fin.coe_natAdd]; omega) x hx
+    exact hord (Fin.natAdd r i) (Fin.natAdd r a') (Fin.natAdd r b') (Fin.natAdd r j) (by rw [Fin.le_def] at h1 ⊢; simp only [Fin.val_natAdd]; omega) (by rw [Fin.le_def] at h2 ⊢; simp only [Fin.val_natAdd]; omega)
+      (by rw [Fin.le_def] at h3 ⊢; simp only [Fin.val_natAdd]; omega) x hx
   have hda : valuation k a.val.det = 1 := val_det_of_mem_KO ha.1
   have hsplit : theta ψ (emb₂ k (stdSum (rfl : r + t = r + t)) (a, b)) =
       (∏ i : Fin r, ev (ψ (Fin.castAdd t i) / nxt ψ (Fin.castAdd t i)) (minor a i)) *

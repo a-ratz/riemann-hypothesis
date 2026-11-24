@@ -272,7 +272,7 @@ theorem SHInsepHens_of (hL : SHInsepLoc) : SHInsepHens := by
     rw [e]
     exact fun x => Algebra.IsIntegral.isIntegral (R := A) x
   have hc : (maximalIdeal (A ⊗[κ] K)).comap (incMap κ K A L).toRingHom = maximalIdeal (A ⊗[κ] L) :=
-    IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' _ hint _)
+    IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal _ hint _)
   refine hens_root_of_sub (incMap κ K A L).toRingHom hc f hf a₀ ?_ ?_ h1 h2
   · intro n
     by_cases hn : n ∈ f.support
@@ -478,7 +478,7 @@ theorem SHInv_of (hAlgExt : AlgExt) (hInsep : Insep) : SHInv := by
   obtain ⟨hHL, hsc⟩ := hSH
   have hqA : IsUnit (q : A) := by simpa using hq.map s.hom
   have hqκ : IsUnit (q : IsLocalRing.ResidueField A) := by simpa using hqA.map (IsLocalRing.residue A)
-  haveI : IsPurelyInseparable (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A)) :=
+  have : IsPurelyInseparable (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A)) :=
     (isSepClosed_iff_isPurelyInseparable_algebraicClosure _ _).mp hsc
   let res := Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))
   let alg := Spec.map (CommRingCat.ofHom (algebraMap (IsLocalRing.ResidueField A)

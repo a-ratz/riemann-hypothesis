@@ -111,7 +111,7 @@ theorem dualAct_apply (E : KMod n) (T : E.V →L[ℂ] E.V) (v) :
 theorem continuous_unitary_inv :
     Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => k⁻¹ := by
   refine Continuous.subtype_mk (p := (· ∈ Matrix.unitaryGroup (Fin n) ℂ)) ?_ _
-  simpa using (continuous_subtype_val.star :
+  simpa using (continuous_subtypeVal.star :
     Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => star k.1)
 
 theorem dualRep_exists {n : ℕ} (E : KMod n) :
@@ -136,7 +136,7 @@ theorem dualRep_exists {n : ℕ} (E : KMod n) :
         intro k l
         ext1 v
         obtain ⟨ξ, rfl⟩ := (dualCoord E).surjective v
-        rw [ContinuousLinearMap.mul_apply, hact l, hact k, hact (k * l), _root_.mul_inv_rev, map_mul]
+        rw [mul_apply_eq_comp, hact l, hact k, hact (k * l), _root_.mul_inv_rev, map_mul]
         rfl }
   refine ⟨dualCoord E, ρ', ?_, ?_, fun k ξ => (hact k ξ).symm⟩
   · have h1 : Continuous (dualAct E) := LinearMap.continuous_of_finiteDimensional _

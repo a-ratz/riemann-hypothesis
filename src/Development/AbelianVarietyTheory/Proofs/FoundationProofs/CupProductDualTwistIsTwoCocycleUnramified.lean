@@ -66,7 +66,7 @@ theorem continuous_eps : Continuous (fun s : G ℚ Ω => eps l s) := by
   have e : ∀ s : G ℚ Ω, eps l s = algebraMap ℚ_[l] (Qbar l) (((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l]) :=
     fun s => rfl
   simp only [e]
-  have hc : Continuous (fun x : ℤ_[l] => (x : ℚ_[l])) := continuous_subtype_val
+  have hc : Continuous (fun x : ℤ_[l] => (x : ℚ_[l])) := continuous_subtypeVal
   exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (hc.comp h)
 
 theorem eps_eq_one_of_mem_Ine [IsAlgClosure ℚ Ω] {A : ValuationSubring Ω} {v : Pl}

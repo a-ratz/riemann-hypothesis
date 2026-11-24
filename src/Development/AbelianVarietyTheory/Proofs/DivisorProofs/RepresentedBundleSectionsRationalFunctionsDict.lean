@@ -122,7 +122,7 @@ theorem rep_dict : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (
     rw [Pair.nu, Weight.nsq, secVal_apply, h2, ← h1, Real.exp_sub, Real.exp_log h3, norm_mul, Real.exp_neg]
     have h4 : Real.exp ((M.φ σ).φ (pick (M.φ σ).isLB y) y) =
         Real.exp ((M.φ σ).φ (pick (M.φ σ).isLB y) y / 2) ^ 2 := by
-      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+      rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
     rw [h4]
     field_simp
   · obtain ⟨c, hc⟩ := hcov M.isLB x

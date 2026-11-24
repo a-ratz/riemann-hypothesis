@@ -298,7 +298,7 @@ theorem exists_X_notMem (z : PSpace ℂ N) :
 theorem exists_finite_gen {Y : Scheme.{0}} [NoetherianSpace Y] (Z : Set Y) (hZ : IsClosed Z) :
     ∃ T : Set Y, T.Finite ∧ T ⊆ Z ∧ ∀ x ∈ Z, ∃ t ∈ T, t ⤳ x := by
   obtain ⟨S, hSf, hSc, hSi, rfl⟩ := NoetherianSpace.exists_finite_set_isClosed_irreducible hZ
-  haveI : Finite S := hSf.to_subtype
+  have : Finite S := hSf.to_subtype
   refine ⟨Set.range fun s : S => (hSi s.1 s.2).genericPoint, Set.finite_range _, ?_, ?_⟩
   · rintro _ ⟨⟨s, hs⟩, rfl⟩
     exact Set.mem_sUnion_of_mem ((hSi s hs).isGenericPoint_genericPoint (hSc s hs)).mem hs
@@ -512,9 +512,9 @@ open GlobalTheory.ProjSpace
 
 theorem eq_of_specializes {X : Scheme.{0}} {p : X ⟶ Sp ℂ} (y : CxPts p (RingHom.id ℂ)) {x : X}
     (h : y.1 (IsLocalRing.closedPoint ℂ) ⤳ x) : x = y.1 (IsLocalRing.closedPoint ℂ) := by
-  haveI : Subsingleton (Sp ℂ) := inferInstanceAs (Subsingleton (PrimeSpectrum ℂ))
+  have : Subsingleton (Sp ℂ) := inferInstanceAs (Subsingleton (PrimeSpectrum ℂ))
   have hid : y.1 ≫ p = 𝟙 _ := y.2.trans (Spec.map_id _)
-  haveI := isClosedImmersion_of_comp_eq_id p y.1 hid
+  have := isClosedImmersion_of_comp_eq_id p y.1 hid
   have hc : IsClosed ({y.1 (IsLocalRing.closedPoint ℂ)} : Set X) := by
     have := y.1.isClosedEmbedding.isClosedMap _ (IsLocalRing.isClosed_singleton_closedPoint ℂ)
     exact (Set.image_singleton (f := ⇑y.1) (a := IsLocalRing.closedPoint ℂ)) ▸ this
@@ -826,13 +826,13 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
           RingHom.ker (CxPts.evHom hy) ^ 2 := by
   intro X _ p d _ N ι hι hp S
   classical
-  haveI : IsClosedImmersion ι := hι
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI := isProper_str ℂ N
-  haveI : CompactSpace (PSpace ℂ N) := QuasiCompact.compactSpace_of_compactSpace (PSpace.str ℂ N)
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace ι
-  haveI : IsNoetherian X := {}
+  have : IsClosedImmersion ι := hι
+  have : Smooth p := SmoothOfRelativeDimension.smooth d p
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have := isProper_str ℂ N
+  have : CompactSpace (PSpace ℂ N) := QuasiCompact.compactSpace_of_compactSpace (PSpace.str ℂ N)
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace ι
+  have : IsNoetherian X := {}
   have hcoh : ∀ x : X, Order.coheight x ≤ d := fun x => GlobalTheory.AffineCover.coheight_le_of_smooth p inferInstance x
   set m := S.card + 1 with hm
   set n := m + m with hn
@@ -896,7 +896,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
       have hZc : IsClosed Z := isClosed_iInter fun i => (fOpen ι (c i).1).isOpen.isClosed_compl
       obtain ⟨T, hTf, hTZ, hT⟩ := Generic.exists_finite_gen Z hZc
       let T' : Set X := T \ Simg
-      have := (hTf.diff (t := Simg)).to_subtype
+      have := (hTf.sdiff (t := Simg)).to_subtype
       let W : Option (T' ⊕ (S : Set (CxPts p (RingHom.id ℂ)))) → Submodule ℂ (vanS ι S n) := fun o =>
         o.elim (vanAt ι S n (genericPoint X)) (Sum.elim (fun t => vanAt ι S n t.1)
           (fun y => (Submodule.span ℂ (Set.range (J y ∘ c))).comap (J y)))
@@ -910,7 +910,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
             rintro _ ⟨v, rfl⟩
             have : v ∈ W (some (Sum.inr y)) := htop ▸ Submodule.mem_top
             exact this
-          haveI := FiniteDimensional.span_of_finite ℂ (Set.finite_range (J y ∘ c))
+          have := FiniteDimensional.span_of_finite ℂ (Set.finite_range (J y ∘ c))
           have h1 := (Submodule.finrank_mono hle).trans (finrank_range_le_card _)
           rw [hrk, Fintype.card_fin] at h1
           omega
@@ -946,7 +946,7 @@ theorem exists_jet_forms : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ
   have hZc : IsClosed Z := isClosed_iInter fun i => (fOpen ι (c i).1).isOpen.isClosed_compl
   obtain ⟨T, hTf, hTZ, hT⟩ := Generic.exists_finite_gen Z hZc
   let T' : Set X := T \ Simg
-  have := (hTf.diff (t := Simg)).to_subtype
+  have := (hTf.sdiff (t := Simg)).to_subtype
   obtain ⟨q, hq⟩ := Submodule.exists_forall_notMem_of_forall_ne_top (fun t : T' => vanAt ι S m t.1)
     (fun t => hvanm _ t.2.2)
   obtain ⟨hqm, hqS⟩ := (mem_vanS ι S).1 q.2

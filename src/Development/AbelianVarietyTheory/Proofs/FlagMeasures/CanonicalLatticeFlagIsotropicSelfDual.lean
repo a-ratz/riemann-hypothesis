@@ -184,7 +184,7 @@ theorem rkK_le_rkR (S : Submodule (𝓞 I.E) (Fin I.n → I.E))
     (hS : ∀ y ∈ S, ∀ z ∈ S, Formalism.UG.hform (starRingEnd I.E) I.J y z = 0) (v : InfinitePlace I.F) :
     rkK S ≤ rkR (I.ε v) := by
   obtain ⟨b, hbS, -, hb⟩ := Submodule.exists_fun_fin_finrank_span_eq I.E (S : Set (Fin I.n → I.E))
-  letI : Algebra I.E ℂ := (I.φ v).toAlgebra
+  let : Algebra I.E ℂ := (I.φ v).toAlgebra
   have h1 : LinearIndependent ℂ (fun i => (I.φ v) ∘ b i) :=
     (linearIndependent_algebraMap_comp_iff (S := ℂ)).2 hb
   have hP : IsUnit (I.P v).det := (Matrix.isUnit_iff_isUnit_det _).1 (I.P_unit v)

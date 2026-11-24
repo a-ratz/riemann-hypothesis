@@ -244,7 +244,7 @@ theorem prod_ad (a : 𝓞 E) (U : Type) [CommGroup U] (h : ((t.G ⊗ t.G).left �
 
 theorem linkRel : LinkRelSt := by
   intro E _ _ _ H V _ _ t hs d BT tg xT eT wPT hc hf hP x hx hM j hj u hu B hB ε hε
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨hlaw, hact⟩ := LinkLaw.linkLaw E H V t d BT tg xT eT wPT hc hf hP x hx hM
   obtain ⟨-, -, hL, hMp, -⟩ := JetRoad.jetRoad
   have R := JetSer.Related.refl B

@@ -465,7 +465,7 @@ private lemma exists_integer_mul_eq_of_valuation_le (D : D7) (q : PlF D) (x y : 
   have hv := (Valuation.vle_iff_le (ValuativeRel.valuation (D.s.atP q).Fp)).1 hle
   have hy' : (D.s.atP q).ιF y ≠ 0 := (map_ne_zero _).2 hy
   have hpos : 0 < ValuativeRel.valuation (D.s.atP q).Fp ((D.s.atP q).ιF y) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hy')
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hy')
   refine ⟨(D.s.atP q).ιF x / (D.s.atP q).ιF y, ?_, ?_⟩
   · rw [Valuation.mem_integer_iff, map_div₀]
     exact (div_le_one₀ hpos).2 hv
@@ -506,7 +506,7 @@ private lemma exists_smul_sub_eq_gS_mul_mem_O (D : D7) (p : PlF D) (f : (D.s.atP
 
   have hβ : ValuativeRel.valuation (D.s.atP p).Fp ((f - (D.s.atP p).ιF a) / u) ≤ 1 := by
     rw [map_div₀, ← Valuation.map_neg, neg_sub]
-    exact (div_le_one₀ (zero_lt_iff.2 hvu)).2 ha.le
+    exact (div_le_one₀ (pos_iff_ne_zero.2 hvu)).2 ha.le
   refine ⟨algebraMap D.host.F D.host.E a * e,
     algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((f - (D.s.atP p).ιF a) / u) * (D.s.atP p).ιE ((d : ℤ) • e),
     mul_mem (algebraMap_mem_O_of_mem_integer' D p _ ((Valuation.mem_integer_iff _ _).2 hβ))
@@ -555,13 +555,13 @@ private lemma exists_intValuation_sub_one_le_and_le_elsewhere (D : D7) (p : PlF 
     (fun q => if (q : PlF D) = p then 1 else 0)
   refine ⟨y, ?_, ?_⟩
   · have h := hy p (Finset.mem_insert_self _ _)
-    simp only [if_true] at h
+    simp only [ite_true] at h
     rw [p.intValuation_eq_exp_neg_multiplicity hr]
     exact (p.intValuation_le_pow_iff_mem _ _).2 h
   · intro q hq
     by_cases hqs : r ∈ q.asIdeal
     · have h := hy q (Finset.mem_insert_of_mem (hfin.mem_toFinset.2 hqs))
-      simp only [hq, if_false, sub_zero] at h
+      simp only [hq, ite_false, sub_zero] at h
       rw [q.intValuation_eq_exp_neg_multiplicity hr]
       exact (q.intValuation_le_pow_iff_mem _ _).2 h
     · rw [IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff.2 hqs]
@@ -1216,14 +1216,14 @@ lemma prF_e (v : V) (b : Fin r) : H.h (Fr.prF v) (Fr.e b) = 0 := by
   unfold FrameD.prF
   rw [h_sub_left, h_sub_left, h_sum_left, h_sum_left]
   simp only [H.h_smul_left, h_ee, h_es_e, mul_zero, Finset.sum_const_zero, mul_ite, mul_one,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   ring
 
 lemma prF_es (v : V) (b : Fin r) : H.h (Fr.prF v) (Fr.es b) = 0 := by
   unfold FrameD.prF
   rw [h_sub_left, h_sub_left, h_sum_left, h_sum_left]
   simp only [H.h_smul_left, h_e_es, Fr.h_ss, mul_zero, Finset.sum_const_zero, mul_ite, mul_one,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 lemma prF_perp (v : V) : Fr.prF v ∈ H.perp (H.X Fr.f) := (mem_perp_iff Fr _).2 (prF_e Fr v)
@@ -1508,7 +1508,7 @@ theorem GlobalTheory.Unfold.ratCls_agree : ∀ (D : D7) (X : HidaSetting D) (Y :
   have rm_one : ∀ y : Dat Z FP, RMoves (1 : GV D) y y := by
     intro y p
     refine ⟨1, ext_one p, (hmv p 1 _ _).2 ?_⟩
-    letI := act p
+    let := act p
     exact one_smul _ _
   have rm_mul : ∀ h₁ ∈ H0 F F', ∀ h₂ ∈ H0 F F', ∀ y y' y'' : Dat Z FP,
       RMoves h₁ y y' → RMoves h₂ y' y'' → RMoves (h₂ * h₁) y y'' := by
@@ -1518,7 +1518,7 @@ theorem GlobalTheory.Unfold.ratCls_agree : ∀ (D : D7) (X : HidaSetting D) (Y :
     let a₁ : (FP p).UW0 := ⟨g₁, hw h₁ hh₁ p g₁ e₁⟩
     let a₂ : (FP p).UW0 := ⟨g₂, hw h₂ hh₂ p g₂ e₂⟩
     refine ⟨g₂ * g₁, ext_mul e₂ e₁, (hmv p (a₂ * a₁) _ _).2 ?_⟩
-    letI := act p
+    let := act p
     have f₁ : a₁ • y p = y' p := (hmv p a₁ _ _).1 m₁
     have f₂ : a₂ • y' p = y'' p := (hmv p a₂ _ _).1 m₂
     show (a₂ * a₁) • y p = y'' p
@@ -1528,7 +1528,7 @@ theorem GlobalTheory.Unfold.ratCls_agree : ∀ (D : D7) (X : HidaSetting D) (Y :
     obtain ⟨g, e, m⟩ := r p
     let a : (FP p).UW0 := ⟨g, hw h hh p g e⟩
     refine ⟨g⁻¹, ext_inv e, (hmv p a⁻¹ _ _).2 ?_⟩
-    letI := act p
+    let := act p
     have f : a • y p = y' p := (hmv p a _ _).1 m
     show a⁻¹ • y' p = y p
     rw [inv_smul_eq_iff, f]

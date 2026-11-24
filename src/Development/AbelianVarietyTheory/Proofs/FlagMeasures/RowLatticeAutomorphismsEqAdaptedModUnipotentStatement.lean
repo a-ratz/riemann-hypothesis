@@ -120,7 +120,7 @@ theorem witt_partners {E V : Type} [Field E] [CharZero E] [StarRing E] [AddCommG
 
     simp only [map_sub, map_sum, map_smulₛₗ, LinearMap.sub_apply, LinearMap.sum_apply, RingHom.id_apply, Finset.sum_apply,
     LinearMap.smul_apply, smul_eq_mul, hee, hge, hg'e, mul_zero, Finset.sum_const_zero, sub_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, starRingEnd_apply]
+    mul_ite, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, starRingEnd_apply]
     have hM : star (h (g b) (g a)) = h (g a) (g b) := hsymm _ _
     have h2 : star (2 : E) = 2 := by simp
     rw [star_div₀, hM, h2]
@@ -155,14 +155,14 @@ theorem diag_isometry {E V : Type} [Field E] [StarRing E] [AddCommGroup V] [Modu
     rw [hL]
 
     simp only [map_add (f := _), map_sum, map_smul, smul_eq_mul, hee, hef, mul_zero, Finset.sum_const_zero, add_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring
   have key_f : ∀ b y, h (f b) (L y) = α b * h (f b) y := by
     intro b y
     rw [hL]
 
     simp only [map_add (f := _), map_sum, map_smul, smul_eq_mul, hff, hfe, mul_zero, Finset.sum_const_zero, add_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring
   have key_x : ∀ x y, h x (L y) = h x y + ∑ a, ((α a - 1) * h (f a) y) * star (h (e a) x) +
       ∑ a, ((β a - 1) * h (e a) y) * star (h (f a) x) := by
@@ -195,7 +195,7 @@ theorem diag_isometry {E V : Type} [Field E] [StarRing E] [AddCommGroup V] [Modu
     simp only [LinearEquiv.coe_ofInjectiveEndo]
     rw [hL]
     simp only [hfe, hee, mul_zero, zero_smul, Finset.sum_const_zero, add_zero, mul_ite, mul_one,
-      ite_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      ite_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [sub_smul, one_smul]; abel
   · intro x hx
     simp only [LinearEquiv.coe_ofInjectiveEndo]
@@ -214,7 +214,7 @@ theorem flag_torus (D : D7) (T : D.host.E) (F0 : FlagG (VS D) D.R.rS T) (γ : GV
   have hXa_succ : ∀ i : Fin D.R.rS, F0.Xa ((i : ℕ) + 1) = F0.Xa i ⊔ Submodule.span D.host.E {F0.e i} := by
     intro i
     have : {j : Fin D.R.rS | (j : ℕ) < (i : ℕ) + 1} = {j : Fin D.R.rS | (j : ℕ) < i} ∪ ({i} : Set (Fin D.R.rS)) := by
-      ext j; simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff]
+      ext j; simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_singleton_iff]
       constructor
       · intro hj; rcases Nat.lt_succ_iff_lt_or_eq.1 hj with h | h
         · exact Or.inl h
@@ -270,7 +270,7 @@ theorem flag_torus (D : D7) (T : D.host.E) (F0 : FlagG (VS D) D.R.rS T) (γ : GV
         rintro _ ⟨a, rfl⟩; simpa using F0.z_orth a) hx
       simpa using this)
   | cast i =>
-    simp only [frame, lf, FlagG.fvec, Fin.snoc_castSucc, Fin.coe_castSucc, LinearEquiv.mul_apply, Xflag]
+    simp only [frame, lf, FlagG.fvec, Fin.snoc_castSucc, Fin.val_castSucc, LinearEquiv.mul_apply, Xflag]
     have : γ (F0.e i) = (γ (F0.e i) - u i • F0.e i) + u i • F0.e i := by abel
     rw [this, map_add (f := _), map_smul, ht_e, smul_smul, mul_inv_cancel₀ (hu0 i), one_smul, add_sub_cancel_right]
     exact ht_Xa _ _ (hu i)
@@ -888,8 +888,8 @@ theorem main_gen (hΛ : IsRowLat D F0 Λ) (hfin : (autLz D F0 Λ).Finite) :
     rw [Set.range_comp]; exact Nat.card_image_of_injective (toFun'_inj F0) _
   refine ⟨A0 F0 Λ, NU F0 Λ, rfl, NU_coe F0 Λ, Subgroup.map_subtype_le _, NU_conj F0 Λ, ?_, ?_⟩
   · rw [Subgroup.relIndex, NU_subgroupOf, Subgroup.index_ker, h1, ← h2, range_eq hΛ]
-  · haveI : Finite (autLz D F0 Λ) := hfin.to_subtype
-    haveI : Nonempty (autLz D F0 Λ) := by
+  · have : Finite (autLz D F0 Λ) := hfin.to_subtype
+    have : Nonempty (autLz D F0 Λ) := by
       rw [← range_eq hΛ]; exact ⟨⟨_, 1, rfl⟩⟩
     exact Nat.card_pos
 

@@ -85,12 +85,12 @@ theorem nonempty_equiv_pi_of_weights {R M N G : Type} [CommRing R] [IsDomain R] 
       ∀ v, (∃ x, f x = v) ↔ v ∈ W ∧ ∀ g, ρ g v = (χ g : R) • v) :
     Nonempty (W ≃ₗ[R] (G → N)) := by
   classical
-  haveI : HasEnoughRootsOfUnity R (Monoid.exponent G) :=
+  have : HasEnoughRootsOfUnity R (Monoid.exponent G) :=
     HasEnoughRootsOfUnity.of_dvd R (Monoid.exponent_dvd_of_forall_pow_eq_one hG)
   obtain ⟨e⟩ := CommGroup.monoidHom_mulEquiv_of_hasEnoughRootsOfUnity G R
-  haveI : Finite (G →* Rˣ) := Finite.of_equiv G e.toEquiv.symm
-  haveI := Fintype.ofFinite G
-  haveI := Fintype.ofFinite (G →* Rˣ)
+  have : Finite (G →* Rˣ) := Finite.of_equiv G e.toEquiv.symm
+  have := Fintype.ofFinite G
+  have := Fintype.ofFinite (G →* Rˣ)
   obtain ⟨u, hu⟩ : ∃ u : R, u * (Fintype.card G : R) = 1 := by
     have h1 := card_dvd_exponent_pow_rank' G hG
     rw [Nat.card_eq_fintype_card] at h1
@@ -549,15 +549,15 @@ open MulSplit in
 theorem sections_mulPull_split :
     (∀ (S : Scheme.{0}) (P : PolAV S) (n : ℕ), ∃ α : LB.Gen (LB.LinComb P.L (K := Fin 2) ![𝟙 P.A.left, (mulA P.A n).left] ![(n : ℤ) ^ 2, -1]), α.IsGen) → (∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (n : ℕ), 1 ≤ n → IsFinite (mulA P.A n).left ∧ Flat (mulA P.A n).left ∧ Surjective (mulA P.A n).left ∧ (IsUnit (n : Γ(S, ⊤)) → Etale (mulA P.A n).left)) → (∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (n : ℕ), (n : K) ≠ 0 → ∀ (U : P.A.left.Opens) (f : Γ(P.A.left, (mulA P.A n).left ⁻¹ᵁ U)), (∀ y : 𝟙_ (Over (Spec (CommRingCat.of K))) ⟶ P.A, y ^ n = 1 → ∀ (e : (mulA P.A n).left ⁻¹ᵁ U ≤ ((toUnit P.A ≫ y) * 𝟙 P.A).left ⁻¹ᵁ ((mulA P.A n).left ⁻¹ᵁ U)), (((toUnit P.A ≫ y) * 𝟙 P.A).left.appLE _ _ e).hom f = f) → ∃! g : Γ(P.A.left, U), ((mulA P.A n).left.app U).hom g = f) → (∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (n : ℕ) (x : baseOver (Spec (CommRingCat.of K)) ⟶ P.A), x ^ n = 1 → ∃ (u : LB.Gen (LB.LinComb P.L (K := Fin 2) ![(mulT P.A (baseOver (Spec (CommRingCat.of K))) n ≫ translPt P.A x).left, (snd (baseOver (Spec (CommRingCat.of K))) P.A ^ n).left] ![1, -1])) (ε : ℤ), u.IsGen ∧ (ε = 1 ∨ ε = -1) ∧ ∀ (y : baseOver (Spec (CommRingCat.of K)) ⟶ P.A) (c : Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤)ˣ), y ^ n = 1 → WeilIs P.A P.L n x y c → LB.Gen.Corr P.L _ _ _ _ (LB.pullGen P.L _ _ u (translT P.A y).left) (LB.mulGen P.L _ _ _ _ u (constGen P.A P.L (c ^ ε)))) → CharPairSt → WeilSt → (∀ (S : Scheme.{0}) (P : PolAV S) (k : ℕ) (T : Over S), (∀ x : T ⟶ P.A, x ^ k = 1 → WeilIs P.A P.L k x x 1) ∧ (∀ (x y : T ⟶ P.A) (c : Γ(T.left, ⊤)ˣ), WeilIs P.A P.L k x y c → WeilIs P.A P.L k y x c⁻¹) ∧ ∀ (T' : Over S) (h : T' ⟶ T) (x y : T ⟶ P.A) (c : Γ(T.left, ⊤)ˣ), WeilIs P.A P.L k x y c → WeilIs P.A P.L k (h ≫ x) (h ≫ y) (Units.map h.left.appTop.hom.toMonoidHom c)) → (∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (K : Type) [Field K] [IsAlgClosed K] (t : Spec (CommRingCat.of K) ⟶ S) (q : ℕ), 1 ≤ q → ∀ c : Over.mk t ⟶ P.A, ∃ d : Over.mk t ⟶ P.A, d ^ q = c ∧ ∃ w : LB.Gen (LB.LinComb P.L (K := Fin 3) ![(snd (Over.mk t) P.A).left, (translPt P.A c).left, (translPt P.A d).left] ![(q : ℤ) - 1, 1, -(q : ℤ)]), w.IsGen) → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (n j : ℕ), (n : K) ≠ 0 → 1 ≤ j → Nonempty (SecM P.A P.L ((n ^ 2 * j : ℕ) : ℤ) (baseOver (Spec (CommRingCat.of K))) ≃ₗ[Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤)] ({x : baseOver (Spec (CommRingCat.of K)) ⟶ P.A // x ^ n = 1} → SecM P.A P.L (j : ℤ) (baseOver (Spec (CommRingCat.of K))))) := by
   intro hmul hfin hgal hchi hchar _ _ htw K _ _ P n j hn hj
-  haveI := P.isAb.comm
-  haveI : NeZero (n : K) := ⟨hn⟩
-  haveI : NeZero n := .of_neZero_natCast K
-  haveI := (hfin _ P n NeZero.one_le).1
-  haveI hF := finite_torsion_of_isFinite_mul K P n
-  haveI := hasEnoughRootsOfUnity_globalSections K n hn
+  have := P.isAb.comm
+  have : NeZero (n : K) := ⟨hn⟩
+  have : NeZero n := .of_neZero_natCast K
+  have := (hfin _ P n NeZero.one_le).1
+  have hF := finite_torsion_of_isFinite_mul K P n
+  have := hasEnoughRootsOfUnity_globalSections K n hn
   let eK : K ≃+* Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) :=
     (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm
-  haveI : IsDomain Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) := eK.symm.toMulEquiv.isDomain K
+  have : IsDomain Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) := eK.symm.toMulEquiv.isDomain K
   have hnu : IsUnit (n : Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤)) := by
     simpa using (Ne.isUnit hn).map eK
   have hL := P.isLB
@@ -573,7 +573,7 @@ theorem sections_mulPull_split :
   clear hmul hfin hgal htw
   set T := baseOver (Spec (CommRingCat.of K))
   let G : Subgroup (T ⟶ P.A) := (powMonoidHom n).ker
-  haveI : Finite G := hF
+  have : Finite G := hF
   have hτ : ∀ x : T ⟶ P.A, (translT P.A x).left ≫ (fst T P.A).left = (fst T P.A).left :=
     CommPairing.translT_fst
   have hττ : ∀ x y : T ⟶ P.A, (translT P.A x).left ≫ (translT P.A y).left = (translT P.A (y * x)).left :=

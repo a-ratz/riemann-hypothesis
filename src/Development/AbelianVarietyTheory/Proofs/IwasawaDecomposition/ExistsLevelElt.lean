@@ -66,7 +66,7 @@ namespace GlobalTheory.EntriesExpBound
 theorem exists_nat_le_exp (x : WithZero (Multiplicative ℤ)) :
     ∃ k : ℕ, x ≤ WithZero.exp (k : ℤ) := by
   by_cases hx : x = 0
-  · exact ⟨0, by rw [hx]; exact zero_le'⟩
+  · exact ⟨0, by rw [hx]; exact zero_le⟩
   · refine ⟨(WithZero.log x).toNat, ?_⟩
     calc x = WithZero.exp (WithZero.log x) := (WithZero.exp_log hx).symm
       _ ≤ _ := WithZero.exp_le_exp.mpr (Int.self_le_toNat _)
@@ -129,7 +129,7 @@ theorem exists_root_rat (E : Type) [Field E] [NumberField E] (P : HeightOneSpect
       (∀ r s, Valued.v (M.1 r s - (1 : Matrix (Fin m) (Fin m) (P.adicCompletion E)) r s) ≤ WithZero.exp (-(N : ℤ))) ∧
       (∀ r s, Valued.v ((M ^ n).1 r s - (1 : Matrix (Fin m) (Fin m) (P.adicCompletion E)) r s) ≤ WithZero.exp (-(N : ℤ))) ∧
       G₁ * M ^ n * G₂ = Matrix.GeneralLinearGroup.map (algebraMap E (P.adicCompletion E)) γ := by
-  haveI : CharZero (P.adicCompletion E) := algebraRat.charZero _
+  have : CharZero (P.adicCompletion E) := algebraRat.charZero _
   have hc : Valued.v (q ^ (N + 1)) = WithZero.exp (-((N : ℤ) + 1)) := by
     rw [map_pow, hq, ← WithZero.exp_nsmul]
     congr 1

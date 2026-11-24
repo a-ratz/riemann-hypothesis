@@ -95,9 +95,9 @@ namespace GlobalTheory.Proof.GaloisEmbeddingCount
 
 theorem card_ringHom_of_isGalois (E F : Type) [Field E] [NumberField E] [IsGalois ℚ E] [Field F]
     (φ : E →+* F) : Nat.card (E →+* F) = Module.finrank ℚ E := by
-  haveI : CharZero F := (RingHom.charZero_iff φ.injective).1 inferInstance
-  letI : Algebra E F := φ.toAlgebra
-  haveI : IsScalarTower ℚ E F := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : CharZero F := (RingHom.charZero_iff φ.injective).1 inferInstance
+  let : Algebra E F := φ.toAlgebra
+  have : IsScalarTower ℚ E F := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   rw [Nat.card_congr (RingHom.equivRatAlgHom E F), Nat.card_congr (Normal.algHomEquivAut ℚ F E),
     IsGalois.card_aut_eq_finrank]
 
@@ -215,8 +215,8 @@ theorem norm_le_one {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [NumberFiel
     (hu : A.valuation (algebraMap E Ω u) < 1) : ‖Bw.j (algebraMap E Ω u)‖ ≤ 1 := by
   by_contra h1
   push_neg at h1
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI := Bw.Kw.2
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have := Bw.Kw.2
   obtain ⟨m, hm, hK⟩ := exists_not_pow Bw.Kw.1 _ (Bw.j_E u) h1
   obtain ⟨y, hy, hy1⟩ := exists_root A (algebraMap E Ω u) hm
   have hy0 : y ≠ 0 := by
@@ -366,7 +366,7 @@ theorem card_span {O Λ K G ι : Type} [CommRing O] [IsDomain O] [IsDiscreteValu
     (Z : Submodule O (G → ι → O)) [Module.Finite O Z] (hZ : ∀ (c : O) z, c ≠ 0 → c • z ∈ Z → z ∈ Z) :
     Nat.card (Submodule.span Λ {f : G → ι → K | ∃ y ∈ Z, ∃ b : K, ∀ g a, f g a = algebraMap O Λ (y g a) • b}) =
       Nat.card K ^ Module.finrank O Z := by
-  letI : Module O K := Module.compHom K (algebraMap O Λ)
+  let : Module O K := Module.compHom K (algebraMap O Λ)
   have hs : ∀ (a : O) (b : K), a • b = algebraMap O Λ a • b := fun _ _ => rfl
   let β := Module.finBasis O Z
   let Φ : (Fin (Module.finrank O Z) → K) →ₗ[Λ] (G → ι → K) :=
@@ -396,7 +396,7 @@ theorem card_span {O Λ K G ι : Type} [CommRing O] [IsDomain O] [IsDiscreteValu
     intro b hb
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
     have hT : Module.IsTorsionBySet O K (IsLocalRing.maximalIdeal O) := fun b a => hK a.1 a.2 b
-    letI : Module (IsLocalRing.ResidueField O) K := hT.module
+    let : Module (IsLocalRing.ResidueField O) K := hT.module
     have hs' : ∀ (a : O) (b : K), IsLocalRing.residue O a • b = a • b := fun _ _ => rfl
     funext i
     refine (Module.forall_dual_apply_eq_zero_iff (IsLocalRing.ResidueField O) (b i)).1 fun φ => ?_
@@ -455,7 +455,7 @@ theorem finite_and_finrank {O L G H ι : Type} [CommRing O] [IsDomain O] [IsNoet
     refine h0 _ fun p hp => ?_
     have : y.1 (e.symm p.1) p.2 = 0 := congrFun hy ⟨p, hp⟩
     rw [hφ, this, map_zero]
-  · haveI : IsLocalizedModule (nonZeroDivisors O) φ := by
+  · have : IsLocalizedModule (nonZeroDivisors O) φ := by
       refine ⟨fun s => ?_, fun y => ?_, fun {x y} h => ⟨1, by rw [hφi h]⟩⟩
       · have hs : algebraMap O L s ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
         rw [Module.End.isUnit_iff]
@@ -504,9 +504,9 @@ variable {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [Field Ω] [Algebra E 
   (Bw : LocBridge l E Ω Gw O)
 
 theorem isFractionRing_LL : letI := Bw.toLL.toAlgebra; IsFractionRing O ↥Bw.LL.1 := by
-  letI := Bw.toLL.toAlgebra
+  let := Bw.toLL.toAlgebra
   have hinj : Function.Injective Bw.toLL := Subtype.val_injective.comp Bw.eO.injective
-  haveI : FaithfulSMul O ↥Bw.LL.1 :=
+  have : FaithfulSMul O ↥Bw.LL.1 :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
   obtain ⟨_, -, hfr⟩ := (GlobalTheory.LocalIntegers.good_integers l Bw.LL).1.1
   refine IsFractionRing.of_field O _ fun x => ?_
@@ -543,17 +543,17 @@ theorem card_local [IsDiscreteValuationRing O] [IsTopologicalRing O] (hO : IsAdi
       (∀ g a, (z : ↥Gw → Fin m → K) g a = algebraMap O Λ (y g a) • b) ∧ x = Submodule.Quotient.mk z}) =
     Nat.card (H0 ρ) * Nat.card K ^ Module.finrank ↥Bw.LL.1 (Formalism.WeaklyAdmissibleFiltrations.FiniteCohomology (P.PD Bw.Kw) (Bw.rep T)) := by
   classical
-  letI := Bw.toLL.toAlgebra
-  haveI := isFractionRing_LL Bw
-  haveI := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK Bw.Kw
+  let := Bw.toLL.toAlgebra
+  have := isFractionRing_LL Bw
+  have := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK Bw.Kw
   have hinj : Function.Injective Bw.toLL := Subtype.val_injective.comp Bw.eO.injective
   set W := Formalism.WeaklyAdmissibleFiltrations.finiteCocycles (P.PD Bw.Kw) (Bw.rep T) with hWdef
   have hrep (g : ↥(GK Bw.Kw)) (x : Fin m → ↥Bw.LL.1) (a : Fin m) :
       Bw.rep T g x a = ∑ b, Bw.toLL ((T (Bw.e.symm g) : Matrix (Fin m) (Fin m) O) a b) * x b := rfl
-  haveI : FiniteDimensional ↥Bw.LL.1 (Formalism.WeaklyAdmissibleFiltrations.continuousCocycles (Bw.rep T)) := by
-    haveI : FiniteDimensional ℚ_[l] ↥Bw.LL.1 := Bw.LL.2
-    haveI : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
-    have htoLL : Continuous Bw.toLL := continuous_subtype_val.comp Bw.eO_cont
+  have : FiniteDimensional ↥Bw.LL.1 (Formalism.WeaklyAdmissibleFiltrations.continuousCocycles (Bw.rep T)) := by
+    have : FiniteDimensional ℚ_[l] ↥Bw.LL.1 := Bw.LL.2
+    have : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
+    have htoLL : Continuous Bw.toLL := continuous_subtypeVal.comp Bw.eO_cont
     let φ : Formalism.GaloisCohomology.GK l Bw.Kw.1 →* ↥(GK Bw.Kw) :=
       (Bw.Kw.1.fixingSubgroupEquiv.symm : _ ≃* _).toMonoidHom
     refine GlobalTheory.LocalH1Finiteness.finite_cocycles_of_compact_cover (l := l) (Bw.rep T) ?_ ?_ φ ?_ ?_ ?_
@@ -574,7 +574,7 @@ theorem card_local [IsDiscreteValuationRing O] [IsTopologicalRing O] (hO : IsAdi
     · exact Bw.Kw.1.fixingSubgroupEquiv.symm.surjective
     · intro r M _ _ _ _ _ ρ' hr hcont
       exact (hfin l Bw.Kw.1 Bw.Kw.2 r M ρ' hr hcont).2.1
-  haveI : FiniteDimensional ↥Bw.LL.1 W :=
+  have : FiniteDimensional ↥Bw.LL.1 W :=
     Submodule.finiteDimensional_of_le (S₂ := Formalism.WeaklyAdmissibleFiltrations.continuousCocycles (Bw.rep T)) fun c hc => hc.1
   have hsm : ∀ (c : O) (y : ↥Gw → Fin m → O), (fun h a => Bw.toLL ((c • y) (Bw.e.symm h) a)) =
       Bw.toLL c • fun h a => Bw.toLL (y (Bw.e.symm h) a) := fun c y => by funext h a; simp
@@ -695,8 +695,8 @@ def fracEquiv (v : PlE D.host) (hv : v ∈ placesOver D.host.E (X.l i)) :
 
 theorem fracEquiv_alg (v : PlE D.host) (hv : v ∈ placesOver D.host.E (X.l i)) (a : X.O0 i) :
     fracEquiv bkP i v hv (algebraMap _ _ a) = (bkP.br i v hv).toLL a := by
-  letI := (bkP.br i v hv).toLL.toAlgebra
-  haveI := isFractionRing_LL (bkP.br i v hv)
+  let := (bkP.br i v hv).toLL.toAlgebra
+  have := isFractionRing_LL (bkP.br i v hv)
   exact IsFractionRing.ringEquivOfRingEquiv_algebraMap (RingEquiv.refl (X.O0 i)) a
 
 def embOf (x : Emb bkP i) : D.host.E →+* FractionRing (X.O0 i) :=
@@ -795,7 +795,7 @@ theorem exists_conj : ∃ σ : Emb bkP i ≃ Emb bkP i, ∀ x : Emb bkP i,
   rfl
 
 theorem card_emb : Nat.card (Emb bkP i) = 2 * D.R.f := by
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   rw [Nat.card_congr (Equiv.ofBijective _ (embOf_bijective bkP i)), GlobalTheory.Proof.GaloisEmbeddingCount.card_ringHom_of_isGalois D.host.E _
     ((X.emb0 i).comp (D.embE.codRestrict D.LL0 D.hostField_le_fixedField)),
     D.host.finrank_cmField, Formalism.BasicNotions.Ranks.f, Formalism.BasicNotions.Ranks.n]
@@ -827,7 +827,7 @@ theorem h1fDim_eq (h : GalHyp bkP i s) (u : placesOver D.host.E (X.l i)) [Fintyp
   let T := (Tgl i s).comp (DecV N u.1).subtype
   have hdR : Bw.IsdRW P T := (h.1.2.1 u.1 u.2 (Tgl i s) (Or.inr rfl)).1
   have hT : Continuous fun g : ↥(DecV N u.1) => (T g : Matrix (Fin D.R.r) (Fin D.R.r) (X.O0 i)) :=
-    (continuous_Tgl i s).comp continuous_subtype_val
+    (continuous_Tgl i s).comp continuous_subtypeVal
   have h1 := GlobalTheory.BKDimNoInv.finrank_h1f_no_invariants Bw P T hT
     (h.2.2.2.2.2.1 _ _).2.1 hdR (noInv bkP i s h.1 u.1)
   have hr : 0 < D.R.r := (Nat.zero_lt_succ 99).trans_le h.2.2.2.2.2.2
@@ -847,11 +847,11 @@ theorem sum_h1fDim (h : GalHyp bkP i s) [Fintype (placesOver D.host.E (X.l i))] 
     have ht := D.R.two_le_m
     unfold Ranks.f Ranks.n
     omega
-  haveI : Finite (Emb bkP i) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hf)
-  haveI : ∀ u : placesOver D.host.E (X.l i), Finite (EmbV bkP i u.1 u.2) := fun u =>
+  have : Finite (Emb bkP i) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hf)
+  have : ∀ u : placesOver D.host.E (X.l i), Finite (EmbV bkP i u.1 u.2) := fun u =>
     Finite.of_injective (fun τ => (⟨u, τ⟩ : Emb bkP i))
       (sigma_mk_injective (β := fun u : placesOver D.host.E (X.l i) => EmbV bkP i u.1 u.2))
-  letI : ∀ u : placesOver D.host.E (X.l i), Fintype (EmbV bkP i u.1 u.2) := fun u => Fintype.ofFinite _
+  let : ∀ u : placesOver D.host.E (X.l i), Fintype (EmbV bkP i u.1 u.2) := fun u => Fintype.ofFinite _
   obtain ⟨σ, hσ⟩ := exists_conj bkP i
   let d : Emb bkP i → ℤ := fun x =>
     (dimD bkP i x.1.1 x.1.2 (Tgl i s) x.2 : ℤ) - dimFil0 bkP i x.1.1 x.1.2 (Tgl i s) x.2
@@ -883,11 +883,11 @@ theorem locCount : LocalFiniteness → LocalTateDuality → LocalEulerChar → G
     obtain ⟨c, hc⟩ := Ideal.Quotient.mk_surjective (eK b)
     rw [map_smul, map_zero, ← hc]
     exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mul_mem_right c _ (map_nonunit _ a ha))
-  haveI := X.twistBaseCoefficientRing_residueField_finite i
-  haveI : Finite (IsLocalRing.ResidueField Λ) := IsLocalRing.ResidueField.finite_of_finite (R := X.O0 i) inferInstance
-  haveI : Finite K := Finite.of_injective (β := IsLocalRing.ResidueField Λ) eK eK.injective
-  haveI : Finite (placesOver D.host.E (X.l i)) := ((X.S0 i).finite_toSet.subset (X.twistExcludedPlaces_contains_residueChar i)).to_subtype
-  letI : Fintype (placesOver D.host.E (X.l i)) := Fintype.ofFinite _
+  have := X.twistBaseCoefficientRing_residueField_finite i
+  have : Finite (IsLocalRing.ResidueField Λ) := IsLocalRing.ResidueField.finite_of_finite (R := X.O0 i) inferInstance
+  have : Finite K := Finite.of_injective (β := IsLocalRing.ResidueField Λ) eK eK.injective
+  have : Finite (placesOver D.host.E (X.l i)) := ((X.S0 i).finite_toSet.subset (X.twistExcludedPlaces_contains_residueChar i)).to_subtype
+  let : Fintype (placesOver D.host.E (X.l i)) := Fintype.ofFinite _
   rw [← finprod_set_coe_eq_finprod_mem, ← finprod_set_coe_eq_finprod_mem, finprod_eq_prod_of_fintype,
     finprod_eq_prod_of_fintype, ← sum_h1fDim bkP i s hG, ← Finset.prod_pow_eq_pow_sum, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun u _ => ?_
@@ -897,7 +897,7 @@ theorem locCount : LocalFiniteness → LocalTateDuality → LocalEulerChar → G
   have h0 := GlobalTheory.BKDimNoInv.localGaloisRep_invariants_from_fractionRing Bw T
     (noInv bkP i s hG.1 u.1)
   refine card_local Bw (X.twistBaseCoefficientRing_isAdic i) h4.2.2.2.1 (D.loc (X.l i)) T
-    ((continuous_Tgl i s).comp continuous_subtype_val) h0 hkill _ fun g x a => ?_
+    ((continuous_Tgl i s).comp continuous_subtypeVal) h0 hkill _ fun g x a => ?_
   have := hκ u.1 u.2 _ (N.plOm.2 u.1) g.1 g.2
   change ((κ g.1 : Λˣ) : Λ) • (_ : K) = _
   rw [this, Units.val_one, one_smul]

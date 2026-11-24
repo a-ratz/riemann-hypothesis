@@ -352,7 +352,7 @@ theorem coords_eq_zero {O : Type} [CommRing O] [StarRing O] [IsDedekindDomain O]
 
 theorem eq_of_prod_zpow_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Free ℤ X] [Module.Finite ℤ X] (F : Type) [Field F] (I : Type) [Fintype I] (ε : Module.Basis I ℤ (balForms H.bar X)) (x y : I → F), (∀ i, x i ≠ 0) → (∀ i, y i ≠ 0) → (∀ a b, ∏ i, x i ^ (ε i : LinearMap.BilinForm ℤ X) a b = ∏ i, y i ^ (ε i : LinearMap.BilinForm ℤ X) a b) → x = y := by
   intro E _ _ _ H X _ _ _ _ F _ I _ ε x y hx hy h
-  letI : StarRing (𝓞 E) :=
+  let : StarRing (𝓞 E) :=
     { star := H.bar
       star_involutive := fun a => by
         apply Subtype.ext
@@ -561,13 +561,13 @@ theorem torsion_fixed {W R V : Type} [CommRing W] [CommRing R] [IsDomain R] [Com
 theorem coords_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : MonoFam Xo c φ R) (Cn : Canon C), ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'], GlobalTheory.Mum.Base R' → ∀ θ₁ θ₂ : R →+* R', Function.Injective θ₁ → Function.Injective θ₂ → IsLocalHom θ₁ → IsLocalHom θ₂ → ∀ κ₁ κ₂ : Sp (FractionRing R') ⟶ Sp (FractionRing R), κ₁ ≫ jK R = jK R' ≫ spMap θ₁ → κ₂ ≫ jK R = jK R' ≫ spMap θ₂ → κ₁ ≫ C.y = κ₂ ≫ C.y → ∀ k, θ₁ (Cn.ψ (MvPolynomial.X k)) = θ₂ (Cn.ψ (MvPolynomial.X k)) := by
   intro E _ _ _ H Dw l Xo c φ hpq hφ hns R _ _ _ hR C Cn R' _ _ _ hR' θ₁ θ₂ i₁ i₂ l₁ l₂ κ₁ κ₂ hκ₁ hκ₂ hy
   have hW := GlobalTheory.T.canonicalFamily_base_injections_agree Xo c φ hpq hφ hns R hR C Cn R' hR' θ₁ θ₂ i₁ i₂ l₁ l₂ κ₁ κ₂ hκ₁ hκ₂ hy
-  letI := H.starRing
+  let := H.starRing
   have hn : 3 ≤ l.M' := l.three_le.trans (Nat.le_of_dvd (level_pos l) (Nat.dvd_lcm_left _ _))
   have hn1 : 1 ≤ l.M' := by omega
   set iw := Cn.ψ.comp MvPolynomial.C with hiwd
   have hiw : Function.Injective iw := by
     have hfl : iw.Flat := RingHom.Flat.comp (RingHom.flat_algebraMap_iff.2 inferInstance) Cn.compl.2.2.1
-    letI := iw.toAlgebra
+    let := iw.toAlgebra
     have : Module.Flat Cn.L.W R := hfl
     have : IsLocalHom (algebraMap Cn.L.W R) := Cn.ψ_loc
     have : Module.FaithfullyFlat Cn.L.W R := Module.FaithfullyFlat.of_flat_of_isLocalHom
@@ -655,8 +655,8 @@ theorem coords_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
 
   have hω : f₁.comp iw = f₂.comp iw := by rw [c₁, c₂, RingHom.comp_assoc, RingHom.comp_assoc, hW]
   rw [← hω] at hF₂ htaut
-  haveI := hM.2.1
-  haveI : IsMonHom (asIso b).hom := hM.1
+  have := hM.2.1
+  have : IsMonHom (asIso b).hom := hM.1
   have hbsq : IsSquare b.left (lift (fst D₁.toPre.P.A D₁.toPre.P.A ≫ b) (snd D₁.toPre.P.A D₁.toPre.P.A ≫ b) :
       G2 D₁.toPre.P.A ⟶ G2 D₂.toPre.P.A).left :=
     ⟨by rw [← Over.comp_left, lift_fst, Over.comp_left], by rw [← Over.comp_left, lift_snd, Over.comp_left]⟩
@@ -899,7 +899,7 @@ theorem mem_subfield_of_bilinForm_monomials :
   set P := monomialExponents k₀ t with hP
   have hv : ∀ a b : X, (fun k => (ε k : LinearMap.BilinForm ℤ X) a b) ∈ P := fun a b =>
     mem_monomialExponents_of_smul k₀ t _ n hn (h a b)
-  haveI : NoZeroSMulDivisors ℤ ((I → ℤ) ⧸ P) := by
+  have : NoZeroSMulDivisors ℤ ((I → ℤ) ⧸ P) := by
     refine ⟨fun {c x} hx => ?_⟩
     obtain ⟨v, rfl⟩ := P.mkQ_surjective x
     by_cases hc : c = 0
@@ -908,7 +908,7 @@ theorem mem_subfield_of_bilinForm_monomials :
       rw [← map_smul] at hx
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hx ⊢
       exact mem_monomialExponents_of_smul k₀ t v c hc hx
-  haveI : Module.Free ℤ ((I → ℤ) ⧸ P) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ ((I → ℤ) ⧸ P) := Module.free_of_finite_type_torsion_free'
   have key : P.mkQ (Pi.single k 1) = 0 := by
     rw [← Module.forall_dual_apply_eq_zero_iff ℤ]
     intro φ

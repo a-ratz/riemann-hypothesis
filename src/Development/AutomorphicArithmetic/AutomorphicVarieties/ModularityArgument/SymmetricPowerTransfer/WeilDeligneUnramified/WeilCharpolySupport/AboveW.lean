@@ -101,7 +101,7 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 private theorem charPol_supp (hZ : GlobalTheory.Published.ZelevinskyPolynomialRing) (H : UpperTheory.Zero.LLC.LawsT a ha rc)
     (x : IrrGL (k := w.adicCompletion E)) (s : Multiset (IrrGL (k := w.adicCompletion E))) (hs : HasSupport x.rep s) (g : Weil h) :
     (rc x).charPol g = (s.map fun y => (rc y).charPol g).prod := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := GlobalTheory.langlandsExhaustionGL_holds (w.adicCompletion E) x
   have hs' : HasSupport x.rep (msupp 𝔪) := GlobalTheory.LocGL.hasSupport_msupp_of_isL hZ _ 𝔪 x hm
   have he : s = msupp 𝔪 :=
@@ -182,7 +182,7 @@ theorem UpperTheory.V.Z.Desc.W.psT :
     obtain ⟨art, hart⟩ := P.aut.art L Ω
     have hinj := GlobalTheory.ArtinLocalInj.artin_localIdele_injective P.loc.chev L Ω art hart w
     exact MonoidHom.ext fun σ => hinj ((ha'.glob art hart _).trans (ha.glob art hart _).symm)
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hμ : ∀ i, IsSmoothChar (ω i * absPow (w.adicCompletion L) (((n : ℂ) - 1) / 2)) :=
     fun i => (hω i).mul (isSmoothChar_absPow _)
   have e0 : ((n : ℂ) - 1) / 2 + (((1 - (n : ℝ)) / 2 : ℝ) : ℂ) = 0 := by push_cast; ring
@@ -318,7 +318,7 @@ private theorem above' (P : Af.Hypotheses₂) (hl : l ≠ 2) {n : ℕ} {ι : Qba
   obtain ⟨a, ha⟩ : ∃ a, IsLocalArtin h a := by
     obtain ⟨a, ha, -⟩ := hrc
     exact ⟨a, ha⟩
-  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtype_val
+  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtypeVal
   choose ω hω using fun i => (Loc.ordCharIff P.litN.aut.art h ι _ ha (hh i) (ψ i)).1.2 ⟨flag_cont' hc hf i, hψ i⟩
   have hD : DRat ι h (ρ.comp (Dec (F := L) A).subtype) HT fun s => (rc (algNorm τ)).charPol s := fun O _ _ _ Bw hj =>
     have h1 := HG A h O Bw hj
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Z.Sym.W.aboveW : UpperTheory.V.Z.Sym.W.AboveW := by
     fin_cases i
     · exact (hκ s hs).1
     · exact (hκ s hs).2
-  have hcont : Continuous (r.comp (Dec (F := L) A).subtype) := hr.comp continuous_subtype_val
+  have hcont : Continuous (r.comp (Dec (F := L) A).subtype) := hr.comp continuous_subtypeVal
   have hfc : ∀ i, Continuous (κ i) := flag_cont' hcont hf
   have hmono : ∀ t : L →+* Qbar l, StrictMono fun j : Fin 2 => (fun (i : Fin 2) (_ : L →+* Qbar l) => -c i) j t := by
     intro t

@@ -148,7 +148,7 @@ theorem le_of_dense (π : K →* (H →L[ℂ] H)) (hiso : ∀ k x, ‖π k x‖ 
     (hY : ∀ B : H →L[ℂ] H, (∀ k x, B (π k x) = π k (B x)) → ∀ y ∈ Y, B y ∈ Y) : Y ≤ Ds := by
   intro a ha
   let Z : Submodule ℂ H := Ds ⊓ Y
-  haveI : FiniteDimensional ℂ Z := Submodule.finiteDimensional_of_le (inf_le_right : Z ≤ Y)
+  have : FiniteDimensional ℂ Z := Submodule.finiteDimensional_of_le (inf_le_right : Z ≤ Y)
   have hwZ : a - Z.starProjection a ∈ Zᗮ := Z.sub_starProjection_mem_orthogonal a
   have hwY : a - Z.starProjection a ∈ Y :=
     Y.sub_mem ha (inf_le_right (a := Ds) (Z.starProjection_apply_mem a))
@@ -180,9 +180,9 @@ theorem le_of_dense (π : K →* (H →L[ℂ] H)) (hiso : ∀ k x, ‖π k x‖ 
       by_contra hne
       have hwu : ⟪w, u⟫_ℂ ≠ 0 := fun h => hne (by rw [← inner_conj_symm, h, map_zero])
       have hpos : 0 < ∫ k, ‖⟪w, π k u⟫_ℂ‖ ^ 2 ∂μ :=
-        hcont.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+        hcont.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
           (HasCompactSupport.of_compactSpace _) (fun k => by positivity)
-          (by rw [map_one, ContinuousLinearMap.one_apply]; exact pow_ne_zero 2 (norm_ne_zero_iff.2 hwu))
+          (by rw [map_one, one_apply_eq_self]; exact pow_ne_zero 2 (norm_ne_zero_iff.2 hwu))
       exact hpos.ne' (by exact_mod_cast h1.symm)
     rw [hperp] at hmem
     exact (Submodule.mem_bot ℂ).1 hmem
@@ -199,7 +199,7 @@ variable {n : ℕ}
 theorem hsn_nonneg (X : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ hsn X := Real.sqrt_nonneg _
 
 theorem hsn_mul_le (A B : Matrix (Fin n) (Fin n) ℂ) : hsn (A * B) ≤ hsn A * hsn B := by
-  letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.frobeniusNormedAddCommGroup
+  let : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.frobeniusNormedAddCommGroup
   have e : ∀ X : Matrix (Fin n) (Fin n) ℂ, hsn X = ‖X‖ := fun X => by
     rw [Matrix.frobenius_norm_def, hsn, Real.sqrt_eq_rpow]
     norm_cast
@@ -305,7 +305,7 @@ namespace GlobalTheory.KFinDecay
 
 theorem decayAt_of_kFin : GlobalTheory.Published.HarishChandraModules → ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (τ : D.what₂.Tau) (v : M.H τ) (N : ℕ), v ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ → DecayAt M τ v v N → ∀ a ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ, DecayAt M τ v a N := by
   intro _ D V S M τ v N _ hvv a ha
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   obtain ⟨_, _, hU, hI, -⟩ := M.ds τ
   by_cases hv0 : v = 0
   · subst hv0
@@ -1340,8 +1340,8 @@ namespace GlobalTheory.SepPer.LipValue
 theorem lip_value : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (Y V : HSp D) (d : HermitianOrthogonalExtensionData Y V 1 1) (S S' : D.what₂.Tau → SPar) (M₀ : DSModel Y S') (M : DSModel V S) (p : Pack M₀ M) (Q : ℝ), p.Is θ d Q → ∀ (J : Set (GA D Y)) (χ : GA D Y → ℂ), ∀ t ∈ MultT θ M₀ J χ, ∀ b : ℝ, (∀ x, ‖t (PiTensorProduct.tprod ℂ p.w) x‖ ≤ b) → Lip θ p.A (t (PiTensorProduct.tprod ℂ p.w)) (Real.exp Q * b) := by
   intro hCusp D θ hθ Y V d S S' M₀ M p Q hp J χ t ht b hb
   obtain ⟨hLC, hSC, hT2, hB, hTG, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D Y
-  haveI := hLC; haveI := hSC; haveI := hT2; haveI := hB; haveI := hTG
-  haveI : LocallyCompactSpace (GinfC Y) := (GlobalTheory.AdelicSplit.isClosed_GinfC' Y).locallyCompactSpace
+  have := hLC; have := hSC; have := hT2; have := hB; have := hTG
+  have : LocallyCompactSpace (GinfC Y) := (GlobalTheory.AdelicSplit.isClosed_GinfC' Y).locallyCompactSpace
   obtain ⟨c, hc⟩ := hp.2 (Measure.haar : Measure (GinfC Y)) inferInstance
   set m : Measure (GinfC Y) := Measure.haar with hm
   set φ : GA D Y → ℂ := t (PiTensorProduct.tprod ℂ p.w) with hφ
@@ -1368,7 +1368,7 @@ theorem lip_value : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ :
     exact inv_eq_of_mul_eq_one_right (by
       rw [← GlobalTheory.Mem.Lift.oneP_add hθ hX, add_neg_cancel, GlobalTheory.Mem.Lift.oneP_zero hθ])
   have hmeas : ∀ y : GA D Y, AEStronglyMeasurable (fun h : GinfC Y => φ (y * h)) m := fun y =>
-    (hcont.comp (continuous_const.mul continuous_subtype_val)).aestronglyMeasurable
+    (hcont.comp (continuous_const.mul continuous_subtypeVal)).aestronglyMeasurable
   have hbd : ∀ y : GA D Y, ∀ᵐ (h : GinfC Y) ∂m, ‖φ (y * h)‖ ≤ b := fun y => Filter.Eventually.of_forall fun h => hb _
   have hαk : Integrable (fun h => α (k⁻¹ * h)) m := hαi.comp_mul_left k⁻¹
   have hI1 : Integrable (fun h => α (k⁻¹ * h) * φ (x * h)) m := hαk.mul_bdd (hmeas x) (hbd x)

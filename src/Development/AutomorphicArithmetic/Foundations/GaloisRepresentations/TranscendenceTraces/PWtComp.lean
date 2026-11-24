@@ -58,8 +58,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtComp_of :
     rw [hm2]
     exact A.pb
   let C : Sq r := ⟨pullback p A.u, A.V, pullback.fst p A.u, A.v, m, hsq⟩
-  haveI : IsFinite m := C.finite
-  haveI : IsFinite (pullback.snd p A.u) := (Sq.of p A.u).finite
+  have : IsFinite m := C.finite
+  have : IsFinite (pullback.snd p A.u) := (Sq.of p A.u).finite
   obtain ⟨ψ1, hψ1, hψ1s⟩ := hr C φ hφ
   obtain ⟨ψ2, hψ2, hψ2s⟩ := hp (Sq.of p A.u) ψ1 hψ1
   refine ⟨ψ2, hψ2, ?_⟩

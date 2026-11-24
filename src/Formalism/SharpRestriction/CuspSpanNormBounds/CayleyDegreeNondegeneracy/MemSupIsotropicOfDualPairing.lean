@@ -199,12 +199,12 @@ theorem mem_sup_isotropic_of_dual_pairing (hΛ : Submodule.IsFullLattice D.host.
         rfl
     by_cases h : a = b
     · subst b
-      simp only [if_pos rfl]
+      simp only [ite_eq_left rfl]
     · have hn : idx a ≠ idx b := fun hh => h (hi.mp hh.symm)
-      simp only [if_neg h, if_neg hn]
+      simp only [ite_eq_right h, ite_eq_right hn]
   have DL := Formalism.HermitianLatticesTheory.dualLattice (𝓞 D.host.E) D.host.E (hS D).V (hS D).hT (hS D).herm (hS D).nondeg i_star_int
   have hlat : ∀ N : LatV D, N.FG → Submodule.IsFullLattice D.host.E (Λ ⊔ N) := by
-    letI := hΛ
+    let := hΛ
     intro N hN
     exact Submodule.IsFullLattice.of_le_of_fg D.host.E le_sup_left (hΛ.fg.sup hN)
   have hΛ₂ := (DL _ (hlat (Submodule.span (𝓞 D.host.E) {y}) (Submodule.fg_span (Set.finite_singleton y)))).1
@@ -256,7 +256,7 @@ theorem mem_sup_isotropic_of_dual_pairing (hΛ : Submodule.IsFullLattice D.host.
         intro a
         rw [← algebraMap_smul D.host.E (o a), ← algebraMap_smul D.host.E ε, map_smul, map_smul, hf]
         split_ifs <;> simp
-      simp only [this, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [this, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [ho b]
       field_simp
     have e : l = (l - l') + l' := by abel

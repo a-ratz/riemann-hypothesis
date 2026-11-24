@@ -1365,7 +1365,7 @@ theorem trace_integral' : TraceInt := by
           exact WithZero.exp_ne_zero
         have hopen := Valued.isOpen_closedBall K
           (r := w.restrict ((π : K) ^ n)) ((map_ne_zero w.restrict).mpr (pow_ne_zero n hπ0))
-        convert hopen.preimage (continuous_subtype_val : Continuous (fun x : O => (x : K))) using 1
+        convert hopen.preimage (continuous_subtypeVal : Continuous (fun x : O => (x : K))) using 1
         ext x
         exact (hpow n x).trans (w.restrict_le_iff).symm
       · intro U hU

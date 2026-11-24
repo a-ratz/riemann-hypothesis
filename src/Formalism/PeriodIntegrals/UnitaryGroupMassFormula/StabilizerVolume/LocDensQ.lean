@@ -74,9 +74,9 @@ theorem sum_cnt (n : ℕ) : ∑ k ∈ Finset.Icc 1 n, cnt K k =
     simp
   | succ n ih =>
     rw [Finset.sum_Icc_succ_top (by omega), ih]
-    haveI : Finite {I : (Ideal (𝓞 K))⁰ // Ideal.absNorm (I : Ideal (𝓞 K)) ≤ n} := (Ideal.finite_setOf_absNorm_le₀ (S := 𝓞 K) n).to_subtype
-    haveI : Finite {I : Ideal (𝓞 K) // Ideal.absNorm I = n + 1} :=
-      (Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) (n + 1)).to_subtype
+    have : Finite {I : (Ideal (𝓞 K))⁰ // Ideal.absNorm (I : Ideal (𝓞 K)) ≤ n} := (Ring.HasFiniteQuotients.finite_absNorm_le₀ (S := 𝓞 K) n).to_subtype
+    have : Finite {I : Ideal (𝓞 K) // Ideal.absNorm I = n + 1} :=
+      (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) (n + 1)).to_subtype
     have hnz : ∀ I : Ideal (𝓞 K), Ideal.absNorm I = n + 1 → I ∈ (Ideal (𝓞 K))⁰ := by
       intro I hI
       refine mem_nonZeroDivisors_iff_ne_zero.2 (fun h => ?_)
@@ -91,14 +91,14 @@ theorem sum_cnt (n : ℕ) : ∑ k ∈ Finset.Icc 1 n, cnt K k =
         left_inv := by
           intro x
           by_cases h : Ideal.absNorm (x.1 : Ideal (𝓞 K)) ≤ n
-          · simp only [dif_pos h]
-          · simp only [dif_neg h]
+          · simp only [dite_eq_left h]
+          · simp only [dite_eq_right h]
         right_inv := by
           intro y
           rcases y with z | z
-          · simp only [dif_pos z.2]
+          · simp only [dite_eq_left z.2]
           · have hz : ¬ Ideal.absNorm z.1 ≤ n := by have := z.2; omega
-            simp only [dif_neg hz] }
+            simp only [dite_eq_right hz] }
     rw [Nat.card_congr e, Nat.card_sum]
     unfold cnt
     push_cast
@@ -143,8 +143,8 @@ theorem qV_eq {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 
 
 theorem qvSum_holds : QvSum := by
   intro F _ _
-  haveI hfin : ∀ n : ℕ, Finite {I : Ideal (𝓞 F) // Ideal.absNorm I = n} :=
-    fun n => (Ideal.finite_setOf_absNorm_eq (S := 𝓞 F) n).to_subtype
+  have hfin : ∀ n : ℕ, Finite {I : Ideal (𝓞 F) // Ideal.absNorm I = n} :=
+    fun n => (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 F) n).to_subtype
   let f : Ideal (𝓞 F) → ℝ := fun I => ((Ideal.absNorm I : ℝ))⁻¹ ^ 2
   have hf0 : ∀ I, 0 ≤ f I := fun I => by positivity
   have hsig : Summable (fun x : Σ n : ℕ, {I : Ideal (𝓞 F) // Ideal.absNorm I = n} => f x.2.1) := by

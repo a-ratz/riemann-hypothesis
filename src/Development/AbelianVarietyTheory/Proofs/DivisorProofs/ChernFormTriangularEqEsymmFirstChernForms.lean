@@ -87,7 +87,7 @@ theorem conn_lowerTriangular {n s : ℕ} {T : V n → Matrix (Fin s) (Fin s) ℂ
     rw [Matrix.transpose_apply, mdel_apply,
       del_congr (g := fun _ => (0 : ℂ)) (h0.mono fun y hy => hy j i hij)]
     simp
-  letI := Matrix.invertibleOfIsUnitDet _ hu'
+  let := Matrix.invertibleOfIsUnitDet _ hu'
   have hc : (conn T x ξ).BlockTriangular id :=
     (Matrix.blockTriangular_inv_of_blockTriangular hT).mul hD
   refine ⟨fun i j hij => hc hij, fun i => ?_⟩
@@ -152,7 +152,7 @@ namespace GlobalTheory.ChernTri
 theorem coeff_charpolyRev_neg_of_tri {R : Type} [CommRing R] {s : ℕ} (F : Matrix (Fin s) (Fin s) R)
     (h : ∀ i j, j < i → F i j = 0) (k : ℕ) :
     (Matrix.charpolyRev (-F)).coeff k = ∑ t ∈ Finset.powersetCard k Finset.univ, ∏ i ∈ t, F i i := by
-  rw [Matrix.charpolyRev, Matrix.det_of_upperTriangular]
+  rw [Matrix.charpolyRev, Matrix.det_of_isUpperTriangular]
   · have e : ∀ i, ((1 : Matrix (Fin s) (Fin s) (Polynomial R)) -
         (Polynomial.X : Polynomial R) • (-F).map Polynomial.C) i i = 1 + Polynomial.C (F i i) * Polynomial.X := by
       intro i
@@ -181,7 +181,7 @@ theorem chernAt_tri : ∀ (n s : ℕ) (T : V n → Matrix (Fin s) (Fin s) ℂ) (
       kappa • (aeval sym (curvPoly T v i i) : Ev n) := by
 
     simp only [ofValues, ddc, curvPoly, Matrix.of_apply, map_sum, map_mul, aeval_C, aeval_X, Finset.smul_sum,
-    fun ξ η => (key ξ η).2 i, leviForm_neg, ← Algebra.smul_def, smul_smul, ContinuousLinearMap.neg_apply]
+    fun ξ η => (key ξ η).2 i, leviForm_neg, ← Algebra.smul_def, smul_smul, neg_apply]
   simp only [e]
   rw [Finset.prod_smul, Finset.prod_const, (Finset.mem_powersetCard.1 ht).2]
 

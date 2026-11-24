@@ -179,7 +179,7 @@ private theorem ord_of_flag (N : GlobalTheory.Mem.LiteralAutomorphy.LitN) (ι : 
     if hx : ∃ b, IsJumpsAt (Loc.PP l) Bw (rk1 (ψ i)) τ {b} then hx.choose else 0
   have hs : ∀ (i : Fin n) (j : W.Emb l w),
       IsJumpsAt (Loc.PP l) Bw (rk1 (ψ i)) (j.1.comp (algebraMap L _)) {hh i (j.1.comp (algebraMap L _))} := fun i j => by
-    simp only [hh, dif_pos (hone i j)]
+    simp only [hh, dite_eq_left (hone i j)]
     exact (hone i j).choose_spec
   have hc := cont_of_flag hr hf'
   have hla := fun i => UpperTheory.V.Loc.laConv art art.heckeLAdicCharacter hD N.aut.berger h (ψ i) (hc i) O Bw hj
@@ -206,8 +206,8 @@ end Loc
 private theorem mem_of_prod {M : Type} [Monoid M] {n : ℕ} (f g : Fin n → (M →* ℂ))
     (h : ∀ x, ∏ j, (X - C (f j x)) = ∏ j, (X - C (g j x))) (j : Fin n) : ∃ i, g i = f j := by
   have hc := GlobalTheory.CharDeg.card_fiber_eq_of_sum_eq f g (fun x => GlobalTheory.CharDeg.sum_eq_of_prod_eq _ _ (h x)) (f j)
-  haveI : Nonempty {i // f i = f j} := ⟨⟨j, rfl⟩⟩
-  haveI : Finite {i // g i = f j} := inferInstance
+  have : Nonempty {i // f i = f j} := ⟨⟨j, rfl⟩⟩
+  have : Finite {i // g i = f j} := inferInstance
   have hpos : 0 < Nat.card {i // g i = f j} := hc ▸ Nat.card_pos
   obtain ⟨⟨i, hi⟩⟩ := (Nat.card_pos_iff.1 hpos).1
   exact ⟨i, hi⟩

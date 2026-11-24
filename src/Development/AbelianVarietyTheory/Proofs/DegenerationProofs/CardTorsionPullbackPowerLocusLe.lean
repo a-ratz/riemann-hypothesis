@@ -90,14 +90,14 @@ variable {k : Type} [Field k] [IsAlgClosed k] {X : Type} [AddCommGroup X]
 
 theorem exists_extend (M : AddSubgroup X) (φ : M →+ Additive kˣ) :
     ∃ t : Multiplicative X →* kˣ, ∀ m : M, t (Multiplicative.ofAdd (m : X)) = (φ m).toMul := by
-  letI : RootableBy kˣ ℕ := rootableByOfPowLeftSurj _ _ fun {n} hn u => by
+  let : RootableBy kˣ ℕ := rootableByOfPowLeftSurj _ _ fun {n} hn u => by
     obtain ⟨z, hz⟩ := IsAlgClosed.exists_pow_nat_eq (u : k) (Nat.pos_of_ne_zero hn)
     have h0 : z ≠ 0 := by
       rintro rfl
       exact u.ne_zero (by rw [← hz, zero_pow hn])
     exact ⟨Units.mk0 z h0, Units.ext (by simpa using hz)⟩
-  letI : RootableBy kˣ ℤ := Group.rootableByIntOfRootableByNat _
-  letI : DivisibleBy (Additive kˣ) ℤ :=
+  let : RootableBy kˣ ℤ := Group.rootableByIntOfRootableByNat _
+  let : DivisibleBy (Additive kˣ) ℤ :=
     { div := fun a n => Additive.ofMul (RootableBy.root a.toMul n)
       div_zero := fun a => congrArg Additive.ofMul (RootableBy.root_zero a.toMul)
       div_cancel := fun a hn => congrArg Additive.ofMul (RootableBy.root_cancel a.toMul hn) }
@@ -420,7 +420,7 @@ theorem exists_const_of_invariant {G B T N : Over (Sp k)} [GrpObj G] [GrpObj B] 
   have hfi : (const N).IsIntegralElem f := by
     rw [hfa, ← hc]
     exact (hint a).map _
-  letI := (const N).toAlgebra
+  let := (const N).toAlgebra
   exact minpoly.mem_range_of_degree_eq_one k f (IsAlgClosed.degree_eq_one_of_irreducible k
     (minpoly.irreducible hfi))
 
@@ -604,7 +604,7 @@ theorem torus_torsion (k : Type) [Field k] (X : Type) [AddCommGroup X] [Module.F
     [Module.Finite ℤ X] (n : ℕ) (hn : 1 ≤ n) :
     Finite {t : 𝟙_ (Over (Sp k)) ⟶ splitTorus (Sp k) X // t ^ n = 1} ∧
       Nat.card {t : 𝟙_ (Over (Sp k)) ⟶ splitTorus (Sp k) X // t ^ n = 1} ≤ n ^ Module.finrank ℤ X := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   let b := Module.finBasis ℤ X
   let e₁ := splitTorusPointsEquiv (Sp k) X (𝟙_ (Over (Sp k)))
   let e₃ : Γ((𝟙_ (Over (Sp k))).left, ⊤)ˣ ≃* kˣ :=

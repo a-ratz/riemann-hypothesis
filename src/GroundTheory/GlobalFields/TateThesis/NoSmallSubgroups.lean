@@ -115,7 +115,7 @@ theorem noSmallSubgroups : NoSmallSubgroups Circle := by
   refine ⟨{z : Circle | ‖(z : ℂ) - 1‖ < 1 / 2}, ?_, fun H hH ↦
     subgroup_eq_bot_of_norm_sub_one_lt H fun z hz ↦ hH hz⟩
   have hc : Continuous fun z : Circle ↦ ‖(z : ℂ) - 1‖ :=
-    (continuous_subtype_val.sub continuous_const).norm
+    (continuous_subtypeVal.sub continuous_const).norm
   exact (isOpen_lt hc continuous_const).mem_nhds (by simp)
 
 end Circle

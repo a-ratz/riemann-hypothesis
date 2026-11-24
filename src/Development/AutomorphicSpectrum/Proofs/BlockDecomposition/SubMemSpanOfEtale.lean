@@ -61,8 +61,8 @@ namespace GlobalTheory.CompanionTheory.LiftFlat
 theorem flat_of_eval₂Hom_etale {Λ D : Type} [CommRing Λ] [CommRing D] (i : Λ →+* D) {d : ℕ}
     (t : Fin d → D) (het : (MvPolynomial.eval₂Hom i t).Etale) : i.Flat := by
   have h1 : (MvPolynomial.eval₂Hom i t).Flat := by
-    letI := (MvPolynomial.eval₂Hom i t).toAlgebra
-    haveI : Algebra.Etale (MvPolynomial (Fin d) Λ) D := het
+    let := (MvPolynomial.eval₂Hom i t).toAlgebra
+    have : Algebra.Etale (MvPolynomial (Fin d) Λ) D := het
     exact Algebra.Smooth.flat (MvPolynomial (Fin d) Λ) D
   have h2 : (MvPolynomial.C : Λ →+* MvPolynomial (Fin d) Λ).Flat := by
     rw [← MvPolynomial.algebraMap_eq, RingHom.flat_algebraMap_iff]
@@ -76,8 +76,8 @@ theorem sub_mem_span_of_etale {Λ D : Type} [CommRing Λ] [CommRing D] (i : Λ �
     (hgt : ∀ k, g (t k) - t k ∈ Ideal.span {μ}) (hgJ : ∀ z, g z - z ∈ J) (z : D) :
     g z - z ∈ Ideal.span {μ} := by
   classical
-  letI : Algebra (MvPolynomial (Fin d) Λ) D := (MvPolynomial.eval₂Hom i t).toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin d) Λ) D := het
+  let : Algebra (MvPolynomial (Fin d) Λ) D := (MvPolynomial.eval₂Hom i t).toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin d) Λ) D := het
   let q : D →+* D ⧸ Ideal.span ({μ} : Set D) := Ideal.Quotient.mk _
   have hcomm : (q.comp g).comp (MvPolynomial.eval₂Hom i t) = q.comp (MvPolynomial.eval₂Hom i t) := by
     apply MvPolynomial.ringHom_ext

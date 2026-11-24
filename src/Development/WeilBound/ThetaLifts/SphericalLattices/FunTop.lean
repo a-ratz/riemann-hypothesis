@@ -599,7 +599,7 @@ theorem relIndex_ne_zero_of_nhds {G : Type} [Group G] [TopologicalSpace G] [IsTo
     (hK : IsCompact (K : Set G)) {U : Set G} (hU : U ∈ 𝓝 (1 : G)) (hH : ∀ k ∈ K, k ∈ U → k ∈ H) : H.relIndex K ≠ 0 := by
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have ho : IsOpen ((H.subgroupOf K : Subgroup K) : Set K) :=
-    (H.subgroupOf K).isOpen_of_mem_nhds (Filter.mem_of_superset (continuous_subtype_val.continuousAt (x := (1 : K)) hU)
+    (H.subgroupOf K).isOpen_of_mem_nhds (Filter.mem_of_superset (continuous_subtypeVal.continuousAt (x := (1 : K)) hU)
       fun k hk => Subgroup.mem_subgroupOf.2 (hH k.1 k.2 hk))
   have : Finite (K ⧸ H.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.index_ne_zero_of_finite
@@ -629,8 +629,8 @@ theorem exists_form (hAvg : AvgSt) (L : IsLocRep M ψ om v ω ρ) (hKc : IsCompa
     ∃ l, IsSphForm M om v ω l ∧ ∀ h ∈ UAt σ W (evFin F v),
       l (ω (1, h) (M.vac v)) = avgK (KSub σ W v) (fun g => l₀ (ω (1, g) (M.vac v)) / l₀ (M.vac v)) h := by
   classical
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
-  haveI : IsTopologicalGroup (UA σ W.J) := inferInstance
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  have : IsTopologicalGroup (UA σ W.J) := inferInstance
   have o1 := one_mem_UAt (σ := σ) X v
   have oW := one_mem_UAt (σ := σ) W v
   have stabFin : ∀ φ (hφ : φ ∈ SB _), (stabK L φ hφ).relIndex (KSub σ W v) ≠ 0 := fun φ hφ => by
@@ -699,7 +699,7 @@ theorem sphFun_of (hCount : CountSt) (hAvg : AvgSt) (hPInv : PInvSt) (hLift : Un
     (hSieg : SiegSt) (hMod : ModSt) (hCart : CartanSt) (hFin : FinSt) : SphFun := by
   classical
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v he ω ρ ω' ρ' L L' hK hK'
-  haveI : LocallyCompactSpace (Fv F v) :=
+  have : LocallyCompactSpace (Fv F v) :=
     (PI.AdicCompletionValuation.isCompact_adicCompletionIntegers F v).locallyCompactSpace_of_mem_nhds_of_addGroup
       ((Valued.isOpen_valuationSubring _).mem_nhds (zero_mem (v.adicCompletionIntegers F)))
   obtain ⟨w, hw⟩ := inert_of_local F E σ B hT.base v he
@@ -865,7 +865,7 @@ theorem avgSt : AvgSt := by
   let N : ∀ φ, φ ∈ V → Subgroup K := fun φ hφ => ((Hc φ hφ).subgroupOf K).normalCore
   have hNn : ∀ φ hφ, (N φ hφ).Normal := fun φ hφ => Subgroup.normalCore_normal _
   have hN0 : ∀ φ hφ, (N φ hφ).index ≠ 0 := fun φ hφ => by
-    haveI := fin1 φ hφ
+    have := fin1 φ hφ
     exact (Subgroup.finiteIndex_normalCore _).index_ne_zero
   have hNinv : ∀ φ hφ, ∀ (x : K), ∀ h ∈ N φ hφ, f φ (x * h) = f φ x := fun φ hφ x h hh =>
     hinvH φ hφ _ (hHcfix φ hφ) x h (Subgroup.normalCore_le _ hh)
@@ -875,7 +875,7 @@ theorem avgSt : AvgSt := by
     have hM := Subgroup.index_inf_ne_zero h0 (hN0 φ hφ)
     rw [← avgQ_le inf_le_left hM hH', avgQ_le inf_le_right hM (hNinv φ hφ)]
   let lamF : S → ℂ := fun φ => if hφ : φ ∈ V then avgQ (N φ hφ) (f φ) else 0
-  have hlamF : ∀ φ (hφ : φ ∈ V), lamF φ = avgQ (N φ hφ) (f φ) := fun φ hφ => dif_pos hφ
+  have hlamF : ∀ φ (hφ : φ ∈ V), lamF φ = avgQ (N φ hφ) (f φ) := fun φ hφ => dite_eq_left hφ
   let lamV : V →ₗ[ℂ] ℂ :=
     { toFun := fun φ => lamF φ
       map_add' := fun φ ψ => by
@@ -903,8 +903,8 @@ theorem avgSt : AvgSt := by
     exact hlamF φ hφ
   refine ⟨lamV ∘ₗ π, fun k hk φ hφ => ?_, fun φ hφ H hHK hH0 hH => ?_⟩
   · have hψ := hV k hk φ hφ
-    haveI := hNn φ hφ
-    haveI := hNn _ hψ
+    have := hNn φ hφ
+    have := hNn _ hψ
     have h0 := Subgroup.index_inf_ne_zero (hN0 _ hφ) (hN0 _ hψ)
     have e : f (ω k φ) = fun x => f φ (x * ⟨k, hk⟩) := funext fun x => by
       rw [hfe, hfe, Subgroup.coe_mul, hmul x x.2 k hk φ hφ]
@@ -1100,14 +1100,14 @@ theorem count_core {U P K : Subgroup G} (hPU : P ≤ U) {f f' : G → ℂ} (f1 :
       fun d _ => by
       by_cases h1 : e ∈ orb (P ⊓ K) (Quotient.out d)⁻¹
       · have h2 := orb_symm (P ⊓ K) h1
-        rw [if_pos h1, if_pos h2]
+        rw [ite_eq_left h1, ite_eq_left h2]
         obtain ⟨a, ha, hd'⟩ := h2
         obtain ⟨m, hm⟩ := QuotientGroup.mk_out_eq_mul (P ⊓ K) (a * (Quotient.out e)⁻¹)
         have hod : Quotient.out d = a * (Quotient.out e)⁻¹ * m := by rw [hd', hm]
         simp only [w]
         rw [hod, bi' a ha _ (hPU hr) m m.2, mul_inv_rev, mul_inv_rev, inv_inv, ← mul_assoc,
           orb_mul ((P ⊓ K).inv_mem m.2) ((P ⊓ K).inv_mem ha)]
-      · rw [if_neg h1, if_neg (fun h2 => h1 (orb_symm (P ⊓ K) h2))]
+      · rw [ite_eq_right h1, ite_eq_right (fun h2 => h1 (orb_symm (P ⊓ K) h2))]
     rw [Finset.sum_congr rfl hcond, ← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul]
     have e1 : ((hA.toFinset.filter (· ∈ orb (P ⊓ K) (Quotient.out e)⁻¹) : Finset (G ⧸ (P ⊓ K))) : Set (G ⧸ (P ⊓ K))) =
         orb (P ⊓ K) (Quotient.out e)⁻¹ := by
@@ -1305,7 +1305,7 @@ theorem finSt_relIndex_nhds {G : Type} [Group G] [TopologicalSpace G] [IsTopolog
     (hK : IsCompact (K : Set G)) {U : Set G} (hU : U ∈ 𝓝 (1 : G)) (hH : ∀ k ∈ K, k ∈ U → k ∈ H) : H.relIndex K ≠ 0 := by
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have ho : IsOpen ((H.subgroupOf K : Subgroup K) : Set K) :=
-    (H.subgroupOf K).isOpen_of_mem_nhds (Filter.mem_of_superset (continuous_subtype_val.continuousAt (x := (1 : K)) hU)
+    (H.subgroupOf K).isOpen_of_mem_nhds (Filter.mem_of_superset (continuous_subtypeVal.continuousAt (x := (1 : K)) hU)
       fun k hk => Subgroup.mem_subgroupOf.2 (hH k.1 k.2 hk))
   have : Finite (K ⧸ H.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.index_ne_zero_of_finite

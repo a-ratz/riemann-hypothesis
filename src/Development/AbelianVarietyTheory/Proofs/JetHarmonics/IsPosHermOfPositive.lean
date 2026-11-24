@@ -181,7 +181,7 @@ theorem sum_pos_of_tensor_pos : ∀ (Y : Type) [AddCommGroup Y] [Module.Free ℤ
 theorem eq_zero_of_trace_mul (E : Type) [Field E] [NumberField E] {u : 𝓞 E}
     (h : ∀ α : 𝓞 E, Algebra.trace ℤ (𝓞 E) (α * u) = 0) : u = 0 := by
   by_contra hu
-  obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) u).exists_nonzero_dvd
+  obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) u).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero hu)
   have h1 := h α
   rw [mul_comm, ← hα, Algebra.trace_algebraMap, nsmul_eq_mul] at h1
@@ -226,7 +226,7 @@ theorem exists_traceDual : ∀ (E : Type) [Field E] [NumberField E], ∃ (N : �
       intro s
       have := h3 (ω.coord s) (α * ω s)
       simp only [Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply, ite_smul,
-        one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+        one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
       rw [← this, mul_comm (θ s), mul_assoc]
 
     rw [mul_sub, map_sub, Finset.mul_sum, map_sum, mul_comm α (_ : 𝓞 E), ← nsmul_eq_mul, map_nsmul,
@@ -280,7 +280,7 @@ variable {X : Type} [AddCommGroup X] [Module (𝓞 E) X]
 theorem smul_ne_zero_of_free [Module.Free ℤ X] {c : 𝓞 E} {x : X} (hc : c ≠ 0) (hx : x ≠ 0) :
     c • x ≠ 0 := by
   intro h
-  obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_nonzero_dvd
+  obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero hc)
   have : r • x = 0 := by
     rw [← algebraMap_smul (𝓞 E) r x, hα, mul_comm, mul_smul, h, smul_zero]

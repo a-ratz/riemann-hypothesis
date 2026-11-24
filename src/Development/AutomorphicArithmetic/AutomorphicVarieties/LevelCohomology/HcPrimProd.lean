@@ -56,8 +56,8 @@ theorem UpperTheory.V.X.primProd :
     ∀ (O : Type) [CommRing O] [IsDomain O] (M N : ℕ) [NeZero M] [NeZero N] (χ : DirichletCharacter O M) (θ : DirichletCharacter O N), ∃ (f : ℕ) (φ : DirichletCharacter O f), φ.IsPrimitive ∧ f ∣ M * θ.conductor ∧ (∀ t : ℕ, χ ^ t = 1 → θ ^ t = 1 → φ ^ t = 1) ∧ ∀ a : ℤ, IsCoprime a (M * N : ℕ) → φ a = χ a * θ a := by
   intro O _ _ M N _ _ χ θ
   have hc0 : θ.conductor ≠ 0 := θ.conductor_ne_zero
-  haveI : NeZero θ.conductor := ⟨hc0⟩
-  haveI : NeZero (M * θ.conductor) := ⟨mul_ne_zero (NeZero.ne M) hc0⟩
+  have : NeZero θ.conductor := ⟨hc0⟩
+  have : NeZero (M * θ.conductor) := ⟨mul_ne_zero (NeZero.ne M) hc0⟩
   set θ' := θ.primitiveCharacter with hθe
   have hM : M ∣ M * θ.conductor := dvd_mul_right M _
   have hC : θ.conductor ∣ M * θ.conductor := dvd_mul_left _ M

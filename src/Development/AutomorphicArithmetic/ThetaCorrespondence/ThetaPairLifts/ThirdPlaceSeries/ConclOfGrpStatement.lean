@@ -151,8 +151,8 @@ theorem exists_mul_conj_eq_norm : ∀ (K : Type) [Field K] [NumberField K], IsEm
     ∀ (j : K →+* Qb) (π : 𝓞 K) (p : ℕ), Ideal.absNorm (Ideal.span {π}) = p →
       ∃ σ : Qb →ₐ[ℚ] Qb, j (π : K) * σ (j (π : K)) = (p : Qb) := by
   intro K _ _ hE hK j π p hp
-  haveI := isTotallyComplex_of_isEmpty hE
-  haveI : Algebra.IsAlgebraic ℚ Qb := AlgebraicClosure.isAlgebraic ℚ
+  have := isTotallyComplex_of_isEmpty hE
+  have : Algebra.IsAlgebraic ℚ Qb := AlgebraicClosure.isAlgebraic ℚ
   let ι : Qb →+* ℂ := (IsAlgClosed.lift (M := ℂ) (R := ℚ) (S := Qb)).toRingHom
   refine ⟨(Formalism.L2.DIV.conjQb ι).toAlgHom, ?_⟩
   apply ι.injective
@@ -204,8 +204,8 @@ theorem exists_span_eq_of_splits (K L : Type) [Field K] [NumberField K] [Field L
   have hN : Ideal.absNorm P = Ideal.absNorm 𝔭.asIdeal := by
     rw [Ideal.absNorm_eq_pow_inertiaDeg'_of_liesOver P 𝔭.asIdeal 𝔭.isPrime 𝔭.ne_bot, hf, pow_one]
   have : Finite (𝓞 L ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
-  letI := Ideal.Quotient.field P
-  letI := Fintype.ofFinite (𝓞 L ⧸ P)
+  let := Ideal.Quotient.field P
+  let := Fintype.ofFinite (𝓞 L ⧸ P)
   have hpow : ∀ x : 𝓞 L, x ^ Ideal.absNorm 𝔭.asIdeal - x ∈ P := fun x => by
     rw [← Ideal.Quotient.eq, map_pow, ← hN, Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
     exact FiniteField.pow_card _
@@ -258,7 +258,7 @@ theorem not_isUnit_natCast {K : Type} [Field K] [NumberField K] {p : ℕ} (hp : 
   intro h
   have : IsLocalHom (algebraMap ℤ (𝓞 K)) := Algebra.IsIntegral.isLocalHom _ _
   rw [← map_natCast (algebraMap ℤ (𝓞 K))] at h
-  exact (Nat.prime_iff_prime_int.1 hp).not_unit (isUnit_of_map_unit _ _ h)
+  exact (Nat.prime_iff_prime_int.1 hp).not_isUnit (isUnit_of_map_unit _ _ h)
 
 theorem rayField_splitsIn_of_isRayPrime (D : D7) (jE : D.host.E →+* Qb) (M : Fld) (h : KQbar D jE ≤ M)
     (hf : FiniteDimensional ℚ M) :
@@ -266,8 +266,8 @@ theorem rayField_splitsIn_of_isRayPrime (D : D7) (jE : D.host.E →+* Qb) (M : F
     haveI := GlobalTheory.ParRay.nfOf hf
     GlobalTheory.Mem.Fld.IsRayField D.host.K M (GlobalTheory.Mem.RaySplit.condIdeal D.host) →
       ∀ p, IsRayPrime (KQbar D jE) (D.host.QS * D.host.q * D.host.d) p → SplitsIn M p := by
-  letI := GlobalTheory.ParRay.algK D jE h
-  haveI := GlobalTheory.ParRay.nfOf hf
+  let := GlobalTheory.ParRay.algK D jE h
+  have := GlobalTheory.ParRay.nfOf hf
   intro hM p hp
   obtain ⟨hpp, π, hπK, hπi, hπc, σ, hσ⟩ := hp
   have hc0 : ((D.host.QS * D.host.q * D.host.d : ℕ) : Qb) ≠ 0 := by
@@ -347,7 +347,7 @@ theorem rayField_splitsIn_of_isRayPrime (D : D7) (jE : D.host.E →+* Qb) (M : F
     rw [← hab]
     exact ha.mul (hunit b hy0 (h2 ▸ h1)))
   have hu' : ¬ IsUnit b := fun hb => hpu (by
-    haveI : Algebra.IsAlgebraic ℚ Qb := by
+    have : Algebra.IsAlgebraic ℚ Qb := by
       unfold Qb; convert AlgebraicClosure.isAlgebraic ℚ <;> first | rfl | exact Subsingleton.elim _ _
     let τ : Qb ≃ₐ[ℚ] Qb := AlgEquiv.ofBijective σ (Algebra.IsAlgebraic.algHom_bijective σ)
     let τZ : Qb →ₐ[ℤ] Qb := τ.symm.toRingEquiv.toRingHom.toIntAlgHom
@@ -395,8 +395,8 @@ theorem splits_completely_of_intermediate :
   set P : Ideal ℤ := Ideal.span {(p : ℤ)} with hPdef
   have hPmax : P.IsMaximal := by
     exact PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
-  haveI := hPmax
-  haveI : Fintype (P.primesOver (𝓞 L)) := (IsDedekindDomain.primesOver_finite P (𝓞 L)).fintype
+  have := hPmax
+  have : Fintype (P.primesOver (𝓞 L)) := (IsDedekindDomain.primesOver_finite P (𝓞 L)).fintype
   have hsum := Ideal.sum_ramification_inertia_eq_finrank P (𝓞 L)
   rw [NumberField.RingOfIntegers.rank] at hsum
   have h1 : (P.primesOver (𝓞 L)).ncard = ∑ _q : P.primesOver (𝓞 L), 1 := by
@@ -410,12 +410,12 @@ theorem splits_completely_of_intermediate :
       exact Nat.mul_pos (Ideal.ramificationIdx_pos (R := _) Q) (Ideal.inertiaDeg_pos Q _)
   intro Q hQ
   obtain ⟨hQp, hQ𝔭⟩ := hQ
-  haveI := 𝔭.isPrime
-  haveI h𝔭P : 𝔭.asIdeal.LiesOver P := by
+  have := 𝔭.isPrime
+  have h𝔭P : 𝔭.asIdeal.LiesOver P := by
     refine ⟨hPmax.eq_of_le (Ideal.IsPrime.comap _).ne_top ?_⟩
     rw [hPdef, Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap]
     simpa using hp𝔭
-  haveI : Q.LiesOver P := Ideal.LiesOver.trans Q 𝔭.asIdeal P
+  have : Q.LiesOver P := Ideal.LiesOver.trans Q 𝔭.asIdeal P
   have h := hall Q ⟨hQp, inferInstance⟩
   rw [Ideal.ramificationIdx_tower 𝔭.asIdeal Q, Ideal.inertiaDeg_tower 𝔭.asIdeal Q] at h
   refine Nat.eq_one_of_dvd_one ?_
@@ -455,7 +455,7 @@ theorem exists_embedded (hray : GlobalTheory.Published.RayClassFieldSt) (D : D7)
       GlobalTheory.Mem.Fld.IsRayField D.host.K M (GlobalTheory.Mem.RaySplit.condIdeal D.host) := by
   obtain ⟨M, _, _, _, hM⟩ := GlobalTheory.Published.rayClassFieldSt_iff_isRayField.1 hray D.host.K _
     (GlobalTheory.Mem.RaySplit.condIdeal_ne_bot D.host)
-  letI := algQb D jE
+  let := algQb D jE
   let ψ : M →ₐ[D.host.K] Qb := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -469,8 +469,8 @@ theorem exists_embedded (hray : GlobalTheory.Published.RayClassFieldSt) (D : D7)
   let e₀ : M ≃ₐ[ℚ] M1 := AlgEquiv.ofInjectiveField (ψ : M →+* Qb).toRatAlgHom
   have hf : FiniteDimensional ℚ M1 := e₀.toLinearEquiv.finiteDimensional
   refine ⟨M1, hK, hf, ?_⟩
-  letI := GlobalTheory.ParRay.algK D jE hK
-  haveI := GlobalTheory.ParRay.nfOf hf
+  let := GlobalTheory.ParRay.algK D jE hK
+  have := GlobalTheory.ParRay.nfOf hf
   exact hM.of_algEquiv (AlgEquiv.ofRingEquiv (f := e₀.toRingEquiv) fun x => Subtype.ext (hψ x))
 
 
@@ -482,9 +482,9 @@ theorem le_of_rayAdm (D : D7) (jE : D.host.E →+* Qb) (M : Fld) (h : KQbar D jE
     (L : Fld) (hL : RayAdm (KQbar D jE) (D.host.QS * D.host.q * D.host.d) L) : L ≤ M := by
   have h2K := GlobalTheory.Mem.RaySplit.finrank_K D.host
   have h3K := GlobalTheory.Mem.RaySplit.isEmpty_real D.host
-  letI := GlobalTheory.ParRay.algK D jE h
-  haveI := GlobalTheory.ParRay.nfOf hf
-  letI := algQb D jE
+  let := GlobalTheory.ParRay.algK D jE h
+  have := GlobalTheory.ParRay.nfOf hf
+  let := algQb D jE
   obtain ⟨hKL, hfL, hspl⟩ := hL
   let mkE : ∀ (X : Fld) (hX : KQbar D jE ≤ X), X ≃+* toIF D jE X hX := fun X hX =>
     { toFun := fun x => ⟨x.1, x.2⟩, invFun := fun x => ⟨x.1, x.2⟩, left_inv := fun _ => rfl,
@@ -493,8 +493,8 @@ theorem le_of_rayAdm (D : D7) (jE : D.host.E →+* Qb) (M : Fld) (h : KQbar D jE
   let L' := toIF D jE L hKL
   let eR : M ≃ₐ[D.host.K] R := AlgEquiv.ofRingEquiv (f := mkE M h) fun x => rfl
   let eL : L ≃+* L' := mkE L hKL
-  haveI : NumberField R := { to_finiteDimensional := (eR.toRingEquiv.toRatAlgEquiv).toLinearEquiv.finiteDimensional }
-  haveI : NumberField L' := { to_finiteDimensional := eL.toRatAlgEquiv.toLinearEquiv.finiteDimensional }
+  have : NumberField R := { to_finiteDimensional := (eR.toRingEquiv.toRatAlgEquiv).toLinearEquiv.finiteDimensional }
+  have : NumberField L' := { to_finiteDimensional := eL.toRatAlgEquiv.toLinearEquiv.finiteDimensional }
   have hR : GlobalTheory.Mem.Fld.IsRayField D.host.K R (GlobalTheory.Mem.RaySplit.condIdeal D.host) := hM.of_algEquiv eR
   have hab : IsAbelianGalois D.host.K R := hR.1
   have key : ∀ 𝔭 : HeightOneSpectrum (𝓞 D.host.K), ¬ 𝔭.asIdeal ∣ GlobalTheory.Mem.RaySplit.condIdeal D.host →
@@ -547,8 +547,8 @@ theorem rayField_isRay : GlobalTheory.Published.RayClassFieldSt → ∀ (D : D7)
   generalize MrayC D jE = X at heq ⊢
   subst heq
   refine ⟨h, hf, ?_⟩
-  letI := GlobalTheory.ParRay.algK D jE h
-  haveI := GlobalTheory.ParRay.nfOf hf
+  let := GlobalTheory.ParRay.algK D jE h
+  have := GlobalTheory.ParRay.nfOf hf
   exact ⟨GlobalTheory.Mem.RaySplit.isGalois_of_ray hM, GlobalTheory.Mem.RaySplit.comm_of_ray hM, GlobalTheory.Mem.RaySplit.unr_of_ray hM, hsplit⟩
 
 end GlobalTheory.ParRayMax
@@ -579,7 +579,7 @@ theorem exists_types : GlobalTheory.Published.RayClassFieldSt → GlobalTheory.P
       (Nonempty (GrpSide D) → IotaOk (setTy D hE X h1 h0) ⟨Pl.ι, Pl.ι_w, Pl.plB, Pl.plB_eq, Pl.plκ⟩) := by
   intro hray _ D hE jE Pl hg
   obtain ⟨h, hf, hgal, hab, hunr, hsplit⟩ := _root_.GlobalTheory.ParRayMax.rayField_isRay hray D jE
-  letI := algK D jE h
+  let := algK D jE h
   have := nfOf hf
   let X : NTypes D.naut :=
     { D.ntypes with
@@ -723,10 +723,10 @@ theorem nonempty_wdSide_of_tie (hB : GlobalTheory.Published.DeRhamPotSemistable)
       wdL (D.loc l) ι D.nd.plOm.1 (br l hl) r D.nd.plOm.2 (hbr l hl) w hw else GlobalTheory.WeilDeligne.wdOf (D.nd.plOm.2 w) hw ι r)
   have h1 : ∀ (l : ℕ) [hl : Fact l.Prime] (ι : Qbar l ≃+* ℂ) {a} (r : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l)) w
       (hw : w ∈ placesOver D.host.E l), T.e w (wd l ι r w) = wdL (D.loc l) ι D.nd.plOm.1 (br l hl) r D.nd.plOm.2 (hbr l hl) w hw :=
-    fun l hl ι a r w hw => by simp only [wd, Equiv.apply_symm_apply, dif_pos hw]
+    fun l hl ι a r w hw => by simp only [wd, Equiv.apply_symm_apply, dite_eq_left hw]
   have h2 : ∀ (l : ℕ) [hl : Fact l.Prime] (ι : Qbar l ≃+* ℂ) {a} (r : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l)) w
       (hw : w ∉ placesOver D.host.E l), T.e w (wd l ι r w) = GlobalTheory.WeilDeligne.wdOf (D.nd.plOm.2 w) hw ι r :=
-    fun l hl ι a r w hw => by simp only [wd, Equiv.apply_symm_apply, dif_neg hw]
+    fun l hl ι a r w hw => by simp only [wd, Equiv.apply_symm_apply, dite_eq_right hw]
   have hL := fun (l : ℕ) [hl : Fact l.Prime] (ι : Qbar l ≃+* ℂ) {a} (r : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l)) w hw =>
     GlobalTheory.PstLaws.wdL_laws hB l (D.loc l) (D.locA l) (D.locT l) ι D.host.E D.nd.Om _ D.nd.plOm.1 (br l hl) D.nd.plOm.2 (hbr l hl) r w hw
   have hA := fun (l : ℕ) [hl : Fact l.Prime] (ι : Qbar l ≃+* ℂ) {a} (r : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l)) w
@@ -973,7 +973,7 @@ theorem cl_eq_of_isLocS {L : Type} [Field L] [NumberField L] [IsCMField L] {n : 
     · have h1 := he₀ (sec A) (hsec A).1 a
       rw [(hsec A).2] at h1
       exact h1
-    · haveI := hnt τ₀
+    · have := hnt τ₀
       obtain ⟨a, ha⟩ := exists_ne (0 : τ₀.V)
       refine ha (hT₀ ?_)
       have h2 := congrArg (fun f : Representation.IntertwiningMap (τ₀.ρ.comp e) (ρ.comp sH) => (f a : GAf L n → ℂ)) h0

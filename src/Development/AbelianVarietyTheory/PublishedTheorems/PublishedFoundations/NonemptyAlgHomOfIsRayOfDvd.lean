@@ -87,7 +87,7 @@ variable {K : Type} [Field K] [NumberField K]
 theorem eq_of_forall_char {L : Type} [Field L] [NumberField L] [Algebra K L] [IsAbelianGalois K L]
     {σ τ : L ≃ₐ[K] L} (h : ∀ χ : (L ≃ₐ[K] L) →* ℂˣ, χ σ = χ τ) : σ = τ := by
   by_contra hne
-  letI : CommGroup (L ≃ₐ[K] L) := { (inferInstance : Group (L ≃ₐ[K] L)) with mul_comm := mul_comm' }
+  let : CommGroup (L ≃ₐ[K] L) := { (inferInstance : Group (L ≃ₐ[K] L)) with mul_comm := mul_comm' }
   obtain ⟨χ, hχ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (L ≃ₐ[K] L) ℂ
     (mt mul_inv_eq_one.1 hne)
   exact hχ (by rw [map_mul, map_inv, h χ, mul_inv_cancel])
@@ -187,7 +187,7 @@ theorem range_le {L L' M : Type} [Field L] [NumberField L] [Algebra K L] [IsAbel
     (h : IsRay L 𝔪) (h' : ∀ χ : (L' ≃ₐ[K] L') →* ℂˣ, IsModulus L' χ 𝔪) :
     (IsScalarTower.toAlgHom K L' M).fieldRange ≤ (IsScalarTower.toAlgHom K L M).fieldRange := by
   obtain ⟨Art, hA⟩ := (clauses_iff L 𝔪).1 h
-  letI : CommGroup (L' ≃ₐ[K] L') := { (inferInstance : Group (L' ≃ₐ[K] L')) with mul_comm := mul_comm' }
+  let : CommGroup (L' ≃ₐ[K] L') := { (inferInstance : Group (L' ≃ₐ[K] L')) with mul_comm := mul_comm' }
   choose fr hfr using GlobalTheory.NT.exists_isFrob (K := K) L'
   let ψ' : idealsPrimeTo 𝔪 →* (L' ≃ₐ[K] L') := extend 𝔪 fr
   have hψ' : ∀ 𝔭 hp, UnramIn L' 𝔭 ∧ IsFrob L' 𝔭 (ψ' (primeElt 𝔪 𝔭 hp)) := fun 𝔭 hp =>

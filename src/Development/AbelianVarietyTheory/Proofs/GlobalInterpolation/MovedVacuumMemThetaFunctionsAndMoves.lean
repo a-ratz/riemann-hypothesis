@@ -53,7 +53,7 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatt
 namespace GlobalTheory.ThetaMove.Moved
 
 theorem sd_stdL (D : D7) (N : ℕ) : StandardLatticesGL3.SD D (StandardLatticesGL3.stdL D N) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hr : ∀ x : D.host.E, x ∈ (algebraMap (𝓞 D.host.E) D.host.E).range ↔ IsIntegral ℤ x := fun x =>
     ⟨by rintro ⟨a, rfl⟩; exact a.2, fun h => ⟨⟨x, h⟩, rfl⟩⟩
   have hm : ∀ x : Fin N → D.host.E, x ∈ StandardLatticesGL3.stdL D N ↔ ∀ k, IsIntegral ℤ (x k) := fun x => by

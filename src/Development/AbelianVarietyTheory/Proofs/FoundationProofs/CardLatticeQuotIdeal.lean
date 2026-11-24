@@ -89,7 +89,7 @@ theorem relIndex_smul {K : Type} [Field K] [NumberField K]
   have he : (((q : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) * J :
       FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K) = q • (J : Submodule (𝓞 K) K) := by
     apply le_antisymm
-    · rw [FractionalIdeal.coe_mul]
+    · rw [FractionalIdeal.coeToSubmodule_mul]
       refine Submodule.mul_le.2 fun x hx y hy => ?_
       obtain ⟨b, hb, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hx
       rw [← Algebra.smul_def]
@@ -110,7 +110,7 @@ theorem coefLat_eq (D : D7) (cc : Ideal (𝓞 D.host.K)) :
   · refine Submodule.span_le.2 ?_
     rintro t ⟨c, hc, m, hm, rfl⟩
     exact FractionalIdeal.mul_mem_mul (mem_ext D hc) hm
-  · rw [FractionalIdeal.coe_mul]
+  · rw [FractionalIdeal.coeToSubmodule_mul]
     refine Submodule.mul_le.2 fun x hx y hy => ?_
     obtain ⟨b, hb, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hx
     clear hx

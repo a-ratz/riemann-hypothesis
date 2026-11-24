@@ -216,7 +216,7 @@ theorem exists_isIdemAt : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) (
     rw [Valuation.ne_zero_iff, map_ne_zero]
     exact fun h => hx (Subtype.ext h)
   show x ∈ I ↔ _
-  rw [hI, hφ, mem_iff he, map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+  rw [hI, hφ, mem_iff he, map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
 
 end GlobalTheory.IdemPrime
 

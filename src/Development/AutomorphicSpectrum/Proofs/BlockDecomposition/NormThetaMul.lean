@@ -286,7 +286,7 @@ theorem norm_theta_mul [IsTotallyReal F] (θ : ℝ →+* InfiniteAdeleRing F) (�
 
 theorem countBd : PositivityTheory.Rg.Mass.CountBd := by
   intro F _ _ hF θ _ K hK N hN
-  haveI := hF
+  have := hF
   have hb : ∀ w : InfinitePlace F, ∃ c : ℝ, ∀ a ∈ K, ‖(a : InfiniteAdeleRing F) w‖ ≤ c := fun w =>
     hK.exists_bound_of_continuousOn (f := fun a : InfiniteAdeleRing F => a w)
       (continuous_apply w).continuousOn

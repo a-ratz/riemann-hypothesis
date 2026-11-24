@@ -230,7 +230,7 @@ theorem frame_away : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.I
     ∃ k : Sp t.X.E (D.R.N i) ≃ₗ[t.X.E] Sp t.X.E (D.R.N i), frsF t.sel (t.tup μ) p₁ P = frsF t.sel (t.tup μ) p P * k ∧
       ∀ s l, IntAt P.1 (((qOf P.1 : t.X.E) ^ (t.cst μ).D P)⁻¹ * (k (Pi.single s (1 : t.X.E)) l - (Pi.single s (1 : t.X.E) : Sp t.X.E (D.R.N i)) l)) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a _ _ i hi β x x₁ p p₁ hp hp₁ P hv
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hD := (t.idx_ok μ).cst_ok.D_pos P
   set k := (frsF t.sel (t.tup μ) p P)⁻¹ * frsF t.sel (t.tup μ) p₁ P with hk
   refine ⟨k, (mul_inv_cancel_left _ _).symm, fun s l => ?_⟩

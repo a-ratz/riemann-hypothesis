@@ -151,7 +151,7 @@ variable [Module.Free ℤ X] [Module.Finite ℤ X] in
 theorem _root_.GlobalTheory.TorsionFourier.natCard_torsionChars {N : ℕ} {ζ : K} (hN : 0 < N)
     (hζ : IsPrimitiveRoot ζ N) :
     Nat.card (_root_.GlobalTheory.TorsionFourier.torsionChars K X N) = N ^ finrank ℤ X := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   let b := Module.Free.chooseBasis ℤ X
   rw [Nat.card_congr (_root_.GlobalTheory.TorsionFourier.torsionCharsEquiv (K := K) (X := X) b N), Nat.card_fun,
     hζ.card_rootsOfUnity, Module.finrank_eq_card_basis b, Nat.card_eq_fintype_card]
@@ -238,13 +238,13 @@ theorem _root_.GlobalTheory.fourier_extraction_tsum_class :
     ∀ (K X : Type) [NontriviallyNormedField K] [IsUltrametricDist K] [CompleteSpace K] [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (N : ℕ) (ζ : K), 0 < N → ‖(N : K)‖ = 1 → IsPrimitiveRoot ζ N → ∀ (σ : X → K), Filter.Tendsto σ Filter.cofinite (nhds 0) → ∀ α : X, Finite {t : Multiplicative X →* Kˣ // t ^ N = 1} ∧ (∑ᶠ t : {t : Multiplicative X →* Kˣ // t ^ N = 1}, (((t.1 (Multiplicative.ofAdd α))⁻¹ : Kˣ) : K) * ∑' β, σ β * (t.1 (Multiplicative.ofAdd β) : K)) = (N : K) ^ finrank ℤ X * ∑' μ, σ (α + N • μ) ∧ ((∀ μ, μ ≠ 0 → ‖σ (α + N • μ)‖ < ‖σ α‖) → ‖∑' μ, σ (α + N • μ)‖ = ‖σ α‖) := by
   intro K X _ _ _ _ _ _ N ζ hN hNK hζ σ hσ α
   classical
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   let b := Module.Free.chooseBasis ℤ X
   let e : {t : Multiplicative X →* Kˣ // t ^ N = 1} ≃ _root_.GlobalTheory.TorsionFourier.torsionChars K X N :=
     Equiv.subtypeEquivRight fun _ => Iff.rfl
-  haveI : Finite (_root_.GlobalTheory.TorsionFourier.torsionChars K X N) :=
+  have : Finite (_root_.GlobalTheory.TorsionFourier.torsionChars K X N) :=
     Finite.of_equiv _ (_root_.GlobalTheory.TorsionFourier.torsionCharsEquiv (K := K) b N).symm
-  letI : Fintype (_root_.GlobalTheory.TorsionFourier.torsionChars K X N) := Fintype.ofFinite _
+  let : Fintype (_root_.GlobalTheory.TorsionFourier.torsionChars K X N) := Fintype.ofFinite _
   refine ⟨Finite.of_equiv _ e.symm, ?_, ?_⟩
   · rw [← finsum_comp_equiv e.symm, finsum_eq_sum_of_fintype]
 
@@ -328,7 +328,7 @@ theorem _root_.GlobalTheory.fourier_extraction_tsum_class :
         · exact le_max_of_le_right
             (Finset.le_sup' (fun μ => ‖g μ‖) (Finset.mem_insert_of_mem hμ))
         · refine le_max_of_le_left ?_
-          rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_le] at hμ
+          rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_le] at hμ
           by_cases h0 : μ = 0
           · simp [g, h0]
             positivity

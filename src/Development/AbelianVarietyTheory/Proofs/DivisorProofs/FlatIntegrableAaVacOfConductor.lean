@@ -255,7 +255,7 @@ theorem unit_mul_mem_integer_iff (u : kˣ) (x : k) :
     (u : k) * x ∈ 𝒪[k] ↔ valuation k x ≤ valuation k ((u⁻¹ : kˣ) : k) := by
   have hu : valuation k (u : k) ≠ 0 := by simp
   rw [Valuation.mem_integer_iff, map_mul, Units.val_inv_eq_inv_val, map_inv₀,
-    ← one_mul (valuation k (u : k))⁻¹, le_mul_inv_iff₀ (zero_lt_iff.2 hu), mul_comm]
+    ← one_mul (valuation k (u : k))⁻¹, le_mul_inv_iff₀ (pos_iff_ne_zero.2 hu), mul_comm]
 
 theorem scale_eq (ϖ : kˣ) (a A B : ℤ) (x : k) :
     (((ϖ ^ a)⁻¹ : kˣ) : k) * (((ϖ ^ A : kˣ) : k) * x * (((ϖ ^ B)⁻¹ : kˣ) : k)) =
@@ -318,7 +318,7 @@ theorem indicator_moveArgs_origin {k : Type} [Field k] [ValuativeRel k] [Topolog
     rw [hM, show G.m - 1 - j = G.m - 2 - j + 1 by omega, vtxExp_frame,
       show G.m - 1 - (j + 1) = G.m - 2 - j by omega, vtxExp_frame]
     congr 2
-    simp only [downMap, dif_pos hj, reindex_apply, submatrix_apply, Equiv.symm_apply_apply]
+    simp only [downMap, dite_eq_left hj, reindex_apply, submatrix_apply, Equiv.symm_apply_apply]
 
   have hbox : ∀ (j : ℕ) (hj : j < G.m - 1) (r' : Fin (topRank G j) ⊕ Fin (G.m - 2 - j + 1))
       (s' : Fin (topRank G (j + 1)) ⊕ Fin (G.m - 2 - j)) (hv : Free ((G.m - 2 - j) / 2 + 1) (s', r') ∨ Kept (s', r')),
@@ -327,7 +327,7 @@ theorem indicator_moveArgs_origin {k : Type} [Field k] [ValuativeRel k] [Topolog
       valuation k (e ⟨j, hj⟩ ⟨(s', r'), hv⟩) ≤ valuation k ((ϖ ^ boxExp G a a' ⟨j, hj⟩ ⟨(s', r'), hv⟩ : kˣ) : k) := by
     intro j hj r' s' hv
     rw [hE, scaled_mem_iff]
-    simp only [stepPt, Matrix.add_apply, of_apply, dif_pos hv, Pi.zero_apply, basePt_zero_of_var s' r' hv, zero_add]
+    simp only [stepPt, Matrix.add_apply, of_apply, dite_eq_left hv, Pi.zero_apply, basePt_zero_of_var s' r' hv, zero_add]
     rfl
   have key : (∀ b ∈ oppositePath G.m, ∀ i j, (((ϖ ^ a)⁻¹ : kˣ) : k) * M b i j ∈ 𝒪[k]) ↔ e ∈ box G ϖ a a' := by
     constructor
@@ -346,7 +346,7 @@ theorem indicator_moveArgs_origin {k : Type} [Field k] [ValuativeRel k] [Topolog
           by_cases hv : Free ((G.m - 2 - j) / 2 + 1) (s', r') ∨ Kept (s', r')
           · exact (hbox j hj' r' s' hv).2 (he ⟨j, hj'⟩ trivial ⟨(s', r'), hv⟩ trivial)
           · rw [hE j hj', scale_eq]
-            simp only [stepPt, Matrix.add_apply, of_apply, dif_neg hv, add_zero, Pi.zero_apply]
+            simp only [stepPt, Matrix.add_apply, of_apply, dite_eq_right hv, add_zero, Pi.zero_apply]
             rcases s' with s' | l <;> rcases r' with r' | i
             · simp [basePt]
             · simp [basePt]
@@ -389,7 +389,7 @@ variable {k : Type} [Field k] {n n' : Type} {c : ℕ}
 
 theorem stepPt_var (x₀ : Matrix n n' k) (e : StepVar n c n' → k) {r : n ⊕ Fin c} {s : n' ⊕ Fin (c + 1)}
     (h : Free (c / 2 + 1) (r, s) ∨ Kept (r, s)) (hb : basePt c x₀ r s = 0) : stepPt x₀ e r s = e ⟨(r, s), h⟩ := by
-  simp only [stepPt, Matrix.add_apply, Matrix.of_apply, hb, zero_add, dif_pos h]
+  simp only [stepPt, Matrix.add_apply, Matrix.of_apply, hb, zero_add, dite_eq_left h]
 
 theorem basePt_inr_succ (x₀ : Matrix n n' k) (i : Fin c) : basePt c x₀ (.inr i) (.inr i.succ) = 0 := by
   simp [basePt]
@@ -569,7 +569,7 @@ theorem colDiag_eq_one (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (a a' : ℤ) {j 
   funext x
   have h := topRank_add hs j
   have hx := x.2
-  rw [vtxExp, if_neg (by omega), zpow_zero, Units.val_one]
+  rw [vtxExp, ite_eq_right (by omega), zpow_zero, Units.val_one]
 
 end Generic
 
@@ -790,7 +790,7 @@ theorem path_apow_pow (w : Pl D.host.E) : ∃ n : ℤ, ((oppositePath D.R.m).map
   · rw [prod_apow, hsum, genAt, genAt, div_eq_mul_inv, ← _root_.zpow_sub, apow_zpow, (isUnif_unifAt w).apow_eq, hS]
     congr 1; push_cast; ring
   · have hle : ((oppositePath D.R.m).map P).sum ≤ ((oppositePath D.R.m).map P).length • (bigN D ^ 2) := by
-      refine List.sum_le_card_nsmul ((oppositePath D.R.m).map P) _ fun x hx => ?_
+      refine List.sum_le_length_nsmul ((oppositePath D.R.m).map P) _ fun x hx => ?_
       obtain ⟨b, hb, rfl⟩ := List.mem_map.1 hx
       obtain ⟨h1, h2⟩ := rank_path_le w (hm ▸ hb)
       simpa [P, sq] using Nat.mul_le_mul h1 h2
@@ -874,7 +874,7 @@ theorem flatIntegrable_aaVac (w : Pl D.host.E) {ψ : AddChar (Kw w) Circle} (hψ
   have hc : Continuous (flatIntegrand one_le_sLen ψ (moved (bareGrid w) true g (aaVac w)) x y) :=
     (continuous_const.mul (continuous_const.mul
       ((isLocallyConstant_aaVac w).continuous.comp (hm.comp (continuous_fill one_le_sLen x y))))).mul
-      (continuous_subtype_val.comp (hψ.comp (continuous_phase x).neg))
+      (continuous_subtypeVal.comp (hψ.comp (continuous_phase x).neg))
   exact hc.integrable_of_hasCompactSupport (hasCompactSupport_aaVac w ψ true g x y)
 
 variable {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil)

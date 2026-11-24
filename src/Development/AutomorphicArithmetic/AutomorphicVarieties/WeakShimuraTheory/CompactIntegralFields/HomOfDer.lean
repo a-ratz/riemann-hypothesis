@@ -81,7 +81,7 @@ private theorem zero_of_not_mem {O Γ : Type} [CommRing O] [Group Γ] [Topologic
     (h1 : i ≠ j) (h2 : wt i j ∉ S) (g : Γ) : x.1 g i j = 0 := by
   have := hx.2.2.2.2.2.1 g i j h1 h2
   rw [hc, Matrix.mul_apply] at this
-  simp only [Fr.split_r_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+  simp only [Fr.split_r_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
   exact (mul_eq_zero.1 this).resolve_right ((Φ.χ j g).isUnit.map a).ne_zero
 
 private theorem triv_of_zero {O Γ : Type} [CommRing O] [Group Γ] {Φ : Fr O Γ} {k : Type} [Field k]
@@ -266,17 +266,17 @@ private theorem rank_of_oneOdd : ∀ {O Γ : Type} [CommRing O] [Group Γ] [Topo
   have hM : ∀ p, Module.rank k (M p) ≤ C := by
     intro p
     by_cases h : wt p.1.1 p.1.2 ∈ oddRoots
-    · rw [show M p = _ from if_pos h]
+    · rw [show M p = _ from ite_eq_left h]
       exact hb.str _ (Finset.mem_union_left _ h)
-    · rw [show M p = _ from if_neg h]
+    · rw [show M p = _ from ite_eq_right h]
       have : ∀ i j, wt i j ∉ oddRoots → wt i j ∈ [0, wPs, -wPs] := by decide
       exact hb.even _ (this _ _ h)
   have mem : ∀ (x : LinearMap.ker (E i₀ j₀)) (p : P), E p.1.1 p.1.2 x.1 ∈ M p := by
     intro x p
     by_cases h : wt p.1.1 p.1.2 ∈ oddRoots
-    · rw [show M p = _ from if_pos h]
+    · rw [show M p = _ from ite_eq_left h]
       exact ⟨ent _ x.1.2 _ _, H _ x.1.2 (fun g => congrFun (LinearMap.mem_ker.1 x.2) g) _ _ p.2 h⟩
-    · rw [show M p = _ from if_neg h]
+    · rw [show M p = _ from ite_eq_right h]
       exact ent _ x.1.2 _ _
   let F : LinearMap.ker (E i₀ j₀) →ₗ[k] (∀ p : P, M p) × (Φ.ι × Q → k) :=
     { toFun := fun x => (fun p => ⟨_, mem x p⟩, fun z => (adj (c.n z.1) * x.1.1.2 z.1 * c.n z.1) z.2.1.1 z.2.1.2)
@@ -316,7 +316,7 @@ private theorem rank_of_oneOdd : ∀ {O Γ : Type} [CommRing O] [Group Γ] [Topo
     rw [Cardinal.sum_const', Cardinal.mk_fintype, show Fintype.card P = 10 by decide]
     simp
   have r3 : Module.rank k (Φ.ι × Q → k) ≤ 6 * C := by
-    haveI := Fintype.ofFinite Φ.ι
+    have := Fintype.ofFinite Φ.ι
     rw [rank_fun', Fintype.card_prod, show Fintype.card Q = 6 by decide, ← Nat.card_eq_fintype_card]
     have := hb.card
     exact_mod_cast (by omega : Nat.card Φ.ι * 6 ≤ 6 * C)
@@ -336,7 +336,7 @@ private theorem limR {O Γ : Type} [CommRing O] [Group Γ] {Φ : Fr O Γ} {k : T
   rw [cmp_apply, Fr.split_r_apply]
   by_cases h1 : i = j
   · subst h1; simp [h.diag]
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     split_ifs with h2
     · exact (z i j h1 (by omega)).symm
     · rfl
@@ -348,7 +348,7 @@ private theorem limN {k : Type} [Field k] {n : M4 k} (h : ∀ i, n i i = 1) {m :
   rw [cmp_apply, Matrix.one_apply]
   by_cases h1 : i = j
   · subst h1; simp [h]
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     split_ifs with h2
     · exact (z i j h1 (by omega)).symm
     · rfl
@@ -511,14 +511,14 @@ theorem UpperTheory.V.Ws.red :
       ∀ (R : Type) [CommRing R] [Algebra Λ R] [IsCO Λ R] (P : PD Φ.ι Γ R), Φ.IsDef a c P → ∀ S ∈ redTypes, ringKrullDim (R ⧸ redIdeal S P.r) ≤ (d + 20 * C + 1 : ℕ) := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hstd d C hB c hRes hGood R _ _ _ P hDef S hS
   by_cases hI : redIdeal S P.r = ⊤
-  · haveI : Subsingleton (R ⧸ redIdeal S P.r) := Ideal.Quotient.subsingleton_iff.mpr hI
+  · have : Subsingleton (R ⧸ redIdeal S P.r) := Ideal.Quotient.subsingleton_iff.mpr hI
     rw [ringKrullDim_eq_bot_of_subsingleton]
     exact bot_le
   set I := redIdeal S P.r with hIdef
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
-  haveI hco : IsCO Λ (R ⧸ I) :=
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have hco : IsCO Λ (R ⧸ I) :=
     co_quot Λ R (R ⧸ I) (Ideal.Quotient.mkₐ Λ I) (Ideal.Quotient.mkₐ_surjective Λ I)
-  haveI hcoD : IsCO Λ (DualNumber (ResidueField Λ)) := (co_res Λ).2
+  have hcoD : IsCO Λ (DualNumber (ResidueField Λ)) := (co_res Λ).2
   have hIm : I ≤ maximalIdeal R := IsLocalRing.le_maximalIdeal hI
   have hlift := hDef.1
   have hcr : ∀ g i j, c.r g i j = res Λ R (P.r g i j) := by

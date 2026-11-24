@@ -66,7 +66,7 @@ private theorem haar_uniq {G : Type*} [Group G] [TopologicalSpace G] [IsTopologi
     (hm : m.IsHaarMeasure) (hm' : m'.IsHaarMeasure) (h : m K = 1) (h' : m' K = 1) : m = m' := by
   have e := Measure.isMulLeftInvariant_eq_smul m m'
   have e2 : m K = (Measure.haarScalarFactor m m' • m') K := by rw [← e]
-  rw [h, Measure.smul_apply, h', ENNReal.smul_def, smul_eq_mul, mul_one] at e2
+  rw [h, smul_apply, h', ENNReal.smul_def, smul_eq_mul, mul_one] at e2
   have e3 : Measure.haarScalarFactor m m' = 1 := by exact_mod_cast e2.symm
   rw [e3, one_smul] at e
   exact e
@@ -74,10 +74,10 @@ private theorem haar_uniq {G : Type*} [Group G] [TopologicalSpace G] [IsTopologi
 private theorem gl_top (R : Type*) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R]
     [LocallyCompactSpace R] [SecondCountableTopology R] (n : ℕ) :
     LocallyCompactSpace (GL (Fin n) R) ∧ SecondCountableTopology (GL (Fin n) R) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact ⟨inferInstance, Units.isEmbedding_embedProduct.secondCountableTopology⟩
 
@@ -109,7 +109,7 @@ private theorem gl_int {R : Type*} [CommRing R] [TopologicalSpace R] [IsTopologi
       simp
     rw [this]
     exact isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => hc
-  · simp only [Set.setOf_and, Set.setOf_forall]
+  · simp only [Set.ofPred_and, Set.ofPred_forall]
     refine IsOpen.inter ?_ ?_
     · exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         ho.preimage (Units.continuous_val.matrix_elem i j)
@@ -135,7 +135,7 @@ private theorem unitSet_top {F E : Type} [Field F] [NumberField F] [Field E] [Nu
   have e : unitSet E n v = {g : GL (Fin n) (CompletionsOver E v) | (∀ i j, g i j ∈ O) ∧
       ∀ i j, (g⁻¹ : GL (Fin n) (CompletionsOver E v)) i j ∈ O} := by
     ext g
-    simp only [unitSet, Set.mem_setOf_eq, GLnLocal.mem_integralGL_iff, ← map_inv, O, Subring.mem_iInf, Subring.mem_comap]
+    simp only [unitSet, Set.mem_ofPred_eq, GLnLocal.mem_integralGL_iff, ← map_inv, O, Subring.mem_iInf, Subring.mem_comap]
     exact ⟨fun h => ⟨fun i j w => (h w).1 i j, fun i j w => (h w).2 i j⟩,
       fun h w => ⟨fun i j => h.1 i j w, fun i j => h.2 i j w⟩⟩
   refine ⟨e ▸ (gl_int n O hc ho).1, e ▸ (gl_int n O hc ho).2, fun w => ?_⟩

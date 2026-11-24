@@ -111,7 +111,7 @@ theorem amplitude_orbital_integral : Formalism.MainNotions.S.Pv.AmpDD.AmpDDOfSte
   have hD : Formalism.MainNotions.InverseNormDecayBounds.DiagonalMatrixCoefficientPowerDecay L.σ w0 (Formalism.FourierDecayAlt.ThreeDimData.aOf r h) := ⟨C, fun g hg => hC g hg⟩
   have hw0DD : w0 ∈ Formalism.FourierDecayAlt.ThreeDimData.DDsp L.σ w0 := by
     have := Formalism.FourierDecayAlt.P.S3dx6.mem_DD L.σ w0 (Formalism.FourierDecayAlt.P.S3dx6.one_mem_uh (k := k) (r := r))
-    rwa [(Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.sigma_facts hσ).1, ContinuousLinearMap.one_apply] at this
+    rwa [(Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.sigma_facts hσ).1, one_apply_eq_self] at this
   obtain ⟨C1, hC1⟩ := Formalism.MainNotions.InverseNormDecayBounds.decDD L.hσ ha hD w0 hw0DD v hv
   obtain ⟨C2, hC2⟩ := Formalism.MainNotions.InverseNormDecayBounds.decDD L.hσ ha hD w0 hw0DD v' hv'
   have hAG0 : 0 ≤ Formalism.FourierDecayAlt.ThreeDimData.AG k r := by unfold Formalism.FourierDecayAlt.ThreeDimData.AG; positivity

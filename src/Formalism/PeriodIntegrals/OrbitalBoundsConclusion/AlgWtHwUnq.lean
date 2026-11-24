@@ -102,11 +102,11 @@ theorem mPt_continuousAt {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (hM : M.det 
   rw [continuousAt_pi]
   rintro ⟨b, i, j⟩
   cases b
-  · simp only [mPt, Bool.false_eq_true, if_false]
+  · simp only [mPt, Bool.false_eq_true, ite_false]
     have h1 : ContinuousAt (fun N : Matrix (Fin n) (Fin n) ℂ => N⁻¹) M :=
       continuousAt_matrix_inv M (by simpa [isUnit_iff_ne_zero] using hM)
     exact (continuous_apply_apply j i).continuousAt.comp h1
-  · simp only [mPt, if_true]
+  · simp only [mPt, ite_true]
     exact (continuous_apply_apply i j).continuousAt
 
 def Rm {n : ℕ} {ι : Type} (Q : ι → ι → MvPolynomial (Bool × Fin n × Fin n) ℂ) (M : Matrix (Fin n) (Fin n) ℂ) :
@@ -145,7 +145,7 @@ theorem char_dd {n : ℕ} (c lam : Fin n → ℤ) (t : ℝ) :
     exact Finset.sum_congr rfl fun i _ => by ring]
   rw [Complex.exp_sum]
   refine Finset.prod_congr rfl fun i _ => ?_
-  exact (Complex.exp_int_mul (lam i) ((c i : ℂ) * t)).symm
+  exact (Complex.exp_intCast_mul (lam i) ((c i : ℂ) * t)).symm
 
 theorem tendsto_exp_neg {k : ℤ} (hk : k < 0) :
     Tendsto (fun t : ℝ => Complex.exp ((k : ℂ) * t)) atTop (𝓝 0) := by
@@ -226,7 +226,7 @@ theorem wt_le {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι]
 
   have hgen : ∀ s ∈ S, ∀ g : GL (Fin n) ℂ, s *ᵥ (R g *ᵥ v) ∈ P := by
     intro s hs g
-    have hclosed : IsClosed (P : Set (ι → ℂ)) := Submodule.closed_of_finiteDimensional P
+    have hclosed : IsClosed (P : Set (ι → ℂ)) := Submodule.isClosed_of_finiteDimensional P
     have hdet : g.val.det ≠ 0 := (Matrix.isUnits_det_units g).ne_zero
     have hcs : Continuous fun N : Matrix ι ι ℂ => s *ᵥ (N *ᵥ v) :=
       continuous_const.matrix_mulVec (continuous_id.matrix_mulVec continuous_const)
@@ -420,7 +420,7 @@ theorem span_orbit (a : AlgWt L n) {ι : Type} [Fintype ι] [DecidableEq ι] (b 
   have hT : {w | ∃ γ : GQ L n, w = Matrix.mulVec (LinearMap.toMatrix b b (a.ρ γ)) (b.equivFun x)} =
       b.equivFun '' R := by
     ext w
-    simp only [Set.mem_setOf_eq, Set.mem_image, hR, Set.mem_range, exists_exists_eq_and]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, hR, Set.mem_range, exists_exists_eq_and]
     have key : ∀ γ : GQ L n, b.equivFun (a.ρ γ x) = Matrix.mulVec (LinearMap.toMatrix b b (a.ρ γ)) (b.equivFun x) := by
       intro γ
       rw [Module.Basis.equivFun_apply, Module.Basis.equivFun_apply, LinearMap.toMatrix_mulVec_repr]
@@ -430,7 +430,7 @@ theorem span_orbit (a : AlgWt L n) {ι : Type} [Fintype ι] [DecidableEq ι] (b 
     · rintro ⟨γ, rfl⟩
       exact ⟨γ, key γ⟩
   have hS : Submodule.span ℂ R = ⊤ := by
-    haveI : IsSimpleModule (MonoidAlgebra ℂ (GQ L n)) a.ρ.asModule :=
+    have : IsSimpleModule (MonoidAlgebra ℂ (GQ L n)) a.ρ.asModule :=
       (Representation.irreducible_iff_isSimpleModule_asModule a.ρ).1 a.irr
     set m := a.ρ.asModuleEquiv.symm x with hm
     have hm0 : m ≠ 0 := (LinearEquiv.map_ne_zero_iff _).2 hx

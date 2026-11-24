@@ -178,7 +178,7 @@ theorem fin_expU {ω : HChar F} (h : IsOfFinOrder ω) (z : TR.Rinf F) : ω.1 (TR
   have e1 : TR.expU z = TR.expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, TR.expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, TR.expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]
@@ -244,7 +244,7 @@ theorem stab {k : InfinitePlace F → ℕ} {c : Pl F → ℕ} {ω : HChar F} (h�
       congr 1
       push_cast
       ring
-    rw [hden, hdet, hp, mul_pow, ← Complex.exp_nat_mul, Complex.ofReal_inv, Complex.ofReal_pow, mul_right_comm,
+    rw [hden, hdet, hp, mul_pow, ← Complex.exp_natCast_mul, Complex.ofReal_inv, Complex.ofReal_pow, mul_right_comm,
       mul_inv_cancel₀ (pow_ne_zero _ (by exact_mod_cast (hρ v).ne')), one_mul]
     congr 1
     ring
@@ -370,7 +370,7 @@ theorem analytic_Fx (hO : Osg) {I : Type} [Fintype I] (f : X I → ℂ) (hf : Se
       exact Fx_eq f w.2
     rw [e]
     refine hc.comp (continuous_pi fun v => ?_)
-    exact Continuous.subtype_mk ((continuous_apply v).comp continuous_subtype_val) _
+    exact Continuous.subtype_mk ((continuous_apply v).comp continuous_subtypeVal) _
   · intro w hw v
     have hw' : ∀ u, (w u).im ≠ 0 := hw
     let z : X I := fun u => ⟨w u, hw' u⟩
@@ -540,7 +540,7 @@ theorem exp_triv {ω : HChar F} (h : IsOfFinOrder ω) (z : TR.Rinf F) : ω.1 (TR
   have e1 : TR.expU z = TR.expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, TR.expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, TR.expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]
@@ -1157,7 +1157,7 @@ theorem sign_holV {k c} {ω : HChar F} {φ : TR.Sm F 2} (hφ : IsHolV k c ω φ)
 theorem sgn_of {k c} {ω : HChar F} {φ : TR.Sm F 2} (hφ : IsHolV k c ω φ) (h0 : φ ≠ 0) : Sgn k ω := by
   intro v
   rw [sign_holV hφ h0 v, show Complex.I * ((k v : ℕ) : ℂ) * (Real.pi : ℂ) = (k v : ℕ) * ((Real.pi : ℂ) * Complex.I) by ring,
-    Complex.exp_nat_mul, Complex.exp_pi_mul_I]
+    Complex.exp_natCast_mul, Complex.exp_pi_mul_I]
 
 theorem fin_zc (z : (Af F)ˣ) : finGL F 2 (zc F z) = GeneralLinearGroup.scalar (Fin 2) (finId F z) := by
   rw [zc, finGL, GlobalTheory.CuspRep.cornerGL_scalar]
@@ -1270,16 +1270,16 @@ theorem normV_eq (w : Pl F) : normV w = Ideal.absNorm w.asIdeal := by
 theorem nu_nat {l : ℕ} [Fact l.Prime] (ι : Qbar l ≃+* ℂ) {n : ℕ} (h : ¬ l ∣ n) : nu ι (n : ℂ) = 1 := by
   have e : ι.symm (n : ℂ) = algebraMap ℚ_[l] (Qbar l) (n : ℚ_[l]) := by rw [map_natCast, map_natCast]
   apply NNReal.coe_injective
-  rw [nu_apply, coe_nnnorm, e, norm_algebraMap',
+  rw [nu_apply, coe_nnNorm, e, norm_algebraMap',
     Padic.norm_natCast_eq_one_iff.2 ((Nat.Prime.coprime_iff_not_dvd Fact.out).2 h), NNReal.coe_one]
 
 theorem not_dvd (w : Pl F) {l : ℕ} [hl : Fact l.Prime] (h : ((l : ℕ) : 𝓞 F) ∉ w.asIdeal) : ¬ l ∣ normV w := by
   intro hd
-  haveI := w.isPrime
+  have := w.isPrime
   have hne : normV w ≠ 0 := by
     rw [normV_eq]; have := HeightOneSpectrum.one_lt_absNorm w; omega
-  haveI : Finite (𝓞 F ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero hne
-  haveI := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
+  have : Finite (𝓞 F ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero hne
+  have := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
   have hd' : l ∣ Fintype.card (𝓞 F ⧸ w.asIdeal) := by rw [Fintype.card_eq_nat_card]; exact hd
   obtain ⟨a, ha⟩ := exists_prime_addOrderOf_dvd_card l hd'
   have h1 : (l : 𝓞 F ⧸ w.asIdeal) * a = 0 := by rw [← nsmul_eq_mul, ← ha, addOrderOf_nsmul_eq_zero]
@@ -1321,7 +1321,7 @@ theorem fin_supp (y : (Af F)ˣ) : (Function.mulSupport fun w : Pl F => ‖pLoc F
   have h2 := Filter.eventually_cofinite.1 ((y⁻¹ : (Af F)ˣ) : Af F).2
   refine (h1.union h2).subset fun w hw => ?_
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   have a1 : Valued.v (pLoc F w (y : Af F)) ≤ 1 := hc.1
   have a2 : Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) ≤ 1 := hc.2
   have a3 : Valued.v (pLoc F w (y : Af F)) * Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) = 1 := by
@@ -1484,7 +1484,7 @@ theorem fin_expU {F : Type} [Field F] [NumberField F] [IsTotallyReal F] {ω : HC
   have e1 : expU z = expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]
@@ -1616,7 +1616,7 @@ theorem nu_two {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) (ι : Qbar l ≃+* ℂ) :
     | zero => simp
     | succ m ih => rw [Nat.cast_succ]; exact (nu ι).map_add_le ih (by simp)
   have hlt : nu ι (l : ℂ) < 1 := by
-    rw [nu_apply, map_natCast, ← NNReal.coe_lt_coe, coe_nnnorm, NNReal.coe_one]
+    rw [nu_apply, map_natCast, ← NNReal.coe_lt_coe, coe_nnNorm, NNReal.coe_one]
     rw [← map_natCast (algebraMap ℚ_[l] (PadicAlgCl l)) l]
     exact lt_of_eq_of_lt (PadicAlgCl.norm_extends l _) Padic.norm_p_lt_one
   obtain ⟨m, hm⟩ := (Fact.out : l.Prime).odd_of_ne_two hl

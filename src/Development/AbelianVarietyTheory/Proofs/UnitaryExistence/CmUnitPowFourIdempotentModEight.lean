@@ -244,7 +244,7 @@ theorem det_eq_norm {ι : Type} [Fintype ι] [DecidableEq ι] (b : Module.Basis 
     (hspan : Submodule.span E (Set.range φ) = ⊤) (T : L →ₗ[ℤ] L) (A : Matrix (Fin r) (Fin r) E)
     (hA : ∀ x, A *ᵥ φ x = φ (T x)) :
     (((LinearMap.toMatrix b b T).det : ℤ) : ℚ) = Algebra.norm ℚ A.det := by
-  haveI := isLocalizedModule_int φ hf hspan
+  have := isLocalizedModule_int φ hf hspan
   let b' := b.ofIsLocalizedModule ℚ ℤ⁰ (φ.restrictScalars ℤ)
   rw [← LinearMap.det_toLin' A, ← LinearMap.det_restrictScalars, ← LinearMap.det_toMatrix b',
     ← eq_intCast (algebraMap ℤ ℚ), RingHom.map_det]

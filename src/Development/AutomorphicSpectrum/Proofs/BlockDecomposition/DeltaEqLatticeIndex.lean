@@ -67,7 +67,7 @@ theorem delta_ne_zero (c : Matrix (Fin m) (Fin m) K) : delta c ≠ 0 := by
     rw [hr i j, Algebra.smul_def]
   let I : Ideal (𝓞 K) := Ideal.span {(b : 𝓞 K)}
   have hI : I ≠ ⊥ := fun h => hb0 (Ideal.span_singleton_eq_bot.1 h)
-  haveI : Finite (𝓞 K ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have : Finite (𝓞 K ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
   let π : (Fin m → 𝓞 K) →+ (Fin m → 𝓞 K ⧸ I) :=
     AddMonoidHom.pi (fun i => (Ideal.Quotient.mk I).toAddMonoidHom.comp
       (Pi.evalAddMonoidHom (fun _ : Fin m => 𝓞 K) i))

@@ -55,7 +55,7 @@ theorem zeta_pow_div_of_dvd {n N : ℕ} (hN : N ≠ 0) (h : n ∣ N) : zeta N ^ 
   have hc : c ≠ 0 := right_ne_zero_of_mul hN
   have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hn
   have hc' : (c : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hc
-  rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero hn), zeta, zeta, ← Complex.exp_nat_mul]
+  rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero hn), zeta, zeta, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -150,7 +150,7 @@ theorem exists_inclusion_cycAway : ∀ n N : ℕ, N ≠ 0 → n ∣ N → ∃ j 
   have hj : Function.Injective j := Subring.inclusion_injective _
   refine ⟨j, hj, Subtype.ext (zeta_pow_div_of_dvd hN h).symm, fun ⟨a, ha⟩ => ?_⟩
   have hint : j.IsIntegral := isIntegral_inclusion_cycAway hN h ha
-  letI := j.toAlgebra
+  let := j.toAlgebra
   have : IsDedekindDomain (cycAway n) := (arBase_cycAway n hn).1
   have : Algebra.IsIntegral (cycAway n) (cycAway N) := ⟨hint⟩
   have := finiteType_cycAway N

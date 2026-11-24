@@ -252,7 +252,7 @@ theorem exists_ideal_ramificationIdx (L : Type) [Field L] [NumberField L] [Algeb
   refine ⟨(differentIdeal (𝓞 E) (𝓞 L)).under (𝓞 E), ?_, fun v w hv hl => ?_⟩
   · obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
       (differentIdeal_ne_bot (A := 𝓞 E) (B := 𝓞 L))
-    exact Ideal.comap_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral x)
+    exact Ideal.under_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral x)
   · have hnd : ¬ w.asIdeal ∣ differentIdeal (𝓞 E) (𝓞 L) := fun hd => hv (Ideal.dvd_iff_le.2 (by
       rw [hl.over]
       exact Ideal.comap_mono (Ideal.dvd_iff_le.1 hd)))
@@ -275,7 +275,7 @@ theorem res_eq {art art' : Ideles E →* Gab E Ω} (ha : IsGlobalArtin art)
     (ha' : IsGlobalArtin art') (L : IntermediateField E Ω) [FiniteDimensional E L]
     [IsAbelianGalois E L] (x : Ideles E) : res L (art x) = res L (art' x) := by
   have := isAlgClosure_top L
-  letI : CommGroup (L ≃ₐ[E] L) :=
+  let : CommGroup (L ≃ₐ[E] L) :=
     { (inferInstance : Group (L ≃ₐ[E] L)) with
       mul_comm := fun a b => (IsMulCommutative.is_comm (M := L ≃ₐ[E] L)).comm a b }
   have : T2Space (L ≃ₐ[E] L) := krullTopology_t2
@@ -367,8 +367,8 @@ theorem GlobalTheory.CompanionTheory.LTHodge.isSepClosure_Om_of_range : ∀ {l :
     have h := congrArg Subtype.val (e.apply_symm_apply ⟨algebraMap ℚ_[l] (Om l) q, hmem q⟩)
     exact h
   have hcomp : (algebraMap F (Om l)).comp φ = algebraMap ℚ_[l] (Om l) := RingHom.ext hφ
-  haveI : CharZero F := (algebraMap F (Om l)).charZero
-  haveI halg : Algebra.IsAlgebraic F (Om l) := by
+  have : CharZero F := (algebraMap F (Om l)).charZero
+  have halg : Algebra.IsAlgebraic F (Om l) := by
     constructor
     intro x
     obtain ⟨p, hp0, hpx⟩ := Algebra.IsAlgebraic.isAlgebraic (R := ℚ_[l]) x
@@ -396,8 +396,8 @@ open scoped GroundTheory.PAdicHodge.CyclNorms
 namespace GlobalTheory.CompanionTheory.LTHodge.CompletionRange
 
 theorem isClosed_finExt {l : ℕ} [Fact l.Prime] (K : FinExt l) : IsClosed (K.1 : Set (Om l)) := by
-  haveI : FiniteDimensional ℚ_[l] K.1.toSubmodule := K.2
-  exact Submodule.closed_of_finiteDimensional K.1.toSubmodule
+  have : FiniteDimensional ℚ_[l] K.1.toSubmodule := K.2
+  exact Submodule.isClosed_of_finiteDimensional K.1.toSubmodule
 
 theorem valued_le_one_of_norm_le_one {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField E]
     (w : HeightOneSpectrum (𝓞 E)) (φ : w.adicCompletion E →+* Om l) (hφ : Continuous φ)
@@ -503,11 +503,11 @@ theorem local_restriction_abelianization_artin : ∀ {E Ω : Type} [Field E] [Nu
     ∀ (L : IntermediateField E Ω) [FiniteDimensional E L] [IsAbelianGalois E L],
     PositivityTheory.FamInh.res L (toAb E Ω σ) = PositivityTheory.FamInh.res L (PositivityTheory.FamInh.art0 E Ω (localIdele E w a)) := by
   intro E Ω _ _ _ _ _ w Ωv _ _ _ j hj a σ g hgj hloc L _ _
-  haveI : IsGalois E Ω := IsAlgClosure.isGalois E Ω
+  have : IsGalois E Ω := IsAlgClosure.isGalois E Ω
   obtain ⟨w'⟩ := GroundTheory.Global.IdeleGroup.nonempty_placesOver_of_finite (K := E) (L := L) w
-  haveI : IsSepClosed Ωv := IsSepClosure.sep_closed (w.adicCompletion E)
-  haveI : CharZero (w.adicCompletion E) := algebraRat.charZero _
-  haveI : Algebra.IsSeparable (w.adicCompletion E) (w'.1.adicCompletion L) := inferInstance
+  have : IsSepClosed Ωv := IsSepClosure.sep_closed (w.adicCompletion E)
+  have : CharZero (w.adicCompletion E) := algebraRat.charZero _
+  have : Algebra.IsSeparable (w.adicCompletion E) (w'.1.adicCompletion L) := inferInstance
   let ι : w'.1.adicCompletion L →ₐ[w.adicCompletion E] Ωv := IsSepClosed.lift
   set s := restrictAb L (le_maximalAbelianExtension L)
     (artinMap E Ω (GroundTheory.Global.IdeleClassGroup.mk E (IdeleGroup.finiteEmbedding w a))) with hs
@@ -519,7 +519,7 @@ theorem local_restriction_abelianization_artin : ∀ {E Ω : Type} [Field E] [Nu
     rw [hs, artinMap_finiteEmbedding_apply L w w' ι a l]
     exact hloc _ _
   rw [hres, PositivityTheory.FamInh.res_toAb]
-  letI : Algebra E Ωv := ((algebraMap (w.adicCompletion E) Ωv).comp (algebraMap E (w.adicCompletion E))).toAlgebra
+  let : Algebra E Ωv := ((algebraMap (w.adicCompletion E) Ωv).comp (algebraMap E (w.adicCompletion E))).toAlgebra
   let m₂ : L →ₐ[E] Ωv :=
     { toRingHom := j.comp (algebraMap L Ω)
       commutes' := fun y => by
@@ -537,8 +537,8 @@ theorem local_restriction_abelianization_artin : ∀ {E Ω : Type} [Field E] [Nu
         show ι (algebraMap L (w'.1.adicCompletion L) (algebraMap E L y)) = _
         rw [hcomp, ι.commutes]
         rfl }
-  letI : Algebra L Ωv := m₂.toRingHom.toAlgebra
-  haveI : IsScalarTower E L Ωv := IsScalarTower.of_algebraMap_eq fun y => (m₂.commutes y).symm
+  let : Algebra L Ωv := m₂.toRingHom.toAlgebra
+  have : IsScalarTower E L Ωv := IsScalarTower.of_algebraMap_eq fun y => (m₂.commutes y).symm
   let τ : L ≃ₐ[E] L := Normal.algHomEquivAut E Ωv L m₁
   have hτ : ∀ l : L, m₂ (τ l) = m₁ l := fun l =>
     DFunLike.congr_fun ((Normal.algHomEquivAut E Ωv L).symm_apply_apply m₁) l
@@ -639,7 +639,7 @@ theorem GlobalTheory.CompanionTheory.LocalNorm.vle_iff_norm_le : ∀ {l : ℕ} [
     simp
   · have hbn : 0 < ‖φ b‖ := norm_pos_iff.2 ((map_ne_zero φ).2 hb)
     have hvb : 0 < valuation F b := by
-      rw [zero_lt_iff]
+      rw [pos_iff_ne_zero]
       exact (Valuation.ne_zero_iff _).2 hb
     constructor
     · intro h
@@ -687,16 +687,16 @@ theorem link : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E
       art (localIdele E w x) = toAb E Ω σ →
       (((χ (Bw.e σ) : (↥Bw.Kw.1)ˣ) : ↥Bw.Kw.1) : Om l) = φ (x : w.adicCompletion E) := by
   intro E Ω _ _ _ _ _ l _ w A hA O _ _ _ Bw hI art hart χ hχ φ hφ hφj x σ hx hσ hxσ
-  letI algF : Algebra (w.adicCompletion E) (Om l) := φ.toAlgebra
+  let algF : Algebra (w.adicCompletion E) (Om l) := φ.toAlgebra
   have hmap : ∀ y, algebraMap (w.adicCompletion E) (Om l) y = φ y := fun _ => rfl
   have hr : Set.range (algebraMap (w.adicCompletion E) (Om l)) = (Bw.Kw.1 : Set (Om l)) :=
     _root_.GlobalTheory.CompanionTheory.LTHodge.CompletionRange.range_eq_Kw Bw w φ hφ hφj
-  haveI hsep : IsSepClosure (w.adicCompletion E) (Om l) := _root_.GlobalTheory.CompanionTheory.LTHodge.isSepClosure_Om_of_range Bw.Kw hr
-  haveI hext : ValuativeExtension (w.adicCompletion E) (Om l) := ⟨fun {a b} => by
+  have hsep : IsSepClosure (w.adicCompletion E) (Om l) := _root_.GlobalTheory.CompanionTheory.LTHodge.isSepClosure_Om_of_range Bw.Kw hr
+  have hext : ValuativeExtension (w.adicCompletion E) (Om l) := ⟨fun {a b} => by
     rw [GroundTheory.PAdicHodge.CyclNorms.vle_iff_norm_le]
     exact (_root_.GlobalTheory.CompanionTheory.LocalNorm.vle_iff_norm_le φ hφ a b).symm⟩
-  haveI hclosed : IsSepClosed (Om l) := IsSepClosure.sep_closed (w.adicCompletion E)
-  haveI halg : Algebra.IsAlgebraic (w.adicCompletion E) (Om l) := hsep.separable.isAlgebraic
+  have hclosed : IsSepClosed (Om l) := IsSepClosure.sep_closed (w.adicCompletion E)
+  have halg : Algebra.IsAlgebraic (w.adicCompletion E) (Om l) := hsep.separable.isAlgebraic
   obtain ⟨π, hπ, H⟩ := _root_.GlobalTheory.CompanionTheory.LTHodge.UnitAct.main hχ hr
   let g' := Bw.e σ
   have hfix : ∀ y, (g' : GQ l) (algebraMap (w.adicCompletion E) (Om l) y) = algebraMap (w.adicCompletion E) (Om l) y := by
@@ -784,7 +784,7 @@ theorem exists_unit_model : ∀ {E Ω : Type} [Field E] [NumberField E] [Field �
     have hij : i = j := Subsingleton.elim i j
     subst hij
     simp [Formalism.MainNotions.N.mapRep, PositivityTheory.HodgeLocalCharacter.HLC.toGL1, rk1, hψ]
-  · exact hc.comp continuous_subtype_val
+  · exact hc.comp continuous_subtypeVal
   · exact GlobalTheory.ExpFrame.CharUnit.norm_eq_one_of_compact μ hc _
 
 end GlobalTheory.CompanionTheory.HeckeChar
@@ -971,11 +971,11 @@ theorem multV_inv [IsDomain BdR] (κ : K →ₐ[Qp] Om)
       exact Submodule.zero_mem _)
   set fi : (LL →ₐ[Qp] Om) → BdR := fun σ => if σ.comp τ = κ then yv σ else 0 with hfi
   have hfi1 : ∀ σ, σ.comp τ = κ → f σ * fi σ = 1 := fun σ hσ => by
-    simp only [hfi, if_pos hσ]; exact hyv1 σ hσ
-  have hfi0 : ∀ σ, ¬ σ.comp τ = κ → fi σ = 0 := fun σ hσ => by simp only [hfi, if_neg hσ]
+    simp only [hfi, ite_eq_left hσ]; exact hyv1 σ hσ
+  have hfi0 : ∀ σ, ¬ σ.comp τ = κ → fi σ = 0 := fun σ hσ => by simp only [hfi, ite_eq_right hσ]
   have hfiF : ∀ σ, fi σ ∈ PD.Fil (-J) := fun σ => by
     by_cases hσ : σ.comp τ = κ
-    · simp only [hfi, if_pos hσ]; exact hyv σ hσ
+    · simp only [hfi, ite_eq_left hσ]; exact hyv σ hσ
     · rw [hfi0 σ hσ]; exact Submodule.zero_mem _
   have hcoord : ∀ σ, ev σ (coordInv fi : (Fin 1 → LL) ⊗[Qp] BdR) = fi σ := ev_coordInv fi
   have hII : IsInv PD act χ' fi := fun g σ => by
@@ -1108,9 +1108,9 @@ theorem exists_inv_fil (a : ℤ) (x : Formalism.Per6.BdR l) (h1 : x ∈ Formalis
 theorem exists_gal (K : FinExt l) {LL : Type} [Field LL] [Algebra ℚ_[l] LL] (τ : ↥K.1 →ₐ[ℚ_[l]] LL)
     (σ σ' : LL →ₐ[ℚ_[l]] Om l) (h : σ.comp τ = K.1.val) (h' : σ'.comp τ = K.1.val) :
     ∃ g : ↥(GK K), ∀ x, (g : GQ l) (σ x) = σ' x := by
-  letI : Algebra LL (Om l) := σ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ_[l] LL (Om l) := .of_algebraMap_eq fun x => (σ.commutes x).symm
-  haveI : Normal ℚ_[l] (Om l) := IsAlgClosure.normal ℚ_[l] (Om l)
+  let : Algebra LL (Om l) := σ.toRingHom.toAlgebra
+  have : IsScalarTower ℚ_[l] LL (Om l) := .of_algebraMap_eq fun x => (σ.commutes x).symm
+  have : Normal ℚ_[l] (Om l) := IsAlgClosure.normal ℚ_[l] (Om l)
   let g₀ : Om l →ₐ[ℚ_[l]] Om l := σ'.liftNormal (Om l)
   have hg₀ : ∀ x, g₀ (σ x) = σ' x := fun x => AlgHom.liftNormal_commutes σ' (Om l) x
   let g : GQ l := AlgEquiv.ofBijective g₀ (Algebra.IsAlgebraic.algHom_bijective g₀)
@@ -1135,7 +1135,7 @@ theorem repE_toGL1 (LL' : FinExt l) (ψ : ↥Gw →* (↥LL'.1)ˣ) (g : ↥(GK B
 
 theorem card_emb_le (LL' : FinExt l) (hLL : Bw.LL.1 ≤ LL'.1) [Fintype (↥Bw.Kw.1 →ₐ[ℚ_[l]] ↥LL'.1)] :
     Fintype.card (↥Bw.Kw.1 →ₐ[ℚ_[l]] ↥LL'.1) = finrank ℚ_[l] ↥Bw.Kw.1 := by
-  haveI : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
+  have : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
   rw [← AlgHom.card ℚ_[l] ↥Bw.Kw.1 (Om l)]
   exact Fintype.card_congr
     { toFun := fun τ => LL'.1.val.comp τ
@@ -1157,9 +1157,9 @@ theorem GlobalTheory.CompanionTheory.DeRhamChar.isdRJ_inv : ∀ {E Ω : Type} [F
       PositivityTheory.HodgeLocalCharacter.HLC.IsdRJ Bw P LL' ψ J → PositivityTheory.HodgeLocalCharacter.HLC.IsdRJ Bw P LL' ψ⁻¹ (-J) := by
   intro E Ω _ _ _ _ _ l _ P AI hT w A _ O _ _ _ Bw _ LL' hLL ψ J hJ
   obtain ⟨T⟩ := hT
-  haveI : IsDomain P.R.BdR := T.eD.toMulEquiv.isDomain (Formalism.Per6.BdR l)
-  haveI : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2
-  haveI : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
+  have : IsDomain P.R.BdR := T.eD.toMulEquiv.isDomain (Formalism.Per6.BdR l)
+  have : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2
+  have : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
   have hOm : ∀ x : Om l, algebraMap (Om l) P.R.BdR x ∈ (P.PD Bw.Kw).Fil 0 := fun x => by
     obtain ⟨y, hy, -⟩ := T.om x
     rw [T.fil, hy]
@@ -1220,8 +1220,8 @@ theorem char_mul {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
     rw [this, m₁]
     simp only [sub_eq_iff_eq_add]
   refine ⟨?_, hm⟩
-  haveI := K.2
-  haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL _ ν₃).1
+  have := K.2
+  have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL _ ν₃).1
   have hc : Fintype.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = finrank ℚ_[l] ↥K.1 := by
     rw [← hcard, Nat.card_eq_fintype_card]
   set_option synthInstance.maxHeartbeats 200000 in
@@ -1229,7 +1229,7 @@ theorem char_mul {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T
     intro τ
     obtain ⟨hf, hle, -⟩ := (GlobalTheory.Per.Components.components_finrank l P AI T K LL _ ν₃).1 τ
     have hm1 := hm τ (J₁ τ + J₂ τ)
-    rw [if_pos rfl, multV] at hm1
+    rw [ite_eq_left rfl, multV] at hm1
     have hfil : finrank ↥LL.1 ↥(FildR (P.PD K) ν₃ τ (J₁ τ + J₂ τ)) ≤ finrank ↥LL.1 ↥(DdRE (P.PD K) ν₃ τ) :=
       Submodule.finrank_mono (inf_le_left : FildR (P.PD K) ν₃ τ _ ≤ DdRE (P.PD K) ν₃ τ)
     simp only [finrank_fin_fun, finrank_self, Module.finrank_pi, Fintype.card_fin] at hle
@@ -1301,7 +1301,7 @@ theorem tendsto_pow_zero (w : HeightOneSpectrum (𝓞 E)) (x : w.adicCompletion 
   refine Filter.mem_map.2 (Filter.mem_atTop_sets.2 ⟨n, fun m hm => hγ ?_⟩)
   have e : Valued.v (x ^ m) < MonoidWithZeroHom.ValueGroup₀.embedding γ.1 := by
     rw [map_pow]
-    exact (pow_le_pow_of_le_one zero_le' hx.le hm).trans_lt hn
+    exact (pow_le_pow_of_le_one zero_le hx.le hm).trans_lt hn
   exact (Valuation.restrict_lt_iff_lt_embedding _).2 e
 
 theorem norm_lt_one (w : HeightOneSpectrum (𝓞 E)) (φ : w.adicCompletion E →+* Om l) (hφ : Continuous φ)
@@ -1360,7 +1360,7 @@ theorem isInducing (w : HeightOneSpectrum (𝓞 E)) (φ : w.adicCompletion E →
     rw [map_div₀, norm_div]
     exact (div_lt_one hε).2 hx'
   have h2 := v_le_one w φ hφ _ h1
-  have hv : 0 < Valued.v π ^ n := zero_lt_iff.2 (pow_ne_zero n ((Valuation.ne_zero_iff _).2 hπ0))
+  have hv : 0 < Valued.v π ^ n := pos_iff_ne_zero.2 (pow_ne_zero n ((Valuation.ne_zero_iff _).2 hπ0))
   rw [map_div₀, map_pow, div_le_one₀ hv] at h2
   exact (Valuation.restrict_lt_iff_lt_embedding _).2 (h2.trans_lt hn)
 
@@ -1383,9 +1383,9 @@ theorem embeddings_of_continuous : ∀ {E Ω : Type} [Field E] [NumberField E] [
   obtain ⟨⟨φ, hφc⟩, hφ, -⟩ := GlobalTheory.CompanionTheory.EmbUniq.existsUnique_continuous_induced w A hA O Bw hI LL'
     (IntermediateField.inclusion hKL)
   have hφE : ∀ y : E, φ (algebraMap E (w.adicCompletion E) y) = Bw.j (algebraMap E Ω y) := fun y => hφ y
-  haveI : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
+  have : FiniteDimensional ℚ_[l] ↥Bw.Kw.1 := Bw.Kw.2
   have hKc : IsClosed (Bw.Kw.1 : Set (Om l)) :=
-    Submodule.closed_of_finiteDimensional (Subalgebra.toSubmodule Bw.Kw.1.toSubalgebra)
+    Submodule.isClosed_of_finiteDimensional (Subalgebra.toSubmodule Bw.Kw.1.toSubalgebra)
   have hmem : ∀ x, φ x ∈ Bw.Kw.1 := fun x =>
     (HeightOneSpectrum.denseRange_algebraMap E w).induction_on (p := fun x => φ x ∈ (Bw.Kw.1 : Set (Om l))) x
       (hKc.preimage hφc) (fun y => by
@@ -1406,7 +1406,7 @@ theorem embeddings_of_continuous : ∀ {E Ω : Type} [Field E] [NumberField E] [
     exact ⟨x, Subtype.ext hx⟩⟩
   let e : w.adicCompletion E ≃+* ↥Bw.Kw.1 := RingEquiv.ofBijective φ' hbij
   have hei : Topology.IsInducing e := by
-    refine Topology.IsInducing.of_comp ?_ continuous_subtype_val hind
+    refine Topology.IsInducing.of_comp ?_ continuous_subtypeVal hind
     exact hφc.subtype_mk hmem
   have hes : Continuous e.symm := (e.toEquiv.toHomeomorphOfIsInducing hei).symm.continuous
   let ψ : ↥Bw.Kw.1 →+* Om l := j.1.comp (e.symm : ↥Bw.Kw.1 →+* w.adicCompletion E)
@@ -1480,7 +1480,7 @@ theorem fil_of_unramified (P : LocPrime l) (AI : LocAinf l P) (Ti : LocTied l P 
       split_ifs <;> simp)) i
   obtain ⟨M, hM⟩ := GlobalTheory.UnramifiedRep.exists_matrixHom T.ρ e hint
   obtain ⟨W, hW, hWg⟩ := GlobalTheory.UnramifiedRep.exists_witt_matrix (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)) M
     (continuous_pi fun i => continuous_pi fun j => continuous_induced_rng.2 (by
       have h := (continuous_apply i).comp (hcont.comp (T.cont (e j)))
@@ -1623,11 +1623,11 @@ theorem multV_of_fil (P : LocPrime l) (AI : LocAinf l P) (Ti : LocTied l P AI) (
     simpa using this
   unfold multV
   rcases lt_trichotomy a 0 with h | h | h
-  · rw [hneg a h.le, hneg (a + 1) (by omega), sub_self, if_neg h.ne]
+  · rw [hneg a h.le, hneg (a + 1) (by omega), sub_self, ite_eq_right h.ne]
   · subst h
     rw [hneg 0 le_rfl, hpos (0 + 1) (by omega), finrank_bot, hfin]
     simp
-  · rw [hpos a (by omega), hpos (a + 1) (by omega), sub_self, if_neg h.ne']
+  · rw [hpos a (by omega), hpos (a + 1) (by omega), sub_self, ite_eq_right h.ne']
 
 end Line
 
@@ -1654,7 +1654,7 @@ theorem isdRJ_zero_of_trivial_on_open_inertia :
   have hK : ∃ (K' : FinExt l) (h : Bw.Kw.1 ≤ K'.1), ∀ g : ↥(GK K'),
       ((Bw.e.symm (Subgroup.inclusion (GK_le h) g) : ↥(Dec (F := E) A)) : G E Ω) ∈ V := by
     have hU : IsOpen {g : ↥(GK Bw.Kw) | ((Bw.e.symm g : ↥(Dec (F := E) A)) : G E Ω) ∈ V} :=
-      hV.preimage (continuous_subtype_val.comp Bw.e_symm_cont)
+      hV.preimage (continuous_subtypeVal.comp Bw.e_symm_cont)
     obtain ⟨U', hU', hUU'⟩ := isOpen_induced_iff.1 hU
     have h1 : (1 : GQ l) ∈ U' := by
       have : (1 : ↥(GK Bw.Kw)) ∈ Subtype.val ⁻¹' U' := by
@@ -1664,7 +1664,7 @@ theorem isdRJ_zero_of_trivial_on_open_inertia :
         exact V.one_mem
       exact this
     obtain ⟨F, hF, hsub⟩ := (krullTopology_mem_nhds_one_iff ℚ_[l] (Om l) _).1 (hU'.mem_nhds h1)
-    haveI := Bw.Kw.2
+    have := Bw.Kw.2
     let K' : FinExt l := ⟨Bw.Kw.1 ⊔ F, IntermediateField.finiteDimensional_sup _ _⟩
     have hKK' : Bw.Kw.1 ≤ K'.1 := le_sup_left
     refine ⟨K', hKK', fun g => ?_⟩
@@ -1693,7 +1693,7 @@ theorem isdRJ_zero_of_trivial_on_open_inertia :
     have : μh (i g) = 1 := hIK hg
     rw [this, Units.val_one]
   have hc' : Continuous fun g => ((μh (i g) : (↥LL'.1)ˣ) : ↥LL'.1) :=
-    hμc.comp (continuous_induced_rng.2 continuous_subtype_val)
+    hμc.comp (continuous_induced_rng.2 continuous_subtypeVal)
   have hO : ∀ g, ((μh (i g) : (↥LL'.1)ˣ) : ↥LL'.1) ∈ OL LL' := fun g =>
     GlobalTheory.UnramifiedChar.val_mem_OL Bw.Kw LL' μh hμc (i g)
   have hρ' : ∀ g x, (ρ.comp i) g x = ((μh (i g) : (↥LL'.1)ˣ) : ↥LL'.1) • x := fun g x => hρ (i g) x
@@ -1946,10 +1946,10 @@ theorem field_of_ltPeriods (HP : LTPeriods) : GlobalTheory.Published.HeckeLAdicC
   have hsum : (0 + ∑ j, nj j • Jj j) τ' = -n (ι.toRingHom.comp τ) := by
     simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, Pi.zero_apply, zero_add]
     rw [Finset.sum_eq_single j0]
-    · simp only [Jj, if_pos hj0, nj, smul_eq_mul, mul_neg, mul_one, ← hj0E, RingHom.comp_assoc]
+    · simp only [Jj, ite_eq_left hj0, nj, smul_eq_mul, mul_neg, mul_one, ← hj0E, RingHom.comp_assoc]
     · intro b _ hb
       have : ¬ IsInduced Bw (b.1.comp (algebraMap E (w.adicCompletion E))) τ' := fun h => hb (huniq b h)
-      simp only [Jj, if_neg this, smul_zero]
+      simp only [Jj, ite_eq_right this, smul_zero]
     · intro h
       exact absurd (Finset.mem_univ j0) h
   rw [hsum, Multiset.count_singleton]

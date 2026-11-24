@@ -81,7 +81,7 @@ theorem _root_.GlobalTheory.AppellHumbertTrivial.exists_bound_of_periodic {g : �
     (hΛ : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) {F : Type} [NormedAddCommGroup F]
     (φ : (Fin g → ℂ) → F) (hφ : Continuous φ)
     (hp : ∀ (l : Λ) z, φ (z + l) = φ z) : Bornology.IsBounded (Set.range φ) := by
-  haveI : IsZLattice ℝ Λ := ⟨hΛ⟩
+  have : IsZLattice ℝ Λ := ⟨hΛ⟩
   exact (IsZLattice.isCompact_range_of_periodic Λ φ hφ
     (fun z w hw => hp ⟨w, hw⟩ z)).isBounded
 

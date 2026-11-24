@@ -469,7 +469,7 @@ theorem normE_eq {D : D7} (xd : ThData D) (h : XdAll xd) :
   intro i j hj b
   rw [Finset.mem_Icc] at hj
   show (if 1 ≤ j ∧ j ≤ D.R.m then Set.univ else ∅) = xd.xd0 i j b
-  rw [if_pos hj, h i j b hj.1 hj.2]
+  rw [ite_eq_left hj, h i j b hj.1 hj.2]
 
 theorem heq_ite_univ {T T' : Type} (hT : T = T') {Dat : T → ℕ → Bool → Type} {Dat' : T' → ℕ → Bool → Type}
     (hD : HEq Dat Dat') {m m' : ℕ} (hm : m = m') :
@@ -858,8 +858,8 @@ theorem nonempty_seed_of_kept : ∀ (D₁ D₀ : D7) (C₁ : NChoice D₁) (C₀
     epsilon_congr _ _ (funext fun r => propext ⟨fun ⟨h1, h2⟩ => ⟨h1, h.trans hG h2⟩,
       fun ⟨h1, h2⟩ => ⟨h1, (h.symm hG).trans hG h2⟩⟩)
   let s : D₁.what₂.places.Pl → D₁.ntw.Tw := fun v => if TwistedAt D₁ v then C₁.twI (rep v) else C₁.twI v
-  have hs_tw : ∀ v, TwistedAt D₁ v → s v = C₁.twI (rep v) := fun v hv => if_pos hv
-  have hs_un : ∀ v, ¬ TwistedAt D₁ v → s v = C₁.twI v := fun v hv => if_neg hv
+  have hs_tw : ∀ v, TwistedAt D₁ v → s v = C₁.twI (rep v) := fun v hv => ite_eq_left hv
+  have hs_un : ∀ v, ¬ TwistedAt D₁ v → s v = C₁.twI v := fun v hv => ite_eq_right hv
   let P : ∀ i : D₁.ntw.Tw, (Σ (Q : Finset (PlE D₁.host)) (k : ℕ), D₁.ntw.RCG i Q →* (D₁.ntw.Ok i k)ˣ) → Prop :=
     fun i z => ∀ r, TwistedAt D₁ r → C₁.twI r = i → ∀ a : ℤ, Nat.Coprime a.natAbs (D₁.ntw.l i) →
       IntegralHeckeForms.GoodTw D₁.nexp (BlochKatoReduction.bk0 D₁) (twEOf xd₁) N1 i (twEps D₁ i) (S1 i) (A i) z.1 z.2.1 (z.2.2 ^ a)
@@ -1209,7 +1209,7 @@ def decMap (σ : Ω ≃ₐ[F] Ω') {A : ValuationSubring Ω} {A₁ : ValuationSu
 theorem continuous_decMap (σ : Ω ≃ₐ[F] Ω') {A : ValuationSubring Ω} {A₁ : ValuationSubring Ω'}
     (hA : ∀ y, σ y ∈ A₁ ↔ y ∈ A) : Continuous (decMap σ hA) :=
   Continuous.subtype_mk ((GlobalTheory.ConsCompare.autCongr_continuous_cyc_inertia F Ω Ω' σ).1.comp
-    continuous_subtype_val) _
+    continuous_subtypeVal) _
 
 theorem shaLen_transport (σ : Ω ≃ₐ[F] Ω') (D : LData F Ω l) (e : ℤ) :
     shaLen (transport σ D) e = shaLen D e := by
@@ -1409,7 +1409,7 @@ theorem exists_nStage_over {B : Base} {C C₀ : Cols B} {W₀ : RowsRest B C₀}
       N.toLocStage = L ∧ HEq N.nd.Om Y.Om ∧ HEq N.nd.instOm Y.instOm ∧ HEq N.nd.algOm Y.algOm ∧ HEq N.nd.plOm Y.plOm ∧
       HEq N.nd.PlG Y.PlG ∧ HEq N.naut.plGw A₁.plGw := by
   let nd := bareLayer B C W Y (fun k _ j => omLab f.W k ^ (2 * (j.1 + 1))) ldat hsha
-  haveI hE : IsEmpty nd.Loc := ⟨fun i : Empty => i.elim⟩
+  have hE : IsEmpty nd.Loc := ⟨fun i : Empty => i.elim⟩
   let A : NAut nd := GaloisStage.nAut nd A₁.plGw A₁.plGw_over A₁.plGw_inj A₁.plGw_nconj
   have hl : ∀ k w (p : A.LP w), A.items₂ k w p = (X - 1) ^ A.lpDim p := fun _ _ _ => rfl
   have hi : ∀ w (p : A.LP w) σ, A.inePol p σ = (X - 1) ^ A.lpDim p := fun _ _ _ => rfl
@@ -1478,7 +1478,7 @@ theorem exists_bare_over {K : Ctx} (P : Pre2 K w) {rows₁ : Rows.Data B.R} (Y :
         ∀ eR, StdIso (w.st (RowPk.Over.Z ⟨_, _, V, S, N, G⟩)) w.px eR → CenIs P.q.p N eR) ∧
       N.toLocStage = L ∧ HEq N.nd.Om Y.Om ∧ HEq N.nd.instOm Y.instOm ∧ HEq N.nd.algOm Y.algOm ∧ HEq N.nd.plOm Y.plOm ∧
       HEq N.nd.PlG Y.PlG ∧ HEq N.naut.plGw A₁.plGw := by
-  letI := P.z.alg
+  let := P.z.alg
   obtain ⟨ldat₀, hsha₀⟩ := P.q.sha
   have hD := fun (p : ℕ) [Fact p.Prime] => _root_.GlobalTheory.ShaTransport.exists_lData_shaLen_eq (Ω' := Y.Om) p (ldat₀ p)
   let ldat : ∀ (p : ℕ) [Fact p.Prime], Formalism.GaloisCohomology.LData B.host.E Y.Om p := fun p _ => (hD p).choose
@@ -1618,7 +1618,7 @@ theorem pow_of_tied (hc : GlobalTheory.TwSys.Cheb) {D : D7} (cf : CharFrame D) (
     (htw : TwistedAt D v) (hk : 1 ≤ C.k' v)
     (hL : ∀ z : ℂ, z ^ D.what₂.places.resChar v ^ C.k' v = 1 → ∃ x : D.what₂.LL, D.what₂.embLL x = z) :
     ∃ a : ℕ, a.Coprime (D.ntw.l (C.twI v)) ∧ C.psi' v = ψ ^ a := by
-  haveI : NeZero (D.ntw.l (C.twI v) ^ C.k' v) := ⟨pow_ne_zero _ (D.ntw.lPrime _).out.ne_zero⟩
+  have : NeZero (D.ntw.l (C.twI v) ^ C.k' v) := ⟨pow_ne_zero _ (D.ntw.lPrime _).out.ne_zero⟩
   have hL' : ∀ z : ℂ, z ^ (D.ntw.l (C.twI v) ^ C.k' v) = 1 → ∃ x : D.what₂.LL, D.what₂.embLL x = z := fun z hz =>
     hL z (by rw [← C.twI_l v]; exact hz)
   let j : D.ntw.Ok (C.twI v) (C.k' v) →+* FractionRing (C.Oe v) :=

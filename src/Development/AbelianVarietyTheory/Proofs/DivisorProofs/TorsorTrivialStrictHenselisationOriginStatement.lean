@@ -164,9 +164,9 @@ theorem directedSystem_etaleBaseChange : ∀ (T : Type) [CommRing T] (ι : Type)
       (∀ x : E, ∃ k y, e k y = x) := by
   intro T _ ι _ _ 𝒜 hA hcov i₀ h₀ E _ _ E₀ _ _ _ hφ
   obtain ⟨φ⟩ := hφ
-  letI instA : ∀ k, Algebra (𝒜 i₀)[X] (𝒜 k)[X] := fun k =>
+  let instA : ∀ k, Algebra (𝒜 i₀)[X] (𝒜 k)[X] := fun k =>
     (mapRingHom (Subring.inclusion (hA (h₀ k)))).toAlgebra
-  letI instT : Algebra (𝒜 i₀)[X] T[X] := (mapRingHom (𝒜 i₀).subtype).toAlgebra
+  let instT : Algebra (𝒜 i₀)[X] T[X] := (mapRingHom (𝒜 i₀).subtype).toAlgebra
   have hincl : ∀ {a b c : ι} (hab : a ≤ b) (hbc : b ≤ c),
       (Subring.inclusion (hA hbc)).comp (Subring.inclusion (hA hab)) =
         Subring.inclusion (hA (hab.trans hbc)) := by
@@ -184,7 +184,7 @@ theorem directedSystem_etaleBaseChange : ∀ (T : Type) [CommRing T] (ι : Type)
       commutes' := fun p => by
         change Polynomial.map _ (Polynomial.map _ p) = Polynomial.map _ p
         rw [Polynomial.map_map, hsub (h₀ k)] }
-  haveI : Module.Flat (𝒜 i₀)[X] E₀ := inferInstance
+  have : Module.Flat (𝒜 i₀)[X] E₀ := inferInstance
   have hcovT : ∀ q : T[X], ∃ k p, sub k p = q := by
     intro q
     have hq : ∃ k, ∀ n, q.coeff n ∈ 𝒜 k := by
@@ -872,10 +872,10 @@ theorem exists_stage_torsor : ∀ (T : Type) [CommRing T] [IsDomain T] (ι : Typ
   obtain ⟨i₀, E₀, _, _, hE₀, ⟨iso₀⟩⟩ := GlobalTheory.T.exists_etale_polynomial_descent_of_directed_union T ι 𝒜 hA hU E
 
   let ι' := {k : ι // i₀ ≤ k}
-  haveI : IsDirected ι' (· ≤ ·) := ⟨fun a b => by
+  have : IsDirected ι' (· ≤ ·) := ⟨fun a b => by
     obtain ⟨c, hac, hbc⟩ := directed_of (· ≤ ·) a.1 b.1
     exact ⟨⟨c, a.2.trans hac⟩, hac, hbc⟩⟩
-  haveI : Nonempty ι' := ⟨⟨i₀, le_rfl⟩⟩
+  have : Nonempty ι' := ⟨⟨i₀, le_rfl⟩⟩
   let 𝒜' : ι' → Subring T := fun k => 𝒜 k.1
   have hA' : Monotone 𝒜' := fun a b hab => hA hab
   have hU' : ∀ x : T, ∃ k : ι', x ∈ 𝒜' k := fun x => by
@@ -940,9 +940,9 @@ theorem exists_stage_torsor : ∀ (T : Type) [CommRing T] [IsDomain T] (ι : Typ
   refine ⟨k.1, Ek k, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, e k, he k,
     g k, GlobalTheory.GenFibMap.genFibMap_comp_algebraMap _ _ _ _ _ _ _, Di, inferInstance, inferInstance, acti, htori, ?_⟩
   intro C _ ψ σ hσ
-  letI : Algebra (GlobalTheory.LocAcyc.GenFib (𝒜' k) (Localization.AtPrime (Q.comap (e k))))
+  let : Algebra (GlobalTheory.LocAcyc.GenFib (𝒜' k) (Localization.AtPrime (Q.comap (e k))))
       (GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q)) := (g k).toAlgebra
-  letI : Algebra (GlobalTheory.LocAcyc.GenFib (𝒜' k) (Localization.AtPrime (Q.comap (e k)))) C :=
+  let : Algebra (GlobalTheory.LocAcyc.GenFib (𝒜' k) (Localization.AtPrime (Q.comap (e k)))) C :=
     (ψ.comp (g k)).toAlgebra
   let ψa : GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q) →ₐ[GlobalTheory.LocAcyc.GenFib (𝒜' k)
       (Localization.AtPrime (Q.comap (e k)))] C := { ψ with commutes' := fun r => rfl }
@@ -1050,8 +1050,8 @@ theorem isIntegrallyClosed_of_absIntClosed (T : Type) [CommRing T] [IsDomain T]
 
 theorem norm_finiteType {T : Type} [CommRing T] [IsDomain T] [IsIntegrallyClosed T] (S : Finset T) :
     Algebra.FiniteType ℤ (GlobalTheory.NormalApprox.norm S) := by
-  haveI := GlobalTheory.finite_integralClosure_of_essFiniteType_int (GlobalTheory.NormalApprox.gen S)
-  haveI : Algebra.FiniteType ℤ
+  have := GlobalTheory.finite_integralClosure_of_essFiniteType_int (GlobalTheory.NormalApprox.gen S)
+  have : Algebra.FiniteType ℤ
       (integralClosure (GlobalTheory.NormalApprox.gen S) (FractionRing (GlobalTheory.NormalApprox.gen S))) :=
     Algebra.FiniteType.trans (S := GlobalTheory.NormalApprox.gen S) inferInstance inferInstance
   exact Algebra.FiniteType.equiv this
@@ -1059,9 +1059,9 @@ theorem norm_finiteType {T : Type} [CommRing T] [IsDomain T] [IsIntegrallyClosed
 
 theorem loc_essFiniteType {T : Type} [CommRing T] [IsDomain T] [IsIntegrallyClosed T] (S : Finset T) :
     Algebra.EssFiniteType ℤ (GlobalTheory.NormalApprox.loc S) := by
-  haveI := norm_finiteType S
-  haveI := GlobalTheory.NormalApprox.loc_isLocalization S
-  haveI : Algebra.EssFiniteType (GlobalTheory.NormalApprox.norm S) (GlobalTheory.NormalApprox.loc S) :=
+  have := norm_finiteType S
+  have := GlobalTheory.NormalApprox.loc_isLocalization S
+  have : Algebra.EssFiniteType (GlobalTheory.NormalApprox.norm S) (GlobalTheory.NormalApprox.loc S) :=
     Algebra.EssFiniteType.of_isLocalization _ (GlobalTheory.NormalApprox.unitsIn S)
   exact Algebra.EssFiniteType.comp ℤ (GlobalTheory.NormalApprox.norm S) (GlobalTheory.NormalApprox.loc S)
 
@@ -1106,8 +1106,8 @@ theorem exists_noetherian_model : ∀ (T O : Type) [CommRing T] [IsDomain T] [Is
   have hprop : ∀ S, IsNoetherianRing (𝒜 S) ∧ IsIntegrallyClosed (𝒜 S) ∧ IsLocalRing (𝒜 S) ∧
       (∀ x : 𝒜 S, IsUnit (x : T) → IsUnit x) ∧ Algebra.EssFiniteType ℤ (𝒜 S) := by
     intro S
-    haveI := GlobalTheory.NormalApprox.loc_isLocalization S
-    haveI := GlobalTheory.NormalApprox.norm_isIntegrallyClosed S
+    have := GlobalTheory.NormalApprox.loc_isLocalization S
+    have := GlobalTheory.NormalApprox.norm_isIntegrallyClosed S
     exact ⟨IsLocalization.isNoetherianRing (GlobalTheory.NormalApprox.unitsIn S) _ (GlobalTheory.NormalApprox.norm_isNoetherianRing S),
       isIntegrallyClosed_of_isLocalization (GlobalTheory.NormalApprox.loc S) (GlobalTheory.NormalApprox.unitsIn S)
         (GlobalTheory.NormalApprox.unitsIn_le S),
@@ -1204,7 +1204,7 @@ theorem torsor_baseChange : ∀ (B₁ B₂ D₁ : Type) [CommRing B₁] [CommRin
     ∃ act₂ : Multiplicative (ZMod q) →* (TensorProduct B₁ B₂ D₁ ≃ₐ[B₂] TensorProduct B₁ B₂ D₁),
       GlobalTheory.KeyOriginCut.IsZTorsor B₂ (TensorProduct B₁ B₂ D₁) q act₂ := by
   intro B₁ B₂ D₁ _ _ _ _ _ q hq act₁ h
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   classical
   obtain ⟨hfin, hproj, hff, hbij⟩ := h
   let act₂ : Multiplicative (ZMod q) →* (B₂ ⊗[B₁] D₁ ≃ₐ[B₂] B₂ ⊗[B₁] D₁) :=
@@ -1289,9 +1289,9 @@ theorem exists_stage_torsor : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLoca
   obtain ⟨E, _, _, _, _, _, ψ, DE, _, _, actE, hDE, hred⟩ :=
     GlobalTheory.T.spread_torsor_to_etale_algebra T O P φ hφ hSH.2.2.2 q hq D act hD
   set Q : Ideal E := (maximalIdeal O).comap ψ.toRingHom with hQdef
-  haveI : Q.IsPrime := Ideal.comap_isPrime _ _
+  have : Q.IsPrime := Ideal.comap_isPrime _ _
   have hloc : (maximalIdeal O).comap φ = maximalIdeal (Localization.AtPrime P) := by
-    haveI := hSH.2.2.1
+    have := hSH.2.2.1
     apply le_antisymm
     · exact IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top _ (Ideal.IsMaximal.ne_top inferInstance))
     · intro x hx
@@ -1335,7 +1335,7 @@ theorem exists_stage_torsor : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLoca
     exact ⟨t, ht, (IsScalarTower.algebraMap_apply T E (Localization.AtPrime Q) t).symm⟩
   let m : GlobalTheory.LocAcyc.GenFib T E →+* GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q) :=
     IsLocalization.map _ (algebraMap E (Localization.AtPrime Q)) hM'
-  letI : Algebra (GlobalTheory.LocAcyc.GenFib T E) (GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q)) := m.toAlgebra
+  let : Algebra (GlobalTheory.LocAcyc.GenFib T E) (GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q)) := m.toAlgebra
   obtain ⟨act₂, h₂⟩ := torsor_baseChange (GlobalTheory.LocAcyc.GenFib T E)
     (GlobalTheory.LocAcyc.GenFib T (Localization.AtPrime Q)) DE q hq actE hDE
   refine ⟨E, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, Q, inferInstance,

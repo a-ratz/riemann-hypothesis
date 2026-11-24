@@ -110,7 +110,7 @@ theorem transfer (n : ℕ) : TransferStatement n := by
 
   rw [Finset.sum_congr rfl fun i _ => hA i, ← map_sum]
   suffices h : ∑ i, lWord ((D i).map Neg.neg) (psM T μ) x₀ (v i) = 0 by rw [h, map_zero]
-  have hopc : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hopc : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   have hAc : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ :=
     (hopc.mul continuous_const).mul (hopc.comp continuous_inv)
   have hint : ∀ i, Integrable (fun k : KG ε =>
@@ -127,12 +127,12 @@ theorem transfer (n : ℕ) : TransferStatement n := by
         ∫ k, lWord (adW ε k ((D i).map Neg.neg)) (PhiM μ) (toMK k⁻¹ * x₀ * toMK k) •
           (T.op k * projW T * T.op k⁻¹) (v i) ∂(muK ε) := by
     intro i
-    rw [(hword _).2.2 x₀ hx₀, ContinuousLinearMap.smul_apply, ContinuousLinearMap.integral_apply (hint i)]
+    rw [(hword _).2.2 x₀ hx₀, smul_apply, ContinuousLinearMap.integral_apply (hint i)]
     rfl
   rw [Finset.sum_congr rfl fun i _ => hterm i, ← Finset.smul_sum, ← MeasureTheory.integral_finsetSum _ hint']
   have hAv : ∀ (k : KG ε) (u : T.V), (T.op k * projW T * T.op k⁻¹) u = ⟪T.op k T.w, u⟫_ℂ • T.op k T.w := by
     intro k u
-    simp only [ContinuousLinearMap.mul_apply, projW, ContinuousLinearMap.smulRight_apply,
+    simp only [mul_apply_eq_comp, projW, ContinuousLinearMap.smulRight_apply,
       innerSL_apply_apply, map_smul, op_inv_eq_adjoint, ContinuousLinearMap.adjoint_inner_right]
   have hzero : ∀ k : KG ε, ∑ i, lWord (adW ε k ((D i).map Neg.neg)) (PhiM μ) (toMK k⁻¹ * x₀ * toMK k) •
       (T.op k * projW T * T.op k⁻¹) (v i) = 0 := by

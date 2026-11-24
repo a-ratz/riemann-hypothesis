@@ -114,14 +114,14 @@ theorem low_keep [NeZero r] (LL : Letters N) (j : ℕ) (a b : Fin r) (ha : a ≠
   refine glAct_keep (p := p) LL j a b _ _ ?_ ?_ x hx
   · intro i hi hv m hm h1
     have hm' := single_add_sub_single_eq_of_one_le m (i, b) h1
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     rw [← hm'] at hm
     rw [wt_single_add_eq] at hm ⊢
     refine le_trans (WithTop.coe_le_coe.mpr ?_) hm
     simp [hi, hv, ha] <;> split_ifs <;> omega
   · intro i hi hv m hm h1
     have hm' := single_add_sub_single_eq_of_one_le m (i, a) h1
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     rw [← hm'] at hm
     rw [wt_single_add_eq] at hm ⊢
     refine le_trans (WithTop.coe_le_coe.mpr ?_) hm
@@ -269,7 +269,7 @@ theorem raise_nil [NeZero r] (LL : Letters N) (j : ℕ) (c : Fin r) (hc : c ≠ 
     refine glAct_keep (p := p) LL j 0 c _ _ ?_ ?_
     · intro i hi hv m hm h1
       have hm' := single_add_sub_single_eq_of_one_le m (i, c) h1
-      simp only [Set.mem_setOf_eq] at hm ⊢
+      simp only [Set.mem_ofPred_eq] at hm ⊢
       rw [← hm'] at hm
       simp only [φ, sum_weight_mul_single_add_eq] at hm ⊢
       have e0 : wg (i, 0) = 0 := by simp [wg, hi, hv, Ne.symm hc]
@@ -277,7 +277,7 @@ theorem raise_nil [NeZero r] (LL : Letters N) (j : ℕ) (c : Fin r) (hc : c ≠ 
       omega
     · intro i hi hv m hm h1
       have hm' := single_add_sub_single_eq_of_one_le m (i, 0) h1
-      simp only [Set.mem_setOf_eq] at hm ⊢
+      simp only [Set.mem_ofPred_eq] at hm ⊢
       rw [← hm'] at hm
       simp only [φ, sum_weight_mul_single_add_eq] at hm ⊢
       have e0 : wg (i, c) = 0 := by simp [wg, hi, hv, hc]
@@ -296,7 +296,7 @@ theorem raise_nil [NeZero r] (LL : Letters N) (j : ℕ) (c : Fin r) (hc : c ≠ 
   have h0 := iter (h.support.sup φ + 1) 0 h (by
     rw [mem_restrictSupport_iff]
     intro m hm
-    simp only [Set.mem_setOf_eq, add_zero]
+    simp only [Set.mem_ofPred_eq, add_zero]
     exact Nat.lt_succ_of_le (Finset.le_sup (f := φ) (Finset.mem_coe.mp hm)))
   rw [mem_restrictSupport_iff] at h0
   apply MvPolynomial.support_eq_empty.mp
@@ -365,7 +365,7 @@ theorem mulLast_bwd (hj : K + 1 ≤ j) (hv : LL.vec (Fin.last K) = true) (c : Fi
     rw [mem_restrictSupport_iff] at hg' ⊢
     refine hg'.trans ?_
     intro m hm
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     rw [last_wt LL j hj hv]
     rw [← withTop_shift] at hm
     refine le_trans (WithTop.coe_le_coe.mpr ?_) hm
@@ -438,7 +438,7 @@ theorem mulLast_zero (hj : K + 1 ≤ j) (hv : LL.vec (Fin.last K) = true)
     rw [mem_restrictSupport_iff]
     refine hy.trans ?_
     intro m hm
-    simp only [Set.mem_setOf_eq, last_wt LL j hj hv] at hm ⊢
+    simp only [Set.mem_ofPred_eq, last_wt LL j hj hv] at hm ⊢
     rw [← withTop_shift]
     simpa using hm
   have hg0 : ∀ l : List (Fin r), wd p LL j l (X (Fin.last K, (0 : Fin r)) * g) ∈ SuppLE p LL j M :=
@@ -457,12 +457,12 @@ theorem pow_last (hj : K + 1 ≤ j) (hv : LL.vec (Fin.last K) = true) (c : Fin r
       glAct p LL j 0 c (X (Fin.last K, c) * y) =
         X (Fin.last K, (0 : Fin r)) * y + X (Fin.last K, c) * glAct p LL j 0 c y := by
     intro y
-    rw [glAct_mul, last_X p LL j hj hv, if_pos rfl]
+    rw [glAct_mul, last_X p LL j hj hv, ite_eq_left rfl]
   have h2 : ∀ z : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p],
       glAct p LL j 0 c (X (Fin.last K, (0 : Fin r)) * z) =
         X (Fin.last K, (0 : Fin r)) * glAct p LL j 0 c z := by
     intro z
-    rw [glAct_mul, last_X p LL j hj hv, if_neg hc, zero_mul, zero_add]
+    rw [glAct_mul, last_X p LL j hj hv, ite_eq_right hc, zero_mul, zero_add]
   have hpow : ∀ (n : ℕ) (y : MvPolynomial (Fin (K + 1) × Fin r) ℚ_[p]),
       ((glAct p LL j 0 c) ^ (n + 1)) y = glAct p LL j 0 c (((glAct p LL j 0 c) ^ n) y) := by
     intro n y

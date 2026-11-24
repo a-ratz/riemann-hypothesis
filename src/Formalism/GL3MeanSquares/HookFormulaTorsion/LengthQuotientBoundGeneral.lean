@@ -132,7 +132,7 @@ open Formalism.HermitianLattices.LocalLatticeBases Finset ComplexConjugate
 theorem prime_order_element : RationalMatrixPrimeOrderBound := by
   intro n p hp A hA h1
   classical
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hint : IsIntegral ℚ A := Algebra.IsIntegral.isIntegral A
   have hm0 : minpoly ℚ A ≠ 0 := minpoly.ne_zero hint
   have hdvd : minpoly ℚ A ∣ Polynomial.cyclotomic p ℚ * (Polynomial.X - 1) := by

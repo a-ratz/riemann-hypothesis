@@ -97,13 +97,13 @@ theorem exists_bump (μ : Measure X) [IsHaarMeasure μ] :
   refine ⟨fun x => ((f x : ℝ) : ℂ), Complex.continuous_ofReal.comp f.continuous, hfc.comp_left Complex.ofReal_zero, ?_⟩
   show ∫ x, ((f x : ℝ) : ℂ) ∂μ ≠ 0
   rw [show ∫ x, ((f x : ℝ) : ℂ) ∂μ = ((∫ x, f x ∂μ : ℝ) : ℂ) from integral_ofReal, Complex.ofReal_ne_zero]
-  exact (f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hfc (fun x => (hf01 x).1) (x := 1)
+  exact (f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfc (fun x => (hf01 x).1) (x := 1)
     (by simp [hf1 (Set.mem_singleton (1 : X))])).ne'
 
 theorem exists_split (e : X × (Y × Z) ≃ₜ* K) (μ : Measure K) [IsHaarMeasure μ] (mX : Measure X) [IsHaarMeasure mX]
     (mY : Measure Y) [IsHaarMeasure mY] (mZ : Measure Z) [IsHaarMeasure mZ] :
     ∃ c : NNReal, 0 < c ∧ ∀ f : K → ℂ, ∫ g, f g ∂μ = c • ∫ z, f (e z) ∂(mX.prod (mY.prod mZ)) := by
-  haveI : IsHaarMeasure (μ.map e.symm) := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
+  have : IsHaarMeasure (μ.map e.symm) := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
   obtain ⟨c, hc0, h⟩ : ∃ c : NNReal, 0 < c ∧ μ.map e.symm = c • mX.prod (mY.prod mZ) :=
     ⟨_, haarScalarFactor_pos_of_isHaarMeasure _ _, isMulLeftInvariant_eq_smul _ _⟩
   refine ⟨c, hc0, fun f => ?_⟩
@@ -197,7 +197,7 @@ theorem integral_tensH_splitH [MeasurableSpace (G a)] [MeasurableSpace (G b)] [M
 
 theorem compatFub : CompatFub := by
   intro E _ _ _ a b D _ _ _ _ _ _ μa _ μb _ ν _ hC F hF hFc
-  haveI := haar_of_dom D
+  have := haar_of_dom D
   have : IsHaarMeasure (Measure.pi fun _ : InfinitePlace E => μa) := pi.isHaarMeasure _
   have : IsHaarMeasure (Measure.pi fun _ : InfinitePlace E => μb) := pi.isHaarMeasure _
   obtain ⟨c, hc0, hc⟩ := exists_split (splitH a b) D.μ (Measure.pi fun _ : InfinitePlace E => μa)
@@ -220,8 +220,8 @@ theorem compatFub : CompatFub := by
 
 theorem compatEx : CompatEx := by
   intro E _ _ _ a b D _ _ _ _ _ _ μa _ μb _
-  haveI := haar_of_dom D
-  haveI : D.μ.IsMulRightInvariant := D.haar.2.1
+  have := haar_of_dom D
+  have : D.μ.IsMulRightInvariant := D.haar.2.1
   have : IsHaarMeasure (Measure.pi fun _ : InfinitePlace E => μa) := pi.isHaarMeasure _
   have : IsHaarMeasure (Measure.pi fun _ : InfinitePlace E => μb) := pi.isHaarMeasure _
   set ν₀ : Measure (Hf E a b) := Measure.haar
@@ -262,7 +262,7 @@ theorem compatEx : CompatEx := by
     have h3 : ((k : ℝ) : ℂ) = 1 := mul_right_cancel₀ (mul_ne_zero hc' hne) h2
     have hk1 : k = 1 := by exact_mod_cast h3
     rw [hk, hk1, one_smul]
-  haveI : ν₀.IsMulRightInvariant := ⟨hR⟩
+  have : ν₀.IsMulRightInvariant := ⟨hR⟩
   refine ⟨c • ν₀, IsHaarMeasure.nnreal_smul _ hc0.ne', ⟨fun h => by
     rw [Measure.map_smul, hR]
     exact (measurable_mul_const h).aemeasurable⟩, ?_⟩

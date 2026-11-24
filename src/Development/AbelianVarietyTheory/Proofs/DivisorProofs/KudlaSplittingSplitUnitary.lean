@@ -142,7 +142,7 @@ theorem nOf_mem (g : UG c (stdJ ν E)) : nOf c g ∈ sieg c ν := by
 theorem pOf_mem (g : UG c (stdJ ν E)) (hd : IsUnit (mat c g).toBlocks₂₂.det) : pOf c g ∈ sieg c ν := by
   rw [mem_sieg]
   have hk : mat c (pOf c g) = mat c g * (-stdJ ν E * (fromBlocks 1 (-(-vOf c g)) 0 1 * stdJ ν E)) := by
-    simp only [pOf, kOf, _root_.mul_inv_rev, inv_inv, nOf, dif_pos hd]
+    simp only [pOf, kOf, _root_.mul_inv_rev, inv_inv, nOf, dite_eq_left hd]
     rfl
   rw [hk]
   have hDV : (mat c g).toBlocks₂₂ * vOf c g = (mat c g).toBlocks₂₁ := mul_nonsing_inv_cancel_left _ _ hd
@@ -156,7 +156,7 @@ section Top
 variable [TopologicalSpace E] [IsTopologicalRing E] [ContinuousInv₀ E] [T2Space E]
 
 theorem continuous_mat : Continuous (mat c : UG c (stdJ ν E) → Matrix (ν ⊕ ν) (ν ⊕ ν) E) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_blk₂₂ : Continuous fun g : UG c (stdJ ν E) => (mat c g).toBlocks₂₂ :=
   continuous_matrix fun _ _ => (continuous_mat c).matrix_elem _ _
@@ -204,7 +204,7 @@ theorem tendsto_nOf : Tendsto (nOf c) (𝓝 (1 : UG c (stdJ ν E))) (𝓝 1) := 
       MulOpposite.op (fromBlocks 1 (-(-vOf c g)) 0 1 : Matrix (ν ⊕ ν) (ν ⊕ ν) E))) =ᶠ[𝓝 1]
       (Units.embedProduct _ ∘ fun g => ((nOf c g : UG c (stdJ ν E)) : GL (ν ⊕ ν) E)) := by
     filter_upwards [eventually_isUnit c] with g hg
-    simp only [Function.comp_apply, nOf, dif_pos hg]
+    simp only [Function.comp_apply, nOf, dite_eq_left hg]
     rfl
   refine Tendsto.congr' hE ?_
   have h1 : Units.embedProduct _ ((1 : UG c (stdJ ν E)) : GL (ν ⊕ ν) E) = (1, MulOpposite.op 1) := rfl
@@ -226,9 +226,9 @@ theorem isOpen_of_sieg_of_opp (F : Type) [Field F] [CharZero F] [ValuativeRel F]
     (h2 : ∀ᶠ g in nhds (1 : UG c (stdJ ν E)), g ∈ sieg c ν → (weyl c ν)⁻¹ * g * weyl c ν ∈ U) :
     IsOpen (U : Set (UG c (stdJ ν E))) := by
   obtain ⟨-, hTR, hCI, hT2, -⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
-  haveI := hTR
-  haveI := hCI
-  haveI := hT2
+  have := hTR
+  have := hCI
+  have := hT2
   refine Subgroup.isOpen_of_mem_nhds U (g := 1) ?_
   have hn : Tendsto (nOf c) (𝓝 (1 : UG c (stdJ ν E))) (𝓝 1) := tendsto_nOf c
   have hk : Tendsto (kOf c) (𝓝 (1 : UG c (stdJ ν E))) (𝓝 1) := by
@@ -400,10 +400,10 @@ theorem pr_zero_right (Q : Matrix α α E) (x : Matrix α ν E) : pr c Q x 0 = 0
 variable [TopologicalSpace F] [TopologicalSpace E] [IsTopologicalRing E]
 
 theorem continuous_mat : Continuous fun g : UG c (stdJ ν E) => mat c g :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_mat_inv : Continuous fun g : UG c (stdJ ν E) => mat c g⁻¹ :=
-  Units.continuous_coe_inv.comp continuous_subtype_val
+  Units.continuous_coe_inv.comp continuous_subtypeVal
 
 theorem continuous_pr (hc : Continuous c) (htr : Continuous (Algebra.trace F E)) [ContinuousMul F] (Q : Matrix α α E) :
     Continuous fun p : Matrix α ν E × Matrix α ν E => pr c Q p.1 p.2 := by
@@ -429,8 +429,8 @@ end GlobalTheory.KSp.ParNear
 theorem GlobalTheory.KSp.parFun_fixed_near_one : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : IsQuad c δ) (α : Type) [Fintype α] [DecidableEq α] (ν : Type) [Fintype ν] [DecidableEq ν] (Q : Matrix α α E) (_ : IsHerm c Q) (ψ : AddChar F ℂ) (hψ : Continuous ψ) (_ : ∀ t, ‖ψ t‖ = 1) (_ : ψ ≠ 1) (χ : Eˣ →* Circle) (_ : Continuous χ) (_ : ResEtaPow (R := F) ⊥ χ (Fintype.card α)), ∀ φ ∈ SB (Matrix α ν E), ∀ᶠ g in nhds (1 : UG c (stdJ ν E)), g ∈ sieg c ν → parFun c ψ χ Q (mat c g) φ = φ := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE α _ _ ν _ _ Q _ ψ hψ _ _ χ hχ _ φ hφ
   obtain ⟨-, htop, -, -, hcc, -, htr, -⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
-  haveI := htop
-  haveI := GlobalTheory.WeilM.nonarch_field F
+  have := htop
+  have := GlobalTheory.WeilM.nonarch_field F
   have hψl := GlobalTheory.WeilM.isLocallyConstant_addChar ψ hψ
   have hφl : IsLocallyConstant φ := hφ.1
   have hK : IsCompact (tsupport φ) := hφ.2
@@ -530,11 +530,11 @@ theorem isKW_isSmoothRep : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F
       one_mem' := by simp
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have key : ∀ u : SB (Matrix α ν E), ∀ᶠ g in nhds (1 : UG c (stdJ ν E)), g ∈ sieg c ν → ω g u = u := by
@@ -571,7 +571,7 @@ theorem heisFun_fou : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [To
   intro F _ _ _ _ _ E _ _ _ _ c δ hE α _ _ ν _ _ Q hQ ψ _ _ μ _ w φ
   obtain ⟨β, hβ, hsym, -, -, -⟩ := _root_.GlobalTheory.KSp.pr_alg F E c δ hE α ν Q hQ
   obtain ⟨-, -, -, -, -, -, -, hM⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
-  haveI : IsTopologicalAddGroup (Matrix α ν E) := (hM α ν).2.grp
+  have : IsTopologicalAddGroup (Matrix α ν E) := (hM α ν).2.grp
   have hh : ∀ (w : Matrix α (ν ⊕ ν) E) (φ : Matrix α ν E → ℂ) (x : Matrix α ν E),
       heisFun c ψ Q w φ x = ψ (β x w.toCols₂ + 2⁻¹ * β w.toCols₁ w.toCols₂) * φ (x + w.toCols₁) := by
     intro w φ x
@@ -770,7 +770,7 @@ theorem integral_four_mul (X : Type) [AddCommGroup X] [TopologicalSpace X] [Meas
     (hG : Good X) (μ : Measure X) [μ.IsAddHaarMeasure] (e : X → X → ℂ) (he : IsPair e) (C : ℝ) (_hC : 0 < C)
     (hinv : ∀ φ ∈ SB X, ∀ x, four μ e (four μ e φ) x = (C : ℂ) * φ (-x)) (φ : X → ℂ) (hφ : φ ∈ SB X) :
     ∫ x, four μ e φ x * starRingEnd ℂ (four μ e φ x) ∂μ = (C : ℂ) * ∫ y, φ y * starRingEnd ℂ (φ y) ∂μ := by
-  haveI := hG.grp; haveI := hG.t2; haveI := hG.lc; haveI := hG.sc
+  have := hG.grp; have := hG.t2; have := hG.lc; have := hG.sc
   set Φ := four μ e φ with hΦdef
   have hΦ : Φ ∈ SB X := _root_.GlobalTheory.KSp.FourMem.four_mem_SB X hG μ e he φ hφ
   have hec : Continuous (fun p : X × X => e p.1 p.2) := he.lc.continuous
@@ -812,7 +812,7 @@ theorem integral_four_mul (X : Type) [AddCommGroup X] [TopologicalSpace X] [Meas
 
 theorem lintegral_four_sq : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace X] [MeasurableSpace X] [BorelSpace X] (_ : Good X) (μ : Measure X) [μ.IsAddHaarMeasure] (e : X → X → ℂ), IsPair e → ∀ C : ℝ, 0 < C → (∀ φ ∈ SB X, ∀ x, four μ e (four μ e φ) x = (C : ℂ) * φ (-x)) → ∀ φ ∈ SB X, ∫⁻ x, ‖four μ e φ x‖ₑ ^ 2 ∂μ = ENNReal.ofReal C * ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ := by
   intro X _ _ _ _ hG μ _ e he C hC hinv φ hφ
-  haveI := hG.grp; haveI := hG.t2; haveI := hG.lc; haveI := hG.sc
+  have := hG.grp; have := hG.t2; have := hG.lc; have := hG.sc
   have hΦ : four μ e φ ∈ SB X := _root_.GlobalTheory.KSp.FourMem.four_mem_SB X hG μ e he φ hφ
   have hL : ∀ f ∈ SB X, ∫⁻ x, ‖f x‖ₑ ^ 2 ∂μ = ENNReal.ofReal (∫ x, ‖f x‖ ^ 2 ∂μ) := by
     intro f hf
@@ -825,7 +825,7 @@ theorem lintegral_four_sq : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace X]
       (h1.norm.pow 2).integrable_of_hasCompactSupport h3
     rw [ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall fun x => by positivity)]
     congr 1; ext x
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   have hC' : ∀ f : X → ℂ, ∫ x, f x * starRingEnd ℂ (f x) ∂μ = ((∫ x, ‖f x‖ ^ 2 ∂μ : ℝ) : ℂ) := by
     intro f
     rw [← integral_complex_ofReal]
@@ -869,7 +869,7 @@ theorem parFun_lintegral_sq : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRe
     have := hnorm (Matrix.GeneralLinearGroup.det A)
     have hd : ((Matrix.GeneralLinearGroup.det A : Eˣ) : E) = (mat c p).toBlocks₁₁.det := rfl
     rw [hd] at this
-    rw [enorm_eq_nnnorm, ← ENNReal.coe_pow]
+    rw [eNorm_eq_nnNorm, ← ENNReal.coe_pow]
     congr 1
     apply NNReal.eq
     push_cast
@@ -879,9 +879,9 @@ theorem parFun_lintegral_sq : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRe
       ((D ^ Fintype.card α : NNReal) : ENNReal) * ‖φ (x * (A : Matrix ν ν E))‖ₑ ^ 2 := by
     intro x
     have hψe : ∀ t, ‖ψ t‖ₑ = 1 := fun t => by
-      rw [enorm_eq_nnnorm]; simp [← NNReal.coe_eq_one, coe_nnnorm, hψ1 t]
-    simp only [parFun, enorm_mul, hψe, one_mul, mul_pow, hsc, hA]
-  haveI := htop
+      rw [eNorm_eq_nnNorm]; simp [← NNReal.coe_eq_one, coe_nnNorm, hψ1 t]
+    simp only [parFun, eNorm_mul, hψe, one_mul, mul_pow, hsc, hA]
+  have := htop
   let e : Matrix α ν E ≃ₜ Matrix α ν E :=
     { toFun := fun x => x * (A : Matrix ν ν E)
       invFun := fun x => x * ((A⁻¹ : GL ν E) : Matrix ν ν E)
@@ -924,12 +924,12 @@ theorem weil_representation_preserves_L2 : ∀ (F : Type) [Field F] [CharZero F]
   intro F _ _ _ _ _ E _ _ _ _ c δ hE α _ _ ν _ _ Q hQ ψ hψ hψ1 hψne χ hχ hres _ _ μ _ κ ω hKW μ' _ g φ
   obtain ⟨hfd, htr, hinv, ht2, hc, hn, htrc, hmat⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   obtain ⟨hmt, hgood⟩ := hmat α ν
-  haveI := hfd
-  haveI := hmt
-  haveI := hgood.grp
-  haveI := hgood.t2
-  haveI := hgood.lc
-  haveI := hgood.sc
+  have := hfd
+  have := hmt
+  have := hgood.grp
+  have := hgood.t2
+  have := hgood.lc
+  have := hgood.sc
   let N : SB (Matrix α ν E) → ℝ≥0∞ := fun f => ∫⁻ x, ‖(f : Matrix α ν E → ℂ) x‖ₑ ^ 2 ∂μ
   let U : Subgroup (UG c (stdJ ν E)) :=
     { carrier := {g | ∀ φ, N (ω g φ) = N φ}
@@ -959,7 +959,7 @@ theorem weil_representation_preserves_L2 : ∀ (F : Type) [Field F] [CharZero F]
     intro φ
     simp only [N]
     rw [hKW.wey φ]
-    simp only [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow]
+    simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow]
     rw [lintegral_const_mul' _ _ (by simp), fou, hpl _ φ.2, mul_assoc]
   have hww : weyl c ν * weyl c ν ∈ sieg c ν := by
     rw [mem_sieg]
@@ -1025,14 +1025,14 @@ namespace GlobalTheory
 
 theorem kudlaSplittingSplitUnitary : GlobalTheory.Published.KudlaSplittingSplitUnitary := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE α ν _ _ _ _ Q hQ ψ hψ hψ1 hψne χ hχ hres
-  letI : MeasurableSpace (Matrix α ν E) := borel _
-  haveI : BorelSpace (Matrix α ν E) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix α ν E) := borel _
+  have : BorelSpace (Matrix α ν E) := ⟨rfl⟩
   obtain ⟨-, -, -, -, -, -, -, hmat⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   obtain ⟨-, hG⟩ := hmat α ν
-  haveI := hG.grp
-  haveI := hG.t2
-  haveI := hG.lc
-  haveI := hG.sc
+  have := hG.grp
+  have := hG.t2
+  have := hG.lc
+  have := hG.sc
   obtain ⟨κ, ω, hKW⟩ := _root_.GlobalTheory.KSp.Exist.exists_isKW F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres (Measure.addHaar)
   refine ⟨ω, _root_.GlobalTheory.KSp.isKW_isSmoothRep F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW, ?_,
     _root_.GlobalTheory.KSp.weil_heis_intertwine F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW, ?_⟩

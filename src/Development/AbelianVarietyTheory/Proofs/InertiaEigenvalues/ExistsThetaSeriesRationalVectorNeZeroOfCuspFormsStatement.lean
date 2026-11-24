@@ -179,11 +179,11 @@ theorem indepToC_bcMap_iff (hσ : ∀ a, σ' (algebraMap K L a) = σ a) (f : C �
     have h1 := h n (fun i => (1 : L) ⊗ₜ[K] b i) (Module.Flat.linearIndependent_one_tmul hb)
     simpa only [bcMap_tmul, map_one, one_smul] using h1
   · intro h n b hb
-    letI : Algebra K ℂ := σ.toAlgebra
-    letI : Algebra L ℂ := σ'.toAlgebra
-    haveI : IsScalarTower K L ℂ := IsScalarTower.of_algebraMap_eq fun a => (hσ a).symm
-    letI : Module K W := Module.compHom W σ
-    haveI : IsScalarTower K ℂ W := ⟨fun a z w => by
+    let : Algebra K ℂ := σ.toAlgebra
+    let : Algebra L ℂ := σ'.toAlgebra
+    have : IsScalarTower K L ℂ := IsScalarTower.of_algebraMap_eq fun a => (hσ a).symm
+    let : Module K W := Module.compHom W σ
+    have : IsScalarTower K ℂ W := ⟨fun a z w => by
       show (σ a * z) • w = σ a • z • w
       rw [mul_smul]⟩
     let g : C →ₗ[K] W :=
@@ -289,7 +289,7 @@ theorem rel_of_dict {D : D7} (T : Core D) (hM : LawsM T) {j : ℕ} (hj : InR D j
   have hU : IsUnf (T.U j σ) := hM.unf j hj σ hσ
   have hT := hM.unTest j hj σ hσ
   obtain ⟨th, hr, -, hD⟩ := hM.dictU j hj σ hσ
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   funext k x
   simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply]
   by_cases hx : x ∈ ((T.U j σ).X k).dom
@@ -340,7 +340,7 @@ theorem eq_zero_of_rdU {D : D7} (T : Core D) (hM : LawsM T) {j : ℕ} (hj : InR 
     (hBC : IsBC hle f' as gs)
     (h0 : ∑ i, σ' (as i) • rdU (T.U j (σ'.comp (incF T.Q.c c' hle))) (gs i) = 0) : f' = 0 := by
   classical
-  letI : Algebra T.Q.c.F c'.F := (incF T.Q.c c' hle).toAlgebra
+  let : Algebra T.Q.c.F c'.F := (incF T.Q.c c' hle).toAlgebra
   have hσ' : ∀ x : T.Q.c.F, σ' (algebraMap T.Q.c.F c'.F x) = (σ'.comp (incF T.Q.c c' hle)) x := fun _ => rfl
   have hI := (GlobalTheory.ReadingComparison.indepToC_bcMap_iff hσ'
     ((rdU (T.U j (σ'.comp (incF T.Q.c c' hle)))).comp (sec (T.Q.Xo j) T.Q.c a n).subtype)).2
@@ -358,7 +358,7 @@ theorem eq_zero_of_rdU {D : D7} (T : Core D) (hM : LawsM T) {j : ℕ} (hj : InR 
     exact h1.ne_zero 0 (by exact hbt)
   funext p y
   show f' p y = 0
-  letI : Algebra T.Q.c.F p.R := GlobalTheory.FieldBC.resAlg hle p.R
+  let : Algebra T.Q.c.F p.R := GlobalTheory.FieldBC.resAlg hle p.R
   have hA : AlgOver T.Q.c c' hle p.R := fun _ => rfl
   have hv : f' p y = evR (T.Q.Xo j) c' f' y := by
     have hft : FromTest (K := c'.F) (fun S _ _ => FrPt (T.Q.Xo j) c' S) (fun φ y z => FrMap φ y z) y :=

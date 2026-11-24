@@ -117,7 +117,7 @@ theorem exists_basis {k : ℕ} (hk : (k : K) ≠ 0) : ∃ v : Fin (2 * P.g) → 
   have hk0 : k ≠ 0 := fun e => hk (by rw [e, Nat.cast_zero])
   have : NeZero (k : K) := ⟨hk⟩
   have : NeZero k := ⟨hk0⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K k
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K k
   have hζ' : IsPrimitiveRoot (c.symm ζ) k := hζ.map_of_injective c.symm.injective
   obtain ⟨w₁, w₂, w₃, -⟩ := hL.weil _ P k (Over.mk t)
   exact PrincipalNumerics.exists_basis_of_pairing (G := Over.mk t ⟶ P.A) (g := P.g) (Nat.pos_of_ne_zero hk0)

@@ -83,7 +83,7 @@ theorem conv_right_continuous {G : Type} [Group G] [TopologicalSpace G] [IsTopol
   refine continuous_of_dominated (bound := fun h => B * ‖α h‖) ?_ ?_ ?_ ?_
   · intro x
     refine hα.aestronglyMeasurable.mul ?_
-    exact (hφ.comp (continuous_const.mul continuous_subtype_val)).aestronglyMeasurable
+    exact (hφ.comp (continuous_const.mul continuous_subtypeVal)).aestronglyMeasurable
   · intro x
     refine Filter.Eventually.of_forall (fun h => ?_)
     rw [norm_mul, mul_comm]
@@ -228,8 +228,8 @@ theorem integral_mul_multT_eq : GlobalTheory.Published.CuspRapidDecay → ∀ (D
   obtain rfl := Formalism.IndefR.Eqv.eq_thetaC D hθ
   obtain ⟨i1, i2, i3, i4, i5⟩ := Formalism.IndefR.Eqv.ga_facts D V
   obtain ⟨-, -, -, -, -, j6, j7, j8⟩ := GlobalTheory.RealMeasOne.ginfC_facts V
-  haveI := hm
-  haveI := Formalism.IndefR.Eqv.gQ_countable D V
+  have := hm
+  have := Formalism.IndefR.Eqv.gQ_countable D V
   have hT : PiTensorProduct.lift.symm t ∈ Mult (Formalism.IndefR.Eqv.thetaC D) M J χ := (mem_multT _ M J χ t).1 ht
   have hTv : ∀ (v : M.Vec) g, (PiTensorProduct.lift.symm t) v g = t (PiTensorProduct.tprod ℂ v) g := fun v g => rfl
   have hEq := Formalism.IndefR.AutomorphicEvaluation.eqCont_of_mem hT

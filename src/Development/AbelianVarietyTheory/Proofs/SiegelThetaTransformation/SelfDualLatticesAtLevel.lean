@@ -227,7 +227,7 @@ theorem exists_mul (P : Submonoid (𝓞 F)) (I : Ideal (𝓞 F))
     obtain ⟨s, hs, hv⟩ := exists_clear P ((1 - idem I) * algebraMap F (Af F) (d : F)⁻¹) fun v => by
       by_cases hv : I ≤ v.asIdeal
       · left
-        rw [mul_at, sub_at, idem_at, if_pos hv, one_at, sub_self, zero_mul]
+        rw [mul_at, sub_at, idem_at, ite_eq_left hv, one_at, sub_self, zero_mul]
         exact zero_mem _
       · exact Or.inr (hP v hv)
     refine ⟨_, ⟨s, hs, rfl⟩, (h1 _).1 ?_⟩
@@ -319,7 +319,7 @@ theorem trivAt_fmt {V : HSp D} {I : Ideal (𝓞 D.host.F)} {g : GA D V} (h : Tri
   smul_mulVec_eq _ _ (fun v => by
     by_cases hv : I ≤ v.asIdeal
     · exact Or.inr (h v hv)
-    · exact Or.inl (if_neg hv)) u
+    · exact Or.inl (ite_eq_right hv)) u
 
 theorem trivAt_fmtC {V : HSp D} {I : Ideal (𝓞 D.host.F)} {g : GA D V} (h : TrivAt V I g) (u) :
     lf (idem I) • (fmtC V g *ᵥ u) = lf (idem I) • u :=
@@ -338,14 +338,14 @@ theorem trivAt_fmtC {V : HSp D} {I : Ideal (𝓞 D.host.F)} {g : GA D V} (h : Tr
         exacts [map_one _, map_zero _]
       rw [e, e'] at this
       exact this
-    · exact Or.inl (if_neg hv)) u
+    · exact Or.inl (ite_eq_right hv)) u
 
 theorem trivOff_fmt {V : HSp D} {I : Ideal (𝓞 D.host.F)} {g : GA D V} (h : TrivOff V I g) (u) :
     lf (1 - idem I) • (fmt V g *ᵥ u) = lf (1 - idem I) • u :=
   smul_mulVec_eq _ _ (fun v => by
     by_cases hv : I ≤ v.asIdeal
     · left
-      rw [sub_at, idem_at, if_pos hv, one_at, sub_self]
+      rw [sub_at, idem_at, ite_eq_left hv, one_at, sub_self]
     · exact Or.inr (h v hv)) u
 
 theorem full_of_mov {g : GL (Fin k) (AfE D)} {Λ L : Lt D.host.E k} (hΛ : Λ.FG)
@@ -470,7 +470,7 @@ theorem mem_Vset (C : Ctx S T) {M : ℕ} {h : GA D S} {Λ : Lt D.host.E S.rank}
           rintro _ _ ⟨a, ha, ha', rfl⟩ ⟨b, hb, hb', rfl⟩
           exact ⟨a * b, mul_pos ha hb, Nat.Coprime.mul_left ha' hb', (Nat.cast_mul a b).symm⟩ }
     obtain ⟨_, ⟨s, hs0, hsM, rfl⟩, h1, h2⟩ := agree_of_mov P (Ideal.span {(M : 𝓞 D.host.F)}) (fun v hv => by
-      haveI := v.isPrime
+      have := v.isPrime
       obtain ⟨p, hp, e⟩ := (Ideal.isPrime_int_iff.mp (Ideal.IsPrime.under ℤ v.asIdeal)).resolve_left
         (Ideal.under_ne_bot ℤ v.ne_bot)
       have hpv : (p : 𝓞 D.host.F) ∈ v.asIdeal := by
@@ -525,7 +525,7 @@ theorem mem_lats (C : Ctx S T) (Lv : SW.Level C.X) {g : GA D T} {L : Lt D.host.E
       one_mem' := Lev.cop_one
       mul_mem' := Lev.cop_mul }
   obtain ⟨s, hs, h1, h2⟩ := agree_of_mov (g := finHom T g) P (C.under Lv) (fun v hv => by
-    obtain ⟨a, ha, ha'⟩ := SetLike.not_le_iff_exists.1 hv
+    obtain ⟨a, ha, ha'⟩ := IsConcreteLE.not_le_iff_exists.1 hv
     obtain ⟨y, i, hi, e⟩ := v.isMaximal.exists_inv ha'
     exact ⟨i, Lev.cop_iff.2 ⟨1, y * a, Ideal.mul_mem_left _ _ ha, by linear_combination e⟩, hi⟩)
     C.X.Λ_fg C.X.Λ_span hL hm (trivAt_fmt ht)
@@ -553,7 +553,7 @@ theorem exists_triv (C : Ctx S T) (Lv : SW.Level C.X) {g : GA D T} {L : Lt D.hos
     obtain ⟨b, m, hm', e⟩ := Lev.cop_iff.1 hs.of_mul_right_right
     exact Lev.cop_iff.2 ⟨Lev.bar b, Lev.bar m, Lev.mem_conjI.1 hm', by rw [← map_mul, ← map_add (f := _), e, map_one]⟩
   have hv : ∀ v : HeightOneSpectrum (𝓞 D.host.F), C.under Lv ≤ v.asIdeal → t ∉ v.asIdeal := fun v hv htv => by
-    haveI := v.isPrime
+    have := v.isPrime
     obtain ⟨Q, hQ, hQp, e⟩ := Ideal.exists_ideal_over_prime_of_isIntegral v.asIdeal Lv.𝔪 hv
     obtain ⟨b, m, hm', e'⟩ := Lev.cop_iff.1 hc
     rw [← e, Ideal.mem_comap, ht'] at htv

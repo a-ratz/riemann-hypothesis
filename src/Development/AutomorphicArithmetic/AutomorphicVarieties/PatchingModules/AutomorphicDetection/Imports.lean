@@ -82,7 +82,7 @@ private theorem limKer_key {G ι : Type} [Group G] [TopologicalSpace G] [IsTopol
     [CompactSpace G] (U : Ultrafilter ι) (K : ι → Subgroup G) (O : OpenNormalSubgroup G) (x : G) :
     (∀ᶠ i in (U : Filter ι), x ∈ K i ⊔ O.toSubgroup) ↔
       x ∈ limKer (U : Filter ι) K ⊔ O.toSubgroup := by
-  haveI := O.isNormal'
+  have := O.isNormal'
   constructor
   · intro h
     have hex : ∀ᶠ i in (U : Filter ι), ∃ k ∈ K i, k⁻¹ * x ∈ O.toSubgroup := by
@@ -95,7 +95,7 @@ private theorem limKer_key {G ι : Type} [Group G] [TopologicalSpace G] [IsTopol
     obtain ⟨k, hk⟩ : ∃ k : ι → G, ∀ᶠ i in (U : Filter ι), k i ∈ K i ∧ (k i)⁻¹ * x ∈ O.toSubgroup := by
       refine ⟨fun i => if hi : ∃ k ∈ K i, k⁻¹ * x ∈ O.toSubgroup then hi.choose else 1, ?_⟩
       refine hex.mono fun i hi => ?_
-      simp only [dif_pos hi]
+      simp only [dite_eq_left hi]
       exact hi.choose_spec
     obtain ⟨l, hl⟩ : ∃ l : G, Tendsto k (U : Filter ι) (nhds l) := by
       refine ⟨(U.map k).lim, ?_⟩
@@ -225,14 +225,14 @@ theorem UpperTheory.V.AlgebraTools.exists_lim_hom_out :
       { carrier := {g | (f j g)⁻¹ * f i g ∈ V.toSubgroup}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul] at *
+          simp only [Set.mem_ofPred_eq, map_mul] at *
           have := V.toSubgroup.mul_mem (V.isNormal'.conj_mem _ ha (f j b)⁻¹) hb
           convert this using 1
           group
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq, map_inv] at *
+          simp only [Set.mem_ofPred_eq, map_inv] at *
           have := V.isNormal'.conj_mem _ (V.toSubgroup.inv_mem ha) (f j a)
           convert this using 1
           group }
@@ -397,10 +397,10 @@ theorem UpperTheory.V.Pa.comm_lim :
   have hl : l.Prime := Fact.out
   have key : ∀ W : OpenNormalSubgroup B, (a * b)⁻¹ * (b * a) ∈ W.toSubgroup := by
     intro W
-    haveI : W.toSubgroup.Normal := W.isNormal'
-    haveI : Finite (B ⧸ W.toSubgroup) :=
+    have : W.toSubgroup.Normal := W.isNormal'
+    have : Finite (B ⧸ W.toSubgroup) :=
       W.toSubgroup.quotient_finite_of_isOpen W.toOpenSubgroup.isOpen
-    haveI : W.toSubgroup.FiniteIndex := W.toSubgroup.finiteIndex_of_finite_quotient
+    have : W.toSubgroup.FiniteIndex := W.toSubgroup.finiteIndex_of_finite_quotient
     have hn0 : W.toSubgroup.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
     let V : OpenNormalSubgroup Ph :=
       { toOpenSubgroup := ⟨W.toSubgroup.comap πo, W.toOpenSubgroup.isOpen.preimage hπo⟩
@@ -577,7 +577,7 @@ private theorem continuous_section_quotient_of_ker_le_open {Ph G : Type} [Group 
     [CompactSpace Ph] [Group G] [TopologicalSpace G] [T2Space G] (π : Ph →* G) (hπ : Continuous π)
     (σ : G → Ph) (hσ : ∀ γ, π (σ γ) = γ) (S : Subgroup Ph) (hS : IsOpen (S : Set Ph))
     (hk : π.ker ≤ S) : Continuous (fun γ => (σ γ : Ph ⧸ S)) := by
-  haveI : DiscreteTopology (Ph ⧸ S) := QuotientGroup.discreteTopology hS
+  have : DiscreteTopology (Ph ⧸ S) := QuotientGroup.discreteTopology hS
   have hmk : Continuous (QuotientGroup.mk : Ph → Ph ⧸ S) := continuous_quot_mk
   have key : ∀ s : Set (Ph ⧸ S), (fun γ => (σ γ : Ph ⧸ S)) ⁻¹' s =
       π '' ((QuotientGroup.mk : Ph → Ph ⧸ S) ⁻¹' s) := by
@@ -613,7 +613,7 @@ private theorem mul_one_sub_add_psi_eq_of_conj {Ph Y : Type} [Group Ph] [Topolog
         ∀ y, ((σ N (f N y) : Ph) : Ph ⧸ S) = c y := by
   set W : Subgroup Ph := (V.toOpenSubgroup : Subgroup Ph) with hW
   have hWo : IsOpen (W : Set Ph) := V.toOpenSubgroup.isOpen
-  haveI : Finite (Ph ⧸ W) := Subgroup.quotient_finite_of_isOpen W hWo
+  have : Finite (Ph ⧸ W) := Subgroup.quotient_finite_of_isOpen W hWo
   have hmem : ∀ S : Subgroup Ph, W ≤ S → ∀ x : Ph,
       x ∈ S ↔ (x : Ph ⧸ W) ∈ (QuotientGroup.mk : Ph → Ph ⧸ W) '' (S : Set Ph) := by
     intro S hS x
@@ -637,11 +637,11 @@ private theorem mul_one_sub_add_psi_eq_of_conj {Ph Y : Type} [Group Ph] [Topolog
     (Filter.Eventually.of_forall fun N => show W ≤ (π N).ker ⊔ W from le_sup_right)
   have hSo : IsOpen (S : Set Ph) := Subgroup.isOpen_mono hWS hWo
   obtain ⟨N0, hN0⟩ := hS.exists
-  haveI hSn : S.Normal := by
+  have hSn : S.Normal := by
     rw [← hN0]
     infer_instance
-  haveI : DiscreteTopology (Ph ⧸ S) := QuotientGroup.discreteTopology hSo
-  haveI : Finite (Ph ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
+  have : DiscreteTopology (Ph ⧸ S) := QuotientGroup.discreteTopology hSo
+  have : Finite (Ph ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
   have hΦ := (finite_hom_of_topFG (Y ⧸ P) hP).1 (Ph ⧸ S)
   set A2 : Set (Y → Ph ⧸ S) := {φ | Continuous φ ∧
     ∃ θ ∈ {θ : Y ⧸ P →* Ph ⧸ S | IsOpen (θ.ker : Set (Y ⧸ P))},
@@ -685,7 +685,7 @@ private theorem mul_one_sub_add_psi_eq_of_conj {Ph Y : Type} [Group Ph] [Topolog
 theorem UpperTheory.V.Pa.in_lim :
     ∀ (Ph Y : Type) [Group Ph] [TopologicalSpace Ph] [IsTopologicalGroup Ph] [CompactSpace Ph] [TotallyDisconnectedSpace Ph] [Group Y] [TopologicalSpace Y] [IsTopologicalGroup Y] [CompactSpace Y] [TotallyDisconnectedSpace Y] (Γ : ℕ → Type) [∀ N, Group (Γ N)] [∀ N, TopologicalSpace (Γ N)] [∀ N, IsTopologicalGroup (Γ N)] [∀ N, CompactSpace (Γ N)] [∀ N, TotallyDisconnectedSpace (Γ N)] (π : ∀ N, Ph →* Γ N) (U : Ultrafilter ℕ) (P : Subgroup Y) [P.Normal] (f : ∀ N, Y →* Γ N), (∀ N, Continuous (π N) ∧ Function.Surjective (π N)) → TopFG (Y ⧸ P) → (∀ N, Continuous (f N) ∧ P ≤ (f N).ker) → ∃ F : Y →* Ph ⧸ limKer (U : Filter ℕ) (fun N => (π N).ker), Continuous F ∧ ∀ V : OpenNormalSubgroup Ph, ∀ᶠ N in (U : Filter ℕ), ∀ y, Close (π N) (QuotientGroup.mk' (limKer (U : Filter ℕ) fun N => (π N).ker)) V.toSubgroup (f N y) (F y) := by
   intro Ph Y _ _ _ _ _ _ _ _ _ _ Γ _ _ _ _ _ π U P _ f hπ hP hf
-  haveI : ∀ N, T2Space (Γ N) := fun N => inferInstance
+  have : ∀ N, T2Space (Γ N) := fun N => inferInstance
   choose σ hσ using fun N (γ : Γ N) => (hπ N).2 γ
   choose h hh using fun y => exists_tendsto_ultrafilter_of_compact U (fun N => σ N (f N y))
   have hmul : ∀ a b, ((h (a * b) : Ph) : Ph ⧸ limKer (U : Filter ℕ) fun N => (π N).ker) =
@@ -706,7 +706,7 @@ theorem UpperTheory.V.Pa.in_lim :
     obtain ⟨t, ht, hto, ht1⟩ := mem_nhds_iff.1 h1
     obtain ⟨V, hV⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hto ht1
     obtain ⟨S, hSo, c, hc, hev⟩ := mul_one_sub_add_psi_eq_of_conj π (fun N => (hπ N).1) σ hσ U P f hP hf V
-    haveI : DiscreteTopology (Ph ⧸ S) := QuotientGroup.discreteTopology hSo
+    have : DiscreteTopology (Ph ⧸ S) := QuotientGroup.discreteTopology hSo
     rw [mem_nhds_iff]
     refine ⟨c ⁻¹' {c 1}, ?_, hc.isOpen_preimage _ (isOpen_discrete _), rfl⟩
     intro y hy
@@ -802,9 +802,9 @@ theorem UpperTheory.V.Pa.loc_fin :
     let m : Y →* Y ⧸ P := QuotientGroup.mk' P
     have hmc : Continuous m := continuous_quot_mk
     have hms : Function.Surjective m := QuotientGroup.mk'_surjective P
-    haveI : TotallyDisconnectedSpace (Y ⧸ P) := (totallyDisconnected_quot Y P hPc).1
+    have : TotallyDisconnectedSpace (Y ⧸ P) := (totallyDisconnected_quot Y P hPc).1
     let H' : Subgroup (Y ⧸ P) := H.map m
-    haveI : H'.Normal := Subgroup.Normal.map inferInstance m hms
+    have : H'.Normal := Subgroup.Normal.map inferInstance m hms
     have hcm : H'.comap m = H := by
       rw [Subgroup.comap_map_eq, QuotientGroup.ker_mk']
       exact sup_eq_left.mpr hPH
@@ -902,11 +902,11 @@ theorem UpperTheory.V.AlgebraTools.exists_surj_over_finite :
   have hfr : ∀ j, f (x (Fin.natAdd r j)) = z j := fun j => by
     rw [hfx, Fin.append_right]
   refine ⟨f, hf, ?_, ?_, hfl⟩
-  · haveI : T2Space G := inferInstance
+  · have : T2Space G := inferInstance
     have hRc : IsClosed (Set.range f) := (isCompact_range hf).isClosed
     have hker : ∀ k : q.ker, (k : G) ∈ Set.range f := by
       let S : Set q.ker := Subtype.val ⁻¹' Set.range f
-      have hSc : IsClosed S := hRc.preimage continuous_subtype_val
+      have hSc : IsClosed S := hRc.preimage continuous_subtypeVal
       have hsub : ((Subgroup.closure (Set.range z) : Subgroup q.ker) : Set q.ker) ⊆ S := by
         have : Subgroup.closure (Set.range z) ≤ f.range.comap q.ker.subtype := by
           rw [Subgroup.closure_le]
@@ -1004,7 +1004,7 @@ theorem UpperTheory.V.Pa.sys_cover :
     let p := (T.h N).p
     let q : (T.GN N).Γ →* G0.Γ ⧸ H0 := (QuotientGroup.mk' H0).comp p
     let HN : Subgroup (T.GN N).Γ := H0.comap p
-    haveI : HN.Normal := Subgroup.Normal.comap inferInstance p
+    have : HN.Normal := Subgroup.Normal.comap inferInstance p
     have hqker : q.ker = HN := by
       ext g
       simp [q, HN, p, MonoidHom.mem_ker, QuotientGroup.eq_one_iff]
@@ -1058,7 +1058,7 @@ theorem UpperTheory.V.Pa.selmer_cocycles_limit_and_descent_properties :
     exact Filter.hyperfilter_le_cofinite
   set K : Subgroup Ph := limKer (U : Filter ℕ) (fun N => (π N).ker) with hK
   have hKs := limKer_sup Ph ℕ U (fun N => (π N).ker)
-  haveI : TotallyDisconnectedSpace (Ph ⧸ K) := (totallyDisconnected_quot Ph K hKs.1).1
+  have : TotallyDisconnectedSpace (Ph ⧸ K) := (totallyDisconnected_quot Ph K hKs.1).1
   have sep : ∀ z : G0.Γ, (∀ W : OpenNormalSubgroup G0.Γ, z ∈ (W : Subgroup G0.Γ)) → z = 1 := by
     intro z hz
     have h1 := (totallyDisconnected_quot G0.Γ ⊥ (by simpa using isClosed_singleton)).2 z
@@ -1118,12 +1118,12 @@ theorem UpperTheory.V.Pa.selmer_cocycles_limit_and_descent_properties :
       (fun V => (hFconv V).mono fun N h => h y) (fun W => Filter.Eventually.of_forall fun N => ?_)
     simp [hf]
   have hv := fun v => lift (L.Gv v) (T.phiV v) (fun N => (T.GN N).η.ker.subtype.comp ((T.GN N).φ v))
-    (G0.η.ker.subtype.comp (G0.φ v)) (fun N => continuous_subtype_val.comp ((T.GN N).φ_cont v))
-    (continuous_subtype_val.comp (G0.φ_cont v)) (fun N y => (T.h N).φ v y)
+    (G0.η.ker.subtype.comp (G0.φ v)) (fun N => continuous_subtypeVal.comp ((T.GN N).φ_cont v))
+    (continuous_subtypeVal.comp (G0.φ_cont v)) (fun N y => (T.h N).φ v y)
   choose Fv hFvc hFvconv hFvp using hv
   have hu := fun u => lift (L.Gu u) (T.phiU u) (fun N => (T.GN N).η.ker.subtype.comp ((T.GN N).φu u))
-    (G0.η.ker.subtype.comp (G0.φu u)) (fun N => continuous_subtype_val.comp ((T.GN N).φu_cont u))
-    (continuous_subtype_val.comp (G0.φu_cont u)) (fun N y => (T.h N).φu u y)
+    (G0.η.ker.subtype.comp (G0.φu u)) (fun N => continuous_subtypeVal.comp ((T.GN N).φu_cont u))
+    (continuous_subtypeVal.comp (G0.φu_cont u)) (fun N y => (T.h N).φu u y)
   choose Fu hFuc hFuconv hFup using hu
   have memv : ∀ v y, Fv v y ∈ (G0.η.comp hp).ker := by
     intro v y

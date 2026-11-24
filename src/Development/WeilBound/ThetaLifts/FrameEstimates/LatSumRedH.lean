@@ -103,7 +103,7 @@ theorem latSum_redH (hT : GrpTop) (hS : SiegelAll) (hI : LatInv) (hK : LatCpt) (
   refine ENNReal.ofReal_le_ofReal ?_
   have h1 : (1 : ℝ) ≤ (ht h : ℝ) ^ (k * N) := one_le_pow₀ (by exact_mod_cast one_le_ht h)
   have h3 : Real.exp (N * ∑ j, t j) ≤ A ^ N * (ht h : ℝ) ^ (k * N) := by
-    rw [Real.exp_nat_mul, pow_mul, ← mul_pow]
+    rw [Real.exp_natCast_mul, pow_mul, ← mul_pow]
     exact pow_le_pow_left₀ (Real.exp_pos _).le (hAk h δ hδ t ht' κ hκ e) _
   have h4 : (0 : ℝ) ≤ K₁ * K₂ * A ^ N := by positivity
   have h5 : (1 : ℝ) ≤ (K₁ * K₂ * A ^ N + 1) * (ht h : ℝ) ^ (k * N) := by nlinarith

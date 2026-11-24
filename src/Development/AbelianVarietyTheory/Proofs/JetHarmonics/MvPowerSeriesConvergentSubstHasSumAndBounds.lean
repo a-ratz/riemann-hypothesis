@@ -128,11 +128,11 @@ theorem exists_decay {σ : Type} [Fintype σ] (s : σ → MvPowerSeries τ K) (h
     have : (Finset.univ.sup fun i => ‖MvPowerSeries.constantCoeff (s i)‖₊) < 1 :=
       (Finset.sup_lt_iff (by simp)).2 fun i _ => by
         have h := (hsi i).2
-        rw [← coe_nnnorm] at h
+        rw [← coe_nnNorm] at h
         exact_mod_cast h
     exact_mod_cast this
   have hle : ∀ i, ‖MvPowerSeries.constantCoeff (s i)‖ ≤ θ := fun i => by
-    rw [hθdef, ← coe_nnnorm]
+    rw [hθdef, ← coe_nnNorm]
     exact_mod_cast Finset.le_sup (f := fun i => ‖MvPowerSeries.constantCoeff (s i)‖₊)
       (Finset.mem_univ i)
   refine ⟨θ, h0, hlt, fun ν μ => ?_⟩

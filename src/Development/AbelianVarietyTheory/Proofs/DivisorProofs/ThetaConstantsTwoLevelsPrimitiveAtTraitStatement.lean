@@ -170,7 +170,7 @@ namespace GlobalTheory.UMin.ModelNZ
 
 theorem exists_sec_nz : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [CharZero W], IsAdicComplete (IsLocalRing.maximalIdeal W) W → ∀ (D : DegData W (IsLocalRing.maximalIdeal W)) (A : PolAV (Sp (FractionRing W))) (G : Over (Sp W)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (U : Unif (IsLocalRing.maximalIdeal W) D A G), ∃ σ : SecAt G U.LG.L (𝟙 (Sp W)), NZ G U.LG.L (𝟙 (Sp W)) σ := by
   intro R _ _ _ _ _ D A G _ _ hsemi U
-  haveI : GeometricallyConnected G.hom := hsemi.geomConnected
+  have : GeometricallyConnected G.hom := hsemi.geomConnected
   have hLaws := GlobalTheory.abelianSchemeLaws_all
 
   obtain ⟨th, hth, -⟩ := GlobalTheory.PsiRing.exists_basis_fibNZ hLaws.2.secTwist R D.toPre
@@ -341,7 +341,7 @@ theorem main : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing
   let i' : K →+* Kb := algebraMap K Kb
   have hii : Function.Injective (i'.comp i) := i'.injective.comp hi
   let e : FractionRing W →+* Kb := IsFractionRing.lift hii
-  letI : Algebra (FractionRing W) Kb := e.toAlgebra
+  let : Algebra (FractionRing W) Kb := e.toAlgebra
   let j : F →+* Kb := (IsAlgClosed.lift : F →ₐ[FractionRing W] Kb).toRingHom
   have hsq : i'.comp i = j.comp φF := by
     ext r
@@ -459,7 +459,7 @@ theorem thList_smul {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {L
 
 theorem cmp_unif : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [CharZero W], IsAdicComplete (IsLocalRing.maximalIdeal W) W → ∀ (D : DegData W (IsLocalRing.maximalIdeal W)) (A : PolAV (Sp (FractionRing W))) (G : Over (Sp W)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (_ : Unif (IsLocalRing.maximalIdeal W) D A G) (ρ : LB.Gen (A.L.pull (eSec A.A))), ρ.IsGen → ∀ (K : Type) [Field K] [IsAlgClosed K] (io : FractionRing W →+* K) (m m' N N' : ℕ) (d : Fin N → K) (d' : Fin N' → K), Odd m → 3 ≤ m → IsUnit (m : W) → Odd m' → 3 ≤ m' → IsUnit (m' : W) → (letI := A.isAb.comm; HasTh₂ A.A A.L ρ m m' (spMap io) d d') → ∃ a : K, a ≠ 0 ∧ Prim (io.comp (algebraMap W (FractionRing W))) (fun b => d b / a) ∧ Prim (io.comp (algebraMap W (FractionRing W))) (fun b => d' b / a) := by
   intro W _ _ _ _ hW D A G _ _ hG U ρ hρ K _ _ io m m' N N' d d' hm hm3 hmu hm' hm3' hmu' hd
-  letI := A.isAb.comm
+  let := A.isAb.comm
   obtain ⟨-, -, w, hp, -, hw, -⟩ := GlobalTheory.Ex.GenericFibre.exists_isoData W _ D A G U.toUnifPre
   have h₁ := (GlobalTheory.UMin.ThMove.hasTh₂_move _ G U.LG.L U.LG.rig U.LG.isLB U.LG.rigGen _ A.A A.L ρ (jK W) _ A.isLB hρ hp
     ⟨w, hw⟩ m m' N N' K (spMap io) d d').1 hd
@@ -523,19 +523,19 @@ namespace GlobalTheory.SiegCmp
 
 theorem prim_comp_of_isIntegral : ∀ {V W K : Type} [CommRing V] [CommRing W] [Field K] (f : V →+* W) (j : W →+* K), f.IsIntegral → ∀ {J : Type} (c : J → K), Prim j c → Prim (j.comp f) c := by
   intro V W K _ _ _ f j hf J c hc
-  letI := f.toAlgebra
-  letI := j.toAlgebra
-  letI : Algebra V K := (j.comp f).toAlgebra
-  haveI : IsScalarTower V W K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.IsIntegral V W := ⟨hf⟩
+  let := f.toAlgebra
+  let := j.toAlgebra
+  let : Algebra V K := (j.comp f).toAlgebra
+  have : IsScalarTower V W K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.IsIntegral V W := ⟨hf⟩
   have key : ∀ x : K, j.IsIntegralElem x → (j.comp f).IsIntegralElem x := fun x hx =>
     (isIntegral_trans (R := V) (A := W) x hx : IsIntegral V x)
   exact ⟨fun a => key _ (hc.1 a), let ⟨a, h0, h1⟩ := hc.2; ⟨a, h0, key _ h1⟩⟩
 
 theorem exists_ext_fractionRing : ∀ (V W : Type) [CommRing V] [IsDomain V] [CommRing W] [IsDomain W] (f : V →+* W) (fK : FractionRing V →+* FractionRing W), f.IsIntegral → (∀ a, fK (algebraMap V _ a) = algebraMap W _ (f a)) → ∀ (K : Type) [Field K] [IsAlgClosed K] (io : FractionRing V →+* K), ∃ io' : FractionRing W →+* K, io'.comp fK = io := by
   intro V W _ _ _ _ f fK hf hfK K _ _ io
-  letI := fK.toAlgebra
-  letI := io.toAlgebra
+  let := fK.toAlgebra
+  let := io.toAlgebra
   have hint : ∀ w : W, IsIntegral (FractionRing V) (algebraMap W (FractionRing W) w) := by
     intro w
     obtain ⟨p, hp, hpe⟩ := hf w
@@ -547,7 +547,7 @@ theorem exists_ext_fractionRing : ∀ (V W : Type) [CommRing V] [IsDomain V] [Co
     rw [this, ← Polynomial.hom_eval₂, hpe, map_zero]
   have hmem : ∀ w : W, algebraMap W (FractionRing W) w ∈ algebraicClosure (FractionRing V) (FractionRing W) :=
     fun w => mem_algebraicClosure_iff.2 (hint w).isAlgebraic
-  haveI : Algebra.IsAlgebraic (FractionRing V) (FractionRing W) := by
+  have : Algebra.IsAlgebraic (FractionRing V) (FractionRing W) := by
     constructor
     intro z
     rw [← mem_algebraicClosure_iff]
@@ -561,12 +561,12 @@ theorem exists_ext_fractionRing : ∀ (V W : Type) [CommRing V] [IsDomain V] [Co
 theorem theta_two_levels_prim : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (L : LB G.left) (ρ : LB.Gen (L.pull (eSec G))), L.IsLB → ρ.IsGen → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ (y : Sp (FractionRing V) ⟶ S) (P : PolAV (Sp (FractionRing V))) (α : P.A.left ⟶ G.left), IsGrpPullback P.A G y α → LBIso P.L (L.pull α) → (letI := P.isAb.comm; HypS P.A P.L) → ∀ (K : Type) [Field K] [IsAlgClosed K] (io : FractionRing V →+* K) (m m' N N' : ℕ) (d : Fin N → K) (d' : Fin N' → K), Odd m → 3 ≤ m → IsUnit (m : V) → Odd m' → 3 ≤ m' → IsUnit (m' : V) → HasTh₂ G L ρ m m' (spMap io ≫ y) d d' → ∃ a : K, a ≠ 0 ∧ Prim (io.comp (algebraMap V (FractionRing V))) (fun b => d b / a) ∧ Prim (io.comp (algebraMap V (FractionRing V))) (fun b => d' b / a) := by
 
   intro S G _ _ L ρ hL hρ V _ _ _ hV y P α hα hLα hS K _ _ io m m' N N' d d' hm hm3 hmu hm' hm3' hmu' hth
-  letI := P.isAb.comm
+  let := P.isAb.comm
   obtain ⟨ρP, hρP⟩ := P.rigid
   have h1 : HasTh₂ P.A P.L ρP m m' (spMap io) d d' :=
     (ThMove.hasTh₂_move S G L ρ hL hρ _ P.A P.L ρP y α P.isLB hρP hα hLα m m' N N' K (spMap io) d d').2 hth
   obtain ⟨W, _, _, _, _, f, fK, hWc, hfi, hfinj, hfK, A, β, hβ, hLβ, G', _, _, gen, hG', hgen, E, hE⟩ := GlobalTheory.T.exists_split_semiAbelian_model_after_extension V hV P
-  letI := A.isAb.comm
+  let := A.isAb.comm
   have hSA : HypS A.A A.L :=
     SymBaseChange.hypS_baseChange _ _ P.A A.A (spMap fK) β P.L A.L P.isLB A.isLB hβ hLβ hS
   obtain ⟨D, U, -⟩ := GlobalTheory.ZH.thmU_and_uTors.1 W hWc A G' hG' ⟨E, hE⟩ hSA gen hgen

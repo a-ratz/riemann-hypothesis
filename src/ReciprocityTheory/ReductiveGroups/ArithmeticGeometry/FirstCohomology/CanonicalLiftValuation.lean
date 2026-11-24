@@ -91,8 +91,8 @@ private theorem formEq_sumElim_pullφ_rosatiφ (oa : D.toPre.OAct O) (a : O) (k 
         rosatiφ D.toPre.P.A (oa.onB.act (star a)) (oa.onB.act a) j))
       (Sum.elim (pullε k N) rosatiε) (pullφ D F oa a χ) (pullε k N) := by
   intro U _ h
-  haveI := oa.onB.hom a
-  haveI := oa.onB.hom (star a)
+  have := oa.onB.hom a
+  have := oa.onB.hom (star a)
   simp only [Fintype.prod_sum_type, Sum.elim_inl, Sum.elim_inr, pullφ, pullε]
   rw [prod_ros]
   simp only [Fin.prod_univ_succ, Fin.prod_univ_zero, DegPre.famφ, DegPre.famε, Matrix.cons_val_zero,
@@ -162,8 +162,8 @@ theorem pull_val_chi (hG : GlobalFnsSt) (oa : D.toPre.OAct O) (a : O) (k N : ℕ
     (Z : Scheme.{0}) (ρ : Z ⟶ (DegPre.BF D.toPre F).left) (z : Z) (J) (hJ : Good D.toPre.P.L z J) :
     val u ρ z J = val u0 ρ z J *
       val (LB.pullGen D.toPre.P.L _ _ r (lift (cP D.toPre _ χ) (DegPre.prB D.toPre F)).left) ρ z J := by
-  haveI := oa.onB.hom a
-  haveI := oa.onB.hom (star a)
+  have := oa.onB.hom a
+  have := oa.onB.hom (star a)
   refine (gen_unique' D.toPre.P.isLB (formEq_sumElim_pullφ_rosatiφ oa a k N χ) (fst (TF (R := V) F) D.toPre.P.A).left
     (DegPre.zF D.toPre F).left GC.zF_fst (surj_appTop (D := D.toPre) (F := F) hG) hu
     (mulGen_isGen _ _ _ _ _ _ _ hu0 (pullGen_isGen _ _ _ _ hr _)) ?_ Z ρ z J hJ).trans (val_mul hJ _ _ _)

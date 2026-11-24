@@ -88,7 +88,7 @@ theorem pderiv_formalExp {f : MvPowerSeries σ A} (hf : constantCoeff f = 0) (i 
 
 private theorem one_add_X_mul_deriv_log :
     (1 + PowerSeries.X) * PowerSeries.derivative (R := A) (PowerSeries.log A) = 1 := by
-  rw [PowerSeries.deriv_log]
+  rw [PowerSeries.derivative_log]
   ext n
   rw [add_mul, one_mul, map_add (f := _)]
   cases n with
@@ -107,7 +107,7 @@ theorem mul_pderiv_formalLog {g : MvPowerSeries σ A} (hg : constantCoeff g = 1)
 theorem eq_formalExp_of_pderiv {f u : MvPowerSeries σ A} (hf : constantCoeff f = 0)
     (hu : constantCoeff u = 1) (h : ∀ i, pderiv (R := A) i u = u * pderiv (R := A) i f) :
     u = formalExp f := by
-  haveI : HasUniqueDiv A := IsAddTorsionFree.of_module_rat A
+  have : HasUniqueDiv A := HasUniqueDiv.of_module_rat A
   have hn : constantCoeff (-f) = 0 := by simp [hf]
   have key : ∀ v : MvPowerSeries σ A, constantCoeff v = 1 →
       (∀ i, pderiv (R := A) i v = v * pderiv (R := A) i f) → v * formalExp (-f) = 1 := by
@@ -122,7 +122,7 @@ theorem eq_formalExp_of_pderiv {f u : MvPowerSeries σ A} (hf : constantCoeff f 
 theorem eq_formalLog_of_pderiv {g u : MvPowerSeries σ A} (hg : constantCoeff g = 1)
     (hu : constantCoeff u = 0) (h : ∀ i, g * pderiv (R := A) i u = pderiv (R := A) i g) :
     u = formalLog g := by
-  haveI : HasUniqueDiv A := IsAddTorsionFree.of_module_rat A
+  have : HasUniqueDiv A := HasUniqueDiv.of_module_rat A
   have hunit : IsUnit g := isUnit_iff_constantCoeff.mpr (hg ▸ isUnit_one)
   refine pderiv.ext (fun i => hunit.mul_left_cancel ?_) (by rw [hu, constantCoeff_formalLog hg])
   rw [h, mul_pderiv_formalLog hg]

@@ -119,13 +119,13 @@ private theorem iy_rv (a : (InfiniteAdeleRing ℚ)ˣ) : iy (rv a) = PE.symm (a, 
   have h0 : rv a ≠ 0 := (Ad3.GP.aR a).ne_zero
   apply Units.ext
   refine Prod.ext ?_ ?_
-  · simp only [iy, dif_neg h0]
+  · simp only [iy, dite_eq_right h0]
     change (1 : InfiniteAdeleRing ℚ) - TR.infEq ℚ 1 + TR.infEq ℚ (fun _ => rv a) = (a : InfiniteAdeleRing ℚ)
     rw [map_one, sub_self, zero_add]
     funext w
     rw [Subsingleton.elim w Ad3.GP.wR]
     exact (Ad3.GP.eR.symm_apply_apply _)
-  · simp only [iy, dif_neg h0]
+  · simp only [iy, dite_eq_right h0]
     change (1 : FiniteAdeleRing (𝓞 ℚ) ℚ) - 0 + 0 = 1
     rw [sub_zero, add_zero]
 
@@ -162,7 +162,7 @@ private theorem mem_TF {L : ℕ} {u : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ} :
 private theorem isClosed_TF {L : ℕ} (hL : 0 < L) : IsClosed (TF L) := by
   have e : TF L = ⋂ v : H.P ℚ, ({u | Valued.v (ev v u) = 1} ∩ {u | Valued.v (ev v u - 1) ≤ Valued.v ((L : ℕ) : H.Kv v)}) := by
     ext u
-    simp only [mem_TF, Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [mem_TF, Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
   rw [e]
   refine isClosed_iInter fun v => IsClosed.inter ?_ ?_
   · have := ((Valued.isClopen_sphere (H.Kv v) (r := 1) one_ne_zero).preimage (continuous_ev v)).isClosed
@@ -174,7 +174,7 @@ private theorem isClosed_TF {L : ℕ} (hL : 0 < L) : IsClosed (TF L) := by
       ((continuous_ev v).sub continuous_const : Continuous fun u => ev v u - 1)).isClosed
     convert this using 1
     ext u
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Valuation.restrict_le_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Valuation.restrict_le_iff]
     exact Iff.rfl
 
 private theorem TF_subset (L : ℕ) : TF L ⊆ finiteIntegralUnits ℚ := by

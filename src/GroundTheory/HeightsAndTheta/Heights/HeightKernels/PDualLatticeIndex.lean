@@ -292,7 +292,7 @@ theorem dual_index_le (n : ℕ) : ∀ (L' L : Submodule (𝓞 K) (Fin i → K)),
     rw [AddSubgroup.relIndex_self] at hn
     rw [AddSubgroup.relIndex_self]
     omega
-  · obtain ⟨x₀, hx₀L, hx₀⟩ := SetLike.not_le_iff_exists.mp hLL
+  · obtain ⟨x₀, hx₀L, hx₀⟩ := IsConcreteLE.not_le_iff_exists.mp hLL
     have h1 : L' ≤ L' ⊔ (𝓞 K) ∙ x₀ := le_sup_left
     have h2 : L' ⊔ (𝓞 K) ∙ x₀ ≤ L := sup_le hle ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₀L)
     have htow := AddSubgroup.relIndex_mul_relIndex _ _ _
@@ -393,7 +393,7 @@ theorem box_relIndex_ne_zero {c : K} (hc : c ≠ 0) :
     (box (i := i) c).toAddSubgroup.relIndex (box c⁻¹).toAddSubgroup ≠ 0 := by
   have hid : ∀ c : K, box (i := i) c =
       idealLattice (fun _ : Fin i => FractionalIdeal.spanSingleton (𝓞 K)⁰ c) := fun c => by
-    simp only [box, idealLattice, FractionalIdeal.coe_spanSingleton]
+    simp only [box, idealLattice, FractionalIdeal.coeToSubmodule_spanSingleton]
   have lat : ∀ c : K, c ≠ 0 → Submodule.IsFullLattice ℚ ((box (i := i) c).restrictScalars ℤ) := by
     intro c hc
     obtain ⟨hfg, hspan⟩ := LinesIdealLatticeFG.proof K i (fun _ => FractionalIdeal.spanSingleton (𝓞 K)⁰ c)

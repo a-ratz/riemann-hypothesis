@@ -122,7 +122,7 @@ theorem box_eq_image (b : Basis ι K E) (γ : ι → ValueGroupWithZero K) :
     rw [Basis.equivFun_apply] at h1
     exact h1
   ext x
-  simp only [box, Set.mem_setOf_eq, Set.mem_image, Set.mem_pi, Set.mem_univ, true_implies]
+  simp only [box, Set.mem_ofPred_eq, Set.mem_image, Set.mem_pi, Set.mem_univ, true_implies]
   constructor
   · intro h
     exact ⟨b.equivFun x, fun i => by simpa [Basis.equivFun_apply] using h i, by simp⟩
@@ -164,7 +164,7 @@ variable [MeasurableSpace E] [BorelSpace E]
 
 theorem image_eq_smul (b : Basis ι K E) (μ : Measure E) [μ.IsAddHaarMeasure] (T : E ≃ₗ[K] E) :
     ∃ c : ℝ≥0, ∀ S : Set E, μ (T '' S) = c * μ S := by
-  haveI : IsTopologicalAddGroup E := IsModuleTopology.topologicalAddGroup K E
+  haveI : IsTopologicalAddGroup E := IsModuleTopology.isTopologicalAddGroup K E
   haveI := locallyCompact b
   haveI := secondCountableE b
   let L := toCLE T

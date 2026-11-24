@@ -113,7 +113,7 @@ theorem dom_facts (hB : ThetaBasic) (hp : IsPair B M χX χW om r s r' s') {𝓕
     have h1 := hbd f g h
     have h2 : 0 ≤ p f * (ht h : ℝ) ^ k := mul_nonneg (apply_nonneg p f) (by positivity)
     have h3 := ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hg.ne) h1
-    rwa [toReal_enorm, ENNReal.toReal_mul, ENNReal.toReal_ofReal h2] at h3
+    rwa [toReal_eNorm, ENNReal.toReal_mul, ENNReal.toReal_ofReal h2] at h3
   refine ⟨fun f => ⟨fun h => ?_, p f * (∫ g in M.dom, (G g).toReal ∂M.μ), k, fun h => ?_⟩, fun h => ?_⟩
   · exact Integrable.mono' (hGint.const_mul (p f * (ht h : ℝ) ^ k)) (hmeas f h) (hnb f h)
   · calc ∫ g in M.dom, ‖theta om (pureA F f φ) g h‖ ∂M.μ
@@ -280,7 +280,7 @@ theorem soCont_of (hB : ThetaBasic) (hD : DomSoU) (hF : SoFin) : SoCont := by
     set x : Fin n × Fin d → mixedEmbedding.mixedSpace F := fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (z i).1
     have e4 : (fun j => w j x) = ∑ j, w j x • (P (Pi.single j 1) : Fin m → ℂ) := by
       have a1 : (P (fun j => w j x) : Fin m → ℂ) = fun j => w j x :=
-        congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hQ ⟨_, hmem x⟩)
+        congrArg Subtype.val (Submodule.projectionOnto_apply_left hQ ⟨_, hmem x⟩)
       have a2 : (fun j => w j x) = ∑ j, w j x • (Pi.single j 1 : Fin m → ℂ) := by
         funext i; simp [Finset.sum_apply, Pi.single_apply]
       conv_lhs => rw [← a1, a2]

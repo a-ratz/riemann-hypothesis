@@ -86,7 +86,7 @@ theorem stabClosed_holds : StabClosed := by
   have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   have hmat : Continuous (fun g : HA (AF F) σ J =>
       ((HA.mat (AF F) σ J g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hcont : Continuous (fun g : HA (AF F) σ J => g • ratTup (F := F) (AF F) X0) := by
     show Continuous (fun g : HA (AF F) σ J => actTup (AF F) (HA.mat (AF F) σ J g) (ratTup (F := F) (AF F) X0))
     unfold actTup
@@ -99,7 +99,7 @@ theorem smul_ratTup_cont (F E : Type) [Field F] [NumberField F] [Field E] [Algeb
     Continuous (fun g : HA (AF F) σ J => g • ratTup (F := F) (AF F) X0) := by
   have hmat : Continuous (fun g : HA (AF F) σ J =>
       ((HA.mat (AF F) σ J g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   show Continuous (fun g : HA (AF F) σ J => actTup (AF F) (HA.mat (AF F) σ J g) (ratTup (F := F) (AF F) X0))
   unfold actTup
   exact continuous_pi fun i => hmat.matrix_mulVec continuous_const

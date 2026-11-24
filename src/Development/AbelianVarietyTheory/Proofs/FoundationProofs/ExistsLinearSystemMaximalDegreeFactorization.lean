@@ -76,7 +76,7 @@ theorem exists_deg_lt_two_correction_simple :
       P₀.IsMaximal → ∃ p : Fin n → k[X], (∀ i, (p i).degree < (2 : ℕ)) ∧
         w + ∑ i, p i • b i ∈ P₀ ∧ w + ∑ i, p i • b i ∉ P₀ ^ 2 := by
   intro k A _ _ _ _ _ _ _ _ _ _ n b P₀ w hP
-  haveI : Algebra.FiniteType k A := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
+  have : Algebra.FiniteType k A := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
   obtain ⟨φ, hφ⟩ := ((_root_.GlobalTheory.DedekindCodim.dedekind_finiteType_codim k A).2.1 P₀ hP).2
   set α : k := φ (algebraMap k[X] A X) with hα
   have hC : algebraMap k[X] A (C α) = algebraMap k A α := by
@@ -96,7 +96,7 @@ theorem exists_deg_lt_two_correction_simple :
     exact mul_ne_zero (X_sub_C_ne_zero α) hi h4
   have hbot : P₀ ≠ ⊥ := fun h => hne (by rw [h] at hlin; simpa using hlin)
   have hlt := Ideal.pow_lt_self P₀ hbot hP.ne_top 2 le_rfl
-  obtain ⟨π, hπP, hπ2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨π, hπP, hπ2⟩ := IsConcreteLE.exists_of_lt hlt
   set q : k[X] := (X - C α) ^ 2 with hq
   have hmon : q.Monic := (monic_X_sub_C α).pow 2
   have hqdeg : q.degree = (2 : ℕ) := by

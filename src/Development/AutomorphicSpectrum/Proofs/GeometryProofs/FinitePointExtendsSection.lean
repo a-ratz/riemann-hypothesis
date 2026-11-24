@@ -62,7 +62,7 @@ theorem exists_section_of_isFinite (R : Type) [CommRing R] [IsDomain R] [IsInteg
     (hp : p ≫ f = Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R)))) :
     ∃ s : Spec (CommRingCat.of R) ⟶ X, s ≫ f = 𝟙 _ ∧
       Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R))) ≫ s = p := by
-  haveI : IsAffine X := isAffine_of_isAffineHom f
+  have : IsAffine X := isAffine_of_isAffineHom f
   let ψ : CommRingCat.of R ⟶ Γ(X, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ f.appTop
   let φ : Γ(X, ⊤) ⟶ CommRingCat.of (FractionRing R) :=
     p.appTop ≫ (Scheme.ΓSpecIso (CommRingCat.of (FractionRing R))).hom

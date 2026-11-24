@@ -242,8 +242,8 @@ theorem bcPull_transport (w : q ≫ X.hom = X'.hom ≫ spMap σ) (u : Fn1 X) (E 
     (y : Pt X' E) (hψ : ∀ e, ψ e = φ e) (hy : y.left ≫ q = z.left) :
     @u E _ i E' _ i' φ z = bcPull w u E E' ψ y := by
   subst h h'
-  letI := algVia σ E
-  letI := algVia σ E'
+  let := algVia σ E
+  let := algVia σ E'
   have e1 : homVia σ ψ = φ := AlgHom.ext hψ
   have e2 : ptVia w y = z := by
     apply Over.OverMorphism.ext
@@ -264,8 +264,8 @@ theorem isCob_of_bcPull_isIso : ∀ (R R' : Type) [CommRing R] [CommRing R'] (σ
   intro E _ i E' _ i' φ z _
   let τ := ringOf (X' := X') (z.left ≫ inv q)
   let τ' := ringOf (X' := X') ((spOver φ ≫ z).left ≫ inv q)
-  letI A : Algebra R' E := τ.toAlgebra
-  letI A' : Algebra R' E' := τ'.toAlgebra
+  let A : Algebra R' E := τ.toAlgebra
+  let A' : Algebra R' E' := τ'.toAlgebra
   have hτ : τ' = (φ : E →+* E').comp τ := by
     apply ringOf_eq_of_spMap
     rw [spMap_comp, spMap_ringOf]

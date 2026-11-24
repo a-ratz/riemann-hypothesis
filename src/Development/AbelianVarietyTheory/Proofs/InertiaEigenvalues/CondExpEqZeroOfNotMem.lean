@@ -73,7 +73,7 @@ theorem GlobalTheory.JSW.psiLoc_conductor_eventually : ∀ (E : Type) [Field E] 
   refine ⟨hfin.toFinset, fun w hw x => ?_⟩
   have hw' : ¬ w.asIdeal ∣ differentIdeal ℤ (𝓞 E) := by simpa using hw
   rw [Ideal.dvd_iff_le] at hw'
-  obtain ⟨y, hy, hyw⟩ := SetLike.not_le_iff_exists.mp hw'
+  obtain ⟨y, hy, hyw⟩ := IsConcreteLE.not_le_iff_exists.mp hw'
   have hval : Valued.v ((algebraMap (𝓞 E) E y : E) : w.adicCompletion E) = 1 := by
     rw [HeightOneSpectrum.valuedAdicCompletion_eq_valuation', HeightOneSpectrum.valuation_of_algebraMap]
     exact le_antisymm (w.intValuation_le_one y) (not_lt.mp fun h => hyw ((w.intValuation_lt_one_iff_mem y).mp h))
@@ -125,7 +125,7 @@ theorem condOne_one_of_notMem {w : HeightOneSpectrum (𝓞 E)} (hw : w ∉ badSe
 theorem condExp_eq_zero_of_notMem (ϖ : ∀ w : HeightOneSpectrum (𝓞 E), (w.adicCompletion E)ˣ)
     {w : HeightOneSpectrum (𝓞 E)} (hw : w ∉ badSet E) : condExp ϖ w = 0 := by
   classical
-  rw [condExp, if_pos (condOne_one_of_notMem hw)]
+  rw [condExp, ite_eq_left (condOne_one_of_notMem hw)]
 
 
 open Classical in
@@ -162,7 +162,7 @@ theorem shift_apply_of_notMem (m : ℕ) {T : Finset (HeightOneSpectrum (𝓞 E))
     (ϖ : ∀ w : HeightOneSpectrum (𝓞 E), (w.adicCompletion E)ˣ) {w : HeightOneSpectrum (𝓞 E)} (hw : w ∉ T) :
     (shift m T ϖ).1 w = fun i : Fin (m + 1) => condExp ϖ w * ((m : ℤ) - ((i : ℕ) : ℤ)) := by
   classical
-  rw [shift_apply, shiftFn, if_neg hw]
+  rw [shift_apply, shiftFn, ite_eq_right hw]
 
 theorem shift_last (m : ℕ) (T : Finset (HeightOneSpectrum (𝓞 E)))
     (ϖ : ∀ w : HeightOneSpectrum (𝓞 E), (w.adicCompletion E)ˣ) (w : HeightOneSpectrum (𝓞 E)) :

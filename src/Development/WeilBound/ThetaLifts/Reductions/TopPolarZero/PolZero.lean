@@ -154,9 +154,9 @@ theorem coefLine_of (hS : SWFull) (hX : BoxSec) (hW : DblW) (hH : HgtEx) (hT : H
     simp only [(far z hz).2.2 _ (rp s t), (far z hz).2.2 _ (rp 0 1), tr, ← integral_const_mul,
       fun g => hl _ ((hR F E σ B a a' G X om om' R Rf h hp hq).2 y hy g) y hy]
     exact integral_congr_ae (.of_forall fun g => mul_left_comm _ _ _)⟩) u
-  haveI := cW.sc; haveI := cV.sc; haveI := cW.lc; haveI := cV.lc
-  haveI : IsFiniteMeasure (μ.restrict D) := ⟨by rw [Measure.restrict_apply_univ]; exact cW.fin _ _ hμ hD⟩
-  haveI : IsFiniteMeasure (G.M'.μ.restrict G.M'.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact cV.fin _ _ T.geo.hM'.haar T.geo.hM'.dom⟩
+  have := cW.sc; have := cV.sc; have := cW.lc; have := cV.lc
+  have : IsFiniteMeasure (μ.restrict D) := ⟨by rw [Measure.restrict_apply_univ]; exact cW.fin _ _ hμ hD⟩
+  have : IsFiniteMeasure (G.M'.μ.restrict G.M'.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact cV.fin _ _ T.geo.hM'.haar T.geo.hM'.dom⟩
   have val : ∀ φ, IsRapid φ → kpair X.α e μ D (Ê (((a' : ℂ) - (a + a' : ℕ)) / 2)) φ =
       2 * ((G.M'.μ.real G.M'.dom)⁻¹ : ℝ) * pet G.M'.μ G.M'.dom (th om' μ D φ Ψ) (th om' μ D φ Ψ) := fun φ hφ => by
     have := An.at_value (μ.restrict D) (G.M'.μ.restrict G.M'.dom) ⟨(b2 _ s3).1, cV.bdd₂ cW (b2 _ s3).1 (b2 _ s3).2.1⟩
@@ -164,7 +164,7 @@ theorem coefLine_of (hS : SWFull) (hX : BoxSec) (hW : DblW) (hH : HgtEx) (hT : H
     refine Eq.trans ?_ (congrArg _ this)
     rw [← integral_const_mul]
     refine integral_congr_ae (.of_forall fun y => ?_)
-    simp only [hv, if_neg (show ¬ a + a' < a' by omega), setAverage_eq, Complex.real_smul,
+    simp only [hv, ite_eq_right (show ¬ a + a' < a' by omega), setAverage_eq, Complex.real_smul,
       ← fun g => (((d2 Ψ s3 Ψ s3).2 g y.1 y.2 _ (he _ _)).1), integral_const_mul]
     ring
   rw [val _ (rp s t), val _ (rp 0 1), mul_left_comm lam] at key
@@ -576,7 +576,7 @@ theorem polFin {B : Base F E} {Y : Spc F E n} {W : Spc F E d} {M : Model σ Y W}
       smul_mem' := fun c f ⟨N, h0, h1⟩ => ⟨N, h0, fun k hk A hA => by rw [map_smul]; exact N.smul_mem c (h1 k hk A hA)⟩ }
   have hfS : f ∈ S := by
     refine (sInf_le (a := S) ⟨fun f₀ h₀ => ?_, fun u hu g ⟨N, h0, h1⟩ g₁ hg => ?_⟩ : M.Pol B.ψ B.emb ≤ S) hf
-    · haveI := Dense.vacSp_fin h.base.cm M B.emb
+    · have := Dense.vacSp_fin h.base.cm M B.emb
       refine ⟨⨆ ε, Dense.vacSp M B.emb ε, inferInstance, fun k hk A hA => ?_⟩
       have hgauss : M.IsGauss B.ψ B.emb (A f₀) := by
         obtain ⟨ε, hε⟩ := h₀
@@ -710,9 +710,9 @@ theorem int_th {n d : ℕ} {X : Spc F E n} {W : Spc F E d} (M : Model σ X W) {o
     (hi : ∀ γ ∈ ratU σ X.J, ∀ γ' ∈ ratU σ W.J, ∀ g h, theta om Ψ (γ * g) (γ' * h) = theta om Ψ g h)
     {φ : UA σ W.J → ℂ} (pc : Continuous φ) (pi : ∀ γ ∈ ratU σ W.J, ∀ g, φ (γ * g) = φ g) :
     ∫ g in M.dom, th om μ D φ Ψ g ∂M.μ = pet μ D φ (M.I om Ψ) := by
-  haveI := cX.sc; haveI := cW.sc
-  haveI : IsFiniteMeasure (M.μ.restrict M.dom) := isFiniteMeasure_restrict.2 (cX.fin _ _ h1 h2).ne
-  haveI : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 (cW.fin _ _ hμ hD).ne
+  have := cX.sc; have := cW.sc
+  have : IsFiniteMeasure (M.μ.restrict M.dom) := isFiniteMeasure_restrict.2 (cX.fin _ _ h1 h2).ne
+  have : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 (cW.fin _ _ hμ hD).ne
   have c : Continuous fun x : UA σ X.J × UA σ W.J => φ x.2 * star (theta om Ψ x.1 x.2) := (pc.comp continuous_snd).mul hc.star
   obtain ⟨C, hC⟩ := cX.bdd₂ cW c fun γ hγ δ hδ g g' => by simp only [pi δ hδ, hi γ hγ δ hδ]
   unfold th pet Model.I
@@ -742,7 +742,7 @@ theorem polZero_of (hC : CptAll) (hH : HermLine) (hL : CoefLine) (hT : ThConst) 
     fun s u y hy γ hγ g => by
       simp only [comb, Pi.add_apply, Pi.smul_apply, I_left G.M (b1 _ (s1 y hy)).2.1 γ hγ, I_left G.M' (b2 _ (s2 y hy)).2.1 γ hγ]
   have e01 : ∀ y, comb G om om' 0 1 y = G.M'.I om' y.2 := fun y => by simp [comb]
-  haveI : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 (cW.fin _ _ hμ hD).ne
+  have : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 (cW.fin _ _ hμ hD).ne
   have ig : ∀ s u s' u', ∀ y ∈ pairs B G X R Rf, ∀ y' ∈ pairs B G X R Rf,
       Integrable (fun g => comb G om om' s u y g * star (comb G om om' s' u' y' g)) (μ.restrict D) := fun s u s' u' y hy y' hy' => by
     have c := (cc s u y hy).mul (cc s' u' y' hy').star
@@ -825,9 +825,9 @@ theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [�
       simp [c]
     · rw [Function.update_of_ne hvi]
       by_cases hv : (v : ι) ∈ S
-      · simp only [c, dif_pos hv]
+      · simp only [c, dite_eq_left hv]
         exact Function.update_of_ne (fun e => hvi (Subtype.ext (by rw [← e]))) _ _
-      · simp only [c, dif_neg hv]
+      · simp only [c, dite_eq_right hv]
   refine ⟨PiTensorProduct.lift
     { toFun := fun x => PiTensorProduct.tprod ℂ (c x)
       map_update_add' := fun x i y y' => by simp only [key]; exact (PiTensorProduct.tprod ℂ).map_update_add _ _ _ _
@@ -835,8 +835,8 @@ theorem exists_ext {ι : Type} (M : ι → Type) [∀ v, AddCommGroup (M v)] [�
   rw [PiTensorProduct.lift.tprod]
   refine congrArg (PiTensorProduct.tprod ℂ) (funext fun v => ?_)
   by_cases hv : (v : ι) ∈ S
-  · simp only [c, dif_pos hv]
-  · simp only [c, dif_neg hv, hu v hv]
+  · simp only [c, dite_eq_left hv]
+  · simp only [c, dite_eq_right hv, hu v hv]
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d a a' : ℕ}
   {B : Base F E} {G : Geo σ a a'} {X : Chars F E} {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W}
@@ -1121,8 +1121,8 @@ theorem const_of (hL : LocDist) (hC : ConstOfGood) (hT : ThetaBasic) (h1 : GrpTo
     {μ : Measure (UA σ W.J)} {D : Set (UA σ W.J)} (hμ : μ.IsHaarMeasure) (hD : IsFundamentalDomain (ratU σ W.J) D μ) :
     ∀ Φ ∈ PolData B M', ∀ Ψ ∈ schA F _, ∀ g, th om μ D (C Φ) Ψ g = th om μ D (C Φ) Ψ 1 := by
   classical
-  letI := GlobalTheory.LocalData.complRel (F := F)
-  letI := GlobalTheory.LocalData.isLocalField (F := F)
+  let := GlobalTheory.LocalData.complRel (F := F)
+  let := GlobalTheory.LocalData.isLocalField (F := F)
   have inv_loc (hL : LocDist) (e : Fin n ⊕ Fin n' ≃ Fin d) (hM' : M'.IsGood B.ψ) {v : Pl F} {om : Rep σ X W} {om' : Rep σ X' W}
       {ι : ((Fin n × Fin d → Fv F v) → ℂ) →ₗ[ℂ] (Matrix (Fin n) (Fin d) (Fv F v) → ℂ)}
       {ι' : ((Fin n' × Fin d → Fv F v) → ℂ) →ₗ[ℂ] (Matrix (Fin n') (Fin d) (Fv F v) → ℂ)}

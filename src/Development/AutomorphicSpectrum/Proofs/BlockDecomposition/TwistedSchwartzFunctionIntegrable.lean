@@ -116,11 +116,11 @@ theorem continuous_integrable [NumberField E] (σ : E →ₐ[F] E) (hCM : IsCMEx
     {Φ : (Fin n → Fin M → AF F ⊗[F] E) → ℂ} (hΦ : GlobalTheory.Published.SiegelOneVector.IsSchwartzBruhat Φ) :
     Continuous Φ ∧ Integrable Φ dx := by
   obtain ⟨h1, -, -, -, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := h1
-  haveI := hBor n M
-  haveI := hBor 1 (n * M)
+  have := h1
+  have := hBor n M
+  have := hBor 1 (n * M)
   let e := flat (AF F ⊗[F] E) n M
-  haveI : (dx.map e).IsAddHaarMeasure :=
+  have : (dx.map e).IsAddHaarMeasure :=
     Measure.isAddHaarMeasure_map _ e.toAddEquiv.toAddMonoidHom e.continuous e.surjective
       e.toHomeomorph.isClosedEmbedding.tendsto_cocompact
   obtain ⟨c, hi⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.PoiInt.continuous_integrable_of_isSchwartzBruhat F E σ hCM (n * M)
@@ -140,8 +140,8 @@ theorem integrable_mul_phase : ∀ (F E : Type) [Field F] [NumberField F] [Field
       (Matrix.trace ((b : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) * gramR (AF F) σ J X)))) dx := by
   intro F E _ _ _ _ _ σ hCM M J n ψ hψ dx hdx Φ hΦ b
   obtain ⟨h1, -, -, -, -, htr, -, hBor, -, hgram⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := h1
-  haveI := hBor n M
+  have := h1
+  have := hBor n M
   obtain ⟨hc, hi⟩ := continuous_integrable σ hCM dx hdx hΦ
   have hph : Continuous fun X : Fin n → Fin M → AF F ⊗[F] E =>
       ψ (algebraMap F (AF F) (1 / 2) * Algebra.trace (AF F) (AF F ⊗[F] E)

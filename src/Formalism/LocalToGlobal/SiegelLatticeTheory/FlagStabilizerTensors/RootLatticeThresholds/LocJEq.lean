@@ -75,7 +75,7 @@ def Smap (τ : D.what₂.Tau) (γ z : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
 
 theorem smap_cont (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) : Continuous (Smap C τ γ) := by
   have hc : Continuous fun z : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => umat (γ⁻¹ * z) :=
-    (Units.continuous_val.comp continuous_subtype_val).comp (continuous_const.mul continuous_id)
+    (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_const.mul continuous_id)
   have h2 : Continuous fun z : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) =>
       C.Qi τ * umat (γ⁻¹ * z) * C.Q τ * (C.y τ)⁻¹ :=
     ((continuous_const.matrix_mul hc).matrix_mul continuous_const).matrix_mul continuous_const

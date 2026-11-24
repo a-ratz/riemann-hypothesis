@@ -62,9 +62,9 @@ open IsDedekindDomain.HeightOneSpectrum IsLocalRing Polynomial
 
 theorem isAdicComplete_integers (F : Type) [Field F] [NumberField F] (u : HeightOneSpectrum (𝓞 F)) :
     IsAdicComplete (maximalIdeal (u.adicCompletionIntegers F)) (u.adicCompletionIntegers F) := by
-  letI := GlobalTheory.LocalData.complRel u
-  haveI := GlobalTheory.LocalData.isLocalField u
-  haveI := Valuation.Compatible.ofValuation
+  let := GlobalTheory.LocalData.complRel u
+  have := GlobalTheory.LocalData.isLocalField u
+  have := Valuation.Compatible.ofValuation
     (Valued.v : Valuation (u.adicCompletion F) (WithZero (Multiplicative ℤ)))
   have hE : (ValuativeRel.valuation (u.adicCompletion F)).IsEquiv
       (Valued.v : Valuation (u.adicCompletion F) (WithZero (Multiplicative ℤ))) :=
@@ -102,7 +102,7 @@ theorem exists_sq_add_eq {O : Type} [CommRing O] [Nontrivial O] (I : Ideal O) [H
 theorem isSquare_one_add_four_mul : ∀ (F : Type) [Field F] [NumberField F] (u : HeightOneSpectrum (𝓞 F))
     (z : 𝓞 F), z ∈ u.asIdeal → IsSquare (algebraMap F (u.adicCompletion F) ((1 + 4 * z : 𝓞 F) : F)) := by
   intro F _ _ u z hz
-  haveI := isAdicComplete_integers F u
+  have := isAdicComplete_integers F u
   set z' : u.adicCompletionIntegers F := algebraMap (𝓞 F) (u.adicCompletionIntegers F) z with hz'
   have hcoe : (z' : u.adicCompletion F) = algebraMap F (u.adicCompletion F) (z : F) := by
     rw [hz', algebraMap_adicCompletionIntegers_apply]

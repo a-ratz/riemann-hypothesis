@@ -97,10 +97,10 @@ theorem conjEig : ConjEig := by
     rw [h2 _ (Nat.mul_pos hp.pos hn), h2 _ hp.pos, h2 _ hn, hc]
     by_cases hd : p ∣ n
     · have hm : 1 ≤ n / p := Nat.div_pos (Nat.le_of_dvd hn hd) hp.pos
-      simp only [hd, if_true] at e ⊢
+      simp only [hd, ite_true] at e ⊢
       rw [h2 _ hm]
       simpa [map_add (f := _), map_mul, map_pow, map_natCast] using e
-    · simp only [hd, if_false] at e ⊢
+    · simp only [hd, ite_false] at e ⊢
       simpa [map_add (f := _), map_mul, map_pow, map_natCast] using e
 
 end UpperTheory.V.Z.Sym.Unl
@@ -702,7 +702,7 @@ private theorem UpperTheory.V.Z.Sym.Unl.exists_ring_equiv_flip_sqrt (Ω : Type) 
     rfl
   obtain ⟨a, ha⟩ := IsAlgClosed.exists_pow_nat_eq (p : Ω) (by norm_num : 0 < 2)
   have hirr : Irreducible (Polynomial.X ^ 2 - Polynomial.C (p : ℚ)) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two hne
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two hne
   have hev : ∀ x : Ω, x ^ 2 = (p : Ω) → Polynomial.aeval x (Polynomial.X ^ 2 - Polynomial.C (p : ℚ)) = 0 := by
     intro x hx
     simp [hx]

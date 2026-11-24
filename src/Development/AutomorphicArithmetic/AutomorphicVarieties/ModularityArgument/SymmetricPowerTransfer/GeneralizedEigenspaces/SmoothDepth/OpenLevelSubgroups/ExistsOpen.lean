@@ -59,7 +59,7 @@ private noncomputable abbrev fp (x : UA L n) : GL (Fin n) (Af L) :=
   Matrix.GeneralLinearGroup.map (pFin L) (x : GA L n)
 
 private theorem cont_fp : Continuous (fp : UA L n → GL (Fin n) (Af L)) :=
-  continuous_mapFin.comp continuous_subtype_val
+  continuous_mapFin.comp continuous_subtypeVal
 
 private theorem e_apply (w : Plc L) (x : UA L n) : finiteRestrictedEquiv L n (fp x) w = cLoc w x := by
   refine Units.ext (Matrix.ext fun a b => ?_)
@@ -165,7 +165,7 @@ private theorem clause2 : IsLevel (Kall L n) := by
     rw [e_apply] at h'
     exact GlobalTheory.StabInt.mem_KGL_of_mem_integralGL h'
   rw [e]
-  exact (isOpen_integralFiniteGL L n).preimage (cont_fp.comp continuous_subtype_val)
+  exact (isOpen_integralFiniteGL L n).preimage (cont_fp.comp continuous_subtypeVal)
 
 private theorem clause3 (U : Subgroup (UA L n)) (hU : IsLevel U) (S : Finset (Plc L))
     (V : ∀ w : Plc L, Sig.Lev (Kw w)) : IsLevel (lev U S V) := by
@@ -176,7 +176,7 @@ private theorem clause3 (U : Subgroup (UA L n)) (hU : IsLevel U) (S : Finset (Pl
     simp [lev, Subgroup.mem_inf, Subgroup.mem_iInf]
   rw [e]
   exact hU.2.inter (isOpen_biInter_finset fun w _ =>
-    ((Sig.finFacts _ (V w)).2.2.2.2.2 n).2.1.preimage ((cont_cLoc w).comp continuous_subtype_val))
+    ((Sig.finFacts _ (V w)).2.2.2.2.2 n).2.1.preimage ((cont_cLoc w).comp continuous_subtypeVal))
 
 private theorem clause4 (U : Subgroup (UA L n)) (hU : IsLevel U) :
     ∀ᶠ w : Plc L in Filter.cofinite, locU n w ⊓ Kall L n ≤ U := by

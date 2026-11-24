@@ -349,7 +349,7 @@ theorem isGroupLikeElem_iff [Nontrivial A] (hA : ∀ e : A, IsIdempotentElem e �
     have h1 := (hA _ (isIdempotentElem_coeff hu x)).resolve_left hx
     refine ⟨x, eq_single_of_coeff_eq_zero hu x fun y hy => ?_⟩
     have := coeff_mul_coeff hu y x
-    rwa [h1, _root_.mul_one, if_neg hy] at this
+    rwa [h1, _root_.mul_one, ite_eq_right hy] at this
   · rintro ⟨x, rfl⟩
     exact AddMonoidAlgebra.isGroupLikeElem_single_one x
 
@@ -509,7 +509,7 @@ theorem exists_eq_chi_of_ev [ConnectedSpace S] {u : Γ((splitTorus S X).left, �
     rw [ev_comp, hidx]; simp
   have hB : ∀ (A : CommRingCat.{u}) (t : Spec A ⟶ S) (p : Spec A) (a : X),
       (ev t u).coeff a ∉ p.asIdeal ↔ idx (t p) = a := fun A t p a => by
-    haveI := p.isPrime
+    have := p.isPrime
     let φ : A ⟶ .of p.asIdeal.ResidueField := CommRingCat.ofHom (algebraMap _ _)
     have h1 := hA p.asIdeal.ResidueField (Spec.map φ ≫ t)
     have h2 : (Spec.map φ ≫ t) (IsLocalRing.closedPoint p.asIdeal.ResidueField) = t p := by
@@ -533,7 +533,7 @@ theorem exists_eq_chi_of_ev [ConnectedSpace S] {u : Γ((splitTorus S X).left, �
     intro s hs
     obtain ⟨i, p, rfl⟩ := S.affineOpenCover.openCover.exists_eq s
     let t := S.affineOpenCover.f i
-    haveI : IsOpenImmersion t := S.affineOpenCover.map_prop i
+    have : IsOpenImmersion t := S.affineOpenCover.map_prop i
     refine ⟨t '' {q | (ev t u).coeff a ∉ q.asIdeal}, ?_, ?_, p, ?_, rfl⟩
     · rintro _ ⟨q, hq, rfl⟩
       exact (hB _ t q a).1 hq

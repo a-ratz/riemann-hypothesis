@@ -64,7 +64,7 @@ private theorem isLieData_map_pow (H : IsLieData σ j s) (x : 𝔸) (n : ℕ) : 
 
 private theorem isLieData_map_exp (H : IsLieData σ j s) (x : 𝔸) :
     σ (NormedSpace.exp x) = NormedSpace.exp (σ x) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   rw [NormedSpace.exp_eq_tsum ℝ]
   have hs := NormedSpace.expSeries_summable' (𝕂 := ℝ) x
   have := (LinearMap.toContinuousLinearMap σ).map_tsum hs
@@ -72,7 +72,7 @@ private theorem isLieData_map_exp (H : IsLieData σ j s) (x : 𝔸) :
 
 theorem exp_unitary (H : IsLieData σ j s) (X : L) :
     σ (NormedSpace.exp (j X)) * NormedSpace.exp (j X) = 1 := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have hb : ∀ y : 𝔸, y ∈ Metric.eball (0 : 𝔸) (NormedSpace.expSeries ℝ 𝔸).radius := fun y =>
     (NormedSpace.expSeries_radius_eq_top ℝ 𝔸).symm ▸ edist_lt_top _ _
   rw [isLieData_map_exp H, (H.skew (j X)).2 ⟨X, rfl⟩,
@@ -85,13 +85,13 @@ theorem unitary_mul (H : IsLieData σ j s) {a b : 𝔸} (ha : σ a * a = 1) (hb 
   rw [H.anti, mul_assoc, ← mul_assoc (σ a), ha, one_mul, hb]
 
 theorem hasDerivAt_exp (A : 𝔸) : HasDerivAt (fun t : ℝ => NormedSpace.exp (t • A)) A 0 := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   simpa using hasDerivAt_exp_smul_const (𝕂 := ℝ) A (0 : ℝ)
 
 theorem der_eq (H : IsLieData σ j s) {φ : G → ℂ} {g : G} {F : 𝔸 → ℂ} {a : 𝔸} (ha : σ a * a = 1)
     (hF : DifferentiableAt ℝ F a) (he : ∀ᶠ h in 𝓝 a, σ h * h = 1 → φ (g * s h) = F h) (Y : L) :
     Der (expMap j s) Y φ (g * s a) = fderiv ℝ F a (a * j Y) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have hcd : HasDerivAt (fun t : ℝ => a * NormedSpace.exp (t • j Y)) (a * j Y) 0 :=
     (hasDerivAt_exp (j Y)).const_mul a
   have hc0 : a * NormedSpace.exp ((0 : ℝ) • j Y) = a := by
@@ -119,7 +119,7 @@ theorem der_der_eq (H : IsLieData σ j s) {φ : G → ℂ} {g : G} {F : 𝔸 →
     (hF : ContDiffAt ℝ 2 F 1) (he : ∀ᶠ h in 𝓝 (1 : 𝔸), σ h * h = 1 → φ (g * s h) = F h) (X Y : L) :
     Der (expMap j s) X (Der (expMap j s) Y φ) g =
       fderiv ℝ (fderiv ℝ F) 1 (j X) (j Y) + fderiv ℝ F 1 (j X * j Y) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have hcd : HasDerivAt (fun t : ℝ => NormedSpace.exp (t • j X)) (j X) 0 := hasDerivAt_exp (j X)
   have hc0 : NormedSpace.exp ((0 : ℝ) • j X) = 1 := by rw [zero_smul, NormedSpace.exp_zero]
   have hlim : Filter.Tendsto (fun t : ℝ => NormedSpace.exp (t • j X)) (𝓝 0) (𝓝 1) := by

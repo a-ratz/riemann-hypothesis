@@ -73,7 +73,7 @@ theorem isClosed_det_eq {Γ A : Type} [TopologicalSpace Γ] [CommRing A] [Topolo
 
 theorem infinite_O (D : D7) (i : D.nd.Loc) : Infinite (D.nd.O i) := by
   by_contra h
-  haveI : Finite (D.nd.O i) := not_infinite_iff_finite.mp h
+  have : Finite (D.nd.O i) := not_infinite_iff_finite.mp h
   have hf : IsField (D.nd.O i) := Finite.isField_of_domain (D.nd.O i)
   exact IsDiscreteValuationRing.not_a_field' ((IsLocalRing.isField_iff_maximalIdeal_eq).mp hf)
 
@@ -101,12 +101,12 @@ theorem charpoly_of_isRhoOf (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd �
     IsPlaceOver (F := D.host.E) B w ∧ IsFrob (F := D.host.E) B (normV w) σ} with hFr_def
   have hden : closure Fr = Set.univ := hCheb Sg hSg
   have hg : g ∈ closure Fr := by rw [hden]; exact Set.mem_univ g
-  haveI := infinite_O D i
+  have := infinite_O D i
   refine Polynomial.eq_of_infinite_eval_eq _ _ ?_
   refine Set.Infinite.mono ?_ Set.infinite_univ
   intro c _
-  simp only [Set.mem_setOf_eq]
-  haveI : T2Space (D.nd.O i) := by
+  simp only [Set.mem_ofPred_eq]
+  have : T2Space (D.nd.O i) := by
     have hA := isAdic_iff.mp (D.nd.O_adic i)
     refine IsTopologicalAddGroup.t2Space_of_zero_sep ?_
     intro y hy
@@ -123,7 +123,7 @@ theorem charpoly_of_isRhoOf (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd �
     (fun g => ((ρ' g : GL _ _) : Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)))
     (fun k g => ((D.nd.chi i k g : (D.nd.O i)ˣ) : D.nd.O i)) hrc hρc (fun k => D.nd.chi_cont i k) c
   have hmain := (hcl.closure_subset_iff.mpr ?_) hg
-  · simp only [Set.mem_setOf_eq] at hmain
+  · simp only [Set.mem_ofPred_eq] at hmain
     rw [Polynomial.eval_mul, Polynomial.eval_prod, Matrix.eval_charpoly, Matrix.eval_charpoly]
     simpa only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C] using hmain
   · rintro σ ⟨w, hw, hs, B, hB, hFb⟩
@@ -131,7 +131,7 @@ theorem charpoly_of_isRhoOf (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd �
       ⟨hs, fun h => hw (Or.inl (Or.inl h)), fun h => hw (Or.inl (Or.inr h)), fun h => hw (Or.inr h)⟩
     have e3 := congrArg (Polynomial.eval c) ((hrF w hso B σ hB hFb).trans (hρF w hso B σ hB hFb).symm)
     rw [Polynomial.eval_mul, Polynomial.eval_prod, Matrix.eval_charpoly, Matrix.eval_charpoly] at e3
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     simpa only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C] using e3
 
 def rhoChiK (D : D7) (i : D.nd.Loc) (ρ' : GE D.nd →* GL (Fin D.R.r) (D.nd.O i)) :

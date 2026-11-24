@@ -54,7 +54,7 @@ namespace GlobalTheory.CompanionTheory.SW.CharEx
 theorem exists_isCharAF : ∀ (F : Type) [Field F] [NumberField F], ∃ ψ, IsCharAF F ψ := by
   intro F _ _
   refine ⟨Circle.coeHom.compAddChar (GroundTheory.Global.adelicChar F), ?_, ?_, ?_, ?_⟩
-  · exact continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar (K := F))
+  · exact continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar (K := F))
   · intro x
     exact Circle.norm_coe _
   · intro a

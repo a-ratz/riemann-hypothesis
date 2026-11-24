@@ -192,8 +192,8 @@ def denom (n : ℕ) (c : ℂ) (α : Fin (n / 2) → ℂˣ) (X : ℂ) : ℂ :=
 theorem differentiable_denom (n : ℕ) (c : ℂ) (α : Fin (n / 2) → ℂˣ) : Differentiable ℂ (denom n c α) := by
   unfold denom
   by_cases h : Odd n
-  · simp only [if_pos h]; fun_prop
-  · simp only [if_neg h]; fun_prop
+  · simp only [ite_eq_left h]; fun_prop
+  · simp only [ite_eq_right h]; fun_prop
 
 theorem one_sub_ne_zero {z : ℂ} (h : ‖z‖ < 1) : 1 - z ≠ 0 := fun e => by
   rw [← sub_eq_zero.1 e, norm_one] at h
@@ -288,8 +288,8 @@ theorem trivialBound_of_bounded : GlobalTheory.IndefiniteRowSideFullHecke.Spheri
   have hq2 : 2 ≤ q := hU.2.2.2.2.2.1
   have hq1 : (1 : ℝ) ≤ q := by exact_mod_cast (by omega : 1 ≤ q)
   obtain ⟨deg, hdeg⟩ := exists_deg ϖ hU (by omega : 1 ≤ n)
-  letI : MeasurableSpace (GU σ n) := borel _
-  haveI : BorelSpace (GU σ n) := ⟨rfl⟩
+  let : MeasurableSpace (GU σ n) := borel _
+  have : BorelSpace (GU σ n) := ⟨rfl⟩
   obtain ⟨μ, hμH, hμK⟩ := GlobalTheory.ZetaSumU.exists_haar (ϖ : L) hU n
   have hKo := (GlobalTheory.LFun.IntPtsUnitary.isOpen_isCompact_KU L (ϖ : L) σ q n hU).1
   have hc1 : (1 : ℝ) ≤ (q : ℝ) ^ (n - 1) := one_le_pow₀ hq1

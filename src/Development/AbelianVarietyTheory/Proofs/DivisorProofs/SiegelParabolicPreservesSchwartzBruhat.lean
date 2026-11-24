@@ -59,7 +59,7 @@ theorem parFun_mem : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [Top
   obtain ⟨-, hring, -, -, hc, -, htr, -⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   obtain ⟨β, hβ, -, -, -, hform⟩ := _root_.GlobalTheory.KSp.pr_alg F E c δ hE α ν Q hQ
   obtain ⟨hinv, -, -⟩ := _root_.GlobalTheory.KSp.sieg_blocks F E c δ hE ν p hp
-  haveI := GlobalTheory.WeilM.nonarch_field F
+  have := GlobalTheory.WeilM.nonarch_field F
   set a := (mat c p).toBlocks₁₁ with ha
   set b := (mat c p).toBlocks₁₂ with hb
   set d := (((mat c p).toBlocks₂₂).map c)ᵀ with hd

@@ -72,9 +72,9 @@ theorem addv_eq_of_mem {w : AddValuation L (WithTop ℤ)} (hw : w ∈ PlacesOver
     ∃ v : HeightOneSpectrum (integralClosure O L), w = addv L v := by
   have hnonneg (s : integralClosure O L) :
       0 ≤ w (algebraMap (integralClosure O L) L s) := by
-    letI : Algebra O (vRing w) :=
+    let : Algebra O (vRing w) :=
       ((algebraMap O L).codRestrict (vRing w) (fun x => (hw.2 x).1)).toAlgebra
-    haveI : IsScalarTower O (vRing w) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    have : IsScalarTower O (vRing w) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have hs : IsIntegral O (algebraMap (integralClosure O L) L s) := s.2
     have hs' : IsIntegral (vRing w) (algebraMap (integralClosure O L) L s) := hs.tower_top
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hs'
@@ -113,15 +113,15 @@ theorem addv_mem (v : HeightOneSpectrum (integralClosure O L)) : addv L v ∈ Pl
       addv L v y = ((-WithZero.log (v.valuation L y) : ℤ) : WithTop ℤ) := by
     intro y hy
     unfold addv
-    rw [AddValuation.of_apply, if_neg hy]
+    rw [AddValuation.of_apply, ite_eq_right hy]
   have hP : v.asIdeal.comap (algebraMap O (integralClosure O L)) = IsLocalRing.maximalIdeal O := by
-    haveI := v.isMaximal
+    have := v.isMaximal
     apply IsLocalRing.eq_maximalIdeal
     first
       | exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal v.asIdeal
       | exact Ideal.IsMaximal.under O v.asIdeal
       | infer_instance
-  simp only [PlacesOver, IsNormDiscrete, Set.mem_setOf_eq]
+  simp only [PlacesOver, IsNormDiscrete, Set.mem_ofPred_eq]
   refine ⟨⟨fun a ha => ?_, ?_⟩, fun x => ?_⟩
   · rw [hval a ha]
     exact WithTop.coe_ne_top
@@ -187,7 +187,7 @@ theorem addv_nonneg_iff (v : HeightOneSpectrum (integralClosure O L)) {y : L} (h
   have hv : v.valuation L y ≠ 0 := by simpa using hy
   have hval : addv L v y = ((-WithZero.log (v.valuation L y) : ℤ) : WithTop ℤ) := by
     unfold addv
-    rw [AddValuation.of_apply, if_neg hy]
+    rw [AddValuation.of_apply, ite_eq_right hy]
   rw [hval]
   have h2 := WithZero.log_le_log hv one_ne_zero
   rw [WithZero.log_one] at h2
@@ -262,14 +262,14 @@ theorem exists_val_eq (n : AddValuation L (WithTop ℤ) → ℤ) :
       have hQ0 : Q ≠ ⊥ := fun h => hb (Ideal.mem_bot.1 (h ▸ hmem))
       exact ⟨⟨Q, hQ.isPrime, hQ0⟩,
         Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem Q).2 hmem), rfl⟩
-  haveI : IsPrincipalIdealRing (integralClosure O L) := IsPrincipalIdealRing.of_finite_maximals hmax
-  haveI := hmax.to_subtype
-  haveI : Finite (HeightOneSpectrum (integralClosure O L)) := by
+  have : IsPrincipalIdealRing (integralClosure O L) := IsPrincipalIdealRing.of_finite_maximals hmax
+  have := hmax.to_subtype
+  have : Finite (HeightOneSpectrum (integralClosure O L)) := by
     refine Finite.of_injective (fun v => (⟨v.asIdeal, v.isMaximal⟩ :
       {I : Ideal (integralClosure O L) | I.IsMaximal})) ?_
     intro v v' h
     exact HeightOneSpectrum.ext (congrArg Subtype.val h)
-  letI := Fintype.ofFinite (HeightOneSpectrum (integralClosure O L))
+  let := Fintype.ofFinite (HeightOneSpectrum (integralClosure O L))
   let π : HeightOneSpectrum (integralClosure O L) → integralClosure O L := fun v =>
     Submodule.IsPrincipal.generator v.asIdeal
   have hπ : ∀ v, v.asIdeal = Ideal.span {π v} := fun v =>
@@ -298,9 +298,9 @@ theorem exists_val_eq (n : AddValuation L (WithTop ℤ) → ℤ) :
     intro v'
     simp only [g, map_prod, map_zpow₀, hval]
     rw [Finset.prod_eq_single v']
-    · rw [if_pos rfl, ← exp_zsmul, smul_eq_mul, mul_neg_one]
+    · rw [ite_eq_left rfl, ← exp_zsmul, smul_eq_mul, mul_neg_one]
     · intro v _ hv
-      rw [if_neg (Ne.symm hv), one_zpow]
+      rw [ite_eq_right (Ne.symm hv), one_zpow]
     · simp
   refine ⟨g, hg0, fun w hw => ?_⟩
   obtain ⟨v, rfl⟩ := addv_eq_of_mem O F hw

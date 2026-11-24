@@ -160,7 +160,7 @@ theorem exists_nhds_compact (p₀ : {r : ℝ // 0 < r} × AdelicGLn.AdelicGL K n
   refine ⟨A, B, hA, hB, ?_⟩
   have h1 : {p : {r : ℝ // 0 < r} × AdelicGLn.AdelicGL K n × AdelicGLn.AdelicGL K n |
       (p₀.1 : ℝ) / 2 < p.1} ∈ 𝓝 p₀ :=
-    (isOpen_lt continuous_const (continuous_subtype_val.comp continuous_fst)).mem_nhds
+    (isOpen_lt continuous_const (continuous_subtypeVal.comp continuous_fst)).mem_nhds
       (half_lt_self p₀.1.2)
   have h2 : (Prod.snd ⁻¹' (A ×ˢ B) : Set ({r : ℝ // 0 < r} × AdelicGLn.AdelicGL K n ×
       AdelicGLn.AdelicGL K n)) ∈ 𝓝 p₀ :=

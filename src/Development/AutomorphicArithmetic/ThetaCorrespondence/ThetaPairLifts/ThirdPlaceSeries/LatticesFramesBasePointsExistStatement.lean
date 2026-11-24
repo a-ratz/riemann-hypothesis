@@ -238,7 +238,7 @@ theorem exists_selfDual_core_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTie
           _ = 1 := by rw [Fintype.card_fin, hl.1]
       have hr0 : a.Lz.rank ≠ 0 := by
         intro h0
-        haveI : IsEmpty (Fin a.Lz.rank) := ⟨fun i => by have := i.2; omega⟩
+        have : IsEmpty (Fin a.Lz.rank) := ⟨fun i => by have := i.2; omega⟩
         have : star a.ζ₀ ⬝ᵥ (a.Lz.gram *ᵥ a.ζ₀) = 0 := by simp [dotProduct]
         rw [hζ] at this
         exact hT0 (by exact_mod_cast this)
@@ -364,7 +364,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Fam
 theorem finite_levelPlaces_or_tuplePlaces_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.PackageHypotheses W → Set.Finite {PP : Pl D.host.E | PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := by
   intro D L hT Gi Gl Kc Yd cX ex W h
-  haveI : Finite W.P.T := h.fin
+  have : Finite W.P.T := h.fin
   have hU : {PP : Pl D.host.E | PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} =
       ((_root_.GlobalTheory.Fam.pk_z W).Pg : Set (Pl D.host.E)) ∪ ⋃ t, ((_root_.GlobalTheory.Fam.pk_z W).Q t : Set (Pl D.host.E)) := by
     ext PP
@@ -649,7 +649,7 @@ theorem exists_shape_integral_in_normal_frames_alt : ∀ {D : D7} {L : SizeData�
     rw [e, h0, mul_zero, map_zero] at v2
     exact zero_ne_one v2
   let I := {PP : Pl D.host.E // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP}
-  haveI : Finite I := hfin.to_subtype
+  have : Finite I := hfin.to_subtype
   have hinj : ∀ i i' : I, (l i.1 i.2).q.v = (l i'.1 i'.2).q.v → i = i' := by
     intro i i' e
     rw [(l i.1 i.2).under, (l i'.1 i'.2).under] at e
@@ -699,7 +699,7 @@ theorem exists_shape_integral_in_normal_frames_alt : ∀ {D : D7} {L : SizeData�
   let G' : Finset (GlobalTheory.FinPl.Pl D) := hfin.toFinset.image (fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))
   have hG' : ∀ x, x ∈ G' ↔ ∃ PP, (PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP) ∧ (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) = x := by
     intro x
-    simp only [G', Finset.mem_image, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [G', Finset.mem_image, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   have hdisj' : Disjoint G' v.tP := by
     rw [Finset.disjoint_left]
     intro x hx hxT
@@ -835,7 +835,7 @@ namespace GlobalTheory.RLatMove
 end GlobalTheory.RLatMove
 namespace GlobalTheory.RLatMove
 theorem finJ_alt {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (hW : _root_.GlobalTheory.Fam.PackageHypotheses W) : Finite {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := by
-  haveI := hW.fin
+  have := hW.fin
   have : {PP | PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} = ((_root_.GlobalTheory.Fam.pk_z W).Pg : Set _) ∪ ⋃ t, ((_root_.GlobalTheory.Fam.pk_z W).Q t : Set _) := by
     ext PP; simp [_root_.GlobalTheory.Fam.QAllAlt]
   have hf : Set.Finite {PP | PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := by
@@ -846,8 +846,8 @@ namespace GlobalTheory.RLatMove
 theorem move_main_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (u : D.what₂.Word), _root_.GlobalTheory.Fam.PackageHypotheses W → ∀ (a : XGeo D) (y : YRat a) (m : YMeas y) (b₀ : ∀ j, GA D (Yc D j)) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : Type) (v : VCom (commOf (_root_.GlobalTheory.Fam.pk_z W) u (mkGeo m b₀))) (o : TDat (commOf (_root_.GlobalTheory.Fam.pk_z W) u (mkGeo m b₀)) k ι) (l : ∀ PP, PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP → LocX a (_root_.GlobalTheory.Fam.pk_z W).βX PP) (bas : ∀ PP h j c, j + c = (l PP h).s + 1 → GL (XIx (Fin D.R.k) (Fin D.R.t) j ⊕ Fin c) (l PP h).k), (commOf (_root_.GlobalTheory.Fam.pk_z W) u (mkGeo m b₀)).Is → y.Tau (-D.host.xi0 ^ (D.R.m / 2)) → star a.ζ₀ ⬝ᵥ a.Lz.gram *ᵥ a.ζ₀ = (((D.mem u).A.T : ℕ) : D.host.E) → v.τ = y.τ → v.NT = a.LT → o.ζ₀ = a.ζ₀ → IsSelfDualC D.sp.X' a.LT → (∀ p, p ∈ v.gP ↔ ∃ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg, p = (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) → (∀ p, p ∈ v.tP ↔ (((D.mem u).A.T : ℕ) : 𝓞 D.host.F) ∈ (_root_.IsDedekindDomain.HeightOneSpectrum.asIdeal p)) → Disjoint v.gP v.tP → PreT v o → (∀ n (h : n = D.R.m) x, x ∉ v.tP → ∃ LZ : GlobalTheory.FinPl.Lat a.Lz, IsSelfDualC _ LZ ∧ GlobalTheory.FinPl.OrthAt (a.oT n h) (a.x n).L a.LT LZ x) → (∀ PP h, PP ∉ (_root_.GlobalTheory.Fam.pk_z W).Pg → ∀ j c hc, bas PP h j c hc = 1) → ∀ (FY : ∀ PP h, FYFam (l PP h)) (N : ∀ j, GlobalTheory.FinPl.Lat (Yc D j)), (∀ j, j < D.R.m → IsSelfDualC (Yc D j) (N j)) → (∀ PP h j c hc, IntIn (l PP h).q (Yc D j) (FY PP h j c hc) (N j)) → ∃ b : ∀ j, GA D (Yc D j), (∀ j, b j ∈ GfC (Yc D j)) ∧ (∀ j, j < D.R.m → ∀ P : GlobalTheory.FinPl.Pl D → Prop, (∀ p, P p → p ∉ v.gP) → GlobalTheory.FinPl.Moves (Yc D j) (b j) ((_root_.GlobalTheory.Fam.pk_z W).ΛY j) (N j) P) ∧ ∀ PP h j c (hc : j + c = (l PP h).s + 1), ∃ e : Ix (Fin D.R.k ⊕ Fin ((l PP h).s + 1)) (Fin D.R.t) j ≃ Fin (Yc D j).rank, GlobalTheory.SymBridge.IsOrd GlobalTheory.SymBridge.zPos e ∧ MovedTo (ofSplit (l PP h).q) (Yc D j) (b j) ((_root_.GlobalTheory.Fam.pk_z W).βY j) (((FY PP h j c hc).β * (bas PP h j c hc).val).submatrix id fun i => stdOrd (Fin D.R.k) (Fin D.R.t) j c hc (e.symm i)) := by
   intro D L hT Gi Gl Kc Yd cX ex W u hW a y m b₀ k _ _ _ _ ι v o l bas hIs hTau hz hτ hNT hζ hLT hgP htP hdisj hPre hOrth hbas FY N hN hInt
   classical
-  haveI : Finite {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := _root_.GlobalTheory.RLatMove.finJ_alt W hW
-  letI : Fintype {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := Fintype.ofFinite _
+  have : Finite {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := _root_.GlobalTheory.RLatMove.finJ_alt W hW
+  let : Fintype {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} := Fintype.ofFinite _
   have hinj : Function.Injective
       (fun i : {PP // PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg ∨ _root_.GlobalTheory.Fam.QAllAlt W PP} => (l i.1 i.2).q.v) := by
     intro i i' hii
@@ -912,14 +912,14 @@ theorem move_main_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
   refine ⟨fun j => if h : j < D.R.m then T j h else 1, ?_, ?_, ?_⟩
   · intro j
     by_cases h : j < D.R.m
-    · simp only [dif_pos h]; exact hT j h
-    · simp only [dif_neg h]; exact one_mem _
+    · simp only [dite_eq_left h]; exact hT j h
+    · simp only [dite_eq_right h]; exact one_mem _
   · intro j hj P hP
-    simp only [dif_pos hj]
+    simp only [dite_eq_left hj]
     exact hMovesT j hj P hP
   · intro PP h j c hc
     have hj : j < D.R.m := by have := (l PP h).hs; omega
-    simp only [dif_pos hj]
+    simp only [dite_eq_left hj]
     exact hFrT j hj PP h c hc
 end GlobalTheory.RLatMove
 end

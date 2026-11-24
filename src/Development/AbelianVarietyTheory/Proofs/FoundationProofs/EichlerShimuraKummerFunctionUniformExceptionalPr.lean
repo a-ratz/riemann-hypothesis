@@ -108,7 +108,7 @@ theorem exists_dom_gauss : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
   intro Ω _ _ _ ε X V
   classical
   open GaussDom in
-  haveI : (RingHom.ker (redA V X.exp)).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker (redA V X.exp)).IsPrime := RingHom.ker_isPrime _
   obtain ⟨W, hA, hinv, hlt⟩ :=
     ReciprocityTheory.ChartRestriction.G.AR.Up.NOrd.exists_val_of_prime (GaussDom.intA V X.exp) (RingHom.ker (GaussDom.redA V X.exp))
   have hker : ∀ x : GaussDom.intA V X.exp, x ∈ RingHom.ker (GaussDom.redA V X.exp) ↔
@@ -126,7 +126,7 @@ theorem exists_dom_gauss : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     have h2 := (W.valuation_le_one_iff _).2 (hinv x hx)
     rw [map_inv₀] at h2
     have hv0 : W.valuation (x : X.K) ≠ 0 := by simpa using hx0
-    exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 hv0)).1 h2)
+    exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 hv0)).1 h2)
   have hj3 : ∀ r, (X.exp X.jK).coeff r ∈ V := fun r => by
     obtain ⟨n, hn⟩ := X.j_exp.2.2 r
     rw [hn]
@@ -306,7 +306,7 @@ theorem exists_finite_field {F E : Type} [Field F] [Field E] [Algebra F E] (t : 
       FiniteDimensional (IntermediateField.adjoin F {(⟨t, ht⟩ : L)}) L := by
   let K₀ : IntermediateField F E := IntermediateField.adjoin F {t}
   let L' : IntermediateField K₀ E := IntermediateField.adjoin K₀ A
-  haveI : Finite A := hfin
+  have : Finite A := hfin
   have hL' : FiniteDimensional K₀ L' := IntermediateField.finiteDimensional_adjoin fun a ha => (hA a ha).isIntegral
   let L : IntermediateField F E := L'.restrictScalars F
   have hK : ∀ x : K₀, (x : E) ∈ L := fun x => L'.algebraMap_mem x
@@ -328,10 +328,10 @@ theorem exists_finite_field {F E : Type} [Field F] [Field E] [Algebra F E] (t : 
       map_mul' := fun _ _ => rfl
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
-  letI : Algebra K₀ K' := φ.toAlgebra
-  letI : Algebra K₀ L := (inferInstance : Algebra K₀ L')
-  haveI : Module.Finite K₀ L := hL'
-  haveI : IsScalarTower K₀ K' L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra K₀ K' := φ.toAlgebra
+  let : Algebra K₀ L := (inferInstance : Algebra K₀ L')
+  have : Module.Finite K₀ L := hL'
+  have : IsScalarTower K₀ K' L := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Module.Finite.of_restrictScalars_finite K₀ K' L
 
 theorem valuation_eq_one_iff' {K : Type} [Field K] (W : ValuationSubring K) (x : K) :
@@ -343,7 +343,7 @@ theorem valuation_eq_one_iff' {K : Type} [Field K] (W : ValuationSubring K) (x :
     rintro rfl
     simp at h
   · rintro ⟨h0, h1, h2⟩
-    have hp : 0 < W.valuation x := zero_lt_iff.2 ((map_ne_zero _).2 h0)
+    have hp : 0 < W.valuation x := pos_iff_ne_zero.2 ((map_ne_zero _).2 h0)
     exact le_antisymm h1 ((inv_le_one₀ hp).1 h2)
 
 theorem gauss_comap {F E : Type} [Field F] [Field E] [Algebra F E] {t : E} (L : IntermediateField F E) (ht : t ∈ L)
@@ -371,8 +371,8 @@ theorem transcendental_j {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω
 theorem gauss_unique_root : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (l M₀ : ℕ), l.Prime → 0 < M₀ → ∃ S : Finset ℕ, ∀ q : ℕ, q.Prime → q ∉ S → ∀ V : ValuationSubring Ω, ((q : ℕ) : Ω) ∈ V.nonunits → ∀ W₁ W₂ : ValuationSubring (AlgebraicClosure X.K), Gauss (algebraMap X.K (AlgebraicClosure X.K) X.jK) V W₁ → Gauss (algebraMap X.K (AlgebraicClosure X.K) X.jK) V W₂ → ∀ (θ : AlgebraicClosure X.K) (f : X.Kˣ), f ∈ X.Un l → Lev X M₀ f → θ ^ l = algebraMap X.K (AlgebraicClosure X.K) (f : X.K) → ∀ x ∈ IntermediateField.adjoin (levF X M₀) {θ}, x ∈ W₁ ↔ x ∈ W₂ := by
   classical
   intro Ω _ _ _ ε X hj l M₀ hl hM
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have halgΩ : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   haveI : @Algebra.IsAlgebraic ℚ Ω _ _ DivisionRing.toRatAlgebra := by
     convert halgΩ
@@ -402,7 +402,7 @@ theorem gauss_unique_root : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
   have hAalg : ∀ a ∈ A, IsAlgebraic (IntermediateField.adjoin Ω {t}) a := by
     rintro a (⟨f, -, rfl⟩ | ha)
     · exact halg f
-    · simp only [Set.mem_iUnion, Set.mem_setOf_eq] at ha
+    · simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at ha
       obtain ⟨r, -, hr⟩ := ha
       exact IsAlgebraic.of_pow hl.pos (hr ▸ halg r)
   obtain ⟨L, ht, hAL, hfin⟩ := exists_finite_field (F := Ω) t A hAfin hAalg
@@ -492,7 +492,7 @@ theorem exists_adjoin_eq_of_natDegree_le {F E : Type} [Field F] [Field E] [CharZ
   intro y hy
   have hx := key x hxL
   have hy' := key y hy
-  haveI : FiniteDimensional F F⟮x, y⟯ := finiteDimensional_adjoin (by
+  have : FiniteDimensional F F⟮x, y⟯ := finiteDimensional_adjoin (by
     rintro z (rfl | rfl)
     · exact hx.1
     · exact hy'.1)
@@ -573,7 +573,7 @@ theorem lev_sl (X : Tower Ω ε) {M : ℕ} {f : X.K} (hf : Lev X M f) (γ : SL(2
   rw [← X.sl_mul, ← map_mul, h, map_mul, X.sl_mul, hf _ ((CongruenceSubgroup.Gamma_normal M).conj_mem δ hδ γ)]
 
 theorem charZero_levF (X : Tower Ω ε) (M : ℕ) : CharZero (levF X M) := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   exact charZero_of_injective_algebraMap (algebraMap Ω (levF X M)).injective
 
 theorem sl_eq_of_map_eq (X : Tower Ω ε) {M : ℕ} {f : X.K} (hf : Lev X M f) {γ δ : SL(2, ℤ)}
@@ -589,7 +589,7 @@ theorem exists_orbit_poly (X : Tower Ω ε) (M₀ M : ℕ) (hM : 0 < M) :
       ∀ y : AlgebraicClosure X.K, Polynomial.aeval y Q = 0 ↔
         ∃ γ ∈ CongruenceSubgroup.Gamma M₀, y ^ m = algebraMap X.K (AlgebraicClosure X.K) (X.sl (ofSL γ) f) := by
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   let π : SL(2, ℤ) →* SL(2, ZMod M) := SpecialLinearGroup.map (Int.castRingHom (ZMod M))
   refine ⟨Fintype.card SL(2, ZMod M), fun m hm f hf => ?_⟩
   let g : SL(2, ZMod M) → X.K := fun x => X.sl (ofSL (Function.invFun π x)) f
@@ -653,7 +653,7 @@ theorem exists_primitive (X : Tower Ω ε) (M₀ M : ℕ) (hM : 0 < M) (hd : M�
     intro y hy
     obtain ⟨f, hf, rfl⟩ := (mem_levF X M₀ y).1 hy
     exact (mem_levF X M _).2 ⟨f, fun γ hγ => hf γ (CongruenceDescent.Gamma_le_of_dvd hd hγ), rfl⟩
-  haveI := charZero_levF X M₀
+  have := charZero_levF X M₀
   obtain ⟨θ, hθ, h⟩ := exists_adjoin_eq_of_natDegree_le (extendScalars hle) (B * 1) (by
     intro y hy
     obtain ⟨f, hf, rfl⟩ := (mem_levF X M y).1 hy
@@ -774,10 +774,10 @@ theorem rootF_finite_galois_isPGroup : ∀ {Ω : Type} [Field Ω] [Algebra ℚ �
   have hM : 0 < M₀ * l ^ k := mul_pos hM₀ (pow_pos hl.pos k)
   have hm : 0 < l ^ n := pow_pos hl.pos n
   obtain ⟨Q, hQ⟩ := exists_isSplittingField X M₀ _ _ hM (dvd_mul_right _ _) hm U hU
-  haveI := charZero_levF X M₀
-  haveI hfin : FiniteDimensional (levF X M₀) (rootF X M₀ (M₀ * l ^ k) (l ^ n) U) :=
+  have := charZero_levF X M₀
+  have hfin : FiniteDimensional (levF X M₀) (rootF X M₀ (M₀ * l ^ k) (l ^ n) U) :=
     Polynomial.IsSplittingField.finiteDimensional _ Q
-  haveI : Normal (levF X M₀) (rootF X M₀ (M₀ * l ^ k) (l ^ n) U) := Normal.of_isSplittingField Q
+  have : Normal (levF X M₀) (rootF X M₀ (M₀ * l ^ k) (l ^ n) U) := Normal.of_isSplittingField Q
   refine ⟨hfin, isGalois_iff.2 ⟨inferInstance, inferInstance⟩, fun τ => ⟨k + n, ?_⟩⟩
   obtain ⟨γ, hγ, hτ⟩ := exists_apply_eq_sl X M₀ _ _ hM (dvd_mul_right _ _) U τ
   have hfix : ∀ (f : X.K) (hf : Lev X (M₀ * l ^ k) f),
@@ -785,7 +785,7 @@ theorem rootF_finite_galois_isPGroup : ∀ {Ω : Type} [Field Ω] [Algebra ℚ �
     intro f hf
     apply Subtype.ext
     rw [hτ _ f hf, hf _ (CongruenceDescent.pow_pow_mem_Gamma_mul hd hγ k)]
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hμ : ∀ z : rootF X M₀ (M₀ * l ^ k) (l ^ n) U, z ^ l ^ n = 1 →
       z ∈ (algebraMap (levF X M₀) (rootF X M₀ (M₀ * l ^ k) (l ^ n) U)).range := by
     intro z hz
@@ -869,17 +869,17 @@ theorem isPGroup_coatom_normal_index_eq {p : ℕ} [hp : Fact p.Prime] {P : Type*
 theorem valuationSubring_galois_stable_of_kummer : ∀ (l : ℕ), l.Prime → ∀ (F L : Type) [Field F] [Field L] [Algebra F L] [FiniteDimensional F L] [IsGalois F L], IsPGroup l (L ≃ₐ[F] L) → (∃ ζ : F, IsPrimitiveRoot ζ l) → ∀ W : ValuationSubring L, (∀ θ : L, θ ≠ 0 → θ ^ l ∈ (algebraMap F L).range → ∀ τ : L ≃ₐ[F] L, ∀ x ∈ IntermediateField.adjoin F {θ}, τ x ∈ W ↔ x ∈ W) → ∀ (τ : L ≃ₐ[F] L) (x : L), τ x ∈ W ↔ x ∈ W := by
   intro l hl F L _ _ _ _ _ hP hζ W hW
   classical
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   let D : Subgroup (L ≃ₐ[F] L) :=
     { carrier := {σ | ∀ x, σ x ∈ W ↔ x ∈ W}
       mul_mem' := by
         intro a b ha hb x
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [AlgEquiv.mul_apply, ha, hb]
       one_mem' := by intro x; simp
       inv_mem' := by
         intro a ha x
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [← ha (a⁻¹ x)]
         simp }
   suffices hD : D = ⊤ by
@@ -889,13 +889,13 @@ theorem valuationSubring_galois_stable_of_kummer : ∀ (l : ℕ), l.Prime → �
   by_contra hD
   obtain ⟨H, hH, hDH⟩ := (eq_top_or_exists_le_coatom D).resolve_left hD
   obtain ⟨hHn, hHi⟩ := isPGroup_coatom_normal_index_eq hP H hH
-  haveI : IsGalois F (IntermediateField.fixedField H) := IsGalois.of_fixedField_normal_subgroup H
+  have : IsGalois F (IntermediateField.fixedField H) := IsGalois.of_fixedField_normal_subgroup H
   have hfr : Module.finrank F (IntermediateField.fixedField H) = l := by
     have h1 := (letI : Module.Free (IntermediateField.fixedField H) L := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank F (IntermediateField.fixedField H) L)
     rw [IntermediateField.finrank_fixedField_eq_card, ← IsGalois.card_aut_eq_finrank F L,
       ← H.card_mul_index, hHi, mul_comm (Nat.card H)] at h1
     exact Nat.eq_of_mul_eq_mul_right Nat.card_pos h1
-  haveI : IsCyclic (IntermediateField.fixedField H ≃ₐ[F] IntermediateField.fixedField H) :=
+  have : IsCyclic (IntermediateField.fixedField H ≃ₐ[F] IntermediateField.fixedField H) :=
     isCyclic_of_prime_card (p := l) (by rw [IsGalois.card_aut_eq_finrank, hfr])
   obtain ⟨ζ, hζ⟩ := hζ
   have hK : (primitiveRoots (Module.finrank F (IntermediateField.fixedField H)) F).Nonempty :=
@@ -996,7 +996,7 @@ theorem fix_root {F L : Type} [Field F] [Field L] [Algebra F L] (W : ValuationSu
     by_contra hc
     push Not at hc
     rw [hp, map_prod] at hy
-    exact absurd hy (not_lt.2 (Finset.one_le_prod' fun i _ => hc i))
+    exact absurd hy (not_lt.2 (Finset.one_le_prod fun i _ => hc i))
   have hi' := (lt_one_iff (τ : L →+* L) hst _).2 hi
   simp only [RingHom.coe_coe, map_sub, map_pow, AlgEquiv.commutes] at hi'
   have hd : W.valuation (τ y - y) < 1 := by
@@ -1005,7 +1005,7 @@ theorem fix_root {F L : Type} [Field F] [Field L] [Algebra F L] (W : ValuationSu
   have hvy : W.valuation y = 1 := by
     have := W.valuation.map_one_add_of_lt hy
     rw [add_sub_cancel, map_pow] at this
-    exact (pow_eq_one_iff_of_nonneg zero_le' hm.ne').1 this
+    exact (pow_eq_one_iff_of_nonneg zero_le hm.ne').1 this
   have hy0 : y ≠ 0 := by rintro rfl; simp at hvy
   set z := τ y / y with hz
   have hzm : z ^ m = 1 := by
@@ -1045,8 +1045,8 @@ theorem not_lt_of_coprime {L : Type} [Field L] (W : ValuationSubring L) {q m : �
   have hi : ∀ c : ℤ, W.valuation (c : L) ≤ 1 := fun c => (W.valuation_le_one_iff _).2 (intCast_mem W c)
   have h1 : W.valuation ((a : L) * m + (b : L) * q) < 1 := by
     refine W.valuation.map_add_lt ?_ ?_ <;> rw [map_mul]
-    · exact mul_lt_one_of_nonneg_of_lt_one_right (hi a) zero_le' hm
-    · exact mul_lt_one_of_nonneg_of_lt_one_right (hi b) zero_le' hq
+    · exact mul_lt_one_of_nonneg_of_lt_one_right (hi a) zero_le hm
+    · exact mul_lt_one_of_nonneg_of_lt_one_right (hi b) zero_le hq
   rw [e, map_one] at h1
   exact lt_irrefl _ h1
 
@@ -1069,13 +1069,13 @@ theorem mem_levF (X : Tower Ω ε) (M : ℕ) (x : AlgebraicClosure X.K) :
 theorem normal_levF (X : Tower Ω ε) (M : ℕ) : Normal (levF X M) (AlgebraicClosure X.K) := by
   let A := IntermediateField.adjoin Ω {X.jK}
   have hA : A ≤ levK X M := IntermediateField.adjoin_le_iff.2 (Set.singleton_subset_iff.2 (lev_jK X M))
-  haveI : Algebra.IsAlgebraic A X.K := ⟨X.alg_j⟩
-  haveI : Algebra.IsAlgebraic A (AlgebraicClosure X.K) := Algebra.IsAlgebraic.trans A X.K _
+  have : Algebra.IsAlgebraic A X.K := ⟨X.alg_j⟩
+  have : Algebra.IsAlgebraic A (AlgebraicClosure X.K) := Algebra.IsAlgebraic.trans A X.K _
   let φ : A →+* levF X M := (algebraMap A (AlgebraicClosure X.K)).codRestrict (levF X M)
     fun a => (mem_levF X M _).2 ⟨a, hA a.2, rfl⟩
-  haveI : Algebra.IsAlgebraic (levF X M) (AlgebraicClosure X.K) := ⟨fun x =>
+  have : Algebra.IsAlgebraic (levF X M) (AlgebraicClosure X.K) := ⟨fun x =>
     (IsIntegral.map_of_comp_eq φ (RingHom.id _) rfl (Algebra.IsIntegral.isIntegral (R := A) x)).isAlgebraic⟩
-  haveI : IsAlgClosure (levF X M) (AlgebraicClosure X.K) := ⟨inferInstance, inferInstance⟩
+  have : IsAlgClosure (levF X M) (AlgebraicClosure X.K) := ⟨inferInstance, inferInstance⟩
   infer_instance
 
 theorem lev_mono (X : Tower Ω ε) {M N : ℕ} (h : M ∣ N) {f : X.K} (hf : Lev X M f) : Lev X N f := by
@@ -1129,11 +1129,11 @@ theorem GlobalTheory.KZ.ES.pow_of_gauss_congr_one : ∀ {Ω : Type} [Field Ω] [
   obtain ⟨S, hS⟩ := _root_.GlobalTheory.KZ.ES.UniqRoot.gauss_unique_root ε X hhol l M₀ hl hM₀
   refine ⟨insert l S, fun q hq hqS V hqV W hW n k U hU hlev hU1 => ?_⟩
   rw [Finset.mem_insert, not_or] at hqS
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   have hroot : ∀ m : ℕ, 0 < m → ∃ ζ : levF X M₀, IsPrimitiveRoot ζ m := fun m hm => by
-    haveI : NeZero m := ⟨hm.ne'⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+    have : NeZero m := ⟨hm.ne'⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
     exact ⟨_, hζ.map_of_injective (algebraMap Ω (levF X M₀)).injective⟩
   have hm : 0 < l ^ n := pow_pos hl.pos n
   obtain ⟨W', hW'⟩ := exists_ext (algebraMap X.K (AlgebraicClosure X.K)) W
@@ -1143,7 +1143,7 @@ theorem GlobalTheory.KZ.ES.pow_of_gauss_congr_one : ∀ {Ω : Type} [Field Ω] [
   set L := rootF X M₀ (M₀ * l ^ k) (l ^ n) U with hL
   let WL : ValuationSubring L := W'.comap (algebraMap L (AlgebraicClosure X.K))
   have hWL : ∀ x : L, algebraMap L (AlgebraicClosure X.K) x ∈ W' ↔ x ∈ WL := fun x => Iff.rfl
-  haveI := normal_levF X M₀
+  have := normal_levF X M₀
   have hstab : ∀ (τ : L ≃ₐ[levF X M₀] L) (x : L), τ x ∈ WL ↔ x ∈ WL := by
     refine _root_.GlobalTheory.valuationSubring_galois_stable_of_kummer l hl (levF X M₀) L h3 (hroot l hl.pos) WL ?_
     rintro θ hθ ⟨a, ha⟩ τ x hx
@@ -1292,7 +1292,7 @@ theorem map_rep {M q : ℕ} (hq : q.Prime) (hqM : Nat.Coprime q M) {γ : SL(2, �
   ·
     have hMq : IsCoprime (M : ℤ) (q : ℤ) := Nat.isCoprime_iff_coprime.mpr hqM.symm
     obtain ⟨u, v, huv⟩ := hMq
-    haveI := Fact.mk hq
+    have := Fact.mk hq
     set j : ℕ := ((k : ZMod q) * (u : ZMod q)).val with hj
     have hjq : j < q := ZMod.val_lt _
     have hdiv : (q : ℤ) ∣ (j : ℤ) * M - k := by
@@ -1463,10 +1463,10 @@ theorem lev_sl {X : Tower Ω ε} {M : ℕ} {f : X.K} (hf : Lev X M f) (γ : SL(2
 
 theorem lev_gal [IsAlgClosure ℚ Ω] {X : Tower Ω ε} {M : ℕ} (hM : 0 < M) {f : X.K} (hf : Lev X M f)
     (s : Ω ≃ₐ[ℚ] Ω) : Lev X M (X.gal s f) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero M := ⟨hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero M := ⟨hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   intro δ hδ
   obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one (ξ := s ζ) (by rw [← map_pow, hζ.pow_eq_one, map_one])
   obtain ⟨h00, h01, h10, h11⟩ := CongruenceSubgroup.Gamma_mem.1 hδ
@@ -1497,7 +1497,7 @@ end GlobalTheory.KZ.ES.Ues
 open GlobalTheory.KZ.ES.Ues in
 theorem GlobalTheory.KZ.ES.eichlerShimura_unit : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (l M₀ : ℕ), l.Prime → 0 < M₀ → l ∣ M₀ → ∃ S : Finset ℕ, ∀ q : ℕ, q.Prime → q ∉ S → ∀ (V : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω), FrobV V q s → ∀ (n k : ℕ) (f : X.Kˣ), f ∈ X.Un (l ^ n) → Lev X (M₀ * l ^ k) f → ∀ γ : SL(2, ℤ), DiagMod (M₀ * l ^ k) q γ → ∃ g : X.Kˣ, Nq X (M₀ * l ^ k) q f * X.sl (toGQ ((γ : Matrix (Fin 2) (Fin 2) ℤ) * !![(q : ℤ), 0; 0, 1])) (f : X.K) = X.gal s (f : X.K) * (X.gal s.symm (X.sl (ofSL γ) (f : X.K))) ^ q * (g : X.K) ^ (l ^ n) := by
   intro Ω _ _ _ ε X hhol l M₀ hl hM₀ hlM
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.KZ.ES.kron_cong_level ε X hhol l M₀ hl hM₀
   obtain ⟨S₂, hS₂⟩ := _root_.GlobalTheory.KZ.ES.pow_of_gauss_congr_one ε X hhol l M₀ hl hM₀ hlM
   refine ⟨S₁ ∪ S₂ ∪ M₀.primeFactors, ?_⟩

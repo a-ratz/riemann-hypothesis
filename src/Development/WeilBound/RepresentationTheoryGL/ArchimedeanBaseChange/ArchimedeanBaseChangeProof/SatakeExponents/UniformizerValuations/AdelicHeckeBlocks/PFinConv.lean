@@ -244,9 +244,9 @@ theorem reindex (S : Set (Pl E)) (A B : Pl E → ℂ)
     rintro w ⟨hw, hB⟩
     rw [Function.mem_mulSupport] at hB
     by_cases hs : IsSplitAt w
-    · rw [if_pos hs] at hB
+    · rw [ite_eq_left hs] at hB
       exact ⟨⟨w, hw, hs⟩, hB, rfl⟩
-    · rw [if_neg hs] at hB
+    · rw [ite_eq_right hs] at hB
       exact absurd rfl hB
   rw [finprod_mem_mul_distrib' hA hB, finprod_sum_elim _ hfin]
   have e₂ : ∏ᶠ w ∈ S, (if IsSplitAt w then B w else 1) = ∏ᶠ w ∈ {w | w ∈ S ∧ IsSplitAt w}, B w := by
@@ -304,7 +304,7 @@ theorem isOpen_levelSub {S : Set (Pl E)}
       ⋂ i ∈ {i | ¬ L i = K2 a b i.pl}, (i.cp a b) ⁻¹' (L i : Set (GLw a i.pl × GLw b i.pl)) := by
     ext x
     simp only [SetLike.mem_coe, mem_levelSub, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, hK,
-      Set.mem_setOf_eq]
+      Set.mem_ofPred_eq]
     constructor
     · intro h; exact ⟨fun i => (hL i).2 (h i), fun i _ => h i⟩
     · rintro ⟨h₁, h₂⟩ i
@@ -319,7 +319,7 @@ def cset {S : Set (Pl E)} (φ₁ φ₂ : ∀ w : Pl E, GLw a w × GLw b w → �
   else tsupport (sf φ₁ φ₂ i)
 
 theorem vol_ne (B : Block E) : B.vol ≠ 0 := by
-  haveI := B.hν
+  have := B.hν
   unfold Block.vol
   have hpos := (isOpen_maximal_pair (E := E) (a := B.a) (b := B.b)).measure_pos B.ν ⟨1, Subgroup.one_mem _⟩
   have hfin := (isCompact_maximal_pair (E := E) (a := B.a) (b := B.b)).measure_lt_top (μ := B.ν)
@@ -335,9 +335,9 @@ theorem finFn_hcs {S : Set (Pl E)} (hev : ∀ x : Gf E a b, ∀ᶠ i : Slot S in
   have hC : ∀ i : Slot S, IsCompact (cset φ₁ φ₂ i) := fun i => by
     unfold cset
     by_cases h : sf φ₁ φ₂ i = (K2 a b i.pl : Set (GLw a i.pl × GLw b i.pl)).indicator 1
-    · rw [if_pos h]; exact (GlobalTheory.BCT.StTw2Add.isOpen_isCompact_KK a b i.pl).2
-    · rw [if_neg h]; exact (hL i).2.2.1
-  have hCe : ∀ᶠ i in cofinite, cset φ₁ φ₂ i = K2 a b i.pl := hLe.mono fun i hi => if_pos hi.2
+    · rw [ite_eq_left h]; exact (GlobalTheory.BCT.StTw2Add.isOpen_isCompact_KK a b i.pl).2
+    · rw [ite_eq_right h]; exact (hL i).2.2.1
+  have hCe : ∀ᶠ i in cofinite, cset φ₁ φ₂ i = K2 a b i.pl := hLe.mono fun i hi => ite_eq_left hi.2
   change IsCompact (closure (Function.support (finFn S φ₁ φ₂)))
   set_option synthInstance.maxHeartbeats 200000 in
     refine IsCompact.closure_of_subset (hcpt _ hC hCe) fun x hx i => ?_
@@ -345,11 +345,11 @@ theorem finFn_hcs {S : Set (Pl E)} (hev : ∀ x : Gf E a b, ∀ᶠ i : Slot S in
   have hne : sf φ₁ φ₂ i (i.cp a b x) ≠ 0 := fun h0 => hx (finprod_eq_zero _ i h0 (fin_one hev hind x))
   unfold cset
   by_cases h : sf φ₁ φ₂ i = (K2 a b i.pl : Set (GLw a i.pl × GLw b i.pl)).indicator 1
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     by_contra hn
     rw [h, Set.indicator_of_notMem hn] at hne
     exact hne rfl
-  · rw [if_neg h]; exact subset_tsupport _ hne
+  · rw [ite_eq_right h]; exact subset_tsupport _ hne
 
 theorem finFn_inv {S : Set (Pl E)}
     (hmul : ∀ (i : Slot S) (x y : Gf E a b), i.cp a b (x * y) = i.cp a b x * i.cp a b y)
@@ -377,8 +377,8 @@ theorem conv_eq (h1 : IntHint) (h2 : HintProd) (B : Block E) {S : Set (Pl E)}
     (h₂' : IsTestP φ₂') (g : Hf E B.a B.b) :
     ∫ h, finFn S φ₁ φ₂ h * finFn S φ₁' φ₂' (h⁻¹ * g) ∂B.ν =
       B.vol * finFn S (fun w => mconv (φ₁ w) (φ₁' w)) (fun w => mconv (φ₂ w) (φ₂' w)) g := by
-  haveI := B.hν
-  haveI : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
+  have := B.hν
+  have : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
   obtain ⟨L, hL, hLe⟩ := positionTest (S := S) h₁ h₂
   obtain ⟨L', hL', hLe'⟩ := positionTest (S := S) h₁' h₂'
   obtain ⟨L'', _, hLe''⟩ := positionTest (S := S) (isTestFunction_mulConvolution h₁ h₁') (isTestFunction_mulConvolution h₂ h₂')

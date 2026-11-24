@@ -239,7 +239,7 @@ theorem step_of_duality (χ ψ : G →* ℤ_[l]ˣ) (N : ℕ)
     ∀ d ∈ Z2 (charRep ψ), ∃ b : G → ℤ_[l], Continuous b ∧
       ∀ p, (l : ℤ_[l]) ^ (N + 1) ∣ (l : ℤ_[l]) ^ N * d p - d1 (charRep ψ) b p := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ (N + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (N + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   intro d hd
   set π : ℤ_[l] →+* ZMod (l ^ (N + 1)) := PadicInt.toZModPow (N + 1) with hπ
   obtain ⟨w, hw⟩ : (χ g₀ : ℤ_[l]) * (ψ g₀⁻¹ : ℤ_[l]) - 1 ∣ (l : ℤ_[l]) ^ N := by
@@ -369,7 +369,7 @@ theorem lift_cocycle_of_duality (hT : Formalism.GaloisCohomology.LocalTateDualit
   have hψc : Continuous fun g => (ψ g : ℤ_[l]) := by
     rw [continuous_iff_coe]
     simp only [hψ, Units.val_zpow_eq_zpow_val]
-    exact (hχ.continuous.comp (continuous_subtype_val.comp hΦ1)).zpow₀ _
+    exact (hχ.continuous.comp (continuous_subtypeVal.comp hΦ1)).zpow₀ _
       fun g => Or.inl (Units.ne_zero _)
   obtain ⟨g₀, hg₀, hg₁⟩ := (gen_dense l _ χ (GlobalTheory.InertiaEigenvalues.isActC_galActC l) hχ K s hs).1
   have hg : ‖(χZ (Φ ⟨g₀, hg₀⟩) : ℤ_[l]) * (ψ (Φ ⟨g₀, hg₀⟩)⁻¹ : ℤ_[l]) - 1‖ =
@@ -390,7 +390,7 @@ theorem lift_cocycle_of_duality (hT : Formalism.GaloisCohomology.LocalTateDualit
     rw [zpow_add_one₀ (Units.ne_zero _), mul_comm]
   have hcont : ContAction (charRep (redChar ψ (N + 1))) :=
     contAction_charRep _ ((continuous_toZModPow _).comp hψc)
-  haveI : NeZero (l ^ (N + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ (N + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hdual := (hT l L (finite_Ks K s) (N + 1) (ZMod (l ^ (N + 1)))
     (charRep (redChar ψ (N + 1))) (Nat.succ_pos _) hcont).2.2.2.2.1
   have hkill := kill_of_step ψ hψc N (step_of_duality χZ ψ N hdual _ hg)
@@ -402,13 +402,13 @@ theorem lift_cocycle_of_duality (hT : Formalism.GaloisCohomology.LocalTateDualit
       have h1 := hloc _ (Φ.symm σ).2
       have h2 : Tendsto (fun g => (Φ.symm g : GQ l)) (𝓝 σ)
           (nhdsWithin (Φ.symm σ : GQ l) (Gj K s)) :=
-        tendsto_nhdsWithin_iff.2 ⟨(continuous_subtype_val.comp hΦ1).tendsto σ,
+        tendsto_nhdsWithin_iff.2 ⟨(continuous_subtypeVal.comp hΦ1).tendsto σ,
           Eventually.of_forall fun g => (Φ.symm g).2⟩
       exact h2.eventually h1)
   let z' : GQ l → ℚ_[l] := fun σ => if h : σ ∈ L.fixingSubgroup then z (Φ ⟨σ, h⟩) else 0
-  have hz' : ∀ σ (h : σ ∈ Gj K s), z' σ = z (Φ ⟨σ, h⟩) := fun σ h => dif_pos h
+  have hz' : ∀ σ (h : σ ∈ Gj K s), z' σ = z (Φ ⟨σ, h⟩) := fun σ h => dite_eq_left h
   refine ⟨z', ⟨?_, fun _ _ => trivial, fun σ hσ τ hτ => ?_⟩, fun σ hσ => ?_⟩
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     exact (hz1.comp hΦ2).congr fun σ => (hz' σ.1 σ.2).symm
   · rw [hz' _ (mul_mem hσ hτ), hz' _ hσ, hz' _ hτ]
     have h1 := hz2 (Φ ⟨σ, hσ⟩) (Φ ⟨τ, hτ⟩)

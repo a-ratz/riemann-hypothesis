@@ -196,7 +196,7 @@ attribute [local instance] levZMod in
 theorem GlobalTheory.Ord2.LocCharPerfect.perfect : LocalFiniteness → LocalTateDuality → ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (c : Coef l) (A : ValuationSubring Ω), OverL l A → ∀ θ θ' : ↥(Dec (F := ℚ) A) →* c.Oˣ, Continuous (fun g => ((θ g : c.Oˣ) : c.O)) → Continuous (fun g => ((θ' g : c.Oˣ) : c.O)) → θ * θ' = (UpperTheory.V.Base.chiO ℚ Ω l c.O).comp (Dec (F := ℚ) A).subtype → ∀ n : ℕ, 1 ≤ n → ∀ b : ↥(Dec (F := ℚ) A) → c.O, Continuous b → (∀ s t, ((l : ℕ) : c.O) ^ n ∣ b (s * t) - (b s + ((θ s : c.Oˣ) : c.O) * b t)) → (∀ a : ↥(Dec (F := ℚ) A) → c.O, Continuous a → (∀ s t, ((l : ℕ) : c.O) ^ n ∣ a (s * t) - (a s + ((θ' s : c.Oˣ) : c.O) * a t)) → ∃ u : ↥(Dec (F := ℚ) A) → c.O, Continuous u ∧ ∀ s t, ((l : ℕ) : c.O) ^ n ∣ b s * (((θ' s : c.Oˣ) : c.O) * a t) - ((((θ s : c.Oˣ) : c.O) * ((θ' s : c.Oˣ) : c.O)) * u t - u (s * t) + u s)) → ∃ x : c.O, ∀ s, ((l : ℕ) : c.O) ^ n ∣ b s - (((θ s : c.Oˣ) : c.O) * x - x) := by
   intro hF hT l _ Ω _ _ _ c A hA θ θ' hθ hθ' hθθ n hn b hb hbc hcup
   classical
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hl0 : ((l : ℕ) : c.O) ≠ 0 := by
     intro h
     have h' := congrArg (fun x : c.O => (x : PadicAlgCl l)) h
@@ -204,7 +204,7 @@ theorem GlobalTheory.Ord2.LocCharPerfect.perfect : LocalFiniteness → LocalTate
     exact (Fact.out : l.Prime).ne_zero h'
   have ha0 : ((l : c.O) ^ n) ≠ 0 := pow_ne_zero _ hl0
   obtain ⟨v, hv, -⟩ := hA
-  haveI : Finite (Lev ((l : c.O) ^ n)) :=
+  have : Finite (Lev ((l : c.O) ^ n)) :=
     (UpperTheory.V.X.So.levFacts l c.O _ ha0 (Lev ((l : c.O) ^ n)) ⟨LinearEquiv.refl _ _⟩).1
   obtain ⟨φ₀, hφ0, hφall⟩ := UpperTheory.V.X.So.dualGen l c.O _ ha0 n (Lev ((l : c.O) ^ n)) ⟨LinearEquiv.refl _ _⟩
   set rho := scal c n θ' with hrho
@@ -447,8 +447,8 @@ theorem nsmul_mem_span_of_card_le : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (C
   refine ⟨(C * Nat.card (UpperTheory.V.X.Lev (((l : ℕ) : c.O) ^ r))).factorial, Nat.factorial_pos _, ?_⟩
   intro n H _ _ _ hkill hcard z hann h
   set L : c.O := ((l : ℕ) : c.O) with hL
-  haveI := hfin n
-  haveI := hfin r
+  have := hfin n
+  have := hfin r
   let f : UpperTheory.V.X.Lev (L ^ n) →ₗ[c.O] H :=
     (Ideal.span {L ^ n}).liftQ (LinearMap.toSpanSingleton c.O H z) (by
       rw [Ideal.span_singleton_le_iff_mem, LinearMap.mem_ker, LinearMap.toSpanSingleton_apply]
@@ -489,7 +489,7 @@ theorem nsmul_mem_span_of_card_le : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (C
         _ ≤ C * (Nat.card (UpperTheory.V.X.Lev (L ^ r)) * Nat.card (LinearMap.range f)) := by gcongr
         _ = _ := by ring
     exact Nat.le_of_mul_le_mul_right this hSpos
-  haveI : Finite (H ⧸ LinearMap.range f) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
+  have : Finite (H ⧸ LinearMap.range f) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
   have hdvd : Nat.card (H ⧸ LinearMap.range f) ∣ (C * Nat.card (UpperTheory.V.X.Lev (L ^ r))).factorial :=
     Nat.dvd_factorial Nat.card_pos hQ
   obtain ⟨k, hk⟩ := hdvd

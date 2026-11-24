@@ -148,7 +148,7 @@ theorem conjIdeal_eq_conjPl {D : D7} (P : Pl D.host.E) :
     rw [SetLike.mem_coe]
     show _ ↔ r ∈ P.asIdeal.map (Formalism.DivisionValues.cO D.host.E)
     rw [Ideal.mem_map_of_equiv]
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · rintro ⟨s, hs, hr⟩
       exact ⟨s, hs, RingOfIntegers.ext hr.symm⟩

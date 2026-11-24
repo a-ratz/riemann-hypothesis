@@ -111,7 +111,7 @@ theorem absPow_eq_zpow (s : ℂ) (x : kˣ) :
   unfold absPow
   simp only [MonoidHom.coe_toHomUnits, MonoidHom.coe_mk, OneHom.coe_mk]
   rw [GlobalTheory.LGrp.nabs_eq_zpow, Complex.cpow_def_of_ne_zero (Complex.ofReal_ne_zero.2 hz),
-    Complex.cpow_def_of_ne_zero hq0, ← Complex.exp_int_mul, ← Complex.ofReal_log (zpow_pos hq _).le,
+    Complex.cpow_def_of_ne_zero hq0, ← Complex.exp_intCast_mul, ← Complex.ofReal_log (zpow_pos hq _).le,
     Real.log_zpow, ← Complex.ofReal_natCast, ← Complex.ofReal_log hq.le]
   push_cast
   congr 1
@@ -171,7 +171,7 @@ theorem genVal_add_segL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     simp only [hF, genVal, esymm_eq_zero_of_lt _ (hBc ▸ hj), mul_zero]
   have hFk : ∀ j, n₀ < j → F j = 0 := by
     intro j hj
-    simp only [hF, if_neg (show ¬ j ≤ n₀ by omega), zero_mul]
+    simp only [hF, ite_eq_right (show ¬ j ≤ n₀ by omega), zero_mul]
   have hR : ∑ j ∈ Finset.range (N + 1), F j = ∑ j ∈ Finset.range (n₀ + 1), F j := by
     rw [Finset.sum_subset (Finset.range_mono (show N + 1 ≤ N + n₀ + 1 by omega))
         (fun j _ hn => hFa j (by simp at hn; omega)),
@@ -181,7 +181,7 @@ theorem genVal_add_segL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   refine Finset.sum_congr rfl fun j hj => ?_
   have hjk : j ≤ n₀ := Nat.lt_succ_iff.1 (Finset.mem_range.1 hj)
   rw [esymm_map_mul_C, esymm_string Q s zS hs hsQ t]
-  simp only [hF, if_pos hjk, genVal]
+  simp only [hF, ite_eq_left hjk, genVal]
   by_cases hjN : j ≤ N
   · by_cases hat : n₀ - j ≤ t
     · have hsI : s ^ (r * n₀ + n₀ * (N + t - n₀)) * s ^ (-(((n₀ - j : ℕ) : ℤ) * ((t : ℤ) - ((n₀ - j : ℕ) : ℤ)))) =
@@ -226,7 +226,7 @@ open GlobalTheory.KerRangeCount Formalism.L2.Col
 theorem card_above_range_eq_sum : ∀ (κ : Type) [Field κ] [Finite κ] (U U' : Type) [AddCommGroup U] [Module κ U] [FiniteDimensional κ U] [AddCommGroup U'] [Module κ U'] [FiniteDimensional κ U'] (f : U →ₗ[κ] U') (t e : ℕ), Module.finrank κ U' = Module.finrank κ U + t → e ≤ Module.finrank κ U' → Nat.card {X : Submodule κ U' // LinearMap.range f ≤ X ∧ Module.finrank κ X + e = Module.finrank κ U'} = ∑ n ∈ Finset.range (Module.finrank κ U + 1), (if n ≤ e then Nat.card κ ^ (n * (t - (e - n))) * Formalism.L2.Col.gaussBin (Nat.card κ) t (e - n) else 0) * Nat.card {X : Submodule κ U // X ≤ LinearMap.ker f ∧ Module.finrank κ X = n} := by
   intro κ _ _ U U' _ _ _ _ _ _ f t e hU' he
   classical
-  letI : Fintype κ := Fintype.ofFinite κ
+  let : Fintype κ := Fintype.ofFinite κ
   rw [Nat.card_eq_fintype_card (α := κ)]
   have hq0 : Fintype.card κ ≠ 0 := Fintype.card_ne_zero
   have hrk := f.finrank_range_add_finrank_ker
@@ -262,7 +262,7 @@ theorem card_above_range_eq_sum : ∀ (κ : Type) [Field κ] [Finite κ] (U U' :
     Finset.sum_subset (Finset.range_mono (by omega)) fun n _ hn => by
       rw [Finset.mem_range] at hn
       simp only [hg]
-      rw [if_neg (by omega), zero_mul]
+      rw [ite_eq_right (by omega), zero_mul]
   have h3 : ∑ n ∈ Finset.range (Module.finrank κ U + 1), g n =
       ∑ n ∈ Finset.range (e + Module.finrank κ U + 1), g n :=
     Finset.sum_subset (Finset.range_mono (by omega)) fun n _ hn => by
@@ -273,7 +273,7 @@ theorem card_above_range_eq_sum : ∀ (κ : Type) [Field κ] [Finite κ] (U U' :
   refine Finset.sum_congr rfl fun n hn => ?_
   rw [Finset.mem_range] at hn
   simp only [hg]
-  rw [if_pos (by omega), show e + 1 - 1 - n = e - n by omega, show e - (e - n) = n by omega]
+  rw [ite_eq_left (by omega), show e + 1 - 1 - n = e - n by omega, show e - (e - n) = n by omega]
   ring
 
 end GlobalTheory.RangeKerCount
@@ -401,9 +401,9 @@ theorem int_mul_torus_iff {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k
   rw [mul_diagonal, mul_diagonal]
   by_cases h : j ∈ s
   · have := div_mem_iff hϖ (M i j)
-    simp only [indic, h, Pi.neg_apply, if_true, _root_.zpow_neg, zpow_one, mul_one, map_apply, Matrix.zero_apply]
+    simp only [indic, h, Pi.neg_apply, ite_true, _root_.zpow_neg, zpow_one, mul_one, map_apply, Matrix.zero_apply]
     exact this
-  · simp only [indic, h, Pi.neg_apply, if_false, neg_zero, zpow_zero, mul_one, mul_zero, map_apply, Matrix.zero_apply, iff_true]
+  · simp only [indic, h, Pi.neg_apply, ite_false, neg_zero, zpow_zero, mul_one, mul_zero, map_apply, Matrix.zero_apply, iff_true]
     exact (M i j).2
 
 omit [DecidableEq D] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -522,7 +522,7 @@ theorem sum_intInd_cosets : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   constructor
   · intro hy
     refine Finset.sum_eq_zero fun g hgR => ?_
-    rw [ParHecke.intInd, if_neg]
+    rw [ParHecke.intInd, ite_eq_right]
     intro h
     apply hy
     have e : g = incG (κ ⟨g, hgR⟩) * g₀ * κ' ⟨g, hgR⟩ := hg ⟨g, hgR⟩
@@ -713,9 +713,9 @@ theorem torus_inv_mul_int_iff {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformiz
   rw [diagonal_mul, diagonal_mul]
   by_cases h : i ∈ s
   · have := inv_mul_mem_iff hϖ (M i j)
-    simp only [indic, h, Pi.neg_apply, if_true, _root_.zpow_neg, zpow_one, one_mul, map_apply, Matrix.zero_apply]
+    simp only [indic, h, Pi.neg_apply, ite_true, _root_.zpow_neg, zpow_one, one_mul, map_apply, Matrix.zero_apply]
     exact this
-  · simp only [indic, h, Pi.neg_apply, if_false, neg_zero, zpow_zero, one_mul, zero_mul, map_apply, Matrix.zero_apply, iff_true]
+  · simp only [indic, h, Pi.neg_apply, ite_false, neg_zero, zpow_zero, one_mul, zero_mul, map_apply, Matrix.zero_apply, iff_true]
     exact (M i j).2
 
 omit [DecidableEq n] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -847,7 +847,7 @@ theorem GlobalTheory.ParHecke.CosetSubL.sum_intInd_cosets_up : ∀ (k : Type) [F
   constructor
   · intro hy
     refine Finset.sum_eq_zero fun g hgR => ?_
-    rw [ParHecke.intInd, if_neg]
+    rw [ParHecke.intInd, ite_eq_right]
     intro h
     apply hy
     have hgi : ∀ i j, g.1 i j ∈ 𝒪[k] := by
@@ -1113,7 +1113,7 @@ theorem dcos_eq_iUnion (J : Subgroup G) (g : G) (R : Finset G) (h1 : ∀ j ∈ R
     (h2 : ∀ j ∈ J, ∃! j', j' ∈ R ∧ (j' * g)⁻¹ * (j * g) ∈ J) :
     dcos J g = ⋃ j ∈ R, (fun x => (j * g)⁻¹ * x) ⁻¹' (J : Set G) := by
   ext x
-  simp only [dcos, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe, exists_prop]
+  simp only [dcos, Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe, exists_prop]
   constructor
   · rintro ⟨a, ha, b, hb, rfl⟩
     obtain ⟨j', ⟨hj'R, hj'⟩, -⟩ := h2 a ha
@@ -1137,7 +1137,7 @@ theorem pairwiseDisjoint_cosets (J : Subgroup G) (g : G) (R : Finset G) (h1 : �
 
 theorem dcos_inv (J : Subgroup G) (g : G) : dcos J g⁻¹ = Inv.inv ⁻¹' dcos J g := by
   ext x
-  simp only [dcos, Set.mem_preimage, Set.mem_setOf_eq]
+  simp only [dcos, Set.mem_preimage, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨a, ha, b, hb, rfl⟩
     exact ⟨b⁻¹, J.inv_mem hb, a⁻¹, J.inv_mem ha, by group⟩
@@ -1159,7 +1159,7 @@ theorem card_eq_of_unimodular [MeasurableSpace G] [TopologicalSpace G] [IsTopolo
     (h1 : ∀ j ∈ R, j ∈ J) (h2 : ∀ j ∈ J, ∃! j', j' ∈ R ∧ (j' * g)⁻¹ * (j * g) ∈ J)
     (h1' : ∀ j ∈ R', j ∈ J) (h2' : ∀ j ∈ J, ∃! j', j' ∈ R' ∧ (j' * g⁻¹)⁻¹ * (j * g⁻¹) ∈ J) :
     R.card = R'.card := by
-  haveI : μ.IsInvInvariant := GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
+  have : μ.IsInvInvariant := GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
   have h0 : μ J ≠ 0 := (hJo.measure_pos μ ⟨1, J.one_mem⟩).ne'
   have e1 := measure_dcos μ J hJo.measurableSet g R h1 h2
   have e2 := measure_dcos μ J hJo.measurableSet g⁻¹ R' h1' h2'
@@ -1174,11 +1174,11 @@ theorem card_isReps_inv (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
     (R R' : Finset (GL (A ⊕ D) k)) (d d' : GL (A ⊕ D) k → kˣ) :
     IsReps g R d → IsReps g⁻¹ R' d' → R.card = R'.card ∧ R.Nonempty := by
   intro hR hR'
-  letI : MeasurableSpace (GL (A ⊕ D) k) := borel _
-  haveI : BorelSpace (GL (A ⊕ D) k) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (GL (A ⊕ D) k) := inferInstance
-  haveI : LocallyCompactSpace (GL (A ⊕ D) k) := inferInstance
-  haveI : SecondCountableTopology (GL (A ⊕ D) k) := inferInstance
+  let : MeasurableSpace (GL (A ⊕ D) k) := borel _
+  have : BorelSpace (GL (A ⊕ D) k) := ⟨rfl⟩
+  have : IsTopologicalGroup (GL (A ⊕ D) k) := inferInstance
+  have : LocallyCompactSpace (GL (A ⊕ D) k) := inferInstance
+  have : SecondCountableTopology (GL (A ⊕ D) k) := inferInstance
   obtain ⟨hJo, hJc⟩ := GlobalTheory.ParahoricOpenCompact.isOpen_isCompact_parahoric k A D
 
   have hRI : ∀ (μ : Measure (GL (A ⊕ D) k)) [μ.IsHaarMeasure], μ.IsMulRightInvariant := by
@@ -1197,7 +1197,7 @@ theorem card_isReps_inv (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
         (ENNReal.mul_left_inj hne hnt).1 (by rw [one_mul]; exact h2.symm)
       exact_mod_cast h3
     rw [Measure.map_right_mul_eq_modularCharacterFun_smul μ g, show Measure.modularCharacterFun g = 1 from h, one_smul]
-  haveI := hRI (Measure.haar : Measure (GL (A ⊕ D) k))
+  have := hRI (Measure.haar : Measure (GL (A ⊕ D) k))
   refine ⟨card_eq_of_unimodular (Measure.haar : Measure (GL (A ⊕ D) k)) (parahoric k A D) hJo
     hJc.measure_lt_top.ne g R R' (fun j hj => (hR.1 j hj).1) hR.2
     (fun j hj => (hR'.1 j hj).1) hR'.2, ?_⟩
@@ -1407,7 +1407,7 @@ theorem torus_int {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (s : F
   rw [diagonal_apply]; split_ifs
   · show valuation k _ ≤ 1
     rw [map_zpow₀]
-    exact zpow_le_one₀ (zero_lt_iff.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
+    exact zpow_le_one₀ (pos_iff_ne_zero.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
   · exact zero_mem _
 
 theorem nlow_mul_eq {x : Matrix (A ⊕ D') (A ⊕ D) k} (hx : InSupp x) :
@@ -1541,12 +1541,12 @@ theorem card_filter_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     fun j hj => by
       have hY : (c * j)⁻¹ ∈ parahoric k A D' := inv_mem (mul_mem hc hj)
       have h := (hRK.2 _ (inv_mem (lowerDiagonalBlockAsGL_mem_integralGeneralLinear hY))).exists
-      simp only [pick, dif_pos h]; exact h.choose_spec
+      simp only [pick, dite_eq_left h]; exact h.choose_spec
   have uniq : ∀ j ∈ parahoric k A D', ∀ g ∈ RK, g⁻¹ * ((lowerDiagonalBlockAsGL ((c * j)⁻¹))⁻¹ * T) ∈ KO k D' → pick j = g :=
     fun j hj g hg h => (hRK.2 _ (inv_mem (lowerDiagonalBlockAsGL_mem_integralGeneralLinear (inv_mem (mul_mem hc hj))))).unique (spec j hj) ⟨hg, h⟩
   apply Finset.card_nbij pick
   · intro j hj
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_filter] at hj ⊢
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_filter] at hj ⊢
     obtain ⟨hjR, hin⟩ := hj
     have hJ := hJR j hjR
     have hY : (c * j)⁻¹ ∈ parahoric k A D' := inv_mem (mul_mem hc hJ)
@@ -1561,7 +1561,7 @@ theorem card_filter_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
       exact isIntM_mul (isIntM_of_mem_KO hK) h22
     exact this
   · intro j₁ hj₁ j₂ hj₂ he
-    simp only [Finset.coe_filter, Set.mem_setOf_eq] at hj₁ hj₂
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hj₁ hj₂
     obtain ⟨h1R, h1⟩ := hj₁
     obtain ⟨h2R, h2⟩ := hj₂
     have hJ1 := hJR _ h1R
@@ -1577,7 +1577,7 @@ theorem card_filter_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
       simp only [map_mul, map_inv]; group
     exact (hR.2 j₂ hJ2).unique ⟨h1R, hm⟩ ⟨h2R, by simp⟩
   · intro g hg
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_filter] at hg
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_filter] at hg
     obtain ⟨hgR, hSg⟩ := hg
     obtain ⟨κ, hκ, κ', hκ', hgdef⟩ := hRK.1 g hgR
     have hj₀ : c⁻¹ * dg (A := A) κ ∈ parahoric k A D' := mul_mem (inv_mem hc) (dg_mem hκ)
@@ -1605,7 +1605,7 @@ theorem card_filter_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
       rw [hE, hgdef, show (κ * T * κ')⁻¹ * ((T * lowerDiagonalBlockAsGL n * (κ * T)⁻¹)⁻¹ * T) = κ'⁻¹ * (lowerDiagonalBlockAsGL n)⁻¹ by group]
       exact mul_mem (inv_mem hκ') (inv_mem (lowerDiagonalBlockAsGL_mem_integralGeneralLinear hm))
     refine ⟨j, ?_, hpick⟩
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_filter]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_filter]
     refine ⟨hjR, (hcond j hJ).2 ⟨fun i l => ?_, ?_⟩⟩
     · rw [← h21]; exact (mem_parahoric.1 hm).2 i l
     · rw [← h22, show (κ * T)⁻¹ = κ' * g⁻¹ by rw [hgdef]; group, Units.val_mul κ' g⁻¹, ← Matrix.mul_assoc,
@@ -1684,7 +1684,7 @@ theorem torusElt_indic_int {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer 
   rw [diagonal_apply]; split_ifs
   · show valuation k _ ≤ 1
     rw [map_zpow₀]
-    exact zpow_le_one₀ (zero_lt_iff.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
+    exact zpow_le_one₀ (pos_iff_ne_zero.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
   · exact zero_mem _
 
 theorem inSupp_diag_mul {y : Matrix (A ⊕ D') (A ⊕ D) k} (hy : InSupp y) {t : Matrix D' D' k} (ht : IsIntM t) :
@@ -1703,7 +1703,7 @@ open Classical in
 theorem coset_term : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (A D D' : Type) [Fintype A] [DecidableEq A] [Fintype D] [DecidableEq D] [Fintype D'] [DecidableEq D'] (ϖ : kˣ), valuation k (ϖ : k) = uniformizer k → ∀ (ξ : kˣ →* ℂˣ), IsTame ξ → ∀ (s : Finset D') (j : GL (A ⊕ D') k), j ∈ parahoric k A D' → ∀ d : kˣ, (d : k) = j.1.toBlocks₂₂.det → ∀ x : Matrix (A ⊕ D') (A ⊕ D) k, (InSupp (((j * mtor ϖ (indic s))⁻¹).1 * x) → ((ξ d * (ξ (GeneralLinearGroup.det j))⁻¹ : ℂˣ) : ℂ) * datum ξ (((j * mtor ϖ (indic s))⁻¹).1 * x) = datum ξ x) ∧ (¬ InSupp (((j * mtor ϖ (indic s))⁻¹).1 * x) → datum ξ (((j * mtor ϖ (indic s))⁻¹).1 * x) = 0) := by
   intro k _ _ _ _ A D D' _ _ _ _ _ _ ϖ hϖ ξ hξ s j hj d hd x
   set y := ((j * mtor ϖ (indic s))⁻¹).1 * x with hydef
-  refine ⟨fun hW => ?_, fun hW => by simp only [datum, dif_neg hW]⟩
+  refine ⟨fun hW => ?_, fun hW => by simp only [datum, dite_eq_right hW]⟩
   set T := torusElt k D' ϖ (indic s) with hT
   have hg0 : (mtor (A := A) ϖ (indic s)).val = fromBlocks (1 : Matrix A A k) 0 0 T.val := by
     rw [mtor_eq_dg, val_dg]
@@ -1728,7 +1728,7 @@ theorem coset_term : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
     show valuation k (x.toBlocks₁₁.det - y.toBlocks₁₁.det * j.val.toBlocks₁₁.det) < 1
     rw [mul_comm (y.toBlocks₁₁.det)]
     exact hc
-  simp only [datum, dif_pos hs, dif_pos hW]
+  simp only [datum, dite_eq_left hs, dite_eq_left hW]
   rw [t1, t2, ← Units.val_mul]
   congr 1
   simp only [map_mul]
@@ -1771,7 +1771,7 @@ theorem sum_reps_datum_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     Finset.sum_const, Finset.sum_const]
   by_cases hx : InSupp x
   · rw [GlobalTheory.T.card_filter_parahoric_cosets_eq_schur_count k A D D' ϖ hϖ s R d hR RK hRK x hx]
-  · have h0 : datum ξ x = 0 := by simp only [datum, dif_neg hx]
+  · have h0 : datum ξ x = 0 := by simp only [datum, dite_eq_right hx]
     simp [h0]
 
 end GlobalTheory.ParHeckeTarget

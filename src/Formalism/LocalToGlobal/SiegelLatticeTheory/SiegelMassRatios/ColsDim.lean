@@ -265,9 +265,9 @@ theorem equi_dim (hst : StabTriv ιf K) [Finite (Classes ιf K)] [FiniteDimensio
     FiniteDimensional k (Equi k ιf K ρ χ) ∧
       finrank k (Equi k ιf K ρ χ) = finrank k W * Nat.card (Classes ιf K) := by
   obtain ⟨s, hs⟩ := exists_doubleCoset_section ιf K
-  haveI := Fintype.ofFinite (Classes ιf K)
+  have := Fintype.ofFinite (Classes ιf K)
   let e := decEquiv ιf K hst s hs ρ χ
-  haveI : FiniteDimensional k (Equi k ιf K ρ χ) := LinearEquiv.finiteDimensional e.symm
+  have : FiniteDimensional k (Equi k ιf K ρ χ) := LinearEquiv.finiteDimensional e.symm
   refine ⟨inferInstance, ?_⟩
   rw [e.finrank_eq, Module.finrank_pi_fintype, Finset.sum_const, Finset.card_univ, smul_eq_mul,
     Nat.card_eq_fintype_card, mul_comm]
@@ -436,7 +436,7 @@ theorem columns_dimension : ColsDim := by
   intro Γ Gi Gf _ _ _ k _ V _ _ ιi ιf K K0 ψ π hK hst hfin hV
   obtain ⟨h1, h2⟩ := equi_dim ιf K (stabTriv_mono ιf hK hst) (dualRep ιi π) ψ
   let e := colsEquiv ιf K ιi ψ π
-  haveI := h1
+  have := h1
   refine ⟨LinearEquiv.finiteDimensional e.symm, ?_⟩
   rw [e.finrank_eq, h2, Subspace.dual_finrank_eq]
 

@@ -136,7 +136,7 @@ theorem lenUnit_invariants_le (D : D7) (i : D.nd.Loc) (hls : D.nd.l i ∉ D.host
     lenUnit (O := D.nd.O i) (D.nd.l i)
         ↥(Representation.invariants ((Formalism.MainNotions.N.Glob.KOtw D.nd i (n : ℤ)).comp (decS D.nd w))) ≤
       ((1 + padicValNat (D.nd.l i) n : ℕ) : ℚ) := by
-  haveI := D.nd.lPrime i
+  have := D.nd.lPrime i
   have hl2 : D.nd.l i ≠ 2 := UpperTheory.Small.ne_two D.host hls
   obtain ⟨g, hgI, hg⟩ := GlobalTheory.PtCore.EpsAll.exists_generator (GlobalTheory.EpsInertia.epsAll D i) w hw
   have hgD : g ∈ Dec (F := D.host.E) (D.nd.plOm.1 w) := Ine_le_Dec _ hgI
@@ -157,7 +157,7 @@ theorem lenUnit_invariants_le (D : D7) (i : D.nd.Loc) (hls : D.nd.l i ∉ D.host
     rw [hva] at ht
     obtain ⟨e, he0, he⟩ := Formalism.MainNotions.TruncatedSeriesCountingIdentities.Br.exists_eO D.nd i
     rw [he] at ht
-    exact absurd ht (by rw [← Nat.cast_mul]; exact ENat.coe_ne_top _)
+    exact absurd ht (by rw [← Nat.cast_mul]; exact ENat.natCast_ne_top _)
   have hkill : ∀ x ∈ Representation.invariants ((Formalism.MainNotions.N.Glob.KOtw D.nd i (n : ℤ)).comp (decS D.nd w)),
       a • x = 0 := by
     intro x hx
@@ -199,7 +199,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (col : Finset (HeightOneSpectrum (�
     D.nd.l i ≠ D.host.q → D.nd.l i ≠ D.host.d → (∀ u ∈ col, u ∈ placesOver D.host.E (D.nd.l i)) →
     ((h0 D.nd i col : ℚ) : ℝ) ≤ 2 * D.R.t := by
   intro D i col hl2 _ _ hcol
-  haveI := D.nd.lPrime i
+  have := D.nd.lPrime i
   have key : h0 D.nd i col ≤ 2 * (D.R.t : ℚ) := by
     unfold h0
     refine unbotD_le ?_ (by positivity)

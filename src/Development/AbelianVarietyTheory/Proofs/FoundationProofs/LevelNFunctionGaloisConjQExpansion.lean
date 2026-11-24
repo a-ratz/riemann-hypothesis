@@ -815,7 +815,7 @@ theorem conj_family_sep : ∀ (g : ℂ ≃+* ℂ) (ι : Type) [Fintype ι] (act 
   let κ := Quotient s
   have hs : ∀ i j, (Quotient.mk s i = Quotient.mk s j) ↔ t i = t j := fun i j =>
     ⟨fun h => Quotient.exact h, fun h => Quotient.sound h⟩
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Fintype κ := Fintype.ofFinite κ
   let actκ : κ → SL(2, ℤ) → κ := fun c γ =>
     Quotient.lift (fun i => Quotient.mk s (act i γ)) (fun i j (h : t i = t j) => by
       apply (hs _ _).2
@@ -893,7 +893,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (τ : ℍ) (x y : Fin 2 → ZMod N), x �
   have hc : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := Complex.two_pi_I_ne_zero
   have hz : tors N τ x ∉ (tauPair τ).lattice := fun h => hx ((hmem x).1 h)
   have hw : tors N τ y ∉ (tauPair τ).lattice := fun h => hy ((hmem y).1 h)
-  rw [wp, wp, div_left_inj' (pow_ne_zero _ hc)] at h1
+  rw [wp, wp, div_left_inj₀ (pow_ne_zero _ hc)] at h1
   rcases (Formalism.L2.Th1.F.pInjective (tauPair τ) _ _ hz hw).1 h1 with h | h
   · exact Or.inl ((hsub x y).1 h)
   · right
@@ -930,10 +930,10 @@ theorem finite_nat_roots (a b c : ℂ) (h : ¬ (a = 0 ∧ b = 0 ∧ c = 0)) :
     have e2 := congrArg (fun q => q.coeff 2) h0
     simp [P, Polynomial.coeff_X_pow, Polynomial.coeff_C, Polynomial.coeff_X] at e0 e1 e2
     exact ⟨e0, e1, e2⟩
-  have hf := (Polynomial.finite_setOf_isRoot hP).preimage (f := (Nat.cast : ℕ → ℂ)) Nat.cast_injective.injOn
+  have hf := (Polynomial.finite_setOfPred_isRoot hP).preimage (f := (Nat.cast : ℕ → ℂ)) Nat.cast_injective.injOn
   refine hf.subset ?_
   intro n hn
-  simp only [Set.mem_setOf_eq, Set.mem_preimage] at hn ⊢
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage] at hn ⊢
   rw [Polynomial.IsRoot.def]
   simp only [P, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X, Polynomial.eval_pow]
   linear_combination hn
@@ -995,7 +995,7 @@ theorem sep_family : ∀ (N : ℕ) [NeZero N], ∃ c₁ c₂ : ℕ, ∀ α β : 
     by_contra hz
     exact hn (Set.mem_iUnion.mpr ⟨(α, β), hz, hroot⟩)
   rcases Nat.lt_or_ge 1 N with hN | hN
-  · haveI : Fact (1 < N) := ⟨hN⟩
+  · have : Fact (1 < N) := ⟨hN⟩
     obtain ⟨z0, z1, z2⟩ := hz UpperHalfPlane.I
     have ne0 : (![1, 0] : Fin 2 → ZMod N) ≠ 0 := by
       intro h; have := congrFun h 0; simp at this

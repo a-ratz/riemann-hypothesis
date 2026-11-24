@@ -386,7 +386,7 @@ theorem IsFiniteSub.finite_subPts {S : LinSys k} {I : S.Y.IdealSheafData} (h : S
     [Algebra k Ω] : (S.subPts I Ω).Finite := by
   have : IsFinite (I.subschemeι ≫ S.str) := h
   have : IsAffine I.subscheme := isAffine_of_isAffineHom (I.subschemeι ≫ S.str)
-  letI := algebraΓOfHom (I.subschemeι ≫ S.str)
+  let := algebraΓOfHom (I.subschemeι ≫ S.str)
   have : Module.Finite k Γ(I.subscheme, ⊤) :=
     (I.subschemeι ≫ S.str).finite_appTop.comp (RingHom.Finite.of_surjective _
       (Scheme.ΓSpecIso (.of k)).symm.commRingCatIsoToRingEquiv.surjective)

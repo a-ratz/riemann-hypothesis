@@ -74,7 +74,7 @@ theorem exists_nbhd_of_map_O (M : RatModel o Ω) (M' : RatModel o Ω') (φ : Ω 
       ∀ x ∈ M.ringOn U, φ x ∈ M'.ringOn V := by
   obtain ⟨U, hU, hzU, -⟩ := exists_isAffineOpen_mem_and_subset (U := (⊤ : M.Z.Opens)) (x := z) trivial
   have hUne : (U : Set M.Z).Nonempty := ⟨z, hzU⟩
-  letI := (M.constHom U).toAlgebra
+  let := (M.constHom U).toAlgebra
   obtain ⟨s, hs⟩ := (M.finiteType_constHom hU).out
   let V : M'.Z.Opens := ⟨⋂ f ∈ s, {w | φ (valF M.pt U f) ∈ M'.O w},
     isOpen_biInter_finset fun f _ => M'.isOpen_setOf_mem_O _⟩

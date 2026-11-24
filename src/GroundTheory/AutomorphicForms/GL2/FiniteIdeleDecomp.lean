@@ -108,7 +108,7 @@ theorem intUnitsAt_eq_unitFiltrationUnits (v : HeightOneSpectrum (𝓞 K)) :
     refine le_antisymm h1 ?_
     by_contra hlt
     push Not at hlt
-    have := (one_lt_inv₀ (zero_lt_iff.2 h0)).2 hlt
+    have := (one_lt_inv₀ (pos_iff_ne_zero.2 h0)).2 hlt
     exact absurd h2 (not_le.2 this)
   · intro h
     simp [h]
@@ -256,18 +256,18 @@ theorem awayImageS_eq_smul {g : (FiniteAdeleRing (𝓞 K) K)ˣ → ℝ≥0∞}
     awayImageS S g = awayImageS S g (intUnitsAtS S) • multHaarS S := by
   have := isMulLeftInvariant_awayImageS hinv
   have := isFiniteMeasureOnCompacts_awayImageS hinv hc
-  haveI : (multHaarS S).IsHaarMeasure := by
+  have : (multHaarS S).IsHaarMeasure := by
     unfold multHaarS
     infer_instance
   have h := Measure.isMulLeftInvariant_eq_smul (awayImageS S g) (multHaarS S)
   set c := Measure.haarScalarFactor (awayImageS S g) (multHaarS S)
   have hU : awayImageS S g (intUnitsAtS S) = (c : ℝ≥0∞) := by
     conv_lhs => rw [h]
-    rw [Measure.smul_apply, multHaarS_intUnitsAtS, ENNReal.smul_def, smul_eq_mul, mul_one]
+    rw [smul_apply, multHaarS_intUnitsAtS, ENNReal.smul_def, smul_eq_mul, mul_one]
   rw [hU]
   conv_lhs => rw [h]
   ext A _
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 end AtS
 

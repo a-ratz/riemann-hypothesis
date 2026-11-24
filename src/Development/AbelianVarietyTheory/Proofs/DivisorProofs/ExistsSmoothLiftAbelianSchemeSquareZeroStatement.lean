@@ -117,7 +117,7 @@ theorem isOb2_natural : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Id
   have hl0 : ∀ T : C', ∃ l : L.B (n.G.obj T) →ₐ[R] L₂.B (G.obj T),
       ∀ b, L₂.p (G.obj T) (l b) = coefHom n T (L.p _ b) := by
     intro T
-    haveI := L.smooth (n.G.obj T)
+    have := L.smooth (n.G.obj T)
     exact homLift R R₀ I hI π hπ hk _ _ (L.p _) (L.semi _) (L.surj _) (L.ker _) _ _ (L₂.p (G.obj T))
       (L₂.semi _) (L₂.surj _) (L₂.ker _) (coefHom n T)
   choose l hl using hl0
@@ -171,7 +171,7 @@ theorem isOb2_natural : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Id
   rw [CoefMap.pullCohomologyTwo_class, CoefMap.pullCohomologyTwo_class, H2.mk_eq_mk]
   refine ⟨fun T T' a ↦ -g T T' a, ?_⟩
   funext T T' T'' a b
-  haveI := L₂.smooth (G.obj T'')
+  have := L₂.smooth (G.obj T'')
   have nb := sig_natural R R₀ I hI π hπ hk R₁ α _ _ (L₂.p (G.obj T')) (L₂.semi _) (L₂.surj _) (L₂.ker _) _ _
     (L₂.p (G.obj T'')) (L₂.semi _) (L₂.surj _) (L₂.ker _) (L₂.ρ (G.map b)) (mp F₂ (G.map b)) (L₂.nat (G.map b))
     (σ₂ _) (σ₂ _) (hσ₂ _) (hσ₂ _)
@@ -270,8 +270,8 @@ theorem exists_isOb2 : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
     exact ex.trans (add_comm _ _)
   have hZ : (fun T T' T'' a b ↦ z T T' T'' a b : C2 (ext R₁ F)) ∈ Z2 (ext R₁ F) := by
     intro T T' T'' T''' a b c
-    haveI := L.smooth T'''
-    haveI : Module.Flat R (L.B T''') := Algebra.Smooth.flat R _
+    have := L.smooth T'''
+    have : Module.Flat R (L.B T''') := Algebra.Smooth.flat R _
     have nat := GlobalTheory.T.augmentation_sigma_map_natural R R₀ I hI π hπ hk R₁ α (L.B T'') (F.obj T'') (L.p T'') (L.semi T'')
       (L.surj T'') (L.ker T'') (L.B T''') (F.obj T''') (L.p T''') (L.semi T''') (L.surj T''') (L.ker T''')
       (L.ρ c) (mp F c) (L.nat c) (σ T'') (σ T''') (hσ T'') (hσ T''')
@@ -1007,7 +1007,7 @@ theorem core (g : Fin r → MvPolynomial (Fin n) R₀) (a : Fin n → Fin r → 
     exact (isUnit_one.neg).pow _
   let D := MvPolynomial (Fin n ⊕ Fin n) R₀ ⧸ K
   let T1 := Localization.Away P.jacobian
-  haveI hT1 : Algebra.IsStandardSmooth R₀ T1 := by
+  have hT1 : Algebra.IsStandardSmooth R₀ T1 := by
     let Q := Algebra.SubmersivePresentation.localizationAway T1 P.jacobian
     let P' : Algebra.SubmersivePresentation R₀ T1 (Unit ⊕ (Fin n ⊕ Fin n)) (Unit ⊕ Fin n) :=
       { __ := Q.toPreSubmersivePresentation.comp P
@@ -1087,7 +1087,7 @@ theorem core (g : Fin r → MvPolynomial (Fin n) R₀) (a : Fin n → Fin r → 
     rw [RingHom.mem_ker, map_sub, map_one, sub_eq_zero] at this
     exact this
   let C₀ := Localization.Away (algebraMap D T1 e)
-  haveI : Algebra.IsStandardSmooth T1 C₀ :=
+  have : Algebra.IsStandardSmooth T1 C₀ :=
     Algebra.IsStandardSmooth.localization_away (algebraMap D T1 e)
   have hC : Algebra.IsStandardSmooth R₀ C₀ := Algebra.IsStandardSmooth.trans R₀ T1 C₀
   let r₂ : C₀ →ₐ[R₀] MvPolynomial (Fin n) R₀ ⧸ J :=
@@ -1120,7 +1120,7 @@ theorem exists_retract_isStandardSmooth : ∀ (R₀ B₀ : Type) [CommRing R₀]
   obtain ⟨r, g, hg⟩ := Submodule.fg_iff_exists_fin_generating_family.1 hfg
   let e : (MvPolynomial (Fin n) R₀ ⧸ Ideal.span (Set.range g)) ≃ₐ[R₀] B₀ :=
     (Ideal.quotientEquivAlgOfEq R₀ hg).trans (Ideal.quotientKerAlgEquivOfSurjective hf)
-  haveI : Algebra.FormallySmooth R₀ (MvPolynomial (Fin n) R₀ ⧸ Ideal.span (Set.range g)) :=
+  have : Algebra.FormallySmooth R₀ (MvPolynomial (Fin n) R₀ ⧸ Ideal.span (Set.range g)) :=
     Algebra.FormallySmooth.of_equiv e.symm
   obtain ⟨a, b, hab⟩ :=
     GlobalTheory.exists_witnesses_of_formallySmooth_quotient (Fin n) R₀ r g inferInstance
@@ -1225,8 +1225,8 @@ theorem pre_nonempty : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
   intro R R₀ _ _ I hI π hπ hk C _ F hF
   have h := fun T => GlobalTheory.T.smoothAlgebra_lifts_over_square_zero_thickening R R₀ I hI π hπ hk (F.obj T) (hF T)
   choose B iB aB p hs hp hker hsm using h
-  letI := iB
-  letI := aB
+  let := iB
+  let := aB
   have hl : ∀ {T T' : C} (a : T ⟶ T'), ∃ ρ : B T →ₐ[R] B T', ∀ b, p T' (ρ b) = mp F a (p T b) :=
     fun {T T'} a => homLift R R₀ I hI π hπ hk (B T) (F.obj T) (p T) (hs T) (hp T) (hker T)
       (B T') (F.obj T') (p T') (hs T') (hp T') (hker T') (mp F a)
@@ -1356,9 +1356,9 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.Obs.exists_smooth_lift_of_abelian : FormSt → PrimitiveExtendedDegTwoVanish → ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal R) (hI : I ^ 2 = 0) (π : R →+* R₀) (hπ : Function.Surjective π) (hk : RingHom.ker π = I) (A₀ : Over (Sp R₀)) [GrpObj A₀] (g : ℕ), IsAbelianScheme A₀ → SmoothOfRelativeDimension g A₀.hom → ∃ (X : Over (Sp R)) (i : A₀.left ⟶ X.left), IsPullback i A₀.hom X.hom (spMap π) ∧ Smooth X.hom := by
   intro hF hP R R₀ _ _ I hI π hπ hk A₀ _ g hab hsm
-  haveI := hsm
-  haveI : Smooth A₀.hom := SmoothOfRelativeDimension.smooth g _
-  haveI : Smooth (A₀ ⊗ A₀).hom := inferInstanceAs (Smooth (Limits.pullback.fst A₀.hom A₀.hom ≫ A₀.hom))
+  have := hsm
+  have : Smooth A₀.hom := SmoothOfRelativeDimension.smooth g _
+  have : Smooth (A₀ ⊗ A₀).hom := inferInstanceAs (Smooth (Limits.pullback.fst A₀.hom A₀.hom ≫ A₀.hom))
   obtain ⟨R₁, _, _, ⟨α⟩⟩ := GlobalTheory.Obs.exists_aug R R₀ I hI π hπ hk
   obtain ⟨hPar, hProj, hadd⟩ := hF R₀ A₀ g hab hsm
   obtain ⟨L⟩ := GlobalTheory.T.nonempty_smoothLiftPresystem_squareZero R R₀ I hI π hπ hk _ (OAff A₀.hom) (fun T ↦ smooth_sec_affine A₀.hom T.unop)

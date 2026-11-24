@@ -67,7 +67,7 @@ section -- clump:auto
 namespace UpperTheory.Reformulated.B.P6.r20a
 
 theorem finsum_const_eq_card_mul {α : Type} [Finite α] (c : ℂ) : ∑ᶠ _ : α, c = (Nat.card α : ℂ) * c := by
-  haveI : Fintype α := Fintype.ofFinite α
+  have : Fintype α := Fintype.ofFinite α
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, Nat.card_eq_fintype_card]
 
 theorem quotient_out_right_invariant {H : Type} [Group H] (K : Subgroup H) (u : H → ℂ)
@@ -89,7 +89,7 @@ theorem PositivityTheory.Rg.BcN.F2.LocOpPf.finsum_quot_le :
     | H x =>
       rw [hfst x, quotient_out_right_invariant S u huS x, quotient_out_right_invariant T u hu x]
   have hcard : S.relIndex T = Nat.card (T ⧸ S.subgroupOf T) := rfl
-  haveI : Finite (T ⧸ S.subgroupOf T) := Nat.finite_of_card_ne_zero (by rw [← hcard]; exact hidx)
+  have : Finite (T ⧸ S.subgroupOf T) := Nat.finite_of_card_ne_zero (by rw [← hcard]; exact hidx)
   set F : (H ⧸ T) × (T ⧸ S.subgroupOf T) → ℂ := fun pr => u (Quotient.out pr.1) with hF
   have h1 : ∑ᶠ (q : H ⧸ S), u (Quotient.out q) = ∑ᶠ (q : H ⧸ S), F (e q) :=
     finsum_congr key

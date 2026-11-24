@@ -99,21 +99,21 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem totallyDisconnected : TotallyDisconnectedSpace k := by
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := k)
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
   infer_instance
 
 theorem nonarchimedeanGroup_GL (n : ℕ) : NonarchimedeanGroup (GL (Fin n) k) := by
-  haveI := totallyDisconnected (k := k)
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
+  have := totallyDisconnected (k := k)
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → k))
-  haveI : TotallyDisconnectedSpace (GL (Fin n) k) :=
+  have : TotallyDisconnectedSpace (GL (Fin n) k) :=
     ⟨isTotallyDisconnected_of_image (f := fun g : GL (Fin n) k => g.val) Units.continuous_val.continuousOn
       Units.val_injective (isTotallyDisconnected_of_totallyDisconnectedSpace _)⟩
-  haveI : CompactSpace (KO k (Fin n)) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
-  haveI : NonarchimedeanGroup (KO k (Fin n)) := ⟨fun U hU => by
+  have : CompactSpace (KO k (Fin n)) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
+  have : NonarchimedeanGroup (KO k (Fin n)) := ⟨fun U hU => by
     obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (isOpen_interior (s := U))
       (mem_interior_iff_mem_nhds.2 hU)
     exact ⟨N.toOpenSubgroup, hN.trans interior_subset⟩⟩
@@ -422,7 +422,7 @@ theorem exists_equivariant_extension :
     rw [dite_eq_left h]
     obtain ⟨hc', κ', hκ', e⟩ := h.choose_spec.choose_spec
     exact wd _ _ _ _ hc' hc κ' hκ' κ hκ e.symm
-  have h0 : ∀ g, ¬ Ω g → f g = 0 := fun g h => dif_neg h
+  have h0 : ∀ g, ¬ Ω g → f g = 0 := fun g h => dite_eq_right h
   refine ⟨f, ?_, ?_, ?_, ?_⟩
   · intro q g
     by_cases h : Ω g
@@ -1051,7 +1051,7 @@ theorem exists_openSubgroup_consistent {G : Type} [Group G] [TopologicalSpace G]
   have hopenQ : IsOpen {q : Q | ∀ v ∈ φ '' C, σ q v = v} := by
     have e : {q : Q | ∀ v ∈ φ '' C, σ q v = v} = ⋂ v ∈ φ '' C, {q : Q | σ q v = v} := by
       ext q
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     rw [e]
     exact hfin.isOpen_biInter fun v _ => hσ v
   obtain ⟨UQ, hUQ, hUQe⟩ := isOpen_induced_iff.1 hopenQ
@@ -1073,7 +1073,7 @@ theorem exists_openSubgroup_consistent {G : Type} [Group G] [TopologicalSpace G]
       rw [hUe]
       exact K'.one_mem
     exact this
-  have hC' : IsCompact ((Subtype.val : P → G) '' C) := hC.image continuous_subtype_val
+  have hC' : IsCompact ((Subtype.val : P → G) '' C) := hC.image continuous_subtypeVal
   obtain ⟨OP, hOP, hOPc⟩ := exists_nhds_one_tube hC' (n := {z : G × G | z.1⁻¹ * z.2 * z.1 ∈ U})
     (hU.preimage (by fun_prop)) (by
       rintro _ ⟨c, -, rfl⟩
@@ -1457,7 +1457,7 @@ theorem core0 (i j : ℕ) (h₀ : (i + 1) + (j + 1) = i + (j + 1) + 1) (h₁ : (
       Nonempty ((subQuot ⊤ S).Equiv (cInd (HGPg k h₁)
         ((extTensor (GRep.tw (⟨V, π₁⟩ : GRep k (i + 1)) (((j + 1 : ℕ) : ℝ) / 2)).ρ
         (mtw (gres (⟨W, π₂⟩ : GRep k (j + 1))) (-((i + 1 : ℕ) : ℝ) / 2)).ρ).comp (gpProjg k h₁)))) := by
-  haveI := GlobalTheory.LocRankBig.nonarchimedeanGroup_GL (k := k) (i + (j + 1) + 1)
+  have := GlobalTheory.LocRankBig.nonarchimedeanGroup_GL (k := k) (i + (j + 1) + 1)
   have ho := (GlobalTheory.SplitFlip.isOpen_KO (k := k) (n := Fin (i + (j + 1) + 1))).mem_nhds (one_mem _)
   have ht : 0 < j + 1 := by omega
   refine two_orbits (Q := parab k (two (stdSum h₀))) (P := Mir k (i + (j + 1))) (w := wGL k h₀)

@@ -235,7 +235,7 @@ theorem isThick_of_isPullback_quotient : ∀ (R C : Type) [CommRing R] [CommRing
       (by simp) ?_ (by simp [Scheme.Hom.appLE_eq_app]) (by simp)
     rw [← Scheme.ΓSpecIso_naturality]
     congr 1
-  haveI := IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom (Ideal.Quotient.mk J))
+  have := IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom (Ideal.Quotient.mk J))
     Ideal.Quotient.mk_surjective
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip inferInstance
@@ -310,7 +310,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (hAb : AbLift) (R : Type) [CommRing 
     (g : ℕ) (hA : IsAbelianScheme A) (hg : SmoothOfRelativeDimension g A.hom) (C : Type) [CommRing C] (σ : R →+* C)
     (N : LB (A ⊗ (Ov σ ⊗ Ov (Ideal.Quotient.mk J))).left) (hN : N.IsLB) (hadd : IsAdditive N) :
     ∃ c : Pic (A ⊗ Ov σ).left, CechPic.pull (A ◁ fst (Ov σ) (Ov (Ideal.Quotient.mk J))).left c = cls N hN := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   let U := Ov σ
   let S' := Ov (Ideal.Quotient.mk J)
   obtain ⟨B, _, pr, pr', hB, hBg, hp, hp', hμ, h₁, h₂, -, -⟩ := GlobalTheory.T.exists_abelianScheme_baseChange_and_square R C A g hA hg
@@ -1376,7 +1376,7 @@ theorem presheaf_map_map {Y : Scheme.{0}} {U V W : Y.Opens} (h₁ : V ≤ U) (h�
 variable {R : Type} [CommRing R] {I : Ideal R} {X X₀ : Scheme.{0}} {s : X ⟶ Sp R} {i : X₀ ⟶ X} {L : LB X₀}
 
 theorem isBasis_smallG (hi : IsThick I s i) (hL : L.IsLB) : IsBasis (smallG i L) := by
-  haveI := hi.closed
+  have := hi.closed
   have hind : Topology.IsInducing i.base := i.isClosedEmbedding.isInducing
   have cov : ∀ (x : X) (U : X.Opens), x ∈ U → ∃ t : (Small i L)ᵒᵖ,
       x ∈ ((smallG i L).obj t).unop.1 ∧ ((smallG i L).obj t).unop.1 ≤ U := by
@@ -1437,7 +1437,7 @@ theorem lift_mdef (hi : IsThick I s i) (hL : L.IsLB) {u : C1 (smallG i L ⋙ OAf
     le_inf ((i.preimage_mono hb).trans (Small.le_inf a)) t''.unop.2
   have hc := congrArg (fun w ↦ (X₀.presheaf.map (homOfLE h2).op).hom w.val)
     (hL.cocycle t.unop.1.2 t'.unop.1.2 t''.unop.1.2)
-  simp only [Units.val_mul, map_mul, res, Units.coe_map, MonoidHom.coe_coe,
+  simp only [Units.val_mul, map_mul, res, Units.coe_map, MonoidHom.coe_ofClass,
     presheaf_map_map] at hc
   have k : ∀ (x : Γ(X, t'.unop.1.1.1)) (y z : Γ(X, t''.unop.1.1.1)),
       (i.app t'.unop.1.1.1).hom x = (res (Small.le_inf a) (L.g t.unop.1.2 t'.unop.1.2)).val →
@@ -1446,7 +1446,7 @@ theorem lift_mdef (hi : IsThick I s i) (hL : L.IsLB) {u : C1 (smallG i L ⋙ OAf
       (i.app t''.unop.1.1.1).hom ((X.presheaf.map (homOfLE hb).op).hom x * y - z) = 0 := by
     intro x y z hx hy hz
     rw [map_sub, map_mul, app_presheaf_map, hx, hy, hz, sub_eq_zero]
-    simp only [res, Units.coe_map, MonoidHom.coe_coe, presheaf_map_map]
+    simp only [res, Units.coe_map, MonoidHom.coe_ofClass, presheaf_map_map]
     exact hc
   exact k _ _ _ (hu t t' a) (hu t' t'' b) (hu t t'' (a ≫ b))
 
@@ -1515,10 +1515,10 @@ theorem abLift_of_prim (hP : PrimitiveExtendedDegTwoVanish) : AbLift := by
   obtain ⟨T, _, _, H, K₀, K₁, K₂, le₀, le₁, le₂, v, hH, hv, hrel⟩ := GlobalTheory.T.multiplicative_relation_of_pullback_iso_thickening R I hI _ _ _ _ A.hom (A ⊗ A).hom i i'
     _ _ _ (overW μ[A]) (overW (fst A A)) (overW (snd A A)) ψ₀ ψ₁ ψ₂ L hL u hi' hB hu e₀ e₁ e₂ hc
   obtain ⟨R₁, _, _, q, hq, hprim⟩ := GlobalTheory.T.flat_coefficient_extension_H2_class R I
-  haveI : Smooth A.hom := SmoothOfRelativeDimension.smooth g _
-  haveI : Smooth (A ⊗ A).hom := by
+  have : Smooth A.hom := SmoothOfRelativeDimension.smooth g _
+  have : Smooth (A ⊗ A).hom := by
     rw [← Over.w (fst A A)]
-    haveI : Smooth (fst A A).left := inferInstanceAs (Smooth (pullback.fst A.hom A.hom))
+    have : Smooth (fst A A).left := inferInstanceAs (Smooth (pullback.fst A.hom A.hom))
     infer_instance
   have hpi := hprim _ _ _ _ (pullMap (overW μ[A]) _ H K₀ le₀) (pullMap (overW (fst A A)) _ H K₁ le₁)
     (pullMap (overW (snd A A)) _ H K₂ le₂)
@@ -1573,7 +1573,7 @@ theorem exists_fam {S : Scheme.{0}} {A U T : Over S} [GrpObj A] [IsLocallyNoethe
 theorem hasRep_of_sqZero : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ J : Ideal R, J ^ 2 = ⊥ → HasRep A g (Over.mk (spMap (Ideal.Quotient.mk J))) → HasRep A g (𝟙_ _) := by
   intro R _ _ A _ g hA hg J hJ ⟨B, b, P, hP, hb⟩
   refine GlobalTheory.T.representingScheme_of_finite_surjective_lift R A g hA hg B _ b P ?_ ?_ hP hb fun x ↦ ?_
-  · haveI : IsClosedImmersion (spMap (Ideal.Quotient.mk J)) :=
+  · have : IsClosedImmersion (spMap (Ideal.Quotient.mk J)) :=
       IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
     exact inferInstanceAs (IsFinite (spMap (Ideal.Quotient.mk J)))
   · exact GlobalTheory.LiftSys.surjective_spMap_sqZero _ Ideal.Quotient.mk_surjective hJ
@@ -1584,8 +1584,8 @@ theorem hasRep_of_sqZero : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A :
     simp only [evc_ev hP.fam.isLB, lift_fst, lift_snd_assoc]
     exact (isAdditive_iff hP.fam.isLB).1 hP.fam.add Y a a' _
   obtain ⟨c, hc⟩ := GlobalTheory.T.additiveFamily_reduction_lifts_lineBundle abLift R J hJ A g hA hg C σ _ hN ha
-  haveI : Smooth (spMap σ) := SmoothOfRelativeDimension.smooth g _
-  haveI : IsLocallyNoetherian (Over.mk (spMap σ)).left :=
+  have : Smooth (spMap σ) := SmoothOfRelativeDimension.smooth g _
+  have : IsLocallyNoetherian (Over.mk (spMap σ)).left :=
     LocallyOfFiniteType.isLocallyNoetherian (spMap σ)
   obtain ⟨M, hM, hMa, key⟩ := exists_fam hA (fst (Over.mk (spMap σ)) (Over.mk (spMap (Ideal.Quotient.mk J))))
     (fun K _ s t ↦ by

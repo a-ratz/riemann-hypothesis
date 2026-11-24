@@ -185,7 +185,7 @@ theorem average {θ : InfFam D} {sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin
   have hfinQ : Finite (Λ ⧸ K) := by
     obtain ⟨R, hR, hRdec⟩ := GlobalTheory.LatFinMod.latO_finite_mod D S T ΛS ΛT hS.1.fg hT.1.fg (fun _ => True) (2 * N)
       (by omega)
-    haveI : Finite R := hR.to_subtype
+    have : Finite R := hR.to_subtype
     refine Finite.of_surjective (fun r : R => if h : (r : WO S T) ∈ Λ then
       (QuotientAddGroup.mk (⟨r, h⟩ : Λ) : Λ ⧸ K) else 0) ?_
     intro q
@@ -195,10 +195,10 @@ theorem average {θ : InfFam D} {sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin
       have : r = (t : WO S T) - (2 * N) • u := by rw [e]; abel
       rw [this]; exact sub_mem t.2 (AddSubgroup.nsmul_mem _ hu _)
     refine ⟨⟨r, hr⟩, ?_⟩
-    simp only [dif_pos hrΛ]
+    simp only [dite_eq_left hrΛ]
     rw [QuotientAddGroup.eq]
     exact ⟨⟨u, hu⟩, Subtype.ext (by simp [e])⟩
-  haveI : Fintype (Λ ⧸ K) := Fintype.ofFinite _
+  have : Fintype (Λ ⧸ K) := Fintype.ofFinite _
   obtain ⟨g, hg⟩ : ∃ g : Λ ⧸ K → WO S T → ℂ, ∀ q, g q = ε q.out • heisO ψ S T (q.out : WO S T) φ :=
     ⟨_, fun _ => rfl⟩
   have hshift : ∀ (u : Λ) (q : Λ ⧸ K), ε u • heisO ψ S T u (g q) = g (QuotientAddGroup.mk u + q) := fun u q => by

@@ -77,14 +77,14 @@ theorem exists_idempotent_sub_mem_of_pow_sub_mem (l : ℕ) [Fact l.Prime] {R : T
     [Algebra ℤ_[l] R] [Module.Finite ℤ_[l] R] (b : R) :
     ∃ E : R, E * E = E ∧ ∀ (M : Submodule ℤ_[l] R) (c : R),
       (∀ n : ℕ, b ^ (n + 1) - c ∈ M) → E - c ∈ M := by
-  letI : TopologicalSpace R := moduleTopology ℤ_[l] R
-  haveI : IsModuleTopology ℤ_[l] R := ⟨rfl⟩
-  haveI : IsTopologicalRing R := IsModuleTopology.isTopologicalRing ℤ_[l] R
+  let : TopologicalSpace R := moduleTopology ℤ_[l] R
+  have : IsModuleTopology ℤ_[l] R := ⟨rfl⟩
+  have : IsTopologicalRing R := IsModuleTopology.isTopologicalRing ℤ_[l] R
   have hcl : ∀ M : Submodule ℤ_[l] R, IsClosed (M : Set R) := fun M => isClosed_submodule_padicInt_finite l M
-  haveI : T2Space R := by
+  have : T2Space R := by
     rw [IsTopologicalAddGroup.t2Space_iff_zero_closed]
     simpa using hcl ⊥
-  haveI : CompactSpace R := by
+  have : CompactSpace R := by
     obtain ⟨n, π, hπ⟩ := Module.Finite.exists_fin' ℤ_[l] R
     have hc : Continuous π := IsModuleTopology.continuous_of_linearMap π
     exact ⟨by simpa [hπ.range_eq] using isCompact_range hc⟩

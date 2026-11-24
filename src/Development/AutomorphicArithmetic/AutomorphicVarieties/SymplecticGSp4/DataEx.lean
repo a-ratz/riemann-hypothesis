@@ -123,7 +123,7 @@ private theorem xvan_of_van {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure �
 theorem UpperTheory.V.X.xvan :
     CorX → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), (∀ p ∈ D.T, p.Prime ∧ (D.pl p).valuation (p : Ω) < 1) → ∀ (d f n : ℕ) [NeZero (f * 2 ^ n)] (φ : DirichletCharacter c.O f) (ξ : DirichletCharacter c.O (2 ^ n)), XData l d φ ξ → ∀ γ : G ℚ Ω →* c.Oˣ, (∀ g, Raw.bar γ g = (redChar Ω (residue c.O) (prodX φ ξ) g : ResidueField c.O)) → D.XVan γ ∧ D.XVan γ⁻¹ := by
   intro hCor Ω _ _ _ l _ c D hT d f n _ φ ξ hX γ hγ
-  haveI : CharP (ResidueField c.O) l := by
+  have : CharP (ResidueField c.O) l := by
     obtain ⟨-, -, hloc, -⟩ := dvrFacts l c.O
     rw [CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)]
     rw [← map_natCast (residue c.O), residue_eq_zero_iff, mem_maximalIdeal, mem_nonunits_iff]
@@ -154,7 +154,7 @@ section -- clump:auto
 theorem UpperTheory.exists_dirichletCharacter_prime_of_orderOf_dvd :
     ∀ (O : Type) [CommRing O] [IsDomain O] (N : ℕ) [NeZero N] (ψ : DirichletCharacter O N) (p : ℕ), p.Prime → orderOf ψ ∣ p - 1 → ∃ ξ : DirichletCharacter O p, orderOf ξ = orderOf ψ := by
   intro O _ _ N _ ψ p hp hd
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hfin : Finite ψ.toUnitHom.range :=
     Finite.of_surjective _ ψ.toUnitHom.rangeRestrict_surjective
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := ψ.toUnitHom.range)
@@ -381,8 +381,8 @@ private theorem pt_exists (l : ℕ) (hl : l.Prime) (Γ : Type) [Group Γ] [Topol
   rintro V ⟨hgV, hVo⟩
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one
     (hVo.preimage (continuous_const_mul g')) (by simpa using hgV)
-  haveI : H.toSubgroup.Normal := H.isNormal'
-  haveI : Finite (Γ ⧸ H.toSubgroup) := H.toSubgroup.quotient_finite_of_isOpen H.isOpen'
+  have : H.toSubgroup.Normal := H.isNormal'
+  have : Finite (Γ ⧸ H.toSubgroup) := H.toSubgroup.quotient_finite_of_isOpen H.isOpen'
   obtain ⟨y, hy⟩ := pt_const l hl (QuotientGroup.mk (s := H.toSubgroup) g)
   have hnh : ∀ᶠ z in nhds g', g'⁻¹ * z ∈ H.toSubgroup := by
     have hc : Continuous (fun z : Γ => g'⁻¹ * z) := continuous_const.mul continuous_id
@@ -640,7 +640,7 @@ private theorem dirX {O : Type} [CommRing O] [IsDomain O] {l d N p n c : ℕ} [N
   obtain ⟨f₁, φ₁, p1, d1, t1, v1⟩ := X.primProd O l N ω θ
   have hcN : θ.conductor ∣ N := θ.conductor_dvd_level
   have d1' : f₁ ∣ l * N := d1.trans (Nat.mul_dvd_mul_left l hcN)
-  haveI : NeZero f₁ := ⟨fun h0 => mul_ne_zero (NeZero.ne l) (NeZero.ne N) (Nat.eq_zero_of_zero_dvd (h0 ▸ d1'))⟩
+  have : NeZero f₁ := ⟨fun h0 => mul_ne_zero (NeZero.ne l) (NeZero.ne N) (Nat.eq_zero_of_zero_dvd (h0 ▸ d1'))⟩
   obtain ⟨f, φ, p2, d2, t2, v2⟩ := X.primProd O p f₁ ξ₀ φ₁
   rw [show φ₁.conductor = f₁ from p1] at d2
   obtain ⟨ξ₁, p3, v3⟩ := UpperTheory.exists_primitive_two_pow_twist_mul O N χ c n hc hcn ξ hξ
@@ -751,7 +751,7 @@ private theorem t_sub (h : Host) (ψ : DirichletCharacter c.O h.N) (hψ : h.IsCh
   have hpp := hS p h1
   refine Finset.mem_insert_of_mem (((hostSb h c.O ψ hψ l hl hl2).2.2.2.1 p hpp h2).2 ?_)
   rw [hD] at h3
-  haveI : Finite ((D.Ip p).map (Chr.dirG ℚ Ω ψ)) := by
+  have : Finite ((D.Ip p).map (Chr.dirG ℚ Ω ψ)) := by
     rw [Chr.dirG, ← Subgroup.map_map]
     exact Finite.Set.finite_image _ _
   obtain ⟨⟨_, g, hg, rfl⟩, hx⟩ := exists_prime_orderOf_dvd_card' l h3
@@ -784,9 +784,9 @@ private theorem xvOf (hX : X.CorX) (D : Raw Ω c) (hT : ∀ p ∈ D.T, p.Prime �
     (hγ : ∀ g, Raw.bar γ g = Raw.bar (Chr.dirG ℚ Ω ω) g * (Raw.bar (Chr.dirG ℚ Ω χ) g * Raw.bar (Chr.dirG ℚ Ω θ) g) *
       (Raw.bar (Chr.dirG ℚ Ω ξ₀) g * Raw.bar (Chr.dirG ℚ Ω ξ) g)) : D.XVan γ ∧ D.XVan γ⁻¹ := by
   obtain ⟨f, φ, ξ₁, hd', hf, hv⟩ := dirX ω θ χ ξ₀ ξ hl hp hθ hd h4 o1 o2 o3 hc hcn hξ big odd
-  haveI hM : NeZero (p * l * N * 2 ^ n) := inferInstance
+  have hM : NeZero (p * l * N * 2 ^ n) := inferInstance
   have hdvd : f * 2 ^ n ∣ p * l * N * 2 ^ n := Nat.mul_dvd_mul_right hf _
-  haveI : NeZero (f * 2 ^ n) := ⟨fun h0 => hM.out (Nat.eq_zero_of_zero_dvd (h0 ▸ hdvd))⟩
+  have : NeZero (f * 2 ^ n) := ⟨fun h0 => hM.out (Nat.eq_zero_of_zero_dvd (h0 ▸ hdvd))⟩
   refine X.xvan hX D hT d f n φ ξ₁ hd' γ fun g => ?_
   obtain ⟨a, ha, hw⟩ := X.dirVal Ω (p * l * N * 2 ^ n) g
   have e1 : (X.redChar Ω (residue c.O) (X.prodX φ ξ₁) g : ResidueField c.O) = residue c.O (X.prodX φ ξ₁ a) := by
@@ -959,7 +959,7 @@ end Gal
 
 private theorem pow_cond {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : DirichletCharacter O N) {k : ℕ}
     (h : χ.conductor = 2 ^ k) : χ ^ 2 ^ k = 1 := by
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   have h1 : χ.primitiveCharacter ^ Nat.totient χ.conductor = 1 := by
     ext u
     rw [MulChar.pow_apply_coe, ← map_pow, ← Units.val_pow_eq_pow_val, ZMod.pow_totient, Units.val_one, map_one,
@@ -1035,7 +1035,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.dataEx :
       have h2 := ((hostSb h c.O ψ hψ l hlp hl2).1 v h1).1
       simp only [Sb, Finset.mem_filter, kk] at h1
       exact h1.2.2 (compAlg c.O h.N v h2).2.2.1
-    haveI : NeZero (pOne h.chi) := ⟨p1.ne_zero⟩
+    have : NeZero (pOne h.chi) := ⟨p1.ne_zero⟩
     obtain ⟨b1, b2⟩ := max_le_iff.1 (Nat.le_pow_clog one_lt_two _ : _ ≤ 2 ^ h.nIII l ψ)
     have hn : 3 ≤ h.nIII l ψ := (Nat.pow_le_pow_iff_right one_lt_two).1 (le_trans
       (Nat.le_mul_of_pos_right _ (pow_pos hlp.pos 2)) b2)

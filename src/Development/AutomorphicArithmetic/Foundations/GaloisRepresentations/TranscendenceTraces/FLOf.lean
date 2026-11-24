@@ -62,8 +62,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.extRes_of :
     ExtRes := by
   intro R _ F G T ε _
   obtain ⟨hKI, -, hGE, -, hι, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R G
-  haveI := hKI
-  haveI := hGE
+  have := hKI
+  have := hGE
   have key := GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective R F T (res R G) ε
   refine ⟨fun a => ?_, fun m m' h U i n k hin hnk y hy => ?_⟩
   · obtain ⟨m, hm⟩ := key.1 ((CochainComplex.singleFunctor (Shv R) 0).map a ≫ resAug G)
@@ -151,15 +151,15 @@ theorem UpperTheory.Gal.TranscendenceTraces.phiQis_of :
     PhiQis := by
   intro R _ Φ _ hΦ F
   obtain ⟨-, -, -, hq, hι, -, -, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R F
-  haveI : Φ.PreservesHomology := (Φ.exact_tfae.out 2 3).1 hΦ
+  have : Φ.PreservesHomology := (Φ.exact_tfae.out 2 3).1 hΦ
   let e := (HomologicalComplex.singleMapHomologicalComplex Φ (ComplexShape.up ℤ) 0).app F
   let φ : (HomologicalComplex.single (Shv R) (ComplexShape.up ℤ) 0 ⋙
       Φ.mapHomologicalComplex (ComplexShape.up ℤ)).obj F ⟶
       (Φ.mapHomologicalComplex (ComplexShape.up ℤ)).obj (res R F) :=
     (Φ.mapHomologicalComplex (ComplexShape.up ℤ)).map (resAug F)
-  haveI hφ : QuasiIso φ :=
+  have hφ : QuasiIso φ :=
     (inferInstance : QuasiIso ((Φ.mapHomologicalComplex (ComplexShape.up ℤ)).map (resAug F)))
-  haveI he : QuasiIso e.inv := inferInstance
+  have he : QuasiIso e.inv := inferInstance
   refine ⟨e.inv ≫ φ, quasiIso_comp e.inv φ, ?_⟩
   erw [HomologicalComplex.comp_f]
   rw [← Category.assoc]

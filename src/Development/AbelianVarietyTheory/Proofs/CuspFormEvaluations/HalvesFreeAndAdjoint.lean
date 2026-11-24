@@ -70,11 +70,11 @@ theorem nonempty_equiv_quot {R N : Type} [CommRing R] [IsDomain R] [AddCommGroup
     (hr : Module.finrank R N = r) :
     Nonempty ((N ⧸ (I • ⊤ : Submodule R N)) ≃ₗ[R] (Fin r → R ⧸ I)) := by
   classical
-  haveI : Module.Flat R N := inferInstance
+  have : Module.Flat R N := inferInstance
   have hrk : ∀ P : MaximalSpectrum (R ⧸ I),
       Module.finrank ((R ⧸ I) ⧸ P.1) (((R ⧸ I) ⧸ P.1) ⊗[R ⧸ I] ((R ⧸ I) ⊗[R] N)) = r := by
     intro P
-    letI := Ideal.Quotient.field P.1
+    let := Ideal.Quotient.field P.1
     rw [(TensorProduct.AlgebraTensorModule.cancelBaseChange R (R ⧸ I) ((R ⧸ I) ⧸ P.1)
       ((R ⧸ I) ⧸ P.1) N).finrank_eq]
     let p₀ : PrimeSpectrum ((R ⧸ I) ⧸ P.1) := ⟨⊥, Ideal.isPrime_bot⟩
@@ -331,7 +331,7 @@ theorem exists_adjoint_halves (N : ℕ) (hN : N ≠ 0) (I : Ideal (𝓞 E))
       (Dw.La ⧸ (I.map (H.bar : 𝓞 E →+* 𝓞 E) • ⊤ : Submodule (𝓞 E) Dw.La)))
       (v : Dw.La ⧸ (I • ⊤ : Submodule (𝓞 E) Dw.La)), ∃ w, ∀ u, B (g u) v = B u w := by
     intro g v
-    haveI := Dw.proj
+    have := Dw.proj
     obtain ⟨G, hG⟩ := Module.projective_lifting_property
       ((I.map (H.bar : 𝓞 E →+* 𝓞 E) • ⊤ : Submodule (𝓞 E) Dw.La).mkQ)
       (g ∘ₗ (I.map (H.bar : 𝓞 E →+* 𝓞 E) • ⊤ : Submodule (𝓞 E) Dw.La).mkQ)
@@ -383,9 +383,9 @@ theorem halves_free_and_adjoint : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       rw [hp]; exact Ideal.mem_span_singleton_self _
     rw [h0, Ideal.mul_bot, Ideal.mem_bot] at h1
     exact hpd (by exact_mod_cast h1)
-  haveI : Finite (𝓞 E ⧸ d.I.map (H.bar : 𝓞 E →+* 𝓞 E)) := Ideal.finiteQuotientOfFreeOfNeBot _ hJne
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have : Finite (𝓞 E ⧸ d.I.map (H.bar : 𝓞 E →+* 𝓞 E)) := Ideal.finiteQuotientOfFreeOfNeBot _ hJne
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨e⟩ := nonempty_equiv_quot (d.I.map (H.bar : 𝓞 E →+* 𝓞 E)) (Dw.p + Dw.q) Dw.rank
   exact ⟨exists_span _ _ e, fun x x' hx hx' => existsUnique_equiv _ _ e x x' hx hx',
     exists_adjoint_halves d.pd hpd d.I hp hI _ _ rfl rfl⟩
@@ -468,11 +468,11 @@ private theorem finite_quotient_I_and_map_bar_of_isLev {E : Type} [Field E] [Num
 private theorem finite_linearEquiv_laI_of_isLev {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
     {Dw : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l} {n : ℕ}
     {d : DeltaDat Xo c n} (hd : d.IsLev) : Finite (LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d) := by
-  haveI := (finite_quotient_I_and_map_bar_of_isLev hd).1
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have := (finite_quotient_I_and_map_bar_of_isLev hd).1
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨eI⟩ := GlobalTheory.ShortVal.Halves.nonempty_equiv_quot d.I (Dw.p + Dw.q) Dw.rank
-  haveI : Finite (LaI Xo c d) := Finite.of_equiv _ eI.toEquiv.symm
+  have : Finite (LaI Xo c d) := Finite.of_equiv _ eI.toEquiv.symm
   exact Finite.of_injective (fun g : LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d => (g : LaI Xo c d → LaI Xo c d))
     (fun g g' h => LinearEquiv.ext (congrFun h))
 
@@ -480,9 +480,9 @@ private theorem card_laJ_eq_pd_pow_of_isLev {E : Type} [Field E] [NumberField E]
     {Dw : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l} {n : ℕ}
     {d : DeltaDat Xo c n} (hd : d.IsLev) :
     Nat.card (LaJ Xo c d) = d.pd ^ (fdeg E * (Dw.p + Dw.q)) := by
-  haveI := (finite_quotient_I_and_map_bar_of_isLev hd).2
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have := (finite_quotient_I_and_map_bar_of_isLev hd).2
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨eJ⟩ := GlobalTheory.ShortVal.Halves.nonempty_equiv_quot (d.I.map (H.bar : 𝓞 E →+* 𝓞 E))
     (Dw.p + Dw.q) Dw.rank
   rw [Nat.card_congr eJ.toEquiv, Nat.card_fun, Nat.card_eq_fintype_card (α := Fin _),
@@ -495,7 +495,7 @@ private theorem norm_eF_ph_le_one_of_phiPin {E : Type} [Field E] [NumberField E]
     {x₀ : Fin n → LaJ Xo c d} (hpin : d.PhiPin ph ψ x₀) (hn : Dw.p + Dw.q ≤ n)
     (σ : d.c₂.F →+* ℂ) (x : Fin n → LaJ Xo c d) : ‖σ (d.eF (ph x))‖ ≤ 1 := by
   classical
-  haveI := finite_linearEquiv_laI_of_isLev hd
+  have := finite_linearEquiv_laI_of_isLev hd
   obtain ⟨-, huniq, adj, -, hadj⟩ :=
     GlobalTheory.ShortVal.Halves.halves_free_and_adjoint E H Dw l Xo c n d hd
   obtain ⟨hph1, hph2, hph3, hph4, hph5, -⟩ := hpin
@@ -550,9 +550,9 @@ theorem norm_coeff_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
       ‖σ (((⟨zeta d.l₂.M', d.c₂.zeta_mem⟩ : d.c₂.F) ^ (d.l₂.M' / d.pd)) ^ k)‖ = 1 :=
     norm_embedding_zpow_eq_one_of_pow_eq_one σ hpd.ne'
       (GlobalTheory.DatumInverseCharacter.root_pow d.c₂ (by rw [hM]; exact dvd_mul_left _ _))
-  haveI : Finite (LaJ Xo c d) :=
+  have : Finite (LaJ Xo c d) :=
     Nat.finite_of_card_ne_zero (by rw [card_laJ_eq_pd_pow_of_isLev hd]; exact pow_ne_zero _ hpd.ne')
-  haveI : Fintype (Fin n → LaJ Xo c d) := Fintype.ofFinite _
+  have : Fintype (Fin n → LaJ Xo c d) := Fintype.ofFinite _
   simp only [DeltaDat.w, map_mul, norm_mul, hz1, _root_.one_mul]
 
   rw [hph6 q, finsum_eq_sum_of_fintype, map_sum]

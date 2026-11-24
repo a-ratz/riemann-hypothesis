@@ -127,7 +127,7 @@ namespace GlobalTheory
 
 theorem closedPoint_specializing_in_open : ∀ (k : Type) [Field k] (X : Scheme.{0}) (q : X ⟶ Sp k) [LocallyOfFiniteType q] (U : X.Opens) (y : X), y ∈ U → ∃ x : X, IsClosed ({x} : Set X) ∧ y ⤳ x ∧ x ∈ U := by
   intro k _ X q _ U y hy
-  haveI : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace q
+  have : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace q
   have hne : (closure ({y} : Set X) ∩ (U : Set X)).Nonempty := ⟨y, subset_closure rfl, hy⟩
   have hlc : IsLocallyClosed (closure ({y} : Set X) ∩ (U : Set X)) :=
     ⟨U, closure {y}, U.isOpen, isClosed_closure, Set.inter_comm _ _⟩
@@ -275,8 +275,8 @@ theorem exists_sec_of_pull {F E : Type} [Field F] [Field E] [Algebra F E] {Y X :
     (hx : x ∈ nonzeroLocus σ) : ∃ θ : N.Sec, π x ∈ nonzeroLocus θ := by
   classical
   obtain ⟨n, V, c, hVa, hVc, hcov⟩ := exists_affine_chart_cover N hN
-  letI instV : ∀ a, Algebra F Γ(Y, V a) := fun a => (algX p (V a)).toAlgebra
-  letI instW : ∀ ab : Fin n × Fin n, Algebra F Γ(Y, V ab.1 ⊓ V ab.2) := fun ab => (algX p _).toAlgebra
+  let instV : ∀ a, Algebra F Γ(Y, V a) := fun a => (algX p (V a)).toAlgebra
+  let instW : ∀ ab : Fin n × Fin n, Algebra F Γ(Y, V ab.1 ⊓ V ab.2) := fun ab => (algX p _).toAlgebra
   let δ : (∀ a, Γ(Y, V a)) →ₗ[F] (∀ ab : Fin n × Fin n, Γ(Y, V ab.1 ⊓ V ab.2)) :=
     { toFun := fun f ab => dfun N V c hVc f ab.1 ab.2
       map_add' := fun f g => by
@@ -430,7 +430,7 @@ theorem core_gen (hK : GlobalTheory.Published.NadelVanishingAndNonKltDivisor) (h
       (∀ (Z : Closeds X) (e : ℕ), IsIrreducible (Z : Set X) → x ∈ Z → 1 ≤ e →
         topologicalKrullDim (Z : Set X) = e → 1 ≤ interNumRed ℂ Z (fun _ : Fin e => N)) →
       cls B hB = m • cls N hN + cls N' hN' → ∃ s : (tens K.bundle B).Sec, x ∈ nonzeroLocus s := by
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   intro K N N' B hN hN' hB m x hx hNn hNb hN'n hm hpos hBc
   have hm1 : 1 ≤ m := by omega
   obtain ⟨N₀, h₀, hc₀, hn₀, hb₀⟩ := _root_.GlobalTheory.nef_big_of_cls_eq_smul_add_smul hNN ℂ X q hq N N' hN hN' (2 * m - 1) 2 hNn hNb hN'n (by omega)
@@ -472,21 +472,21 @@ theorem core_gen (hK : GlobalTheory.Published.NadelVanishingAndNonKltDivisor) (h
 
 theorem effective_generation : GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.NefNumerics → ∀ (F : Type) [Field F] [NumberField F] (Y : Scheme.{0}) (p : Y ⟶ Sp F) (D : ℕ) [SmoothOfRelativeDimension D p], IsProjOver p → GeometricallyConnected p → 1 ≤ D → letI := algebraΓOfHom p; ∀ (K : CanonLB p D) (N N' B : LB Y) (hN : N.IsLB) (hN' : N'.IsLB) (hB : B.IsLB) (a m : ℕ) (y : Y), IsNef F N → IsNef F N' → (D + 1).choose 2 < m → (∃ (N₁ N₂ : LB Y) (h₁ : N₁.IsLB) (h₂ : N₂.IsLB), 0 < a ∧ a • cls N hN = cls N₁ h₁ + cls N₂ h₂ ∧ AmpleAt N₁ y ∧ IsNef F N₂) → cls B hB = m • cls N hN + cls N' hN' → ∃ s : (tens K.bundle B).Sec, y ∈ nonzeroLocus s := by
   intro hK hNN F _ _ Y p D _ hproj hgc hD1
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   intro K N N' B hN hN' hB a m y hNn hN'n hm hdec hBc
   obtain ⟨N₁, N₂, h₁, h₂, ha, hcls, hamp, hN₂⟩ := hdec
-  haveI : Algebra.IsAlgebraic ℚ F := Algebra.IsAlgebraic.of_finite ℚ F
+  have : Algebra.IsAlgebraic ℚ F := Algebra.IsAlgebraic.of_finite ℚ F
   let σ : F →+* ℂ := (IsAlgClosed.lift (M := ℂ) (R := ℚ) (S := F)).toRingHom
-  letI : Algebra F ℂ := σ.toAlgebra
+  let : Algebra F ℂ := σ.toAlgebra
   let π := pullback.fst p (spMap (algebraMap F ℂ))
   let q := pullback.snd p (spMap (algebraMap F ℂ))
   have H : IsPullback π q p (spMap (algebraMap F ℂ)) := IsPullback.of_hasPullback _ _
   obtain ⟨hXi, hXn, hsm, hqp, hsurj⟩ := _root_.GlobalTheory.BaseChangeVariety.baseChange_props F ℂ Y _ p q π D H hproj hgc
-  haveI := hXi; haveI := hXn; haveI := hsm
-  letI := algebraΓOfHom q
-  haveI : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
+  have := hXi; have := hXn; have := hsm
+  let := algebraΓOfHom q
+  have : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
   obtain ⟨y', rfl⟩ := hsurj y
-  haveI : Smooth q := SmoothOfRelativeDimension.smooth D q
+  have : Smooth q := SmoothOfRelativeDimension.smooth D q
   obtain ⟨m₁, A, s₁, hm₁, hA, hAa, hy⟩ := hamp
   obtain ⟨x, hxc, hyx, hxU⟩ := _root_.GlobalTheory.closedPoint_specializing_in_open ℂ _ q (π ⁻¹ᵁ nonzeroLocus s₁) y' hy
   have hAx : AmpleAt (N₁.pull π) x := _root_.GlobalTheory.AmplePull.ampleAt_pull Y _ π N₁ h₁ x ⟨m₁, A, s₁, hm₁, hA, hAa, hxU⟩
@@ -578,7 +578,7 @@ namespace GlobalTheory.HSApp
 theorem gapGe_stdWt {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} (Dw : Datum H) :
     GapGe 1 (GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) : AllWt.Weight Dw) := by
   intro τ k hk
-  simp only [gap, dif_pos hk, GlobalTheory.CompHt.stdWt]
+  simp only [gap, dite_eq_left hk, GlobalTheory.CompHt.stdWt]
   push_cast
   omega
 
@@ -587,7 +587,7 @@ theorem gapGe_sub_smul {E : Type} [Field E] [NumberField E] [IsCMField E] {H : R
     GapGe 0 (b - m • (GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) : AllWt.Weight Dw)) := by
   intro τ k hk
   have h1 := h τ k hk
-  simp only [gap, dif_pos hk, Pi.sub_apply, Pi.smul_apply, GlobalTheory.CompHt.stdWt] at h1 ⊢
+  simp only [gap, dite_eq_left hk, Pi.sub_apply, Pi.smul_apply, GlobalTheory.CompHt.stdWt] at h1 ⊢
   rw [nsmul_eq_mul, nsmul_eq_mul]
   push_cast
   linarith
@@ -687,13 +687,13 @@ open GlobalTheory.HSApp
 namespace GlobalTheory.HSApp
 theorem exists_canonical_section_ne_zero_at : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NefNumerics → GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalChartsForFan → GlobalTheory.Published.SemiAbelianLieSeminegative → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → 1 ≤ dimFlag Dw → ∀ (hV : IsVariety₀ TF.X Z) (la : AllWt.Weight Dw), GapGe (((dimFlag Dw + 1).choose 2 + 1 : ℕ) : ℤ) (la - FlagTan.kap Dw) → letI := hV.1; ∀ y ∈ U₀ TF.X Z, ∃ g : H0 (str₀ TF.X Z) (tens (CanonLB.all (str₀ TF.X Z) (dimFlag Dw)).bundle (L₀ TF.X Z (la - FlagTan.kap Dw))) ⊤, y ∈ nonzeroLocus (toSec g) := by
   intro hP hN hNa hS hT hL E _ _ _ H Dw l Xo c TF Z hF hD hV la hg
-  letI := hV.1
+  let := hV.1
   intro y hy
   set std : AllWt.Weight Dw := GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) with hstd_def
   set m : ℕ := (dimFlag Dw + 1).choose 2 + 1 with hm_def
   have hstd : GapGe 1 std := gapGe_stdWt Dw
   have hmu : GapGe 0 (la - FlagTan.kap Dw - m • std) := gapGe_sub_smul m _ hg
-  letI := algebraΓOfHom (str₀ TF.X Z)
+  let := algebraΓOfHom (str₀ TF.X Z)
   have nef : ∀ w : AllWt.Weight Dw, GapGe 0 w → IsNef c.F (L₀ TF.X Z w) :=
     fun w hw => _root_.GlobalTheory.T.base_weight_line_bundle_is_nef hP hN hL E H Dw l Xo c TF Z hF w hw
   obtain ⟨mu, hmu0, m', hm', hA⟩ := _root_.GlobalTheory.T.hodge_bundle_ample_on_regular_locus hP hN hS hT E H Dw l Xo c TF Z hF std hstd y hy
@@ -733,8 +733,8 @@ theorem globally_generated_on_open_of_weight_gap_ge : _root_.GlobalTheory.CovTop
   rw [mem_support_baseIdeal]
   push_neg
   obtain ⟨g, hgy⟩ := _root_.GlobalTheory.HSApp.exists_canonical_section_ne_zero_at hP hQ.nef hNa hS hT hL E H Dw l Xo c TF Z hF hD hV la hg y hy
-  haveI := hV.1
-  haveI : SmoothOfRelativeDimension (dimFlag Dw) (𝟙 (Y₀ TF.X Z) ≫ str₀ TF.X Z) := M.smooth
+  have := hV.1
+  have : SmoothOfRelativeDimension (dimFlag Dw) (𝟙 (Y₀ TF.X Z) ≫ str₀ TF.X Z) := M.smooth
   obtain ⟨g', hg'⟩ := GlobalTheory.ModifRefl.exists_sec_canon_tens_pull_id c.F (Y₀ TF.X Z) (str₀ TF.X Z) (dimFlag Dw) _ (isLB_L₀ TF.X Z _) g y hgy
   have hyM : (y : M.X) ∈ M.off := by
     rw [M.off_eq]

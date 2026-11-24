@@ -109,7 +109,7 @@ theorem place_cover : ∀ (D : D7) (k : Fin 2), ∀ w ∈ placesOver D.host.E (D
       rw [D.naut.plGw_inj k this]
   have hc : Nat.card (placesOver D.host.E (D.host.g k)) = Nat.card (D.nd.PlG k ⊕ D.nd.PlG k) := by
     rw [Nat.card_coe_set_eq, D.nd.g_split k, finrank_eq, Nat.card_sum, Nat.card_eq_fintype_card, D.nd.card_PlG k, two_mul]
-  haveI : Finite (placesOver D.host.E (D.host.g k)) := by
+  have : Finite (placesOver D.host.E (D.host.g k)) := by
     refine Nat.finite_of_card_ne_zero ?_
     rw [Nat.card_coe_set_eq, D.nd.g_split k]
     exact Module.finrank_pos.ne'

@@ -137,7 +137,7 @@ theorem datumEmbedding_add (hP : IsPsiFor ε lam T Ψ) (v₀ v v' : T.V) :
   have h1 := dt_memLp hP v₀ v
   have h2 := dt_memLp hP v₀ v'
   have h3 := dt_memLp hP v₀ (v + v')
-  simp only [uniformisationL2, toL2, dif_pos h1, dif_pos h2, dif_pos h3]
+  simp only [uniformisationL2, toL2, dite_eq_left h1, dite_eq_left h2, dite_eq_left h3]
   rw [← MemLp.toLp_add]
   exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun g => by simp [jfun, inner_add_right])
 
@@ -145,7 +145,7 @@ theorem datumEmbedding_smul (hP : IsPsiFor ε lam T Ψ) (v₀ : T.V) (c : ℂ) (
     uniformisationL2 ε Ψ v₀ (c • v) = c • uniformisationL2 ε Ψ v₀ v := by
   have h1 := dt_memLp hP v₀ v
   have h3 := dt_memLp hP v₀ (c • v)
-  simp only [uniformisationL2, toL2, dif_pos h1, dif_pos h3]
+  simp only [uniformisationL2, toL2, dite_eq_left h1, dite_eq_left h3]
   rw [← MemLp.toLp_const_smul]
   exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall fun g => by simp [jfun, inner_smul_right])
 
@@ -160,7 +160,7 @@ private theorem toL2_congr_of_eq_on_umat (F G : Matrix (Fin n) (Fin n) ℂ → �
   unfold toL2
   by_cases hF : MemLp (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε)
   · have hG : MemLp (fun g : Formalism.REAL.UJ ε => G (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε) := hfg ▸ hF
-    rw [dif_pos hF, dif_pos hG]
+    rw [dite_eq_left hF, dite_eq_left hG]
     exact MemLp.toLp_congr _ _ (Filter.Eventually.of_forall h)
   · have hG : ¬ MemLp (fun g : Formalism.REAL.UJ ε => G (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε) := hfg ▸ hF
     rw [dite_eq_right hF, dite_eq_right hG]
@@ -259,7 +259,7 @@ theorem datumEmbedding_self_ne_zero (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv
   intro h0
   have hm := dt_memLp hP v₀ v₀
   have hc : Continuous (fun y : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat y) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hcont : Continuous (fun g : Formalism.REAL.UJ ε => jfun Ψ v₀ v₀ (Formalism.MainNotions.S.umat g)) := by
     rw [continuous_iff_continuousAt]
     intro g
@@ -269,8 +269,8 @@ theorem datumEmbedding_self_ne_zero (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv
       | (letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAddCommGroup
          letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
          exact hF.continuousOn.continuousAt (hU.mem_nhds hgU))
-      | (letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedAddCommGroup
-         letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedSpace
+      | (let : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedAddCommGroup
+         let : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedSpace
          exact hF.continuousOn.continuousAt (hU.mem_nhds hgU))
       | (letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.frobeniusNormedAddCommGroup
          letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.frobeniusNormedSpace
@@ -283,12 +283,12 @@ theorem datumEmbedding_self_ne_zero (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv
     exact ((innerSL ℂ v₀).comp (ContinuousLinearMap.apply ℂ T.V v₀)).continuous.continuousAt.comp
       (hFc.comp hc.continuousAt)
   have hae : (fun g : Formalism.REAL.UJ ε => jfun Ψ v₀ v₀ (Formalism.MainNotions.S.umat g)) =ᵐ[Formalism.REAL.muG ε] 0 := by
-    have h1 : uniformisationL2 ε Ψ v₀ v₀ = hm.toLp _ := by simp only [uniformisationL2, toL2, dif_pos hm]
+    have h1 : uniformisationL2 ε Ψ v₀ v₀ = hm.toLp _ := by simp only [uniformisationL2, toL2, dite_eq_left hm]
     rw [h1] at h0
     have h2 := hm.coeFn_toLp
     rw [h0] at h2
     exact h2.symm.trans (Lp.coeFn_zero ℂ 2 (Formalism.REAL.muG ε))
-  haveI : (Formalism.REAL.muG ε).IsOpenPosMeasure := by
+  have : (Formalism.REAL.muG ε).IsOpenPosMeasure := by
     unfold Formalism.REAL.muG
     infer_instance
   have hall := (Continuous.ae_eq_iff_eq (Formalism.REAL.muG ε) hcont continuous_zero).1 hae

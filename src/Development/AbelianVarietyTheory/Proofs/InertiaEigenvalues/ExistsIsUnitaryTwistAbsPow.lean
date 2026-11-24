@@ -166,7 +166,7 @@ theorem exists_isUnitary_twist_absPow (π : CG E a) (ha : 1 ≤ a) :
   · change ‖((ω.1 x : ℂˣ) : ℂ) * ((((absPow E (-(c / a))).1 x) ^ a : ℂˣ) : ℂ)‖ = 1
     rw [Units.val_pow_eq_pow_val, absPow_val_apply, norm_mul, norm_pow, hc x,
       show ((-(c / a) : ℝ) : ℂ) * (logNorm E x : ℂ) = ((-(c / a) * logNorm E x : ℝ) : ℂ) by push_cast; ring,
-      Complex.norm_exp_ofReal, ← Real.exp_nat_mul, ← Real.exp_add]
+      Complex.norm_exp_ofReal, ← Real.exp_natCast_mul, ← Real.exp_add]
     rw [Real.exp_eq_one_iff]
     field_simp
     ring

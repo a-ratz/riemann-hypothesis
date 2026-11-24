@@ -163,7 +163,7 @@ theorem integrable_unipotent_rank_one (ph ρ : ℕ) (σ : Equiv.Perm (Fin ph)) (
   have b2 : SigmaFinite (volume : Measure ((U.LW σ → ℂ) × (G.UT ph → ℂ))) := by
     rw [Measure.volume_eq_prod]; infer_instance
   have b3 : SigmaFinite (volume : Measure (U.XiH ph (0 + 1) σ)) := by
-    haveI := b1; haveI := b2
+    have := b1; have := b2
     rw [Measure.volume_eq_prod]; infer_instance
   have b4 : SigmaFinite (U.muXiH ph (0 + 1) σ) := by unfold U.muXiH; exact b3
   have hg : MeasurePreserving (fun b : U.XiH ph (0 + 1) σ => (b, v₀)) volume

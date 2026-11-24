@@ -83,7 +83,7 @@ theorem hodgeTate_inclusion_chart : ∀ (p : ℕ) [Fact p.Prime], HTFSt p := by
   intro p _ T _ _ _ _ _ _ hp G _ _ D A x d F xx hC C _ _ _ v O _ _ hv _ _ iota hiota
   obtain ⟨hL1, -, -, -, -⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨-, -, -, -, -, -, hcube, -⟩ := hL1
-  letI : Algebra ℤ_[p] O := ((GlobalTheory.ChF.padicInt_algebra_of_isAdicComplete_and_matrix_unique p O).1).some
+  let : Algebra ℤ_[p] O := ((GlobalTheory.ChF.padicInt_algebra_of_isAdicComplete_and_matrix_unique p O).1).some
   have hFH : FH p (F.mapF iota) := by
     have h := GlobalTheory.FormalTorsion.fhSt p
     unfold FHSt at h

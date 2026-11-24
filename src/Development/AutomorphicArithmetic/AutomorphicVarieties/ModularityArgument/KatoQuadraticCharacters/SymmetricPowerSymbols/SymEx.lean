@@ -155,10 +155,10 @@ private theorem prod_sg (c k : ℕ) (x : Fin 2 → ℚ) (τ τ' : ℍ) (hk : 0 <
     ring
   rw [Finset.prod_congr rfl h1, key, GlobalTheory.Sieg.sg]
   congr 1
-  · simp only [ee, ← Complex.exp_nat_mul, h]
+  · simp only [ee, ← Complex.exp_natCast_mul, h]
     congr 1
     ring
-  · simp only [hT, pt, ee, ← Complex.exp_nat_mul, h]
+  · simp only [hT, pt, ee, ← Complex.exp_natCast_mul, h]
     congr 1
     field_simp
 
@@ -191,7 +191,7 @@ private theorem neBot : (Filter.codiscreteWithin Hs).NeBot := by
     show IsOpen {z : ℂ | 0 < z.im}
     exact isOpen_lt continuous_const Complex.continuous_im
   have hnb : (nhdsWithin Complex.I (Hs \ {Complex.I})).NeBot := by
-    rw [Set.diff_eq, nhdsWithin_inter_of_mem
+    rw [Set.sdiff_eq, nhdsWithin_inter_of_mem
       (mem_nhdsWithin_of_mem_nhds (hopen.mem_nhds hI))]
     infer_instance
   refine hnb.mono ?_
@@ -203,7 +203,7 @@ private theorem mob_dg (k : ℕ) (hk : 0 < k) (z : ℂ) : mob (dg k) z = k * z :
 private theorem prod_siegel {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε)
     (c k : ℕ) (x : Fin 2 → ℚ) (hA : GlobalTheory.Sieg.admitted c x) (hk : 0 < k) (hc : Nat.Coprime c k) :
     ∏ j ∈ Finset.range k, siegel X c ![x 0, (x 1 + j) / k] = X.sl (dg k) (siegel X c x) := by
-  haveI := neBot
+  have := neBot
   have hk0 : (k : ℚ) ≠ 0 := by exact_mod_cast hk.ne'
   have hAj : ∀ j ∈ Finset.range k, GlobalTheory.Sieg.admitted c ![x 0, (x 1 + j) / k] := by
     intro j _
@@ -244,7 +244,7 @@ theorem UpperTheory.V.Z.Kato.Sym.sgIsog :
   have hkM : k * M ≠ 0 := NeZero.ne _
   have hk : 0 < k := Nat.pos_of_ne_zero (left_ne_zero_of_mul hkM)
   have hM : 0 < M := Nat.pos_of_ne_zero (right_ne_zero_of_mul hkM)
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hck : c.Coprime k := Nat.Coprime.coprime_dvd_right (dvd_mul_right k M) hc
   have hcM : c.Coprime M := Nat.Coprime.coprime_dvd_right (dvd_mul_left M k) hc
   have hx0 : (x 0).val < M := ZMod.val_lt _
@@ -324,7 +324,7 @@ namespace UpperTheory.V.Z.Kato.Sym
 
 private theorem mul_eq_up (k M : ℕ) [NeZero k] [NeZero M] (x : Row M) (i : Fin 2) (z : ZMod (k * M))
     (h : ZMod.castHom (dvd_mul_left M k) (ZMod M) z = x i) : up k M x i = (k : ZMod (k * M)) * z := by
-  haveI : NeZero (k * M) := ⟨mul_ne_zero (NeZero.ne k) (NeZero.ne M)⟩
+  have : NeZero (k * M) := ⟨mul_ne_zero (NeZero.ne k) (NeZero.ne M)⟩
   obtain ⟨n, rfl⟩ := ZMod.natCast_zmod_surjective z
   rw [map_natCast] at h
   simp only [up]
@@ -333,7 +333,7 @@ private theorem mul_eq_up (k M : ℕ) [NeZero k] [NeZero M] (x : Row M) (i : Fin
 
 private theorem cast_eq_zero_of (k M : ℕ) [NeZero k] [NeZero M] (z : ZMod (k * M))
     (h : (k : ZMod (k * M)) * z = 0) : ZMod.castHom (dvd_mul_left M k) (ZMod M) z = 0 := by
-  haveI : NeZero (k * M) := ⟨mul_ne_zero (NeZero.ne k) (NeZero.ne M)⟩
+  have : NeZero (k * M) := ⟨mul_ne_zero (NeZero.ne k) (NeZero.ne M)⟩
   obtain ⟨n, rfl⟩ := ZMod.natCast_zmod_surjective z
   rw [← Nat.cast_mul, ZMod.natCast_eq_zero_iff] at h
   rw [map_natCast, ZMod.natCast_eq_zero_iff]
@@ -458,7 +458,7 @@ private theorem mv_swap (X : Tower Ω ε) (m : ℕ) (hm : 0 < m) (τ ρ ρ' : X.
     rcases Nat.eq_or_lt_of_le (Nat.succ_le_of_lt hm) with h | h
     · subst h
       exact ⟨_, by rw [pow_one]; exact (mul_inv_cancel_left _ _).symm⟩
-    · haveI : Fact (1 < m) := ⟨h⟩
+    · have : Fact (1 < m) := ⟨h⟩
       exact ⟨1, by rw [ZMod.val_one, pow_one, one_pow, mul_one]⟩
   have e : ρ.trans τ = τ.trans ρ' := RingEquiv.ext fun f => (hc f).symm
   rw [e, one_mul, ← mul_one s] at h5
@@ -468,7 +468,7 @@ private theorem mv_swap (X : Tower Ω ε) (m : ℕ) (hm : 0 < m) (τ ρ ρ' : X.
 open Classical in
 theorem pIsog : PIsog := by
   intro Ω _ _ _ ε X m c d k M _ _ hm hc hd hc6 hd6 hL t w' w ht hw' hw
-  haveI : NeZero (k * M) := ⟨mul_ne_zero (NeZero.ne k) (NeZero.ne M)⟩
+  have : NeZero (k * M) := ⟨mul_ne_zero (NeZero.ne k) (NeZero.ne M)⟩
   have hk : 0 < k := Nat.pos_of_ne_zero (NeZero.ne k)
   have hM : 0 < M := Nat.pos_of_ne_zero (NeZero.ne M)
   have hcM : Nat.Coprime c M := hL.2.1.coprime_mul_left_right
@@ -673,11 +673,11 @@ theorem UpperTheory.V.Z.Kato.Sym.recip :
     rw [map_one] at c1 c4
     rw [map_zero] at c2 c3
     exact ⟨c1, c2, c3, c4⟩
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero (M : Ω) := ⟨by exact_mod_cast hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : NeZero M := ⟨hM.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero (M : Ω) := ⟨by exact_mod_cast hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have hex : ∀ t : Ω ≃ₐ[ℚ] Ω, ∃ d : ℕ, t ζ = ζ ^ d := fun t => by
     obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one (ξ := t ζ) (by rw [← map_pow, hζ.pow_eq_one, map_one])
     exact ⟨i, hi.symm⟩
@@ -814,7 +814,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PC.eqv :
   have hu : (unU X (slR X (ofSL γ))) (w s x y) = slU X (ofSL γ) (w s x y) := Units.ext rfl
   rw [hu] at hC
   rcases Nat.lt_or_ge 1 m with h1m | h1m
-  · haveI : Fact (1 < m) := ⟨h1m⟩
+  · have : Fact (1 < m) := ⟨h1m⟩
     have hcyc := ((lgB Ω ε X m hm).2.2.2.2.2.2 1 1).2.1
     rw [hcyc, ZMod.val_one, pow_one] at hC
     exact hC
@@ -942,7 +942,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PC.loc :
   obtain ⟨hgr, hok, -⟩ := rowB Ω M hM
   obtain ⟨-, hadm, -⟩ := admB Ω ε X
   classical
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   have pt : ∀ a b : Row M, Ok a b → IsPt X m (sg X c M a) (sg X d M b) (t (sg X c M a) (sg X d M b)) := by
     intro a b hab
     exact (ht _ _ (sgB Ω ε X c M hc hc6 hM hcM a (hok a b hab).1).1 (sgB Ω ε X d M hd hd6 hM hdM b (hok a b hab).2.1).1).1
@@ -1117,9 +1117,9 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω 
 
 private theorem eOm_red (ε : Ω →+* ℂ) {k m : ℕ} (hk : 0 < k) (hm : 0 < m) :
     eOm ε (1 / ((k * m : ℕ) : ℚ)) ^ k = eOm ε (1 / (m : ℚ)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   apply ε.injective
-  rw [map_pow, eps_eOm, eps_eOm, ← Complex.exp_nat_mul]
+  rw [map_pow, eps_eOm, eps_eOm, ← Complex.exp_natCast_mul]
   congr 1
   have h1 : (k : ℂ) ≠ 0 := by exact_mod_cast hk.ne'
   have h2 : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -1132,7 +1132,7 @@ private theorem zt_red (X : Tower Ω ε) {k m : ℕ} (hk : 0 < k) (hm : 0 < m) :
 
 private theorem cast_val {k m : ℕ} (hk : 0 < k) (hm : 0 < m) (i : ZMod (k * m)) :
     (ZMod.castHom (dvd_mul_left m k) (ZMod m) i).val = i.val % m := by
-  haveI : NeZero (k * m) := ⟨(Nat.mul_pos hk hm).ne'⟩
+  have : NeZero (k * m) := ⟨(Nat.mul_pos hk hm).ne'⟩
   rw [ZMod.castHom_apply, ZMod.cast_eq_val, ZMod.val_natCast]
 
 private theorem lg_red (X : Tower Ω ε) {k m : ℕ} (hk : 0 < k) (hm : 0 < m) {a b : Kb X} (hb : b ≠ 0)
@@ -1161,7 +1161,7 @@ private theorem ka_red (X : Tower Ω ε) {k m : ℕ} (hk : 0 < k) (hm : 0 < m) {
 
 private theorem cyc_red (X : Tower Ω ε) {k m : ℕ} (hk : 0 < k) (hm : 0 < m) (s : Ω ≃ₐ[ℚ] Ω) :
     cyc m s = ZMod.castHom (dvd_mul_left m k) (ZMod m) (cyc (k * m) s) := by
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   obtain ⟨hp, -, -, -, -, -, hcyc⟩ := lgB Ω ε X m hm
   obtain ⟨-, -, -, -, -, -, hcyc2⟩ := lgB Ω ε X (k * m) (Nat.mul_pos hk hm)
   have hζ : IsPrimitiveRoot (eOm ε (1 / (m : ℚ))) m :=
@@ -1317,7 +1317,7 @@ theorem UpperTheory.V.Z.Kato.Sym.pSymb :
   refine ⟨fun s x y => if h : UpperTheory.V.Z.Kato.Sym.Ok x y then Classical.choose (key s x y h) else 1, ?_⟩
   unfold UpperTheory.V.Z.Kato.Sym.IsSymb
   intro s x y hxy
-  simp only [dif_pos hxy]
+  simp only [dite_eq_left hxy]
   exact Classical.choose_spec (key s x y hxy)
 end -- clump:auto
 end -- clump:auto

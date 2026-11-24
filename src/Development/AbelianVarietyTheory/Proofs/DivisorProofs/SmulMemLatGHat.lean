@@ -152,7 +152,7 @@ theorem exists_marking : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (Dw : Datum H)
   intro D H Dw l l₂ W r hr ι hι hM hMb k
   subst hr
   rw [latR_rfl]
-  haveI := Dw.proj
+  have := Dw.proj
   have hM0 : l.M ≠ 0 := by have := l.three_le; omega
   have hM2 : l₂.M ≠ 0 := by have := l₂.three_le; omega
   let fv : (Fin W.rank → D.host.E) →+ (Fin W.rank → Af D.host.F ⊗[D.host.F] D.host.E) :=

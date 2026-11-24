@@ -106,10 +106,10 @@ private theorem fin_sel (S : Finset (Pl F)) :
     rw [hc, hu]
     have h1 : Nat.card ↥(rootsOfUnity 2 F) ≠ 0 := Nat.card_pos.ne'
     have h2 : Nat.card { c : Kum.ClS (S : Set (Pl F)) // c ^ 2 = 1 } ≠ 0 := by
-      haveI : Nonempty { c : Kum.ClS (S : Set (Pl F)) // c ^ 2 = 1 } := ⟨⟨1, one_pow 2⟩⟩
+      have : Nonempty { c : Kum.ClS (S : Set (Pl F)) // c ^ 2 = 1 } := ⟨⟨1, one_pow 2⟩⟩
       exact Nat.card_pos.ne'
     exact mul_ne_zero (mul_ne_zero (pow_ne_zero _ two_ne_zero) h1) h2
-  haveI := Nat.finite_of_card_ne_zero hne
+  have := Nat.finite_of_card_ne_zero hne
   let f : {c : Fˣ ⧸ (powMonoidHom 2 : Fˣ →* Fˣ).range | c.out ∈ Kum.SelK (S : Set (Pl F)) 2} →
       (↥(Kum.SelK (S : Set (Pl F)) 2) ⧸ (Kum.powK F 2).subgroupOf (Kum.SelK (S : Set (Pl F)) 2)) :=
     fun c => QuotientGroup.mk ⟨c.1.out, c.2⟩
@@ -142,7 +142,7 @@ private theorem quotient_out_eq_mul_sq (a : Fˣ) :
 private theorem mem_sel (y : F) (a : Fˣ) (h : TPos (a : F)) (h' : D.Ev ((a : F) * y)) :
     (a : Fˣ ⧸ (powMonoidHom 2 : Fˣ →* Fˣ).range) ∈ D.Sel y := by
   obtain ⟨b, hb⟩ := quotient_out_eq_mul_sq a
-  simp only [Dat.Sel, Set.mem_setOf_eq]
+  simp only [Dat.Sel, Set.mem_ofPred_eq]
   rw [hb]
   constructor
   · intro σ
@@ -159,7 +159,7 @@ open UpperTheory.V.Z.Sym.Glob in
 theorem UpperTheory.V.Z.Sym.Glob.selCard :
     UpperTheory.V.Z.Sym.Glob.SelCard := by
   intro F _ _ Δ D hOk
-  haveI := hOk.real
+  have := hOk.real
   have hfin1 : (D.Sel 1).Finite := by
     refine (fin_sel D.Sg).subset ?_
     intro c hc v hv

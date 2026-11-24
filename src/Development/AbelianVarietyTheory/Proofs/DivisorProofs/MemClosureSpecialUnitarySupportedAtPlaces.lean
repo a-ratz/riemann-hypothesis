@@ -116,7 +116,7 @@ theorem tendsto_idem (η : Finset (HeightOneSpectrum (𝓞 F)) → AF F)
     intro v
     refine tendsto_const_nhds.congr' ?_
     filter_upwards [eventually_ge_atTop {v}] with T hT
-    exact (if_pos (hT (Finset.mem_singleton_self v))).symm
+    exact (ite_eq_left (hT (Finset.mem_singleton_self v))).symm
   let s : (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) → Af F :=
     RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) cofinite
@@ -150,8 +150,8 @@ theorem mem_closure_supp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     rw [cT_trunc _ (StrongApprox.sigR_algebraMap σ _)]
     exact idempotentTruncation_preserves_form (he T) (g : HR (AF F) σ J).2
   let x : Finset (HeightOneSpectrum (𝓞 F)) → HA (AF F) σ J := fun T => (⟨u T, hu T⟩ : HR (AF F) σ J)
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
   have hmat : ∀ A : Matrix (Fin M) (Fin M) (AF F ⊗[F] E),
       Tendsto (fun T => 1 + ι (η T) • (A - 1)) atTop (𝓝 A) := by
     intro A

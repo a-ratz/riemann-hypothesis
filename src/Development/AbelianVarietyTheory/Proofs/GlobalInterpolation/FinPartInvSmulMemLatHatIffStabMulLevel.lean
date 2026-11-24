@@ -117,7 +117,7 @@ theorem mem_latHat_iff : StabTransitive → ∀ (F E : Type) [Field F] [NumberFi
     obtain ⟨k', hk'⟩ := exists_fin σ J h⁻¹
     have h1 : k'⁻¹ ∈ {h : HA (Af F) σ J | actV (Af F) σ J h⁻¹ (fun i => inclR (F := F) (Af F) (x 0 i)) ∈
         latHat F E (L : Set (Fin M → E))} := by
-      rw [Set.mem_setOf_eq, inv_inv, actV_eq, hk', ← projFin_smul]
+      rw [Set.mem_ofPred_eq, inv_inv, actV_eq, hk', ← projFin_smul]
       exact hm
     rw [hO] at h1
     obtain ⟨af, haf, kf, hkf, e⟩ := h1

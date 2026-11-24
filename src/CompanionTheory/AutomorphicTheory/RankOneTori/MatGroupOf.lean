@@ -434,7 +434,7 @@ theorem root_haar (hk : 1 ≤ k) (L : LocBessel k r) (hc : L.c ≠ 0) {γ : Poin
   have ht0 : t ≠ 0 := (ENNReal.ofReal_pos.2 (by positivity)).ne'
   have ht1 : t ≠ ⊤ := ENNReal.ofReal_ne_top
   have hroot' : IsRootMeas { L with c := cStd } γ g (t • μR) := by
-    refine ⟨by rw [Measure.smul_apply, hroot.1, smul_zero], ?_⟩
+    refine ⟨by rw [smul_apply, hroot.1, smul_zero], ?_⟩
     show (t • μR).map (rootCoords (k0 + 1) r L.z γ) =
       ENNReal.ofReal ((‖cStd‖ / (2 * Real.pi)) ^ (rootPat γ).card) • volume
     rw [Measure.map_smul _ (Formalism.MainNotions.BigCellDensity.meas_rootCoords L.z γ).aemeasurable,

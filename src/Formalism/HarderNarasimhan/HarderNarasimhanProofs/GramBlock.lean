@@ -120,7 +120,7 @@ theorem gram_block_determinant : GramBlock := by
       by_cases hij : i = j
       · simp [hij]
       · simp [hij]
-    · rw [if_neg (fun h => hvw (congrArg Sigma.fst h))]
+    · rw [ite_eq_right (fun h => hvw (congrArg Sigma.fst h))]
       exact hEv v w hvw _ (hfW ⟨v, i⟩).2 _ (hfW ⟨w, j⟩).2
   have hspanf : Submodule.span ℝ (Set.range f) = W := by
     apply le_antisymm
@@ -260,7 +260,7 @@ theorem gram_block_determinant : GramBlock := by
         subst hab
         rw [hiso v _ (hfW ⟨v, i⟩).2 _ (hfW ⟨v, j⟩).2, orthonormal_iff_ite.1 hfon]
         split_ifs <;> simp
-      · rw [if_neg (fun h => hab (congrArg Sigma.fst h))]
+      · rw [ite_eq_right (fun h => hab (congrArg Sigma.fst h))]
         exact hEv' _ _ hab _ (hTf a).1 _ (hTf b).1
     rw [hGT, hGu, hreidx, hdiag, Matrix.det_diagonal, hprod]
     ring

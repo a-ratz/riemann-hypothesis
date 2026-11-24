@@ -56,8 +56,8 @@ namespace GlobalTheory.CuspGeneric
 theorem avg_add_right (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [LocallyCompactSpace G]
     [SecondCountableTopology G] [T2Space G] (Γ : AddSubgroup G) (hΓ : IsCoLat Γ) (Φ : G → ℂ) (hΦ : Per Γ Φ) (y : G) :
     avg Γ (fun x => Φ (x + y)) = avg Γ Φ := by
-  letI : MeasurableSpace G := borel G
-  haveI : BorelSpace G := ⟨rfl⟩
+  let : MeasurableSpace G := borel G
+  have : BorelSpace G := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one G Γ hΓ
   have hΨ : Per Γ (fun x => Φ (x + y)) :=
     ⟨hΦ.1.comp (continuous_add_const y), fun γ hγ x => by simp only [add_assoc, hΦ.2 γ hγ]⟩

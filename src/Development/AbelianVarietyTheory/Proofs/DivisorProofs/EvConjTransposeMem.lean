@@ -62,7 +62,7 @@ namespace GlobalTheory.PsCo.PcEF.CoefPolyPf
 variable {n : ℕ} {ε : Fin n → Bool}
 
 lemma continuous_toMK : Continuous (fun k : KG ε => toMK k) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+  Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
 
 lemma continuous_ev (P : Poly n) : Continuous (fun g : Mat n => ev g P) := by
   have h : Continuous (fun g : Mat n =>
@@ -277,7 +277,7 @@ def avgSpan (ε : Fin n → Bool) (T : Mat n → (W →L[ℂ] W)) (v : W) : Subm
 
 lemma mem_avgSpan {T : Mat n → (W →L[ℂ] W)} (hT : Formalism.MainNotions.S.IsURepOn (Formalism.REAL.Kset ε) T) (v : W) :
     v ∈ avgSpan ε T v := by
-  haveI := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ W
   by_contra hv
   rw [← Submodule.orthogonal_orthogonal (avgSpan ε T v), Submodule.mem_orthogonal] at hv
   push_neg at hv
@@ -298,7 +298,7 @@ lemma mem_avgSpan {T : Mat n → (W →L[ℂ] W)} (hT : Formalism.MainNotions.S.
 
 lemma coef_avgSpan {T : Mat n → (W →L[ℂ] W)} (hT : Formalism.MainNotions.S.IsURepOn (Formalism.REAL.Kset ε) T) (v w : W) {x : W}
     (hx : x ∈ avgSpan ε T v) : ∃ Q : Poly n, ∀ k ∈ Formalism.REAL.Kset ε, ⟪w, T k x⟫_ℂ = ev k Q := by
-  haveI := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ W
   induction hx using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨P, rfl⟩ := hx

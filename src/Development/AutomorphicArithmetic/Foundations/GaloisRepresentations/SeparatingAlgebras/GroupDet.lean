@@ -121,11 +121,11 @@ theorem UpperTheory.Gal.Gen.groupDet_pf :
     simp only [this]
     simp
   have hdet : (A' + (l : k) • B).det = (∑ u, a u) ^ Fintype.card H := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [Matrix.det_of_isUpperTriangular]
     · simp [hTe]
     · intro i j hij
       have hji : j < i := hij
-      rw [hTe i j hji.le, if_neg hji.ne', mul_zero]
+      rw [hTe i j hji.le, ite_eq_right hji.ne', mul_zero]
   have hnA : ∀ i j, ‖A' i j‖ ≤ 1 := by
     intro i j
     rw [hA']

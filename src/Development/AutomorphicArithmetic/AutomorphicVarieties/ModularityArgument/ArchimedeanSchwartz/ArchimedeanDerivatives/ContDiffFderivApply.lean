@@ -129,7 +129,7 @@ theorem exists_comm_lift {W : Type} [Ring W] {n : ℕ} (x : Fin n → Fin n → 
   have hS : ∀ u ∈ S, ∀ v ∈ S, u * v = v * u := by
     rintro _ ⟨p, rfl⟩ _ ⟨q, rfl⟩
     exact (hx _ _ _ _).eq
-  letI : IsMulCommutative (Subring.closure S) :=
+  let : IsMulCommutative (Subring.closure S) :=
     Subring.isMulCommutative_closure (fun a ha b hb _ => hS a ha b hb)
   open scoped IsMulCommutative in
   refine ⟨(Subring.closure S).subtype.comp
@@ -362,11 +362,11 @@ private theorem weyl_rel (τ : K →+* ℂ) (a b c e : Fin n) :
   change pd τ a b (fun z => coordC τ c e z * F.1 z) y - coordC τ c e y * pd τ a b F.1 y =
     ((if a = c ∧ b = e then (1 : Module.End ℂ (Smth K n)) else 0) F).1 y
   rw [pd_eq, pd_eq, fderiv_fun_mul (coordC τ c e).differentiableAt (diff_of F y), ContinuousLinearMap.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, coordC_eDir]
+  simp only [add_apply, smul_apply, smul_eq_mul, coordC_eDir]
   by_cases h : a = c ∧ b = e
-  · simp only [if_pos h, Module.End.one_apply]
+  · simp only [ite_eq_left h, Module.End.one_apply]
     linear_combination (-(F.1 y) / 2) * Complex.I_mul_I
-  · simp only [if_neg h, LinearMap.zero_apply, ZeroMemClass.coe_zero, Pi.zero_apply]
+  · simp only [ite_eq_right h, LinearMap.zero_apply, ZeroMemClass.coe_zero, Pi.zero_apply]
     ring
 
 private theorem prod_map_apply {ι : Type} (A : ι → Module.End ℂ (Smth K n))

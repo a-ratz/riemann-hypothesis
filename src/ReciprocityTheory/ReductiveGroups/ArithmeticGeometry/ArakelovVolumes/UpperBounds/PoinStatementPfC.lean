@@ -116,7 +116,7 @@ theorem isOpen_Bset (X : Data E r) (x : Frame X.Ψ r) (ρ : ℝ) : IsOpen (Bset 
     have he : X.dom = ⋂ τ : X.Ψ, ({y : Frame X.Ψ r | (mat y τ).det ≠ 0} ∩
         ⋂ i : Fin (r + 1), {y : Frame X.Ψ r | 0 < psgn X.p0 i * (dmin X.Gm y τ i).re}) := by
       ext y
-      simp only [Data.dom, GG, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+      simp only [Data.dom, GG, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
     rw [he]
     refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
     · have hmat : Continuous fun y : Frame X.Ψ r => mat y τ := by
@@ -239,7 +239,7 @@ private theorem gram_mat_lact (X : Data E r) {γ : GL (Fin r) E} (hγ : γ ∈ X
 
 private theorem lact_mem_dom_of_mem_Γ (X : Data E r) {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ) {x : Frame X.Ψ r}
     (hx : x ∈ X.dom) : lact γ x ∈ X.dom := by
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hx ⊢
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx ⊢
   intro τ
   obtain ⟨h1, h2⟩ := hx τ
   refine ⟨?_, fun i => ?_⟩
@@ -286,7 +286,7 @@ theorem key_int (X : Data E r) (la : Wt X.Ψ r) (W : Frame X.Ψ r → ℝ≥0∞
     hP.continuousOn.comp hgc.continuousOn hmaps
   have hmeas : AEMeasurable (fun w => ‖P (lact γ (cpt X x w))‖ₑ ^ 2 * W (lact γ (cpt X x w)))
       (volume.restrict (Bset X x ρ)) :=
-    ((hPc.aemeasurable hBm).enorm.pow_const 2).mul (hW.1.comp hgc.measurable).aemeasurable
+    ((hPc.aemeasurable hBm).eNorm.pow_const 2).mul (hW.1.comp hgc.measurable).aemeasurable
   have hfin := ae_lt_top' hmeas hI
   refine lintegral_mono_ae ?_
   filter_upwards [hfin, ae_restrict_mem hBm] with w hw hwB
@@ -336,7 +336,7 @@ theorem supR_mono (X : Data E r) (la : Wt X.Ψ r) (W : Frame X.Ψ r → ℝ≥0�
 theorem Bset_mono (X : Data E r) (x : Frame X.Ψ r) {ρ ρ' : ℝ} (h : ρ' ≤ ρ) :
     Bset X x ρ' ⊆ Bset X x ρ := by
   intro w hw
-  simp only [Bset, Set.mem_setOf_eq] at hw ⊢
+  simp only [Bset, Set.mem_ofPred_eq] at hw ⊢
   exact ⟨lt_of_lt_of_le hw.1 h, hw.2⟩
 
 theorem ball_of (hA : SubMeanStatement (E := E)) (hS : SumBallStatement (E := E)) :
@@ -418,14 +418,14 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
 theorem bchar_ne (X : Data E r) (la : Wt X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
     bchar la b ≠ 0 := by
-  simp only [Bor, Set.mem_setOf_eq] at hb
+  simp only [Bor, Set.mem_ofPred_eq] at hb
   unfold bchar
   refine Finset.prod_ne_zero_iff.mpr fun τ _ => Finset.prod_ne_zero_iff.mpr fun i _ => zpow_ne_zero _ ?_
   obtain ⟨hd, ht⟩ := hb τ
   have hT : Matrix.BlockTriangular (mat b τ) id := by
     intro a c h
     exact ht a c h
-  rw [Matrix.det_of_upperTriangular hT] at hd
+  rw [Matrix.det_of_isUpperTriangular hT] at hd
   exact (Finset.prod_ne_zero_iff.mp hd) i (Finset.mem_univ _)
 
 theorem isBEq_lact (X : Data E r) (la : Wt X.Ψ r) {P : Frame X.Ψ r → ℂ} (hP : IsBEq X la P)

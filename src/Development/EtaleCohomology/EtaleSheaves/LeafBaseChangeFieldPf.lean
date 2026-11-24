@@ -98,8 +98,8 @@ lemma finite_over_adjoin {G L : Type} [Field G] [Field L] [Algebra (RatFunc G) L
     FiniteDimensional G⟮algebraMap (RatFunc G) L RatFunc.X⟯ L := by
   let c : RatFunc G →+* G⟮algebraMap (RatFunc G) L RatFunc.X⟯ :=
     (algebraMap (RatFunc G) L).codRestrict _ mem_adjoin_of_ratFunc
-  letI : Algebra (RatFunc G) G⟮algebraMap (RatFunc G) L RatFunc.X⟯ := c.toAlgebra
-  haveI : IsScalarTower (RatFunc G) G⟮algebraMap (RatFunc G) L RatFunc.X⟯ L :=
+  let : Algebra (RatFunc G) G⟮algebraMap (RatFunc G) L RatFunc.X⟯ := c.toAlgebra
+  have : IsScalarTower (RatFunc G) G⟮algebraMap (RatFunc G) L RatFunc.X⟯ L :=
     IsScalarTower.of_algebraMap_eq (fun x => rfl)
   exact Module.Finite.of_restrictScalars_finite (RatFunc G) _ L
 
@@ -110,17 +110,17 @@ theorem LateralTheory.E.LeafBaseChangeFieldPf.LeafBaseChangeField_of : LateralTh
   intro F G K _ _ _ _ _ t ht hfin
   let e := RatFunc.algEquivOfTranscendental t ht
   let h : F⟮t⟯ →+* RatFunc G := (ratMap F G).comp e.symm.toRingHom
-  letI : Algebra F⟮t⟯ (RatFunc G) := h.toAlgebra
-  haveI : Nontrivial (TensorProduct F⟮t⟯ (RatFunc G) K) :=
+  let : Algebra F⟮t⟯ (RatFunc G) := h.toAlgebra
+  have : Nontrivial (TensorProduct F⟮t⟯ (RatFunc G) K) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain _ _ _ h.injective
       (algebraMap F⟮t⟯ K).injective
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (TensorProduct F⟮t⟯ (RatFunc G) K)
-  letI : Field (TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M) := Ideal.Quotient.field M
-  haveI : Module.Finite (RatFunc G) (TensorProduct F⟮t⟯ (RatFunc G) K) :=
+  let : Field (TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M) := Ideal.Quotient.field M
+  have : Module.Finite (RatFunc G) (TensorProduct F⟮t⟯ (RatFunc G) K) :=
     Module.Finite.base_change F⟮t⟯ (RatFunc G) K
-  haveI : Module.Finite (RatFunc G) (TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M) :=
+  have : Module.Finite (RatFunc G) (TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ (RatFunc G) M).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : IsScalarTower G (RatFunc G) (TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M) := inferInstance
+  have : IsScalarTower G (RatFunc G) (TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M) := inferInstance
   refine ⟨TensorProduct F⟮t⟯ (RatFunc G) K ⧸ M, inferInstance, inferInstance,
     algebraMap (RatFunc G) _ RatFunc.X,
     (Ideal.Quotient.mk M).comp (Algebra.TensorProduct.includeRight (R := F⟮t⟯) (A := RatFunc G) (B := K)).toRingHom,

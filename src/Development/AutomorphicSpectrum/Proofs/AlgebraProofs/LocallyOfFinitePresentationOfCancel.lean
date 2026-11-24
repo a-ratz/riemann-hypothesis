@@ -117,14 +117,14 @@ theorem UpperTheory.Reformulated.B.FiniteTypeDescent.main.{u_1, u_2, u_3} :
   intro R C D _ _ _ _ _ _ _ _ _ hinj hft
   obtain ⟨π, hπ⟩ := FiniteTypeOfFiniteProjectiveExtension.exists_retr (C := C) (D := D) hinj
   obtain ⟨B₀, hB₀, hB₀D⟩ := exists_subalgebra_of_fg R C D hft.out (Module.Finite.fg_top)
-  haveI : Module.Finite B₀ D := ⟨hB₀D⟩
+  have : Module.Finite B₀ D := ⟨hB₀D⟩
   let π' : D →ₗ[B₀] C := π.restrictScalars B₀
   have hsurj : Function.Surjective π' := fun c =>
     ⟨algebraMap C D c, by
       show π (algebraMap C D c) = c
       rw [Algebra.algebraMap_eq_smul_one, map_smul, hπ, smul_eq_mul, mul_one]⟩
-  haveI : Module.Finite B₀ C := Module.Finite.of_surjective π' hsurj
-  haveI : Algebra.FiniteType R B₀ := ⟨B₀.fg_top.2 hB₀⟩
+  have : Module.Finite B₀ C := Module.Finite.of_surjective π' hsurj
+  have : Algebra.FiniteType R B₀ := ⟨B₀.fg_top.2 hB₀⟩
   exact Algebra.FiniteType.trans (S := B₀) inferInstance inferInstance
 end -- clump:auto
 end -- clump:auto
@@ -271,21 +271,21 @@ theorem GlobalTheory.CompanionTheory.FinPresDescent.finitePresentation_of_finite
       Algebra.FinitePresentation R C := by
   intro R C D _ _ _ _ _ _ _ hfin hproj hff hfp
   have hinj : Function.Injective (algebraMap C D) := FaithfulSMul.algebraMap_injective C D
-  haveI : Algebra.FiniteType R D := inferInstance
-  haveI : Algebra.FiniteType R C := finiteType_of_finite_projective R C D hinj
+  have : Algebra.FiniteType R D := inferInstance
+  have : Algebra.FiniteType R C := finiteType_of_finite_projective R C D hinj
   obtain ⟨k, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 ‹Algebra.FiniteType R C›
-  letI : Algebra (MvPolynomial (Fin k) R) C := f.toRingHom.toAlgebra
-  letI : Algebra (MvPolynomial (Fin k) R) D := ((algebraMap C D).comp f.toRingHom).toAlgebra
-  haveI : IsScalarTower (MvPolynomial (Fin k) R) C D := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R (MvPolynomial (Fin k) R) D := .of_algebraMap_eq fun r => by
+  let : Algebra (MvPolynomial (Fin k) R) C := f.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin k) R) D := ((algebraMap C D).comp f.toRingHom).toAlgebra
+  have : IsScalarTower (MvPolynomial (Fin k) R) C D := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R (MvPolynomial (Fin k) R) D := .of_algebraMap_eq fun r => by
     change algebraMap R D r = algebraMap C D (f (algebraMap R _ r))
     rw [f.commutes, ← IsScalarTower.algebraMap_apply]
-  haveI : Algebra.FinitePresentation (MvPolynomial (Fin k) R) D :=
+  have : Algebra.FinitePresentation (MvPolynomial (Fin k) R) D :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation R _ D
-  haveI : Module.Finite (MvPolynomial (Fin k) R) C :=
+  have : Module.Finite (MvPolynomial (Fin k) R) C :=
     Module.Finite.of_surjective (Algebra.linearMap _ C) hf
-  haveI : Module.Finite (MvPolynomial (Fin k) R) D := Module.Finite.trans C D
-  haveI : Module.FinitePresentation (MvPolynomial (Fin k) R) D :=
+  have : Module.Finite (MvPolynomial (Fin k) R) D := Module.Finite.trans C D
+  have : Module.FinitePresentation (MvPolynomial (Fin k) R) D :=
     Module.FinitePresentation.of_finite_of_finitePresentation _ D
   have hker := ker_fg_of_projective (P := MvPolynomial (Fin k) R) (C := C) (M := D) hf
     (fun c hc => hinj (by simpa [Algebra.smul_def] using hc 1))
@@ -317,14 +317,14 @@ lemma affine_case {X Y S : Scheme.{0}} [IsAffine X] [IsAffine Y] [IsAffine S] (q
     have := (HasRingHomProperty.iff_of_isAffine (P := @LocallyOfFinitePresentation)).1
       (inferInstance : LocallyOfFinitePresentation (q ≫ f))
     rwa [Scheme.Hom.comp_appTop, CommRingCat.hom_comp] at this
-  letI : Algebra Γ(S, ⊤) Γ(Y, ⊤) := f.appTop.hom.toAlgebra
-  letI : Algebra Γ(Y, ⊤) Γ(X, ⊤) := q.appTop.hom.toAlgebra
-  letI : Algebra Γ(S, ⊤) Γ(X, ⊤) := (q.appTop.hom.comp f.appTop.hom).toAlgebra
-  haveI : IsScalarTower Γ(S, ⊤) Γ(Y, ⊤) Γ(X, ⊤) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Module.Finite Γ(Y, ⊤) Γ(X, ⊤) := h1
-  haveI : Algebra.FinitePresentation Γ(Y, ⊤) Γ(X, ⊤) := h3
-  haveI : Module.FaithfullyFlat Γ(Y, ⊤) Γ(X, ⊤) := h2
-  haveI : Module.FinitePresentation Γ(Y, ⊤) Γ(X, ⊤) :=
+  let : Algebra Γ(S, ⊤) Γ(Y, ⊤) := f.appTop.hom.toAlgebra
+  let : Algebra Γ(Y, ⊤) Γ(X, ⊤) := q.appTop.hom.toAlgebra
+  let : Algebra Γ(S, ⊤) Γ(X, ⊤) := (q.appTop.hom.comp f.appTop.hom).toAlgebra
+  have : IsScalarTower Γ(S, ⊤) Γ(Y, ⊤) Γ(X, ⊤) := IsScalarTower.of_algebraMap_eq' rfl
+  have : Module.Finite Γ(Y, ⊤) Γ(X, ⊤) := h1
+  have : Algebra.FinitePresentation Γ(Y, ⊤) Γ(X, ⊤) := h3
+  have : Module.FaithfullyFlat Γ(Y, ⊤) Γ(X, ⊤) := h2
+  have : Module.FinitePresentation Γ(Y, ⊤) Γ(X, ⊤) :=
     Module.FinitePresentation.of_finite_of_finitePresentation _ _
   have hp : Module.Projective Γ(Y, ⊤) Γ(X, ⊤) := Module.Flat.projective_of_finitePresentation
   exact _root_.GlobalTheory.CompanionTheory.FinPresDescent.finitePresentation_of_finite_projective_faithfullyFlat _ _ _ inferInstance hp inferInstance h4
@@ -334,7 +334,7 @@ theorem descends : ∀ {X Y S : Scheme.{0}} (q : X ⟶ Y) (f : Y ⟶ S), IsFinit
     LocallyOfFinitePresentation f := by
   intro X Y S q f _ _ _ _ _
   let I := {p : S.affineOpens × Y.affineOpens // (p.2 : Y.Opens) ≤ f ⁻¹ᵁ (p.1 : S.Opens)}
-  haveI := HasRingHomProperty.instIsZariskiLocalAtSource (P := @LocallyOfFinitePresentation.{0})
+  have := HasRingHomProperty.instIsZariskiLocalAtSource (P := @LocallyOfFinitePresentation.{0})
   refine IsZariskiLocalAtSource.of_iSup_eq_top (P := @LocallyOfFinitePresentation.{0}) (fun i : I ↦ (i.1.2 : Y.Opens)) ?_ ?_
   · rw [eq_top_iff]
     rintro y -
@@ -343,16 +343,16 @@ theorem descends : ∀ {X Y S : Scheme.{0}} (q : X ⟶ Y) (f : Y ⟶ S), IsFinit
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨(⟨U, hU⟩, ⟨V, hV⟩), hVU⟩, hyV⟩
   · rintro ⟨⟨⟨U, hU⟩, ⟨V, hV⟩⟩, e⟩
     dsimp only at e ⊢
-    haveI : IsAffine U.toScheme := hU
-    haveI : IsAffine V.toScheme := hV
-    haveI : IsAffine (q ⁻¹ᵁ V).toScheme := (hV.preimage q)
+    have : IsAffine U.toScheme := hU
+    have : IsAffine V.toScheme := hV
+    have : IsAffine (q ⁻¹ᵁ V).toScheme := (hV.preimage q)
     have hc : (q ∣_ V) ≫ f.resLE U V e =
         (q ≫ f).resLE U (q ⁻¹ᵁ V) (by simpa using (Scheme.Hom.preimage_mono q e)) := by
       rw [← Scheme.Hom.resLE_eq_morphismRestrict, Scheme.Hom.resLE_comp_resLE]
     haveI : LocallyOfFinitePresentation ((q ∣_ V) ≫ f.resLE U V e) := by
       rw [hc]; delta Scheme.Hom.resLE; infer_instance
     haveI : Surjective (q ∣_ V) := IsZariskiLocalAtTarget.restrict ‹Surjective q› V
-    haveI : LocallyOfFinitePresentation (f.resLE U V e) := affine_case (q ∣_ V) _
+    have : LocallyOfFinitePresentation (f.resLE U V e) := affine_case (q ∣_ V) _
     rw [← Scheme.Hom.resLE_comp_ι f e]
     infer_instance
 

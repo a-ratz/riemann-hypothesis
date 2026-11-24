@@ -176,10 +176,10 @@ theorem hasSubst_block {ι B : Type} [Finite ι] (k : B) :
     intro s hs t ht
     by_contra hne
     apply hs
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     rintro rfl
     apply ht
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     intro h
     exact hne (Prod.ext_iff.mp (Finsupp.single_left_injective one_ne_zero h)).2
     all_goals simp_all
@@ -194,10 +194,10 @@ theorem inBlock_C {ι B : Type} (k : B) (r : K) :
     intro s hs t ht
     by_contra hne
     apply hs
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     rintro rfl
     apply ht
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     intro h
     exact hne (Prod.ext_iff.mp (Finsupp.single_left_injective one_ne_zero h)).2
   unfold inBlock
@@ -216,10 +216,10 @@ theorem inBlock_X {ι B : Type} [Finite ι] (k : B) (i : ι) :
     intro s hs t ht
     by_contra hne
     apply hs
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     rintro rfl
     apply ht
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     intro h
     exact hne (Prod.ext_iff.mp (Finsupp.single_left_injective one_ne_zero h)).2
     all_goals simp_all
@@ -235,10 +235,10 @@ theorem inBlock_sum {ι B α : Type} (k : B) (s : Finset α) (f : α → MvPower
     intro s hs t ht
     by_contra hne
     apply hs
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     rintro rfl
     apply ht
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     intro h
     exact hne (Prod.ext_iff.mp (Finsupp.single_left_injective one_ne_zero h)).2
   unfold inBlock
@@ -254,10 +254,10 @@ theorem inBlock_smul {ι B : Type} (k : B) (r : K) (f : MvPowerSeries ι K) :
     intro s hs t ht
     by_contra hne
     apply hs
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     rintro rfl
     apply ht
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     intro h
     exact hne (Prod.ext_iff.mp (Finsupp.single_left_injective one_ne_zero h)).2
     all_goals simp_all
@@ -307,7 +307,7 @@ theorem pair_row {H : Type} [Fintype H] [DecidableEq H] {N0 N1 : ℕ} (u : H →
     simp
   · rintro ⟨a', ⟨⟨b', h'⟩, p'⟩⟩ _ hne
     obtain ⟨a, ⟨⟨b, h⟩, p⟩⟩ := x
-    rw [if_neg]
+    rw [ite_eq_right]
     · simp
     rintro ⟨rfl, rfl, rfl, hb⟩
     apply hne

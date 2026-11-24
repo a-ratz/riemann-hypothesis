@@ -111,13 +111,13 @@ def inc (x : Grp G hG) : MtM m := x.1
 
 theorem inc_mem (x : Grp G hG) : Matrix.of (inc x) ∈ G := x.2
 
-theorem inc_cont : Continuous (inc : Grp G hG → MtM m) := continuous_subtype_val
+theorem inc_cont : Continuous (inc : Grp G hG → MtM m) := continuous_subtypeVal
 
 theorem inc_closedEmb : IsClosedEmbedding (inc : Grp G hG → MtM m) :=
   (amb_closed hG).isClosedEmbedding_subtypeVal
 
 theorem inc_memb : MeasurableEmbedding (inc : Grp G hG → MtM m) :=
-  MeasurableEmbedding.subtype_coe (amb_closed hG).measurableSet
+  MeasurableEmbedding.subtypeVal (amb_closed hG).measurableSet
 
 theorem range_inc : Set.range (inc : Grp G hG → MtM m) = amb G := Subtype.range_coe
 
@@ -218,10 +218,10 @@ theorem haar_unique_locFinite_openPos :
   · obtain ⟨d, hd0, hdt, hd⟩ := eq_smul_haar hG μ' hμ'
     refine ⟨d / c, ENNReal.div_pos hd0.ne' hct.ne, ENNReal.div_lt_top hdt.ne hc0.ne', ?_⟩
     rw [hd, hc, smul_smul, ENNReal.div_mul_cancel hc0.ne' hct.ne]
-  · rw [hc, Measure.smul_apply, smul_eq_mul, inc_memb.map_apply]
+  · rw [hc, smul_apply, smul_eq_mul, inc_memb.map_apply]
     exact ENNReal.mul_lt_top hct (inc_closedEmb.isCompact_preimage hK).measure_lt_top
   · obtain ⟨x, hxU, hxG⟩ := hx
-    rw [hc, Measure.smul_apply, smul_eq_mul, inc_memb.map_apply]
+    rw [hc, smul_apply, smul_eq_mul, inc_memb.map_apply]
     exact ENNReal.mul_pos hc0.ne' ((hU.preimage inc_cont).measure_ne_zero _ ⟨⟨x, hxG⟩, hxU⟩)
 
 end GlobalTheory.MatHaar

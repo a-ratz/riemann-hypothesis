@@ -139,7 +139,7 @@ theorem mem_YYl_skew_iff (𝔪 : Ideal (𝓞 D.host.E)) (a d : ℕ) (x : Matrix 
     rw [Matrix.matrix_eq_sum_single x]
     refine sum_mem fun i _ => sum_mem fun j _ => ?_
     have hij := hx i j
-    rw [FractionalIdeal.coe_mul] at hij
+    rw [FractionalIdeal.coeToSubmodule_mul] at hij
     refine Submodule.mul_induction_on (C := fun r => Matrix.single i j r ∈ YYl D (stdL D a) (skewLat D 𝔪 d)) hij ?_ ?_
     · intro m hm n hn
       refine Submodule.subset_span ⟨m, hm, Matrix.single i j n, Submodule.subset_span fun v hv => ?_, ?_⟩
@@ -152,7 +152,7 @@ theorem mem_YYl_skew_iff (𝔪 : Ideal (𝓞 D.host.E)) (a d : ℕ) (x : Matrix 
         · subst hk
           simp only [Matrix.mulVec, dotProduct, Matrix.single_apply, true_and]
           rw [Finset.sum_eq_single j (fun l _ hl => by simp [Ne.symm hl]) (by simp)]
-          simp only [if_true]
+          simp only [ite_true]
           rw [← ho, mul_comm, ← Algebra.smul_def]
           exact Submodule.smul_mem _ o hn
         · have hk' : i ≠ k := Ne.symm hk
@@ -212,7 +212,7 @@ theorem index_inter_skew : ∀ (D : D7) (δ : ℂ), Crv D ⊤ δ → ∀ (𝔪 :
         (D.host.conj • 𝔪 : Ideal (𝓞 D.host.E)) • (J : Submodule (𝓞 D.host.E) D.host.E) := by
     intro J
     apply le_antisymm
-    · rw [FractionalIdeal.coe_mul]
+    · rw [FractionalIdeal.coeToSubmodule_mul]
       refine Submodule.mul_le.2 fun x hx y hy => ?_
       obtain ⟨b, hb, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hx
       rw [← Algebra.smul_def]
@@ -225,7 +225,7 @@ theorem index_inter_skew : ∀ (D : D7) (δ : ℂ), Crv D ⊤ δ → ∀ (𝔪 :
         Submodule (𝓞 D.host.E) D.host.E).toAddSubgroup =
       ((D.host.conj • 𝔪 : Ideal (𝓞 D.host.E)) • ((D.host.AA0 * skewEnt D 𝔪 :
         FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E)).toAddSubgroup := by
-    rw [← he, ← hF, FractionalIdeal.coe_inf]
+    rw [← he, ← hF, FractionalIdeal.coeToSubmodule_inf]
     rfl
   show (La0 D (tor0 D ⊤ δ) a d).relIndex (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d)) = _
   rw [La0_eq_map, La_skew_eq_map, AddSubgroup.relIndex_map_map_of_injective _ _ (ptHom_injective D ⊤ hδ a d)]

@@ -222,7 +222,7 @@ theorem lbIso_pow_of_hermForm_pull_eq :
     have c2 := semicharacter_sq_eq_one_of_symmetric P' u' Hm' χ' hu' ⟨F l, hΛ l l.2⟩
     have e : Complex.exp (Real.pi * (n * hermForm Hm z l) + Real.pi / 2 * (n * hermForm Hm l l)) =
         Complex.exp (Real.pi * hermForm Hm z l + Real.pi / 2 * hermForm Hm l l) ^ n := by
-      rw [← Complex.exp_nat_mul]
+      rw [← Complex.exp_natCast_mul]
       congr 1
       ring
     simp only [hH, e] at h1

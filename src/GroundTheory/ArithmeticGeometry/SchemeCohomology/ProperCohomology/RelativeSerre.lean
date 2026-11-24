@@ -503,10 +503,10 @@ theorem overCohomologyMap_bijective [EnoughInjectives (Sheaf J AddCommGrpCat.{v}
     intro F
     let I : InjectivePresentation F := Classical.arbitrary _
     let S := ShortComplex.mk _ _ (cokernel.condition I.f)
-    letI : Injective S.X₂ := I.injective
+    let : Injective S.X₂ := I.injective
     have hS : S.ShortExact := { exact := ShortComplex.exact_cokernel I.f }
     have hS' := hS.map_of_exact (J.overPullback AddCommGrpCat.{v} U)
-    letI : Injective (S.map (J.overPullback AddCommGrpCat.{v} U)).X₂ :=
+    let : Injective (S.map (J.overPullback AddCommGrpCat.{v} U)).X₂ :=
       (J.overPullback AddCommGrpCat.{v} U).injective_obj_of_injective I.injective
     exact AddMonoidHom.bijective_of_surjective_of_bijective_of_right_exact _ _ _ _
       (overCohomologyMap J U S.X₂ n) (overCohomologyMap J U S.X₃ n)
@@ -1015,7 +1015,7 @@ variable {A : Type u} [CommRing A] {X X' : Scheme.{u}} [X.Over (Spec (.of A))] {
 lemma embed_snd {V : X.Opens} (hV : IsAffineOpen V) :
     letI := baseAlgebra A hV
     embed i ψ h hV ≫ pullback.snd _ _ = ψ ∣_ V ≫ hV.isoSpec.hom := by
-  letI := baseAlgebra A hV
+  let := baseAlgebra A hV
   rw [← cancel_mono hV.fromSpec, Category.assoc, Category.assoc, IsAffineOpen.isoSpec_hom_fromSpec,
     morphismRestrict_ι]
   have hc : pullback.snd (graph i ψ h) (overV (N := N) A hV) ≫ overV A hV =
@@ -1043,7 +1043,7 @@ lemma algebraMap_overBase {V : X.Opens} (hV : IsAffineOpen V) (b : Γ(X, V)) :
     X'.presheaf.map (eqToHom (Scheme.Opens.ι_image_top (ψ ⁻¹ᵁ V)).symm).op
       (algebraMap Γ(X, V) Γ((ψ ⁻¹ᵁ V).toScheme, ⊤) b : Γ(X', (ψ ⁻¹ᵁ V).ι ''ᵁ ⊤)) =
       ψ.app V b := by
-  letI := overBase i ψ h hV
+  let := overBase i ψ h hV
   have s1 : algebraMap Γ(X, V) Γ((ψ ⁻¹ᵁ V).toScheme, ⊤) b = (ψ ∣_ V).appTop (V.topIso.inv b) := by
     change (embed i ψ h hV ≫ pullback.snd _ _).appTop ((Scheme.ΓSpecIso (.of Γ(X, V))).inv b) = _
     rw [embed_snd, Scheme.Hom.comp_appTop, CommRingCat.comp_apply, IsAffineOpen.isoSpec_hom_appTop,
@@ -1092,7 +1092,7 @@ def H0ToSections {V : X.Opens} (hV : IsAffineOpen V) (M : X'.Modules) :
 
 lemma H0ToSections_bijective {V : X.Opens} (hV : IsAffineOpen V) (M : X'.Modules) :
     Function.Bijective (H0ToSections i ψ h hV M) := by
-  letI := overBase i ψ h hV
+  let := overBase i ψ h hV
   exact (ConcreteCategory.bijective_of_isIso (M.presheaf.map
     (eqToHom (Scheme.Opens.ι_image_top (ψ ⁻¹ᵁ V)).symm).op)).comp
     (Sheaf.H.equiv₀ (modulesAb (M.restrict (ψ ⁻¹ᵁ V).ι)) isTerminalTop).bijective
@@ -1101,7 +1101,7 @@ theorem finite_sections_pushforward {V : X.Opens} (hV : IsAffineOpen V) (M : X'.
     letI := overBase i ψ h hV
     Module.Finite Γ(X, V) (Sheaf.H.{u} (modulesAb (M.restrict (ψ ⁻¹ᵁ V).ι)) 0) →
       Module.Finite Γ(X, V) Γ((Scheme.Modules.pushforward ψ).obj M, V) := by
-  letI := overBase i ψ h hV
+  let := overBase i ψ h hV
   intro hfin
   exact Module.Finite.of_surjective (H0ToSections i ψ h hV M) (H0ToSections_bijective i ψ h hV M).2
 

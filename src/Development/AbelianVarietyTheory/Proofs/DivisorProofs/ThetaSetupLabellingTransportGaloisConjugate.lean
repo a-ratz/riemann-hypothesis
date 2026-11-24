@@ -120,8 +120,8 @@ theorem compare {o Ω o' Ω' : Type} [CommRing o] [Field Ω] [Algebra o Ω] [Com
           QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk x ∧ x ^ m = 1 ∧ w ≫ P₀.A.hom = 𝟙 _ ∧ w ≫ a = x.left ∧
           w ≫ a' = x'.left ∧ CongMod m pk'.y (e pk.y) := by
   obtain ⟨e, hps, hcg⟩ := GlobalTheory.T.exists_latticeIso_of_two_padicAlgCl_uniformisations S S' ρ ρ' p y₀ y₁ u u' P₀ a a' ha ha' hL hL'
-  haveI := charZero_uTest_V u
-  haveI := charZero_uTest_V u'
+  have := charZero_uTest_V u
+  have := charZero_uTest_V u'
   refine ⟨e, fun χ => ?_, fun m x x' w hm hx hx' hw hwa hwa' => ?_, fun m pk' x' hm hpk' => ?_⟩
   · have h1 := (hps χ _).1 (l.q_eq χ)
     have h2 := l'.q_eq (e χ)
@@ -159,7 +159,7 @@ theorem isLab_conj : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fi
   obtain ⟨Q, b', b'', hb', hb'', lb', lb'', hpts, hend⟩ :=
     exists_generic D.X.ρ D.ε ρ' ε' ρ₂ ε₂ (fun x => x) (fun x => x) hsame' hsame₂ (σ : D.X.Ω₁ →+* D.X.Ω₁) a P₀ b t ε₀
       hb ht lb lt hε hp
-  haveI : IsDedekindDomain D.X.o₁ := ArithBase.ded (Ω := D.X.Ω₁)
+  have : IsDedekindDomain D.X.o₁ := ArithBase.ded (Ω := D.X.Ω₁)
   have hR₂' : R₂ ≤ D.X.M.O (((gPt p ≫ y) ≫ s) (closedPoint (PadicAlgCl p))) := by
     rw [Category.assoc]; exact hR₂
   have hy₁' : ∀ r : R₂, y₁ r = D.X.M.val ((gPt p ≫ y) ≫ s) r := by

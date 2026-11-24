@@ -98,7 +98,7 @@ theorem exists_dual_rep (J : Set (GA D V)) (χ : GA D V → ℂ) (Sb : Finset (H
   obtain ⟨he, v, hf⟩ := GlobalTheory.HeckeDual.idem_of_isPrimeIdem hef
   obtain ⟨a, rfl⟩ := (GlobalTheory.HeckeDual.suppF_iff V hf α).1 hα
   obtain ⟨δ, hδ, hσδ⟩ := GlobalTheory.HeckeDual.exists_skew D
-  haveI := GlobalTheory.HeckeDual.isLattice_frameLat V
+  have := GlobalTheory.HeckeDual.isLattice_frameLat V
   have hK : ∀ g, g ∈ {k | k ∈ J ∧ SuppF V f k} ↔
       ∃ k ∈ GlobalTheory.AdelicU.stabLoc D.sp.cm.sig V.gram (GlobalTheory.AdelicU.frameLat V) v,
         GlobalTheory.AdelicU.emb D.sp.cm.sig V.gram v k = g := fun g => by
@@ -304,7 +304,7 @@ theorem levS_flat_gen (Q : Finset (Pl D.host.E)) (hr : D.R.r ≤ (Yc D 0).rank)
     simp [blkOf, hi, hj] at hij
   refine levS_congr _ _ _ fun x => ?_
   show (x ∈ parLev _ _ _ _ ∧ _) ↔ (x ∈ parLev _ _ _ _ ∧ _)
-  simp only [LevCh.dat0, Lev.datY, eq_self_iff_true, if_true, ite_true, parLev, Subgroup.mem_inf, Subgroup.mem_iInf, mem_parah]
+  simp only [LevCh.dat0, Lev.datY, eq_self_iff_true, ite_true, ite_true, parLev, Subgroup.mem_inf, Subgroup.mem_iInf, mem_parah]
   constructor
   · rintro ⟨⟨⟨⟨hU, hSt⟩, hPg⟩, -⟩, hT⟩
     refine ⟨⟨⟨⟨hU, hSt⟩, fun i hi => hPg i (Finset.mem_union_left _ hi)⟩, fun i hi => absurd hi (Finset.notMem_empty _)⟩, ?_⟩

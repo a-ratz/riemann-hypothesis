@@ -128,13 +128,13 @@ theorem herm_bvec_esI' {r : ℕ} (v : Fin (2 * r + k + 1) → ℂ) (b : Fin r) :
     herm (Hpk k r) v (bvec (esI k r b)) = v (eI k r b) := by
   rw [herm_bvec_r]
   simp only [hpk_esI_row, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 theorem herm_bvec_eI' {r : ℕ} (v : Fin (2 * r + k + 1) → ℂ) (b : Fin r) :
     herm (Hpk k r) v (bvec (eI k r b)) = v (esI k r b) := by
   rw [herm_bvec_r]
   simp only [hpk_eI_row, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 def midB (o ρ : ℕ) (G : B.Mat k (o + ρ)) : B.Mat k ρ := fun a b => G (levPos k o ρ a) (levPos k o ρ b)
 
@@ -161,12 +161,12 @@ theorem uw_block (o ρ : ℕ) (z : Fin (2 * ρ + k + 1) → ℂ) (G : B.Mat k (o
     · have ep : p = levPos k o ρ ⟨p.val - o, by omega⟩ := by ext; simp [levPos]; omega
       have eq : q = levPos k o ρ ⟨q.val - o, by omega⟩ := by ext; simp [levPos]; omega
       rw [ep, eq, lev_levPos]; rfl
-    · rw [lev_out_row o ρ _ p q hp, if_neg (by intro h; rw [h] at hp; exact hp hq)]
+    · rw [lev_out_row o ρ _ p q hp, ite_eq_right (by intro h; rw [h] at hp; exact hp hq)]
       rw [show G p q = (G *ᵥ bvec q) p from (mulVec_bvec_apply G q p).symm]
       have hqne : ∀ c : Fin (2 * (o + ρ) + k + 1), ¬ (o ≤ c.val ∧ c.val < 2 * ρ + k + 1 + o) → bvec q c = 0 := by
         intro c hc
         simp only [bvec, Pi.single_apply]
-        rw [if_neg]; intro h; rw [h] at hc; exact hc hq
+        rw [ite_eq_right]; intro h; rw [h] at hc; exact hc hq
       by_cases h1 : p.val < o
       · have e : p = eI k (o + ρ) ⟨p.val, by omega⟩ := by ext; simp [eI]
         rw [e, ← herm_bvec_esI' (G *ᵥ bvec q), ← (hG.2.1 _).2, TwoByOneBlock.herm_UH hG.1, herm_bvec_esI']
@@ -271,7 +271,7 @@ theorem haar_lev {r : ℕ} (o ρ : ℕ) (h : o + ρ = r) (z : Fin (2 * ρ + k + 
   obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r _ μ (ν.map (levMt o ρ h)) hcl hμ hconc hleft hfin
   have h1 : (ν.map (levMt o ρ h)) Set.univ = 1 := by
     rw [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, hν1]
-  rw [hc, Measure.smul_apply, hμ1] at h1
+  rw [hc, smul_apply, hμ1] at h1
   have hc1 : c = 1 := by
     have h2 : ((c : ENNReal)) = 1 := by simpa [ENNReal.smul_def] using h1
     exact_mod_cast h2

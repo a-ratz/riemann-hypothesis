@@ -145,7 +145,7 @@ private theorem full_of_local_span {n : ℕ} (A : Places F E sig)
     (p : HeightOneSpectrum (𝓞 F))
     (hp : Submodule.span (A.loc p).Ep (A.lat p Λ : Set (Fin n → (A.loc p).Ep)) = ⊤) :
     Submodule.IsFullLattice E Λ := by
-  haveI := PlacesInt.nontrivial_Ep (A.loc p)
+  have := PlacesInt.nontrivial_Ep (A.loc p)
   refine { toIsLattice := hΛ, span_eq_top := ?_ }
   apply (Submodule.dualAnnihilator_eq_bot_iff).1
   apply le_antisymm ?_ bot_le
@@ -195,8 +195,8 @@ theorem lrel_of_local (G : GFrames A r k) {d : G.Dat} {Γ Γ' : G.Lt} (hT : G.Is
   obtain ⟨p₀⟩ : Nonempty (HeightOneSpectrum (𝓞 F)) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
     exact ⟨⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩⟩
-  haveI := (A.loc p₀).lf
-  haveI := (A.loc p₀).char0
+  have := (A.loc p₀).lf
+  have := (A.loc p₀).char0
   have hspan := (TermBasic.term_basic _ _ _ _ _ _ (hT.2 p₀)).1.1.2
   have hfull := full_of_local_span A Γ hT.1 p₀ hspan
   obtain ⟨u, _, hu⟩ := H p₀
@@ -210,15 +210,15 @@ theorem lrel_of_local (G : GFrames A r k) {d : G.Dat} {Γ Γ' : G.Lt} (hT : G.Is
   have hn : ∀ p, n p ∈ (G.S p).St ∧ A.lat p Γ' = n p • A.lat p Γ := by
     intro p
     by_cases hp : A.lat p Γ' = A.lat p Γ
-    · simp only [n, if_pos hp]; exact ⟨(G.S p).St.one_mem, by rw [one_smul]; exact hp⟩
-    · simp only [n, if_neg hp]; exact (H p).choose_spec
+    · simp only [n, ite_eq_left hp]; exact ⟨(G.S p).St.one_mem, by rw [one_smul]; exact hp⟩
+    · simp only [n, ite_eq_right hp]; exact (H p).choose_spec
   have hfin : {p | n p ∉ (G.S p).K0}.Finite := by
     refine (recΓ.2.2.union recΓ'.2.2).subset fun p hp => ?_
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
     apply hp
     have : A.lat p Γ' = A.lat p Γ := by rw [hc.1, hc.2]
-    simp only [n, if_pos this]
+    simp only [n, ite_eq_left this]
     exact (G.S p).K0.one_mem
   have hc : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ,
       ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = (((fun _ => 1 : ∀ p, ((A.loc p).Fp)ˣ) p) : (A.loc p).Fp)}.Finite :=
@@ -230,8 +230,8 @@ theorem lrel_of_local (G : GFrames A r k) {d : G.Dat} {Γ Γ' : G.Lt} (hT : G.Is
   obtain ⟨g, hg, hgp⟩ := happrox
   have hloc : ∀ p, A.lat p Γ' = A.lat p (Γ.map ((g : G.V →ₗ[E] G.V).restrictScalars (𝓞 E))) := by
     intro p
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     obtain ⟨g', hg'St, he⟩ := mem_rat hg p
     obtain ⟨-, hsub⟩ := hgp p g' he
     have hSD := (TermBasic.term_basic _ _ _ _ _ _ (hT.2 p)).1
@@ -285,8 +285,8 @@ theorem glue_terms (G : GFrames A r k) (hk : 4 * r + 7 ≤ k) {d : G.Dat} {Λ₀
   obtain ⟨p₀⟩ : Nonempty (HeightOneSpectrum (𝓞 F)) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
     exact ⟨⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩⟩
-  haveI := (A.loc p₀).lf
-  haveI := (A.loc p₀).char0
+  have := (A.loc p₀).lf
+  have := (A.loc p₀).char0
   have hspan := (TermBasic.term_basic _ _ _ _ _ _ (h₀.2 p₀)).1.1.2
   have hfull := full_of_local_span A Λ₀ h₀.1 p₀ hspan
   have rec₀ := _root_.GlobalTheory.HL.PlacesRec.lattice_local A _ Λ₀ hfull
@@ -294,9 +294,9 @@ theorem glue_terms (G : GFrames A r k) (hk : 4 * r + 7 ≤ k) {d : G.Dat} {Λ₀
       A.lat p Λ₀ = Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V)) ∧
       ∃ h ∈ (G.S p).St, Λ p = h • Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V)) := by
     refine ⟨_, hstd.union rec₀.2.2, fun p hp => ?_⟩
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hp
+    have := (A.loc p).lf
+    have := (A.loc p).char0
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hp
     obtain ⟨⟨-, -, -, d₀, hW, -, -, hT1, -, -⟩, hl⟩ := hp
     have hTp : (G.S p).IsTerm (d p) (Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V))) := by
       rw [← hl]; exact h₀.2 p
@@ -309,29 +309,29 @@ theorem glue_terms (G : GFrames A r k) (hk : 4 * r + 7 ≤ k) {d : G.Dat} {Λ₀
   have hterm : ∀ p, (G.S p).IsTerm (d p) (Λ' p) := by
     intro p
     by_cases hp : p ∈ B
-    · simp only [Λ', if_pos hp]; exact hΛ p
-    · simp only [Λ', if_neg hp]; rw [← (hB p hp).1]; exact h₀.2 p
+    · simp only [Λ', ite_eq_left hp]; exact hΛ p
+    · simp only [Λ', ite_eq_right hp]; rw [← (hB p hp).1]; exact h₀.2 p
   have hlat : ∀ p, IsLat (A.L p) (Λ' p) := by
     intro p
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     exact (TermBasic.term_basic _ _ _ _ _ _ (hterm p)).1.1
   have hfin : {p | Λ' p ≠ Submodule.span (A.L p).O
       (Set.range fun i => (Pi.single i 1 : Fin (k + 2 * r + 1) → (A.loc p).Ep))}.Finite := by
     refine hBfin.subset fun p hp => ?_
     by_contra hc
     apply hp
-    simp only [Λ', if_neg hc]
+    simp only [Λ', ite_eq_right hc]
   obtain ⟨Γ, ⟨hL, hlatΓ⟩, -⟩ := _root_.GlobalTheory.HL.Glue.glue A _ Λ' hlat hfin
   refine ⟨Γ, ⟨hL, fun p => (hlatΓ p).symm ▸ hterm p⟩, fun p => ?_⟩
   by_cases hp : p ∈ B
   · refine ⟨1, (G.S p).St.one_mem, ?_⟩
     rw [hlatΓ p, one_smul]
-    simp only [Λ', if_pos hp]
+    simp only [Λ', ite_eq_left hp]
   · obtain ⟨h, hh, he⟩ := (hB p hp).2
     refine ⟨h⁻¹, (G.S p).St.inv_mem hh, ?_⟩
     rw [hlatΓ p, he, inv_smul_smul]
-    simp only [Λ', if_neg hp]
+    simp only [Λ', ite_eq_right hp]
 
 end GlobalTheory.HL.GlobalOrbits
 

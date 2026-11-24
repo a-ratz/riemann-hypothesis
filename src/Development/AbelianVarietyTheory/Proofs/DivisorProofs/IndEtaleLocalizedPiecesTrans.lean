@@ -329,13 +329,13 @@ theorem flat_of_algHom_atPrime (R A B : Type) [CommRing R] [CommRing A] [CommRin
   have e : φ.toRingHom = h.comp ψ.toRingHom := by ext a; exact (hψ a).symm
   rw [e]
   refine RingHom.Flat.comp ?_ ?_
-  · letI : Algebra A (Localization.Away g) := ψ.toRingHom.toAlgebra
-    haveI : IsScalarTower R A (Localization.Away g) :=
+  · let : Algebra A (Localization.Away g) := ψ.toRingHom.toAlgebra
+    have : IsScalarTower R A (Localization.Away g) :=
       IsScalarTower.of_algebraMap_eq (fun r => (ψ.commutes r).symm)
-    haveI : Algebra.Etale A (Localization.Away g) := Algebra.Etale.of_restrictScalars R A _
+    have : Algebra.Etale A (Localization.Away g) := Algebra.Etale.of_restrictScalars R A _
     exact RingHom.flat_algebraMap_iff.mpr inferInstance
-  · letI : Algebra (Localization.Away g) (Localization.AtPrime p) := h.toAlgebra
-    haveI : IsScalarTower B (Localization.Away g) (Localization.AtPrime p) :=
+  · let : Algebra (Localization.Away g) (Localization.AtPrime p) := h.toAlgebra
+    have : IsScalarTower B (Localization.Away g) (Localization.AtPrime p) :=
       IsScalarTower.of_algebraMap_eq (fun b => by
         change _ = h _
         simp [hh, Localization.awayLift, IsLocalization.Away.lift])
@@ -351,11 +351,11 @@ theorem flat_of_essEtale : ∀ (R L₁ L₂ : Type) [CommRing R] [CommRing L₁]
       (e₁.toAlgHom.comp (IsScalarTower.toAlgHom R A (Localization.AtPrime q)))
   have hφ := flat_of_algHom_atPrime R A A' q' φ
   let f : A →+* L₁ := e₁.toRingHom.comp (algebraMap A (Localization.AtPrime q))
-  letI : Algebra A L₁ := f.toAlgebra
-  letI : Algebra A L₂ := ((algebraMap L₁ L₂).comp f).toAlgebra
-  haveI : IsScalarTower A L₁ L₂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra A L₁ := f.toAlgebra
+  let : Algebra A L₂ := ((algebraMap L₁ L₂).comp f).toAlgebra
+  have : IsScalarTower A L₁ L₂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let e₁' : Localization.AtPrime q ≃ₐ[A] L₁ := { e₁ with commutes' := fun _ => rfl }
-  haveI : IsLocalization q.primeCompl L₁ := IsLocalization.isLocalization_of_algEquiv q.primeCompl e₁'
+  have : IsLocalization q.primeCompl L₁ := IsLocalization.isLocalization_of_algEquiv q.primeCompl e₁'
   have hflat : Module.Flat A L₂ := by
     rw [← RingHom.flat_algebraMap_iff]
     have : algebraMap A L₂ = e₂.toRingHom.comp φ.toRingHom := by
@@ -390,18 +390,18 @@ theorem ann_of_directed_essEtale : ∀ (R B : Type) [CommRing R] [CommRing B] [A
   let f : C i →+* C k := (Subalgebra.inclusion (hmono hik)).toRingHom
   have hf : Qi = Qk.comap f := by ext x; rfl
   let g : Localization.AtPrime Qi →+* Localization.AtPrime Qk := Localization.localRingHom Qi Qk f hf
-  letI : Algebra (Localization.AtPrime Qi) (Localization.AtPrime Qk) := g.toAlgebra
-  haveI : IsScalarTower R (Localization.AtPrime Qi) (Localization.AtPrime Qk) := by
+  let : Algebra (Localization.AtPrime Qi) (Localization.AtPrime Qk) := g.toAlgebra
+  have : IsScalarTower R (Localization.AtPrime Qi) (Localization.AtPrime Qk) := by
     refine IsScalarTower.of_algebraMap_eq (fun r => ?_)
     change algebraMap R (Localization.AtPrime Qk) r = g (algebraMap R (Localization.AtPrime Qi) r)
     rw [IsScalarTower.algebraMap_apply R (C i) (Localization.AtPrime Qi), IsScalarTower.algebraMap_apply R (C k) (Localization.AtPrime Qk)]
     simp only [g, Localization.localRingHom_to_map]
     congr 1
-  haveI : Module.Flat (Localization.AtPrime Qi) (Localization.AtPrime Qk) :=
+  have : Module.Flat (Localization.AtPrime Qi) (Localization.AtPrime Qk) :=
     _root_.GlobalTheory.flat_of_essEtale R _ _ (hess i) (hess k)
-  haveI : IsLocalHom (algebraMap (Localization.AtPrime Qi) (Localization.AtPrime Qk)) :=
+  have : IsLocalHom (algebraMap (Localization.AtPrime Qi) (Localization.AtPrime Qk)) :=
     (inferInstance : IsLocalHom g)
-  haveI : Module.FaithfullyFlat (Localization.AtPrime Qi) (Localization.AtPrime Qk) :=
+  have : Module.FaithfullyFlat (Localization.AtPrime Qi) (Localization.AtPrime Qk) :=
     Module.FaithfullyFlat.of_flat_of_isLocalHom
   have hinj := RingHom.FaithfullyFlat.injective (RingHom.faithfullyFlat_algebraMap_iff.mpr this)
   have h0 : algebraMap (C k) (Localization.AtPrime Qk) ⟨c, hck⟩ = 0 := by
@@ -444,13 +444,13 @@ theorem etale_adjoin_baseChange_image (R S B : Type) [CommRing R] [CommRing S] [
         Set.range (fun b : B₀ => e.symm (1 ⊗ₜ b)))) := by
   set C := Algebra.adjoin R ((algebraMap S B) '' (S' : Set S) ∪
         Set.range (fun b : B₀ => e.symm (1 ⊗ₜ b))) with hC
-  letI : Algebra A₀ S' := (Subalgebra.inclusion h).toRingHom.toAlgebra
+  let : Algebra A₀ S' := (Subalgebra.inclusion h).toRingHom.toAlgebra
   let ι : S' →ₐ[A₀] S :=
     { toRingHom := S'.val.toRingHom
       commutes' := fun _ => rfl }
   let Φ : S' ⊗[A₀] B₀ →ₐ[A₀] S ⊗[A₀] B₀ := Algebra.TensorProduct.map ι (AlgHom.id A₀ B₀)
   let Ψ : S' ⊗[A₀] B₀ →+* B := (e.symm : S ⊗[A₀] B₀ →+* B).comp Φ.toRingHom
-  haveI : Module.Flat A₀ B₀ := inferInstance
+  have : Module.Flat A₀ B₀ := inferInstance
   have hΦ : Function.Injective Φ := by
     have hl : (Φ.toLinearMap : S' ⊗[A₀] B₀ →ₗ[A₀] S ⊗[A₀] B₀) = LinearMap.rTensor B₀ ι.toLinearMap := by
       apply TensorProduct.ext'
@@ -504,7 +504,7 @@ theorem etale_adjoin_baseChange_image (R S B : Type) [CommRing R] [CommRing S] [
     obtain ⟨x, rfl⟩ := hsurj hy
     exact ⟨x, rfl⟩
   let eqv : S' ⊗[A₀] B₀ ≃+* C := RingEquiv.ofBijective f hf
-  letI alg : Algebra S' C := (f.comp (algebraMap S' (S' ⊗[A₀] B₀))).toAlgebra
+  let alg : Algebra S' C := (f.comp (algebraMap S' (S' ⊗[A₀] B₀))).toAlgebra
   have tower : IsScalarTower R S' C := by
     refine IsScalarTower.of_algebraMap_eq (fun r => ?_)
     apply Subtype.ext
@@ -514,7 +514,7 @@ theorem etale_adjoin_baseChange_image (R S B : Type) [CommRing R] [CommRing S] [
     rfl
   refine ⟨alg, tower, ?_⟩
   let eA : S' ⊗[A₀] B₀ ≃ₐ[S'] C := AlgEquiv.ofRingEquiv (f := eqv) (fun _ => rfl)
-  haveI : Algebra.Etale S' (S' ⊗[A₀] B₀) := Algebra.Etale.baseChange A₀ B₀ S'
+  have : Algebra.Etale S' (S' ⊗[A₀] B₀) := Algebra.Etale.baseChange A₀ B₀ S'
   exact Algebra.Etale.of_equiv eA
 
 end GlobalTheory
@@ -539,9 +539,9 @@ theorem exists_finitePresentation_isLocalization_of_localization (A B E : Type) 
       @IsLocalization D _ (Algebra.algebraMapSubmonoid D M) E _ φ.toAlgebra := by
   classical
   obtain ⟨n, f, hf, hK⟩ := ‹Algebra.FinitePresentation B E›
-  letI : Algebra (MvPolynomial (Fin n) A) (MvPolynomial (Fin n) B) :=
+  let : Algebra (MvPolynomial (Fin n) A) (MvPolynomial (Fin n) B) :=
     MvPolynomial.algebraMvPolynomial
-  haveI hL : IsLocalization (M.map (MvPolynomial.C (σ := Fin n))) (MvPolynomial (Fin n) B) :=
+  have hL : IsLocalization (M.map (MvPolynomial.C (σ := Fin n))) (MvPolynomial (Fin n) B) :=
     MvPolynomial.isLocalization M B
   obtain ⟨s, hs⟩ := hK
   choose p hp using fun g : (s : Set (MvPolynomial (Fin n) B)) =>
@@ -563,9 +563,9 @@ theorem exists_finitePresentation_isLocalization_of_localization (A B E : Type) 
       exact Ideal.subset_span ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩
   have hJfg : J₀.FG := Submodule.fg_span (Set.finite_range _)
   let D := MvPolynomial (Fin n) A ⧸ J₀
-  haveI : Algebra.FinitePresentation A D := Algebra.FinitePresentation.quotient hJfg
+  have : Algebra.FinitePresentation A D := Algebra.FinitePresentation.quotient hJfg
   let Dl := MvPolynomial (Fin n) B ⧸ J₀.map (algebraMap (MvPolynomial (Fin n) A) (MvPolynomial (Fin n) B))
-  haveI hDl : IsLocalization (Algebra.algebraMapSubmonoid D (M.map (MvPolynomial.C (σ := Fin n)))) Dl :=
+  have hDl : IsLocalization (Algebra.algebraMapSubmonoid D (M.map (MvPolynomial.C (σ := Fin n)))) Dl :=
     inferInstance
   let e : Dl ≃+* E := (Ideal.quotEquivOfEq hJ).trans (Ideal.quotientKerAlgEquivOfSurjective hf).toRingEquiv
   let φ : D →+* E := e.toRingHom.comp (algebraMap D Dl)
@@ -575,7 +575,7 @@ theorem exists_finitePresentation_isLocalization_of_localization (A B E : Type) 
       (MvPolynomial.C a))) = algebraMap B E (algebraMap A B a)
     have he : ∀ x, e (Ideal.Quotient.mk _ x) = f x := fun x => rfl
     rw [he, MvPolynomial.algebraMap_def, MvPolynomial.map_C, ← MvPolynomial.algebraMap_eq, f.commutes]
-  · letI : Algebra D E := φ.toAlgebra
+  · let : Algebra D E := φ.toAlgebra
     let e' : Dl ≃ₐ[D] E := AlgEquiv.ofRingEquiv (f := e) (fun x => rfl)
     have hsub : Algebra.algebraMapSubmonoid D (M.map (MvPolynomial.C (σ := Fin n))) =
         Algebra.algebraMapSubmonoid D M := by
@@ -586,7 +586,7 @@ theorem exists_finitePresentation_isLocalization_of_localization (A B E : Type) 
         exact ⟨a, ha, rfl⟩
       · rintro ⟨a, ha, rfl⟩
         exact ⟨_, ⟨a, ha, rfl⟩, rfl⟩
-    haveI := IsLocalization.isLocalization_of_algEquiv
+    have := IsLocalization.isLocalization_of_algEquiv
       (Algebra.algebraMapSubmonoid D (M.map (MvPolynomial.C (σ := Fin n)))) e'
     rwa [hsub] at this
 
@@ -600,13 +600,13 @@ theorem exists_etale_atPrime_algEquiv_of_isEtaleAt (R D : Type) [CommRing R] [Co
   have hdisj : Disjoint (Submonoid.powers f : Set D) P' :=
     (Ideal.disjoint_powers_iff_notMem_of_isPrime _).mpr hfP
   let q' : Ideal A' := P'.map (algebraMap D A')
-  haveI hq' : q'.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers f) A' P' ‹_› hdisj
+  have hq' : q'.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers f) A' P' ‹_› hdisj
   have hcomap : q'.comap (algebraMap D A') = P' :=
     IsLocalization.under_map_of_isPrime_disjoint (Submonoid.powers f) A' ‹_› hdisj
-  haveI h1 : IsLocalization.AtPrime (Localization.AtPrime q') (q'.comap (algebraMap D A')) :=
+  have h1 : IsLocalization.AtPrime (Localization.AtPrime q') (q'.comap (algebraMap D A')) :=
     IsLocalization.isLocalization_isLocalization_atPrime_isLocalization (Submonoid.powers f)
       (Localization.AtPrime q') q'
-  haveI h2 : IsLocalization P'.primeCompl (Localization.AtPrime q') := by
+  have h2 : IsLocalization P'.primeCompl (Localization.AtPrime q') := by
     have h1' : IsLocalization (q'.comap (algebraMap D A')).primeCompl (Localization.AtPrime q') := h1
     have hsub : (q'.comap (algebraMap D A')).primeCompl = P'.primeCompl := by
       ext x
@@ -620,32 +620,32 @@ theorem essEtale_atPrime_of_etale_over_atPrime : ∀ (R A E : Type) [CommRing R]
   intro R A E _ _ _ _ _ q _ _ _ _ _ P _
   obtain ⟨D, _, _, _, φ, hφ, hloc⟩ :=
     exists_finitePresentation_isLocalization_of_localization A (Localization.AtPrime q) E q.primeCompl
-  letI : Algebra R D := ((algebraMap A D).comp (algebraMap R A)).toAlgebra
-  haveI : IsScalarTower R A D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.FinitePresentation R D := Algebra.FinitePresentation.trans R A D
-  letI : Algebra D E := φ.toAlgebra
-  haveI : IsScalarTower R D E := by
+  let : Algebra R D := ((algebraMap A D).comp (algebraMap R A)).toAlgebra
+  have : IsScalarTower R A D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.FinitePresentation R D := Algebra.FinitePresentation.trans R A D
+  let : Algebra D E := φ.toAlgebra
+  have : IsScalarTower R D E := by
     refine IsScalarTower.of_algebraMap_eq' ?_
     rw [IsScalarTower.algebraMap_eq R (Localization.AtPrime q) E,
       IsScalarTower.algebraMap_eq R A (Localization.AtPrime q), ← RingHom.comp_assoc, ← hφ]
     rfl
   let EP := Localization.AtPrime P
-  haveI : IsScalarTower D E EP := inferInstance
-  haveI : IsScalarTower R D EP := inferInstance
-  haveI hEP : IsLocalization.AtPrime EP (P.comap (algebraMap D E)) :=
+  have : IsScalarTower D E EP := inferInstance
+  have : IsScalarTower R D EP := inferInstance
+  have hEP : IsLocalization.AtPrime EP (P.comap (algebraMap D E)) :=
     IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
       (Algebra.algebraMapSubmonoid D q.primeCompl) EP P
   let P' := P.comap (algebraMap D E)
   let eP : Localization.AtPrime P' ≃ₐ[D] EP := IsLocalization.algEquiv P'.primeCompl _ _
-  haveI : Algebra.FormallyEtale R A := inferInstance
-  haveI : Algebra.FormallyEtale A (Localization.AtPrime q) :=
+  have : Algebra.FormallyEtale R A := inferInstance
+  have : Algebra.FormallyEtale A (Localization.AtPrime q) :=
     Algebra.FormallyEtale.of_isLocalization q.primeCompl
-  haveI : Algebra.FormallyEtale R (Localization.AtPrime q) :=
+  have : Algebra.FormallyEtale R (Localization.AtPrime q) :=
     Algebra.FormallyEtale.comp R A (Localization.AtPrime q)
-  haveI : Algebra.FormallyEtale R E := Algebra.FormallyEtale.comp R (Localization.AtPrime q) E
-  haveI : Algebra.FormallyEtale E EP := Algebra.FormallyEtale.of_isLocalization P.primeCompl
-  haveI : Algebra.FormallyEtale R EP := Algebra.FormallyEtale.comp R E EP
-  haveI : Algebra.IsEtaleAt R P' := Algebra.FormallyEtale.of_equiv (eP.restrictScalars R).symm
+  have : Algebra.FormallyEtale R E := Algebra.FormallyEtale.comp R (Localization.AtPrime q) E
+  have : Algebra.FormallyEtale E EP := Algebra.FormallyEtale.of_isLocalization P.primeCompl
+  have : Algebra.FormallyEtale R EP := Algebra.FormallyEtale.comp R E EP
+  have : Algebra.IsEtaleAt R P' := Algebra.FormallyEtale.of_equiv (eP.restrictScalars R).symm
   obtain ⟨A', i1, i2, i3, q', i4, ⟨e⟩⟩ := exists_etale_atPrime_algEquiv_of_isEtaleAt R D P'
   exact ⟨A', i1, i2, i3, q', i4, ⟨e.trans (eP.restrictScalars R)⟩⟩
 
@@ -665,14 +665,14 @@ namespace GlobalTheory.EtaleOverDirectedUnion
 
 theorem localRing_of_etale_over_essEtale : ∀ (R S' E : Type) [CommRing R] [CommRing S'] [CommRing E] [Algebra R S'] [Algebra S' E] [Algebra R E] [IsScalarTower R S' E] [Algebra.Etale S' E], (∃ (A : Type) (_ : CommRing A) (_ : Algebra R A) (_ : Algebra.Etale R A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[R] S')) → ∀ (P : Ideal E) (_ : P.IsPrime), (∃ (A : Type) (_ : CommRing A) (_ : Algebra R A) (_ : Algebra.Etale R A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[R] Localization.AtPrime P)) := by
   intro R S' E _ _ _ _ _ _ _ _ ⟨A, _, _, _, q, _, ⟨ψ⟩⟩ P hP
-  letI : Algebra (Localization.AtPrime q) S' := ψ.toRingHom.toAlgebra
-  letI : Algebra (Localization.AtPrime q) E := ((algebraMap S' E).comp ψ.toRingHom).toAlgebra
-  haveI : IsScalarTower (Localization.AtPrime q) S' E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.Etale (Localization.AtPrime q) S' :=
+  let : Algebra (Localization.AtPrime q) S' := ψ.toRingHom.toAlgebra
+  let : Algebra (Localization.AtPrime q) E := ((algebraMap S' E).comp ψ.toRingHom).toAlgebra
+  have : IsScalarTower (Localization.AtPrime q) S' E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.Etale (Localization.AtPrime q) S' :=
     Algebra.Etale.of_equiv (R := Localization.AtPrime q)
       ({ ψ.toRingEquiv with commutes' := fun _ => rfl } : Localization.AtPrime q ≃ₐ[Localization.AtPrime q] S')
-  haveI : Algebra.Etale (Localization.AtPrime q) E := Algebra.Etale.comp (Localization.AtPrime q) S' E
-  haveI : IsScalarTower R (Localization.AtPrime q) E := IsScalarTower.of_algebraMap_eq (fun r => by
+  have : Algebra.Etale (Localization.AtPrime q) E := Algebra.Etale.comp (Localization.AtPrime q) S' E
+  have : IsScalarTower R (Localization.AtPrime q) E := IsScalarTower.of_algebraMap_eq (fun r => by
     show algebraMap R E r = algebraMap S' E (ψ (algebraMap R _ r))
     rw [ψ.commutes, ← IsScalarTower.algebraMap_apply])
   exact _root_.GlobalTheory.essEtale_atPrime_of_etale_over_atPrime R A E q P
@@ -859,8 +859,8 @@ namespace GlobalTheory
 theorem localDecomp_indEtale : ∀ (R S T : Type) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T], (∃ (ι : Type) (_ : Preorder ι) (_ : IsDirected ι (· ≤ ·)) (_ : Nonempty ι) (Si : ι → Subalgebra R S), Monotone Si ∧ (∀ s : S, ∃ i, s ∈ Si i) ∧ ∀ i, (∃ (A : Type) (_ : CommRing A) (_ : Algebra R A) (_ : Algebra.Etale R A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[R] Si i))) → ∀ (U : Subalgebra S T) (B : Type) [CommRing B] [Algebra S B] [Algebra.Etale S B] (Q : Ideal B) [Q.IsPrime], Nonempty (Localization.AtPrime Q ≃ₐ[S] U) → ∃ (μ : Type) (_ : Preorder μ) (_ : IsDirected μ (· ≤ ·)) (_ : Nonempty μ) (V : μ → Subalgebra R T), Monotone V ∧ (∀ m, V m ≤ U.restrictScalars R) ∧ (∀ x ∈ U, ∃ m, x ∈ V m) ∧ (∀ m, ∀ x ∈ V m, ∀ y ∈ U, x * y = 1 → ∃ z ∈ V m, x * z = 1) ∧ ∀ m, (∃ (A : Type) (_ : CommRing A) (_ : Algebra R A) (_ : Algebra.Etale R A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[R] V m)) := by
   intro R S T _ _ _ _ _ _ _ hS U B _ _ _ Q _ hf
   obtain ⟨f⟩ := hf
-  letI : Algebra R B := ((algebraMap S B).comp (algebraMap R S)).toAlgebra
-  haveI : IsScalarTower R S B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R B := ((algebraMap S B).comp (algebraMap R S)).toAlgebra
+  have : IsScalarTower R S B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨ι, _, _, _, C, hCm, hCc, hCe⟩ := _root_.GlobalTheory.EtaleOverDirectedUnion.construct R S B hS
   have hCe' : ∀ i, (∃ (A : Type) (_ : CommRing A) (_ : Algebra R A) (_ : Algebra.Etale R A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[R] Localization.AtPrime (Q.comap ((C i).val : C i →ₐ[R] B)))) :=
     fun i => hCe i _ inferInstance
@@ -922,7 +922,7 @@ theorem indEtale_localPieces_trans : ∀ (R S T : Type) [CommRing R] [CommRing S
   let P : Subalgebra R T → Prop := fun W => ∃ (j : κ) (m : μ j), V j m = W
   have key : ∀ (j₁ : κ) (m₁ : μ j₁) (j : κ), j₁ ≤ j → ∃ m : μ j, V j₁ m₁ ≤ V j m := by
     intro j₁ m₁ j hj
-    letI := pre j; haveI := dir j; haveI := ne j
+    let := pre j; have := dir j; have := ne j
     refine _root_.GlobalTheory.essEtaleLocal_le_of_directed R T ((Tj j).restrictScalars R) (μ j) (V j) (hVmono j) ?_ ?_ (V j₁ m₁) ?_
       (hVee j₁ m₁)
     · intro x hx; exact hVcov j x hx
@@ -935,7 +935,7 @@ theorem indEtale_localPieces_trans : ∀ (R S T : Type) [CommRing R] [CommRing S
     obtain ⟨j, h₁, h₂⟩ := directed_of (· ≤ ·) j₁ j₂
     obtain ⟨a, ha⟩ := key j₁ m₁ j h₁
     obtain ⟨b, hb⟩ := key j₂ m₂ j h₂
-    letI := pre j; haveI := dir j
+    let := pre j; have := dir j
     obtain ⟨c, hac, hbc⟩ := directed_of (· ≤ ·) a b
     exact ⟨⟨V j c, j, c, rfl⟩, ha.trans (hVmono j hac), hb.trans (hVmono j hbc)⟩
   · obtain ⟨j⟩ := (inferInstance : Nonempty κ)

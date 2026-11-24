@@ -71,7 +71,7 @@ theorem psi_nontriv {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) : ∃ a : Ad E, 
 
 theorem alg_inj {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) : Function.Injective (algebraMap E (Ad E)) := by
   obtain ⟨a, ha⟩ := psi_nontriv hψ
-  haveI : Nontrivial (Ad E) := ⟨⟨a, 0, fun h => ha (by rw [h, AddChar.map_zero_eq_one])⟩⟩
+  have : Nontrivial (Ad E) := ⟨⟨a, 0, fun h => ha (by rw [h, AddChar.map_zero_eq_one])⟩⟩
   exact (algebraMap E (Ad E)).injective
 
 noncomputable def eL (hi : Function.Injective (algebraMap E (Ad E))) : (Fin k → E) ≃ vecLattice E (Fin k) :=
@@ -133,7 +133,7 @@ theorem B_inj {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (γ : Fin k → Ad E) 
   apply ha
   have := h (Pi.single i (algebraMap E (Ad E) (ξ i)⁻¹ * a) : Fin k → Ad E)
   have e : (∑ j, (fun j => algebraMap E (Ad E) (ξ j)) j * (Pi.single i (algebraMap E (Ad E) (ξ i)⁻¹ * a) : Fin k → Ad E) j) = a := by
-    simp only [Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [← mul_assoc, ← map_mul, mul_inv_cancel₀ hi, map_one, one_mul]
   simp only [B] at this
   rwa [e] at this
@@ -151,7 +151,7 @@ theorem cov (hD : D0) (hM : AdelicLinearChange) (g : GA E k) (h : (Fin k → Ad 
   have hpos : 0 < Dt g := (hD E k).1 g
   have hmap : Measure.map (T g) (vecMeasure E (Fin k)) = ENNReal.ofReal (Dt g)⁻¹ • vecMeasure E (Fin k) := by
     ext A hA
-    rw [Measure.smul_apply, smul_eq_mul, ← lintegral_indicator_one hA, ← lintegral_indicator_one hA,
+    rw [smul_apply, smul_eq_mul, ← lintegral_indicator_one hA, ← lintegral_indicator_one hA,
       lintegral_map (measurable_one.indicator hA) (T g).continuous.measurable]
     exact (hM E k g (A.indicator 1) (measurable_one.indicator hA)).2
   have := integral_map_equiv (T g).toMeasurableEquiv h (μ := vecMeasure E (Fin k))
@@ -239,7 +239,7 @@ theorem poisson_cutoff_of : D0 → AdelicLinearChange → N0 → H0 → ThetaSer
     rw [Function.comp_apply, eL_val, stepA hD hM, norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.2 (hDpos g))]
 
   obtain ⟨hdisc, K, hK, hcov⟩ := isCoLat_ratV E (Fin k)
-  haveI : DiscreteTopology (vecLattice E (Fin k)) := hdisc
+  have : DiscreteTopology (vecLattice E (Fin k)) := hdisc
   have hP := GlobalTheory.CovolumeOneSelfDual.poisson (vecLattice E (Fin k)) K hK hcov (B ψ) (B_cont hψ) (B_symm ψ)
     (B_add ψ) (fun x y => hψ.norm _) (B_ker hψ) (fun γ hγ h => B_inj hψ γ hγ h) (vecMeasure E (Fin k))
     (vecDomain E (Fin k)) isAddFundamentalDomain_vecDomain vecMeasure_vecDomain hfc hfs hsumΓ
@@ -254,7 +254,7 @@ theorem poisson_cutoff_of : D0 → AdelicLinearChange → N0 → H0 → ThetaSer
       rw [hlast, mul_assoc, hinv (gam (eR.symm ξ))]
       rfl
     · intro ξ hξ
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rintro rfl
       apply hξ
       simp only [alg_zero, Matrix.zero_vecMul, hΨ0]

@@ -118,9 +118,9 @@ def betaI : HI I →* I.Ginf := MonoidHom.pi (betaV I)
 
 theorem continuous_betaV (v : InfinitePlace I.F) : Continuous (betaV I v) := by
   have hval : Continuous (fun g : HI I => hmI I g) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hinv : Continuous (fun g : HI I => hmI I g⁻¹) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   have key : ∀ f : HI I → Matrix (Fin I.n) (Fin I.n) (TI I), Continuous f →
       Continuous (fun g => (I.P v)⁻¹ * (f g).map (thI I v) * I.P v) := fun f hf =>
     (continuous_const.matrix_mul (hf.matrix_map (continuous_thI I v))).matrix_mul continuous_const
@@ -145,12 +145,12 @@ theorem continuous_toInfL : Continuous (Formalism.L2.SG.Pf.MeasInf.toInfL I hb) 
   have h1 : Continuous (fun s : I.Ginf => toHA I hb (s, 1)) :=
     (toHA I hb).continuous.comp (continuous_id.prodMk continuous_const)
   have hv : Continuous (fun x : HAd I => (hmat I x).map (kap I)) :=
-    (Units.continuous_val.comp continuous_subtype_val).matrix_map (continuous_kap I)
+    (Units.continuous_val.comp continuous_subtypeVal).matrix_map (continuous_kap I)
   have hi : Continuous (fun x : HAd I =>
       (((Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J x)⁻¹ :
         GL (Fin I.n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F ⊗[I.F] I.E)) :
         Matrix (Fin I.n) (Fin I.n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F ⊗[I.F] I.E)).map (kap I)) :=
-    (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_map (continuous_kap I)
+    (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_map (continuous_kap I)
   apply continuous_induced_rng.2
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · exact hv.comp h1

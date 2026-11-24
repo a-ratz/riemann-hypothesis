@@ -78,7 +78,7 @@ theorem isLocallyConstant_orbit {π : Representation ℂ G V} (hπ : IsSmooth π
 theorem eq_zero_of_fixed_twKer {π : Representation ℂ G V} (hπ : IsSmooth π) {K : Subgroup G}
     (hK : IsCompact (K : Set G)) {w : V} (hw : w ∈ fixed π K) (hw' : w ∈ twKer π K 1) : w = 0 := by
   classical
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   obtain ⟨T, hTS, hwT⟩ := Submodule.mem_span_finite_of_mem_span hw'
   have hT : ∀ t ∈ T, ∃ (n : K) (v : V), t = π n v - v := by
     intro t ht
@@ -87,7 +87,7 @@ theorem eq_zero_of_fixed_twKer {π : Representation ℂ G V} (hπ : IsSmooth π)
   choose! n v hnv using hT
   let O : Set V := ⋃ t ∈ T, Set.range fun h : K => π h (v t)
   have hOfin : O.Finite := Set.Finite.biUnion T.finite_toSet fun t _ =>
-    ((isLocallyConstant_orbit hπ (v t)).comp_continuous continuous_subtype_val).range_finite
+    ((isLocallyConstant_orbit hπ (v t)).comp_continuous continuous_subtypeVal).range_finite
   have hOst : ∀ (k : K) (x : V), x ∈ O → π k x ∈ O := by
     intro k x hx
     simp only [O, Set.mem_iUnion, Set.mem_range] at hx ⊢
@@ -96,14 +96,14 @@ theorem eq_zero_of_fixed_twKer {π : Representation ℂ G V} (hπ : IsSmooth π)
   have hvO : ∀ t ∈ T, v t ∈ O := fun t ht => by
     simp only [O, Set.mem_iUnion, Set.mem_range]
     exact ⟨t, ht, 1, by simp⟩
-  haveI : Finite O := hOfin
+  have : Finite O := hOfin
   let φ : K → O → O := fun k x => ⟨π k x.1, hOst k x.1 x.2⟩
   have hφmul : ∀ k k' : K, φ (k * k') = φ k ∘ φ k' := by
     intro k k'; funext x; apply Subtype.ext; simp [φ, map_mul]
   have hφone : φ 1 = id := by funext x; apply Subtype.ext; simp [φ]
   let ι := Set.range φ
-  haveI : Fintype ι := Fintype.ofFinite ι
-  haveI : Nonempty ι := ⟨⟨φ 1, 1, rfl⟩⟩
+  have : Fintype ι := Fintype.ofFinite ι
+  have : Nonempty ι := ⟨⟨φ 1, 1, rfl⟩⟩
   let r : ι → K := fun f => f.2.choose
   have hr : ∀ f : ι, φ (r f) = f.1 := fun f => f.2.choose_spec
   let A : V →ₗ[ℂ] V := ∑ f : ι, π (r f)
@@ -257,7 +257,7 @@ theorem evMap_bijective
     exact hl (LinearMap.congr_fun (congrArg Subtype.val hv) l)
   · intro Λ
     obtain ⟨K, ho, hc, hKs⟩ := hG _ ((isSmooth_contra (contra π) Λ).mem_nhds (by simp))
-    haveI := hπ.2 K ho hc
+    have := hπ.2 K ho hc
     have hbij : Function.Bijective (res π K) := ⟨res_injective hπ.1 hc, res_surjective hπ.1 ho hc⟩
     let e := LinearEquiv.ofBijective (res π K) hbij
     let μ : Module.Dual ℂ (fixed (contra π) K) :=
@@ -298,7 +298,7 @@ theorem mem_of_annihilator_eq_bot
     (l : smoothPart π.dual) : l ∈ U.toSubmodule := by
   obtain ⟨K, ho, hc, hKs⟩ := hG _ ((isSmooth_contra π l).mem_nhds (by simp))
   have hlK : l ∈ fixed (contra π) K := mem_fix.2 fun h hh => hKs hh
-  haveI := hπ.2 K ho hc
+  have := hπ.2 K ho hc
   let S : Submodule ℂ (Module.Dual ℂ (fixed π K)) :=
     (U.toSubmodule.comap (fixed (contra π) K).subtype).map (res π K)
   by_cases hS : S = ⊤

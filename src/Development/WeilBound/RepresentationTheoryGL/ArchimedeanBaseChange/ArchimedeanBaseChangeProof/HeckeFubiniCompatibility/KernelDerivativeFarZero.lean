@@ -252,7 +252,7 @@ theorem hasFDerivAt_Iop {W : Type} [NormedAddCommGroup W] [NormedSpace ℝ W] [C
   obtain ⟨C, hC⟩ := (hBc.prod hS).exists_bound_of_continuousOn
     (hF'c.mono (Set.prod_mono subset_rfl (Set.subset_univ _)))
   have hF0 : ∀ x ∈ U, ∀ y, R + l x < l (v y) → F' x y = 0 := fun x hx y h => by
-    simp only [F', kernel_derivative_far_zero hU hl hR hx (hvU y) h, map_zero, ContinuousLinearMap.zero_apply]
+    simp only [F', kernel_derivative_far_zero hU hl hR hx (hvU y) h, map_zero, zero_apply]
   have hb : ∀ y, ∀ x ∈ Metric.closedBall x₀ ε, ‖F' x y‖ ≤ {y | l (v y) ≤ R + M}.indicator (fun _ => C) y := by
     intro y x hx
     by_cases hy : y ∈ {y | l (v y) ≤ R + M}
@@ -286,7 +286,7 @@ theorem hasFDerivAt_Iop {W : Type} [NormedAddCommGroup W] [NormedSpace ℝ W] [C
     exact (L.continuous.comp (hs.comp_continuous hv hvU)).clm_apply hφ
   have hint0 : Integrable (fun y => L (K x₀ (v y)) (φ y)) μ := by
     refine (hcont x₀ hx₀).integrable_of_hasCompactSupport (HasCompactSupport.intro (hlc (R + l x₀)) fun y hy => ?_)
-    rw [hR x₀ hx₀ (v y) (hvU y) (not_le.1 hy), map_zero, ContinuousLinearMap.zero_apply]
+    rw [hR x₀ hx₀ (v y) (hvU y) (not_le.1 hy), map_zero, zero_apply]
   exact hasFDerivAt_integral_of_dominated_of_fderiv_le (Metric.closedBall_mem_nhds _ hε)
     (Filter.eventually_of_mem (hU.mem_nhds hx₀) fun x hx => (hcont x hx).aestronglyMeasurable) hint0
     hF'x.aestronglyMeasurable (ae_of_all _ hb) hbi (ae_of_all _ fun y x hx => hFd x (hB hx) y)
@@ -324,7 +324,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 theorem act_contDiffOn (M : KMod n)
     {k : Mat n → (M.V →L[ℂ] M.V)} (hk : ContDiffOn ℝ ∞ k (GLs n)) {R : ℝ} (hR : ∀ y ∈ GLs n, R < lg y → k y = 0)
     {F : Mat n → M.V} (hF : ContinuousOn F (GLs n)) : ContDiffOn ℝ ∞ (act μ M k F) (GLs n) := by
-  haveI : ProperSpace (Mat n) := inferInstanceAs (ProperSpace (Fin n → Fin n → ℂ))
+  have : ProperSpace (Mat n) := inferInstanceAs (ProperSpace (Fin n → Fin n → ℂ))
   have hL := _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts
   have hCl := GlobalTheory.CompanionTheory.WaveK.Word.cl_kK hL hk hR
   have hG : Good (GLs n) lg (GlobalTheory.CompanionTheory.WaveK.Word.kK k) := ⟨hCl.smooth, hCl.supp⟩

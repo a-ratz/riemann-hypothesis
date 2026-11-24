@@ -196,7 +196,7 @@ def RecTied (D : D7) (L : SizeData₂ D) : Prop := GlobalTheory.FinalJoin2.Field
 theorem core_eq_FO : p.T.Q.c.F = FO D := (GlobalTheory.FinalJoin2.FO_eq_coeff p.T.Q p.fw.laws.pins.2.2.1).symm
 
 theorem RecTied.core_size (h : RecTied D L) : fieldSz p.T.Q.c.F ≤ 2 * Formalism.MainNotions.WeightAlgebra.PO D L := by
-  letI : NumberField (FO D) := NumberField.mk
+  let : NumberField (FO D) := NumberField.mk
   let e : FO D ≃+* p.T.Q.c.F := (IntermediateField.equivOfEq (core_eq_FO p).symm).toRingEquiv
   have h1 : Module.finrank ℚ (FO D) = Module.finrank ℚ p.T.Q.c.F :=
     (LinearEquiv.ofBijective e.toRingHom.toRatAlgHom.toLinearMap e.bijective).finrank_eq

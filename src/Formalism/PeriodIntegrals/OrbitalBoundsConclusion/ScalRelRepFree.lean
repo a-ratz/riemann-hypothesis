@@ -163,7 +163,7 @@ theorem Xa_ge {T₀ : E} (G : LFlag S r T₀) {j : ℕ} (hj : r ≤ j) : Xflag G
   unfold Xflag Xsp Formalism.MainNotions.S.FlagG.Xa Formalism.MainNotions.S.FlagG.X
   congr 1
   ext x
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
   constructor
   · rintro ⟨i, -, rfl⟩
     exact ⟨i, rfl⟩
@@ -221,7 +221,7 @@ theorem nl_map_X (hn : n ∈ NLam Λ G) : (Xsp G).map (n : S.V →ₗ[E] S.V) = 
   · rintro _ ⟨u, hu, rfl⟩
     exact nl_X_mem hn hu
   · intro v hv
-    haveI : FiniteDimensional E (Xsp G) := by
+    have : FiniteDimensional E (Xsp G) := by
       unfold Xsp Formalism.MainNotions.S.FlagG.X
       exact FiniteDimensional.span_of_finite E (Set.finite_range _)
     let f : Xsp G →ₗ[E] Xsp G := (n : S.V →ₗ[E] S.V).restrict (fun u hu => nl_X_mem hn hu)

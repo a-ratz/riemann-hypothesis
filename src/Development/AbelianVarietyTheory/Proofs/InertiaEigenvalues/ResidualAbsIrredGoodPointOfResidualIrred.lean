@@ -62,7 +62,7 @@ theorem absIrrSub_top_of_irred {k L : Type} [Field k] [Field L] [IsAlgClosed L] 
   classical
   set K := AlgebraicClosure k
   set f := algebraMap k K with hf
-  letI : Algebra k L := φ.toAlgebra
+  let : Algebra k L := φ.toAlgebra
   let ψ : K →ₐ[k] L := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -70,7 +70,7 @@ theorem absIrrSub_top_of_irred {k L : Type} [Field k] [Field L] [IsAlgClosed L] 
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hψ : ∀ x : k, ψ (f x) = φ x := fun x => ψ.commutes x
   have hψinj : Function.Injective ψ := ψ.toRingHom.injective
-  haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+  have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
   have hspan : Submodule.span K ((fun v : Fin a → k => f ∘ v) '' ((⊤ : Submodule k (Fin a → k)) : Set _)) = ⊤ := by
     rw [eq_top_iff]
     intro v _

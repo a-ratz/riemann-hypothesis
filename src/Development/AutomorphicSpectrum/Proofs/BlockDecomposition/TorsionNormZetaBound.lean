@@ -83,7 +83,7 @@ theorem sum_torsion_le (K : Type) [Field K] [NumberField K] (m : ℕ)
     have hc : ((S.filter (fun x => τ x = τ x₀)).card : ℝ) ≤ (Ideal.absNorm (τ x₀) : ℝ) ^ m := by
       have hinj : (S.filter (fun x => τ x = τ x₀)).card ≤
           Nat.card {x : (Fin m → K) ⧸ L // ∀ a ∈ τ x₀, a • x = 0} := by
-        haveI := Fintype.ofFinite {x : (Fin m → K) ⧸ L // ∀ a ∈ τ x₀, a • x = 0}
+        have := Fintype.ofFinite {x : (Fin m → K) ⧸ L // ∀ a ∈ τ x₀, a • x = 0}
         rw [Nat.card_eq_fintype_card, ← Fintype.card_coe]
         refine Fintype.card_le_of_injective (fun x => ⟨x.1, fun a ha => ?_⟩) (fun x y h => ?_)
         · have hx := (Finset.mem_filter.mp x.2).2

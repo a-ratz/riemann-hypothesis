@@ -127,9 +127,9 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem linOm_unitary : ∀ (D : D7) (v : FinPl D) (m n : ℕ) (g : GL (Fin n) (Fv D.host.F v)) (h : GL (Fin m) (Fv D.host.F v)), (∃ r : ℝ, 0 < r ∧ ∀ Φ : Matrix (Fin m) (Fin n) (Fv D.host.F v) → ℂ, linOm v g h Φ = fun x => (r : ℂ) * Φ ((h⁻¹).val * x * g.val)) ∧ ∀ Φ ∈ GlobalTheory.SplitWeil.SB (Matrix (Fin m) (Fin n) (Fv D.host.F v)), linOm v g h Φ ∈ GlobalTheory.SplitWeil.SB (Matrix (Fin m) (Fin n) (Fv D.host.F v)) ∧ ∀ ν : Measure (Fv D.host.F v), ν.IsAddHaarMeasure → GlobalTheory.SplitWeil.ip ν (linOm v g h Φ) (linOm v g h Φ) = GlobalTheory.SplitWeil.ip ν Φ Φ ∧ (GlobalTheory.SplitWeil.ip ν Φ Φ = 0 → Φ = 0) := by
   intro D v m n g h
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  haveI : BorelSpace (Fv D.host.F v) := ⟨rfl⟩
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  have : BorelSpace (Fv D.host.F v) := ⟨rfl⟩
   refine ⟨⟨fac g h, fac_pos g h, fun Φ => om_one_eq g h Φ⟩, fun Φ hΦ => ⟨?_, fun ν hν => ⟨?_, ?_⟩⟩⟩
   · exact GlobalTheory.SplitWeil.Model.om_mem_SB 1 g h hΦ
   · exact ip_om_one ν g h Φ

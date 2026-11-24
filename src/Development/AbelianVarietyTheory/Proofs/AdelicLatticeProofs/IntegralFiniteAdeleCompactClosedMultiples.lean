@@ -107,7 +107,7 @@ theorem exists_nat_mul_integral (a : FiniteAdeleRing (𝓞 F) F) :
     ∃ M : ℕ, 0 < M ∧ ∀ v, ((M : FiniteAdeleRing (𝓞 F) F) * a) v ∈
       HeightOneSpectrum.adicCompletionIntegers F v := by
   obtain ⟨x, b, hb, hab⟩ := GlobalTheory.AdLat.exists_eq_algebraMap_add_nsmul F 1 one_pos a
-  haveI : Algebra.IsAlgebraic ℤ F :=
+  have : Algebra.IsAlgebraic ℤ F :=
     (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ) (C := F)).2 inferInstance
   obtain ⟨m, y, hm, hmx⟩ := IsAlgebraic.exists_nsmul_eq (𝓞 F)
     (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) x)
@@ -124,12 +124,12 @@ theorem integral_finiteAdele_properties : ∀ (F : Type) [Field F] [NumberField 
   intro F _ _
   refine ⟨GlobalTheory.AdeleCocompact.isCompact_integral F, fun M _ => ?_, eq_zero_of_forall_mul F,
     fun x hx => ?_, exists_nat_mul_integral F, ⟨fun a ⟨n, hn⟩ => ?_⟩⟩
-  · haveI := t2Space_finiteAdeleRing' F
+  · have := t2Space_finiteAdeleRing' F
     have h := ((GlobalTheory.AdeleCocompact.isCompact_integral F).image
       (continuous_const_mul (M : FiniteAdeleRing (𝓞 F) F))).isClosed
     convert h using 1
     ext a
-    simp only [Set.mem_image, Set.mem_setOf_eq, eq_comm]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, eq_comm]
   · obtain ⟨y, hy⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one F x fun v => by
       have := (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).1 (hx v)
       rwa [FiniteAdeleRing.algebraMap_apply,

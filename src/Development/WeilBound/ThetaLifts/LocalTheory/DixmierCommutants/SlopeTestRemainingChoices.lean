@@ -197,7 +197,7 @@ theorem rank_SB (V : Type) [TopologicalSpace V] [SecondCountableTopology V] [T2S
     Module.rank ℂ (GlobalTheory.WeilM.SB V) ≤ Cardinal.aleph0 := by
   classical
   have hc : {K : Set V | IsCompact K ∧ IsOpen K}.Countable := by
-    refine ((Set.countable_setOf_finite_subset (TopologicalSpace.countable_countableBasis V)).image Set.sUnion).mono ?_
+    refine ((Set.countable_ofPred_finite_subset (TopologicalSpace.countable_countableBasis V)).image Set.sUnion).mono ?_
     rintro K ⟨h1, h2⟩
     obtain ⟨S, hS, rfl⟩ := (TopologicalSpace.isBasis_countableBasis V).open_eq_sUnion h2
     obtain ⟨T, hT, hf, hcov⟩ := h1.elim_finite_subcover_image (b := S) (c := id)
@@ -207,9 +207,9 @@ theorem rank_SB (V : Type) [TopologicalSpace V] [SecondCountableTopology V] [T2S
   have hle : GlobalTheory.WeilM.SB V ≤ Submodule.span ℂ ((fun K : Set V => K.indicator (1 : V → ℂ)) '' {K | IsCompact K ∧ IsOpen K}) := by
     intro f hf
     have hfin : (f '' tsupport f).Finite := by
-      haveI : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hf.2.isCompact
-      have h2 := (hf.1.comp_continuous (continuous_subtype_val (p := (· ∈ tsupport f)))).range_finite
-      rwa [Set.range_comp, Subtype.range_coe_subtype, Set.setOf_mem_eq] at h2
+      have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hf.2.isCompact
+      have h2 := (hf.1.comp_continuous (continuous_subtypeVal (p := (· ∈ tsupport f)))).range_finite
+      rwa [Set.range_comp, Subtype.range_coe_subtype, Set.ofPred_mem_eq] at h2
     have e : f = ∑ c ∈ hfin.toFinset.erase 0, c • (f ⁻¹' {c}).indicator (1 : V → ℂ) := by
       funext y
       rw [Finset.sum_apply, Finset.sum_eq_single (f y)]

@@ -94,7 +94,7 @@ private theorem pi_fix {I : Type} [Fintype I] {Gi Wi : I → Type} [∀ i, Group
     (h : ∀ i, 0 < Module.finrank ℂ (fixd (τ i) (K i))) :
     ((∏ i, Module.finrank ℂ (fixd (τ i) (K i)) : ℕ) : Cardinal) ≤ Module.rank ℂ (fixd (piRep τ) (Subgroup.pi Set.univ K)) := by
   classical
-  haveI : ∀ i, Module.Finite ℂ (fixd (τ i) (K i)) := fun i => Module.finite_of_finrank_pos (h i)
+  have : ∀ i, Module.Finite ℂ (fixd (τ i) (K i)) := fun i => Module.finite_of_finrank_pos (h i)
   have e : ((∏ i, Module.finrank ℂ (fixd (τ i) (K i)) : ℕ) : Cardinal) = Module.rank ℂ (⨂[ℂ] i, fixd (τ i) (K i)) := by
     rw [rank_eq_card_basis (Basis.piTensorProduct fun i => Module.finBasis ℂ (fixd (τ i) (K i)))]
     simp
@@ -146,8 +146,8 @@ private theorem one_copy (hS : Step) (π : Representation ℂ G W) (τ : Represe
     omega
   have h8 : Nontrivial X := by
     by_contra hc
-    haveI := not_nontrivial_iff_subsingleton.1 hc
-    haveI : Subsingleton Z := f.symm.injective.subsingleton
+    have := not_nontrivial_iff_subsingleton.1 hc
+    have : Subsingleton Z := f.symm.injective.subsingleton
     exact hZ (Submodule.eq_bot_of_subsingleton)
   have h9 : Module.rank ℂ ℂ = Module.rank ℂ X := by
     rw [Module.rank_self]
@@ -171,7 +171,7 @@ private theorem loc_adm (hU : GlobalTheory.BCT.Unr E) (hn : 1 ≤ n) {σ : Submo
     FiniteDimensional ℂ (fixed τ.ρ K) := by
   obtain ⟨⟨τ₀, h₀, hfd⟩, hu⟩ := GlobalTheory.BCT.LocCompU.exists_unique_locComp E hU n hn σ hσ w
   obtain ⟨T⟩ := hu τ₀ τ h₀ hτ
-  haveI := hfd K hK
+  have := hfd K hK
   exact GlobalTheory.BCT.SphLine.finiteDimensional_fixed_of_equiv T K
 
 private theorem loc_one (hU : GlobalTheory.BCT.Unr E) (hn : 1 ≤ n) {σ : Submodule ℂ (UA E n → ℂ)} (hσ : IsAutRepU σ) (w : Plc E)
@@ -191,16 +191,16 @@ private theorem loc_deep (hU : GlobalTheory.BCT.Unr E) (hn : 1 ≤ n) {σ : Subm
     { carrier := {k | τ.ρ k x = x}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have ho : IsOpen ((St ⊓ KL n w : Subgroup (UL n w)) : Set (UL n w)) :=
     (τ.smooth x).inter (GlobalTheory.BCT.LocCompU.isOpen_isCompact_KL hU n w).1
   refine ⟨_, ho, inf_le_right, ?_⟩
-  haveI := loc_adm hU hn hσ w τ hτ _ ho
+  have := loc_adm hU hn hσ w τ hτ _ ho
   refine Module.finrank_pos_iff_exists_ne_zero.2 ⟨⟨x, ?_⟩, fun h => hx (congrArg Subtype.val h)⟩
   rw [GlobalTheory.GelfandLine.mem_fixed_iff]
   exact fun k hk => hk.1
@@ -210,12 +210,12 @@ private theorem loc_move (hU : GlobalTheory.BCT.Unr E) (hn : 1 ≤ n) {σ : Subm
     (K : Subgroup (UL n w)) :
     Module.finrank ℂ (fixd τ'.ρ (K.map (UL n w).subtype)) = Module.finrank ℂ (fixed τ.ρ K) := by
   have hm : ∀ g : GLw n w, g ∈ UL n w := fun g => by
-    rw [UL, if_pos hw]
+    rw [UL, ite_eq_left hw]
     trivial
   let τ₁ : SmIrr (UL n w) :=
     { V := τ'.V
       ρ := τ'.ρ.comp (UL n w).subtype
-      smooth := fun v => (τ'.smooth v).preimage continuous_subtype_val
+      smooth := fun v => (τ'.smooth v).preimage continuous_subtypeVal
       irred := by
         obtain ⟨h0, h⟩ := (GlobalTheory.CuspRep.isIrreducible_iff _).1 τ'.irred
         exact (GlobalTheory.CuspRep.isIrreducible_iff _).2 ⟨h0, fun W hW => h W fun g x hx => hW ⟨g, hm g⟩ x hx⟩ }
@@ -263,7 +263,7 @@ private theorem glob_dim (hU : GlobalTheory.BCT.Unr E) (hn : 1 ≤ n) {σ : Subm
   have hfin : {w : Plc E | w.under (𝓞 (Lp E)) ∈ T}.Finite := by
     refine (T.finite_toSet.biUnion (t := fun v => {w : Plc E | w.under (𝓞 (Lp E)) = v}) fun v _ => ?_).subset
       fun w hw => Set.mem_biUnion hw rfl
-    haveI := v.isMaximal
+    have := v.isMaximal
     refine Set.Finite.of_finite_image (f := fun w : Plc E => w.asIdeal)
       ((IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).subset ?_) fun _ _ _ _ h => HeightOneSpectrum.ext h
     rintro _ ⟨w, rfl, rfl⟩
@@ -326,7 +326,7 @@ private theorem SectionSplitPlaces : ((l : ℕ) : 𝓞 (Lp L)) ∉ s.v0.asIdeal 
   have e' := congrArg (Int.cast : ℤ → 𝓞 (Lp L) ⧸ s.v0.asIdeal) e
   push_cast at e'
   rw [hl0, hp0, mul_zero, mul_zero, add_zero] at e'
-  haveI := subsingleton_of_zero_eq_one e'
+  have := subsingleton_of_zero_eq_one e'
   rw [Nat.card_of_subsingleton (0 : 𝓞 (Lp L) ⧸ s.v0.asIdeal)] at hcard
   exact s.p_prime.one_lt.ne hcard
 
@@ -438,8 +438,8 @@ private theorem form_wt (hn : 1 ≤ n)
     (σ : Submodule ℂ (UA L n → ℂ)) (F : Ga l L n × GL' n V → Fin d → ℂ) (hF : ¬ ∀ ℓ, toForm ι e F ℓ = 0)
     (hσ : ∀ ℓ, toForm ι e F ℓ ∈ σ) (y : Emb l (fun v : V.frame.Vl => s.w v.1)) :
     HasWeightAt σ (ι.toRingHom.comp y.res) (lam y.res).dual := by
-  haveI : Finite V.frame.Vl := @Finite.of_fintype _ V.frame.finV
-  haveI : ∀ v : V.frame.Vl, Finite (W.Emb l (s.w v.1)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
+  have : Finite V.frame.Vl := @Finite.of_fintype _ V.frame.finV
+  have : ∀ v : V.frame.Vl, Finite (W.Emb l (s.w v.1)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
   let Φ : Module.Dual ℂ (⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res)) →ₗ[ℂ] (UA L n → ℂ) :=
     { toFun := fun ℓ => toForm ι e F ℓ
       map_add' := fun _ _ => rfl
@@ -488,7 +488,7 @@ variable {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMF
 
 private theorem model_irr (hB : BoxIrr) (hP : PiIrr) (hG : SchurGL) : AbsIrr (box C.repL C.repS) := by
   classical
-  letI : Fintype V.frame.Vl := V.frame.finV
+  let : Fintype V.frame.Vl := V.frame.finV
   exact hB _ _ _ _ _ _ (hP _ _ _ _ fun v => hG L n _ _) (hB _ _ _ _ _ _ (hP _ _ _ _ fun u => hG L n _ _) (hG L n _ _))
 
 private theorem model_rank [Fintype V.frame.Vl] (K : ∀ w : Plc L, Subgroup (GLw n w)) (a : Plc (Lp L) → ℕ) (k4 : ∀ v, 0 < a v)
@@ -502,7 +502,7 @@ private theorem model_rank [Fintype V.frame.Vl] (K : ∀ w : Plc L, Subgroup (GL
   have rl := pi_fix (fun v => (C.l v).ρ) (fun v => K (s.w v.1)) fun v => (k4 _).trans_eq (el v).symm
   have ru := pi_fix (fun u => (C.u u).ρ) (fun u => K (s.w u.1)) fun u => (k4 _).trans_eq (eu u).symm
   have ro : (a s.v0 : Cardinal) ≤ Module.rank ℂ (fixd C.o.ρ (K (s.w s.v0))) := by
-    haveI := Module.finite_of_finrank_pos ((k4 _).trans_eq eo.symm)
+    have := Module.finite_of_finrank_pos ((k4 _).trans_eq eo.symm)
     exact ((congrArg Nat.cast eo).symm.trans (Module.finrank_eq_rank _ _)).le
   rw [Finset.prod_congr rfl fun v _ => el v] at rl
   rw [Finset.prod_congr rfl fun u _ => eu u] at ru
@@ -550,7 +550,7 @@ private theorem cancel_rank {r y : Cardinal} {f d P : ℕ} {D : ℂ} (hP : 0 < P
 theorem UpperTheory.V.Z.J.D.flath :
     IsotS → Step → BoxIrr → PiIrr → SchurGL → InfDim → WtEx → SecS → Flath := by
   intro hI hS hB hP hG hD hW hSec l _ L Ω _ _ _ _ _ _ s n hn V hV Q c ι m τ₀ lam d e ξ hξ σ hσ hne C
-  letI : Fintype V.frame.Vl := V.frame.finV
+  let : Fintype V.frame.Vl := V.frame.finV
   refine (hI l L Ω s n hn V hV Q c ι m τ₀ lam d e ξ hξ σ hσ C).elim fun ρ hρ => ?_
   obtain ⟨lam', hl⟩ := hW l L Ω s n hn V hV ι lam
   have hv := vs_data hn Q ι τ₀ e ξ hξ σ hne

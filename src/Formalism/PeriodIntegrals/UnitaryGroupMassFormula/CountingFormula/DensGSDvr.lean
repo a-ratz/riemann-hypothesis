@@ -123,7 +123,7 @@ theorem key_norm {ι : Type} [Fintype ι] {n : ℕ} (X : ι → Fin n → F) (hX
     (hred : LinearIndependent 𝓀[F] (redM F X)) (c : ι → F) (u : Fin n → F) (hu : ∑ i, c i • X i = u)
     (j : ι) (hj : ∀ i, valuation F (c i) ≤ valuation F (c j)) (hcj : c j ≠ 0)
     (hlt : ∀ k, valuation F (u k) < valuation F (c j)) : False := by
-  have hvj : 0 < valuation F (c j) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hcj)
+  have hvj : 0 < valuation F (c j) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hcj)
   have hd : ∀ i, c i / c j ∈ 𝒪[F] := fun i =>
     (Valuation.mem_integer_iff _ _).2 (by rw [map_div₀]; exact (div_le_one₀ hvj).2 (hj i))
   have hz : ∑ i, resF F (c i / c j) • redM F X i = 0 := by
@@ -156,10 +156,10 @@ theorem indep_of_red {ι : Type} [Fintype ι] {n : ℕ} (X : ι → Fin n → F)
     intro h
     have h2 := hj i0 (Finset.mem_univ _)
     rw [h, map_zero] at h2
-    exact hi0 ((Valuation.zero_iff _).1 (le_antisymm h2 zero_le'))
+    exact hi0 ((Valuation.zero_iff _).1 (le_antisymm h2 zero_le))
   refine key_norm X hX hred g 0 hg j (fun i => hj i (Finset.mem_univ _)) hcj (fun k => ?_)
   rw [Pi.zero_apply, map_zero]
-  exact zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hcj)
+  exact pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hcj)
 
 theorem sat_of_red {ι : Type} [Fintype ι] {n : ℕ} (X : ι → Fin n → F) (hX : ∀ i k, X i k ∈ 𝒪[F])
     (hred : LinearIndependent 𝓀[F] (redM F X)) : SatF F X := by
@@ -174,7 +174,7 @@ theorem sat_of_red {ι : Type} [Fintype ι] {n : ℕ} (X : ι → Fin n → F) (
   have hcj : c j ≠ 0 := by
     intro h
     rw [h, map_zero] at hj1
-    exact not_lt.2 zero_le' hj1
+    exact not_lt.2 zero_le hj1
   exact key_norm X hX hred c u hc j (fun i => hj i (Finset.mem_univ _)) hcj
     (fun k => lt_of_le_of_lt ((Valuation.mem_integer_iff _ _).1 (hu k)) hj1)
 

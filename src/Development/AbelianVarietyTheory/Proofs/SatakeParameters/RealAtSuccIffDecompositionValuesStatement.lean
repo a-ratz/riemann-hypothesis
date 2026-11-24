@@ -70,7 +70,7 @@ theorem exists_isDetOf_uPts (D : D7) (i : ℕ) (hi : i ≤ D.R.m)
   refine ⟨⟨Units.map (Matrix.scalar (Fin 1)).toMonoidHom (Matrix.GeneralLinearGroup.det x.1), ?_⟩, ?_⟩
   · simp only [Formalism.L2.DIV.U1, MonoidHom.mem_ker, MonoidHom.mul_apply, MonoidHom.id_apply, Formalism.L2.DIV.conjId] at hd
     have hd' := congrArg Units.val hd
-    simp only [Units.val_mul, Units.coe_map, Units.val_one, MonoidHom.coe_coe] at hd'
+    simp only [Units.val_mul, Units.coe_map, Units.val_one, MonoidHom.coe_ofClass] at hd'
     show cT _ _ * _ * _ = _
     ext a b
     fin_cases a; fin_cases b

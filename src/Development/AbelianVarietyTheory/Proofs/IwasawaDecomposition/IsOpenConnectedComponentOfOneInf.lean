@@ -64,7 +64,7 @@ theorem exists_infPow_hom : ∀ (E : Type) [Field E] [NumberField E] (n : (E →
   intro E _ _ n
   have h0 : ∀ (x : Ideles E) (w : InfinitePlace E), (x : AdeleRing (𝓞 E) E).1 w ≠ 0 := fun x w =>
     left_ne_zero_of_mul_eq_one (congrArg (fun y : AdeleRing (𝓞 E) E => y.1 w) x.mul_inv)
-  haveI : ∀ w : InfinitePlace E, Fintype {i : w.Completion →+* ℂ // Continuous i} := fun w =>
+  have : ∀ w : InfinitePlace E, Fintype {i : w.Completion →+* ℂ // Continuous i} := fun w =>
     @Fintype.ofFinite _ (finite_contEmbInf w)
   have e : ∀ x : Ideles E, infPow n x = ∏ w : InfinitePlace E, ∏ i : {i : w.Completion →+* ℂ // Continuous i},
       i.1 ((x : AdeleRing (𝓞 E) E).1 w) ^ n (i.1.comp (algebraMap E w.Completion)) := fun x =>
@@ -94,7 +94,7 @@ theorem exists_lPow_hom : ∀ (E : Type) [Field E] [NumberField E] (l : ℕ) [Fa
   have hl : l.Prime := Fact.out
   have h0 : ∀ (x : Ideles E) (v : HeightOneSpectrum (𝓞 E)), (x : AdeleRing (𝓞 E) E).2 v ≠ 0 := fun x w =>
     left_ne_zero_of_mul_eq_one (congrArg (fun y : AdeleRing (𝓞 E) E => y.2 w) x.mul_inv)
-  haveI : ∀ v : HeightOneSpectrum (𝓞 E), Fintype {j : v.adicCompletion E →+* Qbar l // Continuous j} := fun v =>
+  have : ∀ v : HeightOneSpectrum (𝓞 E), Fintype {j : v.adicCompletion E →+* Qbar l // Continuous j} := fun v =>
     @Fintype.ofFinite _ (finite_contEmb v)
   have hI : Ideal.span {((l : ℕ) : 𝓞 E)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
@@ -174,7 +174,7 @@ theorem infPow_diagUnits : ∀ (E : Type) [Field E] [NumberField E] (n : (E →+
     intro φ
     obtain ⟨j, hj, e⟩ := GlobalTheory.InfTypeLocal.exists_ext φ
     exact ⟨⟨_, j, hj⟩, RingHom.ext e⟩
-  haveI : ∀ w, Fintype (J w) := fun w => @Fintype.ofFinite _ (finite_contEmbInf w)
+  have : ∀ w, Fintype (J w) := fun w => @Fintype.ofFinite _ (finite_contEmbInf w)
   rw [← Fintype.prod_bijective res ⟨hinj, hsurj⟩ (fun p => res p (k : E) ^ n (res p)) _ fun _ => rfl,
     Fintype.prod_sigma]
   exact Finset.prod_congr rfl fun w _ => finprod_eq_prod_of_fintype _
@@ -185,13 +185,13 @@ theorem isOpenEmbedding_val_inf (E : Type) [Field E] [NumberField E] :
 
 theorem isOpen_connectedComponentOfOne_inf : ∀ (E : Type) [Field E] [NumberField E], IsOpen ((Subgroup.connectedComponentOfOne (InfiniteAdeleRing E)ˣ : Subgroup (InfiniteAdeleRing E)ˣ) : Set (InfiniteAdeleRing E)ˣ) := by
   intro E _ _
-  haveI : ∀ w : InfinitePlace E, LocallyConnectedSpace w.Completion := fun w => by
+  have : ∀ w : InfinitePlace E, LocallyConnectedSpace w.Completion := fun w => by
     rcases w.isReal_or_isComplex with hw | hw
     · exact (InfinitePlace.Completion.isometryEquivRealOfIsReal hw).toHomeomorph.locallyConnectedSpace
     · exact (InfinitePlace.Completion.isometryEquivComplexOfIsComplex hw).toHomeomorph.locallyConnectedSpace
-  haveI : LocallyConnectedSpace (InfiniteAdeleRing E) :=
+  have : LocallyConnectedSpace (InfiniteAdeleRing E) :=
     inferInstanceAs (LocallyConnectedSpace (∀ w : InfinitePlace E, w.Completion))
-  haveI : LocallyConnectedSpace (InfiniteAdeleRing E)ˣ := (isOpenEmbedding_val_inf E).locallyConnectedSpace
+  have : LocallyConnectedSpace (InfiniteAdeleRing E)ˣ := (isOpenEmbedding_val_inf E).locallyConnectedSpace
   exact isOpen_connectedComponent
 
 theorem denseRange_units_inf : ∀ (E : Type) [Field E] [NumberField E], DenseRange (fun k : Eˣ => (Units.map (algebraMap E (InfiniteAdeleRing E)).toMonoidHom k : (InfiniteAdeleRing E)ˣ)) := by

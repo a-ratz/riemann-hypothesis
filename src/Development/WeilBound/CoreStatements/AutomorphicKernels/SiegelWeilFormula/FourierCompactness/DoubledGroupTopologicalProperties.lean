@@ -141,7 +141,7 @@ theorem incM_zero {α β : Type} : incM F (0 : Matrix α β E) = 0 := by
   simp [incM]
 
 theorem inclR_injective : Function.Injective (inclR (F := F) (E := E) (AF F)) := by
-  haveI : Nontrivial (AF F) := by
+  have : Nontrivial (AF F) := by
     show Nontrivial (AdeleRing (𝓞 F) F)
     unfold AdeleRing
     infer_instance
@@ -222,22 +222,22 @@ theorem exists_cov (p q : ℕ) : ∃ (ν : Measure (Mx F E p q)) (𝓕 : Set (Mx
   have h0 : μ D ≠ 0 := (hD μ).measure_ne_zero (NeZero.ne μ)
   refine ⟨(μ D)⁻¹ • μ, D, ?_, hD _, ?_⟩
   · exact Measure.IsAddHaarMeasure.smul μ (ENNReal.inv_ne_zero.2 htop) (ENNReal.inv_ne_top.2 h0)
-  · rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 htop]
+  · rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 htop]
 
 theorem doubled_group_topological_properties (σ : E →ₐ[F] E) {n : ℕ} (Y : Spc F E n) : IsTopologicalGroup (G2 σ Y) ∧ LocallyCompactSpace (G2 σ Y) ∧
     T2Space (G2 σ Y) ∧ SecondCountableTopology (G2 σ Y) := by
   have hσc : Continuous (cA σ) := IsModuleTopology.continuous_of_linearMap (R := AF F) (cA σ).toLinearMap
-  haveI : LocallyCompactSpace (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin n ⊕ Fin n → Fin n ⊕ Fin n → AE F E))
-  haveI : LocallyCompactSpace (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E))ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : LocallyCompactSpace (GL (Fin n ⊕ Fin n) (AE F E)) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (GL (Fin n ⊕ Fin n) (AE F E)) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n ⊕ Fin n → Fin n ⊕ Fin n → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Fin n ⊕ Fin n) (AE F E)) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : T2Space (GL (Fin n ⊕ Fin n) (AE F E)) := Units.isEmbedding_embedProduct.t2Space
+  have : SecondCountableTopology (GL (Fin n ⊕ Fin n) (AE F E)) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : T2Space (GL (Fin n ⊕ Fin n) (AE F E)) := Units.isEmbedding_embedProduct.t2Space
   have hc : IsClosed (UG (cA σ) (dbl (incM F Y.J)) : Set (GL (Fin n ⊕ Fin n) (AE F E))) := by
     have hv : Continuous fun g : GL (Fin n ⊕ Fin n) (AE F E) => (g : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) :=
       Units.continuous_val

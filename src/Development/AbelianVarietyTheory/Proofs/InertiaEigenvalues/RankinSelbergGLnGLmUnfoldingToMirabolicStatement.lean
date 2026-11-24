@@ -128,7 +128,7 @@ theorem det_posM_eq_one {R : Type} [CommRing R] {a : ℕ} {ι : Type} [Fintype �
     intro i j hij
     simp only [posM, Matrix.sum_apply, Matrix.single_apply]
     refine Finset.sum_eq_zero fun t _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨rfl, rfl, -⟩
     exact absurd (hp t) (not_lt.2 hij)
   have hT : (1 + posM p x).IsUpperTriangular := by
@@ -263,7 +263,7 @@ theorem partialCoeff_colSmooth : ∀ (E : Type) [Field E] [NumberField E] (n m :
     rw [e]
     set l := n - 1 - i
     set Q := partialWhittakerCoeff φ i
-    haveI : IsFiniteMeasure ((vecMeasure E (Fin l)).restrict (vecDomain E (Fin l))) := ⟨by
+    have : IsFiniteMeasure ((vecMeasure E (Fin l)).restrict (vecDomain E (Fin l))) := ⟨by
       rw [Measure.restrict_apply_univ, vecMeasure_vecDomain]; exact ENNReal.one_lt_top⟩
     set H : (Fin l → Ad E) → (Fin m → Ad E) → ℂ := fun y x =>
       F x * (Q (FourierWhittaker.colGL l y * (g * FourierWhittaker.colGL m x)) *
@@ -311,7 +311,7 @@ theorem vecCoeff_zero_eq_zero : ∀ (E : Type) [Field E] [NumberField E] (k m : 
   have hk : m + 1 < k + 1 := by omega
   have hz := hg.van (m + 1) (Nat.succ_pos m) le_rfl g
   have hper := (per_blk hg.cont (GlobalTheory.CuspRep.Generic.hl_of_good hg le_rfl) g).2
-  haveI : Countable (ratV E (UnipotentBlockColumnIndex (k + 1) (m + 1) (m + 1))) := countable_vecLattice
+  have : Countable (ratV E (UnipotentBlockColumnIndex (k + 1) (m + 1) (m + 1))) := countable_vecLattice
   rw [WhitEq.avg_eq_setIntegral (ratV E (UnipotentBlockColumnIndex (k + 1) (m + 1) (m + 1))) (vecMeasure E _) (vecDomain E _)
       isAddFundamentalDomain_vecDomain vecMeasure_vecDomain _ hper] at hz
   let Em := MeasurableEquiv.piCongrLeft (fun _ : Fin (m + 1) => Ad E) (WhitEq.colIx hk)
@@ -377,7 +377,7 @@ theorem hasSum_integral_mul_of_periodic : ∀ (E : Type) [Field E] [NumberField 
     HasSum (fun ξ : Fin n → E => c ξ * GroundTheory.Automorphic.FourierWhittaker.vecCoeff f ξ)
       (∫ x, G x * f x ∂GroundTheory.Automorphic.GJMatrix.adeleMeasurePi E) := by
   intro E _ _ n G f c hGc hGi hf ⟨C, hC⟩ hp hs hP
-  haveI := GroundTheory.Global.countable_numberField E
+  have := GroundTheory.Global.countable_numberField E
   set μ := vecMeasure E (Fin n)
   set D := vecDomain E (Fin n)
   have hGi' : Integrable (fun x => G x * f x) μ := hGi.mul_bdd hf.aestronglyMeasurable (.of_forall hC)
@@ -400,7 +400,7 @@ theorem hasSum_integral_mul_of_periodic : ∀ (E : Type) [Field E] [NumberField 
     simp only [hp]
     rw [tsum_mul_right, hP, ← tsum_mul_right]
     exact tsum_congr fun ξ => by ring
-  haveI : IsFiniteMeasure (μ.restrict D) := ⟨by
+  have : IsFiniteMeasure (μ.restrict D) := ⟨by
     rw [Measure.restrict_apply_univ, vecMeasure_vecDomain]; exact ENNReal.one_lt_top⟩
   change HasSum _ (∫ x, G x * f x ∂μ)
   rw [h1]
@@ -965,9 +965,9 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   intro E _ _ _ m r μ _
   refine ⟨1, one_pos, ?_⟩
   intro π π' hπ hπ' φ φ' hφ hφ' F hF 𝓕 𝓕₀ h𝓕 h𝓕₀ x h1 h2
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E (m + 1)
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E (m + 1)
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E (m + 1)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E (m + 1)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E (m + 1)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E (m + 1)
   obtain ⟨oc, hoc, hπoc⟩ := hπ
   obtain ⟨oc', hoc', hπoc'⟩ := hπ'
   rw [CuspSub.hasCentral_iff] at hπoc hπoc'
@@ -1079,11 +1079,11 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   have hen : ∀ (c W : ℂ) (A B : ℝ), 0 ≤ A → 0 ≤ B → ‖c‖ ^ 2 = A * B →
       ‖c * W‖ₑ ^ 2 * ((1 : NNReal) : ℝ≥0∞) = ‖W‖ₑ ^ 2 * ENNReal.ofReal A * ENNReal.ofReal B := by
     intro c W A B hA hB h
-    rw [ENNReal.coe_one, mul_one, enorm_mul, mul_pow, ← ofReal_norm_eq_enorm c, ← ENNReal.ofReal_pow (norm_nonneg _), h,
+    rw [ENNReal.coe_one, mul_one, eNorm_mul, mul_pow, ← ofReal_norm c, ← ENNReal.ofReal_pow (norm_nonneg _), h,
       ENNReal.ofReal_mul hA]
     ring
   obtain ⟨𝓕P, h𝓕P⟩ : ∃ 𝓕P, IsFundamentalDomain (ratMirU E (m + 1) m) 𝓕P μ := by
-    haveI : DiscreteTopology (ratMirU E (m + 1) m) := discrete_of_le_range (Subgroup.map_le_range _ _)
+    have : DiscreteTopology (ratMirU E (m + 1) m) := discrete_of_le_range (Subgroup.map_le_range _ _)
     exact GlobalTheory.FundDomDiscrete.exists_isFundamentalDomain _ μ
   have h𝓕₀' : IsFundamentalDomain (ratMirU E (m + 1) 0) 𝓕₀ μ := GlobalTheory.ZUnf.NE_eq_ratMirU_zero (E := E) (m := m) ▸ h𝓕₀
   have hU := GlobalTheory.MirTower.unfold_mirabolic E (m + 1) μ (GlobalTheory.StdCharConductor.psi E) (GlobalTheory.StdCharConductor.stdPsi_psi E)
@@ -1092,12 +1092,12 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
     rw [hU.1 _ hG1]
     refine ne_of_eq_of_ne (lintegral_congr fun g => ?_) h1
     change ‖GlobalTheory.CuspGeneric.whit (GlobalTheory.StdCharConductor.psi E) m f1 g‖ₑ ^ 2 * ((1 : NNReal) : ℝ≥0∞) = _
-    rw [hW1, hen _ _ _ _ (norm_nonneg _) (Real.rpow_nonneg (hdpos g).le _) (hc1n g), ofReal_norm_eq_enorm, hFh]
+    rw [hW1, hen _ _ _ _ (norm_nonneg _) (Real.rpow_nonneg (hdpos g).le _) (hc1n g), ofReal_norm, hFh]
   have hd2 : ∫⁻ g in 𝓕P, ‖f2 g‖ₑ ^ 2 * (((fun _ => (1 : NNReal)) g : NNReal) : ℝ≥0∞) ∂μ ≠ ⊤ := by
     rw [hU.1 _ hG2]
     refine ne_of_eq_of_ne (lintegral_congr fun g => ?_) h2
     change ‖GlobalTheory.CuspGeneric.whit (GlobalTheory.StdCharConductor.psi E) m f2 g‖ₑ ^ 2 * ((1 : NNReal) : ℝ≥0∞) = _
-    rw [hW2, hen _ _ _ _ (norm_nonneg _) (Real.rpow_nonneg (hdpos g).le _) (hc2n g), ofReal_norm_eq_enorm, hFh]
+    rw [hW2, hen _ _ _ _ (norm_nonneg _) (Real.rpow_nonneg (hdpos g).le _) (hc2n g), ofReal_norm, hFh]
   obtain ⟨hI1, hI2, hEq⟩ := hU.2 f1 f2 hG1 hG2 hd1 hd2
 
   have hD : ∀ g : GA E (m + 1), ((GlobalTheory.RSnm.detAbs g : ℝ) : ℂ) ^ ((x : ℂ) - (((m + r + 1 + 1 : ℕ) : ℂ) - ((m + 1 : ℕ) : ℂ)) / 2) =
@@ -1130,7 +1130,7 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
     rw [mem_mirU_last, Matrix.single_one_vecMul, funext_iff]
     simp only [Pi.single_apply, Matrix.row]
   obtain ⟨γ, e, hγ, he⟩ := GlobalTheory.ThetaUnfold.exists_transversal hv0 hP
-  haveI := GlobalTheory.ThetaUnfold.countable_range_ratGL (E := E) (a := m + 1)
+  have := GlobalTheory.ThetaUnfold.countable_range_ratGL (E := E) (a := m + 1)
   obtain ⟨H, hH⟩ : ∃ H : GA E (m + 1) → ℂ, H = fun g => f1 g * conj (f2 g) * (((fun _ => (1 : NNReal)) g : NNReal) : ℝ) :=
     ⟨_, rfl⟩
   have hHinv : ∀ δ ∈ (mirU E (m + 1) m).map (ratGL E (m + 1)), ∀ g, H (δ * g) = H g := by
@@ -1148,7 +1148,7 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
     exact ((hG1.cont.mul (Complex.continuous_conj.comp hG2.cont)).mul continuous_const).aestronglyMeasurable
   have hfin : ∫⁻ g in 𝓕, ∑' ξ, ‖H (ratGL E (m + 1) (γ ξ) * g)‖ₑ ∂μ ≠ ⊤ := by
     rw [GlobalTheory.ThetaUnfold.lintegral_unfold μ _ _ (fun ξ => ratGL E (m + 1) (γ ξ)) e he h𝓕 h𝓕P (fun g => ‖H g‖ₑ)
-      (fun δ hδ g => by simp only [hHinv δ hδ g]) hHm.enorm]
+      (fun δ hδ g => by simp only [hHinv δ hδ g]) hHm.eNorm]
     rw [hH]
     exact hI1.2.ne
   obtain ⟨-, -, -, hEqU⟩ := GlobalTheory.ThetaUnfold.integral_unfold μ _ _ (fun ξ => ratGL E (m + 1) (γ ξ)) e he h𝓕 h𝓕P H hHinv hHm hfin

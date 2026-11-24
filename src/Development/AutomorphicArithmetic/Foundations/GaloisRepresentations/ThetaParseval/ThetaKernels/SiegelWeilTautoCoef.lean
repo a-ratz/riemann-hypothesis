@@ -80,7 +80,7 @@ theorem cont_tr_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {f : M
   have e : ∀ Y, f Y = (f ∘ d.cmb) (d.crd Y) := fun Y => by simp [_root_.PositivityTheory.SiegelWeilFormula.Kdil.Tb.cmb_crd_k]
   have h2 : Continuous fun h : UA σ d.A.J =>
       (((h : GL (Fin d.m) (AE F E))⁻¹ : GL (Fin d.m) (AE F E)) : Matrix (Fin d.m) (Fin d.m) (AE F E)) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   simp only [_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k, e, _root_.PositivityTheory.SiegelWeilFormula.Kdil.Tb.crd_mul_k]
   exact h1.comp (((_root_.PositivityTheory.SiegelWeilFormula.Kdil.Tb.continuous_mh_k d).comp h2).matrix_mulVec continuous_const)
 theorem chr_comb_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (β G T : Matrix (Fin d.n) (Fin d.n) (AE F E)) :
@@ -270,7 +270,7 @@ theorem exists_twist_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (
     rw [e1, psi_trace_at d.std hcm τ w z hf hw]
     have hzw : (piInf (τ w) z).re = 1 / 4 := by
       rw [hz, map_neg, map_mul, hc, hs1, ← hq]
-      simp only [hx, if_pos rfl, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
+      simp only [hx, ite_eq_left rfl, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
       rw [hr]
       field_simp
     rw [hzw]
@@ -290,8 +290,8 @@ theorem orth_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {nb : nA 
   obtain ⟨ε, hb, -⟩ := _root_.PositivityTheory.SiegelWeilFormula.Tauto.frame_sign_k d
   have hσ := _root_.PositivityTheory.SiegelWeilFormula.kfour.sigma_sigma_of_good_k d.ok.good
   obtain ⟨-, hH, hfd, h1⟩ := hc
-  haveI := hH
-  haveI : BorelSpace (nA σ d.Y d.b) := (nA_top hσ d.ok.frame).2.2.2
+  have := hH
+  have : BorelSpace (nA σ d.Y d.b) := (nA_top hσ d.ok.frame).2.2.2
   obtain ⟨S₀, rfl⟩ := hr
   split_ifs with h0
   · have hone : ∀ β : nA σ d.Y d.b, d.B.ψ (-(d.tt (incM F S₀ * β.1))) = 1 := fun β => by
@@ -349,7 +349,7 @@ theorem stepA_k (hP : _root_.PositivityTheory.SiegelWeilFormula.TPar_k) (hT : _r
   rfl
 theorem meas_tr_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {f : Mx F E d.m d.n → ℂ} (hf : f ∈ d.schM) (X : Matrix (Fin d.m) (Fin d.n) E) :
     AEMeasurable (fun g => ‖f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X)‖ₑ) (d.μ.restrict d.D) :=
-  ((_root_.PositivityTheory.SiegelWeilFormula.Tauto.cont_tr_k d hf X).enorm.measurable).aemeasurable
+  ((_root_.PositivityTheory.SiegelWeilFormula.Tauto.cont_tr_k d hf X).eNorm.measurable).aemeasurable
 theorem tbdd_k (hS : GlobalTheory.Published.SiegelSetUnitary) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {f : Mx F E d.m d.n → ℂ} (hf : f ∈ d.schM) :
     ∃ K : ℝ, ∀ g : UA σ d.A.J, Summable (fun X => ‖f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X)‖) ∧ ∑' X, ‖f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X)‖ ≤ K := by
   obtain ⟨K, hK⟩ := _root_.PositivityTheory.SiegelWeilFormula.Kdil.thetaBdd_of_k hS F E σ d f hf
@@ -366,7 +366,7 @@ theorem pt_bdd_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {f : Mx
 theorem lint_fin_k (hS : GlobalTheory.Published.SiegelSetUnitary) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {f : Mx F E d.m d.n → ℂ} (hf : f ∈ d.schM)
     (s : Set (Matrix (Fin d.m) (Fin d.n) E)) :
     ∑' X : s, ∫⁻ g in d.D, ‖f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X.1)‖ₑ ∂d.μ ≠ ⊤ := by
-  haveI := countable_mat (E := E) d.m d.n
+  have := countable_mat (E := E) d.m d.n
   obtain ⟨K, hK⟩ := _root_.PositivityTheory.SiegelWeilFormula.Tauto.tbdd_k hS d hf
   have hfin : d.μ d.D < ⊤ := (_root_.PositivityTheory.SiegelWeilFormula.Tauto.cpt_k hS d).fin d.μ d.D d.ok.haar d.ok.dom
   rw [← lintegral_tsum (f := fun (X : s) g => ‖f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X.1)‖ₑ) fun X => _root_.PositivityTheory.SiegelWeilFormula.Tauto.meas_tr_k d hf X.1]
@@ -379,17 +379,17 @@ theorem lint_fin_all_k (hS : GlobalTheory.Published.SiegelSetUnitary) (d : _root
 theorem continuous_tt_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) : Continuous (d.tt) := by
   have h1 : Continuous (Algebra.trace (AF F) (AE F E)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF F) (AE F E))
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   exact h1.comp (continuous_finsetSum _ fun i _ => continuous_id.matrix_elem i i)
 theorem thetaCoef_at_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hB : _root_.PositivityTheory.SiegelWeilFormula.TBij_k) (hP : _root_.PositivityTheory.SiegelWeilFormula.TPar_k) (hT : _root_.PositivityTheory.SiegelWeilFormula.TTheta_k) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ)
     {Φ : d.Fn} (hΦ : Φ ∈ d.sch) {nb : nA σ d.Y d.b → d.G} {lam : Measure (nA σ d.Y d.b)} {𝓖 : Set (nA σ d.Y d.b)}
     (hc : CoefData (σ := σ) (Y := d.Y) d.b nb lam 𝓖) (T : nF σ d.Y d.b) (x : d.G) :
     fc d.B.ψ d.b nb lam 𝓖 (d.I Φ) T x = d.orb T (d.om x Φ) := by
-  haveI := countable_mat (E := E) d.m d.n
+  have := countable_mat (E := E) d.m d.n
   have hΨ : d.om x Φ ∈ d.sch := d.ok.dbl.weil.2.1.pres x Φ hΦ
   have hf : d.T (d.om x Φ) ∈ d.schM := (hB F E σ d).1 _ hΨ
   have hen : ∀ a, ‖d.B.ψ a‖ₑ = 1 := fun a => by
-    rw [← ofReal_norm_eq_enorm, GlobalTheory.StdCharFromIsStd.norm_psi d.std, ENNReal.ofReal_one]
+    rw [← ofReal_norm, GlobalTheory.StdCharFromIsStd.norm_psi d.std, ENNReal.ofReal_one]
   have hψc : Continuous d.B.ψ := d.std.1
   set f : Mx F E d.m d.n → ℂ := d.T (d.om x Φ) with hfdef
   set c : ℝ := (d.μ.real d.D)⁻¹ with hcdef
@@ -401,7 +401,7 @@ theorem thetaCoef_at_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hB : _roo
   set H : Matrix (Fin d.m) (Fin d.n) E → ℂ := fun X => ∫ g in d.D, f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X) ∂d.μ with hH
   have hmeas : ∀ X, AEStronglyMeasurable (fun g => f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X)) (d.μ.restrict d.D) :=
     fun X => (_root_.PositivityTheory.SiegelWeilFormula.Tauto.cont_tr_k d hf X).aestronglyMeasurable
-  have hcb : Continuous fun β : nA σ d.Y d.b => β.1 := continuous_subtype_val
+  have hcb : Continuous fun β : nA σ d.Y d.b => β.1 := continuous_subtypeVal
   have hec : ∀ X, Continuous fun β => e β X := fun X =>
     hψc.comp ((continuous_const.mul ((_root_.PositivityTheory.SiegelWeilFormula.Tauto.continuous_tt_k d).comp (hcb.matrix_mul continuous_const))).neg)
   have hχc : Continuous χ := hψc.comp (((_root_.PositivityTheory.SiegelWeilFormula.Tauto.continuous_tt_k d).comp (continuous_const.matrix_mul hcb)).neg)
@@ -414,7 +414,7 @@ theorem thetaCoef_at_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hB : _roo
     simp only [hA']
     rw [integral_tsum (f := fun X g => e β X * f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X)) (fun X => (hmeas X).const_mul _) ?_]
     · exact tsum_congr fun X => integral_const_mul _ _
-    · simpa only [he, enorm_mul, hen, one_mul] using _root_.PositivityTheory.SiegelWeilFormula.Tauto.lint_fin_all_k hS d hf
+    · simpa only [he, eNorm_mul, hen, one_mul] using _root_.PositivityTheory.SiegelWeilFormula.Tauto.lint_fin_all_k hS d hf
   have hO : ∀ X, ∫ β in 𝓖, e β X * χ β ∂lam = if G X = (-2 : ℤ) • T.1.1 then 1 else 0 := fun X => by
     obtain ⟨hm, S₀, hS₀⟩ := _root_.PositivityTheory.SiegelWeilFormula.Tauto.gram_mem_k d X T
     simp only [he, hχ, _root_.PositivityTheory.SiegelWeilFormula.Tauto.chr_comb_k]
@@ -428,17 +428,17 @@ theorem thetaCoef_at_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hB : _roo
     exact tsum_congr fun X => by simp only [hχ, _root_.PositivityTheory.SiegelWeilFormula.SD_k.tt]; ring
   have hlam : lam 𝓖 = 1 := hc.2.2.2
   have h2 : ∑' X, ∫⁻ β in 𝓖, ‖e β X * χ β * H X‖ₑ ∂lam ≠ ⊤ := by
-    simp only [he, hχ, enorm_mul, hen, one_mul, lintegral_const, Measure.restrict_apply_univ, hlam, mul_one]
+    simp only [he, hχ, eNorm_mul, hen, one_mul, lintegral_const, Measure.restrict_apply_univ, hlam, mul_one]
     refine ne_top_of_le_ne_top (_root_.PositivityTheory.SiegelWeilFormula.Tauto.lint_fin_all_k hS d hf) (ENNReal.tsum_le_tsum fun X => ?_)
-    exact enorm_integral_le_lintegral_enorm _
+    exact eNorm_integral_le_lintegral_eNorm _
   have h3 : ∑' X, (if G X = (-2 : ℤ) • T.1.1 then (1 : ℂ) else 0) * H X =
       ∑' X : {X : Matrix (Fin d.m) (Fin d.n) E // d.gram (incM F X) (incM F X) = (-2 : ℤ) • T.1.1}, H X.1 := by
     show _ = ∑' X : ({X | G X = (-2 : ℤ) • T.1.1} : Set (Matrix (Fin d.m) (Fin d.n) E)), H X.1
     rw [tsum_subtype {X | G X = (-2 : ℤ) • T.1.1} H]
-    exact tsum_congr fun X => by simp only [Set.indicator_apply, Set.mem_setOf_eq, ite_mul, one_mul, zero_mul]
+    exact tsum_congr fun X => by simp only [Set.indicator_apply, Set.mem_ofPred_eq, ite_mul, one_mul, zero_mul]
   have h4 : d.orb T (d.om x Φ) = c • ∑' X : {X : Matrix (Fin d.m) (Fin d.n) E //
       d.gram (incM F X) (incM F X) = (-2 : ℤ) • T.1.1}, H X.1 := by
-    haveI : Countable {X : Matrix (Fin d.m) (Fin d.n) E // d.gram (incM F X) (incM F X) = (-2 : ℤ) • T.1.1} :=
+    have : Countable {X : Matrix (Fin d.m) (Fin d.n) E // d.gram (incM F X) (incM F X) = (-2 : ℤ) • T.1.1} :=
       Subtype.countable
     show (⨍ g in d.D, ∑' X : ({X | G X = (-2 : ℤ) • T.1.1} : Set (Matrix (Fin d.m) (Fin d.n) E)),
       f (_root_.PositivityTheory.SiegelWeilFormula.Tauto.tr_k d g X.1) ∂d.μ) = c • ∑' X : ({X | G X = (-2 : ℤ) • T.1.1} : Set (Matrix (Fin d.m) (Fin d.n) E)), H X.1

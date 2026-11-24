@@ -389,7 +389,7 @@ theorem ConeMapAreaOne.proof (hA : AreaFormulaInj.Statement) : ConeMapAreaOne.St
   have hμ := Measure.isAddLeftInvariant_eq_smul
     (μH[(finrank ℝ (EuclideanSpace ℂ (Fin (e + 1))) : ℝ)] : Measure (EuclideanSpace ℂ (Fin (e + 1))))
     volume
-  rw [hμ, Measure.restrict_smul, lintegral_smul_measure, Measure.smul_apply,
+  rw [hμ, Measure.restrict_smul, lintegral_smul_measure, smul_apply,
     (measurePreserving_splitE e).setLIntegral_comp_preimage_emb (splitE e).measurableEmbedding,
     lintegral_cone_prod _ (aemeasurable_coneIntegrand hD hDU hv hF), volume_ball_E]
   simp only [ENNReal.smul_def, smul_eq_mul, coneIntegrand]

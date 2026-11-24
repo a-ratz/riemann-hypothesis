@@ -126,7 +126,7 @@ theorem Zs_res : PowerSeries.map (IsLocalRing.residue O) (Zs p m) = PowerSeries.
   have hp : ((p : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     have h := (IsLocalRing.residue_eq_zero_iff ((p : ℕ) : O)).mpr hlm
     simpa using h
-  haveI hk : CharP (IsLocalRing.ResidueField O) p := by
+  have hk : CharP (IsLocalRing.ResidueField O) p := by
     first
     | exact (CharP.charP_iff_prime_eq_zero hpp).mpr hp
     | exact CharP.charP_of_prime_eq_zero hpp hp
@@ -134,7 +134,7 @@ theorem Zs_res : PowerSeries.map (IsLocalRing.residue O) (Zs p m) = PowerSeries.
        rcases (Nat.dvd_prime hpp).mp h1 with h2 | h2
        · exact absurd h2 CharP.ringChar_ne_one
        · exact ringChar.of_eq h2)
-  haveI : CharP (PowerSeries (IsLocalRing.ResidueField O)) p := by
+  have : CharP (PowerSeries (IsLocalRing.ResidueField O)) p := by
     first
     | infer_instance
     | exact charP_of_injective_algebraMap' (IsLocalRing.ResidueField O) p
@@ -150,7 +150,7 @@ theorem Zs_order : (PowerSeries.map (Ideal.Quotient.mk (IsLocalRing.maximalIdeal
     p ^ m := by
   have h : (PowerSeries.map (IsLocalRing.residue O) (Zs p m)).order.toNat = p ^ m := by
     first
-    | rw [Zs_res p m hlm, PowerSeries.order_X_pow, ENat.toNat_coe]
+    | rw [Zs_res p m hlm, PowerSeries.order_X_pow, ENat.toNat_natCast]
     | simp [Zs_res p m hlm]
   exact h
 
@@ -169,7 +169,7 @@ theorem evalWeierstrassMod_eq_aeval_of_eq {x : F} (hx : Polynomial.aeval x (Zp (
   have hP := Zp_monic (O := O) p m
   have hord : (PowerSeries.map (IsLocalRing.residue O) (Zs p m)).order.toNat = p ^ m := by
     first
-    | rw [Zs_res p m hlm, PowerSeries.order_X_pow, ENat.toNat_coe]
+    | rw [Zs_res p m hlm, PowerSeries.order_X_pow, ENat.toNat_natCast]
     | simp [Zs_res p m hlm]
   rw [evalWeierstrassMod_def]
   generalize hq0 : f /ʷ Zs p m = q0 at hW

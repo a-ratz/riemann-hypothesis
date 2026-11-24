@@ -71,7 +71,7 @@ theorem exists_mul_norm_sq_le {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ
         (b.coord i).continuous_of_finiteDimensional
       exact h1.mul (continuous_conj.comp h2)
     exact continuous_re.comp this
-  haveI : ProperSpace V := FiniteDimensional.proper ℂ V
+  have : ProperSpace V := FiniteDimensional.proper ℂ V
   obtain ⟨c, hc, hle⟩ : ∃ c : ℝ, 0 < c ∧ ∀ x ∈ Metric.sphere (0 : V) 1, c ≤ (H x x).re := by
     refine (isCompact_sphere (0 : V) 1).exists_forall_le' hcont.continuousOn fun x hx => hH.2 x ?_
     rintro rfl
@@ -110,10 +110,10 @@ theorem exp_le_inv_pow {a : ℝ} (ha : 0 < a) (C : ℝ) (k : ℕ) {t : ℝ} (ht 
 theorem summable_exp_neg_herm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℂ V] [FiniteDimensional ℂ V] (H : Sesq V), IsPosHerm H → ∀ (Λ : AddSubgroup V) [DiscreteTopology Λ] (C : ℝ), Summable (fun x : Λ => Real.exp (-(π / 2) * (H x x).re + C * ‖(x : V)‖)) := by
   intro V _ _ _ H hH Λ _ C
   obtain ⟨c, hc, hle⟩ := exists_mul_norm_sq_le H hH
-  letI : NormedSpace ℝ V := NormedSpace.complexToReal
-  haveI : FiniteDimensional ℝ V := FiniteDimensional.complexToReal V
+  let : NormedSpace ℝ V := NormedSpace.complexToReal
+  have : FiniteDimensional ℝ V := FiniteDimensional.complexToReal V
   let L : Submodule ℤ V := AddSubgroup.toIntSubmodule Λ
-  haveI : DiscreteTopology L := ‹DiscreteTopology Λ›
+  have : DiscreteTopology L := ‹DiscreteTopology Λ›
   have hs : Summable fun x : Λ => ‖(x : V)‖⁻¹ ^ (Module.finrank ℤ L + 1) :=
     ZLattice.summable_norm_pow_inv L (Module.finrank ℤ L + 1) (Nat.lt_succ_self _)
   have ha : 0 < π / 2 * c := by have := Real.pi_pos; positivity

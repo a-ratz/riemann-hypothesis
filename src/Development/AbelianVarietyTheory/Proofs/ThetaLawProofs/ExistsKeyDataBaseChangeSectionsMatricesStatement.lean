@@ -155,9 +155,9 @@ theorem exists_baseChange_data : Out.Laws → ∀ (O : Type) [CommRing O] [IsLoc
     exact coords_mul hx h₂ (hs' i) (hb' (j + 1) k) (hb' j) (hm i j hj k)
   · obtain ⟨-, -, -, ⟨hP, -⟩, -⟩ := hx
     have hc : IsClosed {y : x.P.A.left | ∀ i, y ∉ Out.nonzeroLocus (s i)} := by
-      rw [Set.setOf_forall]
+      rw [Set.ofPred_forall]
       exact isClosed_iInter fun i => (Out.nonzeroLocus (s i)).isOpen.isClosed_compl
-    haveI : IsProper x.P.A.hom := x.P.isAb.proper
+    have : IsProper x.P.A.hom := x.P.isAb.proper
     refine (KeyFin.finite_preimage_of_isPullback_of_finite_base _ _ _ _ _ _ _ _ _ inferInstance inferInstance
       hP hfin hc hz).subset fun y hy i h => hy i ?_
     exact EtBaseChange.mem_nonzeroLocus_via (hs' i) y h

@@ -184,7 +184,7 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
     rw [h] at hij
     omega
   have hlt : i < j := by
-    rw [Fin.lt_iff_val_lt_val]
+    rw [Fin.lt_def]
     omega
   have h3 : s * xJ E j = xJ E i * s + 1 := by
     calc s * xJ E j = s * (xJ E j * s) * s := by simp only [mul_assoc, hs2, mul_one]
@@ -255,7 +255,7 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
   have Fjj : F j j = 1 := by simp [F]
   have Fji : F j i = 1 := by
     simp only [F]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨h, -⟩
     exact absurd (lt_trans h hlt) (lt_irrefl _)
   have hPeq : ∏ q, ∏ p, F p q = F i j *
@@ -268,7 +268,7 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
         (∏ q ∈ (Finset.univ.erase i).erase j, F i q * F j q) *
         ∏ q ∈ (Finset.univ.erase i).erase j, ∏ p ∈ (Finset.univ.erase i).erase j, F p q :
           Algebra.adjoin ℂ S) : Module.End ℂ _), ?_, ?_⟩
-  · rw [hcolD, hPeq, hcoe_mul, hF, if_pos ⟨hlt, hcol⟩]
+  · rw [hcolD, hPeq, hcoe_mul, hF, ite_eq_left ⟨hlt, hcol⟩]
   · have hmul : ∀ a b : Algebra.adjoin ℂ S,
         Commute (a : Module.End ℂ (TV n M (Fin m))) s →
         Commute (b : Module.End ℂ (TV n M (Fin m))) s →
@@ -289,7 +289,7 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
       show Commute ((F p i : Module.End ℂ (TV n M (Fin m))) * (F p j : Module.End ℂ _)) s
       rw [hF, hF]
       by_cases hq : p < i ∧ col p = col i
-      · rw [if_pos hq, if_pos ⟨lt_trans hq.1 hlt, hq.2.trans hcol⟩,
+      · rw [ite_eq_left hq, ite_eq_left ⟨lt_trans hq.1 hlt, hq.2.trans hcol⟩,
           show xJ E p - xJ E i + 1 = (xJ E p + 1) - xJ E i by abel,
           show xJ E p - xJ E j + 1 = (xJ E p + 1) - xJ E j by abel]
         exact hsym2 _ ((h2 p hpi hpj).add_left (Commute.one_left s))
@@ -298,9 +298,9 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
           rintro ⟨h, h'⟩
           apply hq
           refine ⟨?_, h'.trans hcol.symm⟩
-          rw [Fin.lt_iff_val_lt_val] at h ⊢
+          rw [Fin.lt_def] at h ⊢
           omega
-        rw [if_neg hq, if_neg hn, mul_one]
+        rw [ite_eq_right hq, ite_eq_right hn, mul_one]
         exact Commute.one_left s
     have hB : Commute (((∏ q ∈ (Finset.univ.erase i).erase j, F i q * F j q :
         Algebra.adjoin ℂ S)) : Module.End ℂ (TV n M (Fin m))) s := by
@@ -314,9 +314,9 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
       by_cases hq' : i < q ∧ col i = col q
       · have hjq : j < q := by
           have := hq'.1
-          rw [Fin.lt_iff_val_lt_val] at this ⊢
+          rw [Fin.lt_def] at this ⊢
           omega
-        rw [if_pos hq', if_pos ⟨hjq, hcol.symm.trans hq'.2⟩,
+        rw [ite_eq_left hq', ite_eq_left ⟨hjq, hcol.symm.trans hq'.2⟩,
           show xJ E i - xJ E q + 1 = xJ E i + (1 - xJ E q) by abel,
           show xJ E j - xJ E q + 1 = xJ E j + (1 - xJ E q) by abel]
         exact hsym _ ((Commute.one_left s).sub_left (h2 q hqi hqj))
@@ -325,9 +325,9 @@ theorem split {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (col : Fin m 
           rintro ⟨h, h'⟩
           apply hq'
           refine ⟨?_, hcol.trans h'⟩
-          rw [Fin.lt_iff_val_lt_val] at h ⊢
+          rw [Fin.lt_def] at h ⊢
           omega
-        rw [if_neg hq', if_neg hn, mul_one]
+        rw [ite_eq_right hq', ite_eq_right hn, mul_one]
         exact Commute.one_left s
     have hC : Commute (((∏ q ∈ (Finset.univ.erase i).erase j,
         ∏ p ∈ (Finset.univ.erase i).erase j, F p q :

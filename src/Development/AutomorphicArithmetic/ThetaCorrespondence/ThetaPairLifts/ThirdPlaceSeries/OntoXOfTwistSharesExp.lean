@@ -203,7 +203,7 @@ theorem zeta_mul_mem (F : IntermediateField ℚ ℂ) {m n : ℕ} (hm : 0 < m) (h
   have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
   have e : zeta (m * n) = zeta m ^ u * zeta n ^ v := by
     unfold zeta
-    rw [← Complex.exp_int_mul, ← Complex.exp_int_mul, ← Complex.exp_add]
+    rw [← Complex.exp_intCast_mul, ← Complex.exp_intCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     field_simp
@@ -375,8 +375,8 @@ theorem evR_pow {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reciproc
 theorem exists_character : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (n : ℕ) (d : DeltaDat Xo c n) (m : ℕ), 0 < m → d.cδ ∈ sec d.Xo₂ d.c₂ 0 0 → d.cδ ^ m = 1 → (∀ y : FrPt d.Xo₂ d.c₂ (CAt d.c₂.F.val.toRingHom), ∃ a : d.c₂.F, evR d.Xo₂ d.c₂ d.cδ y = algebraMap d.c₂.F (CAt d.c₂.F.val.toRingHom) a) → ∃ (Cls : Type) (_ : CommGroup Cls) (_ : Finite Cls) (δ : Cls →* d.c₂.Fˣ) (gdet : FrPt d.Xo₂ d.c₂ (CAt d.c₂.F.val.toRingHom) → Cls), CMP Xo c d _ Cls δ gdet false := by
   intro E _ _ _ H Dw l Xo c n d m hm hsec hpow hval
   choose a ha using hval
-  haveI : NeZero m := ⟨hm.ne'⟩
-  haveI : IsReduced (CAt d.c₂.F.val.toRingHom) := (inferInstance : IsReduced ℂ)
+  have : NeZero m := ⟨hm.ne'⟩
+  have : IsReduced (CAt d.c₂.F.val.toRingHom) := (inferInstance : IsReduced ℂ)
   have hinj : Function.Injective (algebraMap d.c₂.F (CAt d.c₂.F.val.toRingHom)) :=
     (d.c₂.F.val.toRingHom).injective
   have hroot : ∀ y, a y ^ m = 1 := by
@@ -566,7 +566,7 @@ theorem sum_eq (hC : ChartIndepSt2) [StarRing (𝓞 E)] (nab nab' : NabV Xo c) (
     (F : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo y.x))) :
     ∑ m ∈ P.support, algebraMap c.F S (P.coeff m) * ∏ b, nab y ((N : ℤ) ^ 2) (F b) (colOf m b) =
       ∑ m ∈ P.support, algebraMap c.F S (P.coeff m) * ∏ b, nab' y ((N : ℤ) ^ 2) (F b) (colOf m b) := by
-  letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
+  let : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
   have hU := thExprUniq_of_chartIndep2 hC
   obtain ⟨M, hM, hMP, hsupp⟩ := GlobalTheory.exists_natCast_smul_mem_harmA E H Dw l c a n P hP
   have key0 : ∀ (K : ℤ) (k : ℕ), K = (k : ℤ) →
@@ -937,13 +937,13 @@ theorem exists_run_pins : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
     ⟨_, rfl⟩
   have hδ : Formalism.L2.Host.IsDelta (H := D.host) l δ := by
     rcases hl with rfl | rfl
-    · rw [hδdef, if_pos rfl]; exact (R2 p).C.isDel
-    · rw [hδdef, if_neg D.host.pde_ne.symm]; exact (R2 p).C.isDel'
+    · rw [hδdef, ite_eq_left rfl]; exact (R2 p).C.isDel
+    · rw [hδdef, ite_eq_right D.host.pde_ne.symm]; exact (R2 p).C.isDel'
   have hδv : ∀ x, ((δ.1 x : ℂˣ) : ℂ) ∈ FO D := by
     intro x
     by_cases h : l = D.host.pde
-    · rw [hδdef, if_pos h]; exact hC.delVal x
-    · rw [hδdef, if_neg h]; exact hC.delVal' x
+    · rw [hδdef, ite_eq_left h]; exact hC.delVal x
+    · rw [hδdef, ite_eq_right h]; exact hC.delVal' x
   obtain ⟨χ, de, hχ, hd, hfin⟩ := GlobalTheory.TameFinitePart.exists_xiRec D l δ hl hδ hδv
   have hF : GlobalTheory.FinalJoin2.FieldOK0 D l := by
     rcases hl with rfl | rfl
@@ -982,7 +982,7 @@ theorem exists_run_pins : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
     rw [xi_det_of_isDetRoot hxi _ _ _ hx]
     exact hd.rat _ x rfl
   · intro v hv hvl i
-    letI : Algebra r.full.J.Q.c.F D.what₂.LL := p.alg
+    let : Algebra r.full.J.Q.c.F D.what₂.LL := p.alg
     refine ⟨rfl, ?_, ?_, ?_⟩
     · rw [hvl]
       exact (hcov _ (hInR i)).2 _
@@ -993,10 +993,10 @@ theorem exists_run_pins : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
         unfold ownAt at hvl
         unfold Formalism.L2.Host.CharFrame.delAt
         by_cases h : Formalism.EigenvalueLevelCeiling.plc v = D.host.pde
-        · rw [if_pos h] at hvl ⊢
-          rw [hδdef, ← hvl, if_neg D.host.pde_ne.symm]
-        · rw [if_neg h] at hvl ⊢
-          rw [hδdef, ← hvl, if_pos rfl]
+        · rw [ite_eq_left h] at hvl ⊢
+          rw [hδdef, ← hvl, ite_eq_right D.host.pde_ne.symm]
+        · rw [ite_eq_right h] at hvl ⊢
+          rw [hδdef, ← hvl, ite_eq_left rfl]
       refine ⟨χ, hδv' ▸ hχ, fun g x hx => ?_⟩
       rw [xi_det_of_isDetRoot hxi _ _ _ hx]
       exact hfin x _ rfl
@@ -1059,8 +1059,8 @@ theorem exists_runs_at_alt (p : PtAt ex Csz) (hR : p.PointConditions') (hM : Mor
   have hused : ∀ v, (r.used v = r₂ ∧ ownAt D v = D.host.pde') ∨ (r.used v = r₁ ∧ ownAt D v = D.host.pde) := by
     intro v
     by_cases h : Formalism.EigenvalueLevelCeiling.plc v = D.host.pde
-    · exact Or.inl ⟨if_pos h, if_pos h⟩
-    · exact Or.inr ⟨if_neg h, if_neg h⟩
+    · exact Or.inl ⟨ite_eq_left h, ite_eq_left h⟩
+    · exact Or.inr ⟨ite_eq_right h, ite_eq_right h⟩
   have hlaws : ∀ v, LawsFull (r.used v).full := by
     intro v
     rcases hused v with ⟨h, _⟩ | ⟨h, _⟩ <;> rw [h]
@@ -1228,8 +1228,8 @@ theorem e_j_eOp (hU : R.LUnif) (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ) (y 
   rw [GlobalTheory.LevelForms.eOp_eq_sum, map_sum, map_sum]
   simp only [map_smulₛₗ, map_smul, htw]
   refine MultilinearMap.ext fun v => ?_
-  simp only [RealDat.eWf, gaL, RealDat.eC, LinearMap.sum_apply, LinearMap.smul_apply, MultilinearMap.sum_apply,
-    MultilinearMap.smul_apply, postOn_apply, RingHom.id_apply]
+  simp only [RealDat.eWf, gaL, RealDat.eC, LinearMap.sum_apply, LinearMap.smul_apply, sum_apply,
+    smul_apply, postOn_apply, RingHom.id_apply]
   all_goals rfl
 
 theorem exists_w0C_eq (i : Fin D.R.m) {w : (R.HW i (sg0 D A)).H} (h1 : w ∈ R.WS F false i (sg0 D A)) :
@@ -1537,8 +1537,8 @@ theorem on_base_atPlaces : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
   obtain ⟨hc, hinj, ht⟩ := hO.tied
   obtain ⟨st, hd⟩ := hO.depth
   have hN : TieLevelNum O (rankPred D.R) D.R.f := by
-    letI := st
-    letI := hostAlg D
+    let := st
+    let := hostAlg D
     refine ⟨hd.f_eq, ?_⟩
     rw [hO.rr_eq, OntoChain.rank_eq]
     push_cast

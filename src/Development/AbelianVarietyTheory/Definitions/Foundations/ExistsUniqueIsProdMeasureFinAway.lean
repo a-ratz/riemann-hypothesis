@@ -100,11 +100,11 @@ theorem IsRestrProd.smul_inf [DecidableEq ι] [MeasurableConstSMul G G]
   · by_cases e : j = i
     · subst j; rw [Function.update_self]; exact .nnreal_smul _ hc
     · rw [Function.update_of_ne e]; exact h.haar_inf j
-  · rw [Measure.smul_apply, h.measure_cyl S hS A B hA hB, ← Finset.mul_prod_erase _ _ (Finset.mem_univ i),
+  · rw [smul_apply, h.measure_cyl S hS A B hA hB, ← Finset.mul_prod_erase _ _ (Finset.mem_univ i),
       ← Finset.mul_prod_erase _ (fun j => Function.update μi i (c • μi i) j (A j)) (Finset.mem_univ i),
       Function.update_self, Finset.prod_congr (f := fun j => Function.update μi i (c • μi i) j (A j))
         (g := fun j => μi j (A j)) rfl fun j hj => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hj)]]
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_assoc]
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, mul_assoc]
 
 variable [IsTopologicalGroup G] [BorelSpace G] [LocallyCompactSpace G] [SecondCountableTopology G]
   [∀ i, IsTopologicalGroup (H i)] [∀ i, BorelSpace (H i)] [∀ i, LocallyCompactSpace (H i)]
@@ -141,7 +141,7 @@ theorem IsRestrProd.unique {μ' : Measure G} (h : IsRestrProd p q K μi μf μ) 
   obtain ⟨A, B, hA, hB, h0, ht⟩ := exists_box_pos μi μf S
   have e := Measure.isMulLeftInvariant_eq_smul μ μ'
   have e1 := h.measure_cyl S hS A B hA fun k _ => hB k
-  rw [e, Measure.smul_apply, h'.measure_cyl S hS A B hA fun k _ => hB k, ENNReal.smul_def, smul_eq_mul] at e1
+  rw [e, smul_apply, h'.measure_cyl S hS A B hA fun k _ => hB k, ENNReal.smul_def, smul_eq_mul] at e1
   have e2 : Measure.haarScalarFactor μ μ' = 1 := by
     exact_mod_cast (ENNReal.mul_left_inj h0 ht).1 (e1.trans (one_mul _).symm)
   rw [e, e2, one_smul]

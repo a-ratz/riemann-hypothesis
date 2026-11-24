@@ -191,7 +191,7 @@ theorem sum_embeddings_restrict (g : (K →+* ℂ) → ℝ) :
     nsmul_eq_mul]
   congr 1
   norm_cast
-  letI : Algebra K ℂ := τ.toAlgebra
+  let : Algebra K ℂ := τ.toAlgebra
   let eqv : {φ : K₁ →+* ℂ // φ.comp (algebraMap K K₁) = τ} ≃ (K₁ →ₐ[K] ℂ) :=
     { toFun := fun φ => { φ.1 with commutes' := fun r => RingHom.congr_fun φ.2 r }
       invFun := fun ψ => ⟨ψ.toRingHom, RingHom.ext fun r => ψ.commutes r⟩

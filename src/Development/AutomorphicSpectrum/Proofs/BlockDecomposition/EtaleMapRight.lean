@@ -133,8 +133,8 @@ variable {K : Type} [CommRing K]
 
 theorem etale_map_left {S A T : Type} [CommRing S] [CommRing A] [CommRing T] [Algebra K S] [Algebra K A] [Algebra K T]
     (f : S →ₐ[K] A) (hf : f.toRingHom.Etale) : (Algebra.TensorProduct.map f (AlgHom.id K T)).toRingHom.Etale := by
-  letI : Algebra S A := f.toRingHom.toAlgebra
-  haveI : IsScalarTower K S A := IsScalarTower.of_algHom f
+  let : Algebra S A := f.toRingHom.toAlgebra
+  have : IsScalarTower K S A := IsScalarTower.of_algHom f
   have h0 : (algebraMap S A).Etale := hf
   have h1 := RingHom.IsStableUnderBaseChange.tensorProduct RingHom.Etale.isStableUnderBaseChange (TensorProduct K S T) h0
   let ε : TensorProduct S (TensorProduct K S T) A ≃ₐ[S] TensorProduct K A T :=
@@ -298,10 +298,10 @@ theorem prod_affine (q : X ⟶ Spec (CommRingCat.of K)) (q' : X' ⟶ Spec (CommR
     (hP : IsPullback p₁ p₂ q q') (V : X.Opens) (V' : X'.Opens) (hV : IsAffineOpen V) (hV' : IsAffineOpen V') :
     IsAffineOpen (p₁ ⁻¹ᵁ V ⊓ p₂ ⁻¹ᵁ V') := by
   have H := GlobalTheory.isPullback_opens_inf hP V V' _ rfl
-  haveI : IsAffine (V : Scheme.{0}) := hV
-  haveI : IsAffine (V' : Scheme.{0}) := hV'
-  haveI : IsAffineHom (V'.ι ≫ q') := isAffineHom_of_isAffine _
-  haveI : IsAffineHom (Scheme.Hom.resLE p₁ V (p₁ ⁻¹ᵁ V ⊓ p₂ ⁻¹ᵁ V') inf_le_left) :=
+  have : IsAffine (V : Scheme.{0}) := hV
+  have : IsAffine (V' : Scheme.{0}) := hV'
+  have : IsAffineHom (V'.ι ≫ q') := isAffineHom_of_isAffine _
+  have : IsAffineHom (Scheme.Hom.resLE p₁ V (p₁ ⁻¹ᵁ V ⊓ p₂ ⁻¹ᵁ V') inf_le_left) :=
     MorphismProperty.of_isPullback (P := @IsAffineHom) H.flip inferInstance
   exact isAffine_of_isAffineHom (Scheme.Hom.resLE p₁ V (p₁ ⁻¹ᵁ V ⊓ p₂ ⁻¹ᵁ V') inf_le_left)
 

@@ -179,7 +179,7 @@ theorem kbar_cocycle_subgroup (H : Subgroup (GK p K)) (f : H → KbarMult p) (hf
 theorem kbar_cocycle (f : GK p K → KbarMult p) (hf : Continuous f)
     (hc : ∀ g h, f (g * h) = f g + kbarRep p K g (f h)) :
     ∃ m : KbarMult p, ∀ h, f h = kbarRep p K h m - m := by
-  obtain ⟨m, hm⟩ := kbar_cocycle_subgroup p K ⊤ (fun h => f h.1) (hf.comp continuous_subtype_val)
+  obtain ⟨m, hm⟩ := kbar_cocycle_subgroup p K ⊤ (fun h => f h.1) (hf.comp continuous_subtypeVal)
     (fun g h => hc g.1 h.1)
   exact ⟨m, fun h => hm ⟨h, Subgroup.mem_top h⟩⟩
 

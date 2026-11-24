@@ -136,7 +136,7 @@ theorem mem_OK_iff_isIntegral [IsUltrametricDist F] (A : Et F E) (z : A.K) :
 theorem OK_isSubring : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E), ∃ R : Subring A.K, (R : Set A.K) = A.OK := by
   intro F E _ _ _ _ hU A
-  haveI : IsUltrametricDist F := hU.ultraF
+  have : IsUltrametricDist F := hU.ultraF
   refine ⟨(integralClosure (NormedField.valuation (K := F)).integer A.K).toSubring, ?_⟩
   ext z
   exact (mem_OK_iff_isIntegral A z).symm

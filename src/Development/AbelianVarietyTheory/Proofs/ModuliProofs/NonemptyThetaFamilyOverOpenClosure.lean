@@ -515,8 +515,8 @@ theorem exists_retraction {K R' : Type} [Field K] [CommRing R'] (φ : K →+* R'
     intro q
     obtain ⟨r, hr⟩ := hp
     exact ⟨r, Subsingleton.elim _ _⟩
-  haveI : Surjective (spMap φ) := ⟨hsurj⟩
-  haveI : IsIso (spMap φ) := (isIso_iff_isOpenImmersion_and_surjective _).2 ⟨hφ, inferInstance⟩
+  have : Surjective (spMap φ) := ⟨hsurj⟩
+  have : IsIso (spMap φ) := (isIso_iff_isOpenImmersion_and_surjective _).2 ⟨hφ, inferInstance⟩
   obtain ⟨ψ', hψ'⟩ := Spec.map_surjective (inv (spMap φ))
   refine ⟨ψ'.hom, ?_⟩
   have key : Spec.map (CommRingCat.ofHom φ ≫ ψ') = Spec.map (𝟙 _) := by
@@ -695,7 +695,7 @@ theorem torsBasis_pow {G : Type} [CommGroup G] {r k l : ℕ} (hk : k ≠ 0) (hl 
     (hy : ∀ i, y i ^ (k * l) = 1)
     (h : ∀ z : G, z ^ (k * l) = 1 → ∃! c : Fin r → ZMod (k * l), ∏ i, y i ^ (c i).val = z)
     (z : G) (hz : z ^ k = 1) : ∃! c : Fin r → ZMod k, ∏ i, (y i ^ l) ^ (c i).val = z := by
-  haveI : NeZero k := ⟨hk⟩
+  have : NeZero k := ⟨hk⟩
   have red : ∀ e : Fin r → ℕ, ∏ i, y i ^ ((e i : ZMod (k * l))).val = ∏ i, y i ^ e i := fun e =>
     Finset.prod_congr rfl fun i _ => by rw [ZMod.val_natCast, ← pow_eq_pow_mod _ (hy i)]
   have tor : ∀ e : Fin r → ℕ, (∏ i, y i ^ e i) ^ (k * l) = 1 := fun e => by
@@ -797,7 +797,7 @@ theorem kTriv_near_good_prime : ∀ (o : Type) [CommRing o] (g N' : ℕ) (J : Ty
   obtain ⟨hab, -, hLB, -, -, hamp, -, hfib⟩ := hP
   obtain ⟨ψ, hψ, hiso⟩ := hfib K x s t hgood
   obtain ⟨e, he, hcomp⟩ := grpPullback_iso (isGrpPullback_pullback_fst A (spMap x)) hψ.1
-  haveI := he
+  have := he
   have hLB' : (L.pull (pullback.fst A.hom (spMap x))).IsLB := pull_isLB hLB _
   have hLt : (t.L.pull e.hom.left).IsLB := pull_isLB t.isLB _
   have hψL : (L.pull ψ).IsLB := pull_isLB hLB ψ
@@ -1263,7 +1263,7 @@ theorem nearC_of_smooth [Finite J]
     (hs : SmoothOfRelativeDimension g Z.hom) : NearC b Mat κ β v q₀ := by
   classical
   have := Fintype.ofFinite J
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
   have hs' : Smooth Z.hom := SmoothOfRelativeDimension.smooth g _
   have hq := isPrime_of_mem h.2
   obtain ⟨f₁, hf₁, hmu⟩ := hadd R β v Z M th sc q₀ h hZ hs'
@@ -1321,7 +1321,7 @@ theorem nearC_of_fam
     {v : Ix g ((n ^ j) ^ 2) → R} {Z : Over (Sp R)} {M : LB Z.left} {th : Ix g ((n ^ j) ^ 2) → M.Sec}
     {sc : Ix g ((n ^ j) ^ 2) → (Out.baseOver (Sp R) ⟶ Z)} {q₀ : Ideal R} (h : Den b Mat κ β v q₀)
     (hv : Ideal.span (Set.range v) = ⊤) (hZ : Fam b Mat κ β v (n ^ 2) M th sc) : NearC b Mat κ β v q₀ := by
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
   obtain ⟨f, hf, hs⟩ : ∃ f, f ∉ q₀ ∧ SmoothOfRelativeDimension g (pullback.snd Z.hom (spMap (loc f))) := by
     obtain ⟨K, _, _, x, s, t, rfl, ht⟩ := mem_objPrimes.1 h.2
     obtain ⟨φ, hφ⟩ := hZ.2.2 K x s t ht
@@ -1346,7 +1346,7 @@ theorem nearC_of_unimodular
     {hh : Hh → Ix g ((n ^ j) ^ 2)} {Q : Polynomial ℚ} {d : ℕ} {q₀ : Ideal R} (h : Den b Mat κ β v q₀)
     (hv : Ideal.span (Set.range v) = ⊤) (hp : ∀ c, Ideal.span (Set.range (p c)) = ⊤)
     (hD : FibData b Mat κ β v (n ^ 2) p hh Q d) : NearC b Mat κ β v q₀ := by
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
   obtain ⟨f, hf, Z, M, th, hrep, hfl, hfib⟩ := GlobalTheory.ZM.NearCut.exists_away_flat_projRep R _ Hh (fun c => p (hh c)) Q d _ h.1 (fun q hq => by
     obtain ⟨K, _, _, x, s, t, rfl, ht⟩ := mem_objPrimes.1 hq
     obtain ⟨σ, I, -, -, -, hc, -⟩ := hD K x s t ht
@@ -1364,7 +1364,7 @@ theorem exists_tObj_near : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [
   obtain ⟨j₂, H₂⟩ := _root_.GlobalTheory.ZM.NearBuild.exists_add_near h1 h2 g J Mat κ n hn hodd
   obtain ⟨j₃, H₃⟩ := _root_.GlobalTheory.ZM.NearBuild.exists_endomorphism_near h1 h2 g J Mat κ n hn hodd
   refine ⟨j₁ + j₂ + j₃ + 2, fun j hj o _ b R _ _ _ β v hd q₀ hq₀ => ?_⟩
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
   suffices H : NearC b Mat κ β v q₀ by
     obtain ⟨f, hf, t, ht, H⟩ := H
     exact ⟨f, t, hf, ht, fun K _ _ x t' k₁ k₂ => H K x _ t' ⟨rfl, k₁, k₂⟩⟩
@@ -1508,19 +1508,19 @@ theorem exists_fac_away {R T : Type} [CommRing R] [CommRing T] (x : Sp R ⟶ S) 
 
 theorem isReduced_of_open {R : Type} [CommRing R] [IsReduced S] (x : Sp R ⟶ S) [IsOpenImmersion x] :
     _root_.IsReduced R := by
-  haveI : IsReduced (Sp R) := isReduced_of_isOpenImmersion x
+  have : IsReduced (Sp R) := isReduced_of_isOpenImmersion x
   exact (affine_isReduced_iff (CommRingCat.of R)).1 this
 
 theorem isNoetherianRing_of_open {R : Type} [CommRing R] [IsNoetherianRing o] {s : S ⟶ Sp o} (hs : IsQProjOver s)
     (x : Sp R ⟶ S) [IsOpenImmersion x] : IsNoetherianRing R := by
   obtain ⟨N, i, hi, hqc, hcomp⟩ := hs
-  haveI : IsImmersion i := hi
-  haveI : IsProper (PSpace.str o N) := isProper_str o N
-  haveI : LocallyOfFiniteType (PSpace.str o N) := inferInstance
-  haveI : LocallyOfFiniteType i := inferInstance
-  haveI : IsLocallyNoetherian (Sp o) := inferInstance
-  haveI : LocallyOfFiniteType (x ≫ i ≫ PSpace.str o N) := inferInstance
-  haveI : IsLocallyNoetherian (Sp R) := LocallyOfFiniteType.isLocallyNoetherian (x ≫ i ≫ PSpace.str o N)
+  have : IsImmersion i := hi
+  have : IsProper (PSpace.str o N) := isProper_str o N
+  have : LocallyOfFiniteType (PSpace.str o N) := inferInstance
+  have : LocallyOfFiniteType i := inferInstance
+  have : IsLocallyNoetherian (Sp o) := inferInstance
+  have : LocallyOfFiniteType (x ≫ i ≫ PSpace.str o N) := inferInstance
+  have : IsLocallyNoetherian (Sp R) := LocallyOfFiniteType.isLocallyNoetherian (x ≫ i ≫ PSpace.str o N)
   first
   | exact (isLocallyNoetherian_Spec (R := CommRingCat.of R)).1 this
 
@@ -1630,10 +1630,10 @@ theorem exists_chart [IsNoetherianRing o] (hG : GenericObj C Y Mat κ)
     (p : Sp K) : ∃ (R : Type) (_ : CommRing R) (x : Sp R ⟶ Y.MM) (v : Ix g (N' ^ 2) → R)
       (t : TObj g (N' ^ 2) J b (x ≫ Y.s)), IsChart Y Mat κ x v t ∧ z p ∈ Set.range x := by
   obtain ⟨R0, _, x0, v0, hx0, hp0, hsc0⟩ := (_root_.GlobalTheory.ZM.LocalCoord.secCoord_local Y.MM Y.de _ Y.th Y.isLB).2.2 (z p)
-  haveI : IsOpenImmersion x0 := hx0
-  haveI : IsReduced Y.MM := Y.reduced
-  haveI : _root_.IsReduced R0 := isReduced_of_open x0
-  haveI : IsNoetherianRing R0 := isNoetherianRing_of_open Y.qproj x0
+  have : IsOpenImmersion x0 := hx0
+  have : IsReduced Y.MM := Y.reduced
+  have : _root_.IsReduced R0 := isReduced_of_open x0
+  have : IsNoetherianRing R0 := isNoetherianRing_of_open Y.qproj x0
   obtain ⟨β, hβ⟩ := exists_spMap (x0 ≫ Y.s)
   obtain ⟨y0, hy0⟩ := exists_fac_field x0 z p hp0
   have hD : DenseP (objPrimes b Mat κ β v0) := by
@@ -1658,7 +1658,7 @@ theorem exists_chart [IsNoetherianRing o] (hG : GenericObj C Y Mat κ)
   have hbt : spMap ((algebraMap R0 (Localization.Away f)).comp β) =
       (spMap (algebraMap R0 (Localization.Away f)) ≫ x0) ≫ Y.s := by
     rw [Category.assoc, hβ, GlobalTheory.ThetaClosed.spMap_comp']
-  haveI : IsOpenImmersion (spMap (algebraMap R0 (Localization.Away f))) := by
+  have : IsOpenImmersion (spMap (algebraMap R0 (Localization.Away f))) := by
     first
     | infer_instance
     | (unfold spMap; infer_instance)
@@ -1695,11 +1695,11 @@ theorem chart_compat (h₁ : Out.Laws) (h₂ : Out.Laws2) {m : ℕ} (hm : 2 ≤ 
     [IsOpenImmersion a] (e : a ≫ x = a' ≫ x') (hu : TMap u t a) : TMap u t' a' := by
   obtain ⟨φ, rfl⟩ := exists_spMap a
   obtain ⟨β, rfl⟩ := exists_spMap s₁
-  haveI : IsOpenImmersion x := hc.1
-  haveI : IsReduced Y.MM := Y.reduced
-  haveI : _root_.IsReduced R := isReduced_of_open x
-  haveI : IsReduced (Sp R) := (affine_isReduced_iff (CommRingCat.of R)).2 inferInstance
-  haveI : _root_.IsReduced T := isReduced_of_open (spMap φ)
+  have : IsOpenImmersion x := hc.1
+  have : IsReduced Y.MM := Y.reduced
+  have : _root_.IsReduced R := isReduced_of_open x
+  have : IsReduced (Sp R) := (affine_isReduced_iff (CommRingCat.of R)).2 inferInstance
+  have : _root_.IsReduced T := isReduced_of_open (spMap φ)
   obtain ⟨u', hu'⟩ := GlobalTheory.tObj_pull _ _ _ _ b _ _ (x' ≫ Y.s) (spMap β) a' t'
     (by rw [hs, ← Category.assoc, ← e, Category.assoc])
   have hvT := secCoord_bc hc.2.1 φ
@@ -1745,7 +1745,7 @@ theorem Covered.dense (h : Covered Mat κ univ) (hG : GenericObj C Y Mat κ) : D
   rw [dense_iff_inter_open]
   rintro V hV ⟨p, hp⟩
   obtain ⟨R, _, x, v, t, hc, ⟨r, hr⟩, hmap⟩ := h p
-  haveI : IsOpenImmersion (x ≫ U.ι) := hc.1
+  have : IsOpenImmersion (x ≫ U.ι) := hc.1
   have hW : IsOpen ((fun q => x q) ⁻¹' V) := hV.preimage x.continuous
   obtain ⟨q, hqW, hqmin⟩ := exists_minimal_mem _ hW (p := r) (show x r ∈ V by rw [hr]; exact hp)
   obtain ⟨K, _, _, y, t'', hker, hsh, hth, hfc⟩ := hG R (x ≫ U.ι) v hc.1 hc.2.1 _ hqmin
@@ -1766,8 +1766,8 @@ theorem Covered.exists_local (h : Covered Mat κ univ) (h₂ : Out.Laws2) {R : T
       univ.HasTh (spMap (algebraMap R (Localization.Away f)) ≫ z) w ∧
       SecCoord Y.de Y.th (spMap (algebraMap R (Localization.Away f)) ≫ z ≫ U.ι) w := by
   obtain ⟨R', _, x, v, t, hc, hp, hmap⟩ := h (z p)
-  haveI : IsOpenImmersion (x ≫ U.ι) := hc.1
-  haveI : IsOpenImmersion x := IsOpenImmersion.of_comp x U.ι
+  have : IsOpenImmersion (x ≫ U.ι) := hc.1
+  have : IsOpenImmersion x := IsOpenImmersion.of_comp x U.ι
   obtain ⟨f, hf, y, hy'⟩ := exists_fac_away x z p hp
   refine ⟨f, hf, fun a => y (v a), ?_, ?_⟩
   · rw [← hy']; exact hasTh_of_tmap h₂ hmap hc.2.2.1 y
@@ -1825,7 +1825,7 @@ theorem Covered.tmap (h : Covered Mat κ univ) (K : Type) [Field K] [IsAlgClosed
     (hsh : t'.Shape Mat κ) (hth : t'.HasTh (𝟙 _) v') (hv' : SecCoord Y.de Y.th (z ≫ U.ι) v') : TMap t' univ z := by
   have pt : Sp K := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum K)
   obtain ⟨R, _, x, v, t, hc, hp, hmap⟩ := h (z pt)
-  haveI : IsOpenImmersion (x ≫ U.ι) := hc.1
+  have : IsOpenImmersion (x ≫ U.ι) := hc.1
   obtain ⟨r, hr⟩ := hp
   obtain ⟨y, hy⟩ := exists_fac_field (x ≫ U.ι) (z ≫ U.ι) pt ⟨r, by simp [hr]⟩
   have hz : spMap y ≫ x = z := by
@@ -1847,7 +1847,7 @@ theorem exists_covered (h₁ : Out.Laws) (h₂ : Out.Laws2) {m : ℕ} (hm : 2 �
   have hW : IsOpen W := by
     rw [isOpen_iff_forall_mem_open]
     rintro p ⟨R, _, x, v, t, hc, hp⟩
-    haveI : IsOpenImmersion x := hc.1
+    have : IsOpenImmersion x := hc.1
     exact ⟨Set.range x, fun q hq => ⟨R, inferInstance, x, v, t, hc, hq⟩, x.isOpenEmbedding.isOpen_range, hp⟩
   let U : Y.MM.Opens := ⟨W, hW⟩
   have hUι : ∀ q : U.toScheme, U.ι q = q.1 := fun q => by
@@ -1860,17 +1860,17 @@ theorem exists_covered (h₁ : Out.Laws) (h₂ : Out.Laws2) {m : ℕ} (hm : 2 �
   have hmem : ∀ i : U.toScheme, ∃ (R : Type) (_ : CommRing R) (x : Sp R ⟶ Y.MM) (v : Ix g (N' ^ 2) → R)
       (t : TObj g (N' ^ 2) J b (x ≫ Y.s)), IsChart Y Mat κ x v t ∧ i.1 ∈ Set.range x := fun i => i.2
   choose R hR x v t hc hx using hmem
-  letI : ∀ i, CommRing (R i) := hR
+  let : ∀ i, CommRing (R i) := hR
   let x' : ∀ i, Sp (R i) ⟶ U.toScheme := fun i => IsOpenImmersion.lift U.ι (x i) (hrange (x i) (v i) (t i) (hc i))
   have hx' : ∀ i, x' i ≫ U.ι = x i := fun i => IsOpenImmersion.lift_fac _ _ _
-  haveI : ∀ i, IsOpenImmersion (x' i) := fun i => by
-    haveI : IsOpenImmersion (x i) := (hc i).1
-    haveI : IsOpenImmersion (x' i ≫ U.ι) := by rw [hx' i]; infer_instance
+  have : ∀ i, IsOpenImmersion (x' i) := fun i => by
+    have : IsOpenImmersion (x i) := (hc i).1
+    have : IsOpenImmersion (x' i ≫ U.ι) := by rw [hx' i]; infer_instance
     exact IsOpenImmersion.of_comp (x' i) U.ι
   have hb : ∀ i, x i ≫ Y.s = x' i ≫ U.ι ≫ Y.s := fun i => by rw [← Category.assoc, hx' i]
   let t' : ∀ i, TObj g (N' ^ 2) J b (x' i ≫ U.ι ≫ Y.s) := fun i => cast (t i) (hb i)
-  haveI : IsReduced Y.MM := Y.reduced
-  haveI : IsReduced U.toScheme := isReduced_of_isOpenImmersion U.ι
+  have : IsReduced Y.MM := Y.reduced
+  have : IsReduced U.toScheme := isReduced_of_isOpenImmersion U.ι
   have hcov : ∀ p : U.toScheme, p ∈ Set.range (x' p) := by
     intro p
     obtain ⟨r, hr⟩ := hx p
@@ -1881,7 +1881,7 @@ theorem exists_covered (h₁ : Out.Laws) (h₂ : Out.Laws2) {m : ℕ} (hm : 2 �
     | simp
   obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.ThetaAffineGlue.exists_glue h₁ h₂ _ _ _ _ b m U.toScheme (U.ι ≫ Y.s) U.toScheme R x' t' hm hd ho
     (fun i => inferInstance) (fun p => ⟨p, hcov p⟩) (fun i i' T _ a a' u ha e hu => by
-      haveI := ha
+      have := ha
       have e' : a ≫ x i = a' ≫ x i' := by
         rw [← hx' i, ← hx' i', ← Category.assoc, e, Category.assoc]
       have hu' : TMap u (t i) a := (tmap_cast_right (t i) (hb i) u a).1 hu
@@ -1904,7 +1904,7 @@ theorem nonempty_wFam : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Fin
   have hj1 : j ≥ j₁ := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hj
   have hj2 : j ≥ j₂ := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hj
   have hj3 : 2 ≤ j := le_trans (le_max_right _ _) hj
-  haveI : IsDedekindDomain o := har.1
+  have : IsDedekindDomain o := har.1
   obtain ⟨hrad, hhom, htf⟩ :=
     GlobalTheory.ZM.ThIdeal.thIdeal_radical_homogeneous_torsionFree o g (n ^ j) J b em C har.2.2
   obtain ⟨Y⟩ := _root_.GlobalTheory.ZM.nonempty_MMPre o g n (n ^ j) (thIdeal em C) (pow_pos hn.pos j) hrad hhom htf

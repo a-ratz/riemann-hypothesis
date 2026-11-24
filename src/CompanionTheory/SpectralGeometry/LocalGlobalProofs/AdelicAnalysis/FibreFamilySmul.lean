@@ -55,7 +55,7 @@ theorem isFibreFamily_rescale (V X Y : Type) [TopologicalSpace V] [MeasurableSpa
     Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily (a • μ) f ι U (c • ν) B (fun b => (a / c) • fib b) := by
   unfold Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily at h ⊢
   refine ⟨fun b => ?_, fun φ hφ => ?_, fun φ hφc hφs hφU => ?_⟩
-  · rw [Measure.smul_apply, h.1 b, smul_zero]
+  · rw [smul_apply, h.1 b, smul_zero]
   · simp only [Measure.restrict_smul, lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul]
     rw [h.2.1 φ hφ, lintegral_const_mul' _ _ ENNReal.coe_ne_top, ← mul_assoc, ← ENNReal.coe_mul,
       mul_comm c, div_mul_cancel₀ a hc]

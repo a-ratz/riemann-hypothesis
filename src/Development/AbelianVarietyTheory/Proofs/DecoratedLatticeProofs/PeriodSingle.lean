@@ -111,7 +111,7 @@ theorem period_single (l : I.Laws) (u : B.Word) (a : I.ι) (φ : Frm I a) (G : (
     (hw : w c = z) (hw' : ∀ c', c' ≠ c → w c' = 0) :
     (Nat.card ((I.stX a).Stab c) : ℂ) * (I.per l u a).period w G =
       pairVal B z (val φ (toRow I.sel (I.tup a) ((I.stX a).rep c).1.1)) := by
-  letI := (I.perIn u a).clFin (l.per u a)
+  let := (I.perIn u a).clFin (l.per u a)
   have e : (I.per l u a).period w G = ∑ c' : (I.perIn u a).S'.Cl, (I.perIn u a).wt c' * pairB (K := ℂ) (I.perIn u a).sgT
       (polOf (Gr B.fields.emb B.embLL (B.R.N B.R.m - 1)) (Formalism.L2.Forms.shiftOf (I.perIn u a).sgT)
         (fr0 B.fields.emb B.embLL (B.R.N B.R.m - 1)) (w c')) ((I.perIn u a).rd B.fields.emb B.embLL G c') := by
@@ -122,7 +122,7 @@ theorem period_single (l : I.Laws) (u : B.Word) (a : I.ι) (φ : Frm I a) (G : (
   · have hs : (I.perIn u a).sgT = B.wts.sgTrue := rfl
     have h1 : (I.perIn u a).rd B.fields.emb B.embLL G c =
         MvPolynomial.map B.embLL (val φ (toRow I.sel (I.tup a) ((I.stX a).rep c).1.1)).1 := hG _
-    haveI : Finite ((I.stX a).Stab c) := (l.per u a).step.fin_stab c.1 _
+    have : Finite ((I.stX a).Stab c) := (l.per u a).step.fin_stab c.1 _
     have h2 : (Nat.card ((I.stX a).Stab c) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
     have h3 : (Nat.card ((I.stX a).Stab c) : ℂ) * (I.perIn u a).wt c = 1 := mul_inv_cancel₀ h2
     rw [← mul_assoc]

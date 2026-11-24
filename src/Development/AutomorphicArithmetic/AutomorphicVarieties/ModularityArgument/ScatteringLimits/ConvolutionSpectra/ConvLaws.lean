@@ -71,7 +71,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.convLaws :
     simp only [ContinuousLinearMap.comp_apply]
     rw [h1, h2, h3]
     refine integral_congr_ae ?_
-    filter_upwards [Measure.QuasiMeasurePreserving.ae (q x) (sh_ae V a u)] with t ht
+    filter_upwards [QuasiMeasurePreserving.ae (q x) (sh_ae V a u)] with t ht
     rw [ht, add_right_comm]
   · ext1 u
     have c1 := (cutLaws (V := W) (Iic (T + ρ)) (Ioi (T + ρ)) measurableSet_Iic measurableSet_Ioi).2.2.2.2.2.2.2.1
@@ -85,12 +85,12 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.convLaws :
       filter_upwards [(convSpec κ hk (cut V (Iic T) u)).1] with x hx hx'
       rw [hx]
       refine integral_eq_zero_of_ae ?_
-      filter_upwards [Measure.QuasiMeasurePreserving.ae (q x) h0] with t ht
+      filter_upwards [QuasiMeasurePreserving.ae (q x) h0] with t ht
       by_cases h : ρ < |t|
       · simp [hρ t h]
       · have h2 := (abs_le.1 (not_lt.1 h)).1
         rw [ht (by simp only [mem_Iic, not_le] at hx' ⊢; linarith), map_zero]; rfl
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply]
+    simp only [ContinuousLinearMap.comp_apply, zero_apply]
     rw [← h1]
     have := DFunLike.congr_fun c2.1 (conv κ (cut V (Iic T) u))
     rw [Ioi_inter_Iic, Ioc_self, c2.2.2.2.2.1] at this
@@ -108,7 +108,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.convLaws :
     · filter_upwards [(convSpec κ hk p).1] with x hx hx'
       rw [hx]
       refine integral_eq_zero_of_ae ?_
-      filter_upwards [Measure.QuasiMeasurePreserving.ae (q x) h0] with t ht
+      filter_upwards [QuasiMeasurePreserving.ae (q x) h0] with t ht
       by_cases h : R < |t|
       · simp [hR t h]
       · obtain ⟨h2, h3⟩ := abs_le.1 (not_lt.1 h)

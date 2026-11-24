@@ -81,7 +81,7 @@ theorem KernelBound.real {D : D7} {V W : HSp D} {A d : ℕ} (H : KernelBound V W
   refine ⟨hs, fun g h => ?_⟩
   have := ENNReal.toReal_mono (ENNReal.mul_ne_top (ENNReal.mul_ne_top ENNReal.coe_ne_top hs) ENNReal.ofReal_ne_top)
     (hC χS χT ω hω μ 𝓕 hμ f hf g h)
-  rwa [toReal_enorm, ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.coe_toReal,
+  rwa [toReal_eNorm, ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.coe_toReal,
     ENNReal.toReal_ofReal (pow_nonneg (mul_pos (height_pos V g) (height_pos W h)).le A)] at this
 
 end GlobalTheory.IndefiniteRowSideFullHecke.ThetaKernelGrowth

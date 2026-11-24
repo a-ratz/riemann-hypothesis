@@ -69,7 +69,7 @@ theorem exists_ext_containing (T : CDVR) (hT : T.FinRes) {C : Type} [Field C] [C
       e₁.comp f₁ = f ∧ ∀ a, e₁ (algebraMap T₁.V T₁.Fr (φ a)) = e (algebraMap T.V T.Fr a) := by
   have : Finite (ResidueField T.V) := hT
   have : CharZero T.Fr := IsFractionRing.charZero_of_isFractionRing T.V
-  letI : Algebra T.Fr C := e.toAlgebra
+  let : Algebra T.Fr C := e.toAlgebra
   let b := Module.finBasis ℚ F
   let L : IntermediateField T.Fr C := IntermediateField.adjoin T.Fr (Set.range fun i => f (b i))
   have hfin : FiniteDimensional T.Fr L := by
@@ -83,7 +83,7 @@ theorem exists_ext_containing (T : CDVR) (hT : T.FinRes) {C : Type} [Field C] [C
     refine sum_mem fun i _ => ?_
     rw [Rat.smul_def, map_mul, map_ratCast]
     exact mul_mem (SubfieldClass.ratCast_mem L _) (IntermediateField.subset_adjoin _ _ ⟨i, rfl⟩)
-  letI : Algebra T.V L := ((algebraMap T.Fr L).comp (algebraMap T.V T.Fr)).toAlgebra
+  let : Algebra T.V L := ((algebraMap T.Fr L).comp (algebraMap T.V T.Fr)).toAlgebra
   have : IsScalarTower T.V T.Fr L := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hB : Module.Finite T.V (integralClosure T.V L) := IsIntegralClosure.finite T.V T.Fr L _
   have hBd : IsDiscreteValuationRing (integralClosure T.V L) := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_dvr T.V T.Fr L

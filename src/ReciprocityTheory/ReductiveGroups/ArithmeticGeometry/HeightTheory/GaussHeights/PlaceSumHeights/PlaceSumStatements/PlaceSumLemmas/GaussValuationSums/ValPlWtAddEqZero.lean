@@ -410,7 +410,7 @@ theorem plOf_e (Q : {Q : Ideal (integralClosure O L) // Q.IsMaximal}) {ϖ : O}
     rw [← RingHom.coe_comp, ← IsScalarTower.algebraMap_eq]
     exact FaithfulSMul.algebraMap_injective O L
   have hb0 : algebraMap O (integralClosure O L) ϖ ≠ 0 := (map_ne_zero_iff _ hinj).2 hϖ.ne_zero
-  haveI : Q.1.LiesOver (maximalIdeal O) := ⟨(valPl_comap Q.1).symm⟩
+  have : Q.1.LiesOver (maximalIdeal O) := ⟨(valPl_comap Q.1).symm⟩
   have hmap : Ideal.map (algebraMap O (integralClosure O L)) (maximalIdeal O) =
       Ideal.span {algebraMap O (integralClosure O L) ϖ} := by
     rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ, Ideal.map_span, Set.image_singleton]
@@ -432,8 +432,8 @@ theorem plOf_f (Q : {Q : Ideal (integralClosure O L) // Q.IsMaximal}) :
   rw [Ideal.inertiaDeg_eq_of_isMaximal (maximalIdeal O) Q.1]
   have hwm := plOf_mem (O := O) Q
   set w := plOf O L Q with hw_def
-  letI : Field (O ⧸ maximalIdeal O) := Ideal.Quotient.field _
-  letI : Field (integralClosure O L ⧸ Q.1) := Ideal.Quotient.field _
+  let : Field (O ⧸ maximalIdeal O) := Ideal.Quotient.field _
+  let : Field (integralClosure O L ⧸ Q.1) := Ideal.Quotient.field _
   let V := vRing w
   let V0 := V.comap (algebraMap F L)
   have hV0 : ∀ x : F, x ∈ V0 ↔ 0 ≤ (w.comap (algebraMap F L)) x := fun x => Iff.rfl
@@ -503,7 +503,7 @@ theorem plOf_f (Q : {Q : Ideal (integralClosure O L) // Q.IsMaximal}) :
         obtain ⟨b, hb⟩ := hsurjB r
         exact ⟨Ideal.Quotient.mk _ b, by rw [Ideal.Quotient.lift_mk]; exact hb⟩⟩
   simp only [fres]
-  letI := resAlg (F := F) w
+  let := resAlg (F := F) w
   symm
   refine Algebra.finrank_eq_of_equiv_equiv i j ?_
   apply Ideal.Quotient.ringHom_ext

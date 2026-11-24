@@ -113,8 +113,8 @@ theorem trace_lie {A O : Type} [CommRing A] [CommRing O] {G : Over (Sp A)} [GrpO
     haveI := Module.Free.of_basis (Lie.basis act hv)
     haveI := Module.Finite.of_basis (Lie.basis act hv)
     LinearMap.trace A (Lie act) (Module.toModuleEnd A (Lie act) x) = M.trace := by
-  haveI := Module.Free.of_basis (Lie.basis act hv)
-  haveI := Module.Finite.of_basis (Lie.basis act hv)
+  have := Module.Free.of_basis (Lie.basis act hv)
+  have := Module.Finite.of_basis (Lie.basis act hv)
   let e := (Lie.basis act hv).equivFun
   have he : ∀ c, (e.symm c).hom = prodPts c v := fun c => by
     have h := (Lie.isLieComb_iff c (Lie.basis act hv) (prodPts c v)).1 (by
@@ -179,12 +179,12 @@ theorem trace_level {A O : Type} [CommRing A] [IsLocalRing A] [CommRing O] {K G 
     MG.trace = MK.trace + MB.trace := by
   have := hi.isMonHom
   have := hq.isMonHom
-  haveI := Module.Free.of_basis (Lie.basis aK hvK)
-  haveI := Module.Finite.of_basis (Lie.basis aK hvK)
-  haveI := Module.Free.of_basis (Lie.basis aG hvG)
-  haveI := Module.Finite.of_basis (Lie.basis aG hvG)
-  haveI := Module.Free.of_basis (Lie.basis aB hvB)
-  haveI := Module.Finite.of_basis (Lie.basis aB hvB)
+  have := Module.Free.of_basis (Lie.basis aK hvK)
+  have := Module.Finite.of_basis (Lie.basis aK hvK)
+  have := Module.Free.of_basis (Lie.basis aG hvG)
+  have := Module.Finite.of_basis (Lie.basis aG hvG)
+  have := Module.Free.of_basis (Lie.basis aB hvB)
+  have := Module.Finite.of_basis (Lie.basis aB hvB)
   obtain ⟨inj, ex⟩ := Lie.map_kernel (a := aG) (b := aB) (c := aK) hk
   rw [← trace_lie hvK aK x MK hMK, ← trace_lie hvG aG x MG hMG, ← trace_lie hvB aB x MB hMB]
   exact trace_add_of_exact (Lie.map aK aG i) (Lie.map aG aB q) inj ex (map_surjective _ _ _) _ _ _
@@ -323,7 +323,7 @@ theorem injective_of_charZero {E F : Type} [Field E] [NumberField E] [Field F] [
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro c hc
   by_contra h0
-  obtain ⟨n, hn, d, hd⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_nonzero_dvd
+  obtain ⟨n, hn, d, hd⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero h0)
   have := congrArg τ hd
   rw [map_mul, hc, zero_mul] at this
@@ -332,8 +332,8 @@ theorem injective_of_charZero {E F : Type} [Field E] [NumberField E] [Field F] [
 theorem lieMult_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (T : Formalism.L2.Pj.CDVR) (t : SAB H (Sp T.V)) (P : PELUnif (IsLocalRing.maximalIdeal T.V) t) (F : Type) [Field F] [IsAlgClosed F] (f : T.V →+* F), Function.Injective f → ∀ (τ : 𝓞 E →+* F) (N : ℕ), LieMult t.act (spMap f) τ N → letI := H.starRing; ∃ n, LieMult (ofRingAct P.oD.onB.toRingAct) (spMap f) τ n ∧ n + Module.finrank (𝓞 E) P.D.toPre.X = N := by
   intro E _ _ _ H T t P F _ _ f hf τ N hN
   classical
-  letI := H.starRing
-  haveI : CharZero F := ⟨fun a b h => Nat.cast_injective (R := T.V) (hf (by simpa using h))⟩
+  let := H.starRing
+  have : CharZero F := ⟨fun a b h => Nat.cast_injective (R := T.V) (hf (by simpa using h))⟩
   have := P.U.smooth
   have : Smooth P.D.toPre.P.A.hom := P.D.toPre.P.smoothDim.smooth
   obtain ⟨g, v, hv⟩ := Chart.exists_isLieBasis t.G P.U.smooth
@@ -346,8 +346,8 @@ theorem lieMult_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   obtain ⟨w', ρB', hw', hρB', hMB⟩ := ToricRank.exists_action_pullback hw hρB f
   let aG := t.act.pullback (spMap f) t.G
   let aB := (ofRingAct P.oD.onB.toRingAct).pullback (spMap f) P.D.toPre.P.A
-  haveI := Module.Finite.of_basis (Lie.basis aG hv')
-  haveI := Module.Finite.of_basis (Lie.basis aB hw')
+  have := Module.Finite.of_basis (Lie.basis aG hv')
+  have := Module.Finite.of_basis (Lie.basis aB hw')
   have tG : ∀ a, LinearMap.trace F (Lie aG) (Module.toModuleEnd F (Lie aG) a) = f (LinearMap.trace T.V _ (ρ a)) :=
     fun a => by rw [trace_map_eq]; exact trace_lie hv' aG a _ (fun c => by rw [← hM, hρ'])
   have tB : ∀ a, LinearMap.trace F (Lie aB) (Module.toModuleEnd F (Lie aB) a) = f (LinearMap.trace T.V _ (ρB a)) :=

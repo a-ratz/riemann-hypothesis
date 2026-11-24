@@ -144,26 +144,26 @@ variable (E)
 
 theorem isFreeGen_toRat {ω : Forms E.const n} (hω : IsFreeGen E.ring ω) :
     IsFreeGen X.functionField (E.toRat n ω) := by
-  letI := E.const.toAlgebra
-  letI := (Cartier.constFn p).toAlgebra
-  haveI : IsScalarTower k E.ring X.functionField := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.FormallyEtale E.ring X.functionField :=
+  let := E.const.toAlgebra
+  let := (Cartier.constFn p).toAlgebra
+  have : IsScalarTower k E.ring X.functionField := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.FormallyEtale E.ring X.functionField :=
     .of_isLocalization (nonZeroDivisors E.ring)
   exact hω.of_isBaseChange (isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale k E.ring X.functionField) n)
 
 theorem exists_isFreeGen [PerfectField k] [LocallyOfFiniteType p]
     (hn : topologicalKrullDim X = n) : ∃ ω : Forms E.const n, IsFreeGen E.ring ω := by
-  letI := E.const.toAlgebra
-  letI := (Cartier.constFn p).toAlgebra
-  haveI : IsScalarTower k E.ring X.functionField := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.EssFiniteType k E.ring := E.essFiniteType
-  haveI := formallySmooth_of_isRegularLocalRing_of_perfectField k E.ring
+  let := E.const.toAlgebra
+  let := (Cartier.constFn p).toAlgebra
+  have : IsScalarTower k E.ring X.functionField := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.EssFiniteType k E.ring := E.essFiniteType
+  have := formallySmooth_of_isRegularLocalRing_of_perfectField k E.ring
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible E.ring
   obtain ⟨m, z, b, -, hb⟩ := exists_basis_kaehler_uniformiser k ht
   have h1 := trdeg_eq_of_basis_kaehler k X.functionField b
   have e : (Spec.preimage (X.fromSpecStalk (genericPoint X) ≫ p)).hom = Cartier.constFn p := by
-    letI := algebraΓOfHom p
+    let := algebraΓOfHom p
     have e₁ : strHom k X = p := strHom_eq fun _ => rfl
     have e₂ : X.fromSpecStalk (genericPoint X) ≫ p =
         Spec.map (CommRingCat.ofHom (Cartier.constFn p)) := by
@@ -195,9 +195,9 @@ end DivOver
 theorem regAt_of_forall_coheight_eq_one [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] {x : X}
     {f : X.functionField} (h : ∀ z, z ⤳ x → Order.coheight z = 1 → RegAt z f) : RegAt x f := by
   obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨x, hx⟩⟩
-  letI := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨x, hx⟩
+  have : Nonempty U := ⟨⟨x, hx⟩⟩
+  let := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
+  have := hU.isLocalization_stalk ⟨x, hx⟩
   refine (mem_range_algebraMap_iff_forall_height_eq_one (A := X.presheaf.stalk x) f).2
     fun q hq h1 => ?_
   let P : PrimeSpectrum Γ(X, U) := ⟨q.comap (algebraMap _ (X.presheaf.stalk x)), inferInstance⟩
@@ -217,7 +217,7 @@ theorem regAt_of_forall_coheight_eq_one [IsLocallyNoetherian X] [GlobalTheory.Is
       hU.fromSpec.continuous
     rwa [hU.fromSpec_primeIdealOf ⟨x, hx⟩] at h
   clear_value z
-  haveI := hU.isLocalization_stalk z
+  have := hU.isLocalization_stalk z
   have hc : Order.coheight (z : X) = 1 := by
     have := IsLocalization.AtPrime.ringKrullDim_eq_height (hU.primeIdealOf z).asIdeal
       (X.presheaf.stalk (z : X))
@@ -265,7 +265,7 @@ theorem IsAt.coheight_eq_one (h : E.IsAt z) : Order.coheight z = 1 := by
 
 theorem IsAt.ord_eq [IsLocallyNoetherian X] (h : E.IsAt z) (g : X.functionFieldˣ) :
     E.ord g = Scheme.ord (g : X.functionField) z := by
-  haveI : IsDiscreteValuationRing (X.presheaf.stalk z) :=
+  have : IsDiscreteValuationRing (X.presheaf.stalk z) :=
     IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing h.equiv.symm
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible (X.presheaf.stalk z)
   obtain ⟨m, u, e⟩ := exists_eq_unit_mul_zpow ht g.ne_zero
@@ -465,17 +465,17 @@ theorem DivOver.formOrd_formOf_eq_zero {U : X.Opens} (hz : z ∈ U) (hE : E.IsAt
   have e₁ : E.toRat n (TopForm.formMap n ρ hρ ω) = formOf U (gen_mem hz) ω :=
     formMap_formMap _ _ _ hρ' _ _ _ ω
   refine DivOver.IsFormOrd.formOrd_eq h0 ⟨TopForm.formMap n ρ hρ ω, ?_, 1, by simp [e₁], E.ord_one⟩
-  letI := (algX p U).toAlgebra
-  letI := E.const.toAlgebra
-  letI := ρ.toAlgebra
-  letI := X.presheaf.algebra_section_stalk (⟨z, hz⟩ : U)
-  haveI : IsScalarTower k Γ(X, U) E.ring := IsScalarTower.of_algebraMap_eq' hρ.symm
-  haveI := hω.affine.isLocalization_stalk ⟨z, hz⟩
-  haveI : IsLocalization (hω.affine.primeIdealOf ⟨z, hz⟩).asIdeal.primeCompl E.ring :=
+  let := (algX p U).toAlgebra
+  let := E.const.toAlgebra
+  let := ρ.toAlgebra
+  let := X.presheaf.algebra_section_stalk (⟨z, hz⟩ : U)
+  have : IsScalarTower k Γ(X, U) E.ring := IsScalarTower.of_algebraMap_eq' hρ.symm
+  have := hω.affine.isLocalization_stalk ⟨z, hz⟩
+  have : IsLocalization (hω.affine.primeIdealOf ⟨z, hz⟩).asIdeal.primeCompl E.ring :=
     IsLocalization.isLocalization_of_algEquiv _
       (AlgEquiv.ofRingEquiv (f := hE.equiv) fun _ => rfl :
         X.presheaf.stalk z ≃ₐ[Γ(X, U)] E.ring)
-  haveI : Algebra.FormallyEtale Γ(X, U) E.ring :=
+  have : Algebra.FormallyEtale Γ(X, U) E.ring :=
     .of_isLocalization (hω.affine.primeIdealOf ⟨z, hz⟩).asIdeal.primeCompl
   exact hω.gen.of_isBaseChange (isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale k Γ(X, U) E.ring) n)
@@ -484,7 +484,7 @@ theorem DivOver.formOrd_formOf_eq_zero {U : X.Opens} (hz : z ∈ U) (hE : E.IsAt
 omit [LocallyOfFiniteType p] in
 theorem kltAt_zero_of_smooth [SmoothOfRelativeDimension n p] (hn : topologicalKrullDim X = n)
     (x : X) : KltAt p n 0 x := by
-  haveI := SmoothOfRelativeDimension.smooth n p
+  have := SmoothOfRelativeDimension.smooth n p
   obtain ⟨U, ω, hx, hω⟩ := exists_isFrame p n x
   have h0 : formOf U (gen_mem hx) ω ≠ 0 := fun h =>
     one_ne_zero ((isFreeGen_formOf (gen_mem hx) hω).1 (a₁ := 1) (a₂ := 0) (by simp [h]))
@@ -501,7 +501,7 @@ omit [LocallyOfFiniteType p] in
 theorem isLogCanonicalMultiple_canonical [IsLocallyNoetherian X] [SmoothOfRelativeDimension n p]
     (hn : topologicalKrullDim X = n) (D : CartierDiv X) (hm : 0 < m) :
     IsLogCanonicalMultiple p n (qWeil D m) m (m • canonical p n + D) := by
-  haveI := SmoothOfRelativeDimension.smooth n p
+  have := SmoothOfRelativeDimension.smooth n p
   refine ⟨baseForm p n, baseForm_ne_zero p n, fun x g hg z hz E hE => ?_⟩
   obtain ⟨U, ω, hU, hω⟩ := exists_isFrame p n z
   have hgen := isFreeGen_formOf (gen_mem hU) hω

@@ -76,7 +76,7 @@ theorem ipow_mul_mem {𝔡 : Ideal (𝓞 K)} (h𝔡 : 𝔡 ≠ ⊥) {m n : ℤ} 
   have h0 : ((𝔡 : FractionalIdeal (𝓞 K)⁰ K)) ≠ 0 := by
     simpa using h𝔡
   unfold ipow at *
-  rw [zpow_add₀ h0, FractionalIdeal.coe_mul]
+  rw [zpow_add₀ h0, FractionalIdeal.coeToSubmodule_mul]
   exact Submodule.mul_mem_mul hx hy
 
 theorem one_mem_ipow_mul {𝔡 : Ideal (𝓞 K)} (h𝔡 : 𝔡 ≠ ⊥) (m : ℤ) :
@@ -84,7 +84,7 @@ theorem one_mem_ipow_mul {𝔡 : Ideal (𝓞 K)} (h𝔡 : 𝔡 ≠ ⊥) (m : ℤ
   have h0 : ((𝔡 : FractionalIdeal (𝓞 K)⁰ K)) ≠ 0 := by
     simpa using h𝔡
   unfold ipow
-  rw [← FractionalIdeal.coe_mul, ← zpow_add₀ h0, add_neg_cancel, zpow_zero, FractionalIdeal.coe_one]
+  rw [← FractionalIdeal.coeToSubmodule_mul, ← zpow_add₀ h0, add_neg_cancel, zpow_zero, FractionalIdeal.coeToSubmodule_one]
   exact Submodule.one_le.mp le_rfl
 
 theorem ipow_zero (𝔡 : Ideal (𝓞 K)) : ipow 𝔡 0 = 1 := by

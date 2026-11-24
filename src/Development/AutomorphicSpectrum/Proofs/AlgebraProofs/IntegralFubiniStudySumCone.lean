@@ -127,10 +127,10 @@ theorem coneBall_logGap_integral (n e : ℕ) (h : HermNorm n) (W : Ideal (MvPoly
   have hnull := ConeHyperplaneNull.full n e h W f u hW hf hu
   set ν : Measure (EuclideanSpace ℂ (Fin n)) := Measure.hausdorffMeasure ((2 * (e + 1) : ℕ) : ℝ) with hν
   have h0 : ν {0} = 0 := by
-    haveI := Measure.nullSingletonClass_hausdorff (X := EuclideanSpace ℂ (Fin n))
+    have := Measure.nullSingletonClass_hausdorff (X := EuclideanSpace ℂ (Fin n))
       (d := ((2 * (e + 1) : ℕ) : ℝ)) (by positivity)
     exact measure_singleton 0
-  haveI : IsFiniteMeasure (ν.restrict (coneBall h W)) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure (ν.restrict (coneBall h W)) := ⟨by simpa using hfin⟩
   have hp : Continuous (fun y : EuclideanSpace ℂ (Fin n) => h.pointOf y) := by
     unfold HermNorm.pointOf; fun_prop
   have hc : Continuous (fun y : EuclideanSpace ℂ (Fin n) => ∑ j, u j * h.pointOf y j) :=
@@ -602,10 +602,10 @@ theorem lay_le (x : ℝ≥0∞) : lay x ≤ x := by
     | succ n ih =>
       rw [Finset.sum_range_succ]
       by_cases h : ((n : ℝ≥0∞) + 1) < x
-      · simp only [h, if_true]
+      · simp only [h, ite_true]
         have h1 := add_le_add_left ih.2 (1 : ℝ≥0∞)
         exact ⟨h1.trans h.le, by push_cast; exact h1⟩
-      · simp only [h, if_false, add_zero]
+      · simp only [h, ite_false, add_zero]
         exact ⟨ih.1, ih.2.trans (by exact_mod_cast Nat.le_succ n)⟩
   rw [lay, ENNReal.tsum_eq_iSup_nat]
   exact iSup_le fun N => (key N).1
@@ -661,7 +661,7 @@ theorem two_mul_lay_le (x : ℝ≥0∞) : 2 * lay x ≤ lay (2 * x) := by
         rw [mul_add]
         gcongr
         norm_num
-      rw [if_pos h, if_pos h3]
+      rw [ite_eq_left h, ite_eq_left h3]
     · simp [h]
   · by_cases h : ((l : ℝ≥0∞) + 1) < x
     · have h2 := two_lt_two h
@@ -669,7 +669,7 @@ theorem two_mul_lay_le (x : ℝ≥0∞) : 2 * lay x ≤ lay (2 * x) := by
         refine lt_of_le_of_lt (le_of_eq ?_) h2
         push_cast
         ring
-      rw [if_pos h, if_pos h3]
+      rw [ite_eq_left h, ite_eq_left h3]
     · simp [h]
 
 noncomputable def dy (k : ℕ) (x : ℝ≥0∞) : ℝ≥0∞ := (2 ^ k : ℝ≥0∞)⁻¹ * lay (2 ^ k * x)
@@ -829,7 +829,7 @@ theorem encard_fibrePts_inter {n e : ℕ} (S A : Set (EuclideanSpace ℂ (Fin n)
   unfold cntOver
   congr 2
   ext y
-  simp only [fibrePts, ptsOver, Set.mem_inter_iff, Set.mem_setOf_eq]
+  simp only [fibrePts, ptsOver, Set.mem_inter_iff, Set.mem_ofPred_eq]
   tauto
 
 end ModelDimension.FnCrofton
@@ -972,7 +972,7 @@ theorem lt_logGap_iff (h : HermNorm n) {u : Fin n → ℂ} (hu : u ≠ 0) {s : �
   by_cases hp : ∑ j, u j * h.pointOf y j = 0
   · simp [hy, hp, hs.lt_top, hc]
   · have hpn : 0 < ‖∑ j, u j * h.pointOf y j‖ := norm_pos_iff.mpr hp
-    rw [if_neg hy, if_neg hp, ENNReal.lt_ofReal_iff_toReal_lt hs, fsLog, dualNorm_pointOf_eq,
+    rw [ite_eq_right hy, ite_eq_right hp, ENNReal.lt_ofReal_iff_toReal_lt hs, fsLog, dualNorm_pointOf_eq,
       Real.log_div hpn.ne' hy'.ne', ← Real.log_lt_log_iff hpn hc,
       Real.log_mul (by positivity) hy'.ne', Real.log_mul (Real.exp_pos _).ne' hN.ne', Real.log_exp]
     constructor <;> intro hh <;> linarith
@@ -1067,7 +1067,7 @@ theorem fubini_study_sum_crofton {n e δ : ℕ} (h : HermNorm n) (u : Fin n → 
     simp [logGap, hne0 y hy, hsum y hy]
   have hnn : ∀ y ∈ fibrePts S π, 0 ≤ Real.log (h.norm u) - fsLog h u (h.pointOf y) := fun y hy =>
     sub_nonneg.2 (_root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.fsLog_pointOf_le_log_norm n h u y (hne0 y hy) (hsum y hy))
-  haveI : Fintype (fibrePts S π) := hfin.fintype
+  have : Fintype (fibrePts S π) := hfin.fintype
   have htsum : ∑' z : fibrePts S π, logGap h u z = ∑ y ∈ hfin.toFinset, logGap h u y := by
     rw [tsum_fintype]
     exact (Finset.sum_subtype hfin.toFinset (fun y => hfin.mem_toFinset) (logGap h u)).symm
@@ -1084,7 +1084,7 @@ end GlobalTheory.CompanionTheory.Ar.Short.Crofton
 private theorem tsum_fibre_pts_eq_sum {n e : ℕ} (S : Set (EuclideanSpace ℂ (Fin n))) (π : Fin (e + 1) → Fin n → ℂ)
     (hfin : (fibrePts S π).Finite) (g : EuclideanSpace ℂ (Fin n) → ℝ≥0∞) :
     ∑' y : fibrePts S π, g y = ∑ y ∈ hfin.toFinset, g y := by
-  haveI : Fintype (fibrePts S π) := hfin.fintype
+  have : Fintype (fibrePts S π) := hfin.fintype
   rw [tsum_fintype]
   exact (Finset.sum_subtype hfin.toFinset (fun y => hfin.mem_toFinset) g).symm
 
@@ -1113,7 +1113,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Short.Crofton.fsSum_crofton : ∀ (n e �
   have hcnt : ∀ᵐ π ∂(gaussM (e + 1) n), (fibrePts (coneSet h W) π).encard = δ :=
     hac.ae_le (_root_.GlobalTheory.CompanionTheory.Relay.ae_fibre_points_card_eq_degree n e δ h W f hW hf hδ)
   have hd : (0 : ℝ) < ((2 * (e + 1) : ℕ) : ℝ) := by positivity
-  haveI := MeasureTheory.Measure.nullSingletonClass_hausdorff (EuclideanSpace ℂ (Fin n)) hd
+  have := MeasureTheory.Measure.nullSingletonClass_hausdorff (EuclideanSpace ℂ (Fin n)) hd
   have hφm : Measurable (({0}ᶜ : Set (EuclideanSpace ℂ (Fin n))).indicator (fun _ => (1 : ℝ≥0∞))) :=
     measurable_const.indicator (measurableSet_singleton 0).compl
   have hφo : ∀ s : ℝ≥0∞,
@@ -1173,7 +1173,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Short.Crofton.fsSum_crofton : ∀ (n e �
     filter_upwards [hcnt, hGae] with π h1 h2
     rw [fubini_study_sum_crofton h u _ π h1 h2]
     ring
-  haveI : IsFiniteMeasure (gaussM (e + 1) n) := ⟨hμt⟩
+  have : IsFiniteMeasure (gaussM (e + 1) n) := ⟨hμt⟩
   have hGint := integrable_toReal_of_lintegral_ne_top hGm.aemeasurable hGfin
   have hint : Integrable (fun π => (δ : ℝ) * Real.log (h.norm u) -
       (∑' y : fibrePts (coneSet h W) π, logGap h u y).toReal) (gaussM (e + 1) n) :=

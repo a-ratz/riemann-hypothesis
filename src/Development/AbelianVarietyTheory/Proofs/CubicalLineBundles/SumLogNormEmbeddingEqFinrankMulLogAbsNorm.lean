@@ -70,7 +70,7 @@ theorem exists_span_singleton_eq_map_of_integral (K M : Type) [Field K] [NumberF
   · rw [Ideal.span_singleton_le_iff_mem]
     have hone : (1 : K) ∈ ((𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) *
         (𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)⁻¹) := by
-      rw [FractionalIdeal.coe_ideal_mul_inv 𝔟 h𝔟]
+      rw [FractionalIdeal.coeIdeal_mul_inv 𝔟 h𝔟]
       exact FractionalIdeal.one_mem_one _
     have key : ∀ r ∈ ((𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) *
         (𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)⁻¹),

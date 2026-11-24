@@ -163,7 +163,7 @@ theorem exists_deriv_sq_quot {h : ℂ → ℂ} (hh : Differentiable ℂ h) (h0 :
     obtain ⟨s, hs⟩ := h0
     exact hs ((hh.differentiableOn.analyticOnNhd isOpen_univ).eqOn_zero_of_preconnected_of_eventuallyEq_zero
       isPreconnected_univ (Set.mem_univ s₀) hz (Set.mem_univ s))
-  obtain ⟨n, u, hu, hu0, he⟩ := (hh.analyticAt s₀).exists_eventuallyEq_pow_smul_nonzero_iff.2 hnz
+  obtain ⟨n, u, hu, hu0, he⟩ := (hh.analyticAt s₀).exists_eventuallyEq_pow_smul_ne_zero_iff.2 hnz
   simp only [smul_eq_mul] at he
   have hder : ∀ᶠ s in 𝓝 s₀, deriv h s = n * (s - s₀) ^ (n - 1) * u s + (s - s₀) ^ n * deriv u s := by
     filter_upwards [he.eventually_nhds, hu.eventually_analyticAt] with s hs hus
@@ -312,7 +312,7 @@ theorem bound_on_line {θ : (Fin g → ℂ) → ℂ} (hθ : Differentiable ℂ �
   have hnz : ¬ ∀ᶠ s in 𝓝 (0 : ℂ), Φ s = 0 := fun hz =>
     not_eventually_zero (h := fun s => θ (z + s • w)) (by fun_prop) h0 0 (hz.mono fun s hs => by
       simpa [Φ, γ] using congrArg (fun F : C(K, ℂ) => F ⟨0, by simp [K]⟩) hs)
-  obtain ⟨n, G, hG, hG0, he⟩ := (hΦ.analyticAt 0).exists_eventuallyEq_pow_smul_nonzero_iff.2 hnz
+  obtain ⟨n, G, hG, hG0, he⟩ := (hΦ.analyticAt 0).exists_eventuallyEq_pow_smul_ne_zero_iff.2 hnz
   simp only [sub_zero] at he
   let F : ℂ → ℂ → ℂ := fun s t => (s ^ n)⁻¹ * θ (z + s • w + t • v)
   have hFd : ∀ s, Differentiable ℂ (F s) := fun s => by fun_prop
@@ -449,7 +449,7 @@ theorem exists_entire_quot_of_lines {θ N : (Fin g → ℂ) → ℂ} (hθ : Diff
   let ψ : (Fin g → ℂ) → ℂ := fun z => limUnder (𝓝[{x | θ x ≠ 0}] z) (fun x => N x / θ x)
   have he : ∀ a, ∀ᶠ z in 𝓝 a, ψ z = Ψ a z := fun a => by
     filter_upwards [hΨ a, (hΨ a).eventually_nhds] with z h1 h2
-    haveI := frequently_ne_zero hθ h0 z
+    have := frequently_ne_zero hθ h0 z
     refine Tendsto.limUnder_eq ((h1.1.continuousAt.tendsto.mono_left nhdsWithin_le_nhds).congr' ?_)
     filter_upwards [h2.filter_mono nhdsWithin_le_nhds, self_mem_nhdsWithin] with y hy hy0
     rw [← hy.2, mul_div_cancel_right₀ _ hy0]
@@ -537,7 +537,7 @@ theorem eq_zero_of_tendsto (L : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology
     {u : (Fin g → ℂ) → ℝ} (hu : Continuous u) (hp : ∀ a ∈ L, ∀ z, u (z + a) = u z)
     (z w : Fin g → ℂ) (ht : Tendsto (fun n : ℕ => u (z + n • w)) atTop (𝓝 0)) : u z = 0 := by
   let Q := (Fin g → ℂ) ⧸ L.toAddSubgroup
-  haveI : CompactSpace Q := by
+  have : CompactSpace Q := by
     have := IsZLattice.isCompact_range_of_periodic L (QuotientAddGroup.mk : _ → Q)
       QuotientAddGroup.continuous_mk fun z w hw => by
         rw [QuotientAddGroup.mk_add, (QuotientAddGroup.eq_zero_iff w).2 hw, add_zero]
@@ -583,7 +583,7 @@ theorem exists_zero_fderiv_ne_zero : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin g) 
       have e3 : fderiv ℂ (D + fun y => l * θ y) z v = fderiv ℂ D z v + l * D z := by
         rw [((hD z).hasFDerivAt.add ((hθ z).hasFDerivAt.const_mul l)).fderiv]; rfl
       have e4 : ψ (z + a) = j z * (ψ z + 2 * l * D z + l ^ 2 * θ z) := by
-        haveI := frequently_ne_zero hθ h0 z
+        have := frequently_ne_zero hθ h0 z
         have c1 : Continuous fun z => ψ (z + a) := hψ.continuous.comp (by fun_prop)
         have c2 : Continuous fun z => j z * (ψ z + 2 * l * D z + l ^ 2 * θ z) := by
           have := hψ.continuous; have := hD.continuous; have := hθ.continuous
@@ -634,8 +634,8 @@ theorem exists_zero_fderiv_ne_zero : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin g) 
     simp [B]
     ring
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Λ
-  haveI hL : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨ThetaTranslSpan.span_eq_top hH Λ fun v => (hΛ v).1⟩
+  have hL : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨ThetaTranslSpan.span_eq_top hH Λ fun v => (hΛ v).1⟩
   set w := t₀ • v with hw
   have hw0 : w ≠ 0 := smul_ne_zero ht₀ hv
   have hpos : 0 < B w w := (Complex.pos_iff.1 (hH.dotProduct_mulVec_pos hw0)).1
@@ -726,10 +726,10 @@ theorem upper_sub (b : Module.Basis (Fin n) ℝ (EuclideanSpace ℂ ι)) (x y : 
     · simp [h, lt_asymm h]
     · subst h
       have := imForm_swap (b i) (b i)
-      simp only [lt_irrefl, if_false, sub_zero]
+      simp only [lt_irrefl, ite_false, sub_zero]
       linarith
     · have := imForm_swap (b j) (b i)
-      simp only [h, lt_asymm h, if_true, if_false, zero_sub]
+      simp only [h, lt_asymm h, ite_true, ite_false, zero_sub]
       linarith
   rw [key]
   simp only [LinearMap.sub_apply, LinearMap.flip_apply]
@@ -968,10 +968,10 @@ theorem exists_theta (hH : Hm.PosDef) (Λ : AddSubgroup (Fin g → ℂ)) [hd : D
       ∀ a ∈ Λ, ∀ z, θ (z + a) = χ a * Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec z) +
         Real.pi / 2 * (star a ⬝ᵥ Hm.mulVec a)) * θ z := by
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Λ
-  haveI hL : DiscreteTopology L := hd
+  have hL : DiscreteTopology L := hd
   have hsp : Submodule.span ℝ (L : Set (Fin g → ℂ)) = ⊤ :=
     ThetaTranslSpan.span_eq_top hH Λ fun v => (hΛ v).1
-  haveI : IsZLattice ℝ L := ⟨hsp⟩
+  have : IsZLattice ℝ L := ⟨hsp⟩
   have hfactor : ∃ B : Matrix (Fin g) (Fin g) ℂ, IsUnit B ∧ Hm = star B * B := by
     open scoped MatrixOrder in
       exact CStarAlgebra.isStrictlyPositive_iff_eq_star_mul_self.mp hH.isStrictlyPositive
@@ -1089,7 +1089,7 @@ theorem exists_completion {Λ : AddSubgroup (Fin g → ℂ)} {χ θ : (Fin g →
         (∏ i ∈ t, Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec (x i)))) *
         Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec c)) ^ (p + 1) *
         Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec c')) := by
-      rw [← Complex.exp_sum, ← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add]
+      rw [← Complex.exp_sum, ← Complex.exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add]
       congr 1
       conv_lhs => rw [hS]
       rw [mulVec_add, mulVec_add, dotProduct_add, dotProduct_add, mulVec_sum, dotProduct_sum,
@@ -1097,7 +1097,7 @@ theorem exists_completion {Λ : AddSubgroup (Fin g → ℂ)} {χ θ : (Fin g →
       ring
     clear_value j
     simp only [h1, Finset.prod_mul_distrib, Finset.prod_const]
-    rw [mul_sub, sub_eq_add_neg, Complex.exp_add, h2, Complex.exp_nat_mul, mulVec_add,
+    rw [mul_sub, sub_eq_add_neg, Complex.exp_add, h2, Complex.exp_natCast_mul, mulVec_add,
       dotProduct_add, mul_add, neg_add, Complex.exp_add]
     ring
 
@@ -1132,7 +1132,7 @@ theorem exists_translates_jet_ne_zero : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin 
   classical
   have hM0 : (M : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   have hM0' : (M : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
-  haveI hd₁ : DiscreteTopology Λ₁ := DiscreteTopology.of_subset (s := (Λ : Set (Fin g → ℂ))) hd hle
+  have hd₁ : DiscreteTopology Λ₁ := DiscreteTopology.of_subset (s := (Λ : Set (Fin g → ℂ))) hd hle
   set H' : Matrix (Fin g) (Fin g) ℂ := (M : ℝ)⁻¹ • Hm with hH'def
   have hH' : H'.PosDef := hH.smul (inv_pos.2 (Nat.cast_pos.2 (by omega)))
   have hHH : ∀ v w : Fin g → ℂ, star v ⬝ᵥ Hm.mulVec w = M * (star v ⬝ᵥ H'.mulVec w) := fun v w => by
@@ -1149,7 +1149,7 @@ theorem exists_translates_jet_ne_zero : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin 
   have hadd : ∀ a b : Λ₁, χ (a + b) / χ₁ (a + b) ^ M = χ a / χ₁ a ^ M * (χ b / χ₁ b ^ M) := by
     intro a b
     rw [mult_add hz₀ hθt (hle a.2) (hle b.2), mult_add hz₁ hθt₁ a.2 b.2, mul_pow, mul_pow,
-      ← Complex.exp_nat_mul, hHH, hHH, ← mul_sub, mul_left_comm (M : ℂ),
+      ← Complex.exp_natCast_mul, hHH, hHH, ← mul_sub, mul_left_comm (M : ℂ),
       mul_div_mul_right _ _ (Complex.exp_ne_zero _), div_mul_div_comm]
   have hψ : ∀ a : Λ₁, ‖χ a / χ₁ a ^ M‖ = 1 := fun a => by
     rw [norm_div, norm_pow, hχ _ (hle a.2), hχ₁ _ a.2, one_pow, div_one]
@@ -1165,8 +1165,8 @@ theorem exists_translates_jet_ne_zero : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin 
         exact (mul_eq_left₀ h1).1 h.symm
       map_add_eq_mul' := hadd }
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Λ₁
-  haveI hL : DiscreteTopology L := hd₁
-  haveI : Module.Free ℤ Λ₁ := (inferInstance : Module.Free ℤ L)
+  have hL : DiscreteTopology L := hd₁
+  have : Module.Free ℤ Λ₁ := (inferInstance : Module.Free ℤ L)
   obtain ⟨φ, hφ⟩ := ThetaTranslSpan.exists_log_addChar ψ hψ
   obtain ⟨S, hS⟩ := ThetaTranslSpan.exists_im_eq_lattice hH' L
     (ThetaTranslSpan.span_eq_top hH' Λ₁ fun v => (hΛ' v).1) (-φ)
@@ -1298,9 +1298,9 @@ theorem discrete_of_integral (hpos : ∀ z, z ≠ 0 → 0 < (hermForm Hm z z).re
     unfold hermForm
     fun_prop
   rw [discreteTopology_iff_isOpen_singleton_zero]
-  convert hop.preimage (continuous_subtype_val (p := fun v => v ∈ Λ)) using 1
+  convert hop.preimage (continuous_subtypeVal (p := fun v => v ∈ Λ)) using 1
   ext v
-  simp only [Set.mem_singleton_iff, Set.mem_preimage, Set.mem_iInter, Set.mem_setOf_eq]
+  simp only [Set.mem_singleton_iff, Set.mem_preimage, Set.mem_iInter, Set.mem_ofPred_eq]
   constructor
   · rintro rfl a _
     simp [hermForm]
@@ -1651,7 +1651,7 @@ theorem exists_thGen_ne_zero (hC : Formalism.MainNotions.ModuliIntegralCharts.H1
     (hU : Formalism.L2.PjFree.IsUnf U) (hr : 1 ≤ r) (k : U.Comp) (x : (U.X k).dom) (hx : IsUnitFr (U.X k) x.1)
     [StarRing (𝓞 E)] (nab : NabV Xo c) (hnab : IsNab Xo c nab) : ThNe0 Xo c nab := by
   rintro a n hD - - hdeg ⟨P, hP, hP0⟩
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨W, Dc, A, θ, v, κ, he, -, -, hL, hmk, hA, hrd, hθ, hmean, hv, hκ⟩ :=
     GlobalTheory.T.exists_analyticData_unitFrame_framedPoint E H Dw l Xo c σ r U hσ hU hr a n hD k x hx
   have hM : l.M ≠ 0 := by have := l.three_le; omega

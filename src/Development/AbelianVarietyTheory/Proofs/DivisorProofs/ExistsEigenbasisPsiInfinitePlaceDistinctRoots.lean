@@ -87,13 +87,13 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem charpoly_psi_eq_map_pol (G : HTGroup p) (P : Pair G) (v : InfinitePlace G.F) :
     (G.psi v (P.γ : G.C)).charpoly = P.pol.map v.embedding := by
-  letI : Algebra G.F ℂ := v.embedding.toAlgebra
+  let : Algebra G.F ℂ := v.embedding.toAlgebra
   have hg : ∀ a, G.psi v (algebraMap G.F G.C a) = algebraMap G.F (Matrix (Fin G.n) (Fin G.n) ℂ) a :=
     fun a => by rw [G.psi_F, Matrix.algebraMap_eq_diagonal]; rfl
   let g : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ := { G.psi v with commutes' := hg }
   let L : ℂ ⊗[G.F] G.C →ₐ[ℂ] Matrix (Fin G.n) (Fin G.n) ℂ :=
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) g (fun r _ => Algebra.commute_algebraMap_left r _)
-  haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
   have hinj : Function.Injective L :=
     (IsSimpleRing.injective_ringHom_or_subsingleton_codomain L.toRingHom).resolve_right (not_subsingleton _)
   have hL : ∀ x : G.C, L ((1 : ℂ) ⊗ₜ x) = G.psi v x := fun x => by

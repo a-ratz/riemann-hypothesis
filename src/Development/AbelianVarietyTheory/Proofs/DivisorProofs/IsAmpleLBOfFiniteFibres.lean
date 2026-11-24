@@ -169,7 +169,7 @@ theorem isAmpleLB_of_finite_fibres (R : Type) [CommRing R] (X : Scheme.{0}) (f :
         obtain ⟨e1, e2⟩ := hinj K a' a ha'
         exact ⟨e1, fun i => e2 i (Finset.mem_univ i)⟩
       exact hs.to_subtype
-    · haveI : IsEmpty {x : Spec (.of K) ⟶ X // x ≫ Ψ = y} := ⟨fun x => hy ⟨x.1, x.2⟩⟩
+    · have : IsEmpty {x : Spec (.of K) ⟶ X // x ≫ Ψ = y} := ⟨fun x => hy ⟨x.1, x.2⟩⟩
       infer_instance
   have := IsFinite.of_isProper_of_locallyQuasiFinite Ψ
   have hcls' : CechPic.cls (P.pull Ψ) (LB.isLB_pull hP.isLB Ψ) = CechPic.cls N hN := by

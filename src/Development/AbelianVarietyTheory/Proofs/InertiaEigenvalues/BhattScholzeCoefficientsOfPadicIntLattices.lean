@@ -94,8 +94,8 @@ variable {G : Type} [Group G] [TopologicalSpace G]
 
 theorem modO_smul (LL : FinExt l) (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) (o : ↥(OL LL)) (w : T.V) :
     @HSMul.hSMul _ _ _ (@instHSMul _ _ T.modO.toSMul) o w = algebraMap ↥(OL LL) ↥LL.1 o • w := by
-  letI := T.modO
-  haveI := T.towO
+  let := T.modO
+  have := T.towO
   exact (algebraMap_smul ↥LL.1 o w).symm
 
 theorem zlV_smul (LL : FinExt l) (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) (z : ℤ_[l]) (w : T.V) :
@@ -106,7 +106,7 @@ theorem zlV_smul (LL : FinExt l) (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) (z : 
 theorem zlV_tower (LL : FinExt l) (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) :
     letI := zlV LL T
     IsScalarTower ℤ_[l] ℚ_[l] T.V := by
-  letI := zlV LL T
+  let := zlV LL T
   refine ⟨fun z q v => ?_⟩
   change (z • q) • v = (zlV LL T).toSMul.smul z (q • v)
   rw [zlV_smul, smul_smul]
@@ -116,13 +116,13 @@ theorem finite_compHom {O M : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Fin
     [Module O M] [Module.Finite O M] :
     letI := Module.compHom M (algebraMap ℤ_[l] O)
     Module.Finite ℤ_[l] M := by
-  letI := Module.compHom M (algebraMap ℤ_[l] O)
-  haveI : IsScalarTower ℤ_[l] O M := ⟨fun c a x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  let := Module.compHom M (algebraMap ℤ_[l] O)
+  have : IsScalarTower ℤ_[l] O M := ⟨fun c a x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
   exact Module.Finite.trans O M
 
 theorem denom (LL : FinExt l) (c : ↥LL.1) :
     ∃ (z : ℚ_[l]) (a : ↥(OL LL)), c = z • algebraMap ↥(OL LL) ↥LL.1 a := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have halg : IsAlgebraic ℤ_[l] c :=
     (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥LL.1).mpr (Algebra.IsAlgebraic.isAlgebraic c)
   obtain ⟨z, hz, hint⟩ := halg.exists_integral_multiple
@@ -143,21 +143,21 @@ theorem bhattScholze_coeff : GlobalTheory.Published.BhattScholzeIntegral → Glo
   intro h l _ K P₀ e hA
   obtain ⟨h1, h2⟩ := h l K P₀ e hA
   refine ⟨fun P AI hS LL T hC => ?_, h2⟩
-  letI := zlV LL T
-  haveI := zlV_tower LL T
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : FiniteDimensional ℚ_[l] T.V := Module.Finite.trans ↥LL.1 T.V
-  haveI : IsModuleTopology ℚ_[l] ↥LL.1 := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology ℚ_[l] T.V := isModuleTopology_of_tower ℚ_[l] ↥LL.1 T.V
+  let := zlV LL T
+  have := zlV_tower LL T
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] T.V := Module.Finite.trans ↥LL.1 T.V
+  have : IsModuleTopology ℚ_[l] ↥LL.1 := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] T.V := isModuleTopology_of_tower ℚ_[l] ↥LL.1 T.V
   let TZ : Submodule ℤ_[l] T.V :=
     { carrier := (T.L.T : Set T.V)
       add_mem' := fun ha hb => T.L.T.add_mem ha hb
       zero_mem' := T.L.T.zero_mem
       smul_mem' := fun z v hv => T.L.T.smul_mem (algebraMap ℤ_[l] ↥(OL LL) z) hv }
-  haveI := finite_OL LL
-  haveI : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
+  have := finite_OL LL
+  have : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
   have hfin' := finite_compHom (l := l) (O := ↥(OL LL)) (M := ↥T.L.T)
-  haveI hfin : Module.Finite ℤ_[l] ↥TZ := hfin'
+  have hfin : Module.Finite ℤ_[l] ↥TZ := hfin'
   have hz : ∀ (z : ℤ_[l]) (v : T.V), z • v = (z : ℚ_[l]) • v := fun z v => zlV_smul LL T z v
   have htf : Module.IsTorsionFree ℤ_[l] ↥TZ := by
     rw [Module.isTorsionFree_iff_smul_eq_zero]

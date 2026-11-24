@@ -66,12 +66,12 @@ theorem push_id_pow (A : Over S) [GrpObj A] [IsCommMonObj A] (n : ℕ) :
     push κ t ((𝟙 A) ^ n : A ⟶ A) = (n : R) • LinearMap.id := by
   induction n with
   | zero =>
-    haveI := isMonHom_id_pow A 0
+    have := isMonHom_id_pow A 0
     rw [push_congr κ t (pow_zero (𝟙 A)), push_one, Nat.cast_zero, zero_smul]
   | succ n ih =>
-    haveI := isMonHom_id_pow A n
-    haveI := isMonHom_id_pow A (n + 1)
-    haveI : IsMonHom ((𝟙 A) ^ n * 𝟙 A) := inferInstanceAs (IsMonHom (lift ((𝟙 A) ^ n) (𝟙 A) ≫ μ[A]))
+    have := isMonHom_id_pow A n
+    have := isMonHom_id_pow A (n + 1)
+    have : IsMonHom ((𝟙 A) ^ n * 𝟙 A) := inferInstanceAs (IsMonHom (lift ((𝟙 A) ^ n) (𝟙 A) ≫ μ[A]))
     rw [push_congr κ t (pow_succ (𝟙 A) n), push_mul, ih, push_id, Nat.cast_succ, add_smul, one_smul]
 
 end Push
@@ -80,8 +80,8 @@ theorem bijective_push {S : Scheme.{0}} {R : Type} [CommRing R] {I : Ideal R} (�
     {A B : Over S} [GrpObj A] [GrpObj B] [IsCommMonObj A] [IsCommMonObj B] (f : A ⟶ B) (h : B ⟶ A)
     [IsMonHom f] [IsMonHom h] (m : ℕ) (hm : IsUnit (m : R)) (e₁ : f ≫ h = 𝟙 A ^ m) (e₂ : h ≫ f = 𝟙 B ^ m) :
     Function.Bijective (push κ t f) := by
-  haveI := isMonHom_id_pow A m
-  haveI := isMonHom_id_pow B m
+  have := isMonHom_id_pow A m
+  have := isMonHom_id_pow B m
   have k₁ : ∀ x, push κ t h (push κ t f x) = (m : R) • x := fun x ↦ by
     rw [← LinearMap.comp_apply, ← push_comp, push_congr κ t e₁, push_id_pow]; rfl
   have k₂ : ∀ y, push κ t f (push κ t h y) = (m : R) • y := fun y ↦ by

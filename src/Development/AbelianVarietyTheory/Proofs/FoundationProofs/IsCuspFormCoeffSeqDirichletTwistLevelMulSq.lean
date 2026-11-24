@@ -86,7 +86,7 @@ lemma summable_of_polyB {a : ℕ → ℂ} (h : PolyB a) (τ : ℍ) :
   have h2 := ((summable_nat_add_iff 1).2 h1).mul_left (C * ‖q‖⁻¹)
   refine Summable.of_norm_bounded h2 fun n => ?_
   have e : cexp (2 * π * Complex.I * n * τ) = q ^ n := by
-    rw [hq, ← Complex.exp_nat_mul]; congr 1; ring
+    rw [hq, ← exp_natCast_mul]; congr 1; ring
   rw [e, norm_mul, norm_pow]
   calc ‖a n‖ * ‖q‖ ^ n ≤ C * ((n : ℝ) + 1) ^ A * ‖q‖ ^ n :=
         mul_le_mul_of_nonneg_right (hC n) (by positivity)
@@ -163,7 +163,7 @@ lemma vadd_smul {N M : ℕ} [NeZero M] (γ : SL(2, ℤ)) (hγ : ((N * M ^ 2 : �
 theorem cf_twist : ∀ (k N M : ℕ) (χ : DirichletCharacter ℂ N) (φ : DirichletCharacter ℂ M) (g : ℕ → ℂ), 0 < M →
     CF k N (ch χ) g → CF k (N * M ^ 2) (fun d => ch χ d * ch φ d ^ 2) (fun n => φ n * g n) := by
   intro k N M χ φ g hM ⟨⟨hp, hi⟩, B, hB⟩
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨c, hc1, hc2⟩ := exists_coeffs φ
   refine ⟨⟨?_, ?_⟩, (∑ u, ‖c u‖ ^ 2) * ∑ _u : ZMod M, B, fun τ => ?_⟩
   · obtain ⟨C, A, hC⟩ := hp

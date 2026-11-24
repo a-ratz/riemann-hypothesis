@@ -101,15 +101,15 @@ theorem eq_zero_of_trace_mul {F E R : Type} [Field F] [Field E] [Algebra F E] [F
         trace_one_tmul, smul_eq_mul]
       have := (Algebra.traceForm F E).apply_dualBasis_left (traceForm_nondegenerate F E) b j i
       rw [Algebra.traceForm_apply, mul_comm] at this
-      rw [this, if_neg hij, map_zero, mul_zero]
+      rw [this, ite_eq_right hij, map_zero, mul_zero]
     · intro hj'; exact absurd (Finset.mem_univ j) hj'
   exact bA.repr.injective (by ext j; simp [key j])
 
 theorem trace_pairing_nondeg : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (ψ : AddChar (AF F) ℂ),
     IsStd ψ → ∀ m : AEF F E, m ≠ 0 → ∃ z : AEF F E, ψ (Algebra.trace (AF F) (AEF F E) (m * z)) ≠ 1 := by
   intro F E _ _ _ _ _ ψ hψ m hm
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : Algebra.IsSeparable F E := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Algebra.IsSeparable F E := Algebra.IsAlgebraic.isSeparable_of_perfectField
   by_contra hne
   push_neg at hne
   apply hm
@@ -221,11 +221,11 @@ theorem exists_finset_ann_le : ∀ (F E : Type) [Field F] [NumberField F] [Field
             (∀ g ∈ G, B.ψ (symplOHF σ JS JT ξ₀ g y - symplOHF σ JS JT ξ₀ y g) = 1) → y ∈ U := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hσξ e he U hU
   classical
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨eh⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : T2Space (AEF F E) := eh.isEmbedding.t2Space
+  have : T2Space (AEF F E) := eh.isEmbedding.t2Space
   have hψ : Continuous B.ψ := hB.std.1
   obtain ⟨he1, he2, v, ε, hpl, hsum⟩ := id he
   obtain ⟨N, Φ, hΦc, hΦi, hΦr⟩ := GlobalTheory.PlaceCoordsF.coords_at_place F E v ε hpl nS nT
@@ -234,7 +234,7 @@ theorem exists_finset_ann_le : ∀ (F E : Type) [Field F] [NumberField F] [Field
   obtain ⟨K, hK, hK0, hKn⟩ := GlobalTheory.NonarchShell.exists_compact_shell_nsmul F v N _ hV
   let Y : Set (WOF F E nS nT) := {y | ∀ i j, cAF σ e * y i j = y i j}
   have hYc : IsClosed Y := by
-    simp only [Y, Set.setOf_forall]
+    simp only [Y, Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_eq (continuous_const.mul ((continuous_apply j).comp (continuous_apply i)))
         ((continuous_apply j).comp (continuous_apply i))
@@ -340,7 +340,7 @@ theorem exists_compact_open {e : AEF F E} (he : IsSplitIdemF σ e) :
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
   obtain ⟨he1, he2, v, ε, hpl, hsum⟩ := id he
   obtain ⟨N, Φ, hΦc, -, hΦr⟩ := GlobalTheory.PlaceCoordsF.coords_at_place F E v ε hpl nS nT
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
   have hcc : cAF σ e * cAF σ e = cAF σ e := by rw [← map_mul, he1]
   let J : (Fin N → v.adicCompletion F) →+ conjHalf σ e nS nT := (projH σ nS nT he1).comp Φ
   have hJ : Continuous J := (continuous_projH he1).comp hΦc
@@ -349,11 +349,11 @@ theorem exists_compact_open {e : AEF F E} (he : IsSplitIdemF σ e) :
       rw [← hsum, ← y.2 i j]
       linear_combination (y.1 i j) * he2 + (y.1 i j) * hcc
     exact ⟨t, by show projH σ nS nT he1 (Φ t) = y; rw [ht, projH_coe]⟩
-  haveI : LocallyCompactSpace (conjHalf σ e nS nT) :=
+  have : LocallyCompactSpace (conjHalf σ e nS nT) :=
     (isClosed_conjHalf e).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : T2Space (conjHalf σ e nS nT) := inferInstance
-  haveI : R1Space (conjHalf σ e nS nT) := T2Space.r1Space
-  haveI : BaireSpace (conjHalf σ e nS nT) := BaireSpace.of_t2Space_locallyCompactSpace
+  have : T2Space (conjHalf σ e nS nT) := inferInstance
+  have : R1Space (conjHalf σ e nS nT) := T2Space.r1Space
+  have : BaireSpace (conjHalf σ e nS nT) := BaireSpace.of_t2Space_locallyCompactSpace
   have hopen : IsOpenMap J := AddMonoidHom.isOpenMap_of_sigmaCompact J hJs hJ
   let Bl : AddSubgroup (Fin N → v.adicCompletion F) :=
     { carrier := Metric.closedBall 0 1
@@ -377,7 +377,7 @@ theorem exists_compact_of_finite {Y T : Type} [AddCommGroup Y] [TopologicalSpace
   let r : T → Y := fun t => if ht : t ∈ φ '' A then Classical.choose ht else 0
   have hr : ∀ t ∈ φ '' A, φ (r t) = t := by
     intro t ht
-    simp only [r, dif_pos ht]
+    simp only [r, dite_eq_left ht]
     exact (Classical.choose_spec ht).2
   refine ⟨⋃ t ∈ φ '' A, (fun k => r t + k) '' K₀, hfin.isCompact_biUnion fun t _ => hK.image (continuous_const.add continuous_id), ?_⟩
   intro y hy

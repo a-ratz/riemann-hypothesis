@@ -213,8 +213,8 @@ theorem card_odd_range (s : ℕ) : ((range (2 * s)).filter fun t => t % 2 = 1).c
     have h2 : ¬ (2 * s) % 2 = 1 := by omega
     have h3 : 2 * s + 1 ∉ (range (2 * s)).filter fun t => t % 2 = 1 := by
       simp only [Finset.mem_filter, Finset.mem_range]; omega
-    rw [e, Finset.range_add_one, Finset.range_add_one, Finset.filter_insert, Finset.filter_insert, if_pos h1,
-      if_neg h2, Finset.card_insert_eq_ite, if_neg h3, ih]
+    rw [e, Finset.range_add_one, Finset.range_add_one, Finset.filter_insert, Finset.filter_insert, ite_eq_left h1,
+      ite_eq_right h2, Finset.card_insert_eq_ite, ite_eq_right h3, ih]
 
 end Pure2
 
@@ -283,7 +283,7 @@ theorem hJ_sub_right {n : ℕ} (ε : Fin n → Bool) (a b c : Fin n → ℂ) : h
 variable {D : D7} (X : HidaSetting D) (u : D.what₂.Word)
 
 private lemma host_conj_eq_star (D : D7) (c : D.host.E) : D.host.conj c = star c := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   apply D.host.φ₀.injective
   have h1 : D.host.φ₀ (D.host.conj c) = starRingEnd ℂ (D.host.φ₀ c) := by
     rw [← D.embE_φ₀]
@@ -393,7 +393,7 @@ theorem wuDefinite_holds : WuDefinite X u := by
     simp only [nv]
     split_ifs with hj
     · rw [hJ_sub_left, hJ_sub_right, hJ_sub_right]
-      simp only [HidaSetting.eR, HidaSetting.fR, hJ_crd, X.ee, X.ff, X.ef, hT_f_e, if_true, map_zero, map_one]
+      simp only [HidaSetting.eR, HidaSetting.fR, hJ_crd, X.ee, X.ff, X.ef, hT_f_e, ite_true, map_zero, map_one]
       norm_num
     · simp only [HidaSetting.zR, hJ_crd, X.zu_norm, map_neg, map_natCast]
       simp only [Complex.neg_re, Complex.natCast_re, Left.neg_neg_iff]

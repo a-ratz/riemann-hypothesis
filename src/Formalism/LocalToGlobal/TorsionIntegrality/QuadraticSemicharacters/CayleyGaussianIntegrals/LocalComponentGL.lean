@@ -123,7 +123,7 @@ theorem cosetRepsExist : RepsExist := by
   classical
   have hQ : Finite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Nat.finite_of_card_ne_zero hne
   refine ⟨?_, fun S hS => ?_⟩
-  · letI : Fintype (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Fintype.ofFinite _
+  · let : Fintype (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Fintype.ofFinite _
     refine ⟨Finset.univ.image (fun c : Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂ => ((Quotient.out c : Λ₂) : V)),
       ?_, ?_, ?_⟩
     · intro x hx
@@ -149,7 +149,7 @@ theorem InterReps_of (h : SemiHom) : InterReps := by
   intro V _ _ H hH Λ₁ Λ₂ α hα F hF S hS z
   classical
   have hcl := InterClass_of h V H hH Λ₁ Λ₂ α hα F hF
-  letI : Fintype (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Fintype.ofBijective _ (repClass_bijective hS)
+  let : Fintype (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Fintype.ofBijective _ (repClass_bijective hS)
   unfold inter sumU
   congr 1
   rw [finsum_eq_sum_of_fintype, ← Finset.sum_coe_sort S]

@@ -132,7 +132,7 @@ theorem mean_transport (Γ : AddSubgroup A) (Δ : AddSubgroup B) [Countable Γ] 
     have h4 := Measure.isAddLeftInvariant_eq_smul (μ.map T) ν
     rw [h4] at h2
     have hc : Measure.addHaarScalarFactor (μ.map T) ν = 1 := by
-      rw [Measure.smul_apply, h1, ENNReal.smul_def, smul_eq_mul, mul_one] at h2
+      rw [smul_apply, h1, ENNReal.smul_def, smul_eq_mul, mul_one] at h2
       exact_mod_cast h2
     rw [h4, hc, one_smul]
   have h5 : ∫ a in s, f (T a) ∂μ = ∫ b in T.toAddEquiv.toEquiv '' s, f b ∂ν := by

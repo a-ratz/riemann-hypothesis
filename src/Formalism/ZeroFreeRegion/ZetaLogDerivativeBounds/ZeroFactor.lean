@@ -145,7 +145,7 @@ theorem exists_factorization_of_sum_order (z₀ : ℂ) (r R₁ : ℝ) (hR : R₁
           ∑ ρ ∈ Z, ((if ρ = ρ₀ then 1 else 0) + analyticOrderNatAt g ρ) :=
         Finset.sum_congr rfl fun ρ hρ => (keyN ρ hρ).1
       rw [hs, Finset.sum_add_distrib] at hsum
-      simp only [Finset.sum_ite_eq', hρ₀Z, if_true] at hsum
+      simp only [Finset.sum_ite_eq', hρ₀Z, ite_true] at hsum
       omega
     have hzg : ∀ z ∈ Metric.closedBall z₀ R₁, g z = 0 → z ∈ Z :=
       fun z hz h0 => hzero z hz (by rw [hfg z, h0, mul_zero])

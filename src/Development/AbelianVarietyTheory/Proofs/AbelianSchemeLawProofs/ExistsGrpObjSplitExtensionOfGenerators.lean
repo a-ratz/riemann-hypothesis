@@ -85,7 +85,7 @@ theorem exists_grpObj {C : Type*} [Category C] [CartesianMonoidalCategory C] [Br
   have li : ∀ {W : C} (x : W ⟶ G), lift (x ≫ j) x ≫ m = toUnit W ≫ e := fun x =>
     ext _ _ (by rw [m₁, j₁, e₁, inv_mul_cancel]) (by
       rw [m₂, j₂, j₁, e₂, mul_right_comm (n x)⁻¹]; simp)
-  letI : GrpObj G :=
+  let : GrpObj G :=
     { one := e
       mul := m
       one_mul := by
@@ -499,10 +499,10 @@ open GlobalTheory.GeneratorLaw in
 theorem GlobalTheory.exists_grpObj_gtDatum_of_generators :
     GlobalFnsSt → ∀ (S : Scheme.{0}) (E : SplitExt S) (G : Scheme.{0}) (q : G ⟶ E.B.left), letI := E.free; letI := E.finite; let B := E.B.left; let N := fun k => (E.O (E.basis k)).L; ∀ (u : ∀ k (i : (N k).ι), Γ(G, q ⁻¹ᵁ (N k).U i)ˣ), ((∀ k i i', res (Scheme.Hom.preimage_mono q (inf_le_right : (N k).U i ⊓ (N k).U i' ≤ (N k).U i')) (u k i') = pullU q _ ((N k).g i i') * res (Scheme.Hom.preimage_mono q (inf_le_left : (N k).U i ⊓ (N k).U i' ≤ (N k).U i)) (u k i)) ∧ ∀ (Z : Scheme.{0}) (b : Z ⟶ B) (s : ∀ k (i : (N k).ι), Γ(Z, b ⁻¹ᵁ (N k).U i)ˣ), (∀ k i i', res (Scheme.Hom.preimage_mono b (inf_le_right : (N k).U i ⊓ (N k).U i' ≤ (N k).U i')) (s k i') = pullU b _ ((N k).g i i') * res (Scheme.Hom.preimage_mono b (inf_le_left : (N k).U i ⊓ (N k).U i' ≤ (N k).U i)) (s k i)) → ∃! g : Z ⟶ G, ∃ hg : g ≫ q = b, ∀ k i, (g.appLE (q ⁻¹ᵁ (N k).U i) (b ⁻¹ᵁ (N k).U i) (by rw [← hg]; exact le_rfl)).hom (u k i).val = (s k i).val) → IsAffineHom q → Flat q → Surjective q → ∃ (_ : GrpObj (Over.mk (q ≫ E.B.hom))), IsCommMonObj (Over.mk (q ≫ E.B.hom)) ∧ ∃ d : E.GtDatum (Over.mk (q ≫ E.B.hom)), d.q.left = q := by
   intro hG S E G q
-  letI := E.free
-  letI := E.finite
+  let := E.free
+  let := E.finite
   intro B N u ⟨hu, hU⟩ ha hf hs
-  haveI := E.isAbelian.comm
+  have := E.isAbelian.comm
   let q' : Over.mk (q ≫ E.B.hom) ⟶ E.B := Over.homMk q rfl
   obtain ⟨_, hc, hq, hn, i, hi, hk, act⟩ := exists_law (O := fun k => E.O (E.basis k)) (q := q') (u := u) hG
     E.isAbelian (fun k => E.primitive _) hu hU E.basis

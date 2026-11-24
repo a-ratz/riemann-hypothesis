@@ -157,7 +157,7 @@ theorem isCompact_stdLattice {O : Subring R} (hO : IsCompact (O : Set R)) :
 theorem continuous_unitaryMat_mulVec :
     Continuous fun p : unitaryPoints K E H R × (ι → R ⊗[K] E) => unitaryMat p.1 *ᵥ p.2 := by
   have h1 : Continuous fun p : unitaryPoints K E H R × (ι → R ⊗[K] E) => unitaryMat p.1 :=
-    (Units.continuous_val.comp continuous_subtype_val).comp continuous_fst
+    (Units.continuous_val.comp continuous_subtypeVal).comp continuous_fst
   exact h1.matrix_mulVec continuous_snd
 
 section NumberField

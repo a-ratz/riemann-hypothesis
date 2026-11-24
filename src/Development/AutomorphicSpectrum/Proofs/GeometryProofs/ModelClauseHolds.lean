@@ -113,7 +113,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 theorem zeta_mul_pow {a c : ℕ} (ha : 0 < a) (hc : 0 < c) : zeta (a * c) ^ c = zeta a := by
   have ha' : (a : ℂ) ≠ 0 := Nat.cast_ne_zero.2 ha.ne'
   have hc' : (c : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hc.ne'
-  rw [zeta, zeta, ← Complex.exp_nat_mul]
+  rw [zeta, zeta, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp

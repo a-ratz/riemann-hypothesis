@@ -986,7 +986,7 @@ theorem ev_map_complexAut {ι : Type} (f : MvPolynomial (ι × ι) ℚ)
 theorem exists_isQGroup_weilRestriction : ∀ (F β : Type) [Field F] [Algebra ℚ F] [Fintype β] [DecidableEq β] (ω : Module.Basis β ℚ F) (n : ℕ) (S : Set (MvPolynomial (Fin n × Fin n) F)), (∀ (B : Type) [CommRing B] [Algebra F B], (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((1 : GL (Fin n) (B)) : Matrix (Fin n) (Fin n) (B)) ij.1 ij.2) P = 0) ∧ (∀ g h : GL (Fin n) B, (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((g : GL (Fin n) (B)) : Matrix (Fin n) (Fin n) (B)) ij.1 ij.2) P = 0) → (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((h : GL (Fin n) (B)) : Matrix (Fin n) (Fin n) (B)) ij.1 ij.2) P = 0) → (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((g * h : GL (Fin n) (B)) : Matrix (Fin n) (Fin n) (B)) ij.1 ij.2) P = 0)) ∧ ∀ g : GL (Fin n) B, (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((g : GL (Fin n) (B)) : Matrix (Fin n) (Fin n) (B)) ij.1 ij.2) P = 0) → (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((g⁻¹ : GL (Fin n) (B)) : Matrix (Fin n) (Fin n) (B)) ij.1 ij.2) P = 0)) → ∃ Γ : Set (Matrix ((Fin n × β) ⊕ Unit) ((Fin n × β) ⊕ Unit) ℂ), IsQGroup Γ ∧ ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra ℚ R] [Algebra R A] [Algebra F A] (b : Module.Basis β R A), (∀ i, b i = algebraMap F A (ω i)) → (∀ y ∈ pts Γ R, ∃ g : GL (Fin n) A, (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((g : GL (Fin n) (A)) : Matrix (Fin n) (Fin n) (A)) ij.1 ij.2) P = 0) ∧ y = emb b g) ∧ (IsReduced R → ∀ g : GL (Fin n) A, (∀ P ∈ S, MvPolynomial.aeval (fun ij : Fin n × Fin n => ((g : GL (Fin n) (A)) : Matrix (Fin n) (Fin n) (A)) ij.1 ij.2) P = 0) → emb b g ∈ pts Γ R) := by
   intro F β _ _ _ _ ω n S hS
   obtain ⟨S', hS'⟩ := _root_.GlobalTheory.ClassFin.WeilEqs.exists_equations F β ω n S
-  letI : Algebra F (ℂ ⊗[ℚ] F) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra F (ℂ ⊗[ℚ] F) := Algebra.TensorProduct.rightAlgebra
   have hb : ∀ i, Algebra.TensorProduct.basis ℂ ω i = algebraMap F (ℂ ⊗[ℚ] F) (ω i) := by
     intro i
     rw [Algebra.TensorProduct.basis_apply]
@@ -1483,11 +1483,11 @@ theorem res_one' {R A β κ : Type} [CommRing R] [CommRing A] [Algebra R A] [Fin
   ext p q
   simp only [res, Matrix.of_apply, Matrix.one_apply]
   by_cases h : p.1 = q.1
-  · rw [if_pos h, map_one, Matrix.one_apply]
+  · rw [ite_eq_left h, map_one, Matrix.one_apply]
     by_cases h' : p.2 = q.2
-    · rw [if_pos h', if_pos (Prod.ext h h')]
-    · rw [if_neg h', if_neg (fun e => h' (congrArg Prod.snd e))]
-  · rw [if_neg h, map_zero, Matrix.zero_apply, if_neg (fun e => h (congrArg Prod.fst e))]
+    · rw [ite_eq_left h', ite_eq_left (Prod.ext h h')]
+    · rw [ite_eq_right h', ite_eq_right (fun e => h' (congrArg Prod.snd e))]
+  · rw [ite_eq_right h, map_zero, Matrix.zero_apply, ite_eq_right (fun e => h (congrArg Prod.fst e))]
 
 theorem repr_mem {R A β : Type} [CommRing R] [CommRing A] [Algebra R A] [Fintype β] [DecidableEq β]
     (b : Module.Basis β R A) (R₀ : Subring R) (h1 : ∀ i, b.repr 1 i ∈ R₀) (x : A)
@@ -1611,7 +1611,7 @@ theorem classFinite_integralLevel : ∀ (F : Type) [Field F] [NumberField F] (n 
       s = GlobalTheory.ClassFin.emb b (lift s) := by
     intro s hs
     have h := hA.1 s hs
-    simp only [lift, dif_pos h]
+    simp only [lift, dite_eq_left h]
     exact h.choose_spec
   obtain ⟨hemb1, hembmul, -, hembinj⟩ := _root_.GlobalTheory.ClassFin.EmbHom.emb_hom R (FiniteAdeleRing (𝓞 F) F) _ (Fin n) b
   refine ⟨T₀.image lift, ?_, ?_⟩

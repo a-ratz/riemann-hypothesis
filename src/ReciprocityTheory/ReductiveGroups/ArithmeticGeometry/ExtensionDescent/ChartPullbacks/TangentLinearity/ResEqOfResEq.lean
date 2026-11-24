@@ -252,7 +252,7 @@ variable {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {O : Type} [Ring O] 
 
 lemma eSec_h : eSec (thickObj R I e G) ≫ ((Over.pullback (thick R I e)).map (ιG.act a)).left =
     eSec (thickObj R I e G) := by
-  haveI := ιG.hom a
+  have := ιG.hom a
   delta eSec
   rw [← Over.comp_left, IsMonHom.one_hom]
 

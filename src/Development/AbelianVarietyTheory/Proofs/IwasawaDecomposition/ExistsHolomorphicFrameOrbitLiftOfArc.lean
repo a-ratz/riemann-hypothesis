@@ -118,7 +118,7 @@ theorem exists_hol_away {A : Type} [CommRing A] (ψ : ℂ → (A →+* ℂ)) (V 
     if h : u ∈ V then IsLocalization.Away.lift a (g := ψ u) (Ne.isUnit (ha u h))
     else IsLocalization.Away.lift a (g := ψ u₀) (Ne.isUnit (ha u₀ h₀))
   have hev : ∀ u ∈ V, (ev u).comp (algebraMap A _) = ψ u := fun u hu => by
-    simp only [ev, dif_pos hu]
+    simp only [ev, dite_eq_left hu]
     exact IsLocalization.Away.lift_comp a _
   refine ⟨ev, hev, fun t => ?_⟩
   obtain ⟨n, b, hb⟩ := IsLocalization.Away.surj a t
@@ -146,7 +146,7 @@ theorem spMap_dualMap_sq {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) 
 
 theorem arc_descends_to_moduli : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (σ : c.F →+* ℂ) (A : Type) [CommRing A] (φ : c.F →+* A) (x : Sp A ⟶ gen Z) (fr : EigFrame Z φ (x ≫ genι Z)) (ψ : ℂ → (A →+* ℂ)) (r : ℝ) (y : ℂ → FrPt Xo c (CAt σ)), IsArc Z σ φ x ψ r → (∀ u ∈ Metric.ball (0 : ℂ) r, u ≠ 0 → Matches fr (ψ u) (y u)) → ∀ u₀ ∈ Metric.ball (0 : ℂ) r, u₀ ≠ 0 → ∃ (R : Type) (_ : CommRing R) (xR : Sp R ⟶ Xo.X) (vR : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → (Sp (DualNumber R) ⟶ Xo.univ.t.G.left)) (ev : ℂ → (R →+* ℂ)) (V : Set ℂ), IsOpen V ∧ u₀ ∈ V ∧ (∀ t, DifferentiableOn ℂ (fun u => ev u t) V) ∧ ∀ u ∈ V, (y u).x = spMap (show R →+* CAt σ from ev u) ≫ xR ∧ ∀ τ i, (y u).u τ i = spMap (dualMap (show R →+* CAt σ from ev u)) ≫ vR τ i := by
   intro E _ _ _ H Dw l Xo c O _ β Z σ A _ φ x fr ψ r y harc hm u₀ hu₀ hne
-  haveI := Z.jQ_open
+  have := Z.jQ_open
   obtain ⟨a, ha, hsub⟩ := exists_basicOpen_subset_of_pt (ψ u₀) (x ⁻¹' Set.range Z.jQ)
     ((IsOpenImmersion.isOpen_range Z.jQ).preimage x.continuous) (fun s => by
       have h := (hm u₀ hu₀ hne).1
@@ -275,7 +275,7 @@ variable {A P : Matrix (Fin r) (Fin r) ℂ}
 theorem inv_mul_mixCol (hA : A.det ≠ 0) {j : Fin r} (hj : p j) (i : Fin r) :
     (A⁻¹ * mixCol p A P) i j = (1 : Matrix (Fin r) (Fin r) ℂ) i j := by
   have h : (A⁻¹ * mixCol p A P) i j = (A⁻¹ * A) i j := by
-    simp only [Matrix.mul_apply, mixCol, Matrix.of_apply, if_pos hj]
+    simp only [Matrix.mul_apply, mixCol, Matrix.of_apply, ite_eq_left hj]
   rw [h, Matrix.nonsing_inv_mul A (isUnit_iff_ne_zero.mpr hA)]
 
 theorem det_mixRow_ne_zero (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) : (mixRow p A P).det ≠ 0 := by
@@ -287,13 +287,13 @@ theorem det_mixRow_ne_zero (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) : 
   have hS : ∀ a, p a → v a = 0 := by
     intro a ha
     have e : (mixRow p A P *ᵥ v) a = ((1 : Matrix (Fin r) (Fin r) ℂ) *ᵥ v) a := by
-      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, if_pos ha]
+      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, ite_eq_left ha]
     rw [Matrix.one_mulVec, hv] at e
     exact e.symm
   have hT : ∀ a, ¬ p a → ((A⁻¹ * mixCol p A P) *ᵥ v) a = 0 := by
     intro a ha
     have e : (mixRow p A P *ᵥ v) a = ((A⁻¹ * mixCol p A P) *ᵥ v) a := by
-      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, if_neg ha]
+      simp only [Matrix.mulVec, dotProduct, mixRow, Matrix.of_apply, ite_eq_right ha]
     rw [← e, hv]
     rfl
   have hfix : ∀ w : Fin r → ℂ, (∀ b, ¬ p b → w b = 0) → (A⁻¹ * mixCol p A P) *ᵥ w = w := by
@@ -321,8 +321,8 @@ theorem det_mixRow_ne_zero (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) : 
 private theorem mix_apply_eq_one_apply_of_mem (hA : A.det ≠ 0) {j : Fin r} (hj : p j) (a : Fin r) :
     mixRow p A P a j = (1 : Matrix (Fin r) (Fin r) ℂ) a j := by
   by_cases ha : p a
-  · simp only [mixRow, Matrix.of_apply, if_pos ha]
-  · simp only [mixRow, Matrix.of_apply, if_neg ha]
+  · simp only [mixRow, Matrix.of_apply, ite_eq_left ha]
+  · simp only [mixRow, Matrix.of_apply, ite_eq_right ha]
     exact inv_mul_mixCol p hA hj a
 
 theorem mix_col_eq (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) {j : Fin r} (hj : p j) (k : Fin r) :
@@ -342,7 +342,7 @@ theorem mix_inv_row_eq (hA : A.det ≠ 0) (hQ : (mixCol p A P).det ≠ 0) {a : F
   have hR := det_mixRow_ne_zero p hA hQ
   rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (isUnit_iff_ne_zero.mpr hR)]
   have e : (mixRow p A P * (mixCol p A P)⁻¹) a k = (A⁻¹ * mixCol p A P * (mixCol p A P)⁻¹) a k := by
-    simp only [Matrix.mul_apply, mixRow, Matrix.of_apply, if_neg ha]
+    simp only [Matrix.mul_apply, mixRow, Matrix.of_apply, ite_eq_right ha]
   rw [e, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hQ), Matrix.mul_one]
 
 theorem differentiableOn_det {B : Set ℂ} {M : ℂ → Matrix (Fin r) (Fin r) ℂ}
@@ -379,16 +379,16 @@ theorem differentiableOn_mix {B : Set ℂ} {A : ℂ → Matrix (Fin r) (Fin r) �
   have hQd : ∀ k l, DifferentiableOn ℂ (fun w => mixCol p (A w) P k l) B := by
     intro k l
     by_cases hl : p l
-    · simp only [mixCol, Matrix.of_apply, if_pos hl]
+    · simp only [mixCol, Matrix.of_apply, ite_eq_left hl]
       exact hc l hl k
-    · simp only [mixCol, Matrix.of_apply, if_neg hl]
+    · simp only [mixCol, Matrix.of_apply, ite_eq_right hl]
       exact differentiableOn_const _
   have hRd : ∀ k l, DifferentiableOn ℂ (fun w => mixRow p (A w) P k l) B := by
     intro k l
     by_cases hk : p k
-    · simp only [mixRow, Matrix.of_apply, if_pos hk]
+    · simp only [mixRow, Matrix.of_apply, ite_eq_left hk]
       exact differentiableOn_const _
-    · simp only [mixRow, Matrix.of_apply, if_neg hk, Matrix.mul_apply]
+    · simp only [mixRow, Matrix.of_apply, ite_eq_right hk, Matrix.mul_apply]
       exact DifferentiableOn.fun_sum fun m _ => (hr k hk m).mul (hQd m l)
   have hRi := differentiableOn_inv (M := fun w => mixRow p (A w) P) hRd
     (fun w hw => det_mixRow_ne_zero p (hA w hw) (hQ w hw))
@@ -468,7 +468,7 @@ theorem det_mixCol_ne_zero {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {P 
   have hWW : (hermC τ.1 X.Gm W W).re = -∑ i, Complex.normSq (γ i) := by
     rw [hW, hermC_quad]
     simp only [hg, Matrix.diagonal_apply, mul_ite, ite_mul, mul_zero, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [Complex.re_sum, ← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hi : (i : ℕ) < X.p0
@@ -510,7 +510,7 @@ theorem mem_dom_of_eq {x y : Frame X.Ψ r} (hx : x ∈ X.dom) (hy : ∀ τ, (mat
     y ∈ X.dom := by
   have hxd : ∀ τ, (mat x τ).det ≠ 0 := fun τ => ((Data.mem_dom_iff X x).mp hx τ).1
   have hb : (fun τ => ((mat x τ)⁻¹ * mat y τ : Matrix (Fin r) (Fin r) ℂ)) ∈ Bor X.Ψ r := by
-    simp only [Bor, Set.mem_setOf_eq]
+    simp only [Bor, Set.mem_ofPred_eq]
     intro τ
     refine ⟨?_, ?_⟩
     · show ((mat x τ)⁻¹ * mat y τ).det ≠ 0
@@ -571,7 +571,7 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
       DifferentiableOn ℂ (fun w => mat (x₁ w) τ k a) B := by
     intro τ a ha k
     have h := hall (fun b => cc (X.Gm⁻¹ b k)) τ a
-    simp only [GlobalTheory.GenericFrames.pc, if_pos ha,
+    simp only [GlobalTheory.GenericFrames.pc, ite_eq_left ha,
       GlobalTheory.PeriodLift.hermC_emb_inv_col τ.1 X.Gm X.Gm_det] at h
     exact h
   have hrowD : ∀ τ : X.Ψ, ∀ a : Fin r, ¬ (a : ℕ) < X.p0 → ∀ k,
@@ -585,7 +585,7 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
       · simp [Data.emb, hj]
     have hv : ∀ w, GlobalTheory.GenericFrames.pc X (x₁ w) (Pi.single k 1) τ a = (mat (x₁ w) τ)⁻¹ a k := by
       intro w
-      simp only [GlobalTheory.GenericFrames.pc, if_neg ha, he]
+      simp only [GlobalTheory.GenericFrames.pc, ite_eq_right ha, he]
       simp [Matrix.mulVec, dotProduct, Pi.single_apply]
     have h := hall (Pi.single k 1) τ a
     simpa only [hv] using h
@@ -635,9 +635,9 @@ theorem exists_holomorphic_frames : ∀ (E : Type) [Field E] [NumberField E] [Is
           col (mat (x₁ w) τ) a := by
         funext k
         exact hcolEq τ a ha k
-      simp only [GlobalTheory.GenericFrames.pc, if_pos ha]
+      simp only [GlobalTheory.GenericFrames.pc, ite_eq_left ha]
       rw [hcol]
-    · simp only [GlobalTheory.GenericFrames.pc, if_neg ha, Matrix.mulVec, dotProduct, hrowEq τ a ha]
+    · simp only [GlobalTheory.GenericFrames.pc, ite_eq_right ha, Matrix.mulVec, dotProduct, hrowEq τ a ha]
 
 end GlobalTheory.HolFrameLift
 end -- clump:auto
@@ -693,7 +693,7 @@ theorem exists_unipotent_of_pc_eq : ∀ (E : Type) [Field E] [NumberField E] [Is
         (by intros; simp [hermC, Data.emb, Finset.mul_sum, mul_left_comm])
         (by intros; simp [hermC, Data.emb, Finset.mul_sum, mul_left_comm])
         (by simp)
-        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, if_true] using h v hv τ a)
+        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, ite_true] using h v hv τ a)
         (fun b => cc (X.Gm⁻¹ b k))
       simpa only [GlobalTheory.PeriodLift.hermC_emb_inv_col τ.1 X.Gm X.Gm_det, col] using this
     · intro a ha k
@@ -706,7 +706,7 @@ theorem exists_unipotent_of_pc_eq : ∀ (E : Type) [Field E] [NumberField E] [Is
         (by intros; simp [Matrix.mulVec, dotProduct, Data.emb, Finset.mul_sum, mul_left_comm])
         (by intros; simp [Matrix.mulVec, dotProduct, Data.emb, Finset.mul_sum, mul_left_comm])
         (by simp)
-        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, if_false] using h v hv τ a)
+        (fun v hv => by simpa only [GlobalTheory.GenericFrames.pc, ha, ite_false] using h v hv τ a)
         (Pi.single k 1)
       simpa [Matrix.mulVec, dotProduct, Data.emb, Pi.single_apply, apply_ite τ.1] using this
   refine ⟨fun τ => ((mat x τ)⁻¹ * mat x' τ : Matrix (Fin r) (Fin r) ℂ), fun τ => ⟨?_, fun a c hca => ?_⟩,
@@ -980,7 +980,7 @@ theorem exists_adp_global (y : ℂ → FrPt Xo c (CAt σ)) (T : ℝ) (hper : ∀
       ∀ w : ℂ, T < w.im → Adp F (y w) k (P w) ∧ ∀ a, P (w + 1) a = P w (δ.1 a) := by
   have hcv : Convex ℝ {w : ℂ | T < w.im} := convex_halfSpace_im_gt T
   have hop : IsOpen {w : ℂ | T < w.im} := isOpen_lt continuous_const Complex.continuous_im
-  haveI : Nonempty (Fin F.n) := ⟨k⟩
+  have : Nonempty (Fin F.n) := ⟨k⟩
   have hidx : ∀ w : ℂ, T < w.im → ∃ P : ℂ → ((F.Di k).La →+ (Fin g → ℂ)),
       ∀ᶠ z in 𝓝 w, Adp F (y z) k (P z) ∧ ∀ a, DifferentiableAt ℂ (fun b => P b a) z := by
     have hl : ∀ w : ℂ, T < w.im → ∃ k : Fin F.n, ∃ P : ℂ → ((F.Di k).La →+ (Fin g → ℂ)),
@@ -1110,7 +1110,7 @@ theorem exists_orbit_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have hdesc := _root_.GlobalTheory.ShFam.BdArc.arc_descends_to_moduli E H Dw l Xo c O β Z σ A φ x fr ψ r y harc hm
       (eTwoPi w) (hT w hw) (Complex.exp_ne_zero _)
     rcases hdesc with ⟨R, instR, hdesc⟩
-    letI : CommRing R := instR
+    let : CommRing R := instR
     rcases hdesc with ⟨xR, vR, ev, V, hV, hwV, hev, hy⟩
     obtain ⟨B', k, P, hB', hb, hPd, hP⟩ := exists_adp_local F xR vR (m := 1) (fun b => ev (b 0))
       (B := (fun b => b 0) ⁻¹' V) (fun b => y (b 0)) (hV.preimage (continuous_apply 0))
@@ -1133,7 +1133,7 @@ theorem exists_orbit_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     obtain ⟨j, hj⟩ := idx.surjective (τ, i)
     obtain ⟨rfl, rfl⟩ : τ = (idx j).1 ∧ i = (idx j).2 := by rw [hj]; exact ⟨rfl, rfl⟩
     exact h a j
-  haveI : Inhabited (Frame (U.X k).Ψ N) := inferInstance
+  have : Inhabited (Frame (U.X k).Ψ N) := inferInstance
   choose! x₁ hx₁ hr₁ using fun (w : ℂ) (hw : T < w.im) => honto (P w) (hP w hw).1.1
   obtain ⟨xx, hxd, hxx⟩ := _root_.GlobalTheory.HolFrameLift.exists_holomorphic_frames E N (U.X k) {w : ℂ | T < w.im} x₁ hx₁
     (hall fun a j => (differentiableOn_pi.1 (hPd a) j).congr fun w hw => hr₁ w hw a j)

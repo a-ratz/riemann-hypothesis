@@ -199,11 +199,11 @@ private theorem gY_meas (D : Dat ℚ E) (χ : HChar ℚ) {φ : GL (Fin 2) (A E) 
   have hS : MeasurableSet ((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) :=
     MeasurableSet.univ.prod (measurableSet_singleton 0).compl
   have hc : ContinuousOn (Function.uncurry (gY D χ φ s n)) (Set.univ ×ˢ {0}ᶜ) := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hi : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => iy x.1.2 * pin n :=
-      (Nz.contOn_iy.comp_continuous (continuous_snd.comp continuous_subtype_val) fun x => x.2.2).mul continuous_const
+      (Nz.contOn_iy.comp_continuous (continuous_snd.comp continuous_subtypeVal) fun x => x.2.2).mul continuous_const
     have hr : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => rot x.1.1 :=
-      Nz.cont_rot.comp (continuous_fst.comp continuous_subtype_val)
+      Nz.cont_rot.comp (continuous_fst.comp continuous_subtypeVal)
     have hh : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => em E (aE (iy x.1.2 * pin n) * rot x.1.1) :=
       Nz.cont_em.comp ((continuous_aE.comp hi).mul hr)
     have habc : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => ((ab (iy x.1.2 * pin n) : ℝ) : ℂ) :=
@@ -211,7 +211,7 @@ private theorem gY_meas (D : Dat ℚ E) (χ : HChar ℚ) {φ : GL (Fin 2) (A E) 
     have hp : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => ((ab (iy x.1.2 * pin n) : ℝ) : ℂ) ^ (s - 1) :=
       habc.cpow continuous_const fun x => Complex.ofReal_mem_slitPlane.2 (ab_pos _)
     have hd : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => ((|x.1.2| : ℝ) : ℂ) :=
-      Complex.continuous_ofReal.comp (continuous_abs.comp (continuous_snd.comp continuous_subtype_val))
+      Complex.continuous_ofReal.comp (continuous_abs.comp (continuous_snd.comp continuous_subtypeVal))
     refine Continuous.div (((hWc.comp hh).mul (Units.continuous_val.comp (χ.2.1.comp hi))).mul hp) hd fun x => ?_
     have : x.1.2 ≠ 0 := x.2.2
     simpa using this

@@ -315,7 +315,7 @@ theorem IsConstTermOn.eq_constTermOn_par {d : Fin r → ℕ} (hc : IsConstTermOn
 
 theorem IsConstTermOn.leftInv {d : Fin r → ℕ} (hc : IsConstTermOn σ J (unipFlag σ J C d) φ c)
     (hφ : LeftInv (ratPts σ J ⊓ parFlag σ J C d) φ) : LeftInv (leftGrp σ J C d) c := by
-  haveI := locallyCompact_unipFlag hJ (sigma_sigma h) hC d
+  have := locallyCompact_unipFlag hJ (sigma_sigma h) hC d
   obtain ⟨hco, e⟩ := hc.eq_constTermOn_par h hJ hC hφ
   let S : Subgroup (GAd σ J) := MulAction.stabilizer (GAd σ J)ᵈᵐᵃ c |>.comap ((MulEquiv.inv' (GAd σ J)).toMonoidHom)
   have hS : ∀ γ, γ ∈ S ↔ ∀ g, c (γ⁻¹ * g) = c g := fun γ => funext_iff
@@ -327,7 +327,7 @@ theorem IsConstTermOn.leftInv {d : Fin r → ℕ} (hc : IsConstTermOn σ J (unip
 
 theorem IsConstTermOn.continuous {d : Fin r → ℕ} (hc : IsConstTermOn σ J (unipFlag σ J C d) φ c)
     (hφ : LeftInv (ratPts σ J ⊓ parFlag σ J C d) φ) (hφc : Continuous φ) : Continuous c := by
-  haveI := locallyCompact_unipFlag hJ (sigma_sigma h) hC d
+  have := locallyCompact_unipFlag hJ (sigma_sigma h) hC d
   obtain ⟨hco, e⟩ := hc.eq_constTermOn_par h hJ hC hφ
   exact e ▸ hco.continuous_constTermOn hφ hφc
 

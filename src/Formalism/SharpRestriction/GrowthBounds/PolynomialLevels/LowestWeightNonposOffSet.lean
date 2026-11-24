@@ -236,16 +236,16 @@ private theorem posU_strictMono (hV : Fr.Valid L₁ N₁) (hnL : ∀ j, nL j = (
   unfold posU
   by_cases hb' : b < nL j
   · have ha' : a < nL j := lt_trans hab hb'
-    rw [if_pos ha', if_pos hb']
+    rw [ite_eq_left ha', ite_eq_left hb']
     exact Formalism.MainNotions.Proposition5Numerics.llPos_lt _ _ _ hab (by rw [← hnL j]; exact hb')
-  · rw [if_neg hb']
+  · rw [ite_eq_right hb']
     by_cases ha' : a < nL j
-    · rw [if_pos ha']
+    · rw [ite_eq_left ha']
       have hm := Formalism.MainNotions.Proposition5Numerics.llPos_mem Fr (segZ j) a (by rw [← hnL j]; exact ha')
       simp only [Frames.LLset, Finset.mem_filter, Finset.mem_Ioo] at hm
       have h2 := Formalism.MainNotions.Proposition5Numerics.DdG.fr_le Fr hmono (segZ j) (Nat.zero_le (b - nL j)) (by omega)
       exact lt_of_lt_of_le hm.1.2 h2
-    · rw [if_neg ha']
+    · rw [ite_eq_right ha']
       exact Formalism.MainNotions.Proposition5Numerics.DdG.fr_lt Fr hmono (segZ j) (by omega) (by omega)
 
 private theorem posU_lt_posU_iff (hV : Fr.Valid L₁ N₁) (hnL : ∀ j, nL j = (Fr.LLset (segZ j)).card) (j : ZMod J)

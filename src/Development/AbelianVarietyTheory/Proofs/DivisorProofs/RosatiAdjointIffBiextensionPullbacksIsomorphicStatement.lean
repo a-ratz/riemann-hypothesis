@@ -114,8 +114,8 @@ namespace GlobalTheory.AdjFwd
 
 theorem adjoint_hermForm_of_lbIso : ∀ (A : Over (Sp ℂ)) [GrpObj A] [IsCommMonObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (N : LB A.left), N.IsLB → Out.RelAmple A N → ∀ (M : LB A.left) (u : HolUnif A M g) (Hm : Matrix (Fin g) (Fin g) ℂ) (χ : u.Λ → ℂ), M.IsLB → GlobalTheory.TorusRM.IsFactorAH u Hm χ → ∀ (f f' : A ⟶ A) (F F' : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)), IsMonHom f → IsMonHom f' → (∀ z, u.ex (F z) = u.ex z ≫ f) → (∀ z, u.ex (F' z) = u.ex z ≫ f') → LBIso (cubeLB A ![fst A A ≫ f, snd A A] M) (cubeLB A ![fst A A, snd A A ≫ f'] M) → ∀ z w, hermForm Hm (F z) w = hermForm Hm z (F' w) := by
   intro A _ _ g hA _ N _ _ M u Hm χ hM hF f f' F F' hf hf' e e' hiso
-  haveI := hf
-  haveI := hf'
+  have := hf
+  have := hf'
   obtain ⟨Mr, hMr, ⟨c⟩⟩ := GlobalTheory.AHWeilAny.exists_cubical A hA M hM
   subst hMr
   have hR := GlobalTheory.AdjPolLocal.rosatiAdj_of_lbIso _ A Mr.L f f' hM hiso

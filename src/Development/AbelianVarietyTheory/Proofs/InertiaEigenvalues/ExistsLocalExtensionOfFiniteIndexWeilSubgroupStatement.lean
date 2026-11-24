@@ -86,7 +86,7 @@ theorem decOrbit_root_count : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
     intro x hx
     have h := (hS x).1 hx
     refine ⟨Classical.choose h, (Classical.choose_spec h).1, (Classical.choose_spec h).2, ?_⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
 
   have hg0 : g ≠ 0 := hg.ne_zero
   have hconj : ∀ σ : G E Ω, σ β' ∈ (g.aroots Ω).toFinset := by
@@ -213,13 +213,13 @@ namespace GlobalTheory
 
 theorem conj_places_of_same_prime_below : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (K : IntermediateField E Ω) [FiniteDimensional E K] (A B : ValuationSubring Ω), (∀ x ∈ K, IsIntegral ℤ x → (A.valuation x < 1 ↔ B.valuation x < 1)) → ∃ ρ : G E Ω, (∀ x ∈ K, ρ x = x) ∧ ρ • A = B := by
   intro E Ω _ _ _ _ _ K _ A B h
-  haveI : FiniteDimensional ℚ K := Module.Finite.trans E K
-  haveI : NumberField K := ⟨⟩
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
-  letI : TopologicalSpace (IntCl K Ω) := ⊥
-  haveI : DiscreteTopology (IntCl K Ω) := ⟨rfl⟩
-  haveI := continuousSMul_intCl K Ω
-  haveI := isInvariant_intCl K Ω
+  have : FiniteDimensional ℚ K := Module.Finite.trans E K
+  have : NumberField K := ⟨⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
+  let : TopologicalSpace (IntCl K Ω) := ⊥
+  have : DiscreteTopology (IntCl K Ω) := ⟨rfl⟩
+  have := continuousSMul_intCl K Ω
+  have := isInvariant_intCl K Ω
   obtain ⟨g, hg⟩ := Algebra.IsInvariant.exists_smul_of_under_eq_of_profinite (A := 𝓞 K)
     (G := Ω ≃ₐ[K] Ω) (primeBelow (F := K) A) (primeBelow (F := K) B) (by
       ext x
@@ -264,15 +264,15 @@ theorem crt_approx_integral : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
       ∀ σ : G E Ω, (∃ x ∈ K, IsIntegral ℤ x ∧ ¬(A.valuation (σ x) < 1 ↔ A.valuation x < 1)) →
         A.valuation (σ t) ≤ A.valuation (c : Ω) := by
   intro E Ω _ _ _ _ _ K _ A c hc
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : NumberField K := { to_charZero := inferInstance, to_finiteDimensional := Module.Finite.trans E K }
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : NumberField K := { to_charZero := inferInstance, to_finiteDimensional := Module.Finite.trans E K }
   have hint : ∀ {y : Ω}, IsIntegral ℤ y → A.valuation y ≤ 1 := fun hy =>
     (A.valuation_le_one_iff _).2 (mem_of_isIntegral_int A hy)
   by_cases hcP : A.valuation (c : Ω) < 1
   swap
   · have h1 : 1 ≤ A.valuation (c : Ω) := not_lt.mp hcP
     refine ⟨1, K.one_mem, isIntegral_one, ?_, fun σ _ => ?_⟩
-    · rw [sub_self, map_zero]; exact zero_le'
+    · rw [sub_self, map_zero]; exact zero_le
     · rw [map_one, map_one]; exact h1
   set f : 𝓞 K →+* Ω := (algebraMap K Ω).comp (algebraMap (𝓞 K) K) with hf
   have fint : ∀ r : 𝓞 K, IsIntegral ℤ (f r) := fun r =>
@@ -297,7 +297,7 @@ theorem crt_approx_integral : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
     have h' := hcP'
     rw [h, Ideal.mem_bot] at h'
     exact hc (by exact_mod_cast h')
-  haveI hPmax : (Pg f fint).IsMaximal := Ideal.IsPrime.isMaximal (primePg f fint) hPne
+  have hPmax : (Pg f fint).IsMaximal := Ideal.IsPrime.isMaximal (primePg f fint) hPne
   have hI : Ideal.span {(c : 𝓞 K)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast hc
   classical
@@ -334,7 +334,7 @@ theorem crt_approx_integral : ∀ (E Ω : Type) [Field E] [NumberField E] [Field
     obtain ⟨s', hs'P, hs'Q⟩ : ∃ s' ∈ Pg f fint ^ a, s' ∉ Pg g gint := by
       by_contra hcon
       push_neg at hcon
-      haveI := primePg g gint
+      have := primePg g gint
       have h1 : Pg f fint ≤ Pg g gint := Ideal.IsPrime.le_of_pow_le hcon
       exact hne (hPmax.eq_of_le (primePg g gint).ne_top h1).symm
     have := key g gint s' z hs'Q (by rw [hIJ]; exact Ideal.mul_mem_mul hs'P hz)
@@ -358,8 +358,8 @@ namespace GlobalTheory
 theorem exists_algebraMap_sub_eq_sum_conjugates : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (y : Ω), ∃ (e : E) (s : Finset Ω), (∀ x ∈ s, x ≠ y ∧ ∃ σ : G E Ω, σ y = x) ∧ algebraMap E Ω e - y = ∑ x ∈ s, x := by
   intro E Ω _ _ _ _ _ y
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : Normal E Ω := IsAlgClosure.normal E Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : Normal E Ω := IsAlgClosure.normal E Ω
   have hy : IsIntegral E y := Algebra.IsIntegral.isIntegral y
   set p := minpoly E y with hp
   set q := p.map (algebraMap E Ω) with hq
@@ -447,7 +447,7 @@ theorem exists_base_near_of_dec_fixed : ∀ (E Ω : Type) [Field E] [NumberField
     have h1 : A.valuation (b' : Ω) * A.valuation (b : Ω) ≤ A.valuation r * A.valuation (b : Ω) :=
       mul_le_mul_left hb'v _
     have hpos : 0 < A.valuation (b' : Ω) * A.valuation (b : Ω) := by
-      rw [zero_lt_iff, ← Valuation.map_mul]; simpa using ⟨hb'0, hb0⟩
+      rw [pos_iff_ne_zero, ← Valuation.map_mul]; simpa using ⟨hb'0, hb0⟩
     calc A.valuation (b' : Ω) * A.valuation (b : Ω) * A.valuation (m : Ω)
         < A.valuation (b' : Ω) * A.valuation (b : Ω) * 1 := mul_lt_mul_of_pos_left hmA hpos
       _ ≤ A.valuation r * A.valuation (b : Ω) := by rw [mul_one]; exact h1
@@ -461,7 +461,7 @@ theorem exists_base_near_of_dec_fixed : ∀ (E Ω : Type) [Field E] [NumberField
       _ ≤ A.valuation (c : Ω) * 1 := mul_le_mul' hx (hint _ hu)
       _ < A.valuation r * A.valuation (b : Ω) := by rw [mul_one]; exact hcv
   set K := IntermediateField.adjoin E ({z} : Set Ω) with hK
-  haveI : FiniteDimensional E K :=
+  have : FiniteDimensional E K :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral z)
   have hzK : z ∈ K := IntermediateField.mem_adjoin_simple_self E z
   have hfix : ∀ σ : G E Ω, σ z = z → ∀ x ∈ K, σ x = x := by
@@ -526,7 +526,7 @@ theorem orbit_stab_cut_finite (E Ω : Type) [Field E] [NumberField E] [Field Ω]
     [IsAlgClosure E Ω] (H : Subgroup (G E Ω)) (y : Ω) :
     ∃ s : Finset Ω, ∀ σ : G E Ω, (∀ x ∈ s, σ x = x) ↔ ∀ τ ∈ H, ∃ τ' ∈ H, σ (τ y) = τ' y := by
   classical
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral E y := Algebra.IsIntegral.isIntegral y
   set S : Set Ω := {t | ∃ τ ∈ H, τ y = t} with hSdef
   have hS : S.Finite := by
@@ -698,7 +698,7 @@ namespace GlobalTheory.WeilDeligne
 
 theorem exists_monic_base_root_near : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω), (∀ z : Ω, (∀ d ∈ Dec (F := E) A, d z = z) → ∀ r : Ω, r ≠ 0 → ∃ e : E, A.valuation (algebraMap E Ω e - z) < A.valuation r) → ∀ f : Polynomial Ω, f.Monic → (∀ d ∈ Dec (F := E) A, ∀ i, d (f.coeff i) = f.coeff i) → ∀ β : Ω, f.eval β = 0 → ∀ r : Ω, r ≠ 0 → ∃ g : Polynomial E, g.Monic ∧ g.natDegree = f.natDegree ∧ ∃ β' : Ω, aeval β' g = 0 ∧ A.valuation (β' - β) < A.valuation r := by
   intro E Ω _ _ _ _ _ A hdense f hf hfix β hβ r hr
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   set n := f.natDegree with hn
   have hvr : A.valuation r ≠ 0 := (Valuation.ne_zero_iff _).mpr hr
   have hvrn : A.valuation r ^ n ≠ 0 := pow_ne_zero _ hvr
@@ -711,7 +711,7 @@ theorem exists_monic_base_root_near : ∀ (E Ω : Type) [Field E] [NumberField E
         exact ⟨e, by simpa [map_pow] using he⟩
       · refine ⟨0, ?_⟩
         simp only [hb, map_zero, zero_pow hi.ne', mul_zero]
-        exact zero_lt_iff.mpr hvrn
+        exact pos_iff_ne_zero.mpr hvrn
     · have hbi : β ^ i ≠ 0 := pow_ne_zero _ hb
       obtain ⟨e, he⟩ := hdense (f.coeff i) (fun d hd => hfix d hd i) (r ^ n / β ^ i)
         (div_ne_zero (pow_ne_zero _ hr) hbi)
@@ -721,7 +721,7 @@ theorem exists_monic_base_root_near : ∀ (E Ω : Type) [Field E] [NumberField E
       rw [map_div₀, map_pow, map_pow] at he
       calc A.valuation (algebraMap E Ω e - f.coeff i) * A.valuation β ^ i
           < A.valuation r ^ n / A.valuation β ^ i * A.valuation β ^ i :=
-            mul_lt_mul_of_pos_right he (zero_lt_iff.mpr hvb)
+            mul_lt_mul_of_pos_right he (pos_iff_ne_zero.mpr hvb)
         _ = A.valuation r ^ n := div_mul_cancel₀ _ hvb
   choose c hc using happ
   let p : E[X] := ∑ i : Fin n, C (c i) * X ^ (i : ℕ)
@@ -795,7 +795,7 @@ theorem exists_pos_pow_apply_eq {E Ω : Type} [Field E] [Field Ω] [Algebra E Ω
     (σ : Ω ≃ₐ[E] Ω) (x : Ω) (hx : IsIntegral E x) : ∃ k : ℕ, 0 < k ∧ (σ ^ k) x = x := by
   classical
   have hfin : ((minpoly E x).rootSet Ω).Finite := Polynomial.rootSet_finite _ _
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   let f : ℕ → (minpoly E x).rootSet Ω := fun n => ⟨(σ ^ n) x, by
     rw [Polynomial.mem_rootSet]
     refine ⟨minpoly.ne_zero hx, ?_⟩
@@ -845,9 +845,9 @@ open NumberField IsDedekindDomain Polynomial Formalism.ConjugateSelfDual Recipro
 
 theorem GlobalTheory.stab_finset_eq_stab_primitive : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (s : Finset Ω), ∃ β : Ω, ∀ σ : G E Ω, σ β = β ↔ ∀ x ∈ s, σ x = x := by
   intro E Ω _ _ _ _ _ s
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   set K := IntermediateField.adjoin E (s : Set Ω) with hK
-  haveI : FiniteDimensional E K :=
+  have : FiniteDimensional E K :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   obtain ⟨α, hα⟩ := Field.exists_primitive_element E K
   refine ⟨(α : Ω), fun σ => ?_⟩
@@ -895,7 +895,7 @@ theorem krasner_val_lt_apply_iff {E Ω : Type} [Field E] [NumberField E] [Field 
   · have hb' : A.valuation b ≠ 0 := by simpa using hb
     have hsb : σ b ≠ 0 := (map_ne_zero_iff _ σ.injective).mpr hb
     have hsb' : A.valuation (σ b) ≠ 0 := by simpa using hsb
-    rw [← div_lt_one₀ (zero_lt_iff.mpr hb'), ← div_lt_one₀ (zero_lt_iff.mpr hsb'),
+    rw [← div_lt_one₀ (pos_iff_ne_zero.mpr hb'), ← div_lt_one₀ (pos_iff_ne_zero.mpr hsb'),
       ← map_div₀, ← map_div₀, ← map_div₀, valuation_apply_lt_one_iff hσ]
 
 theorem krasner_stabiliser (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω]

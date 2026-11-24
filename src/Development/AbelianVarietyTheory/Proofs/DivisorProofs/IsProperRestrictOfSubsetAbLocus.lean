@@ -80,11 +80,11 @@ theorem isProper_dvr (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRi
 
 theorem isProper_of_abLocus_eq_univ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] (G : Over (Sp R))
     [GrpObj G] (hG : IsSemiAbelian G) (hab : abLocus G = Set.univ) : IsProper G.hom := by
-  haveI : IsSemiAbelian G := hG
-  haveI := hG.separated
-  haveI := hG.quasiCompact
-  haveI := hG.smooth
-  haveI : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
+  have : IsSemiAbelian G := hG
+  have := hG.separated
+  have := hG.quasiCompact
+  have := hG.smooth
+  have : IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
   refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint R G.left G.hom ?_
   intro V K _ _ _ _ _ _ _ x y _ hxy
   have hGV : IsSemiAbelian ((Over.pullback y).obj G) := IsSemiAbelian.pullback y G hG
@@ -114,9 +114,9 @@ theorem isProper_restrict_of_subset_abLocus : ∀ (R : Type) [CommRing R] [IsDom
     PrimeSpectrum.localization_away_comap_range (Localization.Away i.1) i.1
   have hprop : ∀ i : I, IsProper (pullback.snd G.hom (t i) ∣_ ⊤) := by
     intro i
-    haveI : IsDomain (Localization.Away i.1) :=
+    have : IsDomain (Localization.Away i.1) :=
       IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors i.2.1)
-    haveI : IsNoetherianRing (Localization.Away i.1) :=
+    have : IsNoetherianRing (Localization.Away i.1) :=
       IsLocalization.isNoetherianRing (Submonoid.powers i.1) _ inferInstance
     have hGi : IsSemiAbelian ((Over.pullback (t i)).obj G) := IsSemiAbelian.pullback (t i) G hG
     have hab : abLocus ((Over.pullback (t i)).obj G) = Set.univ := Set.eq_univ_of_forall fun z =>

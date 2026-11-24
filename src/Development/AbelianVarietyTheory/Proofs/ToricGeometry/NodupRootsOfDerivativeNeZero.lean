@@ -230,7 +230,7 @@ theorem norm_root_le {P : ℂ[X]} (hP : P.Monic) {M : ℝ} (hM0 : 0 ≤ M)
   lift M to NNReal using hM0
   have h2 : P.cauchyBound ≤ M + 1 := by
     unfold cauchyBound
-    rw [hP.leadingCoeff, nnnorm_one, div_one]
+    rw [hP.leadingCoeff, nnNorm_one, div_one]
     gcongr
     exact Finset.sup_le fun i hi => by exact_mod_cast hM i (Finset.mem_range.mp hi)
   exact_mod_cast (h1.trans_le h2).le

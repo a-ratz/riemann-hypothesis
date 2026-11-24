@@ -75,7 +75,7 @@ theorem gen_asIdeal (z : Spec (CommRingCat.of (FractionRing R))) : ((genPt R).ho
   exact Ideal.comap_bot_of_injective _ (IsFractionRing.injective R (FractionRing R))
 
 theorem genSec_cover (Γ : QFGroup R T) (a : ↥(pullback Γ.G.hom (genPt R).hom)) : ∃ t z, genSec Γ t z = a := by
-  haveI : IsPreimmersion (genPt R).hom := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
+  have : IsPreimmersion (genPt R).hom := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
   have h1 : Γ.G.hom (pullback.fst Γ.G.hom (genPt R).hom a) = (genPt R).hom (pullback.snd Γ.G.hom (genPt R).hom a) := by
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, pullback.condition]
   obtain ⟨t, z, hz⟩ := Γ.pt_onto (pullback.fst Γ.G.hom (genPt R).hom a) (by rw [h1]; exact gen_asIdeal _)
@@ -83,21 +83,21 @@ theorem genSec_cover (Γ : QFGroup R T) (a : ↥(pullback Γ.G.hom (genPt R).hom
   rw [← Scheme.Hom.comp_apply, genSec_fst, hz]
 
 theorem genSec_open [Finite T] (Γ : QFGroup R T) (t : T) : IsOpenImmersion (genSec Γ t) := by
-  haveI := Γ.separated
-  haveI := Γ.gen_reduced
+  have := Γ.separated
+  have := Γ.gen_reduced
   have hcl : ∀ s, IsClosedImmersion (genSec Γ s) := fun s => by
     haveI : IsClosedImmersion (genSec Γ s ≫ pullback.snd _ _) := by rw [genSec_snd]; infer_instance
     exact IsClosedImmersion.of_comp _ (pullback.snd Γ.G.hom (genPt R).hom)
-  haveI : Subsingleton ↥(Spec (CommRingCat.of (FractionRing R))) :=
+  have : Subsingleton ↥(Spec (CommRingCat.of (FractionRing R))) :=
     inferInstanceAs (Subsingleton (PrimeSpectrum (FractionRing R)))
   let z₀ : Spec (CommRingCat.of (FractionRing R)) := IsLocalRing.closedPoint (FractionRing R)
-  haveI : Finite ↥(pullback Γ.G.hom (genPt R).hom) :=
+  have : Finite ↥(pullback Γ.G.hom (genPt R).hom) :=
     Finite.of_surjective (fun s => genSec Γ s z₀) fun a => by
       obtain ⟨s, z, rfl⟩ := genSec_cover Γ a
       exact ⟨s, by rw [Subsingleton.elim z z₀]⟩
-  haveI : T1Space ↥(pullback Γ.G.hom (genPt R).hom) := ⟨fun a => by
+  have : T1Space ↥(pullback Γ.G.hom (genPt R).hom) := ⟨fun a => by
     obtain ⟨s, z, rfl⟩ := genSec_cover Γ a
-    haveI := hcl s
+    have := hcl s
     have := (genSec Γ s).isClosedEmbedding.isClosedMap {z} (isClosed_discrete _)
     rwa [Set.image_singleton] at this⟩
   let U : (pullback Γ.G.hom (genPt R).hom).Opens := ⟨{genSec Γ t z₀}, isOpen_discrete _⟩
@@ -106,13 +106,13 @@ theorem genSec_open [Finite T] (Γ : QFGroup R T) (t : T) : IsOpenImmersion (gen
     rw [Scheme.Opens.range_ι, Subsingleton.elim z z₀]
     exact rfl
   have e := IsOpenImmersion.lift_fac U.ι (genSec Γ t) hU
-  haveI : IsClosedImmersion (IsOpenImmersion.lift U.ι (genSec Γ t) hU ≫ U.ι) := by rw [e]; exact hcl t
-  haveI : IsClosedImmersion (IsOpenImmersion.lift U.ι (genSec Γ t) hU) := IsClosedImmersion.of_comp _ U.ι
-  haveI : Surjective (IsOpenImmersion.lift U.ι (genSec Γ t) hU) := ⟨fun u => ⟨z₀, by
+  have : IsClosedImmersion (IsOpenImmersion.lift U.ι (genSec Γ t) hU ≫ U.ι) := by rw [e]; exact hcl t
+  have : IsClosedImmersion (IsOpenImmersion.lift U.ι (genSec Γ t) hU) := IsClosedImmersion.of_comp _ U.ι
+  have : Surjective (IsOpenImmersion.lift U.ι (genSec Γ t) hU) := ⟨fun u => ⟨z₀, by
     apply U.ι.isOpenEmbedding.injective
     rw [← Scheme.Hom.comp_apply, e]
     exact (u.2 : u.1 = _).symm⟩⟩
-  haveI := isIso_of_isClosedImmersion_of_surjective (IsOpenImmersion.lift U.ι (genSec Γ t) hU)
+  have := isIso_of_isClosedImmersion_of_surjective (IsOpenImmersion.lift U.ι (genSec Γ t) hU)
   rw [← e]
   infer_instance
 
@@ -177,7 +177,7 @@ theorem bcSec_spec [Finite T] (Γ : QFGroup R T) {φ : R →+* R'} (hφ : Functi
       · rw [Category.assoc, Category.assoc, genSec_fst, hq₁, reassoc_of% e₂, bcPt_fst]
       · rw [Category.assoc, Category.assoc, genSec_snd, hq₂, reassoc_of% e₁, Category.comp_id]
   refine ⟨fun t => ?_, fun a => ?_⟩
-  · haveI := genSec_open Γ t
+  · have := genSec_open Γ t
     exact MorphismProperty.of_isPullback (P := @IsOpenImmersion) (hs t) this
   · obtain ⟨t, z, hz⟩ := genSec_cover Γ (q a)
     obtain ⟨w, -, hw⟩ := Scheme.exists_preimage_of_isPullback (hs t) z a hz

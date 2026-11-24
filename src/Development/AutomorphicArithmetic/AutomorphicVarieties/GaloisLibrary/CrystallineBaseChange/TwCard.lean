@@ -48,7 +48,7 @@ theorem UpperTheory.V.Br.twCard :
     rcases Nat.eq_zero_or_pos n with rfl | h
     · exact absurd (Submodule.eq_bot_of_subsingleton) hirr.1
     · exact h
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   choose! g hg using hS
   have key : ∀ δ ∈ S, ∀ s, ((g δ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) * (r s : Matrix (Fin n) (Fin n) k)
       = ((δ s : kˣ) : k) • ((r s : Matrix (Fin n) (Fin n) k) * (g δ : Matrix (Fin n) (Fin n) k)) := by

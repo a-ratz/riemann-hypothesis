@@ -53,7 +53,7 @@ variable {n : ℕ}
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem continuous_kR : Continuous (fun k : KR n => mR (k : GR n)) := continuous_mR.comp continuous_subtype_val
+theorem continuous_kR : Continuous (fun k : KR n => mR (k : GR n)) := continuous_mR.comp continuous_subtypeVal
 
 def kSet (S : Set (M2 n)) : Set (M2 n) := (fun p : KR n × M2 n => mR (p.1 : GR n) * p.2) '' (univ ×ˢ S)
 

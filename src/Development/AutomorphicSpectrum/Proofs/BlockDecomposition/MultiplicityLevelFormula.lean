@@ -58,11 +58,11 @@ theorem measure_eq_relIndex_mul (μ : Measure V) [μ.IsAddLeftInvariant] (K H : 
     (hle : H ≤ K) (ho : IsOpen (H : Set V)) (hi : H.relIndex K ≠ 0) :
     μ K = (H.relIndex K : ENNReal) * μ H := by
   have hKm : MeasurableSet (K : Set V) := (AddSubgroup.isOpen_mono hle ho).measurableSet
-  have hemb : MeasurableEmbedding (K.subtype : K → V) := MeasurableEmbedding.subtype_coe hKm
+  have hemb : MeasurableEmbedding (K.subtype : K → V) := MeasurableEmbedding.subtypeVal hKm
   have : (μ.comap (K.subtype : K → V)).IsAddLeftInvariant := Measure.IsAddLeftInvariant.comap μ hemb
   have : (H.addSubgroupOf K).FiniteIndex := ⟨hi⟩
   have hHm : MeasurableSet ((H.addSubgroupOf K : AddSubgroup K) : Set K) :=
-    (ho.preimage continuous_subtype_val).measurableSet
+    (ho.preimage continuous_subtypeVal).measurableSet
   have key := AddSubgroup.index_mul_measure (H.addSubgroupOf K) hHm (μ.comap (K.subtype : K → V))
   rw [hemb.comap_apply, hemb.comap_apply] at key
   have h1 : (K.subtype : K → V) '' Set.univ = (K : Set V) := by simp
@@ -116,7 +116,7 @@ theorem vol_ratio (lam : Measure V) [lam.IsAddHaarMeasure] (L : AddSubgroup V) (
   set N : AddSubgroup V := L ⊔ L.map φ with hNdef
   have hset : {x | ∃ y ∈ L, ∃ y' ∈ L, x = y + φ y'} = (N : Set V) := by
     ext x
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, hNdef, AddSubgroup.mem_sup, AddSubgroup.mem_map]
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, hNdef, AddSubgroup.mem_sup, AddSubgroup.mem_map]
     constructor
     · rintro ⟨y, hy, y', hy', rfl⟩
       exact ⟨y, hy, _, ⟨y', hy', rfl⟩, rfl⟩
@@ -135,9 +135,9 @@ theorem vol_ratio (lam : Measure V) [lam.IsAddHaarMeasure] (L : AddSubgroup V) (
     rw [this]
     exact (hLc.prod hLc).image (continuous_fst.add (hφ.comp continuous_snd))
   have hidx : L.relIndex N ≠ 0 := by
-    haveI : CompactSpace N := isCompact_iff_compactSpace.mp hNc
-    have ho : IsOpen ((L.addSubgroupOf N : AddSubgroup N) : Set N) := hLo.preimage continuous_subtype_val
-    haveI : Finite (N ⧸ L.addSubgroupOf N) := AddSubgroup.quotient_finite_of_isOpen _ ho
+    have : CompactSpace N := isCompact_iff_compactSpace.mp hNc
+    have ho : IsOpen ((L.addSubgroupOf N : AddSubgroup N) : Set N) := hLo.preimage continuous_subtypeVal
+    have : Finite (N ⧸ L.addSubgroupOf N) := AddSubgroup.quotient_finite_of_isOpen _ ho
     exact AddSubgroup.index_ne_zero_of_finite
   have h0 : lam (L : Set V) ≠ 0 := (hLo.measure_pos lam ⟨0, L.zero_mem⟩).ne'
   have htop : lam (L : Set V) ≠ ⊤ := hLc.measure_lt_top.ne
@@ -156,9 +156,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem exists_coord_homeo : ∃ h : (Fv F v ⊗[F] E) ≃ₜ (Fin d → Fv F v),
     ∀ x k, h x k = (Algebra.TensorProduct.basis (Fv F v) bs).repr x k := by
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : Module.Finite (Fv F v) (Fv F v ⊗[F] E) := Module.Finite.of_basis (Algebra.TensorProduct.basis (Fv F v) bs)
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) (Fv F v ⊗[F] E)
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : Module.Finite (Fv F v) (Fv F v ⊗[F] E) := Module.Finite.of_basis (Algebra.TensorProduct.basis (Fv F v) bs)
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) (Fv F v ⊗[F] E)
   let e := (Algebra.TensorProduct.basis (Fv F v) bs).equivFun
   exact ⟨{ toEquiv := e.toEquiv
            continuous_toFun := IsModuleTopology.continuous_of_linearMap e.toLinearMap
@@ -184,13 +184,13 @@ theorem isCompact_Rv : IsCompact (Rv bs v) := by
 include bs in
 theorem secondCountable_tens : SecondCountableTopology (Fv F v ⊗[F] E) := by
   obtain ⟨h, -⟩ := exists_coord_homeo bs v
-  haveI : SecondCountableTopology (Fv F v) := LocMassOrdSF.secondCountable_Fv v
+  have : SecondCountableTopology (Fv F v) := LocMassOrdSF.secondCountable_Fv v
   exact h.isInducing.secondCountableTopology
 
 include bs in
 theorem topRing_tens : IsTopologicalRing (Fv F v ⊗[F] E) := by
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : Module.Finite (Fv F v) (Fv F v ⊗[F] E) := Module.Finite.of_basis (Algebra.TensorProduct.basis (Fv F v) bs)
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : Module.Finite (Fv F v) (Fv F v ⊗[F] E) := Module.Finite.of_basis (Algebra.TensorProduct.basis (Fv F v) bs)
   exact IsModuleTopology.isTopologicalRing (Fv F v) (Fv F v ⊗[F] E)
 
 theorem mem_latO_iff {n : ℕ} (y : Fin n → Fv F v ⊗[F] E) : y ∈ latO bs v ↔ ∀ a, y a ∈ Rv bs v := Iff.rfl
@@ -251,9 +251,9 @@ theorem multiplicity_hermitian_level (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) 
     (hL : (L : Set (Fin n → Fv F v ⊗[F] E)) = latO bs v) (k : ℕ) (X : Matrix (Fin n) (Fin n) S)
     (hX : PositivityTheory.PfSWUS.Loc.cT σS X = X) :
     nu2 lam L L (hG.hermLev k X hX).1 = (nuAt hG.pS (red hG.pS k X) : ℝ) := by
-  haveI := topRing_tens (E := E) bs v
-  haveI := secondCountable_tens (E := E) bs v
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have := topRing_tens (E := E) bs v
+  have := secondCountable_tens (E := E) bs v
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   have hmem : ∀ y : Fin n → Fv F v ⊗[F] E, y ∈ L ↔ ∀ a, y a ∈ S := by
     intro y
     have h1 : y ∈ L ↔ y ∈ latO bs v := by rw [← hL]; rfl

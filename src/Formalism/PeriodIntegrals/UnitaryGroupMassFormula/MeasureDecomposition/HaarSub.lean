@@ -52,14 +52,14 @@ namespace PI.ScMuExists.UnitaryGroupMassFormula
 
 theorem generic_haar_subgroup : GenHaarSub := by
   intro G _ _ _ _ _ _ _ _ K hK
-  haveI : LocallyCompactSpace K := hK.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace K := hK.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hm : haarSub K hK = (Measure.haar : Measure K).map Subtype.val := rfl
-  have hmeas : Measurable (Subtype.val : K → G) := measurable_subtype_coe
+  have hmeas : Measurable (Subtype.val : K → G) := measurable_subtypeVal
   have hcpt : ∀ C : Set G, IsCompact C → haarSub K hK C < ⊤ := by
     intro C hC
     rw [hm, Measure.map_apply hmeas hC.isClosed.measurableSet]
     exact (hK.isClosedEmbedding_subtypeVal.isCompact_preimage hC).measure_lt_top
-  haveI : IsFiniteMeasureOnCompacts (haarSub K hK) := ⟨hcpt⟩
+  have : IsFiniteMeasureOnCompacts (haarSub K hK) := ⟨hcpt⟩
   refine ⟨inferInstance, ?_, ?_, ?_, hcpt, ?_⟩
   · intro h0
     rw [hm, Measure.map_eq_zero_iff hmeas.aemeasurable] at h0
@@ -84,6 +84,6 @@ theorem generic_haar_subgroup : GenHaarSub := by
       | exact Measure.IsMulLeftInvariant.map_mul_left_eq_self _
   · intro U hU h1
     rw [hm, Measure.map_apply hmeas hU.measurableSet]
-    exact (hU.preimage continuous_subtype_val).measure_pos (Measure.haar : Measure K) ⟨1, by simpa using h1⟩
+    exact (hU.preimage continuous_subtypeVal).measure_pos (Measure.haar : Measure K) ⟨1, by simpa using h1⟩
 
 end PI.ScMuExists.UnitaryGroupMassFormula

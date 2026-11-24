@@ -748,7 +748,7 @@ theorem isSmooth_subQuot [TopologicalSpace G] [IsTopologicalGroup G] {ρ : Repre
 theorem nontrivial_twJacquet_subQuot {ρ : Representation ℂ G V} (N : Subgroup G) (χ : N →* ℂˣ)
     (A B : Subrepresentation ρ) (hB : B.toSubmodule ≤ twKer ρ N χ) (hA : ¬ A.toSubmodule ≤ twKer ρ N χ) :
     Nontrivial (TwJacquet (subQuot A B) N χ) := by
-  obtain ⟨a, haA, hak⟩ := SetLike.not_le_iff_exists.mp hA
+  obtain ⟨a, haA, hak⟩ := IsConcreteLE.not_le_iff_exists.mp hA
   let φ : A.toSubmodule →ₗ[ℂ] V ⧸ twKer ρ N χ := (twKer ρ N χ).mkQ ∘ₗ A.toSubmodule.subtype
   have hφ : Submodule.comap A.toSubmodule.subtype B.toSubmodule ≤ LinearMap.ker φ := by
     intro x hx
@@ -785,8 +785,8 @@ theorem exists_generic_subQuot : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
       IsSmooth (subQuot A B) ∧ IsGenericFor ψ (subQuot A B) := by
   intro k _ _ _ _ ψ hψ N V _ _ ρ hρ hfl hgen
   have hNA := isFiniteLength_iff_isNoetherian_isArtinian.mp hfl
-  haveI := hNA.1
-  haveI := hNA.2
+  have := hNA.1
+  have := hNA.2
   have hle : ∀ S T : Subrepresentation ρ, S.asSubmodule ≤ T.asSubmodule ↔ S ≤ T := fun S T => Iff.rfl
   have hsm : StrictMono (fun S : Subrepresentation ρ => S.asSubmodule) := fun S T h =>
     lt_of_le_of_ne ((hle S T).mpr h.le)

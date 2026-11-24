@@ -62,6 +62,6 @@ theorem UpperTheory.V.Lit.Bor.ipDef :
     have h3 : ω X = ∑ I : Fin q → Fin n, ω fun i => trF (e (I i)).1 (X i).1 • e (I i) := by
       conv_lhs => rw [hX]
       exact ω.toMultilinearMap.map_sum (fun i j => trF (e j).1 (X i).1 • e j)
-    rw [h3, AlternatingMap.zero_apply]
+    rw [h3, zero_apply]
     refine Finset.sum_eq_zero fun I _ => ?_
     rw [ω.map_smul_univ (fun i => trF (e (I i)).1 (X i).1) (fun i => e (I i)), h2, smul_zero]

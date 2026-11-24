@@ -279,7 +279,7 @@ theorem range_upqMat (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
 
 theorem upqMat_cont (e : Fin P ⊕ Fin Q ≃ Fin n) : Continuous (upqMat e : Formalism.BasicNotions.UpqT P Q → _) := by
   have h : Continuous fun g : Formalism.BasicNotions.UpqT P Q => Formalism.BasicNotions.UpqT.mat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   exact h.matrix_submatrix _ _
 
 theorem isClosedEmbedding_upqMat (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
@@ -316,7 +316,7 @@ theorem isClosedEmbedding_upqMat (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n →
 theorem measurableEmbedding_upqMat (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
     (he1 : ∀ i, ε (e (Sum.inl i)) = true) (he2 : ∀ j, ε (e (Sum.inr j)) = false) :
     @MeasurableEmbedding (Formalism.BasicNotions.UpqT P Q) (Fin n → Fin n → ℂ) _ _ (fun g => upqMat e g) := by
-  haveI := upqT_borel P Q
+  have := upqT_borel P Q
   exact Topology.IsClosedEmbedding.measurableEmbedding (β := Fin n → Fin n → ℂ)
     (isClosedEmbedding_upqMat e he1 he2)
 

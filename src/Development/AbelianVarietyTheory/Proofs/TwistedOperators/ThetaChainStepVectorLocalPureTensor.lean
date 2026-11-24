@@ -505,11 +505,11 @@ theorem prod_locFn_half : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (EAf
       intro i j
       rw [frMapO_smul, Matrix.smul_apply, smul_eq_mul]
       exact (Formalism.L2.Herm.intAf D.host.F D.host.E).mul_mem hi (hN i j)
-    rw [if_pos ⟨hhalfPP PP hPP, hN'⟩]
+    rw [ite_eq_left ⟨hhalfPP PP hPP, hN'⟩]
     congr 1
     funext i j
     have hmem : (frMapO S T βS βT (es PP • t)) i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := hN' i j
-    simp only [redM, dif_pos (hN i j), dif_pos hmem]
+    simp only [redM, dite_eq_left (hN i j), dite_eq_left hmem]
     have heq : (⟨(frMapO S T βS βT (es PP • t)) i j, hmem⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) =
         ⟨toEAf D (es PP), hi⟩ * ⟨(frMapO S T βS βT t) i j, hN i j⟩ := by
       apply Subtype.ext
@@ -533,7 +533,7 @@ theorem prod_locFn_half : ∀ (D : D7) (S T : HSp D) (βS : GL (Fin S.rank) (EAf
       exact Subring.sum_mem _ fun PP hPP => hc PP hPP i j
     obtain ⟨PP, hPP, hni⟩ := hex
     symm
-    exact Finset.prod_eq_zero hPP (if_neg fun h => hni h.2)
+    exact Finset.prod_eq_zero hPP (ite_eq_right fun h => hni h.2)
 
 end GlobalTheory.StepVec
 end -- clump:auto
@@ -614,8 +614,8 @@ theorem GlobalTheory.StepVec.onHalf_viaRed_eq_locFn : ∀ (D : D7) (v : FinPl D)
   unfold onHalf locFn
   by_cases hh : IsHalf e t
   swap
-  · rw [if_neg hh, if_neg (fun h => hh h.1)]
-  rw [if_pos hh, h1]
+  · rw [ite_eq_right hh, ite_eq_right (fun h => hh h.1)]
+  rw [ite_eq_left hh, h1]
   have hfix : ∀ i j, toEAf D e * N i j = N i j := by
     intro i j
     have : toEAf D e • N = N := by
@@ -638,14 +638,14 @@ theorem GlobalTheory.StepVec.onHalf_viaRed_eq_locFn : ∀ (D : D7) (v : FinPl D)
       exact (hr.2.2.2 (N i j) (h i j)).1
   unfold viaRed
   by_cases hI : IsIntM N
-  · rw [dite_eq_left (hiff.2 hI), if_pos ⟨hh, hI⟩]
+  · rw [dite_eq_left (hiff.2 hI), ite_eq_left ⟨hh, hI⟩]
     congr 1
     ext i j
     obtain ⟨hm, hm'⟩ := hr.2.2.2 (N i j) (hI i j)
     simp only [Matrix.of_apply, Matrix.map_apply]
     unfold redM
     rw [dite_eq_left (hI i j), ← hm']
-  · rw [dite_eq_right (fun h => hI (hiff.1 h)), if_neg (fun h => hI h.2)]
+  · rw [dite_eq_right (fun h => hI (hiff.1 h)), ite_eq_right (fun h => hI h.2)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitHalfResidueReductionFunctionEqFrameLocal =====
@@ -826,7 +826,7 @@ theorem stepVecLocal : ∀ D : D7, StepVecLocal D := by
     have h1 : (fun y => localNewformFunction (vP i) J lam mu (rowsTB ht y)) = viaRed (rP i) (ω i.1) := by
       funext y
       rw [GlobalTheory.T.localLevelDatum_eq_function_of_residueReduction D (vP i) (φP i) i.1 (rP i) (hrP i) _ _ t ht LS _ _ J lam hJ mu (χ i.1) hmu y]
-      simp only [ω, dif_pos hi]
+      simp only [ω, dite_eq_left hi]
     rw [h1]
     exact GlobalTheory.T.splitHalf_residueReduction_function_eq_frameLocal D (vP i) (φP i) (es i.1) i.1 (rP i) (hφ i) (hpr i) (hrP i) S T βS βT (ω i.1)
   have hcmpQ : ∀ (i : ↥s) (hi : i.1 ∈ Q) (mu : (Fv D.host.F (vP i))ˣ →* ℂˣ), LiftsChar (φP i) i.1 mu (ξ i.1)⁻¹ →
@@ -836,7 +836,7 @@ theorem stepVecLocal : ∀ D : D7, StepVecLocal D := by
     have h1 : phiQ (vP i) LS.r mu = viaRed (b := T.rank) (a := S.rank) (rP i) (ω i.1) := by
       funext y
       rw [GlobalTheory.T.thetaTwistDatum_eq_function_of_residueReduction D (vP i) (φP i) i.1 (rP i) (hrP i) _ _ LS.r mu (ξ i.1) hmu y]
-      simp only [ω, dif_neg hn]
+      simp only [ω, dite_eq_right hn]
     rw [h1]
     exact GlobalTheory.T.splitHalf_residueReduction_function_eq_frameLocal D (vP i) (φP i) (es i.1) i.1 (rP i) (hφ i) (hpr i) (hrP i) S T βS βT (ω i.1)
 
@@ -873,10 +873,10 @@ theorem stepVecLocal : ∀ D : D7, StepVecLocal D := by
       intro i
       have h : ∃ j, vP j = vP i := ⟨i, rfl⟩
       show (if h : ∃ j, vP j = vP i then xθ h.choose else f₀) = xθ i
-      rw [dif_pos h, hinj h.choose_spec]
+      rw [dite_eq_left h, hinj h.choose_spec]
     refine ⟨x, ⟨fun τ => rfl, fun v hv => ?_⟩, ?_⟩
     · show (if h : ∃ i, vP i = v then xθ h.choose else f₀) = f₀
-      refine dif_neg ?_
+      refine dite_eq_right ?_
       rintro ⟨i, rfl⟩
       exact hv i.1 i.2 (hunder i)
     · intro v φ e' he' mu
@@ -917,9 +917,9 @@ theorem stepVecLocal : ∀ D : D7, StepVecLocal D := by
         ← Finset.prod_coe_sort LS.Pg fun PP => ω PP (y PP)]
       congr 1
       · refine Finset.prod_congr rfl fun PP _ => ?_
-        simp only [ω, dif_pos PP.2]
+        simp only [ω, dite_eq_left PP.2]
       · refine Finset.prod_congr rfl fun PP hq => ?_
-        simp only [ω, dif_neg fun h => Finset.disjoint_left.1 hdisj h hq]
+        simp only [ω, dite_eq_right fun h => Finset.disjoint_left.1 hdisj h hq]
     rw [← hsumes] at hth
     refine GlobalTheory.T.thetaFunction_splitProductDatum_isPureTensor D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hC ↥s Finset.univ vP (fun i => es i.1) (fun i _ => hsplit i)
       hinj.injOn Φ (fun i _ => hsb i) x f _ (fun i _ => hθ i) hoff ?_ ?_ hth
@@ -930,11 +930,11 @@ theorem stepVecLocal : ∀ D : D7, StepVecLocal D := by
       show (if _ then _ else _) = ∏ i : ↥s, Φ i (es i.1 • t')
       rw [h2, ← h]
       by_cases hI : IsIntM (frMapO S T βS βT t')
-      · rw [if_pos ⟨ht', hI⟩, if_pos hI]
+      · rw [ite_eq_left ⟨ht', hI⟩, ite_eq_left hI]
         exact hprod _
-      · rw [if_neg fun h => hI h.2, if_neg hI]
+      · rw [ite_eq_right fun h => hI h.2, ite_eq_right hI]
     · intro t' ht'
-      exact if_neg fun h => ht' h.1
+      exact ite_eq_right fun h => ht' h.1
 
 end GlobalTheory.StepVec
 

@@ -167,7 +167,7 @@ theorem AnPt.chart_act (m : ℕ) (a : 𝓞 E) :
     rfl
   have hol' := isHolFam_comp (fun z => (Φ.e z).left) Φ.hol (Xo.univ.t.act.act a).left
   rw [jetPt_comp (fun z => (Φ.e z).left) Φ.hol _ _ hol' (fun z => rfl)]
-  haveI : IsLocalHom ((jetSubstP m fun p : Fin 1 × Fin g => psTrunc m (anAct ty a p.2) :
+  have : IsLocalHom ((jetSubstP m fun p : Fin 1 × Fin g => psTrunc m (anAct ty a p.2) :
       Jet ℂ (Fin 1 × Fin g) m →ₐ[ℂ] Jet ℂ (Fin 1 × Fin g) m) :
         Jet ℂ (Fin 1 × Fin g) m →+* Jet ℂ (Fin 1 × Fin g) m) :=
     isLocalHom_jetMap (m := m)
@@ -199,7 +199,7 @@ theorem AnPt.chart_tan (j0 : Fin g) (vt : Sp (DualNumber ℂ) ⟶ Xo.univ.t.G.le
   have hone : ∀ j, j ≠ j0 → u j = 1 := by
     intro j hj
     ext1
-    simp only [u, v, if_neg hj, Over.comp_left, epsHom, Over.homMk_left, Formalism.L2.Pj.homAt, AnPt.chart_jx_left]
+    simp only [u, v, ite_eq_right hj, Over.comp_left, epsHom, Over.homMk_left, Formalism.L2.Pj.homAt, AnPt.chart_jx_left]
     rw [← Category.assoc, spMap_epsMul_zero_jetTan, Category.assoc, jetPt_aug, one_left'']
     show spMap _ ≫ (Φ.e 0).left = (spMap (algebraMap ℂ (DualNumber ℂ)) ≫ y.x) ≫ _
     rw [Φ.chart_e_zero, one_left'', Category.assoc]
@@ -207,7 +207,7 @@ theorem AnPt.chart_tan (j0 : Fin g) (vt : Sp (DualNumber ℂ) ⟶ Xo.univ.t.G.le
   have hprod : (List.ofFn u).prod = u j0 := by
     rw [List.prod_ofFn, Finset.prod_eq_single j0 (fun j _ hj => hone j hj) (by simp)]
   rw [hprod]
-  simp only [u, v, if_pos rfl, ite_true, Over.comp_left, epsHom, Over.homMk_left, Formalism.L2.Pj.homAt, AnPt.chart_jx_left,
+  simp only [u, v, ite_eq_left rfl, ite_true, Over.comp_left, epsHom, Over.homMk_left, Formalism.L2.Pj.homAt, AnPt.chart_jx_left,
     epsMul_one]
   rw [show spMap (RingHom.id (DualNumber ℂ)) = 𝟙 _ from by simp [spMap]]
   exact (Category.id_comp _).trans (jetPt_tan (fun z => (Φ.e z).left) Φ.hol ((0 : Fin 1), j0) vt hd)
@@ -477,9 +477,9 @@ theorem sameSum_of_jetMap {n : ℕ} (m : ℕ) {K K' J : Type} [Fintype K] [Finty
     else spMap (algebraMap ℂ _) ≫ (Φ.e 0).left
   refine sameSum_of_factor φ ε φ' ε' F σ σ' (fun k => ?_) (fun k => ?_) hc
   · obtain ⟨hol, e⟩ := h k
-    simp only [F, dif_pos hol]; exact e
+    simp only [F, dite_eq_left hol]; exact e
   · obtain ⟨hol, e⟩ := h' k
-    simp only [F, dif_pos hol]; exact e
+    simp only [F, dite_eq_left hol]; exact e
 
 end General
 
@@ -1155,7 +1155,7 @@ theorem corr_rig {n m : ℕ} {K : Type} [Fintype K] (φ : K → (Sp (Jet ℂ (Fi
   · have hW : (⊤ : (Sp ℂ).Opens) ≤ W := top_le_of_mem (x := 𝟙 (Sp ℂ)) hc
     have hW1 := hW.trans inf_le_left
     have hW2 := hW.trans inf_le_right
-    haveI : IsLocalHom ((jetAug : Jet ℂ (Fin n × Fin g) m →ₐ[ℂ] ℂ) : Jet ℂ (Fin n × Fin g) m →+* ℂ) :=
+    have : IsLocalHom ((jetAug : Jet ℂ (Fin n × Fin g) m →ₐ[ℂ] ℂ) : Jet ℂ (Fin n × Fin g) m →+* ℂ) :=
       ⟨fun a ha => isUnit_of_jetAug a ha.ne_zero⟩
     have hp : spMap ((jetAug : Jet ℂ (Fin n × Fin g) m →ₐ[ℂ] ℂ) : Jet ℂ (Fin n × Fin g) m →+* ℂ) cpt =
         IsLocalRing.closedPoint _ := Spec_closedPoint
@@ -1188,7 +1188,7 @@ theorem corr_rig {n m : ℕ} {K : Type} [Fintype K] (φ : K → (Sp (Jet ℂ (Fi
   · have hb : W = ⊥ := by
       refine le_bot_iff.1 fun p hp => hc ?_
       rwa [Subsingleton.elim cpt p]
-    haveI : Subsingleton Γ(Sp ℂ, W) := by rw [hb]; infer_instance
+    have : Subsingleton Γ(Sp ℂ, W) := by rw [hb]; infer_instance
     exact Subsingleton.elim (α := Γ(Sp ℂ, W)) _ _
 
 end General
@@ -1495,12 +1495,12 @@ theorem filter_col_toMultiset {T : Type} [Fintype T] {r : T → ℕ} {n : ℕ}
   rw [Multiset.count_filter]
   by_cases h : c = b
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have := Multiset.count_map_eq_count' _ (Finsupp.toMultiset (Finsupp.equivFunOnFinite.symm
         fun ℓ : (Σ τ : T, Fin (r τ)) => m ⟨ℓ.1, ℓ.2, c⟩)) hinj ⟨τ, i⟩
     rw [this]
     simp [Finsupp.count_toMultiset]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     symm
     rw [Multiset.count_eq_zero, Multiset.mem_map]
     rintro ⟨x, -, hx⟩

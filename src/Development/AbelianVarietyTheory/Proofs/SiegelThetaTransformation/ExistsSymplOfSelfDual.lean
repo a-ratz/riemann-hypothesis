@@ -188,9 +188,9 @@ theorem exists_sympl_of_selfDual {V : Type} [AddCommGroup V] [Module ℚ V] [Fin
     (hN : ∀ x, x ∈ N ↔ ∀ y ∈ N, ∃ k : ℤ, B x y = k) :
     ∃ b : Fin g ⊕ Fin g → V, (∀ u, u ∈ N ↔ ∃ m : Fin g ⊕ Fin g → ℤ, u = ∑ j, m j • b j) ∧
       ∀ i j, B (b i) (b j) = -(omegaStd (Pi.single i 1) (Pi.single j 1) : ℤ) := by
-  haveI : Module.Finite ℤ N := Module.Finite.iff_fg.2 hfg
-  haveI : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
-  haveI : Module.Free ℤ N := inferInstance
+  have : Module.Finite ℤ N := Module.Finite.iff_fg.2 hfg
+  have : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
+  have : Module.Free ℤ N := inferInstance
   choose f hf using fun (x y : N) => (hN x).1 x.2 y y.2
   let ω : LinearMap.BilinForm ℤ N := LinearMap.mk₂ ℤ (fun x y => -f x y)
     (fun x x' y => by
@@ -325,7 +325,7 @@ theorem norm_sq_of_mean {τ h : Matrix (Fin g) (Fin g) ℂ} {c₁ c₂ : Fin g �
     ‖a‖ ^ 2 = Real.sqrt (2 ^ g * (τ.map Complex.im).det) := by
   obtain ⟨Fd', hFd', hm'⟩ := GlobalTheory.ThetaMean.exists_fundamentalDomain_mean_norm_sq_thetaChar
     g τ h c₁ c₂ A hτ.1 hτ.2 hh h₁ h₂ hA
-  haveI : Countable A := by
+  have : Countable A := by
     have : (A : Set (Fin g → ℂ)) ⊆ Set.range fun p : (Fin g → ℤ) × (Fin g → ℤ) =>
         h⁻¹ *ᵥ ((fun i => (p.1 i : ℂ)) + τ *ᵥ (fun i => (p.2 i : ℂ))) := by
       intro lam hl
@@ -341,7 +341,7 @@ theorem norm_sq_of_mean {τ h : Matrix (Fin g) (Fin g) ℂ} {c₁ c₂ : Fin g �
     obtain ⟨ε, hε, hp⟩ := hper p p.2
     change ‖θ (p + z)‖ ^ 2 * Real.exp (-Real.pi * (H (p + z) (p + z)).re) = _
     rw [← hp z, add_comm (p : Fin g → ℂ) z, norm_mul, norm_mul, hε, _root_.one_mul, mul_pow, Complex.norm_exp,
-      ← Real.exp_nat_mul, mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
+      ← Real.exp_natCast_mul, mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
     congr 2
     have e1 : (H (z + p) (z + p)).re = (H z z).re + 2 * (H z p).re + (H p p).re := by
       have := re_dot_star_comm hY (h *ᵥ z) (h *ᵥ p)
@@ -358,7 +358,7 @@ theorem norm_sq_of_mean {τ h : Matrix (Fin g) (Fin g) ℂ} {c₁ c₂ : Fin g �
       (‖thetaChar τ c₁ c₂ (h *ᵥ z)‖ ^ 2 * Real.exp (-2 * Real.pi * ((fun i => ((h *ᵥ z) i).im) ⬝ᵥ
         (((τ.map Complex.im)⁻¹) *ᵥ fun i => ((h *ᵥ z) i).im)))) := by
     intro z
-    rw [ha, norm_mul, norm_mul, mul_pow, mul_pow, Complex.norm_exp, ← Real.exp_nat_mul, _root_.mul_assoc,
+    rw [ha, norm_mul, norm_mul, mul_pow, mul_pow, Complex.norm_exp, ← Real.exp_natCast_mul, _root_.mul_assoc,
       mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
     congr 3
     have : ((Real.pi : ℂ) / 2) = ((Real.pi / 2 : ℝ) : ℂ) := by push_cast; ring
@@ -407,7 +407,7 @@ theorem norm_factor_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     by_contra hne
     rcases Nat.eq_zero_or_pos g with rfl | hg
     · simp at hne
-    · haveI : Nonempty (Fin g) := ⟨⟨0, hg⟩⟩
+    · have : Nonempty (Fin g) := ⟨⟨0, hg⟩⟩
       rw [nonsing_inv_apply_not_isUnit _ hne, det_zero] at hh
       exact not_isUnit_zero hh
   generalize hh' : P⁻¹ = h at *

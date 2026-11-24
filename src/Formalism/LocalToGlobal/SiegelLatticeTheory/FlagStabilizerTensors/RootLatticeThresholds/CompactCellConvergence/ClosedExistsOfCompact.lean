@@ -96,7 +96,7 @@ theorem flagStab_closed (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (FlagStab k
   have hF : IsClosed {s : Formalism.FourierDecayAlt.B.Mat k r |
       ∀ a, s *ᵥ fvec k r z a - fvec k r z a ∈ flagSpan k r z a} := by
     simp only [Set.ofPred_forall]
-    exact isClosed_iInter fun a => (Submodule.closed_of_finiteDimensional (flagSpan k r z a)).preimage
+    exact isClosed_iInter fun a => (Submodule.isClosed_of_finiteDimensional (flagSpan k r z a)).preimage
       ((continuous_id.matrix_mulVec continuous_const).sub continuous_const)
   exact hG.inter hF
 
@@ -235,7 +235,7 @@ theorem closed_exists_of_compact {X Y Z : Type*} [TopologicalSpace X] [Topologic
     (hS : IsClosed S) : IsClosed {m : Y | ∃ y ∈ K, Φ (y, m) ∈ S} := by
   have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have hc : Continuous (fun p : K × Y => Φ ((p.1 : X), p.2)) :=
-    hΦ.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    hΦ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
   have hC : IsClosed {p : K × Y | Φ ((p.1 : X), p.2) ∈ S} := hS.preimage hc
   have himg : {m : Y | ∃ y ∈ K, Φ (y, m) ∈ S} = Prod.snd '' {p : K × Y | Φ ((p.1 : X), p.2) ∈ S} := by
     ext m; constructor

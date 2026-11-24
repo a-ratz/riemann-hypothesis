@@ -280,7 +280,7 @@ theorem residueDegree_eq_one {Z M : RatModel o Ω} {π : M.Z ⟶ Z.Z} (h : Z.IsH
     rw [← hz]
     rfl
   unfold Scheme.Hom.residueDegree
-  letI := (π.residueFieldMap (M.pt (IsLocalRing.closedPoint (CommRingCat.of Ω)))).hom.toAlgebra
+  let := (π.residueFieldMap (M.pt (IsLocalRing.closedPoint (CommRingCat.of Ω)))).hom.toAlgebra
   have hbij : Function.Bijective (algebraMap (Z.Z.residueField (π (M.pt (IsLocalRing.closedPoint (CommRingCat.of Ω)))))
       (M.Z.residueField (M.pt (IsLocalRing.closedPoint (CommRingCat.of Ω))))) :=
     ⟨RingHom.injective _, hsurj⟩
@@ -403,7 +403,7 @@ theorem exists_bundle (Z : RatModel o Ω) {m : ℕ} (t : Fin m → Ω) (ht : Z.H
       ⨆ k, nonzeroLocus (s k) = ⊤ := by
   classical
   let d : Fin m → Ω := fun i => if t i = 0 then 1 else t i
-  have hd : ∀ i, t i ≠ 0 → d i = t i := fun i hi => if_neg hi
+  have hd : ∀ i, t i ≠ 0 → d i = t i := fun i hi => ite_eq_right hi
   have hdne : ∀ i, d i ≠ 0 := by
     intro i
     by_cases h : t i = 0
@@ -926,7 +926,7 @@ theorem mul_eq_one_of_comb {K V : Type} [Field K] [AddCommGroup V] [Module K V] 
 
   simp only [map_sum, map_smul, Module.Basis.repr_self, Finsupp.coe_finsetSum, Finset.sum_apply, Finsupp.coe_smul,
   Pi.smul_apply, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at e
+  Finset.mem_univ, ite_true] at e
   rw [Matrix.mul_apply, Matrix.one_apply]
   simp only [mul_comm (g i _), ← e, eq_comm]
 
@@ -1112,7 +1112,7 @@ theorem exists_ext (K : Type) [Field K] [NumberField K] (τ : 𝓞 K →+* ℂ) 
     ∃ σ : K →+* ℂ, σ.comp (algebraMap (𝓞 K) K) = τ := by
   have hinj : Function.Injective τ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     have h : Function.Injective (τ.comp (algebraMap ℤ (𝓞 K))) := RingHom.injective_int _
     rw [RingHom.injective_iff_ker_eq_bot] at h
     exact (RingHom.comap_ker τ (algebraMap ℤ (𝓞 K))).trans h

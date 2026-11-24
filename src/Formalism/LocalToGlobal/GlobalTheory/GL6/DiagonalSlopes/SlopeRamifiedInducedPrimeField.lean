@@ -95,7 +95,7 @@ theorem induced_lattice_map_sz (B Wh : HLat K) (Ψ : ((∀ i, G i) → Wh.V) →
     (U : Submodule K B.V) (hU : U = (RamFun.ramFun K G Wh.V).map Ψ) :
     (T2.piL (T2.SzIdx G) Wh.L).map ((Ψ ∘ₗ T2.kronMap K Wh.V (T2.szVec G)).restrictScalars (𝓞 K)) =
       B.L ⊓ U.restrictScalars (𝓞 K) := by
-  haveI : FiniteDimensional K Wh.V := Module.Finite.of_basis Wh.b
+  have : FiniteDimensional K Wh.V := Module.Finite.of_basis Wh.b
   ext x
   constructor
   · rintro ⟨F, hF, rfl⟩
@@ -131,7 +131,7 @@ theorem slope_ramified_induced (B Wh : HLat K) (hB : FrameOK B) (hW : Wh.Good) (
     (withL B (B.L ⊓ U.restrictScalars (𝓞 K))).mu =
       B.mu - Real.log (((T2.szGram G).det : ℤ) : ℝ) / (Fintype.card (T2.SzIdx G) : ℝ) := by
   have := T2.nonempty_SzIdx G h2
-  haveI : Nonempty (∀ i, G i) := ⟨1⟩
+  have : Nonempty (∀ i, G i) := ⟨1⟩
   have hinj : Function.Injective (Ψ ∘ₗ T2.kronMap K Wh.V (T2.szVec G)) :=
     hΨ.comp (T2.kron_szVec_injective G)
   have e1 := T2.kron_mu B Wh hB hW hW0 (Ψ ∘ₗ T2.kronMap K Wh.V (T2.szVec G)) hinj
@@ -203,7 +203,7 @@ theorem induced_of_slice (B : HLat K) (hB : B.Good) (hB0 : B.L ≠ ⊥)
         (∀ v F F', majAt B.b B.X v (Ψ F) (Ψ F') = ∑ a, majAt Wh.b Wh.X v (F a) (F' a)) ∧
         B.L = (T2.piL (∀ i, G i) Wh.L).map (Ψ.restrictScalars (𝓞 K)) ∧
         (⨅ i, LinearMap.ker (t2sNm B ρ i)) = (RamFun.ramFun K G Wh.V).map Ψ := by
-  haveI : Module.Finite K B.V := Module.Finite.of_basis B.b
+  have : Module.Finite K B.V := Module.Finite.of_basis B.b
   have hsub : Function.Injective W.subtype := Subtype.val_injective
   obtain ⟨hX, hm, -⟩ := pull_spec1 B (Module.finBasis K W) W.subtype hB.1 hsub
   set Ψ := t2sPsi B ρ W with hΨ
@@ -276,10 +276,10 @@ theorem induced_of_slice (B : HLat K) (hB : B.Good) (hB0 : B.L ≠ ⊥)
     rw [hs]
     refine Finset.sum_congr rfl fun g _ => ?_
     rw [Finset.sum_eq_single g]
-    · rw [horth, if_pos rfl, hm]
+    · rw [horth, ite_eq_left rfl, hm]
       rfl
     · intro h _ hgh
-      rw [horth, if_neg (Ne.symm hgh)]
+      rw [horth, ite_eq_right (Ne.symm hgh)]
     · simp
   ·
     ext x
@@ -466,7 +466,7 @@ theorem embedding_mem_forms (x : ((D.fm u).lat 0).V) : (D.fm u).emb 0 x ∈ (D.f
 
 theorem t2sRv_comm (Tf : Forms0 D u) (hE : DiamondElementsExist Tf) :
     Pairwise fun v v' => ∀ x y, Commute (t2sRv (D := D) (u := u) v x) (t2sRv v' y) := by
-  haveI : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
   intro v v' hvv x y
   show t2sRv v x * t2sRv v' y = t2sRv v' y * t2sRv v x
   refine LinearMap.ext fun z => ?_
@@ -501,7 +501,7 @@ def t2sDv (v : (D.mem u).A.vT) : ((D.mem u).A.Fv v)ˣ →* Function.End ((D.mem 
 
 theorem t2sDv_comm (Tf : Forms0 D u) (hE : DiamondElementsExist Tf) :
     Pairwise fun v v' => ∀ x y, Commute (t2sDv (D := D) (u := u) v x) (t2sDv v' y) := by
-  haveI : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
   intro v v' hvv x y
   have h := diamond_ops_commute_distinct Tf hE hvv (t2xU v x) (t2xU v' y)
   have e1 : t2xDv v (t2xU v x) = t2sDv (D := D) (u := u) v x := by
@@ -577,7 +577,7 @@ theorem group_action_eq_unit_action [Fact (D.mem u).A.T.Prime] (Tf : Forms0 D u)
 
 theorem group_acts_freely_classes' (Tf : Forms0 D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) (hE : DiamondElementsExist Tf) (g : ∀ v, t2sG D u v)
     (c : (D.mem u).C.cls 0) (h : t2sAc Tf hE g c = c) : g = 1 := by
-  haveI : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
   have h1 : t2xAc Tf hE (t2sPc g) c = c := by
     rw [← group_action_eq_unit_action Tf hE g c]
     exact h
@@ -602,12 +602,12 @@ theorem restriction_rational_form (Tf : Forms0 D u) (hS : Formalism.MainNotions.
   · rw [(D.fm u).Fi_zero, mem_forms_level_zero_iff Tf hS]
     intro c
     by_cases hc : S c
-    · simp only [hc, if_true]; exact h0 c
-    · simp only [hc, if_false]; exact (levelZeroValues Tf).zero_mem
+    · simp only [hc, ite_true]; exact h0 c
+    · simp only [hc, ite_false]; exact (levelZeroValues Tf).zero_mem
   · by_cases hc : S c
-    · simp only [hc, if_true]; exact hr.2 c
+    · simp only [hc, ite_true]; exact hr.2 c
     · refine ⟨0, zero_mem _, fun z => ?_⟩
-      simp only [hc, if_false, map_zero, Pi.zero_apply]
+      simp only [hc, ite_false, map_zero, Pi.zero_apply]
 
 theorem lattice_level_zero_ne_bot (Tf : Forms0 D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) : ((D.fm u).lat 0).L ≠ ⊥ := by
   intro h0
@@ -740,7 +740,7 @@ theorem slice_map_bijective (hS : Formalism.MainNotions.product_first_zeroth_par
         have h1 := class_rep_group_elem_spec Tf hE (t2sAc Tf hE g⁻¹ c)
         rw [h, ← group_action_mul, mul_inv_cancel, map_one, t2sRep_ac] at h1
         exact hc h1.symm
-      simp only [hne, if_false, map_zero]
+      simp only [hne, ite_false, map_zero]
     refine ⟨fun g => ⟨_, hmem g⟩, ?_⟩
     apply (D.fm u).emb_inj 0
     funext c

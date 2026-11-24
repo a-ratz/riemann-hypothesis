@@ -162,7 +162,7 @@ theorem surjective_of_isometry {D D' : Datum H} (hr : D.p + D.q = D'.p + D'.q) (
 
 theorem exp_eq_zeta (n : ℕ) (m : ℤ) :
     Complex.exp (-(2 * Real.pi * Complex.I) * (m : ℂ) / n) = zeta n ^ (-m) := by
-  rw [zeta, ← Complex.exp_int_mul]
+  rw [zeta, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring

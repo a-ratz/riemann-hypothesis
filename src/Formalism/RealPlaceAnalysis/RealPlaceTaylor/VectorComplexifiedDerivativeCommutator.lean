@@ -87,9 +87,9 @@ theorem vector_right_derivative_left_invariant : RdLeftV := by
 
 theorem rdSmoothV_of (h : RdExtV) : RdSmoothV := by
   intro n ε E _ _ f X hf hX g0 hg0
-  letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) :=
+  let : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) :=
     ContinuousLinearMap.toNormedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) := ContinuousLinearMap.toNormedSpace
+  let : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) := ContinuousLinearMap.toNormedSpace
   obtain ⟨U, F, hU, hg0U, hF, hfF⟩ := hf g0 hg0
   refine ⟨U, fun x => fderiv ℝ F x (x * X), hU, hg0U, ?_,
     fun x hx hxJ => h n ε E f F U x X hU hx hxJ hF hfF hX⟩
@@ -142,9 +142,9 @@ private lemma inG_commutator' {m : ℕ} {e : Fin m → Bool} {X Y : Matrix (Fin 
 
 theorem rdBracketV_of (h : RdExtV) (_hs : RdSmoothV) : RdBracketV := by
   intro n ε E _ _ f X Y g hf hX hY hg
-  letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) :=
+  let : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) :=
     ContinuousLinearMap.toNormedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) := ContinuousLinearMap.toNormedSpace
+  let : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ →L[ℝ] E) := ContinuousLinearMap.toNormedSpace
   obtain ⟨U, F, hU, hgU, hF, hfF⟩ := hf g hg
   have hF1 : ContDiffOn ℝ ∞ (fun y => fderiv ℝ F y) U :=
     ((contDiffOn_infty_iff_fderiv_of_isOpen hU).mp hF).2

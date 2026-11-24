@@ -895,11 +895,11 @@ theorem rank_equality : HodgeTateDimensionEquality := by
         rw [Finset.sum_range, ← hg' i, Fintype.sum_sigma]
         refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun s _ => ?_
         simp only [z]
-        rw [dif_pos a.isLt]
+        rw [dite_eq_left a.isLt]
       have hz := hJ bH z ?_
       · rintro ⟨⟨a, ha⟩, s⟩
         have := congrFun (hz a (Nat.lt_succ_iff.1 ha)) s
-        simp only [z, dif_pos ha] at this
+        simp only [z, dite_eq_left ha] at this
         exact this
       intro v
       calc ∑ a ∈ Finset.range (n + 1), ∑ s, z a s * P.h M a n v ((bH a).coord s)
@@ -1114,7 +1114,7 @@ theorem GlobalTheory.SSG.chartAt_of_smooth : ∀ (O : Type) [CommRing O] (ϖ : O
   obtain ⟨r, hr, hxr⟩ : ∃ r ∈ s, x' ∈ V.toScheme.basicOpen r := by simpa using hmem
   have hW' : IsAffineOpen (V.toScheme.basicOpen r) := hW.basicOpen r
   have e' : V.toScheme.basicOpen r ≤ f ⁻¹ᵁ ⊤ := fun _ _ => trivial
-  haveI : IsLocalization.Away r Γ(V.toScheme, V.toScheme.basicOpen r) := hW.isLocalization_basicOpen r
+  have : IsLocalization.Away r Γ(V.toScheme, V.toScheme.basicOpen r) := hW.isLocalization_basicOpen r
   have hst : (f.appLE ⊤ _ e').hom.IsStandardSmooth := by
     rw [← f.appLE_map e (homOfLE (V.toScheme.basicOpen_le r)).op]
     exact hfs r hr _
@@ -1245,8 +1245,8 @@ namespace CrystallineSemistableComparison.Onto
 open Pb HT
 
 theorem etale_of_subsingleton2 {A S : Type} [CommRing A] [CommRing S] [Subsingleton S] (f : A →+* S) : f.Etale := by
-  letI := f.toAlgebra
-  haveI : IsLocalization.Away (0 : A) S := (isLocalization_iff _ _).mpr
+  let := f.toAlgebra
+  have : IsLocalization.Away (0 : A) S := (isLocalization_iff _ _).mpr
     ⟨fun _ => isUnit_of_subsingleton _, fun z => ⟨(0, 1), Subsingleton.elim _ _⟩,
       fun {x y} _ => ⟨⟨0, 1, pow_one 0⟩, by simp⟩⟩
   exact Algebra.Etale.of_isLocalizationAway (0 : A)
@@ -1294,7 +1294,7 @@ theorem appLE_congr2 {X X' : Scheme.{0}} {f g : X ⟶ X'} (hfg : f = g) (U : X'.
 
 theorem off_centre2 (B : Blow q i π D d) (A : Z.Opens) (hA : A ≤ B.U) (hAa : IsAffineOpen A) :
     IsAffineOpen (π ⁻¹ᵁ A) ∧ Function.Bijective (π.app A).hom := by
-  haveI := B.iso
+  have := B.iso
   have hh : (π ∣_ B.U) ≫ B.U.ι = (π ⁻¹ᵁ B.U).ι ≫ π := morphismRestrict_ι π B.U
   have hr : ((π ∣_ B.U) ≫ B.U.ι).opensRange = B.U := by
     rw [Scheme.Hom.opensRange_comp_of_isIso, Scheme.Opens.opensRange_ι]
@@ -1334,7 +1334,7 @@ theorem divisor_good_off_centre (B : Blow q i π D d) (V' : Y.Opens) (σ' : (V' 
     rw [e]
     exact hVU x.2)
   have hu' : IsUnit (V.topIso.hom.hom (B.f (Y.homOfLE h ≫ σ'))) := hu.map _
-  haveI : Subsingleton Γ(pullback i π, pullback.snd i π ⁻¹ᵁ V) := by rw [hbot]; infer_instance
+  have : Subsingleton Γ(pullback i π, pullback.snd i π ⁻¹ᵁ V) := by rw [hbot]; infer_instance
   refine ⟨?_, ⟨0, by rw [hbot]; exact coord_empty_open _⟩, ?_, fun a ω hω => (hu'.smul_eq_zero).mp hω⟩
   · obtain ⟨c', -⟩ := coord_res c h hV
     exact ⟨n, ⟨c'⟩⟩
@@ -1378,7 +1378,7 @@ theorem f_chart2 (B : Blow q i π D d) (α : B.ι) (k : Fin d) (V : Y.Opens) (h 
 
 theorem good_chart2 (hCL : ChartLaws) (B : Blow q i π D d) (α : B.ι) (k : Fin d) :
     DGood2 B ((B.c α).C k) (B.σ α k) := by
-  haveI := B.closed
+  have := B.closed
   refine ⟨B.σ_f α k, (B.c α).C_aff k, fun V h hV => ?_⟩
   obtain ⟨h1, h2, h3, h4⟩ := (hCL K W Z Y q i π d (B.V α) (B.c α)).2.2.2 k V h hV
   refine ⟨⟨_, h1⟩, ⟨_, h2⟩, ?_, ?_⟩
@@ -1391,8 +1391,8 @@ end
 
 theorem divisor_cover_of_chart_laws (hCL : ChartLaws) : DivCover := by
   intro K _ W Z Y q _ _ i π _ D d B
-  haveI := B.closed
-  haveI hsep : Y.IsSeparated := isSeparated_of_over_field (π ≫ q)
+  have := B.closed
+  have hsep : Y.IsSeparated := isSeparated_of_over_field (π ≫ q)
   have hpt : ∀ y : Y, ∃ (V' : Y.Opens) (σ' : (V' : Scheme.{0}) ⟶ D.Y), y ∈ V' ∧ DGood2 B V' σ' := by
     intro y
     by_cases hy : π y ∈ B.U
@@ -1409,7 +1409,7 @@ theorem divisor_cover_of_chart_laws (hCL : ChartLaws) : DivCover := by
       obtain ⟨k, hk⟩ := TopologicalSpace.Opens.mem_iSup.mp h6
       exact ⟨_, _, hk, good_chart2 hCL B α k⟩
   choose V' σ' hyV hG using hpt
-  haveI : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace (π ≫ q)
+  have : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace (π ≫ q)
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover (fun y => (V' y : Set Y)) (fun y => (V' y).2)
     (fun y _ => Set.mem_iUnion.mpr ⟨y, hyV y⟩)
   refine ⟨t.card, fun α => V' (t.equivFin.symm α), fun α => σ' (t.equivFin.symm α), fun α => (hG _).1, ?_,
@@ -1748,7 +1748,7 @@ theorem d_extZ {Q : ObjectProperty C} (hQ : Cosieve Q) {n : ℕ} (b : CH.Cn (Q.�
     ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • ((Q.ι ⋙ F).map (toLast i (liftS hQ s hs))).hom (b (face i (liftS hQ s hs)))
   refine Finset.sum_congr rfl fun i _ => ?_
   have h : Q ((face i s).obj 0) := hQ (s.map (homOfLE (Fin.zero_le _))) hs
-  have e : extZ F hQ b (face i s) = b (liftS hQ (face i s) h) := dif_pos h
+  have e : extZ F hQ b (face i s) = b (liftS hQ (face i s) h) := dite_eq_left h
   rw [e]
   rfl
 

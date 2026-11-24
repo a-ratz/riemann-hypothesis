@@ -65,25 +65,25 @@ theorem isRegularLocalRing_of_flat_of_map_comap_maximalIdeal (V : Type) [CommRin
     [IsRegularLocalRing V] (I : Type) [Fintype I] (S : Type) [CommRing S] [IsLocalRing S]
     [IsNoetherianRing S] (φ : MvPolynomial I V →+* S) (hflat : φ.Flat)
     (hmap : ((maximalIdeal S).comap φ).map φ = maximalIdeal S) : IsRegularLocalRing S := by
-  haveI : IsRegularRing V := GlobalTheory.isRegularRing_of_isRegularLocalRing V
+  have : IsRegularRing V := GlobalTheory.isRegularRing_of_isRegularLocalRing V
   set q : Ideal (MvPolynomial I V) := (maximalIdeal S).comap φ with hq
-  haveI : q.IsPrime := Ideal.comap_isPrime φ (maximalIdeal S)
+  have : q.IsPrime := Ideal.comap_isPrime φ (maximalIdeal S)
   let L := Localization.AtPrime q
-  haveI : IsRegularLocalRing L := IsRegularRing.isRegularLocalRing_localization q
+  have : IsRegularLocalRing L := IsRegularRing.isRegularLocalRing_localization q
   have hu : ∀ y : q.primeCompl, IsUnit (φ y) := by
     intro y
     by_contra h
     exact y.2 ((mem_maximalIdeal _).2 h)
   let χ : L →+* S := IsLocalization.lift (M := q.primeCompl) hu
-  letI : Algebra (MvPolynomial I V) S := φ.toAlgebra
-  letI : Algebra L S := χ.toAlgebra
-  haveI : IsScalarTower (MvPolynomial I V) L S := IsScalarTower.of_algebraMap_eq (fun a => by
+  let : Algebra (MvPolynomial I V) S := φ.toAlgebra
+  let : Algebra L S := χ.toAlgebra
+  have : IsScalarTower (MvPolynomial I V) L S := IsScalarTower.of_algebraMap_eq (fun a => by
     change φ a = χ (algebraMap _ L a)
     exact (IsLocalization.lift_eq (M := q.primeCompl) hu a).symm)
-  haveI : Module.Flat (MvPolynomial I V) S := hflat
-  haveI : IsLocalizedModule q.primeCompl (LinearMap.id : S →ₗ[MvPolynomial I V] S) :=
+  have : Module.Flat (MvPolynomial I V) S := hflat
+  have : IsLocalizedModule q.primeCompl (LinearMap.id : S →ₗ[MvPolynomial I V] S) :=
     isLocalizedModule_id q.primeCompl S L
-  haveI : Module.Flat L S :=
+  have : Module.Flat L S :=
     Module.Flat.of_isLocalizedModule L q.primeCompl (LinearMap.id : S →ₗ[MvPolynomial I V] S)
   have hm : maximalIdeal S = (maximalIdeal L).map (algebraMap L S) := by
     rw [← Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_map, ← IsScalarTower.algebraMap_eq]
@@ -97,8 +97,8 @@ theorem isRegularLocalRing_quotient_of_isComplAt :
         IsRegularLocalRing (R ⧸ 𝔭.map (ψ.comp MvPolynomial.C)) := by
   intro W _ _ _ I _ R _ _ ψ hψ hloc 𝔭 h𝔭 hreg
   obtain ⟨hnoeth, -, hflat, hmap, -⟩ := hψ
-  haveI : IsNoetherianRing R := hnoeth
-  haveI : IsRegularLocalRing (W ⧸ 𝔭) := hreg
+  have : IsNoetherianRing R := hnoeth
+  have : IsRegularLocalRing (W ⧸ 𝔭) := hreg
   rw [← Ideal.map_map]
   set J : Ideal R := (Ideal.map MvPolynomial.C 𝔭).map ψ with hJ
   have hJm : J ≤ maximalIdeal R := by
@@ -107,9 +107,9 @@ theorem isRegularLocalRing_quotient_of_isComplAt :
     rw [Ideal.mem_comap, mem_maximalIdeal, mem_nonunits_iff]
     intro hu
     exact h𝔭 (Ideal.eq_top_of_isUnit_mem _ hx (isUnit_of_map_unit _ _ hu))
-  haveI : Nontrivial (R ⧸ J) :=
+  have : Nontrivial (R ⧸ J) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal R).ne_top hJm)
-  haveI : IsLocalRing (R ⧸ J) :=
+  have : IsLocalRing (R ⧸ J) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
   let e := MvPolynomial.quotientEquivQuotientMvPolynomial (σ := I) 𝔭
   have heC : ∀ a : W, e (MvPolynomial.C (Ideal.Quotient.mk 𝔭 a)) = Ideal.Quotient.mk _ (MvPolynomial.C a) := by
@@ -165,8 +165,8 @@ namespace GlobalTheory.TChart
 set_option backward.isDefEq.respectTransparency false in
 theorem Taut.isRegularLocalRing_and_isRelParam : ∀ (g n : ℕ) (φ : InvFun ℤ), 3 ≤ n → ∀ C : Taut (zetaAway n) g n φ, IsRegularLocalRing C.R ∧ CharZero C.R ∧ Function.Injective C.b ∧ C.b.Flat ∧ IsRelParam C.b C.t ∧ IsRegularLocalRing (C.R ⧸ ((maximalIdeal C.R).comap C.b).map C.b) := by
   intro g n φ _ C
-  haveI : IsNoetherianRing C.W := C.noeth
-  haveI : IsLocalHom C.iw := C.ψ_loc
+  have : IsNoetherianRing C.W := C.noeth
+  have : IsLocalHom C.iw := C.ψ_loc
   set X := (LowChart.powA C.F C.T.r).left with hX
   set π := LowChart.toO C.F C.T.r with hπ
   set y := C.u (closedPoint C.W) with hy
@@ -190,18 +190,18 @@ theorem Taut.isRegularLocalRing_and_isRelParam : ∀ (g n : ℕ) (φ : InvFun �
     have : π y = spMap C.T.b (closedPoint C.W) := by
       rw [hy, ← C.u_base, Scheme.Hom.comp_apply]
     rw [this]; rfl
-  haveI : IsRegularLocalRing (X.presheaf.stalk y) := LowChart.isRegularLocalRing_stalk C.F y
+  have : IsRegularLocalRing (X.presheaf.stalk y) := LowChart.isRegularLocalRing_stalk C.F y
   have het := C.u_et
-  haveI hW : IsRegularLocalRing C.W := by
-    letI : Algebra (X.presheaf.stalk y) C.W := φ₀.toAlgebra
-    haveI : Module.Flat (X.presheaf.stalk y) C.W := het.1
+  have hW : IsRegularLocalRing C.W := by
+    let : Algebra (X.presheaf.stalk y) C.W := φ₀.toAlgebra
+    have : Module.Flat (X.presheaf.stalk y) C.W := het.1
     exact GlobalTheory.isRegularLocalRing_of_flat_of_map_eq_maximalIdeal _ _ (maximalIdeal _) het.2.1.symm
   obtain ⟨hRreg, hRdom⟩ := isRegularLocalRing_and_isDomain_of_isComplAt C.W (Fin C.m ⊕ Fin C.N) C.R C.ψ C.compl C.ψ_loc
   have hρspec : spMap ρ = X.fromSpecStalk y ≫ π := by
     rw [← Scheme.SpecMap_stalkMap_fromSpecStalk π (x := y), h3]
     simp only [spMap, ρ, σ, CommRingCat.ofHom_comp, Spec.map_comp, CommRingCat.ofHom_hom, Category.assoc]
   have hflatρ : ρ.Flat := by
-    haveI := GlobalTheory.SmoothStalkNormal.flat_fromSpecStalk' X y
+    have := GlobalTheory.SmoothStalkNormal.flat_fromSpecStalk' X y
     have h : Flat (spMap ρ) := by rw [hρspec]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @Flat)).1 h
   have hiwflat : C.iw.Flat :=
@@ -235,13 +235,13 @@ theorem Taut.isRegularLocalRing_and_isRelParam : ∀ (g n : ℕ) (φ : InvFun �
     Ideal.map_le_iff_le_comap.2 (IsLocalRing.maximalIdeal_comap σ).ge
   have h𝔭m : 𝔭 ≤ maximalIdeal C.W := het.2.1 ▸ Ideal.map_mono hIm
   have h𝔭ne : 𝔭 ≠ ⊤ := ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top h𝔭m
-  haveI : Nontrivial (C.W ⧸ 𝔭) := Ideal.Quotient.nontrivial_iff.2 h𝔭ne
-  haveI : IsLocalRing (C.W ⧸ 𝔭) := IsLocalRing.of_surjective' (Ideal.Quotient.mk 𝔭) Ideal.Quotient.mk_surjective
+  have : Nontrivial (C.W ⧸ 𝔭) := Ideal.Quotient.nontrivial_iff.2 h𝔭ne
+  have : IsLocalRing (C.W ⧸ 𝔭) := IsLocalRing.of_surjective' (Ideal.Quotient.mk 𝔭) Ideal.Quotient.mk_surjective
   have hreg𝔭 : IsRegularLocalRing (C.W ⧸ 𝔭) := by
     let χ : (X.presheaf.stalk y ⧸ I) →+* (C.W ⧸ 𝔭) := Ideal.quotientMap 𝔭 φ₀ Ideal.le_comap_map
     have hχflat : χ.Flat := GlobalTheory.Pat.flat_quotientMap_map φ₀ het.1 I
-    letI : Algebra (X.presheaf.stalk y ⧸ I) (C.W ⧸ 𝔭) := χ.toAlgebra
-    haveI : Module.Flat (X.presheaf.stalk y ⧸ I) (C.W ⧸ 𝔭) := hχflat
+    let : Algebra (X.presheaf.stalk y ⧸ I) (C.W ⧸ 𝔭) := χ.toAlgebra
+    have : Module.Flat (X.presheaf.stalk y ⧸ I) (C.W ⧸ 𝔭) := hχflat
     have hcomm : (Ideal.Quotient.mk 𝔭).comp φ₀ = χ.comp (Ideal.Quotient.mk I) := by
       ext a; simp [χ]
     have hmax : maximalIdeal (C.W ⧸ 𝔭) = (maximalIdeal (X.presheaf.stalk y ⧸ I)).map (algebraMap _ _) := by

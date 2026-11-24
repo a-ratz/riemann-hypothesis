@@ -106,7 +106,7 @@ theorem thetaWinP_of_K (h : JFactPK Y u u' ν C hB large₂ C1) : ThetaWinP Y u 
   have hP : 0 < localAmplitudeProduct u u' hB w := by rw [← e]; exact mul_pos hJ hK
   have e2 : thetaP u u' hB (J2of Y u u' ν (toPts w)) w = K ^ ((1 : ℝ) / (2 * Fintype.card D.what₂.Tau)) := by
     unfold thetaP
-    rw [if_pos ⟨hJ, hP⟩, ← e, mul_div_cancel_left₀ _ hJ.ne']
+    rw [ite_eq_left ⟨hJ, hP⟩, ← e, mul_div_cancel_left₀ _ hJ.ne']
   rw [e2]
   exact hW
 
@@ -173,7 +173,7 @@ private theorem hsNormSq_real_smul' {Wp Wq : Type*} [NormedAddCommGroup Wp] [Inn
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (c : ℂ) (A : Wq →L[ℂ] Wp) :
     Formalism.MainNotions.S.hsNormSq (c • A) = Complex.normSq c * Formalism.MainNotions.S.hsNormSq A := by
   unfold Formalism.MainNotions.S.hsNormSq Formalism.MainNotions.S.hsInner
-  simp only [ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right, ← Finset.mul_sum]
+  simp only [smul_apply, inner_smul_left, inner_smul_right, ← Finset.mul_sum]
   rw [← mul_assoc, Complex.mul_conj, Complex.re_ofReal_mul]
 
 theorem locNormPK_of (hU : LocUniqP u u' C hB νl) (hM : MeasP u u' C hB νl) (hK : 0 < K0 Y u u' C hB)
@@ -187,7 +187,7 @@ theorem locNormPK_of (hU : LocUniqP u u' C hB νl) (hM : MeasP u u' C hB νl) (h
     exact lt_irrefl _ hK
   have hfac : ∀ τ, Formalism.MainNotions.S.hsNormSq ((locS hB u u' τ).J (Formalism.L2.SG.Pf.JointAmplitudePoints.nu1P C u u' w τ)
       (Formalism.L2.SG.Pf.JointAmplitudePoints.gamP C u u' w τ)) = Complex.normSq (aT u u' C hB τ) *
-      Formalism.MainNotions.S.hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u (vOf X τ))
+      Formalism.MainNotions.S.hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u (vOf X τ))
         Jv (νl w (vOf X τ)) (X.Wloc u (vOf X τ)) (X.Wloc u' (vOf X τ)) ((gamW X u u' w) (vOf X τ))) := by
     intro τ
     rw [hU w hrow hrep τ]

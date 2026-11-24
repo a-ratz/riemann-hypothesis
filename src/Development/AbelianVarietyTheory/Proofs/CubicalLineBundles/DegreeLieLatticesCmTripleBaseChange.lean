@@ -613,9 +613,9 @@ theorem lieLat_eq_span (hB : Out.PolBaseChangeSt) (hξ : IsPolFibre (RingOfInteg
   obtain ⟨e, he, hx⟩ := hloc i R G.A κ ζ
     (IsLocalization.map_units R (⟨r i, Submonoid.mem_powers _⟩ : Submonoid.powers (r i))) hκ.2.1 hζ.2.1 hζκ
   choose x hx hxM using hx
-  haveI := G.isAb.comm
-  haveI := G'.isAb.comm
-  haveI := G.smoothDim
+  have := G.isAb.comm
+  have := G'.isAb.comm
+  have := G.smoothDim
   obtain ⟨e', he', hee'⟩ := exists_isLieBasis_baseChange R R' θ G.A G'.A χ hχ.2.1
     (SmoothOfRelativeDimension.smooth G.g _) _ e he
   choose x' hx' using fun k => (existsUnique_isVecOver hζ'.2.1.1 (e' k)).exists
@@ -664,7 +664,7 @@ theorem eigLat_eq_span (hB : Out.PolBaseChangeSt) (hξ : IsPolFibre (RingOfInteg
   have hs : (F.eigLat act τ : Set (Fin F.P₀.g → K)) =
       {c | c ∈ F.lieLat ∧ ∀ a, (LinearMap.toMatrix' (r a)).mulVec c = algebraMap (𝓞 K) K (τ a) • c} := by
     ext c
-    simp only [SetLike.mem_coe, Set.mem_setOf_eq, (he τ c).1, LinearMap.toMatrix'_mulVec, algebraMap_smul]
+    simp only [SetLike.mem_coe, Set.mem_ofPred_eq, (he τ c).1, LinearMap.toMatrix'_mulVec, algebraMap_smul]
   ext c'
   rw [hs, _root_.GlobalTheory.CM.eigenLattice_baseChange K K' O j F.P₀.g F.lieLat _ _ c' (_root_.GlobalTheory.CM.LieLattice.lieLat_fg_and_span_eq_top K P F).1, ← hL, (he' _ c').1]
   refine and_congr_right fun hc' => forall_congr' fun a => ?_
@@ -690,9 +690,9 @@ theorem deg_eq_of_isPolFibre (hU : ThetaUnifAV) (hL : Out.Laws) (hξ : IsPolFibr
   have hd : SmoothOfRelativeDimension F.P₀.g F'.P₀.A.hom := hg ▸ F'.P₀.smoothDim
   have fib : IsPolFibre (algebraMap (𝓞 K') K') P' (withDim F'.P₀ F.P₀.g hd) F'.φ := ⟨hg.symm.trans F'.fib.1, F'.fib.2⟩
   obtain ⟨ψ, hψ, w⟩ := PolFibre.cancel (g := j) F.fib (PolFibre.comp hξ fib)
-  haveI := F.P₀.isAb.comm
-  haveI := F'.P₀.isAb.comm
-  haveI := F.P₀.smoothDim
+  have := F.P₀.isAb.comm
+  have := F'.P₀.isAb.comm
+  have := F.P₀.smoothDim
   obtain ⟨v', basis, hv⟩ := exists_isLieBasis_baseChange K K' j F.P₀.A F'.P₀.A ψ hψ.2.1
     (SmoothOfRelativeDimension.smooth F.P₀.g _) _ F.v F.basis
   let F₂ : GenFib P' := ⟨withDim F'.P₀ F.P₀.g hd, F'.φ, fib, v', basis⟩

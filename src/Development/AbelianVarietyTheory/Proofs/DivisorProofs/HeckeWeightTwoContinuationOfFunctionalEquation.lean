@@ -173,8 +173,8 @@ theorem card_le_absNorm_of_forall_le : ∀ (F : Type) [Field F] [NumberField F] 
     ∀ s : Finset (Ideal (𝓞 F)), (∀ J ∈ s, I ≤ J) → s.card ≤ Ideal.absNorm I := by
   intro F _ _ I hI s hs
   classical
-  haveI : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  letI : Fintype (𝓞 F ⧸ I) := Fintype.ofFinite _
+  have : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  let : Fintype (𝓞 F ⧸ I) := Fintype.ofFinite _
   have hgen : ∀ J : Ideal (𝓞 F), ∃ a : 𝓞 F, I ≤ J → I ⊔ Ideal.span {a} = J := by
     intro J
     by_cases h : I ≤ J
@@ -447,9 +447,9 @@ theorem summable_exp_neg_abs {ε : ℝ} (hε : 0 < ε) : Summable fun n : ℤ =>
     summable_geometric_of_lt_one (Real.exp_pos _).le (Real.exp_lt_one_iff.mpr (by linarith))
   apply Summable.of_nat_of_neg
   · refine hg.congr fun n => ?_
-    rw [← Real.exp_nat_mul]; push_cast; rw [abs_of_nonneg (by positivity)]; ring_nf
+    rw [← Real.exp_natCast_mul]; push_cast; rw [abs_of_nonneg (by positivity)]; ring_nf
   · refine hg.congr fun n => ?_
-    rw [← Real.exp_nat_mul]; push_cast; rw [abs_neg, abs_of_nonneg (by positivity)]; ring_nf
+    rw [← Real.exp_natCast_mul]; push_cast; rw [abs_neg, abs_of_nonneg (by positivity)]; ring_nf
 
 end GlobalTheory.LatExpSum
 
@@ -700,13 +700,13 @@ lemma lipschitzOneVariableKernel_two_eq_indicator {y : ℝ} (hy : 0 < y) :
   have him : ((y : ℂ) * I).im = y := by simp
   simp only [GlobalTheory.LipschitzTR.phi1, Set.indicator, Set.mem_Ioi, him, sign_pos hy, SignType.coe_one, one_mul]
   by_cases ht : 0 < t
-  · rw [if_pos ht, if_pos ht, abs_of_pos ht]
+  · rw [ite_eq_left ht, ite_eq_left ht, abs_of_pos ht]
     push_cast
     congr 2
     ring_nf
     rw [I_sq]
     ring
-  · rw [if_neg ht, if_neg ht]
+  · rw [ite_eq_right ht, ite_eq_right ht]
 
 lemma norm_inv_ofReal_add_mul_I_sq (x y : ℝ) : ‖((x : ℂ) + (y : ℂ) * I)⁻¹ ^ 2‖ = (x ^ 2 + y ^ 2)⁻¹ := by
   rw [norm_pow, norm_inv, inv_pow, Complex.sq_norm, Complex.normSq_apply]
@@ -773,12 +773,12 @@ theorem hTrans_sigma_zero_eq : ∀ (ν y : ℝ), 0 < y → GlobalTheory.HeckeTwo
   have him : ((y : ℂ) * I).im = y := by simp
   rw [him, sign_pos hy, SignType.coe_one, one_mul]
   by_cases hν : 0 < ν
-  · rw [if_pos hν, if_pos hν, abs_of_pos hν]
+  · rw [ite_eq_left hν, ite_eq_left hν, abs_of_pos hν]
     push_cast
     ring_nf
     rw [I_sq]
     ring_nf
-  · rw [if_neg hν, if_neg hν, mul_zero]
+  · rw [ite_eq_right hν, ite_eq_right hν, mul_zero]
 
 end GlobalTheory.HeckeTwo
 end -- clump:auto
@@ -862,7 +862,7 @@ theorem summable_qClass_two [IsTotallyReal F] (𝔞 𝔟 : Frac F) (z : Emb F �
   have hnrm : 0 < nrm 𝔞 := lt_of_le_of_ne (by unfold nrm; exact_mod_cast FractionalIdeal.absNorm_nonneg _)
     (GlobalTheory.HeckeTwoExp.nrm_ne_zero 𝔞).symm
   set N : FractionalIdeal (𝓞 F)⁰ F := (𝔞 : FractionalIdeal (𝓞 F)⁰ F) * (𝔟 : FractionalIdeal (𝓞 F)⁰ F) with hN
-  haveI : DiscreteTopology (latOf N) := discrete_latOf F N
+  have : DiscreteTopology (latOf N) := discrete_latOf F N
   set n : ℕ := Module.finrank ℤ (latOf N) + 1 with hn
   have hL : Summable fun v : latOf N => ‖v‖⁻¹ ^ n := ZLattice.summable_norm_pow_inv (latOf N) n (Nat.lt_succ_self _)
   set f : ℕ := Fintype.card (Emb F) with hf
@@ -1014,16 +1014,16 @@ theorem hTrans_zero (ν y : ℝ) (hy : y ≠ 0) :
     rw [← e, _root_.GlobalTheory.HeckeTwo.hTrans_sigma_zero_eq _ _ (neg_pos.2 h)]
     by_cases hν : 0 < -ν
     · have h2 : 0 < ν * y := by nlinarith
-      rw [if_pos hν, if_pos h2, abs_of_neg (by linarith : ν < 0),
+      rw [ite_eq_left hν, ite_eq_left h2, abs_of_neg (by linarith : ν < 0),
         show -(2 * Real.pi * -ν * -y) = -(2 * Real.pi * (ν * y)) by ring]
     · have h2 : ¬ 0 < ν * y := by nlinarith
-      rw [if_neg hν, if_neg h2]
+      rw [ite_eq_right hν, ite_eq_right h2]
   · rw [_root_.GlobalTheory.HeckeTwo.hTrans_sigma_zero_eq _ _ h]
     by_cases hν : 0 < ν
     · have h2 : 0 < ν * y := mul_pos hν h
-      rw [if_pos hν, if_pos h2, abs_of_pos hν, show 2 * Real.pi * ν * y = 2 * Real.pi * (ν * y) by ring]
+      rw [ite_eq_left hν, ite_eq_left h2, abs_of_pos hν, show 2 * Real.pi * ν * y = 2 * Real.pi * (ν * y) by ring]
     · have h2 : ¬ 0 < ν * y := by nlinarith
-      rw [if_neg hν, if_neg h2]
+      rw [ite_eq_right hν, ite_eq_right h2]
 
 theorem fTerm_zero [IsTotallyReal F] {z : Emb F → ℂ} (hz : z ∈ upperHalf F) {b ν : F} (hb : b ≠ 0) (hν : ν ≠ 0) :
     fTerm 0 z b ν = if ∀ τ : Emb F, 0 < τ (ν * b) then
@@ -1035,7 +1035,7 @@ theorem fTerm_zero [IsTotallyReal F] {z : Emb F → ℂ} (hz : z ∈ upperHalf F
   split_ifs with hc
   · have hc' : ∀ τ : Emb F, 0 < τ ν * (τ b * (z τ).im) := fun τ => by
       have := hc τ; rw [map_mul] at this; rw [← mul_assoc]; exact mul_pos this (hz τ)
-    rw [Finset.prod_congr rfl fun τ _ => by rw [if_pos (hc' τ)]]
+    rw [Finset.prod_congr rfl fun τ _ => by rw [ite_eq_left (hc' τ)]]
     rw [abs_norm_eq_prod, qPow, Finset.mul_sum, Complex.exp_sum]
     rw [show ((-4 * (Real.pi : ℂ) ^ 2) ^ Fintype.card (Emb F) * ∏ τ : Emb F, ((|τ ν| : ℝ) : ℂ)) *
         ∏ x : Emb F, Complex.exp (2 * (Real.pi : ℂ) * I * ((x (ν * b) : ℂ) * z x)) =
@@ -1053,7 +1053,7 @@ theorem fTerm_zero [IsTotallyReal F] {z : Emb F → ℂ} (hz : z ∈ upperHalf F
     obtain ⟨τ, hτ⟩ := hc
     have : ¬ 0 < τ ν * (τ b * (z τ).im) := by
       rw [map_mul] at hτ; rw [← mul_assoc]; exact not_lt.2 (mul_nonpos_of_nonpos_of_nonneg hτ (hz τ).le)
-    exact Finset.prod_eq_zero (Finset.mem_univ τ) (by rw [if_neg this, mul_zero])
+    exact Finset.prod_eq_zero (Finset.mem_univ τ) (by rw [ite_eq_right this, mul_zero])
 
 theorem bOne_zero_expansion [IsTotallyReal F] (𝔞 𝔟 : Frac F) (z : Emb F → ℂ) (hz : z ∈ upperHalf F) :
     Summable (qClass 𝔞 𝔟 2 z) ∧
@@ -1213,7 +1213,7 @@ theorem wirt_mono (c : ℂ → ℂ) (a : ℂ → Φ → ℂ) (σ : ℂ) {z : Φ 
   have e1 : ∀ x, ((if x = τ₀ then (1:ℂ) else 0).im) = 0 := fun x => by split_ifs <;> simp
   have e2 : ∀ x, ((if x = τ₀ then I else 0).im) = if x = τ₀ then 1 else 0 := fun x => by split_ifs <;> simp
   simp only [e1, e2, ofReal_zero, mul_zero, Finset.sum_const_zero, zero_add, apply_ite (fun r : ℝ => (r : ℂ)), ofReal_one, ofReal_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have he : ∑ x, (a σ x - if x = τ₀ then 1 else 0) * ((Real.log (z x).im : ℝ) : ℂ) =
       ∑ x, a σ x * ((Real.log (z x).im : ℝ) : ℂ) - ((Real.log (z τ₀).im : ℝ) : ℂ) := by
     simp [sub_mul, Finset.sum_sub_distrib, ite_mul]
@@ -1368,7 +1368,7 @@ theorem _root_.GlobalTheory.HeckeTwo.bZero_isGood (F : Type) [Field F] [NumberFi
         have := congrArg Complex.re h
         simp at this
         linarith
-      simp only [halfPlane, Set.mem_setOf_eq] at hσ
+      simp only [halfPlane, Set.mem_ofPred_eq] at hσ
       linarith
     have h1 : DifferentiableAt ℂ (fun σ : ℂ => ((nrm 𝔟 : ℝ) : ℂ) ^ (-1 - 2 * σ)) σ :=
       DifferentiableAt.const_cpow ((differentiableAt_const _).sub (differentiableAt_id.const_mul _)) (Or.inr hσ')
@@ -1602,7 +1602,7 @@ theorem wirtWord_const_fun {Φ : Type} [Fintype Φ] (ws : List (Φ × Bool)) (d 
   | nil => rfl
   | cons w ws ih =>
     rw [GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.wirtWord_cons, ih]
-    simp only [reduceCtorEq, if_false]
+    simp only [reduceCtorEq, ite_false]
     exact wirt_const_fun w.1 w.2 _
 
 theorem isGood_const (F : Type) [Field F] [NumberField F] (a : ℂ → ℂ)
@@ -1804,7 +1804,7 @@ theorem zeta_simple_pole : ∀ (F : Type) [Field F] [NumberField F] [NumberField
       rw [hHh z hz1] at hz0
       have : Z z = 0 := (mul_eq_zero.mp hz0).resolve_left (pow_ne_zero _ hne)
       simp [g, this]
-    · obtain ⟨n, G, hGa, hG1, hev⟩ := hHa.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hz
+    · obtain ⟨n, G, hGa, hG1, hev⟩ := hHa.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hz
       rcases le_or_gt f (n + 1) with hfn | hfn
       · obtain ⟨m, hm⟩ := Nat.exists_eq_add_of_le hfn
         refine ⟨(1 - 1 : ℂ) ^ m * G 1, ?_⟩

@@ -440,7 +440,7 @@ theorem entries_zero_or_d {d l : ℕ} (hd : 0 < d) (σ : IrrRep (GL (Fin d) k)) 
     rcases lt_or_gt_of_ne hj with hlt | hlt
     · exact ⟨_, _, e1.symm ▸ e0.symm ▸ hlt⟩
     · exact ⟨_, _, e0.symm ▸ e1.symm ▸ hlt⟩
-  haveI := hcu.2 l (fun j => b.1 i j) (f i) hne
+  have := hcu.2 l (fun j => b.1 i j) (f i) hne
   have hirr : (piTensor fun j => (s i j).ρ).IsIrreducible :=
     GlobalTheory.ProdFiniteLength.piTensor_isIrreducible_of_schur _ (fun j => (s i j).irr)
       fun j φ hφ => GlobalTheory.CompanionTheory.SocleFrob.exists_eq_smul_id _ (s i j).smooth (s i j).irr φ hφ

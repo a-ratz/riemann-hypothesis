@@ -96,7 +96,7 @@ theorem continuous_conjUJHom {n : ℕ} (ε : Fin n → Bool) : Continuous (conjU
     show Continuous fun M : Matrix (Fin n) (Fin n) ℂ => M.map (starRingEnd ℂ)
     exact Continuous.matrix_map continuous_id Complex.continuous_conj
   have hu := Continuous.units_map _ hc
-  exact Continuous.subtype_mk (hu.comp continuous_subtype_val) _
+  exact Continuous.subtype_mk (hu.comp continuous_subtypeVal) _
 
 noncomputable def conjUJ {n : ℕ} (ε : Fin n → Bool) : Formalism.REAL.UJ ε ≃ₜ* Formalism.REAL.UJ ε where
   toFun := conjUJHom ε

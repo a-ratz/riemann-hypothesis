@@ -343,7 +343,7 @@ open PI.SqPair.LocCartanPairW
 
 theorem inert_isLocalRing {R : Type} [CommRing R] [StarRing R] {R₀ : Subring R} {ϖ : R}
     (hI : Inert R₀ ϖ) : IsLocalRing R := by
-  haveI := hI.dom
+  have := hI.dom
   have key : ∀ x : R, ¬ IsUnit x → ϖ ∣ x := by
     intro x hx
     by_cases h0 : x = 0
@@ -1274,8 +1274,8 @@ theorem pair_dichotomy : Dichotomy := by
         push_cast
         ring
     have hdom : IsDomain R := by
-      haveI : Nontrivial R := nontrivial_of_ne _ _ hne
-      haveI : NoZeroDivisors R := by
+      have : Nontrivial R := nontrivial_of_ne _ _ hne
+      have : NoZeroDivisors R := by
         refine ⟨fun {x y} hxy => ?_⟩
         by_contra hc
         push_neg at hc
@@ -1600,7 +1600,7 @@ end Lin
 
 theorem step_of (h5 : Select) (h8 : Plane) (h6 : Split) : Step := by
   intro R _ _ R₀ _ ϖ hin κ _ _ A A' h k hP hnb
-  haveI := hin.dom
+  have := hin.dom
   obtain ⟨a, x, y, ha0, hak, hxy, ⟨c, hc⟩, ⟨v, hv⟩, ⟨w, hw⟩⟩ := h5 R R₀ ϖ hin (Fin 2 ⊕ κ) A A' h k hP hnb
   have hA : Aᴴ = A := hP.1.1
   have hsϖ : star ϖ = ϖ := (hin.fix ϖ).1 hin.pi_mem

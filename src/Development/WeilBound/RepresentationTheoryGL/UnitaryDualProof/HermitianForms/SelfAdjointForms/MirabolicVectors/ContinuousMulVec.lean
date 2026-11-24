@@ -73,10 +73,10 @@ theorem relIndex_mul_measure_of_isCompact {G : Type*} [AddCommGroup G] [Topologi
     [μ.IsAddLeftInvariant] {H L : AddSubgroup G} (hL : IsCompact (L : Set G))
     (hH : IsOpen (H : Set G)) (hHL : H ≤ L) :
     (H.relIndex L : ℝ≥0∞) * μ H = μ L := by
-  haveI : CompactSpace L := isCompact_iff_compactSpace.mp hL
-  have ho : IsOpen ((H.addSubgroupOf L : AddSubgroup L) : Set L) := hH.preimage continuous_subtype_val
-  haveI : Finite (L ⧸ H.addSubgroupOf L) := AddSubgroup.quotient_finite_of_isOpen _ ho
-  haveI : (H.addSubgroupOf L).FiniteIndex := AddSubgroup.finiteIndex_of_finite_quotient
+  have : CompactSpace L := isCompact_iff_compactSpace.mp hL
+  have ho : IsOpen ((H.addSubgroupOf L : AddSubgroup L) : Set L) := hH.preimage continuous_subtypeVal
+  have : Finite (L ⧸ H.addSubgroupOf L) := AddSubgroup.quotient_finite_of_isOpen _ ho
+  have : (H.addSubgroupOf L).FiniteIndex := AddSubgroup.finiteIndex_of_finite_quotient
   exact GlobalTheory.BaseModule.addRelIndex_mul_measure H L hHL hH.measurableSet μ
 
 theorem relIndex_eq_distribHaarChar_det_mul (k : Type) [Field k] [ValuativeRel k]
@@ -87,8 +87,8 @@ theorem relIndex_eq_distribHaarChar_det_mul (k : Type) [Field k] [ValuativeRel k
     ((A₀.relIndex A : ℕ) : ℝ) = (distribHaarChar k (Matrix.GeneralLinearGroup.det g) : ℝ) *
       ((A₀.relIndex (A.comap (Matrix.mulVecLin (g : Matrix (Fin n) (Fin n) k)).toAddMonoidHom) : ℕ) : ℝ) := by
   borelize k
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   set B := A.comap (Matrix.mulVecLin (g : Matrix (Fin n) (Fin n) k)).toAddMonoidHom with hB
   let μ : Measure (Fin n → k) := Measure.pi fun _ : Fin n => (Measure.addHaar : Measure k)
   have hBset : (B : Set (Fin n → k)) = (fun x => (g⁻¹).val *ᵥ x) '' (A : Set (Fin n → k)) := by
@@ -109,7 +109,7 @@ theorem relIndex_eq_distribHaarChar_det_mul (k : Type) [Field k] [ValuativeRel k
     have h := GlobalTheory.WeilM.smul_map_mulVec_pi (Measure.addHaar : Measure k) g.val
       (Matrix.GeneralLinearGroup.det g) rfl
     have h2 := congrArg (fun m : Measure (Fin n → k) => m (A : Set (Fin n → k))) h
-    simp only [Measure.smul_apply, smul_eq_mul, Measure.map_apply hm hAm] at h2
+    simp only [smul_apply, smul_eq_mul, Measure.map_apply hm hAm] at h2
     exact h2.symm
   have i1 := relIndex_mul_measure_of_isCompact μ hA hA₀ h₀
   have i2 := relIndex_mul_measure_of_isCompact μ hBc hA₀ h₁

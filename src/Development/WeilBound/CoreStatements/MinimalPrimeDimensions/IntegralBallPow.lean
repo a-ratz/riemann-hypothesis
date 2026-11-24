@@ -152,7 +152,7 @@ theorem cHess_two_mul {D : ℕ} {ψ : (Fin D → ℂ) → ℝ} {v : V D} (hψ : 
   have hb' (i : Fin D) : L (Complex.I • bas D i) = Complex.I • Pi.single i 1 := by
     rw [hL, WithLp.ofLp_smul, ← hL, hb]
   rw [cHess, Matrix.of_apply, wd, h5.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.flip_apply, Complex.ofRealCLM_apply, hb, hb', smul_eq_mul, Matrix.smul_apply, cxHessian]
   push_cast
   linear_combination (-(((fderiv ℝ (fderiv ℝ ψ) v.ofLp) (Complex.I • Pi.single j 1)

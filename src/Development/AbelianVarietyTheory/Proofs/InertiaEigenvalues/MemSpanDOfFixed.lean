@@ -130,10 +130,10 @@ private theorem mem_spanD_of_fixed {K K' : FinExt l} (h : K.1 ≤ K'.1)
     (ρ : Representation LL ↥(GK K) V) (x : V ⊗[ℚ_[l]] P.R.BdR)
     (hxH : x ∈ DdR (P.PD K') (ρ.comp (Subgroup.inclusion (GK_le h)))) :
     x ∈ spanD P K ρ := by
-  haveI : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
-  haveI : Finite (GQ l ⧸ GK K') :=
+  have : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
+  have : Finite (GQ l ⧸ GK K') :=
     Subgroup.quotient_finite_of_isOpen _ (IntermediateField.fixingSubgroup_isOpen K'.1)
-  haveI : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   refine JumpDescent.descent (Ω := Om l) ((GK K').subgroupOf (GK K))
     (fun g => (actVdR (P.PD K) ρ g).toAddMonoidHom) ?_ ?_
     (fun c => (mulR ℚ_[l] P.R.BdR LL V (algebraMap (Om l) P.R.BdR c)).toAddMonoidHom) ?_ ?_ ?_

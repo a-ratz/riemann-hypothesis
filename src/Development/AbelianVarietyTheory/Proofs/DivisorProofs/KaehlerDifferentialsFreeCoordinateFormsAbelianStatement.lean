@@ -225,7 +225,7 @@ theorem locally_standardSmooth_sec (A : Over (Sp ℂ)) (g : ℕ) (h : SmoothOfRe
 theorem kaehler_sec_finite_projective_rank : ∀ (A : Over (Sp ℂ)) (g : ℕ), SmoothOfRelativeDimension g A.hom → ∀ U : A.left.affineOpens, Module.Finite (Sec (str A) U.1) Ω[Sec (str A) U.1⁄ℂ] ∧ Module.Projective (Sec (str A) U.1) Ω[Sec (str A) U.1⁄ℂ] ∧ ∀ p : PrimeSpectrum (Sec (str A) U.1), Module.rankAtStalk Ω[Sec (str A) U.1⁄ℂ] p = g := by
   intro A g h U
   have hl := locally_standardSmooth_sec A g h U
-  haveI := GlobalTheory.AugCot.smooth_of_locally hl
+  have := GlobalTheory.AugCot.smooth_of_locally hl
   exact ⟨inferInstance, inferInstance, GlobalTheory.AugCot.rankAtStalk_kaehler_of_locally hl⟩
 
 end GlobalTheory.CechPer
@@ -270,8 +270,8 @@ theorem main : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u :
   obtain ⟨r, hrle, hrmem⟩ := hU.exists_basicOpen_le (V := O ⊓ U) ⟨_, hmem⟩ hmem.2
   have hDO : A.left.basicOpen r ≤ O := hrle.trans inf_le_left
   have hDU : A.left.basicOpen r ≤ U := A.left.basicOpen_le r
-  letI := (A.left.presheaf.map (homOfLE hDU).op).hom.toAlgebra
-  haveI := hU.isLocalization_basicOpen r
+  let := (A.left.presheaf.map (homOfLE hDU).op).hom.toAlgebra
+  have := hU.isLocalization_basicOpen r
   obtain ⟨n, b, hb⟩ := IsLocalization.Away.surj r (resG A.left hDO f)
   let P : Set (Fin g → ℂ) := {y | ⊤ ≤ (u.ex y).left ⁻¹ᵁ A.left.basicOpen r}
   have hP : IsOpen P := (u.hol _ 0).1
@@ -303,7 +303,7 @@ theorem main : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u :
   have hRw : fderiv ℂ R z w = 0 := hw r
   have hBw : fderiv ℂ B z w = 0 := hw b
   have hRz : R z ≠ 0 := (GlobalTheory.top_le_preimage_basicOpen_iff _ U r).1 hzP
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, hRw, hBw, smul_zero, smul_eq_mul,
+  simp only [add_apply, smul_apply, hRw, hBw, smul_zero, smul_eq_mul,
     mul_zero, zero_add] at e
   exact (mul_eq_zero.1 e).resolve_left (pow_ne_zero _ hRz)
 
@@ -479,10 +479,10 @@ theorem kaehler_frame : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.l
       obtain ⟨y, rfl⟩ := hx
       rw [hD, Derivation.liftKaehlerDifferential_comp_D]
       exact (hval a y z hz).symm.trans (hev' _)
-    | zero => simp only [map_zero, ContinuousLinearMap.zero_apply]
-    | add x y _ _ hx hy => simp only [map_add (f := _), ContinuousLinearMap.add_apply, hx, hy]
+    | zero => simp only [map_zero, zero_apply]
+    | add x y _ _ hx hy => simp only [map_add (f := _), add_apply, hx, hy]
     | smul r x _ hx =>
-      rw [hsm', ContinuousLinearMap.smul_apply, hx, map_smul, smul_eq_mul, smul_eq_mul, map_mul, hev' r]
+      rw [hsm', smul_apply, hx, map_smul, smul_eq_mul, smul_eq_mul, map_mul, hev' r]
 
 end GlobalTheory.CechPer
 end -- clump:auto

@@ -110,7 +110,7 @@ theorem card_le_ringKrullDim (W : Ideal (MRing ι)) [W.IsPrime] (hWh : IsMultiHo
   have hQp : ∀ S, (Q S).IsPrime := fun S => Ideal.comap_isPrime _ _
   have hstep : ∀ S k, k ∉ S → Q S < Q (insert k S) := by
     intro S k hk
-    refine SetLike.lt_iff_le_and_exists.mpr ⟨fun g hg => ?_, X ⟨k, j k⟩, ?_, ?_⟩
+    refine IsConcreteLE.lt_iff_le_and_exists.mpr ⟨fun g hg => ?_, X ⟨k, j k⟩, ?_, ?_⟩
     · have h1 := Ideal.mem_comap.mp (le_comap_killBlocks (insert k S) hWh (Ideal.mem_comap.mp hg))
       rw [← AlgHom.comp_apply, killBlocks_comp (Finset.subset_insert k S)] at h1
       exact Ideal.mem_comap.mpr h1
@@ -118,7 +118,7 @@ theorem card_le_ringKrullDim (W : Ideal (MRing ι)) [W.IsPrime] (hWh : IsMultiHo
       simp [killBlocks]
     · intro h
       rw [Ideal.mem_comap] at h
-      simp only [killBlocks, aeval_X, if_neg hk] at h
+      simp only [killBlocks, aeval_X, ite_eq_right hk] at h
       exact hj k h
   have chain : ∀ S : Finset K, (S.card : WithBot ℕ∞) + ringKrullDim (MRing ι ⧸ Q S) ≤
       ringKrullDim (MRing ι ⧸ Q ∅) := by

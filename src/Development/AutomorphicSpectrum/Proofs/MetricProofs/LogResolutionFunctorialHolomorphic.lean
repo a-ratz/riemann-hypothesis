@@ -152,7 +152,7 @@ theorem exists_analytic_retraction {D : ℕ} {E : Type*} [NormedAddCommGroup E] 
   refine ⟨hcd.localInverse hd hn ∘ L, ?_, ?_⟩
   · have h1 := (hcd.to_localInverse hd hn).analyticAt
     exact AnalyticAt.comp (g := hcd.localInverse hd hn) (f := L) h1 (L.analyticAt _)
-  · exact (hcd.hasStrictFDerivAt' hd hn).eventually_left_inverse
+  · exact (hcd.hasStrictFDerivAt hd hn).eventually_left_inverse
 
 end Analysis
 

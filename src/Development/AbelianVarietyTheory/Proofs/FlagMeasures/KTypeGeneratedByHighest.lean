@@ -99,7 +99,7 @@ theorem eigen (U : ℝ → H →L[ℂ] H) (h0 : ∀ v, U 0 v = v)
   have heq : (fun s => U s v) = g := by
     apply ODE_solution_unique_univ (v := fun _ x => L x) (s := fun _ => Set.univ) (K := ‖L‖₊)
       (t₀ := 0)
-    · intro _; exact L.lipschitz.lipschitzOnWith
+    · intro _; exact L.lipschitzWith.lipschitzOnWith
     · intro t; exact ⟨by simpa [hL] using hder t, trivial⟩
     · intro t; exact ⟨by simpa [hL] using hg t, trivial⟩
     · simp [g, h0]
@@ -108,7 +108,7 @@ theorem eigen (U : ℝ → H →L[ℂ] H) (h0 : ∀ v, U 0 v = v)
 
 theorem deriv_mem (S : Submodule ℂ H) [FiniteDimensional ℂ S] (f : ℝ → H) (hf : ∀ t, f t ∈ S) (w : H)
     (hd : HasDerivAt f w 0) : w ∈ S := by
-  have hc : IsClosed (S : Set H) := S.closed_of_finiteDimensional
+  have hc : IsClosed (S : Set H) := S.isClosed_of_finiteDimensional
   rw [hasDerivAt_iff_tendsto_slope] at hd
   refine hc.mem_of_tendsto hd (Filter.Eventually.of_forall fun t => ?_)
   rw [slope_def_module]
@@ -119,7 +119,7 @@ private theorem mem_of_hasDerivAt_linear_of_invariant {E : Type*} [NormedAddComm
     (s : Set E) (hTs : ∀ x ∈ T, x ∈ s) (K : NNReal) (hK : LipschitzOnWith K L s)
     (f : ℝ → E) (hfs : ∀ t, f t ∈ s) (hf : ∀ t, HasDerivAt f (L (f t)) t) (h0 : f 0 ∈ T)
     (t : ℝ) : f t ∈ T := by
-  haveI : CompleteSpace T := FiniteDimensional.complete ℂ T
+  have : CompleteSpace T := FiniteDimensional.completeSpace ℂ T
   let B : T →L[ℂ] T := LinearMap.toContinuousLinearMap (L.restrict hLT)
   have hB : ∀ y : T, ((B y : T) : E) = L y := fun y => rfl
   let x0 : T := ⟨f 0, h0⟩
@@ -136,7 +136,7 @@ private theorem mem_of_hasDerivAt_linear_of_invariant {E : Type*} [NormedAddComm
         (((B * NormedSpace.exp ((t : ℂ) • B)) x0 : T) : E) t := by
       convert h2 using 1 <;> first | rfl | simp
     have h4 : L (g t) = (((B * NormedSpace.exp ((t : ℂ) • B)) x0 : T) : E) := by
-      rw [ContinuousLinearMap.mul_apply, hB]
+      rw [mul_apply_eq_comp, hB]
     rw [h4]
     exact h3
   have heq : f = g := by
@@ -229,7 +229,7 @@ theorem inK_single {a b : Fin n} (hab : ε a = ε b) (c : ℂ) :
     simp only [e1, e2]
     split_ifs <;> simp [star_sub]
   · simp only [Matrix.sub_apply, Matrix.single_apply]
-    rw [if_neg, if_neg, sub_zero]
+    rw [ite_eq_right, ite_eq_right, sub_zero]
     · rintro ⟨rfl, rfl⟩; simp_all
     · rintro ⟨rfl, rfl⟩; simp_all
 
@@ -505,10 +505,10 @@ theorem kStableOn_map (hσ : IsURepOn (UJset ε) σ)
   intro g hg w hw
   obtain ⟨Y, hY, hexp, -⟩ := Formalism.REAL.compact_exists_log_bounded ε g hg
   obtain ⟨u, hu, rfl⟩ := hw
-  haveI hS' : FiniteDimensional ℂ (S.comap Vs.subtype) :=
+  have hS' : FiniteDimensional ℂ (S.comap Vs.subtype) :=
     (Submodule.comapSubtypeEquivOfLe hle).symm.finiteDimensional
   have hTle : T ≤ S.comap Vs.subtype := fun x hx => hTS ⟨x, hx, rfl⟩
-  haveI : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTle
+  have : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTle
   let L : Module.End ℂ Vs := ∑ i, ∑ j, Y i j • E i j
   have hL : ∀ x, L x = ∑ i, ∑ j, Y i j • E i j x := by
     intro x; simp [L]
@@ -527,7 +527,7 @@ theorem kStableOn_map (hσ : IsURepOn (UJset ε) σ)
     intro x hx y hy
     have hC : L x - L y = C (⟨x, hx⟩ - ⟨y, hy⟩) := by
       rw [map_sub]; rfl
-    rw [dist_eq_norm, dist_eq_norm, hC, coe_nnnorm]
+    rw [dist_eq_norm, dist_eq_norm, hC, coe_nnNorm]
     refine (C.le_opNorm _).trans (le_of_eq ?_)
     rfl
   have hmemS : ∀ t : ℝ, σ (NormedSpace.exp ((t : ℂ) • Y)) (u : H) ∈ S :=
@@ -554,7 +554,7 @@ theorem kType_generated_by_highest : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Ty
   intro n ε H _ _ _ σ Vs E hσ hc Λ S hS hle
   obtain ⟨_, hgl, _, hE, _⟩ := hc
   obtain ⟨hfin, hKS, hirr, ⟨v, hvS, hv0, hvw⟩, hdom⟩ := hS
-  haveI := hfin
+  have := hfin
   let u : Vs := ⟨v, hle hvS⟩
   have hwt : IsWeight E Λ u := isWeight_of_isWtOn hE Λ u hvw
   have hS' : KStable ε E (S.comap Vs.subtype) := kStable_comap hE S hKS
@@ -577,7 +577,7 @@ theorem kType_generated_by_highest : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Ty
     simp only [Formalism.REAL.kSpan, Submodule.mem_sInf]
     intro T hT
     exact hT.1
-  haveI : FiniteDimensional ℂ (S.comap Vs.subtype) :=
+  have : FiniteDimensional ℂ (S.comap Vs.subtype) :=
     (Submodule.comapSubtypeEquivOfLe hle).symm.finiteDimensional
   have hfinK : FiniteDimensional ℂ (kSpan ε E u) := Submodule.finiteDimensional_of_le hKle
   have hmapS : (kSpan ε E u).map Vs.subtype ≤ S := Submodule.map_le_iff_le_comap.2 hKle

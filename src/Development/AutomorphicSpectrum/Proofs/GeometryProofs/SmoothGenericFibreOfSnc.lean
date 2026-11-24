@@ -92,7 +92,7 @@ theorem exists_mul_pow_mem (T : Set Ω) {f : Ω} (hf0 : f ≠ 0) {x : Ω}
 theorem isLocalization_away (A S : Subalgebra ℚ Ω) (hle : A ≤ S) (f : A) (hf0 : (f : Ω) ≠ 0)
     (hinv : (f : Ω)⁻¹ ∈ S) (hs : ∀ x ∈ S, ∃ n : ℕ, x * (f : Ω) ^ n ∈ A) :
     @IsLocalization.Away A _ f S _ (Subalgebra.inclusion hle).toRingHom.toAlgebra := by
-  letI := (Subalgebra.inclusion hle).toRingHom.toAlgebra
+  let := (Subalgebra.inclusion hle).toRingHom.toAlgebra
   have hmap : ∀ a : A, ((algebraMap A S a : S) : Ω) = a := fun a => rfl
   have hunit : IsUnit (algebraMap A S f) := by
     refine IsUnit.of_mul_eq_one (⟨(f : Ω)⁻¹, hinv⟩ : S) ?_
@@ -133,7 +133,7 @@ theorem smooth_of_cover (A : Subalgebra ℚ Ω) {m : ℕ} (f a : Fin m → Ω) (
     RingHom.Smooth.respectsIso _ s hspan ?_
   rintro ⟨x, hx0, l, hl⟩
   have hx0' : f l ≠ 0 := hl ▸ hx0
-  letI alg := (Subalgebra.inclusion (hle l)).toRingHom.toAlgebra
+  let alg := (Subalgebra.inclusion (hle l)).toRingHom.toAlgebra
   have hloc : IsLocalization.Away x (S l) :=
     isLocalization_away A (S l) (hle l) x hx0 (hl ▸ hinv l hx0') (hl ▸ hs l hx0')
   refine ⟨S l, inferInstance, alg, hloc, ?_⟩

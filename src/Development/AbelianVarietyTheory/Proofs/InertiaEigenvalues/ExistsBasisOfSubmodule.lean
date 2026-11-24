@@ -253,14 +253,14 @@ theorem continuous_coord {L V : Type} [Field L] [Algebra ℚ_[l] L] [Topological
     [AddCommGroup V] [Module L V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] L V] [TopologicalSpace V]
     [IsModuleTopology L V] [FiniteDimensional L V] {n : ℕ} (w : Module.Basis (Fin n) ℚ_[l] V) :
     Continuous w.equivFun ∧ Continuous w.equivFun.symm := by
-  haveI : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup L V
-  haveI : ContinuousSMul L V := IsModuleTopology.toContinuousSMul L V
-  haveI : T2Space V := by
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup L V
+  have : ContinuousSMul L V := IsModuleTopology.toContinuousSMul L V
+  have : T2Space V := by
     let c := Module.finBasis L V
     have h1 : Continuous c.equivFun :=
       IsModuleTopology.continuous_of_linearMap c.equivFun.toLinearMap
     exact T2Space.of_injective_continuous c.equivFun.injective h1
-  haveI : ContinuousSMul ℚ_[l] V := ⟨by
+  have : ContinuousSMul ℚ_[l] V := ⟨by
     have h : (fun p : ℚ_[l] × V => p.1 • p.2) = fun p => algebraMap ℚ_[l] L p.1 • p.2 := by
       funext p; rw [algebraMap_smul]
     rw [h]
@@ -287,7 +287,7 @@ theorem exists_basis_lattice {L O V : Type} [Field L] [Algebra ℚ_[l] L] [CommR
 theorem exists_mul_mem (LL : FinExt l) (a : ↥LL.1) :
     ∃ y : ℤ_[l], y ≠ 0 ∧ ∃ o : ↥(OL LL),
       algebraMap ↥(OL LL) ↥LL.1 o = algebraMap ℚ_[l] ↥LL.1 y * a := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have h1 : IsAlgebraic ℚ_[l] a := Algebra.IsAlgebraic.isAlgebraic a
   have h2 : IsAlgebraic ℤ_[l] a := (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥LL.1).2 h1
   obtain ⟨y, hy, hi⟩ := h2.exists_integral_multiple
@@ -306,8 +306,8 @@ theorem exists_basis (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalS
     ∃ (n : ℕ) (w : Module.Basis (Fin n) ℚ_[l] T.V),
       (∀ x : T.V, x ∈ T.L.T ↔ ∀ i, ‖w.repr x i‖ ≤ 1) ∧
         Continuous w.equivFun ∧ Continuous w.equivFun.symm := by
-  haveI := Decomp.freeOL LL
-  haveI := Decomp.finiteOL LL
+  have := Decomp.freeOL LL
+  have := Decomp.finiteOL LL
   obtain ⟨n, w, hw⟩ := exists_basis_lattice (l := l) (L := ↥LL.1) (O := ↥(OL LL)) (fun _ => rfl)
     (exists_mul_mem LL) T.L.T T.L.fg T.L.free T.L.span
   exact ⟨n, w, hw, continuous_coord (continuous_algebraMap_ext LL) w⟩

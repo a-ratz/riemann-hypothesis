@@ -119,8 +119,8 @@ theorem pderiv_of_mul (g : MvPowerSeries (Fin d) C)
   have hZ : HasSubst Z := hasSubst_of_constantCoeff_zero fun s => by cases s <;> simp [Z]
   have hd := congrArg (fun f => subst Z (pderiv (Sum.inr i) f)) h
   simp only [Derivation.leibniz, pderiv_subst hS, pderiv_subst hL, pderiv_subst hR, map_add (f := _), pderiv_X,
-    Pi.single_apply, reduceCtorEq, if_false, Sum.inr.injEq, zero_add, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_const_zero, smul_zero, add_zero,
+    Pi.single_apply, reduceCtorEq, ite_false, Sum.inr.injEq, zero_add, mul_ite, mul_one, mul_zero,
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_const_zero, smul_zero, add_zero,
     smul_eq_mul] at hd
   rw [subst_mul hZ, subst_comp_subst_apply hS hZ, subst_comp_subst_apply hL hZ,
     subst_comp_subst_apply hR hZ] at hd
@@ -162,7 +162,7 @@ theorem coeff_single_expOf (G : LogFGL v d) (a i : Fin d) :
   classical
   have h := congrArg (coeff (Finsupp.single i 1)) ((expOf_twoSided_unique C v d G).2.1 a)
   rw [coeff_single_subst G.lg_const] at h
-  simp only [G.lg_lin, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+  simp only [G.lg_lin, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
   rw [h, ← cc_pderiv, pderiv_X, Pi.single_apply]
   split_ifs <;> simp
 
@@ -238,7 +238,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FactorDepthInertBounds (boundAll bo
 
 theorem isCharLog_dl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p), ∀ χ : PS X.O 1 (chD Ch.ch), ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.IsCh (fun i => MvPowerSeries.map X.ι (Ch.FT i)) χ → IsCharLog (fgl Ch X) (fun j => algebraMap X.O X.C (ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.dl χ j)) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y Ch X χ hχ
   obtain ⟨h0, hm⟩ := hχ
   set φ := algebraMap X.O X.C with hφ
@@ -324,7 +324,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.BigBlockCharacters (pairDet hasChar
 
 theorem hasChars_frame_of_hasAF : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p), ∀ (f : Lt1 Dw) (xs : NNReal) (r : ℝ), ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.HasAF X.v (fun i => MvPowerSeries.map X.ι (Ch.FT i)) (fun (i : Fin (Dw.mult f.1)) j => X.ι (Ch.uvecT ⟨f.1, i⟩ j)) xs → (X.v (p : X.C) : ℝ) ^ r ≤ xs → HasChars (fgl Ch X) (frame Ch X f) (r : EReal) ∧ ∀ k : ℕ, nuFac p y f k ≤ ((k * r : ℝ) : EReal) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y Ch X f xs r hAF hr
   have hp0 : (0 : ℝ) < (X.v (p : X.C) : ℝ) := by
     have : X.v (p : X.C) ≠ 0 := by simpa using (Fact.out : p.Prime).ne_zero

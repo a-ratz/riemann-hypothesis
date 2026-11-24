@@ -137,17 +137,17 @@ theorem UnfoldingTorus.proof (h : HermitianForm F E W) (v : Basis ι E W)
       rintro _ ⟨γ, -, rfl⟩
       exact ⟨(γ : h.unitaryGroup), γ.2, rfl⟩
     exact DiscreteTopology.of_continuous_injective (f := Subgroup.inclusion hle)
-      (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective hle)
+      (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective hle)
   have : Countable (vecStabGroup h v La x₀) :=
     TopologicalSpace.separableSpace_iff_countable.1 inferInstance
 
   let s : (InfinitePlace E → ℂ) × M.stab → archUnitary h v := fun y => τ y.1 * y.2
   have hwtm : Measurable wt :=
-    Finset.measurable_prod _ fun w _ => (measurable_pi_apply w).enorm.pow_const _
-  have hsm' : Measurable s := (hτm.comp measurable_fst).mul (measurable_subtype_coe.comp measurable_snd)
+    Finset.measurable_prod _ fun w _ => (measurable_pi_apply w).eNorm.pow_const _
+  have hsm' : Measurable s := (hτm.comp measurable_fst).mul (measurable_subtypeVal.comp measurable_snd)
   have hsm : Measurable fun p : vecFixGroup h v x₀ × ((InfinitePlace E → ℂ) × M.stab) =>
       (p.1 : archUnitary h v) * s p.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul (hsm'.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).mul (hsm'.comp measurable_snd)
   have hform : ∀ f : archUnitary h v → ℝ≥0∞, Measurable f → ∫⁻ g, f g ∂μ =
       ∫⁻ y, ∫⁻ x, f (x * s y) ∂ν ∂((volume.withDensity wt).prod κ) := by
     intro f hf

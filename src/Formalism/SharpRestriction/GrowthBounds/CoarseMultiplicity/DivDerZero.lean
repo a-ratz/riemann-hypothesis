@@ -121,7 +121,7 @@ theorem yjtZ_cth (D : Formalism.BasicNotions.D7) (LL : ChainLetters N) {q : ℕ}
     refine ycond_op D LL LL rfl (J k) n (hthr k) _ _ ?_ (hy2 k)
     by_cases hn : n = 0
     · subst hn; simp [vecDeg, covDeg]
-    · simp only [vecDeg, covDeg, Finsupp.support_single_ne_zero _ hn, Finset.sum_singleton, Finsupp.single_eq_same]
+    · simp only [vecDeg, covDeg, Finsupp.support_single _ hn, Finset.sum_singleton, Finsupp.single_eq_same]
       split_ifs with h1 h2 <;> first | omega | (exfalso; simp_all)
 
 theorem yjtZ_X (D : Formalism.BasicNotions.D7) (LL LL' : ChainLetters N) (hv : LL'.vec = LL.vec) (a : Fin N) (c : Fin r)
@@ -149,7 +149,7 @@ theorem yjtZ_X (D : Formalism.BasicNotions.D7) (LL LL' : ChainLetters N) (hv : L
       simp [Finsupp.single_apply]
     · have : ∀ x : Fin r, (Finsupp.single (a, c) 1 : Fin N × Fin r →₀ ℕ) (i, x) = 0 := by
         intro x
-        rw [Finsupp.single_apply, if_neg]
+        rw [Finsupp.single_apply, ite_eq_right]
         intro h
         exact hi (congrArg Prod.fst h).symm
       simp [this, hi]
@@ -157,7 +157,7 @@ theorem yjtZ_X (D : Formalism.BasicNotions.D7) (LL LL' : ChainLetters N) (hv : L
     intro k
     have h := ycond_op D LL LL' hv (J k) n (hthr k) (Finsupp.single (a, c) 1) 0 ?_ (hy2 k)
     · rwa [divDer_zero] at h
-    · simp only [vecDeg, covDeg, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton,
+    · simp only [vecDeg, covDeg, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton,
         Finsupp.single_eq_same, Finsupp.support_zero, Finset.sum_empty, add_zero]
       split_ifs with h1
       · exact hn h1.2

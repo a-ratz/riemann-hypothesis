@@ -252,8 +252,8 @@ theorem factor_closedImmersion_iff_of_local : ∀ (A : Type) [CommRing A] [IsLoc
   obtain ⟨I, hI⟩ := exists_ideal_factor_closedImmersion_iff A X Y a j
   have key : ∀ (K : Ideal A), K ≠ ⊤ → (I ≤ K ↔ J ≤ K) := by
     intro K hK
-    haveI : Nontrivial (A ⧸ K) := Ideal.Quotient.nontrivial_iff.mpr hK
-    haveI : IsLocalRing (A ⧸ K) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
+    have : Nontrivial (A ⧸ K) := Ideal.Quotient.nontrivial_iff.mpr hK
+    have : IsLocalRing (A ⧸ K) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
     have := (hI (A ⧸ K) (Ideal.Quotient.mk K)).symm.trans (H (A ⧸ K) (Ideal.Quotient.mk K))
     simpa [Ideal.mk_ker] using this
   have hIJ : I = J := by
@@ -392,7 +392,7 @@ theorem exists_ideal_free_complex_at_origin : ∀ (K : Type) [Field K] [IsAlgClo
   intro K _ _ A _ g hA hg L H _ j hL hp hΘ _ hjc hfin hH x₀ hx₀
   have := hA.comm
   have := hA.smooth
-  haveI : IsLocallyNoetherian A.left := LocallyOfFiniteType.isLocallyNoetherian A.hom
+  have : IsLocallyNoetherian A.left := LocallyOfFiniteType.isLocallyNoetherian A.hom
   obtain ⟨hO, hu, hK⟩ := GlobalTheory.UU.TrivTwist.inK_iff_trivial_twist _ A L hL
   let ηK : Sp K ⟶ A.left := (η[A]).left
   have hηK : ηK ≫ A.hom = 𝟙 _ := Over.w η[A]
@@ -408,7 +408,7 @@ theorem exists_ideal_free_complex_at_origin : ∀ (K : Type) [Field K] [IsAlgClo
   have hy : ∃ y : Spec (CommRingCat.of K) ⟶ H.left,
       y ≫ j.left = Spec.map (CommRingCat.ofHom φ) ≫ A.left.fromSpecStalk (ηK (IsLocalRing.closedPoint K)) :=
     ⟨z.left, by rw [hφa]; exact congrArg (·.left) hz⟩
-  haveI hN : IsNoetherianRing (A.left.presheaf.stalk (ηK (IsLocalRing.closedPoint K))) := inferInstance
+  have hN : IsNoetherianRing (A.left.presheaf.stalk (ηK (IsLocalRing.closedPoint K))) := inferInstance
   obtain ⟨I, C, c₁, c₂, eC, c₃, hI, c₅⟩ := @exists_ideal_complex_cech globalFns_holds _ _ A _ _ hA hp g hg L _ hL hO hΘ hu H j
     (fun T x => (hK _ rfl T x).symm.trans (hH T x)) (A.left.presheaf.stalk (ηK (IsLocalRing.closedPoint K))) _ hN _
     (A.left.fromSpecStalk (ηK (IsLocalRing.closedPoint K))) K _ φ hφl hy
@@ -488,16 +488,16 @@ theorem maximalIdeal_map_span_of_flat_of_isArtinianRing_fibre :
       IsArtinianRing (O ⧸ (IsLocalRing.maximalIdeal O').map σ) → ∀ g : ℕ, ringKrullDim O = g →
       ∃ f : Fin g → O, Ideal.span (Set.range f) = (IsLocalRing.maximalIdeal O').map σ := by
   intro O' O _ _ _ _ _ σ hloc hflat hart g hg
-  letI := σ.toAlgebra
-  haveI : Module.Flat O' O := hflat
-  haveI : Algebra.HasGoingDown O' O := Algebra.HasGoingDown.of_flat
-  haveI : IsLocalHom (algebraMap O' O) := hloc
-  haveI : IsLocalHom σ := hloc
+  let := σ.toAlgebra
+  have : Module.Flat O' O := hflat
+  have : Algebra.HasGoingDown O' O := Algebra.HasGoingDown.of_flat
+  have : IsLocalHom (algebraMap O' O) := hloc
+  have : IsLocalHom σ := hloc
   set I : Ideal O := (maximalIdeal O').map σ with hI
   have hIle : I ≤ maximalIdeal O := IsLocalRing.map_maximalIdeal_le _
-  haveI : Nontrivial (O ⧸ I) :=
+  have : Nontrivial (O ⧸ I) :=
     Ideal.Quotient.nontrivial_iff.mpr (ne_top_of_le_ne_top (maximalIdeal.isMaximal O).ne_top hIle)
-  haveI : IsLocalRing (O ⧸ I) :=
+  have : IsLocalRing (O ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   have hmap : (maximalIdeal O).map (Ideal.Quotient.mk I) = maximalIdeal (O ⧸ I) :=
     IsLocalRing.map_maximalIdeal_of_surjective _ Ideal.Quotient.mk_surjective
@@ -633,7 +633,7 @@ theorem stalk_regular_of_section : ∀ (K : Type) [Field K] (X : Scheme.{0}) (f 
   set σ : K →+* X.presheaf.stalk x := (Spec.preimage (X.fromSpecStalk x ≫ f)).hom with hσdef
   have hσ : X.fromSpecStalk x ≫ f = Spec.map (CommRingCat.ofHom σ) := by
     simp [σ]
-  haveI : IsLocalHom σ := ⟨fun a ha => isUnit_iff_ne_zero.mpr (by rintro rfl; simp at ha)⟩
+  have : IsLocalHom σ := ⟨fun a ha => isUnit_iff_ne_zero.mpr (by rintro rfl; simp at ha)⟩
   obtain ⟨h1, -, h3, h4⟩ := GlobalTheory.StabFlat.stalk_of_smooth_local K X f g hg x hcl σ hσ inferInstance
   have hb : (IsLocalRing.maximalIdeal K).map σ = ⊥ := by
     rw [IsLocalRing.maximalIdeal_eq_bot, Ideal.map_bot]
@@ -679,7 +679,7 @@ theorem ideal_eq_span_fin : ∀ (K : Type) [Field K] [IsAlgClosed K] (A : Over (
     · simpa using (key _ (Ideal.Quotient.mk J)).1 (by simp)
   obtain ⟨_, hart⟩ := GlobalTheory.T.closed_subfunctor_stalk_ideal_criterion K A H j hj hci hfin x₀ ⟨p, hp⟩ J hJ
   have hflat : σ.Flat := Flat.stalkMap q.left x₀
-  haveI := Ldim.1
+  have := Ldim.1
   rw [Lgeo] at hart ⊢
   exact GlobalTheory.T.exists_span_maximalIdeal_map_of_flat_regular _ _ σ inferInstance hflat hart g Ldim.2.2
 
@@ -1239,9 +1239,9 @@ open FirstBetti in
 theorem finrank_homology_one_two_of_dual_resolution : ∀ (O : Type) [CommRing O] [IsRegularLocalRing O] (g : ℕ), ringKrullDim O = g → ∀ (f : Fin g → O), Ideal.span (Set.range f) ≠ ⊤ → IsArtinianRing (O ⧸ Ideal.span (Set.range f)) → ∀ (C : CochainComplex (ModuleCat.{0} O) ℕ), (∀ i, Module.Free O (C.X i) ∧ Module.Finite O (C.X i)) → (∀ i, Function.Exact (C.d (i + 1) (i + 2)).hom.dualMap (C.d i (i + 1)).hom.dualMap) → Nonempty ((Module.Dual O (C.X 0) ⧸ LinearMap.range (C.d 0 1).hom.dualMap) ≃ₗ[O] (O ⧸ Ideal.span (Set.range f))) → ∀ (K : Type) [Field K] (φ : O →+* K), RingHom.ker φ = IsLocalRing.maximalIdeal O → Module.finrank K ((((ModuleCat.extendScalars φ).mapHomologicalComplex _).obj C).homology 1) = g ∧ Module.finrank K ((((ModuleCat.extendScalars φ).mapHomologicalComplex _).obj C).homology 2) ≤ g.choose 2 := by
   intro O _ _ g hdim f hne hart C hC hex hN K _ φ hker
   obtain ⟨eN⟩ := hN
-  letI := φ.toAlgebra
-  haveI : ∀ i, Module.Free O (C.X i) := fun i => (hC i).1
-  haveI : ∀ i, Module.Finite O (C.X i) := fun i => (hC i).2
+  let := φ.toAlgebra
+  have : ∀ i, Module.Free O (C.X i) := fun i => (hC i).1
+  have : ∀ i, Module.Finite O (C.X i) := fun i => (hC i).2
   have hIm : Ideal.span (Set.range f) ≤ IsLocalRing.maximalIdeal O := IsLocalRing.le_maximalIdeal hne
   have hIφ : ∀ x ∈ Ideal.span (Set.range f), algebraMap O K x = 0 := fun x hx => by
     have : x ∈ RingHom.ker φ := hker ▸ hIm hx
@@ -1369,14 +1369,14 @@ theorem cechLB_triv_finrank_one_two : ∀ (K : Type) [Field K] [IsAlgClosed K] (
   have hbot : (IsLocalRing.maximalIdeal K).map σ = ⊥ := by
     rw [IsLocalRing.maximalIdeal_eq_bot, Ideal.map_bot]
   let e := (Ideal.quotEquivOfEq hbot).trans (RingEquiv.quotientBot (A.left.presheaf.stalk ((η[A]).left.base p)))
-  haveI : IsRegularLocalRing (A.left.presheaf.stalk ((η[A]).left.base p)) :=
+  have : IsRegularLocalRing (A.left.presheaf.stalk ((η[A]).left.base p)) :=
     IsRegularLocalRing.of_ringEquiv e
   have hdim' : ringKrullDim (A.left.presheaf.stalk ((η[A]).left.base p)) = g := by
     rw [← ringKrullDim_eq_of_ringEquiv e]
     exact hdim
   have hex := _root_.GlobalTheory.exact_dualMap_of_exact_fibres_of_isRegularLocalRing _ g hdim' C hfree hbdd hfib
   obtain ⟨h1, h2⟩ := GlobalTheory.T.finrank_homology_one_two_dualResolution _ g hdim' f hJt hart C hfree hex hcok K φ hφ
-  haveI := hA.proper
+  have := hA.proper
   refine ⟨fun i => ?_, ?_, ?_⟩
   · exact GlobalTheory.AbLaw.cechLB_homology_finite_of_affine_cover K A.left A.hom (LB.triv A.left) κ D
       (LB.isLB_triv _) inferInstance hproj hD hcov i

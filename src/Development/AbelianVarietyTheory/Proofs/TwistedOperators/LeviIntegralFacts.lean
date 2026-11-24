@@ -144,7 +144,7 @@ theorem _root_.GlobalTheory.SmGL.LeviInt.levi_integral_facts : ∀ (k : Type) [F
     refine continuous_pi fun a => Units.continuous_iff.2 ⟨?_, ?_⟩
     · refine continuous_pi fun i => continuous_pi fun j => ?_
       simp only [Function.comp_apply, _root_.GlobalTheory.SmGL.leviProj_apply]
-      exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem _ _
+      exact (Units.continuous_val.comp continuous_subtypeVal).matrix_elem _ _
     · have hinv : ∀ p : _root_.GlobalTheory.SmGL.parab k e,
           (_root_.GlobalTheory.SmGL.leviProj k e p a)⁻¹ = _root_.GlobalTheory.SmGL.leviProj k e p⁻¹ a := by
         intro p
@@ -152,14 +152,14 @@ theorem _root_.GlobalTheory.SmGL.LeviInt.levi_integral_facts : ∀ (k : Type) [F
         rfl
       refine continuous_pi fun i => continuous_pi fun j => ?_
       simp only [hinv, _root_.GlobalTheory.SmGL.leviProj_apply, Subgroup.coe_inv]
-      exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_elem _ _
+      exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_elem _ _
   have hP : IsClosed (_root_.GlobalTheory.SmGL.parab k e : Set (GL n k)) := by
     have hset : (_root_.GlobalTheory.SmGL.parab k e : Set (GL n k)) =
         ⋂ (a) (b) (i : m a) (j : m b) (_ : b < a),
           {g : GL n k | (g : Matrix n n k) (e ⟨a, i⟩) (e ⟨b, j⟩) = 0} := by
       ext g
       rw [SetLike.mem_coe, _root_.GlobalTheory.SmGL.mem_parab_iff]
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     rw [hset]
     exact isClosed_iInter fun a => isClosed_iInter fun b => isClosed_iInter fun i =>
       isClosed_iInter fun j => isClosed_iInter fun _ =>
@@ -171,7 +171,7 @@ theorem _root_.GlobalTheory.SmGL.LeviInt.levi_integral_facts : ∀ (k : Type) [F
             (g : Matrix n n k) (e ⟨a, i⟩) (e ⟨a, j⟩) = (1 : Matrix (m a) (m a) k) i j} := by
       ext g
       rw [SetLike.mem_coe, _root_.GlobalTheory.SmGL.mem_unipRad]
-      simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+      simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
     rw [hset]
     exact hP.inter (isClosed_iInter fun a => isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_eq (Units.continuous_val.matrix_elem _ _) continuous_const)

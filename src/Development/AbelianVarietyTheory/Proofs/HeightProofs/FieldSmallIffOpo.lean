@@ -60,8 +60,8 @@ theorem FO_eq_coeff {D : D7} (Q : Par D) (h : Q.PinField) : FO D = Q.c.F := by
     rw [e']
     exact SetLike.coe_mem _
   · intro z hz
-    haveI := Q.c.fin
-    haveI : NumberField Q.c.F := NumberField.mk
+    have := Q.c.fin
+    have : NumberField Q.c.F := NumberField.mk
     have hint : ∀ x : 𝓞 Q.c.F, ((algebraMap (𝓞 Q.c.F) Q.c.F x : Q.c.F) : ℂ) ∈ FO D := fun x => by
       have e : D.what₂.phiO (Q.eO x) = ((algebraMap (𝓞 Q.c.F) Q.c.F x : Q.c.F) : ℂ) := h x
       rw [← e]
@@ -77,7 +77,7 @@ theorem fieldSmall_iff_opo : ∀ (D : D7) (T : Top D) (h : LawsP T) (large₂ : 
     FieldSmall D large₂ ↔ OPO large₂ (recB h.toLawsCore) := by
   intro D T h large₂
   have hF : FO D = T.Q.c.F := FO_eq_coeff T.Q h.toLawsCore.pins.2.2.1
-  letI : NumberField (FO D) := NumberField.mk
+  let : NumberField (FO D) := NumberField.mk
   let e : FO D ≃+* (recB h.toLawsCore).KO := (IntermediateField.equivOfEq hF).toRingEquiv
   have h1 : Module.finrank ℚ (FO D) = Module.finrank ℚ (recB h.toLawsCore).KO :=
     (LinearEquiv.ofBijective e.toRingHom.toRatAlgHom.toLinearMap e.bijective).finrank_eq

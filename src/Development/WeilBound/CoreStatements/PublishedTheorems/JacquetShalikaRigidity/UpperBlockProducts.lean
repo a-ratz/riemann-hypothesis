@@ -73,7 +73,7 @@ theorem posM_blk_zero {j : ℕ} (Y : UnipotentBlockColumnIndex k j j → Ad E) (
     posM Subtype.val Y i c = 0 := by
   simp only [posM, Matrix.sum_apply, Matrix.single_apply]
   refine Finset.sum_eq_zero fun t _ => ?_
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨h1, h2⟩
   obtain ⟨t1, t2, t3⟩ := t.2
   rw [h1, h2] at *
@@ -162,7 +162,7 @@ theorem finite_place_of_jump_windows : jumpWindows.S2 → jumpWindows.S9 → jum
     exact hClU' c₂ hc₂
   · refine sum_of _ s0 sadd ssmul T c _ fun t => sT (ρ (fl k v t)) (fun g z => ?_) x hsm
     simp only [MonoidHom.comp_apply]
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, i7 _ (i3 v t) g, map_mul, ContinuousLinearMap.mul_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, i7 _ (i3 v t) g, map_mul, mul_apply_eq_comp]
   · rw [hJx']
     exact sum_of _ b5 b4 b3 T c _ fun t => by rw [repW_apply]; exact b2 _ _ hlev
   · rintro _ ⟨c₂, hc₂, rfl⟩

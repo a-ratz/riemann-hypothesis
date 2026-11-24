@@ -602,7 +602,7 @@ theorem conj_mem_levG (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ M : Lat
     (hm : ∀ v, P v → Moves V t Λ M (· = v)) (hQ : Ld.Q = ∅)
     (hPg : ∀ PP ∈ Ld.Pg, ¬ P ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) (hκ : InK V M P κ) :
     t⁻¹ * κ * t ∈ Lev.levG V β Ld := by
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   have hfg : Λ.FG := Submodule.IsLattice.fg (A := D.host.E) Λ
   obtain ⟨hκf, hκ1⟩ := (KOpen.mem_grpAt_iff V P κ).1 hκ.1
   have hy : t⁻¹ * κ * t ∈ GfC V := (GfC V).mul_mem ((GfC V).mul_mem ((GfC V).inv_mem ht) hκf) ht
@@ -831,19 +831,19 @@ theorem volLev_ne_zero_of_isCompact {D : D7} (V : HSp D) (hK : IsCompact (GinfC 
     (U : Subgroup (GA D V)) (hle : U ≤ GfC V) (hc : IsCompact (U : Set (GA D V)))
     (ho : IsOpen ((U.subgroupOf (GfC V) : Subgroup (GfC V)) : Set (GfC V))) : GlobalTheory.SeeSaw.volLev v U ≠ 0 := by
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.1
-  haveI := hT.2.1
-  haveI := hT.2.2.1
-  haveI := hT.2.2.2.1
-  haveI := hT.2.2.2.2.1
-  haveI := v.haar
-  haveI : (GinfC V).Normal := inferInstanceAs ((finHom V).ker.Normal)
+  have := hT.1
+  have := hT.2.1
+  have := hT.2.2.1
+  have := hT.2.2.2.1
+  have := hT.2.2.2.2.1
+  have := v.haar
+  have : (GinfC V).Normal := inferInstanceAs ((finHom V).ker.Normal)
   let K : Subgroup (GA D V) := GinfC V ⊔ U
   have hKset : (K : Set (GA D V)) = {g | ∃ k ∈ GinfC V, ∃ κ ∈ U, g = k * κ} := by
     show ((GinfC V ⊔ U : Subgroup (GA D V)) : Set (GA D V)) = _
     rw [Subgroup.normal_mul]
     ext g
-    simp only [Set.mem_mul, SetLike.mem_coe, Set.mem_setOf_eq]
+    simp only [Set.mem_mul, SetLike.mem_coe, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨k, hk, κ, hκ, rfl⟩
       exact ⟨k, hk, κ, hκ, rfl⟩
@@ -979,7 +979,7 @@ theorem GlobalTheory.TopVol.main_alt_alt : ∀ {B : GlobalTheory.Mem.Base} {X : 
       rfl
     rw [e]
     exact ho.inter (isOpen_iInter_of_finite fun i =>
-      ((J.E i).openT).preimage ((GlobalTheory.LevIdx.continuous_locHom (J.G i).q S (J.G i).FT).comp continuous_subtype_val))
+      ((J.E i).openT).preimage ((GlobalTheory.LevIdx.continuous_locHom (J.G i).q S (J.G i).FT).comp continuous_subtypeVal))
   have hvol := GlobalTheory.T.archimedeanLevelVolume_mul_relIndex (I.rec7 l Z) S a.g.volT U' U hle' hle hc hU'o
   refine ⟨U', fun h => _root_.GlobalTheory.TopVol.mem_level_twist_iff_conj_mem_levS_datXP h, fun β => ?_⟩
   have hw : ∀ i, (J.E i).wt B.R.m (β i) = (((Jf i).relIndex (GlobalTheory.SplitWeil.KO (J.G i).k _) : ℕ) : ℂ) := by
@@ -1082,7 +1082,7 @@ def boxAct (J : Subgroup (GL (n ⊕ Fin 0) k)) (hJ : J ≤ GlobalTheory.SplitWei
 theorem relIndex_cosStab_box (J : Subgroup (GL (n ⊕ Fin 0) k)) (hJ : J ≤ GlobalTheory.SplitWeil.KO k (n ⊕ Fin 0)) (c : kˣ)
     (x : (n → k) ⧸ GlobalTheory.StepData.box n c) :
     (cosStab J (GlobalTheory.StepData.box n c) x).relIndex J = Nat.card {yb | GlobalTheory.QPl.SameOrb J (GlobalTheory.StepData.box n c) x yb} := by
-  letI := boxAct J hJ c
+  let := boxAct J hJ c
   have smk : ∀ (g : J) (y : n → k), g • (Submodule.Quotient.mk y : (n → k) ⧸ GlobalTheory.StepData.box n c) =
       Submodule.Quotient.mk (g.val.val.toBlocks₁₁ *ᵥ y) := fun _ _ => rfl
   have hst : (cosStab J (GlobalTheory.StepData.box n c) x).subgroupOf J = MulAction.stabilizer J x := by
@@ -1104,7 +1104,7 @@ theorem relIndex_cosStab_box (J : Subgroup (GL (n ⊕ Fin 0) k)) (hJ : J ≤ Glo
         rw [h', h]
   have horb : MulAction.orbit J x = {yb | GlobalTheory.QPl.SameOrb J (GlobalTheory.StepData.box n c) x yb} := by
     ext yb
-    simp only [MulAction.mem_orbit_iff, Set.mem_setOf_eq, GlobalTheory.QPl.SameOrb]
+    simp only [MulAction.mem_orbit_iff, Set.mem_ofPred_eq, GlobalTheory.QPl.SameOrb]
     constructor
     · rintro ⟨g, rfl⟩
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ x
@@ -1168,11 +1168,11 @@ namespace GlobalTheory.PenVol
 theorem relIndex_ne_zero_of_open {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (K U U0 : Subgroup G)
     (hU0 : U0 ≤ K) (hc : IsCompact (U0 : Set G)) (ho : IsOpen ((U.subgroupOf K : Subgroup K) : Set K)) :
     U.relIndex U0 ≠ 0 := by
-  haveI : CompactSpace U0 := isCompact_iff_compactSpace.1 hc
-  have hcont : Continuous (fun x : U0 => (⟨x.1, hU0 x.2⟩ : K)) := Continuous.subtype_mk continuous_subtype_val _
+  have : CompactSpace U0 := isCompact_iff_compactSpace.1 hc
+  have hcont : Continuous (fun x : U0 => (⟨x.1, hU0 x.2⟩ : K)) := Continuous.subtype_mk continuous_subtypeVal _
   have ho' : IsOpen ((U.subgroupOf U0 : Subgroup U0) : Set U0) := ho.preimage hcont
-  haveI : Finite (U0 ⧸ U.subgroupOf U0) := (U.subgroupOf U0).quotient_finite_of_isOpen ho'
-  haveI : (U.subgroupOf U0).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (U0 ⧸ U.subgroupOf U0) := (U.subgroupOf U0).quotient_finite_of_isOpen ho'
+  have : (U.subgroupOf U0).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   exact Subgroup.FiniteIndex.index_ne_zero
 
 theorem wt_cast (C : ℕ → Type) (w : ∀ j, C j → ℂ) {j j' : ℕ} (h : j = j') (x : C j) :
@@ -1427,8 +1427,8 @@ theorem inv_toReal_eq_relIndex {Γ : Type*} [Group Γ] [MeasurableSpace Γ] [Mea
     intro g
     rw [← Measure.map_apply_of_aemeasurable (hmeas g) hH, map_mul_left_eq_self μ g]
   set L := H.subgroupOf K
-  haveI : L.FiniteIndex := ⟨hn⟩
-  haveI : Fintype (K ⧸ L) := Fintype.ofFinite _
+  have : L.FiniteIndex := ⟨hn⟩
+  have : Fintype (K ⧸ L) := Fintype.ofFinite _
   let C : (K ⧸ L) → Set Γ := fun q => (fun x => ((q.out : K) : Γ)⁻¹ * x) ⁻¹' (H : Set Γ)
   have hcov : (K : Set Γ) = ⋃ q, C q := by
     ext x
@@ -1483,14 +1483,14 @@ namespace GlobalTheory
 
 theorem QTw.QExt.m_inv_toReal_eq_relIndex : ∀ {D : D7} {c : Comm D} {v : VCom c} {B : GlobalTheory.Fam.Base c} {PP : Formalism.L2.DIV.Pl D.host.E} (G : GlobalTheory.QTw.QGeo v B PP) (χ : ℕ → (AE D)ˣ →* Circle) (E : GlobalTheory.QTw.QExt G χ) (j : ℕ) (H : Subgroup (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k)), H ≤ KO G.k _ → MeasurableSet (H : Set (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k)) → H.relIndex (KO G.k _) ≠ 0 → ((((E.m j H).toReal)⁻¹ : ℝ) : ℂ) = (H.relIndex (KO G.k _) : ℂ) := by
   intro D c v B PP G χ E j H hHK hH hn
-  letI : MeasurableSpace (Matrix (XIx (Fin D.R.k) (Fin D.R.t) j) (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := Formalism.DoubleCosetMeasures.instMeasMat
+  let : MeasurableSpace (Matrix (XIx (Fin D.R.k) (Fin D.R.t) j) (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := Formalism.DoubleCosetMeasures.instMeasMat
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := G.k)
-  haveI : BorelSpace (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : SecondCountableTopology (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := GlobalTheory.SplitFlip.secondCountable_GL
-  haveI : MeasurableMul (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := ⟨
+  have : BorelSpace (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := GlobalTheory.SplitFlip.borel_GL
+  have : SecondCountableTopology (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := GlobalTheory.SplitFlip.secondCountable_GL
+  have : MeasurableMul (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) := ⟨
     fun g => (continuous_const.mul continuous_id).measurable,
     fun g => (continuous_id.mul continuous_const).measurable⟩
-  haveI := (E.haar j).1
+  have := (E.haar j).1
   rw [HaarIdx.inv_toReal_eq_relIndex (E.m j) _ H hHK hH (E.haar j).2 hn]
   push_cast
   rfl
@@ -1660,16 +1660,16 @@ theorem vol_level_wt_const_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toP
     else if h' : j + 1 = B.R.m then Classical.choose (_root_.GlobalTheory.T.true_geometry_chain_step_value_alt W hW u a ha haT j h') else 1, VT, ?_, hVT, ?_⟩
   · intro j hj
     by_cases h : j + 2 ≤ B.R.m
-    · simp only [dif_pos h]; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_identity_alt W hW u a ha haT j h)).1
+    · simp only [dite_eq_left h]; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_identity_alt W hW u a ha haT j h)).1
     · have h' : j + 1 = B.R.m := by omega
-      simp only [dif_neg h, dif_pos h']; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_value_alt W hW u a ha haT j h')).1
+      simp only [dite_eq_right h, dite_eq_left h']; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_value_alt W hW u a ha haT j h')).1
   · intro t J hJ
     refine ⟨?_, hT3 t J hJ⟩
     intro j hj α
     by_cases h : j + 2 ≤ B.R.m
-    · simp only [dif_pos h]; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_identity_alt W hW u a ha haT j h)).2 t J hJ α
+    · simp only [dite_eq_left h]; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_identity_alt W hW u a ha haT j h)).2 t J hJ α
     · have h' : j + 1 = B.R.m := by omega
-      simp only [dif_neg h, dif_pos h']; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_value_alt W hW u a ha haT j h')).2 t J hJ α
+      simp only [dite_eq_right h, dite_eq_left h']; exact (Classical.choose_spec (_root_.GlobalTheory.T.true_geometry_chain_step_value_alt W hW u a ha haT j h')).2 t J hJ α
 end GlobalTheory.Fam
 end
 end -- clump:auto

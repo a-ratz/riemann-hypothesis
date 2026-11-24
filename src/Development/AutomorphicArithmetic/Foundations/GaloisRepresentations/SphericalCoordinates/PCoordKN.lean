@@ -56,8 +56,8 @@ variable {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} (L : Link D G)
 private theorem smul_mem_laHat {c : AfP p} (hc : IsIntAf c) {v : AfP p ⊗[ℚ] VQ D} (hv : v ∈ LaHat D) :
     c • v ∈ LaHat D := by
   classical
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   apply KNLevel.mem_laHat_of_repr b
   intro i
@@ -72,8 +72,8 @@ private theorem inAf_mem_laHat (a : D.La) : inAf D a ∈ LaHat D := by
 private theorem exists_den_act (g : G.GAf) :
     ∃ m : ℕ, 0 < m ∧ ∀ z ∈ LaHat D, m • L.actG g z ∈ LaHat D := by
   classical
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   let B := KNLevel.bA b
   obtain ⟨m, hm, hden⟩ := AfPCpctDen.exists_den p

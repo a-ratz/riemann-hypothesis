@@ -423,14 +423,14 @@ theorem polData_map (B : Base F E) {n d n₁ d₁ : ℕ} {X : Spc F E n} {W : Sp
     let φ : ∀ v : Pl (F := F), (Fin n × Fin d → Fv F v) → ℂ := fun v => if φ' v = M₁.vac v then M.vac v else (hpre v).choose
     have hφ : ∀ v, φ v ∈ SB _ := fun v => by
       by_cases h : φ' v = M₁.vac v
-      · simp only [φ, if_pos h]; exact hM v
-      · simp only [φ, if_neg h]; exact (hpre v).choose_spec.1
+      · simp only [φ, ite_eq_left h]; exact hM v
+      · simp only [φ, ite_eq_right h]; exact (hpre v).choose_spec.1
     have hev : (fun v => ev v (φ v)) = φ' := funext fun v => by
       by_cases h : φ' v = M₁.vac v
-      · simp only [φ, if_pos h]; rw [(hv v).1, h]
-      · simp only [φ, if_neg h]; exact (hpre v).choose_spec.2
+      · simp only [φ, ite_eq_left h]; rw [(hv v).1, h]
+      · simp only [φ, ite_eq_right h]; exact (hpre v).choose_spec.2
     have hc : ∀ᶠ v in cofinite, φ v = M.vac v := by
-      filter_upwards [hc'] with v h; simp only [φ, if_pos h]
+      filter_upwards [hc'] with v h; simp only [φ, ite_eq_left h]
     apply Submodule.subset_span
     refine ⟨GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ, ⟨f, hf, φ, hφ, hc, rfl⟩, ?_⟩
     rw [hl f φ hφ hc, hev]
@@ -587,7 +587,7 @@ theorem exists_linearEquiv_of_rational {K R E α β κ : Type} [Field K] [CommRi
     ∃ d₀ : Matrix α β E ≃ₗ[K] (κ → K) × (κ → K), ∀ x, e (x.map fun t => (1 : R) ⊗ₜ[K] t) =
       (fun i => algebraMap K R ((d₀ x).1 i), fun i => algebraMap K R ((d₀ x).2 i)) := by
   classical
-  haveI : Nontrivial R := hinj.nontrivial
+  have : Nontrivial R := hinj.nontrivial
   choose y z hyz using h
   have hadd : ∀ a b : Matrix α β E, ((a + b).map fun t => (1 : R) ⊗ₜ[K] t) =
       (a.map fun t => (1 : R) ⊗ₜ[K] t) + b.map fun t => (1 : R) ⊗ₜ[K] t := by
@@ -648,7 +648,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {n d : ℕ} {X : Spc F E n} {W : Spc F E d}
 
 theorem ratRel_of_good {ψ : AddChar (AF F) ℂ} {M M₁ : Model σ X W} (h : M.IsGood ψ) (h₁ : M₁.IsGood ψ) : RatRel M.co M₁.co := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨d₀, hd⟩ := exists_linearEquiv_of_rational (AdeleRing.algebraMap_injective (𝓞 F) F) M.co.e h.rat
   intro y z
   obtain ⟨x, hx⟩ := d₀.surjective (y, z)

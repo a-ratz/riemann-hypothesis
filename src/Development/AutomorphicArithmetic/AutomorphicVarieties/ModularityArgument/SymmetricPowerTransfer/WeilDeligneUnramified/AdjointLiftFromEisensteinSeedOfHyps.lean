@@ -156,9 +156,9 @@ variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
 
 private theorem finOrder_of_kills {C : Type} [CommGroup C] {N : ℕ} (hN : 0 < N) {φ : G ℚ Ω →* C} (h : KillsMu N φ) :
     IsOfFinOrder φ := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : NeZero N := ⟨hN.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   refine isOfFinOrder_iff_pow_eq_one.2 ⟨Fintype.card (ZMod N)ˣ, Fintype.card_pos, MonoidHom.ext fun s => ?_⟩
   rw [MonoidHom.pow_apply, ← map_pow]
   refine h _ fun ζ hζ => ?_
@@ -186,8 +186,8 @@ private theorem cc_not_mem (K : Type) [Field K] [NumberField K] [_root_.NumberFi
 
 private theorem sq_mem_galOf (K : Type) [Field K] [NumberField K] [Algebra K Ω] (h : Module.finrank ℚ K = 2) (s : G ℚ Ω) :
     s * s ∈ galOf ℚ K Ω := by
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
-  haveI : IsGalois ℚ K := inferInstance
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
+  have : IsGalois ℚ K := inferInstance
   have h1 : Nat.card (K ≃ₐ[ℚ] K) = 2 := by rw [IsGalois.card_aut_eq_finrank, h]
   have h2 : AlgEquiv.restrictNormalHom K (s * s) = 1 := by
     rw [map_mul, ← sq, ← h1, pow_card_eq_one']

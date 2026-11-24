@@ -87,7 +87,7 @@ private theorem pow_tot {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : Diric
 
 private theorem pow_tot_cond {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : DirichletCharacter O N) :
     χ ^ Nat.totient χ.conductor = 1 := by
-  haveI : NeZero χ.conductor := ⟨DirichletCharacter.conductor_ne_zero χ⟩
+  have : NeZero χ.conductor := ⟨DirichletCharacter.conductor_ne_zero χ⟩
   rw [show χ ^ Nat.totient χ.conductor = DirichletCharacter.changeLevel χ.conductor_dvd_level
       (χ.primitiveCharacter ^ Nat.totient χ.conductor) by
     rw [map_pow, χ.changeLevel_primitiveCharacter]]
@@ -96,7 +96,7 @@ private theorem pow_tot_cond {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : 
 theorem UpperTheory.V.GradeZeroInterpolatingElement.levOf :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (h : Host) (t : ℕ), h.Big t → ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (e : ℕ), l ≠ 2 → 0 < e → e < t → ∀ ψ ∈ h.X c e, ∀ D : Raw Ω c, D.Good → ∀ n' p₁ m₀ : ℕ, Aut.OfChar D e ψ n' p₁ m₀ → c2 ψ ≤ n' → m₀ ∣ h.o → (Af.KillsMu (l * 2 ^ n' * h.N * p₁) D.ψ ∧ Af.KillsMu (l * 2 ^ n' * h.N * p₁) D.ξ ∧ Af.KillsMu (l * 2 ^ n' * h.N * p₁) D.om) ∧ D.ψ ^ ((l - 1) * 2 ^ n' * (2 * h.o)) = 1 ∧ D.ξ ^ ((l - 1) * 2 ^ n' * (2 * h.o)) = 1 ∧ D.om ^ ((l - 1) * 2 ^ n' * (2 * h.o)) = 1 := by
   intro Ω _ _ _ h t _ l _ c e _ _ _ ψ hψ D hD n' p₁ m₀ hc hc2 hm₀
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   obtain ⟨hp₁, ξ', ξ₀, -, -, hord, hξ⟩ := hc.xi
   have hpsi := hc.psi
   have hMN : h.N ∣ l * 2 ^ n' * h.N * p₁ := dvd_mul_of_dvd_left (dvd_mul_left _ _) _

@@ -95,7 +95,7 @@ private theorem w3_lemma {ℓ : ℕ} [Fact ℓ.Prime] {z : ℤ_[ℓ]} (hz : z �
 theorem character_value_formula_holds : StatChiVal := by
   intro ℓ _ hℓ χ hχ k hk
   by_cases hdk : (ℓ - 1) ∣ k
-  · rw [if_pos hdk]
+  · rw [ite_eq_left hdk]
     obtain ⟨t, rfl⟩ := hdk
     have ht : t ≠ 0 := by
       rintro rfl
@@ -133,7 +133,7 @@ theorem character_value_formula_holds : StatChiVal := by
       ring
     have hne : (χ : ℤ_[ℓ]) ^ ((ℓ - 1) * (ℓ ^ a * t')) - 1 ≠ 0 := by
       intro h0
-      rw [h0, emultiplicity_zero] at key
+      rw [h0, emultiplicity_zero_right] at key
       exact ENat.top_ne_natCast _ key
     refine ⟨hne, ?_⟩
     have hv := w3_lemma hne
@@ -151,7 +151,7 @@ theorem character_value_formula_holds : StatChiVal := by
       Nat.multiplicity_mul hpow ht0, Nat.multiplicity_prime_pow,
       multiplicity_eq_zero_of_not_dvd ht', multiplicity_eq_zero_of_not_dvd hnd,
       Nat.add_zero, Nat.zero_add]
-  · rw [if_neg hdk]
+  · rw [ite_eq_right hdk]
     exact val_zero_of_not_dvd (fun h => hdk (hχ.1 k h))
 
 private theorem w3_lemma_2 {ℓ : ℕ} [Fact ℓ.Prime] {A : Type} [CommRing A] [Algebra ℤ_[ℓ] A] {G : GBase ℓ A}

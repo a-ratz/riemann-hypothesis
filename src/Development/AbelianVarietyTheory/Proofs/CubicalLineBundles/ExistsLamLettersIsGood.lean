@@ -111,9 +111,9 @@ theorem exists_lamLetters_isGood : ∀ (E : Type) [Field E] [NumberField E] [IsC
     have : κ.symm ((ε.trans κ) ⟨b, i⟩) = ε ⟨b, i⟩ := by simp
     simp only [this]
     by_cases h : p b
-    · have e1 : ε ⟨b, i⟩ = Sum.inl (i.cast (if_pos h), o.τΨ.symm ⟨b, h⟩) := dif_pos h
+    · have e1 : ε ⟨b, i⟩ = Sum.inl (i.cast (ite_eq_left h), o.τΨ.symm ⟨b, h⟩) := dite_eq_left h
       rw [e1]; simp
-    · have e1 : ε ⟨b, i⟩ = Sum.inr (i.cast (if_neg h), o.τ'.symm ⟨b, h⟩) := dif_neg h
+    · have e1 : ε ⟨b, i⟩ = Sum.inr (i.cast (ite_eq_right h), o.τ'.symm ⟨b, h⟩) := dite_eq_right h
       rw [e1]; simp
   · intro k
     refine ⟨w (κ.symm k), ?_, hu _⟩
@@ -127,6 +127,6 @@ theorem exists_lamLetters_isGood : ∀ (E : Type) [Field E] [NumberField E] [IsC
     generalize κ.symm k = q
     cases q <;> rfl
   · intro b
-    exact ⟨fun h => if_pos h, fun h => if_neg h⟩
+    exact ⟨fun h => ite_eq_left h, fun h => ite_eq_right h⟩
 
 end GlobalTheory.LamF

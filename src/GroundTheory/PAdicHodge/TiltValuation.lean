@@ -113,12 +113,12 @@ theorem val_eq_nnnorm_untilt (x : PreTilt (normInteger K) p) :
     ModP.preVal_mk normInteger_integers (by rwa [← coeff_eq_mk_untilt])]
   ext
   push_cast
-  rw [NormedField.valuation_apply, coe_nnnorm]
+  rw [NormedField.valuation_apply, coe_nnNorm]
   exact norm_untilt_iterate_pow x n
 
 theorem untilt_eq_zero_iff {x : PreTilt (normInteger K) p} :
     ((x.untilt : normInteger K) : K) = 0 ↔ x = 0 := by
-  rw [← nnnorm_eq_zero, ← val_eq_nnnorm_untilt, PreTilt.map_eq_zero]
+  rw [← nnNorm_eq_zero, ← val_eq_nnnorm_untilt, PreTilt.map_eq_zero]
 
 theorem norm_untilt_add_le (x y : PreTilt (normInteger K) p) :
     ‖(((x + y).untilt : normInteger K) : K)‖ ≤

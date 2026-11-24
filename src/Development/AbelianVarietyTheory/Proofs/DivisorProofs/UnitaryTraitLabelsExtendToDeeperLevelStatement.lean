@@ -167,11 +167,11 @@ theorem exists_complete_dvr_values_unitary : ∀ (E : Type) [Field E] [NumberFie
   intro E _ _ _ H Dw l Xo cf C X₁ D p _ z₁ c y h V _ _ _ _ hc hV
   obtain ⟨R, _, hR, y₀, hval⟩ := GlobalTheory.ValField.exists_fg_values D.X.M (gPt p ≫ y)
   let κ : FractionRing V →+* PadicAlgCl p := algebraMap (FractionRing V) (PadicAlgCl p)
-  haveI : CharZero V := RingHom.charZero (κ.comp (algebraMap V (FractionRing V)))
+  have : CharZero V := RingHom.charZero (κ.comp (algebraMap V (FractionRing V)))
   have hQ := GlobalTheory.PadicUnitBall.padic_mem_range p V hc κ hV
   obtain ⟨W₂, i₁, i₂, i₃, hcW, -, fV, fK, κ', -, -, -, -, hκ', hunit, hy⟩ :=
     GlobalTheory.DvrFinExt.exists_finite_extension p V hc κ hV hQ R y₀
-  letI : Algebra (FractionRing W₂) (PadicAlgCl p) := κ'.toAlgebra
+  let : Algebra (FractionRing W₂) (PadicAlgCl p) := κ'.toAlgebra
   refine ⟨W₂, i₁, i₂, i₃, κ'.toAlgebra, hcW, hunit, fK, hκ', fun a ha => ?_⟩
   have hm := hval κ'.fieldRange (fun r => by obtain ⟨x, hx⟩ := hy r; exact ⟨x, hx⟩) a ha
   obtain ⟨x, hx⟩ := hm
@@ -227,8 +227,8 @@ theorem extend {O Ω Γ : Type} [CommRing O] [IsDomain O] [IsNoetherianRing O] [
     have hc : IsCommMonObj G' := open scoped CategoryTheory.MonObj in by
       rw [isCommMonObj_iff_isMulCommutative]
       intro T
-      letI : Group (T ⟶ G') := CategoryTheory.Hom.group
-      letI : CommGroup (Over.mk (T.hom ≫ f) ⟶ G) := CategoryTheory.Hom.commGroup
+      let : Group (T ⟶ G') := CategoryTheory.Hom.group
+      let : CommGroup (Over.mk (T.hom ≫ f) ⟶ G) := CategoryTheory.Hom.commGroup
       refine ⟨⟨fun x y => Over.OverMorphism.ext (h.1.hom_ext ?_ (by rw [Over.w, Over.w]))⟩⟩
       rw [← h.2 T x y (pushPt h.1.w x) (pushPt h.1.w y) rfl rfl,
         ← h.2 T y x (pushPt h.1.w y) (pushPt h.1.w x) rfl rfl, _root_.mul_comm]
@@ -349,8 +349,8 @@ theorem GlobalTheory.UPoinc.uTest_transport : ∀ (E : Type) [Field E] [NumberFi
     have hc : IsCommMonObj G' := open scoped CategoryTheory.MonObj in by
       rw [isCommMonObj_iff_isMulCommutative]
       intro T
-      letI : Group (T ⟶ G') := CategoryTheory.Hom.group
-      letI : CommGroup (Over.mk (T.hom ≫ f) ⟶ G) := CategoryTheory.Hom.commGroup
+      let : Group (T ⟶ G') := CategoryTheory.Hom.group
+      let : CommGroup (Over.mk (T.hom ≫ f) ⟶ G) := CategoryTheory.Hom.commGroup
       refine ⟨⟨fun x y => Over.OverMorphism.ext (h.1.hom_ext ?_ (by rw [Over.w, Over.w]))⟩⟩
       rw [← h.2 T x y (pushPt h.1.w x) (pushPt h.1.w y) rfl rfl,
         ← h.2 T y x (pushPt h.1.w y) (pushPt h.1.w x) rfl rfl, _root_.mul_comm]
@@ -363,16 +363,16 @@ theorem GlobalTheory.UPoinc.uTest_transport : ∀ (E : Type) [Field E] [NumberFi
     GlobalTheory.Poinc.UTestBaseChange.baseChange _ _ _ ρ' p y₀ u V₂ hV₂c hV₂n σ hσ
   let j : FractionRing u₁.V →+* PadicAlgCl p := algebraMap _ _
   have hf' : j.comp u₁.yK = y₀ := u₁.fac
-  haveI := X₁.ar.char
-  haveI := D.X.ar.char
-  haveI := isSeparated_univ Xo
+  have := X₁.ar.char
+  have := D.X.ar.char
+  have := isSeparated_univ Xo
 
   set x₂ := (gPt p ≫ y) (closedPoint (PadicAlgCl p)) with hx₂
   have hx₁ : (gPt p ≫ ct.y) (closedPoint (PadicAlgCl p)) = D.q x₂ := by
     rw [← h, ← Category.assoc]; rfl
-  haveI : IsDedekindDomain D.X.o₁ := ArithBase.ded (Ω := D.X.Ω₁)
-  haveI : IsNoetherianRing (D.X.M.O x₂) := D.X.M.isNoetherianRing_O x₂
-  haveI : IsIntegrallyClosed (D.X.M.O x₂) := haveI := D.X.normal; RatModel.isIntegrallyClosed_O (GlobalTheory.IsNormalScheme.pred _) x₂
+  have : IsDedekindDomain D.X.o₁ := ArithBase.ded (Ω := D.X.Ω₁)
+  have : IsNoetherianRing (D.X.M.O x₂) := D.X.M.isNoetherianRing_O x₂
+  have : IsIntegrallyClosed (D.X.M.O x₂) := haveI := D.X.normal; RatModel.isIntegrallyClosed_O (GlobalTheory.IsNormalScheme.pred _) x₂
   have hmem : ∀ a : R', algebraMap X₁.Ω₁ D.X.Ω₁ a ∈ D.X.M.O x₂ := fun a =>
     map_mem_O D.gen (hx₁ ▸ hR' a.2)
   let g₁ : R' →+* D.X.M.O x₂ := ((algebraMap X₁.Ω₁ D.X.Ω₁).comp R'.val.toRingHom).codRestrict _ hmem

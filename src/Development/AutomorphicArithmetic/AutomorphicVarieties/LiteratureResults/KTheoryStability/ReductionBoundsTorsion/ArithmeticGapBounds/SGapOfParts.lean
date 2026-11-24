@@ -540,7 +540,7 @@ theorem _root_.PositivityTheory.KB.sGap_of_parts : GapAbs → Unfold → Arith �
   have hπ : π ≠ 0 := hπp.ne_zero
   have hN0 : 0 < N := by omega
   obtain ⟨hfc, hfe, hfs, hfi, hf0⟩ := hf
-  haveI := d.haar
+  have := d.haar
   obtain ⟨q, s, hq⟩ := exists_q L N π hπ 1 hN0
   obtain ⟨q₂, s₂, hq₂⟩ := exists_q L N π hπ 2 hN0
   have hmem1 := mem_map_Kg L N π hπ 1 q s hq

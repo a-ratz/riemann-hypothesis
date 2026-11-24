@@ -195,7 +195,7 @@ theorem exists_hom_range_stabiliser : ∀ (F E : Type) [Field F] [NumberField F]
     rw [(hS (φ g)).1 (e.symm g).2] at h3
     erw [hr] at h3
     exact h3.symm
-  have cm : Continuous fun g : HA (AF F) σ J' => HA.mat (AF F) σ J' g := continuous_subtype_val
+  have cm : Continuous fun g : HA (AF F) σ J' => HA.mat (AF F) σ J' g := continuous_subtypeVal
   have cφ : ∀ f : HA (AF F) σ J' → HA (AF F) σ J',
       (Continuous fun g => ((HA.mat (AF F) σ J' (f g) : GL (Fin M') (AF F ⊗[F] E)) :
             Matrix (Fin M') (Fin M') (AF F ⊗[F] E))) →

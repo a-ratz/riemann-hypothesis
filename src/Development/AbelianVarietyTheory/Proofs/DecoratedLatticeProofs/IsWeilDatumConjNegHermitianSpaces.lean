@@ -71,7 +71,7 @@ theorem mt_negGA_symm (V : HSp D) (g : GA D (negSp V)) : mt V ((negGA V).symm g)
   rw [← mt_negGA, MulEquiv.apply_symm_apply]
 
 theorem continuous_negGA_symm (V : HSp D) : Continuous (negGA V).symm :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem UJ_neg {A : Type} [CommRing A] {n : Type} [Fintype n] [DecidableEq n] (σ : A →+* A) (J : Matrix n n A) :
     Formalism.UG.UJ σ (-J) = Formalism.UG.UJ σ J := by

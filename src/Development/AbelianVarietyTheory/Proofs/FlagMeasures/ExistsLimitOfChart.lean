@@ -117,7 +117,7 @@ theorem exists_limit_of_chart (V M G : Type) [NormedAddCommGroup V] [NormedSpace
     ∃ A : ℝ, 0 < A ∧ Tendsto (fun r : ℝ => (μ {g | ‖m g - m 1‖ ≤ r}).toReal / r ^ Module.finrank ℝ V)
       (𝓝[>] 0) (𝓝 A) := by
   borelize V
-  haveI : ProperSpace V := FiniteDimensional.proper_real V
+  have : ProperSpace V := FiniteDimensional.proper_real V
   set lam : Measure V := Measure.addHaar
   obtain ⟨c, hc0, hct, hc⟩ := GlobalTheory.CompactDualExists.exists_density_of_chart V M G lam μ e m ι L he h0 hd
     hL hL1 hm hn
@@ -268,12 +268,12 @@ theorem uMat_injective (ε : Fin n → Bool) : Function.Injective (uMat : UJ ε 
   fun _ _ h => Subtype.ext (Units.ext h)
 
 theorem continuous_uMat (ε : Fin n → Bool) : Continuous (uMat : UJ ε → _) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_expJ (ε : Fin n → Bool) : Continuous (expJ ε) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact UpqExpChart.continuous_matExp.comp continuous_subtype_val
-  · exact UpqExpChart.continuous_matExp.comp continuous_subtype_val.neg
+  · exact UpqExpChart.continuous_matExp.comp continuous_subtypeVal
+  · exact UpqExpChart.continuous_matExp.comp continuous_subtypeVal.neg
 
 theorem expJ_image_mem_nhds (ε : Fin n → Bool) {U : Set (lieJ ε)} (hU : U ∈ 𝓝 (0 : lieJ ε)) :
     expJ ε '' U ∈ 𝓝 (1 : UJ ε) := by

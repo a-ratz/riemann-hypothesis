@@ -203,7 +203,7 @@ theorem Twist.triv_good {Q : Finset (Pl D.host.E)} (h : SplitSet Q) : (Twist.tri
     rfl
 
 theorem Twist.Good.isHeckeChar {t : Twist D Circle} (h : t.Good) : IsHeckeChar D t.chi := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
   refine ⟨continuous_of_continuousAt_one t.chi ?_, h.rat⟩
   refine (continuousAt_const (y := (1 : Circle))).congr ?_
   filter_upwards [h.isOpen.mem_nhds (one_mem t.chi.ker)] with x hx using (MonoidHom.mem_ker.1 hx).symm

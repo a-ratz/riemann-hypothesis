@@ -67,13 +67,13 @@ theorem exists_rho : ∃ ρ : (AF F)ˣ, (∀ w, ‖evInf F w ρ‖₊ = 2⁻¹) 
     Prod.ext e (mul_one _), Prod.ext ((mul_comm _ _).trans e) (mul_one _)⟩, fun w => ?_,
     fun v => map_one (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v)⟩
   change ‖GlobalTheory.AutFunCompare.evW w (algebraMap F (Ainf F) 2⁻¹)‖₊ = _
-  rw [AlgHom.commutes, map_inv₀, map_ofNat, nnnorm_inv]
+  rw [AlgHom.commutes, map_inv₀, map_ofNat, nnNorm_inv]
   exact congrArg _ (nnnorm_nat w 2)
 
 theorem compact_bound {Ω : Set (AF F)} (hΩ : IsCompact Ω) : ∃ (c : ℕ) (R : ℝ≥0), 0 < c ∧
     ∀ a ∈ Ω, (∀ w, ‖evInf F w a‖₊ ≤ R) ∧ ∀ v, ‖(c : Fv F v) * evFin F v a‖ ≤ 1 := by
   choose R hR using fun w => (hΩ.image (f := fun a => ‖evInf F w a‖₊)
-    (Continuous.nnnorm ((continuous_apply w).comp continuous_fst))).bddAbove
+    (Continuous.nnNorm ((continuous_apply w).comp continuous_fst))).bddAbove
   let O : ℕ+ → Set (AF F) := fun c => {a | ∀ v, ‖((c : ℕ) : Fv F v) * evFin F v a‖ ≤ 1}
   have hO : ∀ c, IsOpen (O c) := fun c => by
     have := (RestrictedProduct.isOpen_forall_mem (R := fun v : Pl F => Fv F v) (A := fun v => v.adicCompletionIntegers F)
@@ -105,7 +105,7 @@ theorem scale_core {ρ : (AF F)ˣ} (r1 : ∀ w, ‖evInf F w ρ‖₊ = 2⁻¹) 
   have D0 : 0 < D := by positivity
   have hP : ∏ w, ‖evInf F w ν‖₊ ≤ D := Finset.prod_le_pow_card _ _ _ fun w _ => h1 w
   have hQ : ∏ᶠ v, ‖evFin F v ν‖₊ ≤ 1 := finprod_induction (· ≤ 1) le_rfl (fun _ _ => mul_le_one') h2
-  have n0 : ∀ v, 0 < ‖evFin F v ν‖₊ := fun v => nnnorm_pos.2 (ν.isUnit.map _).ne_zero
+  have n0 : ∀ v, 0 < ‖evFin F v ν‖₊ := fun v => nnNorm_pos.2 (ν.isUnit.map _).ne_zero
   obtain ⟨m, m0, hm, hv⟩ := GlobalTheory.SmoothForms.denom_global (fun v => ‖evFin F v ν‖₊⁻¹) (fun v => (one_le_inv₀ (n0 v)).2 (h2 v))
     (by rwa [Function.mulSupport_fun_inv])
   have a1 : 1 ≤ 2 ^ i * ∏ᶠ v, ‖evFin F v ν‖₊ := le_of_mul_le_mul_left
@@ -120,13 +120,13 @@ theorem scale_core {ρ : (AF F)ˣ} (r1 : ∀ w, ‖evInf F w ρ‖₊ = 2⁻¹) 
         (pow_le_pow_right₀ hR (Finset.card_le_univ _))) _
     have a3 : 1 ≤ 2 ^ i * ‖evInf F w ν‖₊ := le_of_mul_le_mul_left
       ((mul_one D).trans_le (h.trans ((mul_le_mul_right (mul_le_mul' a2 hQ) _).trans_eq (by ring)))) D0
-    have a4 : ‖evInf F w ν‖₊⁻¹ ≤ 2 ^ i := (inv_le_iff_one_le_mul₀ (nnnorm_pos.2 (ν.isUnit.map _).ne_zero)).2 a3
-    rw [← coe_nnnorm, NNReal.coe_le_one]
-    rw [map_mul, map_mul, map_pow, map_natCast, map_units_inv, nnnorm_mul, nnnorm_mul, nnnorm_pow, nnnorm_inv, nnnorm_nat, r1]
+    have a4 : ‖evInf F w ν‖₊⁻¹ ≤ 2 ^ i := (inv_le_iff_one_le_mul₀ (nnNorm_pos.2 (ν.isUnit.map _).ne_zero)).2 a3
+    rw [← coe_nnNorm, NNReal.coe_le_one]
+    rw [map_mul, map_mul, map_pow, map_natCast, map_units_inv, nnNorm_mul, nnNorm_mul, nnNorm_pow, nnNorm_inv, nnnorm_nat, r1]
     refine (mul_le_mul' (mul_le_mul_left hm' _) a4).trans_eq ?_
     rw [inv_pow, two_mul, pow_add]; field_simp
   · rw [map_mul, map_mul, map_pow, map_natCast, map_units_inv, r2, one_pow, mul_one]
-    exact hv v _ (nnnorm_inv _).le
+    exact hv v _ (nnNorm_inv _).le
 
 theorem scale_ad (hF : IsTotallyReal F) {ρ : (AF F)ˣ} (r1 : ∀ w, ‖evInf F w ρ‖₊ = 2⁻¹) (r2 : ∀ v, evFin F v ρ = 1) {Ω : Set (AF F)}
     (hΩ : IsCompact Ω) : ∃ (i₀ : ℕ) (C : Set (AF F)), IsCompact C ∧ (∀ i m : ℕ, m ≤ 2 ^ i → m * ρ.1 ^ (2 * i) ∈ C) ∧
@@ -141,8 +141,8 @@ theorem scale_ad (hF : IsTotallyReal F) {ρ : (AF F)ˣ} (r1 : ∀ w, ‖evInf F 
   obtain ⟨i₀, hi⟩ := pow_unbounded_of_one_lt (max 1 R ^ Fintype.card (InfinitePlace F)) (one_lt_two (α := ℝ≥0))
   refine ⟨i₀, C ∪ (· * (c : AF F) ^ (k + 1)) '' C, hC.union (hC.image (continuous_mul_const _)), fun i m hm => .inl (mem _
     (fun w => ?_) fun v => ?_), fun u hu => ?_⟩
-  · rw [← coe_nnnorm, NNReal.coe_le_one]
-    rw [map_mul, map_pow, map_natCast, nnnorm_mul, nnnorm_pow, nnnorm_nat, r1, inv_pow, mul_inv_le_iff₀ (by positivity), one_mul]
+  · rw [← coe_nnNorm, NNReal.coe_le_one]
+    rw [map_mul, map_pow, map_natCast, nnNorm_mul, nnNorm_pow, nnnorm_nat, r1, inv_pow, mul_inv_le_iff₀ (by positivity), one_mul]
     exact_mod_cast hm.trans (Nat.pow_le_pow_right two_pos (by omega))
   · rw [map_mul, map_pow, map_natCast, r2, one_pow, mul_one]
     exact IsUltrametricDist.norm_natCast_le_one _ _
@@ -156,7 +156,7 @@ theorem scale_ad (hF : IsTotallyReal F) {ρ : (AF F)ˣ} (r1 : ∀ w, ‖evInf F 
     simp only [absE_apply, absEv_unitFin, absEw_unitInf, IsTotallyReal.mult_eq, pow_one]; rfl
   have h1 : ∀ w, ‖evInf F w ν‖₊ ≤ max 1 R := fun w => ((hR _ ⟨_, hu, e2.symm⟩).1 w).trans (le_max_right _ _)
   have h2 : ∀ v, ‖evFin F v ν‖₊ ≤ 1 := fun v => by
-    rw [← NNReal.coe_le_one, coe_nnnorm]
+    rw [← NNReal.coe_le_one, coe_nnNorm]
     rw [e2, map_mul, map_pow, map_natCast, pow_succ, mul_assoc, norm_mul, norm_pow]
     exact mul_le_one₀ (pow_le_one₀ (norm_nonneg _) (IsUltrametricDist.norm_natCast_le_one _ _)) (norm_nonneg _) ((hc _ hu).2 v)
   refine ⟨?_, fun j hj => ?_⟩

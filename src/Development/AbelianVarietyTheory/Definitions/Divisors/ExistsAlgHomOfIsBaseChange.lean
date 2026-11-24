@@ -229,7 +229,7 @@ variable {α : k →+* A} {β : k →+* B} {γ : k →+* C}
 
 theorem span_dForm (α : k →+* A) (D : ℕ) :
     Submodule.span A (Set.range (dForm α (D := D))) = ⊤ := by
-  letI := α.toAlgebra
+  let := α.toAlgebra
   rw [eq_top_iff, ← exteriorPower.ιMulti_span_of_span A D (Omega α)
     (KaehlerDifferential.span_range_derivation k A)]
   refine Submodule.span_mono ?_
@@ -251,10 +251,10 @@ def formMap (ρ : A →+* B) (h : ρ.comp α = β) : Forms α D →ₛₗ[ρ] Fo
 
 @[simp] theorem formMap_dForm (ρ : A →+* B) (h : ρ.comp α = β) (f : Fin D → A) :
     formMap D ρ h (dForm α f) = dForm β fun i => ρ (f i) := by
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
   change exteriorPowerMapOver (B := B) (D := D) (KaehlerDifferential.map k k A B)
     (exteriorPower.ιMulti A D _) = _
   rw [exteriorPowerMapOver_ιMulti, dForm_eq]
@@ -268,7 +268,7 @@ theorem forms_ext {M : Type*} [AddCommGroup M] [Module B M] {ρ : A →+* B}
 theorem formMap_formMap (ρ : A →+* B) (σ : B →+* C) (τ : A →+* C) (e : σ.comp ρ = τ)
     (h : ρ.comp α = β) (h' : σ.comp β = γ) (h'' : τ.comp α = γ) (x : Forms α D) :
     formMap D σ h' (formMap D ρ h x) = formMap D τ h'' x := by
-  haveI : RingHomCompTriple ρ σ τ := ⟨e⟩
+  have : RingHomCompTriple ρ σ τ := ⟨e⟩
   refine LinearMap.congr_fun (forms_ext (φ := (formMap D σ h').comp (formMap D ρ h))
     (ψ := formMap D τ h'') fun f => ?_) x
   rw [LinearMap.comp_apply, formMap_dForm, formMap_dForm, formMap_dForm, ← e]
@@ -282,11 +282,11 @@ theorem formMap_of_eq_id (ρ : A →+* A) (e : ρ = RingHom.id A) (h : ρ.comp �
 
 theorem IsFreeGen.formMap {ρ : A →+* B} (hρ : ρ.Etale) (h : ρ.comp α = β) {ω : Forms α D}
     (hω : IsFreeGen A ω) : IsFreeGen B (formMap D ρ h ω) := by
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
-  haveI : Algebra.Etale A B := hρ
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
+  have : Algebra.Etale A B := hρ
   exact hω.of_isBaseChange (isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale k A B) D)
 
@@ -297,23 +297,23 @@ theorem isFreeGen_dForm (x : Fin D → A) (b : Module.Basis (Fin D) A (Omega α)
 
 theorem exists_isFreeGen (h : α.IsStandardSmoothOfRelativeDimension D) :
     ∃ ω : Forms α D, IsFreeGen A ω := by
-  letI := α.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
+  let := α.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
   cases subsingleton_or_nontrivial A with
   | inl _ =>
-    haveI := Module.subsingleton A (Forms α D)
+    have := Module.subsingleton A (Forms α D)
     exact ⟨0, fun _ _ _ => Subsingleton.elim _ _, fun _ => ⟨0, Subsingleton.elim _ _⟩⟩
   | inr _ =>
-    haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth D (R := k) (S := A)
-    haveI : Module.Free A (Omega α) := inferInstanceAs (Module.Free A Ω[A⁄k])
-    haveI : Module.Finite A (Omega α) := inferInstanceAs (Module.Finite A Ω[A⁄k])
+    have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth D (R := k) (S := A)
+    have : Module.Free A (Omega α) := inferInstanceAs (Module.Free A Ω[A⁄k])
+    have : Module.Finite A (Omega α) := inferInstanceAs (Module.Finite A Ω[A⁄k])
     have hr : Module.finrank A (Omega α) = D := Module.finrank_eq_of_rank_eq
       (Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := k) (S := A) D)
     exact ⟨_, isFreeGen_ιMulti (Module.finBasisOfFinrankEq A (Omega α) hr)⟩
 
 theorem map_dForm_mul_sub_mem (c : Forms α D →ₗ[A] A) (I : Ideal A) (h : A) (g : Fin D → A)
     (hg : ∀ i, g i ∈ I) : c (dForm α fun i => h * g i) - h ^ D * c (dForm α g) ∈ I := by
-  letI := α.toAlgebra
+  let := α.toAlgebra
   have := Submodule.mem_map_of_mem (f := c) (dWedge_mul_sub_mem k I h g hg)
   rw [Submodule.map_smul'', map_sub, map_smul] at this
   exact (Submodule.smul_mono le_rfl le_top).trans

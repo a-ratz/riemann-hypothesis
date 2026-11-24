@@ -63,7 +63,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : �
 theorem sum_sub_delta (X : Matrix (Fin r) (Fin r) E) (g : Fin r → S.V) (a : Fin r) :
     ∑ c, X c a • g c - g a = ∑ c, (X c a - if c = a then 1 else 0) • g c := by
   simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 theorem psiF_mem (Λ : Submodule (𝓞 E) S.V) (e f : Fin r → S.V) (U U' : Matrix (Fin r) (Fin r) E) (m : E)
     (hm : star m = m) (hint : ∀ x ∈ Λ, ∀ y ∈ Λ, ∃ o : 𝓞 E, (o : E) = S.hT x y)
@@ -136,15 +136,15 @@ theorem m_mem_aaS_inv (D : D7) (a : Fin D.R.rS) :
   rw [aaS_eq, inv_inv]
   set N := Ideal.absNorm (differentIdeal ℤ (𝓞 D.host.F))
   have hNk : ((N : D.host.E)) ^ (D.R.rS - a.1) ∈ ddS D ^ (D.R.rS - a.1) := by
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_pow]
-    exact Submodule.pow_mem_pow _ (FractionalIdeal.mem_coe.mpr (norm_mem_ddS D)) _
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_pow]
+    exact Submodule.pow_mem_pow _ (FractionalIdeal.mem_coeToSubmodule.mpr (norm_mem_ddS D)) _
   have h1 : ((N : D.host.E)) ^ (D.R.rS - a.1) ∈ ((ddS D ^ (D.R.rS - a.1) :
       FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E) :=
-    FractionalIdeal.mem_coe.mpr hNk
+    FractionalIdeal.mem_coeToSubmodule.mpr hNk
   have h2 := Submodule.smul_mem _ ((N : 𝓞 D.host.E) ^ a.1) h1
   rw [Algebra.smul_def, map_pow, map_natCast, ← pow_add, Nat.add_sub_cancel' a.2.le] at h2
   push_cast
-  exact FractionalIdeal.mem_coe.mp h2
+  exact FractionalIdeal.mem_coeToSubmodule.mp h2
 
 theorem frame_fin (D : D7) {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (b : 𝓞 D.host.E)
     (B : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (𝓞 D.host.E)) (hB : UpB b B)

@@ -246,7 +246,7 @@ theorem mem_dualV_iff_valued {ψ : AddChar (AF F) ℂ} (h : IsStdChar F ψ)
   refine ⟨fun H => by simpa only [singleV_self] using H v, fun H w => ?_⟩
   by_cases hw : w = v
   · subst hw; rwa [singleV_self]
-  · rw [singleV_of_ne _ hw, map_zero]; exact zero_le'
+  · rw [singleV_of_ne _ hw, map_zero]; exact zero_le
 
 theorem exists_generator_differentV (v : HeightOneSpectrum (𝓞 F)) :
     ∃ y : v.adicCompletionIntegers F,
@@ -283,7 +283,7 @@ theorem dualV_eq_inv_different {ψ : AddChar (AF F) ℂ} (h : IsStdChar F ψ)
     exact exp_ne_zero hy.symm
   have h1 : ∀ t : Fv F v, t ∈ dualV F ψ v ↔ t * y ∈ v.adicCompletionIntegers F := fun t => by
     rw [mem_dualV_iff_valued h, HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, hy, exp_neg,
-      ← one_div, le_div_iff₀ (zero_lt_iff.2 exp_ne_zero)]
+      ← one_div, le_div_iff₀ (pos_iff_ne_zero.2 exp_ne_zero)]
   refine ⟨fun t => ?_, ?_⟩
   · rw [h1, hD]
     refine ⟨fun H d hd => ?_, fun H => H y (Ideal.mem_span_singleton_self y)⟩

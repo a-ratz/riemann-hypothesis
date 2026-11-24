@@ -85,7 +85,7 @@ theorem stalkMap_injective_of_flat (r : Z ⟶ X) [Flat r] (z : Z) : Function.Inj
 
 theorem exists_frac {A : X.Opens} (hA : IsAffineOpen A) {y : X} (hy : y ∈ A) (κ : X.presheaf.stalk y) :
     ∃ a b : Γ(X, A), IsUnit (gs (𝟙 X) y A b) ∧ κ * gs (𝟙 X) y A b = gs (𝟙 X) y A a := by
-  letI := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : A)
+  let := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : A)
   have h := hA.isLocalization_stalk ⟨y, hy⟩
   obtain ⟨⟨a, b⟩, e⟩ := IsLocalization.surj (hA.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl
     (S := X.presheaf.stalk ((⟨y, hy⟩ : A) : X)) κ
@@ -103,7 +103,7 @@ theorem stalkSpecializes_injective {x y : X} (h : y ⤳ x) [IsDomain (X.presheaf
   obtain ⟨a, b, hb, e⟩ := exists_frac hA hx t
   have ha : gs (𝟙 X) y A a = 0 := by
     rw [← gs_specializes (𝟙 X) h A hx, ← e, map_mul, ht, zero_mul]
-  letI := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : A)
+  let := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : A)
   have hl := hA.isLocalization_stalk ⟨y, hy⟩
   rw [gs_id y A hy] at ha
   obtain ⟨c, hc⟩ := (IsLocalization.map_eq_zero_iff (hA.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl

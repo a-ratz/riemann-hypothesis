@@ -120,7 +120,7 @@ theorem finite_setOf_mem_asIdeal (E : Type) [Field E] [NumberField E] (δ : 𝓞
     {w : HeightOneSpectrum (𝓞 E) | δ ∈ w.asIdeal}.Finite := by
   have := Ideal.finite_factors (R := 𝓞 E) (I := Ideal.span {δ}) (by simpa using h)
   refine this.subset fun w hw => ?_
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]; exact hw
 
 theorem eventually_degOne_moved : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
@@ -139,7 +139,7 @@ theorem eventually_degOne_moved : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     exact (sub_eq_zero.mp this).symm
   refine (finite_setOf_mem_asIdeal E (θ - θ') hδ).subset ?_ |> Filter.eventually_cofinite.mpr
   intro w hw
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   by_contra hnot
   apply hw
   intro hdeg
@@ -479,10 +479,10 @@ theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [
   set S : Finset (HeightOneSpectrum (𝓞 E)) := hU.toFinset ∪ hX.toFinset ∪ {w} with hS
   have hSu : ∀ v ∉ S, UnrAt χ v := by
     intro v hv; by_contra h
-    exact hv (by simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inl (Or.inl h))
+    exact hv (by simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; exact Or.inl (Or.inl h))
   have hSd : ∀ v ∉ S, DegOne F v → TrivAt χ v := by
     intro v hv; by_contra h
-    exact hv (by simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inl (Or.inr h))
+    exact hv (by simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; exact Or.inl (Or.inr h))
   have hwS : w ∈ S := by simp [hS]
   obtain ⟨θ, D, hD0, hθ⟩ := _root_.GlobalTheory.quadratic_ringOfIntegers_mul_mem_span_one_gen F E (Algebra.IsQuadraticExtension.finrank_eq_two F E)
   set ι := algebraMap (𝓞 F) (𝓞 E) with hι
@@ -497,7 +497,7 @@ theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [
       intro Q _; rw [Ideal.zero_eq_bot]; exact Q.ne_bot
     obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP
     have hC : Ideal.comap ι (∏ Q ∈ S, Q.asIdeal) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_integral_mem ha0 ha (Algebra.IsIntegral.isIntegral a)
+      Ideal.under_ne_bot_of_integral_mem ha0 ha (Algebra.IsIntegral.isIntegral a)
     have hD : Ideal.span {D} ≠ ⊥ := by rwa [Ne, Ideal.span_singleton_eq_bot]
     rw [hm, ← Ideal.zero_eq_bot]
     exact mul_ne_zero (by rwa [Ideal.zero_eq_bot]) (by rwa [Ideal.zero_eq_bot])
@@ -509,7 +509,7 @@ theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [
       rw [Ne, Ideal.zero_eq_bot, Ideal.map_eq_bot_iff_of_injective hιinj]; exact hm0
     refine (Ideal.finite_factors h0).subset ?_
     intro P hP
-    simp only [Set.mem_setOf_eq] at hP ⊢
+    simp only [Set.mem_ofPred_eq] at hP ⊢
     rw [Ideal.dvd_iff_le]; exact Ideal.map_le_iff_le_comap.mpr hP
   set S' := hfin.toFinset with hS'
   have memS' : ∀ P, P ∈ S' ↔ m ≤ P.asIdeal.comap ι := by intro P; simp [hS']

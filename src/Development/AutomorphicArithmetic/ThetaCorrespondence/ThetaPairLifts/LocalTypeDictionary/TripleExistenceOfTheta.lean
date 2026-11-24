@@ -73,7 +73,7 @@ theorem triEx_holds_alt : GlobalTheory.Published.HoweDualityReal → _root_.Glob
   have hF : GlobalTheory.ConstRatio.Factor X W.ψ W.θ lam :=
     ⟨hlam0, Pi, p, p', J, hs, hinj, fun t P h => (hX.integrable t).1 P h, hlam, fun t Q _ => hI' t Q,
       P', hP', fun t h => (hX.integrable t).2 P' h⟩
-  haveI : Nonempty T := ⟨μ₀⟩
+  have : Nonempty T := ⟨μ₀⟩
   exact ⟨A, A', WW, X, lam, hX, hF.isConst⟩
 end GlobalTheory.SqTop
 end

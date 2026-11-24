@@ -321,22 +321,22 @@ variable {k r : ℕ}
 theorem rho_lt (S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)) (t : ℝ) :
     {m : Mt k r | rhoS k r S m < ENNReal.ofReal t} = expBall (k := k) (r := r) S t := by
   ext m
-  simp only [Set.mem_setOf_eq, rhoS, iInf_lt_iff, expBall, Set.mem_image, Metric.mem_ball, dist_zero_right]
+  simp only [Set.mem_ofPred_eq, rhoS, iInf_lt_iff, expBall, Set.mem_image, Metric.mem_ball, dist_zero_right]
   constructor
   · rintro ⟨Y, hY, hlt⟩
     refine ⟨Y, ?_, hY⟩
-    rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm, ENNReal.ofReal_lt_ofReal_iff'] at hlt
+    rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm, ENNReal.ofReal_lt_ofReal_iff'] at hlt
     exact hlt.1
   · rintro ⟨Y, hlt, hY⟩
     refine ⟨Y, hY, ?_⟩
-    rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm, ENNReal.ofReal_lt_ofReal_iff']
+    rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm, ENNReal.ofReal_lt_ofReal_iff']
     exact ⟨hlt, lt_of_le_of_lt (norm_nonneg _) hlt⟩
 
 theorem norm_lt {E : Type*} [NormedAddCommGroup E] (t : ℝ) :
     {Z : E | (‖Z‖₊ : ℝ≥0∞) < ENNReal.ofReal t} = Metric.ball 0 t := by
   ext Z
-  simp only [Set.mem_setOf_eq, Metric.mem_ball, dist_zero_right]
-  rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm, ENNReal.ofReal_lt_ofReal_iff']
+  simp only [Set.mem_ofPred_eq, Metric.mem_ball, dist_zero_right]
+  rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm, ENNReal.ofReal_lt_ofReal_iff']
   constructor
   · exact fun h => h.1
   · exact fun h => ⟨h, lt_of_le_of_lt (norm_nonneg _) h⟩
@@ -354,7 +354,7 @@ theorem m_int (μb : Measure (Mt k r)) {R1 R2 s : ℝ} (hs : 0 < s) (h1 : 0 ≤ 
       μb (expBall (k := k) (r := r) (Formalism.FourierDecayAlt.B2.UWb k r) (Real.sqrt (s ^ 2 - R1 - R2))) := by
   rw [← rho_lt, ← lintegral_indicator_one (by rw [rho_lt]; exact measurableSet_expBall' _ _)]
   refine lintegral_congr fun m => ?_
-  simp only [Set.indicator, Set.mem_setOf_eq, Pi.one_apply, sq_cond hs h1 h2]
+  simp only [Set.indicator, Set.mem_ofPred_eq, Pi.one_apply, sq_cond hs h1 h2]
 
 theorem z_int {E : Type*} [NormedAddCommGroup E] [MeasurableSpace E] [BorelSpace E] (ν : Measure E)
     {R1 R2 s : ℝ} (hs : 0 < s) (h1 : 0 ≤ R1) (h2 : 0 ≤ R2) :
@@ -362,7 +362,7 @@ theorem z_int {E : Type*} [NormedAddCommGroup E] [MeasurableSpace E] [BorelSpace
       then (1 : ℝ≥0∞) else 0) ∂ν = ν (Metric.ball 0 (Real.sqrt (s ^ 2 - R1 - R2))) := by
   rw [← norm_lt, ← lintegral_indicator_one (by rw [norm_lt]; exact measurableSet_ball)]
   refine lintegral_congr fun Z => ?_
-  simp only [Set.indicator, Set.mem_setOf_eq, Pi.one_apply, sq_cond hs h1 h2]
+  simp only [Set.indicator, Set.mem_ofPred_eq, Pi.one_apply, sq_cond hs h1 h2]
 
 end Formalism.L2.SG.Pf.BH.VL
 
@@ -773,8 +773,8 @@ set_option backward.isDefEq.respectTransparency false in
 open scoped Norms.Operator in
 lemma entry_zero {X : Mat 0 r} (hX : X ∈ lieOf (UWb 0 r)) (i j : Fin (2 * r + 0 + 1))
     (hij : ¬ (i = cI r ∧ j = cI r)) : X i j = 0 := by
-  letI : NormedRing (Mat 0 r) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mat 0 r) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Mat 0 r) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mat 0 r) := Matrix.linftyOpNormedAlgebra
   have hconst : ∀ t : ℝ, (NormedSpace.exp (t • X)) i j = (1 : Mat 0 r) i j := by
     intro t
     have hm := hX t
@@ -911,7 +911,7 @@ lemma toCircle_coe (s : ℝ) :
 
 lemma continuous_Gm : Continuous (Gm r) := by
   have hc : Continuous fun θ : AddCircle (2 * π) => ((AddCircle.toCircle θ : Circle) : ℂ) :=
-    continuous_subtype_val.comp AddCircle.continuous_toCircle
+    continuous_subtypeVal.comp AddCircle.continuous_toCircle
   refine continuous_pi fun i => continuous_pi fun j => ?_
   simp only [Gm, dgl_apply]
   split_ifs
@@ -977,7 +977,7 @@ lemma isHaar : IsHaarOn (UWb 0 r) (μG r) := by
     rw [Ne, Measure.map_eq_zero_iff continuous_Gm.measurable.aemeasurable]
     intro h
     have h1 := AddCircle.measure_univ (2 * π)
-    rw [h, Measure.coe_zero, Pi.zero_apply, eq_comm, ENNReal.ofReal_eq_zero] at h1
+    rw [h, FunLike.coe_zero, Pi.zero_apply, eq_comm, ENNReal.ofReal_eq_zero] at h1
     linarith [Real.pi_pos]
   · unfold μG
     rw [me_Gm.map_apply]
@@ -1410,14 +1410,14 @@ theorem ballFormOf (ε : Fin n → Bool) : BallFormOf ε := by
   have hdisj : Pairwise (Disjoint on disjointed O) := disjoint_disjointed O
   have hcov : ⋃ i, disjointed O i = univ := by rw [iUnion_disjointed, hOU]
   have hDV : ∀ i, disjointed O i ⊆ (fun h => xs i * h) '' V := fun i => disjointed_subset O i
-  haveI : Measure.IsMulLeftInvariant (nuG ε s xs (disjointed O)) := ⟨fun g => nuG_leftInv hLs hVW hD hdisj hcov hDV g⟩
-  haveI : IsLocallyFiniteMeasure (nuG ε s xs (disjointed O)) := ⟨fun y => ⟨(fun h => y * h) '' V, hcovN y, by
+  have : Measure.IsMulLeftInvariant (nuG ε s xs (disjointed O)) := ⟨fun g => nuG_leftInv hLs hVW hD hdisj hcov hDV g⟩
+  have : IsLocallyFiniteMeasure (nuG ε s xs (disjointed O)) := ⟨fun y => ⟨(fun h => y * h) '' V, hcovN y, by
       rw [nuG_eq hLs hVW hD hdisj hcov hDV y (hOm' y) (image_mono hVW)]
       calc (lamM ε s).map (fun h => y * h) ((fun h => y * h) '' V) ≤ (lamM ε s).map (fun h => y * h) univ :=
             measure_mono (subset_univ _)
         _ = lamM ε s univ := by rw [Measure.map_apply (measurable_const_mul y) MeasurableSet.univ, preimage_univ]
         _ < ∞ := lamM_univ_lt_top ε s⟩⟩
-  haveI : Measure.IsHaarMeasure (Formalism.REAL.muG ε) := by unfold Formalism.REAL.muG; infer_instance
+  have : Measure.IsHaarMeasure (Formalism.REAL.muG ε) := by unfold Formalism.REAL.muG; infer_instance
   have hνμ := Measure.isMulLeftInvariant_eq_smul (nuG ε s xs (disjointed O)) (Formalism.REAL.muG ε)
   set κ := Measure.haarScalarFactor (nuG ε s xs (disjointed O)) (Formalism.REAL.muG ε) with hκdef
   have hform : ∀ ρ, 0 < ρ → ρ ≤ s →
@@ -1462,7 +1462,7 @@ theorem ballFormOf (ε : Fin n → Bool) : BallFormOf ε := by
   rw [expSet_ball_eq_image]
   have h1 := hform ρ hρ hρs
   rw [hνμ] at h1
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
   rw [← h1, ← mul_assoc, ENNReal.ofReal_inv_of_pos hκpos, ENNReal.ofReal_coe_nnreal,
     ENNReal.inv_mul_cancel (ENNReal.coe_ne_zero.2 hκ) ENNReal.coe_ne_top, one_mul]
 

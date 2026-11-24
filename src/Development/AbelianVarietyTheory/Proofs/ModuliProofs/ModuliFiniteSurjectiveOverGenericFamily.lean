@@ -116,7 +116,7 @@ theorem exists_tate_of_lin (hc : l.A.Coprime l.M) {k : Type} [Field k] {Q : Type
       { toFun := fun a => P.mkQ (s a)
         map_add' := fun a b => by rw [← map_add (f := _), hP, I.add, hs, hs, hs, hadd]
         map_smul' := fun c a => by rw [RingHom.id_apply, ← map_smul, hP, I.lin, hs, hs, hlin] }
-    haveI := D.proj
+    have := D.proj
     obtain ⟨f, hf⟩ := Module.projective_lifting_property P.mkQ φ P.mkQ_surjective
     refine ⟨f, fun a => ?_⟩
     have h : P.mkQ (f a) = P.mkQ (s a) := LinearMap.congr_fun hf a
@@ -418,7 +418,7 @@ theorem GlobalTheory.moduli_finite_surjective_over_family : Out.Laws → Out.Law
   obtain ⟨hred, -, hnoe⟩ := isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ _ hsm
   have hfl : Flat (spMap β) := by
     obtain ⟨-, -, hfr⟩ := (GlobalTheory.BaseRing.isDedFrac_RZ E H l n j hn.pos hj.dvd).2.2 β hβ
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact Flat.SpecMap_iff.2 (IsLocalization.flat (KA l) (nonZeroDivisors (RZ H n l.A)))
   obtain ⟨a, ⟨h, ν, hν⟩, -⟩ := F.rep Xo.X (Xo.s ≫ spMap β) Xo.univ.t Xo.univ.etaA hred hnoe inferInstance
     (fullObj_of_obj Xo.s Xo.univ β hβ)

@@ -95,12 +95,12 @@ theorem leviForm_smul {ι : Type} [Fintype ι] (c : ℝ) (φ : (ι → ℂ) → 
   by_cases hc : c = 0
   · subst hc
     simp [leviForm]
-  · letI : Invertible c := invertibleOfNonzero hc
+  · let : Invertible c := invertibleOfNonzero hc
     have h1 : fderiv ℝ (c • φ) = c • fderiv ℝ φ :=
       funext fun x => fderiv_const_smul_of_invertible c
     have h2 : fderiv ℝ (c • fderiv ℝ φ) z = c • fderiv ℝ (fderiv ℝ φ) z :=
       fderiv_const_smul_of_invertible c
-    simp only [leviForm, h1, h2, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [leviForm, h1, h2, smul_apply, smul_eq_mul]
     ring
 
 theorem root_model_line_semipositive : ∀ (Ψ : Type) [Fintype Ψ] (N : ℕ) (M : RootModel Ψ N) (t : ℝ) (lam : Wt Ψ N) (s : ℝ) (q : ℕ) (n : Option (Ψ × Fin N) → ℤ), (∀ j, (n j : ℝ) = q * M.coef lam s j) → M.Semipos t lam s → IsSemipositiveH M.P (combLine (M.line t) n) ∧ IsConjInvariantH (combLine (M.line t) n) := by

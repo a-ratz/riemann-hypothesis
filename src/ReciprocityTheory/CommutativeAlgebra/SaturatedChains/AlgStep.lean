@@ -68,10 +68,10 @@ theorem height_le_one_of_comap_C_eq_bot {A : Type*} [CommRing A] [IsDomain A]
     have h0 : s ∈ Q.comap C := hsQ
     rw [hQ, Ideal.mem_bot] at h0
     exact nonZeroDivisors.ne_zero hs h0
-  letI : Algebra A[X] (FractionRing A)[X] := Polynomial.algebra A (FractionRing A)
-  haveI : IsLocalization (Submonoid.map (C : A →+* A[X]) (nonZeroDivisors A))
+  let : Algebra A[X] (FractionRing A)[X] := Polynomial.algebra A (FractionRing A)
+  have : IsLocalization (Submonoid.map (C : A →+* A[X]) (nonZeroDivisors A))
       (FractionRing A)[X] := Polynomial.isLocalization (nonZeroDivisors A) (FractionRing A)
-  haveI hQ' : (Q.map (algebraMap A[X] (FractionRing A)[X])).IsPrime :=
+  have hQ' : (Q.map (algebraMap A[X] (FractionRing A)[X])).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint _ _ Q ‹Q.IsPrime› hd
   have hcomap := IsLocalization.under_map_of_isPrime_disjoint
     (Submonoid.map (C : A →+* A[X]) (nonZeroDivisors A)) (FractionRing A)[X] ‹Q.IsPrime› hd
@@ -87,17 +87,17 @@ theorem height_le_height_comap_C_add_one {R : Type*} [CommRing R] [IsNoetherianR
     (P : Ideal R[X]) [P.IsPrime] : P.height ≤ (P.comap C).height + 1 := by
 
   set p := P.comap (C : R →+* R[X]) with hp
-  letI : Algebra R[X] (Localization.AtPrime p)[X] := Polynomial.algebra R (Localization.AtPrime p)
-  haveI : IsLocalization (Submonoid.map (C : R →+* R[X]) p.primeCompl)
+  let : Algebra R[X] (Localization.AtPrime p)[X] := Polynomial.algebra R (Localization.AtPrime p)
+  have : IsLocalization (Submonoid.map (C : R →+* R[X]) p.primeCompl)
       (Localization.AtPrime p)[X] := Polynomial.isLocalization p.primeCompl (Localization.AtPrime p)
-  haveI : IsNoetherianRing (Localization.AtPrime p) :=
+  have : IsNoetherianRing (Localization.AtPrime p) :=
     IsLocalization.isNoetherianRing p.primeCompl (Localization.AtPrime p) inferInstance
   have hd : Disjoint ((Submonoid.map (C : R →+* R[X]) p.primeCompl : Submonoid R[X]) :
       Set R[X]) (P : Set R[X]) := by
     rw [Set.disjoint_left]
     rintro _ ⟨s, hs, rfl⟩ hsP
     exact hs hsP
-  haveI hP' : (P.map (algebraMap R[X] (Localization.AtPrime p)[X])).IsPrime :=
+  have hP' : (P.map (algebraMap R[X] (Localization.AtPrime p)[X])).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint _ _ P ‹P.IsPrime› hd
   have hcomap := IsLocalization.under_map_of_isPrime_disjoint
     (Submonoid.map (C : R →+* R[X]) p.primeCompl) (Localization.AtPrime p)[X] ‹P.IsPrime› hd

@@ -66,7 +66,7 @@ theorem val_rigPow {Z : Scheme.{0}} (k : ℤ) (r : Z ⟶ (𝟙_ (Over Xo.X)).lef
   exact map_zpow _ _ _
 
 theorem eSec_act (c : 𝓞 E) : eSec Xo.univ.t.G ≫ (Xo.univ.t.act.act c).left = eSec Xo.univ.t.G := by
-  haveI := Xo.univ.t.act.2 c
+  have := Xo.univ.t.act.2 c
   unfold eSec
   rw [← Over.comp_left, IsMonHom.one_hom]
 

@@ -322,7 +322,7 @@ theorem DecoSet.finite_orbits (hE : PosStar E) (Γ : Subgroup (UF E n × GLG (E 
     (hΓ : ∀ g : UF E n, (g, (1 : GLG (E := E) (n := n) (SG := SG))) ∈ Γ) :
     Finite (MulAction.orbitRel.Quotient Γ (DecoSet (E := E) (n := n) (ST := ST) (SG := SG))) := by
   obtain ⟨s, hs, hrep⟩ := DecoSet.finite_reps (E := E) (n := n) (ST := ST) (SG := SG) hE
-  haveI : Finite s := hs.to_subtype
+  have : Finite s := hs.to_subtype
   refine Finite.of_surjective
     (fun x : s => (Quotient.mk _ x.1 : MulAction.orbitRel.Quotient Γ (DecoSet (E := E) (n := n) (ST := ST) (SG := SG)))) ?_
   intro z
@@ -388,7 +388,7 @@ theorem conjIdeal_eq (P : Ideal (𝓞 E)) : conjIdeal (K := E) P = P.comap (cO E
   have hset : {r : 𝓞 E | ∃ s ∈ P, algebraMap (𝓞 E) E r = star (algebraMap (𝓞 E) E s)} =
       (P.comap (cO E) : Set (𝓞 E)) := by
     ext r
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, Ideal.mem_comap]
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Ideal.mem_comap]
     constructor
     · rintro ⟨s, hs, h⟩
       have hrs : cO E r = s := by
@@ -718,8 +718,8 @@ theorem Deco.Ok.repl {d : Deco E n ST SG} (hd : d.Ok) (P : ST) {N' : Submodule (
     exact hx'
   · intro w c
     obtain ⟨a, ha, a', ha', h1, h2⟩ := hSG w
-    haveI := w.1.isMaximal
-    letI := Ideal.Quotient.field w.1.asIdeal
+    have := w.1.isMaximal
+    let := Ideal.Quotient.field w.1.asIdeal
     have hne : Ideal.Quotient.mk w.1.asIdeal a' ≠ 0 := fun h0 =>
       ha' (Ideal.Quotient.eq_zero_iff_mem.mp h0)
     obtain ⟨x, hx, hbx⟩ := hd.be_surj w ((Ideal.Quotient.mk w.1.asIdeal a')⁻¹ • c)
@@ -937,20 +937,20 @@ theorem Deco.Ok.up {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hP : MoveHyp ST SG
   refine hd.repl P h1 h2 (fun Q hQ => h3 Q.1 (fun h => hQ (Subtype.ext h)) (hP.st Q))
     (fun w => h3 w.1 (hP.sg w).1 (hP.sg w).2) ?_ ?_ ?_ ?_
   · intro y hy z hz
-    rw [if_pos hy, if_pos hz, if_pos (Submodule.add_mem _ hy hz), smul_add]
+    rw [ite_eq_left hy, ite_eq_left hz, ite_eq_left (Submodule.add_mem _ hy hz), smul_add]
     exact hd.f_add P _ (hloc y hy) _ (hloc z hz)
   · intro a y hy
-    rw [if_pos hy, if_pos (Submodule.smul_mem _ a hy), smul_comm]
+    rw [ite_eq_left hy, ite_eq_left (Submodule.smul_mem _ a hy), smul_comm]
     exact hd.f_smul P a _ (hloc y hy)
   · intro y hy
-    rw [if_neg hy]
+    rw [ite_eq_right hy]
   · obtain ⟨a, ha, r, hr, har⟩ := exists_inv_unif P.1 hq hq2
     obtain ⟨e, he, e', he', hee⟩ := exists_coprime hP.ne
     have hax : a • x ∈ upA P.1.asIdeal d.N x :=
       (le_sup_right : _ ≤ upA P.1.asIdeal d.N x) (Submodule.subset_span ⟨a, ha, rfl⟩)
     have hy : e • (a • x) ∈ upN P.1.asIdeal d.N x := h5 (Submodule.smul_mem_smul he hax)
     refine ⟨e • (a • x), hy, ?_⟩
-    rw [if_pos (le_locP _ _ hy)]
+    rw [ite_eq_left (le_locP _ _ hy)]
     have e1 : q • e • a • x = (e * r) • x := by
       rw [smul_comm q e, ← algebraMap_smul E q (a • x), smul_smul, har, algebraMap_smul, mul_smul]
     rw [e1, hd.f_smul P _ x (le_locP _ _ hx), hfx, mul_one]
@@ -972,8 +972,8 @@ theorem DecoSet.up_val (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P 
 theorem DecoSet.upSet_nonempty (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) (hP : MoveHyp ST SG P) {q : 𝓞 E}
     (hq : q ∈ P.1.asIdeal) (hq2 : q ∉ P.1.asIdeal ^ 2) : (d.upSet P q).Nonempty := by
   obtain ⟨x, hx, hfx⟩ := d.2.f_ne P
-  haveI := P.1.isMaximal
-  letI := Ideal.Quotient.field P.1.asIdeal
+  have := P.1.isMaximal
+  let := Ideal.Quotient.field P.1.asIdeal
   obtain ⟨c, hc⟩ := Ideal.Quotient.mk_surjective ((d.1.f P x)⁻¹)
   have hx1 : d.1.f P (c • x) = 1 := by
     rw [d.2.f_smul P c x (mem_localized_of_mem _ _ hx), hc, inv_mul_cancel₀ hfx]
@@ -1130,7 +1130,7 @@ theorem Deco.Ok.til {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
     replace hx : x ∈ localization₂ P.1.asIdeal (tilN d.N) := hx
     replace hy : y ∈ localization₂ P.1.asIdeal (tilN d.N) := hy
     simp only [Deco.til]
-    rw [if_pos hx, if_pos hy, if_pos (Submodule.add_mem _ hx hy), map_add (f := _)]
+    rw [ite_eq_left hx, ite_eq_left hy, ite_eq_left (Submodule.add_mem _ hx hy), map_add (f := _)]
     rw [hermStd_lastVector_apply, hermStd_lastVector_apply]
     exact reduction_add ((IntAt.coe _ _).mul ((mem_localization_tilN _ _ _).1 hx).2)
       ((IntAt.coe _ _).mul ((mem_localization_tilN _ _ _).1 hy).2)
@@ -1138,26 +1138,26 @@ theorem Deco.Ok.til {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
     intro P a x hx
     replace hx : x ∈ localization₂ P.1.asIdeal (tilN d.N) := hx
     simp only [Deco.til]
-    rw [if_pos hx, if_pos (Submodule.smul_mem _ a hx), LinearMap.map_smul_of_tower, hermStd_lastVector_apply]
+    rw [ite_eq_left hx, ite_eq_left (Submodule.smul_mem _ a hx), LinearMap.map_smul_of_tower, hermStd_lastVector_apply]
     exact redP_osmul a ((IntAt.coe _ _).mul ((mem_localization_tilN _ _ _).1 hx).2)
   case f_off =>
     intro P x hx
     replace hx : x ∉ localization₂ P.1.asIdeal (tilN d.N) := hx
     simp only [Deco.til]
-    rw [if_neg hx]
+    rw [ite_eq_right hx]
   case f_ne =>
     intro P
     have h1 : eLast E n ∈ tilN d.N := (mem_tilN _ _).2 ⟨by simp, 1, by simp⟩
     refine ⟨_, h1, ?_⟩
     simp only [Deco.til]
-    rw [if_pos (le_locP _ _ h1), hermStd_lastVector_apply, eLast_last, mul_one, reduction_coe]
+    rw [ite_eq_left (le_locP _ _ h1), hermStd_lastVector_apply, eLast_last, mul_one, reduction_coe]
     exact mk_ne_zero (hT P)
   case be_add =>
     intro w x hx y hy
     replace hx : x ∈ localization₂ w.1.asIdeal (tilN d.N) := hx
     replace hy : y ∈ localization₂ w.1.asIdeal (tilN d.N) := hy
     simp only [Deco.til]
-    rw [if_pos hx, if_pos hy, if_pos (Submodule.add_mem _ hx hy)]
+    rw [ite_eq_left hx, ite_eq_left hy, ite_eq_left (Submodule.add_mem _ hx hy)]
     obtain ⟨hx1, hx2⟩ := (mem_localization_tilN _ _ _).1 hx
     obtain ⟨hy1, hy2⟩ := (mem_localization_tilN _ _ _).1 hy
     funext i
@@ -1171,7 +1171,7 @@ theorem Deco.Ok.til {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
     intro w a x hx
     replace hx : x ∈ localization₂ w.1.asIdeal (tilN d.N) := hx
     simp only [Deco.til]
-    rw [if_pos hx, if_pos (Submodule.smul_mem _ a hx)]
+    rw [ite_eq_left hx, ite_eq_left (Submodule.smul_mem _ a hx)]
     obtain ⟨hx1, hx2⟩ := (mem_localization_tilN _ _ _).1 hx
     funext i
     refine Fin.lastCases ?_ (fun j => ?_) i
@@ -1185,7 +1185,7 @@ theorem Deco.Ok.til {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
     intro w x hx
     replace hx : x ∉ localization₂ w.1.asIdeal (tilN d.N) := hx
     simp only [Deco.til]
-    rw [if_neg hx]
+    rw [ite_eq_right hx]
   case be_surj =>
     intro w c
     obtain ⟨y, hy, hc⟩ := hd.be_surj w (fun i => c i.castSucc)
@@ -1199,7 +1199,7 @@ theorem Deco.Ok.til {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
         simp [Algebra.smul_def]⟩
     refine ⟨_, h1, ?_⟩
     simp only [Deco.til]
-    rw [if_pos (le_locP _ _ h1)]
+    rw [ite_eq_left (le_locP _ _ h1)]
     funext i
     refine Fin.lastCases ?_ (fun j => ?_) i
     · simp only [Fin.snoc_last]
@@ -1215,7 +1215,7 @@ theorem Deco.Ok.til {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
     intro w x hx h0
     replace hx : x ∈ tilN d.N := hx
     simp only [Deco.til] at h0
-    rw [if_pos (le_locP _ _ hx)] at h0
+    rw [ite_eq_left (le_locP _ _ hx)] at h0
     obtain ⟨h1, r, hr⟩ := (mem_tilN _ _).1 hx
     have hpi0 : algebraMap (𝓞 E) E pi ≠ 0 := by
       rw [Ne, FaithfulSMul.algebraMap_eq_zero_iff]
@@ -1391,7 +1391,7 @@ theorem upA_gmap (g : Sp E n ≃ₗ[E] Sp E n) (P : Ideal (𝓞 E)) (N : Submodu
   rw [Submodule.map_span]
   congr 1
   ext z
-  simp only [Set.mem_setOf_eq, Set.mem_image, LinearMap.restrictScalars_apply, LinearEquiv.coe_coe]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, LinearMap.restrictScalars_apply, LinearEquiv.coe_coe]
   constructor
   · rintro ⟨a, ha, rfl⟩
     exact ⟨a • x, ⟨a, ha, rfl⟩, map_smul g a x⟩
@@ -1478,10 +1478,10 @@ theorem Deco.up_act (d : Deco E n ST SG) {g : Sp E n ≃ₗ[E] Sp E n} (hg : g �
           g.symm y ∈ localization₂ Q.1.asIdeal (upN Q.1.asIdeal d.N x) := by
         rw [e1, upN_gmap hg, localization_gmap_eq_gmap_localization, mg]
       by_cases hm : g.symm y ∈ localization₂ Q.1.asIdeal (upN Q.1.asIdeal d.N x)
-      · rw [if_pos (hm'.mpr hm), if_pos hm]
+      · rw [ite_eq_left (hm'.mpr hm), ite_eq_left hm]
         change d.f Q (g.symm (q • y)) = _
         rw [hsm]
-      · rw [if_neg (fun h' => hm (hm'.mp h')), if_neg hm]
+      · rw [ite_eq_right (fun h' => hm (hm'.mp h')), ite_eq_right hm]
     · change _ = (d.up P q x).f Q (g.symm y)
       rw [up_f_ne_lemma_6 _ _ _ _ hQ, up_f_ne_lemma_6 _ _ _ _ hQ]
       rfl
@@ -1503,7 +1503,7 @@ theorem Deco.kerAt_act (d : Deco E n ST SG) (g : Sp E n ≃ₗ[E] Sp E n) (h : G
   rw [Submodule.map_span]
   congr 1
   ext x
-  simp only [gmap, Submodule.mem_map, Set.mem_setOf_eq, Set.mem_image,
+  simp only [gmap, Submodule.mem_map, Set.mem_ofPred_eq, Set.mem_image,
     LinearMap.restrictScalars_apply, LinearEquiv.coe_coe]
   constructor
   · rintro ⟨⟨y, hy, rfl⟩, hf⟩
@@ -1593,7 +1593,7 @@ theorem Deco.up_f (d : Deco E n ST SG) (P : ST) (q : 𝓞 E) (x y : Sp E n) :
 
 theorem Deco.up_f_of_mem (d : Deco E n ST SG) (P : ST) (q : 𝓞 E) (x : Sp E n) {y : Sp E n}
     (hy : y ∈ upN P.1.asIdeal d.N x) : (d.up P q x).f P y = d.f P (q • y) := by
-  rw [Deco.up_f, if_pos (mem_localized_of_mem _ _ hy)]
+  rw [Deco.up_f, ite_eq_left (mem_localized_of_mem _ _ hy)]
 
 theorem Deco.up_f_ne (d : Deco E n ST SG) (P : ST) (q : 𝓞 E) (x : Sp E n) {Q : ST} (hQ : Q ≠ P) :
     (d.up P q x).f Q = d.f Q := by
@@ -1850,7 +1850,7 @@ theorem Deco.Ok.up_f_inv {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hP : MoveHyp
     rw [this]
     exact h5 (Submodule.smul_mem_smul he ((le_sup_right : _ ≤ upA P.1.asIdeal d.N x)
       (Submodule.subset_span ⟨a, ha, rfl⟩)))
-  rw [Deco.up_f, if_pos hmem, ← algebraMap_smul E q, smul_smul, mul_inv_cancel₀ hq0, one_smul, hfx]
+  rw [Deco.up_f, ite_eq_left hmem, ← algebraMap_smul E q, smul_smul, mul_inv_cancel₀ hq0, one_smul, hfx]
 
 theorem exists_finite_reps {N : Submodule (𝓞 E) (Sp E n)} (hN : N.FG)
     (P : HeightOneSpectrum (𝓞 E)) :
@@ -1898,7 +1898,7 @@ theorem Deco.Ok.til_L {d : Deco E n ∅ SG} (hd : d.Ok) {pi : 𝓞 E}
       (d.til (ST := ST) pi).f P x = Ideal.Quotient.mk P.1.asIdeal (cO E pi * r) := by
     intro P x r hx hr
     have : (d.til (ST := ST) pi).f P x =
-        redP P.1 (hStd E (n + 1) (z0 E n (algebraMap (𝓞 E) E pi)) x) := if_pos (le_locP _ _ hx)
+        redP P.1 (hStd E (n + 1) (z0 E n (algebraMap (𝓞 E) E pi)) x) := ite_eq_left (le_locP _ _ hx)
     rw [this, hermStd_lastVector_apply, ← hr, ← map_mul, reduction_coe]
   ext x
   rw [hok.mem_L]
@@ -2172,8 +2172,8 @@ theorem Deco.til_act (d : Deco E n ∅ SG) (g : Sp E n ≃ₗ[E] Sp E n) (h : GL
         then redP P.1 (hStd E (n + 1) (z0 E n (algebraMap (𝓞 E) E pi)) ((extE g).symm x)) else 0)
     rw [hermStd_lastVector_apply, hermStd_lastVector_apply, extE_symm_last]
     by_cases hm : (extE g).symm x ∈ localization₂ P.1.asIdeal (tilN d.N)
-    · rw [if_pos ((hloc P.1 x).mpr hm), if_pos hm]
-    · rw [if_neg (fun h' => hm ((hloc P.1 x).mp h')), if_neg hm]
+    · rw [ite_eq_left ((hloc P.1 x).mpr hm), ite_eq_left hm]
+    · rw [ite_eq_right (fun h' => hm ((hloc P.1 x).mp h')), ite_eq_right hm]
   · funext w x
     change (open Classical in if x ∈ localization₂ w.1.asIdeal (tilN (gmap g d.N))
         then Fin.snoc (α := fun _ => 𝓞 E ⧸ w.1.asIdeal) ((h w).1.mulVec (d.be w (g.symm (initL E n x))))
@@ -2183,8 +2183,8 @@ theorem Deco.til_act (d : Deco E n ∅ SG) (g : Sp E n ≃ₗ[E] Sp E n) (h : GL
         then Fin.snoc (α := fun _ => 𝓞 E ⧸ w.1.asIdeal) (d.be w (initL E n ((extE g).symm x)))
           (redP w.1 ((extE g).symm x (Fin.last n) / algebraMap (𝓞 E) E pi)) else 0)
     by_cases hm : (extE g).symm x ∈ localization₂ w.1.asIdeal (tilN d.N)
-    · rw [if_pos ((hloc w.1 x).mpr hm), if_pos hm, padM_mulVec_snoc, initL_extE_symm, extE_symm_last]
-    · rw [if_neg (fun h' => hm ((hloc w.1 x).mp h')), if_neg hm, Matrix.mulVec_zero]
+    · rw [ite_eq_left ((hloc w.1 x).mpr hm), ite_eq_left hm, padM_mulVec_snoc, initL_extE_symm, extE_symm_last]
+    · rw [ite_eq_right (fun h' => hm ((hloc w.1 x).mp h')), ite_eq_right hm, Matrix.mulVec_zero]
 
 theorem DecoSet.til_smul (a : UF E n × GLG (E := E) (n := n) (SG := SG)) (d : DecoSet (E := E) (n := n) (ST := ∅) (SG := SG)) {pi : 𝓞 E}
     (hT : ∀ P : ST, cO E pi ∉ P.1.asIdeal) (hG : ∀ w : SG, pi ∉ w.1.asIdeal) :
@@ -2234,8 +2234,8 @@ theorem Deco.Ok.exists_dualBasis {d : Deco E n ST SG} (hd : d.Ok) :
       rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ Q)]
       exact Ideal.mul_mem_right _ _ (huQ Q hQ)
     obtain ⟨x, hx, hfx⟩ := hd.f_ne P
-    haveI := P.1.isMaximal
-    letI := Ideal.Quotient.field P.1.asIdeal
+    have := P.1.isMaximal
+    let := Ideal.Quotient.field P.1.asIdeal
     have hy : d.f P ((∏ Q, s Q) • x) ≠ 0 := by
       rw [hd.f_smul P _ x (mem_localized_of_mem _ _ hx)]
       exact mul_ne_zero (fun h0 => htP (Ideal.Quotient.eq_zero_iff_mem.mp h0)) hfx
@@ -2399,7 +2399,7 @@ theorem Deco.Ok.Lsh_quot_L {d : Deco E n ST SG} (hd : d.Ok) (hc : ∀ P Q : ST, 
       have h5 := ((hd.mem_kerAt P _).1 (this (h1 P))).2
       rw [h2] at h5
       exact one_ne_zero h5
-    obtain ⟨y, hy, hyN⟩ := SetLike.not_le_iff_exists.1 hnot
+    obtain ⟨y, hy, hyN⟩ := IsConcreteLE.not_le_iff_exists.1 hnot
     have hLB : d.L ≤ d.kerAt P := fun x hx =>
       (hd.mem_kerAt P x).2 ⟨((hd.mem_L x).1 hx).1, ((hd.mem_L x).1 hx).2 P⟩
     have hyL : y ∈ d.Lsh := dual_anti hLB hy
@@ -2625,7 +2625,7 @@ theorem DecoSet.dnSet_nonempty (d : DecoSet (E := E) (n := n) (ST := ST) (SG := 
   let f' : Sp E n → 𝓞 E ⧸ P.1.asIdeal := fun y =>
     if y ∈ localization₂ P.1.asIdeal (d.1.dnN P) then redP P.1 (hStd E n w y) else 0
   have hf' : ∀ y ∈ localization₂ P.1.asIdeal (d.1.dnN P), f' y = redP P.1 (hStd E n w y) := fun y hy =>
-    if_pos hy
+    ite_eq_left hy
   have hBle : d.1.kerAt P ≤ localization₂ P.1.asIdeal (d.1.dnN P) := fun y hy =>
     le_locP _ _ ((le_sup_left : d.1.kerAt P ≤ d.1.dnN P) hy)
   have hf'q : f' (q • e1) = 1 := by
@@ -2640,7 +2640,7 @@ theorem DecoSet.dnSet_nonempty (d : DecoSet (E := E) (n := n) (ST := ST) (SG := 
     intro a x hx
     rw [hf' _ hx, hf' _ (Submodule.smul_mem _ a hx), LinearMap.map_smul_of_tower]
     exact redP_osmul a (hint x hx)
-  have hok : (d.1.dn P f').Ok := hd.dn P hP f_add f_smul (fun x hx => if_neg hx)
+  have hok : (d.1.dn P f').Ok := hd.dn P hP f_add f_smul (fun x hx => ite_eq_right hx)
     ⟨q • e1, (le_sup_left : d.1.kerAt P ≤ d.1.dnN P) hqe, by rw [hf'q]; exact one_ne_zero⟩
   have hfP : (d.1.dn P f').f P = f' := by simp [Deco.dn]
   refine ⟨⟨d.1.dn P f', hok⟩, ?_, ?_⟩

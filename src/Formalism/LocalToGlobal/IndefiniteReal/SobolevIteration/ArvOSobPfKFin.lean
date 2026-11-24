@@ -91,7 +91,7 @@ theorem integrable_avg {G s : Matrix (Fin n) (Fin n) ℂ} {π : Matrix (Fin n) (
     {p : (Fin n → Fin n → ℂ) → ℂ} (hp : Continuous p) (w : H) :
     Integrable (fun k => p k • π (Matrix.of k) w) μ := by
 
-  haveI := hμ.1
+  have := hμ.1
   have hae : ∀ᵐ k ∂μ, k ∈ KS G s := hμ.2.1
   have h := (continuousOn_avg (s := s) hπ hp w).integrableOn_compact (μ := μ) (isCompact_KS hs)
   rwa [IntegrableOn, Measure.restrict_eq_self_of_ae_mem hae] at h

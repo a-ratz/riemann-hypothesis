@@ -74,7 +74,7 @@ lemma coeMatrix_inv_eq {n : ℕ} (ε : Fin n → Bool) (g : UJ ε) :
   Units.inv_eq_of_mul_eq_one_left (coeMatrix_left_inv ε _ g.2)
 
 lemma continuous_coeMatrix {n : ℕ} (ε : Fin n → Bool) : Continuous (coeMatrixAlt ε) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 lemma isClosed_pseudoUnitary {n : ℕ} (ε : Fin n → Bool) :
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | inUJ ε g} := by
@@ -124,7 +124,7 @@ theorem isClosedEmbeddingMatrix : UJEmb := by
 
 theorem uJLocCompact_of (h : UJEmb) : UJLocCompact := by
   intro n ε
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) := Pi.locallyCompactSpace_of_finite
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) := Pi.locallyCompactSpace_of_finite
   exact (h n ε).1.locallyCompactSpace
 
 end Formalism.REAL

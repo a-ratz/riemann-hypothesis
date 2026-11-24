@@ -157,11 +157,11 @@ theorem val_mem_GLs (y : G n) : y.val ∈ GLs n := by
 
 theorem pairAdj : LgFacts → Unimod → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (E : KMod n) (k : Mat n → (E.V →L[ℂ] E.V)) (f h : Mat n → E.V), KReg k → ContinuousOn f (GLs n) → ContinuousOn h (GLs n) → Cpt f → Cpt h → (haveI := FiniteDimensional.complete ℂ E.V; ∫ x : G n, ⟪act μ E (fun y => ContinuousLinearMap.adjoint (k y⁻¹)) f x.val, h x.val⟫_ℂ ∂μ = ∫ x : G n, ⟪f x.val, act μ E k h x.val⟫_ℂ ∂μ) := by
   intro hL hU n _ _ μ _ E k f h hk hf hh cf ch
-  haveI := FiniteDimensional.complete ℂ E.V
-  haveI : μ.IsMulRightInvariant := (hU n μ).1
-  haveI : μ.IsInvInvariant := (hU n μ).2
+  have := FiniteDimensional.completeSpace ℂ E.V
+  have : μ.IsMulRightInvariant := (hU n μ).1
+  have : μ.IsInvInvariant := (hU n μ).2
   have hc : ∀ R, IsCompact {y : G n | lg y.val ≤ R} := (hL n).2.2.2.2.1
-  haveI : SigmaFinite μ := ⟨⟨⟨fun m : ℕ => {y : G n | lg y.val ≤ m}, fun _ => trivial,
+  have : SigmaFinite μ := ⟨⟨⟨fun m : ℕ => {y : G n | lg y.val ≤ m}, fun _ => trivial,
     fun m => (hc m).measure_lt_top,
     Set.eq_univ_of_forall fun y => Set.mem_iUnion.2 (exists_nat_ge (lg y.val))⟩⟩⟩
   have cont : ∀ {W : Type} [TopologicalSpace W] {φ : Mat n → W}, ContinuousOn φ (GLs n) →

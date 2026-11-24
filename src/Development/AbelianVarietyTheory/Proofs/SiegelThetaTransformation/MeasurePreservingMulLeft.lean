@@ -102,7 +102,7 @@ theorem _root_.GlobalTheory.SW.Slab.exists_bound_upper {r : ℕ} (d : Fin r → 
     refine ⟨2 * (2 + r * C ^ 2), by positivity, ?_⟩
     intro b hb hdiag hinv hM k hk c
     have hrow : ∀ j : Fin r, j < k → ∀ c, ‖b j c‖ ≤ C := fun j hj c' =>
-      hC b hb hdiag hinv hM j (by have := Fin.lt_iff_val_lt_val.mp hj; omega) c'
+      hC b hb hdiag hinv hM j (by have := Fin.lt_def.mp hj; omega) c'
     set f : Fin r → ℂ := fun j => b j k * d j * conj (b j c) with hf
     have hentry : (bᵀ * Matrix.diagonal d * b.map (starRingEnd ℂ)) k c = ∑ j, f j := by
       rw [Matrix.mul_apply]
@@ -171,7 +171,7 @@ theorem _root_.GlobalTheory.SW.Slab.lminor_sgnM (i : Fin (r + 1)) :
     _root_.ReciprocityTheory.ChartRestriction.G.FD.lminor (_root_.GlobalTheory.SW.sgnM X) i = ((_root_.ReciprocityTheory.ChartRestriction.G.FD.psgn X.p0 i : ℝ) : ℂ) := by
   unfold _root_.GlobalTheory.SW.sgnM
   rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.lminor_diagonal]
-  simp only [Fin.coe_castLE]
+  simp only [Fin.val_castLE]
   rw [Fin.prod_univ_eq_prod_range (fun a => ((_root_.ReciprocityTheory.ChartRestriction.G.FD.sgn X.p0 a : ℝ) : ℂ)) i]
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.psgn
   push_cast
@@ -277,7 +277,7 @@ private theorem measurePreserving_mul_left_of_normSq_det_eq_one {r : ℕ} (u : M
     (hu : Complex.normSq u.det = 1) :
     MeasurePreserving (fun (M : Fin r → Fin r → ℂ) (i j : Fin r) => ∑ k, u i k * M k j)
       volume volume := by
-  haveI : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure (fun _ => (volume : Measure (Fin r → ℂ)))
   let L : (Fin r → Fin r → ℂ) →ₗ[ℂ] (Fin r → Fin r → ℂ) :=
     { toFun := fun M i j => ∑ k, u i k * M k j
@@ -379,7 +379,7 @@ theorem _root_.GlobalTheory.SW.thin_slab : ∀ (E : Type) [Field E] [NumberField
         rw [Matrix.det_nonsing_inv]
         rw [Ring.inverse_eq_inv']
         exact inv_ne_zero (hBdet τ)
-      · haveI : Invertible (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x) τ) :=
+      · have : Invertible (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x) τ) :=
           Matrix.invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr (hBdet τ))
         have ht := Matrix.blockTriangular_inv_of_blockTriangular (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.upper_of_bor X hb τ)
         exact ht hca
@@ -396,7 +396,7 @@ theorem _root_.GlobalTheory.SW.thin_slab : ∀ (E : Type) [Field E] [NumberField
   · have hset : _root_.GlobalTheory.SW.slab X δ = ⋂ τ : X.Ψ, ⋂ a : Fin r, ⋂ b : Fin r,
         {x | ‖_root_.ReciprocityTheory.ChartRestriction.G.FD.gram τ.1 X.Gm (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat x τ) a b - _root_.GlobalTheory.SW.sgnM X a b‖ < δ} := by
       ext x
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       exact mem_slab_iff_norm_gram_sub_sgnM_lt X
     rw [hset]
     exact isOpen_iInter_of_finite fun τ => isOpen_iInter_of_finite fun a =>

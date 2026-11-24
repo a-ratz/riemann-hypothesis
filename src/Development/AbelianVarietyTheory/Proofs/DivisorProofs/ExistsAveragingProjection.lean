@@ -92,16 +92,16 @@ noncomputable def avgH (H : Subgroup L) (x : V) : V :=
 theorem avgH_refine {H H' : Subgroup L} {x : V} (hle : H' ≤ H) (hH : H ≤ stab π L x)
     [H'.FiniteIndex] : avgH π L H' x = avgH π L H x := by
   classical
-  haveI : H.FiniteIndex := Subgroup.finiteIndex_of_le hle
+  have : H.FiniteIndex := Subgroup.finiteIndex_of_le hle
   have hrel := Subgroup.relIndex_mul_index hle
-  haveI : (H'.subgroupOf H).FiniteIndex := by
+  have : (H'.subgroupOf H).FiniteIndex := by
     refine ⟨?_⟩
     intro h0
     have h4 : H'.index = 0 := by rw [← hrel]; simp [Subgroup.relIndex, h0]
     exact Subgroup.FiniteIndex.index_ne_zero h4
-  haveI := Fintype.ofFinite (L ⧸ H)
-  haveI := Fintype.ofFinite (L ⧸ H')
-  haveI := Fintype.ofFinite (H ⧸ H'.subgroupOf H)
+  have := Fintype.ofFinite (L ⧸ H)
+  have := Fintype.ofFinite (L ⧸ H')
+  have := Fintype.ofFinite (H ⧸ H'.subgroupOf H)
   unfold avgH
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   let e := Subgroup.quotientEquivProdOfLE hle
@@ -139,14 +139,14 @@ theorem stab_le_smul (c : ℂ) (x : V) : stab π L x ≤ stab π L (c • x) := 
 theorem avgH_add (H : Subgroup L) [H.FiniteIndex] (x y : V) :
     avgH π L H (x + y) = avgH π L H x + avgH π L H y := by
   classical
-  haveI := Fintype.ofFinite (L ⧸ H)
+  have := Fintype.ofFinite (L ⧸ H)
   unfold avgH cv
   simp only [finsum_eq_sum_of_fintype, map_add (f := _), Finset.sum_add_distrib, smul_add]
 
 theorem avgH_smul (H : Subgroup L) [H.FiniteIndex] (c : ℂ) (x : V) :
     avgH π L H (c • x) = c • avgH π L H x := by
   classical
-  haveI := Fintype.ofFinite (L ⧸ H)
+  have := Fintype.ofFinite (L ⧸ H)
   unfold avgH cv
   simp only [finsum_eq_sum_of_fintype, map_smul, ← Finset.smul_sum, smul_comm c]
 
@@ -158,7 +158,7 @@ theorem avg_eq {H : Subgroup L} {x : V} [H.FiniteIndex] (hH : H ≤ stab π L x)
 theorem avg_fixed {x : V} (hx : (stab π L x).FiniteIndex) (hfix : ∀ l ∈ L, π l x = x) :
     avg π L x = x := by
   classical
-  haveI := Fintype.ofFinite (L ⧸ stab π L x)
+  have := Fintype.ofFinite (L ⧸ stab π L x)
   unfold avg avgH
   have : ∀ q : L ⧸ stab π L x, cv π L (stab π L x) x q = x := fun q => hfix _ (q.out).2
   simp only [finsum_eq_sum_of_fintype, this, Finset.sum_const, Finset.card_univ]
@@ -169,7 +169,7 @@ theorem avg_fixed {x : V} (hx : (stab π L x).FiniteIndex) (hfix : ∀ l ∈ L, 
 theorem avg_invariant {x : V} (hx : (stab π L x).FiniteIndex) (l : L) :
     π (l : G) (avg π L x) = avg π L x := by
   classical
-  haveI := Fintype.ofFinite (L ⧸ stab π L x)
+  have := Fintype.ofFinite (L ⧸ stab π L x)
   unfold avg avgH
 
   rw [finsum_eq_sum_of_fintype, map_smul, map_sum]
@@ -186,7 +186,7 @@ theorem avg_invariant {x : V} (hx : (stab π L x).FiniteIndex) (l : L) :
 
 theorem avg_add {x y : V} (hx : (stab π L x).FiniteIndex) (hy : (stab π L y).FiniteIndex) :
     avg π L (x + y) = avg π L x + avg π L y := by
-  haveI : (stab π L x ⊓ stab π L y).FiniteIndex := inferInstance
+  have : (stab π L x ⊓ stab π L y).FiniteIndex := inferInstance
   rw [avg_eq π L (stab_le_add π L x y), avg_eq π L (inf_le_left : stab π L x ⊓ stab π L y ≤ stab π L x),
     avg_eq π L (inf_le_right : stab π L x ⊓ stab π L y ≤ stab π L y), avgH_add]
 

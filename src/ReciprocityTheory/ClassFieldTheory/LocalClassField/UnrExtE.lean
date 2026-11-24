@@ -60,7 +60,7 @@ theorem exists_closest {M : IntermediateField ℚ_[p] (PadicAlgCl p)}
   have : ProperSpace M := FiniteDimensional.proper ℚ_[p] M
   have hc : IsCompact (Metric.closedBall (0 : M) ‖x‖) := isCompact_closedBall 0 ‖x‖
   have hcont : Continuous (fun m : M => ‖x - (m : PadicAlgCl p)‖) :=
-    (continuous_const.sub continuous_subtype_val).norm
+    (continuous_const.sub continuous_subtypeVal).norm
   have hne : (Metric.closedBall (0 : M) ‖x‖).Nonempty :=
     ⟨0, Metric.mem_closedBall_self (norm_nonneg x)⟩
   obtain ⟨m0, hm0, hmin⟩ := hc.exists_isMinOn hne hcont.continuousOn

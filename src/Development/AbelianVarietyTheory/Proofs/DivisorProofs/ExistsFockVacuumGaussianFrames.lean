@@ -76,7 +76,7 @@ theorem exists_siegel {V C : Type} [AddCommGroup V] [Module ℝ V] [FiniteDimens
     have h1 : p c = 0 := congrArg Prod.fst hc
     have h2 : p (J c) = 0 := congrArg Prod.snd hc
     simp [h1, h2] at h
-  haveI : FiniteDimensional ℝ C := FiniteDimensional.of_injective _ hi
+  have : FiniteDimensional ℝ C := FiniteDimensional.of_injective _ hi
   have hsurj : Function.Surjective (p.prod (p ∘ₗ J)) := by
     refine (LinearMap.injective_iff_surjective_of_finrank_eq_finrank ?_).1 hi
     exact le_antisymm (LinearMap.finrank_le_finrank_of_injective hi) (LinearMap.finrank_le_finrank_of_surjective hs)

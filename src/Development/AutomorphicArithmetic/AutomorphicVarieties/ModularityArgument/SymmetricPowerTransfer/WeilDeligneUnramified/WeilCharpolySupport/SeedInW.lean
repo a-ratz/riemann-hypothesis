@@ -106,7 +106,7 @@ private theorem closure_of (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
 private theorem tower_of {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (K L : Type) [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K Ω] [Algebra L Ω] (h : galOf ℚ L Ω ≤ galOf ℚ K Ω) :
     ∃ _ : Algebra K L, IsScalarTower K L Ω := by
-  haveI := closure_of Ω L
+  have := closure_of Ω L
   have h1 : ∀ x : K, ∃ y : L, algebraMap L Ω y = algebraMap K Ω x := fun x =>
     (InfiniteGalois.mem_range_algebraMap_iff_fixed (k := L) _).2 fun f => h (galEmb_mem ℚ L Ω f) x
   choose f hf using h1
@@ -117,7 +117,7 @@ private theorem tower_of {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
       map_mul' := fun a b => hi (by simp [hf])
       map_zero' := hi (by simp [hf])
       map_add' := fun a b => hi (by simp [hf]) }
-  letI := g.toAlgebra
+  let := g.toAlgebra
   exact ⟨_, IsScalarTower.of_algebraMap_eq fun x => (hf x).symm⟩
 
 private theorem gram_two {k : Type} [Field k] (M : Matrix (Fin 2) (Fin 2) k) :
@@ -148,7 +148,7 @@ private theorem adjoint_zero_twist {Γ k : Type} [Group Γ] [Field k] (r : Γ �
     simpa [Matrix.GeneralLinearGroup.val_det_apply] using this
   have hD : ((tw r δ s : GL (Fin 2) k) : Matrix (Fin 2) (Fin 2) k).det = (δ s : k) ^ 2 * (r s : Matrix (Fin 2) (Fin 2) k).det := by
     rw [tw_val, Matrix.det_smul]; simp
-  simp only [ad0, tw_val, MonoidHom.comp_apply, MonoidHom.inv_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [ad0, tw_val, MonoidHom.comp_apply, MonoidHom.inv_apply, Units.coe_map, MonoidHom.coe_ofClass]
   simp only [Units.val_inv_eq_inv_val, Matrix.GeneralLinearGroup.val_det_apply, hD, ← tw_val]
   simp only [tw_val]
   ext i j

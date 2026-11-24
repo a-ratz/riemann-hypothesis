@@ -62,7 +62,7 @@ lemma pow_succ_le_factorial_mul_choose (n A : ℕ) :
 
 lemma norm_qterm (n : ℕ) (τ : ℍ) :
     ‖cexp (2 * π * Complex.I * n * τ)‖ = Real.exp (-2 * π * τ.im) ^ n := by
-  rw [Complex.norm_exp, ← Real.exp_nat_mul]
+  rw [Complex.norm_exp, ← Real.exp_natCast_mul]
   congr 1
   simp [Complex.mul_re, Complex.mul_im]
   ring

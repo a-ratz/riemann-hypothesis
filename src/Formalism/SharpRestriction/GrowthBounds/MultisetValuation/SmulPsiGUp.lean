@@ -188,7 +188,7 @@ theorem isLattice_between [IsDomain W] [IsPrincipalIdealRing W] [IsFractionRing 
   obtain rfl : m = n := le_antisymm hmn hnm
   refine ⟨Matrix.of fun a b => c b a, ?_, ?_⟩
   · rw [← Matrix.isUnit_iff_isUnit_det]
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     exact hliQ
   · unfold colSpan
     have e1 : (Set.range fun b : Fin m => fun a => (Matrix.of fun a b => c b a) a b) =
@@ -533,7 +533,7 @@ theorem core (p n' : ℕ) (h : Res (p : W) F) (hq : Nat.card F = p ^ n') (N g i 
           ∀ y ∈ A1, x.mulVec y ∈ colSpan W gB} := by
   classical
   have hp0 : (p : Qq) ≠ 0 := pQ_ne h
-  haveI hFfin : Finite F := by
+  have hFfin : Finite F := by
     apply Nat.finite_of_card_ne_zero
     rw [hq]
     refine pow_ne_zero _ ?_
@@ -542,7 +542,7 @@ theorem core (p n' : ℕ) (h : Res (p : W) F) (hq : Nat.card F = p ^ n') (N g i 
   have hq1 : 2 ≤ p ^ n' := by
     rw [← hq]
     exact Finite.one_lt_card
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   have hcardF : Fintype.card F = p ^ n' := by rw [← Nat.card_eq_fintype_card, hq]
   by_cases hx : ∀ y ∈ colSpan W gA, x.mulVec y ∈ colSpan W gB
   swap
@@ -654,9 +654,9 @@ theorem countLoc : CountLoc := by
   subst hN
   obtain ⟨gA, hgA, rfl⟩ := hA
   obtain ⟨gB, hgB, rfl⟩ := hB
-  haveI := hfr
-  haveI : (Ideal.span {(p : W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hirr
-  letI : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
+  have := hfr
+  have : (Ideal.span {(p : W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hirr
+  let : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
   have hres : Cnt.Res (p : W) (W ⧸ Ideal.span {(p : W)}) :=
     { surj := by rw [Ideal.Quotient.algebraMap_eq]; exact Ideal.Quotient.mk_surjective
       ker := fun w => by

@@ -59,7 +59,7 @@ private theorem prod_tri {C : Type} [CommRing C] {n : ℕ} (M : Fin n → Matrix
     | succ k ih =>
       intro hk i j hj
       have htake : (List.ofFn M).take (k + 1) = (List.ofFn M).take k ++ [M ⟨k, hk⟩] := by
-        rw [List.take_succ]
+        rw [List.take_add_one]
         simp [show k < n by omega]
       rw [htake, List.prod_append, List.prod_singleton, Matrix.mul_apply]
       apply Finset.sum_eq_zero
@@ -122,5 +122,5 @@ theorem UpperTheory.V.Fr.ord_of_flag :
       _ = 0 := by rw [h0, mul_zero, zero_mul]
   · intro s
     rw [← Matrix.charpoly_units_conj g (r s), ← Matrix.coe_units_inv, ← hconj,
-      Matrix.charpoly_of_upperTriangular _ (fun i j hij => (hg s).1 i j hij)]
+      charpoly_of_isUpperTriangular _ (fun i j hij => (hg s).1 i j hij)]
     exact Finset.prod_congr rfl fun i _ => by rw [(hg s).2 i]

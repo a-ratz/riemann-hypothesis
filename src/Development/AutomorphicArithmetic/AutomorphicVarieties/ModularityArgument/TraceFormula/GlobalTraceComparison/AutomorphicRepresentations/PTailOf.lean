@@ -116,9 +116,9 @@ private theorem diff_le {X : Type*} [MeasurableSpace X] (ν : Measure X) (f g : 
     ring
   rw [e, norm_neg]
   have h1 : ‖∫ x, A.indicator f x ∂ν‖ₑ ≤ ENNReal.ofReal B := by
-    refine (enorm_integral_le_lintegral_enorm _).trans (le_trans (le_of_eq ?_) hb)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (le_trans (le_of_eq ?_) hb)
     refine lintegral_congr fun x => ?_
-    exact enorm_indicator_eq_indicator_enorm ..
+    exact eNorm_indicator_eq_indicator_eNorm ..
   rw [← ofReal_norm] at h1
   exact (ENNReal.ofReal_le_ofReal_iff hB).mp h1
 
@@ -149,7 +149,7 @@ private theorem tail_main : UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.Sizes �
   let A : Set (H E n 0) := {x | x.1 ∉ cutSet E n τ}
   have hAm : MeasurableSet A := by
     have ho : IsOpen A := ((mahler_holds E n τ).1.preimage continuous_fst).isOpen_compl
-    haveI : BorelSpace (H E n 0) := ⟨rfl⟩
+    have : BorelSpace (H E n 0) := ⟨rfl⟩
     exact ho.measurableSet
   have hAρ : ∀ x ∈ A, |ldet x| ≤ c * ρ → ρ ≤ r0 x := fun x hx hl => by
     by_contra hlt

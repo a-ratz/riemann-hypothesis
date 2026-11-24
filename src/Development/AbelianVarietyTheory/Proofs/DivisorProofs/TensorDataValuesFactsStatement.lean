@@ -73,8 +73,8 @@ theorem tensφ_eq (T : Tens D D' W) (k : (Fin r × Fin r) × Fin 4) : tensφ T.p
 theorem tensHom_mul (T : Tens D D' W) (k : (Fin r × Fin r) × Fin 4) {Z : Over (Spec (CommRingCat.of R))}
     (a b : Z ⟶ D'.P.A) : (a * b) ≫ tensHom T k = (a ≫ tensHom T k) * (b ≫ tensHom T k) := by
   obtain ⟨⟨i, j⟩, m⟩ := k
-  haveI := T.pr_hom i
-  haveI := T.pr_hom j
+  have := T.pr_hom i
+  have := T.pr_hom j
   fin_cases m
   · show (a * b) ≫ (T.pr i * T.pr j) = (a ≫ (T.pr i * T.pr j)) * (b ≫ (T.pr i * T.pr j))
     rw [MonObj.comp_mul, MonObj.comp_mul, MonObj.comp_mul, MonObj.mul_comp, MonObj.mul_comp]
@@ -195,8 +195,8 @@ theorem theta_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], B
     refine Finset.prod_congr rfl fun j _ => ?_
     rw [Fin.prod_univ_four]
     simp only [lift_cubeρ]
-    haveI := T.pr_hom i
-    haveI := T.pr_hom j
+    have := T.pr_hom i
+    have := T.pr_hom j
     have m0 : ∀ a, ν'.eA a ≫ tensHom T ((i, j), 0) = ν.eA (cmp T ν ν' a i * cmp T ν ν' a j) := fun a => by
       rw [map_mul, ecmp, ecmp]; exact MonObj.comp_mul _ _ _
     have m1 : ∀ a, ν'.eA a ≫ tensHom T ((i, j), 1) = ν.eA (cmp T ν ν' a i) := fun a => (ecmp a i).symm
@@ -447,7 +447,7 @@ variable {R : Type} [CommRing R] [IsDomain R] {D D' : DegPre R} {r : ℕ} {W : M
 
 theorem cmp_mul (T : Tens D D' W) (ν : NumOf D F N) (ν' : NumOf D' F N') (x y : N'.A) (j : Fin r) :
     cmp T ν ν' (x * y) j = cmp T ν ν' x j * cmp T ν ν' y j := by
-  haveI := T.pr_hom j
+  have := T.pr_hom j
   simp only [TensTor.cmp, map_mul]
   rw [← map_mul ν.eA.symm]
   congr 1

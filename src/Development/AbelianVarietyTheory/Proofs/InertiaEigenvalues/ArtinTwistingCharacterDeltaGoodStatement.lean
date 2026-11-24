@@ -178,7 +178,7 @@ theorem val_div_eq_one (τ : Ω ≃+* Ω) (hm : ∀ x, A.valuation (τ x) < 1 �
   rw [map_inv₀] at h2
   have h0 : A.valuation (τ y / y) ≠ 0 := by simpa using ha
   push_neg at h1 h2
-  exact le_antisymm ((one_le_inv₀ (zero_lt_iff.2 h0)).1 h2) h1
+  exact le_antisymm ((one_le_inv₀ (pos_iff_ne_zero.2 h0)).1 h2) h1
 
 end General
 
@@ -239,8 +239,8 @@ theorem fixes_of_wild (s : Ω ≃+* Ω) (hm : ∀ x, A.valuation (s x) < 1 ↔ A
   exact Valuation.map_add_lt _ (Valuation.map_add_lt _ hb1 hb2) (val_mul_lt_one_left A hu lY)
 
 theorem exists_cube_root_mod {p : ℕ} (hp : p.Prime) (hp3 : p % 3 = 1) : ∃ t : ℕ, p ∣ t ^ 2 + t + 1 := by
-  haveI := Fact.mk hp
-  haveI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  have := Fact.mk hp
+  have : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hcard : 3 ∣ Fintype.card (ZMod p)ˣ := by
     rw [ZMod.card_units_eq_totient, Nat.totient_prime hp]; omega
   obtain ⟨u, hu⟩ := exists_prime_orderOf_dvd_card 3 hcard
@@ -310,7 +310,7 @@ theorem exists_iterate_eq {Ω : Type} [Field Ω] [Algebra ℚ Ω] (τ : Ω ≃+*
       have := Polynomial.aeval_algHom_apply (τ : Ω →+* Ω).toRatAlgHom (τ^[k] y) f
       rw [ih.2, map_zero] at this
       exact this
-  haveI := (Polynomial.rootSet_finite f Ω).to_subtype
+  have := (Polynomial.rootSet_finite f Ω).to_subtype
   obtain ⟨i, j, hij, he⟩ := Finite.exists_ne_map_eq_of_infinite
     (fun k : ℕ => (⟨τ^[k] y, hroot k⟩ : f.rootSet Ω))
   have he' : τ^[i] y = τ^[j] y := congrArg Subtype.val he
@@ -367,16 +367,16 @@ theorem places_split : ∀ (D : D7) (i : D.ntw.Tw), ∀ P ∈ D.ntw.pD i, Formal
       val_mul_lt_one_left A h3 ((A.valuation_le_one_iff _).2 (natCast_mem A _))
     exact absurd (lt_of_le_of_lt h1 (max_lt hpv h2)) (lt_irrefl _)
   have hcard := D.ntw.delta_15 i P hP A hA
-  haveI : Finite ((Ine (F := D.host.E) A).map (D.ntw.delta i)) :=
+  have : Finite ((Ine (F := D.host.E) A).map (D.ntw.delta i)) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; norm_num)
-  haveI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  have : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' (G := ((Ine (F := D.host.E) A).map (D.ntw.delta i))) 3
     (by rw [hcard]; norm_num)
   obtain ⟨σ, hσ, hσx⟩ := Subgroup.mem_map.1 x.2
   have hord : orderOf (D.ntw.delta i σ) = 3 := by rw [hσx, Subgroup.orderOf_coe]; exact hx
   have hd3 : D.ntw.delta i σ ^ 3 = 1 := by rw [← hord]; exact pow_orderOf_eq_one _
   have hd1 : D.ntw.delta i σ ≠ 1 := fun h => by rw [h, orderOf_one] at hord; norm_num at hord
-  haveI : IsGalois D.host.E D.nd.Om := IsAlgClosure.isGalois _ _
+  have : IsGalois D.host.E D.nd.Om := IsAlgClosure.isGalois _ _
   set K := (D.ntw.delta i).ker with hK_def
   have hfix : (IntermediateField.fixedField K).fixingSubgroup = K :=
     InfiniteGalois.fixingSubgroup_fixedField ⟨K, K.isClosed_of_isOpen (D.ntw.delta_open i)⟩
@@ -434,10 +434,10 @@ theorem places_split : ∀ (D : D7) (i : D.ntw.Tw), ∀ P ∈ D.ntw.pD i, Formal
     have h2 : (σ * σ) (((σ * σ)⁻¹ * (g * σ' * g⁻¹)) z) = (σ * σ) z := by rw [h1]
     rw [← AlgEquiv.mul_apply, mul_inv_cancel_left] at h2
     exact h2
-  haveI : CharZero D.nd.Om := charZero_of_injective_algebraMap (algebraMap D.host.E D.nd.Om).injective
+  have : CharZero D.nd.Om := charZero_of_injective_algebraMap (algebraMap D.host.E D.nd.Om).injective
   have hIntW : IsIntegral ℚ w := by
-    haveI : Algebra.IsAlgebraic D.host.E D.nd.Om := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic ℚ D.nd.Om := Algebra.IsAlgebraic.trans ℚ D.host.E D.nd.Om
+    have : Algebra.IsAlgebraic D.host.E D.nd.Om := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic ℚ D.nd.Om := Algebra.IsAlgebraic.trans ℚ D.host.E D.nd.Om
     exact (Algebra.IsAlgebraic.isAlgebraic w).isIntegral
   obtain ⟨n, hn, hnw⟩ := exists_iterate_eq τ hIntW
   have hwz : A.valuation (z / w) = 1 := by
@@ -533,9 +533,9 @@ theorem coprime_absNorm_of_natCast_notMem {E : Type} [Field E] [NumberField E]
     Nat.Coprime m (Ideal.absNorm P.asIdeal) := by
   apply Nat.coprime_of_dvd
   intro p hp hpm hpN
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : P.asIdeal.IsPrime := P.isPrime
-  haveI : Finite (RingOfIntegers E ⧸ P.asIdeal) :=
+  have : Fact p.Prime := ⟨hp⟩
+  have : P.asIdeal.IsPrime := P.isPrime
+  have : Finite (RingOfIntegers E ⧸ P.asIdeal) :=
     Ideal.finiteQuotientOfFreeOfNeBot P.asIdeal P.ne_bot
   have hcard : p ∣ Nat.card (RingOfIntegers E ⧸ P.asIdeal) := by
     rwa [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hpN
@@ -765,7 +765,7 @@ open GlobalTheory.TwistPull
 
 theorem good_pull_tame : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (a : Recip D N.Om), a.Good → ∀ (A : Type) [CommGroup A] (φ : G D.host.E N.Om →* A), IsOpen (φ.ker : Set (G D.host.E N.Om)) → AntiHom X.cc φ → ∀ Q : Finset (Pl D.host.E), SplitSet Q → (∀ P ∈ Q, ∃ m : ℕ, ((m : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal ∧ ∀ B : ValuationSubring N.Om, IsPlaceOver B P → ∀ σ ∈ Ine (F := D.host.E) B, φ σ ^ m = 1) → (∀ v : Pl D.host.E, v ∉ Q → (∀ P ∈ Q, ¬ Formalism.BasicNotions.IsConjPl D.host P v) → ∀ B : ValuationSubring N.Om, IsPlaceOver B v → ∀ σ ∈ Ine (F := D.host.E) B, φ σ = 1) → (⟨Q, a.pull φ, resOf (a.pull φ)⟩ : Twist D A).Good := by
   intro D N X a ha A _ φ hφ hanti Q hQ hQm hunr
-  haveI := finite_range (D := D) hφ
+  have := finite_range (D := D) hφ
   set M := Nat.card φ.range with hMdef
   have hM : M ≠ 0 := Nat.card_pos.ne'
   have hr : ∀ f : φ.range →* ℂˣ, IsOpen ((f.comp φ.rangeRestrict).ker : Set (G D.host.E N.Om)) ∧

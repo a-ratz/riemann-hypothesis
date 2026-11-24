@@ -120,7 +120,7 @@ lemma tsact_monomial_left (m : σ →₀ ℕ) (a : R) (h : MvPolynomial σ R) :
   by_cases ha : a = 0
   · subst ha; simp [tsact_zero_left]
   · unfold fockR
-    rw [MvPolynomial.support_monomial, if_neg ha, Finset.sum_singleton, MvPolynomial.coeff_monomial, if_pos rfl]
+    rw [MvPolynomial.support_monomial, ite_eq_right ha, Finset.sum_singleton, MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
 lemma tsact_fact_eq (m : σ →₀ ℕ) (s : Finset σ) (h : m.support ⊆ s) :
     ∏ k ∈ m.support, (m k).factorial = ∏ k ∈ s, (m k).factorial := by

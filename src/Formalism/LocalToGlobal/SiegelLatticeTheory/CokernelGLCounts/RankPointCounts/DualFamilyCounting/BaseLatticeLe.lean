@@ -114,7 +114,7 @@ theorem fg_aaLbS (b : Fin D.R.rS) : (aaLbS X b).FG := by
       rfl
     rw [e]
     exact base_lattice_le X (X.Lb.smul_mem o hl)
-  haveI : IsNoetherian (𝓞 D.host.E) (VS D).L0 := isNoetherian_of_fg_of_noetherian _ (VS D).standardTuple_isLattice.fg
+  have : IsNoetherian (𝓞 D.host.E) (VS D).L0 := isNoetherian_of_fg_of_noetherian _ (VS D).standardTuple_isLattice.fg
   have hfg : ((aaLbS X b).map f).FG := (isNoetherian_submodule.1 inferInstance) _ hle
   exact Submodule.fg_of_fg_map_injective f hf hfg
 

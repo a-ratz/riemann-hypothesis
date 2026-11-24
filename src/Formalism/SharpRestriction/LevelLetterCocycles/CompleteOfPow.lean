@@ -83,7 +83,7 @@ theorem l_mem_max (P : LocPrime l) (LL : FinExt l) :
   exact (mem_maximalIdeal _).2 (mem_nonunits_iff.2 (l_not_unit P LL))
 
 theorem OL_dvr (P : LocPrime l) (LL : FinExt l) : IsDiscreteValuationRing ↥(OL LL) := by
-  letI := Formalism.MainNotions.LiftingTheory.lkd_local P LL
+  let := Formalism.MainNotions.LiftingTheory.lkd_local P LL
   have hfd : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have hded : IsDedekindDomain ↥(OL LL) :=
     IsIntegralClosure.isDedekindDomain ℤ_[l] ℚ_[l] ↥LL.1 ↥(integralClosure ℤ_[l] ↥LL.1)
@@ -96,7 +96,7 @@ theorem OL_dvr (P : LocPrime l) (LL : FinExt l) : IsDiscreteValuationRing ↥(OL
 theorem OL_complete_max (P : LocPrime l) (LL : FinExt l) :
     letI := Formalism.MainNotions.LiftingTheory.lkd_local P LL
     IsAdicComplete (maximalIdeal ↥(OL LL)) ↥(OL LL) := by
-  letI := Formalism.MainNotions.LiftingTheory.lkd_local P LL
+  let := Formalism.MainNotions.LiftingTheory.lkd_local P LL
   have := OL_dvr P LL
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible ↥(OL LL)
   have hl0 : Ideal.span {((l : ℕ) : ↥(OL LL))} ≠ ⊥ := by

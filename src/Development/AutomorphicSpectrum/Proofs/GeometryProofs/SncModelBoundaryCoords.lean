@@ -235,7 +235,7 @@ theorem points_of_isEmpty [IsEmpty K] [∀ k, Fintype (J k)] {Ω : Type} [Field 
     (hs : Cmp.IsSncModel y e bd) (hB : ∀ p ∈ B, Char0 ξ p) (hP : SncPts ξ e B)
     (z : Spec (CommRingCat.of ℂ) ⟶ Sc) (w : (Σ k, J k) → ℂ) :
     w ∈ mcPts bd ↔ ∃ h : genPt ξ ⤳ centre z, (⟨centre z, h⟩ : Cpt ξ) ∈ B := by
-  haveI hE : IsEmpty (Σ k, J k) := ⟨fun p => isEmptyElim p.1⟩
+  have hE : IsEmpty (Σ k, J k) := ⟨fun p => isEmptyElim p.1⟩
   let c : (k : K) → J k := fun k => isEmptyElim k
   obtain ⟨m, f, a, hf, ha, hsum, hS⟩ := hs c (fun k => isEmptyElim k)
   have hr : (Set.range fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩) = ∅ := Set.range_eq_empty _
@@ -258,7 +258,7 @@ theorem points_of_isEmpty [IsEmpty K] [∀ k, Fintype (J k)] {Ω : Type} [Field 
     have e1 : s = algebraMap ℚ S t := Subtype.ext ht.symm
     rw [e1]
     exact (KaehlerDifferential.D ℚ S).map_algebraMap t
-  haveI hFe : IsEmpty (Fin e) := ⟨fun i => hli.ne_zero i (hD _)⟩
+  have hFe : IsEmpty (Fin e) := ⟨fun i => hli.ne_zero i (hD _)⟩
   have hcl := hq ⊥ Ideal.isPrime_bot
   obtain ⟨g, hg, s, hs1, hs0⟩ : ∃ g ∈ bd, ∃ s : S, (s : Ω) = aeval (fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩) g ∧
       s ∉ (⊥ : Ideal S) := by
@@ -293,7 +293,7 @@ open Seg in
 theorem exists_isSncModel_of_sncPts : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (X : Scheme.{0}) (ξ : Sp Ω ⟶ X) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (e : ℕ) (B : Set (Cpt ξ)), CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) → (∀ p ∈ B, Char0 ξ p) → SncPts ξ e B → ∃ bd : Ideal (MRing J), Cmp.IsSncModel y e bd ∧ ∀ (z : Spec (CommRingCat.of ℂ) ⟶ X) w, CoordsAt ξ y z w → (w ∈ mcPts bd ↔ ∃ h : genPt ξ ⤳ centre z, (⟨centre z, h⟩ : Cpt ξ) ∈ B) := by
   intro Ω _ _ X ξ K _ J _ y e B hT hB hP
   obtain ⟨c₀, -⟩ := hT.cover ⟨genPt ξ, specializes_rfl⟩
-  haveI : Nonempty ((k : K) → J k) := ⟨c₀⟩
+  have : Nonempty ((k : K) → J k) := ⟨c₀⟩
   have hcard : 0 < Nat.card ((k : K) → J k) := Nat.card_pos
   obtain ⟨N, hN⟩ := Nat.exists_eq_succ_of_ne_zero hcard.ne'
   let E : Fin (N + 1) ≃ ((k : K) → J k) := (Finite.equivFinOfCardEq hN).symm

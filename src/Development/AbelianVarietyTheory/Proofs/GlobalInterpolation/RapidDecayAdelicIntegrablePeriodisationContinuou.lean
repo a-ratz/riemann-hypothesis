@@ -81,7 +81,7 @@ theorem decay_integrable_periodise : ∀ (F : Type) [Field F] [NumberField F] (N
         _ = C * c ξ := mul_comm _ _
     · rw [hKz _ hmem, norm_zero]
       exact mul_nonneg hC0 (hc0 ξ)
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ) (M := F)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ) (M := F)
   refine ⟨?_, ?_, ?_⟩
   · intro μ hμ
     obtain ⟨ν, hν⟩ := _root_.GlobalTheory.SWQ.exists_adeles_haarMeasure_covolume_one F
@@ -102,7 +102,7 @@ theorem decay_integrable_periodise : ∀ (F : Type) [Field F] [NumberField F] (N
       rw [Set.indicator_of_mem hu]
       have h3 := hcb ξ (u - rat ξ) hξ
       rw [add_sub_cancel] at h3
-      rw [← ofReal_norm_eq_enorm]
+      rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal h3
     have hfin : (∑' ξ, ENNReal.ofReal (C * c ξ)) < ∞ := by
       rw [← ENNReal.ofReal_tsum_of_nonneg (fun ξ => mul_nonneg hC0 (hc0 ξ)) (hcs.mul_left C)]

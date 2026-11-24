@@ -66,8 +66,8 @@ theorem van_spec (Z : Closeds X) (x : X) :
   obtain ⟨_, ⟨W, hW, rfl⟩, hx, -⟩ :=
     X.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ x) isOpen_univ
   rw [ds_stalkId_eq_map _ ⟨W, hW⟩ x hx, Scheme.IdealSheafData.vanishingIdeal_ideal]
-  letI : Algebra Γ(X, W) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hx⟩
-  haveI := hW.isLocalization_stalk ⟨x, hx⟩
+  let : Algebra Γ(X, W) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hx⟩
+  have := hW.isLocalization_stalk ⟨x, hx⟩
   have hg : (X.presheaf.germ W x hx).hom = algebraMap Γ(X, W) (X.presheaf.stalk x) := rfl
   have hcl : IsClosed (X := PrimeSpectrum Γ(X, W)) (hW.fromSpec ⁻¹' (Z : Set X)) :=
     Z.isClosed.preimage hW.fromSpec.continuous
@@ -132,7 +132,7 @@ theorem stalkId_comap (π : X' ⟶ X) (J : X.IdealSheafData) (x' : X') :
   obtain ⟨V₀, hV, hxV, hVU⟩ := Opens.isBasis_iff_nbhd.1 X'.isBasis_affineOpens
     (show x' ∈ π ⁻¹ᵁ U from hxU)
   let V : X'.Opens := V₀
-  haveI : IsAffine V.toScheme := hV
+  have : IsAffine V.toScheme := hV
   obtain ⟨z, rfl⟩ : ∃ z : V.toScheme, V.ι z = x' := ⟨⟨x', hxV⟩, rfl⟩
   have hle : ⊤ ≤ (V.ι ≫ π) ⁻¹ᵁ U := fun w _ => hVU w.2
   have h1 := stalkId_comap_of_affine J (V.ι ≫ π) ⟨U, hU⟩ hle z

@@ -155,7 +155,7 @@ theorem gtD_lat {m : ℕ} (b : Basis (Fin (m + 1)) ℝ (EuclideanSpace ℝ (Fin 
     let f : K → span ℤ (Set.range b) := fun x =>
       ⟨((x : (ℝ ∙ y0)ᗮ) : EuclideanSpace ℝ (Fin (m + 1))), (hKmem x).1 x.2⟩
     refine DiscreteTopology.of_continuous_injective (f := f)
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) ?_
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) ?_
     intro x y hxy
     have hv := congrArg Subtype.val hxy
     exact Subtype.ext (Subtype.ext hv)

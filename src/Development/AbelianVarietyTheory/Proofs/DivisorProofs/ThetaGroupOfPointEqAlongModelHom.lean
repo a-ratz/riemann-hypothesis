@@ -104,7 +104,7 @@ theorem HH_eq_of_hom : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] 
   unfold ThetaSys.HH
   congr 1
   ext x
-  simp only [ThetaSys.supI, Set.mem_setOf_eq]
+  simp only [ThetaSys.supI, Set.mem_ofPred_eq]
   constructor
   · intro hx
     obtain ⟨x₀, h₀⟩ := hdiv (q w)

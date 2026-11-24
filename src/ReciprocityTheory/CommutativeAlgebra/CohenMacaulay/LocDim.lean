@@ -93,7 +93,7 @@ theorem grade_step_exists (h : IsCM R) {I : Ideal R} (hI : I ≠ ⊤) {r : ℕ}
     (hr : (r : ℕ∞) ≤ I.height) (rs : List R) (hlen : rs.length < r) (hrsI : ∀ x ∈ rs, x ∈ I)
     (reg : IsRegular R rs) :
     ∃ x ∈ I, IsSMulRegular (R ⧸ (Ideal.ofList rs • ⊤ : Submodule R R)) x := by
-  haveI : IsNoetherianRing R := h.1
+  have : IsNoetherianRing R := h.1
   have hIm : I ≤ maximalIdeal R := le_maximalIdeal hI
   have hCM := (isCM_iff_isCMMod.mp h).quotient_ofList (fun x hx => hIm (hrsI x hx)) reg
   have hJ : (Ideal.ofList rs • (⊤ : Submodule R R) : Ideal R) = Ideal.ofList rs := Ideal.mul_top _
@@ -213,7 +213,7 @@ theorem IsCM.depthGE_localization_of_le_height (h : IsCM R) (P : Ideal R) [P.IsP
 
 theorem IsCM.localization_atPrime (h : IsCM R) (P : Ideal R) [P.IsPrime] :
     IsCM (Localization.AtPrime P) := by
-  haveI : IsNoetherianRing R := h.1
+  have : IsNoetherianRing R := h.1
   have hfin : P.height ≠ ⊤ := by
     first
     | exact Ideal.height_ne_top (Ideal.IsPrime.ne_top ‹_›)
@@ -223,9 +223,9 @@ theorem IsCM.localization_atPrime (h : IsCM R) (P : Ideal R) [P.IsPrime] :
     | (rw [Ideal.height_eq_primeHeight P]; exact (Ideal.primeHeight_lt_top P).ne)
     | exact (Ideal.primeHeight_lt_top P).ne
   refine ⟨inferInstance, P.height.toNat, ?_,
-    h.depthGE_localization_of_le_height P (by rw [ENat.coe_toNat hfin])⟩
+    h.depthGE_localization_of_le_height P (by rw [ENat.natCast_toNat hfin])⟩
   rw [IsLocalization.AtPrime.ringKrullDim_eq_height P (Localization.AtPrime P)]
-  conv_lhs => rw [← ENat.coe_toNat hfin]
+  conv_lhs => rw [← ENat.natCast_toNat hfin]
   rfl
 
 theorem IsCM.height_add_ringKrullDim_quotient (h : IsCM R) (P : Ideal R) [P.IsPrime] :

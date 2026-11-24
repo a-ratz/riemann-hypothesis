@@ -71,7 +71,7 @@ private theorem cocycle_coboundary_of_vanishing_finite_index {k Γ : Type} [Fiel
     have := hcn a _ h
     rw [mul_inv_cancel_left] at this
     exact this.symm
-  haveI : Fintype (Γ ⧸ N) := Fintype.ofFinite _
+  have : Fintype (Γ ⧸ N) := Fintype.ofFinite _
   have hcard : (Fintype.card (Γ ⧸ N) : k) = N.index := by
     rw [Subgroup.index_eq_card, Nat.card_eq_fintype_card]
   refine ⟨-(N.index : k)⁻¹ * ∑ q : Γ ⧸ N, c q.out, fun s => ?_⟩
@@ -132,11 +132,11 @@ private theorem rank_kummer_dual_le_clRk {F Ω : Type} [Field F] [NumberField F]
   have hsp : Kum.XDual 1 K₁ k k ≤ Submodule.span k (Set.range e) := by
     intro φ hφ
     obtain ⟨hlc, hadd, hine, hdec⟩ := hφ
-    haveI : CompactSpace K₁ :=
+    have : CompactSpace K₁ :=
       isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen K₁ hK).isCompact
     have hfin : (Set.range φ).Finite := hlc.range_finite
-    letI : Module (ZMod l) k := Module.compHom k cst
-    haveI : Module.Finite (ZMod l) (Submodule.span (ZMod l) (Set.range φ)) :=
+    let : Module (ZMod l) k := Module.compHom k cst
+    have : Module.Finite (ZMod l) (Submodule.span (ZMod l) (Set.range φ)) :=
       Module.Finite.span_of_finite _ hfin
     let β := Module.finBasis (ZMod l) (Submodule.span (ZMod l) (Set.range φ))
     have hmem : ∀ u, φ u ∈ Submodule.span (ZMod l) (Set.range φ) :=
@@ -227,7 +227,7 @@ theorem UpperTheory.V.GC.strGen :
     obtain ⟨hlcz, _, _⟩ := z.2
     refine ⟨?_, ?_, ?_, ?_⟩
     · have hcont : Continuous fun u : K₁ => π ⟨u.1, hKU u.2⟩ :=
-        hπc.comp (Continuous.subtype_mk continuous_subtype_val _)
+        hπc.comp (Continuous.subtype_mk continuous_subtypeVal _)
       exact hlcz.comp_continuous hcont
     · intro a b
       show z.1.1 (π ⟨(a * b).1, hKU (a * b).2⟩)
@@ -275,7 +275,7 @@ theorem UpperTheory.V.GC.strGen :
       rw [hρ]
       by_cases h : ∀ s, κ (loc v s) = 1
       · rw [h s, Units.val_one, one_mul, sub_self, sub_zero]
-      · rw [show e0 y v = 0 from dif_neg h, mul_zero, sub_zero, sub_zero]
+      · rw [show e0 y v = 0 from dite_eq_right h, mul_zero, sub_zero, sub_zero]
   let ι : ({v // ∀ s, κ (loc v s) = 1} → k) →ₗ[k] Zs :=
     { toFun := fun y => ⟨((0 : Γ → k), e0 y), e0mem y⟩
       map_add' := fun y y' => Subtype.ext (Prod.ext (by simp) (e0add y y'))
@@ -290,7 +290,7 @@ theorem UpperTheory.V.GC.strGen :
     have hdvd : N.index ∣ K₁.relIndex U := Subgroup.index_map_dvd _ hπs
     have hNl : ¬ l ∣ N.index := fun h => hl (h.trans hdvd)
     have hN0 : N.index ≠ 0 := fun h => hNl (h ▸ dvd_zero l)
-    haveI : N.FiniteIndex := ⟨hN0⟩
+    have : N.FiniteIndex := ⟨hN0⟩
     have hNk : (N.index : k) ≠ 0 := by
       rw [Ne, CharP.cast_eq_zero_iff k l]
       exact hNl
@@ -310,9 +310,9 @@ theorem UpperTheory.V.GC.strGen :
       rw [Submodule.mem_bot]
       show e0 (fun v => z.1.2 v.1 - X) v - z.1.2 v - -X = 0
       by_cases h : ∀ s, κ (loc v s) = 1
-      · rw [show e0 (fun v => z.1.2 v.1 - X) v = z.1.2 v - X from dif_pos h]
+      · rw [show e0 (fun v => z.1.2 v.1 - X) v = z.1.2 v - X from dite_eq_left h]
         ring
-      · rw [show e0 (fun v => z.1.2 v.1 - X) v = 0 from dif_neg h]
+      · rw [show e0 (fun v => z.1.2 v.1 - X) v = 0 from dite_eq_right h]
         push_neg at h
         obtain ⟨s, hs⟩ := h
         have e := hcl z v s

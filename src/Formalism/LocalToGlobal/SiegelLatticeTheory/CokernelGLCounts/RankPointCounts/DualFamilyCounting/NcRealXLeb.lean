@@ -80,8 +80,8 @@ theorem haarUnique_holds : Formalism.L2.SG.Pf.LsNc5.HaarUnique := by
   intro D X u μ ν hμ hν
   obtain ⟨hσ, h0, hc, hi⟩ := hμ
   obtain ⟨hσ', h0', hc', hi'⟩ := hν
-  haveI := hσ
-  haveI := hσ'
+  have := hσ
+  have := hσ'
   have hco : (ProductExactness.NinfG X u : Set X.B.I.Ginf) = X.NinfU u := ProductExactness.NinfG_coe X u
   rw [← hco] at hc hi hc' hi'
   obtain ⟨κ, -, -, hκ⟩ := ProductExactness.PiM.uniq_on_closed (ProductExactness.NinfG X u) (ProductExactness.NinfG_closed X u) μ ν hc hc' hi hi' h0 h0'
@@ -113,7 +113,7 @@ section Real
 variable {r k : ℕ}
 
 theorem reim_cont (b : Bool) : Continuous fun c : ℂ => LsNc5.reim c b := by
-  cases b <;> simp only [LsNc5.reim, Bool.false_eq_true, if_false, if_true] <;>
+  cases b <;> simp only [LsNc5.reim, Bool.false_eq_true, ite_false, ite_true] <;>
     first | exact Complex.continuous_re | exact Complex.continuous_im | fun_prop
 
 def idxC : WlocSk.NB.CI k r × Bool ⊕ Fin r → LsNc5.CIdx r k
@@ -190,7 +190,7 @@ theorem map_Rc : (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ
         LsNc5.reim z true ∈ s (eIdx (Sum.inl (c, true)))}) ×ˢ
       (Set.univ.pi fun a => s (eIdx (Sum.inr a))) := by
     ext t
-    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_prod, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_prod, Set.mem_ofPred_eq]
     constructor
     · intro h
       refine ⟨fun c => ⟨?_, ?_⟩, fun a => ?_⟩
@@ -343,7 +343,7 @@ theorem kapL_eq {z : Fin (2 * r + k + 1) → ℂ} {T : ℝ} (hF : IsFrameJ ε e 
     intro a
     have hv : (eI k r a).val = a.val := rfl
     unfold colQ
-    rw [dif_pos (by omega)]
+    rw [dite_eq_left (by omega)]
     all_goals rfl
   have cF : ∀ a : Fin r, colQ e f w (z0v T z) (esI k r a) = f a := by
     intro a
@@ -358,13 +358,13 @@ theorem kapL_eq {z : Fin (2 * r + k + 1) → ℂ} {T : ℝ} (hF : IsFrameJ ε e 
     have hj := j.isLt
     have hv : (wI k r (Fin.castSucc j)).val = r + j.val := rfl
     unfold colQ
-    rw [dite_eq_right (by omega), dif_pos (by omega)]
+    rw [dite_eq_right (by omega), dite_eq_left (by omega)]
     congr 1
     all_goals (apply Fin.ext; show (wI k r (Fin.castSucc j)).val - r = j.val; omega)
   have cZ : colQ e f w (z0v T z) (wI k r (Fin.last k)) = z0v T z := by
     have hv : (wI k r (Fin.last k)).val = r + k := rfl
     unfold colQ
-    rw [dite_eq_right (by omega), dite_eq_right (by omega), dif_pos hv]
+    rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left hv]
   have hX : xL ε e f g = WlocSk.NB.bA M := by
     funext b a
     show hJ ε (f b) (uMat g *ᵥ e a) = M (eI k r b) (eI k r a)
@@ -376,7 +376,7 @@ theorem kapL_eq {z : Fin (2 * r + k + 1) → ℂ} {T : ℝ} (hF : IsFrameJ ε e 
     rw [← cF a]
     exact hcol b _
   have hg' := hg
-  simp only [Nset, Set.mem_setOf_eq] at hg'
+  simp only [Nset, Set.mem_ofPred_eq] at hg'
   obtain ⟨hU, h1, h2⟩ := hg'
   have hCB : WlocSk.NB.ColB M := WlocSk.NB.colB_of (col_of_unipotent_entries h1 h2)
   have hMm : mL ε e f g = WlocSk.NB.mof M := by
@@ -436,12 +436,12 @@ theorem lebLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f
   have hΦN : ∀ t : (WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ), WlocSk.NB.phi0 t.1 t.2 ∈ Nset k r := fun t =>
     WlocSk.NB.test_vector_mem_schwartz_bruhat t.1 t.2
   set ν := (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))).map Φ with hν
-  haveI : SigmaFinite ν := hΦe.sigmaFinite_map
+  have : SigmaFinite ν := hΦe.sigmaFinite_map
   have hν0 : ν ≠ 0 := by
     intro h0
     rw [hν, Measure.map_eq_zero_iff hΦe.measurable.aemeasurable] at h0
     exact isOpen_univ.measure_ne_zero (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))) Set.univ_nonempty
-      (by rw [h0, Measure.coe_zero, Pi.zero_apply])
+      (by rw [h0, FunLike.coe_zero, Pi.zero_apply])
   have hrange : ∀ t, ∃ g : Formalism.REAL.UJ ε, Ψ g = Φ t := fun t => by
     refine ⟨toUJ _ (conjQ_UJ hFJ (hΦN t).1), ?_⟩
     show (Qi ε e f w (z0v T z) * uMat (toUJ _ (conjQ_UJ hFJ (hΦN t).1)) * Qm e f w (z0v T z) :
@@ -454,10 +454,10 @@ theorem lebLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f
     rw [ae_iff, hν, hΦe.map_apply]
     convert measure_empty (μ := (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))))
     ext t
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
     obtain ⟨g, hg⟩ := hrange t
     exact ⟨g, hg⟩
-  haveI : SigmaFinite lam0 := SigmaFinite.of_map _ emb.measurable.aemeasurable (by rw [hmap]; infer_instance)
+  have : SigmaFinite lam0 := SigmaFinite.of_map _ emb.measurable.aemeasurable (by rw [hmap]; infer_instance)
   have hNz : NLoc ε e (Qm e f w (z0v T z) *ᵥ zBv k r T) = NLoc ε e z := by rw [hQz]
   have hz0 : ∃ t : ℂ, z0v T z = t • (Qm e f w (z0v T z) *ᵥ zBv k r T) :=
     ⟨(((Real.sqrt T)⁻¹ : ℝ) : ℂ), by rw [hQz]; rfl⟩
@@ -566,7 +566,7 @@ theorem lebHaar_holds : LsNc5.LebHaar := by
     (ProductExactness.zV X u v) (ProductExactness.Tw_pos u) (fX_ee X v) (fX_ff X v) (fX_ef X v) (fX_ww X u v) (fX_ew X u v)
     (fX_fw X u v) (fX_ez X u v) (fX_fz X u v) (frame_real_z_z_eq_neg X u v) (fX_zw X u v)
   choose lam hH hM hmap using hloc
-  haveI : ∀ v, SigmaFinite (lam v) := fun v => (hH v).1
+  have : ∀ v, SigmaFinite (lam v) := fun v => (hH v).1
   have hco : X.NinfU u = (ProductExactness.NinfG X u : Set X.B.I.Ginf) := (ProductExactness.NinfG_coe X u).symm
   refine ⟨Measure.pi lam, ⟨inferInstance, ProductExactness.PiM.pi_ne_zero _ fun v => (hH v).2.1, ?_, ?_⟩, ?_⟩
   · rw [hco, ProductExactness.NinfG, Subgroup.coe_pi]
@@ -592,7 +592,7 @@ theorem lebHaar_holds : LsNc5.LebHaar := by
         fun p : InfinitePlace X.B.I.F × LsNc5.CIdx D.R.rS D.R.k => F p.1 p.2) :=
       Measurable.of_eval fun p : InfinitePlace X.B.I.F × LsNc5.CIdx D.R.rS D.R.k =>
         (measurable_pi_apply p.2).comp (measurable_pi_apply p.1)
-    haveI : ∀ v, SigmaFinite ((lam v).map
+    have : ∀ v, SigmaFinite ((lam v).map
         (kapL (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v))) := fun v => by
       rw [hmap v]; infer_instance
     rw [hkap, ← Measure.map_map hunc hK'm, Measure.pi_map_pi (fun v => hM v)]

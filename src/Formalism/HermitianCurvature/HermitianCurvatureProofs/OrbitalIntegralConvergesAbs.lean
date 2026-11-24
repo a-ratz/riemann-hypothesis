@@ -78,7 +78,7 @@ theorem muPi_eq (β : ℂ) (ι : Type) [Fintype ι] :
     muPi β ι = (Real.toNNReal (‖β‖ / (2 * Real.pi))) ^ Fintype.card ι • (volume : Measure (ι → ℂ)) := by
   unfold muPi
   refine Measure.pi_eq fun s hs => ?_
-  simp only [mu, Measure.smul_apply, volume_pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
+  simp only [mu, smul_apply, volume_pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
 theorem map_mulVec_volume {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℂ) (h : ‖M.det‖ = 1) :
@@ -114,9 +114,9 @@ theorem norm_det_wMat (n : ℕ) : ‖(wMat n).det‖ = 1 := by
 theorem continuous_strictUpper (d : ℕ) : Continuous (strictUpper : (UT d → ℂ) → Matrix (Fin d) (Fin d) ℂ) := by
   refine continuous_matrix fun i j => ?_
   by_cases h : i < j
-  · simp only [strictUpper, Matrix.of_apply, h, dif_pos]
+  · simp only [strictUpper, Matrix.of_apply, h, dite_eq_left]
     exact continuous_apply _
-  · simp only [strictUpper, Matrix.of_apply, h, dif_neg, not_false_iff]
+  · simp only [strictUpper, Matrix.of_apply, h, dite_eq_right, not_false_iff]
     exact continuous_const
 
 theorem continuous_upper (d : ℕ) : Continuous (upper : (UT d → ℂ) → Matrix (Fin d) (Fin d) ℂ) :=
@@ -289,7 +289,7 @@ theorem affine_fibre {Y : Type} [MeasurableSpace Y] (ν : Measure Y) [SFinite ν
     have hpos : (0 : ℝ) < ‖α y‖ ^ 2 := by positivity
     apply NNReal.eq
     rw [NNReal.coe_mul, Real.coe_toNNReal _ (by positivity)]
-    simp only [NNReal.coe_pow, coe_nnnorm, NNReal.coe_one]
+    simp only [NNReal.coe_pow, coe_nnNorm, NNReal.coe_one]
     exact mul_inv_cancel₀ hpos.ne'
   rw [h2, ENNReal.coe_one, one_mul]
 
@@ -305,7 +305,7 @@ theorem integral_affine_fibre {Y : Type} [MeasurableSpace Y] (ν : Measure Y) [S
   conv_lhs => rw [← hm]
   rw [integral_map hT.aemeasurable (by rw [hm]; exact hG), integral_withDensity_eq_integral_smul hd]
   refine integral_congr_ae (Filter.Eventually.of_forall fun p => ?_)
-  simp only [NNReal.smul_def, NNReal.coe_pow, coe_nnnorm]
+  simp only [NNReal.smul_def, NNReal.coe_pow, coe_nnNorm]
   rw [← Complex.coe_smul]
 
 def consMap (m : ℕ) (q : RedCoord m) : BlockCoord (m + 1) := (Fin.cons q.1 q.2.1, q.2.2)

@@ -120,7 +120,7 @@ private theorem integral_norm_sq_lemma_4 {α : Type} [MeasurableSpace α] {m : M
 private theorem setIntegral_norm_le_lemma_5 {α : Type} [MeasurableSpace α] {m : Measure α} {S : Set α}
     (hS : m S < ∞) (F : Lp ℂ 2 m) :
     ∫ q in S, ‖F q‖ ∂m ≤ ((∫ q in S, (1 : ℝ) ∂m) + ‖F‖ ^ 2) / 2 := by
-  haveI : IsFiniteMeasure (m.restrict S) := isFiniteMeasure_restrict.2 hS.ne
+  have : IsFiniteMeasure (m.restrict S) := isFiniteMeasure_restrict.2 hS.ne
   have hsq : Integrable (fun q => ‖F q‖ ^ 2) m := (Lp.memLp F).norm.integrable_sq
   have hint1 : Integrable (fun q => (1 + ‖F q‖ ^ 2) / 2) (m.restrict S) :=
     ((integrable_const (1 : ℝ)).add hsq.restrict).div_const 2
@@ -163,7 +163,7 @@ theorem memL2_convolution_mem {G L : Type} [Group G] [TopologicalSpace G] [IsTop
       Integrable (fun p : L × Quot Γ => φ (sec Γ p.2 * j p.1) * D p.1)
         (ν.prod ((GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ).restrict S)) := by
     intro S hS hSf
-    haveI : IsFiniteMeasure ((GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ).restrict S) := isFiniteMeasure_restrict.2 hSf.ne
+    have : IsFiniteMeasure ((GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ).restrict S) := isFiniteMeasure_restrict.2 hSf.ne
     rw [integrable_prod_iff hmeasH.aestronglyMeasurable]
     refine ⟨Filter.Eventually.of_forall fun y => ?_, ?_⟩
     · have hc := coeFn_R_lemma_3 h (j y)
@@ -193,7 +193,7 @@ theorem memL2_convolution_mem {G L : Type} [Group G] [TopologicalSpace G] [IsTop
       fun q => ψ (sec Γ q) := by
     refine ae_eq_of_forall_setIntegral_eq_of_sigmaFinite ?_ ?_ ?_
     · intro S hS hSf
-      haveI : IsFiniteMeasure ((GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ).restrict S) := isFiniteMeasure_restrict.2 hSf.ne
+      have : IsFiniteMeasure ((GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ).restrict S) := isFiniteMeasure_restrict.2 hSf.ne
       exact ((Lp.memLp (T h.toL2 : Lp ℂ 2 (GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ))).restrict S).integrable one_le_two
     · intro S hS hSf
       exact (hprod S hS hSf).integral_prod_right.congr
@@ -342,7 +342,7 @@ theorem isCuspForm_fin (k : GL (Fin a) (Af E)) {φ : Sm E a} (h : IsCuspForm φ)
   · have e : {k' | finRep E a k' (finRep E a k φ) = finRep E a k φ} =
         (fun k' => k⁻¹ * k' * k) ⁻¹' {k' | finRep E a k' φ = φ} := by
       ext k'
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, map_mul]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_mul]
       constructor
       · intro e
         rw [Module.End.mul_apply, Module.End.mul_apply, e, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel,
@@ -468,8 +468,8 @@ theorem exists_stable (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
       rw [mul_assoc, h2]
     · exact (right_translate_toL2 h3 _) ▸ hS.2 _ _ h4
   | lie X =>
-    letI : MeasurableSpace (AutomorphicForm.archGroup E a) := borel _
-    haveI : BorelSpace (AutomorphicForm.archGroup E a) := ⟨rfl⟩
+    let : MeasurableSpace (AutomorphicForm.archGroup E a) := borel _
+    have : BorelSpace (AutomorphicForm.archGroup E a) := ⟨rfl⟩
     obtain ⟨D, hD, hDc, hrep⟩ := _root_.GlobalTheory.CompanionTheory.LieConv.lie_eq_conv E a (Measure.haar : Measure (AutomorphicForm.archGroup E a)) φ h1.1 X
     have hc : Continuous φ.1 := ContAut.continuous_of_isOpen_stab E a φ h1.1.level
     obtain ⟨h', hW⟩ := _root_.GlobalTheory.CompanionTheory.AutomorphicL2Convolution.memL2_convolution_mem (latticeGL E a) μ (Measure.haar : Measure (AutomorphicForm.archGroup E a))

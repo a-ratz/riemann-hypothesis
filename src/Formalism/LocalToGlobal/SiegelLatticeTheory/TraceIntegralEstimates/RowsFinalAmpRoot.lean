@@ -145,7 +145,7 @@ theorem rootHaar_main : PI.AmpRootH.RootHaar := by
     have e := hνf
     rw [h0, Measure.map_zero] at e
     have e2 := congrArg (fun m : Measure (rootPat p → ℂ) => m Set.univ) e
-    simp only [Measure.coe_zero, Pi.zero_apply, Measure.smul_apply, smul_eq_mul] at e2
+    simp only [FunLike.coe_zero, Pi.zero_apply, smul_apply, smul_eq_mul] at e2
     rcases mul_eq_zero.1 e2.symm with h | h
     · exact hc0 h
     · exact NeZero.ne (volume : Measure (rootPat p → ℂ)) (Measure.measure_univ_eq_zero.1 h)

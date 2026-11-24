@@ -56,13 +56,13 @@ theorem length_le_topologicalKrullDim_of_last_subset {X : Type} [TopologicalSpac
   have hsub : ∀ i, (q i : Set X) ⊆ Z := fun i x hx => h (q.monotone (Fin.le_last i) hx)
   have irr : ∀ i, IsIrreducible (Subtype.val ⁻¹' (q i : Set X) : Set Z) := by
     intro i
-    haveI : IrreducibleSpace (q i : Set X) := Subtype.irreducibleSpace (q i).isIrreducible
+    have : IrreducibleSpace (q i : Set X) := Subtype.irreducibleSpace (q i).isIrreducible
     have := (IrreducibleSpace.isIrreducible_univ (q i : Set X)).image (Set.inclusion (hsub i))
       (continuous_inclusion (hsub i)).continuousOn
     rw [Set.image_univ, Set.range_inclusion] at this
     exact this
   let f : Fin (q.length + 1) → IrreducibleCloseds Z := fun i =>
-    ⟨Subtype.val ⁻¹' (q i : Set X), irr i, (q i).isClosed.preimage continuous_subtype_val⟩
+    ⟨Subtype.val ⁻¹' (q i : Set X), irr i, (q i).isClosed.preimage continuous_subtypeVal⟩
   have hf : ∀ i j, f i = f j → q i = q j := by
     intro i j e
     have e' : (Subtype.val ⁻¹' (q i : Set X) : Set Z) = Subtype.val ⁻¹' (q j : Set X) :=
@@ -90,7 +90,7 @@ theorem topologicalKrullDim_lt_of_isClosed (S : Type) [TopologicalSpace S] [Noet
   rw [not_lt] at hlt
   obtain ⟨p, hp⟩ := le_krullDim_iff.1 hlt
   let q : LTSeries (IrreducibleCloseds S) :=
-    p.map (IrreducibleCloseds.map Subtype.val continuous_subtype_val)
+    p.map (IrreducibleCloseds.map Subtype.val continuous_subtypeVal)
       (IrreducibleCloseds.map_strictMono_of_isInducing Topology.IsInducing.subtypeVal)
   have hql : q.length = d := hp
   have hWC : (q.last : Set S) ⊆ C := by
@@ -123,7 +123,7 @@ theorem finite_of_topologicalKrullDim_nonpos (S : Type) [TopologicalSpace S] [No
     have := hm ⟨closure {x}, isIrreducible_singleton.closure, isClosed_closure⟩
       (b := ⟨closure T, hT.closure, isClosed_closure⟩) (fun y hy => subset_closure (hle hy))
     exact subset_closure.trans this
-  haveI : Finite (irreducibleComponents S) :=
+  have : Finite (irreducibleComponents S) :=
     NoetherianSpace.finite_irreducibleComponents.to_subtype
   exact Finite.of_injective (fun x => (⟨closure {x}, hcomp x⟩ : irreducibleComponents S))
     fun x y hxy => (inseparable_iff_closure_eq.2 (congrArg Subtype.val hxy)).eq

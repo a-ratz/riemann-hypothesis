@@ -58,11 +58,11 @@ theorem measure_eq_relIndex_mul {V : Type} [AddCommGroup V] [MeasurableSpace V] 
     (μ : Measure V) [μ.IsAddLeftInvariant] (Λ L : AddSubgroup V) (hΛL : Λ ≤ L)
     (hL : MeasurableSet (L : Set V)) (hΛ : MeasurableSet (Λ : Set V)) (hfin : Λ.relIndex L ≠ 0) :
     μ L = (Λ.relIndex L : ENNReal) * μ Λ := by
-  have emb : MeasurableEmbedding ((↑) : L → V) := MeasurableEmbedding.subtype_coe hL
+  have emb : MeasurableEmbedding ((↑) : L → V) := MeasurableEmbedding.subtypeVal hL
   have hadd : ∀ g : L, Measurable (fun x : L => g + x) := fun g =>
-    ((measurable_const_add (g : V)).comp measurable_subtype_coe).subtype_mk
+    ((measurable_const_add (g : V)).comp measurable_subtypeVal).subtype_mk
   have : MeasurableAdd L := ⟨hadd, fun g =>
-    ((measurable_add_const (g : V)).comp measurable_subtype_coe).subtype_mk⟩
+    ((measurable_add_const (g : V)).comp measurable_subtypeVal).subtype_mk⟩
   have : (Λ.addSubgroupOf L).FiniteIndex := ⟨hfin⟩
   have : (μ.comap ((↑) : L → V)).IsAddLeftInvariant := by
     refine ⟨fun g => ?_⟩
@@ -86,7 +86,7 @@ theorem measure_eq_relIndex_mul {V : Type} [AddCommGroup V] [MeasurableSpace V] 
         exact hz
     rw [e, measure_preimage_add]
   have key := AddSubgroup.index_mul_measure (Λ.addSubgroupOf L)
-    (measurable_subtype_coe hΛ) (μ.comap ((↑) : L → V))
+    (measurable_subtypeVal hΛ) (μ.comap ((↑) : L → V))
   rw [emb.comap_apply, emb.comap_apply, Set.image_univ, Subtype.range_coe] at key
   have e2 : ((↑) : L → V) '' ((Λ.addSubgroupOf L : AddSubgroup L) : Set L) = Λ := by
     ext x

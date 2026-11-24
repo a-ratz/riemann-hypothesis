@@ -87,7 +87,7 @@ theorem cmp_actV {R : Type} [CommRing R] [IsDomain R] {D D' : DegPre R} {r : ℕ
     (ν' : NumOf D' F N') {O : Type} [CommRing O] [StarRing O] [Module O D'.X] (o : D'.OAct O)
     (ρ : O →+* Matrix (Fin r) (Fin r) ℤ) (hact : T.IsAct o ρ) (x : O) (b : N'.A) (j : Fin r) :
     GlobalTheory.Mum.TensTor.cmp T ν ν' (GlobalTheory.Relabel.actV ν' o.onB x b) j = ∏ k, GlobalTheory.Mum.TensTor.cmp T ν ν' b k ^ ρ x j k := by
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   let P : (D'.P.A ⟶ D.P.A) →* (TF (R := R) F ⟶ D.P.A) :=
     { toFun := fun f => ν'.eA b ≫ f
       map_one' := MonObj.comp_one _

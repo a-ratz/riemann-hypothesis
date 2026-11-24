@@ -169,10 +169,10 @@ theorem isLevDatum_vec {S T : HSp D} {F : Frame S T} (hF : F.Good) {G : TypeDat 
     unfold Frame.datumFn at ht
     have a1 : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapAdj S T F.βS F.βT t) := by
       by_contra hc
-      exact left_ne_zero_of_mul ht (if_neg hc)
+      exact left_ne_zero_of_mul ht (ite_eq_right hc)
     have a2 : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapO S T F.βS F.βT t) := by
       by_contra hc
-      exact right_ne_zero_of_mul ht (if_neg hc)
+      exact right_ne_zero_of_mul ht (ite_eq_right hc)
     exact ⟨(GlobalTheory.T.mem_selfDualLattice_iff_integral_frameMatrices_half hF h hP a1.1).2 ⟨a1.2, a2.2⟩, a1.1⟩
   · intro u hu hue t
     obtain ⟨i1, i2⟩ := (GlobalTheory.T.mem_selfDualLattice_iff_integral_frameMatrices_half hF h hP hue).1 hu
@@ -194,13 +194,13 @@ theorem isLevDatum_vec {S T : HSp D} {F : Frame S T} (hF : F.Good) {G : TypeDat 
     rw [f1, f2]
     congr 1
     · by_cases hc : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapAdj S T F.βS F.βT t)
-      · rw [if_pos ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).2 hc.2⟩, if_pos hc]
+      · rw [ite_eq_left ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).2 hc.2⟩, ite_eq_left hc]
         exact GlobalTheory.PlaceDatum.omegaG_congr _ _ _ _ fun PP hPP => GlobalTheory.RefDatumLev.redM_add_nsmul PP hc.2 i1 _ (hN PP (Or.inl hPP))
-      · rw [if_neg hc, if_neg fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).1 h'.2⟩]
+      · rw [ite_eq_right hc, ite_eq_right fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i1 _).1 h'.2⟩]
     · by_cases hc : IsHalf (halfIdem G.Pg Q) t ∧ IsIntM (frMapO S T F.βS F.βT t)
-      · rw [if_pos ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).2 hc.2⟩, if_pos hc]
+      · rw [ite_eq_left ⟨hh.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).2 hc.2⟩, ite_eq_left hc]
         exact hω _ _ fun PP hPP => GlobalTheory.RefDatumLev.redM_add_nsmul PP hc.2 i2 _ (hN PP (Or.inr hPP))
-      · rw [if_neg hc, if_neg fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).1 h'.2⟩]
+      · rw [ite_eq_right hc, ite_eq_right fun h' => hc ⟨hh.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff i2 _).1 h'.2⟩]
   · intro t
     unfold Frame.datumFn
     refine mul_mem ?_ ?_ <;> split_ifs
@@ -219,24 +219,24 @@ theorem exists_normal_roots (L₀ : IntermediateField ℚ ℂ) [FiniteDimensiona
     ∃ L : IntermediateField ℚ ℂ, FiniteDimensional ℚ L ∧ Normal ℚ L ∧ L₀ ≤ L ∧ L.toSubfield ≤ k ∧
       ∀ z ∈ k, z ^ n = 1 → z ∈ L := by
   let I := {z : ℂ // z ∈ k ∧ z ^ n = 1}
-  haveI : Finite I := by
+  have : Finite I := by
     refine Set.Finite.to_subtype (s := {z : ℂ | z ∈ k ∧ z ^ n = 1})
       ((Polynomial.nthRoots n (1 : ℂ)).toFinset.finite_toSet.subset fun z hz => ?_)
     simpa [Polynomial.mem_nthRoots (Nat.pos_of_ne_zero hn)] using hz.2
   have hcyc : ∀ z : I, FiniteDimensional ℚ (IntermediateField.adjoin ℚ {z.1}) ∧ Normal ℚ (IntermediateField.adjoin ℚ {z.1}) := by
     intro z
     have ho : IsOfFinOrder z.1 := isOfFinOrder_iff_pow_eq_one.2 ⟨n, Nat.pos_of_ne_zero hn, z.2.2⟩
-    haveI : NeZero (orderOf z.1) := ⟨ho.orderOf_pos.ne'⟩
+    have : NeZero (orderOf z.1) := ⟨ho.orderOf_pos.ne'⟩
     have hζ := IsPrimitiveRoot.orderOf z.1
-    haveI : IsCyclotomicExtension {orderOf z.1} ℚ (IntermediateField.adjoin ℚ {z.1}) := by
+    have : IsCyclotomicExtension {orderOf z.1} ℚ (IntermediateField.adjoin ℚ {z.1}) := by
       change IsCyclotomicExtension {orderOf z.1} ℚ (IntermediateField.adjoin ℚ {z.1}).toSubalgebra
       rw [IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
         ((hζ.isIntegral ho.orderOf_pos).tower_top (A := ℚ)).isAlgebraic]
       exact hζ.adjoin_isCyclotomicExtension ℚ
-    haveI := IsCyclotomicExtension.isGalois {orderOf z.1} ℚ (IntermediateField.adjoin ℚ {z.1})
+    have := IsCyclotomicExtension.isGalois {orderOf z.1} ℚ (IntermediateField.adjoin ℚ {z.1})
     exact ⟨IsCyclotomicExtension.finiteDimensional {orderOf z.1} ℚ _, inferInstance⟩
-  haveI := fun z => (hcyc z).1
-  haveI := fun z => (hcyc z).2
+  have := fun z => (hcyc z).1
+  have := fun z => (hcyc z).2
   let k' : IntermediateField ℚ ℂ := k.toIntermediateField fun q => SubfieldClass.ratCast_mem k q
   refine ⟨L₀ ⊔ ⨆ z : I, IntermediateField.adjoin ℚ {z.1}, inferInstance,
     @IntermediateField.normal_sup ℚ ℂ _ _ _ _ _ ‹_› (@IntermediateField.normal_iSup ℚ ℂ _ _ _ _ _ fun z => (hcyc z).2),
@@ -274,7 +274,7 @@ theorem deltaPrime_isAuxiliarySplitSquarefreeLevel (hsp : D.host.cls D.host.pde 
 theorem zeta_mem_of_rayIn {N : ℕ} (hN : N ≠ 0) {k : Subfield ℂ} (h : RayIn D N k) : ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta N ∈ k := by
   obtain ⟨L, i1, i2, i3, i4, hL, j, -, hk⟩ := h
   obtain ⟨ζ, hζ⟩ := GlobalTheory.RayRootOfUnity.exists_isPrimitiveRoot_of_isRay hN hL
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   obtain ⟨a, -, ha⟩ := (hζ.map_of_injective j.injective).eq_pow_of_pow_eq_one (Complex.isPrimitiveRoot_exp N hN).pow_eq_one
   have : ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta N = j ζ ^ a := ha.symm
   rw [this]
@@ -308,7 +308,7 @@ theorem de_values {ρ : Setup D.ntw} (hρ : ρ.Good) (i : D.ntw.Tw) (j : Fin D.R
       ext σ
       cases b <;> simp [hψ, Formalism.MainNotions.BlochKatoReduction.Gen.psiAt, MonoidHom.mem_ker]
     rw [this]; exact D.ntw.delta_open i
-  haveI : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
+  have : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
   have hpow : ∀ σ, ψ σ ^ ψ.ker.index = 1 := fun σ => by
     rw [← map_pow]; exact ψ.ker.pow_index_mem σ
   refine ⟨ψ.ker.index, Subgroup.FiniteIndex.index_ne_zero, fun x => ?_⟩
@@ -590,7 +590,7 @@ theorem ratBase_of_readsAs (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} (h
 
   obtain ⟨nδ, hnδ, hδ⟩ := de_values hρ i j b
   have hcard : Nat.card (ρ.B i j b).G.P.H ≠ 0 := Nat.card_pos.ne'
-  haveI := GlobalTheory.CoverSmall.smallF_normal D hgal
+  have := GlobalTheory.CoverSmall.smallF_normal D hgal
   obtain ⟨L, _, _, hL0, hLe, hLr⟩ := exists_normal_roots (GlobalTheory.CoverSmall.smallF D) (k := (ρ.e i b).fieldRange)
     (by rintro _ ⟨x, rfl⟩; exact ⟨_, hρ.e_LL0 i b x⟩) (mul_ne_zero hcard hnδ)
   obtain ⟨C, hpd, hfr, hC⟩ := exists_goodCover_pdAt YS hRF hT hti.alg hval hray hsp (D.ntw.l i) j (κ j).n L hL0

@@ -99,7 +99,7 @@ theorem triangular_symm (w w' : Module.Basis (Fin N) Ω V)
     ∀ i j : Fin N, i < j → w'.repr (w i) j = 0 := by
   have hM : (w.toMatrix w').BlockTriangular id := fun i j hij => h j i hij
   have hMN : w.toMatrix w' * w'.toMatrix w = 1 := Module.Basis.toMatrix_mul_toMatrix_flip w w'
-  haveI : Invertible (w.toMatrix w') := ⟨w'.toMatrix w, Module.Basis.toMatrix_mul_toMatrix_flip w' w, hMN⟩
+  have : Invertible (w.toMatrix w') := ⟨w'.toMatrix w, Module.Basis.toMatrix_mul_toMatrix_flip w' w, hMN⟩
   have hinv : (w.toMatrix w')⁻¹ = w'.toMatrix w := Matrix.inv_eq_right_inv hMN
   have hN : (w'.toMatrix w).BlockTriangular id := hinv ▸ Matrix.blockTriangular_inv_of_blockTriangular hM
   intro i j hij

@@ -473,7 +473,7 @@ theorem reading_of_runModel (p : PtAt ex Csz) (r : TwoRuns p.T p.P.Gp) (h : Runs
   let Rd : (recB (h.laws v).p.toLawsCore).Cusp ((i : ℕ) + 1) (p.κ i) →ₛₗ[(r.used v).full.σ₀] M.cusp ka :=
     LinearMap.codRestrict (M.cusp ka) (rdLin h ha) fun F => Submodule.subset_span ⟨_, _root_.GlobalTheory.ShareOn.Reading.rdFun_mem_SS h ha hb F, rfl⟩
   have hRd : ∀ F, ((Rd F : M.cusp ka) : C → M.dom → ℂ) = rdLin h ha F := fun F => rfl
-  letI : Algebra (r.used v).full.J.Q.c.F D.what₂.LL := p.alg
+  let : Algebra (r.used v).full.J.Q.c.F D.what₂.LL := p.alg
   obtain ⟨σ, hσ⟩ := exists_ext_embedding (K := (r.used v).full.J.Q.c.F) (LL := D.what₂.LL) (r.used v).full.σ₀
   let cu := cuspTo (h.laws v).p (fw2 p) i
   have hcuW : ∀ F, cu F ∈ ((R2 p).FW i).WK := fun F => ((fw2 p).e i _).2
@@ -586,7 +586,7 @@ theorem pow_apply_eq_zero_of_strict {K : Type} [CommRing K] {n : ℕ} (S : Matri
   induction m with
   | zero =>
     intro a b h
-    rw [pow_zero, Matrix.one_apply, if_neg]
+    rw [pow_zero, Matrix.one_apply, ite_eq_right]
     intro hab
     rw [hab] at h
     omega
@@ -693,11 +693,11 @@ theorem levUnip_mod_place : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {G
         map_sub, hfφ, Matrix.sub_mulVec, Matrix.one_mulVec]
   have hker : ∀ y, φ y = 0 → y ∈ PPs.1.asIdeal • (⊤ : Submodule (𝓞 D.host.E) (p.T.Q.Dw ((i : ℕ) + 1)).La) := by
     intro y hy
-    haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
-    haveI hfin : Finite (kP PPs.1) := Finite.of_equiv _ (iso ⟨k, v⟩).toEquiv
-    haveI : Finite (𝓞 D.host.E ⧸ PPs.1.asIdeal) := hfin
-    haveI := (p.T.Q.Dw ((i : ℕ) + 1)).fin
-    haveI := (p.T.Q.Dw ((i : ℕ) + 1)).proj
+    have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+    have hfin : Finite (kP PPs.1) := Finite.of_equiv _ (iso ⟨k, v⟩).toEquiv
+    have : Finite (𝓞 D.host.E ⧸ PPs.1.asIdeal) := hfin
+    have := (p.T.Q.Dw ((i : ℕ) + 1)).fin
+    have := (p.T.Q.Dw ((i : ℕ) + 1)).proj
     have hle : PPs.1.asIdeal • (⊤ : Submodule (𝓞 D.host.E) (p.T.Q.Dw ((i : ℕ) + 1)).La) ≤ LinearMap.ker φ := by
       rw [Submodule.smul_le]
       intro c hc z _
@@ -713,7 +713,7 @@ theorem levUnip_mod_place : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {G
       rw [GlobalTheory.natCard_quot_smul_top_of_projective, (p.T.Q.Dw ((i : ℕ) + 1)).rank, ← hrk, hrank]
     have hN2 : Nat.card (Fin (Wc D i).rank → kP PPs.1) = Nat.card (kP PPs.1) ^ (Wc D i).rank := by
       rw [Nat.card_fun, Nat.card_eq_fintype_card (α := Fin _), Fintype.card_fin]
-    haveI : Finite ((p.T.Q.Dw ((i : ℕ) + 1)).La ⧸ PPs.1.asIdeal • (⊤ : Submodule (𝓞 D.host.E) (p.T.Q.Dw ((i : ℕ) + 1)).La)) :=
+    have : Finite ((p.T.Q.Dw ((i : ℕ) + 1)).La ⧸ PPs.1.asIdeal • (⊤ : Submodule (𝓞 D.host.E) (p.T.Q.Dw ((i : ℕ) + 1)).La)) :=
       Nat.finite_of_card_ne_zero (by rw [hN1]; exact pow_ne_zero _ hc0)
     have hb := hψs.bijective_of_nat_card_le (by rw [hN1, hN2])
     have h0 : ψ (Submodule.Quotient.mk y) = ψ 0 := by
@@ -1428,7 +1428,7 @@ theorem row_pair {r p q : ℕ} (hpq : p + q = r) (Dm nL nF : ℤ) (hnF : 0 ≤ n
   have e2 : (b : ℤ) = r - 1 := by omega
   have e3 : (r : ℤ) = p + q := by omega
   rw [hL a, hL b, hF a, hF b, e1, e2]
-  simp only [if_pos hq1, if_neg hq2]
+  simp only [ite_eq_left hq1, ite_eq_right hq2]
   rw [show (b : ℕ) - q = p - 1 by omega, show q - 1 - (a : ℕ) = q - 1 by omega]
   nlinarith
 
@@ -1605,7 +1605,7 @@ theorem p0_extreme_or_archOn_of_runModel : _root_.GlobalTheory.BigOn.ForallTwoRu
   have hOK := (hpg (Fm.D x ι) _ _ ((i : ℕ) + 1) (recPJ hl.p ((i : ℕ) + 1) hj) (Fm.L x ι) _ _ _ _ _ _ _ _ _ _ _ hj hP
     (((le_max_right _ _).trans (le_max_right _ _)).trans hxl)).1
   have hwd := fun k => GlobalTheory.Shares.WtDic.weights_dictionary (Fm.D x ι) (r.used v).full.toTop hl.p ((i : ℕ) + 1) hj k
-  haveI : Nonempty C := ⟨e.symm ((r.used v).full.toTop.dict ((i : ℕ) + 1) (r.used v).full.toTop.σ₀ 1).1⟩
+  have : Nonempty C := ⟨e.symm ((r.used v).full.toTop.dict ((i : ℕ) + 1) (r.used v).full.toTop.σ₀ 1).1⟩
   obtain ⟨c0⟩ := ‹Nonempty C›
   have hp0M : M.p0 = ((Fm.D x ι).R.sigW ((i : ℕ) + 1)).2 :=
     (M.comp_basePoint c0).symm.trans ((congrArg Data.p0 (hXc c0)).trans (hwd (e c0)).2.2.2.2.2.1)

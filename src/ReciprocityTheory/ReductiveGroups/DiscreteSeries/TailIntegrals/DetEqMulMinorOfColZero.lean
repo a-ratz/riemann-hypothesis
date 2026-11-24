@@ -288,7 +288,7 @@ theorem Dl_conj (l : Fin (r + 1)) (Y n n' : Mat k r) (hn : n ∈ GV k r) (α β 
     fun h => Fin.ext (by simp)
   have detP : (1 - Matrix.of fun a c : Fin (l.val + 1) =>
       if c = 0 then star (β (Fin.castLE (by omega) a)) else 0).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular]
+    rw [det_of_isLowerTriangular]
     · apply Finset.prod_eq_one
       intro i _
       by_cases hi : i = 0
@@ -301,7 +301,7 @@ theorem Dl_conj (l : Fin (r + 1)) (Y n n' : Mat k r) (hn : n ∈ GV k r) (α β 
       simp [hj, Matrix.one_apply, ne_of_lt hij']
   have detQ : (1 - Matrix.of fun d b : Fin (l.val + 1) =>
       if d = 0 then α (Fin.castLE (by omega) b) else 0).det = 1 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [det_of_isUpperTriangular]
     · apply Finset.prod_eq_one
       intro i _
       by_cases hi : i = 0
@@ -456,7 +456,7 @@ private lemma w0_mul_lev_mulVec_e0_eq_smul_es0 (c : ℂ) (g : Mat k r') :
     · have hq : ¬ (1 ≤ (eI k (1 + r') (a0 r')).val ∧
           (eI k (1 + r') (a0 r')).val < 2 * r' + k + 1 + 1) := by
         simp [eI, a0]
-      rw [dite_eq_left hp, dite_eq_right hq, if_neg]
+      rw [dite_eq_left hp, dite_eq_right hq, ite_eq_right]
       intro hh
       rw [hh] at hp
       simp [eI, a0] at hp
@@ -537,7 +537,7 @@ theorem FsE_oneStep (hHA : HeisAct) (hHM : HeisMem) (x x' : HPar k r') (c : ℂ)
       (∏ l, (‖c‖₊ : ℝ≥0∞) ^ (-s l)) * FsE k r' (fun l => s (sc r' l)) g := by
   simp only [FsE, Dl_oneStep k r' hHA hHM x x' c g]
   rw [prod_fin_eq_zero_mul_prod_sc, prod_fin_eq_zero_mul_prod_sc]
-  simp only [Dl_Y_zero, Dl_Y_sc, nnnorm_mul, ENNReal.coe_mul]
+  simp only [Dl_Y_zero, Dl_Y_sc, nnNorm_mul, ENNReal.coe_mul]
   first
   | simp only [ENNReal.mul_rpow_of_ne_top ENNReal.coe_ne_top ENNReal.coe_ne_top]
   | simp only [ENNReal.coe_mul_rpow]

@@ -209,7 +209,7 @@ theorem UpperTheory.V.Sd.Hm.fixunit :
   let u0 : (Ohat F)ˣ := ⟨⟨u, mem_Ohat.2 m1⟩, ⟨((u⁻¹ : (Af F)ˣ) : Af F), mem_Ohat.2 m2⟩, Subtype.ext u.mul_inv, Subtype.ext u.inv_mul⟩
   have e := key S (fun k hk _ => hS hk) (aff u 0) (mem_KAway.2 ⟨⟨aff u0 0, ?_, ?_⟩, by simp⟩) fun w => ?_
   · exact congrFun (congrArg Subtype.val e) g
-  · haveI : Subsingleton (Ohat F ⧸ Ideal.span {((1 : ℕ) : ↥(Ohat F))}) :=
+  · have : Subsingleton (Ohat F ⧸ Ideal.span {((1 : ℕ) : ↥(Ohat F))}) :=
       Ideal.Quotient.subsingleton_iff.2 (by simp)
     ext i j
     exact Subsingleton.elim _ _
@@ -243,11 +243,11 @@ theorem UpperTheory.Reformulated.B.StabilizerIsOpen.stab_open.{u_1, u_2} :
       one_mem' := by simp
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h1 : ρ a⁻¹ (ρ a v) = v := by
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
         rwa [ha] at h1 }
@@ -338,7 +338,7 @@ theorem UpperTheory.V.Sd.Hm.mulsm :
     change TR.lieD X χ.1 g = TR.lieD X φ.1 g * ψ.1 g + φ.1 g * TR.lieD X ψ.1 g
     unfold TR.lieD
     rw [hχ, e, fderiv_mul (TR.differentiableAt_chart φ.2 g) (TR.differentiableAt_chart ψ.2 g), v, v]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [add_apply, smul_apply, smul_eq_mul]
     ring
 end -- clump:auto
 end -- clump:auto
@@ -452,7 +452,7 @@ private theorem coefAt_eq {y : Af F} {𝔪 : Ideal (𝓞 F)} (h : GenD y 𝔪) (
   have h' : ∃ 𝔪, GenD y 𝔪 := ⟨𝔪, h⟩
   rw [coefAt, dite_eq_left h', genD_unique h'.choose_spec h]
 
-private theorem coefAt_zero {y : Af F} (h : ¬ ∃ 𝔪, GenD y 𝔪) (a : Ideal (𝓞 F) → ℂ) : coefAt a y = 0 := dif_neg h
+private theorem coefAt_zero {y : Af F} (h : ¬ ∃ 𝔪, GenD y 𝔪) (a : Ideal (𝓞 F) → ℂ) : coefAt a y = 0 := dite_eq_right h
 
 private theorem coefAt_unit {u : Af F} (hu : ∀ w, Valued.v (pLoc F w u) = 1) (y : Af F) (a : Ideal (𝓞 F) → ℂ) :
     coefAt a (y * u) = coefAt a y := by
@@ -487,7 +487,7 @@ private theorem exists_ideal (n : Pl F → ℕ) (hn : ∀ᶠ w in Filter.cofinit
   have h0 : (∏ᶠ w : Pl F, w.asIdeal ^ n w) ≠ ⊥ :=
     finprod_induction (fun I : Ideal (𝓞 F) => I ≠ 0) one_ne_zero (fun _ _ => mul_ne_zero) fun w => pow_ne_zero _ w.ne_bot
   refine ⟨_, h0, fun w => ?_⟩
-  have h1 := FractionalIdeal.count_coe F w h0
+  have h1 := FractionalIdeal.count_coeIdeal F w h0
   have h2 := FractionalIdeal.count_finprod F w (fun w => (n w : ℤ)) (by filter_upwards [hn] with w hw using by simp [hw])
   rw [FractionalIdeal.coeIdeal_finprod _ _ le_rfl] at h1
   simp only [FractionalIdeal.coeIdeal_pow] at h1
@@ -590,17 +590,17 @@ private theorem hasSum_cf (a : Ideal (𝓞 F) → ℂ) (y : Af F) (E : F → ℂ
     simp [cf, this]
   · intro ξ h
     by_contra h'
-    exact h (by simp only [cf]; rw [if_neg (show ¬ ∀ v, 0 < reAt v ξ from h'), zero_mul])
+    exact h (by simp only [cf]; rw [ite_eq_right (show ¬ ∀ v, 0 < reAt v ξ from h'), zero_mul])
 
 private theorem cf_ne {a : Ideal (𝓞 F) → ℂ} {y : Af F} {ξ : F} (h : cf a y ξ ≠ 0) :
     (∀ v, 0 < reAt v ξ) ∧ ∃ 𝔪, GenD (algebraMap F (Af F) ξ * y) 𝔪 ∧ cf a y ξ = a 𝔪 := by
   by_cases h1 : ∀ v, 0 < reAt v ξ
-  · rw [cf, if_pos h1] at h ⊢
+  · rw [cf, ite_eq_left h1] at h ⊢
     by_cases h2 : ∃ 𝔪, GenD (algebraMap F (Af F) ξ * y) 𝔪
     · obtain ⟨𝔪, h2⟩ := h2
       exact ⟨h1, 𝔪, h2, coefAt_eq h2 a⟩
     · exact absurd (coefAt_zero h2 a) h
-  · exact absurd (if_neg h1) h
+  · exact absurd (ite_eq_right h1) h
 
 private theorem cf_unit {u : Af F} (hu : ∀ w, Valued.v (pLoc F w u) = 1) (y : Af F) (a : Ideal (𝓞 F) → ℂ) :
     cf a (y * u) = cf a y := funext fun ξ => by simp only [cf, ← mul_assoc, coefAt_unit hu]
@@ -709,7 +709,7 @@ theorem UpperTheory.V.Sd.holMul :
   choose! Y hY using fun 𝔪 : Ideal (𝓞 F) => exists_genD (𝔪 := 𝔪)
   let A : (Af F)ˣ → ℂ := fun y => cf a y 1 * d₀ y + cv a b y 1
   have one : ∀ v : InfinitePlace F, 0 < reAt v (1 : F) := fun v => by simp [reAt]
-  have cf1 : ∀ y : Af F, cf a y 1 = coefAt a y := fun y => by rw [cf, if_pos one, map_one, one_mul]
+  have cf1 : ∀ y : Af F, cf a y 1 = coefAt a y := fun y => by rw [cf, ite_eq_left one, map_one, one_mul]
   have hA : ∀ y : (Af F)ˣ, coefAt (fun 𝔪 => A (Y 𝔪)) y = A y := fun y => by
     by_cases h : ∃ 𝔪, GenD (y : Af F) 𝔪
     · obtain ⟨𝔪, h⟩ := h
@@ -747,12 +747,12 @@ theorem UpperTheory.V.Sd.holMul :
         simp only [A, const_rat hψ.aut eb y (Units.mk0 ξ (ne_zero_of_pos h)) h] at e1
         change coefAt _ (algebraMap F (Af F) ξ * (y : Af F)) =
           cf a (algebraMap F (Af F) ξ * (y : Af F)) 1 * _ + cv a b (algebraMap F (Af F) ξ * (y : Af F)) 1 at e1
-        rw [cf, if_pos h, e1, cf_rat h, cv_rat h, one_mul]
+        rw [cf, ite_eq_left h, e1, cf_rat h, cv_rat h, one_mul]
         ring
       · have : cv a b y ξ = 0 := by
           by_contra h'
           exact h (cv_ne h').1
-        simp only [cf, if_neg h, this, zero_mul, add_zero]
+        simp only [cf, ite_eq_right h, this, zero_mul, add_zero]
     · rw [hχ, Pi.mul_apply, Nat.cast_add, add_div, Real.rpow_add hp]
       push_cast
       simp only [Pi.zero_apply]

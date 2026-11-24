@@ -67,7 +67,7 @@ theorem projection_commutes_right_regular (hgap : StdGap ε lam) (hP : IsPsiFor 
   intro g hg v
   have h := Lap.QuotA.proj_comm (rreg_isURepOn ε) (Hlam ε Ψ v₀) (rreg_mem_Hlam hgap hP hv₀) g hg v
   rw [Submodule.starProjection_orthogonal'] at h
-  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply, map_sub] at h
+  simp only [sub_apply, one_apply_eq_self, map_sub] at h
   exact sub_right_injective h
 
 theorem projection_preserves_smooth (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v₀ ≠ 0) (x : L2 ε)

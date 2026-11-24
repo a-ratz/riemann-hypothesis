@@ -80,7 +80,7 @@ theorem GlobalTheory.ColNorms.familyVectors : GlobalTheory.ColNorms.FamilyVector
     have : c = Formalism.MainNotions.TaylorLogMetric.taylor D (B.eNat χ N N' L L') α / Formalism.MainNotions.TaylorLogMetric.taylor D (e N N' L L') α := by rw [ht, mul_div_cancel_right₀ _ hα]
     rw [this]
     exact div_mem (hQ α) (hMQ _ (hC α))
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {c}) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {c}) :=
     IntermediateField.adjoin.finiteDimensional (mem_algebraicClosure_iff.1 hcQ).isIntegral
   refine ⟨M ⊔ IntermediateField.adjoin ℚ {c}, IntermediateField.finiteDimensional_sup _ _, fun β => ?_⟩
   rw [ht]

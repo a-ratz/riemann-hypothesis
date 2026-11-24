@@ -68,7 +68,7 @@ open scoped TensorProduct
 theorem um_countable_HFinIn (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (σ : E →ₐ[F] E) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) :
     Countable (HFinIn (AF F) σ J) := by
-  have : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
   have : Countable (Matrix (Fin M) (Fin M) E) := inferInstanceAs (Countable (Fin M → Fin M → E))
   have : Countable (GL (Fin M) E) :=
     Function.Injective.countable (f := fun u : GL (Fin M) E => (u : Matrix (Fin M) (Fin M) E))

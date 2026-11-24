@@ -247,7 +247,7 @@ theorem exists_twist (d : SD σ) (ε : ℤˣ) (S₀ : Matrix (Fin d.n) (Fin d.n)
     rw [e1, psi_trace_at d.std hcm τ w z hf hw]
     have hzw : (piInf (τ w) z).re = 1 / 4 := by
       rw [hz, map_neg, map_mul, hc, hs1, ← hq]
-      simp only [hx, if_pos rfl, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
+      simp only [hx, ite_eq_left rfl, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
       rw [hr]
       field_simp
     rw [hzw]
@@ -268,8 +268,8 @@ theorem orth (d : SD σ) {nb : nA σ d.Y d.b → d.G} {lam : Measure (nA σ d.Y 
   obtain ⟨ε, hb, -⟩ := frame_sign d
   have hσ := sigma_sigma_of_good d.ok.good
   obtain ⟨-, hH, hfd, h1⟩ := hc
-  haveI := hH
-  haveI : BorelSpace (nA σ d.Y d.b) := (nA_top hσ d.ok.frame).2.2.2
+  have := hH
+  have : BorelSpace (nA σ d.Y d.b) := (nA_top hσ d.ok.frame).2.2.2
   obtain ⟨S₀, rfl⟩ := hr
   split_ifs with h0
   · have hone : ∀ β : nA σ d.Y d.b, d.B.ψ (-(d.tt (incM F S₀ * β.1))) = 1 := fun β => by

@@ -294,7 +294,7 @@ theorem iwasawa_witt_flag : ∀ (n r : ℕ) (J P : Matrix (Fin n) (Fin n) ℂ)
     have hd : IsUnit (Rᴴ * R).det := by rw [hR]; exact (Matrix.isUnit_iff_isUnit_det _).1 hG.isUnit
     rw [Matrix.det_mul] at hd
     exact isUnit_of_mul_isUnit_right hd
-  letI := Matrix.invertibleOfIsUnitDet R hRu
+  let := Matrix.invertibleOfIsUnitDet R hRu
   have hBt : (R⁻¹).BlockTriangular id := blockTriangular_inv_of_blockTriangular hRt
   have hRi' : R * R⁻¹ = 1 := Matrix.mul_nonsing_inv R hRu
   have hRiH : (R⁻¹)ᴴ * Rᴴ = 1 := by rw [← conjTranspose_mul, hRi', conjTranspose_one]

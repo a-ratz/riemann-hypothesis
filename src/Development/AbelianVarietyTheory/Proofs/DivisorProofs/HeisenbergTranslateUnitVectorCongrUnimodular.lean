@@ -105,7 +105,7 @@ theorem pt_mem_La_skew {D : D7} (δ : ℂ) (𝔫 : Ideal (𝓞 D.host.E)) {a d :
     pt D (tor0 D ⊤ δ) δ z ∈ La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔫 d) := by
   refine AddSubgroup.subset_closure ⟨δ, AddSubgroup.subset_closure ⟨1, trivial, by simp⟩, _, ?_, rfl⟩
   refine Submodule.subset_span ⟨1, ?_, _, Submodule.subset_span fun x hx i _ => ?_, (one_smul _ _).symm⟩
-  · refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
+  · refine FractionalIdeal.one_mem_inv_coeIdeal fun h => ?_
     have h2 := D.host.𝔟_spec.2
     rw [h, Ideal.smul_bot, sup_bot_eq] at h2
     exact bot_ne_top h2
@@ -178,7 +178,7 @@ theorem wd_unitVec_congr : ∀ (D : D7) (δ t0 : ℂ) (hc : Crv D ⊤ δ) (ht : 
   have hx : pt D (tor0 D ⊤ δ) δ (y - y') ∈ La D (tor0 D ⊤ δ) (stdL D a) (skewLat D (D.host.conj • 𝔪) d) := by
     refine pt_mem_La_skew δ (D.host.conj • 𝔪) (y - y') fun i j => ?_
     have hmem := mem_of_inc_mem_hatId hm' (hyy i j)
-    rw [Matrix.sub_apply, FractionalIdeal.mem_coe, FractionalIdeal.mem_div_iff_of_ne_zero hne]
+    rw [Matrix.sub_apply, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_div_iff_of_ne_zero hne]
     intro w hw
     obtain ⟨c, -, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hw
     rw [mul_comm, ← Algebra.smul_def]

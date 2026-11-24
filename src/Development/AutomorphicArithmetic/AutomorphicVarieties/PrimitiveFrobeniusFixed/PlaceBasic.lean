@@ -226,11 +226,11 @@ theorem UpperTheory.V.ML.placeBasic :
     fun A k ζ hk hζ h => root_eq_one A hk hζ h, fun A q k φ hφ hk x hx => ?_, fun A A' q hq hA hA' => ?_,
     fun A q hq hA => ?_, fun A g => ⟨dec_iff A g, fun x => ?_, fun q x => and_congr (dec_iff A g x) (pow_iff A g x q),
       smul_lt A g, smul_eq A g⟩⟩
-  · haveI := Fact.mk hq
+  · have := Fact.mk hq
     obtain ⟨A, hA⟩ := exists_isPlaceOver Ω (vQ q)
     refine ⟨A, ?_⟩
     simpa using (hA ((q : ℕ) : 𝓞 ℚ)).2 (mem_vQ q)
-  · haveI := Fact.mk hq
+  · have := Fact.mk hq
     obtain ⟨g, hg⟩ := exists_isFrob (isPlaceOver_vQ A hA)
     rw [normV_vQ] at hg
     exact ⟨g, hg⟩
@@ -248,10 +248,10 @@ theorem UpperTheory.V.ML.placeBasic :
   · exact root_eq A hk (by rw [← map_pow, hx, map_one]) hx (hg.2 x (val_root A hk hx).le)
   · exact root_eq A hk (by rw [← map_pow, hx, map_one]) (by rw [← pow_mul, mul_comm, pow_mul, hx, one_pow])
       (hφ.2 x (val_root A hk hx).le)
-  · haveI := Fact.mk hq
+  · have := Fact.mk hq
     obtain ⟨g, hg⟩ := exists_smul_eq_of_isPlaceOver (F := ℚ) (isPlaceOver_vQ A hA) (isPlaceOver_vQ A' hA')
     exact ⟨g, hg.symm⟩
-  · haveI := Fact.mk hq
+  · have := Fact.mk hq
     exact ⟨vQ q, isPlaceOver_vQ A hA, normV_vQ q, mem_vQ q⟩
   · have h := pow_iff A g x 1
     simp only [pow_one] at h

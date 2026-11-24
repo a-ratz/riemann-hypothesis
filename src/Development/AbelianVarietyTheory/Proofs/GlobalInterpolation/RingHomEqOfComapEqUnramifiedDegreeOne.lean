@@ -69,7 +69,7 @@ theorem ringHom_eq_of_comap_eq_unramified_degree_one
 
   have h1 : ∀ x : 𝓞 E, ∃ a : ℤ, x - (a : 𝓞 E) ∈ Q.asIdeal := by
     intro x
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     have hc : Nat.card (𝓞 E ⧸ Q.asIdeal) = p := by
       rw [← hN, Ideal.absNorm_apply, Submodule.cardQuot_apply]
     have h := mem_zmultiples_of_prime_card (g := (1 : 𝓞 E ⧸ Q.asIdeal))

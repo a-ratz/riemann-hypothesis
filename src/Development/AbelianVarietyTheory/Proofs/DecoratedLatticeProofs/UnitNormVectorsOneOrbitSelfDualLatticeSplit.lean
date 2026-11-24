@@ -190,7 +190,7 @@ theorem mem_latV_of_forall {S : HSp D} {L : Lat S} {P : Pl D → Prop} {y : Fin 
       exact smul_mem_latV hb (h a ha)
     · rw [map_add (f := _), add_smul]; exact add_mem h1 h2
   have := key 1 (by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ (GlobalTheory.ModelLatticeCheck.AA_ne_zero D)]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ (GlobalTheory.ModelLatticeCheck.AA_ne_zero D)]
     exact FractionalIdeal.one_mem_one _)
   rwa [map_one, one_smul] at this
 

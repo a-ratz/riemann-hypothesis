@@ -84,7 +84,7 @@ theorem continuous_archP : Continuous (archP K n) := by
     exact continuous_archIncl.mul
       ((Reduction.continuous_centralSection.comp
         (Reduction.continuous_detModule.comp continuous_archIncl)).inv)
-  exact hProj.comp continuous_subtype_val
+  exact hProj.comp continuous_subtypeVal
 
 variable (μ : Measure (Reduction.normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
 

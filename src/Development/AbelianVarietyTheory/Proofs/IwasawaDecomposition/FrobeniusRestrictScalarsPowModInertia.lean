@@ -101,12 +101,12 @@ theorem _root_.GlobalTheory.FrobRestrict.frob_restrict : ∀ (E Ω : Type) [Fiel
     σ.restrictScalars E * (φ ^ w.asIdeal.inertiaDeg (𝓞 E))⁻¹ ∈ _root_.ReciprocityTheory.Gal.Ine (F := E) A := by
   intro E Ω _ _ _ _ K _ _ v w h A hw
   have hnorm : _root_.Formalism.ConjugateSelfDual.normV w = _root_.Formalism.ConjugateSelfDual.normV v ^ w.asIdeal.inertiaDeg (𝓞 E) := by
-    haveI : w.asIdeal.LiesOver v.asIdeal := ⟨h.symm⟩
-    haveI := v.isMaximal
-    haveI := w.isMaximal
+    have : w.asIdeal.LiesOver v.asIdeal := ⟨h.symm⟩
+    have := v.isMaximal
+    have := w.isMaximal
     rw [Ideal.inertiaDeg_eq_of_isMaximal v.asIdeal w.asIdeal]
     unfold _root_.Formalism.ConjugateSelfDual.normV
-    letI := Ideal.Quotient.field v.asIdeal
+    let := Ideal.Quotient.field v.asIdeal
     exact Module.natCard_eq_pow_finrank (K := 𝓞 E ⧸ v.asIdeal) (V := 𝓞 K ⧸ w.asIdeal)
   refine ⟨fun x => ?_, hnorm, fun ι hι => ?_, fun σ φ hσ hφ => ?_⟩
   · have e : (algebraMap K Ω) ((algebraMap (𝓞 E) (𝓞 K) x : 𝓞 K) : K)

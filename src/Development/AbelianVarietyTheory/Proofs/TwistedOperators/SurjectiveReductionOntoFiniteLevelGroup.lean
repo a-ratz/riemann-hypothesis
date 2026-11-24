@@ -59,7 +59,7 @@ open Formalism.L2.SG.AdBridge
 open Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes in
 theorem map_thetaV_eq_one (I : AutInst) (v : InfinitePlace I.F) (M : Matrix (Fin I.n) (Fin I.n) (AF I.F ⊗[I.F] I.E))
     (hM : M.map (Algebra.TensorProduct.map (fstA I.F) (AlgHom.id I.F I.E)) = 1) : M.map (thetaV I v) = 1 := by
-  letI : Algebra I.F ℂ := v.embedding.toAlgebra
+  let : Algebra I.F ℂ := v.embedding.toAlgebra
   let evI : Ainf I.F →ₐ[I.F] ℂ :=
     { toRingHom := (InfinitePlace.Completion.extensionEmbedding v).comp
         (Pi.evalRingHom (fun w : InfinitePlace I.F => w.Completion) v)

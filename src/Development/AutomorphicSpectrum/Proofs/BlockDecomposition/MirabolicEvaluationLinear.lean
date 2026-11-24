@@ -82,7 +82,7 @@ theorem continuous_coef (T : Representation ℂ (Mir k n) V) (B : V →ₗ[ℂ] 
     simp only [coef, h, map_mul, Module.End.mul_apply, hy']
 
 theorem continuous_wt (ψ : AddChar k Circle) (hψ : Continuous ψ) (n : ℕ) : Continuous (wt ψ n) :=
-  continuous_subtype_val.comp (hψ.comp (continuous_apply _).neg)
+  continuous_subtypeVal.comp (hψ.comp (continuous_apply _).neg)
 
 variable [MeasurableSpace k] [BorelSpace k]
 

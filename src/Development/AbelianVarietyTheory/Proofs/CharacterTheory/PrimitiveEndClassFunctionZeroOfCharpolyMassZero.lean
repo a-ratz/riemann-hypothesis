@@ -163,8 +163,8 @@ namespace GlobalTheory.CuspGL
 theorem primitive_eq_zero_of_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGroup V] [Module F V] [FiniteDimensional F V] (φ : Module.End F V → ℂ), IsClassFn φ → IsPrimitive φ → ∀ (f : F[X]) (m : ℕ), Irreducible f → (∀ g : Module.End F V, LinearMap.charpoly g = f ^ m → aeval g f = 0 → φ g = 0) → ∀ g : Module.End F V, LinearMap.charpoly g = f ^ m → φ g = 0 := by
   intro F _ _ V _ _ _ φ hcl hpr f m hf h0
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Module.End F V) :=
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Module.End F V) :=
     Finite.of_injective (fun g : Module.End F V => (g : V → V)) DFunLike.coe_injective
   have key : ∀ n : ℕ, ∀ g : Module.End F V,
       Module.finrank F V - Module.finrank F (LinearMap.ker (aeval g f)) = n →
@@ -248,14 +248,14 @@ theorem eq_zero_of_mass_charpoly_eq_zero (F : Type) [Field F] [Finite F] (V : Ty
     [Module F V] [FiniteDimensional F V] (φ : Module.End F V → ℂ) (hc : IsClassFn φ) (hp : IsPrimitive φ)
     (g : Module.End F V) (hm : mass φ (LinearMap.charpoly g) = 0) : φ g = 0 := by
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Module.End F V) := Finite.of_injective (fun h : Module.End F V => (h : V → V))
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Module.End F V) := Finite.of_injective (fun h : Module.End F V => (h : V → V))
     DFunLike.coe_injective
   rcases Nat.eq_zero_or_pos (Module.finrank F V) with h0 | hpos
-  · haveI : Subsingleton V := Module.finrank_zero_iff.mp h0
+  · have : Subsingleton V := Module.finrank_zero_iff.mp h0
     have hset : {g' : Module.End F V | LinearMap.charpoly g' = LinearMap.charpoly g} = {g} := by
       ext g'
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
       have : g' = g := Subsingleton.elim _ _
       simp [this]
     rw [mass, hset, finsum_mem_singleton] at hm

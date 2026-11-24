@@ -64,7 +64,7 @@ theorem exists_unit_of_cocompact {G : Type} [Group G] [TopologicalSpace G] [IsTo
   have hpos : μ 𝓕 ≠ 0 := h.measure_ne_zero (NeZero.ne μ)
   refine ⟨(μ 𝓕)⁻¹ • μ, 𝓕, Measure.IsHaarMeasure.smul μ (ENNReal.inv_ne_zero.2 hfin) (ENNReal.inv_ne_top.2 hpos),
     h.mono Measure.smul_absolutelyContinuous, ?_⟩
-  rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]
+  rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]
 
 theorem exists_isUnitN : ∀ (D : D7) (B : HSp D) (ρ : ℕ) (e : Matrix (Fin B.rank) (Fin ρ) D.host.E), IsIsoSub B e →
     ∃ ν 𝓝, GlobalTheory.Per.IsUnitN B e ν 𝓝 := by
@@ -74,8 +74,8 @@ theorem exists_isUnitN : ∀ (D : D7) (B : HSp D) (ρ : ℕ) (e : Matrix (Fin B.
   have hcl : IsClosed (NFlag B e : Set (GA D B)) := by
     have : DiscreteTopology (GQ B ⊓ NFlag B e : Subgroup (GA D B)) :=
       DiscreteTopology.of_subset (s := (GQ B : Set (GA D B))) i6 (fun x hx => hx.1)
-    have h1 : IsClosed ((GQ B ⊓ NFlag B e : Subgroup (GA D B)) : Set (GA D B)) := Subgroup.isClosed_of_discrete
-    have h2 := h1.mul_right_of_isCompact (hK.image continuous_subtype_val)
+    have h1 : IsClosed ((GQ B ⊓ NFlag B e : Subgroup (GA D B)) : Set (GA D B)) := Subgroup.isClosed_of_discreteTopology
+    have h2 := h1.mul_right_of_isCompact (hK.image continuous_subtypeVal)
     convert h2 using 1
     ext x
     constructor
@@ -91,7 +91,7 @@ theorem exists_isUnitN : ∀ (D : D7) (B : HSp D) (ρ : ℕ) (e : Matrix (Fin B.
   have : Countable (NFlagQ B e) := hinj.countable
   have : DiscreteTopology (NFlagQ B e) :=
     DiscreteTopology.of_continuous_injective
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) hinj
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) hinj
   exact exists_unit_of_cocompact (NFlagQ B e) hK h
 
 end GlobalTheory.Per.UnitN

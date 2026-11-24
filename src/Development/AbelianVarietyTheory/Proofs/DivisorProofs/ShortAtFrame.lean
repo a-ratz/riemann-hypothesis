@@ -186,8 +186,8 @@ theorem short_value_at_point : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl
     X g' Dc k xk hk hX hp hΛ hsd x hx hxk mk hm hma v ϑ κ' hv hκ
   intro y B hB hϑ
   subst hxk
-  letI : Algebra T.Q.c.F ℂ := (O i).s0.toAlgebra
-  letI : Algebra (T.dδ ((i : ℕ) + 1) (Vc D i).rank).c₂.F ℂ :=
+  let : Algebra T.Q.c.F ℂ := (O i).s0.toAlgebra
+  let : Algebra (T.dδ ((i : ℕ) + 1) (Vc D i).rank).c₂.F ℂ :=
     ((O i).s0.comp ((T.dδ ((i : ℕ) + 1) (Vc D i).rank).eF.symm :
       (T.dδ ((i : ℕ) + 1) (Vc D i).rank).c₂.F →+* T.Q.c.F)).toAlgebra
   have hj := inR i
@@ -313,7 +313,7 @@ theorem singleSeries_eq_phase_thetaKO : ∀ (D : D7) (G : Type) [Group G] [Finty
     have hP := hT.j.pins
     have hm : ∀ τ, τ ∉ X.Ψ → (T.Q.Dw ((i : ℕ) + 1)).mult τ ≤ X.p0 := fun τ hτ => by
       unfold Datum.mult
-      rw [if_neg fun h : τ (T.Q.H.rt : D.host.E) = T.Q.H.rt0 => hτ ((hM.psi τ).2
+      rw [ite_eq_right fun h : τ (T.Q.H.rt : D.host.E) = T.Q.H.rt0 => hτ ((hM.psi τ).2
         (ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.exists_tau_of_inPsi T.Q hP.1 τ h)), hp]
     obtain ⟨h1, h2⟩ := GlobalTheory.AdTh.Dic.letter Dc (fun τ => RingHom.ext fun _ => rfl) hm ℓ
     obtain ⟨g1, g2, g3⟩ := hv (Dc.eL ℓ)
@@ -419,7 +419,7 @@ theorem vecOf_eq_sum_heis : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
   by_cases hw : w ∈ latO (Vc D i) (Wc D i) (R.ΛV i : Set (Fin (Vc D i).rank → D.host.E))
       (R.ΛW i : Set (Fin (Wc D i).rank → D.host.E)) (fun _ => True) ∧ IsHalf (cA D e) w
   swap
-  · rw [halfInd, if_neg hw, zero_mul, if_neg]
+  · rw [halfInd, ite_eq_right hw, zero_mul, ite_eq_right]
     rintro ⟨h1, h2⟩
     have hN : ∀ PP ∈ R.Pg ∪ Q, ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal := fun PP hPP h =>
       (hP PP (Finset.mem_union.1 hPP)).2 (by rw [Nat.cast_mul]; exact Ideal.mul_mem_left _ _ h)
@@ -440,7 +440,7 @@ theorem vecOf_eq_sum_heis : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     rw [hfr]
     have : Ideal.span {(l.M : 𝓞 D.host.E)} ≤ l.Mb := l.prod ▸ Ideal.mul_le_left
     exact GlobalTheory.PlaceVec.redM_add_nsmul PP ((hP PP hPP).1 (this (Ideal.subset_span rfl))) (hφ x).1 (hint u hu)
-  rw [halfInd, if_pos hw, one_mul, if_pos ⟨hw.2, hw' ▸ hint w hw.1⟩,
+  rw [halfInd, ite_eq_left hw, one_mul, ite_eq_left ⟨hw.2, hw' ▸ hint w hw.1⟩,
     hRO _ (fun PP => redM PP (uMat (Vc D i) (Wc D i) (R.βV i) (R.βW i) e (fun b => ι (x b))))
       (fun PP h => hred PP (Finset.mem_union.1 h)), ← (hφ x).2, ← inversion l φ x]
   refine Finset.sum_congr rfl fun q _ => congrArg _ ?_
@@ -449,7 +449,7 @@ theorem vecOf_eq_sum_heis : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     Matrix.ext fun a b => by simp only [Matrix.of_apply]; ring
   refine Eq.trans ?_ (char_eq (Y := Matrix.of fun a b => ((ε : ℤ) : D.host.E) * ι (cSep l • levRep (q b)) a / (l.M : D.host.E))
     hvac.1 hS hT (GlobalTheory.PlaceVec.idemSum_infPart he) hw.2 hu hwM ((hlat _).2 fun b => ?_)).symm
-  · rw [hY, hRat_std hV.1 _ _ _ (by rw [star_div₀, star_intCast, star_natCast]), ← Complex.exp_int_mul]
+  · rw [hY, hRat_std hV.1 _ _ _ (by rw [star_div₀, star_intCast, star_natCast]), ← exp_intCast_mul]
     congr 1
     have h1 : ∀ c : ℚ, ∀ z : D.host.E, Algebra.trace ℚ D.host.E (D.host.xi0 * ((c : D.host.E) * z)) =
         c * Algebra.trace ℚ D.host.E (D.host.xi0 * z) := fun c z => by
@@ -630,7 +630,7 @@ theorem moved_datum_tw : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 :
   rw [hδ χ Q Ω ω φv hω hQ hΩ hvec l φ hφ hP e he, map_smul]
   by_cases hfin' : Finite (Fin (Vc D i).rank → LevQ Dw l)
   swap
-  · haveI := not_finite_iff_infinite.1 hfin'
+  · have := not_finite_iff_infinite.1 hfin'
     rw [Nat.card_eq_zero_of_infinite, Nat.cast_zero, _root_.inv_zero, zero_smul, zero_smul]
   rw [map_finsum _ (Set.toFinite _)]
   congr 1
@@ -673,8 +673,8 @@ theorem thetaKO_eq_short_series_tw : ∀ (D : D7) (G : Type) [Group G] [Fintype 
   choose p hp using fun q => exists_finOf (Vc D i) (Wc D i) (rank_Wc i) ((δ : ℤ) • Y q)
   have hdat := hδ χ Q Ω ω φv hω ξ hchr hfin hram hQ hΩ hvec l₂ φ hφ hl bad N h k Λ mk hbad ⟨hh, e, Ps, he, hPs, hsupp⟩ hΛ
     htriv hlev hmk Y (fun q => (p q).1) (fun q => (p q).2) hY hp
-  haveI := finite_levQ Dw l₂
-  letI : Fintype (Fin (Vc D i).rank → LevQ Dw l₂) := Fintype.ofFinite _
+  have := finite_levQ Dw l₂
+  let : Fintype (Fin (Vc D i).rank → LevQ Dw l₂) := Fintype.ofFinite _
   obtain ⟨hhs, hks, -, hlat, hV1, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs h k
   obtain ⟨-, -, hmv, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs 1 k
   rw [show fin (Vc D i) 1 = 1 from map_one _, hV1] at hmv
@@ -884,7 +884,7 @@ theorem twist_scalar_mem_range : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
     (fun Q hQ x => by
       rw [Formalism.L2.Host.HChar.resFin_mul, Formalism.L2.Host.HChar.resFin_mul, Formalism.L2.Host.HChar.resFin_inv,
         (R.C.isMu0 i).triv.1, hK.triv.1, R.C.isEta.res.1, Formalism.L2.Host.etaFin, GlobalTheory.ClassScalarValue.above_eq,
-        Finset.card_pair hQ.symm, if_neg (by norm_num), inv_one, one_mul, one_mul])
+        Finset.card_pair hQ.symm, ite_eq_right (by norm_num), inv_one, one_mul, one_mul])
   rw [← hbar] at c1 c3
   obtain ⟨q, q0, q1, q2⟩ := (hO.2.ep ()).2 _ cc gU gT gS c1 c3
   have c2' : cc ⊔ Ideal.span {(((O i).bad () : ℕ) : 𝓞 D.host.E)} = ⊤ := by
@@ -1085,7 +1085,7 @@ namespace GlobalTheory.NormCoprime
 theorem coprime_absNorm_of_sup {K : Type} [Field K] [NumberField K] (p : ℕ) (hp : p.Prime)
     {I : Ideal (𝓞 K)} (hI : I ≠ ⊥)
     (h : I ⊔ Ideal.span {((p : ℕ) : 𝓞 K)} = ⊤) : Nat.Coprime (Ideal.absNorm I) p := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hdvd
   have := Ideal.finiteQuotientOfFreeOfNeBot I hI
@@ -1257,7 +1257,7 @@ theorem unitOff_onId (E : Type) [Field E] [NumberField E] (ψ : HChar E) (I : Ty
     have hq : ((Ideal.absNorm cc : ℕ) : 𝓞 E) ∈ v.asIdeal := hle (Ideal.absNorm_mem cc)
     exact unitOff_zpow (GlobalTheory.ValUnit.unitOff_val E ψ I φs n v _ hinf hfin ht (hu v hbv) hq) _
   · have h0 : FractionalIdeal.count E v (cc : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) = 0 := by
-      rw [FractionalIdeal.count_coe E v hcc0, Nat.cast_eq_zero]
+      rw [FractionalIdeal.count_coeIdeal E v hcc0, Nat.cast_eq_zero]
       by_contra h
       exact hdv ((Associates.count_ne_zero_iff_dvd hcc0 (HeightOneSpectrum.prime v).irreducible).1 h)
     rw [h0, zpow_zero]
@@ -1685,7 +1685,7 @@ theorem short_at_frame : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 :
     rintro rfl
     rw [zero_pow hm.ne'] at hm1
     exact zero_ne_one hm1
-  letI : Algebra T.Q.c.F ℂ := (O i).s0.toAlgebra
+  let : Algebra T.Q.c.F ℂ := (O i).s0.toAlgebra
   obtain ⟨mk₂, Y, hm₂, ha₂, hY, hgeo⟩ := GlobalTheory.ShortPtVal.short_value_at_point D G Pl0 T0 A T R F κ v₀ fw O hT hC i hOP χ c0' hcT Λ N x₀ P hUm hTb hTd hLev hAdm
     hPh' ζ φc hζ0 hhat F₀.1 hF₀ _ g' Dc (γ * g) xk hxk hX hp hΛ hsd _ hx hfr mk hm hma vv ϑ κ' hvv hκ _ B hBm hϑ
   obtain ⟨vr, hvr⟩ := exists_isVarOf (Vc D i) (Wc D i) (rank_Wc i) _ hX _ Dc.hr
@@ -1710,7 +1710,7 @@ theorem short_at_frame : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 :
   rw [hΛ, ← hfr] at hser
   have hx0 : 0 < xiR D := norm_pos_iff.2 ((_root_.map_ne_zero _).2 (GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D))
   have hrdU : rdU (T.J.U ((i : ℕ) + 1) (O i).s0) (F₀.1 : T.R ((i : ℕ) + 1)) ((O i).dict g).1 ((O i).dict g).2 = _ :=
-    (dif_pos hx).trans hgeo
+    (dite_eq_left hx).trans hgeo
   have hphiE : (O i).phi ((ka * (-((δ : ℤ) : ℂ)) ^ d * c0⁻¹) • cc) (F₀.1 : T.R ((i : ℕ) + 1)) g =
       ((ka * (-((δ : ℤ) : ℂ)) ^ d * c0⁻¹) * cc ((O i).dict g).1) * (O i).mu g *
         rdU (T.J.U ((i : ℕ) + 1) (O i).s0) (F₀.1 : T.R ((i : ℕ) + 1)) ((O i).dict g).1 ((O i).dict g).2 := rfl

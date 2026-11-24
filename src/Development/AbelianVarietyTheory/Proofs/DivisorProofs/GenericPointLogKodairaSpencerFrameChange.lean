@@ -110,7 +110,7 @@ theorem injective_and_frac : ∀ (X : Scheme.{0}) (V : X.Opens) [IsIntegral V.to
   have he : CommRingCat.ofHom ρW = X.presheaf.germ W.1 (V.ι η) hx ≫ V.ι.stalkMap η := by
     apply Spec.map_injective
     have hW : IsAffineOpen W.1 := W.2
-    haveI : IsOpenImmersion hW.fromSpec := hW.isOpenImmersion_fromSpec
+    have : IsOpenImmersion hW.fromSpec := hW.isOpenImmersion_fromSpec
     rw [← cancel_mono hW.fromSpec, Spec.map_comp, Category.assoc]
     refine Eq.trans h ?_
     rw [← Scheme.SpecMap_stalkMap_fromSpecStalk, ← W.2.fromSpecStalk_eq_fromSpecStalk hx]
@@ -126,9 +126,9 @@ theorem injective_and_frac : ∀ (X : Scheme.{0}) (V : X.Opens) [IsIntegral V.to
     rw [he', he', Scheme.Hom.germ_stalkMap_apply, Scheme.Hom.germ_stalkMap_apply] at hab
     exact hinj1 (hinj2 hab)
   · obtain ⟨y, rfl⟩ := hbij.2 x
-    letI : Algebra Γ(X, W.1) (X.presheaf.stalk (V.ι η)) :=
+    let : Algebra Γ(X, W.1) (X.presheaf.stalk (V.ι η)) :=
       (X.presheaf.germ W.1 (V.ι η) hx).hom.toAlgebra
-    haveI : IsLocalization.AtPrime (X.presheaf.stalk (V.ι η))
+    have : IsLocalization.AtPrime (X.presheaf.stalk (V.ι η))
         (W.2.primeIdealOf ⟨V.ι η, hx⟩).asIdeal := W.2.isLocalization_stalk ⟨V.ι η, hx⟩
     obtain ⟨⟨a, b⟩, hab⟩ := IsLocalization.surj
       (W.2.primeIdealOf ⟨V.ι η, hx⟩).asIdeal.primeCompl y
@@ -173,7 +173,7 @@ theorem isTanAtG_act {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Rec
   · rw [Category.assoc, Over.w]; exact hv.1
   · rw [← Category.assoc, hv.2, ← Over.comp_left]
     congr 1
-    haveI := t.act.hom a
+    have := t.act.hom a
     rw [Hom.one_def, Category.assoc, IsMonHom.one_hom]
 
 theorem actMatrix : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (X : Scheme.{0}) (t : SAB H X) (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ i, IsTanAtG t (GlobalTheory.LogKS.chart U) (v i)) → (∀ w, IsTanAtG t (GlobalTheory.LogKS.chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (GlobalTheory.LogKS.chart U) v cf w) → ∃ A : 𝓞 E → Matrix (Fin n) (Fin n) Γ(X, U.1), ∀ a i, IsCombAtG t (GlobalTheory.LogKS.chart U) v (A a i) (v i ≫ (t.act.act a).left) := by
@@ -360,7 +360,7 @@ theorem isCombAtG_extend {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
       rfl
   · rw [← hw]
     congr 1
-    letI : CommMonoid (tEpsG x ⟶ t.G) := Hom.commMonoid
+    let : CommMonoid (tEpsG x ⟶ t.G) := Hom.commMonoid
     rw [List.prod_ofFn, List.prod_ofFn]
     symm
     refine Finset.prod_of_injOn f hf.injOn (fun _ _ => Finset.mem_coe.2 (Finset.mem_univ _)) ?_ ?_
@@ -475,14 +475,14 @@ theorem blockRow_eq_sum {ι R : Type} [CommRing R] {m : ι → ℕ} {n n' : ℕ}
     rw [Finset.sum_eq_single k]
     · simp
     · intro j _ hj
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h
       exact hj (eq_of_heq (Sigma.mk.inj (e'.injective h)).2).symm
     · simp
   · rw [hB _ _ _ _ h]
     symm
     refine Finset.sum_eq_zero fun j _ => ?_
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h'
     exact h (Sigma.mk.inj (e'.injective h')).1.symm
 
@@ -492,7 +492,7 @@ theorem transpose_mul_symm_mul_apply {R : Type} [CommRing R] {n n' : ℕ} (B : M
       ((if x = a ∧ y = b then 1 else 0) + (if x = b ∧ y = a then 1 else 0) : R)) * B) c d =
       B a c * B b d + B b c * B a d := by
   simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, mul_add, Finset.sum_add_distrib, add_mul,
-    ite_and, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, ite_mul, zero_mul]
+    ite_and, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, ite_mul, zero_mul]
 
 theorem transpose_mul_symPair_mul_mem_span :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (R : Type) [CommRing R] (n n' : ℕ) (e : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n) (e' : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n') (ε' : Fin Dw.dim ≃ GlobalTheory.LogKSDiv.PairIx H Dw) (B : Matrix (Fin n) (Fin n') R), (∀ (τ σ : E →+* ℂ) (i : Fin (Dw.mult τ)) (k : Fin (Dw.mult σ)), τ ≠ σ → B (e ⟨τ, i⟩) (e' ⟨σ, k⟩) = 0) → ∀ P : GlobalTheory.LogKSDiv.PairIx H Dw, ∃ cf : Fin Dw.dim → R, _root_.Matrix.transpose B * GlobalTheory.LogKSDiv.symPair (R := R) e P * B = ∑ k, cf k • GlobalTheory.LogKSDiv.symPair (R := R) e' (ε' k) := by
@@ -591,7 +591,7 @@ theorem basic_loc {X : Scheme.{0}} (U W : X.affineOpens) (hW : W.1 ≤ U.1) (f :
   obtain ⟨W, hWa⟩ := W
   simp only at hf hW ⊢
   subst hf
-  letI := (X.presheaf.map (homOfLE hW).op).hom.toAlgebra
+  let := (X.presheaf.map (homOfLE hW).op).hom.toAlgebra
   have : IsLocalization.Away f Γ(X, X.basicOpen f) := U.2.isLocalization_basicOpen f
   refine ⟨IsLocalization.Away.algebraMap_isUnit f, fun r' => ?_⟩
   obtain ⟨m, r, h⟩ := IsLocalization.Away.surj f r'
@@ -658,7 +658,7 @@ theorem genKS_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
         ∑ k, L k j • GlobalTheory.LogKSDiv.symPair (R := (X₀ TF.Y Z).functionField) e' (ε' k)) ∧
       (letI := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra; ∀ j, D j = ∑ k, L k j • D' k) := by
   intro E _ _ _ H Dw l Xo c TF Z hpq hFA _ _ w w' D D' A hG hG' hA
-  letI := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra
+  let := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra
   obtain ⟨U, hU, ρ, n, e, v, ε, Dl, hρ, hvT, hvB, hw, hKS, hD⟩ := hG
   obtain ⟨U', hU', ρ', n', e', v', ε', Dl', hρ', hvT', hvB', hw', hKS', hD'⟩ := hG'
   have hin : ∀ (U₀ : TF.Y.X.affineOpens) (ρ₀ : Γ(TF.Y.X, U₀.1) →+* (X₀ TF.Y Z).functionField)

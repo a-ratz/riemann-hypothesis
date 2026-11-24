@@ -141,7 +141,7 @@ theorem det_smul_kaehler_eq_zero [DecidableEq σ] [IsNoetherianRing T] [Module.F
     (φ : MvPowerSeries σ T →ₐ[T] Q) (hφ : Function.Surjective φ) (f : σ → MvPowerSeries σ T)
     (hf : ∀ i, φ (f i) = 0) (ω : KaehlerDifferential T Q) :
     φ (Matrix.det (Matrix.of fun i j => pderiv (R := T) j (f i))) • ω = 0 := by
-  haveI : IsNoetherianRing Q := IsNoetherianRing.of_finite T Q
+  have : IsNoetherianRing Q := IsNoetherianRing.of_finite T Q
   set D := KaehlerDifferential.D T Q with hD
   set A : Matrix σ σ Q := Matrix.of fun i j => φ (pderiv (R := T) j (f i)) with hA
   have hdet : φ (Matrix.det (Matrix.of fun i j => pderiv (R := T) j (f i))) = A.det := by
@@ -202,7 +202,7 @@ namespace GlobalTheory.KerCard
 theorem isReduced_baseChange_of_smul_kaehler_eq_zero (T Q C : Type) [CommRing T] [CommRing Q]
     [Algebra T Q] [Module.Finite T Q] [Field C] [Algebra T C] (δ : T) (hδ : algebraMap T C δ ≠ 0)
     (h : ∀ ω : KaehlerDifferential T Q, δ • ω = 0) : IsReduced (C ⊗[T] Q) := by
-  letI : Algebra Q (C ⊗[T] Q) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra Q (C ⊗[T] Q) := Algebra.TensorProduct.rightAlgebra
   have hsub : Subsingleton (C ⊗[T] KaehlerDifferential T Q) := by
     refine subsingleton_of_forall_eq 0 fun x => ?_
     induction x using TensorProduct.induction_on with

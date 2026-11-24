@@ -239,7 +239,7 @@ theorem exists_cdvr_point_gen {K Ω : Type} [Field K] [NumberField K] [Field Ω]
     · simp [h0]
     · rw [memO, map_inv₀, not_le] at h0
       have hne : x ≠ 0 := fun h => by simp [h] at h0
-      exact (one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hne))).1 h0
+      exact (one_lt_inv₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hne))).1 h0
   have hlies : w.asIdeal.LiesOver la.asIdeal := ⟨by
     have hle : la.asIdeal ≤ w.asIdeal.comap (algebraMap (𝓞 K) (𝓞 L)) := fun a ha => by
       rw [Ideal.mem_comap, ← HeightOneSpectrum.valuation_lt_one_iff_mem (K := L)]
@@ -280,7 +280,7 @@ theorem exists_cdvr_point_gen {K Ω : Type} [Field K] [NumberField K] [Field Ω]
   have hP₀ : P₀.IsPrime := RingHom.ker_isPrime g
   have hM : P₀.primeCompl ≤ nonZeroDivisors A := P₀.primeCompl_le_nonZeroDivisors
   let S₀ : Subalgebra A Ω := Localization.subalgebra.ofField Ω P₀.primeCompl hM
-  haveI : IsLocalization P₀.primeCompl S₀ := Localization.subalgebra.isLocalization_ofField Ω P₀.primeCompl hM
+  have : IsLocalization P₀.primeCompl S₀ := Localization.subalgebra.isLocalization_ofField Ω P₀.primeCompl hM
   let ρ₀ : S₀ →+* T.Fr := IsLocalization.lift (M := P₀.primeCompl) (g := g) fun y =>
     isUnit_iff_ne_zero.2 fun h => y.2 h
   have hρ₀ : ∀ a : A, ρ₀ (algebraMap A S₀ a) = g a := fun a => IsLocalization.lift_eq _ a
@@ -415,15 +415,15 @@ theorem fin_small_gen {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z :
   have ha0 : a i₀ ≠ 0 := fun h => by
     have h3 := hi₀ i₁
     simp only [h, map_zero] at h3
-    exact hi₁ ((Valuation.zero_iff ν).1 (le_antisymm h3 zero_le'))
+    exact hi₁ ((Valuation.zero_iff ν).1 (le_antisymm h3 zero_le))
   have hwlat : ∀ i, w i ∈ latOn U Z G := fun i => hw ▸ Submodule.subset_span ⟨i, rfl⟩
   have hlt : ν (a i₀) ^ τ < ν (genVal Z (f : Rul Xo c)) := hcon (w i₀) (hwlat i₀)
   set b := genVal Z (f : Rul Xo c) with hbdef
   have hb0 : b ≠ 0 := fun h => by
     rw [h, map_zero] at hlt
-    exact not_lt_zero' hlt
-  have hνa : 0 < ν (a i₀) := zero_lt_iff.2 ((Valuation.ne_zero_iff ν).2 ha0)
-  have hνb : 0 < ν b := zero_lt_iff.2 ((Valuation.ne_zero_iff ν).2 hb0)
+    exact not_lt_zero hlt
+  have hνa : 0 < ν (a i₀) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff ν).2 ha0)
+  have hνb : 0 < ν b := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff ν).2 hb0)
   let y : Fin n → Om Z := fun i => a i / a i₀
   let q : Om Z := a i₀ ^ τ / b
   have hy : ∀ i, ν (y i) ≤ 1 := fun i => by
@@ -468,7 +468,7 @@ theorem fin_small_gen {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z :
     | mul_X P i hP =>
       rw [map_mul, map_mul]
       exact S.mul_mem hP (hSW _ (Finset.mem_image_of_mem _ (Finset.mem_univ i)))
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let ψ : p.R →ₐ[c.F] T.Fr :=
     { (ρ.comp (χ.codRestrict S hχS).toRingHom) with
       commutes' := fun x => by
@@ -479,7 +479,7 @@ theorem fin_small_gen {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (Z :
   obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c p.R T.Fr ψ u₀
   obtain ⟨T', io', r', y', hr, ho', hf', φ, z', t', h1', h2', hz', hb'⟩ :=
     GlobalTheory.IntegralFrameCheck.intAll_ramified (intAll_all Xo c) la T io e ho hfin z
-  letI := io'.toAlgebra
+  let := io'.toAlgebra
   have hz2 : FrMap (φ.comp ψ) u₀ z' := ReciprocityTheory.ChartRestriction.G.PullbackSections.frMap_trans ψ φ hz hz'
   have hform : ∀ {G' : WTZ E} {g : Rul Xo c}, g ∈ secZ Xo c (exZ Dw G') →
       evI y' g = ((∏ i, t' i ^ exZ Dw G' i : T'.Frˣ) : T'.Fr) * φ (ψ (g p u₀)) := fun hg =>

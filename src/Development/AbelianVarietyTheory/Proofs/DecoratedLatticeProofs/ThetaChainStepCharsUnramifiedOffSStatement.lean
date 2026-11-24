@@ -65,7 +65,7 @@ theorem step_chars_unrAt : ∀ (D : D7) (c : Com D), c.Is → ∀ k < D.R.m, ∀
   intro D c hc k hk v hv w hw
   have hμ : UnrAt (c.μ (k + 1)) w := by
     have := hc.unr ⟨k, hk⟩ w
-    exact this (by rw [GlobalTheory.LFun.above, Set.mem_setOf_eq, hw]; exact hv)
+    exact this (by rw [GlobalTheory.LFun.above, Set.mem_ofPred_eq, hw]; exact hv)
   have hη : UnrAt c.η⁻¹ w := (GlobalTheory.LFun.unrAt_of_unramEverywhere hc.chars.2.1 w).inv
   have hμη : UnrAt (c.μ (k + 1) * c.η⁻¹) w := hμ.mul hη
   unfold Com.chS Com.chT Lift.chrStep

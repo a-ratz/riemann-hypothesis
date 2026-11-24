@@ -106,11 +106,11 @@ end GlobalTheory.Mum.AffFib
 
 theorem GlobalTheory.Mum.etale_localisation_of_etale_affine_fibre : ∀ (A C B : CommRingCat.{0}) (φ : A ⟶ C) (ψ : C ⟶ B) (Ω : Type) [Field Ω] (ω : A ⟶ CommRingCat.of Ω) (W : (pullback (Spec.map (φ ≫ ψ)) (Spec.map ω)).Opens) (w : ↥(pullback (Spec.map (φ ≫ ψ)) (Spec.map ω))), w ∈ W → Etale (W.ι ≫ pullback.map (Spec.map (φ ≫ ψ)) (Spec.map ω) (Spec.map φ) (Spec.map ω) (Spec.map ψ) (𝟙 _) (𝟙 _) (by simp [Spec.map_comp]) (by simp)) → letI := φ.hom.toAlgebra; letI := ψ.hom.toAlgebra; letI := (φ ≫ ψ).hom.toAlgebra; letI := ω.hom.toAlgebra; letI : IsScalarTower A C B := IsScalarTower.of_algebraMap_eq (fun _ => rfl); ∃ (Q' : Ideal (TensorProduct A Ω B)) (_ : Q'.IsPrime) (f : TensorProduct A Ω B), Q'.comap (Algebra.TensorProduct.includeRight : B →ₐ[A] TensorProduct A Ω B) = (pullback.fst (Spec.map (φ ≫ ψ)) (Spec.map ω) w).asIdeal ∧ f ∉ Q' ∧ ((algebraMap (TensorProduct A Ω B) (Localization.Away f)).comp (Algebra.TensorProduct.map (AlgHom.id A Ω) (IsScalarTower.toAlgHom A C B)).toRingHom).Etale := by
   intro A C B φ ψ Ω _ ω W w hw hE
-  letI := φ.hom.toAlgebra; letI := ψ.hom.toAlgebra; letI := (φ ≫ ψ).hom.toAlgebra; letI := ω.hom.toAlgebra
-  letI : IsScalarTower A C B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let := φ.hom.toAlgebra; let := ψ.hom.toAlgebra; let := (φ ≫ ψ).hom.toAlgebra; let := ω.hom.toAlgebra
+  let : IsScalarTower A C B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   set F := pullback.map (Spec.map (φ ≫ ψ)) (Spec.map ω) (Spec.map φ) (Spec.map ω) (Spec.map ψ) (𝟙 _) (𝟙 _)
     (by simp [Spec.map_comp]) (by simp) with hFdef
-  haveI := hE
+  have := hE
   let θ := Algebra.TensorProduct.map (AlgHom.id A Ω) (IsScalarTower.toAlgHom A C B)
   let θc : CommRingCat.of (TensorProduct A Ω C) ⟶ CommRingCat.of (TensorProduct A Ω B) :=
     CommRingCat.ofHom θ.toRingHom
@@ -301,10 +301,10 @@ theorem exists_etale_away_of_bijective_mapBaseChange : ∀ (A C B : Type) [CommR
       funext x; simp [← key]
     rw [this]
     exact eN.bijective.comp (hψ₀.comp eM.symm.bijective)
-  haveI : Algebra.FormallySmooth B BQ := Algebra.FormallySmooth.of_isLocalization Q.primeCompl
-  haveI : Algebra.FormallySmooth A BQ := Algebra.FormallySmooth.comp A B BQ
-  haveI : Algebra.IsEtaleAt C Q := formallyEtale_of_bijective_mapBaseChange A C BQ hψ
-  haveI : Algebra.FinitePresentation C B :=
+  have : Algebra.FormallySmooth B BQ := Algebra.FormallySmooth.of_isLocalization Q.primeCompl
+  have : Algebra.FormallySmooth A BQ := Algebra.FormallySmooth.comp A B BQ
+  have : Algebra.IsEtaleAt C Q := formallyEtale_of_bijective_mapBaseChange A C BQ hψ
+  have : Algebra.FinitePresentation C B :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation A C B
   exact Algebra.exists_etale_of_isEtaleAt Q
 
@@ -419,20 +419,20 @@ theorem mapBaseChange_residueField_bijective_of_etale_fibre :
     ∀ (A C B Ω : Type) [CommRing A] [CommRing C] [CommRing B] [Algebra A C] [Algebra A B] [Algebra C B] [IsScalarTower A C B] [Field Ω] [Algebra A Ω] (Q : Ideal B) [Q.IsPrime] (Q' : Ideal (TensorProduct A Ω B)) [Q'.IsPrime] (f : TensorProduct A Ω B), Q'.comap (Algebra.TensorProduct.includeRight : B →ₐ[A] TensorProduct A Ω B) = Q → f ∉ Q' → ((algebraMap (TensorProduct A Ω B) (Localization.Away f)).comp (Algebra.TensorProduct.map (AlgHom.id A Ω) (IsScalarTower.toAlgHom A C B)).toRingHom).Etale → Function.Bijective ((KaehlerDifferential.mapBaseChange A C B).lTensor Q.ResidueField) := by
   intro A C B Ω _ _ _ _ _ _ _ _ _ Q _ Q' _ f hQ hf het
   classical
-  letI : Algebra C (TensorProduct A Ω C) := Algebra.TensorProduct.rightAlgebra
-  letI : Algebra B (TensorProduct A Ω B) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra C (TensorProduct A Ω C) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B (TensorProduct A Ω B) := Algebra.TensorProduct.rightAlgebra
   set ψ := ((algebraMap (TensorProduct A Ω B) (Localization.Away f)).comp
     (Algebra.TensorProduct.map (AlgHom.id A Ω) (IsScalarTower.toAlgHom A C B)).toRingHom) with hψ
-  letI : Algebra (TensorProduct A Ω C) (Localization.Away f) := ψ.toAlgebra
-  haveI : Algebra.Etale (TensorProduct A Ω C) (Localization.Away f) := het
-  haveI : IsScalarTower Ω (TensorProduct A Ω C) (Localization.Away f) :=
+  let : Algebra (TensorProduct A Ω C) (Localization.Away f) := ψ.toAlgebra
+  have : Algebra.Etale (TensorProduct A Ω C) (Localization.Away f) := het
+  have : IsScalarTower Ω (TensorProduct A Ω C) (Localization.Away f) :=
     IsScalarTower.of_algebraMap_eq fun w => by
       change _ = ψ _
       simp [hψ, Algebra.TensorProduct.algebraMap_apply, IsScalarTower.algebraMap_apply Ω (TensorProduct A Ω B) (Localization.Away f)]
 
   have hunit : IsUnit (algebraMap (TensorProduct A Ω B) Q'.ResidueField f) := by
     rw [isUnit_iff_ne_zero, Ne, Ideal.algebraMap_residueField_eq_zero]; exact hf
-  letI : Algebra (Localization.Away f) Q'.ResidueField :=
+  let : Algebra (Localization.Away f) Q'.ResidueField :=
     (Localization.awayLift (algebraMap (TensorProduct A Ω B) Q'.ResidueField) f hunit).toAlgebra
   have hlift : ∀ s, algebraMap (Localization.Away f) Q'.ResidueField
       (algebraMap (TensorProduct A Ω B) (Localization.Away f) s) =
@@ -444,8 +444,8 @@ theorem mapBaseChange_residueField_bijective_of_etale_fibre :
     rw [IsScalarTower.algebraMap_apply B (Localization.AtPrime Q') Q'.ResidueField,
       IsScalarTower.algebraMap_apply B (TensorProduct A Ω B) (Localization.AtPrime Q'),
       ← IsScalarTower.algebraMap_apply]
-  letI : Algebra C Q'.ResidueField := ((algebraMap B Q'.ResidueField).comp (algebraMap C B)).toAlgebra
-  haveI : IsScalarTower C B Q'.ResidueField := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra C Q'.ResidueField := ((algebraMap B Q'.ResidueField).comp (algebraMap C B)).toAlgebra
+  have : IsScalarTower C B Q'.ResidueField := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨eB, heB⟩ := _root_.GlobalTheory.AuxiliaryLemmaFirst.main A Ω B (TensorProduct A Ω B)
     (Localization.Away f) Q'.ResidueField (fun x => by rw [hlift, hBK])
   obtain ⟨eC, heC⟩ := _root_.GlobalTheory.AuxiliaryLemmaFirst.main A Ω C (TensorProduct A Ω C)
@@ -480,11 +480,11 @@ theorem mapBaseChange_residueField_bijective_of_etale_fibre :
     intro k ω
     have h1 : k ⊗ₜ[C] ω = k • ((1 : K) ⊗ₜ[C] ω) := by rw [TensorProduct.smul_tmul', smul_eq_mul, _root_.mul_one]
     rw [h1, map_smul, hE', TensorProduct.smul_tmul', smul_eq_mul, _root_.mul_one]
-  letI : Algebra Q.ResidueField K :=
+  let : Algebra Q.ResidueField K :=
     (Ideal.ResidueField.map Q Q' (algebraMap B (TensorProduct A Ω B)) (by rw [← hQ]; rfl)).toAlgebra
-  haveI : IsScalarTower B Q.ResidueField K := IsScalarTower.of_algebraMap_eq fun b => by
+  have : IsScalarTower B Q.ResidueField K := IsScalarTower.of_algebraMap_eq fun b => by
     rw [RingHom.algebraMap_toAlgebra, Ideal.ResidueField.map_algebraMap, hBK]
-  rw [← LinearMap.baseChange_eq_ltensor,
+  rw [← LinearMap.baseChange_eq_lTensor,
     ← Module.FaithfullyFlat.lTensor_bijective_iff_bijective Q.ResidueField K]
   let cM := TensorProduct.AlgebraTensorModule.cancelBaseChange B Q.ResidueField K K
     (TensorProduct C B Ω[C⁄A])
@@ -577,9 +577,9 @@ theorem GlobalTheory.Mum.etale_near_of_etale_fibre : ∀ (T X Z : Scheme.{0}) (p
   have hUA' : IsAffineOpen UA := hUA
   have hUB' : IsAffineOpen UB := hUB
   have hUC' : IsAffineOpen UC := hUC
-  haveI := hUA'.isOpenImmersion_fromSpec
-  haveI := hUB'.isOpenImmersion_fromSpec
-  haveI := hUC'.isOpenImmersion_fromSpec
+  have := hUA'.isOpenImmersion_fromSpec
+  have := hUB'.isOpenImmersion_fromSpec
+  have := hUC'.isOpenImmersion_fromSpec
   have hxr : Set.range x ⊆ Set.range hUA'.fromSpec := by
     rw [hUA'.range_fromSpec]
     rintro _ ⟨y, rfl⟩
@@ -603,13 +603,13 @@ theorem GlobalTheory.Mum.etale_near_of_etale_fibre : ∀ (T X Z : Scheme.{0}) (p
   have hex := GlobalTheory.T.etale_localisation_of_etale_affine_fibre' _ _ _ φ ψ Ω ω W' w' hw' hE'
   dsimp only at hex
   obtain ⟨Q', hQ', f, hcomap, hf, hEt⟩ := hex
-  letI := φ.hom.toAlgebra; letI := ψ.hom.toAlgebra; letI := (φ ≫ ψ).hom.toAlgebra; letI := ω.hom.toAlgebra
-  letI : IsScalarTower Γ(T, UA) Γ(Z, UC) Γ(X, UB) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI := hQ'
-  haveI hQprime : (pullback.fst (Spec.map (φ ≫ ψ)) (Spec.map ω) w').asIdeal.IsPrime := PrimeSpectrum.isPrime _
+  let := φ.hom.toAlgebra; let := ψ.hom.toAlgebra; let := (φ ≫ ψ).hom.toAlgebra; let := ω.hom.toAlgebra
+  let : IsScalarTower Γ(T, UA) Γ(Z, UC) Γ(X, UB) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have := hQ'
+  have hQprime : (pullback.fst (Spec.map (φ ≫ ψ)) (Spec.map ω) w').asIdeal.IsPrime := PrimeSpectrum.isPrime _
   have hbij := GlobalTheory.T.localization_tensor_prime_comap_compat Γ(T, UA) Γ(Z, UC) Γ(X, UB) Ω (pullback.fst (Spec.map (φ ≫ ψ)) (Spec.map ω) w').asIdeal Q' f hcomap hf hEt
-  haveI : Algebra.Smooth Γ(T, UA) Γ(Z, UC) := HasRingHomProperty.appLE @Smooth q hq ⟨UA, hUA'⟩ ⟨UC, hUC'⟩ hCA
-  haveI : Algebra.Smooth Γ(T, UA) Γ(X, UB) := by
+  have : Algebra.Smooth Γ(T, UA) Γ(Z, UC) := HasRingHomProperty.appLE @Smooth q hq ⟨UA, hUA'⟩ ⟨UC, hUC'⟩ hCA
+  have : Algebra.Smooth Γ(T, UA) Γ(X, UB) := by
     have := HasRingHomProperty.appLE @Smooth (h ≫ q) hp ⟨UA, hUA'⟩ ⟨UB, hUB'⟩ (hBC.trans (h.preimage_mono hCA))
     rw [← Scheme.Hom.appLE_comp_appLE h q UA UC UB hCA hBC] at this
     exact this

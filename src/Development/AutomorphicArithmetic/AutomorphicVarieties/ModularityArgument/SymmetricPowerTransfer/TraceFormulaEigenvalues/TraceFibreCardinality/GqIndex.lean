@@ -115,7 +115,7 @@ private theorem fib_card (K : Subgroup H) (g : H) (y : Y) :
     ext x
     obtain ⟨h, rfl⟩ := QuotientGroup.mk_surjective x
     obtain ⟨k0, hout⟩ := QuotientGroup.mk_out_eq_mul K h
-    simp only [Set.mem_setOf_eq, Set.mem_range, hout]
+    simp only [Set.mem_ofPred_eq, Set.mem_range, hout]
     constructor
     · rintro ⟨c, hc, hcy⟩
       have hs : g⁻¹ * (h * k0 * c) ∈ stabilizer H y := by
@@ -155,8 +155,8 @@ private theorem gq_index (φ : H' →* H) (hφ : ∀ (a : H') (y : Y), a • y =
     (hw : ∀ y, k y ≠ 0 → H₀.relIndex (stabilizer H y) ≠ 0) :
     gq (H₀.comap φ) k = ((φ.range ⊔ H₀).index : ℂ) * gq H₀ k := by
   classical
-  haveI : (φ.range ⊔ H₀).FiniteIndex := ⟨hn⟩
-  letI : Fintype (H ⧸ (φ.range ⊔ H₀)) := Fintype.ofFinite _
+  have : (φ.range ⊔ H₀).FiniteIndex := ⟨hn⟩
+  let : Fintype (H ⧸ (φ.range ⊔ H₀)) := Fintype.ofFinite _
   obtain ⟨S0, hS0⟩ := hS
   let π : orbitRel.Quotient H' Y → orbitRel.Quotient H Y := fun q' => Quotient.mk (orbitRel H Y) q'.out
   let T : orbitRel.Quotient H Y → ℂ := fun q =>
@@ -261,7 +261,7 @@ private theorem gq_index (φ : H' →* H) (hφ : ∀ (a : H') (y : Y), a • y =
     have hset : ((Finset.univ.filter (fun x => Φ x = q') : Finset (H ⧸ (φ.range ⊔ H₀))) : Set (H ⧸ (φ.range ⊔ H₀))) =
         {x : H ⧸ (φ.range ⊔ H₀) | ∃ c ∈ φ.range ⊔ H₀, c • q'.out = x.out⁻¹ • g • q'.out} := by
       ext x
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
       rw [← orb_iff φ hφ H₀ h0, Quotient.out_eq]
       show Quotient.mk (orbitRel H' Y) (x.out⁻¹ • q.out) = q' ↔ _
       rw [hg]
@@ -276,8 +276,8 @@ end
 
 theorem gqIndex : GqIndex := by
   intro H' H G _ _ _ φ j H₀ U k hN h0 hn hk hS hw
-  letI : MulAction H (G ⧸ U) := MulAction.compHom _ j
-  letI : MulAction H' (G ⧸ U) := MulAction.compHom _ (j.comp φ)
+  let : MulAction H (G ⧸ U) := MulAction.compHom _ j
+  let : MulAction H' (G ⧸ U) := MulAction.compHom _ (j.comp φ)
   exact gq_index φ (fun _ _ => rfl) H₀ h0 k hn hk hS hw
 
 end UpperTheory.V.Z.Sym.Tf

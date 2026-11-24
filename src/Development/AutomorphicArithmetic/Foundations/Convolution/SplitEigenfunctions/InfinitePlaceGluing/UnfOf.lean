@@ -145,10 +145,10 @@ theorem UpperTheory.integral_tsum_ideleCovering_eq_const_mul :
         ∫ t : ℝ, ∫ u, ∫ p, ∑' α : ℚˣ, H (Un.cov t u α * (p.1 * p.1)⁻¹, p) ∂((ideleMeasure ℚ).prod κ) ∂U.υ =
           (c : ℂ) * ∫ q, H q ∂((ideleMeasure ℚ).prod ((ideleMeasure ℚ).prod κ)) := by
   intro U c hc κ _ H hH hI
-  haveI := U.prob
-  letI : MeasurableSpace ℚˣ := ⊤
-  haveI : MeasurableSingletonClass ℚˣ := ⟨fun _ => trivial⟩
-  haveI : Countable ℚˣ := Units.val_injective.countable
+  have := U.prob
+  let : MeasurableSpace ℚˣ := ⊤
+  have : MeasurableSingletonClass ℚˣ := ⟨fun _ => trivial⟩
+  have : Countable ℚˣ := Units.val_injective.countable
   have hiy : Measurable (fun t : ℝ => (iy (Real.exp t) : IdeleGroup ℚ)) := by
     have h : Continuous (fun t : ℝ => (iy (Real.exp t) : IdeleGroup ℚ)) := UpperTheory.realIdele_mul_abs_continuous_and_unit_abs_eq_one.2.2.1
     exact h.measurable
@@ -195,8 +195,8 @@ theorem UpperTheory.integral_unfoldedIntegrand_eq_zetaIntegral :
         Integrable (Un.Hh D χ φ Φ s) ((ideleMeasure ℚ).prod ((ideleMeasure ℚ).prod M₀.κ)) →
         ∫ q, Un.Hh D χ φ Φ s q ∂((ideleMeasure ℚ).prod ((ideleMeasure ℚ).prod M₀.κ)) = Zu D M₀ χ φ Φ s := by
   intro E _ _ D χ φ M₀ Φ s h
-  haveI := M₀.prob
-  haveI : SFinite (ideleMeasure ℚ) := inferInstance
+  have := M₀.prob
+  have : SFinite (ideleMeasure ℚ) := inferInstance
   exact fub3 (ideleMeasure ℚ) (ideleMeasure ℚ) M₀.κ
     (fun y k => Wo D φ (em E (aE y * gl k)) * ((χ.1 y : ℂˣ) : ℂ) * ((ab y : ℝ) : ℂ) ^ (s - 1))
     (fun z k => (Φ fun j => ((z : (A ℚ)ˣ) : A ℚ) * row k j) * ((ab z : ℝ) : ℂ) ^ (2 * s)) h
@@ -360,7 +360,7 @@ private theorem ker_psi (x : A ℚ) : (∀ a : ℚ, ψ (rt a * x) = 1) ↔ x ∈
 
 private theorem eq_zero_of_coeff (Φ : A ℚ → ℂ) (hc : Continuous Φ) (hp : ∀ (k : ℚ) x, Φ (rt k + x) = Φ x)
     (h0 : ∀ a : ℚ, ∫ v in fundamentalSet ℚ, ψ (rt a * v) * Φ v ∂(adeleMeasure ℚ) = 0) : Φ = 0 := by
-  haveI := discreteTopology_principalSubgroup ℚ
+  have := discreteTopology_principalSubgroup ℚ
   obtain ⟨C, hC, hs⟩ := Pp.exists_cpt (F := ℚ)
   have hcov : ∀ x : A ℚ, ∃ γ ∈ AdeleRing.principalSubgroup (𝓞 ℚ) ℚ, γ + x ∈ C := by
     intro x
@@ -439,7 +439,7 @@ private theorem inv_of_summable (f : A ℚ → ℂ) (hc : Continuous f) (hp : �
       by_cases h : α = β
       · subst h
         simp
-      · rw [if_neg h, if_neg (sub_ne_zero.2 (Ne.symm h)), mul_zero]
+      · rw [ite_eq_right h, ite_eq_right (sub_ne_zero.2 (Ne.symm h)), mul_zero]
     simp only [e2] at hsum
     exact hsum.unique (hasSum_ite_eq β (c β))
   have hz : (fun v => f v - G v) = 0 := by
@@ -711,7 +711,7 @@ private theorem modid (t r : ℝ) (hr : 0 < r) (s : ℂ) :
       ((Real.exp t * Real.exp t * (r⁻¹ * r⁻¹) : ℝ) : ℂ) ^ (s - 1) * (r : ℂ) ^ (2 * s) := by
   obtain ⟨L, rfl⟩ : ∃ L, r = Real.exp L := ⟨Real.log r, (Real.exp_log hr).symm⟩
   have h1 : (Real.exp t * (Real.exp L)⁻¹)⁻¹ ^ 2 = Real.exp (2 * L - 2 * t) := by
-    rw [← Real.exp_neg, ← Real.exp_add, ← Real.exp_neg, ← Real.exp_nat_mul]
+    rw [← Real.exp_neg, ← Real.exp_add, ← Real.exp_neg, ← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -888,7 +888,7 @@ theorem UpperTheory.measurable_whittaker_idele_diagTorus_mul :
     M.continuous_gl.comp (M.continuous_nU.comp
       ((AdeleBaseChange.continuous_adeleMap.comp (continuous_apply 0)).add
         ((AdeleBaseChange.continuous_adeleMap.comp (continuous_apply 1)).mul continuous_const)))
-  have hψ : Continuous (ψ (F := ℚ)) := continuous_subtype_val.comp continuous_adelicChar
+  have hψ : Continuous (ψ (F := ℚ)) := continuous_subtypeVal.comp continuous_adelicChar
   have h2 : Continuous fun q : (IdeleGroup ℚ × G1 ℚ) × (Fin 2 → A ℚ) => φ (nE D q.2 * em E (aE q.1.1 * gl q.1.2)) * ψ (q.2 1) :=
     (h.cont.comp ((hn.comp continuous_snd).mul (h1.comp continuous_fst))).mul
       (hψ.comp ((continuous_apply 1).comp continuous_snd))
@@ -930,7 +930,7 @@ theorem UpperTheory.whittaker_lintegral_abs_pow_bounded_on_maximalCompact :
   rw [← map_mul] at hb
   have hab : 0 ≤ ab y ^ x := Real.rpow_nonneg (IdeleGroup.ideleModule ℚ y).2.le x
   by_cases hy : (y : A ℚ).2 ∈ K
-  · rw [if_pos hy, ← ENNReal.ofReal_mul (abs_nonneg _), ← ofReal_norm_eq_enorm,
+  · rw [ite_eq_left hy, ← ENNReal.ofReal_mul (abs_nonneg _), ← ofReal_norm,
       ← ENNReal.ofReal_mul (norm_nonneg _)]
     refine ENNReal.ofReal_le_ofReal ?_
     rw [← mul_assoc]
@@ -939,7 +939,7 @@ theorem UpperTheory.whittaker_lintegral_abs_pow_bounded_on_maximalCompact :
   · have h0 : Wo D φ (em E (aE y * gl k)) = 0 := by
       by_contra h
       exact hy (hb.2 h)
-    rw [h0, enorm_zero, zero_mul]
+    rw [h0, eNorm_zero, zero_mul]
     exact bot_le
 end -- clump:auto
 end -- clump:auto
@@ -960,7 +960,7 @@ theorem UpperTheory.unfoldedIntegrand_measurable_integrable_of_re_gt_four :
     ∀ (E : Type) [Field E] [NumberField E] (D : Dat ℚ E) (ω χ : HChar ℚ) (φ : GL (Fin 2) (A E) → ℂ), admitted D ω φ → Unit1 ω → (∀ a, (χ.1 a * ω.1 a) ^ 2 = 1) → ∀ (M₀ : Meas ℚ), ∀ Φ ∈ schwartzBruhatPi (K := ℚ) (ι := Fin 2), ∀ s : ℂ, 4 < s.re →
         Measurable (Un.Hh D χ φ Φ s) ∧ Integrable (Un.Hh D χ φ Φ s) ((ideleMeasure ℚ).prod ((ideleMeasure ℚ).prod M₀.κ)) := by
   intro E _ _ D ω χ φ hA hU hχ M₀ Φ hΦ s hs
-  haveI := M₀.prob
+  have := M₀.prob
   have hχn : ∀ a, ‖((χ.1 a : ℂˣ) : ℂ)‖ = 1 := by
     intro a
     have h := congrArg (fun u : ℂˣ => ‖(u : ℂ)‖) (hχ a)
@@ -995,13 +995,13 @@ theorem UpperTheory.unfoldedIntegrand_measurable_integrable_of_re_gt_four :
     ‖Wo D φ (em E (aE p.1 * gl p.2))‖ₑ * ENNReal.ofReal (ab p.1 ^ (s.re - 1))
   let Bb : IdeleGroup ℚ × G1 ℚ → ℝ≥0∞ := fun p =>
     ‖Φ fun j => ((p.1 : (A ℚ)ˣ) : A ℚ) * row p.2 j‖ₑ * ENNReal.ofReal (ab p.1 ^ (2 * s.re))
-  have hAm : Measurable Aa := hW.enorm.mul ((hrp _).comp measurable_fst)
-  have hBm : Measurable Bb := hΦm.enorm.mul ((hrp _).comp measurable_fst)
+  have hAm : Measurable Aa := hW.eNorm.mul ((hrp _).comp measurable_fst)
+  have hBm : Measurable Bb := hΦm.eNorm.mul ((hrp _).comp measurable_fst)
   have hnorm : ∀ q, ‖Un.Hh D χ φ Φ s q‖ₑ = Aa (q.1, q.2.2) * Bb q.2 := by
     intro q
     have e1 : (s - 1).re = s.re - 1 := by simp
     have e2 : (2 * s).re = 2 * s.re := by simp
-    simp only [Un.Hh, enorm_mul, hχe, mul_one, hcn, e1, e2, Aa, Bb]
+    simp only [Un.Hh, eNorm_mul, hχe, mul_one, hcn, e1, e2, Aa, Bb]
   have hFm : Measurable fun q : IdeleGroup ℚ × IdeleGroup ℚ × G1 ℚ => Aa (q.1, q.2.2) * Bb q.2 :=
     (hAm.comp (measurable_fst.prodMk (measurable_snd.comp measurable_snd))).mul (hBm.comp measurable_snd)
   have hae : ∀ᵐ k ∂M₀.κ, k ∈ KK ℚ := by
@@ -1042,8 +1042,8 @@ open UpperTheory.ConvolutionTheory.RankTwoDescent
 theorem UpperTheory.ConvolutionTheory.RankTwoDescent.unf_of :
     Unf := by
   intro E _ _ _ D P ω χ hC hω hχ M U
-  haveI := M.prob
-  haveI := U.prob
+  have := M.prob
+  have := U.prob
   obtain ⟨c, hc0, hc⟩ := UpperTheory.ideleCovering_lintegral_eq_const_mul_haar U
   refine ⟨(c : ℂ), by exact_mod_cast hc0, ?_⟩
   intro φ hA Φ hΦ s hs

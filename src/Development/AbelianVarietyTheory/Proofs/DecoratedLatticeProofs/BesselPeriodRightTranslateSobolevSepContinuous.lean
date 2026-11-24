@@ -122,7 +122,7 @@ theorem per_add_bound {ρ : ℕ} (B : BesLev D ρ) {ψ : AddChar (AF D.host.F) �
   have hμ : B.vA.μ B.vA.𝓕 < ⊤ := GlobalTheory.Unf.vol_fund_lt_top B.cpt B.vA
   have hν1 : B.vN.ν B.vN.𝓝 = 1 := B.vN.unit.2.2
   have hν : B.vN.ν B.vN.𝓝 < ⊤ := by rw [hν1]; exact ENNReal.one_lt_top
-  haveI : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 hν.ne
+  have : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 hν.ne
   have hψc : Continuous ψ := hψ.1.1
   have hemb := GlobalTheory.Unf.BesSemi.continuous_embA B.d B.o
   have hpsi := GlobalTheory.CharLaws.continuous_psiBes ψ B.d hψc 1 (vecB B.o B.ζ)
@@ -143,8 +143,8 @@ theorem per_add_bound {ρ : ℕ} (B : BesLev D ρ) {ψ : AddChar (AF D.host.F) �
   have hcont : ∀ f, f ∈ contLeft B.V → ∀ h, Continuous (GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h) := by
     intro f hf h
     change Continuous fun n : flagN B.d => φ h * f (n.1 * embA B.d B.o h) * star (psiBes ψ B.d 1 (vecB B.o B.ζ) n.1)
-    exact (continuous_const.mul (hf.1.comp (continuous_subtype_val.mul continuous_const))).mul
-      (continuous_star.comp (hpsi.comp continuous_subtype_val))
+    exact (continuous_const.mul (hf.1.comp (continuous_subtypeVal.mul continuous_const))).mul
+      (continuous_star.comp (hpsi.comp continuous_subtypeVal))
   have hcontH : ∀ f, f ∈ contLeft B.V → ∀ n : flagN B.d,
       Continuous fun h => GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h n := by
     intro f hf n
@@ -164,7 +164,7 @@ theorem per_add_bound {ρ : ℕ} (B : BesLev D ρ) {ψ : AddChar (AF D.host.F) �
       Continuous fun h => ∫ n in B.vN.𝓝, GlobalTheory.MixPer.besFun ψ 1 B.d B.o B.ζ φ f h n ∂B.vN.ν := by
     intro f hf
     obtain ⟨K, hK⟩ := hK f hf
-    haveI := GlobalTheory.Unf.EvalCont.firstCountable_GA B.A
+    have := GlobalTheory.Unf.EvalCont.firstCountable_GA B.A
     exact continuous_of_dominated (bound := fun _ => Cφ * K)
       (fun h => (hcont f hf h).aestronglyMeasurable)
       (fun h => Filter.Eventually.of_forall fun n => hbd f hf K hK h n) (integrable_const _)
@@ -231,7 +231,7 @@ theorem mult_bound (θ : InfFam D) (hθ : IsInfFam θ) {V : HSp D} {S : D.what�
         obtain ⟨l, _, rfl⟩ := List.mem_map.1 hx; exact norm_nonneg _
       have hs₂ : 0 ≤ s₂ := List.sum_nonneg fun x hx => by
         obtain ⟨l, _, rfl⟩ := List.mem_map.1 hx; exact norm_nonneg _
-      rw [List.map_append, List.sum_append, MultilinearMap.add_apply, Pi.add_apply]
+      rw [List.map_append, List.sum_append, add_apply, Pi.add_apply]
       calc _ ≤ ‖T₁ (Function.update v τ w) g‖ + ‖T₂ (Function.update v τ w) g‖ := norm_add_le _ _
         _ ≤ C₁ * s₁ + C₂ * s₂ := add_le_add (hb₁ w g hg) (hb₂ w g hg)
         _ ≤ max C₁ 0 * s₁ + max C₂ 0 * s₂ :=
@@ -242,7 +242,7 @@ theorem mult_bound (θ : InfFam D) (hθ : IsInfFam θ) {V : HSp D} {S : D.what�
   | smul c T _ h =>
     obtain ⟨L, C, hL, hb⟩ := h
     refine ⟨L, ‖c‖ * C, hL, fun w g hg => ?_⟩
-    rw [MultilinearMap.smul_apply, Pi.smul_apply, norm_smul, mul_assoc]
+    rw [smul_apply, Pi.smul_apply, norm_smul, mul_assoc]
     exact mul_le_mul_of_nonneg_left (hb w g hg) (norm_nonneg _)
 
 end GlobalTheory.Core.Mi.SepPer

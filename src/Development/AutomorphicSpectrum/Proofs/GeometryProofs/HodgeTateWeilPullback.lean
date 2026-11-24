@@ -463,7 +463,7 @@ theorem exists_units_map_eq {Ω Ω' : Type} [Field Ω] [Field Ω'] (i : Ω →+*
     ∃ u : Ωˣ, Units.map (i : Ω →* Ω') u = v := by
   classical
   set m := Nat.card (rootsOfUnity n Ω) with hm
-  haveI : NeZero m := ⟨Nat.card_pos.ne'⟩
+  have : NeZero m := ⟨Nat.card_pos.ne'⟩
   have hinj : Function.Injective (Units.map (i : Ω →* Ω')) :=
     Units.map_injective i.injective
   let f : rootsOfUnity n Ω → rootsOfUnity m Ω' := fun u =>
@@ -508,7 +508,7 @@ theorem chars_descend : ∀ (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+*
   (∀ y : C, y ^ n = 1 → ∃ y' : A, y' ^ n = 1 ∧ ∀ g g', g ^ n = 1 → g' ^ n = 1 → rel g' g → (e' y' g' : Ω') = i (e y g)) := by
   classical
   intro Ω Ω' _ _ i C A _ _ rel n hn hCA hAC hmul hinjA hinjC e e' emul eperf enondeg e'mul e'perf
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have hinj : Function.Injective (Units.map (i : Ω →* Ω')) :=
     Units.map_injective i.injective
   have hrel11 : rel 1 1 := by
@@ -561,7 +561,7 @@ theorem chars_descend : ∀ (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+*
         Units.map (i : Ω →* Ω') (χ c) = e' y' a := by
       intro c hc a ha hac
       obtain ⟨a₁, -, hrel, hu⟩ := (hpart c hc).choose_spec
-      have : χ c = (hpart c hc).choose := dif_pos hc
+      have : χ c = (hpart c hc).choose := dite_eq_left hc
       rw [this, hu, hinjA _ _ _ hrel hac]
     obtain ⟨y, hy, hye⟩ := eperf χ (by
       intro g g' hg hg'
@@ -583,7 +583,7 @@ theorem chars_descend : ∀ (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+*
     have hχ : ∀ a : A, a ^ n = 1 → ∀ c : C, rel a c →
         χ a = Units.map (i : Ω →* Ω') (e y c) := by
       intro a ha c hac
-      have : χ a = Units.map (i : Ω →* Ω') (e y (hpart a ha).choose) := dif_pos ha
+      have : χ a = Units.map (i : Ω →* Ω') (e y (hpart a ha).choose) := dite_eq_left ha
       rw [this, hinjC _ _ _ (hpart a ha).choose_spec.2 hac]
     obtain ⟨y', hy', hye⟩ := e'perf χ (by
       intro g g' hg hg'
@@ -796,8 +796,8 @@ theorem ht_pull {X X' : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω'] {ξ :
 
 theorem main : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X), IsCptGen ξ → Flat.NormalCpt ξ → ∀ (G : Over X) [GrpObj G], IsSemiAbelian G → ∀ (L : LB G.left) (n : ℕ), 1 ≤ n → FullTorsion G ξ n → ∀ e, GenWeil G L ξ n e → ∀ (E : Type) [AddCommGroup E] [Module Ω E] (M : LieModel G ξ E) (X' : Scheme.{0}) [IsLocallyNoetherian X'] (Ω' : Type) [Field Ω'] (ξ' : Spec (CommRingCat.of Ω') ⟶ X'), IsCptGen ξ' → Flat.NormalCpt ξ' → ∀ (f : X' ⟶ X) (i : Ω →+* Ω'), GlobalTheory.CompanionTheory.Ar.Dominates ξ' ξ f i → ∀ (G' : Over X') [GrpObj G'] [IsCommMonObj G'] (φ : G'.left ⟶ G.left), IsGrpPullback G' G f φ → ∀ (L' : LB G'.left) (e' : (Over.mk ξ' ⟶ G') → (Over.mk ξ' ⟶ G') → Ω'ˣ), GenWeil G' L' ξ' n e' → ∀ (E' : Type) [AddCommGroup E'] [Module Ω' E'] (M' : LieModel G' ξ' E') (j : E →+ E') (jd : Module.Dual Ω E →+ Module.Dual Ω' E'), (∀ v, (M'.pt (j v)).left ≫ φ = spMap (dualMap i) ≫ (M.pt v).left) → (∀ w v, jd w (j v) = i (w v)) → M'.htOm L' n = (M.htOm L n).pull ξ' f jd ∧ M'.omLat = M.omLat.pull ξ' f jd := by
   intro X _ Ω _ _ ξ hξ hN G _ hG L n hn hF e he E _ _ M X' _ Ω' _ ξ' hξ' hN' f i hd G' _ _ φ hp L' e' he' E' _ _ M' j jd hj hjd
-  haveI : IsCommMonObj G := hG.comm
-  haveI : CharZero Ω' := charZero_of_injective_ringHom i.injective
+  have : IsCommMonObj G := hG.comm
+  have : CharZero Ω' := charZero_of_injective_ringHom i.injective
   have hs : Smooth G.hom := hG.smooth
   have hG' : IsSemiAbelian G' := _root_.GlobalTheory.CompanionTheory.Ar.isSemiAbelian_of_isGrpPullback X X' G G' f φ hp hG
   obtain ⟨hF', t1, t2, tm, tu1, tu2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorsPull.torsion_of_pullback X X' Ω Ω' ξ ξ' f i hd G G' φ hp n hF

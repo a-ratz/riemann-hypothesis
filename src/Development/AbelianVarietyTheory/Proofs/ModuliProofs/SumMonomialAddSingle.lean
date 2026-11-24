@@ -173,7 +173,7 @@ theorem exists_antidifference (Φ : MvPolynomial (Fin r) ℚ) (k : Fin r) :
       Polynomial.aeval (X k : MvPolynomial (Fin r) ℚ) (Polynomial.bernoulli (d k + 1)),
       fun x => ?_⟩
     have hd : monomial d c = monomial (d.erase k) c * (X k : MvPolynomial (Fin r) ℚ) ^ d k := by
-      rw [X_pow_eq_monomial, monomial_mul, mul_one, Finsupp.erase_add_single]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, mul_one, Finsupp.erase_add_single]
     rw [map_mul, map_mul, eval_monomial_erase, eval_polynomial_aeval_X, eval_polynomial_aeval_X,
       Function.update_self, add_comm (x k) 1, Polynomial.bernoulli_eval_one_add, hd, map_mul,
       eval_monomial, eval_monomial]
@@ -290,8 +290,8 @@ theorem component_X_mul (i : σ) (n : M) (G : MvPolynomial σ K) :
     have hw : Finsupp.weight w d = Finsupp.weight w (d - Finsupp.single i 1) + w i := by
       conv_lhs => rw [hd]
       rw [map_add (f := _), Finsupp.weight_single, one_smul]
-    simp only [hi, if_true, hw, add_left_inj]
-  · simp only [hi, if_false, ite_self]
+    simp only [hi, ite_true, hw, add_left_inj]
+  · simp only [hi, ite_false, ite_self]
 
 theorem component_mem_span_X (s : Set σ) (n : M) {G : MvPolynomial σ K}
     (hG : G ∈ Ideal.span (X '' s : Set (MvPolynomial σ K))) :
@@ -348,7 +348,7 @@ theorem finrank_sup_add_finrank_colonX {I : Ideal (MvPolynomial σ K)}
     intro G hG
     rw [add_comm]
     exact (isWeightedHomogeneous_X K w i).mul hG
-  haveI : Module.Finite K ↥(weightedHomogeneousSubmodule K w (n + w i) ⊓ I.restrictScalars K) :=
+  have : Module.Finite K ↥(weightedHomogeneousSubmodule K w (n + w i) ⊓ I.restrictScalars K) :=
     Submodule.finiteDimensional_of_le inf_le_left
   have h := Submodule.finrank_sup_add_finrank_inf_eq
     (weightedHomogeneousSubmodule K w (n + w i) ⊓ I.restrictScalars K)
@@ -418,7 +418,7 @@ theorem finite_colourPiece [Finite σ] (n : Fin r → ℕ) :
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [this]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨d, hF (mem_support_iff.1 hd), rfl⟩)
-  haveI := FiniteDimensional.span_of_finite K
+  have := FiniteDimensional.span_of_finite K
     (hfin.image (fun d => (monomial d (1 : K) : MvPolynomial σ K)))
   exact Submodule.finiteDimensional_of_le hle
 
@@ -467,8 +467,8 @@ theorem hilbertFun_add {K σ : Type} [Field K] [Finite σ] {r : ℕ} (col : σ �
     hilbertFun col I (n + Pi.single (col i) 1) =
       hilbertFun col (colonX I i) n +
         hilbertFun col (I ⊔ Ideal.span {X i}) (n + Pi.single (col i) 1) := by
-  haveI := finite_colourPiece (K := K) col n
-  haveI := finite_colourPiece (K := K) col (n + Pi.single (col i) 1)
+  have := finite_colourPiece (K := K) col n
+  have := finite_colourPiece (K := K) col (n + Pi.single (col i) 1)
   have h := finrank_sup_add_finrank_colonX (fun i => (Pi.single (col i) 1 : Fin r → ℕ)) hI i n
   have h' := congrArg (Nat.cast : ℕ → ℚ) h
   rw [Nat.cast_add, Nat.cast_add] at h'
@@ -599,7 +599,7 @@ theorem exists_homogeneous_core {K σ M R : Type} [CommRing K] [AddCommMonoid M]
     (ev : MvPolynomial σ K →+* R) : ∃ I : Ideal (MvPolynomial σ K),
       (∀ F ∈ I, ∀ n, MvPolynomial.weightedHomogeneousComponent w n F ∈ I) ∧
       ∀ n (F : MvPolynomial σ K), F.IsWeightedHomogeneous w n → (F ∈ I ↔ ev F = 0) := by
-  letI := MvPolynomial.weightedGradedAlgebra K w
+  let := MvPolynomial.weightedGradedAlgebra K w
   let J := (RingHom.ker ev).homogeneousCore (MvPolynomial.weightedHomogeneousSubmodule K w)
   refine ⟨J.toIdeal, fun F hF n => ?_, fun n F hF => ⟨fun h => Ideal.toIdeal_homogeneousCore_le _ _ h,
     fun h => Ideal.mem_homogeneousCore_of_homogeneous_of_mem ⟨n, hF⟩ h⟩⟩
@@ -898,7 +898,7 @@ theorem finrank_eq_of_h0Is {p : X ⟶ Sp K} {g : ∀ i j, Γ(X, U i ⊓ U j)ˣ} 
     (h₂ : ∀ f, IsSec g f → ∃ F ∈ W, MvPolynomial.eval₂Hom (cstPi p U) v F = f)
     (hI : ∀ F ∈ W, F ∈ I ↔ MvPolynomial.eval₂Hom (cstPi p U) v F = 0) :
     Module.finrank K W = d + Module.finrank K ↥(W ⊓ I) := by
-  letI : Algebra K (∀ j, Γ(X, U j)) := (cstPi p U).toAlgebra
+  let : Algebra K (∀ j, Γ(X, U j)) := (cstPi p U).toAlgebra
   obtain ⟨s, hs⟩ := h
   let b : Fin d → ∀ j, Γ(X, U j) := fun i => (s i).f
   have hb : ∀ (a : Fin d → K) j, (∑ i, a i • b i) j = ∑ i, constFn p (U j) (a i) * b i j := fun a j => by
@@ -1224,7 +1224,7 @@ theorem exists_poly
         nsmul_eq_mul, he', Pi.mul_apply, Pi.natCast_apply]
       split_ifs <;> ring
     rw [Pi.add_apply, Finset.sum_apply, Finset.sum_congr rfl fun i _ => s i, Finset.sum_add_distrib,
-      ← Finset.mul_sum, Finset.sum_ite_eq, if_pos (Finset.mem_univ _)]
+      ← Finset.mul_sum, Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _)]
     simp only [m, η, Option.elim, Pi.smul_apply, smul_eq_mul, nsmul_eq_mul, Pi.mul_apply, Pi.natCast_apply]
     push_cast
     ring
@@ -1464,7 +1464,7 @@ theorem exists_poly_extension (g : ℕ) (A : Polynomial ℤ → Prop) (V : Polyn
 
 theorem relAmple_of_cls_eq {K : Type} [Field K] (P : Out.PolAV (Sp K)) {M N : LB P.A.left} (hM : M.IsLB) (hN : N.IsLB)
     (e : CechPic.cls M hM = CechPic.cls N hN) (h : Out.RelAmple P.A M) : Out.RelAmple P.A N := by
-  haveI : IsProper P.A.hom := P.isAb.proper
+  have : IsProper P.A.hom := P.isAb.proper
   rw [relAmple_iff_isAmpleLB_of_isAffine P.A hM] at h
   rw [relAmple_iff_isAmpleLB_of_isAffine P.A hN]
   exact h.of_lbIso hN ((CechPic.cls_eq_iff hN hM).1 e.symm)
@@ -1522,9 +1522,9 @@ theorem exists_vol_poly : Out.Laws → Out.Laws2 → ∀ (K : Type) [Field K] [I
   refine ⟨D, hD, hD', fun F => (hA F).mono fun t ht => ⟨ht, ?_⟩⟩
   have hf := (GlobalTheory.FormFinite.isFinite_and_surjective_of_formIs h₁ h₂ K P _ _ (hB _) ht (hform _)).1
   rw [mul_comm, emul, Over.comp_left] at hf
-  haveI : IsProper P.A.hom := P.isAb.proper
-  haveI : IsSeparated ((ev 2).left ≫ P.A.hom) := by rw [Over.w]; infer_instance
-  haveI : IsSeparated (ev 2).left := IsSeparated.of_comp _ P.A.hom
+  have : IsProper P.A.hom := P.isAb.proper
+  have : IsSeparated ((ev 2).left ≫ P.A.hom) := by rw [Over.w]; infer_instance
+  have : IsSeparated (ev 2).left := IsSeparated.of_comp _ P.A.hom
   exact IsFinite.of_comp _ (ev 2).left
 
 end GlobalTheory.VolPoly

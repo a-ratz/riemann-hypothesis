@@ -61,8 +61,8 @@ namespace GlobalTheory.AHWeil
 
 theorem eq_top_of_add_discrete {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology Λ]
     (W : Submodule ℂ (Fin g → ℂ)) (h : ∀ z : Fin g → ℂ, ∃ l : Λ, z - (l : Fin g → ℂ) ∈ W) : W = ⊤ := by
-  haveI : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  have hW : IsClosed (W : Set (Fin g → ℂ)) := W.closed_of_finiteDimensional
+  have : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have hW : IsClosed (W : Set (Fin g → ℂ)) := W.isClosed_of_finiteDimensional
   obtain ⟨l, hl⟩ := nonempty_interior_of_iUnion_of_closed
     (f := fun l : Λ => (Homeomorph.subRight (l : Fin g → ℂ)) ⁻¹' (W : Set (Fin g → ℂ)))
     (fun l => hW.preimage (Homeomorph.continuous _))
@@ -73,8 +73,8 @@ theorem eq_top_of_add_discrete {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ)) [D
 
 theorem dim_eq {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g g' : ℕ} (u : HolUnif A L g) (u' : HolUnif A L g')
     (F : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)) (hF : ∀ z, u'.ex (F z) = u.ex z) : g = g' := by
-  haveI := u.discrete
-  haveI := u'.discrete
+  have := u.discrete
+  have := u'.discrete
   have hinj := AnyUnif.injective_of_ker_le_discrete u.Λ F fun z hz => by
     rw [← u.ker, ← hF, hz]
     exact (u'.ker 0).2 u'.Λ.zero_mem

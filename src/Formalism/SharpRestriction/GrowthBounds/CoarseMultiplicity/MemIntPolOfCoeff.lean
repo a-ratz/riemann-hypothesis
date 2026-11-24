@@ -188,7 +188,7 @@ private theorem exists_algebraMap_eq_of_w_pow_padicVal_mul {O : Type} [CommRing 
     rintro rfl
     exact hndvd (dvd_zero p)
   have hv : padicValNat p N = e := by
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     rw [hN', (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (pow_ne_zero _ hp.ne_zero) hN'0, (show padicValNat p (p ^ e) = e from by simpa only [← Nat.padicValNat_def] using Nat.multiplicity_prime_pow (p := p) (n := e)),
       (show padicValNat p N' = 0 from by simpa only [← Nat.padicValNat_def] using multiplicity_eq_zero_of_not_dvd hndvd), add_zero]
   rw [hv] at hz
@@ -281,7 +281,7 @@ theorem blockFormAt_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cm Cc H : ℝ} (hCm : 17 ≤
         rw [← hwsq]
         exact pow_ne_zero 2 hw0
       complete := hSet.complete_O }
-  haveI : CharZero (KK O) := GLWeightTheory.dvr_fraction_field_char_zero hpP DS
+  have : CharZero (KK O) := GLWeightTheory.dvr_fraction_field_char_zero hpP DS
   obtain ⟨κ, T, q, hκ0, hκv, hT, hfac⟩ := hF X O w hw hwsq hD1 hH hC j b hK
   set v := padicValNat X.p (Nblk C0 CE1 CE2 X j b) with hv
   set sc : KK O := algebraMap O (KK O) (w ^ v) with hsc_def

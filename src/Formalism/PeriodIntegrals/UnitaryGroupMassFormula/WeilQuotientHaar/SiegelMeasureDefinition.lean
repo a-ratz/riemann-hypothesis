@@ -126,11 +126,11 @@ lemma map_inv_eq_self (K : Set G) (hc : IsClosed K) (hK : IsGrp K) (μ : Measure
     have h2 := hinv2
     rw [hceq, Measure.map_smul c hmeas.aemeasurable, hceq, smul_smul] at h2
     exact h2.symm
-  haveI := hsf
+  have := hsf
   obtain ⟨A, hA0, hAt⟩ := exists_pos_fin μ hne
   have h3 : μ A = (c * c) * μ A := by
     have h4 := congrArg (fun m : Measure G => m A) hμc
-    simpa only [Measure.smul_apply, smul_eq_mul] using h4
+    simpa only [smul_apply, smul_eq_mul] using h4
   have hcc : c * c = 1 := eq_one_of_eq_mul hA0 hAt h3
   rw [hceq, eq_one_of_mul_self hcc, one_smul]
 
@@ -170,7 +170,7 @@ lemma map_mul_right_eq_self (K : Set G) (hc : IsClosed K) (hK : IsGrp K) (μ : M
     exact measure_union_null h0 hKc
   have h1 : μ K = c * μ K := by
     have h2 := congrArg (fun m : Measure G => m K) hceq
-    simp only [Measure.smul_apply, smul_eq_mul] at h2
+    simp only [smul_apply, smul_eq_mul] at h2
     rwa [Measure.map_apply hmeas hKm, hpre] at h2
   have hc1 : c = 1 := eq_one_of_eq_mul hμK hfin h1
   rw [hceq, hc1, one_smul]

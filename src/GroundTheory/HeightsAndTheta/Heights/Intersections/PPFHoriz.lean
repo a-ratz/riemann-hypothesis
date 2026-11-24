@@ -76,8 +76,8 @@ theorem genMap_injective (G : GenFibre v P') : Function.Injective (genMap G) := 
 
 theorem isFractionRing_genMap (G : GenFibre v P') :
     @IsFractionRing (MRing ι ⧸ imageZ v P') _ G.Φ _ (genMap G).toAlgebra := by
-  letI := (genMap G).toAlgebra
-  haveI : FaithfulSMul (MRing ι ⧸ imageZ v P') G.Φ :=
+  let := (genMap G).toAlgebra
+  have : FaithfulSMul (MRing ι ⧸ imageZ v P') G.Φ :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (genMap_injective G)
   refine IsFractionRing.of_field _ _ fun z => ?_
   obtain ⟨f, g, -, rfl⟩ := G.gen z
@@ -103,8 +103,8 @@ theorem genAlg_alt (G : GenFibre v P') (W : Ideal (MRing ι')) [W.IsPrime] (hW :
     (p : Σ k, ι k) :
     genAlg G W hW (G.x p) =
       algebraMap (MRing ι' ⧸ W) (FractionRing (MRing ι' ⧸ W)) (Ideal.Quotient.mk W (X (v p))) := by
-  letI := (genMap G).toAlgebra
-  haveI := isFractionRing_genMap G
+  let := (genMap G).toAlgebra
+  have := isFractionRing_genMap G
   have hx : G.x p = algebraMap (MRing ι ⧸ imageZ v P') G.Φ (Ideal.Quotient.mk _ (X p)) := by
     show G.x p = genMap G (Ideal.Quotient.mk _ (X p))
     rw [genMap_mk, aeval_X]
@@ -213,7 +213,7 @@ theorem aeval_baseSubst (hκv : IsBlockMap κ v) (G : GenFibre v P') (f : MRing 
     letI := (genAlg G W hW).toAlgebra
     aeval (fun q : Σ k : FibreBlock κ, ι' k.1 => xW W ⟨q.1.1, q.2⟩) (baseSubst κ G f) =
       aeval (R := ℤ) (xW W) f := by
-  letI := (genAlg G W hW).toAlgebra
+  let := (genAlg G W hW).toAlgebra
   have e : (aeval (fun q : Σ k : FibreBlock κ, ι' k.1 => xW W ⟨q.1.1, q.2⟩) :
         MRingOver G.Φ (fibreIdx ι' κ) →ₐ[G.Φ] FractionRing (MRing ι' ⧸ W)).toRingHom.comp (baseSubst κ G) =
       (aeval (R := ℤ) (xW W)).toRingHom := by
@@ -232,7 +232,7 @@ theorem aeval_baseSubst (hκv : IsBlockMap κ v) (G : GenFibre v P') (f : MRing 
 
 theorem fibreIdeal_genFibreOf (hκv : IsBlockMap κ v) (G : GenFibre v P') :
     fibreIdeal κ (genFibreOf G W hW) = fibreOf κ G W := by
-  letI := (genAlg G W hW).toAlgebra
+  let := (genAlg G W hW).toAlgebra
   exact ker_eq_map (baseSubst κ G) (fun q : Σ k : FibreBlock κ, ι' k.1 => xW W ⟨q.1.1, q.2⟩)
     (aeval (R := ℤ) (xW W)).toRingHom W (ker_aeval_xW W) (aeval_baseSubst hW hκv G)
     (fun g => let ⟨_, F, hb, e⟩ := exists_clear hκv G g; ⟨_, hb, F, e⟩)
@@ -241,7 +241,7 @@ end PFHoriz
 
 theorem PFHoriz.proof : PFHoriz.Statement := by
   intro I r hPF K _ ι _ K' _ ι' _ κ v P' W d G J L L' N hκv hW hWP hP hJ hL hLL hN
-  haveI : W.IsPrime := hW.2.1.1
+  have : W.IsPrime := hW.2.1.1
   have h := hPF K ι K' ι' κ v W d (PFHoriz.genFibreOf G W hWP) J L L' N hκv hW (by rw [hWP]; exact hP)
     hJ hL hLL hN
   rw [PFHoriz.fibreIdeal_genFibreOf hWP hκv G, hWP] at h

@@ -88,8 +88,8 @@ theorem UpperTheory.Gal.crystallineComparison.detBasis_of :
   have htop : ⊤ ≤ Submodule.span C (Set.range ((↑) : t → W)) := by
     rw [Subtype.range_coe, hst, hspan]
   let b₀ : Basis t C W := Basis.mk hli htop
-  haveI : Finite t := Module.Finite.finite_basis b₀
-  haveI : Fintype t := Fintype.ofFinite t
+  have : Finite t := Module.Finite.finite_basis b₀
+  have : Fintype t := Fintype.ofFinite t
   have hcard : Fintype.card t = a := by
     rw [← hfin, Module.finrank_eq_card_basis b₀]
   let e : t ≃ Fin a := Fintype.equivFinOfCardEq hcard
@@ -202,14 +202,14 @@ theorem UpperTheory.Gal.crystallineComparison.detCommon_of :
   obtain ⟨L₂, c₂, hm₂, hp₂⟩ := hc
   have l₁ : L₁.1 ≤ (supExt L₁ L₂).1 := le_sup_left
   have l₂ : L₂.1 ≤ (supExt L₁ L₂).1 := le_sup_right
-  haveI := L₁.2
-  haveI := (supExt L₁ L₂).2
+  have := L₁.2
+  have := (supExt L₁ L₂).2
   have hs₁ : IsSst P (Bw.repE L₁ r₁) := GlobalTheory.CrysSst.isSst_of_isCrys P AI T (Bw.repE L₁ r₁) hc₁
   have hs := GlobalTheory.AboveL.RepConj.isSst_enlarge P Bw l₁ r₁ hs₁
   refine ⟨supExt L₁ L₂, mapRep (IntermediateField.inclusion l₁).toRingHom r₁,
     mapRep (IntermediateField.inclusion l₂).toRingHom c₂, hm₁.enlarge l₁, hm₂.enlarge l₂, hs, ?_,
     GlobalTheory.PstExt.isPst_enlarge P Bw l₂ c₂ hp₂⟩
-  haveI : FiniteDimensional ℚ_[l] (Fin a → ↥(supExt L₁ L₂).1) := Module.Finite.trans ↥(supExt L₁ L₂).1 _
+  have : FiniteDimensional ℚ_[l] (Fin a → ↥(supExt L₁ L₂).1) := Module.Finite.trans ↥(supExt L₁ L₂).1 _
   exact GlobalTheory.GalCut.IwaTwist.isPst_of_isSst P AI T _ hs
 end -- clump:auto
 end -- clump:auto
@@ -378,8 +378,8 @@ private theorem ringS' (hRing : RingS) (LL : FinExt l) :
       (∀ x : ↥LL.1, π (x ⊗ₜ[ℚ_[l]] (1 : Bst P)) = algebraMap ℂ S (ι (x : Om l))) ∧
       ∀ c : ↥(MaximalUnramifiedExtension l), π ((1 : ↥LL.1) ⊗ₜ[ℚ_[l]] algebraMap ↥(MaximalUnramifiedExtension l) (Bst P) c) =
         algebraMap ℂ S (ι (c : Om l)) := by
-  haveI : Nontrivial P.R.B := nontrivial_B P
-  haveI : Nontrivial (Bst P) := inferInstanceAs (Nontrivial (Polynomial P.R.B))
+  have : Nontrivial P.R.B := nontrivial_B P
+  have : Nontrivial (Bst P) := inferInstanceAs (Nontrivial (Polynomial P.R.B))
   have hz : ∀ z : ℚ_[l], (ι.toRingHom.comp (algebraMap ↥LL.1 (Om l))) (algebraMap ℚ_[l] ↥LL.1 z) =
       (urC ι) (algebraMap ℚ_[l] ↥(MaximalUnramifiedExtension l) z) := by
     intro z
@@ -440,8 +440,8 @@ theorem UpperTheory.Gal.crystallineComparison.detOne_of :
     CoFacts → RingS → DetCore → DetMem → WeilCo → SpanS → CoLift → DetE := by
   intro hCo hRing hCore hMem hWeil hSpan hLift l _ P AI hAI ι E Ω _ _ _ _ _ A w h O _ _ _ Bw hj a LL r c
     hdet hsst hr hc g hg
-  haveI := hr.finite
-  haveI := hc.finite
+  have := hr.finite
+  have := hc.finite
   obtain ⟨S, _, _, π, hS, hπL, hπU⟩ := ringS' P ι hRing LL
   refine (hLift l P ι Bw.Kw LL a (Bw.repE LL r) S π hπL hπU).elim ?_
   intro j hj1
@@ -485,7 +485,7 @@ namespace UpperTheory.Gal.crystallineComparison
 theorem detRingS_of :
     RingS := by
   intro F L U B C _ _ _ _ _ _ _ _ _ _ _ τL τU h
-  letI : Algebra U C := τU.toAlgebra
+  let : Algebra U C := τU.toAlgebra
   let S := TensorProduct U C B
   have hS : Nontrivial S :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_flat_right U C B τU.injective
@@ -497,7 +497,7 @@ theorem detRingS_of :
       rw [Algebra.smul_def, mul_one]
       rfl
     rw [e, TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
-  letI : Algebra F S := (ψ.comp (algebraMap F B)).toAlgebra
+  let : Algebra F S := (ψ.comp (algebraMap F B)).toAlgebra
   let φ : L →ₐ[F] S :=
     { (algebraMap C S).comp τL with
       commutes' := by
@@ -537,8 +537,8 @@ theorem UpperTheory.Gal.crystallineComparison.detSpan_of :
     CoFacts → SpanS := by
   intro hco l _ P AI hT K LL a ρ hρ S _ π
   obtain ⟨T⟩ := hT
-  haveI := LL.2
-  haveI : FiniteDimensional ℚ_[l] (Fin a → ↥LL.1) := Module.Finite.trans ↥LL.1 (Fin a → ↥LL.1)
+  have := LL.2
+  have : FiniteDimensional ℚ_[l] (Fin a → ↥LL.1) := Module.Finite.trans ↥LL.1 (Fin a → ↥LL.1)
   have honB : ∀ (f : End ℚ_[l] (Bst P)) (y : (Fin a → ↥LL.1) ⊗[ℚ_[l]] Bst P),
       onB P ℚ_[l] (Fin a → ↥LL.1) f y =
         AlgebraTensorModule.map (LinearMap.id : (Fin a → ↥LL.1) →ₗ[↥LL.1] (Fin a → ↥LL.1)) f y := by
@@ -647,9 +647,9 @@ private theorem letter_lift {LL U D N : Type} [Field LL] [Field U] [AddCommGroup
 theorem UpperTheory.Gal.crystallineComparison.detWdLift_of :
     WdLift := by
   intro l _ P ι K LL V _ _ _ _ ρ N _ _ κ hadd hsmul hmul
-  letI := algC ι LL
-  letI : Module ↥LL.1 N := Module.compHom N (algebraMap ↥LL.1 ℂ)
-  haveI : IsScalarTower ↥LL.1 ℂ N := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let := algC ι LL
+  let : Module ↥LL.1 N := Module.compHom N (algebraMap ↥LL.1 ℂ)
+  have : IsScalarTower ↥LL.1 ℂ N := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let κ' : ↥(Dpst P ρ) →ₗ[↥LL.1] N :=
     { toFun := κ
       map_add' := hadd
@@ -740,8 +740,8 @@ theorem detWD_of (hW : WdModel) (hC : CommonModel) (hE : DetE) : DetWD := by
   have k := hE l P AI hT ι E Ω A w h O Bw hj a LL r' c' hd hs p₁ p₂ g hg
   have e₁ := (hW l P ι E Ω A w h O Bw hj a r LL r' m₁ p₁ g).1
   have e₂ := (hW l P ι E Ω A w h O Bw hj 1 c LL c' m₂ p₂ g).1
-  haveI := p₁.finite
-  haveI := p₂.finite
+  have := p₁.finite
+  have := p₂.finite
   exact ((congrArg (fun p : Polynomial ℂ => p.roots.prod) e₁).trans ((roots_prod _).trans (k.trans (roots_prod _).symm))).trans
     (congrArg (fun p : Polynomial ℂ => p.roots.prod) e₂).symm
 

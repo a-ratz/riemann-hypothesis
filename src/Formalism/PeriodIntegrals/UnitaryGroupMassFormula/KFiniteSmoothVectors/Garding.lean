@@ -182,8 +182,8 @@ private theorem matrix_norm_mul_le_card_mul {m : ℕ} (A B : Matrix (Fin m) (Fin
   calc ‖∑ k, A i k * B k j‖ ≤ ∑ k, ‖A i k * B k j‖ := norm_sum_le _ _
     _ ≤ ∑ _k : Fin m, ‖A‖ * ‖B‖ := Finset.sum_le_sum fun k _ => by
         rw [norm_mul]
-        exact mul_le_mul (Matrix.norm_entry_le_entrywise_sup_norm A)
-          (Matrix.norm_entry_le_entrywise_sup_norm B) (norm_nonneg _) (norm_nonneg _)
+        exact mul_le_mul (norm_apply_le_norm A)
+          (norm_apply_le_norm B) (norm_nonneg _) (norm_nonneg _)
     _ = m * ‖A‖ * ‖B‖ := by simp [mul_assoc]
 
 theorem stepGarding_main : StepGarding := by

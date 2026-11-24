@@ -458,7 +458,7 @@ theorem exists_data_of_le_relIndex_ne_zero : ∀ (E : Type) [Field E] [NumberFie
   intro E _ _ _ r X Δ hle hidx
   classical
   have hT : ∃ T : Finset (GL (Fin r) E), ∀ g ∈ X.Γ, ∃ t ∈ T, t⁻¹ * g ∈ Δ := by
-    letI := Subgroup.fintypeOfIndexNeZero hidx
+    let := Subgroup.fintypeOfIndexNeZero hidx
     refine ⟨Finset.univ.image
       (fun q : X.Γ ⧸ Δ.subgroupOf X.Γ => ((Quotient.out q : X.Γ) : GL (Fin r) E)), ?_⟩
     intro g hg
@@ -623,7 +623,7 @@ theorem hypG_signature (τ : E →+* ℂ) : ∃ Q : Matrix (Fin 2) (Fin 2) ℂ, 
 
 theorem iso_rank_two (H : Host E) (Y : Data E 2) (hp : Y.p0 = 1) (hY : IsSelfDualTr Y) :
     ∃ z : Fin 2 → E, z ≠ 0 ∧ herm Y.Gm z z = 0 := by
-  haveI := H.unram
+  have := H.unram
   obtain ⟨J, hJ0, hJc, hJ⟩ := GlobalTheory.Ker.OntoLat.exists_valueIdeal Y
   have HN := GlobalTheory.QNorm.hasseNormSt
   have hΨ : ∀ τ : E →+* ℂ, τ ∈ (Y.Ψ : Set (E →+* ℂ)) ∨ ComplexEmbedding.conjugate τ ∈ (Y.Ψ : Set (E →+* ℂ)) := by
@@ -1058,7 +1058,7 @@ theorem emb_injective : Function.Injective (emb F : E →+* RA F E) := by
   obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
   let v : HeightOneSpectrum (𝓞 F) :=
     ⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩
-  haveI : Nontrivial (FiniteAdeleRing (𝓞 F) F) := ⟨⟨0, 1, fun h => by
+  have : Nontrivial (FiniteAdeleRing (𝓞 F) F) := ⟨⟨0, 1, fun h => by
     have : (0 : v.adicCompletion F) = 1 := congrArg (fun a : FiniteAdeleRing (𝓞 F) F => a v) h
     exact zero_ne_one this⟩⟩
   exact Algebra.TensorProduct.includeRight_injective (algebraMap F (FiniteAdeleRing (𝓞 F) F)).injective
@@ -1221,7 +1221,7 @@ end Covolume
 
 theorem covol_eq_of_same_space : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (r : ℕ) (Y Y' : ReciprocityTheory.ChartRestriction.G.FD.Data E r), (∀ p : ℕ, p.Prime → l.GoodAt p) → (∀ τ : E →+* ℂ, τ ∈ Y.Ψ ↔ τ (H.rt : E) = H.rt0) → Y'.Ψ = Y.Ψ → Y'.Gm = Y.Gm → Y'.ξ0 = Y.ξ0 → Y'.p0 = Y.p0 → 1 ≤ Y.p0 → Y.p0 < r → GlobalTheory.EqCovol.IsLevGrp l Y → GlobalTheory.EqCovol.IsLevGrp l Y' → GlobalTheory.EqCovol.IsSelfDualTr Y → GlobalTheory.EqCovol.IsSelfDualTr Y' → GlobalTheory.TrueCx.covol Y = GlobalTheory.TrueCx.covol Y' := by
   intro E _ _ _ H l r Y Y' _ _ hΨ hG hξ hp h1 h2 hl hl' hs hs'
-  haveI := H.unram
+  have := H.unram
   set F := maximalRealSubfield E
   set c : E ≃ₐ[F] E := IsCMField.complexConj E with hc
   have hM : 3 ≤ l.M' := l.three_le.trans (Nat.le_of_dvd (Nat.lcm_pos (by have := l.three_le; omega) l.A_pos)
@@ -1458,7 +1458,7 @@ theorem trace_ratio (X Y : Data E r) (a : E) :
 theorem exists_similitude (H : Host E) (X Y : Data E r) (hΨ : X.Ψ = Y.Ψ) (hp : X.p0 = Y.p0)
     (hX : IsSelfDualTr X) (hY : IsSelfDualTr Y) :
     ∃ P : GL (Fin r) E, ratio X Y • X.Gm = P.1ᵀ * Y.Gm * P.1.map cc := by
-  haveI := H.unram
+  have := H.unram
   have hb := inv_ne_zero (mul_ne_zero
     ((FractionalIdeal.spanSingleton_ne_zero_iff (R := 𝓞 E) (P := E)).2 Y.ξ0_ne) (coe_different_ne_zero (E := E)))
   obtain ⟨P, hP0, hP⟩ := GlobalTheory.SelfDualGenus.congr_of_modular (G := Y.Gm) (G' := ratio X Y • X.Gm)
@@ -1581,7 +1581,7 @@ theorem transv_conj (ξ : Fin r → E) (α : E) :
     intro G ξ x α
     funext a
     simp only [transvMat, herm, Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib,
-      ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.add_apply, Pi.smul_apply,
+      ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.add_apply, Pi.smul_apply,
       smul_eq_mul, Finset.mul_sum, Finset.sum_mul]
     congr 1
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring

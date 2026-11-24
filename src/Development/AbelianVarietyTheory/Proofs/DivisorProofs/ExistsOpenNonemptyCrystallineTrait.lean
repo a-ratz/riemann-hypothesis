@@ -66,16 +66,16 @@ theorem injective_of_charZero {o K : Type} [CommRing o] [IsDedekindDomain o] [Al
   have hbot : RingHom.ker ψ ≠ ⊥ := fun h => ha0 (by
     have h' : a ∈ RingHom.ker ψ := ha
     rwa [h, Ideal.mem_bot] at h')
-  haveI hmax : (RingHom.ker ψ).IsMaximal := hP.isMaximal hbot
-  haveI := GlobalTheory.finite_quotient_of_finiteType_int (RingHom.ker ψ)
-  haveI : CharZero (o ⧸ RingHom.ker ψ) := (RingHom.charZero_iff (RingHom.kerLift_injective ψ)).2 inferInstance
+  have hmax : (RingHom.ker ψ).IsMaximal := hP.isMaximal hbot
+  have := GlobalTheory.finite_quotient_of_finiteType_int (RingHom.ker ψ)
+  have : CharZero (o ⧸ RingHom.ker ψ) := (RingHom.charZero_iff (RingHom.kerLift_injective ψ)).2 inferInstance
   exact not_finite (o ⧸ RingHom.ker ψ)
 
 theorem exists_lift_genericFibre {o F K : Type} [CommRing o] [IsDedekindDomain o] [Algebra.FiniteType ℤ o] [Field F]
     (b : o →+* F) (hb : letI := b.toAlgebra; IsFractionRing o F) [Field K] [CharZero K] {Z : Scheme.{0}} (z : Z ⟶ Sp o)
     (x : Sp K ⟶ Z) : ∃ x' : Sp K ⟶ pullback z (spMap b), x' ≫ pullback.fst _ _ = x := by
-  letI := b.toAlgebra
-  haveI := hb
+  let := b.toAlgebra
+  have := hb
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (x ≫ z)
   have hinj := injective_of_charZero ψ.hom
   let ψ' : F →+* K := IsFractionRing.lift hinj
@@ -99,11 +99,11 @@ theorem exists_finite_point_rat {X : Scheme.{0}} (s : X ⟶ Sp ℚ) [LocallyOfFi
   have hft : a.hom.FiniteType := by
     rw [← HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType), ha]
     infer_instance
-  letI := a.hom.toAlgebra
+  let := a.hom.toAlgebra
   obtain ⟨T, hT⟩ := Algebra.FiniteType.out (R := ℚ) (A := Γ(X, U)) (self := hft)
   let S : Set (PadicAlgCl p) := φ.hom '' (T : Set Γ(X, U))
   have hSfin : S.Finite := T.finite_toSet.image _
-  haveI : Finite S := hSfin.to_subtype
+  have : Finite S := hSfin.to_subtype
   let K := IntermediateField.adjoin ℚ_[p] S
   have hK : FiniteDimensional ℚ_[p] K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
@@ -125,12 +125,12 @@ theorem exists_finite_point_rat {X : Scheme.{0}} (s : X ⟶ Sp ℚ) [LocallyOfFi
 
 theorem exists_uCTrait_of_open : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (cf : Coeff l) (C : UCompact Xo cf), ∀ (X : USetup C) (p : ℕ) [Fact p.Prime], ∃ U : X.M.Z.Opens, (U : Set X.M.Z).Nonempty ∧ ∀ y : Sp (OO p) ⟶ X.M.Z, Set.range (gPt p ≫ y) ⊆ U → ∃ ct : UCTrait X p (y (cPt p)), ct.y = y := by
   intro E _ _ _ H Dw _ l Xo cf C X p _
-  haveI := C.iF_open
-  haveI := C.ded
-  haveI := C.ft
-  letI := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
+  have := C.iF_open
+  have := C.ded
+  have := C.ft
+  let := C.b.toAlgebra
+  have := C.isFractionRing
+  have : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
   have hemb : Topology.IsEmbedding (pullback.fst C.z (spMap C.b)) := Scheme.Hom.isEmbedding _
   let S : Set C.Z := pullback.fst C.z (spMap C.b) '' (Set.range C.iF)ᶜ
   have hS : pullback.fst C.z (spMap C.b) ⁻¹' closure S = (Set.range C.iF)ᶜ := by
@@ -164,22 +164,22 @@ theorem exists_uCTrait_of_open : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have hy₁ : y₁ ≫ C.i = gPt p ≫ y ≫ X.π := by
       show y₁ ≫ C.iF ≫ pullback.fst _ _ = _
       rw [← Category.assoc, IsOpenImmersion.lift_fac, hx']
-    haveI := cf.fin
-    haveI := Xo.smooth
-    haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim _
-    haveI : LocallyOfFiniteType (spMap (algebraMap ℚ cf.F)) :=
+    have := cf.fin
+    have := Xo.smooth
+    have : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim _
+    have : LocallyOfFiniteType (spMap (algebraMap ℚ cf.F)) :=
       (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).2 (RingHom.finiteType_algebraMap.2 inferInstance)
     obtain ⟨K, hK, x, hx⟩ := exists_finite_point_rat (pullback.snd _ _ ≫ spMap (algebraMap ℚ cf.F)) p y₁
     obtain ⟨hdvr, hcomp, hunit⟩ := GlobalTheory.intRing_complete_dvr p K hK
-    haveI := hdvr
-    haveI : CharZero (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := inferInstance
+    have := hdvr
+    have : CharZero (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := inferInstance
     let e : FractionRing (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) ≃ₐ[GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K] K := FractionRing.algEquiv _ K
     let es : K →+* FractionRing (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := e.symm.toRingEquiv.toRingHom
     have hbase : GlobalTheory.Mum.Base (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) :=
       ⟨⟨inferInstance, inferInstance, inferInstance, hcomp⟩, inferInstance⟩
     obtain ⟨T, f, fK, hinj, hloc, hfin, hc, hTy⟩ :=
       GlobalTheory.UTraitExt.uTraitExtSt E H Dw l Xo cf _ hbase hdvr (spMap es ≫ x)
-    haveI : IsDiscreteValuationRing T.V := T.cdvr.1
+    have : IsDiscreteValuationRing T.V := T.cdvr.1
     obtain ⟨ι, hι, hint⟩ := GlobalTheory.Poinc.GCTrait.exists_ext_emb p _ T.V f fK hinj hloc hfin hc _ hunit
     have h2 : algebraMap (FractionRing (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K)) (PadicAlgCl p) =
         (algebraMap K (PadicAlgCl p)).comp e.toRingEquiv.toRingHom := by

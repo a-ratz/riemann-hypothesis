@@ -152,7 +152,7 @@ theorem idem_apply_eq_zero_of_ne : ∀ (D : D7) (ι : (Af D.host.F ⊗[D.host.F]
     congrArg (fun z : FiniteAdeleRing (𝓞 D.host.E) D.host.E => z P') (h1 ((x : D.host.E)⁻¹))
   rw [hm, hone, one_mul, hi, map_inv₀, map_inv₀, GlobalTheory.GeoLevel.valued_coe_int] at hv
   have hlt : P'.intValuation x < 1 := (P'.intValuation_lt_one_iff_mem x).2 hx
-  have hpos : 0 < P'.intValuation x := zero_lt_iff.2 (P'.intValuation_ne_zero x hx0)
+  have hpos : 0 < P'.intValuation x := pos_iff_ne_zero.2 (P'.intValuation_ne_zero x hx0)
   exact absurd ((inv_le_one₀ hpos).1 hv) (not_le.2 hlt)
 
 end GlobalTheory.ExportSeries
@@ -241,7 +241,7 @@ theorem spec_good (D : D7) (C A : Type) [AddCommGroup C] [CommGroup A] (u : Univ
     (χ : Multiplicative (↥Q → C) →* A) (h : u.Good Q) : (u.spec Q χ).Good := by
   have cc := GlobalTheory.DualPairCheck.cA_cA (D := D)
   refine ⟨?_, ?_, ?_, h.1, ?_, ?_⟩
-  · haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
+  · have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
     let H : Subgroup (AE D)ˣ := ⨅ P : ↥Q, (u.del P.1).ker
     have hH : IsOpen (H : Set (AE D)ˣ) := by
       rw [Subgroup.coe_iInf]
@@ -275,7 +275,7 @@ theorem spec_good (D : D7) (C A : Type) [AddCommGroup C] [CommGroup A] (u : Univ
   · intro PP hPP x h1 hx v hv
     show χ (u.delQ Q x) = (u.spec Q χ).res PP v
     rw [show (u.spec Q χ).res PP = χ.comp ((AddMonoidHom.toMultiplicative (AddMonoidHom.single (fun _ : ↥Q => C) ⟨PP, hPP⟩)).comp
-      (u.kap PP)) from dif_pos hPP, MonoidHom.comp_apply]
+      (u.kap PP)) from dite_eq_left hPP, MonoidHom.comp_apply]
     have hfu := finUnit_of_res PP (h.1.isIdemAt hPP) x h1 hx v hv
     refine congrArg χ ?_
     ext ⟨P', hP'⟩

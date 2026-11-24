@@ -151,7 +151,7 @@ theorem exists_const_l2SG_transport_eq_mul_lintegral {n : ℕ} (hn : n = 2 * r +
   have hlm : ∀ a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ,
       Measurable (Formalism.QuantumDeterminants.lmulM (k := k) (r := r) a) := fun a => WlocSk.HM.lmul_meas a
   have hmulP : Measurable (WlocSk.mulP (k := k) (r := r)) := WlocSk.HM.mulP_meas
-  haveI := hSB.1
+  have := hSB.1
 
   have lint_range : ∀ (ν : Measure (Formalism.QuantumDeterminants.Mt k r)) (g : Formalism.QuantumDeterminants.Mt k r → ℝ≥0∞), Measurable g →
       (∀ y, y ∉ Set.range e → g y = 0) → ∫⁻ y, g y ∂ν = ∫⁻ x, g (e x) ∂(ν.comap e) := by
@@ -172,11 +172,11 @@ theorem exists_const_l2SG_transport_eq_mul_lintegral {n : ℕ} (hn : n = 2 * r +
     have h0 : μSB {x | (Matrix.of x : Matrix _ _ ℂ) ∉ Formalism.QuantumDeterminants.Sset k r z} = 0 := hSB.2.2.1
     filter_upwards [measure_eq_zero_iff_ae_notMem.1 h0] with y hy
     rw [hrange]
-    simp only [Set.mem_setOf_eq, not_not] at hy
+    simp only [Set.mem_ofPred_eq, not_not] at hy
     exact hSsub hy
   have hInvU : QPK.InvOn μSU K := by
     refine ⟨?_, ?_, ?_, ?_⟩
-    · haveI := hSB.1
+    · have := hSB.1
       exact SigmaFinite.of_map μSU he.measurable.aemeasurable (by rw [hmapS]; infer_instance)
     · intro h0; apply hSB.2.1; rw [← hmapS, h0, Measure.map_zero]
     · rw [hμSU, he.comap_apply]
@@ -216,7 +216,7 @@ theorem exists_const_l2SG_transport_eq_mul_lintegral {n : ℕ} (hn : n = 2 * r +
       apply (lintegral_eq_zero_iff' ((hFt.comp hmulP).comp (measurable_id.prodMk measurable_const)).aemeasurable).2
       have h0 : μSB {x | (Matrix.of x : Matrix _ _ ℂ) ∉ Formalism.QuantumDeterminants.Sset k r z} = 0 := hSB.2.2.1
       filter_upwards [measure_eq_zero_iff_ae_notMem.1 h0] with s hs
-      simp only [Set.mem_setOf_eq, not_not] at hs
+      simp only [Set.mem_ofPred_eq, not_not] at hs
       apply hFt0
       intro hmem
       apply hy
@@ -247,11 +247,11 @@ theorem exists_const_l2SG_transport_eq_mul_lintegral {n : ℕ} (hn : n = 2 * r +
     simp only [lintegral_smul_measure, smul_eq_mul]
     rw [lintegral_const_mul' _ _ hct]
   set F0 : Formalism.REAL.UJ ε → ℝ≥0∞ := fun x => ‖f x‖ₑ ^ 2 with hF0
-  have hF0m : Measurable F0 := hf.enorm.measurable.pow_const 2
+  have hF0m : Measurable F0 := hf.eNorm.measurable.pow_const 2
   have hF0K : ∀ s ∈ K, ∀ x, F0 (s * x) = F0 x := by
     intro s hs x
     simp only [hF0]
-    rw [← enorm_norm (f (s * x)), hfK s hs x, enorm_norm]
+    rw [← eNorm_norm (f (s * x)), hfK s hs x, eNorm_norm]
   have h_l := weil_bruhat K hS.2.2.1 hWl hβm hβ1 F0 hF0m hF0K
   have h_u := weil_bruhat K hS.2.2.1 hWc hβm hβ1 F0 hF0m hF0K
   rw [← h_l, lintegral_smul_measure, smul_eq_mul] at h_u
@@ -310,7 +310,7 @@ theorem sset_sub_UH {k r : ℕ} (z : Fin (2 * r + k + 1) → ℂ) :
     Formalism.QuantumDeterminants.Sset k r z ⊆ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) := by
   intro g hg
   obtain ⟨h, hh, m, hm, rfl⟩ := hg
-  simp only [Formalism.QuantumDeterminants.UWset, Formalism.QuantumDeterminants.Nset, Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at hh hm ⊢
+  simp only [Formalism.QuantumDeterminants.UWset, Formalism.QuantumDeterminants.Nset, Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at hh hm ⊢
   rw [Matrix.conjTranspose_mul]
   calc mᴴ * hᴴ * Formalism.QuantumDeterminants.Hpk k r * (h * m) = mᴴ * (hᴴ * Formalism.QuantumDeterminants.Hpk k r * h) * m := by
         simp only [Matrix.mul_assoc]

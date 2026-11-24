@@ -173,9 +173,9 @@ theorem exists_genAll {V : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRing 
     (H1.SectionArithmetic.pullSec (φ := fun _ : Fin 1 => (snd T₀ P.A).left) (ε := fun _ => ((1 : ℕ) : ℤ)) (b i)
       (lift (h P.A) (𝟙 P.A)).left)
   refine ⟨θ, fun K _ s t => ?_⟩
-  haveI : IsAffine (Over.mk s).left := inferInstanceAs (IsAffine (Spec (CommRingCat.of K)))
+  have : IsAffine (Over.mk s).left := inferInstanceAs (IsAffine (Spec (CommRingCat.of K)))
   obtain ⟨c, hc⟩ := exists_basis P 1 b hb (Over.mk s) (h _)
-  haveI : Subsingleton (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
+  have : Subsingleton (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
   have e := c.sum_repr (SecM.ofSec P.A t)
   rw [Fintype.sum_subsingleton _ i, hc] at e
   refine ⟨c.repr (SecM.ofSec P.A t) i, fun Z r z J hJ => ?_⟩
@@ -207,8 +207,8 @@ theorem eq_of_translates [IsLocallyNoetherian S] {θ : Th P} (hθ : GenAll P θ)
   have hLaw := GlobalTheory.abelianSchemeLaws_all.1
   have hL := P.isLB
   let T : Over S := Over.mk s
-  haveI : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
-  haveI : Nonempty T.left := ⟨z⟩
+  have : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Nonempty T.left := ⟨z⟩
   have hF : IsField Γ(T.left, ⊤) := MulEquiv.isField (Field.toIsField K)
     (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.toMulEquiv
   obtain ⟨s₁, hs₁⟩ := exists_powSec hL θ (snd T P.A).left N (LB.oneGen P.L) (Frames.oneGen_gen _)
@@ -226,7 +226,7 @@ theorem eq_of_translates [IsLocallyNoetherian S] {θ : Th P} (hθ : GenAll P θ)
   have hspan : Submodule.span Γ(T.left, ⊤) (Set.range fun i => SecM.ofSec P.A (t i)) = ⊤ := by
     obtain ⟨ρ, k₁, -, k₃, k₄⟩ := thetaGrp_acts_linearly hLaw.globalFns S P N T
     obtain ⟨h0, irr⟩ := secM_invariant_eq_bot_or_univ_at_geometric_point hLaw.polBaseChange
-    haveI : Nonempty C := let ⟨i, _⟩ := hb 1 (one_pow _); ⟨i⟩
+    have : Nonempty C := let ⟨i, _⟩ := hb 1 (one_pow _); ⟨i⟩
     have e : ∀ i, SecM.ofSec P.A (t i) = ρ (U i) (SecM.ofSec P.A s₁) := fun i => ((k₁ _ _ _).1 (ht i)).symm
     simp only [e]
     refine span_translates_eq_top P.A (irr hLaw.irred S P K s N (Or.inr hN) hK) ρ k₁ k₃ k₄ U (fun θ => ?_) _ fun hz => ?_
@@ -271,7 +271,7 @@ theorem eq_of_translates [IsLocallyNoetherian S] {θ : Th P} (hθ : GenAll P θ)
     linear_combination gs (𝟙 T.left) z ⊤ (v c') * rel c - gs (𝟙 T.left) z ⊤ (v c) * rel c')
   obtain ⟨c₀, hc₀⟩ := not_forall.1 (ne_zero_of_span hLaw s (by omega) hspan hv₁)
   obtain ⟨c₁, hc₁⟩ := not_forall.1 (ne_zero_of_span hLaw s (by omega) hspan hv₂)
-  letI := hF.toField
+  let := hF.toField
   have h₀ : v' c₀ ≠ 0 := fun h => mul_ne_zero hc₁ hc₀ (by rw [cross, h, zero_mul])
   obtain ⟨τ'', hτ'', h⟩ := exists_rescale hτ (Units.mk0 (v' c₀ / v c₀) (div_ne_zero h₀ hc₀))
   refine eq_of_span hLaw s (by omega) hspan hτ'' hτ' (v := v') (fun c => ?_) hv₂
@@ -846,8 +846,8 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 theorem GlobalTheory.Poinc.Sep.conj_sharp_points : ∀ (g l : ℕ), l.Prime → Odd l → ∀ W : Matrix (Fin 8) (Fin 8) ℤ, IsE8 W → ∃ j₀ : ℕ, ∀ j, j₀ ≤ j → ∀ (V V₁ : Type) [CommRing V] [IsDomain V] [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → IsUnit (l : V₁) → ∀ (Q : Data V), Q.g ≤ g → ∀ (ρ : V →+* V₁), Function.Injective ρ → ∀ (D : DegPre V₁) (e : (Fin 8 → Q.X) ≃+ D.X), SharpRef W Q ρ D e → ∀ (C : Type) (u : (Fin 8 → Q.X) → C → V₁) (mo : (Fin 8 → Q.X) → V₁), (∀ mu, mo mu ≠ 0 ∧ ∃ c, IsUnit (u mu c)) → IsThetaTerms D ((l ^ j) ^ 2) e (fun mu c => u mu c * mo mu) → ∀ (K : Type) [Field K] [IsAlgClosed K] (ev : V₁ →+* K) (k₀ : Subfield K), IsAlgClosed k₀ → (∀ mu c c', IsUnit (u mu c') → ∃ r ∈ k₀, ev (u mu c) = r * ev (u mu c')) → ∀ (σ : K ≃+* K), (∀ r ∈ k₀, σ r = r) → ∀ (f : ((Over.pullback (spMap ev)).obj D.P.A).left ⟶ ((Over.pullback (spMap (σ.toRingHom.comp ev))).obj D.P.A).left), IsGrpPullback ((Over.pullback (spMap ev)).obj D.P.A) ((Over.pullback (spMap (σ.toRingHom.comp ev))).obj D.P.A) (𝟙 _) f → LBIso (D.P.L.pull (pullback.fst D.P.A.hom (spMap ev))) (D.P.L.pull (f ≫ pullback.fst D.P.A.hom (spMap (σ.toRingHom.comp ev)))) → (∀ (y : Over.mk (spMap ev) ⟶ D.P.A), y ^ ((l ^ j) ^ 2) = 1 → ∀ q : Sp K ⟶ ((Over.pullback (spMap ev)).obj D.P.A).left, q ≫ pullback.fst D.P.A.hom (spMap ev) = y.left → q ≫ pullback.snd D.P.A.hom (spMap ev) = 𝟙 _ → q ≫ f ≫ pullback.fst D.P.A.hom (spMap (σ.toRingHom.comp ev)) = spMap σ.toRingHom ≫ y.left) → (∀ mu (q : Sp K ⟶ ((Over.pullback (spMap ev)).obj D.P.A).left), q ≫ pullback.fst D.P.A.hom (spMap ev) = spMap ev ≫ (D.c (e mu)).left → q ≫ pullback.snd D.P.A.hom (spMap ev) = 𝟙 _ → q ≫ f ≫ pullback.fst D.P.A.hom (spMap (σ.toRingHom.comp ev)) = spMap σ.toRingHom ≫ q ≫ pullback.fst D.P.A.hom (spMap ev)) := by
   intro g l hl hodd W _
   refine ⟨1, fun j hj V V₁ _ _ _ _ _ hV hlu Q _ ρ _ D e _ C u mo hu hT K _ _ ev k₀ hk₀ hr σ hσ f hf hiso htor mu q hq hq' => ?_⟩
-  haveI : IsNoetherianRing V₁ := hV.1
-  haveI : IsIntegrallyClosed V₁ := hV.2.1
+  have : IsNoetherianRing V₁ := hV.1
+  have : IsIntegrallyClosed V₁ := hV.2.1
   have h2 : 2 ≤ l ^ j := hl.two_le.trans (Nat.le_self_pow (by omega) l)
   have h4 : 4 ≤ (l ^ j) ^ 2 := by nlinarith
   obtain ⟨hmo, c₀, hc₀⟩ := hu mu

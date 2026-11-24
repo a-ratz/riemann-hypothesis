@@ -150,7 +150,7 @@ private theorem above' (P : _root_.UpperTheory.V.Af.Hypotheses') (hl : l ≠ 2) 
   obtain ⟨a, ha⟩ : ∃ a, IsLocalArtin h a := by
     obtain ⟨a, ha, -⟩ := hrc
     exact ⟨a, ha⟩
-  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtype_val
+  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtypeVal
   choose ω hω using fun i => (Loc.ordCharIff P.litN.aut.art h ι _ ha (hh i) (ψ i)).1.2 ⟨flag_cont' hc hf i, hψ i⟩
   have hD : DRat ι h (ρ.comp (Dec (F := L) A).subtype) HT fun s => (rc (algNorm τ)).charPol s := fun O _ _ _ Bw hj =>
     have h1 := HG A h O Bw hj
@@ -176,7 +176,7 @@ theorem UpperTheory.V.Z.Sym.W.above_w_statement : _root_.UpperTheory.V.Z.Sym.W.A
     fin_cases i
     · exact (hκ s hs).1
     · exact (hκ s hs).2
-  have hcont : Continuous (r.comp (Dec (F := L) A).subtype) := hr.comp continuous_subtype_val
+  have hcont : Continuous (r.comp (Dec (F := L) A).subtype) := hr.comp continuous_subtypeVal
   have hfc : ∀ i, Continuous (κ i) := flag_cont' hcont hf
   have hmono : ∀ t : L →+* Qbar l, StrictMono fun j : Fin 2 => (fun (i : Fin 2) (_ : L →+* Qbar l) => -c i) j t := by
     intro t

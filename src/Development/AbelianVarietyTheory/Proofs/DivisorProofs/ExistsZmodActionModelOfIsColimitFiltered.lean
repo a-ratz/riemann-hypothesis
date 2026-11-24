@@ -60,7 +60,7 @@ theorem exists_common_under {K : Type} [SmallCategory K] [IsFiltered K] {I : Typ
     (k : K) (l : I → K) (f : ∀ i, k ⟶ l i) :
     ∃ (m : K) (p : k ⟶ m) (r : ∀ i, l i ⟶ m), ∀ i, f i ≫ r i = p := by
   classical
-  letI := Fintype.ofFinite I
+  let := Fintype.ofFinite I
   obtain ⟨c'⟩ := IsFiltered.cocone_nonempty (WidePushoutShape.wideSpan k l f)
   exact ⟨c'.pt, c'.ι.app none, fun i => c'.ι.app (some i), fun i => c'.w (.init i)⟩
 
@@ -90,7 +90,7 @@ theorem exists_stage_factor {K : Type} [SmallCategory K] [IsFiltered K] {I : Typ
   classical
   choose l s h₁ h₂ using fun i => RingHom.EssFiniteType.exists_eq_comp_ι_app_of_isColimit R E α φ c
     hc hφ (a i) (ha i)
-  letI := Fintype.ofFinite I
+  let := Fintype.ofFinite I
   obtain ⟨m, hm⟩ := IsFiltered.sup_objs_exists (Finset.univ.image l)
   have r : ∀ i, l i ⟶ m := fun i => (hm (Finset.mem_image_of_mem l (Finset.mem_univ i))).some
   refine ⟨m, fun i => s i ≫ E.map (r i), fun i => ⟨?_, ?_⟩⟩
@@ -200,9 +200,9 @@ theorem exists_action_model_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsF
       ∃ e : c.pt ⊗[F.obj k] B ≃ₐ[c.pt] D, ∀ (g : Multiplicative (ZMod q)) (x : c.pt ⊗[F.obj k] B),
         e (GlobalTheory.TorsorColim.bcAct c.pt actB g x) = act g (e x) := by
   intro J _ _ F c hc q hq j A _ _ _ D _ _ act
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   rintro ⟨e₀⟩
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   let φ : F.obj j ⟶ CommRingCat.of A := CommRingCat.ofHom (algebraMap (F.obj j) A)
   have hφ : φ.hom.FinitePresentation := RingHom.finitePresentation_algebraMap.2 inferInstance
   let g₀ : c.pt ⟶ CommRingCat.of D := CommRingCat.ofHom (algebraMap c.pt D)
@@ -244,8 +244,8 @@ theorem exists_action_model_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsF
     (fun g k => by
       change u' k ≫ ι' k ≫ τ g = u' k ≫ ι' k
       rw [reassoc_of% hu, hτ, hu])
-  letI : Algebra (F.obj m.right) (E.obj m) := (u' m).hom.toAlgebra
-  letI : Algebra (F.obj m.right) c.pt := (c.ι.app m.right).hom.toAlgebra
+  let : Algebra (F.obj m.right) (E.obj m) := (u' m).hom.toAlgebra
+  let : Algebra (F.obj m.right) c.pt := (c.ι.app m.right).hom.toAlgebra
   let σ' : Multiplicative (ZMod q) →* (E.obj m →ₐ[F.obj m.right] E.obj m) :=
     { toFun := fun g => ⟨(σ g).hom, fun x => congr(($(σu g)).hom x)⟩
       map_one' := AlgHom.ext fun x => congr(($σ1).hom x)

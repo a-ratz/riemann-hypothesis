@@ -223,7 +223,7 @@ theorem not_hasCohomology_of_central {c : ℂ} (hc : c ≠ 0) (h : ∀ m, L (one
       funext j
       refine Fin.cases ?_ (fun j => ?_) j <;> simp [hZ]
     · have h3 := dCo_cons (L := L) ω Z X
-      rw [h1, h, AlternatingMap.zero_apply, eq_comm, sub_eq_zero, dCo_apply] at h3
+      rw [h1, h, zero_apply, eq_comm, sub_eq_zero, dCo_apply] at h3
       rw [dCo_apply, ← inv_smul_smul₀ hc (ω X), h3, Finset.smul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [smul_comm c⁻¹, ← map_smul (L _) c⁻¹]

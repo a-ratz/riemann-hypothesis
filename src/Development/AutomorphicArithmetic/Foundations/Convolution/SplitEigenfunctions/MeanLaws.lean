@@ -50,7 +50,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.meanLaws :
     MeanLaws := by
   intro E _ _ N Ψ hΨ
   have hgl : Continuous (gl : G1 E → GL (Fin 2) (A E)) := by fun_prop
-  haveI : IsFiniteMeasure (N.μ.restrict N.D) := ⟨by simpa using volE E N⟩
+  have : IsFiniteMeasure (N.μ.restrict N.D) := ⟨by simpa using volE E N⟩
   have hc : ∀ y, Continuous fun h : G1 E => Ψ (gl h * y) := fun y =>
     hΨ.cont.comp (hgl.mul continuous_const)
   have hL : ∀ y, UpperTheory.ConvolutionTheory.R2.Ff.LRat fun x => Ψ (x * y) := fun y γ g => by

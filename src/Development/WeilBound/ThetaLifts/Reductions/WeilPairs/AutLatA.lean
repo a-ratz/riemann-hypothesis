@@ -156,7 +156,7 @@ theorem nsmul_inv_smul' {M : Type} [AddCommGroup M] [Module (AEF F E) M] {N : �
 
 theorem level (hG : GoodLat Λ) (N : ℕ) (hN : 0 < N) : ∃ U : AddSubgroup (WOF F E nS nT), IsOpen (U : Set (WOF F E nS nT)) ∧
     ∀ u ∈ U, ∃ l ∈ latF F E nS nT Λ, finIdem F E • u = ((N • l : XFF F E nS nT) : WOF F E nS nT) := by
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   let U : AddSubgroup (WOF F E nS nT) :=
     { carrier := {u | ∃ z ∈ latOF F E nS nT Λ, finIdem F E • u = N • z}
       add_mem' := by

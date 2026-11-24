@@ -599,13 +599,13 @@ theorem exists_psiTie_of_values (V : HSp D) {l : Level H} {Xo : Moduli Dw l} {c 
   obtain ⟨χ, hχ1, hχ⟩ := GlobalTheory.T.exists_twistCharacter_units_mod_specialIdeal D d.pd d.I xi hp (hlM ▸ hcop) (hbar ▸ hprod) (hbar ▸ hI) hxi
   have hpI : (d.pd : 𝓞 D.host.E) ∈ d.I := natCast_mem_half hM hMb
   have hI0 : d.I ≠ ⊥ := fun e => hp.ne_zero (by rw [e, Ideal.mem_bot] at hpI; exact_mod_cast hpI)
-  haveI : Finite (𝓞 D.host.E ⧸ d.I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI0
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have : Finite (𝓞 D.host.E ⧸ d.I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI0
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨e⟩ := HalfPairing.nonempty_equiv_quot (N := Dw.La) d.I V.rank (Dw.rank.trans hU.1.symm)
   obtain ⟨δ, hδs, hδ⟩ := exists_det_hom d.I (hU.1 ▸ hpq) e
   have hItop : d.I ≠ ⊤ := fun hT => by
-    haveI := Ideal.Quotient.subsingleton_iff.2 hT
+    have := Ideal.Quotient.subsingleton_iff.2 hT
     exact hχ1 (MonoidHom.ext fun u => by rw [Subsingleton.elim u 1, map_one, map_one])
   have hM0 : 0 < l.M := by have := l.three_le; omega
   have hM₂ : 0 < d.l₂.M := by have := d.l₂.three_le; omega

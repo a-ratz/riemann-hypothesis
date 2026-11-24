@@ -453,9 +453,9 @@ theorem dvd_of_mem_maxIdeal_pow : ∀ (D : D7) (k : Type) [Field k] [ValuativeRe
         simp only [fmul, Valuation.map_mul, hunit s hs, one_mul] at h1
         rw [h1, ← hq, pow_succ]
         rw [hq]
-        exact mul_le_mul_of_nonneg_right (ih y hy') zero_le'
+        exact mul_le_mul_of_nonneg_right (ih y hy') zero_le
       · rw [hunit x hxw]
-        exact pow_le_one₀ zero_le' hq1
+        exact pow_le_one₀ zero_le hq1
   have hzle : ∀ n, ∀ z ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ n,
       valuation k (z : k) ≤ valuation k ((q.1 : 𝒪[k]) : k) ^ n := by
     intro n
@@ -482,7 +482,7 @@ theorem dvd_of_mem_maxIdeal_pow : ∀ (D : D7) (k : Type) [Field k] [ValuativeRe
   refine ⟨(z : k) / f m, ?_, ?_⟩
   · show valuation k ((z : k) / f m) ≤ 1
     rw [map_div₀]
-    exact div_le_one_of_le₀ ((hzle d z hz).trans hmv) zero_le'
+    exact div_le_one_of_le₀ ((hzle d z hz).trans hmv) zero_le
   · exact (div_mul_cancel₀ _ hf0).symm
 
 end GlobalTheory.SplitPtLev
@@ -544,7 +544,7 @@ theorem cut_mem_latV {D : D7} (S : HSp D) (L : GlobalTheory.FinPl.Lat S) (P : Gl
       · rw [zero_mul]
         exact zero_mem _
     · intro v hv
-      rw [map_mul, GlobalTheory.SelfDualAt.evalV_indP, if_neg hv, zero_mul]
+      rw [map_mul, GlobalTheory.SelfDualAt.evalV_indP, ite_eq_right hv, zero_mul]
     · funext i
       rw [one_mul]
       exact GlobalTheory.HatLatV.cut_tmul P a (x i)

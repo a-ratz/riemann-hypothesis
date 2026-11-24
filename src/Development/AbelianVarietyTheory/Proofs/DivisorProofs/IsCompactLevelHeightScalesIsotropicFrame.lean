@@ -81,7 +81,7 @@ theorem absE_pos (u : (AF F ⊗[F] E)ˣ) : (0 : ℝ) < absE F E u := by
 
 theorem isCompact_isHt_scales : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (r : ℕ) (X Y : Matrix (Fin n) (Fin (r + 1)) E) (L : Submodule (𝓞 E) (Fin n → E)) (a : GL (Fin n) (AF F ⊗[F] E)) (h : GAd σ J → ℝ), DataJ σ J X Y L a h → IsCompact (levelAll σ J L a : Set (GAd σ J)) ∧ IsHt (levelAll σ J L a) h ∧ ∀ p β, ScalesBy σ J X p β → ∀ g, h (p * g) = absE F E (Matrix.GeneralLinearGroup.det β) * h g := by
   intro F E _ _ _ _ _ σ n J r X Y L a h H
-  haveI := H.lat
+  have := H.lat
   obtain ⟨_, _⟩ := GlobalTheory.StdPar.ring_facts (F := F) (E := E)
   have hK : IsCompact (levelAll σ J L a : Set (GAd σ J)) := GlobalTheory.Doubling.isCompact_levelAll H.cm J L a
   have hyx : Formalism.UG.cT (σ : E →+* E) Y * J * X = 1 := GlobalTheory.StdPar.yx H.cm H.herm H.witt
@@ -103,9 +103,9 @@ theorem isCompact_isHt_scales : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hP : ∀ p : P, ScalesBy σ J X p.1 p.2.choose := fun p => p.2.choose_spec.2
   let u : P → (AF F ⊗[F] E)ˣ := fun p => Matrix.GeneralLinearGroup.det p.2.choose
   have cu : Continuous u := Units.continuous_iff.2
-    ⟨((cφ.comp continuous_subtype_val).matrix_det).congr fun p => by
+    ⟨((cφ.comp continuous_subtypeVal).matrix_det).congr fun p => by
         simp only [Function.comp, u, hφ _ _ (hP p)]; rfl,
-      ((cφ.comp (continuous_subtype_val.inv)).matrix_det).congr fun p => by
+      ((cφ.comp (continuous_subtypeVal.inv)).matrix_det).congr fun p => by
         show (φ (p.1⁻¹)).det = _
         rw [hφ _ _ (scalesBy_inv (hP p)), ← map_inv, Matrix.GeneralLinearGroup.val_det_apply]⟩
   refine ⟨hK, ⟨fun g => ?_, ?_, fun k hk => by simpa using H.ht 1 1 (by simp [ScalesBy]) k hk, fun g => ?_⟩, hsc⟩

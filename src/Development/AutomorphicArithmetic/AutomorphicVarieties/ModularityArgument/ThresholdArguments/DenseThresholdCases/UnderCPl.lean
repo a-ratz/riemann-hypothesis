@@ -71,12 +71,12 @@ theorem UpperTheory.V.Z.Bc.polarization_k_of_printed_results :
   intro hP K _ _ _ hK n hn l _ Ω _ _ _ _ _ ι r wt θ P hθ hd hC
   have h5 : NormGal := UpperTheory.galois_norm_compatibility_of_frobenius_restriction UpperTheory.frobenius_power_compatibility (UpperTheory.ideleNorm_valuation_of_local_compatibility UpperTheory.ideleNorm_local_compatibility)
   have h8 : PolOfSat := UpperTheory.polOfSat_of_thetaSat UpperTheory.theta_satake_parameters_inverse
-  haveI : IsScalarTower ℚ (maximalRealSubfield K) Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsScalarTower ℚ (maximalRealSubfield K) Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
-  haveI : IsGalois ℚ K := inferInstance
-  haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans ℚ K Ω⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+  have : IsGalois ℚ K := inferInstance
+  have : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans ℚ K Ω⟩
   have hθ' : IsCycWt l (wt + ((n : ℤ) - 1))
       (θ.comp (res ℚ Ω (maximalRealSubfield K)) * cycBar (maximalRealSubfield K) Ω l ^ ((n : ℤ) - 1)) := by
     obtain ⟨M, χ, hM, hχ, rfl⟩ := hθ

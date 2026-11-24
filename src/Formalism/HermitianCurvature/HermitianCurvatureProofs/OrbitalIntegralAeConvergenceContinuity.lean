@@ -79,7 +79,7 @@ section common
 variable {k r : ℕ}
 
 theorem sf {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 theorem ae_mem {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) :
@@ -117,7 +117,7 @@ theorem isClosed_UW (z : Fin (2 * r + k + 1) → ℂ) : IsClosed {x : Mt k r | M
       ((⋂ a : Fin r, ({x : Mt k r | Matrix.of x *ᵥ bvec (eI k r a) = bvec (eI k r a)} ∩
         {x : Mt k r | Matrix.of x *ᵥ bvec (esI k r a) = bvec (esI k r a)})) ∩ {x : Mt k r | Matrix.of x *ᵥ z = z}) := by
     ext x
-    simp only [UWset, GV, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [UWset, GV, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     try tauto
   rw [e]
   exact isClosed_GV.inter ((isClosed_iInter fun a => (hmv _).inter (hmv _)).inter (hmv z))
@@ -237,7 +237,7 @@ def Q0 (D : RealPlaceData k r Wp Wq) : Set ((Fin r → ℂ) × ℂ) :=
   {q | (∀ a, q.1 a ≠ 0) ∧ Tz k r D.z * Tz k r D.z' < Complex.normSq q.2}
 
 theorem isOpen_good_set (D : RealPlaceData k r Wp Wq) : IsOpen (Q0 D) := by
-  rw [Q0, Set.setOf_and, Set.setOf_forall]
+  rw [Q0, Set.ofPred_and, Set.ofPred_forall]
   refine IsOpen.inter ?_ ?_
   · exact isOpen_iInter_of_finite fun a => isOpen_ne_fun ((continuous_apply a).comp continuous_fst) continuous_const
   · exact isOpen_lt continuous_const (Complex.continuous_normSq.comp continuous_snd)
@@ -533,9 +533,9 @@ theorem d_comm (z : Fin (2 * r + k + 1) → ℂ) (t : ℝ) {h : Mat k r} (hh : h
       · subst hij; simp [mul_comm]
       · simp [hij]
     · have e1 : d_dg k r t i = 1 := by
-        unfold d_dg; rw [if_neg (by omega), if_pos (by omega)]
+        unfold d_dg; rw [ite_eq_right (by omega), ite_eq_left (by omega)]
       have e2 : d_dg k r t j = 1 := by
-        unfold d_dg; rw [if_neg (by omega), if_pos (by omega)]
+        unfold d_dg; rw [ite_eq_right (by omega), ite_eq_left (by omega)]
       rw [e1, e2, one_mul, mul_one]
 
 theorem d_conj_apply (t : ℝ) (ht : t ≠ 0) (n : Mat k r) (i j : Fin (2 * r + k + 1)) :
@@ -551,9 +551,9 @@ theorem d_ell (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (t : ℝ) (ht 
   by_cases h : a.val + 1 < r
   · rw [dite_eq_left h, dite_eq_left h, d_conj_apply t ht]
     have e1 : d_dg k r t (eI k r a) = ((t ^ (r - a.val) : ℝ) : ℂ) := by
-      unfold d_dg; rw [if_pos (by simp only [eI]; omega)]; rfl
+      unfold d_dg; rw [ite_eq_left (by simp only [eI]; omega)]; rfl
     have e2 : d_dg k r t⁻¹ (eI k r ⟨a.val + 1, h⟩) = (((t⁻¹) ^ (r - (a.val + 1)) : ℝ) : ℂ) := by
-      unfold d_dg; rw [if_pos (by simp only [eI]; omega)]; rfl
+      unfold d_dg; rw [ite_eq_left (by simp only [eI]; omega)]; rfl
     rw [e1, e2]
     have e3 : r - a.val = (r - (a.val + 1)) + 1 := by omega
     have e4 : ((t ^ (r - a.val) : ℝ) : ℂ) * (((t⁻¹) ^ (r - (a.val + 1)) : ℝ) : ℂ) = (t : ℂ) := by
@@ -568,13 +568,13 @@ theorem d_ell (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (t : ℝ) (ht 
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [d_conj_apply t ht]
     have e1 : d_dg k r t (eI k r a) = (t : ℂ) := by
-      unfold d_dg; rw [if_pos (by simp only [eI]; omega)]
+      unfold d_dg; rw [ite_eq_left (by simp only [eI]; omega)]
       have : r - (eI k r a).val = 1 := by simp only [eI]; omega
       rw [this, pow_one]
     by_cases hj : j.val < r ∨ r + k < j.val
     · rw [hz j hj]; simp
     · have e2 : d_dg k r t⁻¹ j = 1 := by
-        unfold d_dg; rw [if_neg (by omega), if_pos (by omega)]
+        unfold d_dg; rw [ite_eq_right (by omega), ite_eq_left (by omega)]
       rw [e1, e2]; ring
 
 theorem d_lam (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (t : ℝ) (ht : t ≠ 0) (n : Mat k r) :
@@ -719,7 +719,7 @@ theorem d_pi_smul {ι : Type*} [Fintype ι] {α : ι → Type*} [∀ i, Measurab
     Measure.pi (fun i => c i • μ i) = (∏ i, c i) • Measure.pi μ := by
   refine Measure.pi_eq fun s _ => ?_
   first
-    | simp only [Measure.smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul, ENNReal.ofNNReal_finsetProd,
+    | simp only [smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul, ENNReal.ofNNReal_finsetProd,
         Finset.prod_mul_distrib]
 
 theorem d_map_mul (ρ : ℝ) (hρ : 0 < ρ) :
@@ -866,13 +866,13 @@ theorem jc_meas_E (D : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] W
     Measurable (jc_E D F) := by
   show Measurable fun q => ∫⁻ p, ‖FM F (sgsM p (gqM D q))‖ₑ ∂D.μSS
   first
-    | exact (jc_sm_FPhi D hF).enorm.lintegral_prod_right'
+    | exact (jc_sm_FPhi D hF).eNorm.lintegral_prod_right'
 
 theorem jc_formula (D : RealPlaceData k r Wp Wq) (hI : IntFormula D) {F : Mat k r → (Wq →L[ℂ] Wp)}
     (hF : ContinuousOn F (GV k r)) :
     (∫⁻ g, ‖FM F g‖ₑ ∂D.μG) = ∫⁻ q : (Fin r → ℂ) × ℂ,
       ENNReal.ofReal (bcWeight k r (Tz k r D.z) (Tz k r D.z') q) * jc_E D F q := by
-  have hf : Measurable fun x : Mt k r => ‖FM F x‖ₑ := (sm_FM hF).enorm
+  have hf : Measurable fun x : Mt k r => ‖FM F x‖ₑ := (sm_FM hF).eNorm
   rw [hI _ hf]
   refine lintegral_congr_ae ?_
   filter_upwards [ae_mem_good_set_or_weight_zero D] with q hq
@@ -934,7 +934,7 @@ theorem jc_integrable_of (D : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L
   have hg : gq D q ∈ GV k r := gq_mem D hq
   have h1 : ‖rho D p F (gq D q)‖ₑ ≤ ‖F (sgs p (gq D q))‖ₑ := by
     first
-      | exact enorm_le_iff_norm_le.2 (norm_rho_le D hp F _)
+      | exact eNorm_le_iff_norm_le.2 (norm_rho_le D hp F _)
   have h2 : FM F (sgsM p (gqM D q)) = F (sgs p (gq D q)) := by
     rw [gqM_eq D hq]
     exact FM_eq F (x := sgsM p (gq D q)) (sgs_mem D hp hg)
@@ -1295,8 +1295,8 @@ theorem u_inner_le (D : RealPlaceData k r Wp Wq) (Ξ : Mat k r → NNReal) (A : 
   obtain ⟨K1, hK1, e1⟩ := u_enorm_om_le h₁
   obtain ⟨K2, hK2, e2⟩ := u_enorm_om_le h₂
   refine ⟨K1 * K2 * K0, ENNReal.mul_ne_top (ENNReal.mul_ne_top hK1 hK2) hK0, fun p hp => ?_⟩
-  simp only [enorm_mul]
-  rw [lintegral_const_mul' _ _ enorm_ne_top]
+  simp only [eNorm_mul]
+  rw [lintegral_const_mul' _ _ eNorm_ne_top]
   have a1 := e1 (lam k r D.z (Matrix.of p.1.2))
   have a2 := e2 (-lam k r D.z' (Matrix.of p.2.2))
   rw [abs_neg] at a2
@@ -1304,7 +1304,7 @@ theorem u_inner_le (D : RealPlaceData k r Wp Wq) (Ξ : Mat k r → NNReal) (A : 
   have aO : ‖Om D w₁ w₂ p‖ₑ ≤ (K1 * ENNReal.ofReal ((1 + |lam k r D.z (Matrix.of p.1.2)|) ^ (-(2 : ℝ)))) *
       (K2 * ENNReal.ofReal ((1 + |lam k r D.z' (Matrix.of p.2.2)|) ^ (-(2 : ℝ)))) := by
     unfold Om
-    rw [enorm_mul]
+    rw [eNorm_mul]
     exact mul_le_mul' a1 a2
   refine (mul_le_mul' aO a0).trans (le_of_eq ?_)
   unfold u_fX
@@ -1327,7 +1327,7 @@ theorem integrable_OmK (D : RealPlaceData k r Wp Wq) (Ξ : Mat k r → NNReal) (
     exact contOn_of_CkOn hc1
   have hsm := u_sm_OmK D hcont h₁ h₂
   refine ⟨hsm.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hsm.enorm.aemeasurable]
+  rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hsm.eNorm.aemeasurable]
   obtain ⟨K, hK, hle⟩ := u_inner_le D Ξ A hCB hF h₁ h₂
   have m1 := (u_meas_fX D.z hXi.1).aemeasurable (μ := D.μW.prod D.μN)
   have m2 := (u_meas_fX D.z' hXi.1).aemeasurable (μ := D.μW'.prod D.μN)

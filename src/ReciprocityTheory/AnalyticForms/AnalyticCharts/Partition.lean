@@ -80,9 +80,9 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
       intro p hp
       rw [Function.mem_support] at hp
       by_cases hps : p ∈ (e k).source
-      · simp only [hG, if_pos hps] at hp
+      · simp only [hG, ite_eq_left hps] at hp
         exact ⟨e k p, subset_tsupport g hp, (e k).left_inv hps⟩
-      · simp only [hG, if_neg hps] at hp
+      · simp only [hG, ite_eq_right hps] at hp
         exact absurd rfl hp
     have hts : tsupport G ⊆ T := closure_minimal hsupp hTc.isClosed
     refine ⟨hts.trans hTs, fun j => ?_⟩
@@ -96,7 +96,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
       refine (h1.mono Set.inter_subset_right).congr ?_
       intro y' hy'
       have hc : (e j).symm y' ∈ (e k).source := hy'.2.2
-      simp only [Function.comp, hG, if_pos hc]
+      simp only [Function.comp, hG, ite_eq_left hc]
     · refine ⟨(e j).target ∩ (e j).symm ⁻¹' Tᶜ,
         (e j).isOpen_inter_preimage_symm hTc.isClosed.isOpen_compl,
         ⟨hy, fun hT' => hp (hTs hT')⟩, ?_⟩
@@ -135,7 +135,7 @@ theorem exists_chart_partition {X : Type*} [TopologicalSpace X] [T2Space X] [Com
     (fun p _ => Set.mem_iUnion.mpr ⟨p, hxO p⟩)
   have hOψ : ∀ x p, p ∈ O x → 1 / 2 < ψ x p := by
     intro x p hp
-    simp only [ψ, if_pos hp.1]
+    simp only [ψ, ite_eq_left hp.1]
     exact hp.2
   have hS : ∀ p, 0 < ∑ x ∈ t, ψ x p := by
     intro p

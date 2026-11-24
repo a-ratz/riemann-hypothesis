@@ -96,7 +96,7 @@ theorem posFrame_of_std (D : D7) (h : Formalism.L2.Herm.IsStd (D.sp.X 0)) : PosF
   obtain ⟨b, hb, -⟩ := h
   intro σ
   refine ⟨(b.toMatrix (D.sp.X 0).frame).map σ, ?_, ?_⟩
-  · haveI := b.invertibleToMatrix (D.sp.X 0).frame
+  · have := b.invertibleToMatrix (D.sp.X 0).frame
     have hu : IsUnit (σ (b.toMatrix (D.sp.X 0).frame).det) :=
       (Matrix.isUnit_det_of_invertible _).map σ
     rwa [RingHom.map_det, RingHom.mapMatrix_apply] at hu
@@ -160,7 +160,7 @@ variable {D : D7} {u : D.what₂.Word} (T : Forms0 D u) (B : ColBase D u)
 
 theorem weight_level_zero_eq_one (hst : ∀ c, Subsingleton ((D.mem u).C.stab 0 c)) (c : (D.mem u).C.cls 0) : (D.mem u).C.wt 0 c = 1 := by
   have : Nat.card ((D.mem u).C.stab 0 c) = 1 := by
-    haveI := hst c
+    have := hst c
     exact Nat.card_eq_one_iff_unique.2 ⟨hst c, ⟨1⟩⟩
   simp [Formalism.BasicNotions.ColumnChain.wt, this]
 
@@ -356,7 +356,7 @@ theorem den_of_isLocBasis {L : Submodule (𝓞 K) (Fin n → K)} (hfg : L.FG) {Y
   let t : (Fin n → K) → ℕ := fun g => if h : g ∈ S then (ht g h).choose else 1
   have htS : ∀ g ∈ S, ¬ l ∣ t g ∧ ∀ a, (t g : K) * ((((Y⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) *ᵥ g) a) ∈
       (algebraMap (𝓞 K) K).range := fun g hg => by
-    simp only [t, dif_pos hg]; exact (ht g hg).choose_spec
+    simp only [t, dite_eq_left hg]; exact (ht g hg).choose_spec
   refine ⟨∏ g ∈ S, t g, ?_, fun x hx => ?_⟩
   · rw [Prime.dvd_finsetProd_iff hl.out.prime]
     rintro ⟨g, hg, hdvd⟩
@@ -761,7 +761,7 @@ variable {D : D7}
 
 theorem embT_sigD (τ : D.what₂.Tau) (a : D.host.E) :
     Formalism.L2.Forms.embT D τ (Formalism.L2.Forms.sigD D a) = starRingEnd ℂ (Formalism.L2.Forms.embT D τ a) := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   show D.host.emb (D.eTau τ : D.R.GG) (Formalism.L2.Forms.sigD D a) = starRingEnd ℂ (D.host.emb (D.eTau τ : D.R.GG) a)
   exact NumberField.IsCMField.complexEmbedding_complexConj D.host.E _ a
 
@@ -773,7 +773,7 @@ theorem embLL_rhoC (τ : D.what₂.Tau) (a : D.host.E) :
 
 theorem gramN_sig (i j : Fin (D.R.N 0)) :
     Formalism.L2.Forms.gramN D 0 (Nat.zero_le _) i j = Formalism.L2.Forms.sigD D (Formalism.L2.Forms.gramN D 0 (Nat.zero_le _) j i) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   simp only [Formalism.L2.Forms.gramN, Matrix.reindex_apply, Matrix.submatrix_apply, Formalism.BasicNotions.HSpace.gram]
   first
   | exact ((D.sp.X 0).herm _ _).symm

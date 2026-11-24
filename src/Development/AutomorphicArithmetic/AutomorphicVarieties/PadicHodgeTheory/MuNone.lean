@@ -111,15 +111,15 @@ private theorem mn_field (K Ω : Type) [Field K] [ValuativeRel K] [TopologicalSp
     [IsNonarchimedeanLocalField K] [CharZero K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω]
     {q : ℕ} (hq : q ≠ 0) (hM : ∀ x : Kˣ, x ^ q = 1 → x = 1)
     (a : TopologicalAbelianization (Ω ≃ₐ[K] Ω)) (ha : a ^ q = 1) : a = 1 := by
-  haveI : IsClosed ((commutator (Ω ≃ₐ[K] Ω)).topologicalClosure : Set (Ω ≃ₐ[K] Ω)) :=
+  have : IsClosed ((commutator (Ω ≃ₐ[K] Ω)).topologicalClosure : Set (Ω ≃ₐ[K] Ω)) :=
     Subgroup.isClosed_topologicalClosure _
   have hopen : ∀ n : ℕ, n ≠ 0 → ∃ V : Set (TopologicalAbelianization (Ω ≃ₐ[K] Ω)), IsOpen V ∧ 1 ∈ V ∧
       ∀ x, localReciprocityLimit K Ω x ∈ V → ∃ z, x = z ^ n := by
     intro n hn
-    haveI : Finite (Kˣ ⧸ (powMonoidHom n : Kˣ →* Kˣ).range) := finite_quotient_range_pow_of_charZero hn
+    have : Finite (Kˣ ⧸ (powMonoidHom n : Kˣ →* Kˣ).range) := finite_quotient_range_pow_of_charZero hn
     let H : openFiniteIndex Kˣ := ⟨(powMonoidHom n : Kˣ →* Kˣ).range,
       isOpen_range_pow (Nat.cast_ne_zero.mpr hn), Subgroup.finiteIndex_of_finite_quotient⟩
-    haveI := openCompletion.discreteTopology_quotient H
+    have := openCompletion.discreteTopology_quotient H
     refine ⟨(fun b => artinCoord K Ω H (topologicalAbelianizationEquiv K Ω b)) ⁻¹' {1}, ?_, ?_, ?_⟩
     · exact (isOpen_discrete _).preimage
         ((continuous_artinCoord H).comp (topologicalAbelianizationEquiv K Ω).continuous)
@@ -134,8 +134,8 @@ private theorem mn_field (K Ω : Type) [Field K] [ValuativeRel K] [TopologicalSp
     mn_core (localReciprocityLimit K Ω) denseRange_localReciprocityLimit hq hM hopen a ha n hn
   by_contra hne
   obtain ⟨V, hVo, haV⟩ := mn_sep a hne
-  haveI : Finite (TopologicalAbelianization (Ω ≃ₐ[K] Ω) ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVo
-  haveI : V.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (TopologicalAbelianization (Ω ≃ₐ[K] Ω) ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVo
+  have : V.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨z, hz⟩ := hall V.index Subgroup.FiniteIndex.index_ne_zero
   exact haV (hz ▸ Subgroup.pow_index_mem V z)
 
@@ -186,11 +186,11 @@ theorem UpperTheory.V.Loc.muNone :
   obtain ⟨g0, hg0⟩ := hex
   have hp : l.Prime := Fact.out
   obtain ⟨K, e, he1, he2, hφe, -⟩ := openField φ hφ
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
   set L : IntermediateField ℚ_[l] (Om l) := K.1 with hL
-  haveI : Algebra.IsAlgebraic L (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) L
-  haveI : IsAlgClosure L (Om l) := ⟨inferInstance, inferInstance⟩
-  haveI : IsSepClosure L (Om l) := inferInstance
+  have : Algebra.IsAlgebraic L (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) L
+  have : IsAlgClosure L (Om l) := ⟨inferInstance, inferInstance⟩
+  have : IsSepClosure L (Om l) := inferInstance
   obtain ⟨vr, ts, hloc, -⟩ := GroundTheory.LocalField.exists_isNonarchimedeanLocalField_valuativeExtension ℚ_[l] L
   let ψ : G →* Gal(Om l/L) := L.fixingSubgroupEquiv.toMonoidHom.comp e.toMonoidHom
   have hψ : Continuous ψ := (GlobalTheory.fixingSubgroupEquiv_bicontinuous ℚ_[l] (Om l) L).1.comp he1

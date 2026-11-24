@@ -136,7 +136,7 @@ theorem exists_local_iwasawa : ∀ (E : Type) [Field E] [NumberField E] [_root_.
   have hG : ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) G (Fm E e 0) := hF.to_localInverse hF' hn
   have hG1 : G (Fm E e 0) = 0 := hF.localInverse_apply_image hF' hn
   have hinv : ∀ᶠ X in nhds (Fm E e 0), Fm E e (G X) = X :=
-    (hF.hasStrictFDerivAt' hF' hn).eventually_right_inverse
+    (hF.hasStrictFDerivAt hF' hn).eventually_right_inverse
   rw [Fm_zero] at hG hG1 hinv
   let T : Lie E N ≃L[ℝ] Matrix (Fin N) (Fin N) (Cinf E) := (Matrix.ofLinearEquiv ℝ).toContinuousLinearEquiv
   let φ : Matrix (Fin N) (Fin N) (Cinf E) → Matrix (Fin N) (Fin N) (Cinf E) := fun X => 1 + (G X - skew E e (G X))
@@ -167,7 +167,7 @@ theorem exists_local_iwasawa : ∀ (E : Type) [Field E] [NumberField E] [_root_.
       T.symm.contDiff.contDiffAt.comp _ (hφT.comp (oneL E N) T.contDiff.contDiffAt)
     refine hsm.congr_of_eventuallyEq ?_
     filter_upwards [hunitV] with y hy
-    simp only [dif_pos hy]
+    simp only [dite_eq_left hy]
     show toL (hy.unit : Matrix (Fin N) (Fin N) (Cinf E)) = _
     rw [hy.unit_spec]
     rfl
@@ -177,11 +177,11 @@ theorem exists_local_iwasawa : ∀ (E : Type) [Field E] [NumberField E] [_root_.
       rw [hφ1]
       exact isUnit_one
     refine Subtype.ext (Units.ext ?_)
-    simp only [dif_pos h1]
+    simp only [dite_eq_left h1]
     exact (IsUnit.unit_spec _).trans hφ1
   · exact Subtype.ext hψ1
   · filter_upwards [hunitV, hinvV] with y hy hy'
-    simp only [dif_pos hy]
+    simp only [dite_eq_left hy]
     show Matrix.of y = (hy.unit : Matrix (Fin N) (Fin N) (Cinf E)) * ψ (Matrix.of y)
     rw [hy.unit_spec]
     exact hy'.symm

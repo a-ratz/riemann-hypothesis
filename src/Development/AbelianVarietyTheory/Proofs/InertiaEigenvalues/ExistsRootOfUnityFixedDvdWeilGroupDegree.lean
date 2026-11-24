@@ -81,13 +81,13 @@ theorem _root_.GlobalTheory.exists_fixed_dvd_deg : ∀ (E Ω : Type) [Field E] [
     (w : HeightOneSpectrum (𝓞 E)) (h : _root_.Formalism.ConjugateSelfDual.IsPlaceOver A w) (k : ℕ), 0 < k →
     ∃ ζ : Ω, ∀ σ : _root_.GlobalTheory.WeilDeligne.Weil h, (σ : _root_.Formalism.ConjugateSelfDual.G E Ω) ζ = ζ → (k : ℤ) ∣ _root_.GlobalTheory.WeilDeligne.deg σ := by
   intro E Ω _ _ _ _ _ A w h k hk
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hq1 : 1 < _root_.Formalism.ConjugateSelfDual.normV w := _root_.GlobalTheory.WeilDeligne.one_lt_normV w
   have hpos : 0 < _root_.Formalism.ConjugateSelfDual.normV w ^ k - 1 := Nat.sub_pos_of_lt (Nat.one_lt_pow hk.ne' hq1)
-  haveI : NeZero ((_root_.Formalism.ConjugateSelfDual.normV w ^ k - 1 : ℕ) : Ω) := ⟨by
+  have : NeZero ((_root_.Formalism.ConjugateSelfDual.normV w ^ k - 1 : ℕ) : Ω) := ⟨by
     rw [← map_natCast (algebraMap E Ω)]
     exact (_root_.map_ne_zero _).2 (Nat.cast_ne_zero.2 hpos.ne')⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (_root_.Formalism.ConjugateSelfDual.normV w ^ k - 1)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (_root_.Formalism.ConjugateSelfDual.normV w ^ k - 1)
   have hvN : ¬ A.valuation ((_root_.Formalism.ConjugateSelfDual.normV w ^ k - 1 : ℕ) : Ω) < 1 := by
     have hmem : ((_root_.Formalism.ConjugateSelfDual.normV w ^ k - 1 : ℕ) : 𝓞 E) ∉ w.asIdeal := by
       intro hN

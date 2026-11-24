@@ -94,7 +94,7 @@ private theorem rorth_functional_eq_zero_of_highest_weight_mem (hE : IsGlRep E) 
   obtain ⟨k, hk⟩ := hy
   set W := layer ε E V k with hW
   have : FiniteDimensional ℂ W := finiteDimensional_layer hV.1 k
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hWK : IsKStableSub ε E W := layer_kStable hE hV.2.1 k
   obtain ⟨u, hu⟩ : ∃ u : W, ∀ w : W, inner ℂ (u : M) (w : M) = f w := by
     refine ⟨(InnerProductSpace.toDual ℂ W).symm
@@ -216,7 +216,7 @@ theorem rorth_exists_ext (hVf : FiniteDimensional ℂ V) (j : V →ₗ[ℂ] H) :
   have hι : Function.Injective ι := D.injective_subtype.comp V.injective_subtype
   let S : Submodule ℂ H := LinearMap.range ι
   have : FiniteDimensional ℂ S := inferInstance
-  have : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   let e : V ≃ₗ[ℂ] S := LinearEquiv.ofInjective ι hι
   refine ⟨(LinearMap.toContinuousLinearMap (j.comp e.symm.toLinearMap)).comp
     S.orthogonalProjectionOnto, fun v => ?_⟩

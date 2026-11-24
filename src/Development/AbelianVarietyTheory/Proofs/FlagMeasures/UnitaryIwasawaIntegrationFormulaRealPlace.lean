@@ -427,7 +427,7 @@ theorem vol_ball_type (κ : Type) [Fintype κ] (d : ℕ) (h : Fintype.card κ = 
   rw [← Measure.addHaar_unitClosedBall_eq_addHaar_unitBall, ← h3]
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, Function.comp_apply, mem_closedBall_zero_iff,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, Function.comp_apply, mem_closedBall_zero_iff,
     LinearIsometryEquiv.norm_map, EuclideanSpace.norm_eq, Real.norm_eq_abs, sq_abs, Real.sqrt_le_one]
 
 theorem vol_ball_three (a b : ℕ) :
@@ -460,7 +460,7 @@ theorem vol_scale (a : ℕ) (q : ℝ) :
   rw [← h]
   congr 1
   ext w
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, Pi.smul_apply, smul_eq_mul, mul_pow, inv_pow,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, Pi.smul_apply, smul_eq_mul, mul_pow, inv_pow,
     Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)]
   simp only [div_eq_inv_mul]
 
@@ -499,12 +499,12 @@ theorem volume_sheared_balls (a b c : ℕ) (ι : (Fin c → ℝ) →ₗ[ℝ] (Fi
   have hS : MeasurableSet {v : (Fin a → ℝ) × (Fin b → ℝ) × ((Fin a → ℝ) × (Fin c → ℝ)) |
       ∑ i, (v.1 i + v.2.2.1 i / Real.sqrt 2) ^ 2 + ∑ i, (v.2.1 i + ι v.2.2.2 i) ^ 2 +
         ∑ i, v.2.2.1 i ^ 2 / 2 ≤ 1 ∧ ∑ i, v.2.2.2 i ^ 2 ≤ 1} := by
-    rw [Set.setOf_and]
+    rw [Set.ofPred_and]
     exact ((isClosed_le (by fun_prop) continuous_const).inter
       (isClosed_le (by fun_prop) continuous_const)).measurableSet
   have hs : MeasurableSet {v : ((Fin a → ℝ) × (Fin b → ℝ)) × ((Fin a → ℝ) × (Fin c → ℝ)) |
       ∑ i, v.1.1 i ^ 2 + ∑ i, v.1.2 i ^ 2 + ∑ i, v.2.1 i ^ 2 / 2 ≤ 1 ∧ ∑ i, v.2.2 i ^ 2 ≤ 1} := by
-    rw [Set.setOf_and]
+    rw [Set.ofPred_and]
     exact ((isClosed_le (by fun_prop) continuous_const).inter
       (isClosed_le (by fun_prop) continuous_const)).measurableSet
   have h1 := (volume_preserving_prodAssoc (α₁ := Fin a → ℝ) (β₁ := Fin b → ℝ)
@@ -842,7 +842,7 @@ theorem right_inv_eq_smul_left_inv :
       show ν ((fun h => h * g) ⁻¹' A) = ν A
       rw [← Measure.map_apply (measurable_mul_const g) hA, hνinv g hg]
     rw [lintegral_congr_ae hc, lintegral_const, hμ1, mul_one]
-  rw [Measure.smul_apply, smul_eq_mul, ← h1, h2]
+  rw [smul_apply, smul_eq_mul, ← h1, h2]
 
 end GlobalTheory.IwConst
 end -- clump:auto
@@ -974,10 +974,10 @@ theorem isClosed_stab {a : ℕ} (W : Fin (a + 1) → Submodule ℂ (Fin n → �
       ⋂ i, ⋂ y ∈ (W i : Set (Fin n → ℂ)),
         (fun g : Formalism.REAL.UJ ε => uMat g *ᵥ y) ⁻¹' (W i : Set (Fin n → ℂ)) := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
   rw [h]
   refine isClosed_iInter fun i => isClosed_biInter fun y _ => ?_
-  exact (W i).closed_of_finiteDimensional.preimage (hc.matrix_mulVec continuous_const)
+  exact (W i).isClosed_of_finiteDimensional.preimage (hc.matrix_mulVec continuous_const)
 
 theorem mem_flagM_of_keeps {a : ℕ} (W : Fin (a + 1) → Submodule ℂ (Fin n → ℂ)) {l : Formalism.REAL.UJ ε}
     (hl : l ∈ maxK ε) (h : ∀ i, ∀ y ∈ W i, uMat l *ᵥ y ∈ W i) : l ∈ flagM ε W := by
@@ -1084,7 +1084,7 @@ theorem close_levi : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a �
   refine ⟨r, hr, fun u hu m hm k hk hle => ?_⟩
   have hm' : ∀ i, ∀ y ∈ W i, uMat m *ᵥ y ∈ W i ∧ (uMat m)ᴴ *ᵥ y ∈ W i := hm
   have hum : u * m ∈ {g : Formalism.REAL.UJ ε | ∀ i, ∀ y ∈ W i, uMat g *ᵥ y ∈ W i} := by
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     intro i y hy
     rw [GlobalTheory.FlagLeviGroup.uMat_mul, ← Matrix.mulVec_mulVec]
     exact GlobalTheory.FlagMeas.UnipRad.keeps hW u hu i _ (hm' i y hy).1
@@ -1236,7 +1236,7 @@ theorem slab_measure_squeeze : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j 
       _ = ν {l | l * (l1 * k) ∈ slab ε E ρ r} := by
           congr 1
           ext l
-          simp only [Set.mem_preimage, Set.mem_setOf_eq, mul_assoc]
+          simp only [Set.mem_preimage, Set.mem_ofPred_eq, mul_assoc]
   rw [hA]
   constructor
   · calc ν (hsBall ε (r / (1 + η)))
@@ -1401,7 +1401,7 @@ private theorem map_mul_right_eq_of_isGaugeSub {n : ℕ} {ε : Fin n → Bool} (
     rw [he2, MeasurableEquiv.map_apply]
     congr 1
     ext g
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, MeasurableEquiv.coe_mulRight, MeasurableEquiv.coe_mulLeft]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, MeasurableEquiv.coe_mulRight, MeasurableEquiv.coe_mulLeft]
     have hg : uMat (l⁻¹ * g * l) - 1 = (uMat l)ᴴ * (uMat g - 1) * uMat l := by
       rw [show uMat (l⁻¹ * g * l) = uMat l⁻¹ * uMat g * uMat l by simp [uMat], hinvU]
       simp only [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hu]
@@ -1525,7 +1525,7 @@ theorem iwasawa_constant : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ), (uni
       (𝓝[>] 0) (𝓝 (ballVol (n ^ 2))) := by
     have h3 := ((_root_.GlobalTheory.GaugeWhole.gauge_whole n ε).1 c hc).2.2.2
     refine h3.congr (fun r => ?_)
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     rfl
   have hg : Tendsto (fun r : ℝ => νL (hsBall ε r) /
       ENNReal.ofReal (r ^ ((p - ∑ i, j i) ^ 2 + (q - ∑ i, j i) ^ 2 + ∑ i, j i ^ 2))) (𝓝[>] 0)

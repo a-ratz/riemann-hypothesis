@@ -343,7 +343,7 @@ theorem exists_gen {Λ : Lat ξ Ω} {σ : ℤ} {g : Ω} (hg : g ≠ 0)
     by_contra hn
     have he : {t | ∃ s : Unit → Ω, (∀ i, Λ.IsGenAt p (s i)) ∧ t = ∏ i, s i ^ σ} = ∅ := by
       ext t
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨s, hs, -⟩
       exact hn ⟨_, hs ()⟩
     have hm2 : g ∈ Submodule.span (regAt ξ p) {t | ∃ s : Unit → Ω, (∀ i, Λ.IsGenAt p (s i)) ∧ t = ∏ i, s i ^ σ} :=

@@ -95,7 +95,7 @@ theorem exists_ratEquiv (hp : IsPair B M χX χW om r s r' s') :
     have h3 : incM F a = incM F b := M.co.e.injective (by rw [hyz a, hyz b, h1, h2])
     exact Matrix.ext fun i j => sq_inclR_inj (congrFun (congrFun h3 i) j)
   have h2 : Module.finrank F E = 2 := hp.base.cm.2.2.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   have hdim : Module.finrank F (Matrix (Fin n) (Fin d) E) =
       Module.finrank F ((Fin n × Fin d → F) × (Fin n × Fin d → F)) := by
     rw [Module.finrank_matrix, h2]

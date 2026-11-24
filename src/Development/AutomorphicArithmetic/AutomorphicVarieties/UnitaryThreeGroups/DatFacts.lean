@@ -57,7 +57,7 @@ private theorem open_galOf (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
   let b := Module.finBasis ℚ K
   have e : (galOf ℚ K Ω : Set (G ℚ Ω)) = ⋂ i, {σ : G ℚ Ω | σ (algebraMap K Ω (b i)) = algebraMap K Ω (b i)} := by
     ext σ
-    simp only [Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe, mem_galOf]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe, mem_galOf]
     refine ⟨fun h i => h _, fun h x => ?_⟩
     have := b.ext (f₁ := σ.toLinearMap ∘ₗ (IsScalarTower.toAlgHom ℚ K Ω).toLinearMap)
       (f₂ := (IsScalarTower.toAlgHom ℚ K Ω).toLinearMap) h
@@ -72,7 +72,7 @@ private theorem cyc_ine (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
   show cyclotomicCharacter Ω l σ.toRingEquiv = 1
   refine Units.ext (PadicInt.ext_of_toZModPow.mp fun n => ?_)
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have hN0 : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
   have : NeZero (l ^ n) := ⟨hN0⟩
   have hspec := cyclotomicCharacter.spec (L := Ω) l σ.toRingEquiv ζ hζ.pow_eq_one
@@ -156,7 +156,7 @@ theorem UpperTheory.V.U3.dat_facts :
   · have : Algebra.IsQuadraticExtension ℚ K := ⟨D.gd.quad⟩
     exact IsCMField.ofCMExtension ℚ K
   · have hf : Continuous (algebraMap ℤ_[l] (PadicAlgCl l)).toMonoidHom := by
-      refine ((continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val).congr fun x => ?_
+      refine ((continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal).congr fun x => ?_
       exact (IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l) x).symm
     have h1 := ((hf.units_map _).comp (continuous_cycZ ℚ Ω l)).zpow (e : ℤ)
     have h2 := (((locConst _ (Chr.clsFacts ℚ Ω N).1).comp ψ.toUnitHom).comp

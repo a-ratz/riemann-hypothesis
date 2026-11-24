@@ -484,7 +484,7 @@ variable {L} {f : ℂ → ℂ} {k α : ℂ} {N : ℕ}
 lemma exp_scale (hα : α * (starRingEnd ℂ) α = N) (z ω : ℂ) :
     Complex.exp (k * (2 * (α * z) + α * ω) * (starRingEnd ℂ) (α * ω)) =
       Complex.exp (k * (2 * z + ω) * (starRingEnd ℂ) ω) ^ N := by
-  rw [← Complex.exp_nat_mul, ← hα, map_mul]
+  rw [← Complex.exp_natCast_mul, ← hα, map_mul]
   congr 1; ring
 
 lemma exists_poly (hf : Differentiable ℂ f) (h0 : ∀ z, f z = 0 ↔ z ∈ L.lattice)
@@ -526,7 +526,7 @@ lemma twist_eq_zero (hf : Differentiable ℂ f) (h0 : ∀ z, f z = 0 ↔ z ∈ L
     apply mul_right_cancel₀ (pow_ne_zero (2 * N) (Complex.exp_ne_zero (c * z ^ 2)))
     have e : Complex.exp (κ * z ^ 2) * Complex.exp (c * z ^ 2) ^ (2 * N) =
         Complex.exp (c * (α * z) ^ 2) ^ 2 := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add]
       congr 1; rw [hκ]; push_cast; ring
     have := h z hz
     rw [mul_pow, ← e, mul_pow (f z)] at this
@@ -586,7 +586,7 @@ lemma sgStar_facts (L : PeriodPair) (Λ : AddSubgroup ℂ) (hL : ∀ z, z ∈ Λ
   have e1 : ((if ω / 2 ∈ Λ then 1 else -1 : ℂ)) ^ 2 = 1 := by split_ifs <;> norm_num
   simp only [U1, mul_pow, e1, one_mul] at e
   change sgStar Λ (z + ω) ^ 2 = sgStar Λ z ^ 2 * _
-  rw [← e, mul_assoc, ← Complex.exp_nat_mul, ← Complex.exp_add]
+  rw [← e, mul_assoc, ← Complex.exp_natCast_mul, ← Complex.exp_add]
   have : ((2 : ℕ) : ℂ) * (-(Real.pi : ℂ) * z * (starRingEnd ℂ) ω / (area Λ : ℂ) -
       (Real.pi : ℂ) * ω * (starRingEnd ℂ) ω / (2 * (area Λ : ℂ))) +
       Real.pi / area Λ * (2 * z + ω) * (starRingEnd ℂ) ω = 0 := by

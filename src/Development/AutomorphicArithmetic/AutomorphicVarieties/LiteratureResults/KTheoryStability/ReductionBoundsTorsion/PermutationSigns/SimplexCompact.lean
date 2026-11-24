@@ -91,7 +91,7 @@ private theorem gl_coe_inv_mul_coe_eq_one (B : GL (Fin N) ℂ) :
   Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp B.isUnit)
 
 theorem trans_pos {h : HS L N} (hh : h ∈ Pos L N) : ∃ g : Gp L N, actL g h = (one L N).1 := by
-  simp only [Pos, Set.mem_setOf_eq] at hh
+  simp only [Pos, Set.mem_ofPred_eq] at hh
   choose B hB using fun w => sqrt_fac (hh w)
   refine ⟨B, HS_ext fun w => ?_⟩
   rw [mat_actL_eq_conjTranspose_inv_mul_mul_inv, UpqT_mat_one', hB w]
@@ -128,7 +128,7 @@ private theorem actL_mul' (a b : Gp L N) (x : HS L N) : actL (a * b) x = actL a 
 
 open ComplexOrder in
 private theorem actL_mem_Pos (g : Gp L N) {h : HS L N} (hh : h ∈ Pos L N) : actL g h ∈ Pos L N := by
-  simp only [Pos, Set.mem_setOf_eq] at hh ⊢
+  simp only [Pos, Set.mem_ofPred_eq] at hh ⊢
   intro w
   rw [mat_actL_eq_conjTranspose_inv_mul_mul_inv, ← Matrix.coe_units_inv]
   have hB : IsUnit (((g w)⁻¹ : GL (Fin N) ℂ) : Matrix (Fin N) (Fin N) ℂ) := Units.isUnit _
@@ -199,7 +199,7 @@ theorem ext_zero {q : ℕ} (h : HS L N) : ext (0 : HS L N [⋀^Fin q]→L[ℝ] �
 open ComplexOrder in
 theorem convex_pos : Convex ℝ (Pos L N) := by
   intro x hx y hy a b ha hb hab
-  simp only [Pos, Set.mem_setOf_eq] at *
+  simp only [Pos, Set.mem_ofPred_eq] at *
   intro w
   have hm : mat (a • x + b • y) w = (a : ℂ) • mat x w + (b : ℂ) • mat y w := by simp [mat]
   rw [hm]

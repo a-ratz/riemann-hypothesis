@@ -74,7 +74,7 @@ theorem boundInf : BoundInf := by
         rw [← hu]
         exact NormedRing.inverse_continuousAt u)
     have h2 : Continuous (fun p : HV E a => (Matrix.of p.1 : Matrix (Fin a) (Fin a) (Cinf E))) :=
-      continuous_subtype_val
+      continuous_subtypeVal
     exact (ContinuousAt.comp (f := fun p : HV E a => (Matrix.of p.1 : Matrix (Fin a) (Fin a) (Cinf E))) h1
       h2.continuousAt).continuousWithinAt
   obtain ⟨C₂, hC₂⟩ := hc.exists_bound_of_continuousOn hcont

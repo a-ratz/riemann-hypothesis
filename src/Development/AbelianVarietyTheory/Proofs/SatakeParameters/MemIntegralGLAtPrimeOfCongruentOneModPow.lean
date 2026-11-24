@@ -58,7 +58,7 @@ theorem intAt_iff_mem (P : HeightOneSpectrum (𝓞 E)) (a : E) :
 
 theorem mem_stdAt {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (x : Sp E n) :
     x ∈ stdAt E n P ↔ ∀ i, IntAt P (x i) := by
-  letI : StarRing E := starRingOfComm
+  let : StarRing E := starRingOfComm
   exact mem_localization_standardLattice P x
 
 theorem intAt_mulVec (P : HeightOneSpectrum (𝓞 E)) {n : ℕ} (A : Matrix (Fin n) (Fin n) E)

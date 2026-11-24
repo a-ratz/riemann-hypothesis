@@ -373,7 +373,7 @@ theorem col_mem_level {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.PreX B.t
         ((I.rec7 l Z).host.E ⊗[(I.rec7 l Z).host.F] v.adicCompletion (I.rec7 l Z).host.F)) r s) ∈
       Formalism.UG.latS (F := (I.rec7 l Z).host.F) (v.adicCompletion (I.rec7 l Z).host.F) (intV (I.rec7 l Z).host.E v) S.Lb := by
   have hgram : Formalism.L2.Forms.gramN (I.rec7 l Z) i hi = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 i hi).1
-  haveI : NeZero ((I.rec7 l Z).R.N i) := ⟨by
+  have : NeZero ((I.rec7 l Z).R.N i) := ⟨by
     have := (I.rec7 l Z).R.m_add_three_le_k
     simp only [Ranks.N]; omega⟩
   let c : 𝓞 (I.rec7 l Z).host.E →+* 𝓞 (I.rec7 l Z).host.E :=
@@ -648,7 +648,7 @@ theorem entry_mem_of_levelVL : ∀ (F E : Type) [Field F] [NumberField F] [Field
   subst hJ
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · intro i; exact i.elim0
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have hlast : ∀ j : Fin n, j.1 + 1 = n ↔ j = Formalism.L2.Col.lastIdx n := by
     intro j
     constructor
@@ -835,7 +835,7 @@ theorem lattice_forward_preserves_base_alt : ∀ {B : GlobalTheory.Mem.Base} {X 
   have hL : (a.g.x 0).L = GlobalTheory.AdelicU.stdLattice (I.rec7 l Z).host.E ((I.rec7 l Z).sp.X 0).rank := by
     ext z
     rw [(hat.pinX.xs 0 (Nat.zero_le _)).2.2 z]
-    simp only [GlobalTheory.AdForm.intVec, Set.mem_setOf_eq, GlobalTheory.AdelicU.stdLattice, Formalism.UG.stdLat, Submodule.mem_pi, Set.mem_univ, true_imp_iff, LinearMap.mem_range, Algebra.linearMap_apply]
+    simp only [GlobalTheory.AdForm.intVec, Set.mem_ofPred_eq, GlobalTheory.AdelicU.stdLattice, Formalism.UG.stdLat, Submodule.mem_pi, Set.mem_univ, true_imp_iff, LinearMap.mem_range, Algebra.linearMap_apply]
     exact forall_congr' fun k => ⟨fun hk => ⟨⟨_, hk⟩, rfl⟩, fun ⟨y, hy⟩ => hy ▸ y.isIntegral_coe⟩
   rw [GlobalTheory.AdelicU.levelOpen, Subgroup.mem_iInf]
   intro v
@@ -898,7 +898,7 @@ theorem traceAtG_of_mem_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.
   obtain ⟨k₀, hR⟩ := (hS u).ends 0 (Nat.zero_le _) (Or.inl rfl)
   obtain ⟨A, hU, hA'⟩ := exists_red I hA.tr.ok ((TC.spaces_in_coordinates I hA.tr.ok hP l Z).2.2.2 0 (Nat.zero_le _)).1
     ((W.R.T.cols.forms u).cls 0 (Nat.zero_le _) (Or.inl rfl)).lev hR ⟨_, hy⟩ (a.pl i).1 ((hA.lev.2.1 _).1 (a.pl i).2)
-  letI := (a.G i).fld; letI := (a.G i).val; letI := (a.G i).top; letI := (a.G i).loc
+  let := (a.G i).fld; let := (a.G i).val; let := (a.G i).top; let := (a.G i).loc
   exact embX_mem (a.G i).S g (colGroup_of_red (a.G i).q ((ha.tie row col).2.idem i).1 ((I.rec7 l Z).sp.X 0)
     (Formalism.L2.Forms.rankN (I.rec7 l Z) 0 (Nat.zero_le _)) (show B.R.N 0 = B.R.k by simp [Ranks.N]) _
     ((ha.stdG i).1 0 (Nat.zero_le _)) hκy hA' hU g hg)
@@ -1353,7 +1353,7 @@ end GlobalTheory.FamTrace.LastRow
 
 theorem GlobalTheory.FamTrace.lastRow_cong_of_keepsPairs_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ κ ∈ GfC ((I.rec7 l Z).sp.X 0), _root_.GlobalTheory.FamTrace.KeepsPairsAlt a κ → (∀ (v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F)) (r s : Fin ((I.rec7 l Z).R.N 0)), Formalism.UG.prV (E := (I.rec7 l Z).host.E) v (GlobalTheory.AdForm.finM ((I.rec7 l Z).sp.X 0) (Formalism.L2.Forms.rankN (I.rec7 l Z) 0 (Nat.zero_le _)) κ r s) ∈ Formalism.BasicNotions.intV (I.rec7 l Z).host.E v) → ∀ v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F), (((((I.rec7 l Z).mem u).A.T : ℕ) : 𝓞 (I.rec7 l Z).host.F) ∈ v.asIdeal) → ∀ s : Fin ((I.rec7 l Z).R.N 0), ∃ c ∈ Formalism.BasicNotions.intV (I.rec7 l Z).host.E v, Formalism.UG.prV (E := (I.rec7 l Z).host.E) v (GlobalTheory.AdForm.finM ((I.rec7 l Z).sp.X 0) (Formalism.L2.Forms.rankN (I.rec7 l Z) 0 (Nat.zero_le _)) κ (Formalism.L2.Col.lastIdx _) s) - (1 : Matrix (Fin ((I.rec7 l Z).R.N 0)) (Fin ((I.rec7 l Z).R.N 0)) ((I.rec7 l Z).host.E ⊗[(I.rec7 l Z).host.F] v.adicCompletion (I.rec7 l Z).host.F)) (Formalism.L2.Col.lastIdx _) s = Formalism.UG.inclE (F := (I.rec7 l Z).host.F) (v.adicCompletion (I.rec7 l Z).host.F) (show (I.rec7 l Z).host.E from (X.piT u : B.fields.E)) * c := by
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hA u a ha hat κ hκ hkp hint v hv s
-  letI := a.fld; letI := a.val; letI := a.top; haveI := a.loc
+  let := a.fld; let := a.val; let := a.top; have := a.loc
   have htP : ∀ p, p ∈ a.v.tP ↔ ((((I.rec7 l Z).mem u).A.T : ℕ) : 𝓞 (I.rec7 l Z).host.F) ∈ p.asIdeal := by
     have hψ := hat.pinX.std
     let row : ∀ t, RowCh (_root_.GlobalTheory.Fam.pk_z W) (_root_.GlobalTheory.Fam.complexLevelStructure W) u a.g t := fun t =>
@@ -1376,7 +1376,7 @@ theorem GlobalTheory.FamTrace.lastRow_cong_of_keepsPairs_alt : ∀ {B : GlobalTh
       exact not_isUnit_zero hcop
     exact (Formalism.L2.Col.mem_divs hne _).1 (e i).2
   have hn := Formalism.L2.Forms.rankN (I.rec7 l Z) 0 (Nat.zero_le _)
-  haveI : NeZero ((I.rec7 l Z).R.N 0) := ⟨by
+  have : NeZero ((I.rec7 l Z).R.N 0) := ⟨by
     have := (I.rec7 l Z).R.m_add_three_le_k
     simp only [Ranks.N]; omega⟩
   set r₀ : Fin ((I.rec7 l Z).sp.X 0).rank := (finCongr hn).symm (Formalism.L2.Col.lastIdx _) with hr₀def
@@ -1442,7 +1442,7 @@ theorem GlobalTheory.FamTrace.uloc_T_of_inLevG_alt : ∀ {B : GlobalTheory.Mem.B
   obtain ⟨kk, R⟩ := hF.ends 0 (Nat.zero_le _) (Or.inl rfl)
   have hgram : Formalism.L2.Forms.gramN (I.rec7 l Z) 0 (Nat.zero_le _) = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 0 (Nat.zero_le _)).1
   have hlb := R.lb ()
-  haveI : NeZero ((I.rec7 l Z).R.N 0) := ⟨by
+  have : NeZero ((I.rec7 l Z).R.N 0) := ⟨by
     have := (I.rec7 l Z).R.m_add_three_le_k
     simp only [Ranks.N]; omega⟩
   let s : 𝓞 (I.rec7 l Z).host.E →+* 𝓞 (I.rec7 l Z).host.E := RingOfIntegers.mapRingHom (Formalism.L2.Forms.sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E)

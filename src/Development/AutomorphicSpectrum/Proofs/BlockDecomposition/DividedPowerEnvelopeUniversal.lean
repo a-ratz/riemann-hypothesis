@@ -59,7 +59,7 @@ theorem pdPoly_universal : ∀ {B : Type} [CommRing B] {J : Ideal B} (δ : Divid
   have hη : (pq B).IsStd δ (eta δ) := by
     unfold eta
     exact Classical.choose_spec (FubiniStudyChowHeightFormula₂.Adr.exists_std B J δ (pq B))
-  letI : Algebra B C := f.toAlgebra
+  let : Algebra B C := f.toAlgebra
   let L : (pq B).P →ₗ[B] C := (pq B).e.constr ℕ fun n => δ''.dpow n x
   have hL : ∀ n, L ((pq B).e n) = δ''.dpow n x := fun n => (pq B).e.constr_basis ℕ _ n
   have h1 : L 1 = 1 := by

@@ -416,9 +416,9 @@ theorem approxRoot_fix_tower : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field �
     exact (_root_.GlobalTheory.AlmostEt.approxRoot_closed Ω v p F θ hθ1 _ _ h1 h2).1
 
   refine ⟨θ, hθ1, fun x hx => ?_⟩
-  haveI : CharZero Ω := Basic.charZero_of_isClo hclo
-  haveI : IsAlgClosed Ω := hclo.clo
-  haveI : Algebra.IsAlgebraic (O0 p) Ω := hclo.alg
+  have : CharZero Ω := Basic.charZero_of_isClo hclo
+  have : IsAlgClosed Ω := hclo.clo
+  have : Algebra.IsAlgebraic (O0 p) Ω := hclo.alg
   have hfix : ∀ g : Ω ≃ₐ[O0 p] Ω, (∀ s ∈ S, g s = s) → g x = x := by
     intro g hg
     have hgm : g ∈ ⨅ n, Gn T n := by

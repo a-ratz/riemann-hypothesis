@@ -80,8 +80,8 @@ theorem exists_compact_reps {La : Type} [AddCommGroup La] (P : La →+ (Fin N �
   classical
   obtain ⟨b, hbsub, hbspan, hbli⟩ := exists_linearIndependent ℝ (Set.range P)
   rw [hspan] at hbspan
-  haveI : Finite b := hbli.finite
-  haveI : Fintype b := Fintype.ofFinite b
+  have : Finite b := hbli.finite
+  have : Fintype b := Fintype.ofFinite b
   have hpre : ∀ j : b, ∃ x, P x = (j : Fin N → ℂ) := fun j => hbsub j.prop
   choose a ha using hpre
   refine ⟨(fun c : b → ℝ => ∑ j, c j • (j : Fin N → ℂ)) '' Set.pi Set.univ (fun _ => Set.Icc (0 : ℝ) 1),

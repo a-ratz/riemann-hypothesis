@@ -309,7 +309,7 @@ theorem exists_unit_iterate_mul_eq :
         (∀ r : ℕ, ∃ M : ℕ, ∀ m ≥ M, (⇑φ)^[m] u - 1 ∈ Ideal.span {(p : A)} ^ r) →
           ∀ n : ℕ, 0 < n → ∃ c : A, IsUnit c ∧ (⇑φ)^[n] c * (⇑φ)^[n - 1] u = c := by
   intro A _ p hc φ u hu hconv n hn
-  haveI := hc
+  have := hc
   set I : Ideal A := Ideal.span {(p : A)} with hI
   have hsm : ∀ J : Ideal A, J • (⊤ : Submodule A A) = J := fun J => by simp
   obtain ⟨w, hw⟩ : ∃ w : ℕ → A, w = fun k => (⇑φ)^[n * k + (n - 1)] u := ⟨_, rfl⟩
@@ -516,7 +516,7 @@ theorem abstract {B D : Type} [CommRing B] [CommRing D] [IsDomain D] (ι : B →
     (n : ℕ) (hn : 0 < n) (x : B) (hx : (⇑φ)^[n] x = p * x) (hx0 : x ≠ 0) (hx1 : F 1 (ι x))
     (hj0 : ∀ j, j < n → F 0 (ι ((⇑φ)^[j] x))) :
     IsUnit x ∧ ¬ F 2 (ι x) ∧ ∀ j, 0 < j → j < n → ¬ F 1 (ι ((⇑φ)^[j] x)) := by
-  haveI : IsDomain B := hι.isDomain ι
+  have : IsDomain B := hι.isDomain ι
   have hprod : ∀ (d : ℕ → ℤ) (f : ℕ → D) (s : Finset ℕ), (∀ i ∈ s, F (d i) (f i)) →
       F (∑ i ∈ s, d i) (∏ i ∈ s, f i) := by
     intro d f s
@@ -607,7 +607,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (C : GlobalTheory.MemLoc.Core l) (n 
   obtain ⟨htu, -, ht2, hlu⟩ := core_t_unit_fil l C
   have he := core_isEps l C
   have hlog := (LogFun.log_fun l C.ε C.t he.1 C.t_log).2.2.2 C.j C.j_cris
-  haveI : IsDomain (Per.BdR l) := (BdRField.bdR_isField l).2.2.1.isDomain
+  have : IsDomain (Per.BdR l) := (BdRField.bdR_isField l).2.2.1.isDomain
   refine abstract C.ι (ULaws.u_laws l C).2.2.2.1 (Per.φB l) (fun a y => y ∈ Per.FilD l a) h1 hmul
     (l : Per.Bcris l) (algebraMap (Per.Acris l) (Per.Bcris l) C.t) hlu htu ?_ ?_ ?_ ?_ n hn x hx hx0 hx1 hj0
   · rw [fund_phiB_alg, TPhi.t_phi l C, map_mul, map_natCast]

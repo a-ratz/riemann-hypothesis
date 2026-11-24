@@ -109,7 +109,7 @@ open GlobalTheory.LiftSys.OfLift in
 theorem GlobalTheory.LiftSys.exists_sys_presents : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal R) (hI : I ^ 2 = 0) (π : R →+* R₀) (hπ : Function.Surjective π) (hk : RingHom.ker π = I) (X₀ : Scheme.{0}) (s₀ : X₀ ⟶ Sp R₀), ∀ (X : Scheme.{0}) (s : X ⟶ Sp R) (i : X₀ ⟶ X), IsPullback i s₀ s (spMap π) → Smooth s → ∃ S : Sys I π s₀, Nonempty (S.Presents s i) := by
   intro R R₀ _ _ I hI π hπ hk X₀ s₀ X s i hpb hsm
   have hn : IsNilpotent (RingHom.ker π) := ⟨2, hk ▸ hI⟩
-  haveI := surjective_spMap hI hk hπ
+  have := surjective_spMap hI hk hπ
   have hi : Function.Surjective i.base :=
     (MorphismProperty.of_isPullback (P := @Surjective) hpb.flip ‹_›).surj
   let G : AffOp X₀ ⥤ AffOp X :=

@@ -228,14 +228,14 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
   classical
   set Q := Submodule.span R ((fun s => s ^ k) '' S)
   have hQle : Q ≤ ((I ^ k : FractionalIdeal R⁰ K) : Submodule R K) := by
-    rw [coe_pow, Submodule.span_le]
+    rw [coeToSubmodule_pow, Submodule.span_le]
     rintro _ ⟨s, hs, rfl⟩
     exact Submodule.pow_mem_pow _ (hIS ▸ Submodule.subset_span hs) k
   let Qf : FractionalIdeal R⁰ K := ⟨Q, isFractional_of_le hQle⟩
   have hQf : Qf ≤ I ^ k := hQle
   have hIk : I ^ k ≠ 0 := pow_ne_zero _ hI
   suffices h : I ^ k ≤ Qf by
-    rw [← coe_pow]; exact h
+    rw [← coeToSubmodule_pow]; exact h
   by_contra hne
   have hb : Qf * (I ^ k)⁻¹ ≤ 1 := by
     calc Qf * (I ^ k)⁻¹ ≤ I ^ k * (I ^ k)⁻¹ := mul_le_mul' hQf le_rfl
@@ -253,7 +253,7 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
   have hstep : ∀ s ∈ S, s ∈ ((P : FractionalIdeal R⁰ K) * I) := by
     intro s hs
     have hsI : spanSingleton R⁰ s ≤ I := by
-      rw [spanSingleton_le_iff_mem, ← mem_coe, hIS]; exact Submodule.subset_span hs
+      rw [spanSingleton_le_iff_mem, ← mem_coeToSubmodule, hIS]; exact Submodule.subset_span hs
     have hc : spanSingleton R⁰ s * I⁻¹ ≤ 1 := by
       calc spanSingleton R⁰ s * I⁻¹ ≤ I * I⁻¹ := mul_le_mul' hsI le_rfl
         _ = 1 := mul_inv_cancel₀ hI
@@ -274,9 +274,9 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
         _ ≤ P * I := mul_le_mul' h2 le_rfl
     exact spanSingleton_le_iff_mem.mp h3
   have hIP : I ≤ (P : FractionalIdeal R⁰ K) * I := by
-    rw [← coe_le_coe, hIS, Submodule.span_le]
+    rw [← coeToSubmodule_le_coeToSubmodule, hIS, Submodule.span_le]
     intro s hs
-    exact mem_coe.mpr (hstep s hs)
+    exact mem_coeToSubmodule.mpr (hstep s hs)
   have h1P : (1 : FractionalIdeal R⁰ K) ≤ P := by
     calc (1 : FractionalIdeal R⁰ K) = I * I⁻¹ := (mul_inv_cancel₀ hI).symm
       _ ≤ P * I * I⁻¹ := mul_le_mul' hIP le_rfl
@@ -348,17 +348,17 @@ theorem unitDisc : UnitDisc D := by
     have h2 := congrArg D.host.conj ha
     rwa [CU.conj_smul, hcc, CU.conj_conj] at h2
   let Lf : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E :=
-    ⟨vol D L, isFractional_of_le (J := spanSingleton _ c) (by rw [coe_spanSingleton]; exact hGle)⟩
+    ⟨vol D L, isFractional_of_le (J := spanSingleton _ c) (by rw [coeToSubmodule_spanSingleton]; exact hGle)⟩
   let Mf : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E :=
     ⟨CU.cS D (vol D L), isFractional_of_le (J := spanSingleton _ c)
-      (by rw [coe_spanSingleton]; exact hMle)⟩
+      (by rw [coeToSubmodule_spanSingleton]; exact hMle)⟩
   have hmL : (m : D.host.E) ^ N ∈ vol D L := Submodule.subset_span hmN
   have hmM : (m : D.host.E) ^ N ∈ CU.cS D (vol D L) := by
     rw [CU.mem_cS, map_pow, map_intCast]; exact hmL
   have hMf0 : Mf ≠ 0 := by
     intro h
     have h1 : (m : D.host.E) ^ N ∈ (Mf : Submodule (𝓞 D.host.E) D.host.E) := hmM
-    rw [h, coe_zero, Submodule.mem_bot] at h1
+    rw [h, coeToSubmodule_zero, Submodule.mem_bot] at h1
     exact pow_ne_zero _ hmE h1
   have hMS : (Mf : Submodule (𝓞 D.host.E) D.host.E) = Submodule.span _ (D.host.conj '' G) :=
     cS_span D G
@@ -376,15 +376,15 @@ theorem unitDisc : UnitDisc D := by
     obtain ⟨g, hg, rfl⟩ := (Set.mem_fintype_prod _ _).mp hb
     refine adj_step D L hL U hU g fun i y hy => ?_
     have h1 := (mem_inv_iff hMf0).mp (hg i) y hy
-    rwa [← mem_coe, coe_one] at h1
+    rwa [← mem_coeToSubmodule, coeToSubmodule_one] at h1
   have key' : Mf ^ (N - 1) * Mf⁻¹ ^ N ≤ Lf := by
-    rw [← coe_le_coe, coe_mul, coe_pow, coe_pow]; exact key
+    rw [← coeToSubmodule_le_coeToSubmodule, coeToSubmodule_mul, coeToSubmodule_pow, coeToSubmodule_pow]; exact key
   have hfin : (1 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ≤ Lf * Mf := by
     rcases N with _ | n
     · have h1 : (1 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ≤ Lf := by
         simpa using key'
       have h2 : (1 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ≤ Mf := by
-        rw [FractionalIdeal.one_le, ← mem_coe]
+        rw [FractionalIdeal.one_le, ← mem_coeToSubmodule]
         have h5 : (1 : D.host.E) ∈ CU.cS D (vol D L) := by simpa using hmM
         exact h5
       calc (1 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) = 1 * 1 := (one_mul 1).symm
@@ -395,8 +395,8 @@ theorem unitDisc : UnitDisc D := by
       rw [h3] at key'
       calc (1 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) = Mf⁻¹ * Mf := (inv_mul_cancel₀ hMf0).symm
         _ ≤ Lf * Mf := mul_le_mul' key' le_rfl
-  have h4 := coe_le_coe.mpr hfin
-  rw [coe_one, coe_mul] at h4
+  have h4 := coeToSubmodule_le_coeToSubmodule.mpr hfin
+  rw [coeToSubmodule_one, coeToSubmodule_mul] at h4
   exact h4
 
 end Formalism.L2.Ker.Cd.IntegralLatticeDensity.DN

@@ -107,7 +107,7 @@ theorem cb_eq_of_prod_eq {n : ℕ} {a b : ℕ → ℝ}
   have hr : Set.range (fun j : Fin n => -a (j.1 + 1)) = Set.range (fun j : Fin n => -b (j.1 + 1)) :=
     Set.Subset.antisymm (cb_range_sub_of_mem (cb_mem_of_prod_eq h))
       (cb_range_sub_of_mem (cb_mem_of_prod_eq (fun Y => (h Y).symm)))
-  have hf := ((cb_strictMono_of_anti ha).range_inj (cb_strictMono_of_anti hb)).mp hr
+  have hf := ((cb_strictMono_of_anti ha).range_inj_of_wellFoundedLT (cb_strictMono_of_anti hb)).mp hr
   intro i hi
   have h1 := (Finset.mem_Icc.mp hi).1
   have h1' := (Finset.mem_Icc.mp hi).2
@@ -336,7 +336,7 @@ theorem exists_sep {P : M.Par} (hP : P.OK) :
   apply hY
   simp only [Finset.mem_biUnion, Finset.mem_univ, true_and]
   refine ⟨(σ, σ'), ?_⟩
-  rw [if_neg hss, Multiset.mem_toFinset, Polynomial.mem_roots (hne σ σ' hss), Polynomial.IsRoot.def,
+  rw [ite_eq_right hss, Multiset.mem_toFinset, Polynomial.mem_roots (hne σ σ' hss), Polynomial.IsRoot.def,
     Polynomial.eval_sub, cb_eval_xPoly, cb_eval_xPoly, sub_eq_zero]
   exact h
 

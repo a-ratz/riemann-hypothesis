@@ -84,10 +84,10 @@ theorem fixed_of_mod (l : ℕ) [Fact l.Prime] {R : Type} [CommRing R] (φ : R �
   let g : ℤ_[l] →+* S := f.codRestrict S hf
   have hmap : (Ideal.span {(l : ℤ_[l])}).map g = Ideal.span {(l : S)} := by
     rw [Ideal.map_span, Set.image_singleton, map_natCast]
-  haveI : IsPrecomplete (Ideal.span {(l : ℤ_[l])}) ℤ_[l] := by
+  have : IsPrecomplete (Ideal.span {(l : ℤ_[l])}) ℤ_[l] := by
     rw [← PadicInt.maximalIdeal_eq_span_p]
     infer_instance
-  haveI : IsHausdorff ((Ideal.span {(l : ℤ_[l])}).map g) S := by
+  have : IsHausdorff ((Ideal.span {(l : ℤ_[l])}).map g) S := by
     rw [hmap]
     refine ⟨fun y hy => Subtype.ext (hH.haus (y : R) fun n => ?_)⟩
     have h := hy n
@@ -199,7 +199,7 @@ theorem exists_int_nilpotent (t : Per.OC l) (ht : (l : Per.OC l) ∣ t ^ l - t) 
   have hl : (l : IsLocalRing.ResidueField (Per.OC l)) = 0 := by
     rw [← map_natCast (IsLocalRing.residue (Per.OC l)), IsLocalRing.residue_eq_zero_iff]
     exact (Fact.out : ¬ IsUnit (l : Per.OC l))
-  haveI : CharP (IsLocalRing.ResidueField (Per.OC l)) l :=
+  have : CharP (IsLocalRing.ResidueField (Per.OC l)) l :=
     (CharP.charP_iff_prime_eq_zero Fact.out).2 hl
   have h1 : IsLocalRing.residue (Per.OC l) t ^ l = IsLocalRing.residue (Per.OC l) t := by
     have := map_dvd (IsLocalRing.residue (Per.OC l)) ht

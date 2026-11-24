@@ -237,9 +237,9 @@ theorem exists_slice {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [Com
   have hI : AnalyticAt ℂ I (g b, 0) := hGb ▸ (hG.to_localInverse hG' hω).analyticAt
   have hI0 : I (g b, 0) = b := hGb ▸ hG.localInverse_apply_image hG' hω
   have hI' : HasFDerivAt I (e.symm : ℂ × L.ker →L[ℂ] E) (g b, 0) :=
-    hGb ▸ (hG.hasStrictFDerivAt' hG' hω).to_localInverse.hasFDerivAt
+    hGb ▸ (hG.hasStrictFDerivAt hG' hω).to_localInverse.hasFDerivAt
   have hri : ∀ᶠ y in 𝓝 (g b, (0 : L.ker)), G (I y) = y :=
-    hGb ▸ (hG.hasStrictFDerivAt' hG' hω).eventually_right_inverse
+    hGb ▸ (hG.hasStrictFDerivAt hG' hω).eventually_right_inverse
   have hc : ContinuousAt (fun x : L.ker => (g b, x)) 0 := by fun_prop
   have hri' := hc.eventually hri
   refine ⟨fun x => I (g b, x), ?_, hI0, ?_, ?_, _, hri', ?_⟩
@@ -323,9 +323,9 @@ theorem exists_regular_of_zero {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     apply hne
     filter_upwards [eball_mem_nhds a hp.r_pos] with z hz
     have hz' : z - a ∈ Metric.eball (0 : E) r := by
-      simpa [Metric.mem_eball, edist_eq_enorm_sub] using hz
+      simpa [Metric.mem_eball, eDist_eq_eNorm_sub] using hz
     have := hp.hasSum_iteratedFDeriv hz'
-    simp only [hc _ a haU ha, ContinuousMultilinearMap.zero_apply, smul_zero,
+    simp only [hc _ a haU ha, zero_apply, smul_zero,
       add_sub_cancel] at this
     exact this.unique hasSum_zero
   obtain ⟨b, hbU, hb, hk⟩ := Nat.find_spec hex
@@ -375,7 +375,7 @@ theorem injective_of_fderiv_ne_zero {n : ℕ} (ih : LocalStatement n) {E F : Typ
     (hE : Module.finrank ℂ E = n + 1) (hF : Module.finrank ℂ F = n + 1) {f : E → F} {a : E}
     (hf : AnalyticAt ℂ f a) {s : Set E} (hs : s ∈ 𝓝 a) (hinj : InjOn f s)
     (h0 : fderiv ℂ f a ≠ 0) : Function.Injective (fderiv ℂ f a) := by
-  haveI : CompleteSpace E := FiniteDimensional.complete ℂ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
   obtain ⟨w, hw⟩ : ∃ w, fderiv ℂ f a w ≠ 0 := by
     by_contra hc
     push Not at hc
@@ -421,13 +421,13 @@ theorem localStatement (n : ℕ) : LocalStatement n := by
   induction n with
   | zero =>
     intro E F _ _ _ _ _ _ hE _ f a _ _
-    haveI : Subsingleton E := Module.finrank_zero_iff.mp hE
+    have : Subsingleton E := Module.finrank_zero_iff.mp hE
     exact Function.injective_of_subsingleton _
   | succ n ih =>
     rintro E F _ _ _ _ _ _ hE hF f a hf ⟨s, hs, hinj⟩
-    haveI : CompleteSpace E := FiniteDimensional.complete ℂ E
-    haveI : CompleteSpace F := FiniteDimensional.complete ℂ F
-    haveI : Nontrivial E := Module.nontrivial_of_finrank_eq_succ hE
+    have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
+    have : CompleteSpace F := FiniteDimensional.completeSpace ℂ F
+    have : Nontrivial E := Module.nontrivial_of_finrank_eq_succ hE
     refine injective_of_fderiv_ne_zero ih hE hF hf hs hinj fun h0 => ?_
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · obtain ⟨eE⟩ : Nonempty (ℂ ≃L[ℂ] E) :=
@@ -468,7 +468,7 @@ theorem localStatement (n : ℕ) : LocalStatement n := by
       have hfill := eventually_zero_of_subset hg hhb hg0 hb0 hsub
       obtain ⟨ψ, hψ, hψ0, -, hψg, t, ht, hψi⟩ :=
         exists_slice hg hg.differentiableAt.hasFDerivAt hg0
-      haveI : Nontrivial (fderiv ℂ g b).ker := by
+      have : Nontrivial (fderiv ℂ g b).ker := by
         have := Module.Dual.finrank_ker_add_one_of_ne_zero
           (f := (fderiv ℂ g b : E →ₗ[ℂ] ℂ)) (fun h => hg0 (ContinuousLinearMap.coe_injective h))
         exact Module.nontrivial_of_finrank_pos (R := ℂ) (by omega)

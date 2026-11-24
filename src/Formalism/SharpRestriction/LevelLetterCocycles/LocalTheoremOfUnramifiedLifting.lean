@@ -50,7 +50,7 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.Basi
 variable {l : ℕ} [Fact l.Prime]
 
 theorem finiteDimensional_max_unramified (K : FinExt l) : FiniteDimensional ℚ_[l] ↥(K0 K) := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have h : K0 K ≤ K.1 := inf_le_left
   exact FiniteDimensional.of_injective (IntermediateField.inclusion h).toLinearMap
     (IntermediateField.inclusion h).injective
@@ -61,11 +61,11 @@ theorem fd_Ks (K : FinExt l) (s : ℕ) : FiniteDimensional ℚ_[l] ↥(Ks K s) :
   have hfin : Set.Finite {x : Om l | x ^ (l ^ s) = 1} :=
     (Polynomial.nthRoots (l ^ s) (1 : Om l)).toFinset.finite_toSet.subset fun x hx => by
       simpa [Polynomial.mem_nthRoots hpos] using hx
-  haveI : Finite {x : Om l | x ^ (l ^ s) = 1} := hfin.to_subtype
-  haveI : FiniteDimensional ℚ_[l] ↥(IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ s) = 1}) :=
+  have : Finite {x : Om l | x ^ (l ^ s) = 1} := hfin.to_subtype
+  have : FiniteDimensional ℚ_[l] ↥(IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ s) = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun x hx =>
       IsIntegral.of_pow hpos (by rw [hx]; exact isIntegral_one)
-  haveI := finiteDimensional_max_unramified K
+  have := finiteDimensional_max_unramified K
   unfold Ks
   exact IntermediateField.finiteDimensional_sup _ _
 

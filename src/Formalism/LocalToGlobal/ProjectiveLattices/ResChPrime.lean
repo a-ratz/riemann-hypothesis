@@ -94,8 +94,8 @@ end In66
 
 theorem resCh_prime {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) : (WeightAlgebra.resCh la).Prime := by
   unfold WeightAlgebra.resCh
-  haveI := la.isPrime
-  haveI : Finite (𝓞 K ⧸ la.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot la.asIdeal la.ne_bot
+  have := la.isPrime
+  have : Finite (𝓞 K ⧸ la.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot la.asIdeal la.ne_bot
   first
   | exact CharP.char_is_prime (𝓞 K ⧸ la.asIdeal) _
   | exact (CharP.char_is_prime_or_zero (𝓞 K ⧸ la.asIdeal) _).resolve_right

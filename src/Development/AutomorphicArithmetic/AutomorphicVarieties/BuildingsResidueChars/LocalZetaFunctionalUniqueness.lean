@@ -202,7 +202,7 @@ private theorem leviTensor_ball_of_notMem {r : ℕ} (hr : 1 ≤ r) {m : levi F n
       exact h1 (Set.indicator_of_notMem (s := {x : F | x - (1 : Matrix (Fin n) (Fin n) F) i j ∈ GroundTheory.LocalField.valBall F (r : ℤ)}) hn _)
     · have hne : i ≠ j := fun h => hij (by rw [h])
       rw [mem_levi.1 m.2 i j hij, Matrix.one_apply_ne hne, sub_zero, map_zero]
-      exact zero_le'
+      exact zero_le
   exact (mem_congruenceSubgroup_iff F n).2 ⟨mem_integralGL_of_congr hr hall, hall⟩
 
 end
@@ -218,7 +218,7 @@ end UpperTheory.V.Z.Gam
 theorem UpperTheory.local_zeta_functional_uniqueness :
     UpperTheory.V.Z.Gam.LdUnique := by
   intro F _ _ _ _ _ _ n β W _ _ σ hadm hirr κ hκ μ _ ψ γ γ' h h'
-  haveI := hirr
+  have := hirr
   obtain ⟨v, hv⟩ := exists_ne_zero_of_isIrreducible (ρ := σ)
   obtain ⟨m0, hm0⟩ := exists_subgroupOf_congruenceSubgroup_subset (β := β)
     ((hadm.1 v).mem_nhds (Subgroup.one_mem (stabilizerOf σ v)))
@@ -234,7 +234,7 @@ theorem UpperTheory.local_zeta_functional_uniqueness :
       Subgroup.mem_subgroupOf.2 (congruenceSubgroup_antitone F n (show m0 ≤ m0 + 1 by omega)
         (Subgroup.mem_subgroupOf.1 hk))
     exact mem_stabilizerOf.1 (hm0 hk')
-  haveI : FiniteDimensional ℂ (fixedVectors σ ((congruenceSubgroup F n (m0 + 1)).subgroupOf (levi F n β))) :=
+  have : FiniteDimensional ℂ (fixedVectors σ ((congruenceSubgroup F n (m0 + 1)).subgroupOf (levi F n β))) :=
     hadm.2 _ hKc hKo
   have hv' : (⟨v, hvK⟩ : fixedVectors σ ((congruenceSubgroup F n (m0 + 1)).subgroupOf (levi F n β))) ≠ 0 :=
     fun h0 => hv (congrArg Subtype.val h0)
@@ -285,7 +285,7 @@ theorem UpperTheory.local_zeta_functional_uniqueness :
         {M : Matrix (Fin n) (Fin n) F | ∀ i j, M i j - (1 : Matrix (Fin n) (Fin n) F) i j ∈
           GroundTheory.LocalField.valBall F ((m0 + 1 : ℕ) : ℤ)} := by
     ext m
-    simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage, Set.mem_setOf_eq,
+    simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage, Set.mem_ofPred_eq,
       mem_congruenceSubgroup_iff]
     constructor
     · intro hm i j
@@ -316,5 +316,5 @@ theorem UpperTheory.local_zeta_functional_uniqueness :
     exact smul_ne_zero hpos.ne' hx
   · rw [hKset]
     exact hT.preimage ((comap_measurable Units.val).comp
-      (@measurable_subtype_coe (GL (Fin n) F)
+      (@measurable_subtypeVal (GL (Fin n) F)
         (MeasurableSpace.comap Units.val GroundTheory.Automorphic.GJMatrix.measurableSpace_matrix) _))

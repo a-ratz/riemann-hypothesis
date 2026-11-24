@@ -55,7 +55,7 @@ namespace UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter
 private theorem equivV {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) :
     (ValuativeRel.valuation (v.adicCompletion K)).IsEquiv
       (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))) := by
-  haveI : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact ValuativeRel.isEquiv _ _
 

@@ -179,7 +179,7 @@ theorem fg_lat (β : GL (Fin n) (FiniteAdeleRing (𝓞 E) E)) : (lat β.1).FG :=
       field_simp
     rw [h4]
     exact sum_mem fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI := isNoetherian_span_of_finite (𝓞 E)
+  have := isNoetherian_span_of_finite (𝓞 E)
     (Set.finite_range fun i : Fin n => (Pi.single i (d : E)⁻¹ : Fin n → E))
   exact Submodule.FG.of_le_of_isNoetherian hle
 

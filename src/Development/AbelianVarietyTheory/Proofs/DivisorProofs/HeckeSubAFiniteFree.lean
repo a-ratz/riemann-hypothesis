@@ -95,9 +95,9 @@ theorem heckeSubA_finite_free (b : Base D R) (f : D.La →+ D.La) (k N : ℕ) (h
     Finite (heckeSubA o f N) ∧ ∀ (κ : Type) [Field κ] [IsAlgClosed κ] (x : Sp κ ⟶ S) (h : 𝟙_ (Over S) ⟶ o.A),
       h ∈ heckeSubA o f N → toUnit (Over.mk x) ≫ h = 1 → h = 1 := by
   refine ⟨?_, ?_⟩
-  · haveI := D.finLa
+  · have := D.finLa
     let K : Submodule ℤ D.La := LinearMap.range ((k : ℤ) • LinearMap.id)
-    haveI : Finite (D.La ⧸ K) := by
+    have : Finite (D.La ⧸ K) := by
       apply Module.finite_of_fg_torsion
       intro q
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective K q

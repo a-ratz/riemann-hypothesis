@@ -182,7 +182,7 @@ variable {Ω : Type*} [Field Ω] [Algebra K Ω]
 theorem isGalois_adjoin_nthRoots {T : Set Ω} (hT : ∀ α ∈ T, ∃ a : Kˣ, α ^ n = algebraMap K Ω a) :
     IsGalois K (adjoin K T) := by
   classical
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   have hnK : (n : K) ≠ 0 := (hζ.neZero').out
   let a : T → Kˣ := fun α => (hT α α.2).choose
   have ha : ∀ α : T, (α : Ω) ^ n = algebraMap K Ω (a α) := fun α => (hT α α.2).choose_spec
@@ -283,7 +283,7 @@ lemma isIntegral_of_pow_eq_algebraMap {α : Ω} {a : K} (hα : α ^ n = algebraM
   ⟨X ^ n - C a, monic_X_pow_sub_C _ (NeZero.ne n), by simp [hα]⟩
 
 lemma exists_pow_eq_algebraMap [IsSepClosed Ω] (a : Kˣ) : ∃ α : Ω, α ^ n = algebraMap K Ω a := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   have hnΩ : ((n : ℕ) : Ω) ≠ 0 := by
     rw [← map_natCast (algebraMap K Ω)]
     exact (map_ne_zero (algebraMap K Ω)).mpr (hζ.neZero').out

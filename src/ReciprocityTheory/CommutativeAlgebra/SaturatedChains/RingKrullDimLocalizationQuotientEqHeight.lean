@@ -101,11 +101,11 @@ theorem ringKrullDim_localization_quotient_eq_height {P : Type*} [CommRing P] (p
     [p.IsPrime] [q.IsPrime] (hpq : p ≤ q) :
     ringKrullDim (Localization.AtPrime q ⧸ p.map (algebraMap P (Localization.AtPrime q))) =
       ((q.map (Ideal.Quotient.mk p)).height : WithBot ℕ∞) := by
-  haveI hQ : (q.map (Ideal.Quotient.mk p)).IsPrime :=
+  have hQ : (q.map (Ideal.Quotient.mk p)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hpq)
   have hdisj : Disjoint (q.primeCompl : Set P) (p : Set P) :=
     Set.disjoint_left.mpr fun x hx hxp => hx (hpq hxp)
-  haveI hp' : (p.map (algebraMap P (Localization.AtPrime q))).IsPrime :=
+  have hp' : (p.map (algebraMap P (Localization.AtPrime q))).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint q.primeCompl _ p ‹_› hdisj
   rw [height_eq_order_height_lemma (q.map (Ideal.Quotient.mk p))]
   show Order.krullDim (PrimeSpectrum (Localization.AtPrime q ⧸ p.map (algebraMap P (Localization.AtPrime q)))) = _
@@ -159,7 +159,7 @@ theorem ringKrullDim_localization_quotient_eq_height {P : Type*} [CommRing P] (p
     have hCprime : ∀ x : Set.Iic (⟨q.map (Ideal.Quotient.mk p), hQ⟩ : PrimeSpectrum (P ⧸ p)), (((Ideal.comap (Ideal.Quotient.mk p) x.1.asIdeal).map
         (algebraMap P (Localization.AtPrime q))).map (Ideal.Quotient.mk (p.map (algebraMap P (Localization.AtPrime q))))).IsPrime := by
       intro x
-      haveI := hBprime x
+      have := hBprime x
       exact Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
         (by rw [Ideal.mk_ker]; exact Ideal.map_mono (hpB x.1))
     let h : Set.Iic (⟨q.map (Ideal.Quotient.mk p), hQ⟩ : PrimeSpectrum (P ⧸ p)) → PrimeSpectrum (Localization.AtPrime q ⧸ p.map (algebraMap P (Localization.AtPrime q))) := fun x => ⟨_, hCprime x⟩
@@ -239,7 +239,7 @@ theorem IsCM.height_eq_height_add_height_map_quotient {P : Type*} [CommRing P] [
   have hL := h.localization_atPrime q
   have hdisj : Disjoint (q.primeCompl : Set P) (p : Set P) :=
     Set.disjoint_left.mpr fun x hx hxp => hx (hpq hxp)
-  haveI hp' : (p.map (algebraMap P (Localization.AtPrime q))).IsPrime :=
+  have hp' : (p.map (algebraMap P (Localization.AtPrime q))).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint q.primeCompl _ p ‹_› hdisj
   have e := hL.height_add_ringKrullDim_quotient (p.map (algebraMap P (Localization.AtPrime q)))
   have e1 : (p.map (algebraMap P (Localization.AtPrime q))).height = p.height :=

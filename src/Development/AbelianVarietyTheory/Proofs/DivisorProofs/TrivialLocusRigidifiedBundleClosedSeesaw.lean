@@ -434,8 +434,8 @@ theorem exists_closed_triv_local : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] 
   intro S _ A _ L₀ N hA hL₀ ha hN hr x
   obtain ⟨R, j, _, hx, -⟩ := Scheme.exists_affine_mem_range_and_range_subset (x := x) (U := ⊤) trivial
   let j' : Sp R ⟶ S := j
-  haveI : IsOpenImmersion j' := inferInstanceAs (IsOpenImmersion j)
-  letI : GrpObj ((Over.pullback j').obj A) := Functor.grpObjObj
+  have : IsOpenImmersion j' := inferInstanceAs (IsOpenImmersion j)
+  let : GrpObj ((Over.pullback j').obj A) := Functor.grpObjObj
   let φ₀ := pullback.fst A.hom j'
   have hp := isGrpPullback_pullback A j'
   have hB : IsAbelianScheme ((Over.pullback j').obj A) := Out.TLinPf.isAb_pullback j' A hA
@@ -454,7 +454,7 @@ theorem exists_closed_triv_local : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] 
   let t' : T ⟶ Sp R := t ≫ j'.isoOpensRange.inv
   have ht : t' ≫ j' = t ≫ j'.opensRange.ι := by
     simp only [t', Category.assoc, Scheme.Hom.isoOpensRange_inv_comp]
-  letI : GrpObj ((Over.pullback t').obj ((Over.pullback j').obj A)) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback t').obj ((Over.pullback j').obj A)) := Functor.grpObjObj
   have hq := isGrpPullback_pullback ((Over.pullback j').obj A) t'
   have H1 := H T t' _ _ hq
   have hP : IsPullback (pullback.fst ((Over.pullback j').obj A).hom t' ≫ φ₀)
@@ -487,10 +487,10 @@ namespace GlobalTheory.TrivLocus
 
 theorem trivCond_of_local : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] (N : LB A.left), IsAbelianScheme A → N.IsLB → Out.Rigidified A N → ∀ (T : Scheme.{0}) (t : T ⟶ S), (∀ τ : T, ∃ V : T.Opens, τ ∈ V ∧ TrivCond A N V (V.ι ≫ t)) → TrivCond A N T t := by
   intro S A _ N hA hN hR T t hloc Y φ y hY
-  haveI := hA.comm
-  letI : GrpObj ((Over.pullback t).obj A) := Functor.grpObjObj
+  have := hA.comm
+  let : GrpObj ((Over.pullback t).obj A) := Functor.grpObjObj
   let e : Over.mk y ≅ (Over.pullback t).obj A := Over.isoMk hY.isoPullback hY.isoPullback_hom_snd
-  letI I : GrpObj (Over.mk y) := GrpObj.ofIso e.symm
+  let I : GrpObj (Over.mk y) := GrpObj.ofIso e.symm
   have : IsMonHom e.symm.hom := CategoryTheory.isMonHom_ofIso e.symm
   have : IsMonHom e.hom := inferInstanceAs (IsMonHom e.symm.inv)
   have hP : IsGrpPullback (Over.mk y) A t φ :=
@@ -505,7 +505,7 @@ theorem trivCond_of_local : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] (N : LB
     refine ⟨⟨fun x z => Over.OverMorphism.ext (hP.1.hom_ext ?_ (by rw [Over.w, Over.w]))⟩⟩
     rw [← hP.2 U x z (pushPt hP.1.w x) (pushPt hP.1.w z) rfl rfl,
       ← hP.2 U z x (pushPt hP.1.w z) (pushPt hP.1.w x) rfl rfl, _root_.mul_comm]
-  haveI := hA'.comm
+  have := hA'.comm
   obtain ⟨r, hr⟩ := hR
   have he : eSec (Over.mk y) ≫ φ = t ≫ eSec A := (cubeMapOf hP).e_comm
   have g := rigPullOf_isGen (G' := Over.mk y) (G := A) φ t he N r hr

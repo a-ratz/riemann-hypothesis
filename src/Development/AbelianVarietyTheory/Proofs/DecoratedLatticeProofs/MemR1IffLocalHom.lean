@@ -72,7 +72,7 @@ theorem eN_eq_zero {N j : ℕ} (h : N ≤ j) : Loc.eN E N j = 0 := by
 theorem mem_Ufl {v : Sp E (M + c)} {i : ℕ} :
     v ∈ Loc.Ufl E M c i ↔ ∀ l : Fin (M + c), M + i ≤ l.val → v l = 0 := by
   show (∀ l : Fin (M + c), l.1 ∉ {l | l < M + i} → v l = 0) ↔ _
-  simp only [Set.mem_setOf_eq, not_lt]
+  simp only [Set.mem_ofPred_eq, not_lt]
 
 def ColCond (x : Sp E (M + c) ≃ₗ[E] Sp E (M + c)) : Prop :=
   ∀ l m : Fin (M + c), stepAt M m ≤ stepAt M l → (M ≤ l.val ∨ M ≤ m.val) →
@@ -98,12 +98,12 @@ theorem colCond_of_R1cond {x : Sp E (M + c) ≃ₗ[E] Sp E (M + c)} (h : Loc.R1c
       exact Fin.ext hj
     by_cases hl : l.val < M
     · have hj0 : j = 0 := by
-        simp only [stepAt, hl, hm, if_true, if_false] at hlm
+        simp only [stepAt, hl, hm, ite_true, ite_false] at hlm
         omega
       subst hj0
       rw [hsingle, add_zero, h.2.1]
     · have hjl : M + j ≤ l.val := by
-        simp only [stepAt, hl, hm, if_false] at hlm
+        simp only [stepAt, hl, hm, ite_false] at hlm
         omega
       have h3 := (mem_Ufl.1 (h.2.2 j)) l hjl
       rw [Pi.sub_apply, sub_eq_zero, ← hsingle] at h3

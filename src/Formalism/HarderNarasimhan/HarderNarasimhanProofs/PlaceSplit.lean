@@ -204,7 +204,7 @@ theorem mem_placePart (v : P) (w : EuclideanSpace ℝ (P × ι × Fin 2)) :
 theorem prj_mem (v : P) (w : EuclideanSpace ℝ (P × ι × Fin 2)) : prj v w ∈ placePart v := by
   rw [mem_placePart]
   intro p hp
-  rw [prj_apply, if_neg hp]
+  rw [prj_apply, ite_eq_right hp]
 
 theorem prj_of_mem (v : P) (w : EuclideanSpace ℝ (P × ι × Fin 2)) (hw : w ∈ placePart v) :
     prj v w = w := by
@@ -396,9 +396,9 @@ theorem finrank_span_complex (b : Basis ι K V) (X : InfinitePlace K → Matrix 
     rw [Set.image_image]
     rfl
   rw [himg, ← Submodule.map_span, ← (Submodule.equivMapOfInjective _ hA _).finrank_eq]
-  haveI : Module.Finite K V := Module.Finite.of_basis b
+  have : Module.Finite K V := Module.Finite.of_basis b
   obtain ⟨t, htN, hspan, hli⟩ := exists_linearIndependent K (N : Set V)
-  haveI : Fintype t := by
+  have : Fintype t := by
     first
       | exact hli.setFinite.fintype
   have hadd : ∀ x y : V, Formalism.HermitianLatticesTheory.vecAt b v (x + y) =

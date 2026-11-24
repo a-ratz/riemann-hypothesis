@@ -111,8 +111,8 @@ theorem UpperTheory.exists_rows_hecke_compatible_level_prime_pow :
   have hb0 := bar_mul (l := l) (N := N) (p := p) L hl.ne_zero (NeZero.ne N) hp
   generalize hM : N * l ^ L = M at hb0 ⊢
   have hM0 : M ≠ 0 := hM ▸ Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl.ne_zero)
-  haveI : NeZero M := ⟨hM0⟩
-  haveI : NeZero (p * M) := ⟨Nat.mul_ne_zero hpp.ne_zero hM0⟩
+  have : NeZero M := ⟨hM0⟩
+  have : NeZero (p * M) := ⟨Nat.mul_ne_zero hpp.ne_zero hM0⟩
   have hlM : l ∣ M := hM ▸ Dvd.dvd.mul_left (dvd_pow_self l (by omega)) N
   have h1 := rows_p M p _ hb0 (aU l L N x)
   have h2 := rows_p M p _ hb0 (aV l L N)
@@ -189,7 +189,7 @@ theorem UpperTheory.heckeMatrix_mem_gammaZero_inf_and_exists_unit_inv :
   have hMn : IsCoprime m (((l ^ L * (N * N) : ℕ)) : ℤ) := by
     push_cast
     exact hML.mul_right (hMN.mul_right hMN)
-  haveI : NeZero (l ^ L * (N * N)) := ⟨by positivity⟩
+  have : NeZero (l ^ L * (N * N)) := ⟨by positivity⟩
   have hU : IsUnit (m : ZMod (l ^ L * (N * N))) := by
     obtain ⟨s, t, hst⟩ := hMn
     have h2 := congrArg (fun x : ℤ => (x : ZMod (l ^ L * (N * N)))) hst
@@ -729,7 +729,7 @@ private theorem fac (X : Tower Ω ε) {m p N M : ℕ} [Fact p.Prime] [NeZero M] 
     {b : Fam X (p * M)} (hb : Eqv X m (p * M) b) (o : Option (Fin p)) {x y : Row M} (h : Ok x y) :
     Cgr m (slU X (ofSL (gam p N o)) (pushH X p M b (zr p (gam p N o) x) (zr p (gam p N o) y)))
       (∏ i : ZMod p, ∏ j : ZMod p, b (up p M x + tp p M (i • lin p N o)) (up p M y + tp p M (j • lin p N o))) := by
-  haveI : NeZero (p * M) := ⟨mul_ne_zero (NeZero.ne p) (NeZero.ne M)⟩
+  have : NeZero (p * M) := ⟨mul_ne_zero (NeZero.ne p) (NeZero.ne M)⟩
   have e : ∀ (v : Row M) (i : ZMod p), rt (up p M (rt v (gam p N o)⁻¹) + tp p M ![0, i]) (gam p N o) =
       up p M v + tp p M (i • lin p N o) := fun v i => by
     rw [rt_up_tp, rt_mul, inv_mul_cancel, rt_one]
@@ -754,7 +754,7 @@ private theorem conj [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (p M : ℕ) [Fact p
   have key : ∀ K : ℕ, K ∣ p * M * L → Cj (cyc K s) η γ := fun K hK => by
     obtain ⟨k, hk⟩ := hK
     have hK0 : K ≠ 0 := by rintro rfl; omega
-    haveI : NeZero K := ⟨hK0⟩
+    have : NeZero K := ⟨hK0⟩
     have ht : IsPrimitiveRoot (ζ ^ k) K := hζ.pow h1 (hk.trans (mul_comm _ _))
     have h2 : s (ζ ^ k) = (ζ ^ k) ^ i := by rw [map_pow, hs, ← pow_mul, ← pow_mul, mul_comm]
     have h3 : ∀ z : Ω, z ^ K = 1 → s z = z ^ (cyc K s).val :=
@@ -1770,7 +1770,7 @@ private theorem sum_filter_fiber_eq {G B : Type} [CommGroup G] [Fintype G] {H ι
   rw [Finset.sum_eq_single ((ρ i).1 * e⁻¹)]
   · simp [Prod.ext_iff]
   · intro a _ ha
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply ha
     rw [h]
@@ -1786,13 +1786,13 @@ theorem UpperTheory.V.Z.Kato.Nb.kato_norm_relation_tame_prime :
     (fun s => (ReciprocityTheory.Gal.cycMod (F := ℚ) (Ω := Ω) l r s)⁻¹)
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact f0 _ _
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hl : l.Prime := Fact.out
   have hpN : Nat.Coprime p (l * N) := hcop.coprime_mul_right_right.coprime_mul_right_right
   have hpl : Nat.Coprime p l := hpN.coprime_mul_right_right
   have hpN' : Nat.Coprime p N := hpN.coprime_mul_left_right
-  haveI : NeZero (N * l ^ (r + n)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl.ne_zero)⟩
-  haveI : NeZero (p * (N * l ^ (r + n))) := ⟨mul_ne_zero hp.ne_zero (NeZero.ne _)⟩
+  have : NeZero (N * l ^ (r + n)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl.ne_zero)⟩
+  have : NeZero (p * (N * l ^ (r + n))) := ⟨mul_ne_zero hp.ne_zero (NeZero.ne _)⟩
   have hL : Lev l n N (N * l ^ (r + n)) (topM l n r (N * N)) g :=
     ⟨by unfold topM; ring, dvd_mul_right _ _, (pow_dvd_pow l (Nat.le_add_left n r)).mul_left _, hn, H.cop, H.g0⟩
   have hL' : Lev l n N (p * (N * l ^ (r + n))) (lvT l n r N p) g :=
@@ -1814,7 +1814,7 @@ theorem UpperTheory.V.Z.Kato.Nb.kato_norm_relation_tame_prime :
     ext
     exact (RingHom.congr_fun (ZMod.castHom_comp hrM hMM) (z : ZMod (lvT l n r N p))).symm
   have hcy := (sSlD Ω ε X N (NeZero.pos N)).2.2.2.2.2.2.2
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have k0 : (fun s : Ω ≃ₐ[ℚ] Ω => (π (cycM (topM l n r (N * N)) s))⁻¹) =
       fun s => (ReciprocityTheory.Gal.cycMod (F := ℚ) (Ω := Ω) l r s)⁻¹ := by
     funext s

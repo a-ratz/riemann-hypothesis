@@ -102,8 +102,8 @@ variable [FiniteDimensional ℂ Wp]
 theorem jf_equiv (D : RealPlaceData k r Wp Wq) (F : Mat k r → (Wq →L[ℂ] Wp)) (p : SS k r) (hp : D.inSS p)
     (g : Mat k r) : rho D p (JF D F) g = (xiTau D (1, 1) p)⁻¹ • JF D F g := by
   obtain ⟨h1, h2, h3, h4⟩ := hp
-  have := FiniteDimensional.complete ℂ Wp
-  have := FiniteDimensional.complete ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wq
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarN
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarW'

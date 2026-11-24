@@ -93,7 +93,7 @@ private theorem sc_zero' {E : Type} [Field E] (F : Type) [Field F]
 open MeasureTheory Matrix in
 theorem _root_.GlobalTheory.KSp.sc_basic : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : _root_.GlobalTheory.WeilM.IsQuad c δ) (m : ℕ) (χ : Eˣ →* Circle) (_ : _root_.GlobalTheory.WeilM.ResEtaPow (R := F) ⊥ χ m), _root_.GlobalTheory.KSp.sc F χ m 1 = 1 ∧ (∀ z z' : E, _root_.GlobalTheory.KSp.sc F χ m (z * z') = _root_.GlobalTheory.KSp.sc F χ m z * _root_.GlobalTheory.KSp.sc F χ m z') ∧ (∀ z : Eˣ, _root_.GlobalTheory.KSp.sc F χ m (z : E) = (χ z : ℂ) * ((_root_.GlobalTheory.SplitWeil.nabs F ((Units.map (Algebra.norm F : E →* F)) z) ^ ((m : ℝ) / 2) : ℝ) : ℂ)) ∧ (∀ z : Eˣ, ‖_root_.GlobalTheory.KSp.sc F χ m (z : E)‖ ^ 2 = _root_.GlobalTheory.SplitWeil.nabs F ((Units.map (Algebra.norm F : E →* F)) z) ^ m) ∧ (∀ z : Eˣ, _root_.GlobalTheory.KSp.sc F χ m (c (z : E))⁻¹ * ((_root_.GlobalTheory.SplitWeil.nabs F ((Units.map (Algebra.norm F : E →* F)) z) ^ m : ℝ) : ℂ) = _root_.GlobalTheory.KSp.sc F χ m (z : E)) ∧ (∀ t : Fˣ, _root_.GlobalTheory.KSp.sc F χ m (algebraMap F E t) = (_root_.GlobalTheory.KSp.sgn E t * (_root_.GlobalTheory.SplitWeil.nabs F t : ℝ)) ^ m) ∧ ∀ z : Eˣ, _root_.GlobalTheory.KSp.sc F χ m ((z : E) * c (z : E)) = ((_root_.GlobalTheory.SplitWeil.nabs F ((Units.map (Algebra.norm F : E →* F)) z) ^ m : ℝ) : ℂ) := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE m χ hχ
-  haveI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   have hinj := hE.algebraMap_injective
   have hinv := hE.invol
   have hpos : ∀ t : Fˣ, 0 < _root_.GlobalTheory.SplitWeil.nabs F t :=
@@ -123,7 +123,7 @@ theorem _root_.GlobalTheory.KSp.sc_basic : ∀ (F : Type) [Field F] [CharZero F]
       (_root_.GlobalTheory.KSp.sgn E t * (_root_.GlobalTheory.SplitWeil.nabs F t : ℝ)) ^ m := by
     intro t
     have h1 := hunit (Units.map (algebraMap F E : F →* E) t)
-    simp only [Units.coe_map, MonoidHom.coe_coe] at h1
+    simp only [Units.coe_map, MonoidHom.coe_ofClass] at h1
     rw [h1, hχ t, hNa, hmul, Real.mul_rpow (hpos t).le (hpos t).le, ← sq,
       rpow_natCast_div_two_sq (hpos t) m, mul_pow]
     simp only [_root_.GlobalTheory.KSp.sgn, bot_sup_eq]
@@ -150,7 +150,7 @@ theorem _root_.GlobalTheory.KSp.sc_basic : ∀ (F : Type) [Field F] [CharZero F]
       Real.norm_of_nonneg (Real.rpow_nonneg (hpos _).le _), rpow_natCast_div_two_sq (hpos _) m]
   · intro z
     have h1 := hunit (Units.map (c : E →* E) z)⁻¹
-    simp only [Units.val_inv_eq_inv_val, Units.coe_map, MonoidHom.coe_coe, map_inv] at h1
+    simp only [Units.val_inv_eq_inv_val, Units.coe_map, MonoidHom.coe_ofClass, map_inv] at h1
     have hs := hpos (Units.map (Algebra.norm F : E →* F) z)
     have habs_inv : ∀ t : Fˣ, _root_.GlobalTheory.SplitWeil.nabs F t⁻¹ =
         (_root_.GlobalTheory.SplitWeil.nabs F t)⁻¹ := fun t =>

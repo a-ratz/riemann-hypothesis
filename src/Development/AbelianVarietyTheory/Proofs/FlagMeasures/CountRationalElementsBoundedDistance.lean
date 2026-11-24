@@ -66,7 +66,7 @@ theorem bound_le (s la R : ℝ) (m f : ℕ) (hs : 1 ≤ s) (hla : 0 < la) (hla1 
   calc (1 + 2 * s * Real.exp (R / f) / la) ^ (2 * m * f)
       ≤ (3 * s / la * Real.exp (R / f)) ^ (2 * m * f) := pow_le_pow_left₀ hbase0 hbase _
     _ = (3 * s / la) ^ (2 * m * f) * Real.exp (2 * (m : ℝ) * R) := by
-      rw [mul_pow, ← Real.exp_nat_mul]
+      rw [mul_pow, ← Real.exp_natCast_mul]
       congr 2
       push_cast
       field_simp

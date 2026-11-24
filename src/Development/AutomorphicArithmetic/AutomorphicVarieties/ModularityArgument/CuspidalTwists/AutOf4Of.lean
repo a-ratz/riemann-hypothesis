@@ -82,7 +82,7 @@ theorem UpperTheory.V.Cu.autOf4_of (hne : AlNe) : AutOf4 := by
       intro z hz
       have hz' : z ∈ T.F ⊔ T.K := T.hL ▸ hz
       have hle : T.F ⊔ T.K ≤ IntermediateField.fixedField (Subgroup.zpowers (resQ T.F x)) := by
-        rw [sup_le_iff, IntermediateField.le_iff_le, IntermediateField.le_iff_le, Subgroup.zpowers_le,
+        rw [sup_le_iff, IntermediateField.le_fixedField_iff_le_fixingSubgroup, IntermediateField.le_fixedField_iff_le_fixingSubgroup, Subgroup.zpowers_le,
           Subgroup.zpowers_le]
         refine ⟨?_, x.2.1⟩
         rw [IntermediateField.mem_fixingSubgroup_iff]
@@ -103,7 +103,7 @@ theorem UpperTheory.V.Cu.autOf4_of (hne : AlNe) : AutOf4 := by
     refine hn (IntermediateField.fixingSubgroup_le hle ?_)
     rw [T.hL, IntermediateField.fixingSubgroup_sup]
     exact ⟨(IntermediateField.mem_fixingSubgroup_iff _ _).2 fun y hy => g.commutes ⟨y, hy⟩, hg.1⟩
-  haveI : Algebra.IsQuadraticExtension ℚ T.K := { finrank_eq_two' := T.degK }
+  have : Algebra.IsQuadraticExtension ℚ T.K := { finrank_eq_two' := T.degK }
   have hK : IsAbelianGalois ℚ T.K := IsAbelianGalois.of_isCyclic ℚ T.K
   have hLa : IsAbelianGalois ℚ T.L := by
     have h := @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ T.F T.K

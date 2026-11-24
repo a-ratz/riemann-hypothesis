@@ -550,8 +550,8 @@ theorem UpperTheory.V.Ws.bl :
       ∃ r' u', KPair D 𝔞 r' u' ∧ BlockExt (mapRep 𝔞.toK r') ∧ ∀ g, (r' g).charpoly = (r g).charpoly := by
   intro hP Ω _ _ _ l hl c D hD 𝔞 r u hK hB hsp
   obtain ⟨hpos, h2, A, _, _, _, f, r₁, u₁, hf, hr, hu, hlA, hb⟩ := toGlobalTheory D hD 𝔞 r u hK hB
-  haveI := hf.fin
-  haveI := hf.loc
+  have := hf.fin
+  have := hf.loc
   obtain ⟨r', z, y, e, hc, hz, hy, hm, hzc, hN, hfl, hne⟩ := cocA hP _ _ _ _ hpos A r₁ u₁ hf.complete hlA hb
   have hinj : Function.Injective (f.mapMatrix : M4 A →+* M4 𝔞.V) := Matrix.map_injective hf.inj
   have er : ∀ g, r g = f.mapMatrix (r₁ g) := fun g => by rw [← hr]; rfl

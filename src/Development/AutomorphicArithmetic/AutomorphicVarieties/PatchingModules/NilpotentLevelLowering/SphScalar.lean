@@ -251,7 +251,7 @@ private theorem sphLine_eig {T V : Type} [AddCommGroup V] [Module ℂ V] (U : Su
   obtain ⟨S, ⟨hS0, hS⟩, hmin⟩ := (wellFounded_lt (α := Submodule ℂ U)).has_min
     {S | S ≠ ⊥ ∧ ∀ t, ∀ v ∈ S, (θ t).restrict (hθ t) v ∈ S}
     ⟨⊤, by
-      haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU
+      have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU
       exact top_ne_bot, fun _ _ _ => trivial⟩
   have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS0
   have key : ∀ t, ∃ c : ℂ, ∀ v ∈ S, (θ t).restrict (hθ t) v = c • v := fun t => by
@@ -279,8 +279,8 @@ private theorem sphLine_eig {T V : Type} [AddCommGroup V] [Module ℂ V] (U : Su
 private theorem sphLine_dc {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ G V)
     (K : Subgroup G) (g : G) (hfin : (MulAction.orbit K (g : G ⧸ K)).Finite) {w : V} (hw : w ∈ fixd ρ K) :
     ∃ N : ℂ, N ≠ 0 ∧ dc ρ K K g w - N • ρ g w ∈ GlobalTheory.PRep.twKer ρ K 1 := by
-  letI : Fintype (MulAction.orbit K (g : G ⧸ K)) := hfin.fintype
-  haveI : Nonempty (MulAction.orbit K (g : G ⧸ K)) := ⟨⟨_, MulAction.mem_orbit_self _⟩⟩
+  let : Fintype (MulAction.orbit K (g : G ⧸ K)) := hfin.fintype
+  have : Nonempty (MulAction.orbit K (g : G ⧸ K)) := ⟨⟨_, MulAction.mem_orbit_self _⟩⟩
   refine ⟨(Fintype.card (MulAction.orbit K (g : G ⧸ K)) : ℂ), Nat.cast_ne_zero.2 Fintype.card_ne_zero, ?_⟩
   rw [dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply, Nat.cast_smul_eq_nsmul, ← Finset.card_univ,
     ← Finset.sum_const, ← Finset.sum_sub_distrib]
@@ -327,7 +327,7 @@ theorem UpperTheory.V.Pa.Lev.sphLine :
     exact sub_mem (Submodule.mem_sup_left (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self w)))
       (Submodule.mem_sup_right h)
   have hT : T = ⊤ := by
-    haveI := σ.irred
+    have := σ.irred
     refine (eq_bot_or_eq_top T).resolve_left fun h => hw0 ?_
     rw [h] at hwT
     exact hwT
@@ -505,9 +505,9 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 private theorem sphScalar_idx : (iwC k n ⊤).relIndex (KO k (Fin n)) ≠ 0 := by
   have ho : IsOpen (iwC k n ⊤ : Set (GL (Fin n) k)) :=
     Subgroup.isOpen_mono (H₁ := KOne k (Fin n)) (le_sup_left.trans le_sup_left) GlobalTheory.StepData.isOpen_KOne
-  haveI : CompactSpace (KO k (Fin n)) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
-  haveI := Subgroup.quotient_finite_of_isOpen ((iwC k n ⊤).subgroupOf (KO k (Fin n)))
-    (ho.preimage continuous_subtype_val)
+  have : CompactSpace (KO k (Fin n)) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
+  have := Subgroup.quotient_finite_of_isOpen ((iwC k n ⊤).subgroupOf (KO k (Fin n)))
+    (ho.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 private theorem sphScalar_loc (hBZ : GlobalTheory.Published.BernsteinZelevinskyFiniteness)

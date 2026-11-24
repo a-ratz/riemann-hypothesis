@@ -106,11 +106,11 @@ theorem exists_adelicNorm_vecMul_le_mul {C : Set (AdelicGLn.AdelicGL K n)} (hC :
       exact mul_pos (Real.sqrt_pos.2 this) (mul_pos this (lt_of_lt_of_le one_pos (ha1 w)))
     · rw [hb']
       dsimp only
-      rw [if_pos hv]
+      rw [ite_eq_left hv]
       exact lt_of_lt_of_le one_pos (hb1 v)
   refine ⟨P, hPpos, fun g hg y hy => ?_⟩
   refine (adelicNorm_le_of_local (hy.vecMul g) hy (fun w => √n * (n * a w)) b' S (fun w => ?_)
-    (fun v hv => by rw [hb']; dsimp only; rw [if_neg hv]) (fun v => ?_)).trans (le_of_eq rfl)
+    (fun v hv => by rw [hb']; dsimp only; rw [ite_eq_right hv]) (fun v => ?_)).trans (le_of_eq rfl)
   · rw [infComp_vecMul_GL]
     exact euclidNorm_vecMul_le (zero_le_one.trans (ha1 w)) (ha w g hg) _
   · rw [finComp_vecMul_GL, hb']
@@ -145,7 +145,7 @@ theorem maxCompact_le_normOneGL : maxCompact (K := K) (n := n) ≤ normOneGL (K 
   set f : AdelicGLn.AdelicGL K n →* {r : ℝ // 0 < r} := (ideleModule K).comp (AdelicGLn.det K n)
     with hf
   have hfc : Continuous fun g => (f g : ℝ) :=
-    continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det K n))
+    continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det K n))
   obtain ⟨M, hM⟩ := (isCompact_maxCompact (K := K) (n := n)).exists_bound_of_continuousOn
     hfc.continuousOn
   have hbound : ∀ m : ℕ, (f k : ℝ) ^ m ≤ M ∧ ((f k : ℝ)⁻¹) ^ m ≤ M := fun m => by
@@ -199,7 +199,7 @@ theorem continuous_posIdele_subtype :
     Continuous fun r : {r : ℝ // 0 < r} => (posIdele (K := K) r.1 r.2 : IdeleGroup K) := by
   unfold posIdele
   exact continuous_finsetProd _ fun w _ => (continuous_moduleSection w).comp
-    (Continuous.subtype_mk ((continuous_subtype_val).pow _) _)
+    (Continuous.subtype_mk ((continuous_subtypeVal).pow _) _)
 
 theorem isCompact_torusBox {L U : ℝ} (hL : 0 < L) :
     IsCompact ((fun r : Fin n → {r : ℝ // 0 < r} =>
@@ -242,7 +242,7 @@ theorem exists_isCompact_forall_of_pos_le_height {ε : ℝ} (hε : 0 < ε) :
         ∀ b ∈ ω, m₀ ≤ (ideleModule K (AdelicGLn.det K _ b) : ℝ) := by
       rcases ω.eq_empty_or_nonempty with he | hne
       · exact ⟨1, one_pos, fun b hb => by rw [he] at hb; exact hb.elim⟩
-      · obtain ⟨b₀, -, hmin⟩ := hω.exists_isMinOn hne (continuous_subtype_val.comp
+      · obtain ⟨b₀, -, hmin⟩ := hω.exists_isMinOn hne (continuous_subtypeVal.comp
           (continuous_ideleModule.comp (AdelicGLn.continuous_det K _))).continuousOn
         exact ⟨_, (ideleModule K (AdelicGLn.det K _ b₀)).2, fun b hb => hmin hb⟩
     set d : ℕ := Module.finrank ℚ K with hd

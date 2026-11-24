@@ -496,7 +496,7 @@ theorem primeClass_eq_one_iff (n : ℕ) (hn : n ≠ 0) (v : HeightOneSpectrum (�
           · rw [((Modulus.ofNat (K := K) n hn).exponent_eq_zero_iff w).2 hw]
             simpa using (w.valuation_le_one (K := K) (π - 1))
         rw [map_div₀, valuation_natCast n hn w]
-        exact div_le_one_of_le₀ h1 zero_le'
+        exact div_le_one_of_le₀ h1 zero_le
       obtain ⟨b, hb⟩ := hint
       rw [Ideal.mem_span_singleton']
       refine ⟨b, RingOfIntegers.coe_injective ?_⟩
@@ -1026,7 +1026,7 @@ theorem discr_sqrt_mul (h : χ.conductor = ⊤) :
     simp
   have hpos : 0 < |(discr F : ℝ)| := abs_pos.2 (Int.cast_ne_zero.2 (discr_ne_zero F))
   have hs : ((NNReal.sqrt ‖discr F‖₊ : ℝ≥0) : ℝ) = Real.sqrt |(discr F : ℝ)| := by
-    rw [Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs]
+    rw [Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs]
   have hcp : ((|(discr F : ℝ)| : ℝ) : ℂ) ^ (1 / 2 : ℂ) = ((Real.sqrt |(discr F : ℝ)| : ℝ) : ℂ) := by
     rw [Real.sqrt_eq_rpow, Complex.ofReal_cpow hpos.le]
     norm_num
@@ -1213,9 +1213,9 @@ theorem isPartialZeta_zetaOfClass (C : ClassGroup (𝓞 F)) :
   rw [e]
   constructor
   · intro h
-    rw [if_pos h, inv_mul_cancel₀ card_classGroup_ne_zero]
+    rw [ite_eq_left h, inv_mul_cancel₀ card_classGroup_ne_zero]
   · intro h
-    rw [if_neg h, mul_zero]
+    rw [ite_eq_right h, mul_zero]
 
 theorem isPartialZeta_zetaOfClassInv (C : ClassGroup (𝓞 F)) :
     GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.IsPartialZeta C (zetaOfClassInv C) := by
@@ -1231,9 +1231,9 @@ theorem isPartialZeta_zetaOfClassInv (C : ClassGroup (𝓞 F)) :
   rw [e]
   constructor
   · intro h
-    rw [if_pos h.symm, inv_mul_cancel₀ card_classGroup_ne_zero]
+    rw [ite_eq_left h.symm, inv_mul_cancel₀ card_classGroup_ne_zero]
   · intro h
-    rw [if_neg (Ne.symm h), mul_zero]
+    rw [ite_eq_right (Ne.symm h), mul_zero]
 
 theorem functionalEquation_classHecke [IsTotallyReal F] (ψ : AddChar (Additive (ClassGroup (𝓞 F))) ℂ)
     (D : (Ideal (𝓞 F))⁰) (hD : (D : Ideal (𝓞 F)) = differentIdeal ℤ (𝓞 F))
@@ -1310,7 +1310,7 @@ theorem exists_lie (H : Subgroup 𝔸ˣ) (hH : IsClosed (H : Set 𝔸ˣ)) : ∃ 
 theorem mem_ccSmooth_iff {H : Subgroup 𝔸ˣ} {𝔤 : Submodule ℝ 𝔸} (h : IsExpLieAlgebra H 𝔤) (f : H → ℂ) :
     f ∈ CcSmooth (fun x : H => ((x : 𝔸ˣ) : 𝔸)) ↔
       (letI := h.chartedSpace; ContMDiff 𝓘(ℝ, 𝔤) 𝓘(ℝ, ℂ) ∞ f) ∧ HasCompactSupport f := by
-  letI := h.chartedSpace
+  let := h.chartedSpace
   constructor
   · rintro ⟨hc, Φ, hΦ, e⟩
     refine ⟨?_, hc⟩
@@ -1343,9 +1343,9 @@ end PositivityTheory.DM
 open GlobalTheory.Orb in
 theorem PositivityTheory.DM.dixmierMalliavinFactorisation_holds : GlobalTheory.Published.DixmierMalliavinFactorisation := by
   intro G _ _ _ _ _ n _ _ ι hι μ _ V hV f hf
-  letI := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := n) (α := ℂ)
-  haveI : CompleteSpace (Matrix n n ℂ) := FiniteDimensional.complete ℝ _
+  let := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := n) (α := ℂ)
+  have : CompleteSpace (Matrix n n ℂ) := FiniteDimensional.completeSpace ℝ _
   let T : (n → n → ℂ) ≃L[ℝ] Matrix n n ℂ := (Matrix.ofLinearEquiv ℝ).toContinuousLinearEquiv
   have e : CcMat ι = CcSmooth fun g => ι g :=
     le_antisymm (ccSmooth_le (p := T.symm) T.symm.contDiff fun _ => rfl) (ccSmooth_le (p := T) T.contDiff fun _ => rfl)

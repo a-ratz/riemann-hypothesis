@@ -171,7 +171,7 @@ theorem exists_vec [IsDomain A] [IsFractionRing A K] (hc : ∀ x, c (c x) = x)
     ∃ e ∈ GlobalTheory.CompanionTheory.Ar.HT.eigSp ρ (σ.comp c.toRingHom), ∀ z : D.omHT σ,
       (z : Module.Dual K Li) e = algebraMap A K (g z) := by
   let U : Submodule K (Module.Dual K Li) := Submodule.span K (D.om : Set _)
-  haveI : Module.Finite K U := by
+  have : Module.Finite K U := by
     obtain ⟨S, hS⟩ := D.om_lat.fg
     have : U = Submodule.span K (S : Set _) := by
       dsimp [U]
@@ -179,7 +179,7 @@ theorem exists_vec [IsDomain A] [IsFractionRing A K] (hc : ∀ x, c (c x) = x)
     rw [this]
     exact Module.Finite.span_of_finite K S.finite_toSet
   let T := U.map (eigProj D.ρΩ σ)
-  haveI : Module.Finite K T := Module.Finite.iff_fg.mpr (Submodule.FG.map (eigProj D.ρΩ σ) (Module.Finite.iff_fg.mp (show Module.Finite K U from inferInstance)))
+  have : Module.Finite K T := Module.Finite.iff_fg.mpr (Submodule.FG.map (eigProj D.ρΩ σ) (Module.Finite.iff_fg.mp (show Module.Finite K U from inferInstance)))
   obtain ⟨G, hG⟩ := exists_extend_lin (K := K) (D.omHT σ) ((Algebra.linearMap A K) ∘ₗ g)
   let B : Li →ₗ[K] Module.Dual K T := T.subtype.dualMap.comp (Module.Dual.eval K Li)
   have hB : Function.Injective B.flip := by

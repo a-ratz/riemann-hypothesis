@@ -256,11 +256,11 @@ theorem IsKFinite.rightTranslate_finEmb {φ : AdelicGLn.AdelicGL K n → ℂ} (h
         simpa only [mul_inv_rev, inv_inv, mul_assoc] using this }
   have hVopen : IsOpen (V : Set Kf) := by
     have hc : Continuous fun v : Kf => h⁻¹ * (v : AdelicGLn.FiniteAdelicGL K n) * h :=
-      (continuous_const.mul continuous_subtype_val).mul continuous_const
+      (continuous_const.mul continuous_subtypeVal).mul continuous_const
     exact U.isOpen.preimage hc
-  haveI : CompactSpace Kf :=
+  have : CompactSpace Kf :=
     isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL K n)
-  haveI : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVopen
+  have : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVopen
 
   have hinv : ∀ v ∈ V, ∀ g, φ (g * finEmb K n (v : AdelicGLn.FiniteAdelicGL K n) * finEmb K n h) =
       φ (g * finEmb K n h) := by
@@ -271,7 +271,7 @@ theorem IsKFinite.rightTranslate_finEmb {φ : AdelicGLn.AdelicGL K n → ℂ} (h
     simp only [map_mul, map_inv, mul_assoc, mul_inv_cancel_left]
   set W := Submodule.span ℂ (range fun k : (maxCompact : Subgroup (AdelicGLn.AdelicGL K n)) =>
     rightTranslate (k : AdelicGLn.AdelicGL K n) φ)
-  haveI : FiniteDimensional ℂ W := hk
+  have : FiniteDimensional ℂ W := hk
   unfold IsKFinite
   have hle : Submodule.span ℂ
       (range fun k : (maxCompact : Subgroup (AdelicGLn.AdelicGL K n)) =>

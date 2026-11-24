@@ -492,7 +492,7 @@ theorem perron_kernel_single_term : PerronKernel := by
       have h1 := line_bound_neg l c T hneg hc hT
       rw [← hJ, ← hEe] at h1
       have hXe : X = r * ‖J‖ := by
-        rw [hX, if_neg (not_le.mpr hy1), sub_zero, norm_mul, hnr]
+        rw [hX, ite_eq_right (not_le.mpr hy1), sub_zero, norm_mul, hnr]
       rw [hXe, abs_of_neg hneg]
       have hl' : 0 < -l := by linarith
       calc T * -l * (r * ‖J‖) ≤ T * -l * (r * (2 * (E / (-l) / T))) := by gcongr
@@ -508,7 +508,7 @@ theorem perron_kernel_single_term : PerronKernel := by
       have h1 := line_bound_pos l c T hpos hc hT
       rw [← hJ, ← hEe] at h1
       have hXe : X = r * ‖J - 2 * π‖ := by
-        rw [hX, if_pos hy1, ← hnr, ← norm_mul, hnr]
+        rw [hX, ite_eq_left hy1, ← hnr, ← norm_mul, hnr]
         congr 1
         have : (r : ℂ) * (2 * π) = 1 := by exact_mod_cast hr1
         linear_combination this

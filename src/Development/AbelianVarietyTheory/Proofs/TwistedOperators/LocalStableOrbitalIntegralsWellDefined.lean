@@ -72,7 +72,7 @@ theorem phiOK_of (hσ : IsCMExt F E σ) (hJ : IsHermND σ J) (k : Type) [Field k
     (μ : Measure (HA k σ J)) (dt : Measure (Tor P k)) (f : HA k σ J → ℂ) [hμ : μ.IsHaarMeasure]
     [hdt : dt.IsHaarMeasure] (hf : Continuous f) (hc : HasCompactSupport f) : PhiOK (J := J) μ dt f := by
   refine ⟨Set.toFinite _, fun x φ h => ?_⟩
-  haveI := hU μ hμ
+  have := hU μ hμ
   set q : XSet P k J := ⟨QuotientGroup.mk x, x, φ, rfl, h⟩ with hq
   obtain ⟨hx0, h0⟩ := q.2.choose_spec.choose_spec
   set x0 := q.2.choose
@@ -82,8 +82,8 @@ theorem phiOK_of (hσ : IsCMExt F E σ) (hJ : IsHermND σ J) (k : Type) [Field k
   have halg0 := _root_.GlobalTheory.TrEll.gam_charpoly_regular_cent F E σ hσ r n P J hJ k x0 φ0 h0
   obtain ⟨e0, he0, hm0⟩ := _root_.GlobalTheory.TorCentTop.torEquiv_cent F E σ hσ r n P J hJ k x0 φ0 h0
   obtain ⟨e, he, hm⟩ := _root_.GlobalTheory.TorCentTop.torEquiv_cent F E σ hσ r n P J hJ k x φ h
-  haveI : (centMeas h0 dt).IsHaarMeasure := by rw [hm0]; exact e0.isHaarMeasure_map dt
-  haveI : (centMeas h0 dt).IsMulRightInvariant :=
+  have : (centMeas h0 dt).IsHaarMeasure := by rw [hm0]; exact e0.isHaarMeasure_map dt
+  have : (centMeas h0 dt).IsMulRightInvariant :=
     isMulRightInvariant_cent (isMulCommutative_cent_HA halg0.2.1) _
   have H0 : HasOrbInt μ (gam h0) (centMeas h0 dt) f (orbInt μ (gam h0) (centMeas h0 dt) f) :=
     (hpr _ halg0.2.1).hasOrbInt hf hc
@@ -110,7 +110,7 @@ theorem GlobalTheory.TrPhiOK.phiOK_local : ∀ (F E : Type) [Field F] [NumberFie
   refine ⟨fun v μ dt f hμ hdt hf hc => ?_, fun w μ dt f hμ hdt hf hc => ?_⟩
   · have hU := (GlobalTheory.LocalUnitaryUnimod.unimodularOver_adicCompletion F E σ hσ n J hJ v).1
     exact phiOK_of hσ hJ (Fv F v) (hfin.1 v) hU.2.2.2.2.2.2 (fun g hg => isProperOrbit_GLoc hσ hJ hg) μ dt f hf hc
-  · haveI : SecondCountableTopology w.Completion :=
+  · have : SecondCountableTopology w.Completion :=
       (InfinitePlace.Completion.isometry_extensionEmbedding w).isEmbedding.secondCountableTopology
     have hU := (GlobalTheory.ArchUnitaryUnimod.unimodularOver_of_artinian (σ := σ) w.Completion hσ hJ).1
     exact phiOK_of hσ hJ w.Completion (hfin.2 w) hU.2.2.2.2.2.2 (fun g hg => isProperOrbit_GArch hσ hJ hg) μ dt f hf hc

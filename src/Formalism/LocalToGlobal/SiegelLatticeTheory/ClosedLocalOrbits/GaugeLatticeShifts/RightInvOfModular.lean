@@ -92,11 +92,11 @@ theorem SG_closed : IsClosed (SG ε e z : Set (Formalism.REAL.UJ ε)) := by
       (⋂ a : Fin r, (fun g : Formalism.REAL.UJ ε => (Formalism.MainNotions.S.uMat g - 1) *ᵥ e a) ⁻¹' (spanLt e a.1 : Set (Fin n → ℂ))) ∩
         (fun g : Formalism.REAL.UJ ε => (Formalism.MainNotions.S.uMat g - 1) *ᵥ z) ⁻¹' (spanLt e r : Set (Fin n → ℂ)) := by
     ext g
-    simp only [coe_SG, SLoc, InS, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage,
+    simp only [coe_SG, SLoc, InS, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage,
       SetLike.mem_coe]
   rw [e1]
-  exact (isClosed_iInter fun a => (Submodule.closed_of_finiteDimensional _).preimage (hc _)).inter
-    ((Submodule.closed_of_finiteDimensional _).preimage (hc _))
+  exact (isClosed_iInter fun a => (Submodule.isClosed_of_finiteDimensional _).preimage (hc _)).inter
+    ((Submodule.isClosed_of_finiteDimensional _).preimage (hc _))
 
 section Sub
 

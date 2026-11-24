@@ -74,21 +74,21 @@ theorem exists_equiv_of_torsion {k A : Type*} [Field k] [CommRing A] [Algebra k 
     [AddCommGroup M'] [Module k M'] [Module A M'] [IsScalarTower k A M'] [FiniteDimensional k M]
     [FiniteDimensional k M'] (hM : Module.IsTorsionBySet A M I) (hM' : Module.IsTorsionBySet A M' I)
     (h : finrank k M = finrank k M') : Nonempty (M ≃ₗ[A] M') := by
-  letI : Field (A ⧸ I) := Ideal.Quotient.field I
-  letI := hM.module
-  letI := hM'.module
+  let : Field (A ⧸ I) := Ideal.Quotient.field I
+  let := hM.module
+  let := hM'.module
   have tw : ∀ (P : Type u) [AddCommGroup P] [Module k P] [Module A P] [IsScalarTower k A P]
       (hP : Module.IsTorsionBySet A P I), @IsScalarTower k (A ⧸ I) P _ hP.module.toSMul _ := by
     intro P _ _ _ _ hP
-    letI := hP.module
+    let := hP.module
     refine ⟨fun c x m => ?_⟩
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
     rw [Algebra.smul_def, ← Ideal.Quotient.mk_algebraMap, ← map_mul, hP.mk_smul, hP.mk_smul, mul_smul,
       algebraMap_smul]
-  haveI := tw M hM
-  haveI := tw M' hM'
-  haveI : Module.Finite (A ⧸ I) M := Module.Finite.of_restrictScalars_finite k (A ⧸ I) M
-  haveI : Module.Finite (A ⧸ I) M' := Module.Finite.of_restrictScalars_finite k (A ⧸ I) M'
+  have := tw M hM
+  have := tw M' hM'
+  have : Module.Finite (A ⧸ I) M := Module.Finite.of_restrictScalars_finite k (A ⧸ I) M
+  have : Module.Finite (A ⧸ I) M' := Module.Finite.of_restrictScalars_finite k (A ⧸ I) M'
   have h1 := Module.finrank_mul_finrank k (A ⧸ I) M
   have h2 := Module.finrank_mul_finrank k (A ⧸ I) M'
   have hpos : 0 < finrank k (A ⧸ I) := Module.finrank_pos
@@ -134,7 +134,7 @@ theorem pidem_mul (I J : MaximalSpectrum A) : pidem A I * pidem A J = if I = J t
 
 theorem pidem_idem (I : MaximalSpectrum A) : IsIdempotentElem (pidem A I) := by
   have h := pidem_mul I I
-  rw [if_pos rfl] at h
+  rw [ite_eq_left rfl] at h
   exact h
 
 theorem sum_pidem [Fintype (MaximalSpectrum A)] : ∑ I, pidem A I = 1 := by
@@ -198,8 +198,8 @@ theorem exists_equiv_of_finrank {k A : Type*} [Field k] [CommRing A] [Algebra k 
     (h : ∀ e : A, IsIdempotentElem e → finrank k (piece M e) = finrank k (piece M' e)) :
     Nonempty (M ≃ₗ[A] M') := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
-  haveI : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
   have tor : ∀ (P : Type u) [AddCommGroup P] [Module A P] (I : MaximalSpectrum A),
       Module.IsTorsionBySet A (piece P (pidem A I)) I.asIdeal := by
     intro P _ _ I y a

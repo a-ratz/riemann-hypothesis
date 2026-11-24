@@ -202,7 +202,7 @@ theorem p_continuous {n : ℕ} {w : Pl E} {b : GLw n w}
     (p : UL n w ≃* GU (cj w) n) (hp : ∀ x, (p x).1 = b⁻¹ * x.1 * b) : Continuous p := by
   rw [Topology.IsInducing.subtypeVal.continuous_iff]
   have hc : Continuous fun x : UL n w => b⁻¹ * x.1 * b :=
-    (continuous_const.mul continuous_subtype_val).mul continuous_const
+    (continuous_const.mul continuous_subtypeVal).mul continuous_const
   refine hc.congr fun x => ?_
   rw [Function.comp_apply, hp]
 
@@ -218,7 +218,7 @@ theorem p_symm_continuous {n : ℕ} {w : Pl E} {b : GLw n w}
     (p : UL n w ≃* GU (cj w) n) (hp : ∀ x, (p x).1 = b⁻¹ * x.1 * b) : Continuous p.symm := by
   rw [Topology.IsInducing.subtypeVal.continuous_iff]
   have hc : Continuous fun x : GU (cj w) n => b * x.1 * b⁻¹ :=
-    (continuous_const.mul continuous_subtype_val).mul continuous_const
+    (continuous_const.mul continuous_subtypeVal).mul continuous_const
   refine hc.congr fun x => ?_
   rw [Function.comp_apply, p_symm_val p hp]
 
@@ -479,7 +479,7 @@ theorem fixSub_open [TopologicalSpace H] (ρ : Representation ℂ H V)
     IsOpen (fixSub ρ P : Set H) := by
   have e : (fixSub ρ P : Set H) = ⋂ v ∈ P, {g : H | ρ g v = v} := by
     ext g
-    simp only [SetLike.mem_coe, mem_fixSub, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_fixSub, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [e]
   exact hP.isOpen_biInter (fun v _ => hρ v)
 
@@ -516,9 +516,9 @@ theorem sep_span [TopologicalSpace H] [IsTopologicalGroup H] [CompactSpace H]
   have hg' : ∀ i, ∃ (a : H) (b : V), (g i : V) = ρ a b - b := fun i => (g i).2
   choose j v hjv using hg'
   have hO := fixSub_open ρ hρ (Set.range v) (Set.finite_range v)
-  haveI : Finite (H ⧸ fixSub ρ (Set.range v)) := Subgroup.quotient_finite_of_isOpen _ hO
-  haveI : (fixSub ρ (Set.range v)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-  letI : Fintype (H ⧸ (fixSub ρ (Set.range v)).normalCore) := Fintype.ofFinite _
+  have : Finite (H ⧸ fixSub ρ (Set.range v)) := Subgroup.quotient_finite_of_isOpen _ hO
+  have : (fixSub ρ (Set.range v)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  let : Fintype (H ⧸ (fixSub ρ (Set.range v)).normalCore) := Fintype.ofFinite _
   have hfix : ∀ i, ∀ h ∈ (fixSub ρ (Set.range v)).normalCore, ρ h (v i) = v i := fun i h hh =>
     (mem_fixSub ρ _ h).1 (Subgroup.normalCore_le _ hh) (v i) ⟨i, rfl⟩
   have h0 : ∑ r : H ⧸ (fixSub ρ (Set.range v)).normalCore, ρ r.out w = 0 := by
@@ -620,7 +620,7 @@ theorem levOp_eq (ρ : Representation ℂ G V) (K J : Subgroup G) (t : G) [Finty
     obtain ⟨k, hk, hout⟩ := out_iota J t r
     have hmem : ∃ x ∈ J, ∃ z ∈ J, (iota J t r).out = x * t * z := ⟨r.out, (r.out).2, k, hk, hout⟩
     beta_reduce
-    rw [if_pos hmem, one_smul, LinearMap.comp_id, hout, map_mul, map_mul, Module.End.mul_apply,
+    rw [ite_eq_left hmem, one_smul, LinearMap.comp_id, hout, map_mul, map_mul, Module.End.mul_apply,
       Module.End.mul_apply, fix_apply y hk]
   · intro q hq
     rw [Function.mem_support] at hq
@@ -635,7 +635,7 @@ theorem key [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Representation ℂ
     (hU : PositivityTheory.Lbc.IsHeckeOpG ρ J t U) (y : fixed ρ J) [Fintype (J ⧸ Dsub J t)] :
     ∑ r : J ⧸ Dsub J t, ρ (r.out : G) (ρ t y) = Fintype.card (J ⧸ Dsub J t) • (U y : V) := by
   let ρJ : Representation ℂ J V := ρ.comp J.subtype
-  have hsm : ∀ v : V, IsOpen {g : J | ρJ g v = v} := fun v => (hρ v).preimage continuous_subtype_val
+  have hsm : ∀ v : V, IsOpen {g : J | ρJ g v = v} := fun v => (hρ v).preimage continuous_subtypeVal
   have hinv : ρ t⁻¹ (ρ t (y : V)) = y := by
     rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
   have hz : ∀ h ∈ Dsub J t, ρJ h (ρ t y) = ρ t y := by
@@ -669,16 +669,16 @@ end HeckeFixedSubspaceSpan
 open HeckeFixedSubspaceSpan in
 theorem heckeSum : HeckeSum := by
   intro G _ _ _ V _ _ ρ hρ K J hJ hK hJK t U hU y
-  haveI : CompactSpace J :=
+  have : CompactSpace J :=
     isCompact_iff_compactSpace.mp (hK.of_isClosed_subset (J.isClosed_of_isOpen hJ) (fun x hx => hJK hx))
   have hDo : IsOpen ((Dsub J t : Subgroup J) : Set J) := by
     have e : ((Dsub J t : Subgroup J) : Set J) = (fun d : J => t⁻¹ * (d : G) * t) ⁻¹' (J : Set G) := by
       ext d
       simp only [SetLike.mem_coe, mem_Dsub, Set.mem_preimage]
     rw [e]
-    exact hJ.preimage ((continuous_const.mul continuous_subtype_val).mul continuous_const)
-  haveI : Finite (J ⧸ Dsub J t) := Subgroup.quotient_finite_of_isOpen _ hDo
-  letI : Fintype (J ⧸ Dsub J t) := Fintype.ofFinite _
+    exact hJ.preimage ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
+  have : Finite (J ⧸ Dsub J t) := Subgroup.quotient_finite_of_isOpen _ hDo
+  let : Fintype (J ⧸ Dsub J t) := Fintype.ofFinite _
   rw [levOp_eq ρ K J t y, key ρ hρ J t U hU y, mul_smul, ← Nat.cast_smul_eq_nsmul ℂ, Fintype.card_eq_nat_card]
   rfl
 

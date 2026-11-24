@@ -671,8 +671,8 @@ open scoped LaurentSeries in
 open PowerSeries in
 private lemma prime_C_powerSeries {A : Type} [CommRing A] [IsDomain A] {ϖ : A} (hϖ : Prime ϖ) :
     Prime (C ϖ : PowerSeries A) := by
-  haveI : (Ideal.span {ϖ}).IsPrime := (Ideal.span_singleton_prime hϖ.ne_zero).2 hϖ
-  refine ⟨fun h ↦ hϖ.ne_zero (by simpa using congrArg (coeff 0) h), fun hu ↦ hϖ.not_unit ?_,
+  have : (Ideal.span {ϖ}).IsPrime := (Ideal.span_singleton_prime hϖ.ne_zero).2 hϖ
+  refine ⟨fun h ↦ hϖ.ne_zero (by simpa using congrArg (coeff 0) h), fun hu ↦ hϖ.not_isUnit ?_,
     fun f g h ↦ ?_⟩
   · simpa using hu.map (constantCoeff (R := A))
   · rw [C_dvd_iff_map_mk_eq_zero, C_dvd_iff_map_mk_eq_zero]
@@ -802,7 +802,7 @@ theorem main : ∀ (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing
     ∃ _ : (Ideal.span {(PowerSeries.C ϖ : PowerSeries A)}).IsPrime,
       IsDiscreteValuationRing (Localization.AtPrime (Ideal.span {(PowerSeries.C ϖ : PowerSeries A)})) := by
   intro A _ _ _ ϖ hϖ
-  haveI := span_C_isPrime hϖ
+  have := span_C_isPrime hϖ
   refine ⟨this, isDiscreteValuationRing_atPrime_span ?_⟩
   intro h
   exact hϖ.ne_zero (PowerSeries.C_injective (h.trans (map_zero _).symm))
@@ -861,8 +861,8 @@ theorem spMap_closedPoint_of_surjective {A B : Type} [CommRing A] [CommRing B] [
 
 theorem mk_le_continuum_of_finite {A B : Type} [CommRing A] [CommRing B] (g : A →+* B) (hg : g.Finite)
     (hA : Cardinal.mk A ≤ Cardinal.continuum) : Cardinal.mk B ≤ Cardinal.continuum := by
-  letI := g.toAlgebra
-  haveI : Module.Finite A B := hg
+  let := g.toAlgebra
+  have : Module.Finite A B := hg
   obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' A B
   refine (Cardinal.mk_le_of_surjective hf).trans ?_
   rw [show Cardinal.mk (Fin n → A) = Cardinal.mk A ^ n by simp]
@@ -954,7 +954,7 @@ theorem exists_denominator {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValua
   let f : PowerSeries A →+* K := (algebraMap R K).comp (algebraMap (PowerSeries A) R)
   have hf : Function.Injective f := (IsFractionRing.injective R K).comp hρ
   have hC : Function.Injective (f.comp (PowerSeries.C (R := A))) := hf.comp PowerSeries.C_injective
-  haveI : CharZero K := (RingHom.charZero_iff hC).1 inferInstance
+  have : CharZero K := (RingHom.charZero_iff hC).1 inferInstance
   have h0 : (PowerSeries.C ϖ * PowerSeries.X : PowerSeries A) ≠ 0 :=
     mul_ne_zero (fun h => hϖ.ne_zero (PowerSeries.C_injective (h.trans (map_zero _).symm))) PowerSeries.X_ne_zero
   have hu : IsUnit (f (PowerSeries.C ϖ * PowerSeries.X)) :=
@@ -1045,7 +1045,7 @@ theorem integral_of_arcs_of_good : ∀ (E : Type) [Field E] [NumberField E] [IsC
         rfl
       exact ⟨zT (spMap gF x), by rw [e, Scheme.Hom.comp_apply, Scheme.Hom.comp_apply]⟩) hA hevC hevX
   have hχz : spMap evu ≫ χ₀ = spMap g ≫ spMap i ≫ z := hχy
-  haveI hgl : IsLocalHom g := RingHom.IsIntegral.isLocalHom hgf.to_isIntegral hg
+  have hgl : IsLocalHom g := RingHom.IsIntegral.isLocalHom hgf.to_isIntegral hg
   have hχU : ⊤ ≤ χ₀ ⁻¹ᵁ U₀ := by
     have hc : χ₀ (IsLocalRing.closedPoint (PowerSeries T'.V)) ∈ U₀ := by
       rw [← spMap_closedPoint_of_surjective evu (fun x => ⟨PowerSeries.C x, hevC x⟩)]
@@ -1136,7 +1136,7 @@ theorem integral_of_arcs_of_good : ∀ (E : Type) [Field E] [NumberField E] [IsC
     rw [← ev_factor la (spMap (algebraMap R K) ≫ z) _ rfl W₀ h (le_preimage_comp _ h),
       GlobalTheory.FlagMod.ev_congr hpt2 W₀ _ (le_preimage_comp _ hSW), ev_factor φS _ _ rfl W₀ hSW, hs, hφS]
     rfl
-  haveI : IsLocalHom (g.comp i) := inferInstance
+  have : IsLocalHom (g.comp i) := inferInstance
   exact mem_range_of_map (g.comp i) la (fun r => RingHom.congr_fun hla r) _ ⟨evu s, hval.symm⟩
 
 end GlobalTheory.ArcIntegralMixed
@@ -1163,7 +1163,7 @@ theorem exists_dvd_away {A : Type} [CommRing A] [IsDedekindDomain A] (q : Ideal 
     ∃ s r : A, s ∉ q ∧ (s * a = r * b ∨ s * b = r * a) := by
   by_cases hq : q = ⊥
   · exact ⟨b, a, by simpa [hq] using hb, Or.inl (mul_comm _ _)⟩
-  haveI := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hq (Localization.AtPrime q)
+  have := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hq (Localization.AtPrime q)
   have hinj : Function.Injective (algebraMap A (Localization.AtPrime q)) :=
     IsLocalization.injective _ q.primeCompl_le_nonZeroDivisors
   have key : ∀ (u v : A) (z : Localization.AtPrime q), algebraMap A _ u * z = algebraMap A _ v →
@@ -1218,13 +1218,13 @@ theorem exists_integral_frac {F : Type} [Field F] [NumberField F] (W : Valuation
 theorem preimmersion_flat :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F), IsBaseRing β → ∀ (W : ValuationSubring c.F) (b : O →+* W), W.subtype.comp b = β → IsPreimmersion (spMap b) ∧ Flat (spMap b) := by
   intro E _ _ _ H l c O _ β hβ W b hb
-  haveI := c.fin
-  haveI : NumberField c.F := {}
-  letI : Algebra O W := b.toAlgebra
+  have := c.fin
+  have : NumberField c.F := {}
+  let : Algebra O W := b.toAlgebra
   have hbv : ∀ o : O, ((b o : W) : c.F) = β o := fun o => by rw [← hb]; rfl
   have hinj : Function.Injective b := fun u v h => hβ.1 (by rw [← hbv, ← hbv, h])
   let S : Submonoid O := (IsUnit.submonoid W).comap b
-  haveI : IsLocalization S W := by
+  have : IsLocalization S W := by
     refine (isLocalization_iff S W).2 ⟨fun y => y.2, fun z => ?_, fun {u v} h => ⟨1, by rw [hinj h]⟩⟩
     obtain ⟨a, s, ha, hs, hu, hz⟩ := exists_integral_frac W z
     obtain ⟨a', ha'⟩ := hβ.2 _ ha
@@ -1521,7 +1521,7 @@ theorem extend_of_integral_at_dvr : ∀ (X : Scheme.{0}) (G W₀ : X.Opens) (hle
   obtain ⟨s, hsle, hps⟩ := hG.exists_basicOpen_le ⟨p, hp⟩ (hle hp)
   have hN : ⊤ ≤ η ⁻¹ᵁ X.basicOpen s := generic_le hG (X.basicOpen_le s) ⟨p, hps⟩
   have inj : Function.Injective (ev η (X.basicOpen s) hN) := by
-    haveI := hG.isLocalization_basicOpen s
+    have := hG.isLocalization_basicOpen s
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     obtain ⟨⟨a, m⟩, e⟩ := IsLocalization.surj (Submonoid.powers s) x
@@ -1781,7 +1781,7 @@ theorem countable_sections {X : Scheme.{0}} {O : Type} [CommRing O] [Countable O
     {U : X.Opens} (hU : IsAffineOpen U) : Countable Γ(X, U) := by
   have hf : (s.appLE ⊤ _ le_top).hom.FiniteType :=
     (HasRingHomProperty.appLE (P := @LocallyOfFiniteType) s inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨_, hU⟩ le_top)
-  letI := (s.appLE ⊤ U le_top).hom.toAlgebra
+  let := (s.appLE ⊤ U le_top).hom.toAlgebra
   have : Algebra.FiniteType Γ(Sp O, ⊤) Γ(X, U) := hf
   have hc : Countable Γ(Sp O, ⊤) :=
     (Scheme.ΓSpecIso (CommRingCat.of O)).symm.commRingCatIsoToRingEquiv.symm.injective.countable

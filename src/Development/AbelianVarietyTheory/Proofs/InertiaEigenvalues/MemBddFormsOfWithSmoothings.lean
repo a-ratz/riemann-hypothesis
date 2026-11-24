@@ -115,7 +115,7 @@ theorem aesm_mul_conj (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) (h' : ψ
 theorem integrable_mul_conj (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) (h' : ψ ∈ bddForms E a ω) :
     Integrable (fun q => descend (latticeGL E a) φ q * conj (descend (latticeGL E a) ψ q))
       (GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ) := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   obtain ⟨C, hC⟩ := h.2.2.2
   obtain ⟨D, hD⟩ := h'.2.2.2
   refine Integrable.of_bound (aesm_mul_conj μ hω h h') (C * D) (Eventually.of_forall fun q => ?_)
@@ -134,7 +134,7 @@ theorem pet_eq_setIntegral (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) (h'
   · exact (integral_quotMeasure h𝓕 _).trans (integral_congr_ae (Eventually.of_forall hI.descend_mk))
 
 theorem memL2_norm_bounded_form (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) : MemL2Quotient (latticeGL E a) μ fun g => (‖φ g‖ : ℂ) := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have hI : LeftInv (latticeGL E a) fun g => (‖φ g‖ : ℂ) := leftInv_latticeGL (fun γ g => by simp only [h.2.1])
     fun t g => by simp only [splitCentre_eq_scalar, h.2.2.1, norm_mul, hω _, one_mul]
   obtain ⟨C, hC⟩ := h.2.2.2
@@ -171,7 +171,7 @@ theorem pet_self_pos (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) (h0 : φ 
 
 theorem pet_mul_right (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) (h' : ψ ∈ bddForms E a ω) (k : GA E a) :
     pet (latticeGL E a) μ (fun g => φ (g * k)) (fun g => ψ (g * k)) = pet (latticeGL E a) μ φ ψ := by
-  haveI := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   have hI := leftInv_mul_conj hω h h'
   have hp := measurePreserving_rmul (Γ := latticeGL E a) (μ := μ) k
   have e := integral_map hp.measurable.aemeasurable (hp.map_eq.symm ▸ aesm_mul_conj μ hω h h')
@@ -187,7 +187,7 @@ theorem pet_mul_right_left (hω : ω.IsUnitary) (h : φ ∈ bddForms E a ω) (h'
 theorem pet_lie (hω : ω.IsUnitary) (X : Lie E a) {φ ψ : Sm E a} (h : φ.1 ∈ bddForms E a ω) (h' : ψ.1 ∈ bddForms E a ω)
     (hX : (lie E a X φ).1 ∈ bddForms E a ω) (hX' : (lie E a X ψ).1 ∈ bddForms E a ω) :
     pet (latticeGL E a) μ (lie E a X φ).1 ψ.1 = -pet (latticeGL E a) μ φ.1 (lie E a X ψ).1 := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   obtain ⟨C, hC⟩ := h.2.2.2
   obtain ⟨D, hD⟩ := h'.2.2.2
   obtain ⟨C', hC'⟩ := hX.2.2.2
@@ -245,11 +245,11 @@ theorem smoothing_mem_bddForms (hα : IsTest (invSet E a) α) (h : φ ∈ bddFor
 theorem pet_smoothing_left (hω : ω.IsUnitary) (hα : IsTest (invSet E a) α) (h : φ ∈ bddForms E a ω)
     (h' : ψ ∈ bddForms E a ω) :
     pet (latticeGL E a) μ (smoothing ν α φ) ψ = ∫ x, α x * pet (latticeGL E a) μ (fun g => chart φ g x) ψ ∂ν := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have : ProperSpace (Lie E a) := FiniteDimensional.proper ℝ _
   have : SigmaFinite ν := Measure.IsAddHaarMeasure.sigmaFinite ν
   have hD := isFundamentalDomain_stdDom (latticeGL E a) μ
-  haveI : IsFiniteMeasure (μ.restrict (stdDom (latticeGL E a))) :=
+  have : IsFiniteMeasure (μ.restrict (stdDom (latticeGL E a))) :=
     ⟨by rw [Measure.restrict_apply_univ, ← quotMeasure_univ hD]; exact measure_lt_top _ _⟩
   obtain ⟨C, hC⟩ := h.2.2.2
   obtain ⟨D, hD'⟩ := h'.2.2.2
@@ -277,9 +277,9 @@ theorem invL_val (u : GL (Fin a) (Cinf E)) : invL (toL u.val) = toL (u⁻¹).val
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem contDiffAt_invL {x : Lie E a} (h : x ∈ invSet E a) : ContDiffAt ℝ (⊤ : ℕ∞) invL x := by
-  letI : NormedRing (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   let T : Matrix (Fin a) (Fin a) (Cinf E) →L[ℝ] Lie E a :=
     LinearMap.toContinuousLinearMap (LinearMap.id : Lie E a →ₗ[ℝ] Lie E a)
   let S : Lie E a →L[ℝ] Matrix (Fin a) (Fin a) (Cinf E) :=

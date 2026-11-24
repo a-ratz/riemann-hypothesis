@@ -120,7 +120,7 @@ end NT
 
 theorem eSer_zero_of_tie (T : NormalizedTypesCompatibility D jE) (k : Fin 2) (f : (ZMod (D.host.g k))[X])
     (hf : ¬ (f.Monic ∧ f.natDegree = D.R.r ∧ f.coeff 0 ≠ 0)) : D.ntypes.eSer k f = 0 := by
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   rw [T.eSer_def]
   exact eSerO_eq_zero _ _ f hf
 

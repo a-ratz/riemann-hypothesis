@@ -76,12 +76,12 @@ theorem exists_nat_bounds {E : Type} [Field E] [NumberField E]
     exact Submodule.smul_mem _ _ hxI
   obtain ⟨M, hM, r', hrr'⟩ := exists_nat_eq_mul hr0
   refine ⟨N, M, hN, hM, fun a ha => ?_, ?_⟩
-  · obtain ⟨b, hb⟩ := hint a (FractionalIdeal.mem_coe.2 ha)
+  · obtain ⟨b, hb⟩ := hint a (FractionalIdeal.mem_coeToSubmodule.2 ha)
     refine ⟨d' * b, ?_⟩
     rw [map_mul, hb, Algebra.smul_def, ← mul_assoc, ← map_mul, mul_comm d' d, ← hdd', map_natCast]
   · have : (M : E) = r' • algebraMap (𝓞 E) E r := by
       rw [Algebra.smul_def, ← map_mul, mul_comm r' r, ← hrr', map_natCast]
-    rw [← FractionalIdeal.mem_coe, this]
+    rw [← FractionalIdeal.mem_coeToSubmodule, this]
     exact Submodule.smul_mem _ _ hrI
 
 theorem eventually_notMem {F : Type} [Field F] [NumberField F] {N : ℕ} (hN : N ≠ 0) :
@@ -91,7 +91,7 @@ theorem eventually_notMem {F : Type} [Field F] [NumberField F] {N : ℕ} (hN : N
     rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors hI).subset ?_)
   intro v hv
-  simp only [Set.mem_setOf_eq, not_not] at hv ⊢
+  simp only [Set.mem_ofPred_eq, not_not] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 

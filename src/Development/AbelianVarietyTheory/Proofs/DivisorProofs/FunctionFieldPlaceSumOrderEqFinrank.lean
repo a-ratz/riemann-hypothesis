@@ -117,10 +117,10 @@ theorem sum_ord_eq_finrank : ∀ (k F E : Type) [Field k] [IsAlgClosed k] [CharZ
   ∀ ρ : Place k E → Place k F, IsRes ρ → ∀ (v : Place k F) (π : F), π ≠ 0 → ord v π = 1 → {p | ρ p = v}.Finite ∧ ∑ᶠ p ∈ {p | ρ p = v}, ord p (algebraMap F E π) = Module.finrank F E := by
   intro k F E _ _ _ _ _ _ _ _ _ _ hF ρ hρ v π _ hπ
   classical
-  haveI : GroundTheory.FunctionField.IsFunctionField k F := ⟨hF⟩
-  haveI : GroundTheory.FunctionField.IsFunctionField k E :=
+  have : GroundTheory.FunctionField.IsFunctionField k F := ⟨hF⟩
+  have : GroundTheory.FunctionField.IsFunctionField k E :=
     GroundTheory.FunctionField.IsFunctionField.of_finiteDimensional (k := k) (K := F)
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap k F).injective
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap k F).injective
   have key : ∀ p : Place k E, ρ p = v ↔ (toRing p).LiesOver (toRing v) := by
     intro p
     have h1 : (toRing p).LiesOver (toRing (ρ p)) := by

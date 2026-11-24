@@ -183,9 +183,9 @@ theorem alg_of_closedSubscheme : ∀ (R : Type) [CommRing R] (I : Ideal R) (W : 
     have H : t e ≤ (s e).map ι := Scheme.IdealSheafData.le_map_comap _ _
     rw [← Category.assoc, ← Scheme.IdealSheafData.subschemeMap_subschemeι (s e) (t e) ι H,
       Category.assoc]
-    haveI := hp e
-    haveI : IsClosedImmersion (Scheme.IdealSheafData.subschemeMap (s e) (t e) ι H) := by
-      haveI : IsClosedImmersion (Scheme.IdealSheafData.subschemeMap (s e) (t e) ι H ≫
+    have := hp e
+    have : IsClosedImmersion (Scheme.IdealSheafData.subschemeMap (s e) (t e) ι H) := by
+      have : IsClosedImmersion (Scheme.IdealSheafData.subschemeMap (s e) (t e) ι H ≫
           (t e).subschemeι) := by
         rw [Scheme.IdealSheafData.subschemeMap_subschemeι]; infer_instance
       exact IsClosedImmersion.of_comp_isClosedImmersion _ (t e).subschemeι
@@ -195,12 +195,12 @@ theorem alg_of_closedSubscheme : ∀ (R : Type) [CommRing R] (I : Ideal R) (W : 
   · let g := T₀.subschemeι ≫ ι
     have hk : (T₀.map ι).subschemeι.ker = g.ker := by
       rw [Scheme.IdealSheafData.ker_subschemeι]; rfl
-    haveI := IsClosedImmersion.isIso_lift _ _ hk
+    have := IsClosedImmersion.isIso_lift _ _ hk
     have hfac : (T₀.map ι).subschemeι =
         inv (IsClosedImmersion.lift (T₀.map ι).subschemeι g hk.le) ≫ g := by
       rw [IsIso.eq_inv_comp, IsClosedImmersion.lift_fac]
     rw [hfac, Category.assoc]
-    haveI : IsProper (g ≫ f) := by simpa [g, Category.assoc] using hT₀p
+    have : IsProper (g ≫ f) := by simpa [g, Category.assoc] using hT₀p
     infer_instance
   · calc T₀.map ι ⊔ baseIdeal f (I ^ (e + 1))
         = (T₀ ⊔ (baseIdeal f (I ^ (e + 1))).comap ι).map ι := (hms T₀ _).1.symm
@@ -414,8 +414,8 @@ theorem map_eq_baseChange {R S : Type} [CommRing R] [CommRing S] [Algebra R S] (
 
 theorem map_inf_of_flat {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (hf : f.Flat)
     (I J : Ideal R) : Ideal.map f (I ⊓ J) = Ideal.map f I ⊓ Ideal.map f J := by
-  letI := f.toAlgebra
-  haveI : Module.Flat R S := hf
+  let := f.toAlgebra
+  have : Module.Flat R S := hf
   have e : f = algebraMap R S := rfl
   rw [e, map_eq_baseChange, map_eq_baseChange, map_eq_baseChange, GlobalTheory.baseChange_inf,
     Submodule.map_inf _ (Algebra.TensorProduct.rid R S S).toLinearEquiv.injective]
@@ -427,7 +427,7 @@ namespace GlobalTheory.FlatInf
 theorem comap_inf_of_flat : ∀ (W V : Scheme.{0}) (g : V ⟶ W), Flat g →
     ∀ a b : W.IdealSheafData, (a ⊓ b).comap g = a.comap g ⊓ b.comap g := by
   intro W V g hg a b
-  haveI := hg
+  have := hg
   have hU : ∀ y : V, ∃ U : W.affineOpens, g y ∈ U.1 := fun y => by
     obtain ⟨_, ⟨U, hU, rfl⟩, hyU, -⟩ := W.isBasis_affineOpens.exists_subset_of_mem_open
       (show g y ∈ ((⊤ : W.Opens) : Set W) from trivial) (⊤ : W.Opens).isOpen
@@ -587,7 +587,7 @@ theorem map_comap_inf_sup_pow_eq : ∀ (W W' : Scheme.{0}) [IsAffine W] [IsLocal
     ∃ k₀ : ℕ, ∀ k, k₀ ≤ k → (τ.comap π).map π ⊓ (τ ⊔ K ^ k) = τ := by
   intro W W' _ _ π U hqc hiso K τ hK
   let T : W.affineOpens := ⟨⊤, isAffineOpen_top W⟩
-  haveI : IsNoetherianRing Γ(W, T.1) := IsLocallyNoetherian.component_noetherian T
+  have : IsNoetherianRing Γ(W, T.1) := IsLocallyNoetherian.component_noetherian T
   have hle : τ ≤ (τ.comap π).map π := Scheme.IdealSheafData.le_map_comap τ π
   have htor : ∀ b ∈ ((τ.comap π).map π).ideal T, ∀ f ∈ K.ideal T, ∃ m : ℕ, f ^ m * b ∈ τ.ideal T := by
     intro b hb f hf
@@ -633,7 +633,7 @@ theorem eq_of_sup_baseIdeal_pow_eq {C : Type} [CommRing C] [IsNoetherianRing C] 
     (hJ : J ≤ Ideal.jacobson ⊥) {V : Scheme.{0}} (p : V ⟶ Spec (CommRingCat.of C)) [IsProper p]
     (a a' : V.IdealSheafData)
     (h : ∀ e : ℕ, a ⊔ baseIdeal p (J ^ (e + 1)) = a' ⊔ baseIdeal p (J ^ (e + 1))) : a = a' := by
-  haveI : IsLocallyNoetherian V := LocallyOfFiniteType.isLocallyNoetherian p
+  have : IsLocallyNoetherian V := LocallyOfFiniteType.isLocallyNoetherian p
   refine le_antisymm ?_ ?_
   · exact _root_.GlobalTheory.FormalAlg.le_of_le_reductions C J hJ V p a a' inferInstance fun e => (h e) ▸ le_sup_left
   · exact _root_.GlobalTheory.FormalAlg.le_of_le_reductions C J hJ V p a' a inferInstance fun e => (h e).symm ▸ le_sup_left
@@ -745,14 +745,14 @@ theorem ideal_eq_of_reduces_affine : ∀ (R : Type) [CommRing R] (I : Ideal R) (
   intro R _ I W W' _ f π U hπ hU K hK t ht V
   obtain ⟨hbc, hbs, -⟩ := _root_.GlobalTheory.FormalAlg.baseIdeal_calculus
   obtain ⟨hbC, hloc⟩ := _root_.GlobalTheory.FormalAlg.specIdeal
-  haveI : IsNoetherianRing Γ(W, V.1) := IsLocallyNoetherian.component_noetherian V
+  have : IsNoetherianRing Γ(W, V.1) := IsLocallyNoetherian.component_noetherian V
   obtain ⟨C, _, φ, hCn, hφ, hC, hfaith⟩ := _root_.GlobalTheory.AdicPackage.adicCompletion_package Γ(W, V.1) (I.map (cst f V.1))
-  haveI := hCn
-  haveI := hπ
+  have := hCn
+  have := hπ
   have hJjac : (I.map (cst f V.1)).map φ ≤ Ideal.jacobson ⊥ := by
-    haveI := hC
+    have := hC
     exact IsAdicComplete.le_jacobson_bot _
-  haveI hφF : Flat (Spec.map (CommRingCat.ofHom φ)) := AlgebraicGeometry.Flat.SpecMap_iff.mpr hφ
+  have hφF : Flat (Spec.map (CommRingCat.ofHom φ)) := AlgebraicGeometry.Flat.SpecMap_iff.mpr hφ
   have hOF : Flat V.2.fromSpec :=
     @HasRingHomProperty.of_isOpenImmersion @Flat RingHom.Flat _ _ _ _ RingHom.Flat.containsIdentities
       V.2.isOpenImmersion_fromSpec
@@ -945,8 +945,8 @@ theorem alg_of_modification : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (
     ∀ K : W.IdealSheafData, (∀ x, x ∉ K.support → x ∈ U) → Alg (π ≫ f) I →
     (∀ k : ℕ, Alg ((K ^ k).subschemeι ≫ f) I) → Alg f I := by
   intro R _ _ I W f hsep hlft hqc W' π U hπ hiso K hK hA' hAK t ht hp
-  haveI : IsLocallyNoetherian W := LocallyOfFiniteType.isLocallyNoetherian f
-  haveI : CompactSpace W := QuasiCompact.compactSpace_of_compactSpace f
+  have : IsLocallyNoetherian W := LocallyOfFiniteType.isLocallyNoetherian f
+  have : CompactSpace W := QuasiCompact.compactSpace_of_compactSpace f
 
   have hsys' : IsSystem (π ≫ f) I (fun e => (t e).comap π) := fun e => by
     simp only
@@ -1035,10 +1035,10 @@ theorem isSystem_tower : ∀ (R : Type) [CommRing R] (I : Ideal R) (W : Scheme.{
   have hci : ∀ e, IsClosedImmersion (thick R I e) := fun e =>
     IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom (Ideal.Quotient.mk (I ^ (e + 1))))
       Ideal.Quotient.mk_surjective
-  have hmono : ∀ e, Mono (thick R I e) := fun e => by haveI := hci e; infer_instance
+  have hmono : ∀ e, Mono (thick R I e) := fun e => by have := hci e; infer_instance
   have hfst : ∀ e, (pullback.fst f (thick R I e)).ker = baseIdeal f (I ^ (e + 1)) := by
     intro e
-    haveI := hci e
+    have := hci e
     have h := (_root_.GlobalTheory.FormalAlg.reduces_iff_ker_eq R (I ^ (e + 1)) W W (pullback f (thick R I e)) f (𝟙 W)
       (pullback.fst f (thick R I e)) (pullback.snd f (thick R I e)) inferInstance inferInstance
       pullback.condition).1
@@ -1052,7 +1052,7 @@ theorem isSystem_tower : ∀ (R : Type) [CommRing R] (I : Ideal R) (W : Scheme.{
     haveI := hci e
     IsClosedImmersion.lift (pullback.fst f (thick R I e)) (t e).subschemeι (hle e) ≫ pullback.snd _ _
   have hq : ∀ e, (t e).subschemeι ≫ f = q e ≫ thick R I e := fun e => by
-    haveI := hci e
+    have := hci e
     simp only [q, Category.assoc, ← pullback.condition]
     rw [← Category.assoc, IsClosedImmersion.lift_fac]
   clear_value q
@@ -1064,14 +1064,14 @@ theorem isSystem_tower : ∀ (R : Type) [CommRing R] (I : Ideal R) (W : Scheme.{
   choose β hβ using hb
   refine ⟨q, β, hq, fun e => (hβ e).1, fun e => ?_⟩
   have hbot : IsPullback (thickTrans R I e) (𝟙 _) (thick R I (e + 1)) (thick R I e) := by
-    haveI := hmono (e + 1)
+    have := hmono (e + 1)
     refine IsPullback.of_isLimit' ⟨by simp [thickTrans_comp]⟩ ?_
     refine PullbackCone.IsLimit.mk _ (fun s => s.snd) (fun s => ?_) (fun s => by simp)
       (fun s m _ h2 => by simpa using h2)
     rw [← cancel_mono (thick R I (e + 1)), Category.assoc, thickTrans_comp]
     exact s.condition.symm
   have hcomm : β e ≫ q (e + 1) = q e ≫ thickTrans R I e := by
-    haveI := hmono (e + 1)
+    have := hmono (e + 1)
     rw [← cancel_mono (thick R I (e + 1))]
     calc (β e ≫ q (e + 1)) ≫ thick R I (e + 1) = β e ≫ (t (e + 1)).subschemeι ≫ f := by
           rw [Category.assoc, hq]
@@ -1186,8 +1186,8 @@ theorem GlobalTheory.FormalAlg.alg_of_isProjBy : ∀ (R : Type) [CommRing R] [Is
     refine GlobalTheory.MapUniq.hom_eq_of_pull_sections R W f H n s hH hs _ _ (t' e) _ _ w₁ w₂ (hL e) ?_ hw₁ hw₂ c₁ c₂
     rw [Category.assoc, hφ, hjR]
     exact (hb e).w
-  haveI hci : IsClosedImmersion φ := _root_.GlobalTheory.Div.isClosedImmersion_of_veryAmpleBy_compat R W f H n s hH hs B.left B.hom H' s' φ u hH' hs' hφ hu cu
-  haveI hBp : IsProper (φ ≫ f) := by
+  have hci : IsClosedImmersion φ := _root_.GlobalTheory.Div.isClosedImmersion_of_veryAmpleBy_compat R W f H n s hH hs B.left B.hom H' s' φ u hH' hs' hφ hu cu
+  have hBp : IsProper (φ ≫ f) := by
     rw [hφ]; exact GlobalTheory.AbLaw.isProper_of_isProjBy R _ _ ⟨H', hH', n, s', hs'⟩
   refine ⟨φ.ker, ?_, fun e => ?_⟩
   · change IsProper (φ.imageι ≫ f)
@@ -1221,10 +1221,10 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
   obtain ⟨T, hTp, hTr⟩ := hA _ hs hsp
 
   have hs0 : ((((t 0).map j).support : Set W)) ⊆ Set.range j := by
-    haveI : IsProper ((t 0).subschemeι ≫ j ≫ f) := hp 0
-    haveI : IsProper (((t 0).subschemeι ≫ j) ≫ f) := by rw [Category.assoc]; infer_instance
-    haveI : UniversallyClosed ((t 0).subschemeι ≫ j) := UniversallyClosed.of_comp_of_isSeparated _ f
-    haveI : QuasiCompact ((t 0).subschemeι ≫ j) := QuasiCompact.of_comp _ f
+    have : IsProper ((t 0).subschemeι ≫ j ≫ f) := hp 0
+    have : IsProper (((t 0).subschemeι ≫ j) ≫ f) := by rw [Category.assoc]; infer_instance
+    have : UniversallyClosed ((t 0).subschemeι ≫ j) := UniversallyClosed.of_comp_of_isSeparated _ f
+    have : QuasiCompact ((t 0).subschemeι ≫ j) := QuasiCompact.of_comp _ f
     have hker : (t 0).map j = Scheme.Hom.ker ((t 0).subschemeι ≫ j) := by
       rw [← Scheme.IdealSheafData.map_ker, Scheme.IdealSheafData.ker_subschemeι]
     rw [hker, Scheme.Hom.support_ker,
@@ -1233,7 +1233,7 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
     exact ⟨(t 0).subschemeι x, by simp⟩
 
   have hT : ((T.support : Set W)) ⊆ Set.range j := by
-    haveI : UniversallyClosed (T.subschemeι ≫ f) := inferInstance
+    have : UniversallyClosed (T.subschemeι ≫ f) := inferInstance
     have hZ : IsClosed (T.subschemeι.base ⁻¹' (Set.range j)ᶜ) :=
       (j.isOpenEmbedding.isOpen_range.isClosed_compl).preimage T.subschemeι.continuous
     have hE := _root_.GlobalTheory.closed_empty_of_universallyClosed_of_le_jacobson R I hI T.subscheme (T.subschemeι ≫ f) inferInstance _ hZ (by
@@ -1261,7 +1261,7 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
         rw [← Scheme.IdealSheafData.range_subschemeι]; exact ⟨x, rfl⟩)
       obtain ⟨z, -, hz⟩ := Scheme.Pullback.exists_preimage_pullback w x hw
       exact ⟨z, hz⟩
-    haveI : IsIso (pullback.snd j T.subschemeι) :=
+    have : IsIso (pullback.snd j T.subschemeι) :=
       (isIso_iff_isOpenImmersion_and_surjective _).2 ⟨inferInstance, ⟨hsurj⟩⟩
     have he : (T.comap j).subschemeι ≫ j ≫ f =
         (T.comapIso j).hom ≫ pullback.snd j T.subschemeι ≫ T.subschemeι ≫ f := by
@@ -1455,8 +1455,8 @@ theorem finite_surj_mod_ideal_exists_congr_one_mul_mem_range :
       Function.Surjective ((Ideal.Quotient.mk (J.map f)).comp f) →
       ∃ r : B, r - 1 ∈ J ∧ ∀ c : C, ∃ b : B, f r * c = f b := by
   intro B C _ _ f hf J hs
-  letI := f.toAlgebra
-  haveI : Module.Finite B C := hf
+  let := f.toAlgebra
+  have : Module.Finite B C := hf
   set P : Submodule B C := LinearMap.range (Algebra.linearMap B C) with hP
   have hle : (⊤ : Submodule B (C ⧸ P)) ≤ J • ⊤ := by
     rintro m -
@@ -1500,7 +1500,7 @@ theorem isAffineOpen_preimage_and_finite_app_of_isFinite_restrict :
     ∀ (X Z : Scheme.{0}) (φ : X ⟶ Z) (V : Z.Opens), IsAffineOpen V → IsFinite (φ ∣_ V) →
       IsAffineOpen (φ ⁻¹ᵁ V) ∧ (φ.app V).hom.Finite := by
   intro X Z φ V hV hf
-  haveI : IsAffine (V : Scheme) := hV
+  have : IsAffine (V : Scheme) := hV
   have h1 : IsAffine (φ ⁻¹ᵁ V : Scheme) := isAffine_of_isAffineHom (φ ∣_ V)
   refine ⟨h1, ?_⟩
   have h2 := hf.finite_app ⊤ (isAffineOpen_top _)
@@ -1535,7 +1535,7 @@ theorem appLE_basicOpen_surjective_of_mul_mem_range {X Z : Scheme.{0}} (φ : X �
   let resX : Γ(X, φ ⁻¹ᵁ V) →+* Γ(X, X.basicOpen s) := (X.presheaf.map (homOfLE (X.basicOpen_le s)).op).hom
   let resZ : Γ(Z, V) →+* Γ(Z, Z.basicOpen r) := (Z.presheaf.map (homOfLE (Z.basicOpen_le r)).op).hom
   let g := (φ.appLE (Z.basicOpen r) (X.basicOpen s) e).hom
-  haveI := haff.isLocalization_basicOpen s
+  have := haff.isLocalization_basicOpen s
   obtain ⟨⟨c, ⟨_, n, rfl⟩⟩, hc⟩ := IsLocalization.surj (Submonoid.powers s) y
   obtain ⟨b, hb⟩ := h c
   have hu : IsUnit (resZ r) := Z.toRingedSpace.isUnit_res_basicOpen r
@@ -1566,8 +1566,8 @@ theorem isClosedImmersion_morphismRestrict_basicOpen_of_mul_mem_range :
         IsClosedImmersion (φ ∣_ Z.basicOpen r) := by
   intro X Z φ V hV haff r h
   have hpre : φ ⁻¹ᵁ Z.basicOpen r = X.basicOpen ((φ.app V).hom r) := Scheme.preimage_basicOpen φ r
-  haveI : IsAffine (Z.basicOpen r) := hV.basicOpen r
-  haveI : IsAffine (φ ⁻¹ᵁ Z.basicOpen r) := by
+  have : IsAffine (Z.basicOpen r) := hV.basicOpen r
+  have : IsAffine (φ ⁻¹ᵁ Z.basicOpen r) := by
     have := haff.basicOpen ((φ.app V).hom r)
     rw [← hpre] at this
     exact this
@@ -1699,8 +1699,8 @@ theorem isIso_of_isIso_reductions : ∀ (R : Type) [CommRing R] [IsNoetherianRin
 
   have hK : (baseIdeal f I).comap φ = (c 0).ker := by
     rw [(hc 0).2.1, (_root_.GlobalTheory.FormalAlg.baseIdeal_calculus).1 R X T f φ I, zero_add, pow_one]
-  haveI : IsClosedImmersion (c 0) := (hc 0).1
-  haveI : IsClosedImmersion (c 0 ≫ φ) := (hc' 0).1
+  have : IsClosedImmersion (c 0) := (hc 0).1
+  have : IsClosedImmersion (c 0 ≫ φ) := (hc' 0).1
   have hφc : IsClosedImmersion φ := by
     refine _root_.GlobalTheory.ClosedLev.isClosedImmersion_of_mod R I hI T X φ f hφ inferInstance ?_
     rw [hK]
@@ -1709,15 +1709,15 @@ theorem isIso_of_isIso_reductions : ∀ (R : Type) [CommRing R] [IsNoetherianRin
       exact Scheme.Hom.toImage_imageι_assoc _ _
     rw [he]
     infer_instance
-  haveI := hφc
+  have := hφc
 
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   have hker : φ.ker ≤ ⊥ := by
     refine _root_.GlobalTheory.FormalAlg.le_of_le_reductions R I hI X f φ.ker ⊥ inferInstance fun e => ?_
     rw [bot_sup_eq, ← (hc' e).2.1]
     exact Scheme.Hom.le_ker_comp (c e) φ
   have hbot : φ.ker = ⊥ := le_bot_iff.1 hker
-  haveI : IsIso φ.imageι := by
+  have : IsIso φ.imageι := by
     change IsIso φ.ker.subschemeι
     rw [hbot]
     infer_instance
@@ -1803,15 +1803,15 @@ theorem isPullback_trans {I : Ideal R} (X : Over (Spec (CommRingCat.of R)))
 theorem formalAlgebraisation_morphisms : GlobalTheory.Published.FormalAlgebraisation.Morphisms := by
   intro R _ _ I hI X Z hX hZs hZl hZq Y β b hb hβ f hf hfβ
   have hIj : I ≤ Ideal.jacobson ⊥ := by
-    haveI := hI
+    have := hI
     exact IsAdicComplete.le_jacobson_bot I
 
   let fW : pullback X.hom Z.hom ⟶ Spec (CommRingCat.of R) := pullback.fst X.hom Z.hom ≫ X.hom
-  haveI : IsSeparated (pullback.fst X.hom Z.hom) :=
+  have : IsSeparated (pullback.fst X.hom Z.hom) :=
     MorphismProperty.of_isPullback (P := @IsSeparated) (IsPullback.of_hasPullback X.hom Z.hom).flip hZs
-  haveI : LocallyOfFiniteType (pullback.fst X.hom Z.hom) :=
+  have : LocallyOfFiniteType (pullback.fst X.hom Z.hom) :=
     MorphismProperty.of_isPullback (P := @LocallyOfFiniteType) (IsPullback.of_hasPullback X.hom Z.hom).flip hZl
-  haveI : QuasiCompact (pullback.fst X.hom Z.hom) :=
+  have : QuasiCompact (pullback.fst X.hom Z.hom) :=
     MorphismProperty.of_isPullback (P := @QuasiCompact) (IsPullback.of_hasPullback X.hom Z.hom).flip hZq
   have hAlg : Alg fW I := _root_.GlobalTheory.FormalAlg.alg_of_isSeparated R I hI _ fW inferInstance inferInstance inferInstance
 
@@ -1822,7 +1822,7 @@ theorem formalAlgebraisation_morphisms : GlobalTheory.Published.FormalAlgebraisa
   have hbci : ∀ e, IsClosedImmersion (b e) := fun e =>
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) (hb e).flip inferInstance
   have hjci : ∀ e, IsClosedImmersion (j e) := fun e => by
-    haveI : IsClosedImmersion (j e ≫ pullback.fst X.hom Z.hom) := by rw [hj₁]; exact hbci e
+    have : IsClosedImmersion (j e ≫ pullback.fst X.hom Z.hom) := by rw [hj₁]; exact hbci e
     exact IsClosedImmersion.of_comp (j e) (pullback.fst X.hom Z.hom)
   have hjf : ∀ e, j e ≫ fW = (Y e).hom ≫ thick R I e := fun e => by
     simp only [fW]
@@ -1838,12 +1838,12 @@ theorem formalAlgebraisation_morphisms : GlobalTheory.Published.FormalAlgebraisa
 
   let φ : T ⟶ X.left := i ≫ pullback.fst X.hom Z.hom
   have hφX : φ ≫ X.hom = i ≫ fW := Category.assoc _ _ _
-  haveI : IsProper (φ ≫ X.hom) := by rw [hφX]; exact hip
-  haveI : IsProper φ := IsProper.of_comp φ X.hom
+  have : IsProper (φ ≫ X.hom) := by rw [hφX]; exact hip
+  have : IsProper φ := IsProper.of_comp φ X.hom
   have hcφ : ∀ e, c e ≫ φ = b e := fun e => by
     simp only [φ]
     rw [← Category.assoc, hci, hj₁]
-  haveI hφiso : IsIso φ := _root_.GlobalTheory.FormalAlg.isIso_of_isIso_reductions R I hIj T X.left φ X.hom inferInstance hX Y c
+  have hφiso : IsIso φ := _root_.GlobalTheory.FormalAlg.isIso_of_isIso_reductions R I hIj T X.left φ X.hom inferInstance hX Y c
     (fun e => by rw [hφX]; exact hcpb e) (fun e => by rw [hcφ]; exact hb e)
 
   let gl : X.left ⟶ Z.left := inv φ ≫ i ≫ pullback.snd X.hom Z.hom

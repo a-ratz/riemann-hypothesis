@@ -72,7 +72,7 @@ theorem main : ∀ {R : Type} [CommRing R] {X : Scheme.{0}} (D : E.LineData X) (
   rw [eq_top_iff]
   intro x _
   obtain ⟨j, hj⟩ := GlobalTheory.ProjSpace.exists_mem_chart R N (i x)
-  haveI : IsOpenImmersion (chart R N j) := by
+  have : IsOpenImmersion (chart R N j) := by
     unfold chart
     infer_instance
   have hmem : (pullback.fst i (chart R N j)).opensRange ∈ 𝒱D D :=

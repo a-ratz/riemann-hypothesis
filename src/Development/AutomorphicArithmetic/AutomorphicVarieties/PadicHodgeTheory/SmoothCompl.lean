@@ -311,7 +311,7 @@ theorem UpperTheory.exists_derivations_dual_to_cotangent_parameters :
       rw [this]
       exact Submodule.smul_mem _ _ (key2 a)
   obtain ⟨κ, a, hainj, hsp, hli⟩ := exists_linearIndependent' E (π ∘ g)
-  haveI : Finite κ := Finite.of_injective a hainj
+  have : Finite κ := Finite.of_injective a hainj
   obtain ⟨n, ⟨ε⟩⟩ := Finite.exists_equiv_fin κ
   let b0 : Module.Basis κ E (TensorProduct O E (R ⧸ N)) :=
     Module.Basis.mk hli (by rw [hsp, hspan])
@@ -458,9 +458,9 @@ private theorem a3one_of_factSplit_of_countCont (R : Type) [CommRing R] [IsNoeth
   swap
   · obtain ⟨y, hyI, hyp⟩ := Set.not_subset.mp hIp
     exact ⟨y, hyp, I.mul_mem_right a hyI⟩
-  haveI hq : (p.map (Ideal.Quotient.mk I)).IsPrime :=
+  have hq : (p.map (Ideal.Quotient.mk I)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rwa [Ideal.mk_ker])
-  haveI : IsNoetherianRing (Localization.AtPrime (p.map (Ideal.Quotient.mk I))) :=
+  have : IsNoetherianRing (Localization.AtPrime (p.map (Ideal.Quotient.mk I))) :=
     IsLocalization.isNoetherianRing (p.map (Ideal.Quotient.mk I)).primeCompl _ inferInstance
   have hKrull := Ideal.iInf_pow_eq_bot_of_isLocalRing
     (IsLocalRing.maximalIdeal (Localization.AtPrime (p.map (Ideal.Quotient.mk I))))
@@ -503,7 +503,7 @@ theorem UpperTheory.exists_not_mem_mul_mem_ideal_of_forall_prime_pow_sup :
     ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (I p P : Ideal R), p.IsPrime → I ≤ p → (∀ a ∈ P, ∀ N : ℕ, ∃ s, s ∉ p ∧ s * a ∈ p ^ N ⊔ I) → ∃ y, y ∉ p ∧ ∀ a ∈ P, y * a ∈ I := by
   classical
   intro R _ _ I p P hp hIp hP
-  haveI := hp
+  have := hp
   obtain ⟨S, hS⟩ := (IsNoetherian.noetherian P : P.FG)
   have h1p : (1 : R) ∉ p := fun h => hp.ne_top ((Ideal.eq_top_iff_one p).mpr h)
   have hgen : ∀ T : Finset R, (T : Set R) ⊆ P → ∃ y, y ∉ p ∧ ∀ a ∈ T, y * a ∈ I := by
@@ -549,7 +549,7 @@ theorem UpperTheory.height_ker_section_le_of_cotangent_generators :
   classical
   intro O S _ _ _ _ _ x n t ht hx
   set P := RingHom.ker x with hPdef
-  haveI hP : P.IsPrime := RingHom.ker_isPrime x
+  have hP : P.IsPrime := RingHom.ker_isPrime x
   set L := Localization.AtPrime P
   set T : Ideal L := Ideal.span ((Finset.univ.image (fun i => algebraMap S L (t i)) : Finset L) : Set L) with hT
   have hTm : T ≤ maximalIdeal L := by
@@ -770,15 +770,15 @@ private theorem injective_of_ringKrullDim_eq {A S : Type} [CommRing A] [IsDomain
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro r hr
   by_contra hr0
-  letI : Algebra (A ⧸ Ideal.span {r}) S :=
+  let : Algebra (A ⧸ Ideal.span {r}) S :=
     (Ideal.Quotient.lift (Ideal.span {r}) (algebraMap A S) (fun a ha => by
       obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton.1 ha
       rw [map_mul, hr, zero_mul])).toAlgebra
-  haveI : IsScalarTower A (A ⧸ Ideal.span {r}) S := .of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite (A ⧸ Ideal.span {r}) S := Module.Finite.of_restrictScalars_finite A _ _
+  have : IsScalarTower A (A ⧸ Ideal.span {r}) S := .of_algebraMap_eq fun _ => rfl
+  have : Module.Finite (A ⧸ Ideal.span {r}) S := Module.Finite.of_restrictScalars_finite A _ _
   have h1 : ringKrullDim S ≤ ringKrullDim (A ⧸ Ideal.span {r}) :=
     Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap (A ⧸ Ideal.span {r}) S))
-      fun _ _ hpq => Ideal.IsIntegral.comap_lt_comap (R := A ⧸ Ideal.span {r}) hpq
+      fun _ _ hpq => Ideal.IsIntegral.under_lt_under (R := A ⧸ Ideal.span {r}) hpq
   have h2 := ringKrullDim_succ_le_of_surjective
     (Ideal.Quotient.mk (Ideal.span {r})) Ideal.Quotient.mk_surjective
     (mem_nonZeroDivisors_of_ne_zero hr0)
@@ -810,7 +810,7 @@ theorem UpperTheory.exists_finite_injective_mvPowerSeries_compatible_section :
   let A := MvPowerSeries (Fin n) O
   let φ : A →ₐ[O] S := mvEvalAdic O (maximalIdeal S) z hz
   have hφX : ∀ i, φ (X i) = z i := fun i => mvEvalAdic_X _ z hz i
-  letI : Algebra A S := φ.toRingHom.toAlgebra
+  let : Algebra A S := φ.toRingHom.toAlgebra
   have : IsDomain A := NoZeroDivisors.to_isDomain _
   have hA : IsAdicComplete (maximalIdeal A) A := (co_mvps O O (Fin n)).complete
   have hle : (maximalIdeal A).map (algebraMap A S) ≤ maximalIdeal S := by
@@ -889,16 +889,16 @@ theorem UpperTheory.ringKrullDim_eq_height_ker_section_add_one :
   have hn : IsNoetherianRing S := hS.toIsNoetherian
   have hl : IsLocalHom (algebraMap O S) := IsCO.isLocalHom
   obtain ⟨d, F, hinj, hfin, hd, hF⟩ := UpperTheory.exists_finite_injective_mvPowerSeries_compatible_section O S x
-  haveI : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
   refine le_antisymm ?_ ?_
   · let A := MvPowerSeries (Fin d) O
-    letI : Algebra A S := F.toRingHom.toAlgebra
-    haveI : Module.Finite A S := hfin
-    haveI : FaithfulSMul A S := (faithfulSMul_iff_algebraMap_injective A S).2 hinj
-    haveI : IsIntegrallyClosed A := normal_mv O d
+    let : Algebra A S := F.toRingHom.toAlgebra
+    have : Module.Finite A S := hfin
+    have : FaithfulSMul A S := (faithfulSMul_iff_algebraMap_injective A S).2 hinj
+    have : IsIntegrallyClosed A := normal_mv O d
     let p : Ideal A := RingHom.ker (MvPowerSeries.constantCoeff : MvPowerSeries (Fin d) O →+* O)
-    haveI : p.IsPrime := RingHom.ker_isPrime _
-    haveI : (RingHom.ker x).LiesOver p := ⟨by
+    have : p.IsPrime := RingHom.ker_isPrime _
+    have : (RingHom.ker x).LiesOver p := ⟨by
       ext a
       rw [Ideal.under_def, Ideal.mem_comap, RingHom.mem_ker, RingHom.mem_ker, ← hF]
       rfl⟩

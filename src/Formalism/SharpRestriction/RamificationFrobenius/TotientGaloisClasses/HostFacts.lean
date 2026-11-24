@@ -122,15 +122,15 @@ lemma prim_bound {E K : Type*} [Field E] [Field K] [Algebra ℚ E] [Algebra ℚ 
     [IsScalarTower ℚ E K] [FiniteDimensional ℚ E] [FiniteDimensional E K] (g : ℕ) (hg : g.Prime)
     (μ : K) (hμ : IsPrimitiveRoot μ g) :
     g - 1 ≤ Module.finrank ℚ E * Module.finrank E K := by
-  haveI : FiniteDimensional ℚ K := Module.Finite.trans E K
-  haveI : CharZero K := by
+  have : FiniteDimensional ℚ K := Module.Finite.trans E K
+  have : CharZero K := by
     first
     | exact algebraRat.charZero K
     | exact (algebraMap ℚ K).charZero
   rw [Module.finrank_mul_finrank ℚ E K]
   have hint : IsIntegral ℚ μ := .of_finite ℚ μ
   have h1 : Module.finrank ℚ (IntermediateField.adjoin ℚ {μ}) = g - 1 := by
-    haveI : NeZero g := ⟨hg.ne_zero⟩
+    have : NeZero g := ⟨hg.ne_zero⟩
     have hroot : aeval μ (cyclotomic g ℚ) = 0 := by
       rw [aeval_def, ← eval_map, map_cyclotomic]
       exact (isRoot_cyclotomic_iff.mpr hμ)
@@ -144,7 +144,7 @@ lemma dim_bound {E : Type*} [Field E] [Algebra ℚ E] [FiniteDimensional ℚ E]
     (k g : ℕ) (hg : g.Prime) (M : Matrix (Fin k) (Fin k) E) (hM : M ^ g = 1) (hne : M ≠ 1) :
     g - 1 ≤ Module.finrank ℚ E * k := by
   classical
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   have hint : IsIntegral E M := IsIntegral.of_finite E M
   have hm0 : minpoly E M ≠ 0 := minpoly.ne_zero hint
   have hmk : (minpoly E M).natDegree ≤ k := by
@@ -169,16 +169,16 @@ lemma dim_bound {E : Type*} [Field E] [Algebra ℚ E] [FiniteDimensional ℚ E]
       isCoprime_of_irreducible_dvd (fun h => hm0 h.1) (fun z hz hzm hzΦ => hcon z hz hzm hzΦ)
     exact hnd (hcop.dvd_of_dvd_mul_right hdvd)
   have hfk : f.natDegree ≤ k := (natDegree_le_of_dvd hfm hm0).trans hmk
-  haveI : Fact (Irreducible f) := ⟨hf⟩
+  have : Fact (Irreducible f) := ⟨hf⟩
   have hf0 : f ≠ 0 := hf.ne_zero
-  haveI : FiniteDimensional E (AdjoinRoot f) := (AdjoinRoot.powerBasis hf0).finite
+  have : FiniteDimensional E (AdjoinRoot f) := (AdjoinRoot.powerBasis hf0).finite
   have hrank : Module.finrank E (AdjoinRoot f) = f.natDegree := by
     rw [(AdjoinRoot.powerBasis hf0).finrank, AdjoinRoot.powerBasis_dim]
-  haveI : CharZero (AdjoinRoot f) := by
+  have : CharZero (AdjoinRoot f) := by
     first
     | exact algebraRat.charZero (AdjoinRoot f)
     | exact (algebraMap ℚ (AdjoinRoot f)).charZero
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : NeZero g := ⟨hg.ne_zero⟩
   have hμ : IsPrimitiveRoot (AdjoinRoot.root f) g := by
     rw [← isRoot_cyclotomic_iff, ← map_cyclotomic g (algebraMap E (AdjoinRoot f)), IsRoot, eval_map]
     obtain ⟨q, hq⟩ := hfΦ
@@ -203,13 +203,13 @@ theorem hostOrbitsPlaces : HostOrbitsPlaces := by
       · rw [h]; ext <;> simp [hi.neg_one_pow]
     have hp : placeOf (φ ^ i * τ) = φ ^ i * τ := by
       unfold placeOf
-      rw [if_pos]
+      rw [ite_eq_left]
       simp [Prod.pow_fst, hc, hτ2]
     rw [hp]
     refine ⟨by simp, fun _ => by simp [hc], fun _ => by simp [hc, hi]⟩
   · have hp : placeOf (φ ^ i * τ) = cc e * (φ ^ i * τ) := by
       unfold placeOf
-      rw [if_neg]
+      rw [ite_eq_right]
       rcases hφ with h | h
       · simp [h, c0, hi.neg_one_pow, hτ2, hne]
       · simp [h, hi.neg_one_pow, hτ2, hne]
@@ -472,7 +472,7 @@ theorem conj_sqd : H.conj H.sqd = -H.sqd := by
 
 theorem hostEmb (ψ : H.E →+* ℂ) :
     Function.Bijective (fun σ : H.E ≃ₐ[ℚ] H.E => ψ.comp (σ : H.E →+* H.E)) := by
-  haveI := H.galois
+  have := H.galois
   have hinj : Function.Injective (fun σ : H.E ≃ₐ[ℚ] H.E => ψ.comp (σ : H.E →+* H.E)) := by
     intro σ τ h
     ext x

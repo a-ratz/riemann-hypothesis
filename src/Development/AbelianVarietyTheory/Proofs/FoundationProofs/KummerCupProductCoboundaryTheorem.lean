@@ -116,7 +116,7 @@ theorem twist_cochain : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [A
   ∃ v : (Ω ≃ₐ[K] Ω) → Ωˣ, IsLocallyConstant v ∧
     ∀ g h, (v g : Ω) * g (v h) = ζ ^ (kum (N := N) ζ α g * kum (N := N) ζ β h).val * v (g * h) := by
   intro K Ω _ _ _ _ N ζ hN hζ hζfix a b α β ha hb hα hβ w hw hcoc
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hα0 : α ≠ 0 := by
     rintro rfl
     rw [zero_pow hN.ne'] at hα
@@ -173,7 +173,7 @@ theorem exists_generator {G : Type*} [Group G] {N : ℕ} (hN : 0 < N) (y : G →
     (hy : ∀ g h, y (g * h) = y g + y h) :
     ∃ (d m : ℕ) (σ : G), 0 < m ∧ m * d = N ∧ y σ = m ∧ ∀ g, m ∣ (y g).val := by
   classical
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have h1 : y 1 = 0 := by simpa using hom_pow y hy 1 0
   have hex : ∃ m : ℕ, 0 < m ∧ ∃ g, y g = m := ⟨N, hN, 1, by simp [h1]⟩
   obtain ⟨hm, σ, hσ⟩ := Nat.find_spec hex
@@ -208,9 +208,9 @@ theorem norm_eq_prod [CharZero K] [IsAlgClosure K Ω] {β : Ω} (σ : Ω ≃ₐ[
     (hsurj : ∀ g : Ω ≃ₐ[K] Ω, ∃ j < d, g β = (σ ^ j) β) (γ : K⟮β⟯) :
     algebraMap K Ω (Algebra.norm K γ) = ∏ j ∈ Finset.range d, (σ ^ j) γ := by
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : FiniteDimensional K K⟮β⟯ :=
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : FiniteDimensional K K⟮β⟯ :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral β)
   rw [Algebra.norm_eq_prod_embeddings K Ω γ]
   symm
@@ -237,8 +237,8 @@ theorem carry_coboundary : ∀ (K Ω : Type) [Field K] [CharZero K] [Field Ω] [
   ∃ w : (Ω ≃ₐ[K] Ω) → Ωˣ, IsLocallyConstant w ∧ ∀ g h, (w g : Ω) * g (w h) * α ^ (kum (N := N) ζ β (g * h)).val =
     α ^ ((kum (N := N) ζ β g).val + (kum (N := N) ζ β h).val) * w (g * h) := by
   intro K Ω _ _ _ _ _ N ζ hN hζ hfix hnorm a b α β ha hb hα hβ
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : NeZero N := ⟨hN.ne'⟩
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   have hβ0 : β ≠ 0 := by
     rintro rfl
     rw [zero_pow hN.ne'] at hβ
@@ -255,7 +255,7 @@ theorem carry_coboundary : ∀ (K Ω : Type) [Field K] [CharZero K] [Field Ω] [
   have hyk : ∀ g, y g = y (σ ^ ((y g).val / m)) := fun g => by
     rw [hpow, ← hval, ZMod.natCast_zmod_val]
   have hag : ∀ g g', y g = y g' → g β = g' β := fun g g' h => by rw [hdef g, hdef g', h]
-  haveI : FiniteDimensional K K⟮β⟯ :=
+  have : FiniteDimensional K K⟮β⟯ :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral β)
   obtain ⟨γ, hγ⟩ := hnorm K⟮β⟯ inferInstance a ha
   have hγ0 : (γ : Ω) ≠ 0 := by
@@ -332,7 +332,7 @@ theorem hilbert90_locallyConstant_cocycle :
     exact (mul_left_cancel₀ (w 1).ne_zero h').symm
   have hopen : IsOpen (w ⁻¹' {1}) := hw _
   obtain ⟨E, hfin, hE⟩ := (krullTopology_mem_nhds_one_iff K Ω _).1 (hopen.mem_nhds (by simp [h1]))
-  haveI := hfin
+  have := hfin
   obtain ⟨β, hβ⟩ := ReciprocityTheory.DiscreteGroups.LocalClassField.exists_units_of_cocycle (⊤ : Subgroup (Ω ≃ₐ[K] Ω)) (fun h => w h.1) E
     (fun h hh => hE hh) (fun g h => Units.ext (by simp [hc]))
   refine ⟨β, fun g => ?_⟩
@@ -361,7 +361,7 @@ theorem isLocallyConstant_eval {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω]
     (τ : Ω) : IsLocallyConstant (fun g : Ω ≃ₐ[K] Ω => g τ) := by
   rw [IsLocallyConstant.iff_exists_open]
   intro g
-  haveI : FiniteDimensional K K⟮τ⟯ :=
+  have : FiniteDimensional K K⟮τ⟯ :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral τ)
   have hopen : IsOpen ((K⟮τ⟯).fixingSubgroup : Set (Ω ≃ₐ[K] Ω)) :=
     IntermediateField.fixingSubgroup_isOpen _
@@ -384,9 +384,9 @@ theorem zmod_cocycle_eq_coboundary_of_unit_twisted_cocycle : ∀ (K Ω : Type) [
   ∃ η : (Ω ≃ₐ[K] Ω) → ZMod N, IsLocallyConstant η ∧ ∀ g h, c g h = η h - η (g * h) + η g := by
   intro K Ω _ _ _ _ _ N ζ hN0 hζ hfix c v hv hcoc
   classical
-  haveI : NeZero N := ⟨by omega⟩
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : NeZero N := ⟨by omega⟩
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   let u : (Ω ≃ₐ[K] Ω) → Ωˣ := fun g => v g ^ N
   have hu_lc : IsLocallyConstant u := hv.comp (fun x : Ωˣ => x ^ N)
   have hu_coc : ∀ g h, ((u (g * h) : Ωˣ) : Ω) = u g * g (u h) := by
@@ -429,7 +429,7 @@ theorem zmod_cocycle_eq_coboundary_of_unit_twisted_cocycle : ∀ (K Ω : Type) [
     intro g
     obtain ⟨i, hi, hi'⟩ := hζ.eq_pow_of_pow_eq_one (hw_pow g)
     have hex : ∃ j : ZMod N, ζ ^ j.val = w g := ⟨(i : ZMod N), by rw [ZMod.val_cast_of_lt hi, hi']⟩
-    simp only [η, E, dif_pos hex]
+    simp only [η, E, dite_eq_left hex]
     exact hex.choose_spec
   refine ⟨η, hw_lc.comp E, ?_⟩
   intro g h
@@ -495,7 +495,7 @@ theorem inert_fixes_adjoin_and_kum_eq : ∀ (k K Ω : Type) [Field k] [IsAlgClos
         B.valuation (θ ^ N / (θ₀ ^ N * c ^ N)) = 1 →
         g ∈ (IntermediateField.adjoin K {α, β}).fixingSubgroup ∧ GlobalTheory.NeedB.kum (N := N) ζ θ g = GlobalTheory.NeedB.kum ζ θ₀ g := by
   intro k K Ω _ _ _ _ _ _ _ _ _ _ _ N ζ hN hζ a b α β ha ha' hb hb' ha0 hb0 hα hβ θ θ₀ hθ hθ₀ hθE hθ₀K B hB g hg c hcE hc0 hv
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
 
   have hunit : ∀ x : K, x ∈ FunctionField.ringOfIntegers k K → x⁻¹ ∈ FunctionField.ringOfIntegers k K → x ≠ 0 →
       B.valuation (algebraMap K Ω x) = 1 := by
@@ -526,7 +526,7 @@ theorem inert_fixes_adjoin_and_kum_eq : ∀ (k K Ω : Type) [Field k] [IsAlgClos
   have hgβ : g β = β := hroot β b hb hb' hb0 hβ
   have hfix : g ∈ (IntermediateField.adjoin K {α, β}).fixingSubgroup := by
     have hz : Subgroup.zpowers g ≤ (IntermediateField.adjoin K {α, β}).fixingSubgroup := by
-      rw [← IntermediateField.le_iff_le, IntermediateField.adjoin_le_iff]
+      rw [← IntermediateField.le_fixedField_iff_le_fixingSubgroup, IntermediateField.adjoin_le_iff]
       intro x hx
       have hgx : g x = x := by
         rcases hx with rfl | hx
@@ -618,7 +618,7 @@ namespace GlobalTheory
 theorem kum_eq_of_apply {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] {N : ℕ} (hN : 0 < N) {ζ θ : Ω}
     (hζ : IsPrimitiveRoot ζ N) (hθ : θ ≠ 0) (g : Ω ≃ₐ[K] Ω) (i : ZMod N) (hg : g θ = ζ ^ i.val * θ) :
     kum ζ θ g = i := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hex : ∃ j : ZMod N, g θ = ζ ^ j.val * θ := ⟨i, hg⟩
   unfold kum
   rw [dite_eq_left hex]
@@ -636,8 +636,8 @@ theorem eta_kummer_galoisInvariant : ∀ (K Ω : Type) [Field K] [CharZero K] [F
     (∀ g ∈ (IntermediateField.adjoin K {α, β}).fixingSubgroup, η g = kum ζ θ g) ∧
     ∀ s : Ω ≃ₐ[K] Ω, ∃ u ∈ IntermediateField.adjoin K {α, β}, u ≠ 0 ∧ s (θ ^ N) = θ ^ N * u ^ N := by
   intro K Ω _ _ _ _ _ N ζ hN hζ hfix a b α β ha hb hα hβ η hη hcob
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : IsGalois K Ω := IsAlgClosure.isGalois K Ω
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsGalois K Ω := IsAlgClosure.isGalois K Ω
   set E := IntermediateField.adjoin K ({α, β} : Set Ω) with hE
   have hα0 : α ≠ 0 := by
     rintro rfl; rw [zero_pow hN.ne'] at hα; exact ha ((map_eq_zero _).mp hα.symm)
@@ -777,9 +777,9 @@ private theorem exists_galois_comap_eq_of_comap_eq {A₀ R K₀ L : Type} [CommR
     [FiniteDimensional K₀ L] [IsGalois K₀ L] (v v' : HeightOneSpectrum R)
     (h : v.asIdeal.comap (algebraMap A₀ R) = v'.asIdeal.comap (algebraMap A₀ R)) :
     ∃ σ : L ≃ₐ[K₀] L, v'.asIdeal = Ideal.comap (galRestrict A₀ K₀ L R σ).toRingEquiv v.asIdeal := by
-  letI := IsIntegralClosure.MulSemiringAction A₀ K₀ L R
-  haveI : Algebra.IsIntegral A₀ R := IsIntegralClosure.isIntegral_algebra A₀ L
-  haveI : IsGaloisGroup (L ≃ₐ[K₀] L) A₀ R := IsGaloisGroup.of_isFractionRing _ A₀ R K₀ L
+  let := IsIntegralClosure.MulSemiringAction A₀ K₀ L R
+  have : Algebra.IsIntegral A₀ R := IsIntegralClosure.isIntegral_algebra A₀ L
+  have : IsGaloisGroup (L ≃ₐ[K₀] L) A₀ R := IsGaloisGroup.of_isFractionRing _ A₀ R K₀ L
   have hpre := Ideal.isPretransitive_of_isGaloisGroup (v.asIdeal.comap (algebraMap A₀ R)) (L ≃ₐ[K₀] L) (B := R)
   have h1 : v.asIdeal ∈ (v.asIdeal.comap (algebraMap A₀ R)).primesOver R :=
     ⟨v.isPrime, ⟨rfl⟩⟩
@@ -823,7 +823,7 @@ private theorem count_spanSingleton_algebraMap_eq_count_factors {R L : Type} [Co
     [Field L] [Algebra R L] [IsFractionRing R L] (v : HeightOneSpectrum R) {r : R} (hr : r ≠ 0) :
     FractionalIdeal.count L v (FractionalIdeal.spanSingleton R⁰ (algebraMap R L r)) =
       (Associates.mk v.asIdeal).count (Associates.mk (Ideal.span {r})).factors := by
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe]
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal]
   simpa using hr
 
 open IsDedekindDomain in
@@ -899,10 +899,10 @@ private theorem count_algebraMap_of_unramified_lemma_6 {A₀ R K₀ L : Type} [C
   have hfR : algebraMap A₀ R f ≠ 0 := by
     intro h
     exact hf (hinj (by rw [h, map_zero]))
-  haveI : Q.asIdeal.LiesOver P.asIdeal := ⟨hP⟩
-  haveI : FaithfulSMul A₀ R := (faithfulSMul_iff_algebraMap_injective A₀ R).mpr hinj
+  have : Q.asIdeal.LiesOver P.asIdeal := ⟨hP⟩
+  have : FaithfulSMul A₀ R := (faithfulSMul_iff_algebraMap_injective A₀ R).mpr hinj
   have he : P.asIdeal.ramificationIdx' Q.asIdeal = 1 := by
-    apply Ideal.ramificationIdx_spec
+    apply Ideal.ramificationIdx'_spec
     · rw [pow_one, hP]
       exact Ideal.map_comap_le
     · rw [hP]
@@ -938,8 +938,8 @@ theorem _root_.GlobalTheory.DivisorDescent.descent_submodule : ∀ (A₀ R K₀ 
     apply (algebraMap K₀ L).injective
     rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply,
       IsScalarTower.algebraMap_apply A₀ R L, IsScalarTower.algebraMap_apply A₀ R L b, hab]
-  haveI : FaithfulSMul A₀ R := (faithfulSMul_iff_algebraMap_injective A₀ R).mpr hinj
-  haveI : Algebra.IsIntegral A₀ R := IsIntegralClosure.isIntegral_algebra A₀ L
+  have : FaithfulSMul A₀ R := (faithfulSMul_iff_algebraMap_injective A₀ R).mpr hinj
+  have : Algebra.IsIntegral A₀ R := IsIntegralClosure.isIntegral_algebra A₀ L
   have hex : ∀ P : HeightOneSpectrum A₀, ∃ Q : HeightOneSpectrum R,
       P.asIdeal = Q.asIdeal.comap (algebraMap A₀ R) := by
     intro P
@@ -985,7 +985,7 @@ theorem _root_.GlobalTheory.DivisorDescent.descent_submodule : ∀ (A₀ R K₀ 
   set a : Ideal A₀ := ∏ᶠ P : HeightOneSpectrum A₀, P.asIdeal ^ (r P).toNat with ha
   have hacoe : (a : FractionalIdeal A₀⁰ K₀) = aF := by
     have hmap := MonoidHom.map_finprod (FractionalIdeal.coeIdealHom A₀⁰ K₀).toMonoidHom hmul_fin
-    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_pow,
+    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_pow,
       FractionalIdeal.coeIdealHom_apply] at hmap
     rw [ha, haF, hmap]
     refine finprod_congr fun P => ?_
@@ -1052,7 +1052,7 @@ theorem _root_.GlobalTheory.DivisorDescent.descent_submodule : ∀ (A₀ R K₀ 
       linear_combination h1 + hk - h3 - h4⟩
   obtain ⟨J, hJ⟩ := _root_.GlobalTheory.DivisorDescent.exists_pow_eq_of_dvd_count N _ hI0 hdvd
   exact ⟨algebraMap A₀ K₀ y / algebraMap A₀ K₀ x, J, div_ne_zero hyK hxK, by
-    rw [hwf, ← FractionalIdeal.coe_pow, hJ, FractionalIdeal.coe_spanSingleton]⟩
+    rw [hwf, ← FractionalIdeal.coeToSubmodule_pow, hJ, FractionalIdeal.coeToSubmodule_spanSingleton]⟩
 
 end GlobalTheory.DivisorDescent
 end -- clump:auto
@@ -1091,12 +1091,12 @@ theorem kummer_dual_step (A₀ K₀ F E : Type) [CommRing A₀] [IsDomain A₀] 
     ∀ y : E, (∀ z : E, IsIntegral A₀ z → Algebra.trace K₀ E (y * z) ∈ (algebraMap A₀ K₀).range) →
       IsIntegral A₀ y := by
   intro y hy
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap K₀ F).injective
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
-  haveI : Algebra.IsSeparable F E := inferInstance
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap K₀ F).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  have : Algebra.IsSeparable F E := inferInstance
   let C := integralClosure A₀ F
-  haveI : IsFractionRing C F := IsIntegralClosure.isFractionRing_of_finite_extension A₀ K₀ F C
-  haveI : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension K₀
+  have : IsFractionRing C F := IsIntegralClosure.isFractionRing_of_finite_extension A₀ K₀ F C
+  have : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension K₀
   have hN0 : N ≠ 0 := by
     rintro rfl
     simp at hN
@@ -1218,7 +1218,7 @@ theorem kummer_dual_induction (A₀ K₀ : Type) [CommRing A₀] [IsDomain A₀]
       rw [← IntermediateField.adjoin_toSubalgebra_of_isAlgebraic
         (fun z _ => Algebra.IsAlgebraic.isAlgebraic z), h1]
       rfl
-    haveI : IsScalarTower A₀ F E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    have : IsScalarTower A₀ F E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     exact kummer_dual_step A₀ K₀ F E N hN x u hux hgen hF y hy
 
 end GlobalTheory
@@ -1236,18 +1236,18 @@ theorem kummer_not_map_comap_le_sq :
           (P.comap (algebraMap A₀ (integralClosure A₀ E))) ≤ P ^ 2 := by
   intro A₀ K₀ E _ _ _ _ _ _ _ _ _ _ _ N hN s hadj hu P hP hP0 hle
   have hdual := kummer_dual_induction A₀ K₀ N hN _ E s rfl hadj hu
-  haveI : IsFractionRing (integralClosure A₀ E) E :=
+  have : IsFractionRing (integralClosure A₀ E) E :=
     IsIntegralClosure.isFractionRing_of_finite_extension A₀ K₀ E _
-  haveI : IsDedekindDomain (integralClosure A₀ E) := integralClosure.isDedekindDomain A₀ K₀ E
-  haveI : Module.Finite A₀ (integralClosure A₀ E) := IsIntegralClosure.finite A₀ K₀ E _
+  have : IsDedekindDomain (integralClosure A₀ E) := integralClosure.isDedekindDomain A₀ K₀ E
+  have : Module.Finite A₀ (integralClosure A₀ E) := IsIntegralClosure.finite A₀ K₀ E _
   have hinj : Function.Injective (algebraMap A₀ E) := by
     rw [IsScalarTower.algebraMap_eq A₀ K₀ E]
     exact (algebraMap K₀ E).injective.comp (IsFractionRing.injective A₀ K₀)
-  haveI : FaithfulSMul A₀ (integralClosure A₀ E) := by
+  have : FaithfulSMul A₀ (integralClosure A₀ E) := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro a b hab
     exact hinj (congrArg Subtype.val hab)
-  haveI : Module.IsTorsionFree A₀ (integralClosure A₀ E) := inferInstance
+  have : Module.IsTorsionFree A₀ (integralClosure A₀ E) := inferInstance
   have hone : Submodule.traceDual A₀ K₀ (1 : Submodule (integralClosure A₀ E) E) = 1 := by
     refine le_antisymm ?_ Submodule.one_le_traceDual_one
     intro y hy
@@ -1259,12 +1259,12 @@ theorem kummer_not_map_comap_le_sq :
     have : FractionalIdeal.dual A₀ K₀
         (1 : FractionalIdeal (nonZeroDivisors (integralClosure A₀ E)) E) = 1 := by
       apply FractionalIdeal.coeToSubmodule_injective
-      simp only [FractionalIdeal.coe_dual_one, FractionalIdeal.coe_one, hone]
+      simp only [FractionalIdeal.coeToSubmodule_dual_one, FractionalIdeal.coeToSubmodule_one, hone]
     rw [this, inv_one]
   obtain ⟨b, hbP, hb0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP0
   have hp0 : P.comap (algebraMap A₀ (integralClosure A₀ E)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hb0 hbP (Algebra.IsIntegral.isIntegral b)
-  haveI : (P.comap (algebraMap A₀ (integralClosure A₀ E))).IsMaximal :=
+    Ideal.under_ne_bot_of_integral_mem hb0 hbP (Algebra.IsIntegral.isIntegral b)
+  have : (P.comap (algebraMap A₀ (integralClosure A₀ E))).IsMaximal :=
     Ideal.IsPrime.isMaximal inferInstance hp0
   have h := pow_sub_one_dvd_differentIdeal_aux A₀ K₀ E
     (p := P.comap (algebraMap A₀ (integralClosure A₀ E))) P (e := 2) hp0
@@ -1296,8 +1296,8 @@ theorem descent_abstract (A K E Ω : Type) [CommRing A] [IsDedekindDomain A] [Fi
     (hσ : ∀ σ : E ≃ₐ[K] E, ∃ u : E, u ≠ 0 ∧ σ w = w * u ^ N) :
     ∃ f : K, f ≠ 0 ∧ ∀ B : ValuationSubring Ω, (∀ x : A, algebraMap E Ω (algebraMap A E x) ∈ B) →
       ∃ c : E, c ≠ 0 ∧ B.valuation (algebraMap E Ω (w / algebraMap K E f / c ^ N)) = 1 := by
-  haveI : IsDedekindDomain (integralClosure A E) := integralClosure.isDedekindDomain A K E
-  haveI : IsFractionRing (integralClosure A E) E := integralClosure.isFractionRing_of_finite_extension K E
+  have : IsDedekindDomain (integralClosure A E) := integralClosure.isDedekindDomain A K E
+  have : IsFractionRing (integralClosure A E) E := integralClosure.isFractionRing_of_finite_extension K E
   obtain ⟨f, J, hf, hJ⟩ := _root_.GlobalTheory.DivisorDescent.descent_submodule A (integralClosure A E) K E N hN
     (_root_.GlobalTheory.kummer_not_map_comap_le_sq A K E N hNu s hs hsu) hcl w hw hσ
   refine ⟨f, hf, fun B hB => ?_⟩
@@ -1321,8 +1321,8 @@ theorem isGalois_adjoin_pair (K Ω : Type) [Field K] [CharZero K] [Field Ω] [Al
     (N : ℕ) (ζ : Ω) (hN : 0 < N) (hζ : IsPrimitiveRoot ζ N) (hζK : ζ ∈ Set.range (algebraMap K Ω))
     (a b : K) (α β : Ω) (ha : a ≠ 0) (hb : b ≠ 0) (hα : α ^ N = algebraMap K Ω a) (hβ : β ^ N = algebraMap K Ω b) :
     IsGalois K (IntermediateField.adjoin K {α, β}) := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : NeZero N := ⟨hN.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   have key : ∀ (c : K) (γ x : Ω), c ≠ 0 → γ ^ N = algebraMap K Ω c → γ ∈ IntermediateField.adjoin K {α, β} →
       x ^ N = algebraMap K Ω c → x ∈ IntermediateField.adjoin K {α, β} := by
     intro c γ x hc hγ hm hx
@@ -1355,8 +1355,8 @@ theorem isGalois_adjoin_pair (K Ω : Type) [Field K] [CharZero K] [Field Ω] [Al
       · exact key a α x ha hα (IntermediateField.subset_adjoin _ _ (by simp)) h
       · exact key b β x hb hβ (IntermediateField.subset_adjoin _ _ (by simp)) h
   rw [heq]
-  haveI := IntermediateField.adjoin_rootSet_isSplittingField (K := K) (L := Ω) (p := p) (IsAlgClosed.splits _)
-  haveI : Normal K (IntermediateField.adjoin K (p.rootSet Ω)) := Normal.of_isSplittingField p
+  have := IntermediateField.adjoin_rootSet_isSplittingField (K := K) (L := Ω) (p := p) (IsAlgClosed.splits _)
+  have : Normal K (IntermediateField.adjoin K (p.rootSet Ω)) := Normal.of_isSplittingField p
   exact ⟨⟩
 
 theorem adjoin_pair_eq_top (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] (α β : Ω)
@@ -1379,11 +1379,11 @@ theorem divisor_descends : ∀ (k K Ω : Type) [Field k] [IsAlgClosed k] [CharZe
         ∃ c ∈ IntermediateField.adjoin K {α, β}, c ≠ 0 ∧ B.valuation (θ ^ N / (algebraMap K Ω f * c ^ N)) = 1 := by
   intro k K Ω _ _ _ _ _ _ _ _ _ _ _ N ζ hN hζ a b α β ha ha' hb hb' ha0 hb0 hα hβ θ hθ hw hs
   classical
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
-  haveI := isGalois_adjoin_pair K Ω N ζ hN hζ (zeta_mem_range k K Ω N ζ hN hζ) a b α β ha0 hb0 hα hβ
-  haveI : FiniteDimensional K (IntermediateField.adjoin K {α, β}) :=
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
+  have := isGalois_adjoin_pair K Ω N ζ hN hζ (zeta_mem_range k K Ω N ζ hN hζ) a b α β ha0 hb0 hα hβ
+  have : FiniteDimensional K (IntermediateField.adjoin K {α, β}) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
-  haveI : Normal K Ω := IsAlgClosure.normal K Ω
+  have : Normal K Ω := IsAlgClosure.normal K Ω
   have hNu : IsUnit (N : FunctionField.ringOfIntegers k K) := by
     have h1 : IsUnit (N : k) := (Nat.cast_ne_zero.mpr hN.ne').isUnit
     have h2 := h1.map ((algebraMap k[X] (FunctionField.ringOfIntegers k K)).comp C)
@@ -1436,9 +1436,9 @@ theorem cup_eq_coboundary_vanishing_on_inertia : ∀ (k K Ω : Type) [Field k] [
         (∀ g h, kum ζ α g * kum ζ β h = η h - η (g * h) + η g) ∧
         ∀ B : ValuationSubring Ω, Over (FunctionField.ringOfIntegers k K).toSubring B → ∀ g, Inert B g → η g = 0 := by
   intro k K Ω _ _ _ _ _ _ _ _ _ _ _ N ζ hN hζ a b α β haA hai hbA hbi ha0 hb0 hα hβ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
   obtain ⟨z, hz⟩ := zeta_mem_range k K Ω N ζ hN hζ
   have hfix : ∀ g : Ω ≃ₐ[K] Ω, g ζ = ζ := fun g => by rw [← hz]; exact g.commutes z
   have hC1 : IsFirstChernClassOfLineBundle K := _root_.GlobalTheory.NeedB.tsen k K
@@ -1470,7 +1470,7 @@ theorem cup_eq_coboundary_vanishing_on_inertia : ∀ (k K Ω : Type) [Field k] [
 
 theorem thmA : GlobalTheory.NeedB.ThmA := by
   intro k K Ω _ _ _ _ _ _ _ _ _ _ _ N ζ hN hζ a b α β ha0 hb0 haA hai hbA hbi hα hβ
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   obtain ⟨z, hz⟩ := zeta_mem_range k K Ω N ζ hN hζ
   have hfix : ∀ g : Ω ≃ₐ[K] Ω, g ζ = ζ := fun g => by rw [← hz]; exact g.commutes z
   have hα0 : α ≠ 0 := by

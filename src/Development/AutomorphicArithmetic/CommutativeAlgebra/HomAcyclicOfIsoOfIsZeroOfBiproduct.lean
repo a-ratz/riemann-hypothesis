@@ -141,8 +141,8 @@ theorem UpperTheory.homAcyclic_of_iso_of_isZero_of_biproduct :
     obtain ⟨g₂, hi₂⟩ := hP₂ J hJ
     let S₁ : SShv B q := ⟨HP P₁ J, g₁⟩
     let S₂ : SShv B q := ⟨HP P₂ J, g₂⟩
-    haveI : Injective S₁ := hi₁
-    haveI : Injective S₂ := hi₂
+    have : Injective S₁ := hi₁
+    have : Injective S₂ := hi₂
     obtain ⟨e⟩ := biprod_iso (sheafToPresheaf (EtTop B) (ModuleCat.{1} (ULift.{1} (ZMod q))))
       S₁ S₂ (HP P J) (hm r₁ J) (hm i₁ J) (hm r₂ J) (hm i₂ J)
       (by rw [hm_comp, h1, hm_id]; rfl) (by rw [hm_comp, h2, hm_id]; rfl)

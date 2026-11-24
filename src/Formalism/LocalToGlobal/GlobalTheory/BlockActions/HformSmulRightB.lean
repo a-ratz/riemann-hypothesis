@@ -160,7 +160,7 @@ abbrev crdP : D.sp.X'.V ≃ₗ[D.host.E] (Fin (D.R.N D.R.m - 1) → D.host.E) :=
 
 theorem hform_frame (S : @HSpace D.host.E _ _ D.host.cmStar) (v w : S.V) :
     hform (sigD D : D.host.E →+* D.host.E) S.gram (S.frame.equivFun v) (S.frame.equivFun w) = S.hT v w := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [Formalism.L2.GlobalTheoryTheory.TraceIntegrality.hT_expand]
   unfold hform
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -169,7 +169,7 @@ theorem hform_frame (S : @HSpace D.host.E _ _ D.host.cmStar) (v w : S.V) :
 
 theorem hform_crdM (v w : (D.sp.X D.R.m).V) :
     hform (sigD D : D.host.E →+* D.host.E) (gramN D D.R.m le_rfl) (crdM D v) (crdM D w) = (D.sp.X D.R.m).hT v w := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have e : ∀ x, crdM D x = (D.sp.X D.R.m).frame.equivFun x ∘ (finCongr (rankN D D.R.m le_rfl)).symm := fun x => rfl
   rw [e, e]
   unfold gramN
@@ -177,7 +177,7 @@ theorem hform_crdM (v w : (D.sp.X D.R.m).V) :
 
 theorem hform_crdP (v w : D.sp.X'.V) :
     hform (sigD D : D.host.E →+* D.host.E) (gramP D) (crdP D v) (crdP D w) = D.sp.X'.hT v w := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have e : ∀ x, crdP D x = D.sp.X'.frame.equivFun x ∘ (finCongr (rankP D)).symm := fun x => rfl
   rw [e, e]
   unfold gramP
@@ -190,18 +190,18 @@ theorem zc_eq : zc D = crdM D D.sp.z := rfl
 theorem hform_iXc (x y : Fin (D.R.N D.R.m - 1) → D.host.E) :
     hform (sigD D : D.host.E →+* D.host.E) (gramN D D.R.m le_rfl) (iXc D x) (iXc D y) =
       hform (sigD D : D.host.E →+* D.host.E) (gramP D) x y := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [iXc_eq, iXc_eq, hform_crdM, D.sp.iX'_isom, ← hform_crdP, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
 
 theorem hform_iXc_zc (x : Fin (D.R.N D.R.m - 1) → D.host.E) :
     hform (sigD D : D.host.E →+* D.host.E) (gramN D D.R.m le_rfl) (iXc D x) (zc D) = 0 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [iXc_eq, zc_eq, hform_crdM]
   exact D.sp.z_orth _
 
 theorem hform_zc_iXc (x : Fin (D.R.N D.R.m - 1) → D.host.E) :
     hform (sigD D : D.host.E →+* D.host.E) (gramN D D.R.m le_rfl) (zc D) (iXc D x) = 0 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [iXc_eq, zc_eq, hform_crdM, ← (D.sp.X D.R.m).herm.eq (D.sp.iX' _) D.sp.z, D.sp.z_orth, map_zero]
 
 variable {D}

@@ -87,14 +87,14 @@ theorem locInj : LocInj := by
   have hO : IsOpen (ballDom F.q) := BallInverse.isOpen_ballDom F.q
   let R : ↥(ballDom F.q) → RiemLat E g D.La := fun t => F.R t.1
   have hP : ∀ v, Continuous fun x => (R x).P v := fun v =>
-    continuousOn_iff_continuous_restrict.1 (F.hol.2 v).continuousOn
+    continuousOn_iff_continuous_domRestrict.1 (F.hol.2 v).continuousOn
   have hH : Continuous fun x => (R x).Hm :=
     HmCont.continuous_Hm E g D.La _ R F.form (fun x => F.form_eq _) hP
   have h := near_trivial R hP hH ⟨t₀, ht₀⟩ l.M l.three_le
   rw [nhds_prod_eq] at h
   obtain ⟨A, hA, hA'⟩ := (eventually_prod_self_iff (r := fun x y => ∀ γ : D.La ≃ₗ[𝓞 E] D.La,
     (∀ v, ∃ e, γ v = v + l.M • e) → (∀ u v, reForm (R y) (γ u) (γ v) = reForm (R x) u v) → γ = 1)).1 h
-  refine ⟨Subtype.val '' interior A, hO.isOpenMap_subtype_val _ isOpen_interior,
+  refine ⟨Subtype.val '' interior A, hO.isOpenMap_subtypeVal _ isOpen_interior,
     ⟨_, mem_interior_iff_mem_nhds.2 hA, rfl⟩, ?_, ?_⟩
   · rintro _ ⟨x, -, rfl⟩
     exact x.2

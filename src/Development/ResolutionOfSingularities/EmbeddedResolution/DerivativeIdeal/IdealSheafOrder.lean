@@ -120,7 +120,7 @@ theorem germ_mem_stalkIdeal (I : X.IdealSheafData) (x : X) (U : X.affineOpens) (
   have h : Ideal.map (X.presheaf.germ U.1 x hx).hom (I.ideal U) ≤ stalkIdeal I x :=
     le_iSup (fun V : {V : X.affineOpens // x ∈ V.1.1} =>
       Ideal.map (X.presheaf.germ V.1.1 x V.2).hom (I.ideal V.1)) ⟨U, hx⟩
-  exact SetLike.le_def.mp h (Ideal.mem_map_of_mem _ hs)
+  exact IsConcreteLE.le_iff.mp h (Ideal.mem_map_of_mem _ hs)
 
 theorem stalkIdeal_top (x : X) : stalkIdeal (⊤ : X.IdealSheafData) x = ⊤ := by
   obtain ⟨U, hxU⟩ := X.exists_affineOpens_mem x
@@ -131,7 +131,7 @@ theorem stalkIdeal_top (x : X) : stalkIdeal (⊤ : X.IdealSheafData) x = ⊤ := 
       Ideal.map (X.presheaf.germ V.1.1 x V.2).hom ((⊤ : X.IdealSheafData).ideal V.1)) ⟨U, hxU⟩
   have h2 := Ideal.mem_map_of_mem (X.presheaf.germ U.1 x hxU).hom h1
   rw [map_one] at h2
-  exact (Ideal.eq_top_iff_one _).mpr (SetLike.le_def.mp h3 h2)
+  exact (Ideal.eq_top_iff_one _).mpr (IsConcreteLE.le_iff.mp h3 h2)
 
 theorem stalkIdeal_bot (x : X) : stalkIdeal (⊥ : X.IdealSheafData) x = ⊥ := by
   have h : ∀ U : X.affineOpens, (⊥ : X.IdealSheafData).ideal U = ⊥ := fun U => by simp

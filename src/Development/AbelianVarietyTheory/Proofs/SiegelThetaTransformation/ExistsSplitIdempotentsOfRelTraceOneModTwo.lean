@@ -142,7 +142,7 @@ theorem cA_fj (α : Af D.host.F) : cA D (fj D α) = fj D α := by
   rw [cA_tmul, star_one]; rfl
 
 theorem exists_of_star_eq {x : D.host.E} (h : star x = x) : ∃ t : D.host.F, algebraMap D.host.F D.host.E t = x := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   exact ⟨⟨x, (IsCMField.complexConj_eq_self_iff D.host.E x).1 h⟩, rfl⟩
 
 theorem exists_add_cA (z : Formalism.L2.Theta.AE D) :

@@ -70,8 +70,8 @@ theorem natCast_dvd_pow_sub {E : Type} [Field E] [NumberField E] (x : 𝓞 E) (N
   set I : Ideal (𝓞 E) := Ideal.span {(N : 𝓞 E)}
   have hI : I ≠ ⊥ := by
     simp only [I, ne_eq, Ideal.span_singleton_eq_bot, Nat.cast_eq_zero]; omega
-  haveI : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  letI : Fintype (𝓞 E ⧸ I) := Fintype.ofFinite _
+  have : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  let : Fintype (𝓞 E ⧸ I) := Fintype.ofFinite _
   have hcard : Fintype.card (𝓞 E ⧸ I) = N ^ Module.finrank ℤ (𝓞 E) := by
     rw [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply,
       Ideal.absNorm_span_natCast]

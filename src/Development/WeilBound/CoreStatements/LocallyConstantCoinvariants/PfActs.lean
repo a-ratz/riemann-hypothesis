@@ -62,7 +62,7 @@ theorem std_mem_SB {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
   set S : Set (κ → Fv F v) := {x | ∀ i, x i ∈ v.adicCompletionIntegers F} with hSdef
   have hOv : IsOpen ((v.adicCompletionIntegers F : Set (Fv F v))) := Valued.isOpen_integer _
   have hCv : IsCompact ((v.adicCompletionIntegers F : Set (Fv F v))) := by
-    haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+    have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
     exact isCompact_iff_compactSpace.mpr inferInstance
   have hSeq : S = Set.pi Set.univ (fun _ : κ => (v.adicCompletionIntegers F : Set (Fv F v))) := by
     ext x

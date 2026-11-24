@@ -91,7 +91,7 @@ theorem exists_ball_char_trivial (ψ : AddChar k Circle) (hψ : Continuous ψ) :
     ∃ s : kˣ, ∀ y ∈ cball s, ψ y = 1 := by
   have hU : {x : k | ‖(ψ x : ℂ) - 1‖ < 1 / 2} ∈ nhds (0 : k) := by
     have hc : Continuous fun x : k => ‖(ψ x : ℂ) - 1‖ :=
-      ((continuous_subtype_val.comp hψ).sub continuous_const).norm
+      ((continuous_subtypeVal.comp hψ).sub continuous_const).norm
     exact (isOpen_lt hc continuous_const).mem_nhds (by simp)
   obtain ⟨s, hs⟩ := exists_cball_subset hU
   refine ⟨s, fun y hy => ?_⟩

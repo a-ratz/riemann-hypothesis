@@ -61,8 +61,8 @@ set_option synthInstance.maxHeartbeats 400000
 variable {E : Type} [Field E] [NumberField E] {k : ℕ}
 
 theorem countGL : Countable (GL (Fin k) E) := by
-  haveI : Countable E := GroundTheory.Global.countable_numberField E
-  haveI : Countable (Matrix (Fin k) (Fin k) E) := inferInstanceAs (Countable (Fin k → Fin k → E))
+  have : Countable E := GroundTheory.Global.countable_numberField E
+  have : Countable (Matrix (Fin k) (Fin k) E) := inferInstanceAs (Countable (Fin k → Fin k → E))
   exact Units.val_injective.countable
 
 theorem blk_ratGL {j : ℕ} {γ : GL (Fin k) E} (h : GlobalTheory j γ) : GlobalTheory j (ratGL E k γ) := by
@@ -111,12 +111,12 @@ theorem inv_nuG (Γ : Set (GL (Fin k) E)) (d : ℕ)
     _ = ∫⁻ h, f h ∂nuG Γ d := (lint_nuG Γ d f hf).symm
 
 theorem sf_nuG (Γ : Set (GL (Fin k) E)) (d : ℕ) [SFinite (nuD E k d)] : SFinite (nuG Γ d) := by
-  haveI : Countable (GL (Fin k) E) := countGL
+  have : Countable (GL (Fin k) E) := countGL
   rw [nuG]; infer_instance
 
 theorem ae_nuG (Γ : Set (GL (Fin k) E)) (d : ℕ) (hae : ∀ᵐ u ∂nuD E k d, UU (k - d) u) :
     ∀ᵐ h ∂nuG Γ d, ∃ γ u, γ ∈ Γ ∧ UU (k - d) u ∧ h = ratGL E k γ * u := by
-  haveI : Countable (GL (Fin k) E) := countGL
+  have : Countable (GL (Fin k) E) := countGL
   rw [ae_iff] at hae ⊢
   rw [nuG, Measure.sum_apply_of_countable, ENNReal.tsum_eq_zero]
   intro γ
@@ -133,12 +133,12 @@ theorem nuD_ne_zero (hsf : ∀ d ≤ k, SFinite (nuD E k d)) : ∀ d ≤ k, nuD 
     simp [nuD] at h1
   | succ d ih =>
     intro hd h
-    haveI := hsf d (by omega)
+    have := hsf d (by omega)
     have hm : Measurable fun p : (UnipotentBlockColumnIndex k (k - (d + 1)) (k - (d + 1)) → Ad E) × GA E k => blkU p.1 * p.2 :=
       (((continuous_posU (isNil_blk k _ _)).comp continuous_fst).mul continuous_snd).measurable
     have h3 := (Measure.map_eq_zero_iff hm.aemeasurable).mp h
     have h2 := congrArg (fun μ => μ (vecDomain E (UnipotentBlockColumnIndex k (k - (d + 1)) (k - (d + 1))) ×ˢ Set.univ)) h3
-    simp only [Measure.prod_prod, vecMeasure_vecDomain, one_mul, Measure.coe_zero, Pi.zero_apply] at h2
+    simp only [Measure.prod_prod, vecMeasure_vecDomain, one_mul, FunLike.coe_zero, Pi.zero_apply] at h2
     exact ih (by omega) (Measure.measure_univ_eq_zero.mp h2)
 
 variable [_root_.NumberField.IsTotallyComplex E]
@@ -148,7 +148,7 @@ theorem main_nuG (hD0 : D0) (hN1 : N1) (Γ : Set (GL (Fin k) E)) (d : ℕ) (hd :
     SFinite (nuG Γ d) ∧ Measure.map (fun h => h⁻¹) (nuG Γ d) = nuG Γ d ∧
       ∀ᵐ h ∂nuG Γ d, ∃ γ u, γ ∈ Γ ∧ UU (k - d) u ∧ h = ratGL E k γ * u := by
   obtain ⟨hsf, hae, hinvν, -, hconj⟩ := hN1 E k d hd
-  haveI := hsf
+  have := hsf
   refine ⟨sf_nuG Γ d, inv_nuG Γ d hinvν (fun γ hγ F hF => ?_) hinv, ae_nuG Γ d hae⟩
   rw [hconj _ (blk_ratGL (hblk γ hγ)) F hF, (hD0 E k).2.2.2.1 γ, inv_one, ENNReal.ofReal_one, one_pow, one_mul]
 
@@ -204,7 +204,7 @@ theorem galois_fixed_adelic_matrices_descend : D0 → N0 → N1 → N3 := by
       rw [hh, this, map_one, one_mul]
       exact ⟨hu.1, hu.2.1, fun i c hc => absurd hc (Nat.not_lt_zero _)⟩
     · intro h0
-      haveI : Countable (GL (Fin k) E) := countGL
+      have : Countable (GL (Fin k) E) := countGL
       have h1 : nuP E k 0 Set.univ = 0 := by simp [h0]
       rw [nuP, nuG, Measure.sum_apply_of_countable, ENNReal.tsum_eq_zero] at h1
       have h2 := h1 ⟨1, show IsMir 0 (1 : GL (Fin k) E) from fun i c _ => rfl⟩

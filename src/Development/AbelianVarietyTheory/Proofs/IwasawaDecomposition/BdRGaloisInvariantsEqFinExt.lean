@@ -191,7 +191,7 @@ theorem invariants_BdR (l : ℕ) [Fact l.Prime] (C : Core l) (K : FinExt l) (b :
       rw [map_sub, hw' g, hoσ, hg]
   refine ⟨k, hk, ?_⟩
   rw [← sub_eq_zero.1 hz]
-  haveI : IsDomain (Per.BdR l) := (_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).2.2.1.isDomain
+  have : IsDomain (Per.BdR l) := (_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).2.2.1.isDomain
   have ht' : algebraMap (Per.BdRp l) (Per.BdR l) t ^ n ≠ 0 :=
     pow_ne_zero n ((map_ne_zero_iff _ hinj).2 ht0)
   apply mul_right_cancel₀ ht'

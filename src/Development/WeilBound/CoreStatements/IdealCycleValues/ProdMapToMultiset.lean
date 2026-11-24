@@ -99,7 +99,7 @@ theorem evL_mul (n : List G → ℝ) (hp : ∀ l l', l.Perm l' → n l = n l') (
   refine MvPolynomial.induction_on' P (fun μ b => ?_) (fun p q ih1 ih2 => ?_)
   · simp only [evL_monomial]
     refine MvPolynomial.induction_on' H (fun ν a => ?_) (fun p q ih1 ih2 => ?_)
-    · simp only [monomial_mul, evL_monomial]
+    · simp only [monomial_mul_monomial, evL_monomial]
       rw [hp _ _ (classes_add_perm cls ν μ Q)]
       ring
     · rw [add_mul, map_add (f := _), ih1, ih2, map_add (f := _)]

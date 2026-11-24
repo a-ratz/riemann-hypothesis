@@ -171,8 +171,8 @@ theorem pairHerm_cont_joint (σ : E →ₐ[F] E) (a : ℕ) :
   unfold pairHerm
   refine continuous_const.mul (htr.comp (continuous_finsetSum _ fun i _ =>
     continuous_finsetSum _ fun j _ => ?_))
-  exact ((continuous_subtype_val.comp continuous_fst).matrix_elem i j).mul
-    ((continuous_subtype_val.comp continuous_snd).matrix_elem j i)
+  exact ((continuous_subtypeVal.comp continuous_fst).matrix_elem i j).mul
+    ((continuous_subtypeVal.comp continuous_snd).matrix_elem j i)
 
 theorem sdEx_of_psiNT (hP : PsiNT) : SdEx := by
   intro F E _ _ _ _ _ σ n J ψ v a hS

@@ -62,12 +62,12 @@ namespace GlobalTheory.HeckeEx
 
 theorem exists_finiteEtale_algebra_pullback : ∀ (X Y : Scheme.{0}) (π : Y ⟶ X), IsFinite π → Etale π → ∀ (R : Type) [CommRing R] (x : Sp R ⟶ X), ∃ (B : Type) (_ : CommRing B) (_ : Algebra R B) (h : Sp B ⟶ Y), Module.Finite R B ∧ Algebra.Etale R B ∧ h ≫ π = spMap (algebraMap R B) ≫ x ∧ (Surjective π → Function.Surjective (PrimeSpectrum.comap (algebraMap R B))) ∧ ∀ (Ω : Type) [CommRing Ω] (φ : R →+* Ω) (w : Sp Ω ⟶ Y), w ≫ π = spMap φ ≫ x → ∃! χ : B →+* Ω, χ.comp (algebraMap R B) = φ ∧ spMap χ ≫ h = w := by
   intro X Y π hfin het R _ x
-  haveI : IsAffine (pullback π x) := isAffine_of_isAffineHom (pullback.snd π x)
+  have : IsAffine (pullback π x) := isAffine_of_isAffineHom (pullback.snd π x)
   obtain ⟨S, e, -⟩ : ∃ (S : CommRingCat.{0}) (_ : Spec S ≅ pullback π x), True :=
     ⟨_, (pullback π x).isoSpec.symm, trivial⟩
   obtain ⟨f, hf⟩ := Spec.map_surjective (R := CommRingCat.of R) (S := S)
     (e.hom ≫ pullback.snd π x)
-  letI : Algebra R S := f.hom.toAlgebra
+  let : Algebra R S := f.hom.toAlgebra
   have hsp : spMap (algebraMap R S) = e.hom ≫ pullback.snd π x := hf
   refine ⟨S, inferInstance, inferInstance, e.hom ≫ pullback.fst π x, ?_, ?_, ?_, ?_, ?_⟩
   · have h1 : IsFinite (Spec.map f) := by rw [hf]; infer_instance

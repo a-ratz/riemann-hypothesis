@@ -78,7 +78,7 @@ theorem hasDerivAt_orbit {H : Type} [NormedAddCommGroup H] [NormedSpace ℂ H]
     exact ((U t).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt 0 h
   refine (h0.comp_sub_const t t).congr_of_eventuallyEq (Filter.Eventually.of_forall fun x => ?_)
   show U x v = U t (U (x - t) v)
-  rw [← ContinuousLinearMap.mul_apply, ← hU]
+  rw [← mul_apply_eq_comp, ← hU]
   congr 2
   ring
 
@@ -294,7 +294,7 @@ theorem analyticOnNhd_orbit_of_norm_eq : ∀ (H₁ : Type) [NormedAddCommGroup H
   intro a _
   refine analyticAt_of_bound (fun k t => U₂ t (w₂ k)) hF₂ C r hr (fun k t => ?_) a
   have h1 := hCr k
-  simp only [h01, ContinuousLinearMap.one_apply] at h1
+  simp only [h01, one_apply_eq_self] at h1
   simp only [hiso]
   rw [← hw k]
   exact h1

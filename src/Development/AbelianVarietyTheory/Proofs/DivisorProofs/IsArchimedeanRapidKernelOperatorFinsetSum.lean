@@ -60,8 +60,8 @@ theorem isOpenEmbedding_entriesGLInf :
 theorem measurable_comp_GLInf {X β : Type} [MeasurableSpace X] [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β]
     {F : GL (Fin n) (Cinf E) → β} (hF : Continuous F) {γ : X → GL (Fin n) (Cinf E)}
     (hγ : ∀ i j, Measurable fun x => (γ x : Matrix (Fin n) (Fin n) (Cinf E)) i j) : Measurable fun x => F (γ x) := by
-  letI : MeasurableSpace (GL (Fin n) (Cinf E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (Cinf E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (Cinf E)) := borel _
+  have : BorelSpace (GL (Fin n) (Cinf E)) := ⟨rfl⟩
   have h : Measurable γ := (isOpenEmbedding_entriesGLInf.measurableEmbedding.measurable_comp_iff).1
     (Measurable.of_eval fun i => Measurable.of_eval fun j => hγ i j)
   exact hF.measurable.comp h
@@ -87,7 +87,7 @@ theorem IsRapidFInf.integrable {X Z : Type} [MeasurableSpace X] [NormedAddCommGr
     exact nonneg_of_mul_nonneg_left this (pow_pos (htInf_pos' _) _)
   refine ((h.2.2.2 N).const_mul (C * htInf g ^ N)).mono' ?_ (Filter.Eventually.of_forall fun x => ?_)
   · refine Measurable.aestronglyMeasurable ((h.1.mul ?_).mul ?_)
-    · exact (continuous_subtype_val.comp Real.continuous_fourierChar).measurable.comp (h.2.2.1 z)
+    · exact (continuous_subtypeVal.comp Real.continuous_fourierChar).measurable.comp (h.2.2.1 z)
     · exact measurable_comp_GLInf (F := fun q => W (g * q)) (by fun_prop) h.2.1
   · rw [norm_mul, norm_mul, Circle.norm_coe, mul_one]
     have h1 : htInf (g * γ x) ≤ htInf g * (htInf (γ x) * (1 + ‖η x‖)) :=

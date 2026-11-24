@@ -284,7 +284,7 @@ theorem hilbert90_frobenius_tensor_unramified_padic : ∀ (p : ℕ) [Fact p.Prim
     ∃ g : (B ⊗[ℚ_[p]] Qr p r)ˣ, a = g⁻¹ *
       Units.map (Algebra.TensorProduct.map (AlgHom.id ℚ_[p] B) (frobQ p r)).toRingHom.toMonoidHom g := by
   intro p _ r hr B _ _ _ a ha
-  haveI : FiniteDimensional ℚ_[p] (Qr p r) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance hr
+  have : FiniteDimensional ℚ_[p] (Qr p r) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance hr
   let σ := Algebra.TensorProduct.map (AlgHom.id ℚ_[p] B) (frobQ p r)
   let τ : B ⊗[ℚ_[p]] Qr p r → B ⊗[ℚ_[p]] Qr p r := fun x => σ x * ((a⁻¹ : (B ⊗[ℚ_[p]] Qr p r)ˣ) : _)
   have hτr : ∀ v, τ^[r] v = v := by
@@ -374,8 +374,8 @@ theorem hilbert90_frobenius_tensor_unramified_padic : ∀ (p : ℕ) [Fact p.Prim
     have h1 : e 1 ∈ m := hle Submodule.mem_top
     rw [map_one] at h1
     exact hm.ne_top ((Ideal.eq_top_iff_one m).2 h1)
-  haveI : IsArtinianRing (B ⊗[ℚ_[p]] Qr p r) := IsArtinianRing.of_finite ℚ_[p] (B ⊗[ℚ_[p]] Qr p r)
-  have hfin := IsArtinianRing.setOf_isMaximal_finite (B ⊗[ℚ_[p]] Qr p r)
+  have : IsArtinianRing (B ⊗[ℚ_[p]] Qr p r) := IsArtinianRing.of_finite ℚ_[p] (B ⊗[ℚ_[p]] Qr p r)
+  have hfin := IsArtinianRing.setOfPred_isMaximal_finite (B ⊗[ℚ_[p]] Qr p r)
   let fS : Ideal (B ⊗[ℚ_[p]] Qr p r) → Subspace ℚ_[p] W := fun I => (I.restrictScalars ℚ_[p]).comap W.subtype
   have htop : (⊤ : Subspace ℚ_[p] W) ∉ hfin.toFinset.image fS := by
     intro hmem

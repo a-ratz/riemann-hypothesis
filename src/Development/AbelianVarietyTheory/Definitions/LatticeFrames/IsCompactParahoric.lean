@@ -66,7 +66,7 @@ theorem exists_reps {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGrou
     (ho : IsOpen (J : Set G)) (hc : IsCompact (J : Set G)) (g : G) :
     ∃ R : Finset G, (∀ j ∈ R, j ∈ J) ∧ ∀ j ∈ J, ∃! j', j' ∈ R ∧ (j' * g)⁻¹ * (j * g) ∈ J := by
   classical
-  haveI : DiscreteTopology (G ⧸ J) := QuotientGroup.discreteTopology ho
+  have : DiscreteTopology (G ⧸ J) := QuotientGroup.discreteTopology ho
   let f : G → G ⧸ J := fun j => QuotientGroup.mk (j * g)
   have hf : Continuous f := QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   have hfin : (f '' J).Finite := (hc.image hf).finite_of_discrete

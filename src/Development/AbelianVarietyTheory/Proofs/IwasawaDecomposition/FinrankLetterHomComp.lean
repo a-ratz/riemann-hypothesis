@@ -265,7 +265,7 @@ theorem const_of_invariant {L : Type} [Field L] [Algebra ℚ_[l] L] [FiniteDimen
   have h5 : S = ⊤ := by
     have : (IntermediateField.fixedField S).fixingSubgroup = S := h3
     rw [← this, h4, IntermediateField.fixingSubgroup_bot]
-  obtain ⟨f, hf⟩ := IsAlgClosed.surjective_restrictDomain_of_isAlgebraic
+  obtain ⟨f, hf⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic
     (K := ℚ_[l]) (L := ↥s.fieldRange) (M := Om l) (E := Om l) (t.comp (s.equivFieldRange.symm : _ →ₐ[ℚ_[l]] _))
   have hg : AlgEquiv.ofBijective f (Algebra.IsAlgebraic.algHom_bijective f) ∈ S := h5 ▸ Subgroup.mem_top _
   rw [← hg s]
@@ -302,7 +302,7 @@ theorem finrank_wdSpace (l : ℕ) [Fact l.Prime] (P : LocPrime l) (ι : Om l ≃
       rw [coe_mulD, this]
       rfl)
   have h1 : finrank ℂ (WDSpace P ι ρ) = d LL.1.val := by
-    letI := algC ι LL
+    let := algC ι LL
     rw [← Subspace.dual_finrank_eq, finrank_dual_letter]
     exact (finrank_letterHom_comp (mulD P ρ) ι _ _ _ _ (fun _ => rfl) (fun _ => rfl)).symm
   rw [Finset.sum_congr rfl fun s _ => hd s LL.1.val, Finset.sum_const, Finset.card_univ, AlgHom.card,

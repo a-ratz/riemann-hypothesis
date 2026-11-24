@@ -67,7 +67,7 @@ namespace GlobalTheory.FieldExtDim
 theorem ringKrullDim_le_of_isIntegral (R S : Type) [CommRing R] [CommRing S] [Algebra R S]
     [Algebra.IsIntegral R S] : ringKrullDim S ≤ ringKrullDim R :=
   Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap R S))
-    fun I J h => Ideal.IsIntegral.comap_lt_comap (I := I.asIdeal) (J := J.asIdeal) h
+    fun I J h => Ideal.IsIntegral.under_lt_under (I := I.asIdeal) (J := J.asIdeal) h
 
 theorem ringKrullDim_tensor_le (k K A : Type) [Field k] [Field K] [Algebra k K] [CommRing A]
     [Algebra k A] [Algebra.FiniteType k A] : ringKrullDim (K ⊗[k] A) ≤ ringKrullDim A := by
@@ -81,7 +81,7 @@ theorem ringKrullDim_tensor_le (k K A : Type) [Field k] [Field K] [Algebra k K] 
     exact bot_le
   obtain ⟨s, g, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg k A
   let P := MvPolynomial (Fin s) k
-  letI : Algebra P A := g.toRingHom.toAlgebra
+  let : Algebra P A := g.toRingHom.toAlgebra
   have hiA : Algebra.IsIntegral P A := ⟨hfin.to_isIntegral⟩
   have : FaithfulSMul P A := (faithfulSMul_iff_algebraMap_injective P A).2 hinj
   have hdA : ringKrullDim A = s := by
@@ -93,7 +93,7 @@ theorem ringKrullDim_tensor_le (k K A : Type) [Field k] [Field K] [Algebra k K] 
       (σ := Fin s)).toRingEquiv, MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite,
       ringKrullDim_eq_zero_of_field, zero_add, Nat.card_eq_fintype_card, Fintype.card_fin]
   let φ : B →ₐ[K] K ⊗[k] A := Algebra.TensorProduct.map (AlgHom.id K K) g
-  letI : Algebra B (K ⊗[k] A) := φ.toRingHom.toAlgebra
+  let : Algebra B (K ⊗[k] A) := φ.toRingHom.toAlgebra
   have hcomp : (algebraMap B (K ⊗[k] A)).comp
       (Algebra.TensorProduct.includeRight : P →ₐ[k] B).toRingHom =
       (Algebra.TensorProduct.includeRight : A →ₐ[k] K ⊗[k] A).toRingHom.comp (algebraMap P A) := by

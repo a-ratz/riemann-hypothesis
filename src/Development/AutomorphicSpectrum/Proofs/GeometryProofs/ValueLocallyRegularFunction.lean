@@ -91,7 +91,7 @@ theorem spMap_fromSpec_appLE {T : Scheme.{0}} {V : T.Opens} (hV : IsAffineOpen V
 theorem section_near : ∀ (X T : Scheme.{0}) (j : T ⟶ X) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X), IsCptGen ξ → ∀ (y₀ : Sp ℂ ⟶ T) (t : Ω) (r₀ : ℂ), ValAt ξ (y₀ ≫ j) t r₀ → ∃ W₁ : T.Opens, ⊤ ≤ y₀ ⁻¹ᵁ W₁ ∧ ∀ (V : T.Opens) (hV : IsAffineOpen V), V ≤ W₁ → ∃ g : Γ(T, V), ∀ (χ : Γ(T, V) →+* ℂ) (r : ℂ), ValAt ξ ((spMap χ ≫ hV.fromSpec) ≫ j) t r → r = χ g := by
   intro X T j Ω _ ξ hξ y₀ t r₀ h₀
   obtain ⟨h, s, hs, -⟩ := h₀
-  obtain ⟨N, hp, G, rfl⟩ := TopCat.Presheaf.germ_exist X.presheaf s
+  obtain ⟨N, hp, G, rfl⟩ := TopCat.Presheaf.exists_germ_eq X.presheaf s
   have hgen : genPt ξ ∈ N := h.mem_open N.2 hp
   have hgerm : ∀ (p : Cpt ξ) (hp : p.1 ∈ N), genMap ξ p (X.presheaf.germ N p.1 hp G) =
       (Scheme.stalkClosedPointTo ξ).hom (X.presheaf.germ N (genPt ξ) hgen G) := by

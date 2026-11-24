@@ -166,7 +166,7 @@ theorem ellT_eq_span (D : D7) (cD : D.what₂.Tau → ℂ) (h : IsDgen D cD)
   obtain ⟨s, hsc, hs⟩ := hs τ
   have hs0 : s ≠ 0 := GlobalTheory.Glob.ne_zero_of_span_eq hM₀ hs.symm
   have hc0 : cD τ ≠ 0 := fun h => hs0 (Subtype.ext (hsc.trans h))
-  haveI : NumberField (M ⊔ M₀ : IntermediateField ℚ ℂ) := NumberField.mk
+  have : NumberField (M ⊔ M₀ : IntermediateField ℚ ℂ) := NumberField.mk
   have hM' : ∀ τ x, TaylorLogMetric.embT D τ x ∈ (M ⊔ M₀ : IntermediateField ℚ ℂ) :=
     fun τ x => (le_sup_left : M ≤ M ⊔ M₀) (hM τ x)
   have h' := GlobalTheory.EigenlineBaseChange.ellT_eq_span_of_le D M₀ (M ⊔ M₀) le_sup_right hM₀ τ s hs
@@ -201,9 +201,9 @@ theorem mean_logMet_eq : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (dl : ℂ) (c
     obtain ⟨s, hsc, hs⟩ := hs τ
     exact GlobalTheory.Glob.ne_zero_of_span_eq hM₀ hs.symm (Subtype.ext (hsc.trans h))
   refine ⟨hne, fun M _ hD hcM τ => ?_⟩
-  haveI : NumberField M := NumberField.mk
+  have : NumberField M := NumberField.mk
   have hell := ellT_eq_span D cD hgen M hD.1 τ (hcM τ)
-  have hl : TaylorLogMetric.liftM M (cD τ) = ⟨cD τ, hcM τ⟩ := dif_pos (hcM τ)
+  have hl : TaylorLogMetric.liftM M (cD τ) = ⟨cD τ, hcM τ⟩ := dite_eq_left (hcM τ)
   rw [hl, ← hmean M hD τ, Finset.sum_neg_distrib]
   exact (GlobalTheory.Glob.meanLogOm_eq_of_gen hD.1 (GlobalTheory.Glob.area_lamConj_pos hc hD) hell.symm).symm
 

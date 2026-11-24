@@ -143,8 +143,8 @@ theorem hasGram_of_injective {N : (K →+* ℂ) → V → ℝ} (h : HasGram N) (
   classical
   obtain ⟨n, ⟨b, X⟩, hX⟩ := h
   dsimp only at hX
-  haveI : FiniteDimensional K V := Module.Finite.of_basis b
-  haveI : FiniteDimensional K W := FiniteDimensional.of_injective φ hφ
+  have : FiniteDimensional K V := Module.Finite.of_basis b
+  have : FiniteDimensional K W := FiniteDimensional.of_injective φ hφ
   let b' := Module.finBasis K W
   let B : Matrix (Fin n) (Fin (finrank K W)) K := LinearMap.toMatrix b' b φ
   obtain ⟨g, hg⟩ := φ.exists_leftInverse_of_injective (LinearMap.ker_eq_bot.2 hφ)

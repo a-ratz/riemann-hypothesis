@@ -66,7 +66,7 @@ theorem finrank_real_V {n : ℕ} : Module.finrank ℝ (V n) = 2 * n := by
 
 theorem mvPow : MVPowStatement := by
   intro n s hn
-  haveI : Nontrivial (V n) :=
+  have : Nontrivial (V n) :=
     Module.nontrivial_of_finrank_pos (R := ℝ) (by rw [finrank_real_V]; omega)
   have hind : (ball (0 : V n) 1).indicator (fun z : V n => ‖z‖ ^ (-2 * s)) =
       fun z => (Iio (1 : ℝ)).indicator (fun y : ℝ => y ^ (-2 * s)) ‖z‖ := by

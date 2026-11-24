@@ -60,8 +60,8 @@ theorem setIntegral_eq_mass_mul_avg : ∀ (G : Type) [AddCommGroup G] [Topologic
   obtain ⟨hd, K, hK, hcov⟩ := hΓ
   have e := hB.measurable_eq
   subst e
-  letI : MeasurableSpace G := borel G
-  haveI : Countable Γ := countable_of_discrete_addSubgroup Γ
+  let : MeasurableSpace G := borel G
+  have : Countable Γ := countable_of_discrete_addSubgroup Γ
   have hne : μ 𝓕 ≠ 0 := h𝓕.measure_ne_zero (NeZero.ne μ)
   have hfin : μ 𝓕 ≠ ⊤ := (GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact Γ hK hcov μ h𝓕).ne
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hΦ.1.continuousOn
@@ -90,7 +90,7 @@ theorem setIntegral_eq_mass_mul_avg : ∀ (G : Type) [AddCommGroup G] [Topologic
   have e1 : μ 𝓕 = μ F₀ := h𝓕.measure_eq hF₀'
   have e2 : ∫ x in 𝓕, Φ x ∂μ = ∫ x in F₀, Φ x ∂μ :=
     h𝓕.setIntegral_eq hF₀' fun g x => hΦ.2 g g.2 x
-  rw [e1, e2, hc, Measure.restrict_smul, integral_smul_nnreal_measure, Measure.smul_apply, h1]
+  rw [e1, e2, hc, Measure.restrict_smul, integral_smul_nnreal_measure, smul_apply, h1]
   simp [ENNReal.smul_def, NNReal.smul_def]
 
 end GlobalTheory.CuspGeneric

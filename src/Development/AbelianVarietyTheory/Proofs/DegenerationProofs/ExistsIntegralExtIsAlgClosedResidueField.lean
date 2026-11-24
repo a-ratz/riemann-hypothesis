@@ -160,7 +160,7 @@ private lemma isUnit_one_add_algebraMap_mul_of_not_isUnit [IsLocalRing W] {π : 
   by_contra hu
   obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal (Ideal.span {1 + algebraMap W N π * h})
     (by rwa [Ne, Ideal.span_singleton_eq_top])
-  haveI : Algebra.IsIntegral W N :=
+  have : Algebra.IsIntegral W N :=
     ⟨fun x => (isIntegral_algHom_iff N.val Subtype.val_injective).1 (hN x x.2)⟩
   have hmax : (m.comap (algebraMap W N)).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal m
@@ -289,9 +289,9 @@ theorem _root_.GlobalTheory.ClosedResidueExt.exists_unramified_ext (W : Type) [C
       · rw [hu, map_mul, map_pow, mul_comm]
   obtain ⟨M, hM, hmax⟩ := exists_maximal_unram_subalgebra π h0
   obtain ⟨hirrM, hfacM⟩ := irreducible_and_associated_pow_of_unram M hM
-  haveI : IsDiscreteValuationRing M :=
+  have : IsDiscreteValuationRing M :=
     IsDiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization ⟨_, hirrM, fun {x} hx => hfacM x hx⟩
-  haveI hint : Algebra.IsIntegral W M :=
+  have hint : Algebra.IsIntegral W M :=
     ⟨fun x => (isIntegral_algHom_iff M.val Subtype.val_injective).1 (hM.1 x x.2)⟩
   refine ⟨M, inferInstance, inferInstance, inferInstance, inferInstance, ?_, hint, hirrM, ?_⟩
   · intro a b hab

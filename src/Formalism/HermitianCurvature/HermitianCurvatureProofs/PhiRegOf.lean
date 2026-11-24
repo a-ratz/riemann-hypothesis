@@ -95,10 +95,10 @@ theorem phiReg_of (hSch : SchurH) (hNI : NormIdSm) (hGG : GrowthG) (hDD : DecDD)
       have hb : ∀ᵐ g ∂νq, ((‖l (σ (Matrix.of g) x)‖₊ : ℝ≥0) : ℝ≥0∞) ≤
           (‖cc‖ₑ * ‖l v‖ₑ) * ∫⁻ p, ‖⟪v, σ (Matrix.of p.1 * Matrix.of p.2 * Matrix.of g) x⟫_ℂ‖ₑ ∂(μW.prod μN) := by
         filter_upwards [hae] with g hg
-        rw [← enorm_eq_nnnorm, hlx _ hg]
+        rw [← eNorm_eq_nnNorm, hlx _ hg]
         have hbe' := be_enorm_le (c := c) hds hT hπ hW hN (x := x) (v := v) hg
         calc ‖cc • (be z c π σ μW μN (σ (Matrix.of g) x) v) (l v)‖ₑ
-            = ‖cc‖ₑ * ‖(be z c π σ μW μN (σ (Matrix.of g) x) v) (l v)‖ₑ := enorm_smul _ _
+            = ‖cc‖ₑ * ‖(be z c π σ μW μN (σ (Matrix.of g) x) v) (l v)‖ₑ := eNorm_smul _ _
           _ ≤ ‖cc‖ₑ * (‖be z c π σ μW μN (σ (Matrix.of g) x) v‖ₑ * ‖l v‖ₑ) := by
             gcongr
             exact ContinuousLinearMap.le_opENorm _ _
@@ -122,7 +122,7 @@ theorem phiReg_of (hSch : SchurH) (hNI : NormIdSm) (hGG : GrowthG) (hDD : DecDD)
               ((‖be z c π σ μW μN (σ (Matrix.of g) x) v (l v)‖₊ : ℝ≥0) : ℝ≥0∞) ^ 2 ∂νq := by
             apply lintegral_congr_ae
             filter_upwards [hae] with g hg
-            rw [hlx _ hg, nnnorm_smul, ENNReal.coe_mul, mul_pow]
+            rw [hlx _ hg, nnNorm_smul, ENNReal.coe_mul, mul_pow]
         _ = ((‖cc‖₊ : ℝ≥0) : ℝ≥0∞) ^ 2 *
               ∫⁻ g, ((‖be z c π σ μW μN (σ (Matrix.of g) x) v (l v)‖₊ : ℝ≥0) : ℝ≥0∞) ^ 2 ∂νq :=
             lintegral_const_mul' _ _ (by simp)

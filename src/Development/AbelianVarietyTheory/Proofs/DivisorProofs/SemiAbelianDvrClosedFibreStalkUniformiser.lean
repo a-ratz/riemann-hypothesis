@@ -202,9 +202,9 @@ theorem unif : ∀ (T : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing
   intro T _ _ _ H _ _ hH y hy hdim ϖ hϖ
   have hsm : Smooth H.hom := hH.smooth
   let S := (Sp T).presheaf.stalk (H.hom y)
-  letI : Algebra T S := StructureSheaf.stalkAlgebra T (H.hom y)
-  haveI : (H.hom y).asIdeal.IsPrime := PrimeSpectrum.isPrime _
-  haveI : IsLocalization.AtPrime S (H.hom y).asIdeal := StructureSheaf.IsLocalization.to_stalk T _
+  let : Algebra T S := StructureSheaf.stalkAlgebra T (H.hom y)
+  have : (H.hom y).asIdeal.IsPrime := PrimeSpectrum.isPrime _
+  have : IsLocalization.AtPrime S (H.hom y).asIdeal := StructureSheaf.IsLocalization.to_stalk T _
   have hb : (H.hom y).asIdeal = maximalIdeal T := by rw [hy]; rfl
   have hmS : maximalIdeal S = Ideal.span {algebraMap T S ϖ} := by
     rw [← IsLocalization.AtPrime.map_eq_maximalIdeal (H.hom y).asIdeal S, hb, hϖ, Ideal.map_span,
@@ -223,13 +223,13 @@ theorem unif : ∀ (T : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing
   have hϖ0 : ϖ ≠ 0 := by
     rintro rfl
     exact IsDiscreteValuationRing.not_a_field T (by rw [hϖ, Ideal.span_singleton_eq_bot.2 rfl])
-  haveI : IsDomain S := IsLocalization.isDomain_of_le_nonZeroDivisors _
+  have : IsDomain S := IsLocalization.isDomain_of_le_nonZeroDivisors _
     (H.hom y).asIdeal.primeCompl_le_nonZeroDivisors
   have hs0 : algebraMap T S ϖ ≠ 0 := fun h => hϖ0 ((IsLocalization.injective S
     (H.hom y).asIdeal.primeCompl_le_nonZeroDivisors) (h.trans (map_zero _).symm))
   have ha₀ : a₀ ≠ 0 := by
-    letI : Algebra S O := (H.hom.stalkMap y).hom.toAlgebra
-    haveI : Module.Flat S O := Flat.stalkMap H.hom y
+    let : Algebra S O := (H.hom.stalkMap y).hom.toAlgebra
+    have : Module.Flat S O := Flat.stalkMap H.hom y
     have hr : IsSMulRegular O (algebraMap T S ϖ) :=
       Module.Flat.isSMulRegular_of_nonZeroDivisors (mem_nonZeroDivisors_of_ne_zero hs0)
     intro h
@@ -245,12 +245,12 @@ theorem unif : ∀ (T : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing
   have hm : maximalIdeal O = Ideal.span {a₀} :=
     maximalIdeal_eq_span_of_isReduced hdim ha₀ ha₀m hred
 
-  haveI : IsLocallyNoetherian H.left := LocallyOfFiniteType.isLocallyNoetherian H.hom
+  have : IsLocallyNoetherian H.left := LocallyOfFiniteType.isLocallyNoetherian H.hom
   have hnf : ¬ IsField O := fun h => ha₀ (by
     have := (IsLocalRing.isField_iff_maximalIdeal_eq.1 h) ▸ ha₀m
     rwa [Ideal.mem_bot] at this)
   have hpr : Submodule.IsPrincipal (maximalIdeal O) := ⟨⟨a₀, hm⟩⟩
-  haveI : IsDiscreteValuationRing O :=
+  have : IsDiscreteValuationRing O :=
     ((IsDiscreteValuationRing.TFAE O hnf).out 1 5).2 hpr
   have hirr : Irreducible a₀ := IsDiscreteValuationRing.irreducible_iff_uniformizer a₀ |>.2 hm
   have hc : cst H.hom ϖ ≠ 0 := by

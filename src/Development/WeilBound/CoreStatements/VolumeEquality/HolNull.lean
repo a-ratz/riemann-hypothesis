@@ -74,7 +74,7 @@ theorem zero_set_null {n : ℕ} (V : Set (Fin n → ℂ)) (hV : IsOpen V) (hc : 
   have hm : MeasurableSet {x ∈ V | f x = 0} := by
     have : {x ∈ V | f x = 0} = V \ (V ∩ f ⁻¹' {0}ᶜ) := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_diff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff,
+      simp only [Set.mem_ofPred_eq, Set.mem_sdiff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff,
         Set.mem_singleton_iff]
       tauto
     rw [this]

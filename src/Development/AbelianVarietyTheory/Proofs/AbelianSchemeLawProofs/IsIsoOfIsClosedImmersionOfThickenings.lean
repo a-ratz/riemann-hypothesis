@@ -139,7 +139,7 @@ theorem _root_.GlobalTheory.ThickeningClosed.mem_of_thickenings {R : Type} [Comm
     (x : X) (hx : I ≤ (f x).asIdeal) : x ∈ _root_.GlobalTheory.ThickeningClosed.zeroLocusOpen ι.ker := by
   obtain ⟨_, ⟨V, hV, rfl⟩, hxV, -⟩ :=
     (X.isBasis_affineOpens).exists_subset_of_mem_open (Set.mem_univ x) isOpen_univ
-  haveI : IsNoetherianRing Γ(X, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : IsNoetherianRing Γ(X, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
   set φ : CommRingCat.of R ⟶ Γ(X, V) := Spec.preimage (hV.fromSpec ≫ f) with hφ
   have hφ' : Spec.map φ = hV.fromSpec ≫ f := Spec.map_preimage _
   set J : Ideal Γ(X, V) := I.map φ.hom with hJ
@@ -239,13 +239,13 @@ theorem _root_.GlobalTheory.ThickeningClosed.noZeroDivisors_fiber {R C : Type} [
   let u₃ : pullback (j ≫ f) s ⟶ pullback j (pullback.fst f s) :=
     (pullbackRightPullbackFstIso f s j).inv
   let u₄ : pullback j (pullback.fst f s) ⟶ f.fiber p := pullback.snd j (pullback.fst f s)
-  haveI : IsOpenImmersion u₁ := show IsOpenImmersion (Arrow.leftFunc.mapIso e).inv from inferInstance
-  haveI : IsOpenImmersion u₂ := show IsOpenImmersion (pullback.congrHom hj rfl).hom from inferInstance
-  haveI : IsOpenImmersion u₃ := show IsOpenImmersion (pullbackRightPullbackFstIso f s j).inv from inferInstance
-  haveI : IsOpenImmersion u₄ := show IsOpenImmersion (pullback.snd j (pullback.fst f s)) from inferInstance
-  haveI : AlgebraicGeometry.IsIntegral (Spec (CommRingCat.of (p.asIdeal.Fiber C))) :=
+  have : IsOpenImmersion u₁ := show IsOpenImmersion (Arrow.leftFunc.mapIso e).inv from inferInstance
+  have : IsOpenImmersion u₂ := show IsOpenImmersion (pullback.congrHom hj rfl).hom from inferInstance
+  have : IsOpenImmersion u₃ := show IsOpenImmersion (pullbackRightPullbackFstIso f s j).inv from inferInstance
+  have : IsOpenImmersion u₄ := show IsOpenImmersion (pullback.snd j (pullback.fst f s)) from inferInstance
+  have : AlgebraicGeometry.IsIntegral (Spec (CommRingCat.of (p.asIdeal.Fiber C))) :=
     isIntegral_of_isOpenImmersion (u₁ ≫ u₂ ≫ u₃ ≫ u₄)
-  haveI : IsDomain (p.asIdeal.Fiber C) :=
+  have : IsDomain (p.asIdeal.Fiber C) :=
     (affine_isIntegral_iff (CommRingCat.of (p.asIdeal.Fiber C))).mp inferInstance
   infer_instance
 
@@ -269,17 +269,17 @@ theorem _root_.GlobalTheory.isIso_of_isClosedImmersion_of_thickenings :
     fun U ↦ Spec.map_preimage _
   have hft : ∀ U : H.left.affineOpens, (Spec.preimage (U.2.fromSpec ≫ H.hom)).hom.FiniteType := by
     intro U
-    haveI := U.2.isOpenImmersion_fromSpec
+    have := U.2.isOpenImmersion_fromSpec
     have : LocallyOfFiniteType (Spec.map (Spec.preimage (U.2.fromSpec ≫ H.hom))) := by
       rw [hpre]; infer_instance
     exact HasRingHomProperty.Spec_iff.mp this
   have hfl : ∀ U : H.left.affineOpens, (Spec.preimage (U.2.fromSpec ≫ H.hom)).hom.Flat := by
     intro U
-    haveI := U.2.isOpenImmersion_fromSpec
+    have := U.2.isOpenImmersion_fromSpec
     rw [← Flat.SpecMap_iff, hpre]; infer_instance
-  haveI : IsLocallyNoetherian H.left := ⟨fun U ↦ by
-    letI := (Spec.preimage (U.2.fromSpec ≫ H.hom)).hom.toAlgebra
-    haveI : Algebra.FiniteType R Γ(H.left, U) := hft U
+  have : IsLocallyNoetherian H.left := ⟨fun U ↦ by
+    let := (Spec.preimage (U.2.fromSpec ≫ H.hom)).hom.toAlgebra
+    have : Algebra.FiniteType R Γ(H.left, U) := hft U
     exact Algebra.FiniteType.isNoetherianRing R _⟩
   have hsec : ∀ s : Spec (CommRingCat.of R), H.hom (e.left s) = s := by
     intro s
@@ -294,10 +294,10 @@ theorem _root_.GlobalTheory.isIso_of_isClosedImmersion_of_thickenings :
     (iSup_affineOpens_eq_top _) fun U ↦ ?_
   refine eq_bot_iff.mpr fun a ha ↦ ?_
   show a = 0
-  letI : Algebra R Γ(H.left, U) := (Spec.preimage (U.2.fromSpec ≫ H.hom)).hom.toAlgebra
-  haveI : Module.Flat R Γ(H.left, U) := hfl U
-  haveI : IsNoetherianRing Γ(H.left, U) := IsLocallyNoetherian.component_noetherian U
-  haveI := U.2.isOpenImmersion_fromSpec
+  let : Algebra R Γ(H.left, U) := (Spec.preimage (U.2.fromSpec ≫ H.hom)).hom.toAlgebra
+  have : Module.Flat R Γ(H.left, U) := hfl U
+  have : IsNoetherianRing Γ(H.left, U) := IsLocallyNoetherian.component_noetherian U
+  have := U.2.isOpenImmersion_fromSpec
   have hj : Spec.map (CommRingCat.ofHom (algebraMap R Γ(H.left, U))) = U.2.fromSpec ≫ H.hom :=
     hpre U
   have hpt : ∀ q : PrimeSpectrum Γ(H.left, U),
@@ -319,7 +319,7 @@ theorem _root_.GlobalTheory.isIso_of_isClosedImmersion_of_thickenings :
     rw [hsec]; exact (PrimeSpectrum.le_iff_specializes _ M).mp hPm
   obtain ⟨y', hy'y, hy'P⟩ := Flat.generalizingMap H.hom hPM
   have hy'Z := hy'y.mem_open (_root_.GlobalTheory.ThickeningClosed.isOpen_zeroLocusOpen _) hy
-  haveI := hfib (H.hom (U.2.fromSpec q))
+  have := hfib (H.hom (U.2.fromSpec q))
   have hirr : IsIrreducible (H.hom ⁻¹' {H.hom (U.2.fromSpec q)}) := by
     rw [← Scheme.Hom.range_fiberι, ← Set.image_univ]
     exact (IrreducibleSpace.isIrreducible_univ _).image _ (H.hom.fiberι _).continuous.continuousOn

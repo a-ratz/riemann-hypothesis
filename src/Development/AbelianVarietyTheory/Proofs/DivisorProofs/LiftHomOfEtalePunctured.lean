@@ -79,9 +79,9 @@ theorem localLift (R A : Type) [CommRing R] [CommRing A] [Algebra R A] (g : R)
     (C : Type) [CommRing C] [Algebra R C] (hg : IsUnit (algebraMap R C g)) (J : Ideal C)
     (hJ : J ^ 2 = ⊥) (f : A →ₐ[R] C ⧸ J) :
     ∃! α : A →ₐ[R] C, (Ideal.Quotient.mkₐ R J).comp α = f := by
-  haveI : Algebra.FormallyEtale R (Localization.Away g) :=
+  have : Algebra.FormallyEtale R (Localization.Away g) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers g)
-  haveI : Algebra.FormallyEtale R (TensorProduct R (Localization.Away g) A) :=
+  have : Algebra.FormallyEtale R (TensorProduct R (Localization.Away g) A) :=
     Algebra.FormallyEtale.comp R (Localization.Away g) _
   have unit : ∀ (P : Type) [CommRing P] [Algebra R P], IsUnit (algebraMap R P g) →
       ∀ y : Submonoid.powers g, IsUnit ((Algebra.ofId R P) (y : R)) := by
@@ -189,7 +189,7 @@ theorem existsUnique_lifts (hπ : Function.Surjective π) (hI : RingHom.ker π ^
     (hA : Algebra.FormallyEtale (Localization.Away g) (TensorProduct R (Localization.Away g) A))
     {C : Type} [CommRing C] [Algebra R C] (σ : S →ₐ[R] C) (hg : IsUnit (algebraMap R C g)) :
     ∃! α : A →ₐ[R] C, Lifts π φ σ α := by
-  haveI := hA
+  have := hA
   set J := (RingHom.ker π).map σ with hJdef
   have hJ : J ^ 2 = ⊥ := by rw [hJdef, ← Ideal.map_pow, hI, Ideal.map_bot]
   let e := Ideal.quotientKerAlgEquivOfSurjective hπ
@@ -493,15 +493,15 @@ theorem isEtaleAt_of_formallyEtale_baseChange (S B : Type) [CommRing S] [CommRin
   have hle : M ≤ Q.primeCompl := by
     rintro _ ⟨x, hx, rfl⟩
     simpa [P, Ideal.under] using hx
-  letI : Algebra Bp (Localization.AtPrime Q) :=
+  let : Algebra Bp (Localization.AtPrime Q) :=
     IsLocalization.localizationAlgebraOfSubmonoidLe Bp (Localization.AtPrime Q) M Q.primeCompl hle
-  haveI : IsScalarTower B Bp (Localization.AtPrime Q) :=
+  have : IsScalarTower B Bp (Localization.AtPrime Q) :=
     IsLocalization.localization_isScalarTower_of_submonoid_le Bp (Localization.AtPrime Q) M Q.primeCompl hle
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid Bp Q.primeCompl) (Localization.AtPrime Q) :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid Bp Q.primeCompl) (Localization.AtPrime Q) :=
     IsLocalization.isLocalization_of_submonoid_le Bp (Localization.AtPrime Q) M Q.primeCompl hle
   have h3 : Algebra.FormallyEtale Bp (Localization.AtPrime Q) :=
     Algebra.FormallyEtale.of_isLocalization (Algebra.algebraMapSubmonoid Bp Q.primeCompl)
-  haveI : IsScalarTower S Bp (Localization.AtPrime Q) := IsScalarTower.of_algebraMap_eq (fun s => by
+  have : IsScalarTower S Bp (Localization.AtPrime Q) := IsScalarTower.of_algebraMap_eq (fun s => by
     rw [IsScalarTower.algebraMap_apply S B Bp, ← IsScalarTower.algebraMap_apply B Bp,
       ← IsScalarTower.algebraMap_apply S B])
   exact Algebra.FormallyEtale.comp S Bp (Localization.AtPrime Q)
@@ -530,16 +530,16 @@ theorem formallyEtale_away : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoet
     have : algebraMap R S g ∈ P := hgq
     exact (Ideal.IsPrime.ne_top inferInstance)
       (P.eq_top_of_isUnit_mem this (IsLocalization.Away.algebraMap_isUnit g))
-  haveI := he q hqm
-  haveI : P.LiesOver q := ⟨rfl⟩
-  letI := Localization.AtPrime.algebraOfLiesOver q P
+  have := he q hqm
+  have : P.LiesOver q := ⟨rfl⟩
+  let := Localization.AtPrime.algebraOfLiesOver q P
   let e : Localization.AtPrime P ⊗[Localization.AtPrime q] (Localization.AtPrime q ⊗[R] A)
       ≃ₐ[Localization.AtPrime P] Localization.AtPrime P ⊗[S] (S ⊗[R] A) :=
     (Algebra.TensorProduct.cancelBaseChange R (Localization.AtPrime q) (Localization.AtPrime P)
       (Localization.AtPrime P) A).trans
     (Algebra.TensorProduct.cancelBaseChange R S (Localization.AtPrime P)
       (Localization.AtPrime P) A).symm
-  haveI : Algebra.Etale (Localization.AtPrime P) (Localization.AtPrime P ⊗[S] (S ⊗[R] A)) :=
+  have : Algebra.Etale (Localization.AtPrime P) (Localization.AtPrime P ⊗[S] (S ⊗[R] A)) :=
     Algebra.Etale.of_equiv e
   infer_instance
 
@@ -586,7 +586,7 @@ theorem modDepthGE_two_quotient_pow_of_free_of_isRegularLocalRing :
       [Nontrivial B] (k : ℕ), 1 ≤ k →
       ReciprocityTheory.CA.ModDepthGE R (B ⧸ (Ideal.span {f}).map (algebraMap R B) ^ k) 2 := by
   intro R _ _ hd f hf hf0 B _ _ _ _ _ k hk
-  haveI : IsDomain R := GlobalTheory.isDomain_of_isRegularLocalRing R
+  have : IsDomain R := GlobalTheory.isDomain_of_isRegularLocalRing R
   have h3 : ReciprocityTheory.CA.ModDepthGE R B 3 :=
     GlobalTheory.modDepthGE_three_of_free_of_isRegularLocalRing R hd B
   have hfk0 : f ^ k ≠ 0 := pow_ne_zero k hf0
@@ -644,11 +644,11 @@ theorem liftHom_of_etale_punctured : ∀ (R : Type) [CommRing R] [IsRegularLocal
   generalize hJ : (Ideal.span {f}).map (algebraMap R B) = J at φ ⊢
   rcases subsingleton_or_nontrivial B with hB | hB
   · refine ⟨default, ?_⟩
-    haveI : Subsingleton (B ⧸ J) := Ideal.Quotient.subsingleton_iff.2 (Subsingleton.elim _ _)
+    have : Subsingleton (B ⧸ J) := Ideal.Quotient.subsingleton_iff.2 (Subsingleton.elim _ _)
     exact AlgHom.ext fun x => Subsingleton.elim _ _
-  haveI : IsAdicComplete (Ideal.span {f}) R :=
+  have : IsAdicComplete (Ideal.span {f}) R :=
     _root_.GlobalTheory.isAdicComplete_of_le_maximalIdeal R hcomp _ ((Ideal.span_singleton_le_iff_mem _).2 hf)
-  haveI : IsAdicComplete J B := hJ ▸ GlobalTheory.isAdicComplete_map_of_finite (Ideal.span {f}) B
+  have : IsAdicComplete J B := hJ ▸ GlobalTheory.isAdicComplete_map_of_finite (Ideal.span {f}) B
   have hd : ∀ k : ℕ, ReciprocityTheory.CA.ModDepthGE R (B ⧸ J ^ (k + 1)) 2 := fun k =>
     hJ ▸ GlobalTheory.T.modDepthGE_two_quotient_pow_free_over_regularLocalRing R hdim f hf hf0 B (k + 1) (Nat.le_add_left 1 k)
   have hle : ∀ k : ℕ, J ^ (k + 2) ≤ J ^ (k + 1) := fun k => Ideal.pow_le_pow_right (by omega)

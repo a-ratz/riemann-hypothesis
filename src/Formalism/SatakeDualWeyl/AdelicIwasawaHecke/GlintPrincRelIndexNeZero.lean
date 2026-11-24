@@ -109,7 +109,7 @@ theorem glint_conj_integral (O : Subring L) (g : GL n L) (c : O)
   have hkey : ((bc (n := n) O.subtype h : GL n L) : Matrix n n L) =
       1 + ((c : L) * (c : L)) • RingHom.mapMatrix (m := n) O.subtype E := by
     ext a b
-    simp only [bc, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    simp only [bc, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
       RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul,
       E, Matrix.of_apply, Subring.coe_subtype]
     exact hL a b

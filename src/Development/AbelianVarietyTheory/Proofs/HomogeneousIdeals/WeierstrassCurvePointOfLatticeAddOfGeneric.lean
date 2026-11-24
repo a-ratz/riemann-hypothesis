@@ -284,7 +284,7 @@ theorem _root_.GlobalTheory.latticePoint_add (z w : ℂ) :
       by_contra h
       push_neg at h
       exact not_countable_complex (hc.mono fun u _ => h u)
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at hu
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at hu
     obtain ⟨⟨⟨hu1, hu2⟩, hu3⟩, hu4⟩ := hu
     have hzu : z + u ∉ L.lattice := by rw [add_comm]; exact hu3
     have hzmu : z + -u ∉ L.lattice := fun h => hu4 (by

@@ -151,7 +151,7 @@ theorem locWBackI (V : ValTied u eV i hi K) (w : D.what₂.places.Pl) (x : ((D.f
         rw [Formalism.L2.G.val_nonneg_iff, hq, map_div₀, IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap,
           IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap]
         have hdv : (D.plEq w').intValuation d ≠ 0 := (D.plEq w').intValuation_ne_zero d hd0
-        rw [div_le_one₀ (zero_lt_iff.2 hdv)]
+        rw [div_le_one₀ (pos_iff_ne_zero.2 hdv)]
         exact hsv _ hne
       have hsx : s • x = q • (d • x) := by
         rw [key, key, smul_smul, hq, div_mul_cancel₀ _ hdne]

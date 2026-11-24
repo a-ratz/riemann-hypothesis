@@ -133,7 +133,7 @@ theorem isBun_scale {L : C.I → AddSubgroup V} (c : C.I → Kˣ) (hc : {i | c i
   · obtain ⟨b, hb⟩ := h.2
     refine ⟨b, (hb.union hc).subset fun i hi => ?_⟩
     by_contra hn
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hn hi
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hn hi
     apply hi
     intro x
     rw [mem_scale, hn.2, inv_one, Units.val_one, one_smul]

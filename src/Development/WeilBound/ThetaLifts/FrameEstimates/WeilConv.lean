@@ -201,13 +201,13 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem exists_cols_det_ne_zero {K : Type} [Field K] {i d : ℕ} (A : Matrix (Fin i) (Fin d) K)
     (hA : LinearIndependent K A.row) : ∃ c : Fin i → Fin d, Function.Injective c ∧ (A.submatrix id c).det ≠ 0 := by
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' K A.col
-  haveI : Fintype κ := Fintype.ofInjective a ha
+  have : Fintype κ := Fintype.ofInjective a ha
   have hcard : Fintype.card κ = i := by
-    rw [← finrank_span_eq_card hli, hsp, Matrix.rank_eq_finrank_span_cols, hA.rank_matrix, Fintype.card_fin]
+    rw [← finrank_span_eq_card hli, hsp, Matrix.finrank_span_range_col, hA.rank_matrix, Fintype.card_fin]
   let e := (Fintype.equivFinOfCardEq hcard).symm
   refine ⟨a ∘ e, ha.comp e.injective, ?_⟩
   have hu : IsUnit (A.submatrix id (a ∘ e)) := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     exact hli.comp e e.injective
   exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
 
@@ -256,11 +256,11 @@ theorem sum_lam_le_psum {d y : ℕ} {lam : Fin d → (Fin y → ℝ) →ₗ[ℝ]
   · refine (key 0 le_rfl).trans (le_of_eq ?_)
     rw [mul_zero, add_zero, psum]
     refine Finset.sum_congr rfl fun j _ => ?_
-    rw [if_pos (by omega), sub_zero, max_eq_right (ht.2 j)]
+    rw [ite_eq_left (by omega), sub_zero, max_eq_right (ht.2 j)]
 
 theorem psum_eq {q i : ℕ} (hi : i ≤ q) (s : Fin q → ℝ) : psum s i = ∑ a : Fin i, s (Fin.castLE hi a) := by
   exact (Fintype.sum_of_injective _ (Fin.castLE_injective hi) _ (fun j : Fin q => if j.val < i then s j else 0)
-    (fun j hj => if_neg fun h => hj ⟨⟨j, h⟩, rfl⟩) fun a => (if_pos a.2).symm).symm
+    (fun j hj => ite_eq_right fun h => hj ⟨⟨j, h⟩, rfl⟩) fun a => (ite_eq_left a.2).symm).symm
 
 theorem minor_of : FrameBasis → Minor := by
   intro hB F E _ _ _ _ _ σ hσ τ n d J J' hJ hJ' fr fr' hfr hfr' C hC
@@ -350,7 +350,7 @@ theorem minor_of : FrameBasis → Minor := by
       _ = _ := by rw [← mul_pow, hA]; congr 1; ring
   rw [inv_mul_le_iff₀ (by positivity)]
   refine le_of_pow_le_pow_left₀ (n := n + 1) (by omega) (by positivity) ?_
-  rw [← Real.exp_nat_mul, show ((n + 1 : ℕ) : ℝ) * (viol s t / (n + 1)) = viol s t by push_cast; field_simp]
+  rw [← Real.exp_natCast_mul, show ((n + 1 : ℕ) : ℝ) * (viol s t / (n + 1)) = viol s t by push_cast; field_simp]
   exact hv
 
 end PositivityTheory.ThKEst
@@ -457,7 +457,7 @@ theorem frameBasis_of : FrameBasis := by
       · rw [← formL_apply]
 
         simp only [a, map_sub, map_add (f := _), map_sum, map_smul, formL_apply, hfr.xx, yx, smul_eq_mul, mul_zero,
-        Finset.sum_const_zero, mul_ite, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_const_zero, mul_ite, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         linear_combination (-form σ J u (fr.x j)) * hε
       · rw [← formL_apply]
 
@@ -475,7 +475,7 @@ theorem frameBasis_of : FrameBasis := by
   let e : ((Fin fr.r ⊕ Fin fr.r) ⊕ Fin (Module.finrank E K)) ≃ Fin n := B.indexEquiv (Pi.basisFun E (Fin n))
   let M : Matrix (Fin n) (Fin n) E := Matrix.of fun l k => v (e.symm k) l
   have hM : IsUnit M := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     exact hli.comp e.symm e.symm.injective
   let lam0 : (Fin fr.r ⊕ Fin fr.r) ⊕ Fin (Module.finrank E K) → (Fin fr.r → ℝ) →ₗ[ℝ] ℝ :=
     Sum.elim (Sum.elim (fun i => LinearMap.proj i) fun i => -LinearMap.proj i) fun _ => 0
@@ -531,7 +531,7 @@ theorem conj_psi {ψ : AddChar (AF F) ℂ} (hn : ∀ x, ‖ψ x‖ = 1) (a : AF 
 theorem coef_eigen {ψ : AddChar (AF F) ℂ} (hn : ∀ x, ‖ψ x‖ = 1) (μ : Measure (κ → AF F)) [μ.IsAddHaarMeasure]
     (Φ : (κ → AF F) → ℂ) (u w : (κ → AF F) × (κ → AF F)) (a : AF F) (h : schr ψ u Φ = ψ a • Φ) :
     coef F ψ μ Φ (fun x => Φ (-x)) w = ψ (u.1 ⬝ᵥ w.2 - w.1 ⬝ᵥ u.2 + (a + a)) * coef F ψ μ Φ (fun x => Φ (-x)) w := by
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   have key : ∀ y, Φ (y + u.1) = ψ (a - (y ⬝ᵥ u.2 + ⅟(2 : AF F) * (u.1 ⬝ᵥ u.2))) * Φ y := fun y => by
     have := congrFun h y
     simp only [schr, Pi.smul_apply, smul_eq_mul] at this
@@ -587,15 +587,15 @@ theorem soCut_of : SoCut := by
   classical
   obtain ⟨hφ, ι, hι, hz⟩ := hφ
   have h := hP.base.cm
-  haveI := h.1
+  have := h.1
   have hψ := isCharAF hP.base.std
   generalize B.τ₁ = t at *
   generalize B.v₁ = v at *
   generalize B.ψ = ψ at *
   have hc : Continuous (psv v ψ) := hψ.1.comp cont_at
   obtain ⟨b, hb⟩ := (GlobalTheory.GaugeEx.CharLoc.char_local F ψ hψ).1 v
-  haveI := nonarch_field (Fv F v)
-  haveI : CharZero (Fv F v) := algebraRat.charZero _
+  have := nonarch_field (Fv F v)
+  have : CharZero (Fv F v) := algebraRat.charZero _
   obtain ⟨m, g, hsum, hg⟩ := exists_cut (v.adicCompletionIntegers F)
     (isCompact_iff_compactSpace.2 (GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v))
     (fun U hU => by
@@ -739,7 +739,7 @@ theorem latFull_of : LatTor → Minor → LatFull := by
         unfold maj
         split_ifs with hx
         · have h2 := pow_le_pow_left₀ (by positivity) (h1 hx) (m * (n + 1))
-          rw [mul_pow, ← Real.exp_nat_mul,
+          rw [mul_pow, ← Real.exp_natCast_mul,
             show ((m * (n + 1) : ℕ) : ℝ) * (viol s t / (n + 1)) = m * viol s t by push_cast; field_simp] at h2
           rw [pow_add, mul_inv, mul_comm, Real.exp_neg, ← mul_inv (c ^ _)]
           exact mul_le_mul_of_nonneg_right (inv_anti₀ (by positivity) h2) (by positivity)
@@ -823,7 +823,7 @@ theorem latInv_of : LatInv := by
     intro x
     rcases hS with rfl | rfl
     · simp
-    · simp only [fullRank, Set.mem_setOf_eq, latInvEquiv_rank]
+    · simp only [fullRank, Set.mem_ofPred_eq, latInvEquiv_rank]
   unfold latSum
   rw [← Equiv.tsum_eq ((latInvEquiv a b).subtypeEquiv hSS)
     (fun x : S => ENNReal.ofReal (maj τ C N (mat g⁻¹ * incM F x.1 * (mat h⁻¹)ᵀ)))]
@@ -1022,7 +1022,7 @@ theorem latTor_of : FrameBasis → OneVar → LatTor := by
         gcongr
         refine (ENNReal.tsum_comp_le_tsum_of_injective hi g).trans ?_
         rw [tsum_fun_prod]
-        exact Finset.prod_le_prod' fun p _ => hK₁ _
+        exact Finset.prod_le_prod fun p _ => hK₁ _
     _ = _ := by
         rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ← hc,
           ← ENNReal.ofReal_prod_of_nonneg fun p _ => (Real.exp_pos _).le, ← Real.exp_sum, ← Finset.mul_sum,
@@ -1092,8 +1092,8 @@ theorem oneVar_core (Λ : Submodule ℤ V) [DiscreteTopology Λ] (N : ℕ) (hN :
     ∃ K : ℝ≥0, ∀ c : ℝ, 0 < c → c ≤ 1 →
       ∑' x : Λ, ENNReal.ofReal (((1 + c * ‖(x : V)‖) ^ N)⁻¹) ≤ K * ENNReal.ofReal ((c ^ Module.finrank ℝ V)⁻¹) := by
   borelize V
-  haveI : ProperSpace V := FiniteDimensional.proper_real V
-  haveI : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : ProperSpace V := FiniteDimensional.proper_real V
+  have : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   set μ : Measure V := Measure.addHaar with hμ
   obtain ⟨ε, hε, hd⟩ := oneVar_sep Λ
   set f : V → ℝ≥0∞ := fun y => ENNReal.ofReal (((1 + ‖y‖) ^ N)⁻¹) with hf
@@ -1143,7 +1143,7 @@ theorem oneVar_of : OneVar := by
   obtain ⟨K, hK⟩ := oneVar_core Λ N hN
   refine ⟨K, fun l => ?_⟩
   have h := hK (Real.exp (-max 0 l)) (Real.exp_pos _) (Real.exp_le_one_iff.2 (by simp))
-  rw [← Real.exp_nat_mul, ← Real.exp_neg, mul_neg, neg_neg] at h
+  rw [← Real.exp_natCast_mul, ← Real.exp_neg, mul_neg, neg_neg] at h
   refine le_trans (ENNReal.tsum_le_tsum fun x => ENNReal.ofReal_le_ofReal ?_) h
   have : Real.exp (-max 0 l) ≤ Real.exp (-l) := Real.exp_le_exp.2 (neg_le_neg (le_max_right _ _))
   gcongr
@@ -1174,7 +1174,7 @@ theorem qht_le {n : ℕ} {J : Matrix (Fin n) (Fin n) E} (g : UA σ J) {γ : UA �
   ciInf_le (OrderBot.bddBelow _) (⟨γ, hγ⟩ : ratU σ J)
 
 theorem psum_self {r : ℕ} (t : Fin r → ℝ) : psum t r = ∑ i, t i :=
-  Finset.sum_congr rfl fun j _ => if_pos j.2
+  Finset.sum_congr rfl fun j _ => ite_eq_left j.2
 
 theorem psum_le {r : ℕ} {t : Fin r → ℝ} (h : t ∈ Cone r) (i : ℕ) : psum t i ≤ ∑ j, t j :=
   Finset.sum_le_sum fun j _ => by split_ifs; exacts [le_rfl, h.2 j]
@@ -1223,7 +1223,7 @@ theorem soSemiU_of (hT : GrpTop) (hE : EpsOf) (hS : SiegelAll) (hQ : SqSo) (hI :
   have e4 : ‖theta om (pureA F f φ) g h‖ ≤ p f * ((K₁ * K₂ + 1) * Real.exp (x / 2)) := by
     refine (pow_le_pow_iff_left₀ (norm_nonneg _) (by positivity) two_ne_zero).1 ?_
     refine e3.trans ?_
-    have h5 : Real.exp (x / 2) ^ 2 = Real.exp x := by rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    have h5 : Real.exp (x / 2) ^ 2 = Real.exp x := by rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
     have h6 : (0 : ℝ) ≤ K₁ * K₂ := by positivity
     rw [mul_pow, mul_pow, h5, ← mul_assoc (K₁ : ℝ)]
     gcongr
@@ -1250,12 +1250,12 @@ theorem soSemiU_of (hT : GrpTop) (hE : EpsOf) (hS : SiegelAll) (hQ : SqSo) (hI :
     push_cast
     nlinarith
   have e7 : Real.exp (((m + D * n : ℕ) : ℝ) * T) ≤ A ^ (m + D * n) * (ht h : ℝ) ^ (k₁ * (m + D * n)) := by
-    rw [Real.exp_nat_mul, pow_mul, ← mul_pow]
+    rw [Real.exp_natCast_mul, pow_mul, ← mul_pow]
     exact pow_le_pow_left₀ (Real.exp_pos _).le (hAk h δ hδ t ht' κ' hκ' e') _
   calc ‖theta om (pureA F f φ) g h‖ * (qht g : ℝ) ^ N₀
       ≤ p f * ((K₁ * K₂ + 1) * Real.exp (x / 2)) * (max C₀ 0 * B₀ * Real.exp (k₀ * S)) ^ N₀ := by gcongr
     _ = p f * ((K₁ * K₂ + 1) * (max C₀ 0 * B₀) ^ N₀) * Real.exp (x / 2 + N₀ * (k₀ * S)) := by
-        rw [Real.exp_add, mul_pow _ (Real.exp _), ← Real.exp_nat_mul]; ring
+        rw [Real.exp_add, mul_pow _ (Real.exp _), ← Real.exp_natCast_mul]; ring
     _ ≤ p f * ((K₁ * K₂ + 1) * (max C₀ 0 * B₀) ^ N₀) * (A ^ (m + D * n) * (ht h : ℝ) ^ (k₁ * (m + D * n))) := by
         gcongr
         exact (Real.exp_le_exp.2 e6).trans e7
@@ -1312,9 +1312,9 @@ theorem latSum_mono {τ : ∀ w : InfinitePlace F, EmbOver E w} {C C' : Set (Ten
   by_cases hx : ∃ c ∈ C, At (evI F) (mat g⁻¹ * incM F x.1 * (mat h⁻¹)ᵀ - c)
   · obtain ⟨c, h1, h2⟩ := hx
     unfold maj
-    rw [if_pos ⟨c, h1, h2⟩, if_pos ⟨c, hC h1, h2⟩]
+    rw [ite_eq_left ⟨c, h1, h2⟩, ite_eq_left ⟨c, hC h1, h2⟩]
   · conv_lhs => unfold maj
-    rw [if_neg hx]
+    rw [ite_eq_right hx]
     exact sq_maj_nonneg _ _ _ _
 
 
@@ -1334,8 +1334,8 @@ theorem Qb.add (hp : IsPair B M χX χW om r s r' s') {N : ℕ} {Φ Ψ : SInf F 
     fun f g h => sq_iff.2 ?_⟩
   have e1 := sq_iff.1 ((d1 f g h).trans (mul_le_mul_right (latSum_mono (C' := C ∪ C') Set.subset_union_left N _ g h) _))
   have e2 := sq_iff.1 ((d2 f g h).trans (mul_le_mul_right (latSum_mono (C' := C ∪ C') Set.subset_union_right N _ g h) _))
-  rw [theta_add hp (a1 f) (a2 f), Seminorm.add_apply, ENNReal.ofReal_add (apply_nonneg p f) (apply_nonneg q f), add_mul]
-  exact (enorm_add_le _ _).trans (add_le_add e1 e2)
+  rw [theta_add hp (a1 f) (a2 f), add_apply, ENNReal.ofReal_add (apply_nonneg p f) (apply_nonneg q f), add_mul]
+  exact (eNorm_add_le _ _).trans (add_le_add e1 e2)
 
 theorem Qb.smul (hp : IsPair B M χX χW om r s r' s') {N : ℕ} {Φ : SInf F (Fin n × Fin d) → Fn F n d} (h1 : Qb B om N Φ)
     (c : ℂ) : Qb B om N fun f => c • Φ f := by
@@ -1343,7 +1343,7 @@ theorem Qb.smul (hp : IsPair B M χX χW om r s r' s') {N : ℕ} {Φ : SInf F (F
   refine ⟨fun f => Submodule.smul_mem _ _ (a1 f), ‖c‖₊ • p, C, (continuous_const.mul b1 : Continuous fun f => ‖c‖ * p f), c1,
     fun f g h => sq_iff.2 ?_⟩
   have e1 := sq_iff.1 (d1 f g h)
-  rw [theta_smul hp c (a1 f), enorm_mul, show (‖c‖₊ • p) f = ‖c‖ * p f from rfl, ENNReal.ofReal_mul (norm_nonneg c),
+  rw [theta_smul hp c (a1 f), eNorm_mul, show (‖c‖₊ • p) f = ‖c‖ * p f from rfl, ENNReal.ofReal_mul (norm_nonneg c),
     ofReal_norm, mul_assoc]
   exact mul_le_mul_right e1 _
 

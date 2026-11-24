@@ -108,8 +108,8 @@ theorem UpperTheory.V.Alg.tact :
       ∃! f' : R →ₐ[O] R', ∀ j, ∀ x ∈ W.part j, f' x = t (Multiplicative.ofAdd j) * f x := by
   intro O _ _ X _ R _ _ _ W hz R' _ _ _ f t
   classical
-  haveI : Fintype W.σ := W.fin
-  haveI : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
+  have : Fintype W.σ := W.fin
+  have : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
   have hf_max : ∀ x ∈ maximalIdeal R, f x ∈ maximalIdeal R' := by
     intro x hx
     rw [← res_eq_zero_iff O R' (f x), UpperTheory.V.Alg.res_map f x, res_eq_zero_iff O R x]

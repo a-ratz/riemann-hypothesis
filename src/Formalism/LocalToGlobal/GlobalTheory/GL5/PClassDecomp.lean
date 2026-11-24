@@ -91,7 +91,7 @@ theorem exists_basis (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     exact Submodule.span_le_restrictScalars ℚ F _ hx
   obtain ⟨B, hBsub, hBspan, hBli⟩ := exists_linearIndependent F (Set.range β)
   have hBfin : B.Finite := (Set.finite_range β).subset hBsub
-  haveI := hBfin.fintype
+  have := hBfin.fintype
   let e := Fintype.equivFin B
   let b0 : Module.Basis B F E := Module.Basis.mk hBli (by rw [Subtype.range_coe, hBspan, hspan])
   let b : Module.Basis (Fin (Fintype.card B)) F E := b0.reindex e
@@ -485,7 +485,7 @@ theorem isModTopF : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
 
 theorem addGrpF : IsTopologicalAddGroup (Af F ⊗[F] E) := by
   have := isModTopF (F := F) (E := E)
-  exact IsModuleTopology.topologicalAddGroup (R := Af F) _
+  exact IsModuleTopology.isTopologicalAddGroup (R := Af F) _
 
 def crdF {ι : Type} (b : Module.Basis ι F E) (i : ι) : Af F ⊗[F] E →ₗ[Af F] Af F where
   toFun := (TensorProduct.rid F (Af F)).toLinearMap ∘ₗ LinearMap.lTensor (Af F) (b.coord i)
@@ -562,7 +562,7 @@ theorem continuous_finMat_entry (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin 
       ((HA.mat (AF F) σ J h : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) i j :=
     (continuous_apply j).comp ((continuous_apply i).comp
       ((Units.continuous_val : Continuous fun g : GL (Fin M) (AF F ⊗[F] E) =>
-        (g : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))).comp continuous_subtype_val))
+        (g : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))).comp continuous_subtypeVal))
   exact continuous_finPr.comp h1
 
 def SFin (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) (L : Set (Fin M → E)) :

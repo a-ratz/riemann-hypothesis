@@ -105,7 +105,7 @@ theorem exists_keyAt_units : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   choose Mat hMat using fun i : Fin P.g => (hw.2 _ (hbM'.1 i)).exists
   obtain ⟨d, hd⟩ : IsUnit (Matrix.det (Matrix.of Mat)) :=
     ((GlobalTheory.LieComb.lieComb_algebra V t.G P.g w hw.1).2.2.2.2 (Matrix.of Mat) _ hw hMat).1 hbM'
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨ex, -, -, -, bas⟩ := GlobalTheory.LieComb.lieComb_algebra K P.A P.g v hv.1
   choose v' hvv' using fun i => (ex (((Matrix.of Mat).map (algebraMap V K)) i)).exists
   have hdet : ((Matrix.of Mat).map (algebraMap V K)).det = algebraMap V K d := by

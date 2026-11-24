@@ -68,8 +68,8 @@ theorem IsLoc.char_ne (L : IsLoc O Δ) : ringChar (ResidueField O) ≠ 2 := by
   exact hu.ne_zero (by exact_mod_cast h2)
 
 theorem IsLoc.nm_unit (L : IsLoc O Δ) (ε u : Oˣ) : ∃ a b : O, a ^ 2 - ε * b ^ 2 = u := by
-  haveI := L.fin
-  letI := Fintype.ofFinite (ResidueField O)
+  have := L.fin
+  let := Fintype.ofFinite (ResidueField O)
   have hodd : Fintype.card (ResidueField O) % 2 = 1 := by
     have h2 := L.char_ne
     rw [Ne, FiniteField.even_card_iff_char_two] at h2
@@ -179,7 +179,7 @@ private theorem not_isSquare_residue_of_not_isSquare (L : IsLoc O Δ) (ε : Oˣ)
 
 theorem IsLoc.even_of_norm (L : IsLoc O Δ) (ε : Oˣ) (hε : ¬ IsSquare (algebraMap O K ε)) {a b : K}
     (h : a ^ 2 - algebraMap O K ε * b ^ 2 ≠ 0) : EvenVal O (a ^ 2 - algebraMap O K ε * b ^ 2) := by
-  haveI := L.frac
+  have := L.frac
   have hres := not_isSquare_residue_of_not_isSquare L ε hε
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨x1, z1, hz1, rfl⟩ := IsFractionRing.div_surjective (A := O) a
@@ -213,7 +213,7 @@ theorem IsLoc.even_of_norm (L : IsLoc O Δ) (ε : Oˣ) (hε : ¬ IsSquare (algeb
   field_simp
 
 theorem IsLoc.not_even (L : IsLoc O Δ) {p : O} (hp : Irreducible p) : ¬ EvenVal O (algebraMap O K p) := by
-  haveI := L.frac
+  have := L.frac
   rintro ⟨u, s, hs, he⟩
   obtain ⟨x, y, hy, rfl⟩ := IsFractionRing.div_surjective (A := O) s
   have hy0 : y ≠ 0 := nonZeroDivisors.ne_zero hy
@@ -235,9 +235,9 @@ theorem IsLoc.not_even (L : IsLoc O Δ) {p : O} (hp : Irreducible p) : ¬ EvenVa
   omega
 
 theorem IsLoc.exists_nonsq (L : IsLoc O Δ) : ∃ ε : Oˣ, ¬ IsSquare (algebraMap O K ε) := by
-  haveI := L.frac
-  haveI := L.fin
-  letI := Fintype.ofFinite (ResidueField O)
+  have := L.frac
+  have := L.fin
+  let := Fintype.ofFinite (ResidueField O)
   obtain ⟨c, hc⟩ := FiniteField.exists_nonsquare L.char_ne
   obtain ⟨e, rfl⟩ := residue_surjective c
   have he : IsUnit e := by

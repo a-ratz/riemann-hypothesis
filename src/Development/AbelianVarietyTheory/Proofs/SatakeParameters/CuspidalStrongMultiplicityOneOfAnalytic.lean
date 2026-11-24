@@ -107,7 +107,7 @@ theorem coe_mapRep {Γ : Type} [Group Γ] {A B : Type} [CommRing A] [CommRing B]
 
 theorem isSSRep_map {Γ : Type} [Group Γ] {K L : Type} [Field K] [CharZero K] [Field L] {a : ℕ}
     (f : K →+* L) (ρ : Γ →* GL (Fin a) K) (h : IsSSRep ρ) : IsSSRep (mapRep f ρ) := by
-  letI : Algebra K L := f.toAlgebra
+  let : Algebra K L := f.toAlgebra
   exact ssAscent K L Γ a ρ h
 
 end GlobalTheory.RowRepOcc
@@ -131,7 +131,7 @@ theorem isRepOfSig_transport {i i' : N.Loc} (φ : N.O i' ≃+* N.O i) (hφc : Co
   refine ⟨?_, ?_, ?_⟩
   · simp only [coe_mapRep]
     exact h1.matrix_map hφc
-  · haveI := charZero_Kf N A i'
+  · have := charZero_Kf N A i'
     let ψ : Kf N i' ≃+* Kf N i := IsFractionRing.ringEquivOfRingEquiv φ
     have e : mapRep (algebraMap (N.O i) (Kf N i)) (mapRep φ.toRingHom ρ₀) =
         mapRep ψ.toRingHom (mapRep (algebraMap (N.O i') (Kf N i')) ρ₀) := by

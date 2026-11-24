@@ -66,7 +66,7 @@ theorem exists_iso_of_sabMap_id : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   intro E _ _ _ H V _ t t' n
   have hp := n.cart.1
   have hw : n.cm.F ≫ t'.G.hom = t.G.hom := by simpa using hp.w
-  haveI : IsIso n.cm.F := hp.isIso_fst_of_isIso
+  have : IsIso n.cm.F := hp.isIso_fst_of_isIso
   let ψ : t.G ≅ t'.G := Over.isoMk (asIso n.cm.F) hw
   have hψ : ψ.hom.left = n.cm.F := rfl
   refine ⟨ψ, rfl, ?_, fun a => ?_, ?_, ?_⟩

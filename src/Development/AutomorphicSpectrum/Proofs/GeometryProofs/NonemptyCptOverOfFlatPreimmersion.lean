@@ -110,14 +110,14 @@ theorem nonempty_cptOver_of_flat_preimmersion {O : Type} [CommRing O] {β : O �
 theorem nonempty_cptOver_of_fraction {O : Type} [CommRing O] {β : O →+* c.F} (hβ : Function.Injective β)
     (hfr : ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) (Y : Model Xo c β) (U : Set (Xo.XF c))
     (hU : U ∈ irreducibleComponents (Xo.XF c)) : Nonempty (CptOver Y U) := by
-  letI : Algebra O c.F := β.toAlgebra
-  haveI : IsDomain O := hβ.isDomain β
-  haveI : FaithfulSMul O c.F := (faithfulSMul_iff_algebraMap_injective O c.F).2 hβ
-  haveI : IsFractionRing O c.F := IsFractionRing.of_field O c.F fun x => by
+  let : Algebra O c.F := β.toAlgebra
+  have : IsDomain O := hβ.isDomain β
+  have : FaithfulSMul O c.F := (faithfulSMul_iff_algebraMap_injective O c.F).2 hβ
+  have : IsFractionRing O c.F := IsFractionRing.of_field O c.F fun x => by
     obtain ⟨a, b, hb, h⟩ := hfr x
     exact ⟨a, b, (eq_div_iff hb).2 h⟩
-  haveI : IsPreimmersion (spMap β) := IsPreimmersion.of_isLocalization (nonZeroDivisors O)
-  haveI : Flat (spMap β) := by
+  have : IsPreimmersion (spMap β) := IsPreimmersion.of_isLocalization (nonZeroDivisors O)
+  have : Flat (spMap β) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact IsLocalization.flat c.F (nonZeroDivisors O)
   exact nonempty_cptOver_of_flat_preimmersion Y U hU

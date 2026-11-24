@@ -116,8 +116,8 @@ end Transport
 
 theorem exists_basis_of_isField {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (hR : IsField R)
     {m : ℕ} (hm : 0 < m) (h : Module.finrank R M = m) : Nonempty (Module.Basis (Fin m) R M) := by
-  letI := hR.toField
-  haveI : Module.Finite R M := Module.finite_of_finrank_pos (h ▸ hm)
+  let := hR.toField
+  have : Module.Finite R M := Module.finite_of_finrank_pos (h ▸ hm)
   exact ⟨Module.finBasisOfFinrankEq R M h⟩
 
 attribute [local instance] Over.cartesianMonoidalCategory
@@ -142,7 +142,7 @@ theorem exists_basis_sections (H : Out.GlobalSectionsRankAlgClosed) (K : Type) [
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₁).trans (pullback.condition.symm.trans
         ((Category.comp_id _).trans (Category.id_comp _).symm)))
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₂).trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  haveI : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
+  have : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
   let D : ReciprocityTheory.ChartRestriction.G.Out.SecM P.A P.L n T → (lbPow P.L n).Sec := fun v =>
     down P.L (snd T P.A).left ρ.left ρ₂ n (ReciprocityTheory.ChartRestriction.G.Out.SecM.toSec P.A v)
   have hlin : ∀ (a : Fin (n ^ P.g) → K) j,

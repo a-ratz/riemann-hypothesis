@@ -156,7 +156,7 @@ theorem eq_zero_of_tan {κ : Type} [Fintype κ] [DecidableEq κ] (p : Jet R κ (
     have h := ht ℓ
 
     simp only [map_sum, map_mul, AlgHom.commutes, jetTan_alt, mul_ite, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h
+    Finset.mem_univ, ite_true] at h
     first
       | (rw [← Algebra.smul_def] at h; simpa using congrArg TrivSqZeroExt.snd h)
       | simpa using congrArg TrivSqZeroExt.snd h
@@ -327,9 +327,9 @@ end Bridge
 
 theorem expUniqLoc : ExpUniqLocSt := by
   intro E _ _ _ H Dw l Xo S _ _ _ x0 d x x' hx hx' ht
-  haveI : IsCommMonObj Xo.univ.t.G := Xo.univ.t.semi.comm
-  haveI : Smooth Xo.univ.t.G.hom := Xo.univ.t.semi.smooth
-  haveI : Smooth (GS Xo.univ.t.G x0).hom := by
+  have : IsCommMonObj Xo.univ.t.G := Xo.univ.t.semi.comm
+  have : Smooth Xo.univ.t.G.hom := Xo.univ.t.semi.smooth
+  have : Smooth (GS Xo.univ.t.G x0).hom := by
     show Smooth (pullback.snd Xo.univ.t.G.hom x0)
     infer_instance
   obtain ⟨n, xu, hxu⟩ := ReciprocityTheory.ChartRestriction.G.Chart.univChartLoc (GS Xo.univ.t.G x0)

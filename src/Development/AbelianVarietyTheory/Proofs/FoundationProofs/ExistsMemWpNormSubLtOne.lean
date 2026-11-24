@@ -151,8 +151,8 @@ theorem sub_one_lt_of_pow_p_pow (k : ℕ) {y : ℂ_[p]} (hy : ‖y‖ ≤ 1) (h 
 
 theorem exists_root {x : ℂ_[p]} {m : ℕ} (hm : 0 < m) (h : ‖x ^ m - 1‖ < 1) :
     ∃ ζ : ℂ_[p], ζ ^ m = 1 ∧ ‖x - ζ‖ < 1 := by
-  haveI : NeZero m := ⟨hm.ne'⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot ℂ_[p] m
+  have : NeZero m := ⟨hm.ne'⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot ℂ_[p] m
   have e := congrArg (eval x) (X_pow_sub_one_eq_prod hm hξ)
   simp only [eval_sub, eval_pow, eval_X, eval_one, eval_prod, eval_C] at e
   rw [e, norm_prod] at h

@@ -111,7 +111,7 @@ private theorem p0_mem {H V W : Type} [NormedAddCommGroup H] [InnerProductSpace 
     [NormedAddCommGroup V] [InnerProductSpace ℂ V] [NormedAddCommGroup W] [InnerProductSpace ℂ W]
     {J : L V →ₗᵢ[ℂ] H} {J' : L W →ₗᵢ[ℂ] H} {P : H →L[ℂ] H} (hP : IsOrthogonalProjectionTwoLines J J' P) (S : Submodule ℂ H)
     (hS : IsClosed (S : Set H)) (h₁ : ∀ u, J u ∈ S) (h₂ : ∀ v, J' v ∈ S) (φ : H) : P φ ∈ S := by
-  haveI : CompleteSpace S := hS.completeSpace_coe
+  have : CompleteSpace S := hS.completeSpace_coe
   rw [← S.orthogonal_orthogonal, Submodule.mem_orthogonal]
   intro w hw
   have h0 : P w = 0 := (hP.2.2 w).2
@@ -124,9 +124,9 @@ private theorem ct_rc_zero {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : 
     (f : CC K n) (φ : L2 μ) (r : ℕ) (hφ : constantTermL2 μ r φ =ᵐ[μ] 0) (x : G1 K n) : ct r (rc μ f φ) x = 0 := by
   change ∫ X in unipFundamentalDomain K n r, rconv (rationalGLOne (K := K) (n := n)) μ f φ (unipOne (K := K) (n := n) r X * x)
       ∂unipMeasure K n r = 0
-  haveI : SigmaCompactSpace (normOneGL (K := K) (n := n)) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
-  haveI : SFinite μ := instSFiniteOfSigmaFinite
+  have : SigmaCompactSpace (normOneGL (K := K) (n := n)) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
+  have : SFinite μ := instSFiniteOfSigmaFinite
   set S := (x * ·) '' tsupport (f : normOneGL (K := K) (n := n) → ℂ)
   have hS : IsCompact S := f.hasCompactSupport.isCompact.image (continuous_const_mul x)
   obtain ⟨M, hM⟩ := f.continuous.bounded_above_of_compact_support f.hasCompactSupport
@@ -145,12 +145,12 @@ private theorem ct_rc_zero {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : 
     have hfin : ∫⁻ z in S, ∫⁻ X in unipFundamentalDomain K n r,
         ‖φ (mk (rationalGLOne (K := K) (n := n)) (unipOne (K := K) (n := n) r X * z))‖ₑ ∂unipMeasure K n r ∂μ < ⊤ :=
       L2Kernel.lt_top_of_sq_lt_top ((hCφ φ).trans_lt
-        (ENNReal.mul_lt_top hC.lt_top (ENNReal.pow_lt_top enorm_lt_top)))
+        (ENNReal.mul_lt_top hC.lt_top (ENNReal.pow_lt_top eNorm_lt_top)))
     have hmeas : Measurable fun p : (UPos n r → 𝔸[K]) × normOneGL (K := K) (n := n) =>
         ‖φ (mk (rationalGLOne (K := K) (n := n)) (unipOne (K := K) (n := n) r p.1 * p.2))‖ₑ :=
       ((Lp.stronglyMeasurable φ).measurable.comp ((measurable_mk (rationalGLOne (K := K) (n := n))).comp
-        (continuous_unipOne_mul r).measurable)).enorm
-    rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hFm.aestronglyMeasurable.enorm]
+        (continuous_unipOne_mul r).measurable)).eNorm
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hFm.aestronglyMeasurable.eNorm]
     calc ∫⁻ X in unipFundamentalDomain K n r, ∫⁻ z, ‖Function.uncurry F (X, z)‖ₑ ∂μ ∂unipMeasure K n r
         ≤ ∫⁻ X in unipFundamentalDomain K n r, ∫⁻ z in S,
             ENNReal.ofReal M * ‖φ (mk (rationalGLOne (K := K) (n := n)) (unipOne (K := K) (n := n) r X * z))‖ₑ ∂μ ∂unipMeasure K n r := by
@@ -159,7 +159,7 @@ private theorem ct_rc_zero {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : 
           refine lintegral_mono fun z => ?_
           by_cases hz : z ∈ S
           · rw [indicator_of_mem hz]
-            simp only [F, Function.uncurry_apply_pair, enorm_mul]
+            simp only [F, Function.uncurry_apply_pair, eNorm_mul]
             gcongr
             rw [← ofReal_norm]
             exact ENNReal.ofReal_le_ofReal (hM _)
@@ -508,7 +508,7 @@ private theorem fs_point {K : Type} [Field K] [NumberField K] (ω : Set (AdelicG
     (fs_ratio ρ hz.1 t C (HH z) _ ht hd hH hr h1 h2)
   have hQ : 1 ≤ qht z := (qhtBasic K (2 + 2)).1 z
   have h5 : E ≤ Real.exp C₀ * qht z ^ ⌈c₀⌉₊ := by
-    rw [← Real.exp_log (lt_of_lt_of_le one_pos hQ), ← Real.exp_nat_mul, ← Real.exp_add, hE, Real.exp_le_exp]
+    rw [← Real.exp_log (lt_of_lt_of_le one_pos hQ), ← Real.exp_natCast_mul, ← Real.exp_add, hE, Real.exp_le_exp]
     have := mul_le_mul_of_nonneg_right (Nat.le_ceil c₀) (Real.log_nonneg hQ)
     linarith [hq z]
   have h6 : ‖f z‖ * m ^ (c * N₀ + M) ≤ max 0 (max D₀ D₁) := by
@@ -518,7 +518,7 @@ private theorem fs_point {K : Type} [Field K] [NumberField K] (ω : Set (AdelicG
       exact (hD₁ ρ z hz hr).trans (le_max_right _ _)
     · rw [hm, max_eq_left h, one_pow, ← pow_zero (inR ρ)]
       exact (hD₀ ρ z hz hr).trans (le_max_left _ _)
-  have e2 : Real.exp (2 * HH z) = E ^ 2 := by rw [hE, ← Real.exp_nat_mul]; norm_num
+  have e2 : Real.exp (2 * HH z) = E ^ 2 := by rw [hE, ← Real.exp_natCast_mul]; norm_num
   have hh0 := (height_pos (z : AdelicGLn.AdelicGL K (2 + 2))).le
   calc Real.exp (2 * HH z) * ‖f z‖ * AutomorphicForm.height (z : AdelicGLn.AdelicGL K (2 + 2)) ^ N₀ * m ^ M
       ≤ E ^ 2 * ‖f z‖ * (C * (A * E * m) ^ c) ^ N₀ * m ^ M := by rw [e2]; gcongr
@@ -663,7 +663,7 @@ private theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.diffBd_local {
       ∀ C : (Fin k → Bool) → ArchUnits K n, (∀ ε, ((C ε : ArchUnits K n) : ArchMatrix K n) = 1 + altPoint Y ε) →
       ∀ A ∈ T, ‖∑ ε, (altSign ε : ℂ) * f ⟨(C ε)⁻¹ * (A : ArchUnits K n), Subgroup.mem_top _⟩‖ ≤ c * ∏ i, ‖Y i‖ := by
   set T₀ : Set (ArchUnits K n) := (fun a : archGroup K n => (a : ArchUnits K n)) '' T with hT₀
-  have hT₀c : IsCompact T₀ := hT.image continuous_subtype_val
+  have hT₀c : IsCompact T₀ := hT.image continuous_subtypeVal
   set T₁ : Set (ArchUnits K n) := (unipBall (K := K) (n := n) (k * R))⁻¹ * T₀ with hT₁
   have hT₁c : IsCompact T₁ := (isCompact_unipBall _).inv.mul hT₀c
   set L : Set (ArchMatrix K n) := (Units.val : ArchUnits K n → ArchMatrix K n) '' T₁ with hLdef
@@ -759,7 +759,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.diffBd :
       refine ⟨Ω ∩ V, inter_mem_nhdsWithin _ (hVc.isOpen.mem_nhds hxV), ?_⟩
       have hTc : IsCompact ((fun w : G1 K n => infPart K n ((w * x⁻¹ : G1 K n) : AdelicGLn.AdelicGL K n)) '' (Ω ∩ V)) :=
         (hΩ.inter_right hVc.isClosed).image
-          (continuous_infPart.comp (continuous_subtype_val.comp hcm))
+          (continuous_infPart.comp (continuous_subtypeVal.comp hcm))
       obtain ⟨c, hc, h⟩ := UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.diffBd_local (hsm x) hTc k R
       refine ⟨c, hc, fun Y hY hR C hC w hw => ?_⟩
       have hwV : finPart K n ((w * x⁻¹ : G1 K n) : AdelicGLn.AdelicGL K n) ∈
@@ -1501,7 +1501,7 @@ private theorem desc_cont {Y : Type*} [TopologicalSpace Y] (f : G1 K (2 + 2) →
 private theorem desc_sm {Y : Type*} [TopologicalSpace Y] [TopologicalSpace.PseudoMetrizableSpace Y]
     (f : G1 K (2 + 2) → Y) (hc : Continuous f) (hi : ∀ γ ∈ Gam K (2 + 2), ∀ x, f (γ * x) = f x) :
     StronglyMeasurable fun y : RightCosetSpace (Gam K (2 + 2)) => f (Quotient.out y) := by
-  haveI : SecondCountableTopology (RightCosetSpace (Gam K (2 + 2))) :=
+  have : SecondCountableTopology (RightCosetSpace (Gam K (2 + 2))) :=
     (isOpenQuotientMap_mk (Gam K (2 + 2))).isQuotientMap.secondCountableTopology
       (isOpenQuotientMap_mk (Gam K (2 + 2))).isOpenMap
   set_option synthInstance.maxHeartbeats 200000 in
@@ -1569,7 +1569,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.kT :
         {q : Cos K | T ≤ HH ((q.out : G1 K (2 + 2)) * x)} := fun w hw x q hq => by
     by_contra hlt
     exact hq (by beta_reduce; rw [hw _ (not_le.1 hlt), zero_smul])
-  have hind : ∀ h, h < T → ind h = 0 := fun h hh => if_neg (not_lt.2 hh.le)
+  have hind : ∀ h, h < T → ind h = 0 := fun h hh => ite_eq_right (not_lt.2 hh.le)
   have hrz : ∀ n : ℕ, ∀ h, h < T → ((ramp T n h : ℝ) : ℂ) = 0 := fun n h hh => by
     rw [ramp_zero n hh.le]
     simp
@@ -1587,7 +1587,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.kT :
     · simp [ind, h]
     · simp [ind, h]
   · have : ∀ q : Cos K, ind (HH ((q.out : G1 K (2 + 2)) * x)) • kc ((q.out : G1 K (2 + 2)) * x) = 0 := fun q => by
-      have : ind (HH ((q.out : G1 K (2 + 2)) * x)) = 0 := if_neg (not_lt.2 (hx q))
+      have : ind (HH ((q.out : G1 K (2 + 2)) * x)) = 0 := ite_eq_right (not_lt.2 (hx q))
       rw [this, zero_smul]
     simp only [A, this, finsum_zero, sub_zero]
   ·
@@ -1642,20 +1642,20 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.truncKer :
           StronglyMeasurable (fun y : RightCosetSpace (Gam K (2 + 2)) => kk T (Quotient.out y)) ∧ IsHilbertSchmidt (Λ ∘L Rop μ a ∘L P) ∧
           ∀ φ, ((Λ ∘L Rop μ a ∘L P) φ : RightCosetSpace (Gam K (2 + 2)) → ℂ) =ᵐ[quotientMeasure (Gam K (2 + 2)) μ] fun y => ⟪kk T (Quotient.out y), φ⟫_ℂ := by
   intro K _ _ _ μ _ μ₂ _ τ₁ τ₂ hp D d d' A A' a P hP ha hD
-  haveI := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := 2 + 2) μ
-  haveI hsf : SFinite (quotientMeasure (Gam K (2 + 2)) μ) := sfinite_of_finite _
-  haveI : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
-  haveI : SecondCountableTopology (RightCosetSpace (Gam K (2 + 2))) :=
+  have := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := 2 + 2) μ
+  have hsf : SFinite (quotientMeasure (Gam K (2 + 2)) μ) := sfinite_of_finite _
+  have : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
+  have : SecondCountableTopology (RightCosetSpace (Gam K (2 + 2))) :=
     (isOpenQuotientMap_mk (Gam K (2 + 2))).isQuotientMap.secondCountableTopology
       (isOpenQuotientMap_mk (Gam K (2 + 2))).isOpenMap
-  haveI : MeasurableSpace.CountablyGenerated (RightCosetSpace (Gam K (2 + 2))) := by
+  have : MeasurableSpace.CountablyGenerated (RightCosetSpace (Gam K (2 + 2))) := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact BorelSpace.countablyGenerated
-  haveI : IsSeparable (quotientMeasure (Gam K (2 + 2)) μ) := by
+  have : IsSeparable (quotientMeasure (Gam K (2 + 2)) μ) := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact isSeparable_of_sigmaFinite _
-  haveI : SecondCountableTopology (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) := Lp.SecondCountableTopology
-  haveI : TopologicalSpace.SeparableSpace (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) :=
+  have : SecondCountableTopology (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) := Lp.SecondCountableTopology
+  have : TopologicalSpace.SeparableSpace (Lp ℂ 2 (quotientMeasure (Gam K (2 + 2)) μ)) :=
     TopologicalSpace.SecondCountableTopology.to_separableSpace
   choose k hk hkγ hkO hkm using fun T => UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.kT μ a T
   have hsa : ∀ u w : L2 μ, ⟪P u, w⟫_ℂ = ⟪u, P w⟫_ℂ := fun u w => hP.1.isSymmetric u w

@@ -178,11 +178,11 @@ theorem exists_model (hρ : MB.IsActOf t'.act.act ρM) {S : Scheme.{0}} {t : SAB
         (∀ z ∈ eigSp ρM s, ∃ u, IsUnit (g u) ∧ u • z ∈ Submodule.span (𝓞 L) (Set.range y)) →
         LinearIndependent R (fun k => j (y k)) ∧
           Submodule.span R (Set.range fun k => j (y k)) = eigSp ρW (g.comp s) := by
-  letI : Algebra (𝓞 L) R := g.toAlgebra
-  haveI : Smooth t'.G.hom := t'.semi.smooth
+  let : Algebra (𝓞 L) R := g.toAlgebra
+  have : Smooth t'.G.hom := t'.semi.smooth
   obtain ⟨W, _, _, ⟨M₁⟩⟩ := lieModel_exists _ t'.G R (spMap g ≫ 𝟙 _)
-  letI : Module (𝓞 L) W := Module.compHom W g
-  haveI : IsScalarTower (𝓞 L) R W := ⟨fun a b e => by
+  let : Module (𝓞 L) W := Module.compHom W g
+  have : IsScalarTower (𝓞 L) R W := ⟨fun a b e => by
     show (g a * b) • e = g a • b • e
     rw [mul_smul]⟩
   obtain ⟨j₀, hj₀, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts _ t'.G (𝓞 L) R g (𝟙 _) M W MB M₁
@@ -207,7 +207,7 @@ theorem exists_model (hρ : MB.IsActOf t'.act.act ρM) {S : Scheme.{0}} {t : SAB
       change ((MW.pt (j z)).left ≫ (t.act.act a).left) ≫ m.φ = (MW.pt (j (ρM a z))).left ≫ m.φ
       rw [Category.assoc, m.act a, ← Category.assoc, hl z, hl (ρM a z), h1, Category.assoc]
     · rw [Over.w, Over.w]
-  haveI : Module.IsTorsionFree (𝓞 L) R := .of_smul_eq_zero fun a r h =>
+  have : Module.IsTorsionFree (𝓞 L) R := .of_smul_eq_zero fun a r h =>
     (mul_eq_zero.1 h).imp_left fun h0 => hg (h0.trans (map_zero g).symm)
   refine ⟨W, inferInstance, inferInstance, MW, ρW, j.toAddMonoidHom, hρW, hl, fun a z => j.map_smul a z,
     fun s n y hy hli hsp => ⟨?_, ?_⟩⟩

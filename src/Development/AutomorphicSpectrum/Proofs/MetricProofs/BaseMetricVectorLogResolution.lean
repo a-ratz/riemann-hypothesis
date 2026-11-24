@@ -93,7 +93,7 @@ theorem minorIJ_self {N : ℕ} (h : Matrix (Fin N) (Fin N) ℂ) (I : Finset (Fin
 
 theorem det_submatrix_lowerUni {N : ℕ} {T : Matrix (Fin N) (Fin N) ℂ} (hT : IsLowerUni T) (I : Finset (Fin N)) :
     (T.submatrix (I.orderEmbOfFin rfl) (I.orderEmbOfFin rfl)).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [hT.1]
   · intro a b hab
     exact hT.2 _ _ ((I.orderEmbOfFin rfl).strictMono hab)
@@ -103,7 +103,7 @@ theorem finite_minor_line {N : ℕ} (A B : Matrix (Fin N) (Fin N) ℂ) (I : Fins
     {s : ℂ | minorIJ ((1 - s) • A + s • B) I I = 0}.Finite := by
   refine (finite_det_line (A.submatrix (I.orderEmbOfFin rfl) (I.orderEmbOfFin rfl)) _ hB).subset ?_
   intro s hs
-  simp only [Set.mem_setOf_eq, minorIJ_self] at hs ⊢
+  simp only [Set.mem_ofPred_eq, minorIJ_self] at hs ⊢
   rw [← hs]
   rfl
 
@@ -194,7 +194,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.WSq.Dens.dens_core : ∀ (K : Type) [
       exact isOpen_ne_fun hcm.matrix_det continuous_const
     convert h1.inter h2 using 1
     ext u
-    simp only [V₀, bp, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter, htl, and_assoc]
+    simp only [V₀, bp, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter, htl, and_assoc]
   have hbpc : ContinuousOn bp V₀ := by
     refine c.continuousOn_symm.comp tl.continuous.continuousOn fun u hu => hu.1
   have hchart : ∀ k, AnalyticOnNhd ℂ (BM.Rb.A.chart k ∘ bp) (V₀ ∩ bp ⁻¹' (BM.Rb.A.chart k).source) := by

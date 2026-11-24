@@ -96,7 +96,7 @@ theorem hf_coord (T : Tor D) (z w : VC D N N') :
         = (∑ k, u k * starRingEnd ℂ (v k)) / (area T.abelian₂ : ℂ) := by
     intro u v
     simp only [JMB.hf, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_div]
+      ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_div]
     exact Finset.sum_congr rfl fun k _ => by ring
   rw [h1, Hf]
   congr 1
@@ -238,7 +238,7 @@ theorem setup_ok (B : Base D cc δ) (hcc : IsCurveIdeal D cc) (hδ : IsDiscrimin
   ·
     have hc : Continuous fun y : (setup D cc δ N N' L L').La =>
         (⟨(coord D N N').symm y, y.2⟩ : La D (tor0 D cc δ) L L') :=
-      Continuous.subtype_mk ((coord D N N').symm.continuous.comp continuous_subtype_val) _
+      Continuous.subtype_mk ((coord D N N').symm.continuous.comp continuous_subtypeVal) _
     refine DiscreteTopology.of_continuous_injective hc ?_
     intro y y' h
     apply Subtype.ext
@@ -305,7 +305,7 @@ theorem periodSetup : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : 
   have hN : (Ideal.absNorm cc : ℂ) ≠ 0 := by
     have : Ideal.absNorm cc ≠ 0 := by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact hcc.1
     exact_mod_cast this
-  haveI : Nonempty D.what₂.Tau := ⟨D.eTau.symm 1⟩
+  have : Nonempty D.what₂.Tau := ⟨D.eTau.symm 1⟩
   refine ⟨gDim D N N', setup D cc δ N N' L L', coord D N N', rfl, setup_ok B hcc hδ hA,
     fun x => coord_mem_setup x, fun x y => hf_coord _ x y, ?_, ?_, ?_⟩
   ·

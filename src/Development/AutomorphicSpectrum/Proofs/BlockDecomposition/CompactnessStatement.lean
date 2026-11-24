@@ -127,14 +127,14 @@ theorem avg_of_surjective {G H : Type*} [Group G] [Group H] (N : Subgroup G) [N.
     (hr : Function.Surjective r) (hN : N ≤ r.ker) (f : H → ℂ) :
     (Nat.card (G ⧸ N) : ℂ)⁻¹ * ∑ᶠ u : G ⧸ N, f (r (Quotient.out u)) = (∑ᶠ g, f g) / (Nat.card H : ℂ) := by
   classical
-  haveI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  have : Fintype (G ⧸ N) := Fintype.ofFinite _
   set φ : G ⧸ N →* H := QuotientGroup.lift N r hN with hφdef
   have hφ : Function.Surjective φ := by
     intro h
     obtain ⟨g, rfl⟩ := hr h
     exact ⟨(g : G ⧸ N), QuotientGroup.lift_mk N hN g⟩
-  haveI : Finite H := Finite.of_surjective φ hφ
-  haveI : Fintype H := Fintype.ofFinite _
+  have : Finite H := Finite.of_surjective φ hφ
+  have : Fintype H := Fintype.ofFinite _
   have hout : ∀ u : G ⧸ N, r (Quotient.out u) = φ u := by
     intro u
     conv_rhs => rw [← Quotient.out_eq u]
@@ -208,8 +208,8 @@ theorem avgK_res : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
   intro O _ _ _ _ n ϖ hϖ f
   have hm : ϖ ∈ IsLocalRing.maximalIdeal O :=
     (IsLocalRing.mem_maximalIdeal ϖ).mpr hϖ.not_isUnit
-  haveI : (Gam2 (n := n) ϖ).Normal := MonoidHom.normal_ker _
-  haveI : Finite (GL (Ix n) O ⧸ Gam2 (n := n) ϖ) := GlobalTheory.CompanionTheory.Jp.Unif.finite_quotient_level_square_congruence n hϖ
+  have : (Gam2 (n := n) ϖ).Normal := MonoidHom.normal_ker _
+  have : Finite (GL (Ix n) O ⧸ Gam2 (n := n) ϖ) := GlobalTheory.CompanionTheory.Jp.Unif.finite_quotient_level_square_congruence n hϖ
   exact avg_of_surjective (Gam2 ϖ) resK (resK_surjective n) (level_square_congruence_le_reduction_ker n hm) f
 
 end GlobalTheory.CompanionTheory.Jp.AvgRes
@@ -382,7 +382,7 @@ lemma exists_lowH (M : Matrix (Fin n) (Ix n) k) (hM : M.rank = n) : ∃ g : GL (
     LinearIndependent.sum_type hw hli (Disjoint.mono_left hspan hW'.disjoint.symm)
   let A : Matrix (Ix n) (Ix n) k := Matrix.of (Sum.elim w M.row)
   have hA : IsUnit A := by
-    rw [← Matrix.linearIndependent_rows_iff_isUnit]
+    rw [← linearIndependent_row_iff_isUnit]
     exact hall
   refine ⟨hA.unit, ?_⟩
   ext i j
@@ -410,7 +410,7 @@ theorem card_lowerRightBlock_eq_fibre_formula (k : Type) [Field k] [Fintype k] (
       Nat.card {g : GL (Ix n) k // lowerLeftBlock g = 0 ∧ dBlk g = 1} *
         Nat.card {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} := by
   classical
-  haveI : Fintype {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} := Fintype.ofFinite _
+  have : Fintype {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} := Fintype.ofFinite _
   let f : {g : GL (Ix n) k // dBlk g = D} → {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} :=
     fun g => ⟨lowerLeftBlock g.1, by have h := rank_lowH g.1; rw [lowH_eq, g.2] at h; exact h⟩
   have hfib : ∀ C, Nat.card {x // f x = C} = Nat.card {g : GL (Ix n) k // lowerLeftBlock g = 0 ∧ dBlk g = 1} := by
@@ -522,7 +522,7 @@ theorem card_rank_eq {V : Type} [AddCommGroup V] [Module k V] [FiniteDimensional
   have : Finite (V →ₗ[k] V) := Module.finite_of_finite k
   have : Finite (Submodule k V) :=
     Finite.of_injective (fun K : Submodule k V => (K : Set V)) SetLike.coe_injective
-  letI : Fintype {K : Submodule k V // finrank k K = n - ρ} := Fintype.ofFinite _
+  let : Fintype {K : Submodule k V // finrank k K = n - ρ} := Fintype.ofFinite _
   have E : {f : V →ₗ[k] V // finrank k (LinearMap.range f) = ρ} ≃
       Σ K : {K : Submodule k V // finrank k K = n - ρ},
         {f : V →ₗ[k] V // LinearMap.ker f = K.1} :=
@@ -675,7 +675,7 @@ theorem twist_gam : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
   have hC : ∀ i j, ∃ c, (γ : Matrix (Ix n) (Ix n) O) (Sum.inr i) (Sum.inl j) = ϖ * (ϖ * c) := by
     intro i j
     have h0 := hγ' (Sum.inr i) (Sum.inl j)
-    simp only [Matrix.one_apply, reduceCtorEq, if_false, sub_zero] at h0
+    simp only [Matrix.one_apply, reduceCtorEq, ite_false, sub_zero] at h0
     obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 h0
     exact ⟨c, by rw [← hc]; ring⟩
   choose C hCe using hC
@@ -1375,9 +1375,9 @@ theorem low_mul {k : Type} [Field k] {n : ℕ} (x y : GL (Ix n) k) (hx : x.1.toB
 theorem avg_lin {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Fintype (IsLocalRing.ResidueField O)]
     {n : ℕ} {ϖ : O} (hϖ : Irreducible ϖ) {ι : Type} (s : Finset ι) (c : ℂ) (F : ι → GL (Ix n) O → ℂ) :
     avgK ϖ (fun κ => c * ∑ x ∈ s, F x κ) = c * ∑ x ∈ s, avgK ϖ (F x) := by
-  haveI := Unif.finite_quotient_level_square_congruence n hϖ
+  have := Unif.finite_quotient_level_square_congruence n hϖ
   classical
-  haveI := Fintype.ofFinite (GL (Ix n) O ⧸ Gam2 (n := n) ϖ)
+  have := Fintype.ofFinite (GL (Ix n) O ⧸ Gam2 (n := n) ϖ)
   unfold avgK
   simp only [finsum_eq_sum_of_fintype, ← Finset.mul_sum]
   rw [Finset.sum_comm]
@@ -1445,7 +1445,7 @@ theorem sum_weight {k : Type} [Field k] [Fintype k] (n : ℕ) (f : ℕ → ℂ) 
     sumG (fun g : GL (Ix n) k => (Fintype.card k : ℂ) ^ (2 * n * iD g) * f (iD g)) =
       (Fintype.card k : ℂ) ^ (n * n) * sumG (fun h : GL (Ix n) k => f (lowerLeftBlock h).rank) := by
   classical
-  haveI := Fintype.ofFinite (GL (Ix n) k)
+  have := Fintype.ofFinite (GL (Ix n) k)
   unfold sumG
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   have a := sum_fib (iD (k := k) (n := n)) n (fun g => by unfold iD; omega)
@@ -1462,7 +1462,7 @@ theorem sum_weight {k : Type} [Field k] [Fintype k] (n : ℕ) (f : ℕ → ℂ) 
 theorem jpCmp : JpCmp := by
   intro O L _ _ _ _ _ _ _ n ϖ hϖ w hw Ψ hΨ T hT
   classical
-  haveI := Fintype.ofFinite (GL (Ix n) (IsLocalRing.ResidueField O))
+  have := Fintype.ofFinite (GL (Ix n) (IsLocalRing.ResidueField O))
   have hinv : ∀ κ h, IsRed (O := O) w κ h → Ψ h = Ψ (T κ) := by
     intro κ h hr
     obtain ⟨a, d, b, e⟩ := red_unique O L n w κ (T κ) h (hT κ) hr
@@ -1517,7 +1517,7 @@ theorem jpCmp : JpCmp := by
   have hf : ∀ g, Φ g = f (iD g) := by
     intro g
     have h : ∃ g', iD g' = iD g := ⟨g, rfl⟩
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     exact hΦ _ _ h.choose_spec
   have hnum : sumG (fun g => (Fintype.card (IsLocalRing.ResidueField O) : ℂ) ^ (2 * n * iD g) * Ψ g) =
       sumG (fun g => (Fintype.card (IsLocalRing.ResidueField O) : ℂ) ^ (2 * n * iD g) * Φ g) := by

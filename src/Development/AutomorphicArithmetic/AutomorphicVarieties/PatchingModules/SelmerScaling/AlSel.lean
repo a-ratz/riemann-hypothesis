@@ -138,7 +138,7 @@ private theorem scal_mem (p : Fin n → Prop) (b : Prop) (y : DualNumber F) (hy 
   intro i j
   rw [Matrix.algebraMap_matrix_apply]
   refine ⟨fun hij => ?_, fun hij => ?_⟩
-  · rw [if_neg (by rintro rfl; exact hij Iff.rfl)]; rfl
+  · rw [ite_eq_right (by rintro rfl; exact hij Iff.rfl)]; rfl
   · split_ifs with e
     · subst e
       exact hy (hij.1 Iff.rfl)
@@ -314,9 +314,9 @@ private theorem selGen {l : ℕ} [Fact l.Prime] {L : Loc} {G G0 : Glob l L} (h :
     rw [map_one, one_smul] at this
     rw [hu.ine w g hg, this, zero_mul]
   · obtain ⟨o1, o2, -, o3, -⟩ := oddDiag l L G G0 h n x x.Fr v
-    haveI : Infinite x.A := Infinite.of_injective (fun m : ℕ => (PowerSeries.X : x.A) ^ m)
+    have : Infinite x.A := Infinite.of_injective (fun m : ℕ => (PowerSeries.X : x.A) ^ m)
       (pow_injective_of_not_isUnit (by simp [PowerSeries.isUnit_iff_constantCoeff]) PowerSeries.X_ne_zero)
-    haveI : Infinite x.Fr := Infinite.of_injective _ (IsFractionRing.injective x.A x.Fr)
+    have : Infinite x.Fr := Infinite.of_injective _ (IsFractionRing.injective x.A x.Fr)
     let U : G.G₀ →* Matrix (Fin n) (Fin n) (DD x.Fr e) := ⟨⟨u, hu.one⟩, hu.mul⟩
     obtain ⟨Y, hY0, hY⟩ := locDual a d hd h1 (fun i : Fin n => (i : ℕ) < x.a) b (U.comp (G.φ v)) (ρ.comp (G.φ v))
       (fun i => (Units.coeHom _).comp (ψ v i))

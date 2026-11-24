@@ -1291,7 +1291,7 @@ theorem idxDFrame_of (hS : IdxDSig) (hJ : IdxDJacE) (hG : FrGram) : IdxDFrame :=
     have hs : ∀ (F : Fin D.R.k → X.B.I.E ⊗[X.B.I.F] Af X.B.I.F),
         ∑ l, M i l * (F l - if l = j then eps else 0) = ∑ l, M i l * F l - M i j := fun F => by
       simp only [mul_sub, Finset.sum_sub_distrib, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-        if_true, hMe]
+        ite_true, hMe]
     rw [hs, hMG] at h2
     rw [hs] at h1
     refine to_ew hE (hA_int X.B.I (Submodule.sum_mem _ fun l _ =>
@@ -1423,7 +1423,7 @@ theorem af_nontrivial (F : Type) [Field F] [NumberField F] : Nontrivial (Af F) :
     Af F →+* v.adicCompletion F)
 
 theorem incl_injective (I : Formalism.MainNotions.S.AutInst) : Function.Injective (incl I) := by
-  haveI := af_nontrivial I.F
+  have := af_nontrivial I.F
   have hi : Function.Injective (Formalism.UG.inclE (F := I.F) (Af I.F) : I.E →+* _) := RingHom.injective _
   intro a b h
   unfold incl at h

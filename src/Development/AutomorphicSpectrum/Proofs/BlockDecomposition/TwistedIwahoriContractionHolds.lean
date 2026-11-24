@@ -110,7 +110,7 @@ theorem val_det_sub_prod_lt (M : Matrix (Fin n) (Fin n) F)
   rw [map_mul, ← Finset.mul_prod_erase _ _ (Finset.mem_univ i), map_mul]
   have hrest : valuation F (∏ r ∈ Finset.univ.erase i, M (π r) r) ≤ 1 := by
     rw [map_prod]
-    exact Finset.prod_le_one' fun r _ => h0 _ _
+    exact Finset.prod_le_one fun r _ => h0 _ _
   calc _ ≤ 1 * (valuation F (M (π i) i) * 1) := mul_le_mul' hs (mul_le_mul' le_rfl hrest)
     _ < 1 := by simpa using hl _ _ hi
 
@@ -178,7 +178,7 @@ theorem val_diag_of_mem_iwahori {c : GL (Fin n) F} (hc : c ∈ iwahori (m := n) 
     rw [hd, Valuation.map_sub_swap]
     exact h1
   rw [map_prod] at h2
-  exact (Finset.prod_eq_one_iff_of_le_one' fun r _ => mem_unitGL_entries hc.1 r r).1 h2 i (Finset.mem_univ i)
+  exact (Finset.prod_eq_one_iff_of_le_one fun r _ => mem_unitGL_entries hc.1 r r).1 h2 i (Finset.mem_univ i)
 
 end Algebra
 
@@ -214,7 +214,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = iwah
     exact this.symm
   have hev : ∀ i, valuation F (e i) ≠ 0 := fun i => (Valuation.ne_zero_iff _).2 (he i)
   have hq : ∀ i l, i < l → valuation F (e i / e l) ≤ ρ := fun i l h => by
-    rw [map_div₀, div_le_iff₀ (zero_lt_iff.2 (hev l))]
+    rw [map_div₀, div_le_iff₀ (pos_iff_ne_zero.2 (hev l))]
     exact hc i l h
   set s : ℕ := max j 1 with hs
   have hs1 : 1 ≤ s := le_max_right _ _
@@ -226,13 +226,13 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = iwah
     · rw [hs, h', pow_one]; exact hunif _ (hI.2 i l h)
   let T : Matrix (Fin n) (Fin n) F := fun i l =>
     if l < i then - τ.symm (C i l / d i) else if i < l then (e i / e l) * (C i l / d l) else 0
-  have hTlo : ∀ i l, l < i → T i l = - τ.symm (C i l / d i) := fun i l h => if_pos h
+  have hTlo : ∀ i l, l < i → T i l = - τ.symm (C i l / d i) := fun i l h => ite_eq_left h
   have hTup : ∀ i l, i < l → T i l = (e i / e l) * (C i l / d l) := fun i l h => by
     show (if l < i then _ else _) = _
-    rw [if_neg (not_lt.2 h.le), if_pos h]
+    rw [ite_eq_right (not_lt.2 h.le), ite_eq_left h]
   have hTd : ∀ i, T i i = 0 := fun i => by
     show (if i < i then _ else _) = _
-    rw [if_neg (lt_irrefl i), if_neg (lt_irrefl i)]
+    rw [ite_eq_right (lt_irrefl i), ite_eq_right (lt_irrefl i)]
   have hTlov : ∀ i l, l < i → valuation F (T i l) ≤ ρ ^ s := fun i l h => by
     rw [hTlo i l h, Valuation.map_neg, hτs, map_div₀, hd, div_one]
     exact hlow i l h
@@ -242,7 +242,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = iwah
   have hT : Dp ρ s T := fun i l => by
     rcases lt_trichotomy i l with h | h | h
     · exact (hTupv i l h).trans (pow_le_pow_right_of_le_one' hρ1' hsj)
-    · subst h; rw [hTd, map_zero]; exact zero_le'
+    · subst h; rw [hTd, map_zero]; exact zero_le
     · exact hTlov i l h
   have hρs : ρ ^ s ≤ ρ := by
     calc ρ ^ s ≤ ρ ^ 1 := pow_le_pow_right_of_le_one' hρ1' hs1
@@ -335,7 +335,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = iwah
     · subst h
       show valuation F (C i i - Dg i i) ≤ _
       rw [show Dg i i = C i i from Matrix.diagonal_apply_eq _ _, sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
     · show valuation F (C i l - Dg i l) ≤ _
       rw [show Dg i l = 0 from Matrix.diagonal_apply_ne _ h, sub_zero]
       exact hcD i l h
@@ -353,7 +353,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = iwah
       rw [hTd, hQd, map_zero, mul_zero, add_zero, one_mul]
       show valuation F (C i i - C i i) ≤ _
       rw [sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
     · rw [hTlo i l h, map_neg, RingEquiv.apply_symm_apply, mul_neg, mul_div_cancel₀ _ (hd0 i),
         add_neg_cancel, zero_sub, Valuation.map_neg, map_mul, hd, mul_one]
       refine (hQlow i l h).trans ?_
@@ -447,7 +447,7 @@ theorem contraction (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F))
   have hSc : ∀ j, IsClosed (S j) := fun j => by
     have h1 : IsClosed {m : GL (Fin n) F | ∀ i l, i ≠ l →
         valuation F ((f m : Matrix (Fin n) (Fin n) F) i l) ≤ ρ ^ j} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       refine isClosed_iInter fun i => isClosed_iInter fun l => isClosed_iInter fun _ => ?_
       have hcont : Continuous fun m : GL (Fin n) F => (f m : Matrix (Fin n) (Fin n) F) i l :=
         (Units.continuous_val.comp hf).matrix_elem i l

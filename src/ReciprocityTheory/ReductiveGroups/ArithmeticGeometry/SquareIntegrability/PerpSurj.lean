@@ -144,8 +144,8 @@ theorem sympl : ∀ (n : ℕ) (H : Type) [AddCommGroup H] [Module.Free ℤ H] [M
   set e := x
   set f := b ⟨0, hpos⟩
   let Q := perp B e f
-  haveI : Module.Free ℤ Q := Module.Free.of_basis (Q.basisOfPid b).2
-  haveI : Module.Finite ℤ Q := Module.Finite.of_basis (Q.basisOfPid b).2
+  have : Module.Free ℤ Q := Module.Free.of_basis (Q.basisOfPid b).2
+  have : Module.Finite ℤ Q := Module.Finite.of_basis (Q.basisOfPid b).2
   have hr : finrank ℤ Q + 2 = n := by
     have h : finrank ℤ H = finrank ℤ (Q × ℤ × ℤ) := (splitEquiv B halt e f hxf).finrank_eq
     rw [Module.finrank_prod, Module.finrank_prod, Module.finrank_self, hn] at h

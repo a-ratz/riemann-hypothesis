@@ -62,7 +62,7 @@ private theorem testEx_gen {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     ∃ Φ : E → ℂ, (ContDiff ℝ ∞ Φ ∧ HasCompactSupport Φ ∧ tsupport Φ ⊆ U) ∧
       (Differentiable ℂ fun s : ℂ => ∫ x, Φ x * f x * ((A x : ℝ) : ℂ) ^ s ∂μ) ∧
       ∃ s : ℂ, ∫ x, Φ x * f x * ((A x : ℝ) : ℂ) ^ s ∂μ ≠ 0 := by
-  haveI : ProperSpace E := FiniteDimensional.proper ℝ E
+  have : ProperSpace E := FiniteDimensional.proper ℝ E
   set c : ℂ := starRingEnd ℂ (f x₀) with hc
   have hre : 0 < (c * f x₀).re := by
     rw [hc, mul_comm, Complex.mul_conj, Complex.ofReal_re]
@@ -148,8 +148,8 @@ end UpperTheory.V.Z.Inf
 theorem UpperTheory.V.Z.Inf.testEx :
     UpperTheory.V.Z.Inf.TestEx := by
   intro K _ _ _ n f hf ⟨x₀, hx₀, h0⟩
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (Fin n → GlobalTheory.CuspRep.Cinf K)) := Measure.pi.isAddHaarMeasure _
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (GlobalTheory.CuspRep.Lie K n)) := Measure.pi.isAddHaarMeasure _
+  have : Measure.IsAddHaarMeasure (volume : Measure (Fin n → GlobalTheory.CuspRep.Cinf K)) := Measure.pi.isAddHaarMeasure _
+  have : Measure.IsAddHaarMeasure (volume : Measure (GlobalTheory.CuspRep.Lie K n)) := Measure.pi.isAddHaarMeasure _
   refine UpperTheory.V.Z.Inf.testEx_gen volume GlobalTheory.CuspRep.isOpen_invSet hf (A := UpperTheory.V.Z.Inf.nrm) ?_ ?_ hx₀ h0
   · unfold UpperTheory.V.Z.Inf.nrm
     refine continuous_finsetProd _ fun w _ => Continuous.pow (Continuous.norm ?_) 2

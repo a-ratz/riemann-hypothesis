@@ -69,7 +69,7 @@ private theorem hasInfQ_half_of_isEtaT (D : D7) (χ : Formalism.L2.Host.HChar D.
 
 private theorem one_mem_intAE_twisted_operators (D : D7) : 1 ∈ intAE D := by
   apply AddSubgroup.subset_closure
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨1, ?_, 1, ?_⟩
   · intro v
     first

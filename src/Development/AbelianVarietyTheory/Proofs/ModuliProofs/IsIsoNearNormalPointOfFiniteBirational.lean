@@ -123,7 +123,7 @@ theorem exists_isIntegral_nhds {M : Scheme.{0}} [IsLocallyNoetherian M] (x : M)
   obtain ⟨_, ⟨U, hU : IsAffineOpen U, rfl⟩, hxU, -⟩ :=
     M.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ x) isOpen_univ
   have : IsNoetherianRing Γ(M, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  letI := M.presheaf.algebra_section_stalk (U := U) ⟨x, hxU⟩
+  let := M.presheaf.algebra_section_stalk (U := U) ⟨x, hxU⟩
   have := hU.isLocalization_stalk ⟨x, hxU⟩
   obtain ⟨s, hs, h⟩ := exists_away_isDomain (O := M.presheaf.stalk x)
     (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl
@@ -139,20 +139,20 @@ theorem exists_isIso_of_isIntegral {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFinite f]
   obtain ⟨_, ⟨U, hU : IsAffineOpen U, rfl⟩, hxU, -⟩ :=
     Y.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ y) isOpen_univ
   have : Nonempty U := ⟨⟨y, hxU⟩⟩
-  letI := (f.app U).hom.toAlgebra
+  let := (f.app U).hom.toAlgebra
   have : Module.Finite Γ(Y, U) Γ(X, f ⁻¹ᵁ U) := f.finite_app U hU
   have hη := apply_genericPoint_of_isDominant f
   have hyU : f (genericPoint X) ∈ U := by
     rw [hη]
     exact ((genericPoint_spec Y).mem_open_set_iff U.isOpen).mpr (by simpa using ‹Nonempty U›)
-  letI := Y.presheaf.algebra_section_stalk (U := U) ⟨_, hyU⟩
+  let := Y.presheaf.algebra_section_stalk (U := U) ⟨_, hyU⟩
   have hfr_local (z : Y) (hzU : z ∈ U) (hz : z = genericPoint Y) :
       letI := Y.presheaf.algebra_section_stalk (U := U) ⟨z, hzU⟩
       IsFractionRing Γ(Y, U) (Y.presheaf.stalk z) := by
-    haveI : Nonempty U := ⟨⟨z, hzU⟩⟩
+    have : Nonempty U := ⟨⟨z, hzU⟩⟩
     subst hz
     exact functionField_isFractionRing_of_isAffineOpen Y U hU
-  haveI : IsFractionRing Γ(Y, U) (Y.presheaf.stalk (f (genericPoint X))) :=
+  have : IsFractionRing Γ(Y, U) (Y.presheaf.stalk (f (genericPoint X))) :=
     hfr_local _ hyU hη
   have hgerm (a : Γ(Y, U)) : f.stalkMap (genericPoint X) (Y.presheaf.germ U _ hyU a) =
       X.presheaf.germ (f ⁻¹ᵁ U) (genericPoint X) hyU (f.app U a) :=
@@ -176,8 +176,8 @@ theorem exists_isIso_of_isIntegral {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFinite f]
     apply germ_injective_of_isIntegral X (genericPoint X) hyU
     rw [← hφ b, ← hφ b']
     exact congr(f.stalkMap (genericPoint X) $e)
-  letI : Field (Y.presheaf.stalk (f (genericPoint X))) := IsFractionRing.toField Γ(Y, U)
-  letI := Y.presheaf.algebra_section_stalk (U := U) ⟨y, hxU⟩
+  let : Field (Y.presheaf.stalk (f (genericPoint X))) := IsFractionRing.toField Γ(Y, U)
+  let := Y.presheaf.algebra_section_stalk (U := U) ⟨y, hxU⟩
   have := hU.isLocalization_stalk ⟨y, hxU⟩
   obtain ⟨r, hr, h⟩ := exists_mul_mem_range (O := Y.presheaf.stalk y)
     (hU.primeIdealOf ⟨y, hxU⟩).asIdeal.primeCompl ψ hψ

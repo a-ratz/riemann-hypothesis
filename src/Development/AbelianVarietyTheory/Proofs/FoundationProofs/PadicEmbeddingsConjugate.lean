@@ -58,7 +58,7 @@ variable {l : ℕ} [Fact l.Prime] {E : Type} [Field E]
 theorem sum_eq_zero (a b : E →+* PadicAlgCl l) (h : ∀ x, ‖a x‖ < 1 ↔ ‖b x‖ < 1) {ι : Type}
     [Fintype ι] (y : ι → E) (c : ι → ℚ_[l]) (hc : ∑ k, c k • a (y k) = 0) :
     ∑ k, c k • b (y k) = 0 := by
-  haveI : CharZero E := a.charZero
+  have : CharZero E := a.charZero
   have hd : DenseRange (Pi.map fun _ : ι => (Rat.cast : ℚ → ℚ_[l])) :=
     DenseRange.piMap fun _ => Padic.denseRange_ratCast l
   have hcl : ∀ f : E →+* PadicAlgCl l, IsClopen {c : ι → ℚ_[l] | ‖∑ k, c k • f (y k)‖ < 1} := by
@@ -74,7 +74,7 @@ theorem sum_eq_zero (a b : E →+* PadicAlgCl l) (h : ∀ x, ‖a x‖ < 1 ↔ �
     · have := (hcl a).compl.isClosed.union (hcl b).isClosed
       convert this using 1
       ext c
-      simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_compl_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_compl_iff]
       exact imp_iff_not_or
     · have e : ∀ f : E →+* PadicAlgCl l,
           ∑ k, (Pi.map (fun _ : ι => (Rat.cast : ℚ → ℚ_[l])) q) k • f (y k) =
@@ -111,7 +111,7 @@ theorem exists_equiv_of_ker_le {F T K : Type} [Field F] [CommRing T] [Algebra F 
     rw [this]
     rfl
   let φ' : S →ₐ[F] K := φ
-  obtain ⟨ψ, hψ⟩ := IsAlgClosed.surjective_restrictDomain_of_isAlgebraic (K := F) (L := S) (M := K)
+  obtain ⟨ψ, hψ⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic (K := F) (L := S) (M := K)
     (E := K) φ'
   refine ⟨AlgEquiv.ofBijective ψ (Algebra.IsAlgebraic.algHom_bijective ψ), fun x => ?_⟩
   rw [← hφ x]

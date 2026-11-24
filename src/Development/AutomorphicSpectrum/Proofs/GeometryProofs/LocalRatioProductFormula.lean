@@ -114,7 +114,7 @@ theorem iSup_place_pos {w : (Σ k, J k) → L} (v : FinitePlace L) {k : K} (h : 
 theorem iSup_place_eq_one {w : (Σ k, J k) → L} {v : FinitePlace L} (hv : v ∉ badPlaces w) {k : K}
     (h : ∃ c, w ⟨k, c⟩ ≠ 0) : ⨆ i, v (w ⟨k, i⟩) = 1 := by
   obtain ⟨c, hc⟩ := h
-  haveI : Nonempty (J k) := ⟨c⟩
+  have : Nonempty (J k) := ⟨c⟩
   refine le_antisymm (ciSup_le fun i => ?_) ?_
   · by_cases hi : w ⟨k, i⟩ = 0
     · rw [hi, map_zero]; exact zero_le_one

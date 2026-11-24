@@ -67,7 +67,7 @@ namespace GlobalTheory.RegGenSmooth
 theorem injective_of_charZero {k A : Type} [CommRing k] [IsDomain k] [Module.Finite ℤ k]
     [CommRing A] [CharZero A] (f : k →+* A) : Function.Injective f := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+  refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
   rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
   exact RingHom.injective_int _
 

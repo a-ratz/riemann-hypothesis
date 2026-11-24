@@ -114,7 +114,7 @@ theorem fderiv_bet_apply (hα : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
   have hcj : (starRingEnd ℂ) (Complex.exp w * v) = (starRingEnd ℂ) (Complex.exp w) * (starRingEnd ℂ) v :=
     map_mul (starRingEnd ℂ) _ _
   rw [hcj] at key
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.mul_apply', smul_eq_mul]
   linear_combination (Complex.exp w / 2) * key
 

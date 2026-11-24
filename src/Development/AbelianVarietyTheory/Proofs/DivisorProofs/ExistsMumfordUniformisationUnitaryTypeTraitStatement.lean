@@ -134,7 +134,7 @@ theorem genRel_psi_twist (D : DegData T.V (maximalIdeal T.V)) [Module (𝓞 E) D
       Units.val_mk0, zpow_neg]
     show (algebraMap (FractionRing T.V) F) ((((piK hϖ : (FractionRing T.V)ˣ) : FractionRing T.V) ^ qv D hϖ y)⁻¹) = _
     rw [map_inv₀, map_zpow₀]; rfl
-  letI := H.starRing
+  let := H.starRing
   rw [val_pull hJ, val_pull hJ, Category.id_comp]
   erw [val_psi_twist H.w0 (TraitArc.tF D hϖ) y (jFK (R := T.V) F) hJ]
   rw [show jFK (R := T.V) F = 𝟙 _ ≫ spMap (algebraMap (FractionRing T.V) F) from (Category.id_comp _).symm,
@@ -218,7 +218,7 @@ theorem exists_compatible_roots_through (K : Type) [Field K] [IsAlgClosed K] [Ch
   have hz : IsPrimitiveRoot (ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta A) A := GlobalTheory.HostModel.isPrimitiveRoot_zeta hA
   have hint : IsIntegral ℚ (ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta A) := (hz.isIntegral hA).tower_top
   let L : IntermediateField ℚ ℂ := IntermediateField.adjoin ℚ {ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta A}
-  haveI : FiniteDimensional ℚ L := IntermediateField.adjoin.finiteDimensional hint
+  have : FiniteDimensional ℚ L := IntermediateField.adjoin.finiteDimensional hint
   let pb := IntermediateField.adjoin.powerBasis hint
   have hroot : Polynomial.aeval ω (minpoly ℚ pb.gen) = 0 := by
     have hm : minpoly ℚ pb.gen = minpoly ℚ (ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta A) := by
@@ -278,10 +278,10 @@ open GlobalTheory.TorusExt GlobalTheory.ArcExt
 
 theorem exists_tate : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dm : Datum H) (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F), Function.Injective β → ∀ (T : Formalism.L2.Pj.CDVR) (b : O →+* T.V), Function.Injective b → ∀ (D : DegData T.V (maximalIdeal T.V)) [Module (𝓞 E) D.toPre.X] (o : letI := H.starRing; D.toPre.OAct (𝓞 E)), PelOK Dm D.toPre o → (∀ k : ℕ, k ∣ l.M' → ∀ q : QkPt D.toPre (AlgebraicClosure (FractionRing T.V)) k, ∃ p : QkPt D.toPre (FractionRing T.V) k, QkExt (algebraMap (FractionRing T.V) (AlgebraicClosure (FractionRing T.V))) p q) → ∃ (pA : Dm.La → QkPt D.toPre (FractionRing T.V) l.A) (pM : Dm.La → QkPt D.toPre (FractionRing T.V) l.M), ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing T.V) F] (z : O), ((β z : c.F) : ℂ) = zeta l.A → ∃ I : (letI := H.starRing; TateIsoQ Dm D.toPre o F), (I.ζ l.A : F) = algebraMap (FractionRing T.V) F (algebraMap T.V _ (b z)) ∧ (∀ a q, QkExt (algebraMap _ F) (pA a) q → QkPt.Equiv D.toPre F q (I.ev l.A a)) ∧ ∀ a q, QkExt (algebraMap _ F) (pM a) q → QkPt.Equiv D.toPre F q (I.ev l.M a) := by
   intro E _ _ _ H Dm l c O _ β hβ T b hb D _ o hP hrat
-  letI := H.starRing
-  haveI : CharZero (FractionRing T.V) :=
+  let := H.starRing
+  have : CharZero (FractionRing T.V) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective T.V (FractionRing T.V))
-  haveI : CharZero (AlgebraicClosure (FractionRing T.V)) :=
+  have : CharZero (AlgebraicClosure (FractionRing T.V)) :=
     charZero_of_injective_algebraMap (algebraMap (FractionRing T.V) (AlgebraicClosure (FractionRing T.V))).injective
   have hB : D.toPre.TauBimult := D.tau_bimult
 
@@ -461,7 +461,7 @@ theorem tateCl_of (β : O →+* c.F) (b : O →+* T.V) (D : DegData T.V (maximal
         ∀ a q, QkExt (algebraMap _ F) (pM a) q → QkPt.Equiv D.toPre F q (I.ev l.M a)) :
     TateCl D oD hϖ Dm β b hdiv pA pM := by
   intro F _ _ _ z hz
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨I, hζ, e₂, e₃⟩ := h F z hz
   have hw := GlobalTheory.ArcBuild.cmIdempotent_add_star_eq_one (H := H)
   have ht := isScalarForm_tF D oD hϖ
@@ -515,9 +515,9 @@ theorem GlobalTheory.TraitArc.exists_input_recovering : ∀ (R : Type) [CommRing
   have hM' : 0 < l.M' := Nat.lcm_pos (lt_of_lt_of_le (by decide) l.three_le) l.A_pos
   obtain ⟨T, ρ, b, ϖ, D', hρ, hρf, hb, hϖ, ⟨hD⟩, hdvd, hrat⟩ :=
     GlobalTheory.T.exists_traitExtension_divisible_valuationForm R D O V₁ ρ₁ b₁ hV₁ hρ₁ hf₁ hl₁ hb₁ (2 * l.M') (by omega)
-  have hBase : Base R := ⟨by haveI := hR.1; exact ⟨inferInstance, inferInstance, inferInstance, hR.2.1⟩, hR.2.2⟩
+  have hBase : Base R := ⟨by have := hR.1; exact ⟨inferInstance, inferInstance, inferInstance, hR.2.1⟩, hR.2.2⟩
   obtain ⟨inst, o', hP'⟩ := GlobalTheory.Mum.pelOK_of_isPullDeg R hBase E H Dm D o hP T.V ρ hρ D' ⟨hD⟩
-  letI := inst
+  let := inst
   have hX' : Nontrivial D'.toPre.X := hD.xe.toEquiv.nontrivial
   have hdiv : ∀ a a', (2 * l.M' : ℤ) ∣ beF D' hϖ a a' := fun a a' => by
     have := hdvd _ (isQ_qv D' hϖ) a a'
@@ -572,9 +572,9 @@ namespace GlobalTheory.FiniteExtensionEmbedding
 theorem exists_finite_extension_embedding (F K : Type) [Field F] [CharZero F]
     [FiniteDimensional ℚ F] [Field K] [CharZero K] :
     ∃ (L : Type) (_ : Field L) (_ : Algebra K L), FiniteDimensional K L ∧ Nonempty (F →+* L) := by
-  haveI : Nontrivial (K ⊗[ℚ] F) := inferInstance
+  have : Nontrivial (K ⊗[ℚ] F) := inferInstance
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[ℚ] F)
-  letI : Field ((K ⊗[ℚ] F) ⧸ m) := Ideal.Quotient.field m
+  let : Field ((K ⊗[ℚ] F) ⧸ m) := Ideal.Quotient.field m
   refine ⟨(K ⊗[ℚ] F) ⧸ m, inferInstance, inferInstance, ?_, ⟨?_⟩⟩
   · exact Module.Finite.of_surjective (Ideal.Quotient.mkₐ K m).toLinearMap
       (Ideal.Quotient.mkₐ_surjective K m)
@@ -688,8 +688,8 @@ theorem exists_place_finite_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLo
   have hg' : ∀ p : ℕ, p.Prime → l'.GoodAt p := by
     subst hl
     exact hg
-  haveI := c.fin
-  haveI : CharZero (FractionRing R) :=
+  have := c.fin
+  have : CharZero (FractionRing R) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
   obtain ⟨L, _, _, hL, ⟨jF⟩⟩ := exists_finite_ext c.F (FractionRing R)
   obtain ⟨V, _, _, hV, hVc, _, _, _, -, hfin, hinj, hloc, -⟩ :=
@@ -815,7 +815,7 @@ namespace GlobalTheory.UTraitHyp
 theorem hypS_generic : ∀ (V : Type) [CommRing V] [IsDomain V] (I : Ideal V) (E : Type) [Field E] [NumberField E]
     [IsCMField E] (H : Host E) (t : SAB H (Sp V)) (P : PELUnif I t), (letI := P.A.isAb.comm; GlobalTheory.ZH.HypS P.A.A P.A.L) := by
   intro V _ _ I E _ _ _ H t P
-  letI := P.A.isAb.comm
+  let := P.A.isAb.comm
   obtain ⟨h1, h2, -⟩ := GlobalTheory.Ex.GenericFibre.unif_generic P
   exact GlobalTheory.SymBaseChange.hypS_baseChange _ _ t.G P.A.A (jK V) _ t.PP.L P.A.L t.PP.isLB P.A.isLB h1 h2
     ⟨t.act.act H.w0, t.act.act (H.bar H.w0), t.act.hom _, t.act.hom _,

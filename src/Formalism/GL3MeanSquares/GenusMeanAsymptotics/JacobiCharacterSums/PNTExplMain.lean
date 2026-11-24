@@ -591,8 +591,8 @@ theorem ex_rect_logDeriv (f : ℂ → ℂ) (hf : Differentiable ℂ f) (hf1 : f 
     refine hG₀U.congr fun w hw => ?_
     rw [hGdef]
     by_cases hwP : w ∈ insert 1 Z
-    · simp only [if_pos hwP]
-    · simp only [if_neg hwP]; exact hkey w hw hwP
+    · simp only [ite_eq_left hwP]
+    · simp only [ite_eq_right hwP]; exact hkey w hw hwP
   have hPin : ∀ p ∈ insert 1 Z, x₀ < p.re ∧ p.re < x₁ ∧ y₀ < p.im ∧ p.im < y₁ := by
     intro p hp
     rw [Finset.mem_insert] at hp
@@ -605,7 +605,7 @@ theorem ex_rect_logDeriv (f : ℂ → ℂ) (hf : Differentiable ℂ f) (hf1 : f 
     exact hUrect w hw.1.1 hw.1.2 hw.2.1 hw.2.2
   have hres := Formalism.FX.rectangle_residue (fun w => -(deriv f w / f w) * exKer y w) G (insert 1 Z) b
     x₀ x₁ y₀ y₁ (by linarith) (by linarith) hPin ⟨U, hU, hsub, hGU⟩ (fun w hw => by
-      rw [hGdef]; simp only [if_neg hw]; ring)
+      rw [hGdef]; simp only [ite_eq_right hw]; ring)
   have hsum : ∑ ρ ∈ Z, b ρ = -∑ ρ ∈ Z, (analyticOrderNatAt f ρ : ℂ) * exKer y ρ := by
     rw [← Finset.sum_neg_distrib]
     exact Finset.sum_congr rfl fun ρ hρ => by rw [hbρ ρ hρ, hord ρ hρ, neg_mul]
@@ -852,14 +852,14 @@ theorem ex_rect_Fchi {M : ℕ} [NeZero M] (χ : DirichletCharacter ℂ M) (y : �
       rw [e1, hder, hfw]
       exact neg_div_mul_eq_neg_add_div_mul_add_div _ _ _ _ hL hw1
     rw [ex_rectInt_congr hx hyy hB, ex_rectInt_add hx hyy hA hK, hmain,
-      ex_rect_double y hy σ₁ σ₀ (-T') T' hσ₁ hσ₁1 hσ₀ (by linarith) hT', if_pos rfl]
+      ex_rect_double y hy σ₁ σ₀ (-T') T' hσ₁ hσ₁1 hσ₀ (by linarith) hT', ite_eq_left rfl]
     simp only [explicitFormulaConstant, exOrd]
     ring
   · have hfL : exLF χ = DirichletCharacter.LFunction χ := exLF_of_ne hχ
     have hF : Fchi χ y = fun w => -(deriv (exLF χ) w / exLF χ w) * exKer y w := by
       funext w
       simp only [Fchi, negLD, exKer, hfL, mul_div_assoc]
-    rw [hF, hmain, if_neg hχ]
+    rw [hF, hmain, ite_eq_right hχ]
     simp only [explicitFormulaConstant, exOrd]
     ring
 

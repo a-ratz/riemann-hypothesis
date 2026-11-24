@@ -98,11 +98,11 @@ theorem globMove_of (u u' : D.what₂.Word) (hS : StabApprox Zd u u') (hD : Dict
     fun U h => ⟨h.2, fun a b hab => h.1 hab⟩
   have detL : ∀ L : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) D.host.E, Formalism.DoubleCosetMeasures.IsLowUni L →
       IsUnit L.det := fun L h => by
-    rw [Matrix.det_of_lowerTriangular L h.1]
+    rw [Matrix.det_of_isLowerTriangular L h.1]
     simp [h.2]
   have detU : ∀ U : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) D.host.E, Formalism.DoubleCosetMeasures.IsUpUni U →
       IsUnit U.det := fun U h => by
-    rw [Matrix.det_of_upperTriangular h.1]
+    rw [Matrix.det_of_isUpperTriangular h.1]
     simp [h.2]
   have hA₀lo : IsLo (L2 * L1⁻¹) :=
     isLo_mul (lo' _ (lo _ hL2)) (lo' _ (Formalism.DoubleCosetMeasures.isLowUni_inv (hx := lo _ hL1)))

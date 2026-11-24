@@ -81,15 +81,15 @@ theorem exists_eigBasis_at (TF : TorFlag Xo c) (p : TF.Y.X) :
   classical
   obtain ⟨U₁, hU₁, hp₁, x₁, hx₁, C, n, xc, hx⟩ := exists_affine_chart TF.Y.t (𝟙 TF.Y.X) p
   let L : Type := TF.Y.X.presheaf.stalk p
-  letI : Algebra Γ(TF.Y.X, U₁) L := TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf ⟨p, hp₁⟩
+  let : Algebra Γ(TF.Y.X, U₁) L := TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf ⟨p, hp₁⟩
   have hloc := hU₁.isLocalization_stalk ⟨p, hp₁⟩
   let ρ₁ : Γ(TF.Y.X, U₁) →+* L := algebraMap _ _
   have hK : spMap ρ₁ ≫ hU₁.fromSpec = TF.Y.X.fromSpecStalk p := by
     rw [← hU₁.fromSpecStalk_eq_fromSpecStalk hp₁]
     rfl
   have hid : spMap (RingHom.id c.F) = 𝟙 _ := Spec.map_id _
-  haveI : IsIso (spMap (RingHom.id c.F)) := by rw [hid]; infer_instance
-  haveI : IsIso (GlobalTheory.Toroidal.genι TF.Y) := inferInstanceAs (IsIso (pullback.fst TF.Y.s (spMap (RingHom.id c.F))))
+  have : IsIso (spMap (RingHom.id c.F)) := by rw [hid]; infer_instance
+  have : IsIso (GlobalTheory.Toroidal.genι TF.Y) := inferInstanceAs (IsIso (pullback.fst TF.Y.s (spMap (RingHom.id c.F))))
   have hs : inv (GlobalTheory.Toroidal.genι TF.Y) ≫ GlobalTheory.Toroidal.genStr TF.Y = TF.Y.s := by
     rw [IsIso.inv_comp_eq]
     calc GlobalTheory.Toroidal.genStr TF.Y = GlobalTheory.Toroidal.genStr TF.Y ≫ spMap (RingHom.id c.F) := by rw [hid, Category.comp_id]
@@ -114,7 +114,7 @@ theorem exists_eigBasis_at (TF : TorFlag Xo c) (p : TF.Y.X) :
         ReciprocityTheory.ChartRestriction.G.Chart.IsUnivChart _ n xc' ∧
         ∀ cc : Fin n → S, vec TF.Y.t x' xc' (ψ ∘ cc) = spMap (dualMap ψ) ≫ vec TF.Y.t x xc cc := by
     subst h
-    letI : Algebra S S' := ψ.toAlgebra
+    let : Algebra S S' := ψ.toAlgebra
     obtain ⟨x₁, hx₁, hcomp⟩ := LieChart.univChart_baseChange_of_chart (R := S) (R' := S') _ C n xc hx
     have h₁ := IsGrpPullback.comp
       (isGrpPullback_pullback ((Over.pullback x).obj TF.Y.t.G) (ReciprocityTheory.ChartRestriction.G.Chart.fB S S'))
@@ -142,9 +142,9 @@ theorem exists_eigBasis_at (TF : TorFlag Xo c) (p : TF.Y.X) :
     have : CharZero c.F := RingHom.charZero c.F.val.toRingHom
     obtain ⟨α, hinj, ⟨f, hf, hfs⟩, hN⟩ :=
       ReciprocityTheory.ChartRestriction.G.PullbackSections.exists_sepElt (E := E) (F := c.F) c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
-    letI : Algebra c.F L := φ.toAlgebra
+    let : Algebra c.F L := φ.toAlgebra
     refine ⟨fun τ => LinearMap.toMatrix' (ReciprocityTheory.ChartRestriction.G.PullbackSections.proj (rho hx) (embK c) α τ), fun {k} _ ψ {x' xc'} hx' hv τ => ?_⟩
-    letI : Algebra c.F k := (ψ.comp φ).toAlgebra
+    let : Algebra c.F k := (ψ.comp φ).toAlgebra
     have e₁ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) (ReciprocityTheory.ChartRestriction.G.PullbackSections.proj (rho hx') (embK c) α τ m) := fun m =>
       ReciprocityTheory.ChartRestriction.G.PullbackSections.eig_of_alpha _ _ α hN τ (ReciprocityTheory.ChartRestriction.G.PullbackSections.proj_eig_alpha _ _ α hinj f hf hfs τ m)
     have e₂ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) m → ReciprocityTheory.ChartRestriction.G.PullbackSections.proj (rho hx') (embK c) α τ m = m := fun m hm => by
@@ -152,7 +152,7 @@ theorem exists_eigBasis_at (TF : TorFlag Xo c) (p : TF.Y.X) :
         by_cases h : τ' = τ
         · subst h; rwa [Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-      rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+      rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
     have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
       fun a cc => vec_inj hx' (by
         show vec TF.Y.t _ xc' (ReciprocityTheory.ChartRestriction.G.Chart.tmap hx' _ _) = vec TF.Y.t _ xc' (_ ∘ ReciprocityTheory.ChartRestriction.G.Chart.tmap hx _ _)
@@ -189,7 +189,7 @@ theorem exists_eigBasis_at (TF : TorFlag Xo c) (p : TF.Y.X) :
   have hBe : ∀ τ i, Bv τ i ∈ eig c φ₀ hxK τ := fun τ i => (vec_eig_iff hxK _ _).1 (by rw [← hBv]; exact f₀.eig τ i)
   have hPK : ∀ τ i, (Pr τ).map ρ₁ *ᵥ Bv τ i = Bv τ i := fun τ i =>
     (hPr ρ₁ hxK hcK τ (Bv τ i)).2 (by rw [hρφ]; exact hBe τ i)
-  letI : Algebra c.F L := φ₀.toAlgebra
+  let : Algebra c.F L := φ₀.toAlgebra
   have hEig : ∀ z : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)), ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hxK) (embK c z.1) (Bv z.1 z.2) :=
     fun z => (ReciprocityTheory.ChartRestriction.G.Chart.mem_eigLat_iff _ _ _ _).1 (hBe z.1 z.2)
   have hblk : ∀ τ w, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hxK) (embK c τ) w →

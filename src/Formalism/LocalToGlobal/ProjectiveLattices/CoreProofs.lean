@@ -95,7 +95,7 @@ private theorem vV_mul_lemma {T : CDVR} {w x : T.Fr} (hu : valV T.V w = 1) (hx :
 
 theorem unitIndep_of (hW : WtField Xo c) (hU : IntDiagUnit Xo c) : UnitIndep Xo c := by
   intro a n f hf T io y y' t hb e
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hw := hW a n f hf T.Fr t y.1 y'.1 y.2.1 y'.2.1 hb
   have hu := valV_wchar_eq_one (ex Dw a n) t (hU T io y y' t hb)
   unfold nval evI
@@ -107,7 +107,7 @@ theorem unitIndep_of (hW : WtField Xo c) (hU : IntDiagUnit Xo c) : UnitIndep Xo 
     exact zero_ne_one hu
   by_cases hx : x = 0
   · simp [hx]
-  · rw [if_neg (mul_ne_zero hne hx), if_neg hx, vV_mul_lemma hu hx]
+  · rw [ite_eq_right (mul_ne_zero hne hx), ite_eq_right hx, vV_mul_lemma hu hx]
 
 theorem intFrNe_of (hA : AlgPtLa Xo c) (hE : IntFrExt Xo c) :
     IntFrNe Xo c (fun _ _ y => IntFr.IsAlg y) := by

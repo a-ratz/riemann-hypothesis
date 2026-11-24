@@ -68,7 +68,7 @@ theorem eq_zero_of_mem_pow_smul {V E : Type} [CommRing V] [IsLocalRing V] [IsNoe
     [AddCommGroup E] [Module V E] (N : Submodule V E) (hN : N.FG) (w : E)
     (h : ∀ n : ℕ, w ∈ maximalIdeal V ^ n • N) : w = 0 := by
   have hw : w ∈ N := Submodule.smul_le_right (h 0)
-  haveI : Module.Finite V N := Module.Finite.iff_fg.mpr hN
+  have : Module.Finite V N := Module.Finite.iff_fg.mpr hN
   have hb := Ideal.iInf_pow_smul_eq_bot_of_isLocalRing (M := N) (maximalIdeal V)
     (maximalIdeal.isMaximal V).ne_top
   have hm : (⟨w, hw⟩ : N) ∈ (⨅ n : ℕ, maximalIdeal V ^ n • ⊤ : Submodule V N) := by

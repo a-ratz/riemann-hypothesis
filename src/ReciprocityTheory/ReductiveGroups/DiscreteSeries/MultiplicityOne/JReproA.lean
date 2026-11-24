@@ -203,7 +203,7 @@ theorem rep_inv_eq_adjoint {U : Set (Matrix (Fin m) (Fin m) ℂ)} {ρ : Matrix (
   ext v
   have e1 := congrArg (fun T => T (ρ a⁻¹ v)) h1
   have e2 := congrArg (fun T => T v) h2
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at e1 e2
+  simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self] at e1 e2
   rw [← e1, e2]
 
 theorem opNorm_le_one_of_iso {T : H →L[ℂ] H} (h : ∀ v, ‖T v‖ = ‖v‖) : ‖T‖ ≤ 1 :=

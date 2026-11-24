@@ -109,7 +109,7 @@ theorem isClosedEmbedding_coe [T2Space C] [IsTopologicalSemiring C] :
         (⋂ a, ⋂ b, {u | u (a + b) = u a + u b}) ∩
         ⋂ r, {u | u (algebraMap R A r) = algebraMap R C r} := by
     ext u
-    simp only [mem_range, mem_inter_iff, mem_setOf_eq, mem_iInter]
+    simp only [mem_range, mem_inter_iff, mem_ofPred_eq, mem_iInter]
     constructor
     · rintro ⟨p, rfl⟩; simp
     · rintro ⟨⟨⟨⟨h1, h0⟩, hm⟩, ha⟩, hr⟩
@@ -190,7 +190,7 @@ theorem isClosedEmbedding_comap [T1Space C] (φ : A →ₐ[R] B) (hφ : Function
   · have : range (comap φ : (B →ₐ[R] C) → (A →ₐ[R] C)) =
         ⋂ a ∈ {a | φ a = 0}, {p | p a = 0} := by
       ext p
-      simp only [mem_range, mem_iInter, mem_setOf_eq]
+      simp only [mem_range, mem_iInter, mem_ofPred_eq]
       constructor
       · rintro ⟨q, rfl⟩ a ha; simp [ha]
       · exact exists_comap_eq_of_surjective φ hφ p

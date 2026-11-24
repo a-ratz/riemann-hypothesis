@@ -201,11 +201,11 @@ theorem UpperTheory.exists_orthogonalIdempotents_isDomain_of_etale :
     ∀ (T C : Type) [CommRing T] [IsDomain T] [CommRing C] [Algebra T C] [Algebra.Etale T C], GlobalTheory.EtC.AIC T →
       ∃ (n : ℕ) (e : Fin n → C), CompleteOrthogonalIdempotents e ∧ ∀ j, IsDomain (Localization.Away (e j)) := by
   intro T C _ _ _ _ _ hT
-  haveI := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hT
-  haveI := isIntegrallyClosed_of_AIC T hT
+  have := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hT
+  have := isIntegrallyClosed_of_AIC T hT
   let e0 := Algebra.FormallyEtale.equivPiOfIsSepClosed (FractionRing T) (FractionRing T ⊗[T] C)
-  haveI := Algebra.FormallyUnramified.finite_of_free (FractionRing T) (FractionRing T ⊗[T] C)
-  haveI : IsArtinianRing (FractionRing T ⊗[T] C) := isArtinian_of_tower (FractionRing T) inferInstance
+  have := Algebra.FormallyUnramified.finite_of_free (FractionRing T) (FractionRing T ⊗[T] C)
+  have : IsArtinianRing (FractionRing T ⊗[T] C) := isArtinian_of_tower (FractionRing T) inferInstance
   obtain ⟨n, ⟨eq⟩⟩ := Finite.exists_equiv_fin (PrimeSpectrum (FractionRing T ⊗[T] C))
   let g : C ⊗[T] FractionRing T ≃+* (Fin n → FractionRing T) :=
     ((Algebra.TensorProduct.comm T C (FractionRing T)).toRingEquiv.trans e0.toRingEquiv).trans
@@ -424,8 +424,8 @@ theorem LateralTheory.E.t_E1Cut.EqvQA_of (hAcyc : AcycQA) (hQA : QAClosed) (hH0 
   have hqJ : IsUnit (q : S ⧸ J) := by simpa using hq.map (Ideal.Quotient.mk J)
   have hSJ : QA (S ⧸ J) := (hQA S hS).2.2 J
   rcases lt_trichotomy n 0 with hn | rfl | hn
-  · haveI := (h9 (ZMod q) (tw q i)).1 (sp S) n hn
-    haveI := (h9 (ZMod q) (tw q i)).1 (sp (S ⧸ J)) n hn
+  · have := (h9 (ZMod q) (tw q i)).1 (sp S) n hn
+    have := (h9 (ZMod q) (tw q i)).1 (sp (S ⧸ J)) n hn
     exact LateralTheory.E.EqvQAPf.bij_of_sub _
   · obtain ⟨ζ⟩ := LateralTheory.E.EqvQAPf.prim_of_aic q S (hQA S hS).1 hq
     obtain ⟨e, he⟩ := hH0 h9 q i
@@ -441,8 +441,8 @@ theorem LateralTheory.E.t_E1Cut.EqvQA_of (hAcyc : AcycQA) (hQA : QAClosed) (hH0 
       exact key φ
     rw [hcomp]
     exact (e _ _).bijective.comp ((hLC S J hJ (ZMod q)).comp (e S ζ).symm.bijective)
-  · haveI := hAcyc h1 h9 hb1 hb2 q S hS hq n i hn
-    haveI := hAcyc h1 h9 hb1 hb2 q (S ⧸ J) hSJ hqJ n i hn
+  · have := hAcyc h1 h9 hb1 hb2 q S hS hq n i hn
+    have := hAcyc h1 h9 hb1 hb2 q (S ⧸ J) hSJ hqJ n i hn
     exact LateralTheory.E.EqvQAPf.bij_of_sub _
 end -- clump:auto
 end -- clump:auto
@@ -737,7 +737,7 @@ theorem glue : LateralTheory.E.FinEtSectionPf.Glue := by
     exact IsLocalization.Away.lift_eq (ε j) (hunit j) s
   refine ⟨{ E.symm.toRingHom.comp Φ with commutes' := fun s => ?_ }⟩
   simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe,
-    MonoidHom.coe_coe, RingHom.coe_comp, Function.comp_apply, hΦ]
+    MonoidHom.coe_ofClass, RingHom.coe_comp, Function.comp_apply, hΦ]
   simp
 
 theorem Glue_of (_hL : LateralTheory.E.t_E1Cut.EtLift) (_hA : LateralTheory.E.t_E1Cut.EtAIC) : LateralTheory.E.FinEtSectionPf.Glue := glue
@@ -1610,7 +1610,7 @@ namespace LateralTheory.E.StdCoverPf
 theorem mono_spMap {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B)
     [Mono (Spec.map (CommRingCat.ofHom φ))] : Mono (spMap φ) := by
   have h : Mono (yoneda.map (Spec.map (CommRingCat.ofHom φ))) := inferInstance
-  haveI : ∀ X, Mono ((spMap φ).app X) := fun _ => h
+  have : ∀ X, Mono ((spMap φ).app X) := fun _ => h
   exact NatTrans.mono_of_mono_app _
 
 abbrev Xs {S : Type} [CommRing S] (f g : S) (b : Bool) : Scheme.{0} :=

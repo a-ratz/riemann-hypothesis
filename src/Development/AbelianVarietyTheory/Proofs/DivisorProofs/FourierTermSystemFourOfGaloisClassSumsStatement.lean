@@ -135,7 +135,7 @@ theorem exists_unit (q : Ideal B) [q.IsMaximal] :
     rw [Ideal.IsPrime.inf_le' inferInstance]
     rintro ⟨g, hg1, hg2⟩
     exact (Finset.mem_filter.mp hg1).2 (smul_eq_of_smul_le hg2)
-  obtain ⟨y0, hyP, hyq⟩ := SetLike.not_le_iff_exists.mp h1
+  obtain ⟨y0, hyP, hyq⟩ := IsConcreteLE.not_le_iff_exists.mp h1
   obtain ⟨c, i, hi, hci⟩ := Ideal.IsMaximal.exists_inv (inferInstance : q.IsMaximal) hyq
   set y := c * y0 with hy
   have hyP' : ∀ g : G, g • q ≠ q → y ∈ g • q := fun g hg =>
@@ -407,9 +407,9 @@ theorem exists_approx [IsLocalRing A] [Algebra.IsInvariant A B G] (q : Ideal B) 
   set I : Ideal R := (maximalIdeal A).map (algebraMap A R) with hI
   let T : ℕ → Ideal R := fun n => satIdeal A G q (I ^ n)
   obtain ⟨u, hu, hu1, hu2⟩ := exists_unit (G := G) q
-  haveI : Algebra.IsIntegral A B := Algebra.IsInvariant.isIntegral A B G
+  have : Algebra.IsIntegral A B := Algebra.IsInvariant.isIntegral A B G
   have hcomap : q.comap (algebraMap A B) = maximalIdeal A := by
-    haveI : (q.comap (algebraMap A B)).IsMaximal :=
+    have : (q.comap (algebraMap A B)).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal q
     exact IsLocalRing.eq_maximalIdeal this
   have hm : ∀ a ∈ maximalIdeal A, algebraMap A B a ∈ q := fun a ha => by
@@ -517,10 +517,10 @@ namespace GlobalTheory.DecompFixed
 
 theorem exists_approx_integralClosure : ∀ (A K L : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsIntegrallyClosed A] [Field K] [Algebra A K] [IsFractionRing A K] [Field L] [Algebra K L] [Algebra A L] [IsScalarTower A K L] [FiniteDimensional K L] [IsGalois K L] (q : Ideal (integralClosure A L)) [q.IsMaximal] (f : integralClosure A L), (∀ σ : L ≃ₐ[K] L, (∀ x y : integralClosure A L, (y : L) = σ x → (x ∈ q ↔ y ∈ q)) → σ f = f) → ∀ e : ℕ, ∃ (a : A) (b : integralClosure A L), b ∉ q ∧ b * (f - algebraMap A _ a) ∈ (maximalIdeal A ^ e).map (algebraMap A (integralClosure A L)) := by
   intro A K L _ _ _ _ _ _ _ _ _ _ _ _ _ q _ f hf e
-  letI : SMulCommClass (L ≃ₐ[K] L) A L := ⟨fun σ a x => by
+  let : SMulCommClass (L ≃ₐ[K] L) A L := ⟨fun σ a x => by
     rw [AlgEquiv.smul_def, AlgEquiv.smul_def, Algebra.smul_def, Algebra.smul_def, map_mul,
       IsScalarTower.algebraMap_apply A K L, AlgEquiv.commutes]⟩
-  haveI : Algebra.IsInvariant A (integralClosure A L) (L ≃ₐ[K] L) := ⟨fun b hb => by
+  have : Algebra.IsInvariant A (integralClosure A L) (L ≃ₐ[K] L) := ⟨fun b hb => by
     have hL : ∀ σ : L ≃ₐ[K] L, σ (b : L) = b := fun σ => congrArg Subtype.val (hb σ)
     have hbot : (b : L) ∈ (⊥ : IntermediateField K L) := (IsGalois.mem_bot_iff_fixed _).2 hL
     obtain ⟨k, hk⟩ := IntermediateField.mem_bot.1 hbot
@@ -561,8 +561,8 @@ namespace GlobalTheory.Poinc.SFour
 theorem pow_le_map {V V' : Type} [CommRing V] [IsLocalRing V] [IsNoetherianRing V] [CommRing V'] [IsLocalRing V']
     (io : V →+* V') (hfin : io.Finite) :
     ∃ J : ℕ, ∀ j : ℕ, maximalIdeal V' ^ (J * j) ≤ (maximalIdeal V ^ j).map io := by
-  letI := io.toAlgebra
-  haveI : Module.Finite V V' := hfin
+  let := io.toAlgebra
+  have : Module.Finite V V' := hfin
   obtain ⟨E, hE⟩ := GlobalTheory.Poinc.OrbTrace.exists_pow_le (A := V) (B := V') (maximalIdeal V') (maximalIdeal.isMaximal V') 1
   have h1 : maximalIdeal V' ^ E ≤ (maximalIdeal V).map io := by
     intro x hx
@@ -614,11 +614,11 @@ theorem four_of_classSums : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : �
     simp only [map_prod, h4]
     exact OrbTrace.sum_comp_eq C hC1 hC2 hC3 ga h1 h2 h3 (fun c' => ∏ i, (f (fun u => c' (i, u)) (c i) : L))
       (fun c₁ c₂ h => Finset.prod_congr rfl fun i _ => by rw [hf _ _ _ fun u => h _])
-  haveI := hz
+  have := hz
   obtain ⟨g₀, b, hb, hbF⟩ := GlobalTheory.DecompFixed.exists_approx_integralClosure A (FractionRing A) L 𝔷 F hFix e
   refine ⟨g₀, fun y j => ?_⟩
   obtain ⟨V', _, _, io, ev', hfin, hloc, hpure, hcomm, hcomap, hcls⟩ := hy y
-  haveI : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
+  have : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
   obtain ⟨J, hJ⟩ := pow_le_map io hfin
   set j' := J * j + j with hj'
   have hjj : j ≤ j' := Nat.le_add_left _ _

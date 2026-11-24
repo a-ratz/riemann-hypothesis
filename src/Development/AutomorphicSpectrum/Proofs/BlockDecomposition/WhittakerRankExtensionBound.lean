@@ -293,8 +293,8 @@ theorem not_inf_le_of_rank_quotient_le_one {V : Type} [AddCommGroup V] [Module �
     (T A C : Submodule ℂ V) (hT : Module.rank ℂ (V ⧸ T) ≤ 1)
     (hmod : (A ⊔ C) ⊓ T ≤ A ⊓ T ⊔ C ⊓ T) (hA : ¬ A ≤ T) (hC : ¬ C ≤ T) :
     ¬ A ⊓ C ≤ T := by
-  obtain ⟨a, haA, haT⟩ := SetLike.not_le_iff_exists.mp hA
-  obtain ⟨c, hcC, hcT⟩ := SetLike.not_le_iff_exists.mp hC
+  obtain ⟨a, haA, haT⟩ := IsConcreteLE.not_le_iff_exists.mp hA
+  obtain ⟨c, hcC, hcT⟩ := IsConcreteLE.not_le_iff_exists.mp hC
   obtain ⟨v₀, hv₀⟩ := rank_le_one_iff.mp hT
   obtain ⟨s, hs⟩ := hv₀ (Submodule.Quotient.mk a)
   obtain ⟨t, ht⟩ := hv₀ (Submodule.Quotient.mk c)
@@ -359,7 +359,7 @@ theorem eq_or_eq_top_of_isIrreducible_quotient {W : Type} [AddCommGroup W] [Modu
     (σ : Representation ℂ G W) (P : Submodule ℂ W) (hP : ∀ g, P ≤ P.comap (σ g))
     (hirr : (σ.quotient P hP).IsIrreducible) (M : Submodule ℂ W)
     (hM : ∀ g, M ≤ M.comap (σ g)) (hPM : P ≤ M) : M = P ∨ M = ⊤ := by
-  haveI : IsSimpleOrder (Subrepresentation (σ.quotient P hP)) := hirr
+  have : IsSimpleOrder (Subrepresentation (σ.quotient P hP)) := hirr
   let N : Subrepresentation (σ.quotient P hP) :=
     ⟨M.map P.mkQ, by
       rintro g _ ⟨m, hm, rfl⟩
@@ -532,7 +532,7 @@ theorem sup_eq_of_isIrreducible_subQuot :
       (A B E : Subrepresentation ρ), B ≤ A → (subQuot A B).IsIrreducible → E ≤ A → ¬ E ≤ B →
       E ⊔ B = A := by
   intro G V _ _ _ ρ A B E hBA hirr hEA hEB
-  haveI : IsSimpleOrder (Subrepresentation (GlobalTheory.SmGL.subQuot A B)) := hirr
+  have : IsSimpleOrder (Subrepresentation (GlobalTheory.SmGL.subQuot A B)) := hirr
   refine le_antisymm (sup_le hEA hBA) ?_
   let P := Submodule.comap A.toSubmodule.subtype B.toSubmodule
   let S : Submodule ℂ (A.toSubmodule ⧸ P) :=
@@ -544,7 +544,7 @@ theorem sup_eq_of_isIrreducible_subQuot :
     exact Submodule.mem_map.mpr
       ⟨⟨ρ g y, A.apply_mem_toSubmodule g y.2⟩, (E ⊔ B).apply_mem_toSubmodule g (v := (y : V)) hy, rfl⟩
   let W : Subrepresentation (GlobalTheory.SmGL.subQuot A B) := ⟨S, hS⟩
-  obtain ⟨e, heE, heB⟩ := SetLike.not_le_iff_exists.mp hEB
+  obtain ⟨e, heE, heB⟩ := IsConcreteLE.not_le_iff_exists.mp hEB
   have hea : e ∈ A.toSubmodule := hEA heE
   have heEB : e ∈ (E ⊔ B).toSubmodule := (le_sup_left : E ≤ E ⊔ B) heE
   rcases IsSimpleOrder.eq_bot_or_eq_top W with hW | hW
@@ -600,7 +600,7 @@ theorem le_of_not_le_sup {V : Type} [AddCommGroup V] [Module ℂ V] (T A B : Sub
     (hT : Module.rank ℂ (V ⧸ T) ≤ 1) (hA : ¬ A ≤ B ⊔ T) : B ≤ T := by
   intro b hb
   by_contra hbT
-  obtain ⟨a, haA, haBT⟩ := SetLike.not_le_iff_exists.mp hA
+  obtain ⟨a, haA, haBT⟩ := IsConcreteLE.not_le_iff_exists.mp hA
   obtain ⟨v₀, hv₀⟩ := rank_le_one_iff.mp hT
   obtain ⟨r, hr⟩ := hv₀ (Submodule.Quotient.mk b)
   obtain ⟨s, hs⟩ := hv₀ (Submodule.Quotient.mk a)

@@ -126,7 +126,7 @@ open GroundTheory.Global in
 theorem UpperTheory.V.Kum.artFrob :
     ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)) (σ : G K Ω), IsPlaceOver A v → IsFrob (F := K) A (normV v) σ → artCl K Ω σ = primeCl v := by
   intro K Ω _ _ _ _ _ A v σ hA hσ
-  haveI := IsAlgClosure.isAlgClosed K (K := Ω)
+  have := IsAlgClosure.isAlgClosed K (K := Ω)
   obtain ⟨w, hw, hlo⟩ := place_between (L := hilbertClassField K Ω) hA
   have hf := res_frob hw hσ
   have h2 := IsArithFrobAt.arithFrobAt (𝓞 K) Gal(hilbertClassField K Ω/K) w.asIdeal

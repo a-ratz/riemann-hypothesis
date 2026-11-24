@@ -110,13 +110,13 @@ theorem enorm_poin_le (X : Data E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ)
           exact hs.congr fun γ => (hn γ).symm
       _ = ∑' γ : X.Γ, ‖P (lact γ.1 x)‖ₑ := by
           rw [ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) hs]
-          simp only [ofReal_norm_eq_enorm]
+          simp only [ofReal_norm]
   · have htop : ∑' γ : X.Γ, ‖P (lact γ.1 x)‖ₑ = ⊤ := by
       by_contra h
       apply hs
       have h2 : Summable fun γ : X.Γ => ‖P (lact γ.1 x)‖₊ := by
         rw [← ENNReal.tsum_coe_ne_top_iff_summable]
-        simpa only [enorm_eq_nnnorm] using h
+        simpa only [eNorm_eq_nnNorm] using h
       exact NNReal.summable_coe.2 h2
     rw [htop]
     exact le_top

@@ -391,7 +391,7 @@ theorem GlobalTheory.GalAut.galoisRep_definiteUnitary : GlobalTheory.Published.B
         have hs1 : (s : ℕ) + 1 ≤ t := s.isLt
         have e : GlobalTheory.GalAut.shiftF n (d i0) (kk s).2 - ((GlobalTheory.GalDef.wAt (lam (ι.toRingHom.comp τ)) (pp τ) : ℂ) +
             ((n : ℂ) - 1) / 2 - (pp τ : ℕ) - ((t : ℂ) - 1) / 2) = ((bot τ + ((s : ℕ) : ℤ) : ℤ) : ℂ) := by
-          simp only [GlobalTheory.GalAut.shiftF, kk, bot, Fin.coe_cast, Fin.val_rev, hd0]
+          simp only [GlobalTheory.GalAut.shiftF, kk, bot, Fin.val_cast, Fin.val_rev, hd0]
           rw [Nat.cast_sub hs1]
           push_cast
           ring

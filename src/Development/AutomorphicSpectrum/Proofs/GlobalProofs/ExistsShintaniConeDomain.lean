@@ -282,7 +282,7 @@ theorem exists_totPos_basis : ∀ (F : Type) [Field F] [NumberField F] [IsTotall
   intro F _ _ _ M
   classical
   obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.EmbCard.finite_and_card_realEmbeddings F
-  letI : Fintype (F →+* ℝ) := Fintype.ofFinite _
+  let : Fintype (F →+* ℝ) := Fintype.ofFinite _
   obtain ⟨ε, hε, hW⟩ := _root_.GlobalTheory.CompanionTheory.DiagDom.small_perturbation_injective_pos (κ := F →+* ℝ) M
   have hex : ∀ i : F →+* ℝ, ∃ v : F, ∀ σ : F →+* ℝ,
       |σ v - ((if σ = i then 1 else 0) + ε / 2)| < ε / 2 :=
@@ -307,7 +307,7 @@ theorem exists_totPos_basis : ∀ (F : Type) [Field F] [NumberField F] [IsTotall
     exact_mod_cast hi
   have hcardκ : Fintype.card (F →+* ℝ) = Module.finrank ℚ F := by
     rw [← Nat.card_eq_fintype_card]; exact hcard
-  haveI : Nonempty (F →+* ℝ) := by
+  have : Nonempty (F →+* ℝ) := by
     apply Fintype.card_pos_iff.mp
     rw [hcardκ]
     exact Module.finrank_pos
@@ -349,8 +349,8 @@ theorem embedding_unit_le_abs {F : Type} [Field F] [NumberField F] [IsTotallyRea
     (hu : TotPos F ((u : 𝓞 F) : F)) (hR : ∀ σ τ : F →+* ℝ, σ ((u : 𝓞 F) : F) ≤ R * τ ((u : 𝓞 F) : F))
     (σ : F →+* ℝ) : σ ((u : 𝓞 F) : F) ≤ |R| := by
   classical
-  haveI : Finite (F →+* ℝ) := Finite.of_equiv _ (realEmbeddingsEquiv F).symm
-  haveI : Fintype (F →+* ℝ) := Fintype.ofFinite _
+  have : Finite (F →+* ℝ) := Finite.of_equiv _ (realEmbeddingsEquiv F).symm
+  have : Fintype (F →+* ℝ) := Fintype.ofFinite _
   have hprod : ∏ τ : F →+* ℝ, τ ((u : 𝓞 F) : F) = 1 := by
     rw [prod_real_embeddings_eq_absNorm (u : 𝓞 F) hu, Ideal.span_singleton_eq_top.2 u.isUnit, Ideal.absNorm_top]
     simp
@@ -402,7 +402,7 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Cones
 theorem exists_pow_mem_congUnits : ∀ (F : Type) [Field F] [NumberField F] (𝔣 : Ideal (𝓞 F)), 𝔣 ≠ ⊥ →
     ∃ e : ℕ, 0 < e ∧ ∀ u : (𝓞 F)ˣ, u ^ e ∈ congUnits 𝔣 := by
   intro F _ _ 𝔣 h𝔣
-  haveI : Finite (𝓞 F ⧸ 𝔣) := Ideal.finiteQuotientOfFreeOfNeBot 𝔣 h𝔣
+  have : Finite (𝓞 F ⧸ 𝔣) := Ideal.finiteQuotientOfFreeOfNeBot 𝔣 h𝔣
   have hpos : 0 < Nat.card (𝓞 F ⧸ 𝔣)ˣ := Nat.card_pos
   refine ⟨2 * Nat.card (𝓞 F ⧸ 𝔣)ˣ, by omega, fun u => ⟨?_, fun σ => ?_⟩⟩
   · have h1 : (Units.map (Ideal.Quotient.mk 𝔣 : 𝓞 F →* 𝓞 F ⧸ 𝔣) u) ^ (2 * Nat.card (𝓞 F ⧸ 𝔣)ˣ) = 1 := by
@@ -619,12 +619,12 @@ theorem openCone_equivFin {F : Type} [Field F] [CharZero F] (s : Finset F) :
   · rintro ⟨t, ht, rfl⟩
     refine ⟨fun y => if h : y ∈ s then t (s.equivFin ⟨y, h⟩) else 1, ?_, ?_⟩
     · intro y hy
-      simp only [dif_pos hy]
+      simp only [dite_eq_left hy]
       exact ht _
     · rw [← sum_equivFin_symm s (fun y => (if h : y ∈ s then t (s.equivFin ⟨y, h⟩) else 1 : ℚ) • y)]
       refine Finset.sum_congr rfl fun i _ => ?_
       have hm : (s.equivFin.symm i : F) ∈ s := (s.equivFin.symm i).2
-      simp only [dif_pos hm, Subtype.coe_eta, Equiv.apply_symm_apply]
+      simp only [dite_eq_left hm, Subtype.coe_eta, Equiv.apply_symm_apply]
       rw [Rat.smul_def]
   · rintro ⟨t, ht, rfl⟩
     refine ⟨fun i => t (s.equivFin.symm i : F), fun i => ht _ (s.equivFin.symm i).2, ?_⟩
@@ -784,7 +784,7 @@ theorem signConst_of_nonneg (l : V →ₗ[ℚ] ℚ) (s : Finset V) (h : ∀ v �
   by_cases hz : ∀ v ∈ s, l v = 0
   · refine Or.inl ?_
     intro x hx
-    simp only [coneOn, Set.mem_setOf_eq] at hx
+    simp only [coneOn, Set.mem_ofPred_eq] at hx
     obtain ⟨t, -, rfl⟩ := hx
 
     rw [map_sum]
@@ -793,7 +793,7 @@ theorem signConst_of_nonneg (l : V →ₗ[ℚ] ℚ) (s : Finset V) (h : ∀ v �
     push_neg at hz
     obtain ⟨w, hw, hlw⟩ := hz
     intro x hx
-    simp only [coneOn, Set.mem_setOf_eq] at hx
+    simp only [coneOn, Set.mem_ofPred_eq] at hx
     obtain ⟨t, ht, rfl⟩ := hx
 
     rw [map_sum]
@@ -808,7 +808,7 @@ theorem signConst_of_nonpos (l : V →ₗ[ℚ] ℚ) (s : Finset V) (h : ∀ v �
   by_cases hz : ∀ v ∈ s, l v = 0
   · refine Or.inl ?_
     intro x hx
-    simp only [coneOn, Set.mem_setOf_eq] at hx
+    simp only [coneOn, Set.mem_ofPred_eq] at hx
     obtain ⟨t, -, rfl⟩ := hx
 
     rw [map_sum]
@@ -817,7 +817,7 @@ theorem signConst_of_nonpos (l : V →ₗ[ℚ] ℚ) (s : Finset V) (h : ∀ v �
     push_neg at hz
     obtain ⟨w, hw, hlw⟩ := hz
     intro x hx
-    simp only [coneOn, Set.mem_setOf_eq] at hx
+    simp only [coneOn, Set.mem_ofPred_eq] at hx
     obtain ⟨t, ht, rfl⟩ := hx
 
     rw [map_sum]
@@ -838,14 +838,14 @@ private theorem sum_insert_insert_ite_ite_smul [DecidableEq V] {p q : V} {X : Fi
   have hpX : p ∉ X := fun e => hp (Finset.mem_insert_of_mem e)
   have hX : ∑ i ∈ X, (if i = p then α else if i = q then β else t i) • i = ∑ i ∈ X, t i • i :=
     Finset.sum_congr rfl (fun j hj => by
-      rw [if_neg (fun e => hpX (by rw [← e]; exact hj)), if_neg (fun e => hq (by rw [← e]; exact hj))])
-  rw [Finset.sum_insert hp, Finset.sum_insert hq, if_pos rfl, if_neg hqp, if_pos rfl, hX]
+      rw [ite_eq_right (fun e => hpX (by rw [← e]; exact hj)), ite_eq_right (fun e => hq (by rw [← e]; exact hj))])
+  rw [Finset.sum_insert hp, Finset.sum_insert hq, ite_eq_left rfl, ite_eq_right hqp, ite_eq_left rfl, hX]
 
 private theorem sum_insert_ite_smul [DecidableEq V] {p : V} {X : Finset V} (hp : p ∉ X) (α : ℚ) (t : V → ℚ) :
     ∑ i ∈ insert p X, (if i = p then α else t i) • i = α • p + ∑ i ∈ X, t i • i := by
   have hX : ∑ i ∈ X, (if i = p then α else t i) • i = ∑ i ∈ X, t i • i :=
-    Finset.sum_congr rfl (fun j hj => by rw [if_neg (fun e => hp (by rw [← e]; exact hj))])
-  rw [Finset.sum_insert hp, if_pos rfl, hX]
+    Finset.sum_congr rfl (fun j hj => by rw [ite_eq_right (fun e => hp (by rw [← e]; exact hj))])
+  rw [Finset.sum_insert hp, ite_eq_left rfl, hX]
 
 private theorem pos_ite_ite_of_pos_insert_insert [DecidableEq V] {p q : V} {X : Finset V} {α β : ℚ} {t : V → ℚ}
     (hα : 0 < α) (hβ : 0 < β) (ht : ∀ j ∈ X, 0 < t j) :
@@ -887,7 +887,7 @@ private theorem exists_coords_lt_of_mem_coneOn_insert_u_c [DecidableEq V] {u w c
     (hx : x ∈ coneOn (insert u (insert c r))) :
     ∃ α β : ℚ, ∃ t : V → ℚ, 0 < α ∧ 0 < β ∧ (∀ j ∈ r, 0 < t j) ∧
       x = α • u + (β • w + ∑ j ∈ r, t j • j) ∧ β * a < α * b := by
-  simp only [coneOn, Set.mem_setOf_eq] at hx
+  simp only [coneOn, Set.mem_ofPred_eq] at hx
   obtain ⟨t, ht, rfl⟩ := hx
   have htu : 0 < t u := ht u (Finset.mem_insert_self _ _)
   have htc : 0 < t c := ht c (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
@@ -902,7 +902,7 @@ private theorem exists_coords_lt_swap_of_mem_coneOn_c_w [DecidableEq V] {u w c :
     (hx : x ∈ coneOn (insert c (insert w r))) :
     ∃ α β : ℚ, ∃ t : V → ℚ, 0 < α ∧ 0 < β ∧ (∀ j ∈ r, 0 < t j) ∧
       x = α • u + (β • w + ∑ j ∈ r, t j • j) ∧ α * b < β * a := by
-  simp only [coneOn, Set.mem_setOf_eq] at hx
+  simp only [coneOn, Set.mem_ofPred_eq] at hx
   obtain ⟨t, ht, rfl⟩ := hx
   have htc : 0 < t c := ht c (Finset.mem_insert_self _ _)
   have htw : 0 < t w := ht w (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
@@ -916,7 +916,7 @@ private theorem exists_coords_eq_of_mem_coneOn_insert_c [DecidableEq V] {u w c :
     (ha : 0 < a) (hb : 0 < b) (hcr : c ∉ r) {x : V} (hx : x ∈ coneOn (insert c r)) :
     ∃ α β : ℚ, ∃ t : V → ℚ, 0 < α ∧ 0 < β ∧ (∀ j ∈ r, 0 < t j) ∧
       x = α • u + (β • w + ∑ j ∈ r, t j • j) ∧ α * b = β * a := by
-  simp only [coneOn, Set.mem_setOf_eq] at hx
+  simp only [coneOn, Set.mem_ofPred_eq] at hx
   obtain ⟨t, ht, rfl⟩ := hx
   have htc : 0 < t c := ht c (Finset.mem_insert_self _ _)
   refine ⟨t c * a, t c * b, t, mul_pos htc ha, mul_pos htc hb,
@@ -928,7 +928,7 @@ private theorem coneOn_u_w_subset_union [DecidableEq V] {u w c : V} {r : Finset 
     (ha : 0 < a) (hb : 0 < b) (huw : u ∉ insert w r) (hwr : w ∉ r) (huc : u ∉ insert c r)
     (hcr : c ∉ r) (hcw : c ∉ insert w r) {x : V} (hx : x ∈ coneOn (insert u (insert w r))) :
     x ∈ coneOn (insert u (insert c r)) ∪ coneOn (insert c (insert w r)) ∪ coneOn (insert c r) := by
-  simp only [coneOn, Set.mem_setOf_eq] at hx
+  simp only [coneOn, Set.mem_ofPred_eq] at hx
   obtain ⟨t, ht, rfl⟩ := hx
   have htu : 0 < t u := ht u (Finset.mem_insert_self _ _)
   have htw : 0 < t w := ht w (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
@@ -942,7 +942,7 @@ private theorem coneOn_u_w_subset_union [DecidableEq V] {u w c : V} {r : Finset 
     have e : (t u - k * a) * b = t u * b - t w * a := by rw [← hk]; ring
     have hm : 0 < (t u - k * a) * b := by rw [e]; linarith
     have hku : 0 < t u - k * a := by nlinarith
-    simp only [coneOn, Set.mem_setOf_eq]
+    simp only [coneOn, Set.mem_ofPred_eq]
     refine ⟨fun i => if i = u then t u - k * a else if i = c then k else t i,
       pos_ite_ite_of_pos_insert_insert hku hk0 htr, ?_⟩
     beta_reduce
@@ -952,7 +952,7 @@ private theorem coneOn_u_w_subset_union [DecidableEq V] {u w c : V} {r : Finset 
     obtain ⟨k, hk⟩ : ∃ k : ℚ, k * a = t u := ⟨t u / a, div_mul_cancel₀ _ ha.ne'⟩
     have hk0 : 0 < k := by nlinarith
     have hkb : k * b = t w := mul_right_cancel₀ ha.ne' (by rw [h, ← hk]; ring)
-    simp only [coneOn, Set.mem_setOf_eq]
+    simp only [coneOn, Set.mem_ofPred_eq]
     refine ⟨fun i => if i = c then k else t i, pos_ite_of_pos_insert hk0 htr, ?_⟩
     beta_reduce
     rw [sum_insert_ite_smul hcr, hc, ← hk, ← hkb]
@@ -963,7 +963,7 @@ private theorem coneOn_u_w_subset_union [DecidableEq V] {u w c : V} {r : Finset 
     have e : (t w - k * b) * a = t w * a - t u * b := by rw [← hk]; ring
     have hm : 0 < (t w - k * b) * a := by rw [e]; linarith
     have hkw : 0 < t w - k * b := by nlinarith
-    simp only [coneOn, Set.mem_setOf_eq]
+    simp only [coneOn, Set.mem_ofPred_eq]
     refine ⟨fun i => if i = c then k else if i = w then t w - k * b else t i,
       pos_ite_ite_of_pos_insert_insert hk0 hkw htr, ?_⟩
     beta_reduce
@@ -976,12 +976,12 @@ theorem tile_of_card_lt [DecidableEq V] (P : ConvexCone ℚ V) (l : V →ₗ[ℚ
   have hfr : ∀ (x : V) (X : Finset V), l x = 0 →
       ((insert x X).filter (fun v => l v ≠ 0)).card = (X.filter (fun v => l v ≠ 0)).card := by
     intro x X hx
-    rw [Finset.filter_insert, if_neg (not_not.mpr hx)]
+    rw [Finset.filter_insert, ite_eq_right (not_not.mpr hx)]
   have hfi : ∀ (x : V) (X : Finset V), l x ≠ 0 → x ∉ X →
       ((insert x X).filter (fun v => l v ≠ 0)).card = (X.filter (fun v => l v ≠ 0)).card + 1 := by
     intro x X hx hxX
-    rw [Finset.filter_insert, if_pos hx, Finset.card_insert_eq_ite,
-      if_neg (fun h => hxX (Finset.mem_filter.mp h).1)]
+    rw [Finset.filter_insert, ite_eq_left hx, Finset.card_insert_eq_ite,
+      ite_eq_right (fun h => hxX (Finset.mem_filter.mp h).1)]
   induction n with
   | zero => intro s hs; exact absurd hs (Nat.not_lt_zero _)
   | succ n ih =>
@@ -1084,7 +1084,7 @@ theorem tile_of_card_lt [DecidableEq V] (P : ConvexCone ℚ V) (l : V →ₗ[ℚ
           · obtain ⟨α, β, t, h1, h2, h3, h4, -⟩ := exists_coords_eq_of_mem_coneOn_insert_c hc' ha hb hcr hx
             exact ⟨α, β, t, h1, h2, h3, h4⟩
         obtain ⟨α, β, t, h1, h2, h3, h4⟩ := key
-        simp only [coneOn, Set.mem_setOf_eq]
+        simp only [coneOn, Set.mem_ofPred_eq]
         refine ⟨fun i => if i = u then α else if i = w then β else t i, pos_ite_ite_of_pos_insert_insert h1 h2 h3, ?_⟩
         beta_reduce
         rw [sum_insert_insert_ite_ite_smul huwr hwr]
@@ -1198,9 +1198,9 @@ theorem mem_coneOn_basis [DecidableEq V] {κ : Type} [Fintype κ] (b : Module.Ba
       simp only [map_sum, map_smul, Module.Basis.repr_self, Finsupp.smul_single, smul_eq_mul, mul_one,
       Finsupp.finsetSum_apply]
       rw [Finset.sum_eq_single i]
-      · rw [Finsupp.single_apply, if_pos rfl]
+      · rw [Finsupp.single_apply, ite_eq_left rfl]
       · intro j _ hji
-        rw [Finsupp.single_apply, if_neg hji]
+        rw [Finsupp.single_apply, ite_eq_right hji]
       · intro hi
         exact absurd (Finset.mem_univ i) hi
     rw [hrep]
@@ -1209,9 +1209,9 @@ theorem mem_coneOn_basis [DecidableEq V] {κ : Type} [Fintype κ] (b : Module.Ba
     have key : ∀ i, ∑ j, b.repr (b i) j * b.repr x j = b.repr x i := by
       intro i
       rw [Module.Basis.repr_self, Finset.sum_eq_single i]
-      · rw [Finsupp.single_apply, if_pos rfl, one_mul]
+      · rw [Finsupp.single_apply, ite_eq_left rfl, one_mul]
       · intro j _ hji
-        rw [Finsupp.single_apply, if_neg (Ne.symm hji), zero_mul]
+        rw [Finsupp.single_apply, ite_eq_right (Ne.symm hji), zero_mul]
       · intro hi
         exact absurd (Finset.mem_univ i) hi
     refine ⟨fun v => ∑ j, b.repr v j * b.repr x j, ?_, ?_⟩
@@ -1289,8 +1289,8 @@ theorem bounded_ratio_on_basis_cone : ∀ (F : Type) [Field F] [NumberField F] {
     ∃ R : ℝ, 0 < R ∧ ∀ x : F, (∀ i, 0 < b.repr x i) → ∀ σ τ : F →+* ℝ, σ x ≤ R * τ x := by
   intro F _ _ κ _ b hb
   classical
-  haveI := finite_realEmbeddings F
-  haveI : Fintype (F →+* ℝ) := Fintype.ofFinite _
+  have := finite_realEmbeddings F
+  have : Fintype (F →+* ℝ) := Fintype.ofFinite _
   have hterm : ∀ (i : κ) (σ τ : F →+* ℝ), 0 < σ (b i) / τ (b i) := fun i σ τ => div_pos (hb i σ) (hb i τ)
   obtain ⟨R, hRdef⟩ : ∃ R : ℝ, R = 1 + ∑ i, ∑ σ : F →+* ℝ, ∑ τ : F →+* ℝ, σ (b i) / τ (b i) := ⟨_, rfl⟩
   have hsum : 0 ≤ ∑ i, ∑ σ : F →+* ℝ, ∑ τ : F →+* ℝ, σ (b i) / τ (b i) :=

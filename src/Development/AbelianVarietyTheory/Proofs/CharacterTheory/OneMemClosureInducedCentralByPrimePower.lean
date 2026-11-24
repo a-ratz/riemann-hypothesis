@@ -141,8 +141,8 @@ open Polynomial in
 theorem _root_.GlobalTheory.exists_induced_int_prime_to : ∀ (G : Type) [Group G] [Finite G] (x : G) (p : ℕ), p.Prime → ∃ (E : Subgroup G) (f : G → ℤ) (ι : Type) (_ : Fintype ι) (r : ι → ℂ) (lam : ι → E →* ℂˣ), (∃ l : ℕ, l.Prime ∧ ∀ y : E, ∃ j : ℕ, y ^ l ^ j ∈ Subgroup.center E) ∧ ¬ (p : ℤ) ∣ f x ∧ (∀ i, IsIntegral ℤ (r i)) ∧ ∀ g, (f g : ℂ) = ∑ i, r i * _root_.GlobalTheory.BI.ind E (fun e => (lam i e : ℂ)) g := by
   intro G _ _ x p hp
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI := Fintype.ofFinite G
+  have : Fact p.Prime := ⟨hp⟩
+  have := Fintype.ofFinite G
   obtain ⟨c, q, rfl, hcq, hco, a, hqa⟩ := exists_commute_coprime_mul_prime_power_order x hp
   set Z : Subgroup G := Subgroup.centralizer {c} with hZ
   have memZ : ∀ s : G, s ∈ Z ↔ c * s = s * c := fun s => by
@@ -410,7 +410,7 @@ theorem _root_.GlobalTheory.exists_induced_int_prime_to : ∀ (G : Type) [Group 
       refine Finset.sum_congr rfl fun s _ => ?_
       simp only [_root_.GlobalTheory.BI.ext0]
       by_cases h : s⁻¹ * g * s ∈ E
-      · simp only [dif_pos h, h, true_and]
+      · simp only [dite_eq_left h, h, true_and]
         calc _ = (Nat.card E : ℂ)⁻¹ * ∑ k : Fin o, ((ζ⁻¹ ^ (k : ℕ) : ℂˣ) : ℂ) *
               ((((powMonoidHom (k : ℕ)).comp χ) ⟨_, h⟩ : ℂˣ) : ℂ) := by
               rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun k _ => mul_left_comm _ _ _

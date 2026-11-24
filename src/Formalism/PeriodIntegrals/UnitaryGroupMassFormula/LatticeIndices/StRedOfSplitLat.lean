@@ -122,7 +122,7 @@ theorem kerBack (hJu : IsUnit J.det) : KerBack O θ s J P := by
   have lat_sub : ∀ x x', x ∈ Lat O θ J P → x' ∈ Lat O θ J P → x - x' ∈ Lat O θ J P := by
     intro x x' hx hx'
     unfold Lat at hx hx' ⊢
-    simp only [Set.mem_setOf_eq] at hx hx' ⊢
+    simp only [Set.mem_ofPred_eq] at hx hx' ⊢
     constructor
     · have e : (fun j => t1 θ ((x - x') j)) = (fun j => t1 θ (x j)) - fun j => t1 θ (x' j) := by
         funext j
@@ -136,7 +136,7 @@ theorem kerBack (hJu : IsUnit J.det) : KerBack O θ s J P := by
       exact fun i => sub_mem (hx.2 i) (hx'.2 i)
   have hy' := hy
   unfold Lat at hy'
-  simp only [Set.mem_setOf_eq] at hy'
+  simp only [Set.mem_ofPred_eq] at hy'
   have hginv : ∀ x ∈ Lat O θ J P, ((g⁻¹ : GL n T) : Matrix n n T) *ᵥ x ∈ Lat O θ J P := by
     intro x hx
     apply (hL _).mpr
@@ -211,7 +211,7 @@ theorem kerBack (hJu : IsUnit J.det) : KerBack O θ s J P := by
       have e1 := congrFun a1z j
       have e2 := congrFun a2z j
       simp only [t1, t2, Pi.zero_apply, RingHom.comp_apply, RingHom.coe_fst, RingHom.coe_snd,
-        AlgEquiv.coe_toAlgHom, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.coe_coe] at e1 e2
+        AlgEquiv.coe_toAlgHom, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.coe_ofClass] at e1 e2
       ext
       · simpa using e1
       · simpa using e2
@@ -227,7 +227,7 @@ theorem kerBack (hJu : IsUnit J.det) : KerBack O θ s J P := by
       funext j
       simp only [Pi.smul_apply, hsm2, smul_eq_mul]
     unfold Lat
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · rw [s1, Matrix.mulVec_smul, hv1, hWm, Matrix.smul_mulVec, smul_smul,
         inv_mul_cancel₀ hc0, one_smul]

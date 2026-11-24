@@ -64,7 +64,7 @@ theorem unitOn_map : ∀ (ι M : Type) [Fintype ι] [DecidableEq ι] [AddCommGro
   let K : Submodule ℂ M := U ⊓ LinearMap.ker f
   have hKU : ∀ k ∈ K, k ∈ U := fun k hk => (Submodule.mem_inf.mp hk).1
   have hKf : ∀ k ∈ K, f k = 0 := fun k hk => LinearMap.mem_ker.mp (Submodule.mem_inf.mp hk).2
-  haveI : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le (inf_le_left : K ≤ U)
+  have : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le (inf_le_left : K ≤ U)
   let n := Module.finrank ℂ K
   let b := Module.finBasis ℂ K
   let ψ : M →ₗ[ℂ] (Fin n → ℂ) := LinearMap.pi (fun i => ip (b i : M))
@@ -131,7 +131,7 @@ theorem unitOn_map : ∀ (ι M : Type) [Fintype ι] [DecidableEq ι] [AddCommGro
     have := hKf _ (hkey u hu).2
     rw [map_sub, sub_eq_zero] at this
     exact this.symm
-  haveI := hfd
+  have := hfd
   refine ⟨inferInstance, ?_, (ip.comp g).compl₂ g, ?_, ?_, ?_⟩
   · rintro a b hab _ ⟨u, hu, rfl⟩
     exact ⟨F a b u, hst a b hab u hu, hF a b hab u hu⟩

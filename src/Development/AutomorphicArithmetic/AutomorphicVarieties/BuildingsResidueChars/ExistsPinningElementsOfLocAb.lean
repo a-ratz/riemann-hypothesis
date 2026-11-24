@@ -67,7 +67,7 @@ private theorem exists_pow_l_pow_eq_one_of_mem_muG {l : ℕ} [Fact l.Prime] {G :
     rw [← QuotientGroup.eq_one_iff, QuotientGroup.mk_pow]
     exact hn
   have hker : (commutator G).topologicalClosure ≤ ψ.ker :=
-    Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker ψ)
+    Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker ψ)
       (isClosed_ker_of_adicCont ψ hψc)
   rw [← map_pow]
   exact hker h1
@@ -82,7 +82,7 @@ theorem UpperTheory.exists_pinning_elements_of_locAb :
   choose s hsI hsa using hs
   refine ⟨s, hsI, ?_⟩
   intro R _ _ _ _ hl ψ hψc hψI hψs g hg
-  haveI : CharP R l := (CharP.charP_iff_prime_eq_zero hlp).2 hl
+  have : CharP R l := (CharP.charP_iff_prime_eq_zero hlp).2 hl
   have hsk : ∀ k, ψ (s k) = 1 := fun k => hψs _ ⟨k, rfl⟩
   have hq : ∀ (N : ℕ) (u : Rˣ),
       Units.map (↑(Ideal.Quotient.mk (maximalIdeal R ^ N)) : R →* R ⧸ maximalIdeal R ^ N) u = 1 ↔
@@ -94,7 +94,7 @@ theorem UpperTheory.exists_pinning_elements_of_locAb :
   let ρN : (N : ℕ) → G →* (R ⧸ maximalIdeal R ^ N)ˣ := fun N =>
     (Units.map (↑(Ideal.Quotient.mk (maximalIdeal R ^ N)) : R →* R ⧸ maximalIdeal R ^ N)).comp ψ
   have hloc : ∀ N, IsLocallyConstant (ρN N) := fun N => (adicCont_units _ _).1 hψc N
-  haveI hfin1 : Finite (ρN 1).range := (hloc 1).range_finite.to_subtype
+  have hfin1 : Finite (ρN 1).range := (hloc 1).range_finite.to_subtype
   set M := Nat.card (ρN 1).range with hMdef
   have hM0 : M ≠ 0 := Nat.card_pos.ne'
   have hres : ∀ g, ((ψ g ^ M : Rˣ) : R) - 1 ∈ maximalIdeal R := by
@@ -129,7 +129,7 @@ theorem UpperTheory.exists_pinning_elements_of_locAb :
     exact Ideal.pow_le_pow_right (Nat.lt_pow_self hlp.one_lt).le (Ideal.pow_mem_pow hym _)
   have hK : ∀ N, A.a.ker ≤ (φN N).ker := by
     intro N
-    haveI : Finite (φN N).range := (hφloc N).range_finite.to_subtype
+    have : Finite (φN N).range := (hφloc N).range_finite.to_subtype
     have hP : IsPGroup l (φN N).range := by
       rintro ⟨x, g, rfl⟩
       exact ⟨N, Subtype.ext (hφp N g)⟩

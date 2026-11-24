@@ -103,6 +103,6 @@ theorem coeff_dg {σ : Type} (f : (σ →₀ ℕ) → K) (F : MvPolynomial σ K)
 
 theorem mem_PolK_iff {L : Type} {r : ℕ} (d : L → ℕ) (F : MvPolynomial (L × Fin r) K) :
     F ∈ PolK K r d ↔ ∀ α ∈ F.support, ∀ i, ldeg α i = d i := by
-  simp only [PolK, mem_restrictSupport_iff, Set.subset_def, Finset.mem_coe, Set.mem_setOf_eq, ldeg]
+  simp only [PolK, mem_restrictSupport_iff, Set.subset_def, Finset.mem_coe, Set.mem_ofPred_eq, ldeg]
 
 end Formalism.MainNotions.PlaneGram

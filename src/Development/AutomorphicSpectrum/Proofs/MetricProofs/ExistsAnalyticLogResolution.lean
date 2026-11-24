@@ -166,8 +166,8 @@ theorem card_le_of_smooth (σ : Type) [Fintype σ] (Ω : Type) [Field Ω] [CharZ
     · exact Algebra.subset_adjoin hx
   obtain ⟨ψ, hψ, hψu⟩ := GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Reg.exists_unique_lift σ Ω ℂ u w
     (fun g hg => by rw [haw]; exact hker g hg) 1 (by simp) (by simp) _ hS1 huS
-  letI : Algebra (Algebra.adjoin ℚ (Set.range u)) ℂ := ψ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ (Algebra.adjoin ℚ (Set.range u)) ℂ :=
+  let : Algebra (Algebra.adjoin ℚ (Set.range u)) ℂ := ψ.toRingHom.toAlgebra
+  have : IsScalarTower ℚ (Algebra.adjoin ℚ (Set.range u)) ℂ :=
     .of_algebraMap_eq fun r => (ψ.commutes r).symm
   have hfin := finrank_fibre_kaehler (Algebra.adjoin ℚ (Set.range u))
     (IntermediateField.adjoin ℚ (Set.range u)) ℂ e he
@@ -217,7 +217,7 @@ theorem exists_params_of_regular {m : ℕ} (I : Ideal (MvPolynomial (Fin m) ℂ)
         Ideal.map (algebraMap _ (locRing I t)) (ptIdeal t) := by
   classical
   have hK : I ≤ ptI t := fun h hh => mem_ptIdeal.mpr (hI h hh)
-  haveI : IsLocalRing (locR I t) := hreg.toIsLocalRing
+  have : IsLocalRing (locR I t) := hreg.toIsLocalRing
   have hmax : IsLocalRing.maximalIdeal (locRing I t) =
       Ideal.map (algebraMap _ (locRing I t)) (ptIdeal t) := max_eq_map I hK
   have hfg : (IsLocalRing.maximalIdeal (locRing I t)).FG := IsNoetherian.noetherian _

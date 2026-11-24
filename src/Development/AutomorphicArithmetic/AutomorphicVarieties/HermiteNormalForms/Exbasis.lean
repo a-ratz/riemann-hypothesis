@@ -62,7 +62,7 @@ theorem UpperTheory.V.KT.exbasis :
     rw [Subtype.range_coe, hspan]
     exact hM.ge
   let B := Module.Basis.mk hli htop
-  haveI : Fintype s := @Fintype.ofFinite s (Module.Finite.finite_basis B)
+  have : Fintype s := @Fintype.ofFinite s (Module.Finite.finite_basis B)
   have hcard : Fintype.card s = N := by
     rw [← Module.finrank_eq_card_basis B, Module.finrank_fin_fun]
   let e : Fin N ≃ s := (Fintype.equivFinOfCardEq hcard).symm
@@ -73,7 +73,7 @@ theorem UpperTheory.V.KT.exbasis :
   have hli' : LinearIndependent L (fun a => ((e a : s) : Fin N → L)) := hli.comp e e.injective
   let C : Matrix (Fin N) (Fin N) L := fun i a => ((e a : s) : Fin N → L) i
   have hC : IsUnit C := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← linearIndependent_col_iff_isUnit]
     exact hli'
   let A : Matrix (Fin N) (Fin N) (𝓞 L) := fun i a => y a i
   have hCA : C = (algebraMap (𝓞 L) L).mapMatrix A := by

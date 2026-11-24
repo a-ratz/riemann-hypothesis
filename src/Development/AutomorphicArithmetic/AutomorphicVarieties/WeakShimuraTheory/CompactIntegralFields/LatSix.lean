@@ -281,7 +281,7 @@ private theorem col0 {R : Type} [CommRing R] (n X : M4 R) (hn : IsLow n) (hu : I
 
 private theorem notTight {ι Γ R : Type} [Group Γ] [CommRing R] {P : PD ι Γ R} {w : ℤ × ℤ} (hw : w ∈ roots)
     (h : w ∉ Tight P) : (∀ g i j, wt i j = w → P.r g i j = 0) ∧ ∀ v, nCo (P.n v) w = 0 := by
-  simp only [Tight, Set.mem_setOf_eq, not_and, Ent, not_or, not_exists, not_not] at h
+  simp only [Tight, Set.mem_ofPred_eq, not_and, Ent, not_or, not_exists, not_not] at h
   obtain ⟨h1, h2⟩ := h hw
   refine ⟨fun g i j hij => ?_, h2⟩
   by_contra hne
@@ -394,9 +394,9 @@ theorem UpperTheory.V.Ws.Lat.locVanK :
       ∀ γ ∈ [D.al, D.be, D.th, D.al⁻¹, D.be⁻¹, D.th⁻¹], ∀ p ∈ D.Sb, ∀ z : D.Gp p → k, IsLocallyConstant z →
       (∀ g h : D.Gp p, z (g * h) = z g + red (γ g : c.O) * z h) → ∃ m, ∀ g : D.Gp p, z g = red (γ g : c.O) * m - m := by
   intro Ω _ _ _ l _ c D hD hP k _ red hred γ hγ p hp z hlc hco
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
   let f : ResidueField c.O →+* k := Ideal.Quotient.lift (maximalIdeal c.O) red hred
-  letI : Algebra (ResidueField c.O) k := f.toAlgebra
+  let : Algebra (ResidueField c.O) k := f.toAlgebra
   have hf : ∀ a : c.O, algebraMap (ResidueField c.O) k (residue c.O a) = red a := fun a => rfl
   have hs : ∀ (a : c.O) (x : k), red a * x = residue c.O a • x := fun a x => by
     rw [Algebra.smul_def, hf]
@@ -484,7 +484,7 @@ theorem UpperTheory.V.Ws.Lat.oddVan :
   obtain ⟨n, hn⟩ := xvanExt D hD k red hred γ hγ z hlc hco (fun A hA g hg h1 => hN g (.inl ⟨A, hA, hg, h1⟩)) fun v hv => by
     rcases Finset.mem_insert.1 hv with rfl | hv'
     · exact ⟨-m (), fun g hg => (hm () g hg).trans (by ring)⟩
-    · obtain ⟨x, hx⟩ := locVanK D hD hP k red hred γ hγ v hv' (fun g => z g) (hlc.comp_continuous continuous_subtype_val)
+    · obtain ⟨x, hx⟩ := locVanK D hD hP k red hred γ hγ v hv' (fun g => z g) (hlc.comp_continuous continuous_subtypeVal)
         fun g h => hco g h
       exact ⟨x, fun g hg => hx ⟨g, hg⟩⟩
   have hg0 : Raw.bar (D.ps i) g0 ≠ Raw.bar (D.ps j) g0 := by
@@ -924,7 +924,7 @@ theorem UpperTheory.V.Ws.h7 :
     rw [← ValuationSubring.valuation_lt_one_iff]
     exact fun h => hϖ.not_isUnit (IsLocalHom.map_nonunit _ h)
   set γ := V.valuation p with hγ
-  have hγ0 : 0 < γ := zero_lt_iff.2 (by simpa [hγ] using hp0)
+  have hγ0 : 0 < γ := pos_iff_ne_zero.2 (by simpa [hγ] using hp0)
   have hγ1 : γ < 1 := by
     rw [← hp, map_pow] at hlt
     by_contra h
@@ -1140,7 +1140,7 @@ theorem UpperTheory.V.Ws.lat :
     · refine (PD.map_ψ P' _ v i s).trans (Ideal.Quotient.eq.2 ?_)
       exact (hψ v i s).symm ▸ hN.char s hs i
     · obtain ⟨A, _, _, _, f, P₁, hf, hcont, rfl⟩ := hsm
-      haveI := hf.loc
+      have := hf.loc
       exact hcont.map ((residue 𝔞.V).comp f) fun x hx => (residue_eq_zero_iff _).2 (map_nonunit f x hx)
   have hmul : ∀ i g, (frQ D pr g0).χ i g * (frQ D pr g0).χ i.rev g = (frQ D pr g0).ν g := by
     intro i g

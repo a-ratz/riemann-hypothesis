@@ -156,7 +156,7 @@ def height (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* �
 
 theorem one_le_height (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D) (g : GA D V) :
     1 ≤ height θ V g :=
-  one_le_mul_of_one_le_of_one_le (Finset.one_le_prod' fun _ _ => le_max_left _ _)
+  one_le_mul_of_one_le_of_one_le (Finset.one_le_prod fun _ _ => le_max_left _ _)
     (one_le_finprod' fun _ => le_max_left _ _)
 
 def IsUnifModerate (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D) (e : LieInf V → GA D V)

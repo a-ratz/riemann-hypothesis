@@ -87,9 +87,9 @@ theorem isLocalization_quot :
 theorem flat_of_isLocalization_comp {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
     (M : Submonoid R) [IsLocalization M S] (g : S →+* T) (hg : (g.comp (algebraMap R S)).Flat) :
     g.Flat := by
-  letI := g.toAlgebra
-  letI : Algebra R T := (g.comp (algebraMap R S)).toAlgebra
-  haveI : IsScalarTower R S T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := g.toAlgebra
+  let : Algebra R T := (g.comp (algebraMap R S)).toAlgebra
+  have : IsScalarTower R S T := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact (Module.flat_iff_of_isLocalization S M T).mpr hg
 
 end SpecChart

@@ -141,7 +141,7 @@ theorem integral_finiteAdele_complete_separated :
     have hq : ∀ v, (t v - x N v) / (N : v.adicCompletion F) ∈ v.adicCompletionIntegers F :=
       fun v => by
         rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀]
-        exact div_le_one_of_le₀ (ht v N hN) zero_le'
+        exact div_le_one_of_le₀ (ht v N hN) zero_le
     refine ⟨⟨fun v => (t v - x N v) / (N : v.adicCompletion F),
       Filter.Eventually.of_forall hq⟩, hq, ?_⟩
     refine DFunLike.ext _ _ fun v => ?_

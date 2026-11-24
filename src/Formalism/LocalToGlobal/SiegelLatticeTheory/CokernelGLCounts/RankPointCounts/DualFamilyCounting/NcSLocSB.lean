@@ -163,7 +163,7 @@ theorem continuous_act (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R
     Continuous (fun p : HA R σ J × (Fin a → Fin n → R ⊗[F] E) => p.1 • p.2) := by
   have hmat : Continuous (fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   refine continuous_pi fun c => ?_
   show Continuous (fun p : HA R σ J × (Fin a → Fin n → R ⊗[F] E) =>
     ((HA.mat R σ J p.1 : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)).mulVec (p.2 c))
@@ -302,7 +302,7 @@ theorem exists_C (v : HeightOneSpectrum (𝓞 F)) (L : Submodule (𝓞 E) (Fin n
     { carrier := LT, smul_mem' := fun g X hX => hsmulLT g X hX }
   have : ContinuousSMul (HA (Fv F v) σ J) S :=
     ⟨continuous_induced_rng.2 ((continuous_act σ J (Fv F v)).comp
-      (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))⟩
+      (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))⟩
   have : MulAction.IsPretransitive (HA (Fv F v) σ J) S := ⟨fun x y => by
     obtain ⟨g, hg⟩ := hW x.1 x.2
     obtain ⟨h, hh⟩ := hW y.1 y.2
@@ -400,19 +400,19 @@ theorem locSB_of (hW : WittLocT) (hI : IntWittAE) : LocSB := by
   have hCo : ∀ v, IsClopen (C v) ∧ IsCompact (C v) := by
     intro v
     by_cases h : latV b v ∩ LT v = KY v
-    · simp only [C, if_pos h]
+    · simp only [C, ite_eq_left h]
       exact ⟨PI.VolStabS.PositiveNearLattice.isClopen_latV b v a n, PI.VolStabS.PositiveNearLattice.isCompact_latV b v a n⟩
-    · simp only [C, if_neg h]
+    · simp only [C, ite_eq_right h]
       exact ⟨hC'o v, hC'c v⟩
   refine ⟨_, b, C, fun v => ?_, fun v => (hCo v).1.isOpen.measurableSet, fun v => ?_, ?_⟩
   · exact ⟨(LocallyConstant.indicator (LocallyConstant.const _ (1 : ℂ)) (hCo v).1).isLocallyConstant,
       HasCompactSupport.intro' (hCo v).2 (hCo v).1.isClosed fun Y hY => Set.indicator_of_notMem hY _⟩
   · by_cases h : latV b v ∩ LT v = KY v
-    · simp only [C, if_pos h]
+    · simp only [C, ite_eq_left h]
       exact h
-    · simp only [C, if_neg h]
+    · simp only [C, ite_eq_right h]
       exact hC'eq v
   · filter_upwards [hgood] with v hv
-    simp only [C, if_pos hv]
+    simp only [C, ite_eq_left hv]
 
 end Formalism.L2.SG.Pf.NcS.LocSBPf

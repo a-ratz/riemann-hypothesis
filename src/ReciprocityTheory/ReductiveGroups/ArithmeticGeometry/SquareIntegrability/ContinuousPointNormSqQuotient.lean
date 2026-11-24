@@ -73,7 +73,7 @@ theorem lint_fd_shift {ι : Type} [Fintype ι] {κ : Type} [Finite κ]
     (b : Module.Basis κ ℝ (EuclideanSpace ℂ ι)) (F : EuclideanSpace ℂ ι → ℝ≥0∞)
     (hF : ∀ γ ∈ Submodule.span ℤ (Set.range b), ∀ x, F (x + γ) = F x) (a : EuclideanSpace ℂ ι) :
     ∫⁻ x in ZSpan.fundamentalDomain b, F (x + a) = ∫⁻ x in ZSpan.fundamentalDomain b, F x := by
-  haveI : VAddInvariantMeasure (↥(Submodule.span ℤ (Set.range b))) (EuclideanSpace ℂ ι) volume :=
+  have : VAddInvariantMeasure (↥(Submodule.span ℤ (Set.range b))) (EuclideanSpace ℂ ι) volume :=
     ⟨fun c s _ => measure_preimage_add volume (c : EuclideanSpace ℂ ι) s⟩
   have hfd := ZSpan.isAddFundamentalDomain b (volume : Measure (EuclideanSpace ℂ ι))
   have ht := hfd.preimage_of_equiv (measurePreserving_sub_right volume a).quasiMeasurePreserving
@@ -104,7 +104,7 @@ theorem num1 (n : ℕ) (x : ℝ) (hx : 2 * (n : ℝ) + 3 ≤ x) :
   have h1 : 3 / 2 * (n : ℝ) + 9 / 4 ≤ Real.pi / 4 * x := by
     nlinarith [mul_nonneg (sub_nonneg.2 hpi.le) hx0]
   have h2 : (3 : ℝ) ^ n ≤ Real.exp (3 / 2 * n) := by
-    rw [show (3 / 2 * (n : ℝ)) = n * (3 / 2) by ring, Real.exp_nat_mul]
+    rw [show (3 / 2 * (n : ℝ)) = n * (3 / 2) by ring, Real.exp_natCast_mul]
     have h3e := three_le_exp
     gcongr
   have h3 : (2 : ℝ) ≤ Real.exp (9 / 4) := by linarith [Real.add_one_le_exp (9 / 4 : ℝ)]
@@ -280,7 +280,7 @@ theorem cont_uc {ι : Type} [Fintype ι] (K : Submodule ℝ (EuclideanSpace ℂ 
   exact continuous_finsetSum _ fun k _ => (Complex.continuous_im.comp (hz k)).smul continuous_const
 
 theorem cont_jj {ι : Type} [Fintype ι] (K : Submodule ℝ (EuclideanSpace ℂ ι)) : Continuous (jj K) :=
-  continuous_subtype_val.comp (ob2 K).repr.symm.continuous
+  continuous_subtypeVal.comp (ob2 K).repr.symm.continuous
 
 def wc (X : PT E) (I : Submodule ℤ (Vsp X.dim)) (q : ℕ) (c : Qc X I) (v : Vsp X.dim) : ℝ :=
   Real.exp (-(q * Real.pi) * ‖uc (IR I) v - uQ X I c‖ ^ 2)
@@ -449,7 +449,7 @@ theorem ptwise (x : Vsp X.dim) :
   have hN0 : ∀ c, 0 ≤ N c := fun c => by positivity
   have hN2 : ∀ c, N c ^ 2 = (YB hI hP P.q).ptN2 P.q β (wmap (IR I) (x - ((Quotient.out c : X.L) : Vsp X.dim))) := by
     intro c
-    simp only [hN, GT.ptN2, mul_pow, ← Real.exp_nat_mul]
+    simp only [hN, GT.ptN2, mul_pow, ← Real.exp_natCast_mul]
     congr 2; push_cast; ring
   have hNB : ∀ c, N c ≤ B := by
     intro c
@@ -479,7 +479,7 @@ theorem ptwise (x : Vsp X.dim) :
       2 * ∑' c, w c * N c ^ 2 := by
     set E1 := Real.exp (P.q * Real.pi * ‖x‖ ^ 2 / 2)
     have hE : E1 ^ 2 * Real.exp (-(P.q * Real.pi) * ‖x‖ ^ 2) = 1 := by
-      rw [← Real.exp_nat_mul, ← Real.exp_add,
+      rw [← Real.exp_natCast_mul, ← Real.exp_add,
         show ((2 : ℕ) : ℝ) * (P.q * Real.pi * ‖x‖ ^ 2 / 2) + -(P.q * Real.pi) * ‖x‖ ^ 2 = 0 by
           push_cast; ring, Real.exp_zero]
     have hS0 : 0 ≤ ∑' c, w c * N c := tsum_nonneg fun c => mul_nonneg (hw0 c) (hN0 c)

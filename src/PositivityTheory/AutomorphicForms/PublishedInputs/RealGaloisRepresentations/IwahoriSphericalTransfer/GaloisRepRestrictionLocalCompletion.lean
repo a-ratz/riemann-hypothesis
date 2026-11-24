@@ -63,7 +63,7 @@ theorem main : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F
     fun σ z => ((hc σ (c σ)).2 rfl z).symm
   have hres : ∀ σ : Weil h, res F Ω K ((c σ : Weil h') : G K Ω) = (σ : G F Ω) :=
     fun σ => AlgEquiv.ext fun z => hcz σ z
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
 
   have hm : ∀ σ : Ine (F := F) A, ((c (ineIncl h σ) : Weil h') : G K Ω) ∈ Ine (F := K) A := fun σ => by
     rw [← deg_eq_zero_iff, hdeg, deg_ineIncl]
@@ -87,7 +87,7 @@ theorem main : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F
     rw [ContinuousAt, map_one, tendsto_subtype_rng]
     intro O' hO'
     obtain ⟨U, hU, hU1, hUO⟩ := GlobalTheory.WeilTransport.conj_nhds F Ω K Ω (RingEquiv.refl Ω) O' hO'
-    refine Filter.mem_map.2 (Filter.mem_of_superset ((hU.preimage continuous_subtype_val).mem_nhds hU1) ?_)
+    refine Filter.mem_map.2 (Filter.mem_of_superset ((hU.preimage continuous_subtypeVal).mem_nhds hU1) ?_)
     intro τ hτ
     exact hUO (τ : G F Ω) hτ ((e τ : Ine (F := K) A) : G K Ω) fun z => (hez τ z).symm
 

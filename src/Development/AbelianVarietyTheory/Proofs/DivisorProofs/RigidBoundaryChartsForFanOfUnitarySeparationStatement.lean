@@ -365,7 +365,7 @@ theorem exists_cDvr_localHom : ∀ (B : Type) [CommRing B] [IsLocalRing B] (ϖ :
     ϖ ∈ nonZeroDivisors B → CharZero (ResidueField B) → ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W)
     (_ : IsLocalRing W) (h : B →+* W), GlobalTheory.LN.CDvr W ∧ IsLocalHom h ∧ h ϖ ≠ 0 := by
   intro B _ _ ϖ hm hϖ h0
-  haveI := isPrime_powInf hm hϖ
+  have := isPrime_powInf hm hϖ
   have hp0 : Ideal.Quotient.mk (powInf ϖ) ϖ ≠ 0 := by
     rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
     intro h
@@ -404,9 +404,9 @@ theorem exists_cDvr_localHom : ∀ (B : Type) [CommRing B] [IsLocalRing B] (ϖ :
     have hx' : x' ∉ powInf ϖ := fun h => hx (Ideal.Quotient.eq_zero_iff_mem.2 h)
     obtain ⟨n, u, rfl⟩ := exists_unit_mul_pow hm x' hx'
     refine ⟨n, Units.map (Ideal.Quotient.mk (powInf ϖ)).toMonoidHom u, ?_⟩
-    simp only [map_mul, map_pow, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [map_mul, map_pow, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     ring
-  haveI : IsDiscreteValuationRing (B ⧸ powInf ϖ) :=
+  have : IsDiscreteValuationRing (B ⧸ powInf ϖ) :=
     IsDiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization ⟨_, hirr, hfac⟩
   have hle : powInf ϖ ≤ RingHom.ker (residue B) := by
     intro a ha
@@ -421,7 +421,7 @@ theorem exists_cDvr_localHom : ∀ (B : Type) [CommRing B] [IsLocalRing B] (ϖ :
   obtain ⟨W, _, _, _, g, hW, hinj, hg⟩ := GlobalTheory.LocalCompletion.exists_cDvr_embedding (B ⧸ powInf ϖ) inferInstance
     inferInstance (IsDiscreteValuationRing.ringKrullDim_eq_one _) hc0
   refine ⟨W, inferInstance, inferInstance, inferInstance, g.comp (Ideal.Quotient.mk (powInf ϖ)), hW, ?_, ?_⟩
-  · haveI := hloc; haveI := hg; infer_instance
+  · have := hloc; have := hg; infer_instance
   · intro h
     exact hp0 (hinj (by rw [map_zero]; exact h))
 
@@ -453,14 +453,14 @@ theorem isReduced_nontrivial_tensor {A k k' : Type} [CommRing A] [Field k] [Fiel
     exact hs (h ▸ (RingHom.mem_ker.mpr h0))
   let ι := Ideal.ResidueField.lift P (algebraMap A k) hk.ge (hu hk)
   let ι' := Ideal.ResidueField.lift P (algebraMap A k') hk'.ge (hu hk')
-  letI : Algebra P.ResidueField k := ι.toAlgebra
-  letI : Algebra P.ResidueField k' := ι'.toAlgebra
-  haveI : IsScalarTower A P.ResidueField k :=
+  let : Algebra P.ResidueField k := ι.toAlgebra
+  let : Algebra P.ResidueField k' := ι'.toAlgebra
+  have : IsScalarTower A P.ResidueField k :=
     .of_algebraMap_eq fun r => (Ideal.ResidueField.lift_algebraMap P _ _ _ r).symm
-  haveI : IsScalarTower A P.ResidueField k' :=
+  have : IsScalarTower A P.ResidueField k' :=
     .of_algebraMap_eq fun r => (Ideal.ResidueField.lift_algebraMap P _ _ _ r).symm
-  haveI : CharZero P.ResidueField := ⟨fun m n h => Nat.cast_injective (R := k) (by rw [← map_natCast ι, ← map_natCast ι, h])⟩
-  haveI : CompatibleSMul A P.ResidueField k k' := by
+  have : CharZero P.ResidueField := ⟨fun m n h => Nat.cast_injective (R := k) (by rw [← map_natCast ι, ← map_natCast ι, h])⟩
+  have : CompatibleSMul A P.ResidueField k k' := by
     refine ⟨fun x m n => ?_⟩
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := A ⧸ P) x
     have hβ := map_ne_zero_of_mem_nonZeroDivisors _ P.injective_algebraMap_quotient_residueField hb
@@ -491,9 +491,9 @@ theorem exists_local_pushout (A V V' : Type) [CommRing A] [CommRing V] [IsLocalR
     ∃ (B : Type) (_ : CommRing B) (_ : IsLocalRing B) (g : V →+* B) (g' : V' →+* B),
       g.comp f = g'.comp f' ∧ g.Flat ∧ (maximalIdeal V).map g = maximalIdeal B ∧
         (maximalIdeal V').map g' = maximalIdeal B := by
-  letI : Algebra A V := f.toAlgebra
-  letI : Algebra A V' := f'.toAlgebra
-  haveI : Module.Flat A V' := hf'
+  let : Algebra A V := f.toAlgebra
+  let : Algebra A V' := f'.toAlgebra
+  have : Module.Flat A V' := hf'
   set P := (maximalIdeal V).comap f with hPdef
   let C := V ⊗[A] V'
   let φ : C →ₐ[A] ResidueField V ⊗[A] ResidueField V' :=
@@ -539,9 +539,9 @@ theorem exists_local_pushout (A V V' : Type) [CommRing A] [CommRing V] [IsLocalR
     rw [RingHom.mem_ker, map_one] at h1
     exact one_ne_zero h1
   obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hne
-  haveI := hm.isPrime
+  have := hm.isPrime
   obtain ⟨q, hq, -⟩ := Ideal.exists_minimalPrimes_le hle
-  haveI : q.IsPrime := hq.1.1
+  have : q.IsPrime := hq.1.1
   let B := Localization.AtPrime q
   have hmax : Q.map (algebraMap C B) = maximalIdeal B := by
     have h1 := IsLocalization.AtPrime.radical_map_of_mem_minimalPrimes B q Q hq
@@ -819,10 +819,10 @@ theorem exists_lift (n : ℕ) : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDisc
       rw [hfg]; exact minpoly.aeval _ α
     let ψ : AdjoinRoot (f.map (residue V')) →ₐ[ResidueField V'] k'' :=
       AdjoinRoot.liftAlgHom _ (Algebra.ofId _ _) α (by rwa [Polynomial.aeval_def] at haev)
-    letI : Algebra (ResidueField (AdjoinRoot f)) k'' :=
+    let : Algebra (ResidueField (AdjoinRoot f)) k'' :=
       (ψ.toRingHom.comp (resEquiv f hf hg).toRingHom).toAlgebra
     have : Fact (Irreducible (f.map (residue V'))) := ⟨hg⟩
-    letI : Algebra (AdjoinRoot (f.map (residue V'))) k'' := ψ.toRingHom.toAlgebra
+    let : Algebra (AdjoinRoot (f.map (residue V'))) k'' := ψ.toRingHom.toAlgebra
     have : IsScalarTower (ResidueField V') (AdjoinRoot (f.map (residue V'))) k'' :=
       IsScalarTower.of_algebraMap_eq fun x => (ψ.commutes x).symm
     have hL : Module.finrank (ResidueField V') (AdjoinRoot (f.map (residue V'))) =
@@ -847,7 +847,7 @@ theorem exists_lift (n : ℕ) : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDisc
         _ ≤ _ := Nat.mul_le_mul_right _ (by omega)
     obtain ⟨V'', i1, i2, i3, i4, i5, hfin, hinj, hirr'', hloc, e2, he2⟩ :=
       ih _ hlt (AdjoinRoot f) k'' rfl
-    letI : Algebra V' V'' := ((algebraMap (AdjoinRoot f) V'').comp (algebraMap V' (AdjoinRoot f))).toAlgebra
+    let : Algebra V' V'' := ((algebraMap (AdjoinRoot f) V'').comp (algebraMap V' (AdjoinRoot f))).toAlgebra
     have : IsScalarTower V' (AdjoinRoot f) V'' := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hlc : IsLocalHom (algebraMap V' V'') := by
       change IsLocalHom ((algebraMap (AdjoinRoot f) V'').comp (algebraMap V' (AdjoinRoot f)))
@@ -989,8 +989,8 @@ theorem exists_equiv_comp_eq {X X' : Type} [AddCommGroup X] [Module O X] [Module
     [AddCommGroup X'] [Module O X'] [Module.IsTorsionFree O X'] (ρ ρ' : X →ₗ[O] X') (hρ : Function.Surjective ρ)
     (hρ' : Function.Surjective ρ') : ∃ e : X ≃ₗ[O] X, ∀ x, ρ (e x) = ρ' x := by
   classical
-  haveI : Module.Finite O X' := Module.Finite.of_surjective ρ hρ
-  haveI := GlobalTheory.ProjModFinIso.projective_of_isTorsionFree (R := O) X'
+  have : Module.Finite O X' := Module.Finite.of_surjective ρ hρ
+  have := GlobalTheory.ProjModFinIso.projective_of_isTorsionFree (R := O) X'
   obtain ⟨e₁, he₁⟩ := exists_split_ker ρ hρ
   obtain ⟨e₂, he₂⟩ := exists_split_ker ρ' hρ'
   have r1 := e₁.finrank_eq
@@ -1163,8 +1163,8 @@ theorem exists_two_traits {A : Type} [CommRing A] [CharZero k] (θ : A →+* Cha
     rw [← hgm', hm', Ideal.map_span, Set.image_singleton]
   have hl0 : IsLocalHom g0 := ((IsLocalRing.local_hom_tfae g0).out 1 3).2 hgm.le
   have hreg : ϖ ∈ nonZeroDivisors B := by
-    letI := g0.toAlgebra
-    haveI : Module.Flat V B := hg0
+    let := g0.toAlgebra
+    have : Module.Flat V B := hg0
     have ha0 : a (bdParam k m e i) ≠ 0 := by
       rw [Ne, ← map_zero a]
       exact fun h => (prime_mvX (k := k) _).ne_zero
@@ -1178,7 +1178,7 @@ theorem exists_two_traits {A : Type} [CommRing A] [CharZero k] (θ : A →+* Cha
     (RingHom.charZero_iff (ResidueField.map g0).injective).1 hch
   obtain ⟨W, _, _, _, h, hW, hloc, hϖ⟩ := _root_.GlobalTheory.PrincDvr.exists_cDvr_localHom B ϖ hB hreg hchB
   have hmem : ∀ j, bdParam k m e j ∈ maximalIdeal (ChartRing k m e) := fun j =>
-    (mem_maximalIdeal _).2 (prime_mvX (k := k) _).not_unit
+    (mem_maximalIdeal _).2 (prime_mvX (k := k) _).not_isUnit
   have hϖn : ¬ IsUnit ϖ := (mem_maximalIdeal ϖ).1 (hB ▸ Ideal.mem_span_singleton_self ϖ)
   have hdvd1 : ϖ ∣ ϖ' := Ideal.mem_span_singleton.1 (hB ▸ hB' ▸ Ideal.mem_span_singleton_self ϖ')
   have hdvd2 : ϖ' ∣ ϖ := Ideal.mem_span_singleton.1 (hB' ▸ hB ▸ Ideal.mem_span_singleton_self ϖ)
@@ -1215,7 +1215,7 @@ theorem isTorsionFree_of_free (E : Type) [Field E] [NumberField E] (X : Type) [A
   refine Module.IsTorsionFree.of_smul_eq_zero fun c x h => ?_
   by_contra hcx
   push_neg at hcx
-  obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_nonzero_dvd
+  obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero hcx.1)
   have : r • x = 0 := by
     rw [← algebraMap_smul (𝓞 E) r x, hα, mul_comm, mul_smul, h, smul_zero]
@@ -1270,9 +1270,9 @@ theorem branch_sep : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
 
   obtain ⟨hm, hs, -, -, -, -, -⟩ := hT
 
-  haveI : CharZero k := (RingHom.charZero_iff ((MvPowerSeries.constantCoeff (σ := Fin m ⊕ Fin e) (R := k)).comp
+  have : CharZero k := (RingHom.charZero_iff ((MvPowerSeries.constantCoeff (σ := Fin m ⊕ Fin e) (R := k)).comp
     C.b).injective).1 inferInstance
-  haveI : CharZero (ChartRing k m e) := (RingHom.charZero_iff
+  have : CharZero (ChartRing k m e) := (RingHom.charZero_iff
     (MvPowerSeries.C (σ := Fin m ⊕ Fin e) (R := k)).injective).1 inferInstance
   have hCN : GlobalTheory.TorRef.IsCN (ChartRing k m e) := GlobalTheory.ChartCone.isCN_chartRing k m e
   have hTI : C.P.TorsionIso := GlobalTheory.FlatTors.torsionIso_holds E H (ChartRing k m e) _
@@ -1316,7 +1316,7 @@ theorem branch_sep : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
   obtain ⟨d2⟩ := GlobalTheory.TraitOrder.comp hκ' n1 c2
   obtain ⟨x1⟩ := GlobalTheory.TraitOrder.cancel rfl m1 d1
   obtain ⟨x2⟩ := GlobalTheory.TraitOrder.cancel rfl m2 d2
-  haveI := hW.1
+  have := hW.1
   obtain ⟨ψ, -⟩ := GlobalTheory.ModelUniqueChecks.existsUnique_map W (FractionRing W) tW tW' uK x1 x2
   obtain ⟨m2'⟩ := GlobalTheory.TraitOrder.comp (Category.id_comp _) m2 ψ
 
@@ -1327,7 +1327,7 @@ theorem branch_sep : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
   obtain ⟨n4⟩ := GlobalTheory.TraitOrder.comp (GlobalTheory.Ex.UnifModel.spMap_comp (d := f.comp g') fun _ => rfl) m2' m'
 
   have hml : ∀ b, bdParam k m e b ∈ maximalIdeal (ChartRing k m e) := fun b =>
-    (mem_maximalIdeal _).2 (prime_mvX (k := k) _).not_unit
+    (mem_maximalIdeal _).2 (prime_mvX (k := k) _).not_isUnit
   have hnl : ¬ IsLocalHom (f.comp g) := fun hl =>
     (mem_maximalIdeal _).1 (hml ii') (hl.map_nonunit _ ((hgj ii' fun h => hne h.symm).map f))
   have hnl' : ¬ IsLocalHom (f.comp g') := fun hl =>
@@ -1335,10 +1335,10 @@ theorem branch_sep : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
   obtain ⟨ρ, hρs, hρ⟩ := GlobalTheory.TraitCmp.main E H _ C.t C.P hCN hTI V' hV' (f.comp g) (hf.comp hg) hnl t' n3 P'
   obtain ⟨ρ', hρs', hρ'⟩ := GlobalTheory.TraitCmp.main E H _ C.t C.P hCN hTI V' hV' (f.comp g') (hf.comp hg') hnl' t' n4 P'
 
-  haveI : Module.IsTorsionFree (𝓞 E) C.P.D.toPre.X := isTorsionFree_of_free E _
-  haveI : Module.IsTorsionFree (𝓞 E) P'.D.toPre.X := isTorsionFree_of_free E _
-  haveI : Module.Finite (𝓞 E) C.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
-  haveI := GlobalTheory.ProjModFinIso.projective_of_isTorsionFree (R := 𝓞 E) C.P.D.toPre.X
+  have : Module.IsTorsionFree (𝓞 E) C.P.D.toPre.X := isTorsionFree_of_free E _
+  have : Module.IsTorsionFree (𝓞 E) P'.D.toPre.X := isTorsionFree_of_free E _
+  have : Module.Finite (𝓞 E) C.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have := GlobalTheory.ProjModFinIso.projective_of_isTorsionFree (R := 𝓞 E) C.P.D.toPre.X
   obtain ⟨ε, hε⟩ := exists_equiv_comp_eq ρ ρ' hρs hρs'
   obtain ⟨hd, hcp, hz⟩ := hV'
   obtain ⟨be, -, hmon, -⟩ := GlobalTheory.TorRef.exists_periodForm P' hfϖ
@@ -1430,7 +1430,7 @@ theorem sncAt_of_stalkId_eq_span_prod : ∀ (Y : Scheme.{0}) [IsLocallyNoetheria
   have hga : Y.presheaf.germ V y hyV a = ∏ i ∈ T, r i := by
     simp only [a, map_prod, hgf]
   let V' : Y.affineOpens := ⟨V, hV⟩
-  haveI : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian V'
+  have : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian V'
   have hmap := WMult.stalkId_eq_map_germ I y V' hyV
   rw [hI] at hmap
 
@@ -1660,7 +1660,7 @@ theorem exists_rsp_of_isEtaleCompletion : ∀ (A : Type) [CommRing A] [IsLocalRi
       rw [bdParam, MvPowerSeries.X_def, MvPowerSeries.coeff_mul_monomial] at h
       simpa using h
     · intro j _ hj
-      rw [bdParam, MvPowerSeries.X_def, MvPowerSeries.coeff_mul_monomial, if_neg]
+      rw [bdParam, MvPowerSeries.X_def, MvPowerSeries.coeff_mul_monomial, ite_eq_right]
       simp [Finsupp.single_le_iff, Finsupp.single_apply, hj.symm]
     · simp
 
@@ -1686,7 +1686,7 @@ theorem trdeg_residueField_eq_zero {F : Type} [Field F] {X : Scheme.{0}} (f : X 
     [LocallyOfFiniteType f] (x : X) (hx : IsClosed ({x} : Set X)) :
     letI : Algebra F (X.residueField x) := (Spec.preimage (X.fromSpecResidueField x ≫ f)).hom.toAlgebra
     Algebra.trdeg F (X.residueField x) = 0 := by
-  letI : Algebra F (X.residueField x) := (Spec.preimage (X.fromSpecResidueField x ≫ f)).hom.toAlgebra
+  let : Algebra F (X.residueField x) := (Spec.preimage (X.fromSpecResidueField x ≫ f)).hom.toAlgebra
   have := isClosed_singleton_iff_isClosedImmersion.mp hx
   have h : LocallyOfFiniteType (X.fromSpecResidueField x ≫ f) := inferInstance
   rw [← Spec.map_preimage (X.fromSpecResidueField x ≫ f), HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)] at h
@@ -1702,8 +1702,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem locallyOfFiniteType (h : GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD) : LocallyOfFiniteType (π ≫ zs) := by
   obtain ⟨-, -, -, -, ⟨-, hproj, -⟩, -⟩ := h
   obtain ⟨M, i', hi', hcomp⟩ := hproj
-  haveI := hi'
-  haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
+  have := hi'
+  have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
   rw [← hcomp]
   infer_instance
 
@@ -1715,21 +1715,21 @@ theorem smooth_j (h : GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD
 
 theorem isRegularLocalRing_stalk [IsOpenImmersion j] (h : GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD)
     (hU : ∀ x : S, x ∉ Set.range j → UPre Xo c φ j BD d x) (x : S) : IsRegularLocalRing (S.presheaf.stalk x) := by
-  haveI := locallyOfFiniteType h
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have := locallyOfFiniteType h
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
   by_cases hx : x ∈ Set.range j
   · obtain ⟨z, rfl⟩ := hx
-    haveI := smooth_j h
-    haveI : Smooth (j ≫ π ≫ zs) := SmoothOfRelativeDimension.smooth Dw.dim _
-    haveI := GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth_field (j ≫ π ≫ zs) z
+    have := smooth_j h
+    have : Smooth (j ≫ π ≫ zs) := SmoothOfRelativeDimension.smooth Dw.dim _
+    have := GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth_field (j ≫ π ≫ zs) z
     exact IsRegularLocalRing.of_ringEquiv (asIso (j.stalkMap z)).commRingCatIsoToRingEquiv.symm
   · obtain ⟨k, _, m, e, C, ξ, a, -, -, rfl, hE, -⟩ := hU x hx
-    haveI : IsRegularLocalRing (ChartRing k m e) := GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin e)
+    have : IsRegularLocalRing (ChartRing k m e) := GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin e)
     exact (GlobalTheory.RegSmooth.isRegularLocalRing_of_isEtaleCompletion _ hE).1
 
 theorem smooth [IsOpenImmersion j] (h : GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD)
     (hU : ∀ x : S, x ∉ Set.range j → UPre Xo c φ j BD d x) : SmoothOfRelativeDimension Dw.dim (π ≫ zs) := by
-  haveI := locallyOfFiniteType h
+  have := locallyOfFiniteType h
   refine GlobalTheory.RegSmooth.smoothOfRelativeDimension_of_isRegularLocalRing (π ≫ zs) Dw.dim fun x hx => ⟨isRegularLocalRing_stalk h hU x, ?_⟩
   obtain ⟨a, b, ha, hb, hab⟩ := stalk_dim_add_trdeg_of_uPoinOnX h x
   have h0 := trdeg_residueField_eq_zero (π ≫ zs) x hx
@@ -1745,8 +1745,8 @@ namespace GlobalTheory.UChartSmooth
 theorem smooth_and_snc : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ {Z : Scheme.{0}} (zs : Z ⟶ Sp c.F) (i : Xo.XF c ⟶ Z) (OZ : LB Z) (N d : ℕ) (J : Z.IdealSheafData) {S : Scheme.{0}} (π : S ⟶ Z) (j : Xo.XF c ⟶ S) [IsOpenImmersion j] (BD : EffCartierData S), GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD → SepB Xo c φ j → (∀ x : S, x ∉ Set.range j → UPre Xo c φ j BD d x) → SmoothOfRelativeDimension Dw.dim (π ≫ zs) ∧ FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal j.opensRange.compl) := by
   intro E _ _ _ H Dw l Xo c φ hpq hfan hno Z zs i OZ N d J S π j _ BD h hsep hU
   refine ⟨smooth h hU, ?_⟩
-  haveI := locallyOfFiniteType h
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have := locallyOfFiniteType h
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
   intro x
   by_cases hx : x ∈ Set.range j
   · refine sncAt_of_not_mem _ x ?_ (isRegularLocalRing_stalk h hU x)
@@ -1799,7 +1799,7 @@ theorem rigidForFan_of_uStB : UStB → GlobalTheory.RigChart.RigidForFan := by
   intro hU E _ _ _ H Dw hpq φ hpol hnsi l Xo c
   obtain ⟨Z, zs, i, OZ, N, d, J, S, π, j, BD, hUP, hSep⟩ := hU E H Dw hpq φ hpol hnsi l Xo c
   obtain ⟨⟨-, -, -, -, -, hOZ, -⟩, ⟨hN, hdet⟩, -, ⟨hd, hJ, -⟩, ⟨-, -, hj, -, hji, -, hBD, -⟩, k₀, hamp⟩ := id hUP
-  haveI := hj
+  have := hj
   have hpre := GlobalTheory.T.exists_tripleChart_unitary_boundary_point Xo c φ hpq hpol hnsi zs i OZ N d J π j BD hUP hSep
   obtain ⟨Y, ε, hYj, hYs, hsab⟩ := GlobalTheory.T.unitary_compactification_isModel_of_charts Xo c φ hpq hpol hnsi zs i OZ N d J π j BD hUP hSep hpre
   obtain ⟨hsm, hsnc⟩ := GlobalTheory.T.toroidalCompactification_smooth_snc_boundary Xo c φ hpq hpol hnsi zs i OZ N d J π j BD hUP hSep hpre

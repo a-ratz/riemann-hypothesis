@@ -254,7 +254,7 @@ lemma bracket (h31 : LogBinomialProperties) (h34 : LogBinomialDeficit) (k' K : �
     · exact le_refl 0
   have halK : ∀ l, K ≤ l → al l = 0 := by
     intro l hl
-    rw [hal, if_neg (by omega)]
+    rw [hal, ite_eq_right (by omega)]
   have halL : ∀ l, lst.length ≤ l → al l = 0 := by
     intro l hl
     rw [hal]
@@ -271,7 +271,7 @@ lemma bracket (h31 : LogBinomialProperties) (h34 : LogBinomialDeficit) (k' K : �
       apply Finset.sum_congr rfl
       intro m hm
       rw [Finset.mem_filter, Finset.mem_range] at hm
-      rw [hal, if_pos hm.1]
+      rw [hal, ite_eq_left hm.1]
     have e2 : ∑ m ∈ (range K).filter (fun m => u ≤ m), al m = ∑ m ∈ Ico u (K + lst.length), al m := by
       apply Finset.sum_subset
       · intro m hm
@@ -302,7 +302,7 @@ lemma bracket (h31 : LogBinomialProperties) (h34 : LogBinomialDeficit) (k' K : �
       apply Finset.sum_congr rfl
       intro m hm
       rw [Finset.mem_range] at hm
-      rw [hal, if_pos hm]
+      rw [hal, ite_eq_left hm]
     have c2 : ∑ m ∈ range K, fT k' (al m) = ∑ m ∈ range (K + lst.length), fT k' (al m) := by
       apply Finset.sum_subset
       · intro m hm
@@ -353,7 +353,7 @@ def revW (n : ℕ) (la : ℕ → ℤ) : ℕ → ℤ := fun m => -(la (n - 1 - m)
 lemma lat_pred (q : ℕ → Bool) (B : ℕ → ℕ) {i : ℕ} (hi : 1 ≤ i) (h : q i = false) :
     lat q B (i - 1) = lat q B i := by
   obtain ⟨j, rfl⟩ : ∃ j, i = j + 1 := ⟨i - 1, by omega⟩
-  rw [lat_succ, if_neg (by simp [h]), Nat.add_sub_cancel]
+  rw [lat_succ, ite_eq_right (by simp [h]), Nat.add_sub_cancel]
 
 lemma tailPos_split (n : ℕ) (la : ℕ → ℤ) {u : ℕ} (hu : u < n) :
     tailPos n la u = max (la u) 0 + tailPos n la (u + 1) := by

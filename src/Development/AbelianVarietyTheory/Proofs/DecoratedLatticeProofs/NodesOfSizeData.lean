@@ -102,12 +102,12 @@ theorem exp_big {eps x : ℝ} (he : 0 < eps) (hx1 : 1 ≤ x) (hx : (4 + 18 / eps
   · calc 4 * Real.exp y ^ 2 * x ^ 6 ≤ Real.exp 2 * Real.exp y ^ 2 * Real.exp (Real.log x) ^ 6 := by
           rw [← ex]; gcongr
       _ = Real.exp (2 + 2 * y + 6 * Real.log x) := by
-          rw [← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]; push_cast; ring_nf
+          rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]; push_cast; ring_nf
       _ ≤ Real.exp (y ^ 3) := Real.exp_le_exp.2 (by nlinarith)
   · calc 3 * x ^ 5 ≤ Real.exp 2 * Real.exp (Real.log x) ^ 5 := by
           rw [← ex]; gcongr
       _ = Real.exp (2 + 5 * Real.log x) := by
-          rw [← Real.exp_nat_mul, ← Real.exp_add]; push_cast; ring_nf
+          rw [← Real.exp_natCast_mul, ← Real.exp_add]; push_cast; ring_nf
       _ ≤ Real.exp (y ^ 3) := Real.exp_le_exp.2 (by nlinarith)
 
 end GlobalTheory.Diag.PG.NodeParameters
@@ -224,7 +224,7 @@ theorem nodes_of_parameters : ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0
     have hwj := S.wj_ge L τ (j.1 + 1) (by omega) (by omega)
     have e : wj D (j.1 + 1) τ = (((D.hc τ).e j : ℚ) : ℝ) := by
       have : j.1 + 1 - 1 < D.R.m := by omega
-      simp only [wj, dif_pos this]
+      simp only [wj, dite_eq_left this]
       rfl
     rw [e] at hwj
     have hc := abs_le.1 (L.be_close τ j j)

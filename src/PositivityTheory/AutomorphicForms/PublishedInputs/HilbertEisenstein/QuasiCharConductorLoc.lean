@@ -114,7 +114,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 theorem dd_eq (w : HeightOneSpectrum (𝓞 F)) : dd w = differentExp w := by
   unfold dd differentExp ordI
-  rw [FractionalIdeal.count_coe]
+  rw [FractionalIdeal.count_coeIdeal]
   exact _root_.differentIdeal_ne_bot
 
 theorem continuous_loc (ω : HChar F) (w : HeightOneSpectrum (𝓞 F)) : Continuous (ω.loc w) :=

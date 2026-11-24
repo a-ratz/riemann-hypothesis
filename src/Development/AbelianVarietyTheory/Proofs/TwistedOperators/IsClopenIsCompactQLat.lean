@@ -88,18 +88,18 @@ theorem dual_ext {L : Submodule 𝒪[k] (n → k)} {f g : Module.Dual 𝓀[k] (R
 theorem finsum_split {V A : Type} [Finite V] [Zero V] [AddCommMonoid A] (F : V → A) :
     ∑ᶠ v, F v = F 0 + ∑ᶠ v : {v : V // v ≠ 0}, F v := by
   classical
-  letI := Fintype.ofFinite V
+  let := Fintype.ofFinite V
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Fintype.sum_eq_add_sum_subtype_ne F 0]
 
 theorem finsum_ofDual {A : Type} [AddCommMonoid A] (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] (F : Pair k n → A) :
     ∑ᶠ f : {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0}, F (ofDual L f) = ∑ P ∈ withLat L, F P := by
-  letI := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0}
+  let := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0}
   rw [finsum_eq_sum_of_fintype, sum_withLat]
 
 theorem card_withKer (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] : (withKer L).card = (withLat L).card := by
   obtain ⟨q⟩ : Nonempty (Unif k) := inferInstance
-  letI := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0}
-  letI := Fintype.ofFinite {x : Red L // x ≠ 0}
+  let := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0}
+  let := Fintype.ofFinite {x : Red L // x ≠ 0}
   let e : Red L ≃ₗ[𝓀[k]] Module.Dual 𝓀[k] (Red L) := LinearEquiv.ofFinrankEq _ _ Subspace.dual_finrank_eq.symm
   rw [Finset.card_eq_sum_ones, Finset.card_eq_sum_ones, sum_withKer L q, sum_withLat]
   exact Fintype.sum_equiv (e.toEquiv.subtypeEquiv fun x => by simp) _ _ fun _ => rfl
@@ -150,20 +150,20 @@ theorem exists_pull (h : ∀ z ∈ L, x₀ *ᵥ z ∈ LY) (fW : Module.Dual 𝓀
     ((mulVecLin x₀).restrictScalars 𝒪[k]).restrict h)
   have hf' : ∀ z : L, f₀ (Red.mk L z) = fW (Red.mk LY ⟨x₀ *ᵥ z, h z z.2⟩) := hf
   refine ⟨f₀, hf', fun w => ?_⟩
-  rw [finsum_eq_single _ f₀ fun f' hne => ?_, compInd, if_pos ⟨h, fun z => (hf' z).symm⟩, mul_one]
-  rw [compInd, if_neg, mul_zero]
+  rw [finsum_eq_single _ f₀ fun f' hne => ?_, compInd, ite_eq_left ⟨h, fun z => (hf' z).symm⟩, mul_one]
+  rw [compInd, ite_eq_right, mul_zero]
   rintro ⟨_, h'⟩
   exact hne (dual_ext fun z => (h' z).symm.trans (hf' z).symm)
 
 theorem compInd_of_not (h : ¬ ∀ z ∈ L, x₀ *ᵥ z ∈ LY) (f' : Module.Dual 𝓀[k] (Red L))
-    (fW : Module.Dual 𝓀[k] (Red LY)) : compInd L LY f' fW x₀ = 0 := if_neg fun h' => h h'.1
+    (fW : Module.Dual 𝓀[k] (Red LY)) : compInd L LY f' fW x₀ = 0 := ite_eq_right fun h' => h h'.1
 
 theorem latInd_eq_finsum (fW : Module.Dual 𝓀[k] (Red LY)) :
     latInd L LY x₀ = ∑ᶠ f' : Module.Dual 𝓀[k] (Red L), compInd L LY f' fW x₀ := by
   by_cases h : ∀ z ∈ L, x₀ *ᵥ z ∈ LY
   · obtain ⟨f₀, -, hf⟩ := exists_pull h fW
-    simpa [latInd, if_pos h] using (hf fun _ => 1).symm
-  · simp [compInd_of_not h, latInd, if_neg h]
+    simpa [latInd, ite_eq_left h] using (hf fun _ => 1).symm
+  · simp [compInd_of_not h, latInd, ite_eq_right h]
 
 variable (q : Unif k) (χ : AddChar 𝓀[k] ℂ) (ε : 𝓀[k]ˣ) (P : Pair k n')
 
@@ -172,14 +172,14 @@ theorem term_eq_finsum (fW : Module.Dual 𝓀[k] (Red LY)) :
       χ (-((ε : 𝓀[k]) * f' (qvec q P))) * compInd P.ker LY f' fW x₀ := by
   by_cases h : ∀ z ∈ P.ker, x₀ *ᵥ z ∈ LY
   · obtain ⟨f₀, h0, hf⟩ := exists_pull h fW
-    rw [hf fun f' => χ (-((ε : 𝓀[k]) * f' (qvec q P))), term, dif_pos h, qvec, h0]
-  · simp [compInd_of_not h, term, dif_neg h]
+    rw [hf fun f' => χ (-((ε : 𝓀[k]) * f' (qvec q P))), term, dite_eq_left h, qvec, h0]
+  · simp [compInd_of_not h, term, dite_eq_right h]
 
 theorem term_zero : term q χ ε P LY 0 = latInd P.ker LY := by
   ext x₀
   by_cases h : ∀ z ∈ P.ker, x₀ *ᵥ z ∈ LY
-  · simp [term, dif_pos h, latInd, if_pos h]
-  · simp [term, dif_neg h, latInd, if_neg h]
+  · simp [term, dite_eq_left h, latInd, ite_eq_left h]
+  · simp [term, dite_eq_right h, latInd, ite_eq_right h]
 
 variable [LY.IsFullLattice k] (fW : {f : Module.Dual 𝓀[k] (Red LY) // f ≠ 0})
 
@@ -249,7 +249,7 @@ variable {π : Representation ℂ (GL n' k) M} {θ : M →ₗ[ℂ] (Matrix n n' 
 
 theorem lift_latInd (hφ : φ ∈ Mram k n' M) (he : φ ∈ EqForm π) (hθ : IsLiftInv π θ P.ker)
     (L₁ : Submodule 𝒪[k] (n → k)) [L₁.IsFullLattice k] : θ (φ P) (latInd P.ker L₁) = 0 := by
-  letI : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
+  let : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
   let T : M →ₗ[ℂ] A := θ.flip (latInd P.ker L₁)
   have hconst (c : 𝓀[k]ˣ) : T (φ (c • P)) = T (φ P) := by
     obtain ⟨t, ht⟩ := IsLocalRing.residue_surjective ((c⁻¹ : 𝓀[k]ˣ) : 𝓀[k])
@@ -338,7 +338,7 @@ theorem isClopen_isCompact_qLat (q : Unif k) (L : Submodule 𝒪[k] (n → k)) [
   convert hK.image (f := fun z : n → k => ((q.1 : 𝒪[k]) : k) • (g.val *ᵥ z))
     ((continuous_const.matrix_mulVec continuous_id).const_smul ((q.1 : 𝒪[k]) : k)) using 1
   ext y
-  simp only [Set.mem_setOf_eq, mem_smul_iff, mem_stdLat, Set.mem_image, Set.mem_pi, Set.mem_univ, true_imp_iff,
+  simp only [Set.mem_ofPred_eq, mem_smul_iff, mem_stdLat, Set.mem_image, Set.mem_pi, Set.mem_univ, true_imp_iff,
     SetLike.mem_coe]
   constructor
   · intro h
@@ -364,19 +364,19 @@ include hψ
 open Classical in
 theorem integrable_qLat (η : n → k) :
     Integrable (fun y => (if q.inv • y ∈ L then (1 : ℂ) else 0) * (ψ (η ⬝ᵥ y) : ℂ)) μ := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   obtain ⟨h1, h2⟩ := isClopen_isCompact_qLat q L
   have h3 := ite_mem_SB h1 h2
   refine Continuous.integrable_of_hasCompactSupport (h3.1.continuous.mul ?_) h3.2.mul_right
-  exact continuous_subtype_val.comp (hψ.continuous.comp (continuous_const.dotProduct continuous_id))
+  exact continuous_subtypeVal.comp (hψ.continuous.comp (continuous_const.dotProduct continuous_id))
 
 
 open Classical in
 theorem integral_qLat (η : n → k) :
     ∫ y, (if q.inv • y ∈ L then (1 : ℂ) else 0) * (ψ (η ⬝ᵥ y) : ℂ) ∂μ =
       if InDual L (q.1 • η) then (volQ μ q L : ℂ) else 0 := by
-  haveI := secondCountable k
+  have := secondCountable k
   have hd : ∀ y : n → k, (q.1 • η) ⬝ᵥ y = η ⬝ᵥ (q.1 • y) := fun y => by rw [smul_dotProduct, dotProduct_smul]
   split_ifs with h
   · have : ∀ y, (if q.inv • y ∈ L then (1 : ℂ) else 0) * (ψ (η ⬝ᵥ y) : ℂ) =
@@ -384,9 +384,9 @@ theorem integral_qLat (η : n → k) :
       by_cases hy : q.inv • y ∈ L
       · have h1 := h _ hy
         rw [hd, q.smul_inv_smul] at h1
-        rw [if_pos hy, Set.indicator_of_mem (show y ∈ {y : n → k | q.inv • y ∈ L} from hy),
+        rw [ite_eq_left hy, Set.indicator_of_mem (show y ∈ {y : n → k | q.inv • y ∈ L} from hy),
           apply_int_eq_one hψ ⟨_, h1⟩, Circle.coe_one, mul_one]
-      · rw [if_neg hy, Set.indicator_of_notMem (show y ∉ {y : n → k | q.inv • y ∈ L} from hy), zero_mul]
+      · rw [ite_eq_right hy, Set.indicator_of_notMem (show y ∉ {y : n → k | q.inv • y ∈ L} from hy), zero_mul]
     simp only [this]
     rw [integral_indicator_const _ (isClopen_isCompact_qLat q L).1.2.measurableSet]
     simp [volQ]
@@ -400,7 +400,7 @@ theorem integral_qLat (η : n → k) :
       have := (hψ ((q.1 • η) ⬝ᵥ z)).1 fun y hy => by
         have ht : y / ((q.1 • η) ⬝ᵥ z) ∈ 𝒪[k] := by
           rw [Valuation.mem_integer_iff, map_div₀]
-          exact div_le_one_of_le₀ hy zero_le'
+          exact div_le_one_of_le₀ hy zero_le
         have h1 := hc (q.1 • (⟨_, ht⟩ : 𝒪[k]) • z) (by rw [q.inv_smul_smul]; exact L.smul_mem _ hz)
         rw [← hd, dotProduct_smul] at h1
         rwa [← div_mul_cancel₀ y h0]
@@ -424,11 +424,11 @@ theorem datumHat_eq :
       datumHat ψ ε μ q P L x₀ η = (volQ μ q L : ℂ) * ∑ᶠ fW : Module.Dual 𝓀[k] (Red L),
         term q (resChar ψ hψ q) (resUnit ε) P L fW x₀ * cosetInd q L fW η := by
   classical
-  haveI := secondCountable k
+  have := secondCountable k
   by_cases h : ∀ z ∈ P.ker, x₀ *ᵥ z ∈ L
   swap
-  · have : ∀ y, datum q P L x₀ y = 0 := fun y => if_neg fun h' => h h'.1
-    simp [datumHat, this, term, dif_neg h]
+  · have : ∀ y, datum q P L x₀ y = 0 := fun y => ite_eq_right fun h' => h h'.1
+    simp [datumHat, this, term, dite_eq_right h]
   have hψ' := hasConductor_mulShift hψ ε
   set w := x₀ *ᵥ (q.1 • P.vec) with hw
   have hF : ∀ y, datum q P L x₀ y * (ψ (((ε : 𝒪[k]) : k) * (η ⬝ᵥ y)) : ℂ) =
@@ -449,8 +449,8 @@ theorem datumHat_eq :
   simp only [cosetInd_eq]
   split_ifs with hD
   · obtain ⟨f, hf⟩ := exists_lifts hD
-    rw [finsum_eq_single _ f fun g hg => by rw [if_neg fun h' => hg (lifts_unique h' hf), mul_zero],
-      if_pos hf, mul_one, mul_comm, term, dif_pos h]
+    rw [finsum_eq_single _ f fun g hg => by rw [ite_eq_right fun h' => hg (lifts_unique h' hf), mul_zero],
+      ite_eq_left hf, mul_one, mul_comm, term, dite_eq_left h]
     obtain ⟨s, hs, e⟩ := hf ⟨w, h _ (Pair.smul_mem_ker q.mem_max P.hasVal_vec.mem)⟩
     have e' : -(((resUnit ε : 𝓀[k]ˣ) : 𝓀[k]) * residue 𝒪[k] s) = residue 𝒪[k] (-(ε * s)) := by simp [resUnit]
     have hs' : (s : k) = (q.1 : k) * (η ⬝ᵥ w) := by rw [hs, smul_dotProduct]; rfl
@@ -564,7 +564,7 @@ theorem datumHat_mul (P : Pair k n') :
       ((latInd LY L'' x' * cosetInd q LY 0 η) • latInd P.ker LY +
         ∑ Q ∈ withLat LY, phiOne Q (lastPair q L'') (withRow x' η) •
           (latInd P.ker Q.ker + mainDatum q (resChar ψ hψ q) (resUnit ε) P Q)) := by
-  letI := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red LY) // f ≠ 0}
+  let := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red LY) // f ≠ 0}
   ext x₀
   simp only [Pi.smul_apply, Pi.add_apply, Finset.sum_apply, smul_eq_mul]
   rw [(datumHat_eq q hψ μ LY ε P x₀ η).2, finsum_split, finsum_eq_sum_of_fintype, sum_withLat, term_zero,
@@ -616,7 +616,7 @@ theorem lastTwoSteps : LastTwoSteps := by
       fun ψ hψ ε L _ M _ _ φ hφ x' η => ⟨sum_main_last q LY L'' x' η _ _ L φ, fun μ _ =>
         ⟨sum_datumHat q LY L'' x' η hψ ε μ hφ,
           fun π A _ _ θ he hθ P P' hP hP' => lift_datumHat q LY L'' x' η hψ ε μ hφ he hθ hP hP'⟩⟩⟩⟩
-  haveI : L.IsFullLattice k := by
+  have : L.IsFullLattice k := by
     rcases hL with rfl | ⟨fW, rfl⟩ <;> infer_instance
   exact lift_latInd P hφ he hθ L
 

@@ -141,7 +141,7 @@ theorem mem_pts_iff (v : J → Ω) (z : J → ℂ) :
     z ∈ pts (coordIdeal ℤ v) ↔ z ≠ 0 ∧ ∀ (n : ℕ) (g : MvPolynomial J ℚ), g.IsHomogeneous n →
       aeval v g = 0 → aeval z g = 0 := by
   classical
-  simp only [pts, conePts, Set.mem_setOf_eq, coordIdeal, RingHom.mem_ker, aeval_int_eq]
+  simp only [pts, conePts, Set.mem_ofPred_eq, coordIdeal, RingHom.mem_ker, aeval_int_eq]
   refine and_congr_right fun _ => ⟨fun H n g hg hv => ?_, fun H f hf => ?_⟩
   · obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors ℤ)
       (g.support.image fun m => g.coeff m)

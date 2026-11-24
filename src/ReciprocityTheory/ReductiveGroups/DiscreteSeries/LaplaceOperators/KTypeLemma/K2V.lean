@@ -649,13 +649,13 @@ theorem vc_genV (E : Fin n → Fin n → Module.End ℂ M) (lam : Fin n → ℝ)
       ∑ d ∈ univ.filter (fun d => t < d), tensV E t d (Pi.single d φ) := by
   funext e
   rw [Pi.sub_apply, vc_eeV_single, Finset.sum_apply]
-  simp only [vc_tensV_single, Pi.add_apply, if_true, Pi.smul_apply, Pi.single_apply]
+  simp only [vc_tensV_single, Pi.add_apply, ite_true, Pi.smul_apply, Pi.single_apply]
   rw [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_const]
   rcases lt_trichotomy e t with h | rfl | h
   · simp [h.ne, hlow t e h, not_lt.mpr h.le]
   · have hc : (univ.filter fun d : Fin n => e < d).card = n - 1 - e := by
       rw [filter_lt_eq_Ioi, Fin.card_Ioi]
-    simp only [if_true, lt_irrefl, Finset.mem_filter, Finset.mem_univ, true_and, if_false, zero_add, hc, hd]
+    simp only [ite_true, lt_irrefl, Finset.mem_filter, Finset.mem_univ, true_and, ite_false, zero_add, hc, hd]
     rw [← Nat.cast_smul_eq_nsmul ℂ, ← sub_smul]
     congr 1
     have he : 1 + (e : ℕ) ≤ n := by have := e.isLt; omega
@@ -671,13 +671,13 @@ theorem vc_genVd (E : Fin n → Fin n → Module.End ℂ M) (lam : Fin n → ℝ
       -∑ d ∈ univ.filter (fun d => d < t), tensVd E d t (Pi.single d φ) := by
   funext e
   rw [Pi.sub_apply, vc_eeVd_single, Pi.neg_apply, Finset.sum_apply]
-  simp only [vc_tensVd_single, Pi.sub_apply, if_true, Pi.smul_apply, Pi.single_apply]
+  simp only [vc_tensVd_single, Pi.sub_apply, ite_true, Pi.smul_apply, Pi.single_apply]
   rw [Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_const]
   rcases lt_trichotomy e t with h | rfl | h
   · simp [h.ne, h]
   · have hc : (univ.filter fun d : Fin n => d < e).card = e := by
       rw [filter_gt_eq_Iio, Fin.card_Iio]
-    simp only [if_true, lt_irrefl, Finset.mem_filter, Finset.mem_univ, true_and, if_false, zero_sub, hc, hd,
+    simp only [ite_true, lt_irrefl, Finset.mem_filter, Finset.mem_univ, true_and, ite_false, zero_sub, hc, hd,
       neg_neg]
     rw [← Nat.cast_smul_eq_nsmul ℂ, ← neg_smul, ← sub_smul]
     congr 1
@@ -1108,7 +1108,7 @@ theorem vk_stepV (E : Fin n → Fin n → Module.End ℂ M) (lam : Fin n → ℝ
     have h1 : ∀ d ∈ Ioi c, E c d ((Pi.single d φ : Fin n → M) c) = 0 := fun d hd => by
       rw [Pi.single_eq_of_ne (ne_of_lt (mem_Ioi.1 hd)), map_zero]
     rw [Finset.sum_eq_zero h1, hdiag]
-    simp only [Pi.single_eq_same, if_true, Finset.sum_const, Fin.card_Ioi, zero_add]
+    simp only [Pi.single_eq_same, ite_true, Finset.sum_const, Fin.card_Ioi, zero_add]
     rw [← Nat.cast_smul_eq_nsmul ℂ, ← sub_smul]
     congr 1
     have := vk_natCast_Ioi c
@@ -1139,7 +1139,7 @@ theorem vk_stepVd (E : Fin n → Fin n → Module.End ℂ M) (lam : Fin n → �
     have h1 : ∀ d ∈ Iio c, E d c ((Pi.single d φ : Fin n → M) c) = 0 := fun d hd => by
       rw [Pi.single_eq_of_ne (ne_of_gt (mem_Iio.1 hd)), map_zero]
     rw [Finset.sum_eq_zero h1, hdiag]
-    simp only [Pi.single_eq_same, if_true, Finset.sum_const, Fin.card_Iio, zero_sub, neg_neg]
+    simp only [Pi.single_eq_same, ite_true, Finset.sum_const, Fin.card_Iio, zero_sub, neg_neg]
     rw [← Nat.cast_smul_eq_nsmul ℂ, ← neg_smul, ← sub_smul]
     congr 1
     simp only [rho, thVd]
@@ -1495,7 +1495,7 @@ theorem k2V (n : ℕ) : EigenspaceWeightConeStandard n := by
   have hU := isInfUnitary_of_isDerivedOn hσ hD
   have hU' : ∀ a b, ε a = ε b → ∀ x y : D, ⟪E a b x, y⟫_ℂ = ⟪x, E b a y⟫_ℂ := by
     intro a b hab x y
-    rw [hU a b x y, adjSign, if_pos hab, one_mul]
+    rw [hU a b x y, adjSign, ite_eq_left hab, one_mul]
   have hℓ : ∀ (a : Fin n) (v w : V), (w : D) = E a a v →
       submoduleEvaluationFunctional V (ι.symm T.w) w = ((lowK ε lam a : ℝ) : ℂ) * submoduleEvaluationFunctional V (ι.symm T.w) v := by
     intro a v w hw

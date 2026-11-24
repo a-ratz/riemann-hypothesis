@@ -86,7 +86,7 @@ variable {K : Type} [Field K] [Valued K (WithZero (Multiplicative ℤ))]
 
 theorem le_exp_neg_one_of_lt {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
   by_cases h0 : x = 0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   rw [← WithZero.exp_log h0] at hx ⊢
   rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
   exact WithZero.exp_le_exp.2 (by omega)
@@ -299,7 +299,7 @@ theorem approx_class (v : HeightOneSpectrum (𝓞 L⁺)) :
   classical
   refine ⟨fun y => if h : Valued.v y ≤ 1 then Ideal.Quotient.mk _ (adic_exists_approx v y h).choose else 0, ?_⟩
   intro y y' hy hy' hc
-  simp only [dif_pos hy, dif_pos hy'] at hc
+  simp only [dite_eq_left hy, dite_eq_left hy'] at hc
   have ha := (adic_exists_approx v y hy).choose_spec
   have ha' := (adic_exists_approx v y' hy').choose_spec
   set a := (adic_exists_approx v y hy).choose
@@ -323,7 +323,7 @@ theorem finite_image_tSet : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
   intro L _ _ _ n J χ B hJ s ϖ k hB hϖ
   classical
   obtain ⟨c, hc⟩ := approx_class s.v
-  haveI : Finite (𝓞 (maximalRealSubfield L) ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
+  have : Finite (𝓞 (maximalRealSubfield L) ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
   let κ : Formalism.AUTREP.GAf L n → (Fin n → Fin n → 𝓞 (maximalRealSubfield L) ⧸ s.v.asIdeal) := fun x =>
     if h : x ∈ Formalism.AUTREP.tSet L n s ϖ k then
       fun i j => c (((h.2.choose : GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) :
@@ -332,7 +332,7 @@ theorem finite_image_tSet : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
   have key : ∀ x ∈ Formalism.AUTREP.tSet L n s ϖ k, ∀ x' ∈ Formalism.AUTREP.tSet L n s ϖ k, κ x = κ x' →
       (x : Formalism.AUTREP.GAf L n ⧸ J) = x' := by
     intro x hx x' hx' hκ
-    simp only [κ, dif_pos hx, dif_pos hx'] at hκ
+    simp only [κ, dite_eq_left hx, dite_eq_left hx'] at hκ
     obtain ⟨ha, b, hb, hg⟩ := hx.2.choose_spec
     obtain ⟨ha', b', hb', hg'⟩ := hx'.2.choose_spec
     set a := hx.2.choose
@@ -366,7 +366,7 @@ theorem finite_image_tSet : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
   rintro _ ⟨x, hx, rfl⟩ _ ⟨x', hx', rfl⟩ hgg
   have h : ∃ y ∈ Formalism.AUTREP.tSet L n s ϖ k, (y : Formalism.AUTREP.GAf L n ⧸ J) = x := ⟨x, hx, rfl⟩
   have h' : ∃ y ∈ Formalism.AUTREP.tSet L n s ϖ k, (y : Formalism.AUTREP.GAf L n ⧸ J) = x' := ⟨x', hx', rfl⟩
-  simp only [g, dif_pos h, dif_pos h'] at hgg
+  simp only [g, dite_eq_left h, dite_eq_left h'] at hgg
   show (x : Formalism.AUTREP.GAf L n ⧸ J) = x'
   rw [← h.choose_spec.2, ← h'.choose_spec.2]
   exact key _ h.choose_spec.1 _ h'.choose_spec.1 hgg

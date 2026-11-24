@@ -69,7 +69,7 @@ theorem sigRLin_eq (x : R ⊗[F] E) : sigRLin R σ x = sigR R σ x := by
 variable [IsTopologicalRing (R ⊗[F] E)]
 
 theorem continuous_sigR : Continuous (sigR R σ) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   have hc : Continuous (sigRLin R σ) := IsModuleTopology.continuous_of_linearMap _
   have he : (sigR R σ : R ⊗[F] E → R ⊗[F] E) = sigRLin R σ :=
     funext fun x => (sigRLin_eq R σ x).symm
@@ -88,7 +88,7 @@ theorem continuous_linear_action {X : Type} [TopologicalSpace X] {g : X → HA R
     Continuous fun x => lin R σ J (g x) (v x) := by
   have hm : Continuous fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   unfold lin
   simp only [Matrix.mulVecLin_apply]
   exact (hm.comp hg).matrix_mulVec hv

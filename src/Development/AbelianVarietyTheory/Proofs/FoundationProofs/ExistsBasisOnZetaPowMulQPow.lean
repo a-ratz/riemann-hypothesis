@@ -152,7 +152,7 @@ theorem exists_basis [Nontrivial R] (hf : f.Monic) (d : ℕ) (hd : f.natDegree =
     intro i
     simp only [b₁, Module.Basis.reindex_apply, PowerBasis.coe_basis]
     rfl
-  haveI : Nontrivial (AdjoinRoot f) := nontrivial_of_ne _ _ (b₁.ne_zero ⟨0, hd0⟩)
+  have : Nontrivial (AdjoinRoot f) := nontrivial_of_ne _ _ (b₁.ne_zero ⟨0, hd0⟩)
   have hg : (topPoly f m c).Monic := monic_X_pow_sub_C _ hm
   have hgd : (topPoly f m c).natDegree = m := natDegree_X_pow_sub_C _
   let b₂ : Module.Basis (Fin m) (AdjoinRoot f) (AdjoinRoot (topPoly f m c)) :=
@@ -173,7 +173,7 @@ theorem on_free (p : ℕ) [hp : Fact p.Prime] (n : ℕ) :
     ∃ b : Module.Basis (Fin (Nat.totient (p ^ n)) × Fin (p ^ n)) (O0 p) (On p n),
       ∀ i j, b (i, j) = xn p n ^ (i : ℕ) * yn p n ^ (j : ℕ) := by
   rcases subsingleton_or_nontrivial (O0 p) with h | h
-  · haveI : Subsingleton (On p n) := Module.subsingleton (O0 p) _
+  · have : Subsingleton (On p n) := Module.subsingleton (O0 p) _
     exact ⟨Module.Basis.ofRepr (LinearEquiv.ofSubsingleton _ _), fun _ _ => Subsingleton.elim _ _⟩
   · have hpos : 0 < p ^ n := pow_pos hp.out.pos n
     exact exists_basis (cyclotomic (p ^ n) (O0 p)) (p ^ n) (qO p) (cyclotomic.monic _ _) _

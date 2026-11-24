@@ -151,7 +151,7 @@ theorem exists_iota (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver 
     · rw [map_form h, show (G g.1.1).map (piInf (τ w)) = _ from hG _ w]
       exact hK w _ (congrFun (show star g.1.1 * K * g.1.1 = K from g.2) w)
   refine ⟨((Units.map G).comp (SG K).subtype).codRestrict _ hGU,
-    ((Continuous.units_map G hGc).comp continuous_subtype_val).subtype_mk _, fun g u hu => ?_, fun g w => hG _ w⟩
+    ((Continuous.units_map G hGc).comp continuous_subtypeVal).subtype_mk _, fun g u hu => ?_, fun g w => hG _ w⟩
   show u • (1 + L (g.1.1 - 1) - 1) = 0
   rw [add_sub_cancel_left, hL _ u hu]
 
@@ -186,8 +186,8 @@ theorem IsD.comm {D} (hD : IsD d D) {u v : Matrix α β (AE F E)} (hu : At (evI 
     D u (D v f) = D v (D u f) + (2 * π * I * sB σ JA JB u v) • f := by
   obtain ⟨n, ⟨c⟩⟩ := exists_co F κ
   have := congrArg (fun L => c.P (L (c.P' f))) (dRho_comm (c.vec (d.e u)) (c.vec (d.e v)))
-  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.one_apply, map_sub, map_smul, hD.P c hu, hD.P c hv, c.P_P', sympl_e] at this
+  simp only [sub_apply, mul_apply_eq_comp, smul_apply,
+    one_apply_eq_self, map_sub, map_smul, hD.P c hu, hD.P c hv, c.P_P', sympl_e] at this
   rw [← this]
   abel
 

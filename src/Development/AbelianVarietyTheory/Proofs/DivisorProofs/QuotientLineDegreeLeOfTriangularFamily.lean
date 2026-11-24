@@ -119,7 +119,7 @@ theorem symMat_diag {R : Type} [CommRing R] (m : ℕ) (A : Matrix (Fin 2) (Fin 2
 
 theorem det_symMat_of_upper {R : Type} [CommRing R] (m : ℕ) (A : Matrix (Fin 2) (Fin 2) R) (h : A 1 0 = 0) :
     (symMat m A).det = A.det ^ (m * (m + 1) / 2) := by
-  rw [Matrix.det_of_upperTriangular (symMat_upperTriangular m A)]
+  rw [Matrix.det_of_isUpperTriangular (symMat_upperTriangular m A)]
   simp only [symMat_diag]
   rw [Matrix.det_fin_two, h, mul_zero, sub_zero]
   rw [Fin.prod_univ_eq_prod_range (fun i => A 1 1 ^ i * A 0 0 ^ (m - i)) (m + 1), Finset.prod_mul_distrib,
@@ -198,8 +198,8 @@ theorem admissible_degree_twistFamilyAtPlaceByScalar (k F : Type) [Field k] [Fie
     intro v
     by_cases hv : v = v₀
     · subst hv
-      rw [twistAt_self, Matrix.det_smul, Fintype.card_fin, if_pos rfl]
-    · rw [twistAt_of_ne _ _ _ _ hv, if_neg hv, one_mul]
+      rw [twistAt_self, Matrix.det_smul, Fintype.card_fin, ite_eq_left rfl]
+    · rw [twistAt_of_ne _ _ _ _ hv, ite_eq_right hv, one_mul]
   have hord : ∀ v, ord v (twistAt v₀ (π ^ (-e)) h v).det =
       ord v (h v).det - if v = v₀ then (n : ℤ) * e else 0 := by
     intro v
@@ -222,8 +222,8 @@ theorem admissible_degree_twistFamilyAtPlaceByScalar (k F : Type) [Field k] [Fie
     have hfin' : (Function.support fun v : Place k F => if v = v₀ then (n : ℤ) * e else 0).Finite :=
       (Set.finite_singleton v₀).subset fun v hv => by
         by_contra h'
-        exact hv (if_neg h')
-    rw [deg, deg, finsum_congr hord, finsum_sub_distrib hfin hfin', finsum_eq_single _ v₀ fun v hv => if_neg hv, if_pos rfl]
+        exact hv (ite_eq_right h')
+    rw [deg, deg, finsum_congr hord, finsum_sub_distrib hfin hfin', finsum_eq_single _ v₀ fun v hv => ite_eq_right hv, ite_eq_left rfl]
 
 end GlobalTheory.Nef
 end -- clump:auto
@@ -287,7 +287,7 @@ theorem binary_form_splits : ∀ (F : Type) [Field F] (m : ℕ) (p : Fin (m + 1)
     rw [Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hj (Fin.ext h.symm)
     · simp
   have hq0 : q ≠ 0 := by
@@ -712,7 +712,7 @@ theorem val_aeval_le (t : F) (p : k[X]) (v : Place k F) :
     · simp [h]
     · exact (v.2.2 _ h).le
   calc v.1 (algebraMap k F (p.coeff i)) * v.1 t ^ i ≤ 1 * Mx t v ^ i :=
-        mul_le_mul' hc (pow_le_pow_left₀ zero_le' (le_max_right _ _) i)
+        mul_le_mul' hc (pow_le_pow_left₀ zero_le (le_max_right _ _) i)
     _ = Mx t v ^ i := one_mul _
     _ ≤ Mx t v ^ p.natDegree := pow_le_pow_right₀ (one_le_Mx t v) hi'
 
@@ -871,7 +871,7 @@ theorem exists_many_bounded_by_pow : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
     rw [hsm, map_mul, map_pow]
     have ha : (a : ℕ) + c ≤ N := by have := a.2; omega
     calc v.1 t ^ (a : ℕ) * v.1 (aeval t (q j) * b j) ≤ Mx t v ^ (a : ℕ) * Mx t v ^ c :=
-          mul_le_mul' (pow_le_pow_left₀ zero_le' (le_max_right _ _) _)
+          mul_le_mul' (pow_le_pow_left₀ zero_le (le_max_right _ _) _)
             ((hcj j v).trans (pow_le_pow_right₀ (one_le_Mx t v) (Finset.le_sup (Finset.mem_univ j))))
       _ = Mx t v ^ ((a : ℕ) + c) := (pow_add _ _ _).symm
       _ ≤ max 1 (v.1 t) ^ N := pow_le_pow_right₀ (one_le_Mx t v) ha
@@ -984,7 +984,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
     fun v => (_root_.GlobalTheory.Nef.place_isDVR_residue k F hFF v).2 t
   obtain ⟨r, hr⟩ : ∃ r : Place k F → k, ∀ v : Place k F, v.1 t ≤ 1 → v.1 (t - algebraMap k F (r v)) < 1 :=
     ⟨fun v => if h : v.1 t ≤ 1 then (hres v h).choose else 0, fun v h => by
-      simp only [dif_pos h]; exact (hres v h).choose_spec⟩
+      simp only [dite_eq_left h]; exact (hres v h).choose_spec⟩
   have hlin0 : ∀ a : k, t - algebraMap k F a ≠ 0 := fun a h =>
     ht (sub_eq_zero.1 h ▸ isAlgebraic_algebraMap a)
   obtain ⟨M, hM⟩ : ∃ M : ℕ, M = ∑ v ∈ D.support, (D v).natAbs := ⟨_, rfl⟩
@@ -1019,7 +1019,7 @@ theorem riemann_cofinal : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k
   have hgfin : (Function.support g).Finite := by
     refine (hPfin.union hhfin).subset fun v hv => ?_
     by_contra hnot
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hnot
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hnot
     apply hv
     have h1 : P v = 0 := by
       by_contra h'; exact hnot.1 (hPsupp h')
@@ -1139,7 +1139,7 @@ variable {k F : Type} [Field k] [Field F] [Algebra k F]
 theorem val_le_exp_of_ord (v : Place k F) (x : F) (d : ℤ) (hd : 0 ≤ d) (h : -d ≤ ord v x) :
     v.1 x ≤ WithZero.exp d := by
   by_cases hx : v.1 x = 0
-  · rw [hx]; exact zero_le'
+  · rw [hx]; exact zero_le
   · rw [← WithZero.exp_log hx, WithZero.exp_le_exp]
     unfold ord at h; omega
 
@@ -1171,7 +1171,7 @@ theorem exists_exp_bound (v : Place k F) {n : ℕ} (M : Matrix (Fin n) (Fin n) F
   refine ⟨Finset.univ.sup fun ij : Fin n × Fin n => (WithZero.log (v.1 (M ij.1 ij.2))).toNat,
     fun i j => ?_⟩
   by_cases hx : v.1 (M i j) = 0
-  · rw [hx]; exact zero_le'
+  · rw [hx]; exact zero_le
   · rw [← WithZero.exp_log hx, WithZero.exp_le_exp]
     have := Finset.le_sup (f := fun ij : Fin n × Fin n => (WithZero.log (v.1 (M ij.1 ij.2))).toNat)
       (Finset.mem_univ (i, j))
@@ -1187,7 +1187,7 @@ theorem exists_section_of_large_deg : ∀ (k F : Type) [Field k] [IsAlgClosed k]
   set B := hg.2.toFinset with hBdef
   choose d0 hd0 using fun v => exists_exp_bound v (g v)⁻¹
   let D : Place k F →₀ ℤ := Finsupp.onFinset B (fun v => if v ∈ B then (d0 v : ℤ) else 0)
-    (by intro v hv; by_contra h; exact hv (if_neg h))
+    (by intro v hv; by_contra h; exact hv (ite_eq_right h))
   obtain ⟨D', hDD', m, f, hf, hm, hford⟩ := hγ D
   have hD0 : ∀ v, 0 ≤ D' v := fun v => le_trans
     (by simp only [D, Finsupp.onFinset_apply]; split_ifs <;> omega) (hDD' v)
@@ -1219,7 +1219,7 @@ theorem exists_section_of_large_deg : ∀ (k F : Type) [Field k] [IsAlgClosed k]
     apply finsum_eq_sum_of_support_subset
     intro v hv
     rw [Finset.coe_union]; left
-    simp only [B, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [B, Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro hU; apply hv
     simp [ord, hU.2]
   have hNsum : ((∑ v ∈ S, N v : ℕ) : ℤ) < n * m := by
@@ -1287,7 +1287,7 @@ theorem coeff_max_mul_linear {F Γ : Type} [Field F] [LinearOrderedCommGroupWith
       · rw [map_mul]; exact mul_le_mul' (le_max_right _ _) (h1 _)
   refine ⟨hle, ?_⟩
   by_cases hz : max (v α) (v β) * N = 0
-  · exact ⟨0, le_antisymm (hle 0) (hz ▸ zero_le')⟩
+  · exact ⟨0, le_antisymm (hle 0) (hz ▸ zero_le)⟩
   have hM : max (v α) (v β) ≠ 0 := left_ne_zero_of_mul hz
   have hN : N ≠ 0 := right_ne_zero_of_mul hz
   rcases le_or_gt (v β) (v α) with h | h
@@ -1303,14 +1303,14 @@ theorem coeff_max_mul_linear {F Γ : Type} [Field F] [LinearOrderedCommGroupWith
       rw [cs, v.map_add_eq_of_lt_left, map_mul, hs]
       rw [map_mul, map_mul, hs]
       calc v β * v (p.coeff i) ≤ v α * v (p.coeff i) := mul_le_mul' h le_rfl
-        _ < v α * N := mul_lt_mul_of_pos_left hlt (zero_lt_iff.2 hM)
+        _ < v α * N := mul_lt_mul_of_pos_left hlt (pos_iff_ne_zero.2 hM)
   · rw [max_eq_right h.le]
     obtain ⟨i, hi⟩ := h2
     refine ⟨i + 1, ?_⟩
     rw [cs, v.map_add_eq_of_lt_right, map_mul, hi]
     rw [map_mul, map_mul, hi]
     calc v α * v (p.coeff (i + 1)) ≤ v α * N := mul_le_mul' le_rfl (h1 _)
-      _ < v β * N := mul_lt_mul_of_pos_right h (zero_lt_iff.2 hN)
+      _ < v β * N := mul_lt_mul_of_pos_right h (pos_iff_ne_zero.2 hN)
 
 
 open Polynomial in
@@ -1342,7 +1342,7 @@ theorem nrm_coeff_prod_linear : ∀ (k F : Type) [Field k] [Field F] [Algebra k 
       v.1 ((∏ j, (Polynomial.C (α j) + Polynomial.C (β j) * Polynomial.X)).coeff a))
       (Finset.mem_univ (⟨i, him⟩ : Fin (m + 1)))
   · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega), map_zero]
-    exact zero_le'
+    exact zero_le
 
 end GlobalTheory.Nef
 end -- clump:auto
@@ -1379,7 +1379,7 @@ theorem ordVec_symMat_mulVec_triangular : ∀ (k E : Type) [Field k] [Field E] [
     simp only [hfac, coeff_C_mul]
   have hsup : ∀ (n : ℕ) (x : Fin n → E), nrm P (fun a => c * x a) = P.1 c * nrm P x := by
     intro n x
-    have h := Finset.comp_sup_eq_sup_comp (s := Finset.univ) (f := fun a => P.1 (x a)) (fun y => P.1 c * y)
+    have h := Finset.apply_sup_eq_sup_comp (s := Finset.univ) (f := fun a => P.1 (x a)) (fun y => P.1 c * y)
       (fun a b => by
         rcases le_total a b with h | h
         · rw [sup_eq_right.2 h, sup_eq_right.2 (mul_le_mul' le_rfl h)]
@@ -1406,7 +1406,7 @@ theorem ordVec_symMat_mulVec_triangular : ∀ (k E : Type) [Field k] [Field E] [
     have h1 : P.1 (A.mulVec ![s j, t j] i) ≤ nrm P (A.mulVec ![s j, t j]) :=
       Finset.le_sup (f := fun i => P.1 (A.mulVec ![s j, t j] i)) (Finset.mem_univ i)
     rw [h0] at h1
-    exact (Valuation.ne_zero_iff _).2 hi (le_antisymm h1 zero_le')
+    exact (Valuation.ne_zero_iff _).2 hi (le_antisymm h1 zero_le)
   have hPc : P.1 c ≠ 0 := (Valuation.ne_zero_iff _).2 hc
   have hlogprod : ∀ S : Finset (Fin m), WithZero.log (∏ j ∈ S, nrm P (A.mulVec ![s j, t j])) =
       ∑ j ∈ S, WithZero.log (nrm P (A.mulVec ![s j, t j])) := by
@@ -1584,8 +1584,8 @@ theorem GlobalTheory.Nef.deg_le_two_mul_of_triangular : ∀ (k F : Type) [Field 
     obtain ⟨p, hp0, hpint⟩ := hγ (m + 1) _ hTadm hdegT
     have hep : e ≤ degLine S p := _root_.GlobalTheory.Nef.degLine_ge_of_twist k F hFF (m + 1) S hSadm v₀ π hπ0 hπ e p hp0 hpint
     obtain ⟨E, _, _, _, c, s, t, hc, hst, hid⟩ := _root_.GlobalTheory.Nef.binary_form_splits F m p hp0
-    letI : Algebra k E := ((algebraMap F E).comp (algebraMap k F)).toAlgebra
-    haveI : IsScalarTower k F E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra k E := ((algebraMap F E).comp (algebraMap k F)).toAlgebra
+    have : IsScalarTower k F E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     obtain ⟨ρ, hρ⟩ := (_root_.GlobalTheory.Nef.place_res_exists_pow k F E).1
     have hEFF : IsFF k E := (_root_.GlobalTheory.Nef.isFF_main k F hFF).2 E
     have pS := _root_.GlobalTheory.Nef.PullAd.adm_pullAd_and_deg_mul_finrank k F E hFF ρ hρ (m + 1) S hSadm
@@ -1685,7 +1685,7 @@ theorem nrm_two (v : Place k K) (x y : K) : nrm v ![x, y] = max (v.1 x) (v.1 y) 
   have h1 := nrm_cons v x ![y]
   have h2 := nrm_cons v y ![]
   have h3 : nrm v (![] : Fin 0 → K) = 0 := by simp [nrm]
-  rw [h3, max_eq_left (zero_le' )] at h2
+  rw [h3, max_eq_left (zero_le )] at h2
   exact h1.trans (by rw [← h2]; rfl)
 
 theorem quot_line_le : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k] [Field F] [Algebra k F], IsFF k F →
@@ -1705,7 +1705,7 @@ theorem quot_line_le : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     refine ⟨fun v => by simp [ha1def, ha0 v], (hg.2.union hh.2).subset ?_⟩
     intro v hv
     by_contra hno
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hno
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hno
     have h1 := hcF v hno.1 hno.2
     apply hv
     refine ⟨fun i j => ?_, ?_⟩
@@ -1746,7 +1746,7 @@ theorem quot_line_le : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     refine ((hGa.2.union hQa.2).union (hfinQm.union (Set.finite_iUnion hmfin))).subset ?_
     intro p hp
     by_contra hno
-    simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_exists, not_not] at hno
+    simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion, not_or, not_exists, not_not] at hno
     obtain ⟨⟨hGu, hQu⟩, hn1, hmj⟩ := hno
     apply hp
     have hc1 : p.1 (G p 0 0) = 1 := hcE p hGu hQu
@@ -1814,7 +1814,7 @@ theorem quot_line_le : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k] [
     refine (hGa.2.union hQa.2).subset ?_
     intro p hp
     by_contra hno
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hno
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hno
     apply hp
     simp [ord, hcE p hno.1 hno.2]
   have hs2 : (Function.support fun p : Place k E => ordVec p (Q p *ᵥ m)).Finite := by

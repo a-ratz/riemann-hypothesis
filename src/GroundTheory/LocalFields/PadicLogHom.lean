@@ -514,7 +514,7 @@ theorem continuous_padicLog : Continuous (padicLog K) := by
       mul_neg, mul_one]
   have hcont : Continuous fun u : Additive (unitFiltrationUnits K 1) ↦
       ((Additive.toMul u : unitFiltrationUnits K 1) : Kˣ).val :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_toMul)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_toMul)
   have hopen := (isOpen_setOf_valuation_sub_le (a := (1 : K))
     (pow_ne_zero r (valuation_uniformizer_ne_zero hϖ))).preimage hcont
   filter_upwards [hopen.mem_nhds (by simp)] with u hu

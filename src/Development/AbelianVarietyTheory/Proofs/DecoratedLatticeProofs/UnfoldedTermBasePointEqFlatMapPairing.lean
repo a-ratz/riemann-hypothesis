@@ -92,7 +92,7 @@ theorem continuous_psiUni {ψ : AddChar (AF D.host.F) ℂ} (hψ : Continuous ψ)
     Continuous fun u : UX D ρ => psiUni ψ u.1 := by
   have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
-  have hc : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtype_val
+  have hc : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtypeVal
   have hu : Continuous fun u : UX D ρ => upSum (u.1.1 : Mx D ρ ρ) := by
     unfold upSum
     refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
@@ -117,7 +117,7 @@ theorem integral_swap_of_majorant {α β : Type} [MeasurableSpace α] [Measurabl
   have e2 : (fun v => ∫ u, K u v ∂ν) = fun v => ∫ u in t, K u v ∂ν := funext fun v =>
     (setIntegral_eq_integral_of_ae_compl_eq_zero (hz.mono fun u hu hut => hu hut v)).symm
   rw [e1, e2]
-  haveI := hσ
+  have := hσ
   refine integral_integral_swap ?_
   refine Integrable.mono' ((hM.restrict (s := t)).mul_prod (integrable_const C)) hK.aestronglyMeasurable ?_
   exact Filter.Eventually.of_forall fun p => hb p.1 p.2
@@ -181,7 +181,7 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
       evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 Ψ (x0 B ⬝ p.1.1.1) 0 ((B.o.resT J.W₀).symm (0, p.2)) := by
     have hmc := (GlobalTheory.T.weilMixedCoordinates_continuous_bounded_supNorm D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil Ψ hΨ).2
     have hc : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L => (p.1.1.1 : Mx D (σ + 1) (σ + 1)) :=
-      (Units.continuous_val.comp continuous_subtype_val).comp continuous_fst
+      (Units.continuous_val.comp continuous_subtypeVal).comp continuous_fst
     have hin : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L =>
         ((1 : GA D J.W × GA D B.V), x0 B ⬝ p.1.1.1, (0 : Mx D J.W₀.rank σ), (B.o.resT J.W₀).symm (0, p.2)) :=
       continuous_const.prodMk ((continuous_const.matrix_mul hc).prodMk (continuous_const.prodMk
@@ -192,7 +192,7 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
       flatFun ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (x0 B) 0 Ψ ((B.o.resT J.W₀).symm (0, v)) u * star (y v)) :=
     ((continuous_star.comp ((continuous_psiUni hchar.1 (σ + 1)).comp continuous_fst)).mul hE).mul
       (continuous_star.comp (hy.2.comp continuous_snd))
-  haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) := isFiniteMeasure_restrict.2 (by rw [vL.covol.2.2]; simp)
+  have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) := isFiniteMeasure_restrict.2 (by rw [vL.covol.2.2]; simp)
   have hswap := integral_swap_of_majorant s.vU.ν (vL.μ.restrict vL.𝓕) (fun u v =>
       flatFun ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (x0 B) 0 Ψ ((B.o.resT J.W₀).symm (0, v)) u * star (y v))
     hK.stronglyMeasurable M hMi My hbound
@@ -219,16 +219,16 @@ theorem fl_base_eq_tFlat : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : �
   unfold fl
   calc ‖∫ u, ∫ b in vb.𝓕, flFun ψ J.d B.V s.vS (th J ψ B y) (x0 B) Ψ u b ∂vb.μ ∂s.vU.ν‖ₑ
       ≤ ∫⁻ u, ‖∫ b in vb.𝓕, flFun ψ J.d B.V s.vS (th J ψ B y) (x0 B) Ψ u b ∂vb.μ‖ₑ ∂s.vU.ν :=
-        enorm_integral_le_lintegral_enorm _
+        eNorm_integral_le_lintegral_eNorm _
     _ ≤ ∫⁻ u, ∫⁻ b in vb.𝓕, ‖flFun ψ J.d B.V s.vS (th J ψ B y) (x0 B) Ψ u b‖ₑ ∂vb.μ ∂s.vU.ν :=
-        lintegral_mono fun u => enorm_integral_le_lintegral_enorm _
+        lintegral_mono fun u => eNorm_integral_le_lintegral_eNorm _
     _ ≤ ∫⁻ u, ∫⁻ b in vb.𝓕, ENNReal.ofReal Mb *
           ‖J.d.mixS B.V ψ s.vS.μ s.vS.𝓕 Ψ (x0 B ⬝ u.1.1) (x0 B ⬝ b)‖ₑ ∂vb.μ ∂s.vU.ν := by
         refine lintegral_mono fun u => lintegral_mono fun b => ?_
         simp only [flFun]
-        rw [enorm_mul]
+        rw [eNorm_mul]
         gcongr
-        · rw [hlaw b u.1 u.2, ← ofReal_norm_eq_enorm, norm_mul, norm_star, norm_star, hnorm u, one_mul]
+        · rw [hlaw b u.1 u.2, ← ofReal_norm, norm_mul, norm_star, norm_star, hnorm u, one_mul]
           exact ENNReal.ofReal_le_ofReal (hMb' _)
         · simp only [I195MixedCoordinates_f1b992d3c44b213cc9f27f15.source, HypDec.mixS,
             HypDec.extX, HypDec.extY, HypDec.ext0, AddMonoidHom.coe_mk, ZeroHom.coe_mk, le_refl]

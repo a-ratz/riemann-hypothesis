@@ -370,7 +370,7 @@ theorem alg_im_ne (v : InfinitePlace I.F) : (I.φ v (beta I)).im ≠ 0 := by
       rw [NumberField.ComplexEmbedding.conjugate_coe_eq]
       exact Complex.conj_eq_iff_im.mpr (hall e))
   have hw : (NumberField.InfinitePlace.mk (I.φ v)).IsReal := ⟨I.φ v, hreal, rfl⟩
-  haveI := I.cm.cmUnram.1
+  have := I.cm.cmUnram.1
   exact NumberField.InfinitePlace.not_isReal_iff_isComplex.mpr
     (NumberField.IsTotallyComplex.isComplex _) hw
 
@@ -694,7 +694,7 @@ theorem isOpen_tauCInt (c : ℕ) (hc : 1 ≤ c) : IsOpen {y : TT I | tauF I y �
 
   let H : AddSubgroup (TT I) := (top_CIntSub I c).comap (tauF I).toAddMonoidHom
   have hO : IsOpen {y : TT I | ∀ i, (top_eq I y i).2 ∈ top_cO I.F c} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i =>
       (top_isOpen_cO I.F c hc).preimage (continuous_snd.comp (top_cont_coord I i))
   have hsub : {y : TT I | ∀ i, (top_eq I y i).2 ∈ top_cO I.F c} ⊆ (H : Set (TT I)) := by
@@ -996,7 +996,7 @@ def matHom : HAd I →* GL (Fin I.n) (TT I) :=
 
 theorem matHom_apply (h : HAd I) : ((matHom I h : GL (Fin I.n) (TT I)) : Matrix _ _ _) = hmat I h := rfl
 
-theorem continuous_matHom : Continuous (matHom I) := continuous_subtype_val
+theorem continuous_matHom : Continuous (matHom I) := continuous_subtypeVal
 
 def Pu (v : InfinitePlace I.F) : GL (Fin I.n) ℂ := (I.P_unit v).unit
 
@@ -1258,10 +1258,10 @@ theorem continuous_FmF : Continuous (FmF I) := by
     {h | ∀ i j, tauF I ((hmat I h⁻¹ - 1) i j) ∈ CInt I (g * mm I ^ 2)}
   have hV : IsOpen V := by
     apply IsOpen.inter
-    · simp only [Set.setOf_forall]
+    · simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         (isOpen_tauCInt I _ hmm).preimage (hent i j)
-    · simp only [Set.setOf_forall]
+    · simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         (isOpen_tauCInt I _ hmm).preimage ((hent i j).comp continuous_inv)
   have hone : hmat I 1 - 1 = 0 := by
@@ -1343,13 +1343,13 @@ theorem continuousAt_entry (i j : Fin I.n) :
     intro v
     simp_rw [hθ]
     have hu : Continuous fun x : I.GA => uMat (x.1 v) :=
-      (Units.continuous_val.comp continuous_subtype_val).comp ((continuous_apply v).comp continuous_fst)
+      (Units.continuous_val.comp continuous_subtypeVal).comp ((continuous_apply v).comp continuous_fst)
     exact (((continuous_const.mul hu).mul continuous_const).sub continuous_const).matrix_elem i j
   let V : Set I.GA := {x | ∀ v, ‖thetaV I v ((hmat I ((FmEquiv I).symm x) - 1) i j)‖ < δ} ∩
     {x | x.2 ∈ KgS I (c * mm I ^ 2)}
   have hV : IsOpen V := by
     apply IsOpen.inter
-    · simp only [Set.setOf_forall]
+    · simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun v => isOpen_lt (hcontv v).norm continuous_const
     · exact (I.topf_open _ hmm).preimage continuous_snd
   have h1V : (1 : I.GA) ∈ V := by

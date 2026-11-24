@@ -81,7 +81,7 @@ theorem densV_of (hT : TensAll) (hNA : TensNA) (hLC : DensVLC) : DensV := by
   have : LocallyCompactSpace (HermR (Fv F v) σ a) :=
     t4.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   exact (densAll_iff _ _ _ _ _).2 (densApprox_lc μv _ _ νv _ t7
     (hNA F E σ hCM M J hJ ha hc a h1 h2 X0 hT0 hdet v)
     (hLC F E σ hCM M J hJ ha hc a h1 h2 X0 hT0 hdet ψ hψ v μv hμ νv hν))
@@ -230,7 +230,7 @@ theorem densVLC_of_lat (hT : TensAll) (hC : DensVLat) : DensVLC := by
   have : T2Space (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
     inferInstanceAs (T2Space (Fin a → Fin a → Fv F v ⊗[F] E))
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   exact densLC_of_cosB _ _ (isCOBasis_latSub (Module.finBasis F E) v a M)
     (hC F E σ hCM M J hJ ha hc a h1 h2 X0 hT0 hdet ψ hψ v μv hμ νv hν _ (Module.finBasis F E))
 

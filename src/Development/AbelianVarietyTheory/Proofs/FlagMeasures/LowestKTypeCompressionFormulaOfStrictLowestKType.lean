@@ -234,15 +234,15 @@ theorem psi_near_one {lam : Fin n → ℝ} (hlam : IsHCParam lam) {w : S} {τ : 
 
 theorem formulaGap : StrictLow → FormulaGap := by
   intro hSL n ε lam H _ _ σ hlam hσ h hgap hh w hw X hX u hu v hv
-  haveI := hσ.1
+  have := hσ.1
   have hU := hσ.2.2.1
   have hS := (hSL n ε lam hlam H σ hσ).1
   obtain ⟨V, E, hD, hSV⟩ := GlobalTheory.DerEx.exists_isDer_lowKSub n ε lam H σ hU hS
   have han := _root_.GlobalTheory.Jet.Anal.lowK_analytic n ε H σ V E lam hU hD hS hSV u hu X hX.1
   obtain ⟨hw1, hwS, hwt⟩ := hw
   generalize lowKSub ε lam σ = S at *
-  haveI := hS.1
-  haveI := FiniteDimensional.complete ℂ S
+  have := hS.1
+  have := FiniteDimensional.completeSpace ℂ S
   obtain ⟨τ, hτ, hτσ⟩ := TauExt.tauExists n ε _ H σ S ⟨w, hwS⟩ (URep_K hU) hS hw1 hwt
   have hw0 : (⟨w, hSV hwS⟩ : V) ≠ 0 := fun h0 => by
     have : w = 0 := congrArg Subtype.val h0
@@ -329,7 +329,7 @@ open GlobalTheory.Jet.FormGap GlobalTheory.Dec.FormF GlobalTheory.Dec.PsiEig Fil
 
 theorem formulaGap : FormulaGap := by
   intro n ε lam H _ _ σ hlam hσ h hgap hh w hw X hX u hu v hv
-  haveI := hσ.1
+  have := hσ.1
   have hU := hσ.2.2.1
   obtain ⟨g₀, hg1, hg2⟩ := exists_gap hlam hgap hh
   have hS := GlobalTheory.Jet.MultGap.isKTypeOf_lowKSub n ε lam H σ hlam hσ fun a b hab => by
@@ -342,8 +342,8 @@ theorem formulaGap : FormulaGap := by
   have han := GlobalTheory.Jet.Anal.lowK_analytic n ε H σ V E lam hU hD hS hSV u hu X hX.1
   obtain ⟨hw1, hwS, hwt⟩ := hw
   generalize lowKSub ε lam σ = S at *
-  haveI := hS.1
-  haveI := FiniteDimensional.complete ℂ S
+  have := hS.1
+  have := FiniteDimensional.completeSpace ℂ S
   obtain ⟨τ, hτ, hτσ⟩ := TauExt.tauExists n ε _ H σ S ⟨w, hwS⟩ (URep_K hU) hS hw1 hwt
   have hw0 : (⟨w, hSV hwS⟩ : V) ≠ 0 := fun h0 => by
     have : w = 0 := congrArg Subtype.val h0

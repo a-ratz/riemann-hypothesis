@@ -147,7 +147,7 @@ theorem eventually_of_affine {Z : Scheme.{0}} (y : Sp ℂ⸨X⸩ ⟶ Z) (z : ℂ
     filter_upwards [hz, eventually_ne_zero (hf h) h0] with w h1 h2
     exact (le_preimage_basicOpen_iff _ h1 h).2 h2.isUnit
   refine ⟨hzh.mono fun w hw => le_preimage_mono _ hle hw, fun f => ?_⟩
-  haveI := hU.isLocalization_basicOpen h
+  have := hU.isLocalization_basicOpen h
   obtain ⟨n, b, hb⟩ := IsLocalization.Away.surj h ((Z.presheaf.map (homOfLE hle).op).hom f)
   have hb' : (Z.presheaf.map (homOfLE hle).op).hom f *
       (Z.presheaf.map (homOfLE (Z.basicOpen_le h)).op).hom h ^ n =
@@ -174,7 +174,7 @@ theorem eventually_of_isPullback {Y Z : Scheme.{0}} {O F : Type} [CommRing O] [C
     {V : Z.Opens} (hV : ⊤ ≤ y ⁻¹ᵁ V) :
     (∀ᶠ w in upI, ⊤ ≤ z w ⁻¹ᵁ V) ∧
       ∀ f : Γ(Z, V), ∀ᶠ w in upI, (valR y V f, valR (z w) V f) ∈ sumRing w := by
-  haveI : IsAffineHom g := MorphismProperty.of_isPullback H.flip inferInstance
+  have : IsAffineHom g := MorphismProperty.of_isPullback H.flip inferInstance
   have po := (isIso_pushoutSection_iff H (US := ⊤) (UT := ⊤) (UX := U) (UY := g ⁻¹ᵁ U) le_top
     le_top (by simp)).1 (isIso_pushoutSection_of_isAffineOpen H _ _ _ (isAffineOpen_top _)
       (isAffineOpen_top _) hU)
@@ -297,7 +297,7 @@ theorem GlobalTheory.ArcPoint.chart_coordinates_hasSum : ∀ (E : Type) [Field E
       exact ⟨yF, fun h => absurd h hw⟩
   choose yF hyF using hex'
   have hyF' := GlobalTheory.ArcPoint.eventually_upI.2 ⟨Ha.T, hyF⟩
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   obtain ⟨U, hU, hxU, -⟩ := exists_isAffineOpen_mem_and_subset (X := Y.X) (U := ⊤)
     (x := χ (IsLocalRing.closedPoint (PowerSeries ℂ))) trivial
   have hχU : ⊤ ≤ χ ⁻¹ᵁ U :=

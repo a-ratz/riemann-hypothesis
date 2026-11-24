@@ -100,7 +100,7 @@ private lemma mem_dom_of_isOrth {r : ℕ} (X : _root_.ReciprocityTheory.ChartRes
   refine fun τ => ⟨det_mat_ne_zero_of_isOrth' X h τ, fun i => ?_⟩
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.dmin _root_.ReciprocityTheory.ChartRestriction.G.FD.lminor
   rw [h τ, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
-  simp only [Function.comp_apply, Fin.coe_castLE]
+  simp only [Function.comp_apply, Fin.val_castLE]
   rw [← Complex.ofReal_prod, Complex.ofReal_re,
     Fin.prod_univ_eq_prod_range (fun j => _root_.ReciprocityTheory.ChartRestriction.G.FD.sgn X.p0 j) i]
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.psgn

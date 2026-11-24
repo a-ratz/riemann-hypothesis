@@ -480,7 +480,7 @@ theorem splitKer_of_allRat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨p1, p2, -, p4, -⟩ := GlobalTheory.PlaceFormPt.formPt_spec E H Dw l Xo c hstar T io y C B hB
   refine ⟨fun Ω _ _ hinj χ hχ p => ?_, fun α hα a ha b => ?_⟩
   · obtain rfl := GlobalTheory.PowGerm.starSt E H inst hstar
-    letI := H.starRing
+    let := H.starRing
     obtain ⟨h1, h2, h3, h4, h5, h6⟩ := hB
     obtain ⟨x, hx, hm⟩ := GlobalTheory.PowGerm.univConv T.V C.I.G.G _ C.xT
       (GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y C) _ (GlobalTheory.PowGerm.oneCol _)

@@ -96,10 +96,10 @@ theorem exists_transport (K : Type) [Field K] [NumberField K] (ι : Type) [Finty
     rw [hΨ]
     simp only [GlobalTheory.LatFacts.emb, AddMonoidHom.coe_mk, ZeroHom.coe_mk]
     by_cases hw : w.embedding = τ (e.symm w)
-    · simp only [g, if_pos hw]
+    · simp only [g, ite_eq_left hw]
       rw [hw]
       rfl
-    · simp only [g, if_neg hw, Complex.conjLIE_apply]
+    · simp only [g, ite_eq_right hw, Complex.conjLIE_apply]
       have h2 := InfinitePlace.embedding_mk_eq (τ (e.symm w))
       rw [he w] at h2
       rcases h2 with h2 | h2
@@ -406,7 +406,7 @@ theorem exists_rows {K : Type} [Field K] {P S : Type} [Fintype P] [Fintype S] [D
       rfl
     rw [e]
     exact hli.comp f f.injective
-  exact ((Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_rows_iff_isUnit.mp hli')).ne_zero
+  exact ((Matrix.isUnit_iff_isUnit_det _).mp (linearIndependent_row_iff_isUnit.mp hli')).ne_zero
 
 variable {K : Type} [Field K] {N : ℕ}
 

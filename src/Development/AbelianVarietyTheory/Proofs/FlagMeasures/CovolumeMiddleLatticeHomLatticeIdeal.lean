@@ -249,7 +249,7 @@ theorem isLattice_coordLat {m : ℕ} {Λ : Submodule (𝓞 E) (Fin n → E)} (hS
 theorem isFullLattice_coordLat {m : ℕ} {Λ : Submodule (𝓞 E) (Fin n → E)} (hSD : GlobalTheory.SgGlob.SelfDual σ J Λ)
     {Y : Matrix (Fin n) (Fin m) E} {Ly : Matrix (Fin m) (Fin n) E} (hY : Ly * Y = 1) :
     Submodule.IsFullLattice E (coordLat Λ Y) := by
-  letI : Submodule.IsLattice E (coordLat Λ Y) := isLattice_coordLat σ J hSD hY
+  let : Submodule.IsLattice E (coordLat Λ Y) := isLattice_coordLat σ J hSD hY
   refine { span_eq_top := ?_ }
   apply top_unique
   intro u _
@@ -508,7 +508,7 @@ theorem isLattice_lineLat {I : FractionalIdeal (𝓞 E)⁰ E} (hI : I ≠ 0) : S
   exact (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem isFullLattice_lineLat {I : FractionalIdeal (𝓞 E)⁰ E} (hI : I ≠ 0) :
     Submodule.IsFullLattice E (lineLat E I) := by
-  letI : Submodule.IsLattice E (lineLat E I) := isLattice_lineLat E hI
+  let : Submodule.IsLattice E (lineLat E I) := isLattice_lineLat E hI
   obtain ⟨x, hx, hx0⟩ : ∃ x ∈ I, x ≠ 0 := by
     by_contra h
     push_neg at h
@@ -855,7 +855,7 @@ end Main
 theorem covolume_homLat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (k r : ℕ) (J : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) E) (Λ : Submodule (𝓞 E) (Fin (2 * r + k + 1) → E)) (P : Matrix (Fin (2 * r + k + 1)) (Fin (r + 1)) E) (f : Matrix (Fin (2 * r + k + 1)) (Fin r) E) (T : F) (A : InfinitePlace E → Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (s : Fin r → ℝ), IsVolData σ J Λ P f T A s → ∀ a : Fin r, HasDom volume (homLat (σ : E →+* E) J Λ P f A (dInv E (r - a.val)) (s a)) (ENNReal.ofReal (((2⁻¹ : ℝ) ^ Fintype.card (InfinitePlace E) * |(NumberField.discr F : ℝ)| ^ (1 - 2 * ((r - a.val : ℕ) : ℝ)) * s a ^ (2 * Fintype.card (InfinitePlace E))) ^ (k + 1))) := by
   intro F E _ _ _ _ _ σ k r J Λ P f T A s hV a
   obtain ⟨hCM, hU, hND, hSD, hFr, hDu, hLat, hMod, hs, hAd⟩ := hV
-  haveI := hU
+  have := hU
   have hτ : ∀ (τ : E →+* ℂ) (x : E), τ ((σ : E →+* E) x) = star (τ x) := hCM.2.2.2
   have hσ : ∀ x, (σ : E →+* E) ((σ : E →+* E) x) = x := fun x => by
     let τ : E →+* ℂ := (IsAlgClosed.lift : E →ₐ[ℚ] ℂ).toRingHom

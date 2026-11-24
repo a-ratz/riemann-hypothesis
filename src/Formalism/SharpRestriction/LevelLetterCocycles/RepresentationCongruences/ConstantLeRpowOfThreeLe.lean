@@ -113,7 +113,7 @@ include hϖ
 private theorem addVal_l_eq_eO (hl0 : (l : O) ≠ 0) :
     IsDiscreteValuationRing.addVal O (l : O) = (eO (O := O) l : ℕ∞) := by
   unfold eO
-  rw [ENat.coe_toNat]
+  rw [ENat.natCast_toNat]
   rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
 
 private theorem addVal_natCast_eq_of_l_mem_maximalIdeal (hl : (l : O) ∈ IsLocalRing.maximalIdeal O) (hl0 : (l : O) ≠ 0)
@@ -146,7 +146,7 @@ private theorem natCast_ne_zero_of_l_mem_maximalIdeal (hl : (l : O) ∈ IsLocalR
   intro h
   have h2 := addVal_natCast_eq_of_l_mem_maximalIdeal hϖ hl hl0 n hn
   rw [h, IsDiscreteValuationRing.addVal_zero] at h2
-  exact ENat.top_ne_coe _ h2
+  exact ENat.top_ne_natCast _ h2
 
 private theorem one_le_wdeg_p_one : 1 ≤ wdeg (P.p 1) := by
   obtain ⟨w, hw, h⟩ := P.map_p 1
@@ -263,11 +263,11 @@ theorem PhiData.constant_le_rpow_of_three_le (B y : ℕ) (hB : 1 ≤ B) (hy : 1 
     rw [hcont, ← hval]
     exact iInf₂_le (l * j0) hmem
   have hne : cont ϖ ((X : O⟦X⟧) ^ B) (P.p 1 ^ y) ≠ ⊤ :=
-    ne_top_of_le_ne_top (ENat.coe_ne_top _) hle
+    ne_top_of_le_ne_top (ENat.natCast_ne_top _) hle
   refine ⟨hne, ?_⟩
   have htn : (cont ϖ ((X : O⟦X⟧) ^ B) (P.p 1 ^ y)).toNat ≤ eO (O := O) l * (v + (y - j0)) := by
-    have h := ENat.toNat_le_toNat hle (ENat.coe_ne_top _)
-    rwa [ENat.toNat_coe] at h
+    have h := ENat.toNat_le_toNat hle (ENat.natCast_ne_top _)
+    rwa [ENat.toNat_natCast] at h
   have hlpos : (0 : ℝ) < l := by exact_mod_cast hlp
   have hbound : ((v + (y - j0) : ℕ) : ℝ) ≤ max 0 ((y : ℝ) - B / l + 2 + Real.logb l y) := by
     have hcase : j0 = y ∨ j0 = (B - 1) / l := by

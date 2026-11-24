@@ -71,7 +71,7 @@ private theorem iqb_local : IsLocalRing (integralClosure ℤ_[l] (PadicAlgCl l))
     simpa [sub_eq_add_neg] using h2
 
 private theorem iqb_frob : ∃ g : GQ l, IsFrob g := by
-  haveI := iqb_local (l := l)
+  have := iqb_local (l := l)
   have e : IsLocalRing.ResidueField ℤ_[l] ≃+* ZMod l := PadicInt.residueField
   obtain ⟨g, hg⟩ := GlobalTheory.exists_arithFrobenius_absGalois ℤ_[l] ℚ_[l] (Finite.of_equiv _ e.symm.toEquiv) (PadicAlgCl l)
   refine ⟨g, fun x hx => ?_⟩

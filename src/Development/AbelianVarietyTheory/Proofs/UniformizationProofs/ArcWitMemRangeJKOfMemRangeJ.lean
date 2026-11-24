@@ -108,7 +108,7 @@ theorem subsingleton_of_mem_abLocus {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG
     (hp : t p ∈ abLocus G) (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X]
     (f : splitTorus (Spec (CommRingCat.of A)) X ⟶ (Over.pullback t).obj G) (hf : IsMonHom f) [Mono f] :
     Subsingleton X := by
-  letI := hA.toField
+  let := hA.toField
   have : IsProper ((Over.pullback t).obj G).hom := isProper_fibre G hG A t p hp
   exact subsingleton_of_mono A X _ f hf
 

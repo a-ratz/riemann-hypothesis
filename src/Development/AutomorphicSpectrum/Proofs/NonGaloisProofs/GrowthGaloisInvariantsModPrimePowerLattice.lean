@@ -149,7 +149,7 @@ theorem card_le_of_fibers {Q R E : Type} [AddCommGroup Q] [AddCommGroup E] [Fini
 theorem finite_quot_smul_top {O M : Type} [CommRing O] [AddCommGroup M] [Module O M]
     [Module.Finite O M] (J : Ideal O) [Finite (O ⧸ J)] :
     Finite (M ⧸ (J • ⊤ : Submodule O M)) := by
-  haveI : Module.Finite (O ⧸ J) (M ⧸ (J • ⊤ : Submodule O M)) :=
+  have : Module.Finite (O ⧸ J) (M ⧸ (J • ⊤ : Submodule O M)) :=
     Module.Finite.of_restrictScalars_finite O _ _
   exact Module.finite_of_finite (O ⧸ J)
 
@@ -211,7 +211,7 @@ theorem finite_of_torsion {O H : Type} [CommRing O] [IsDomain O] [IsDiscreteValu
   have hfin : Finite (O ⧸ (Ideal.span {a} : Ideal O)) := by
     rw [hJ]
     exact finite_quot_pow hϖ.ne_zero hq n
-  haveI : Module.Finite O R := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite O R := Module.Finite.iff_fg.mpr hfg
   have hfq := finite_quot_smul_top (M := R) (Ideal.span {a} : Ideal O)
   have hbot : (Ideal.span {a} • ⊤ : Submodule O R) = ⊥ := by
     rw [Submodule.ideal_span_singleton_smul, eq_bot_iff]
@@ -244,8 +244,8 @@ theorem mem_fixT {m : ↥LA.T} : m ∈ fixT A LA ↔ ∀ g, A.ρ g (m : A.V) = m
 
 theorem exists_equiv_fixT [IsDomain O] [IsDiscreteValuationRing O] [IsFractionRing O LL] :
     Nonempty (↥(fixT A LA) ≃ₗ[O] (Fin (finrank LL ↥(H0V A.ρ)) → O)) := by
-  haveI : Module.Finite O ↥LA.T := Module.Finite.iff_fg.mpr LA.fg
-  haveI := LA.free
+  have : Module.Finite O ↥LA.T := Module.Finite.iff_fg.mpr LA.fg
+  have := LA.free
   obtain ⟨n, ⟨b⟩⟩ := Submodule.nonempty_basis_of_pid (Module.finBasis O ↥LA.T) (fixT A LA)
   let f : ↥(fixT A LA) →ₗ[O] A.V := LA.T.subtype ∘ₗ (fixT A LA).subtype
   let bv : Fin n → A.V := f ∘ b
@@ -420,15 +420,15 @@ theorem growth [IsDomain O] [IsDiscreteValuationRing O] [IsFractionRing O LL]
         Nat.card {x : ↥LA.T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥LA.T) // ∀ g, actQ LA _ hI g x = x} ∧
       Nat.card {x : ↥LA.T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥LA.T) // ∀ g, actQ LA _ hI g x = x} ≤
         C * Nat.card (O ⧸ Ideal.span {ϖ}) ^ (r * finrank LL ↥(H0V A.ρ)) := by
-  haveI hR := finite_range_connW A LA hfin hϖ hq
+  have hR := finite_range_connW A LA hfin hϖ hq
   refine ⟨Nat.card ↥(LinearMap.range (connW A LA)), fun r hI => ?_⟩
   have ha : ϖ ^ r ≠ 0 := pow_ne_zero r hϖ.ne_zero
   obtain ⟨e⟩ := exists_equiv_fixT A LA
-  haveI : Finite (O ⧸ (Ideal.span {ϖ ^ r} : Ideal O)) := finite_quot_pow hϖ.ne_zero hq r
-  haveI : Module.Finite O ↥LA.T := Module.Finite.iff_fg.mpr LA.fg
-  haveI : Module.Finite O ↥(fixT A LA) := Module.Finite.equiv e.symm
-  haveI hTI := finite_quot_smul_top (M := ↥LA.T) (Ideal.span {ϖ ^ r} : Ideal O)
-  haveI hE := finite_quot_smul_top (M := ↥(fixT A LA)) (Ideal.span {ϖ ^ r} : Ideal O)
+  have : Finite (O ⧸ (Ideal.span {ϖ ^ r} : Ideal O)) := finite_quot_pow hϖ.ne_zero hq r
+  have : Module.Finite O ↥LA.T := Module.Finite.iff_fg.mpr LA.fg
+  have : Module.Finite O ↥(fixT A LA) := Module.Finite.equiv e.symm
+  have hTI := finite_quot_smul_top (M := ↥LA.T) (Ideal.span {ϖ ^ r} : Ideal O)
+  have hE := finite_quot_smul_top (M := ↥(fixT A LA)) (Ideal.span {ϖ ^ r} : Ideal O)
   have hcE : Nat.card (↥(fixT A LA) ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥(fixT A LA))) =
       Nat.card (O ⧸ Ideal.span {ϖ}) ^ (r * finrank LL ↥(H0V A.ρ)) := by
     rw [card_quot_free e, card_quot_pow ϖ hϖ.ne_zero r, pow_mul]

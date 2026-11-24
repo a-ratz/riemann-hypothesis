@@ -57,8 +57,8 @@ theorem exists_tan_basis {R A K ι : Type} [CommRing R] [CommRing A] [Algebra R 
     ∃ Φ : A →+* TrivSqZeroExt K (ι → K), (∀ a, (Φ a).fst = xr a) ∧ (∀ r, (Φ (algebraMap R A r)).snd = 0) ∧
       ∀ M M' : ι → K, (∀ a, ∑ k, (Φ a).snd k * M k = ∑ k, (Φ a).snd k * M' k) → M = M' := by
   classical
-  haveI := GlobalTheory.AugCot.smooth_of_locally h
-  letI : Algebra A K := xr.toAlgebra
+  have := GlobalTheory.AugCot.smooth_of_locally h
+  let : Algebra A K := xr.toAlgebra
   have hrank : Module.finrank K (K ⊗[A] Ω[A⁄R]) = n := by
     have h1 := Module.rankAtStalk_baseChange (R := A) (M := Ω[A⁄R]) (S := K) (IsLocalRing.closedPoint K)
     rw [Module.rankAtStalk_eq_finrank_of_free, GlobalTheory.AugCot.rankAtStalk_kaehler_of_locally h] at h1
@@ -119,13 +119,13 @@ theorem exists_point_tanBasis : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hg : Spec.map g = hU.fromSpec ≫ Xo.s := Spec.map_preimage _
   let xr := Spec.preimage y'
   have hxr : Spec.map xr = y' := Spec.map_preimage _
-  haveI := Xo.smooth
+  have := Xo.smooth
   have hsm : SmoothOfRelativeDimension Dw.dim (Spec.map g) := by
     rw [hg]
     have := (inferInstance : SmoothOfRelativeDimension (0 + Dw.dim) (hU.fromSpec ≫ Xo.s))
     rwa [zero_add] at this
   have hloc := HasRingHomProperty.Spec_iff.1 hsm
-  letI : Algebra (KA l) Γ(Xo.X, U) := g.hom.toAlgebra
+  let : Algebra (KA l) Γ(Xo.X, U) := g.hom.toAlgebra
   obtain ⟨Φ, h1, h2, h3⟩ := exists_tan_basis (R := KA l) (A := Γ(Xo.X, U)) hloc xr.hom hι
   have hbase : ∀ r, xr.hom (g.hom r) = algebraMap c.F K (IntermediateField.inclusion c.le r) := by
     have : Spec.map (g ≫ xr) = sOf c K := by

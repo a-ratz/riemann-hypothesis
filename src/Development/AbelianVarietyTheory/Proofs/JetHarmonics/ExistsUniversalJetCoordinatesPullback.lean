@@ -86,8 +86,8 @@ theorem isUnivSp_baseChange [IsLocalRing R] {κ : Type} {x : ∀ m : ℕ, sp (R�
       rw [jetCoeff_zR, jetAug_zR, jetAug_zR, map_zero]
     rw [this, ← spMap_comp, Category.assoc, hx.2.1, MonObj.comp_one]
   intro A _ _ aug m hJ y hy
-  letI : Algebra R A := ((algebraMap R' A).comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R A := ((algebraMap R' A).comp (algebraMap R R')).toAlgebra
+  have : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨C⟩ := exists_chart G
   let q : A →ₐ[R] R' := aug.restrictScalars R
   have hq : Function.Surjective q := fun r => ⟨algebraMap R' A r, aug.commutes r⟩
@@ -189,7 +189,7 @@ open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestrictio
 
 theorem GlobalTheory.UnivJetBaseChange.exists_univ_pullback : ∀ (V V' : Type) [CommRing V] [IsLocalRing V] [CommRing V'] (φ : V →+* V') (G : Over (Sp V)) [GrpObj G] (G' : Over (Sp V')) [GrpObj G'] (F : G'.left ⟶ G.left), IsGrpPullback G' G (spMap φ) F → ∀ (κ : Type) (z : GlobalTheory.PowGerm.JetPts G κ), GlobalTheory.PowGerm.IsUnivJ G κ z → ∃ z' : GlobalTheory.PowGerm.JetPts G' κ, GlobalTheory.PowGerm.IsUnivJ G' κ z' ∧ ∀ m, (z' m).left ≫ F = spMap (jetCoef φ κ m) ≫ (z m).left := by
   intro V V' _ _ _ φ G _ G' _ F hF κ z hz
-  letI : Algebra V V' := φ.toAlgebra
+  let : Algebra V V' := φ.toAlgebra
   have hπ : IsGrpPullback G' G (Spec.map (CommRingCat.ofHom (algebraMap V V'))) F := hF
   choose x' hx' using fun m => GlobalTheory.ChartBaseChange.push_surjective hπ
     (Chart.spMap (GlobalTheory.ChartBaseChange.jetCoeff V V' κ m) ≫ GlobalTheory.UnivJetBaseChange.toSp (z m))

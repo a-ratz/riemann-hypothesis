@@ -60,7 +60,7 @@ theorem exists_embK_ne {σ σ' : E →+* ℂ} (h : σ ≠ σ') : ∃ a : 𝓞 E,
 theorem pm_mul_pm {Y : Model Xo c (RingHom.id c.F)} (p : Proj (RingHom.id c.F)) (M : MChart Y) {σ σ' : E →+* ℂ}
     (h : σ ≠ σ') : LowRank.pm p M σ * LowRank.pm p M σ' = 0 := by
   obtain ⟨ρ, hρ⟩ := GlobalTheory.Reg.MChart.exists_ringHom_rho E H Dw l Xo c c.F (RingHom.id c.F) Y M
-  letI : Algebra c.F Γ(Y.X, M.U) := (str (tau M.hU)).toAlgebra
+  let : Algebra c.F Γ(Y.X, M.U) := (str (tau M.hU)).toAlgebra
   have hP : ∀ τ, LowRank.pm p M τ =
       ∑ k, algebraMap c.F Γ(Y.X, M.U) (RingHom.id c.F (p.κ τ k)) • ρ (p.a τ k) :=
     fun τ => by simp only [LowRank.pm, hρ]; rfl
@@ -119,10 +119,10 @@ theorem GlobalTheory.FlagMod.FieldFlag.atlas_isCover : ∀ (E : Type) [Field E] 
       rw [(A.k b).wu]
       by_cases hij : i = j
       · subst hij; simp
-      · rw [Matrix.one_apply_ne hij, if_neg]
+      · rw [Matrix.one_apply_ne hij, ite_eq_right]
         intro h'
         exact hij (eq_of_heq (Sigma.mk.inj_iff.1 h').2)
-    · rw [eCh_w_mul_u _ hs, Matrix.zero_apply, if_neg]
+    · rw [eCh_w_mul_u _ hs, Matrix.zero_apply, ite_eq_right]
       intro h'
       exact hs (congrArg Sigma.fst h')
   · have h0 : ⊤ ≤ (spMap φ ≫ (A.V b).2.fromSpec) ⁻¹ᵁ (A.k b).V := le_preimage_comp _ (tau_le (A.aff b) le_rfl)

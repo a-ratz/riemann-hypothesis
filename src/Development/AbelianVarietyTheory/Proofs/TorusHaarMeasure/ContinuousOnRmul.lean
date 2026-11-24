@@ -128,7 +128,7 @@ theorem _root_.GlobalTheory.UnitaryInvMeasure.continuous_diagF : Continuous (_ro
   by_cases h : a = c
   · subst h
     simp only [_root_.GlobalTheory.UnitaryInvMeasure.diagF, Matrix.diagonal_apply_eq]
-    exact continuous_subtype_val.comp ((continuous_apply a).comp (continuous_apply τ))
+    exact continuous_subtypeVal.comp ((continuous_apply a).comp (continuous_apply τ))
   · simp only [_root_.GlobalTheory.UnitaryInvMeasure.diagF, Matrix.diagonal_apply_ne _ h]
     exact continuous_const
 
@@ -216,7 +216,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} in
 variable (X : _root_.ReciprocityTheory.ChartRestriction.G.FD.Data E r) in
 private theorem isOpen_X_dom : IsOpen X.dom := by
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.dom _root_.ReciprocityTheory.ChartRestriction.G.FD.GG
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [Set.ofPred_forall, Set.ofPred_and]
   refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
   · exact isOpen_ne_fun (continuous_frame_mat X τ).matrix_det continuous_const
   · exact isOpen_lt continuous_const
@@ -304,7 +304,7 @@ private theorem lmulC_mem_dom_iff_of_unitary {n : X.Ψ → Matrix (Fin r) (Fin r
     (hdet : ∀ τ, (n τ).det ≠ 0) (x : _root_.ReciprocityTheory.ChartRestriction.G.FD.Frame X.Ψ r) :
     X.lmulC n x ∈ X.dom ↔ x ∈ X.dom := by
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.dom _root_.ReciprocityTheory.ChartRestriction.G.FD.GG
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   have hp : ∀ τ i, _root_.ReciprocityTheory.ChartRestriction.G.FD.dmin X.Gm (X.lmulC n x) τ i = _root_.ReciprocityTheory.ChartRestriction.G.FD.dmin X.Gm x τ i := by
     intro τ i
     unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.dmin
@@ -384,9 +384,9 @@ theorem _root_.GlobalTheory.UnitaryInvMeasure.invMeas :
   obtain ⟨β, hβc, hβm⟩ := hβ r X
   obtain ⟨_, _, hHx⟩ := hH r X H hHiff
   obtain ⟨horb, ι, hιc, hιx, hιg⟩ := hHx x0 hx0
-  haveI : SecondCountableTopology (_root_.GlobalTheory.UnitaryInvMeasure.Torus X) :=
+  have : SecondCountableTopology (_root_.GlobalTheory.UnitaryInvMeasure.Torus X) :=
     inferInstanceAs (SecondCountableTopology (X.Ψ → Fin r → Circle))
-  haveI := sFinite_muF X x0
+  have := sFinite_muF X x0
   have hu : ∀ g : H, X.IsUnitaryC fun τ => ((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ) :=
     fun g => (hHiff g).1 g.2
   have hdet : ∀ (g : H) τ, (((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)).det ≠ 0 :=
@@ -482,7 +482,7 @@ theorem _root_.GlobalTheory.UnitaryInvMeasure.invMeas :
       (fun τ => ((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0 := by
     unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.lmulC
     refine continuous_pi fun τ => ?_
-    exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)).matrix_mul
+    exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)).matrix_mul
       continuous_const
   have hinvF : ∀ f : H → ℝ≥0∞, Measurable f → ∀ g : H,
       ∫⁻ h, f (g * h) ∂ν = ∫⁻ h, f h ∂ν := by

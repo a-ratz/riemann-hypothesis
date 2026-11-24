@@ -150,7 +150,7 @@ theorem extZero_mem {H : Subgroup T} {A : Subalgebra R (H → R)} {B : Subalgebr
   · have : (fun x : H => extZero H a (t * x)) = fun x => a (⟨t, h⟩ * x) := by
       funext x
       have h' : t * x ∈ H := H.mul_mem h x.2
-      simp only [extZero, dif_pos h']
+      simp only [extZero, dite_eq_left h']
       rfl
     rw [this]
     exact hA a ha _
@@ -245,7 +245,7 @@ theorem val_mem_range [IsIntegrallyClosed R] (Γ : QFGroup R T) {U : Γ.G.left.O
     (hψ : Spec.map ψ = hU.fromSpec ≫ j) (t : T) (h : ⊤ ≤ (Γ.pt t).left ⁻¹ᵁ U) (s : Γ(Γ.G.left, U)) :
     ∃ r : R, algebraMap R (FractionRing R) r = valAt (Γ.pt t).left U h s := by
   let ρ : R →+* Γ(Γ.G.left, U) := ψ.hom.comp (algebraMap R A)
-  letI : Algebra R Γ(Γ.G.left, U) := ρ.toAlgebra
+  let : Algebra R Γ(Γ.G.left, U) := ρ.toAlgebra
   have hρ : hU.fromSpec ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, U))) := by
     have e : CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, U)) = CommRingCat.ofHom (algebraMap R A) ≫ ψ := rfl
     rw [e, Spec.map_comp, hψ, Category.assoc, hj.isOver]

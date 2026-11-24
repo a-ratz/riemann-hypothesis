@@ -64,13 +64,13 @@ theorem UpperTheory.V.CF.kwHom :
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   let e : L ≃ₐ[ℚ] f.fieldRange := AlgEquiv.ofInjectiveField f
-  haveI : IsAbelianGalois ℚ f.fieldRange := IsAbelianGalois.of_algHom e.symm.toAlgHom
-  haveI : FiniteDimensional ℚ f.fieldRange := e.toLinearEquiv.finiteDimensional
+  have : IsAbelianGalois ℚ f.fieldRange := IsAbelianGalois.of_algHom e.symm.toAlgHom
+  have : FiniteDimensional ℚ f.fieldRange := e.toLinearEquiv.finiteDimensional
   obtain ⟨N, ζ, hN, hζ, hle⟩ := UpperTheory.V.CF.kw (AlgebraicClosure ℚ) f.fieldRange
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI hNQ : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
-  haveI : IsCyclotomicExtension {N} ℚ ℚ⟮ζ⟯ := hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
-  haveI hC : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
+  have : NeZero N := ⟨hN.ne'⟩
+  have hNQ : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
+  have : IsCyclotomicExtension {N} ℚ ℚ⟮ζ⟯ := hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
+  have hC : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
     @CyclotomicField.isCyclotomicExtension N _ ℚ _ hNQ
   refine ⟨N, hN, ⟨?_⟩⟩
   exact ((IsCyclotomicExtension.algEquiv {N} ℚ ℚ⟮ζ⟯ (CyclotomicField N ℚ)).toAlgHom.comp

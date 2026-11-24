@@ -172,7 +172,7 @@ theorem eab_lin (i : Fin (r + 1)) (D : Set (Mx k r)) (p q : Fin (mdim k r i))
       (hd1.hasFDerivAt.add (hd2.hasFDerivAt.const_smul s)).fderiv
     rw [rdV_ext i X hX (fun x => f x + s • f₂ x) (fun x => F1 x + s • F2 x) (U1 ∩ U2) g hU hgU hg.1 hFs hfs,
       rdV_ext i X hX f F1 U1 g hU1 hgU1 hg.1 hF1 hfF1, rdV_ext i X hX f₂ F2 U2 g hU2 hgU2 hg.1 hF2 hfF2, hfd]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply]
+    simp only [add_apply, smul_apply]
   simp only [EH, EabH]
   rw [key _ hX1, key _ hX2]
   simp only [smul_add]

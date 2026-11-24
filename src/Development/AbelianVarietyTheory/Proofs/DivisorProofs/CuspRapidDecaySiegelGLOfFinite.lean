@@ -261,18 +261,18 @@ theorem discreteTopology_ratN (E : Type) [Field E] [NumberField E] (a s : ℕ) :
       show algebraMap E (Ad E) (q p) = 0
       rw [h0, map_zero]
   rw [h]
-  exact hU.preimage continuous_subtype_val
+  exact hU.preimage continuous_subtypeVal
 
 theorem exists_isAddFundamentalDomain_ratN : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (s : ℕ) [MeasurableSpace (BlockIx a s → Ad E)] [BorelSpace (BlockIx a s → Ad E)] (μ : Measure (BlockIx a s → Ad E)) [μ.IsAddHaarMeasure], ∃ 𝓕 : Set (BlockIx a s → Ad E), IsAddFundamentalDomain (ratN E a s) 𝓕 μ ∧ μ 𝓕 ≠ 0 ∧ μ 𝓕 < ⊤ := by
   intro E _ _ _ a s _ _ μ _
-  haveI : SecondCountableTopology (Ad E) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI := discreteTopology_ratN E a s
-  haveI := countable_ratN (E := E) (a := a) s
+  have : SecondCountableTopology (Ad E) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have := discreteTopology_ratN E a s
+  have := countable_ratN (E := E) (a := a) s
   obtain ⟨D, -, -, hD⟩ := GlobalTheory.exists_isAddFundamentalDomain_addSubgroup (ratN E a s)
-  haveI : MeasurableConstVAdd (ratN E a s) (BlockIx a s → Ad E) :=
+  have : MeasurableConstVAdd (ratN E a s) (BlockIx a s → Ad E) :=
     ⟨fun γ => (continuous_const.add continuous_id :
       Continuous fun x : BlockIx a s → Ad E => (γ : BlockIx a s → Ad E) + x).measurable⟩
-  haveI : VAddInvariantMeasure (ratN E a s) (BlockIx a s → Ad E) μ :=
+  have : VAddInvariantMeasure (ratN E a s) (BlockIx a s → Ad E) μ :=
     ⟨fun γ t _ => measure_preimage_add μ (γ : BlockIx a s → Ad E) t⟩
   have hμ : μ ≠ 0 := fun h => by
     have := isOpen_univ.measure_ne_zero μ Set.univ_nonempty
@@ -301,8 +301,8 @@ theorem norm_le_of_unip_variation : ∀ (E : Type) [Field E] [NumberField E] [_r
     IsCuspForm ψ → ∀ s : ℕ, 0 < s → s < a → ∀ (g : GA E a) (e : ℝ),
       (∀ x : BlockIx a s → Ad E, ‖ψ.1 (unip x * g) - ψ.1 g‖ ≤ e) → ‖ψ.1 g‖ ≤ e := by
   intro E _ _ _ a ψ hψ s hs0 hsa g e he
-  letI : MeasurableSpace (BlockIx a s → Ad E) := borel _
-  haveI : BorelSpace (BlockIx a s → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (BlockIx a s → Ad E) := borel _
+  have : BorelSpace (BlockIx a s → Ad E) := ⟨rfl⟩
   set μ : Measure (BlockIx a s → Ad E) := Measure.addHaar with hμ
   obtain ⟨𝓕, h𝓕, h0, htop⟩ := _root_.GlobalTheory.CuspRep.exists_isAddFundamentalDomain_ratN E a s μ
   have hc := ContAut.continuous_of_isOpen_stab E a ψ hψ.1.level
@@ -1273,11 +1273,11 @@ lemma upperCone_conj_diag_eq {E : Type} [Field E] (a : ℕ) (r : Fin a → ℝ) 
   rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
   simp only [upperConeRescale, Matrix.of_apply, Pi.mul_apply]
   by_cases hpq : p ≤ q
-  · rw [if_pos hpq]
+  · rw [ite_eq_left hpq]
     have : (r p : ℂ) ≠ 0 := by exact_mod_cast (hr p).ne'
     push_cast
     field_simp
-  · rw [if_neg hpq]
+  · rw [ite_eq_right hpq]
     have h0 : M p q = 0 := hM (lt_of_not_ge hpq)
     simp [h0]
 
@@ -1305,9 +1305,9 @@ theorem GlobalTheory.upperCone_conj_compact : ∀ (E : Type) [Field E] [NumberFi
     intro p _ q _
     rw [Set.mem_Icc]
     by_cases hpq : p ≤ q
-    · simp only [if_pos hpq]
+    · simp only [ite_eq_left hpq]
       exact ⟨div_nonneg (hr q).le (hr p).le, hC r hr hcone p q hpq⟩
-    · simp only [if_neg hpq]
+    · simp only [ite_eq_right hpq]
       exact ⟨le_rfl, hC0⟩
   have hbinv : (b⁻¹).val.BlockTriangular id := by
     have := Units.invertible b

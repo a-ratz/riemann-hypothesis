@@ -75,7 +75,7 @@ theorem isRoot_pow (X : Tower Ω ε) {m : ℕ} {f : X.Kˣ} {a b : ℂ → ℂ} (
   refine ⟨ha.pow k, hb.pow k, ?_, ?_⟩
   · intro h0
     rcases Nat.eq_zero_or_pos k with rfl | hk
-    · haveI := hs_codiscrete_neBot
+    · have := hs_codiscrete_neBot
       rw [pow_zero] at h0
       exact one_ne_zero (α := Mero) h0
     · apply hb0
@@ -91,7 +91,7 @@ theorem exp_val_mul (l n : ℕ) [Fact l.Prime] (s t : ZMod (l ^ n)) :
     Complex.exp (2 * Real.pi * Complex.I * ((s * t).val : ℂ) / ((l : ℂ) ^ n)) =
       Complex.exp (2 * Real.pi * Complex.I * (t.val : ℂ) / ((l : ℂ) ^ n)) ^ s.val := by
   have hl : (l : ℂ) ^ n ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
-  rw [← Complex.exp_nat_mul, Complex.exp_eq_exp_iff_exists_int]
+  rw [← Complex.exp_natCast_mul, Complex.exp_eq_exp_iff_exists_int]
   refine ⟨-((s.val * t.val / l ^ n : ℕ) : ℤ), ?_⟩
   have h : (((s * t).val : ℕ) : ℂ) + (l : ℂ) ^ n * ((s.val * t.val / l ^ n : ℕ) : ℂ) = (s.val : ℂ) * t.val := by
     rw [ZMod.val_mul]

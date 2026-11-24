@@ -141,8 +141,8 @@ theorem hsb_indep [FiniteDimensional ℂ V] [FiniteDimensional ℂ V'] {ι κ : 
     (b : OrthonormalBasis ι ℂ V') (c : OrthonormalBasis κ ℂ V') (A : V' →L[ℂ] V) :
     ∑ i, ‖A (b i)‖ ^ 2 = ∑ j, ‖A (c j)‖ ^ 2 := by
 
-  haveI : CompleteSpace V := FiniteDimensional.complete ℂ V
-  haveI : CompleteSpace V' := FiniteDimensional.complete ℂ V'
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
+  have : CompleteSpace V' := FiniteDimensional.completeSpace ℂ V'
   rw [hsb_eq_adj b A, hsb_eq_adj c A]
 
 theorem hilbert_schmidt_comp_left [FiniteDimensional ℂ V'] (A : V' →L[ℂ] V) (T : V →L[ℂ] V) (hT : ∀ x, ‖T x‖ = ‖x‖) :
@@ -160,7 +160,7 @@ theorem hilbert_schmidt_comp_right [FiniteDimensional ℂ V] [FiniteDimensional 
 
 theorem hilbert_schmidt_smul [FiniteDimensional ℂ V'] (c : ℂ) (A : V' →L[ℂ] V) : hs2 (c • A) = ‖c‖ ^ 2 * hs2 A := by
 
-  simp only [hs2, ContinuousLinearMap.smul_apply, norm_smul, mul_pow, Finset.mul_sum]
+  simp only [hs2, smul_apply, norm_smul, mul_pow, Finset.mul_sum]
 
 end Gen
 
@@ -250,9 +250,9 @@ theorem piIso_symm (u : D.what₂.Word) (s : X.B.I.Ginf) (hs : s ∈ X.SinfU u) 
     ((piIso X u s hs).symm.toContinuousLinearEquiv : X.Vpi u →L[ℂ] X.Vpi u) = X.piU u s⁻¹ := by
   ext x
   show (piIso X u s hs).symm x = X.piU u s⁻¹ x
-  rw [LinearIsometryEquiv.symm_apply_eq, piIso_apply, ← ContinuousLinearMap.mul_apply,
+  rw [LinearIsometryEquiv.symm_apply_eq, piIso_apply, ← mul_apply_eq_comp,
     ← (X.piU_rep u).2.1 s hs s⁻¹ (sinfU_inv X u hs), mul_inv_cancel, (X.piU_rep u).1,
-    ContinuousLinearMap.one_apply]
+    one_apply_eq_self]
 
 theorem norm_psiR {n r : ℕ} (ε : Fin n → Bool) (gg : ℕ) (e f : Fin r → Fin n → ℂ) (z : Fin n → ℂ)
     (g : Matrix (Fin n) (Fin n) ℂ) : ‖psiR ε gg e f z g‖ = 1 := by
@@ -273,8 +273,8 @@ theorem norm_psiInfU (u : D.what₂.Word) (s : X.B.I.Ginf) : ‖X.psiInfU u s‖
 
 theorem ooEquivar (u u' : D.what₂.Word) : OOEquivar X u u' := by
   intro γ s hs s' hs'
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u')
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u')
   have hA : ∀ x, X.Wu u (s * x) = X.psiInfU u s • piIso X u s hs (X.Wu u x) :=
     fun x => (X.Wu_spec u).1 s hs x
   have hB : ∀ x, X.Wu u' (s' * x) = X.psiInfU u' s' • piIso X u' s' hs' (X.Wu u' x) :=
@@ -302,11 +302,11 @@ theorem dl_cont {r : ℕ} (l : ℕ) : Continuous (fun Z : Matrix (Fin (r + 1)) (
 
   unfold Dl
   by_cases h : l ≤ r + 1
-  · simp only [h, dif_pos]
+  · simp only [h, dite_eq_left]
     first
     | exact (continuous_id.matrix_submatrix _ _).matrix_det
     | fun_prop
-  · simp only [h, dif_neg, not_false_eq_true]
+  · simp only [h, dite_eq_right, not_false_eq_true]
     exact continuous_const
 
 theorem wt_cont (u u' : D.what₂.Word) : Continuous (wt X u u') := by

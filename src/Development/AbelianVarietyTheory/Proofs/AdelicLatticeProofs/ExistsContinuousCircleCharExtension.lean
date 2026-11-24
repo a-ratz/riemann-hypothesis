@@ -54,14 +54,14 @@ namespace GlobalTheory
 
 theorem circle_hom_extend_of_injective {A B : Type} [CommGroup A] [CommGroup B] (i : A →* B)
     (hi : Function.Injective i) (ψ : A →* Circle) : ∃ χ : B →* Circle, ∀ a, χ (i a) = ψ a := by
-  letI : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
+  let : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
     obtain ⟨t, ht⟩ := Circle.exp_surjective (Additive.toMul u)
     refine ⟨Additive.ofMul (Circle.exp (t / n)), ?_⟩
     apply Additive.toMul.injective
     have hn' : (n : ℝ) ≠ 0 := by exact_mod_cast hn
     simp only [toMul_nsmul, toMul_ofMul]
     rw [← ht, ← Circle.exp_nsmul, nsmul_eq_mul, mul_div_cancel₀ _ hn']
-  letI : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
+  let : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
   obtain ⟨ρ, hρ⟩ := (Module.Baer.of_divisible (Additive Circle)).extension_property_addMonoidHom
     (MonoidHom.toAdditive i) hi (MonoidHom.toAdditive ψ)
   refine ⟨MonoidHom.toAdditive.symm ρ, fun a => ?_⟩

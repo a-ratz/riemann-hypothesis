@@ -290,7 +290,7 @@ lemma const_j (hp2 : p ≠ 2) {N : ℕ} (hN : 0 < N) (hpN : ¬ p ∣ N) (n m : �
   refine ⟨-(((N : K)⁻¹) ^ (m + 1) * (p * y3 * (N : K)⁻¹ - p * y4 * 2⁻¹ + y1)),
     neg_mem (mul_mem (inv_pow_nat_mem hpN _) (add_mem (sub_mem (mul_mem (mul_mem (natCast_mem _ _) hy3)
       (inv_nat_mem hpN)) (mul_mem (mul_mem (natCast_mem _ _) (intCast_mem _ _)) h2)) hy1)), ?_⟩
-  simp only [const0, if_neg (show m + 2 ≠ 1 by omega), f]
+  simp only [const0, ite_eq_right (show m + 2 ≠ 1 by omega), f]
   have hZ := (eq_div_iff (pow_ne_zero (m + 1) (mul_ne_zero hN0 (pow_ne_zero (n + 1) hp0)))).2 ((mul_comm _ _).trans E1)
   rw [hZ, E3, E4]
   rw [pow_mul]
@@ -372,7 +372,7 @@ lemma const_congr_gen (hp2 : p ≠ 2) {N : ℕ} (hN : 0 < N) (hpN : ¬ p ∣ N) 
   have f2 : frc (N * p ^ (n + 1)) (c * a₁) = ((N * (c * α) + s₂ * (p : ℤ) ^ (n + 1) : ℤ) : ℚ) /
       ((N : ℚ) * (p : ℚ) ^ (n + 1)) := by
     unfold frc; rw [hs₂]; push_cast; ring
-  simp only [smF, eisF, ↓reduceIte, const0, if_neg d1, if_neg d2, f1, f2]
+  simp only [smF, eisF, ↓reduceIte, const0, ite_eq_right d1, ite_eq_right d2, f1, f2]
   push_cast
   have hQ : (p : K) ^ n ≠ 0 := pow_ne_zero _ hp0
   simp only [pow_succ (p : K) n]
@@ -458,7 +458,7 @@ theorem smF_congr_gen : ∀ (p : ℕ) [Fact p.Prime] (N n j : ℕ) (K : Type) [F
   have hz1 : (c : K) ^ ((2 : ℤ) - ((1 : ℕ) : ℤ)) = c := by norm_num
   refine ⟨p * ((c : K) ^ 2 * y1 - ((c : K)⁻¹) ^ m * y2), mul_mem (natCast_mem _ _)
     (sub_mem (mul_mem (pow_mem (intCast_mem _ _) _) hy1) (mul_mem (pow_mem (inv_int_mem hc) m) hy2)), ?_⟩
-  simp only [smF, eisF, if_neg hr, hz, hz1]
+  simp only [smF, eisF, ite_eq_right hr, hz, hz1]
   have hcm : ((c : K)⁻¹) ^ m * ((c * α : ℤ) : K) ^ (m + 1) = c * (α : K) ^ (m + 1) := by
     push_cast; rw [inv_pow]; field_simp; ring
   linear_combination (c : K) ^ 2 * E1 - ((c : K)⁻¹) ^ m * E2 +
@@ -502,7 +502,7 @@ private theorem zeta_pow (ε : Ω →+* ℂ) (l N L : ℕ) [NeZero l] [NeZero N]
   have hl : (l : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne l)
   have hN : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne N)
   apply ε.injective
-  rw [map_pow, zt, (eOm_props ε ε.injective).1, (eOm_props ε ε.injective).1, ← Complex.exp_nat_mul]
+  rw [map_pow, zt, (eOm_props ε ε.injective).1, (eOm_props ε ε.injective).1, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -562,11 +562,11 @@ private theorem smF_mem (F : IntermediateField ℚ Ω) (c : ℤ) (j M N : ℕ) (
 private theorem mem_closure_of_isIntegral (ε : Ω →+* ℂ) (l L : ℕ) [Fact l.Prime] [CharZero Ω] {y : Ω}
     (hy : y ∈ IntermediateField.adjoin ℚ {zt ε l L}) (hi : IsIntegral ℤ y) :
     y ∈ Subring.closure {zt ε l L} := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI : NeZero (l ^ L) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ L) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hz := IsNTr.isPrimitiveRoot_zt ε l L
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI hcyc : IsCyclotomicExtension {l ^ L} ℚ (IntermediateField.adjoin ℚ {zt ε l L}) :=
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have hcyc : IsCyclotomicExtension {l ^ L} ℚ (IntermediateField.adjoin ℚ {zt ε l L}) :=
     by
       convert hz.intermediateField_adjoin_isCyclotomicExtension ℚ using 1 <;>
         exact Subsingleton.elim _ _
@@ -643,7 +643,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [CharZero
 private theorem smF_one_mem (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (N : ℕ) [NeZero N] (c L : ℕ) (hL : 1 ≤ L)
     (hc : Nat.Coprime c (6 * l * N)) (a a₂ : ℤ) (ha : ¬ (l : ℤ) ∣ a) (h₂ : (N : ℤ) ∣ a₂) (r : ℕ) :
     smF (c : ℤ) 1 (N * l ^ L) (eOm ε (1 / ((N * l ^ L : ℕ) : ℚ))) a a₂ r ∈ Subring.closure {zt ε l L} := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   obtain ⟨b, rfl⟩ := h₂
   have hcN : Nat.Coprime c N := hc.coprime_dvd_right (Dvd.intro_left _ rfl)
   have hcl : Nat.Coprime c l := hc.coprime_dvd_right ((Dvd.intro_left _ rfl : l ∣ 6 * l).mul_right N)
@@ -662,9 +662,9 @@ private theorem cong_step (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (N : ℕ)
     ∃ β : Ω, InZl ε l L β ∧ (l : Ω) ^ (L - 1) * β =
       (α : Ω) ^ w * smF (c : ℤ) 1 (N * l ^ L) (eOm ε (1 / ((N * l ^ L : ℕ) : ℚ))) a₁ a₂ r -
         (l : Ω) ^ (L * w) * smF (c : ℤ) (w + 1) (N * l ^ L) (eOm ε (1 / ((N * l ^ L : ℕ) : ℚ))) a₁ a₂ r := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hl0 : (l : Ω) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne l)
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hζ : IsPrimitiveRoot (eOm ε (1 / ((N * l ^ L : ℕ) : ℚ))) (N * l ^ L) :=
     isPrimitiveRoot_eOm ε (Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (NeZero.ne l)))
   have hcl : Nat.Coprime c l := hc.coprime_dvd_right ((Dvd.intro_left _ rfl : l ∣ 6 * l).mul_right N)
@@ -711,11 +711,11 @@ private theorem coefQ_nat (M : ℕ) (f : ℕ → Ω) (i : ℕ) : coefQ M f (i : 
     push_cast
     ring
   unfold coefQ
-  rw [e, if_pos ⟨Nat.cast_nonneg _, Rat.den_natCast _⟩, Rat.num_natCast, Int.toNat_natCast]
+  rw [e, ite_eq_left ⟨Nat.cast_nonneg _, Rat.den_natCast _⟩, Rat.num_natCast, Int.toNat_natCast]
 
 private theorem ex_eq (l n L w : ℕ) [Fact l.Prime] (hnL : n < L) (g : SL(2, ℤ)) :
     ∃ u : ℤ, ((ex l n w g : ℕ) : ℤ) = (en g 0 0 % (l : ℤ) ^ L) ^ w + (l : ℤ) ^ n * u := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have h1 : (((((en g 0 0 : ℤ) : ZMod (l ^ n)).val : ℕ) : ℤ) : ZMod (l ^ n)) = ((en g 0 0 : ℤ) : ZMod (l ^ n)) := by
     rw [Int.cast_natCast, ZMod.natCast_zmod_val]
   have h2 := (ZMod.intCast_eq_intCast_iff _ _ (l ^ n)).1 h1

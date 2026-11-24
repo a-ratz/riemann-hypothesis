@@ -63,7 +63,7 @@ theorem exists_minor {F ι : Type*} [Field F] [Fintype ι] {k : ℕ} (v : Fin k 
   let r : ι → Fin k → F := fun i b => v b i
   let V : Matrix ι (Fin k) F := Matrix.of r
   have h1 : V.rank = k := by
-    rw [← Matrix.rank_eq_finrank_span_cols]
+    rw [← finrank_span_range_col]
     have : V.col = v := by funext b i; rfl
     rw [this, finrank_span_eq_card hv, Fintype.card_fin]
   have h2 : Submodule.span F (Set.range r) = ⊤ := by
@@ -76,14 +76,14 @@ theorem exists_minor {F ι : Type*} [Field F] [Fintype ι] {k : ℕ} (v : Fin k 
   rw [h2] at hsp
   let bs := Module.Basis.mk hli (by rw [hsp])
   have : Finite κ := Module.Finite.finite_basis bs
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Fintype κ := Fintype.ofFinite κ
   have hc : Fintype.card κ = k := by
     rw [← Module.finrank_eq_card_basis bs, Module.finrank_fin_fun]
   let e : Fin k ≃ κ := (Fintype.equivFinOfCardEq hc).symm
   refine ⟨a ∘ e, ?_⟩
   have hrows : LinearIndependent F (Matrix.of fun a' b => v b ((a ∘ e) a')).row :=
     hli.comp e e.injective
-  rw [Matrix.linearIndependent_rows_iff_isUnit, Matrix.isUnit_iff_isUnit_det] at hrows
+  rw [linearIndependent_row_iff_isUnit, Matrix.isUnit_iff_isUnit_det] at hrows
   exact hrows.ne_zero
 
 theorem not_li_iff {F ι : Type*} [Field F] [Fintype ι] {k : ℕ} (v : Fin k → ι → F) :

@@ -207,7 +207,7 @@ lemma binMatK_eval_nat (F : Type) [Field F] [CharZero F] {n : ℕ} (del : ℕ)
 lemma norm_nat (p : ℕ) [hp : Fact p.Prime] (n : ℕ) (hn : n ≠ 0) :
     ‖(n : ℚ_[p])‖ = (p : ℝ) ^ (-(padicValNat p n : ℤ)) := by
   have h1 : ((n : ℚ) : ℚ_[p]) = (n : ℚ_[p]) := by push_cast; rfl
-  rw [← h1, Padic.eq_padicNorm, padicNorm.eq_zpow_of_nonzero (by exact_mod_cast hn),
+  rw [← h1, Padic.eq_padicNorm, padicNorm.eq_zpow_of_ne_zero (by exact_mod_cast hn),
     padicValRat.of_nat]
   simp [padicValNat]
 
@@ -334,7 +334,7 @@ lemma det_block_norm {F : Type} [NormedField F] {n : ℕ} (B G : Matrix (Fin n) 
   classical
   have hBT : B.BlockTriangular e := by
     intro i j hij
-    rw [hB, if_neg (ne_of_gt hij)]
+    rw [hB, ite_eq_right (ne_of_gt hij)]
   have hblock : ∀ a, B.toSquareBlock e a = β a • G.toSquareBlock e a := by
     intro a
     ext i j
@@ -362,7 +362,7 @@ lemma legendre' (p : ℕ) [hp : Fact p.Prime] (n : ℕ) :
   have h := Nat.Prime.sub_one_mul_multiplicity_factorial (n := n) hp.out
   have hds := Nat.digit_sum_le p n
   have hsum : (p.digits n).sum ≤ (p.digits n).length * (p - 1) := by
-    have := List.sum_le_card_nsmul (p.digits n) (p - 1)
+    have := List.sum_le_length_nsmul (p.digits n) (p - 1)
       (fun d hd => Nat.le_sub_one_of_lt (Nat.digits_lt_base hp1 hd))
     simpa using this
   have hp1r : (1 : ℝ) < p := by exact_mod_cast hp1
@@ -406,7 +406,7 @@ lemma poly_eq_of_eval (p : ℕ) [Fact p.Prime] (Q P : ℚ_[p][X]) (S : ℕ) (a :
     have := Nat.cast_injective hxy
     omega
   · intro n
-    simp only [Set.mem_setOf_eq, eval_mul, eval_C]
+    simp only [Set.mem_ofPred_eq, eval_mul, eval_C]
     exact h _ (by omega)
 
 lemma entry_deg (hDeg : GamDeg) {p : ℕ} [Fact p.Prime] {K r : ℕ} (LLw : Letters (K + 1)) (ρ : Fin r)
@@ -566,7 +566,7 @@ lemma lead_part (hDeg : GamDeg) (hLead : GamLead) {p : ℕ} [hp : Fact p.Prime] 
     · exact h
     · exfalso
       have hc := congrArg (AddMonoidAlgebra.coeff · mm) h0
-      rw [coeff_initPart, if_pos h.symm, MvPolynomial.coeff_zero] at hc
+      rw [coeff_initPart, ite_eq_left h.symm, MvPolynomial.coeff_zero] at hc
       exact (MvPolynomial.mem_support_iff.mp hmm) hc
 
   have hGblk : ∀ a', ((p : ℝ) ^ (-κ)) ^ (Fintype.card {b // ord b = a'}) ≤

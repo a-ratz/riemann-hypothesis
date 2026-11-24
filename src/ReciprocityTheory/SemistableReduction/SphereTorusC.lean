@@ -76,7 +76,7 @@ private theorem toSphere_univ_ne_top' {n : ℕ} :
 theorem isProbabilityMeasure_sphereProb {n : ℕ} (hn : 0 < n) :
     IsProbabilityMeasure (sphereProb n) := by
   constructor
-  simp only [sphereProb, ProbabilityTheory.cond, Measure.smul_apply, Measure.restrict_univ,
+  simp only [sphereProb, ProbabilityTheory.cond, smul_apply, Measure.restrict_univ,
     smul_eq_mul]
   exact ENNReal.inv_mul_cancel (toSphere_univ_ne_zero_of_pos hn) toSphere_univ_ne_top'
 
@@ -113,7 +113,7 @@ theorem measurePreserving_toSphere_isometry {n : ℕ}
       (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere
       (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere := by
   have hcont : Continuous (fun z : UnitSphereC n => (⟨A z, by simp⟩ : UnitSphereC n)) :=
-    (A.continuous.comp continuous_subtype_val).subtype_mk _
+    (A.continuous.comp continuous_subtypeVal).subtype_mk _
   refine ⟨hcont.measurable, ?_⟩
   ext s hs
   rw [Measure.map_apply hcont.measurable hs, Measure.toSphere_apply' (μ := volume) (hcont.measurable hs),
@@ -189,7 +189,7 @@ theorem sphereProb_coord_zero {n : ℕ} (j : Fin n) :
   have hmeas : MeasurableSet {z : UnitSphereC n | spherePoint z j = 0} := by
     have hc : Continuous fun z : UnitSphereC n => spherePoint z j := by
       exact (continuous_apply j).comp ((EuclideanSpace.equiv (Fin n) ℂ).continuous.comp
-        continuous_subtype_val)
+        continuous_subtypeVal)
     exact (isClosed_singleton.preimage hc).measurableSet
   have hS : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere
       {z : UnitSphereC n | spherePoint z j = 0} = 0 := by
@@ -202,7 +202,7 @@ theorem sphereProb_coord_zero {n : ℕ} (j : Fin n) :
     rw [map_smul]
     show r • WithLp.ofLp (z : EuclideanSpace ℂ (Fin n)) j = 0
     rw [hz, smul_zero]
-  simp only [sphereProb, ProbabilityTheory.cond, Measure.restrict_univ, Measure.smul_apply,
+  simp only [sphereProb, ProbabilityTheory.cond, Measure.restrict_univ, smul_apply,
     smul_eq_mul, hS, mul_zero]
 
 theorem blockSphereProb_coord_zero {B n : ℕ} :

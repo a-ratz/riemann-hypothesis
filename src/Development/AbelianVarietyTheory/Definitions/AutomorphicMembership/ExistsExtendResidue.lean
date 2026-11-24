@@ -489,7 +489,7 @@ theorem finrank_step (F : Flags k V) (i : ι) (n : ℕ) : finrank k (F.step i n)
   rw [Set.image_eq_range]
   refine (finrank_span_eq_card ((b i).linearIndependent.comp _ Subtype.val_injective)).trans ?_
   rw [Fintype.card_subtype]
-  simp only [Set.mem_setOf_eq, Fin.lt_def, Fin.val_castSucc, Fin.card_filter_val_lt]
+  simp only [Set.mem_ofPred_eq, Fin.lt_def, Fin.val_castSucc, Fin.card_filter_val_lt]
   omega
 
 def between (n : ℕ) (A B : ∀ i, Submodule k (V i)) : Closeds (Flags k V) where

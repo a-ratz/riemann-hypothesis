@@ -91,8 +91,8 @@ def annSub (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : WO S T) : AddSubg
 
 theorem isOpen_annSub (hψ : IsCharAF D.host.F ψ) {a : WO S T} (ha : a.map (infPart D) = 0) :
     IsOpen (annSub ψ S T a : Set (WO S T)) := by
-  haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
+  have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
   refine (annSub ψ S T a).isOpen_of_mem_nhds (g := 0) ?_
   have key : ∀ φ : WO S T → AF D.host.F, Continuous φ → φ 0 = 0 → (∀ u, fstA D.host.F (φ u) = 0) →
       ∀ᶠ u in 𝓝 (0 : WO S T), ψ (φ u) = 1 := by
@@ -118,8 +118,8 @@ theorem isTheta_heisO_fin (hψ : IsCharAF D.host.F ψ) {a : WO S T} (ha : a.map 
     conv_rhs => rw [← h1 u hu.1 h0]
     rw [heisO_heisO, heisO_heisO, h2.1, h2.2, add_comm]
   cont := by
-    haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
-    haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
+    have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
+    have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
     exact (hψ.1.comp (continuous_symplOH S T continuous_id continuous_const)).mul
       (hf.cont.comp (continuous_id.add continuous_const))
   smooth k L h1 h2 w := by

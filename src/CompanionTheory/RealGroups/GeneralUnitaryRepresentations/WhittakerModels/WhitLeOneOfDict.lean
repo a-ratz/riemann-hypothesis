@@ -68,7 +68,7 @@ theorem whitLeOne_of_dict
   intro n ψ V _ _ π hs hirr hψc hψ1
   have hadm : GroundTheory.Automorphic.IsAdmissible π :=
     (hA π).1 (CompanionTheory.Tls2.BZGL.irreducibleAdmissibleGL_top k n V π hs hirr)
-  have hc : Continuous (Circle.coeHom.compAddChar ψ) := continuous_subtype_val.comp hψc
+  have hc : Continuous (Circle.coeHom.compAddChar ψ) := continuous_subtypeVal.comp hψc
   have h1 : Circle.coeHom.compAddChar ψ ≠ 1 := by
     intro h
     apply hψ1

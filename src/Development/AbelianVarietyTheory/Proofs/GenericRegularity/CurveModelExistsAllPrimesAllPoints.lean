@@ -97,8 +97,8 @@ set_option maxHeartbeats 4000000 in
 set_option synthInstance.maxHeartbeats 400000 in
 theorem curveInst : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j) T.Q.c) (hT : GenFromTest (T.Q.Xo j) T.Q.c hG), GenValInjSt h j hG → CompSplitSt h j hG → (∀ (ka wL wF : WeightFamilies.Wt D j) (G : GlobalFamilyData (recPlus h j hj) ka wL wF), BigAt h j hj hG G → BIRSt h j hj hG G) → CurveInstSt h j hj := by
   intro D T h j hj hG hT hV hC hB
-  haveI : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
-  letI : Fintype (Comp (T.Q.Xo j) T.Q.c) := Fintype.ofFinite _
+  have : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
+  let : Fintype (Comp (T.Q.Xo j) T.Q.c) := Fintype.ofFinite _
   obtain ⟨hfg, htr⟩ := GlobalTheory.FlagDim.fnFG_fnTrdeg_record D T.Q h.pins.2.2.2 j hj
   have hQ := countQAtSt_holds h j hj hG hT
   have hinj : ∀ ka wL wF G S g0 la, CurveHyp h j hj hG ka wL wF G S g0 →

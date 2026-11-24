@@ -58,7 +58,7 @@ theorem finite_ringHom (k : Type) [CommRing k] [Module.Finite ℤ k] : Finite (k
     intro a
     obtain ⟨P, hm, hP⟩ := (Algebra.IsIntegral.isIntegral a : IsIntegral ℤ a)
     refine ⟨{z | (P.map (Int.castRingHom ℂ)).IsRoot z}, ?_, fun σ => ?_⟩
-    · exact Polynomial.finite_setOf_isRoot (hm.map _).ne_zero
+    · exact Polynomial.finite_setOfPred_isRoot (hm.map _).ne_zero
     · have h : Polynomial.eval₂ (σ.comp (algebraMap ℤ k)) (σ a) P = 0 := by
         rw [← Polynomial.hom_eval₂, hP, map_zero]
       rw [Subsingleton.elim (σ.comp (algebraMap ℤ k)) (Int.castRingHom ℂ)] at h
@@ -97,11 +97,11 @@ theorem isOpen_emb_eq [Finite (k →+* ℂ)] (p : X ⟶ Sp k) (t : X ⟶ Sp ℤ)
     IsOpen {y : CxPts t τ | emb p y = σ} := by
   have hc (a : k) : Continuous fun y : CxPts t τ => emb p y a := by
     simp only [emb_apply]
-    exact (Points.continuous_valR_top _).comp continuous_subtype_val
+    exact (Points.continuous_valR_top _).comp continuous_subtypeVal
   have e : {y : CxPts t τ | emb p y = σ} =
       ⋂ σ' : {s : k →+* ℂ // s ≠ σ}, ⋃ a : k, {y | emb p y a ≠ σ'.1 a} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_iUnion]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_iUnion]
     constructor
     · rintro rfl σ'
       by_contra h
@@ -118,7 +118,7 @@ theorem isOpenEmbedding_and_range : ∀ (k : Type) [CommRing k] [Module.Finite �
   intro k _ _ X p t τ σ
   have := finite_ringHom k
   have hr := range_sheet p t τ σ
-  refine ⟨⟨IsEmbedding.of_comp (continuous_subtype_val.subtype_mk _) continuous_subtype_val
+  refine ⟨⟨IsEmbedding.of_comp (continuous_subtypeVal.subtype_mk _) continuous_subtypeVal
     IsEmbedding.subtypeVal, ?_⟩, hr⟩
   rw [hr]
   exact isOpen_emb_eq p t τ σ

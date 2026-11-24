@@ -240,7 +240,7 @@ private theorem ker_art (h : IsPlaceOver A v) {a : Weil h →* (v.adicCompletion
     κ (Subgroup.inclusion (Weil_le_Dec h) s) = 1 := by
   classical
   by_contra hne
-  haveI : CompactSpace (Dec (F := K) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CompactSpace (Dec (F := K) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   set g := Subgroup.inclusion (Weil_le_Dec h) s with hg
   have hcl : IsClosed (κ.ker : Set (Dec (F := K) A)) := isClosed_singleton.preimage hκ
   have hWo : IsOpen ((fun x => g * x) ⁻¹' (κ.ker : Set (Dec (F := K) A))ᶜ) :=
@@ -250,7 +250,7 @@ private theorem ker_art (h : IsPlaceOver A v) {a : Weil h →* (v.adicCompletion
   obtain ⟨U, hU⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hWo h1W
   set N : Subgroup (Dec (F := K) A) := κ.ker ⊔ U.toSubgroup with hN
   have hNo : IsOpen (N : Set (Dec (F := K) A)) := Subgroup.isOpen_mono le_sup_right U.isOpen
-  haveI : N.Normal := Subgroup.sup_normal _ _
+  have : N.Normal := Subgroup.sup_normal _ _
   have hgN : g ∉ N := fun hm => by
     have hm' : g ∈ ((κ.ker ⊔ U.toSubgroup : Subgroup _) : Set (Dec (F := K) A)) := hm
     rw [Subgroup.mul_normal] at hm'
@@ -267,13 +267,13 @@ private theorem ker_art (h : IsPlaceOver A v) {a : Weil h →* (v.adicCompletion
     simp [MonoidHom.mem_ker, mul_comm]
     rw [mul_mul_mul_comm]
     simp
-  letI : CommGroup (Dec (F := K) A ⧸ N) := { (inferInstance : Group (Dec (F := K) A ⧸ N)) with mul_comm := hcomm }
-  haveI : Finite (Dec (F := K) A ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
-  haveI : NeZero (Monoid.exponent (Dec (F := K) A ⧸ N)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  let : CommGroup (Dec (F := K) A ⧸ N) := { (inferInstance : Group (Dec (F := K) A ⧸ N)) with mul_comm := hcomm }
+  have : Finite (Dec (F := K) A ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
+  have : NeZero (Monoid.exponent (Dec (F := K) A ⧸ N)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   obtain ⟨φ, hφ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (Dec (F := K) A ⧸ N) ℂ
     (a := (g : Dec (F := K) A ⧸ N)) (fun e => hgN ((QuotientGroup.eq_one_iff g).1 e))
   let ξ : Weil h →* ℂˣ := (φ.comp (QuotientGroup.mk' N)).comp (Subgroup.inclusion (Weil_le_Dec h))
-  have hi : Continuous ((Subgroup.inclusion (Weil_le_Dec h)).comp (ineIncl h)) := continuous_subtype_val.subtype_mk _
+  have hi : Continuous ((Subgroup.inclusion (Weil_le_Dec h)).comp (ineIncl h)) := continuous_subtypeVal.subtype_mk _
   have hξ : GlobalTheory.WeilDeligne.IsSmooth ξ := by
     refine Subgroup.isOpen_mono (H₁ := N.comap ((Subgroup.inclusion (Weil_le_Dec h)).comp (ineIncl h)))
       (H₂ := (ξ.comp (ineIncl h)).ker) (fun x hx => ?_) (hNo.preimage hi)
@@ -299,13 +299,13 @@ private theorem emb_norm [Fintype (UpperTheory.V.W.Emb l w.1)] [DecidableEq (Upp
     (y : w.1.adicCompletion L) :
     τ.1 (Algebra.norm (v.adicCompletion K) y) =
       ∏ j ∈ Finset.univ.filter (fun j : UpperTheory.V.W.Emb l w.1 => resE w j = τ), j.1 y := by
-  letI := τ.1.toAlgebra
-  haveI : ContinuousSMul (v.adicCompletion K) (Qbar l) := continuousSMul_of_algebraMap _ _ τ.2
-  haveI : FiniteDimensional (v.adicCompletion K) (w.1.adicCompletion L) := GroundTheory.Global.finite_adicCompletion v w.1
-  haveI : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K (v.adicCompletion K)).injective
+  let := τ.1.toAlgebra
+  have : ContinuousSMul (v.adicCompletion K) (Qbar l) := continuousSMul_of_algebraMap _ _ τ.2
+  have : FiniteDimensional (v.adicCompletion K) (w.1.adicCompletion L) := GroundTheory.Global.finite_adicCompletion v w.1
+  have : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K (v.adicCompletion K)).injective
   refine (Algebra.norm_eq_prod_embeddings (v.adicCompletion K) (Qbar l) y).trans ?_
   have hc : ∀ σ : w.1.adicCompletion L →ₐ[v.adicCompletion K] Qbar l, Continuous σ := fun σ => by
-    letI : NontriviallyNormedField (v.adicCompletion K) := Valued.toNontriviallyNormedField _ _
+    let : NontriviallyNormedField (v.adicCompletion K) := Valued.toNontriviallyNormedField _ _
     have := LinearMap.continuous_of_finiteDimensional σ.toLinearMap
     exact this
   let e : (w.1.adicCompletion L →ₐ[v.adicCompletion K] Qbar l) ≃ {j : UpperTheory.V.W.Emb l w.1 // resE w j = τ} :=
@@ -367,7 +367,7 @@ private theorem exists_const [Fintype (UpperTheory.V.W.Emb l w.1)] [Fintype (Upp
     (c : UpperTheory.V.W.Emb l w.1 → ℤ) (Hk : ∀ x, ω x = 1 → UpperTheory.V.Z.Gam.nm w x = 1 → powU w.1 c x = 1) :
     ∃ c0 : UpperTheory.V.W.Emb l v → ℤ, ∀ y, powU w.1 c y = powU v c0 (UpperTheory.V.Z.Gam.nm w y) := by
   classical
-  haveI : FiniteDimensional (v.adicCompletion K) (w.1.adicCompletion L) := GroundTheory.Global.finite_adicCompletion v w.1
+  have : FiniteDimensional (v.adicCompletion K) (w.1.adicCompletion L) := GroundTheory.Global.finite_adicCompletion v w.1
   set d : ℕ := Module.finrank (v.adicCompletion K) (w.1.adicCompletion L) with hd
   have hd0 : 0 < d := Module.finrank_pos
   let inc : (v.adicCompletion K)ˣ →* (w.1.adicCompletion L)ˣ := Units.map (completionMap v w.1 : _ →* _)
@@ -431,9 +431,9 @@ private theorem isOpenMap_res : IsOpenMap (AlgEquiv.restrictScalarsHom K : G L �
   have hc : Continuous (AlgEquiv.restrictScalarsHom K : G L Ω →* G K Ω) := UpperTheory.V.Af.continuous_restrictScalarsHom K L Ω
   have hinj : Function.Injective (AlgEquiv.restrictScalarsHom K : G L Ω →* G K Ω) := fun σ τ e =>
     AlgEquiv.ext fun z => DFunLike.congr_fun e z
-  haveI : FiniteDimensional K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  have : FiniteDimensional K L := Module.Finite.of_restrictScalars_finite ℚ K L
   let E : IntermediateField K Ω := (IsScalarTower.toAlgHom K L Ω).fieldRange
-  haveI : FiniteDimensional K E :=
+  have : FiniteDimensional K E :=
     (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom K L Ω)).toLinearEquiv.finiteDimensional
   have hE := IntermediateField.fixingSubgroup_isOpen E
   have hr : Set.range (AlgEquiv.restrictScalarsHom K : G L Ω →* G K Ω) = (E.fixingSubgroup : Set (G K Ω)) := by

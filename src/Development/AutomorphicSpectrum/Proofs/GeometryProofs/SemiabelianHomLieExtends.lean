@@ -95,7 +95,7 @@ theorem ext_of_spMap_injective {A B : Type} [CommRing A] [CommRing B] (d : A →
   let Y' : Over Y := Over.mk p
   let f' : X' ⟶ Y' := Over.homMk a
   let g' : X' ⟶ Y' := Over.homMk b hab.symm
-  haveI : IsSeparated Y'.hom := ‹IsSeparated p›
+  have : IsSeparated Y'.hom := ‹IsSeparated p›
   let U' : Over Y := Over.mk (spMap d ≫ a ≫ p)
   let i' : U' ⟶ X' := Over.homMk (spMap d)
   have e : i' ≫ f' = i' ≫ g' := by
@@ -104,8 +104,8 @@ theorem ext_of_spMap_injective {A B : Type} [CommRing A] [CommRing B] (d : A →
   let l := equalizer.lift i' e
   have hi : spMap d = l.left ≫ (equalizer.ι f' g').left := by
     rw [← Over.comp_left, equalizer.lift_ι]; rfl
-  haveI hcl : IsClosedImmersion (equalizer.ι f' g').left := isClosedImmersion_equalizer_ι_left _ _
-  haveI : IsAffine X'.left := inferInstanceAs (IsAffine (Sp A))
+  have hcl : IsClosedImmersion (equalizer.ι f' g').left := isClosedImmersion_equalizer_ι_left _ _
+  have : IsAffine X'.left := inferInstanceAs (IsAffine (Sp A))
   obtain ⟨hA, hs⟩ := IsClosedImmersion.isAffine_surjective_of_isAffine (equalizer.ι f' g').left
   have h2 : Function.Injective (spMap d).appTop.hom := by
     have nat := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom d)
@@ -120,9 +120,9 @@ theorem ext_of_spMap_injective {A B : Type} [CommRing A] [CommRing B] (d : A →
       simp
     rw [e2, CommRingCat.hom_comp] at h2
     exact Function.Injective.of_comp h2
-  haveI : IsIso (equalizer.ι f' g').left.appTop :=
+  have : IsIso (equalizer.ι f' g').left.appTop :=
     (ConcreteCategory.isIso_iff_bijective _).2 ⟨hinj, hs⟩
-  haveI : IsIso (equalizer.ι f' g').left :=
+  have : IsIso (equalizer.ι f' g').left :=
     (MorphismProperty.arrow_mk_iso_iff (MorphismProperty.isomorphisms _)
       (arrowIsoSpecΓOfIsAffine (equalizer.ι f' g').left)).mpr
       (inferInstanceAs (IsIso (Spec.map (equalizer.ι f' g').left.appTop)))
@@ -243,10 +243,10 @@ theorem exists_local {O K : Type} [CommRing O] [IsDedekindDomain O] [Field K] [A
     (huv : u.left = (v ≫ q).left ≫ φ') :
     ∃ w : epsAt (spMap (algebraMap O (Localization.AtPrime P)) ≫ 𝟙 _) ⟶ G', IsTanAt G' _ w ∧
       u.left = spMap (dualMap c) ≫ w.left := by
-  letI : Algebra (Localization.AtPrime P) K := c.toAlgebra
+  let : Algebra (Localization.AtPrime P) K := c.toAlgebra
   have hcK : algebraMap (Localization.AtPrime P) K = c := rfl
-  haveI : IsScalarTower O (Localization.AtPrime P) K := IsScalarTower.of_algebraMap_eq' hc.symm
-  haveI : IsFractionRing (Localization.AtPrime P) K :=
+  have : IsScalarTower O (Localization.AtPrime P) K := IsScalarTower.of_algebraMap_eq' hc.symm
+  have : IsFractionRing (Localization.AtPrime P) K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.primeCompl _ K
   by_cases hO : IsField O
   ·
@@ -271,7 +271,7 @@ theorem exists_local {O K : Type} [CommRing O] [IsDedekindDomain O] [Field K] [A
     rw [← Category.assoc, ← spMap_dualMap_comp, h2, h4]
     simp [spMap]
   · have hP : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField ‹_› hO
-    haveI : IsDiscreteValuationRing (Localization.AtPrime P) :=
+    have : IsDiscreteValuationRing (Localization.AtPrime P) :=
       IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain O hP _
     rw [← hc] at h h'
     obtain ⟨w, hw, hw'⟩ := exists_tangent_dvr (T := Localization.AtPrime P) (K := K)

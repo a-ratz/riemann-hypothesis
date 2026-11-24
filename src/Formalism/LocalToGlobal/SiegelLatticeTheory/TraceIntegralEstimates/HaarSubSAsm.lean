@@ -167,7 +167,7 @@ theorem isHaarSub_NH [LocallyCompactSpace G] [T2Space G] {S N H : Set G} {μN μ
     (hHf : IsFiniteMeasure μH) (hHr : ∀ h ∈ H, μH.map (fun x => x * h) = μH)
     (hHi : μH.map (fun x => x⁻¹) = μH) :
     IsHaarSub S ((μN.prod μH).map (fun p => p.1 * p.2)) := by
-  haveI := hHf
+  have := hHf
   have hmul_m : Measurable fun p : G × G => p.1 * p.2 := measurable_fst.mul measurable_snd
   have key : ∀ f : G → ℝ≥0∞, Measurable f →
       ∫⁻ x, f x ∂((μN.prod μH).map (fun p => p.1 * p.2)) = ∫⁻ n, ∫⁻ h, f (n * h) ∂μH ∂μN := by
@@ -199,7 +199,7 @@ theorem isHaarSub_NH [LocallyCompactSpace G] [T2Space G] {S N H : Set G} {μN μ
           exact ENNReal.mul_lt_top (hNk _ hTc) (measure_lt_top μH H)
   unfold IsHaarSub
   refine ⟨hSc, h1, hmul, hinv, ?_, ?_, ?_, ?_, hcpt, ?_, ?_⟩
-  · haveI : IsFiniteMeasureOnCompacts ((μN.prod μH).map (fun p => p.1 * p.2)) := ⟨hcpt⟩
+  · have : IsFiniteMeasureOnCompacts ((μN.prod μH).map (fun p => p.1 * p.2)) := ⟨hcpt⟩
     infer_instance
   · rw [Ne, ← Measure.measure_univ_eq_zero, Measure.map_apply hmul_m MeasurableSet.univ, Set.preimage_univ,
       ← Set.univ_prod_univ, Measure.prod_prod, mul_eq_zero, not_or, Measure.measure_univ_eq_zero,
@@ -257,8 +257,8 @@ theorem isHaarSub_SinfU (hD : SDecomp) (hN : MeasN) (hH : MeasH) {D : D7} (X : F
   obtain ⟨hHf, hHr, hHi⟩ := hH D X u
   obtain ⟨hNsf, hN0, hNc, hNl⟩ := X.muN_haar u
   obtain ⟨hHsf, hH0, hHcc, hHl⟩ := X.muH_haar u
-  haveI := hNsf
-  haveI := hHsf
+  have := hNsf
+  have := hHsf
   exact isHaarSub_NH hSc h1 hmul hinv hHc hHinv hnorm hNH hdec hN0 hNc hNl hH0 hHcc hHl hNk hNr hNi hconj
     hHf hHr hHi
 

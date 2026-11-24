@@ -62,8 +62,8 @@ namespace GlobalTheory.WeilTypeChar
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
 theorem isCMField_of_cmExt {σ : E →ₐ[F] E} (h : IsCMExt F E σ) : IsCMField E := by
-  haveI := h.1; haveI := h.2.1
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h.2.2.1 }
+  have := h.1; have := h.2.1
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h.2.2.1 }
   exact IsCMField.ofCMExtension F E
 
 def phase : ℂˣ →* ℂˣ where
@@ -111,8 +111,8 @@ theorem norm_chiInf (emb : ∀ w : InfinitePlace F, GlobalTheory.AdelicU.EmbOver
 theorem exists_weil_char : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
     B.IsGood σ → ∃ ξ : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF ξ ∧ HasExp B.emb ξ (fun _ => 1) := by
   intro F E _ _ _ _ _ σ B hB
-  haveI : IsCMField E := isCMField_of_cmExt hB.cm
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsCMField E := isCMField_of_cmExt hB.cm
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨q, hq1, hq⟩ := Nat.exists_infinite_primes (max 3 (Nat.card (Units.torsion E) + 1))
   have hq2 : 2 < q := by omega
   have htq : Nat.card (Units.torsion E) < q := by omega

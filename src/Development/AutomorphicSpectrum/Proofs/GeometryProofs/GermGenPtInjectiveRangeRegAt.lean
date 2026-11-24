@@ -99,7 +99,7 @@ theorem mem_range_val_iff (hξ : IsCptGen ξ) (U : X.Opens) (h : genPt ξ ∈ U)
       rintro ⟨q, hq⟩
       have hq' : genPt ξ ⤳ q := hU q hq
       obtain ⟨x, hx⟩ := RingHom.mem_range.mp (H ⟨q, hq'⟩ hq)
-      obtain ⟨W, hqW, t, ht⟩ := TopCat.Presheaf.germ_exist X.presheaf x
+      obtain ⟨W, hqW, t, ht⟩ := TopCat.Presheaf.exists_germ_eq X.presheaf x
       have hg : genPt ξ ∈ W := hq'.mem_open W.isOpen hqW
       refine ⟨W, t, hqW, hg, ?_⟩
       rw [← genMap_germ ξ W hg hq' hqW t]

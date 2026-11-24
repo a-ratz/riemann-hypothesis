@@ -171,7 +171,7 @@ theorem actE_coe (α : 𝓞 E) (v : Vsp dim) : actE (α : E) v = act α v := rfl
 theorem actE_sum_left {κ : Type*} (s : Finset κ) (α : κ → E) (v : Vsp dim) :
     actE (∑ j ∈ s, α j) v = ∑ j ∈ s, actE (α j) v := by
 
-  simp only [← actL_apply, map_sum, ContinuousLinearMap.sum_apply]
+  simp only [← actL_apply, map_sum, sum_apply]
 
 theorem actE_sum_right {κ : Type*} (s : Finset κ) (α : E) (v : κ → Vsp dim) :
     actE α (∑ j ∈ s, v j) = ∑ j ∈ s, actE α (v j) := by
@@ -236,7 +236,7 @@ theorem tensorEps_neg (w₀ : 𝓞 E) (γ : Fin n → Vsp dim) : tensorEps w₀ 
 
 theorem tensorEps_of_int (w₀ : 𝓞 E) (γ : Fin n → Vsp dim) (m : ℤ)
     (h : (HC γ fun k => act w₀ (γ k)).im = m) : tensorEps w₀ γ = (-1) ^ m := by
-  rw [tensorEps, h, mul_comm, Complex.ofReal_intCast, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [tensorEps, h, mul_comm, Complex.ofReal_intCast, exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem tensorEps_eq_prod (w₀ : 𝓞 E) (γ : Fin n → Vsp dim) :
     tensorEps w₀ γ = ∏ k, cexp (Real.pi * I * ((Hf (γ k) (act w₀ (γ k))).im : ℂ)) := by
@@ -252,7 +252,7 @@ theorem tensorEps_eq_prod_eps (X : PT E) (w₀ : 𝓞 E)
   have h1 := heps _ (hγ k)
   rw [hm, mul_comm, Real.cos_int_mul_pi] at h1
   have h2 : (X.eps (γ k) : ℂ) = (-1) ^ m := by simpa using congrArg (fun t : ℝ => (t : ℂ)) h1
-  rw [hm, h2, mul_comm, Complex.ofReal_intCast, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [hm, h2, mul_comm, Complex.ofReal_intCast, exp_intCast_mul, Complex.exp_pi_mul_I]
 
 variable [IsCMField E]
 

@@ -355,7 +355,7 @@ theorem dvd_of_period_of_dvd_sum_powersetCard (q d : ℕ) (a : ℕ → ℤ) (hq 
     (hsum : ∀ k s : ℕ, (d : ℤ) ∣ ∑ I ∈ (Finset.range d).powersetCard s, a (k * ∑ i ∈ I, q ^ i))
     (s e l : ℕ) (hse : s * e = d) (hl : l * q ^ e ≡ l [MOD q ^ d - 1]) : (s : ℤ) ∣ a l := by
   classical
-  haveI : NeZero d := ⟨hd.ne'⟩
+  have : NeZero d := ⟨hd.ne'⟩
   have hq1 : 1 ≤ q := by omega
   induction s using Nat.strong_induction_on generalizing e l with
   | _ s ih =>
@@ -393,7 +393,7 @@ theorem dvd_of_period_of_dvd_sum_powersetCard (q d : ℕ) (a : ℕ → ℤ) (hq 
     · intro I
       by_cases hI : I ∈ O
       · simp [hI]
-      simp only [hI, if_false]
+      simp only [hI, ite_false]
       by_cases hc : I.card = s
       swap
       · simp [hh, hc]
@@ -403,7 +403,7 @@ theorem dvd_of_period_of_dvd_sum_powersetCard (q d : ℕ) (a : ℕ → ℤ) (hq 
       have hle := Finset.card_le_card hsub
       rw [Finset.card_vadd_finset, card_killed he'.symm, hc] at hle
       rcases hle.lt_or_eq with hlt | heq
-      · simp only [hh, hc, if_true]
+      · simp only [hh, hc, ite_true]
         refine ih _ hlt e' _ he'.symm ?_
         have hmem : (e' : ZMod d) +ᵥ I = I := by
           refine (mem_iff_mem_killed (AddAction.stabilizer (ZMod d) I) _).mpr ?_
@@ -427,7 +427,7 @@ theorem dvd_of_period_of_dvd_sum_powersetCard (q d : ℕ) (a : ℕ → ℤ) (hq 
       obtain ⟨g, rfl⟩ : I ∈ O := (Finset.mem_filter.mp hI).2
       change h (g +ᵥ killed d s) = _
       rw [hhinv]
-      simp only [hh, card_killed hse, if_true, hk]
+      simp only [hh, card_killed hse, ite_true, hk]
   have hsplit : ∑ I, h I = ∑ I, (if I ∈ O then h I else 0) + ∑ I, (if I ∈ O then 0 else h I) := by
     rw [← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun I _ => ?_
@@ -892,13 +892,13 @@ theorem exists_equiv_pi_adjoinRoot_of_aeval_eq_zero (F : Type) [Field F] (Q : Ty
       obtain ⟨b, rfl⟩ := Ideal.mem_span_singleton'.1 ha
       simp [h])
   have hφ : ∀ p : F[X], φ (AdjoinRoot.mk f p) = aeval g p := fun p => rfl
-  letI : Module (AdjoinRoot f) Q := Module.compHom Q φ
+  let : Module (AdjoinRoot f) Q := Module.compHom Q φ
   have hs : ∀ (a : AdjoinRoot f) (v : Q), a • v = φ a v := fun _ _ => rfl
-  haveI : IsScalarTower F (AdjoinRoot f) Q := ⟨fun c a v => by
+  have : IsScalarTower F (AdjoinRoot f) Q := ⟨fun c a v => by
     obtain ⟨p, rfl⟩ := AdjoinRoot.mk_surjective a
     rw [hs, hs, AdjoinRoot.smul_mk, hφ, hφ]
     simp⟩
-  haveI : Module.Finite (AdjoinRoot f) Q := Module.Finite.of_restrictScalars_finite F _ _
+  have : Module.Finite (AdjoinRoot f) Q := Module.Finite.of_restrictScalars_finite F _ _
   refine ⟨Module.finrank (AdjoinRoot f) Q,
     (Module.finBasis (AdjoinRoot f) Q).equivFun.restrictScalars F, fun v => ?_, ?_⟩
   · have : g v = AdjoinRoot.root f • v := by
@@ -968,8 +968,8 @@ theorem finsum_le_oneValue_finrank (K : Type) [Field K] [Finite K] (U : Type) [A
     ∑ᶠ B : {B : Submodule K U // B ≤ A}, oneValue (Nat.card K) (Module.finrank K B.1) =
       (Module.finrank K A : ℂ) := by
   classical
-  haveI : Finite A := Module.finite_of_finite K
-  haveI : Fintype (Submodule K A) := Fintype.ofFinite _
+  have : Finite A := Module.finite_of_finite K
+  have : Fintype (Submodule K A) := Fintype.ofFinite _
   rw [← sum_oneValue_finrank K A, ← finsum_eq_sum_of_fintype,
     ← finsum_comp_equiv (Submodule.MapSubtype.orderIso A).toEquiv]
   refine finsum_congr fun W => ?_
@@ -982,7 +982,7 @@ theorem eq_of_finsum_le_eq {α : Type} [PartialOrder α] [Finite α] (G H : α �
   classical
   induction A using WellFoundedLT.induction with
   | ind A ih =>
-    haveI : Fintype {B : α // B ≤ A} := Fintype.ofFinite _
+    have : Fintype {B : α // B ≤ A} := Fintype.ofFinite _
     have h1 := h A
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
       ← Finset.add_sum_erase _ _ (Finset.mem_univ (⟨A, le_rfl⟩ : {B : α // B ≤ A})),
@@ -1001,21 +1001,21 @@ theorem moebius_affine_finrank (K : Type) [Field K] [Finite K] (U : Type) [AddCo
       c₀ + c * (Module.finrank K A : ℂ)) :
     G ⊤ = c * ∏ i ∈ Finset.Ico 1 (Module.finrank K U), (1 - (Nat.card K : ℂ) ^ i) := by
   classical
-  haveI : Finite U := Module.finite_of_finite K
+  have : Finite U := Module.finite_of_finite K
   have key := eq_of_finsum_le_eq G
     (fun B => (if B = ⊥ then c₀ else 0) + c * oneValue (Nat.card K) (Module.finrank K B)) (fun A => by
-      haveI : Fintype {B : Submodule K U // B ≤ A} := Fintype.ofFinite _
+      have : Fintype {B : Submodule K U // B ≤ A} := Fintype.ofFinite _
       rw [hG A, ← finsum_le_oneValue_finrank K U A, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
         Finset.sum_add_distrib, Finset.mul_sum]
       congr 1
       rw [Finset.sum_eq_single (⟨⊥, bot_le⟩ : {B : Submodule K U // B ≤ A})]
       · simp
       · intro B _ hB
-        exact if_neg fun e => hB (Subtype.ext e)
+        exact ite_eq_right fun e => hB (Subtype.ext e)
       · intro h
         exact absurd (Finset.mem_univ _) h) ⊤
-  haveI : Nontrivial U := Module.nontrivial_of_finrank_pos hU
-  rw [key, if_neg top_ne_bot, zero_add, finrank_top, oneValue, if_neg hU.ne']
+  have : Nontrivial U := Module.nontrivial_of_finrank_pos hU
+  rw [key, ite_eq_right top_ne_bot, zero_add, finrank_top, oneValue, ite_eq_right hU.ne']
 
 end GlobalTheory.CuspGL
 end -- clump:auto
@@ -1132,14 +1132,14 @@ open Primary in
 theorem psi_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGroup V] [Module F V] [FiniteDimensional F V] (s : F[X] → ℂ), IsAdditive s → ∀ (g : Module.End F V) (f : F[X]) (m t : ℕ), f.Monic → Irreducible f → 0 < m → LinearMap.charpoly g = f ^ m → Module.finrank F (LinearMap.ker (aeval g f)) = f.natDegree * t → psi s V g = s f * ∏ i ∈ Finset.Ico 1 t, (1 - (Nat.card F : ℂ) ^ (f.natDegree * i)) := by
   intro F _ _ V _ _ _ s hs g f m t hf hi hm hc ht
   classical
-  haveI : Fact (Irreducible f) := ⟨hi⟩
+  have : Fact (Irreducible f) := ⟨hi⟩
   have he : 0 < f.natDegree := hi.natDegree_pos
   have he' : (f.natDegree : ℂ) ≠ 0 := by exact_mod_cast he.ne'
   obtain ⟨t', π, hsurj, hπ, hker, ht'⟩ := _root_.GlobalTheory.exists_surjective_pi_adjoinRoot_ker_eq_range F V g f
   obtain rfl : t' = t := Nat.eq_of_mul_eq_mul_left he (ht'.symm.trans ht)
-  haveI : Module.Finite F (AdjoinRoot f) := (AdjoinRoot.powerBasis hi.ne_zero).finite
+  have : Module.Finite F (AdjoinRoot f) := (AdjoinRoot.powerBasis hi.ne_zero).finite
   have hK : Module.finrank F (AdjoinRoot f) = f.natDegree := (AdjoinRoot.powerBasis hi.ne_zero).finrank
-  haveI : Finite (AdjoinRoot f) := Module.finite_of_finite F
+  have : Finite (AdjoinRoot f) := Module.finite_of_finite F
   have hcard : Nat.card (AdjoinRoot f) = Nat.card F ^ f.natDegree := by
     rw [← hK]; exact Module.natCard_eq_pow_finrank
   have hN : (aeval g f) ^ m = 0 := by rw [← map_pow, ← hc, LinearMap.aeval_self_charpoly]
@@ -1160,12 +1160,12 @@ theorem psi_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGro
       rw [hc, hf.natDegree_pow, ← finrank_top, ← h1, finrank_bot] at h2
       exact (Nat.mul_pos hm he).ne' h2
     · exact h
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Submodule F V) := Finite.of_injective _ SetLike.coe_injective
-  haveI : Finite (Submodule (AdjoinRoot f) (Fin t' → AdjoinRoot f)) :=
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Submodule F V) := Finite.of_injective _ SetLike.coe_injective
+  have : Finite (Submodule (AdjoinRoot f) (Fin t' → AdjoinRoot f)) :=
     Finite.of_injective _ SetLike.coe_injective
-  letI := Fintype.ofFinite (Submodule F V)
-  letI := Fintype.ofFinite (Submodule (AdjoinRoot f) (Fin t' → AdjoinRoot f))
+  let := Fintype.ofFinite (Submodule F V)
+  let := Fintype.ofFinite (Submodule (AdjoinRoot f) (Fin t' → AdjoinRoot f))
   let P : Submodule F V → ℂ := fun W => if h : ∀ x ∈ W, g x ∈ W then psi s W (g.restrict h) else 0
   let Φ : Submodule F V → Submodule (AdjoinRoot f) (Fin t' → AdjoinRoot f) :=
     fun W => Submodule.span (AdjoinRoot f) (π '' W)
@@ -1204,7 +1204,7 @@ theorem psi_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGro
             (fun W => W ≤ (A.restrictScalars F).comap π ∧ ∀ x ∈ W, g x ∈ W)) (by simp) P]
         refine Finset.sum_subset (fun W => by simp; tauto) fun W hW hW' => ?_
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hW hW'
-        exact dif_neg fun h => hW' ⟨hW, h⟩
+        exact dite_eq_right fun h => hW' ⟨hW, h⟩
       rw [h4, ← h5, h1]
       push_cast at h2
       field_simp
@@ -1216,7 +1216,7 @@ theorem psi_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGro
       · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Φ]
         rw [Submodule.top_coe, Set.image_univ, hsurj.range_eq, Submodule.span_univ]
       · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hW
-        exact dif_neg fun h => hW' (nak W h hW)
+        exact dite_eq_right fun h => hW' (nak W h hW)
     rw [h1]
     simp only [P]
     rw [dite_eq_left htop, ← psi_conj F s _ _ Submodule.topEquiv]
@@ -1405,7 +1405,7 @@ theorem cuspVal_eq_psi (ω : Fbar g →*₀ ℂ) {ι : Type} [Fintype ι] [Decid
     cuspVal ω x M = (-1) ^ (Fintype.card ι - 1) *
       psi (rootSum (ω : Fbar g →* ℂ) k) (ι → ZMod g) (Matrix.toLin' M) := by
   classical
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
   have hs := (_root_.GlobalTheory.CuspGL.rootSum_isAdditive_and_pow_X_sub_one (ZMod g) (ω : Fbar g →* ℂ) k).1
   unfold cuspVal
   split_ifs with hh

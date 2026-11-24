@@ -63,7 +63,7 @@ theorem restrict_surjective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   intro R _ _ _ _ G _ _ hG D A U V _ _ _ _ G' _ _ _ D' A' U' g β _ ρ hsp
   obtain ⟨V₁, _, _, _, ψ, G₁, _, _, m₁, Ω, _, α, b, hb, GΩ, _, n, hn, n', hn', j, G₀, _, m₀, hm₀, h₀, hm₀',
     hψl, hm₁, hj, _, _, _, hΩ, h₀j⟩ := hsp
-  haveI := hψl; haveI := hj
+  have := hψl; have := hj
   have hG₁ : IsSemiAbelian G₁ := GlobalTheory.Mum.isSemiAbelian_of_isGrpPullback_square _ _ _ G G₁ m₁ hm₁ hG
   classical
   by_contra hρ
@@ -71,15 +71,15 @@ theorem restrict_surjective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   obtain ⟨F, _, _, l, hl0, hl⟩ := GlobalTheory.TorusOnto.exists_finite_quotient_ne_zero ρ.range hM
   have hlρ : l.comp ρ = 0 := AddMonoidHom.ext fun x => hl _ ⟨x, rfl⟩
   have key : GlobalTheory.SplitTorus.torusMap (Sp V₁) l ≫ j = GlobalTheory.SplitTorus.torusMap (Sp V₁) 0 ≫ j := by
-    haveI : IsSeparated G₁.hom := hG₁.separated
+    have : IsSeparated G₁.hom := hG₁.separated
     have hjac : maximalIdeal V₁ ≤ Ideal.jacobson ⊥ := (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge
     refine GlobalTheory.hom_eq_of_thickenings_of_isProper V₁ (maximalIdeal V₁) hjac (splitTorus (Sp V₁) F) G₁ _ _ fun e => ?_
     have hψ : ∀ x ∈ maximalIdeal R, ψ x ∈ maximalIdeal V₁ := fun x hx =>
       (mem_maximalIdeal _).2 fun hu => (mem_maximalIdeal _).1 hx (isUnit_of_map_unit ψ x hu)
     have hI : maximalIdeal V₁ ^ (e + 1) ≠ ⊤ := fun h =>
       (maximalIdeal.isMaximal V₁).ne_top (top_le_iff.1 (h ▸ Ideal.pow_le_self (Nat.succ_ne_zero e)))
-    haveI : Nontrivial (V₁ ⧸ maximalIdeal V₁ ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2 hI
-    haveI : IsLocalRing (V₁ ⧸ maximalIdeal V₁ ^ (e + 1)) := .of_surjective' _ Ideal.Quotient.mk_surjective
+    have : Nontrivial (V₁ ⧸ maximalIdeal V₁ ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2 hI
+    have : IsLocalRing (V₁ ⧸ maximalIdeal V₁ ^ (e + 1)) := .of_surjective' _ Ideal.Quotient.mk_surjective
     let q : V₁ →+* V₁ ⧸ maximalIdeal V₁ ^ (e + 1) := Ideal.Quotient.mk _
     have he := isGrpPullback_pullback G₁ (thick V₁ (maximalIdeal V₁) e)
     have ha : ∀ x ∈ maximalIdeal R ^ (e + 1), (q.comp ψ) x = 0 := by
@@ -125,7 +125,7 @@ theorem restrict_surjective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
     show pullback.fst (splitTorus (Sp V₁) F).hom (thick V₁ (maximalIdeal V₁) e) ≫ _ =
       pullback.fst (splitTorus (Sp V₁) F).hom (thick V₁ (maximalIdeal V₁) e) ≫ _
     rw [← GlobalTheory.SplitTorus.bcIso_inv_bcMap, Category.assoc, Category.assoc, k3]
-  haveI : Mono (GlobalTheory.TorusPart.gtTorus (U'.gt 0) hb hn') :=
+  have : Mono (GlobalTheory.TorusPart.gtTorus (U'.gt 0) hb hn') :=
     (GlobalTheory.TorusPart.mono_gtTorus_and_factor (U'.gt 0) hb hn').1
   have e2 := congrArg (GlobalTheory.TorusPart.pullTorus hn) key
   rw [GlobalTheory.TorusPart.pullTorus_torusMap_comp, GlobalTheory.TorusPart.pullTorus_torusMap_comp, hΩ] at e2

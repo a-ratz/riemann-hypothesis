@@ -90,7 +90,7 @@ theorem mfact_add_single (m : σ →₀ ℕ) (x : σ) :
     intro y hy
     rcases Finset.mem_union.1 (Finsupp.support_add hy) with h | h
     · exact Finset.mem_insert_of_mem h
-    · rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at h
+    · rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at h
       rw [h]
       exact Finset.mem_insert_self _ _
   rw [Finsupp.prod_of_support_subset (m + Finsupp.single x 1) hsub _ (fun _ _ => Nat.factorial_zero),

@@ -528,8 +528,8 @@ theorem no_solvable_subgroup_of : NoSolvableOf := by
   have halt := h3 α G (σ ^ k) p hp hkG hk hkc hge hprim
   have h5 : 5 ≤ Fintype.card α := by have := hp.two_le; omega
   apply h4 α h5
-  haveI := hsolv
-  exact solvable_of_solvable_injective (Subgroup.inclusion_injective halt)
+  have := hsolv
+  exact Group.isSolvable_of_isSolvable_injective (Subgroup.inclusion_injective halt)
 
 end Formalism.GaloisIrreducibility
 end -- clump:auto

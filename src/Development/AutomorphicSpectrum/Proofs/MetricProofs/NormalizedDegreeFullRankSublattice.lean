@@ -126,7 +126,7 @@ private theorem index_span_ne_zero_of_linearIndependent {K : Type} [Field K] [Nu
       rw [smul_smul, hb, Nat.cast_smul_eq_nsmul (𝓞 K), natCast_zsmul]
     rw [e]
     exact S.smul_mem b ha
-  haveI := Module.finite_of_fg_torsion _ htor
+  have := Module.finite_of_fg_torsion _ htor
   exact AddSubgroup.index_ne_zero_of_finite
 
 private theorem index_ne_zero_and_le_of_smul_mem {K : Type} [Field K] [NumberField K] (E : HermitianBundle.{0} K)
@@ -146,9 +146,9 @@ private theorem index_ne_zero_and_le_of_smul_mem {K : Type} [Field K] [NumberFie
   have hIne : I.toAddSubgroup.index ≠ 0 := by
     rw [hIidx]
     exact Int.natAbs_ne_zero.mpr (pow_ne_zero _ hd)
-  haveI : I.toAddSubgroup.FiniteIndex := ⟨hIne⟩
-  haveI : Finite (𝓞 K ⧸ I) := I.toAddSubgroup.finite_quotient_of_finiteIndex
-  haveI : Finite (E.carrier ⧸ (⊤ : Submodule (𝓞 K) E.carrier)) :=
+  have : I.toAddSubgroup.FiniteIndex := ⟨hIne⟩
+  have : Finite (𝓞 K ⧸ I) := I.toAddSubgroup.finite_quotient_of_finiteIndex
+  have : Finite (E.carrier ⧸ (⊤ : Submodule (𝓞 K) E.carrier)) :=
     AddSubgroup.index_ne_zero_iff_finite.mp (by rw [Submodule.top_toAddSubgroup, AddSubgroup.index_top]; exact one_ne_zero)
   have hU : Finite (E.carrier ⧸ I • (⊤ : Submodule (𝓞 K) E.carrier)) :=
     Submodule.finite_quotient_smul I Module.Finite.fg_top

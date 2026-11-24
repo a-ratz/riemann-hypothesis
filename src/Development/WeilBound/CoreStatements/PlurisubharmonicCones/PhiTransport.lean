@@ -91,7 +91,7 @@ theorem phi_transport {E : Type} [Field E] [NumberField E] {V V' A : Type} [AddC
     rw [AddMonoidHom.map_closure]
     congr 1
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨a, i, rfl⟩
       exact ⟨ρ a (v i), ⟨a, i, rfl⟩, (hρ a (v i)).symm⟩

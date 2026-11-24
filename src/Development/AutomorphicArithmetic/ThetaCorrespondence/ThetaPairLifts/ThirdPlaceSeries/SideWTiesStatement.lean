@@ -284,9 +284,9 @@ theorem containsRayField_sub (P : Pre) (δ : FieldDat P) (K : IntermediateField 
     (hKE : K ≤ P.host.φ₀.toRatAlgHom.fieldRange) (hKR : K ≤ δ.ray) :
     GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (IntermediateField.inclusion hKR).toRingHom (modulus P) := by
   obtain ⟨hm, hNF, hray⟩ := δ.isRay
-  letI := algOf P.host.φ₀ δ.ray hm
+  let := algOf P.host.φ₀ δ.ray hm
   obtain ⟨hab, hun, -, hart⟩ := hray
-  haveI : IsGalois P.host.E δ.ray := hab.toIsGalois
+  have : IsGalois P.host.E δ.ray := hab.toIsGalois
   have hC : GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (algebraMap P.host.E δ.ray) (modulus P) :=
     GlobalTheory.FieldSize.RayNorm.containsRayField_of_ray (modulus P) hun (fun I hI hc => (hart I hI hc).1)
   let e : P.host.E ≃ₐ[ℚ] P.host.φ₀.toRatAlgHom.fieldRange := AlgEquiv.ofInjectiveField P.host.φ₀.toRatAlgHom
@@ -309,16 +309,16 @@ theorem weberSet_subset_ray : ∀ (P : Pre) (δ : FieldDat P) (L : PeriodPair), 
     exact δ.isRay.emb_mem x
   have hCK := containsRayField_sub P δ K hKE hKR
   obtain ⟨inst, S, hS⟩ := _root_.GlobalTheory.WeberSplitAny.splits_completely_of_three_le K h2 hd L hP n hn
-  haveI := GlobalTheory.FieldSize.WeberIn.numberField_adjoin K δ.ray (weberSet L n)
+  have := GlobalTheory.FieldSize.WeberIn.numberField_adjoin K δ.ray (weberSet L n)
   have hm0 : ((modulus P : ℕ) : 𝓞 δ.ray) ≠ 0 := by
     exact_mod_cast modulus_ne_zero P
-  haveI : NumberField (⊥ : IntermediateField δ.ray ℂ) := NumberField.of_module_finite δ.ray _
+  have : NumberField (⊥ : IntermediateField δ.ray ℂ) := NumberField.of_module_finite δ.ray _
   have hle : IntermediateField.adjoin δ.ray (weberSet L n) ≤ ⊥ := by
     refine GlobalTheory.Bauer.le_of_finite_split_not_split δ.ray ℂ ⊥ (IntermediateField.adjoin δ.ray (weberSet L n)) ?_
     refine ((WeberIn.finite_mem hm0).union (WeberIn.finite_norm_mem S)).subset ?_
     rintro 𝔓 ⟨hp, -, hnot⟩
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at hc
     obtain ⟨f, α, hN, hα, h1⟩ := hCK 𝔓 hc.1
     have h1' : (n : 𝓞 K) ∣ α - 1 := (Nat.cast_dvd_cast hdvd).trans h1
     have hf : f = 1 := by
@@ -331,7 +331,7 @@ theorem weberSet_subset_ray : ∀ (P : Pre) (δ : FieldDat P) (L : PeriodPair), 
       intro h0
       rw [h0, Ideal.absNorm_bot] at hN
       exact hp.ne_zero hN
-    haveI := 𝔓.isPrime
+    have := 𝔓.isPrime
     let 𝔭 : HeightOneSpectrum (𝓞 K) :=
       ⟨𝔓.asIdeal.comap (RingOfIntegers.mapRingHom (IntermediateField.inclusion hKR).toRingHom),
         Ideal.comap_isPrime _ _, hne⟩
@@ -498,10 +498,10 @@ theorem kPsiIn_of_hom (B : Base) [IsCMField B.host.E] {Hh : ReciprocityTheory.Ch
       (emb_sqrt_iff B.host _).2 g.2
     have h0 : Hh.rt0 = Complex.I * (Real.sqrt B.host.d : ℂ) := h2.trans (cmHostBaseEmbedding_sqrtMinusD B.host)
     have m1 : Dw.mult (embSum B.host (Sum.inl g)) = (B.R.sigW j).1 := by
-      rw [ReciprocityTheory.ChartRestriction.G.Geo.Tor.Datum.mult, if_pos (by rw [h1, h0]; exact hs)]
+      rw [ReciprocityTheory.ChartRestriction.G.Geo.Tor.Datum.mult, ite_eq_left (by rw [h1, h0]; exact hs)]
       exact hp
     have m2 : Dw.mult (embSum B.host (Sum.inr g)) = (B.R.sigW j).2 := by
-      rw [ReciprocityTheory.ChartRestriction.G.Geo.Tor.Datum.mult, if_neg]
+      rw [ReciprocityTheory.ChartRestriction.G.Geo.Tor.Datum.mult, ite_eq_right]
       · exact hq
       · rw [h1, h0]
         change ¬ starRingEnd ℂ (B.host.emb g B.host.sqrtMinusD) = _
@@ -685,8 +685,8 @@ theorem step (F : IntermediateField ℚ ℂ) (a b : ℝ) (hF : Sz F a b) (h : �
   have hFK : F ≤ F ⊔ ℚ⟮z⟯ := le_sup_left
   generalize F ⊔ ℚ⟮z⟯ = K at hS hzK hFK
   refine ⟨K, hFK, hS, ?_⟩
-  haveI := finiteDimensional_of_sz hS
-  haveI : NumberField K := NumberField.mk
+  have := finiteDimensional_of_sz hS
+  have : NumberField K := NumberField.mk
   rw [← IsFractionRing.coeSubmodule_isPrincipal (𝓞 K) K]
   have hz0 : z ≠ 0 := by
     rintro rfl
@@ -795,7 +795,7 @@ theorem exists_decomp (b : ClassBasis E) (J : Fin b.k → (Ideal (𝓞 E))⁰)
     rfl
   obtain ⟨a, ha⟩ := b.span (ClassGroup.mk E U)
   have hx1 : ClassGroup.mk E U ^ h = 1 := by
-    rw [← map_pow, hUY, ClassGroup.mk_eq_one_iff, coe_toPrincipalIdeal, FractionalIdeal.coe_spanSingleton]
+    rw [← map_pow, hUY, ClassGroup.mk_eq_one_iff, coe_toPrincipalIdeal, FractionalIdeal.coeToSubmodule_spanSingleton]
     exact ⟨⟨_, rfl⟩⟩
   have hm : ∀ i, ∃ m : ℤ, (h : ℤ) * a i = b.h i * m := by
     have h1 := b.indep (fun i => (h : ℤ) * a i) (by
@@ -954,12 +954,12 @@ theorem _root_.GlobalTheory.FieldSize.WeberUnram.of_algHom {K M R : Type} [Field
       ∀ 𝔭 : HeightOneSpectrum (𝓞 K), _root_.GlobalTheory.NT.UnramIn R 𝔭 →
         _root_.GlobalTheory.NT.UnramIn M 𝔭 := by
   have hab : IsAbelianGalois K M := IsAbelianGalois.of_algHom f
-  letI : Algebra M R := f.toRingHom.toAlgebra
-  haveI : IsScalarTower K M R := IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)
-  haveI : CharZero M := charZero_of_injective_algebraMap (algebraMap K M).injective
-  haveI : FiniteDimensional K M := FiniteDimensional.left K M R
-  haveI : FiniteDimensional ℚ M := Module.Finite.trans K M
-  haveI nf : NumberField M := ⟨⟩
+  let : Algebra M R := f.toRingHom.toAlgebra
+  have : IsScalarTower K M R := IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)
+  have : CharZero M := charZero_of_injective_algebraMap (algebraMap K M).injective
+  have : FiniteDimensional K M := FiniteDimensional.left K M R
+  have : FiniteDimensional ℚ M := Module.Finite.trans K M
+  have nf : NumberField M := ⟨⟩
   exact ⟨nf, hab, fun 𝔭 h => _root_.GlobalTheory.RayMaximal.unramIn_of_tower (L := M) (M := R) h⟩
 
 end GlobalTheory.FieldSize.WeberUnram
@@ -1034,12 +1034,12 @@ private theorem weberSet_subset_of_isRay_span_natCast :
     exact_mod_cast hn0.ne'
   have hMR : IntermediateField.adjoin (↥K) (_root_.GlobalTheory.FieldSize.weberSet L n) ≤ R := by
     apply _root_.GlobalTheory.Bauer.le_of_finite_split_not_split (↥K) ℂ R _
-    refine ((Ideal.finite_setOfPred_absNorm_le (S := 𝓞 K)
+    refine ((Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K)
       (S.sup id + Ideal.absNorm (Ideal.span {(n : 𝓞 K)}))).preimage
       (f := fun v : HeightOneSpectrum (𝓞 K) => v.asIdeal)
       (fun a _ b _ h => HeightOneSpectrum.ext h)).subset ?_
     rintro 𝔭 ⟨hp, hsplit, hnot⟩
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     by_cases hpS : Ideal.absNorm 𝔭.asIdeal ∈ S
     · exact le_add_right (Finset.le_sup (f := id) hpS)
     by_cases hn𝔭 : (n : 𝓞 K) ∈ 𝔭.asIdeal
@@ -1220,13 +1220,13 @@ theorem isGalois_torsion (F H M : IntermediateField ℚ ℂ) [NumberField F] [Nu
     (hM : M = H ⊔ IntermediateField.adjoin ℚ (torsionCoords (A.baseChange ℂ) 12)) :
     letI : Algebra H M := (IntermediateField.inclusion hHM).toAlgebra
     IsGalois H M := by
-  letI : Algebra H M := (IntermediateField.inclusion hHM).toAlgebra
-  letI : Algebra F H := (IntermediateField.inclusion hFH).toAlgebra
-  letI : Algebra F M := (IntermediateField.inclusion (hFH.trans hHM)).toAlgebra
-  haveI : IsScalarTower F H M := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower F M ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower H M ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower F H ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra H M := (IntermediateField.inclusion hHM).toAlgebra
+  let : Algebra F H := (IntermediateField.inclusion hFH).toAlgebra
+  let : Algebra F M := (IntermediateField.inclusion (hFH.trans hHM)).toAlgebra
+  have : IsScalarTower F H M := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower F M ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower H M ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower F H ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
   refine TorsionRam.isGalois A (fun z hz => ⟨⟨z, ?_⟩, rfl⟩) fun T h1 h2 z => ?_
   · rw [hM]
     exact (le_sup_right : _ ≤ H ⊔ _) (IntermediateField.subset_adjoin ℚ _ hz)
@@ -1293,14 +1293,14 @@ theorem sz_discField : RayField → ∀ (P : Pre) (δ : FieldDat P),
     rw [hilbertField, hKe, ← hF]
   rw [DiscRoot.discField_eq_torsionField]
   have hKH : K ≤ hilbertField d δ.jField := hH ▸ le_sup_left
-  letI : Algebra K (hilbertField d δ.jField) := (IntermediateField.inclusion hKH).toAlgebra
+  let : Algebra K (hilbertField d δ.jField) := (IntermediateField.inclusion hKH).toAlgebra
   obtain ⟨_, _, hu, hdeg⟩ := invariantField hR K hK hd4 L hL' _ hH fun _ => rfl
   obtain ⟨hfin, hM⟩ := TorsionDegree.finrank_torsionField_le d δ.jField A
-  haveI : NumberField (torsionField d A) := ⟨⟩
+  have : NumberField (torsionField d A) := ⟨⟩
   have hHM := hilbertField_le_torsionField d A
-  letI : Algebra (hilbertField d δ.jField) (torsionField d A) :=
+  let : Algebra (hilbertField d δ.jField) (torsionField d A) :=
     (IntermediateField.inclusion hHM).toAlgebra
-  haveI : IsGalois (hilbertField d δ.jField) (torsionField d A) :=
+  have : IsGalois (hilbertField d δ.jField) (torsionField d A) :=
     isGalois_torsion δ.jField (hilbertField d δ.jField) (torsionField d A) A le_sup_right hHM rfl
   have hdn : (discr K).natAbs = d := by rw [hdK]; simp
   have hrd := log_rootDiscr_le K (hilbertField d δ.jField) (torsionField d A) d hd0 hK hdn hu
@@ -1702,10 +1702,10 @@ theorem normDescent : ∀ (K E : Type) [Field K] [NumberField K] [Field E] [Numb
       𝔓.asIdeal.comap (algebraMap (𝓞 K) (𝓞 E)) = 𝔭.asIdeal ∧ Ideal.absNorm 𝔓.asIdeal = Ideal.absNorm 𝔭.asIdeal ∧
       ∃ α : 𝓞 K, 𝔭.asIdeal = Ideal.span {α} ∧ α - 1 ∈ Ideal.span {(n : 𝓞 K)} := by
   intro K E _ _ _ _ _ n 𝔓 π hp hπ hπ1
-  haveI := 𝔓.isMaximal
+  have := 𝔓.isMaximal
   set q := 𝔓.asIdeal with hq
   set p := q.under (𝓞 K) with hpd
-  haveI : p.IsMaximal := inferInstance
+  have : p.IsMaximal := inferInstance
   have hrel : Ideal.relNorm (𝓞 K) q = p ^ q.inertiaDeg (𝓞 K) := Ideal.relNorm_eq_pow_of_isMaximal q p
   have hab : Ideal.absNorm q = Ideal.absNorm p ^ q.inertiaDeg (𝓞 K) := by
     rw [← map_pow Ideal.absNorm p, ← hrel, Ideal.absNorm_relNorm]
@@ -1735,8 +1735,8 @@ theorem rayLe : ∀ (K E L Ω : Type) [Field K] [NumberField K] [_root_.NumberFi
   have hint : ∀ z ∈ Set.range (fun i => j (b i)), IsIntegral E z := by
     rintro _ ⟨i, rfl⟩
     exact ((Algebra.IsIntegral.isIntegral (R := K) (b i)).map j).tower_top
-  haveI : FiniteDimensional E M' := IntermediateField.finiteDimensional_adjoin hint
-  haveI : NumberField M' := NumberField.of_module_finite E M'
+  have : FiniteDimensional E M' := IntermediateField.finiteDimensional_adjoin hint
+  have : NumberField M' := NumberField.of_module_finite E M'
   have hmem : ∀ y, j y ∈ M' := by
     intro y
 
@@ -1782,11 +1782,11 @@ theorem rayLeC : ∀ (K E L : Type) [Field K] [NumberField K] [_root_.NumberFiel
     ∃ j : L →+* ℂ, j.comp (algebraMap K L) = φ.comp (algebraMap K E) ∧ ∀ x, j x ∈ M := by
   intro K E L _ _ _ _ _ _ _ _ _ _ _ n hn hL φ M hM
   obtain ⟨hm, hNF, hray⟩ := hM
-  letI := hNF
-  letI : Algebra E M := GlobalTheory.Mem.Fld.algOf φ M hm
-  letI : Algebra E ℂ := φ.toAlgebra
-  letI : Algebra K ℂ := ((algebraMap E ℂ).comp (algebraMap K E)).toAlgebra
-  haveI : IsScalarTower K E ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := hNF
+  let : Algebra E M := GlobalTheory.Mem.Fld.algOf φ M hm
+  let : Algebra E ℂ := φ.toAlgebra
+  let : Algebra K ℂ := ((algebraMap E ℂ).comp (algebraMap K E)).toAlgebra
+  have : IsScalarTower K E ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let R : IntermediateField E ℂ := M.toSubfield.toIntermediateField hm
   let e : M ≃ₐ[E] R :=
     { toFun := fun x => ⟨x.1, x.2⟩
@@ -1796,10 +1796,10 @@ theorem rayLeC : ∀ (K E L : Type) [Field K] [NumberField K] [_root_.NumberFiel
       map_mul' := fun _ _ => rfl
       map_add' := fun _ _ => rfl
       commutes' := fun _ => rfl }
-  haveI : FiniteDimensional ℚ R := e.toRingEquiv.toRatAlgEquiv.toLinearEquiv.finiteDimensional
-  haveI : NumberField R := NumberField.of_module_finite ℚ _
+  have : FiniteDimensional ℚ R := e.toRingEquiv.toRatAlgEquiv.toLinearEquiv.finiteDimensional
+  have : NumberField R := NumberField.of_module_finite ℚ _
   have hR : GlobalTheory.Mem.Fld.IsRayField E R (GlobalTheory.Mem.Fld.natIdeal E n) := hray.of_algEquiv e
-  haveI : IsAbelianGalois E R := hR.1
+  have : IsAbelianGalois E R := hR.1
   let j : L →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1818,7 +1818,7 @@ theorem smallHas_of_rayField : GlobalTheory.NT.RayField → ∀ (B : Base) (f : 
   refine ⟨w.val _ _ _ _ _ _, ?_, ?_⟩
   · have hN : GlobalTheory.Mem.Fld.modulus B.toPre ≠ 0 := GlobalTheory.Mem.Fld.modulus_ne_zero _
     have hray : w.δ.ray ≤ B.KsC := ((GlobalTheory.Mem.Fld.listField_le_iff _ _).1 (le_of_eq w.exact.symm)).2.2.1
-    haveI := GlobalTheory.Mem.NormPrime.isTotallyComplex_K B.host
+    have := GlobalTheory.Mem.NormPrime.isTotallyComplex_K B.host
     have h0 : Ideal.span {((GlobalTheory.Mem.Fld.modulus B.toPre : ℕ) : 𝓞 B.host.K)} ≠ ⊥ := by
       rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast hN
     obtain ⟨L, _, _, _, hab, hun, hgen, hart⟩ := hRF B.host.K _ h0

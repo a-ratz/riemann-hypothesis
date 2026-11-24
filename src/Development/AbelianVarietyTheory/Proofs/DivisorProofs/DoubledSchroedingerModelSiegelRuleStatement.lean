@@ -276,7 +276,7 @@ theorem continuous_reG [TopologicalSpace E] (e : γ ≃ β) {J : Matrix β β E}
     (h : J' = J.submatrix e e) : Continuous (reG c e h) := by
   unfold reG
   refine Continuous.subtype_mk ?_ _
-  refine (Continuous.units_map (Matrix.reindexAlgEquiv E E e.symm).toAlgHom.toMonoidHom ?_).comp continuous_subtype_val
+  refine (Continuous.units_map (Matrix.reindexAlgEquiv E E e.symm).toAlgHom.toMonoidHom ?_).comp continuous_subtypeVal
   exact (continuous_id (X := Matrix β β E)).matrix_reindex e.symm e.symm
 
 end Gen

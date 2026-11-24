@@ -161,13 +161,13 @@ private theorem ce_open {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     rw [← hOeq] at this
     exact this
   obtain ⟨U, hUO⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hOo h1O
-  haveI hUfi : U.toSubgroup.FiniteIndex := U.toOpenSubgroup.finiteIndex_of_finite_quotient
+  have hUfi : U.toSubgroup.FiniteIndex := U.toOpenSubgroup.finiteIndex_of_finite_quotient
   have he : U.toSubgroup.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
   have hn : 0 < Nat.card B := Nat.card_pos
   obtain ⟨ζ, hζ⟩ := _root_.GlobalTheory.exists_fixed_dvd_deg F Ω A w h (U.toSubgroup.index * Nat.card B)
     (Nat.mul_pos (Nat.pos_of_ne_zero he) hn)
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsAlgebraic.isAlgebraic ζ).isIntegral
   have hfix := IntermediateField.fixingSubgroup_isOpen (IntermediateField.adjoin F {ζ})
   obtain ⟨V, hV⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (hfix.inter U.isOpen')
@@ -206,8 +206,8 @@ theorem UpperTheory.V.Loc.charExt :
   have H : ∀ N : ℕ, ∃ ψ : Dec (F := F) A →* R ⧸ IsLocalRing.maximalIdeal R ^ N, IsLocallyConstant ψ ∧
       ∀ s, ψ (i s) = Ideal.Quotient.mk _ (χ s : R) := by
     intro N
-    haveI : Finite (R ⧸ IsLocalRing.maximalIdeal R) := (inferInstance : Finite (IsLocalRing.ResidueField R))
-    haveI : Finite (R ⧸ IsLocalRing.maximalIdeal R ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
+    have : Finite (R ⧸ IsLocalRing.maximalIdeal R) := (inferInstance : Finite (IsLocalRing.ResidueField R))
+    have : Finite (R ⧸ IsLocalRing.maximalIdeal R ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
     let χN : Weil h →* (R ⧸ IsLocalRing.maximalIdeal R ^ N)ˣ :=
       (Units.map (Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ N)).toMonoidHom).comp χ
     have hloc : IsLocallyConstant fun σ : Ine (F := F) A => χN (ineIncl h σ) := by
@@ -215,8 +215,8 @@ theorem UpperTheory.V.Loc.charExt :
       exact (hξ N).comp_continuous ha.cont
     obtain ⟨V, hVn, hVo, hV⟩ := ce_open h χN hloc
     let V' : Subgroup (Dec (F := F) A) := V.comap (Dec (F := F) A).subtype
-    haveI : V'.Normal := hVn.comap _
-    have hV'o : IsOpen (V' : Set (Dec (F := F) A)) := hVo.preimage continuous_subtype_val
+    have : V'.Normal := hVn.comap _
+    have hV'o : IsOpen (V' : Set (Dec (F := F) A)) := hVo.preimage continuous_subtypeVal
     obtain ⟨ψ, hψl, hψ⟩ := ce_ext i hi χN V' hV'o (fun s hs => hV s hs)
     refine ⟨(Units.coeHom _).comp ψ, hψl.comp (fun u : (R ⧸ IsLocalRing.maximalIdeal R ^ N)ˣ => (u : R ⧸ IsLocalRing.maximalIdeal R ^ N)), fun s => ?_⟩
     show ((ψ (i s) : (R ⧸ IsLocalRing.maximalIdeal R ^ N)ˣ) : R ⧸ IsLocalRing.maximalIdeal R ^ N) = _

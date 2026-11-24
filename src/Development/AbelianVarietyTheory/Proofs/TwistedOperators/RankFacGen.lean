@@ -97,7 +97,7 @@ theorem cusp : ∀ (D : D7) (W : HSp D) (s : ℕ) (L : Matrix (Fin W.rank) (Fin 
   let i : NIQ W L → GQ W := fun x => ⟨x.1.1, x.2⟩
   have hi : Function.Injective i := fun x y h => Subtype.ext (Subtype.ext (congrArg (fun z : GQ W => z.1) h))
   have : DiscreteTopology (NIQ W L) := DiscreteTopology.of_continuous_injective (f := i)
-    ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) hi
+    ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) hi
   have : Countable (NIQ W L) := hi.countable
   have : SecondCountableTopology (NI W L) := TopologicalSpace.Subtype.secondCountableTopology _
   let κ : Measure (NI W L) := Measure.haar
@@ -192,11 +192,11 @@ theorem fub {N H Y : Type} [MeasurableSpace N] [MeasurableSpace H] [Countable Y]
   set P := (κ.restrict 𝓝).prod (ν.restrict 𝓕) with hP
   let G : Y → N × H → ℂ := fun y p => T y p.1 p.2 * F p.2
   have hGm : ∀ y, Measurable (G y) := fun y => (hT y).mul (hF.comp measurable_snd)
-  have hGe : ∀ y, Measurable fun p => ‖G y p‖ₑ := fun y => (hGm y).enorm
+  have hGe : ∀ y, Measurable fun p => ‖G y p‖ₑ := fun y => (hGm y).eNorm
   have hlin : ∫⁻ p, ∑' y, ‖G y p‖ₑ ∂P ≠ ⊤ := by
     rw [hP, lintegral_prod _ (Measurable.tsum hGe).aemeasurable]
     convert hb using 6 with n _ h
-    simp only [G, enorm_mul]
+    simp only [G, eNorm_mul]
     rw [ENNReal.tsum_mul_right]
   have hsum : ∑' y, ∫⁻ p, ‖G y p‖ₑ ∂P ≠ ⊤ := by
     rwa [← lintegral_tsum fun y => (hGe y).aemeasurable]
@@ -208,13 +208,13 @@ theorem fub {N H Y : Type} [MeasurableSpace N] [MeasurableSpace H] [Countable Y]
     measurable_of_tendsto_metrizable' Filter.atTop (f := fun (s : Finset Y) p => ∑ y ∈ s, G y p)
       (fun s => Finset.measurable_sum _ fun y _ => hGm y) (tendsto_pi_nhds.2 hsp)
   have hle : ∀ p : N × H, ‖Θ p.1 p.2 * F p.2‖ₑ ≤ ∑' y, ‖G y p‖ₑ := fun p =>
-    le_of_tendsto' ((continuous_enorm.tendsto _).comp (hsp p)) fun s =>
-      (enorm_sum_le s _).trans (ENNReal.sum_le_tsum s)
+    le_of_tendsto' ((continuous_eNorm.tendsto _).comp (hsp p)) fun s =>
+      (eNorm_sum_le s _).trans (ENNReal.sum_le_tsum s)
   have hΘi : Integrable (fun p : N × H => Θ p.1 p.2 * F p.2) P :=
     ⟨hΘm.aestronglyMeasurable, ((lintegral_mono hle).trans_lt (lt_top_iff_ne_top.2 hlin))⟩
   have hnorm : Summable fun y => ∫ p, ‖G y p‖ ∂P := by
     have e : ∀ y, ∫ p, ‖G y p‖ ∂P = (∫⁻ p, ‖G y p‖ₑ ∂P).toReal := fun y => by
-      rw [integral_norm_eq_lintegral_enorm (hGm y).aestronglyMeasurable]
+      rw [integral_norm_eq_lintegral_eNorm (hGm y).aestronglyMeasurable]
     simp only [e]
     exact ENNReal.summable_toReal hsum
   have hS := hasSum_integral_of_summable_integral_norm hGi hnorm
@@ -224,9 +224,9 @@ theorem fub {N H Y : Type} [MeasurableSpace N] [MeasurableSpace H] [Countable Y]
   · refine ne_top_of_le_ne_top hsum (ENNReal.tsum_le_tsum fun y => ?_)
     rw [hP, lintegral_prod_symm _ (hGe y).aemeasurable]
     refine lintegral_mono fun h => ?_
-    simp only [G, enorm_mul]
-    rw [lintegral_mul_const _ ((hT y).of_uncurry_right.enorm)]
-    exact mul_le_mul' (enorm_integral_le_lintegral_enorm _) le_rfl
+    simp only [G, eNorm_mul]
+    rw [lintegral_mul_const _ ((hT y).of_uncurry_right.eNorm)]
+    exact mul_le_mul' (eNorm_integral_le_lintegral_eNorm _) le_rfl
   · have e : (fun y => ∫ h in 𝓕, (∫ n in 𝓝, T y n h ∂κ) * F h ∂ν) =
         fun y => ∫ p, G y p ∂(κ.restrict 𝓝).prod (ν.restrict 𝓕) := funext fun y => by
       rw [integral_prod_symm _ (by rw [← hP]; exact hGi y)]

@@ -272,7 +272,7 @@ theorem det_step (hA : IsUnit (gramF τ G f).det)
     rw [hgdef]
     simp [hMdef, Fin.castSucc_ne_last]
   have hM : M.det = yv τ G f e (Fin.last n) := by
-    rw [Matrix.det_of_upperTriangular, Fin.prod_univ_castSucc]
+    rw [det_of_isUpperTriangular, Fin.prod_univ_castSucc]
     · simp [hMdef, Fin.castSucc_ne_last]
     · intro i j hij
       have hij' : j < i := hij

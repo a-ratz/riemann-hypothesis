@@ -101,7 +101,7 @@ theorem local_den (v : HeightOneSpectrum (𝓞 F)) (x : v.adicCompletion F) :
       pow_pos (zero_lt_one.trans (NumberField.HeightOneSpectrum.one_lt_absNorm v)) k, ?_, ?_⟩
     · refine le_max_of_le_right (le_of_eq ?_)
       apply NNReal.eq
-      rw [coe_nnnorm, FinitePlace.norm_def, he, WithZeroMulInt.toNNReal_neg_apply _ WithZero.exp_ne_zero]
+      rw [coe_nnNorm, FinitePlace.norm_def, he, WithZeroMulInt.toNNReal_neg_apply _ WithZero.exp_ne_zero]
       simp only [WithZero.log_exp, zpow_natCast, Nat.cast_pow, NNReal.coe_pow]
     · rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, he, Nat.cast_pow, map_pow]
       calc _ ≤ (WithZero.exp (-1 : ℤ)) ^ k * WithZero.exp (k : ℤ) := by
@@ -117,7 +117,7 @@ theorem adele_den (c : FiniteAdeleRing (𝓞 F) F) (h : HeightOneSpectrum (𝓞 
   have hm3 : ∀ v, (m v : ℝ≥0) ≤ h v := fun v => (hm1 v).trans (max_le (h1 v) (hc v))
   refine ⟨∏ v ∈ hf.toFinset, m v, Finset.prod_pos fun v _ => hm0 v, ?_, fun v => ?_⟩
   · rw [finprod_eq_prod h hf, Nat.cast_prod]
-    exact Finset.prod_le_prod' fun v _ => hm3 v
+    exact Finset.prod_le_prod fun v _ => hm3 v
   · by_cases hv : v ∈ hf.toFinset
     · rw [← Finset.prod_erase_mul _ _ hv, Nat.cast_mul, mul_assoc]
       exact mul_mem (natCast_mem _ _) (hm2 v)
@@ -139,7 +139,7 @@ theorem family_den {ι : Type} [Fintype ι] (c : ι → FiniteAdeleRing (𝓞 F)
   choose n hn using fun p => adele_den (c p) h hf h1 (hc p)
   refine ⟨∏ p, n p, Finset.prod_pos fun p _ => (hn p).1, ?_, ?_⟩
   · push_cast
-    calc ∏ p, (n p : ℝ≥0) ≤ ∏ _p : ι, ∏ᶠ v, h v := Finset.prod_le_prod' fun p _ => (hn p).2.1
+    calc ∏ p, (n p : ℝ≥0) ≤ ∏ _p : ι, ∏ᶠ v, h v := Finset.prod_le_prod fun p _ => (hn p).2.1
       _ = (∏ᶠ v, h v) ^ Fintype.card ι := by rw [Finset.prod_const, Finset.card_univ]
   · intro p v
     classical
@@ -305,7 +305,7 @@ theorem denomBound (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F]
       (Finset.mem_univ p))))
   refine ⟨A * (B * N), by positivity, ?_, fun i => ?_⟩
   · have h1 : (∏ᶠ v, GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finHt V v g) ≤ GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ V g :=
-      le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => le_max_left _ _)
+      le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => le_max_left _ _)
     have h2 : (N : ℝ≥0) ≤ GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ V g ^ _ := hN1.trans (pow_le_pow_left' h1 _)
     have h3 : (N : ℝ) ≤ (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ V g : ℝ) ^
         Fintype.card (Fin V.rank × Fin V.rank × Fin (Module.finrank D.host.F D.host.E)) := by exact_mod_cast h2
@@ -416,7 +416,7 @@ theorem exists_denominator {F : Type} [Field F] [NumberField F]
   · refine Finset.prod_pos fun v _ => pow_pos ?_ _
     exact lt_trans Nat.one_pos (NumberField.HeightOneSpectrum.one_lt_absNorm v)
   · rw [finprod_eq_prod_of_mulSupport_subset H (s := hfin.toFinset) (by simp), Nat.cast_prod]
-    refine Finset.prod_le_prod' fun v _ => ?_
+    refine Finset.prod_le_prod fun v _ => ?_
     have := hle v
     exact_mod_cast this
   · intro v y hy

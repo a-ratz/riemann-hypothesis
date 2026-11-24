@@ -197,7 +197,7 @@ theorem coeff_subst_kill [Finite τ] (e : σ ↪ τ) (f : MvPowerSeries τ C)
   · intro d hd
     have : d.prod (fun s n => a s ^ n) = killCompl e (monomial d 1) := by
       rw [monomial_one_eq, map_finsuppProd]; simp only [map_pow, ha]
-    rw [this, coeff_killCompl, coeff_monomial, if_neg (Ne.symm hd), smul_zero]
+    rw [this, coeff_killCompl, coeff_monomial, ite_eq_right (Ne.symm hd), smul_zero]
 
 theorem pderiv_exp [CharZero C] : pderiv () (PowerSeries.exp C) = PowerSeries.exp C :=
   PowerSeries.derivative_exp C
@@ -209,7 +209,7 @@ open MvPowerSeries.WithPiTopology in
 theorem pderiv_subst_eq [Fintype σ] {a : σ → MvPowerSeries τ C} (ha : ∀ s, constantCoeff (a s) = 0)
     (f : MvPowerSeries σ C) (t : τ) : pderiv t (subst a f) = tder a (fun s => pderiv t (a s)) f := by
   classical
-  letI : UniformSpace C := ⊥
+  let : UniformSpace C := ⊥
   have hsubst : Continuous (subst a : MvPowerSeries σ C → MvPowerSeries τ C) :=
     continuous_subst (hasSubst_of_constantCoeff_zero ha)
   have hpderiv {ι : Type} (i : ι) :
@@ -233,7 +233,7 @@ theorem pderiv_subst_eq [Fintype σ] {a : σ → MvPowerSeries τ C} (ha : ∀ s
     rw [map_mul, MvPolynomial.aeval_X, Derivation.leibniz, hp, smul_eq_mul, smul_eq_mul, Finset.mul_sum]
     simp only [Derivation.leibniz, MvPolynomial.pderiv_X, Pi.single_apply, smul_eq_mul, map_add (f := _),
       map_mul, MvPolynomial.aeval_X, add_mul, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero,
-      map_one, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      map_one, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp [apply_ite (MvPolynomial.aeval a), mul_assoc, add_comm]
 
 section
@@ -460,7 +460,7 @@ theorem sg_eq (v : κ → C) : Y.sg v = -∑ i, v i • subst (pr (X : κ → Mv
   show -∑ i, v i * coeff (μ.mapDomain (fun x : κ => ((0 : Fin 2), x)) + Finsupp.single ((1 : Fin 2), i) 1) Y.h = _
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [coeff_smul, coeff_subst_kill e _ _ he, coeff_pderiv, Finsupp.embDomain_notin_range, Finsupp.embDomain_eq_mapDomain]
+  rw [coeff_smul, coeff_subst_kill e _ _ he, coeff_pderiv, Finsupp.embDomain_of_notMem_range, Finsupp.embDomain_eq_mapDomain]
   · rw [Nat.cast_zero, zero_add, mul_one]
     rfl
   · rintro ⟨x, hx⟩
@@ -534,7 +534,7 @@ variable {v : κ → C} (hv : ∀ i, V.Ge 0 (v i))
 include hv
 
 theorem int_cocycle : IntS V (subst (addP Y a b) (Y.sg v) - subst a (Y.sg v) - subst b (Y.sg v)) := by
-  haveI := R.charZero
+  have := R.charZero
   have hp := tr_prop (P := fun f => constantCoeff f = 0) ha hb (c := fun _ => 0) fun _ => map_zero _
   have hs := hasSubst_of_constantCoeff_zero hp
   have hA := cc_addP R (cc_gp (C := C) (κ := κ) (0 : Fin 3)) (cc_gp 1)
@@ -571,7 +571,7 @@ theorem int_cocycle : IntS V (subst (addP Y a b) (Y.sg v) - subst a (Y.sg v) - s
   ring
 
 theorem int_second : IntS V (subst a (Y.sg v) + tder (pr a b) (pr (fun _ => 0) (invF Y v b)) Y.h) := by
-  haveI := R.charZero
+  have := R.charZero
   have hp := tr_prop (P := fun f => constantCoeff f = 0) ha hb (c := fun _ => 0) fun _ => map_zero _
   have hs := hasSubst_of_constantCoeff_zero hp
   have hA := cc_addP R (cc_gp (C := C) (κ := κ) (1 : Fin 3)) (cc_gp 2)
@@ -609,7 +609,7 @@ theorem int_second : IntS V (subst a (Y.sg v) + tder (pr a b) (pr (fun _ => 0) (
   ring
 
 theorem int_first : IntS V (subst b (Y.sg v) + tder (pr a b) (pr (invF Y v a) fun _ => 0) Y.h) := by
-  haveI := R.charZero
+  have := R.charZero
   have hp := tr_prop (P := fun f => constantCoeff f = 0) ha (b := fun _ => 0) (fun _ => map_zero _) hb
   have hs := hasSubst_of_constantCoeff_zero hp
   have hA := cc_addP R (cc_gp (C := C) (κ := κ) (0 : Fin 3)) (cc_gp 1)
@@ -707,9 +707,9 @@ theorem coeff_subst_tyS {l : ℕ} (hl : 2 ≤ l) {a : MvPowerSeries τ C} (ha : 
     intro n hn
     by_cases h : ∃ s, l ^ s = n
     · obtain ⟨s, rfl⟩ := h
-      rw [coeff_tyS_pow hl, Finset.sum_eq_single s, if_pos rfl]
+      rw [coeff_tyS_pow hl, Finset.sum_eq_single s, ite_eq_left rfl]
       · intro s' _ hs'
-        exact if_neg fun h => hs' (Nat.pow_right_injective hl h)
+        exact ite_eq_right fun h => hs' (Nat.pow_right_injective hl h)
       · intro hs
         exfalso
         apply hs
@@ -717,7 +717,7 @@ theorem coeff_subst_tyS {l : ℕ} (hl : 2 ≤ l) {a : MvPowerSeries τ C} (ha : 
         rw [Finset.mem_range] at hn ⊢
         omega
     · push Not at h
-      rw [coeff_tyS_of_ne x n h, zero_mul, Finset.sum_eq_zero fun s _ => if_neg (h s)]
+      rw [coeff_tyS_of_ne x n h, zero_mul, Finset.sum_eq_zero fun s _ => ite_eq_right (h s)]
   rw [Finset.sum_congr rfl h1, Finset.sum_comm]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [Finset.sum_ite_eq]
@@ -993,10 +993,10 @@ theorem cEqSt_of_rLaw (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I : 
     show ((μ ⟨1 - g, k⟩ + 1 : ℕ) : C) * Y.hLf g a a' (μ + Finsupp.single (⟨1 - g, k⟩ : WV I) 1) = _
     unfold RawChart.hLf
     by_cases h : ∀ w ∈ μ.support, Y.OnLf g a a' w
-    · rw [if_pos h, if_pos (hsupp.2 h), coeff_pderiv, mul_comm]
+    · rw [ite_eq_left h, ite_eq_left (hsupp.2 h), coeff_pderiv, mul_comm]
       push_cast
       rfl
-    · rw [if_neg h, if_neg (fun h' => h (hsupp.1 h')), mul_zero]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h (hsupp.1 h')), mul_zero]
   rw [hD, hL, hL]
   split_ifs with h
   · have hz : coeff μ (∑ y : I g, (if Y.ty g y = Y.ty (1 - g) k then Y.sg1 (Y.u g y) (Y.u (1 - g) k) else 0) •

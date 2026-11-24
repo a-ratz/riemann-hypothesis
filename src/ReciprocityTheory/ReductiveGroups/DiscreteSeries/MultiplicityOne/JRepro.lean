@@ -135,13 +135,13 @@ theorem ae_EE (D : RealPlaceData k r Wp Wp) :
 
 theorem pi_inv (D : RealPlaceData k r Wp Wp) (hCW : IsClosedSubgroup (UWset k r D.z)) {h : Mat k r}
     (hh : h ∈ UWset k r D.z) : D.π h⁻¹ = ContinuousLinearMap.adjoint (D.π h) :=
-  haveI : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  haveI : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   rep_inv_eq_adjoint D.π_rep D.π_unitary hh (hCW.inv_mem _ hh) (Matrix.mul_nonsing_inv _ (hCW.unit _ hh))
 
 theorem cont_adj_pi (D : RealPlaceData k r Wp Wp) :
     ContinuousOn (fun q : Mt k r × (Mt k r × Mt k r) => ContinuousLinearMap.adjoint (D.π (Matrix.of q.2.1)))
       (EE k r D.z) :=
-  haveI : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  haveI : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   (ContinuousLinearMap.adjoint : (Wp →L[ℂ] Wp) ≃ₗᵢ⋆[ℂ] (Wp →L[ℂ] Wp)).continuous.comp_continuousOn
     (D.π_cont.comp (continuous_fst.comp continuous_snd).continuousOn fun q hq => hq.2.1)
 
@@ -183,7 +183,7 @@ theorem first_joint_integrable (D : RealPlaceData k r Wp Wp) (X : SigData k r)
     {u v : X.Hs} (hu : u ∈ Vfl X) (hv : v ∈ Vfl X) :
     Integrable (fun q : Mt k r × (Mt k r × Mt k r) =>
       ⟪X.σ (Matrix.of q.1) X.w, u⟫_ℂ • beInt D X (X.σ (Matrix.of q.1) X.w) v q.2) (D.μG.prod (D.μW.prod D.μN)) := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have : IsFiniteMeasureOnCompacts D.μG := ⟨fun _ hK => D.haarG.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μW := ⟨fun _ hK => D.haarW.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μN := ⟨fun _ hK => D.haarN.finite_compact _ hK⟩
@@ -251,7 +251,7 @@ theorem reproducing_fst (D : RealPlaceData k r Wp Wp) (X : SigData k r)
     {d : ℝ} (hd : IsFdegG D X d) {u v : X.Hs} (hu : u ∈ Vfl X) (hv : v ∈ Vfl X) :
     beOp D X u v = (d : ℂ) •
       ∫ y : Mt k r, ⟪X.σ (Matrix.of y) X.w, u⟫_ℂ • beOp D X (X.σ (Matrix.of y) X.w) v ∂D.μG := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have : IsFiniteMeasureOnCompacts D.μG := ⟨fun _ hK => D.haarG.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μW := ⟨fun _ hK => D.haarW.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μN := ⟨fun _ hK => D.haarN.finite_compact _ hK⟩
@@ -316,7 +316,7 @@ theorem second_joint_integrable (D : RealPlaceData k r Wp Wp) (X : SigData k r)
     {u v : X.Hs} (hu : u ∈ Vfl X) (hv : v ∈ Vfl X) :
     Integrable (fun q : Mt k r × (Mt k r × Mt k r) =>
       ⟪v, X.σ (Matrix.of q.1) X.w⟫_ℂ • beInt D X u (X.σ (Matrix.of q.1) X.w) q.2) (D.μG.prod (D.μW.prod D.μN)) := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have : IsFiniteMeasureOnCompacts D.μG := ⟨fun _ hK => D.haarG.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μW := ⟨fun _ hK => D.haarW.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μN := ⟨fun _ hK => D.haarN.finite_compact _ hK⟩
@@ -383,7 +383,7 @@ theorem reproducing_snd (D : RealPlaceData k r Wp Wp) (X : SigData k r)
     {d : ℝ} (hd : IsFdegG D X d) {u v : X.Hs} (hu : u ∈ Vfl X) (hv : v ∈ Vfl X) :
     beOp D X u v = (d : ℂ) •
       ∫ y : Mt k r, ⟪v, X.σ (Matrix.of y) X.w⟫_ℂ • beOp D X u (X.σ (Matrix.of y) X.w) ∂D.μG := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have : IsFiniteMeasureOnCompacts D.μG := ⟨fun _ hK => D.haarG.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μW := ⟨fun _ hK => D.haarW.finite_compact _ hK⟩
   have : IsFiniteMeasureOnCompacts D.μN := ⟨fun _ hK => D.haarN.finite_compact _ hK⟩

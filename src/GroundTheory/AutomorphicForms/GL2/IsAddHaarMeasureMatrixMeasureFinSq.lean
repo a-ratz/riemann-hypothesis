@@ -300,7 +300,7 @@ theorem integral_comp_linearEquiv {ι : Type*} [Fintype ι] (μ₀ : Measure (ι
   let e : (ι → F) ≃ₜ (ι → F) := ⟨L.toEquiv, hLc, hLic⟩
   have hmap : Measure.map L μ₀ = ((distribHaarChar (ι → F) L)⁻¹ : ℝ≥0) • μ₀ := by
     ext S hS
-    rw [Measure.map_apply hLc.measurable hS, Measure.smul_apply]
+    rw [Measure.map_apply hLc.measurable hS, smul_apply]
     have h := distribHaarChar_mul μ₀ L⁻¹ S
     have hpre : (L : (ι → F) → (ι → F)) ⁻¹' S = L⁻¹ • S := by
       ext x

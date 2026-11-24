@@ -177,7 +177,7 @@ private lemma measurableSet_dom' : MeasurableSet X.dom := by
   have ho : IsOpen X.dom := by
     show IsOpen {x : Frame X.Ψ r | ∀ τ : X.Ψ, (mat x τ).det ≠ 0 ∧
       ∀ i : Fin (r + 1), 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}
-    simp only [Set.setOf_forall, Set.setOf_and]
+    simp only [ofPred_forall, ofPred_and]
     exact isOpen_iInter_of_finite fun τ => (isOpen_ne_fun (hd τ) continuous_const).inter
       (isOpen_iInter_of_finite fun i =>
         isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (hc τ i))))

@@ -149,8 +149,8 @@ theorem exists_gcd_fraction {R K : Type*} [CommRing R] [IsDomain R] [UniqueFacto
   | inr hι =>
   obtain ⟨k₀⟩ := hι
   have := Fintype.ofFinite ι
-  letI : StrongNormalizationMonoid R := UniqueFactorizationMonoid.strongNormalizationMonoid
-  letI : NormalizedGCDMonoid R := UniqueFactorizationMonoid.toNormalizedGCDMonoid R
+  let : StrongNormalizationMonoid R := UniqueFactorizationMonoid.strongNormalizationMonoid
+  let : NormalizedGCDMonoid R := UniqueFactorizationMonoid.toNormalizedGCDMonoid R
   obtain ⟨⟨d, hd⟩, hdc⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors R) c
   choose e he using hdc
   have hd0 : algebraMap R K d ≠ 0 :=

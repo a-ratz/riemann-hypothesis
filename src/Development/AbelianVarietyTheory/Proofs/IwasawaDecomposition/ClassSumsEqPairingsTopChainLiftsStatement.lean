@@ -502,14 +502,14 @@ theorem finrank_coef_eq_prod : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl
   have hp := GlobalTheory.DefiniteMult.allPlus_parB _ (Nat.sub_le _ _) R.MX
   have hb := GlobalTheory.DefiniteMult.pair_bijective hB.models.inf hp hB.models.cX hB.models.prX
   have m := GlobalTheory.DefLift.AllPlus.finite_smooth_irreducible D _ _ R.MX hp
-  haveI : ∀ τ, FiniteDimensional ℂ (R.MX.H τ) := fun τ => (m τ).1
-  haveI : ∀ τ, FiniteDimensional ℂ (R.MX.sm τ) := fun τ => inferInstance
+  have : ∀ τ, FiniteDimensional ℂ (R.MX.H τ) := fun τ => (m τ).1
+  have : ∀ τ, FiniteDimensional ℂ (R.MX.sm τ) := fun τ => inferInstance
   have hsm : ∀ τ, Module.finrank ℂ (R.MX.sm τ) = Module.finrank ℂ (R.MX.H τ) := fun τ => by
     rw [(m τ).2.1, finrank_top]
   have e : R.cX.W ≃ₗ[ℂ] Module.Dual ℂ (SmT R.MX) := LinearEquiv.ofBijective R.prX hb
   have hT : Module.finrank ℂ (SmT R.MX) = ∏ τ, Module.finrank ℂ (R.MX.H τ) :=
     (finrank_piTensorProduct (fun τ => R.MX.sm τ)).trans (Finset.prod_congr rfl fun τ _ => hsm τ)
-  haveI : FiniteDimensional ℂ (SmT R.MX) :=
+  have : FiniteDimensional ℂ (SmT R.MX) :=
     Module.Finite.of_basis (Basis.piTensorProduct (fun τ => Module.finBasis ℂ (R.MX.sm τ)))
   rw [e.finrank_eq, Subspace.dual_finrank_eq, hT]
 
@@ -552,7 +552,7 @@ theorem rieszProd_inner : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
   have hp : GlobalTheory.DefLift.AllPlus R.MX := GlobalTheory.DefiniteMult.allPlus_parB _ (Nat.sub_le _ _) R.MX
   have hbij := GlobalTheory.DefiniteMult.pair_bijective hB.models.inf hp hB.models.cX hB.models.prX
   have m := GlobalTheory.DefLift.AllPlus.finite_smooth_irreducible D _ _ R.MX hp
-  haveI : ∀ τ, FiniteDimensional ℂ (R.MX.sm τ) := fun τ => by haveI := (m τ).1; infer_instance
+  have : ∀ τ, FiniteDimensional ℂ (R.MX.sm τ) := fun τ => by have := (m τ).1; infer_instance
   let b := fun τ => stdOrthonormalBasis ℂ (R.MX.sm τ)
   let c : R.MX.Vec → (∀ τ, Fin (Module.finrank ℂ (R.MX.sm τ))) → ℂ := fun u f => ∏ τ, ⟪(b τ (f τ)), u τ⟫_ℂ
   have hexp : ∀ u : R.MX.Vec, PiTensorProduct.tprod ℂ u =
@@ -576,12 +576,12 @@ theorem rieszProd_inner : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T :
     intro g
     obtain ⟨w, hw⟩ := hw g
     have h1 := hI (fun τ => Fin (Module.finrank ℂ (R.MX.sm τ))) b w a
-    rw [Finset.sum_eq_single g (fun f _ hf => by rw [hw f, if_neg hf]; simp) (by simp), hw g, if_pos rfl,
+    rw [Finset.sum_eq_single g (fun f _ hf => by rw [hw f, ite_eq_right hf]; simp) (by simp), hw g, ite_eq_left rfl,
       map_one, one_mul] at h1
 
     rw [← h1, ← inner_conj_symm, ← ha w, hexp v, map_sum]
-    rw [Finset.sum_eq_single g (fun f _ hf => by rw [map_smul, hw f, if_neg hf]; simp) (by simp)]
-    rw [map_smul, hw g, if_pos rfl, smul_eq_mul, mul_one]
+    rw [Finset.sum_eq_single g (fun f _ hf => by rw [map_smul, hw f, ite_eq_right hf]; simp) (by simp)]
+    rw [map_smul, hw g, ite_eq_left rfl, smul_eq_mul, mul_one]
   have h2 := ha' a
 
   rw [← h2, hexp v', map_sum]
@@ -681,7 +681,7 @@ theorem topSchur : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) 
   intro D G _ _ Pl0 T A Ks _ _ _ R F hB hP t h h'
   classical
   have hC := GlobalTheory.T.finrank_coefficient_space_eq_prod_real_models D G Pl0 T A Ks R F hB
-  haveI hWnt : Nontrivial R.cX.W := hB.models.cX.2.2.2.1
+  have hWnt : Nontrivial R.cX.W := hB.models.cX.2.2.2.1
   have hd0 : (Module.finrank ℂ R.cX.W : ℂ) ≠ 0 := by
     have := Module.finrank_pos (R := ℂ) (M := R.cX.W)
     exact_mod_cast this.ne'

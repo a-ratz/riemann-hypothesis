@@ -87,7 +87,7 @@ theorem UpperTheory.V.Ws.Pp.gram :
     apply Matrix.isUnit_det_of_right_inverse
       (B := ((k⁻¹ : (M4 R)ˣ) : M4 R) * adj ((k⁻¹ : (M4 R)ˣ) : M4 R))
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc (k : M4 R), Units.mul_inv, Matrix.one_mul, hinv]
-  rw [Matrix.det_of_upperTriangular (fun i j h => hQ i j h), Fin.prod_univ_four] at hdet
+  rw [Matrix.det_of_isUpperTriangular (fun i j h => hQ i j h), Fin.prod_univ_four] at hdet
   obtain ⟨a', ha⟩ := (isUnit_of_mul_isUnit_left
     (isUnit_of_mul_isUnit_left (isUnit_of_mul_isUnit_left hdet))).exists_right_inv
   obtain ⟨d', hd⟩ := (isUnit_of_mul_isUnit_right

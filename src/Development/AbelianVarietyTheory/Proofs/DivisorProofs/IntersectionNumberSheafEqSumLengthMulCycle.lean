@@ -95,7 +95,7 @@ variable {κ : Type} [Field κ] {X : Scheme.{0}} [Algebra κ Γ(X, ⊤)]
 
 theorem length_stalk_eq_zero_of_notMem {F : X.Modules} {w : X} (h : w ∉ support F) :
     Module.length (X.presheaf.stalk w) (F.presheaf.stalk w :) = 0 := by
-  haveI := notMem_support_iff.1 h
+  have := notMem_support_iff.1 h
   exact Module.length_eq_zero
 
 theorem dim_closure_le_suppDim {F : X.Modules} [IsFiniteQC F] {w : X} (h : w ∈ support F) :

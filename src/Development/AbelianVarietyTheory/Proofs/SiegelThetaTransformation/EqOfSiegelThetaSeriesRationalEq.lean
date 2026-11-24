@@ -159,7 +159,7 @@ theorem eq_of_thS_eq : ∀ (κ ι : Type) [Fintype κ] [Fintype ι] [DecidableEq
     funext p
     have := congrFun (congrFun hst p.1) p.2
     simp only [e, Matrix.of_apply] at this
-    have := (div_left_inj' hN).1 this
+    have := (div_left_inj₀ hN).1 this
     exact_mod_cast this
   have hrange : ∀ x, φ x - ψ x ≠ 0 → x ∈ Set.range e := by
     intro x hx

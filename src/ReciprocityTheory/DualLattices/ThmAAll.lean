@@ -379,7 +379,7 @@ theorem ht_gen (hB2 : HighestWeightVectorUniformBounds B) (N : ℕ) (hN : (N : (
         refine (pmap_heq f hx1 rfl hB1).trans ((B.zeroFst_nat f _).trans ?_)
         rw [hfy]
       ·
-        rw [Units.coe_map, MonoidHom.coe_coe, hzinv, evalT_tmul, map_sub, map_one, map_mul, hfσ, Dp.fr_η, hk]
+        rw [Units.coe_map, MonoidHom.coe_ofClass, hzinv, evalT_tmul, map_sub, map_one, map_mul, hfσ, Dp.fr_η, hk]
         try simp only [LinearMap.coe_comp, Function.comp_apply, AlgHom.toLinearMap_apply]
         try ring
       ·

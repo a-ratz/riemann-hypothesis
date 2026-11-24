@@ -57,16 +57,16 @@ theorem finite_nonunit {F : Type} [Field F] {E : Type} [CommRing E] [Algebra F E
     (p : Polynomial E) (τ : E) (h : IsUnit (p.eval τ)) : {t : F | ¬ IsUnit (p.eval (algebraMap F E t))}.Finite := by
   have hm : ∀ m : MaximalSpectrum E, {t : F | p.eval (algebraMap F E t) ∈ m.asIdeal}.Finite := by
     intro m
-    haveI := m.isMaximal
+    have := m.isMaximal
     have hq : p.map (Ideal.Quotient.mk m.asIdeal) ≠ 0 := by
       intro h0
       have := congrArg (Polynomial.eval (Ideal.Quotient.mk m.asIdeal τ)) h0
       rw [Polynomial.eval_map_apply, Polynomial.eval_zero] at this
       exact (h.map (Ideal.Quotient.mk m.asIdeal)).ne_zero this
-    refine ((Polynomial.finite_setOf_isRoot hq).preimage
+    refine ((Polynomial.finite_setOfPred_isRoot hq).preimage
       (f := ((Ideal.Quotient.mk m.asIdeal).comp (algebraMap F E))) (RingHom.injective _).injOn).subset ?_
     intro t ht
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Polynomial.IsRoot, RingHom.comp_apply, Polynomial.eval_map_apply]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Polynomial.IsRoot, RingHom.comp_apply, Polynomial.eval_map_apply]
     exact Ideal.Quotient.eq_zero_iff_mem.mpr ht
   refine (Set.finite_iUnion hm).subset ?_
   intro t ht
@@ -138,7 +138,7 @@ theorem triv_of_cell {F : Type} [Field F] [Infinite F] {E : Type} [CommRing E] [
     rw [this]
     exact (IsUnit.of_mul_eq_one _ hk2).mul (hunit _ _ ((h2.mul hξ).mul hξ) (h2.mul hξ))
   obtain ⟨t, ht⟩ := ((f1.union f2).union f3).infinite_compl.nonempty
-  simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at ht
+  simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at ht
   obtain ⟨⟨⟨W, hW⟩, u2⟩, u3⟩ := ht
   have s1 : σ (y (algebraMap F E t)) = y' (algebraMap F E t) := by
     simp only [y, y', map_add (f := _), hsm, hσh, h1, map_mul, map_sub, c.commutes, hc]; module

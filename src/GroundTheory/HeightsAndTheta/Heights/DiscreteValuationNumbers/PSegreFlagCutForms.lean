@@ -98,7 +98,7 @@ theorem exists_flag_dual (y : (Σ k, ι k) → Ω) (B : ChartBundle R (segreVec 
     rw [w.mem_span_image]
     intro m hm
     simp only [Finset.mem_coe, Finsupp.mem_support_iff] at hm
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     by_contra hjm
     push_neg at hjm
     apply hm
@@ -117,7 +117,7 @@ theorem exists_flag_dual (y : (Σ k, ι k) → Ω) (B : ChartBundle R (segreVec 
       intro hm
       have hS : {j : Fin N | (j : ℕ) < m + 1} = insert (⟨m, hm⟩ : Fin N) {j : Fin N | (j : ℕ) < m} := by
         ext j
-        simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Fin.ext_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Fin.ext_iff]
         omega
       rw [hS, Set.image_insert_eq, Set.image_insert_eq, Submodule.span_insert, Submodule.span_insert,
         ih (by omega)]
@@ -215,7 +215,7 @@ theorem exists_pair_not_mem {R A : Type*} [CommRing R] [CommRing A] [Algebra R A
     have hfin : (insert 0 (⋃ Q ∈ T, {t : R | x.2 + algebraMap R A t * y.2 ∈ Q})).Finite :=
       (T.finite_toSet.biUnion fun Q hQ => (hsub Q hQ).finite).insert 0
     obtain ⟨t, ht⟩ := Infinite.exists_notMem_finset hfin.toFinset
-    simp only [Set.Finite.mem_toFinset, Set.mem_insert_iff, Set.mem_iUnion, Set.mem_setOf_eq,
+    simp only [Set.Finite.mem_toFinset, Set.mem_insert_iff, Set.mem_iUnion, Set.mem_ofPred_eq,
       not_or, not_exists] at ht
     obtain ⟨ht0, htT⟩ := ht
     have hsnd : (x + t • y).2 = x.2 + algebraMap R A t * y.2 := by
@@ -265,7 +265,7 @@ theorem genVal_flag (w w' e : Module.Basis (Fin N) Ω E) (hsame : ∀ i j : Fin 
     rw [hχ]
   · have h0 : flagCoord w e t (k + 1) j = 0 := by
       unfold flagCoord
-      rw [if_neg hj]
+      rw [ite_eq_right hj]
     rw [h0, zero_mul, zero_mul]
 
 theorem flagLineCoord_ne_zero (w w' e : Module.Basis (Fin N) Ω E)
@@ -279,10 +279,10 @@ theorem flagLineCoord_ne_zero (w w' e : Module.Basis (Fin N) Ω E)
     rw [Finset.sum_eq_single ⟨k, hk⟩]
     · rw [Module.Basis.repr_self, Finsupp.single_eq_same, map_one, mul_one]
       unfold flagCoord
-      rw [if_pos (Nat.lt_succ_self k)]
+      rw [ite_eq_left (Nat.lt_succ_self k)]
       exact Finset.sum_congr rfl fun i _ => by rw [Algebra.smul_def, mul_comm]
     · intro j _ hj
-      rw [Module.Basis.repr_self, Finsupp.single_apply, if_neg hj, map_zero, mul_zero]
+      rw [Module.Basis.repr_self, Finsupp.single_apply, ite_eq_right hj, map_zero, mul_zero]
     · simp
   rw [h2] at h1
   have hz := Fintype.linearIndependent_iff.mp ht.linearIndependent _ h1

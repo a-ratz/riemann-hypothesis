@@ -132,8 +132,8 @@ theorem finRay (F : Type) [Field F] [NumberField F] (𝔣 : Ideal (𝓞 F)) (h�
     ∃ S : Finset (Ideal (𝓞 F)), (∀ a ∈ S, CoprimeTo F 𝔣 a) ∧ (∀ a ∈ S, ∀ b ∈ S, RayRel F 𝔣 a b → a = b) ∧
       ∀ I, CoprimeTo F 𝔣 I → ∃ a ∈ S, RayRel F 𝔣 I a := by
   classical
-  haveI : Finite (F →+* ℝ) := finite_realEmbeddings
-  haveI : Finite (𝓞 F ⧸ 𝔣) :=
+  have : Finite (F →+* ℝ) := finite_realEmbeddings
+  have : Finite (𝓞 F ⧸ 𝔣) :=
     (Ideal.absNorm_ne_zero_iff 𝔣).1 (by rwa [Ne, Ideal.absNorm_eq_zero_iff])
   have key : ∀ A : Ideal (𝓞 F), A ≠ ⊥ → ∃ B : Ideal (𝓞 F), B ≠ ⊥ ∧ B ⊔ 𝔣 = ⊤ ∧
       ∃ r : 𝓞 F, r ≠ 0 ∧ A * B = Ideal.span {r} := by
@@ -212,7 +212,7 @@ theorem finRay (F : Type) [Field F] [NumberField F] (𝔣 : Ideal (𝓞 F)) (h�
       (ha _ _) (ha _ _) (hb _ _) (hb _ _) (hb1 _ _) (hb1 _ _) (haq _ _) (Ideal.Quotient.eq.1 hq)
       (fun σ => Set.ext_iff.1 hs σ) (he _ _) ?_
     rw [hc]; exact he _ _
-  haveI : Nonempty {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I} :=
+  have : Nonempty {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I} :=
     ⟨⟨⊤, show (⊤ : Ideal (𝓞 F)) ≠ ⊥ ∧ (⊤ : Ideal (𝓞 F)) ⊔ 𝔣 = ⊤ from ⟨top_ne_bot, top_sup_eq _⟩⟩⟩
   have hfin : (Set.range κ).Finite := Set.toFinite _
   have hne : ∀ d ∈ Set.range κ, ∃ I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I}, κ I = d := fun d hd => hd

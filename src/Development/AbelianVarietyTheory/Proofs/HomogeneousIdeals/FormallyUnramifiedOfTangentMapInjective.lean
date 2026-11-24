@@ -157,10 +157,10 @@ theorem formallySmooth_of_dual_lift [Field k] [IsLocalRing B] (α : R →+* A) (
     β.FormallySmooth := by
   algebraize [α, β, β.comp α, x, x.comp β, (x.comp β).comp α]
   have : IsScalarTower R B k := .of_algebraMap_eq' rfl
-  haveI : IsLocalHom (algebraMap B k) := ‹_›
-  letI : Algebra (IsLocalRing.ResidueField B) k := (IsLocalRing.ResidueField.lift x).toAlgebra
-  haveI : IsScalarTower B (IsLocalRing.ResidueField B) k := .of_algebraMap_eq fun _ => rfl
-  haveI : Module.Free B Ω[B⁄R] := Module.free_of_flat_of_isLocalRing
+  have : IsLocalHom (algebraMap B k) := ‹_›
+  let : Algebra (IsLocalRing.ResidueField B) k := (IsLocalRing.ResidueField.lift x).toAlgebra
+  have : IsScalarTower B (IsLocalRing.ResidueField B) k := .of_algebraMap_eq fun _ => rfl
+  have : Module.Free B Ω[B⁄R] := Module.free_of_flat_of_isLocalRing
   obtain ⟨r, hr⟩ := (IsLocalRing.split_injective_iff_lTensor_residueField_injective
     (KaehlerDifferential.mapBaseChange R A B)).mpr (lTensor_injective_of_extend (k := k) _ fun χ => by
       let D : Derivation R A k :=

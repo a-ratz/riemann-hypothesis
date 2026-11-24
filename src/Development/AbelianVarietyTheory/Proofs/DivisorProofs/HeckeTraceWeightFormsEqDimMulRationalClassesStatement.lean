@@ -255,7 +255,7 @@ theorem loc_cpt_part {E : Type} [Field E] [NumberField E] [IsCMField E] (hU : Un
     (y : UL n w) (hs : y.1.val.charpoly.Separable) :
     ∃ C : Set (UL n w), IsCompact C ∧ (cptPart (twCent (MonoidHom.id (UL n w)) y) : Set (UL n w)) ⊆ C := by
   obtain ⟨Ω, hΩ, hmem⟩ := GlobalTheory.CentCpt.main E hU n w y hs
-  haveI : T2Space (GL (Fin n) (w.adicCompletion E)) := Units.isEmbedding_embedProduct.t2Space
+  have : T2Space (GL (Fin n) (w.adicCompletion E)) := Units.isEmbedding_embedProduct.t2Space
   have hc : ∀ a ∈ twCent (MonoidHom.id (UL n w)) y, ∀ b ∈ twCent (MonoidHom.id (UL n w)) y, a * b = b * a := by
     intro a ha b hb
     have ha' : a * y = y * a := ha
@@ -280,7 +280,7 @@ theorem stab_le_cptPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       map_mul' := fun a b => Subtype.ext (by simp) }
   have hρv : ∀ w z, ((ρ w z : UL n w) : GLw n w) = cLoc w (z : UA E n) := fun _ _ => rfl
   have hρc : ∀ w, Continuous (ρ w) := fun w =>
-    continuous_induced_rng.2 ((GlobalTheory.DefU.Inert.continuous_cLoc w).comp continuous_subtype_val)
+    continuous_induced_rng.2 ((GlobalTheory.DefU.Inert.continuous_cLoc w).comp continuous_subtypeVal)
   have hδw : ∀ w, ((ρ w δ : UL n w) : GLw n w) = GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) γ.1 := by
     intro w
     rw [hρv, hδ, FinPtLoc.finPt_eq]
@@ -299,7 +299,7 @@ theorem stab_le_cptPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       {z : finU (E := E) (n := n) | ∀ w ∈ S, toSub (UL n w) (cLoc w (z : UA E n)) ∈ (K'' w : Set (UL n w))} := by
     intro K''
     ext z
-    simp only [SetLike.mem_coe, Set.mem_setOf_eq, globLev, Subgroup.mem_iInf, Subgroup.mem_comap, Subgroup.mem_map,
+    simp only [SetLike.mem_coe, Set.mem_ofPred_eq, globLev, Subgroup.mem_iInf, Subgroup.mem_comap, Subgroup.mem_map,
       MonoidHom.coe_comp, Function.comp_apply, Subgroup.coe_subtype]
     refine forall₂_congr fun w _ => ?_
     rw [FinPtLoc.toSub_of_mem _ _ (GlobalTheory.BCT.ThBasic.cLoc_mem_UL hU n w _)]
@@ -343,20 +343,20 @@ theorem stab_le_cptPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hCc : ∀ w, IsCompact (C w) := by
       intro w
       by_cases h : cptPart (twCent (MonoidHom.id (UL n w)) (ρ w δ)) ≤ KL n w
-      · simp only [C, if_pos h]; exact (GlobalTheory.BCT.LocCompU.isOpen_isCompact_KL hU n w).2
-      · simp only [C, if_neg h]; exact hC0c w
+      · simp only [C, ite_eq_left h]; exact (GlobalTheory.BCT.LocCompU.isOpen_isCompact_KL hU n w).2
+      · simp only [C, ite_eq_right h]; exact hC0c w
     have hCK : ∀ᶠ w in cofinite, C w = KL n w := by
       filter_upwards [hcof] with w hw
       have e : ρ w δ = locPt w γ := by
         rw [← GlobalTheory.BCT.locPt_finPt E hU n γ w, FinPtLoc.toSub_of_mem _ _ (GlobalTheory.BCT.ThBasic.cLoc_mem_UL hU n w _)]
         rfl
       have hw' : cptPart (twCent (MonoidHom.id (UL n w)) (ρ w δ)) ≤ KL n w := by rw [e]; exact hw
-      simp only [C, if_pos hw']
+      simp only [C, ite_eq_left hw']
     have hsub : ∀ w, (cptPart (twCent (MonoidHom.id (UL n w)) (ρ w δ)) : Set (UL n w)) ⊆ C w := by
       intro w
       by_cases h : cptPart (twCent (MonoidHom.id (UL n w)) (ρ w δ)) ≤ KL n w
-      · simp only [C, if_pos h]; exact h
-      · simp only [C, if_neg h]; exact hC0 w
+      · simp only [C, ite_eq_left h]; exact h
+      · simp only [C, ite_eq_right h]; exact hC0 w
     have hD := GlobalTheory.BCT.LocCpt.loc_cpt E hU n S hS C hCc hCK
     have hle : cptPart T ≤ ⨅ w : Pl E, (cptPart (twCent (MonoidHom.id (UL n w)) (ρ w δ))).comap (ρ w) := by
       rw [cptPart, Subgroup.closure_le]
@@ -383,7 +383,7 @@ theorem stab_le_cptPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hUo' : IsOpen ((((globLev S K').map (MulAut.conj x).toMonoidHom).subgroupOf (cptPart T) : Subgroup _) :
         Set (cptPart T)) := by
       rw [Subgroup.coe_subgroupOf]
-      exact hUo.preimage continuous_subtype_val
+      exact hUo.preimage continuous_subtypeVal
     have hfi := GlobalTheory.LocVec.finiteIndex_of_isOpen (cptPart T) hD hTD _ hUo'
     have hTc : cptPart T ≤ T := (Subgroup.closure_le T).2 fun t ht => ht.1
     have heq : (T ⊓ (globLev S K').map (MulAut.conj x).toMonoidHom).subgroupOf (cptPart T) =
@@ -472,20 +472,20 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
     rw [mul_assoc, key, inv_mul_cancel_left]
   by_cases hw : IsSplitAt w
   · obtain ⟨u, hu⟩ := GlobalTheory.ConjLocal.conj_of_charpoly_local O n y'.val z'.val e12.symm (hsep _ e1)
-    refine ⟨u, by rw [UL, if_pos hw]; exact Subgroup.mem_top _, ?_⟩
+    refine ⟨u, by rw [UL, ite_eq_left hw]; exact Subgroup.mem_top _, ?_⟩
     rw [hu, ← mul_assoc, ← mul_assoc, Units.mul_inv, one_mul]
   · obtain ⟨-, hcc, hv, h4, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨ϖ, q, ⟨-, -, -, -, ⟨x₀, hx₀, hx₁⟩, hq2, hcard⟩, -⟩ := (h4 hw).2.1
     have hcard' : Nat.card (O ⧸ IsLocalRing.maximalIdeal O) = q ^ 2 := hcard
-    haveI := GlobalTheory.HenselSquare.isAdicComplete_integers E w
-    haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
+    have := GlobalTheory.HenselSquare.isAdicComplete_integers E w
+    have : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
       Nat.finite_of_card_ne_zero (by rw [hcard']; positivity)
     let c : O →+* O := (cj w).restrict _ _ (ThBasic.cj_mem_integers hU w)
     have hc : ∀ x, c (c x) = x := fun x => Subtype.ext (hcc _)
     have hmapc : ∀ M : Matrix (Fin n) (Fin n) O, (cT c M).map ι = cT (cj w) (M.map ι) := fun M => by
       ext i j; rfl
     have hUL : ∀ x : GLw n w, x ∈ UL n w ↔ cT (cj w) x.val * x.val = 1 := fun x => by
-      rw [UL, if_neg hw]
+      rw [UL, ite_eq_right hw]
       change cT (cj w) x.val * 1 * x.val = 1 ↔ _
       rw [mul_one]
     have hmv : ∀ x : GL (Fin n) O, (GeneralLinearGroup.map ι x).val = x.val.map ι := fun x => by
@@ -550,7 +550,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 theorem cLoc_mem_UL' (w : Pl E) (x : UA E n) : cLoc w x ∈ UL n w := by
   by_cases hsp : IsSplitAt w
-  · unfold UL; rw [if_pos hsp]; trivial
+  · unfold UL; rw [ite_eq_left hsp]; trivial
   · exact GlobalTheory.LocInj.cLoc_mem_UL hsp x
 
 def cw (w : Pl E) : finU (E := E) (n := n) →* UL n w where
@@ -559,7 +559,7 @@ def cw (w : Pl E) : finU (E := E) (n := n) →* UL n w where
   map_mul' x y := Subtype.ext (by simp)
 
 theorem toSub_eq (w : Pl E) (x : finU (E := E) (n := n)) : toSub (UL n w) (cLoc w (x : UA E n)) = cw w x :=
-  dif_pos (cLoc_mem_UL' w _)
+  dite_eq_left (cLoc_mem_UL' w _)
 
 theorem cw_val (w : Pl E) (x : finU (E := E) (n := n)) : (cw w x).1 = cLoc w (x : UA E n) := rfl
 
@@ -641,7 +641,7 @@ theorem GlobalTheory.BCT.ClsSupp.finite_supp : ∀ (E : Type) [Field E] [NumberF
   have hBg : ∀ w ∈ S, w ∉ B → ∀ g : UL n w, f w (g⁻¹ * cw w δ * g) ≠ 0 →
       ∃ a ∈ twCent (MonoidHom.id (UL n w)) (cw w δ), ∃ k ∈ K' w, g = a * k := fun w hw hwB =>
     by_contra fun h => hwB ⟨hw, h⟩
-  haveI : Finite B := hB.to_subtype
+  have : Finite B := hB.to_subtype
   have hq0 : ∀ q : DoubleCoset.Quotient (twCent (MonoidHom.id (finU (E := E) (n := n))) δ : Set (finU (E := E) (n := n))) (globLev S K' : Set (finU (E := E) (n := n))),
       globFn S f ((Quotient.out q)⁻¹ * δ * (MonoidHom.id (finU (E := E) (n := n))) (Quotient.out q)) ≠ 0 → ∀ w ∈ S,
       f w ((cw w (Quotient.out q))⁻¹ * cw w δ * cw w (Quotient.out q)) ≠ 0 := fun q hq w hw => by
@@ -875,7 +875,7 @@ theorem finsum_fibres {H C : Type} (p : H → C) (a : H → ℂ) (ha : (Function
     refine (Set.finite_singleton (p x)).subset ?_
     intro c hc
     by_contra h
-    exact hc (if_neg h)
+    exact hc (ite_eq_right h)
 
 theorem mk_eq_iff {H : Type} [Group H] (x y : H) :
     (Quot.mk _ x : TwCl (MonoidHom.id H)) = Quot.mk _ y ↔ ∃ g, y = g⁻¹ * x * g := by
@@ -904,7 +904,7 @@ theorem range_conj {H : Type} [Group H] (c : TwCl (MonoidHom.id H)) :
       = {x | (Quot.mk _ x : TwCl (MonoidHom.id H)) = c} := by
   have hc : (Quot.mk _ c.rep : TwCl (MonoidHom.id H)) = c := Quot.out_eq c
   ext x
-  simp only [Set.mem_range, Set.mem_setOf_eq]
+  simp only [Set.mem_range, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨δ, rfl⟩
     refine Eq.trans ?_ hc
@@ -1041,7 +1041,7 @@ theorem fiber_count (ι : H →* G) (hι : Injective ι) (Γ : Subgroup G) (hΓ 
     refine inf_eq_right.2 (fun g hg => ?_)
     obtain ⟨h, rfl⟩ := (hΓ g).1 (Subgroup.mem_inf.1 hg).1
     exact ⟨h, rfl⟩
-  haveI : Finite S := Nat.finite_of_card_ne_zero (hcardS ▸ (Nat.card_pos).ne')
+  have : Finite S := Nat.finite_of_card_ne_zero (hcardS ▸ (Nat.card_pos).ne')
   set h₀ := Quotient.out δ₀ with hh₀
   have hδ₀ : ((h₀ : H) : H ⧸ T) = δ₀ := QuotientGroup.out_eq' δ₀
   have hsm : ∀ s : S, s • δ₀ = (((s : H) * h₀ : H) : H ⧸ T) := fun s => by
@@ -1141,7 +1141,7 @@ open Function
 theorem unfold_classSum : ∀ {G H : Type} [Group G] [Group H] (ι : H →* G), Function.Injective ι → ∀ (Γ : Subgroup G), (∀ g, g ∈ Γ ↔ ∃ h, ι h = g) → ∀ (T : Subgroup H) (Γ' : Subgroup G), (∀ g, g ∈ Γ' ↔ ∃ t ∈ T, ι t = g) → ∀ (K : Subgroup G) (u : G → ℂ), (∀ t ∈ T, ∀ k ∈ K, ∀ g, u (ι t * g * k) = u g) → Finite (DoubleCoset.Quotient (Γ : Set G) (K : Set G)) → (∀ x : G, Finite ↥(Γ ⊓ K.map (MulAut.conj x).toMonoidHom)) → (∀ x : G, {δ : H ⧸ T | u ((ι (Quotient.out δ))⁻¹ * x) ≠ 0}.Finite) → ∑ᶠ q : DoubleCoset.Quotient (Γ : Set G) (K : Set G), ((Nat.card ↥(Γ ⊓ K.map (MulAut.conj (Quotient.out q)).toMonoidHom) : ℂ))⁻¹ * ∑ᶠ δ : H ⧸ T, u ((ι (Quotient.out δ))⁻¹ * Quotient.out q) = ∑ᶠ q : DoubleCoset.Quotient (Γ' : Set G) (K : Set G), ((Nat.card ↥(Γ' ⊓ K.map (MulAut.conj (Quotient.out q)).toMonoidHom) : ℂ))⁻¹ * u (Quotient.out q) := by
   intro G H _ _ ι hι Γ hΓ T Γ' hΓ' K u hu hfinQ hfinS hsupp
   classical
-  haveI := hfinQ
+  have := hfinQ
   have hιΓ : ∀ h, ι h ∈ Γ := fun h => (hΓ _).2 ⟨h, rfl⟩
   have hu' : ∀ g' ∈ Γ', ∀ k ∈ K, ∀ g, u (g' * g * k) = u g := by
     intro g' hg' k hk g
@@ -1212,7 +1212,7 @@ theorem unfold_classSum : ∀ {G H : Type} [Group G] [Group H] (ι : H →* G), 
       · rintro ⟨q, δ₀⟩
         rw [hfib_eq, Set.ncard_image_of_injective _ (fun d d' e => by simpa using e)]
         obtain ⟨-, hc⟩ := fiber_count ι hι Γ hΓ T Γ' hΓ' K (Quotient.out q) (hfinS _) δ₀
-        haveI := hfinS (Quotient.out q)
+        have := hfinS (Quotient.out q)
         have hS0 : Nat.card ↥(Γ ⊓ K.map (MulAut.conj (Quotient.out q)).toMonoidHom) ≠ 0 := Nat.card_pos.ne'
         rw [← hc] at hS0
         obtain ⟨hn0, hc0⟩ := mul_ne_zero_iff.1 hS0
@@ -1313,7 +1313,7 @@ theorem regroup_abstract {G H : Type} [Group G] [Group H] (ι : H →* G) (hι :
         ((Nat.card ↥((Γ ⊓ twCent (MonoidHom.id G) (ι c.rep)) ⊓ K.map (MulAut.conj (Quotient.out q)).toMonoidHom) : ℂ))⁻¹ *
           Φ ((Quotient.out q)⁻¹ * ι c.rep * Quotient.out q) := by
   classical
-  haveI := Fintype.ofFinite (DoubleCoset.Quotient (Γ : Set G) (K : Set G))
+  have := Fintype.ofFinite (DoubleCoset.Quotient (Γ : Set G) (K : Set G))
   set D : DoubleCoset.Quotient (Γ : Set G) (K : Set G) → TwCl (MonoidHom.id H) → ℂ := fun q c =>
     ∑ᶠ δ : H ⧸ twCent (MonoidHom.id H) c.rep,
       Φ ((Quotient.out q)⁻¹ * ι (Quotient.out δ * c.rep * (Quotient.out δ)⁻¹) * Quotient.out q) with hD

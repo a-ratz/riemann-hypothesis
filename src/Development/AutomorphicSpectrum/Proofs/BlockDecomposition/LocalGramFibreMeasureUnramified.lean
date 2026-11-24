@@ -108,7 +108,7 @@ theorem avg_gen {V X Y : Type} {_ : TopologicalSpace V} {_ : MeasurableSpace V} 
     (∀ k, MeasurableSet (A ∩ {x | c - g x ∈ U k}) ∧ μ (A ∩ {x | c - g x ∈ U k}) ≠ ⊤) ∧
       Filter.Tendsto (fun k => (μ (A ∩ {x | c - g x ∈ U k})).toReal / (ν (U k)).toReal) Filter.atTop
         (nhds (fib c A).toReal) := by
-  haveI : ν.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular _
+  have : ν.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular _
   have hBc := hB.mem_nhds hc
 
   let S : ℕ → Set X := fun k => {s | c - s ∈ U k}
@@ -191,17 +191,17 @@ end GlobalTheory.CompanionTheory.SiegelND.Coef.AvgV
 theorem GlobalTheory.CompanionTheory.SiegelND.Coef.avgV_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (hJ : IsHermND σ J) (n : ℕ), 2 * n < M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lv : Measure (Fv F v)), GlobalTheory.CompanionTheory.SW.IsStdV v lv → ∀ mv : HermR (Fv F v) σ n → Measure (Fin n → Fin M → Fv F v ⊗[F] E), GlobalTheory.CompanionTheory.SW.IsGramFib (Fv F v) σ J n (GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b lv n M) (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v) σ b lv n) mv → ∀ c : HermR (Fv F v) σ n, IsUnit (c : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)).det → ∀ A : Set (Fin n → Fin M → Fv F v ⊗[F] E), IsCompact A → IsOpen A → ∀ U : ℕ → Set (HermR (Fv F v) σ n), (∀ k, IsCompact (U k) ∧ IsOpen (U k) ∧ (0 : HermR (Fv F v) σ n) ∈ U k) → Filter.Tendsto U Filter.atTop (nhds (0 : HermR (Fv F v) σ n)).smallSets → (∀ k, MeasurableSet (A ∩ {X | c - gramH hCM hJ (Fv F v) X ∈ U k}) ∧ GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b lv n M (A ∩ {X | c - gramH hCM hJ (Fv F v) X ∈ U k}) ≠ ⊤) ∧ Filter.Tendsto (fun k => (GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b lv n M (A ∩ {X | c - gramH hCM hJ (Fv F v) X ∈ U k})).toReal / (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v) σ b lv n (U k)).toReal) Filter.atTop (nhds (mv c A).toReal) := by
   intro F E _ _ _ _ _ σ hCM M J hJ n _ d b v lv hlv mv hmv c hc A hAc hAo U hU hUt
   obtain ⟨r1, r2, r3, r4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   obtain ⟨a1, a2, a3, a4, -, -, -, a8, -, a10⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
-  haveI := a1
-  haveI := a2
-  haveI := a3
-  haveI := a4
+  have := a1
+  have := a2
+  have := a3
+  have := a4
   obtain ⟨-, hW, hH⟩ := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b lv hlv.1
   obtain ⟨e1, e2, e3, e4, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Fv F v) n
   have hgc : Continuous (gramH hCM hJ (Fv F v) : (Fin n → Fin M → Fv F v ⊗[F] E) → HermR (Fv F v) σ n) :=

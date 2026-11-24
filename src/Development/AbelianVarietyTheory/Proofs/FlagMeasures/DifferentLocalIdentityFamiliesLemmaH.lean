@@ -103,7 +103,7 @@ theorem val_unit {K : Type} [Field K] [ValuativeRel K] (u : (𝒪[K])ˣ) :
 theorem val_unif (A : LocAt F E sig p) {ϖ : 𝒪[A.Fp]} (hϖ : Irreducible ϖ) {π : F}
     (hπ : p.valuation F π = WithZero.exp (-1)) :
     valuation A.Fp (A.ιF π) = valuation A.Fp ϖ := by
-  haveI := A.lf
+  have := A.lf
   have h0 : (ϖ : A.Fp) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   have hv0 : valuation A.Fp ϖ ≠ 0 := by simpa using h0
   have hlt : valuation A.Fp ϖ < 1 := by
@@ -117,8 +117,8 @@ theorem val_unif (A : LocAt F E sig p) {ϖ : 𝒪[A.Fp]} (hϖ : Irreducible ϖ) 
   apply le_antisymm
   · obtain ⟨k, u, hk⟩ := GlobalTheory.UnramVal.exists_eq_zpow_mul_unit hϖ ((map_ne_zero A.ιF).2 hπ0)
     rw [hk, map_mul, val_unit, mul_one, map_zpow₀] at hπ1 ⊢
-    have hk1 : 0 < k := (zpow_lt_one_iff_right_of_lt_one₀ (zero_lt_iff.2 hv0) hlt).1 hπ1
-    calc _ ≤ valuation A.Fp ϖ ^ (1 : ℤ) := zpow_le_zpow_right_of_le_one₀ (zero_lt_iff.2 hv0) hlt.le hk1
+    have hk1 : 0 < k := (zpow_lt_one_iff_right_of_lt_one₀ (pos_iff_ne_zero.2 hv0) hlt).1 hπ1
+    calc _ ≤ valuation A.Fp ϖ ^ (1 : ℤ) := zpow_le_zpow_right_of_le_one₀ (pos_iff_ne_zero.2 hv0) hlt.le hk1
       _ = _ := zpow_one _
   · have hn : {z : A.Fp | valuation A.Fp z = valuation A.Fp ϖ} ∈ nhds (ϖ : A.Fp) := by
       rw [IsValuativeTopology.mem_nhds_iff]
@@ -152,7 +152,7 @@ theorem le_pow_iff (I : Ideal (𝓞 F)) (hI : I ≠ 0) (n : ℕ) :
 theorem val_lt_one {K : Type} [Field K] [ValuativeRel K] {ϖ : 𝒪[K]} (hϖ : Irreducible ϖ) :
     0 < valuation K ϖ ∧ valuation K ϖ < 1 := by
   have h0 : (ϖ : K) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
-  refine ⟨zero_lt_iff.2 (by simpa using h0), lt_of_le_of_ne ϖ.2 fun h => hϖ.not_isUnit ?_⟩
+  refine ⟨pos_iff_ne_zero.2 (by simpa using h0), lt_of_le_of_ne ϖ.2 fun h => hϖ.not_isUnit ?_⟩
   exact ((Valuation.integer.integers (valuation K)).isUnit_iff_valuation_eq_one).2 h
 
 theorem mem_span_iff (A : LocAt F E sig p) (L : LocE A.Fp A.Ep) {c : A.Fp} (hc : c ≠ 0) (x : A.Fp) :
@@ -162,7 +162,7 @@ theorem mem_span_iff (A : LocAt F E sig p) (L : LocE A.Fp A.Ep) {c : A.Fp} (hc :
   have hx : algebraMap A.Fp A.Ep x = algebraMap A.Fp A.Ep (x / c) * algebraMap A.Fp A.Ep c := by
     rw [← map_mul, div_mul_cancel₀ _ hc]
   have h1 : valuation A.Fp x ≤ valuation A.Fp c ↔ x / c ∈ 𝒪[A.Fp] := by
-    rw [Valuation.mem_integer_iff, map_div₀, div_le_one₀ (zero_lt_iff.2 (by simpa using hc))]
+    rw [Valuation.mem_integer_iff, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 (by simpa using hc))]
   rw [h1, ← GlobalTheory.UnramOrder.algebraMap_mem_iff L, Submodule.mem_span_singleton]
   constructor
   · rintro ⟨o, ho⟩
@@ -178,7 +178,7 @@ theorem vE_eq_count (A : LocAt F E sig p) (L : LocE A.Fp A.Ep) {ϖ : 𝒪[A.Fp]}
       Submodule.span L.O {algebraMap A.Fp A.Ep c}) :
     vE L ϖ (algebraMap A.Fp A.Ep c) =
       ((Associates.mk p.asIdeal).count (Associates.mk I).factors : ℕ) := by
-  haveI := A.lf
+  have := A.lf
   obtain ⟨h0, h1⟩ := val_lt_one hϖ
   have hϖ0 : (ϖ : A.Fp) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   obtain ⟨k, u, rfl⟩ := GlobalTheory.UnramVal.exists_eq_zpow_mul_unit hϖ hc
@@ -294,7 +294,7 @@ theorem finprod_modK_localGen : ∀ (D : D7) (Z : LocDat D),
   let A : GlobalTheory.HL.Places D.host.F D.host.E D.conjF :=
     { quad := D.sp.cm.deg2, loc := D.s.atP, L := fun p => (Z.M p).L, L_cj := fun p => Z.hcj p }
   have hex : ∀ p : PlF D, ∃ ϖ : 𝒪[(D.s.atP p).Fp], Irreducible ϖ := fun p => by
-    haveI := (D.s.atP p).lf
+    have := (D.s.atP p).lf
     exact IsDiscreteValuationRing.exists_irreducible _
   choose ϖ hϖ using hex
   have hδ : ∀ p, Z.δ p ≠ 0 := fun p => (Z.agree p).2.1
@@ -314,7 +314,7 @@ theorem finprod_modK_localGen : ∀ (D : D7) (Z : LocDat D),
     fun p => GlobalTheory.IdealResProd.vE_eq_count (D.s.atP p) (Z.M p).L (hϖ p) _ hI (hδ p) (_root_.GlobalTheory.LocDiffGen.span_different_eq D Z p)
   have hfin : (Function.mulSupport g).Finite := by
     refine (Ideal.finite_factors hI).subset fun p hp => ?_
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     by_contra h
     apply hp
     have h0 : (Associates.mk p.asIdeal).count (Associates.mk (differentIdeal ℤ (𝓞 D.host.F))).factors = 0 := by
@@ -421,7 +421,7 @@ theorem prod_resQ_zpow : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
 
   have key : ∀ p, vE (A.L p) (ϖ p) (algebraMap (A.loc p).Fp (A.loc p).Ep ((A.loc p).ιF x)) =
       -WithZero.log (p.valuation F x) := fun p => by
-    haveI := (A.loc p).lf
+    have := (A.loc p).lf
     exact vE_eq_neg_log p (A.L p) (A.loc p).ιF (A.loc p).dense
       (GlobalTheory.HL.PlacesInt.val_le_iff (A.loc p)) (hϖ p) hx
   have hterm : ∀ p, (resQ (ϖ p) : ℝ) ^ vE (A.L p) (ϖ p)
@@ -434,7 +434,7 @@ theorem prod_resQ_zpow : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
   · refine (hfin.image NumberField.FinitePlace.equivHeightOneSpectrum).subset ?_
     intro p hp
     refine ⟨NumberField.FinitePlace.equivHeightOneSpectrum.symm p, ?_, by simp⟩
-    simp only [Set.mem_setOf_eq, key] at hp
+    simp only [Set.mem_ofPred_eq, key] at hp
     rw [Function.mem_mulSupport, place_eq_zpow p hx]
     intro h1
     have hgt : (1 : ℝ) < Ideal.absNorm p.asIdeal := by

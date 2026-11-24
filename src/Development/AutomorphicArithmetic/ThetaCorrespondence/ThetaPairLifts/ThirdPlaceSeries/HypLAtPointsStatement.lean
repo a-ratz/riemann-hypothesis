@@ -381,11 +381,11 @@ theorem pairs_append {p q : ℕ} (g : Fin (p + q) → Fin (p + q) → ℝ) :
       (∏ i : Fin p, ∏ j ∈ univ.filter (fun j => i < j), g (Fin.castAdd q i) (Fin.castAdd q j)) *
       (∏ i : Fin p, ∏ j : Fin q, g (Fin.castAdd q i) (Fin.natAdd p j)) *
       (∏ i : Fin q, ∏ j ∈ univ.filter (fun j => i < j), g (Fin.natAdd p i) (Fin.natAdd p j)) := by
-  simp only [Finset.prod_filter, Fin.prod_univ_add, Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd]
+  simp only [Finset.prod_filter, Fin.prod_univ_add, Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd]
   have h1 : ∀ (i : Fin p) (j : Fin q), (i : ℕ) < p + (j : ℕ) := fun i j => by omega
   have h2 : ∀ (i : Fin q) (j : Fin p), ¬ p + (i : ℕ) < (j : ℕ) := fun i j => by omega
   have h3 : ∀ (i j : Fin q), (p + (i : ℕ) < p + (j : ℕ)) ↔ ((i : ℕ) < (j : ℕ)) := fun i j => by omega
-  simp only [h1, h2, h3, if_true, if_false, Finset.prod_const_one, mul_one, one_mul, Finset.prod_mul_distrib]
+  simp only [h1, h2, h3, ite_true, ite_false, Finset.prod_const_one, mul_one, one_mul, Finset.prod_mul_distrib]
 
 theorem pairs_cast {n n' : ℕ} (h : n = n') (f : Fin n' → Fin n' → ℝ) :
     ∏ a : Fin n, ∏ b ∈ univ.filter (fun b => a < b), f (Fin.cast h a) (Fin.cast h b) =
@@ -451,9 +451,9 @@ theorem interlace_bound {K n : ℕ} (hn : K + 1 = n) (u : Fin n → ℝ) (v : Fi
   intro j _
   by_cases hij : i < j
   · have hle : i ≤ j := hij.le
-    simp only [hij, hle, if_true]
+    simp only [hij, hle, ite_true]
     have hsj : Fin.succ i ≤ Fin.castSucc j := by
-      rw [Fin.le_def]; simp only [Fin.val_succ, Fin.coe_castSucc]; exact hij
+      rw [Fin.le_def]; simp only [Fin.val_succ, Fin.val_castSucc]; exact hij
     have a1 := h1 i
     have a2 := h2 j
     have a3 := h1 j
@@ -465,11 +465,11 @@ theorem interlace_bound {K n : ℕ} (hn : K + 1 = n) (u : Fin n → ℝ) (v : Fi
     have e4 : u ⟨i.1 + 1, by omega⟩ = u (Fin.succ i) := rfl
     rw [abs_of_pos (by linarith)]
     linarith
-  · simp only [hij, if_false]
+  · simp only [hij, ite_false]
     by_cases hle : i ≤ j
     · have : i = j := le_antisymm hle (not_lt.1 hij)
       subst this
-      simp only [hle, if_true]
+      simp only [hle, ite_true]
       exact h3 i
     · simp [hle]
 
@@ -605,7 +605,7 @@ theorem log_ratio_eq (D : D7) (u : D.what₂.Word) :
       + (D.R.f : ℝ) * ∑ i : Fin 2, ∑ j ∈ Finset.Ioc D.R.k D.R.r,
           Real.log (1 - ((D.host.g i : ℝ) ^ j)⁻¹)
       + ∑ ρ, Real.log (D.dsig ρ * facProd D.R.r / vand (uColR D u ρ)) := by
-  haveI : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.BinaryRep.represents_totallyPositive⟩
+  have : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.BinaryRep.represents_totallyPositive⟩
   have h2b := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.standardLattice_aux2b D
   have h43 := index_product_formulas_and_ratio D
   have hv := host_v_pos D
@@ -861,7 +861,7 @@ theorem tr_le_of (C : Formalism.MainNotions.Inhab.FC) (hC : C.CTu = 25) (cD ch :
   have hlog10 : Real.log 10 ≤ 3 := by
     rw [Real.log_le_iff_le_exp (by norm_num)]
     have h := Real.exp_one_gt_d9
-    have e : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_nat_mul]; norm_num
+    have e : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_natCast_mul]; norm_num
     rw [e]
     have h27 : (2.7 : ℝ) ≤ Real.exp 1 := by linarith
     have h3 : (2.7 : ℝ) ^ 3 ≤ Real.exp 1 ^ 3 := pow_le_pow_left₀ (by norm_num) h27 3

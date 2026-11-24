@@ -61,8 +61,8 @@ theorem ker_finite_free {O : Type} [CommRing O] [IsDomain O] [ValuationRing O] {
     rw [Submodule.mem_bot]
     apply Subtype.ext
     exact (smul_eq_zero.1 h1).resolve_left (nonZeroDivisors.ne_zero a.2)
-  haveI := flat (LinearMap.range b)
-  haveI : Module.Free O (LinearMap.range b) := Module.free_of_flat_of_isLocalRing
+  have := flat (LinearMap.range b)
+  have : Module.Free O (LinearMap.range b) := Module.free_of_flat_of_isLocalRing
   obtain ⟨s, hs⟩ := Module.projective_lifting_property b.rangeRestrict LinearMap.id
     b.surjective_rangeRestrict
   have hs' : ∀ y, b (s y) = y := fun y => congrArg Subtype.val (LinearMap.congr_fun hs y)
@@ -73,8 +73,8 @@ theorem ker_finite_free {O : Type} [CommRing O] [IsDomain O] [ValuationRing O] {
     apply Subtype.ext
     have h0 : b.rangeRestrict x = 0 := Subtype.ext x.2
     simp [π, h0]⟩
-  haveI hfin : Module.Finite O (LinearMap.ker b) := Module.Finite.of_surjective π hπ
-  haveI := flat (LinearMap.ker b)
+  have hfin : Module.Finite O (LinearMap.ker b) := Module.Finite.of_surjective π hπ
+  have := flat (LinearMap.ker b)
   exact ⟨hfin, Module.free_of_flat_of_isLocalRing⟩
 
 theorem sub_one_dvd {O : Type} [CommRing O] [IsDomain O] {ζ : O} {k : ℕ}
@@ -99,13 +99,13 @@ theorem pDivGroupOmegaBidual_dlog_eq_dual_hodgeTate (G : PDivGroup p O) (χ : G.
 
 theorem finite_free_and_sq_smul_mem_span : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O] (ε : PreTilt O p) (hε : GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta.IsPrimitiveSystem ε), v.Integers O → GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta.HodgeTateSandwichAt hε → ∀ G : PDivGroup p O, Module.Finite O G.omega ∧ Module.Free O G.omega ∧ ∀ w : G.omega, (p : O) ^ 2 • w ∈ Submodule.span O (Set.range (dlog (G := G))) := by
   intro p hp C _ _ _ v O _ _ _ _ _ ε hε hv hS G
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   obtain ⟨u₁, u₂, hS⟩ := hS
   obtain ⟨D, e, fil, lie, hR⟩ := hS G.dual ℤ_[p] (padicAction _)
   let Ψ : G.omega ≃ₗ[O] D.Fil := pDivGroupOmegaBidualEquiv G ≪≫ₗ fil
   obtain ⟨hfin, hfree⟩ := ker_finite_free D.bb
-  haveI : Module.Finite O D.Fil := hfin
-  haveI : Module.Free O D.Fil := hfree
+  have : Module.Finite O D.Fil := hfin
+  have : Module.Free O D.Fil := hfree
   refine ⟨Module.Finite.equiv Ψ.symm, Module.Free.of_equiv Ψ.symm, fun w => ?_⟩
   have hζ : IsPrimitiveRoot (root ε).untilt p := by
     have h := hε 1

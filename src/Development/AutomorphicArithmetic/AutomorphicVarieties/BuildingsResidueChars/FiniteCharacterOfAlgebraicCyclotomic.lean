@@ -52,8 +52,8 @@ theorem UpperTheory.finiteCharacter_of_algebraic_cyclotomic :
       filter_upwards [hopen.mem_nhds (Subgroup.one_mem _)] with x hx
       rw [SetLike.mem_coe, MonoidHom.mem_ker] at hx
       rw [hx, map_one]
-    haveI : Finite (Formalism.ConjugateSelfDual.G F Ω ⧸ δ.ker) := Subgroup.quotient_finite_of_isOpen _ hopen
-    haveI : δ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : Finite (Formalism.ConjugateSelfDual.G F Ω ⧸ δ.ker) := Subgroup.quotient_finite_of_isOpen _ hopen
+    have : δ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     refine h1 δ hcont fun w _ => ?_
     obtain ⟨A, hAw⟩ := exists_isPlaceOver Ω w
     refine ⟨A, hAw, 0, δ.ker.index, Nat.pos_of_ne_zero Subgroup.FiniteIndex.index_ne_zero, fun s _ => ?_⟩
@@ -61,8 +61,8 @@ theorem UpperTheory.finiteCharacter_of_algebraic_cyclotomic :
     exact Subgroup.pow_index_mem δ.ker s
   · intro K M Ω _ _ _ _ _ _ _ _ _ _ _ l _ δ hδ
     let E : IntermediateField K Ω := (IsScalarTower.toAlgHom K M Ω).fieldRange
-    haveI : FiniteDimensional K M := Module.Finite.of_restrictScalars_finite ℚ K M
-    haveI : FiniteDimensional K E :=
+    have : FiniteDimensional K M := Module.Finite.of_restrictScalars_finite ℚ K M
+    have : FiniteDimensional K E :=
       LinearEquiv.finiteDimensional (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom K M Ω)).toLinearEquiv
     refine Subgroup.isOpen_mono ?_ E.fixingSubgroup_isOpen
     intro g hg

@@ -138,7 +138,7 @@ theorem cns_kfin (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v�
     fun i j => ⟨max i j, layer_mono (le_max_left i j), layer_mono (le_max_right i j)⟩
   obtain ⟨k, hk⟩ := (Submodule.mem_iSup_of_directed _ hdir).mp hy
   set S0 := layer ε (smE ε (rreg ε)) (datumV ε Ψ v₀) k with hS0
-  haveI hS0f : FiniteDimensional ℂ S0 := finiteDimensional_layer hV.1 k
+  have hS0f : FiniteDimensional ℂ S0 := finiteDimensional_layer hV.1 k
   have hS0K := kStable_of_isKStableSub hσ hD S0 hS0f (layer_kStable hE hV.2.1 k)
   set S : Submodule ℂ (Hlam ε Ψ v₀) := (S0.map (smD ε (rreg ε)).subtype).comap (Hlam ε Ψ v₀).subtype with hS
   have hSf : FiniteDimensional ℂ S := by
@@ -146,8 +146,8 @@ theorem cns_kfin (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v�
     have hle : S.map (Hlam ε Ψ v₀).subtype ≤ S0.map (smD ε (rreg ε)).subtype := by
       rintro _ ⟨a, ha, rfl⟩
       exact ha
-    haveI : FiniteDimensional ℂ (S0.map (smD ε (rreg ε)).subtype) := Module.Finite.map _ _
-    haveI := Submodule.finiteDimensional_of_le hle
+    have : FiniteDimensional ℂ (S0.map (smD ε (rreg ε)).subtype) := Module.Finite.map _ _
+    have := Submodule.finiteDimensional_of_le hle
     exact (Submodule.equivMapOfInjective _ hinj S).symm.finiteDimensional
   refine ⟨S, hSf, ⟨y, hk, hx.symm⟩, ?_⟩
   intro g hg v hv
@@ -190,8 +190,8 @@ theorem cns_term (dual : Bool) {lam lam' : Fin n → ℝ} {T : S7.KType ε (lowK
       ∀ g ∈ UJset ε, ∑ c, inner ℂ ((η c : smD ε (rreg ε)) : L2 ε)
           (tensGrp dual (rreg ε) g (fun d => ((f d : smD ε (rreg ε)) : L2 ε)) c) =
         inner ℂ z (sigLam ε Ψ' v₀' g x) := by
-  haveI := Hlam_nontrivial hgap hP hv₀
-  haveI := Hlam_nontrivial hgap' hP' hv₀'
+  have := Hlam_nontrivial hgap hP hv₀
+  have := Hlam_nontrivial hgap' hP' hv₀'
   obtain ⟨w, hw⟩ := exists_ne (0 : Hlam ε Ψ v₀)
   obtain ⟨w', hw'⟩ := exists_ne (0 : Hlam ε Ψ' v₀')
   obtain ⟨⟨ι, hι, -, hsurj⟩, -⟩ := cc_gk dual hgap hP hv₀ hgap' hP' hv₀' hh hth hh' hth' hpos hpos' hW hW' hG hG'
@@ -354,7 +354,7 @@ theorem cns_kfin_map {H₁ H₂ : Type*} [NormedAddCommGroup H₁] [InnerProduct
     (hU : ∀ g ∈ UJset ε, ∀ x, U (σ₁ g x) = σ₂ g (U x)) {x : H₁} (hx : PI.UpqRep.IsKFin ε σ₁ x) :
     PI.UpqRep.IsKFin ε σ₂ (U x) := by
   obtain ⟨S, hfin, hxS, hst⟩ := hx
-  haveI := hfin
+  have := hfin
   have hK : ∀ g ∈ PI.UpqRep.Kset ε, g ∈ UJset ε := by
     rintro g ⟨hu, hc⟩
     show inUJ ε g

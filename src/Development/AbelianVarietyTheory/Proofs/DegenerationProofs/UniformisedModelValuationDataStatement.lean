@@ -140,7 +140,7 @@ theorem isPrimitiveRoot_map {o F : Type} [CommRing o] [IsDomain o] [Field F] [Ch
 
 theorem main : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → CharZero u.V ∧ IsUnit ((ρ.n : ℕ) : u.V) ∧ AdmBase u.V (IsLocalRing.maximalIdeal u.V) ∧ ‖((S.r * S.N : ℕ) : PadicAlgCl p)‖ = 1 ∧ IsPrimitiveRoot (y₀ (algebraMap o S.R S.ζ)) ((S.r * S.N) ^ 2) ∧ ∃ (ϖ : u.V) (Q : u.D.toPre.X → ℤ) (v : AddValuation (PadicAlgCl p) (WithTop ℚ)) (lam : ℝ), Irreducible ϖ ∧ ValOver ϖ (PadicAlgCl p) v ∧ NormIs u l ϖ Q v lam := by
   intro o Ω _ _ _ hA S ρ p _ y₀ u l hy
-  haveI : IsDomain o := hA.ded.toIsDomain
+  have : IsDomain o := hA.ded.toIsDomain
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible u.V
   have hN : ‖((S.r * S.N : ℕ) : PadicAlgCl p)‖ = 1 := by
     have := norm_eq_one_of_isUnit (y₀.comp (algebraMap o S.R)) hy S.unit

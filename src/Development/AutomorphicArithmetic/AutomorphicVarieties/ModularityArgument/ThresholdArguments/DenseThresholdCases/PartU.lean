@@ -112,7 +112,7 @@ open UpperTheory.V.Z.Ord.AtLOrdinary in
 theorem UpperTheory.V.Z.Ord.at_l_of_literal_automorphy_n :
     _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis → AtLOf := by
   intro _ l _ L Ω _ _ _ _ _ ι n A w h r HT τ lam hHT hLG hw ω hs hd ⟨e⟩ rc hrc _ O _ _ _ Bw hj
-  haveI : CharZero (w.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
+  have : CharZero (w.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
   have hP := plainTor_of_ps τ ω hs hd e
   have hG : Win.Gd (rc (algNorm τ)) := UpperTheory.V.Z.Win.Gu.plainGd L Ω A w h rc hrc n τ hP
   obtain ⟨h1, h2⟩ := hHT hP A h O Bw hj

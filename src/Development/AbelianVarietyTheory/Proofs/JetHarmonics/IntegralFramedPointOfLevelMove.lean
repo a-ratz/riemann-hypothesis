@@ -70,7 +70,7 @@ theorem gs_of_isoMaps {X X' : Scheme.{0}} {L : LB X} {L' : LB X'} {F : X' ⟶ X}
 
 theorem integral_of_levR : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (g : (Dw.La →ₗ[𝓞 E] Dw.La) × (Dw.La →ₗ[𝓞 E] Dw.La)) (T : CDVR) (io : c.F →+* T.Fr), letI := io.toAlgebra; ∀ y y' : FrPt Xo c T.Fr, levR (Xo := Xo) (c := c) g y y' → Integral T io y → Integral T io y' := by
   intro E _ _ _ H Dw l Xo c gl T io
-  letI := io.toAlgebra
+  let := io.toAlgebra
   rintro y y' ⟨ρ, ν, -, -, hx, hu, pm, w, p₁, p₂, hw, hs⟩
     ⟨G, t', m1, m2, ⟨ub, b₁, b₂, b₃, b₄⟩, θ, hθ, w1, w2, σ, s1, θ2, r₁, r₂, i₁, i₂, hp, hg⟩
   obtain ⟨n, hn, w', hw', tri⟩ := exists_comp_rig ν m1 y'.x hx ⟨hw.1, hw.2.1⟩ r₁

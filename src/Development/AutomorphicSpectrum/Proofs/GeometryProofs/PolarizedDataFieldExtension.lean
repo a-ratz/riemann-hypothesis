@@ -182,8 +182,8 @@ theorem ext_props (D : PPData H L) (D' : PPData H L') (m : D.Ext D') :
         ((D'.B.metric.form σ').inner ((1 : ComplexAt σ') ⊗ₜ[𝓞 L'] io x) ((1 : ComplexAt σ') ⊗ₜ[𝓞 L'] io y) : ℂ) =
           ((D.B.metric.form (σ'.comp (algebraMap L L'))).inner ((1 : ComplexAt _) ⊗ₜ[𝓞 L] x)
             ((1 : ComplexAt _) ⊗ₜ[𝓞 L] y) : ℂ) := by
-  haveI : Smooth D.t.G.hom := D.t.semi.smooth
-  haveI : Smooth D'.t.G.hom := D'.t.semi.smooth
+  have : Smooth D.t.G.hom := D.t.semi.smooth
+  have : Smooth D'.t.G.hom := D'.t.semi.smooth
   obtain ⟨Mp, hMp⟩ := (LiePull.lieModel_pullback _ _ D.t.G D'.t.G (spMap (algebraMap (𝓞 L) (𝓞 L'))) m.φ m.cart (𝓞 L')
     (𝟙 _) D'.B.carrier).2 D'.MB
   obtain ⟨Mq, hMq⟩ := exists_transport
@@ -196,8 +196,8 @@ theorem ext_props (D : PPData H L) (D' : PPData H L') (m : D.Ext D') :
       (Category.comp_id _).symm.trans (hj e)
     rw [hMp, ← h1]
     exact (hMq _).symm
-  letI : Module (𝓞 L) D'.B.carrier := Module.compHom _ (algebraMap (𝓞 L) (𝓞 L'))
-  haveI : IsScalarTower (𝓞 L) (𝓞 L') D'.B.carrier := ⟨fun a b x => by
+  let : Module (𝓞 L) D'.B.carrier := Module.compHom _ (algebraMap (𝓞 L) (𝓞 L'))
+  have : IsScalarTower (𝓞 L) (𝓞 L') D'.B.carrier := ⟨fun a b x => by
     change (a • b) • x = algebraMap (𝓞 L) (𝓞 L') a • (b • x)
     rw [Algebra.smul_def, mul_smul]⟩
   let jl : D.B.carrier →ₗ[𝓞 L] D'.B.carrier :=

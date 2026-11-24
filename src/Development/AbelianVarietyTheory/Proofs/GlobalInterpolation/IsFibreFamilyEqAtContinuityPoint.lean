@@ -153,7 +153,7 @@ theorem _root_.GlobalTheory.measure_eq_of_lintegral_eq_on_compactSupport {V : Ty
       (measure_mono hsub).trans_lt <|
         (measure_le_lintegral_of_eqOn_one m hfc.isClosed.measurableSet hg1).trans_lt
           (h g g.continuous hgc hgO fun v => (hg01 v).1).1.lintegral_lt_top
-    haveI : IsFiniteMeasure (m.restrict {v | 0 < f n v}) := isFiniteMeasure_restrict.2 hfin.ne
+    have : IsFiniteMeasure (m.restrict {v | 0 < f n v}) := isFiniteMeasure_restrict.2 hfin.ne
     show m.restrict {v | 0 < f n v} = m'.restrict {v | 0 < f n v}
     refine ext_of_generate_finite {s | IsOpen s} BorelSpace.measurable_eq isPiSystem_isOpen
       (fun s hs => ?_) ?_

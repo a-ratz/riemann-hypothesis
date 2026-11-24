@@ -186,7 +186,7 @@ theorem schr_irreducible : ∀ {F : Type} [Field F] [NumberField F] (v : HeightO
     ∀ N : Submodule ℂ ((κ → Fv F v) → ℂ), N ≤ GlobalTheory.WeilM.SB (κ → Fv F v) → (∀ w, ∀ φ ∈ N, schr ψk w φ ∈ N) → ∀ φ₀ ∈ N, φ₀ ≠ 0 →
       N = GlobalTheory.WeilM.SB (κ → Fv F v) := by
   intro F _ _ v κ _ ψk hc h1 N hN hS φ₀ h0 hne
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
   exact schr_irreducible_local (Fv F v) ψk hc h1 N hN hS φ₀ h0 hne
 
 end GlobalTheory.SchrIrred

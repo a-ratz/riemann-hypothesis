@@ -84,7 +84,7 @@ theorem minor_stepOf_ne_zero (hj : j ≤ N) {G : Matrix (Fin N) (Fin N) ℂ} (hG
     simp only [IsProperStep, stepOf, not_and_or, not_not] at hp
     split_ifs at hp <;> omega
   have hD := GlobalTheory.CompanionTheory.Ar.PB.CPts.detFac_ne_zero hj (⟨N - 1, by omega⟩ : Fin N) hG hd
-  rw [detFac, if_pos (by simp only; omega), if_pos (by simp only; omega)] at hD
+  rw [detFac, ite_eq_left (by simp only; omega), ite_eq_left (by simp only; omega)] at hD
   by_cases h : N - j ≤ (b : ℕ)
   · have e : stepCols N j (stepOf N j b) = wIdx N j := by
       ext a
@@ -118,10 +118,10 @@ theorem exists_lower_upper : ∀ (N j : ℕ) (G : Matrix (Fin N) (Fin N) ℂ), j
     rw [Matrix.det_mul, h, mul_zero] at this
     exact zero_ne_one this
   have huB : IsUnit B.det := hdB.isUnit
-  letI := Matrix.invertibleOfIsUnitDet B huB
+  let := Matrix.invertibleOfIsUnitDet B huB
   refine ⟨G * B, B⁻¹, hG.mul hB, hL, hB.inv huB, blockTriangular_inv_of_blockTriangular hBt, fun c => ?_, ?_⟩
   · have h1 : (B⁻¹).det ≠ 0 := (Matrix.isUnit_nonsing_inv_det B huB).ne_zero
-    rw [Matrix.det_of_upperTriangular (blockTriangular_inv_of_blockTriangular hBt)] at h1
+    rw [det_of_isUpperTriangular (blockTriangular_inv_of_blockTriangular hBt)] at h1
     exact (Finset.prod_ne_zero_iff.1 h1) c (Finset.mem_univ c)
   · rw [Matrix.mul_nonsing_inv_cancel_right _ _ huB]
 

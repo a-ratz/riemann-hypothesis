@@ -139,7 +139,7 @@ theorem isTest_partialFourier {X F : Type} [TopologicalSpace X] [T2Space X] [Non
     · by_cases hxbw : (x, b + w) ∈ tsupport f
       · have hmw : -w ∈ v1 := hball (by simpa using hw)
         have := huv (⟨hKu hxbw, hmw⟩ : ((x, b + w), -w) ∈ u1 ×ˢ v1)
-        simp only [Set.mem_setOf_eq, add_neg_cancel_right] at this
+        simp only [Set.mem_ofPred_eq, add_neg_cancel_right] at this
         exact this.symm
       · rw [image_eq_zero_of_notMem_tsupport hxb, image_eq_zero_of_notMem_tsupport hxbw]
   have hzero : ∀ x b, b ∉ Prod.snd '' tsupport f → f (x, b) = 0 := fun x b hb =>
@@ -211,11 +211,11 @@ theorem ptrB_isTest : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ f : Gl r F → ℂ,
     IsTest f → IsTest (WeilMix.ptrB M ψ f) := by
   intro F E _ _ _ _ hU r M ψ hψ f hf
-  letI := M.mF
-  haveI := M.bF
-  haveI := M.haarF
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  let := M.mF
+  have := M.bF
+  have := M.haarF
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   let eH : Gl r F ≃ₜ (Matrix (Fin r) (Fin r) F × (Fin r → F) × F) × (Fin r → F) :=
     { toFun := fun Y => ((Y.1, Y.2.2.1, Y.2.2.2), Y.2.1)
       invFun := fun p => (p.1.1, p.2, p.1.2.1, p.1.2.2)
@@ -277,12 +277,12 @@ theorem selfDual_pi (F E : Type) [NontriviallyNormedField F] [NontriviallyNormed
     [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) :
     letI := M.mF
     SelfDual (Measure.pi fun _ : Fin r => M.μF) (fun x y : Fin r → F => ψ (x ⬝ᵥ y)) := by
-  letI := M.mF
-  haveI := M.bF
-  haveI := M.haarF
-  haveI : IsUltrametricDist F := Unram.ultraF E
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  let := M.mF
+  have := M.bF
+  have := M.haarF
+  have : IsUltrametricDist F := Unram.ultraF E
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   have hcond := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.1
   have hsymm : LinearMap.BilinForm.IsSymm (dotProductBilin F F : LinearMap.BilinForm F (Fin r → F)) :=
     ⟨fun x y => by simp [dotProduct_comm]⟩
@@ -305,7 +305,7 @@ theorem selfDual_pi (F E : Type) [NontriviallyNormedField F] [NontriviallyNormed
   have hdual : {y : Fin r → F | ∀ x ∈ intLat F r,
       ψ ((dotProductBilin F F : LinearMap.BilinForm F (Fin r → F)) x y) = 1} = (intLat F r : Set (Fin r → F)) := by
     ext y
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, mem_intLat, dotProductBilin_apply_apply]
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, mem_intLat, dotProductBilin_apply_apply]
     constructor
     · intro h i
       refine (hcond (y i)).1 fun e he => ?_
@@ -351,7 +351,7 @@ theorem integrable_mixedModel_partialFourier_integrand {F : Type} [NontriviallyN
     (f : Gl r F → ℂ) (hf : IsTest f) (Y : Gl r F) :
     Integrable (fun b : Fin r → F => f (Y.1, b, Y.2.2.1, Y.2.2.2) * ψ (b ⬝ᵥ Y.2.1))
       (Measure.pi fun _ : Fin r => μ) := by
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   have hc : Continuous (fun b : Fin r → F => f (Y.1, b, Y.2.2.1, Y.2.2.2) * ψ (b ⬝ᵥ Y.2.1)) := by
     refine Continuous.mul ?_ ?_
     · exact hf.1.continuous.comp (by fun_prop)
@@ -367,10 +367,10 @@ end GlobalTheory.JR.WeilMix
 
 theorem GlobalTheory.JR.WeilMix.ptrB_linear : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (c : ℂ) (f f' : Gl r F → ℂ), IsTest f → IsTest f' → WeilMix.ptrB M ψ (c • f + f') = c • WeilMix.ptrB M ψ f + WeilMix.ptrB M ψ f' := by
   intro F E _ _ _ _ hU r M ψ hψ c f f' hf hf'
-  letI := M.mF
-  haveI := M.bF
-  haveI := M.haarF
-  haveI : LocallyCompactSpace F := hU.lcF
+  let := M.mF
+  have := M.bF
+  have := M.haarF
+  have : LocallyCompactSpace F := hU.lcF
   have hlc : IsLocallyConstant (fun x => ψ x) := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).1
   funext Y
   have h1 := WeilMix.integrable_mixedModel_partialFourier_integrand M.μF ψ hlc f hf Y
@@ -390,11 +390,11 @@ open GlobalTheory.JR Matrix MeasureTheory Filter Topology
 
 theorem GlobalTheory.JR.WeilMix.negB_ptrB_wS_ptrB : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ f : Gl r F → ℂ, IsTest f → WeilMix.negB (WeilMix.ptrB M ψ (WeilMix.rowAct (wS F) (WeilMix.ptrB M ψ f))) = fourG M ψ f := by
   intro F E _ _ _ _ hU r M ψ hψ f hf
-  letI := M.mF
-  haveI := M.bF
-  haveI := M.haarF
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  let := M.mF
+  have := M.bF
+  have := M.haarF
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   have hψc : Continuous (fun x => ψ x) := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).1.continuous
   funext Y
   obtain ⟨A, b, c, l⟩ := Y
@@ -402,7 +402,7 @@ theorem GlobalTheory.JR.WeilMix.negB_ptrB_wS_ptrB : ∀ (F E : Type) [Nontrivial
   simp only [WeilMix.negB, WeilMix.ptrB, WeilMix.rowAct, WeilMix.rowMap, fourG, hw]
   simp
   set μ : Measure (Fin r → F) := Measure.pi fun _ : Fin r => M.μF with hμ
-  haveI : μ.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular μ
+  have : μ.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular μ
   set G : (Fin r → F) → ℂ := fun x => (∫ b', f (A, b', x, l) * ψ (b' ⬝ᵥ c) ∂μ) * ψ (x ⬝ᵥ b) with hG
   set H : (Fin r → F) → (Fin r → F) → ℂ := fun x b' => f (A, b', x, l) * ψ (b' ⬝ᵥ c) * ψ (x ⬝ᵥ b) with hH
   have hHc : Continuous (Function.uncurry H) := by
@@ -562,7 +562,7 @@ def piCoord {ι : Type} [Fintype ι] (b : Module.Basis ι F E) (r : ℕ) :
 theorem norm_pi_apply (r : ℕ) (y : Fin r → E) (i : Fin r) :
     Algebra.norm (Fin r → F) y i = Algebra.norm F (y i) := by
   have h2 : Module.finrank F E = 2 := Unram.finrank_eq
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   classical
   let b := Module.finBasis F E
   let B := Module.Basis.ofEquivFun (piCoord b r)
@@ -639,12 +639,12 @@ namespace GlobalTheory.JR
 theorem et_equiv_continuous (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E) (r : ℕ) (j : A.L ≃ₗ[E] (Fin r → E)) :
     Continuous j ∧ Continuous j.symm := by
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : CompleteSpace F := IsRightUniformAddGroup.completeSpace_of_weaklyLocallyCompactSpace F
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ (Unram.finrank_eq (F := F) (E := E))
-  haveI : FiniteDimensional F (Fin r → E) := inferInstance
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
-  haveI : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : CompleteSpace F := IsRightUniformAddGroup.completeSpace_of_weaklyLocallyCompactSpace F
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ (Unram.finrank_eq (F := F) (E := E))
+  have : FiniteDimensional F (Fin r → E) := inferInstance
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
+  have : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
   refine ⟨?_, ?_⟩
   · exact IsModuleTopology.continuous_of_linearMap (R := F) (j.toLinearMap.restrictScalars F)
   · exact LinearMap.continuous_of_finiteDimensional (j.symm.toLinearMap.restrictScalars F)
@@ -672,9 +672,9 @@ theorem finite : Module.Finite F E :=
   Module.finite_of_finrank_pos (by rw [Unram.finrank_eq (F := F) (E := E)]; norm_num)
 
 theorem isModuleTopology : IsModuleTopology F E := by
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : Module.Finite F E := finite
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : Module.Finite F E := finite
   exact IsModuleTopology.iso (R := F) (A := Fin 2 → F)
     (ContinuousLinearEquiv.ofFinrankEq (by simp [Unram.finrank_eq (F := F) (E := E)]))
 
@@ -739,7 +739,7 @@ theorem dual_intLat (r : ℕ) (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) :
     {y : Fin r → E | ∀ x ∈ intLat (F := F) (E := E) r, ψ (trForm (F := F) r x y) = 1} =
       ((intLat (F := F) (E := E) r : AddSubgroup (Fin r → E)) : Set (Fin r → E)) := by
   classical
-  haveI : IsUltrametricDist E := Unram.ultraE F
+  have : IsUltrametricDist E := Unram.ultraE F
   have key := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.2
   ext y
   constructor
@@ -767,15 +767,15 @@ end GlobalTheory.JR.PiSelfDual
 open GlobalTheory.JR.PiSelfDual in
 theorem GlobalTheory.JR.selfDual_pi_trace : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → @SelfDual (Fin r → E) _ _ (@MeasurableSpace.pi (Fin r) (fun _ => E) (fun _ => M.mE)) (@Measure.pi (Fin r) (fun _ => E) _ (fun _ => M.mE) (fun _ => M.μE)) (fun c b => ψ (Algebra.trace F E (star c ⬝ᵥ b))) := by
   intro F E _ _ _ _ _ r M ψ hψ
-  letI := M.mE
-  haveI := M.bE
-  haveI := M.haarE
-  haveI : LocallyCompactSpace E := Unram.lcE F
-  haveI : IsUltrametricDist E := Unram.ultraE F
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : Module.Finite F E := finite
-  haveI : IsModuleTopology F E := isModuleTopology
-  haveI : BorelSpace (Fin r → E) := Pi.borelSpace
+  let := M.mE
+  have := M.bE
+  have := M.haarE
+  have : LocallyCompactSpace E := Unram.lcE F
+  have : IsUltrametricDist E := Unram.ultraE F
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : Module.Finite F E := finite
+  have : IsModuleTopology F E := isModuleTopology
+  have : BorelSpace (Fin r → E) := Pi.borelSpace
   haveI : (Measure.pi fun _ : Fin r => M.μE).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hvol : (Measure.pi fun _ : Fin r => M.μE) ((intLat (F := F) (E := E) r : AddSubgroup (Fin r → E)) : Set (Fin r → E)) = 1 := by
     rw [intLat_eq, Measure.pi_pi]
@@ -875,9 +875,9 @@ theorem slices_test {P V Q : Type} [TopologicalSpace P] [TopologicalSpace V] [To
       intro a ha
       funext v
       exact hz _ (fun h => ha ⟨_, h, rfl⟩)
-    haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+    have : CompactSpace K := isCompact_iff_compactSpace.1 hK
     have hfin : (Set.range (fun a : K => Φ a)).Finite :=
-      (hΦ.comp_continuous continuous_subtype_val).range_finite
+      (hΦ.comp_continuous continuous_subtypeVal).range_finite
     set U : Set V := ⋃ h ∈ Set.range (fun a : K => Φ a), tsupport (T h) with hUdef
     have hU : IsCompact U := hfin.isCompact_biUnion (fun h hh => by
       obtain ⟨a, rfl⟩ := hh
@@ -941,13 +941,13 @@ namespace GlobalTheory
 
 theorem trace_tower_et : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (z : A.L), Algebra.trace F A.K (Algebra.trace A.K A.L z) = Algebra.trace F E (Algebra.trace E A.L z) := by
   intro F E _ _ _ _ hU A z
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
   have hE : IsBaseChange E (IsScalarTower.toAlgHom F A.K A.L).toLinearMap := A.push.out
   have hK : IsBaseChange A.K (IsScalarTower.toAlgHom F E A.L).toLinearMap := A.push.symm.out
-  haveI : Module.Free E A.L := Module.Free.of_equiv hE.equiv
-  haveI : Module.Finite E A.L := Module.Finite.equiv hE.equiv
-  haveI : Module.Free A.K A.L := Module.Free.of_equiv hK.equiv
-  haveI : Module.Finite A.K A.L := Module.Finite.equiv hK.equiv
+  have : Module.Free E A.L := Module.Free.of_equiv hE.equiv
+  have : Module.Finite E A.L := Module.Finite.equiv hE.equiv
+  have : Module.Free A.K A.L := Module.Free.of_equiv hK.equiv
+  have : Module.Finite A.K A.L := Module.Finite.equiv hK.equiv
   rw [Algebra.trace_trace, Algebra.trace_trace]
 
 end GlobalTheory
@@ -979,12 +979,12 @@ theorem sl2Map_wS {F K : Type} [Field F] [CommRing K] [Algebra F K] :
 theorem weilSL2_hermitian : WeilEt → GammaOne → ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∃ W : SpecialLinearGroup (Fin 2) F → (Hn r F E → ℂ) → Hn r F E → ℂ, IsTestRep W ∧ ∀ f, IsTest f → (∀ t X, W (nS t) f X = ψ (t * Algebra.trace F E (star X.2.1 ⬝ᵥ X.2.1) / 2) * f X) ∧ W (wS F) f = fourU M ψ f := by
   intro hW hG F E _ _ _ _ _ r M ψ hψ
   obtain ⟨A, e, j, hj, hNe⟩ := _root_.GlobalTheory.JR.exists_split_et F E r
-  haveI : LocallyCompactSpace E := Unram.lcE (F := F)
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : SecondCountableTopology E := secondCountable_of_proper
-  haveI : CharZero F := Unram.charZero (E := E)
-  letI mE : MeasurableSpace E := M.mE
-  haveI : BorelSpace E := M.bE
+  have : LocallyCompactSpace E := Unram.lcE (F := F)
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : SecondCountableTopology E := secondCountable_of_proper
+  have : CharZero F := Unram.charZero (E := E)
+  let mE : MeasurableSpace E := M.mE
+  have : BorelSpace E := M.bE
   obtain ⟨hjc, hjsc⟩ := _root_.GlobalTheory.JR.et_equiv_continuous F E A r j
   let jh : A.L ≃ₜ (Fin r → E) := { j.toEquiv with continuous_toFun := hjc, continuous_invFun := hjsc }
   let μE : Measure (Fin r → E) := Measure.pi fun _ => M.μE
@@ -1090,18 +1090,18 @@ theorem GlobalTheory.JR.match_add : ∀ (F E : Type) [NontriviallyNormedField F]
   obtain ⟨-, hsec, -⟩ := _root_.GlobalTheory.JR.normalForm_invariants F r
   have ha' : Delta (inv (sec a)) ≠ 0 := by rw [hsec]; exact ha
   have eG : orbG M (f₁' + f₂') (sec a) = orbG M f₁' (sec a) + orbG M f₂' (sec a) := by
-    letI := M.mG
-    haveI := M.bG
-    haveI := M.haarG
+    let := M.mG
+    have := M.bG
+    have := M.haarG
     unfold orbG
     simp only [Pi.add_apply, add_mul]
     exact integral_add (MatchAdd.integrable_of_isTest _ (hG _ h₁' _ ha'))
       (MatchAdd.integrable_of_isTest _ (hG _ h₂' _ ha'))
   have eU : ∀ X : Hn r F E, HasInv X a → orbU M (f₁ + f₂) X = orbU M f₁ X + orbU M f₂ X := by
     intro X hX
-    letI := M.mU
-    haveI := M.bU
-    haveI := M.haarU
+    let := M.mU
+    have := M.bU
+    have := M.haarU
     unfold orbU
     simp only [Pi.add_apply]
     exact integral_add (MatchAdd.integrable_of_isTest _ (hU _ h₁ a X ha hX))
@@ -1124,7 +1124,7 @@ namespace GlobalTheory.JR.SLGen
 
 theorem exists_unif (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] [LocallyCompactSpace F] :
     ∃ ϖ : F, ϖ ≠ 0 ∧ ‖ϖ‖ < 1 ∧ ∀ y : F, ‖y‖ < 1 → ‖y‖ ≤ ‖ϖ‖ := by
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   have hK : IsCompact (Metric.ball (0 : F) 1) :=
     (isCompact_closedBall (0 : F) 1).of_isClosed_subset (IsUltrametricDist.isClosed_ball 0 1)
       Metric.ball_subset_closedBall
@@ -1208,8 +1208,8 @@ theorem GlobalTheory.JR.sl2_closure_weyl_unipotent_eq_top :
     ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
       [Unram F E], Subgroup.closure ({wS F} ∪ {g | ∃ t : F, (∀ y : F, ‖y‖ < 1 → ‖t * y‖ ≤ 1) ∧ g = nS t}) = ⊤ := by
   intro F E _ _ _ _ hU
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : LocallyCompactSpace F := hU.lcF
+  have : IsUltrametricDist F := hU.ultraF
+  have : LocallyCompactSpace F := hU.lcF
   set H := Subgroup.closure ({wS F} ∪ {g | ∃ t : F, (∀ y : F, ‖y‖ < 1 → ‖t * y‖ ≤ 1) ∧ g = nS t})
   obtain ⟨ϖ, hϖ0, hϖ1, hmax⟩ := exists_unif F
   have hw : wS F ∈ H := Subgroup.subset_closure (Or.inl rfl)
@@ -1289,7 +1289,7 @@ theorem qU_of_hasInv [Unram F E] {r : ℕ} {X : Hn (r + 1) F E} {a : Inv (r + 1)
   simp only [inv, Inv.map, Hn.toGl, mom] at h1
   rw [show ((0 : Fin (r + 1)) : ℕ) = 0 from rfl, pow_zero, one_mulVec] at h1
   rw [mom_sec_zero, qU, h1, Algebra.trace_algebraMap, Unram.finrank_eq]
-  haveI := (Unram.charZero (F := F) (E := E))
+  have := (Unram.charZero (F := F) (E := E))
   rw [nsmul_eq_mul]; push_cast; field_simp
 
 theorem orbG_mul {r : ℕ} (M : Meas r F E) (φ : F → ℂ) (f' : Gl r F → ℂ) (Y : Gl r F) :

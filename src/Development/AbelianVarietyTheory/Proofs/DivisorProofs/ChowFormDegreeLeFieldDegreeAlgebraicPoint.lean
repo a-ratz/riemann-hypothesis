@@ -262,12 +262,12 @@ theorem _root_.GlobalTheory.CompHt.PointUp.le_finrank_of_isChowFormInt : ∀ (K 
   obtain ⟨hhomog, -, hzero⟩ := id hf
   have hSeq : (IntermediateField.adjoin K (Set.range y)).toSubalgebra =
       Algebra.adjoin K (Set.range y) := IntermediateField.adjoin_toSubalgebra _
-  haveI hfinE : FiniteDimensional K (IntermediateField.adjoin K (Set.range y)) :=
+  have hfinE : FiniteDimensional K (IntermediateField.adjoin K (Set.range y)) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hfin : Module.finrank K (IntermediateField.adjoin K (Set.range y)) =
       Module.finrank K (Algebra.adjoin K (Set.range y)) := by
     rw [← hSeq]; rfl
-  haveI : FiniteDimensional K (Algebra.adjoin K (Set.range y)) :=
+  have : FiniteDimensional K (Algebra.adjoin K (Set.range y)) :=
     Module.finite_of_finrank_pos (hfin ▸ Module.finrank_pos)
   rw [hfin]
   set d := Module.finrank K (Algebra.adjoin K (Set.range y))

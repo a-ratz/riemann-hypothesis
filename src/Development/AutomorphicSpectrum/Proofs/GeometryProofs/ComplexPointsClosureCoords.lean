@@ -101,8 +101,8 @@ theorem point_of_ringHom {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U) {F
 theorem germ_fraction {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U) {p : X} (hp : p ∈ U)
     (s : X.presheaf.stalk p) : ∃ t₁ t₂ : Γ(X, U), IsUnit (X.presheaf.germ U p hp t₂) ∧
       s * X.presheaf.germ U p hp t₂ = X.presheaf.germ U p hp t₁ := by
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨p, hp⟩ : U)
-  haveI := hU.isLocalization_stalk (⟨p, hp⟩ : U)
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨p, hp⟩ : U)
+  have := hU.isLocalization_stalk (⟨p, hp⟩ : U)
   obtain ⟨⟨t₁, t₂⟩, h⟩ := IsLocalization.surj (hU.primeIdealOf (⟨p, hp⟩ : U)).asIdeal.primeCompl s
   exact ⟨t₁, t₂, IsLocalization.map_units _ t₂, h⟩
 

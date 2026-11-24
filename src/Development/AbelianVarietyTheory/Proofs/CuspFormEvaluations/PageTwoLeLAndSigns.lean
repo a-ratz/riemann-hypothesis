@@ -68,7 +68,7 @@ theorem page_two_le_L_and_signs : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : 
       rw [hn]; exact_mod_cast (by unfold Ranks.nV; omega : D.R.r ≤ D.R.nV)
     have he : Real.exp 1 ≤ 3 := (Real.exp_one_lt_d9.trans (by norm_num)).le
     have he4 : Real.exp 4 ≤ 81 := by
-      have : Real.exp 4 = Real.exp 1 ^ 4 := by rw [← Real.exp_nat_mul]; norm_num
+      have : Real.exp 4 = Real.exp 1 ^ 4 := by rw [← Real.exp_natCast_mul]; norm_num
       rw [this]
       calc Real.exp 1 ^ 4 ≤ 3 ^ 4 := pow_le_pow_left₀ (Real.exp_pos 1).le he 4
         _ = 81 := by norm_num

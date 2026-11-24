@@ -242,7 +242,7 @@ theorem box_kfin (hL : FinLevel) (hB : B.IsGood σ) (hK : IsStab2 B K) (hc : IsC
       simpa [Matrix.mul_apply, Fintype.sum_sum_type] using this
     have n2 : dd0 (d'.e (-u.toCols₂)) f' = -dd0 (d'.e u.toCols₂) f' := SchwartzMap.ext fun x => by
       have ng : ∀ y : κ → AF F, nf (-y) = -nf y := fun y => funext fun i => map_neg (InfiniteAdeleRing.ringEquiv_mixedSpace F) _
-      simp only [dd0, map_neg, Prod.fst_neg, Prod.snd_neg, ng, dop_apply, SchwartzMap.neg_apply, linForm_apply, Pi.neg_apply, mul_neg,
+      simp only [dd0, map_neg, Prod.fst_neg, Prod.snd_neg, ng, dop_apply, neg_apply, linForm_apply, Pi.neg_apply, mul_neg,
         Finset.sum_neg_distrib]
       push_cast
       ring
@@ -256,8 +256,8 @@ theorem box_kfin (hL : FinLevel) (hB : B.IsGood σ) (hK : IsStab2 B K) (hc : IsC
     fun f _ => z2 f ▸ zero_mem _⟩, fun c _ h f hf => c2 c f _ ▸ Submodule.smul_mem _ _ (h f hf)⟩ (fun ε' f' hf' => ?_)
     (fun u hu f' h f hf => ?_) h2 f₁ h1
   · refine hP ⟨⟨⟨{f | bx f f' ∈ kfin om K}, fun h h' => by
-      rw [Set.mem_setOf_eq, a1]; exact add_mem h h'⟩, by rw [Set.mem_setOf_eq, z1]; exact zero_mem _⟩,
-      fun c _ h => by rw [Set.mem_setOf_eq, c1]; exact Submodule.smul_mem _ _ h⟩ (fun ε f hf => base ε f hf ε' f' hf') fun u hu f h => ?_
+      rw [Set.mem_ofPred_eq, a1]; exact add_mem h h'⟩, by rw [Set.mem_ofPred_eq, z1]; exact zero_mem _⟩,
+      fun c _ h => by rw [Set.mem_ofPred_eq, c1]; exact Submodule.smul_mem _ _ h⟩ (fun ε f hf => base ε f hf ε' f' hf') fun u hu f h => ?_
     have := D_kfin hB.std hs (atc hu at0) h
     rw [D_box hB.std hd hu at0 f f' s1 s2, d0] at this
     change bx _ _ + bx _ _ ∈ _ at this

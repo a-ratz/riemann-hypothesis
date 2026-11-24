@@ -271,7 +271,7 @@ theorem mn_norm_mul_le (A B : Mat k r) : ‖A * B‖ ≤ ((2 * r + k + 1 : ℕ) 
   calc ‖∑ l, A i l * B l j‖ ≤ ∑ l, ‖A i l * B l j‖ := norm_sum_le _ _
     _ ≤ ∑ _l : Fin (2 * r + k + 1), ‖A‖ * ‖B‖ := Finset.sum_le_sum fun l _ => by
         rw [norm_mul]
-        exact mul_le_mul (Matrix.norm_entry_le_entrywise_sup_norm A) (Matrix.norm_entry_le_entrywise_sup_norm B)
+        exact mul_le_mul (Matrix.norm_apply_le_norm A) (Matrix.norm_apply_le_norm B)
           (norm_nonneg _) (norm_nonneg _)
     _ = ((2 * r + k + 1 : ℕ) : ℝ) * ‖A‖ * ‖B‖ := by
         rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
@@ -340,10 +340,10 @@ theorem norm_mnP_le (w : List (Bool × Mat k r)) (hw : ∀ x ∈ w, ‖x.2‖ �
     have hn : (1 : ℝ) ≤ ((2 * r + k + 1 : ℕ) : ℝ) := by exact_mod_cast (by omega)
     obtain ⟨b, X⟩ := x
     cases b
-    · simp only [mnP, Bool.false_eq_true, if_false, List.length_cons, pow_succ]
+    · simp only [mnP, Bool.false_eq_true, ite_false, List.length_cons, pow_succ]
       have : 0 ≤ ((2 * r + k + 1 : ℕ) : ℝ) ^ w.length * ‖P‖ := by positivity
       nlinarith
-    · simp only [mnP, if_true, List.length_cons, pow_succ]
+    · simp only [mnP, ite_true, List.length_cons, pow_succ]
       calc ‖mnP w P * -X‖ ≤ ((2 * r + k + 1 : ℕ) : ℝ) * ‖mnP w P‖ * ‖-X‖ := mn_norm_mul_le _ _
         _ ≤ ((2 * r + k + 1 : ℕ) : ℝ) * (((2 * r + k + 1 : ℕ) : ℝ) ^ w.length * ‖P‖) * 1 := by
           rw [norm_neg]
@@ -360,12 +360,12 @@ theorem mn_mnQ_norm (w : List (Bool × Mat k r)) (hw : ∀ x ∈ w, ‖x.2‖ �
     have hn : (1 : ℝ) ≤ ((2 * r + k + 1 : ℕ) : ℝ) := by exact_mod_cast (by omega)
     obtain ⟨b, X⟩ := x
     cases b
-    · simp only [mnQ, Bool.false_eq_true, if_false, List.length_cons, pow_succ]
+    · simp only [mnQ, Bool.false_eq_true, ite_false, List.length_cons, pow_succ]
       calc ‖X * mnQ w Q‖ ≤ ((2 * r + k + 1 : ℕ) : ℝ) * ‖X‖ * ‖mnQ w Q‖ := mn_norm_mul_le _ _
         _ ≤ ((2 * r + k + 1 : ℕ) : ℝ) * 1 * (((2 * r + k + 1 : ℕ) : ℝ) ^ w.length * ‖Q‖) := by
           gcongr
         _ = _ := by ring
-    · simp only [mnQ, if_true, List.length_cons, pow_succ]
+    · simp only [mnQ, ite_true, List.length_cons, pow_succ]
       have : 0 ≤ ((2 * r + k + 1 : ℕ) : ℝ) ^ w.length * ‖Q‖ := by positivity
       nlinarith
 
@@ -681,12 +681,12 @@ theorem mn_np_chat2L {Eop : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → (Mat
   apply mn_nice_sum; intro j _
   apply mn_nice_sum; intro j' _
   by_cases hP : i < i' ∧ j < j'
-  · simp only [if_pos hP]
+  · simp only [ite_eq_left hP]
     exact mn_good_mul (mn_good_mul (mn_good_const _)
       (mn_good_sub (mn_good_mul (hβ i) (hβ' i')) (mn_good_mul (hβ i') (hβ' i))))
       (mn_good_sub (mn_good_mul (ha j) (ha' j')) (mn_good_mul (ha j') (ha' j))) _
       (mn_np_qminorOp hE _ _ u F hF)
-  · simp only [if_neg hP]
+  · simp only [ite_eq_right hP]
     exact mn_nice_zero
 
 theorem mn_np_EH : ∀ a b, mnNP Bs ε (Q.EH k r a b) := fun a b _ hF => mn_nice_EH a b hF
@@ -1007,9 +1007,9 @@ theorem bcUnder_coef {Θ : (B.Mat k r → (Wq →L[ℂ] Wp)) → B.Mat k r → (
 theorem bcUnder_ite {Θ : (B.Mat k r → (Wq →L[ℂ] Wp)) → B.Mat k r → (Wq →L[ℂ] Wp)} (P : Prop) [Decidable P]
     (h : P → BcUnder D F g Θ) : BcUnder D F g (fun f x => if P then Θ f x else 0) := by
   by_cases hP : P
-  · simp only [if_pos hP]
+  · simp only [ite_eq_left hP]
     exact h hP
-  · simp only [if_neg hP]
+  · simp only [ite_eq_right hP]
     exact ⟨by simp, by simp⟩
 
 theorem bc_tL_under (A : ℝ) (m : ℕ) (hnm : 2 * r + k + 1 ≤ m) (hThr : JF.TransportedAlt k r A m) (hF : B.InCC A m F)
@@ -1196,8 +1196,8 @@ theorem bcLoc_ite {Θ : (B.Mat k r → E) → B.Mat k r → E} (P : Prop) [Decid
     BcLoc U (fun f x => if P then Θ f x else 0) := by
   intro f f' hff x hx hxG
   by_cases hP : P
-  · simp only [if_pos hP]; exact h hP f f' hff x hx hxG
-  · simp only [if_neg hP]
+  · simp only [ite_eq_left hP]; exact h hP f f' hff x hx hxG
+  · simp only [ite_eq_right hP]
 
 theorem bcLoc_fold (Ts : List ((B.Mat k r → E) → B.Mat k r → E))
     (hT : ∀ T ∈ Ts, BcLoc U T) : BcLoc U (fun f => Ts.foldr (fun T h => T h) f) := by
@@ -1442,7 +1442,7 @@ def rma_resFn (J : Mx k r → (Wq →L[ℂ] Wp)) : Fn k r (Wq →L[ℂ] Wp) := f
 theorem rma_resFn_of_mem (J : Mx k r → (Wq →L[ℂ] Wp)) {y : (Fin r → ℂ) × Mx k r} (hy : y ∈ DomR k r z z') :
     rma_resFn z z' J y.1 y.2 = resG k r (Fin.last r) J y.1 y.2 := by
   unfold rma_resFn
-  rw [if_pos (by simpa using hy)]
+  rw [ite_eq_left (by simpa using hy)]
 
 theorem rma_resFn_mem (hz : inWb k r z) (hz' : inWb k r z') (J : Mx k r → (Wq →L[ℂ] Wp))
     (hJ : J ∈ FFl k r z z' π π' 0 (OmPlus k r z z')) : rma_resFn z z' J ∈ RadSp k r z z' π π' := by
@@ -1450,7 +1450,7 @@ theorem rma_resFn_mem (hz : inWb k r z) (hz' : inWb k r z') (J : Mx k r → (Wq 
   have hsm := Formalism.FourierDecayAlt.P5.Rad.sf_resG hJ.1
   refine ⟨fun x hx => ?_, fun x₀ hx₀ => ?_, fun x hx h hh h' hh' => ?_⟩
   · show (if (x.1, x.2) ∈ DomR k r z z' then resG k r (Fin.last r) J x.1 x.2 else 0) = 0
-    rw [if_neg (by rw [Prod.mk.eta]; exact hx)]
+    rw [ite_eq_right (by rw [Prod.mk.eta]; exact hx)]
   · obtain ⟨U, Fe, hU, hxU, hFe, hΦ⟩ := hsm x₀
       ⟨hx₀.1, Formalism.FourierDecayAlt.P5.Rad.wCell_mem_omPlus hz hz' hx₀.1 hx₀.2.1 hx₀.2.2⟩ hx₀.2.1
     have hV : IsOpen {x : (Fin r → ℂ) × Mx k r | x.1 ∈ OmX r ∧ 0 < GGl k r z z' x.2} :=
@@ -1460,12 +1460,12 @@ theorem rma_resFn_mem (hz : inWb k r z) (hz' : inWb k r z') (J : Mx k r → (Wq 
       ⟨hxU, hx₀.1, hx₀.2.2⟩, hFe.mono Set.inter_subset_left, fun x hx hxG => ?_⟩
     have hxD : (x.1, x.2) ∈ DomR k r z z' := ⟨hx.2.1, hxG, hx.2.2⟩
     show (if (x.1, x.2) ∈ DomR k r z z' then resG k r (Fin.last r) J x.1 x.2 else 0) = _
-    rw [if_pos hxD]
+    rw [ite_eq_left hxD]
     exact hΦ x hx.1 hxG
   · have hx' : (x.1, x.2) ∈ DomR k r z z' := by simpa using hx
     show (if (x.1, h * x.2 * h') ∈ DomR k r z z' then resG k r (Fin.last r) J x.1 (h * x.2 * h') else 0) =
       (π h).comp ((if (x.1, x.2) ∈ DomR k r z z' then resG k r (Fin.last r) J x.1 x.2 else 0).comp (π' h'))
-    rw [if_pos (Formalism.FourierDecayAlt.P5.Rad.domR_uw hx hh hh'), if_pos hx']
+    rw [ite_eq_left (Formalism.FourierDecayAlt.P5.Rad.domR_uw hx hh hh'), ite_eq_left hx']
     unfold resG
     have e : wCell k r (Fin.last r) x.1 * (h * x.2 * h') =
         h * (wCell k r (Fin.last r) x.1 * x.2) * h' := by
@@ -2172,7 +2172,7 @@ theorem rb_ae_ne_circle {T T' : ℝ} (hc : 0 < T * T') : ∀ᵐ ζ : ℂ, Comple
 theorem rb_zWeight_zero_of_not {k : ℕ} {T T' : ℝ} {ζ : ℂ} (h1 : ζ ∉ rbO T T') (h2 : Complex.normSq ζ ≠ T * T') :
     B2.zWeight k T T' ζ = 0 := by
   unfold B2.zWeight
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hle
   exact h1 (lt_of_le_of_ne hle (Ne.symm h2))
 
@@ -2462,7 +2462,7 @@ variable {k r : ℕ}
 theorem rb_gauge_eq (c : Fin r → ℂ) : rbGauge k r c = ∏ a : Fin r, ‖c a‖ ^ (Mdim k r a - 1) := by
   unfold rbGauge
   refine Finset.prod_congr rfl fun a _ => ?_
-  rw [if_pos (by simp [a.isLt])]
+  rw [ite_eq_left (by simp [a.isLt])]
 
 theorem rb_cw_eq {c : Fin r → ℂ} (hc : c ∈ OmX r) :
     (∏ a : Fin r, ‖c a‖ ^ (-2 : ℤ)) * rbGauge k r c ^ 2 = B2.cWeight k r c := by
@@ -2530,7 +2530,7 @@ theorem rb_contOn_bcW (D : B.RealPlaceData k r Wp Wq) :
       (((Complex.continuous_normSq.comp continuous_snd).sub continuous_const).pow _)
   refine hc.continuousOn.congr fun q hq => ?_
   unfold bcWeight
-  rw [if_pos hq.2.le]
+  rw [ite_eq_left hq.2.le]
 
 theorem rb_contOn_J (D : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[ℂ] Wp)) (hF : ∀ (A : ℝ) (m : ℕ), B.InCC A m F) :
     ContinuousOn (fun q => B.hsVec (B.JF D F (B.gq D q))) (B7.Q0 D) := by
@@ -2878,7 +2878,7 @@ theorem pd_phi_support : HasCompactSupport (pdPhi (k := k) (r := r)) := by
   have hK : IsCompact {M : Mat k r | pdSq M ≤ 4} := by
     refine Metric.isCompact_of_isClosed_isBounded (isClosed_le pd_sq_cd.continuous continuous_const) ?_
     refine (Metric.isBounded_closedBall (x := (0 : Mat k r)) (r := 2)).subset fun M hM => ?_
-    simp only [Set.mem_setOf_eq] at hM
+    simp only [Set.mem_ofPred_eq] at hM
     rw [Metric.mem_closedBall, dist_zero_right]
     have h1 := mn_norm_le_gN M
     have h2 : gN M ^ 2 ≤ 2 ^ 2 := by rw [← pd_sq_eq]; linarith
@@ -2886,7 +2886,7 @@ theorem pd_phi_support : HasCompactSupport (pdPhi (k := k) (r := r)) := by
     have h3 : gN M ≤ 2 := by nlinarith
     linarith
   refine HasCompactSupport.intro hK fun M hM => ?_
-  simp only [Set.mem_setOf_eq, not_le] at hM
+  simp only [Set.mem_ofPred_eq, not_le] at hM
   simp [pdPhi, pd_chi_zero hM.le]
 
 theorem pd_phi_bound (j : ℕ) : ∃ B : ℝ, ∀ y ∈ (Set.univ : Set (Mat k r)), ‖iteratedFDeriv ℝ j pdPhi y‖ ≤ B := by
@@ -3000,7 +3000,7 @@ theorem pd_phi_deriv (m : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∀ w, admitted m w �
     have hz : ∀ M' ∈ {M : Mat k r | 4 < pdSq M}, pdPhi M' = (fun _ => (0 : ℂ)) M' := by
       intro M' hM'
       simp [pdPhi, pd_chi_zero (le_of_lt hM')]
-    rw [pd_Dw_congr_open hU hz w M (by simp only [Set.mem_setOf_eq]; simp only [Set.mem_setOf_eq, not_le] at hM; linarith), Dw_zero]
+    rw [pd_Dw_congr_open hU hz w M (by simp only [Set.mem_ofPred_eq]; simp only [Set.mem_ofPred_eq, not_le] at hM; linarith), Dw_zero]
     simpa using hC0
 
 theorem pd_psi_deriv (m : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R → ∀ w, admitted m w → ∀ g : Mat k r,
@@ -3027,7 +3027,7 @@ theorem pd_psi_deriv (m : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 < R →
   · have hU : IsOpen {g' : Mat k r | pdSq (R⁻¹ • g') < 1} :=
       isOpen_lt (pd_sq_cd.continuous.comp (continuous_const_smul R⁻¹)) continuous_const
     have hgU : g ∈ {g' : Mat k r | pdSq (R⁻¹ • g') < 1} := by
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [pd_sq_smul, pd_sq_eq]
       have h0 : 0 ≤ gN g := Real.sqrt_nonneg _
       rw [inv_pow, inv_mul_lt_iff₀ (by positivity), mul_one]
@@ -3114,7 +3114,7 @@ theorem pd_cut_nice {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {R : �
     rw [Metric.mem_closedBall, dist_zero_right]
     exact (mn_norm_le_gN M).trans (pd_gN_le_of_sq (by positivity) hM)
   refine Formalism.FourierDecayAlt.P.compact_support_finite_class k r E _ _ hck hK fun g hg => ?_
-  simp only [Set.mem_setOf_eq, not_le] at hg
+  simp only [Set.mem_ofPred_eq, not_le] at hg
   have h4 : 4 ≤ pdSq (R⁻¹ • g) := by
     rw [pd_sq_smul, inv_pow, le_inv_mul_iff₀ (by positivity)]
     nlinarith

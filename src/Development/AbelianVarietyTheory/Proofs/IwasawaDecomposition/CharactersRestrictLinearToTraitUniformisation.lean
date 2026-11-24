@@ -113,7 +113,7 @@ theorem restrict_torus_smul_comm : ∀ (E : Type) [Field E] [NumberField E] [IsC
     ∀ (a : 𝓞 E) (x : P.D.toPre.X), ρ (a • x) = a • ρ x := by
   intro E _ _ _ H R _ _ _ t P W _ _ _ t' P' V _ _ _ ψ _ tV mV Ω _ α β hβ tΩ n n' j _ t₀ m₀ h₀ m₀' ρ
     hα hj _ h₀j
-  letI := H.starRing
+  let := H.starRing
   have key : ∀ a : 𝓞 E, j ≫ tV.act.act a =
       SplitTorus.torusMap _ (DistribSMul.toAddMonoidHom P'.D.toPre.X (H.bar a)) ≫ j := by
     intro a
@@ -141,7 +141,7 @@ theorem restrict_torus_smul_comm : ∀ (E : Type) [Field E] [NumberField E] [IsC
       TorusPart.pullTorus_torusMap_comp m₀.cart j, h₀j, Category.assoc,
       TorusPart.PELUnif.torus_comp_act P h₀ m₀' a, ← Category.assoc, ← Category.assoc,
       ← SplitTorus.torusMap_comp, ← SplitTorus.torusMap_comp] at e
-    haveI : Mono (TorusPart.PELUnif.torus P h₀ m₀') := hmono
+    have : Mono (TorusPart.PELUnif.torus P h₀ m₀') := hmono
     have : Nonempty (Sp (ResidueField V)) := inferInstance
     exact SplitTorus.torusMap_injective ((cancel_mono _).1 e)
   intro a x
@@ -376,7 +376,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     · exact ⟨2, le_rfl, by simpa using h.neg⟩
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
   let F := AlgebraicClosure (FractionRing W)
-  letI : Algebra (FractionRing R) F := ((algebraMap (FractionRing W) F).comp gK).toAlgebra
+  let : Algebra (FractionRing R) F := ((algebraMap (FractionRing W) F).comp gK).toAlgebra
   have key : ∀ k : ℕ, IsUnit (k : R) →
       (k : ℤ) ∣ (ord_vw W).toFun (Units.map gK.toMonoidHom x) - (ord_vw W).toFun x' := fun k hk => by
     obtain ⟨O, φ, σ, π, h₁, h₂, h₃, h₄, h₅⟩ := _root_.GlobalTheory.InertiaTameRoot.exists_inertia_moves_root W F ϖ hϖ k (by simpa using hk.map g)

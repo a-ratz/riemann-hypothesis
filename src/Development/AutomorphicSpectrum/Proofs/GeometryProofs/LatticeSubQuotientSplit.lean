@@ -71,9 +71,9 @@ theorem exists_basis_of_isCompl (R : Type) [CommRing R] [IsLocalRing R] {M : Typ
     ∃ k : ℕ, Nonempty (Module.Basis (Fin k) R A) := by
   have h1 : Module.Projective R A :=
     Module.Projective.of_split A.subtype (Submodule.linearProjOfIsCompl A B h)
-      (LinearMap.ext fun x => Submodule.linearProjOfIsCompl_apply_left h x)
+      (LinearMap.ext fun x => projectionOnto_apply_left h x)
   have h2 : Module.Finite R A :=
-    Module.Finite.of_surjective (Submodule.linearProjOfIsCompl A B h) (Submodule.linearProjOfIsCompl_surjective h)
+    Module.Finite.of_surjective (Submodule.linearProjOfIsCompl A B h) (projectionOnto_surjective h)
   have h3 : Module.FinitePresentation R A := Module.finitePresentation_of_projective R A
   have h4 : Module.Free R A := Module.free_of_flat_of_isLocalRing
   exact ⟨_, ⟨Module.finBasis R A⟩⟩

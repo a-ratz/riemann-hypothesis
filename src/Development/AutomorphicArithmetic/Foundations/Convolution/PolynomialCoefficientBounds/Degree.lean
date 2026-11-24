@@ -62,7 +62,7 @@ private theorem UpperTheory.ConvolutionTheory.FX.exp_le_factorial_eventually (k 
     linarith
   filter_upwards [(Nat.tendsto_div_const_atTop hk).eventually h2] with j hj
   refine le_trans ?_ hj
-  rw [hC, ← Real.exp_nat_mul]
+  rw [hC, ← Real.exp_natCast_mul]
   apply Real.exp_le_exp.mpr
   have h3 : j ≤ k * (j / k + 1) := (Nat.lt_mul_div_succ j (Nat.pos_of_ne_zero hk)).le
   have h4 : (j : ℝ) ≤ k * ((j / k + 1 : ℕ) : ℝ) := by exact_mod_cast h3

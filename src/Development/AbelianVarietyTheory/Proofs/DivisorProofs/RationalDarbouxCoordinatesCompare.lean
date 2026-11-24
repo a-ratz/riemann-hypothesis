@@ -77,7 +77,7 @@ theorem darboux_change_rat : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       GlobalTheory.SympChange.IsSymp G ∧ ∀ w, c₂.e w = GlobalTheory.SympChange.spAct G (c₁.e w) := by
   intro F E _ _ _ _ _ σ n d JX JW c₁ c₂ h₁ h₂
   classical
-  haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
   have hAinj : Function.Injective (algebraMap F (AF F)) := AdeleRing.algebraMap_injective _ _
 
   have honto : ∀ y z : Fin n × Fin d → F, ∃ x : Matrix (Fin n) (Fin d) E,

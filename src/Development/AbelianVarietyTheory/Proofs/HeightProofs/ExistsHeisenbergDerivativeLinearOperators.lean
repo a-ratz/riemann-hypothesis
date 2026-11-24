@@ -66,7 +66,7 @@ theorem _root_.GlobalTheory.FockCompare.exists_heisenberg_operators : ∀ (G R :
     have hfun : (fun x : R => ((f : G → ℂ) + g) (w + ι x)) =
         (fun x : R => (f : G → ℂ) (w + ι x)) + fun x : R => (g : G → ℂ) (w + ι x) := rfl
     rw [hfun, fderiv_add (hdiff _ f.2 w) (hdiff _ g.2 w)]
-    simp only [Pi.add_apply, ContinuousLinearMap.add_apply]
+    simp only [Pi.add_apply, add_apply]
     ring
   · intro a f
     ext w
@@ -75,7 +75,7 @@ theorem _root_.GlobalTheory.FockCompare.exists_heisenberg_operators : ∀ (G R :
     have hfun : (fun x : R => (a • (f : G → ℂ)) (w + ι x)) =
         a • fun x : R => (f : G → ℂ) (w + ι x) := rfl
     rw [hfun, fderiv_const_smul (hdiff _ f.2 w)]
-    simp only [Pi.smul_apply, smul_eq_mul, ContinuousLinearMap.smul_apply]
+    simp only [Pi.smul_apply, smul_eq_mul, smul_apply]
     ring
   · intro u v
     ext f w

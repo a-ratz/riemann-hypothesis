@@ -283,11 +283,11 @@ theorem fc_chart_inv {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [Se
     simp only [f', ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero]
     exact (hcd.differentiableAt hn).hasFDerivAt
   have hs : HasStrictFDerivAt (A.zLoc w0 s i) (f' : V n →L[ℂ] V n) (A.chart i x) :=
-    hcd.hasStrictFDerivAt' hf' hn
+    hcd.hasStrictFDerivAt hf' hn
   have hloc := hcd.to_localInverse hf' hn
   have hzx : A.zLoc w0 s i (A.chart i x) = e x := fc_zLoc_chart A hD e he x hxe i hxi
   have hsymmc : ContinuousAt (fun w => ((e.symm w : A.Mset w0 s De) : Y)) (e x) :=
-    continuous_subtype_val.continuousAt.comp (e.continuousAt_symm (e.map_source hxe))
+    continuous_subtypeVal.continuousAt.comp (e.continuousAt_symm (e.map_source hxe))
   have hGc : Filter.Tendsto (fun w => A.chart i (e.symm w : Y)) (𝓝 (e x)) (𝓝 (A.chart i x)) := by
     have h := ((A.chart i).continuousAt hxi).comp_of_eq hsymmc (by simp [e.left_inv hxe])
     unfold ContinuousAt at h

@@ -154,7 +154,7 @@ private theorem isGVal_of_linear_change {F : Type} [Field F] [NumberField F]
       _root_.GlobalTheory.HilbFam.transfQuot T q ∈ _root_.GlobalTheory.HilbFam.cls L' := by
     intro q
     obtain ⟨ε, hε⟩ := exists_unit_transfQuot_out_eq_smul T q
-    simp only [_root_.GlobalTheory.HilbFam.cls, Set.mem_setOf_eq, hε]
+    simp only [_root_.GlobalTheory.HilbFam.cls, Set.mem_ofPred_eq, hε]
     have hz : ε • T q.out ≠ 0 ↔ q.out ≠ 0 := by
       constructor
       · intro h h0

@@ -63,14 +63,14 @@ theorem thetaTranslationOperator_apply (ω : ℂ) (G : ℂ → ℂ) (z : ℂ) : 
 theorem trFac_mul {β : ℂ} {n : ℕ} (hb : β * starRingEnd ℂ β = (n : ℂ)) (z ω : ℂ) :
     trFac Λ (β * z) (β * ω) = trFac Λ z ω ^ n := by
   simp only [trFac]
-  rw [← Complex.exp_nat_mul, ← hb, map_mul]
+  rw [← Complex.exp_natCast_mul, ← hb, map_mul]
   congr 1
   ring
 
 theorem trFac_add_sub (v z ω : ℂ) :
     trFac Λ (v + z) ω * trFac Λ (z - v) ω = trFac Λ z ω ^ 2 := by
   simp only [trFac]
-  rw [← Complex.exp_nat_mul, ← Complex.exp_add]
+  rw [← Complex.exp_natCast_mul, ← Complex.exp_add]
   congr 1
   push_cast
   ring

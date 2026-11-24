@@ -163,7 +163,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem thL_eq_thetaGL (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) : thL n w = GlobalTheory.CuspRep.thetaGL n (cj w) := by
   unfold thL
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 theorem cj_cj' (w : Pl E) (x : w.adicCompletion E) : cj w (cj w x) = x := (GlobalTheory.T.localConjugation_involutive_valuation_preserving E w).1 x
 
@@ -417,7 +417,7 @@ private theorem incrV_tdiag_of_strictAnti_of_ordL_eq_one (w : Pl E) (n : ℕ) (�
   rw [(ValuativeRel.isEquiv (valuation (w.adicCompletion E)) Valued.v).lt_iff_lt]
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   have hpos : 0 < Valued.v (ϖ : w.adicCompletion E) := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     simp
   exact zpow_lt_zpow_right_of_lt_one₀ hpos (valued_v_lt_one_of_ordL_eq_one w ϖ hϖ) (ha hij)
 

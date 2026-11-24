@@ -476,8 +476,8 @@ theorem hkPtC_values : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
         ∑ m, b i (jm m) (cr m * a) *
           valAt' (lift (𝟙 (Over.mk y.x)) ((cr m * a) ^ p)).left ((PPx y.x).U (fun _ => jm m)) (y.s.f (fun _ => jm m))) := by
   intro E _ _ _ H Dw l Xo c σ p y z C hk
-  letI := fieldCAt σ
-  haveI := algClosedCAt σ
+  let := fieldCAt σ
+  have := algClosedCAt σ
   obtain ⟨ψ, ψp, hiso, -, htr⟩ := hk
   obtain ⟨β, s₁, n, cr, hβ, hs, hr, hv⟩ := isThetaTrace_iff.1 htr
   obtain ⟨β₀, hβ₀, hc₀⟩ := hs.exists_isRigIso

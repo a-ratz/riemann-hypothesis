@@ -106,9 +106,9 @@ theorem unfold_abs (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K
       ∫⁻ k, ∫⁻ t, (∫⁻ u in D₁, ‖f (ι u * mm t * k.1)‖ₑ ∂μH) * χ t ∂μT ∂μK < ⊤ →
       (∀ᵐ g ∂(ν.restrict D), Summable fun x => f (r x * g)) ∧ IntegrableOn (fun g => ∑' x, f (r x * g)) D ν ∧
         ∫ g in D, ∑' x, f (r x * g) ∂ν = κ * ∫ k, ∫ t, (∫ u in D₁, f (ι u * mm t * k.1) ∂μH) * ((χ t : ℝ) : ℂ) ∂μT ∂μK := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : Countable Q := (Subgroup.inclusion_injective hQ).countable
-  haveI : DiscreteTopology Q := DiscreteTopology.of_continuous_injective
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : Countable Q := (Subgroup.inclusion_injective hQ).countable
+  have : DiscreteTopology Q := DiscreteTopology.of_continuous_injective
     (continuous_inclusion hQ) (Subgroup.inclusion_injective hQ)
   have ci := h.ci.measurable
   have cm := h.cm.measurable
@@ -121,7 +121,7 @@ theorem unfold_abs (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K
   refine ⟨(a / c).toReal, ENNReal.toReal_pos k0 k1, fun I r hr hu f hf i1 i2 hfin => ?_⟩
   have hinj : Function.Injective fun x => (⟨r x, hr x⟩ : Γ) := fun x x' e =>
     (hu _ (hr x)).unique (by simp) (by rw [show r x = r x' from congrArg Subtype.val e]; simp)
-  haveI := hinj.countable
+  have := hinj.countable
   obtain ⟨𝓕, f1, f2⟩ := PositivityTheory.PlacePermOperatorBicommutantSpan.unf G ν Γ Q hQ D hD I r hr hu
   have key : ∀ φ : G → ℝ≥0∞, Measurable φ → (∀ p g, φ (nn p * g) = φ g) → (∀ q ∈ Q, ∀ g, φ (q * g) = φ g) →
       ∫⁻ g in D, ∑' x, φ (r x * g) ∂ν = a / c * ∫⁻ k, ∫⁻ t, (∫⁻ u in D₁, φ (ι u * mm t * k.1) ∂μH) * χ t ∂μT ∂μK :=
@@ -137,12 +137,12 @@ theorem unfold_abs (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K
       simp only [mul_assoc _ (mm _)]
       rw [← e2, ← mul_assoc, ENNReal.inv_mul_cancel c0 c1, one_mul]
   have hm := hf.measurable
-  have n1 := key (fun g => ‖f g‖ₑ) hm.enorm (fun p g => by rw [i1]) fun q hq g => by rw [i2 q hq]
+  have n1 := key (fun g => ‖f g‖ₑ) hm.eNorm (fun p g => by rw [i1]) fun q hq g => by rw [i2 q hq]
   have n2 : ∫⁻ g in D, ∑' x, ‖f (r x * g)‖ₑ ∂ν < ⊤ := by rw [n1]; exact ENNReal.mul_lt_top k1.lt_top hfin
   have hx : ∀ x, Measurable fun g => f (r x * g) := fun x => hm.comp (measurable_const_mul _)
-  refine ⟨(ae_lt_top (Measurable.tsum fun x => (hx x).enorm) n2.ne).mono fun g hg => ?_,
-    ⟨(Measurable.tsum hx).aestronglyMeasurable, (lintegral_mono fun g => enorm_tsum_le_tsum_enorm).trans_lt n2⟩, ?_⟩
-  · exact Summable.of_nnnorm (ENNReal.tsum_coe_ne_top_iff_summable.1 hg.ne)
+  refine ⟨(ae_lt_top (Measurable.tsum fun x => (hx x).eNorm) n2.ne).mono fun g hg => ?_,
+    ⟨(Measurable.tsum hx).aestronglyMeasurable, (lintegral_mono fun g => eNorm_tsum_le_tsum_eNorm).trans_lt n2⟩, ?_⟩
+  · exact Summable.of_nnNorm (ENNReal.tsum_coe_ne_top_iff_summable.1 hg.ne)
   set wd := μT.withDensity fun s => (χ s : ℝ≥0∞) with hwd
   set ρ := μK.prod (wd.prod (μH.restrict D₁)) with hρ
   have hπ : Measurable fun z : K × T × H => ι z.2.2 * mm z.2.1 * z.1.1 := by fun_prop
@@ -158,9 +158,9 @@ theorem unfold_abs (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K
       lintegral_withDensity_eq_lintegral_mul _ hχ (by fun_prop)]
     exact lintegral_congr fun t => mul_comm _ _
   have I1 : Integrable f (Measure.sum fun x => (ν.restrict D).map (r x * ·)) :=
-    ⟨hm.aestronglyMeasurable, (L1 _ hm.enorm).trans_lt n2⟩
+    ⟨hm.aestronglyMeasurable, (L1 _ hm.eNorm).trans_lt n2⟩
   have I2 : Integrable (fun z : K × T × H => f (ι z.2.2 * mm z.2.1 * z.1.1)) ρ :=
-    ⟨(hm.comp hπ).aestronglyMeasurable, (L2 _ hm.enorm).trans_lt hfin⟩
+    ⟨(hm.comp hπ).aestronglyMeasurable, (L2 _ hm.eNorm).trans_lt hfin⟩
   have e := integral_eq_of (μ₁ := Measure.sum fun x => (ν.restrict D).map (r x * ·))
     (μ₂ := (a / c) • ρ.map fun z : K × T × H => ι z.2.2 * mm z.2.1 * z.1.1) hm fun ψ hψ => by
       rw [L1 (fun g => ψ (f g)) (hψ.comp hm), lintegral_smul_measure, lintegral_map (f := fun g => ψ (f g)) (hψ.comp hm) hπ,
@@ -170,7 +170,7 @@ theorem unfold_abs (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K
   rw [integral_sum_measure I1, integral_smul_measure, integral_map hπ.aemeasurable hm.aestronglyMeasurable, hρ,
     integral_prod _ I2] at e
   rw [integral_tsum (fun x => (hx x).aestronglyMeasurable)
-    (by rw [← lintegral_tsum fun x => (hx x).enorm.aemeasurable]; exact n2.ne)]
+    (by rw [← lintegral_tsum fun x => (hx x).eNorm.aemeasurable]; exact n2.ne)]
   refine Eq.trans (tsum_congr fun x => (integral_map (measurable_const_mul _).aemeasurable hm.aestronglyMeasurable).symm)
     (e.trans ?_)
   rw [Complex.real_smul]
@@ -242,9 +242,9 @@ theorem unfold_of : Unfold := by
   obtain ⟨_, _, _, _, _, -⟩ := PositivityTheory.ThKF.unimodLC hB.cm hJ (det_ne hY)
   obtain ⟨_, _, _, _, _, -⟩ := PositivityTheory.ThKF.unimodLC hB.cm hJ₁ hd.ne_zero
   obtain ⟨-, _, _, _, _, _, -⟩ := ideleTop F E
-  haveI := PositivityTheory.ThKF.countable_ratU σ X.J
-  haveI := PositivityTheory.ThKF.countable_ratU σ X₁.J
-  haveI := PositivityTheory.ThKF.discrete_ratU hB.cm hJ (det_ne hY)
+  have := PositivityTheory.ThKF.countable_ratU σ X.J
+  have := PositivityTheory.ThKF.countable_ratU σ X₁.J
+  have := PositivityTheory.ThKF.discrete_ratU hB.cm hJ (det_ne hY)
   obtain ⟨s1, s2, s3⟩ := stabDec_of F E σ B n n₁ X X₁ H j₀ j₁ r s hB hY hH
   obtain ⟨N, _, _, _, _, μN, _, _, nn, ι, mm, χ, hP, c1, c2, c3, -, C, hC, hcov⟩ := parEx hB hY hH
   have l1 : ∀ g, IsLevi H 1 g (ι g) := fun g => by simpa using c3 1 g

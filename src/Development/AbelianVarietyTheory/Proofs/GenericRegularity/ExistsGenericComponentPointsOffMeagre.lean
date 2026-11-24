@@ -126,10 +126,10 @@ theorem exists_countable_atlas : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hBC : FrBC Xo c := (GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1.bc
   choose A iA dA aA j yA hj hp hjs hsm hyA using
     GlobalTheory.LocalFrame.exists_integral_chart_frame hS E H Dw l Xo c
-  haveI : IsNoetherian (Xo.XF c) := CompFin.isNoetherian_XF Xo c
+  have : IsNoetherian (Xo.XF c) := CompFin.isNoetherian_XF Xo c
   obtain ⟨T, -, hT⟩ := (isCompact_univ (X := Xo.XF c)).elim_nhds_subcover (fun p => Set.range (j p))
     (fun p _ => by
-      haveI := hj p
+      have := hj p
       exact (IsOpenImmersion.isOpen_range (j p)).mem_nhds (hp p))
   choose C hC using fun (p : Xo.XF c) (σ : ∀ τ : E →+* ℂ, Equiv.Perm (Fin (Dw.mult τ))) =>
     GlobalTheory.Reg.exists_fChart_cell E H Dw l Xo c hBC h (A p) (j p) (yA p) (hj p) (hjs p) (hsm p) (hyA p) σ
@@ -141,7 +141,7 @@ theorem exists_countable_atlas : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     rfl
   let q : Sp L ⟶ Xo.XF c := pullback.lift y.x (spMap (algebraMap c.F L)) hcond
   obtain ⟨p, hpT, hq⟩ := Set.mem_iUnion₂.mp (hT (Set.mem_univ (q (IsLocalRing.closedPoint L))))
-  haveI := hj p
+  have := hj p
   obtain ⟨f, hf⟩ := exists_algHom_of_mem_range (pullback.snd _ _) (j p) (hjs p) q (pullback.lift_snd _ _ _) hq
   obtain ⟨z₀, hz₀⟩ := hBC (A p) L f (yA p)
   have hx : y.x = z₀.x := by
@@ -202,7 +202,7 @@ theorem isMeagre_of_isSigmaCompact {X : Type} [TopologicalSpace X] [T2Space X] {
   obtain ⟨K, hK, rfl⟩ := hs
   refine isMeagre_iUnion fun n => IsNowhereDense.isMeagre ?_
   rw [(hK n).isClosed.isNowhereDense_iff]
-  exact Set.subset_eq_empty (interior_mono (Set.subset_iUnion K n)) hi
+  exact Set.eq_empty_of_subset (interior_mono (Set.subset_iUnion K n)) hi
 
 theorem exists_seq_of_isMeagre {X : Type} [TopologicalSpace X] {s : Set X} (hs : IsMeagre s) :
     ∃ S : ℕ → Set X, (∀ n, IsClosed (S n) ∧ interior (S n) = ∅) ∧ ∀ x ∈ s, ∃ n, x ∈ S n := by
@@ -225,7 +225,7 @@ def pc (x : Frame X.Ψ r) (v : Fin r → E) (τ : X.Ψ) (a : Fin r) : ℂ :=
   if (a : ℕ) < X.p0 then hermC τ.1 X.Gm (col (mat x τ) a) (Data.emb τ.1 v) else ((mat x τ)⁻¹ *ᵥ Data.emb τ.1 v) a
 
 theorem continuous_pc (v : Fin r → E) (τ : X.Ψ) (a : Fin r) : Continuous fun x : X.dom => pc X x.1 v τ a := by
-  have hm : Continuous fun x : X.dom => mat x.1 τ := (continuous_apply τ).comp continuous_subtype_val
+  have hm : Continuous fun x : X.dom => mat x.1 τ := (continuous_apply τ).comp continuous_subtypeVal
   unfold pc
   split_ifs
   · unfold hermC col
@@ -247,22 +247,22 @@ variable {B : Set (Fin m → ℂ)} (hB : IsOpen B) (P : (Fin m → ℂ) → La �
 include hB hP in
 theorem isSigmaCompact_rel (hf : ContinuousOn f B) :
     IsSigmaCompact {x | x ∈ X.dom ∧ ∃ b ∈ B, f b = 0 ∧ ∃ h, Rel X idx φ T x (P b) h} := by
-  haveI : LocallyCompactSpace X.dom := (FourierCoefficientDomain.isOpen_dom X).locallyCompactSpace
-  haveI : LocallyCompactSpace B := hB.locallyCompactSpace
+  have : LocallyCompactSpace X.dom := (FourierCoefficientDomain.isOpen_dom X).locallyCompactSpace
+  have : LocallyCompactSpace B := hB.locallyCompactSpace
   let W : Set (X.dom × B × (Fin g → Fin g → ℂ)) := {p | f p.2.1 = 0 ∧ Rel X idx φ T p.1 (P p.2.1) p.2.2}
   have hW : IsClosed W := by
     have h1 : Continuous fun p : X.dom × B × (Fin g → Fin g → ℂ) => f p.2.1 :=
-      (continuousOn_iff_continuous_restrict.1 hf).comp continuous_snd.fst
+      (continuousOn_iff_continuous_domRestrict.1 hf).comp continuous_snd.fst
     simp only [W, Rel]
     refine (isClosed_eq h1 continuous_const).and (IsClosed.and ?_ ?_)
-    · simp only [Set.setOf_forall, ne_eq, not_imp_comm (a := _ = (0 : ℂ))]
+    · simp only [Set.ofPred_forall, ne_eq, not_imp_comm (a := _ = (0 : ℂ))]
       refine isClosed_iInter fun j => isClosed_iInter fun j' => isClosed_iInter fun _ => ?_
       exact isClosed_eq (by fun_prop) continuous_const
-    · simp only [Set.setOf_forall]
+    · simp only [Set.ofPred_forall]
       refine isClosed_iInter fun a => isClosed_iInter fun j => isClosed_eq
         ((continuous_pc X _ _ _).comp continuous_fst) ?_
       have h2 : Continuous fun p : X.dom × B × (Fin g → Fin g → ℂ) => P p.2.1 a :=
-        (continuousOn_iff_continuous_restrict.1 (hP a)).comp continuous_snd.fst
+        (continuousOn_iff_continuous_domRestrict.1 (hP a)).comp continuous_snd.fst
       have h3 : Continuous fun p : X.dom × B × (Fin g → Fin g → ℂ) => (p.2.2 : Matrix (Fin g) (Fin g) ℂ) :=
         continuous_snd.snd
       exact (continuous_apply j).comp (h3.matrix_mulVec h2)
@@ -341,8 +341,8 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
   have hcc : ∀ τ : E →+* ℂ, ComplexEmbedding.conjugate (ComplexEmbedding.conjugate τ) = τ := fun τ =>
     ComplexEmbedding.involutive_conjugate E τ
   obtain ⟨f, hf⟩ := GlobalTheory.FrameUnif.exists_letter_equiv X.Ψ X.cmType Dw.p Dw.q r hr (Formalism.L2.PjFree.relab c σ) hbij Dw.mult
-    (fun τ h => by unfold Datum.mult; rw [if_pos ((hrt τ).1 ((hty _).1 h))])
-    (fun τ h => by unfold Datum.mult; rw [if_neg (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_left ((hrt τ).1 ((hty _).1 h))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_right (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
   obtain ⟨idx, hi⟩ : ∃ idx : Fin g ≃ X.Ψ × Fin r, ∀ j,
       (Formalism.L2.PjFree.relab c σ (e j).1 ∈ X.Ψ ∧ (idx j).1.1 = Formalism.L2.PjFree.relab c σ (e j).1 ∧
         ((idx j).2 : ℕ) = Dw.q + (e j).2) ∨
@@ -354,8 +354,8 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
     intro j
     rw [hq]
     rcases hi j with ⟨a, b, c'⟩ | ⟨a, b, c', d⟩
-    · rw [if_neg (by omega), b]
-    · rw [if_pos (by omega), b, hcc]
+    · rw [ite_eq_right (by omega), b]
+    · rw [ite_eq_left (by omega), b, hcc]
   have hqq : D.q = X.p0 := hq.trans hp0.symm
   refine ⟨idx, fun x v j => ?_, fun b hb j j' hne => ?_, fun P hP => ?_⟩
   · have h := hi j
@@ -365,12 +365,12 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
     dsimp only at h ⊢
     rw [← hp0] at h
     rcases h with ⟨a, rfl, rfl⟩ | ⟨a, rfl, rfl, d⟩
-    · rw [if_neg (by omega)]
+    · rw [ite_eq_right (by omega)]
       unfold Formalism.L2.PjFree.perFr
-      rw [dif_pos a, dif_pos hn]
-    · rw [if_pos (by omega)]
+      rw [dite_eq_left a, dite_eq_left hn]
+    · rw [ite_eq_left (by omega)]
       unfold Formalism.L2.PjFree.perFr
-      rw [dite_eq_right a, dif_pos (show conjEmb (Formalism.L2.PjFree.relab c σ (e j).1) ∈ X.Ψ from hτ), dif_pos hn]
+      rw [dite_eq_right a, dite_eq_left (show conjEmb (Formalism.L2.PjFree.relab c σ (e j).1) ∈ X.Ψ from hτ), dite_eq_left hn]
       rfl
   · obtain ⟨h1, h2⟩ := PerBor.moveMat_support _ idx hb j j' hne
     rw [← hqq] at h2
@@ -379,19 +379,19 @@ theorem dictionary {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
     have c1 := hi j
     have c2 := hi j'
     by_cases hj : ((idx j).2 : ℕ) < D.q
-    · rw [if_pos hj] at h2 t1
+    · rw [ite_eq_left hj] at h2 t1
       have hj' : ((idx j').2 : ℕ) < D.q := by omega
-      rw [if_pos hj'] at t2
+      rw [ite_eq_left hj'] at t2
       refine ⟨hbij.1 (by rw [t1, t2, h1]), ?_⟩
       rcases c1 with ⟨-, -, c1⟩ | ⟨-, -, c1, d1⟩ <;> rcases c2 with ⟨-, -, c2⟩ | ⟨-, -, c2, d2⟩ <;> omega
-    · rw [if_neg hj] at h2 t1
+    · rw [ite_eq_right hj] at h2 t1
       have hj' : ¬ ((idx j').2 : ℕ) < D.q := by omega
-      rw [if_neg hj'] at t2
+      rw [ite_eq_right hj'] at t2
       refine ⟨hbij.1 (by rw [t1, t2, h1]), ?_⟩
       rcases c1 with ⟨-, -, c1⟩ | ⟨-, -, c1, d1⟩ <;> rcases c2 with ⟨-, -, c2⟩ | ⟨-, -, c2, d2⟩ <;> omega
   · rcases eq_or_ne r 0 with hr0 | hr0
     · subst hr0
-      haveI : IsEmpty (Fin g) := idx.isEmpty
+      have : IsEmpty (Fin g) := idx.isEmpty
       obtain ⟨x, hx⟩ := (GlobalTheory.frames_isConnected E 0 X).nonempty
       exact ⟨x, hx, fun _ j => isEmptyElim j⟩
     have hpos : ∀ τ ∈ X.Ψ, 0 < (τ (-X.ξ0)).im := by
@@ -505,12 +505,12 @@ theorem isMeagre_chart (U : Formalism.L2.PjFree.Unf Xo c σ r) (hσ : Formalism.
   classical
   obtain ⟨hL, -, -, -⟩ := evLaws_genFr_atlas E H Dw l Xo c
   obtain ⟨-, -, hinv, -⟩ := GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c (CAt σ)
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI := C.sm
-  haveI : Countable c.F := Countable.of_equiv _ (Module.finBasis ℚ c.F).equivFun.toEquiv.symm
-  haveI : Countable C.R := by
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have := C.sm
+  have : Countable c.F := Countable.of_equiv _ (Module.finBasis ℚ c.F).equivFun.toEquiv.symm
+  have : Countable C.R := by
     obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 (inferInstance : Algebra.FiniteType c.F C.R)
-    haveI : Countable (MvPolynomial (Fin n) c.F) := Cardinal.mk_le_aleph0_iff.1
+    have : Countable (MvPolynomial (Fin n) c.F) := Cardinal.mk_le_aleph0_iff.1
       (MvPolynomial.cardinalMk_le_max.trans (by simp))
     exact hf.countable
   rcases Set.eq_empty_or_nonempty {x | ∃ hx : x ∈ (U.X k).dom, ∃ (ψ : C.R →ₐ[c.F] CAt σ) (z : FrPt Xo c (CAt σ))
@@ -525,7 +525,7 @@ theorem isMeagre_chart (U : Formalism.L2.PjFree.Unf Xo c σ r) (hσ : Formalism.
     else ψ₀
   have hφ' : ∀ i, ∀ b ∈ B i, ∀ a, Formalism.L2.PjFree.toC (φ' i b a) = φ i b a := by
     intro i b hb a
-    simp only [φ', dif_pos hb]
+    simp only [φ', dite_eq_left hb]
     rfl
   choose z hz using fun i b => hL.bc _ _ (φ' i b) C.y
   have key := fun (i : ι) (a : {a : C.R // a ≠ 0}) => isMeagre_family U hσ hU k C.y (φ' i) (z i) (hB i)
@@ -556,8 +556,8 @@ theorem exists_generic_of_injective {h : GenFrEx Xo c} (C : FChart h) (ψ : C.R 
     ∃ (φ : Om C.Z →ₐ[c.F] CAt σ) (y' : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ),
       FrMap φ (genFr h C.Z) y' ∧ FrBor t y' z := by
   obtain ⟨hL, -, -, -⟩ := evLaws_genFr_atlas E H Dw l Xo c
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI := GlobalTheory.SupGeneric.isFractionRing_chart C
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have := GlobalTheory.SupGeneric.isFractionRing_chart C
   let φ : Om C.Z →ₐ[c.F] CAt σ := IsFractionRing.liftAlgHom hψ
   have e : φ.comp C.R.val = ψ := AlgHom.ext fun a => IsFractionRing.lift_algebraMap (K := Om C.Z) hψ a
   obtain ⟨w, hw⟩ := hL.bc _ _ φ (genFr h C.Z)
@@ -574,7 +574,7 @@ theorem exists_comp_generic_off_meagre : ∀ (E : Type) [Field E] [NumberField E
   obtain ⟨S, hS, hcov⟩ := exists_seq_of_isMeagre
     (isMeagre_iUnion fun i => isMeagre_chart (Formalism.L2.PjFree.Unf.ofPj U) hσ hU k (C i))
   refine ⟨Z, S, hS, fun x hx => ?_⟩
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨i, ψ, z, t, hz, ht⟩ := hC (CAt σ) (U.un k x)
   obtain rfl := hZ x (C i) ψ z t hz ht
   have hψ : Function.Injective ψ := by

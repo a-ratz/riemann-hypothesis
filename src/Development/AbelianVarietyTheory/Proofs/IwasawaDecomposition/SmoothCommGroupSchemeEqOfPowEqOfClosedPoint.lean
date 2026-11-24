@@ -96,12 +96,12 @@ theorem eq_of_pow_eq_of_closedPoint : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj 
     ∀ (x y : Over.mk s ⟶ G), x ^ k = y ^ k →
     ∀ (κ : Type) [Field κ] (c : A →+* κ), IsLocalHom c → spMap c ≫ x.left = spMap c ≫ y.left → x = y := by
   intro S G _ _ hG A _ _ s k hk x y hxy κ _ c hc hxc
-  haveI := hc
+  have := hc
   let GA := (Over.pullback s).obj G
-  haveI : Smooth GA.hom := inferInstanceAs (Smooth (pullback.snd G.hom s))
+  have : Smooth GA.hom := inferInstanceAs (Smooth (pullback.snd G.hom s))
   have hu : IsUnit (k : Γ(Sp A, ⊤)) := by
     simpa using hk.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
-  haveI het : Etale (mulN GA k).left := GrpTangent.etale_mulN GA hu
+  have het : Etale (mulN GA k).left := GrpTangent.etale_mulN GA hu
   let e := TorsionLift.ptsEquiv s G (Over.mk (𝟙 (Sp A))) s (Category.id_comp s)
   have h1 : e.symm x ≫ mulN GA k = e.symm y ≫ mulN GA k := by
     rw [GrpTangent.comp_mulN, GrpTangent.comp_mulN, ← map_pow, ← map_pow, hxy]

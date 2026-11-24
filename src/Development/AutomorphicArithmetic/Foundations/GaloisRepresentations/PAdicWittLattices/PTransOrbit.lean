@@ -78,13 +78,13 @@ theorem UpperTheory.Gal.G3.pTransOrbit :
   have one_mem : (1 : G.GAf) ∈ L.KN 1 := (L.KN 1).one_mem
   have kn1 : ∀ {M : ℕ} {g : G.GAf}, g ∈ L.KN M → g ∈ L.KN 1 :=
     fun hg => UpperTheory.Gal.Int.Geo.KN_anti (one_dvd _) hg
-  haveI : IsIso ψ₁ := hTI p D G L R gb _ s _ _ o₁ o ψ₁ 1 one_mem h₁
-  haveI : IsIso ψ₂ := hTI p D G L R gb _ s _ _ o₂ o ψ₂ 1 one_mem h₂
+  have : IsIso ψ₁ := hTI p D G L R gb _ s _ _ o₁ o ψ₁ 1 one_mem h₁
+  have : IsIso ψ₂ := hTI p D G L R gb _ s _ _ o₂ o ψ₂ 1 one_mem h₂
   unfold UpperTheory.Gal.Int.Geo.IsTrans at h₁ h₂
-  haveI hm₁ : IsMonHom ψ₁ := h₁.1
-  haveI hm₂ : IsMonHom ψ₂ := h₂.1
-  haveI hmi₁ : IsMonHom (inv ψ₁) := isMonHom_inv' ψ₁
-  haveI hmi₂ : IsMonHom (inv ψ₂) := isMonHom_inv' ψ₂
+  have hm₁ : IsMonHom ψ₁ := h₁.1
+  have hm₂ : IsMonHom ψ₂ := h₂.1
+  have hmi₁ : IsMonHom (inv ψ₁) := isMonHom_inv' ψ₁
+  have hmi₂ : IsMonHom (inv ψ₂) := isMonHom_inv' ψ₂
   have hNpos : 0 < (N' : ℕ) := by
     have := N'.2.1
     omega

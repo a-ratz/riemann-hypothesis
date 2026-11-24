@@ -324,9 +324,9 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem lift_iff_orthogonal : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), GalHyp bkP i s → ∀ ρ, IsDual i s ρ → ∀ (v : PlE D.host) (hv : v ∈ placesOver D.host.E (X.l i)) (ϖ : X.O0 i), Irreducible ϖ → ∀ y : ↥(DecV N v) → Fin D.R.r → X.O0 i, (∀ a, IsLocallyConstant fun g => IsLocalRing.residue (X.O0 i) (y g a)) → (∀ g h a, y (g * h) a - (y g a + (Tdual i s g.1).mulVec (y h) a) ∈ IsLocalRing.maximalIdeal (X.O0 i)) → ((∃ y', IsFCoc bkP i v hv ρ y' ∧ ∀ g a, y' g a - y g a ∈ IsLocalRing.maximalIdeal (X.O0 i)) ↔ ∀ d, IsFCoc bkP i v hv (Tgl i s) d → ∃ f : ↥(DecV N v) → Formalism.BasicNotions.KmodO (X.O0 i), IsLocallyConstant f ∧ ∀ g h, (Submodule.Quotient.mk ((algebraMap (X.O0 i) (FractionRing (X.O0 i)) ϖ)⁻¹ * algebraMap (X.O0 i) (FractionRing (X.O0 i)) (d g ⬝ᵥ (Tdual i s g.1).mulVec (y h))) : Formalism.BasicNotions.KmodO (X.O0 i)) = ((eps0 X i g.1 : (X.O0 i)ˣ) : X.O0 i) • f h - f (g * h) + f g) := by
   intro D N X bkP i s h ρ hρ v hv ϖ hϖ y hy hyc
   let Bw := bkP.br i v hv
-  letI : Algebra (X.O0 i) ↥Bw.LL.1 := Bw.toLL.toAlgebra
+  let : Algebra (X.O0 i) ↥Bw.LL.1 := Bw.toLL.toAlgebra
   have hG0 := (GlobalTheory.LocalIntegers.good_integers (X.l i) Bw.LL).1
-  haveI : IsTopologicalRing ↥Bw.LL.1 := hG0.2.2.2.1
+  have : IsTopologicalRing ↥Bw.LL.1 := hG0.2.2.2.1
   have hG : Formalism.MainNotions.N.GoodO (Qp := ℚ_[X.l i]) ↥Bw.LL.1 (X.O0 i) := by
     obtain ⟨⟨_, -, hfr⟩, h1, h2, h3, h4⟩ := hG0
     refine ⟨⟨inferInstance, inferInstance, ?_⟩, h1, h2, h3, ?_⟩
@@ -346,12 +346,12 @@ theorem lift_iff_orthogonal : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R
     rfl
   · have hr : Continuous (fun g : ↥(DecV N v) => ((Tgl i s g.1 : GL (Fin D.R.r) (X.O0 i)) : Matrix (Fin D.R.r) (Fin D.R.r) (X.O0 i))) := by
       simp_rw [Tgl_coe]
-      exact (GlobalTheory.PrimeToInertia.continuous_Tmat i s).comp continuous_subtype_val
-    exact ((hr.comp Bw.e_symm_cont).matrix_map (continuous_subtype_val.comp Bw.eO_cont)).matrix_mulVec continuous_const
+      exact (GlobalTheory.PrimeToInertia.continuous_Tmat i s).comp continuous_subtypeVal
+    exact ((hr.comp Bw.e_symm_cont).matrix_map (continuous_subtypeVal.comp Bw.eO_cont)).matrix_mulVec continuous_const
   · have hr : Continuous (fun g : ↥(DecV N v) => ((ρ g.1 : GL (Fin D.R.r) (X.O0 i)) : Matrix (Fin D.R.r) (Fin D.R.r) (X.O0 i))) := by
       simp_rw [hρ _]
-      exact (GlobalTheory.PrimeToInertia.continuous_Tdual i s).comp continuous_subtype_val
-    exact ((hr.comp Bw.e_symm_cont).matrix_map (continuous_subtype_val.comp Bw.eO_cont)).matrix_mulVec continuous_const
+      exact (GlobalTheory.PrimeToInertia.continuous_Tdual i s).comp continuous_subtypeVal
+    exact ((hr.comp Bw.e_symm_cont).matrix_map (continuous_subtypeVal.comp Bw.eO_cont)).matrix_mulVec continuous_const
   · have h1 := (D.loc (X.l i)).PD_χ Bw.Kw (Bw.e g)
     have h2 := GlobalTheory.Survey.CrystallineCharacterRatio.chi_eq_cyc (D.loc (X.l i)) Bw.j g.1 (Bw.e g : Loc.GQ (X.l i)) (Bw.e_comm g)
     change algebraMap ↥(Loc.OL Bw.LL) ↥Bw.LL.1 (Bw.eO (algebraMap ℤ_[X.l i] (X.O0 i) _)) =

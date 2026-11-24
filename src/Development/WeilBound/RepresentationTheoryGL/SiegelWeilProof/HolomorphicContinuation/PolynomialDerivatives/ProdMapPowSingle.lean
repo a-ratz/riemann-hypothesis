@@ -142,7 +142,7 @@ theorem op_add (s₁ s₂ : Sym m n) (f : PX m n) : op (s₁ + s₂) f = op s₁
 theorem op_monomial (t : (Fin m × Fin n × Bool) ⊕ (Fin m × Fin n × Bool) →₀ ℕ) (c : ℂ) (f : PX m n) :
     op (monomial t c) f = c • opMono t f := by
   classical
-  rw [op_eq_sum_of_subset _ f {t} (support_monomial_subset), Finset.sum_singleton, coeff_monomial, if_pos rfl]
+  rw [op_eq_sum_of_subset _ f {t} (support_monomial_subset), Finset.sum_singleton, coeff_monomial, ite_eq_left rfl]
 
 theorem op_zero (f : PX m n) : op (0 : Sym m n) f = 0 := by
   simp [op]
@@ -172,13 +172,13 @@ theorem op_mul_X_inl (s : Sym m n) (k : Fin m × Fin n × Bool) (f : PX m n) :
     op (s * X (Sum.inl k)) f = X k * op s f := by
   induction s using MvPolynomial.induction_on' with
   | monomial t c =>
-    rw [X, monomial_mul, mul_one, op_monomial, op_monomial, opMono_eq, opMono_eq]
+    rw [X, monomial_mul_monomial, mul_one, op_monomial, op_monomial, opMono_eq, opMono_eq]
     have h1 : (t + Finsupp.single (Sum.inl k) 1).comapDomain Sum.inl Sum.inl_injective.injOn =
         t.comapDomain Sum.inl Sum.inl_injective.injOn + Finsupp.single k 1 := by
       ext x; simp [Finsupp.comapDomain_apply, Finsupp.single_apply]
     have h2 : (fun x => (t + Finsupp.single (Sum.inl k) 1 : _ →₀ ℕ) (Sum.inr x)) = fun x => t (Sum.inr x) := by
       funext x; simp [Finsupp.single_apply]
-    rw [h1, h2, ← mul_one (1 : ℂ), ← monomial_mul, ← X]
+    rw [h1, h2, ← mul_one (1 : ℂ), ← monomial_mul_monomial, ← X]
     simp only [mul_one, smul_eq_mul]
     ring_nf
     simp [mul_comm, mul_left_comm, mul_assoc, Algebra.mul_smul_comm]
@@ -188,7 +188,7 @@ theorem op_mul_X_inr (s : Sym m n) (k : Fin m × Fin n × Bool) (f : PX m n) :
     op (s * X (Sum.inr k)) f = op s (pderiv k f) := by
   induction s using MvPolynomial.induction_on' with
   | monomial t c =>
-    rw [X, monomial_mul, mul_one, op_monomial, op_monomial, opMono_eq, opMono_eq]
+    rw [X, monomial_mul_monomial, mul_one, op_monomial, op_monomial, opMono_eq, opMono_eq]
     have h1 : (t + Finsupp.single (Sum.inr k) 1).comapDomain Sum.inl Sum.inl_injective.injOn =
         t.comapDomain Sum.inl Sum.inl_injective.injOn := by
       ext x; simp [Finsupp.comapDomain_apply, Finsupp.single_apply]

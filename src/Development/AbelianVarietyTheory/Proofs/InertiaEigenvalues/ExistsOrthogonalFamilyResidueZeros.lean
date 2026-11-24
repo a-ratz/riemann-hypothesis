@@ -321,7 +321,7 @@ theorem _root_.GlobalTheory.PMonE.exists_window_radii : ∀ (F : Type) [Nontrivi
   · rw [norm_mul, ← hs]
     calc s * ‖P j‖ ≤ s * c := mul_le_mul_of_nonneg_left (hPmono (Nat.lt_succ_iff.mp j.isLt)) hspos.le
       _ < 1 := hsc
-  · simp only [Fin.val_succ, Fin.coe_castSucc, hPsucc, norm_mul, mul_pow]
+  · simp only [Fin.val_succ, Fin.val_castSucc, hPsucc, norm_mul, mul_pow]
     have : ρ' j = ρ j := by simp [hρ', j.isLt]
     rw [this, hρn]
     have := hl j.succ
@@ -571,7 +571,7 @@ theorem term_le_bound : ∀ (F : Type) [NormedField F] (p : ℕ) [Fact p.Prime] 
           rw [div_le_iff₀ hp0]; linarith
     | cast i =>
       have e1 : (((Fin.castSucc i : ℕ)) : ℤ) + ((k : ℤ) + 1) * m + 1 = ((i.succ : ℕ) : ℤ) + ((k : ℤ) + 1) * m := by
-        push_cast [Fin.coe_castSucc, Fin.val_succ]; ring
+        push_cast [Fin.val_castSucc, Fin.val_succ]; ring
       rw [e1, aW_at, aW_at]
       have h1 : ‖lam i.succ‖ ≤ ‖lam (Fin.castSucc i)‖ := hanti (Fin.castSucc_lt_succ (i := i)).le
       have hz := zpow_pos hp0 (-m)
@@ -621,10 +621,10 @@ theorem term_le_bound : ∀ (F : Type) [NormedField F] (p : ℕ) [Fact p.Prime] 
       linear_combination (p : ℝ) ^ (-m) * hXY
     | cast i =>
       have e1 : (((Fin.castSucc i : ℕ)) : ℤ) + ((k : ℤ) + 1) * m + 1 = ((i.succ : ℕ) : ℤ) + ((k : ℤ) + 1) * m := by
-        push_cast [Fin.coe_castSucc, Fin.val_succ]; ring
+        push_cast [Fin.val_castSucc, Fin.val_succ]; ring
       rw [e1, aW_at, aW_at, rW_at, rW_at, hrp _ (norm_nonneg _), hrp _ (norm_nonneg _)]
       have e2 : -(((k : ℤ) + 1) * m) + ((((Fin.castSucc i : ℕ)) : ℤ) + ((k : ℤ) + 1) * m) = ((i : ℕ) : ℤ) := by
-        push_cast [Fin.coe_castSucc]; ring
+        push_cast [Fin.val_castSucc]; ring
       rw [e2, hnat, hnat]
       have h := hrel1 i
       linear_combination (p : ℝ) ^ (-m) * h
@@ -789,7 +789,7 @@ open Finset Polynomial
 
 theorem moore_pow_sub_self_eq_prod {F : Type*} [Field F] (p : ℕ) [Fact p.Prime] [CharP F p] (x : F) :
     x ^ p - x = ∏ c : ZMod p, (x - ((c.val : ℕ) : F)) := by
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
   have hp : 1 < p := (Fact.out : p.Prime).one_lt
   have hroots := FiniteField.roots_X_pow_card_sub_X (ZMod p)
   rw [ZMod.card] at hroots
@@ -961,9 +961,9 @@ theorem coefDet_pw_natCast (n : ℕ) (x : F) : pw p (n : ℤ) x = x ^ p ^ n := b
 theorem coefDet_pw_pow_p (k : ℤ) (x : F) : pw p k x ^ p = pw p (k + 1) x := by
   unfold pw
   by_cases hk : 0 ≤ k
-  · rw [if_pos hk, if_pos (by omega), ← pow_mul, ← pow_succ]
+  · rw [ite_eq_left hk, ite_eq_left (by omega), ← pow_mul, ← pow_succ]
     congr 2; omega
-  · rw [if_neg hk]
+  · rw [ite_eq_right hk]
     obtain ⟨n, hn⟩ : ∃ n : ℕ, (-k).toNat = n + 1 := ⟨(-k).toNat - 1, by omega⟩
     rw [hn, Function.iterate_succ_apply']
     have e : ((frobeniusEquiv F p).symm (((frobeniusEquiv F p).symm)^[n] x)) ^ p =
@@ -972,11 +972,11 @@ theorem coefDet_pw_pow_p (k : ℤ) (x : F) : pw p k x ^ p = pw p (k + 1) x := by
       rwa [frobenius_def] at this
     rw [e]
     by_cases hk1 : 0 ≤ k + 1
-    · rw [if_pos hk1]
+    · rw [ite_eq_left hk1]
       have hn0 : n = 0 := by omega
       have h0 : (k + 1).toNat = 0 := by omega
       rw [hn0, h0]; simp
-    · rw [if_neg hk1]; congr 1; omega
+    · rw [ite_eq_right hk1]; congr 1; omega
 
 theorem coefDet_pw_pow (k : ℤ) (x : F) (a : ℕ) : pw p k x ^ p ^ a = pw p (k + a) x := by
   induction a with
@@ -1060,7 +1060,7 @@ theorem coefB_det (F : Type) [NormedField F] [IsUltrametricDist F] (p : ℕ) [Fa
   · have e : coefB p ϖ lam π L U L = Matrix.of fun r j : Fin h =>
         ((c r)⁻¹ * (lam j * π j ^ p ^ (r : ℕ))) ^ p ^ (h - (r : ℕ)) := by
       ext r j
-      simp only [coefB, Matrix.of_apply, term, le_add_iff_nonneg_right, zero_le, if_true, sub_self, neg_zero,
+      simp only [coefB, Matrix.of_apply, term, le_add_iff_nonneg_right, zero_le, ite_true, sub_self, neg_zero,
         zpow_zero, mul_one, zero_mul, add_zero, coefDet_pw_natCast, hc]
       rw [div_eq_inv_mul]
     rw [e, coefDet_det_scaled, norm_mul, norm_mul, norm_prod, norm_prod, hDn]
@@ -1088,7 +1088,7 @@ theorem coefB_det (F : Type) [NormedField F] [IsUltrametricDist F] (p : ℕ) [Fa
     have e : coefB p ϖ lam π L U 0 = Matrix.of fun r j : Fin h =>
         ((ϖ ^ L / c r) * (lam j * y j ^ p ^ (r : ℕ))) ^ p ^ (h - (r : ℕ)) := by
       ext r j
-      simp only [coefB, Matrix.of_apply, term, zero_le, if_true, hc, hy, coefDet_pw_pow]
+      simp only [coefB, Matrix.of_apply, term, zero_le, ite_true, hc, hy, coefDet_pw_pow]
       have e1 : ((r : ℕ) : ℤ) + (((0 : ℕ) : ℤ) - L) * h = -((L : ℤ) * h) + ((r : ℕ) : ℤ) := by
         push_cast; ring
       have e2 : ϖ ^ (-(((0 : ℕ) : ℤ) - L)) = ϖ ^ L := by
@@ -1193,7 +1193,7 @@ theorem GlobalTheory.PMonE.rowS_winPt_pow_eq_gsum_coefB (F : Type) [NormedField 
     have ht : ((n + L).toNat : ℤ) = n + L := Int.toNat_of_nonneg (by omega)
     have hle : (n + L).toNat ≤ L + U := by omega
     have hsub : (((n + L).toNat : ℕ) : ℤ) - L = n := by omega
-    rw [if_pos hle, hsub, term, term, winPt, pw_mul, ← pw_win p h r L hr hL n hn.1 (z j)]
+    rw [ite_eq_left hle, hsub, term, term, winPt, pw_mul, ← pw_win p h r L hr hL n hn.1 (z j)]
     rw [show lam j * ϖ ^ (-n) * (pw p (↑↑r + n * ↑h) (π j) * pw p (↑↑r + n * ↑h) (z j ^ (p ^ h) ^ (L - 1))) /
         (lam r * π r ^ p ^ (r : ℕ)) = (lam j * ϖ ^ (-n) * pw p (↑↑r + n * ↑h) (π j) / (lam r * π r ^ p ^ (r : ℕ))) *
         pw p (↑↑r + n * ↑h) (z j ^ (p ^ h) ^ (L - 1)) by ring, mul_pow]
@@ -1285,7 +1285,7 @@ theorem normalize {F : Type} [NormedField F] [IsUltrametricDist F] (p : ℕ) [Fa
       have H3 := congrFun H2 r
       rw [← _root_.GlobalTheory.PMonE.rowS_winPt_pow_eq_gsum_coefB F p h ϖ lam π L U hL z r] at H3
       have H4 := (iterateFrobenius_inj F p (h - (r : ℕ))).eq_iff.1 (by simpa [iterateFrobenius_def] using H3)
-      exact (div_left_inj' (hc r)).1 H4
+      exact (div_left_inj₀ (hc r)).1 H4
     · intro H
       have H2 : gsum (p ^ h) (L + U) B z = nb b := by
         funext r
@@ -1349,7 +1349,7 @@ theorem winThm : WinThm := by
       by_contra hx
       push_neg at hx
       exact hcon ⟨x.1, x.2.1, hx, x.2.2⟩
-    haveI : Finite {x : Fin (k + 1) → F // (∀ j, ‖x j‖ ≤ ‖π j‖ ^ p ^ (k + 1)) ∧
+    have : Finite {x : Fin (k + 1) → F // (∀ j, ‖x j‖ ≤ ‖π j‖ ^ p ^ (k + 1)) ∧
         ∀ r, rowT p ϖ lam 2 x r = 0} := Nat.finite_of_card_ne_zero (by rw [cI]; positivity)
     have hle := Nat.card_le_card_of_injective
       (fun x : {x : Fin (k + 1) → F // (∀ j, ‖x j‖ ≤ ‖π j‖) ∧ ∀ r, rowS p ϖ lam 2 2 x r = 0} =>
@@ -1606,7 +1606,7 @@ theorem untilt_ext_sum_sub_le : ∀ (l : ℕ) [Fact l.Prime] (F : Type) [NormedF
         _ ≤ 1 := hN
     · exact ⟨0, map_zero ι⟩
   choose x hxe using hx
-  have hxa : ∀ a ∈ s, ι (x a) = c * z a := fun a ha => by rw [hxe, if_pos ha]
+  have hxa : ∀ a ∈ s, ι (x a) = c * z a := fun a ha => by rw [hxe, ite_eq_left ha]
   have hsa : ∀ a ∈ s, sh (x a) = tsh c * tsh (z a) := fun a ha => by
     rw [← hι, hxa a ha, map_mul]
   have hss : sh (∑ a ∈ s, x a) = tsh c * tsh (∑ a ∈ s, z a) := by
@@ -1673,7 +1673,7 @@ theorem map_pw_eq_pw (l : ℕ) [Fact l.Prime] (F : Type) [NormedField F] [CharP 
   | negSucc n =>
     have hk : Int.negSucc n = -((n + 1 : ℕ) : ℤ) := rfl
     simp only [GlobalTheory.PSer.pw, GlobalTheory.PMonE.pw]
-    rw [if_neg (by omega), hk, hneg, hit]
+    rw [ite_eq_right (by omega), hk, hneg, hit]
     congr
 
 end GlobalTheory.PSer
@@ -1820,7 +1820,7 @@ theorem core (l : ℕ) [Fact l.Prime] (F : Type) [NontriviallyNormedField F] [Is
     have := hE x0 hx0S i
     rwa [hx0z, hrow0, map_zero, sub_zero] at this
   obtain ⟨y, hy0, hyS, hysum⟩ := _root_.GlobalTheory.lift_hasSum_zero l (Fin h → Fl l) (Fin h) η τ S hL1 x0 hx0S hL2
-  haveI : Nonempty (Fin h) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin h) := ⟨⟨0, hpos⟩⟩
   set R : ℝ := Finset.univ.sup' Finset.univ_nonempty ρ with hRdef
   have hρR : ∀ j, ρ j ≤ R := fun j => Finset.le_sup' ρ (Finset.mem_univ j)
   have hR1 : R < 1 := (Finset.sup'_lt_iff _).2 fun j _ => (hρ j).2
@@ -1842,7 +1842,7 @@ namespace GlobalTheory.CoreOrth
 theorem residue_zeros : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (μ : Fin h → ℂ_[l]), 2 ≤ h → (∀ i, μ i ≠ 0 ∧ ‖μ i‖ ≤ 1) → Antitone (fun i => ‖μ i‖) → (∀ i j, ‖μ i‖ < l * ‖μ j‖) → (∀ (c : Fin h → ℚ_[l]) (j : Fin h), ‖c j‖ * ‖μ j‖ ≤ ‖∑ i, algebraMap ℚ_[l] ℂ_[l] (c i) * μ i‖) → ∃ (y : Fin h → ℕ → Formalism.Per.Fl l) (j0 : Fin h) (r R : ℝ), 0 ≤ r ∧ r < 1 ∧ R < 1 ∧ (∀ a k, ‖sh (y a k)‖ ≤ R) ∧ (∀ k, ‖sh (y j0 k)‖ ≤ r) ∧ r ^ l ^ h < ‖sh (y j0 0)‖ ∧ ∀ i : Fin h, ∑ j, μ j * abelian₂ h i (y j) = 0 := by
   intro l _ h μ h2 hμ hanti hratio horth
   obtain ⟨hac, ι, hs, hon⟩ := GlobalTheory.PSer.tilt_isAlgClosed_and_unitBall l
-  haveI := hac
+  have := hac
   exact core l _ ι (GroundTheory.PAdicHodge.tiltSharp ℂ_[l] l) (fun z => GroundTheory.PAdicHodge.norm_tiltSharp z) hs hon
     h μ h2 hμ hanti hratio horth
 end GlobalTheory.CoreOrth

@@ -84,15 +84,15 @@ theorem muH_preimage (μ : Measure (Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (fr
     (S : Set (Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u'))) (hS : MeasurableSet S) :
     μ ((fun h => h0 * h) ⁻¹' S) = μ S := by
   have hm : μ.map (fun h => h0 * h) = μ := map_mul_left_eq_self μ h0
-  haveI : IsModuleTopology (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :=
+  have : IsModuleTopology (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) := ⟨rfl⟩
+  have : IsTopologicalRing (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :=
     IsModuleTopology.isTopologicalRing (Ainf X.B.I.F) _
-  haveI : IsTopologicalGroup (GI X) := by
+  have : IsTopologicalGroup (GI X) := by
     have h {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
         (S : Subgroup G) : IsTopologicalGroup S := inferInstance
     exact h (HR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J)
-  haveI : BorelSpace (GI X) := ⟨rfl⟩
-  haveI : BorelSpace (Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u')) := inferInstance
+  have : BorelSpace (GI X) := ⟨rfl⟩
+  have : BorelSpace (Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u')) := inferInstance
   have ha : AEMeasurable (fun h => h0 * h) μ :=
     (measurable_const_mul h0).aemeasurable
   rw [← Measure.map_apply_of_aemeasurable ha hS, hm]

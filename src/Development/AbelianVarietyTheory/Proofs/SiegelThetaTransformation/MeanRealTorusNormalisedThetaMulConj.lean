@@ -209,7 +209,7 @@ theorem measure_lt_top_of_span (L : AddSubgroup V) [Countable L]
     μ F < ⊤ := by
   let b := Module.Basis.ofSpan hL
   have hb : Set.range b ⊆ L := Module.Basis.ofSpan_subset hL
-  haveI := FiniteDimensional.fintypeBasisIndex b
+  have := FiniteDimensional.fintypeBasisIndex b
   have hS : μ (ZSpan.fundamentalDomain b) < ⊤ :=
     (ZSpan.fundamentalDomain_isBounded b).measure_lt_top
   refine lt_of_le_of_lt ?_ hS
@@ -248,7 +248,7 @@ theorem mean_tsum {ι : Type} [Countable ι] (L : AddSubgroup V) [Countable L]
     ((μ F).toReal : ℂ)⁻¹ * ∫ w in F, ∑' i, c i * χ i w ∂μ = c i₀ := by
   have hfin := measure_lt_top_of_span L hL hF
   have hpos : μ F ≠ 0 := hF.measure_ne_zero (NeZero.ne μ)
-  haveI : IsFiniteMeasure (μ.restrict F) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (μ.restrict F) := isFiniteMeasure_restrict.2 hfin.ne
   have hre : ((μ F).toReal : ℂ) ≠ 0 := by
     exact_mod_cast ENNReal.toReal_ne_zero.2 ⟨hpos, hfin.ne⟩
   rw [← integral_tsum_of_summable_integral_norm]
@@ -286,14 +286,14 @@ theorem dblz'_shift (x₁ x₂ : Frame X.Ψ r) (τ : X.Ψ) (h : (aLin X x₁ x�
   funext c
   by_cases hc : (c : ℕ) < X.p0
   · set_option synthInstance.maxHeartbeats 100000 in
-      simp only [if_pos hc, zR, Equiv.apply_symm_apply, hermC, map_sum, map_mul, conj_conj, DblPer.conj_Gm, mulVec, dotProduct,
+      simp only [ite_eq_left hc, zR, Equiv.apply_symm_apply, hermC, map_sum, map_mul, conj_conj, DblPer.conj_Gm, mulVec, dotProduct,
       aLin, of_apply, Finset.sum_mul, FD.col, mat, Pi.add_apply]
     rw [Finset.sum_comm (f := fun i j => τ.1 (X.Gm i j) * conj (x₂ τ j c) * w τ k i),
       ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun _ _ => ?_
     rw [← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun _ _ => by ring
-  · simp only [if_neg hc, zR, Equiv.apply_symm_apply, mulVec, dotProduct, aLin, of_apply, Pi.add_apply]
+  · simp only [ite_eq_right hc, zR, Equiv.apply_symm_apply, mulVec, dotProduct, aLin, of_apply, Pi.add_apply]
     rw [← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun _ _ => by ring
 
@@ -310,7 +310,7 @@ theorem dblz_shift (x₁ x₂ : Frame X.Ψ r) (τ : X.Ψ) (h : (aAnti X x₁ x�
   congr 1
   funext c
   by_cases hc : (c : ℕ) < X.p0
-  · simp only [if_pos hc, zR, Equiv.apply_symm_apply, hermC, map_add (f := _), mulVec, dotProduct,
+  · simp only [ite_eq_left hc, zR, Equiv.apply_symm_apply, hermC, map_add (f := _), mulVec, dotProduct,
       aAnti, of_apply, Finset.sum_mul, FD.col, mat, Pi.add_apply, Pi.star_apply, RCLike.star_def]
     rw [Finset.sum_comm (f := fun i j => x₁ τ j c * τ.1 (X.Gm j i) * conj (w τ k i)),
       ← Finset.sum_add_distrib]
@@ -318,7 +318,7 @@ theorem dblz_shift (x₁ x₂ : Frame X.Ψ r) (τ : X.Ψ) (h : (aAnti X x₁ x�
     rw [← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun _ _ => by ring
   · set_option synthInstance.maxHeartbeats 100000 in
-      simp only [if_neg hc, zR, Equiv.apply_symm_apply, mulVec, dotProduct, aAnti, of_apply, Pi.add_apply, map_sum, map_mul,
+      simp only [ite_eq_right hc, zR, Equiv.apply_symm_apply, mulVec, dotProduct, aAnti, of_apply, Pi.add_apply, map_sum, map_mul,
       map_add, Pi.star_apply, RCLike.star_def]
     rw [← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun _ _ => by ring
@@ -436,7 +436,7 @@ theorem exists_common {ι : Type} [Fintype ι] (v : ι → Fin r → E) :
 theorem span_latR (hd : DenseRange (embR X (n := n))) {N : ℕ} (hN : 0 < N) :
     ⊤ ≤ Submodule.span ℝ (latR X n N : Set (WR X n)) := by
   intro v _
-  refine (Submodule.closed_of_finiteDimensional _).closure_subset_iff.2 ?_ (hd v)
+  refine (Submodule.isClosed_of_finiteDimensional _).closure_subset_iff.2 ?_ (hd v)
   rintro _ ⟨y, rfl⟩
   obtain ⟨M, hM, hy⟩ := exists_common X fun k => y k
   have h1 : N • embR X ((M : E) • y) ∈ latR X n N := AddSubgroup.subset_closure ⟨_, hy, rfl⟩
@@ -507,8 +507,8 @@ theorem mean_thR_mul_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     rw [mul_mul_mul_comm (gaussR _ _ _ _ _), e1]
     ring
   simp only [hint]
-  haveI : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI : Countable (Matrix (Fin n) (Fin r) E) := inferInstanceAs (Countable (Fin n → Fin r → E))
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
+  have : Countable (Matrix (Fin n) (Fin r) E) := inferInstanceAs (Countable (Fin n → Fin r → E))
   have hadd : ∀ x v w, χ x (v + w) = χ x v * χ x w := fun x v w => by
     simp only [χ]
     rw [EFR_add_right, ← Complex.exp_add]; congr 1; push_cast; ring
@@ -516,9 +516,9 @@ theorem mean_thR_mul_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have := EFR_smul_right X 0 (embR X x) 0
     simp only [zero_smul, zero_mul] at this
     simp [χ, this]
-  haveI : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin n → Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (WR X n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin n → Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (WR X n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have key := mean_tsum (μ := volume) (latR X n (M * R * d)) (span_latR X hdense hN) hF c (hsum _ _) χ
     (fun x => by
       have := continuous_EFR X (embR X x)

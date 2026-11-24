@@ -177,7 +177,7 @@ private theorem dual_pair {O K : Type} [CommRing O] [Field K] [Algebra O K]
 theorem UpperTheory.isLattice_iff_fixedPoint_quadraticTorus :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → ∀ S : Set (Etau K τ), (∀ t : K, IsFixP O τ t S → IsLat O τ S) ∧ (IsLat O τ S → (∀ y ∈ S, ω * y ∈ S) → ∃ t : K, t ≠ 0 ∧ IsFixP O τ t S) := by
   intro O K _ _ _ _ _ Δ τ hL hτ S
-  haveI := hL.frac
+  have := hL.frac
   refine ⟨fun t h => fix_lat h, fun hS hst => ?_⟩
   obtain ⟨y, x, hx, -, -, e⟩ := latCls O K Δ τ hL hτ S hS
   have e' : S = (Submodule.span O {(y : Etau K τ), (y : Etau K τ) * x} : Submodule O (Etau K τ)) := by
@@ -307,7 +307,7 @@ private theorem rescaleE {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValua
 private theorem cls_smul {K : Type} [Field K] {τ : K} (S : Set (Etau K τ)) {s : K} (hs : s ≠ 0) :
     cls τ ((s • ·) '' S) = cls τ S := by
   ext T
-  simp only [cls, Set.mem_setOf_eq, Set.image_image, smul_smul]
+  simp only [cls, Set.mem_ofPred_eq, Set.image_image, smul_smul]
   constructor
   · rintro ⟨u, rfl⟩
     exact ⟨u * Units.mk0 s hs, by congr 1⟩
@@ -320,7 +320,7 @@ private theorem cls_smul {K : Type} [Field K] {τ : K} (S : Set (Etau K τ)) {s 
 private theorem exists_finite_representatives_mod_smul_of_fg {O M : Type} [CommRing O] [AddCommGroup M] [Module O M] {m : O}
     (hq : Finite (O ⧸ Ideal.span {m})) (R : Submodule O M) (hR : R.FG) :
     ∃ F : Set M, F.Finite ∧ ∀ x ∈ R, ∃ y ∈ F, ∃ z ∈ R, x - y = m • z := by
-  haveI := hq
+  have := hq
   obtain ⟨g, rfl⟩ := hR
   have hsurj := Ideal.Quotient.mk_surjective (I := Ideal.span {m})
   refine ⟨Set.range (fun r : (↥g → O ⧸ Ideal.span {m}) =>
@@ -342,7 +342,7 @@ private theorem exists_finite_representatives_mod_smul_of_fg {O M : Type} [CommR
 theorem UpperTheory.quadraticTorus_fixedVertices_finite :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → (Fv O τ).Finite := by
   intro O K _ _ _ _ _ Δ τ hL hτ
-  haveI := hL.frac
+  have := hL.frac
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨c0, hc0, hden⟩ := int_denom hL hτ
   have hm : c0 * p ≠ 0 := mul_ne_zero hc0 hp.ne_zero
@@ -490,7 +490,7 @@ variable [IsDomain O] [IsDiscreteValuationRing O] {Δ : K}
 
 theorem even_or_irr (L : IsLoc O Δ) {π : O} (hπ : Irreducible π) {x : K} (hx : x ≠ 0) :
     EvenVal O x ∨ EvenVal O (x / algebraMap O K π) := by
-  haveI := L.frac
+  have := L.frac
   have h0 : algebraMap O K π ≠ 0 := by simpa using hπ.ne_zero
   obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible hπ hx
   obtain ⟨k, rfl | rfl⟩ := Int.even_or_odd' n
@@ -502,7 +502,7 @@ theorem even_or_irr (L : IsLoc O Δ) {π : O} (hπ : Irreducible π) {x : K} (hx
 
 theorem even_or (L : IsLoc O Δ) {x p : K} (hx : x ≠ 0) (hp : p ≠ 0) (h : ¬ EvenVal O p) :
     EvenVal O x ∨ EvenVal O (x / p) := by
-  haveI := L.frac
+  have := L.frac
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have h0 : algebraMap O K π ≠ 0 := by simpa using hπ.ne_zero
   refine (even_or_irr L hπ hx).imp_right fun h1 => ?_
@@ -511,7 +511,7 @@ theorem even_or (L : IsLoc O Δ) {x p : K} (hx : x ≠ 0) (hp : p ≠ 0) (h : ¬
   field_simp
 
 theorem not_even_irr (L : IsLoc O Δ) {π : O} (hπ : Irreducible π) : ¬ EvenVal O (algebraMap O K π) := by
-  haveI := L.frac
+  have := L.frac
   rintro ⟨u, s, -, h⟩
   have h1 : IsIntegral O (s ^ 2) := by
     have : s ^ 2 = algebraMap O K ((u⁻¹ : Oˣ) * π) := by
@@ -525,7 +525,7 @@ theorem not_even_irr (L : IsLoc O Δ) {π : O} (hπ : Irreducible π) : ¬ EvenV
 
 theorem unit_of_sq (L : IsLoc O Δ) {s : Kˣ} {ε : Oˣ} (h : 1 = algebraMap O K ε * (s : K) ^ 2) :
     ∃ u : Oˣ, algebraMap O K u = s := by
-  haveI := L.frac
+  have := L.frac
   have h1 : IsIntegral O ((s : K) ^ 2) := by
     have : (s : K) ^ 2 = algebraMap O K (ε⁻¹ : Oˣ) := by
       rw [map_units_inv]; exact eq_inv_of_mul_eq_one_right h.symm
@@ -590,7 +590,7 @@ theorem fv_card (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) (t p : Kˣ) (hp : ¬ E
   exact hp ⟨ε, s, s.ne_zero, mul_right_cancel₀ t.ne_zero (by rw [← hε, Units.val_mul, mul_comm])⟩
 
 theorem vcount_eq (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) : vcount O τ ω = ((Fv O τ).ncard : ℂ) := by
-  letI := mulAct τ
+  let := mulAct τ
   let P : Set (Set (Set (Etau K τ))) := {X | ∃ S, IsLat O τ S ∧ (∀ y ∈ S, ω * y ∈ S) ∧ X = cls τ S}
   have hs : ∀ (z : (Etau K τ)ˣ) (S : Set (Etau K τ)), z • cls τ S = cls τ (ml z S) := fun z S => cls_ml z S
   rw [← wCard _ _ (Cint O τ) P (Fv O τ) ?_ ?_ (UpperTheory.quadraticTorus_fixedVertices_finite O K Δ τ L hτ) ?_ ?_ ?_]
@@ -618,7 +618,7 @@ theorem pcount_eq (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) (t : Kˣ) (a b : (Et
     (h1 : ∀ y : (Etau K τ)ˣ, ∃ z, ∃ c ∈ Cint O τ, y = a * c * z ^ 2 ∨ y = b * c * z ^ 2)
     (h2 : ∀ z : (Etau K τ)ˣ, z ^ 2 * a * b⁻¹ ∈ Cint O τ → z ∈ Cint O τ) :
     pcount O τ t = ((Gs O τ t a ∪ Gs O τ t b).ncard : ℂ) := by
-  letI := quoAct τ
+  let := quoAct τ
   have hs : ∀ (z : (Etau K τ)ˣ) (S : Set (Etau K τ)), z • S = ml (qU z) S := fun z S => by
     rw [ml, qU_val]; rfl
   have hf : ∀ (z : (Etau K τ)ˣ) (S : Set (Etau K τ)), IsFixP O τ t S → IsFixP O τ t (z • S) := fun z S h => by

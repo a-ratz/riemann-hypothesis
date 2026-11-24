@@ -141,11 +141,11 @@ theorem selfDual_matrix_unique_of_equiv {R P ι : Type} [CommRing R] [Topologica
 
 theorem selfDual_rationalForm_Ainf_unique : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ k : Measure (Ainf F), SelfDual k (fun s t => psiInf F ψ (s * t)) → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (A : Matrix ι ι F), A.IsSymm → A.det ≠ 0 → ∀ μ ν : Measure (ι → Ainf F), SelfDual μ (fun x y => psiInf F ψ (x ⬝ᵥ (A.map (algebraMap F (Ainf F)) *ᵥ y))) → SelfDual ν (fun x y => psiInf F ψ (x ⬝ᵥ (A.map (algebraMap F (Ainf F)) *ᵥ y))) → μ = ν := by
   intro F _ _ hF ψ hψ _ _ ι _ _ A hA hdet μ ν hμ hν
-  haveI : IsTotallyReal F := hF
+  have : IsTotallyReal F := hF
   obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-  haveI := h1
-  haveI := h3
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := h1
+  have := h3
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hnd : ∀ x : Ainf F, (∀ y, psiInf F ψ (x * y) = 1) → x = 0 := (_root_.GlobalTheory.GaugeEx.CharLoc.char_local F ψ hψ).2.2
   obtain ⟨a, ha, ha'⟩ := GlobalTheory.GaugeEx.SdInf.exists_equiv_Ainf F
   have hpc : Continuous (psiInf F ψ) := hψ.1.comp (continuous_id.prodMk continuous_const)
@@ -246,7 +246,7 @@ theorem not_selfDual_one (V : Type) [AddCommGroup V] [TopologicalSpace V] [IsTop
     [T2Space V] [LocallyCompactSpace V] [MeasurableSpace V] [BorelSpace V] [Nontrivial V]
     (k : Measure V) : ¬ SelfDual k (fun _ _ => (1 : ℂ)) := by
   intro hk
-  haveI := hk.1
+  have := hk.1
   obtain ⟨h, hh⟩ := exists_ne (0 : V)
   obtain ⟨g, hg1, hg0, hgc, -⟩ := exists_continuous_one_zero_of_isCompact (X := V)
     (s := {0}) (t := {-h}) isCompact_singleton isClosed_singleton
@@ -286,7 +286,7 @@ theorem chiV_apply (ψ : AddChar (AF F) ℂ) (v : HeightOneSpectrum (𝓞 F)) (t
 theorem selfDual_unique_coord : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (v : HeightOneSpectrum (𝓞 F)) (k : Measure (Fv F v)), SelfDual k (fun s t => psiV F ψ v (s * t)) → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (A : Matrix ι ι F), A.IsSymm → A.det ≠ 0 → ∀ μ ν : Measure (ι → Fv F v), SelfDual μ (fun x y => psiV F ψ v (x ⬝ᵥ (A.map (algebraMap F (Fv F v)) *ᵥ y))) → SelfDual ν (fun x y => psiV F ψ v (x ⬝ᵥ (A.map (algebraMap F (Fv F v)) *ᵥ y))) → μ = ν := by
   intro F _ _ ψ hψ v k hk ι _ _ A hA hdet μ ν hμ hν
   obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hc : Continuous (chiV F ψ v) :=
     hψ.1.comp (Continuous.prodMk continuous_const (GlobalTheory.AdelicU.continuous_singleFin v))
   have hu : ∀ t, ‖chiV F ψ v t‖ = 1 := fun t => hψ.2.1 _
@@ -484,7 +484,7 @@ theorem selfDual_psiInf_std (F : Type) [Field F] [NumberField F] (hF : IsTotally
     SelfDual (Real.toNNReal (Real.sqrt |(discr F : ℝ)|) • laminf)
       (fun s t => psiInf F (Circle.coeHom.compAddChar (GroundTheory.Global.adelicChar F)) (s * t)) := by
   obtain ⟨ρ, e, hρ, hh, he, -, hm⟩ := real_iso F hF
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   let e' : Ainf F ≃ₜ+ (InfinitePlace F → ℝ) :=
     { e.toAddEquiv with
       continuous_toFun := hh.continuous
@@ -540,7 +540,7 @@ private theorem differentExp_eq_count_differentIdeal (F : Type) [Field F] [Numbe
     GroundTheory.Global.differentExp v =
       ((Associates.mk v.asIdeal).count (Associates.mk (differentIdeal ℤ (𝓞 F))).factors : ℤ) := by
   unfold GroundTheory.Global.differentExp
-  exact FractionalIdeal.count_coe F v (differentIdeal_int_ne_zero F)
+  exact FractionalIdeal.count_coeIdeal F v (differentIdeal_int_ne_zero F)
 
 private theorem prod_absNorm_pow_count_differentIdeal_eq_natAbs_discr (F : Type) [Field F] [NumberField F] :
     ∏ v ∈ (differentExp_finite F).toFinset, Ideal.absNorm v.asIdeal ^
@@ -555,7 +555,7 @@ private theorem prod_absNorm_pow_count_differentIdeal_eq_natAbs_discr (F : Type)
     rw [HeightOneSpectrum.maxPowDividing, map_pow]
   · intro v hv
     rw [Function.mem_mulSupport] at hv
-    rw [Set.Finite.coe_toFinset, Set.mem_setOf_eq, differentExp_eq_count_differentIdeal]
+    rw [Set.Finite.coe_toFinset, Set.mem_ofPred_eq, differentExp_eq_count_differentIdeal]
     intro h0
     apply hv
     have h0' : (Associates.mk v.asIdeal).count (Associates.mk (differentIdeal ℤ (𝓞 F))).factors = 0 := by
@@ -593,7 +593,7 @@ theorem sqrt_discr_mul_finprod_different (F : Type) [Field F] [NumberField F] :
       norm_num
     · intro v hv
       rw [Function.mem_mulSupport] at hv
-      rw [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+      rw [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
       intro h0
       exact hv (by rw [h0]; simp)
 
@@ -672,7 +672,7 @@ theorem tendsto_mean (ψ : AddChar K Circle) {Φ : K → ℂ} (hΦ : Continuous 
       ε / 2 * v := by
     refine norm_setIntegral_le_of_norm_le_const hfin fun x hx => ?_
     have := hm (hsub hx)
-    rw [Set.mem_setOf_eq, dist_eq_norm] at this
+    rw [Set.mem_ofPred_eq, dist_eq_norm] at this
     exact this.le
   rw [dist_eq_norm, hdiff, norm_mul, Complex.norm_real, Real.norm_of_nonneg hc0]
   calc c * ‖∫ x in valBall K (k : ℤ), (Φ (x - z) - Φ (-z)) ∂(selfDualMeasure ψ)‖
@@ -689,7 +689,7 @@ theorem setIntegral_fourier_mul_char {ψ : AddChar K Circle} (hψ : Continuous �
         ∫ x in valBall K k, Φ (x - z) ∂(selfDualMeasure ψ) := by
   set μ := selfDualMeasure ψ with hμ
   have hfi : Integrable Φ μ := hΦ.integrable_of_hasCompactSupport hc
-  have hψc : Continuous fun x => (ψ x : ℂ) := continuous_subtype_val.comp hψ
+  have hψc : Continuous fun x => (ψ x : ℂ) := continuous_subtypeVal.comp hψ
   have : IsFiniteMeasure (μ.restrict (valBall K (addCharConductor ψ - k))) :=
     isFiniteMeasure_restrict.mpr (isCompact_valBall _).measure_lt_top.ne
   let G : K → K → ℂ := fun y x => Φ x * (ψ (x * y) : ℂ) * (ψ (y * z) : ℂ)
@@ -725,12 +725,12 @@ theorem setIntegral_fourier_mul_char {ψ : AddChar K Circle} (hψ : Continuous �
     · have ht : IsTrivialOn (ψ.mulShift (x + z)) (addCharConductor ψ - k) := by
         rw [isTrivialOn_mulShift_iff_mem hψ hψ1]
         simpa using hxz
-      rw [if_pos ht, Set.indicator_of_mem (show x + z ∈ (valBall K k : Set K) from hxz),
+      rw [ite_eq_left ht, Set.indicator_of_mem (show x + z ∈ (valBall K k : Set K) from hxz),
         add_sub_cancel_right, mul_comm]
     · have ht : ¬ IsTrivialOn (ψ.mulShift (x + z)) (addCharConductor ψ - k) := by
         rw [isTrivialOn_mulShift_iff_mem hψ hψ1]
         simpa using hxz
-      rw [if_neg ht, Set.indicator_of_notMem (show x + z ∉ (valBall K k : Set K) from hxz),
+      rw [ite_eq_right ht, Set.indicator_of_notMem (show x + z ∉ (valBall K k : Set K) from hxz),
         mul_zero]
   rw [hB, integral_integral_swap hG]
   simp only [hinner]
@@ -754,7 +754,7 @@ theorem inversion {ψ : AddChar K Circle} (hψ : Continuous ψ) (hψ1 : ψ ≠ 1
       (selfDualMeasure ψ)) (z : K) :
     ∫ y, (∫ x, Φ x * (ψ (x * y) : ℂ) ∂(selfDualMeasure ψ)) * (ψ (y * z) : ℂ)
       ∂(selfDualMeasure ψ) = Φ (-z) := by
-  have hψc : Continuous fun x => (ψ x : ℂ) := continuous_subtype_val.comp hψ
+  have hψc : Continuous fun x => (ψ x : ℂ) := continuous_subtypeVal.comp hψ
   have hF : Integrable (fun y => (∫ x, Φ x * (ψ (x * y) : ℂ) ∂(selfDualMeasure ψ)) *
       (ψ (y * z) : ℂ)) (selfDualMeasure ψ) := by
     refine hI.norm.mono' (hI.aestronglyMeasurable.mul
@@ -825,7 +825,7 @@ theorem smul_eq_selfDualMeasure (v : HeightOneSpectrum (𝓞 F)) (lam : Measure 
 theorem selfDual_std : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ (laminf : Measure (Ainf F)) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), IsStdInf laminf → (∀ v, IsStdV v (lam v)) → ∃ ψ, IsCharAF F ψ ∧ ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (SelfDual (cinf • laminf) (fun s t => psiInf F ψ (s * t))) ∧ ∀ v : HeightOneSpectrum (𝓞 F), (SelfDual (c v • lam v) (fun s t => psiV F ψ v (s * t))) := by
   intro F _ _ hF laminf lam hinf hlam
   refine ⟨Circle.coeHom.compAddChar (adelicChar F), ?_, Real.toNNReal (Real.sqrt |(discr F : ℝ)|), cV F, ?_, _root_.GlobalTheory.CompanionTheory.SW.selfDual_psiInf_std F hF laminf hinf, fun v => ?_⟩
-  · refine ⟨continuous_subtype_val.comp (continuous_adelicChar (K := F)), fun x => Circle.norm_coe _, fun a => ?_, ?_⟩
+  · refine ⟨continuous_subtypeVal.comp (continuous_adelicChar (K := F)), fun x => Circle.norm_coe _, fun a => ?_, ?_⟩
     · show ((adelicChar F _ : Circle) : ℂ) = 1
       rw [adelicChar_algebraMap]
       rfl
@@ -950,8 +950,8 @@ def matE (M : Matrix ι ι R) (hu : IsUnit M.det) : (ι → R) ≃ₜ+ (ι → R
 theorem pi_smul {X : Type} [MeasurableSpace X] (lam : Measure X) [SigmaFinite lam] (c : ℝ≥0) :
     Measure.pi (fun _ : ι => c • lam) = c ^ Fintype.card ι • Measure.pi fun _ : ι => lam := by
   refine (Measure.pi_eq fun s hs => ?_)
-  rw [Measure.smul_apply, Measure.pi_pi]
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
+  rw [smul_apply, Measure.pi_pi]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
 variable [LocallyCompactSpace R] [SecondCountableTopology R] [T2Space R] [MeasurableSpace R]
@@ -1047,33 +1047,33 @@ theorem selfDual_coord : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal
   have hprod := (_root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F _ _ _ _ hinv hpow).2.2.1
   refine ⟨_, _, hprod, ?_, fun v => ?_⟩
   · obtain ⟨h1, h2, h3, h4, -, -, -, -⟩ := isLocR_Ainf F hF
-    haveI := h1; haveI := h2; haveI := h3; haveI := h4
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := h1; have := h2; have := h3; have := h4
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     have hA' : ∀ x y : ι → Ainf F, psiInf F ψ (x ⬝ᵥ (B.map (algebraMap F (Ainf F)) *ᵥ y)) =
         psiInf F ψ₀ (x ⬝ᵥ ((a • B).map (algebraMap F (Ainf F)) *ᵥ y)) := by
       intro x y
       rw [scale_inf F ψ ψ₀ a hax, dot_smul]
     intro μ
     simp only [hA']
-    haveI := hinf.1
+    have := hinf.1
     exact iff_of (psiInf F ψ₀) ((a • B).map (algebraMap F (Ainf F))) (hAs.map _)
       (isUnit_det_map _ hAdet) (c₀ • laminf) laminf c₀ c₁ rfl (_root_.GlobalTheory.CompanionTheory.SW.selfDual_pi_inf F hF ψ₀ hψ₀ _ hsd0 ι)
-      (by haveI := (_root_.GlobalTheory.CompanionTheory.SW.selfDual_pi_inf F hF ψ₀ hψ₀ _ hsd0 ι).1; exact hm _ inferInstance)
+      (by have := (_root_.GlobalTheory.CompanionTheory.SW.selfDual_pi_inf F hF ψ₀ hψ₀ _ hsd0 ι).1; exact hm _ inferInstance)
       (_root_.GlobalTheory.CompanionTheory.SW.selfDual_rationalForm_Ainf_unique F hF ψ₀ hψ₀ _ hsd0 ι (a • B) hAs hAdet) μ
   · obtain ⟨h1, h2, h3, h4, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := h1; haveI := h2; haveI := h3; haveI := h4
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := h1; have := h2; have := h3; have := h4
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have hA' : ∀ x y : ι → Fv F v, psiV F ψ v (x ⬝ᵥ (B.map (algebraMap F (Fv F v)) *ᵥ y)) =
         psiV F ψ₀ v (x ⬝ᵥ ((a • B).map (algebraMap F (Fv F v)) *ᵥ y)) := by
       intro x y
       rw [scale_v F ψ ψ₀ a hax, dot_smul]
     intro μ
     simp only [hA']
-    haveI := (hlam v).1
+    have := (hlam v).1
     exact iff_of (psiV F ψ₀ v) ((a • B).map (algebraMap F (Fv F v))) (hAs.map _)
       (isUnit_det_map _ hAdet) (e₀ v • lam v) (lam v) (e₀ v) (e₁ v) rfl
       (_root_.GlobalTheory.CompanionTheory.SW.PiV.selfDual_pi_v F ψ₀ hψ₀ v _ (hsdv v) ι)
-      (by haveI := (_root_.GlobalTheory.CompanionTheory.SW.PiV.selfDual_pi_v F ψ₀ hψ₀ v _ (hsdv v) ι).1; exact hmv v _ inferInstance)
+      (by have := (_root_.GlobalTheory.CompanionTheory.SW.PiV.selfDual_pi_v F ψ₀ hψ₀ v _ (hsdv v) ι).1; exact hmv v _ inferInstance)
       (_root_.GlobalTheory.CompanionTheory.SW.SdUniq.selfDual_unique_coord F ψ₀ hψ₀ v _ (hsdv v) ι (a • B) hAs hAdet) μ
 
 end GlobalTheory.CompanionTheory.SW.SdCoord

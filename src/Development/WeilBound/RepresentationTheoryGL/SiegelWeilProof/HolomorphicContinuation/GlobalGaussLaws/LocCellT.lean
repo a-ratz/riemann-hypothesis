@@ -127,8 +127,8 @@ theorem tauFact_nonneg (μ : Measure X) [μ.IsAddRightInvariant] (π : X → (Fi
           rw [lintegral_const_mul']
           simp [hr]
       _ < ∞ := ENNReal.mul_lt_top (by simp [hr]) hint
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, ν = c • (volume : Measure (Fin m → Fin n → ℂ)) :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul ν volume⟩
   refine ⟨c, fun a ha => ?_⟩

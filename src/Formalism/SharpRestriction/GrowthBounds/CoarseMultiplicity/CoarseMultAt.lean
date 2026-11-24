@@ -58,16 +58,16 @@ theorem val_digit {D : Formalism.BasicNotions.D7} (h52 : Formalism.MainNotions.C
     (hodd : ∀ v, odd v → L v = p ^ (t v + 1) ∧ ρ v < L v) (hend : ∀ v, ¬ odd v → L v = 1 ∧ ρ v = 0) (μ : σ → ℕ) :
     (∏ v, (ρ v + L v * μ v).factorial).factorization p =
       (∏ v, (ρ v).factorial * (μ v).factorial * (L v).factorial ^ (μ v)).factorization p := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨h1, h2⟩ := h52 p hp h5
   set t' : σ → ℕ := fun v => if odd v then t v else 0 with ht'
   set ρ' : σ → ℕ := fun v => if odd v then ρ v else 0 with hρ'
   have hlt : ∀ k, ρ' k < p ^ (t' k + 1) := by
     intro k
     by_cases hk : odd k
-    · simp only [hρ', ht', if_pos hk]
+    · simp only [hρ', ht', ite_eq_left hk]
       rw [← (hodd k hk).1]; exact (hodd k hk).2
-    · simp only [hρ', ht', if_neg hk]
+    · simp only [hρ', ht', ite_eq_right hk]
       exact pow_pos hp.pos _
   obtain ⟨hunit, -, -⟩ := h2 σ t' ρ' hlt
   set e' : σ → ℕ := fun v => if odd v then μ v else 0 with he'
@@ -81,11 +81,11 @@ theorem val_digit {D : Formalism.BasicNotions.D7} (h52 : Formalism.MainNotions.C
     refine Finset.prod_congr rfl fun v _ => ?_
     by_cases hv : odd v
     · have := h1 (t' v) (ρ' v) (e' v) (hlt v)
-      simp only [hρ', ht', he', if_pos hv] at this ⊢
+      simp only [hρ', ht', he', ite_eq_left hv] at this ⊢
       rw [(hodd v hv).1, this]
       ring
     · have := h1 (t' v) (ρ' v) (e' v) (hlt v)
-      simp only [hρ', ht', he', if_neg hv] at this ⊢
+      simp only [hρ', ht', he', ite_eq_right hv] at this ⊢
       rw [(hend v hv).1, (hend v hv).2]
       simp only [zero_add, mul_zero, Nat.factorial_zero, Nat.cast_one, pow_zero, one_mul, mul_one, zero_add] at this ⊢
       rw [← this]

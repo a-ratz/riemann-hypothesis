@@ -129,7 +129,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℂ U]
 
 theorem exists_rep (b : U →ₗ⋆[ℂ] U →ₗ[ℂ] ℂ) (Y : Submodule ℂ U) [FiniteDimensional ℂ Y] :
     ∃ T : U →ₗ[ℂ] Y, ∀ x, ∀ y ∈ Y, ⟪(T x : U), y⟫_ℂ = b x y := by
-  have := FiniteDimensional.complete ℂ Y
+  have := FiniteDimensional.completeSpace ℂ Y
   have ex : ∀ x, ∃ t : Y, ∀ y : Y, ⟪t, y⟫_ℂ = b x y := fun x =>
     ⟨(InnerProductSpace.toDual ℂ Y).symm (LinearMap.toContinuousLinearMap (b x ∘ₗ Y.subtype)), fun y => by simp⟩
   choose t ht using ex
@@ -224,7 +224,7 @@ theorem fin_orbit [BaireSpace G] (ρ : G →* Module.End ℂ P) (u : P →ₗ[�
   have o : Continuous fun g => u (ρ g x) := continuous_pi fun h => by
     simp only [he]; exact (hc x).comp (continuous_const.mul continuous_id)
   obtain ⟨t, g₀, h₀⟩ := nonempty_interior_of_iUnion_of_closed (f := fun t => {g | ρ g x ∈ V t}) (fun t => by
-      have : IsClosed ((V t).map u : Set (G → ℂ)) := Submodule.closed_of_finiteDimensional _
+      have : IsClosed ((V t).map u : Set (G → ℂ)) := Submodule.isClosed_of_finiteDimensional _
       convert this.preimage o using 1
       ext g
       exact ⟨fun h => ⟨_, h, rfl⟩, fun ⟨y, hy, e⟩ => (hu e ▸ hy : ρ g x ∈ V t)⟩)
@@ -275,8 +275,8 @@ theorem line [LocallyCompactSpace G] [T2Space G] (ρ : G →* Module.End ℂ P) 
       add_left := fun x y z => by simp
       smul_left := fun x y r => by simp
       definite := fun z hz => by obtain ⟨x, rfl⟩ := sj z; exact (Submodule.Quotient.mk_eq_zero _).2 (hd x hz) }
-  letI : NormedAddCommGroup U := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ U := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup U := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ U := InnerProductSpace.ofCore core.toCore
   obtain ⟨t, -, ht⟩ := hΩ.elim_nhds_subcover (fun g => (fun h => g⁻¹ * h) ⁻¹' K) fun g _ =>
     (continuous_const.mul continuous_id).continuousAt.preimage_mem_nhds (hK.mem_nhds (by simpa using K.one_mem))
   obtain ⟨z, lam, hz, e⟩ := exists_eigen (U := U) (ρ'.comp K.subtype)
@@ -339,7 +339,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {B : Base F E} {X : Spc F E n} {W : Spc F E d} {M : Model σ X W} {om : Rep σ X W}
 
 theorem rank_polData (hM : M.IsGood B.ψ) (h : Module.rank ℂ (M.Pol B.ψ B.emb) ≤ ℵ₀) : Module.rank ℂ (PolData B M) ≤ ℵ₀ := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   let p : SInf F (Fin n × Fin d) →ₗ[ℂ] ((Fin n × Fin d → Af F) → ℂ) →ₗ[ℂ] Fn F n d :=
     LinearMap.mk₂ ℂ (fun f g => pureA F f g) (fun _ _ _ => funext fun _ => add_mul _ _ _)
       (fun _ _ _ => funext fun _ => mul_assoc _ _ _) (fun _ _ _ => funext fun _ => mul_add _ _ _)
@@ -369,13 +369,13 @@ theorem exists_form {J : Matrix (Fin n) (Fin n) E} (c : Cpt σ J) {μ : Measure 
     (hi' : ∀ x, ∀ γ ∈ ratU σ J, ∀ g, u' x (γ * g) = u' x g) (ρ : UA σ J →* Module.End ℂ P)
     (he : ∀ g x h, u (ρ g x) h = u x (h * g)) (he' : ∀ g x h, u' (ρ g x) h = u' x (h * g)) :
     ∃ b : P →ₗ⋆[ℂ] P →ₗ[ℂ] ℂ, (∀ x y, b x y = pet μ D (u y) (u' x)) ∧ ∀ g x y, b (ρ g x) (ρ g y) = b x y := by
-  haveI : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 (c.fin _ _ hμ hD).ne
+  have : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 (c.fin _ _ hμ hD).ne
   have ii : ∀ x y, Integrable (fun g => u y g * star (u' x g)) (μ.restrict D) := fun x y => by
     have h := (hc y).mul (hc' x).star
     obtain ⟨C, hC⟩ := c.bdd h fun γ hγ g => by simp only [Pi.mul_apply, Pi.star_apply, hi y γ hγ, hi' x γ hγ]
     exact Integrable.of_bound h.aestronglyMeasurable C (Eventually.of_forall hC)
-  haveI := c.cnt
-  haveI := c.right μ hμ
+  have := c.cnt
+  have := c.right μ hμ
   refine ⟨LinearMap.mk₂'ₛₗ (starRingEnd ℂ) (RingHom.id ℂ) (fun x y => pet μ D (u y) (u' x))
     (fun x x' y => ?_) (fun a x y => ?_) (fun x y y' => ?_) (fun a x y => ?_), fun _ _ => rfl, fun g x y => ?_⟩
   · rw [pet, pet, pet, ← integral_add (ii x y) (ii x' y)]; simp [mul_add]

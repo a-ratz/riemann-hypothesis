@@ -119,7 +119,7 @@ theorem ringHom_powerSeries_eq_of_rescale :
         rw [hD, map_sub]
       rw [h3, e, map_add (f := _), h1, h2, hc0, hc0', map_sub, map_sub, hD, hD]
     have Dπ : ∀ b, D (π b) = 0 := by
-      intro b; rw [hD, hγπ', hγ'π', PowerSeries.coeff_C, if_neg hj0, sub_self]
+      intro b; rw [hD, hγπ', hγ'π', PowerSeries.coeff_C, ite_eq_right hj0, sub_self]
     have Dsq : ∀ x ∈ RingHom.ker ε ^ 2, D x = 0 := by
       intro x hx
       rw [pow_two] at hx
@@ -191,7 +191,7 @@ theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A
   rw [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
 
 theorem spMap_constantCoeff_closedPoint (R : Type) [CommRing R] [IsLocalRing R] : (spMap (PowerSeries.constantCoeff (R := R))) (IsLocalRing.closedPoint (CommRingCat.of R)) = IsLocalRing.closedPoint (CommRingCat.of (PowerSeries R)) := by
-  haveI : IsLocalHom (CommRingCat.Hom.hom (CommRingCat.ofHom (PowerSeries.constantCoeff (R := R)))) :=
+  have : IsLocalHom (CommRingCat.Hom.hom (CommRingCat.ofHom (PowerSeries.constantCoeff (R := R)))) :=
     ⟨fun _ h => PowerSeries.isUnit_iff_constantCoeff.mpr h⟩
   exact Spec_closedPoint
 
@@ -238,7 +238,7 @@ theorem path_unique : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R : Type) [C
       have a' := RingHom.congr_fun (E2 g' hξ') f
       simp only [RingHom.comp_apply] at a a'
       rw [PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_zero_eq_constantCoeff_apply, a, a']
-    · obtain ⟨U, hxU, f0, rfl⟩ := TopCat.Presheaf.germ_exist _ f
+    · obtain ⟨U, hxU, f0, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ f
       obtain ⟨hh, hev⟩ := (_root_.GlobalTheory.Nef.evAt_calculus).2.2.2.2.2.2 (PowerSeries R) G.left x g U hxU
       obtain ⟨hh', hev'⟩ := (_root_.GlobalTheory.Nef.evAt_calculus).2.2.2.2.2.2 (PowerSeries R) G.left x g' U hxU
       have := hlow U hh hh' f0 j hj0 hj

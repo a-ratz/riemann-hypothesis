@@ -97,16 +97,16 @@ theorem lieNUpper : LieNUpper := by
   simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.zero_apply, Matrix.conjTranspose_apply] at e
   have s1 : ∑ l, star (X l p) * Hpk k r l j = star (X b p) := by
     rw [Finset.sum_eq_single b]
-    · rw [hpk_col_f _ _ hj2, if_pos (by omega), mul_one]
+    · rw [hpk_col_f _ _ hj2, ite_eq_left (by omega), mul_one]
     · intro l _ hl
-      rw [hpk_col_f _ _ hj2, if_neg, mul_zero]
+      rw [hpk_col_f _ _ hj2, ite_eq_right, mul_zero]
       intro h; apply hl; ext; omega
     · simp
   have s2 : ∑ l, Hpk k r p l * X l j = X i j := by
     rw [Finset.sum_eq_single i]
-    · rw [hpk_row_e _ _ (by omega), if_pos (by omega), one_mul]
+    · rw [hpk_row_e _ _ (by omega), ite_eq_left (by omega), one_mul]
     · intro l _ hl
-      rw [hpk_row_e _ _ (by omega), if_neg, zero_mul]
+      rw [hpk_row_e _ _ (by omega), ite_eq_right, zero_mul]
       intro h; apply hl; ext; omega
     · simp
   have hz : X b p = 0 := hA1 ⟨p.val, by omega⟩ b (by simp only; omega)
@@ -434,7 +434,7 @@ theorem haarLie_finite_compact (κ : ℝ≥0∞) (hκ : κ ≠ ⊤) (K : Set (Mt
     rw [hxx]
     linarith
   unfold Formalism.MainNotions.S.haarLie
-  rw [Measure.smul_apply, Measure.map_apply (PI.WUN.continuous_expLie (Nset k r)).measurable hK.measurableSet,
+  rw [smul_apply, Measure.map_apply (PI.WUN.continuous_expLie (Nset k r)).measurable hK.measurableSet,
     smul_eq_mul]
   exact ENNReal.mul_lt_top hκ.lt_top ((measure_mono hsub).trans_lt measure_closedBall_lt_top)
 
@@ -442,7 +442,7 @@ theorem haarLie_ne_zero (κ : ℝ≥0∞) (h0 : κ ≠ 0) : Formalism.MainNotion
   intro h
   have h2 : Formalism.MainNotions.S.haarLie (Nset k r) κ Set.univ = 0 := by rw [h]; simp
   unfold Formalism.MainNotions.S.haarLie at h2
-  rw [Measure.smul_apply, Measure.map_apply (PI.WUN.continuous_expLie (Nset k r)).measurable MeasurableSet.univ,
+  rw [smul_apply, Measure.map_apply (PI.WUN.continuous_expLie (Nset k r)).measurable MeasurableSet.univ,
     Set.preimage_univ, smul_eq_mul, mul_eq_zero] at h2
   rcases h2 with h2 | h2
   · exact h0 h2
@@ -501,8 +501,8 @@ theorem measF_side {z : Fin (2 * r + k + 1) → ℂ} {u : Fin k → ℝ} {Wp : T
   have hN' : Formalism.MainNotions.S.IsHaarOn (Nset k r) μN := ⟨hN.1, hN.2.1, hN.2.2.1, hN.2.2.2⟩
   have hWc := Formalism.MainNotions.BridgeLemma₃.hu_haarUp.1 k r z μW hz hT hW'
   have hNc := Formalism.MainNotions.BridgeLemma₃.hu_haarUp.2 k r μN hN'
-  haveI : SigmaFinite μW := hW.1
-  haveI : SigmaFinite μN := hN.1
+  have : SigmaFinite μW := hW.1
+  have : SigmaFinite μN := hN.1
   exact PI.WBL.Cv.measF_of (fun h hh => ⟨rmul_meas h, hWc.right h hh⟩)
     ⟨PI.WBL.Cv.measurable_matInv, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μW (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hWc⟩
     hW.2.2.1 hN.2.2.1 (measPresN_conj_of hNc hz hT) (measPresN_inv_of hNc hz hT)

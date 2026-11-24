@@ -79,7 +79,7 @@ theorem exists_major {μ : @Measure (κ → AF F) (borel _)} {G₁ G₂ : (κ �
   have c₂ : Continuous fun x => ((‖G₂ x‖ : ℝ) : ℂ) := Complex.continuous_ofReal.comp h₂.norm
   have e : ∀ G : (κ → AF F) → ℂ, nsq μ (fun x => ((‖G x‖ : ℝ) : ℂ)) = nsq μ G := fun G => by
     unfold nsq
-    simp only [← ofReal_norm_eq_enorm, Complex.norm_real, norm_norm]
+    simp only [← ofReal_norm, Complex.norm_real, norm_norm]
   refine ⟨(fun x => ((‖G₁ x‖ : ℝ) : ℂ)) + fun x => ((‖G₂ x‖ : ℝ) : ℂ), c₁.add c₂, (nsq_add_le μ c₁ _).trans_lt ?_, fun x => ?_⟩
   · rw [e, e]
     exact ENNReal.add_lt_top.2 ⟨ENNReal.mul_lt_top (by simp) f₁, ENNReal.mul_lt_top (by simp) f₂⟩
@@ -131,7 +131,7 @@ theorem exists_dom (hψ : IsStd ψ) {μ : @Measure (κ → AF F) (borel _)} (hμ
     exact mul_le_mul_of_nonneg_left (hG x) (abs_nonneg _)
   | smul c a _ h =>
     obtain ⟨G, c₁, f₁, h⟩ := h
-    refine ⟨c • G, c₁.const_smul c, by rw [nsq_smul]; exact ENNReal.mul_lt_top (by simp [enorm_eq_nnnorm]) f₁,
+    refine ⟨c • G, c₁.const_smul c, by rw [nsq_smul]; exact ENNReal.mul_lt_top (by simp [eNorm_eq_nnNorm]) f₁,
       fun t ht x => ?_⟩
     rw [schr_smul, Pi.smul_apply, Pi.smul_apply, Pi.smul_apply, ← smul_sub, norm_smul, norm_smul, mul_left_comm]
     exact mul_le_mul_of_nonneg_left (h t ht x) (norm_nonneg _)
@@ -153,26 +153,26 @@ theorem schr_mem (hψ : IsStd ψ) (w : Pt F κ) {Φ : (κ → AF F) → ℂ} (h�
 theorem Impl.dR (hψ : IsStd ψ) {μ : @Measure (κ → AF F) (borel _)} (hμ : IsHaar μ) {T : Module.End ℂ ((κ → AF F) → ℂ)}
     {s : Pt F κ →ₗ[AF F] Pt F κ} (hT : Impl ψ T s) {w w' : V F κ × V F κ} (hw : s (emb w) = emb w')
     {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) : T (dR ψ w' Φ) = dR ψ w (T Φ) := by
-  letI mA : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : μ.IsAddHaarMeasure := hμ
+  let mA : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : μ.IsAddHaarMeasure := hμ
   let q : ℕ → (κ → AF F) → ℂ := fun n =>
     ((n : ℂ) + 1) • (schr ψ (emb ((1 / ((n : ℝ) + 1)) • w')) Φ - Φ) - Grow.dR ψ w' Φ
   have hq : ∀ n, q n ∈ schA F κ := fun n =>
     sub_mem (Submodule.smul_mem _ _ (sub_mem (schr_mem hψ _ hΦ) hΦ)) (dR_mem hψ w' hΦ)
   have meas : ∀ Θ ∈ schA F κ, Measurable fun x => ‖Θ x‖ₑ ^ 2 := fun Θ h =>
-    (continuous_of_mem h).measurable.enorm.pow_const 2
+    (continuous_of_mem h).measurable.eNorm.pow_const 2
   obtain ⟨G₁, c₁, f₁, h₁⟩ := exists_dom hψ hμ w' hΦ
   obtain ⟨G, -, f, hG⟩ := exists_major c₁ (continuous_of_mem (dR_mem hψ w' hΦ)) f₁ (nsq_lt_top hμ (dR_mem hψ w' hΦ))
   have lim : ∀ {u : ℕ → ℂ} {a : ℂ}, Tendsto u atTop (𝓝 a) → Tendsto (fun n => ‖u n‖ₑ ^ 2) atTop (𝓝 (‖a‖ₑ ^ 2)) :=
-    fun h => ((ENNReal.continuous_pow 2).tendsto _).comp h.enorm
+    fun h => ((ENNReal.continuous_pow 2).tendsto _).comp h.eNorm
   have t0 : Tendsto (fun n => nsq μ (q n)) atTop (𝓝 0) := by
     have := tendsto_lintegral_of_dominated_convergence (μ := μ) (F := fun n x => ‖q n x‖ₑ ^ 2) (f := fun _ => 0)
       (fun x => ‖G x‖ₑ ^ 2) (fun n => meas _ (hq n)) (fun n => Eventually.of_forall fun x => ?_) f.ne
       (Eventually.of_forall fun x => ?_)
     · rw [lintegral_zero] at this
       exact this
-    · refine pow_le_pow_left' (enorm_le_iff_norm_le.2 ((norm_sub_le _ _).trans (le_trans ?_ (hG x)))) 2
+    · refine pow_le_pow_left' (eNorm_le_iff_norm_le.2 ((norm_sub_le _ _).trans (le_trans ?_ (hG x)))) 2
       have hp : (0 : ℝ) < (n : ℝ) + 1 := by positivity
       have h1 := h₁ (1 / ((n : ℝ) + 1)) (by
         rw [abs_of_pos (by positivity), div_le_one hp]; linarith [Nat.cast_nonneg (α := ℝ) n]) x
@@ -184,7 +184,7 @@ theorem Impl.dR (hψ : IsStd ψ) {μ : @Measure (κ → AF F) (borel _)} (hμ : 
     · have h := (slope_tendsto (hasDerivAt_dR hψ w' hΦ x)).sub_const (Grow.dR ψ w' Φ x)
       rw [sub_self, schr_zero] at h
       have h2 := lim h
-      rw [enorm_zero, zero_pow two_ne_zero] at h2
+      rw [eNorm_zero, zero_pow two_ne_zero] at h2
       exact h2
   have hD : Grow.dR ψ w (T Φ) - T (Grow.dR ψ w' Φ) ∈ schA F κ :=
     sub_mem (dR_mem hψ w (hT.pres _ hΦ)) (hT.pres _ (dR_mem hψ w' hΦ))
@@ -306,7 +306,7 @@ theorem word_bound (hψ : IsStd ψ) {μ : @Measure (κ → AF F) (borel _)} (hμ
       (mul_le_mul' le_rfl (Finset.sum_le_sum fun j _ => ?_))
     have h1 := hC' j l' (by simpa using hl) c fun u hu => hc u (by simp [hu])
     have h2 : ‖(b.repr w j : ℂ)‖ₑ ≤ K j * c := by
-      rw [enorm_eq_nnnorm, ← ENNReal.coe_mul, ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm, Complex.norm_real]
+      rw [eNorm_eq_nnNorm, ← ENNReal.coe_mul, ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnNorm, Complex.norm_real]
       exact ((LinearMap.toContinuousLinearMap (b.coord j)).le_opNorm w).trans
         (mul_le_mul_of_nonneg_left (hc w (by simp)) (norm_nonneg _))
     rw [nsq_smul]
@@ -425,7 +425,7 @@ theorem core (hF : FinInv) (hS : Sob) (hψ : IsStd ψ) {Φ : (κ → AF F) → �
   have h1 := (h (m₀ * d) (Nat.mul_pos hm₀ hd) _ (word_mem hψ _ (hT.pres _ hΦ))
     (word_lev hψ (List.replicate j (0, b)) (hT.pres _ hΦ) lev) x).trans
     (mul_le_mul' le_rfl (h' T s d y (by exact_mod_cast hy1) hT hs b hb))
-  rw [enorm_eq_nnnorm] at h1
+  rw [eNorm_eq_nnNorm] at h1
   have h2 : ‖word ψ (List.replicate j (0, b)) (T Φ) x‖ ^ 2 ≤ C * ((m₀ : ℝ) * d) ^ k * (C' * (y : ℝ) ^ k') := by
     exact_mod_cast h1
   have h3 : C * ((m₀ : ℝ) * d) ^ k * (C' * (y : ℝ) ^ k') ≤ C * m₀ ^ k * C' * (y : ℝ) ^ (k + k') := by

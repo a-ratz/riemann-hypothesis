@@ -68,7 +68,7 @@ variable {E : Type} [Field E] [NumberField E]
 theorem exists_compare (v : HeightOneSpectrum (𝓞 E)) (a b : 𝓞 E) :
     ∃ d t : 𝓞 E, d ∉ v.asIdeal ∧ (d * b = t * a ∨ d * a = t * b) := by
   let A := Localization.AtPrime v.asIdeal
-  haveI : IsDiscreteValuationRing A :=
+  have : IsDiscreteValuationRing A :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 E) v.ne_bot A
   have hinj : Function.Injective (algebraMap (𝓞 E) A) :=
     IsLocalization.injective A v.asIdeal.primeCompl_le_nonZeroDivisors

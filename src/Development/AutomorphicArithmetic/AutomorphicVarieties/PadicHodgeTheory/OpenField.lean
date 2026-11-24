@@ -65,7 +65,7 @@ theorem UpperTheory.Reformulated.B.Qi42.open_fix :
     ∀ {v : ℕ} [inst : Fact (Nat.Prime v)] (H : Subgroup (UpperTheory.Reformulated.B.Qi42.GQ v)),
       IsOpen (↑H : Set (UpperTheory.Reformulated.B.Qi42.GQ v)) → (IntermediateField.fixedField H).fixingSubgroup = H := by
   intro v inst H hH
-  haveI : IsGalois ℚ_[v] (PadicAlgCl v) := IsAlgClosure.isGalois ℚ_[v] (PadicAlgCl v)
+  have : IsGalois ℚ_[v] (PadicAlgCl v) := IsAlgClosure.isGalois ℚ_[v] (PadicAlgCl v)
   exact InfiniteGalois.fixingSubgroup_fixedField ⟨H, Subgroup.isClosed_of_isOpen H hH⟩
 end -- clump:auto
 end -- clump:auto
@@ -97,10 +97,10 @@ private theorem fixed_sup {v : ℕ} [Fact v.Prime] (H : Subgroup (GQ v)) :
   rw [← h1]
   apply le_antisymm
   · exact le_inf (IntermediateField.fixedField_le le_sup_left) (IntermediateField.fixedField_le le_sup_right)
-  · rw [IntermediateField.le_iff_le]
+  · rw [IntermediateField.le_fixedField_iff_le_fixingSubgroup]
     refine sup_le ?_ ?_
-    · rw [← IntermediateField.le_iff_le]; exact inf_le_left
-    · rw [← IntermediateField.le_iff_le]; exact inf_le_right
+    · rw [← IntermediateField.le_fixedField_iff_le_fixingSubgroup]; exact inf_le_left
+    · rw [← IntermediateField.le_fixedField_iff_le_fixingSubgroup]; exact inf_le_right
 
 theorem UpperTheory.V.Loc.openField :
     ∀ {v : ℕ} [Fact v.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ v) (hφ : IsOpenEmbedding φ), ∃ (K : FinExt v) (e : G ≃* ↥(GK K)), Continuous e ∧ Continuous e.symm ∧ (GK K).subtype.comp e.toMonoidHom = φ ∧ φ.range = GK K ∧ φ.range.index = finrank ℚ_[v] ↥K.1 ∧ (φ.range ⊔ Iq v).index = finrank ℚ_[v] ↥(K0 K) := by
@@ -118,7 +118,7 @@ theorem UpperTheory.V.Loc.openField :
       funext x
       rw [Function.comp_apply, ← he, MulEquiv.apply_symm_apply]
     rw [this]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   · ext1 g
     exact he g
   · rw [open_index _ (Subgroup.isOpen_mono le_sup_left hH), fixed_sup]

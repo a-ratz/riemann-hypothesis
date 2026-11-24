@@ -90,7 +90,7 @@ theorem UpperTheory.isSplitAt_of_decomposition_le_restriction_range :
   have huniq : ∀ u : Plc L, u.under (𝓞 (Lp L)) = v → u = w := fun u hu => by
     by_contra h
     exact hs ⟨u, h, hu.trans hw.symm⟩
-  haveI : Normal (Lp L) Ω := IsAlgClosure.normal _ _
+  have : Normal (Lp L) Ω := IsAlgClosure.normal _ _
   let t : G (Lp L) Ω := (IsCMField.complexConj L).liftNormal Ω
   have ht : ∀ y : L, t (algebraMap L Ω y) = algebraMap L Ω (IsCMField.complexConj L y) := fun y =>
     AlgEquiv.liftNormal_commutes _ Ω y

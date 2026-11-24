@@ -220,7 +220,7 @@ theorem schwartz_iteratedFDeriv_tendsto_zero_cocompact
     {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] (f : SchwartzMap E F) (j : ℕ) :
     Tendsto (fun z => iteratedFDeriv ℝ j f z) (cocompact E) (𝓝 0) := by
-  haveI : ProperSpace E := FiniteDimensional.proper_real E
+  have : ProperSpace E := FiniteDimensional.proper_real E
   obtain ⟨C, -, hC⟩ := f.decay 1 j
   have hn : Tendsto (fun z : E => ‖z‖) (cocompact E) atTop := by first | exact tendsto_norm_cocompact_atTop | exact tendsto_norm_cocompact_atTop _
   have h0 : Tendsto (fun z : E => C / ‖z‖) (cocompact E) (𝓝 0) :=
@@ -249,7 +249,7 @@ namespace GlobalTheory
 theorem schwartz_weighted_sobolev_of_finrank_zero :
     ∀ {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [μ.IsAddHaarMeasure], finrank ℝ E = 0 → ∀ (k n : ℕ), ∃ (N : ℕ) (C : ℝ), 0 ≤ C ∧ ∀ (f : SchwartzMap E ℂ) (x : E), ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ C * Real.sqrt (∑ i ∈ Finset.range (N + 1), ∑ j ∈ Finset.range (N + 1), ∫ z, (‖z‖ ^ i * ‖iteratedFDeriv ℝ j f z‖) ^ 2 ∂μ) := by
   intro E _ _ _ _ _ μ _ hE k n
-  haveI : Subsingleton E := Module.finrank_zero_iff.mp hE
+  have : Subsingleton E := Module.finrank_zero_iff.mp hE
   have hcpt : IsCompact (univ : Set E) := (Set.subsingleton_univ).isCompact
   have hfin : μ univ ≠ ∞ := hcpt.measure_lt_top.ne
   have hne : μ univ ≠ 0 := isOpen_univ.measure_ne_zero μ univ_nonempty
@@ -431,7 +431,7 @@ theorem taylorTail_step_one {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F
       calc ‖g a‖ = ‖∫ x in Ioi a, deriv g x‖ := by rw [hint, norm_neg]
         _ ≤ ∫ x in Ioi a, ‖deriv g x‖ := norm_integral_le_integral_norm _
     calc ENNReal.ofReal ‖g a‖ ≤ ENNReal.ofReal (∫ x in Ioi a, ‖deriv g x‖) := ENNReal.ofReal_le_ofReal h1
-      _ = ∫⁻ t in Ioi a, ‖deriv g t‖ₑ := ofReal_integral_norm_eq_lintegral_enorm hI
+      _ = ∫⁻ t in Ioi a, ‖deriv g t‖ₑ := ofReal_integral_norm_eq_lintegral_eNorm hI
   · have : ∫⁻ t in Ioi a, ‖deriv g t‖ₑ = ∞ := by
       by_contra hne
       exact hI ⟨hd.aestronglyMeasurable, lt_top_iff_ne_top.mpr hne⟩
@@ -461,7 +461,7 @@ theorem taylorTail_tonelli (f : ℝ → ℝ≥0∞) (hf : Measurable f) (j : ℕ
     have hS : MeasurableSet {p : ℝ × ℝ | p.1 < p.2} := measurableSet_lt measurable_fst measurable_snd
     have : Function.uncurry G = fun p : ℝ × ℝ => w p.1 * ({p : ℝ × ℝ | p.1 < p.2}.indicator (fun p => f p.2) p) := by
       ext ⟨t, s⟩
-      simp only [Function.uncurry_apply_pair, G, Set.indicator, mem_Ioi, mem_setOf_eq]
+      simp only [Function.uncurry_apply_pair, G, Set.indicator, mem_Ioi, mem_ofPred_eq]
     rw [this]
     exact (hwm.comp measurable_fst).mul ((hf.comp measurable_snd).indicator hS)
   have step1 : ∫⁻ t in Ioi (0:ℝ), w t * ∫⁻ s in Ioi t, f s
@@ -485,7 +485,7 @@ theorem taylorTail_bound {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F] [
     ENNReal.ofReal ‖h 0‖ ≤ ∫⁻ t in Ioi (0:ℝ),
       ENNReal.ofReal (t ^ m / (m.factorial : ℝ)) * ‖iteratedDeriv (m + 1) h t‖ₑ := by
   have hdiff : ∀ n : ℕ, Differentiable ℝ (iteratedDeriv n h) := fun n =>
-    hh.differentiable_iteratedDeriv n (by exact_mod_cast ENat.coe_lt_top n)
+    hh.differentiable_iteratedDeriv n (by exact_mod_cast ENat.natCast_lt_top n)
   have hcont : ∀ n : ℕ, Continuous (iteratedDeriv n h) := fun n => (hdiff n).continuous
   have key : ∀ j ≤ m, ENNReal.ofReal ‖h 0‖ ≤ ∫⁻ t in Ioi (0:ℝ),
       ENNReal.ofReal (t ^ j / (j.factorial : ℝ)) * ‖iteratedDeriv (j + 1) h t‖ₑ := by
@@ -503,11 +503,11 @@ theorem taylorTail_bound {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F] [
           ≤ ∫⁻ t in Ioi (0:ℝ), ENNReal.ofReal (t ^ j / (j.factorial : ℝ)) *
               ∫⁻ s in Ioi t, ‖iteratedDeriv (j + 1 + 1) h s‖ₑ := by
             refine lintegral_mono (fun t => ?_)
-            refine mul_le_mul_of_nonneg_left ?_ (zero_le')
+            refine mul_le_mul_of_nonneg_left ?_ (zero_le)
             have := taylorTail_step_one (iteratedDeriv (j+1) h) t (hdiff _)
               (by rw [← iteratedDeriv_succ]; exact hcont _) (hlim (j+1) hj)
             simpa [iteratedDeriv_succ] using this
-        _ = _ := taylorTail_tonelli _ ((hcont _).enorm.measurable) j
+        _ = _ := taylorTail_tonelli _ ((hcont _).eNorm.measurable) j
   exact key m le_rfl
 
 end GlobalTheory
@@ -565,7 +565,7 @@ theorem norm_le_lintegral_ray_iteratedFDeriv
   have ha : 0 ≤ t ^ m / (m.factorial : ℝ) := by
     have : (0:ℝ) < t := ht
     positivity
-  rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul ha]
+  rw [← ofReal_norm, ← ENNReal.ofReal_mul ha]
   refine ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ ha)
   rw [mul_comm]
   exact bound (m + 1) t
@@ -587,8 +587,8 @@ namespace GlobalTheory
 
 theorem weighted_lintegral_sobolev_pointwise : ∀ {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [μ.IsAddHaarMeasure] (m : ℕ), finrank ℝ E = m + 1 → ∃ C : ℝ≥0∞, C ≠ ∞ ∧ ∀ {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] (G : E → F), ContDiff ℝ (⊤ : ℕ∞) G → (∀ j ≤ m, Tendsto (iteratedFDeriv ℝ j G) (cocompact E) (𝓝 0)) → ∀ (k : ℕ) (x : E), ENNReal.ofReal (‖x‖ ^ k * ‖G x‖) ≤ C * ∫⁻ z, ENNReal.ofReal (‖z‖ ^ k * ‖iteratedFDeriv ℝ (m + 1) G z‖) ∂μ := by
   intro E _ _ _ _ _ μ _ m hdim
-  haveI : Nontrivial E := Module.nontrivial_of_finrank_eq_succ hdim
-  haveI : μ.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular μ
+  have : Nontrivial E := Module.nontrivial_of_finrank_eq_succ hdim
+  have : μ.IsNegInvariant := Measure.IsAddHaarMeasure.isNegInvariant_of_regular μ
   set B : Set E := Metric.closedBall (0:E) 1 with hB
   set β : ℝ≥0∞ := μ B with hβ
   have hβ0 : β ≠ 0 := (Metric.measure_closedBall_pos μ (0:E) one_pos).ne'

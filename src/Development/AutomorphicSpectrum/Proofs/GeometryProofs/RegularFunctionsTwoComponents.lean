@@ -91,7 +91,7 @@ theorem eq_of_dominated_of_inChart {o : Type} [CommRing o] {Ω : Type} [Field Ω
     q = r := by
   have cq := (_root_.GlobalTheory.CompanionTheory.Ar.chart_regAt_localisation o Ω κ x M c q hq).1
   have cr := (_root_.GlobalTheory.CompanionTheory.Ar.chart_regAt_localisation o Ω κ x M c r hr).1
-  haveI := isLocalRing_regAt M.ξ q
+  have := isLocalRing_regAt M.ξ q
   let f : chRing o x c →+* regAt M.ξ q :=
     ((chRing o x c).val : chRing o x c →+* Ω).codRestrict (regAt M.ξ q) fun u => cq _ u.2
   have hP : ∀ u : chRing o x c, u ∈ (IsLocalRing.maximalIdeal (regAt M.ξ q)).comap f ↔ ¬ unitAt M.ξ q (u : Ω) := by

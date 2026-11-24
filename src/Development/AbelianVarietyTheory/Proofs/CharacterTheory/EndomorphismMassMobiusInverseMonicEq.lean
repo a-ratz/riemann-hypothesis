@@ -86,7 +86,7 @@ theorem finite_monic_factorisations (P : F[X]) :
     rintro x ⟨h1, h2, h3⟩
     exact False.elim ((h1.mul h2).ne_zero (h3.trans hP))
   · have hfin : {D : F[X] | D.Monic ∧ D ∣ P}.Finite := by
-      letI : Fintype {D : F[X] | D.Monic ∧ D ∣ P} := Polynomial.fintypeSubtypeMonicDvd P hP
+      let : Fintype {D : F[X] | D.Monic ∧ D ∣ P} := Polynomial.fintypeSubtypeMonicDvd P hP
       exact Set.toFinite _
     refine (hfin.prod hfin).subset ?_
     rintro x ⟨h1, h2, h3⟩
@@ -100,10 +100,10 @@ theorem conv_comm (a b : F[X] → ℂ) (P : F[X]) : conv a b P = conv b a P := b
   rw [conv_eq_sum, conv_eq_sum]
   refine Finset.sum_nbij' Prod.swap Prod.swap ?_ ?_ ?_ ?_ ?_
   · intro x hx
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx ⊢
     exact ⟨hx.2.1, hx.1, by rw [← hx.2.2]; exact mul_comm _ _⟩
   · intro x hx
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx ⊢
     exact ⟨hx.2.1, hx.1, by rw [← hx.2.2]; exact mul_comm _ _⟩
   · intro x _; rfl
   · intro x _; rfl
@@ -117,20 +117,20 @@ theorem conv_assoc (a b c : F[X] → ℂ) (P : F[X]) :
   refine Finset.sum_nbij' (fun z => ⟨(z.2.1, z.2.2 * z.1.2), (z.2.2, z.1.2)⟩)
     (fun z => ⟨(z.1.1 * z.2.1, z.2.2), (z.1.1, z.2.1)⟩) ?_ ?_ ?_ ?_ ?_
   · rintro ⟨⟨D, E⟩, ⟨A, B⟩⟩ hx
-    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
+    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx ⊢
     obtain ⟨⟨h1, h2, h3⟩, h4, h5, h6⟩ := hx
     exact ⟨⟨h4, h5.mul h2, by rw [← mul_assoc, h6, h3]⟩, h5, h2, trivial⟩
   · rintro ⟨⟨D, E⟩, ⟨A, B⟩⟩ hx
-    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
+    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx ⊢
     obtain ⟨⟨h1, h2, h3⟩, h4, h5, h6⟩ := hx
     exact ⟨⟨h1.mul h4, h5, by rw [mul_assoc, h6, h3]⟩, h1, h4, trivial⟩
   · rintro ⟨⟨D, E⟩, ⟨A, B⟩⟩ hx
-    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx
+    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx
     obtain ⟨⟨h1, h2, h3⟩, h4, h5, h6⟩ := hx
     subst h6
     rfl
   · rintro ⟨⟨D, E⟩, ⟨A, B⟩⟩ hx
-    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx
+    simp only [Finset.mem_sigma, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx
     obtain ⟨⟨h1, h2, h3⟩, h4, h5, h6⟩ := hx
     subst h6
     rfl
@@ -245,7 +245,7 @@ theorem conv_at_one (a b : F[X] → ℂ) : conv a b 1 = a 1 * b 1 := by
   unfold conv
   have : {x : F[X] × F[X] | x.1.Monic ∧ x.2.Monic ∧ x.1 * x.2 = 1} = {(1, 1)} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · rintro ⟨h1, h2, h3⟩
       have hdeg := h1.natDegree_mul h2
@@ -362,7 +362,7 @@ theorem card_pairs {V : Type} [AddCommGroup V] [Module F V] [FiniteDimensional F
     Nat.card (AdjoinRoot D ≃ₗ[F] V) =
       Nat.card (Σ g : {g : Module.End F V // LinearMap.charpoly g = D},
         {v : V // ∀ U : Submodule F V, (∀ x ∈ U, g.1 x ∈ U) → v ∈ U → U = ⊤}) := by
-  haveI : FiniteDimensional F (AdjoinRoot D) := (AdjoinRoot.powerBasis' hD).finite
+  have : FiniteDimensional F (AdjoinRoot D) := (AdjoinRoot.powerBasis' hD).finite
   have hA : Module.finrank F (AdjoinRoot D) = D.natDegree := (AdjoinRoot.powerBasis' hD).finrank
   let Φ : (AdjoinRoot D ≃ₗ[F] V) → (Σ g : {g : Module.End F V // LinearMap.charpoly g = D},
         {v : V // ∀ U : Submodule F V, (∀ x ∈ U, g.1 x ∈ U) → v ∈ U → U = ⊤}) := fun e =>
@@ -423,12 +423,12 @@ theorem mass_card_cyclic (F : Type) [Field F] [Finite F] (D : F[X]) (hD : D.Moni
       (Nat.card {v : Fin D.natDegree → F // ∀ U : Submodule F (Fin D.natDegree → F),
         (∀ x ∈ U, g x ∈ U) → v ∈ U → U = ⊤} : ℂ)) D = glCard F D.natDegree := by
   classical
-  haveI : FiniteDimensional F (AdjoinRoot D) := (AdjoinRoot.powerBasis' hD).finite
+  have : FiniteDimensional F (AdjoinRoot D) := (AdjoinRoot.powerBasis' hD).finite
   have hA : Module.finrank F (AdjoinRoot D) = D.natDegree := (AdjoinRoot.powerBasis' hD).finrank
   have h := CyclicMass.card_pairs (V := Fin D.natDegree → F) D hD (by simp)
-  haveI : Finite (Module.End F (Fin D.natDegree → F)) :=
+  have : Finite (Module.End F (Fin D.natDegree → F)) :=
     Finite.of_injective _ DFunLike.coe_injective
-  haveI := Fintype.ofFinite {g : Module.End F (Fin D.natDegree → F) // LinearMap.charpoly g = D}
+  have := Fintype.ofFinite {g : Module.End F (Fin D.natDegree → F) // LinearMap.charpoly g = D}
   rw [Nat.card_sigma] at h
   let e0 : AdjoinRoot D ≃ₗ[F] (Fin D.natDegree → F) :=
     LinearEquiv.ofFinrankEq _ _ (by simp [hA])
@@ -461,10 +461,10 @@ theorem finsum_card_cyclic_eq (F : Type) [Field F] [Finite F] (V : Type) [AddCom
         (∀ x ∈ U, (g.restrict W.2) x ∈ U) → v ∈ U → U = ⊤} : ℂ)
       = (Nat.card F : ℂ) ^ Module.finrank F V := by
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Submodule F V) :=
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Submodule F V) :=
     Finite.of_injective (fun W : Submodule F V => (W : Set V)) SetLike.coe_injective
-  haveI : Fintype {W : Submodule F V // ∀ x ∈ W, g x ∈ W} := Fintype.ofFinite _
+  have : Fintype {W : Submodule F V // ∀ x ∈ W, g x ∈ W} := Fintype.ofFinite _
   have key : ∀ (W W' : {W : Submodule F V // ∀ x ∈ W, g x ∈ W}) (v : W.1),
       (∀ U : Submodule F (W.1), (∀ x ∈ U, (g.restrict W.2) x ∈ U) → v ∈ U → U = ⊤) →
       (v : V) ∈ W'.1 → W.1 ≤ W'.1 := by
@@ -553,8 +553,8 @@ theorem mass_const {F : Type} [Field F] [Finite F] {V : Type} [AddCommGroup V] [
     [FiniteDimensional F V] (c : ℂ) (P : F[X]) :
     mass (fun _ : Module.End F V => c) P = c * mass (fun _ : Module.End F V => (1 : ℂ)) P := by
   unfold mass
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Module.End F V) := Finite.of_injective (fun g : Module.End F V => (g : V → V))
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Module.End F V) := Finite.of_injective (fun g : Module.End F V => (g : V → V))
     DFunLike.coe_injective
   have hs : {g : Module.End F V | LinearMap.charpoly g = P}.Finite := Set.toFinite _
   rw [finsum_mem_eq_finite_toFinset_sum _ hs, finsum_mem_eq_finite_toFinset_sum _ hs]
@@ -567,7 +567,7 @@ theorem mu_one (F : Type) [Field F] : mu (1 : F[X]) = 1 := by
     rintro n rfl
     have h1 : glCard F 0 = 1 := by
       unfold glCard
-      haveI : Subsingleton (GL (Fin 0) F) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
+      have : Subsingleton (GL (Fin 0) F) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
       rw [Nat.card_unique]
       simp
     have h2 : {g : Module.End F (Fin 0 → F) | LinearMap.charpoly g = 1} = {0} := by
@@ -577,7 +577,7 @@ theorem mu_one (F : Type) [Field F] : mu (1 : F[X]) = 1 := by
         apply (LinearMap.charpoly_monic g).natDegree_eq_zero.1
         rw [LinearMap.charpoly_natDegree]
         simp
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
       exact ⟨fun _ => hg, fun _ => hc⟩
     unfold mass
     rw [h1, h2, finsum_mem_singleton]

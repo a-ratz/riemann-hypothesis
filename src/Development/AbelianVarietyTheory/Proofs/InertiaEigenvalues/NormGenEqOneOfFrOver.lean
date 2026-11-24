@@ -322,7 +322,7 @@ theorem norm_gen_eq_one_of_frOver {E : Type} [Field E] [NumberField E] [IsCMFiel
     frames_eq P.range hspan
       (fun q : Xo.univ.t.PP.L.ι × d.Xo₂.univ.t.PP.L.ι => {z | ⊤ ≤ (F₂.ex i P z).left ⁻¹ᵁ O q.1 q.2})
       (fun j => GlobalTheory.FamilyUnif_isOpen_ex F₂ i P hp _) hcov2
-      (fun j a ha z hz => by rw [Set.mem_setOf_eq, hexp a ha]; exact hz)
+      (fun j a ha z hz => by rw [Set.mem_ofPred_eq, hexp a ha]; exact hz)
       (fun q z => valAt' (F₂.ex i P z).left (O q.1 q.2) (ω q.1 q.2) * fr q.2 z) (fun q z => fr' q.1 (h *ᵥ z))
       (fun q q' z => valAt' ((F₂.ex i P z).left ≫ d.m.φ) (Xo.univ.t.PP.L.U q.1 ⊓ Xo.univ.t.PP.L.U q'.1)
         (Xo.univ.t.PP.L.g q.1 q'.1).val)
@@ -385,8 +385,8 @@ theorem norm_gen_eq_one_of_frOver {E : Type} [Field E] [NumberField E] [IsCMFiel
     have v1 := hv j z _ e1 e2 hj
     have v2 := hv j (z + a) _ (by rw [hexp a ha]; exact e1) e2 hj'
     exact normSq_periodic hH _ _ _ _ z a (hn j _ hj') (v2.symm.trans v1) (hm j a ha z hj)
-  haveI : Countable P.range := by
-    haveI := hp.2.2.1
+  have : Countable P.range := by
+    have := hp.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hinj : Function.Injective (fun z : Fin g → ℂ => h *ᵥ z) :=
     Matrix.mulVec_injective_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det h).2 hdet)

@@ -107,9 +107,9 @@ theorem tri_solve' {X : Type} [AddCommGroup X] [Module ℂ X] (n : ℕ) (z : ℕ
   refine (Finset.sum_congr rfl fun j hj => ?_).trans
     (Finset.sum_subset (Finset.range_subset_range.2 (by omega)) fun j hj hj' => ?_)
   · rw [Finset.mem_range] at hj
-    rw [if_pos (by omega)]
+    rw [ite_eq_left (by omega)]
   · rw [Finset.mem_range] at hj hj'
-    rw [if_neg (by omega), zero_smul]
+    rw [ite_eq_right (by omega), zero_smul]
 
 variable {D : D7}
 
@@ -127,8 +127,8 @@ theorem hkF_evC (V : HSp D) {W : Type} [AddCommGroup W] [Module ℂ W] (P : Pl D
     · have := congrFun (h d hd) g
       unfold hkF at this
       rw [Finsupp.sum_single_index (by simp), one_smul] at this
-      rw [if_pos hd, this]; rfl
-    · rw [if_neg hd, rep_of_not hd, Finset.sum_empty, zero_smul]
+      rw [ite_eq_left hd, this]; rfl
+    · rw [ite_eq_right hd, rep_of_not hd, Finset.sum_empty, zero_smul]
   simp only [hkF, evC, Finsupp.sum, Pi.smul_apply, Finset.sum_smul, e, smul_smul]
   refine Finset.sum_congr rfl fun d _ => ?_
   split_ifs <;> simp
@@ -155,7 +155,7 @@ theorem exists_split_data {P : Pl D.host.E} (hc : Formalism.DivisionValues.conjP
     Formalism.L2.NTheta.IsIdemAt e P ∧ ϖ ∈ P.asIdeal ∧ ϖ ∉ P.asIdeal ^ 2 ∧ (x : AE D) = e * incA D (ϖ : D.host.E) + (1 - e) := by
   obtain ⟨e, he⟩ := GlobalTheory.Hk3.SplitMatch.exists_isIdemAt hc
   obtain ⟨ϖ, h1, h2⟩ : ∃ ϖ ∈ P.asIdeal, ϖ ∉ P.asIdeal ^ 2 :=
-    SetLike.exists_of_lt (Ideal.pow_lt_self _ P.ne_bot P.isPrime.ne_top 2 le_rfl)
+    IsConcreteLE.exists_of_lt (Ideal.pow_lt_self _ P.ne_bot P.isPrime.ne_top 2 le_rfl)
   have h0 : (ϖ : D.host.E) ≠ 0 := RingOfIntegers.coe_ne_zero_iff.2 fun h => h2 (h ▸ zero_mem _)
   exact ⟨e, ϖ, Formalism.L2.JoinChr.locU he.1.1 (Units.mk0 _ h0), he, h1, h2, by
     rw [Formalism.L2.JoinChr.locU_val, Formalism.L2.JoinChr.locE, Units.val_mk0]; ring⟩

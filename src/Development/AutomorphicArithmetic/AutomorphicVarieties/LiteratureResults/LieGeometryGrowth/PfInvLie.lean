@@ -53,10 +53,10 @@ private theorem level_lie (X : Lie E a) (φ : Sm E a) (h : IsOpen {k | act (.fin
     { carrier := {k | finRep E a k θ = θ}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hle : S φ ≤ S (lie E a X φ) := fun k hk => by

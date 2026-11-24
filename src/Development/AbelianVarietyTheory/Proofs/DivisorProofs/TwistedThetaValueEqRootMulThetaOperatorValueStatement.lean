@@ -223,7 +223,7 @@ theorem exists_cst_bij {K : Type} [Field K] (z : (baseOver (Sp K)).left) :
       ∀ a, gs (𝟙 (baseOver (Sp K)).left) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom a) = c a := by
   refine ⟨((Sp K).presheaf.germ ⊤ z trivial).hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom,
     ⟨RingHom.injective _, fun s => ?_⟩, fun _ => gs_eq (𝟙 _) z ⊤ trivial _⟩
-  obtain ⟨U, hU, t, rfl⟩ := (Sp K).presheaf.germ_exist s
+  obtain ⟨U, hU, t, rfl⟩ := (Sp K).presheaf.exists_germ_eq s
   obtain rfl : U = ⊤ := eq_top_iff.2 fun q _ => by rwa [Subsingleton.elim (α := PrimeSpectrum K) q z]
   obtain ⟨b, rfl⟩ := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of K)).inv).2 t
   exact ⟨b, rfl⟩

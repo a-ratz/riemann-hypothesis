@@ -68,12 +68,12 @@ theorem lintegral_sq_comp_linearEquiv_mixed (F : Type) [Field F] [NumberField F]
     (Q : EuclideanSpace ℝ (Fin n) ≃L[ℝ] (κ → mixedEmbedding.mixedSpace F)) :
     ∃ c : ℝ≥0∞, ∀ h : (κ → mixedEmbedding.mixedSpace F) → ℂ,
       ∫⁻ x, ‖h (Q x)‖ₑ ^ 2 = c * ∫⁻ z, ‖h z‖ₑ ^ 2 := by
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := MeasurableAdd₂.toMeasurableAdd
-  haveI : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure :=
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := MeasurableAdd₂.toMeasurableAdd
+  have : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   let eM := Q.toHomeomorph.toMeasurableEquiv
-  haveI : (Measure.map eM (volume : Measure (EuclideanSpace ℝ (Fin n)))).IsAddHaarMeasure :=
+  have : (Measure.map eM (volume : Measure (EuclideanSpace ℝ (Fin n)))).IsAddHaarMeasure :=
     Q.isAddHaarMeasure_map _
   obtain ⟨c, hc⟩ : ∃ c : NNReal, Measure.map eM (volume : Measure (EuclideanSpace ℝ (Fin n))) =
       c • (volume : Measure (κ → mixedEmbedding.mixedSpace F)) :=

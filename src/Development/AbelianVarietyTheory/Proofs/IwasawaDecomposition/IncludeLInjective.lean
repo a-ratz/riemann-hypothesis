@@ -62,7 +62,7 @@ section Rat
 variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
 
 theorem includeL_injective : Function.Injective (Algebra.TensorProduct.includeLeftRingHom : L →+* AL L) := by
-  haveI : Nontrivial (AFplus L) := Formalism.L2.GlobalTheoryTheory.Br.finiteAdeleRing_nontrivial
+  have : Nontrivial (AFplus L) := Formalism.L2.GlobalTheoryTheory.Br.finiteAdeleRing_nontrivial
   exact Algebra.TensorProduct.includeLeft_injective (S := L) (RingHom.injective _)
 
 abbrev incGL : GL (Fin n) L →* GL (Fin n) (AL L) :=

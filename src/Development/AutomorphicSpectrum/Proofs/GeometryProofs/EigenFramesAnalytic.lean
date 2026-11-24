@@ -213,7 +213,7 @@ theorem coef_eq {R U : Type} [CommRing R] [AddCommGroup U] [Module R U] {n : ℕ
   funext l
   have h0 : ∑ m, (c m - (Pi.single i 1 : Fin n → R) m) • x m = 0 := by
     simp only [sub_smul, Finset.sum_sub_distrib, ← h, Pi.single_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
   exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hx _ h0 l)
 
 variable {A Ω T F V N : Type} [CommRing A] [Field Ω] [CommRing T] [AddCommGroup F] [Module A F]
@@ -622,7 +622,7 @@ namespace GlobalTheory.CompanionTheory.Ar.LocalFrames
 
 theorem span_eq_of_saturated : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (E : Type) [AddCommGroup E] [Module Ω E] (L : Lat ξ E) (V' : Submodule Ω E) (p : Cpt ξ) (g : ℕ) (b : Fin g → E) (S : Finset (Fin g)), IsCptGen ξ → Submodule.span Ω (Set.range b) = ⊤ → L p = Submodule.span (regAt ξ p) (Set.range b) → (L.inter V') p = Submodule.span (regAt ξ p) (b '' S) → V' = Submodule.span Ω (b '' S) := by
   intro X Ω _ ξ E _ _ L V' p g b S h hspan hL hI
-  haveI hfr : IsFractionRing (regAt ξ p) Ω := (RegAtRing.regAt_ring X Ω ξ h p).1
+  have hfr : IsFractionRing (regAt ξ p) Ω := (RegAtRing.regAt_ring X Ω ξ h p).1
   have sm : ∀ (c : regAt ξ p) {m : E}, m ∈ L p → (c : Ω) • m ∈ L p := fun c _ hm => (L p).smul_mem c hm
   have key : ∀ x : E, ∃ d : regAt ξ p, (d : Ω) ≠ 0 ∧ (d : Ω) • x ∈ L p := by
     intro x
@@ -765,11 +765,11 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat.LocalFrames
 theorem exists_affine_eigenframes : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (b₁ : Fin D.p → Z.V) (b₂ : Fin D.q → Z.V) (p₀ : Cpt (Z.ξ₀ ≫ Y.j)), (Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) → τ (H.rt : E) = H.rt0 → LinearIndependent Z.Ω b₁ → Submodule.span Z.Ω (Set.range b₁) = eigSp Z.ρ (Z.inc.comp (tauIn c τ)) → LinearIndependent Z.Ω b₂ → Submodule.span Z.Ω (Set.range b₂) = eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ))) → p₀ ∈ Z.genFib → ∃ (A : Y.X.Opens) (hA : IsAffineOpen A) (EB : Type) (_ : AddCommGroup EB) (_ : Module Γ(Y.X, A) EB) (MB : LieModel Y.t.G hA.fromSpec EB) (e₁ : Fin D.p → EB) (e₂ : Fin D.q → EB) (v₁ : Fin D.p → Z.V) (v₂ : Fin D.q → Z.V), p₀.1 ∈ A ∧ (∀ q : Cpt (Z.ξ₀ ≫ Y.j), q.1 ∈ A → (Z.eig τ).IsFrameAt v₁ q ∧ (Z.eig (ComplexEmbedding.conjugate τ)).IsFrameAt v₂ q) ∧ (∀ (f : Γ(Y.X, A) →+* ℂ) (y : Sp ℂ ⟶ Y.X) (v : Fin D.p → (epsAt y ⟶ Y.t.G)) (w : Fin D.q → (epsAt y ⟶ Y.t.G)), y = spMap f ≫ hA.fromSpec → y ≫ Y.s = spMap (σ.comp β) → (∀ i, (v i).left = spMap (dualMap f) ≫ (MB.pt (e₁ i)).left) → (∀ j, (w j).left = spMap (dualMap f) ≫ (MB.pt (e₂ j)).left) → IsEigFrame Y.t.act y (σ.comp (tauIn c τ)) v ∧ IsEigFrame Y.t.act y (σ.comp (tauIn c (ComplexEmbedding.conjugate τ))) w) ∧ (∀ (f : Γ(Y.X, A) →+* ℂ) (y : Sp ℂ ⟶ Y.X) (v : Fin D.p → (epsAt y ⟶ Y.t.G)) (w : Fin D.q → (epsAt y ⟶ Y.t.G)), y = spMap f ≫ hA.fromSpec → genPt (Z.ξ₀ ≫ Y.j) ⤳ centre y → (∀ i, (v i).left = spMap (dualMap f) ≫ (MB.pt (e₁ i)).left) → (∀ j, (w j).left = spMap (dualMap f) ≫ (MB.pt (e₂ j)).left) → (∀ i, Z.M.ValAt y (v₁ i) (v i)) ∧ ∀ j, Z.M.ValAt y (v₂ j) (w j)) := by
   intro E _ _ _ H D l Xo c O _ β Y U Z τ σ b₁ b₂ p₀ hO hτ h1 h2 h3 h4 hp₀
   obtain ⟨hinj, hnoeth, hfr⟩ := hO
-  haveI := hnoeth
+  have := hnoeth
   have := projProper _ _ _ Y.proj
-  haveI : IsLocallyNoetherian Y.X := LocallyOfFiniteType.isLocallyNoetherian Y.s
-  haveI : GlobalTheory.IsNormalScheme Y.X := GlobalTheory.IsNormalScheme.of_pred Y.normal
-  haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
+  have : IsLocallyNoetherian Y.X := LocallyOfFiniteType.isLocallyNoetherian Y.s
+  have : GlobalTheory.IsNormalScheme Y.X := GlobalTheory.IsNormalScheme.of_pred Y.normal
+  have : Smooth Y.t.G.hom := Y.t.semi.smooth
   obtain ⟨-, -, h3c, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c O β Y U Z τ ⟨hinj, hnoeth, hfr⟩ hτ
   obtain ⟨g, b, hb, hS⟩ := h3c p₀ hp₀
   obtain ⟨S₁, hS₁⟩ := hS τ
@@ -1189,7 +1189,7 @@ namespace GlobalTheory.CompanionTheory.Ar.FrameVal
 
 theorem exists_framed_values : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (b₁ : Fin D.p → Z.V) (b₂ : Fin D.q → Z.V) (y : Sp ℂ ⟶ Xo.XF c) (h : genPt (Z.ξ₀ ≫ Y.j) ⤳ centre (y ≫ Y.j)), (Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) → τ (H.rt : E) = H.rt0 → σ (tauIn c τ H.rt) = H.rt0 → y ≫ pullback.snd _ _ = spMap σ → (Z.eig τ).IsFrameAt b₁ ⟨_, h⟩ → (Z.eig (ComplexEmbedding.conjugate τ)).IsFrameAt b₂ ⟨_, h⟩ → ∃ (v : Vecs y D.p) (w : Vecs y D.q), IsFramed Set.univ τ σ y v w ∧ (∀ i, ∃ v', Z.M.ValAt (y ≫ Y.j) (b₁ i) v' ∧ SameVec Y y (v i) v') ∧ ∀ j, ∃ w', Z.M.ValAt (y ≫ Y.j) (b₂ j) w' ∧ SameVec Y y (w j) w' := by
   intro E _ _ _ H D l Xo c O _ β Y U Z τ σ b₁ b₂ y h hO hτ _ hy hf₁ hf₂
-  haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
+  have : Smooth Y.t.G.hom := Y.t.semi.smooth
   obtain ⟨-, -, h3, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c O β Y U Z τ hO hτ
   have hfib : (⟨centre (y ≫ Y.j), h⟩ : Cpt (Z.ξ₀ ≫ Y.j)) ∈ Z.genFib :=
     ⟨Y.jQ (y (IsLocalRing.closedPoint ℂ)), by simp only [Model.j, centre, Scheme.Hom.comp_apply]⟩
@@ -1274,8 +1274,8 @@ theorem isPreimmersion_fst {O K : Type} [CommRing O] [Field K] (β : O →+* K) 
     IsPreimmersion (pullback.fst s (spMap β)) := by
   obtain ⟨hi, -, hx⟩ := hβ
   have hdom : IsDomain O := hi.isDomain β
-  letI : Algebra O K := β.toAlgebra
-  haveI : FaithfulSMul O K := (faithfulSMul_iff_algebraMap_injective O K).2 hi
+  let : Algebra O K := β.toAlgebra
+  have : FaithfulSMul O K := (faithfulSMul_iff_algebraMap_injective O K).2 hi
   have hloc : IsLocalization (nonZeroDivisors O) K := by
     refine IsFractionRing.of_field O K fun z => ?_
     obtain ⟨a, b, hb, e⟩ := hx z
@@ -1419,7 +1419,7 @@ theorem exists_gen_of_unitAn : Geo.ResK.ResKStatement → GagaSections → ∀ (
     rw [← Category.assoc, hjW, Category.assoc]
   have hj2 : jW ≫ pullback.snd _ _ = W'.ι ≫ s' := by
     rw [hs', ← Y.jQ_over, ← Category.assoc, hjW, Category.assoc]
-  letI : Algebra c.F Z.Ω := Z.inc.toAlgebra
+  let : Algebra c.F Z.Ω := Z.inc.toAlgebra
   have hconst : ConstClosed c.F Z.Ω := fun a ha => by
     obtain ⟨p, hp0, hp⟩ := ha
     obtain ⟨x, rfl⟩ := hgeom a ⟨p, hp0, by rwa [Polynomial.aeval_def] at hp⟩

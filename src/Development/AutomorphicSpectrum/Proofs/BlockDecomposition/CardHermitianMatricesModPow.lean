@@ -105,7 +105,7 @@ theorem card_hermMod : ∀ (R : Type) [CommRing R] (σ : R →+* R) (ϖ : R) (q 
   rw [hermMod_eq h n k]
   have hcard := _root_.GlobalTheory.CompanionTheory.UnrDens.card_quot_lev R σ ϖ q ε h k
   have hq : 1 < q := h.one_lt
-  haveI : Finite (R ⧸ PositivityTheory.PfSWUS.Loc.lev ϖ k) :=
+  have : Finite (R ⧸ PositivityTheory.PfSWUS.Loc.lev ϖ k) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (by omega))
   obtain ⟨u, hu, -⟩ := h.basis
   have hinv : ∀ x, barσ σ ϖ h.fix_ϖ k (barσ σ ϖ h.fix_ϖ k x) = x := by

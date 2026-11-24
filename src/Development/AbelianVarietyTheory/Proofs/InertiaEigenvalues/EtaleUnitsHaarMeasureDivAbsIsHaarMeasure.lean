@@ -59,15 +59,15 @@ namespace GlobalTheory.JR.UnitsHaar
 
 theorem secondCountable_base (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] : SecondCountableTopology F := by
-  haveI : LocallyCompactSpace F := @Unram.lcF F E _ _ _ _ ‹_›
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F (E := F)
+  have : LocallyCompactSpace F := @Unram.lcF F E _ _ _ _ ‹_›
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F (E := F)
   infer_instance
 
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
   [Unram F E] (A : Et F E)
 
 theorem top_K : T2Space A.K ∧ SecondCountableTopology A.K := by
-  haveI := secondCountable_base F E
+  have := secondCountable_base F E
   let e := (Module.finBasis F A.K).equivFun
   have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -120,7 +120,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (μK : Measure A.K) (hμ : μK.IsAdd
   classical
   obtain ⟨hT2, hSC⟩ := top_K A
   have hOU := openUnits A
-  haveI hB := borel_units A
+  have hB := borel_units A
   have hemb := hOU.isOpenEmbedding_unitsVal
   have hme : MeasurableEmbedding (Units.val : A.Kˣ → A.K) := hemb.measurableEmbedding
   have hU : IsOpen {t : A.K | IsUnit t} := hemb.isOpen_range
@@ -144,7 +144,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (μK : Measure A.K) (hμ : μK.IsAdd
     refine integral_congr_ae (ae_of_all _ fun t => ?_)
     simp only
     rw [NNReal.smul_def, Complex.real_smul, absK_eq, dens, NNReal.coe_inv, Complex.ofReal_inv, mul_comm]
-  haveI := hμ
+  have := hμ
   have hc0 : ∀ c : A.Kˣ, 0 < GlobalTheory.GaugeEx.modu A.K c := fun c => ((GlobalTheory.GaugeEx.modu_basic A.K).1 c c.isUnit).1
   have hscale : ∀ (c : A.Kˣ) (G : A.K → ℝ≥0∞),
       ∫⁻ t, G t ∂μK = (GlobalTheory.GaugeEx.modu A.K c : ℝ≥0∞) * ∫⁻ t, G ((c : A.K) * t) ∂μK := by

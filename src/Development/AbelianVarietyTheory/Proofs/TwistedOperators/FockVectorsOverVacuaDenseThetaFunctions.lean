@@ -850,7 +850,7 @@ theorem exists_number {ι : Type} [Fintype ι] (u : ι → V) (d : ℕ) : ∃ M 
   obtain ⟨C, hC⟩ := hb (l.map fun i => dE hS hD (u i)) d
     (fun X hX => by obtain ⟨i, -, rfl⟩ := List.mem_map.1 hX; exact r4 _) (by simpa using hl)
   refine ⟨ENNReal.ofReal (max C 0), ENNReal.ofReal_ne_top, fun x => ?_⟩
-  rw [← hw, ← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (le_max_right _ _)]
+  rw [← hw, ← ofReal_norm, ← ofReal_norm, ← ENNReal.ofReal_mul (le_max_right _ _)]
   exact ENNReal.ofReal_le_ofReal ((hC x).trans (mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)))
 
 
@@ -884,7 +884,7 @@ theorem dense_words (hρ : ∀ w, ∀ f ∈ S, ρ w f ∈ S) (hP : ∀ f ∈ S, 
   rw [map_sub (M ^ d), Submodule.coe_sub, Submodule.coe_sub, mul_comm] at c2
   refine ⟨g', k3 hg', g'.2, c2.trans_lt (lt_of_le_of_lt ?_ hε')⟩
   refine mul_le_mul_left ?_ _
-  rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_coe_nnreal]
+  rw [← ofReal_norm, ← ENNReal.ofReal_coe_nnreal]
   exact ENNReal.ofReal_le_ofReal hd.le
 
 
@@ -1080,8 +1080,8 @@ theorem fockDense : ∀ D : D7, GlobalTheory.ChainFr.FockDense D := by
   obtain ⟨U, hU, hl⟩ := hf.level
   refine ⟨U, hU, ⟨hf, hl⟩, fun d δ hδ => ?_⟩
   obtain ⟨-, i2, i3, i4, i5, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (WO V W) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
   have e0 : coeL ψ V W (toB hψ f hf) = f := coe_toB hψ f hf
   have hF : toB hψ f hf ∈ (thetaLevel ψ V W U).comap (coeL ψ V W) := by
     rw [Submodule.mem_comap, e0]
@@ -1094,7 +1094,7 @@ theorem fockDense : ∀ D : D7, GlobalTheory.ChainFr.FockDense D := by
       atPl a.1 (Matrix.single a.2.1 a.2.2.1 (if a.2.2.2 then Complex.I else 1))) d hF hδ
   refine ⟨coeL ψ V W g, h1, h2, lt_of_eq_of_lt ?_ h3⟩
   have e1 : ∀ G : BB ψ V W, l2O μ 𝓕 (coeL ψ V W G) = ‖toL2 _ _ (μ.restrict 𝓕) G‖ₑ := fun G =>
-    (eLpNorm_congr_ae (BoundedContinuousFunction.coeFn_toLp 2 (μ.restrict 𝓕) ℂ G.1)).symm.trans (Lp.enorm_def _).symm
+    (eLpNorm_congr_ae (BoundedContinuousFunction.coeFn_toLp 2 (μ.restrict 𝓕) ℂ G.1)).symm.trans (Lp.eNorm_def _).symm
   have e2 : f - coeL ψ V W g = coeL ψ V W (toB hψ f hf - g) := by rw [LinearMap.map_sub, e0]
   simp only [sobO, wordSum, e2, coe_word h hψ hU _ (sub_mem hF h2), e1]
 

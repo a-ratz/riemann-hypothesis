@@ -320,10 +320,10 @@ theorem weil_scalar_eq_one_of_split : _root_.GlobalTheory.FunPr.ThetaLocalInputs
     { carrier := {g | omd g (GlobalTheory.InertDbl.dblFun Ψ) = GlobalTheory.InertDbl.dblFun Ψ}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hgen := (_root_.GlobalTheory.SplitDblGen.inlD_mem_closure_split) F E σ B a a' G X om om' hTr v hsp hψ h2 k hk
@@ -462,7 +462,7 @@ theorem spherical_vacuum_fixed_off_finite_set : _root_.GlobalTheory.FunPr.ThetaL
     exact Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
   refine ⟨X.T ∪ hfin1.toFinset ∪ hfin2.toFinset ∪ hfin3.toFinset, ?_⟩
   intro v hv k hk
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hv
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not] at hv
   obtain ⟨⟨⟨hvT, hstd⟩, hdiff⟩, h2⟩ := hv
   rcases GlobalTheory.LFun.InertChart.isSplit_or_isInertAt (isUnram_of_unramified hTr.base.unram v) with hs | ⟨w, hw⟩
   · have hψ := GlobalTheory.StdCharUnrF.psiUnr_of_not_le F B.ψ hTr.base.std v hdiff

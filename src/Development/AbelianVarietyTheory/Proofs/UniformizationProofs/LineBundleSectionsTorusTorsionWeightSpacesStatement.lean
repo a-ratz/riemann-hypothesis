@@ -142,7 +142,7 @@ theorem exists_comm_eq [Finite A] [HasEnoughRootsOfUnity F (Monoid.exponent A)]
     have h1 : e b a = 1 := DFunLike.congr_fun ha b
     have h2 := comm_swap hc a b
     rwa [h1, _root_.mul_one] at h2
-  haveI : Finite (A →* Fˣ) :=
+  have : Finite (A →* Fˣ) :=
     Finite.of_equiv A (CommGroup.monoidHom_mulEquiv_of_hasEnoughRootsOfUnity A F).some.toEquiv.symm
   have hbij : Function.Bijective P :=
     hinj.bijective_of_nat_card_le (CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity A F).le
@@ -163,20 +163,20 @@ theorem heisenberg_weightSpace_finrank :
   intro F _ _ A _ _ E _ _ _ e Φ hA hdim hm hc hn T lam hlam Wt hWt
   classical
   have hpos : 0 < Nat.card A := Nat.card_pos
-  haveI : Nontrivial E := by
+  have : Nontrivial E := by
     apply Module.nontrivial_of_finrank_pos (R := F)
     rcases Nat.eq_zero_or_pos (Module.finrank F E) with h | h
     · rw [h] at hdim
       omega
     · exact h
-  haveI : NeZero ((Nat.card A : ℕ) : F) := ⟨hA⟩
-  haveI : NeZero (Nat.card A) := ⟨hpos.ne'⟩
-  haveI h0 : HasEnoughRootsOfUnity F (Nat.card A) := inferInstance
-  haveI hAe : HasEnoughRootsOfUnity F (Monoid.exponent A) :=
+  have : NeZero ((Nat.card A : ℕ) : F) := ⟨hA⟩
+  have : NeZero (Nat.card A) := ⟨hpos.ne'⟩
+  have h0 : HasEnoughRootsOfUnity F (Nat.card A) := inferInstance
+  have hAe : HasEnoughRootsOfUnity F (Monoid.exponent A) :=
     h0.of_dvd F Group.exponent_dvd_nat_card
-  haveI : HasEnoughRootsOfUnity F (Monoid.exponent T) :=
+  have : HasEnoughRootsOfUnity F (Monoid.exponent T) :=
     hAe.of_dvd F (Monoid.exponent_submonoid_dvd T.toSubmonoid)
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F (Nat.card A)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F (Nat.card A)
   let ρ : Representation F T E :=
     { toFun := fun t => (lam t : E →ₗ[F] E)
       map_one' := by ext v; simp
@@ -204,7 +204,7 @@ theorem heisenberg_weightSpace_finrank :
       simp
     exact (LinearEquiv.finrank_map_eq (Φ a) (Wt χ)).symm.le.trans (Submodule.finrank_mono hmap)
   intro χ
-  haveI := Fintype.ofFinite (T →* Fˣ)
+  have := Fintype.ofFinite (T →* Fˣ)
   have h1 : Module.finrank F E = ∑ ψ, Module.finrank F (Wt ψ) := by
     rw [← (LinearEquiv.ofBijective (DirectSum.coeLinearMap Wt) hint).finrank_eq,
       Module.finrank_directSum]

@@ -111,8 +111,8 @@ theorem detNorm_scal (t : ℝ) (x : MatInf E j) :
   rw [mul_comm j 2]
 
 theorem isAddHaar_volume : (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)).IsAddHaarMeasure := by
-  haveI h1 : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI h2 : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h1 : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h2 : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   exact Measure.pi.isAddHaarMeasure _
 
 theorem lintegral_scal (t : ℝ) (ht : t ≠ 0) (f : MatInf E j → ENNReal) (hf : Measurable f) :
@@ -125,7 +125,7 @@ theorem lintegral_scal (t : ℝ) (ht : t ≠ 0) (f : MatInf E j → ENNReal) (hf
   have e1 := lintegral_withDensity_eq_lintegral_mul (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) hd hf'
   have e2 := lintegral_withDensity_eq_lintegral_mul (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) hd hf''
   refine e2.trans (Eq.trans ?_ e1.symm)
-  haveI := isAddHaar_volume E j
+  have := isAddHaar_volume E j
   have hm := Measure.map_addHaar_smul (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) ht
   have hrk : Module.finrank ℝ (InfinitePlace E → Fin j → Fin j → ℂ) =
       2 * j * Fintype.card (InfinitePlace E) * j := by
@@ -160,7 +160,7 @@ theorem restrict_pos (hj : 1 ≤ j) : (haarGL E j).restrict {g | 0 < detNorm E j
   rw [← h, _root_.inv_zero, zero_pow (by omega), ENNReal.ofReal_zero]
 
 theorem sFinite_haarGL : SFinite (haarGL E j) := by
-  haveI := isAddHaar_volume E j
+  have := isAddHaar_volume E j
   exact (Measure.withDensity.instSFinite :
     SFinite (Measure.withDensity (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) _))
 
@@ -181,7 +181,7 @@ theorem lintegral_cone (hj : 1 ≤ j) (D : Set (MatInf E j)) (hD : MeasurableSet
     ∫⁻ g in D, F (detNorm E j g) ∂(haarGL E j) =
       haarGL E j ({x | 1 ≤ detNorm E j x ∧ detNorm E j x < Real.exp 1} ∩ D) *
         ∫⁻ t in Set.Ioi (0 : ℝ), F t / ENNReal.ofReal t := by
-  haveI := sFinite_haarGL E j
+  have := sFinite_haarGL E j
   have hl : Measurable fun g => Real.log (detNorm E j g) := Real.measurable_log.comp (measurable_detNorm E j)
   set ν : Measure ℝ := ((haarGL E j).restrict D).map fun g => Real.log (detNorm E j g) with hν
   have hνa : ∀ s, MeasurableSet s → ν s = haarGL E j ((fun g => Real.log (detNorm E j g)) ⁻¹' s ∩ D) :=
@@ -190,7 +190,7 @@ theorem lintegral_cone (hj : 1 ≤ j) (D : Set (MatInf E j)) (hD : MeasurableSet
   have hN0 : (N : ℝ) ≠ 0 := by
     have : 0 < N := Nat.mul_pos (by omega) Fintype.card_pos
     exact_mod_cast this.ne'
-  haveI : ν.IsAddLeftInvariant := by
+  have : ν.IsAddLeftInvariant := by
     refine ⟨fun c => ?_⟩
     ext s hs
     have hc : Measurable fun u : ℝ => c + u := measurable_const_add c
@@ -231,7 +231,7 @@ theorem lintegral_cone (hj : 1 ≤ j) (D : Set (MatInf E j)) (hD : MeasurableSet
     ext x
     refine and_congr_left fun hx => ?_
     have h0 : 0 < detNorm E j x := hpos hx
-    simp only [Set.mem_preimage, Set.mem_Ico, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_Ico, Set.mem_ofPred_eq]
     rw [Real.log_nonneg_iff h0, Real.log_lt_iff_lt_exp h0]
   rw [hset] at h1
   have h2 : ∫⁻ u, F (Real.exp u) ∂ν = ∫⁻ g in D, F (detNorm E j g) ∂(haarGL E j) := by
@@ -252,10 +252,10 @@ theorem covol_withDensity_detNorm : ∀ (E : Type) [Field E] [NumberField E], Is
     rw [detNorm_mul, detNorm_aut E j hE Λ hΛ hγ, one_mul]
   have h1 := hcov (fun x => F (detNorm E j x)) _ ((hF.comp hm).indicator hP)
     (fun γ hγ g _ => by simp only [hinv γ hγ g]) hP subset_rfl
-    (fun γ hγ g hg => by simpa only [Set.mem_setOf_eq, hinv γ hγ g] using hg)
+    (fun γ hγ g hg => by simpa only [Set.mem_ofPred_eq, hinv γ hγ g] using hg)
   have h2 := hcov (fun _ => 1) _ (measurable_const.indicator hP) (fun _ _ _ _ => rfl) hS
     (fun g hg => lt_of_lt_of_le one_pos hg.1)
-    (fun γ hγ g hg => by simpa only [Set.mem_setOf_eq, hinv γ hγ g] using hg)
+    (fun γ hγ g hg => by simpa only [Set.mem_ofPred_eq, hinv γ hγ g] using hg)
   rw [restrict_pos E j hj] at h1 h2
   rw [withDensity_const, one_smul, setLIntegral_one] at h2
   rw [h1, h2, Set.inter_eq_right.2 hpos]

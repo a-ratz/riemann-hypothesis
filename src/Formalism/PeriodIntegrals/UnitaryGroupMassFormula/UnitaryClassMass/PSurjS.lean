@@ -135,7 +135,7 @@ theorem hermToF (hst : ∀ a : F, star (algebraMap F E a) = algebraMap F E a)
   have hxX : x ∈ loc (K := E) Q X := ⟨_, hs', hsx⟩
   rw [h Q hQm hQc] at hxX
   obtain ⟨t, ht, htx⟩ := hxX
-  haveI := hQm.isPrime
+  have := hQm.isPrime
   exact (hcompl_le_primeCompl Q ht) (hIQ htx)
 
 end Over

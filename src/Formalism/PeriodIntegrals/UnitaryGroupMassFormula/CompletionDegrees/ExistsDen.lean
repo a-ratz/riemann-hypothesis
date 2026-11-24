@@ -63,15 +63,15 @@ theorem exists_den {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField E]
       algebraMap (𝓞 E) E a / algebraMap (𝓞 E) E d * algebraMap (𝓞 E) E u = algebraMap (𝓞 E) E w := by
     intro u w huw
     rw [div_mul_eq_mul_div, div_eq_iff hd0, ← map_mul, ← map_mul, huw, mul_comm]
-  haveI : IsDomain (Localization.AtPrime v.asIdeal) := by
+  have : IsDomain (Localization.AtPrime v.asIdeal) := by
     first
       | infer_instance
       | exact IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors v.asIdeal)
-  haveI : IsDiscreteValuationRing (Localization.AtPrime v.asIdeal) := by
+  have : IsDiscreteValuationRing (Localization.AtPrime v.asIdeal) := by
     first
       | exact IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 E) v.ne_bot _
       | infer_instance
-  haveI : ValuationRing (Localization.AtPrime v.asIdeal) := inferInstance
+  have : ValuationRing (Localization.AtPrime v.asIdeal) := inferInstance
   have hinj := IsLocalization.injective (Localization.AtPrime v.asIdeal)
     (Ideal.primeCompl_le_nonZeroDivisors v.asIdeal)
   obtain ⟨c, hc⟩ := ValuationRing.cond (algebraMap (𝓞 E) (Localization.AtPrime v.asIdeal) d)
@@ -170,11 +170,11 @@ theorem denseSurj : DenseSurj := by
   let P : Ideal (𝓞 E) :=
     { carrier := {x | ‖φ (algebraMap (𝓞 E) E x)‖ < 1}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at ha hb ⊢
         exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ha hb)
       zero_mem' := by simp
       smul_mem' := fun c {x} hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, norm_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, norm_mul] at hx ⊢
         exact lt_of_le_of_lt (mul_le_of_le_one_left (norm_nonneg _) (hint c)) hx }
   have hP : ∀ x, x ∈ P ↔ ‖φ (algebraMap (𝓞 E) E x)‖ < 1 := fun x => Iff.rfl
   have hPprime : P.IsPrime := by
@@ -209,11 +209,11 @@ theorem denseSurj : DenseSurj := by
   let I : Ideal (𝓞 E) :=
     { carrier := {x | ‖φ (algebraMap (𝓞 E) E x)‖ ≤ ‖((l : ℕ) : Om l)‖}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at ha hb ⊢
         exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
       zero_mem' := by simp
       smul_mem' := fun c {x} hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, norm_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, norm_mul] at hx ⊢
         exact (mul_le_of_le_one_left (norm_nonneg _) (hint c)).trans hx }
   have hI : ∀ x, x ∈ I ↔ ‖φ (algebraMap (𝓞 E) E x)‖ ≤ ‖((l : ℕ) : Om l)‖ := fun x => Iff.rfl
   have hcop : Ideal.span {s} ⊔ I = ⊤ := by

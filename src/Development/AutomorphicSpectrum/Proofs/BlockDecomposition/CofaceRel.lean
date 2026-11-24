@@ -57,7 +57,7 @@ theorem coface_rel (A : Type) [CommRing A] (B : Type) [CommRing B] [Algebra A B]
   have key : ∀ j : Fin n,
       (k.succAbove i).succAbove ((i.predAbove k).succAbove j) = k.succAbove (i.succAbove j) :=
     fun j => Fin.succAbove_succAbove_succAbove_predAbove k i j
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   refine (hwp n).uniq (K (n + 1 + 1)) _ _ ?_ ?_
   · rw [AlgHom.comp_algebraMap, AlgHom.comp_algebraMap]
   · intro j

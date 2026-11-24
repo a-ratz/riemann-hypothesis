@@ -183,8 +183,8 @@ theorem oo_eq_tens (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wha
       Formalism.L2.SG.TermOp.OO νq Set.univ (X.Wu u) (X.Wu u') γ) (X.tensU u' y) =
     X.tensU u (fun v => (haveI := FiniteDimensional.complete ℂ (X.Vloc u v);
       Jv (ν v) (X.Wloc u v) (X.Wloc u' v) (γ v)) (y v)) := by
-  have := FiniteDimensional.complete ℂ (X.Vpi u)
-  have : ∀ v, CompleteSpace (X.Vloc u v) := fun v => FiniteDimensional.complete ℂ _
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have : ∀ v, CompleteSpace (X.Vloc u v) := fun v => FiniteDimensional.completeSpace ℂ _
   have hWc : ∀ u₀, Continuous (X.Wu u₀) := fun u₀ => (X.Wu_spec u₀).2.2.1
   have hcont : Continuous (ooF X u u' γ) := by
     unfold ooF
@@ -243,7 +243,7 @@ theorem oo_eq_tens (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wha
     have hR0 : X.tensU u (fun v => (∫ t, TermOp.rk1 (X.Wloc u v t) (X.Wloc u' v ((γ v)⁻¹ * t)) ∂(ν v))
         (y v)) = 0 := by
       apply tensU_eq_zero_of_apply_eq_zero X u _ v0
-      simp only [integral_undef hv0, ContinuousLinearMap.zero_apply]
+      simp only [integral_undef hv0, zero_apply]
     have hL0 : (∫ x, TermOp.rk1 (X.Wu u x) (X.Wu u' (γ⁻¹ * x)) ∂(Measure.pi ν)) (X.tensU u' y) = 0 := by
       by_cases hf : Integrable (fun x : X.B.I.Ginf => TermOp.rk1 (X.Wu u x) (X.Wu u' (γ⁻¹ * x)))
           (Measure.pi ν)
@@ -260,7 +260,7 @@ theorem oo_eq_tens (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wha
           simpa using hx
         rw [integral_congr_ae hae']
         simp
-      · rw [integral_undef hf, ContinuousLinearMap.zero_apply]
+      · rw [integral_undef hf, zero_apply]
     rw [hL0, hR0]
 
 def psiU (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u : D.what₂.Word) (s : X.B.I.Ginf) : ℂ :=
@@ -274,7 +274,7 @@ theorem rankOneInnerOperator_smul_smul_eq_mul_conj_smul {V V' : Type*} [NormedAd
     [NormedAddCommGroup V'] [InnerProductSpace ℂ V'] (c d : ℂ) (a : V) (b : V') :
     TermOp.rk1 (c • a) (d • b) = (c * star d) • TermOp.rk1 a b := by
   ext x
-  simp only [TermOp.rk1, ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.smul_apply, smul_smul,
+  simp only [TermOp.rk1, ContinuousLinearMap.smulRight_apply, smul_apply, smul_smul,
     innerSL_apply_apply, inner_smul_left]
   congr 1
   rw [Complex.star_def]
@@ -288,7 +288,7 @@ theorem stInv_of_rel (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.w
     intro u₀ t ht y
     have h1 := (X.Wu_spec u₀).1 t (fun v => (ht v).1) y
     rw [(X.piU_rep u₀).2.2.2.1 t ht] at h1
-    simp only [ContinuousLinearMap.one_apply] at h1
+    simp only [one_apply_eq_self] at h1
     exact h1
   unfold ooF
   rw [hW u s hs.1 x,

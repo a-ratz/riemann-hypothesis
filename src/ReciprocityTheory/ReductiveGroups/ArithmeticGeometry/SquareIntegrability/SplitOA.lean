@@ -99,7 +99,7 @@ theorem so_norm_ge (w : E) (hw0 : w ≠ 0)
 theorem so_sum_sq_ge [IsCMField E] (w : E) (hw0 : w ≠ 0)
     (hw : ∀ y : 𝓞 E, ∃ n : ℤ, Algebra.trace ℚ E (w * y) = n) :
     2 ≤ PT.rd E ^ 2 * ∑ σ : E →+* ℂ, ‖σ w‖ ^ 2 := by
-  haveI := NumberField.IsCMField.isTotallyComplex E
+  have := NumberField.IsCMField.isTotallyComplex E
   have hcard : (Finset.univ : Finset (E →+* ℂ)).card = Module.finrank ℚ E := by
     rw [Finset.card_univ, NumberField.Embeddings.card]
   have hn2 : 2 ≤ Module.finrank ℚ E := by

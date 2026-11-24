@@ -134,7 +134,7 @@ open IsLocalRing Polynomial Matrix UpperTheory.V
 private theorem chi_map_ofRep {n : ℕ} {A K G : Type} [CommRing A] [CommRing K] [Group G] (f : A →+* K)
     (ρ : G →* Matrix (Fin n) (Fin n) A) (g : G) :
     ((W.GDet.ofRep ρ).map f).chi (MonoidAlgebra.single g 1) = (ρ g).charpoly.map f := by
-  letI : Algebra A K[X] := ((algebraMap K K[X]).comp f).toAlgebra
+  let : Algebra A K[X] := ((algebraMap K K[X]).comp f).toAlgebra
   rw [← Matrix.charpoly_map]
   change (W.GDet.repAlg ρ K[X] _).det = (Matrix.charmatrix _).det
   congr 1
@@ -152,7 +152,7 @@ private theorem charpoly_flag {H k : Type} [Group H] [CommRing k] {n : ℕ} (r :
   have h1 := Matrix.charpoly_units_conj g (W.mat r s)
   have h2 : ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv] at h3
   refine h3.trans ?_
@@ -317,7 +317,7 @@ theorem UpperTheory.V.Ws.isClosed_zeroLocus_mvPolynomial_eval_adicContinuous :
       ∀ f : MvPolynomial ι κ, IsClosed {g | MvPolynomial.eval (fun s => j (a s g)) f = 0} := by
   intro G A κ ι _ _ _ _ _ _ j _ a ha f
   classical
-  letI : Algebra A κ := j.toAlgebra
+  let : Algebra A κ := j.toAlgebra
   let L : (f.support → A) →ₗ[A] κ :=
     { toFun := fun v => ∑ d : f.support, f.coeff d.1 * j (v d)
       map_add' := fun x y => by
@@ -390,17 +390,17 @@ theorem UpperTheory.V.Ws.h4 :
   intro l _ hl F O _ _ _ _ _ r x ⟨v⟩ _ ha hb hc hd
   classical
   have hlp : l.Prime := Fact.out
-  haveI : CharP x.K l := charP_of_injective_algebraMap (algebraMap (ResidueField O) x.K).injective l
-  haveI : CompactSpace F.G₀ :=
+  have : CharP x.K l := charP_of_injective_algebraMap (algebraMap (ResidueField O) x.K).injective l
+  have : CompactSpace F.G₀ :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
-  haveI hN : F.G'.Normal := MonoidHom.normal_ker _
+  have hN : F.G'.Normal := MonoidHom.normal_ker _
   let j : x.A →+* x.Fb := (algebraMap x.Fr x.Fb).comp (algebraMap x.A x.Fr)
   have hj : Function.Injective j := (algebraMap x.Fr x.Fb).injective.comp (IsFractionRing.injective x.A x.Fr)
   let ρ : F.G₀ →* Matrix (Fin 4) (Fin 4) x.Fb := W.mat (W.pushRep (algebraMap x.Fr x.Fb) x.ρF)
   have hρ : ∀ g, ρ g = (W.mat x.ρ g).map j := fun g => rfl
   have two : ∀ (k : Type) [Field k] [CharP k l], (2 : k) ≠ 0 := fun k _ _ h =>
     hl ((Nat.prime_dvd_prime_iff_eq hlp Nat.prime_two).1 ((CharP.cast_eq_zero_iff k l 2).1 (by exact_mod_cast h)))
-  haveI : CharP x.Fb l := charP_of_injective_ringHom (j.comp (PowerSeries.C : x.K →+* x.A)).injective l
+  have : CharP x.Fb l := charP_of_injective_ringHom (j.comp (PowerSeries.C : x.K →+* x.A)).injective l
   obtain ⟨cpR, cpL⟩ := h4Cp l F O 4 r x
 
   obtain ⟨g, hg, hfree⟩ := exists_mem_powerSeries_char_ratios_not_isOfFinOrder l (F.Gv v) x.K 4 (x.ψ v) (F.G'.comap (F.φ v)) fun a b hab => by
@@ -419,7 +419,7 @@ theorem UpperTheory.V.Ws.h4 :
     rw [← _root_.map_div] at h
     exact (Function.Injective.isOfFinOrder_iff (Units.map_injective (f := (j : x.A →* x.Fb)) hj)).1 h
   have hsep := charpoly_pow_separable_of_eigenvalue_ratios_not_finOrder _ 4 _ a hu hfa
-  have hcomm : commutator F.G₀ ≤ F.G' := Abelianization.commutator_subset_ker _
+  have hcomm : commutator F.G₀ ≤ F.G' := Group.Abelianization.commutator_le_ker _
 
   have hI : x.TypeI := by
     by_contra hI
@@ -427,14 +427,14 @@ theorem UpperTheory.V.Ws.h4 :
       ⟨_, hg, by simpa using hsep 1 one_pos⟩ hI
     obtain ⟨η, hη, hSη, hcp⟩ := exists_sign_twist_charpoly_of_not_irreducible_restriction x.Fb F.G₀ (two _) ρ hb S (hcomm.trans hNS) hSi fun h =>
       (h V fun s hs => (hS s).1 hs).elim hV0 hV1
-    haveI : S.FiniteIndex := ⟨fun h => by simp [h] at hSi⟩
+    have : S.FiniteIndex := ⟨fun h => by simp [h] at hSi⟩
     have hSo : IsOpen (S : Set F.G₀) := by
       refine S.isOpen_of_isClosed_of_finiteIndex ?_
       have h1 := isClosed_setOf_matrix_stabilizes_submodule F.G₀ x.Fb 4 _ (Pr.linClosedOfAdic F.G₀ x.A x.Fb j hj 4 (W.mat x.ρ) x.cont) V
       convert h1 using 1
       ext s
       exact hS s
-    have hk := sign_char_eq_one_of_cyclotomic_sub_one_not_isUnit l hl F.G₀ (F.ε.comp F.η.ker.subtype) (F.ε_cont.comp continuous_subtype_val) η
+    have hk := sign_char_eq_one_of_cyclotomic_sub_one_not_isUnit l hl F.G₀ (F.ε.comp F.η.ker.subtype) (F.ε_cont.comp continuous_subtypeVal) η
       (Subgroup.isOpen_mono hSη hSo) (hNS.trans hSη)
     have h1 := hc (W.pushCh (Int.castRingHom (ResidueField O)) η) ?_ ?_
       (exists_sign_twist_char_eq_of_charpoly_twist_invariant x.Fb (ResidueField O) x.K x.A F.G₀ 4 (W.mat x.ρ) j _ _ r.chib η hj cpR hcp)
@@ -475,7 +475,7 @@ theorem UpperTheory.V.Ws.h4 :
     refine exists_mem_open_inter_subgroup_of_cosetwise_finiteIndex F.G₀ F.G' (fun s => (W.mat x.ρF s).charpoly.Separable) fun V hV σ => ?_
     obtain ⟨y, hy, hs⟩ := AlgebraTools.regCosetFour x.Fb F.G' (two _) (ρ.comp F.G'.subtype)
       (fun f => (isClosed_zeroLocus_mvPolynomial_eval_adicContinuous F.G₀ x.A x.Fb (Fin 4 × Fin 4) j hj (fun p s => W.mat x.ρ s p.1 p.2) (fun p => x.cont p.1 p.2) f).preimage
-        continuous_subtype_val) hsp ⟨⟨_, hg⟩, a, hu, hfa⟩ (fun N _ h2 h3 => hnc N h2 h3) V hV σ
+        continuous_subtypeVal) hsp ⟨⟨_, hg⟩, a, hu, hfa⟩ (fun N _ h2 h3 => hnc N h2 h3) V hV σ
     refine ⟨y, hy, (Polynomial.separable_map (algebraMap x.Fr x.Fb)).1 ?_⟩
     rw [← Matrix.charpoly_map]
     exact hs
@@ -495,7 +495,7 @@ theorem UpperTheory.V.Ws.P1.condA :
           Nonempty K.V.frame.Vl ∧ ∀ v i j, i ≠ j → ∃ g, K.V.frame.φ v g ∈ K.V.frame.G' ∧ K.r.psib v i g = K.r.psib v j g ∧ ψ v i g ≠ ψ v j g := by
   intro Ω _ _ _ l _ c D T hfit _ c' h K R _ _ Q ψ hψ hsep
   obtain ⟨hrange, -, -, -, hres, hloc⟩ := P1.towerGal D T
-  haveI : IsLocalHom (inc h) := (P1.coefRes c).2.2.1 c' h
+  have : IsLocalHom (inc h) := (P1.coefRes c).2.2.1 c' h
   have hlev := P1.levEps K.V
   refine ⟨hlev.2.2.1, fun v i j hij => ?_⟩
   obtain ⟨s, ⟨hsI, hscyc, hsr⟩, hne⟩ := hsep (K.e v) i j hij
@@ -714,11 +714,11 @@ theorem UpperTheory.V.Ws.P1.ccEx :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (T : Tower D) (s : W.HidaSetting l T.L Ω), ∃ cF : G T.F Ω, IsCC cF ∧
           ∀ g : G T.L Ω, ∃ g' : G T.L Ω, W.resP T.L Ω g' = s.c * W.resP T.L Ω g * s.c⁻¹ ∧ resLe T.F_le g' = cF * resLe T.F_le g * cF⁻¹ := by
   intro Ω _ _ _ l _ c D T s
-  haveI := T.nL
-  haveI := T.cmL
-  haveI := T.nF
-  haveI := T.realF
-  haveI : Normal (W.Lp T.L) T.L := by
+  have := T.nL
+  have := T.cmL
+  have := T.nF
+  have := T.realF
+  have : Normal (W.Lp T.L) T.L := by
     unfold UpperTheory.V.W.Lp
     infer_instance
   obtain ⟨j, hj⟩ := s.hc
@@ -1009,7 +1009,7 @@ theorem UpperTheory.V.Ws.P1.ineTriv :
   have hQr : Q.r (resLe T.F_le g') = 1 := by
     apply hQ.kill
     unfold UpperTheory.V.Ws.Tower.fr
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine ⟨K.s.A ↑u, ?_, ?_, ?_⟩
     · intro p hp
       simp only [Finset.mem_insert, Finset.notMem_empty, or_false] at hp
@@ -1222,7 +1222,7 @@ theorem UpperTheory.V.Ws.P1.redPsi :
   constructor
   · intro v i
     ext g
-    simp only [W.pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [W.pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
     rw [hψ v i g, map_mul, K.psib v i g, K.chib i]
     obtain ⟨g, hg0⟩ := (show ↥(Dec (K.s.A ↑(show W.Vl l T.L from v))) from g)
     have hg : (resLe T.F_le) g ∈ Dec (T.pl (K.e v)) := by
@@ -1239,11 +1239,11 @@ theorem UpperTheory.V.Ws.P1.redPsi :
       exact not_isUnit_zero
     have h1 : AdicCont (maximalIdeal (PowerSeries k))
         (fun g : Dec (K.s.A ↑(show W.Vl l T.L from v)) => algebraMap c'.O (PowerSeries k) ↑(K.κ g.1)) :=
-      ac_comp (ac_map _ hφ K.κ_cont) continuous_subtype_val
+      ac_comp (ac_map _ hφ K.κ_cont) continuous_subtypeVal
     have h2 : AdicCont (maximalIdeal (PowerSeries k))
         (fun g : Dec (K.s.A ↑(show W.Vl l T.L from v)) => Q.ψ (K.e v) i (resLe T.F_le g.1)) := by
       have := (sxAdicMat _ _ hQ.cont).2 (adj (Q.n (K.e v))) (Q.n (K.e v)) i i
-      exact ac_comp this (hcont.comp continuous_subtype_val)
+      exact ac_comp this (hcont.comp continuous_subtypeVal)
     have key := ac_mul h1 h2
     have e : (fun g : Dec (K.s.A ↑(show W.Vl l T.L from v)) => ((ψ v i g : (PowerSeries k)ˣ) : PowerSeries k)) =
         fun g => algebraMap c'.O (PowerSeries k) ↑(K.κ g.1) * Q.ψ (K.e v) i (resLe T.F_le g.1) :=
@@ -1400,9 +1400,9 @@ private theorem trace_swap {K V : Type} [Field K] [AddCommGroup V] [Module K V] 
     (h1 : ∀ v ∈ N, T v ∈ M) (h2 : ∀ v ∈ M, T v ∈ N) : LinearMap.trace K V T = 0 := by
   obtain ⟨p, hpN, hpM⟩ : ∃ p : Module.End K V, (∀ v ∈ N, p v = v) ∧ (∀ v ∈ M, p v = 0) :=
     ⟨N.subtype ∘ₗ N.linearProjOfIsCompl M hc, fun v hv =>
-      congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨v, hv⟩),
+      congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨v, hv⟩),
       fun v hv =>
-      congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨v, hv⟩)⟩
+      congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨v, hv⟩)⟩
   have key : T = (p * T) * (1 - p) + ((1 - p) * T) * p := by
     ext v
     have hv : v ∈ N ⊔ M := by rw [hc.sup_eq_top]; trivial
@@ -1489,7 +1489,7 @@ theorem UpperTheory.V.Ws.P1.irrL :
     fun a => (IsScalarTower.algebraMap_apply c'.O (ResidueField c'.O) x.K a).symm
   have hinj : Function.Injective (algebraMap x.A x.Fr) := IsFractionRing.injective x.A x.Fr
   have h2 : (2 : x.Fr) ≠ 0 := by
-    haveI := (UpperTheory.V.Ws.P1.coefRes c').2.1
+    have := (UpperTheory.V.Ws.P1.coefRes c').2.1
     intro h0
     have h1 : (2 : x.A) = 0 := hinj (by rw [map_ofNat, map_zero]; exact h0)
     have h3 : (2 : x.K) = 0 := by
@@ -1562,11 +1562,11 @@ theorem UpperTheory.V.Ws.modular_deformation_quotient_regular_at_point_alt :
         X.LocZero J (y : X.A →+* PowerSeries k) := by
   intro _ Ω _ _ _ l _ c D T hF hD c' h K X B Λ ι J₀ hM φ hφ J hJ k _ _ _ y hy hyJ hU hI q hq hqy
   have hQ := P1.psPair D T c' h X k y hy
-  haveI : IsLocalHom (algebraMap c'.O k) := ⟨fun a ha => by
+  have : IsLocalHom (algebraMap c'.O k) := ⟨fun a ha => by
     by_contra hn
     exact ha.ne_zero (hQ.loc a hn)⟩
-  letI : Algebra (ResidueField c'.O) k := (ResidueField.lift (algebraMap c'.O k)).toAlgebra
-  haveI : IsScalarTower c'.O (ResidueField c'.O) k := IsScalarTower.of_algebraMap_eq fun a => rfl
+  let : Algebra (ResidueField c'.O) k := (ResidueField.lift (algebraMap c'.O k)).toAlgebra
+  have : IsScalarTower c'.O (ResidueField c'.O) k := IsScalarTower.of_algebraMap_eq fun a => rfl
   obtain ⟨hfin, hchar, -⟩ := P1.coefRes c'
   obtain ⟨ρ, hρ, hρc⟩ := P1.rhoEx D T c' h K (PowerSeries k) _ (maximalIdeal _) (fun a ha => by
     rw [PowerSeries.algebraMap_apply, hQ.loc a ha, map_zero]; exact zero_mem _) hQ.pair hQ.cont

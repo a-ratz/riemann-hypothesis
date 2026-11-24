@@ -78,7 +78,7 @@ theorem bc {G : Over S} [GrpObj G] (hs : Smooth G.hom) (f : R →+* R') (x : Sp 
     (hb : ∀ k, (M'.pt (b' k)).left = Spec.map (CommRingCat.ofHom (dualMap f)) ≫ (M.pt (b k)).left) :
     LinearIndependent R' b' ∧ Submodule.span R' (Set.range b') = ⊤ := by
   subst hy
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨j, hj, -, hsp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G R R' x E E' M M'
   have e : (fun k => j (b k)) = b' :=
     funext fun k => M'.inj (Over.OverMorphism.ext ((hj _).trans (hb k).symm))
@@ -282,8 +282,8 @@ theorem indep_of_bases {F : Type} [AddCommGroup F] [Module Ω' F] {m : ℕ} (b�
     {n : ℕ} (b : Fin n → V) (hb : LinearIndependent Ω b) : LinearIndependent Ω' fun k => j (b k) := by
   have hs : LinearIndepOn Ω id (Set.range b) := hb.linearIndepOn_id
   let B := Module.Basis.extend hs
-  haveI : Module.Finite Ω V := Module.Finite.of_basis b₁
-  haveI := Module.Finite.finite_basis B
+  have : Module.Finite Ω V := Module.Finite.of_basis b₁
+  have := Module.Finite.finite_basis B
   let eq := Finite.equivFin (hs.extend (Set.subset_univ _))
   have h := (hall _ (B.reindex eq)).comp
     (fun k => eq ⟨b k, hs.subset_extend _ (Set.mem_range_self k)⟩)

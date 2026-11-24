@@ -58,7 +58,7 @@ theorem eq_of_forall_algClosed {K R : Type} [Field K] [CommRing R] [Algebra K R]
   refine IsNilpotent.eq_zero (nilpotent_iff_mem_prime.2 fun J hJ => ?_)
   let ψ : R →+* AlgebraicClosure J.ResidueField :=
     (algebraMap J.ResidueField (AlgebraicClosure J.ResidueField)).comp (algebraMap R J.ResidueField)
-  letI : Algebra K (AlgebraicClosure J.ResidueField) := (ψ.comp (algebraMap K R)).toAlgebra
+  let : Algebra K (AlgebraicClosure J.ResidueField) := (ψ.comp (algebraMap K R)).toAlgebra
   have e : ψ u = ψ v := h (AlgebraicClosure J.ResidueField) { ψ with commutes' := fun _ => rfl }
   have e' : algebraMap R J.ResidueField u = algebraMap R J.ResidueField v :=
     (algebraMap J.ResidueField (AlgebraicClosure J.ResidueField)).injective e
@@ -74,7 +74,7 @@ theorem sec_eq_of_geometric {E : Type} [Field E] [NumberField E] [IsCMField E] {
     evalWD_fr (frChartF_of (GlobalTheory.Frames.chartCoverF_of_secBaseChange hS E H Dw l Xo c))
   have hBC : GlobalTheory.CoefChangeCompare.HasBC Xo c := GlobalTheory.CoefChangeCompare.hasBC_of hS
   funext p y
-  haveI := ((GlobalTheory.reduced_finiteType_iff_testRing c.F).2 p).2
+  have := ((GlobalTheory.reduced_finiteType_iff_testRing c.F).2 p).2
   refine eq_of_forall_algClosed (K := c.F) _ _ fun k _ _ _ φ => ?_
   obtain ⟨z, hz⟩ := hBC p.R k φ y
   rw [← GlobalTheory.CoefChangeCompare.evR_of_map hWD hf.1 hz, ← GlobalTheory.CoefChangeCompare.evR_of_map hWD hf'.1 hz]
@@ -84,7 +84,7 @@ theorem isThClsD_unique : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
   intro hC E _ _ _ H Dw l Xo c n d Cl _ w La Nc gam vol ep Vs _ _ io hd hnab hLa a hio x a' m f hf f' hf' h h'
   obtain ⟨_, hnab⟩ := hnab
   refine sec_eq_of_geometric hf hf' fun k _ _ _ y => ?_
-  letI : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+  let : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
   have hk : ∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a := fun a => by
     show algebraMap c.F k (d.eF.symm (d.eF a)) = _
     rw [AlgEquiv.symm_apply_apply]

@@ -119,14 +119,14 @@ end SlopeTestRemainingChoices
 
 private theorem nh_open {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} : IsOpen ((⨅ w : Plc L, (KO (w.adicCompletion L) (Fin n)).comap (cLoc w) : Subgroup (UA L n)) : Set (UA L n)) := by
   let p : UA L n →* GL (Fin n) (Af L) := (Matrix.GeneralLinearGroup.map (pFin L)).comp (UA L n).subtype
-  have hp : Continuous p := GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtype_val
+  have hp : Continuous p := GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtypeVal
   have ho : IsOpen (GlobalTheory.GLIntegral.intSubring L : Set (Af L)) := RestrictedProduct.isOpen_forall_mem
     (A := fun v : HeightOneSpectrum (𝓞 L) => (v.adicCompletionIntegers L : Set (v.adicCompletion L)))
     (fun v => Valued.isOpen_valuationSubring _)
   refine Subgroup.isOpen_mono (H₁ := (GlobalTheory.GLIntegral.glSub (GlobalTheory.GLIntegral.intSubring L)).comap p) (fun g hg => ?_)
     ((GlobalTheory.GLIntegral.isOpen_glSub _ ho).preimage hp)
   have hv : ∀ (w : Plc L) (x : w.adicCompletion L), x ∈ w.adicCompletionIntegers L → x ∈ 𝒪[w.adicCompletion L] := fun w x hx => by
-    haveI : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     rw [Valuation.mem_integer_iff, ← map_one (valuation _), ← Valuation.vle_iff_le, Valuation.vle_iff_le Valued.v, map_one]
     exact hx
@@ -136,7 +136,7 @@ theorem UpperTheory.unitaryAdelic_localComponents_continuous_levels_open :
     ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ), (∀ w : Plc L, Continuous (cLoc (E := L) (n := n) w)) ∧ (∀ (w : Plc L) (b : ℕ), IsOpen (Kc (w.adicCompletion L) n b : Set (GLw n w))) ∧ ∀ᶠ k : finU (E := L) (n := n) in nhds 1, ∀ w : Plc L, cLoc w (k : UA L n) ∈ KO (w.adicCompletion L) (Fin n) := by
   intro L _ _ _ n
   refine ⟨fun w => GlobalTheory.DefU.Inert.continuous_cLoc w, fun w b => nh_Kc_open b, ?_⟩
-  have h := ((nh_open (L := L) (n := n)).preimage (continuous_subtype_val (p := fun x => x ∈ finU (E := L) (n := n)))).mem_nhds
+  have h := ((nh_open (L := L) (n := n)).preimage (continuous_subtypeVal (p := fun x => x ∈ finU (E := L) (n := n)))).mem_nhds
     (x := (1 : finU (E := L) (n := n))) (one_mem (⨅ w : Plc L, (KO (w.adicCompletion L) (Fin n)).comap (cLoc w) : Subgroup (UA L n)))
   filter_upwards [h] with k hk w
   exact Subgroup.mem_iInf.1 hk w

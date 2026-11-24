@@ -246,7 +246,7 @@ theorem rho_central {z : Fin n → ℂˣ} (hH : Heig ρ v z) :
     have := Finset.powersetCard_self (Finset.univ : Finset (Fin n))
     rwa [Finset.card_univ, Fintype.card_fin] at this
   rw [hS, Finset.sum_singleton, Nat.sub_self, mul_zero, pow_zero, one_mul] at h
-  haveI hempty : IsEmpty (Pairs (Finset.univ : Finset (Fin n))) :=
+  have hempty : IsEmpty (Pairs (Finset.univ : Finset (Fin n))) :=
     ⟨fun p => (show {p : Fin n × Fin n // p.1 ∈ (Finset.univ : Finset (Fin n)) ∧
       p.2 ∉ (Finset.univ : Finset (Fin n)) ∧ p.1 < p.2} from p).2.2.1 (Finset.mem_univ _)⟩
   have hone : ∀ c : Pairs (Finset.univ : Finset (Fin n)) → 𝓀[F],
@@ -267,7 +267,7 @@ theorem rho_central {z : Fin n → ℂˣ} (hH : Heig ρ v z) :
 theorem lamS_compl (S : Finset (Fin n)) :
     lamS Sᶜ = -lamS S + lamS (Finset.univ : Finset (Fin n)) := by
   funext i
-  simp only [lamS, Pi.add_apply, Pi.neg_apply, Finset.mem_compl, Finset.mem_univ, if_true]
+  simp only [lamS, Pi.add_apply, Pi.neg_apply, Finset.mem_compl, Finset.mem_univ, ite_true]
   split_ifs <;> norm_num
 
 theorem coeff_compl {z : Fin n → ℂˣ} (hU : Unit' ρ B) (hH : Heig ρ v z) (S : Finset (Fin n)) :

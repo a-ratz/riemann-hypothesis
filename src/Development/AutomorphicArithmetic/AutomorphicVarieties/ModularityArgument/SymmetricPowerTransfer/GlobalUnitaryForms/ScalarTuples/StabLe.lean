@@ -281,7 +281,7 @@ private theorem quo_norm (s : (Etau K τ)ˣ) :
 private theorem int_D (O : Type) [CommRing O] [Algebra O K] (hr : τ ^ 2 - 4 ≠ 0) (γ : DX Δ)
     (j : (Etau K τ)ˣ →* DX Δ) (hγ : HasTr γ τ) (hj : IsEmb τ γ j) (y : DX Δ) (s : (Etau K τ)ˣ)
     (h : y⁻¹ * j s * y ∈ ZD Δ ⊔ KD Δ O) : IsIntegral O (quo s) := by
-  haveI := zd_normal (Δ := Δ)
+  have := zd_normal (Δ := Δ)
   have h' : y⁻¹ * j s * y ∈ ((ZD Δ ⊔ KD Δ O : Subgroup (DX Δ)) : Set (DX Δ)) := h
   rw [Subgroup.normal_mul, Set.mem_mul] at h'
   obtain ⟨n, hn, kk, hk, e⟩ := h'

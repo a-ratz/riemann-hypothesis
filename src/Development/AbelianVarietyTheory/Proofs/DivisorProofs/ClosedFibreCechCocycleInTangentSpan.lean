@@ -115,8 +115,8 @@ theorem cechLB_triv_finite_finrank_one_le : ∀ (K : Type) [Field K] (A : Over (
   have H : IsPullback π A'.hom A.hom (Spec.map (CommRingCat.ofHom (algebraMap K L))) := hGP.1
   obtain ⟨hA', hg'⟩ :=
     GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback (algebraMap K L) A A' π g hGP hA hsm
-  haveI := hA.proper
-  haveI := GlobalTheory.isAffineHom_diagonal_of_isSeparated A.hom
+  have := hA.proper
+  have := GlobalTheory.isAffineHom_diagonal_of_isSeparated A.hom
   have hDs := GlobalTheory.isAffineOpen_finset_biInf hD
   let D' : κ → A'.left.Opens := fun i => π ⁻¹ᵁ D i
   have hD' : ∀ i, IsAffineOpen (D' i) := fun i => GlobalTheory.AbLaw.isAffineOpen_preimage_of_isPullback H (hD i)
@@ -137,8 +137,8 @@ theorem cechLB_triv_finite_finrank_one_le : ∀ (K : Type) [Field K] (A : Over (
     (GlobalTheory.AbLaw.cechLBCongr A'.hom D' (LB.isLB_triv A'.left) (LB.isLB_pull (LB.isLB_triv A.left) π) w hw) 1).toLinearEquiv
   let E : (L ⊗[K] C.homology 1) ≃ₗ[L] (GlobalTheory.AbLaw.cechLB A'.hom (LB.triv A'.left) D').homology 1 :=
     e₃.symm ≪≫ₗ e₄ ≪≫ₗ e₅.symm
-  haveI := hfin' 1
-  haveI : Module.Finite L (L ⊗[K] C.homology 1) := Module.Finite.equiv E.symm
+  have := hfin' 1
+  have : Module.Finite L (L ⊗[K] C.homology 1) := Module.Finite.equiv E.symm
   have hfinK : Module.Finite K (C.homology 1) := by
     have h1 : Module.rank L (L ⊗[K] C.homology 1) < Cardinal.aleph0 := Module.rank_lt_aleph0 L _
     rw [Module.rank_baseChange, Cardinal.lift_id] at h1
@@ -498,7 +498,7 @@ theorem exists_comb_coboundary : ∀ (K : Type) [Field K] (Y : Scheme.{0}) (s : 
   let A := secCube s (LB.triv Y) D
   let z : Fin (g + 1) → LinearMap.ker (Cube.d A (1 + 1)) :=
     fun b => ⟨coc s D (e b), coc_mem s D (e b) (he b)⟩
-  haveI : Module.Finite K ((cechComplex A).homology 1) := hfin
+  have : Module.Finite K ((cechComplex A).homology 1) := hfin
   have hnli : ¬ LinearIndependent K (fun b => cechClass A 1 (z b)) := by
     intro hli
     have h1 := hli.fintype_card_le_finrank
@@ -657,7 +657,7 @@ theorem isAbelianScheme_and_relDim : ∀ (E : Type) [Field E] [NumberField E] [I
   have := hG.comm
   obtain ⟨v₁, hv₁, -⟩ := GlobalTheory.exists_isLieBasis_baseChange _ _ _ _ A _ h₁ hG'.smooth n v' hv'
   have : IsLocalRing (Γ(X, U.1) ⧸ m) := by
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     infer_instance
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim _ A hA
   obtain ⟨v₂, hv₂⟩ := GlobalTheory.KeyPow.exists_isLieBasis A hg
@@ -751,7 +751,7 @@ theorem isPullback_comp_mono {C : Type*} [Category C] {A B T : C} (f : A ⟶ B) 
 
 theorem isAffineOpen_preimage_fibre : ∀ (X Z : Scheme.{0}) (p : Z ⟶ X) (U : X.affineOpens) (m : Ideal Γ(X, U.1)) (A : Scheme.{0}) (q : A ⟶ Sp (Γ(X, U.1) ⧸ m)) (ι : A ⟶ Z), IsPullback ι q p (spMap (Ideal.Quotient.mk m) ≫ chart U) → ∀ W : Z.Opens, IsAffineOpen W → W ≤ p ⁻¹ᵁ U.1 → IsAffineOpen (ι ⁻¹ᵁ W) := by
   intro X Z p U m A q ι H W hW hWU
-  haveI : IsOpenImmersion (chart U) := U.2.isOpenImmersion_fromSpec
+  have : IsOpenImmersion (chart U) := U.2.isOpenImmersion_fromSpec
   let h : (W : Scheme) ⟶ Sp Γ(X, U.1) := p.resLE U.1 W hWU ≫ U.2.isoSpec.hom
   have hh : W.ι ≫ p = h ≫ chart U := by
     simp [h, chart, IsAffineOpen.fromSpec]
@@ -762,10 +762,10 @@ theorem isAffineOpen_preimage_fibre : ∀ (X Z : Scheme.{0}) (p : Z ⟶ X) (U : 
     simpa [Category.assoc] using big.w
   have sq : IsPullback (ι ∣_ W) ((ι ⁻¹ᵁ W).ι ≫ q) h (spMap (Ideal.Quotient.mk m)) :=
     IsPullback.of_bot (v₂₁ := 𝟙 _) (by simpa using big) comm (isPullback_comp_mono _ _)
-  haveI : IsClosedImmersion (spMap (Ideal.Quotient.mk m)) :=
+  have : IsClosedImmersion (spMap (Ideal.Quotient.mk m)) :=
     IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
   haveI : IsAffineHom (ι ∣_ W) := MorphismProperty.of_isPullback (P := @IsAffineHom) sq.flip inferInstance
-  haveI : IsAffine (W : Scheme) := hW
+  have : IsAffine (W : Scheme) := hW
   exact isAffine_of_isAffineHom (ι ∣_ W)
 
 end GlobalTheory.AffinePreimageFibre
@@ -792,8 +792,8 @@ theorem resG_appLE {Y : Scheme.{0}} {K : Type} [CommRing K] (s : Y ⟶ Sp K) {V 
 
 theorem fieldDep : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (J : Type) (W : J → A.left.Opens), (∀ i, IsAffineOpen (W i)) → ⨆ i, W i = ⊤ → ∀ (e : Fin (g + 1) → ∀ i i' : J, Γ(A.left, W i ⊓ W i')), (∀ b i i' i'', resG A.left (inf_le_left : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i') (e b i i') + resG A.left (le_inf (inf_le_left.trans inf_le_right) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i' ⊓ W i'') (e b i' i'') = resG A.left (le_inf (inf_le_left.trans inf_le_left) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i'') (e b i i'')) → ∃ c : Fin (g + 1) → K, c ≠ 0 ∧ ∃ h : ∀ i, Γ(A.left, W i), ∀ i i', ∑ b, (A.hom.appLE ⊤ (W i ⊓ W i') le_top).hom ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom (c b)) * e b i i' = resG A.left inf_le_left (h i) - resG A.left inf_le_right (h i') := by
   intro K _ A _ g hA hsm J W hW hcov e he
-  haveI := hA.proper
-  haveI : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
+  have := hA.proper
+  have : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover (fun i => (W i : Set A.left))
     (fun i => (W i).isOpen) (by
       intro x _
@@ -823,7 +823,7 @@ theorem fieldDep : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (g : �
 
 theorem fibre_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X), IsProper t.G.hom → Out.RelAmple t.G t.PP.L → ∀ (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ a, IsTanAtG t (chart U) (v a)) → (∀ w, IsTanAtG t (chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (chart U) v cf w) → ∀ (J : Type) (W : J → t.G.left.Opens), (∀ i, IsAffineOpen (W i)) → ⨆ i, W i = t.G.hom ⁻¹ᵁ U.1 → ∀ (hWU : ∀ i, W i ≤ t.G.hom ⁻¹ᵁ U.1) (m : Ideal Γ(X, U.1)), m.IsMaximal → ∀ (A : Over (Sp (Γ(X, U.1) ⧸ m))) [GrpObj A] (ι : A.left ⟶ t.G.left), IsGrpPullback A t.G (spMap (Ideal.Quotient.mk m) ≫ chart U) ι → ∀ (e : Fin (n + 1) → ∀ i i' : J, Γ(A.left, ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i')), (∀ b, (∀ i i' i'', resG A.left (inf_le_left : ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'' ≤ ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i') (e b i i') + resG A.left (le_inf (inf_le_left.trans inf_le_right) inf_le_right : ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'' ≤ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'') (e b i' i'') = resG A.left (le_inf (inf_le_left.trans inf_le_left) inf_le_right : ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'' ≤ ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i'') (e b i i''))) → ∃ r : Fin (n + 1) → Γ(X, U.1), (∃ b, r b ∉ m) ∧ ∃ h' : ∀ i, Γ(A.left, ι ⁻¹ᵁ W i), ∀ i i', ∑ b, (ι.appLE (W i ⊓ W i') (ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i') (fun _ hx => hx)).hom ((t.G.hom.appLE U.1 (W i ⊓ W i') (inf_le_left.trans (hWU i))).hom (r b)) * e b i i' = resG A.left inf_le_left (h' i) - resG A.left inf_le_right (h' i') := by
   intro E _ _ _ H X t hprop hamp U n v hv huniq J W hWa hcov hWU m hm A _ ι hpb e he
-  letI : Field (Γ(X, U.1) ⧸ m) := Ideal.Quotient.field m
+  let : Field (Γ(X, U.1) ⧸ m) := Ideal.Quotient.field m
   obtain ⟨hA, hsm⟩ := _root_.GlobalTheory.FibreAbDim.isAbelianScheme_and_relDim E H X t hprop U n v hv huniq m hm A ι hpb
   have hsq := hpb.1
   have hw : ι ≫ t.G.hom = A.hom ≫ spMap (Ideal.Quotient.mk m) ≫ chart U := hsq.w
@@ -1204,8 +1204,8 @@ open MonObj
 
 theorem fibre_indep' : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X), IsProper t.G.hom → Out.RelAmple t.G t.PP.L → Out.KTriv t.G t.PP.L → ∀ (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ a, IsTanAtG t (chart U) (v a)) → (∀ w, IsTanAtG t (chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (chart U) v cf w) → ∀ (δ : Fin n → ∀ O : t.G.left.Opens, Γ(t.G.left, O) → Γ(t.G.left, O)), (∀ a, IsField (t.G.hom ⁻¹ᵁ U.1) (δ a)) → (∀ a (O : t.G.left.Opens) (h : O ≤ t.G.hom ⁻¹ᵁ U.1) (r : Γ(X, U.1)), δ a O ((t.G.hom.appLE U.1 O h).hom r) = 0) → (∀ a (O : t.G.left.Opens), O ≤ t.G.hom ⁻¹ᵁ U.1 → ∀ (f : Γ(t.G.left, O)) (S : Type) [CommRing S] (φ : Γ(X, U.1) →+* S) (g₀ : Sp S ⟶ t.G.left) (w : Sp (DualNumber S) ⟶ t.G.left), g₀ ≫ t.G.hom = spMap φ ≫ chart U → ⊤ ≤ g₀ ⁻¹ᵁ O → IsTranslate t φ g₀ (v a) w → valR g₀ O (δ a O f) = (valR w O f).snd) → ∀ (J : Type) (W : J → t.G.left.Opens) (j : J → t.PP.L.ι), (∀ i, IsAffineOpen (W i)) → ⨆ i, W i = t.G.hom ⁻¹ᵁ U.1 → ∀ (hWU : ∀ i, W i ≤ t.G.hom ⁻¹ᵁ U.1) (hj : ∀ i, W i ≤ t.PP.L.U (j i)) (m : Ideal Γ(X, U.1)), m.IsMaximal → ∀ (A : Over (Sp (Γ(X, U.1) ⧸ m))) [GrpObj A] (ιA : A.left ⟶ t.G.left), IsGrpPullback A t.G (spMap (Ideal.Quotient.mk m) ≫ chart U) ιA → ∀ (r : Fin n → Γ(X, U.1)) (h' : ∀ i, Γ(A.left, ιA ⁻¹ᵁ W i)), (∀ i i', (ιA.appLE (W i ⊓ W i') (ιA ⁻¹ᵁ W i ⊓ ιA ⁻¹ᵁ W i') (fun _ hx => hx)).hom (∑ b, (t.G.hom.appLE U.1 (W i ⊓ W i') (inf_le_left.trans (hWU i))).hom (r b) * (δ b (W i ⊓ W i') (resG t.G.left (inf_le_inf (hj i) (hj i')) (t.PP.L.g (j i) (j i')).val) * resG t.G.left (inf_le_inf (hj i) (hj i')) (t.PP.L.g (j i) (j i'))⁻¹.val)) = resG A.left inf_le_left (h' i) - resG A.left inf_le_right (h' i')) → ∀ b, r b ∈ m := by
   intro E _ _ _ H X t _hprop _hamp hK U n v hv hb δ hδ hδ0 hδt J W j hWa hWcov hWU hj m hm A _ ιA hι r h' hcob
-  haveI := hm
-  letI : Field (Γ(X, U.1) ⧸ m) := Ideal.Quotient.field m
+  have := hm
+  let : Field (Γ(X, U.1) ⧸ m) := Ideal.Quotient.field m
   set q := Ideal.Quotient.mk m with hq
   set x0 : Sp (Γ(X, U.1) ⧸ m) ⟶ X := spMap q ≫ chart U with hx0
   have hB := GlobalTheory.LineNorm.isTanBasis_of_basis E H X t Γ(X, U.1) (chart U) n v hv hb

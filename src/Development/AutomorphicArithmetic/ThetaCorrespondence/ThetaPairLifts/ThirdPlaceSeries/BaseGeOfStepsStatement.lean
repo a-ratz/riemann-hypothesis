@@ -540,10 +540,10 @@ theorem adForm_lowT_equiv' {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : T
     exact hT.equiv τ _ hg _ _ (by rw [hrep]; exact hu)
   | zero => rfl
   | add S T _ _ hS hT =>
-    simp only [MultilinearMap.add_apply, hS, hT]
+    simp only [add_apply, hS, hT]
     rfl
   | smul a T _ hT =>
-    simp only [MultilinearMap.smul_apply, hT]
+    simp only [smul_apply, hT]
     rfl
 
 end GlobalTheory.TraceRatPf
@@ -598,14 +598,14 @@ theorem translate_all {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} 
         rw [hu', hw, hu]
       have e1 := adForm_lowT_equiv' R hcore.models.HW i ((R.FW i).ρ g x) ρ k hk w z hu2
       have e2 := GlobalTheory.SeriesKEquiv.singleSeries_kEquiv R F hcore i _ χ ξR _ ω φ hker _ _ φ hker.vecOf h y g ρ k hk w z hu2
-      rw [MultilinearMap.sub_apply, hLf, hRt, e1, e2]
+      rw [sub_apply, hLf, hRt, e1, e2]
       change Formalism.L2.Theta.rTr (Wc D i) _ (Lf w) - c • Formalism.L2.Theta.rTr (Wc D i) _ (act _) = 0
-      rw [hrs, ← hRt, ← MultilinearMap.sub_apply, h0]
+      rw [hrs, ← hRt, ← sub_apply, h0]
       rfl)
-    (by rw [MultilinearMap.sub_apply, hat, sub_self])
+    (by rw [sub_apply, hat, sub_self])
   intro w
   have := key w
-  rw [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
+  rw [sub_apply, sub_eq_zero, hLf, hRt] at this
   exact this
 
 end GlobalTheory.TraceRatPf
@@ -628,17 +628,17 @@ theorem traceRat : TraceRat := by
   let c' : G → D.what₂.LL := fun g =>
     if hg : g ∈ U then (((ψ ⟨g, hg⟩)⁻¹ * ((R.FW i).chi g)⁻¹ : D.what₂.LLˣ) : D.what₂.LL) else 0
   refine ⟨∑ g, c' g • (R.FW i).ρ g x, fun v => ?_⟩
-  rw [adForm_sum, MultilinearMap.sum_apply]
+  rw [adForm_sum, sum_apply]
   unfold levelTrace gaL
   rw [LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun g _ => ?_
-  rw [GlobalTheory.TraceClassRank.adForm_smul, MultilinearMap.smul_apply,
+  rw [GlobalTheory.TraceClassRank.adForm_smul, smul_apply,
     translate_all R F hcore hU i v₀ hext hker h y u hu x hx g v, LinearMap.smul_apply, smul_smul, ← map_mul]
   congr 2
   by_cases hg : g ∈ U
-  · simp only [c', dif_pos hg]
+  · simp only [c', dite_eq_left hg]
     rw [← Units.val_mul, mul_assoc, inv_mul_cancel, mul_one]
-  · simp only [c', dif_neg hg, zero_mul, map_zero]
+  · simp only [c', dite_eq_right hg, zero_mul, map_zero]
 
 end GlobalTheory.TraceRatPf
 end -- clump:auto

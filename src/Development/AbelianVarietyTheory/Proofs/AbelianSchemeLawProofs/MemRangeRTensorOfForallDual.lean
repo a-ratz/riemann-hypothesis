@@ -56,7 +56,7 @@ theorem mem_range_rTensor_of_forall_dual {R C₀ C₁ B : Type} [CommRing R] (hR
     (h : ∀ l : C₁ →ₗ[R] R, l ∘ₗ δ = 0 → TensorProduct.lid R B (l.rTensor B z) = 0) :
     ∃ y, δ.rTensor B y = z := by
   classical
-  letI := hR.toField
+  let := hR.toField
   have hex := rTensor_exact B (LinearMap.exact_map_mkQ_range δ) (Submodule.mkQ_surjective _)
   refine (hex z).mp ?_
   let b := Module.Basis.ofVectorSpace R (C₁ ⧸ LinearMap.range δ)

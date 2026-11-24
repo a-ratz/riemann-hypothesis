@@ -403,7 +403,7 @@ theorem key {m : ℕ} (a b : Fin (m + 1) → Fin (2 * r + k + 1)) (i : Fin m) (u
       - PP a (b ∘ Equiv.swap i.castSucc i.succ) u (σ * Equiv.swap i.castSucc i.succ) Φ g = 0 := by
   have hi : (i : ℕ) + 1 < m + 1 := by omega
   have hsw : ∀ j : Fin (m + 1), (j : ℕ) ≠ i → (j : ℕ) ≠ i + 1 → Equiv.swap i.castSucc i.succ j = j :=
-    fun j h1 h2 => Equiv.swap_apply_of_ne_of_ne (fun h => h1 (by rw [h, Fin.coe_castSucc]))
+    fun j h1 h2 => Equiv.swap_apply_of_ne_of_ne (fun h => h1 (by rw [h, Fin.val_castSucc]))
       (fun h => h2 (by rw [h, Fin.val_succ]))
   have hc : (⟨(i : ℕ), by omega⟩ : Fin (m + 1)) = i.castSucc := Fin.ext rfl
   have hs : (⟨(i : ℕ) + 1, hi⟩ : Fin (m + 1)) = i.succ := Fin.ext rfl
@@ -417,7 +417,7 @@ theorem key {m : ℕ} (a b : Fin (m + 1) → Fin (2 * r + k + 1)) (i : Fin m) (u
   · intro j h1 h2; simp only [Equiv.Perm.mul_apply, Function.comp_apply, hsw j h1 h2]
   · intro Ψ x hx hΨ
     simp only [hc, hs, Equiv.Perm.mul_apply, Function.comp_apply, Equiv.swap_apply_left, Equiv.swap_apply_right,
-      Fin.coe_castSucc, Fin.val_succ]
+      Fin.val_castSucc, Fin.val_succ]
     exact two hΨ hx _ _ (by push_cast; ring) _ _ _ _
 
 theorem adj {m : ℕ} (a b : Fin (m + 1) → Fin (2 * r + k + 1)) (i : Fin m) (u : ℂ)
@@ -594,7 +594,7 @@ theorem conv (y : Mat k r) (hy : y ∈ GV k r) {Ψ : Mat k r → E} {g : Mat k r
     have h2 : ∑ ab : Fin (2 * r + k + 1) × Fin (2 * r + k + 1),
         (if ab.1 = ab.2 then (y⁻¹) ab.1 a * y b ab.2 else 0) = if a = b then 1 else 0 := by
       rw [Fintype.sum_prod_type]
-      simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       have := congrFun (congrFun (gv_inv hy).1 b) a
       rw [Matrix.mul_apply] at this
       rw [Finset.sum_congr rfl (fun p _ => mul_comm _ _), this, Matrix.one_apply]

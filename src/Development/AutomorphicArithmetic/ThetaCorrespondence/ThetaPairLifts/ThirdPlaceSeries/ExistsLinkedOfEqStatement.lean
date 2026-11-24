@@ -586,7 +586,7 @@ theorem natCast_mem_differentIdeal (hR : RayField) {M : ℕ} (hM : Squarefree M)
   have hPp : P.IsPrime := Ideal.isPrime_of_prime hP
   have hP0 : P ≠ ⊥ := hP.ne_zero
   have hPm := hPp.isMaximal hP0
-  have hp : P.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot hP0
+  have hp : P.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_under_eq_bot hP0
   let 𝔭 : HeightOneSpectrum (𝓞 K) := ⟨P.under (𝓞 K), inferInstance, hp⟩
   by_cases hnP : 𝔭.asIdeal ∣ natIdeal K M
   · obtain ⟨Q, hPQ, e⟩ := Ideal.eq_prime_pow_mul_coprime hI P
@@ -602,7 +602,7 @@ theorem natCast_mem_differentIdeal (hR : RayField) {M : ℕ} (hM : Squarefree M)
       (by simpa using Ideal.mem_comap.1 (Ideal.absNorm_mem (P.under (𝓞 K))))
       fun g => Subtype.ext (inertia_pow hR 𝔭 hm0 hpm (hm ▸ h) ⟨P, hPp, ⟨rfl⟩, g.2⟩)
     obtain ⟨x, hx, htr⟩ := exists_intTrace_not_mem P Q hPQ he
-    have h1 := not_dvd_differentIdeal_of_intTrace_not_mem (𝓞 K) (p := natIdeal K M) _ Q
+    have h1 := not_dvd_differentIdeal_of_intTrace_notMem (𝓞 K) (p := natIdeal K M) _ Q
       (by rw [Ideal.map_span, Set.image_singleton, map_natCast]; exact e.symm) x hx
       fun hmem => htr (Ideal.le_of_dvd ⟨𝔪, hm⟩ hmem)
     exact (emultiplicity_lt_iff_not_dvd.2 h1).le.trans (le_emultiplicity_of_pow_dvd ⟨Q, e⟩)
@@ -650,16 +650,16 @@ theorem sup_adjoin_root (F : IntermediateField ℚ ℂ) [NumberField F] {k : ℕ
       p ∣ k ∨ p ∣ (discr F).natAbs := by
   obtain ⟨hy, I, hI⟩ := hy
   have hI' : (I : Submodule (𝓞 F) F) ^ k = Submodule.span (𝓞 F) {y} := by
-    rw [← FractionalIdeal.coe_pow, ← hI, FractionalIdeal.coe_spanSingleton]
+    rw [← FractionalIdeal.coeToSubmodule_pow, ← hI, FractionalIdeal.coeToSubmodule_spanSingleton]
   set L : IntermediateField ℚ ℂ := F ⊔ ℚ⟮z⟯ with hLdef
   have hzL : z ∈ L := (le_sup_right : ℚ⟮z⟯ ≤ L) (IntermediateField.mem_adjoin_simple_self ℚ z)
   have hzF : IsIntegral F z := IsIntegral.of_pow hk (by rw [hz]; exact isIntegral_algebraMap (x := y))
   have hzQ : IsIntegral ℚ z := isIntegral_trans z hzF
-  haveI : FiniteDimensional ℚ ℚ⟮z⟯ := IntermediateField.adjoin.finiteDimensional hzQ
+  have : FiniteDimensional ℚ ℚ⟮z⟯ := IntermediateField.adjoin.finiteDimensional hzQ
   have hLfin : FiniteDimensional ℚ L := IntermediateField.finiteDimensional_sup F ℚ⟮z⟯
-  letI : NumberField L := NumberField.mk
-  letI : Algebra F L := (IntermediateField.inclusion (le_sup_left : F ≤ L)).toRingHom.toAlgebra
-  haveI : IsScalarTower F L ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : NumberField L := NumberField.mk
+  let : Algebra F L := (IntermediateField.inclusion (le_sup_left : F ≤ L)).toRingHom.toAlgebra
+  have : IsScalarTower F L ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hz' : (⟨z, hzL⟩ : L) ^ k = algebraMap F L y := Subtype.ext hz
   have hzi : IsIntegral F (⟨z, hzL⟩ : L) := Algebra.IsIntegral.isIntegral _
   have htop : F⟮(⟨z, hzL⟩ : L)⟯ = ⊤ := by
@@ -740,7 +740,7 @@ theorem prime_dvd_discr_iSup_kPsi : ∀ (P : Pre) (δ : FieldDat P),
   have : FiniteDimensional ℚ ↥(⨆ j ∈ Set.Icc 1 P.R.m, δ.KPsi j) :=
     Module.Finite.of_injective (IntermediateField.inclusion hle).toLinearMap (IntermediateField.inclusion hle).injective
   have hN : NumberField ↥(⨆ j ∈ Set.Icc 1 P.R.m, δ.KPsi j) := NumberField.mk
-  letI := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  let := (IntermediateField.inclusion hle).toRingHom.toAlgebra
   refine ⟨hN, fun p hp hd => (Nat.Prime.dvd_mul hp).2 (H p hp (hd.trans ?_))⟩
   exact Int.natAbs_dvd_natAbs.2 (discr_dvd_discr _ _)
 
@@ -816,7 +816,7 @@ theorem qb_KC (d : ℕ) : qb ι (KC d) = KQ d := by
     · exact (show ι x ∈ KC d from h ▸ h2)
     · exact (show ι x ∈ KC d from h ▸ neg_mem h2)
   · obtain ⟨x, hx⟩ := exists_eq_of_isAlgebraic ι (z := sqrtNegNat d)
-      (IsAlgebraic.of_pow two_pos (by rw [sqrtNegNat_sq]; exact (isAlgebraic_nat d).neg))
+      (IsAlgebraic.of_pow two_pos (by rw [sqrtNegNat_sq]; exact (isAlgebraic_natCast d).neg))
     refine IntermediateField.subset_adjoin ℚ _ ⟨x, ι.injective ?_, hx⟩
     rw [map_pow, hx, sqrtNegNat_sq]
     simp

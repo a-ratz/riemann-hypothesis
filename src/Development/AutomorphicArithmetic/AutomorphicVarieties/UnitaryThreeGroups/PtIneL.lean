@@ -73,7 +73,7 @@ private theorem sgn_up {R : Type} [Field R] (s : ℤˣ) (u : GL (Fin 3) R)
   · rw [sgnAct_neg_one]
     have hv : ∀ a b, wt a b < 0 → ((u⁻¹ : GL (Fin 3) R) : Matrix (Fin 3) (Fin 3) R) a b = 0 := by
       rw [up_iff] at hu ⊢
-      letI := u.invertible
+      let := u.invertible
       rw [Matrix.coe_units_inv]
       exact Matrix.blockTriangular_inv_of_blockTriangular hu
     refine ⟨fun a b hab => ?_, fun t ht a => ?_⟩
@@ -162,8 +162,8 @@ theorem UpperTheory.V.U3.pt_inertia_above :
     exact ⟨h1, (key s σ hσ h1).1, (key s σ hσ h1).2 hσI⟩
   refine ⟨fun s hs => ?_, M, fun s hs h1 => ?_, fun s hs => (kI s hs).2.2⟩
   · obtain ⟨h1, h2, h3⟩ := kI s hs
-    rw [← charpoly_conj r M s ((h.mult s).trans h1), Matrix.charpoly_of_upperTriangular _ ((up_iff _).1 h2),
-      Matrix.charpoly_of_upperTriangular (r0 D.η D.ΨQ s).mat (Matrix.blockTriangular_diagonal _)]
+    rw [← charpoly_conj r M s ((h.mult s).trans h1), charpoly_of_isUpperTriangular _ ((up_iff _).1 h2),
+      charpoly_of_isUpperTriangular (r0 D.η D.ΨQ s).mat (Matrix.blockTriangular_diagonal _)]
     simp only [h3]
   · have := (hxD s).1 hs
     rw [← hD] at this

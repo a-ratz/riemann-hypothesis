@@ -131,7 +131,7 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
       intro v
       have hset : {g | A.toRepresentation g v = v} = {g | π g v = v} := by
         ext g
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         exact Subtype.ext_iff
       rw [hset]
       exact hs v
@@ -151,8 +151,8 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
     have hPv : ∀ v w, w ∈ A.toSubmodule → (hm : v - w ∈ A'.toSubmodule) → P v = ⟨v - w, hm⟩ := by
       intro v w hw hm
       have hv : v = w + (v - w) := by abel
-      have h0 : P w = 0 := Submodule.linearProjOfIsCompl_apply_right hc ⟨w, hw⟩
-      have h1 : P (v - w) = ⟨v - w, hm⟩ := Submodule.linearProjOfIsCompl_apply_left hc ⟨v - w, hm⟩
+      have h0 : P w = 0 := Submodule.projectionOnto_apply_right hc ⟨w, hw⟩
+      have h1 : P (v - w) = ⟨v - w, hm⟩ := Submodule.projectionOnto_apply_left hc ⟨v - w, hm⟩
       conv_lhs => rw [hv]
       rw [map_add (f := _), h0, zero_add, h1]
     have hPeq : ∀ g v, P (π g v) = A'.toRepresentation g (P v) := by
@@ -169,15 +169,15 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
     let ι : A.toRepresentation.IntertwiningMap π := ⟨A.toSubmodule.subtype, fun g => LinearMap.ext fun v => rfl⟩
     have hsurj : Function.Surjective p := by
       intro y
-      exact ⟨y, Submodule.linearProjOfIsCompl_apply_left hc y⟩
+      exact ⟨y, Submodule.projectionOnto_apply_left hc y⟩
     have hexact : Function.Exact ι p := by
       intro y
       constructor
       · intro hy
-        have hy' : y ∈ A.toSubmodule := (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hc).mp hy
+        have hy' : y ∈ A.toSubmodule := (Submodule.projectionOnto_apply_eq_zero_iff hc).mp hy
         exact ⟨⟨y, hy'⟩, rfl⟩
       · rintro ⟨z, rfl⟩
-        exact Submodule.linearProjOfIsCompl_apply_right hc z
+        exact Submodule.projectionOnto_apply_right hc z
     have hex := GlobalTheory.CompanionTheory.SocleJm.jhMult_jac_exact e hρ ι p hs Subtype.val_injective hsurj hexact
     obtain ⟨a, haA, ha0⟩ := hnz A hA.1
     have hA1 := hone A a haA ha0
@@ -204,8 +204,8 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
     have h3 := h2.trans hjm
     norm_num at h3
   have hwf := ((hasFiniteLength_iff_wellFounded π).mp hfl).2
-  haveI : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt hwf
-  haveI : Nontrivial (Subrepresentation π) := by
+  have : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt hwf
+  have : Nontrivial (Subrepresentation π) := by
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
     refine ⟨⟨⊥, ⊤, ?_⟩⟩
     intro h
@@ -226,7 +226,7 @@ private theorem isIrreducible_parInd (hBZ : GlobalTheory.Published.BernsteinZele
     {ρ : Representation ℂ (Levi k fun a => Fin (d a)) X} (hρ : ρ.IsIrreducible) (hsρ : IsSmooth ρ)
     (hun : IsUnitarisable (parInd e ρ)) (hjm : jhMult ρ (jac e (parInd e ρ)) ≤ 1) :
     (parInd e ρ).IsIrreducible := by
-  haveI := GlobalTheory.CompanionTheory.SocleJm.nontrivial_indSp e hρ hsρ
+  have := GlobalTheory.CompanionTheory.SocleJm.nontrivial_indSp e hρ hsρ
   refine isIrreducible_of_occurs hBZ e hρ (parInd e ρ) (isSmooth_parInd _ _)
     ((hBZ k).2.2.1 _ _ _ e _ ρ hsρ (hasFiniteLength_of_isIrreducible hρ)) hun (fun T v hv hv0 => ?_) hjm
   let ιT : T.toRepresentation.IntertwiningMap (parInd e ρ) := ⟨T.toSubmodule.subtype, fun _ => rfl⟩

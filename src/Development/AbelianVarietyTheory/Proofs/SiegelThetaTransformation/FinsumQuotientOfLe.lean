@@ -64,8 +64,8 @@ theorem finsum_quotient_of_le {A : Type} [AddCommGroup A] {s t : AddSubgroup A} 
     ∑ᶠ q : A ⧸ s, φ q.out = (s.relIndex t : ℂ) * ∑ᶠ q : A ⧸ t, φ q.out := by
   classical
   set e := AddSubgroup.quotientEquivProdOfLE h
-  haveI : Finite (t ⧸ s.addSubgroupOf t) := Nat.finite_of_card_ne_zero hn
-  haveI : Fintype (t ⧸ s.addSubgroupOf t) := Fintype.ofFinite _
+  have : Finite (t ⧸ s.addSubgroupOf t) := Nat.finite_of_card_ne_zero hn
+  have : Fintype (t ⧸ s.addSubgroupOf t) := Fintype.ofFinite _
   have h1 : ∀ q : A ⧸ s, φ q.out = φ (e q).1.out := by
     intro q
     have h2 : (e q).1 = (q.out : A ⧸ t) := by
@@ -109,7 +109,7 @@ theorem perSub_eq_range (R : ℕ) :
   have : {x | ∃ y : Matrix κ ι K, IntM y ∧ x = (R : K) • y} =
       (((incl K κ ι).comp (nsmulAddMonoidHom R)).range : Set (Matrix κ ι K)) := by
     ext z
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, AddMonoidHom.mem_range, AddMonoidHom.comp_apply,
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, AddMonoidHom.mem_range, AddMonoidHom.comp_apply,
       nsmulAddMonoidHom_apply, map_nsmul, intM_iff, Nat.cast_smul_eq_nsmul]
     constructor
     · rintro ⟨_, ⟨y, rfl⟩, rfl⟩; exact ⟨y, rfl⟩

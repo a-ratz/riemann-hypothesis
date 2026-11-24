@@ -113,7 +113,7 @@ theorem area_bot : area (⊥ : AddSubgroup ℂ) = 0 := by
   unfold area
   have : {a : ℝ | 0 < a ∧ ∃ w₁ ∈ (⊥ : AddSubgroup ℂ), ∃ w₂ ∈ (⊥ : AddSubgroup ℂ), a = |((starRingEnd ℂ) w₁ * w₂).im|} = ∅ := by
     ext a
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
     rintro ha ⟨w₁, h1, w₂, h2, rfl⟩
     rw [AddSubgroup.mem_bot] at h1 h2
     simp [h1, h2] at ha

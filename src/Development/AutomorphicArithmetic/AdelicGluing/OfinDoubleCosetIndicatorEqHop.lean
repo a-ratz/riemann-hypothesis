@@ -71,7 +71,7 @@ private theorem dc_support {G : Type*} [Group G] [TopologicalSpace G] [IsTopolog
     have : {g : G | ∃ a ∈ J, ∃ b ∈ J, g = a * y * b} = (fun p : G × G => p.1 * y * p.2) ''
         ((J : Set G) ×ˢ (J : Set G)) := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_image, Set.mem_prod, SetLike.mem_coe, Prod.exists]
+      simp only [Set.mem_ofPred_eq, Set.mem_image, Set.mem_prod, SetLike.mem_coe, Prod.exists]
       exact ⟨fun ⟨a, ha, b, hb, e⟩ => ⟨a, b, ⟨ha, hb⟩, e.symm⟩, fun ⟨a, b, ⟨ha, hb⟩, e⟩ => ⟨a, ha, b, hb, e.symm⟩⟩
     rw [this]
     exact (hc.prod hc).image (by fun_prop)

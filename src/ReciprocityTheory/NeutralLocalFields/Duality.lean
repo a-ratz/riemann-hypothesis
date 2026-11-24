@@ -563,7 +563,7 @@ def locHom (D : GData F Ω S n) (i : S ⊕ InfinitePlace F) :
 
 theorem continuous_locHom (D : GData F Ω S n) (i : S ⊕ InfinitePlace F) :
     Continuous (locHom D i) :=
-  (continuous_toGS Ω _).comp continuous_subtype_val
+  (continuous_toGS Ω _).comp continuous_subtypeVal
 
 abbrev locF (D : GData F Ω S n) (v : S) := locHom D (Sum.inl v)
 

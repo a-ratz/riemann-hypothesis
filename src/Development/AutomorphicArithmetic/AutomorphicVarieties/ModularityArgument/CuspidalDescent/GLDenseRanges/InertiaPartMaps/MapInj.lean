@@ -91,7 +91,7 @@ private theorem upMat_diag (R : Type) [CommRing R] (n : ℕ)
 
 private theorem upMat_det (R : Type) [CommRing R] (n : ℕ)
     (f : {p : Fin n × Fin n // p.1 < p.2} → R) : (upMat R n f).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j h => upMat_lower R n f i j h)]
+  rw [det_of_isUpperTriangular (fun i j h => upMat_lower R n f i j h)]
   simp [upMat_diag]
 
 private noncomputable def upGL (R : Type) [CommRing R] (n : ℕ)
@@ -173,9 +173,9 @@ private theorem super_mul {x y : Matrix (Fin n) (Fin n) F}
   · rintro k ⟨hki, hkj⟩
     rcases lt_or_gt_of_ne hki with hk | hk
     · rw [hx i k hk, zero_mul]
-    · have h1 := Fin.lt_iff_val_lt_val.mp hk
+    · have h1 := Fin.lt_def.mp hk
       have h2 : (k : ℕ) ≠ j := fun e => hkj (Fin.ext e)
-      have hjk : j < k := Fin.lt_iff_val_lt_val.mpr (by omega)
+      have hjk : j < k := Fin.lt_def.mpr (by omega)
       rw [hy k j hjk, mul_zero]
 
 private def sup (f : SD n → Fˣ) (x : Matrix (Fin n) (Fin n) F) : F :=
@@ -218,12 +218,12 @@ private theorem tv_apply (i j : Fin n) (h : i ≠ j) (c : F) (a b : Fin n) :
 private theorem tv_mem (p : SD n) (c : F) : tv p.1.1 p.1.2 (SD.ne p) c ∈ unipB F (Fin n) := by
   rw [mem_unipB]
   refine ⟨fun a b hab => ?_, fun a => ?_⟩
-  · rw [tv_apply, Matrix.one_apply_ne (ne_of_gt hab), Matrix.single_apply, if_neg, add_zero]
+  · rw [tv_apply, Matrix.one_apply_ne (ne_of_gt hab), Matrix.single_apply, ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     have h1 := p.2
-    have h2 := Fin.lt_iff_val_lt_val.mp hab
+    have h2 := Fin.lt_def.mp hab
     omega
-  · rw [tv_apply, Matrix.one_apply_eq, Matrix.single_apply, if_neg, add_zero]
+  · rw [tv_apply, Matrix.one_apply_eq, Matrix.single_apply, ite_eq_right, add_zero]
     rintro ⟨rfl, h⟩
     exact SD.ne p h.symm
 
@@ -231,9 +231,9 @@ private theorem sup_tv (f : SD n → Fˣ) (p : SD n) (c : F) :
     sup f ((tv p.1.1 p.1.2 (SD.ne p) c : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) = f p * c := by
   simp only [sup]
   rw [Finset.sum_eq_single p]
-  · rw [tv_apply, Matrix.one_apply_ne (SD.ne p), zero_add, Matrix.single_apply, if_pos ⟨rfl, rfl⟩]
+  · rw [tv_apply, Matrix.one_apply_ne (SD.ne p), zero_add, Matrix.single_apply, ite_eq_left ⟨rfl, rfl⟩]
   · intro q _ hq
-    rw [tv_apply, Matrix.one_apply_ne (SD.ne q), zero_add, Matrix.single_apply, if_neg, mul_zero]
+    rw [tv_apply, Matrix.one_apply_ne (SD.ne q), zero_add, Matrix.single_apply, ite_eq_right, mul_zero]
     rintro ⟨h1, h2⟩
     exact hq (Subtype.ext (Prod.ext h1.symm h2.symm))
   · intro h
@@ -486,7 +486,7 @@ private theorem c_conv {Q I : Type} [Group Q] [Fintype Q] [Fintype I]
     _ = (Fintype.card Q : ℂ) * ∑ t, (((χ t w)⁻¹ : ℂˣ) : ℂ) := by
         rw [Finset.mul_sum]
         refine Finset.sum_congr rfl fun t _ => ?_
-        simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
         ring
 
 private theorem opE_sum {G R W Q : Type} [Group G] [CommRing R] [AddCommGroup W] [Module R W]
@@ -674,9 +674,9 @@ private theorem rank_isotypic_character_projection {Q I W : Type} [Group Q] [Fin
     intro w t
 
     rw [map_sum, Finset.sum_eq_single t]
-    · rw [hproj t t _ (w t).2, if_pos rfl]
+    · rw [hproj t t _ (w t).2, ite_eq_left rfl]
     · intro s _ hst
-      rw [hproj s t _ (w s).2, if_neg hst]
+      rw [hproj s t _ (w s).2, ite_eq_right hst]
     · intro h
       exact absurd (Finset.mem_univ t) h
   have hsumV : ∀ (w : ∀ t, ↥(V ⊓ ⨅ x, Module.End.eigenspace (T x) ((χ t x : ℂˣ) : ℂ))),
@@ -782,7 +782,7 @@ theorem UpperTheory.unipotent_upper_map_surjective :
     have h2 : i ≠ j := ne_of_gt hij
     simp [A, h1, h2]
   have hdet : A.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hA]
+    rw [det_of_isUpperTriangular hA]
     exact Finset.prod_eq_one fun i _ => by simp [A]
   have hunit : IsUnit A.det := by simp [hdet, isUnit_one]
   have hcoe : ((GeneralLinearGroup.mk'' A hunit : GL (Fin n) S) : Matrix (Fin n) (Fin n) S) = A := rfl
@@ -796,7 +796,7 @@ theorem UpperTheory.unipotent_upper_map_surjective :
     have hmap : ((GeneralLinearGroup.map (n := Fin n) f (GeneralLinearGroup.mk'' A hunit) : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) i j = f (A i j) := rfl
     rw [hmap]
     rcases lt_trichotomy i j with h | h | h
-    · simp only [A, if_pos h]
+    · simp only [A, ite_eq_left h]
       exact Function.surjInv_eq hf _
     · subst h
       simp [A, hdiag]
@@ -891,11 +891,11 @@ theorem eOp : EOp := by
   intro k _ _ _ _ n
   classical
   obtain ⟨ψ, φ, hψ, hφ, hres⟩ := UpperTheory.exists_level_one_addChar_lifting_residue k
-  letI : Fintype 𝓀[k] := Fintype.ofFinite _
+  let : Fintype 𝓀[k] := Fintype.ofFinite _
   obtain ⟨χ, hχi, hχv, c, hc⟩ := UpperTheory.exists_injective_generic_unipotent_characters 𝓀[k] n φ hφ
-  haveI : Finite (Matrix (Fin n) (Fin n) 𝓀[k]) := inferInstanceAs (Finite (Fin n → Fin n → _))
-  haveI : Finite (GL (Fin n) 𝓀[k]) := Finite.of_injective _ Units.val_injective
-  letI : Fintype (unipB 𝓀[k] (Fin n)) := Fintype.ofFinite _
+  have : Finite (Matrix (Fin n) (Fin n) 𝓀[k]) := inferInstanceAs (Finite (Fin n → Fin n → _))
+  have : Finite (GL (Fin n) 𝓀[k]) := Finite.of_injective _ Units.val_injective
+  let : Fintype (unipB 𝓀[k] (Fin n)) := Fintype.ofFinite _
   obtain ⟨j, hj⟩ := UpperTheory.card_unipotent_upper_eq_pow 𝓀[k] n
   have hcard : Fintype.card (unipB 𝓀[k] (Fin n)) = Nat.card 𝓀[k] ^ j := by
     rw [← Nat.card_eq_fintype_card, hj]
@@ -913,7 +913,7 @@ theorem eOp : EOp := by
     have h : (i : ℕ) + 1 < n := by have := i'.2; simp only at hp; omega
     have e : (⟨(i, ⟨(i : ℕ) + 1, h⟩), rfl⟩ : {p : Fin n × Fin n // (p.2 : ℕ) = p.1 + 1}) = ⟨(i, i'), hp⟩ :=
       Subtype.ext (Prod.ext rfl (Fin.ext hp.symm))
-    simp only [lift, dif_pos h, e]
+    simp only [lift, dite_eq_left h, e]
   have hinj : Function.Injective lift := fun f g h => by
     funext p
     refine Units.ext ?_
@@ -957,9 +957,9 @@ theorem eOp : EOp := by
     obtain ⟨f, -, rfl⟩ := Finset.mem_map.1 ht
     change valuation k (lift f i) = 1
     by_cases h : (i : ℕ) + 1 < n
-    · simp only [lift, dif_pos h]
+    · simp only [lift, dite_eq_left h]
       exact hunit _
-    · simp only [lift, dif_neg h, map_one]
+    · simp only [lift, dite_eq_right h, map_one]
   · intro W _ _ τ
     rw [← hcard, UpperTheory.rank_fixed_inf_character_eigenspace (Kc k n 1) (iA k n) (pA k n) s hs (pA_ker k n) hn χ hχi c hc W τ, Finset.sum_map]
     refine Finset.sum_congr rfl fun f _ => ?_

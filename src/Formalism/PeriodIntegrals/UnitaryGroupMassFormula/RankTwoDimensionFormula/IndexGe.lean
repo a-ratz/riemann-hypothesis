@@ -77,7 +77,7 @@ def IdxSurj : Prop :=
 variable {D : D7} {X : HidaSetting D}
 
 theorem kset_inv {m : X.B.I.Gf} (hm : m ∈ X.B.I.Kset) : m⁻¹ ∈ X.B.I.Kset := by
-  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq] at hm ⊢
+  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq] at hm ⊢
   simpa using (Formalism.UG.stabGL X.B.I.Lf).inv_mem hm
 
 theorem cj_inv (u : D.what₂.Word) (s : Hfin X u) : cj X u s⁻¹ = (cj X u s)⁻¹ := by
@@ -89,11 +89,11 @@ theorem cj_one (u : D.what₂.Word) : cj X u 1 = 1 := by
 theorem latS_mul_K {u : D.what₂.Word} (h : X.B.I.Gf) (s : Hfin X u) (hs : cj X u s ∈ X.B.I.Kset) :
     latS X u (h * (s : X.B.I.Gf)) = latS X u h := by
   ext y
-  simp only [latS, Set.mem_setOf_eq]
+  simp only [latS, Set.mem_ofPred_eq]
   have e : (h * (s : X.B.I.Gf) * X.xu u)⁻¹ = (cj X u s)⁻¹ * (h * X.xu u)⁻¹ := by
     simp only [cj]; group
   have hm := kset_inv hs
-  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq] at hm
+  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq] at hm
   have e2 : X.B.I.fmat ((cj X u s)⁻¹ * (h * X.xu u)⁻¹) =
       X.B.I.fmat (cj X u s)⁻¹ * X.B.I.fmat (h * X.xu u)⁻¹ := by
     simp [Formalism.MainNotions.S.AutInst.fmat]
@@ -131,7 +131,7 @@ theorem gamma_one_eq_card (hU : UniSub) (TR : TypedRed X) :
         (Formalism.L2.SG.GGMirabolic.cardU (TR.Fq v) D.R.k : ℝ) : ℝ) : ℂ) := by
     intro v
     have hp : Formalism.L2.SG.GGMirabolic.psiNat (TR.psi0 v) (1 : GL (Fin D.R.k) (TR.Fq v)) = 1 := by
-      rw [Formalism.L2.SG.GGMirabolic.psiNat, if_pos Formalism.L2.SG.GGMirabolic.isUni_one, Formalism.L2.SG.GGMirabolic.psiU]
+      rw [Formalism.L2.SG.GGMirabolic.psiNat, ite_eq_left Formalism.L2.SG.GGMirabolic.isUni_one, Formalism.L2.SG.GGMirabolic.psiU]
       convert AddChar.map_zero_eq_one (TR.psi0 v)
       unfold Formalism.L2.SG.GGMirabolic.superdiag
       apply Finset.sum_eq_zero
@@ -164,7 +164,7 @@ theorem indexGe_of (hU : UniSub) (hH : IdxHom) (hS : IdxSurj) : IndexGe := by
     rw [← lamOf_eq_latS (Y.cs u) ((Y.cs u).base Λ), (Y.cs u).base_lam Λ hΛ]
   have hKmul : ∀ m m' : X.B.I.Gf, m ∈ X.B.I.Kset → m' ∈ X.B.I.Kset → m * m' ∈ X.B.I.Kset := by
     intro m m' hm hm'
-    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq] at hm hm' ⊢
+    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq] at hm hm' ⊢
     simpa using (Formalism.UG.stabGL X.B.I.Lf).mul_mem hm hm'
   have cj_mul : ∀ a b : Hfin X u, cj X u (a * b) = cj X u a * cj X u b := by
     intro a b

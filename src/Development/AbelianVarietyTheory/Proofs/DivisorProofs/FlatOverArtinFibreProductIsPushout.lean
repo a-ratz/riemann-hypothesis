@@ -216,12 +216,12 @@ theorem points_of_pinch : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶
     obtain ⟨a, ha⟩ := hg₁ (g₂ b)
     obtain ⟨x, -, hx⟩ := ring_lift_of_isPullback hP a b ha
     exact ⟨x, hx⟩
-  haveI := IsClosedImmersion.spec_of_surjective f₁ hf₁
-  haveI := IsClosedImmersion.spec_of_surjective f₂ hf₂
-  haveI : IsClosedImmersion j₁ := closedImmersion_of_isPullback h₁
-  haveI : IsClosedImmersion j₂ := closedImmersion_of_isPullback h₂
-  haveI : Subsingleton (Spec P) := spec_subsingleton_of_artinian P
-  haveI : Subsingleton (Spec R₁) := (Spec.map f₁).isClosedEmbedding.injective.subsingleton
+  have := IsClosedImmersion.spec_of_surjective f₁ hf₁
+  have := IsClosedImmersion.spec_of_surjective f₂ hf₂
+  have : IsClosedImmersion j₁ := closedImmersion_of_isPullback h₁
+  have : IsClosedImmersion j₂ := closedImmersion_of_isPullback h₂
+  have : Subsingleton (Spec P) := spec_subsingleton_of_artinian P
+  have : Subsingleton (Spec R₁) := (Spec.map f₁).isClosedEmbedding.injective.subsingleton
   have lift₁ : Nontrivial R₁ → ∀ y : Y, ∃ y₁, j₁ y₁ = y := fun hn y => by
     obtain ⟨s⟩ := (spec_nonempty_iff R₁).2 hn
     obtain ⟨y₁, hy, -⟩ := scheme_exists_of_isPullback h₁ y s (Subsingleton.elim _ _)
@@ -338,15 +338,15 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
   intro P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hg₁ hg₂ Y Y₁ Y₂ Y₀ j₁ j₂ i₁ i₂ hfl h₁ h₂ h₀ hij hp₂
   have hf₁ : Function.Surjective f₁ := surjective_fst_of_isPullback hP hg₂
   have hf₂ : Function.Surjective f₂ := surjective_fst_of_isPullback hP.flip hg₁
-  haveI : IsClosedImmersion j₁ :=
+  have : IsClosedImmersion j₁ :=
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₁.flip (IsClosedImmersion.spec_of_surjective f₁ hf₁)
-  haveI : IsClosedImmersion j₂ :=
+  have : IsClosedImmersion j₂ :=
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₂.flip (IsClosedImmersion.spec_of_surjective f₂ hf₂)
   obtain ⟨hcov, hpts⟩ := _root_.GlobalTheory.PinchPoints.points_of_pinch _ _ _ _ _ _ _ _ hP hloc hart hg₁ hg₂ _ _ _ _ Y.hom Y₁.hom Y₂.hom Y₀.hom
     j₁ j₂ i₁ i₂ h₁ h₂ h₀ hij
   have hM : GlobalTheory.DualOpen.Milnor (Spec.map f₂) (Spec.map f₁) (Spec.map g₂) (Spec.map g₁) :=
     GlobalTheory.DualOpen.Milnor.of_isPullback hP.flip hg₁
-  haveI : Flat Y.hom := hfl
+  have : Flat Y.hom := hfl
   have SEC := fun W => GlobalTheory.DualOpen.sections_of_squares hM h₂ h₁ h₀ hij.symm hp₂ W
   have hinj : ∀ (W : Y.left.Opens) (a b : Γ(Y.left, W)), j₁.app W a = j₁.app W b → j₂.app W a = j₂.app W b → a = b :=
     fun W a b e1 e2 => (SEC W).1 a b e2 e1

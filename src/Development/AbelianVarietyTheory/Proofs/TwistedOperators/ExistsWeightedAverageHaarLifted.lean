@@ -342,14 +342,14 @@ theorem stdSnd_shift {ν : (AE D)ˣ →* Circle} {e : AE D} {S : Finset (Pl D.ho
   unfold stdSnd
   by_cases hcnd : IsHalf (cA D e) t ∧ IsIntM (dualCoord A' WW βA' βW t) ∧
       ∀ i j, j.1 < a → InId I (dualCoord A' WW βA' βW t i j)
-  · rw [if_pos hcnd, if_pos ⟨hh.2 hcnd.1, hint.2 hcnd.2.1, hid.2 hcnd.2.2⟩]
+  · rw [ite_eq_left hcnd, ite_eq_left ⟨hh.2 hcnd.1, hint.2 hcnd.2.1, hid.2 hcnd.2.2⟩]
     refine (unitChar_congr he hl hc (isIntM_rightBlock a hcnd.2.1)
       (Z := rightBlock a fun i j => (n₀ : EAf D) * Z i j)
       (isIntM_rightBlock a fun i j => mul_mem (natCast_mem _ _) (hZ i j))
       (rightBlock_shift a (c := ((n * c : ℕ) : EAf D)) fun i j => ?_)).symm
     rw [h, Nat.cast_mul n₀]
     ring
-  · rw [if_neg hcnd, if_neg fun h' => hcnd ⟨hh.1 h'.1, hint.1 h'.2.1, hid.1 h'.2.2⟩]
+  · rw [ite_eq_right hcnd, ite_eq_right fun h' => hcnd ⟨hh.1 h'.1, hint.1 h'.2.1, hid.1 h'.2.2⟩]
 
 
 
@@ -374,7 +374,7 @@ theorem stdSnd_isSB {ν : (AE D)ˣ →* Circle} (hν : Continuous ν) {e : AE D}
     Nat.mul_pos hK (Nat.mul_pos (Nat.mul_pos hn₀ (Nat.mul_pos hn hc)) hM), fun u hu hh t => ?_, fun t ht => ?_⟩
   · unfold stdSnd at ht
     by_contra h
-    exact ht (if_neg fun h' => h h'.1)
+    exact ht (ite_eq_right fun h' => h h'.1)
   · refine stdSnd_shift he hnI hl hcS a A' WW βA' βW
       (Z := fun i j => (K : EAf D) * ((M : EAf D) * dualCoord A' WW βA' βW u i j))
       ?_ (fun i j => mul_mem (natCast_mem _ _) (hB u hu i j)) fun i j => ?_
@@ -386,7 +386,7 @@ theorem stdSnd_isSB {ν : (AE D)ˣ →* Circle} (hν : Continuous ν) {e : AE D}
   · have h : IsHalf (cA D e) t ∧ IsIntM (dualCoord A' WW βA' βW t) := by
       unfold stdSnd at ht
       by_contra h
-      exact ht (if_neg fun h' => h ⟨h'.1, h'.2.1⟩)
+      exact ht (ite_eq_right fun h' => h ⟨h'.1, h'.2.1⟩)
     rw [mul_nsmul]
     exact nsmul_mem (hC t h.1 h.2) _
 
@@ -688,7 +688,7 @@ theorem eq_of_finE_eq (V : HSp D) {a b : GA D V} (ha : a ∈ GfC V) (hb : b ∈ 
       apply Units.ext
       ext p q
       have := congrArg (fun z : GL (Fin V.rank) (Lev.EAf D) => z.1 p q) hxy
-      simp only [Formalism.UG.bc, Units.coe_map, MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply] at this
+      simp only [Formalism.UG.bc, Units.coe_map, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply] at this
       exact (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E).injective this
     exact inj h
   have h2 : a⁻¹ * b ∈ GinfC V ⊓ GfC V := by
@@ -807,7 +807,7 @@ theorem ker'_cont (hX : IsBottomTri W i j X) (t : T) (P : PolF D WW.rank A'.rank
     Continuous fun k : GinfC A' => X.ker' W.ψ W.θ t P h (x * k) := by
   have hW := weil' hX t
   have hF := theta' hX t P
-  exact (hW.om_cont _ hF 0).comp ((continuous_const.mul continuous_subtype_val).prodMk continuous_const)
+  exact (hW.om_cont _ hF 0).comp ((continuous_const.mul continuous_subtypeVal).prodMk continuous_const)
 
 theorem level_all [Finite T] (t₀ : T) (hX : IsBottomTri W i j X) :
     ∃ K : Subgroup (GL (Fin A'.rank) (Lev.EAf D)), GlobalTheory.IndefiniteRowSideFullHecke.ClassFunctionSumIntegral.IsOpenCompactLevel A' K ∧

@@ -120,7 +120,7 @@ theorem norm_le_of_monic_root {G : Polynomial ℂ} (hG : G.Monic) {t : ℂ} (ht 
     ‖t‖ ≤ ∑ k ∈ Finset.range G.natDegree, ‖G.coeff k‖ + 1 := by
   have h1 := Polynomial.IsRoot.norm_lt_cauchyBound hG.ne_zero ht
   have h2 : Polynomial.cauchyBound G ≤ ∑ k ∈ Finset.range G.natDegree, ‖G.coeff k‖₊ + 1 := by
-    rw [Polynomial.cauchyBound, hG.leadingCoeff, nnnorm_one, div_one]
+    rw [Polynomial.cauchyBound, hG.leadingCoeff, nnNorm_one, div_one]
     gcongr
     exact Finset.sup_le fun k hk =>
       Finset.single_le_sum (f := fun k => ‖G.coeff k‖₊) (fun _ _ => zero_le) hk
@@ -256,8 +256,8 @@ theorem FiniteMapOpen.proof : FiniteMapOpen.Statement := by
       obtain ⟨j, hj⟩ := Function.ne_iff.1 hw
       have h1 := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q j) h0
       simp only [P, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial_apply, Polynomial.coeff_zero] at h1
-      rw [Finset.sum_eq_single j (fun k _ hk => if_neg (fun h => hk (Fin.ext h))) (by simp)] at h1
-      simp only [if_true] at h1
+      rw [Finset.sum_eq_single j (fun k _ hk => ite_eq_right (fun h => hk (Fin.ext h))) (by simp)] at h1
+      simp only [ite_true] at h1
       exact hj (sub_eq_zero.1 h1)
     have hsub : {w | (w ∈ zeroLocus J ∧ φ w = y₀) ∧ w ≠ x}.Finite :=
       hfib.subset (by intro w hw; exact hw.1)

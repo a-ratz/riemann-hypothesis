@@ -95,7 +95,7 @@ private theorem ine_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
     [Algebra K Ω] {l : ℕ} (hl : l.Prime) (hd : ¬ l ∣ (discr K).natAbs) (A : ValuationSubring Ω)
     (hA : A.valuation (l : Ω) < 1) : Ine (F := ℚ) A ≤ galOf ℚ K Ω := by
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   intro σ hσ
   have hin : ∀ x : Ω, A.valuation x ≤ 1 → A.valuation (σ x - x) < 1 := (show σ ∈ Inertia A from hσ).2
   show ∀ x : K, σ (algebraMap K Ω x) = algebraMap K Ω x
@@ -133,7 +133,7 @@ private theorem ine_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
   have hdv : A.valuation ((discr K : ℤ) : Ω) < 1 := by
     have h1 : ((discr K : ℤ) : Ω) = algebraMap ℚ Ω ((discr K : ℤ) : ℚ) := by simp
     rw [h1, hdisc, Valuation.map_pow]
-    exact pow_lt_one₀ zero_le' hlt two_ne_zero
+    exact pow_lt_one₀ zero_le hlt two_ne_zero
   have hcop : Nat.Coprime l (discr K).natAbs := (Nat.Prime.coprime_iff_not_dvd hl).mpr hd
   have hic : IsCoprime (l : ℤ) (discr K) := Int.isCoprime_iff_gcd_eq_one.mpr hcop
   obtain ⟨u, v, huv⟩ := hic
@@ -159,8 +159,8 @@ private theorem exists_neg (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
     {O : Type} [CommRing O] [IsDomain O] {N : ℕ} [NeZero N] (ψ : DirichletCharacter O N) (w : G ℚ Ω →* Oˣ)
     (hw : w.ker = (Chr.cls ℚ Ω l).ker) : ∃ σ : G ℚ Ω, w σ = -1 ∧ ((Chr.dirG ℚ Ω ψ σ : Oˣ) : O) = ψ (-1) := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
-  haveI : NeZero (l * N) := ⟨Nat.mul_ne_zero hp.ne_zero (NeZero.ne N)⟩
+  have : NeZero l := ⟨hp.ne_zero⟩
+  have : NeZero (l * N) := ⟨Nat.mul_ne_zero hp.ne_zero (NeZero.ne N)⟩
   obtain ⟨σ, hσ⟩ := (Chr.clsOnto Ω (l * N)).1 (-1)
   have hcomp := (Chr.clsFacts ℚ Ω (l * N)).2.1
   have hdown : ∀ (M : ℕ) [NeZero M] (h : M ∣ l * N), Chr.cls ℚ Ω M σ = -1 := by
@@ -178,7 +178,7 @@ private theorem exists_neg (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
       intro h
       have h' : σ ∈ w.ker := h
       rw [hw, MonoidHom.mem_ker, hl1] at h'
-      haveI : Fact (2 < l) := ⟨lt_of_le_of_ne hp.two_le (Ne.symm hl)⟩
+      have : Fact (2 < l) := ⟨lt_of_le_of_ne hp.two_le (Ne.symm hl)⟩
       exact ZMod.neg_one_ne_one (congrArg Units.val h')
     have e1 : w σ * w σ = 1 := by rw [← map_mul]; exact hsq
     have e2 : ((w σ : Oˣ) : O) * (w σ : O) = 1 := by rw [← Units.val_mul, e1, Units.val_one]
@@ -236,7 +236,7 @@ theorem UpperTheory.V.HV.gdLoc :
     rw [← MonoidHom.pow_apply, hw1, MonoidHom.one_apply]
   have hdisc : ¬ l ∣ (discr K).natAbs := fun h => hG.l_cop (dvd_mul_of_dvd_left h _)
   have hidx : (galOf ℚ K Ω).index = 2 := by
-    haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+    have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
     rw [(galEmbTop ℚ K Ω).2.2, hG.quad]
   set m := (l - 1) * orderOf D with hmdef
   have hm : ¬ l ∣ m := by

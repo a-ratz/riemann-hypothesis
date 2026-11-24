@@ -185,7 +185,7 @@ theorem coreAt_of (C : ℝ) (hg : GramAt p i) (hm : MeasAt p i C) (hr : RatAt p 
     simp only [nrmK]
     rw [normW, normW, petW, petW, GlobalTheory.CompHt.goodOf_conj σ]
   have hfg : (latTypeK p.fw p.F.lv2 i).FG := by
-    haveI := isNoetherian_of_fg_of_noetherian _ hg.2.2.2.2.1
+    have := isNoetherian_of_fg_of_noetherian _ hg.2.2.2.2.1
     exact Submodule.FG.of_le_of_isNoetherian (T := latW (p.T.U ((i : ℕ) + 1)) (wtZ (wtA (p.κ i)) (p.κ i).n)) inf_le_left
   have hN : ∀ σ' x, nrmR p.R.toRealDat i σ' (ι x) ≤ Real.exp (C * unitE p) * nrmK p.fw i (σ'.comp (algebraMap p.T.Q.c.F D.what₂.LL)) x := by
     intro σ' x
@@ -201,7 +201,7 @@ theorem coreAt_of (C : ℝ) (hg : GramAt p i) (hm : MeasAt p i C) (hr : RatAt p 
     rw [hr]
     congr 1
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨hy1, hy2⟩
       have hy1' : y ∈ (ι '' (latW (p.T.U ((i : ℕ) + 1)) (wtZ (wtA (p.κ i)) (p.κ i).n) : Set (VK p.fw i))) := by
@@ -453,7 +453,7 @@ variable {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V]
 
 theorem norm_sum_le_of_gram {N : (K →+* ℂ) → V → ℝ} (hG : HasGram N) (hc : ∀ σ x, N ((starRingEnd ℂ).comp σ) x = N σ x)
     {ι : Type} (s : Finset ι) (f : ι → V) (σ : K →+* ℂ) : N σ (∑ i ∈ s, f i) ≤ ∑ i ∈ s, N σ (f i) := by
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨n, ⟨b, X⟩, h⟩ := hG
   have e : ∀ x, N σ x = Formalism.HermitianLatticesTheory.normAt b X (InfinitePlace.mk σ) x := fun x => by
     rw [(h _).2]
@@ -482,7 +482,7 @@ theorem exists_short_eigen {H : Type} [Group H] [Finite H] (st : H → V →ₗ[
     ∃ s' : Set V, (∀ y ∈ s', (y ∈ Λ ∧ ∀ h, st h y = ((χ h : Kˣ) : K) • y) ∧ ∀ σ, N σ y ≤ Nat.card H * B) ∧
       ∀ x, (∀ h, st h x = ((χ h : Kˣ) : K) • x) → x ∈ Submodule.span K s' := by
   classical
-  letI := Fintype.ofFinite H
+  let := Fintype.ofFinite H
   refine ⟨_, ?_, GlobalTheory.eigenvector_mem_span_twistedTrace_image H K V st hst χ s hsp⟩
   rintro _ ⟨y, hy, rfl⟩
   refine ⟨⟨Λ.sum_mem fun h _ => ?_, fun g => ?_⟩, fun σ => ?_⟩
@@ -515,12 +515,12 @@ theorem half_lt_laOf (τ : Psi p.T.Q.H) (k : Fin ((dat p i).p + (dat p i).q)) (h
   have h := GlobalTheory.HolRead.lastPos_wtA_of_kapIs D p.T p.κ p.fw.laws p.fw.kap i τ.1 τ.2
   have hm : (dat p i).mult τ.1 = (dat p i).p := by
     unfold Datum.mult
-    exact if_pos τ.2
+    exact ite_eq_left τ.2
   rw [hm] at h
   have h2 : wtA (p.κ i) (τ.1, (dat p i).p - 1) ≤ wtA (p.κ i) (τ.1, k) := (dom_wtA (p.κ i)).1 τ.1 (show (k : ℕ) ≤ _ by omega)
   have h3 := h (by omega)
   unfold laOf weightOf
-  rw [if_pos hk]
+  rw [ite_eq_left hk]
   beta_reduce
   omega
 
@@ -623,7 +623,7 @@ theorem covering_gmin_of_gram_deep_size : _root_.GlobalTheory.CovTop.PublishedHo
   obtain ⟨s, e1, e2, e3⟩ := hg _ p.T c1 _ b1 b2 b3 c2 Y _ _ hY.1 _ c3 c4 c5 c6 le_rfl (wtA (p.κ i)) (p.κ i).n
     (dom_wtA _) (p.κ i).n_even hn (half_lt_laOf p i) (c9.trans (by linarith))
   obtain ⟨k1, k2⟩ := GlobalTheory.LevelIsometry.keeps_cusp_lattice_norm _ p.T c1 _ b1 b2 b3 c2 Y _ _ hY.1 (Gk p i)
-    ((Int.even_coe_nat _).2 (p.κ i).n_even)
+    ((Int.even_natCast _).2 (p.κ i).n_even)
   refine gminAt_of_gens p i Y (by omega) d1.coprime k1 k2 (a4 i hi Y hY).1 _ _ d2 s e1 e2 _ _ (fun y hy σ => (e3 y hy σ).1)
     (num_step hC (hL.trans ?_) (one_le_kap p i b1) c10 d3)
   have f1 : (1 : ℝ) ≤ (Fm.D x ι).R.f := by exact_mod_cast (by omega : 1 ≤ (Fm.D x ι).R.f)
@@ -813,7 +813,7 @@ theorem numeric {dg db μ μg m lg δ Q : ℝ} (hd : 0 < dg + db) (hdg : 0 ≤ d
 
 theorem slope_good_ge : ∀ (K V : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (N : (K →+* ℂ) → V → ℝ) (L M : Submodule (𝓞 K) V) (e : V →ₗ[K] V) (g : ℕ) (δ Q : ℝ), HasGram N → M.FG → L ≤ M → L ≠ ⊥ → e ∘ₗ e = e → (∀ σ x y, N σ (e x + (y - e y)) ^ 2 = N σ (e x) ^ 2 + N σ (y - e y) ^ 2) → 1 ≤ g → (∀ x ∈ L, (g : K) • e x ∈ L) → 0 ≤ δ → δ ≤ 1 / 12 → (Formalism.HN.rkK (L ⊓ (LinearMap.ker e).restrictScalars (𝓞 K)) : ℝ) ≤ 3 * δ * Formalism.HN.rkK L → slopeMax_sq N M ≤ Q → -Q ≤ slope_sq N L → 2 * Real.log g ≤ Q → slope_sq N L - 12 * δ * Q ≤ slope_sq N (L ⊓ (LinearMap.range e).restrictScalars (𝓞 K)) := by
   intro K V _ _ _ _ _ _ _ N L M e g δ Q hGram hM hLM hL0 hee hpyth hg hint hδ hδ' hrk hmax hmin hlog
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨F⟩ := hGram
   obtain ⟨n, ⟨⟨b, X⟩, hG⟩⟩ := F
   have hX : ∀ v, IsUnit (X v).det := fun v => (hG v).1
@@ -892,7 +892,7 @@ theorem lcv_le {A B PP C1 C2 : ℝ} (hx : 0 < L.sc.x) (h1 : 0 ≤ C1) (h2 : 0 �
     (hG : GramAt p i) (hR : RecAt p i) (hC : CutAt p i) (hB : BadAt p i) (hL : LamAt p i A) (hS : SizeAt p i PP B)
     (hK : CoreAt p i C1) (hW : LowAt p i C2) :
     Formalism.DivisionValues.lcv ((p.S false).XW i) ((p.S false).M i) / ((p.S false).D : ℝ) ≤ mainT p i + (C1 + C2 + 1) * unitE p := by
-  haveI : IsTotallyComplex D.what₂.LL := D.tcLL
+  have : IsTotallyComplex D.what₂.LL := D.tcLL
   obtain ⟨g1, g2, g3, -⟩ := hG
   obtain ⟨c1, c2, c3, c4⟩ := hC
   obtain ⟨s1, s2, -, s4, -⟩ := hS
@@ -1185,7 +1185,7 @@ theorem exists_good_sized : GlobalTheory.Published.RayClassFieldSt → ∀ (D : 
     show Nat.lcm l₂.M l₂.A = l₂.M
     rw [l6, Nat.lcm_one_right]
   obtain ⟨R, a, b, hsz, hab, hst, hrt, hz, hW⟩ := exists_ray hRF T.Q.H l₂.M l₂.three_le
-  haveI := T.Q.c.fin
+  have := T.Q.c.fin
   have hsz0 : Sz T.Q.c.F (Real.log (Module.finrank ℚ T.Q.c.F))
       (Real.log |(discr T.Q.c.F : ℝ)| / (Module.finrank ℚ T.Q.c.F : ℝ)) := ⟨T.Q.c.fin, le_rfl, le_rfl⟩
   obtain ⟨hN, hN1, hN2⟩ := GlobalTheory.FieldSize.sz_sup _ _ _ _ _ _ hsz0 hsz
@@ -1202,7 +1202,7 @@ theorem exists_good_sized : GlobalTheory.Published.RayClassFieldSt → ∀ (D : 
     · rw [l6]
       simpa [zeta] using one_mem (T.Q.c.F ⊔ R)
   generalize T.Q.c.F ⊔ R = N at hN hN1 hN2 h1 h2 hst' hKA
-  haveI : NumberField N := NumberField.mk
+  have : NumberField N := NumberField.mk
   let c' : Coeff T.Q.l := ⟨N, hN, fun τ a => h1 (T.Q.c.conj τ a), h1 T.Q.c.zeta_mem, T.Q.c.le.trans h1⟩
   let c₂ : Coeff l₂ := ⟨N, hN, fun τ a => h1 (T.Q.c.conj τ a), hM' ▸ h2 hz, hKA⟩
   have hfa : FnAlgClosed (Xo := Xo₂) (c := c₂) := GlobalTheory.FinalJoin.FieldAlg.fnAlgClosed_of_weberIn D T.Q hQ j hj l₂ Xo₂ c₂ l₂.M
@@ -1562,14 +1562,14 @@ namespace GlobalTheory.Proof.componentDegrees_sum_le_total_degree
 
 theorem degOn_sum_le : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (V : (c.F →+* ℂ) → HSp D) (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r), IsComplexData U V dict → ∀ G : WTZ D.host.E, GoodW U (xiR D) V dict G → rankW U G = ∑ᶠ Z : Comp Xo c, rankOn U Z G ∧ (∑ᶠ Z : Comp Xo c, degOn U (xiR D) V dict Z G) ≤ degW U (xiR D) V dict G := by
   intro D H Dw l Xo c r U V dict hc G hG
-  haveI : Finite (Comp Xo c) := finite_comp
+  have : Finite (Comp Xo c) := finite_comp
   have hS : Splits U G := _root_.GlobalTheory.CuspSplit.splits D H Dw l Xo c r U V dict (fun σ hσ => (hc.2 σ hσ).1) G
   have hO := _root_.GlobalTheory.CompPetOrth.orthogonal_mass_idem D H Dw l Xo c r U V dict hc G
   have hA : Adds U V dict G := _root_.GlobalTheory.CompAdds.adds D H Dw l Xo c r U V dict G hS hO.1
   obtain ⟨-, hr, -, -, hd⟩ := hA.2 hG
   refine ⟨hr, ?_⟩
   rw [hd]
-  haveI : Fintype (Comp Xo c) := Fintype.ofFinite _
+  have : Fintype (Comp Xo c) := Fintype.ofFinite _
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   refine Finset.sum_le_sum fun Z _ => ?_
   have hlog : (∑ σ : c.F →+* ℂ, Real.log (mass U V dict Z σ)) ≤ 0 :=
@@ -1610,7 +1610,7 @@ theorem two_le_rdE (D : D7) : 2 ≤ D.host.rdE := by
 
 theorem log_two_le (D : D7) (K : Type) [Field K] [NumberField K] (φ : D.host.E →+* K) :
     Real.log 2 ≤ Formalism.HN.logDisc K / (Module.finrank ℚ K : ℝ) := by
-  letI : Algebra D.host.E K := φ.toAlgebra
+  let : Algebra D.host.E K := φ.toAlgebra
   refine le_trans ?_ (GlobalTheory.FieldSize.log_finrank_rootDiscr_le_of_tower D.host.E K).2
   have h := Real.log_le_log (by norm_num) (two_le_rdE D)
   have hpos : (0 : ℝ) < |((discr D.host.E : ℤ) : ℝ)| := abs_pos.2 (by exact_mod_cast discr_ne_zero D.host.E)
@@ -1621,7 +1621,7 @@ theorem log_two_le (D : D7) (K : Type) [Field K] [NumberField K] (φ : D.host.E 
 theorem slope_sq_nonneg_of_rk_zero {K : Type} [Field K] [NumberField K] {V : Type} [AddCommGroup V] [Module K V]
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (N : (K →+* ℂ) → V → ℝ) (L : Submodule (𝓞 K) V) (hL : L.FG)
     (h0 : Formalism.HN.rkK L = 0) (hK : Real.log 2 ≤ Formalism.HN.logDisc K / (Module.finrank ℚ K : ℝ)) : 0 ≤ slope_sq N L := by
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   unfold slope_sq
   split_ifs with h
   · obtain ⟨-, h2, -⟩ := Formalism.HN.plLat K V _ h.some.2.1.1 h.some.2.1.2 (fun v => (h.some.2.2 v).1) L hL
@@ -1645,7 +1645,7 @@ theorem sum_deg_div_le_mu : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toC
   intro D T j Y e o hT _ hY _ _ la hG hfin _
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Proof.componentDegrees_sum_le_total_degree.degOn_sum_le D _ _ _ _ _ _ Y.U (fun _ => D.sp.W j) Y.dict (isComplexData _ hT.pins Y hY) _ hG
   have h3 : (∑ᶠ Z, Y.rkC la Z) = (rankW Y.U (wtOf (T.Q.Dw j) la 0) : ℝ) := by
-    haveI := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
+    have := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
     rw [h1, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Nat.cast_sum]
   rw [h3]
   rcases Nat.eq_zero_or_pos (rankW Y.U (wtOf (T.Q.Dw j) la 0)) with h0 | h0
@@ -1728,7 +1728,7 @@ theorem core (ι : Type) [Finite ι] [Nonempty ι] (T D A cs X cc z ρ R Bn δ' 
     (h7 : T * X ≤ C1 * E) (h8 : T * cc ≤ C1 * E) (h9 : cs * (6 * D + 10 + T * (z + 2 * ρ)) ≤ C1 * E)
     (h10 : A * Real.log (max A 1) + R ≤ C2 * E)
     (h11 : 2 * ((∑ᶠ c, degc c) / ∑ᶠ c, dc c) ≤ mu) : -((2 * (3 * C1 + C2 + 4)) * E) ≤ mu := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   rw [finsum_eq_sum_of_fintype] at h5
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype] at h11
   rw [Nat.card_eq_fintype_card] at h5

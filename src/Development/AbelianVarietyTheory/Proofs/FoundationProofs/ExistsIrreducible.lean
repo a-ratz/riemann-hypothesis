@@ -80,13 +80,13 @@ theorem split_prime {E : Type} [Field E] [NumberField E] {g : ℕ} (hg : g.Prime
     (g : 𝓞 E) ∉ P ^ 2 ∧ ∀ x : 𝓞 E, ∃ m : ℤ, x - m ∈ P := by
   classical
   have hp : Prime (g : ℤ) := Nat.prime_iff_prime_int.mp hg
-  haveI : (Ideal.span {(g : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).mpr hp
+  have : (Ideal.span {(g : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).mpr hp
   have hne : (Ideal.span {(g : ℤ)}) ≠ ⊥ := by simpa using hg.ne_zero
-  haveI hmax : (Ideal.span {(g : ℤ)}).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hne
+  have hmax : (Ideal.span {(g : ℤ)}).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hne
   have hle0 : Ideal.span {(g : ℤ)} ≤ P.under ℤ := by
     rw [Ideal.span_singleton_le_iff_mem, Ideal.under_def, Ideal.mem_comap]
     simpa using hgP
-  haveI hPl : P.LiesOver (Ideal.span {(g : ℤ)}) :=
+  have hPl : P.LiesOver (Ideal.span {(g : ℤ)}) :=
     ⟨hmax.eq_of_le (Ideal.IsPrime.ne_top inferInstance) hle0⟩
   have hs := Ideal.sum_ramification_inertia (𝓞 E) ℚ E (p := Ideal.span {(g : ℤ)}) hne
   rw [← h, ← IsDedekindDomain.coe_primesOverFinset hne, Set.ncard_coe_finset,
@@ -95,8 +95,8 @@ theorem split_prime {E : Type} [Field E] [NumberField E] {g : ℕ} (hg : g.Prime
       1 ≤ (Ideal.span {(g : ℤ)}).ramificationIdx' q * (Ideal.span {(g : ℤ)}).inertiaDeg' q := by
     intro q hq
     rw [IsDedekindDomain.mem_primesOverFinset_iff hne] at hq
-    haveI := hq.1
-    haveI := hq.2
+    have := hq.1
+    have := hq.2
     exact Nat.mul_pos (Nat.pos_of_ne_zero
       (Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver q hne))
       (Ideal.inertiaDeg'_pos ..)
@@ -109,9 +109,9 @@ theorem split_prime {E : Type} [Field E] [NumberField E] {g : ℕ} (hg : g.Prime
     · rw [Ideal.map_span, Set.image_singleton, Ideal.span_singleton_le_iff_mem]; simpa using hgP
     · rw [Ideal.map_span, Set.image_singleton, Ideal.span_singleton_le_iff_mem]; simpa using h2
   · rw [Ideal.inertiaDeg'_algebraMap] at hf
-    letI : Field (ℤ ⧸ Ideal.span {(g : ℤ)}) := Ideal.Quotient.field _
-    haveI : Nontrivial (𝓞 E ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (1 : 𝓞 E ⧸ P) one_ne_zero).1 hf
+    let : Field (ℤ ⧸ Ideal.span {(g : ℤ)}) := Ideal.Quotient.field _
+    have : Nontrivial (𝓞 E ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : 𝓞 E ⧸ P) one_ne_zero).1 hf
       (Ideal.Quotient.mk P x)
     obtain ⟨m, rfl⟩ := Ideal.Quotient.mk_surjective c
     refine ⟨m, ?_⟩
@@ -130,7 +130,7 @@ theorem int_dense {R : Type} [CommRing R] [IsDedekindDomain R] (w : HeightOneSpe
     have hn : (g : R) ^ n ∉ w.asIdeal ^ (n + 1) := by
       rw [← w.intValuation_le_pow_iff_mem, map_pow, hv, ← WithZero.exp_nsmul, WithZero.exp_le_exp]
       simp
-    haveI := w.isPrime
+    have := w.isPrime
     obtain ⟨d, e, he, hde⟩ := Ideal.exists_mul_add_mem_pow_succ w.ne_bot ((g : R) ^ n) (x - m)
       (Ideal.pow_mem_pow h1 n) hn hm
     obtain ⟨c, hc⟩ := h3 d
@@ -147,8 +147,8 @@ theorem exists_sqrt (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     ∃ (α : 𝓞 E) (a : 𝓞 F), (α : E) ≠ 0 ∧ sig α = -α ∧ algebraMap (𝓞 F) (𝓞 E) a = α ^ 2 ∧
       ∀ y : E, ∃ u v : F, y = algebraMap F E u + algebraMap F E v * α := by
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
   let σ : E ≃ₐ[F] E := AlgEquiv.ofBijective sig (AlgHom.bijective sig)
   have hσ : ∀ x, σ x = sig x := fun _ => rfl
   have hσ1 : σ ≠ 1 := fun h => hs (AlgHom.ext fun x => by rw [← hσ, h]; rfl)
@@ -203,7 +203,7 @@ theorem exists_equiv {K A : Type} [Field K] [CharZero K] [CommRing A] [Algebra K
     (ht : t ^ 2 = algebraMap K A (β ^ 2)) (hc : cj t = -t)
     (hsp : ∀ y : A, ∃ u v : K, y = algebraMap K A u + algebraMap K A v * t) :
     ∃ e : A ≃ₐ[K] K × K, ∀ x, e (cj x) = (e x).swap := by
-  haveI : FiniteDimensional K A := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional K A := Module.finite_of_finrank_pos (by omega)
   let gl : K × K →ₗ[K] A :=
     { toFun := fun z => algebraMap K A ((z.1 + z.2) / 2) +
         algebraMap K A ((z.1 - z.2) / (2 * β)) * t
@@ -308,7 +308,7 @@ theorem exists_irreducible (g : F) (hg : p.valuation F g = WithZero.exp (-1 : �
 include hd hv in
 theorem exists_sq_eq (a : 𝓞 F) (ha : ∀ n : ℕ, ∃ m : ℤ, a - (m : 𝓞 F) ^ 2 ∈ p.asIdeal ^ n) :
     ∃ β : K, β ^ 2 = ι a := by
-  haveI : T2Space K := IsTopologicalAddGroup.t2Space_of_zero_sep fun x hx =>
+  have : T2Space K := IsTopologicalAddGroup.t2Space_of_zero_sep fun x hx =>
     ⟨{y | valuation K y < valuation K x},
       (IsValuativeTopology.hasBasis_nhds_zero' K).mem_of_mem (by simpa using hx), by simp⟩
   have hc : IsCompact (Set.range fun x : 𝒪[K] => (x : K) ^ 2) :=
@@ -328,7 +328,7 @@ theorem exists_sq_eq (a : 𝓞 F) (ha : ∀ n : ℕ, ∃ m : ℤ, a - (m : 𝓞 
       rw [WithZero.exp_lt_exp]
       omega
     rw [← not_le, ← hv, not_le, hy] at h1
-    rw [Set.mem_setOf_eq, Valuation.map_sub_swap]
+    rw [Set.mem_ofPred_eq, Valuation.map_sub_swap]
     simpa using h1
   rw [hc.isClosed.closure_eq] at hm
   obtain ⟨β, hβ⟩ := hm
@@ -342,8 +342,8 @@ theorem nonempty_splitAt : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     ((Ideal.span {(resChar p : ℤ)}).primesOver (𝓞 E)).ncard = Module.finrank ℚ E →
     Nonempty (SplitAt L.Fp L.Ep L.cj (resChar p)) := by
   intro F E _ _ _ _ _ sig h2 hs p L h
-  haveI := L.lf
-  haveI := L.char0
+  have := L.lf
+  have := L.char0
   have hg : (resChar p).Prime := L.ellPrime.out
   have hv : ∀ x y : F, valuation L.Fp (L.ιF x) ≤ valuation L.Fp (L.ιF y) ↔
       p.valuation F x ≤ p.valuation F y := fun x y => by
@@ -351,10 +351,10 @@ theorem nonempty_splitAt : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hgp : (resChar p : 𝓞 F) ∈ p.asIdeal := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
     exact ringChar.Nat.cast_ringChar
-  haveI := p.isPrime
+  have := p.isPrime
   obtain ⟨P, hP, hPl⟩ := (inferInstance : Nonempty (p.asIdeal.primesOver (𝓞 E)))
   let w : HeightOneSpectrum (𝓞 E) := ⟨P, hP, Ideal.ne_bot_of_liesOver_of_ne_bot p.ne_bot P⟩
-  haveI : w.asIdeal.LiesOver p.asIdeal := hPl
+  have : w.asIdeal.LiesOver p.asIdeal := hPl
   have hgP : (resChar p : 𝓞 E) ∈ P := by
     simpa using (Ideal.mem_of_liesOver P p.asIdeal (resChar p : 𝓞 F)).1 hgp
   obtain ⟨hP2, hP3⟩ := split_prime hg h P hgP

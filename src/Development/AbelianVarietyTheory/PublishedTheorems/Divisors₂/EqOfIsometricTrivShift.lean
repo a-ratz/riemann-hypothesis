@@ -175,8 +175,8 @@ theorem ArMix.fnB (H : ArMix) (HE : ArExists) (hX : IsArithVar p D) {L : ι → 
     (hΦ : IsArFun (fun o : Option ι => o.elim (fnB u hu hc) L) D Φ) (n : ι → ℤ) :
     (∀ σ, ((comb L n).φ σ).ChernIntegrableOn D Set.univ (u σ)) ∧
       Φ (MvPolynomial.X none * rename some (lin fun i => (n i : ℝ)) ^ D) = 1 / 2 * chInt (comb L n) D u := by
-  haveI : IsLocallyNoetherian X := hX.isLocallyNoetherian
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
+  have : IsLocallyNoetherian X := hX.isLocallyNoetherian
+  have : Finite (k →+* ℂ) := hX.finite_emb
   obtain ⟨h, hh⟩ := (HE k X p D hX).1 (comb L n)
   have hr1 : IsRatSec (LB.triv X) (fun _ => 1) := by
     intro i j hij

@@ -54,7 +54,7 @@ theorem hl_basic : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocal
   have hη : IsOpen (D.η.ker : Set (GQ l)) := by
     have : D.η.ker = GK D.Kv := Subgroup.ext fun g => D.η_ker g
     rw [this]
-    haveI := D.Kv.2
+    have := D.Kv.2
     exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
   have ho : IsOpen (D.HL : Set (GQ l)) := hη.inter D.τ_open
   have hex : ∃ s, IsInertiaInfiniteCyclotomic D s := by

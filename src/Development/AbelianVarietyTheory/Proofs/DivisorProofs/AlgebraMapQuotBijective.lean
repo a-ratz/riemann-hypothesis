@@ -87,14 +87,14 @@ private theorem isArtinianRing_quotient_of_ne_bot_of_isDedekindDomain (A : Type)
 private theorem module_finite_quotient_of_ne_bot_of_isDedekindDomain (k A : Type) [Field k] [CommRing A] [IsDedekindDomain A]
     [Algebra k A] [Algebra.FiniteType k A] (I : Ideal A) (hI : I ≠ ⊥) :
     Module.Finite k (A ⧸ I) := by
-  haveI := isArtinianRing_quotient_of_ne_bot_of_isDedekindDomain A I hI
+  have := isArtinianRing_quotient_of_ne_bot_of_isDedekindDomain A I hI
   exact Module.finite_of_isArtinianRing k (A ⧸ I)
 
 private theorem algebraMap_quotient_bijective_of_isMaximal_of_isAlgClosed (k A : Type) [Field k] [IsAlgClosed k]
     [CommRing A] [Algebra k A] [Algebra.FiniteType k A] (P : Ideal A) [P.IsMaximal] :
     Function.Bijective (algebraMap k (A ⧸ P)) := by
-  letI := Ideal.Quotient.field P
-  haveI : Module.Finite k (A ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ P)
+  let := Ideal.Quotient.field P
+  have : Module.Finite k (A ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ P)
   exact ⟨(algebraMap k (A ⧸ P)).injective, IsSepClosed.algebraMap_surjective k (A ⧸ P)⟩
 
 private theorem mul_sup_span_singleton_eq_of_mem_of_not_mem_mul (A : Type) [CommRing A] [IsDedekindDomain A]
@@ -126,9 +126,9 @@ private theorem finrank_quotient_mul_maximal_eq_finrank_add_one (k A : Type) [Fi
     [CommRing A] [IsDedekindDomain A] [Algebra k A] [Algebra.FiniteType k A] (I P : Ideal A)
     (hI : I ≠ ⊥) (hP : P.IsMaximal) (hP0 : P ≠ ⊥) :
     Module.finrank k (A ⧸ I * P) = Module.finrank k (A ⧸ I) + 1 := by
-  haveI := hP
-  haveI := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A (I * P) (mul_ne_zero hI hP0)
-  haveI := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A I hI
+  have := hP
+  have := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A (I * P) (mul_ne_zero hI hP0)
+  have := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A I hI
   obtain ⟨x, hxI, hxIP⟩ : ∃ x ∈ I, x ∉ I * P := by
     by_contra! h
     have hIP : I * P = I * ⊤ := by
@@ -175,7 +175,7 @@ theorem _root_.GlobalTheory.DedekindCodimG.dedekind_finiteType_codim (k A : Type
       I = J := by
   refine ⟨fun I hI => module_finite_quotient_of_ne_bot_of_isDedekindDomain k A I hI, ?_, ?_, ?_⟩
   · intro P hP
-    haveI := hP
+    have := hP
     let e : k ≃ₐ[k] A ⧸ P :=
       AlgEquiv.ofBijective (Algebra.ofId k (A ⧸ P)) (algebraMap_quotient_bijective_of_isMaximal_of_isAlgClosed k A P)
     refine ⟨by rw [← e.toLinearEquiv.finrank_eq, Module.finrank_self],
@@ -187,7 +187,7 @@ theorem _root_.GlobalTheory.DedekindCodimG.dedekind_finiteType_codim (k A : Type
     | h₁ => exact absurd rfl hJ
     | h₂ u hu =>
       rw [Ideal.isUnit_iff.mp hu, Ideal.mul_top]
-      haveI : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+      have : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
       rw [Module.finrank_zero_of_subsingleton (M := A ⧸ (⊤ : Ideal A)), add_zero]
     | h₃ a p ha hp ih =>
       have hp0 : p ≠ ⊥ := hp.ne_zero
@@ -199,8 +199,8 @@ theorem _root_.GlobalTheory.DedekindCodimG.dedekind_finiteType_codim (k A : Type
       ring
   · intro I J hI hIJ hle
     have hJ : J ≠ ⊥ := fun h => hI (le_bot_iff.mp (h ▸ hIJ))
-    haveI := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A I hI
-    haveI := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A J hJ
+    have := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A I hI
+    have := module_finite_quotient_of_ne_bot_of_isDedekindDomain k A J hJ
     let f : (A ⧸ I) →ₗ[k] (A ⧸ J) := (Ideal.Quotient.factorₐ k hIJ).toLinearMap
     have hsurj : Function.Surjective f := by
       intro y

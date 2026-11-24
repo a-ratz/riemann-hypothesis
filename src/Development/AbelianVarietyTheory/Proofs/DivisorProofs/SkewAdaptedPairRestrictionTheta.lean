@@ -151,7 +151,7 @@ theorem le_finrank_lagr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     ∀ K : Submodule F (Matrix (Fin n) (Fin d₁) E), Module.finrank F K = n * d₁ → (∀ z ∈ K, (M₁.co.e (incM F z)).1 = 0) →
       n * d ≤ Module.finrank F (lagr M M₁ H') := by
   intro F E _ _ _ _ _ σ n d d₁ X W W₁ M M₁ H' hE hd hxy hιy hι f hf hfe K hK hK0
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
 
   let Φ : (Fin n → E) × K →ₗ[F] Matrix (Fin n) (Fin d) E :=
     { toFun := fun p => Matrix.vecMulVec p.1 H'.x + (p.2 : Matrix (Fin n) (Fin d₁) E) * H'.ιᵀ
@@ -240,7 +240,7 @@ theorem rat_first_zero_dim : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       Function.Injective f → (∀ x, hat (f x) = M.co.e (incM F x)) →
       ∃ K : Submodule F (Matrix (Fin n) (Fin d) E), Module.finrank F K = n * d ∧ ∀ z ∈ K, (M.co.e (incM F z)).1 = 0 := by
   intro F E _ _ _ _ _ σ n d X W M hE f hf hhat
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hdom : Module.finrank F (Matrix (Fin n) (Fin d) E) = n * d * 2 := by
     rw [Module.finrank_matrix, hE]; simp
   have hcod : Module.finrank F ((Fin n × Fin d → F) × (Fin n × Fin d → F)) = n * d * 2 := by
@@ -456,7 +456,7 @@ theorem symplectic_isotropic_embedded_vanishes : ∀ (F E : Type) [Field F] [Num
   have hm : ∀ m, ∑ j, ∑ l, H'.ι j m * JW j l * σ (H'.x l) = 0 := by
     intro m
     have := hH (Pi.single m 1)
-    simp only [form, Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+    simp only [form, Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     rw [← this]
     exact Finset.sum_congr rfl fun j _ => by rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun l _ => by ring
   have hm' : ∀ m, ∑ j, ∑ l, inclR (F := F) (AF F) (H'.ι j m) * inclR (F := F) (AF F) (JW j l) * inclR (F := F) (AF F) (σ (H'.x l)) = 0 := fun m => by

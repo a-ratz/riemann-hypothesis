@@ -255,10 +255,10 @@ namespace GlobalTheory.ZM.GenericTrdeg
 theorem exists_hom_of_ker_eq {R K K' : Type} [CommRing R] [Field K] [Field K'] (φ : R →+* K) (θ : R →+* K')
     (hk : RingHom.ker θ = RingHom.ker φ) (hs : ∀ z : K, ∃ a b, z = φ a / φ b) :
     ∃ j : K →+* K', j.comp φ = θ := by
-  letI : Algebra (R ⧸ RingHom.ker φ) K := (RingHom.kerLift φ).toAlgebra
-  haveI : FaithfulSMul (R ⧸ RingHom.ker φ) K :=
+  let : Algebra (R ⧸ RingHom.ker φ) K := (RingHom.kerLift φ).toAlgebra
+  have : FaithfulSMul (R ⧸ RingHom.ker φ) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.kerLift_injective φ)
-  haveI : IsFractionRing (R ⧸ RingHom.ker φ) K := by
+  have : IsFractionRing (R ⧸ RingHom.ker φ) K := by
     refine IsFractionRing.of_field _ _ fun z => ?_
     obtain ⟨a, b, h⟩ := hs z
     exact ⟨Ideal.Quotient.mk _ a, Ideal.Quotient.mk _ b, h⟩
@@ -278,7 +278,7 @@ theorem exists_local_domain {A K : Type} [CommRing A] [Field K] (e : A →+* K) 
     ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (ρ : A →+* R') (ψ : R' →+* K),
       RingHom.ker ρ = P ∧ ψ.comp ρ = e ∧ ∀ r, ψ r ≠ 0 → IsUnit r := by
   let e' : A ⧸ P →+* K := Ideal.Quotient.lift P e (fun a ha => hP ha)
-  haveI : (RingHom.ker e').IsPrime := RingHom.ker_isPrime e'
+  have : (RingHom.ker e').IsPrime := RingHom.ker_isPrime e'
   let R' := Localization.AtPrime (RingHom.ker e')
   have hu : ∀ y : (RingHom.ker e').primeCompl, IsUnit (e' y) := fun y =>
     isUnit_iff_ne_zero.2 y.2
@@ -726,7 +726,7 @@ theorem exists_family_over_MMPre : Out.Laws → Out.Laws2 → (∀ (g n : ℕ) (
   obtain ⟨β, rfl⟩ := exists_spMap s
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)] at a₁
   rw [HasRingHomProperty.Spec_iff (P := @Flat)] at a₂
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have ft : Algebra.FiniteType o R := a₁
   have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing o R
   have gen := H₃ j hj.2.1 o b em C d hb hC Y R β x v hx hs hv

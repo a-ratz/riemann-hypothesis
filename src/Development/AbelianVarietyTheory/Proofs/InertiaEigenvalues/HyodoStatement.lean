@@ -113,8 +113,8 @@ theorem finite_continuous_cocycles_localGaloisRep : ∀ (l : ℕ) [Fact l.Prime]
     (∀ v, Continuous fun g => ρ g v) → Module.Finite ℚ_[l] ↥(continuousCocycles ρ) := by
   intro l _ P K V _ _ _ _ _ _ _ ρ hc
   obtain ⟨ρ', m, hc', hD⟩ := _root_.GlobalTheory.DualTwist.exists_dual1 l P K V ρ hc
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let A : GRep ↥(GK K) ℚ_[l] ℚ_[l] ℤ_[l] := { V := V, ρ := ρ, cont := hc }
   let A' : GRep ↥(GK K) ℚ_[l] ℚ_[l] ℤ_[l] :=
     { V := Fin (finrank ℚ_[l] V) → ℚ_[l], ρ := ρ', cont := hc' }
@@ -194,8 +194,8 @@ theorem orth_of_cont (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P
     (hχ : Continuous fun g => ((cycLL (P.PD K) ℚ_[l] g : ℚ_[l]ˣ) : ℚ_[l]))
     (c : ↥(GK K) → V) (hc : c ∈ geometricCocycles (P.PD K) ρ) (a : ↥(GK K) → V')
     (ha : a ∈ crystallineCocycles (P.PD K) ρ') : CobL (P.PD K) (cupL ρ' m c a) := by
-  letI : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨hcz, b, hb⟩ := hc
   obtain ⟨haz, β, hβφ, hβ⟩ := ha
   obtain ⟨-, d, hd, hd'⟩ :=
@@ -429,10 +429,10 @@ namespace GlobalTheory.HyodoDef.Count
 
 theorem finrank_blochKato_g_add_e_le_f_add_f_alt : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [ContinuousAdd V] [ContinuousConstSMul ℚ_[l] V] (ρ : Representation ℚ_[l] ↥(GK K) V) (V' : Type) [AddCommGroup V'] [Module ℚ_[l] V'] [FiniteDimensional ℚ_[l] V'] [TopologicalSpace V'] [IsModuleTopology ℚ_[l] V'] [ContinuousAdd V'] [ContinuousConstSMul ℚ_[l] V'] (ρ' : Representation ℚ_[l] ↥(GK K) V') (m : V →ₗ[ℚ_[l]] V' →ₗ[ℚ_[l]] ℚ_[l]), (∀ v, Continuous fun g => ρ g v) → (∀ y, Continuous fun g => ρ' g y) → IsDR (P.PD K) ρ → IsDR (P.PD K) ρ' → IsDual1 (P.PD K) ρ ρ' m → finrank ℚ_[l] ↥(geometricCocycles (P.PD K) ρ) + finrank ℚ_[l] ↥(crystallineCocycles (P.PD K) ρ') ≤ finrank ℚ_[l] ↥(finiteCocycles (P.PD K) ρ) + finrank ℚ_[l] ↥(finiteCocycles (P.PD K) ρ') := by
   intro l _ P AI hT K V _ _ _ _ _ _ _ ρ V' _ _ _ _ _ _ _ ρ' m hc hc' hdR hdR' hdual
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  letI : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   have hO := GlobalTheory.Published.BlochKato.goodO_padicInt (l := l)
   have hTD := CompanionTheory.LocalTateOrthogonality.Gcoh.top_tate
   have hEC := CompanionTheory.LocalTateOrthogonality.Gcoh.top_euler
@@ -445,8 +445,8 @@ theorem finrank_blochKato_g_add_e_le_f_add_f_alt : ∀ (l : ℕ) [Fact l.Prime] 
     exact h1 g x y
   obtain ⟨hfin, -⟩ := _root_.GlobalTheory.EulerCharH1.finite_and_finrank_H1V hTD hEC l P K ℚ_[l] ℤ_[l] hO A A' m hdual
   obtain ⟨hfin', -⟩ := _root_.GlobalTheory.EulerCharH1.finite_and_finrank_H1V hTD hEC l P K ℚ_[l] ℤ_[l] hO A' A m.flip hdual'
-  haveI : FiniteDimensional ℚ_[l] (continuousCocycles ρ) := GlobalTheory.BlochKatoAnn.finite_continuous_cocycles_localGaloisRep A hfin
-  haveI : FiniteDimensional ℚ_[l] (continuousCocycles ρ') := GlobalTheory.BlochKatoAnn.finite_continuous_cocycles_localGaloisRep A' hfin'
+  have : FiniteDimensional ℚ_[l] (continuousCocycles ρ) := GlobalTheory.BlochKatoAnn.finite_continuous_cocycles_localGaloisRep A hfin
+  have : FiniteDimensional ℚ_[l] (continuousCocycles ρ') := GlobalTheory.BlochKatoAnn.finite_continuous_cocycles_localGaloisRep A' hfin'
   obtain ⟨β, hβ, -, hr⟩ : ∃ β : ↥(continuousCocycles ρ) →ₗ[ℚ_[l]] ↥(continuousCocycles ρ') →ₗ[ℚ_[l]] ℚ_[l],
       (∀ a b, β a b = 0 ↔ CobL (P.PD K) (cupL ρ' m a.1 b.1)) ∧
       (∀ a, (∀ b, β a b = 0) ↔ a.1 ∈ B1 ρ) ∧ ∀ b, (∀ a, β a b = 0) ↔ b.1 ∈ B1 ρ' :=
@@ -537,14 +537,14 @@ theorem map_Dcris_le (ρ : Representation LL G V) :
 theorem DdR_finite [FiniteDimensional Qp K] [FiniteDimensional LL V]
     (ρ : Representation LL G V) (h : IsDR PD ρ) : Module.Finite LL ↥(DdR PD ρ) := by
   by_cases hV : finrank LL V = 0
-  · haveI : Subsingleton V := Module.finrank_zero_iff.mp hV
+  · have : Subsingleton V := Module.finrank_zero_iff.mp hV
     have h0 : ∀ x : V ⊗[Qp] BdR, x = 0 := by
       intro x
       induction x using TensorProduct.induction_on with
       | zero => rfl
       | tmul v b => rw [Subsingleton.elim v 0, zero_tmul]
       | add a c ha hc => rw [ha, hc, add_zero]
-    haveI : Subsingleton ↥(DdR PD ρ) :=
+    have : Subsingleton ↥(DdR PD ρ) :=
       ⟨fun x y => Subtype.ext ((h0 x).trans (h0 y).symm)⟩
     infer_instance
   · apply Module.finite_of_finrank_pos
@@ -553,8 +553,8 @@ theorem DdR_finite [FiniteDimensional Qp K] [FiniteDimensional LL V]
 
 theorem Dcris_finite [FiniteDimensional Qp K] [FiniteDimensional LL V]
     (ρ : Representation LL G V) (h : IsDR PD ρ) : Module.Finite LL ↥(Dcris PD ρ) := by
-  haveI := DdR_finite PD ρ h
-  haveI : FiniteDimensional LL ↥((Dcris PD ρ).map (ιV PD (LL := LL) (V := V))) :=
+  have := DdR_finite PD ρ h
+  have : FiniteDimensional LL ↥((Dcris PD ρ).map (ιV PD (LL := LL) (V := V))) :=
     Submodule.finiteDimensional_of_le (map_Dcris_le PD ρ)
   exact Module.Finite.equiv
     (Submodule.equivMapOfInjective _ (ιV_injective PD) (Dcris PD ρ)).symm
@@ -567,7 +567,7 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.Weakl
 
 theorem GlobalTheory.DcrisFin.dcris_finite_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V] (ρ : Representation ℚ_[l] ↥(GK K) V), IsDR (P.PD K) ρ → Module.Finite ℚ_[l] ↥(Dcris (P.PD K) ρ) := by
   intro l _ P K V _ _ _ ρ h
-  haveI := (P.PD K).finK
+  have := (P.PD K).finK
   exact GlobalTheory.DcrisFin.Dcris_finite (P.PD K) ρ h
 end -- clump:auto
 end -- clump:auto
@@ -667,7 +667,7 @@ theorem finrank_finite_cocycles_le [Module.Finite LL (Dcris PD ρ)] :
   set N := LinearMap.range (oneSubφ PD ρ) with hN
   let T : finiteCocycles PD ρ →ₗ[LL] (Dcris PD ρ ⧸ N) := N.mkQ ∘ₗ toDcris PD ρ ∘ₗ s
   have hle : crystallineCocycles PD ρ ≤ finiteCocycles PD ρ := fun c ⟨hc, x, _, hx⟩ => ⟨hc, x, hx⟩
-  haveI : Module.Finite LL (crystallineCocycles PD ρ) :=
+  have : Module.Finite LL (crystallineCocycles PD ρ) :=
     Module.Finite.of_injective (Submodule.inclusion hle) (Submodule.inclusion_injective hle)
   have hmem : ∀ k : LinearMap.ker T, ((k : finiteCocycles PD ρ) : G → V) ∈ crystallineCocycles PD ρ := by
     intro k
@@ -691,7 +691,7 @@ theorem finrank_finite_cocycles_le [Module.Finite LL (Dcris PD ρ)] :
   have h4 := LinearMap.finrank_range_add_finrank_ker (oneSubφ PD ρ)
   have h5 := LinearMap.finrank_range_add_finrank_ker T
   set W := Dcris PD ρ ⊓ LinearMap.ker (φVB PD (LL := LL) (V := V) - LinearMap.id) with hW
-  haveI : Module.Finite LL W :=
+  have : Module.Finite LL W :=
     Module.Finite.of_injective (Submodule.inclusion (inf_le_left : W ≤ Dcris PD ρ))
       (Submodule.inclusion_injective _)
   have hmemW : ∀ k : LinearMap.ker (oneSubφ PD ρ), ((k : Dcris PD ρ) : V ⊗[Qp] B) ∈ W := by
@@ -723,7 +723,7 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.Weakl
 
 theorem GlobalTheory.HyodoFE.finrank_finite_le_exponential_add : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [ContinuousAdd V] [ContinuousConstSMul ℚ_[l] V] (ρ : Representation ℚ_[l] ↥(GK K) V), (∀ v, Continuous fun g => ρ g v) → IsDR (P.PD K) ρ → finrank ℚ_[l] ↥(finiteCocycles (P.PD K) ρ) ≤ finrank ℚ_[l] ↥(crystallineCocycles (P.PD K) ρ) + finrank ℚ_[l] ↥(Dcris (P.PD K) ρ ⊓ LinearMap.ker (φVB (P.PD K) (LL := ℚ_[l]) (V := V) - LinearMap.id)) := by
   intro l _ P AI _ K V _ _ _ _ _ _ _ ρ _ hdR
-  haveI := GlobalTheory.DcrisFin.dcris_finite_of_isDR l P K V ρ hdR
+  have := GlobalTheory.DcrisFin.dcris_finite_of_isDR l P K V ρ hdR
   exact GlobalTheory.HyodoFE.finrank_finite_cocycles_le (P.PD K) ρ
 end -- clump:auto
 end -- clump:auto
@@ -947,8 +947,8 @@ namespace GlobalTheory.PMon
 theorem exists_phiSt_invariant_nondegenerate_linearForm :
     ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l), ∃ lam : Bst P →ₗ[ℚ_[l]] ℚ_[l], (∀ c : ↥(K0 K), lam (phiSt P (Polynomial.C (algebraMap ↥(K0 K) P.R.B c))) = lam (Polynomial.C (algebraMap ↥(K0 K) P.R.B c))) ∧ ∀ c : ↥(K0 K), (∀ c' : ↥(K0 K), lam (Polynomial.C (algebraMap ↥(K0 K) P.R.B c') * Polynomial.C (algebraMap ↥(K0 K) P.R.B c)) = 0) → c = 0 := by
   intro l _ P K
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
-  haveI : Nontrivial P.R.B := by
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : Nontrivial P.R.B := by
     refine ⟨⟨(P.PD K).t, 0, fun h => (P.PD K).not_mem_filtration_two ?_⟩⟩
     rw [h, map_zero]
     exact Submodule.zero_mem _
@@ -1164,7 +1164,7 @@ namespace GlobalTheory
 theorem finrank_dcris_phi_fixed_add_finrank_mon_le : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V] (V' : Type) [AddCommGroup V'] [Module ℚ_[l] V'] [FiniteDimensional ℚ_[l] V'] (ρ : Representation ℚ_[l] ↥(GK K) V) (ρ' : Representation ℚ_[l] ↥(GK K) V') (m : V →ₗ[ℚ_[l]] V' →ₗ[ℚ_[l]] ℚ_[l]), IsDual1 (P.PD K) ρ ρ' m → IsSst P ρ → finrank ℚ_[l] ↥(Dcris (P.PD K) ρ' ⊓ LinearMap.ker (φVB (P.PD K) (LL := ℚ_[l]) (V := V') - LinearMap.id)) + finrank ℚ_[l] ↥((Dst P ρ).map (monV P ℚ_[l] V)) ≤ finrank ℚ_[l] ↥(Dst P ρ ⊓ ((Dst P ρ).map (monV P ℚ_[l] V)).comap ((l : ℚ_[l]) • phiV P ℚ_[l] V - LinearMap.id)) := by
   intro l _ P AI T K V _ _ _ V' _ _ _ ρ ρ' m hD hS
   obtain ⟨B, h1, h2, h3⟩ := _root_.GlobalTheory.PMon.exists_pairing_Dst_Dcris_phi_one l P AI T K V V' ρ ρ' m hD hS
-  haveI := _root_.GlobalTheory.Pst.finiteDimensional_Dst_of_isSst l P K V ρ hS
+  have := _root_.GlobalTheory.Pst.finiteDimensional_Dst_of_isSst l P K V ρ hS
   refine _root_.GlobalTheory.finrank_add_finrank_le_finrank_inf_comap_sub_id ℚ_[l] _ _ (Dst P ρ) ((Dst P ρ).map (monV P ℚ_[l] V))
     ((l : ℚ_[l]) • phiV P ℚ_[l] V) B ?_ ?_ ?_ ?_ h3
   · rintro _ ⟨x, hx, rfl⟩
@@ -1263,7 +1263,7 @@ theorem cont_dR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l 
           rw [← P.PD_actdR K g b, ← hΦ]
           rfl
         simp only [e]
-        exact latCont_orbit AI T b ((hV φ).comp (hρ v)) continuous_subtype_val
+        exact latCont_orbit AI T b ((hV φ).comp (hρ v)) continuous_subtypeVal
       | add y y' ih ih' =>
         simp only [map_add (f := _)]
         exact ih.add AI ih'
@@ -1280,8 +1280,8 @@ theorem cont_dR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l 
     funext g
     simp [b.sum_repr]
   rw [this]
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[l] V
-  haveI : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[l] V
+  have : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
   exact continuous_finsetSum _ fun j _ => (key (b.coord j)).smul continuous_const
 
 end GlobalTheory.ContDR
@@ -1322,8 +1322,8 @@ theorem GlobalTheory.cocycle_of_st_coboundary : ∀ (l : ℕ) [Fact l.Prime] (P 
     intro g
     simp [hb g]
   · intro g h
-    haveI : Nontrivial P.R.B := nontrivial_B P
-    haveI : Nontrivial (Bst P) := inferInstance
+    have : Nontrivial P.R.B := nontrivial_B P
+    have : Nontrivial (Bst P) := inferInstance
     apply GlobalTheory.CocycStLemma.tmul_one_injective (F := ℚ_[l]) (B := Bst P)
     simp only [add_tmul]
     rw [hc, hc g, map_mul, Module.End.mul_apply]
@@ -1552,9 +1552,9 @@ theorem exists_stCocycles_lower : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
   have hN : ∀ y ∈ Dst P ρ, monV P ℚ_[l] V y ∈ Dst P ρ := fun y hy =>
     (mem_Dst P ρ).mpr fun g => by
       rw [← End.mul_apply, ← monV_stRep, End.mul_apply, (mem_Dst P ρ).mp hy g]
-  haveI := _root_.GlobalTheory.Pst.finiteDimensional_Dst_of_isSst l P K V ρ hs
-  haveI : FiniteDimensional ℚ_[l] ↥(LinearMap.range π) := Submodule.finiteDimensional_of_le h2
-  haveI : FiniteDimensional ℚ_[l] ↥(Dst P ρ ⊓ ((Dst P ρ).map (monV P ℚ_[l] V)).comap
+  have := _root_.GlobalTheory.Pst.finiteDimensional_Dst_of_isSst l P K V ρ hs
+  have : FiniteDimensional ℚ_[l] ↥(LinearMap.range π) := Submodule.finiteDimensional_of_le h2
+  have : FiniteDimensional ℚ_[l] ↥(Dst P ρ ⊓ ((Dst P ρ).map (monV P ℚ_[l] V)).comap
       ((l : ℚ_[l]) • phiV P ℚ_[l] V - LinearMap.id)) := Submodule.finiteDimensional_of_le inf_le_left
   have h4 := _root_.GlobalTheory.finrank_add_le_finrank_range_add_of_comap_le ℚ_[l] _ _ _ π ν (finiteCocycles (P.PD K) ρ) ((Dst P ρ).map (monV P ℚ_[l] V))
     (Dst P ρ ⊓ ((Dst P ρ).map (monV P ℚ_[l] V)).comap ((l : ℚ_[l]) • phiV P ℚ_[l] V - LinearMap.id)) h1
@@ -1597,19 +1597,19 @@ namespace GlobalTheory.PMon
 
 theorem hyodo : Hyodo := by
   intro l _ P AI T K V _ _ _ _ _ ρ hcont hsst c hc hcoc hdR
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[l] V
-  haveI : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[l] V
+  have : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
   obtain ⟨ρ', m, hρ'c, hdual⟩ := _root_.GlobalTheory.DualTwist.exists_dual1 l P K V ρ hcont
   have hdrV : IsDR (P.PD K) ρ := _root_.GlobalTheory.sst_isDR l P AI T K V ρ hsst
   have hdrV' : IsDR (P.PD K) ρ' := by
-    letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-    haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+    let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+    have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
     exact (_root_.GlobalTheory.TateDualTied.main l P AI T K).1 ℚ_[l] ℤ_[l] GlobalTheory.Published.BlochKato.goodO_padicInt
       { V := V, ρ := ρ, cont := hcont } { V := Fin (finrank ℚ_[l] V) → ℚ_[l], ρ := ρ', cont := hρ'c } m hdrV hdual
   have hfin : Module.Finite ℚ_[l] ↥(continuousCocycles ρ) := _root_.GlobalTheory.HyodoFin.finite_continuous_cocycles_localGaloisRep l P K V ρ hcont
   obtain ⟨S, _hfS, hSc, hSst, hSdR, hS⟩ := _root_.GlobalTheory.PMon.exists_stCocycles_lower l P AI T K V _ ρ ρ' m hcont hdual hsst hfin
   have hgc : geometricCocycles (P.PD K) ρ ≤ continuousCocycles ρ := fun _ h => h.1
-  haveI : Module.Finite ℚ_[l] ↥(geometricCocycles (P.PD K) ρ) :=
+  have : Module.Finite ℚ_[l] ↥(geometricCocycles (P.PD K) ρ) :=
     Module.Finite.of_injective (Submodule.inclusion hgc) (Submodule.inclusion_injective hgc)
   have hSg : S ≤ geometricCocycles (P.PD K) ρ := fun c hc => ⟨hSc hc, hSdR c hc⟩
   have h1 := _root_.GlobalTheory.HyodoDef.Count.finrank_blochKato_g_add_e_le_f_add_f_alt l P AI T K V ρ _ ρ' m hcont hρ'c hdrV hdrV' hdual

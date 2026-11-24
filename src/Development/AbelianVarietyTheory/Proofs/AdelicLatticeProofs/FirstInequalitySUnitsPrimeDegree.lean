@@ -183,7 +183,7 @@ theorem exists_uniformizer_lt_one (E : Type) [Field E] [NumberField E]
     (fun v => if v.1 = w then π else 0)
   have h1 : w.intValuation y = WithZero.exp (-1) := by
     have h2 := hy w hw
-    simp only [if_true] at h2
+    simp only [ite_true] at h2
     rw [← HeightOneSpectrum.intValuation_le_pow_iff_mem] at h2
     have h3 : w.intValuation (y - π) < w.intValuation π := by
       rw [hπ]
@@ -196,7 +196,7 @@ theorem exists_uniformizer_lt_one (E : Type) [Field E] [NumberField E]
   · rw [hww, h1, ← WithZero.exp_zero]
     exact WithZero.exp_lt_exp.2 (by norm_num)
   · have h2 := hy w' hw'
-    simp only [if_neg hww, sub_zero] at h2
+    simp only [ite_eq_right hww, sub_zero] at h2
     rw [← HeightOneSpectrum.intValuation_le_pow_iff_mem] at h2
     rw [← WithZero.exp_zero]
     exact h2.trans_lt (WithZero.exp_lt_exp.2 (by norm_num))
@@ -489,9 +489,9 @@ theorem prime_mul_card_le_card_over : ∀ (p : ℕ) (F E : Type) [Field F] [Numb
   · obtain ⟨w, hw⟩ := (places_over F E).2.1 v
     have : 0 < (SE.filter (fun w => w.under (𝓞 F) = v)).card :=
       Finset.card_pos.2 ⟨w, Finset.mem_filter.2 ⟨(hSE w).2 (hw ▸ hv), hw⟩⟩
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
     omega
-  · rw [if_neg hs]
+  · rw [ite_eq_right hs]
     push Not at hs
     obtain ⟨r, hr⟩ := hs
     have hδ : δ ≠ 0 := fun h0 => hq.nonpow 0 (by rw [h0, zero_pow hp.ne_zero])
@@ -513,7 +513,7 @@ theorem prime_mul_card_le_card_over : ∀ (p : ℕ) (F E : Type) [Field F] [Numb
       rw [← h3, ← Set.ncard_coe_finset]
       congr 1
       ext u
-      simp only [Finset.coe_filter, Set.mem_setOf_eq]
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq]
       exact ⟨fun h => h.2, fun h => ⟨(hSE u).2 (h ▸ hv), h⟩⟩
     omega
 
@@ -604,8 +604,8 @@ theorem first_inequality_sUnits_prime :
   obtain ⟨E, _, _, θ, σ, hq⟩ := exists_isKum p F ζ δ hp hζ hns
   obtain ⟨hfd, hrk, hper, hfix, -, -, hnorm⟩ := _root_.GlobalTheory.CNorm.kummer_basic p F E ζ δ θ σ hq
   obtain ⟨-, -, hgal, -⟩ := kummer_galois p F E ζ δ θ σ hq
-  haveI : NumberField E := NumberField.of_module_finite F E
-  haveI : IsTotallyComplex E := isTotallyComplex_of_algebra F E
+  have : NumberField E := NumberField.of_module_finite F E
+  have : IsTotallyComplex E := isTotallyComplex_of_algebra F E
   obtain ⟨SE, hSE⟩ := (places_over F E).1 S
   obtain ⟨hup, hσ⟩ := sUnits_over_and_aut F E S SE hSE
   have h90 := _root_.GlobalTheory.CNorm.hilbert90_sUnits_kummer p F E ζ δ θ σ hq S SE hSE hS ((mem_sUnits F S δ).1 hδ)

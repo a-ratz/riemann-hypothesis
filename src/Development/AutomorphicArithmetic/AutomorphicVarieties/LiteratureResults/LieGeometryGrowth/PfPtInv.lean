@@ -88,7 +88,7 @@ theorem UpperTheory.V.Lit.Geo.Pf.ptInv :
       isOpen_iInter_of_finite fun i => (hy i).level
     refine open_stab (finRep E a) θ (ox.inter oy) ⟨by simp, by simp⟩ ?_
     rintro k ⟨h1, h2⟩
-    simp only [Set.mem_iInter, Set.mem_setOf_eq] at h1 h2
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq] at h1 h2
     have e : ∀ φ : Sm E a, finRep E a k φ = φ → ∀ g, φ.1 (g * finGL E a k) = φ.1 g := fun φ hφ g =>
       congrFun (congrArg Subtype.val hφ) g
     refine Subtype.ext (funext fun g => ?_)

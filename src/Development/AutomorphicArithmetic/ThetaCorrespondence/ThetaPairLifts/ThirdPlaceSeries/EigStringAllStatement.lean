@@ -899,8 +899,8 @@ theorem bcParam_eq_ubc_of_satU_eq : ∀ (L : Type) [Field L] [Valued L (WithZero
   rw [← hβ]
   congr 1
   rcases Nat.mod_two_eq_zero_or_one n with h2 | h2
-  · rw [h2, if_neg (Nat.not_odd_iff.2 h2)]; rfl
-  · rw [h2, if_pos (Nat.odd_iff.2 h2)]; rfl
+  · rw [h2, ite_eq_right (Nat.not_odd_iff.2 h2)]; rfl
+  · rw [h2, ite_eq_left (Nat.odd_iff.2 h2)]; rfl
 
 end Local
 
@@ -960,7 +960,7 @@ theorem sum_ext {D : D7} {V : HSp D} (c : CoefA V) (hc : c.Is)
       GlobalTheory.DefLiftHecke.ext_level c hc hf (hk k hkk).1 (hk k hkk).2 g
   have h3 := congrFun h2 g
   have h4 := GlobalTheory.DefLiftHecke.ext_hkF c hc w (Finsupp.single d 1) f g
-  rw [he, map_smul, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton,
+  rw [he, map_smul, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton,
     Finsupp.single_eq_same, one_smul] at h4
   rw [opOf, Finsupp.sum_single_index (by exact zero_smul _ _), one_smul, Finset.sum_apply, LinearMap.sum_apply,
     Finset.sum_apply] at h3
@@ -1013,7 +1013,7 @@ theorem exists_den {K Γ ι : Type} [Field K] [LinearOrderedCommGroupWithZero Γ
   choose N h0 h1 h2 using h
   refine ⟨∏ i, N i, Finset.prod_ne_zero_iff.2 fun i _ => h0 i, fun i => ?_⟩
   rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ i), mul_assoc, map_mul, map_prod]
-  exact mul_le_one' (Finset.prod_le_one' fun j _ => h1 j) (h2 i)
+  exact mul_le_one' (Finset.prod_le_one fun j _ => h1 j) (h2 i)
 
 theorem val_mulVec_le {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero Γ] {n : ℕ} (v : Valuation K Γ)
     {A : Matrix (Fin n) (Fin n) K} (hA : ∀ i j, v (A i j) ≤ 1) {y : Fin n → K} (hy : ∀ i, v (y i) ≤ 1) (i : Fin n) :
@@ -1200,7 +1200,7 @@ theorem sum_reps_eq {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
       show (γ : GAf L n ⧸ Umax L n) = c
       rw [← e]
       exact QuotientGroup.eq.2 hγx.1
-    · exact absurd (dif_neg hc) hc0
+    · exact absurd (dite_eq_right hc) hc0
 
 section Frame
 
@@ -1381,7 +1381,7 @@ theorem exists_sphOp {n : ℕ} (hn : V.rank = n) {hF : D.host.F = maximalRealSub
   refine ⟨R, ?_, fun W _ _ φ hφ => ?_⟩
   · obtain ⟨e, f, hef⟩ := GlobalTheory.IdemSupport.exists_isPrimeIdem (comp_finAdEquiv D) w
     obtain ⟨ϖ, p1, p2⟩ : ∃ ϖ ∈ w.asIdeal, ϖ ∉ w.asIdeal ^ 2 :=
-      SetLike.exists_of_lt (Ideal.pow_lt_self w.asIdeal w.ne_bot w.isPrime.ne_top 2 le_rfl)
+      IsConcreteLE.exists_of_lt (Ideal.pow_lt_self w.asIdeal w.ne_bot w.isPrime.ne_top 2 le_rfl)
     have hsu : ∀ κ, SuppF V f (PV.ψ κ) ↔ TrivOutside {v} κ := fun κ =>
       (Supp.suppF_iff_of_isPrimeIdem V hef rfl _).trans (ht κ).symm
     have hK : ∀ g, g ∈ {k | k ∈ KsphC V ∅ ∧ SuppF V f k} ↔ ∃ k ∈ GlobalTheory.InertSph.Kv D.host.E V.rank v, PV.ψ k = g :=
@@ -1851,7 +1851,7 @@ theorem GlobalTheory.EigStr.eigString_all_of_aux41_adm7_tieLab : GlobalTheory.Pu
       (GlobalTheory.LPositivity.split_or_inert D Pp).elim
         (fun h1 => _root_.GlobalTheory.T.theta_eigen_compatibility_first_alt hAF hL D P X hA h41 h7 htl i hμ j hj x hx f hf y hy hy0 hh hops Pp hG h1 d hLab)
         (fun h1 => _root_.GlobalTheory.T.theta_eigen_compatibility_second_alt hAF hL D P X hA h41 h7 htl i hμ j hj x hx f hf y hy hy0 hh hops Pp hG h1 d hLab)
-    simp only [s, dif_pos hc]
+    simp only [s, dite_eq_left hc]
     exact hc.choose_spec
   let B : GlobalTheory.LFun.Fam D.host.E := fun w =>
     if hB : ∃ Bw, GlobalTheory.LFun.IsSysParam D.sp.cm.sig (Formalism.IndefR.Links.Vc D j).rank
@@ -1866,7 +1866,7 @@ theorem GlobalTheory.EigStr.eigString_all_of_aux41_adm7_tieLab : GlobalTheory.Pu
       · exact _root_.GlobalTheory.T.theta_eigen_compatibility_third_alt hAF hL D P X hA h41 h7 htl i hμ j hj x hx f hf y hy hy0 hh hops s hs w hv h1
       · exact _root_.GlobalTheory.T.theta_eigen_compatibility_fourth_alt hAF hL D P X hA h41 h7 htl i hμ j hj x hx f hf y hy hy0 hh hops s hs w hv h1
     show GlobalTheory.LFun.IsSysParam D.sp.cm.sig _ _ (s w) (B w)
-    simp only [B, dif_pos hex]
+    simp only [B, dite_eq_left hex]
     exact hex.choose_spec
   refine ⟨s, ⟨B, hB, fun w hw => ?_⟩, hs⟩
   rcases GlobalTheory.LPositivity.split_or_inert D w with h1 | h1

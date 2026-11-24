@@ -105,7 +105,7 @@ theorem map_phi_eq {k r : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {P Q : MatKR 
     intro A
     have : Continuous (fun u : Formalism.REAL.UJ ε =>
         ((u : (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)ˣ) : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     exact (continuous_const.matrix_mul this).matrix_mul continuous_const
   have hinv : (Formalism.REAL.muG ε).map (fun u => m * u * m⁻¹) = Formalism.REAL.muG ε := by
     have hL : Measurable (fun u : Formalism.REAL.UJ ε => m * u) := measurable_const_mul m

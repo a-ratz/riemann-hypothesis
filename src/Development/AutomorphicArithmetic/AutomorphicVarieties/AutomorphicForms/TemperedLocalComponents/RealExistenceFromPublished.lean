@@ -72,7 +72,7 @@ private theorem galRepOfR_iso (P : Hypotheses₂) {F Ω : Type} [Field F] [Numbe
       fun rc hrc => ?_⟩, fun σ hσ hS => k2 (h4 σ hσ hS)⟩
     obtain ⟨T⟩ := hT
     exact (GlobalTheory.PstConj.main F Ω l ι n Q AI ⟨T⟩ w A h O Bw hj _ _ p hc
-      (P.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (H.cont.comp continuous_subtype_val)) h1)).2.trans
+      (P.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (H.cont.comp continuous_subtypeVal)) h1)).2.trans
       ((h3 σ hσ hI).2 rc hrc)
 
 end UpperTheory.V.Af

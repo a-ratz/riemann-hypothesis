@@ -86,9 +86,9 @@ theorem crossOp_eig_gap (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW
   classical
   set S : Submodule ℂ (Big n 1 M) :=
     Module.End.eigenspace (crossOp ε E 1 0) (θ : ℂ) ⊓ ncV ε V 1 with hSdef
-  haveI hfdN : FiniteDimensional ℂ (ncV ε V 1) :=
+  have hfdN : FiniteDimensional ℂ (ncV ε V 1) :=
     ReciprocityTheory.ChartRestriction.DS.finiteDimensional_ncV hV.1 1
-  haveI hfd : FiniteDimensional ℂ S :=
+  have hfd : FiniteDimensional ℂ S :=
     Submodule.finiteDimensional_of_le (inf_le_right : S ≤ ncV ε V 1)
 
   have hS : ReciprocityTheory.ChartRestriction.DS.IsKStableSub ε (ReciprocityTheory.ChartRestriction.DS.bAct E 1) S := by
@@ -166,7 +166,7 @@ theorem ncV_one_decomp (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW 
   classical
   have hinv : ∀ y ∈ ncV ε V 1, crossOp ε E 1 0 y ∈ ncV ε V 1 :=
     fun y hy => crossOp_mem_ncV hV.2.1 1 0 hy
-  haveI : FiniteDimensional ℂ (ncV ε V 1) := finiteDimensional_ncV hV.1 1
+  have : FiniteDimensional ℂ (ncV ε V 1) := finiteDimensional_ncV hV.1 1
   let T' : Module.End ℂ (ncV ε V 1) := (crossOp ε E 1 0).restrict hinv
   have hT' : T'.IsSymmetric := fun u v => crossOp_symm hU 1 0 u v
   have htop : (⨆ μ, Module.End.eigenspace T' μ) = ⊤ := by
@@ -235,7 +235,7 @@ private lemma nsq_add_root_sub_nsq (w : Fin n → ℝ) {r s : Fin n} (hrs : r �
       · simp [h1, h2]
   unfold nsq dot
   rw [← Finset.sum_sub_distrib]
-  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 private lemma abs_rhoN_le_half (ε : Fin n → Bool) (a : Fin n) :

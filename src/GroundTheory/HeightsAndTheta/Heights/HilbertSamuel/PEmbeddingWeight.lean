@@ -105,7 +105,7 @@ theorem conjVec_conjVec (z : (Σ k, ι k) → ℂ) : conjVec (conjVec z) = z := 
   simp [conjVec]
 
 theorem isOpen_blockNonzero : IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
-  simp only [Set.setOf_forall, Set.setOf_exists]
+  simp only [ofPred_forall, ofPred_exists]
   exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i =>
     isOpen_ne_fun (continuous_apply _) continuous_const
 
@@ -188,21 +188,21 @@ theorem liesOver_smul {Ω F : Type} [Field Ω] [Field F] [Algebra F Ω]
 
 theorem isClosed_liesOver {Ω F : Type} [Field Ω] [Field F] [Algebra F Ω]
     (y : (Σ k, ι k) → Ω) (sg : F →+* ℂ) : IsClosed {z : (Σ k, ι k) → ℂ | LiesOver y sg z} := by
-  simp only [LiesOver, Set.setOf_forall]
+  simp only [LiesOver, ofPred_forall]
   exact isClosed_iInter fun d => isClosed_iInter fun g => isClosed_iInter fun h =>
     isClosed_iInter fun θ => isClosed_iInter fun _ => isClosed_iInter fun _ =>
       isClosed_iInter fun _ => isClosed_eq (MvPolynomial.continuous_eval _) (continuous_const.mul (MvPolynomial.continuous_eval _))
 
 theorem isClosed_zeros (P : Ideal (MRing ι)) :
     IsClosed {z : (Σ k, ι k) → ℂ | ∀ f ∈ P, eval z (map (Int.castRingHom ℂ) f) = 0} := by
-  simp only [Set.setOf_forall]
+  simp only [ofPred_forall]
   exact isClosed_iInter fun f => isClosed_iInter fun _ => isClosed_eq (MvPolynomial.continuous_eval _) continuous_const
 
 theorem isCompact_sphere : IsCompact {z : (Σ k, ι k) → ℂ | ∀ k, blockNormSq z k = 1} := by
   have hN : ∀ k, Continuous fun z : (Σ k, ι k) → ℂ => blockNormSq z k := fun k =>
     continuous_finsetSum _ fun i _ => ((continuous_apply _).norm).pow 2
   refine Metric.isCompact_of_isClosed_isBounded ?_ ?_
-  · simp only [Set.setOf_forall]
+  · simp only [ofPred_forall]
     exact isClosed_iInter fun k => isClosed_eq (hN k) continuous_const
   · refine (Metric.isBounded_iff_subset_closedBall 0).2 ⟨1, fun z hz => ?_⟩
     rw [Metric.mem_closedBall, dist_zero_right]
@@ -246,7 +246,7 @@ theorem EmbeddingWeight.proof : EmbeddingWeight.Statement := by
           ({z | ∀ f ∈ mCoordIdeal y, eval z (map (Int.castRingHom ℂ) f) = 0} ∩
             {z | LiesOver y sg z}) ∩ {z | ∀ k, blockNormSq z k = 1} := by
         ext z
-        simp only [S, mcPts, mem_inter_iff, mem_setOf_eq]
+        simp only [S, mcPts, mem_inter_iff, mem_ofPred_eq]
         constructor
         · rintro ⟨⟨⟨-, h1⟩, h2⟩, h3⟩
           exact ⟨⟨h1, h2⟩, h3⟩
@@ -293,11 +293,11 @@ theorem EmbeddingWeight.proof : EmbeddingWeight.Statement := by
       by_cases htg : tg = sg
       · subst htg
         simpa using (hχ1 tg).filter_mono (nhds_le_nhdsSet he)
-      · simp only [htg, if_false]
+      · simp only [htg, ite_false]
         exact (hχ0 tg).filter_mono (nhds_le_nhdsSet
           (Set.mem_iUnion₂.2 ⟨sg, Finset.mem_erase.2 ⟨Ne.symm htg, Finset.mem_univ _⟩, he⟩))
     filter_upwards [Filter.eventually_all.2 this] with e' he'
-    simp only [g, he', mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [g, he', mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   let u : ((Σ k, ι k) → ℂ) → ℝ := fun z => (g (projPt z) + g (projPt (conjVec z))) / 2
   have hu_smul : ∀ (c : K → ℂ) z, (∀ k, c k ≠ 0) →
       (fun z => -u z) (fun p => c p.1 * z p) = (fun z => -u z) z := by

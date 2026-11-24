@@ -71,7 +71,7 @@ private theorem exists_crt_indicator {R : Type} [CommRing R] [IsDedekindDomain R
     exact ha haP
   let v : IsDedekindDomain.HeightOneSpectrum R := ⟨P, hP.isPrime, hPb⟩
   have hv : v ∈ (Ideal.finite_factors hI).toFinset := by
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le,
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le,
       Ideal.span_singleton_le_iff_mem]
     exact haP
   have h := hy v hv

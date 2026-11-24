@@ -89,8 +89,8 @@ theorem det_vars_ne_zero {σ : Type*} {n : ℕ} (f : Fin n × Fin n → σ) (hf 
     intro i j
     by_cases hij : i = j
     · subst hij
-      rw [if_pos ⟨i, rfl⟩, if_pos rfl]
-    · rw [if_neg hij, if_neg]
+      rw [ite_eq_left ⟨i, rfl⟩, ite_eq_left rfl]
+    · rw [ite_eq_right hij, ite_eq_right]
       rintro ⟨i', hi'⟩
       have hpair := hf hi'
       simp only [Prod.mk.injEq] at hpair
@@ -188,13 +188,13 @@ theorem hwVec_mem_supported (p q r s : ℕ) (a b c d : List ℤ) :
     intro i j hi hj
     rw [posPart_length] at hi hj
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS]
+    simp only [Set.mem_ofPred_eq, inS]
     exact ⟨hi, hj⟩
   · apply shapeProd_mem
     intro i j hi hj
     rw [negPart_length] at hi hj
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS, fin_rev_val]
+    simp only [Set.mem_ofPred_eq, inS, fin_rev_val]
     have := i.isLt
     have := j.isLt
     constructor <;> omega
@@ -202,13 +202,13 @@ theorem hwVec_mem_supported (p q r s : ℕ) (a b c d : List ℤ) :
     intro i j hi hj
     rw [posPart_length] at hi hj
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS]
+    simp only [Set.mem_ofPred_eq, inS]
     exact ⟨hi, hj⟩
   · apply shapeProd_mem
     intro i j hi hj
     rw [negPart_length] at hi hj
     apply varMat_apply_mem_supported
-    simp only [Set.mem_setOf_eq, inS, fin_rev_val]
+    simp only [Set.mem_ofPred_eq, inS, fin_rev_val]
     have := i.isLt
     have := j.isLt
     constructor <;> omega
@@ -250,7 +250,7 @@ theorem vecJ_of (hF : FormJ) : VecJ := by
     refine Finset.sum_eq_zero fun l _ => dd_eq_zero hsupp ?_
     refine not_and_or.mp ?_
     rintro ⟨hx, hy⟩
-    simp only [Set.mem_setOf_eq, inS] at hx hy
+    simp only [Set.mem_ofPred_eq, inS] at hx hy
     obtain ⟨hx1, hx2⟩ := hx
     obtain ⟨hy1, hy2⟩ := hy
     omega
@@ -260,7 +260,7 @@ theorem vecJ_of (hF : FormJ) : VecJ := by
     refine Finset.sum_eq_zero fun k _ => dd_eq_zero hsupp ?_
     refine not_and_or.mp ?_
     rintro ⟨hx, hy⟩
-    simp only [Set.mem_setOf_eq, inS] at hx hy
+    simp only [Set.mem_ofPred_eq, inS] at hx hy
     obtain ⟨hx1, hx2⟩ := hx
     obtain ⟨hy1, hy2⟩ := hy
     omega
@@ -270,7 +270,7 @@ theorem vecJ_of (hF : FormJ) : VecJ := by
     refine Finset.sum_eq_zero fun i _ => dd_eq_zero hsupp ?_
     refine not_and_or.mp ?_
     rintro ⟨hx, hy⟩
-    simp only [Set.mem_setOf_eq, inS] at hx hy
+    simp only [Set.mem_ofPred_eq, inS] at hx hy
     obtain ⟨hx1, hx2⟩ := hx
     obtain ⟨hy1, hy2⟩ := hy
     omega
@@ -280,7 +280,7 @@ theorem vecJ_of (hF : FormJ) : VecJ := by
     refine Finset.sum_eq_zero fun j _ => dd_eq_zero hsupp ?_
     refine not_and_or.mp ?_
     rintro ⟨hx, hy⟩
-    simp only [Set.mem_setOf_eq, inS] at hx hy
+    simp only [Set.mem_ofPred_eq, inS] at hx hy
     obtain ⟨hx1, hx2⟩ := hx
     obtain ⟨hy1, hy2⟩ := hy
     omega

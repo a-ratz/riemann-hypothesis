@@ -64,11 +64,11 @@ theorem tsum_setIntegral_sub_rat : ∀ (D : D7) (m r : ℕ) (μr : Measure (Mx D
       Integrable f μr ∧ ∑' p : Matrix (Fin m) (Fin r) D.host.E, ∫ y in 𝓕r, f (y - rat p) ∂μr = ∫ t, f t ∂μr := by
   intro D m r μr 𝓕r h f hf B hB
   obtain ⟨hHaar, hFD, hvol⟩ := h
-  haveI := hHaar
-  haveI : BorelSpace (Mx D m r) := ⟨rfl⟩
-  haveI : Countable D.host.E :=
+  have := hHaar
+  have : BorelSpace (Mx D m r) := ⟨rfl⟩
+  have : Countable D.host.E :=
     Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.toEquiv.symm
-  haveI : Countable (Matrix (Fin m) (Fin r) D.host.E) :=
+  have : Countable (Matrix (Fin m) (Fin r) D.host.E) :=
     inferInstanceAs (Countable (Fin m → Fin r → D.host.E))
   have hinc : Function.Injective (Formalism.L2.Theta.incA D) := by
     have h0 : Function.Injective (algebraMap ↥D.host.F (AF ↥D.host.F)) :=
@@ -84,17 +84,17 @@ theorem tsum_setIntegral_sub_rat : ∀ (D : D7) (m r : ℕ) (μr : Measure (Mx D
       exact Matrix.map_injective hinc h2
     · obtain ⟨p, hp⟩ := AddMonoidHom.mem_range.mp g.2
       exact ⟨p, Subtype.ext hp⟩
-  haveI : Countable (ratMx D m r) := Countable.of_equiv _ e
-  haveI : VAddInvariantMeasure (ratMx D m r) (Mx D m r) μr :=
+  have : Countable (ratMx D m r) := Countable.of_equiv _ e
+  have : VAddInvariantMeasure (ratMx D m r) (Mx D m r) μr :=
     ⟨fun c s _ => measure_preimage_add μr (c : Mx D m r) s⟩
   have hv : ∀ (p : Matrix (Fin m) (Fin r) D.host.E) (x : Mx D m r), -(e p) +ᵥ x = x - rat p := by
     intro p x
     change ((-(e p) : ratMx D m r) : Mx D m r) + x = x - rat p
     rw [AddSubgroup.coe_neg, he]
     exact neg_add_eq_sub (rat p) x
-  haveI : ContinuousSub (Mx D m r) := IsTopologicalAddGroup.to_continuousSub
+  have : ContinuousSub (Mx D m r) := IsTopologicalAddGroup.to_continuousSub
   have hmeas : ∀ p : Matrix (Fin m) (Fin r) D.host.E, Measurable (fun x => ‖f (x - rat p)‖ₑ) :=
-    fun p => (hf.comp (continuous_id.sub continuous_const)).measurable.enorm
+    fun p => (hf.comp (continuous_id.sub continuous_const)).measurable.eNorm
   have hlin : ∫⁻ x, ‖f x‖ₑ ∂μr ≤ B := by
     rw [hFD.lintegral_eq_tsum', ← e.tsum_eq]
     simp_rw [hv]

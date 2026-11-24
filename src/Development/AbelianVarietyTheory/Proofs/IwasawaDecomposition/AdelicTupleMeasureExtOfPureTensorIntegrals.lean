@@ -170,7 +170,7 @@ theorem ext_of_pure {X I Z₀ : Type} {Z : I → Type} [mX : MeasurableSpace X] 
         fun x => (p x, fun v => q v x) := by
       refine Measurable.prodMk (m := MeasurableSpace.generateFrom G) ?_ ?_
       · exact fun A hA => MeasurableSpace.measurableSet_generateFrom (Or.inl ⟨A, hA, rfl⟩)
-      · refine @measurable_pi_lambda _ _ _ (MeasurableSpace.generateFrom G) _ _ fun v => ?_
+      · refine @Measurable.of_eval _ _ _ (MeasurableSpace.generateFrom G) _ _ fun v => ?_
         have hb := (BorelSpace.measurable_eq (α := Z v)).trans
           (basis_compact_open (Z v)).borel_eq_generateFrom
         have : @Measurable X (Z v) (MeasurableSpace.generateFrom G)

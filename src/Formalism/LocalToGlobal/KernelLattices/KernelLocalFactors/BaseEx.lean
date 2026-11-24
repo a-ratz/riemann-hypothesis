@@ -178,7 +178,7 @@ lemma int_mul_mem {K E : Type} [Field K] [NumberField K] [Field E] [NumberField 
     (RingOfIntegers.isIntegral_coe z).map (algebraMap K E).toIntAlgHom
   have := (I : Submodule (𝓞 E) E).smul_mem (⟨_, hz⟩ : 𝓞 E) hy
   have e : ((⟨_, hz⟩ : 𝓞 E) • y) = algebraMap K E (algebraMap (𝓞 K) K z) * y := Algebra.smul_def _ _
-  rw [← FractionalIdeal.mem_coe]
+  rw [← FractionalIdeal.mem_coeToSubmodule]
   convert this using 1
   exact e.symm
 
@@ -397,7 +397,7 @@ lemma exists_denom_forward {K E : Type} [Field K] [NumberField K] [Field E] [Num
     rfl
   have hterm : ∀ a, (N : K) * φ a w (x a) ∈ (algebraMap (𝓞 K) K).range := by
     intro a
-    obtain ⟨z, hz⟩ := hαI (x a) (FractionalIdeal.mem_coe.2 (hx a))
+    obtain ⟨z, hz⟩ := hαI (x a) (FractionalIdeal.mem_coeToSubmodule.2 (hx a))
     have hxa : x a = ∑ i, (b.repr z i) • ((algebraMap (𝓞 E) E α)⁻¹ * algebraMap (𝓞 E) E (b i)) := by
       have h1 : x a = (algebraMap (𝓞 E) E α)⁻¹ * algebraMap (𝓞 E) E z := by
         rw [hz, Algebra.smul_def, inv_mul_cancel_left₀ hα0]
@@ -434,9 +434,9 @@ lemma exists_denom_backward {K E : Type} [Field K] [NumberField K] [Field E] [Nu
     ext j
     rw [Pi.single_apply, Pi.smul_apply, Pi.single_apply]
     split_ifs <;> simp
-  rw [hv', Finset.sum_apply, Finset.mul_sum, ← FractionalIdeal.mem_coe]
+  rw [hv', Finset.sum_apply, Finset.mul_sum, ← FractionalIdeal.mem_coeToSubmodule]
   refine Submodule.sum_mem _ fun w _ => ?_
-  rw [FractionalIdeal.mem_coe, Pi.smul_apply, Algebra.smul_def, mul_left_comm]
+  rw [FractionalIdeal.mem_coeToSubmodule, Pi.smul_apply, Algebra.smul_def, mul_left_comm]
   exact int_mul_mem I (hv w) (hN (w, a))
 
 theorem detOrdFin : DetOrdFin := by
@@ -703,8 +703,8 @@ theorem splitsAt_odd {K E : Type} [Field K] [NumberField K] [Field E] [NumberFie
     (cj : E ≃ₐ[ℚ] E) (d p : ℕ) (s : K) (hs : s * s = -(d : K))
     (hcj : cj (algebraMap K E s) = -algebraMap K E s) (hp : p.Prime) (hp2 : p ≠ 2)
     (hJ : jacobiSym (-(d : ℤ)) p = 1) : PI.KerIso.SplitsAt K cj p := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨P, hP, hpP⟩ := exists_isPrime_natCast_mem (K := K) p hp
   obtain ⟨r, t, ht⟩ : ∃ r t : ℤ, r * r + (d : ℤ) = (p : ℤ) * t := by
     obtain ⟨c, hc⟩ := ZMod.isSquare_of_jacobiSym_eq_one hJ

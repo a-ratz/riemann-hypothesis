@@ -114,7 +114,7 @@ theorem IsNear.inv {r : ℝ} {A B : Matrix (Fin m) (Fin m) L} (h0 : 0 ≤ r) (hr
     by_contra hcon
     push_neg at hcon
     obtain ⟨i₀, j₀, h1⟩ := hcon
-    haveI : Nonempty (Fin m × Fin m) := ⟨(i₀, j₀)⟩
+    have : Nonempty (Fin m × Fin m) := ⟨(i₀, j₀)⟩
     obtain ⟨p, hp⟩ := Finite.exists_max fun p : Fin m × Fin m => ‖B p.1 p.2‖
     have hc : 1 < ‖B p.1 p.2‖ := h1.trans_le (hp (i₀, j₀))
     have h2 := key _ (norm_nonneg _) (fun i j => hp (i, j)) p.1 p.2

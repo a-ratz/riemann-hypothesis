@@ -314,8 +314,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem pullRule_mem (hO : GlobalTheory.ClsVal.Cmp.OverBase d) (hK : KA l ≤ KA d.l₂) {a : (E →+* ℂ) × ℕ → ℕ} {m : ℕ}
     {f : Rul Xo c} (hf : f ∈ sec Xo c a m) : pullRule d f ∈ sec d.Xo₂ d.c₂ a m := by
   refine ⟨fun p q φ u u' hm => ?_, fun p t u u' hb => ?_⟩
-  · letI := algDn d p.R
-    letI := algDn d q.R
+  · let := algDn d p.R
+    let := algDn d q.R
     obtain ⟨y, hy⟩ := below_exists d hO hK (S := p.R) (fun _ => rfl) u
     obtain ⟨y', hy'⟩ := below_exists d hO hK (S := q.R) (fun _ => rfl) u'
     let φc : p.R →ₐ[c.F] q.R := ⟨φ.toRingHom, fun a => φ.commutes (d.eF a)⟩
@@ -326,7 +326,7 @@ theorem pullRule_mem (hO : GlobalTheory.ClsVal.Cmp.OverBase d) (hK : KA l ≤ KA
     rw [pullRule_eq d f q u' y' hy', pullRule_eq d f p u y hy]
     exact GlobalTheory.SupLawProbe.evR_map (GlobalTheory.TransferCompare.evalWD_framed Xo c) f hf.1 φc y
       (GlobalTheory.TransferCompare.allTest_framed Xo c p.R y) y' hw
-  · letI := algDn d p.R
+  · let := algDn d p.R
     obtain ⟨y, hy⟩ := below_exists d hO hK (S := p.R) (fun _ => rfl) u
     obtain ⟨y', hy'⟩ := below_exists d hO hK (S := p.R) (fun _ => rfl) u'
     show pullRule d f p u' = wchar (ex Dw a m) t * pullRule d f p u
@@ -340,7 +340,7 @@ theorem evR_pullRule (hO : GlobalTheory.ClsVal.Cmp.OverBase d) (hK : KA l ≤ KA
   have key : ∀ (p : TRing d.c₂.F) (φ : p.R →ₐ[d.c₂.F] k) (u : FrPt d.Xo₂ d.c₂ p.R), FrMap φ u y₂ →
       φ (pullRule d f p u) = evR Xo c f y := by
     intro p φ u hu
-    letI := algDn d p.R
+    let := algDn d p.R
     obtain ⟨z, hz⟩ := below_exists d hO hK (S := p.R) (fun _ => rfl) u
     let φc : p.R →ₐ[c.F] k := ⟨φ.toRingHom, fun a => (φ.commutes (d.eF a)).trans (hc a)⟩
     obtain ⟨w, hw⟩ := GlobalTheory.TransferCompare.frBC_framed Xo c p.R k φc z

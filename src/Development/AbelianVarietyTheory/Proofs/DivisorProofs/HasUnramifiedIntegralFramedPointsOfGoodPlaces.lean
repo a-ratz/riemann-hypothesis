@@ -225,7 +225,7 @@ theorem isPureBC_ell : GlobalTheory.Published.AbelianDeRham → ∀ (E : Type) [
   unfold IsPureBC
   intro R _ f A _ φ hpb W' _ hW'
 
-  haveI : IsCommMonObj A := GlobalTheory.PolPull.isCommMonObj_of_isGrpPullback hpb
+  have : IsCommMonObj A := GlobalTheory.PolPull.isCommMonObj_of_isGrpPullback hpb
   have hA : IsAbelianScheme A := by
     exact ⟨inferInstance, MorphismProperty.of_isPullback (P := @Smooth) hpb.1 C.P.isAb.smooth,
       MorphismProperty.of_isPullback (P := @IsProper) hpb.1 C.P.isAb.proper,
@@ -253,11 +253,11 @@ theorem isPureBC_ell : GlobalTheory.Published.AbelianDeRham → ∀ (E : Type) [
   obtain ⟨hiso, hperf⟩ := hP.2.2.2.2 R A 1 hA hgA (C.P.L.pull φ) hL' ψ hψ
   have hK : ReciprocityTheory.ChartRestriction.G.Out.KTriv A (C.P.L.pull φ) :=
     kTriv_pull hpb C.P.isLB hL' (pGen_pull_refl C.P.L C.P.isLB φ) C.P.ktriv
-  haveI := hperf hK
+  have := hperf hK
 
   obtain ⟨o', ho'⟩ := GlobalTheory.CM.ellPull_exists_oAct hpb C.act
-  haveI := o'.hom (GlobalTheory.CM.wK H)
-  haveI := o'.hom (1 - GlobalTheory.CM.wK H)
+  have := o'.hom (GlobalTheory.CM.wK H)
+  have := o'.hom (1 - GlobalTheory.CM.wK H)
   have hWo : o'.act (GlobalTheory.CM.wK H) = W' := by
     apply Over.OverMorphism.ext
     apply hpb.1.hom_ext
@@ -1030,8 +1030,8 @@ namespace GlobalTheory.TorsionReduction
 
 theorem eq_of_residue_eq : ∀ (S : Type) [CommRing S] (P : Out.PolAV (Sp S)) (T : Type) [CommRing T] [IsLocalRing T] (b : S →+* T) (n : ℕ), IsUnit (n : T) → ∀ x y : Over.mk (spMap b) ⟶ P.A, x ^ n = 1 → y ^ n = 1 → spMap (IsLocalRing.residue T) ≫ x.left = spMap (IsLocalRing.residue T) ≫ y.left → x = y := by
   intro S _ P T _ _ b n hn x y hx hy hr
-  letI := P.isAb.comm
-  haveI : Smooth P.A.hom := P.isAb.smooth
+  let := P.isAb.comm
+  have : Smooth P.A.hom := P.isAb.smooth
   let j : Sp T ⟶ Sp S := spMap b
   let G : Over (Sp T) := (Over.pullback j).obj P.A
   have hn' : IsUnit (n : Γ(Sp T, ⊤)) := by
@@ -1263,7 +1263,7 @@ theorem exists_curveOver (hA : GlobalTheory.Published.FormalAlgebraisation) (hG 
       rw [← Category.assoc, k', Category.assoc, k, ← Category.assoc, e])
     (by
       intro τ 𝔮 h𝔮 hq𝔮 hτ
-      haveI := C.act.hom (GlobalTheory.CM.wK H)
+      have := C.act.hom (GlobalTheory.CM.wK H)
       have hu : 1 - ω - ω ∉ 𝔮 := fun hm => by
         have h2 : (H.d : 𝓞 N) ∈ 𝔮 := by
           have : (H.d : 𝓞 N) = -((1 - ω - ω) * (1 - ω - ω)) := by linear_combination hω
@@ -1364,7 +1364,7 @@ theorem exists_fixed_point (hD : 1 ≤ Dw.p + Dw.q) {q : ℕ} (hq : q.Prime) (hq
   obtain ⟨g, ty, hty⟩ := hex
   obtain ⟨F⟩ := GlobalTheory.closing_of_abelianSchemeLaws E H Dw l Xo (algebraMap (KA l) ℂ) g ty hD rfl hty
   obtain ⟨L, _, _, j, x₁, hx₁, hZ₁⟩ := exists_numberField_point Z
-  letI : Algebra c.F L := j.toAlgebra
+  let : Algebra c.F L := j.toAlgebra
   let k : L →ₐ[c.F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1439,7 +1439,7 @@ theorem exists_intFr (hpq : 1 ≤ Dw.p + Dw.q) {q : ℕ} (hq : q.Prime) (hg : l.
     rw [Category.assoc, Limits.pullback.condition, ← Category.assoc, hs, GlobalTheory.EtaVal.spMap_comp_spMap]
     rfl
   obtain ⟨y₀, -, h0, -, -⟩ := gfp_frPt_gen (Xo := Xo) (c := c) (L := T.Fr) (L' := T.Fr) hT (fun _ => rfl) _ hx
-    (fun _ i j => if i = j then 1 else 0) (fun _ _ => if_pos rfl) (fun _ _ _ h => if_neg h.ne')
+    (fun _ i j => if i = j then 1 else 0) (fun _ _ => ite_eq_left rfl) (fun _ _ _ h => ite_eq_right h.ne')
   obtain ⟨y', t, hbor⟩ := intFr_of_model hIF T (k.comp j) Y hPI b hb y₀
   refine ⟨T, k.comp j, y', ho, hfin, fun p => ?_⟩
   have h1 : y'.1.x = y₀.x := hbor.1
@@ -1483,8 +1483,8 @@ theorem unramPts : GlobalTheory.Published.FormalAlgebraisation → GlobalTheory.
   obtain ⟨N, x, hN, hx, hZ, hfix⟩ := exists_fixed_point hD hq (fun h => hb (h.mul_right _)) Z
   obtain ⟨F', _, hF, hC⟩ := exists_curveOver hA hG hR H (n := N * l.M') hq
     (fun h => (hq.dvd_mul.1 h).elim hN hqM) (fun h => hb (((h.mul_left _).mul_right _).mul_right _))
-  haveI := c.fin
-  haveI : NumberField (c.F ⊔ F' : IntermediateField ℚ ℂ) := ⟨⟩
+  have := c.fin
+  have : NumberField (c.F ⊔ F' : IntermediateField ℚ ℂ) := ⟨⟩
   have hle : c.F ≤ c.F ⊔ F' := le_sup_left
   obtain ⟨𝔭, h𝔭⟩ := GlobalTheory.UnramCompositum.exists_vLa_eq c.F F' _ hle rfl q hq hF w hqw
   obtain ⟨g, rfl⟩ := GlobalTheory.FixedPoint.exists_descent (c.F ⊔ F') x fun τ hτ =>

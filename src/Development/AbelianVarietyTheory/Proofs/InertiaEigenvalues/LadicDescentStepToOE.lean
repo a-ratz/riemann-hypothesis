@@ -83,7 +83,7 @@ end GlobalTheory.BSP.DescentStep
 open GlobalTheory.BSP.DescentStep in
 theorem GlobalTheory.BSP.BK.descent_step : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (κ : Type) [Fintype κ] (x b : κ → WCb l) (c : κ → κ → WCb l), (∀ i j, c i j ∈ bk.OE) → (∀ j, b j ∈ bk.OE) → (∀ j, x j = ∑ i, frobW l (x i) * c i j + b j) → (∀ g : ↥(GK K), bk.FixFlat g → ∀ j, galW l (g : GQ l) (x j) = x j) → ∃ v x' b' : κ → WCb l, (∀ j, v j ∈ bk.OE) ∧ (∀ j, b' j ∈ bk.OE) ∧ (∀ j, x j = v j + ((l : ℕ) : WCb l) * x' j) ∧ (∀ j, x' j = ∑ i, frobW l (x' i) * c i j + b' j) ∧ ∀ g : ↥(GK K), bk.FixFlat g → ∀ j, galW l (g : GQ l) (x' j) = x' j := by
   intro l _ K bk κ _ x b c hc hb hx hg
-  haveI : PerfectRing (Cb l) l := perfectRing_Cb
+  have : PerfectRing (Cb l) l := perfectRing_Cb
   obtain ⟨sat, -, hφ, hfix, -⟩ := _root_.GlobalTheory.OEStable.main l K bk
   set cc := WittVector.constantCoeff (p := l) (R := Cb l) with hcc
   have hmemc : ∀ w ∈ bk.OE, cc w ∈ bk.OE.map cc := fun w hw => Subring.mem_map.2 ⟨w, hw, rfl⟩
@@ -108,7 +108,7 @@ theorem GlobalTheory.BSP.BK.descent_step : ∀ (l : ℕ) [Fact l.Prime] (K : Fin
       simp_rw [e2]
       rcases subsingleton_or_nontrivial T with hT | hT
       · exact Subsingleton.elim _ _
-      · haveI : CharP T l := charP_of_injective_ringHom i₁.injective l
+      · have : CharP T l := charP_of_injective_ringHom i₁.injective l
         simp_rw [sub_pow_char, sub_mul, Finset.sum_sub_distrib]
         ring
   choose v hv hvx using fun j => Subring.mem_map.1 (key j)

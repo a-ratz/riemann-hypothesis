@@ -84,7 +84,7 @@ theorem exists_loc : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q :
   have hb : TFBase (dividedPowersBot K) 1 s := tfBase_dpBot hs
   obtain ⟨c', e, hTF, he1, he2, he3⟩ := GlobalTheory.CompanionTheory.ChartAlg.chart_exists (O := K) (R := K) (dividedPowersBot K) 1 s hb q
     (Ideal.Quotient.mk ⊥) (fun a => rfl) c
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   have hg := GlobalTheory.CompanionTheory.ChartMaps.good c'
   have hD : KS q s {W} c'.D := ⟨hTF, W, rfl, c'.inV⟩
   let E := c'.frame hg (KS q s {W}) (ks_in q s W) hD

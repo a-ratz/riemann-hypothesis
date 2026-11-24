@@ -83,7 +83,7 @@ private theorem equiv_prinSeries {k : Type} [Field k] [ValuativeRel k] [Topologi
     GlobalTheory.Parabolic.isIrreducible_of_equiv
       (p.trans (multiProdEquiv (stdBlocks (fun i => (y i).1) hd)
         fun i => equivRep (IrrRep.det (Fin 1) (ξ i) (hξ i)))).symm hP
-  haveI := nontrivial_of_irreducible hM
+  have := nontrivial_of_irreducible hM
   haveI : Nontrivial (IndSp _ _) := by
     obtain ⟨S, f, hf⟩ := GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries e₀ ξ
     have := hf.nontrivial
@@ -94,13 +94,13 @@ private theorem equiv_prinSeries {k : Type} [Field k] [ValuativeRel k] [Topologi
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap
     have hs : Function.Surjective F := hf.comp (topEquiv ρ).symm.toLinearEquiv.surjective
     refine ⟨equivOfBijective F ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, hs⟩⟩
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top F.ker with h | h
     · have : x ∈ F.ker := hx
       rw [h] at this
@@ -118,7 +118,7 @@ open UpperTheory.V.Z.Win.Gu.PrincipalSeriesDeterminant in
 theorem UpperTheory.V.Z.Win.Gu.plainGd :
     PlainGd := open scoped commutatorElement in by
   intro E Ω _ _ _ _ _ A w h rc ⟨a, ha, L⟩ n σ hP
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨ξ, hξ, hs, hu⟩ := GlobalTheory.RoadU.plainTor_exists_chars _ _ hP
   have hs' : HasSupport σ.ρ (GlobalTheory.RoadU.chars ξ hξ) := hs.of_equiv (IrrGL.equivOf σ.ρ σ.smooth σ.irred).symm
   obtain ⟨e⟩ := equiv_prinSeries σ.ρ ξ hξ hs' hu
@@ -141,7 +141,7 @@ theorem UpperTheory.V.Z.Win.Gu.plainGd :
     let q := multiProdEquiv (stdBlocks (fun i => (y i).1) hd) fun i => equivRep (IrrRep.det (Fin 1) (ξ i) (hξ i))
     have hM : (multiProd (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) fun i => detRep (Fin 1) (ξ i)).IsIrreducible :=
       GlobalTheory.Parabolic.isIrreducible_of_equiv (p.trans q).symm hP
-    haveI := nontrivial_of_irreducible hM
+    have := nontrivial_of_irreducible hM
     haveI : Nontrivial (IndSp _ _) := by
       obtain ⟨S, f, hf⟩ := GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) ξ
       have := hf.nontrivial
@@ -152,13 +152,13 @@ theorem UpperTheory.V.Z.Win.Gu.plainGd :
       obtain ⟨S, f, hf⟩ := h
       obtain ⟨y, hy⟩ := exists_ne (0 : W)
       obtain ⟨v, rfl⟩ := hf y
-      haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+      have : IsSimpleOrder (Subrepresentation ρ) := hρ
       rcases eq_bot_or_eq_top S with rfl | rfl
       · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
       let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap
       have hs : Function.Surjective F := hf.comp (topEquiv ρ).symm.toLinearEquiv.surjective
       refine ⟨equivOfBijective F ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, hs⟩⟩
-      haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+      have : IsSimpleOrder (Subrepresentation ρ) := hρ
       rcases eq_bot_or_eq_top F.ker with h | h
       · have : x ∈ F.ker := hx
         rw [h] at this

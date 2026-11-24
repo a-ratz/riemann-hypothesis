@@ -111,7 +111,7 @@ theorem exists_residueChar {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {ϖ
     have h0 : valuation k (ϖ : k) ≠ 0 := by simp
     have h3 : valuation k (((ϖ⁻¹ : kˣ) : k) * ((x : k) - (y : k))) ≤ 1 := by
       rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀]
-      exact (inv_mul_le_one₀ (zero_lt_iff.2 h0)).2 h2
+      exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 h0)).2 h2
     have h4 : ((ϖ⁻¹ : kˣ) : k) * (x : k)
         = ((ϖ⁻¹ : kˣ) : k) * (y : k) + ((ϖ⁻¹ : kˣ) : k) * ((x : k) - (y : k)) := by ring
     rw [h4, AddChar.map_add_eq_mul, h1 _ h3, mul_one]
@@ -281,9 +281,9 @@ theorem exists_isCosetFn (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
     have hx : ∃ g, P x g := ⟨g, hg⟩
     obtain ⟨u, hu, j, hj, e⟩ := hx.choose_spec
     obtain ⟨u', hu', j', hj', e'⟩ := hg
-    simp only [f, dif_pos hx]
+    simp only [f, dite_eq_left hx]
     rw [deltaR_eq H hu hu' hj hj' (e.symm.trans e')]
-  have fneg : ∀ x, (¬ ∃ g, P x g) → f x = 0 := fun x hx => by simp only [f, dif_neg hx]
+  have fneg : ∀ x, (¬ ∃ g, P x g) → f x = 0 := fun x hx => by simp only [f, dite_eq_right hx]
   have left : ∀ u ∈ N k n c 1, ∀ (g g' : GL n k) x, P x g' → P (u * embX c g * x) (g * g') := by
     rintro u hu g g' x ⟨u', hu', j, hj, rfl⟩
     refine ⟨u * (embX c g * u' * (embX c g)⁻¹), mul_mem hu (Radical.conj_mem _ hu'), j, hj, ?_⟩
@@ -519,21 +519,21 @@ private lemma finiteIndex_and_index_subgroupOf_eq_pow {G : Type} [Group G] [Topo
     (hpow : ∀ u : G, ∀ U ∈ 𝓝 (1 : G), ∃ m : ℕ, u ^ (q ^ m) ∈ U) {H K : Subgroup G}
     (hH : _root_.GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsCO H) (hK : IsOpen (K : Set G)) :
     (K.subgroupOf H).FiniteIndex ∧ ∃ b : ℕ, (K.subgroupOf H).index = q ^ b := by
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hH.2
+  have : Fact q.Prime := ⟨hq⟩
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hH.2
   set K' := K.subgroupOf H
-  have hK' : IsOpen (K' : Set H) := hK.preimage continuous_subtype_val
-  haveI : Finite (H ⧸ K') := Subgroup.quotient_finite_of_isOpen K' hK'
-  haveI : K'.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have hK' : IsOpen (K' : Set H) := hK.preimage continuous_subtypeVal
+  have : Finite (H ⧸ K') := Subgroup.quotient_finite_of_isOpen K' hK'
+  have : K'.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   set N := K'.normalCore
   have hNo : IsOpen (N : Set H) :=
     N.isOpen_of_isClosed_of_finiteIndex (K'.normalCore_isClosed (K'.isClosed_of_isOpen hK'))
-  haveI : Finite (H ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
+  have : Finite (H ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
   have hp : IsPGroup q (H ⧸ N) := by
     intro x
     induction x using QuotientGroup.induction_on with | H u => ?_
     have hU : (Subtype.val '' (N : Set H)) ∈ 𝓝 (1 : G) :=
-      (hH.1.isOpenMap_subtype_val _ hNo).mem_nhds ⟨1, N.one_mem, rfl⟩
+      (hH.1.isOpenMap_subtypeVal _ hNo).mem_nhds ⟨1, N.one_mem, rfl⟩
     obtain ⟨m, hm⟩ := hpow (u : G) _ hU
     obtain ⟨v, hv, hvu⟩ := hm
     refine ⟨m, ?_⟩
@@ -556,7 +556,7 @@ private lemma measure_eq_index_subgroupOf_mul_measure {G : Type} [Group G] [Topo
     μ H = ((K.subgroupOf H).index : ENNReal) * μ K := by
   classical
   set K' := K.subgroupOf H
-  letI : Fintype (H ⧸ K') := Subgroup.fintypeQuotientOfFiniteIndex
+  let : Fintype (H ⧸ K') := Subgroup.fintypeQuotientOfFiniteIndex
   have hcover : (H : Set G) = ⋃ c : H ⧸ K', ((Quotient.out c : H) : G) • (K : Set G) := by
     ext g
     constructor
@@ -663,7 +663,7 @@ private lemma integral_indicator_embed_mul_unipotent_lemma (ν : Measure k) [ν.
         (fun _ => (((_root_.GlobalTheory.RootEx.volN ν n c 1)
           ((_root_.GlobalTheory.StepData.Cgrp J h).subgroupOf (_root_.GlobalTheory.RootEx.N k n c 1))).toReal
             : ℂ)) x := by
-  haveI := _root_.GlobalTheory.RootEx.VolN.isHaarMeasure_volN (c := c) (n := n) ν 1
+  have := _root_.GlobalTheory.RootEx.VolN.isHaarMeasure_volN (c := c) (n := n) ν 1
   set C := _root_.GlobalTheory.StepData.Cgrp J h
   set E := _root_.GlobalTheory.RootEx.embX (k := k) (n := n) c
   by_cases hx : x ∈ _root_.GlobalTheory.StepData.prX C
@@ -689,7 +689,7 @@ private lemma integral_indicator_embed_mul_unipotent_lemma (ν : Measure k) [ν.
             Set (_root_.GlobalTheory.RootEx.N k n c 1))) from fun h' => hu (hiff.mpr h'))]
     have hmeas : MeasurableSet ((C.subgroupOf (_root_.GlobalTheory.RootEx.N k n c 1) :
         Set (_root_.GlobalTheory.RootEx.N k n c 1))) :=
-      measurable_subtype_coe (measurableSet_Cgrp_of_isCO hJ h)
+      measurable_subtypeVal (measurableSet_Cgrp_of_isCO hJ h)
     simp_rw [key]
     rw [integral_mul_left_eq_self (fun u => ((C.subgroupOf (_root_.GlobalTheory.RootEx.N k n c 1) :
         Set (_root_.GlobalTheory.RootEx.N k n c 1))).indicator (fun _ => (1 : ℂ)) u) w,
@@ -709,8 +709,8 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
   [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype n] [DecidableEq n] {c : ℕ} in
 theorem _root_.GlobalTheory.StepAvg.integral_translate_indicator : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure] (n : Type) [Fintype n] [DecidableEq n] (c : ℕ), 1 ≤ c → ∀ (J : Subgroup (GL (n ⊕ Fin c) k)), _root_.GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsCO J → ∀ (h : GL (n ⊕ Fin c) k), _root_.GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsCO (_root_.GlobalTheory.StepData.prX (_root_.GlobalTheory.StepData.Cgrp J h)) → ∀ (m : Measure (GL n k)) [m.IsHaarMeasure], ∀ u₀ ∈ _root_.GlobalTheory.RootEx.N k n c 1, ∀ g₀ : GL n k, ∫ g, (∫ u : _root_.GlobalTheory.RootEx.N k n c 1, (_root_.GlobalTheory.StepData.Cgrp J h : Set (GL (n ⊕ Fin c) k)).indicator (fun _ => (1 : ℂ)) (_root_.GlobalTheory.RootEx.embX c g * (u : GL (n ⊕ Fin c) k) * (u₀ * _root_.GlobalTheory.RootEx.embX c g₀)) ∂(_root_.GlobalTheory.RootEx.volN ν n c 1)) ∂m = ((_root_.GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.deltaR c g₀ * ((_root_.GlobalTheory.RootEx.volN ν n c 1 ((_root_.GlobalTheory.StepData.Cgrp J h).subgroupOf (_root_.GlobalTheory.RootEx.N k n c 1))).toReal * (m (_root_.GlobalTheory.StepData.prX (_root_.GlobalTheory.StepData.Cgrp J h))).toReal) : ℝ) : ℂ) := by
   intro k _ _ _ _ _ _ ν _ n _ _ c hc J hJ h hpr m _ u₀ hu₀ g₀
-  haveI := _root_.GlobalTheory.RootEx.VolN.isMulRightInvariant_volN (c := c) (n := n) ν 1
-  haveI := _root_.GlobalTheory.SplitFlip.isMulRightInvariant_of_haar (k := k) m
+  have := _root_.GlobalTheory.RootEx.VolN.isMulRightInvariant_volN (c := c) (n := n) ν 1
+  have := _root_.GlobalTheory.SplitFlip.isMulRightInvariant_of_haar (k := k) m
   set C := _root_.GlobalTheory.StepData.Cgrp J h
   set E := _root_.GlobalTheory.RootEx.embX (k := k) (n := n) c
   set V : ℂ := (((_root_.GlobalTheory.RootEx.volN ν n c 1)
@@ -944,9 +944,9 @@ theorem _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn (k : Type) [Field k] 
     (hf : _root_.GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsCosetFn J h f) :
     _root_.GlobalTheory.RootEx.IsQuotInt ν m μG 1 f ((((μG J).toReal / v : ℝ) : ℂ) * f h) := by
   classical
-  haveI : BorelSpace (GL (n ⊕ Fin c) k) :=
+  have : BorelSpace (GL (n ⊕ Fin c) k) :=
     (_root_.GlobalTheory.SplitWeil.volGL_haar k (n ⊕ Fin c) ν).1
-  haveI : SecondCountableTopology (GL (n ⊕ Fin c) k) :=
+  have : SecondCountableTopology (GL (n ⊕ Fin c) k) :=
     (_root_.GlobalTheory.SplitWeil.volGL_haar k (n ⊕ Fin c) ν).2.2.1
   unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsCO at hJ
   obtain ⟨hJo, hJc⟩ := hJ
@@ -979,8 +979,8 @@ theorem _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn (k : Type) [Field k] 
       rw [hFdef]
       dsimp only
       by_cases hy : h⁻¹ * y ∈ J
-      · rw [if_pos hy, if_pos (QuotientGroup.eq.2 hy).symm]
-      · rw [if_neg hy, if_neg (fun (he : (y : GL (n ⊕ Fin c) k ⧸ J) = h) =>
+      · rw [ite_eq_left hy, ite_eq_left (QuotientGroup.eq.2 hy).symm]
+      · rw [ite_eq_right hy, ite_eq_right (fun (he : (y : GL (n ⊕ Fin c) k ⧸ J) = h) =>
           hy (QuotientGroup.eq.1 he.symm))]
     rw [hFq]
     exact hSB
@@ -1015,10 +1015,10 @@ theorem _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn (k : Type) [Field k] 
         rw [hFdef]
         by_cases hin : h⁻¹ * (_root_.GlobalTheory.RootEx.embX c g * (u : GL (n ⊕ Fin c) k) *
             (u₀ * _root_.GlobalTheory.RootEx.embX c x₀)) * h ∈ J
-        · rw [if_pos (hiff.2 hin), Set.indicator_of_mem
+        · rw [ite_eq_left (hiff.2 hin), Set.indicator_of_mem
             (show _ ∈ _root_.GlobalTheory.StepData.Cgrp J h from
               _root_.GlobalTheory.StepData.mem_Cgrp.2 ⟨hyP, hin⟩), mul_one]
-        · rw [if_neg (fun h' => hin (hiff.1 h')), Set.indicator_of_notMem
+        · rw [ite_eq_right (fun h' => hin (hiff.1 h')), Set.indicator_of_notMem
             (show _ ∉ _root_.GlobalTheory.StepData.Cgrp J h from
               fun h' => hin (_root_.GlobalTheory.StepData.mem_Cgrp.1 h').2), mul_zero]
       simp_rw [hpt, integral_const_mul]
@@ -1031,7 +1031,7 @@ theorem _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn (k : Type) [Field k] 
       have hpt : ∀ (g : GL n k) (u : _root_.GlobalTheory.RootEx.N k n c 1),
           F (_root_.GlobalTheory.RootEx.embX c g * (u : GL (n ⊕ Fin c) k) * x) = 0 := by
         intro g u
-        rw [hFdef, if_neg]
+        rw [hFdef, ite_eq_right]
         intro hmem
         apply hx
         refine (@DoubleCoset.eq _ _ _ _ _ _).2 ⟨(_root_.GlobalTheory.RootEx.embX c g *
@@ -1044,8 +1044,8 @@ theorem _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn (k : Type) [Field k] 
       funext y
       rw [hFdef]
       by_cases hy : h⁻¹ * y ∈ J
-      · rw [if_pos hy, Set.indicator_of_mem (show y ∈ (fun y => h⁻¹ * y) ⁻¹' (J : Set _) from hy)]
-      · rw [if_neg hy,
+      · rw [ite_eq_left hy, Set.indicator_of_mem (show y ∈ (fun y => h⁻¹ * y) ⁻¹' (J : Set _) from hy)]
+      · rw [ite_eq_right hy,
           Set.indicator_of_notMem (show y ∉ (fun y => h⁻¹ * y) ⁻¹' (J : Set _) from hy)]
     rw [hFind, integral_indicator_const _
       (hJo.measurableSet.preimage (measurable_const_mul h⁻¹)), measureReal_def,
@@ -1074,7 +1074,7 @@ theorem _root_.GlobalTheory.CosetVolProd.volR_Cgrp : ∀ (k : Type) [Field k] [V
   intro k _ _ _ _ _ _ ν _ n _ _ c J h hopen m
   set C := _root_.GlobalTheory.StepData.Cgrp J h
   set N := _root_.GlobalTheory.RootEx.N k n c 1
-  haveI := _root_.GlobalTheory.RootEx.VolN.isHaarMeasure_volN ν (n := n) (c := c) 1
+  have := _root_.GlobalTheory.RootEx.VolN.isHaarMeasure_volN ν (n := n) (c := c) 1
   have key : ∀ g : GL n k, _root_.GlobalTheory.RootEx.volN ν n c 1
       {u : N | _root_.GlobalTheory.RootEx.embX c g * (u : GL (n ⊕ Fin c) k) ∈ C}
       = (_root_.GlobalTheory.StepData.prX C : Set (GL n k)).indicator
@@ -1487,7 +1487,7 @@ variable [MeasurableSpace k] [BorelSpace k] {ν : Measure k} [ν.IsAddHaarMeasur
 
 omit [MeasurableSpace k] [BorelSpace k] in
 theorem isCO_subgroupOf {H : Subgroup (GL (n ⊕ Fin c) k)} (hH : IsCO H) : IsCO (H.subgroupOf (N k n c 1)) :=
-  ⟨hH.1.preimage continuous_subtype_val, (VolN.isClosed_N 1).isClosedEmbedding_subtypeVal.isCompact_preimage hH.2⟩
+  ⟨hH.1.preimage continuous_subtypeVal, (VolN.isClosed_N 1).isClosedEmbedding_subtypeVal.isCompact_preimage hH.2⟩
 
 theorem volNat_zpow (hq : (resCard k).Prime) {J : Subgroup (GL (n ⊕ Fin c) k)} (hJ : IsCO J)
     (h b : GL (n ⊕ Fin c) k) : ∃ z : ℤ, volNat ν b (Cgrp J h) = (resCard k : ℝ) ^ z := by
@@ -1516,7 +1516,7 @@ theorem cosetMeasure : CosetMeasure ν := by
   have v0 : volR ν m (Cgrp J h) ≠ 0 := by rw [hv]; exact mul_ne_zero h0 m0
   have v1 : volR ν m (Cgrp J h) ≠ ⊤ := by rw [hv]; exact ENNReal.mul_ne_top h1 m1
   refine ⟨hv m, v0, v1, fun b => ?_, fun μG hμG f hf z => ?_⟩
-  · rw [hv, rescale, volNat, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_mul,
+  · rw [hv, rescale, volNat, smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_mul,
       ENNReal.toReal_inv]
     ring
   · have key := _root_.GlobalTheory.CosetQuotInt.isQuotInt_cosetFn k ν n c J hJ h m (volR ν m (Cgrp J h)).toReal (ENNReal.toReal_pos v0 v1).ne'

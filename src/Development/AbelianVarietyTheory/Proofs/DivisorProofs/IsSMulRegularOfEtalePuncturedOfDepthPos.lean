@@ -75,11 +75,11 @@ theorem isSMulRegular_of_etale_punctured_of_depth_pos :
   obtain ⟨P, hP, hle⟩ := exists_le_isAssociatedPrime_of_isNoetherianRing R a ha0
   have hfP : f ∈ P := hle (Submodule.mem_colon_singleton.mpr (by simpa using ha))
   obtain ⟨hPprime, b, hb⟩ := Submodule.isAssociatedPrime_iff.mp hP
-  haveI := hPprime
+  have := hPprime
   have hPm : P ≠ maximalIdeal R := fun h => hmax (h ▸ hP)
-  haveI := het P hPm
+  have := het P hPm
   set L := Localization.AtPrime P
-  haveI : Module.Free L (TensorProduct R L A) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free L (TensorProduct R L A) := Module.free_of_flat_of_isLocalRing
   have hfb : f • b = 0 := by
     have : f ∈ (⊥ : Submodule R A).colon {b} := hb ▸ hfP
     simpa using Submodule.mem_colon_singleton.mp this

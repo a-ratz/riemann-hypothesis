@@ -185,7 +185,7 @@ private lemma exists_GLint_mul_clears_below_diag_from {n : ℕ} (M : Matrix (Fin
         · subst hji
           rw [hdiag, Valuation.map_add_eq_of_lt_right _ hlt]
         · rw [hk1eq, mul_column_operation_apply]
-          simp only [hji, if_false, mul_zero, ite_self, add_zero]
+          simp only [hji, ite_false, mul_zero, ite_self, add_zero]
           exact hmax j hj
       · rw [hdiag]
         intro h0
@@ -198,7 +198,7 @@ private lemma exists_GLint_mul_clears_below_diag_from {n : ℕ} (M : Matrix (Fin
       split_ifs with hb
       · apply mem_Ov_of_valuation_le_one
         rw [Valuation.map_neg, map_div₀]
-        exact div_le_one_of_le₀ (hpiv1 b hb.le) zero_le'
+        exact div_le_one_of_le₀ (hpiv1 b hb.le) zero_le
       · exact Subring.zero_mem _)
   refine ⟨k1 * k2, Subgroup.mul_mem _ hk1 hk2, fun i j hi hj => ?_⟩
   rw [Units.val_mul, ← Matrix.mul_assoc, ← hM1, hk2eq, mul_column_operation_apply]
@@ -207,7 +207,7 @@ private lemma exists_GLint_mul_clears_below_diag_from {n : ℕ} (M : Matrix (Fin
     simp
   · subst h
     have hji : j ≠ i0 := ne_of_lt hj
-    simp only [hji, ne_eq, not_false_eq_true, if_true, hj]
+    simp only [hji, ne_eq, not_false_eq_true, ite_true, hj]
     field_simp
     ring
 

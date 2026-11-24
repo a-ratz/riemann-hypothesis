@@ -91,14 +91,14 @@ theorem exists_zl_span_lattice_reads : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) 
       beta_reduce
       rw [this]
       exact Submodule.smul_mem _ _ (Submodule.subset_span (Finset.mem_coe.2 (Finset.mem_image_of_mem v (hf't hk))))
-  haveI : Module.Finite ℤ_[l] M := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.IsTorsionFree ℤ_[l] M := Module.IsTorsionFree.of_smul_eq_zero fun c m h => by
+  have : Module.Finite ℤ_[l] M := Module.Finite.iff_fg.mpr hfg
+  have : Module.IsTorsionFree ℤ_[l] M := Module.IsTorsionFree.of_smul_eq_zero fun c m h => by
     have h' : (c : ℚ_[l]) • (m : Matrix (Fin a) (Fin a) (Om l)) = 0 := by
       rw [← hsq]; exact congrArg Subtype.val h
     rcases smul_eq_zero.1 h' with h0 | h0
     · left; exact Subtype.ext h0
     · right; exact Subtype.ext h0
-  haveI : Module.Free ℤ_[l] M := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ_[l] M := Module.free_of_finite_type_torsion_free'
   let d := Module.finrank ℤ_[l] M
   let B : Module.Basis (Fin d) ℤ_[l] M := Module.finBasis ℤ_[l] M
 
@@ -152,7 +152,7 @@ theorem exists_zl_span_lattice_reads : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) 
 
   let Wq := Submodule.span ℚ_[l] (Set.range b)
   let Bq : Module.Basis (Fin d) ℚ_[l] Wq := Module.Basis.span hli
-  haveI : FiniteDimensional ℚ_[l] Wq := Module.Finite.of_basis Bq
+  have : FiniteDimensional ℚ_[l] Wq := Module.Finite.of_basis Bq
   have hmemW : ∀ x : M, (x : Matrix (Fin a) (Fin a) (Om l)) ∈ Wq := by
     intro x
     rw [← hrepr x]

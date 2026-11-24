@@ -102,7 +102,7 @@ theorem eval₂_conj_inv_root :
       (AdjoinRoot.root P.1)⁻¹ = 0 := by
   obtain ⟨-, -, hdeg, h0, hs⟩ := P.2
   have h1 := AdjoinRoot.eval₂_root P.1
-  letI : Invertible (AdjoinRoot.root P.1)⁻¹ := invertibleOfNonzero (inv_ne_zero (root_ne_zero P))
+  let : Invertible (AdjoinRoot.root P.1)⁻¹ := invertibleOfNonzero (inv_ne_zero (root_ne_zero P))
   have h2 := eval₂_reflect_mul_pow (AdjoinRoot.of P.1) (AdjoinRoot.root P.1)⁻¹ r
     (P.1.map (IsCMField.complexConj E : E →+* E)) (natDegree_map_le.trans hdeg.le)
   rw [invOf_eq_inv, inv_inv, eval₂_map] at h2

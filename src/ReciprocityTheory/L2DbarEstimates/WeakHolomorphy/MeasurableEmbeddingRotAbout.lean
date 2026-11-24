@@ -180,12 +180,12 @@ theorem circle_mean_sq {n : ℕ} {c w : V n} {R : ℝ} {u : V n → ℂ}
     rw [hv] at h
     linarith
   have hen : ∀ θ, ‖F θ‖ₑ ^ 2 = ENNReal.ofReal (‖F θ‖ ^ 2) := fun θ => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   show ‖u c‖ₑ ^ 2 * ENNReal.ofReal (2 * Real.pi) ≤
     ∫⁻ θ in Ioc (0 : ℝ) (2 * Real.pi), ‖F θ‖ₑ ^ 2
   simp_rw [hen]
   rw [← ofReal_integral_eq_lintegral_ofReal hint2 (ae_of_all _ fun θ => by positivity),
-    ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+    ← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
     ← ENNReal.ofReal_mul (by positivity)]
   exact ENNReal.ofReal_le_ofReal hreal
 
@@ -277,7 +277,7 @@ theorem mv : MVStatement := by
       ((volume.restrict (Ioc 0 (2 * Real.pi))).prod (volume.restrict (ball c R))) := by
     rw [Measure.prod_restrict]
     have h1 := ((continuousOn_comp_rotAbout hu (Ioc 0 (2 * Real.pi))).aemeasurable
-      (μ := volume.prod volume) (measurableSet_Ioc.prod measurableSet_ball)).enorm.pow_const 2
+      (μ := volume.prod volume) (measurableSet_Ioc.prod measurableSet_ball)).eNorm.pow_const 2
     have h2 : Measurable fun p : ℝ × V n => r ‖p.2 - c‖ :=
       hr.comp ((measurable_snd.sub_const c).norm)
     exact h1.mul h2.aemeasurable
@@ -300,7 +300,7 @@ theorem mv : MVStatement := by
         (fun θ => (rotAbout_mem_ball_iff c (hT1 θ) R z).2 hz)
     have hm : Measurable fun θ : ℝ =>
         ‖u (rotAbout c (Complex.exp ((θ : ℂ) * I)) z)‖ₑ ^ 2 :=
-      hcz.measurable.enorm.pow_const 2
+      hcz.measurable.eNorm.pow_const 2
     rw [lintegral_mul_const _ hm]
     gcongr
     exact circle_mean_sq hu hw

@@ -167,8 +167,8 @@ theorem exists_open_ann {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.
     (hZ : ∀ z ∈ Z, z.map (finPart D) ∈ K) :
     ∃ V : AddSubgroup (Mx D T.rank ρ), IsOpen (V : Set (Mx D T.rank ρ)) ∧
       ∀ b ∈ V, b.map (infPart D) = 0 → ∀ z ∈ Z, ψ (bt d T z b) = 1 := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   obtain ⟨s, hs, hsf⟩ := exists_section D
   have hadd : ∀ z a b, ψ (pairA D.host.F 0 (bt d T z (a + b)).2) =
       ψ (pairA D.host.F 0 (bt d T z a).2) * ψ (pairA D.host.F 0 (bt d T z b).2) := fun z a b => by
@@ -249,8 +249,8 @@ theorem level (hψ : IsCharAF D.host.F ψ) (h0 : d.j0 = 0) (hφ : GlobalTheory.I
       ψ (symplO S T (d.extX T (w ⬝ d.jX + rat ξ)) (d.extY T (w ⬝ d.jY))) * φ (w ⬝ d.jX + rat ξ)) :
     ∃ U : AddSubgroup (WO S T), IsOpen (U : Set (WO S T)) ∧
       ∀ u ∈ U, u.map (infPart D) = 0 → heisO ψ S T u f = f := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   obtain ⟨U, hU, hUφ⟩ := hφ.level
   obtain ⟨K, hK, hKφ⟩ := hφ.supp
   obtain ⟨V, hV, hVψ⟩ := exists_open_ann d T hψ {z | φ z ≠ 0} hK hKφ
@@ -274,7 +274,7 @@ theorem level (hψ : IsCharAF D.host.F ψ) (h0 : d.j0 = 0) (hφ : GlobalTheory.I
   by_cases hz : φ z = 0
   · simp only [hz, mul_zero]
   have h1 := hb z hz
-  have h2 := hb (z + a) (by rwa [Set.mem_setOf_eq, ha])
+  have h2 := hb (z + a) (by rwa [Set.mem_ofPred_eq, ha])
   rw [← mul_assoc, ← mul_assoc]
   congr 1
   rw [← one_mul (ψ (-bt d T x y) * ψ _), ← h1, ← one_mul (ψ (bt d T z b) * _), ← h2]
@@ -659,7 +659,7 @@ theorem hasDerivAt_heisO_thetaSeries : ∀ (D : D7) (ψ : AddChar (AF D.host.F) 
   obtain ⟨θ, hθ⟩ := hψ.2.1
   obtain ⟨lam, hl, hlam⟩ := GlobalTheory.WeilVacMove.exists_log hψ
   have hn : ∀ z, ‖ψ z‖ = 1 := hψ.1.2.1
-  haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
+  have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
   let d := dblDec A
   let a : ℝ →+ Mx D B.rank A.rank := mulLine M d.jX
   let b : ℝ →+ Mx D B.rank A.rank := mulLine M d.jY

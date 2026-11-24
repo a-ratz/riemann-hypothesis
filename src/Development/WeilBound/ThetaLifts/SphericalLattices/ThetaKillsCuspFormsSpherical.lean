@@ -145,8 +145,8 @@ theorem killInf' (hU : Unimod) (hT : ThetaBasic) (hO : ArchOp) (hLie : ArchLie) 
   have h𝓒' : ∀ f : SInf F (Fin n × Fin d), pureA F f ψ ∈ 𝓒 := fun f => eψ f ▸ h𝓒 f
   obtain ⟨L, hL⟩ := exists_L hp hc hψ h𝓒'
   obtain ⟨hΓ, μ, 𝓕, hμ, h𝓕, hr⟩ := uniW hU hp
-  haveI : BorelSpace (UA σ W.J) := ⟨rfl⟩
-  haveI : SFinite μ := @instSFiniteOfSigmaFinite _ _ _
+  have : BorelSpace (UA σ W.J) := ⟨rfl⟩
+  have : SFinite μ := @instSFiniteOfSigmaFinite _ _ _
     (sFinite_haar (ε := -1) hp.base.cm (fun i j => by simpa using hp.skew.skew i j) (detW hp) μ)
   choose op hop hopP using hO F E σ B n d X W M χX χW om r s r' s' hp
   have hL2 := hLie F E σ B n d X W M χX χW om r s r' s' hp

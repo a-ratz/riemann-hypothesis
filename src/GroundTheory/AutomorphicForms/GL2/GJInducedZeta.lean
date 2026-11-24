@@ -96,7 +96,7 @@ theorem map_mul_right_eq_self_of_compactSpace {K : Type*} [Group K] [Topological
   have e := isMulLeftInvariant_eq_smul (map (· * k) μ) μ
   have h := congrArg (fun ν : Measure K => ν univ) e
   simp only [map_apply (continuous_mul_const k).measurable MeasurableSet.univ,
-    Set.preimage_univ, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+    Set.preimage_univ, smul_apply, ENNReal.smul_def, smul_eq_mul] at h
   have hc : haarScalarFactor (map (· * k) μ) μ = 1 := by
     have := (ENNReal.mul_eq_right (IsOpen.measure_ne_zero μ isOpen_univ univ_nonempty)
       (measure_ne_top μ univ)).1 h.symm
@@ -176,8 +176,8 @@ theorem map_mul_prod_eq_smul [TotallyDisconnectedSpace G] (P K : Subgroup G)
   have : BorelSpace K := Subtype.borelSpace (fun x => x ∈ (K : Set G))
   set m : P × K → G := fun x => (x.1 : G) * x.2 with hm_def
   have hm : Measurable m :=
-    (measurable_subtype_coe.comp measurable_fst).mul
-      (measurable_subtype_coe.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).mul
+      (measurable_subtypeVal.comp measurable_snd)
   set ν := map m (μP.prod μK) with hν
   have hleft : ∀ p : P, map ((p : G) * ·) ν = ν := by
     intro p
@@ -279,7 +279,7 @@ theorem map_mul_prod_eq_smul [TotallyDisconnectedSpace G] (P K : Subgroup G)
   have e := isMulLeftInvariant_eq_smul ν μG
   rw [← hνK, e]
   ext s hs
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
   ring
 
 theorem lintegral_mul_prod_eq [TotallyDisconnectedSpace G] (P K : Subgroup G)
@@ -297,8 +297,8 @@ theorem lintegral_mul_prod_eq [TotallyDisconnectedSpace G] (P K : Subgroup G)
   have : BorelSpace P := Subtype.borelSpace (fun x => x ∈ (P : Set G))
   have : BorelSpace K := Subtype.borelSpace (fun x => x ∈ (K : Set G))
   have hm : Measurable fun x : P × K => (x.1 : G) * x.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul
-      (measurable_subtype_coe.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).mul
+      (measurable_subtypeVal.comp measurable_snd)
   have h := congrArg (fun μ : Measure G => ∫⁻ g, f g ∂μ)
     (map_mul_prod_eq_smul P K hP hKo hKc hPK μG μP μK)
   simp only [lintegral_smul_measure, smul_eq_mul] at h
@@ -322,8 +322,8 @@ theorem integral_mul_prod_eq [TotallyDisconnectedSpace G] (P K : Subgroup G)
   have : BorelSpace P := Subtype.borelSpace (fun x => x ∈ (P : Set G))
   have : BorelSpace K := Subtype.borelSpace (fun x => x ∈ (K : Set G))
   have hm : Measurable fun x : P × K => (x.1 : G) * x.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul
-      (measurable_subtype_coe.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).mul
+      (measurable_subtypeVal.comp measurable_snd)
   have key := map_mul_prod_eq_smul P K hP hKo hKc hPK μG μP μK
   set ν := map (fun x : P × K => (x.1 : G) * x.2) (μP.prod μK)
   set d : ℝ≥0∞ := μP (Subtype.val ⁻¹' (K : Set G)) * μK univ with hd_def
@@ -669,7 +669,7 @@ theorem lintegral_inducedIntegrand_mul (μ𝔪 : Measure (LeviIndex n β → F))
   have hcont := continuous_inducedIntegrand hΦ hφ.2 ℓ s
   have hmeas : Measurable fun p : blockUpper F n β =>
       ‖inducedIntegrand Φ φ ℓ s ((p : GL (Fin n) F) * y)‖ₑ :=
-    (hcont.comp (continuous_subtype_val.mul continuous_const)).enorm.measurable
+    (hcont.comp (continuous_subtypeVal.mul continuous_const)).eNorm.measurable
   rw [lintegral_haarParabolic μ𝔪 μ𝔫 hmeas]
   refine lintegral_congr fun m => ?_
   have hΦy := hΦ.comp_mulRight y
@@ -678,16 +678,16 @@ theorem lintegral_inducedIntegrand_mul (μ𝔪 : Measure (LeviIndex n β → F))
   have hmu : Measurable fun u : UnipotentIndex n β → F =>
       ‖Φ ((((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u) *
         (y : Matrix (Fin n) (Fin n) F))‖ₑ :=
-    (hΦy.1.continuous.comp (continuous_const.add continuous_unipMatrix)).enorm.measurable
-  simp_rw [inducedIntegrand_parabolicMk_mul hφ ℓ s hy m, enorm_mul]
-  rw [lintegral_mul_const _ hmu, ← ofReal_integral_norm_eq_lintegral_enorm hint]
+    (hΦy.1.continuous.comp (continuous_const.add continuous_unipMatrix)).eNorm.measurable
+  simp_rw [inducedIntegrand_parabolicMk_mul hφ ℓ s hy m, eNorm_mul]
+  rw [lintegral_mul_const _ hmu, ← ofReal_integral_norm_eq_lintegral_eNorm hint]
   have hI : 0 ≤ ∫ u, ‖Φ ((((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u) *
       (y : Matrix (Fin n) (Fin n) F))‖ ∂μ𝔫 := integral_nonneg fun _ => norm_nonneg _
   have hI' : (∫ u, ((‖Φ ((((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u) *
       (y : Matrix (Fin n) (Fin n) F))‖ : ℝ) : ℂ) ∂μ𝔫) =
       ((∫ u, ‖Φ ((((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u) *
       (y : Matrix (Fin n) (Fin n) F))‖ ∂μ𝔫 : ℝ) : ℂ) := integral_complex_ofReal
-  simp only [leviIntegrand, enorm_mul, MonoidHom.mul_apply]
+  simp only [leviIntegrand, eNorm_mul, MonoidHom.mul_apply]
   rw [hI', enorm_ofReal_complex hI, enorm_coe_nnreal, ← coe_leviSqrtModular, enorm_coe_nnreal,
     ENNReal.coe_mul]
   ring
@@ -731,7 +731,7 @@ theorem lintegral_eq_sum_parabolic [MeasurableSpace (GL (Fin n) F)] [BorelSpace 
   classical
   have : BorelSpace (integralGL F n) := Subtype.borelSpace _
   have hLo : IsOpen (((congruenceSubgroup F n r).subgroupOf (integralGL F n) : Subgroup (integralGL F n)) : Set (integralGL F n)) :=
-    (isOpen_congruenceSubgroup F n r).preimage continuous_subtype_val
+    (isOpen_congruenceSubgroup F n r).preimage continuous_subtypeVal
   rw [← Measures.lintegral_mul_prod_eq (blockUpper F n β) (integralGL F n)
     (Measures.isClosed_blockUpper F n β) (isOpen_integralGL F n) (isCompact_integralGL F n)
     (fun g => exists_blockUpper_mul_integralGL' g) μG μP μK hh]
@@ -747,7 +747,7 @@ theorem lintegral_eq_sum_parabolic [MeasurableSpace (GL (Fin n) F)] [BorelSpace 
   simp_rw [hinner]
   have hmeas : ∀ q : integralGL F n ⧸ (congruenceSubgroup F n r).subgroupOf (integralGL F n), Measurable fun p : blockUpper F n β =>
       h ((p : GL (Fin n) F) * ((q.out : integralGL F n) : GL (Fin n) F)) := fun q =>
-    hh.comp (continuous_subtype_val.mul continuous_const).measurable
+    hh.comp (continuous_subtypeVal.mul continuous_const).measurable
   rw [lintegral_const_mul _ (Finset.measurable_sum _ fun q _ => hmeas q),
     lintegral_finsetSum _ fun q _ => hmeas q]
 
@@ -773,7 +773,7 @@ theorem integral_eq_sum_parabolic [MeasurableSpace (GL (Fin n) F)] [BorelSpace (
   have : CompactSpace (integralGL F n) :=
     isCompact_iff_compactSpace.1 (isCompact_integralGL F n)
   have hLo : IsOpen (((congruenceSubgroup F n r).subgroupOf (integralGL F n) : Subgroup (integralGL F n)) : Set (integralGL F n)) :=
-    (isOpen_congruenceSubgroup F n r).preimage continuous_subtype_val
+    (isOpen_congruenceSubgroup F n r).preimage continuous_subtypeVal
   have hLc : IsCompact (((congruenceSubgroup F n r).subgroupOf (integralGL F n) : Subgroup (integralGL F n)) : Set (integralGL F n)) :=
     (Subgroup.isClosed_of_isOpen _ hLo).isCompact
   rw [← Measures.integral_mul_prod_eq (blockUpper F n β) (integralGL F n)
@@ -854,7 +854,7 @@ theorem exists_inducedZeta (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsCuspid
       hK' k (hr₂ (congruenceSubgroup_antitone F n (le_max_right _ _) hk)) g]
   have : Finite (integralGL F n ⧸ (congruenceSubgroup F n (max r₁ r₂)).subgroupOf (integralGL F n)) :=
     Subgroup.quotient_finite_of_isOpen _
-      ((isOpen_congruenceSubgroup F n _).preimage continuous_subtype_val)
+      ((isOpen_congruenceSubgroup F n _).preimage continuous_subtypeVal)
   let _ := Fintype.ofFinite
     (integralGL F n ⧸ (congruenceSubgroup F n (max r₁ r₂)).subgroupOf (integralGL F n))
 
@@ -878,7 +878,7 @@ theorem exists_inducedZeta (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsCuspid
         (haarParabolic (parabolicMeasure β μ𝔪 μ𝔫)) := by
     intro s hs z hz
     have hΨz := isLeviSchwartz_integral μ𝔫 (hΦ.comp_mulRight z).norm
-    refine ⟨((hcont s).comp (continuous_subtype_val.mul continuous_const)).aestronglyMeasurable, ?_⟩
+    refine ⟨((hcont s).comp (continuous_subtypeVal.mul continuous_const)).aestronglyMeasurable, ?_⟩
     show ∫⁻ p, ‖inducedIntegrand Φ φ ℓ s ((p : GL (Fin n) F) * z)‖ₑ
       ∂(haarParabolic (parabolicMeasure β μ𝔪 μ𝔫)) < ⊤
     rw [lintegral_inducedIntegrand_mul μ𝔪 μ𝔫 hΦ hφ ℓ s hz]
@@ -886,7 +886,7 @@ theorem exists_inducedZeta (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsCuspid
 
   have hP0 : haarParabolic (parabolicMeasure β μ𝔪 μ𝔫)
       (Subtype.val ⁻¹' (integralGL F n : Set (GL (Fin n) F))) ≠ 0 :=
-    ((isOpen_integralGL F n).preimage continuous_subtype_val).measure_ne_zero _
+    ((isOpen_integralGL F n).preimage continuous_subtypeVal).measure_ne_zero _
       ⟨1, by simp [one_mem]⟩
   have hK0 : μK Set.univ ≠ 0 := isOpen_univ.measure_ne_zero μK Set.univ_nonempty
 
@@ -894,7 +894,7 @@ theorem exists_inducedZeta (hσ : IsSmooth σ) [σ.IsIrreducible] (hc : IsCuspid
     intro s hs
     refine ⟨(hcont s).aestronglyMeasurable, ?_⟩
     have hC := lintegral_eq_sum_parabolic (β := β) μG (haarParabolic (parabolicMeasure β μ𝔪 μ𝔫))
-      μK (hcont s).enorm.measurable (fun g k hk => by rw [hinv s g k hk])
+      μK (hcont s).eNorm.measurable (fun g k hk => by rw [hinv s g k hk])
     have hlt : μG (integralGL F n) * (μK ((congruenceSubgroup F n (max r₁ r₂)).subgroupOf
         (integralGL F n)) * ∑ q : Q, ∫⁻ p, ‖inducedIntegrand Φ φ ℓ s
           ((p : GL (Fin n) F) * y q)‖ₑ ∂(haarParabolic (parabolicMeasure β μ𝔪 μ𝔫))) < ⊤ :=

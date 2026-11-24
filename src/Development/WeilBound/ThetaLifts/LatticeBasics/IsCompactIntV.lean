@@ -80,7 +80,7 @@ theorem isOpen_intAf : IsOpen {a : Af F | ∀ v, evalV F v a ∈ v.adicCompletio
     (fun v => Valued.isOpen_valuationSubring _)
 
 theorem isOpen_intV (u : HeightOneSpectrum (𝓞 F)) : IsOpen {x : κ → Fv F u | ∀ i, x i ∈ u.adicCompletionIntegers F} := by
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun i => (Valued.isOpen_valuationSubring _).preimage (continuous_apply i)
 
 theorem isCompact_intV (u : HeightOneSpectrum (𝓞 F)) :
@@ -164,7 +164,7 @@ theorem exists_box {W : Set (κ → Af F)} (hW : W ∈ 𝓝 0) : ∃ K h h', ((b
       (fun u => (u.adicCompletionIntegers F : Set (u.adicCompletion F))) cofinite fun u => ⟨(x u).1 i, (x u).2 i⟩
   have hj : Continuous j := continuous_pi fun i => RestrictedProduct.isEmbedding_structureMap.continuous.comp
     (continuous_pi fun u => Continuous.subtype_mk (f := fun x : ∀ u, intV κ u => (x u).1 i) ((continuous_apply i).comp
-      ((continuous_subtype_val (p := fun x => x ∈ intV κ u)).comp (continuous_apply (A := fun u => intV κ u) u))) _)
+      ((continuous_subtypeVal (p := fun x => x ∈ intV κ u)).comp (continuous_apply (A := fun u => intV κ u) u))) _)
   have h0 : j ⁻¹' W ∈ 𝓝 0 := hj.continuousAt.preimage_mem_nhds (by convert hW; rfl)
   obtain ⟨U, hUW, hUo, hU0⟩ := mem_nhds_iff.1 h0
   obtain ⟨I₀, s₀, hs₀, hs₁⟩ := isOpen_pi_iff.1 hUo 0 hU0
@@ -173,11 +173,11 @@ theorem exists_box {W : Set (κ → Af F)} (hW : W ∈ 𝓝 0) : ∃ K h h', ((b
   let t : ∀ u : HeightOneSpectrum (𝓞 F), Set (intV κ u) := fun u => if u ∈ I₀ then s₀ u else Set.univ
   have ht : ∀ u, t u ∈ 𝓝 (0 : intV κ u) := fun u => by
     by_cases hu : u ∈ I₀
-    · simp only [t, if_pos hu]
+    · simp only [t, ite_eq_left hu]
       exact (hs₀ u hu).1.mem_nhds (hs₀ u hu).2
-    · simp only [t, if_neg hu, univ_mem]
+    · simp only [t, ite_eq_right hu, univ_mem]
   have hs : I.pi t ⊆ j ⁻¹' W := fun x hx => hUW (hs₁ fun u hu => by
-    simpa only [t, if_pos (Finset.mem_coe.1 hu)] using hx u hu)
+    simpa only [t, ite_eq_left (Finset.mem_coe.1 hu)] using hx u hu)
   have : ∀ u, ∃ K : OpenAddSubgroup (κ → Fv F u), ∀ x : intV κ u, x.1 ∈ K → x ∈ t u := fun u => by
     have := ht u
     rw [nhds_subtype, mem_comap] at this
@@ -186,7 +186,7 @@ theorem exists_box {W : Set (κ → Af F)} (hW : W ∈ 𝓝 0) : ∃ K h h', ((b
     exact ⟨K, fun x hx => hst (hK hx)⟩
   choose K hK using this
   refine ⟨fun u => if u ∈ I then K u ⊓ intV κ u else intV κ u, ?_, fun u => ?_, fun y hy => ?_⟩
-  · filter_upwards [hI.compl_mem_cofinite] with u hu using if_neg hu
+  · filter_upwards [hI.compl_mem_cofinite] with u hu using ite_eq_right hu
   · simp only
     split_ifs
     · exact inf_le_right
@@ -199,12 +199,12 @@ theorem exists_box {W : Set (κ → Af F)} (hW : W ∈ 𝓝 0) : ∃ K h h', ((b
       · exact this
     refine hs (a := fun u => ⟨_, h1 u⟩) fun u hu => hK u _ ?_
     have := hy u
-    simp only [if_pos hu] at this
+    simp only [ite_eq_left hu] at this
     exact this.1
 
 theorem mem_span_pf {g : (κ → Af F) → ℂ} (hg : g ∈ SB (κ → Af F)) :
     g ∈ Submodule.span ℂ {h | ∃ φ, Good φ ∧ h = pf φ} := by
-  haveI : NonarchimedeanAddGroup (κ → Af F) := ⟨fun W hW => by
+  have : NonarchimedeanAddGroup (κ → Af F) := ⟨fun W hW => by
     obtain ⟨K, h, h', hs⟩ := exists_box hW
     exact ⟨_, hs⟩⟩
   obtain ⟨K₀, hK₀⟩ := GlobalTheory.WeilM.HaarUniq.exists_invariant hg

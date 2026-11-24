@@ -81,10 +81,10 @@ theorem finite_pow_eq_one_of_extension {T G B : Type*} [Group T] [CommGroup G] [
 theorem finite_chars_pow_eq_one (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (R : Type)
     [CommRing R] [IsDomain R] {n : ℕ} (hn : 1 ≤ n) :
     Finite {t : Multiplicative X →* Rˣ // t ^ n = 1} := by
-  haveI : NeZero n := ⟨by omega⟩
-  haveI : AddGroup.FG X := Module.Finite.iff_addGroup_fg.mp inferInstance
+  have : NeZero n := ⟨by omega⟩
+  have : AddGroup.FG X := Module.Finite.iff_addGroup_fg.mp inferInstance
   obtain ⟨S, hS, hfin⟩ := (Group.fg_iff.mp (inferInstance : Group.FG (Multiplicative X)))
-  haveI : Finite S := hfin.to_subtype
+  have : Finite S := hfin.to_subtype
   let g : {t : Multiplicative X →* Rˣ // t ^ n = 1} → (S → rootsOfUnity n R) := fun t s =>
     ⟨t.1 s.1, (mem_rootsOfUnity _ _).2 (by simpa using DFunLike.congr_fun t.2 s.1)⟩
   refine Finite.of_injective g fun a b h => Subtype.ext ?_
@@ -109,7 +109,7 @@ theorem finite_hom_range_subset {X : Scheme.{0}} (π : X ⟶ Sp ℤ) [LocallyOfF
   have e : φ.hom = algebraMap ℤ Γ(X, V) := RingHom.ext_int _ _
   have h' : (algebraMap ℤ Γ(X, V)).FiniteType := e ▸ h
   have : Algebra.FiniteType ℤ Γ(X, V) := RingHom.finiteType_algebraMap.mp h'
-  haveI := finite_ringHom Γ(X, V) F
+  have := finite_ringHom Γ(X, V) F
   refine (Set.finite_range fun ψ : Γ(X, V) →+* F =>
     Spec.map (CommRingCat.ofHom ψ) ≫ hV.fromSpec).subset fun f hf => ?_
   have hf' : Set.range f ⊆ Set.range hV.fromSpec := by rw [hV.range_fromSpec]; exact hf
@@ -130,7 +130,7 @@ theorem finite_points_over {Z : Scheme.{0}} (π : Z ⟶ Sp ℤ) [LocallyOfFinite
   obtain ⟨s, hs, hsU⟩ := (isCompact_iff_finite_and_eq_biUnion_affineOpens).mp hc
   have hfin : (⋃ V ∈ s, {f : Sp F ⟶ G.left | Set.range f ⊆ V.1}).Finite :=
     hs.biUnion fun V _ => finite_hom_range_subset (G.hom ≫ π) (CommRingCat.of F) V.1 V.2
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   have hm : ∀ x : Over.mk t ⟶ G,
       x.left ∈ ⋃ V ∈ s, {f : Sp F ⟶ G.left | Set.range f ⊆ V.1} := by
     intro x
@@ -163,11 +163,11 @@ theorem semiAbelian_torsion_finite_and_closedPoint_finiteOrder : (∀ (K : Type)
   intro hB
   refine ⟨?_, ?_⟩
   · rintro K _ _ G _ _ ⟨E⟩ n hn
-    letI := E.addCommGroup
-    letI := E.finite
-    letI := E.grpB
-    haveI := E.q_hom
-    haveI := E.i_hom
+    let := E.addCommGroup
+    let := E.finite
+    let := E.grpB
+    have := E.q_hom
+    have := E.i_hom
     have hk := E.isKernel
     refine finite_pow_eq_one_of_extension (IsMonHom.monoidHom E.i (𝟙_ (Over (Sp K))))
       (IsMonHom.monoidHom E.q (𝟙_ (Over (Sp K)))) ?_ ?_ n ?_ (hB K E.B E.isAbelian n hn)
@@ -178,17 +178,17 @@ theorem semiAbelian_torsion_finite_and_closedPoint_finiteOrder : (∀ (K : Type)
       exact ⟨hk.lift x (toUnit _) (by rw [hx', Hom.one_def]), hk.lift_fst _ _ _⟩
     · haveI : IsDomain Γ((𝟙_ (Over (Sp K))).left, ⊤) :=
         inferInstanceAs (IsDomain Γ(Sp K, ⊤))
-      haveI := finite_chars_pow_eq_one E.X Γ((𝟙_ (Over (Sp K))).left, ⊤) hn
+      have := finite_chars_pow_eq_one E.X Γ((𝟙_ (Over (Sp K))).left, ⊤) hn
       let e := splitTorusPointsEquiv (Sp K) E.X (𝟙_ (Over (Sp K)))
       refine Finite.of_injective (fun t => (⟨e t.1, by rw [← map_pow, t.2, map_one]⟩ :
         {t : Multiplicative E.X →* Γ((𝟙_ (Over (Sp K))).left, ⊤)ˣ // t ^ n = 1})) ?_
       intro a b h
       exact Subtype.ext (e.injective (congrArg Subtype.val h))
   · intro Z π _ G _ _ _ w hw
-    haveI : Finite (G.left.residueField w) :=
+    have : Finite (G.left.residueField w) :=
       (jacobson_closedPoints_tools_int G.left (G.hom ≫ π)).2.1 w hw
     let t₀ : Sp (G.left.residueField w) ⟶ Z := G.left.fromSpecResidueField w ≫ G.hom
-    haveI := finite_points_over π G (G.left.residueField w) t₀
+    have := finite_points_over π G (G.left.residueField w) t₀
     let x₀ : Over.mk t₀ ⟶ G := Over.homMk (G.left.fromSpecResidueField w) rfl
     refine ⟨Nat.card (Over.mk t₀ ⟶ G), Nat.card_pos, fun K _ t x hx => ?_⟩
     obtain ⟨⟨z, φ⟩, hz⟩ := (Scheme.SpecToEquivOfField K G.left).symm.surjective x.left

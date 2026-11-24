@@ -396,7 +396,7 @@ theorem ConeSlabBound.proof (hV : VarietySlabMeasure.Statement) : ConeSlabBound.
   calc μH[s] (coneBall h W ∩ {y | ‖∑ j, u j * h.pointOf y j‖ ≤ ε * ‖y‖})
       ≤ μH[s] (L '' {z | z ∈ zeroSetEuc W ∧ ‖z‖ ≤ ‖F‖ ∧ ‖∑ j, u j * z j‖ ≤ ε}) := measure_mono hsub
     _ ≤ (K : ℝ≥0∞) ^ s * μH[s] {z | z ∈ zeroSetEuc W ∧ ‖z‖ ≤ ‖F‖ ∧ ‖∑ j, u j * z j‖ ≤ ε} :=
-        L.lipschitz.hausdorffMeasure_image_le hs0 _
+        L.lipschitzWith.hausdorffMeasure_image_le hs0 _
     _ ≤ (K : ℝ≥0∞) ^ s * ENNReal.ofReal (C * ε ^ α) := by
         gcongr
         exact hb ε hε hε1
@@ -616,7 +616,7 @@ theorem linearForm_coeff_single {F : Type} [Field F] {n : ℕ} (a : Fin n → F)
   · rw [mul_comm, coeff_C_mul, coeff_X]
     simp
   · intro j _ hji
-    rw [mul_comm, coeff_C_mul, coeff_X, if_neg, mul_zero]
+    rw [mul_comm, coeff_C_mul, coeff_X, ite_eq_right, mul_zero]
     intro h
     exact hji ((Finsupp.single_left_inj one_ne_zero).mp h)
   · simp
@@ -1081,7 +1081,7 @@ theorem ChartMassCompare.proof (h1 : SheetComass.Statement) (h2 : SheetAreaCompa
   calc ∫⁻ y, ‖chartAbsDens J A gB φ y‖ₑ
       ≤ ∫⁻ y, ENNReal.ofReal C' * ‖sheetSum J A (fun x s => |gB x| * sheetJac s (A *ᵥ x)) y‖ₑ := by
         refine lintegral_mono fun y => ?_
-        rw [Real.enorm_eq_ofReal_abs, Real.enorm_eq_ofReal_abs, abs_of_nonneg (hnn y),
+        rw [Real.eNorm_eq_ofReal_abs, Real.eNorm_eq_ofReal_abs, abs_of_nonneg (hnn y),
           ← ENNReal.ofReal_mul hC'0]
         exact ENNReal.ofReal_le_ofReal ((hpt y).trans
           (mul_le_mul_of_nonneg_left (le_abs_self _) hC'0))
@@ -1486,7 +1486,7 @@ theorem ZeroSetOpenMass.proof
     rw [Set.image_image]
     exact (Set.image_congr fun w (hw : w ∈ U') => hAg w hw.1).trans (Set.image_id' _)
   obtain ⟨K, hK⟩ : ∃ K, LipschitzWith K (fun z : Fin n → ℂ => A.mulVec z) :=
-    ⟨_, (LinearMap.toContinuousLinearMap (Matrix.mulVecLin A)).lipschitz⟩
+    ⟨_, (LinearMap.toContinuousLinearMap (Matrix.mulVecLin A)).lipschitzWith⟩
   have hpos : 0 < μH[((2 * d : ℕ) : ℝ)] U' := by
     rw [← finrank_real_fin_complex d]
     exact hU'.measure_pos _ ⟨_, hzU'⟩

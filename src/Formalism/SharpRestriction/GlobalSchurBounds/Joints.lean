@@ -245,7 +245,7 @@ theorem jnt_ramEK (D : D7) (𝔭 : Ideal (𝓞 D.host.K)) (h𝔭 : 𝔭.IsPrime)
     ((D.host.QS * D.host.q : ℕ) : 𝓞 D.host.K) ∈ 𝔭 := by
   have hex : ∃ P : Ideal (𝓞 D.host.E), P.IsPrime ∧ P.LiesOver 𝔭 := by
     by_contra hn
-    rw [Ideal.ramificationIdxIn, dif_neg hn] at hr
+    rw [Ideal.ramificationIdxIn, dite_eq_right hn] at hr
     omega
   rw [Ideal.ramificationIdxIn, dite_eq_left hex] at hr
   obtain ⟨hP, hlo⟩ := hex.choose_spec
@@ -296,8 +296,8 @@ open scoped TensorProduct
 theorem jnt_sig_eq_conj (D : D7) (x : D.host.E) :
     letI := D.host.cmStar
     D.sp.cm.sig x = D.host.conj x := by
-  letI := D.host.cmStar
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  let := D.host.cmStar
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   apply D.host.φ₀.injective
   have h1 : D.host.φ₀ (D.host.conj x) = starRingEnd ℂ (D.host.φ₀ x) :=
     D.host.conjE_apply D.host.φ₀ x
@@ -318,7 +318,7 @@ theorem jnt_exists_place (D : D7) (g : ℕ) (hg : g.Prime) :
 
 theorem _root_.Formalism.MainNotions.StandardLattice.column_lemma_of_definite_form (D : D7) (Lv : LevelData D) (h : Formalism.MainNotions.UnusedSlot33.division_rows_rational_lattice D)
     (hD : letI := D.host.cmStar; Formalism.MainNotions.UnusedSlot33.IsDef D.sp.cm.sig D.sp.gram0) : Formalism.MainNotions.StandardLattice.adm17 D Lv := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rintro ⟨i, hgk⟩ u hP c
   obtain ⟨v, hv⟩ := jnt_exists_place D (D.host.g i) (D.host.g_prime i)
   exact h D.sp.cm.sig (jnt_sig_eq_conj D) D.sp.gram0 D.sp.baseGram_isHermitian hD (D.host.g i)
@@ -328,7 +328,7 @@ theorem _root_.Formalism.MainNotions.StandardLattice.column_lemma_of_definite_fo
 
 theorem stabilisers_trivial_of_adm17 (D : D7) (Lv : LevelData D) (u : D.what₂.Word) (h : Formalism.MainNotions.StandardLattice.adm17 D Lv)
     (hP : letI := D.host.cmStar; (Lv u).ProG) (hgk : StandardLattice.GBig D) : (D.mem u).C.StabZero := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro c
   have hbot := h hgk u hP c
   have h1 : ∀ γ : (D.mem u).C.stab 0 c,
@@ -602,7 +602,7 @@ theorem jnt_isCharED_one (D : D7) : IsCharED D (1 : DirichletCharacter ℂ ((1 :
 theorem jnt_prim_isCharED (D : D7) (ψ : ZetaZeroFreeRegion.Chr D) : IsCharED D (ZetaZeroFreeRegion.prim D ψ).2 := by
   by_cases h : ∃ χ, ZetaZeroFreeRegion.Reads D ψ χ
   · exact jnt_isCharED_of_reads D ψ _ (jnt_prim_reads D ψ h)
-  · have key : ZetaZeroFreeRegion.prim D ψ = ⟨1, 1⟩ := dif_neg h
+  · have key : ZetaZeroFreeRegion.prim D ψ = ⟨1, 1⟩ := dite_eq_right h
     rw [key]
     exact jnt_isCharED_one D
 

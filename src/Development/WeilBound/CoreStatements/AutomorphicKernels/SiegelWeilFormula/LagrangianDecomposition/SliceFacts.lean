@@ -61,7 +61,7 @@ theorem projHom {κ : Type} [Fintype κ] {G : Type} [Group G]
   set P : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ) := (schA F κ).subtype ∘ₗ (schA F κ).projectionOnto T hT with hPdef
   have hPS : ∀ x, P x ∈ schA F κ := fun x => Submodule.coe_mem _
   have hPid : ∀ x ∈ schA F κ, P x = x := fun x hx => by
-    rw [hPdef, LinearMap.comp_apply, Submodule.linearProjOfIsCompl_apply_left hT ⟨x, hx⟩]
+    rw [hPdef, LinearMap.comp_apply, Submodule.projectionOnto_apply_left hT ⟨x, hx⟩]
     rfl
   have hPP : ∀ x, P (x - P x) = 0 := fun x => by
     rw [map_sub, hPid _ (hPS x), sub_self]

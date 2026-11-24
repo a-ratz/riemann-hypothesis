@@ -183,7 +183,7 @@ theorem exists_toDisc_eq_of_extends_norm_le_one : ∀ (l : ℕ) [Fact l.Prime] (
     exact DFunLike.congr_fun key y'
   choose z hz using hz
 
-  haveI : IsAdicComplete bk.J bk.S := bk.complete
+  have : IsAdicComplete bk.J bk.S := bk.complete
   have hfin : ∀ n : ℕ, {i | z i ∉ bk.J ^ n}.Finite := by
     intro n
     obtain ⟨r, hr, hr'⟩ := (_root_.GlobalTheory.BSP.toDisc_injective_of_topBasis l K bk bk.S (RingHom.id _) Unit (TopBasis.self bk.J) ρ hρ hρ1).2.1 n
@@ -246,8 +246,8 @@ theorem exists_discStep : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
   rw [RingHom.id_comp] at hc1
   rw [RingHom.comp_id] at hc2
   have hcomm : ∀ x, R' (Φ' x) = Φ (R x) := fun x => RingHom.congr_fun (hc1.unique hc2) x
-  haveI : IsUltrametricDist (Disc l (s X) ρ') := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l A (s X) ρ').1
-  haveI : NonarchimedeanAddGroup (Disc l (s X) ρ') := IsUltrametricDist.nonarchimedeanAddGroup
+  have : IsUltrametricDist (Disc l (s X) ρ') := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l A (s X) ρ').1
+  have : NonarchimedeanAddGroup (Disc l (s X) ρ') := IsUltrametricDist.nonarchimedeanAddGroup
 
   have hUn : Filter.Tendsto (fun i => ‖U i‖) Filter.cofinite (nhds 0) := tendsto_zero_iff_norm_tendsto_zero.1 hU
   have hTle : ∀ i j, ‖Φ' (U i) * toDisc l (s X) ρ' (c i j)‖ ≤ ‖U i‖ * ‖toDisc l (s X) ρ' (c i j)‖ := fun i j =>
@@ -279,7 +279,7 @@ theorem exists_discStep : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
     refine (hF.biUnion fun i _ => hc i n).subset ?_
     intro j hj
     by_contra hj'
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_not] at hj'
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, not_not] at hj'
     refine (not_le.2 (show r < ‖Z j‖ from hj)) ?_
     refine IsUltrametricDist.norm_tsum_le_of_forall_le_of_nonneg hr.le fun i => ?_
     by_cases hi : r < ‖U i‖
@@ -290,7 +290,7 @@ theorem exists_discStep : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
   have hZ : Filter.Tendsto Z Filter.cofinite (nhds 0) := by
     refine Metric.tendsto_nhds.2 fun ε hε => Filter.eventually_cofinite.2 ((hsmall (ε / 2) (by linarith)).subset ?_)
     intro j hj
-    simp only [Set.mem_setOf_eq, dist_zero_right, not_lt] at hj ⊢
+    simp only [Set.mem_ofPred_eq, dist_zero_right, not_lt] at hj ⊢
     linarith
 
   obtain ⟨hnorm', hdiv'⟩ := _root_.GlobalTheory.BSP.div_E_of_topBasis l K bk A s ι tb ρ' (hρ₀.trans hρρ') hρ'1

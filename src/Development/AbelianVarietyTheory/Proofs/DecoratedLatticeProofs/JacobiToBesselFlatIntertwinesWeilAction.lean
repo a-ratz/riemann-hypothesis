@@ -83,7 +83,7 @@ theorem besselAnisotropicEmbedding_fixes_basePoint {σ : ℕ} (B : BesLev D σ) 
 
 theorem continuous_psiUni {ψ : AddChar (AF D.host.F) ℂ} (hψ : Continuous ψ) (ρ : ℕ) :
     Continuous fun u : UX D ρ => psiUni ψ u.1 := by
-  have hv : Continuous (fun u : UX D ρ => u.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hv : Continuous (fun u : UX D ρ => u.1.1) := Units.continuous_val.comp continuous_subtypeVal
   have hs : Continuous fun u : UX D ρ => upSum u.1.1 := by
     refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
     split_ifs
@@ -94,8 +94,8 @@ theorem continuous_psiUni {ψ : AddChar (AF D.host.F) ℂ} (hψ : Continuous ψ)
 
 theorem sFinite_of_haar {G : Type} [MeasurableSpace G] [Group G] [TopologicalSpace G] (hl : LocallyCompactSpace G)
     (hs : SecondCountableTopology G) (μ : Measure G) (hμ : μ.IsHaarMeasure) : SFinite μ := by
-  haveI : SigmaCompactSpace G := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
+  have : SigmaCompactSpace G := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
   exact instSFiniteOfSigmaFinite
 
 
@@ -104,8 +104,8 @@ theorem flatFB_om : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F) 
   intro D hD ψ σ J B s Ψ hΨ g h
   obtain ⟨x, hx, hx0⟩ := GlobalTheory.Unf.FB.exists_rationalOrbit_point_eq_besselBasePoint D σ B
   obtain ⟨k1, k2, k3⟩ := GlobalTheory.UnitU.topology D (σ + 1)
-  haveI : BorelSpace (UX D (σ + 1)) := ⟨rfl⟩
-  haveI : SFinite s.vU.ν := sFinite_of_haar k1 k2 _ s.vU.unit.1
+  have : BorelSpace (UX D (σ + 1)) := ⟨rfl⟩
+  have : SFinite s.vU.ν := sFinite_of_haar k1 k2 _ s.vU.unit.1
   have hstd := s.weil.std
   set p : GA D J.W × GA D B.V := (J.d.emb0 g, embA B.d B.o h) with hp
   let F : (WO J.W B.V → ℂ) → UX D (σ + 1) → WO J.W₀ B.V₀ → ℂ := fun Φ u w =>
@@ -119,7 +119,7 @@ theorem flatFB_om : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F) 
     have e := GlobalTheory.Unf.FB.evalAt_zero_equivariant D hD ψ σ J B s Ψ hΨ g 1 (one_mem _) h (x0 B ⬝ u.1.1)
     rw [one_mul, ← map_inv, ← Matrix.mul_assoc, besselAnisotropicEmbedding_fixes_basePoint] at e
     rw [hF, hF, map_smul, ← e]
-  have hv : Continuous (fun u : UX D (σ + 1) => u.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hv : Continuous (fun u : UX D (σ + 1) => u.1.1) := Units.continuous_val.comp continuous_subtypeVal
   have hc : ∀ q, Continuous fun r : UX D (σ + 1) × WO J.W₀ B.V₀ => F (s.om q Ψ) r.1 r.2 := fun q => by
     have c := (GlobalTheory.MixCont.mixed_coords_continuous D ψ J.W J.W₀ B.V B.V₀ _ _ J.d B.d s.vS s.vT _ _ s.om s.weil Ψ hΨ).2
     have c2 : Continuous fun r : UX D (σ + 1) × WO J.W₀ B.V₀ =>

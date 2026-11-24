@@ -162,12 +162,12 @@ theorem act_isMonHom (hpr : ∀ i, IsMonHom (pr i)) (a : Matrix (Fin r) (Fin r) 
     intro X
     refine hom_ext pr hl fun i => ?_
     rw [Category.assoc, comp_act_pr]
-    haveI := hpr i
+    have := hpr i
     simp [MonObj.one_comp]
   have h2 : ∀ {X : Over S} (f g : X ⟶ A), (f * g) ≫ act pr hl a = (f ≫ act pr hl a) * (g ≫ act pr hl a) := by
     intro X f g
     refine hom_ext pr hl fun i => ?_
-    haveI := hpr i
+    have := hpr i
     rw [Category.assoc, comp_act_pr, MonObj.mul_comp, Category.assoc, Category.assoc, comp_act_pr, comp_act_pr,
       ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun j _ => ?_
@@ -206,7 +206,7 @@ theorem act_add (hpr : ∀ i, IsMonHom (pr i)) (a b : Matrix (Fin r) (Fin r) ℤ
     act pr hl (a + b) = padd A (act pr hl a) (act pr hl b) := by
   show _ = act pr hl a * act pr hl b
   refine hom_ext pr hl fun i => ?_
-  haveI := hpr i
+  have := hpr i
   rw [MonObj.mul_comp]
   simp only [act_pr, Matrix.add_apply, zpow_add, Finset.prod_mul_distrib]
 
@@ -242,12 +242,12 @@ theorem pr_inc (i₀ : Fin r) : pr i₀ ≫ inc pr hl i₀ = act pr hl (Matrix.s
   simp only [hp, Category.assoc, inc_pr, act_pr]
   by_cases h : i = i₀
   · subst h
-    rw [if_pos rfl, Category.comp_id, Finset.prod_eq_single i]
+    rw [ite_eq_left rfl, Category.comp_id, Finset.prod_eq_single i]
     · simp [Matrix.single_apply]
     · intro j _ hj
       simp [Matrix.single_apply, Ne.symm hj]
     · simp
-  · rw [if_neg h, comp_one]
+  · rw [ite_eq_right h, comp_one]
     symm
     apply Finset.prod_eq_one
     intro j _
@@ -287,7 +287,7 @@ variable (Q : GlobalTheory.PolDeg.Data R) (D' : DegPre R) {r : ℕ} (pr : Fin r 
 theorem c_smul (hc : ∀ z i, D'.c z ≫ pr i = Q.c (xe z i)) (s : SymUnit r) :
     letI := mod xe s
     ∀ (a : TensO s) (y : D'.X), D'.c (a • y) = D'.c y ≫ act pr hl (TensO.mat s a) := by
-  letI := mod xe s
+  let := mod xe s
   intro a y
   refine Fan.IsLimit.hom_ext hl _ _ fun i => ?_
   show D'.c (a • y) ≫ pr i = (D'.c y ≫ act pr hl (TensO.mat s a)) ≫ pr i
@@ -308,7 +308,7 @@ theorem c_xi (hc : ∀ z i, D'.c z ≫ pr i = Q.c (xe z i)) (i₀ : Fin r) (y : 
   by_cases h : i = i₀
   · subst h
     simp [xe_xi]
-  · rw [if_neg h, comp_one]
+  · rw [ite_eq_right h, comp_one]
     simp [xe_xi, Pi.single_apply, h, c_zero]
 
 end Points
@@ -320,7 +320,7 @@ variable {X X' : Type} [AddCommGroup X] [Module.Free ℤ X] [AddCommGroup X'] {r
 theorem xe_smul_xi (s : SymUnit r) (a : TensO s) (i₀ : Fin r) (y : X) (i : Fin r) :
     letI := mod xe s
     xe (a • xi xe i₀ y) i = TensO.mat s a i i₀ • y := by
-  letI := mod xe s
+  let := mod xe s
   rw [xe_smul]
   simp only [xe_xi]
   rw [Finset.sum_eq_single i₀]
@@ -333,7 +333,7 @@ theorem factor_latt (s : SymUnit r) (i₀ : Fin r) :
     (∀ y, xp xe i₀ (xi xe i₀ y) = y) ∧ (∀ z, xi xe i₀ (xp xe i₀ z) = TensO.idem s i₀ • z) ∧
     Function.Injective (fun y => star (TensO.idem s i₀) • TensO.binv s • xi xe i₀ y) ∧
     ∀ z, ∃ y, star (TensO.idem s i₀) • z = star (TensO.idem s i₀) • TensO.binv s • xi xe i₀ y := by
-  letI := mod xe s
+  let := mod xe s
   have key : ∀ y i, xe (star (TensO.idem s i₀) • TensO.binv s • xi xe i₀ y) i =
       ((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) i i₀ • y := by
     intro y i

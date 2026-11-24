@@ -62,7 +62,7 @@ theorem UpperTheory.V.AlgebraTools.ord_ext :
       (fun _ => MonoidAlgebra.basis Γ R) ?_
     intro v
     simp only [F, MultilinearMap.compLinearMap_apply, MultilinearMap.mkPiAlgebraFin_apply,
-      MultilinearMap.zero_apply, MonoidAlgebra.basis_apply]
+      zero_apply, MonoidAlgebra.basis_apply]
     convert h v using 3
     funext i
     simp [φ, MonoidAlgebra.lift_single]

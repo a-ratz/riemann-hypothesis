@@ -87,7 +87,7 @@ theorem topologicalKrullDim_add_one_le {T : Type*} [TopologicalSpace T] [QuasiSo
       rintro _ ⟨z, hz, rfl⟩
       exact specializes_iff_mem_closure.1 ((subtype_specializes_iff _ _).2
         (hyx.trans ((subtype_specializes_iff _ _).1 (hx.specializes hz))))
-    · have hc : IsClosed (Subtype.val ⁻¹' s : Set t) := hs.preimage continuous_subtype_val
+    · have hc : IsClosed (Subtype.val ⁻¹' s : Set t) := hs.preimage continuous_subtypeVal
       exact hys (closure_minimal (t := Subtype.val ⁻¹' s) (by rintro _ ⟨z, -, rfl⟩; exact z.2) hc
         (hle (subset_closure rfl)))
   rcases isEmpty_or_nonempty (IrreducibleCloseds s) with _ | hne
@@ -298,8 +298,8 @@ theorem surjective_and_ker_unit_subschemeι (I : X.IdealSheafData) (F : X.Module
       ((Scheme.Modules.pullbackPushforwardAdjunction I.subschemeι).unit.app F) W.1) =
         I.ideal W • ⊤ := by
   have e : I.subschemeι ⁻¹ᵁ W.1 ≤ I.subschemeι ⁻¹ᵁ W.1 := le_rfl
-  letI := appLEAlgebra I.subschemeι e
-  letI := appLEModule I.subschemeι ((Scheme.Modules.pullback I.subschemeι).obj F) e
+  let := appLEAlgebra I.subschemeι e
+  let := appLEModule I.subschemeι ((Scheme.Modules.pullback I.subschemeι).obj F) e
   have := appLE_isScalarTower I.subschemeι ((Scheme.Modules.pullback I.subschemeι).obj F) e
   have e₀ : algebraMap Γ(X, W.1) Γ(I.subscheme, I.subschemeι ⁻¹ᵁ W.1) =
       (I.subschemeι.app W.1).hom := congrArg CommRingCat.Hom.hom (I.subschemeι.appLE_eq_app)
@@ -389,7 +389,7 @@ theorem support_cut [IsFiniteQC F] : support (cut F hL s) = support F \ nonzeroL
 
 theorem support_cut_eq_inter [IsFiniteQC F] :
     support (cut F hL s) = support F ∩ (secIdeal hL s).support := by
-  rw [support_cut, coe_support_secIdeal, Set.diff_eq]
+  rw [support_cut, coe_support_secIdeal, Set.sdiff_eq]
 
 theorem surjective_cutπ_app [F.IsQuasicoherent] (W : X.affineOpens) :
     Function.Surjective ((cutπ F hL s).app W.1) := surjective_app_of_epi _ W.2
@@ -576,7 +576,7 @@ theorem IsAmpleLB.eventually_exists_finite_subset_nonzeroLocus (h : IsAmpleLB L)
   | H S ih =>
     rcases S.eq_empty_or_nonempty with rfl | hne
     · exact .of_forall fun _ _ _ _ => ⟨0, by simp⟩
-    letI := specializationPreorder X
+    let := specializationPreorder X
     obtain ⟨x, hx, hmax⟩ := S.exists_maximal hne
     have hcl : IsClosed (⋃ y ∈ S.erase x, closure ({y} : Set X)) :=
       isClosed_biUnion_finset fun _ _ => isClosed_closure

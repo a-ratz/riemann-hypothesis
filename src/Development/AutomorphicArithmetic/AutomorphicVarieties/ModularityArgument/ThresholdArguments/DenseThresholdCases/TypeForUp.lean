@@ -64,7 +64,7 @@ variable (Q0 : QData V0) (Q : QData V) (hS : V0.S' ⊆ V.S')
 theorem type_for_r_up_of_type_for (hp : ∀ g, h.p (toGS Ω V.S' g) = toGS Ω V0.S' g) (ι : Qbar l ≃+* ℂ) {m : ℕ}
     (τ₀ : KT n (wt s) →* GL (Fin m) c.O) (ht : _root_.UpperTheory.V.Hi.CaseU.TypeForAlt r ι τ₀) : _root_.UpperTheory.V.Hi.CaseU.TypeForAlt (rUp h) ι τ₀ := by
   intro t' ht'
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
   have hk : ∀ i, (p0 h).ker ≤ (t' i).ker := fun i g hg => by
     refine teich_ext _ _ ?_ (ht' i g).2 (one_pow _)
     rw [(ht' i g).1, rUp_chib, MonoidHom.mem_ker.1 hg, map_one]

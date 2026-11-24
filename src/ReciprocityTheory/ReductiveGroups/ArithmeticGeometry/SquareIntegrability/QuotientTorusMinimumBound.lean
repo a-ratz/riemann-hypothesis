@@ -126,7 +126,7 @@ theorem GB_discrete : DiscreteTopology (GB X I) := by
       have h0 : t ≠ 0 := fun h' => hne (Subtype.ext h')
       exact absurd (GB_norm hI ht h0) (not_le.2 h)
   rw [this]
-  exact Metric.isOpen_ball.preimage continuous_subtype_val
+  exact Metric.isOpen_ball.preimage continuous_subtypeVal
 
 theorem GB_span (hP : Ext.PackingCount) :
     Submodule.span ℝ (GB X I : Set (EuclideanSpace ℂ (Fin (gB (IR I))))) = ⊤ := by
@@ -242,9 +242,9 @@ def bB {X : PT E} {I : Submodule ℤ (Vsp X.dim)} {DF : ℕ} {P : Par X DF} (hI 
 
 theorem lat_bB {X : PT E} {I : Submodule ℤ (Vsp X.dim)} {DF : ℕ} {P : Par X DF} (hI : IsSplit P I)
     (hP : Ext.PackingCount) : lat (bB hI hP) = GB X I := by
-  haveI := GB_discrete hI
-  haveI : IsZLattice ℝ (GB X I) := ⟨GB_span hI hP⟩
-  haveI := ZLattice.module_free ℝ (GB X I)
+  have := GB_discrete hI
+  have : IsZLattice ℝ (GB X I) := ⟨GB_span hI hP⟩
+  have := ZLattice.module_free ℝ (GB X I)
   rw [lat, bB, Module.Basis.range_reindex, Module.Basis.ofZLatticeBasis_span]
 
 theorem exp_sign (q : ℕ) (k : ℤ) :

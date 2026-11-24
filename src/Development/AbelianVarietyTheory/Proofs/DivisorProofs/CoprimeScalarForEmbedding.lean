@@ -83,15 +83,15 @@ theorem map_phiHat (c : Coeff l) (τ : c.F →+* ℂ) : ∃ m : ℤ, IsCoprime m
     ∀ (n : ℕ) (φ : (Fin n → LevQc Dw l) → c.F), (∀ x, φ x = 0 ∨ φ x = 1) → ∀ q,
       τ (phiHat c φ q) = c.F.val.toRingHom (phiHat c φ (m • q)) := by
   have hM : l.M ≠ 0 := by have := l.three_le; omega
-  haveI : NeZero l.M := ⟨hM⟩
+  have : NeZero l.M := ⟨hM⟩
   have h0 := GlobalTheory.LevelPairing.zetaM_prim c
   have h1 : IsPrimitiveRoot (c.F.val.toRingHom (zetaM c)) l.M := h0.map_of_injective c.F.val.toRingHom.injective
   have h2 : IsPrimitiveRoot (τ (zetaM c)) l.M := h0.map_of_injective τ.injective
   obtain ⟨m, -, hm⟩ := h1.eq_pow_of_pow_eq_one h2.pow_eq_one
   have hc : m.Coprime l.M := (h1.pow_iff_coprime (Nat.pos_of_ne_zero hM) m).1 (hm ▸ h2)
   refine ⟨m, Nat.isCoprime_iff_coprime.2 hc, fun n φ hφ q => ?_⟩
-  haveI := GlobalTheory.AdTh.PairModel.finite_levQc Dw l
-  haveI := Fintype.ofFinite (Fin n → LevQc Dw l)
+  have := GlobalTheory.AdTh.PairModel.finite_levQc Dw l
+  have := Fintype.ofFinite (Fin n → LevQc Dw l)
 
   rw [phiHat, phiHat, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, map_sum, map_sum]
   refine Finset.sum_congr rfl fun x _ => ?_

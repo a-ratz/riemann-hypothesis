@@ -188,7 +188,7 @@ theorem ae_evT_ne_zero (sg : K →+* ℂ) (q : KTp K d.D d.N) (hq : q ≠ 0) (m 
   rw [MeasureTheory.ae_iff]
   refine MeasureTheory.measure_mono_null ?_ key
   intro w hw
-  simp only [Set.mem_setOf_eq, not_not] at hw ⊢
+  simp only [Set.mem_ofPred_eq, not_not] at hw ⊢
   rw [← hev w]
   exact hw
 
@@ -298,8 +298,8 @@ theorem trace_fib (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) (t : 
     tauPev sg _ hpt (Algebra.trace (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
         (algebraMap (Ω c) (OmS (Ω c) d.D d.N) g)) =
       ∑ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg t), P g := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  letI : Algebra (KTf K d.D d.N) ℂ := (tauPev sg _ hpt).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) ℂ := (tauPev sg _ hpt).toAlgebra
   obtain ⟨hfd, hrk⟩ := d.omS_finite hd h c
   have : CharZero (KTf K d.D d.N) :=
     charZero_of_injective_algebraMap (R := K) (algebraMap K (KTf K d.D d.N)).injective
@@ -320,7 +320,7 @@ theorem de_fibre (hd : d.AxH 𝒜) (h : d.S1) (a b : KTp K d.D d.N) (hab : d.IsP
         (Matrix.of fun k l : Fin d.del => ∑ c, ∑ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg (d.tOf z)),
           P (ratio (Ω := Ω c) (d.thp (hd.sel k) c) (hd.a4.choose c)) *
           P (ratio (Ω := Ω c) (d.thp (hd.sel l) c) (hd.a4.choose c))).det := by
-  haveI : Countable K := countable_numberField K
+  have : Countable K := countable_numberField K
   filter_upwards [NPB.ae_gen (D := d.D) (N := d.N) sg] with z hz hb
   refine (div_eq_iff hb).2 ?_
   have hG : ∀ (m : Fin d.D → ℕ) (p : MvPolynomial (Fin d.D × Fin (d.N + 1)) K),
@@ -451,8 +451,8 @@ variable (d : Data K ι Ω WT A)
 
 theorem de_ne_zero (hd : d.AxH 𝒜) (h : d.S1) : d.De hd h ≠ 0 := by
   classical
-  letI alg : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
-  haveI : CharZero (KTf K d.D d.N) :=
+  let alg : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
+  have : CharZero (KTf K d.D d.N) :=
     charZero_of_injective_algebraMap (algebraMap K (KTf K d.D d.N)).injective
   obtain ⟨_, hli, hsp⟩ := hd.a4.choose_spec
   have hS : ∀ c (p : KTp K d.D d.N),
@@ -500,7 +500,7 @@ theorem de_ne_zero (hd : d.AxH 𝒜) (h : d.S1) : d.De hd h ≠ 0 := by
     have hq0 : algebraMap (KTp K d.D d.N) (KTf K d.D d.N) q ≠ 0 :=
       IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hq
     exact (mul_eq_zero.mp h1).resolve_left hq0
-  haveI hfd : ∀ c, FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := by
+  have hfd : ∀ c, FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := by
     intro c
     refine Module.finite_def.mpr ⟨Finset.univ.image (fun k => d.bvecG hd.sel hd.a4.choose k c),
       eq_top_iff.mpr fun y _ => ?_⟩
@@ -588,7 +588,7 @@ theorem disc_pointwise (hd : d.AxH 𝒜) (h : d.S1) (a b : KTp K d.D d.N) (hab :
         (σ : OmS (Ω c) d.D d.N →+* ℂ).comp (d.KTtoS h c) = tauPev sg pt hpt :=
       RingHom.ext fun x => σ.commutes x
     have hinj : Function.Injective restrict := fun σ₁ σ₂ hσ =>
-      AlgHom.coe_ringHom_injective (d.emb_ext h c sg pt hpt _ _ (hcomm σ₁) (hcomm σ₂) hσ)
+      AlgHom.toRingHom_injective (d.emb_ext h c sg pt hpt _ _ (hcomm σ₁) (hcomm σ₂) hσ)
     have hrange : Set.range restrict = d.ST c sg (fun i j => pt (i.succ, j)) := by
       ext P
       constructor
@@ -810,7 +810,7 @@ theorem disc_hadamard (hd : d.AxH 𝒜) (h : d.S1) (hI2be : d.HeightIntegralBoun
     (hab : d.IsPres hd h a b) (sg : K →+* ℂ) :
     d.mSgP sg a b - 2 * d.Nsg d.wF hd.a4.choose sg ≤
       d.del * Real.log d.del + 2 * ∑ k, Real.log (d.supN sg d.wF (d.thp (hd.sel k))) := by
-  haveI : MeasureTheory.IsProbabilityMeasure (ReciprocityTheory.MultiplicativeHeights.blockSphereProb d.D (d.N + 1)) :=
+  have : MeasureTheory.IsProbabilityMeasure (ReciprocityTheory.MultiplicativeHeights.blockSphereProb d.D (d.N + 1)) :=
     ReciprocityTheory.MultiplicativeHeights.blockSphereMeasure_isProbability (Nat.succ_pos _)
   have he := hd.a4.choose_spec.1
   have hF : ∀ c, MeasureTheory.Integrable (fun z : ReciprocityTheory.MultiplicativeHeights.BlockSphere d.D (d.N + 1) =>

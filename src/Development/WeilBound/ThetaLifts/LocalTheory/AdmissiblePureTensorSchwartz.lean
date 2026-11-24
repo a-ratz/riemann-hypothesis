@@ -503,7 +503,7 @@ theorem arch_slice {φ : ∀ v : Pl F, (κ → Fv F v) → ℂ} (h0 : ∀ v, φ 
   have hc : (∏ᶠ v, φ v fun i => evFin F v (x₀ i)) ≠ 0 := right_ne_zero_of_mul hx
   have : g = (∏ᶠ v, φ v fun i => evFin F v (x₀ i))⁻¹ • f := by
     ext z
-    rw [SchwartzMap.smul_apply, ← a, e, smul_eq_mul]; field_simp
+    rw [smul_apply, ← a, e, smul_eq_mul]; field_simp
   exact this ▸ N.smul_mem _ hf
 
 end Gen
@@ -562,7 +562,7 @@ theorem so_slice (h : M.IsGood B.ψ) {f : SInf F _} (hf : f ≠ 0) {x} (hx : pur
     rintro _ ⟨g, φ, -, h2, h3, rfl⟩
     have st : Std φ := (h2.and h.std).mono fun _ h => h.1.trans h.2
     have : π (φ B.v₁) = 0 := by
-      exact congrArg N.subtype ((Submodule.linearProjOfIsCompl_apply_eq_zero_iff hN.symm).2 (Submodule.subset_span h3))
+      exact congrArg N.subtype ((Submodule.projectionOnto_apply_eq_zero_iff hN.symm).2 (Submodule.subset_span h3))
     show O _ = 0
     rw [hO g φ st, this, pure_upd_zero g st])
   have st : ∀ y, Std (Function.update M.vac B.v₁ y) := fun y =>
@@ -576,7 +576,7 @@ theorem so_slice (h : M.IsGood B.ψ) {f : SInf F _} (hf : f ≠ 0) {x} (hx : pur
     · subst e; rwa [Function.update_self]
     · rw [Function.update_of_ne e]; exact vac_ne h u
   have : N.linearProjOfIsCompl _ hN.symm x = 0 := Subtype.ext p0
-  exact (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hN.symm).1 this
+  exact (Submodule.projectionOnto_apply_eq_zero_iff hN.symm).1 this
 
 theorem I_add₂ {o : Rep σ Y W} {χ χ' : Chr F E} (hw : M.IsWeil B.ψ χ χ' o) {Φ Ψ : Fn F n d} (hΦ : Φ ∈ schA F _) (hΨ : Ψ ∈ schA F _)
     (c : M.Conv o Φ) (c' : M.Conv o Ψ) (h : UA σ W.J) : M.I o (Φ + Ψ) h = M.I o Φ h + M.I o Ψ h := by
@@ -691,7 +691,7 @@ theorem side_condition_vanishing (H : Hyp) (m : IsMatched B G X om om' R Rf) (q 
     fun f hf φ a => H.kills0 F E σ B _ _ G X om om' R Rf m q f hf φ a.1 a.2
 
 theorem ex_ne (m : IsMatched B G X om om' R Rf) : ∃ f : SInf F (Fin a' × Fin (a + a')), f ≠ 0 := by
-  haveI := m.real.nontriv
+  have := m.real.nontriv
   obtain ⟨ξ, hξ⟩ := exists_ne (0 : R.Pi)
   obtain ⟨f, -, e⟩ := Submodule.mem_map.1 (m.real.quot'.onto ▸ Submodule.mem_top : ξ ∈ (G.M'.Pol B.ψ B.emb).map R.p')
   exact ⟨f, fun h => hξ (by rw [← e, h, map_zero])⟩

@@ -332,8 +332,8 @@ theorem class_eq_zero_of_coboundary (R : Type) [CommRing R] (C : Type) [Category
     (h : ∀ (T T' : C) (φ : T ⟶ T'), (evZ F φ).rTensor N t = g T' - (mp F φ).toLinearMap.rTensor N (g T)) :
     (H1.mk F).rTensor N t = 0 := by
   classical
-  haveI : ∀ T T' : C, Finite (T ⟶ T') := fun T T' ↦ by
-    haveI : Subsingleton (T ⟶ T') := inferInstance
+  have : ∀ T T' : C, Finite (T ⟶ T') := fun T T' ↦ by
+    have : Subsingleton (T ⟶ T') := inferInstance
     exact Finite.of_subsingleton
   let κ : Z1 F →ₗ[R] ∀ x : (Σ T : C, Σ T' : C, (T ⟶ T')), F.obj x.2.1 :=
     LinearMap.pi fun x ↦ evZ F x.2.2
@@ -401,7 +401,7 @@ theorem exists_finite_sys_of_separated_quasiCompact :
     ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R), IsSeparated s → QuasiCompact s →
     ∃ (P : Type) (_ : SemilatticeInf P) (_ : Finite P), Nonempty (Sys X P) := by
   intro R _ X s hsep hqc
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
   have hdiag : IsAffineHom (Limits.pullback.diagonal s) := inferInstance
   have hinf : ∀ U V : X.Opens, IsAffineOpen U → IsAffineOpen V → IsAffineOpen (U ⊓ V) :=
     fun U V hU hV => isAffineHom_diagonal_iff.mp hdiag ⊤ (isAffineOpen_top _) U (by simp) V
@@ -412,9 +412,9 @@ theorem exists_finite_sys_of_separated_quasiCompact :
   have hA : ∀ U ∈ A, IsAffineOpen U :=
     infClosure_min (t := {U | IsAffineOpen U}) (by rintro _ ⟨i, -, rfl⟩; exact i.2)
       (fun a ha b hb => hinf a b ha hb)
-  letI inst : SemilatticeInf A :=
+  let inst : SemilatticeInf A :=
     Subtype.semilatticeInf (fun _ _ ha hb => infClosed_infClosure ha hb)
-  haveI hfin : Finite A := ((hS.image _).infClosure).to_subtype
+  have hfin : Finite A := ((hS.image _).infClosure).to_subtype
   refine ⟨A, inst, hfin, ⟨⟨fun j => ⟨j.1, hA j.1 j.2⟩, fun a b => rfl, ?_⟩⟩⟩
   apply top_le_iff.mp
   rw [e]
@@ -634,7 +634,7 @@ theorem cocycle_of_flat (R : Type) [CommRing R] (C : Type) [Category.{0} C] [Fin
     (hf : ∀ (T T' T'' : C) (φ : T ⟶ T') (ψ : T' ⟶ T''),
       f T T'' (φ ≫ ψ) = (mp F ψ).toLinearMap.rTensor N (f T T' φ) + f T' T'' ψ) :
     ∃ t : Z1 F ⊗[R] N, ∀ (T T' : C) (φ : T ⟶ T'), (evZ F φ).rTensor N t = f T T' φ := by
-  haveI : ∀ T T' : C, Finite (T ⟶ T') := fun _ _ => Finite.of_subsingleton
+  have : ∀ T T' : C, Finite (T ⟶ T') := fun _ _ => Finite.of_subsingleton
   have b1 := rTensor_coords_bijective (R := R) _ (oneCochainsPiArrowsEquiv F) N
   have b2 := rTensor_coords_bijective (R := R) _ (twoCochainsPiComposableEquiv F) N
   obtain ⟨v, hv⟩ := b1.2 (fun a => f a.1 a.2.1 a.2.2)
@@ -775,8 +775,8 @@ theorem bijective_tens (U : X.affineOpens) (V : Y.affineOpens) (W : (pullback f 
     (α : Sec f U.1 ⊗[R] Sec g V.1 →+* Sec s' W.1)
     (hα : ∀ b c, α (b ⊗ₜ c) = secPull (φ := pullback.fst f g) f s' ⟨(W, U), hU⟩ b *
       secPull (φ := pullback.snd f g) g s' ⟨(W, V), hV⟩ c) : Function.Bijective α := by
-  haveI : Mono (affPt f U) := IsOpenImmersion.mono _
-  haveI : Mono (affPt g V) := IsOpenImmersion.mono _
+  have : Mono (affPt f U) := IsOpenImmersion.mono _
+  have : Mono (affPt g V) := IsOpenImmersion.mono _
   have hr : Set.range (affPt s' W) = Set.range (tensPt f g U V) := by
     rw [range_tensPt]
     refine (W.2.range_fromSpec).trans ?_
@@ -1058,7 +1058,7 @@ namespace GlobalTheory.CompanionTheory.Axis
 theorem flat_sec_of_smooth : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R), Smooth s →
     ∀ U : X.affineOpens, Module.Flat R (Sec s U.1) := by
   intro R _ X s hs U
-  haveI : Smooth s := hs
+  have : Smooth s := hs
   have hfl : Flat s := inferInstance
   have hT : IsAffineOpen (⊤ : (Sp R).Opens) := isAffineOpen_top (Sp R)
   have h1 := HasRingHomProperty.appLE @Flat s hfl ⟨⊤, hT⟩ U le_top
@@ -1148,7 +1148,7 @@ theorem kunneth (R : Type) [CommRing R] (C : Type) [Category.{0} C] [Finite C] [
   obtain ⟨f, rfl⟩ := H1.mk_surjective _ c
   have hz : ∀ b : C, ∃ t : Z1 F ⊗[R] F.obj b, ∀ (T T' : C) (φ : T ⟶ T'),
       (evZ F φ).rTensor _ t = f.1 (T, b) (T', b) (φ, 𝟙 b) := fun b ↦ by
-    haveI := hf b
+    have := hf b
     let f₀ : ∀ (T T' : C) (_ : T ⟶ T'), F.obj T' ⊗[R] F.obj b := fun T T' φ ↦ f.1 (T, b) (T', b) (φ, 𝟙 b)
     refine GlobalTheory.T.flat_cocycle_tensor_representation R C F (F.obj b) f₀ ?_
     intro T T' T'' φ ψ
@@ -1161,7 +1161,7 @@ theorem kunneth (R : Type) [CommRing R] (C : Type) [Category.{0} C] [Finite C] [
   choose t ht using hz
   have hcomp : ∀ (b b' : C) (ψ : b ⟶ b'), (H1.mk F).rTensor _ (t b') =
       (mp F ψ).toLinearMap.lTensor (H1 F) ((H1.mk F).rTensor _ (t b)) := fun b b' ψ ↦ by
-    haveI := hf b'
+    have := hf b'
     have k := GlobalTheory.T.cocycle_tensor_coboundary_class_zero R C F (F.obj b') (t b' - (mp F ψ).toLinearMap.lTensor (Z1 F) (t b))
       (fun a ↦ f.1 (a, b) (a, b') (𝟙 a, ψ)) (fun T T' φ ↦ by
         have e : (evZ F φ).rTensor _ ((mp F ψ).toLinearMap.lTensor (Z1 F) (t b)) =
@@ -1219,8 +1219,8 @@ theorem ust_abelian : DescentSt → LowSt → SysBCSt → SteinSt → ∀ (R : T
     (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom →
     ∀ (P : Type) [SemilatticeInf P] (S : Sys A.left P), USt (OSys A.hom S) := by
   intro hD hL hB hS R _ A _ g hA hg P _ S M _ _ z hz
-  letI : Module Rᵐᵒᵖ M := Module.compHom M ((RingEquiv.toOpposite R).symm.toRingHom)
-  haveI : IsCentralScalar R M := ⟨fun r m ↦ rfl⟩
+  let : Module Rᵐᵒᵖ M := Module.compHom M ((RingEquiv.toOpposite R).symm.toRingHom)
+  have : IsCentralScalar R M := ⟨fun r m ↦ rfl⟩
   obtain ⟨A', _, φ, hA', hg', hpb⟩ := GlobalTheory.T.abelian_scheme_base_change_exists R (TrivSqZeroExt R M) A g hA hg
   have := hA.proper
   have := hA'.proper
@@ -1260,7 +1260,7 @@ theorem axOSt : DescentSt → LowSt → SysBCSt → SteinSt → AxOSt := by
   have hU := ust_abelian hD hL hB hS R A g hA hg P S
   have hb := (hL _ _ _ _ _ (resSys A.hom S) (hD R _ A.hom inferInstance P S)).1
   have hb' := (hL _ _ _ _ _ (resSys (A ⊗ A).hom S') (hD R _ (A ⊗ A).hom inferInstance Q S')).1
-  haveI : Finite Pᵒᵖ := Finite.of_injective Opposite.unop Opposite.unop_injective
+  have : Finite Pᵒᵖ := Finite.of_injective Opposite.unop Opposite.unop_injective
   obtain ⟨w, hw⟩ := hm ((resSys (A ⊗ A).hom S').pull1 c)
   obtain ⟨x, y, rfl⟩ := kunneth R Pᵒᵖ (OSys A.hom S) (fun T ↦ GlobalTheory.T.smooth_sections_affine_flat R _ A.hom inferInstance _) hU w
   obtain ⟨x₀, rfl⟩ := hb.2 x

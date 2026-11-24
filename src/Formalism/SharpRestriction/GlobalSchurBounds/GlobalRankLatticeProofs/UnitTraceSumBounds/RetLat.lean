@@ -211,7 +211,7 @@ lemma rel_neg (G : ℂ → ℂ) (A ω s s' : ℂ) (hA : A ≠ 0) (hss : s * s' =
   ring
 
 lemma exp_int_pi (k : ℤ) : cexp (k * (Real.pi * I)) = (-1 : ℂ) ^ k := by
-  rw [Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [exp_intCast_mul, Complex.exp_pi_mul_I]
 
 lemma zsign (a b k c : ℤ) (h : Even (a + b + k - c)) :
     (-1 : ℂ) ^ a * (-1 : ℂ) ^ b * (-1 : ℂ) ^ k = (-1 : ℂ) ^ c := by
@@ -269,7 +269,7 @@ lemma psi_eq (v₁ v₂ : ℂ) (h : ((starRingEnd ℂ) v₁ * v₂).im ≠ 0) (m
     (-1 : ℂ) ^ (m + n + m * n) =
       if ((m : ℂ) * v₁ + n * v₂) / 2 ∈ PI.lat2 v₁ v₂ then 1 else -1 := by
   by_cases hmem : ((m : ℂ) * v₁ + n * v₂) / 2 ∈ PI.lat2 v₁ v₂
-  · rw [if_pos hmem]
+  · rw [ite_eq_left hmem]
     unfold PI.lat2 at hmem
     obtain ⟨p, q, hpq⟩ := AddSubgroup.mem_closure_pair.mp hmem
     rw [zsmul_eq_mul, zsmul_eq_mul] at hpq
@@ -277,7 +277,7 @@ lemma psi_eq (v₁ v₂ : ℂ) (h : ((starRingEnd ℂ) v₁ * v₂).im ≠ 0) (m
     obtain rfl : m = 2 * p := by omega
     obtain rfl : n = 2 * q := by omega
     exact Even.neg_one_zpow ⟨p + q + 2 * p * q, by ring⟩
-  · rw [if_neg hmem]
+  · rw [ite_eq_right hmem]
     have hodd : Odd (m + n + m * n) := by
       rcases Int.even_or_odd m with ⟨a, ha⟩ | ⟨a, ha⟩ <;> rcases Int.even_or_odd n with ⟨b, hb⟩ | ⟨b, hb⟩
       · exfalso
@@ -587,7 +587,7 @@ lemma term_pos (τ : ℂ) (n : ℕ) :
       (-1) ^ n * qe τ n := by
     rw [qe, show 2 * (Real.pi : ℂ) * I * (n : ℂ) * (1 / 2 + τ / 2) + Real.pi * I * (n : ℂ) ^ 2 * τ =
         (n : ℂ) * (Real.pi * I) + Real.pi * I * τ * ((n : ℂ) * ((n : ℂ) + 1)) by ring,
-      Complex.exp_add, Complex.exp_nat_mul, Complex.exp_pi_mul_I]
+      Complex.exp_add, exp_natCast_mul, Complex.exp_pi_mul_I]
   simp only [jacobiTheta₂'_term, jacobiTheta₂_term, Int.cast_natCast, hexp]
 
 lemma term_neg (τ : ℂ) (n : ℕ) :
@@ -601,7 +601,7 @@ lemma term_neg (τ : ℂ) (n : ℕ) :
     rw [qe, show 2 * (Real.pi : ℂ) * I * (-((n : ℂ) + 1)) * (1 / 2 + τ / 2) +
         Real.pi * I * (-((n : ℂ) + 1)) ^ 2 * τ =
         ((n + 1 : ℕ) : ℂ) * (-(Real.pi * I)) + Real.pi * I * τ * ((n : ℂ) * ((n : ℂ) + 1)) by push_cast; ring,
-      Complex.exp_add, Complex.exp_nat_mul, hm]
+      Complex.exp_add, exp_natCast_mul, hm]
   simp only [jacobiTheta₂'_term, jacobiTheta₂_term, Int.cast_neg, Int.cast_add, Int.cast_natCast,
     Int.cast_one, hexp]
   ring
@@ -640,7 +640,7 @@ lemma norm_succ_le (τ : ℂ) (hy : 0 < τ.im) (n : ℕ) :
     linarith
   have hB : Real.exp (-(Real.pi * τ.im * (((n + 1 : ℕ) : ℝ) * (((n + 1 : ℕ) : ℝ) + 1)))) ≤
       Real.exp (-(2 * Real.pi * τ.im)) ^ (n + 1) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     apply Real.exp_le_exp.mpr
     push_cast
     nlinarith [mul_nonneg (mul_nonneg Real.pi_pos.le hy.le)

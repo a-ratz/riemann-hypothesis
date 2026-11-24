@@ -89,7 +89,7 @@ variable {O K V : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [F
 
 theorem exists_smul_mem (L : IsLoc O Δ) (hf : S.FG) (hd : ∀ y, y ∈ S ↔ ∀ x ∈ S, B x y ∈ (algebraMap O K).range) (y : V) :
     ∃ k : K, k ≠ 0 ∧ k • y ∈ S := by
-  haveI := L.frac
+  have := L.frac
   classical
   obtain ⟨s, rfl⟩ := hf
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors O) (s.image fun x => B x y)
@@ -107,7 +107,7 @@ theorem exists_smul_mem (L : IsLoc O Δ) (hf : S.FG) (hd : ∀ y, y ∈ S ↔ �
 theorem exists_unit (L : IsLoc O Δ) (hB : ∀ x y, B x y = B y x) (hf : S.FG) (hd : ∀ y, y ∈ S ↔ ∀ x ∈ S, B x y ∈ (algebraMap O K).range)
     (P : V →ₗ[K] V) (hP : ∀ x ∈ S, P x ∈ S) (hPP : ∀ x, P (P x) = P x) (hadj : ∀ x y, B x (P y) = B (P x) (P y)) (h0 : P ≠ 0) :
     ∃ v ∈ S, P v = v ∧ ∃ u : Oˣ, B v v = algebraMap O K u := by
-  haveI := L.frac
+  have := L.frac
   by_contra hn
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hp' : algebraMap O K p ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective O K)).2 hp.ne_zero
@@ -154,7 +154,7 @@ theorem exists_frame (L : IsLoc O Δ) (h3 : Module.finrank K V = 3) (hB : ∀ x 
     (hd : ∀ y, y ∈ S ↔ ∀ x ∈ S, B x y ∈ (algebraMap O K).range) :
     ∃ e ∈ S, ∃ f ∈ S, ∃ h ∈ S, ∃ η : Oˣ, B e e = 0 ∧ B f f = 0 ∧ B e f = 1 ∧ B e h = 0 ∧ B f h = 0 ∧ B h h = algebraMap O K η ∧
       ∀ v ∈ S, ∃ a b c : O, v = a • e + b • f + c • h := by
-  haveI := L.frac
+  have := L.frac
   have sm : ∀ (a : O) (x : V), algebraMap O K a • x = a • x := fun a x => algebraMap_smul K a x
   have un : ∀ u : Oˣ, algebraMap O K u ≠ 0 := fun u => (u.isUnit.map _).ne_zero
   have iv : ∀ u : Oˣ, (algebraMap O K u)⁻¹ = algebraMap O K (u⁻¹ : Oˣ) := fun u =>
@@ -289,7 +289,7 @@ theorem exists_lat (L : IsLoc O Δ) (hc : c = (τ ^ 2 - 4) * algebraMap O K ε *
     ∃ Λ, IsLat O τ Λ ∧ S = S0 s β Λ := by
   classical
   obtain ⟨e, heS, f, hfS, h, hhS, η, hee, hff, hef, heh, hfh, hhh, hspan⟩ := Uni.frame L hS
-  haveI := L.frac
+  have := L.frac
   have h2O : IsUnit (2 : O) := L.two
   have h2 : (2 : K) ≠ 0 := by
     have := (h2O.map (algebraMap O K)).ne_zero
@@ -474,7 +474,7 @@ theorem lattice_homothety_of_eq_unimodular (L : IsLoc O Δ) (hD : τ ^ 2 - 4 ≠
     exact smul_left_injective K hy1 hpq
   have hJfg : J.FG := Submodule.fg_of_fg_map_injective g hginj
     (Submodule.FG.of_le (Submodule.fg_span (Finset.finite_toSet u)) (Submodule.map_comap_le g M'))
-  haveI := L.frac
+  have := L.frac
   obtain ⟨k, hk⟩ := (FractionalIdeal.isPrincipal
     (⟨J, FractionalIdeal.isFractional_of_fg hJfg⟩ : FractionalIdeal (nonZeroDivisors O) K)).principal
   change J = Submodule.span O {k} at hk
@@ -562,7 +562,7 @@ theorem unimodular_image_mul_unit (z : (Etau K τ)ˣ) (Λ : Set (Etau K τ)) :
 omit [IsDomain O] [IsDiscreteValuationRing O] in
 theorem unimodular_image_smul_eq (k : Kˣ) (Λ : Set (Etau K τ)) : S0 s β (((k : K) • ·) '' Λ) = S0 s β Λ := by
   ext v
-  simp only [S0, Set.mem_setOf_eq]
+  simp only [S0, Set.mem_ofPred_eq]
   constructor
   · intro h y hy
     have := h ((k : K) • y) ⟨y, hy, rfl⟩
@@ -726,7 +726,7 @@ private theorem exists_finset_up_span_eq_span (σ : K) (s : Finset (K × Etau K 
   refine ⟨t, ?_⟩
   rw [ht]
   ext x
-  simp only [up, Set.mem_setOf_eq, SetLike.mem_coe, Submodule.mem_map, Submodule.mem_prod,
+  simp only [up, Set.mem_ofPred_eq, SetLike.mem_coe, Submodule.mem_map, Submodule.mem_prod,
     LinearMap.coe_restrictScalars]
   constructor
   · rintro ⟨v, hv, w, hw, rfl⟩
@@ -963,7 +963,7 @@ theorem fix_down (L : IsLoc O Δ) (hσ : Δ * σ ^ 2 = algebraMap O K ε) (h1 : 
     refine ⟨s, ?_⟩
     rw [hs]
     ext v
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, Submodule.mem_map]
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Submodule.mem_map]
     constructor
     · intro hv
       exact ⟨_, hv, hp v 0⟩
@@ -1073,7 +1073,7 @@ private theorem norm_int (L : IsLoc O Δ) (hD : τ ^ 2 - 4 ≠ 0) {Λ : Set (Eta
 private theorem stab_iff (L : IsLoc O Δ) (hD : τ ^ 2 - 4 ≠ 0) {s : K} {β : Etau K τ} (hs : s ≠ 0) (hu : IsUnit β) {r : O} (h1 : IsUnit r)
     (hr : algebraMap O K r ^ 2 = 2 + τ) {z : (Etau K τ)ˣ} (hz : (z : Etau K τ) = 1 + ω) {Λ : Set (Etau K τ)} (hΛ : IsLat O τ Λ) :
     Mu ω '' S0 s β Λ = S0 s β Λ ↔ ∀ y ∈ Λ, ω * y ∈ Λ := by
-  haveI := L.frac
+  have := L.frac
   have r1 : algebraMap O K r ≠ 0 := (h1.map _).ne_zero
   have n0 : 2 + τ ≠ 0 := hr ▸ pow_ne_zero 2 r1
   have hi : ((z⁻¹ : (Etau K τ)ˣ) : Etau K τ) = (2 + τ)⁻¹ • (1 + star ω) := by
@@ -1139,7 +1139,7 @@ theorem UpperTheory.V.Z.Sym.Loc.caseP :
     UpperTheory.V.Z.Sym.Loc.CaseP := by
   intro O K _ _ _ _ _ Δ τ L hD r hr2 hr c hc j χ hj hχ a ha z hz t
   classical
-  haveI := L.frac
+  have := L.frac
   have h2 : (2 : K) ≠ 0 := by
     have := (L.two.map (algebraMap O K)).ne_zero
     rwa [map_ofNat] at this
@@ -1177,7 +1177,7 @@ theorem UpperTheory.V.Z.Sym.Loc.caseP :
   · rw [H, hq] at hm
     obtain ⟨p, q, hpq⟩ : ∃ p q : K, p ^ 2 - (τ ^ 2 - 4) * q ^ 2 = -2 * c * t := by
       by_contra hn
-      rw [hs, if_neg hn] at hm
+      rw [hs, ite_eq_right hn] at hm
       norm_num at hm
     let ε : Oˣ := -ε₀
     let s : K := s₀ / (algebraMap O K r * (2 - τ))
@@ -1198,8 +1198,8 @@ theorem UpperTheory.V.Z.Sym.Loc.caseP :
     have ga : gOrb O j χ a = vcount O τ ω := by
       rw [gLat O K Δ τ L hD j χ hj hχ a 1 1 (by simp [ha, QuadraticAlgebra.norm_def]), ha]; simp
     rw [ga]
-    letI := torAct (K := K) Δ τ
-    letI := mulAct τ
+    let := torAct (K := K) Δ τ
+    let := mulAct τ
     have kX : ∀ Λ, IsLat O τ Λ → ((∃ S, IsLat O τ S ∧ (∀ y ∈ S, ω * y ∈ S) ∧ cls τ Λ = cls τ S) ↔ ∀ y ∈ Λ, ω * y ∈ Λ) := fun Λ hΛ => by
       refine ⟨?_, fun h => ⟨Λ, hΛ, h, rfl⟩⟩
       rintro ⟨S, -, hS, e⟩
@@ -1225,22 +1225,22 @@ theorem UpperTheory.V.Z.Sym.Loc.caseP :
       exact ⟨_, lat_mul hΛ w, (tor_up _ w _).trans (by rw [unimodular_image_mul_unit]; rfl), cls_mul w Λ⟩
     · rintro _ _ ⟨Λ, hΛ, rfl, rfl⟩
       exact if_congr ((kT Λ hΛ).trans (kX Λ hΛ).symm) rfl rfl
-    · obtain ⟨S, a1, -, rfl⟩ := fix_down L hσ h1 h1' hr (by by_contra h; exact hT (if_neg h))
+    · obtain ⟨S, a1, -, rfl⟩ := fix_down L hσ h1 h1' hr (by by_contra h; exact hT (ite_eq_right h))
       obtain ⟨Λ, hΛ, rfl⟩ := exists_lat L hc' hβ a1
       refine ⟨_, ⟨Λ, hΛ, rfl, rfl⟩, ?_⟩
       rintro _ ⟨Λ', hΛ', e, rfl⟩
       obtain ⟨k, rfl⟩ := lattice_homothety_of_eq_unimodular L hD hs' hu hΛ hΛ' (up_inj hσ0 e)
       exact cls_smul k Λ
-    · obtain ⟨Λ, hΛ, -, rfl⟩ : ∃ S, IsLat O τ S ∧ (∀ y ∈ S, ω * y ∈ S) ∧ X = cls τ S := by by_contra h; exact hX (if_neg h)
+    · obtain ⟨Λ, hΛ, -, rfl⟩ : ∃ S, IsLat O τ S ∧ (∀ y ∈ S, ω * y ∈ S) ∧ X = cls τ S := by by_contra h; exact hX (ite_eq_right h)
       refine ⟨_, ⟨Λ, hΛ, rfl, rfl⟩, ?_⟩
       rintro _ ⟨Λ', hΛ', rfl, e⟩
       obtain ⟨k, rfl⟩ := of_cls e
       rw [unimodular_image_smul_eq]
-  · refine finsum_eq_zero_of_forall_eq_zero fun o => mul_eq_zero_of_right _ (if_neg fun h => H ?_)
+  · refine finsum_eq_zero_of_forall_eq_zero fun o => mul_eq_zero_of_right _ (ite_eq_right fun h => H ?_)
     obtain ⟨S, a1, -, -⟩ := fix_down L hσ h1 h1' hr h
     rcases a1.iso L t.ne_zero with h3 | h3
     · rw [(hsLaw O K Δ L).2.2.2 _ _ hD h3, (hsLaw O K Δ L).2.2.2 _ _ hD h3]
-    · rw [hs, if_pos h3] at hm
+    · rw [hs, ite_eq_left h3] at hm
       linear_combination (-hs (τ ^ 2 - 4) (-2 * c)) * hm - hs (τ ^ 2 - 4) (t : K) * hq (-2 * c)
 end -- clump:auto
 end -- clump:auto

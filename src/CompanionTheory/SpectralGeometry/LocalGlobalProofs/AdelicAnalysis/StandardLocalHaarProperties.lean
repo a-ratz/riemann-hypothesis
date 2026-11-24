@@ -84,8 +84,8 @@ theorem mulAdd_symm_continuous (c : Fv F v) (hc : c ≠ 0) : Continuous (mulAdd 
 
 theorem vol_lt_one (lam : Measure (Fv F v)) (h : IsStdV v lam) :
     lam {t | Valued.v t < 1} = (Ideal.absNorm v.asIdeal : ℝ≥0∞)⁻¹ := by
-  haveI := h.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have key := GlobalTheory.ResidueBoxVolume.measureReal_residueBox F v (Fv F v) lam Unit
     (ContinuousLinearEquiv.funUnique Unit (Fv F v) (Fv F v)).symm {0}
   have e1 : {x : Fv F v | ∃ y : Unit → v.adicCompletionIntegers F,
@@ -94,7 +94,7 @@ theorem vol_lt_one (lam : Measure (Fv F v)) (h : IsStdV v lam) :
         ({0} : Set (Unit → IsLocalRing.ResidueField (v.adicCompletionIntegers F)))} =
       {t | Valued.v t < 1} := by
     ext x
-    simp only [Set.mem_setOf_eq, ← GlobalTheory.ResidueBoxVolume.exists_residue_eq_zero_iff v x]
+    simp only [Set.mem_ofPred_eq, ← GlobalTheory.ResidueBoxVolume.exists_residue_eq_zero_iff v x]
     constructor
     · rintro ⟨y, h1, h2⟩
       exact ⟨y (), h1 (), congrFun h2 ()⟩
@@ -122,8 +122,8 @@ theorem absNorm_ne_zero : (Ideal.absNorm v.asIdeal : ℝ≥0∞) ≠ 0 := by
 
 theorem map_unit (lam : Measure (Fv F v)) (h : IsStdV v lam) (u : Fv F v) (hu : Valued.v u = 1) :
     lam.map (fun t => u * t) = lam := by
-  haveI := h.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨_, hl, hs, ht, _⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have hu0 : u ≠ 0 := by
     rintro rfl
@@ -146,8 +146,8 @@ theorem exp_neg_one_mul_lt_one_iff (a : WithZero (Multiplicative ℤ)) :
 theorem map_unif (lam : Measure (Fv F v)) (h : IsStdV v lam) (π : Fv F v)
     (hπ : Valued.v π = WithZero.exp (-1 : ℤ)) :
     lam.map (fun t => π * t) = (Ideal.absNorm v.asIdeal : ℝ≥0∞) • lam := by
-  haveI := h.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨_, hl, hs, ht, _⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have hq0 := absNorm_ne_zero v
   have hqt : (Ideal.absNorm v.asIdeal : ℝ≥0∞) ≠ ⊤ := ENNReal.natCast_ne_top _
@@ -155,7 +155,7 @@ theorem map_unif (lam : Measure (Fv F v)) (h : IsStdV v lam) (π : Fv F v)
     rintro rfl
     simp at hπ
     exact WithZero.exp_ne_zero hπ.symm
-  haveI : ((Ideal.absNorm v.asIdeal : ℝ≥0∞) • lam).IsAddHaarMeasure :=
+  have : ((Ideal.absNorm v.asIdeal : ℝ≥0∞) • lam).IsAddHaarMeasure :=
     Measure.IsAddHaarMeasure.smul lam hq0 hqt
   refine (_root_.GlobalTheory.CompanionTheory.SW.HaarTransport.map_addEquiv_haar (Fv F v) (Fv F v) lam ((Ideal.absNorm v.asIdeal : ℝ≥0∞) • lam)
     (mulAdd v π hπ0) (mulAdd_continuous v π hπ0) (mulAdd_symm_continuous v π hπ0)).2
@@ -164,7 +164,7 @@ theorem map_unif (lam : Measure (Fv F v)) (h : IsStdV v lam) (π : Fv F v)
   · change Valued.v (π * x) < 1 ↔ Valued.v x ≤ 1
     rw [map_mul, hπ]
     exact exp_neg_one_mul_lt_one_iff _
-  · rw [h.2, Measure.smul_apply, vol_lt_one v lam h, smul_eq_mul, ENNReal.mul_inv_cancel hq0 hqt]
+  · rw [h.2, smul_apply, vol_lt_one v lam h, smul_eq_mul, ENNReal.mul_inv_cancel hq0 hqt]
 
 theorem volumes_in_completion : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → lam {t | Valued.v t < 1} = (Ideal.absNorm v.asIdeal : ℝ≥0∞)⁻¹ ∧ (∀ π : Fv F v, Valued.v π = WithZero.exp (-1 : ℤ) → lam.map (fun t => π * t) = (Ideal.absNorm v.asIdeal : ℝ≥0∞) • lam) ∧ (∀ u : Fv F v, Valued.v u = 1 → lam.map (fun t => u * t) = lam) ∧ Nat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) = Ideal.absNorm v.asIdeal :=
   fun F _ _ v lam h => ⟨vol_lt_one v lam h, map_unif v lam h, map_unit v lam h,

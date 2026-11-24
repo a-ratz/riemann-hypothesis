@@ -82,7 +82,7 @@ theorem ample_prod : ∀ (R : Type) [CommRing R] (A A' : Over (Spec (CommRingCat
   intro R _ A A' _ _ L L' hA hL hLa hA' hL' hLa'
   have hAA := ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor A A' hA hA'
   refine ⟨hAA, ?_⟩
-  haveI : IsProper (A ⊗ A').hom := hAA.proper
+  have : IsProper (A ⊗ A').hom := hAA.proper
   have hP : IsPullback (fst A A').left (snd A A').left A.hom A'.hom :=
     Over.isPullback_of_binaryFan_isLimit _ (CartesianMonoidalCategory.tensorProductIsBinaryProduct A A')
   have hp := ReciprocityTheory.ChartRestriction.G.Semi.LB.isLB_pull hL (fst A A').left
@@ -348,7 +348,7 @@ theorem tens_map {X Y X' Y' : Type} (M : Submodule R (X' → C)) (M' : Submodule
   rw [Submodule.map_span]
   congr 1
   ext F
-  simp only [Set.mem_image, Set.mem_setOf_eq, Submodule.mem_map]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Submodule.mem_map]
   constructor
   · rintro ⟨_, ⟨g, hg, k, hk, rfl⟩, rfl⟩
     exact ⟨_, ⟨g, hg, rfl⟩, _, ⟨k, hk, rfl⟩, rfl⟩

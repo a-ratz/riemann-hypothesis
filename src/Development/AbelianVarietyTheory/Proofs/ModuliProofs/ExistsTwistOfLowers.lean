@@ -125,9 +125,9 @@ end Field
 theorem exists_finite_mod (D : Datum H) {n : ℕ} (hn : 0 < n) : ∃ (Q : Type) (_ : Finite Q)
     (π : (D.La →ₗ[𝓞 E] D.La) → Q), ∀ f f', π f = π f' → ∀ a, D.ModN n (f a - f' a) := by
   let N : Submodule (𝓞 E) D.La := LinearMap.range (n • (LinearMap.id : D.La →ₗ[𝓞 E] D.La))
-  haveI := D.fin
-  haveI : Module.Finite ℤ (D.La ⧸ N) := Module.Finite.trans (𝓞 E) _
-  haveI : Finite (D.La ⧸ N) := Module.finite_of_fg_torsion (M := D.La ⧸ N) fun x => by
+  have := D.fin
+  have : Module.Finite ℤ (D.La ⧸ N) := Module.Finite.trans (𝓞 E) _
+  have : Finite (D.La ⧸ N) := Module.finite_of_fg_torsion (M := D.La ⧸ N) fun x => by
     obtain ⟨x, rfl⟩ := N.mkQ_surjective x
     refine ⟨⟨(n : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hn.ne')⟩, ?_⟩
     change (n : ℤ) • N.mkQ x = 0
@@ -211,7 +211,7 @@ structure Twist (g : Sim D) (σ : KA l₂ →+* KA l₂) (f : Xo.X ⟶ Xo.X) : P
     ∀ a, (Xo.univ.etaA (g.f l₂.A a)).left ≫ ν.φ = f ≫ (Xo.univ.etaA a).left
 
 theorem reduced : IsReduced Xo.X := by
-  haveI := Xo.smooth
+  have := Xo.smooth
   exact (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ Xo.s
     (SmoothOfRelativeDimension.smooth D.dim _)).1
 
@@ -441,7 +441,7 @@ theorem Grp.exists_inv (hpq : 1 ≤ D.p + D.q) (hj : ∀ x, ((jK x : KA l₂) : 
 theorem Grp.finite (hpq : 1 ≤ D.p + D.q) (hj : ∀ x, ((jK x : KA l₂) : ℂ) = ((x : KA l) : ℂ)) : Finite (Grp Xo jK) := by
   obtain ⟨Q, _, π, hπ⟩ := exists_finite_mod D (level_pos l₂)
   obtain ⟨Q', _, π', hπ'⟩ := exists_finite_mod D l₂.A_pos
-  haveI : NeZero l₂.A := ⟨l₂.A_pos.ne'⟩
+  have : NeZero l₂.A := ⟨l₂.A_pos.ne'⟩
   choose g σ h using fun a : Grp Xo jK => a.2
   refine Finite.of_injective (fun a => ((π ((g a).f l₂.M), π' ((g a).f l₂.A), ((g a).ν l₂.A : ZMod l₂.A)) :
     Q × Q' × ZMod l₂.A)) fun a c hac => Subtype.ext ?_

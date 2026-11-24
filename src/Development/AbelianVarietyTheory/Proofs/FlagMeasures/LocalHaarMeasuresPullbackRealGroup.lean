@@ -272,7 +272,7 @@ theorem map_muL {μτ : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)}
 
 theorem sf_muL {μτ : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)}
     (hH : IsHaarOn (Rset D.R.k D.R.rS (GlobalTheory.TypeAsm.gamT C t τ)⁻¹) μτ) : SigmaFinite (μτ.comap (eM C τ)) := by
-  haveI := hH.1
+  have := hH.1
   exact SigmaFinite.of_map _ (eM_emb C τ).measurable.aemeasurable (by rw [map_muL C t τ hH]; infer_instance)
 
 theorem map_nuL {ντ : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)}
@@ -380,13 +380,13 @@ theorem pullC_holds : GlobalTheory.TypeAsm.PullC := by
   have hH : ∀ τ, IsHaarOn (Rset D.R.k D.R.rS (GlobalTheory.TypeAsm.gamT C t τ)⁻¹) (μ τ) := fun τ => (h τ).2.1
   have hC : ∀ τ, ν τ {x | Matrix.of x ∉ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)} = 0 := fun τ => (h τ).2.2.2.1
   have hQ := fun τ => (h τ).2.2.2.2
-  haveI : ∀ τ, SigmaFinite (μ τ) := fun τ => (h τ).1
-  haveI : ∀ τ, SigmaFinite (ν τ) := fun τ => (h τ).2.2.1
+  have : ∀ τ, SigmaFinite (μ τ) := fun τ => (h τ).1
+  have : ∀ τ, SigmaFinite (ν τ) := fun τ => (h τ).2.2.1
   set μl : ∀ τ : D.what₂.Tau, Measure (Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) := fun τ => (μ τ).comap (eM C τ) with hμl
   set νl' : ∀ τ : D.what₂.Tau, Measure (Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :=
     fun τ => (ν τ).comap (Formalism.L2.SG.Pf.LocJEq.Smap C τ (t.pt.1 (vOf X τ))) with hνl'
-  haveI : ∀ τ, SigmaFinite (μl τ) := fun τ => sf_muL C t τ (hH τ)
-  haveI : ∀ τ, SigmaFinite (νl' τ) := fun τ => sf_nuL C t τ (hC τ)
+  have : ∀ τ, SigmaFinite (μl τ) := fun τ => sf_muL C t τ (hH τ)
+  have : ∀ τ, SigmaFinite (νl' τ) := fun τ => sf_nuL C t τ (hC τ)
   have hmap : ∀ τ, (μl τ).map (eM C τ) = μ τ := fun τ => map_muL C t τ (hH τ)
   set Rq : (∀ τ : D.what₂.Tau, Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) ≃ᵐ X.B.I.Ginf :=
     MeasurableEquiv.piCongrLeft (fun v => Formalism.REAL.UJ (X.B.I.ε v)) X.pl.symm with hRq
@@ -443,7 +443,7 @@ theorem pullC_holds : GlobalTheory.TypeAsm.PullC := by
       funext τ
       exact (eM_emb C τ).injective.extend_apply id _ (p τ)
   have hpiμ : Measure.pi μ = (Measure.pi μl).map E := by
-    haveI : ∀ τ, SigmaFinite ((μl τ).map (eM C τ)) := fun τ => by rw [hmap τ]; infer_instance
+    have : ∀ τ, SigmaFinite ((μl τ).map (eM C τ)) := fun τ => by rw [hmap τ]; infer_instance
     rw [Measure.pi_map_pi (μ := μl) (f := fun τ => eM C τ) (fun τ => (eM_emb C τ).measurable.aemeasurable)]
     congr 1
     funext τ
@@ -480,7 +480,7 @@ theorem pullC_holds : GlobalTheory.TypeAsm.PullC := by
       refine inv_muL C t τ (hH τ) _ ?_
       rw [hRq_symm]
       exact (rset_iff C t s).1 hs τ
-    haveI : ∀ τ, SigmaFinite ((μl τ).map (fun a => Rq.symm s τ * a)) := fun τ => by rw [hinvs τ]; infer_instance
+    have : ∀ τ, SigmaFinite ((μl τ).map (fun a => Rq.symm s τ * a)) := fun τ => by rw [hinvs τ]; infer_instance
     have hpm := Measure.pi_map_pi (μ := μl) (f := fun τ a => Rq.symm s τ * a)
       (fun τ => (measurable_const_mul _).aemeasurable)
     have hcomp : (fun x => s * x) ∘ Rq = Rq ∘ (fun (p : ∀ τ : D.what₂.Tau, Formalism.REAL.UJ (X.B.I.ε (vOf X τ)))

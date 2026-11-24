@@ -116,11 +116,11 @@ theorem cont_mod (g : 𝓢(V, ℂ)) : Continuous fun L : V →L[ℝ] ℝ => Schw
   have e : SchwartzMap.smulLeftCLM ℂ (ex L) g - SchwartzMap.smulLeftCLM ℂ (ex L₀) g =
       SchwartzMap.smulLeftCLM ℂ (ex (L - L₀) - fun _ => 1) (SchwartzMap.smulLeftCLM ℂ (ex L₀) g) := by
     ext x
-    simp only [SchwartzMap.sub_apply, SchwartzMap.smulLeftCLM_apply_apply (ex_temp _), SchwartzMap.smulLeftCLM_apply_apply hu,
+    simp only [sub_apply, SchwartzMap.smulLeftCLM_apply_apply (ex_temp _), SchwartzMap.smulLeftCLM_apply_apply hu,
       Pi.sub_apply, smul_eq_mul]
     simp only [ex]
     have : Complex.exp (Complex.I * (L x : ℝ)) = Complex.exp (Complex.I * ((L - L₀) x : ℝ)) * Complex.exp (Complex.I * (L₀ x : ℝ)) := by
-      rw [← Complex.exp_add]; congr 1; simp only [ContinuousLinearMap.sub_apply]; push_cast; ring
+      rw [← Complex.exp_add]; congr 1; simp only [sub_apply]; push_cast; ring
     rw [this, sub_mul, one_mul, mul_assoc]
   rw [SchwartzMap.schwartzSeminormFamily_apply, e]
   refine (h _ _ hu (norm_nonneg _) fun i _ x => ?_).trans_lt h2
@@ -166,7 +166,7 @@ theorem kill_mul (hS : WeakInt) (l : 𝓢(X, ℂ) →L[ℂ] ℂ) (g : 𝓢(X, �
     ext x
     have : f x = ∫ η, (a η • SchwartzMap.smulLeftCLM ℂ (ex (Λ η)) g) x :=
       (hf ((BoundedContinuousFunction.evalCLM ℂ x).comp (SchwartzMap.toBoundedContinuousFunctionCLM ℂ X ℂ))).2
-    simp only [SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply (ex_temp _), smul_eq_mul] at this
+    simp only [smul_apply, SchwartzMap.smulLeftCLM_apply_apply (ex_temp _), smul_eq_mul] at this
     rw [this, SchwartzMap.smulLeftCLM_apply_apply φ.hasTemperateGrowth, smul_eq_mul, ha, ← integral_mul_const]
     congr 1
     funext η
@@ -210,7 +210,7 @@ theorem irr_inner (hS : WeakInt) (l : 𝓢(X, ℂ) →L[ℂ] ℂ) (g : 𝓢(X, �
         rw [hy]; simp
   have e : φ = ∑ a ∈ t, SchwartzMap.smulLeftCLM ℂ ((hsup a).toSchwartzMap (hsm a)) (SchwartzMap.compSubConstCLM ℂ a g) := by
     ext x
-    rw [SchwartzMap.sum_apply]
+    rw [sum_apply]
     simp only [SchwartzMap.smulLeftCLM_apply_apply (SchwartzMap.hasTemperateGrowth _), SchwartzMap.compSubConstCLM_apply,
       smul_eq_mul, HasCompactSupport.toSchwartzMap_toFun]
     by_cases hx : x ∈ tsupport φ

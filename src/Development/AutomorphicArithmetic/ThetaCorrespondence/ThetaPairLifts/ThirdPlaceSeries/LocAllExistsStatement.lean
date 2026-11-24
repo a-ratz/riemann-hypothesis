@@ -201,7 +201,7 @@ theorem charpoly_coeff_congr_same_place : ∀ (D : D7) (Rw : RowSide D) (Pl : Pl
     have e1 := eventually_map_residue_eq (hO i) (fun g => (ρ g : Matrix (Fin D.R.r) (Fin D.R.r) (X.nd.O i))) hR.1 g0
     have e2 := eventually_map_residue_eq (hO i') (fun g => (ρ' g : Matrix (Fin D.R.r) (Fin D.R.r) (X.nd.O i'))) hR'.1 g0
     filter_upwards [e1, e2] with g h1 h2
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hg0 ⊢
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hg0 ⊢
     intro hg
     apply hg0
     have c1 : IsLocalRing.residue (X.nd.O i) ((ρ g : Matrix (Fin D.R.r) (Fin D.R.r) (X.nd.O i)).charpoly.coeff n) =
@@ -221,13 +221,13 @@ theorem charpoly_coeff_congr_same_place : ∀ (D : D7) (Rw : RowSide D) (Pl : Pl
         iotaO X.nd Y.naut i' ((ρ' g : Matrix (Fin D.R.r) (Fin D.R.r) (X.nd.O i')).charpoly.coeff n) ∈
         (Pl.plB (X.nd.w i)).nonunits}) (fun s hs => by
     obtain ⟨w, hwS, hsplit, B, hB, hF⟩ := hs
-    simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hwS
+    simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not] at hwS
     obtain ⟨q1, q2⟩ := hwS
     have r1 := q1 B s hB hF
     have r2 := q2 B s hB hF
     have eqloc : isoLoc X.nd Y.naut Sig w = isoLoc X.nd Y.naut Sig' w :=
       (hP.2.2 w hsplit).trans ((hRw i σ w).trans ((hRw i' σ w).symm.trans (hP'.2.2 w hsplit).symm))
-    rw [Set.mem_setOf_eq, ← Polynomial.coeff_map, ← Polynomial.coeff_map, r1, r2, eqloc, sub_self, ValuationSubring.mem_nonunits_iff,
+    rw [Set.mem_ofPred_eq, ← Polynomial.coeff_map, ← Polynomial.coeff_map, r1, r2, eqloc, sub_self, ValuationSubring.mem_nonunits_iff,
       map_zero]
     exact zero_lt_one)
   have hc := hE.closure_eq
@@ -306,7 +306,7 @@ theorem isOpen_ker_mapRep {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopolo
     ext i j
     have := hφ (hg i j)
     rw [RingHom.mem_ker, map_sub, sub_eq_zero] at this
-    simp only [mapRep, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe,
+    simp only [mapRep, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass,
       RingHom.mapMatrix_apply, Matrix.map_apply, Units.val_one]
     change φ ((ρ g : Matrix (Fin a) (Fin a) O) i j) = (1 : Matrix (Fin a) (Fin a) k) i j
     rw [this, Matrix.one_apply, Matrix.one_apply]
@@ -560,8 +560,8 @@ theorem exists_pow_pair [IsAlgClosure E Ω] {v : HeightOneSpectrum (𝓞 E)} {A 
           show a * m' + a = (m' + 1) * a by ring, pow_mul, hζm, one_pow, one_mul]
       · rw [map_inv, a2, inv_eq_iff_mul_eq_one, ← pow_add, show a + a * m' = (m' + 1) * a by ring, pow_mul,
           hI γ hγ.1, one_pow]
-  haveI : IsGalois E Ω := IsAlgClosure.isGalois E Ω
-  have hfin : ({u : Kˣ | u ^ (m' + 1) = 1} \ {r ρ}).Finite := (GlobalTheory.TameGenPowers.finite_roots K _ hm0).diff
+  have : IsGalois E Ω := IsAlgClosure.isGalois E Ω
+  have hfin : ({u : Kˣ | u ^ (m' + 1) = 1} \ {r ρ}).Finite := (GlobalTheory.TameGenPowers.finite_roots K _ hm0).sdiff
   have ho1 : IsOpen (r ⁻¹' ({u : Kˣ | u ^ (m' + 1) = 1} \ {r ρ})ᶜ) := hfin.isClosed.isOpen_compl.preimage hr
   have ho2 := (stabilizer_isOpen_of_isIntegral (K := E) π).preimage (continuous_const_mul ρ⁻¹)
   obtain ⟨σ, ⟨h1, h2⟩, h3⟩ := mem_closure_iff.1 (hγ.2 hρ) _ (ho1.inter ho2) ⟨by simp, by simp⟩
@@ -584,8 +584,8 @@ theorem exists_tameRep (hP : GlobalTheory.Published.GlobalArtinReciprocity) [_ro
     (r : G E Ω →* Kˣ) (hr : Continuous r) (hI : ∀ σ ∈ Ine (F := E) A, r σ ^ (g - 1) = 1) :
     ∃ (u : 𝓞 E) (hu : (u : E) ≠ 0), NX.TameRep v 1 γ u ∧ IsUnitAt v (atFin v (Units.mk0 (u : E) hu)) ∧
       ∃ σ : G E Ω, art (localIdele E v (atFin v (Units.mk0 (u : E) hu))) = toAb E Ω σ ∧ r σ = r γ := by
-  haveI : Fact g.Prime := ⟨hg⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : Fact g.Prime := ⟨hg⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hg2 := hg.two_le
   have hm : 0 < g - 1 := by omega
   have hg1 : ((g - 1 : ℕ) : 𝓞 E) ∉ v.asIdeal := fun h => by
@@ -703,11 +703,11 @@ variable {E : Type} [Field E] [NumberField E]
 end Values
 theorem chi1_loc_isGal_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE) (low : Finset ℕ) (Pq : HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E)) → PlE D.host) (S : RatDat D.ntw) (hL : ∀ j, ℕ → PlE D.host → Module.End D.what₂.LL (S.WL j)) (eig : ℕ → D.what₂.FT → ℕ → PlE D.host → ↥D.LL0) (θ : ∀ kk : Fin 2, Multiplicative (ZMod (D.host.g kk)) →* (↥D.LL0)ˣ) (Bs : SideB D cf A.row low Pq S hL eig θ) (M : MtFam D) (C : NChoice D) (tp : TupTied D cf C), ChoiceSide D cf M Bs.exp C tp → MtInput D M tp.tup C.Q → (∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0) → (∀ j g, ∃ z : ℤ, eExp D j g = z) → (∀ v, v ∈ placesOver D.host.E D.host.pde ∨ v ∈ placesOver D.host.E D.host.pde' → IsSplitPl D.host v) → GlobalTheory.RowTie.ChebSplit D.nd → ∀ (big : D.what₂.places.Pl → Finset ℂ) (X : LocNd (lay0 D)) (T : LocTw X) (Sp : NdSpec A.pl M C big X T), ∀ (Y : LocAut X) (Cb : LocBC Y), _root_.GlobalTheory.HeightCounting.AutomorphicSpecialisation A M tp.tup Sp.iq Y Cb → ∀ (art : Ideles D.host.E →* Gab D.host.E D.nd.Om), IsGlobalArtin art → ∀ (i : X.nd.Loc) (j' : Fin D.R.m), j'.1 + 1 = X.nd.j i → ∃ n, GlobalTheory.GalChar.IsGal art (Sp.iq i) (Y.naut.iotaQC i) (GlobalTheory.GalChar.block (cf.mu0 j' * cf.delAt (X.nd.l i)) cf.eta D.R.r) n ((Units.map (T.twist₂ i).toMonoidHom).comp (D.ntw.chi1 (T.twOf i) (X.nd.j i) (T.twSide i))) := by
   intro D cf jE A low Pq S hL eig θ Bs M C tp _ _ _ he _ _ big X T Sp Y Cb hAu art ha i j' hj
-  letI := D.ntw.crO0 (T.twOf i)
-  haveI := D.ntw.twistBaseCoefficientRing_isDomain (T.twOf i)
-  haveI := D.ntw.twistBaseCoefficientRing_isDVR (T.twOf i)
-  letI := D.ntw.topO0 (T.twOf i)
-  haveI := D.ntw.twistBaseCoefficientRing_topologicalRing (T.twOf i)
+  let := D.ntw.crO0 (T.twOf i)
+  have := D.ntw.twistBaseCoefficientRing_isDomain (T.twOf i)
+  have := D.ntw.twistBaseCoefficientRing_isDVR (T.twOf i)
+  let := D.ntw.topO0 (T.twOf i)
+  have := D.ntw.twistBaseCoefficientRing_topologicalRing (T.twOf i)
   let C' : GlobalTheory.Mem.Chr.HFrame D.host (eExp D) :=
     ⟨cf.P, cf.W, cf.mu0, cf.eta, cf.chiPsi, cf.del, cf.del', cf.isMu0, cf.isEta, cf.isChi, cf.isDel, cf.isDel'⟩
   obtain ⟨n0, h0⟩ := GlobalTheory.GalChar.exists_isAlgPos_mu0 C' he j'
@@ -748,7 +748,7 @@ theorem chi1_loc_isGal_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+
   have hO := X.nd.O_adic i
   have hκ := Sp.iq_alg i
   obtain ⟨r0, hr0⟩ := GlobalTheory.GalChar.exists_isGal hO hκ ha hn' hf hAlm
-  haveI : T2Space (X.nd.O i) := (GlobalTheory.GalChar.isEmbedding_toQ hO hκ).t2Space
+  have : T2Space (X.nd.O i) := (GlobalTheory.GalChar.isEmbedding_toQ hO hκ).t2Space
   have hlO := (GlobalTheory.CoefEmbed.embedding_closed_integral (X.nd.l i) (X.nd.O i) hO (Sp.iq i) hκ).2.2.2
   have hl0 : ((X.nd.l i : ℕ) : D.ntw.O0 (T.twOf i)) ≠ 0 := fun h => by
     have h' := congrArg (algebraMap (D.ntw.O0 (T.twOf i)) (FractionRing (D.ntw.O0 (T.twOf i)))) h
@@ -824,7 +824,7 @@ theorem chi_one_tameGen_alt : GlobalTheory.Published.GlobalArtinReciprocity → 
   have hI := (hG.ine_pow_iff ha (Or.inl hwl) hA (D.host.g k - 1)).2 fun x hx => by
     rw [hloc x hx, ← hN]
     exact (GlobalTheory.Mem.WildChar.orders_on_units _ _ _).1 ((cf.isMu0 j').tame _) x hx
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   obtain ⟨u, hu, hrep, hunit, σ, eσ, hσ⟩ := exists_tameRep hP ha hA hgp
     ((GlobalTheory.ChiLocGal.normV_eq_absNorm _).trans hN) hwg hg2 (fun a ha' x hx => isUnitAt_nat hwg ha' hx)
     (D.ntypes.tg_gen k v) _ (hG.cont (X.nd.O_adic i) (Sp.iq_alg i)) fun σ hσ => by
@@ -961,7 +961,7 @@ theorem isoTyp_eq {W : Type} [AddCommGroup W] [Module ℂ W] {ρ : Representatio
   unfold NG.isoTyp
   congr 1
   ext S'
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   exact and_congr_right fun _ => ⟨fun h' => isoRep_trans (isoRep_symm hs h) h', fun h' => isoRep_trans h h'⟩
 
 end rep

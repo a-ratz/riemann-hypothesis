@@ -80,7 +80,7 @@ theorem UpperTheory.V.Pa.finTw :
   obtain ⟨rep, hrep⟩ := adEx l G0.frame x.A (DD (x.Am m) k.g) n _ _ _ hok
   obtain ⟨_, hlce, hLC⟩ := lc1 l L G0 G0 (Glob.Hom.refl G0) n x k m
   have hLCrep := hLC _ _ rep hlce hrep
-  haveI : Finite (DD (x.Am m) k.g) := hfinR
+  have : Finite (DD (x.Am m) k.g) := hfinR
   have hl : ∀ v : pairedDualFirstOrderDualMatrixSpace n x.A (x.Am m) k.g x.a, l • v = 0 := by
     intro v
     apply Subtype.ext
@@ -88,12 +88,12 @@ theorem UpperTheory.V.Pa.finTw :
     simp [hlR]
   have finite_addMonoidHom_zmod_of_finite (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] [Finite M] :
       Finite (M →+ ZMod l) := by
-    haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+    have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
     exact Finite.of_injective (fun f : M →+ ZMod l => (f : M → ZMod l)) DFunLike.coe_injective
   
   have eq_zero_of_forall_hom_zmod_eq_zero_of_l_smul (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] (hl : ∀ m : M, l • m = 0)
       (m : M) (h : ∀ f : M →+ ZMod l, f m = 0) : m = 0 := by
-    letI : Module (ZMod l) M := AddCommGroup.zmodModule hl
+    let : Module (ZMod l) M := AddCommGroup.zmodModule hl
     let b := Module.Basis.ofVectorSpace (ZMod l) M
     apply b.repr.injective
     ext i
@@ -106,14 +106,14 @@ theorem UpperTheory.V.Pa.finTw :
       { carrier := {g | ∀ m, ρ g m = m}
         mul_mem' := by
           intro a b ha hb m
-          simp only [Set.mem_setOf_eq] at ha hb
+          simp only [Set.mem_ofPred_eq] at ha hb
           rw [map_mul, Module.End.mul_apply, hb, ha]
         one_mem' := by
           intro m
           simp
         inv_mem' := by
           intro a ha m
-          simp only [Set.mem_setOf_eq] at ha
+          simp only [Set.mem_ofPred_eq] at ha
           have h1 := ha (ρ a⁻¹ m)
           rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply] at h1
           exact h1.symm }
@@ -123,9 +123,9 @@ theorem UpperTheory.V.Pa.finTw :
         simp [N]
       rw [hset]
       exact isOpen_iInter_of_finite (fun m => (hρ m).isOpen_fiber m)
-    haveI : Finite (Γ ⧸ N) := Subgroup.quotient_finite_of_isOpen N hN
-    haveI : Finite (M →+ ZMod l) := finite_addMonoidHom_zmod_of_finite l M
-    haveI := hΦ N hN
+    have : Finite (Γ ⧸ N) := Subgroup.quotient_finite_of_isOpen N hN
+    have : Finite (M →+ ZMod l) := finite_addMonoidHom_zmod_of_finite l M
+    have := hΦ N hN
     have z1 : ∀ z ∈ Zl ρ, z 1 = 0 := by
       intro z hz
       have h := ((mem_Zl ρ).1 hz).2 1 1
@@ -145,7 +145,7 @@ theorem UpperTheory.V.Pa.finTw :
         Multiplicative.ofAdd (f (z.1 k)) * Multiplicative.ofAdd (f (z.1 k'))
       rw [Subgroup.coe_mul, zN _ z.2 _ _ k.2, map_add (f := _), ofAdd_add]
     · have hlc : IsLocallyConstant (fun k : N => Multiplicative.ofAdd (f (z.1 k))) :=
-        (((mem_Zl ρ).1 z.2).1.comp_continuous continuous_subtype_val).comp _
+        (((mem_Zl ρ).1 z.2).1.comp_continuous continuous_subtypeVal).comp _
       rw [MonoidHom.coe_ker]
       exact hlc.isOpen_fiber 1
     · intro z z' h

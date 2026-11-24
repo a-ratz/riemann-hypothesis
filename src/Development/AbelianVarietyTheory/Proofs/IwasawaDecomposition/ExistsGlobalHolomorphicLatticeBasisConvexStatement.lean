@@ -258,7 +258,7 @@ abbrev Frames (B : Set (Fin n → ℂ)) (K : (Fin n → ℂ) → Set (Fin g → 
 def proj (B : Set (Fin n → ℂ)) (K : (Fin n → ℂ) → Set (Fin g → ℂ)) (r : ℕ) : Frames B K r → ↥B := fun e => e.1.1
 
 theorem continuous_proj (B : Set (Fin n → ℂ)) (K : (Fin n → ℂ) → Set (Fin g → ℂ)) (r : ℕ) :
-    Continuous (proj B K r) := continuous_fst.comp continuous_subtype_val
+    Continuous (proj B K r) := continuous_fst.comp continuous_subtypeVal
 
 theorem local_data {B : Set (Fin n → ℂ)} {K : (Fin n → ℂ) → Set (Fin g → ℂ)} (hB : IsOpen B)
     (hloc : ∀ b₀ ∈ B, ∃ lam : (Fin n → ℂ) → Fin r → Fin g → ℂ, AnalyticAt ℂ lam b₀ ∧
@@ -277,7 +277,7 @@ theorem isCoveringMap_proj {B : Set (Fin n → ℂ)} {K : (Fin n → ℂ) → Se
   intro x₀
   obtain ⟨V, lam, hV, hxV, hVB, -, hc, hbas⟩ := local_data hB hloc x₀.2
   apply IsEvenlyCovered.to_isEvenlyCovered_preimage (I := GLZ r)
-  have hU : IsOpen (Subtype.val ⁻¹' V : Set ↥B) := hV.preimage continuous_subtype_val
+  have hU : IsOpen (Subtype.val ⁻¹' V : Set ↥B) := hV.preimage continuous_subtypeVal
   have hM : ∀ e : proj B K r ⁻¹' (Subtype.val ⁻¹' V : Set ↥B), ∃ M : GLZ r,
       e.1.1.2 = act M.mat (lam e.1.1.1.1) := fun e => exists_glz (hbas _ e.2) e.1.2
   choose M hM using hM
@@ -298,9 +298,9 @@ theorem isCoveringMap_proj {B : Set (Fin n → ℂ)} {K : (Fin n → ℂ) → Se
   · refine Prod.ext rfl ?_
     apply GLZ.mat_injective
     exact act_injective (hbas _ q.1.2).1 (hM _).symm
-  · exact (Continuous.subtype_mk ((continuous_proj B K r).comp continuous_subtype_val) _).prodMk hMc
+  · exact (Continuous.subtype_mk ((continuous_proj B K r).comp continuous_subtypeVal) _).prodMk hMc
   · refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
-    refine (continuous_subtype_val.comp continuous_fst).prodMk ?_
+    refine (continuous_subtypeVal.comp continuous_fst).prodMk ?_
     rw [continuous_prod_of_discrete_right]
     intro m
     have hlu : Continuous fun u : ↥(Subtype.val ⁻¹' V : Set ↥B) => lam u.1.1 :=
@@ -333,10 +333,10 @@ theorem exists_global (n g r : ℕ) (B : Set (Fin n → ℂ)) (K : (Fin n → �
   have hM : ∀ t : ↥V, ∃ M : GLZ r, (F ⟨t, hVB t.2⟩).1.2 = act M.mat (lam t) :=
     fun t => exists_glz (hlat _ t.2) (hbas ⟨t, hVB t.2⟩)
   choose M hM using hM
-  have hMc : Continuous M := continuous_of_act (hc.comp_continuous continuous_subtype_val fun t => t.2)
+  have hMc : Continuous M := continuous_of_act (hc.comp_continuous continuous_subtypeVal fun t => t.2)
     (by fun_prop) (fun t => (hlat _ t.2).1) M hM
   have hopen : IsOpen (Subtype.val '' (M ⁻¹' {M ⟨b₀, hbV⟩}) : Set (Fin n → ℂ)) :=
-    hV.isOpenMap_subtype_val _ ((isOpen_discrete _).preimage hMc)
+    hV.isOpenMap_subtypeVal _ ((isOpen_discrete _).preimage hMc)
   have hev : lamG =ᶠ[𝓝 b₀] fun b => act (M ⟨b₀, hbV⟩).mat (lam b) := by
     filter_upwards [hopen.mem_nhds ⟨⟨b₀, hbV⟩, rfl, rfl⟩] with b hb
     obtain ⟨t, ht, rfl⟩ := hb

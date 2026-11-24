@@ -284,12 +284,12 @@ theorem relfinrank_blockFnField_sv : ∀ (n' m : ℕ) (n : Fin (m + 1) → ℕ) 
   intro n' m n x _
   let f : (MP ℤ m n).residueField ((qpSnd n' m n) x) ⟶ (MP ℤ (m + 1) (consN n' n)).residueField x :=
     (qpSnd n' m n).residueFieldMap x
-  haveI : CharZero ((MP ℤ m n).residueField ((qpSnd n' m n) x)) :=
+  have : CharZero ((MP ℤ m n).residueField ((qpSnd n' m n) x)) :=
     (RingHom.charZero_iff f.hom.injective).2 inferInstance
   let g := f.hom.toRatAlgHom
   have e : ptCoord x ∘ sv n' n = g ∘ ptCoord ((qpSnd n' m n) x) := _root_.funext fun p => ptCoord_sv n' n x p
   rw [e, blockFnField_comp, blockFnField_ptCoord, blockFnField_ptCoord, IntermediateField.relfinrank_top_right]
-  letI := f.hom.toAlgebra
+  let := f.hom.toAlgebra
   let i := (IntermediateField.topEquiv.symm.trans (IntermediateField.equivMap ⊤ g)).toRingEquiv
   refine (Algebra.finrank_eq_of_equiv_equiv i (RingEquiv.refl _) ?_).symm
   ext a

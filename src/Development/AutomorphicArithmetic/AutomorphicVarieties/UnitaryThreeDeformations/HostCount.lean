@@ -104,12 +104,12 @@ private theorem quartic_character_eq_one (Ω : Type) [Field Ω] [CharZero Ω] [I
 theorem UpperTheory.exists_absGalois_fixing_sqrt_neg_one_cyclotomic_ne_one :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime], l ≠ 2 → ∃ σ : Formalism.ConjugateSelfDual.G ℚ Ω, eta4 Ω σ = 1 ∧ cycMod ℚ Ω l 1 σ ≠ 1 := by
   intro Ω _ _ _ l _ hl2
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hlp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hlp.ne_zero⟩
+  have : NeZero l := ⟨hlp.ne_zero⟩
   obtain ⟨m, hm⟩ : ∃ m, l = 2 * m + 1 := hlp.eq_two_or_odd'.resolve_left hl2
   have hm1 : 1 ≤ m := by have := hlp.two_le; omega
-  haveI : NeZero (4 * l) := ⟨by omega⟩
+  have : NeZero (4 * l) := ⟨by omega⟩
   let a : ZMod (4 * l) := ((4 * m + 1 : ℕ) : ZMod (4 * l))
   have ha : a * a = 1 := by
     have hnat : ((4 * m + 1) * (4 * m + 1) : ℕ) = 1 + (4 * l) * (2 * m) := by rw [hm]; ring
@@ -118,7 +118,7 @@ theorem UpperTheory.exists_absGalois_fixing_sqrt_neg_one_cyclotomic_ne_one :
       zero_mul, add_zero]
   let u : (ZMod (4 * l))ˣ := ⟨a, a, ha, ha⟩
   obtain ⟨σ, hσ⟩ := (UpperTheory.V.Chr.clsOnto Ω (4 * l)).1 u
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (4 * l)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (4 * l)
   have hval : ((u : ZMod (4 * l))).val = 4 * m + 1 := by
     show (((4 * m + 1 : ℕ) : ZMod (4 * l))).val = 4 * m + 1
     rw [ZMod.val_natCast, Nat.mod_eq_of_lt (by omega)]
@@ -135,7 +135,7 @@ theorem UpperTheory.exists_absGalois_fixing_sqrt_neg_one_cyclotomic_ne_one :
     have hprim : IsPrimitiveRoot (ζ ^ 4) l := hζ.pow (by omega) rfl
     have h4l : (ζ ^ 4) ^ (4 * l) = 1 := by
       rw [← pow_mul, mul_comm 4 (4 * l), pow_mul, hζ.pow_eq_one, one_pow]
-    haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+    have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
     unfold cycMod cycZ at hcyc
     have hz : PadicInt.toZModPow 1 ((cyclotomicCharacter Ω l
         (MulSemiringAction.toRingAut (Formalism.ConjugateSelfDual.G ℚ Ω) Ω σ) : ℤ_[l]ˣ) : ℤ_[l]) = 1 := by
@@ -211,13 +211,13 @@ private theorem mem_ker_iff {k D : Type} [Field k] [Group D] (η : D →* ℤˣ)
   constructor
   · intro h a b
     have h1 := congrArg (fun Y : Gb (k := k) j => Y.val a b) h
-    simp only [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, if_neg hne] at h1
+    simp only [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, ite_eq_right hne] at h1
     exact h1.symm
   · intro h
     apply Subtype.ext
     ext a b
     show ((gRep η Ψ j c) X).val a b = X.val a b
-    rw [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, if_neg hne]
+    rw [gRep_val, adRep_baseLift_apply, hΨ, _root_.one_zpow, Units.val_one, one_mul, ite_eq_right hne]
     exact (h a b).symm
 
 private theorem ker_one {k : Type} [Field k] (j : ℤ) (K : Submodule k (Gb (k := k) j))
@@ -251,7 +251,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
   intro k D _ _ η Ψ c h2 hη hΨ j
   classical
   have e := gbEquiv k j
-  haveI : Module.Finite k (Gb (k := k) j) := Module.Finite.equiv e.symm
+  have : Module.Finite k (Gb (k := k) j) := Module.Finite.equiv e.symm
   have hdim : finrank k (Gb (k := k) j) = (3 - |j|).toNat := by
     rw [e.finrank_eq, Module.finrank_fintype_fun_eq_card, card_wt]
   refine ⟨inferInstance, hdim, ?_⟩
@@ -264,7 +264,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     exact hz X ((hK X).1 hX)
   rcases (show j ≤ -3 ∨ j = -2 ∨ j = -1 ∨ j = 0 ∨ j = 1 ∨ j = 2 ∨ 3 ≤ j by omega)
     with h | rfl | rfl | rfl | rfl | rfl | h
-  · rw [if_neg (by rw [abs_le]; omega)]
+  · rw [ite_eq_right (by rw [abs_le]; omega)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ j → X.val a b = 0 := X.2
@@ -276,7 +276,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     have := a.isLt
     have := b.isLt
     omega
-  · rw [if_neg (by norm_num)]
+  · rw [ite_eq_right (by norm_num)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ -2 → X.val a b = 0 := X.2
@@ -286,7 +286,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     fin_cases a <;> fin_cases b <;> first
       | exact hZ _ _ (by decide)
       | exact half h2 (hA _ _)
-  · rw [if_pos (by norm_num)]
+  · rw [ite_eq_left (by norm_num)]
     refine ker_one _ _ hK (!![0, 0, 0; 1, 0, 0; 0, -1, 0]) ?_ ?_ 1 0 (by simp) ?_
     · show ∀ a b, wt a b ≠ -1 → _ = 0
       intro a b hab
@@ -303,7 +303,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
         | exact (hXa 2 1).symm
         | exact (hXa 2 2).symm
         | exact (hXa 1 2).symm
-  · rw [if_pos (by norm_num)]
+  · rw [ite_eq_left (by norm_num)]
     refine ker_one _ _ hK (!![1, 0, 0; 0, 0, 0; 0, 0, -1]) ?_ ?_ 0 0 (by simp) ?_
     · show ∀ a b, wt a b ≠ 0 → _ = 0
       intro a b hab
@@ -320,7 +320,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
         | exact (hXa 2 1).symm
         | exact (hXa 2 2).symm
         | exact (hXa 1 2).symm
-  · rw [if_pos (by norm_num)]
+  · rw [ite_eq_left (by norm_num)]
     refine ker_one _ _ hK (!![0, 1, 0; 0, 0, -1; 0, 0, 0]) ?_ ?_ 0 1 (by simp) ?_
     · show ∀ a b, wt a b ≠ 1 → _ = 0
       intro a b hab
@@ -337,7 +337,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
         | exact (hXa 2 1).symm
         | exact (hXa 2 2).symm
         | exact (hXa 1 2).symm
-  · rw [if_neg (by norm_num)]
+  · rw [ite_eq_right (by norm_num)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ 2 → X.val a b = 0 := X.2
@@ -347,7 +347,7 @@ theorem UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants :
     fin_cases a <;> fin_cases b <;> first
       | exact hZ _ _ (by decide)
       | exact half h2 (hA _ _)
-  · rw [if_neg (by rw [abs_le]; omega)]
+  · rw [ite_eq_right (by rw [abs_le]; omega)]
     apply zero_case
     intro X hA
     have hZ : ∀ a b, wt a b ≠ j → X.val a b = 0 := X.2
@@ -390,7 +390,7 @@ private theorem zhat_lift :
       ∃ w : D →* E, IsLocallyConstant w ∧ (∀ s ∈ I, w s = 1) ∧ q.comp w = w' ∧ w φ = e ∧ ∀ g, w g ∈ Subgroup.zpowers e := by
   intro D E E' _ _ _ _ _ _ I φ hcl hd q w' e hw' hI hq
   have hn : 0 < orderOf e := orderOf_pos e
-  haveI : NeZero (orderOf e) := ⟨hn.ne'⟩
+  have : NeZero (orderOf e) := ⟨hn.ne'⟩
   obtain ⟨d, hdl, hdI, hdφ⟩ := hd (orderOf e) hn
   let f : Multiplicative (ZMod (orderOf e)) →* E :=
     MonoidHom.mk' (fun x => e ^ (Multiplicative.toAdd x).val) (by
@@ -556,7 +556,7 @@ private noncomputable def subquotEquiv {R R' X : Type*} [CommRing R] [CommRing R
 
 private theorem ef_eq_one (v : Pl) : v.asIdeal.ramificationIdx ℤ * v.asIdeal.inertiaDeg ℤ = 1 := by
   classical
-  haveI : Fintype ((v.asIdeal.under ℤ).primesOver (NumberField.RingOfIntegers ℚ)) := Fintype.ofFinite _
+  have : Fintype ((v.asIdeal.under ℤ).primesOver (NumberField.RingOfIntegers ℚ)) := Fintype.ofFinite _
   have hsum := Ideal.sum_ramification_inertia_eq_finrank (v.asIdeal.under ℤ) (NumberField.RingOfIntegers ℚ)
   rw [NumberField.RingOfIntegers.rank, Module.finrank_self] at hsum
   have hmem : v.asIdeal ∈ (v.asIdeal.under ℤ).primesOver (NumberField.RingOfIntegers ℚ) :=
@@ -580,10 +580,10 @@ theorem UpperTheory.local_euler_characteristic_rationals :
           (((l : ℕ) : NumberField.RingOfIntegers ℚ) ∉ v.asIdeal → finrank k (H1 ρ) = finrank k (H0 ρ) + finrank k (H2 ρ)) := by
   intro hFin hEC Ω _ _ _ l _ k M _ _ _ _ _ _ _ _ A v ρ hv hc
   classical
-  haveI : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
+  have : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
   let φ : ZMod (l ^ 1) →+* k := ZMod.castHom (dvd_refl _) k
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom M φ
-  haveI : LinearMap.CompatibleSMul M M (ZMod (l ^ 1)) k := ⟨fun f c x => f.map_smul (φ c) x⟩
+  let : Module (ZMod (l ^ 1)) M := Module.compHom M φ
+  have : LinearMap.CompatibleSMul M M (ZMod (l ^ 1)) k := ⟨fun f c x => f.map_smul (φ c) x⟩
   let ρ' : Representation (ZMod (l ^ 1)) (Dec (F := ℚ) A) M :=
     { toFun := fun g => (ρ g).restrictScalars (ZMod (l ^ 1))
       map_one' := by ext x; simp
@@ -594,14 +594,14 @@ theorem UpperTheory.local_euler_characteristic_rationals :
   have e1 : H1 ρ' ≃ H1 ρ := subquotEquiv _ _ _ _ (fun _ => Iff.rfl) (fun _ => Iff.rfl)
   have e2 : H2 ρ' ≃ H2 ρ := subquotEquiv _ _ _ _ (fun _ => Iff.rfl) (fun _ => Iff.rfl)
   have e0 : ↥(H0 ρ') ≃ ↥(H0 ρ) := Equiv.subtypeEquivRight (fun _ => Iff.rfl)
-  haveI := hF.2.1
-  haveI := hF.2.2.1
-  haveI : Finite (H1 ρ) := Finite.of_equiv _ e1
-  haveI : Finite (H2 ρ) := Finite.of_equiv _ e2
-  haveI : Module.Finite k (H1 ρ) := Module.Finite.of_finite
-  haveI : Module.Finite k (H2 ρ) := Module.Finite.of_finite
-  haveI : Module.Finite k M := Module.Finite.of_finite
-  haveI : Module.Finite k ↥(H0 ρ) := Module.Finite.of_finite
+  have := hF.2.1
+  have := hF.2.2.1
+  have : Finite (H1 ρ) := Finite.of_equiv _ e1
+  have : Finite (H2 ρ) := Finite.of_equiv _ e2
+  have : Module.Finite k (H1 ρ) := Module.Finite.of_finite
+  have : Module.Finite k (H2 ρ) := Module.Finite.of_finite
+  have : Module.Finite k M := Module.Finite.of_finite
+  have : Module.Finite k ↥(H0 ρ) := Module.Finite.of_finite
   have hq : 1 < Nat.card k := Finite.one_lt_card
   have inj := Nat.pow_right_injective (show 2 ≤ Nat.card k by omega)
   have c1 : Nat.card (H1 ρ') = Nat.card k ^ finrank k (H1 ρ) := by
@@ -683,7 +683,7 @@ private theorem cone {k ι A1 A2 : Type} [Field k] [Fintype ι] {L1 L2 : ι → 
           ∑ v, finrank k (Z2v v ⧸ ((Cv v).map (dv v)).comap (Z2v v).subtype) := by
   have hr : ∀ v, ∀ x ∈ Z1, r1 v x ∈ Z1v v := fun v x hx =>
     (hZv v _).2 ⟨hC v x ((hZ x).1 hx).1, by rw [← hd, ((hZ x).1 hx).2, map_zero]⟩
-  haveI : ∀ v, Module.Finite k (ZL v) := fun v =>
+  have : ∀ v, Module.Finite k (ZL v) := fun v =>
     Module.Finite.of_injective _ (Submodule.inclusion_injective (hL v))
   let f : selmerCocycles →ₗ[k] Z1 × ∀ v, ZL v :=
     { toFun := fun x => (⟨x.1, ((hZ1L _).1 x.2).1⟩, fun v => ⟨-r1 v x.1, neg_mem (((hZ1L _).1 x.2).2 v)⟩)
@@ -794,8 +794,8 @@ private theorem quot {k A : Type} [Field k] [AddCommGroup A] [Module k A] (B Z :
     [Module.Finite k B] [Module.Finite k (Z ⧸ B.comap Z.subtype)] :
     Module.Finite k Z ∧ finrank k (Z ⧸ B.comap Z.subtype) + finrank k B = finrank k Z := by
   have e := Submodule.comapSubtypeEquivOfLe h
-  haveI : Module.Finite k (B.comap Z.subtype) := Module.Finite.equiv e.symm
-  haveI : Module.Finite k Z := Module.Finite.of_submodule_quotient (B.comap Z.subtype)
+  have : Module.Finite k (B.comap Z.subtype) := Module.Finite.equiv e.symm
+  have : Module.Finite k Z := Module.Finite.of_submodule_quotient (B.comap Z.subtype)
   exact ⟨this, by rw [← e.finrank_eq]; exact Submodule.finrank_quotient_add_finrank _⟩
 
 theorem UpperTheory.selmerComplex_finite_and_euler_characteristic :
@@ -810,24 +810,24 @@ theorem UpperTheory.selmerComplex_finite_and_euler_characteristic :
             (finrank (ResidueField O) (H1 (F.gbar j)) : ℤ) - finrank (ResidueField O) (H2 (F.gbar j)) +
               ∑ v, ((finrank (ResidueField O) (H2 (F.gloc j v)) : ℤ) - finrank (ResidueField O) (Z1 (F.gloc j v)) + finrank (ResidueField O) (F.ZL j v)) := by
   intro O _ _ G Γ ι _ _ _ _ _ _ _ F j hπ hact hfin hB h1 h2 h1v h2v hs
-  have hloc : ∀ v, Continuous (F.loc v) := fun v => hπ.comp continuous_subtype_val
+  have hloc : ∀ v, Continuous (F.loc v) := fun v => hπ.comp continuous_subtypeVal
   have hL : ∀ v, F.ZL j v ≤ Z1 (F.gloc j v) := fun v y hy => hy.1
-  haveI : Module.Finite (ResidueField O) (B1 (F.gbar j)) := Module.Finite.range _
-  haveI : ∀ v, Module.Finite (ResidueField O) (B1 (F.gloc j v)) := fun v => Module.Finite.range _
+  have : Module.Finite (ResidueField O) (B1 (F.gbar j)) := Module.Finite.range _
+  have : ∀ v, Module.Finite (ResidueField O) (B1 (F.gloc j v)) := fun v => Module.Finite.range _
   obtain ⟨fZ, eZ⟩ := quot (B1 (F.gbar j)) (Z1 (F.gbar j)) (coboundaries_le_cocycles _ hact)
-  haveI : ∀ v, Module.Finite (ResidueField O) (Z1 (F.gloc j v)) := fun v =>
+  have : ∀ v, Module.Finite (ResidueField O) (Z1 (F.gloc j v)) := fun v =>
     (quot (B1 (F.gloc j v)) (Z1 (F.gloc j v)) ((hB v).trans (hL v))).1
   have hZ1L : ∀ x, x ∈ F.selmerCocycles j ↔ x ∈ Z1 (F.gbar j) ∧ ∀ v, F.res1 j v x ∈ F.ZL j v := fun x => by
     simp [Frame.selmerCocycles, Submodule.mem_iInf]
   have hBL : B1 (F.gbar j) ≤ F.selmerCocycles j := fun x hx => (hZ1L x).2 ⟨coboundaries_le_cocycles _ hact hx, fun v => hB v (by
     obtain ⟨m, rfl⟩ := hx
     exact ⟨m, rfl⟩)⟩
-  haveI : Module.Finite (ResidueField O) (F.selmerCocycles j) :=
+  have : Module.Finite (ResidueField O) (F.selmerCocycles j) :=
     Module.Finite.of_injective _ (Submodule.inclusion_injective (fun x hx => ((hZ1L x).1 hx).1 : F.selmerCocycles j ≤ Z1 (F.gbar j)))
   have fL : Module.Finite (ResidueField O) (F.selmerCohomologyQuotient j) := inferInstance
   obtain ⟨-, eL⟩ := quot (B1 (F.gbar j)) (F.selmerCocycles j) hBL
-  haveI := h2
-  haveI := h2v
+  have := h2
+  have := h2v
   have key := @cone (ResidueField O) ι _ _ _ _ _ _ _ _ _ _ _ _ _ _ (contMaps _ _ Γ) (Z1 (F.gbar j)) (Z2 (F.gbar j)) (d1 (F.gbar j))
     (fun v => contMaps _ _ (F.D v)) (fun v => Z1 (F.gloc j v)) (F.ZL j) (fun v => Z2 (F.gloc j v))
     (fun v => d1 (F.gloc j v)) (F.res1 j) (F.res2 j) (mem_cocycles_iff _) (fun v => mem_cocycles_iff _)
@@ -878,7 +878,7 @@ theorem UpperTheory.Reformulated.B.Qe18.hc_avg :
           (∀ s ∈ N, z s = (0 : M)) → ∃ (m : M), ∀ (g : D), z g = ((ρ : D → M →ₗ[k] M) g : M → M) m - m := by
   intro k D M _ _ _ _ ρ N hN z hz h0
   have hidx : N.index ≠ 0 := fun h => hN (by rw [h, Nat.cast_zero])
-  haveI : Fintype (D ⧸ N) := Subgroup.fintypeOfIndexNeZero hidx
+  have : Fintype (D ⧸ N) := Subgroup.fintypeOfIndexNeZero hidx
   have hcos : ∀ a b : D, (a : D ⧸ N) = (b : D ⧸ N) → z a = z b := by
     intro a b hab
     have hmem : a⁻¹ * b ∈ N := QuotientGroup.eq.mp hab
@@ -938,9 +938,9 @@ private theorem rank_coboundaries_invariants : finrank k (B1 ρ) + finrank k (H0
 private theorem rank_cocycles_formula (h : ContAction ρ) [Module.Finite k (H1 ρ)] :
     finrank k (Z1 ρ) + finrank k (H0 ρ) = finrank k (H1 ρ) + finrank k M := by
   have e := Submodule.comapSubtypeEquivOfLe (coboundaries_le_cocycles ρ h)
-  haveI : Module.Finite k (B1 ρ) := Module.Finite.range (d0 ρ)
-  haveI : Module.Finite k ((B1 ρ).comap (Z1 ρ).subtype) := Module.Finite.equiv e.symm
-  haveI : Module.Finite k (Z1 ρ) := Module.Finite.of_submodule_quotient ((B1 ρ).comap (Z1 ρ).subtype)
+  have : Module.Finite k (B1 ρ) := Module.Finite.range (d0 ρ)
+  have : Module.Finite k ((B1 ρ).comap (Z1 ρ).subtype) := Module.Finite.equiv e.symm
+  have : Module.Finite k (Z1 ρ) := Module.Finite.of_submodule_quotient ((B1 ρ).comap (Z1 ρ).subtype)
   rw [← Submodule.finrank_quotient_add_finrank ((B1 ρ).comap (Z1 ρ).subtype), e.finrank_eq, ← rank_coboundaries_invariants ρ]
   ring
 
@@ -976,8 +976,8 @@ private theorem hc_tame :
       fun h => ⟨⟨y, (hW _).2 ⟨h.1, fun s hs => h.2 s (hNI hs)⟩⟩, funext fun s => h.2 s s.2, rfl⟩⟩
   rw [Submodule.finrank_map_subtype_eq] at hk
   obtain ⟨φ, hφ, -⟩ := hφ
-  haveI : Module.Finite k (B1 (ρ.comp I.subtype : Representation k I M)) := Module.Finite.range _
-  haveI : Module.Finite k W := by
+  have : Module.Finite k (B1 (ρ.comp I.subtype : Representation k I M)) := Module.Finite.range _
+  have : Module.Finite k W := by
     let r' : W →ₗ[k] B1 (ρ.comp I.subtype : Representation k I M) := r.codRestrict _ fun z => hr ▸ ⟨z, rfl⟩
     refine Module.Finite.of_injective (r'.prod ((LinearMap.proj φ).comp W.subtype)) ?_
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -1009,7 +1009,7 @@ private theorem hc_scal {k D : Type} [CommRing k] [Group D] (η : D →* ℤˣ) 
     (X : Gb (k := k) j) : gRep η Ψ j g X = ((Ψ g ^ j : kˣ) : k) • X := by
   refine hc_val ?_
   ext a b
-  rw [gRep_val, adRep_baseLift_apply, if_pos hg]
+  rw [gRep_val, adRep_baseLift_apply, ite_eq_left hg]
   show _ = ((Ψ g ^ j : kˣ) : k) * X.val a b
   by_cases h : wt a b = j
   · rw [h]
@@ -1023,7 +1023,7 @@ private theorem hc_congr {k D : Type} [CommRing k] [Group D] (η : D →* ℤˣ)
   · refine hc_val ?_
     ext a b
     have h2 : ¬ η g = 1 := by rw [h1]; decide
-    rw [gRep_val, gRep_val, adRep_baseLift_apply, adRep_baseLift_apply, if_neg h2, if_neg (h ▸ h2)]
+    rw [gRep_val, gRep_val, adRep_baseLift_apply, adRep_baseLift_apply, ite_eq_right h2, ite_eq_right (h ▸ h2)]
     by_cases e : wt a b = j
     · rw [e, h']
     · have : X.val b.rev a.rev = 0 := X.2 _ _ (by
@@ -1095,7 +1095,7 @@ private theorem hc_I (hF : F.Ok) (s : F.D F.vl) (hs : s ∈ F.Iv F.vl) (m : Gb (
 
 private theorem hc_contv (hF : F.Ok) (j : ℤ) (v : ι) : ContAction (F.gloc j v) := by
   have h : Continuous fun p : F.D v × Gb (k := ResidueField O) j => (F.loc v p.1, p.2) :=
-    ((hF.π_cont.comp continuous_subtype_val).comp continuous_fst).prodMk continuous_snd
+    ((hF.π_cont.comp continuous_subtypeVal).comp continuous_fst).prodMk continuous_snd
   have h2 : Continuous fun p : Γ × Gb (k := ResidueField O) j => F.gbar j p.1 p.2 := hc_cont hF j
   have h3 := h2.comp h
   exact h3
@@ -1119,7 +1119,7 @@ private theorem hc_idx (hF : F.Ok) (v : ι) : ((F.Nv v).subgroupOf (F.Iv v)).Nor
   rw [Subgroup.index_ker] at h
   obtain ⟨t, ht⟩ := Subgroup.card_subgroup_dvd_card (((F.η.prod F.Ψbar).comp (F.loc v)).comp (F.Iv v).subtype).range
   have h2 := congrArg (Nat.cast (R := ResidueField O)) ht
-  letI := Fintype.ofFinite (ResidueField O)
+  let := Fintype.ofFinite (ResidueField O)
   rw [Nat.cast_mul, h, zero_mul, Nat.card_prod, Nat.card_units (ResidueField O), Nat.cast_mul,
     Nat.cast_sub Nat.card_pos, Nat.card_eq_fintype_card (α := ResidueField O), FiniteField.cast_card_eq_zero,
     Nat.card_eq_fintype_card, Fintype.card_units_int] at h2
@@ -1139,7 +1139,7 @@ private theorem hc_count [Fintype ι] (hF : F.Ok) (hV : F.LocVan) (j : ℤ)
     Module.Finite (ResidueField O) (F.selmerCohomologyQuotient j) ∧ Module.Finite (ResidueField O) (F.Ob j) ∧
       (finrank (ResidueField O) (F.selmerCohomologyQuotient j) : ℤ) - finrank (ResidueField O) (F.Ob j) = Frame.defect j := by
   obtain ⟨f, d1, d2⟩ := UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants F.η F.Ψbar F.c (hc_two hF) hF.ηc (hc_c hF) j
-  haveI : Finite (Gb (k := ResidueField O) j) := Module.finite_of_finite (ResidueField O)
+  have : Finite (Gb (k := ResidueField O) j) := Module.finite_of_finite (ResidueField O)
   obtain ⟨c1, c2, c3⟩ := UpperTheory.selmerComplex_finite_and_euler_characteristic F j hF.π_cont (hc_cont hF j) f (hc_B hF j) g1 g2 l1 l2 hs
   refine ⟨c1, c2, ?_⟩
   have z := fun v => rank_cocycles_formula _ (hc_contv hF j v)
@@ -1178,7 +1178,7 @@ private theorem hc_count [Fintype ι] (hF : F.Ok) (hV : F.LocVan) (j : ℤ)
       · simpa using hc_scal F.η F.Ψbar 0 h1 m
       · exact (hc_congr F.η F.Ψbar 0 (h1.trans hF.ηc.symm) (by simp) m).trans h
     rw [e] at g3
-    simp only [show ¬ (0 : ℤ) = -1 by decide, show ¬ ((0 : ℤ) = 1 ∨ (0 : ℤ) = 2) by decide, if_false]
+    simp only [show ¬ (0 : ℤ) = -1 by decide, show ¬ ((0 : ℤ) = 1 ∨ (0 : ℤ) = 2) by decide, ite_false]
     omega
   · have e : F.ZL j F.vl = Z1 (F.gloc j F.vl) := le_antisymm (fun y hy => hy.1) fun y hy =>
       ⟨hy, fun e => (e rfl).elim, fun _ e => (lt_asymm hj e).elim, fun _ e => (hj.ne' e).elim⟩
@@ -1201,24 +1201,24 @@ theorem UpperTheory.V.UnitaryThreeInertia.hostFrame_count :
   obtain ⟨x, x1, x2, x3⟩ := exists_sigma Ω c e ψ o₁ hd S A F hF F.vl (Or.inl rfl)
   have hS : ContainsAbove S l := fun v hv => (hF.mem v).2 (by
     rw [Nat.cast_mul]; exact Ideal.mul_mem_right _ _ hv)
-  haveI : Finite (ResidueField c.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField c.O) l := by
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
-    haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+    have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
     rw [← map_natCast (residue c.O), residue_eq_zero_iff, ← map_natCast (algebraMap ℤ_[l] c.O), mem_maximalIdeal,
       mem_nonunits_iff, isUnit_map_iff, PadicInt.isUnit_iff, PadicInt.norm_p]
     exact (inv_lt_one_of_one_lt₀ (by exact_mod_cast hl.out.one_lt)).ne
   obtain ⟨f, -⟩ := UpperTheory.finrank_gradedPiece_and_complexConjugation_invariants F.η F.Ψbar F.c (hc_two hO) hO.ηc (hc_c hO) j
-  haveI : Finite (Gb (k := ResidueField c.O) j) := Module.finite_of_finite (ResidueField c.O)
+  have : Finite (Gb (k := ResidueField c.O) j) := Module.finite_of_finite (ResidueField c.O)
   have hσ : ∃ (σ : Formalism.ConjugateSelfDual.G ℚ Ω) (a : ResidueField c.O) (n : ℕ), (∀ m, F.gbar j (F.π σ) m = a • m) ∧
       (n : ZMod (l ^ 1)) = (cycMod ℚ Ω l 1 σ : (ZMod (l ^ 1))ˣ) ∧ a ≠ (n : ResidueField c.O) := by
     by_cases hj : j = 0
     · subst hj
       obtain ⟨σ, s1, s2⟩ := UpperTheory.exists_absGalois_fixing_sqrt_neg_one_cyclotomic_ne_one Ω l hd.l_odd
-      haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+      have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
       refine ⟨σ, 1, _, fun m => ?_, ZMod.natCast_zmod_val _, fun h => s2 (Units.ext ?_)⟩
       · simpa using hc_scal F.η F.Ψbar 0 ((DFunLike.congr_fun hF.η σ).trans s1) m
       · rw [← Nat.cast_one, CharP.natCast_eq_natCast _ l] at h

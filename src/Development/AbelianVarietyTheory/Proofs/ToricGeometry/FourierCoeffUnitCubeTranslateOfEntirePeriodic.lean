@@ -84,10 +84,10 @@ theorem setIntegral_unitCube_add_right_of_periodic {ι E : Type*} [Fintype ι] [
     [NormedAddCommGroup E] [NormedSpace ℝ E] {F : (ι → ℝ) → E}
     (hF : ∀ (i : ι) x, F (x + Pi.single i 1) = F x) (t : ι → ℝ) :
     ∫ x in Set.Icc (0 : ι → ℝ) 1, F (x + t) = ∫ x in Set.Icc (0 : ι → ℝ) 1, F x := by
-  letI : MeasureSpace UnitAddCircle := ⟨AddCircle.haarAddCircle⟩
-  haveI : Measure.IsAddHaarMeasure (volume : Measure UnitAddCircle) :=
+  let : MeasureSpace UnitAddCircle := ⟨AddCircle.haarAddCircle⟩
+  have : Measure.IsAddHaarMeasure (volume : Measure UnitAddCircle) :=
     inferInstanceAs (Measure.IsAddHaarMeasure AddCircle.haarAddCircle)
-  haveI : IsProbabilityMeasure (volume : Measure UnitAddCircle) :=
+  have : IsProbabilityMeasure (volume : Measure UnitAddCircle) :=
     inferInstanceAs (IsProbabilityMeasure AddCircle.haarAddCircle)
   let G : UnitAddTorus ι → E := fun y => F fun i => (AddCircle.equivIoc 1 0 (y i) : ℝ)
   have hG : ∀ x : ι → ℝ, G (fun i => (x i : UnitAddCircle)) = F x := by

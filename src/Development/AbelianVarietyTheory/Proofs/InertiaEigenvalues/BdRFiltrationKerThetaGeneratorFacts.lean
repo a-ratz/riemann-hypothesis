@@ -122,7 +122,7 @@ theorem GlobalTheory.MemLoc.seed_fil : ∀ (l : ℕ) [Fact l.Prime] (C : Core l)
       rw [hc] at h0
       have h2 : aDp l (xi C.ε) = 0 := (Units.mul_right_eq_zero c).1 h0
       exact one_ne_zero (hreg 1 (by rw [h2, zero_mul]))
-    haveI := hfr
+    have := hfr
     have hne : aDp l ξ ≠ 0 := fun h => hw0 (by rw [hw, h, map_zero])
     obtain ⟨u, hu⟩ : IsUnit w :=
       IsLocalization.map_units (Per.BdR l) (⟨aDp l ξ, mem_nonZeroDivisors_of_ne_zero hne⟩ : nonZeroDivisors _)
@@ -154,7 +154,7 @@ theorem GlobalTheory.MemLoc.seed_fil : ∀ (l : ℕ) [Fact l.Prime] (C : Core l)
       rwa [add_comm] at this
   · have hdvr := GlobalTheory.MemLoc.BdRDVR.core_dvr l C
     obtain ⟨_, _, -, -, -, -, hfr⟩ := hdvr
-    haveI := hfr
+    have := hfr
     have hinjD : Function.Injective (algebraMap (Per.BdRp l) (Per.BdR l)) := IsFractionRing.injective _ _
     have hplus : Function.Injective C.jP := (GlobalTheory.MemLoc.AwayT.away_and_inj l C).2.2
     have hloc : Function.Injective (algebraMap (Per.Acris l) (BcrisP l)) := by

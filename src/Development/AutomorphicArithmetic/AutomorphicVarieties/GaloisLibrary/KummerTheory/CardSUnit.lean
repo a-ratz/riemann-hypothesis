@@ -109,7 +109,7 @@ private theorem card_ker_eq {K : Type} [Field K] [NumberField K] (S : Set (Heigh
 theorem UpperTheory.V.Kum.cardSUnit :
     ∀ (K : Type) [Field K] [NumberField K] (S : Set (HeightOneSpectrum (𝓞 K))) (n : ℕ) [NeZero n], S.Finite → Nat.card (S.unit K ⧸ (powK (K := K) n).subgroupOf (S.unit K)) = n ^ (InfinitePlace.nrRealPlaces K + InfinitePlace.nrComplexPlaces K - 1 + Nat.card S) * Nat.card (rootsOfUnity n K) := by
   intro K _ _ S n _ hS
-  haveI : Finite S := hS
+  have : Finite S := hS
   rw [← Subgroup.index_eq_card, powK_subgroupOf S (NeZero.ne n),
     GroundTheory.Global.index_range_powMonoidHom_eq_pow_mul (NeZero.ne n), GroundTheory.Global.SUnit.finrank_quotient_torsion,
     index_range_eq_card_ker, card_ker_eq, Units.rank, InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces]

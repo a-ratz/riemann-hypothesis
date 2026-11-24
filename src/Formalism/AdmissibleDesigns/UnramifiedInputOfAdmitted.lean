@@ -103,10 +103,10 @@ theorem bKa_clause (hBK : LargeLevelLemmas.BlochKatoAnnihilators i) (hG : K.Self
     ∀ w ∈ rowsN i dc, ∀ a, a ∈ HfWS i r π dc g0 eB e₁ s Dd hD hc w ↔
       ∀ b ∈ Hf₂S i r π dc g0 eB e₁ s Dd hD hc w, cupFG (DatS i r π dc g0 eB e₁ s Dd hD hc w) a b = 0 := by
   intro w hw
-  letI := modS i r π dc g0 eB e₁ s Dd hD hc
-  haveI := KLat.towerT Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
-  letI := modS' i r π dc g0 eB e₁ s Dd hD hc
-  haveI := KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
+  let := modS i r π dc g0 eB e₁ s Dd hD hc
+  have := KLat.towerT Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
+  let := modS' i r π dc g0 eB e₁ s Dd hD hc
+  have := KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
   have hreal := (KLat.rowLat Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i)
     (hM0 i r π g0 eB e₁ s Dd hD hc) (D.nd.l i) (Topo.padicCoeff_O i) (Topo.fracTop_O i) w).2.1
   have hin : KBKa.RowIn i dc (KLat.VT (O := D.nd.O i) (RepresentationBoundsCohomology.blk D.R)) (KLat.VT (O := D.nd.O i) (RepresentationBoundsCohomology.blk D.R))
@@ -309,10 +309,10 @@ theorem rowTie_disp (hπ : Function.Surjective π)
   intro n hn hw b hR
   obtain ⟨hF1, hF2, hFn⟩ := hFin
   obtain ⟨hF3, hF4, hsp⟩ := hFn n hn
-  haveI := hF1
-  haveI := hF2
-  haveI := hF3
-  haveI := hF4
+  have := hF1
+  have := hF2
+  have := hF3
+  have := hF4
   have hev : Function.Surjective ((vD n).toLinearMap ∘ₗ π) := (vD n).surjective.comp hπ
   have hrow := rowLenD_eq i dc VT VT' Dat ρ₁ π vD hpD heD hw hsp (hcob n hn) (hTop n hn hw).1 (hTop n hn hw).2
   have hR' : RowAt (Br.PD D.loc D.nbr i _ hw) (LL := Br.LLw (D.nbr i _ hw)) (O := Br.Ow (D.nbr i _ hw))
@@ -352,9 +352,9 @@ theorem rowTie_disp (hπ : Function.Surjective π)
   have hm' : rowLenD i dc VT VT' Dat ρ₁ π vD hpD heD n = m := hrow.trans hm
   have hk' : lenOl (Br.PD D.loc D.nbr i (K.plOf i dc n) hw)
       (O := ↥(OL (TruncatedSeriesCountingIdentities.CoefExt.self i (K.plOf i dc n) hw).LL)) = k := hk
-  refine ⟨by rw [hm']; exact ENat.coe_ne_top m, ?_⟩
+  refine ⟨by rw [hm']; exact ENat.natCast_ne_top m, ?_⟩
   rw [hm', hk']
-  simp only [ENat.toNat_coe]
+  simp only [ENat.toNat_natCast]
   exact hmk
 
 
@@ -417,9 +417,9 @@ theorem rowTie_S
       (DatS i r π dc g0 eB e₁ s Dd hD hc) (T₁ := FirstSummandSubmodule (D.nd.O i) Dd.e₁))
     (hcob : ∀ n ∈ rowsN i dc, KHf.OrbC i dc (n := n) (DatS i r π dc g0 eB e₁ s Dd hD hc n).ρT') :
     Sel.RowTie i dc r ρ π (rowLenS i r π dc g0 eB e₁ s Dd hD hc hT hrk) := by
-  haveI := Topo.rTop_addGroup_RD i r π g0 eB e₁ s Dd hD
-  letI := modS' i r π dc g0 eB e₁ s Dd hD hc
-  haveI := KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
+  have := Topo.rTop_addGroup_RD i r π g0 eB e₁ s Dd hD
+  let := modS' i r π dc g0 eB e₁ s Dd hD hc
+  have := KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
   have hπ : Function.Surjective (piS i Dd hT hrk) :=
     (tensor_lattice_facts Dd (D.nd.T i) (RepresentationBoundsCohomology.one_le_letterBlockLength D.R) hT hrk (epsU D.nd i)).2.2.2.2.2.2.2.2.2.2
   exact KRow.rowTie_disp i dc _ _ (DatS i r π dc g0 eB e₁ s Dd hD hc) (rho1 i Dd) (piS i Dd hT hrk)
@@ -533,7 +533,7 @@ theorem unrFin_of (hA : UnrIn i dc) : KHf.UnrFin i dc δO (KFin.uz i dc δO) := 
 
   by_cases hU : KFin.UnrHom i dc l
   · unfold KFin.uCol; rw [dite_eq_left hU]; exact hU.choose_spec.1
-  · have h0 : KFin.uCol i dc l = 0 := by unfold KFin.uCol; exact dif_neg hU
+  · have h0 : KFin.uCol i dc l = 0 := by unfold KFin.uCol; exact dite_eq_right hU
     rw [h0]; unfold KFin.UnrAdm
     refine ⟨fun g h => by simp, fun g _ => rfl, fun hn => ?_⟩
     first
@@ -589,7 +589,7 @@ def RowTieIn : Prop :=
 
 theorem row_match_from_comparison (h : RowTieIn i r ρ π dc g0 eB e₁ s Dd hD hc) :
     Sel.RowTie i dc r ρ π (rowLenS i r π dc g0 eB e₁ s Dd hD hc hT hrk) := by
-  haveI := Topo.rTop_addGroup_RD i r π g0 eB e₁ s Dd hD
+  have := Topo.rTop_addGroup_RD i r π g0 eB e₁ s Dd hD
   obtain ⟨hSub, hOrb, hMat, hTop1, hFin, hcob⟩ := h
   exact rowTie_S i r ρ π dc g0 eB e₁ s Dd hD hc hT hrk hSub hOrb hMat
     (KRow.rowTop_of i dc _ (fun _ _ hw => KOrb.topMatch_pi i hw _) hTop1) hFin hcob

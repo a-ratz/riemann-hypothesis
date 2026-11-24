@@ -137,7 +137,7 @@ theorem exists_matrix_span_eq (hv : v.Integers R) {X : Type} [Fintype X] [Decida
   · have hb := Module.Basis.mk hli (by simpa using hspC.ge)
     let e : X ≃ S := (hb.indexEquiv (Pi.basisFun C X)).symm
     refine ⟨Matrix.of fun x j => ((e j : S) : X → C) x, ?_, ?_⟩
-    · refine (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 ?_)
+    · refine (Matrix.isUnit_iff_isUnit_det _).1 (linearIndependent_col_iff_isUnit.1 ?_)
       exact hli.comp e e.injective
     · congr 1
       ext f

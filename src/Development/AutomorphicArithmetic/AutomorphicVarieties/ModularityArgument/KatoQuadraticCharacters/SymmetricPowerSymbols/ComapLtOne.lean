@@ -60,7 +60,7 @@ private theorem valuation_lt_one_iff_inv_not_mem {K : Type} [Field K] (A : Valua
   have h0 : A.valuation x ≠ 0 := by simpa using hx
   constructor
   · intro h
-    exact one_lt_inv_iff₀.mpr ⟨zero_lt_iff.mpr h0, h⟩
+    exact one_lt_inv_iff₀.mpr ⟨pos_iff_ne_zero.mpr h0, h⟩
   · intro h
     exact (one_lt_inv_iff₀.mp h).2
 

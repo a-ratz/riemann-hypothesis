@@ -71,9 +71,9 @@ theorem algChart_of_isStandardSmooth {R : Type} [CommRing R] (B : Type) [CommRin
         ∀ φ : B →ₐ[R] A, aug.comp φ = ε' →
           ∃! ψ : JetR R (Fin n) m →ₐ[R] A, aug.comp ψ = jetAug R (Fin n) m ∧ ψ.comp (π m) = φ := by
   obtain ⟨n, g, hgC, hg⟩ := hB.exists_etale_mvPolynomial
-  letI : Algebra (MvPolynomial (Fin n) R) B := g.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) B := IsScalarTower.of_algebraMap_eq' hgC.symm
-  haveI : Algebra.Etale (MvPolynomial (Fin n) R) B := hg
+  let : Algebra (MvPolynomial (Fin n) R) B := g.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) B := IsScalarTower.of_algebraMap_eq' hgC.symm
+  have : Algebra.Etale (MvPolynomial (Fin n) R) B := hg
   have hπ : ∀ m : ℕ, ∃ π : B →ₐ[R] JetR R (Fin n) m, (jetAug R (Fin n) m).comp π = ε' ∧
       ∀ j, π (sX (R := R) j) = algebraMap R _ (ε' (sX (R := R) j)) + zR m j := fun m =>
     etale_exists (n := n) ε' (jetAug R (Fin n) m) (ker_jetAug_nil (Fin n) m) _ (fun j => by
@@ -271,7 +271,7 @@ theorem exists_chart_pullback {X : Scheme.{0}} (G : Over X) [GrpObj G] {U : X.Op
     (h : (G.hom.appLE U V e).hom.IsStandardSmooth) (G₀ : Over (Spec (CommRingCat.of Γ(X, U)))) [GrpObj G₀]
     (φ : G₀.left ⟶ G.left) (hφ : IsGrpPullback G₀ G hU.fromSpec φ) :
     ∃ C : Chart G₀, (alg0 C).IsStandardSmooth := by
-  haveI : IsOpenImmersion φ := MorphismProperty.of_isPullback hφ.1.flip inferInstance
+  have : IsOpenImmersion φ := MorphismProperty.of_isPullback hφ.1.flip inferInstance
   have hr : V ≤ φ.opensRange := by
     intro y hy
     have h1 : G.hom y ∈ Set.range hU.fromSpec := by rw [hU.range_fromSpec]; exact e hy
@@ -288,7 +288,7 @@ theorem exists_chart_pullback {X : Scheme.{0}} (G : Over X) [GrpObj G] {U : X.Op
     rw [← cancel_mono hU.fromSpec, ← fromSpec_over C, Spec.map_comp, Category.assoc, Category.assoc,
       IsAffineOpen.SpecMap_appLE_fromSpec G.hom hU hV e, ← Category.assoc (Spec.map _),
       IsAffineOpen.SpecMap_appLE_fromSpec φ hV C.hU le_rfl, Category.assoc, hφ.1.w]
-  haveI := φ.isIso_app V hr
+  have := φ.isIso_app V hr
   have k2 : alg0 C = (φ.app V).hom.comp (G.hom.appLE U V e).hom := by
     rw [Scheme.Hom.app_eq_appLE]
     exact congrArg CommRingCat.Hom.hom key

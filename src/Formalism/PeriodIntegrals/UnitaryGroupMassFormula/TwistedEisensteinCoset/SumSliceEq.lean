@@ -147,7 +147,7 @@ theorem sum_stab {ι : Type} [Fintype ι] [DecidableEq ι] {a b A B : ℕ} (hA :
       have h2 := pow_eq_zero_iff'.1 hq
       have hq0 : qOf P = 0 := by exact_mod_cast h2.1
       simp [hq0, h2.2] at hi
-    · exact_mod_cast (div_left_inj' hq).1 hij
+    · exact_mod_cast (div_left_inj₀ hq).1 hij
   have hslice : ∀ (S : ι → Finset E) (k : ι),
       ∑ t ∈ Fintype.piFinset (update S k (valsQ E (qOf P) A B)), H t =
         ((qOf P ^ (B - b) : ℕ) : K) * ∑ t ∈ Fintype.piFinset (update S k (valsQ E (qOf P) a b)), H t :=

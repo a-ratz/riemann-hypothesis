@@ -109,7 +109,7 @@ theorem generic_translate_weights_mem (hT : TransvectionExpansion) (hTo : TorusA
     generated_submodule_stable LL S G (binomPol R LL S a k) (Or.inr ⟨a, k, rfl⟩) x hx
   have hWd : ∀ a b k, a ≠ b → ∀ x ∈ W, divPow R LL S a b k x ∈ W := fun a b k hab x hx =>
     generated_submodule_stable LL S G (divPow R LL S a b k) (Or.inl ⟨a, b, k, hab, rfl⟩) x hx
-  haveI hdom : IsDomain (GLCoord R n) :=
+  have hdom : IsDomain (GLCoord R n) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors
       (Matrix.det_mvPolynomialX_ne_zero (Fin n) R : (genMat R n).det ≠ 0))
   let K := FractionRing (GLCoord R n)

@@ -141,7 +141,7 @@ theorem infinitePlace_liesOver_comap (w : InfinitePlace E) : w.LiesOver (w.comap
 
 theorem ncard_places_over_eq_finrank [_root_.NumberField.IsTotallyComplex F] (v : InfinitePlace F) :
     {w : InfinitePlace E | w.comap (algebraMap F E) = v}.ncard = finrank F E := by
-  have h := InfinitePlace.unramifedPlacesOver_ncard_add_eq_finrank E v
+  have h := InfinitePlace.unramifiedPlacesOver_ncard_add_eq_finrank E v
   have hr : InfinitePlace.ramifiedPlacesOver E v = ∅ := by
     ext w
     simp only [Set.mem_empty_iff_false, iff_false]
@@ -456,15 +456,15 @@ theorem baseChangeLattice_span (s : Set (ι → F)) :
     let N : Submodule (𝓞 F) (ι → F) :=
       { carrier := {x | bcMap (E := E) x ∈ Submodule.span (𝓞 E) (bcMap (E := E) '' s)}
         add_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq, baseChangeMap_map_add] at *
+          simp only [Set.mem_ofPred_eq, baseChangeMap_map_add] at *
           exact Submodule.add_mem _ ha hb
         zero_mem' := by
-          simp only [Set.mem_setOf_eq]
+          simp only [Set.mem_ofPred_eq]
           have h0 : bcMap (E := E) (0 : ι → F) = 0 := by funext i; simp [bcMap]
           rw [h0]
           exact Submodule.zero_mem _
         smul_mem' := fun c {x} hx => by
-          simp only [Set.mem_setOf_eq, baseChangeMap_smul_integers] at *
+          simp only [Set.mem_ofPred_eq, baseChangeMap_smul_integers] at *
           exact Submodule.smul_mem _ _ hx }
     have hsN : Submodule.span (𝓞 F) s ≤ N :=
       Submodule.span_le.2 fun x hx => Submodule.subset_span ⟨x, hx, rfl⟩
@@ -591,11 +591,11 @@ theorem exists_nat_mul_mem_span_finset {j : ℕ} (e : Fin j → ι → K) (s : F
   let N : Submodule (𝓞 K) (ι → K) :=
     { carrier := {x | (∏ z : s, m z) • x ∈ Submodule.span (𝓞 K) (Set.range e)}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, smul_add] at *
+        simp only [Set.mem_ofPred_eq, smul_add] at *
         exact Submodule.add_mem _ ha hb
       zero_mem' := by simp
       smul_mem' := fun c {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_comm]
         exact Submodule.smul_mem _ _ hx }
   have hle : Submodule.span (𝓞 K) (s : Set (ι → K)) ≤ N := by
@@ -705,13 +705,13 @@ theorem baseChangeMap_mem_span_field {j : ℕ} (e : Fin j → ι → F) (m : ι 
   let N : Submodule F (ι → F) :=
     { carrier := {x | bcMap (E := E) x ∈ Submodule.span E (Set.range fun a => bcMap (E := E) (e a))}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, baseChangeMap_add_vectors] at *
+        simp only [Set.mem_ofPred_eq, baseChangeMap_add_vectors] at *
         exact Submodule.add_mem _ ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, bcMap_zero]
+        simp only [Set.mem_ofPred_eq, bcMap_zero]
         exact Submodule.zero_mem _
       smul_mem' := fun c {x} hx => by
-        simp only [Set.mem_setOf_eq, baseChangeMap_smul_field] at *
+        simp only [Set.mem_ofPred_eq, baseChangeMap_smul_field] at *
         exact Submodule.smul_mem _ _ hx }
   have hle : Submodule.span F (Set.range e) ≤ N :=
     Submodule.span_le.2 (by rintro _ ⟨a, rfl⟩; exact Submodule.subset_span ⟨a, rfl⟩)
@@ -981,7 +981,7 @@ theorem bc_mu (hc : CMData F E) (S : HSpace E) (hsig : S.SigOK) (hpos : S.IsPosD
     exact ⟨x, rfl⟩
   have hfr : finrank K (Fin S.rank → K) = finrank K Q.V := by
     rw [Module.finrank_eq_card_basis Q.b, hcard]; simp
-  haveI : FiniteDimensional K Q.V := Module.Finite.of_basis Q.b
+  have : FiniteDimensional K Q.V := Module.Finite.of_basis Q.b
   have hinj : Function.Injective f := (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hfr).2 hsurj
   obtain ⟨XK, hP1, hP3, hfg0, hmu'⟩ := pull_coords Q hQ f hinj hsurj
   have hcomap : Q.L.comap (f.restrictScalars (𝓞 K)) = Submodule.span (𝓞 K) (ιm '' (crdLat S L : Set (Fin S.rank → E))) := by
@@ -1043,9 +1043,9 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem q_lattice_slope (D : D7) : QSlope D := by
   intro u CV c τ
   have H := columnHypotheses D u
-  haveI := H.tcE
+  have := H.tcE
   have hn : 0 < (D.sp.X 0).rank := by rw [H.rank]; exact H.npos
-  letI : Algebra D.host.E D.what₂.LL := (CV.rho τ).toAlgebra
+  let : Algebra D.host.E D.what₂.LL := (CV.rho τ).toAlgebra
   have h1 := bc_mu D.sp.cm (D.sp.X 0) (D.sp.X_sig 0) (D.X_posDef 0 (Nat.zero_le _)) hn (CV.Q c τ) (CV.Q_good c τ)
     (by rw [Fintype.card_congr (CV.eQ c τ), Fintype.card_fin, H.rank]) (CV.bc c τ) (CV.bc_smul c τ) (D.clsLat u 0 c) (H.lat c)
     (CV.bc_L c τ) (CV.bc_norm c τ)

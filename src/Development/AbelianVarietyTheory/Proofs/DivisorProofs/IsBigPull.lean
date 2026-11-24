@@ -78,10 +78,10 @@ theorem pull_top_injective {k : Type} [CommRing k] {X Y : Scheme.{0}} [IsIntegra
 theorem finite_H0_top {E : Type} [Field E] {Y : Scheme.{0}} (p : Y ⟶ Sp E) (B : LB Y) :
     letI := algebraΓOfHom p
     Module.Finite E (coh (twist (structureModule Y) B) 0) → Module.Finite E (H0 p B ⊤) := by
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   intro h
-  letI : Module E B.Sec := Module.compHom _ (algebraMap E Γ(Y, ⊤))
-  haveI : IsScalarTower E Γ(Y, ⊤) B.Sec := IsScalarTower.of_compHom _ _ _
+  let : Module E B.Sec := Module.compHom _ (algebraMap E Γ(Y, ⊤))
+  have : IsScalarTower E Γ(Y, ⊤) B.Sec := IsScalarTower.of_compHom _ _ _
   have e (c : E) : algebraMap E Γ(Y, ⊤) c = algX p ⊤ c := by
     change p.appTop _ = _
     rw [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE]
@@ -95,8 +95,8 @@ theorem isBig_pull : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral X] 
     Dense (Set.range g) → ∀ N : LB X, (letI := algebraΓOfHom p; IsBig k N) →
     (letI := algebraΓOfHom (g ≫ p); IsBig k (N.pull g)) := by
   intro k _ X Y _ p g hp hd hg N hN
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (g ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (g ≫ p)
   have hL : ∀ m, (lbPow (N.pull g) m).IsLB := fun m => isLB_lbPow (LB.isLB_pull hN.isLB g) m
   have hfin : ∀ m, Module.Finite k (coh (twist (structureModule Y) (lbPow (N.pull g) m)) 0) :=
     fun m => finite_coh_zero_twist_of_isProjOver (fun _ => rfl) hp (hL m)
@@ -106,7 +106,7 @@ theorem isBig_pull : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral X] 
     have hB' := LB.isLB_pull hB g
     have ec := (cls_eq_iff (hL m) hB').2 (lbIso_lbPow_pull hN.isLB g m)
     rw [lineBundleGlobalSectionsDim_congr_picardClass (hL m) hB' ec, ← H0.finrank_top p, ← H0.finrank_top (g ≫ p)]
-    haveI := finite_H0_top (g ≫ p) ((lbPow N m).pull g)
+    have := finite_H0_top (g ≫ p) ((lbPow N m).pull g)
       (finite_coh_zero_twist_congr hB' (hL m) ec.symm (hfin m))
     exact LinearMap.finrank_le_finrank_of_injective (pull_top_injective p g hg _ hB)
   obtain ⟨D, hD, c, hc, hm⟩ := hN.growth

@@ -129,17 +129,17 @@ theorem measurableSet_primV (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (hJ : IsHermND σ J)
     (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) :
     MeasurableSet (primV σ J b v) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  haveI : LocallyCompactSpace (Fv F v) := inferInstance
-  haveI : SecondCountableTopology (Fv F v) := inferInstance
-  haveI : T2Space (Fv F v) := inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have : LocallyCompactSpace (Fv F v) := inferInstance
+  have : SecondCountableTopology (Fv F v) := inferInstance
+  have : T2Space (Fv F v) := inferInstance
   obtain ⟨-, -, -, t2, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI := t2
+  have := t2
   obtain ⟨-, lc, sc, -, -, hact⟩ := GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 2) (hypOne J)
     (isHermND_hypOne σ J hJ) (Fv F v)
-  haveI := lc
-  haveI := sc
-  haveI := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_fv F E σ hσ 1 (M + 2) v
+  have := lc
+  have := sc
+  have := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_fv F E σ hσ 1 (M + 2) v
   have hc := (hact 1).1
   have hlat := (GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b 1 (M + 2)).2.2.2.1 v
   have hclopen : IsClopen (latV b v : Set (Fin 1 → Fin (M + 2) → Fv F v ⊗[F] E)) :=
@@ -179,11 +179,11 @@ theorem measurableSet_primV (F E : Type) [Field F] [NumberField F] [Field E] [Nu
 theorem measurable_purePr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (S : Finset (HeightOneSpectrum (𝓞 F))) (Ψinf : (Fin 1 → Fin (M + 2) → Ainf F ⊗[F] E) → ℝ≥0∞) (Ψ : ∀ v : HeightOneSpectrum (𝓞 F), (Fin 1 → Fin (M + 2) → Fv F v ⊗[F] E) → ℝ≥0∞), Measurable Ψinf → (∀ v, Measurable (Ψ v)) → Measurable (purePr σ J b S Ψinf Ψ) := by
   intro F E _ _ _ _ _ σ hσ M J hJ d b S Ψinf Ψ hΨinf hΨ
   obtain ⟨hpi, hpf, hpv, -⟩ := GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b 1 (M + 2)
-  haveI := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_af F E σ hσ 1 (M + 2)
-  haveI := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_ainf F E σ hσ 1 (M + 2)
-  haveI : ∀ v, BorelSpace (Fin 1 → Fin (M + 2) → Fv F v ⊗[F] E) :=
+  have := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_af F E σ hσ 1 (M + 2)
+  have := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_ainf F E σ hσ 1 (M + 2)
+  have : ∀ v, BorelSpace (Fin 1 → Fin (M + 2) → Fv F v ⊗[F] E) :=
     fun v => GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_fv F E σ hσ 1 (M + 2) v
-  haveI := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   have hset : MeasurableSet {y : Fin 1 → Fin (M + 2) → AF F ⊗[F] E |
       ∀ v, v ∉ S → projV v (projFin y) ∈ primV σ J b v} := by
     have hE : {y : Fin 1 → Fin (M + 2) → AF F ⊗[F] E |

@@ -242,7 +242,7 @@ theorem kap_symm_apply (h : GA D V') : I.kap.symm h = I.symm.kap h := rfl
 theorem continuous_kap : Continuous I.kap := by
   have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
   have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  refine Continuous.subtype_mk (Continuous.comp (g := Units.map _) ?_ continuous_subtype_val) _
+  refine Continuous.subtype_mk (Continuous.comp (g := Units.map _) ?_ continuous_subtypeVal) _
   exact Continuous.units_map _ ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const)
 
 theorem continuous_kap_symm : Continuous I.kap.symm := I.symm.continuous_kap

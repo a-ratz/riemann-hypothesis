@@ -82,7 +82,7 @@ theorem pi_map_const {X : Type} [MeasurableSpace X] (μ : Measure X) [SigmaFinit
   simp only [hμ]
   haveI : SigmaFinite ((c : ENNReal) • μ) := (inferInstance : SigmaFinite (c • μ))
   refine Measure.pi_eq fun s hs => ?_
-  simp only [Measure.smul_apply, Measure.pi_pi, smul_eq_mul]
+  simp only [smul_apply, Measure.pi_pi, smul_eq_mul]
   rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ]
 
 theorem measN (n k : ℕ) (bs : Module.Basis (Fin n) F E) : ∃ κ : Measure ((Fin k → AE F E) × AF F), κ.IsAddHaarMeasure ∧

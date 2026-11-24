@@ -819,7 +819,7 @@ theorem DominantFibreBound.proof (hG : ComplexSets.GenericProjectionFinite.State
     _ = ((Fintype.piFinset R).card : ℕ∞) := Set.encard_coe_eq_coe_finsetCard _
     _ ≤ _ := by
       rw [Fintype.card_piFinset]
-      exact_mod_cast Finset.prod_le_prod' fun j _ => (Multiset.toFinset_card_le _).trans
+      exact_mod_cast Finset.prod_le_prod fun j _ => (Multiset.toFinset_card_le _).trans
         ((Polynomial.card_roots' _).trans Polynomial.natDegree_map_le)
 
 end
@@ -1113,7 +1113,7 @@ theorem lintegral_lt_top (hS : VarSlabMeasure.Statement) (hF : MassFinite.Statem
     · rw [← Real.exp_mul]; ring_nf
   have hle : ∀ z ∈ S, ‖F z‖ₑ ≤ ENNReal.ofReal M + ENNReal.ofReal (G z) := by
     intro z hz
-    rw [Real.enorm_eq_ofReal_abs, ← ENNReal.ofReal_add (le_max_right _ _) (le_max_right _ _)]
+    rw [Real.eNorm_eq_ofReal_abs, ← ENNReal.ofReal_add (le_max_right _ _) (le_max_right _ _)]
     refine ENNReal.ofReal_le_ofReal ?_
     have h1 := hFle z hz
     rcases le_or_gt 0 (F z) with h2 | h2
@@ -1408,7 +1408,7 @@ theorem volume_image_eq_zero (W I : Ideal (MvPolynomial (Fin n) ℂ)) (A : Matri
   refine volume_eq_zero_of_hausdorff (le_antisymm ?_ bot_le)
   calc μH[((2 * d : ℕ) : ℝ)] (A.mulVec '' (zeroSet W ∩ zeroSet I))
       ≤ μH[((2 * d : ℕ) : ℝ)] (L '' zeroSetEuc (W ⊔ I)) := measure_mono hsub
-    _ ≤ _ := L.lipschitz.hausdorffMeasure_image_le (by positivity) _
+    _ ≤ _ := L.lipschitzWith.hausdorffMeasure_image_le (by positivity) _
     _ = 0 := by rw [h0, mul_zero]
 
 end VarMassNearSmall

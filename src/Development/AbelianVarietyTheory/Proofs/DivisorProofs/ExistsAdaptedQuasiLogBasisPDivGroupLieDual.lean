@@ -726,7 +726,7 @@ namespace GlobalTheory
 
 theorem QLog.Chart.existsUnique_isLie : ∀ (p : ℕ) [Fact p.Prime] (O E : Type) [CommRing O] [CommRing E] [Algebra O E], IsFrame p E (RingHom.id O) → ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d), ∀ (f : MvPowerSeries (Fin d) E), QL c.μ ⊤ f → ∃! l : G.dual.Lie, c.IsLie f l := by
   intro p _ O E _ _ _ hF G d c f hf
-  haveI : IsAdicComplete (Ideal.span {(p : O)}) O := hF.complete
+  have : IsAdicComplete (Ideal.span {(p : O)}) O := hF.complete
   have hinj : Function.Injective (MvPowerSeries.map (σ := Fin d) (algebraMap O E)) := by
     intro s t h
     ext α
@@ -1536,9 +1536,9 @@ theorem exists_isLie (l : G.dual.Lie) : ∃ f : MvPowerSeries (Fin d) E, QL c.μ
         have := isLie_add hv c hE (ql_zero (E := E) h0) hf (isLie_zero hv c hE) hl a
         simpa only [zero_add] using this }
   have hom := GlobalTheory.PDiv.omega_finite_projective p C v O hv G.dual
-  haveI := hom.1
-  haveI := hom.2
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have := hom.1
+  have := hom.2
+  have : ValuationRing O := ValuationRing.of_integers v hv
   have hp : Ideal.span {(p : O)} ≤ (⊥ : Ideal O).jacobson :=
     ((Ideal.span_singleton_le_iff_mem _).2 ((IsLocalRing.mem_maximalIdeal _).2
       (Fact.out : ¬IsUnit (p : O)))).trans (IsLocalRing.maximalIdeal_le_jacobson _)
@@ -1555,10 +1555,10 @@ theorem adapted_basis : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlg
   intro p _ C _ _ _ v O _ _ _ _ _ hv G d c E _ _ hE
   have h0 := c.isLaw.const
   have hom := GlobalTheory.PDiv.omega_finite_projective p C v O hv G.dual
-  haveI := hom.1
-  haveI := hom.2
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : Module.Free O G.dual.omega := Module.free_of_flat_of_isLocalRing
+  have := hom.1
+  have := hom.2
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : Module.Free O G.dual.omega := Module.free_of_flat_of_isLocalRing
   let lb := Module.finBasis O G.dual.Lie
   choose F hF using fun j => exists_isLie hv c hE (lb j)
   choose large₂ hLg using fun i : Fin d => _root_.GlobalTheory.QLog.exists_log_of_lin p O E hE d c.μ c.isLaw (Pi.single i 1)

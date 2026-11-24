@@ -77,7 +77,7 @@ theorem average_step (σ : G → A →+* A) (hσ : ∀ g h a, σ (g * h) a = σ 
     ∃ W' : Matrix (Fin r) (Fin r) A, (∀ i j, c ∣ (W - W') i j) ∧ (∀ g ∈ N, W'.map (σ g) = W') ∧
       ∀ g i j, d ∣ (M g * W'.map (σ g) - W') i j := by
   classical
-  haveI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  have : Fintype (G ⧸ N) := Fintype.ofFinite _
 
   have dl : ∀ (e : A) (X : Matrix (Fin r) (Fin r) A), (∀ i j, e ∣ X i j) →
       ∀ (Y : Matrix (Fin r) (Fin r) A) i j, e ∣ (X * Y) i j := by
@@ -183,8 +183,8 @@ theorem exists_invariant_lift : ∀ (G : Type) [Group G] (A : Type) [CommRing A]
     intro k N W hNS hWN hWc
     obtain ⟨N', hN'S, hN'N, hN'd⟩ := hSk N hNS (k + 1 + 1)
     obtain ⟨hN'n, hN'f, τ, hτ, hτ1⟩ := hS N' hN'S
-    haveI := hN'n
-    haveI := hN'f
+    have := hN'n
+    have := hN'f
     obtain ⟨W', h1, h2, h3⟩ := GlobalTheory.InvariantLift.average_step σ hσ M hM N' τ hτ hτ1
       (π ^ (k + 1)) (π ^ (k + 1 + 1)) hN'd W (fun g hg => hWN g (hN'N hg)) hWc
     exact ⟨N', W', hN'S, h2, h3, h1⟩
@@ -275,7 +275,7 @@ theorem exists_witt_trace_one : ∀ (p : ℕ) [Fact p.Prime] (G : Type) [Group G
   intro p hp G _ R _ _ _ _ ρ m hm hfin
   classical
   set N := fixer ρ p m with hN
-  letI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  let : Fintype (G ⧸ N) := Fintype.ofFinite _
   let χ : G ⧸ N → (fixedPow p R m →* R) := fun x =>
     (ρ x.out).toMonoidHom.comp (fixedPow p R m).subtype
   have hχ : Function.Injective χ := by
@@ -406,7 +406,7 @@ theorem exists_matrix_coboundary (p : ℕ) [hp : Fact p.Prime] (G : Type) [Group
       ∀ g, M g * W.map (ρ g) = W := by
   classical
   set N := fixer ρ p m with hN
-  letI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  let : Fintype (G ⧸ N) := Fintype.ofFinite _
   let χ : G ⧸ N → (fixedPow p R m →* R) := fun x =>
     (ρ x.out).toMonoidHom.comp (fixedPow p R m).subtype
   have hχ : Function.Injective χ := by
@@ -687,8 +687,8 @@ theorem exists_matrixHom {l : ℕ} [Fact l.Prime] {G : Type} [Group G] {L V : Ty
     change e.repr (ρ 1 (e j)) i = _
     rw [map_one, Module.End.one_apply, e.repr_self, Finsupp.single_apply, Matrix.one_apply]
     by_cases h : i = j
-    · rw [if_pos h, if_pos h.symm, PadicInt.coe_one]
-    · rw [if_neg h, if_neg (Ne.symm h), PadicInt.coe_zero]
+    · rw [ite_eq_left h, ite_eq_left h.symm, PadicInt.coe_one]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), PadicInt.coe_zero]
   · ext i j
     rw [Matrix.mul_apply, PadicInt.coe_sum]
     simp only [PadicInt.coe_mul]
@@ -722,7 +722,7 @@ theorem isCrys_and_jump_eq_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       split_ifs <;> simp)) i
   obtain ⟨M, hM⟩ := exists_matrixHom T.ρ e hint
   obtain ⟨W, hW, hWg⟩ := exists_witt_matrix (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)) M
     (continuous_pi fun i => continuous_pi fun j => continuous_induced_rng.2 (by
       have h := (continuous_apply i).comp (hcont.comp (T.cont (e j)))

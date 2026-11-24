@@ -82,7 +82,7 @@ theorem exists_det_submatrix_ne_zero {K ρ κ : Type*} [Field K] [Fintype ρ] [D
   refine ⟨a ∘ eqv, ?_⟩
   have hli' : LinearIndependent K (A.submatrix id (a ∘ eqv)).col :=
     hli.comp eqv eqv.injective
-  rw [Matrix.linearIndependent_cols_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
+  rw [Matrix.linearIndependent_col_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
     isUnit_iff_ne_zero] at hli'
   exact hli'
 
@@ -162,7 +162,7 @@ theorem proof : IncidenceZeroLocus.Statement := by
       omega
     have hle : Finsupp.single j (e j) ≤ f := Finsupp.single_le_iff.mpr hj
     have h : monomial f (1 : Ω) = X j ^ e j * monomial (f - Finsupp.single j (e j)) 1 := by
-      rw [X_pow_eq_monomial, monomial_mul, one_mul, add_tsub_cancel_of_le hle]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, one_mul, add_tsub_cancel_of_le hle]
     rw [h]
     exact Jv.mul_mem_right _ (he j)
   let Rows : Finset (Fin n →₀ ℕ) := (Finset.univ : Finset (Fin n)).finsuppAntidiag N
@@ -229,7 +229,7 @@ theorem proof : IncidenceZeroLocus.Statement := by
     by_cases hff : f' = f
     · subst hff
       simp
-    · rw [if_neg hff, if_neg (fun h' => hff (Subtype.ext h'.symm))]
+    · rw [ite_eq_right hff, ite_eq_right (fun h' => hff (Subtype.ext h'.symm))]
   obtain ⟨σ', hσ'⟩ := exists_det_submatrix_ne_zero (Mx.map φv) hspanv
   obtain ⟨D, hD⟩ : ∃ D, D = (Mx.submatrix id σ').det := ⟨_, rfl⟩
   have hDv : aeval v D ≠ 0 := by

@@ -54,12 +54,12 @@ theorem exists_cj_Qbar_eq : ∀ (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[�
   let L : IntermediateField ℚ ℂ := M ⊓ Qbar
   have h1 : L ≤ M := inf_le_left
   have h2 : L ≤ Qbar := inf_le_right
-  letI : Algebra L Qbar := (IntermediateField.inclusion h2).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ L Qbar := IsScalarTower.of_algebraMap_eq fun r => by
+  let : Algebra L Qbar := (IntermediateField.inclusion h2).toRingHom.toAlgebra
+  have : IsScalarTower ℚ L Qbar := IsScalarTower.of_algebraMap_eq fun r => by
     apply Subtype.ext
     exact (map_ratCast (algebraMap ℚ ℂ) r).trans (by simp)
-  haveI : Algebra.IsAlgebraic ℚ Qbar := algebraicClosure.isAlgebraic ℚ ℂ
-  haveI : Algebra.IsAlgebraic L Qbar := Algebra.IsAlgebraic.tower_top (K := ℚ) L
+  have : Algebra.IsAlgebraic ℚ Qbar := algebraicClosure.isAlgebraic ℚ ℂ
+  have : Algebra.IsAlgebraic L Qbar := Algebra.IsAlgebraic.tower_top (K := ℚ) L
   obtain ⟨φ, hφ⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic (K := ℚ) (L := L) (M := ℂ)
     (E := Qbar) (ρ.comp (IntermediateField.inclusion h1))
   refine ⟨φ, fun x hx hM => ?_⟩

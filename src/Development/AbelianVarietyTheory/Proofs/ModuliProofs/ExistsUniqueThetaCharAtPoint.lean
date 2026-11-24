@@ -160,7 +160,7 @@ theorem mulVec_period_basis {g : ℕ} {La : Type} [AddCommGroup La] (P : La →+
   have h1 : ∀ m : Fin g → ℤ, (fun i => (m i : ℂ)) = ∑ i, m i • (Pi.single i 1 : Fin g → ℂ) := by
     intro m; ext k; simp [Finset.sum_apply, Pi.single_apply]
   have h2 : v = ∑ i, v i • (Pi.single i 1 : Fin g ⊕ Fin g → ℤ) := by
-    ext k; simp only [Finset.sum_apply, Pi.single_apply, Pi.smul_apply, smul_eq_mul, mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    ext k; simp only [Finset.sum_apply, Pi.single_apply, Pi.smul_apply, smul_eq_mul, mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [h1 fun i => v (.inl i), h1 fun i => v (.inr i)]
   conv_lhs => rw [h2]
 
@@ -191,12 +191,12 @@ theorem existsUnique_char_of_triple (hT : ThetaUnifAV) (hmul : Out.MulNSt) {E : 
   have hg := isGrpPullback_pullback t.G (y b₀)
   obtain ⟨hL, hr, ⟨c', w, hw, -⟩, hsym⟩ := Out.CubePf.cubePull S _ t.G _ (cubeMapOf hg) t.PP t.cub
   obtain ⟨-, ws, gs', -⟩ := hsym t.sym
-  haveI := t.semi.smooth
-  haveI := t.semi.geomConnected
-  haveI : Smooth ((Over.pullback (y b₀)).obj t.G).hom := by
+  have := t.semi.smooth
+  have := t.semi.geomConnected
+  have : Smooth ((Over.pullback (y b₀)).obj t.G).hom := by
     change Smooth (pullback.snd t.G.hom (y b₀))
     infer_instance
-  haveI : GeometricallyConnected ((Over.pullback (y b₀)).obj t.G).hom := by
+  have : GeometricallyConnected ((Over.pullback (y b₀)).obj t.G).hom := by
     change GeometricallyConnected (pullback.snd t.G.hom (y b₀))
     infer_instance
   obtain ⟨U, hU, hc, -⟩ := exists_isAffineOpen_mem_and_subset (X := S) (U := ⊤)

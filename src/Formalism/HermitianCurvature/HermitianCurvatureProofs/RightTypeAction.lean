@@ -157,7 +157,7 @@ theorem mem_right (hD : IsDom k r z z' (Fin.last r) D) {g h : Mx k r} (hg : g �
     (hh : h ∈ UWset k r z') : g * h ∈ Glev k r (Fin.last r) ∩ D := by
   obtain ⟨hgG, hgD⟩ := hg
   refine ⟨?_, ?_⟩
-  · simp only [Glev, UH, UWset, Set.mem_setOf_eq] at hgG hh ⊢
+  · simp only [Glev, UH, UWset, Set.mem_ofPred_eq] at hgG hh ⊢
     refine ⟨?_, fun a ha => ?_⟩
     · rw [conjTranspose_mul]
       calc hᴴ * gᴴ * Hpk k r * (g * h) = hᴴ * (gᴴ * Hpk k r * g) * h := by simp only [Matrix.mul_assoc]
@@ -173,7 +173,7 @@ theorem J_right (hπ' : IsCRepOn (UWset k r z') π') (hJ : J ∈ FFl k r z z' π
     (hg : g ∈ Glev k r (Fin.last r) ∩ D) (hh : h ∈ UWset k r z') : J (g * h) = (J g).comp (π' h) := by
   have h1z : (1 : Mx k r) ∈ UWset k r z := by simp [UWset, UH]
   have h1z' : (1 : Mx k r) ∈ UWset k r z' := by simp [UWset, UH]
-  simp only [FFl, Set.mem_setOf_eq] at hJ
+  simp only [FFl, Set.mem_ofPred_eq] at hJ
   have e1 := hJ.2.2.2 g hg 1 h1z 1 h1z'
   have e2 := hJ.2.2.2 g hg 1 h1z h hh
   rw [one_mul, mul_one, hπ'.1] at e1
@@ -237,8 +237,8 @@ theorem fold_right (hD : IsDom k r z z' (Fin.last r) D) (hπ' : IsCRepOn (UWset 
       rw [rz_right hD hπ' hc hJ hB1 h1 h2 hg, hB1 g hg]
       ext v
       simp
-    · simp only [List.map_cons, List.foldr_cons, ContinuousLinearMap.add_apply,
-        ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+    · simp only [List.map_cons, List.foldr_cons, add_apply,
+        smul_apply, ContinuousLinearMap.comp_apply]
       rw [hB2 v, ecRep_eq hπ' hc h1 h2]
 
 end Right
@@ -263,8 +263,8 @@ theorem right_type_action : Formalism.FourierDecayAlt.Q.RightTypeAction := by
   simp only [List.map_ofFn, Function.comp_def, ite_smul, zero_smul] at key
   choose Bf hBf1 hBf2 using key
 
-  simp only [id, Finset.sum_apply, Pi.smul_apply, ContinuousLinearMap.sum_apply,
-  ContinuousLinearMap.smul_apply, map_sum, map_zsmul, map_smul]
+  simp only [id, Finset.sum_apply, Pi.smul_apply, sum_apply,
+  smul_apply, map_sum, map_zsmul, map_smul]
   refine Finset.sum_congr rfl fun σ _ => ?_
   rw [hBf1 σ g hg, ContinuousLinearMap.comp_apply, hBf2 σ v]
 

@@ -107,7 +107,7 @@ theorem modM_of_map (X : GL (Fin k) A) (μ : Measure (Fin k → A)) [μ.IsAddHaa
   have hpos : μ K ≠ 0 := (measure_pos_of_mem_nhds μ hKn).ne'
   have hfin : μ K ≠ ⊤ := hK.measure_lt_top.ne
   have h2 := congrArg (fun ν : Measure (Fin k → A) => ν K) h1
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   have h3 : ((modM X : ℝ≥0) : ENNReal) = 1 := by
     have h4 : (modM X : ENNReal) * μ K / μ K = 1 * μ K / μ K := by rw [one_mul]; exact congrArg (· / μ K) h2
     rwa [ENNReal.mul_div_cancel_right hpos hfin, ENNReal.mul_div_cancel_right hpos hfin] at h4

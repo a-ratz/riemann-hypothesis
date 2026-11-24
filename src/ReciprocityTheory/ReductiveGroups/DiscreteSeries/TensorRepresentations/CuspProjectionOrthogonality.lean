@@ -125,7 +125,7 @@ theorem psi_pairing_at_one_re_pos (dual : Bool) (hP : IsPsiFor ε lam T Ψ) (hP'
       ∑ j, ob2SI (ob2B dual Ψ 1 (ι₀ (b j))) (ι₀ (Ψ' 1 (b j))) :=
     psi_pairing_eq_inner dual Ψ Ψ' ι₀ (1 : Matrix (Fin n) (Fin n) ℂ)
   rw [e]
-  simp only [psi_twist_at_one dual Ψ hP.2.1, hP'.2.1, ContinuousLinearMap.one_apply]
+  simp only [psi_twist_at_one dual Ψ hP.2.1, hP'.2.1, one_apply_eq_self]
   obtain ⟨j, hj⟩ : ∃ j, ι₀ (b j) ≠ 0 := by
     by_contra h
     push Not at h

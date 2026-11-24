@@ -364,11 +364,11 @@ theorem unitBall_prime (R : Type) [CommRing R] (l : ℕ) [Fact l.Prime] (χ : R 
   refine ⟨{ carrier := {p | ‖χ p‖ < 1}, add_mem' := ?_, zero_mem' := ?_, smul_mem' := ?_ }, ?_,
     fun p => Iff.rfl⟩
   · intro a b ha hb
-    simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+    simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
     exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ha hb)
   · simp
   · intro c x hx
-    simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, norm_mul] at *
+    simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, norm_mul] at *
     calc ‖χ c‖ * ‖χ x‖ ≤ 1 * ‖χ x‖ := by gcongr; exact h c
       _ < 1 := by simpa using hx
   · refine ⟨?_, ?_⟩
@@ -434,12 +434,12 @@ theorem core (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] (emb : O →+* Pad
         { carrier := {v | τ p *ᵥ v = μ • v}
           add_mem' := by
             intro a b ha hb
-            simp only [Set.mem_setOf_eq] at *
+            simp only [Set.mem_ofPred_eq] at *
             rw [mulVec_add, ha, hb, smul_add]
           zero_mem' := by simp
           smul_mem' := by
             intro a v hv
-            simp only [Set.mem_setOf_eq] at *
+            simp only [Set.mem_ofPred_eq] at *
             rw [mulVec_smul, hv, smul_comm] }
       have hcE : c ∈ E := hcμ
       have hE : E ≠ ⊥ := fun h => hc ((Submodule.mem_bot _).1 (h ▸ hcE))
@@ -580,7 +580,7 @@ theorem lift_forms_of_card_isUnit : ∀ (O : Type) [CommRing O] (G : Type) [Grou
       ∀ (h : Γ) (hk : s⁻¹ * (h : G) * s ∈ K), ρ ⟨_, hk⟩ y = y := by
     intro s
     obtain ⟨hF, hu⟩ := hfin s
-    haveI : Fintype {γ : Γ // s⁻¹ * (γ : G) * s ∈ K} := Fintype.ofFinite _
+    have : Fintype {γ : Γ // s⁻¹ * (γ : G) * s ∈ K} := Fintype.ofFinite _
     obtain ⟨y0, hy0⟩ := hπ (f s)
     obtain ⟨u, hu'⟩ := hu
     let kk : {γ : Γ // s⁻¹ * (γ : G) * s ∈ K} → K := fun h => ⟨_, h.2⟩
@@ -702,9 +702,9 @@ theorem indep_pi {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] {
     {T : Type} [Finite T] (n : ℕ) (y : Fin n → T → M) (hy : LinearIndependent O y) :
     LinearIndependent L fun a t => b (y a t) := by
   classical
-  haveI : Fintype T := Fintype.ofFinite T
+  have : Fintype T := Fintype.ofFinite T
 
-  haveI : Module.IsTorsionFree O M := by
+  have : Module.IsTorsionFree O M := by
     rw [Module.isTorsionFree_iff_smul_eq_zero]
     intro r m h
     have h1 : emb r • b m = 0 := by rw [← LinearMap.map_smulₛₗ, h, map_zero]
@@ -713,8 +713,8 @@ theorem indep_pi {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] {
     · exact Or.inr (hbinj (by rw [h2, map_zero]))
 
   let P : Submodule O M := Submodule.span O (Set.range fun p : Fin n × T => y p.1 p.2)
-  haveI : Module.Finite O P := Module.Finite.iff_fg.2 (Submodule.fg_span (Set.finite_range _))
-  haveI : Module.Free O P := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O P := Module.Finite.iff_fg.2 (Submodule.fg_span (Set.finite_range _))
+  have : Module.Free O P := Module.free_of_finite_type_torsion_free'
   let e := Module.finBasis O P
   let k := Module.finrank O P
   have hmem : ∀ a t, y a t ∈ P := fun a t => Submodule.subset_span ⟨(a, t), rfl⟩
@@ -742,8 +742,8 @@ theorem indep_pi {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] {
     apply LinearIndependent.of_comp Φ
     have : (Φ ∘ Y) = y := funext hΦ
     rw [this]; exact hy
-  letI : Algebra O L := emb.toAlgebra
-  haveI : FaithfulSMul O L := (faithfulSMul_iff_algebraMap_injective O L).2 hemb
+  let : Algebra O L := emb.toAlgebra
+  have : FaithfulSMul O L := (faithfulSMul_iff_algebraMap_injective O L).2 hemb
   have hY' : LinearIndependent L fun a => algebraMap O L ∘ Y a :=
     linearIndependent_algebraMap_comp_iff.2 hY
   let Ψ : (T × Fin k → L) →ₗ[L] (T → V) :=

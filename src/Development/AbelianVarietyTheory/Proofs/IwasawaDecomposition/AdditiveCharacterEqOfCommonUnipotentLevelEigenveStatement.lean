@@ -104,7 +104,7 @@ variable (κ : Type) [Field κ] [Finite κ]
 
 theorem unip_index (n : ℕ) : (Formalism.L2.DIV.unip κ n).index = ∏ i : Fin n, (Nat.card κ ^ (n - i) - 1) := by
   classical
-  letI := Fintype.ofFinite κ
+  let := Fintype.ofFinite κ
   have h1 := Subgroup.card_mul_index (Formalism.L2.DIV.unip κ n)
   rw [GlobalTheory.Mem.GrpCount.card_unip, card_pairs_lt, Matrix.card_GL_field, ← Nat.card_eq_fintype_card] at h1
   have h2 : ∏ i : Fin n, (Nat.card κ ^ n - Nat.card κ ^ (i : ℕ)) =
@@ -192,7 +192,7 @@ theorem prime_dvd_card_residue (v : HeightOneSpectrum (𝓞 (NumberField.maximal
     (hv : ((p : ℕ) : 𝓞 L⁺) ∈ v.asIdeal) [Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺))] :
     p ∣ Nat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺)) := by
   classical
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺))
+  let := Fintype.ofFinite (IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺))
   have h0 : ((p : ℕ) : IsLocalRing.ResidueField (v.adicCompletionIntegers L⁺)) = 0 := by
     have : (IsLocalRing.residue (v.adicCompletionIntegers L⁺))
         (algebraMap (𝓞 L⁺) (v.adicCompletionIntegers L⁺) ((p : ℕ) : 𝓞 L⁺)) = 0 := by
@@ -214,7 +214,7 @@ theorem relIndex_coprime : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L
     Nat.Coprime (H.relIndex (Formalism.UG.GLint (Fin n) (s.v.adicCompletionIntegers (maximalRealSubfield L)).toSubring)) p := by
   intro L _ _ _ n s r p H hp hA _ hH
   classical
-  haveI : Finite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield L))) :=
+  have : Finite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield L))) :=
     Formalism.UG.P.glint_finite_residueField s.v
   let ι := Formalism.UG.bc (n := Fin n) (s.v.adicCompletionIntegers (maximalRealSubfield L)).toSubring.subtype
   have hG : Formalism.UG.GLint (Fin n) (s.v.adicCompletionIntegers (maximalRealSubfield L)).toSubring = ι.range := rfl
@@ -251,7 +251,7 @@ theorem relIndex_coprime : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L
     have hlow : ∀ i j, j < i → B i j = 0 := by intro i j h; simp [B, h]
     have hdiag : ∀ i, B i i = 1 := by intro i; simp [B]
     have hdet : B.det = 1 := by
-      rw [Matrix.det_of_upperTriangular hlow]
+      rw [Matrix.det_of_isUpperTriangular hlow]
       simp [hdiag]
     let g := Matrix.nonsingInvUnit B (by rw [hdet]; exact isUnit_one)
     have hgB : ((ι g : GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) : Matrix (Fin n) (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) = fun i j => ((B i j : _) : s.v.adicCompletion (maximalRealSubfield L)) := rfl
@@ -275,7 +275,7 @@ theorem relIndex_coprime : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L
       · by_cases hij : i = j
         · subst hij
           rw [hdiag, map_one, map_one, h1]
-        · simp only [B, if_neg hji, if_neg hij]
+        · simp only [B, ite_eq_right hji, ite_eq_right hij]
           exact Function.surjInv_eq _ _
   refine Nat.Coprime.coprime_dvd_left (Subgroup.index_dvd_of_le hU) ?_
   rw [unip_index]
@@ -544,7 +544,7 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
         rintro ⟨rfl, -⟩
         simp [i0] at ha
         omega
-      rw [hent, if_neg h1, if_neg h2, add_zero, map_zero]
+      rw [hent, ite_eq_right h1, ite_eq_right h2, add_zero, map_zero]
       exact zero_lt_one
     · have h1 : a ≠ b := by
         rintro rfl
@@ -552,13 +552,13 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
       have h2 : ¬(a = i0 ∧ b = i1) := by
         rintro ⟨rfl, -⟩
         simp [i0] at hba
-      rw [hent, if_neg h1, if_neg h2, add_zero, map_zero]
+      rw [hent, ite_eq_right h1, ite_eq_right h2, add_zero, map_zero]
       exact zero_lt_one
     · subst hab
       have h2 : ¬(a = i0 ∧ a = i1) := by
         rintro ⟨h3, h4⟩
         exact hne (h3.symm.trans h4)
-      rw [hent, if_pos rfl, if_neg h2, add_zero, sub_self, map_zero]
+      rw [hent, ite_eq_left rfl, ite_eq_right h2, add_zero, sub_self, map_zero]
       exact zero_lt_one
   have hdet : NG.detDD s r (s.loc n x) = 1 := by
     unfold NG.detDD
@@ -572,16 +572,16 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
         rw [h3] at this
         simp [i0] at this
         omega
-      rw [Matrix.of_apply, hent, if_neg h2, add_zero, Matrix.one_apply]
+      rw [Matrix.of_apply, hent, ite_eq_right h2, add_zero, Matrix.one_apply]
       simp only [Subtype.ext_iff]
     rw [this, Matrix.det_one]
   have hsup : NG.supDiag s r (s.loc n x) = y := by
     unfold NG.supDiag
     rw [Finset.sum_eq_single i0, Finset.sum_eq_single i1]
-    · rw [if_pos ⟨rfl, by simp [i1]; omega⟩, hent, if_neg hne, if_pos ⟨rfl, rfl⟩, zero_add]
+    · rw [ite_eq_left ⟨rfl, by simp [i1]; omega⟩, hent, ite_eq_right hne, ite_eq_left ⟨rfl, rfl⟩, zero_add]
     · intro b _ hb
       split_ifs with h
-      · rw [hent, if_neg (fun h' => by simp [i0, Fin.ext_iff] at h'; omega), if_neg (fun h' => hb h'.2), add_zero]
+      · rw [hent, ite_eq_right (fun h' => by simp [i0, Fin.ext_iff] at h'; omega), ite_eq_right (fun h' => hb h'.2), add_zero]
       · rfl
     · intro h
       exact absurd (Finset.mem_univ _) h
@@ -589,7 +589,7 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
       apply Finset.sum_eq_zero
       intro b _
       split_ifs with h
-      · rw [hent, if_neg (fun h' => by simp [Fin.ext_iff] at h'; omega), if_neg (fun h' => ha h'.1), add_zero]
+      · rw [hent, ite_eq_right (fun h' => by simp [Fin.ext_iff] at h'; omega), ite_eq_right (fun h' => ha h'.1), add_zero]
       · rfl
     · intro h
       exact absurd (Finset.mem_univ _) h

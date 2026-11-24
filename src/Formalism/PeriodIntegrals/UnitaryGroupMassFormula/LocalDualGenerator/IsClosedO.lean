@@ -80,16 +80,16 @@ theorem t2 : T2Space K := by
   exact lt_irrefl _ hz'
 
 theorem isClosed_O : IsClosed ((𝒪[K] : Set K)) := by
-  haveI : T2Space K := t2 (K := K)
+  have : T2Space K := t2 (K := K)
   exact (IsNonarchimedeanLocalField.isCompact_closedBall K 1).isClosed
 
 theorem iota_mem (hcont : Continuous (algebraMap ℚ_[l] K)) (a : ℤ_[l]) :
     algebraMap ℚ_[l] K (a : ℚ_[l]) ∈ 𝒪[K] := by
   have hcl : IsClosed {a : ℤ_[l] | algebraMap ℚ_[l] K (a : ℚ_[l]) ∈ 𝒪[K]} :=
-    (isClosed_O (K := K)).preimage (hcont.comp continuous_subtype_val)
+    (isClosed_O (K := K)).preimage (hcont.comp continuous_subtypeVal)
   refine PadicInt.denseRange_intCast.induction_on a hcl ?_
   intro n
-  simp only [Set.mem_setOf_eq, PadicInt.coe_intCast, map_intCast]
+  simp only [Set.mem_ofPred_eq, PadicInt.coe_intCast, map_intCast]
   exact intCast_mem _ n
 
 def iotaR (hcont : Continuous (algebraMap ℚ_[l] K)) : ℤ_[l] →+* 𝒪[K] :=
@@ -155,7 +155,7 @@ theorem res_Phi (hcont : Continuous (algebraMap ℚ_[l] K)) (c : Fin (fdim K l) 
 
 theorem one_step (hcont : Continuous (algebraMap ℚ_[l] K)) (huni : Irreducible ((l : ℕ) : 𝒪[K]))
     (x : 𝒪[K]) : ∃ c, ∃ y : 𝒪[K], x = Phi K l hcont c + (l : 𝒪[K]) * y := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   set r := (bb K l).repr (residue 𝒪[K] x) with hr
   refine ?_
   have hc : residue 𝒪[K] (Phi K l hcont (fun i => ((r i).val : ℤ_[l]))) = residue 𝒪[K] x := by
@@ -185,7 +185,7 @@ theorem n_step (hcont : Continuous (algebraMap ℚ_[l] K)) (huni : Irreducible (
 
 theorem span (hcont : Continuous (algebraMap ℚ_[l] K)) (huni : Irreducible ((l : ℕ) : 𝒪[K]))
     (x : 𝒪[K]) : ∃ c, x = Phi K l hcont c := by
-  haveI : T2Space K := t2 (K := K)
+  have : T2Space K := t2 (K := K)
   choose c y hxy using fun j => n_step K l hcont huni j x
   let F : (Fin (fdim K l) → ℤ_[l]) → K := fun c => ((Phi K l hcont c : 𝒪[K]) : K)
   have hF : Continuous F := by
@@ -194,7 +194,7 @@ theorem span (hcont : Continuous (algebraMap ℚ_[l] K)) (huni : Irreducible ((l
       exact Phi_coe K l hcont c
     rw [this]
     refine continuous_finsetSum _ (fun i _ => ?_)
-    exact (hcont.comp (continuous_subtype_val.comp (continuous_apply i))).mul continuous_const
+    exact (hcont.comp (continuous_subtypeVal.comp (continuous_apply i))).mul continuous_const
   have hcl : IsClosed (Set.range F) := (isCompact_range hF).isClosed
   have h0 : Filter.Tendsto (fun j => (l : K) ^ j * (y j : K)) Filter.atTop (nhds 0) := by
     have hp : Filter.Tendsto (fun j => (l : ℚ_[l]) ^ j) Filter.atTop (nhds 0) :=

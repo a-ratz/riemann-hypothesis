@@ -185,7 +185,7 @@ private theorem mem_minusculeSet_iff {j : ℕ} (hj : j ≤ n) (g : GL (Fin n) F)
     have hs : ∑ i, μ i = j := by
       have hv : valuation F (uniformizer F : F) ≠ 0 := valuation_uniformizer_ne_zero F
       rw [valuation_det_diagPow, ← zpow_natCast] at m3
-      exact (zpow_right_strictAnti₀ (zero_lt_iff.2 hv) (valuation_uniformizer_lt_one F)).injective m3
+      exact (zpow_right_strictAnti₀ (pos_iff_ne_zero.2 hv) (valuation_uniformizer_lt_one F)).injective m3
     have hμ : μ = fun i : Fin n => if (i : ℕ) < j then (1 : ℤ) else 0 :=
       funext (eq_ite_of_antitone hdom h0 h1 hs)
     exact ⟨k₁, hk₁, k₂, hk₂, by rw [← hμ]⟩
@@ -350,9 +350,9 @@ private theorem heckeAct_Hs (hm : m.real (integralGL (w.adicCompletion K) n : Se
   have hT := (heckeAct_eq_finsum m (rr μ w) hm (minusculeHecke m ((i : ℕ) + 1)) hu).2
   have hsm := smooth_of_mem_fixedVectors hKo hu
   rw [Hs, val_smul, HeckeAlgebra.coe_smul, heckeAct_smul_left _ (minusculeHecke m ((i : ℕ) + 1) : HeckeAlgebra m).mem hsm,
-    hT, Tsph, ContinuousLinearMap.smul_apply, Hop, ContinuousLinearMap.comp_apply, hp, scal_eq]
+    hT, Tsph, smul_apply, Hop, ContinuousLinearMap.comp_apply, hp, scal_eq]
   congr 1
-  rw [finsum_mem_eq_finite_toFinset_sum _ hS, ContinuousLinearMap.sum_apply,
+  rw [finsum_mem_eq_finite_toFinset_sum _ hS, sum_apply,
     finsum_eq_sum_of_support_subset (s := hS.toFinset)]
   · refine Finset.sum_congr rfl fun c hc => ?_
     rw [minusculeHecke_apply, Set.indicator_of_mem ((out_mem_iff w i c).2 ((Set.Finite.mem_toFinset hS).1 hc)), one_smul,
@@ -562,7 +562,7 @@ private theorem out_mem_iwCoset_iff {K : Type} [Field K] [NumberField K] {n : �
     c.out ∈ iwCoset w ν ↔ c ∈ {c : GL (Fin n) (w.adicCompletion K) ⧸ GLnLocal.iwahori (w.adicCompletion K) n |
       ∃ k ∈ GLnLocal.iwahori (w.adicCompletion K) n,
         c = QuotientGroup.mk (k * Cartan.diagPow (w.adicCompletion K) n ν)} := by
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨a, ha, b, hb, h⟩
     refine ⟨a, ha, ?_⟩
@@ -713,7 +713,7 @@ private theorem exists_mid (w : Pl K) (J : Subgroup (GL (Fin n) (w.adicCompletio
     (h₀ : ∀ x, e₀ x = r x * (J : Set (GL (Fin n) (w.adicCompletion K))).indicator 1 (cf w x)) :
     ∃ e : TF K n, ∀ x, e x = r x * S.indicator 1 (cf w x) := by
   classical
-  haveI : DiscreteTopology (GL (Fin n) (w.adicCompletion K) ⧸ J) := QuotientGroup.discreteTopology hJ
+  have : DiscreteTopology (GL (Fin n) (w.adicCompletion K) ⧸ J) := QuotientGroup.discreteTopology hJ
   have hmk : Continuous (QuotientGroup.mk : GL (Fin n) (w.adicCompletion K) → GL (Fin n) (w.adicCompletion K) ⧸ J) :=
     continuous_quotient_mk'
   have hfin : ((QuotientGroup.mk : GL (Fin n) (w.adicCompletion K) → GL (Fin n) (w.adicCompletion K) ⧸ J) '' S).Finite :=
@@ -852,7 +852,7 @@ theorem UpperTheory.ConvolutionTheory.GM.repOne :
   intro K _ _ _ n hn μ _ 𝔞 ev hev w₀ hw₀ ν hν T hT p h hsph r hr₀ hrT hU j wd e₀ e₁ h₀ h₁
   classical
   obtain ⟨m, hm, hC⟩ := (UpperTheory.ConvolutionTheory.Tf.compatEx K n hn).2.1 μ 𝔞.ν
-  haveI := hm
+  have := hm
   have hne : ∀ w ∈ T, w ≠ w₀ := fun w hw e => hT w hw (e ▸ hw₀)
   have hI := UpperTheory.ConvolutionTheory.Tf.uiwPow K n μ w₀ ν ν hν hν
   have hIo := hI.2.2.1

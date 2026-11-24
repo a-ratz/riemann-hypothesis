@@ -75,10 +75,10 @@ variable {G T : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2S
 private lemma uni_comap (μ : Measure G) (hμ : Uni μ) (U : Subgroup G) (hU : IsOpen (U : Set G)) :
     Uni (μ.comap fun u : U => (u : G)) := by
   obtain ⟨h1, h2⟩ := hμ
-  haveI := h1
-  haveI := h2
+  have := h1
+  have := h2
   have hUm : MeasurableSet (U : Set G) := hU.measurableSet
-  have emb : MeasurableEmbedding (fun u : U => (u : G)) := MeasurableEmbedding.subtype_coe hUm
+  have emb : MeasurableEmbedding (fun u : U => (u : G)) := MeasurableEmbedding.subtypeVal hUm
   have hH : (μ.comap U.subtype).IsHaarMeasure :=
     Measure.IsHaarMeasure.comap (mH := inferInstance) μ hU.isOpenEmbedding_subtypeVal
   refine ⟨hH, ⟨?_⟩⟩
@@ -138,14 +138,14 @@ private lemma isNrm_glue (j : T →* G) (ν : Measure T) (hν : Uni ν) (U : Sub
     (i : U.comap j →* U) (hi : ∀ t, (i t : G) = j t) (r : U → ℝ≥0∞)
     (h₀ : IsNrm i (ν.comap fun t : U.comap j => (t : T)) r) (r' : G → ℝ≥0∞) (h' : IsNrm j ν r') :
     IsNrm j ν ((Set.range j * (U : Set G)).piecewise (ext0 U r) r') := by
-  haveI := hν.2
-  haveI := hν.1
-  haveI : ν.IsMulRightInvariant := by
+  have := hν.2
+  have := hν.1
+  have : ν.IsMulRightInvariant := by
     have h2 : (ν.inv).IsMulRightInvariant := inferInstance
     rwa [Measure.IsInvInvariant.inv_eq_self] at h2
   have hS : IsOpen (Set.range j * (U : Set G)) := hU.mul_left
   have hm : Measurable (ext0 U r) :=
-    (MeasurableEmbedding.subtype_coe hU.measurableSet).measurable_extend h₀.1 measurable_const
+    (MeasurableEmbedding.subtypeVal hU.measurableSet).measurable_extend h₀.1 measurable_const
   refine ⟨hm.piecewise hS.measurableSet h'.1, fun x => ?_⟩
   by_cases hx : x ∈ Set.range j * (U : Set G)
   · obtain ⟨_, ⟨s, rfl⟩, u, hu, rfl⟩ := hx
@@ -181,11 +181,11 @@ theorem UpperTheory.ConvolutionTheory.G.quotOpen_of :
   obtain ⟨hμ, hj, hν⟩ := id h
   have hV : IsOpen ((U.comap j : Subgroup T) : Set T) := hU.preimage hj.continuous
   have hUm : MeasurableSet (U : Set G) := hU.measurableSet
-  haveI : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set G)
-  haveI : SecondCountableTopology (U.comap j) :=
+  have : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set G)
+  have : SecondCountableTopology (U.comap j) :=
     TopologicalSpace.Subtype.secondCountableTopology ((U.comap j : Subgroup T) : Set T)
-  haveI : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace (U.comap j) := hV.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (U.comap j) := hV.isOpenEmbedding_subtypeVal.locallyCompactSpace
   have hUc : IsClosedEmbedding (fun u : U => (u : G)) :=
     (Subgroup.isClosed_of_isOpen U hU).isClosedEmbedding_subtypeVal
   have hVc : IsClosedEmbedding (fun t : U.comap j => (t : T)) :=
@@ -205,7 +205,7 @@ theorem UpperTheory.ConvolutionTheory.G.quotOpen_of :
   obtain ⟨r', -, hr', -⟩ := hN G T μ j ν h
   have hg := isNrm_glue j ν hν U hU hV.measurableSet i hi _ hr₀ _ hr'
   obtain ⟨hQ1, -, hQ3⟩ := hE G T μ j ν h F hFm hFi _ hg
-  have hFm' : Measurable (fun u : U => F u) := hFm.comp measurable_subtype_coe
+  have hFm' : Measurable (fun u : U => F u) := hFm.comp measurable_subtypeVal
   have hFi' : ∀ (t : U.comap j) (g : U), F ((i t * g : U) : G) = F g := by
     intro t g
     simp [hi, hFi]
@@ -262,21 +262,21 @@ theorem UpperTheory.quotient_haar_measure_pushforward :
     μ j ν μ' j' ν' hP hP' U hU π πT hπ hπT hc hμ hν F F' hF hFi hF' hF'i hs hFF
   have hjc : Continuous j := hP.2.1.continuous
   have hUT : IsOpen ((U.comap j : Subgroup T) : Set T) := hU.preimage hjc
-  haveI : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace (U.comap j) := hUT.isOpenEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set G)
-  haveI : SecondCountableTopology (U.comap j) :=
+  have : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (U.comap j) := hUT.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set G)
+  have : SecondCountableTopology (U.comap j) :=
     TopologicalSpace.Subtype.secondCountableTopology ((U.comap j : Subgroup T) : Set T)
-  haveI : BorelSpace U := Subtype.borelSpace (fun x => x ∈ (U : Set G))
-  haveI : BorelSpace (U.comap j) := Subtype.borelSpace (fun x => x ∈ ((U.comap j : Subgroup T) : Set T))
+  have : BorelSpace U := Subtype.borelSpace (fun x => x ∈ (U : Set G))
+  have : BorelSpace (U.comap j) := Subtype.borelSpace (fun x => x ∈ ((U.comap j : Subgroup T) : Set T))
   let i : U.comap j →* U := (j.comp (U.comap j).subtype).codRestrict U (fun t => t.2)
   have hi : ∀ t : U.comap j, (i t : G) = j t := fun _ => rfl
   obtain ⟨hPU, hO⟩ := quotOpen_of normEx quotEq G T μ j ν hP U hU i hi
   obtain ⟨ρ', hρc, hρ, -⟩ := normEx H T' μ' j' ν' hP'
   have embG : MeasurableEmbedding (fun u : U => (u : G)) :=
-    MeasurableEmbedding.subtype_coe hU.measurableSet
+    MeasurableEmbedding.subtypeVal hU.measurableSet
   have embT : MeasurableEmbedding (fun t : U.comap j => (t : T)) :=
-    MeasurableEmbedding.subtype_coe hUT.measurableSet
+    MeasurableEmbedding.subtypeVal hUT.measurableSet
   have mapG : (μ.comap fun u : U => (u : G)).map (fun u : U => (u : G)) = μ.restrict (U : Set G) := by
     rw [embG.map_comap]; congr 1; exact Subtype.range_coe
   have mapT : (ν.comap fun t : U.comap j => (t : T)).map (fun t : U.comap j => (t : T)) =
@@ -285,7 +285,7 @@ theorem UpperTheory.quotient_haar_measure_pushforward :
   have hρm : Measurable fun h : H => ((ρ' h : NNReal) : ℝ≥0∞) :=
     measurable_coe_nnreal_ennreal.comp hρc.measurable
   have hn : IsNrm i (ν.comap fun t : U.comap j => (t : T)) (fun u : U => ((ρ' (π u) : NNReal) : ℝ≥0∞)) := by
-    refine ⟨hρm.comp (hπ.measurable.comp measurable_subtype_coe), fun x => ?_⟩
+    refine ⟨hρm.comp (hπ.measurable.comp measurable_subtypeVal), fun x => ?_⟩
     have hg : Measurable fun s : T' => ((ρ' (j' s * π x) : NNReal) : ℝ≥0∞) :=
       hρm.comp ((hP'.2.1.continuous.measurable).mul_const _)
     calc ∫⁻ t, ((ρ' (π ((i t * x : U) : G)) : NNReal) : ℝ≥0∞) ∂(ν.comap fun t : U.comap j => (t : T))
@@ -302,7 +302,7 @@ theorem UpperTheory.quotient_haar_measure_pushforward :
           (lintegral_map hg hπT.measurable).symm
       _ = ∫⁻ s, ((ρ' (j' s * π x) : NNReal) : ℝ≥0∞) ∂ν' := by rw [hν]
       _ = 1 := hρ.2 (π x)
-  have hFU : Measurable fun u : U => F u := hF.comp measurable_subtype_coe
+  have hFU : Measurable fun u : U => F u := hF.comp measurable_subtypeVal
   have hFUi : ∀ (t : U.comap j) (g : U), F ((i t * g : U) : G) = F g := by
     intro t g
     rw [Subgroup.coe_mul, hi, hFi]

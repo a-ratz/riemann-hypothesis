@@ -114,10 +114,10 @@ theorem IsContOn.comp [TopologicalSpace G] {C : TestClass R} {om : G →* Module
 theorem norm_eq_one_of_lintegral_eq {X : Type} [MeasurableSpace X] {μ : Measure X} {f : X → ℂ} {a : ℂ}
     (h : ∫⁻ x, ‖(a • f) x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖f x‖ₑ ^ 2 ∂μ) (h0 : ∫⁻ x, ‖f x‖ₑ ^ 2 ∂μ ≠ 0)
     (h1 : ∫⁻ x, ‖f x‖ₑ ^ 2 ∂μ ≠ ⊤) : ‖a‖ = 1 := by
-  simp only [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow] at h
-  rw [lintegral_const_mul' _ _ (by simp [enorm_eq_nnnorm])] at h
+  simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow] at h
+  rw [lintegral_const_mul' _ _ (by simp [eNorm_eq_nnNorm])] at h
   have h2 : ‖a‖ₑ ^ 2 = 1 := (ENNReal.mul_left_inj h0 h1).mp (h.trans (one_mul _).symm)
-  rw [enorm_eq_nnnorm, ← ENNReal.coe_pow, ENNReal.coe_eq_one, pow_eq_one_iff_of_nonneg zero_le' two_ne_zero] at h2
+  rw [eNorm_eq_nnNorm, ← ENNReal.coe_pow, ENNReal.coe_eq_one, pow_eq_one_iff_of_nonneg zero_le two_ne_zero] at h2
   exact congrArg NNReal.toReal h2
 
 end Unitary
@@ -364,7 +364,7 @@ variable {c} in
 theorem ResEtaPow.map_conj {ξ : E} (h : IsQuad c ξ) {K : Subgroup Rˣ} {χ : Eˣ →* Circle} {n : ℕ} (hχ : ResEtaPow K χ n)
     (z : Eˣ) : χ (Units.map (c : E →* E) z) = (χ z)⁻¹ := by
   have h1 := hχ (Units.map (Algebra.norm R : E →* R) z)
-  rw [if_pos (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨z, rfl⟩)), Circle.coe_eq_one,
+  rw [ite_eq_left (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨z, rfl⟩)), Circle.coe_eq_one,
     show Units.map (algebraMap R E : R →* E) (Units.map (Algebra.norm R : E →* R) z) = z * Units.map (c : E →* E) z from
       Units.ext (h.algebraMap_norm z), map_mul] at h1
   exact eq_inv_of_mul_eq_one_right h1

@@ -98,7 +98,7 @@ namespace GlobalTheory.HilbertSamuel.Data
 
 theorem complexify_statement : Complexify := by
   intro F _ _ X β hF _ hS hB
-  haveI := hF
+  have := hF
   exact ⟨fun σ => hB.mulBoundAt σ, fun E _ _ _ => hS.baseChange E⟩
 
 end GlobalTheory.HilbertSamuel.Data
@@ -218,16 +218,16 @@ theorem vecHeight_smul_algebraMap (F K : Type) [Field F] [NumberField F] [Field 
   set z : Fin N → Ω := c • fun j => algebraMap K Ω (y j) with hz
   let L : IntermediateField K Ω := IntermediateField.adjoin K {c}
   have hcK : IsIntegral K c := ((Algebra.IsAlgebraic.isAlgebraic (R := F) c).tower_top K).isIntegral
-  haveI : FiniteDimensional K L := IntermediateField.adjoin.finiteDimensional hcK
-  haveI : NumberField L := NumberField.of_module_finite K L
+  have : FiniteDimensional K L := IntermediateField.adjoin.finiteDimensional hcK
+  have : NumberField L := NumberField.of_module_finite K L
   have hcL : c ∈ L := IntermediateField.mem_adjoin_simple_self K c
   have hle : coordField F z ≤ L.restrictScalars F := by
     refine IntermediateField.adjoin_le_iff.2 ?_
     rintro _ ⟨j, rfl⟩
     exact mul_mem hcL (L.algebraMap_mem (y j))
   let ι : coordField F z →ₐ[F] L := IntermediateField.inclusion hle
-  letI : Algebra (coordField F z) L := ι.toRingHom.toAlgebra
-  haveI : IsScalarTower F (coordField F z) L := IsScalarTower.of_algebraMap_eq fun x => (ι.commutes x).symm
+  let : Algebra (coordField F z) L := ι.toRingHom.toAlgebra
+  have : IsScalarTower F (coordField F z) L := IsScalarTower.of_algebraMap_eq fun x => (ι.commutes x).symm
   let z' : Fin N → coordField F z := fun j => ⟨z j, IntermediateField.subset_adjoin _ _ ⟨j, rfl⟩⟩
   let c' : L := ⟨c, hcL⟩
   have hc' : c' ≠ 0 := fun h => hc (congrArg Subtype.val h)
@@ -376,7 +376,7 @@ theorem RatPt.along_bijective (hs : G.IsGood s)
     {Ω : Type} [Field Ω] [IsAlgClosed Ω] (φ : K →+* Ω) : Function.Bijective fun x : RatPt G s => x.along φ := by
   have := hs.finite
   have := hs.etale
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have hB := isLB_tw G.isLB₂ G.isLB 0
   have : Finite (Points.PtsOver ((G.ideal s).subschemeι ≫ G.str) (spMap φ)) := finite_ptsOver _ Ω
   refine (RatPt.along_injective hs φ).bijective_of_nat_card_le (le_of_eq ?_)
@@ -429,7 +429,7 @@ variable {G E s}
 theorem RatPt.ptHeight_geomPt (x : RatPt (G.baseChange E) s) :
     haveI : Algebra.IsAlgebraic F (AlgebraicClosure E) := Algebra.IsAlgebraic.trans F E _
     G.ptHeight (LinSys.toBase (RatPt.geomPt G E s x)) = x.ht := by
-  haveI : Algebra.IsAlgebraic F (AlgebraicClosure E) := Algebra.IsAlgebraic.trans F E _
+  have : Algebra.IsAlgebraic F (AlgebraicClosure E) := Algebra.IsAlgebraic.trans F E _
   obtain ⟨c, hc, e⟩ := G.exists_coords_baseChange E x.pt.1
   have h₀ := G.geom.alg.bpf.coords_ne_zero (x.pt.1 ≫ G.bcFst E)
   have h₁ := vecHeight_smul_algebraMap F E _ _ G.w G.A G.geom.alg.spans G.herm (AlgebraicClosure E) _ 1 h₀ one_ne_zero
@@ -932,22 +932,22 @@ theorem vanishFrom_adj_of_nef_big : Quoted → ∀ (K : Type) [Field K] [NumberF
   have hV : S.IsVariety := G.geom.alg.variety
   have hV' := hV.baseChange Ω
   have hH := S.isPullback_baseChange Ω
-  haveI : IsIntegral (S.baseChange Ω).Y := hV'.isIntegral
-  haveI : SmoothOfRelativeDimension G.D (S.baseChange Ω).str := hV'.smooth
+  have : IsIntegral (S.baseChange Ω).Y := hV'.isIntegral
+  have : SmoothOfRelativeDimension G.D (S.baseChange Ω).str := hV'.smooth
   obtain ⟨hprop, A₀, hA₀⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hV.proj
-  haveI := hprop
+  have := hprop
   have hstr : strHom K G.Y = G.str := strHom_eq fun _ => rfl
   have hproj : IsProjOver (strHom K (X := G.Y)) := hstr ▸ hV.proj
-  haveI : IsProper (strHom K (X := G.Y)) := hstr ▸ hprop
+  have : IsProper (strHom K (X := G.Y)) := hstr ▸ hprop
 
   have hLnef : IsNef K G.L := IsGenerated.isNef_of_isProjOver (L := G.L) ⟨G.N, G.b, G.geom.alg.bpf⟩ hV.proj
   have hLj : IsNef K (lbPow G.L j) := hLnef.pow hA₀ j
   have hNnef : IsNef K (tens B₀ (lbPow G.L j)) := hnef.tens_of_isProjOver hLj hV.proj
   have hNbig : IsBig K (tens B₀ (lbPow G.L j)) := hbig.tens_nef Q.nef hproj hnef hLj
 
-  haveI : IsIntegralHom (spMap (algebraMap K Ω)) :=
+  have : IsIntegralHom (spMap (algebraMap K Ω)) :=
     IsIntegralHom.SpecMap_iff.2 fun x => Algebra.IsIntegral.isIntegral x
-  haveI : IsIntegralHom (S.bcFst Ω) := MorphismProperty.of_isPullback (P := @IsIntegralHom) hH.flip ‹_›
+  have : IsIntegralHom (S.bcFst Ω) := MorphismProperty.of_isPullback (P := @IsIntegralHom) hH.flip ‹_›
   let π := S.bcFst Ω
 
   have hN'nef : IsNef Ω ((tens B₀ (lbPow G.L j)).pull π) :=
@@ -1007,7 +1007,7 @@ theorem vanishesTo_of_isUnit (s : Fin G.D → Fin G.N → K) (g : Matrix (Fin G.
     simp only [Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm]
     simp only [← Finset.sum_smul, ← Matrix.mul_apply, Matrix.nonsing_inv_mul g hg, Matrix.one_apply, ite_smul, one_smul,
-      zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   change ger y hj ((G.comb (s a)).f j) ∈ Ideal.span _
   rw [e, ger_comb_sum]
   exact sum_mem fun i _ => Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨i, rfl⟩)
@@ -1052,7 +1052,7 @@ theorem res_onto : Quoted → ∀ (K : Type) [Field K] [NumberField K] (G : Geo 
       simp only [Finset.smul_sum, smul_smul]
       rw [Finset.sum_comm]
       simp only [← Finset.sum_smul, ← Matrix.mul_apply, Matrix.nonsing_inv_mul g hg, Matrix.one_apply, ite_smul,
-        one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have h := vanishesTo_of_isUnit G (fun i => ∑ j, g i j • s j) g⁻¹ (Matrix.isUnit_nonsing_inv_det g hg) hf
     rwa [e] at h
   have key : ∀ y₀ : sectionsOnClosedSubscheme G.str (G.adj₂ 0) (G.ideal s), ∃ f, resTo suppIn_top f = y₀ := by
@@ -1288,7 +1288,7 @@ theorem exists_filV_mulPow {K : Type} [Field K] [NumberField K] (X : Data K) {s 
   rw [key]
   by_cases hα : α' = α
   · subst hα; simp
-  · rw [if_neg (fun h => hα (Subtype.ext h)), Pi.single_eq_of_ne hα, map_zero]; rfl
+  · rw [ite_eq_right (fun h => hα (Subtype.ext h)), Pi.single_eq_of_ne hα, map_zero]; rfl
 
 theorem totSym_incl {K : Type} [Field K] [NumberField K] {X : Data K} {s : Fin X.D → Fin X.N → K} {hs : X.IsGood s}
     {δ : ℕ} (Co : Coord X.toGeo hs δ) (a : ℕ) (f : filV X s a) (y : totFil X s a) (h : y.1 = incl X X.T f.1) :

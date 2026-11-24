@@ -175,7 +175,7 @@ theorem ugReindex_coe (e : ι ≃ ι') {J : Matrix ι ι E} {J' : Matrix ι' ι'
 
 theorem continuous_ugReindex [TopologicalSpace E] (e : ι ≃ ι') {J : Matrix ι ι E} {J' : Matrix ι' ι' E}
     (hJ : Matrix.reindex e e J = J') : Continuous (ugReindex (c := c) e hJ) := by
-  refine Continuous.subtype_mk (Continuous.comp (Continuous.units_map _ ?_) continuous_subtype_val) _
+  refine Continuous.subtype_mk (Continuous.comp (Continuous.units_map _ ?_) continuous_subtypeVal) _
   exact continuous_id.matrix_submatrix _ _
 
 end Grp

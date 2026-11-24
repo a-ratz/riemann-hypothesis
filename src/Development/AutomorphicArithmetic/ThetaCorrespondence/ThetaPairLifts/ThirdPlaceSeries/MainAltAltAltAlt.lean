@@ -173,8 +173,8 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 open GlobalTheory.TameLabels
 theorem tame_fixed_of_type_alt : ∀ D : D7, WildOne D → _root_.UpperTheory.GalS.GalAwayN D → FrobDense D → ∀ (i : D.nd.Loc) (π : D.naut.CG D.R.r) (ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.r) (D.nd.O i)), D.naut.csd π → D.naut.ralg π → _root_.UpperTheory.GalS.FullLabS D [⟨D.R.r, π, 1⟩] → IsRepOfSig D.nd D.naut i [⟨D.R.r, π, 1⟩] ρ → ∀ k : Fin 2, D.nd.l i ≠ D.host.g k → TameFixed D i [⟨D.R.r, π, 1⟩] ρ k := by
   intro D hW hG hF i π ρ hc ha hfull hρ k hl v
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  haveI : Fact (D.nd.l i).Prime := D.nd.lPrime i
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.nd.l i).Prime := D.nd.lPrime i
   have hw := not_mem_of_ne (D := D) (v := v) (D.nd.lPrime i).out hl
   have hine := _root_.GlobalTheory.IneAway.ineAt' D hG hF i π ρ hc ha hfull hρ k v _ rfl hw
   obtain ⟨ι, hι, hred⟩ := _root_.GlobalTheory.TypeLeaf.exists_redVia D i k hl
@@ -262,13 +262,13 @@ namespace GlobalTheory.PowAut
 
 theorem exists_coprime_lift (N k a : ℕ) (hN : 0 < N) (hk : 0 < k) (ha : a.Coprime N) :
     ∃ b : ℕ, b.Coprime (N * k) ∧ b ≡ a [MOD N] := by
-  haveI : NeZero (N * k) := ⟨(Nat.mul_pos hN hk).ne'⟩
+  have : NeZero (N * k) := ⟨(Nat.mul_pos hN hk).ne'⟩
   obtain ⟨u, hu⟩ := ZMod.unitsMap_surjective (Dvd.intro k rfl : N ∣ N * k)
     (ZMod.unitOfCoprime a ha)
   refine ⟨(u : ZMod (N * k)).val, ZMod.val_coe_unit_coprime u, ?_⟩
   rw [← ZMod.natCast_eq_natCast_iff]
   have h := congrArg (fun v : (ZMod N)ˣ => (v : ZMod N)) hu
-  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, ZMod.castHom_apply,
+  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, ZMod.castHom_apply,
     ZMod.coe_unitOfCoprime] at h
   rw [← h, ZMod.natCast_val]
 
@@ -299,9 +299,9 @@ theorem exists_exponents (M n : ℕ) (hM : 0 < M) (hn : n.Coprime M) :
 theorem orderOf_pos_of_ne_zero (g : ℕ) [Fact g.Prime] (x : AlgebraicClosure (ZMod g))
     (hx : x ≠ 0) : 0 < orderOf x := by
   have hint : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
-  haveI := Fintype.ofFinite (IntermediateField.adjoin (ZMod g) {x})
+  have := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
+  have := Fintype.ofFinite (IntermediateField.adjoin (ZMod g) {x})
   let y : IntermediateField.adjoin (ZMod g) {x} :=
     ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
   have hy : y ≠ 0 := fun h => hx (congrArg Subtype.val h)
@@ -318,10 +318,10 @@ theorem exists_powHom {K : Type*} [Field K] (hK : ∀ x : K, x ≠ 0 → 0 < ord
   classical
   obtain ⟨a, ha0, hac, ha⟩ := exists_exponents M n hM hn
   let t : K → K := fun x => if x = 0 then 0 else x ^ a (orderOf x)
-  have t0 : t 0 = 0 := if_pos rfl
+  have t0 : t 0 = 0 := ite_eq_left rfl
   have ht : ∀ x : K, x ≠ 0 → ∀ j, orderOf x ≤ j → t x = x ^ a j := by
     intro x hx j hj
-    have : t x = x ^ a (orderOf x) := if_neg hx
+    have : t x = x ^ a (orderOf x) := ite_eq_right hx
     rw [this]
     have h := (ha _ _ hj).of_dvd
       (Dvd.dvd.mul_left (Nat.dvd_factorial (hK x hx) le_rfl) M)
@@ -415,8 +415,8 @@ theorem tameGen_pow : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Al
   intro E Ω _ _ _ _ _ A γ γ' h h' M _ φ hk hw
   have h1 := tameGen_image_mem_zpowers A γ γ' h h' φ hk hw
   have h2 := tameGen_image_mem_zpowers A γ' γ h' h φ hk hw
-  haveI : IsGalois E Ω := IsGalois.mk
-  haveI : Finite (G E Ω ⧸ φ.ker) := Subgroup.quotient_finite_of_isOpen _ hk
+  have : IsGalois E Ω := IsGalois.mk
+  have : Finite (G E Ω ⧸ φ.ker) := Subgroup.quotient_finite_of_isOpen _ hk
   have hfin : IsOfFinOrder (φ γ) := by
     have h0 : IsOfFinOrder (QuotientGroup.mk γ : G E Ω ⧸ φ.ker) := isOfFinOrder_of_finite _
     have := (QuotientGroup.kerLift φ).isOfFinOrder h0
@@ -643,7 +643,7 @@ open GlobalTheory.TameLabels GlobalTheory.AntiRamConj GlobalTheory.TwistDet
 open scoped Pointwise
 theorem tame_any_at_of_is_conj_pl_tame_gen : ∀ D : D7, WildOne D → (∀ (i : D.nd.Loc) (k : Fin 2) (v : D.nd.PlG k), D.nd.l i ≠ D.host.g k → ∀ s ∈ wildSet D.nd (D.nd.plOm.1 (D.naut.plGw k v)), D.nd.chi i 1 s = 1) → _root_.UpperTheory.GalS.GalAwayN D → FrobDense D → ∀ (i : D.nd.Loc) (π : D.naut.CG D.R.r) (ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.r) (D.nd.O i)), D.naut.csd π → D.naut.ralg π → _root_.UpperTheory.GalS.FullLabS D [⟨D.R.r, π, 1⟩] → IsRepOfSig D.nd D.naut i [⟨D.R.r, π, 1⟩] ρ → ∀ k : Fin 2, D.nd.l i ≠ D.host.g k → ∀ (v : D.nd.PlG k) (w : PlE D.host), IsConjPl D.host (D.naut.plGw k v) w → TameGen D.nd (D.nd.plOm.1 w) (D.nd.gam0 i w) → TameAnyAt D i [⟨D.R.r, π, 1⟩] ρ k w := by
   intro D hW hχ hG hF i π ρ hc ha hfull hρ k hl v w hvw hgen
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hP := not_mem_of_ne (D := D) (v := v) (D.nd.lPrime i).out hl
   have hw : w ∉ placesOver D.host.E (D.nd.l i) := fun h => hP (mem_placesOver_conj (isConjPl_symm hvw) h)
   have hγ0 : TameGenAt (D.nd.plOm.1 (D.naut.plGw k v)) (D.nd.gam0 i (D.naut.plGw k v)) := by

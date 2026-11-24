@@ -89,7 +89,7 @@ theorem isSimpleModule_of_finrank_end {k R M : Type} [Field k] [Ring R] [Algebra
   have : Nontrivial (Submodule R M) := (Submodule.nontrivial_iff R).2 hM
   refine { eq_bot_or_eq_top := fun U => ?_ }
   obtain ⟨U', hU⟩ := exists_isCompl U
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (1 : Module.End R M) one_ne_zero).1 h
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : Module.End R M) one_ne_zero).1 h
     (U.subtype ∘ₗ U.projectionOnto U' hU)
   by_cases h0 : c = 0
   · left
@@ -150,12 +150,12 @@ theorem zIdem_eq_charIdem' (τ : FDRep ℂ Γ) : zIdem τ = PI.CharIdem.charIdem
   rfl
 
 theorem isIrreducible_of_simple (τ : FDRep ℂ Γ) (h : Simple τ) : Representation.IsIrreducible τ.ρ := by
-  haveI := h
+  have := h
   have hc : (Nat.card Γ : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
   have : Invertible (Nat.card Γ : ℂ) := invertibleOfNonzero hc
   apply GlobalTheory.AbsIrrDescent.isIrreducible_of_norm_one
   have hs := FDRep.char_orthonormal τ τ
-  rw [if_pos ⟨Iso.refl _⟩, inv_mul_eq_one₀ hc] at hs
+  rw [ite_eq_left ⟨Iso.refl _⟩, inv_mul_eq_one₀ hc] at hs
   exact hs.symm
 
 theorem isIrr_of_simple (τ : FDRep ℂ Γ) (h : Simple τ) : Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.IsIrr τ.ρ :=
@@ -237,13 +237,13 @@ theorem zIdem_set_finsum :
   classical
   set S := {z : MonoidAlgebra ℂ Γ | ∃ τ : FDRep ℂ Γ, Simple τ ∧ zIdem τ = z} with hS
   have hfin : S.Finite := zIdem_set_finite
-  letI : Fintype S := hfin.fintype
+  let : Fintype S := hfin.fintype
   choose τ hτ hτz using fun z : S => z.2
   have key := Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.central_idempotents_sum_one Γ S (fun z => (τ z : Type)) (fun z => (τ z).ρ)
     (fun z => isIrr_of_simple (τ z) (hτ z))
     (fun i j ⟨φ, hφ⟩ => Subtype.ext ((hτz i).symm.trans ((zIdem_eq_of_equiv (τ i) (τ j) φ hφ).trans (hτz j))))
     (fun W _ _ _ σ hσ => by
-      haveI := isIrreducible_of_isIrr σ hσ
+      have := isIrreducible_of_isIrr σ hσ
       have hs : Simple (FDRep.of σ) := PI.GreenLabelSurjWork.simple_of_irr σ
       let i : S := ⟨zIdem (FDRep.of σ), FDRep.of σ, hs, rfl⟩
       obtain ⟨e, he⟩ := repIso_of_zIdem_eq_of_simple (FDRep.of σ) (τ i) hs (hτ i) (hτz i).symm

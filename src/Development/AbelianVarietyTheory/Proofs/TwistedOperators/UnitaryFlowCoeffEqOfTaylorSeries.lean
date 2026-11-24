@@ -98,7 +98,7 @@ theorem inner_skew (U : ℝ → (H →L[ℂ] H)) (x : ℕ → H) (h0 : U 0 = 1)
     let L : H →ₗᵢ[ℂ] H := ⟨(U t).toLinearMap, hn t⟩
     exact L.inner_map_map (x i) (x k)
   have hder := (hd i).inner ℂ (hd k)
-  simp only [hconst, h0, ContinuousLinearMap.one_apply] at hder
+  simp only [hconst, h0, one_apply_eq_self] at hder
   have h2 := hder.unique (hasDerivAt_const (0 : ℝ) ⟪x i, x k⟫_ℂ)
   linear_combination h2
 
@@ -243,7 +243,7 @@ private theorem norm_unitary_sub_taylor_le {H : Type} [NormedAddCommGroup H] [In
       have hm : (-t) ^ k * (-1 : ℝ) ^ k = t ^ k := by
         rw [← mul_pow]
         norm_num
-      rw [h0, ContinuousLinearMap.one_apply, smul_smul, div_mul_eq_mul_div, hm]
+      rw [h0, one_apply_eq_self, smul_smul, div_mul_eq_mul_div, hm]
     simp only [zero_add, neg_zero, hs, pow_zero, one_smul, neg_neg] at e
     rwa [abs_of_neg ht]
 

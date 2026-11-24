@@ -89,7 +89,7 @@ theorem integrable_inf (B : RowsAut) (hσ : IsURep B.σs) (w : B.Hs)
   have hemb := isClosedEmbedding_entries_inf B.I
   have hrep : Continuous (fun g : B.I.Ginf => B.σs g w) := hσ.2.2.2 w
   have hμ : muInf B.I = Measure.pi fun v => muG (B.I.ε v) := rfl
-  haveI : IsFiniteMeasureOnCompacts (muInf B.I) := by
+  have : IsFiniteMeasureOnCompacts (muInf B.I) := by
     rw [hμ]
     infer_instance
   have hcs : HasCompactSupport (fun g : B.I.Ginf => F (fun v i j => uMat (g v) i j) • B.σs g w) :=

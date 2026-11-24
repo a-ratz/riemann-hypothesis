@@ -159,7 +159,7 @@ theorem conj_entries {ϖ : kˣ} (hϖ : ord k ϖ = 1) {x : Fin n → ℤ} (hx : S
   rw [conj_apply]
   rcases lt_trichotomy i j with h | rfl | h
   · rw [h0 i j h, mul_zero, map_zero]
-    exact ⟨zero_le', fun h' => absurd h' h.not_gt⟩
+    exact ⟨zero_le, fun h' => absurd h' h.not_gt⟩
   · rw [h1, sub_self]
     simp
   · have hlt : valuation k (((ϖ ^ (x j - x i) : kˣ) : k) * (l : Matrix (Fin n) (Fin n) k) i j) < 1 := by

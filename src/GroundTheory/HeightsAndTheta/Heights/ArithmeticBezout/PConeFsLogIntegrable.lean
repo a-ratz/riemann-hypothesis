@@ -158,7 +158,7 @@ theorem ConeFsLogIntegrable.proof (hfin : ConeBallFinite.Statement)
   unfold HasFiniteIntegral
   have hle : ∀ y, ‖F y‖ₑ ≤ ENNReal.ofReal M + ENNReal.ofReal (G y) := by
     intro y
-    rw [Real.enorm_eq_ofReal_abs, ← ENNReal.ofReal_add (le_max_right _ _) (le_max_right _ _)]
+    rw [Real.eNorm_eq_ofReal_abs, ← ENNReal.ofReal_add (le_max_right _ _) (le_max_right _ _)]
     refine ENNReal.ofReal_le_ofReal ?_
     have h1 := fsLog_pointOf_le h u y
     rcases le_or_gt 0 (F y) with h2 | h2

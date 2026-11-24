@@ -154,7 +154,7 @@ theorem inSupport_of_KO_eigen (hD : GlobalTheory.Published.DepthZeroJacquetInjec
     GlobalTheory.EigenSubquot.exists_irreducible_subquotient_eigen _ _ (jac e σ) S θ _ hy' hθ
   have hrank : Module.rank ℂ Y ≤ ℵ₀ := by
     obtain ⟨S', f, hf⟩ := hτs
-    haveI := GlobalTheory.LocGL.secondCountableTopology_GL k (Fin m)
+    have := GlobalTheory.LocGL.secondCountableTopology_GL k (Fin m)
     exact (LinearMap.rank_le_of_surjective f.toLinearMap hf).trans ((Submodule.rank_le _).trans
       ((LinearMap.rank_le_of_surjective _ (Submodule.mkQ_surjective _)).trans (GlobalTheory.LocGL.rank_le_aleph0_of_isIrreducible hs hi)))
   have hc : ∀ g : GL (Fin 1) k, ∃ c : ℂ, ∀ w, τ (Pi.mulSingle a0 g) w = c • w := fun g =>

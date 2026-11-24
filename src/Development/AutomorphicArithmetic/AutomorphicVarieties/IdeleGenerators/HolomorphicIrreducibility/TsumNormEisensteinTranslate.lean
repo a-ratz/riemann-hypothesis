@@ -176,7 +176,7 @@ theorem UpperTheory.V.Sd.eisMF :
   have hk' : (3 : ℤ) ≤ k := by exact_mod_cast hk
   refine ⟨{ toFun := eisFun N k a, slash_action_eq' := ?_, holo' := ?_, bdd_at_cusps' := ?_ }, rfl⟩
   · rintro _ ⟨A, (hA : A ∈ Gamma1 N), rfl⟩
-    have h := eisSlash N k hk a A (Gamma1_in_Gamma0 N hA)
+    have h := eisSlash N k hk a A (Gamma1_le_Gamma0 N hA)
     rw [((Gamma1_mem N A).mp hA).2.1, mul_one] at h
     exact h
   · show MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (eisFun N k a)

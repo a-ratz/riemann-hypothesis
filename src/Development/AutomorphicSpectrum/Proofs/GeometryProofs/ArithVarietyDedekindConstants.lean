@@ -288,7 +288,7 @@ theorem flagStep_succ (b : Fin r → E) (i : Fin r) :
     rw [← Set.image_insert_eq]
     congr 1
     ext k
-    simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Fin.ext_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Fin.ext_iff]
     omega
   rw [flagStep, h]
 
@@ -450,7 +450,7 @@ theorem exists_point_of_prime {W : Set (Cpt ξ)} (Z : Subalgebra ℤ Ω) (R : Su
       map_mul' := fun _ _ => Subtype.ext (by simp)
       map_zero' := Subtype.ext (by simp)
       map_add' := fun _ _ => Subtype.ext (by simp) }
-  haveI := hP
+  have := hP
   obtain ⟨q, hqW, hqu⟩ := hpt (P.comap ι) inferInstance
   have hnot : ∀ s (hs : s ∈ S), (⟨s, hZR s (hSZ s hs)⟩ : R) ∉ P := by
     intro s hs hsP
@@ -877,7 +877,7 @@ theorem exists_natCast_eq (A : Type) [CommRing A] [IsDomain A] [Module.Finite �
   have hp0 : (p : O) ≠ 0 := by
     intro h0
     have hA0 : (p : A) = 0 := hinj (by rw [map_natCast, h0, map_zero])
-    haveI : Finite A := Module.finite_of_fg_torsion A (fun x => ⟨⟨(p : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hp.ne_zero)⟩, by
+    have : Finite A := Module.finite_of_fg_torsion A (fun x => ⟨⟨(p : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hp.ne_zero)⟩, by
       show (p : ℤ) • x = 0
       rw [← Int.cast_smul_eq_zsmul A, Int.cast_natCast, hA0, zero_smul]⟩)
     have hF : IsField A := Finite.isField_of_domain A
@@ -1352,7 +1352,7 @@ theorem flag_pair_of_lat : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
     rw [← algebraMap_int_eq, MvPolynomial.aeval_map_algebraMap]
   refine ⟨B, B', w.unitsSMul ue, w.unitsSMul ue', fun c hc z => ⟨hBl c hc z, hBl' c hc z⟩, hmod, hsame, ?_⟩
   refine ⟨hfr, hfr', fun i j hij => ?_, fun i => ?_, fun i => ?_⟩
-  · rw [hcoef, if_neg hij.ne]
+  · rw [hcoef, ite_eq_right hij.ne]
   · obtain ⟨bf, bg, hbf, hbg, hb⟩ := hdeg i
     have hf0 : aeval y (Q.f i) ≠ 0 := by
       rw [hfg i]
@@ -1420,7 +1420,7 @@ theorem flag_pair_of_lat : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
       have hei := he0 i
       rw [hYg']
       field_simp
-  · simp only [hcoef, if_true]
+  · simp only [hcoef, ite_true]
     show aeval y (MvPolynomial.map (Int.castRingHom O) (Q.f i)) = _ * aeval y (MvPolynomial.map (Int.castRingHom O) (Q.g i))
     rw [hev, hev, hfg i]
 

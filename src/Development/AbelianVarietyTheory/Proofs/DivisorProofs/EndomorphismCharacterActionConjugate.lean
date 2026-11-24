@@ -56,7 +56,7 @@ namespace GlobalTheory.UPoinc
 
 theorem endChar_act : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (a : 𝓞 E), EndChar P.U (t.act.act a) (DistribSMul.toAddMonoidHom P.D.toPre.X (H.bar a)) := by
   intro E _ _ _ H R _ _ _ _ t P a κ _ ρ hρ G₀ _ φ h f₀ hf
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨τ, hτ, hi⟩ := P.lin.i_lin 0 a
   have e : τ = GlobalTheory.SplitTorus.torusMap _ (DistribSMul.toAddMonoidHom P.D.toPre.X (H.bar a)) :=
     (GlobalTheory.SplitTorus.eq_torusMap_iff _ _).2 fun x =>

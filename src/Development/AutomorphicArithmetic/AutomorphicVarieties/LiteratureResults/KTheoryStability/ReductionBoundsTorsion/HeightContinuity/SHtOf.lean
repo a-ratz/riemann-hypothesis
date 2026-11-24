@@ -122,7 +122,7 @@ theorem nonempty_ne (hN : 1 ≤ N) : Nonempty {y : Lat L N // y ≠ 0} := by
 
 theorem le_lm (hN : 1 ≤ N) {B : InfinitePlace L → Matrix (Fin N) (Fin N) ℂ} {t : ℝ}
     (h : ∀ y : Lat L N, y ≠ 0 → t ≤ tv B y) : t ≤ lm B := by
-  haveI := nonempty_ne (L := L) hN
+  have := nonempty_ne (L := L) hN
   exact le_ciInf fun y => h y.1 y.2
 
 theorem lm_mono (hN : 1 ≤ N) {B B' : InfinitePlace L → Matrix (Fin N) (Fin N) ℂ} {c : ℝ}

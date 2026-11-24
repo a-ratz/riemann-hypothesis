@@ -775,7 +775,7 @@ theorem levelPt_of_rep : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Nu
     · exact ⟨l.A_pos, Nat.dvd_lcm_right _ _⟩
     · exact ⟨le_trans (by norm_num) l.three_le, Nat.dvd_lcm_left _ _⟩
   obtain ⟨hk, hkM⟩ := hkM
-  haveI : NeZero k := ⟨Nat.one_le_iff_ne_zero.1 hk⟩
+  have : NeZero k := ⟨Nat.one_le_iff_ne_zero.1 hk⟩
   have hdv : ∀ y z, (k : ℤ) ∣ a.be y z := fun y z =>
     ((Int.natCast_dvd_natCast.2 hkM).mul_left 2).trans (a.be_dvd y z)
   have hd : ∀ α, (k : ℤ) ∣ Λ.A.be la.y α := fun α => by rw [Λ.be_eq]; exact hdv _ _
@@ -784,7 +784,7 @@ theorem levelPt_of_rep : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Nu
     ⟨s1, s2, s3, s4, s5, fun F _ _ _ _ uF h₁ h₂ => (s6 F uF h₁ h₂).1⟩
   obtain ⟨F, _, _, _, i, hi⟩ := exists_closure
   let f : ℂ →+* F := constF ℂ F
-  letI : Algebra (FractionRing ℂ) F := (f.comp (algebraMap (FractionRing ℂ) ℂ)).toAlgebra
+  let : Algebra (FractionRing ℂ) F := (f.comp (algebraMap (FractionRing ℂ) ℂ)).toAlgebra
   have hF : ∀ x, algebraMap (FractionRing ℂ) F (algebraMap ℂ _ x) = constF ℂ F x := fun x =>
     congrArg f (IsScalarTower.algebraMap_apply ℂ (FractionRing ℂ) ℂ x).symm
   obtain ⟨q₁, hq₁, -⟩ := TorusExt.existsUnique_qkExt a.bimult (algebraMap (FractionRing ℂ) ℂ) (RingHom.comp_id _) p₀
@@ -913,8 +913,8 @@ theorem chain_levelPt_of_section (h1 : Out.Laws) (h2 : Out.Laws2) (E : Type) [Fi
 
 theorem chain_levels : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)] (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (bF : c.F →+* ℂ) (a : ArcIn D l β ℂ (bF.comp β)) (χ : Sp ℂ⟦X⟧ ⟶ Y.X) (W : ArcWit Y a (Ideal.span {PowerSeries.X}) (PowerSeries.C (R := ℂ)) PowerSeries.X χ) (Λ : GtAn a) (C : Chain W Λ) (laA laM : D.La → Λ.A.La), (∀ v, Λ.Rep l.A (a.etaA v) (laA v)) → (∀ v, Λ.Rep l.M (a.eta v) (laM v)) → (∀ v, C.Φ.LevelPt l.A (toUnit _ ≫ Xo.univ.etaA v) (laA v)) ∧ ∀ v ∈ idealPart D l, C.Φ.LevelPt l.M (toUnit _ ≫ Xo.univ.eta v) (laM v) := by
   intro h1 h2 E _ _ _ H _ D l Xo c O _ β Y _ _ bF a χ W Λ C laA laM hA hM
-  haveI : NeZero l.A := ⟨l.A_pos.ne'⟩
-  haveI : NeZero l.M := ⟨by have := l.three_le; omega⟩
+  have : NeZero l.A := ⟨l.A_pos.ne'⟩
+  have : NeZero l.M := ⟨by have := l.three_le; omega⟩
   refine ⟨fun v => ?_, fun v hv => ?_⟩
   · exact chain_levelPt_of_section h1 h2 E H D l Xo c O β Y bF a χ W Λ C l.A (a.etaA v) (Y.oF.etaA v)
       (Xo.univ.etaA v) (laA v) (Y.m0.etaA v) (Or.inl ⟨rfl, v, HEq.rfl, rfl⟩) (hA v)

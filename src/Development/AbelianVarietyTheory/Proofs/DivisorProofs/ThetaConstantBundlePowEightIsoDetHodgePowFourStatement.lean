@@ -196,7 +196,7 @@ theorem div_of_mem_nonzeroLocus : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Alg
     show (M.pt.appLE _ ⊤ hptU ≫ (Sp Ω).presheaf.map (homOfLE le_top).op).hom _ = _
     rw [Scheme.Hom.appLE_map]
   have hv : ∀ b, valF M.pt (δ.U k) ((t b).f k) = e.hom.hom ((M.pt.appLE (δ.U k) ⊤ hptU).hom ((t b).f k)) :=
-    fun b => dif_pos hptU
+    fun b => dite_eq_left hptU
   have hei : ∀ x : Ω, e.hom.hom (e.inv.hom x) = x := fun x => by
     rw [← CommRingCat.comp_apply, Iso.inv_hom_id, CommRingCat.id_apply]
   have key : ∀ b, valF M.pt (δ.U k) ((t b).f k) * th a = valF M.pt (δ.U k) ((t a).f k) * th b := by
@@ -631,8 +631,8 @@ theorem ring_of_isAffineOpen : ∀ (S : Scheme.{0}) [IsIntegral S] (s : S ⟶ Sp
     Geo.Tor.IsNormalScheme S → LocallyOfFiniteType s → CharZero Γ(S, ⊤) →
     IsIntegrallyClosed Γ(S, W) ∧ CharZero Γ(S, W) ∧ Algebra.FiniteType ℤ Γ(S, W) := by
   intro S _ s W hW hne hN hs hc
-  haveI : Nonempty W := hne.to_subtype
-  haveI : GlobalTheory.IsNormalScheme S := (GlobalTheory.isNormalScheme_iff_pred S).2 hN
+  have : Nonempty W := hne.to_subtype
+  have : GlobalTheory.IsNormalScheme S := (GlobalTheory.isNormalScheme_iff_pred S).2 hN
   refine ⟨GlobalTheory.IsNormalScheme.isIntegrallyClosed_of_isAffineOpen hW, ?_, ?_⟩
   · exact charZero_of_injective_ringHom (map_injective_of_isIntegral S (homOfLE (le_top : W ≤ ⊤)))
   · have h₁ : (s.appLE ⊤ W le_top).hom.FiniteType :=
@@ -778,7 +778,7 @@ namespace GlobalTheory.KeyValsPf
 theorem smooth_bG : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (g : ℕ) (R : Type) [CommRing R] (ξ : Sp R ⟶ S),
     SmoothOfRelativeDimension g G.hom → SmoothOfRelativeDimension g (KeyVals.bG G ξ).hom := by
   intro S G _ g R _ ξ h
-  haveI := smoothOfRelativeDimension_isStableUnderBaseChange g
+  have := smoothOfRelativeDimension_isStableUnderBaseChange g
   exact MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension g) (isGrpPullback_pullback G ξ).1 h
 
 theorem semi_bG : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R : Type) [CommRing R] (ξ : Sp R ⟶ S),
@@ -821,7 +821,7 @@ theorem abLocus_affine : ∀ (S : Scheme.{0}) [IsIntegral S] (G : Over S) [GrpOb
     IsOpen (abLocus G) → genericPoint S ∈ abLocus G → IsOpen (abLocus (KeyVals.bG G hW.fromSpec)) ∧
       Set.range (spMap (algebraMap Γ(S, W) (FractionRing Γ(S, W)))).base ⊆ abLocus (KeyVals.bG G hW.fromSpec) := by
   intro S _ G _ W hW hne hop h
-  haveI : Nonempty W := ⟨⟨hne.some, hne.some_mem⟩⟩
+  have : Nonempty W := ⟨⟨hne.some, hne.some_mem⟩⟩
   have e : abLocus (KeyVals.bG G hW.fromSpec) = hW.fromSpec ⁻¹' abLocus G :=
     Set.ext fun q => ⟨mem_abLocus_of_bG (R := Γ(S, W)) G hW.fromSpec q, mem_abLocus_bG (R := Γ(S, W)) G hW.fromSpec q⟩
   have ho : IsOpen (hW.fromSpec ⁻¹' abLocus G) := hop.preimage hW.fromSpec.continuous
@@ -871,9 +871,9 @@ theorem keyVal_unit : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ → KeyL
     exact ((genericPoint_spec S).mem_open_set_iff hop).2 ⟨p, trivial, hp⟩
   obtain ⟨W, hW, hpW, hle⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.1 S.isBasis_affineOpens) hp
   have hW : IsAffineOpen W := hW
-  haveI : Nonempty W := ⟨⟨p, hpW⟩⟩
+  have : Nonempty W := ⟨⟨p, hpW⟩⟩
   obtain ⟨hic, hcz, hft⟩ := GlobalTheory.T.affineOpen_ring_normal_charZero_finiteType_over_int S s W hW ⟨p, hpW⟩ hN hs h0
-  haveI : IsNoetherianRing Γ(S, W) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have : IsNoetherianRing Γ(S, W) := Algebra.FiniteType.isNoetherianRing ℤ _
   have hr : ∀ U : S.Opens, W ≤ U → ⊤ ≤ hW.fromSpec ⁻¹ᵁ U := fun U h q _ =>
     h (show hW.fromSpec q ∈ (W : Set S) from hW.range_fromSpec ▸ ⟨q, rfl⟩)
   have hri := hr _ (hle.trans inf_le_right)
@@ -938,7 +938,7 @@ theorem keyVals : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ → KeyLoc �
           S.presheaf.germ _ (genericPoint S) h1
             ((VB.det (LieVB.omega G) g).g c c' : Γ(S, (VB.det (LieVB.omega G) g).U c ⊓ (VB.det (LieVB.omega G) g).U c')) ^ 4 * f c' i') := by
   intro κ hH hF hL S _ s G _ _ g L δ σ hg hN hs h0 hsa hsm hne hop hsym hδ hpol hunif hnz
-  haveI : CharZero (KeyVals.FF S) :=
+  have : CharZero (KeyVals.FF S) :=
     charZero_of_injective_ringHom (f := (S.presheaf.germ ⊤ (genericPoint S) trivial).hom)
       (germ_injective_of_isIntegral S (U := ⊤) (genericPoint S) trivial)
   let f : (VB.det (LieVB.omega G) g).ι → δ.ι → S.presheaf.stalk (genericPoint S) := fun c i =>
@@ -946,7 +946,7 @@ theorem keyVals : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ → KeyLoc �
   have hf : ∀ c i, genericPoint S ∈ (VB.det (LieVB.omega G) g).U c ⊓ δ.U i → KeyVals.IsKeyVal κ g L σ c i (f c i) := by
     intro c i h
     have ex := exists_keyVal κ S s G g L δ σ hg hN hs h0 hsa hsm hne hop hsym hδ hpol hunif hnz c i h
-    simp only [f, dif_pos ex]
+    simp only [f, dite_eq_left ex]
     exact ex.choose_spec
   have hgen : ∀ U : S.Opens, (U : Set S).Nonempty → genericPoint S ∈ U := fun U ⟨p, hp⟩ =>
     ((genericPoint_spec S).mem_open_set_iff U.isOpen).2 ⟨p, trivial, hp⟩
@@ -1025,7 +1025,7 @@ theorem germ_lbPow_g' {S : Scheme.{0}} (M : LB S) (n : ℕ) (j j' : (lbPow M n).
 
 theorem keyGlob_of_keyLoc : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ → KeyLoc κ → KeyGlob := by
   intro κ hH hF hL S s G _ _ g L δ σ hg hS hN hs h0 hsa hsm hne hop hsym hδ hpol hunif hnz
-  haveI := hS
+  have := hS
   obtain ⟨f, hloc, hcomp⟩ := GlobalTheory.T.thetaKeyValues_detOmega_delta_local_units κ hH hF hL S s G g L δ σ hg hN hs h0 hsa hsm hne hop hsym hδ hpol hunif hnz
   refine GlobalTheory.T.lineBundleIso_of_compatible_rational_local_units S (lbPow δ 8) (lbPow (SiegelTor.hodge G g) 4) (fun p => f (p.1 PUnit.unit) (p.2 PUnit.unit)) ?_ ?_
   · rintro ⟨c, i⟩ x hx
@@ -1267,7 +1267,7 @@ theorem kapF_of_rule4 : ∀ κ : Rule, Rule4 κ → KapF κ := by
   obtain ⟨β, π, hπ0, hπ1, hfinβ, hexp⟩ := GlobalTheory.T.exists_integralForm_parameter_of_discreteNorms C N q (toF V C ϖ) hq ht0 ht1 hdisc m hm1
   choose bd hbd using fun a j => GlobalTheory.T.thetaTranslateTerms_jets_bounded V D C hCE N ν hInt q hq m hmOdd (Q a) (s' a) (ff a) (hs'V a)
     (hfam a).2.2.2.1 (gm₀ j) (gm j) (hT j).2.1 (hT j).2.2
-  haveI : NeZero (m ^ 2) := ⟨by omega⟩
+  have : NeZero (m ^ 2) := ⟨by omega⟩
   set B : ℝ := ∑ a, ∑ j, |bd a j| with hB
   have hbB : ∀ a j, bd a j ≤ B := fun a j =>
     (le_abs_self _).trans ((Finset.single_le_sum (f := fun j => |bd a j|) (fun _ _ => abs_nonneg _)
@@ -1393,7 +1393,7 @@ theorem keyTrait_of_keyTraitU : ∀ κ : Rule, KeyTraitU κ → KeyTrait κ := b
     show θ.inv.left ≫ pullback.fst G.hom (jK V) = φ
     rw [← hθφ, ← Category.assoc, ← Over.comp_left, θ.inv_hom_id, Over.id_left, Category.id_comp]
   have hFd := dualMapR_eq_of_map _ F hF1 hF2
-  haveI : IsMonHom θ.hom := hθm
+  have : IsMonHom θ.hom := hθm
   refine hU V hA hF D x G hSA U' w₀ ⟨hw₀, x.rig_gen, ?_⟩ y hLie (fun i => ?_) σ' ?_ ?_
   · exact GlobalTheory.T.iso_preserves_rigidification_at_origin V G x.P.A θ.hom φ hθφ hφe x.P.L L.L U.LG.L x.P.isLB L.isLB U.LG.isLB x.rig L.rig U.LG.rig ψ e' w₀ hPW hRig heR
   · show (x.v i).left ≫ (U'.gen.inv.left ≫ pullback.fst G.hom (jK V)) = _
@@ -1511,7 +1511,7 @@ theorem exists_complete_closed_field :
   intro V _ _ _ _ hc hf
   let T : Formalism.L2.Pj.CDVR := { V := V }
   obtain ⟨p, hp, k, kO, hk⟩ := GlobalTheory.CompleteDvrEmbedding.exists_embedding_padicComplexInt T hf
-  letI : Algebra (FractionRing V) ℂ_[p] := k.toAlgebra
+  let : Algebra (FractionRing V) ℂ_[p] := k.toAlgebra
   obtain ⟨eC⟩ := GlobalTheory.MomOne.Inh.nonempty_iso p
   refine ⟨ℂ_[p], inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, this, ⟨?_, ?_⟩, ⟨eC.symm⟩⟩
   · have hle : ∀ r : V, ‖k (algebraMap V (FractionRing V) r)‖ ≤ 1 := fun r => by

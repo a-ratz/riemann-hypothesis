@@ -223,7 +223,7 @@ theorem unipotent_vector_group : UnipotentVectorGroup (E := E) := by
   · have hfix := zmat_mulVec_emb_eq_self X u hiso b
     have hdom : ∀ x ∈ X.dom, X.Zb u b x ∈ X.dom := by
       intro x hx
-      simp only [Data.dom, GG, Set.mem_setOf_eq] at hx ⊢
+      simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx ⊢
       intro τ
       refine ⟨?_, fun i => ?_⟩
       · rw [mat_Zb_eq_zmat_mul_mat, Matrix.det_mul, det_zmat_eq_one X u hiso b, one_mul]
@@ -242,7 +242,7 @@ theorem unipotent_vector_group : UnipotentVectorGroup (E := E) := by
         gram_zmat_mul_eq_gram X u hiso b hb τ, hv0]
     have hD1 : ∀ x ∈ X.FramesOverBasis (u 0), X.Zb u b x ∈ X.FramesOverBasis (u 0) := by
       intro x hx
-      simp only [Data.FramesOverBasis, Set.mem_setOf_eq] at hx ⊢
+      simp only [Data.FramesOverBasis, Set.mem_ofPred_eq] at hx ⊢
       refine ⟨hdom x hx.1, fun τ => ?_⟩
       rw [hmaj x τ hx.1]
       exact hx.2 τ

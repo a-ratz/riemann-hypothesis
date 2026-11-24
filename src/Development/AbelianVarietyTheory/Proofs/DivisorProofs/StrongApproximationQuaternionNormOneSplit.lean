@@ -269,7 +269,7 @@ theorem one_lt_measure_univ (hn : 0 < n) : 1 < adeleMeasurePi F (ι := Fin n) Se
   have hv0 : (⟨v, hv⟩ : ratL F n) ≠ 0 := by
     intro h
     have hc := congrFun (congrArg Subtype.val h) ⟨0, hn⟩
-    haveI : Nontrivial (AF F) := by
+    have : Nontrivial (AF F) := by
       show Nontrivial (AdeleRing (𝓞 F) F)
       unfold AdeleRing
       infer_instance
@@ -737,7 +737,7 @@ theorem inv_cont : ∀ (F : Type) [Field F] [NumberField F] (S₁ : Finset (Infi
     subst ht0
     apply hε0
     have hB := ht.2
-    simp only [Set.mem_setOf_eq, map_zero, mul_zero] at hB
+    simp only [Set.mem_ofPred_eq, map_zero, mul_zero] at hB
     refine ext_c (fun w => ?_) (fun v => ?_)
     · rw [map_zero]
       exact hε.2.1 w fun hw => hB.1 w hw rfl
@@ -1170,14 +1170,14 @@ theorem strongApproximation_normOne_divisionQuaternion : ∀ (F : Type) [Field F
   have hee : ε * ε = ε := isPlacesIdem_idem hε
   obtain ⟨hmul, -, -, -⟩ := _root_.GlobalTheory.QSA.Grp.closure_normOneProducts_subgroup_properties F a b ε hee
   obtain ⟨htr, -, -, hT2⟩ := _root_.GlobalTheory.quaternion_isTopologicalRing_nrm_re_t2 (AF F) (algebraMap F (AF F) a) (algebraMap F (AF F) b)
-  haveI : IsTopologicalRing (DA F a b) := htr
-  haveI : T2Space (AF F) := by
-    haveI : T2Space (InfiniteAdeleRing F) := inferInstanceAs (T2Space (∀ w : InfinitePlace F, w.Completion))
-    haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := inferInstanceAs (T2Space (RestrictedProduct
+  have : IsTopologicalRing (DA F a b) := htr
+  have : T2Space (AF F) := by
+    have : T2Space (InfiniteAdeleRing F) := inferInstanceAs (T2Space (∀ w : InfinitePlace F, w.Completion))
+    have : T2Space (FiniteAdeleRing (𝓞 F) F) := inferInstanceAs (T2Space (RestrictedProduct
       (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite))
     exact inferInstanceAs (T2Space (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))
-  haveI : T2Space (DA F a b) := hT2 inferInstance
+  have : T2Space (DA F a b) := hT2 inferInstance
   obtain ⟨C, hC, hfuj⟩ := _root_.GlobalTheory.QSA.FujisakiQ.fujisaki_mod_centre F a b ha hb hdiv
 
   have key : ∀ (T₁ : Finset (InfinitePlace F)) (T₂ : Finset (HeightOneSpectrum (𝓞 F))) (η : AF F),

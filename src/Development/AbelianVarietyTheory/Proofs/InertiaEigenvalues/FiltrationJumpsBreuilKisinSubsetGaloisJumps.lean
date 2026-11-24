@@ -278,7 +278,7 @@ theorem galOD_teich_sub {g : GQ l} (hg : g (ϖ.seq 0) = ϖ.seq 0) :
 
 theorem galOD_iHat_piHat {g : GQ l} (hg : g (ϖ.seq 0) = ϖ.seq 0) :
     galOD O g (ϖ.iHat O K (piHat O K)) = ϖ.iHat O K (piHat O K) := by
-  haveI := ϖ.complete_OD O K
+  have := ϖ.complete_OD O K
   have hx : ϖ.iHat O K (piHat O K) ^ e = -(l : OD l O) := by
     have := congrArg (ϖ.iHat O K) (piHat_pow_add O K (l := l) (e := e))
     rw [map_add (f := _), map_pow, map_natCast, map_zero] at this
@@ -816,7 +816,7 @@ theorem exists_of_mem_jumps (P : PhiMod O K l e a ι) {i : ℤ} (hi : i ∈ P.ju
   have hle : P.filL (i + 1) ≤ P.filL i := by
     unfold PhiMod.filL
     exact sup_le_sup_right (inf_le_inf_left _ (shiftE_succ_le P i)) _
-  obtain ⟨x, hx, hnx⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨x, hx, hnx⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   have hx' : x ∈ (P.ext (invL l (A O K)) ⊓ shiftE l e i (P.Mext (invL l (A O K)))) ⊔
       shiftE l e 1 (P.ext (invL l (A O K))) := hx
   obtain ⟨u, hu, v, hv, rfl⟩ := Submodule.mem_sup.1 hx'

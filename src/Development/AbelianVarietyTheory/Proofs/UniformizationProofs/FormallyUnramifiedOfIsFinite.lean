@@ -70,7 +70,7 @@ theorem isIso_of_formallyUnramified {K : Type} [Field K] [IsAlgClosed K] {X : Sc
     (f : X ⟶ Spec (CommRingCat.of K)) [LocallyOfFiniteType f] [FormallyUnramified f]
     (s : Spec (CommRingCat.of K) ⟶ X) (hs : s ≫ f = 𝟙 _)
     (h : ∀ p : Spec (CommRingCat.of K) ⟶ X, p ≫ f = 𝟙 _ → p = s) : IsIso f := by
-  haveI : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion
+  have : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion
       (MorphismProperty.diagonal @IsOpenImmersion) :=
     MorphismProperty.hasOfPostcompProperty_iff_le_diagonal.2 le_rfl
   have ho : IsOpenImmersion s :=
@@ -119,7 +119,7 @@ theorem main : ∀ (S : Scheme.{0}) (B : Over S) [GrpObj B] [IsCommMonObj B] (H 
       rw [hm, hw, inv_inv, Hom.mul_def]
       congr 1)
     (by rw [hi, Category.id_comp, Hom.inv_def])
-  haveI : IsCommMonObj H :=
+  have : IsCommMonObj H :=
     ⟨by rw [← cancel_mono j, Category.assoc, IsMonHom.mul_hom,
       ← BraidedCategory.braiding_naturality_assoc, IsCommMonObj.mul_comm]⟩
   have hfin : IsFinite (pullback.snd H.hom t) := inferInstance

@@ -104,7 +104,7 @@ theorem isChi_car : ∀ (D : Formalism.L2.Ker.Car) (χ : Formalism.L2.Host.HChar
     have nB := ordSub_finite fB b hb
     have nAB : {w | ordSub w A + ordSub w B ≠ 0}.Finite := (nA.union nB).subset fun w hw => by
       by_contra h0
-      simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at h0
+      simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at h0
       exact hw (by rw [h0.1, h0.2, add_zero])
     unfold chiId
     rw [← Units.val_mul]
@@ -113,14 +113,14 @@ theorem isChi_car : ∀ (D : Formalism.L2.Ker.Car) (χ : Formalism.L2.Host.HChar
     rw [← finprod_val_add χ _ _ (finite_toNat nA) (finite_toNat nB)]
     refine finprod_val_congr χ hv _ _ (finite_toNat nAB) ((nA.union nB).subset fun w hw => ?_) fun w w' h => ?_
     · by_contra h0
-      simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at h0
+      simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at h0
       exact hw (by simp [h0.1, h0.2])
     · rcases hpl w w' h with rfl | h
       · rfl
       · rw [ordSub_conj_eq_neg h (fun x => (hA' x).trans (by rw [← hc]; rfl)) hA,
           ordSub_conj_eq_neg h (fun x => (hB' x).trans (by rw [← hc]; rfl)) hB]
         omega
-  · letI := D.host.cmStar
+  · let := D.host.cmStar
     intro z
     have hcmf : IsCMField D.host.E := D.host.isCMField_hostE
     have hcc : ∀ x, IsCMField.complexConj D.host.E x = D.host.conj x := fun x => bridge_star_holds D.R D.host x
@@ -280,7 +280,7 @@ theorem ana {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X) (h : I.O
   have hL := Cd.laHyp_ambOf_top (seamC B) I.chi I.J.cD (vacC B I.J) (seamC_ok B) hδ (he i) (he j) _ (fun P hP => (bad P hP).1)
     fun P hP => Cd.primeTo_half _ (by
       have := P.isPrime
-      obtain ⟨t, ht, ht'⟩ := SetLike.not_le_iff_exists.1 fun hle => GlobalTheory.PeriodIdealUnit.not_dvd_different (K := B.host.K) (E := B.host.E)
+      obtain ⟨t, ht, ht'⟩ := IsConcreteLE.not_le_iff_exists.1 fun hle => GlobalTheory.PeriodIdealUnit.not_dvd_different (K := B.host.K) (E := B.host.E)
         (bad P hP).2.1 P.asIdeal (Ideal.absNorm_mem _) (bad P hP).2.2.1 (Ideal.dvd_iff_le.2 hle)
       exact ⟨t, ht, ht'⟩)
   have hE := Cd.CarC.eqLaw_ambOf_of (seamC B) (vacC B I.J) I.chi I.J.cD (seamC_ok B)
@@ -360,7 +360,7 @@ theorem opOf_move {a b : ℕ} (s' s : ι → ℤ) (cD : ι → ℂ) {G G' : VCx 
       hG.comp (LinearMap.toContinuousLinearMap (TE.mulL (matAt emb σ γ'⁻¹) (matAt emb σ γ))).contDiff
     have e : G' = κ • fun z => G (TE.mulL (matAt emb σ γ'⁻¹) (matAt emb σ γ) z) := funext h
     unfold jetC derivAt0
-    rw [e, iteratedFDeriv_const_smul_apply (hs.of_le le_top).contDiffAt, ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+    rw [e, iteratedFDeriv_const_smul_apply (hs.of_le le_top).contDiffAt, smul_apply, smul_eq_mul]
     ring
   have h2 := TE.jetMap_pull (RingHom.id ℂ) cD G hG (matAt emb σ γ) (matAt emb σ γ'⁻¹) (TE.mulL (matAt emb σ γ'⁻¹) (matAt emb σ γ))
     (TE.mulL_coordX _ _) (jetC cD G) (jetC cD G') 1 κ (fun m => (one_mul _).symm) hj κ (mul_one _).symm 0
@@ -604,11 +604,11 @@ theorem th_move (g : (I.stp u a i).G b) (g' : (I.stp u a (i + 1)).G b') (z : VCx
   have s1 : (I.chain l u a).sSharp i = fun τ => ez τ - ((B.R.N (i + 1) / 2 : ℕ) : ℤ) := funext fun τ => by
     apply Int.cast_injective (α := ℚ)
     rw [Int.cast_sub, half_cast, ← hez]
-    exact (congrArg _ (dif_pos hi)).trans (floor_sub_half _ _ _)
+    exact (congrArg _ (dite_eq_left hi)).trans (floor_sub_half _ _ _)
   have s2 : (I.chain l u a).sDiv i = fun τ => ez τ - ((B.R.N i / 2 : ℕ) : ℤ) := funext fun τ => by
     apply Int.cast_injective (α := ℚ)
     rw [Int.cast_sub, half_cast, ← hez]
-    exact (congrArg _ (dif_pos hi)).trans (floor_sub_half _ _ _)
+    exact (congrArg _ (dite_eq_left hi)).trans (floor_sub_half _ _ _)
   have d1 : ∀ {n : ℕ} (γ : UF B.fields.E n) (s : B.fields.Tau → ℤ), detPow B.fields.emb B.embLL (ufGL B.fields.E n γ) s =
       ∏ τ, B.fields.embC I.A.σ₀ τ ((LinearEquiv.det γ.1 : B.fields.Eˣ) : B.fields.E) ^ s τ := fun γ s => by
     rw [detPow, TE.det_ufGL]

@@ -113,20 +113,20 @@ noncomputable def equivB (A : Type) [CommRing A] (q : ℕ) [NeZero q] (hq : IsUn
 
 theorem etaleB (A : Type) [CommRing A] (q : ℕ) [NeZero q] (hq : IsUnit (q : A)) :
     Algebra.Etale A (AdjoinRoot (cyc A q)) := by
-  haveI : Algebra.IsStandardEtale A (AdjoinRoot (cyc A q)) :=
+  have : Algebra.IsStandardEtale A (AdjoinRoot (cyc A q)) :=
     Algebra.IsStandardEtale.of_equiv (equivB A q hq)
   infer_instance
 
 theorem surjB (A : Type) [CommRing A] (q : ℕ) [NeZero q] :
     Function.Surjective (PrimeSpectrum.comap (algebraMap A (AdjoinRoot (cyc A q)))) := by
   intro p
-  haveI : Nontrivial A := ⟨⟨0, 1, fun h => p.2.ne_top (by rw [Ideal.eq_top_iff_one, ← h]; exact p.1.zero_mem)⟩⟩
+  have : Nontrivial A := ⟨⟨0, 1, fun h => p.2.ne_top (by rw [Ideal.eq_top_iff_one, ← h]; exact p.1.zero_mem)⟩⟩
   have hm := cyc_monic A q
   have hdeg : 0 < (cyc A q).natDegree := by
     show 0 < ((cyclotomic q ℤ).map (Int.castRingHom A)).natDegree
     rw [(cyclotomic.monic q ℤ).natDegree_map, natDegree_cyclotomic]; exact Nat.totient_pos.mpr (Nat.pos_of_neZero q)
-  haveI : Module.Free A (AdjoinRoot (cyc A q)) := .of_basis (AdjoinRoot.powerBasis' hm).basis
-  haveI : Nontrivial (AdjoinRoot (cyc A q)) := by
+  have : Module.Free A (AdjoinRoot (cyc A q)) := .of_basis (AdjoinRoot.powerBasis' hm).basis
+  have : Nontrivial (AdjoinRoot (cyc A q)) := by
     have hne : (AdjoinRoot.powerBasis' hm).basis ⟨0, hdeg⟩ ≠ 0 := (AdjoinRoot.powerBasis' hm).basis.ne_zero _
     exact nontrivial_of_ne _ _ hne
   exact PrimeSpectrum.comap_surjective_of_faithfullyFlat p

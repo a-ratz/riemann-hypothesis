@@ -106,7 +106,7 @@ private theorem coeff_psTrunc_lemma_7 {τ : Type} [Fintype τ] [DecidableEq τ] 
 theorem mk_psTrunc_X {τ : Type} [Fintype τ] [DecidableEq τ] (m : ℕ) (q : τ) :
     (Ideal.Quotient.mk (orig S τ ^ (m + 1)) (psTrunc m (MvPowerSeries.X q))) = Ideal.Quotient.mk _ (X q) := by
   have hdeg : (Finsupp.single q 1).degree = 1 := by
-    rw [degree_eq_sum_lemma_2, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton,
+    rw [degree_eq_sum_lemma_2, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton,
       Finsupp.single_eq_same]
   have hs : psTrunc m (MvPowerSeries.X q : MvPowerSeries τ S) = if 1 ≤ m then X q else 0 := by
     ext e
@@ -118,8 +118,8 @@ theorem mk_psTrunc_X {τ : Type} [Fintype τ] [DecidableEq τ] (m : ℕ) (q : τ
       · simp [h3, MvPolynomial.coeff_X]
       · simp [h3]
     · have h4 : AddMonoidAlgebra.coeff (X q : MvPolynomial τ S) e = 0 := by
-        rw [MvPolynomial.coeff_X']
-        exact if_neg (Ne.symm h2)
+        rw [coeff_X]
+        exact ite_eq_right (Ne.symm h2)
       split_ifs <;> simp [h4, h2]
   rw [Ideal.Quotient.eq, hs]
   split_ifs with h

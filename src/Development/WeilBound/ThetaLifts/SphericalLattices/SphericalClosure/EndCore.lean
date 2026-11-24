@@ -224,7 +224,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem pla_le_one_iff {v : Pl F} (x : Fv F v) :
     ValuativeRel.valuation (Fv F v) x ≤ 1 ↔ x ∈ v.adicCompletionIntegers F := by
-  haveI : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (Fv F v)) Valued.v).le_one_iff_le_one
 
 theorem pla_continuous (v : Pl F) (t : E →ₐ[F] Fv F v) : Continuous (piW t) :=
@@ -259,7 +259,7 @@ theorem places : Places := by
     have h2 : Valued.v (complMap (splitPrime_under t) ((x : Fv F v)⁻¹)) ≤ 1 :=
       complMap_mem _ ((pla_le_one_iff _).1 (by rw [map_inv₀, hx, inv_one]))
     have h3 : Valued.v (complMap (splitPrime_under t) (x : Fv F v)) ≠ 0 := by simp
-    rw [map_inv₀, map_inv₀, inv_le_one₀ (zero_lt_iff.2 h3)] at h2
+    rw [map_inv₀, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h3)] at h2
     exact le_antisymm h1 h2
   · obtain ⟨v, hv, hn⟩ := GlobalTheory.Orb.exists_split_place_notMem h hf.toFinset
     exact hv (hf.mem_toFinset.2 hn)
@@ -1036,7 +1036,7 @@ theorem conePol_of (hM : MeasEx) (hC : ConeIntegralFactorisation) : ConePol := b
     · split_ifs
       · exact (hΛ v _ (h1 v)).2
       · exact (hT₁.geo.hM.vac v).1
-    · exact T.eventually_cofinite_notMem.mono fun v hv => if_neg hv
+    · exact T.eventually_cofinite_notMem.mono fun v hv => ite_eq_right hv
   | zero => rw [z]; exact zero_mem _
   | add x y hx hy h1 h2 =>
     have := hlin x (polData_le hT.geo.hM hx) y (polData_le hT.geo.hM hy) 1
@@ -1185,9 +1185,9 @@ theorem perpZero_of (hQ : SqInt) (hA : IAut) : PerpZero := by
   obtain ⟨Φ, hΦ, Φ', hΦ', e⟩ := hf
   obtain ⟨c, ⟨μ, 𝓕, hμ, h𝓕⟩, -⟩ := PositivityTheory.ThKF.unimodularity_holds F E σ t.base.cm _ G.W.J (-1) (fun i j => by simpa using t.geo.hW.skew i j)
     (PositivityTheory.ThKG.Tow.Levi.det_ne_zero t.geo.hW)
-  haveI : BorelSpace (UA σ G.W.J) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : IsTopologicalGroup (UA σ G.W.J) := Subgroup.instIsTopologicalGroupSubtypeMem _
+  have : BorelSpace (UA σ G.W.J) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalGroup (UA σ G.W.J) := Subgroup.instIsTopologicalGroupSubtypeMem _
   obtain ⟨q1, q2⟩ := hQ F E σ B a a' G X om om' t μ 𝓕 hμ h𝓕
   obtain ⟨a1, a2⟩ := hA F E σ B a a' G X om om' t
   have c1 := (a1 Φ hΦ).1
@@ -1347,7 +1347,7 @@ theorem htOf_le {R : Type} [CommRing R] {N₁ : Matrix p p R → ℝ≥0} {N₂ 
 
 theorem opNorm_le (a : Matrix p p ℂ) (b : Matrix q q ℂ) : opNorm (fromBlocks a 0 0 b) ≤ max (opNorm a) (opNorm b) := by
   refine ContinuousLinearMap.opNNNorm_le_bound _ _ fun x => ?_
-  rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnnorm, coe_nnnorm]
+  rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnNorm, coe_nnNorm]
   obtain ⟨v, rfl⟩ : ∃ v : p ⊕ q → ℂ, x = WithLp.toLp 2 v := ⟨x.ofLp, rfl⟩
   set c : ℝ := ((max (opNorm a) (opNorm b) : ℝ≥0) : ℝ) with hc
   have h0 : 0 ≤ c := NNReal.coe_nonneg _
@@ -1393,8 +1393,8 @@ theorem heightGL_le {X : GL (p ⊕ q) (AE F E)} {x : GL p (AE F E)} {y : GL q (A
   unfold heightGL
   rw [mul_mul_mul_comm, ← Finset.prod_mul_distrib,
     ← finprod_mul_distrib (finite_mulSupport_htFin F x) (finite_mulSupport_htFin F y)]
-  refine mul_le_mul' (Finset.prod_le_prod' fun w _ => htOf_le (normInf_le F w) (b _))
-    (finprod_le_finprod' (finite_mulSupport_htFin F _) ?_ fun v => htOf_le (normFin_le F v) (b _))
+  refine mul_le_mul' (Finset.prod_le_prod fun w _ => htOf_le (normInf_le F w) (b _))
+    (finprod_le_finprod (finite_mulSupport_htFin F _) ?_ fun v => htOf_le (normFin_le F v) (b _))
   exact ((finite_mulSupport_htFin F x).union (finite_mulSupport_htFin F y)).subset (Function.mulSupport_mul _ _)
 
 end Ht

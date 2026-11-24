@@ -337,7 +337,7 @@ theorem seed_at_enl : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
   rintro B' f' T' hOv hOB w' ⟨pin⟩ B f T w _ _ _ _ Z hX Wt z _ _ _ _ Z' hX' _ hgrp _ core' alg' _ _ hKs _ _ _ _ _
 
   set Wt' : Set B'.places.Pl := {v | B'.places.resChar v ∈ T'.pl} with hWt
-  letI := alg'
+  let := alg'
   obtain ⟨hHH, -, -, hPos, hStd, hStdX, -, -⟩ := hK (w'.st Z') hOv
   have hok := w'.ok
   have hC := w'.C_eq
@@ -361,7 +361,7 @@ theorem seed_at_enl : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
     exact congrArg HeightOneSpectrum.asIdeal this
   have hfin : Wt'.Finite := GlobalTheory.Mem.Top.TwFin.finite_pl B' T'.pl
   have hconj : ∀ v ∈ Wt', B'.places.conj v ∈ Wt' :=
-    fun v hv => by simpa only [hWt, Set.mem_setOf_eq, GlobalTheory.Mem.Top.TwFin.resChar_conj] using hv
+    fun v hv => by simpa only [hWt, Set.mem_ofPred_eq, GlobalTheory.Mem.Top.TwFin.resChar_conj] using hv
   have hch : Fld.charField f' ≤ B'.KsC := (GlobalTheory.Mem.Base.KsExact.lower w'.exact).2.2.1
   obtain ⟨hVals, -⟩ := hOB w'.px w'.I hX' hok hC hrange
   have hrange' : Set.range w'.I.xi = T'.set w'.I.C := by rw [hC]; exact hrange
@@ -976,7 +976,7 @@ theorem resetW : ∀ {B B' : Base} {f : Fr B.toPre} {f' : Fr B'.toPre} {T : TwDa
   have hio := fun i : Fin D.R.m =>
     exists_heq_io (fun σ => LowT (z.R.MW i σ)) hs (eq_of_heq (hcV i i rfl).1) (hcV i i rfl).2.2.1 (hcV i i rfl).2.2.2 (z.R.ioP i)
   choose ioP' hioP using hio
-  letI := z.alg
+  let := z.alg
   have halgι : ∀ y : z.core.Q.c.F, ι (algebraMap z.core.Q.c.F D.what₂.LL y) = algebraMap z.core.Q.c.F D'.what₂.LL y := by
     intro y
     apply D'.what₂.embLL.injective
@@ -1126,7 +1126,7 @@ theorem reset_stepW : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
   refine hO.imp ?_
   rintro B' f' T' hOv hOB w' ⟨pin⟩ B f T w hE hf _ hp Z hX Wt z _ _ hFine _ Z' hX' _ hgrp _ core' alg' ha _ hKs hc _ _ _ _
   intro Xg tr R₀ cG hKept
-  letI := alg'
+  let := alg'
   obtain ⟨hHH, -, -, hPos, hStd, hStdX, -, -⟩ := hK (w'.st Z') hOv
   obtain ⟨hVals, -⟩ := hOB w'.px w'.I hX' w'.ok w'.C_eq w'.xi_range
   refine (GlobalTheory.T.definiteFormsReading_reset_baseEnlargement z hE hf hp hFine.2.2.2 (fun i => (hStd _).2.1) hStdX hVals R₀ cG hKept).elim fun Ra h => h.elim fun cGa h => ?_

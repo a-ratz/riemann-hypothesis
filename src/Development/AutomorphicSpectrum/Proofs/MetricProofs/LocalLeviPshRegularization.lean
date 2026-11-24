@@ -593,9 +593,9 @@ theorem regularise_one_chart :
   obtain ⟨Q, hQ0, hQ⟩ := oc_q_bounds hq
   have hsub : ball (0 : Fin D → ℂ) (3 / 2) \ ReciprocityTheory.AnForm.A.coordDiv S ⊆
       ball 0 2 \ ReciprocityTheory.AnForm.A.coordDiv S :=
-    Set.diff_subset_diff_left (ball_subset_ball (by norm_num))
+    Set.sdiff_subset_sdiff_left (ball_subset_ball (by norm_num))
   have hqA : ContDiffOn ℝ ∞ q (ball (0 : Fin D → ℂ) 2 \ ReciprocityTheory.AnForm.A.coordDiv S) :=
-    hq.mono Set.diff_subset
+    hq.mono Set.sdiff_subset
   have huS : ContDiffOn ℝ ∞ (fun z => q z + ph z)
       (ball (0 : Fin D → ℂ) 2 \ ReciprocityTheory.AnForm.A.coordDiv S) := hqA.add hph
   have hO2 : IsOpen (ball (0 : Fin D → ℂ) 2 \ ReciprocityTheory.AnForm.A.coordDiv S) :=
@@ -738,7 +738,7 @@ theorem regularise_one_chart :
       isOpen_ball.sdiff hAc
     have hOsub : ball (0 : Fin D → ℂ) (5 / 4) \ ReciprocityTheory.AnForm.A.coordDiv S ⊆
         ball 0 2 \ ReciprocityTheory.AnForm.A.coordDiv S :=
-      Set.diff_subset_diff_left (ball_subset_ball (by norm_num))
+      Set.sdiff_subset_sdiff_left (ball_subset_ball (by norm_num))
     have hd : ∀ᶠ t in 𝓝[>] (0 : ℝ), ∀ z ∈ K',
         fderiv ℝ (phT t) z - fderiv ℝ ph z =
           fderiv ℝ (ReciprocityTheory.AnForm.A.molli ρ t (w t)) z - fderiv ℝ (fun z => q z + ph z) z ∧
@@ -749,8 +749,8 @@ theorem regularise_one_chart :
       have ht0 : 0 < t := ht
       have hs := hsmooth t ht0 (htt.le.trans (min_le_left _ _))
       have hzO := hK' hz
-      obtain ⟨a1, a2⟩ := fderiv_add_and_second_fderiv_add hO (hqs.mono Set.diff_subset) (hs.mono Set.diff_subset) hzO
-      obtain ⟨b1, b2⟩ := fderiv_add_and_second_fderiv_add hO (hqs.mono Set.diff_subset) (hph.mono hOsub) hzO
+      obtain ⟨a1, a2⟩ := fderiv_add_and_second_fderiv_add hO (hqs.mono Set.sdiff_subset) (hs.mono Set.sdiff_subset) hzO
+      obtain ⟨b1, b2⟩ := fderiv_add_and_second_fderiv_add hO (hqs.mono Set.sdiff_subset) (hph.mono hOsub) hzO
       rw [hgF t, a1, a2, b1, b2]
       constructor <;> abel
     refine ⟨oc_tuo h1 ?_, oc_tuo h2 (hd.mono fun t ht z hz => (ht z hz).1),

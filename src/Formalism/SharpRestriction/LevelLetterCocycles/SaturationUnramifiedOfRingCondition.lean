@@ -170,7 +170,7 @@ theorem p_nzd_O (W : LocWach PD LL O v n) (hinj : Function.Injective (algebraMap
 
 theorem isUnit_one_add_p (W : LocWach PD LL O v n) (y : W.EE) :
     IsUnit (1 + ((PD.p : ℕ) : W.EE) * y) := by
-  haveI := W.EE_complete
+  have := W.EE_complete
   have hp : ((PD.p : ℕ) : W.EE) ∈ (⊥ : Ideal W.EE).jacobson :=
     IsAdicComplete.le_jacobson_bot (I := Ideal.span {((PD.p : ℕ) : W.EE)})
       (Ideal.subset_span (Set.mem_singleton _))

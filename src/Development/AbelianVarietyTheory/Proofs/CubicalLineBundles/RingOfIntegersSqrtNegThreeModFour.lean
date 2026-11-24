@@ -144,7 +144,7 @@ private theorem exists_int_eq_of_squarefree_mul_sq_eq_int {d : ℕ} (hsq : Squar
     have h3 : q.den ^ 2 ∣ d := hcop.dvd_of_dvd_mul_right hdvd
     have hu := hsq q.den (by simpa [sq] using h3)
     simpa using hu
-  exact ⟨q.num, (Rat.coe_int_num_of_den_eq_one hden).symm⟩
+  exact ⟨q.num, (Rat.intCast_num_of_den_eq_one hden).symm⟩
 
 theorem exists_integer_generator_of_sq_eq_neg {K : Type*} [Field K] [NumberField K] {d : ℕ}
     (h2 : finrank ℚ K = 2) (hsq : Squarefree d) (hd : d % 4 = 3) {r : K} (hr : r ^ 2 = -d) :

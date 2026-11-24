@@ -97,7 +97,7 @@ theorem awayLiftAlgHom_algebraMap {k : Type} [Field k] {B : Type} [CommRing B] [
 theorem aeval_reverse_mul_pow_of_mul_eq_one {k : Type} [Field k] {B : Type} [CommRing B]
     [Algebra k B] (x y : B) (h : x * y = 1) (P : k[X]) :
     aeval y P.reverse * x ^ P.natDegree = aeval x P := by
-  letI : Invertible x := invertibleOfRightInverse x y h
+  let : Invertible x := invertibleOfRightInverse x y h
   have hinv : (⅟x : B) = y := invOf_eq_right_inv h
   have := eval₂_reverse_mul_pow (algebraMap k B) x P
   rw [hinv] at this
@@ -202,11 +202,11 @@ theorem isPrincipalIdealRing_away {R : Type} [CommRing R] [IsPrincipalIdealRing 
 theorem extend : ∀ (k : Type) [Field k] (B : Over (Sp k)) [IsProper B.hom] [LocallyOfFinitePresentation B.hom] (P : Polynomial k) (c : k), P ≠ 0 → ∀ u : Sp (Localization.Away (P * (Polynomial.X - Polynomial.C c))) ⟶ B.left, u ≫ B.hom = spMap (algebraMap k (Localization.Away (P * (Polynomial.X - Polynomial.C c)))) → ∃ v : Sp (Localization.Away P) ⟶ B.left, v ≫ B.hom = spMap (algebraMap k (Localization.Away P)) ∧ spMap (IsLocalization.Away.awayToAwayRight (S := Localization.Away P) (P := Localization.Away (P * (Polynomial.X - Polynomial.C c))) P (Polynomial.X - Polynomial.C c)) ≫ v = u := by
   intro k _ B _ _ P c hP u hu
   have hQ0 : P * (X - C c) ≠ 0 := mul_ne_zero hP (X_sub_C_ne_zero c)
-  haveI : IsDomain (Localization.Away P) :=
+  have : IsDomain (Localization.Away P) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors hP)
-  haveI : IsDomain (Localization.Away (P * (X - C c))) :=
+  have : IsDomain (Localization.Away (P * (X - C c))) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors hQ0)
-  haveI : IsPrincipalIdealRing (Localization.Away P) := isPrincipalIdealRing_away P
+  have : IsPrincipalIdealRing (Localization.Away P) := isPrincipalIdealRing_away P
   have hφ : ∀ a : k[X], IsLocalization.Away.awayToAwayRight (S := Localization.Away P)
       (P := Localization.Away (P * (X - C c))) P (X - C c) (algebraMap k[X] (Localization.Away P) a) =
       algebraMap k[X] (Localization.Away (P * (X - C c))) a :=
@@ -218,17 +218,17 @@ theorem extend : ∀ (k : Type) [Field k] (B : Over (Sp k)) [IsProper B.hom] [Lo
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
     congr 2
     exact (RingHom.ext hφ).symm
-  haveI : IsOpenImmersion (spMap (algebraMap k[X] (Localization.Away P))) :=
+  have : IsOpenImmersion (spMap (algebraMap k[X] (Localization.Away P))) :=
     IsOpenImmersion.of_isLocalization P
-  haveI : IsOpenImmersion (spMap (IsLocalization.Away.awayToAwayRight (S := Localization.Away P)
+  have : IsOpenImmersion (spMap (IsLocalization.Away.awayToAwayRight (S := Localization.Away P)
         (P := Localization.Away (P * (X - C c))) P (X - C c)) ≫
         spMap (algebraMap k[X] (Localization.Away P))) := by
     rw [← hcomp]
     exact IsOpenImmersion.of_isLocalization (P * (X - C c))
-  haveI := IsOpenImmersion.of_comp (spMap (IsLocalization.Away.awayToAwayRight
+  have := IsOpenImmersion.of_comp (spMap (IsLocalization.Away.awayToAwayRight
     (S := Localization.Away P) (P := Localization.Away (P * (X - C c))) P (X - C c)))
     (spMap (algebraMap k[X] (Localization.Away P)))
-  haveI : B.left.IsSeparated := ⟨by
+  have : B.left.IsSeparated := ⟨by
     rw [show terminal.from B.left = B.hom ≫ terminal.from (Sp k) from terminal.hom_ext _ _]
     infer_instance⟩
   have hu' : u ≫ B.hom = spMap (IsLocalization.Away.awayToAwayRight (S := Localization.Away P)
@@ -371,7 +371,7 @@ theorem poly_eq_C_of_eq_aeval_invSelf {K : Type} [CommRing K] (p q : K[X])
     p = C (p.eval 0) := by
   set L := Localization.Away (X : K[X])
   set n := q.natDegree
-  letI : Invertible (algebraMap K[X] L X) :=
+  let : Invertible (algebraMap K[X] L X) :=
     ⟨IsLocalization.Away.invSelf (X : K[X]),
       by rw [mul_comm]; exact IsLocalization.Away.mul_invSelf _, IsLocalization.Away.mul_invSelf _⟩
   have hr : (q.reflect n).natDegree ≤ n := natDegree_reflect_le.trans (by simp [n])
@@ -383,7 +383,7 @@ theorem poly_eq_C_of_eq_aeval_invSelf {K : Type} [CommRing K] (p q : K[X])
     rw [map_mul, map_pow, h, aeval_def, ← hev (q.reflect n)]
     exact key
   have hinj : Function.Injective (algebraMap K[X] L) :=
-    IsLocalization.injective L (Submonoid.powers_le.2 X_mem_nonzeroDivisors)
+    IsLocalization.injective L (Submonoid.powers_le.2 X_mem_nonZeroDivisors)
   have h3 := hinj h2
   have hdeg : (p * X ^ n).natDegree ≤ n := h3 ▸ hr
   have hp0 : p.natDegree = 0 := by
@@ -406,7 +406,7 @@ theorem chart_map_into_affine_const (K : Type) [CommRing K] (Y : Scheme.{0}) (W 
       spMap (Polynomial.aeval (IsLocalization.Away.invSelf (Polynomial.X : Polynomial K) :
         Localization.Away (Polynomial.X : Polynomial K))).toRingHom ≫ g₁) :
     g₀ = spMap (algebraMap K (Polynomial K)) ≫ spMap (Polynomial.evalRingHom 0) ≫ g₀ := by
-  haveI := hW.isOpenImmersion_fromSpec
+  have := hW.isOpenImmersion_fromSpec
   have r₀ : Set.range g₀.base ⊆ Set.range hW.fromSpec.base := by
     rw [hW.range_fromSpec]; rintro _ ⟨x, rfl⟩; exact h₀ x
   have r₁ : Set.range g₁.base ⊆ Set.range hW.fromSpec.base := by
@@ -647,7 +647,7 @@ theorem exists_of_cmap_eq {x x' : Sp (Polynomial R)} (h : cmap R 0 x = cmap R 1 
   exact (e.symm.trans (congrArg (cmap R 0) hu)).trans h
 
 theorem isClosedMap_str : IsClosedMap (PSpace.str R 1) := by
-  haveI := isProper_str R 1
+  have := isProper_str R 1
   exact (PSpace.str R 1).isClosedMap
 
 theorem str_cmap (i : Fin 2) (x : Sp (Polynomial R)) :
@@ -674,7 +674,7 @@ theorem GlobalTheory.isOpen_setOf_charts_mem (R : Type) [CommRing R] (Y : Scheme
   have key : {τ : Sp R | ∀ x : Sp (Polynomial R), spMap (algebraMap R (Polynomial R)) x = τ →
       g₀ x ∈ W ∧ g₁ x ∈ W} = (PSpace.str R 1 '' Oᶜ)ᶜ := by
     ext τ
-    simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_image, not_exists, not_and]
+    simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_image, not_exists, not_and]
     constructor
     · intro H q hq hτ
       obtain ⟨i, hi⟩ := exists_mem_chart R 1 q
@@ -934,7 +934,7 @@ theorem punctured_line_open_cofinite : ∀ (k : Type) [Field k] (V : Set (Sp (Lo
     have := hχp χ₁
     rw [map_zero, map_zero] at this
     exact mul_ne_zero hg₁ (pow_ne_zero _ (hXu χ₁)) this.symm
-  refine (Polynomial.finite_setOf_isRoot hp0).subset ?_
+  refine (Polynomial.finite_setOfPred_isRoot hp0).subset ?_
   rintro c ⟨hc0, hcall⟩
   by_contra hroot
   have hunit : ∀ y : Submonoid.powers (Polynomial.X : Polynomial k),
@@ -993,7 +993,7 @@ open Polynomial
 theorem projLine_map_const : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B], IsAbelianScheme B → ∀ (f₀ f₁ : Sp (Polynomial k) ⟶ B.left), f₀ ≫ B.hom = spMap (algebraMap k (Polynomial k)) → f₁ ≫ B.hom = spMap (algebraMap k (Polynomial k)) → spMap (algebraMap (Polynomial k) (Localization.Away (Polynomial.X : Polynomial k))) ≫ f₀ = spMap (Polynomial.aeval (IsLocalization.Away.invSelf (Polynomial.X : Polynomial k) : Localization.Away (Polynomial.X : Polynomial k))).toRingHom ≫ f₁ → ∀ a b : Polynomial k →ₐ[k] k, spMap a.toRingHom ≫ f₀ = spMap b.toRingHom ≫ f₀ := by
   intro k _ _ B _ hB f₀ f₁ h0 h1 h01 a b
   have := hB.proper
-  haveI hsub : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))
+  have hsub : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))
   let pt : Sp k := IsLocalRing.closedPoint k
   let e : B.left := (η[B] : 𝟙_ (Over (Sp k)) ⟶ B).left pt
   obtain ⟨_, ⟨W, hW, rfl⟩, heW, -⟩ :=
@@ -1066,7 +1066,7 @@ theorem projLine_map_const : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over 
   have hscale : ∀ c : k, c ≠ 0 → c ∉ F → ∀ a : k,
       spMap (Polynomial.evalRingHom (c * a)) ≫ f₀ = spMap (Polynomial.evalRingHom a) ≫ f₀ := by
     intro c hc0 hcF
-    simp only [F, Set.mem_setOf_eq, not_and, not_forall, not_not] at hcF
+    simp only [F, Set.mem_ofPred_eq, not_and, not_forall, not_not] at hcF
     obtain ⟨χ, hχt, hχV⟩ := hcF hc0
     obtain ⟨hA, hB'⟩ := hW₀ χ hχV
     have hu : χ t * χ ti = 1 := by rw [← map_mul, hti, map_one]
@@ -1238,8 +1238,8 @@ theorem extend_to_line : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp 
 
 theorem maps_from_open_line_const : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B], IsAbelianScheme B → ∀ (P : Polynomial k), P ≠ 0 → ∀ (u : Sp (Localization.Away P) ⟶ B.left) (a b : Localization.Away P →ₐ[k] k), u ≫ B.hom = spMap (algebraMap k (Localization.Away P)) → spMap a.toRingHom ≫ u = spMap b.toRingHom ≫ u := by
   intro k _ _ B _ hB P hP u a b hu
-  haveI := hB.smooth
-  haveI := hB.proper
+  have := hB.smooth
+  have := hB.proper
   obtain ⟨Q, hQ, σ, τ, h1, h2⟩ := _root_.GlobalTheory.localizationAway_inv_coordinate k P hP
   obtain ⟨f₀, hf₀, e₀⟩ := extend_to_line k B P hP u hu
   have hu' : (spMap σ.toRingHom ≫ u) ≫ B.hom = spMap (algebraMap k (Localization.Away Q)) := by
@@ -1248,7 +1248,7 @@ theorem maps_from_open_line_const : ∀ (k : Type) [Field k] [IsAlgClosed k] (B 
     ext x
     exact σ.commutes x
   obtain ⟨f₁, hf₁, e₁⟩ := extend_to_line k B Q hQ _ hu'
-  haveI : IsDominant (spMap (rhoMap k P)) := by
+  have : IsDominant (spMap (rhoMap k P)) := by
     rw [isDominant_iff]
     show DenseRange (PrimeSpectrum.comap (rhoMap k P))
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical,

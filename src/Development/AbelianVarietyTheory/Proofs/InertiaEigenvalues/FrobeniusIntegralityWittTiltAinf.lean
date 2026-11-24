@@ -266,7 +266,7 @@ theorem step (S : Matrix p p (WittVector l R)) (S' : Matrix q q (WittVector l R)
   have h5 := congrFun (congrFun hB a) b
   simp only [Matrix.map_apply, Matrix.smul_apply, smul_eq_mul, hY', map_mul, map_natCast,
     Matrix.sub_apply] at h5
-  have h6 := mul_left_cancel₀ (WittVector.p_nonzero l K) h5
+  have h6 := mul_left_cancel₀ (WittVector.p_ne_zero l K) h5
   simp only [Matrix.map_apply, Matrix.add_apply, Matrix.of_apply] at h6 ⊢
   rw [h6]; ring
 

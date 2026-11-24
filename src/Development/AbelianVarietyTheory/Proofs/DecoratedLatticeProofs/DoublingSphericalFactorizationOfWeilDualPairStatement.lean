@@ -331,7 +331,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : HSp D) (χB 
         exact RestrictedProduct.single_eq_of_ne (fun w : HeightOneSpectrum (𝓞 D.host.F) => w.adicCompletionIntegers D.host.F) 1 hv'
     · intro P hP
       exact (GlobalTheory.LFun.unrAt_iff_of_chrEq hc P).1 (hU.unr P (by
-        simp only [GlobalTheory.LFun.above, Set.mem_setOf_eq, hP]
+        simp only [GlobalTheory.LFun.above, Set.mem_ofPred_eq, hP]
         exact_mod_cast hv))
   have key : ∀ C, GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.VacuumFixedOn D C → C v →
       omh (emb D.sp.cm.sig (dblSp A).gram v k, 1) (delta A B Φ₁ Φ₂) = delta A B Φ₁ Φ₂ := by
@@ -456,7 +456,7 @@ theorem aH_mem_intLoc_of_lattice (σ : E →ₐ[F] E) {n : ℕ} (Q : Matrix (Fin
 
 theorem aH_mem_intLoc : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (v : FinPl D) (p : siegelH (Fv D.host.F v) D.sp.cm.sig (dblSp A).gram), (p : Gv (dblSp A) v) ∈ KFin D.sp.cm.sig (dblSp A).gram L v → ((aH _ D.sp.cm.sig (dblSp A).gram p : (Fv D.host.F v ⊗[D.host.F] D.host.E)ˣ) : Fv D.host.F v ⊗[D.host.F] D.host.E) ∈ intLoc D.host.F D.host.E v := by
   intro D A L hL v p hp
-  haveI := GlobalTheory.AdIsom.selfDual_isFullLattice hL
+  have := GlobalTheory.AdIsom.selfDual_isFullLattice hL
   exact aH_mem_intLoc_of_lattice D.sp.cm.sig (n := A.rank) (dblSp A).gram L v p hp
 
 end GlobalTheory.Core.Rk.AInt
@@ -576,7 +576,7 @@ end Gen
 
 theorem exists_isSphSecAt_unique : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (μ : (AE D)ˣ →* Circle), IsHeckeChar D μ → ∀ v : FinPl D, (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → GlobalTheory.LFun.UnrAt μ w) → ∀ s : ℂ, ∃ φ, IsSphSecAt A L v μ s φ ∧ ∀ Ψ : Gv (dblSp A) v → ℂ, (∀ (p : siegelH (Fv D.host.F v) D.sp.cm.sig (dblSp A).gram) g, Ψ (p * g) = charAt μ v (aH _ D.sp.cm.sig (dblSp A).gram p) * npow (absEv D.host.F D.host.E v (aH _ D.sp.cm.sig (dblSp A).gram p)) (s + (A.rank : ℂ) / 2) * Ψ g) → (∀ k ∈ KFin D.sp.cm.sig (dblSp A).gram L v, ∀ g, Ψ (g * k) = Ψ g) → ∀ g, Ψ g = Ψ 1 * φ g := by
   intro D A L hL μ hμ v hunr s
-  haveI : Submodule.IsFullLattice D.host.E L :=
+  have : Submodule.IsFullLattice D.host.E L :=
     Formalism.IndefR.Fin.PDA.selfDual_isFullLattice A L hL
   have hI : HasIwasawa D.sp.cm.sig (dblSp A).gram (KFin D.sp.cm.sig (dblSp A).gram L v) := by
     by_cases hs : Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v
@@ -671,11 +671,11 @@ theorem sphFactor_of_weilRepresentationUnitaryPair (hW : GlobalTheory.Published.
   have hco := (hCC Φ₁ Φ₂ hΦ₁ hΦ₂).2
   have hlaw := GlobalTheory.T.siegelWeilSection_degeneratePrincipalSeries_law hW D ψ A B χB omh homh ν 𝓕 hP.covol _ hδ
   have hvac := GlobalTheory.T.doubledTheta_vector_fixed_unramified_stabilizer D ψ A B χB omh homh LA LB Sf Φ₁ Φ₂ hΦ₁ hΦ₂ hU v hv
-  haveI : Submodule.IsLattice D.host.E LA := hU.sdA.1
-  haveI : Submodule.IsFullLattice D.host.E LA := GlobalTheory.ProjXCols.selfDual_isFullLattice A LA hU.sdA
+  have : Submodule.IsLattice D.host.E LA := hU.sdA.1
+  have : Submodule.IsFullLattice D.host.E LA := GlobalTheory.ProjXCols.selfDual_isFullLattice A LA hU.sdA
   have hI : HasIwasawa D.sp.cm.sig (dblSp A).gram (KAd D.sp.cm.sig (dblSp A).gram LA a) :=
     GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D A LA a hU.sdA hP.maj
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   have hK : IsCompact (KAd D.sp.cm.sig (dblSp A).gram LA a : Set (GA D (dblSp A))) := isCompact_KAd (isCMExt_host D)
   obtain ⟨Ψ, hΨdef⟩ : ∃ Ψ : GA D (dblSp A) → ℂ, Ψ = fun g => swSec A B omh ν 𝓕 (delta A B Φ₁ Φ₂) g *
       npow (hgtAd D.sp.cm.sig (dblSp A).gram LA a g) (s - sZero A B) := ⟨_, rfl⟩

@@ -99,7 +99,7 @@ theorem sub_of_red {E : Type} [Field E] [NumberField E] {n : ℕ} (M : ℕ) {A B
     ∀ i j, ∃ b : E, IsIntegral ℤ b ∧ (A - B) i j = (M : E) * b := by
   intro i j
   have e := congrFun (congrFun h i) j
-  simp only [red, dif_pos (hA i j), dif_pos (hB i j)] at e
+  simp only [red, dite_eq_left (hA i j), dite_eq_left (hB i j)] at e
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.1 (Ideal.Quotient.eq.1 e)
   clear e
   refine ⟨b, RingOfIntegers.isIntegral_coe b, ?_⟩
@@ -161,7 +161,7 @@ theorem intUnit_compact : ∀ I : AutInst, ∃ K : Set I.Gf, IsCompact K ∧ ∀
   let T : Set (GL (Fin I.n) I.E) := {γ | γ ∈ Formalism.UG.UJ (starRingEnd I.E) I.J ∧
     (∀ i j, IsIntegral ℤ ((γ : Matrix (Fin I.n) (Fin I.n) I.E) i j)) ∧
     ∀ i j, IsIntegral ℤ (((γ⁻¹ : GL (Fin I.n) I.E) : Matrix (Fin I.n) (Fin I.n) I.E) i j)}
-  haveI : Finite (𝓞 I.E ⧸ Ideal.span {(M : 𝓞 I.E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
+  have : Finite (𝓞 I.E ⧸ Ideal.span {(M : 𝓞 I.E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
     rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast (Nat.one_le_iff_ne_zero.1 hM))
   let Kq : (Fin I.n → Fin I.n → (𝓞 I.E ⧸ Ideal.span {(M : 𝓞 I.E)})) → Set I.Gf := fun q =>
     if h : ∃ γ, γ ∈ T ∧ red M (γ : Matrix (Fin I.n) (Fin I.n) I.E) = q then
@@ -175,7 +175,7 @@ theorem intUnit_compact : ∀ I : AutInst, ∃ K : Set I.Gf, IsCompact K ∧ ∀
       ⟨γ, ⟨hγ, hi, hi'⟩, rfl⟩
     refine ⟨(fun v => Formalism.L2.S.S7.DensRat.ratReal I γ hγ v, fp I γ hγ), ⟨γ, hγ, fun v => rfl, rfl⟩,
       Set.mem_iUnion.2 ⟨red M (γ : Matrix (Fin I.n) (Fin I.n) I.E), ?_⟩, fun v => rfl⟩
-    simp only [Kq, dif_pos hex]
+    simp only [Kq, dite_eq_left hex]
     obtain ⟨hT', hr⟩ := hex.choose_spec
     set γ' := hex.choose with hγ'def
     refine ⟨(fp I γ' hT'.1)⁻¹ * fp I γ hγ, ?_, mul_inv_cancel_left _ _⟩
@@ -1177,7 +1177,7 @@ theorem trace_form_real_coord : ∀ (I : AutInst) (N : ℕ) (ρ : (InfinitePlace
   refine ⟨B, adjugate B, hBr, ?_, hB⟩
   have hex : ∃ e : Fin N → Fin I.n → I.E, IsZBasis I e := ⟨e, he⟩
   have hΔe : Δ = (B.det : ℝ) := by
-    simp only [Δ, dif_pos hex]
+    simp only [Δ, dite_eq_left hex]
     exact_mod_cast det_eq I he hex.choose_spec c hc1 B _ hB (hBex hex.choose hex.choose_spec).choose_spec
   have hadj : (adjugate B).map (Int.cast : ℤ → ℝ) = adjugate (B.map (Int.cast : ℤ → ℝ)) :=
     (Int.castRingHom ℝ).map_adjugate B
@@ -1720,7 +1720,7 @@ theorem bases_finite_classes : ∀ (I : AutInst) (N : ℕ) (R : ℝ), ∃ S : Se
     (Set.univ.pi fun _ => Set.univ.pi fun _ => {q : ℚ | |(q:ℝ)| ≤ R ∧ ∃ m : ℤ, (c:ℚ) * q = m})
   have hZ : {z : ℤ | |(z:ℝ)| ≤ R}.Finite := by
     refine (Set.finite_Icc (-⌈R⌉) ⌈R⌉).subset fun z hz => ?_
-    simp only [Set.mem_setOf_eq] at hz
+    simp only [Set.mem_ofPred_eq] at hz
     have h := abs_le.mp hz
     have hR := Int.le_ceil R
     constructor
@@ -1749,7 +1749,7 @@ theorem bases_finite_classes : ∀ (I : AutInst) (N : ℕ) (R : ℝ), ∃ S : Se
     if h : ∃ e, IsZBasis I e ∧ has e t then Classical.choose h else 0
   have hpick : ∀ t (h : ∃ e, IsZBasis I e ∧ has e t), IsZBasis I (pick t) ∧ has (pick t) t := by
     intro t h
-    simp only [pick, dif_pos h]
+    simp only [pick, dite_eq_left h]
     exact Classical.choose_spec h
   have uniq : ∀ (f : Fin N → Fin I.n → I.E) (t : T), IsZBasis I f → has f t → ∀ k j (w : Fin N → ℤ),
       (integralBasis I.E k : I.E) • f j = ∑ i, w i • f i → w = t.1 k j := by

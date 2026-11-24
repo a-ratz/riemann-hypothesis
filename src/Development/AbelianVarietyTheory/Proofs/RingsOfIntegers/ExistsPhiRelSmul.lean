@@ -99,7 +99,7 @@ theorem exists_phiRel_smul (hG : GlobalFnsSt) {R : Type} [CommRing R] [IsDomain 
 theorem pow_eq_one_of_pr {S : Scheme.{0}} {G' G : Over S} [GrpObj G'] [GrpObj G] {j : ℕ} (p : IsPowGrp G' G j)
     {T : Over S} (x : T ⟶ G') (k : ℕ) (h : ∀ i, (x ≫ p.pr i) ^ k = 1) : x ^ k = 1 :=
   Fan.IsLimit.hom_ext p.lim _ _ fun i => by
-    haveI := p.hom i
+    have := p.hom i
     show (x ^ k) ≫ p.pr i = 1 ≫ p.pr i
     rw [MonObj.pow_comp, MonObj.one_comp, h]
 

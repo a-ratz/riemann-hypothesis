@@ -208,7 +208,7 @@ theorem exists_P {n : ℕ} {ε : Fin (n + 1) → Bool} {ε' : Fin n → Bool} {e
   · rw [norm_smul, norm_inv, Complex.norm_real, norm_norm, LinearIsometryEquiv.norm_map,
       inv_mul_cancel₀ hjn]
   · intro h x
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.map_smul, hadj]
+    simp only [smul_apply, ContinuousLinearMap.map_smul, hadj]
   · intro h0
     have hc : ((‖j‖ : ℂ)⁻¹) ≠ 0 := inv_ne_zero (by exact_mod_cast hjn)
     have h1 : ContinuousLinearMap.adjoint j = 0 := by
@@ -222,7 +222,7 @@ theorem dense_sm {m : ℕ} {ε : Fin m → Bool} {lam : Fin m → ℝ} {H : Type
     (hc : Formalism.QuantumDeterminants.IsHCParam lam) (hσ : IsDS ε lam σ) (hg : Formalism.QuantumDeterminants.GapAtLeast ε lam (100 * (m : ℝ) ^ 3))
     (hS : IsSmMod ε σ S E) : Dense (S : Set H) := by
   obtain ⟨hcs, -, hU, hI, -, ⟨K, hK⟩, -⟩ := hσ
-  haveI := hcs
+  have := hcs
   obtain ⟨v, hvK, hv0, -⟩ := hK.2.2.2.1
   have hvS : v ∈ S :=
     (hS.mem v).2 (CompanionTheory.D.gk.admitted.kFin_mem_smoothVecs m ε H σ hU hI v ⟨K, hK.1, hvK, hK.2.1⟩)
@@ -247,7 +247,7 @@ theorem decay_low {n : ℕ} {ε' : Fin n → Bool} {mu : Fin n → ℝ} {K : Typ
   refine ⟨?_, ?_⟩
   · obtain ⟨-, -, hU, -⟩ := hσ
     have h1 : Continuous (fun h : UJ ε' => um h) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hcont : Continuous (fun h : UJ ε' => σ (um h) w) :=
       (hU.2.2 w).comp_continuous h1 (fun h => h.2)
     exact (continuous_const.inner hcont).star

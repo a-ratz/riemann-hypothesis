@@ -56,17 +56,17 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.uKerW_of :
   obtain ⟨⟨k, hck⟩, hmon, hact, -, -, ψ', hmon', h1, h2⟩ := T.isog
   subst hck
   have hw : w ≠ ⊤ := Ideal.IsMaximal.ne_top inferInstance
-  haveI : Smooth M.s := M.smooth.smooth
-  haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
-  haveI : IsFinite T.s := T.fin
-  haveI : IsLocallyNoetherian T.Y := LocallyOfFiniteType.isLocallyNoetherian T.s
+  have : Smooth M.s := M.smooth.smooth
+  have : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : IsFinite T.s := T.fin
+  have : IsLocallyNoetherian T.Y := LocallyOfFiniteType.isLocallyNoetherian T.s
   obtain ⟨hRep, -, hTors⟩ :=
     hKerU p D O b N r w hw hstd.ule T.Y (T.s ≫ M.s) T.o T.o' T.ψ ψ' k hmon hmon' hact h1 h2
   obtain ⟨K, i, -, -, hflatK, hiff⟩ := hRep
   have hiU : UKer r T.o T.ψ K i := (hiff K i).mp ⟨𝟙 _, Category.id_comp _⟩
   obtain ⟨y, rfl⟩ := (hiff X g).mpr hg
   intro a ha
-  haveI := T.o.act.hom (algebraMap (𝓞 D.F) D.O a)
+  have := T.o.act.hom (algebraMap (𝓞 D.F) D.O a)
   have hpO : ∀ x : O, (p : O) * x = 0 → x = 0 := by
     intro x hx
     rcases mul_eq_zero.mp hx with h | h
@@ -83,8 +83,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.uKerW_of :
       simpa using hpowi
     apply OrdCount.eq_one_of_reg T.o.A T.o.ab _ (p ^ k)
     · intro U s hs
-      haveI : Flat K.hom := hflatK
-      haveI : Flat (T.s ≫ M.s) := hflat
+      have : Flat K.hom := hflatK
+      have : Flat (T.s ≫ M.s) := hflat
       have hreg := pReg_of_flat (p := p) (K.hom ≫ T.s ≫ M.s) hpO U
       have hregk : ∀ n (t : Γ(K.left, U)), (p : Γ(K.left, U)) ^ n * t = 0 → t = 0 := by
         intro n
@@ -103,7 +103,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.uKerW_of :
         push_cast
         rw [h0, zero_pow hk0]
       let φ : O →+* k' := (Spec.preimage (z ≫ T.s ≫ M.s)).hom
-      haveI : CharZero k' := by
+      have : CharZero k' := by
         apply charZero_of_injective_ringHom (f := φ)
         have hker : RingHom.ker φ = ⊥ := by
           by_contra hne

@@ -100,7 +100,7 @@ namespace GlobalTheory.FrameQuot
 theorem finite_quot_prime (l : ℕ) [Fact l.Prime] (ι : Type) (N : ℕ) (F : Frame l ι N) (hF : F.Ok) :
     Finite (F.O ⧸ Ideal.span {((l : ℕ) : F.O)}) := by
   obtain ⟨hinj, L, hL, hrange⟩ := hF.ring
-  haveI := hL
+  have := hL
   have hmem : ∀ x : F.O, F.emb x ∈ L ∧ ‖F.emb x‖ ≤ 1 := fun x => by
     have hx : F.emb x ∈ Set.range F.emb := ⟨x, rfl⟩
     rw [hrange] at hx
@@ -438,7 +438,7 @@ theorem finite_joint_eigen {K I : Type} [Field K] {n : ℕ} (T : I → Matrix (F
     exact Module.End.mem_eigenspace_iff.mp this
   have hind := iSupIndep_of_joint_eigen (fun i => Matrix.toLin' (T i)) V hV
   have hfin : Finite {θ // V θ ≠ ⊥} := by
-    haveI := hind.fintypeNeBotOfFiniteDimensional
+    have := hind.fintypeNeBotOfFiniteDimensional
     infer_instance
   refine (Set.finite_coe_iff (s := {θ | V θ ≠ ⊥})).mp hfin |>.subset ?_
   rintro θ ⟨c, hc0, hc⟩
@@ -490,12 +490,12 @@ theorem maximal_ideal_eq_joint_eigen : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [
     { carrier := {p | ∀ r, ‖eval₂ emb θ (r * p)‖ < 1}
       add_mem' := by
         intro a b ha hb r
-        simp only [Set.mem_setOf_eq, mul_add, eval₂_add] at *
+        simp only [Set.mem_ofPred_eq, mul_add, eval₂_add] at *
         exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt (ha r) (hb r))
       zero_mem' := by intro r; simp
       smul_mem' := by
         intro a b hb r
-        simp only [Set.mem_setOf_eq, smul_eq_mul, ← mul_assoc] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, ← mul_assoc] at *
         exact hb (r * a) }
   have hJmem : ∀ θ ∈ Θ, ∀ p, p ∈ J θ ↔ ‖eval₂ emb θ p‖ < 1 := by
     intro θ hθ p
@@ -753,7 +753,7 @@ theorem _root_.GlobalTheory.ExpCover.values_mem_of_local {l : ℕ} [Fact l.Prime
   obtain ⟨m, hmax, hAm⟩ := Ideal.exists_le_maximal A hAtop
   have key : ∃ θ : I → PadicAlgCl l, (∀ i, ‖θ i‖ ≤ 1) ∧ (∀ p, p ∈ m ↔ ‖eval₂ emb θ p‖ < 1) ∧
       (∃ v ∈ S, v ≠ 0 ∧ ∀ i g, emb (cst i) • ∑ s ∈ tr i, v (g * s) = θ i • v g) := by
-    haveI : Module.IsTorsionFree O V := Module.IsTorsionFree.of_smul_eq_zero fun r w h => by
+    have : Module.IsTorsionFree O V := Module.IsTorsionFree.of_smul_eq_zero fun r w h => by
       have h' : emb r • b w = 0 := by rw [← map_smulₛₗ, h, map_zero]
       rcases smul_eq_zero.1 h' with h'' | h''
       · exact Or.inl (hemb (by rw [h'', map_zero]))
@@ -761,10 +761,10 @@ theorem _root_.GlobalTheory.ExpCover.values_mem_of_local {l : ℕ} [Fact l.Prime
     let Z : Submodule (MvPolynomial I O) M := Submodule.span (MvPolynomial I O) {x}
     let ι : Z →ₗ[O] (G → V) := M.subtype ∘ₗ (Z.subtype.restrictScalars O)
     have hι : Function.Injective ι := Subtype.val_injective.comp Subtype.val_injective
-    haveI : Module.IsTorsionFree O Z := hι.moduleIsTorsionFree _ (by simp)
-    haveI : Module.Finite O Z :=
+    have : Module.IsTorsionFree O Z := hι.moduleIsTorsionFree _ (by simp)
+    have : Module.Finite O Z :=
       Module.Finite.of_injective (Z.subtype.restrictScalars O) Subtype.val_injective
-    haveI : Module.Free O Z := Module.free_of_finite_type_torsion_free'
+    have : Module.Free O Z := Module.free_of_finite_type_torsion_free'
     let B := Module.finBasis O Z
     let φ : MvPolynomial I O →ₐ[O] Module.End O Z := Algebra.lsmul O O Z
     let ρ : MvPolynomial I O →ₐ[O] Matrix (Fin (Module.finrank O Z)) (Fin (Module.finrank O Z)) O :=
@@ -810,7 +810,7 @@ theorem _root_.GlobalTheory.ExpCover.values_mem_of_local {l : ℕ} [Fact l.Prime
       exact hpS p
     let f : Fin (Module.finrank O Z) → G → W := fun j g => b ((((B j : Z) : M) : G → V) g)
     have hind : LinearIndependent (PadicAlgCl l) f := by
-      haveI : Module.Free O V := Module.free_of_finite_type_torsion_free'
+      have : Module.Free O V := Module.free_of_finite_type_torsion_free'
       let w := Module.finBasis O V
       have hw := hli _ w w.linearIndependent
       let L : Z →ₗ[O] (G × Fin (Module.finrank O V) → O) :=
@@ -897,7 +897,7 @@ theorem _root_.GlobalTheory.ExpCover.values_mem_of_local {l : ℕ} [Fact l.Prime
     rw [← Submonoid.smul_def, ← Submonoid.smul_def, ← hu, Submonoid.smul_def]
     exact N.smul_mem _ (hD x' hx'D)
   have hus := hAm ((hA _).2 hmem)
-  haveI := hmax.isPrime
+  have := hmax.isPrime
   rcases hmax.isPrime.mem_or_mem hus with h | h
   · exact u.2 h
   · exact s.2 h
@@ -1015,9 +1015,9 @@ private theorem span_stable {l : ℕ} [Fact l.Prime] {ι : Type} [DecidableEq ι
 private theorem forms_fin : ∀ (l : ℕ) [Fact l.Prime] (ι : Type) [Fintype ι] [DecidableEq ι] (N : ℕ) (F : Frame l ι N) (lam : ι → ℕ → ℕ)
     (jK : F.K →* alg F.O N lam), F.Ok → Module.Finite F.O (Forms F.O (A := alg F.O N lam) F.Γ jK (NablaT F.O N lam)) := by
   intro l _ ι _ _ N F lam jK hF
-  haveI : Module.Finite F.O (NablaT F.O N lam) := GlobalTheory.NablaFin.nablaT_finite F.O N ι lam
+  have : Module.Finite F.O (NablaT F.O N lam) := GlobalTheory.NablaFin.nablaT_finite F.O N ι lam
   obtain ⟨S, hS⟩ := hF.classes
-  haveI : Finite (Formalism.UG.ClassSet F.Γ F.K) := by
+  have : Finite (Formalism.UG.ClassSet F.Γ F.K) := by
     refine Finite.of_surjective (fun s : S => (DoubleCoset.mk F.Γ F.K (s : F.G) : Formalism.UG.ClassSet F.Γ F.K)) ?_
     intro c
     obtain ⟨γ, hγ, s, hs, κ, hκ, e⟩ := hS (Quotient.out c)
@@ -1156,7 +1156,7 @@ theorem modelSt_of_small_frame_gal : GlobalTheory.Published.BhattScholzeCrystall
   intro eps Fm x hx i p _ H j P W hD hN w hw hR
   obtain ⟨hs, hf, hg⟩ := H
   have hsm : SmallAt p j P w := hs j P W hD hN w hw hR
-  haveI hl : Fact (Formalism.EigenvalueLevelCeiling.plc w).Prime := ⟨hsm.1⟩
+  have hl : Fact (Formalism.EigenvalueLevelCeiling.plc w).Prime := ⟨hsm.1⟩
   obtain ⟨F, R, inc, hFok, ⟨T⟩⟩ := @hf j P W hD hN w hw hR hl
   have hG := @hg j P W hD hN w hw hR hl F R inc hFok T
   have hNr := hN.1.Nr_eq

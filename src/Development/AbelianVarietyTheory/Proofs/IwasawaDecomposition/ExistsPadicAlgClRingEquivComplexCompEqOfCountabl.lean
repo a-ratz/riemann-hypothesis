@@ -100,7 +100,7 @@ theorem exists_padicAlgCl_ringEquiv_complex_comp_eq_of_countable (l : ℕ) [Fact
 theorem exists_padicAlgCl_ringEquiv_complex_comp_eq (l : ℕ) [Fact l.Prime]
     (K : Type) [Field K] [NumberField K] (a : K →+* PadicAlgCl l) (b : K →+* ℂ) :
     ∃ e : PadicAlgCl l ≃+* ℂ, (e : PadicAlgCl l →+* ℂ).comp a = b := by
-  haveI : Countable K := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable K := Countable.of_moduleFinite (R := ℚ)
   obtain ⟨e, he⟩ := exists_padicAlgCl_ringEquiv_complex_comp_eq_of_countable l K a b
   exact ⟨e, RingHom.ext he⟩
 

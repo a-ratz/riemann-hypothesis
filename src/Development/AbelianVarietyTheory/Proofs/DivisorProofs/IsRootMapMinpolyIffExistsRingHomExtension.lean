@@ -67,8 +67,8 @@ theorem exists_algHom_of_injective {A : Type u_1} {B : Type u_2} {K : Type u_3}
     [Algebra A B] [Algebra A K] [Algebra.IsIntegral A B]
     (hB : Function.Injective (algebraMap A B)) (hK : Function.Injective (algebraMap A K)) :
     Nonempty (B →ₐ[A] K) := by
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective _ _).2 hB
-  haveI : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective _ _).2 hK
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective _ _).2 hB
+  have : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective _ _).2 hK
   exact ⟨IsAlgClosed.lift⟩
 
 theorem exists_ringHom_comp_algebraMap_eq {R : Type u_1} {S : Type u_2} {K : Type u_3}
@@ -84,9 +84,9 @@ theorem exists_ringHom_comp_algebraMap_eq {R : Type u_1} {S : Type u_2} {K : Typ
       simp [this])
   let f : R ⧸ RingHom.ker ψ →+* S ⧸ Q := Ideal.quotientMap Q (algebraMap R S) hQp.ge
   have hf : Function.Injective f := Ideal.quotientMap_injective' hQp.le
-  letI : Algebra (R ⧸ RingHom.ker ψ) (S ⧸ Q) := f.toAlgebra
-  letI : Algebra (R ⧸ RingHom.ker ψ) K := (RingHom.kerLift ψ).toAlgebra
-  haveI : Algebra.IsIntegral (R ⧸ RingHom.ker ψ) (S ⧸ Q) := by
+  let : Algebra (R ⧸ RingHom.ker ψ) (S ⧸ Q) := f.toAlgebra
+  let : Algebra (R ⧸ RingHom.ker ψ) K := (RingHom.kerLift ψ).toAlgebra
+  have : Algebra.IsIntegral (R ⧸ RingHom.ker ψ) (S ⧸ Q) := by
     constructor
     intro y
     obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -134,12 +134,12 @@ theorem isRoot_map_minpoly_iff_exists_ringHom : ∀ (A B : Type) [CommRing A] [I
   intro A B _ _ _ _ _ _ _ hinj g φ z
   constructor
   · intro h
-    haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+    have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
     have hg : IsIntegral A g := Algebra.IsIntegral.isIntegral g
     have h' : (minpoly A g).eval₂ φ z = 0 := by rwa [IsRoot, eval_map] at h
     let e := minpoly.equivAdjoin hg
     let ψ : Algebra.adjoin A {g} →+* ℂ := (AdjoinRoot.lift φ z h').comp (e.symm : _ →+* _)
-    haveI : Algebra.IsIntegral (Algebra.adjoin A {g}) B := Algebra.IsIntegral.tower_top A
+    have : Algebra.IsIntegral (Algebra.adjoin A {g}) B := Algebra.IsIntegral.tower_top A
     obtain ⟨x, hx⟩ := exists_ringHom_extension_algClosed_of_isIntegral_injective (S := B) Subtype.val_injective ψ
     have hx' : ∀ r : Algebra.adjoin A {g}, x r = ψ r := fun r => RingHom.congr_fun hx r
     refine ⟨x, ?_, ?_⟩

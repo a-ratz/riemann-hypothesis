@@ -76,15 +76,15 @@ theorem exp_local_matrix (n : Type) [Fintype n] [DecidableEq n] :
       Filter.map (NormedSpace.exp : Matrix n n ℂ → Matrix n n ℂ) (𝓝 0) = 𝓝 1 := by
   let : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
   let : NormedAlgebra ℂ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
-  have : CompleteSpace (Matrix n n ℂ) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Matrix n n ℂ) := FiniteDimensional.completeSpace ℂ _
   exact exp_local_algebra (Matrix n n ℂ)
 
 open MeasureTheory Filter Topology in
 private theorem exists_local_homeomorph_matrix_exp_source_zero {n : Type} [Fintype n] [DecidableEq n] :
     ∃ e : OpenPartialHomeomorph (Matrix n n ℂ) (Matrix n n ℂ),
       (0 : Matrix n n ℂ) ∈ e.source ∧ ⇑e = NormedSpace.exp := by
-  letI : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
   have hf : HasStrictFDerivAt (NormedSpace.exp : Matrix n n ℂ → Matrix n n ℂ)
       ((ContinuousLinearEquiv.refl ℂ (Matrix n n ℂ) : Matrix n n ℂ →L[ℂ] Matrix n n ℂ)) 0 :=
     hasStrictFDerivAt_exp_zero
@@ -123,7 +123,7 @@ theorem _root_.GlobalTheory.ExpBallNhds.exp_ballU_mem_nhds : ∀ (P Q : ℕ) (r 
   have himg := e.image_mem_nhds h0 hU
   rw [he, NormedSpace.exp_zero] at himg
   have hmat : Continuous (fun g : _root_.Formalism.BasicNotions.UpqT P Q => _root_.Formalism.BasicNotions.UpqT.mat g) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hpre : (fun g : _root_.Formalism.BasicNotions.UpqT P Q => _root_.Formalism.BasicNotions.UpqT.mat g) ⁻¹'
       (NormedSpace.exp '' (e.source ∩ σ ⁻¹' e.source ∩ N)) ∈ 𝓝 (1 : _root_.Formalism.BasicNotions.UpqT P Q) :=
     hmat.continuousAt.preimage_mem_nhds himg

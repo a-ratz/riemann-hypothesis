@@ -152,7 +152,7 @@ theorem int_sq_dvd_of_eq {O : Type} [CommRing O] [IsDomain O] {ℓ : ℕ} (hℓ 
 
 theorem exists_place_resChar (K : Type) [Field K] [NumberField K] {ℓ : ℕ} (hℓ : ℓ.Prime) :
     ∃ p : IsDedekindDomain.HeightOneSpectrum (𝓞 K), Formalism.MainNotions.S.Loc.resChar p = ℓ := by
-  haveI hmax : (Ideal.span {(ℓ : ℤ)}).IsMaximal :=
+  have hmax : (Ideal.span {(ℓ : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hℓ).irreducible
   have hker : RingHom.ker (algebraMap ℤ (𝓞 K)) ≤ Ideal.span {(ℓ : ℤ)} := by
     rw [(RingHom.injective_iff_ker_eq_bot _).mp (algebraMap ℤ (𝓞 K)).injective_int]
@@ -169,7 +169,7 @@ theorem exists_place_resChar (K : Type) [Field K] [NumberField K] {ℓ : ℕ} (h
     have h0 : ((ℓ : ℕ) : 𝓞 K) = 0 := by simpa using hmem
     exact hℓ.ne_zero (Nat.cast_eq_zero.mp h0)
   refine ⟨⟨Q, hQ.isPrime, hne⟩, ?_⟩
-  haveI := hQ
+  have := hQ
   show ringChar (𝓞 K ⧸ Q) = ℓ
   have hz : ((ℓ : ℕ) : 𝓞 K ⧸ Q) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk Q), Ideal.Quotient.eq_zero_iff_mem]
@@ -263,7 +263,7 @@ def locSpOf {D : D7} (δ : ∀ p : PlF D, (D.s.atP p).Fp) (M : ∀ p : PlF D, Lo
   bc_form p x y := baseChangeAt_form M p (hA p).2.2.1 x y
 
 theorem exists_unif_at {D : D7} (p : PlF D) : ∃ ϖ : 𝒪[(D.s.atP p).Fp], Irreducible ϖ := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   exact IsDiscreteValuationRing.exists_irreducible _
 
 theorem exists_unifs (D : D7) : ∃ ϖ : ∀ p : PlF D, 𝒪[(D.s.atP p).Fp], ∀ p, Irreducible (ϖ p) :=
@@ -282,7 +282,7 @@ theorem exists_glueReps (D : D7) (u u' : D.what₂.Word) (hT : (D.mem u).A.T ≡
     (F0 : FlagG (VS D) D.R.rS (Tn u)) (what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)) (hR : IsRowReps D F0 what₂)
     (G' : LFlag (D.sp.Y 0) D.R.rS (Tn u')) (hz : G'.zt = G'.fl.z) (hP : Formalism.MainNotions.S.LocalSplitGroups.TotPos (GZ (Tn u) (Tn u') (ZhatL (lf D F0) G'))) :
     ∃ s, IsGlueReps (VS D).hT (UPair D F0 G') (MMof D F0 G') s := by
-  haveI : Fact HermRepUnram := ⟨GlobalTheory.BinaryRep.represents_totallyPositive⟩
+  have : Fact HermRepUnram := ⟨GlobalTheory.BinaryRep.represents_totallyPositive⟩
   obtain ⟨hLat, -⟩ := mmChar_of local_unimodular_holds D u u' hT F0 what₂ hR _ G' hz rfl hP
   by_cases hI : Formalism.HermitianLatticesTheory.IsIntegralLat (VS D).hT (MMof D F0 G')
   · obtain ⟨hK, hF, hN⟩ := field_dictionary_holds D
@@ -309,7 +309,7 @@ end Reps
 
 theorem glueSum_le : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), Formalism.L2.SG.Pf.LocCP.LocTied D → 2 * D.R.rS + 2 + D.R.f + 5 ≤ D.R.k → (D.mem u).A.T ≡ (D.mem u').A.T [MOD (gS D) ^ 2] → ∀ G' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E), G'.zt = G'.fl.z → TotPos (Gval (lf D (X.Fu u)) G') → ∃ s : Finset (LV D), Glue (lf D (X.Fu u)) G' s ∧ (s.Nonempty → (∃ Λ, IsRowLat D (X.Fu u) Λ ∧ G' ∈ Formalism.L2.SG.CntLocal.EZ ((Tu D u' : ℕ) : D.host.E) (X.Fu u) Λ (ZhatL (lf D (X.Fu u)) G')) ∧ glueSum (lf D (X.Fu u)) G' s ≤ 2 * (Formalism.L2.SG.Pf.Cnt.cExpl D (X.Fu u) (Y.what₂ u) * Formalism.MainNotions.S.Cnt.massRows D (X.Fu u) (Y.what₂ u) * ∏' p, Formalism.L2.SG.DataInst.alpD u u' p) * Formalism.L2.SG.CntLocal.sqrtAbsNormOfScaledGram ((Tu D u : ℕ) : D.host.E) ((Tu D u' : ℕ) : D.host.E) (ZhatL (lf D (X.Fu u)) G') ^ (D.R.k - 1)) := by
   intro D X Y u u' hTied hk hT G' hz hTP
-  haveI : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.BinaryRep.represents_totallyPositive⟩
+  have : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.BinaryRep.represents_totallyPositive⟩
   have hR : IsRowReps D (X.Fu u) (Y.what₂ u) := Y.rowsOK u
   have hP : Formalism.MainNotions.S.LocalSplitGroups.TotPos (Formalism.L2.SG.CntLocal.GZ (Formalism.L2.SG.CntLocal.Tn u) (Formalism.L2.SG.CntLocal.Tn u')
       (ZhatL (lf D (X.Fu u)) G')) := hTP
@@ -326,9 +326,9 @@ theorem glueSum_le : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wha
   have hpos : 0 < glueSum (lf D (X.Fu u)) G' s := by
     unfold glueSum
     refine Finset.sum_pos (fun Λ' hΛ' => ?_) ⟨Λ, hΛ⟩
-    haveI : Finite (Formalism.L2.SG.Pf.Cnt.stabFix (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D (X.Fu u) G') Λ') :=
+    have : Finite (Formalism.L2.SG.Pf.Cnt.stabFix (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D (X.Fu u) G') Λ') :=
       (hs.2.2 Λ' hΛ').to_subtype
-    haveI : Nonempty (Formalism.L2.SG.Pf.Cnt.stabFix (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D (X.Fu u) G') Λ') :=
+    have : Nonempty (Formalism.L2.SG.Pf.Cnt.stabFix (VS D).hT (Formalism.L2.SG.Pf.Cnt.UPair D (X.Fu u) G') Λ') :=
       ⟨⟨1, one_mem_stabFix _ _⟩⟩
     exact inv_pos.2 (Nat.cast_pos.2 Nat.card_pos)
   have hnu : Formalism.L2.SG.CntLocal.nu (Formalism.L2.SG.CntLocal.Tn u') (X.Fu u) (Y.what₂ u) (ZhatL (lf D (X.Fu u)) G') ≠ 0 := by
@@ -636,8 +636,8 @@ theorem finrank_loc {D : D7} (p : PlF D) :
 theorem wt_pos : ∀ (D : D7) (Z : LocDat D) (p : PlF D) (P : LocNG.FPair (locH Z p) D.R.rS), P.RelG (LocNG.theta (Z.M p)) → ∀ d0 d : LocNG.Datum P, (∃ t, LocNG.IsTermOver P d0 t) → (∃ t, LocNG.IsTermOver P d t) → 0 < LocNG.Datum.wt d0 d := by
   intro D Z p P hR d0 d ⟨t0, ht0⟩ ⟨t, ht⟩
   have hOK := (Z.agree p).1
-  haveI := hOK.loc
-  haveI := hOK.char0
+  have := hOK.loc
+  have := hOK.char0
   obtain ⟨S, ⟨c⟩⟩ := GlobalTheory.HL.CoordExist.exists_coord (Z.M p) hOK (locH Z p) D.R.rS D.R.k P (finrank_loc p) hR
   have h0 := ((GlobalTheory.HL.CoordTermWt.terms_correspond (Z.M p) hOK (locH Z p) D.R.rS D.R.k P S c).1 d0 t0 ht0).1
   have h1 := ((GlobalTheory.HL.CoordTermWt.terms_correspond (Z.M p) hOK (locH Z p) D.R.rS D.R.k P S c).1 d t ht).1
@@ -686,8 +686,8 @@ theorem infinite_finPlaces (K : Type) [Field K] [NumberField K] :
     Infinite (IsDedekindDomain.HeightOneSpectrum (𝓞 K)) := by
   have h : ∀ p : Nat.Primes, ∃ la : IsDedekindDomain.HeightOneSpectrum (𝓞 K),
       la.asIdeal.comap (algebraMap ℤ (𝓞 K)) = Ideal.span {((p : ℕ) : ℤ)} := fun p => by
-    haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
-    haveI : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
+    have : Fact (p : ℕ).Prime := ⟨p.2⟩
+    have : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
     obtain ⟨M, hM, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K) (Ideal.span {((p : ℕ) : ℤ)})
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 K)).injective_int]; exact bot_le)
     exact ⟨⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField K)⟩, hc⟩
@@ -787,7 +787,7 @@ theorem tied_mass_law : ∀ (Cg cb Cw cT CT C0 C' Cl : ℝ) (D : D7) (large₂ :
   have hBased : Based (zOf Y) Fm.FP (Tu D u) (Tu D u') F F' := fun p => hbase p
   have hZF : ZhatOM (ZhatL F F') = ptMat w := hZ
   have hG : Gval F F' ≠ 0 := by
-    haveI : Infinite (PlF D) := infinite_finPlaces D.host.F
+    have : Infinite (PlF D) := infinite_finPlaces D.host.F
     obtain ⟨p, hp⟩ := Infinite.exists_notMem_finset Fm.P
     exact gval_ne_of_primeTo D (zOf Y) Fm.FP (Tu D u) (Tu D u') F F' hBased p (hgood p hp)
   have hRel : ∀ p, (Fm.FP p).RelG (LocNG.theta ((zOf Y).M p)) := fun p =>
@@ -964,7 +964,7 @@ theorem countConst_eq_unscaledConst : PI.VolStabS.MassDataS.SWXS → ∀ (Cg cb 
   refine ⟨hng, ?_⟩
   set B0 := Formalism.L2.SG.MassDataConc.bCF X hb Y.hK (Y.FN u) (Y.FN u') u u' X0 ψ (Y.tO u u') 0 0 1 vR0 Q0 Y.M Y.δ i0 i0' νq
     with hB0
-  have eU : kapU D = Formalism.L2.SG.MassDataConc.kapN D := if_pos hκ
+  have eU : kapU D = Formalism.L2.SG.MassDataConc.kapN D := ite_eq_left hκ
   have eA : (bkU X hb Y u u' X0 ψ sd C Th vR Q i0 i0' νq).AA = B0.AA / kapU D := by
     show B0.volB * (B0.Coo / kapU D) * (B0.MM / B0.volZZ) / B0.μK =
       B0.volB * B0.Coo * (B0.MM / B0.volZZ) / B0.μK / kapU D

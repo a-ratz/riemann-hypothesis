@@ -57,7 +57,7 @@ private theorem int_of_norm_one {O K : Type} [CommRing O] [IsDomain O] [IsDiscre
     [Algebra O K] {Δ τ : K} (h : IsLoc O Δ) (hτ : ¬ IsSquare (τ ^ 2 - 4)) (e : Etau K τ)
     (hn : QuadraticAlgebra.norm e = 1) : IsIntegral O e := by
   classical
-  haveI := h.frac
+  have := h.frac
   have hN : e.re * e.re + τ * e.re * e.im - (-1) * e.im * e.im = 1 := by
     have h' := hn
     rw [QuadraticAlgebra.norm_def] at h'

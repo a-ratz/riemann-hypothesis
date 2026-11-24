@@ -62,7 +62,7 @@ theorem cutoff : Cutoff := by
     rw [map_mul, Equiv.Perm.mul_apply]
   have hmulρ : ∀ (a b : Γ) (x : V), G.ρ (a * b) x = G.ρ a (G.ρ b x) := by
     intro a b x
-    rw [map_mul, ContinuousLinearMap.mul_apply]
+    rw [map_mul, mul_apply_eq_comp]
   let Φ : S → V → ℝ := fun s p => ∑ᶠ γ, φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p)
   have hinv : ∀ (δ : Γ) s p, Φ (G.σ δ⁻¹ s) (G.ρ δ⁻¹ p) = Φ s p := by
     intro δ s p

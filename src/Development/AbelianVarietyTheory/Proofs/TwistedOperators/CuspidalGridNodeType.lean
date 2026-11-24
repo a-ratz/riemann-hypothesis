@@ -140,7 +140,7 @@ theorem hasTypeAll_single [CompleteSpace H] {ε : Fin n → Bool} {σ : Mx n →
     · rw [Pi.single_eq_of_ne hi]
   · by_cases hi : i = 0
     · subst hi
-      simp only [if_true, Pi.single_eq_same]
+      simp only [ite_true, Pi.single_eq_same]
       have h1 := hb w hw
       have h2 := hd w hw
       have h3 : 0 ≤ sobNorm (fun g => σ (P * g * P⁻¹)) S₀ w := sobNorm_nonneg _ _ _
@@ -170,7 +170,7 @@ theorem isTypeAt_value {D : D7} (θ : InfFam D)
     {J : Set (GA D V)} {χ : GA D V → ℂ} {T : MMap M} (hT : IsMultMap θ M J χ T) (v : M.Vec) (τ : D.what₂.Tau) :
     IsTypeAt θ V τ (Sp τ) (T v) := by
   have hD := M.ds τ
-  haveI : CompleteSpace (M.H τ) := hD.1
+  have : CompleteSpace (M.H τ) := hD.1
   have hσ : Std (M.ε τ) (M.σ τ) := std_of_isDS hHC hD
   refine ⟨M.H τ, _, _, M.σ τ, M.lam τ, M.ε τ, M.fr τ, M.enum τ, hD, M.fr_unit τ, M.fr_gram τ, fun x => ?_⟩
   obtain ⟨ℓ, hℓ, hℓv⟩ := hT.cont τ v x

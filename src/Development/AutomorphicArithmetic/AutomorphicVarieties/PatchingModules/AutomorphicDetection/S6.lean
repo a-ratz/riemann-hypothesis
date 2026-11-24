@@ -590,10 +590,10 @@ theorem UpperTheory.V.Pa.gr_E :
     · exact Or.inr rfl
   have hp : oB n a p = p := by
     unfold oB
-    rw [if_pos (show 0 < a by omega)]
+    rw [ite_eq_left (show 0 < a by omega)]
   have hq : oB n a q = q := by
     unfold oB
-    rw [if_neg (show ¬ (n - 1 < a) by omega)]
+    rw [ite_eq_right (show ¬ (n - 1 < a) by omega)]
   have h0 : ∀ y i j, oB n a i ≠ oB n a j → r y i j = 0 := fun y i j h =>
     (Submodule.mem_bot F).1 ((hev y i j).2 fun h' => h ((oB_eq_iff h1 h2 i j).2 h'))
   obtain ⟨φ, hφ, hφst, -⟩ := vr_hom T (oB n a) U p q hpq ho
@@ -602,7 +602,7 @@ theorem UpperTheory.V.Pa.gr_E :
   have hle' := hle hp hq hpq
   rw [hker] at hle'
   have hφe : (φ : E → _) = U.vr p q := funext hφ
-  haveI : Module.Finite B (corner B (U.ep p) (U.ep q)) := Module.Finite.range _
+  have : Module.Finite B (corner B (U.ep p) (U.ep q)) := Module.Finite.range _
   have hv : ∀ y y' k l, U.x k * y * T.st (U.x l) = U.x k * y' * T.st (U.x l) → φ y k l = φ y' k l :=
     fun y y' k l h => by
       rw [hφ, hφ]
@@ -888,7 +888,7 @@ private theorem hr_span {A F : Type} [CommRing A] [IsDomain A] [Field F] [Algebr
   refine S.sum_mem fun i _ => S.sum_mem fun j _ => ?_
   by_cases e : ((i : ℕ) < a) ↔ ((j : ℕ) < a)
   · obtain ⟨s, hs⟩ := hT (single i j 1) (fun p q => ⟨fun _ => trivial, fun e' => by
-      rw [Submodule.mem_bot, Matrix.single_apply, if_neg]
+      rw [Submodule.mem_bot, Matrix.single_apply, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact e' e⟩)
     have h2 := S.smul_mem (Z i j * (algebraMap A F (t ^ s))⁻¹) (h1 _ hs)
@@ -1158,8 +1158,8 @@ theorem UpperTheory.V.CA.d_gma_det :
         subst hc
         rw [Det.lam, Det.lam, chi_congr (D.baseChange S) (Det.ofRep (Fintype.card_fin n) (rS r))]
         intro B _ _ b
-        letI : Algebra A B := ((algebraMap S B).comp (algebraMap A S)).toAlgebra
-        haveI : IsScalarTower A S B := .of_algebraMap_eq fun _ => rfl
+        let : Algebra A B := ((algebraMap S B).comp (algebraMap A S)).toAlgebra
+        have : IsScalarTower A S B := .of_algebraMap_eq fun _ => rfl
         rw [(d_bc D S).1 B, hrep, map_add (f := _), map_add (Det.repS _ _), map_one, map_one (Det.repS _ _),
           Det.cancel_tmul, Det.repS_tmul, rS_tmul, map_one, mul_one, ← smul_tmul, ev_one_add D _ (h1 i), map_smul, hr, one_smul,
           ← det_one_add_single i (a • b)]
@@ -1201,8 +1201,8 @@ private theorem gdet_eq_ofRep {n : ℕ} {A G E S : Type} [CommRing A] [Group G] 
     (hvr : ∀ γ, vr γ = φ (ι (MonoidAlgebra.single γ 1))) :
     D.map (algebraMap A S) = GDet.ofRep vr := by
   refine GDet.ext fun T _ _ y => ?_
-  letI : Algebra A T := ((algebraMap S T).comp (algebraMap A S)).toAlgebra
-  haveI : IsScalarTower A S T := .of_algebraMap_eq fun _ => rfl
+  let : Algebra A T := ((algebraMap S T).comp (algebraMap A S)).toAlgebra
+  have : IsScalarTower A S T := .of_algebraMap_eq fun _ => rfl
   let ψ : T ⊗[A] E →ₐ[T] Matrix (Fin n) (Fin n) T :=
     Algebra.TensorProduct.lift (Algebra.ofId T _) ((IsScalarTower.toAlgHom A S T).mapMatrix.comp φ)
       fun s _ => Algebra.commute_algebraMap_left s _
@@ -1287,7 +1287,7 @@ theorem UpperTheory.V.AlgebraTools.alghom_of_units :
     exact Finset.sum_comm
   have h1 : f 1 = 1 := by
     simp only [f, Pi.one_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact hsum
   let L : (∀ s, Matrix (d s) (d s) K) →ₗ[K] E :=
     { toFun := f, map_add' := hadd, map_smul' := hsmul }
@@ -1302,12 +1302,12 @@ theorem UpperTheory.V.AlgebraTools.alghom_of_units :
     · rw [Finset.sum_eq_single k]
       · simp
       · intro b _ hb
-        rw [if_neg]
+        rw [ite_eq_right]
         exact fun h => hb h.2.symm
       · intro h; exact absurd (Finset.mem_univ _) h
     · intro b _ hb
       refine Finset.sum_eq_zero fun c _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hb h.1.symm
     · intro h; exact absurd (Finset.mem_univ _) h
   · intro t _ ht
@@ -1353,7 +1353,7 @@ theorem UpperTheory.V.Pa.gr_ss :
     intro i k l hik hkl
     apply g.φ_inj
     rw [map_mul, he, he, he]
-    simp only [M, if_pos hik, if_pos hkl, if_pos (hik.trans hkl), Matrix.single_mul_single_same,
+    simp only [M, ite_eq_left hik, ite_eq_left hkl, ite_eq_left (hik.trans hkl), Matrix.single_mul_single_same,
       mul_one]
   have hzero : ∀ i k l m : Fin n, k ≠ l → e i k * e l m = 0 := by
     intro i k l m hkl
@@ -1364,12 +1364,12 @@ theorem UpperTheory.V.Pa.gr_ss :
     intro i k hik
     apply g.φ_inj
     rw [he, map_zero]
-    simp only [M, if_neg hik, Matrix.single_zero]
+    simp only [M, ite_eq_right hik, Matrix.single_zero]
   have hsum : ∑ i, e i i = 1 := by
     apply g.φ_inj
 
     rw [map_sum, map_one]
-    simp only [he, M, iff_self, if_true]
+    simp only [he, M, iff_self, ite_true]
     ext p q
     rw [Matrix.sum_apply]
     simp only [Matrix.single_apply]
@@ -1377,7 +1377,7 @@ theorem UpperTheory.V.Pa.gr_ss :
     · subst hpq
       simp
     · rw [Matrix.one_apply_ne hpq]
-      exact Finset.sum_eq_zero (fun x _ => if_neg (fun h => hpq (h.1.symm.trans h.2)))
+      exact Finset.sum_eq_zero (fun x _ => ite_eq_right (fun h => hpq (h.1.symm.trans h.2)))
   have hdec : ∀ y : E, ∃ b : Fin n → Fin n → B, s • y = ∑ i, ∑ k, b i k • e i k := by
     intro y
     have hent : ∀ i k, ∃ c : B, s • g.φ y i k = c • (if ((i : ℕ) < a ↔ (k : ℕ) < a) then 1 else 0) := by
@@ -1386,9 +1386,9 @@ theorem UpperTheory.V.Pa.gr_ss :
       by_cases hik : ((i : ℕ) < a ↔ (k : ℕ) < a)
       · obtain ⟨c, hc⟩ := Submodule.mem_one.mp (h1 hik)
         refine ⟨s * c, ?_⟩
-        rw [if_pos hik, ← hc, Algebra.algebraMap_eq_smul_one, smul_smul]
+        rw [ite_eq_left hik, ← hc, Algebra.algebraMap_eq_smul_one, smul_smul]
       · refine ⟨0, ?_⟩
-        rw [if_neg hik, smul_zero]
+        rw [ite_eq_right hik, smul_zero]
         have := (Module.mem_annihilator.mp hann) ⟨_, h2 hik⟩
         simpa using congrArg Subtype.val this
     choose c hc using hent
@@ -1399,8 +1399,8 @@ theorem UpperTheory.V.Pa.gr_ss :
 
     simp only [map_sum, map_smul, he, M, Matrix.smul_apply, Matrix.sum_apply, Matrix.single_apply]
     rw [hc, Finset.sum_eq_single p (fun i _ hi => Finset.sum_eq_zero (fun k _ => by
-        rw [if_neg (fun h => hi h.1), smul_zero])) (by simp),
-      Finset.sum_eq_single q (fun k _ hk => by rw [if_neg (fun h => hk h.2), smul_zero]) (by simp)]
+        rw [ite_eq_right (fun h => hi h.1), smul_zero])) (by simp),
+      Finset.sum_eq_single q (fun k _ hk => by rw [ite_eq_right (fun h => hk h.2), smul_zero]) (by simp)]
     simp
   let bf : Fin n → Bool := fun i => decide ((i : ℕ) < a)
   let cl : Fin n → Set.range bf := Set.rangeFactorization bf
@@ -1408,7 +1408,7 @@ theorem UpperTheory.V.Pa.gr_ss :
     intro i k
     simp only [cl, bf, Set.rangeFactorization, Subtype.mk.injEq, decide_eq_decide]
   let d : Set.range bf → Type := fun t => {i : Fin n // cl i = t}
-  haveI : ∀ t, Nonempty (d t) := fun t => by
+  have : ∀ t, Nonempty (d t) := fun t => by
     obtain ⟨i, hi⟩ := Set.rangeFactorization_surjective t
     exact ⟨⟨i, hi⟩⟩
   let ee : (t : Set.range bf) → d t → d t → κ ⊗[B] E := fun t i k => (1 : κ) ⊗ₜ[B] e i.1 k.1
@@ -1550,9 +1550,9 @@ theorem UpperTheory.V.Pa.gr_thick :
   intro l _ L G G0 h n x B _ _ D I Bh _ _ _ _ e H ep g Q _ hQ s hs
   obtain ⟨κ, _, f, hf, hns⟩ := hQ
   by_contra hsQ
-  letI : Algebra Bh κ := f.toAlgebra
+  let : Algebra Bh κ := f.toAlgebra
   have hs0 : algebraMap Bh κ s ≠ 0 := fun h0 => hsQ (hf ▸ (RingHom.mem_ker.2 h0 : s ∈ RingHom.ker f))
-  haveI := UpperTheory.V.Pa.gr_ss g κ s hs0 hs
+  have := UpperTheory.V.Pa.gr_ss g κ s hs0 hs
   exact hns (quot_ss (κ := κ) I H.ι H.surj (fun y hy => (H.ker y).1 hy))
 end -- clump:auto
 end -- clump:auto
@@ -1569,14 +1569,14 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.urep_of :
     ∀ {l : ℕ} [Fact l.Prime] {L : Loc} {G G0 : Glob l L} {h : G.Hom G0} {n : ℕ} {x : NP G0.frame n} {B : Type} [CommRing B] [IsLocalRing B] {D : GDet n B G.G₀} {I : Set (MonoidAlgebra B G.G₀)} {Bh : Type} [CommRing Bh] [IsLocalRing Bh] [Algebra B Bh] [Algebra Bh (FractionRing x.A)] {e : G.G₀ →* Bˣ} (H : Hat h x D I Bh e) {ep : Fin n → H.E} (g : GrAlg H.T n x.a H.r ep), CompleteOrthogonalIdempotents ep → (∀ i, H.DE.D Bh[X] (1 + X ⊗ₜ ep i) = 1 + X) → Nonempty (URep h x D I Bh (algebraMap Bh (FractionRing x.A)) e) := by
   intro l _ L G G0 h n x B _ _ D I Bh _ _ _ _ e H ep g hep hD
-  letI : CommRing g.AA := g.ring
-  letI : Algebra Bh g.AA := g.alg
-  letI : Ring H.E := H.ring
-  letI : Algebra Bh H.E := H.alg
-  letI : Algebra B H.E := H.algB
-  haveI : IsScalarTower B Bh H.E := H.tower
-  letI algB : Algebra B g.AA := ((algebraMap Bh g.AA).comp (algebraMap B Bh)).toAlgebra
-  haveI tower : IsScalarTower B Bh g.AA := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : CommRing g.AA := g.ring
+  let : Algebra Bh g.AA := g.alg
+  let : Ring H.E := H.ring
+  let : Algebra Bh H.E := H.alg
+  let : Algebra B H.E := H.algB
+  have : IsScalarTower B Bh H.E := H.tower
+  let algB : Algebra B g.AA := ((algebraMap Bh g.AA).comp (algebraMap B Bh)).toAlgebra
+  have tower : IsScalarTower B Bh g.AA := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let vr : G.G₀ →* Matrix (Fin n) (Fin n) g.AA :=
     ((g.φ.toRingHom.comp H.ι.toRingHom).toMonoidHom).comp (MonoidAlgebra.of Bh G.G₀)
   have hvr : ∀ γ, vr γ = g.φ (H.ι (MonoidAlgebra.single γ 1)) := fun _ => rfl
@@ -1677,13 +1677,13 @@ namespace UpperTheory.V.Pa
 
 theorem s6 : S6 := by
   intro l _ L G G0 h n x O _ _ _ _ _ _ r B _ _ _ u P Bh _ _ _ rF hl hc hr hk
-  letI : Algebra Bh (FractionRing x.A) := rF.toAlgebra
+  let : Algebra Bh (FractionRing x.A) := rF.toAlgebra
   have hk' : RingHom.ker (algebraMap Bh (FractionRing x.A)) = maximalIdeal Bh := hk
   obtain ⟨H⟩ := hat_ex P (Bh := Bh) hr
   have hs := rF_surj P (Bh := Bh) hr hk'
-  haveI := hc.noeth
-  haveI := hc.complete
-  haveI := H.fin
+  have := hc.noeth
+  have := hc.complete
+  have := H.fin
   have h2 : IsUnit (2 : Bh) := by
     by_contra hn
     have h3 : (2 : Bh) ∈ RingHom.ker (algebraMap Bh (FractionRing x.A)) := by rw [hk']; exact hn

@@ -124,7 +124,7 @@ theorem isIrreducible_of_equiv {G V V' : Type} [Monoid G] [AddCommGroup V] [Modu
         show U.toSubmodule.map (e : V →ₗ[ℂ] V') ≤ U'.toSubmodule.map (e : V →ₗ[ℂ] V') ↔
           U.toSubmodule ≤ U'.toSubmodule
         exact Submodule.map_le_map_iff_of_injective e.injective _ _ }
-  haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+  have : IsSimpleOrder (Subrepresentation ρ) := hρ
   exact F.symm.isSimpleOrder
 
 variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
@@ -166,7 +166,7 @@ theorem exists_pow_frob_comm (ρ : Representation ℂ (Weil h) V) (hρ : IsSmoot
     conv_rhs => rw [← hpow]
     rw [← map_pow, ← map_mul, ← map_mul, inv_mul_cancel_right]
   choose m hm hc using h1
-  haveI := hρ.finite_range.fintype
+  have := hρ.finite_range.fintype
   refine ⟨∏ T, m T, Finset.prod_pos fun T _ => hm T, fun σ => ?_⟩
   obtain ⟨τ, hτ⟩ := exists_eq_zpow_mul (deg_frob (h := h)) σ
   rw [hτ, map_mul]
@@ -203,7 +203,7 @@ theorem isSemisimple_apply (ρ : Representation ℂ (Weil h) V) (hρ : IsSmooth 
     rw [hT, ← map_pow]; exact Q.apply_mem_toSubmodule _ hv
   have hQ0 : Q.toSubmodule = ⊥ := by
     by_contra hne
-    haveI : Nontrivial Q.toSubmodule := Submodule.nontrivial_iff_ne_bot.mpr hne
+    have : Nontrivial Q.toSubmodule := Submodule.nontrivial_iff_ne_bot.mpr hne
     obtain ⟨μ, hμ⟩ := End.exists_eigenvalue (T.restrict hQT)
     obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
     have hv1 : T v = μ • (v : V) := congrArg Subtype.val hv.apply_eq_smul
@@ -265,7 +265,7 @@ theorem IrrW.lpDim_pos (z : IrrW h) : 0 < z.1.lpDim := by
 
 theorem isIrrWD_lpOfChar (χ : Weil h →* ℂˣ) (hχ : IsSmooth χ) : IsIrrWD (WD.lpOfChar h χ hχ) := by
   refine ⟨1, _, rfl, ?_⟩
-  haveI : IsSimpleModule ℂ (Fin 1 → ℂ) := isSimpleModule_iff_finrank_eq_one.2 (by simp)
+  have : IsSimpleModule ℂ (Fin 1 → ℂ) := isSimpleModule_iff_finrank_eq_one.2 (by simp)
   refine { exists_pair_ne := ⟨⊥, ⊤, fun hbt => ?_⟩, eq_bot_or_eq_top := fun U => ?_ }
   · exact bot_ne_top (α := Submodule ℂ (Fin 1 → ℂ)) (congrArg Subrepresentation.toSubmodule hbt)
   · rcases eq_bot_or_eq_top U.toSubmodule with hU | hU
@@ -353,7 +353,7 @@ private theorem eq_of_support_singleton {k : Type} [Field k] [ValuativeRel k] [T
 private theorem det_law (H : LawsT a ha rc) (t : ℕ) (χ : (w.adicCompletion E)ˣ →* ℂˣ) (hχ : IsSmoothChar χ) :
     rc (cls (IrrRep.det (Fin t) χ hχ)) =
       sumList ((List.range t).map fun j : ℕ => (rc (.ofChar χ hχ)).lpTw (((t : ℝ) - 1) / 2 - j)) := by
-  haveI := cz (E := E) (w := w)
+  have := cz (E := E) (w := w)
   have hL := GlobalTheory.T.isLanglandsClassification_detCharacter Pr.cos (w.adicCompletion E) t χ hχ
   obtain ⟨φ⟩ := (IrrRep.det (Fin t) χ hχ).nonempty_equiv_rep
   rw [H.langlands _ (cls (IrrRep.det (Fin t) χ hχ)) (hL.of_equiv φ.symm), segSum, List.map_map]
@@ -368,7 +368,7 @@ private theorem det_law (H : LawsT a ha rc) (t : ℕ) (χ : (w.adicCompletion E)
 private theorem prod_law (H : LawsT a ha rc) (r t : ℕ) (σ : IrrRep (GL (Fin r) (w.adicCompletion E)))
     (τ : IrrRep (GL (Fin t) (w.adicCompletion E))) (π : IrrRep (GL (Fin (r + t)) (w.adicCompletion E)))
     (hπ : Nonempty (π.ρ.Equiv (prod₂ σ.ρ τ.ρ))) : rc (cls π) = (rc (cls σ)).lpSum (rc (cls τ)) := by
-  haveI := cz (E := E) (w := w)
+  have := cz (E := E) (w := w)
   obtain ⟨𝔪, h𝔪⟩ := Pr.exh _ (cls σ)
   obtain ⟨𝔫, h𝔫⟩ := Pr.exh _ (cls τ)
   have hp := GlobalTheory.T.isLanglandsClassification_add_of_irreducible_product Pr.multi Pr.cos _ r t σ τ π 𝔪 𝔫 (h𝔪.of_equiv (equivRep σ).symm)
@@ -393,7 +393,7 @@ private theorem charPol_seg (H : LawsT a ha rc) (Δ : Segment (w.adicCompletion 
 
 private theorem supp_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)) (s : Multiset (IrrGL (k := w.adicCompletion E)))
     (hs : HasSupport x.rep s) (σ : Weil h) : (rc x).charPol σ = (s.map fun y => (rc y).charPol σ).prod := by
-  haveI := cz (E := E) (w := w)
+  have := cz (E := E) (w := w)
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
   have h1 := GlobalTheory.T.langlandsClassification_supercuspidalSupport_multisegment Pr.zel _ 𝔪 x hm
   obtain rfl : s = msupp 𝔪 := GlobalTheory.T.supercuspidalSupport_unique_GL geo Pr.bz Pr.zel _ x s _ hs h1
@@ -406,7 +406,7 @@ private theorem supp_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E
 
 private theorem sat_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)) (α : Fin x.1 → ℂˣ)
     (hα : HasSatake x.rep α) : rc x = WD.mk (WDRep.diag h fun i => (α i)⁻¹) := by
-  haveI := cz (E := E) (w := w)
+  have := cz (E := E) (w := w)
   have hL := GlobalTheory.T.spherical_satake_eq_langlandsQuotient_unramified Pr.exh Pr.multi Pr.cos Pr.zel geo Pr.bz (w.adicCompletion E) x α hα
   rw [Fin.univ_val_map] at hL
   rw [H.langlands _ x hL, segSum, List.map_ofFn, ← SatakeLaw.sumList_ofFn_diag]
@@ -418,7 +418,7 @@ private theorem sat_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)
 
 private theorem good_of_hasSatake (x : IrrGL (k := w.adicCompletion E)) (α : Fin x.1 → ℂˣ) (hα : HasSatake x.rep α) :
     Good x := by
-  haveI := cz (E := E) (w := w)
+  have := cz (E := E) (w := w)
   refine ⟨_, GlobalTheory.T.supercuspidalSupport_of_principalSeries_subquotient (w.adicCompletion E) x.1 (fun i => GlobalTheory.SmGL.unrChar _ (α i))
     (fun i => isSmoothChar_of_isUnram (isUnram_unrChar _ (α i))) x.2.rep hα.2.2, fun y hy => ?_⟩
   obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 hy
@@ -480,7 +480,7 @@ private theorem seg_dim_pos (H : LawsT a ha rc) (Δ : Segment (w.adicCompletion 
   exact Nat.mul_pos Δ.isCusp_first.1 Δ.len_pos
 
 private theorem cusp_law (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)) (hx : IsIrrWD (rc x)) : x.IsCusp := by
-  haveI := cz (E := E) (w := w)
+  have := cz (E := E) (w := w)
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
   obtain ⟨l, rfl⟩ : ∃ l : List (Segment (w.adicCompletion E)), (l : Multiset _) = 𝔪 := ⟨_, 𝔪.coe_toList⟩
   have hs := GlobalTheory.T.langlandsClassification_supercuspidalSupport_multisegment Pr.zel _ _ x hm

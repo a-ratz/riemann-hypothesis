@@ -99,7 +99,7 @@ theorem Aset_mem_nhds : Aset v ψ0 ∈ 𝓝 (0 : Fv F v) := by
     apply hγ
     rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers,
       ← Valuation.restrict_le_one_iff] at hc'
-    simp only [Set.mem_setOf_eq, map_mul]
+    simp only [Set.mem_ofPred_eq, map_mul]
     calc Valued.v.restrict c' * Valued.v.restrict t ≤ 1 * Valued.v.restrict t := by gcongr
       _ = Valued.v.restrict t := one_mul _
       _ < _ := ht

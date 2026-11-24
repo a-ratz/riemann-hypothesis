@@ -66,7 +66,7 @@ private theorem act_sl (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (g h : SL(2, �
     (by rw [Matrix.SpecialLinearGroup.det_coe]; exact one_pos) b
 
 private theorem gam_le (N l : ℕ) : Gam N l ≤ CongruenceSubgroup.Gamma0 N ⊓ CongruenceSubgroup.Gamma0 l :=
-  inf_le_inf_right _ (CongruenceSubgroup.Gamma1_in_Gamma0 N)
+  inf_le_inf_right _ (CongruenceSubgroup.Gamma1_le_Gamma0 N)
 
 private theorem conj_mem (N l : ℕ) (γ δ : SL(2, ℤ)) (hγ : γ ∈ Gam N l)
     (hδ : δ ∈ CongruenceSubgroup.Gamma0 N ⊓ CongruenceSubgroup.Gamma0 l) : δ * γ * δ⁻¹ ∈ Gam N l := by

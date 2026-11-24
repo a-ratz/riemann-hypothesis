@@ -90,8 +90,8 @@ namespace GlobalTheory.BKLim
 
 theorem isCrys_of_bcris_matrix : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (d : ℕ) (ρ : ↥(GK K) →* GL (Fin d) ℤ_[l]) (U : Matrix (Fin d) (Fin d) (Per.Bcris l)), IsUnit U → (∀ g : ↥(GK K), (ρ g).val.map (Per.zB l) * U.map (Per.σB (g : GQ l)) = U) → IsCrys (P.PD K) (qRep ρ) := by
   intro l _ K P AI T d ρ U hU hinv
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
-  haveI : Nontrivial P.R.B := by
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : Nontrivial P.R.B := by
     refine ⟨⟨(P.PD K).t, 0, fun h => (P.PD K).not_mem_filtration_two ?_⟩⟩
     rw [h, map_zero]
     exact Submodule.zero_mem _

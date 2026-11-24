@@ -245,10 +245,10 @@ end Embed
 
 theorem exists_eigenvector {K R M : Type} [Field K] [IsAlgClosed K] [CommRing R] (e : K ≃+* R) [AddCommGroup M]
     [Module R M] (hM : Module.finrank R M ≠ 0) (f : M →ₗ[R] M) : ∃ (a : R) (v : M), v ≠ 0 ∧ f v = a • v := by
-  letI : Field R := (e.symm.isField (Field.toIsField K)).toField
-  haveI : IsAlgClosed R := IsAlgClosed.of_ringEquiv K R e
-  haveI : Module.Finite R M := Module.finite_of_finrank_pos (Nat.pos_of_ne_zero hM)
-  haveI : Nontrivial M := Module.nontrivial_of_finrank_pos (R := R) (Nat.pos_of_ne_zero hM)
+  let : Field R := (e.symm.isField (Field.toIsField K)).toField
+  have : IsAlgClosed R := IsAlgClosed.of_ringEquiv K R e
+  have : Module.Finite R M := Module.finite_of_finrank_pos (Nat.pos_of_ne_zero hM)
+  have : Nontrivial M := Module.nontrivial_of_finrank_pos (R := R) (Nat.pos_of_ne_zero hM)
   obtain ⟨a, ha⟩ := Module.End.exists_eigenvalue (K := R) f
   obtain ⟨v, hv⟩ := ha.exists_hasEigenvector
   exact ⟨a, v, hv.2, hv.apply_eq_smul⟩

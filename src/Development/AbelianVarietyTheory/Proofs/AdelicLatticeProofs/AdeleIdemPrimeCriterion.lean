@@ -61,7 +61,7 @@ private lemma one_lt_valued_inv_iff_mem {E : Type} [Field E] [NumberField E]
   rw [FiniteAdeleRing.algebraMap_apply, HeightOneSpectrum.valuedAdicCompletion_eq_valuation',
     map_inv₀, HeightOneSpectrum.valuation_of_algebraMap,
     ← HeightOneSpectrum.intValuation_lt_one_iff_mem]
-  exact one_lt_inv₀ (zero_lt_iff.mpr (Q.intValuation_ne_zero x hx))
+  exact one_lt_inv₀ (pos_iff_ne_zero.mpr (Q.intValuation_ne_zero x hx))
 
 
 open NumberField IsDedekindDomain NumberField.mixedEmbedding Complex Classical in
@@ -88,7 +88,7 @@ theorem _root_.GlobalTheory.adele_idem_prime_criterion : ∀ (F E : Type) [Field
       change 1 < Valued.v ((Φ e).2 Q * (algebraMap E (FiniteAdeleRing (𝓞 E) E) (x : E)⁻¹) Q) at hQ
       rcases hidem Q with h | h
       · rw [h, zero_mul, map_zero] at hQ
-        exact absurd hQ (not_lt.mpr zero_le')
+        exact absurd hQ (not_lt.mpr zero_le)
       · rw [h, one_mul, one_lt_valued_inv_iff_mem Q x hx] at hQ
         exact ⟨Q, h, hQ⟩
     · rintro ⟨Q, h, hQ⟩

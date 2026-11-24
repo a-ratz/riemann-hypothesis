@@ -119,7 +119,7 @@ theorem UpperTheory.compatible_polarization_of_link :
   · exact ⟨(H.above _ _ ⟨T⟩ w A h O Bw hj).deRham, (H.above _ _ ⟨T⟩ w A h O Bw hj).jumps⟩
   · exact H.away w hw A h rc hrc _ (hσ w)
   · have hpst : IsPstAt (Loc.PP l) Bw (r.comp (Dec (F := E) A).subtype) :=
-      Pr.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (H.cont.comp continuous_subtype_val))
+      Pr.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (H.cont.comp continuous_subtypeVal))
         (H.above _ _ ⟨T⟩ w A h O Bw hj).deRham
     obtain ⟨c1, c2⟩ := (hL w _ ((hσ w).twist ξ) A h rc hrc).2 O Bw hj
     exact ⟨hpst, Lev.untwistS Pr.litN.aut.chA Pr.litN.aut.chW Pr.litN.aut.berger E Ω l ι a r H.cont art ξ m μ hart

@@ -115,10 +115,10 @@ theorem coord_atEmb' (σ τ : E →+* ℂ) (z : ℂ) : coord σ (atEmb τ z) =
     (if σ = τ then z else 0) + (if σ = ComplexEmbedding.conjugate τ then starRingEnd ℂ z else 0) := by
   by_cases h1 : σ = τ
   · subst h1
-    rw [if_pos rfl, if_neg (conj_ne σ).symm, add_zero, coord_atEmb]
+    rw [ite_eq_left rfl, ite_eq_right (conj_ne σ).symm, add_zero, coord_atEmb]
   by_cases h2 : σ = ComplexEmbedding.conjugate τ
   · subst h2
-    rw [if_neg h1, if_pos rfl, zero_add]
+    rw [ite_eq_right h1, ite_eq_left rfl, zero_add]
     have := atEmb_conj τ (starRingEnd ℂ z)
     rw [Complex.conj_conj] at this
     rw [← this, coord_atEmb]
@@ -126,11 +126,11 @@ theorem coord_atEmb' (σ τ : E →+* ℂ) (z : ℂ) : coord σ (atEmb τ z) =
       rcases InfinitePlace.mk_eq_iff.1 h with h | h
       · exact h1 h
       · exact h2 (by rw [← h]; ext; simp)
-    rw [if_neg h1, if_neg h2, add_zero]
+    rw [ite_eq_right h1, ite_eq_right h2, add_zero]
     unfold coord atEmb
     by_cases h3 : (InfinitePlace.mk σ).embedding = σ
-    · rw [if_pos h3]; simp [h]
-    · rw [if_neg h3]; simp [h]
+    · rw [ite_eq_left h3]; simp [h]
+    · rw [ite_eq_right h3]; simp [h]
 
 theorem chiInf_eq (χ : HChar E) {I : Type} [Fintype I] (φ : I → E →+* ℂ) (f : I → ℂ → ℂ)
     (hf : ∀ i z, z ≠ 0 → ContinuousAt (f i) z)
@@ -167,7 +167,7 @@ theorem expo_of_infType : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   classical
   refine ⟨fun n h τ => ?_, fun s h τ => ?_, fun I _ φ n hφ h i => ?_⟩
   · rw [expo_eq_sum χ (fun σ => σ) (fun σ z => z ^ n σ) (fun σ => n σ) (fun _ => 0)
-      (fun σ z hz => continuousAt_zpow₀ z _ (Or.inl hz)) (fun σ z => by simp [Complex.exp_int_mul]) h τ]
+      (fun σ z hz => continuousAt_zpow₀ z _ (Or.inl hz)) (fun σ z => by simp [Complex.exp_intCast_mul]) h τ]
     simp
   · rw [expo_eq_sum χ (fun σ => σ) (fun σ z => ((‖z‖ : ℝ) : ℂ) ^ (s : ℂ)) (fun _ => s / 2) (fun _ => s / 2)
       (fun σ z hz => ?_) (fun σ z => ?_) h.2.2 τ]
@@ -193,7 +193,7 @@ theorem expo_of_infType : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     · have hn : ((‖z‖ : ℝ) : ℂ) ≠ 0 := by simpa using hz
       exact (continuousAt_id.div (Complex.continuous_ofReal.comp continuous_norm).continuousAt hn).zpow₀ _
         (Or.inl (div_ne_zero hz hn))
-    · rw [Complex.norm_exp, Complex.ofReal_exp, ← Complex.exp_sub, ← Complex.exp_int_mul]
+    · rw [Complex.norm_exp, Complex.ofReal_exp, ← Complex.exp_sub, ← Complex.exp_intCast_mul]
       congr 1
       have := Complex.add_conj z
       push_cast at this

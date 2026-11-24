@@ -256,7 +256,7 @@ theorem modulus_cpow_eq_zpow (u : Kˣ) (s : ℂ) :
   rw [modulus_of_ne_zero u.ne_zero, NNReal.coe_zpow, NNReal.coe_natCast]
   have hpos : (0 : ℝ) < (residueCard K : ℝ) ^ (-ord (u : K)) := zpow_pos hq _
   rw [Complex.cpow_def_of_ne_zero (by exact_mod_cast hpos.ne'),
-    Complex.cpow_def_of_ne_zero residueCard_ne_zero_complex, ← Complex.exp_int_mul,
+    Complex.cpow_def_of_ne_zero residueCard_ne_zero_complex, ← Complex.exp_intCast_mul,
     ← Complex.ofReal_log hpos.le, Real.log_zpow, ← Complex.ofReal_natCast,
     ← Complex.ofReal_log hq.le]
   push_cast

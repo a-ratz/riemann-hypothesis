@@ -248,7 +248,7 @@ section Self
 variable {X : Scheme.{0}} (s : X ⟶ Sp R)
 
 theorem smooth_sec_affine [Smooth s] (U : X.affineOpens) : Algebra.Smooth R (Sec s U.1) := by
-  haveI : IsOpenImmersion (affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
+  have : IsOpenImmersion (affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
   have h : Smooth (affPt s U ≫ s) := inferInstance
   rw [affPt_w] at h
   exact RingHom.smooth_algebraMap.1 ((HasRingHomProperty.Spec_iff (P := @Smooth)).1 h)

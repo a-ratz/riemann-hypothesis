@@ -517,7 +517,7 @@ end Main
 
 theorem main : Laws → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Geo.Tor.Host E) (t : Geo.Tor.SAB H (Spec (CommRingCat.of V))) (P : Geo.Tor.PELUnif (maximalIdeal V) t) (a : NumberField.RingOfIntegers E) (N : ℕ), (letI := H.starRing; a * star a = (N : NumberField.RingOfIntegers E)) → 0 < N → letI := H.starRing;  ∀ k : ℕ, (k = 1 ∨ 4 ≤ k) → ∀ (u : LB.Gen (LB.LinComb P.U.LG.L (K := Fin 2) ![gK, endK (t.act.act a) ≫ gK] ![((k * N : ℕ) : ℤ), -(k : ℤ)])), u.IsGen → LB.Gen.Corr P.U.LG.L _ _ _ _ (LB.pullGen P.U.LG.L _ _ u unitK) (LB.pullGen P.U.LG.L _ _ (GeneratorPullback.powGen P.U.LG.L _ _ P.U.LG.rig (k * (N - 1))) (jK V)) → ∀ (F : Type) [Field F] [Algebra (FractionRing V) F] (σ' : P.U.SecGF F k) (s : Fam P.D.toPre F k), P.U.ExpandsG F k σ' s → ∀ σ'' : P.U.SecGF F (k * N), (∀ (y : (UnifPre.GF (G := t.G) F).left) (J), Geo.Tor.Good P.U.LG.L y J → Geo.Tor.sval σ'' (𝟙 _) y J = Geo.Tor.sval σ' ((TFK (R := V) F) ◁ (Over.pullback (jK V)).map (t.act.act a)).left y J * (Geo.Tor.val u (snd (TFK (R := V) F) ((Over.pullback (jK V)).obj t.G)).left y J).val) → ∃ s'' : Fam P.D.toPre F (k * N), PullAl P.D F P.oD a k N s s'' ∧ P.U.ExpandsG F (k * N) σ'' s'' := by
   intro hL V _ _ _ E _ _ _ H t P a N hN hN0 k hk u hu hc F _ _ σ' s hs σ'' hσ
-  letI := H.starRing
+  let := H.starRing
   refine of_generic hL P.U P.oD a (t.act.act a) k N (by omega) ?_ u hu hc F σ' s hs σ'' hσ
   rcases hk with rfl | hk
   · exact GlobalTheory.T.expansion_pullback_sourceLevelOne hL V E H t P a N hN hN0

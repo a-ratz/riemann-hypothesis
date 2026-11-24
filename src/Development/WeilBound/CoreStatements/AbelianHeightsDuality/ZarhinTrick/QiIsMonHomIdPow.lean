@@ -145,7 +145,7 @@ theorem ext_of_affine_points {R : Type} [CommRing R] {W X : Over (Sp R)} (u v : 
     (h : ∀ (S : Type) [CommRing S] [Algebra R S] (t : sp (R₀ := R) S ⟶ W), t ≫ u = t ≫ v) : u = v := by
   have key : ∀ (B : CommRingCat.{0}) (j₀ : Spec B ⟶ W.left), j₀ ≫ u.left = j₀ ≫ v.left := by
     intro B j₀
-    letI : Algebra R B := (Spec.preimage (j₀ ≫ W.hom)).hom.toAlgebra
+    let : Algebra R B := (Spec.preimage (j₀ ≫ W.hom)).hom.toAlgebra
     let j : sp (R₀ := R) B ⟶ W := Over.homMk j₀ (Spec.map_preimage (j₀ ≫ W.hom)).symm
     exact congrArg CommaMorphism.left (h B j)
   apply Over.OverMorphism.ext
@@ -232,13 +232,13 @@ theorem exists_geometric_point {S : Scheme.{0}} (Y : Over S) (y : Y.left) :
 
 theorem finiteOfFibres : PositivityTheory.Tls2.Zar3.Ch1.FiniteOfFibres := by
   intro R _ A B _ _ l hA hB _ hfib
-  haveI := hA
-  haveI := hB
+  have := hA
+  have := hB
   have hcomp : l.left ≫ B.hom = A.hom := Over.w l
-  haveI : IsProper A.hom := IsAbelianScheme.proper (A := A)
-  haveI : IsProper B.hom := IsAbelianScheme.proper (A := B)
-  haveI : IsProper (l.left ≫ B.hom) := by rw [hcomp]; infer_instance
-  haveI : IsProper l.left := IsProper.of_comp l.left B.hom
+  have : IsProper A.hom := IsAbelianScheme.proper (A := A)
+  have : IsProper B.hom := IsAbelianScheme.proper (A := B)
+  have : IsProper (l.left ≫ B.hom) := by rw [hcomp]; infer_instance
+  have : IsProper l.left := IsProper.of_comp l.left B.hom
   have lift : ∀ {T : Scheme.{0}} (s : T ⟶ ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp R) (x : ↥A.left)
       (w : ↥(pullback B.hom s)), pullback.fst B.hom s w = l.left x →
       ∃ v, ((Over.pullback s).map l).left v = w ∧ pullback.fst A.hom s v = x := by
@@ -267,7 +267,7 @@ theorem finiteOfFibres : PositivityTheory.Tls2.Zar3.Ch1.FiniteOfFibres := by
     refine ⟨pullback.fst A.hom s v, ?_⟩
     have hsq := (isPullback_baseChange s l).w
     rw [← Scheme.Hom.comp_apply, ← hsq, Scheme.Hom.comp_apply, hv, hw]
-  haveI : LocallyQuasiFinite l.left := LocallyQuasiFinite.of_finite_preimage_singleton l.left hfin
+  have : LocallyQuasiFinite l.left := LocallyQuasiFinite.of_finite_preimage_singleton l.left hfin
   exact ⟨IsFinite.of_isProper_of_locallyQuasiFinite l.left, hsurj⟩
 
 end GlobalTheory.CompanionTheory.AbFibre
@@ -316,7 +316,7 @@ variable {R : Type} [CommRing R]
 theorem exists_sp_iso (X : Over (Sp R)) [IsFinite X.hom] [Flat X.hom] [LocallyOfFinitePresentation X.hom] :
     ∃ (F : Type) (_ : CommRing F) (_ : Algebra R F) (_ : Nonempty (sp (R₀ := R) F ≅ X)),
       Module.Finite R F ∧ Module.Projective R F := by
-  haveI : IsAffine X.left := isAffine_of_isAffineHom X.hom
+  have : IsAffine X.left := isAffine_of_isAffineHom X.hom
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (X.left.isoSpec.inv ≫ X.hom)
   have f₁ : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance
   have f₂ : Flat (Spec.map φ) := by rw [hφ]; infer_instance
@@ -324,11 +324,11 @@ theorem exists_sp_iso (X : Over (Sp R)) [IsFinite X.hom] [Flat X.hom] [LocallyOf
   rw [IsFinite.SpecMap_iff] at f₁
   rw [Flat.SpecMap_iff] at f₂
   rw [LocallyOfFinitePresentation.SpecMap_iff] at f₃
-  letI : Algebra R Γ(X.left, ⊤) := φ.hom.toAlgebra
-  haveI : Module.Finite R Γ(X.left, ⊤) := RingHom.finite_algebraMap.1 f₁
-  haveI : Module.Flat R Γ(X.left, ⊤) := RingHom.flat_algebraMap_iff.1 f₂
-  haveI : Algebra.FinitePresentation R Γ(X.left, ⊤) := RingHom.finitePresentation_algebraMap.1 f₃
-  haveI : Module.FinitePresentation R Γ(X.left, ⊤) := Module.FinitePresentation.of_finite_of_finitePresentation _ _
+  let : Algebra R Γ(X.left, ⊤) := φ.hom.toAlgebra
+  have : Module.Finite R Γ(X.left, ⊤) := RingHom.finite_algebraMap.1 f₁
+  have : Module.Flat R Γ(X.left, ⊤) := RingHom.flat_algebraMap_iff.1 f₂
+  have : Algebra.FinitePresentation R Γ(X.left, ⊤) := RingHom.finitePresentation_algebraMap.1 f₃
+  have : Module.FinitePresentation R Γ(X.left, ⊤) := Module.FinitePresentation.of_finite_of_finitePresentation _ _
   refine ⟨Γ(X.left, ⊤), inferInstance, inferInstance,
     ⟨Over.isoMk X.left.isoSpec.symm ?_⟩, inferInstance, Module.Flat.projective_of_finitePresentation⟩
   exact hφ.symm
@@ -343,22 +343,22 @@ theorem one_comp_hom {A B T : Over (Sp R)} [GrpObj A] [GrpObj B] (l : A ⟶ B) [
 
 theorem kernelFinFlat : PositivityTheory.Tls2.Zar3.Ch1.KernelFinFlat := by
   intro R _ A B _ _ l hA hB hl hfin hflat
-  haveI := hA.smooth
-  haveI := hB.smooth
-  haveI : IsFinite l.left := hfin
-  haveI : Flat l.left := hflat
-  haveI : IsMonHom l := hl
+  have := hA.smooth
+  have := hB.smooth
+  have : IsFinite l.left := hfin
+  have : Flat l.left := hflat
+  have : IsMonHom l := hl
   have hw : l.left ≫ B.hom = A.hom := Over.w l
-  haveI : LocallyOfFinitePresentation (l.left ≫ B.hom) := by rw [hw]; infer_instance
-  haveI : LocallyOfFinitePresentation l.left :=
+  have : LocallyOfFinitePresentation (l.left ≫ B.hom) := by rw [hw]; infer_instance
+  have : LocallyOfFinitePresentation l.left :=
     GlobalTheory.TangentCrit.locallyOfFinitePresentation_of_comp l.left B.hom
   let e : Sp R ⟶ B.left := (η[B] : 𝟙_ (Over (Sp R)) ⟶ B).left
   have he : e ≫ B.hom = 𝟙 _ := Over.w (η[B] : 𝟙_ (Over (Sp R)) ⟶ B)
-  haveI : Mono e := mono_of_mono_fac he
+  have : Mono e := mono_of_mono_fac he
   let X : Over (Sp R) := Over.mk (pullback.snd l.left e)
-  haveI : IsFinite X.hom := inferInstanceAs (IsFinite (pullback.snd l.left e))
-  haveI : Flat X.hom := inferInstanceAs (Flat (pullback.snd l.left e))
-  haveI : LocallyOfFinitePresentation X.hom :=
+  have : IsFinite X.hom := inferInstanceAs (IsFinite (pullback.snd l.left e))
+  have : Flat X.hom := inferInstanceAs (Flat (pullback.snd l.left e))
+  have : LocallyOfFinitePresentation X.hom :=
     inferInstanceAs (LocallyOfFinitePresentation (pullback.snd l.left e))
   have hf : pullback.fst l.left e ≫ A.hom = X.hom := by
     rw [← hw, pullback.condition_assoc, he, Category.comp_id]
@@ -635,7 +635,7 @@ def ptGrp (hs : IsFinFlatSub G F h) (S : Type) [CommRing S] [Algebra R S] : Subg
 
 theorem pts_killed [Module.Finite R F] (hs : IsFinFlatSub G F h) :
     ∃ m : ℕ, 0 < m ∧ ∀ x : (C ⊗[R] F) →ₐ[C] C, x.comp (Qi.pw (dlt (C := C) hs) (eps (C := C) hs) m) = eps hs := by
-  haveI : Finite (ptGrp hs C) :=
+  have : Finite (ptGrp hs C) :=
     Finite.of_surjective (fun φ : F →ₐ[R] C => (⟨_, φ, rfl⟩ : ptGrp hs C))
       (by rintro ⟨_, φ, rfl⟩; exact ⟨φ, rfl⟩)
   refine ⟨Nat.card (ptGrp hs C), Nat.card_pos, fun x => ?_⟩
@@ -663,8 +663,8 @@ open GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Ar.
 
 theorem killedAny_of (hc : Qi.KilledCore) : KilledAny := by
   intro C _ _ v R _ _ hv G _ _ F _ _ h hs
-  haveI := hs.fin
-  haveI := hs.proj
+  have := hs.fin
+  have := hs.proj
   obtain ⟨N, hN0, hN⟩ := hc C (C ⊗[R] F) (dlt (C := C) hs) (eps hs) (counitL hs) (counitR hs) (pw_mul hs)
     (pts_killed hs)
   have hinj : Function.Injective (algebraMap R C) := hv.hom_inj
@@ -781,13 +781,13 @@ private theorem pfiF_fib_subset_lemma {G' : Over (Sp Ω)} (σ : 𝟙_ (Over (Sp 
 theorem pfiF_range_finite_closed {G : Over (Sp Ω)} [GrpObj G] (hG : IsAbelianScheme G) (H : Over (Sp Ω))
     (j : H ⟶ G) (hH : IsFinite H.hom) :
     (Set.range j.left).Finite ∧ ∀ z ∈ Set.range j.left, IsClosed ({z} : Set G.left) := by
-  haveI : IsFinite H.hom := hH
-  haveI : IsProper G.hom := hG.proper
-  haveI : IsLocallyArtinian H.left := .of_locallyQuasiFinite H.hom
-  haveI : CompactSpace H.left := QuasiCompact.compactSpace_of_compactSpace H.hom
-  haveI : IsProper (j.left ≫ G.hom) := by rw [Over.w j]; infer_instance
-  haveI : IsProper j.left := IsProper.of_comp j.left G.hom
-  haveI : Finite H.left := finite_of_compact_of_discrete
+  have : IsFinite H.hom := hH
+  have : IsProper G.hom := hG.proper
+  have : IsLocallyArtinian H.left := .of_locallyQuasiFinite H.hom
+  have : CompactSpace H.left := QuasiCompact.compactSpace_of_compactSpace H.hom
+  have : IsProper (j.left ≫ G.hom) := by rw [Over.w j]; infer_instance
+  have : IsProper j.left := IsProper.of_comp j.left G.hom
+  have : Finite H.left := finite_of_compact_of_discrete
   refine ⟨Set.finite_range _, ?_⟩
   rintro _ ⟨h, rfl⟩
   have hc := j.left.isClosedMap {h} (isClosed_discrete _)
@@ -834,7 +834,7 @@ theorem pfiF_fib_closed {G G' : Over (Sp Ω)} [GrpObj G] [GrpObj G'] (hG : IsAbe
     (hj : ∀ (T : Over (Sp Ω)) (x : T ⟶ G), x ≫ f = 1 → ∃ z : T ⟶ H, z ≫ j = x)
     (x : G.left) (hx : IsClosed ({x} : Set G.left)) :
     (f.left ⁻¹' {f.left x}).Finite ∧ ∀ z ∈ f.left ⁻¹' {f.left x}, IsClosed ({z} : Set G.left) := by
-  haveI : LocallyOfFiniteType G.hom := by haveI := hG.smooth; infer_instance
+  have : LocallyOfFiniteType G.hom := by have := hG.smooth; infer_instance
   obtain ⟨s, hs⟩ := GlobalTheory.RationalPoint.exists_pt_mem (X := G) hx ⟨x, rfl⟩
   have hsx : s.left (IsLocalRing.closedPoint Ω) = x := hs
   have hsub : f.left ⁻¹' {f.left x} ⊆ Set.range (j * (toUnit H ≫ s)).left := fun y hy =>
@@ -847,12 +847,12 @@ theorem isFinite_of_ker {Ω : Type} [Field Ω] [IsAlgClosed Ω] {G G' : Over (Sp
     (hG : IsAbelianScheme G) (hG' : IsAbelianScheme G') (f : G ⟶ G') [IsMonHom f] (H : Over (Sp Ω))
     (j : H ⟶ G) (hH : IsFinite H.hom)
     (hj : ∀ (T : Over (Sp Ω)) (x : T ⟶ G), x ≫ f = 1 → ∃ z : T ⟶ H, z ≫ j = x) : IsFinite f.left := by
-  haveI : IsProper G.hom := hG.proper
-  haveI : IsProper G'.hom := hG'.proper
-  haveI : IsProper (f.left ≫ G'.hom) := by rw [Over.w f]; infer_instance
-  haveI : IsProper f.left := IsProper.of_comp f.left G'.hom
-  haveI : JacobsonSpace G.left := LocallyOfFiniteType.jacobsonSpace (Y := Spec _) G.hom
-  haveI : LocallyQuasiFinite f.left :=
+  have : IsProper G.hom := hG.proper
+  have : IsProper G'.hom := hG'.proper
+  have : IsProper (f.left ≫ G'.hom) := by rw [Over.w f]; infer_instance
+  have : IsProper f.left := IsProper.of_comp f.left G'.hom
+  have : JacobsonSpace G.left := LocallyOfFiniteType.jacobsonSpace (Y := Spec _) G.hom
+  have : LocallyQuasiFinite f.left :=
     GlobalTheory.locallyQuasiFinite_of_finite_fibres_closedPoints f.left fun y hy =>
       (pfiF_fib_closed hG f H j hH hj y hy).1
   exact IsFinite.of_isProper_of_locallyQuasiFinite f.left
@@ -937,21 +937,21 @@ theorem flat_surj_of_finite {Ω : Type} [Field Ω] [IsAlgClosed Ω] {G G' : Over
     (hG : IsAbelianScheme G) (hG' : IsAbelianScheme G') (g : ℕ) (hgG : SmoothOfRelativeDimension g G.hom)
     (hgG' : SmoothOfRelativeDimension g G'.hom) (f : G ⟶ G') [IsMonHom f] (hf : IsFinite f.left) :
     Flat f.left ∧ Surjective f.left := by
-  haveI := hG.smooth
-  haveI := hG'.smooth
-  haveI := hG.proper
-  haveI := hG'.proper
-  haveI := hf
-  haveI : AlgebraicGeometry.IsIntegral G.left := GlobalTheory.isIntegral_of_isAbelianScheme_field Ω G hG
-  haveI : AlgebraicGeometry.IsIntegral G'.left := GlobalTheory.isIntegral_of_isAbelianScheme_field Ω G' hG'
-  haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
-  haveI : IsLocallyNoetherian G'.left := LocallyOfFiniteType.isLocallyNoetherian G'.hom
+  have := hG.smooth
+  have := hG'.smooth
+  have := hG.proper
+  have := hG'.proper
+  have := hf
+  have : AlgebraicGeometry.IsIntegral G.left := GlobalTheory.isIntegral_of_isAbelianScheme_field Ω G hG
+  have : AlgebraicGeometry.IsIntegral G'.left := GlobalTheory.isIntegral_of_isAbelianScheme_field Ω G' hG'
+  have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
+  have : IsLocallyNoetherian G'.left := LocallyOfFiniteType.isLocallyNoetherian G'.hom
   have hsurj : Surjective f.left :=
     surj_of_finite_dimS f.left g
       (fun x hx => GlobalTheory.CutDegree.ringKrullDim_stalk hgG hx)
       (fun y hy => GlobalTheory.CutDegree.ringKrullDim_stalk hgG' hy)
       _ (isClosed_originS (G := G))
-  haveI := hsurj
+  have := hsurj
   exact ⟨GlobalTheory.SS.flat_of_isDominant_grpHom Ω G G' f, hsurj⟩
 
 end PositivityTheory.PrwZar.Z2
@@ -991,7 +991,7 @@ theorem polFibreIsogAny : PositivityTheory.PrwZar.PolFibreIsogAny := by
   have hB' := GlobalTheory.isAbelianScheme_pullback_obj s B hB
   have hgA' := GlobalTheory.FiniteData.relDim_pullback s A hgA
   have hgB' := GlobalTheory.FiniteData.relDim_pullback s B hgB
-  haveI := hA'.comm
+  have := hA'.comm
   obtain ⟨H, j, -, hH, hK⟩ := GlobalTheory.T.exists_finite_closed_subscheme_represents_kernel_ample GlobalTheory.globalFns_holds Ω ((Over.pullback s).obj A) hA' L hL ha
   have hfin : IsFinite ((Over.pullback s).map l).left :=
     isFinite_of_ker hA' hB' _ H j hH fun T x hx => (hK T x).1 (ker_memKL hD l s L hL e x hx)
@@ -1020,7 +1020,7 @@ namespace PositivityTheory.PrwZar.Qi
 variable {K H : Type} [Field K] [CommRing H] [Algebra K H]
 
 theorem qc_stable [FiniteDimensional K H] (I : Ideal H) : ∃ k : ℕ, ∀ j, k ≤ j → I ^ j = I ^ k := by
-  haveI : IsArtinianRing H := IsArtinianRing.of_finite K H
+  have : IsArtinianRing H := IsArtinianRing.of_finite K H
   let f : ℕ →o (Ideal H)ᵒᵈ := ⟨fun n => OrderDual.toDual (I ^ n), fun _ _ hab => Ideal.pow_le_pow_right hab⟩
   obtain ⟨n, hn⟩ := IsArtinian.monotone_stabilizes f
   exact ⟨n, fun j hj => congrArg OrderDual.ofDual (hn j hj).symm⟩
@@ -1347,10 +1347,10 @@ theorem idem_eq_zero {K H : Type} [Field K] [IsAlgClosed K] [CommRing H] [Algebr
     have h0 : f * (1 - f) = 0 := by rw [mul_sub, mul_one, hf.eq, sub_self]
     exact htop.mul_left_eq_zero.1 h0
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne1
-  letI := Ideal.Quotient.field M
-  haveI : Module.Finite K (H ⧸ M) :=
+  let := Ideal.Quotient.field M
+  have : Module.Finite K (H ⧸ M) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ K M).toLinearMap (Ideal.Quotient.mkₐ_surjective K M)
-  haveI : Algebra.IsIntegral K (H ⧸ M) := Algebra.IsIntegral.of_finite K (H ⧸ M)
+  have : Algebra.IsIntegral K (H ⧸ M) := Algebra.IsIntegral.of_finite K (H ⧸ M)
   have hb := IsAlgClosed.algebraMap_bijective_of_isIntegral (k := K) (K := H ⧸ M)
   let e : K ≃ₐ[K] H ⧸ M := AlgEquiv.ofBijective (Algebra.ofId K (H ⧸ M)) hb
   let x : H →ₐ[K] K := e.symm.toAlgHom.comp (Ideal.Quotient.mkₐ K M)
@@ -1387,8 +1387,8 @@ namespace PositivityTheory.PrwZar.Qi
 
 theorem exists_stable_pow {K H : Type} [Field K] [CommRing H] [Algebra K H] [FiniteDimensional K H]
     (I : Ideal H) : ∃ (k : ℕ) (e : H), IsIdempotentElem e ∧ I ^ k = Ideal.span {e} ∧ ∀ j, k ≤ j → I ^ j = I ^ k := by
-  haveI : IsArtinianRing H := isArtinian_of_tower K inferInstance
-  haveI : IsNoetherianRing H := isNoetherian_of_tower K inferInstance
+  have : IsArtinianRing H := isArtinian_of_tower K inferInstance
+  have : IsNoetherianRing H := isNoetherian_of_tower K inferInstance
   obtain ⟨n, hn⟩ := IsArtinian.monotone_stabilizes (R := H) (M := H)
     ⟨fun n => OrderDual.toDual (I ^ n), fun a b h => Ideal.pow_le_pow_right h⟩
   have hst : ∀ j, n ≤ j → I ^ j = I ^ n := fun j hj => congrArg OrderDual.ofDual (hn j hj).symm

@@ -72,9 +72,9 @@ def isoL (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBasicPro
 lemma isoL_nat (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBasicProperties) {F G : Shv R} (φ : F ⟶ G) :
     DerivedCategory.Q.map (resMap R φ) ≫ (isoL R hres G).hom =
       (isoL R hres F).hom ≫ (DerivedCategory.singleFunctor (Shv R) 0).map φ := by
-  haveI : IsIso (DerivedCategory.Q.map (resAug F)) :=
+  have : IsIso (DerivedCategory.Q.map (resAug F)) :=
     (DerivedCategory.isIso_Q_map_iff_quasiIso (φ := resAug F)).2 (hres R F).2.2.2.1
-  haveI : IsIso (DerivedCategory.Q.map (resAug G)) :=
+  have : IsIso (DerivedCategory.Q.map (resAug G)) :=
     (DerivedCategory.isIso_Q_map_iff_quasiIso (φ := resAug G)).2 (hres R G).2.2.2.1
   have h1 := congrArg DerivedCategory.Q.map (((hres R F).2.2.2.2.2.2.2 G φ).1)
   simp only [Functor.map_comp] at h1
@@ -121,7 +121,7 @@ end
 
 theorem DerDict_of (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBasicProperties) : LateralTheory.KummerTheory.BockCut.DerDict := by
   intro R _ K
-  letI := HasDerivedCategory.standard (Shv R)
+  let := HasDerivedCategory.standard (Shv R)
   refine ⟨dict R hres K, ?_⟩
   intro F G φ n x
   obtain ⟨c, rfl⟩ := x.mk_surjective

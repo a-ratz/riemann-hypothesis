@@ -87,7 +87,7 @@ end General
 
 theorem ramExactly_conj : ∀ (D : D7) (M : Type) [CommGroup M] (ψ : G D.host.E D.nd.Om →* M) (Q : Set (PlE D.host)), AntiHom D.ntw.cc ψ → RamExactly ψ Q → ∀ P ∈ Q, ∀ P' : PlE D.host, IsConjPl D.host P P' → P' ∈ Q := by
   intro D M _ ψ Q hA hR P hP P' hPP
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hst : ∀ x : D.host.E, IsCMField.complexConj D.host.E x = D.host.conj x :=
     bridge_star_holds D.R D.host
   obtain ⟨⟨j, hj⟩, -⟩ := D.ntw.cc_cm

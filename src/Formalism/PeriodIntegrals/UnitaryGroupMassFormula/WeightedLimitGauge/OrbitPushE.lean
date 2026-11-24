@@ -81,9 +81,9 @@ theorem continuous_opGen (k r : ℕ) : Continuous (opGen k r : TrE k → Mat k r
 theorem continuous_opEmap (k r : ℕ) (T' : ℝ) :
     Continuous (fun q : TrE k => opCo k r (NormedSpace.exp (opGen k r q) *ᵥ opBase k r T')) := by
 
-  letI : NormedRing (Mat k r) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Mat k r) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Mat k r) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Mat k r) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Mat k r) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Mat k r) := Matrix.linftyOpNormedAlgebra
   have h1 : Continuous (fun q : TrE k => NormedSpace.exp (opGen k r q)) :=
     NormedSpace.exp_continuous.comp (continuous_opGen k r)
   have h2 : Continuous (fun q : TrE k => NormedSpace.exp (opGen k r q) *ᵥ opBase k r T') :=
@@ -120,7 +120,7 @@ theorem hypPar_mem (k : ℕ) (T' : ℝ) (hT' : 0 < T') (q : EuclideanSpace ℂ (
 
   have h1 : Complex.normSq (Complex.exp (q.2 * Complex.I)) = 1 := by
     rw [Complex.normSq_eq_norm_sq, Complex.norm_exp_ofReal_mul_I, one_pow]
-  simp only [hypS, hypPar, Set.mem_setOf_eq]
+  simp only [hypS, hypPar, Set.mem_ofPred_eq]
   rw [normSq_sum_eq, Complex.normSq_mul, Complex.normSq_ofReal, h1, mul_one,
     Real.mul_self_sqrt (by positivity)]
   ring
@@ -142,7 +142,7 @@ theorem hypLF : HypLF := by
     exact isClosed_eq h1 continuous_const
   constructor
   · unfold hypM
-    rw [Measure.smul_apply, Measure.map_apply hmeas hSc.measurableSet.compl]
+    rw [smul_apply, Measure.map_apply hmeas hSc.measurableSet.compl]
     have h2 : hypPar k T' ⁻¹' (hypS k T')ᶜ = ∅ := by
       ext q
       simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_empty_iff_false, iff_false, not_not]
@@ -162,7 +162,7 @@ theorem hypLF : HypLF := by
             Finset.sum_le_sum (fun i _ => pow_le_pow_left₀ (norm_nonneg _) (h2 i) 2)
         _ = k * R ^ 2 := by simp
     unfold hypM
-    rw [Measure.smul_apply, Measure.map_apply hmeas hC.isClosed.measurableSet, smul_eq_mul]
+    rw [smul_apply, Measure.map_apply hmeas hC.isClosed.measurableSet, smul_eq_mul]
     refine ENNReal.mul_lt_top (ENNReal.div_lt_top ENNReal.one_ne_top two_ne_zero) ?_
     calc _ ≤ (volume.prod (volume.restrict (Set.Ioc (0 : ℝ) (2 * Real.pi))))
           (Metric.closedBall (0 : EuclideanSpace ℂ (Fin k)) (Real.sqrt (k * R ^ 2)) ×ˢ Set.univ) :=

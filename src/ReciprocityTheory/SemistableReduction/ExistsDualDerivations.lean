@@ -75,9 +75,9 @@ theorem coeff_coeffMap (δ : Derivation K Ω Ω) (P : MvPolynomial σ Ω) (n : �
   rw [coeff_sum]
   by_cases h : n ∈ P.support
   · rw [Finset.sum_eq_single n]
-    · rw [coeff_monomial, if_pos rfl]
+    · rw [coeff_monomial, ite_eq_left rfl]
     · intro b _ hb
-      rw [coeff_monomial, if_neg hb]
+      rw [coeff_monomial, ite_eq_right hb]
     · intro hn
       exact absurd h hn
   · have h0 : AddMonoidAlgebra.coeff P n = 0 := by
@@ -85,7 +85,7 @@ theorem coeff_coeffMap (δ : Derivation K Ω Ω) (P : MvPolynomial σ Ω) (n : �
       exact h (mem_support_iff.mpr hc)
     rw [h0, map_zero]
     refine Finset.sum_eq_zero fun b hb => ?_
-    rw [coeff_monomial, if_neg]
+    rw [coeff_monomial, ite_eq_right]
     rintro rfl
     exact h hb
 
@@ -113,8 +113,8 @@ theorem coeffMap_mul (δ : Derivation K Ω Ω) (P Q : MvPolynomial σ Ω) :
   · rename_i u a
     induction Q using MvPolynomial.induction_on'
     · rename_i v b
-      rw [monomial_mul, coeffMap_monomial, coeffMap_monomial,
-        coeffMap_monomial, monomial_mul, monomial_mul, Derivation.leibniz, smul_eq_mul,
+      rw [monomial_mul_monomial, coeffMap_monomial, coeffMap_monomial,
+        coeffMap_monomial, monomial_mul_monomial, monomial_mul_monomial, Derivation.leibniz, smul_eq_mul,
         smul_eq_mul, map_add, add_comm v u]
     · rename_i p q hp hq
       simp only [mul_add, add_mul, coeffMap_add, hp, hq]

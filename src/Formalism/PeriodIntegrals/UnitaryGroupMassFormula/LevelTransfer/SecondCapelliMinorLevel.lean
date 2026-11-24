@@ -75,7 +75,7 @@ theorem mulVec_liftVec (M : Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1))
       rw [liftVec_out _ _ hq, mul_zero]
   · rw [liftVec_out _ _ hp]
     simp only [Matrix.mulVec, dotProduct, ιLev_out M p _ hp, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     exact liftVec_out _ _ hp
 
 theorem hpk_mulVec_liftVec (v : Fin (2 * r' + k + 1) → ℂ) :
@@ -122,7 +122,7 @@ theorem bvec_lev (q : Fin (2 * r' + k + 1)) : bvec (levPos k i r' q) = liftVec k
     simp only [bvec, Pi.single_apply, lev_inj.eq_iff]
   · rw [liftVec_out _ _ hp]
     simp only [bvec, Pi.single_apply]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     apply hp
     rw [lev_val]
@@ -251,7 +251,7 @@ theorem mdim_lev (k i r' : ℕ) : mdim k (i + r') ⟨i, by omega⟩ = mdim k r' 
 theorem posL_lev (k i r' : ℕ) (j : Fin (mdim k (i + r') ⟨i, by omega⟩)) :
     posL k (i + r') ⟨i, by omega⟩ j = levPos k i r' (posL k r' 0 (Fin.cast (mdim_lev k i r') j)) := by
   apply Fin.ext
-  simp only [posL, lev_val, Fin.coe_cast, Fin.val_zero, Fin.val_mk]
+  simp only [posL, lev_val, Fin.val_cast, Fin.val_zero, Fin.val_mk]
   omega
 
 theorem uC_lev (k i r' : ℕ) (Y : ℂ) : uC k (i + r') ⟨i, by omega⟩ Y = uC k r' 0 Y := by

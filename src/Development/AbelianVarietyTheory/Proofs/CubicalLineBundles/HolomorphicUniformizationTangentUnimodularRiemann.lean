@@ -84,7 +84,7 @@ theorem tangent_and_unimodular : ThetaUnifAV → ∀ (P : Out.PolAV (Sp ℂ)) (u
     (𝟙 P.A) inferInstance
   have hF : ∀ z, u'.ex (F z) = u.ex z := fun z => (hF₀ z).trans (Category.comp_id _)
   have hΛ : ∀ z, F z ∈ u'.Λ ↔ z ∈ u.Λ := fun z => by rw [← u'.ker, hF, u.ker]
-  haveI := u.discrete
+  have := u.discrete
   have hinj := injective_of_ker_le_discrete u.Λ F fun z hz => (hΛ z).1 (hz ▸ u'.Λ.zero_mem)
   let e := LinearEquiv.ofInjectiveEndo F hinj
   have he : ∀ z, e z = F z := fun _ => rfl

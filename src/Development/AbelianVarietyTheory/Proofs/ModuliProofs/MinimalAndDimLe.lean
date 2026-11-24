@@ -115,8 +115,8 @@ theorem _root_.GlobalTheory.ZM.FullLevel.dim_generic_chart {o K : Type} [CommRin
   have hVa : IsAffineOpen V := hV
   let A : Type := Γ(U, V)
   let j : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp A ⟶ U := hVa.fromSpec
-  haveI : IsOpenImmersion j := hVa.isOpenImmersion_fromSpec
-  letI : Algebra o A := (Spec.preimage (j ≫ s)).hom.toAlgebra
+  have : IsOpenImmersion j := hVa.isOpenImmersion_fromSpec
+  let : Algebra o A := (Spec.preimage (j ≫ s)).hom.toAlgebra
   have hjs : j ≫ s = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap o A) := by
     rw [RingHom.algebraMap_toAlgebra]
     simp [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap]
@@ -153,8 +153,8 @@ theorem _root_.GlobalTheory.ZM.FullLevel.dim_generic_chart {o K : Type} [CommRin
   obtain ⟨z, hz⟩ := hy
   let g := IsOpenImmersion.lift x F hrange
   have hg : g ≫ x = F := IsOpenImmersion.lift_fac x F hrange
-  haveI : IsOpenImmersion g := by
-    haveI : IsOpenImmersion (g ≫ x) := hg ▸ inferInstance
+  have : IsOpenImmersion g := by
+    have : IsOpenImmersion (g ≫ x) := hg ▸ inferInstance
     exact IsOpenImmersion.of_comp g x
   let gf : PrimeSpectrum (FractionRing o ⊗[o] A) → PrimeSpectrum R := fun a => g a
   have hgemb : Topology.IsEmbedding gf := g.isOpenEmbedding.isEmbedding
@@ -206,8 +206,8 @@ theorem _root_.GlobalTheory.ZM.FullLevel.eq_constPt {k K : Type} [Field k] [Char
     (x : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp (DualNumber K) ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k) : x = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.constPt x := by
   have hK : CharZero K :=
     _root_.GlobalTheory.ZM.FullLevel.charZero_of_hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (TrivSqZeroExt.fstHom K K K).toRingHom ≫ x)
-  haveI : Algebra.IsSeparable ℚ k := Algebra.IsAlgebraic.isSeparable_of_perfectField
-  haveI : Algebra.FormallyUnramified ℚ k := Algebra.FormallyUnramified.of_isSeparable ℚ k
+  have : Algebra.IsSeparable ℚ k := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : Algebra.FormallyUnramified ℚ k := Algebra.FormallyUnramified.of_isSeparable ℚ k
   obtain ⟨φ, rfl⟩ : ∃ φ : k →+* DualNumber K, x = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap φ :=
     ⟨(Spec.preimage x).hom, by simp [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap]⟩
   let ψ : k →+* DualNumber K :=

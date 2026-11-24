@@ -611,7 +611,7 @@ theorem exists_galMap : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     GlobalTheory.T.uniformisation_determined_by_degenerationData_normal R' hR' D' A'' ((Over.pullback (specOf (Gal.hom σ))).obj G') hsa U'' D' A' G' hG' U' hid
   obtain ⟨h', bc, hU, hxe', hem', -, hmon⟩ := GlobalTheory.T.isPullbackUniformisation_comp_id_pullback R' R' _ _ (Gal.hom σ) D' D' D' h hid A' A'' A' G'
     ((Over.pullback (specOf (Gal.hom σ))).obj G') G' (Iso.refl _) bc1 U' U'' U' hU'' hU1
-  haveI : IsMonHom bc.hom := hmon (by show IsMonHom (𝟙 _); infer_instance) mbc1
+  have : IsMonHom bc.hom := hmon (by show IsMonHom (𝟙 _); infer_instance) mbc1
   refine ⟨bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ)), ?_, h', bc, rfl, hU, ?_⟩
   · exact ((isGrpPullback_of_iso bc).comp (isGrpPullback_pullback G' (spMap (Gal.hom σ)))).congr (Category.id_comp _) rfl
   · refine ⟨fun x => by rw [hxe', hxe]; exact hPO.1 x, fun b c hb hc => ?_⟩
@@ -1211,12 +1211,12 @@ theorem exists_galois_embedding (R R' : Type) [CommRing R] [IsDomain R] [CharZer
   classical
   set K := FractionRing R
   set Ω := AlgebraicClosure K
-  haveI : FaithfulSMul R R' := (faithfulSMul_iff_algebraMap_injective R R').2 hinj
+  have : FaithfulSMul R R' := (faithfulSMul_iff_algebraMap_injective R R').2 hinj
   have hΩ : Function.Injective (algebraMap R Ω) := by
     rw [IsScalarTower.algebraMap_eq R K Ω]
     exact (algebraMap K Ω).injective.comp (IsFractionRing.injective R K)
-  haveI : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).2 hΩ
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
+  have : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).2 hΩ
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
   let φ : R' →ₐ[R] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1228,12 +1228,12 @@ theorem exists_galois_embedding (R R' : Type) [CommRing R] [IsDomain R] [CharZer
       intro x hx
       rw [Ideal.mem_comap, RingHom.mem_ker, AlgHom.commutes] at hx
       exact hΩ (by simpa using hx)
-    have h2 : RingHom.ker φ = ⊥ := Ideal.eq_bot_of_comap_eq_bot h1
+    have h2 : RingHom.ker φ = ⊥ := Ideal.eq_bot_of_under_eq_bot h1
     exact (RingHom.injective_iff_ker_eq_bot φ).2 h2
   obtain ⟨s, hs⟩ := (Module.finite_def.1 (inferInstance : Module.Finite R R'))
   let M : IntermediateField K Ω := IntermediateField.adjoin K (φ '' (s : Set R'))
-  haveI : Finite (φ '' (s : Set R')) := (s.finite_toSet.image φ).to_subtype
-  haveI : FiniteDimensional K M :=
+  have : Finite (φ '' (s : Set R')) := (s.finite_toSet.image φ).to_subtype
+  have : FiniteDimensional K M :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   let L : IntermediateField K Ω := IntermediateField.normalClosure K M Ω
   have hML : M ≤ L := IntermediateField.le_normalClosure M
@@ -1298,7 +1298,7 @@ theorem isGal_integralClosure_of_tower (R : Type) [CommRing R] [IsDomain R] [IsI
     IsGal (algebraMap R (integralClosure R L)) := by
   set K := FractionRing R
   set B := integralClosure R L
-  haveI : IsFractionRing B L := integralClosure.isFractionRing_of_finite_extension K L
+  have : IsFractionRing B L := integralClosure.isFractionRing_of_finite_extension K L
   have hRL : ∀ r : R, algebraMap B L (algebraMap R B r) = algebraMap K L (algebraMap R K r) := fun r => by
     rw [← IsScalarTower.algebraMap_apply R K L]; rfl
   have hfix : ∀ τ : Gal (algebraMap R B), ∀ k : K,
@@ -1353,8 +1353,8 @@ theorem exists_galois_finExt_isLocalHom : ∀ (R R' : Type) [CommRing R] [IsDoma
   intro R R' _ _ _ _ _ _ ρ hR hρ
   obtain ⟨⟨hRn, -, hRic, hRc⟩, hR0⟩ := hR
   obtain ⟨-, hinj, hfin⟩ := hρ
-  letI : Algebra R R' := ρ.toAlgebra
-  haveI : Module.Finite R R' := hfin
+  let : Algebra R R' := ρ.toAlgebra
+  have : Module.Finite R R' := hfin
   obtain ⟨L, hLf, hLg, j, hj⟩ := exists_galois_embedding R R' hinj
   set B := integralClosure R L
   obtain ⟨hBfin, hBloc, hBn, hBic, -⟩ := GlobalTheory.integralClosure_finite_local_of_isAdicComplete R hRc L

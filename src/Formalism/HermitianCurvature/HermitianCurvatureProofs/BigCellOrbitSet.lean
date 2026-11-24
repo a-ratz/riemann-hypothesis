@@ -62,7 +62,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.big_cell_orbit_set : GqOm := by
       apply measure_mono_null (t := Metric.sphere (0 : ℂ)
         (Real.sqrt (Formalism.QuantumDeterminants.Tz k r D.z * Formalism.QuantumDeterminants.Tz k r D.z')))
       · intro w hw
-        simp only [Set.mem_setOf_eq] at hw
+        simp only [Set.mem_ofPred_eq] at hw
         simp only [Metric.mem_sphere, dist_zero_right]
         rw [← hw, Complex.normSq_eq_norm_sq, Real.sqrt_sq (norm_nonneg _)]
       · exact Measure.addHaar_sphere _ _ _
@@ -70,7 +70,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.big_cell_orbit_set : GqOm := by
   rw [ae_restrict_iff' (Formalism.FourierDecayAlt.P.B7.measurableSet_Qset D)]
   filter_upwards [compl_mem_ae_iff.mpr hnull] with q hq hqQ
   apply Formalism.FourierDecayAlt.P.BigCellHermitian.gqDom D
-  simp only [B.Qset, Set.mem_setOf_eq] at hqQ
+  simp only [B.Qset, Set.mem_ofPred_eq] at hqQ
   unfold Formalism.QuantumDeterminants.bcWeight at hqQ
   split_ifs at hqQ with hle
   · refine ⟨?_, ?_⟩

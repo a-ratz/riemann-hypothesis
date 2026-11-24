@@ -150,7 +150,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
   intro D i r Xs k M C e h
   have hl : (D.nd.l i).Prime := Fact.out
   have hfin := finite_placesOver D.host.E (D.nd.l i) hl.ne_zero
-  letI : Fintype ↥(placesOver D.host.E (D.nd.l i)) := hfin.fintype
+  let : Fintype ↥(placesOver D.host.E (D.nd.l i)) := hfin.fintype
   obtain ⟨C', h₁, h₂, h₃⟩ := exists_le_forall_le
     (fun q : ↥(placesOver D.host.E (D.nd.l i)) =>
       (HfD (Br.PD D.loc D.nbr i q.1 q.2) (Br.locLat D.nbr i q.1 q.2 M)).comap (locFunS i M q.1 q.2))

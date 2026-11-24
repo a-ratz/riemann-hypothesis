@@ -107,7 +107,7 @@ open GlobalTheory.LocGL GlobalTheory.SmGL
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem continuous_symm {D : D7} (I : Ident D) (k : Fin 2) (v : D.nd.PlG k) : Continuous (I.i k v).symm := by
-  letI := (I.i k v).toRingHom.toAlgebra
+  let := (I.i k v).toRingHom.toAlgebra
   have : ContinuousSMul ℚ_[D.host.g k] ((D.naut.plGw k v).adicCompletion D.host.E) :=
     continuousSMul_of_algebraMap _ _ (I.cont k v)
   let el : ℚ_[D.host.g k] ≃ₗ[ℚ_[D.host.g k]] (D.naut.plGw k v).adicCompletion D.host.E :=

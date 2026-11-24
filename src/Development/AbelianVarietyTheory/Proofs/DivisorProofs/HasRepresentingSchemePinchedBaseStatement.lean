@@ -130,8 +130,8 @@ theorem exists_fam_of_pull : ∀ (S : Scheme.{0}) (A U U' : Over S) [GrpObj A] [
     rw [form, key, key, h.add.evc_one h.isLB, sub_zero]
   refine ⟨M, ⟨hM, GlobalTheory.T.isAdditive_lineBundleFamily_of_geometricFibres S A U hA M hM ((triv_ev_iff hM _ _).2 (by rw [form, sub_self])) ?_⟩, ?_⟩
   · intro K _ _ s t
-    haveI := hfin
-    haveI := hsurj
+    have := hfin
+    have := hsurj
     obtain ⟨b, hb⟩ := exists_lift_pt p.left t.left
     let t' : Over.mk s ⟶ U' := Over.homMk b (by
       rw [← Over.w p, ← Category.assoc, hb, Over.w t])
@@ -1329,8 +1329,8 @@ namespace GlobalTheory.Pinch.Aff
 
 theorem pinched_affine_of_spec : (∀ (R : Type) [CommRing R] [IsNoetherianRing R] (R' : Type) [CommRing R'] [Algebra R R'] [Module.Finite R R'], Function.Injective (algebraMap R R') → ∀ c : Ideal R, (∀ x ∈ c, ∀ r : R', ∃ y ∈ c, algebraMap R R' y = algebraMap R R' x * r) → ∀ (g : ℕ) (C' D E : Type) [CommRing C'] [CommRing D] [CommRing E] (φ : R' →+* C') (δ : R ⧸ c →+* D) (π : C' →+* E) (ψ : D →+* E), φ.Smooth → δ.IsStandardSmoothOfRelativeDimension g → IsPushout (CommRingCat.ofHom (φ.comp (algebraMap R R'))) (CommRingCat.ofHom (Ideal.Quotient.mk c)) (CommRingCat.ofHom π) (CommRingCat.ofHom (ψ.comp δ)) → IsPushout (CommRingCat.ofHom (δ.comp (Ideal.Quotient.mk c))) (CommRingCat.ofHom (algebraMap R R')) (CommRingCat.ofHom ψ) (CommRingCat.ofHom (π.comp φ)) → ∀ y : Sp E, GlobalTheory.Pinch.Pinched g (spMap (algebraMap R R')) (spMap (Ideal.Quotient.mk c)) (spMap φ) (spMap δ) (spMap π) (spMap ψ) (spMap π y)) → ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (R' : Type) [CommRing R'] [Algebra R R'] [Module.Finite R R'], Function.Injective (algebraMap R R') → ∀ c : Ideal R, (∀ x ∈ c, ∀ r : R', ∃ y ∈ c, algebraMap R R' y = algebraMap R R' x * r) → ∀ (g : ℕ) (B' C Y : Scheme.{0}) (b' : B' ⟶ Sp R') (e : C ⟶ Sp (R ⧸ c)) (i : Y ⟶ B') (q : Y ⟶ C), IsAffine B' → IsAffine C → Smooth b' → e.appTop.hom.IsStandardSmoothOfRelativeDimension g → IsPullback i (q ≫ e) (b' ≫ spMap (algebraMap R R')) (spMap (Ideal.Quotient.mk c)) → IsPullback q (i ≫ b') (e ≫ spMap (Ideal.Quotient.mk c)) (spMap (algebraMap R R')) → ∀ y : Y, GlobalTheory.Pinch.Pinched g (spMap (algebraMap R R')) (spMap (Ideal.Quotient.mk c)) b' e i q (i y) := by
   intro H R _ _ R' _ _ _ hinj c hc g B' C Y b' e i q hB hC hsm hss h1 h2 y
-  haveI : IsAffine Y := IsAffine.of_isPullback h1
-  haveI := hsm
+  have : IsAffine Y := IsAffine.of_isPullback h1
+  have := hsm
   set φc : CommRingCat.of R' ⟶ Γ(B', ⊤) := Spec.preimage (B'.isoSpec.inv ≫ b') with hφc
   set δc : CommRingCat.of (R ⧸ c) ⟶ Γ(C, ⊤) := Spec.preimage (C.isoSpec.inv ≫ e) with hδc
   set πc : Γ(B', ⊤) ⟶ Γ(Y, ⊤) := Spec.preimage (Y.isoSpec.inv ≫ i ≫ B'.isoSpec.hom) with hπc
@@ -1642,10 +1642,10 @@ open MvPolynomial in
 theorem exists_standardSmooth : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (R' : Type) [CommRing R'] [Algebra R R'] [Module.Finite R R'], Function.Injective (algebraMap R R') → ∀ c : Ideal R, (∀ x ∈ c, ∀ r : R', ∃ y ∈ c, algebraMap R R' y = algebraMap R R' x * r) → ∀ (g : ℕ) (C' D E : Type) [CommRing C'] [CommRing D] [CommRing E] (φ : R' →+* C') (δ : R ⧸ c →+* D) (π : C' →+* E) (ψ : D →+* E), φ.Smooth → δ.IsStandardSmoothOfRelativeDimension g → IsPushout (CommRingCat.ofHom (φ.comp (algebraMap R R'))) (CommRingCat.ofHom (Ideal.Quotient.mk c)) (CommRingCat.ofHom π) (CommRingCat.ofHom (ψ.comp δ)) → IsPushout (CommRingCat.ofHom (δ.comp (Ideal.Quotient.mk c))) (CommRingCat.ofHom (algebraMap R R')) (CommRingCat.ofHom ψ) (CommRingCat.ofHom (π.comp φ)) → ∃ (F : Type) (_ : CommRing F) (ε : R →+* F) (t : C') (α : F →+* Localization.Away t) (β : F →+* D) (τ : Localization.Away t →+* E), ε.IsStandardSmoothOfRelativeDimension g ∧ IsPushout (CommRingCat.ofHom ε) (CommRingCat.ofHom (algebraMap R R')) (CommRingCat.ofHom α) (CommRingCat.ofHom ((algebraMap C' (Localization.Away t)).comp φ)) ∧ IsPushout (CommRingCat.ofHom ε) (CommRingCat.ofHom (Ideal.Quotient.mk c)) (CommRingCat.ofHom β) (CommRingCat.ofHom δ) ∧ τ.comp (algebraMap C' (Localization.Away t)) = π ∧ τ.comp α = ψ.comp β := by
   intro R _ _ R' _ _ _ hinj c hc g C' D E _ _ _ φ δ π ψ hφ hδ h1 h2
   classical
-  letI : Algebra R' C' := φ.toAlgebra
-  letI : Algebra (R ⧸ c) D := δ.toAlgebra
-  haveI : Algebra.Smooth R' C' := hφ
-  haveI : IsNoetherianRing R' := IsNoetherianRing.of_finite R R'
+  let : Algebra R' C' := φ.toAlgebra
+  let : Algebra (R ⧸ c) D := δ.toAlgebra
+  have : Algebra.Smooth R' C' := hφ
+  have : IsNoetherianRing R' := IsNoetherianRing.of_finite R R'
   obtain ⟨ν₀, σ₀, _, _, P₀, hP₀⟩ := (show Algebra.IsStandardSmoothOfRelativeDimension g (R ⧸ c) D from hδ).out
   obtain ⟨hπ, hker⟩ := GlobalTheory.T.pushout_quotient_surjective_ker_eq_map R C' E c _ π _ h1
   obtain ⟨κ, _, ξ, hξ, hsurj⟩ := GlobalTheory.T.exists_generators_adapted_to_quotient_generators R (R ⧸ c) R' C' D E ν₀ (algebraMap R R') (Ideal.Quotient.mk c) π ψ P₀.val
@@ -1673,7 +1673,7 @@ theorem exists_standardSmooth : ∀ (R : Type) [CommRing R] [IsNoetherianRing R]
     (fun G hG ↦ GlobalTheory.T.mem_span_relations_conductor_of_eval_eq_zero R R' D E _ _ (algebraMap R R') c (π.comp φ) ψ P.val F P.aeval_val_surjective hkP h2 G
       (by rw [← key, show aeval ξ G = 0 from hG, map_zero]))
   obtain ⟨H, hH0, hH⟩ := GlobalTheory.T.exists_mvPolynomial_lift_conductor_coeffs R R' _ c hc _ hs1
-  letI : Fintype (κ ⊕ σ₀) := Fintype.ofFinite _
+  let : Fintype (κ ⊕ σ₀) := Fintype.ofFinite _
   let Δ : MvPolynomial (κ ⊕ ν₀) R := (Matrix.of fun s t ↦ pderiv (P.map s) (F t)).det
   have hΔ : aeval P.val (map (Ideal.Quotient.mk c) (Δ * (H + 1))) = P.jacobian := by
     rw [map_mul, map_add (f := _), hH0, map_one, zero_add, _root_.mul_one, P.jacobian_eq_jacobiMatrix_det, P.algebraMap_apply,

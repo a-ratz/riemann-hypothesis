@@ -67,13 +67,13 @@ namespace GlobalTheory
 theorem isOfFinOrder_of_conj_mem_ratU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (D : Subgroup (UA E n)),
     IsCompact (D : Set (UA E n)) → ∀ (g : UA E n), ∀ c ∈ D, g * c * g⁻¹ ∈ ratU E n → IsOfFinOrder c := by
   intro E _ _ _ n D hD g c hc hgc
-  haveI : T1Space (GA E n) := by
+  have : T1Space (GA E n) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
-  haveI : DiscreteTopology (ratGL E n).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E n
-  have hcl : IsClosed (((ratGL E n).range : Subgroup (GA E n)) : Set (GA E n)) := Subgroup.isClosed_of_discrete
+  have : DiscreteTopology (ratGL E n).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E n
+  have hcl : IsClosed (((ratGL E n).range : Subgroup (GA E n)) : Set (GA E n)) := Subgroup.isClosed_of_discreteTopology
   let K : Set (GA E n) := (fun x : UA E n => ((g * x * g⁻¹ : UA E n) : GA E n)) '' (D : Set (UA E n))
-  have hK : IsCompact K := hD.image (continuous_subtype_val.comp ((continuous_const.mul continuous_id).mul continuous_const))
+  have hK : IsCompact K := hD.image (continuous_subtypeVal.comp ((continuous_const.mul continuous_id).mul continuous_const))
   have hKG : IsCompact (K ∩ ((ratGL E n).range : Set (GA E n))) := hK.inter_right hcl
   let t : Set (ratGL E n).range := {x | (x : GA E n) ∈ K}
   have himg : Subtype.val '' t = K ∩ ((ratGL E n).range : Set (GA E n)) := by

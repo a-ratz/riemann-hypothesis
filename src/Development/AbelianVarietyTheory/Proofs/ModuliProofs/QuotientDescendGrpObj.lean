@@ -163,7 +163,7 @@ theorem quotient_descend_grpObj :
     rw [up_comp, he, MonObj.comp_one]
   have hb' {T : Over X'} (u : T ⟶ G') (c : O) : up H (u ≫ b c) = up H u ≫ a.act c := by
     rw [up_comp, hb, ← Category.assoc, ← up_comp, Category.comp_id]
-  letI : GrpObj G' :=
+  let : GrpObj G' :=
     { one := e
       mul := m
       one_mul := inj (f₂ f₀ hG') (by

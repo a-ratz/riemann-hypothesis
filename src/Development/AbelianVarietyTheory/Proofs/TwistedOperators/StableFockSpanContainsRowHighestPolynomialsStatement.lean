@@ -296,21 +296,21 @@ theorem colDerM_single (t : T) (k l : κ) :
   · rw [colDerM_X_xVar, colDer_X_xVar]
     by_cases ht : t' = t
     · by_cases hj : j = l
-      · subst hj; rw [if_pos ht, if_pos ⟨ht, rfl⟩, ← xForm_single]
+      · subst hj; rw [ite_eq_left ht, ite_eq_left ⟨ht, rfl⟩, ← xForm_single]
         congr 1; ext i; simp [single_apply, Pi.single_apply, eq_comm]
-      · rw [if_pos ht, if_neg (fun h => hj h.2)]
+      · rw [ite_eq_left ht, ite_eq_right (fun h => hj h.2)]
         have : (single l k (1 : R)) j = 0 := by ext i; simp [single_apply, Ne.symm hj, hj]
         rw [this, map_zero]
-    · rw [if_neg ht, if_neg (fun h => ht h.1)]
+    · rw [ite_eq_right ht, ite_eq_right (fun h => ht h.1)]
   · rw [colDerM_X_yVar, colDer_X_yVar]
     by_cases ht : t' = t
     · by_cases hj : j = k
-      · subst hj; rw [if_pos ht, if_pos ⟨ht, rfl⟩, ← yForm_single]
+      · subst hj; rw [ite_eq_left ht, ite_eq_left ⟨ht, rfl⟩, ← yForm_single]
         congr 2; ext i; simp [single_apply, Pi.single_apply, eq_comm]
-      · rw [if_pos ht, if_neg (fun h => hj h.2)]
+      · rw [ite_eq_left ht, ite_eq_right (fun h => hj h.2)]
         have : (fun r => single l k (1 : R) r j) = 0 := by ext i; simp [single_apply, hj, Ne.symm hj]
         rw [this, map_zero, neg_zero]
-    · rw [if_neg ht, if_neg (fun h => ht h.1)]
+    · rw [ite_eq_right ht, ite_eq_right (fun h => ht h.1)]
 
 end ColDerLin
 
@@ -419,7 +419,7 @@ theorem infinite_unit_circle : {u : ℂ | u * star u = 1}.Infinite := by
     simp at this
     exact_mod_cast (by linarith : (a : ℝ) = b)
   · intro n
-    rw [Set.mem_setOf_eq, Complex.star_def, map_div₀]
+    rw [Set.mem_ofPred_eq, Complex.star_def, map_div₀]
     simp only [map_add (f := _), map_sub, map_one, map_mul, Complex.conj_ofReal, Complex.conj_I]
     rw [div_mul_div_comm, div_eq_one_iff_eq (mul_ne_zero (hne n) (by simpa using hne' n))]
     ring
@@ -473,7 +473,7 @@ theorem colActHom_diagInvAt_monomial (t : T) (k : κ) (u : Rˣ) (m : Var T p q �
     | zero => simp [colWeight]
     | add m m' h h' =>
       have e : (monomial (m + m') 1 : Poly R T p q κ) = monomial m 1 * monomial m' 1 := by
-        rw [monomial_mul, mul_one]
+        rw [monomial_mul_monomial, mul_one]
       rw [e, map_mul, h, h', colWeight_add, _root_.zpow_add, Units.val_mul, smul_mul_smul_comm]
     | single v e => exact hpow v e
   intro m c
@@ -526,7 +526,7 @@ theorem colLie_diag_mem_of_unitary (W : Submodule ℂ (Poly ℂ T p q κ))
     (fun u (hu : u * star u = 1) h0 => by rw [h0, zero_mul] at hu; exact zero_ne_one hu)
     w.support (fun m => colWeight m t k) (fun m => monomial m (AddMonoidAlgebra.coeff w m)) (fun u hu => by
       have hu0 : u ≠ 0 := fun h0 => by
-        rw [Set.mem_setOf_eq, h0, zero_mul] at hu; exact zero_ne_one hu
+        rw [Set.mem_ofPred_eq, h0, zero_mul] at hu; exact zero_ne_one hu
       have := hW (Pi.mulSingle t (diagInvAt k (Units.mk0 u hu0)))
         (mulSingle_mem_unitaryGroup t _ (diagInvAt_mem_unitaryGroup k _ hu)) w hw
 
@@ -568,14 +568,14 @@ theorem colLie_mem_of_unitary_stable : ∀ {ι : Type} [Fintype ι] [DecidableEq
   let S : Submodule ℂ (Matrix (Fin n) (Fin n) ℂ) :=
     { carrier := {X | ∀ w ∈ W, colDerM (p := p) (q := q) t X w ∈ W}
       add_mem' := fun {X Y} hX hY w hw => by
-        rw [Set.mem_setOf_eq] at hX hY
+        rw [Set.mem_ofPred_eq] at hX hY
         rw [colDerM_add, Derivation.add_apply]; exact W.add_mem (hX w hw) (hY w hw)
       zero_mem' := fun w _ => by
         have : colDerM (p := p) (q := q) t (0 : Matrix (Fin n) (Fin n) ℂ) =
             (0 : ℂ) • colDerM t 0 := by rw [← colDerM_smul, zero_smul]
         rw [this, zero_smul, Derivation.zero_apply]; exact W.zero_mem
       smul_mem' := fun c X hX w hw => by
-        rw [Set.mem_setOf_eq] at hX
+        rw [Set.mem_ofPred_eq] at hX
         rw [colDerM_smul, Derivation.smul_apply]; exact W.smul_mem c (hX w hw) }
   have hdiag : ∀ m : Fin n, single m m (1 : ℂ) ∈ S := fun m w hw => by
     rw [colDerM_single]; exact colLie_diag_mem_of_unitary W hW t m hw
@@ -707,7 +707,7 @@ theorem phi_minorMinus (C : Ctx S T) (hn : T.rank ≤ S.rank) (τ : D.what₂.Ta
     have := α.2
     congr 1
     exact congrArg _ (Prod.ext rfl (Prod.ext rfl (Fin.ext (by
-      simp only [Harm.lead, Fin.coe_castLE, Fin.revPerm_apply, Fin.val_rev]
+      simp only [Harm.lead, Fin.val_castLE, Fin.revPerm_apply, Fin.val_rev]
       omega))))
   refine ⟨((Equiv.Perm.sign (Fin.revPerm : Equiv.Perm (Fin (i.val + 1))) : ℤ) : ℂ) *
     (((2 / fockScale D τ : ℝ) : ℂ)) ^ (i.val + 1), ?_⟩
@@ -778,10 +778,10 @@ theorem GlobalTheory.RenamedMinors.renamed_delta_mem_rowHighest : ∀ (D : D7) (
   · change phi C _ ∈ _
     rw [hκ, ← MvPolynomial.smul_eq_C_mul]
     refine Submodule.smul_mem _ κ (Harm.minorProd_mem_rowHighest _ _ fun t a b => ?_)
-    rw [single_dotProduct, one_mul, Pi.single_apply, if_neg]
+    rw [single_dotProduct, one_mul, Pi.single_apply, ite_eq_right]
     intro h
     have h' := congrArg Fin.val h
-    simp only [Fin.coe_castLE] at h'
+    simp only [Fin.val_castLE] at h'
     have := a.2
     have := b.2
     omega
@@ -950,7 +950,7 @@ theorem revB_isB : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B₀ : C.Bas), C.Is
     show sgn C.X.p0 ((revPos C.X.p0 a : Fin T.rank) : ℕ) = _
     unfold revPos
     split_ifs with h
-    · simp only [sgn, if_pos h.1, if_pos (show C.X.p0 - 1 - (a : ℕ) < C.X.p0 by omega)]
+    · simp only [sgn, ite_eq_left h.1, ite_eq_left (show C.X.p0 - 1 - (a : ℕ) < C.X.p0 by omega)]
     · rfl
   have hD : (sgnM C.X).submatrix σ σ = sgnM C.X := by
     unfold sgnM

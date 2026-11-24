@@ -50,7 +50,7 @@ private theorem isPlaceOver_under {L Ω : Type} [Field L] [NumberField L] [IsCMF
 theorem UpperTheory.V.Z.Sym.Pl.linkUnr :
     UpperTheory.V.Z.Sym.Pl.LinkUnr := by
   intro Ω _ _ _ l _ O _ _ η Ψ σ g₁ B M L _ _ _ _ Φ k
-  haveI : IsAlgClosure L Ω :=
+  have : IsAlgClosure L Ω :=
     { isAlgClosed := IsAlgClosure.isAlgClosed ℚ
       isAlgebraic := haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
         Algebra.IsAlgebraic.tower_top (K := ℚ) L }

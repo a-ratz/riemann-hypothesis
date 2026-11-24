@@ -516,7 +516,7 @@ theorem clopen_cut_closedImmersion : ∀ {X Z₁ : Scheme.{0}} (i : Z₁ ⟶ X),
   have hVc : IsClosed (Set.range (i ⁻¹ᵁ U).ι.base) := by
     rw [Scheme.Opens.range_ι]
     exact hU.preimage i.base.hom.continuous
-  haveI : IsClosedImmersion (i ⁻¹ᵁ U).ι := IsClosedImmersion.of_isPreimmersion _ hVc
+  have : IsClosedImmersion (i ⁻¹ᵁ U).ι := IsClosedImmersion.of_isPreimmersion _ hVc
   refine ⟨(i ⁻¹ᵁ U), (i ⁻¹ᵁ U).ι ≫ i, inferInstance, fun T g => ?_⟩
   constructor
   · rintro ⟨z, rfl⟩
@@ -705,7 +705,7 @@ theorem exists_torsLift {G H : Type} [Group G] [Group H] (p : ℕ) (ρ : G →* 
   refine ⟨fun x => if h : ∃ g : G, (∃ n, 0 < n ∧ n.Coprime p ∧ g ^ n = 1) ∧ ρ g = x then h.choose else 1, ?_⟩
   intro n hn hnp g hg
   have h : ∃ g' : G, (∃ n, 0 < n ∧ n.Coprime p ∧ g' ^ n = 1) ∧ ρ g' = ρ g := ⟨g, ⟨n, hn, hnp, hg⟩, rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   obtain ⟨⟨m, hm, hmp, hgm⟩, he⟩ := h.choose_spec
   exact hi (m * n) (Nat.mul_pos hm hn) (Nat.Coprime.mul_left hmp hnp) _ _
     (by rw [pow_mul, hgm, one_pow]) (by rw [mul_comm, pow_mul, hg, one_pow]) he
@@ -804,7 +804,7 @@ theorem transport_alg :
     · rw [hact'1]
   · intro n hn hnp a
     have hg : 0 < n ∧ n.Coprime p := ⟨hn, hnp⟩
-    simp only [if_pos hg]
+    simp only [ite_eq_left hg]
     rw [← I.ker n hn hnp a]
     obtain ⟨h1, h2⟩ := hLx n hn hnp _ (hevt n hn hnp a)
     constructor
@@ -815,7 +815,7 @@ theorem transport_alg :
       rw [h, ← map_one ρ, hL n hn hnp 1 (one_pow n), map_one]
   · intro n hn hnp y
     have hg : 0 < n ∧ n.Coprime p := ⟨hn, hnp⟩
-    simp only [if_pos hg]
+    simp only [ite_eq_left hg]
     constructor
     · intro hy
       obtain ⟨g, hg1, rfl⟩ := hρ's n hn hnp y hy
@@ -828,14 +828,14 @@ theorem transport_alg :
     have hnm0 : 0 < n * m := Nat.mul_pos hn hm
     have hg1 : 0 < n * m ∧ (n * m).Coprime p := ⟨hnm0, hnm⟩
     have hg2 : 0 < n ∧ n.Coprime p := ⟨hn, hnp⟩
-    simp only [if_pos hg1, if_pos hg2]
+    simp only [ite_eq_left hg1, ite_eq_left hg2]
     obtain ⟨h1, h2⟩ := hLx (n * m) hnm0 hnm _ (hevt _ hnm0 hnm a)
     have := hL n hn hnp (L (I.ev (n * m) a) ^ m) (by rw [← pow_mul, mul_comm m n, h1])
     rw [map_pow, h2, I.tower n m hn hm hnm] at this
     rw [← map_pow, ← this]
   · intro n hn hnp a b
     have hg : 0 < n ∧ n.Coprime p := ⟨hn, hnp⟩
-    simp only [if_pos hg]
+    simp only [ite_eq_left hg]
     obtain ⟨ga1, ga2⟩ := hLx n hn hnp _ (hevt n hn hnp a)
     obtain ⟨gb1, gb2⟩ := hLx n hn hnp _ (hevt n hn hnp b)
     obtain ⟨u, hu, he, he'⟩ := hpair n hn hnp _ _ ga1 gb1
@@ -849,7 +849,7 @@ theorem transport_alg :
     exact he'
   · intro n hn hnp a g hg hρg
     have hgd : 0 < n ∧ n.Coprime p := ⟨hn, hnp⟩
-    simp only [if_pos hgd]
+    simp only [ite_eq_left hgd]
     rw [← hρg, hL n hn hnp g hg]
 
 end GlobalTheory.UPel.HT.TateTransportO
@@ -974,11 +974,11 @@ theorem geomAt_transport {b : Base D R} {N : ℕ} (hN : 0 < N) (hNp : N.Coprime 
     (GlobalTheory.rootsOfUnity_map_bijective_of_henselian R' k' φ' n hn (hRu n hn hnp))
   have h7 : ∀ (c : D.O) (g h : Over.mk t ⟶ A), (g * h) ≫ o.act.act c = (g ≫ o.act.act c) * (h ≫ o.act.act c) := by
     intro c g h
-    haveI := o.act.hom c
+    have := o.act.hom c
     exact MonObj.mul_comp _ _ _
   have h8 : ∀ c, (1 : Over.mk (spMap φ' ≫ t) ⟶ A) ≫ o.act.act c = 1 := by
     intro c
-    haveI := o.act.hom c
+    have := o.act.hom c
     exact MonObj.one_comp _
   have h9 : ∀ n : ℕ, 0 < n → n.Coprime p → ∀ g h : Over.mk t ⟶ A, g ^ n = 1 → h ^ n = 1 →
       ∃ u : R'ˣ, u ^ n = 1 ∧ Out.WeilIs A PP.L (n : ℤ) (ρ g) (ρ h) (unitOn (Units.map φ.toMonoidHom u)) ∧
@@ -1160,8 +1160,8 @@ theorem relRep_htPull : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [C
   have hZj := (hZ Z j).1 ⟨𝟙 Z, Category.id_comp _⟩
   obtain ⟨u, ψ, ψ₂, pbu, squ, isou, actu, etau⟩ := GlobalTheory.T.exists_harrisTaylorObject_over_lieTate_locus p D R b N hN hNp h M B ζ S s₁ t c e he hc E πE AE
     φE φ₂E actE ηE pbE sqE rosE etaE Z j hZj.1 hZj.2
-  haveI : IsFinite πE := hEf
-  haveI : Mono j := inferInstance
+  have : IsFinite πE := hEf
+  have : Mono j := inferInstance
   refine ⟨Z, j ≫ πE, u, ψ ≫ φE, ψ₂, pbu.comp pbE, squ, isou, inferInstance, ?_⟩
   intro T g t' o φ φ₂ hgt pbo sqo isoo
   have rosO : RosatiFor D o.act (c.P.pull φ₂) :=
@@ -1305,7 +1305,7 @@ open GlobalTheory.SiegelPull GlobalTheory.SiegelPullComp
 
 theorem relRep_siegel : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M e : ℕ), 3 ≤ N → N.Coprime p → 3 ≤ M → Odd M → M.Coprime p → e.Coprime p → ∀ (Y : Scheme.{0}) (s : Y ⟶ Sp (cycAway M)) (c : SiegPre h M (zetaAway M) s), SiegKerBy c e → IsLocallyNoetherian (pullback (s ≫ spMap (Int.castRingHom (cycAway M))) (spMap (Int.castRingHom R))) → ∃ (Z : Scheme.{0}) (π : Z ⟶ pullback (s ≫ spMap (Int.castRingHom (cycAway M))) (spMap (Int.castRingHom R))) (u : Obj b N (π ≫ pullback.snd _ _)) (lev : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over Z) ⟶ u.A)), IsSympLev u.P h M (zetaAway M) (π ≫ pullback.fst _ _ ≫ s) lev ∧ IsFinite π ∧ (∀ (T : Scheme.{0}) (g : T ⟶ Z) (t : T ⟶ Sp R) (t₁ : T ⟶ Sp (cycAway M)) (o : Obj b N t) (l : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over T) ⟶ o.A)) (hl : IsSympLev o.P h M (zetaAway M) t₁ l), (∃ m : ObjMap o u g, ∀ a, (l a).left ≫ m.φ = g ≫ (lev a).left) → SiegPB (o.toSieg hl) c (g ≫ π ≫ pullback.fst _ _)) ∧ ∀ (T : Scheme.{0}) (t₀ : T ⟶ Y) (t : T ⟶ Sp R) (t₁ : T ⟶ Sp (cycAway M)) (o : Obj b N t) (l : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over T) ⟶ o.A)) (hl : IsSympLev o.P h M (zetaAway M) t₁ l), SiegPB (o.toSieg hl) c t₀ → ∃! g : T ⟶ Z, g ≫ π ≫ pullback.fst _ _ = t₀ ∧ g ≫ π ≫ pullback.snd _ _ = t ∧ ∃ m : ObjMap o u g, ∀ a, (l a).left ≫ m.φ = g ≫ (lev a).left := by
   intro p _ D R _ b N h M e hN hNp hM hMo hMp hep Y s c hker hY
-  haveI := hY
+  have := hY
   obtain ⟨⟨c', hc'⟩, -⟩ := GlobalTheory.siegPre_pullback h M (cycAway M) (zetaAway M) Y _ s
     (pullback.fst (s ≫ spMap (Int.castRingHom (cycAway M))) (spMap (Int.castRingHom R)) ≫ s) (pullback.fst _ _) c rfl
   have hker' : SiegKerBy c' e := siegKerBy_pull hc' hker

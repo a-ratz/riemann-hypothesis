@@ -56,9 +56,9 @@ theorem exists_open_psiAway_mem_conj_level : ∀ (p : ℕ) [Fact p.Prime] (G : H
     ∃ O : Set ((AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ), IsOpen O ∧ 1 ∈ O ∧ ∀ z ∈ O, InT G (AfP p) β y z →
       ∃ k ∈ L.K.toSubgroup, ((r₁ * k * r₁⁻¹ : G.GAf) : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) = psiAway G x z := by
   intro p _ G L β x t hx y r₁
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) (AfP p ⊗[ℚ] G.C)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) (AfP p ⊗[ℚ] G.C)
   let K' : Set G.GAf := (fun g : G.GAf => r₁⁻¹ * g * r₁) ⁻¹' (L.K : Set G.GAf)
   have hK'o : IsOpen K' :=
     L.K.isOpen.preimage ((continuous_const.mul continuous_id).mul continuous_const)

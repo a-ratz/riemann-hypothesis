@@ -549,8 +549,8 @@ theorem dich_pt {Z : Subalgebra k (Matrix (Fin N) (Fin N) k)} {χ : k[X]} {q : �
         = ∑ e ∈ P, ∑ f ∈ Q, if e * f = e then (e.rank / dA (Sx D x) e) ^ 2 else 0 := by
           refine Finset.sum_congr rfl fun e he => ?_
           obtain ⟨f₀, hf₀, hef₀⟩ := ef_exists D hZ hx hχ (mP.mp he)
-          rw [Finset.sum_eq_single_of_mem f₀ (mQ.mpr hf₀) fun f hf hne => if_neg fun h =>
-            hne (ef_unique D hZ hx hχ (mP.mp he) (mQ.mp hf) hf₀ h hef₀), if_pos hef₀]
+          rw [Finset.sum_eq_single_of_mem f₀ (mQ.mpr hf₀) fun f hf hne => ite_eq_right fun h =>
+            hne (ef_unique D hZ hx hχ (mP.mp he) (mQ.mp hf) hf₀ h hef₀), ite_eq_left hef₀]
       _ = ∑ f ∈ Q, ∑ e ∈ P with e * f = e, (e.rank / dA (Sx D x) e) ^ 2 := by
           rw [Finset.sum_comm]; exact Finset.sum_congr rfl fun f _ => (Finset.sum_filter _ _).symm
 
@@ -630,9 +630,9 @@ theorem conj_pow' {N : ℕ} (g : GL (Fin N) k) (y : Matrix (Fin N) (Fin N) k) (n
 
 theorem roots_finite {N : ℕ} {Z : Subalgebra k (Matrix (Fin N) (Fin N) k)} (hZ : CR Z) {χ : k[X]} (hχ : χ ≠ 0) :
     {c : Matrix (Fin N) (Fin N) k | c ∈ Z ∧ aeval c χ = 0}.Finite := by
-  letI : CommRing Z := { (inferInstance : Ring ↥Z) with mul_comm := fun a b => Subtype.ext (hZ.1 a a.2 b b.2) }
-  haveI : IsReduced Z := hZ.2
-  haveI : IsArtinianRing Z := IsArtinianRing.of_finite k Z
+  let : CommRing Z := { (inferInstance : Ring ↥Z) with mul_comm := fun a b => Subtype.ext (hZ.1 a a.2 b b.2) }
+  have : IsReduced Z := hZ.2
+  have : IsArtinianRing Z := IsArtinianRing.of_finite k Z
   have hT : {c : Z | aeval c χ = 0}.Finite := by
     refine Set.Finite.of_finite_image ?_ (IsArtinianRing.equivPi Z).injective.injOn
     refine (Set.Finite.pi (t := fun I : MaximalSpectrum Z => χ.rootSet (Z ⧸ I.asIdeal))
@@ -663,8 +663,8 @@ theorem root_of_nil {N : ℕ} {Z : Subalgebra k (Matrix (Fin N) (Fin N) k)} (hZ 
     · exact hxc.symm
     · rfl
   let A := Algebra.adjoin k ({x, c} : Set (Matrix (Fin N) (Fin N) k))
-  haveI : IsMulCommutative A := Algebra.isMulCommutative_adjoin k (fun a ha b hb _ => hcomm a ha b hb)
-  letI : CommRing A := { (inferInstance : Ring A) with mul_comm := fun a b => mul_comm' a b }
+  have : IsMulCommutative A := Algebra.isMulCommutative_adjoin k (fun a ha b hb _ => hcomm a ha b hb)
+  let : CommRing A := { (inferInstance : Ring A) with mul_comm := fun a b => mul_comm' a b }
   let xa : A := ⟨x, Algebra.subset_adjoin (by simp)⟩
   let ca : A := ⟨c, Algebra.subset_adjoin (by simp)⟩
   have hna : IsNilpotent (xa - ca) := (IsNilpotent.map_iff (f := A.val) Subtype.val_injective).1 hn
@@ -680,7 +680,7 @@ theorem root_of_nil {N : ℕ} {Z : Subalgebra k (Matrix (Fin N) (Fin N) k)} (hZ 
     rw [← Polynomial.aeval_algHom_apply]
     exact h4
   have h6 : aeval c' χ = 0 := by
-    haveI : IsReduced Z := hZ.2
+    have : IsReduced Z := hZ.2
     exact h5.eq_zero
   have h7 := congrArg Subtype.val h6
   rwa [Polynomial.aeval_subalgebra_coe] at h7
@@ -703,7 +703,7 @@ theorem pieceGood_of (hF : PositivityTheory.PfBern.Frob.FrobeniusReciprocity) (h
   have rt_inj : Function.Injective rt := fun j j' h => hfin.toFinset.equivFin.symm.injective (Subtype.ext h)
   have hred : ∀ c ∈ Z, IsNilpotent c → c = 0 := fun c hc hn => by
     have h : IsNilpotent (⟨c, hc⟩ : Z) := (IsNilpotent.map_iff (f := Z.val) Subtype.val_injective).1 hn
-    haveI : IsReduced Z := hZ.2
+    have : IsReduced Z := hZ.2
     exact congrArg Subtype.val h.eq_zero
   have hcz : ∀ c ∈ Z, ∀ x ∈ Bz Z, x - c ∈ Bz Z := fun c hc x hx a ha => by
     rw [mul_sub, sub_mul, hx a ha, hZ.1 a ha c hc]
@@ -730,13 +730,13 @@ theorem pieceGood_of (hF : PositivityTheory.PfBern.Frob.FrobeniusReciprocity) (h
     have hxB : x ∈ Bz Z := (hsub _ x hx).1
     simp only [G] at hx hy
     by_cases hb : bad i
-    · rw [if_pos hb] at hx hy
+    · rw [ite_eq_left hb] at hx hy
       split_ifs at hx hy with h1 h2
       · rw [h1, h2]
       · simp at hy
       · simp at hx
       · simp at hx
-    · rw [if_neg hb] at hx hy
+    · rw [ite_eq_right hb] at hx hy
       cases s with
       | none => simp at hx
       | some a =>
@@ -789,7 +789,7 @@ theorem pieceGood_of (hF : PositivityTheory.PfBern.Frob.FrobeniusReciprocity) (h
       ⟨hx, by rw [← hc]; exact Matrix.aeval_self_charpoly x, by funext t; simp [τ, i]⟩
     by_cases hb : bad i
     · refine ⟨(i, none), ?_⟩
-      simp only [G, if_pos hb, if_true]
+      simp only [G, ite_eq_left hb, ite_true]
       exact hxp
     · rcases hD N q Z hZ χ D (τ i) x hxp with h | ⟨c, hc, hn⟩
       · exact (hb ⟨x, hxp, h⟩).elim
@@ -797,7 +797,7 @@ theorem pieceGood_of (hF : PositivityTheory.PfBern.Frob.FrobeniusReciprocity) (h
         have hmem : c ∈ hfin.toFinset := hfin.mem_toFinset.2 ⟨hc, hroot⟩
         refine ⟨(i, some (hfin.toFinset.equivFin ⟨c, hmem⟩)), ?_⟩
         have hrtc : rt (hfin.toFinset.equivFin ⟨c, hmem⟩) = c := by simp [rt]
-        simp only [G, if_neg hb, Option.elim_some]
+        simp only [G, ite_eq_right hb, Option.elim_some]
         refine ⟨hxp, ?_⟩
         rw [hrtc]
         exact hB _ (hcz c hc x hx) hn
@@ -932,7 +932,7 @@ theorem orbClosed_gen (N r : ℕ) (A : Type) [CommRing A] [Algebra k A] [FiniteD
         (isClosed_idem_rank (ρ₀ e).rank).preimage (hΦc (s e))
   convert hS using 1
   ext w
-  simp only [S, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [S, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, Set.mem_preimage]
   constructor
   · rintro ⟨g, hg⟩
     have hΦ : ∀ c, Φ w c = g.val * ρ₀ (L c) * g⁻¹.val := fun c => by
@@ -1176,7 +1176,7 @@ theorem first_orbit_map_eq_one_iff (p : Ys D τ) : p1 D τ e₁ p = ((1 : GL (Fi
   e_eq_one_iff he₁ _
 
 theorem continuous_first_orbit_map : Continuous (p1 D τ e₁) :=
-  e₁.symm.continuous.comp (Continuous.subtype_mk (continuous_fst.comp continuous_subtype_val) _)
+  e₁.symm.continuous.comp (Continuous.subtype_mk (continuous_fst.comp continuous_subtypeVal) _)
 
 theorem mem_piece_of_first_fibre (hZ : CR Z) (y : Fib (p1 D τ e₁)) : y.1.1.2 ∈ piece D τ ×ˢ (Set.univ : Set (Fin N → k)) := by
   obtain ⟨⟨p, hp⟩, hy⟩ := y
@@ -1230,8 +1230,8 @@ theorem second_orbit_map_eq_one_iff (p : Ys D τ) : p2 D τ hOH hZ hx₀ e₂ p 
 omit he₂ in
 theorem continuous_p2 : Continuous (p2 D τ hOH hZ hx₀ e₂) := by
   unfold p2
-  exact e₂.symm.continuous.comp ((Continuous.swc D (continuous_fst.comp continuous_subtype_val)
-    (continuous_fst.comp (continuous_snd.comp continuous_subtype_val))).subtype_mk _)
+  exact e₂.symm.continuous.comp ((Continuous.swc D (continuous_fst.comp continuous_subtypeVal)
+    (continuous_fst.comp (continuous_snd.comp continuous_subtypeVal))).subtype_mk _)
 
 end E2
 
@@ -1367,14 +1367,14 @@ def actH {N : ℕ} (g : GL (Fin N) k) : Sp k N ≃ₜ Sp k N where
 
 theorem transfer_of : (PositivityTheory.PfBern.Frob.FrobeniusReciprocity → DoubleTransfer) → OrbHom k → OrbClosed k → Transfer k := by
   intro hDT hOH hOC hFr p _ _ hU N q Z hZ χ D τ x₀ hx₀ hV ξ hsupp hinv f hf
-  haveI : T2Space k := t2k
-  haveI : TotallyDisconnectedSpace k := tdk
-  haveI : SecondCountableTopology k := sck
-  haveI : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) := tdM
-  haveI : LocallyCompactSpace (Matrix (Fin N) (Fin N) k) := inferInstanceAs (LocallyCompactSpace (Fin N → Fin N → k))
-  haveI : SecondCountableTopology (GL (Fin N) k) := GlobalTheory.SplitFlip.secondCountable_GL
-  letI : MeasurableSpace (GL (Fin N) k) := borel _
-  haveI : BorelSpace (GL (Fin N) k) := ⟨rfl⟩
+  have : T2Space k := t2k
+  have : TotallyDisconnectedSpace k := tdk
+  have : SecondCountableTopology k := sck
+  have : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) := tdM
+  have : LocallyCompactSpace (Matrix (Fin N) (Fin N) k) := inferInstanceAs (LocallyCompactSpace (Fin N → Fin N → k))
+  have : SecondCountableTopology (GL (Fin N) k) := GlobalTheory.SplitFlip.secondCountable_GL
+  let : MeasurableSpace (GL (Fin N) k) := borel _
+  have : BorelSpace (GL (Fin N) k) := ⟨rfl⟩
   have hP := pieceTop k N q Z hZ χ D τ
   have hCR : CR (Sx D x₀) := hP.2.2 x₀ hx₀
   have hB0 : x₀ ∈ Bz Z := hx₀.1
@@ -1382,11 +1382,11 @@ theorem transfer_of : (PositivityTheory.PfBern.Frob.FrobeniusReciprocity → Dou
   obtain ⟨e₁, he₁⟩ := exists_orb_homeo hOC hZ D.hz
   obtain ⟨e₂, he₂⟩ := exists_orb_homeo hOC hCR (sx_span D hB0 hχ0)
   have hYc : IsClosed (Ys D τ) := isClosed_Ys D hOC hZ τ hP.2.1
-  haveI : LocallyCompactSpace (Ys D τ) := hYc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (Ys D τ) := hYc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hp₁ := oneFormsMapOfFunctorMorphism_smul (τ := τ) he₁
   have hp₂ := second_orbit_map_equivariant (τ := τ) (hOH := hOH) (hZ := hZ) (hx₀ := hx₀) he₂
   let C : Set (Ys D τ) := {y | y.1.2.2 = 0}
-  have hCc : IsClosed C := isClosed_eq (continuous_snd.comp (continuous_snd.comp continuous_subtype_val)) continuous_const
+  have hCc : IsClosed C := isClosed_eq (continuous_snd.comp (continuous_snd.comp continuous_subtypeVal)) continuous_const
   have hCinv : ∀ (g : GL (Fin N) k), ∀ y ∈ C, g • y ∈ C := by
     intro g y hy
     change g.val *ᵥ y.1.2.2 = 0
@@ -1424,7 +1424,7 @@ theorem transfer_of : (PositivityTheory.PfBern.Frob.FrobeniusReciprocity → Dou
     obtain ⟨f0, hf0⟩ := restr_surjective hY2c φ'
     have hsupp' : Function.support (φ' : Ys2 D τ x₀ → ℂ) ⊆ {y | y.1.2 ≠ 0} := fun y hy => hφ0 hy
     have hK : IsCompact (Subtype.val '' Function.support (φ' : Ys2 D τ x₀ → ℂ)) :=
-      (isCompact_support φ'.2).image continuous_subtype_val
+      (isCompact_support φ'.2).image continuous_subtypeVal
     have hKsub : Subtype.val '' Function.support (φ' : Ys2 D τ x₀ → ℂ) ⊆ {q : Sp k N | q.2 ≠ 0} := by
       rintro _ ⟨y, hy, rfl⟩
       exact hsupp' hy

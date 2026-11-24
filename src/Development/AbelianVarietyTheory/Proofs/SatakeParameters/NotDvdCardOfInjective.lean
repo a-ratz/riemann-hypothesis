@@ -59,7 +59,7 @@ theorem not_dvd_card_of_injective {E : Type} [Field E] [NumberField E] {n : ℕ}
     (f : G →* (Sp E n ≃ₗ[E] Sp E n)) (hf : Function.Injective f) {p : ℕ} (hp : p.Prime)
     (hb : Module.finrank ℚ E * n + 1 < p) : ¬ p ∣ Nat.card G := by
   intro hd
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' p hd
   let A : Module.End ℚ (Sp E n) := ((f g : Sp E n ≃ₗ[E] Sp E n) : Sp E n →ₗ[E] Sp E n).restrictScalars ℚ
   have hApow : ∀ (k : ℕ) (x : Sp E n), (A ^ k) x = (f (g ^ k)) x := by
@@ -287,7 +287,7 @@ theorem piT_notMem_rowSG (hPr : Pr.Ok) (hsel : IsSel X sel) (u : Pr.Word) (hS : 
       have h6 : ringChar (𝓞 X.F ⧸ v0.asIdeal) ∣ Pr.T u := by
         rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v0.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
         exact h5
-      haveI := v0.isPrime
+      have := v0.isPrime
       rcases (Nat.dvd_prime (hPr.T_prime u)).1 h6 with h7 | h7
       · exact absurd h7 CharP.ringChar_ne_one
       · change ringChar (𝓞 X.F ⧸ v0.asIdeal) ∈ S
@@ -331,7 +331,7 @@ theorem valuation_PtilE_le_one (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (u
   have hE : Module.finrank ℚ X.E = 2 * X.f := by
     rw [← Module.finrank_mul_finrank ℚ X.F X.E, hX.rankE, ← hX.card_Tau, mul_comm]
     rfl
-  haveI := hP.fin_stab ((mtildeGSD W Ch sel mu P).outSec.rep c)
+  have := hP.fin_stab ((mtildeGSD W Ch sel mu P).outSec.rep c)
   have h1 := not_dvd_card_stab_form (rowTy Ch sel mu P).inv ((mtildeGSD W Ch sel mu P).outSec.rep c) hp
     (lt_of_le_of_lt (by rw [hE]; gcongr; omega) hb)
   rw [map_mul, valuation_inv_natCast w hp hw (by rw [wt_eq_card]; exact h1), one_mul]

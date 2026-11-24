@@ -188,7 +188,7 @@ theorem exists_frac_compl {A : Type} [CommRing A] [IsDomain A] [IsDedekindDomain
     (q : Ideal A) [q.IsPrime] (hq : q ≠ ⊥) (z : K) :
     ∃ a s : A, s ∉ q ∧ (z * algebraMap A K s = algebraMap A K a ∨ z * algebraMap A K a = algebraMap A K s) := by
   obtain ⟨x, y, hy, rfl⟩ := IsFractionRing.div_surjective A z
-  haveI := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hq (Localization.AtPrime q)
+  have := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hq (Localization.AtPrime q)
   have hinj : Function.Injective (algebraMap A (Localization.AtPrime q)) :=
     IsLocalization.injective _ q.primeCompl_le_nonZeroDivisors
   have hy0 : algebraMap A K y ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hy
@@ -328,7 +328,7 @@ theorem exists_setting_of_place : ∀ (D : D7) (cf : CharFrame D) (b0 b1 : Big D
   intro D cf b0 b1 Sx T Sp w
   let v : AddValuation D.LL0 (WithTop ℤ) := (D.what₂.places.val w).comap (algebraMap D.LL0 D.what₂.LL)
   have hv : ∀ x : D.LL0, v x = D.what₂.places.val w (x : D.what₂.LL) := fun x => rfl
-  haveI := cen_isPrime v
+  have := cen_isPrime v
   have hp := D.what₂.places.resChar_prime w
   have hpc : ((D.what₂.places.resChar w : ℕ) : 𝓞 D.LL0) ∈ cen v := by
     rw [mem_cen, hv]
@@ -395,7 +395,7 @@ theorem star_mul_self_of_pow (D : D7) (ζ : (↥D.LL0)ˣ) (n : ℕ) (hn : n ≠ 
 
 theorem readT_false_eq (D : D7) (T : TwR D.LL0 D.nd) (hstar : ∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0)
     (i : T.Tw) (x : ↥D.LL0) : readT D T i false x = readT D T i true ⟨star (x : D.what₂.LL), hstar x⟩ := by
-  simp only [readT, RingHom.comp_apply, Bool.false_eq_true, if_false, if_true]
+  simp only [readT, RingHom.comp_apply, Bool.false_eq_true, ite_false, ite_true]
   rw [T.restX_coefficientEmbedding_conj i x ⟨star (x : D.what₂.LL), hstar x⟩ rfl]
 
 theorem readT_false_mul_true (D : D7) (T : TwR D.LL0 D.nd) (hstar : ∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0)
@@ -419,7 +419,7 @@ theorem psiUT_eq_thSide : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : 
   · simp only [psiUT, MonoidHom.comp_apply, psiUOf_apply, map_prod]
     refine Finset.prod_congr rfl fun kv _ => ?_
     cases b
-    · simp only [thSide, Bool.false_eq_true, if_false, MonoidHom.inv_apply, MonoidHom.comp_apply]
+    · simp only [thSide, Bool.false_eq_true, ite_false, MonoidHom.inv_apply, MonoidHom.comp_apply]
       apply Units.ext
       rw [Units.coe_map, Units.val_inv_eq_inv_val, Units.coe_map]
       refine eq_inv_of_mul_eq_one_left ?_
@@ -452,11 +452,11 @@ theorem exists_root_congr_unit : ∀ {E Ω : Type} [Field E] [NumberField E] [Fi
     IsPlaceOver A P → ∀ u : 𝓞 E, u ∉ P.asIdeal →
       ∃ ζ : Ω, ζ ^ (normV P - 1) = 1 ∧ A.valuation (ζ - algebraMap E Ω (u : E)) < 1 := by
   intro E Ω _ _ _ _ _ A P hA u hu
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI hfin : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  letI : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
-  letI : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field _
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have hfin : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let : Fintype (𝓞 E ⧸ P.asIdeal) := Fintype.ofFinite _
+  have : P.asIdeal.IsMaximal := P.isMaximal
+  let : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field _
   set q := normV P with hq
   have hqc : q = Fintype.card (𝓞 E ⧸ P.asIdeal) := by
     rw [hq, normV, Nat.card_eq_fintype_card]
@@ -544,7 +544,7 @@ theorem tameChar_of_prime_residue : ∀ {E Ω : Type} [Field E] [NumberField E] 
   obtain ⟨ϖ, hϖ, hϖ2⟩ : ∃ ϖ : 𝓞 E, ϖ ∈ P.asIdeal ∧ ϖ ∉ P.asIdeal ^ 2 := by
     have hlt : P.asIdeal ^ (1 + 1) < P.asIdeal ^ 1 := Ideal.pow_succ_lt_pow P.ne_bot 1
     rw [pow_one] at hlt
-    exact SetLike.exists_of_lt hlt
+    exact IsConcreteLE.exists_of_lt hlt
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap E Ω (ϖ : E)) hm0
   have hπ0 : π ≠ 0 := by
     rintro rfl
@@ -770,7 +770,7 @@ theorem formsExport_eq : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : T
       show a ⊗ₜ[S.Ks] (LinearEquiv.ofEq _ _ hW (f w)) = a ⊗ₜ[S.Ks] (f' (LinearEquiv.ofEq _ _ hW w))
       exact congrArg (a ⊗ₜ[S.Ks] ·) (Subtype.ext (hf w))
     | add y z hy hz => rw [map_add (f := _), map_add (f := _), hy, hz, map_add (f := _), map_add (f := _)]
-  have hc : ∀ g', cR D S In.chi j g' = chiL S j (In.chi j h1 h2) g' := fun g' => dif_pos ⟨h1, h2⟩
+  have hc : ∀ g', cR D S In.chi j g' = chiL S j (In.chi j h1 h2) g' := fun g' => dite_eq_left ⟨h1, h2⟩
   have hsm : ∀ (r : T.O i') (y : KT D T i' b ⊗[S.Ks] ↥(WKr D S j)),
       e ((show KT D T i' b from algebraMap (T.O i') (FractionRing (T.O i')) r) • y) =
         (show KT D T i' b from algebraMap (T.O i') (FractionRing (T.O i')) r) • e y := fun r y => e.map_smul _ y
@@ -814,7 +814,7 @@ theorem formsExport_eq : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T : T
             fun x hx => In.hs j h1 h2 k P x hx) (e x)
     rw [LinearEquiv.map_smul, hbc _ _ ?_ x]
     intro w
-    rw [hLr, dif_pos ⟨h1, h2⟩]
+    rw [hLr, dite_eq_left ⟨h1, h2⟩]
     rfl
 
 end GlobalTheory.HeightCounting.FormsStep
@@ -998,19 +998,19 @@ theorem residueHom_zmod : ∀ (D : D7) (kv : Σ k : Fin 2, D.nd.PlG k) (s : Spli
     Nonempty (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E) →+* ZMod (D.host.g kv.1)) := by
   intro D kv s hs
   have hp := D.host.g_prime kv.1
-  haveI : Fact (D.host.g kv.1).Prime := ⟨hp⟩
+  have : Fact (D.host.g kv.1).Prime := ⟨hp⟩
   have hN := GlobalTheory.TameLabels.normV_eq_of_split hp (D.nd.g_split kv.1) (D.naut.plGw_over kv.1 kv.2)
   have hc : Nat.card (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) =
       D.host.g kv.1 := by
     rw [ReciprocityTheory.Bridge.ResidueFieldCardinality.card_residue, ← s.card_quot, hs]
     rw [← hN]
     rfl
-  haveI : Finite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) :=
+  have : Finite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact hp.ne_zero)
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E)))
+  let := Fintype.ofFinite (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E)))
   have hcF : Fintype.card (IsLocalRing.ResidueField (s.v.adicCompletionIntegers (maximalRealSubfield D.host.E))) =
       D.host.g kv.1 := by rw [Fintype.card_eq_nat_card]; exact hc
-  haveI := charP_of_card_eq_prime hcF
+  have := charP_of_card_eq_prime hcF
   exact ⟨(ZMod.ringEquiv _ hcF).symm.toRingHom.comp (IsLocalRing.residue _)⟩
 
 end GlobalTheory.TypePlaceResidue
@@ -1255,11 +1255,11 @@ theorem levDatum_forms_alt : GlobalTheory.Published.GlobalArtinReciprocity → �
     · exact hsplit P (Or.inr hP')
     · exact hsplit P (Or.inl hP')
   obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.PdPlace.pD_nonempty D T i
-  haveI : Nonempty (SplitPlace D.host.E) := ⟨(_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P₀ (hDs P₀ hP₀)).choose⟩
+  have : Nonempty (SplitPlace D.host.E) := ⟨(_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P₀ (hDs P₀ hP₀)).choose⟩
   let sp : PlE D.host → SplitPlace D.host.E := fun P =>
     if h : IsSplitPl D.host P then (_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P h).choose else Classical.arbitrary _
   have hsp : ∀ P, IsSplitPl D.host P → (sp P).w = P := fun P h => by
-    simp only [sp, dif_pos h]; exact (_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P h).choose_spec
+    simp only [sp, dite_eq_left h]; exact (_root_.GlobalTheory.HeightCounting.SplitPlaceOf.exists_splitPlace D P h).choose_spec
   have hspw : ∀ P, (P ∈ qpOf D Pq Q ∨ P ∈ qpOf D Pq (T.pD i) ∨ ∃ kv, P = NX.pG D kv) → (sp P).w = P := by
     rintro P (h | h | ⟨kv, rfl⟩)
     · exact hsp P (hQs P (qpOf_sub D Pq Q h))
@@ -1450,7 +1450,7 @@ theorem baseChange_inf_lattice_eq_subspace : ∀ {O V : Type} [CommRing O] [IsDo
     exact fun y hy => ⟨1 ⊗ₜ ⟨y, hy⟩, hfN _⟩
   have hbN : IsBaseChange K N.subtype :=
     IsBaseChange.of_equiv (LinearEquiv.ofBijective fN ⟨hinjN, hsurjN⟩) (fun y => hfN y)
-  haveI hlN : IsLocalizedModule (nonZeroDivisors O) N.subtype :=
+  have hlN : IsLocalizedModule (nonZeroDivisors O) N.subtype :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors O) K N.subtype).2 hbN
 
   set N' := N ⊓ W.restrictScalars O
@@ -1643,7 +1643,7 @@ theorem sig_of_fg_alt (hfg : ∀ (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (T
   intro D cf jE A S In b0 b1 Sx T Sp hst hSb hstar
   refine ⟨sigDataOf D T In, ?_, ?_, ?_, ?_, ?_⟩
   · intro i j b h1 h2
-    haveI : Module.Finite (T.O i) ↥(BI D T S In i j b) :=
+    have : Module.Finite (T.O i) ↥(BI D T S In i j b) :=
       Module.Finite.iff_fg.mpr (fg_BI D T S In (fun i j b => (hfg D S In T i j b).1) i j b)
     rw [eq_top_iff, ← _root_.GlobalTheory.HeightCounting.FormsStep.span_eig_BI_alt D cf jE A S In b0 b1 Sx T Sp hst hSb hstar (fun i j b => (hfg D S In T i j b).2) i j b h1 h2]
     refine Submodule.span_le.mpr ?_
@@ -1773,7 +1773,7 @@ theorem second_step_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ 
   intro hGAR D cf jE A S In low Pq M tup Q hM hPq hGal hRC hCh hstar hexp hsplit
   obtain ⟨c1, hc1⟩ := _root_.GlobalTheory.T.exists_galois_rep_family_bounded_alt hGAR D cf jE A hGal hRC hCh hstar
   obtain ⟨c2, hc2⟩ := _root_.GlobalTheory.T.exists_weight_data_integral_alt hGAR D cf jE A hstar hexp
-  refine ⟨fun l _ j => ⟨(c1 l j).1 ⊔ (c2 l j).1, by haveI := (c1 l j).2; haveI := (c2 l j).2; infer_instance⟩,
+  refine ⟨fun l _ j => ⟨(c1 l j).1 ⊔ (c2 l j).1, by have := (c1 l j).2; have := (c2 l j).2; infer_instance⟩,
     fun b0 b1 Sx T Sp hc0 hSb hconj hlow => ?_⟩
   have hb1 : ∀ (l : ℕ) [Fact l.Prime] j, (c1 l j).1 ≤ (b0 l j).1 := fun l _ j => le_trans le_sup_left (hc0 l j)
   have hb2 : ∀ (l : ℕ) [Fact l.Prime] j, (c2 l j).1 ≤ (b0 l j).1 := fun l _ j => le_trans le_sup_right (hc0 l j)

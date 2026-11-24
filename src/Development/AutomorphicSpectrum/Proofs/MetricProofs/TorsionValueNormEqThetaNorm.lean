@@ -67,8 +67,8 @@ theorem eq_of_norm_periodic {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ))
   have hsp : ⊤ ≤ Submodule.span ℝ (Set.range ((↑) : b → Fin g → ℂ)) := by
     rw [Subtype.range_coe, hspan, hf]
   let B : Module.Basis b ℝ (Fin g → ℂ) := Module.Basis.mk hli hsp
-  haveI : Finite b := Module.Finite.finite_basis B
-  haveI : Fintype b := Fintype.ofFinite b
+  have : Finite b := Module.Finite.finite_basis B
+  have : Fintype b := Fintype.ofFinite b
   have hmem : ∀ x ∈ Submodule.span ℤ (Set.range B), x ∈ Λ := by
     intro x hx
     refine (Submodule.span_le (p := Λ)).2 ?_ hx
@@ -101,10 +101,10 @@ def ev (x : Sp ℂ ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) : Γ(X, U) �
   (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom.comp (x.appLE U ⊤ h).hom
 
 theorem valF_eq (x : Sp ℂ ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) : valF x U f = ev x U h f :=
-  dif_pos h
+  dite_eq_left h
 
 theorem valAt'_eq (x : Sp ℂ ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) : valAt' x U f = ev x U h f :=
-  dif_pos h
+  dite_eq_left h
 
 theorem ev_res (x : Sp ℂ ⟶ X) {U V : X.Opens} (hVU : V ≤ U) (h : ⊤ ≤ x ⁻¹ᵁ V) (h' : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) :
     ev x V h ((X.presheaf.map (homOfLE hVU).op).hom f) = ev x U h' f :=
@@ -355,7 +355,7 @@ theorem Wf_per (t : GenN P N) (ht : t.IsGen) {l : Fin g → ℂ} (hl : l ∈ a.u
   have hexp : Real.exp (Real.pi * ((N : ℝ) ^ 2 * (a.herm v l).re) +
       Real.pi / 2 * ((N : ℝ) ^ 2 * (a.herm l l).re)) =
       Real.exp (Real.pi * (a.herm v l).re + Real.pi / 2 * (a.herm l l).re) ^ (N ^ 2) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -402,7 +402,7 @@ theorem norm_of_torsVal {n : ℕ} (s : Out.H0 P.L n) (θ : (Fin g → ℂ) → �
   rw [hr, mul_pow] at hn
   have hn' : ‖T‖ * Real.exp (Real.pi / 2 * ((N : ℝ) ^ 2 * (a.herm w w).re)) ^ n = ‖θ w‖ ^ (N ^ 2) :=
     mul_right_cancel₀ (pow_ne_zero n hF) (by rw [_root_.mul_assoc]; exact hn)
-  rw [ArchFrame.nrm, mul_pow, ← hn', _root_.mul_assoc, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [ArchFrame.nrm, mul_pow, ← hn', _root_.mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add]
   have e0 : (n : ℝ) * (Real.pi / 2 * ((N : ℝ) ^ 2 * (a.herm w w).re)) +
       ((N ^ 2 : ℕ) : ℝ) * (-(Real.pi * n / 2) * (a.herm w w).re) = 0 := by
     push_cast

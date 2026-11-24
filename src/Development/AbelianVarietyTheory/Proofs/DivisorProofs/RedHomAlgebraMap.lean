@@ -85,8 +85,8 @@ def dVal (φ : B →ₐ[R] DualNumber D) : Ω[B⁄R] →ₗ[R] D :=
   d.liftKaehlerDifferential.restrictScalars R
 
 theorem dVal_D (φ : B →ₐ[R] DualNumber D) (b : B) : dVal φ (KaehlerDifferential.D R B b) = (φ b).snd := by
-  letI : Algebra B D := (redHom φ).toAlgebra
-  haveI : IsScalarTower R B D := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
+  let : Algebra B D := (redHom φ).toAlgebra
+  have : IsScalarTower R B D := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
   exact Derivation.liftKaehlerDifferential_comp_D _ b
 
 end Val

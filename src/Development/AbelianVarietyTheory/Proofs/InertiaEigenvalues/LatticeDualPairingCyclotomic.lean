@@ -125,19 +125,19 @@ theorem limit_cocycle : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) 
   intro l _ K LL _ _ _ O _ _ hG A LA ϖ hϖ hI w hw hstep
   have hcO : IsCompact (Set.range (algebraMap O LL)) := (_root_.GlobalTheory.GoodCoeff.good_coeff_integers l LL O hG).2.1
   obtain ⟨⟨hD, hDVR, hFr⟩, hfin, hmod, htop, hopen⟩ := hG
-  haveI := hD
-  haveI := hDVR
-  haveI := hFr
-  haveI : FiniteDimensional ℚ_[l] LL := hfin
-  haveI := hmod
-  haveI := htop
-  haveI : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
-  haveI : ContinuousSMul LL A.V := IsModuleTopology.toContinuousSMul LL A.V
-  haveI : IsTopologicalAddGroup A.V := IsModuleTopology.topologicalAddGroup LL A.V
-  haveI : T2Space LL := by
+  have := hD
+  have := hDVR
+  have := hFr
+  have : FiniteDimensional ℚ_[l] LL := hfin
+  have := hmod
+  have := htop
+  have : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
+  have : ContinuousSMul LL A.V := IsModuleTopology.toContinuousSMul LL A.V
+  have : IsTopologicalAddGroup A.V := IsModuleTopology.isTopologicalAddGroup LL A.V
+  have : T2Space LL := by
     let e := (Module.finBasis ℚ_[l] LL).equivFun
     exact T2Space.of_injective_continuous e.injective (IsModuleTopology.continuous_of_linearMap e.toLinearMap)
-  haveI : T2Space A.V := by
+  have : T2Space A.V := by
     let e := (Module.finBasis LL A.V).equivFun
     exact T2Space.of_injective_continuous e.injective (IsModuleTopology.continuous_of_linearMap e.toLinearMap)
 
@@ -324,7 +324,7 @@ theorem exists_cocycle_level : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL :
   let F : A'.V ⧸ LA'.T → ↥LA'.T ⧸ (Ideal.span {ϖ ^ n} • ⊤ : Submodule O ↥LA'.T) := fun v =>
     if h : p0 ^ n • liftD LA' v ∈ LA'.T then Submodule.Quotient.mk ⟨_, h⟩ else 0
   have hc' : ∀ g, (F ∘ c) g = Submodule.Quotient.mk ⟨_, hmem g⟩ := by
-    intro g; simp only [F, Function.comp_apply, dif_pos (hmem g)]
+    intro g; simp only [F, Function.comp_apply, dite_eq_left (hmem g)]
   refine ⟨fun g => Submodule.Quotient.mk ⟨_, hmem g⟩, ⟨?_, ?_⟩, ?_, ?_⟩
   · have : (fun g => (Submodule.Quotient.mk ⟨_, hmem g⟩ :
         ↥LA'.T ⧸ (Ideal.span {ϖ ^ n} • ⊤ : Submodule O ↥LA'.T))) = F ∘ c :=
@@ -445,8 +445,8 @@ theorem cocycle_pow_smul_mem : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL :
     (algebraMap O LL ϖ) ^ r • liftD LA' (c g) ∈ LA'.T := by
   intro l _ K LL _ _ _ O _ _ hO A' LA' ϖ hϖ c hc
   obtain ⟨⟨hD, hDVR, hFR⟩, -⟩ := hO
-  haveI : CompactSpace ↥(GK K) := by
-    haveI := K.2
+  have : CompactSpace ↥(GK K) := by
+    have := K.2
     exact isCompact_iff_compactSpace.1 (InfiniteGalois.fixingSubgroup_isClosed K.1).isCompact
   have hfin : (Set.range c).Finite := hc.1.range_finite
   choose f hf using fun y : A'.V ⧸ LA'.T =>
@@ -505,7 +505,7 @@ end Gen
 theorem mem_BD_of_orthogonal : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ L1 : Lattice (O := O) (charRep (cycLL (P.PD K) LL)), L1.T = LinearMap.range (Algebra.linearMap O LL) → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (LA' : Lattice (O := O) A'.ρ) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDualLat1 (P.PD K) LA LA' m → ∀ c ∈ divisibleCocycles LA', (∀ d ∈ latticeCocycles LA, CobO (P.PD K) L1 (cupLD LA' m d c)) → c ∈ BD LA' := by
   intro hT l _ P K LL _ _ _ O _ _ hO L1 hL1 A A' LA LA' m hm c hc horth
   obtain ⟨hDom, hDVR, hFrac⟩ := hO.1
-  haveI := hDom; haveI := hDVR; haveI := hFrac
+  have := hDom; have := hDVR; have := hFrac
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   set π := algebraMap O LL ϖ with hπdef
   have hπ : π ≠ 0 := by

@@ -103,7 +103,7 @@ theorem UpperTheory.V.CA.d_ofRep :
   · change (Det.repS r A (1 ⊗ₜ x)).det = _
     rw [Det.repS_tmul]
     simp
-  · haveI : Nonempty ι := Fintype.card_pos_iff.1 (by omega)
+  · have : Nonempty ι := Fintype.card_pos_iff.1 (by omega)
     rw [Det.tr, Det.lam, chi_ofRep, Matrix.trace_eq_neg_charpoly_coeff, h]
     simp
   · have hle : (Det.ofRep h r).CH ≤ TwoSidedIdeal.ker r := by

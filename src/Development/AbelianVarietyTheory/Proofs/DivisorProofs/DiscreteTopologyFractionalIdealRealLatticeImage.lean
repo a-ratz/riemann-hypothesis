@@ -89,7 +89,7 @@ theorem discrete_latOf : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal
       exact ⟨a, ha, (toMixedTR_remb F a).symm⟩
     let h : latOf N → mixedEmbedding.idealLattice F I := fun x => ⟨toMixedTR F x, hmem x⟩
     refine DiscreteTopology.of_continuous_injective (f := h) ?_ ?_
-    · exact Continuous.subtype_mk ((continuous_toMixedTR F).comp continuous_subtype_val) _
+    · exact Continuous.subtype_mk ((continuous_toMixedTR F).comp continuous_subtypeVal) _
     · rintro ⟨x, hx⟩ ⟨y, hy⟩ hxy
       obtain ⟨a, ha, rfl⟩ := (mem_latOf N x).1 hx
       obtain ⟨b, hb, rfl⟩ := (mem_latOf N y).1 hy

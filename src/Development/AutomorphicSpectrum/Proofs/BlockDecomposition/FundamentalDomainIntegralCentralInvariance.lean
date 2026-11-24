@@ -92,7 +92,7 @@ theorem det_rationalEmbedding (γ : GL (Fin 2) ℚ) :
     GeneralLinearGroup.det (dia2 γ) = IdeleGroup.diagonal ℚ (GeneralLinearGroup.det γ) := by
   ext
   delta Ad3.R.dia2 GroundTheory.Automorphic.AdelicGLn.diagonal GroundTheory.Global.IdeleGroup.diagonal
-  simp only [Matrix.GeneralLinearGroup.val_det_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [Matrix.GeneralLinearGroup.val_det_apply, Units.coe_map, MonoidHom.coe_ofClass]
   exact (RingHom.map_det _ _).symm
 
 theorem md_mul (a b : Jd) : md (a * b) = md a * md b := by
@@ -121,7 +121,7 @@ theorem detModulus_diag (z : Jd) : Dt (dg2 z z) = md z ^ 2 := by
 theorem continuous_Dt : Continuous Dt := by
   show Continuous fun g : G2 =>
     ((GroundTheory.Global.IdeleGroup.ideleModule ℚ (GeneralLinearGroup.det g) : {r : ℝ // 0 < r}) : ℝ)
-  exact continuous_subtype_val.comp
+  exact continuous_subtypeVal.comp
     (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp Matrix.GeneralLinearGroup.continuous_det)
 
 theorem key {μ : Measure G2} {𝓕 : Set G2} [μ.IsMulLeftInvariant] (hfd : IsFundamentalDomain Gam 𝓕 μ)
@@ -129,8 +129,8 @@ theorem key {μ : Measure G2} {𝓕 : Set G2} [μ.IsMulLeftInvariant] (hfd : IsF
     (hs : ∀ (γ : Gam) x, T ((e γ : G2) * x) = (γ : G2) * T x) :
     (∀ F : G2 → ℝ≥0∞, LInv F → ∫⁻ g in 𝓕, F (T g) ∂μ = ∫⁻ g in 𝓕, F g ∂μ) ∧
     ∀ F : G2 → ℂ, LInv F → ∫ g in 𝓕, F (T g) ∂μ = ∫ g in 𝓕, F g ∂μ := by
-  haveI : SMulInvariantMeasure G2 G2 μ := Measure.IsMulLeftInvariant.smulInvariantMeasure
-  haveI : SMulInvariantMeasure Gam G2 μ := Subgroup.smulInvariantMeasure Gam
+  have : SMulInvariantMeasure G2 G2 μ := Measure.IsMulLeftInvariant.smulInvariantMeasure
+  have : SMulInvariantMeasure Gam G2 μ := Subgroup.smulInvariantMeasure Gam
   have hemb : MeasurableEmbedding T := T.measurableEmbedding
   have h𝓕' : IsFundamentalDomain Gam (T '' 𝓕) μ := hfd.image_of_equiv T.toEquiv (hT.symm T).quasiMeasurePreserving e (fun γ x => hs γ x)
   have hinv : ∀ {X : Type} (F : G2 → X), LInv F → ∀ (γ : Gam) (x : G2), F (γ • x) = F x := by
@@ -210,7 +210,7 @@ theorem det_inverse_twist_mem_arithmetic {g : G2} (hg : g ∈ Gam) : inv2 g ∈ 
 theorem measurePreserving_det_inverse_twist {μ : Measure G2} [μ.IsHaarMeasure] : MeasurePreserving inv2 μ μ := by
   have hc : Continuous inv2 := continuous_det_inverse_twist
   refine ⟨hc.measurable, ?_⟩
-  haveI : (μ.map inv2).IsHaarMeasure := MulEquiv.isHaarMeasure_map μ inv2Equiv hc hc
+  have : (μ.map inv2).IsHaarMeasure := MulEquiv.isHaarMeasure_map μ inv2Equiv hc hc
   set c := Measure.haarScalarFactor (μ.map inv2) μ with hc_def
   have h1 : μ.map inv2 = c • μ := Measure.isMulLeftInvariant_eq_smul _ _
   have h2 : (μ.map inv2).map inv2 = μ := by
@@ -222,7 +222,7 @@ theorem measurePreserving_det_inverse_twist {μ : Measure G2} [μ.IsHaarMeasure]
   have hpos : μ K ≠ 0 := (Measure.measure_pos_of_mem_nhds μ hKn).ne'
   have hfin : μ K ≠ ⊤ := hKc.measure_lt_top.ne
   have h3 := congrArg (fun ν : Measure G2 => ν K) h2
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
   have h4 : ((c * c : NNReal) : ENNReal) * μ K = 1 * μ K := by
     rw [one_mul, ENNReal.coe_mul]
     exact h3
@@ -242,7 +242,7 @@ theorem exists_unit_one_add_generator (r : ℝ) (hr : 0 < r) :
     obtain ⟨φ, hφ⟩ := v.2
     obtain ⟨ψ, hψ⟩ := w.2
     exact Subtype.ext (by rw [← hφ, ← hψ, Subsingleton.elim φ ψ])
-  haveI : Subsingleton (NumberField.InfinitePlace ℚ) := ⟨hsub⟩
+  have : Subsingleton (NumberField.InfinitePlace ℚ) := ⟨hsub⟩
   have hv : ∀ v : NumberField.InfinitePlace ℚ, v.IsReal := fun v => by
     obtain ⟨φ, hφ⟩ := v.2
     exact ⟨φ, Subsingleton.elim _ _, Subtype.ext hφ⟩
@@ -267,7 +267,7 @@ theorem exists_unit_one_add_generator (r : ℝ) (hr : 0 < r) :
       show ∏ w, ‖(↑(Z t) : NumberField.AdeleRing (𝓞 ℚ) ℚ).1 w‖ ^ w.mult = |(t : ℝ)|
       rw [Fintype.prod_subsingleton _ p0]
       show ‖ι t p0‖ ^ p0.mult = |(t : ℝ)|
-      rw [hnorm, NumberField.InfinitePlace.mult, if_pos (hv _), pow_one]
+      rw [hnorm, NumberField.InfinitePlace.mult, ite_eq_left (hv _), pow_one]
     have hfin : (Z t).finiteModule = 1 := by
       show ∏ᶠ v, ‖(↑(Z t) : NumberField.AdeleRing (𝓞 ℚ) ℚ).2 v‖ = 1
       have h1 : ∀ v, ‖(↑(Z t) : NumberField.AdeleRing (𝓞 ℚ) ℚ).2 v‖ = 1 := fun v => by
@@ -324,9 +324,9 @@ theorem fundamental_domain_integral_invariance {μ : Measure G2} {𝓕 : Set G2}
 theorem level {μ : Measure G2} {𝓕 : Set G2} {mK : Measure KA} {𝓓 : Set Jd} (h : Set0 μ 𝓕 mK 𝓓) :
     μ {g | Dt g = 1} = 0 := by
   classical
-  haveI := h.haar
-  haveI : SMulInvariantMeasure G2 G2 μ := Measure.IsMulLeftInvariant.smulInvariantMeasure
-  haveI : SMulInvariantMeasure Gam G2 μ := Subgroup.smulInvariantMeasure Gam
+  have := h.haar
+  have : SMulInvariantMeasure G2 G2 μ := Measure.IsMulLeftInvariant.smulInvariantMeasure
+  have : SMulInvariantMeasure Gam G2 μ := Subgroup.smulInvariantMeasure Gam
   have hGinv : ∀ (γ : Gam) (x : G2), Dt ((γ : G2) * x) = Dt x := fun γ x => by
     obtain ⟨γ0, hγ0⟩ := γ.2
     rw [← hγ0, Dt_mul]
@@ -337,7 +337,7 @@ theorem level {μ : Measure G2} {𝓕 : Set G2} {mK : Measure KA} {𝓓 : Set Jd
   have hLInv : ∀ r : ℝ, LInv ({g : G2 | Dt g = r}.indicator (1 : G2 → ℝ≥0∞)) := by
     intro r γ g
     have h1 : Dt (dia2 γ * g) = Dt g := by rw [Dt_mul, detModulus_rational, one_mul]
-    simp only [Set.indicator, Set.mem_setOf_eq, h1, Pi.one_apply]
+    simp only [Set.indicator, Set.mem_ofPred_eq, h1, Pi.one_apply]
   have heq : ∀ r : ℝ, 0 < r → μ ({g : G2 | Dt g = r} ∩ 𝓕) = μ ({g : G2 | Dt g = 1} ∩ 𝓕) := by
     intro r hr
     obtain ⟨z, hz, -⟩ := exists_unit_one_add_generator r hr
@@ -349,14 +349,14 @@ theorem level {μ : Measure G2} {𝓕 : Set G2} {mK : Measure KA} {𝓓 : Set Jd
       have hD : Dt (dg2 z z * g) = r * Dt g := by rw [Dt_mul, detModulus_diag, hz]
       by_cases hg : Dt g = 1
       · have h2 : Dt (dg2 z z * g) = r := by rw [hD, hg, mul_one]
-        simp only [Set.indicator, Set.mem_setOf_eq, h2, hg, if_true, Pi.one_apply]
+        simp only [Set.indicator, Set.mem_ofPred_eq, h2, hg, ite_true, Pi.one_apply]
       · have h2 : Dt (dg2 z z * g) ≠ r := by
           rw [hD]
           intro h3
           apply hg
           have h4 : r * Dt g = r * 1 := by rw [h3, mul_one]
           exact mul_left_cancel₀ hr.ne' h4
-        simp only [Set.indicator, Set.mem_setOf_eq, h2, hg, if_false]
+        simp only [Set.indicator, Set.mem_ofPred_eq, h2, hg, ite_false]
     beta_reduce at key
     rw [hpre, lintegral_indicator_one (hmeasS 1), lintegral_indicator_one (hmeasS r),
       Measure.restrict_apply (hmeasS 1), Measure.restrict_apply (hmeasS r)] at key
@@ -412,7 +412,7 @@ theorem level {μ : Measure G2} {𝓕 : Set G2} {mK : Measure KA} {𝓓 : Set Jd
   have hinvS : ∀ γ : Gam, γ • {g : G2 | Dt g = 1} = {g : G2 | Dt g = 1} := fun γ => by
     ext x
     rw [Set.mem_smul_set_iff_inv_smul_mem]
-    simp only [Set.mem_setOf_eq, Subgroup.smul_def, smul_eq_mul]
+    simp only [Set.mem_ofPred_eq, Subgroup.smul_def, smul_eq_mul]
     rw [hGinv γ⁻¹ x]
   rw [h.fd.measure_eq_tsum]
   simp only [hinvS, hzero, tsum_zero]

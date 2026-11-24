@@ -102,11 +102,11 @@ private theorem core (hσ : IsK σ) (S : Submodule ℂ V) [FiniteDimensional ℂ
     (hS : ∀ k, ∀ x ∈ S, σ k x ∈ S) {x : V} (hx : x ∈ S) :
     ∃ u ∈ S ⊓ isoSp σ E, x - u ∈ (isoSp σ E)ᗮ := by
   let D : Submodule ℂ V := S ⊓ isoSp σ E
-  haveI : FiniteDimensional ℂ D := Submodule.finiteDimensional_inf_left S _
-  haveI : CompleteSpace D := FiniteDimensional.complete ℂ D
+  have : FiniteDimensional ℂ D := Submodule.finiteDimensional_inf_left S _
+  have : CompleteSpace D := FiniteDimensional.completeSpace ℂ D
   let C : Submodule ℂ V := S ⊓ Dᗮ
-  haveI : FiniteDimensional ℂ C := Submodule.finiteDimensional_inf_left S _
-  haveI : CompleteSpace C := FiniteDimensional.complete ℂ C
+  have : FiniteDimensional ℂ C := Submodule.finiteDimensional_inf_left S _
+  have : CompleteSpace C := FiniteDimensional.completeSpace ℂ C
   have hD : ∀ k, ∀ x ∈ D, σ k x ∈ D := fun k x hx => ⟨hS k x hx.1, iso_stable k hx.2⟩
   have hC : ∀ k, ∀ x ∈ C, σ k x ∈ C := fun k x hx => ⟨hS k x hx.1, orth_stable hσ hD k hx.2⟩
   have hu : D.starProjection x ∈ D := D.starProjection_apply_mem x
@@ -135,9 +135,9 @@ end UpperTheory.V.Z.GSp4Splitting
 theorem UpperTheory.V.Z.GSp4Splitting.projEx :
     ProjEx := by
   intro n V _ _ σ hσ E
-  haveI : (isoSp σ E).HasOrthogonalProjection := ⟨fun v => by
+  have : (isoSp σ E).HasOrthogonalProjection := ⟨fun v => by
     obtain ⟨S, hfd, hx, hS⟩ := hσ.fin v
-    haveI := hfd
+    have := hfd
     obtain ⟨u, hu, hv⟩ := core (E := E) hσ S hS hx
     exact ⟨u, hu.2, hv⟩⟩
   have hIs : ∀ k, ∀ x ∈ isoSp σ E, σ k x ∈ isoSp σ E := fun k x hx => iso_stable k hx
@@ -165,8 +165,8 @@ theorem UpperTheory.V.Z.GSp4Splitting.projEx :
     rw [← inner_conj_symm, hadj, ← inner_conj_symm, h, map_zero, map_zero]
   · intro N hN x hx
     obtain ⟨S, hfd, hxS, hS⟩ := hσ.fin x
-    haveI := hfd
-    haveI : FiniteDimensional ℂ (S ⊓ N : Submodule ℂ V) := Submodule.finiteDimensional_inf_left S N
+    have := hfd
+    have : FiniteDimensional ℂ (S ⊓ N : Submodule ℂ V) := Submodule.finiteDimensional_inf_left S N
     obtain ⟨u, hu, hv⟩ := core (E := E) hσ (S ⊓ N) (fun k y hy => ⟨hS k y hy.1, hN k y hy.2⟩) ⟨hxS, hx⟩
     have he : (isoSp σ E).starProjection x = u := Submodule.eq_starProjection_of_mem_orthogonal hu.2 hv
     show (isoSp σ E).starProjection x ∈ N

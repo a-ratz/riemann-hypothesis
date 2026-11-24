@@ -146,7 +146,7 @@ def invVol (C : Subgroup (GL (n ⊕ Fin c) k)) : ℚ :=
 theorem relIndex_ne_zero_of_isOpen {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     {U K H : Subgroup G} (hU : IsOpen (U : Set G)) (hK : IsCompact (K : Set G)) (hH : H ≤ K) : U.relIndex H ≠ 0 := by
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtype_val)
+  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtypeVal)
   exact fun h => Subgroup.index_ne_zero_of_finite (Subgroup.relIndex_eq_zero_of_le_right hH h)
 
 theorem invVol_KO : invVol (KO k (n ⊕ Fin c)) = 1 := by

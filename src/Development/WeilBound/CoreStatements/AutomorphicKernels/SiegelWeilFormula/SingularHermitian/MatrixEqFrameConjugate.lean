@@ -303,8 +303,8 @@ theorem nbw (d : SD σ) (R : RD d) (w : InfinitePlace F) {nb : nA σ d.Y d.b →
       rw [← Matrix.fromBlocks_one, Matrix.fromBlocks_smul, smul_zero]
   refine ⟨fun x => ⟨(inFrame d.b (R.ι w (nr x))).toBlocks₁₂, AddSubgroup.subset_closure ⟨R.ι w (nr x), hP x⟩⟩, ?_,
     fun x => inFrame_inj d ?_⟩
-  · haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-    have hm : Continuous fun g : d.G => mat2 g := Units.continuous_val.comp continuous_subtype_val
+  · have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+    have hm : Continuous fun g : d.G => mat2 g := Units.continuous_val.comp continuous_subtypeVal
     have hi : Continuous fun g : d.G => inFrame d.b g := (continuous_const.matrix_mul hm).matrix_mul continuous_const
     have hc : Continuous fun x => inFrame d.b (R.ι w (nr x)) := hi.comp ((R.cont w).comp (continuous_nr nr hnr))
     refine Continuous.subtype_mk ?_ _

@@ -127,7 +127,7 @@ theorem haar_eq_smul {k r : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {P : Mx k r
       have h5 : (ν.comap (phi ε P)) (spanningSets (ν.comap (phi ε P)) i) =
           ∞ * Formalism.REAL.muG ε (spanningSets (ν.comap (phi ε P)) i) := by
         have := congrArg (fun m : Measure (Formalism.REAL.UJ ε) => m (spanningSets (ν.comap (phi ε P)) i)) e3
-        simpa only [h, Measure.smul_apply, smul_eq_mul] using this
+        simpa only [h, smul_apply, smul_eq_mul] using this
       by_contra hne
       rw [h5, ENNReal.top_mul hne] at h4
       exact lt_irrefl _ h4

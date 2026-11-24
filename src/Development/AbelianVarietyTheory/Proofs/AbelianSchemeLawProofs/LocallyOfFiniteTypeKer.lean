@@ -150,7 +150,7 @@ theorem isIso_desc_iff {I : Type} {X : Over S} (t : I → (𝟙_ (Over S) ⟶ X)
 theorem isIso_desc_of_lists {I : Type} {X : Over S} (t : I → (𝟙_ (Over S) ⟶ X))
     [FormallyUnramified X.hom] [LocallyOfFiniteType X.hom] (h : ListsGeomPoints t) :
     IsIso (Sigma.desc t) := by
-  haveI : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion
+  have : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion
       (MorphismProperty.diagonal @IsOpenImmersion) :=
     MorphismProperty.hasOfPostcompProperty_iff_le_diagonal.2 le_rfl
   have ho : ∀ i, IsOpenImmersion (t i).left := fun i =>
@@ -197,7 +197,7 @@ theorem isKer_iff {A : Over S} [GrpObj A] {k : ℕ} {I : Type} (x : I → (𝟙_
     IsPullback (Sigma.desc x : constOver S I ⟶ A) (toUnit _) (mulBy A k) η[A] ↔
       IsIso (Sigma.desc fun i => kerPt (x i) (hx i)) := by
   have e : (Sigma.desc fun i => kerPt (x i) (hx i)) ≫ pullback.fst _ _ = Sigma.desc x :=
-    Sigma.hom_ext _ _ fun i => by rw [Sigma.ι_desc_assoc, kerPt_fst, Sigma.ι_desc]
+    Sigma.hom_ext _ _ fun i => by rw [Sigma.ι_comp_desc_assoc, kerPt_fst, Sigma.ι_comp_desc]
   constructor
   · intro h
     rw [show (Sigma.desc fun i => kerPt (x i) (hx i)) = h.isoPullback.hom from

@@ -113,7 +113,7 @@ private theorem unram_iff {D : ℕ} {Y : Type} [AddCommGroup Y] [Module ℂ Y] (
     rw [map_smul]
     simp [detRep]
     rfl
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : y.V)
   constructor
   · rintro ⟨ξ, hξ, h, hu⟩
@@ -179,7 +179,7 @@ private theorem val_eq {D : ℕ} {Y : Type} [AddCommGroup Y] [Module ℂ Y] (ρ 
     rw [map_smul]
     simp [detRep]
     rfl
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : y.V)
   obtain ⟨S, f, hf⟩ := hy
   obtain ⟨w, rfl⟩ := hf v
@@ -271,8 +271,8 @@ private theorem pol_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
     exact (OrderIso.isSimpleOrder_iff o).2 hi
   obtain ⟨E⟩ := GlobalTheory.CompanionTheory.ParIndBridge.parInd_equiv_parabolicInd k e β hβ φ hφ τ
   rw [hστ] at E
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hs.isIrreducible
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hs.isIrreducible
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   let f := E.symm.toIntertwiningMap.comp ι
   have hf : f v ≠ 0 := by
@@ -303,7 +303,7 @@ private theorem pol_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
       ((hu j).of_equiv (IrrGL.equivOf _ _ _))
     have h0 := cusp_block e hβ φ hφ σ hc j e' hU
     obtain ⟨S, g, hg⟩ := GlobalTheory.JacquetExact.isSubquotient_jac e' (hsm j) (hy j)
-    haveI : Subsingleton S.toSubmodule := ⟨fun a b => Subtype.ext (h0.elim _ _)⟩
+    have : Subsingleton S.toSubmodule := ⟨fun a b => Subtype.ext (h0.elim _ _)⟩
     exact Function.Surjective.subsingleton hg
   suffices key : ∀ j, (∃ ξ hξ, IrrGL.of (y j).ρ (y j).smooth (y j).irr = IrrGL.ofChar ξ hξ ∧ IsUnram (ξ * 1)) ↔
       d j = 1 ∧ ∀ g ∈ integralGL k (d j), σ (φ (Pi.mulSingle j g)) = 1 by
@@ -325,7 +325,7 @@ private theorem pol_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
     funext a
     by_cases ha : a = j
     · subst ha
-      haveI : Unique (Fin (d a)) := hD ▸ inferInstance
+      have : Unique (Fin (d a)) := hD ▸ inferInstance
       ext p q
       simp [Matrix.mul_apply, Subsingleton.elim p default, Subsingleton.elim q default, mul_comm]
     · simp [Pi.mulSingle_eq_of_ne ha]
@@ -334,7 +334,7 @@ private theorem pol_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
       have hz' : τ (Pi.mulSingle j g) z = z := hz
       show (τ (Pi.mulSingle j g) * τ x) z = τ x z
       rw [← map_mul, hcomm, map_mul, Module.End.mul_apply, hz']⟩
-  haveI := hτ
+  have := hτ
   rcases eq_bot_or_eq_top K with h | h
   · have : w ∈ K.toSubmodule := hw
     rw [h] at this

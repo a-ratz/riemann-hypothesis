@@ -408,7 +408,7 @@ theorem sum_uMat {r : ℕ} (u : UIdx r → Fv F v ⊗[F] E) (X : Fin (r + 1) →
     (b : Fin (r + 1)) :
     ∑ a, uMat v u a b • X a = X b + ∑ a, (if h : a < b then u ⟨(a, b), h⟩ else 0) • X a := by
   simp only [uMat_split, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem sum_dite_lt {r : ℕ} (b : Fin (r + 1))
     (c : {a // a ∈ {a : Fin (r + 1) | a < b}} → Fv F v ⊗[F] E) (X : Fin (r + 1) → Fin n → Fv F v ⊗[F] E) :
@@ -454,7 +454,7 @@ theorem kgv_iff {g : ℕ} (κ : HA (Fv F v) σ J) :
       ∀ w ∈ latLoc (E := E) v Λ, ∃ z ∈ latLoc (E := E) v Λ,
         lin (Fv F v) σ J κ w - w = sc (E := E) v (g : Fv F v) • z := by
   unfold Formalism.L2.SG.TypedSets.Kgv
-  simp only [Set.mem_setOf_eq, Matrix.sub_mulVec, Matrix.one_mulVec, nat_osmul]
+  simp only [Set.mem_ofPred_eq, Matrix.sub_mulVec, Matrix.one_mulVec, nat_osmul]
   exact Iff.rfl
 
 theorem kgv_one {g : ℕ} : (1 : HA (Fv F v) σ J) ∈ Formalism.L2.SG.TypedSets.Kgv σ J Λ g v :=
@@ -571,7 +571,7 @@ theorem sdE_inv (ψ : AddChar (AF F) ℂ) (v : HeightOneSpectrum (𝓞 F)) (ι :
     (sdE (E := E) ψ v ι).IsAddLeftInvariant := by
   unfold sdE
   split_ifs with h
-  · haveI := h.choose_spec.1; infer_instance
+  · have := h.choose_spec.1; infer_instance
   · exact ⟨fun _ => Measure.map_zero _⟩
 
 end Prf
@@ -581,8 +581,8 @@ theorem stepIdx_of (hL : CongruenceSubgroupLift) (hU : KUnip1) (hM : CongruenceS
   intro F E _ _ _ _ _ σ n J ψ v r g P Λ T μG μS0 hStd hP hSD hUn hg hgv hN hEta hPr hμG hLat hμS0 hS0
   have hyp : IdxHyp σ J ψ v g P Λ T μS0 := ⟨hStd, hP, hSD, hUn, hg, hgv, hN, hEta, hPr, hLat, hμS0, hS0⟩
   have hg0 : (g : Fv F v) ≠ 0 := natCast_ne hg
-  haveI := hC (E := E) v r g hg
-  haveI := sdE_inv (E := E) ψ v (UIdx r)
+  have := hC (E := E) v r g hg
+  have := sdE_inv (E := E) ψ v (UIdx r)
   have hNK : ∀ x ∈ Formalism.L2.SG.TypedSets.Knatv σ J Λ P g v, ∀ k ∈ principalCongruenceSubgroupAlt σ J v Λ g P,
       x * k ∈ Formalism.L2.SG.TypedSets.Knatv σ J Λ P g v :=
     fun x hx k hk => knat_mul hx (hL σ J ψ v g P Λ T μS0 hyp hk)
@@ -606,9 +606,9 @@ theorem stepIdx_of (hL : CongruenceSubgroupLift) (hU : KUnip1) (hM : CongruenceS
     refine ⟨s, hsN, (cong_iff hSD hPr hg0 hsK hsK (phi_spec (knat_cong hPr hsN)).2 hcs).1 ?_⟩
     rw [inv_mul_cancel]
     exact (principalCongruenceSubgroupAlt σ J v Λ g P).one_mem
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : MeasurableAdd (Fv F v ⊗[F] E) := inferInstance
-  haveI : MeasurableAdd (UIdx r → Fv F v ⊗[F] E) := inferInstance
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : MeasurableAdd (Fv F v ⊗[F] E) := inferInstance
+  have : MeasurableAdd (UIdx r → Fv F v ⊗[F] E) := inferInstance
   have key := idx_abs μG (sdE (E := E) ψ v (UIdx r)) (principalCongruenceSubgroupAlt σ J v Λ g P)
     (hM σ J ψ v g P Λ T μS0 hyp) (UOgS (E := E) v g r) (hMU (E := E) v r g hg)
     (Formalism.L2.SG.TypedSets.Knatv σ J Λ P g v) (UO (E := E) v r) (phi σ J v Λ g P)

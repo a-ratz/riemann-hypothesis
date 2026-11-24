@@ -79,8 +79,8 @@ theorem exists_abHom_of_ringEquiv : ∀ (E Ω : Type) [Field E] [NumberField E] 
       ∀ (τ : Formalism.ConjugateSelfDual.G E' Ω') (σ : Formalism.ConjugateSelfDual.G E Ω), (∀ z, φ (σ z) = τ (φ z)) →
         ρ (GlobalTheory.HeckeGal.toAb E' Ω' τ) = GlobalTheory.HeckeGal.toAb E Ω σ := by
   intro E Ω _ _ _ _ _ E' Ω' _ _ _ _ _ φ j hφ
-  haveI : Algebra.IsIntegral E' Ω' := (IsAlgClosure.isAlgebraic (R := E') (K := Ω')).isIntegral
-  haveI : IsClosed ((commutator (Formalism.ConjugateSelfDual.G E Ω)).topologicalClosure : Set (Formalism.ConjugateSelfDual.G E Ω)) :=
+  have : Algebra.IsIntegral E' Ω' := (IsAlgClosure.isAlgebraic (R := E') (K := Ω')).isIntegral
+  have : IsClosed ((commutator (Formalism.ConjugateSelfDual.G E Ω)).topologicalClosure : Set (Formalism.ConjugateSelfDual.G E Ω)) :=
     Subgroup.isClosed_topologicalClosure _
   let c := conjGal φ j hφ
   have hc : Continuous c :=

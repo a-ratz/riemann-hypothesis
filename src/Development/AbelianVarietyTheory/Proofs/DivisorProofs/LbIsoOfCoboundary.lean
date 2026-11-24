@@ -99,14 +99,14 @@ theorem exists_eigFrame {W : X.YY.Opens} (hW : IsAffineOpen W) {S : Type} [CommR
     (hzW : ⊤ ≤ z ⁻¹ᵁ W) : ∃ φ : c.F →+* S, ∀ (k : X.F.J) (_ : W ≤ X.F.U k) (hz : ⊤ ≤ z ⁻¹ᵁ X.F.U k),
       ∃ f : EigFrame Y φ (z ≫ X.π), ∀ τ, f.vec τ = X.F.vecAt k z hz rfl τ := by
   obtain ⟨ψ, rfl⟩ : ∃ ψ : Γ(X.YY, W) →+* S, spMap ψ ≫ tau hW = z := ⟨_, spMap_ev z hW hzW⟩
-  haveI := X.proper
-  haveI := GlobalTheory.ThetaDescent.isProper_of_isProjOver Y.proj
-  haveI : IsLocallyNoetherian X.YY := LocallyOfFiniteType.isLocallyNoetherian (X.π ≫ Y.s)
+  have := X.proper
+  have := GlobalTheory.ThetaDescent.isProper_of_isProjOver Y.proj
+  have : IsLocallyNoetherian X.YY := LocallyOfFiniteType.isLocallyNoetherian (X.π ≫ Y.s)
   obtain ⟨φ, hφ⟩ : ∃ φ : c.F →+* Γ(X.YY, W), spMap φ = tau hW ≫ X.π ≫ Y.s :=
     ⟨(Spec.preimage (tau hW ≫ X.π ≫ Y.s)).hom, Spec.map_preimage _⟩
   refine ⟨ψ.comp φ, fun k hk hz => ?_⟩
   obtain ⟨K, _, ρ, hρ, hK⟩ := affineOpen_injects_to_dense X.YY (flagOpen X) (dense_flagOpen X) W hW
-  letI : Algebra c.F K := (ρ.comp φ).toAlgebra
+  let : Algebra c.F K := (ρ.comp φ).toAlgebra
   have h₀ : ⊤ ≤ tau hW ⁻¹ᵁ X.F.U k := tau_le hW hk
   have hz' : ⊤ ≤ (spMap ρ ≫ tau hW) ⁻¹ᵁ X.F.U k := le_preimage_comp _ h₀
   have hr : Set.range ((spMap ρ ≫ tau hW) ≫ X.π) ⊆ Set.range Y.j := by
@@ -183,7 +183,7 @@ theorem lbIso_detOm_Llam : LBIso X.detOm (X.Llam (mu0 Dw)) := by
   have e₂ : ∏ τ, (f.co f' τ).det = (∏ p : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)), X.F.TAt k k' z hh (some p)).val := by
     rw [Units.coe_prod, Fintype.prod_sigma]
     refine Finset.prod_congr rfl fun τ _ => ?_
-    rw [hco, Matrix.det_of_upperTriangular (X.F.B_map_tri k k' τ _)]
+    rw [hco, Matrix.det_of_isUpperTriangular (X.F.B_map_tri k k' τ _)]
     rfl
   have e₃ := X.F.ev_LL_g (fun ix => ix.elim 0 fun _ => 1) k k' z hh
   rw [Fintype.prod_option] at e₃

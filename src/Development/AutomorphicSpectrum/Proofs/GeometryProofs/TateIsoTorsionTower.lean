@@ -85,10 +85,10 @@ theorem kernel_props' (hp : IsPullback j (toUnit A) ((𝟙 B) ^ N) η[B])
     Flat A.hom ∧ LocallyQuasiFinite A.hom ∧ IsSeparated A.hom ∧ QuasiCompact A.hom ∧
       LocallyOfFinitePresentation A.hom := by
   have h1 := kernel_isPullback hp
-  haveI : IsSeparated (((𝟙 B) ^ N).left ≫ B.hom) := by rw [Over.w]; infer_instance
-  haveI : QuasiCompact (((𝟙 B) ^ N).left ≫ B.hom) := by rw [Over.w]; infer_instance
-  haveI : IsSeparated ((𝟙 B) ^ N).left := IsSeparated.of_comp _ B.hom
-  haveI : QuasiCompact ((𝟙 B) ^ N).left := QuasiCompact.of_comp _ B.hom
+  have : IsSeparated (((𝟙 B) ^ N).left ≫ B.hom) := by rw [Over.w]; infer_instance
+  have : QuasiCompact (((𝟙 B) ^ N).left ≫ B.hom) := by rw [Over.w]; infer_instance
+  have : IsSeparated ((𝟙 B) ^ N).left := IsSeparated.of_comp _ B.hom
+  have : QuasiCompact ((𝟙 B) ^ N).left := QuasiCompact.of_comp _ B.hom
   exact ⟨MorphismProperty.of_isPullback (P := @Flat) h1 inferInstance,
     MorphismProperty.of_isPullback (P := @LocallyQuasiFinite) h1 inferInstance,
     MorphismProperty.of_isPullback (P := @IsSeparated) h1 inferInstance,
@@ -139,9 +139,9 @@ end Props
 
 theorem lofp_pullback_map {S' S : Scheme.{0}} [IsLocallyNoetherian S] (x : S' ⟶ S) {G : Over S}
     [LocallyOfFiniteType G.hom] (u : G ⟶ G) : LocallyOfFinitePresentation ((Over.pullback x).map u).left := by
-  haveI : LocallyOfFiniteType (u.left ≫ G.hom) := by rw [Over.w]; infer_instance
-  haveI : LocallyOfFiniteType u.left := locallyOfFiniteType_of_comp u.left G.hom
-  haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
+  have : LocallyOfFiniteType (u.left ≫ G.hom) := by rw [Over.w]; infer_instance
+  have : LocallyOfFiniteType u.left := locallyOfFiniteType_of_comp u.left G.hom
+  have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
   have hu : LocallyOfFinitePresentation u.left := lofp_of_noeth u.left
   exact MorphismProperty.of_isPullback (P := @LocallyOfFinitePresentation)
     (GlobalTheory.AbLaw.MulN.isPullback_baseChange x u) hu
@@ -151,12 +151,12 @@ theorem exists_genPt {R : Type} [CommRing R] [IsDomain R] [IsAlgClosed (Fraction
     (hg : (A.hom g).asIdeal = ⊥) :
     ∃ (c : genPt R ⟶ A) (u : Spec (CommRingCat.of (FractionRing R))), c.left u = g := by
   obtain ⟨Ω, _, _, a, c, hc, hcg⟩ := exists_geom_point A.hom g hg
-  letI : Algebra (FractionRing R) Ω := a.toAlgebra
-  haveI : IsIntegrallyClosedIn (FractionRing R) Ω := isIntegrallyClosedIn_iff.2
+  let : Algebra (FractionRing R) Ω := a.toAlgebra
+  have : IsIntegrallyClosedIn (FractionRing R) Ω := isIntegrallyClosedIn_iff.2
     ⟨(algebraMap (FractionRing R) Ω).injective, fun {x} hx =>
       minpoly.mem_range_of_degree_eq_one _ x (IsAlgClosed.degree_eq_one_of_irreducible _ (minpoly.irreducible hx))⟩
   have hpb := IsPullback.of_hasPullback A.hom (genPt R).hom
-  haveI : LocallyQuasiFinite (pullback.snd A.hom (genPt R).hom) :=
+  have : LocallyQuasiFinite (pullback.snd A.hom (genPt R).hom) :=
     MorphismProperty.of_isPullback (P := @LocallyQuasiFinite) hpb inferInstance
   let x : Spec (CommRingCat.of Ω) ⟶ pullback A.hom (genPt R).hom :=
     pullback.lift c (Spec.map (CommRingCat.ofHom a)) hc
@@ -198,7 +198,7 @@ theorem qfGroup_of_kernel [GrpObj G] [IsCommMonObj G]
     (hsurj : ∀ g : Over.mk ((genPt R).hom ≫ x) ⟶ G, g ^ N = 1 → ∃ t, g = τ t) :
     ∃ (Γ : QFGroup R T) (i : Γ.G.left ⟶ G.left), Γ.IsTorsionAlong G x N i ∧ ∀ t, (Γ.pt t).left ≫ i = (τ t).left := by
   classical
-  haveI hmono : Mono j := mono_of_pullback hp
+  have hmono : Mono j := mono_of_pullback hp
   have hi : ∀ {Y : Over (Spec (CommRingCat.of R))} (y : Y ⟶ A) (g : Over.mk (Y.hom ≫ x) ⟶ G),
       y ≫ j = toPull x G g → y.left ≫ j.left ≫ pullback.fst G.hom x = g.left := by
     intro Y y g h
@@ -284,10 +284,10 @@ theorem exists_qfGroup [CharZero R] [IsAlgClosed (FractionRing R)] [IsLocallyNoe
     (τ : T →* (Over.mk ((genPt R).hom ≫ x) ⟶ G)) (hinj : Function.Injective τ) (hτ : ∀ t, τ t ^ N = 1)
     (hsurj : ∀ g : Over.mk ((genPt R).hom ≫ x) ⟶ G, g ^ N = 1 → ∃ t, g = τ t) :
     ∃ (Γ : QFGroup R T) (i : Γ.G.left ⟶ G.left), Γ.IsTorsionAlong G x N i ∧ ∀ t, (Γ.pt t).left ≫ i = (τ t).left := by
-  haveI : IsCommMonObj G := hG.comm
-  haveI : Smooth G.hom := hG.smooth
-  haveI : IsSeparated G.hom := hG.separated
-  haveI : QuasiCompact G.hom := hG.quasiCompact
+  have : IsCommMonObj G := hG.comm
+  have : Smooth G.hom := hG.smooth
+  have : IsSeparated G.hom := hG.separated
+  have : QuasiCompact G.hom := hG.quasiCompact
   have heq : (Over.pullback x).map ((𝟙 G) ^ N) = (𝟙 ((Over.pullback x).obj G)) ^ N := by
     rw [← GlobalTheory.MulEtaleDvr.mulN_eq_pow, GlobalTheory.MulEtaleDvr.pullback_map_mulN, GlobalTheory.MulEtaleDvr.mulN_eq_pow]
   have hpb0 := IsPullback.of_hasPullback ((𝟙 ((Over.pullback x).obj G)) ^ N) (η[(Over.pullback x).obj G])
@@ -298,28 +298,28 @@ theorem exists_qfGroup [CharZero R] [IsAlgClosed (FractionRing R)] [IsLocallyNoe
   obtain ⟨_, _, _⟩ := exists_kernel_grp hp
   have hfl := GlobalTheory.SemiAbMulFlat.flat_and_locallyQuasiFinite_pow S G hG N hN
   have hbc := GlobalTheory.AbLaw.MulN.isPullback_baseChange x ((𝟙 G) ^ N)
-  haveI : Flat ((𝟙 ((Over.pullback x).obj G)) ^ N).left := by
+  have : Flat ((𝟙 ((Over.pullback x).obj G)) ^ N).left := by
     rw [← heq]
     exact MorphismProperty.of_isPullback (P := @Flat) hbc hfl.1
-  haveI : LocallyQuasiFinite ((𝟙 ((Over.pullback x).obj G)) ^ N).left := by
+  have : LocallyQuasiFinite ((𝟙 ((Over.pullback x).obj G)) ^ N).left := by
     rw [← heq]
     exact MorphismProperty.of_isPullback (P := @LocallyQuasiFinite) hbc hfl.2
-  haveI : LocallyOfFinitePresentation ((𝟙 ((Over.pullback x).obj G)) ^ N).left := by
+  have : LocallyOfFinitePresentation ((𝟙 ((Over.pullback x).obj G)) ^ N).left := by
     rw [← heq]
     exact lofp_pullback_map x ((𝟙 G) ^ N)
-  haveI : IsSeparated ((Over.pullback x).obj G).hom := by
+  have : IsSeparated ((Over.pullback x).obj G).hom := by
     show IsSeparated (pullback.snd G.hom x)
     infer_instance
-  haveI : QuasiCompact ((Over.pullback x).obj G).hom := by
+  have : QuasiCompact ((Over.pullback x).obj G).hom := by
     show QuasiCompact (pullback.snd G.hom x)
     infer_instance
   obtain ⟨hflat, hqf, hsep, hqc, hfp⟩ := kernel_props' hp
-  haveI := hflat
-  haveI := hqf
-  haveI := hfp
+  have := hflat
+  have := hqf
+  have := hfp
   have hpt := fun g hg => exists_genPt (pullback ((𝟙 ((Over.pullback x).obj G)) ^ N) (η[(Over.pullback x).obj G])) g hg
-  haveI := kernel_base_etale' (genPt R).hom hp (isUnit_natCast_frac hN)
-  haveI : IsReduced (genPt R).left := by
+  have := kernel_base_etale' (genPt R).hom hp (isUnit_natCast_frac hN)
+  have : IsReduced (genPt R).left := by
     show IsReduced (Spec (CommRingCat.of (FractionRing R)))
     infer_instance
   have hred := GlobalTheory.isReduced_of_smooth_of_isReduced

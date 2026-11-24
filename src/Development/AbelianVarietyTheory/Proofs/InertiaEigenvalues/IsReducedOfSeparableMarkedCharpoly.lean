@@ -78,7 +78,7 @@ theorem InvAlg.isReduced_of_separable_P : ∀ (K : UQ) (B : InvAlg K), B.P.Separ
   rcases Nat.eq_zero_or_pos k with h0 | h0
   · subst h0
     rw [pow_zero] at hk
-    haveI := subsingleton_of_zero_eq_one hk.symm
+    have := subsingleton_of_zero_eq_one hk.symm
     exact Subsingleton.elim _ _
   have hdk : minpoly K.E B.g ∣ q ^ k := minpoly.dvd _ _ (by rw [map_pow, hk])
   obtain ⟨r, hr⟩ := (hms.squarefree.dvd_pow_iff_dvd h0.ne').1 hdk

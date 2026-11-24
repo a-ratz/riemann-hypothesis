@@ -110,18 +110,18 @@ theorem continuous_transportF_apply : ∀ (F E : Type) [Field F] [NumberField F]
       refine Units.continuous_iff.2 ⟨?_, ?_⟩
       · have e : (Units.val ∘ fun p => matHomF σ JT (h p)) = fun p => p.1.1.1 := funext fun p => hh p
         rw [e]
-        exact Units.continuous_val.comp (continuous_subtype_val.comp continuous_fst)
+        exact Units.continuous_val.comp (continuous_subtypeVal.comp continuous_fst)
       · have e : (fun p => (matHomF σ JT (h p))⁻¹.1) = fun p => (p.1.1)⁻¹.1 := funext fun p => by rw [hhU p]
         rw [e]
-        exact Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_fst)
+        exact Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_fst)
     have hcG' : Continuous fun p => matHomF σ JS (g p) := by
       refine Units.continuous_iff.2 ⟨?_, ?_⟩
       · have e : (Units.val ∘ fun p => matHomF σ JS (g p)) = fun p => ((p.2.1)⁻¹).1ᵀ := funext fun p => hg p
         rw [e]
-        exact (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_snd)).matrix_transpose
+        exact (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_snd)).matrix_transpose
       · have e : (fun p => (matHomF σ JS (g p))⁻¹.1) = fun p => p.2.1.1ᵀ := funext hgU
         rw [e]
-        exact (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)).matrix_transpose
+        exact (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)).matrix_transpose
     have hcH : Continuous h := continuous_induced_rng.2 hcH'
     have hcG : Continuous g := continuous_induced_rng.2 hcG'
     have heq : ∀ p, GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ (om p Φ) w =
@@ -134,14 +134,14 @@ theorem continuous_transportF_apply : ∀ (F E : Type) [Field F] [NumberField F]
   let f : _ → Fin m → SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ :=
     fun p => if h : p ∈ N then Classical.choose (hf p h) else 0
   have hfe : ∀ p ∈ N, om p Φ = ∑ i, pureA F (f p i) (g i) := fun p hp => by
-    simp only [f, dif_pos hp]
+    simp only [f, dite_eq_left hp]
     exact Classical.choose_spec (hf p hp)
   have hslice : ∀ p ∈ N, ∀ i v, f p i v = om p Φ (GlobalTheory.WeilCont.adeleJoin F v (y i)) := by
     intro p hp i v
     rw [hfe p hp, Finset.sum_apply, Finset.sum_eq_single i]
-    · rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, if_pos rfl, mul_one]
+    · rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, ite_eq_left rfl, mul_one]
     · intro j _ hji
-      rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, if_neg hji, mul_zero]
+      rw [GlobalTheory.WeilCont.pureA_adeleJoin, hy, ite_eq_right hji, mul_zero]
     · intro h
       exact absurd (Finset.mem_univ i) h
   have hbd : ∀ k : ℕ, ∃ C : ℝ, ∀ᶠ p in nhds p0, ∀ i v, ‖v‖ ^ k * ‖f p i v‖ ≤ C := by

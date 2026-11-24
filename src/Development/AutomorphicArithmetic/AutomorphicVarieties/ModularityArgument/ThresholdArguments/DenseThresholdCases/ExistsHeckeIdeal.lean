@@ -97,8 +97,8 @@ theorem UpperTheory.V.Hi.exists_ordinaryCharacters_heckeAlgebra' :
       ((∏ i with i ≤ j, ψ v i g * (hset Q R.τ₀).epsV T v g ^ (i : ℕ) : Tˣ) : T) = gen (.inr (v, j))) →
     ∀ v i, r.IsPsi v i (ψ v i) ∧ W.pushCh (φ : Λ.Λ →+* T) (Λ.κ v i) = (ψ v i).comp (V.frame.Iv v).subtype := by
   intro l _ L Ω _ _ _ _ _ _ s n V Q c r ι Λ R hAx T _ _ _ φ gen hgen ψ hc hu hϖ v
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : Finite (ResidueField T) := Finite.of_surjective _ (Alg.resMap_bijective c.O T).2
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField T) := Finite.of_surjective _ (Alg.resMap_bijective c.O T).2
   have ha : IsLocalArtin (s.hw v.1) (artOf (s.hw v.1)) := hAx.art_spec v
   have hI : ∀ i (g : Dec (F := L) (s.A v.1)) (hg : g ∈ V.frame.Iv v), (ψ v i g : T) = φ (Λ.κ v i ⟨g, hg⟩) := by
     intro i g hg
@@ -251,7 +251,7 @@ private theorem cd_compact {R : Type} [CommRing R] [WithIdeal R] [IsAdicComplete
     (hf : ∀ N : ℕ, Finite (R ⧸ (WithIdeal.i : Ideal R) ^ N)) : CompactSpace R := by
   have hI : IsAdic (WithIdeal.i : Ideal R) := rfl
   have hc : CompleteSpace R := (hI.isAdicComplete_iff.1 inferInstance).1
-  refine ⟨isCompact_iff_totallyBounded_isComplete.2 ⟨?_, complete_univ⟩⟩
+  refine ⟨isCompact_iff_totallyBounded_isComplete.2 ⟨?_, isComplete_univ⟩⟩
   rw [totallyBounded_iff_subset_finite_iUnion_nhds_zero]
   intro U hU
   obtain ⟨N, hN⟩ := (isAdic_iff.1 hI).2 U hU
@@ -470,7 +470,7 @@ private theorem cd_psi (hN : _root_.GlobalTheory.Mem.LiteralAutomorphy.Literatur
     rwa [map_natCast, map_natCast] at h2
   have hc := cd_alg ((algebraMap c.O T).comp (algebraMap ℤ_[l] c.O)) _ hl
     (fun g : Dec (F := L) (H.pl v) => ((cycZ L Ω l g ^ (i : ℕ))⁻¹ : ℤ_[l]ˣ))
-    (Units.continuous_coe_inv.comp (((continuous_cycZ L Ω l).comp continuous_subtype_val).pow _))
+    (Units.continuous_coe_inv.comp (((continuous_cycZ L Ω l).comp continuous_subtypeVal).pow _))
   have hv : ∀ g, (ψ * (H.epsV T v ^ (i : ℕ))⁻¹) g * H.epsV T v g ^ (i : ℕ) = ψ g := fun g => by simp
   refine ⟨ψ * (H.epsV T v ^ (i : ℕ))⁻¹, fun N => ?_, fun s g y hg hy => ?_, fun s g hg hy => ?_⟩
   · convert (hψ N).mul (hc N) using 1
@@ -490,10 +490,10 @@ private theorem cd_glue {l : ℕ} [Fact l.Prime] (c : Coef l) {n : ℕ} {T Γ : 
   choose r hrc hrf using hr
   have := cd_fin c
   have hcnl := IsCNL.ofCO c.O T
-  letI : WithIdeal T := ⟨maximalIdeal _⟩
+  let : WithIdeal T := ⟨maximalIdeal _⟩
   have hI : IsAdic (maximalIdeal T) := rfl
-  haveI : CompactSpace T := @cd_compact _ _ _ hcnl.complete fun N => by
-    haveI : Finite (T ⧸ maximalIdeal T) := hcnl.finite
+  have : CompactSpace T := @cd_compact _ _ _ hcnl.complete fun N => by
+    have : Finite (T ⧸ maximalIdeal T) := hcnl.finite
     exact Ideal.finite_quotient_pow (I := maximalIdeal T) (IsNoetherian.noetherian _) N
   have hinj : ∀ t : T, (∀ x : {x // Q x}, x.1.toRingHom t = 0) → t = 0 :=
     fun t ht => hsep t fun x hx => ht ⟨x, hx⟩
@@ -601,7 +601,7 @@ private theorem absH (hN : _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureR
     ∃ J : Ideal B, H.IsJ θ a K D₀ ψ₀ j J := by
   by_cases hne : H.MK θ a K = ⊥
   · exact ⟨⊤, Or.inl ⟨hne, rfl⟩⟩
-  haveI hF : Fact (CommOn (H.MK θ a K) (H.op A)) := ⟨((hiComm L Ω l n c _ hA A θ hθ K).2.2.2 a).1⟩
+  have hF : Fact (CommOn (H.MK θ a K) (H.op A)) := ⟨((hiComm L Ω l n c _ hA A θ hθ K).2.2.2 a).1⟩
   obtain ⟨hCO, -, -, hres, -, hgen⟩ := hiAlg L Ω l n c _ hA A θ hθ a K hne
   obtain ⟨D, ψ, hU⟩ := _root_.UpperTheory.V.Hi.coreDet_alt hN L Ω l n c _ hA A θ hθ ι _ hAut lam hl hd a K
   have hO := _root_.UpperTheory.V.Z.Ord.core_hecke_of_automorphic_hecke_dense_weight hN L Ω l n c _ hA A θ hθ ι _ hAut lam hl hd a K D ψ hU

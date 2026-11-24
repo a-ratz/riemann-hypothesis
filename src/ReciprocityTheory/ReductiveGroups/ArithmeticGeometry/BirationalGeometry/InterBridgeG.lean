@@ -189,11 +189,11 @@ theorem exists_inj_cover {O : Set (Fin e → ℂ)} {Q : (Fin e → ℂ) → (Fin
 theorem integrable_tsum_of_summable {α : Type*} [MeasurableSpace α] {μ : Measure α}
     {F : ℕ → α → ℝ} (hF : ∀ n, Integrable (F n) μ) (hs : Summable fun n => ∫ y, ‖F n y‖ ∂μ) :
     Integrable (fun y => ∑' n, F n y) μ := by
-  have hmeas : ∀ n, AEMeasurable (fun y => ‖F n y‖ₑ) μ := fun n => (hF n).aemeasurable.enorm
+  have hmeas : ∀ n, AEMeasurable (fun y => ‖F n y‖ₑ) μ := fun n => (hF n).aemeasurable.eNorm
   have hlin : ∫⁻ y, ∑' n, ‖F n y‖ₑ ∂μ ≠ ⊤ := by
     rw [lintegral_tsum hmeas]
     have : ∀ n, ∫⁻ y, ‖F n y‖ₑ ∂μ = ENNReal.ofReal (∫ y, ‖F n y‖ ∂μ) := fun n =>
-      (ofReal_integral_norm_eq_lintegral_enorm (hF n)).symm
+      (ofReal_integral_norm_eq_lintegral_eNorm (hF n)).symm
     simp_rw [this]
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun n => integral_nonneg fun _ => norm_nonneg _) hs]
     exact ENNReal.ofReal_ne_top
@@ -207,7 +207,7 @@ theorem integrable_tsum_of_summable {α : Type*} [MeasurableSpace α] {μ : Meas
     (fun N => Finset.aestronglyMeasurable_fun_sum _ fun n _ => (hF n).1) ?_, ?_⟩
   · filter_upwards [hsum] with y hy
     exact hy.hasSum.tendsto_sum_nat
-  · refine lt_of_le_of_lt (lintegral_mono fun y => enorm_tsum_le_tsum_enorm) ?_
+  · refine lt_of_le_of_lt (lintegral_mono fun y => eNorm_tsum_le_tsum_eNorm) ?_
     exact lt_top_iff_ne_top.mpr hlin
 
 theorem tsum_finsum_disjointed {α : Type*} {D : ℕ → Set α} (hd : Pairwise (Disjoint on D))

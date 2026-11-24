@@ -120,7 +120,7 @@ theorem mem_admissibleImaginary_iff (hx : x ∈ X.dom) (hξ : X.IsIso ξ) (y : X
 
 theorem zero_mem_Om (hx : x ∈ X.dom) (hξ : X.IsIso ξ) : (0 : Fin n → ℝ) ∈ Om X ξ x ω := by
   show (fun τ => ∑ j, (0 : Fin n → ℝ) j * ω j τ) ∈ AdmissibleHermitianColumns.admissibleImaginary X ξ x
-  simp only [AdmissibleHermitianColumns.admissibleImaginary, Set.mem_setOf_eq]
+  simp only [AdmissibleHermitianColumns.admissibleImaginary, Set.mem_ofPred_eq]
   intro τ i
   have h := (hx τ).2 i
   simpa [dmin] using h

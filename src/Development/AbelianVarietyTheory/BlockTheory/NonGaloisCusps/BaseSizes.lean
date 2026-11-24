@@ -194,13 +194,13 @@ theorem vO_l (D : D7) (i : D.nd.Loc) : vO (D.nd.O i) (D.nd.l i) (D.nd.l i : D.nd
       rcases mul_eq_zero.1 hz with h | h
       · exact ((PadicInt.unitCoeff hz0).isUnit.map _).ne_zero h
       · exact h0 (pow_eq_zero_iff'.1 h).1
-    haveI : FaithfulSMul ℤ_[D.nd.l i] (D.nd.O i) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+    have : FaithfulSMul ℤ_[D.nd.l i] (D.nd.O i) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
     have : IsUnit ((D.nd.l i : ℕ) : ℤ_[D.nd.l i]) :=
       IsLocalHom.map_nonunit (f := algebraMap ℤ_[D.nd.l i] (D.nd.O i)) _ (by rw [map_natCast]; exact hu)
     exact PadicInt.irreducible_p.not_isUnit this
   unfold vO nlen
   apply ENNReal.div_self
-  · haveI : Nontrivial (D.nd.O i ⧸ Ideal.span {(D.nd.l i : D.nd.O i)}) :=
+  · have : Nontrivial (D.nd.O i ⧸ Ideal.span {(D.nd.l i : D.nd.O i)}) :=
       Ideal.Quotient.nontrivial_iff.2 (by rwa [Ne, Ideal.span_singleton_eq_top])
     simpa using (Module.length_pos (R := D.nd.O i)).ne'
   · have hf : IsFiniteLength (D.nd.O i) (D.nd.O i ⧸ Ideal.span {(D.nd.l i : D.nd.O i)}) :=

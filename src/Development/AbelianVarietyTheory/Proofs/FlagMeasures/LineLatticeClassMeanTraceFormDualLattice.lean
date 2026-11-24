@@ -495,8 +495,8 @@ theorem hasFDerivAt_inv {j : ℕ} (A : Fin j → Fin j → ℂ) (hA : (Matrix.of
 
 theorem isAddHaarMeasure_volume (ι : Type) [Fintype ι] (j : ℕ) :
     (volume : Measure (ι → Fin j → Fin j → ℂ)).IsAddHaarMeasure := by
-  haveI : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   exact Measure.pi.isAddHaarMeasure _
 
 variable (E : Type) [Field E] [NumberField E] (j : ℕ)
@@ -511,7 +511,7 @@ theorem measurePreserving_mul_left (γ : MatInf E j) (hγ : 0 < detNorm E j γ) 
     intro w
     exact (Matrix.mul_one _).symm
   have hu := fun w => isUnit_iff_ne_zero.2 ((detNorm_pos_iff E j γ).1 hγ w)
-  haveI := isAddHaarMeasure_volume (InfinitePlace E) j
+  have := isAddHaarMeasure_volume (InfinitePlace E) j
   refine measurePreserving_of_fderiv (V := InfinitePlace E → Fin j → Fin j → ℂ) volume _
     (measurableSet_detNorm_pos E j) _ (by rw [hL]; exact L.continuous.measurable) (fun _ => L)
     (fun x _ => by rw [hL]; exact L.hasFDerivAt) ?_ ?_ _ ?_
@@ -565,7 +565,7 @@ theorem measurePreserving_invT :
   let L := fun x : InfinitePlace E → Fin j → Fin j → ℂ => LinearMap.toContinuousLinearMap
     (sandwich (fun w => -(Matrix.of (x w))⁻¹) fun w => (Matrix.of (x w))⁻¹)
   let T := LinearMap.toContinuousLinearMap (transp (InfinitePlace E) j)
-  haveI := isAddHaarMeasure_volume (InfinitePlace E) j
+  have := isAddHaarMeasure_volume (InfinitePlace E) j
   refine measurePreserving_of_fderiv (V := InfinitePlace E → Fin j → Fin j → ℂ) volume _
     (measurableSet_detNorm_pos E j) _ (measurable_invT E j) (fun x => T.comp (L x)) ?_ ?_ ?_ _ ?_
   · intro x hx
@@ -746,7 +746,7 @@ theorem term_le_of_carries {γ : GL (Fin j) E} {Λ Λ' : Submodule (𝓞 E) (Fin
     term E j F Λ ≤ term E j F Λ' := by
   have hp : ∀ (δ : GL (Fin j) E), ∀ x ∈ {g | 0 < detNorm E j g}, embInf E j δ * x ∈ {g | 0 < detNorm E j g} :=
     fun δ x hx => by
-      rw [Set.mem_setOf_eq, detNorm_mul]; exact mul_pos (detNorm_embInf E j δ) hx
+      rw [Set.mem_ofPred_eq, detNorm_mul]; exact mul_pos (detNorm_embInf E j δ) hx
   refine covol_le_of_map _ _ _ _ (measurableSet_detNorm_pos E j) _
     (measurePreserving_mul_left E j _ (detNorm_embInf E j γ)) (hp γ) _ _ (fun x _ => by rw [h.latAt]) hm ?_
   intro x hx
@@ -770,7 +770,7 @@ theorem covol_invT_le {Λ Λ' : Submodule (𝓞 E) (Fin j → E)} (h : trDual E 
   obtain ⟨δ, hδ, rfl⟩ := (mem_autGL E j).1 hx
   refine ⟨embInf E j (glInvT δ), (mem_autGL E j).2 ⟨_, ?_, rfl⟩, fun x hx => ⟨?_, ?_⟩⟩
   · rw [← h]; exact Carries.trDual hδ
-  · rw [Set.mem_setOf_eq, detNorm_mul]; exact mul_pos (detNorm_embInf E j _) hx
+  · rw [Set.mem_ofPred_eq, detNorm_mul]; exact mul_pos (detNorm_embInf E j _) hx
   · rw [invT_mul, ← invT_embInf, invT_invT E j (detNorm_embInf E j _)]
 
 theorem term_dual (hE : IsTotallyComplex E) {Λ : Submodule (𝓞 E) (Fin j → E)} (hΛ : Submodule.IsFullLattice E Λ)

@@ -64,7 +64,7 @@ theorem coefwise_dbar_sum_smul {n : ℕ} {ι : Type} [Fintype ι] {c : ι → V 
 
       simp [map_sum, Finsupp.finsetSum_apply]
     rw [e, GlobalTheory.dbar_sum (A := fun i x => c i x * (bas n).repr (F i x) S) (fun i _ => (hc i).mul (hF i S)),
-      ContinuousLinearMap.sum_apply]
+      sum_apply]
     exact Finset.sum_congr rfl fun i _ => GlobalTheory.dbar_mul (hc i) (hF i S) w
   simp only [coefwise, h, Finset.sum_smul]
   rw [Finset.sum_comm]

@@ -266,10 +266,10 @@ theorem embInf_eq_cornerGL (v : InfinitePlace E) (y : GL (Fin n) ℂ) : embInf n
   · rw [cV_embInf]
     by_cases h : w = v
     · subst h
-      rw [if_pos rfl, map_cornerGL_of_hom (sV w) (cV w) (RingHom.id ℂ) (fun x => by rw [cV_sV, Pi.single_eq_same]; rfl) y]
+      rw [ite_eq_left rfl, map_cornerGL_of_hom (sV w) (cV w) (RingHom.id ℂ) (fun x => by rw [cV_sV, Pi.single_eq_same]; rfl) y]
       ext i j
       rfl
-    · rw [if_neg h, map_cornerGL_of_zero (sV v) (cV w) (fun x => by rw [cV_sV, Pi.single_eq_of_ne h]) y]
+    · rw [ite_eq_right h, map_cornerGL_of_zero (sV v) (cV w) (fun x => by rw [cV_sV, Pi.single_eq_of_ne h]) y]
   · rw [pFin_embInf, map_cornerGL_of_zero (sV v) (pFin E) (fun x => rfl) y]
 
 theorem continuous_embInf (v : InfinitePlace E) : Continuous (embInf (E := E) n v) := by
@@ -280,7 +280,7 @@ theorem continuous_embInf (v : InfinitePlace E) : Continuous (embInf (E := E) n 
 theorem cV_embInf_self (v : InfinitePlace E) (y : GL (Fin n) ℂ) :
     GeneralLinearGroup.map (cV v) (embInf n v y) = y := by
   classical
-  rw [cV_embInf, if_pos rfl]
+  rw [cV_embInf, ite_eq_left rfl]
 
 theorem embInf_comm (v : InfinitePlace E) (y : GL (Fin n) ℂ) (k : GA E n)
     (hk : k ∈ (GeneralLinearGroup.map (n := Fin n) (cV (E := E) v)).ker) : embInf n v y * k = k * embInf n v y := by
@@ -291,7 +291,7 @@ theorem embInf_comm (v : InfinitePlace E) (y : GL (Fin n) ℂ) (k : GA E n)
     by_cases h : w = v
     · subst h
       rw [hk']; simp
-    · rw [if_neg h]; simp
+    · rw [ite_eq_right h]; simp
   · rw [map_mul, map_mul, pFin_embInf]; simp
 
 theorem cV_thetaA (v : InfinitePlace E) (g : GA E n) :
@@ -304,8 +304,8 @@ theorem thetaA_embInf (v : InfinitePlace E) (y : GL (Fin n) ℂ) :
   refine ga_ext' (fun w => ?_) ?_
   · rw [cV_thetaA, cV_embInf, cV_embInf]
     by_cases h : w = v
-    · rw [if_pos h, if_pos h]
-    · rw [if_neg h, if_neg h, thetaR_one']
+    · rw [ite_eq_left h, ite_eq_left h]
+    · rw [ite_eq_right h, ite_eq_right h, thetaR_one']
   · rw [pFin_embInf, map_thetaR (pFin E) (conjAd E) (conjFin (IsCMField.complexConj E).toRingEquiv) (fun _ => rfl),
       pFin_embInf, thetaR_one']
 
@@ -316,30 +316,30 @@ theorem cV_ratGL (v : InfinitePlace E) (d : GL (Fin n) E) :
 
 theorem locallyCompact_GL {R : Type} [CommRing R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R]
     [LocallyCompactSpace R] : LocallyCompactSpace (GL (Fin n) R) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
-  haveI : T2Space (Matrix (Fin n) (Fin n) R) := inferInstanceAs (T2Space (Fin n → Fin n → R))
+  have : T2Space (Matrix (Fin n) (Fin n) R) := inferInstanceAs (T2Space (Fin n → Fin n → R))
   exact Units.isClosedEmbedding_embedProduct.locallyCompactSpace
 
 theorem secondCountable_GL {R : Type} [CommRing R] [TopologicalSpace R] [SecondCountableTopology R] :
     SecondCountableTopology (GL (Fin n) R) := by
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) R)).symm.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
 theorem splitAt : PositivityTheory.Rg.BcB.D4.SplitAt := by
   intro E _ _ _ n v _ _ μ _
-  haveI : LocallyCompactSpace (Ad E) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
-  haveI : SecondCountableTopology (Ad E) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI : T2Space (Ad E) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
-  haveI : LocallyCompactSpace (GA E n) := locallyCompact_GL
-  haveI : SecondCountableTopology (GA E n) := secondCountable_GL
-  haveI : LocallyCompactSpace (GL (Fin n) ℂ) := locallyCompact_GL
-  haveI : SecondCountableTopology (GL (Fin n) ℂ) := secondCountable_GL
-  letI mH : MeasurableSpace (GL (Fin n) ℂ) := borel _
-  haveI bH : BorelSpace (GL (Fin n) ℂ) := ⟨rfl⟩
+  have : LocallyCompactSpace (Ad E) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
+  have : SecondCountableTopology (Ad E) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have : T2Space (Ad E) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have : LocallyCompactSpace (GA E n) := locallyCompact_GL
+  have : SecondCountableTopology (GA E n) := secondCountable_GL
+  have : LocallyCompactSpace (GL (Fin n) ℂ) := locallyCompact_GL
+  have : SecondCountableTopology (GL (Fin n) ℂ) := secondCountable_GL
+  let mH : MeasurableSpace (GL (Fin n) ℂ) := borel _
+  have bH : BorelSpace (GL (Fin n) ℂ) := ⟨rfl⟩
   let p : GA E n →* GL (Fin n) ℂ := GeneralLinearGroup.map (cV v)
   let s : GL (Fin n) ℂ →* GA E n := embInf n v
   have hp : Continuous p := continuous_mapGL _ (continuous_cV v)
@@ -350,10 +350,10 @@ theorem splitAt : PositivityTheory.Rg.BcB.D4.SplitAt := by
     have : (p.ker : Set (GA E n)) = p ⁻¹' {1} := rfl
     rw [this]
     exact isClosed_singleton.preimage hp
-  haveI lK : LocallyCompactSpace p.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI sK : SecondCountableTopology p.ker := TopologicalSpace.Subtype.secondCountableTopology _
-  letI mK : MeasurableSpace p.ker := borel _
-  haveI bK : BorelSpace p.ker := ⟨rfl⟩
+  have lK : LocallyCompactSpace p.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have sK : SecondCountableTopology p.ker := TopologicalSpace.Subtype.secondCountableTopology _
+  let mK : MeasurableSpace p.ker := borel _
+  have bK : BorelSpace p.ker := ⟨rfl⟩
   have hθ : ∀ g, p (thetaA E n g) = thetaR (starRingEnd ℂ) n (p g) := cV_thetaA v
   have hθ' : ∀ y, thetaA E n (s y) = s (thetaR (starRingEnd ℂ) n y) := thetaA_embInf v
   obtain ⟨μ₁, μ₂, h1, h2, h3⟩ := haar_split (splitC p s hps hc hp hs) μ
@@ -419,16 +419,16 @@ variable [MeasurableSpace G] [BorelSpace G]
 theorem exists_normaliser (T : Subgroup G) (hT : IsClosed (T : Set G)) (μT : Measure T)
     [μT.IsHaarMeasure] [μT.IsInvInvariant] : ∃ ρ, IsQuotNormaliser T μT ρ := by
   classical
-  haveI : LocallyCompactSpace T := hT.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : μT.IsMulRightInvariant := by
+  have : LocallyCompactSpace T := hT.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : μT.IsMulRightInvariant := by
     rw [← Measure.inv_eq_self μT]; infer_instance
-  haveI : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : SigmaCompactSpace T := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SigmaFinite μT := Measure.IsHaarMeasure.sigmaFinite μT
+  have : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
+  have : SigmaCompactSpace T := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SigmaFinite μT := Measure.IsHaarMeasure.sigmaFinite μT
   obtain ⟨U, K, hU, hK, hUK, hcov⟩ := exists_open_cover (G := G)
   have hUm : ∀ i, MeasurableSet (U i) := fun i => (hU i).measurableSet
   have hmulT : Measurable fun p : G × T => (p.2 : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
   let f : ℕ → G → ℝ≥0∞ := fun i => (U i).indicator 1
   have hf : ∀ i, Measurable (f i) := fun i => measurable_one.indicator (hUm i)
   let m : ℕ → G → ℝ≥0∞ := fun i g => ∫⁻ t : T, f i ((t : G) * g) ∂μT
@@ -440,7 +440,7 @@ theorem exists_normaliser (T : Subgroup G) (hT : IsClosed (T : Set G)) (μT : Me
   have hset : ∀ i g, m i g = μT ((fun t : T => (t : G) * g) ⁻¹' U i) := by
     intro i g
     have hme : MeasurableSet ((fun t : T => (t : G) * g) ⁻¹' U i) :=
-      (measurable_subtype_coe.mul_const g) (hUm i)
+      (measurable_subtypeVal.mul_const g) (hUm i)
     rw [← lintegral_indicator_one hme]
     rfl
   have hfin : ∀ i g, m i g ≠ ∞ := by
@@ -454,7 +454,7 @@ theorem exists_normaliser (T : Subgroup G) (hT : IsClosed (T : Set G)) (μT : Me
     intro i g hg
     rw [hset]
     have ho : IsOpen ((fun t : T => (t : G) * g) ⁻¹' U i) :=
-      (hU i).preimage (continuous_subtype_val.mul continuous_const)
+      (hU i).preimage (continuous_subtypeVal.mul continuous_const)
     exact (ho.measure_pos μT ⟨1, by simpa using hg⟩).ne'
   let A : ℕ → Set G := fun i => {g | m i g ≠ 0}
   have hAm : ∀ i, MeasurableSet (A i) := fun i => (hmm i (measurableSet_singleton 0)).compl
@@ -463,7 +463,7 @@ theorem exists_normaliser (T : Subgroup G) (hT : IsClosed (T : Set G)) (μT : Me
     (hAm i).inter (MeasurableSet.iInter fun j => (hAm j).compl)
   have hBinv : ∀ i (s : T) g, (s : G) * g ∈ B i ↔ g ∈ B i := by
     intro i s g
-    simp only [B, A, mem_inter_iff, mem_iInter, mem_compl_iff, mem_setOf_eq, hinv]
+    simp only [B, A, mem_inter_iff, mem_iInter, mem_compl_iff, mem_ofPred_eq, hinv]
   let c : ℕ → G → ℝ≥0∞ := fun i => (B i).indicator (fun g => (m i g)⁻¹)
   have hc : ∀ i, Measurable (c i) := fun i => (hmm i).inv.indicator (hBm i)
   have hcinv : ∀ i (s : T) g, c i ((s : G) * g) = c i g := by
@@ -475,12 +475,12 @@ theorem exists_normaliser (T : Subgroup G) (hT : IsClosed (T : Set G)) (μT : Me
     fun g => ?_⟩
   have e1 : ∫⁻ t : T, ∑' i, c i ((t : G) * g) * f i ((t : G) * g) ∂μT = ∑' i, c i g * m i g := by
     have hmt : ∀ i, AEMeasurable (fun t : T => c i ((t : G) * g) * f i ((t : G) * g)) μT := fun i =>
-      (((hc i).mul (hf i)).comp (measurable_subtype_coe.mul_const g)).aemeasurable
+      (((hc i).mul (hf i)).comp (measurable_subtypeVal.mul_const g)).aemeasurable
     rw [lintegral_tsum hmt]
     refine tsum_congr fun i => ?_
     simp only [hcinv]
     have hfm : Measurable fun t : T => f i ((t : G) * g) :=
-      (hf i).comp (measurable_subtype_coe.mul_const g)
+      (hf i).comp (measurable_subtypeVal.mul_const g)
     rw [lintegral_const_mul _ hfm]
   rw [e1]
   have hex : ∃ i, g ∈ A i := by
@@ -519,7 +519,7 @@ theorem quotIntegral_strict {K : Type*} [Group K] [MeasurableSpace K] [Measurabl
     (hD : ∀ t : K, ∃! h : Γ, (h : K) * t ∈ D) {f : K → ℂ} (hf : Measurable f)
     (hfΓ : ∀ h ∈ Γ, ∀ t, f (h * t) = f t) :
     quotIntegral ν Γ Measure.count f = ∫ t in D, f t ∂ν := by
-  haveI : (Measure.count : Measure Γ).IsInvInvariant := count_inv
+  have : (Measure.count : Measure Γ).IsInvInvariant := count_inv
   have hρ : IsQuotNormaliser Γ Measure.count (D.indicator (1 : K → ℝ≥0∞)) := by
     refine ⟨measurable_one.indicator hDm, fun g => ?_⟩
     rw [lintegral_count]
@@ -560,9 +560,9 @@ theorem stage_normaliser (Γ₀ : Subgroup T) [Countable Γ₀]
     (hD : ∀ t : T, ∃! h : Γ₀, (h : T) * t ∈ D) {σ : G → ℝ≥0∞} (hσ : IsQuotNormaliser T μT σ) :
     IsQuotNormaliser (Γ₀.map T.subtype) Measure.count
       (fun x => ∫⁻ t in D, σ (((t⁻¹ : T) : G) * x) ∂μT) := by
-  haveI : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
   have hj : Measurable fun p : G × T => ((p.2⁻¹ : T) : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd.inv).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd.inv).mul measurable_fst
   refine ⟨(hσ.1.comp hj).lintegral_prod_right', fun x => ?_⟩
   rw [lintegral_count]
   let e : Γ₀ ≃ Γ₀.map T.subtype := (Γ₀.equivMapOfInjective T.subtype T.subtype_injective).toEquiv
@@ -581,7 +581,7 @@ theorem stage_normaliser (Γ₀ : Subgroup T) [Countable Γ₀]
   have hm : ∀ γ : Γ₀, AEMeasurable (fun s : T => D.indicator (1 : T → ℝ≥0∞) ((γ : T) * s) *
       σ (((s⁻¹ : T) : G) * x)) μT := fun γ =>
     (((measurable_one.indicator hDm).comp (measurable_const_mul _)).mul
-      (hσ.1.comp ((measurable_subtype_coe.comp measurable_inv).mul_const x))).aemeasurable
+      (hσ.1.comp ((measurable_subtypeVal.comp measurable_inv).mul_const x))).aemeasurable
   rw [← lintegral_tsum hm]
   have e2 : ∀ s : T, ∑' γ : Γ₀, D.indicator (1 : T → ℝ≥0∞) ((γ : T) * s) * σ (((s⁻¹ : T) : G) * x) =
       σ (((s⁻¹ : T) : G) * x) := by
@@ -602,7 +602,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
 
 theorem enorm_ofReal_toReal_le (r : ℝ≥0∞) : ‖((r.toReal : ℝ) : ℂ)‖ₑ ≤ r := by
-  rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg ENNReal.toReal_nonneg]
+  rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg ENNReal.toReal_nonneg]
   exact ENNReal.ofReal_toReal_le
 
 theorem integral_stage {T : Subgroup G} (μ : Measure G) [μ.IsMulLeftInvariant] [SFinite μ]
@@ -611,26 +611,26 @@ theorem integral_stage {T : Subgroup G} (μ : Measure G) [μ.IsMulLeftInvariant]
     (hfin : ∫⁻ x, ‖F x‖ₑ * ∫⁻ t, σ (((t⁻¹ : T) : G) * x) ∂ν ∂μ ≠ ∞) :
     ∫ x, F x * (((∫⁻ t, σ (((t⁻¹ : T) : G) * x) ∂ν).toReal : ℝ) : ℂ) ∂μ =
       ∫ x, (∫ t, F ((t : G) * x) ∂ν) * (((σ x).toReal : ℝ) : ℂ) ∂μ := by
-  haveI : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
   let A : T × G → ℂ := fun p => F p.2 * (((σ (((p.1⁻¹ : T) : G) * p.2)).toReal : ℝ) : ℂ)
   let ψ : T × G → T × G := fun p => (p.1, (p.1 : G) * p.2)
   have hj : Measurable fun p : T × G => ((p.1⁻¹ : T) : G) * p.2 :=
-    (measurable_subtype_coe.comp measurable_fst.inv).mul measurable_snd
+    (measurable_subtypeVal.comp measurable_fst.inv).mul measurable_snd
   have hAm : Measurable A := (hF.comp measurable_snd).mul
     (Complex.measurable_ofReal.comp (hσ.comp hj).ennreal_toReal)
   have hψ : MeasurePreserving ψ (ν.prod μ) (ν.prod μ) :=
     (MeasurePreserving.id ν).skew_product (g := fun (t : T) (x : G) => (t : G) * x)
-      ((measurable_subtype_coe.comp measurable_fst).mul measurable_snd)
+      ((measurable_subtypeVal.comp measurable_fst).mul measurable_snd)
       (ae_of_all _ fun t => map_mul_left_eq_self μ (t : G))
   have hAi : Integrable A (ν.prod μ) := by
     refine ⟨hAm.aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, lintegral_prod_symm _ hAm.enorm.aemeasurable]
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_prod_symm _ hAm.eNorm.aemeasurable]
     refine lt_of_le_of_lt (lintegral_mono fun x => ?_) (lt_top_iff_ne_top.2 hfin)
     have hm : Measurable fun t : T => σ (((t⁻¹ : T) : G) * x) :=
-      hσ.comp ((measurable_subtype_coe.comp measurable_inv).mul_const x)
+      hσ.comp ((measurable_subtypeVal.comp measurable_inv).mul_const x)
     rw [← lintegral_const_mul _ hm]
     refine lintegral_mono fun t => ?_
-    simp only [A, enorm_mul]
+    simp only [A, eNorm_mul]
     exact mul_le_mul_right (enorm_ofReal_toReal_le _) _
   have hBi : Integrable (A ∘ ψ) (ν.prod μ) :=
     (hψ.integrable_comp hAm.aestronglyMeasurable).2 hAi
@@ -640,7 +640,7 @@ theorem integral_stage {T : Subgroup G} (μ : Measure G) [μ.IsMulLeftInvariant]
     refine integral_congr_ae ?_
     filter_upwards [hae] with x hx
     have hm : Measurable fun t : T => σ (((t⁻¹ : T) : G) * x) :=
-      hσ.comp ((measurable_subtype_coe.comp measurable_inv).mul_const x)
+      hσ.comp ((measurable_subtypeVal.comp measurable_inv).mul_const x)
     simp only [A]
     rw [integral_const_mul, integral_complex_ofReal,
       integral_toReal hm.aemeasurable (ae_lt_top hm hx.ne)]
@@ -661,21 +661,21 @@ end Fubini
 theorem quotStage_holds : PositivityTheory.Rg.BcB.D4.QuotStage := by
   intro G _ _ _ _ _ _ _ μ _ T μT _ _ Γ₀ F hT hdisc hF hFΓ hfin
   classical
-  haveI := hdisc
-  haveI : LocallyCompactSpace T := hT.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : SigmaCompactSpace T := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SigmaFinite μT := Measure.IsHaarMeasure.sigmaFinite μT
-  haveI : SigmaCompactSpace G := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
-  haveI : μT.IsMulRightInvariant := by
+  have := hdisc
+  have : LocallyCompactSpace T := hT.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology T := IsEmbedding.subtypeVal.secondCountableTopology
+  have : SigmaCompactSpace T := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SigmaFinite μT := Measure.IsHaarMeasure.sigmaFinite μT
+  have : SigmaCompactSpace G := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
+  have : μT.IsMulRightInvariant := by
     rw [← Measure.inv_eq_self μT]; infer_instance
-  haveI : SecondCountableTopology Γ₀ := IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : Countable Γ₀ := countable_of_Lindelof_of_discrete
-  haveI : DiscreteTopology (Γ₀.map T.subtype) := map_discrete T Γ₀
-  haveI : Countable (Γ₀.map T.subtype) :=
+  have : SecondCountableTopology Γ₀ := IsEmbedding.subtypeVal.secondCountableTopology
+  have : Countable Γ₀ := countable_of_Lindelof_of_discrete
+  have : DiscreteTopology (Γ₀.map T.subtype) := map_discrete T Γ₀
+  have : Countable (Γ₀.map T.subtype) :=
     (Γ₀.equivMapOfInjective T.subtype T.subtype_injective).toEquiv.surjective.countable
-  haveI : (Measure.count : Measure (Γ₀.map T.subtype)).IsInvInvariant := count_inv
+  have : (Measure.count : Measure (Γ₀.map T.subtype)).IsInvInvariant := count_inv
   obtain ⟨σ, hσ⟩ := exists_normaliser T hT μT
   obtain ⟨D, hDm, hD⟩ := GlobalTheory.CompanionTheory.QuotUnfold.exists_strict_domain Γ₀
   have hρ := stage_normaliser Γ₀ hDm hD hσ
@@ -684,7 +684,7 @@ theorem quotStage_holds : PositivityTheory.Rg.BcB.D4.QuotStage := by
     obtain ⟨γ, hγ, rfl⟩ := Subgroup.mem_map.1 hh
     exact hFΓ γ hγ x
   have hmt : ∀ x, Measurable fun t : T => F ((t : G) * x) := fun x =>
-    hF.comp (measurable_subtype_coe.mul_const x)
+    hF.comp (measurable_subtypeVal.mul_const x)
   have hΓt : ∀ x, ∀ h ∈ Γ₀, ∀ t : T, F (((h * t : T) : G) * x) = F ((t : G) * x) := by
     intro x h hh t
     have := hFΓ h hh ((t : G) * x)
@@ -694,7 +694,7 @@ theorem quotStage_holds : PositivityTheory.Rg.BcB.D4.QuotStage := by
     quotIntegral_strict hDm hD (hmt x) (hΓt x)
   have hΦm : Measurable fun x => ∫ t in D, F ((t : G) * x) ∂μT := by
     have hj : Measurable fun p : G × T => F ((p.2 : G) * p.1) :=
-      hF.comp ((measurable_subtype_coe.comp measurable_snd).mul measurable_fst)
+      hF.comp ((measurable_subtypeVal.comp measurable_snd).mul measurable_fst)
     exact (hj.stronglyMeasurable.integral_prod_right' (ν := μT.restrict D)).measurable
   have hΦT : ∀ s ∈ T, ∀ x, ∫ t in D, F ((t : G) * (s * x)) ∂μT = ∫ t in D, F ((t : G) * x) ∂μT := by
     intro s hs x
@@ -722,7 +722,7 @@ theorem quotStage_holds : PositivityTheory.Rg.BcB.D4.QuotStage := by
   have hfin' : ∫⁻ x, ‖F x‖ₑ * ∫⁻ t in D, σ (((t⁻¹ : T) : G) * x) ∂μT ∂μ ≠ ∞ := by
     have hex : ∃ ρ, IsQuotNormaliser (Γ₀.map T.subtype) Measure.count ρ := ⟨_, hρ⟩
     rw [quotLIntegral, dite_eq_left hex] at hfin
-    rwa [lintegral_normaliser_eq hF.enorm (fun h hh g => by simp only [hFH h hh g]) hρ hex.choose_spec]
+    rwa [lintegral_normaliser_eq hF.eNorm (fun h hh g => by simp only [hFH h hh g]) hρ hex.choose_spec]
   exact integral_stage μ (μT.restrict D) hF hσ.1
     (GlobalTheory.CompanionTheory.QuotNorm.ae_lt_top_of_normaliser hρ) hfin'
 
@@ -1004,16 +1004,16 @@ def split (t : T₁.prod T₂) : T₁ × T₂ :=
   (⟨t.1.1, (Subgroup.mem_prod.1 t.2).1⟩, ⟨t.1.2, (Subgroup.mem_prod.1 t.2).2⟩)
 
 theorem measurable_split : Measurable (split : T₁.prod T₂ → T₁ × T₂) :=
-  ((measurable_fst.comp measurable_subtype_coe).subtype_mk).prodMk
-    ((measurable_snd.comp measurable_subtype_coe).subtype_mk)
+  ((measurable_fst.comp measurable_subtypeVal).subtype_mk).prodMk
+    ((measurable_snd.comp measurable_subtypeVal).subtype_mk)
 
 theorem lintegral_prod_subgroup (hν : ν.map split = ν₁.prod ν₂) {ρ : G₁ × G₂ → ℝ≥0∞}
     (hρ : Measurable ρ) (g : G₁ × G₂) :
     ∫⁻ h : T₁.prod T₂, ρ ((h : G₁ × G₂) * g) ∂ν =
       ∫⁻ t₁ : T₁, ∫⁻ t₂ : T₂, ρ ((t₁ : G₁) * g.1, (t₂ : G₂) * g.2) ∂ν₂ ∂ν₁ := by
   have hm : Measurable fun p : T₁ × T₂ => ρ ((p.1 : G₁) * g.1, (p.2 : G₂) * g.2) :=
-    hρ.comp ((((measurable_subtype_coe.comp measurable_fst).mul_const g.1)).prodMk
-      ((measurable_subtype_coe.comp measurable_snd).mul_const g.2))
+    hρ.comp ((((measurable_subtypeVal.comp measurable_fst).mul_const g.1)).prodMk
+      ((measurable_subtypeVal.comp measurable_snd).mul_const g.2))
   rw [← lintegral_prod _ hm.aemeasurable, ← hν, lintegral_map hm measurable_split]
   rfl
 
@@ -1021,7 +1021,7 @@ theorem normaliser_fst (hν : ν.map split = ν₁.prod ν₂) {ρ : G₁ × G�
     (hρ : IsQuotNormaliser (T₁.prod T₂) ν ρ) :
     IsQuotNormaliser T₁ ν₁ fun x => ∫⁻ t₂ : T₂, ρ (x, (t₂ : G₂)) ∂ν₂ := by
   refine ⟨Measurable.lintegral_prod_right' (f := fun p : G₁ × T₂ => ρ (p.1, (p.2 : G₂)))
-    (hρ.1.comp (measurable_fst.prodMk (measurable_subtype_coe.comp measurable_snd))), fun g => ?_⟩
+    (hρ.1.comp (measurable_fst.prodMk (measurable_subtypeVal.comp measurable_snd))), fun g => ?_⟩
   have h := hρ.2 (g, 1)
   rw [lintegral_prod_subgroup hν hρ.1] at h
   simpa using h
@@ -1030,14 +1030,14 @@ theorem normaliser_snd (hν : ν.map split = ν₁.prod ν₂) {ρ : G₁ × G�
     (hρ : IsQuotNormaliser (T₁.prod T₂) ν ρ) :
     IsQuotNormaliser T₂ ν₂ fun x => ∫⁻ t₁ : T₁, ρ ((t₁ : G₁), x) ∂ν₁ := by
   refine ⟨Measurable.lintegral_prod_right' (f := fun p : G₂ × T₁ => ρ ((p.2 : G₁), p.1))
-    (hρ.1.comp ((measurable_subtype_coe.comp measurable_snd).prodMk measurable_fst)), fun g => ?_⟩
+    (hρ.1.comp ((measurable_subtypeVal.comp measurable_snd).prodMk measurable_fst)), fun g => ?_⟩
   have h := hρ.2 (1, g)
   rw [lintegral_prod_subgroup hν hρ.1] at h
   rw [lintegral_lintegral_swap]
   · simpa using h
   · have hm : Measurable fun p : T₂ × T₁ => ρ ((p.2 : G₁), (p.1 : G₂) * g) :=
-      hρ.1.comp ((measurable_subtype_coe.comp measurable_snd).prodMk
-        ((measurable_subtype_coe.comp measurable_fst).mul_const g))
+      hρ.1.comp ((measurable_subtypeVal.comp measurable_snd).prodMk
+        ((measurable_subtypeVal.comp measurable_fst).mul_const g))
     exact hm.aemeasurable
 
 theorem normaliser_mul (hν : ν.map split = ν₁.prod ν₂) {ρ₁ : G₁ → ℝ≥0∞} {ρ₂ : G₂ → ℝ≥0∞}
@@ -1050,7 +1050,7 @@ theorem normaliser_mul (hν : ν.map split = ν₁.prod ν₂) {ρ₁ : G₁ →
   have hc : ∀ t₁ : T₁, ∫⁻ t₂ : T₂, ρ₁ ((t₁ : G₁) * g.1) * ρ₂ ((t₂ : G₂) * g.2) ∂ν₂ =
       ρ₁ ((t₁ : G₁) * g.1) := fun t₁ => by
     have hm₂ : Measurable fun t₂ : T₂ => ρ₂ ((t₂ : G₂) * g.2) :=
-      h₂.1.comp (measurable_subtype_coe.mul_const g.2)
+      h₂.1.comp (measurable_subtypeVal.mul_const g.2)
     rw [lintegral_const_mul _ hm₂, h₂.2, mul_one]
   simp only [hc]
   exact h₁.2 g.1
@@ -1084,7 +1084,7 @@ theorem quotProd_holds : PositivityTheory.Rg.BcB.D4.QuotProd := by
       simp only [this, Pi.zero_apply]
       rw [integral_mul_const, hq, zero_mul]
     · exact integral_undef hi
-  · simp only [quotIntegral, dif_neg hex]
+  · simp only [quotIntegral, dite_eq_right hex]
 
 theorem quotProd_of_normEq : PositivityTheory.Rg.BcB.D4.NormEq → PositivityTheory.Rg.BcB.D4.QuotProd :=
   fun _ => quotProd_holds
@@ -1527,7 +1527,7 @@ theorem exists_diag (γ : Matrix (Fin n) (Fin n) ℂ) (h : γ.charpoly.Separable
   have hli : LinearIndependent ℂ v :=
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' γ) lam hl v hv
   let Pm : Matrix (Fin n) (Fin n) ℂ := Matrix.of fun a i => v i a
-  have hPu : IsUnit Pm := Matrix.linearIndependent_cols_iff_isUnit.1 hli
+  have hPu : IsUnit Pm := linearIndependent_col_iff_isUnit.1 hli
   obtain ⟨P, hP⟩ := hPu
   have hγ : γ * P.val = P.val * diagonal lam := by
     rw [hP]
@@ -1604,12 +1604,12 @@ theorem diag_proper (lam : Fin n → ℂ) (hl : Function.Injective lam)
       simp only [G, h1, hp]
       rw [Matrix.mul_apply]
       simp only [Matrix.mul_diagonal, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [← h2]
     exact ((norm_le_pi_norm _ b).trans ((norm_le_pi_norm _ a).trans (norm_le_pi_norm _ i))).trans (hB _ hy)
 
   have hrow : ∀ i, ∃ j, ∀ j', ‖y.val i j'‖ ≤ ‖y.val i j‖ := fun i => by
-    haveI : Nonempty (Fin n) := ⟨i⟩
+    have : Nonempty (Fin n) := ⟨i⟩
     exact Finite.exists_max _
   choose c hc using hrow
   have hne : ∀ i, y.val i (c i) ≠ 0 := by

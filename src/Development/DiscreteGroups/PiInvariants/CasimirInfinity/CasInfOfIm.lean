@@ -130,7 +130,7 @@ private lemma coshT_bump (c : ℂ) (hc : c.im = 0) (φ : ContDiffBump (0 : ℝ))
     · exact mul_nonneg φ.nonneg (hpos t ht).le
     · rw [φ.zero_of_le_dist (by simpa [Real.dist_eq] using not_lt.1 ht), zero_mul]
   refine ⟨∫ t, φ t * h t, ?_, ?_⟩
-  · refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 0)
+  · refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 0)
       (φ.continuous.mul hcont) φ.hasCompactSupport.mul_right (fun t => hnn t) ?_
     rw [φ.one_of_mem_closedBall (by simp [φ.rIn_pos.le]), one_mul]
     exact (hpos 0 (by simp [φ.rOut_pos])).ne'

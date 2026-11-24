@@ -59,10 +59,10 @@ theorem sum_out_left_translate {A : Type} [Group A] (U : Subgroup A) [Fintype (A
 
 theorem unimodFin : UnimodFin := by
   intro A _ U V f hU hV hl hr
-  haveI : U.FiniteIndex := ⟨hU⟩
-  haveI : V.FiniteIndex := ⟨hV⟩
-  letI : Fintype (A ⧸ U) := Fintype.ofFinite _
-  letI : Fintype (A ⧸ V) := Fintype.ofFinite _
+  have : U.FiniteIndex := ⟨hU⟩
+  have : V.FiniteIndex := ⟨hV⟩
+  let : Fintype (A ⧸ U) := Fintype.ofFinite _
+  let : Fintype (A ⧸ V) := Fintype.ofFinite _
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   have e1 : ∀ x : A ⧸ U, ∑ y : A ⧸ V, f (y.out⁻¹ * x.out) = ∑ y : A ⧸ V, f y.out⁻¹ := by
     intro x

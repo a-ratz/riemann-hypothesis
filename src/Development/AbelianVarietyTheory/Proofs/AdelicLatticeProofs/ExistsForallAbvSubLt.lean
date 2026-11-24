@@ -62,7 +62,7 @@ theorem _root_.GlobalTheory.LocalQuad.Approx.exists_forall_abv_sub_lt {F : Type*
     (hv : Pairwise fun i j ↦ ¬(v i).IsEquiv (v j)) (z : ι → F) {ε : ℝ} (hε : 0 < ε) :
     ∃ x : F, ∀ i, v i (z i - x) < ε := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨x, hx⟩ := (AbsoluteValue.denseRange_algebraMap_pi h hv).exists_dist_lt
     (fun i ↦ WithAbs.toAbs (v i) (z i)) hε
   refine ⟨x, fun i ↦ ?_⟩

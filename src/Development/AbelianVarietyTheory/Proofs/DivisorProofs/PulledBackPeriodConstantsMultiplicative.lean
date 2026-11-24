@@ -174,7 +174,7 @@ theorem isoVal_law {S S₁ S' : Scheme.{0}} {B : Over S} {B₁ : Over S₁} {B' 
       isoVal w (lift (1 : T ⟶ B') (1 : T ⟶ B')).left z J J' * isoVal w (lift (x * x') y).left z J J' *
         @id (T.left.presheaf.stalk z)ˣ (cubV (T := Over.mk (T.hom ≫ f)) c z J' (toBase hβ.1.w x) (toBase hβ.1.w x')
           (toBase hβ.1.w y)) := by
-  haveI := hB.comm
+  have := hB.comm
   have hG := GlobalTheory.globalFns_holds
   obtain ⟨a, ha, va⟩ := exists_law M c hβ hsq
   obtain ⟨t, ht, vt⟩ := exists_law M₁ c₁ hβ' hsq'

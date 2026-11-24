@@ -82,7 +82,7 @@ open scoped Matrix
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.hopf_order_ideals_eq_top : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable F AA.carrier → ∀ (K : Submodule F N) (t : N), t ∉ K → GenAF p AA.carrier K.toAddSubgroup → ∀ χ : MulChar F R, idealX AA.carrier K t χ = ⊤ → ∃ τ : MulChar F R, IsFund p τ ∧ idealD p AA.carrier K t τ = ⊤ := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hc N _ _ _ _ AA hFS K t ht hGen χ hχ
-  haveI : Nontrivial R := (algebraMap R C).domain_nontrivial
+  have : Nontrivial R := (algebraMap R C).domain_nontrivial
   have hval : ∀ g ∈ AA.carrier, ∀ x, ∃ r : R, algebraMap R C r = g x := fun g hg =>
     (show ∀ x, ∃ r : R, algebraMap R C r = g x from AA.le_int hg)
   have hle : ∀ g ∈ AA.carrier, ∀ x, v (g x) ≤ 1 := by
@@ -556,7 +556,7 @@ private theorem prod_pow_le_pow_of_frobenius_le (p f n : ℕ) (hp : 1 ≤ p) (hf
   rw [← pow_le_pow_iff_left₀ (zero_le) (zero_le) hP, ← Finset.prod_pow]
   calc ∏ i : Fin f, (a i ^ e i) ^ p ^ (f - 1)
       ≤ ∏ i : Fin f, a n ^ (e i * p ^ (f - 1 - (n + f - i) % f)) := by
-        refine Finset.prod_le_prod' (fun i _ => ?_)
+        refine Finset.prod_le_prod (fun i _ => ?_)
         have hil := i.isLt
         have hr := Nat.mod_lt (n + f - i) (by omega : f > 0)
         have hsplit : p ^ (f - 1) = p ^ ((n + f - i) % f) * p ^ (f - 1 - (n + f - i) % f) := by
@@ -575,7 +575,7 @@ theorem r_om_of (h : type_of% @_root_.GlobalTheory.CompanionTheory.Relay.fundame
   have hp2 := hpr.two_le
   obtain ⟨hord, -, -, -, -⟩ := GlobalTheory.CompanionTheory.Ar.GR.FundGen.main p C v R hv hp F f hcard σ hσ
   obtain ⟨hval, hprod⟩ := h p C v R hv hp F f hcard AA hst σ hσ c hc
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
   have hf1 : 1 ≤ f := by
     rcases Nat.eq_zero_or_pos f with h0 | h0
     · have h1 := Fintype.one_lt_card (α := F)

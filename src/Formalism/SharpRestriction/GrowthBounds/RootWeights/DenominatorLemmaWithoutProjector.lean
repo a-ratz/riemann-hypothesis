@@ -107,11 +107,11 @@ theorem singleConjugation_commute {E : GLOps n K V} (hE : IsGLRep E) (c i j : Fi
     Commute (singleConjugation E c i) (singleConjugation E c j) := by
   have h1 : E c i * E c j = E c j * E c i := by
     have := hE.1 c i c j
-    rw [if_neg hi, if_neg hj, sub_zero, sub_eq_zero] at this
+    rw [ite_eq_right hi, ite_eq_right hj, sub_zero, sub_eq_zero] at this
     exact this
   have h2 : E j c * E i c = E i c * E j c := by
     have := hE.1 j c i c
-    rw [if_neg (Ne.symm hi), if_neg (Ne.symm hj), sub_zero, sub_eq_zero] at this
+    rw [ite_eq_right (Ne.symm hi), ite_eq_right (Ne.symm hj), sub_zero, sub_eq_zero] at this
     exact this
   unfold Commute SemiconjBy
   ext X : 1
@@ -248,7 +248,7 @@ theorem scaled_casimirPower_integral_bound (S : UniformizedDVR p O) (hp : p.Prim
     {M : Submodule O V} (hM : UZStable (O := O) E M) (c : Fin n) (L : ℕ) (s : Finset (Fin n)) :
     (∀ j ∈ s, j ≠ c) → ∀ q b : ℕ, q + b ≤ L + n - 1 → ∀ y ∈ M,
       ((p : O) ^ (s.card * deF p n L)) • casimirPowerScaled E c s b q y ∈ M := by
-  haveI := charZero_KK_of_uniformizedDVR S hp
+  have := charZero_KK_of_uniformizedDVR S hp
   induction s using Finset.induction_on with
   | empty =>
     intro _ q b _ y hy
@@ -369,10 +369,10 @@ theorem casimirPowerW_comm_lower_block {E : GLOps n K V} (hE : IsGLRep E) (c a b
     have hca : c ≠ a := ne_of_gt ha
     have hA : ∀ i, E a b * E c i - E c i * E a b = -(if i = a then E c b else 0) := by
       intro i
-      rw [hE.1 a b c i, if_neg hbc, zero_sub]
+      rw [hE.1 a b c i, ite_eq_right hbc, zero_sub]
     have hG : ∀ i, E a b * E i c - E i c * E a b = (if b = i then E a c else 0) := by
       intro i
-      rw [hE.1 a b i c, if_neg hca, sub_zero]
+      rw [hE.1 a b i c, ite_eq_right hca, sub_zero]
     have hW : E a b * casimirPower E c (Iio c) q - casimirPower E c (Iio c) q * E a b = 0 := by
       rw [ih, sub_self]
     simp_rw [commutator_triple_product_leibniz, hA, hG, hW, mul_zero, zero_mul, add_zero]
@@ -437,21 +437,21 @@ theorem projector_recursion_base {E : GLOps n K V} (hE : IsGLRep E) (c : Fin n) 
   · intro j hj
     have h : ∀ i ∈ Iio c, E j i (E i c u) = E j c u := by
       intro i hi
-      rw [gl_commutation_relation_apply hE j i i c u, hu j i hj (Finset.mem_Iio.mp hi), map_zero, if_pos rfl,
-        if_neg (ne_of_gt hj), zero_add, sub_zero]
+      rw [gl_commutation_relation_apply hE j i i c u, hu j i hj (Finset.mem_Iio.mp hi), map_zero, ite_eq_left rfl,
+        ite_eq_right (ne_of_gt hj), zero_add, sub_zero]
     rw [Finset.sum_congr rfl h, Finset.sum_const, Fin.card_Iio, Nat.cast_zero, zero_add,
       Nat.cast_smul_eq_nsmul]
 
 theorem raising_to_column_commute {E : GLOps n K V} (hE : IsGLRep E) (c i j : Fin n) (hi : i < c) (hj : j < c) (y : V) :
     E i c (E j c y) = E j c (E i c y) := by
-  rw [gl_commutation_relation_apply hE i c j c y, if_neg (ne_of_gt hj), if_neg (ne_of_gt hi), add_zero, sub_zero]
+  rw [gl_commutation_relation_apply hE i c j c y, ite_eq_right (ne_of_gt hj), ite_eq_right (ne_of_gt hi), add_zero, sub_zero]
 
 theorem projector_recursion_lower {E : GLOps n K V} (hE : IsGLRep E) (c l : Fin n) (hl : l < c) (s : ℕ) (y : V)
     (hy : ProjectorRecursionProperty E c s y) : ProjectorRecursionProperty E c (s + 1) (E l c y) := by
   obtain ⟨h1, h2⟩ := hy
   have hlc : l ≠ c := ne_of_lt hl
   refine ⟨?_, ?_⟩
-  · rw [gl_commutation_relation_apply hE c c l c y, if_neg (Ne.symm hlc), if_pos rfl, h1, map_smul, add_zero]
+  · rw [gl_commutation_relation_apply hE c c l c y, ite_eq_right (Ne.symm hlc), ite_eq_left rfl, h1, map_smul, add_zero]
     push_cast
     rw [neg_add, add_smul, neg_smul, neg_smul, one_smul]
     abel
@@ -461,10 +461,10 @@ theorem projector_recursion_lower {E : GLOps n K V} (hE : IsGLRep E) (c l : Fin 
         E l c (E j i (E i c y)) + (if i = l then E j c (E i c y) else 0) := by
       intro i hi
       rw [raising_to_column_commute hE c i l (Finset.mem_Iio.mp hi) hl y, gl_commutation_relation_apply hE j i l c (E i c y),
-        if_neg hcj, sub_zero]
+        ite_eq_right hcj, sub_zero]
 
     rw [Finset.sum_congr rfl key, Finset.sum_add_distrib, ← map_sum, h2 j hj, map_smul,
-    Finset.sum_ite_eq', if_pos (Finset.mem_Iio.mpr hl), raising_to_column_commute hE c l j hl hj y]
+    Finset.sum_ite_eq', ite_eq_left (Finset.mem_Iio.mpr hl), raising_to_column_commute hE c l j hl hj y]
     push_cast
     simp only [add_smul, one_smul]
     abel
@@ -496,7 +496,7 @@ theorem raising_casimirPower_commutator {E : GLOps n K V} (hE : IsGLRep E) (c j 
         (if i = j then casimirPower E c (Iio c) q (E c c (E j c y)) else 0) := by
       intro i hi
       have hi' : i < c := Finset.mem_Iio.mp hi
-      rw [gl_commutation_relation_apply hE j c c i, if_pos rfl, ih (s + 1) (E i c y) (projector_recursion_lower hE c i hi' s y hy),
+      rw [gl_commutation_relation_apply hE j c c i, ite_eq_left rfl, ih (s + 1) (E i c y) (projector_recursion_lower hE c i hi' s y hy),
         ← raising_to_column_commute hE c i j hi' hj y, map_add, map_smul, casimirPowerW_comm_lower_apply hE c j i hj hi' q]
       split_ifs with h
       · subst h
@@ -516,7 +516,7 @@ theorem raising_casimirPower_commutator {E : GLOps n K V} (hE : IsGLRep E) (c j 
     rw [casimirPowerW_succ_apply E c (Iio c) q y, map_sum (E j c), Finset.sum_congr rfl hterm,
     Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.smul_sum, hW,
     ← map_sum (casimirPower E c (Iio c) q), hy.2 j hj, map_smul (casimirPower E c (Iio c) q), Finset.sum_ite_eq',
-    if_pos (Finset.mem_Iio.mpr hj), hPj.1, map_smul (casimirPower E c (Iio c) q),
+    ite_eq_left (Finset.mem_Iio.mpr hj), hPj.1, map_smul (casimirPower E c (Iio c) q),
     ← casimirPowerW_succ_apply E c (Iio c) q (E j c y), Nat.add_sub_cancel, ← key]
     simp only [add_smul, sub_smul]
     abel
@@ -840,27 +840,27 @@ private theorem E_apply_mem_weightSp_add_rootW_of_ne {E : GLOps n K V} (hE : IsG
   rw [sub_eq_iff_eq_add] at hc
   by_cases h1 : c = a
   · have h2 : ¬ b = c := fun h => hab (h1.symm.trans h.symm)
-    rw [if_pos h1, if_neg h2, h1] at hc
+    rw [ite_eq_left h1, ite_eq_right h2, h1] at hc
     rw [h1] at *
     simp only [LinearMap.zero_apply, sub_zero] at hc
     rw [hc]
-    simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_apply, hab, if_false,
+    simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_apply, hab, ite_false,
       sub_zero, Int.cast_add, Int.cast_one, add_smul, one_smul]
     abel
   · by_cases h2 : b = c
-    · rw [if_neg h1, if_pos h2] at hc
+    · rw [ite_eq_right h1, ite_eq_left h2] at hc
       subst h2
       simp only [LinearMap.zero_apply, zero_sub] at hc
       rw [hc]
       simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_apply,
-        Ne.symm hab, if_false, zero_sub, Int.cast_add, Int.cast_neg, Int.cast_one, add_smul,
+        Ne.symm hab, ite_false, zero_sub, Int.cast_add, Int.cast_neg, Int.cast_one, add_smul,
         neg_smul, one_smul]
       abel
-    · rw [if_neg h1, if_neg h2] at hc
+    · rw [ite_eq_right h1, ite_eq_right h2] at hc
       simp only [LinearMap.zero_apply, sub_zero, zero_add] at hc
       rw [hc]
       have h2' : c ≠ b := fun h => h2 h.symm
-      simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_apply, h1, h2', if_false, sub_zero,
+      simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_apply, h1, h2', ite_false, sub_zero,
         add_zero]
 
 private theorem E_pow_apply_mem_weightSp_ne_zero_of_highest [CharZero K] {E : GLOps n K V} (hE : IsGLRep E) {a b : Fin n}
@@ -891,7 +891,7 @@ private theorem E_pow_apply_mem_weightSp_ne_zero_of_highest [CharZero K] {E : GL
     rw [h a, h b, ← sub_smul]
     congr 1
     simp only [rootW, Pi.add_apply, Pi.smul_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_apply,
-      hab, Ne.symm hab, if_false, smul_eq_mul]
+      hab, Ne.symm hab, ite_false, smul_eq_mul]
     push_cast
     rw [hNK]
     ring
@@ -1102,7 +1102,7 @@ private theorem degreeZeroWeightsBounded_linf {n : ℕ} {K V : Type*} [Field K] 
 
 theorem linf_lemma_without_projector (D : Formalism.BasicNotions.D7) (h2 : adm2 D) : InvariantDenominatorLinftyBound := by
   intro p n' O _ _ _ S hG n V _ _ _ _ _ E hE M hM hMQ Inv hInv x hx
-  haveI : CharZero (KK O) := dvr_fraction_field_charZero_prime S hG.prime
+  have : CharZero (KK O) := dvr_fraction_field_charZero_prime S hG.prime
   rw [hMQ]
   exact invariant_projection_denominator_bound D h2 p O n V E hE M hM.1 Inv hInv _ _
     (fun c u hu0 hu => extremal_projector_properties hE c _ (degreeZeroWeightsBounded_linf hE) u hu0 hu)
@@ -1110,7 +1110,7 @@ theorem linf_lemma_without_projector (D : Formalism.BasicNotions.D7) (h2 : adm2 
 
 theorem denominator_lemma_without_projector (D : Formalism.BasicNotions.D7) (h2 : adm2 D) : InvariantProjectionDenominator := by
   intro p n' O _ _ _ S hG n V _ _ _ _ _ E hE M hM hMQ Inv hInv x hx
-  haveI : CharZero (KK O) := dvr_fraction_field_charZero_prime S hG.prime
+  have : CharZero (KK O) := dvr_fraction_field_charZero_prime S hG.prime
   rw [hMQ]
   exact invariant_projection_denominator_bound D h2 p O n V E hE M hM.1 Inv hInv _ _
     (fun c u hu0 hu => extremal_projector_properties hE c _ (degreeZeroWeightsBounded_ellOf hE) u hu0 hu)

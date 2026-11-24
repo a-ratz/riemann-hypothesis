@@ -129,7 +129,7 @@ theorem act_act_inv (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp 
     (p : WithLp 2 (H × Lp ℂ 2 μ)) : act ρ hR h (act ρ hR h⁻¹ p) = p := by
   have e1 : ρ h (ρ h⁻¹ p.fst) = p.fst := by
     have := congrArg (fun T : H →L[ℂ] H => T p.fst) (hmul h h⁻¹)
-    simp only [mul_inv_cancel, hone, ContinuousLinearMap.one_apply, ContinuousLinearMap.comp_apply] at this
+    simp only [mul_inv_cancel, hone, one_apply_eq_self, ContinuousLinearMap.comp_apply] at this
     exact this.symm
   show WithLp.toLp 2 (ρ h (ρ h⁻¹ p.fst), rt hR h (rt hR h⁻¹ p.snd)) = p
   rw [e1, rt_rt_inv]
@@ -186,7 +186,7 @@ theorem star_eq (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp (ρ 
   intro x y
   have hinv : ρ h (ρ h⁻¹ x) = x := by
     have := congrArg (fun T : H →L[ℂ] H => T x) (hmul h h⁻¹)
-    simp only [mul_inv_cancel, hone, ContinuousLinearMap.one_apply, ContinuousLinearMap.comp_apply] at this
+    simp only [mul_inv_cancel, hone, one_apply_eq_self, ContinuousLinearMap.comp_apply] at this
     exact this.symm
   have hI : ⟪ρ h (ρ h⁻¹ x), ρ h y⟫_ℂ = ⟪ρ h⁻¹ x, y⟫_ℂ :=
     ({ toLinearMap := (ρ h : H →ₗ[ℂ] H), norm_map' := hiso h } : H →ₗᵢ[ℂ] H).inner_map_map _ _
@@ -207,7 +207,7 @@ theorem memLp_of_ne (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp 
         intro g v hv
         rw [LinearMap.mem_ker, ContinuousLinearMap.coe_coe] at hv ⊢
         have := congrArg (fun Y : H →L[ℂ] H => Y v) (hX g).eq
-        simp only [ContinuousLinearMap.mul_apply, hv, map_zero] at this
+        simp only [mul_apply_eq_comp, hv, map_zero] at this
         exact this
       rcases hirr (LinearMap.ker (X : H →ₗ[ℂ] H)) X.isClosed_ker hinv with h | h
       · right
@@ -219,7 +219,7 @@ theorem memLp_of_ne (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp 
         ext v
         have hv : v ∈ LinearMap.ker (X : H →ₗ[ℂ] H) := by rw [h]; trivial
         rw [LinearMap.mem_ker, ContinuousLinearMap.coe_coe] at hv
-        rw [hv, ContinuousLinearMap.zero_apply]
+        rw [hv, zero_apply]
     have hcf : ∀ f : ℝ → ℝ, ∀ g, Commute (cfc f B) (ρ g) := by
       intro f g
       first
@@ -262,8 +262,8 @@ theorem memLp_of_ne (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp 
       · apply hgne
         ext v
         apply h1
-        simp only [ContinuousLinearMap.zero_apply, map_zero]
-        rw [← ContinuousLinearMap.mul_apply, hfg, ContinuousLinearMap.zero_apply]
+        simp only [zero_apply, map_zero]
+        rw [← mul_apply_eq_comp, hfg, zero_apply]
     by_cases hne : (spectrum ℝ B).Nonempty
     · obtain ⟨c, hc'⟩ := hne
       refine ⟨c, ?_⟩
@@ -274,7 +274,7 @@ theorem memLp_of_ne (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp 
       calc B = cfc (id : ℝ → ℝ) B := (cfc_id ℝ B hB).symm
         _ = cfc (fun _ : ℝ => (0 : ℝ)) B := cfc_congr (fun x hx => absurd ⟨x, hx⟩ hne)
         _ = algebraMap ℝ (H →L[ℂ] H) 0 := cfc_const 0 B hB
-  haveI : CompleteSpace (graph μ ρ w₀) := (graph_isClosed ρ w₀).completeSpace_coe
+  have : CompleteSpace (graph μ ρ w₀) := (graph_isClosed ρ w₀).completeSpace_coe
   have hmemP : ∀ z, (graph μ ρ w₀).starProjection z ∈ graph μ ρ w₀ := by
     intro z
     first
@@ -354,9 +354,9 @@ theorem memLp_of_ne (hone : ρ 1 = 1) (hmul : ∀ a b, ρ (a * b) = (ρ a).comp 
   have hc0 : c ≠ 0 := by
     rintro rfl
     apply hne0
-    rw [hc, map_zero, ContinuousLinearMap.zero_apply]
+    rw [hc, map_zero, zero_apply]
   have hx : bop (graph μ ρ w₀) (c⁻¹ • x) = x := by
-    rw [hc, Algebra.algebraMap_eq_smul_one, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply,
+    rw [hc, Algebra.algebraMap_eq_smul_one, smul_apply, one_apply_eq_self,
       smul_smul, mul_inv_cancel₀ hc0, one_smul]
   have hfin := hD (c⁻¹ • x)
   rw [hx] at hfin

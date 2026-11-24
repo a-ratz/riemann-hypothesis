@@ -195,7 +195,7 @@ theorem lR_last_ge (Tp : ParamsT D L P) (hK : DV.KapDef D) {j : ℕ} (hj : InR D
   show Tp.TO ≤ ofGaps (lGapP D (kaR Tp hK j) Tp.TO Tp.nWn τ) i + 1
   rw [ofGaps_last _ _ hn]
   unfold lGapP
-  rw [if_neg hn]
+  rw [ite_eq_right hn]
   have hp : (0 : ℤ) < (WeightAlgebra.Tp D j Tp.TO : ℤ) := by unfold WeightAlgebra.Tp; push_cast; omega
   rw [Int.fdiv_eq_ediv_of_nonneg _ hp.le]
   have h1 : ((Tp.Dp : ℤ) + 2) * Tp.nWn + 2 * D.R.r ≤ Tp.TO := by exact_mod_cast Tp.TO_nW
@@ -287,7 +287,7 @@ theorem sizeRows_at {D : D7} {L : SizeData₂ D} {Pm : ParameterChoice' D L} (Tp
     have a1 : L.etaSz ≤ Real.exp (L.sc.x ^ (L.sc.eps / 4)) := (Real.log_le_iff_le_exp heta).1 hlogeta
     have a2 : (D.R.n : ℝ) ≤ Real.exp (1 + 3 * Real.log L.sc.x) := by
       have e3 : Real.exp (3 * Real.log L.sc.x) = L.sc.x ^ 3 := by
-        rw [show (3 : ℝ) = ((3 : ℕ) : ℝ) by norm_num, Real.exp_nat_mul, Real.exp_log hx0]
+        rw [show (3 : ℝ) = ((3 : ℕ) : ℝ) by norm_num, Real.exp_natCast_mul, Real.exp_log hx0]
       rw [Real.exp_add, e3]
       have b1 : L.sc.x ^ (2 + 8 * L.sc.eps) ≤ L.sc.x ^ (3 : ℝ) :=
         Real.rpow_le_rpow_of_exponent_le hx1.le (by linarith)
@@ -327,7 +327,7 @@ theorem sizeRows_at {D : D7} {L : SizeData₂ D} {Pm : ParameterChoice' D L} (Tp
     exact_mod_cast this
   · intro i
     have e : Real.exp (9 * L.sc.L) = L.sc.b ^ 9 := by
-      unfold Scale.b; rw [← Real.exp_nat_mul]; norm_num
+      unfold Scale.b; rw [← Real.exp_natCast_mul]; norm_num
     rw [← e]; exact hg i
   ·
     have hq : (0 : ℝ) < D.host.q := lt_trans (by positivity) Pm.qd_pow.1

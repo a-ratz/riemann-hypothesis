@@ -139,7 +139,7 @@ theorem exists_cutoff : ∀ (R S : Type) [Group R] [TopologicalSpace R] [IsTopol
       refine HasCompactSupport.intro' hKc hKcl fun x hx => ?_
       have hx' : g * i x ∉ U := hx
       simp [hβ, hx']
-    exact hcont.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hsupp
+    exact hcont.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hsupp
       (fun s => hβ0 _) (by simp [hβ, hg])
   refine ⟨fun g => β g / F g, ?_, ?_, ?_, ?_⟩
   · exact IsLocallyConstant.comp₂ hβlc hFlc (· / ·)

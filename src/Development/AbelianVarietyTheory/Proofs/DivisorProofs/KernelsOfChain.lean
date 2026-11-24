@@ -101,12 +101,12 @@ def grp : GrpObj (ker f) := GrpObj.ofRepresentableBy _ (pts f) (rep f)
 theorem mul_fst {T : Over S} (y z : T ⟶ ker f) :
     letI := grp f
     (y * z) ≫ pullback.fst f η[B] = (y ≫ pullback.fst f η[B]) * (z ≫ pullback.fst f η[B]) := by
-  letI := grp f
+  let := grp f
   have := ((yonedaGrpObjIsoOfRepresentableBy (ker f) _ (rep f)).hom.app (.op T)).hom.map_mul y z
   exact congrArg Subtype.val this
 
 theorem isMonHom_fst : letI := grp f; IsMonHom (pullback.fst f η[B]) := by
-  letI := grp f
+  let := grp f
   exact isMonHom_of_mul _ fun T y z => mul_fst f y z
 
 instance mono_fst : Mono (pullback.fst f η[B]) := ⟨fun _ _ h => hom_ext f h⟩

@@ -220,7 +220,7 @@ open Formalism.MainNotions.IntegralHeckeForms in
 theorem fullRk_of_le (E : ExpDat Y) (i : X.Tw) (j : ℕ) (b : Bool)
     (h : V0 Y i j b ≤ Submodule.span (FractionRing (X.O i)) (eG Y i j b '' (Y.th i j b '' E.Dat0 i j b))) :
     FullRk Y E i j b (SgJ Y E i j b) := by
-  haveI := charZero_frac (X := X) i
+  have := charZero_frac (X := X) i
   have hc : ((D.what₂.restRowsFiniteGroupCard : ℕ) : FractionRing (X.O i)) ≠ 0 := Nat.cast_ne_zero.2 D.what₂.restRowsFiniteGroupCard_pos.ne'
   refine ⟨subset_rfl, AO_Th_le Y E i j b, le_antisymm (Submodule.span_le.2 (AO_Th_le Y E i j b)) (h.trans ?_)⟩
   refine Submodule.span_le.2 ?_
@@ -470,7 +470,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     (hm : σ ∈ L) : Dec (F := F) A ≤ L := by
   have h := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω A v hA ⟨σ, hσ.1⟩ hσ
   have hc : IsClosed ((L.subgroupOf (Dec (F := F) A) : Subgroup (Dec (F := F) A)) : Set (Dec (F := F) A)) :=
-    (L.isClosed_of_isOpen hL).preimage continuous_subtype_val
+    (L.isClosed_of_isOpen hL).preimage continuous_subtypeVal
   have h2 := Subgroup.topologicalClosure_minimal
     (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
     (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
@@ -583,7 +583,7 @@ theorem thmC_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.hos
     simpa [Fin.ext_iff] using this
   have hc := hco (fun a => φ (Fin.castAdd t a)) (fun a => GlobalTheory.TwistDet.cConj X (φ (Fin.castAdd t a)))
     (fun a => ⟨hcj _, g (Fin.castAdd t a), by simpa using (hg (Fin.castAdd t a)).1⟩)
-  rw [if_neg hl.ne'] at hc
+  rw [ite_eq_right hl.ne'] at hc
   obtain ⟨P', hP', hSt', -, hNF⟩ := induct hl f (fun j => (hP i _ (hT _ (hfT j))).2.1) (fun j => (hP i _ (hT _ (hfT j))).2.2)
     he hle (by omega) hd hLH hz (fun j => ⟨hLs _ (hfT j), hLζ, hLi _ (hfT j)⟩) _ h₀
     (fun j => (hP i _ (hT _ (hfT j))).1 M (R₀ + t) R₀ d A L z _ _ _ (Nat.le_add_right _ _) hlt hz (hLs _ (hfT j)) h₀
@@ -633,7 +633,7 @@ theorem unrAt_eq_top {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra
   let ι : Ine (F := F) A →* Dec (F := F) A := Subgroup.inclusion (Ine_le_Dec A)
   let f : Ine (F := F) A →* Multiplicative M := MonoidHom.mk' (fun σ => Multiplicative.ofAdd (c.1 (ι σ))) fun a b => by
     rw [map_mul, hc, htriv _ (show ((ι a : Dec (F := F) A) : G F Ω) ∈ Ine (F := F) A from a.2), ofAdd_add]
-  have hι : Continuous ι := continuous_subtype_val.subtype_mk _
+  have hι : Continuous ι := continuous_subtypeVal.subtype_mk _
   have hf : Continuous f := continuous_ofAdd.comp (c.2.1.comp hι)
   have ho : IsOpen (f.ker : Set (Ine (F := F) A)) := (isOpen_discrete {1}).preimage hf
   have hcl : IsClosed (f.ker : Set (Ine (F := F) A)) := isClosed_singleton.preimage hf
@@ -669,7 +669,7 @@ theorem unrAt_eq_top {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra
     refine hγ.2.trans (Subgroup.topologicalClosure_minimal _ (sup_le ?_ hJ) ?_)
     · rw [Subgroup.zpowers_le]
       exact ⟨γ', hγ0, rfl⟩
-    · exact (isClosed_Ine A).isClosedMap_subtype_val _ hcl
+    · exact (isClosed_Ine A).isClosedMap_subtypeVal _ hcl
   refine (Submodule.Quotient.mk_eq_zero _).2 ((mem_coboundaries1 _ _).2 ⟨0, fun g => ?_⟩)
   have := hker ⟨g.1.1, g.2⟩ (hall g.2)
   rw [map_zero, sub_zero]
@@ -810,8 +810,8 @@ theorem computes_map (s : X.Sig i) (M : ℕ) {ι ι' : Type} (d : ι → (GE N �
       (fun x => by rw [hQ B hB]; exact ch_mem_selOn bkP i π hκ _ _ hπ Q x) (e B hB)
   choose e' he' using key
   refine ⟨e', fun B B' _ _ _ _ _ _ _ _ hB hB' f x x' z z' hx hz h0 => ?_⟩
-  letI : Module (abelian₂ X i M ι) B := Module.compHom B (π : abelian₂ X i M ι →+* abelian₂ X i M ι')
-  letI : Module (abelian₂ X i M ι) B' := Module.compHom B' (π : abelian₂ X i M ι →+* abelian₂ X i M ι')
+  let : Module (abelian₂ X i M ι) B := Module.compHom B (π : abelian₂ X i M ι →+* abelian₂ X i M ι')
+  let : Module (abelian₂ X i M ι) B' := Module.compHom B' (π : abelian₂ X i M ι →+* abelian₂ X i M ι')
   let f₀ : B →ₗ[abelian₂ X i M ι] B' := ⟨f.toAddHom, fun c b => f.map_smul (π c) b⟩
   rw [he'] at h0 ⊢
   have h1 := he B B' hB hB' f₀ ⟨x.1, x.2⟩ ⟨x'.1, x'.2⟩
@@ -1369,7 +1369,7 @@ theorem exists_residue_char [IsAlgClosure E Ω] {N : ℕ} {P : HeightOneSpectrum
     have e : σ y / y - y ^ orderOf g = (σ y - y ^ normV P) / y := by rw [hq]; field_simp; ring
     rw [e, map_div₀, hy, div_one]
     exact hF.2 y hy.le
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   obtain ⟨m, hm⟩ : N ∣ orderOf g := by
     have h1 := hcong ζ (valuation_eq_one_of_pow_eq_one A hN0 hζ.pow_eq_one)
     rw [hσ ζ hζ.pow_eq_one, div_self (hζ.ne_zero hN0)] at h1
@@ -1448,7 +1448,7 @@ theorem dec_le_ker {B : Type} [Group B] {φ : G E Ω →* B} (ho : IsOpen (φ.ke
   have h2 := Subgroup.topologicalClosure_minimal _ (t := φ.ker.subgroupOf (Dec (F := E) A))
     (sup_le ((Subgroup.zpowers_le (g := (⟨τ, hτ.1⟩ : Dec (F := E) A))).2 (Subgroup.mem_subgroupOf.2 (hF τ hτ)))
       (fun g (hg : g ∈ (Ine (F := E) A).subgroupOf (Dec (F := E) A)) => hI g.1 hg))
-    ((φ.ker.isClosed_of_isOpen ho).preimage continuous_subtype_val)
+    ((φ.ker.isClosed_of_isOpen ho).preimage continuous_subtypeVal)
   rw [h] at h2
   exact h2 (Subgroup.mem_top (⟨σ, hσ⟩ : Dec (F := E) A))
 
@@ -1631,7 +1631,7 @@ theorem dec_le_of_frob_mem {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
     (hm : σ ∈ L) : Dec (F := F) A ≤ L := by
   have h := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω A v hA ⟨σ, hσ.1⟩ hσ
   have hc : IsClosed ((L.subgroupOf (Dec (F := F) A) : Subgroup (Dec (F := F) A)) : Set (Dec (F := F) A)) :=
-    (L.isClosed_of_isOpen hL).preimage continuous_subtype_val
+    (L.isClosed_of_isOpen hL).preimage continuous_subtypeVal
   have h2 := Subgroup.topologicalClosure_minimal
     (Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A))
     (sup_le ((Subgroup.zpowers_le).2 (Subgroup.mem_subgroupOf.2 hm)) (fun x hx => hI hx)) hc
@@ -1666,7 +1666,7 @@ theorem residual_bound_of_parts : ∀ (D : Formalism.BasicNotions.D7) (N : NData
     · exact (hLs s hs).2.2.2.2 k (dec_le_of_frob_mem (N.plOm.2 _) (hφ a) hLo
         ((hIne _ _ (Or.inl rfl) _ (N.plOm.2 _)).trans hUL') (hφL a) hk)
   have hc := hco φ (fun a => GlobalTheory.TwistDet.cConj X (φ a)) (fun a => ⟨hcj a, g a, (hg a).1⟩) s hs
-  rw [if_pos hl] at hc
+  rw [ite_eq_left hl] at hc
   obtain ⟨m, hm, hu⟩ := (hRB i s (hT s hs) M R P _ φ _ Q hlt hPos hQ a Φ hΦ).1 hc F hF
   exact ⟨m, hm, (IsDiscreteValuationRing.addVal_eq_zero_iff.2 hu).le⟩
 
@@ -1759,7 +1759,7 @@ theorem exportAt_of_bundles_alt : Cheb → PoitouTateTotallyComplex → CohDimTw
   · intro j hj b
     have h : D.ntw.NonzeroIndexPlace (nch.twI w) ∧ j ∈ Finset.Icc 1 D.R.m := ⟨hW w hw, hj⟩
     show IntegralHeckeForms.BasisOf D.nexp (nch.twI w) j b (IntegralHeckeForms.SgJ D.nexp (twEOf xd) (nch.twI w) j b) (S (nch.twI w) j b)
-    simp only [S, dif_pos h]
+    simp only [S, dite_eq_left h]
     exact Classical.choose_spec (GlobalTheory.T.exists_basis_averaged_series_of_class_sums D (twEOf xd) hI.t4 _ h.1 j h.2 b)
 end GlobalTheory.ExportClose
 end

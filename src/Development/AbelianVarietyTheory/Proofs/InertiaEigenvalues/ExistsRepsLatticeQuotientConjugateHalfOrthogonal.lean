@@ -138,16 +138,16 @@ theorem reps_orth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D),
     show y - (y - k • (c • u)) ∈ N
     rw [sub_sub_cancel]
     exact ⟨c • u, hcu, rfl⟩
-  haveI hfinQ : Finite (M ⧸ N') := by
+  have hfinQ : Finite (M ⧸ N') := by
     let P' : Set M := {z | (z : WO S T) ∈ (fun t : WO S T => k • t) ⁻¹' ((fun r => c • r) '' R2)}
     have hP' : P'.Finite := hP.preimage Subtype.val_injective.injOn
-    haveI := hP'.to_subtype
+    have := hP'.to_subtype
     refine Finite.of_surjective (fun z : P' => ((z : M) : M ⧸ N')) fun q => ?_
     induction q using QuotientAddGroup.induction_on with
     | H y =>
       obtain ⟨z, hz, hzy⟩ := hcover y
       exact ⟨⟨z, hz⟩, hzy⟩
-  letI := Fintype.ofFinite (M ⧸ N')
+  let := Fintype.ofFinite (M ⧸ N')
   let rep : M ⧸ N' → WO S T := fun q => ((Quotient.out q : M) : WO S T)
   have hrepM : ∀ q, rep q ∈ M := fun q => (Quotient.out q : M).2
   have hrep : ∀ q, ((⟨rep q, hrepM q⟩ : M) : M ⧸ N') = q := fun q => QuotientAddGroup.out_eq' q

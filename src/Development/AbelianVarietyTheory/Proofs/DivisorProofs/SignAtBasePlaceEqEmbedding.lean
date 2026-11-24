@@ -134,7 +134,7 @@ theorem eventually_mul_hom (N : ℕ) (hN : N ≠ 0)
     (φ : AdeleRing (𝓞 F) F ⊗[F] E →+* E ⊗[F] FiniteAdeleRing (𝓞 F) F)
     (hφ : ∀ a e, φ (a ⊗ₜ[F] e) = e ⊗ₜ[F] a.2) (c : E ⊗[F] FiniteAdeleRing (𝓞 F) F) :
     ∀ᶠ b in 𝓝 (0 : AdeleRing (𝓞 F) F ⊗[F] E), c * φ b ∈ multN F E N := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   set B := Algebra.TensorProduct.basis (AdeleRing (𝓞 F) F) (Module.finBasis F E) with hB
   have h1 : ∀ i, ∀ᶠ b in 𝓝 (0 : AdeleRing (𝓞 F) F ⊗[F] E),
       (c * (Module.finBasis F E i ⊗ₜ[F] 1)) * ((1 : E) ⊗ₜ[F] (B.coord i b).2) ∈ multN F E N := by
@@ -221,19 +221,19 @@ theorem finE_mem_UA (g : GA D V) : finE V g ∈ UA D.sp.cm V.gram := by
 theorem isModTop : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
 
 theorem isTopRing : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI := isModTop (D := D)
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have := isModTop (D := D)
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
   exact IsModuleTopology.isTopologicalRing (AF D.host.F) _
 
 theorem isTopGroup : IsTopologicalGroup (GA D V) := by
-  haveI := isTopRing (D := D)
+  have := isTopRing (D := D)
   exact (inferInstance : IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
 
 theorem eventually_entry (β : GL (Fin V.rank) (EAf D)) (N : ℕ) (hN : N ≠ 0) :
     ∀ᶠ g in 𝓝 (1 : GA D V), ∀ i j, ((β⁻¹ * finE V g * β).val - 1) i j ∈ multN D.host.F D.host.E N := by
-  haveI := isModTop (D := D)
-  haveI := isTopRing (D := D)
-  have h1 : Continuous fun g : GA D V => matHom V g := continuous_subtype_val
+  have := isModTop (D := D)
+  have := isTopRing (D := D)
+  have h1 : Continuous fun g : GA D V => matHom V g := continuous_subtypeVal
   have ht : Tendsto (fun g : GA D V => matHom V g) (𝓝 1) (𝓝 1) := h1.tendsto' 1 1 rfl
   have h2 := ht.eventually (eventually_conj (finRing D) (multN D.host.F D.host.E N)
     (eventually_mul_hom N hN (finRing D) (finRing_tmul D)) β)
@@ -320,7 +320,7 @@ variable {D : D7} {V : HSp D}
 
 theorem eventually_princ (β : GL (Fin V.rank) (EAf D)) (T : Finset (Pl D.host.E)) :
     ∀ᶠ g in 𝓝 (1 : GA D V), finE V g ∈ St β ∧ ∀ PP ∈ T, redFn β PP (finE V g) = 1 := by
-  haveI := isTopGroup (D := D) (V := V)
+  have := isTopGroup (D := D) (V := V)
   obtain ⟨N, hN, hT⟩ := exists_nat_mem T
   have h1 := eventually_entry β N hN
   have ht : Tendsto (fun g : GA D V => g⁻¹) (𝓝 1) (𝓝 1) := continuous_inv.tendsto' 1 1 inv_one
@@ -335,7 +335,7 @@ theorem isOpen_stabiliser {D : Formalism.BasicNotions.D7} {V : Formalism.BasicNo
     {X : Type} [AddCommGroup X] [Module ℂ X] {ρ : Representation ℂ (GfC V) X} (hs : L.s = 0) (hQ : L.Q = ∅) {x : X}
     (hx : x ∈ GlobalTheory.CuspMult.killed ρ (GlobalTheory.CuspMult.eqSet V β L eG c P ok pl q Sg)) :
     IsOpen {g : GfC V | ρ g x = x} := by
-  haveI := isTopGroup (D := D) (V := V)
+  have := isTopGroup (D := D) (V := V)
   let S : Subgroup (GfC V) :=
     { carrier := {g | ρ g x = x}
       one_mem' := by show ρ 1 x = x; rw [map_one]; rfl
@@ -349,7 +349,7 @@ theorem isOpen_stabiliser {D : Formalism.BasicNotions.D7} {V : Formalism.BasicNo
         conv_lhs => rw [← show ρ a x = x from ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl }
   refine S.isOpen_of_mem_nhds (g := 1) ?_
-  have ht : Tendsto (fun g : GfC V => (g : GA D V)) (𝓝 1) (𝓝 1) := continuous_subtype_val.tendsto' 1 1 rfl
+  have ht : Tendsto (fun g : GfC V => (g : GA D V)) (𝓝 1) (𝓝 1) := continuous_subtypeVal.tendsto' 1 1 rfl
   filter_upwards [ht.eventually (eventually_princ β L.Pg)] with k hk
   have hK : finE V k ∈ Kg D.sp.cm V.gram β L.Pg :=
     ⟨⟨finE_mem_UA _, hk.1⟩, Subgroup.mem_iInf.2 fun PP => Subgroup.mem_iInf.2 fun hP => mem_princAt.2 ⟨hk.1, hk.2 PP hP⟩⟩

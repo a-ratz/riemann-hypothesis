@@ -168,7 +168,7 @@ theorem gaussTail_of_card_le : Ext.GaussianTailBound := by
         rw [not_le] at hc
         nlinarith
       calc (u / t) ^ g ≤ Real.exp (u / t - 1) ^ g := by gcongr
-        _ = Real.exp (g * (u / t - 1)) := by rw [← Real.exp_nat_mul]
+        _ = Real.exp (g * (u / t - 1)) := by rw [← Real.exp_natCast_mul]
         _ ≤ Real.exp ((u - t) / 2) := by
           apply Real.exp_le_exp.mpr
           rw [hy]

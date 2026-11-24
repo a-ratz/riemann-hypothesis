@@ -66,7 +66,7 @@ theorem exists_diff_not_mem (v : HeightOneSpectrum (𝓞 F)) (hun : Algebra.IsUn
     ∃ d ∈ differentIdeal ℤ (𝓞 F), d ∉ v.asIdeal := by
   have h1 : ¬ v.asIdeal ∣ differentIdeal ℤ (𝓞 F) := (not_dvd_differentIdeal_iff).2 hun
   rw [Ideal.dvd_iff_le] at h1
-  exact SetLike.not_le_iff_exists.1 h1
+  exact IsConcreteLE.not_le_iff_exists.1 h1
 
 theorem mul_diff_int (y : F)
     (hy : ∀ z : 𝓞 F, ∃ n : ℤ, Algebra.trace ℚ F (y * algebraMap (𝓞 F) F z) = n)
@@ -287,7 +287,7 @@ theorem psi_conductor_all_places : Formalism.L2.SG.Pf.PsiCondAll := by
     rcases v.isPrime.mem_or_mem hv' with h | h
     exacts [⟨0, h⟩, ⟨1, h⟩]
   have hun : Algebra.IsUnramifiedAt ℤ v.asIdeal := by
-    letI : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
+    let : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
     exact PsiCondAllPf.unram_of (D.host.g i) (D.host.g_prime i) v hi
       (Formalism.L2.SG.Pf.TypedLoc.tower_ef X.B.I.F D.host.E (D.host.g_prime i) (D.nd.g_split i) v hi).1
   have hg : v.valuation X.B.I.F ((X.B.g : ℕ) : X.B.I.F) = WithZero.exp (-1 : ℤ) := by

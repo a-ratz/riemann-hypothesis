@@ -100,8 +100,8 @@ theorem isNef_pull_of_nefOver {k : Type} [CommRing k] {X : Scheme.{0}} {p : X �
     (L : HermLB p) (hL : NefOver L l) : IsNef (ZMod l) (L.B.pull i) := by
   have hLi := LB.isLB_pull L.isLB i
   refine isNef_iff_isClosedImmersion.2 ⟨hLi, fun C c hc hC hd _ => ?_⟩
-  letI := algebraΓAlong (ZMod l) c
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  let := algebraΓAlong (ZMod l) c
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have h := hL C (c ≫ i) (ZMod l) hd
   rw [interNumOn_eq_interNum_pull (fun r => rfl) (fun j => by fin_cases j; exact hLi)]
   rw [topSelfIntersection] at h

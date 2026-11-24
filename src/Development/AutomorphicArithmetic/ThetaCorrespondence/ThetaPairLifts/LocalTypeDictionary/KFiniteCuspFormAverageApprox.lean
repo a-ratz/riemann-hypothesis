@@ -73,7 +73,7 @@ theorem isCuspForm_kFinite_average : ∀ {D : D7} (θ : InfFam D), IsInfFam θ �
     fun y => (hcc.constTermOn_eq_zero_iff h𝓕 hl y).1 (h0 y)
   obtain ⟨K0, hK0, hs⟩ := hcc
   have hcont : Continuous fun p : NN × Formalism.REAL.KG (N.M.ε τ) => φ ((p.1 : GA D N.V) * x * A p.2) :=
-    hφ.cont.comp (((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul (hAc.comp continuous_snd))
+    hφ.cont.comp (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul (hAc.comp continuous_snd))
   obtain ⟨C, hC⟩ := (hK0.prod (isCompact_univ (X := Formalism.REAL.KG (N.M.ε τ)))).exists_bound_of_continuousOn
     hcont.continuousOn
   have hb : ∀ (n : NN) k, ‖φ ((n : GA D N.V) * x * A k)‖ ≤ C := fun n k => by
@@ -85,7 +85,7 @@ theorem isCuspForm_kFinite_average : ∀ {D : D7} (θ : InfFam D), IsInfFam θ �
       simp only [mul_assoc]
     rwa [e1, h2] at h1
   obtain ⟨Ce, hCe⟩ := (isCompact_univ (X := Formalism.REAL.KG (N.M.ε τ))).exists_bound_of_continuousOn he.continuousOn
-  haveI : IsFiniteMeasure ((Measure.haar : Measure NN).restrict (stdDom ((GQ N.V).subgroupOf NN))) :=
+  have : IsFiniteMeasure ((Measure.haar : Measure NN).restrict (stdDom ((GQ N.V).subgroupOf NN))) :=
     isFiniteMeasure_restrict.2 hfin
   have hint : Integrable (Function.uncurry fun (n : NN) (k : Formalism.REAL.KG (N.M.ε τ)) => e k * φ ((n : GA D N.V) * x * A k))
       (((Measure.haar : Measure NN).restrict (stdDom ((GQ N.V).subgroupOf NN))).prod (Formalism.REAL.muK (N.M.ε τ))) := by

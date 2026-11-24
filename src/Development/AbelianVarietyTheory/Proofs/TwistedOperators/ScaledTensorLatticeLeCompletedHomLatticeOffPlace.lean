@@ -159,10 +159,10 @@ theorem exists_mul_std : ∀ (D : D7) (S : HSp D) (k₀ : GA D S) (Λ' : Lt D.ho
           exacts [map_one _, map_zero _]
         rw [e1, e'] at this
         exact this
-      · exact Or.inl (if_neg hv')) u
+      · exact Or.inl (ite_eq_right hv')) u
   obtain ⟨t, htw, H⟩ := MovLev.exists_mul (E := D.host.E) w.asIdeal.primeCompl w.asIdeal (fun v' hv' => by
       have h1 : ¬ v'.asIdeal ≤ w.asIdeal := fun h => hv' ((v'.isMaximal.eq_of_le w.isPrime.ne_top h) ▸ le_rfl)
-      obtain ⟨a, ha, ha'⟩ := SetLike.not_le_iff_exists.1 h1
+      obtain ⟨a, ha, ha'⟩ := IsConcreteLE.not_le_iff_exists.1 h1
       exact ⟨a, ha', ha⟩)
     (L := Submodule.span (𝓞 D.host.E) {v}) (Λ := stdL D.host.E S.rank) (Submodule.fg_span_singleton v) hfg hs
     (fun z hz => by
@@ -326,7 +326,7 @@ theorem rowTriv : ∀ (D : D7) (S T : HSp D) (k₀ : GA D S) (f : AE D), 0 < T.r
   have h1 := congrFun (congrFun (h x hx) i₀) j
   unfold actO at h1
   rw [GlobalTheory.AdelicLatMove.mt_one, Matrix.one_mul, Matrix.mul_apply, Finset.sum_eq_single i] at h1
-  · simp only [x, Matrix.of_apply, true_and, if_true] at h1
+  · simp only [x, Matrix.of_apply, true_and, ite_true] at h1
     rw [Matrix.sub_apply, mul_sub, h1, Matrix.one_apply]
     by_cases hij : i = j
     · subst hij; simp

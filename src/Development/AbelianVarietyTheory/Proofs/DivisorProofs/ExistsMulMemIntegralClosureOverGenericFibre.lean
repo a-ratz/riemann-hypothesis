@@ -62,8 +62,8 @@ theorem exists_common_multiple_mem_closure :
       GlobalTheory.KeyOriginNoeth.baseHom A R D (algebraMap A R a) * d ∈ GlobalTheory.KeyOriginNoeth.closure A R D := by
   intro A R _ _ _ _ D _ _ _ s
   classical
-  letI : Algebra R D := (baseHom A R D).toAlgebra
-  haveI : IsScalarTower R (GlobalTheory.LocAcyc.GenFib A R) D :=
+  let : Algebra R D := (baseHom A R D).toAlgebra
+  have : IsScalarTower R (GlobalTheory.LocAcyc.GenFib A R) D :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have key : ∀ d : D, ∃ a : A, a ≠ 0 ∧ IsIntegral R (baseHom A R D (algebraMap A R a) * d) := by
     intro d

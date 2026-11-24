@@ -168,7 +168,7 @@ theorem rad_eq_one {𝔪 : Ideal (𝓞 K)} (hm : 𝔪 ≠ ⊥) {v : HeightOneSpe
   have : (Associates.mk v.asIdeal).count (Associates.mk 𝔪).factors = 0 := by
     by_contra hne
     exact hv ((Associates.count_ne_zero_iff_dvd hm v.irreducible).1 hne)
-  rw [rad, FractionalIdeal.count_coe K v hm]
+  rw [rad, FractionalIdeal.count_coeIdeal K v hm]
   simp [this]
 
 theorem mem_iff_rad {𝔪 : Ideal (𝓞 K)} (hm : 𝔪 ≠ ⊥) (a : 𝓞 K) :

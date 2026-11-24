@@ -129,12 +129,12 @@ theorem secTrace_restrict {k : Type} [CommRing k] {X X' : Scheme.{0}} {s : X ⟶
         (Sec.res ((f ⁻¹ᵁ V).ι ≫ s') h (appSec s' ((f ⁻¹ᵁ V).ι ≫ s') (f ⁻¹ᵁ V).ι (f ⁻¹ᵁ U) b')) =
       appSec s (V.ι ≫ s) V.ι U (secTrace s s' hU b') := by
   have hw : (f ⁻¹ᵁ V).ι ≫ f = f ∣_ V ≫ V.ι := (morphismRestrict_ι f V).symm
-  letI := secAlg s s' f U
-  letI : Algebra (Sec s U) (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U)) := (appSec s (V.ι ≫ s) V.ι U).toAlgebra
+  let := secAlg s s' f U
+  let : Algebra (Sec s U) (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U)) := (appSec s (V.ι ≫ s) V.ι U).toAlgebra
   letI : Algebra (Sec s' (f ⁻¹ᵁ U)) (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))) :=
     ((Sec.res ((f ⁻¹ᵁ V).ι ≫ s') h : _ →+* _).comp
       (appSec s' ((f ⁻¹ᵁ V).ι ≫ s') (f ⁻¹ᵁ V).ι (f ⁻¹ᵁ U))).toAlgebra
-  letI := secAlg (V.ι ≫ s) ((f ⁻¹ᵁ V).ι ≫ s') (f ∣_ V) (V.ι ⁻¹ᵁ U)
+  let := secAlg (V.ι ≫ s) ((f ⁻¹ᵁ V).ι ≫ s') (f ∣_ V) (V.ι ⁻¹ᵁ U)
   letI : Algebra (Sec s U) (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))) :=
     ((appSec (V.ι ≫ s) ((f ⁻¹ᵁ V).ι ≫ s') (f ∣_ V) (V.ι ⁻¹ᵁ U)).comp
       (appSec s (V.ι ≫ s) V.ι U)).toAlgebra
@@ -146,7 +146,7 @@ theorem secTrace_restrict {k : Type} [CommRing k] {X X' : Scheme.{0}} {s : X ⟶
       (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))) := .of_algebraMap_eq fun _ ↦ rfl
   haveI : IsScalarTower (Sec s U) (Sec s' (f ⁻¹ᵁ U))
       (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))) := .of_algebraMap_eq hsq
-  haveI : IsIso (CommRingCat.ofHom (algebraMap (Sec s U) (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U)))) :=
+  have : IsIso (CommRingCat.ofHom (algebraMap (Sec s U) (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U)))) :=
     isIso_ι_app V U hUV
   haveI : IsIso (CommRingCat.ofHom (algebraMap (Sec s' (f ⁻¹ᵁ U))
       (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))))) := by
@@ -158,13 +158,13 @@ theorem secTrace_restrict {k : Type} [CommRing k] {X X' : Scheme.{0}} {s : X ⟶
   haveI : Algebra.IsPushout (Sec s U) (Sec s' (f ⁻¹ᵁ U)) (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U))
       (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))) :=
     CommRingCat.isPushout_iff_isPushout.1 (IsPushout.of_vert_isIso ⟨by ext b; exact (hsq b).symm⟩)
-  haveI := this.symm
-  haveI := sec_finite (s := s) (s' := s') (f := f) hU
-  haveI := sec_etale (s := s) (s' := s') (f := f) hU
-  haveI := sec_finite (s := V.ι ≫ s) (s' := (f ⁻¹ᵁ V).ι ≫ s') (f := f ∣_ V) hU'
-  haveI := sec_etale (s := V.ι ≫ s) (s' := (f ⁻¹ᵁ V).ι ≫ s') (f := f ∣_ V) hU'
-  haveI := projective_of_etale (Sec s U) (Sec s' (f ⁻¹ᵁ U))
-  haveI := projective_of_etale (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U))
+  have := this.symm
+  have := sec_finite (s := s) (s' := s') (f := f) hU
+  have := sec_etale (s := s) (s' := s') (f := f) hU
+  have := sec_finite (s := V.ι ≫ s) (s' := (f ⁻¹ᵁ V).ι ≫ s') (f := f ∣_ V) hU'
+  have := sec_etale (s := V.ι ≫ s) (s' := (f ⁻¹ᵁ V).ι ≫ s') (f := f ∣_ V) hU'
+  have := projective_of_etale (Sec s U) (Sec s' (f ⁻¹ᵁ U))
+  have := projective_of_etale (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U))
     (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U)))
   change algTrace (Sec (V.ι ≫ s) (V.ι ⁻¹ᵁ U)) (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U)))
       (algebraMap (Sec s' (f ⁻¹ᵁ U)) (Sec ((f ⁻¹ᵁ V).ι ≫ s') ((f ∣_ V) ⁻¹ᵁ (V.ι ⁻¹ᵁ U))) b') =
@@ -318,7 +318,7 @@ theorem omegaTrace_comp_omegaPull_ι {k : Type} [CommRing k] {X X' : Scheme.{0}}
 
 theorem hodgePull_hodgeTrace_ι : ∀ {k : Type} [CommRing k] {X X' : Scheme.{0}} {s : X ⟶ Sp k} {s' : X' ⟶ Sp k} {f : X' ⟶ X} [IsFinite f] [Etale f] (hf : f ≫ s = s') (V : X.Opens) (j q : ℕ) (x : hodgeH s' j q), hodgePull (f := V.ι) (s' := V.ι ≫ s) rfl j q (hodgeTrace hf j q x) = hodgeTrace (f := f ∣_ V) (s := V.ι ≫ s) (s' := (f ⁻¹ᵁ V).ι ≫ s') (by rw [← hf, ← Category.assoc, morphismRestrict_ι, Category.assoc]) j q (hodgePull (f := (f ⁻¹ᵁ V).ι) rfl j q x) := by
   intro k _ X X' s s' f _ _ hf V j q x
-  letI := algΓ s; letI := algΓ s'; letI := algΓ (V.ι ≫ s); letI := algΓ ((f ⁻¹ᵁ V).ι ≫ s')
+  let := algΓ s; let := algΓ s'; let := algΓ (V.ι ≫ s); let := algΓ ((f ⁻¹ᵁ V).ι ≫ s')
   have hg : f ∣_ V ≫ V.ι ≫ s = (f ⁻¹ᵁ V).ι ≫ s' := by
     rw [← hf, ← Category.assoc, morphismRestrict_ι, Category.assoc]
   obtain ⟨y, rfl⟩ := (coh.pushforwardEquiv k (appTop_algebraMap hf) (Omega s' j) q).surjective x

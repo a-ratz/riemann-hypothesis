@@ -149,8 +149,8 @@ theorem exists_continuous_unip (n : ℕ) :
   refine continuous_induced_rng.2 ?_
   rw [Units.continuous_iff]
   constructor
-  · exact (continuous_block_matrix continuous_subtype_val).congr (fun b => (hN b).symm)
-  · exact (continuous_block_matrix continuous_subtype_val.neg).congr (fun b => (hinv b).symm)
+  · exact (continuous_block_matrix continuous_subtypeVal).congr (fun b => (hN b).symm)
+  · exact (continuous_block_matrix continuous_subtypeVal.neg).congr (fun b => (hinv b).symm)
 
 theorem exists_hermQ {n : ℕ} (c : ratHerm D n) : ∃ b : HermQ D n, b.1.map (incA D) = c.1.1 := by
   obtain ⟨M, hM⟩ := c.2

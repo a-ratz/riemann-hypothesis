@@ -80,6 +80,6 @@ theorem goal1 :
     (fun k => ((Matrix.of fun k i => d i k) * (Matrix.of fun i j => c j i)) k j - (1 : Matrix ι ι O) k j) ?_ k
   · exact congrArg Subtype.val (sub_eq_zero.1 hz)
   · simp only [sub_smul, Finset.sum_sub_distrib, key, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
 
 end Bl.general_b_fact_third_alt_form

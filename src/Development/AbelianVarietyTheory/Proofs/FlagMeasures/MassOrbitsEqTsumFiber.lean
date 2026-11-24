@@ -80,7 +80,7 @@ theorem encard_orbit_fiber {G X Y : Type*} [Group G] [MulAction G X] [MulAction 
         P z ∧ π z = π x} : Set X)
       = MulAction.orbit (↥(H ⊓ MulAction.stabilizer G (π x))) x := by
     ext z
-    simp only [Set.mem_setOf_eq, Quotient.eq'', MulAction.orbitRel_apply]
+    simp only [Set.mem_ofPred_eq, Quotient.eq'', MulAction.orbitRel_apply]
     constructor
     · rintro ⟨⟨h, rfl⟩, -, hz⟩
       have h2 := (hP h h.2 x hx).2
@@ -148,7 +148,7 @@ theorem mass_orbits_eq_tsum_fiber : ∀ {G X Y : Type} [Group G] [MulAction G X]
       have : ({x | (Quotient.mk'' x : MulAction.orbitRel.Quotient H X) = o ∧ P x ∧ π x = c.out} :
           Set X) = ∅ := by
         ext z
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         rintro ⟨h1, h2, h3⟩
         obtain ⟨h, hh, e⟩ := hmem z h1
         apply hne
@@ -163,7 +163,7 @@ theorem mass_orbits_eq_tsum_fiber : ∀ {G X Y : Type} [Group G] [MulAction G X]
     have : ({x | (Quotient.mk'' x : MulAction.orbitRel.Quotient H X) = o ∧ P x ∧ π x = c.out} :
         Set X) = ∅ := by
       ext z
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨h1, h2, -⟩
       obtain ⟨h, hh, e⟩ := hmem z h1
       exact ho (e ▸ (hP' h hh z h2).1)

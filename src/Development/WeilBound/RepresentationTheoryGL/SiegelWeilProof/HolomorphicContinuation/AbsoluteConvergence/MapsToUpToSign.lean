@@ -71,7 +71,7 @@ theorem kr_inducing (n : ℕ) : Topology.IsInducing (fun k : KR n => mR (k : GR 
     Units.isEmbedding_embedProduct.isInducing.comp
       (Topology.IsInducing.subtypeVal.comp Topology.IsInducing.subtypeVal)
   refine Topology.IsInducing.of_comp (g := fun M : M2 n => (M, MulOpposite.op Mᴴ)) ?_ ?_ ?_
-  · exact Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+  · exact Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   · exact continuous_id.prodMk (MulOpposite.continuous_op.comp continuous_id.matrix_conjTranspose)
   · convert hemb using 1
     funext k
@@ -97,7 +97,7 @@ variable {m n : ℕ} {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGro
 theorem continuous_arg (hιc : Continuous ι) {a b : GR n} {nb : (Fin n → Fin n → ℝ) → GR n} (hnbc : Continuous nb)
     (g : G) : Continuous (fun y : KR n × (Fin n → Fin n → ℝ) => g * ι ((y.1 : GR n) * a * nb y.2 * b)) := by
   have h1 : Continuous (fun y : KR n × (Fin n → Fin n → ℝ) => (y.1 : GR n) * a * nb y.2 * b) :=
-    (((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul (hnbc.comp continuous_snd)).mul
+    (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul (hnbc.comp continuous_snd)).mul
       continuous_const
   exact continuous_const.mul (hιc.comp h1)
 
@@ -118,7 +118,7 @@ private theorem integrable_integral_mul_of_continuous_uncurry [MeasurableSpace (
       simp [image_eq_zero_of_notMem_tsupport hx]
   refine ⟨hint, hcont, ?_⟩
   have hF0 : Continuous (fun k : KR n => (F0 p q e (k : GR n))⁻¹) :=
-    ((continuous_weight_factor hD p q e).comp continuous_subtype_val).inv₀ fun k => spherical_section_ne_zero hD p q e _
+    ((continuous_weight_factor hD p q e).comp continuous_subtypeVal).inv₀ fun k => spherical_section_ne_zero hD p q e _
   exact (hF0.mul hcont).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
 theorem top_integrable [MeasurableSpace (KR n)] [BorelSpace (KR n)] [CompactSpace (KR n)] (μ : Measure (KR n))
@@ -159,10 +159,10 @@ theorem top_hol [MeasurableSpace (KR n)] [BorelSpace (KR n)] [CompactSpace (KR n
     (hEc : ContinuousOn (fun y : ℂ × G => E y.1 y.2) (U ×ˢ univ)) (hEh : ∀ g, DifferentiableOn ℂ (fun z => E z g) U)
     (g : G) : DifferentiableOn ℂ (fun z => Top μ ι p q e a b nb ψ (E z) g) U := by
   have hK : IsCompact (tsupport ψ) := hψs
-  haveI : IsFiniteMeasure ((volume : Measure (Fin n → Fin n → ℝ)).restrict (tsupport ψ)) :=
+  have : IsFiniteMeasure ((volume : Measure (Fin n → Fin n → ℝ)).restrict (tsupport ψ)) :=
     isFiniteMeasure_restrict.mpr hK.measure_lt_top.ne
   have hF0 : Continuous (fun k : KR n => (F0 p q e (k : GR n))⁻¹) :=
-    ((continuous_weight_factor hD p q e).comp continuous_subtype_val).inv₀ fun k => spherical_section_ne_zero hD p q e _
+    ((continuous_weight_factor hD p q e).comp continuous_subtypeVal).inv₀ fun k => spherical_section_ne_zero hD p q e _
   have harg := continuous_arg (a := a) (b := b) hιc hnbc g
   have hC : IsCompact (univ ×ˢ tsupport ψ : Set (KR n × (Fin n → Fin n → ℝ))) := isCompact_univ.prod hK
   have hCc : (μ.prod ((volume : Measure (Fin n → Fin n → ℝ)).restrict (tsupport ψ)))
@@ -229,14 +229,14 @@ theorem top_sum [MeasurableSpace (KR n)] [BorelSpace (KR n)] [CompactSpace (KR n
   classical
   have hK : IsCompact (tsupport ψ) := hψs
   have hw : Continuous (fun y : KR n × (Fin n → Fin n → ℝ) => ((y.1 : GR n) * a * nb y.2 * b)) :=
-    (((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul (hnbc.comp continuous_snd)).mul
+    (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul (hnbc.comp continuous_snd)).mul
       continuous_const
   have harg := continuous_arg (a := a) (b := b) hιc hnbc g
   have hC : IsCompact (insert g ((fun y : KR n × (Fin n → Fin n → ℝ) =>
       g * ι ((y.1 : GR n) * a * nb y.2 * b)) '' (univ ×ˢ tsupport ψ))) :=
     ((isCompact_univ.prod hK).image harg).insert g
   obtain ⟨u, hu, hub⟩ := hmaj _ hC
-  haveI : Countable (Function.support u) := hu.countable_support.to_subtype
+  have : Countable (Function.support u) := hu.countable_support.to_subtype
   have hmemC : ∀ (k : KR n) (x : Fin n → Fin n → ℝ), x ∈ tsupport ψ →
       g * ι ((k : GR n) * a * nb x * b) ∈ insert g ((fun y : KR n × (Fin n → Fin n → ℝ) =>
         g * ι ((y.1 : GR n) * a * nb y.2 * b)) '' (univ ×ˢ tsupport ψ)) :=
@@ -294,7 +294,7 @@ theorem top_sum [MeasurableSpace (KR n)] [BorelSpace (KR n)] [CompactSpace (KR n
       ((hu.subtype _).mul_right _)
   obtain ⟨M, hM⟩ : ∃ M, ∀ k : KR n, ‖(F0 p q e (k : GR n))⁻¹‖ ≤ M := by
     have hF0 : Continuous (fun k : KR n => (F0 p q e (k : GR n))⁻¹) :=
-      ((continuous_weight_factor hD p q e).comp continuous_subtype_val).inv₀ fun k => spherical_section_ne_zero hD p q e _
+      ((continuous_weight_factor hD p q e).comp continuous_subtypeVal).inv₀ fun k => spherical_section_ne_zero hD p q e _
     obtain ⟨M, hM⟩ := isCompact_univ.exists_bound_of_continuousOn hF0.continuousOn
     exact ⟨M, fun k => hM k (mem_univ _)⟩
   have hj : ∀ j : Function.support u, ∫ k : KR n, (F0 p q e (k : GR n))⁻¹ *

@@ -96,7 +96,7 @@ private theorem ψ_neg_mul (x : A F) : ψ (-x) * ψ x = 1 := by
   rw [← ψ_add, neg_add_cancel]
   simpa using ψ_rt (0 : F)
 
-private theorem cont_ψ : Continuous (ψ (F := F)) := continuous_subtype_val.comp continuous_adelicChar
+private theorem cont_ψ : Continuous (ψ (F := F)) := continuous_subtypeVal.comp continuous_adelicChar
 
 private theorem mkE_add (D : Dat F E) (a b c d : A F) : D.mkE (a + c) (b + d) = D.mkE a b + D.mkE c d := by
   simp only [Dat.mkE, map_add (f := _), add_mul]

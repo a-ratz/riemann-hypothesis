@@ -60,8 +60,8 @@ theorem lbIso_of_pullback_quasiInverseIsogeny_trivial_axes : ∀ (Y : Scheme.{0}
     LBIso (Q₁.pull (Hecke.sq2 ψ)) (Q₂.pull (Hecke.sq2 ψ)) → LBIso Q₁ Q₂ := by
   intro Y A B _ _ _ _ k ψ ψ' Q₁ Q₂ hB hk _ hq h₁ h₂ hiso
   obtain ⟨hψ, hψ', -, hc⟩ := hq
-  haveI := hψ
-  haveI := hψ'
+  have := hψ
+  have := hψ'
   have o₁ : (1 : B ⟶ B) ≫ (𝟙 B) ^ k = 1 := by
     rw [← hc, ← Category.assoc, GlobalTheory.BirigUniq.one_comp_monHom, GlobalTheory.BirigUniq.one_comp_monHom]
   obtain ⟨hL₁, r₁₁, r₁₂⟩ := h₁

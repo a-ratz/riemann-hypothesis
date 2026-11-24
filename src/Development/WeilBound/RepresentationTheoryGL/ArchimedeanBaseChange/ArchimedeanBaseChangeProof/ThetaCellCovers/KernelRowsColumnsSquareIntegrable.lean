@@ -92,7 +92,7 @@ theorem bumpEx : BumpEx := by
   have hcs : HasCompactSupport fun z : X.G => b z⁻¹ :=
     hbc.comp_homeomorph (Homeomorph.inv X.G)
   have hI : 0 < ∫ z, b z⁻¹ ∂X.μ :=
-    hcc.integral_pos_of_hasCompactSupport_nonneg_nonzero hcs (fun z => hbnn _)
+    hcc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs (fun z => hbnn _)
       (x := 1) (by simp [hb11])
   set I := ∫ z, b z⁻¹ ∂X.μ with hIdef
   have hnorm : ∀ z, ‖((b z / I : ℝ) : ℂ)‖ = b z / I := fun z => by
@@ -137,8 +137,8 @@ theorem measurable_hits (X : Ctx) {S : Set X.G} (hS : MeasurableSet S) :
 
 theorem lintegral_hits (X : Ctx) {S : Set X.G} (hS : MeasurableSet S) :
     ∫⁻ x, hits X S x ∂X.ν = X.μ S := by
-  haveI : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
-  haveI : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
+  have : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
+  have : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
   have hm : ∀ γ : X.Γ, AEMeasurable (fun x : X.G => S.indicator (1 : X.G → ℝ≥0∞) ((γ : X.G) * x)) X.ν :=
     fun γ => ((measurable_one.indicator hS).comp (measurable_const_mul (γ : X.G))).aemeasurable
   have h1 : ∫⁻ x, hits X S x ∂X.ν
@@ -318,7 +318,7 @@ theorem coeFn_sum_ae {α : Type} [MeasurableSpace α] {ν : Measure α} {ι : Ty
 theorem opExA : KerBasic → RowInt → SchurOp → OpExA := by
   intro hK hR hS X ι _ Φ hΦ
   classical
-  haveI : SFinite X.ν := by unfold Ctx.ν; infer_instance
+  have : SFinite X.ν := by unfold Ctx.ν; infer_instance
   have hex : ∀ i j, ∃ T : Lp ℂ 2 X.ν →L[ℂ] Lp ℂ 2 X.ν, ∀ f, (T f : X.G → ℂ) =ᵐ[X.ν]
       fun x => ∫ y, ker X.Γ (Φ i j) x y * (f : X.G → ℂ) y ∂X.ν := by
     intro i j
@@ -332,7 +332,7 @@ theorem opExA : KerBasic → RowInt → SchurOp → OpExA := by
       ContinuousLinearMap.pi fun i => ∑ j, (S i j).comp (PiLp.proj 2 (fun _ : ι => Lp ℂ 2 X.ν) j)
   have hT : ∀ f i, T f i = ∑ j, S i j (f j) := by
     intro f i
-    simp [T, ContinuousLinearMap.sum_apply]
+    simp [T, sum_apply]
   have hIs : X.IsOp Φ T := by
     intro f i
     rw [hT]
@@ -436,14 +436,14 @@ namespace GlobalTheory.CompanionTheory.KernelColumn
 
 theorem colSq_of_kerBasic : KerBasic → ColSq := by
   intro hK X φ B Ω hT hB hΩ hS y
-  letI : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
-  haveI : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
+  let : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
+  have : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
   have hker := (hK X φ hT).2.2.2.2.2
   have hBe : ∀ z, ‖φ z‖ₑ ≤ ENNReal.ofReal B := fun z => by
     rw [← ofReal_norm]; exact ENNReal.ofReal_le_ofReal (hB z)
   let A : X.G → ℝ≥0∞ := fun x => ∑' γ : X.Γ, ‖φ (x⁻¹ * (γ : X.G) * y)‖ₑ
   have hterm : ∀ γ : X.Γ, Measurable fun x : X.G => ‖φ (x⁻¹ * (γ : X.G) * y)‖ₑ := fun γ =>
-    (hT.1.comp (by fun_prop)).enorm.measurable
+    (hT.1.comp (by fun_prop)).eNorm.measurable
   have hAm : Measurable A := Measurable.tsum hterm
   have hAinv : ∀ (δ : X.Γ) (x : X.G), A ((δ : X.G) * x) = A x := by
     intro δ x
@@ -453,7 +453,7 @@ theorem colSq_of_kerBasic : KerBasic → ColSq := by
     simp [mul_assoc]
   let g : X.G → ℝ≥0∞ := fun x => ‖φ (x⁻¹ * y)‖ₑ * A x
   have hgm : Measurable g :=
-    ((hT.1.comp (by fun_prop : Continuous fun x : X.G => x⁻¹ * y)).enorm.measurable).mul hAm
+    ((hT.1.comp (by fun_prop : Continuous fun x : X.G => x⁻¹ * y)).eNorm.measurable).mul hAm
   have hsq : ∀ x, A x ^ 2 = ∑' γ : X.Γ, g (γ⁻¹ • x) := by
     intro x
     rw [sq]
@@ -522,7 +522,7 @@ theorem comp_key (hB : KerBasic) (hR : RowInt) (hL : KernelL2RowsColumns) (hS : 
     Integrable (fun z => ker X.Γ φ x z * ∫ y, ker X.Γ ψ z y * f y ∂X.ν) X.ν ∧
     ∫ z, ker X.Γ φ x z * (∫ y, ker X.Γ ψ z y * f y ∂X.ν) ∂X.ν
       = ∫ y, ker X.Γ (cv X.μ φ ψ) x y * f y ∂X.ν := by
-  haveI : SFinite X.ν := by unfold Ctx.ν; infer_instance
+  have : SFinite X.ν := by unfold Ctx.ν; infer_instance
   obtain ⟨A, hA, hrow, hcol⟩ := hR X ψ hψ
   have hmeas : Measurable (Function.uncurry (ker X.Γ ψ)) := (hB X ψ hψ).2.1.measurable
   have hint := hS X.G X.ν (ker X.Γ ψ) A hmeas hA hrow hcol (fun z => ker X.Γ φ x z) f
@@ -742,7 +742,7 @@ theorem cv_adj_eq_avg (X : Ctx) (f ψ : X.G → ℂ) (hψ : IsBump X ψ) (y : X.
 
 theorem approxU : CvTest → TwoUnif → ApproxU := by
   intro hcv htu X φ ε hφ hε
-  letI : Inv (Set X.G) := Set.inv
+  let : Inv (Set X.G) := Set.inv
   obtain ⟨W₀, hW₀, hW⟩ := htu X φ ε hφ hε
   refine ⟨W₀ ∩ W₀⁻¹, Filter.inter_mem hW₀ (inv_mem_nhds_one _ hW₀), ?_⟩
   intro ψ hb hsub y
@@ -793,7 +793,7 @@ theorem finite_of_compact (X : Ctx) {φ : X.G → ℂ} (hφ : HasCompactSupport 
   have hS : IsCompact (U * tsupport φ * V⁻¹) := (hU.mul hφ.isCompact).mul hV.inv
   refine (X.proper _ hS).subset ?_
   rintro γ ⟨x, hx, y, hy, h⟩
-  refine Set.mem_setOf_eq ▸ ?_
+  refine Set.mem_ofPred_eq ▸ ?_
   have e : (γ : X.G) = x * (x⁻¹ * (γ : X.G) * y) * y⁻¹ := by group
   rw [e]
   exact Set.mul_mem_mul (Set.mul_mem_mul hx (subset_tsupport _ (Function.mem_support.2 h)))
@@ -860,7 +860,7 @@ theorem enorm_ker_le (X : Ctx) {φ : X.G → ℂ} (hφ : HasCompactSupport φ) (
     ‖ker X.Γ φ x y‖ₑ ≤ ∑' γ : X.Γ, ‖φ (x⁻¹ * (γ : X.G) * y)‖ₑ := by
   unfold ker
   rw [finsum_eq_sum _ (support_finite X hφ x y)]
-  exact (enorm_sum_le _ _).trans (ENNReal.sum_le_tsum _)
+  exact (eNorm_sum_le _ _).trans (ENNReal.sum_le_tsum _)
 
 theorem kerBasic : KerBasic := by
   intro X φ hφ
@@ -927,7 +927,7 @@ theorem entry_pairing (hK : KerBasic) (hR : RowInt) (hS : SchurInt) (X : Ctx) (�
     Integrable (fun y => conj ((g : X.G → ℂ) y) * ∫ x, ker X.Γ φ y x * (f : X.G → ℂ) x ∂X.ν) X.ν ∧
     ∫ x, conj (∫ y, ker X.Γ (adj φ) x y * (g : X.G → ℂ) y ∂X.ν) * (f : X.G → ℂ) x ∂X.ν
       = ∫ y, conj ((g : X.G → ℂ) y) * ∫ x, ker X.Γ φ y x * (f : X.G → ℂ) x ∂X.ν ∂X.ν := by
-  haveI : SFinite X.ν := by unfold Ctx.ν; infer_instance
+  have : SFinite X.ν := by unfold Ctx.ν; infer_instance
   obtain ⟨-, hc, -, -, hadj, -⟩ := hK X φ hφ
   obtain ⟨A, hA, h1, h2⟩ := hR X φ hφ
   have hg : MemLp (fun y => conj ((g : X.G → ℂ) y)) 2 X.ν := (Lp.memLp g).star
@@ -1075,7 +1075,7 @@ theorem kerClose : KerClose := by
       (Function.support fun γ : X.Γ => φ (x⁻¹ * (γ : X.G) * y)) ⊆ (hfin.toFinset : Set X.Γ) := by
     intro φ hφ γ hγ
     have hmem : x⁻¹ * (γ : X.G) * y ∈ Ω := hφ hγ
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     exact ⟨_, hmem, by group⟩
   have hker : ∀ φ : X.G → ℂ, Function.support φ ⊆ Ω →
       ker X.Γ φ x y = ∑ γ ∈ hfin.toFinset, φ (x⁻¹ * (γ : X.G) * y) := fun φ hφ =>
@@ -1151,8 +1151,8 @@ namespace GlobalTheory.CompanionTheory.KernelComposition
 theorem integral_ker_mul_eq_unfolded (hk : KerBasic) (X : Ctx) (φ ψ : X.G → ℂ) (hφ : Tst φ)
     (hψ : Tst ψ) (x y : X.G) :
     ∫ z, ker X.Γ φ x z * ker X.Γ ψ z y ∂X.ν = ∫ z, φ (x⁻¹ * z) * ker X.Γ ψ z y ∂X.μ := by
-  haveI : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
-  haveI : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
+  have : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
+  have : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
   set g : X.G → ℂ := fun z => φ (x⁻¹ * z) * ker X.Γ ψ z y with hg
   have hkc : Continuous fun z => ker X.Γ ψ z y :=
     (hk X ψ hψ).2.1.comp (continuous_id.prodMk continuous_const)
@@ -1287,7 +1287,7 @@ namespace GlobalTheory.CompanionTheory.SchurKernel
 
 theorem lintegral_enorm_rpow_two_ne_top {α : Type} [MeasurableSpace α] {ν : Measure α} {g : α → ℂ}
     (hg : MemLp g 2 ν) : ∫⁻ x, ‖g x‖ₑ ^ (2 : ℝ) ∂ν ≠ ⊤ := by
-  have h := lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top (p := 2) (by norm_num) (by norm_num)
+  have h := lintegral_rpow_eNorm_lt_top_of_eLpNorm_lt_top (p := 2) (by norm_num) (by norm_num)
     hg.eLpNorm_lt_top
   simpa using h.ne
 
@@ -1301,23 +1301,23 @@ theorem schurInt_of_schurL : SchurL → SchurInt := by
     (hgm.mul hkm).mul hfm
   refine ⟨hm, ?_⟩
   set K : α → α → ℝ≥0∞ := fun x y => ‖k x y‖ₑ with hK
-  have hKm : Measurable (Function.uncurry K) := hk.enorm
-  have hFm : AEMeasurable (fun y => ‖f y‖ₑ) ν := hf.aestronglyMeasurable.aemeasurable.enorm
+  have hKm : Measurable (Function.uncurry K) := hk.eNorm
+  have hFm : AEMeasurable (fun y => ‖f y‖ₑ) ν := hf.aestronglyMeasurable.aemeasurable.eNorm
   set h : α → ℝ≥0∞ := fun x => ∫⁻ y, K x y * ‖f y‖ₑ ∂ν with hh
   have hprod : AEMeasurable (fun p : α × α => K p.1 p.2 * ‖f p.2‖ₑ) (ν.prod ν) :=
-    hKm.aemeasurable.mul hfm.enorm
+    hKm.aemeasurable.mul hfm.eNorm
   have hhm : AEMeasurable h ν := hprod.lintegral_prod_right'
   have hsch : ∫⁻ x, h x ^ 2 ∂ν ≤ A ^ 2 * ∫⁻ y, ‖f y‖ₑ ^ 2 ∂ν :=
     hS α ν K A (fun y => ‖f y‖ₑ) hKm hFm hrow hcol
   have heq : ∫⁻ p, ‖g p.1 * k p.1 p.2 * f p.2‖ₑ ∂(ν.prod ν) = ∫⁻ x, ‖g x‖ₑ * h x ∂ν := by
-    rw [lintegral_prod _ hm.enorm]
+    rw [lintegral_prod _ hm.eNorm]
     refine lintegral_congr fun x => ?_
     simp only [hh, hK]
-    rw [← lintegral_const_mul' _ _ enorm_ne_top]
+    rw [← lintegral_const_mul' _ _ eNorm_ne_top]
     refine lintegral_congr fun y => ?_
-    simp only [enorm_mul, mul_assoc]
+    simp only [eNorm_mul, mul_assoc]
   have hhold := ENNReal.lintegral_mul_le_Lp_mul_Lq ν (Real.HolderConjugate.two_two)
-    hg.aestronglyMeasurable.aemeasurable.enorm hhm
+    hg.aestronglyMeasurable.aemeasurable.eNorm hhm
   have hG : ∫⁻ x, ‖g x‖ₑ ^ (2 : ℝ) ∂ν ≠ ⊤ := lintegral_enorm_rpow_two_ne_top hg
   have hF : ∫⁻ x, ‖f x‖ₑ ^ (2 : ℝ) ∂ν ≠ ⊤ := lintegral_enorm_rpow_two_ne_top hf
   have hH : ∫⁻ x, h x ^ (2 : ℝ) ∂ν ≠ ⊤ := by
@@ -1419,8 +1419,8 @@ open PositivityTheory.Rg.BcB.E1
 
 theorem rowInt_of_kerBasic : KerBasic → RowInt := by
   intro hK X φ hφ
-  haveI : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
-  haveI : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
+  have : MeasurableConstSMul X.Γ X.G := ⟨fun γ => measurable_const_mul (γ : X.G)⟩
+  have : SMulInvariantMeasure X.Γ X.G X.μ := ⟨fun γ s _ => measure_preimage_mul _ γ.1 s⟩
   have hc : Continuous φ := hφ.1
   have hcs : HasCompactSupport φ := hφ.2
   have hc' : Continuous fun z : X.G => φ z⁻¹ := hc.comp continuous_inv
@@ -1441,7 +1441,7 @@ theorem rowInt_of_kerBasic : KerBasic → RowInt := by
           · refine tsum_congr fun γ => lintegral_congr fun y => ?_
             rw [Subgroup.smul_def, smul_eq_mul, mul_assoc]
           · intro γ
-            exact (hc.comp (by fun_prop)).enorm.aemeasurable
+            exact (hc.comp (by fun_prop)).eNorm.aemeasurable
       _ = ∫⁻ y, ‖φ (x⁻¹ * y)‖ₑ ∂X.μ :=
           (X.fd.lintegral_eq_tsum'' (fun y => ‖φ (x⁻¹ * y)‖ₑ)).symm
       _ = ∫⁻ y, ‖φ y‖ₑ ∂X.μ := lintegral_mul_left_eq_self (fun y => ‖φ y‖ₑ) x⁻¹
@@ -1453,7 +1453,7 @@ theorem rowInt_of_kerBasic : KerBasic → RowInt := by
       _ = ∑' γ : X.Γ, ∫⁻ x in X.F, ‖φ (x⁻¹ * (γ : X.G) * y)‖ₑ ∂X.μ := by
           rw [hν, lintegral_tsum]
           intro γ
-          exact (hc.comp (by fun_prop)).enorm.aemeasurable
+          exact (hc.comp (by fun_prop)).eNorm.aemeasurable
       _ = ∑' γ : X.Γ, ∫⁻ x in X.F, ‖φ ((γ • x)⁻¹ * y)‖ₑ ∂X.μ := by
           rw [← (Equiv.inv X.Γ).tsum_eq]
           refine tsum_congr fun γ => lintegral_congr fun x => ?_

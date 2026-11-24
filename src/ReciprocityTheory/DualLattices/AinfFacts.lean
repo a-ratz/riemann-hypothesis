@@ -108,7 +108,7 @@ lemma theta_surj (hv : v.Integers O) : Function.Surjective (fontaineTheta O p) :
   surjective_fontaineTheta (frob_surj p O hv)
 
 lemma O_local (hv : v.Integers O) : IsLocalRing O := by
-  haveI : Nontrivial O :=
+  have : Nontrivial O :=
     ⟨⟨(0 : O), (1 : O), fun h => by
       have h2 := congrArg (algebraMap O C) h
       simp at h2⟩⟩
@@ -138,7 +138,7 @@ lemma quot_nontrivial {R : Type} [CommRing R] (I : Ideal R) (hI : I ≠ ⊤) : N
 
 lemma local_of_surj_sq {S T : Type} [CommRing S] [CommRing T] [IsLocalRing T] (f : S →+* T)
     (hf : Function.Surjective f) (hk : ∀ k ∈ RingHom.ker f, k * k = 0) : IsLocalRing S := by
-  haveI : Nontrivial S := hf.nontrivial
+  have : Nontrivial S := hf.nontrivial
   have key : ∀ y : S, IsUnit (f y) → IsUnit y := by
     intro y hy
     obtain ⟨u, hu⟩ := hy

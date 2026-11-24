@@ -134,8 +134,8 @@ end SlopeTestRemainingChoices
 
 private theorem ipo_le_one {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRing R] [Algebra c.O R] [IsCO c.O R]
     {f : R →ₐ[c.O] PadicAlgCl l} (hf : IsLocPt f) (x : R) : ‖f x‖ ≤ 1 := by
-  haveI := c.dvr
-  haveI : IsLocalHom (algebraMap c.O R) := IsCO.isLocalHom
+  have := c.dvr
+  have : IsLocalHom (algebraMap c.O R) := IsCO.isLocalHom
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible c.O
   have hm : algebraMap c.O R ϖ ∈ maximalIdeal R := by
     rw [mem_maximalIdeal, mem_nonunits_iff]

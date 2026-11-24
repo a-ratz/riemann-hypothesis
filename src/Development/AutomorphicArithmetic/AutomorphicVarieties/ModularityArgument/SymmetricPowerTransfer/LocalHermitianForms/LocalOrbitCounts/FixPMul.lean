@@ -107,7 +107,7 @@ theorem UpperTheory.V.Z.Sym.Loc.pNorm : UpperTheory.V.Z.Sym.Loc.PNorm := by
   obtain ⟨y, rfl⟩ := ht
   show pcount O τ (QuadraticAlgebra.norm (y : Etau K τ) * x) = pcount O τ x
   unfold pcount
-  letI := quoAct (K := K) τ
+  let := quoAct (K := K) τ
   have inv : ∀ (z : (Etau K τ)ˣ) (r : K) (S : Set (Etau K τ)),
       IsFixP O τ r ((quo z * ·) '' S) ↔ IsFixP O τ r S := by
     intro z r S

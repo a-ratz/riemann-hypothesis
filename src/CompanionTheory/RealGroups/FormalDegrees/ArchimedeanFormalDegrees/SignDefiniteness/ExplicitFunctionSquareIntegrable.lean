@@ -97,7 +97,7 @@ theorem square_integrable_of_norm : PsiNorm → CompanionTheory.RgDs.ExplicitFun
           ∫⁻ g : Formalism.REAL.UJ ε, ENNReal.ofReal (hsOp (PsiM T μ (Formalism.MainNotions.S.umat g))) ∂(muCD ε) :=
           lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
       _ < ⊤ := by rw [hfin]; exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top ENNReal.ofReal_lt_top
-  haveI hH : (show Measure (UJ ε) from muCD ε).IsHaarMeasure := muCD_isHaar ε
+  have hH : (show Measure (UJ ε) from muCD ε).IsHaarMeasure := muCD_isHaar ε
   have heq := Measure.isMulLeftInvariant_eq_smul ν (show Measure (UJ ε) from muCD ε)
   rw [heq]
   exact hmCD.smul_measure ENNReal.coe_ne_top

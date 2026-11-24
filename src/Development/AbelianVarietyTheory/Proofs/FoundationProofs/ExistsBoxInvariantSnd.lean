@@ -103,7 +103,7 @@ theorem exists_box_invariant_snd {f : T × (n → k) → ℂ} (hf : f ∈ SB (T 
 omit [DecidableEq n] [T2Space T] [Fintype n] in
 theorem slice_mem_SB {f : T × (n → k) → ℂ} (hf : f ∈ SB (T × (n → k))) (t : T) :
     (fun x => f (t, x)) ∈ SB (n → k) := by
-  haveI := t2Space k
+  have := t2Space k
   refine ⟨hf.1.comp_continuous (by fun_prop),
     HasCompactSupport.intro (hf.2.isCompact.image continuous_snd) fun x hx => ?_⟩
   exact image_eq_zero_of_notMem_tsupport fun h => hx ⟨_, h, rfl⟩
@@ -150,7 +150,7 @@ theorem pf_mem_SB (μ : Measure (n → k)) [μ.IsAddRightInvariant] (h : HasCond
       rw [hVf t ht x]
     rw [e1]
     exact hOf y hy
-  · haveI := t2Space k
+  · have := t2Space k
     refine HasCompactSupport.intro
       ((hf.2.isCompact.image continuous_fst).prod (isCompact_box (c * s⁻¹))) ?_
     rintro ⟨t, y⟩ hty
@@ -166,7 +166,7 @@ theorem inversion_const (m : Measure k) [m.IsAddHaarMeasure] (h : HasConductor �
     {f : (n → k) → ℂ} (hf : f ∈ SB (n → k)) :
     ∫ y : n → k, (∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂(Measure.pi fun _ => m)) ∂(Measure.pi fun _ => m) =
       (((m.real (𝒪[k] : Set k) ^ 2 * nabs k c) ^ Fintype.card n : ℝ) : ℂ) * f 0 := by
-  haveI := secondCountable k
+  have := secondCountable k
   obtain ⟨s, hs⟩ := fourier_inversion_pi (Measure.pi fun _ : n => m) h hf
   have hbox : ∀ r : kˣ, (Measure.pi fun _ : n => m).real (box n r) =
       (nabs k r * m.real (𝒪[k] : Set k)) ^ Fintype.card n := by
@@ -186,7 +186,7 @@ theorem pf_pf (m : Measure k) [m.IsAddHaarMeasure] (h : HasConductor ψ c)
     {f : T × (n → k) → ℂ} (hf : f ∈ SB (T × (n → k))) (z : T × (n → k)) :
     pf ψ (Measure.pi fun _ => m) (pf ψ (Measure.pi fun _ => m) f) z =
       (((m.real (𝒪[k] : Set k) ^ 2 * nabs k c) ^ Fintype.card n : ℝ) : ℂ) * f (z.1, -z.2) := by
-  haveI := secondCountable k
+  have := secondCountable k
   obtain ⟨t, y⟩ := z
   have hsl := slice_mem_SB hf t
   have hg : (fun w => f (t, w - y)) ∈ SB (n → k) :=
@@ -210,7 +210,7 @@ theorem pf_pf (m : Measure k) [m.IsAddHaarMeasure] (h : HasConductor ψ c)
 
 theorem pf_bijOn (m : Measure k) [m.IsAddHaarMeasure] (h : HasConductor ψ c) :
     Set.BijOn (pf ψ (Measure.pi fun _ => m)) {f | f ∈ SB (T × (n → k))} {f | f ∈ SB (T × (n → k))} := by
-  haveI := secondCountable k
+  have := secondCountable k
   set C : ℂ := (((m.real (𝒪[k] : Set k) ^ 2 * nabs k c) ^ Fintype.card n : ℝ) : ℂ) with hC
   have hC0 : C ≠ 0 := by
     have h1 : 0 < m.real (𝒪[k] : Set k) := by

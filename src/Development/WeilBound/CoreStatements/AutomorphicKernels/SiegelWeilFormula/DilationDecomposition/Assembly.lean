@@ -70,17 +70,17 @@ theorem gIdil_of (hT : TAll) (hAux : AuxiliaryPrimeFunction) (hLE : LocOpEx) (hT
   unfold TAll at hT
   have hTA : ThetaAuto := hT.2.2.2.2
   obtain ⟨hμ0, hμT, hTA'⟩ := hTA F E σ d
-  haveI : IsTopologicalGroup d.G := (hAux F E σ d).2.2.1
-  haveI : Countable (Matrix (Fin d.m) (Fin d.n) E) := hMC E d.m d.n
+  have : IsTopologicalGroup d.G := (hAux F E σ d).2.2.1
+  have : Countable (Matrix (Fin d.m) (Fin d.n) E) := hMC E d.m d.n
   obtain ⟨L, hL⟩ := hLE F E σ d R w
   obtain ⟨y₀, Ψ', hsplit, hgauss⟩ := hSD F E σ d R w L hL Ψ hΨ g
   obtain ⟨Gf, hGt, hGd, hGc, hGb, hGr⟩ := hLF F E σ d R w L hL X a ha
   obtain ⟨hUo, hUt, hUb⟩ := hSO d.n X
   set ν : Measure (UA σ d.A.J) := ((d.μ.restrict d.D) Set.univ)⁻¹ • d.μ.restrict d.D with hν
   have hνu : ν Set.univ = 1 := by
-    rw [hν, Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
+    rw [hν, smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
     exact ENNReal.inv_mul_cancel hμ0 hμT
-  haveI : IsFiniteMeasure ν := ⟨by rw [hνu]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure ν := ⟨by rw [hνu]; exact ENNReal.one_lt_top⟩
   let Mt : UA σ d.A.J → Matrix (Fin d.m) (Fin d.n) E → Mx F E d.m d.n := fun h k => mat h⁻¹ * incM F k
   let Fk : GR d.n → ℂ → UA σ d.A.J → Matrix (Fin d.m) (Fin d.n) E → ℂ :=
     fun p z h k => Gf (y₀ * p) z (R.loc w (Mt h k)) * Ψ' (Mt h k)

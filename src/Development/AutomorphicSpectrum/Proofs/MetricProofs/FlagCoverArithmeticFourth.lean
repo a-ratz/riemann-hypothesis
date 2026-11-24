@@ -148,7 +148,7 @@ theorem isAlgebraic_of_relfinrank_pos {F E : Type} [Field F] [Field E] [Algebra 
     {A B : IntermediateField F E} (h : A ≤ B) (hpos : 0 < IntermediateField.relfinrank A B) :
     ∀ t ∈ B, IsAlgebraic A t := by
   rw [IntermediateField.relfinrank_eq_finrank_of_le h] at hpos
-  haveI := Module.finite_of_finrank_pos hpos
+  have := Module.finite_of_finrank_pos hpos
   intro t ht
   have h1 : IsAlgebraic A (⟨t, ht⟩ : IntermediateField.extendScalars h) :=
     Algebra.IsAlgebraic.isAlgebraic _
@@ -184,7 +184,7 @@ theorem count_of_nonempty (hGood : Inter.GenericPointsAvoidBadLocus.Statement) (
       rw [RingHom.mem_ker, aeval_X, h0]
     rw [G.genericFibre_ker_target, mCoordIdeal, RingHom.mem_ker, mConeMap, aeval_X] at h1
     exact mul_ne_zero (by rw [Ne, C_eq_zero]; exact hq) (X_ne_zero _) h1
-  haveI : CharZero G.Φ' := by
+  have : CharZero G.Φ' := by
     refine charZero_of_inj_zero fun m hm => ?_
     have h1 : (C (m : ℤ) : MRing ι') ∈ RingHom.ker (aeval G.x' : MRing ι' →ₐ[ℤ] G.Φ') := by
       rw [RingHom.mem_ker, ← algebraMap_eq, AlgHom.commutes]

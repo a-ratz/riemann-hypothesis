@@ -548,7 +548,7 @@ theorem lattice_norm_conj_invariant (v : HeightOneSpectrum (𝓞 F)) (σ : E →
     have hcsa : (a.map (sigR (Fv F v) σ))ᵀ = cs σ a := rfl
     rw [hcsa]
     ext z
-    simp only [Sx, Set.mem_preimage, Set.mem_setOf_eq, he, mulVecEquiv, AddEquiv.coe_mk, Equiv.coe_fn_mk]
+    simp only [Sx, Set.mem_preimage, Set.mem_ofPred_eq, he, mulVecEquiv, AddEquiv.coe_mk, Equiv.coe_fn_mk]
     constructor
     · rintro ⟨y, hy, y', hy', rfl⟩
       refine ⟨(cs σ a)⁻¹.mulVec y, hL1asi y hy, a.mulVec y', hL2a y' hy', ?_⟩
@@ -897,8 +897,8 @@ theorem nM_single_le {p q : ℕ} (i : Fin p) (j : Fin q) (w : Fv F v ⊗[F] E) :
     nM v (Matrix.single i j w) ≤ nA v w := by
   refine (nM_le_iff (nA_nonneg w)).2 fun i' j' => ?_
   by_cases h : i = i' ∧ j = j'
-  · rw [Matrix.single_apply, if_pos h]
-  · rw [Matrix.single_apply, if_neg h, nA_zero]; exact nA_nonneg w
+  · rw [Matrix.single_apply, ite_eq_left h]
+  · rw [Matrix.single_apply, ite_eq_right h, nA_zero]; exact nA_nonneg w
 
 
 variable (v) in
@@ -1003,7 +1003,7 @@ def conjE (hcm : IsCMExt F E σ) {n : ℕ} (a a' : Matrix (Fin n) (Fin n) (Fv F 
 
 theorem continuous_conj {n : ℕ} (a : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :
     Continuous fun b : HermR (Fv F v) σ n => conjM σ a b.1 :=
-  (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+  (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
 
 theorem continuous_conjE (hcm : IsCMExt F E σ) {n : ℕ} (a a' : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))
     (h1 : a * a' = 1) (h2 : a' * a = 1) : Continuous (conjE hcm a a' h1 h2) :=
@@ -1017,7 +1017,7 @@ theorem isCompact_ballH (n : ℕ) (r : ℝ) : IsCompact {b : HermR (Fv F v) σ n
   (isClosed_hermSet v σ n).isClosedEmbedding_subtypeVal.isCompact_preimage (isCompact_ballM r)
 
 theorem isOpen_ballH (n : ℕ) {r : ℝ} (hr : 0 < r) : IsOpen {b : HermR (Fv F v) σ n | nM v b.1 ≤ r} :=
-  IsOpen.preimage continuous_subtype_val
+  IsOpen.preimage continuous_subtypeVal
     (isOpen_ballM hr : IsOpen {x : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E) | nM v x ≤ r})
 
 theorem setIntegral_comp_eq {G : Type*} [MeasurableSpace G] (μ : Measure G) (e : G ≃ᵐ G)
@@ -1047,11 +1047,11 @@ theorem setIntegral_conj (hcm : IsCMExt F E σ) {n : ℕ} (νv : Measure (HermR 
     { toEquiv := e.toEquiv, continuous_toFun := hc, continuous_invFun := hc' }
   have hn : ∀ b : HermR (Fv F v) σ n, nM v (e b).1 = nM v b.1 := fun b => hpres b.1
   have hB : e ⁻¹' {b : HermR (Fv F v) σ n | nM v b.1 ≤ 1} = {b | nM v b.1 ≤ 1} := by
-    ext b; simp only [Set.mem_preimage, Set.mem_setOf_eq]; rw [hn]
+    ext b; simp only [Set.mem_preimage, Set.mem_ofPred_eq]; rw [hn]
   have hmp : MeasurePreserving e νv νv := measurePreserving_of_addEquiv νv e hc hc' _ (isCompact_ballH n 1)
     (by rw [(isOpen_ballH n one_pos).interior_eq]; exact ⟨0, (le_of_eq nM_zero).trans zero_le_one⟩) hB
   have hS : e ⁻¹' {b : HermR (Fv F v) σ n | P (nM v b.1)} = {b | P (nM v b.1)} := by
-    ext b; simp only [Set.mem_preimage, Set.mem_setOf_eq]; rw [hn]
+    ext b; simp only [Set.mem_preimage, Set.mem_ofPred_eq]; rw [hn]
   exact setIntegral_comp_eq νv eh.toMeasurableEquiv hmp _ hSm hS f
 
 instance measMat (n : ℕ) : MeasurableSpace (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
@@ -1082,7 +1082,7 @@ theorem continuous_chi {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F ψ) {n : ℕ}
   have htr : Continuous (Algebra.trace (Fv F v) (Fv F v ⊗[F] E)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (Fv F v) (Fv F v ⊗[F] E))
   refine (continuous_psiV hψ).comp (htr.comp ?_).neg
-  exact ((continuous_const.matrix_mul (continuous_subtype_val.comp continuous_snd)).matrix_mul continuous_fst).matrix_trace
+  exact ((continuous_const.matrix_mul (continuous_subtypeVal.comp continuous_snd)).matrix_mul continuous_fst).matrix_trace
 
 theorem trPair_conj (hcm : IsCMExt F E σ) {n : ℕ} (T b : HermR (Fv F v) σ n) (x : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :
     trPair (Fv F v) T.1 (conjM σ (1 + x) b.1) = trPair (Fv F v) T.1 b.1 +
@@ -1094,9 +1094,9 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (q : ℝ) (hq : 1 < q) : ∃ R₀ : ℝ, ∀ R : ℝ, R₀ ≤ R → ∀ z : ℂ,
       ∫ b in {b : HermR (Fv F v) σ n | R < nM v b.1 ∧ nM v b.1 ≤ q * R},
         whI (Fv F v) σ J (psiV F ψ v) μv Φv (nu2 lam L₁ L₂) T.1 z b ∂νv = 0 := by
-  haveI : νv.IsAddHaarMeasure := h.sdH.1
-  haveI : μv.IsAddHaarMeasure := h.sdW.1
-  haveI : lam.IsAddHaarMeasure := h.haar
+  have : νv.IsAddHaarMeasure := h.sdH.1
+  have : μv.IsAddHaarMeasure := h.sdW.1
+  have : lam.IsAddHaarMeasure := h.haar
   obtain ⟨r1, hr1, hpres⟩ := exists_normPres v σ n
   obtain ⟨r2, hr2, hinv⟩ := exists_inv (E := E) v n
   obtain ⟨r3, hr3, hJ⟩ := jtR_conj_inv v σ h.cm J (psiV F ψ v) μv Φv h.sb
@@ -1127,14 +1127,14 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
       (1 + x) * (1 + x' x) = 1 ∧ (1 + x' x) * (1 + x) = 1 := by
     intro x hx
     have hs := Classical.choose_spec (hinv x (hrle x hx).2.1)
-    simp only [x', dif_pos hx]
+    simp only [x', dite_eq_left hx]
     exact ⟨hs.1, hs.2.1⟩
   let φ : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E) → HermR (Fv F v) σ n → HermR (Fv F v) σ n := fun x b =>
     if hx : nM v x ≤ r then conjE h.cm (1 + x) (1 + x' x) (hx'1 x hx).1 (hx'1 x hx).2 b else b
   set S := {b : HermR (Fv F v) σ n | R < nM v b.1 ∧ nM v b.1 ≤ q * R} with hSdef
   have hSm : MeasurableSet S := by
     have hc : Measurable fun b : HermR (Fv F v) σ n => nM v b.1 :=
-      (show Continuous fun b : HermR (Fv F v) σ n => nM v b.1 from continuous_nM.comp continuous_subtype_val).measurable
+      (show Continuous fun b : HermR (Fv F v) σ n => nM v b.1 from continuous_nM.comp continuous_subtypeVal).measurable
     exact (measurableSet_lt measurable_const hc).inter (measurableSet_le hc measurable_const)
   let U := ballSub (v := v) (E := E) n r hrpos.le
   have hUm : MeasurableSet (U : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) :=
@@ -1143,7 +1143,7 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     ⟨Measure.addHaar, inferInstance⟩
   have hUo : IsOpen (U : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) := isOpen_ballM hrpos
   have hU0 : m U ≠ 0 := hUo.measure_ne_zero m ⟨0, (le_of_eq nM_zero).trans hrpos.le⟩
-  haveI := hm
+  have := hm
   have hUf : m U ≠ ⊤ := (show IsCompact (U : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) from
     isCompact_ballM r).measure_lt_top.ne
   refine avg_zero νv m (U : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) S
@@ -1153,7 +1153,7 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     intro x hx
     have hx0 : nM v x ≤ r := hx
     have e1 : ∀ b, φ x b = conjE h.cm (1 + x) (1 + x' x) (hx'1 x hx0).1 (hx'1 x hx0).2 b := fun b => by
-      simp only [φ, dif_pos hx0]
+      simp only [φ, dite_eq_left hx0]
     simp only [e1]
     exact setIntegral_conj h.cm νv x (x' x) (hx'1 x hx0).1 (hx'1 x hx0).2 (fun b => hpres x (hrle x hx0).1 b)
       (fun t => R < t ∧ t ≤ q * R) hSm _
@@ -1161,7 +1161,7 @@ theorem shellP_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     intro x hx b hb
     have hx0 : nM v x ≤ r := hx
     have e1 : φ x b = conjE h.cm (1 + x) (1 + x' x) (hx'1 x hx0).1 (hx'1 x hx0).2 b := by
-      simp only [φ, dif_pos hx0]
+      simp only [φ, dite_eq_left hx0]
     rw [e1]
     have hval : (conjE h.cm (1 + x) (1 + x' x) (hx'1 x hx0).1 (hx'1 x hx0).2 b).1 = conjM σ (1 + x) b.1 := rfl
     have hnu' : nu2 lam L₁ L₂ (conjM σ (1 + x) b.1) = nu2 lam L₁ L₂ b.1 :=

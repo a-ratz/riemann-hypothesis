@@ -166,7 +166,7 @@ lemma angular_period (hGd : ∀ x ∈ V, HasFDerivAt G (H x) x) (hGc : Continuou
       have e2 : circleMap 0 1 θ * Complex.I * Complex.I = - circleMap 0 1 θ := by
         rw [mul_assoc, Complex.I_mul_I]; ring
       rw [e1, e2, map_smul, map_neg]
-      simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+      simp only [smul_apply, smul_eq_mul]
       ring) (((hc2.const_mul s).sub hc1).intervalIntegrable 0 (2 * π))
   have hp : circleMap 0 s (2 * π) = circleMap 0 s 0 := by
     simpa using periodic_circleMap 0 s 0
@@ -225,7 +225,7 @@ lemma rot_id (B : ℂ →L[ℝ] ℂ →L[ℝ] ℝ) (θ : ℝ) :
     apply Complex.ext <;> simp [circleMap, Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im,
       Complex.cos_ofReal_re, Complex.sin_ofReal_re]
   rw [h2, h1]
-  simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [map_add (f := _), map_smul, add_apply, smul_apply,
     smul_eq_mul]
   linear_combination (B 1 1 + B Complex.I Complex.I) * Real.sin_sq_add_cos_sq θ
 
@@ -439,7 +439,7 @@ theorem lap_nonneg_of_sub_mean (hg : ∀ x ∈ V, HasFDerivAt g (G x) x)
         ‖H x - H 0‖ := by
       have := (H x - H 0).le_opNorm₂ (circleMap 0 1 θ * Complex.I) (circleMap 0 1 θ * Complex.I)
       rw [heI] at this; simpa [Real.norm_eq_abs] using this
-    simp only [ContinuousLinearMap.sub_apply] at b1 b2
+    simp only [sub_apply] at b1 b2
     have := abs_le.mp b1
     have := abs_le.mp b2
     linarith
@@ -594,7 +594,7 @@ theorem subMeanValuePolydisc_holds : SubMeanPolydiscStatement := by
     rw [HasFiniteIntegral]
     calc ∫⁻ x in K, ‖M - φU x‖ₑ = ∫⁻ x in K, Φ x := by
           refine setLIntegral_congr_fun hKm (fun x hx => ?_)
-          rw [Real.enorm_of_nonneg (sub_nonneg.2 ((hφU x hx).symm ▸ hM x hx))]
+          rw [eNorm_of_nonneg (sub_nonneg.2 ((hφU x hx).symm ▸ hM x hx))]
       _ ≤ _ := hbound
       _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hKfin
   have hφint : IntegrableOn φ K := by
@@ -667,7 +667,7 @@ lemma radialBump_hasCompactSupport (D : ℕ) : HasCompactSupport (g0 D) :=
     exact hw (ball_subset_closedBall (radialBump_support D h))
 
 lemma integral_radialBump_pos (D : ℕ) : 0 < ∫ w, g0 D w :=
-  (radialBump_contDiff D).continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 0) (radialBump_hasCompactSupport D)
+  (radialBump_contDiff D).continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 0) (radialBump_hasCompactSupport D)
     (radialBump_nonneg D) (by
       rw [g0, b0.one_of_mem_closedBall]
       · norm_num

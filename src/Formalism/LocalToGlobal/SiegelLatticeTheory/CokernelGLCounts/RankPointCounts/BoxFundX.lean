@@ -113,7 +113,7 @@ theorem box_fundX {ι P : Type} [Fintype P] [DecidableEq P] (h : P → ℕ) (BX 
   have hcond : ∀ γ : ι → P → ℂ, ((∀ p, (fun v => γ v p) - τ p γ ∈ A p) ∧
       lawX BX γ x ∈ {y : ι → P → ℂ | ∀ p, (fun v => y v p) ∈ F p}) ↔ Φ γ = γ := by
     intro γ
-    rw [Set.mem_setOf_eq, ← forall_and, forall_congr' (fun p => key p γ)]
+    rw [Set.mem_ofPred_eq, ← forall_and, forall_congr' (fun p => key p γ)]
     constructor
     · intro H
       funext v p

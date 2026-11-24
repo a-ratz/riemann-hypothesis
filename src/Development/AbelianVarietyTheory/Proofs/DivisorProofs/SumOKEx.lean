@@ -156,7 +156,7 @@ theorem isTensor_flipTensor {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} (hϖ : 
     (hK : J (i, j) ≤ KO k _) {γ : List Edge} (h1 : Edge.theta i j ∈ γ) (h2 : Edge.ex i j ∈ γ) {T : G.Args → ℂ}
     (hT : G.IsTensor ϖ e γ T) : G.IsTensor ϖ e (flipPath i j γ) (G.flipTensor .one ψ ϖ e i j J T) := by
   have hJ' := isOpen_map_invT hJ hK
-  haveI := isHaarMeasure_haarVol hJ'.1 hJ'.2
+  have := isHaarMeasure_haarVol hJ'.1 hJ'.2
   have hne : Edge.theta i j ≠ Edge.ex i j := by simp
   have hN : ∀ x, IsNatDatum ϖ e (squareFlip (haarVol ((J (i, j)).map invT)) (stdSplit (G.rank_square i j)) ψ (G.nu i j) ϖ e
       (Assignment.one.block _ _) (G.sliceB i j T x)) := fun x =>
@@ -275,12 +275,12 @@ theorem val_pow_anti {ϖ : kˣ} (hϖ : IsUnif ϖ) {a b : ℕ} (h : a ≤ b) :
     valuation k ((ϖ ^ b : kˣ) : k) ≤ valuation k ((ϖ ^ a : kˣ) : k) := by
   have h1 : valuation k (ϖ : k) ≤ 1 := hϖ ▸ uniformizer_lt_one.le
   rw [Units.val_pow_eq_pow_val, Units.val_pow_eq_pow_val, map_pow, map_pow]
-  exact pow_le_pow_of_le_one zero_le' h1 h
+  exact pow_le_pow_of_le_one zero_le h1 h
 
 theorem val_inv_pow_mono {ϖ : kˣ} (hϖ : IsUnif ϖ) {a b : ℕ} (h : a ≤ b) :
     valuation k (((ϖ ^ a)⁻¹ : kˣ) : k) ≤ valuation k (((ϖ ^ b)⁻¹ : kˣ) : k) := by
   rw [Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_inv₀, map_inv₀]
-  exact inv_anti₀ (zero_lt_iff.2 (by simp)) (val_pow_anti hϖ h)
+  exact inv_anti₀ (pos_iff_ne_zero.2 (by simp)) (val_pow_anti hϖ h)
 
 theorem IsSBArgs.mono {G : Grid k} {ϖ : kˣ} (hϖ : IsUnif ϖ) {n n' : ℕ} (h : n ≤ n') {F : ColArgs G → RowArgs G → ℂ}
     (hF : IsSBArgs G ϖ n F) : IsSBArgs G ϖ n' F :=
@@ -380,7 +380,7 @@ theorem sum_reps_eq (SA : ∀ j, A j → Prop) (SB : ∀ i, B i → Prop) (BA : 
   by_cases hex : ∃ q : (∀ j, R j) × (∀ i, R' i), (∀ j, SA j (x j - (q.1 j).1)) ∧ ∀ i, SB i (y i - (q.2 i).1)
   · obtain ⟨q₀, hx, hy⟩ := hex
     rw [Finset.sum_eq_single q₀]
-    · rw [Finset.prod_eq_one fun j _ => if_pos (hx j), Finset.prod_eq_one fun i _ => if_pos (hy i), mul_one, mul_one]
+    · rw [Finset.prod_eq_one fun j _ => ite_eq_left (hx j), Finset.prod_eq_one fun i _ => ite_eq_left (hy i), mul_one, mul_one]
       have h := hper (fun j => (q₀.1 j).1) (fun i => (q₀.2 i).1) (x - fun j => (q₀.1 j).1) (y - fun i => (q₀.2 i).1) hx hy
       rw [add_sub_cancel, add_sub_cancel] at h
       exact h.symm
@@ -390,11 +390,11 @@ theorem sum_reps_eq (SA : ∀ j, A j → Prop) (SB : ∀ i, B i → Prop) (BA : 
       have h1 : ∀ j, SA j (x j - (q.1 j).1) := fun j => by
         by_contra h0
         apply hz
-        rw [Finset.prod_eq_zero (Finset.mem_univ j) (if_neg h0)]; ring
+        rw [Finset.prod_eq_zero (Finset.mem_univ j) (ite_eq_right h0)]; ring
       have h2 : ∀ i, SB i (y i - (q.2 i).1) := fun i => by
         by_contra h0
         apply hz
-        rw [Finset.prod_eq_zero (Finset.mem_univ i) (if_neg h0)]; ring
+        rw [Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right h0)]; ring
       refine Prod.ext (funext fun j => Subtype.ext ?_) (funext fun i => Subtype.ext ?_)
       · have := hSA j _ _ (hx j) (h1 j)
         rw [sub_sub_sub_cancel_left] at this
@@ -417,10 +417,10 @@ theorem sum_reps_eq (SA : ∀ j, A j → Prop) (SB : ∀ i, B i → Prop) (BA : 
       refine ⟨q, fun j => ?_, fun i => ?_⟩
       · by_contra h0
         apply hz
-        rw [Finset.prod_eq_zero (Finset.mem_univ j) (if_neg h0)]; ring
+        rw [Finset.prod_eq_zero (Finset.mem_univ j) (ite_eq_right h0)]; ring
       · by_contra h0
         apply hz
-        rw [Finset.prod_eq_zero (Finset.mem_univ i) (if_neg h0)]; ring
+        rw [Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right h0)]; ring
 
 end Abstract
 
@@ -467,7 +467,7 @@ theorem IsSmall.sub {x y : Mx D b a} (h : IsSmall P β' β n x) (h' : IsSmall P 
   rw [sub_eq_add_neg]; exact h.add h'.neg
 
 theorem cosLoc_self {e : AE D} {r : Mx D b a} (hr : IsHalf e r) : cosLoc P e β' β n r r = 1 := by
-  rw [cosLoc, if_pos ⟨hr, by rw [sub_self]; exact isSmall_zero⟩]
+  rw [cosLoc, ite_eq_left ⟨hr, by rw [sub_self]; exact isSmall_zero⟩]
 
 theorem cosLoc_of_ne_zero {e : AE D} {r x : Mx D b a} (h : cosLoc P e β' β n r x ≠ 0) :
     IsHalf e x ∧ IsSmall P β' β n (x - r) := by
@@ -530,7 +530,7 @@ theorem isFullLattice_grid_succ (G : GridData L sc) {i : ℕ} (hi : i + 1 ≤ D.
 theorem isFullLattice_X {μ₀ : T} (hL : L.Is μ₀) : Submodule.IsFullLattice D.host.E L.ΛX := by
   obtain ⟨c, hc⟩ := hL.βX
   obtain ⟨hfg, hspan⟩ := GlobalTheory.ParahoricLift.base_lattice hc
-  letI : Submodule.IsLattice D.host.E L.ΛX := Submodule.IsLattice.of_fg D.host.E hfg
+  let : Submodule.IsLattice D.host.E L.ΛX := Submodule.IsLattice.of_fg D.host.E hfg
   exact ⟨hspan⟩
 
 theorem isFullLattice_grid_zero {μ₀ : T} (hL : L.Is μ₀) (G : GridData L sc) :
@@ -585,7 +585,7 @@ theorem GridChoice.exists_isCosExpansion {μ₀ : T} (hL : L.Is μ₀) (S : Grid
   have hSB : ∀ w : locPl G t, ∃ n, IsSBArgs (locGrid G t w.1) (unifAt w.1) n (S.term t Φ β w).datum := fun w => by
     have hg := (Good.locGrid_isGood hL G W t hde hc).1 w.1 w.2
     have h00 := hg.square 0 (by change 0 < D.R.m; omega) 0 (by change 0 < D.R.m; omega)
-    haveI := (isUnitVol_unitVol w.1).1
+    have := (isUnitVol_unitVol w.1).1
     exact exists_isSBArgs_flat (locGrid G t w.1) one_le_sLen (psiAt W w.1) (unitVol w.1) (unifAt w.1) (depthAt G w.1)
       (Tflip W S.B t Φ w.1) (keepAt G w.1) ((repsAt G t w.1).elt (β w)) hm h00.unif h00.cond
       (isTensor_Tflip hL W S.B t Φ hde hc w.2)
@@ -687,13 +687,13 @@ theorem GridChoice.sumOK_flat_fin_ex {μ₀ : T} (hL : L.Is μ₀) (S : GridChoi
   have hcond : ∀ w ∈ locPl G t, HasConductor (psiAt W w) 1 := fun w hw =>
     (((Good.locGrid_isGood hL G W t hde hc).1 w hw).square 0 hm 0 hm).cond
   refine ⟨fun w hw => ?_, ?_, fun β => S.exists_isCosExpansion hL t Φ hde hc β⟩
-  · haveI := (isUnitVol_unitVol w).1
+  · have := (isUnitVol_unitVol w).1
     exact flatIntegrable one_le_sLen (psiAt W w) (unitVol w) (isUnif_unifAt w) (hcond w hw).continuous
       (isTensor_Tflip hL W S.B t Φ hde hc hw)
   · refine Set.Finite.subset (Set.Finite.pi' (κ := fun w : locPl G t => Cosets (G := locGrid G t w.1) one_le_sLen
       (givenLevel G t w.1)) (t := fun w : locPl G t => unfSupport (psiAt W w.1) (unitVol w.1) (keepAt G w.1)
       (repsAt G t w.1) (Tflip W S.B t Φ w.1)) fun w => ?_) fun β hβ => hβ
-    haveI := (isUnitVol_unitVol w.1).1
+    have := (isUnitVol_unitVol w.1).1
     have hT := isTensor_Tflip hL W S.B t Φ hde hc w.2
     have hE : Even (locGrid G t w.1).m := D.R.m_even
     have hJ : ∀ j, 0 < j → j < (locGrid G t w.1).m →

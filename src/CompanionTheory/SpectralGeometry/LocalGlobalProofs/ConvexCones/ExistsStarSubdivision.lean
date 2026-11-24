@@ -172,8 +172,8 @@ theorem eval_twist_of_isTwG {φ : InvFun O} (hφ : IsTwG w0 φ) (τ : O ≃+* O)
     ext i
     simp
   have hs : Function.Surjective g := hr.comp fun a => ⟨fun i => τ.symm (a i), funext fun i => τ.apply_symm_apply _⟩
-  letI : Module O X := Module.compHom _ τ.toRingHom
-  letI := hf
+  let : Module O X := Module.compHom _ τ.toRingHom
+  let := hf
   exact (φ.eval_eq (r := ⟨g.toAddHom, hg⟩) hs _).symm
 
 
@@ -198,11 +198,11 @@ theorem depthSet_twist_subset (hb : CMOrd O bar) {ψ w : InvFun O} (hψ : IsTwG 
     simp only [hτdef, RingEquiv.apply_symm_apply] at this
     exact this
   have hf' : letI := Module.compHom X₁ τ.toRingHom; Module.Finite O X₁ := by
-    letI := Module.compHom X₁ τ.toRingHom
+    let := Module.compHom X₁ τ.toRingHom
     exact Module.Finite.of_surjective (⟨g.toAddHom, hg⟩ : (Fin n → O) →ₗ[O] X₁) hs
   have hd' := isStarDepth_transfer bar i2 (Module.compHom X₁ τ.toRingHom) i3 hf' (mem_balForms_twist hb τ)
     (eval_twist_of_isTwG hψ τ hτ hf') (eval_twist_of_isTwG hw τ hτ hf') hd
-  letI := Module.compHom X₁ τ.toRingHom
+  let := Module.compHom X₁ τ.toRingHom
   exact ⟨X₁, i1, _, hf', ⟨g.toAddHom, hg⟩, B₁, hs, hrad, hgB, hd'⟩
 
 end Twist
@@ -484,7 +484,7 @@ theorem exists_bounded_gens : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [
   choose b hb using key
   refine ⟨Finset.univ.sup b, fun X _ _ _ _ hX β hβ hp => ?_⟩
   obtain ⟨k, ⟨f⟩⟩ := hiso X hX
-  haveI := (hR k).1
+  have := (hR k).1
   obtain ⟨m, u, h1, h2, h3, h4, h5, h6, h7⟩ := hb k (pull f.symm.toLinearMap β) (pull_mem _ hβ) fun y => hp _
   have hk : (b k : ℝ) ≤ (Finset.univ.sup b : ℕ) := by exact_mod_cast Finset.le_sup (f := b) (Finset.mem_univ k)
   exact transport f.symm ⟨m, u, h1, h2, h3, h4, fun i => (h5 i).trans hk, h6, h7⟩
@@ -512,8 +512,8 @@ theorem starDepth_den : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZe
   obtain ⟨n, R, hR, hcls⟩ := hb.classes q
   have key : ∀ k : Fin n, ∃ D : ℕ, 0 < D ∧ ∀ x ∈ {x : ℝ | ∃ β ∈ balForms bar (R k), (∀ y, 0 ≤ β y y) ∧
       haveI := (hR k).1; x = (starDepth bar ψ w).evalZ β}, ∃ z : ℤ, (D : ℝ) * x = z := fun k => by
-    haveI := (hR k).1
-    haveI := (hR k).2.1
+    have := (hR k).1
+    have := (hR k).2.1
     obtain ⟨-, h2, h3⟩ := hw (R k) (hR k).2.2
     obtain ⟨D, hD, hA⟩ := GlobalTheory.PolFan.StarDen.module_den (hψ (R k) (hR k).2.2) h2 h3
     refine ⟨D, hD, ?_⟩
@@ -522,7 +522,7 @@ theorem starDepth_den : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZe
   obtain ⟨D₀, hD₀, hall⟩ := GlobalTheory.PolFan.StarDen.common_den _ key
   refine ⟨D₀, hD₀, fun X _ _ _ _ hX β hβ hp => ?_⟩
   obtain ⟨k, ⟨f⟩⟩ := hcls X hX
-  haveI := (hR k).1
+  have := (hR k).1
   have hval : (starDepth bar ψ w).evalZ (pull f.symm.toLinearMap β) = (starDepth bar ψ w).evalZ β :=
     evalZ_pull _ f.symm.surjective β
   rw [← hval]

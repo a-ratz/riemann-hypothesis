@@ -93,7 +93,7 @@ theorem congH_cancel {u v : Matrix (Fin n) (Fin n) D.host.E} (h : (rat u * rat v
     _ = b.1 := by rw [h, h', one_mul, mul_one]
 
 theorem continuous_congH (u : Matrix (Fin n) (Fin n) D.host.E) : Continuous (congH (D := D) u) :=
-  Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+  Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
 
 theorem congH_rat (u : Matrix (Fin n) (Fin n) D.host.E) {b : hermA D n} (hb : b ∈ ratHerm D n) : congH u b ∈ ratHerm D n := by
   obtain ⟨η, hη⟩ := hb
@@ -179,13 +179,13 @@ theorem fc_levi : ∀ {D : D7} {n : ℕ} {ψ : AddChar (AF D.host.F) ℂ}, IsCha
   intro D n ψ hψ F _ hinv nb lam 𝓖 hC a β
   obtain ⟨hnb, hlam, hFD, hvol⟩ := hC
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D n n
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D n) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace (hermA D n) := isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : DiscreteTopology (ratHerm D n) := discrete_ratHerm
-  haveI : SecondCountableTopology (ratHerm D n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : Countable (ratHerm D n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : BorelSpace (hermA D n) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (hermA D n) := isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : DiscreteTopology (ratHerm D n) := discrete_ratHerm
+  have : SecondCountableTopology (ratHerm D n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (ratHerm D n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨q, hqF, hq⟩ := exists_levi_rat (D := D) a
   refine ⟨q, fun g => ?_⟩
   let f : hermA D n → ℂ := fun c =>

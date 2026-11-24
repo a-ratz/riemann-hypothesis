@@ -131,7 +131,7 @@ lemma dhpr_zetaMul_eq_sum {M : ℕ} (χ : DirichletCharacter ℂ M) (n : ℕ) :
   intro d hd
   have hd0 : d ≠ 0 := Nat.ne_of_gt (Nat.pos_of_mem_divisors hd)
   first
-    | exact if_neg hd0
+    | exact ite_eq_right hd0
     | simp only [LSeries.toArithmeticFunction, ArithmeticFunction.coe_mk, if_neg hd0]
 
 lemma dhpr_zetaMul_prime_pow {M : ℕ} (χ : DirichletCharacter ℂ M) {p : ℕ} (hp : p.Prime)

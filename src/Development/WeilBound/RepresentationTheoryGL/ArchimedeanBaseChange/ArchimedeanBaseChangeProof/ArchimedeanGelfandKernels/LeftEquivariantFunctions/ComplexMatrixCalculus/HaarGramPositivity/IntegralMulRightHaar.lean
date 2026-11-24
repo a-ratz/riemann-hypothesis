@@ -69,15 +69,15 @@ theorem map_mul_right_haar (g : UK n) :
     (Measure.haar : Measure (UK n)).map (· * g) = Measure.haar := by
   set μ : Measure (UK n) := Measure.haar
   set ν : Measure (UK n) := μ.map (· * g)
-  haveI : ν.IsHaarMeasure := Measure.isHaarMeasure_map_mul_right μ g
-  haveI : ν.Regular := inferInstance
+  have : ν.IsHaarMeasure := Measure.isHaarMeasure_map_mul_right μ g
+  have : ν.Regular := inferInstance
   have hsm := Measure.isMulLeftInvariant_eq_smul_of_regular ν μ
   have huniv : ν Set.univ = μ Set.univ := by
     simp only [ν]
     rw [Measure.map_apply (measurable_mul_const g) MeasurableSet.univ, Set.preimage_univ]
   have hc : ν.haarScalarFactor μ = 1 := by
     have h1 := congrArg (fun m : Measure (UK n) => m Set.univ) hsm
-    simp only [Measure.smul_apply, smul_eq_mul] at h1
+    simp only [smul_apply, smul_eq_mul] at h1
     rw [huniv] at h1
     have hne : μ Set.univ ≠ 0 := IsOpen.measure_ne_zero μ isOpen_univ Set.univ_nonempty
     have hfin : μ Set.univ ≠ ⊤ := measure_ne_top μ _

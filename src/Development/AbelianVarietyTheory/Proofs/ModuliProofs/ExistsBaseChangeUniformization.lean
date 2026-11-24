@@ -92,9 +92,9 @@ theorem exists_unif_pull_of_deg (hP : PolBaseChangeSt) (hG : GlobalFnsSt) (hS : 
     U.toUnifPre eA heA hwA L' wL he hwL hrig
   subst hL
   obtain rfl := eq_of_heq hw
-  haveI := hsa.geomConnected
-  haveI := hsa.quasiCompact
-  haveI : GeometricallyConnected G'.hom := by
+  have := hsa.geomConnected
+  have := hsa.quasiCompact
+  have : GeometricallyConnected G'.hom := by
     rw [← Over.w bc.hom]
     have : IsIso bc.hom.left := ((Over.forget _).mapIso bc).isIso_hom
     have : GeometricallyConnected ((Over.pullback (specOf φ)).obj G).hom :=
@@ -102,8 +102,8 @@ theorem exists_unif_pull_of_deg (hP : PolBaseChangeSt) (hG : GlobalFnsSt) (hS : 
     exact MorphismProperty.of_isPullback (P := @GeometricallyConnected)
       (IsPullback.of_horiz_isIso (fst := bc.hom.left) (f := ((Over.pullback (specOf φ)).obj G).hom) (g := 𝟙 _)
         ⟨(Category.comp_id _).symm⟩) this
-  haveI := hR.1
-  haveI := hR'.1
+  have := hR.1
+  have := hR'.1
   have hexp : ∀ k : ℕ, 1 ≤ k → U'.ExpBij k := by
     intro k hk
     obtain ⟨-, hd⟩ := FamDim.finrank_fam hG hP hT R D.toPre D.tau_bimult (psiOnExists R I hR D) (FractionRing R) k hk

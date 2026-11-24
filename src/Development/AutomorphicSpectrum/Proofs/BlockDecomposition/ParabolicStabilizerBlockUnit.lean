@@ -106,7 +106,7 @@ theorem lieAlg_stable : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)}, Gl
       rw [smul_neg, Matrix.exp_neg]
       exact GlobalTheory.CompanionTheory.LieStable.conj_mem hG h𝔤 (hexp X hX s) hY
     have hd := hasDerivAt_iff_tendsto_slope.1 (GlobalTheory.CompanionTheory.LieStable.hasDerivAt_conj_curve X Y)
-    refine (Submodule.closed_of_finiteDimensional 𝔤).mem_of_tendsto hd
+    refine (Submodule.isClosed_of_finiteDimensional 𝔤).mem_of_tendsto hd
       (Filter.Eventually.of_forall fun s => ?_)
     rw [slope_def_module]
     exact 𝔤.smul_mem _ (𝔤.sub_mem (hmem s) (hmem 0))

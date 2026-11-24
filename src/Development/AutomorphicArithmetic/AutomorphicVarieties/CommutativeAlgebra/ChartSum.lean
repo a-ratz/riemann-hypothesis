@@ -95,7 +95,7 @@ private theorem one_mem_wtPart_zero {ι A G : Type} [CommRing A] [AddCommGroup G
     (1 : MvPowerSeries ι A) ∈ wtPart A w' 0 := by
   classical
   intro n hn
-  rw [coeff_one, if_neg]
+  rw [coeff_one, ite_eq_right]
   rintro rfl
   exact hn (map_zero _)
 
@@ -168,7 +168,7 @@ private theorem cs_coeff_ne {T : Type} {τ : T → Type} [∀ v, Finite (τ v)] 
   rintro ⟨y, hy⟩
   have h1 := congrArg (fun g => g ⟨v', i⟩) hy
   simp only [Finsupp.single_eq_same] at h1
-  rw [Finsupp.mapDomain_notin_range] at h1
+  rw [Finsupp.mapDomain_of_notMem_range] at h1
   · exact zero_ne_one h1
   · rintro ⟨j, hj⟩
     exact h (congrArg Sigma.fst hj).symm
@@ -236,8 +236,8 @@ theorem UpperTheory.V.Alg.chart_sum :
         ∀ v s, ψ (W.z (e ⟨v, s⟩)) = MvPowerSeries.rename (Sigma.mk v) (φ v ((WB v).z s)) := by
   intro O X _ _ _ T _ B _ _ WB hB τ _ wt φ hφ R _ _ W e he hker
   classical
-  haveI : Fintype W.σ := W.fin
-  haveI : ∀ v, Fintype (WB v).σ := fun v => (WB v).fin
+  have : Fintype W.σ := W.fin
+  have : ∀ v, Fintype (WB v).σ := fun v => (WB v).fin
   have hO : W.HasOrigin := by
     intro f hf
     have hf' : f ∈ RingHom.ker W.π := RingHom.mem_ker.mpr hf

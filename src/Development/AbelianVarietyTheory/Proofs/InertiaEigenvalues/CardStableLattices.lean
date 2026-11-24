@@ -91,7 +91,7 @@ theorem val_algebraMap (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
     exact (IsLocalRing.mem_maximalIdeal _).1 this u.isUnit
   rw [IsDiscreteValuationRing.addVal_def' u hϖ n]
   simp only [val, IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap, map_mul, map_pow, h1, h2,
-    one_mul, ← WithZero.exp_nsmul, WithZero.log_exp, ENat.toNat_coe]
+    one_mul, ← WithZero.exp_nsmul, WithZero.log_exp, ENat.toNat_natCast]
   simp
 
 end GlobalTheory.LatIndexDet
@@ -158,9 +158,9 @@ namespace GlobalTheory.LatIndexDet
 
 theorem card_quot_eq_pow_val : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Finite (IsLocalRing.ResidueField O)] (E : Type) [Field E] [Algebra O E] [IsFractionRing O E] (V : Type) [AddCommGroup V] [Module E V] [Module O V] [IsScalarTower O E V] [FiniteDimensional E V] (N : Submodule O V), N.FG → Submodule.span E (N : Set V) = ⊤ → ∀ T : V →ₗ[E] V, LinearMap.det T ≠ 0 → (∀ x ∈ N, T x ∈ N) → (Nat.card (↥N ⧸ (N.map (T.restrictScalars O)).comap N.subtype) : ℚ) = (Nat.card (IsLocalRing.ResidueField O) : ℚ) ^ val O (LinearMap.det T) := by
   intro O _ _ _ _ E _ _ _ V _ _ _ _ _ N hfg hspan T hdet hT
-  haveI := isTorsionFree_lat O E N
-  haveI : Module.Finite O N := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free O N := Module.free_of_finite_type_torsion_free'
+  have := isTorsionFree_lat O E N
+  have : Module.Finite O N := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free O N := Module.free_of_finite_type_torsion_free'
   let T' : N →ₗ[O] N := (T.restrictScalars O).restrict hT
   have hdetT : algebraMap O E (LinearMap.det T') = LinearMap.det T := algebraMap_det_restrict O E N hspan T hT
   have hdet' : LinearMap.det T' ≠ 0 := fun h => hdet (by rw [← hdetT, h, map_zero])
@@ -203,8 +203,8 @@ theorem card_commMaps_eq_card_homQuot : ∀ (O : Type) [CommRing O] [IsDomain O]
   have hF : ∀ ψ (x : M₂), F ψ x = Submodule.Quotient.mk (ψ (x : A₂)) := fun _ _ => rfl
   have hsurj : Function.Surjective F := by
     intro φ
-    haveI : Module.Finite O M₂ := Module.Finite.iff_fg.2 hM₂.1
-    haveI : Module.IsTorsionFree O A₂ := Module.IsTorsionFree.of_smul_eq_zero fun r m h => by
+    have : Module.Finite O M₂ := Module.Finite.iff_fg.2 hM₂.1
+    have : Module.IsTorsionFree O A₂ := Module.IsTorsionFree.of_smul_eq_zero fun r m h => by
       by_cases hr : r = 0
       · exact Or.inl hr
       right
@@ -213,7 +213,7 @@ theorem card_commMaps_eq_card_homQuot : ∀ (O : Type) [CommRing O] [IsDomain O]
         intro h0
         exact hr ((IsFractionRing.injective O E) (by rw [h0, map_zero]))
       exact (smul_eq_zero.1 h).resolve_left hr'
-    haveI : Module.Free O M₂ := Module.free_of_finite_type_torsion_free'
+    have : Module.Free O M₂ := Module.free_of_finite_type_torsion_free'
     let b := Module.Free.chooseBasis O M₂
     let bs : Module.Free.ChooseBasisIndex O M₂ → A₂ := fun i => (b i : A₂)
     have hli : LinearIndependent O bs := b.linearIndependent.map' M₂.subtype (Submodule.ker_subtype M₂)
@@ -570,7 +570,7 @@ theorem homLat_fg_and_span_eq_top (O : Type) [CommRing O] [IsDomain O] [IsDiscre
     exact fun x hx => Submodule.span_le_restrictScalars O E _ hx
   have memH : ∀ ψ ∈ homLat E M₁ M₂, ∀ x ∈ M₂, ψ x ∈ M₁ := fun ψ hψ => hψ
   refine ⟨?_, ?_⟩
-  · haveI : Module.Finite O M₁ := Module.Finite.iff_fg.mpr h₁fg
+  · have : Module.Finite O M₁ := Module.Finite.iff_fg.mpr h₁fg
     let f : homLat E M₁ M₂ →ₗ[O] (s → M₁) :=
       { toFun := fun ψ x => ⟨ψ.1 x, memH ψ.1 ψ.2 x (hs ▸ Submodule.subset_span x.2)⟩
         map_add' := fun _ _ => rfl
@@ -581,7 +581,7 @@ theorem homLat_fg_and_span_eq_top (O : Type) [CommRing O] [IsDomain O] [IsDiscre
       apply LinearMap.ext_on hsE
       intro x hx
       exact congrArg Subtype.val (congrFun h ⟨x, hx⟩)
-    haveI := Module.Finite.of_injective f hf
+    have := Module.Finite.of_injective f hf
     exact Module.Finite.iff_fg.mp this
   · rw [eq_top_iff]
     intro ψ _

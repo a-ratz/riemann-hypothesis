@@ -66,13 +66,13 @@ open Formalism.IndefR.Lev GlobalTheory.Mem.VolExists
 
 theorem exists_probHaar (P Q : ℕ) (h : P = 0 ∨ Q = 0) : ∃ ν : Measure (UpqT P Q), ν.IsHaarMeasure ∧
     ∀ m : Measure (UpqT P Q), (m.IsHaarMeasure ∧ IsProbabilityMeasure m) ↔ m = ν := by
-  haveI : CompactSpace (UpqT P Q) := by
+  have : CompactSpace (UpqT P Q) := by
     rcases h with rfl | rfl
     exacts [(GlobalTheory.compactSpace_UpqT_definite Q).2, (GlobalTheory.compactSpace_UpqT_definite P).1]
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
   let ν : Measure (UpqT P Q) := Measure.haarMeasure ⊤
-  haveI hν : ν.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure ⊤
-  haveI hp : IsProbabilityMeasure ν := ⟨Measure.haarMeasure_self (K₀ := ⊤)⟩
+  have hν : ν.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure ⊤
+  have hp : IsProbabilityMeasure ν := ⟨Measure.haarMeasure_self (K₀ := ⊤)⟩
   refine ⟨ν, hν, fun m => ⟨fun ⟨h1, h2⟩ => ?_, fun e => e ▸ ⟨hν, hp⟩⟩⟩
   exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure m ν
 

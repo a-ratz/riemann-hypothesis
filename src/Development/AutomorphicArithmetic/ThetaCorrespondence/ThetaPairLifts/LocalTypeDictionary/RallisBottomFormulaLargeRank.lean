@@ -280,7 +280,7 @@ open GlobalTheory.BotClassDict GlobalTheory.DefiniteClassAvg GlobalTheory.BotFor
 
 theorem isFrame_one {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ) :
     Formalism.L2.DIV.IsFrame (1 : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (Formalism.L2.Col.stdLat E n) := by
-  letI : StarRing E := starRingOfComm
+  let : StarRing E := starRingOfComm
   intro z
   rw [inv_one, Units.val_one, Matrix.one_mulVec]
   exact Formalism.L2.Col.mem_latS_std z
@@ -339,8 +339,8 @@ theorem integral_eq_vol_mul_classSum : ∀ {D : D7} (A : HSp D), A.gram = 1 → 
   refine ⟨((m J).toReal : ℂ), Complex.ofReal_ne_zero.2 (ENNReal.toReal_pos hJ0 hJtop).ne', ?_⟩
   intro n hn pt hpt Φ hl hinf hlev
   subst hn
-  haveI : Finite (GlobalTheory.NormSum.Cls D A.rank (GlobalTheory.NormSum.intG D A.rank)) := (GlobalTheory.NormSum.cls_finite_card_le D A.rank).1
-  haveI := Fintype.ofFinite (GlobalTheory.NormSum.Cls D A.rank (GlobalTheory.NormSum.intG D A.rank))
+  have : Finite (GlobalTheory.NormSum.Cls D A.rank (GlobalTheory.NormSum.intG D A.rank)) := (GlobalTheory.NormSum.cls_finite_card_le D A.rank).1
+  have := Fintype.ofFinite (GlobalTheory.NormSum.Cls D A.rank (GlobalTheory.NormSum.intG D A.rank))
   let z : GlobalTheory.NormSum.Cls D A.rank (GlobalTheory.NormSum.intG D A.rank) → Formalism.L2.Theta.GA D A := fun x => pt x.out
   obtain ⟨hu, hcard⟩ := transport (finStd A hA) (GQ A) J (GlobalTheory.NormSum.ratG D A.rank) (GlobalTheory.NormSum.intG D A.rank)
     hJ (fun γ hγ => finStd_mem_ratG A hA hγ) (fun δ hδ => exists_rat_lift A hA hδ)
@@ -349,7 +349,7 @@ theorem integral_eq_vol_mul_classSum : ∀ {D : D7} (A : HSp D), A.gram = 1 → 
     have him : {γ : Formalism.L2.Theta.GA D A | γ ∈ GQ A ∧ (z l)⁻¹ * γ * z l ∈ J} =
         Subtype.val '' {γ : GQ A | (z l)⁻¹ * (γ : Formalism.L2.Theta.GA D A) * z l ∈ J} := by
       ext γ
-      simp only [Set.mem_setOf_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
+      simp only [Set.mem_ofPred_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
       exact ⟨fun h => ⟨h.1, h.2⟩, fun ⟨h, h'⟩ => ⟨h, h'⟩⟩
     rw [him]
     exact (GlobalTheory.InnerClassSum.finite_stab_of_measure m (GQ A) J hfd hJ0 hJtop (z l)).image _
@@ -476,12 +476,12 @@ theorem stdFst_actO (ν : (Formalism.L2.Theta.AE D)ˣ →* Circle) {e : Formalis
   unfold stdFst
   rw [hact]
   by_cases hc : IsHalf e y ∧ IsIntM (frMapO S T βS βT y) ∧ ∀ i j, S.rank ≤ i.1 → InId I (frMapO S T βS βT y i j)
-  · rw [if_pos hc, if_pos ⟨(GlobalTheory.SchrMove.isHalf_actO_iff g 1 y).2 hc.1,
+  · rw [ite_eq_left hc, ite_eq_left ⟨(GlobalTheory.SchrMove.isHalf_actO_iff g 1 y).2 hc.1,
       Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isIntM_mul hc.2.1 (isIntM_frG hg'),
       fun i j hi => inId_mul_right (isIntM_frG hg') (fun l => hc.2.2 i l hi) j⟩, topL_mul_sq,
       unitChar_congr ν e (Matrix.det_mul_comm _ _),
       unitChar_mul ν hee hK (isUnitDet_frG he hg') (isUnitDet_frG he hg), detIdl_inv hee, map_inv, inv_inv]
-  · rw [if_neg hc, if_neg, mul_zero]
+  · rw [ite_eq_right hc, ite_eq_right, mul_zero]
     rintro ⟨h1, h2, h3⟩
     refine hc ⟨(GlobalTheory.SchrMove.isHalf_actO_iff g 1 y).1 h1, ?_, fun i j hi => ?_⟩
     · rw [hback]; exact Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isIntM_mul h2 (isIntM_frG hg)

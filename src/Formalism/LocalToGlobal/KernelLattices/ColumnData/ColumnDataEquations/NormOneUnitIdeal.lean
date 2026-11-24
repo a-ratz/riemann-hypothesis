@@ -105,7 +105,7 @@ private theorem smulLat_mem_lemma {N : ℕ} (L : Submodule (𝓞 D.host.E) (Fin 
 
 theorem detSmul : DetSmul D := by
   intro N L₀ L γ _ hL₀ hL
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hγ : star (γ : Matrix (Fin N) (Fin N) D.host.E) * γ = 1 := γ.2.1
   have hγ' : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := γ.2.2
   rw [detId_eq_vol D hL₀, detId_eq_vol D hL₀, ← mul_assoc]
@@ -114,7 +114,7 @@ theorem detSmul : DetSmul D := by
   rw [Submodule.span_mul_span]
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_mul, Set.mem_singleton_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_mul, Set.mem_singleton_iff]
   constructor
   · rintro ⟨U', hU', rfl⟩
     refine ⟨_, rfl, (star (γ : Matrix (Fin N) (Fin N) D.host.E) * U').det, ⟨star (γ : Matrix (Fin N) (Fin N) D.host.E) * U', fun j => ?_, rfl⟩, ?_⟩
@@ -130,13 +130,13 @@ theorem detSmul : DetSmul D := by
 theorem stdH_unitary {N : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E)
     (hu' : (letI := D.host.cmStar; star γ * γ) = 1) (a b : Fin N → D.host.E) :
     (letI := D.host.cmStar; stdH D.host.E N (γ *ᵥ a) (γ *ᵥ b)) = (letI := D.host.cmStar; stdH D.host.E N a b) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   show dotProduct (star (γ *ᵥ a)) (γ *ᵥ b) = dotProduct (star a) b
   rw [star_mulVec, dotProduct_mulVec, vecMul_vecMul, ← star_eq_conjTranspose, hu', vecMul_one]
 
 theorem smulSD : SmulSD D := by
   intro N L γ hL
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hγ : star (γ : Matrix (Fin N) (Fin N) D.host.E) * γ = 1 := γ.2.1
   have hγ' : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 := γ.2.2
   have hin : ∀ v ∈ L, (γ : Matrix (Fin N) (Fin N) D.host.E) *ᵥ v ∈ SDLat.smulLat (γ : Matrix (Fin N) (Fin N) D.host.E) L := fun v hv => by

@@ -107,7 +107,7 @@ theorem lamConj_eq_closure_pair : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (�
     intro h0
     apply hd
     have := congrArg (fun y : M => (y : ℂ)) h0
-    simp only [TaylorLogMetric.liftM, dif_pos h2, dif_pos h3] at this
+    simp only [TaylorLogMetric.liftM, dite_eq_left h2, dite_eq_left h3] at this
     exact this
   obtain ⟨L', ha, hb⟩ := hex _ _ hne
   obtain ⟨e2, e3, -, -, -, hun, -⟩ :=
@@ -150,7 +150,7 @@ theorem iop_eq_sum (D : D7) (T : Tor D) {N N' : ℕ} (A₁ A₂ : AddSubgroup (V
     Iop D T A₁ A₂ F =
       (fun z => ((Real.sqrt (n : ℝ) : ℝ) : ℂ)⁻¹ * ∑ i, aU D T (x i) F z) := by
   let e := Equiv.ofBijective _ hx
-  letI : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := Fintype.ofEquiv _ e
+  let : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := Fintype.ofEquiv _ e
   have hn : (A₁.addSubgroupOf A₂).index = n := by
     rw [AddSubgroup.index, ← Nat.card_congr e]; simp
   funext z
@@ -165,7 +165,7 @@ theorem iop_eq_sum (D : D7) (T : Tor D) {N N' : ℕ} (A₁ A₂ : AddSubgroup (V
 
 theorem iop_pair : ∀ (D : D7) (T T' : Tor D) (N N' : ℕ) (A₁ A₂ A₁' A₂' : AddSubgroup (VC D N N')) (F F' : VC D N N' → ℂ) (R : VC D N N' → VC D N N' → Prop), (A₁.addSubgroupOf A₂).FiniteIndex → RepInd D T A₁ A₂ F → RepInd D T' A₁' A₂' F' → (∀ x ∈ A₂, ∃ x' ∈ A₂', R x x') → (∀ x' ∈ A₂', ∃ x ∈ A₂, R x x') → (∀ x x' y y', R x x' → R y y' → (x - y ∈ A₁ ↔ x' - y' ∈ A₁')) → ∃ (n : ℕ) (x x' : Fin n → VC D N N'), (∀ i, x i ∈ A₂ ∧ x' i ∈ A₂' ∧ R (x i) (x' i)) ∧ Iop D T A₁ A₂ F = (fun z => ((Real.sqrt (n : ℝ) : ℝ) : ℂ)⁻¹ * ∑ i, aU D T (x i) F z) ∧ Iop D T' A₁' A₂' F' = (fun z => ((Real.sqrt (n : ℝ) : ℝ) : ℂ)⁻¹ * ∑ i, aU D T' (x' i) F' z) := by
   intro D T T' N N' A₁ A₂ A₁' A₂' F F' R hfin hF hF' h1 h2 h3
-  haveI : Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := AddSubgroup.finite_quotient_of_finiteIndex
+  have : Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := AddSubgroup.finite_quotient_of_finiteIndex
   obtain ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin (A₂ ⧸ A₁.addSubgroupOf A₂)
   let x : Fin n → A₂ := fun i => Quotient.out (e.symm i)
   have hxe : ∀ i, (QuotientAddGroup.mk (x i) : A₂ ⧸ A₁.addSubgroupOf A₂) = e.symm i :=
@@ -585,8 +585,8 @@ theorem nsmul_mem_LaS {T : Tor D} (hT : Good D T)
 
 theorem finiteIndex_of {V : Type*} [AddCommGroup V] {A₁ A₂ : AddSubgroup V} (hf : A₂.FG) {m : ℕ}
     (hm : 0 < m) (h : ∀ x ∈ A₂, m • x ∈ A₁) : (A₁.addSubgroupOf A₂).FiniteIndex := by
-  haveI : AddGroup.FG A₂ := (AddGroup.fg_iff_addSubgroup_fg A₂).2 hf
-  haveI := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg A₂ hm.ne'
+  have : AddGroup.FG A₂ := (AddGroup.fg_iff_addSubgroup_fg A₂).2 hf
+  have := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg A₂ hm.ne'
   refine AddSubgroup.finiteIndex_of_le (H := (nsmulAddMonoidHom m : A₂ →+ A₂).range) ?_
   rintro _ ⟨x, rfl⟩
   exact h x x.2
@@ -607,7 +607,7 @@ theorem tr_comb {T : Tor D} {b : Fin r → Matrix (Fin N') (Fin N) D.host.E} {F 
 
 theorem ee_half_int (m : ℤ) : ee ((m : ℝ) / 2) = (-1 : ℂ) ^ m := by
   unfold ee
-  rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+  rw [← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
   congr 1
   push_cast; ring
 
@@ -624,7 +624,7 @@ theorem al_eq_wdPh {T : Tor D} {x : VC D N N'} (h : wdPh D T x ^ 2 = 1) : al D T
   have h1 : Complex.exp (2 * (Real.pi : ℂ) * Complex.I * (qH D T x : ℂ)) = 1 := by
     rw [← h]
     unfold wdPh ee
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     push_cast; ring
   obtain ⟨m, hm⟩ := Complex.exp_eq_one_iff.1 h1
@@ -785,7 +785,7 @@ theorem area_bar (T : Tor D) : area (torBar D T).abelian₂ = area T.abelian₂ 
   unfold area
   congr 1
   ext a
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine and_congr_right fun _ => ⟨?_, ?_⟩
   · rintro ⟨_, ⟨w₁, h1, rfl⟩, _, ⟨w₂, h2, rfl⟩, rfl⟩
     refine ⟨w₁, h1, w₂, h2, ?_⟩
@@ -910,7 +910,7 @@ theorem conj_iop {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) (ρ 
     rw [mem_algebraicClosure_iff]
     refine IsAlgebraic.of_pow two_pos ?_
     rw [sq, hsq]
-    exact isAlgebraic_nat n
+    exact isAlgebraic_natCast n
   have him := inv_mem hsm
   refine ⟨?_, F', hFF, ⟨hFF.2.1, fun y' hy' => ?_⟩, ?_⟩
   · rw [e1]

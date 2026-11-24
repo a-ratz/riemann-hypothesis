@@ -107,7 +107,7 @@ theorem j_s (C : Cpt c t β) : C.j ≫ C.s = c ≫ spMap β := by
 theorem dense_part (C : Cpt c t β) (h : IsDedFrac β) :
     IsLocallyNoetherian C.X ∧ IsPreimmersion C.j ∧ Flat C.j ∧ IsDominant C.j ∧ QuasiCompact C.j := by
   obtain ⟨⟨_, _⟩, _, h₃⟩ := h
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨a, -, -, b⟩ := GlobalTheory.genericPart_dense_proOpen O F C.X U C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
   exact ⟨a, b⟩
 
@@ -123,7 +123,7 @@ theorem isReduced_open (C : Cpt c t β) (h : IsDedFrac β) : IsReduced U := by
 
 theorem mono_spMap (h : IsDedFrac β) : Mono (spMap β) := by
   obtain ⟨-, -, h₃⟩ := h
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have : IsPreimmersion (spMap β) := IsPreimmersion.of_isLocalization (nonZeroDivisors O) (R := O) (S := F)
   infer_instance
 
@@ -326,7 +326,7 @@ namespace GlobalTheory.RaisedTransition
 
 theorem mono_spMap_of_isDedFrac {O F : Type} [CommRing O] [Field F] {β : O →+* F} (h : IsDedFrac β) :
     Mono (spMap β) := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have := h.2.2
   have : IsPreimmersion (spMap β) := IsPreimmersion.of_isLocalization (nonZeroDivisors O) (S := F)
   infer_instance
@@ -381,7 +381,7 @@ theorem exists_isTransition : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDis
   have hbβ : β₂.comp b = (IntermediateField.inclusion hc).toRingHom.comp β :=
     RingHom.ext fun x => Subtype.ext (hb x)
   have hinj : Function.Injective β₂ := by
-    letI := β₂.toAlgebra
+    let := β₂.toAlgebra
     have := hβ₂.2.2
     exact IsFractionRing.injective O₂ c₂.F
   have hbb : b₂.comp b₀ = b.comp b₁ := RingHom.ext fun x => hinj (Subtype.ext

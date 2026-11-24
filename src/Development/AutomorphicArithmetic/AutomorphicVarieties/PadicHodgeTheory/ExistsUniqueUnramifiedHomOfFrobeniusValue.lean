@@ -59,13 +59,13 @@ open Formalism.ConjugateSelfDual ReciprocityTheory.Gal Module UpperTheory.V.Loc 
 theorem UpperTheory.exists_unique_unramified_hom_of_frobenius_value :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (v : ℕ), v.Prime → ∀ (A : ValuationSubring Ω), A.valuation (v : Ω) < 1 → ∀ σ : ↥(Dec (F := ℚ) A), Formalism.ConjugateSelfDual.IsFrob (F := ℚ) A v (σ : G ℚ Ω) → ∀ (E : Type) [AddCommGroup E] [Module ℚ_[l] E] [Module.Finite ℚ_[l] E], (∀ e : E, ∃ u : ↥(Dec (F := ℚ) A) → E, QCont l u ∧ (∀ g h, u (g * h) = u g + u h) ∧ (∀ g : ↥(Dec (F := ℚ) A), (g : G ℚ Ω) ∈ Ine (F := ℚ) A → u g = 0) ∧ u σ = e) ∧ ∀ u : ↥(Dec (F := ℚ) A) → E, QCont l u → (∀ g h, u (g * h) = u g + u h) → (∀ g : ↥(Dec (F := ℚ) A), (g : G ℚ Ω) ∈ Ine (F := ℚ) A → u g = 0) → u σ = 0 → u = 0 := by
   intro Ω _ _ _ l _ v hv A hA σ hσ E _ _ _
-  haveI : Fact v.Prime := ⟨hv⟩
+  have : Fact v.Prime := ⟨hv⟩
   obtain ⟨w, hwv, hwA⟩ := GlobalTheory.DecLocal.exists_place_below (p := v) (F := ℚ) A hA
   obtain ⟨j, rfl⟩ := (UpperTheory.V.Loc.decEmb (F := ℚ) (Ω := Ω) (v := v)).1 _ w hwA hwv
   obtain ⟨hemb, hrange, hcomap, -, -, -, hfrob⟩ := UpperTheory.V.Loc.iotaFacts (v := v) j
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup E := IsModuleTopology.topologicalAddGroup ℚ_[l] E
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalAddGroup E := IsModuleTopology.isTopologicalAddGroup ℚ_[l] E
   let ρ : Representation ℚ_[l] (Formalism.BasicNotions.Loc.GQ v) E := Representation.trivial ℚ_[l] _ E
   have hρ : ∀ g x, ρ g x = x := fun _ _ => rfl
   have hcont : ContAction ρ := by
@@ -94,7 +94,7 @@ theorem UpperTheory.exists_unique_unramified_hom_of_frobenius_value :
     rw [hemb.isInducing.continuous_iff]
     have hfun : (iota j ∘ inv) = fun g : ↥(Dec (F := ℚ) (placeJ j)) => (g : G ℚ Ω) := funext hinv
     rw [hfun]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   have hmemr : ∀ x, iota j x ∈ Dec (F := ℚ) (placeJ j) := by
     intro x
     rw [← hrange]

@@ -62,13 +62,13 @@ theorem isUnit_of_toOe (c : NChoice D) (w : D.what₂.places.Pl) (y : D.ntw.O0 (
     (h : IsUnit (algebraMap (D.ntw.Ok (c.twI w) (c.k' w)) (c.Oe w)
       (algebraMap (D.ntw.O (c.twI w)) (D.ntw.Ok (c.twI w) (c.k' w))
         (algebraMap (D.ntw.O0 (c.twI w)) (D.ntw.O (c.twI w)) y)))) : IsUnit y := by
-  haveI := c.Oe_loc w
+  have := c.Oe_loc w
   have h1 := (isUnit_map_iff _ _).1 h
   clear h
   generalize c.k' w = k at h1
   generalize c.twI w = i at y k h1
-  haveI := D.ntw.Ok_fin i k
-  haveI : FaithfulSMul (D.ntw.O i) (D.ntw.Ok i k) :=
+  have := D.ntw.Ok_fin i k
+  have : FaithfulSMul (D.ntw.O i) (D.ntw.Ok i k) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (D.ntw.Ok_inj i _)
   have h2 := (isUnit_map_iff (algebraMap (D.ntw.O i) (D.ntw.Ok i k)) _).1 h1
   by_contra hy
@@ -134,12 +134,12 @@ theorem liesUnder_of_tie (hG : IsGalois ℚ ↥D.LL0) {c : NChoice D} (h : NChTi
   rw [hleft]
   cases hs : c.sd w
   · obtain ⟨x', hx'⟩ := exists_star hG (x : ↥D.LL0)
-    rw [if_neg (by simp), D.conj_val, ← hx']
+    rw [ite_eq_right (by simp), D.conj_val, ← hx']
     refine (key x' ?_).symm
-    rw [hs, if_neg (by simp)]
+    rw [hs, ite_eq_right (by simp)]
     exact D.ntw.restX_coefficientEmbedding_conj _ _ _ (by rw [hx', star_star])
-  · rw [if_pos rfl]
-    exact (key x (by rw [hs, if_pos rfl])).symm
+  · rw [ite_eq_left rfl]
+    exact (key x (by rw [hs, ite_eq_left rfl])).symm
 
 theorem atPlace_of_tie (hG : IsGalois ℚ ↥D.LL0) {c : NChoice D} (h : NChTie D c) : AtPlace (recorded c) := by
   intro w _

@@ -126,11 +126,11 @@ def modelEquiv (P Q : ℕ) : UpqT P Q ≃ₜ* Formalism.REAL.UJ (signs P Q) wher
 
 theorem isMulRightInvariant_of_isHaarMeasure (P Q : ℕ) (μ : Measure (UpqT P Q))
     (hμ : μ.IsHaarMeasure) : μ.IsMulRightInvariant := by
-  haveI : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
-  haveI : BorelSpace (UpqT P Q) := ⟨rfl⟩
+  have : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
+  have : BorelSpace (UpqT P Q) := ⟨rfl⟩
   refine isMulRightInvariant_of_continuousMulEquiv (modelEquiv P Q) μ ?_
-  haveI : (μ.map (modelEquiv P Q)).IsHaarMeasure := (modelEquiv P Q).isHaarMeasure_map μ
-  haveI : (Formalism.REAL.muG (signs P Q)).IsMulRightInvariant :=
+  have : (μ.map (modelEquiv P Q)).IsHaarMeasure := (modelEquiv P Q).isHaarMeasure_map μ
+  have : (Formalism.REAL.muG (signs P Q)).IsMulRightInvariant :=
     ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ _ g⟩
   rw [Measure.isMulLeftInvariant_eq_smul (μ.map (modelEquiv P Q)) (Formalism.REAL.muG (signs P Q))]
   infer_instance

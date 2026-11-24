@@ -168,10 +168,10 @@ theorem ker_key {T : C} (c x : TrivSqZeroExt (F.obj T) (F.obj T ⊗[R] N)) (m₁
 theorem hasLoc_tenExt (H : Desc.HasLoc F) : Desc.HasLoc (tenExt N F) := by
   intro T c
   obtain ⟨T', l, h1, h2, h3, h4⟩ := H T c.fst
-  letI : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
-  haveI : IsScalarTower R (F.obj T) (F.obj T') :=
+  let : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
+  have : IsScalarTower R (F.obj T) (F.obj T') :=
     IsScalarTower.of_algebraMap_eq fun r ↦ ((mp F l).commutes r).symm
-  haveI := GlobalTheory.CechDR.FormExt.isLocalization_of_data F l c.fst h1 h2 h3
+  have := GlobalTheory.CechDR.FormExt.isLocalization_of_data F l c.fst h1 h2 h3
   have hp : ∀ m, LinearMap.rTensor N (mp F l).toLinearMap m =
       TensorProduct.AlgebraTensorModule.rTensor R N (Algebra.linearMap (F.obj T) (F.obj T')) m := by
     intro m

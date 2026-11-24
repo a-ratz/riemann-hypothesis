@@ -132,7 +132,7 @@ private lemma isSiegel_of_reduced {ι : Type} [Fintype ι] [DecidableEq ι]
     (hdec : g * γ.map (Int.cast : ℤ → ℝ) = k * diagonal a * n) :
     _root_.GlobalTheory.ClassFin.IsSiegel C k a n := by
   have hn : n.det = 1 := by
-    rw [det_of_upperTriangular (by intro i j h; exact hn0 i j h)]
+    rw [det_of_isUpperTriangular (by intro i j h; exact hn0 i j h)]
     simp [hn1]
   have hγR : (γ.map (Int.cast : ℤ → ℝ)).det = 1 := by
     rw [show γ.map (Int.cast : ℤ → ℝ) = (Int.castRingHom ℝ).mapMatrix γ from rfl,

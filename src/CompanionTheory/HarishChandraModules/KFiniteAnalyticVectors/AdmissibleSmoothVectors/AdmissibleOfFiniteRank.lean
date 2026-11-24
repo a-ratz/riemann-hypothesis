@@ -113,7 +113,7 @@ theorem admissible_of_finite_rank (h1 : FinOfPI) (h2 : GoodPI) (h3 : Transfer) (
   have hc : ∀ u, Continuous fun g => homUJ hσ g u := fun u =>
     (hσ.2.2 u).comp_continuous continuous_toM fun g => g.2
   obtain ⟨e, E, he, hfin, hE, hEv⟩ := h4 (KG ε) μ H ((homUJ hσ).comp (KG ε).subtype) (fun k u => hiso k u)
-    (fun u => (hc u).comp continuous_subtype_val) S (fun k u hu => hS _ k.2 u hu) v hv
+    (fun u => (hc u).comp continuous_subtypeVal) S (fun k u hu => hS _ k.2 u hu) v hv
   choose st hst using fun g : UJ ε => exists_elt (conjTranspose_mem (m := toM g) g.2)
   let Tr : Set (UJ ε) := {s | (stdU ε hU s).BlockTriangular id}
   have hgood : IsGood st Tr (stdU ε hU) := by
@@ -151,7 +151,7 @@ theorem admissible_of_finite_rank (h1 : FinOfPI) (h2 : GoodPI) (h3 : Transfer) (
   · refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
     show e k • σ (toMK k) (T u) = T (e k • σ (toMK k) u)
     rw [map_smul, hT _ k.2]
-  · exact (he.smul ((hc u).comp continuous_subtype_val)).integrable_of_hasCompactSupport
+  · exact (he.smul ((hc u).comp continuous_subtypeVal)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
 
 theorem smooth_of_adm (hA : AdmUJ ε) (hG : GardingFin) {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]

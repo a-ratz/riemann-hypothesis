@@ -119,7 +119,7 @@ theorem charpoly_mulLeft_eq_of_gen {F A : Type} [Field F] [CommRing A] [Algebra 
   by_contra hne
   have hR : P - Q ≠ 0 := sub_ne_zero.mpr hne
   have hdeg : (P - Q).degree < d := by
-    have := Polynomial.degree_sub_lt (p := P) (q := Q) (by rw [Polynomial.degree_eq_natDegree hP.ne_zero,
+    have := degree_sub_lt_left (p := P) (q := Q) (by rw [Polynomial.degree_eq_natDegree hP.ne_zero,
       Polynomial.degree_eq_natDegree hQ.ne_zero, hPd]) hP.ne_zero (by rw [hP.leadingCoeff, hQ.leadingCoeff])
     rwa [Polynomial.degree_eq_natDegree hP.ne_zero, hPd] at this
   have hRd : (P - Q).natDegree < d := (Polynomial.natDegree_lt_iff_degree_lt hR).2 hdeg
@@ -243,7 +243,7 @@ theorem models_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w 
     rw [hψh, hψ'h]
   refine ⟨y, ?_, ?_⟩
   · unfold UL
-    rw [if_neg hw]
+    rw [ite_eq_right hw]
     change Formalism.UG.cT (cj w) (y : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * 1 *
       (y : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = 1
     set M : Matrix (Fin n) (Fin n) (w.adicCompletion E) := (y : Matrix (Fin n) (Fin n) (w.adicCompletion E)) with hM
@@ -418,7 +418,7 @@ theorem exists_isModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   subst hQ
   have hU : cT (cj w) γ.val * 1 * γ.val = 1 := by
     have h := hγU
-    simp only [UL, hsplit, if_false] at h
+    simp only [UL, hsplit, ite_false] at h
     exact h
   set Q' : K.E[X] := (γ.val.charpoly).map e.symm.toRingHom with hQ'
   have hQm : Q'.Monic := (charpoly_monic _).map _
@@ -435,7 +435,7 @@ theorem exists_isModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
 
   obtain ⟨v, hv⟩ := GlobalTheory.ClassParam.exists_cyclic_field γ.val hsep
   have hliV : LinearIndependent (w.adicCompletion E) (fun j : Fin n => (γ.val ^ (j : ℕ)) *ᵥ v) := by
-    have := Matrix.linearIndependent_cols_iff_isUnit.mpr
+    have := linearIndependent_col_iff_isUnit.mpr
       ((Matrix.isUnit_iff_isUnit_det _).mpr (isUnit_iff_ne_zero.mpr hv))
     convert this using 1
     funext j i
@@ -511,7 +511,7 @@ theorem exists_isModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
         intro r a
         rw [hψs, stdH_smul_left, map_mul, RingEquiv.symm_apply_apply]
         rfl }
-  haveI := isReduced_of hli hQm hdeg hadj hroot hsep'
+  have := isReduced_of hli hQm hdeg hadj hroot hsep'
   have hnd : ∀ a : B.A, (∀ y, Algebra.trace K.E B.A (a * y) = 0) → a = 0 := fun a ha =>
     GlobalTheory.RegSS.eq_zero_of_trace_mul_eq_zero a ha
   have hinj : Function.Injective (Algebra.traceForm K.E B.A) := by
@@ -611,9 +611,9 @@ theorem herm_eq_sum {n : ℕ} (x : B.A) (b : Module.Basis (Fin n) K.E B.A)
   rw [herm_sum_left]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [herm_sum_right, Finset.sum_eq_single k]
-  · rw [GlobalTheory.UnitLemma.Basic.herm_smul_left, GlobalTheory.UnitLemma.Basic.herm_smul_right, hb, if_pos rfl]; ring
+  · rw [GlobalTheory.UnitLemma.Basic.herm_smul_left, GlobalTheory.UnitLemma.Basic.herm_smul_right, hb, ite_eq_left rfl]; ring
   · intro l _ hl
-    rw [GlobalTheory.UnitLemma.Basic.herm_smul_left, GlobalTheory.UnitLemma.Basic.herm_smul_right, hb, if_neg (Ne.symm hl)]; ring
+    rw [GlobalTheory.UnitLemma.Basic.herm_smul_left, GlobalTheory.UnitLemma.Basic.herm_smul_right, hb, ite_eq_right (Ne.symm hl)]; ring
   · intro h; exact absurd (Finset.mem_univ k) h
 
 end GlobalTheory.KapLat.ModelOfBasis
@@ -659,12 +659,12 @@ theorem GlobalTheory.KapLat.exists_model_of_orthonormal_basis :
     rw [Finset.sum_congr rfl fun k _ => mul_comm _ _, h]
     by_cases hij : i = j
     · subst hij; simp
-    · rw [if_neg (Ne.symm hij), if_neg hij, map_zero]
+    · rw [ite_eq_right (Ne.symm hij), ite_eq_right hij, map_zero]
   have hunit' : M * cT (cj w) M = 1 := mul_eq_one_comm.mp hunit
   let γ : GLw n w := ⟨M, cT (cj w) M, hunit', hunit⟩
   refine ⟨γ, ?_, ψ, ?_, hM, hstd⟩
   · unfold UL
-    rw [if_neg hw]
+    rw [ite_eq_right hw]
     show cT (cj w) M * 1 * M = 1
     rw [Matrix.mul_one, hunit]
   · intro c y
@@ -980,11 +980,11 @@ theorem exists_orthonormal_of_selfDual (K : GlobalTheory.UnitLemma.UQ) (V : Type
     simp only [g, hsmul, hsmul2]
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl, hft, ← hv i, map_inv₀]
+      rw [ite_eq_left rfl, hft, ← hv i, map_inv₀]
       have : K.c (v i) ≠ 0 := by simpa using hv0 i
       field_simp
       exact div_self (hv0 i)
-    · rw [if_neg hij, hfo i j hij, mul_zero, mul_zero]
+    · rw [ite_eq_right hij, hfo i j hij, mul_zero, mul_zero]
   let φ : V → V →ₗ[K.E] K.E := fun z =>
     { toFun := fun y => h y z
       map_add' := fun y y' => hadd y y' z
@@ -1005,7 +1005,7 @@ theorem X_nonempty_of_N_ne_zero {K : GlobalTheory.UnitLemma.UQ} (B : GlobalTheor
   by_contra hX
   rw [Set.not_nonempty_iff_eq_empty] at hX
   apply hN
-  haveI : IsEmpty (GlobalTheory.UnitLemma.Orb K.O B.T (B.X x)) :=
+  have : IsEmpty (GlobalTheory.UnitLemma.Orb K.O B.T (B.X x)) :=
     ⟨fun o => by
       induction o using Quot.ind with
       | mk L => exact Set.eq_empty_iff_forall_notMem.1 hX L.1 L.2⟩
@@ -1136,7 +1136,7 @@ theorem model_conj_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hc : (c : B.A) = φ 1 := rfl
     rw [hc, sub_mul, map_sub, sub_eq_zero, this]
     congr 1; ring
-  haveI : IsReduced B.A := isReduced_of_adjoin_squarefree u hadj _ (hQ.map.squarefree) hroot
+  have : IsReduced B.A := isReduced_of_adjoin_squarefree u hadj _ (hQ.map.squarefree) hroot
   exact (sub_eq_zero.1 (GlobalTheory.RegSS.eq_zero_of_trace_mul_eq_zero _ htr)).symm
 
 end GlobalTheory.KapLat
@@ -1248,7 +1248,7 @@ theorem kapSign_eq_eta_gramDet : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · intro h
       exact Prod.ext h0 (by rw [h1, h, mul_zero]; rfl)
   unfold kapSign
-  rw [if_neg hns]
+  rw [ite_eq_right hns]
   dsimp only
   set V₁ := LinearMap.ker (Matrix.toLin' (aeval γ.val Q₁)) with hV₁
   set m := Module.finrank (w.adicCompletion E) V₁ with hm
@@ -1495,7 +1495,7 @@ theorem kapOrb_eq_kapSum_of_fits {E : Type} [Field E] [NumberField E] [IsCMField
   have hrep : ∀ c ∈ S', IsModel w e (B₁.prod B₂) (u₁, u₂) (GlobalTheory.UnitLemma.InvAlg.Cl.rep (Φ c)) c.rep.1 := by
     intro c hc
     have h := hex c hc
-    have hΦ : Φ c = Quot.mk _ ⟨h.choose_spec.2.1.unit, by simpa using h.choose_spec.1⟩ := dif_pos h
+    have hΦ : Φ c = Quot.mk _ ⟨h.choose_spec.2.1.unit, by simpa using h.choose_spec.1⟩ := dite_eq_left h
     have hq := Quot.eqvGen_exact ((Quot.out_eq (Φ c)).trans hΦ)
     obtain ⟨v, hv⟩ := hcl.symm (hcl.eqvGen_iff.1 hq)
     have hr : GlobalTheory.UnitLemma.InvAlg.Cl.rep (Φ c) = h.choose * ((v : (B₁.prod B₂).A) * (B₁.prod B₂).σ (v : (B₁.prod B₂).A)) := by
@@ -1547,9 +1547,9 @@ theorem kapOrb_eq_kapSum_of_fits {E : Type} [Field E] [NumberField E] [IsCMField
   calc _ = ∑ᶠ c, S'.indicator (fun c => G (Φ c)) c := finsum_congr fun c => by
           by_cases hc : c ∈ S'
           · rw [Set.indicator_of_mem hc, ← hterm c hc]
-            exact if_pos hc
+            exact ite_eq_left hc
           · rw [Set.indicator_of_notMem hc]
-            exact if_neg hc
+            exact ite_eq_right hc
     _ = ∑ᶠ c ∈ S', G (Φ c) := (finsum_mem_def _ _).symm
     _ = ∑ᶠ κ ∈ Φ '' S', G κ := (finsum_mem_image hinj).symm
     _ = ∑ᶠ κ, G κ := by

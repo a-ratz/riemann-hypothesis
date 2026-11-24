@@ -81,8 +81,8 @@ theorem series_form {O : Type} [CommRing O] (ϖ : O) (hO : ∀ a, IsUnit a ∨ �
     · ext n
       rw [map_add (f := _), coeff_C_mul, coeff_X_pow_mul', coeff_mk]
       by_cases hn : n < Nat.find h
-      · rw [if_pos hn, if_neg (by omega), hd n hn, add_zero]
-      · rw [if_neg hn, if_pos (by omega), coeff_mk, Nat.sub_add_cancel (by omega), mul_zero, zero_add]
+      · rw [ite_eq_left hn, ite_eq_right (by omega), hd n hn, add_zero]
+      · rw [ite_eq_right hn, ite_eq_left (by omega), coeff_mk, Nat.sub_add_cancel (by omega), mul_zero, zero_add]
 
 theorem letter_form {O ι : Type} [CommRing O] [DecidableEq ι] (ϖ : O) (hO : ∀ a, IsUnit a ∨ ϖ ∣ a)
     (a : ι → O⟦X⟧) (i : ι) :
@@ -136,7 +136,7 @@ theorem mem_jac_of_pow {R : Type} [CommRing R] {t u : R} (hu : IsUnit u) {n : �
     (h : u * t ^ n ∈ Ideal.jacobson (⊥ : Ideal R)) (hn : n ≠ 0) : t ∈ Ideal.jacobson (⊥ : Ideal R) := by
   rw [Ideal.jacobson, Ideal.mem_sInf] at h ⊢
   intro J hJ
-  haveI := hJ.2.isPrime
+  have := hJ.2.isPrime
   exact Ideal.IsPrime.mem_of_pow_mem inferInstance n ((Ideal.unit_mul_mem_iff_mem J hu).mp (h hJ))
 
 theorem abstract (j : A →+* E) (f : E →+* W) (g : A →+* B) (c : B →+* W) (hcomm : ∀ a, f (j a) = c (g a))
@@ -399,12 +399,12 @@ theorem ioE_injective_saturated_inter (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
     classical
     obtain ⟨_, hc, hl0, hlu, hfree, -, -⟩ := GlobalTheory.Per.integers_completeDVR l LL
     obtain ⟨hWc, hWtf, -, hsat, hμ⟩ := GlobalTheory.HWL.TensorWitt.main l LL
-    haveI : FiniteDimensional ℚ_[l] K.1 := K.2
-    haveI : FiniteDimensional ℚ_[l] (K0 K) :=
+    have : FiniteDimensional ℚ_[l] K.1 := K.2
+    have : FiniteDimensional ℚ_[l] (K0 K) :=
       Module.Finite.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
         (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))
-    haveI : NeZero (Module.finrank ℚ_[l] (K0 K)) := ⟨Module.finrank_pos.ne'⟩
-    haveI : Nontrivial (RW LL) := Module.FaithfullyFlat.lTensor_nontrivial ℤ_[l] ↥(OL LL) (WCb l)
+    have : NeZero (Module.finrank ℚ_[l] (K0 K)) := ⟨Module.finrank_pos.ne'⟩
+    have : Nontrivial (RW LL) := Module.FaithfullyFlat.lTensor_nontrivial ℤ_[l] ↥(OL LL) (WCb l)
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible ↥(OL LL)
     obtain ⟨N, hN⟩ := IsDiscreteValuationRing.associated_pow_irreducible hl0 hϖ
     obtain ⟨n, rfl⟩ : ∃ n, N = n + 1 := by
@@ -458,7 +458,7 @@ theorem ioE_injective_saturated_inter (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
     · intro i
       rw [← Pi.single_mul, mul_one]
     · exact Finset.univ_sum_single (1 : LetA ↥(OL LL) _)
-    · haveI := hμ _ (not_isUnit_εroot_sub_one AI s)
+    · have := hμ _ (not_isUnit_εroot_sub_one AI s)
       change I.io letπ ∈ _
       rw [I.io_π]
       exact IsAdicComplete.le_jacobson_bot _ (Ideal.mem_span_singleton_self _)

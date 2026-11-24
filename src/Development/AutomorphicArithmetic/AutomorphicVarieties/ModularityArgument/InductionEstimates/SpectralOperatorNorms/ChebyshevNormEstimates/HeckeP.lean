@@ -72,7 +72,7 @@ private theorem map_inv_self {G : Type} [Group G] [MeasurableSpace G] [Measurabl
 
 private theorem hecke_star {K : Type} [Field K] [NumberField K] {n : ℕ} (D : TypeDat K n) (f : CC K n)
     (hf : D.Hecke f) : D.Hecke (CuspidalProjection.ccStar f) := by
-  haveI := D.prob
+  have := D.prob
   have hm := map_inv_self D.ν D.U D.supp D.inv
   have hI : ∀ φ : G1 K n → ℂ, ∫ k, φ k⁻¹ ∂D.ν = ∫ k, φ k ∂D.ν := fun φ => by
     have := integral_map_equiv (μ := D.ν) (MeasurableEquiv.inv (G1 K n)) φ

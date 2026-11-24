@@ -65,13 +65,13 @@ namespace GlobalTheory.UPoinc.USum.ClassTerms
 theorem summable_of_mem_fd {p : ℕ} [Fact p.Prime] {I : Type} (M : Submodule ℚ_[p] (PadicAlgCl p))
     [FiniteDimensional ℚ_[p] M] (f : I → PadicAlgCl p) (hf : ∀ i, f i ∈ M)
     (h0 : Tendsto (fun i => ‖f i‖) cofinite (𝓝 0)) : Summable f := by
-  haveI : CompleteSpace M := FiniteDimensional.complete ℚ_[p] M
+  have : CompleteSpace M := FiniteDimensional.completeSpace ℚ_[p] M
   let g : I → M := fun i => ⟨f i, hf i⟩
   have hg : Tendsto g cofinite (𝓝 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero]
     simpa [g] using h0
   have hs : Summable g := NonarchimedeanAddGroup.summable_of_tendsto_cofinite_zero hg
-  have := hs.hasSum.map M.subtype continuous_subtype_val
+  have := hs.hasSum.map M.subtype continuous_subtypeVal
   exact this.summable
 
 theorem exists_unit_sub_one_unit (p : ℕ) [Fact p.Prime] :
@@ -112,7 +112,7 @@ theorem one_class {p : ℕ} [Fact p.Prime] {Y K : Type} [Nonempty Y] [Nonempty K
   set D : Set Y := C \ {χ₀} with hD
   set A : Subalgebra ℚ_[p] (PadicAlgCl p) := Algebra.adjoin ℚ_[p] ({s, u₀} : Set (PadicAlgCl p)) with hA
   let M : Submodule ℚ_[p] (PadicAlgCl p) := Subalgebra.toSubmodule A
-  haveI : FiniteDimensional ℚ_[p] M :=
+  have : FiniteDimensional ℚ_[p] M :=
     Algebra.finite_adjoin_of_finite_of_isIntegral (by simp) (fun x _ => Algebra.IsIntegral.isIntegral x)
   have hsA : s ∈ A := Algebra.subset_adjoin (by simp)
   have huA : u₀ ∈ A := Algebra.subset_adjoin (by simp)
@@ -149,16 +149,16 @@ theorem one_class {p : ℕ} [Fact p.Prime] {Y K : Type} [Nonempty Y] [Nonempty K
     · intro χ hχ κ
       by_cases h : χ = χ₀
       · subst h
-        simp only [if_true]
+        simp only [ite_true]
         rw [sub_eq_add_neg]
         exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hG κ) (by rw [norm_neg]; exact hS))
-      · simp only [h, if_false, hw, le_refl]
+      · simp only [h, ite_false, hw, le_refl]
     · intro χ hχ
       by_cases h : χ = χ₀
       · subst h
         obtain ⟨κ, hκ⟩ := hex
         exact ⟨κ, by simpa using hκ⟩
-      · exact ⟨Classical.arbitrary K, by simp only [h, if_false, hw]⟩
+      · exact ⟨Classical.arbitrary K, by simp only [h, ite_false, hw]⟩
     · intro κ
       have h1 : HasSum (fun χ => if χ = χ₀ then G κ - S else 0) (G κ - S) := hasSum_ite_eq _ _
       have h2 := h1.add hsum.hasSum
@@ -183,7 +183,7 @@ theorem one_class {p : ℕ} [Fact p.Prime] {Y K : Type} [Nonempty Y] [Nonempty K
     refine key rr hrA hrn ⟨κ, ?_⟩
     have hlt : ‖∑' χ, D.indicator rr χ‖ < Real.exp (-q χ₀) := by
       by_cases hDe : D.Nonempty
-      · haveI : Nonempty D := hDe.to_subtype
+      · have : Nonempty D := hDe.to_subtype
         have hqD : Tendsto (fun x : D => q x) cofinite atTop :=
           hq.comp Subtype.val_injective.tendsto_cofinite
         obtain ⟨a₁, ha₁⟩ := hqD.exists_forall_le
@@ -264,7 +264,7 @@ theorem classSum_of_terms : ∀ (p : ℕ) [Fact p.Prime] (Y K : Type) [AddCommGr
     intro c
     obtain ⟨x, rfl⟩ := Quotient.exists_rep c
     let Cs : Set Y := {χ | Quotient.mk R χ = Quotient.mk R x}
-    haveI : Nonempty Cs := ⟨⟨x, rfl⟩⟩
+    have : Nonempty Cs := ⟨⟨x, rfl⟩⟩
     have hqC : Tendsto (fun a : Cs => q a) cofinite atTop := hq.comp Subtype.val_injective.tendsto_cofinite
     obtain ⟨a, ha⟩ := hqC.exists_forall_le
     exact ⟨a, a.2, fun χ hχ => ha ⟨χ, hχ⟩⟩

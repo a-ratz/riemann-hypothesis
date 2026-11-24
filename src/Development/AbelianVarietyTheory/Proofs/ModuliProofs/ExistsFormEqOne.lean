@@ -84,13 +84,13 @@ theorem dvd_form_sub {n : ℕ} {x x' y y' : D.La} (hx : D.ModN n (x - x')) (hy :
   ring
 
 theorem exists_form_eq_one (h : 1 ≤ D.p + D.q) : ∃ a b : D.La, D.EF a b = 1 := by
-  haveI := D.fin
-  haveI := D.proj
-  haveI : Nontrivial D.La := Module.nontrivial_of_finrank_pos (R := 𝓞 E) (by rw [D.rank]; omega)
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.IsTorsionFree ℤ D.La :=
+  have := D.fin
+  have := D.proj
+  have : Nontrivial D.La := Module.nontrivial_of_finrank_pos (R := 𝓞 E) (by rw [D.rank]; omega)
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.IsTorsionFree ℤ D.La :=
     Function.Injective.moduleIsTorsionFree D.EF D.unimod.1 (fun r x => map_smul _ r x)
-  haveI : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
   let B := Module.Free.chooseBasis ℤ D.La
   obtain ⟨i⟩ := B.index_nonempty
   obtain ⟨a, ha⟩ := D.unimod.2 (B.coord i)

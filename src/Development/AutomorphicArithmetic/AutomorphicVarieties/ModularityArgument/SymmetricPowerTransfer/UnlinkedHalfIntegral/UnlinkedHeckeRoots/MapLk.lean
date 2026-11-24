@@ -85,7 +85,7 @@ theorem UpperTheory.V.Z.Sym.Unl.eisCj : UpperTheory.V.Z.Sym.Unl.EisCj := by
   intro N _ hN σ
   obtain ⟨s, hs⟩ := UpperTheory.V.Z.Sym.Unl.exists_unit N σ
   refine ⟨s, hs, fun k hk a n => ?_⟩
-  haveI : Fact (1 < N) := ⟨hN⟩
+  have : Fact (1 < N) := ⟨hN⟩
   have ha : ((a : (ZMod N)ˣ) : ZMod N) ≠ 0 := a.ne_zero
   have hsa : (((s * a : (ZMod N)ˣ)) : ZMod N) ≠ 0 := (s * a).ne_zero
   have hu : (((s * a : (ZMod N)ˣ)) : ZMod N) = (s : ZMod N) * a := Units.val_mul s a

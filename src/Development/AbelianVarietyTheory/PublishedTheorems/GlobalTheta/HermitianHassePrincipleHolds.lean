@@ -100,7 +100,7 @@ theorem CongrOver.complex (h : CongrOver σ A G G') (τ : E →+* ℂ) (hτ : �
     (hψτ : ∀ s : F, ψ (algebraMap F A s) = τ (algebraMap F E s)) :
     ∃ Q : Matrix (Fin r) (Fin r) ℂ, Q.det ≠ 0 ∧ G'.map τ = Qᵀ * G.map τ * Q.map conj := by
   obtain ⟨P, hP, h⟩ := h
-  letI : Algebra F ℂ := (τ.comp (algebraMap F E)).toAlgebra
+  let : Algebra F ℂ := (τ.comp (algebraMap F E)).toAlgebra
   let ψ' : A →ₐ[F] ℂ := { ψ with commutes' := hψτ }
   let τ' : E →ₐ[F] ℂ := { τ with commutes' := fun _ => rfl }
   let Φ : A ⊗[F] E →+* ℂ := (Algebra.TensorProduct.productMap ψ' τ').toRingHom

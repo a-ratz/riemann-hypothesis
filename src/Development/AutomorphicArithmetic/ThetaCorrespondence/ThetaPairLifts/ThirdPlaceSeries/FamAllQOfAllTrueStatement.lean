@@ -693,7 +693,7 @@ theorem GlobalTheory.BaseChain.stepY_integrable_and_eq_alt {D : D7} {L : SizeDat
       ((_root_.GlobalTheory.Fam.pk_z W).ItY j) ((_root_.GlobalTheory.Fam.pk_z W).CC t (j + 1)) ((_root_.GlobalTheory.Fam.pk_z W).CC t j) ((_root_.GlobalTheory.Fam.pk_z W).ioY t j) :=
     hW.bot.hyp.2.2.2.1.chain.ioY t j (by omega)
   have hfin : ∀ PP : (_root_.GlobalTheory.Fam.pk_z W).Pg, Finite (kP PP.1) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot _ PP.1.ne_bot
-  haveI : Fintype (_root_.GlobalTheory.Fam.complexLevelStructure W).H := Fintype.ofFinite _
+  have : Fintype (_root_.GlobalTheory.Fam.complexLevelStructure W).H := Fintype.ofFinite _
   obtain ⟨κ, hκ, hsum⟩ := _root_.GlobalTheory.T.exists_level_elements_step_vector_alt W hW t j hj
   rw [hsum v hv Q]
   simp_rw [GlobalTheory.BaseChain.thetaKO_sum_smul_act]

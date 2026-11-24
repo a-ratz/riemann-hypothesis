@@ -62,8 +62,8 @@ theorem isClosedImmersion_subschemeι_comp {R : Type} [CommRing R] {W W' : Schem
     (f : W ⟶ Spec (CommRingCat.of R)) (π : W' ⟶ W) [IsSeparated f] [IsImmersion π]
     (T : W'.IdealSheafData) [IsProper (T.subschemeι ≫ π ≫ f)] :
     IsClosedImmersion (T.subschemeι ≫ π) := by
-  haveI : IsProper ((T.subschemeι ≫ π) ≫ f) := by rw [Category.assoc]; infer_instance
-  haveI : IsProper (T.subschemeι ≫ π) := IsProper.of_comp _ f
+  have : IsProper ((T.subschemeι ≫ π) ≫ f) := by rw [Category.assoc]; infer_instance
+  have : IsProper (T.subschemeι ≫ π) := IsProper.of_comp _ f
   exact IsClosedImmersion.of_isPreimmersion _ (T.subschemeι ≫ π).isClosedMap.isClosed_range
 
 theorem isProper_ker_subschemeι_comp {X Y S : Scheme.{0}} (g : X ⟶ Y) [IsClosedImmersion g]
@@ -108,11 +108,11 @@ theorem mapSystem : ∀ (R : Type) [CommRing R] (I : Ideal R) (W W' : Scheme.{0}
       _ = ((t (e + 1)).subschemeι ≫ π).ker ⊔ baseIdeal f (I ^ (e + 1)) := by rw [h2, h3]
       _ = (t (e + 1)).map π ⊔ baseIdeal f (I ^ (e + 1)) := rfl
   ·
-    haveI := hci e
-    haveI : IsProper (((t e).subschemeι ≫ π) ≫ f) := by rw [Category.assoc]; exact hp e
+    have := hci e
+    have : IsProper (((t e).subschemeι ≫ π) ≫ f) := by rw [Category.assoc]; exact hp e
     exact isProper_ker_subschemeι_comp ((t e).subschemeι ≫ π) f
   ·
-    haveI := hci e
+    have := hci e
     refine le_antisymm (Scheme.IdealSheafData.comap_map_le _ _) ?_
     show t e ≤ (((t e).subschemeι ≫ π).ker).comap π
     rw [← Scheme.IdealSheafData.ker_fst_of_isClosedImmersion]

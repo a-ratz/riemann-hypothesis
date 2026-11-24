@@ -81,19 +81,19 @@ theorem dualModule_apply (a : c.O) (f : c.O →ₗ[ℤ_[l]] ℤ_[l]) (x : c.O) :
 
 theorem dual_tower :
     letI := dualModule l c; IsScalarTower ℤ_[l] c.O (c.O →ₗ[ℤ_[l]] ℤ_[l]) := by
-  letI := dualModule l c
+  let := dualModule l c
   refine ⟨fun r a f => ?_⟩
   ext x
   rw [dualModule_apply, LinearMap.smul_apply, dualModule_apply, smul_mul_assoc, map_smul]
 
 theorem dual_torsionFree :
     letI := dualModule l c; Module.IsTorsionFree c.O (c.O →ₗ[ℤ_[l]] ℤ_[l]) := by
-  letI := dualModule l c
+  let := dualModule l c
   refine Module.IsTorsionFree.of_smul_eq_zero fun a f h => ?_
   by_cases ha : a = 0
   · exact Or.inl ha
   right
-  have hne := Ideal.comap_ne_bot_of_integral_mem (R := ℤ_[l]) (I := Ideal.span {a}) ha
+  have hne := Ideal.under_ne_bot_of_integral_mem (R := ℤ_[l]) (I := Ideal.span {a}) ha
     (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
   obtain ⟨r, hr, hr0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   rw [Ideal.mem_comap, Ideal.mem_span_singleton] at hr
@@ -112,13 +112,13 @@ theorem GlobalTheory.Ord2.coef_dual_free_rank_one :
     ∀ (l : ℕ) [Fact l.Prime] (c : Coef l), ∃ τ : c.O →ₗ[ℤ_[l]] ℤ_[l],
       ∀ f : c.O →ₗ[ℤ_[l]] ℤ_[l], ∃! a : c.O, ∀ x, f x = τ (a * x) := by
   intro l _ c
-  letI := dualModule l c
-  haveI := dual_tower l c
-  haveI : Module.IsTorsionFree ℤ_[l] c.O := FaithfulSMul.to_isTorsionFree ℤ_[l] c.O
-  haveI : Module.Free ℤ_[l] c.O := Module.free_of_finite_type_torsion_free'
-  haveI : Module.Finite c.O (c.O →ₗ[ℤ_[l]] ℤ_[l]) := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
-  haveI := dual_torsionFree l c
-  haveI : Module.Free c.O (c.O →ₗ[ℤ_[l]] ℤ_[l]) := Module.free_of_finite_type_torsion_free'
+  let := dualModule l c
+  have := dual_tower l c
+  have : Module.IsTorsionFree ℤ_[l] c.O := FaithfulSMul.to_isTorsionFree ℤ_[l] c.O
+  have : Module.Free ℤ_[l] c.O := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite c.O (c.O →ₗ[ℤ_[l]] ℤ_[l]) := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
+  have := dual_torsionFree l c
+  have : Module.Free c.O (c.O →ₗ[ℤ_[l]] ℤ_[l]) := Module.free_of_finite_type_torsion_free'
   have h1 := Module.finrank_linearMap ℤ_[l] ℤ_[l] c.O ℤ_[l]
   have h2 := Module.finrank_mul_finrank ℤ_[l] c.O (c.O →ₗ[ℤ_[l]] ℤ_[l])
   have hpos : 0 < Module.finrank ℤ_[l] c.O := Module.finrank_pos

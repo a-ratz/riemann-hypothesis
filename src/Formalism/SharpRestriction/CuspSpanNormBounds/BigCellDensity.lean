@@ -151,7 +151,7 @@ theorem muR_ne_zero {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hc : L.c = cStd) (�
     rw [hc, ucStd]
     positivity
   have h3 := congrArg (fun μ : Measure ((rootPat γ) → ℂ) => μ Set.univ) h2
-  simp only [Measure.coe_zero, Pi.zero_apply, Measure.smul_apply, smul_eq_mul] at h3
+  simp only [FunLike.coe_zero, Pi.zero_apply, smul_apply, smul_eq_mul] at h3
   rcases mul_eq_zero.1 h3.symm with h4 | h4
   · rw [ENNReal.ofReal_eq_zero] at h4
     linarith
@@ -258,7 +258,7 @@ theorem meas_act' {k r : ℕ} (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k 
   (meas_act g).comp (measurable_const.prodMk measurable_id)
 
 theorem enorm_split (y : ℝ) : ‖y‖ₑ = ENNReal.ofReal y + ENNReal.ofReal (-y) := by
-  rw [Real.enorm_eq_ofReal_abs]
+  rw [Real.eNorm_eq_ofReal_abs]
   rcases le_total 0 y with h | h
   · simp [abs_of_nonneg h, ENNReal.ofReal_of_nonpos (neg_nonpos.2 h)]
   · simp [abs_of_nonpos h, ENNReal.ofReal_of_nonpos h]
@@ -377,7 +377,7 @@ theorem nu_inPair_gen {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hκ0 : L.κN ≠ 
         ((Set.univ ×ˢ ({x | Matrix.of x ∉ UWset (k0 + 1) r L.z'} ×ˢ Set.univ)) ∪
           (Set.univ ×ˢ (Set.univ ×ˢ {x | Matrix.of x ∉ Nset (k0 + 1) r}))) := by
       intro p hp
-      simp only [Set.mem_setOf_eq, InPair, not_and_or] at hp
+      simp only [Set.mem_ofPred_eq, InPair, not_and_or] at hp
       rcases hp with h | h | h | h <;> simp [h]
     refine measure_mono_null hsub ?_
     simp only [pairMeas]
@@ -417,7 +417,7 @@ theorem weil_L_gen {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hc : L.c = cStd) (h�
     (hθ1 : ∀ p, InPair L p → ∫ x, θ (stabAct g (Matrix.of x) p) ∂μR = 1)
     (hint : Integrable (fun p => θ p • besselIntg L F g p) (pairMeas L)) :
     ∫ p, θ p • besselIntg L F g p ∂(pairMeas L) = OrbInt L F g ν := by
-  have : CompleteSpace L.Wp := FiniteDimensional.complete ℂ L.Wp
+  have : CompleteSpace L.Wp := FiniteDimensional.completeSpace ℂ L.Wp
   set f := fun p => θ p • besselIntg L F g p with hfdef
   set h := hint.aestronglyMeasurable.mk f with hhdef
   have hh : StronglyMeasurable h := hint.aestronglyMeasurable.stronglyMeasurable_mk
@@ -547,7 +547,7 @@ theorem hsNormSq_smul {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace 
     [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (t : ℝ) (A : Wq →L[ℂ] Wp) :
     hsNormSq (t • A) = t ^ 2 * hsNormSq A := by
   rw [show t • A = (t : ℂ) • A from (Complex.coe_smul t A).symm]
-  simp only [hsNormSq, hsInner, ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right,
+  simp only [hsNormSq, hsInner, smul_apply, inner_smul_left, inner_smul_right,
     Complex.conj_ofReal, ← Finset.mul_sum]
   rw [← mul_assoc, ← Complex.ofReal_mul, Complex.re_ofReal_mul]
   ring
@@ -655,11 +655,11 @@ theorem partner_partner (l : List (ℕ × ℂ)) (a : ℕ) (ha : a < Formalism.Fo
     simp only [Formalism.FourierDecayAlt.D.ptSize, List.map_cons, List.sum_cons] at ha
     simp only [Formalism.FourierDecayAlt.D.ptPartner]
     by_cases h : a < s
-    · simp only [if_pos h]
-      rw [if_pos (show s - 1 - a < s by omega)]
+    · simp only [ite_eq_left h]
+      rw [ite_eq_left (show s - 1 - a < s by omega)]
       omega
-    · simp only [if_neg h]
-      rw [if_neg (show ¬ (s + Formalism.FourierDecayAlt.D.ptPartner l (a - s) < s) by omega), Nat.add_sub_cancel_left,
+    · simp only [ite_eq_right h]
+      rw [ite_eq_right (show ¬ (s + Formalism.FourierDecayAlt.D.ptPartner l (a - s) < s) by omega), Nat.add_sub_cancel_left,
         ih (a - s) (by simp only [Formalism.FourierDecayAlt.D.ptSize]; omega)]
       omega
 
@@ -675,16 +675,16 @@ theorem partner_order (l : List (ℕ × ℂ)) (hl : GoodL l) (a b : ℕ) (hab : 
     simp only [bD, Formalism.FourierDecayAlt.D.ptPartner]
     by_cases hbs : b < s
     · have has : a < s := by omega
-      simp only [if_pos hbs, if_pos has]
+      simp only [ite_eq_left hbs, ite_eq_left has]
       constructor
       · intro _; omega
       · intro _; trivial
     · by_cases has : a < s
-      · simp only [if_pos has, if_neg hbs]
+      · simp only [ite_eq_left has, ite_eq_right hbs]
         constructor
         · intro h; omega
         · intro h; omega
-      · simp only [if_neg has, if_neg hbs]
+      · simp only [ite_eq_right has, ite_eq_right hbs]
         have := ih (goodL_tail hl) (a - s) (b - s) (by omega) (by simp only [Formalism.FourierDecayAlt.D.ptSize]; omega)
         constructor
         · intro h
@@ -705,23 +705,23 @@ theorem ptEntry_partner (l : List (ℕ × ℂ)) (a b : ℕ) (hb : b < Formalism.
     simp only [Formalism.FourierDecayAlt.D.ptSize, List.map_cons, List.sum_cons] at hb
     simp only [Formalism.FourierDecayAlt.D.ptEntry, Formalism.FourierDecayAlt.D.ptPartner, Formalism.FourierDecayAlt.D.ptScal]
     by_cases hbs : b < s
-    · simp only [if_pos hbs]
+    · simp only [ite_eq_left hbs]
       by_cases has : a < s
-      · rw [if_pos ⟨has, hbs⟩]
+      · rw [ite_eq_left ⟨has, hbs⟩]
         by_cases e : a + b + 1 = s
-        · rw [if_pos e, if_pos (show a = s - 1 - b by omega)]
-        · rw [if_neg e, if_neg (show ¬ a = s - 1 - b by omega)]
-      · rw [if_neg (show ¬ (a < s ∧ b < s) by omega), if_neg (show ¬ (s ≤ a ∧ s ≤ b) by omega),
-          if_neg (show ¬ a = s - 1 - b by omega)]
-    · simp only [if_neg hbs]
+        · rw [ite_eq_left e, ite_eq_left (show a = s - 1 - b by omega)]
+        · rw [ite_eq_right e, ite_eq_right (show ¬ a = s - 1 - b by omega)]
+      · rw [ite_eq_right (show ¬ (a < s ∧ b < s) by omega), ite_eq_right (show ¬ (s ≤ a ∧ s ≤ b) by omega),
+          ite_eq_right (show ¬ a = s - 1 - b by omega)]
+    · simp only [ite_eq_right hbs]
       by_cases has : a < s
-      · rw [if_neg (show ¬ (a < s ∧ b < s) by omega), if_neg (show ¬ (s ≤ a ∧ s ≤ b) by omega),
-          if_neg (show ¬ a = s + Formalism.FourierDecayAlt.D.ptPartner l (b - s) by omega)]
-      · rw [if_neg (show ¬ (a < s ∧ b < s) by omega), if_pos (show s ≤ a ∧ s ≤ b by omega),
+      · rw [ite_eq_right (show ¬ (a < s ∧ b < s) by omega), ite_eq_right (show ¬ (s ≤ a ∧ s ≤ b) by omega),
+          ite_eq_right (show ¬ a = s + Formalism.FourierDecayAlt.D.ptPartner l (b - s) by omega)]
+      · rw [ite_eq_right (show ¬ (a < s ∧ b < s) by omega), ite_eq_left (show s ≤ a ∧ s ≤ b by omega),
           ih (a - s) (b - s) (by simp only [Formalism.FourierDecayAlt.D.ptSize]; omega)]
         by_cases e : a - s = Formalism.FourierDecayAlt.D.ptPartner l (b - s)
-        · rw [if_pos e, if_pos (show a = s + Formalism.FourierDecayAlt.D.ptPartner l (b - s) by omega)]
-        · rw [if_neg e, if_neg (show ¬ a = s + Formalism.FourierDecayAlt.D.ptPartner l (b - s) by omega)]
+        · rw [ite_eq_left e, ite_eq_left (show a = s + Formalism.FourierDecayAlt.D.ptPartner l (b - s) by omega)]
+        · rw [ite_eq_right e, ite_eq_right (show ¬ a = s + Formalism.FourierDecayAlt.D.ptPartner l (b - s) by omega)]
 
 theorem ptScal_ne (l : List (ℕ × ℂ)) (hl : GoodL l) (b : ℕ) (hb : b < Formalism.FourierDecayAlt.D.ptSize l) :
     Formalism.FourierDecayAlt.D.ptScal l b ≠ 0 := by
@@ -782,9 +782,9 @@ theorem ptMatN_mono {r : ℕ} (γ : Point ℂ (r + 1)) :
   have : (i = wPt γ a) ↔ (i.val = Formalism.FourierDecayAlt.D.ptPartner (γ.1.map Prod.swap) a.val) := by
     rw [Fin.ext_iff, wPt_val]
   by_cases h : i = wPt γ a
-  · rw [if_pos (this.1 h), if_pos h]
+  · rw [ite_eq_left (this.1 h), ite_eq_left h]
     rfl
-  · rw [if_neg (fun h' => h (this.2 h')), if_neg h]
+  · rw [ite_eq_right (fun h' => h (this.2 h')), ite_eq_right h]
 
 theorem root_iff {r : ℕ} (γ : Point ℂ (r + 1)) (a b : Fin (r + 1)) (hab : a < b) :
     blockIdx γ.1 a.val = blockIdx γ.1 b.val ↔ (wPt γ).symm b < (wPt γ).symm a := by
@@ -813,9 +813,9 @@ theorem herm_esI (k r : ℕ) (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     herm (Hpk k r) v (bvec (esI k r a)) = v (eI k r a) := by
   unfold herm bvec
   simp only [dotProduct, Pi.star_apply, Pi.single_apply, apply_ite star, star_one, star_zero, ite_mul, one_mul,
-    zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   simp only [Matrix.mulVec, dotProduct, hpk_esI, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem flag_eq_uMap (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (ρ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
     (a b : Fin (r + 1)) (ha : a.val < r) : flagMat k r z ρ a b = Formalism.FourierDecayAlt.C2.uMap k r z ρ a b := by
@@ -865,7 +865,7 @@ theorem good_of {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProduct
 theorem isHaarOn_smul {k r : ℕ} {U : Set (Formalism.FourierDecayAlt.B.Mat k r)} {μ : Measure (Mt k r)} (h : Formalism.FourierDecayAlt.B.IsHaarOn U μ)
     {c : ENNReal} (h0 : c ≠ 0) (h1 : c ≠ ⊤) : Formalism.FourierDecayAlt.B.IsHaarOn U (c • μ) := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · rw [Measure.smul_apply, h.conc, smul_zero]
+  · rw [smul_apply, h.conc, smul_zero]
   · intro a ha
     have hm := Formalism.FourierDecayAlt.P.B2x1.lmulM_cont (k := k) (r := r) a
     rw [Measure.map_smul c hm.measurable.aemeasurable, h.left a ha]
@@ -873,14 +873,14 @@ theorem isHaarOn_smul {k r : ℕ} {U : Set (Formalism.FourierDecayAlt.B.Mat k r)
     have hm := Formalism.FourierDecayAlt.P.B2x1.rmulF_cont a
     rw [Measure.map_smul c hm.measurable.aemeasurable, h.right a ha]
   · intro K hK
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top h1.lt_top (h.finite_compact K hK)
   ·
     intro h'
     apply h.ne_zero
     rw [← Measure.measure_univ_eq_zero]
     have := congrArg (fun ν : Measure (Mt k r) => ν Set.univ) h'
-    simp only [Measure.smul_apply, smul_eq_mul, Measure.coe_zero, Pi.zero_apply] at this
+    simp only [smul_apply, smul_eq_mul, FunLike.coe_zero, Pi.zero_apply] at this
     exact (mul_eq_zero.1 this).resolve_left h0
 
 theorem meas_rootCoords {k r : ℕ} (z : Fin (2 * r + k + 1) → ℂ) (γ : Point ℂ (r + 1)) :
@@ -956,7 +956,7 @@ theorem muR_conc : Formalism.FourierDecayAlt.D.muR Ds g (wPt γ) {x | Matrix.of 
     Measure.map_apply hm hcl.measurableSet.compl]
   convert measure_empty (μ := (volume : Measure (Formalism.FourierDecayAlt.C2.Lstidx (wPt γ) → ℂ)))
   ext x
-  simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_setOf_eq, Equiv.apply_symm_apply, Set.mem_empty_iff_false,
+  simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_ofPred_eq, Equiv.apply_symm_apply, Set.mem_empty_iff_false,
     iff_false, not_not]
   exact (Formalism.FourierDecayAlt.P.Dx2.Rad.rhoF_spec Ds hg (dPt_ne γ) hG x).1
 
@@ -999,7 +999,7 @@ theorem root_measure_of_mu_R : RootMeasOfMuR := by
     congr 1
     field_simp
   refine ⟨?_, ?_⟩
-  · rw [Measure.smul_apply, muR_conc L Ds hz γ hg hZ, smul_zero]
+  · rw [smul_apply, muR_conc L Ds hz γ hg hZ, smul_zero]
   · rw [Measure.map_smul _ (meas_rootCoords _ γ).aemeasurable, muR_map_root L Ds hz γ hg hZ, hcst]
 
 theorem pair_inPair {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hκ0 : L.κN ≠ 0) (hκ1 : L.κN ≠ ⊤) :
@@ -1018,7 +1018,7 @@ theorem pair_inPair {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hκ0 : L.κN ≠ 0)
       ((Set.univ ×ˢ ({x | Matrix.of x ∉ UWset (k0 + 1) r L.z'} ×ˢ Set.univ)) ∪
         (Set.univ ×ˢ (Set.univ ×ˢ {x | Matrix.of x ∉ Nset (k0 + 1) r}))) := by
     intro p hp
-    simp only [Set.mem_setOf_eq, InPair, not_and_or] at hp
+    simp only [Set.mem_ofPred_eq, InPair, not_and_or] at hp
     rcases hp with h | h | h | h <;> simp [h]
   refine measure_mono_null hsub ?_
   simp only [pairMeas]
@@ -1236,8 +1236,8 @@ theorem sum_norm_sq_basis [FiniteDimensional ℂ W] {ι κ : Type*} [Fintype ι]
     haveI := FiniteDimensional.complete ℂ V
     haveI := FiniteDimensional.complete ℂ W
     ∑ i, ‖A (b i)‖ ^ 2 = ∑ j, ‖(ContinuousLinearMap.adjoint A) (c j)‖ ^ 2 := by
-  have := FiniteDimensional.complete ℂ V
-  have := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ V
+  have := FiniteDimensional.completeSpace ℂ W
   calc ∑ i, ‖A (b i)‖ ^ 2 = ∑ i, ∑ j, ‖⟪c j, A (b i)⟫_ℂ‖ ^ 2 := by
         simp_rw [c.sum_sq_norm_inner_right]
     _ = ∑ j, ∑ i, ‖⟪c j, A (b i)⟫_ℂ‖ ^ 2 := Finset.sum_comm

@@ -198,7 +198,7 @@ theorem abelSq : AbelSq := by
     linarith
   have hmono : ∀ i j, i ≤ j → j < n → a' j ≤ a' i := by
     intro i j hij hj
-    simp only [ha', dif_pos hj, dif_pos (lt_of_le_of_lt hij hj)]
+    simp only [ha', dite_eq_left hj, dite_eq_left (lt_of_le_of_lt hij hj)]
     exact ha (show (⟨i, lt_of_le_of_lt hij hj⟩ : Fin n) ≤ ⟨j, hj⟩ from hij)
   set t : ℝ := -∑ i ∈ range n, |a' i| with ht
   have htle : ∀ i < n, t ≤ a' i := by
@@ -428,7 +428,7 @@ lemma psum_eq {k : ℕ} (hk : k ≤ n) (f : Fin n → ℝ) :
   · intro a _ b _ h
     exact Fin.castLE_injective hk h
   · intro b hb
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hb
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hb
     exact ⟨⟨b.val, hb⟩, by simp, Fin.ext (by simp)⟩
   · intro a _
     rfl
@@ -1327,7 +1327,7 @@ theorem poincareSeriesFinite (G : Type*) [Group G] [TopologicalSpace G] [IsTopol
     [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G]
     [BorelSpace G] (μ : Measure G) [μ.IsHaarMeasure] : PoincareSeriesFinite G μ := by
   intro Γ S hΓ hSΓ Ω hΩ h1 a Ph hPh F hF hL D hD x
-  haveI := hΓ
+  have := hΓ
   refine lt_of_le_of_lt (foldBound_holds G μ Γ S hΓ hSΓ Ω hΩ.isClosed.measurableSet a Ph hPh.1 hPh.2.1
     hPh.2.2 F hF D hD x) ?_
   refine ENNReal.mul_lt_top (ENNReal.mul_lt_top ENNReal.coe_lt_top
@@ -1372,7 +1372,7 @@ theorem measurable_poinc {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMu
     intro x
     have h1 : Summable (fun δ : D => ‖Ph ((δ : G) * x)‖₊) := by
       have h2 := hs x
-      simp only [enorm_eq_nnnorm] at h2
+      simp only [eNorm_eq_nnNorm] at h2
       exact ENNReal.tsum_coe_ne_top_iff_summable.mp h2
     exact Summable.of_norm (by simpa using NNReal.summable_coe.mpr h1)
   refine measurable_of_tendsto_metrizable' (Filter.atTop : Filter (Finset D))
@@ -1411,7 +1411,7 @@ theorem fold_L2_double_coset (G : Type*) [Group G] [TopologicalSpace G] [IsTopol
   have hpt : ∀ x : G, ‖poinc D Ph x‖ₑ ^ 2
       ≤ (a : ℝ≥0∞) * quotientLIntegral μ F Ph * ∑' δ : D, g ((δ : G) * x) := by
     intro x
-    have hP : ‖poinc D Ph x‖ₑ ≤ ∑' δ : D, ‖Ph ((δ : G) * x)‖ₑ := enorm_tsum_le_tsum_enorm
+    have hP : ‖poinc D Ph x‖ₑ ≤ ∑' δ : D, ‖Ph ((δ : G) * x)‖ₑ := eNorm_tsum_le_tsum_eNorm
     have hg : ∑' δ : D, g ((δ : G) * x) = mult Γ Ω x * ∑' δ : D, ‖Ph ((δ : G) * x)‖ₑ := by
       rw [← ENNReal.tsum_mul_left]
       refine tsum_congr fun δ => ?_
@@ -1424,7 +1424,7 @@ theorem fold_L2_double_coset (G : Type*) [Group G] [TopologicalSpace G] [IsTopol
           mul_le_mul' le_rfl (hT x)
       _ = (a : ℝ≥0∞) * quotientLIntegral μ F Ph * (mult Γ Ω x * ∑' δ : D, ‖Ph ((δ : G) * x)‖ₑ) := by ring
 
-  have hgm : Measurable g := hmmeas.mul hPh.enorm
+  have hgm : Measurable g := hmmeas.mul hPh.eNorm
   have hginv : ∀ s ∈ S, ∀ y : G, g (s * y) = g y := by
     intro s hs y
     simp only [hgdef]
@@ -1516,7 +1516,7 @@ lemma symD_eq {ε : Fin n → Bool} (g : UJ ε) {k X : Matrix (Fin n) (Fin n) �
       ((g : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ) = k' * NormedSpace.exp X' ∧
       t = Real.sqrt (hs X')} = {Real.sqrt (hs X)} := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · rintro ⟨k', X', hk', hX', hg', rfl⟩
       have := polar_decomposition_unique k' k X' X hk' hk hX' hX (hg'.symm.trans hg)

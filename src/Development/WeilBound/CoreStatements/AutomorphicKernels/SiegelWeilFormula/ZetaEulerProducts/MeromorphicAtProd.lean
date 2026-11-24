@@ -135,7 +135,7 @@ theorem ZO.prod {ι : Type*} (t : Finset ι) (F : ι → ℂ → ℂ) (K : ι �
 
 theorem ZO.one_of_deriv (hf : AnalyticAt ℂ f x) (h0 : f x = 0) (hd : deriv f x ≠ 0) : ZO f x 1 := by
   obtain ⟨p, hp⟩ := hf
-  refine ⟨dslope f x, ⟨_, hp.has_fpower_series_dslope_fslope⟩, by rwa [dslope_same],
+  refine ⟨dslope f x, ⟨_, hp.dslope_fslope⟩, by rwa [dslope_same],
     Filter.Eventually.of_forall fun s => ?_⟩
   have h := sub_smul_dslope f x s
   rw [smul_eq_mul, h0, sub_zero] at h

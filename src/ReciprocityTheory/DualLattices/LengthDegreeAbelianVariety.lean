@@ -110,7 +110,7 @@ lemma sumLat_inv_mulVec {n s : ℕ} (Mτ : Fin n → Lat v (Fin s)) (w : Fin n �
     Equiv.prodComm_symm, Equiv.prodComm_apply, Prod.swap_prod_mk, Matrix.blockDiagonal_apply,
     Fintype.sum_prod_type, ite_mul, zero_mul]
   rw [Finset.sum_comm]
-  simp only [Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 lemma v_mulVec_le {m k : Type} [Fintype k] (P : Matrix m k C) (x : k → C)
     (hP : ∀ i j, v (P i j) ≤ 1) (hx : ∀ j, v (x j) ≤ 1) (i : m) : v ((P *ᵥ x) i) ≤ 1 := by
@@ -131,7 +131,7 @@ theorem polyVec_mem {n h : ℕ} {a : Fin n → C} (F : Lat v (Fin n × Fin h))
   · funext y
     rw [hF]
     simp only [Matrix.mulVec, dotProduct, freeMat, Matrix.of_apply, Fintype.sum_prod_type,
-      ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [Polynomial.eval_eq_sum_range' hdeg, Finset.sum_mul, ← Fin.sum_univ_eq_sum_range]
     exact Finset.sum_congr rfl fun k _ ↦ by ring
 
@@ -209,7 +209,7 @@ theorem conductor_mem {n h : ℕ} {a : Fin n → C} (ha : ∀ τ, v (a τ) ≤ 1
   · rw [hF]
     funext y
     simp only [Matrix.mulVec, dotProduct, Fintype.sum_prod_type, freeMat, Matrix.of_apply, ite_mul,
-      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hsum : ∑ k : Fin n, a y.1 ^ (k : ℕ) *
         ((∏ τ' ∈ Finset.univ.erase τ, (Polynomial.X - Polynomial.C (a τ'))).coeff k * u y.2) =
         (∏ τ' ∈ Finset.univ.erase τ, (Polynomial.X - Polynomial.C (a τ'))).eval (a y.1) * u y.2 := by
@@ -283,9 +283,9 @@ private theorem blockDiag_mul_diagonal_eq_diagonal_mul {n p q : ℕ} (X : Fin n 
   rw [Matrix.mul_diagonal, Matrix.diagonal_mul]
   simp only [Matrix.of_apply]
   by_cases h : y.1 = x.1
-  · rw [if_pos h, h]
+  · rw [ite_eq_left h, h]
     ring
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     ring
 
 private theorem prod_fder_fst_eq_discr_pow {n m : ℕ} (a : Fin n → C) :
@@ -418,14 +418,14 @@ theorem colength_sq_mul_le {n : ℕ} (a : Fin n → C) (hinj : Function.Injectiv
     by_cases hτ : τ = x.1
     · have hv : (fun j : Fin s => if τ = x.1 then A τ j x.2 else 0) = fun j => A τ j x.2 := by
         funext j
-        rw [if_pos hτ]
-      rw [hv, if_pos hτ]
+        rw [ite_eq_left hτ]
+      rw [hv, ite_eq_left hτ]
       rfl
     · have hv : (fun j : Fin s => if τ = x.1 then A τ j x.2 else 0) = 0 := by
         funext j
-        rw [if_neg hτ]
+        rw [ite_eq_right hτ]
         rfl
-      rw [hv, if_neg hτ, Matrix.mulVec_zero]
+      rw [hv, ite_eq_right hτ, Matrix.mulVec_zero]
       rfl
   have hSS : S.pts = (sumLat Mτ).pts := by rw [hS, sumLat_pts]
   have hcol : colen M' S = v (G * W).det := by
@@ -573,7 +573,7 @@ theorem infinite_residueField [IsAlgClosed C] :
   classical
   by_contra hfin
   rw [not_infinite_iff_finite] at hfin
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField v.valuationSubring)
+  let := Fintype.ofFinite (IsLocalRing.ResidueField v.valuationSubring)
   obtain ⟨q, hq⟩ : ∃ q, q = Fintype.card (IsLocalRing.ResidueField v.valuationSubring) := ⟨_, rfl⟩
   have hq2 : 2 ≤ q := by
     have := Fintype.one_lt_card (α := IsLocalRing.ResidueField v.valuationSubring)
@@ -651,7 +651,7 @@ theorem exists_generic [IsAlgClosed C] {ι σ T : Type} [Fintype ι] [DecidableE
     (hsec : ∀ t, ∃ d : Matrix σ ι C, (∀ r i, v (d r i) ≤ 1) ∧ Q t * d = 1) :
     ∃ c : Matrix σ ι C, (∀ r i, v (c r i) ≤ 1) ∧ ∀ t, v (Q t * c).det = 1 := by
   classical
-  haveI : Infinite (IsLocalRing.ResidueField v.valuationSubring) := infinite_residueField
+  have : Infinite (IsLocalRing.ResidueField v.valuationSubring) := infinite_residueField
   let QO : T → Matrix ι σ v.valuationSubring :=
     fun t i r => ⟨Q t i r, (v.mem_valuationSubring_iff _).mpr (hQ t i r)⟩
   let Qk : T → Matrix ι σ (IsLocalRing.ResidueField v.valuationSubring) :=
@@ -811,7 +811,7 @@ theorem valuation_pairwiseDifferenceProduct_pow_le_colength_sq (C : Type) [Field
       intro c τ i
       simp only [Bb, Matrix.mulVec, dotProduct, Fintype.sum_prod_type, Matrix.reindex_apply,
         Matrix.submatrix_apply, Equiv.prodComm_symm, Equiv.prodComm_apply, Prod.swap_prod_mk,
-        Matrix.blockDiagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Matrix.blockDiagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [Finset.sum_eq_single τ (fun b _ hb => by simp [Ne.symm hb]) (by simp)]
       simp
     have hpts : Sb.pts = sumPts Mτ := by
@@ -900,7 +900,7 @@ theorem valuation_pairwiseDifferenceProduct_pow_le_colength_sq (C : Type) [Field
     simp only [X, Matrix.of_apply, hG, freeMat, Matrix.reindex_apply, Matrix.submatrix_apply,
       Equiv.prodComm_symm, Equiv.prodComm_apply, Prod.swap, Matrix.blockDiagonal_apply]
     simp only [ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     ring
   have hGdet : ∀ τ, v (G τ).det = v (Mτ τ).B.det := by
     intro τ
@@ -969,7 +969,7 @@ lemma blkLat_pts {n s : ℕ} (Ls : Fin n → Lat v (Fin s)) : (blkLat Ls).pts = 
       simp [Ne.symm hb]
     · simp
   ext w
-  simp only [ReciprocityTheory.PGsh.Lat.pts, sumPts, Set.mem_setOf_eq, hmv]
+  simp only [ReciprocityTheory.PGsh.Lat.pts, sumPts, Set.mem_ofPred_eq, hmv]
   constructor
   · rintro ⟨c, hc, rfl⟩ τ
     exact ⟨fun j => c (τ, j), fun j => hc (τ, j), rfl⟩

@@ -1603,7 +1603,7 @@ theorem points_defOver : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLo
   intro V₁ _ _ _ hV hunit D τ₀ W₀ _ ib B₀ _ M₀ c₀ τ₁ β w hF K _ _ ev k₀ hk₀ hk N hN b hb a
   classical
   obtain ⟨-, -, hβ, -, hc, -, -⟩ := hF
-  haveI : IsNoetherianRing V₁ := hV.1
+  have : IsNoetherianRing V₁ := hV.1
   have hg : spMap ev ≫ spMap ib = spMap (ev.comp ib) := by
     simp only [spMap, ← Spec.map_comp]; rfl
   obtain ⟨Φ, hΦ⟩ :=
@@ -1733,7 +1733,7 @@ theorem unit_of_val {K S : Type} [Field K] [CommRing S] [Nontrivial S] (f : K �
   exact ⟨Units.mk0 c hc, rfl, Units.ext (by rw [h, Units.val_mul]; rfl)⟩
 
 theorem toStk_surj' {K : Type} [Field K] (z : Sp K) : Function.Surjective (toStk z) := fun s => by
-  obtain ⟨U, hU, a, rfl⟩ := (Sp K).presheaf.germ_exist s
+  obtain ⟨U, hU, a, rfl⟩ := (Sp K).presheaf.exists_germ_eq s
   exact ⟨_, (toStk_valF_gs (𝟙 _) U z hU a).trans (gs_eq _ _ _ hU _)⟩
 
 theorem units_identity {U : Type} [CommGroup U] (gO gB gP gC gCn R M2 M3 M4 M5 : U) :
@@ -1821,7 +1821,7 @@ theorem ev_values : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type) [CommRing
         (k₀.inv_mem hc5)), ?_⟩
     rw [← hL, h1, Units.val_mul, Units.val_mul, Units.val_pow_eq_pow_val,
       sq_cancel _ _ _ _ _ (Units.inv_mul _)]
-    simp only [Units.val_mul, Units.val_pow_eq_pow_val, ← map_inv, Units.coe_map, MonoidHom.coe_coe,
+    simp only [Units.val_mul, Units.val_pow_eq_pow_val, ← map_inv, Units.coe_map, MonoidHom.coe_ofClass,
       RingHom.toMonoidHom_eq_coe, Units.val_inv_eq_inv_val, map_mul, map_pow]
     ring
   obtain ⟨lam, hlam⟩ := toStk_surj' z U0.val

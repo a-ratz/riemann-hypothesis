@@ -386,7 +386,7 @@ theorem starAD_of_global : ∀ (D : D7) (L : SizeData₂ D) (HW : HWOf D.loc) (X
     simp only [Rows.Data.VV, hIco]
   have hcls : TwistedPlaces.SplitK D (D.nd.l i) ∨ TwistedPlaces.InertK D (D.nd.l i) := by
     unfold TwistedPlaces.SplitK TwistedPlaces.InertK Host.cls primeClass
-    simp only [hsm, hlq, hld, if_false]
+    simp only [hsm, hlq, hld, ite_false]
     split_ifs <;> simp
   rcases hcls with hsp | hin
   ·
@@ -1274,8 +1274,8 @@ theorem flat_pos {D : D7} (L : SizeData₂ D) (bd : Prop) (l : ℕ) : 0 < Formal
   have h3 := Formalism.MainNotions.TwistedPlaces.L_ge_one L
   have h4 := L.Sc_pos
   by_cases hb : bd
-  · rw [if_pos hb]; linarith
-  · rw [if_neg hb]; linarith
+  · rw [ite_eq_left hb]; linarith
+  · rw [ite_eq_right hb]; linarith
 
 theorem coreF_pos {D : D7} (L : SizeData₂ D) (bd : Prop) (l : ℕ) (lam : HeightOneSpectrum (𝓞 D.host.E)) :
     0 < Formalism.MainNotions.N.coreF L bd l lam := by
@@ -1566,8 +1566,8 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   have hkill := _root_.GlobalTheory.HubX.InvariantsNoJump.torsion_exponent_kills_invariants_no_jump_zero hP.bk hP.tate hP.euler D HW F Cm (D.nd.l i) (D.nbr i w hw).Kw 1 C.LL hg1 M0 h0
     (GlobalTheory.HubX.tTwoLocalLattice D i (X.ρ i) π C hc L2) hW hnj
   unfold EmbeddingTypes.lenInvD
-  haveI : IsDiscreteValuationRing ↥(OL C.LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr C.LL
-  haveI : IsFractionRing ↥(OL C.LL) ↥C.LL.1 := Formalism.BasicNotions.Examples₂.LB.OL_frac C.LL
+  have : IsDiscreteValuationRing ↥(OL C.LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr C.LL
+  have : IsFractionRing ↥(OL C.LL) ↥C.LL.1 := Formalism.BasicNotions.Examples₂.LB.OL_frac C.LL
   refine EmbeddingTypes.len_le_of_kill (Br.PD D.loc D.nbr i w hw) L2.T hstd _ (X.c0 i u) ?_
   intro x hx
   exact pow_smul_eq_zero_of_le _ hc0 (hkill x fun g => hx g)

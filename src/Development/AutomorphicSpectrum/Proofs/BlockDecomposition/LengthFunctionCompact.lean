@@ -58,7 +58,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem lgCpt : PositivityTheory.RgBcC.VC.LgCpt := by
   intro n R
-  haveI : ProperSpace (Mat n) := FiniteDimensional.proper ℂ _
+  have : ProperSpace (Mat n) := FiniteDimensional.proper ℂ _
   let f : G n → ℝ := fun y => 1 + ∑ a, ∑ b, (‖y.val a b‖ ^ 2 + ‖(y⁻¹).val a b‖ ^ 2)
   have hinv : ∀ y : G n, (y.val)⁻¹ = (y⁻¹).val := fun y => (Matrix.coe_units_inv y).symm
   have hc1 : Continuous fun y : G n => y.val := Units.continuous_val
@@ -74,7 +74,7 @@ theorem lgCpt : PositivityTheory.RgBcC.VC.LgCpt := by
     linarith
   have hS : {y : G n | lg y.val ≤ R} = f ⁻¹' Set.Iic (Real.exp R) := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Iic, lg, hinv]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_Iic, lg, hinv]
     exact Real.log_le_iff_le_exp (hfpos y)
   rw [hS]
   have hclosed : IsClosed (f ⁻¹' Set.Iic (Real.exp R)) := isClosed_Iic.preimage hfc

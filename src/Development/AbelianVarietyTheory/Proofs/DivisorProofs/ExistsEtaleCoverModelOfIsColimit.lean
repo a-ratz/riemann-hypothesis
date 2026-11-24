@@ -76,10 +76,10 @@ private lemma exists_etale_pushout_of_filtered_colimit (J : Type) [SmallCategory
     (g : c.pt ⟶ B) (hg : g.hom.Etale) :
     ∃ (j : J) (B' : CommRingCat.{0}) (a : D.obj j ⟶ B') (h : B' ⟶ B),
       a.hom.Etale ∧ IsPushout a (c.ι.app j) h g := by
-  letI := g.hom.toAlgebra
-  haveI : Algebra.Etale c.pt B := hg
+  let := g.hom.toAlgebra
+  have : Algebra.Etale c.pt B := hg
   obtain ⟨j, A, _, _, hA, ⟨e⟩⟩ := _root_.GlobalTheory.EtaleDescent.exists_etale_model_of_isColimit J D c hc B
-  letI : Algebra (D.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (D.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   refine ⟨j, CommRingCat.of A, CommRingCat.ofHom (algebraMap (D.obj j) A),
     CommRingCat.ofHom ((e : TensorProduct (D.obj j) c.pt A →+* B).comp
       Algebra.TensorProduct.includeRight.toRingHom), ?_, ?_⟩
@@ -147,7 +147,7 @@ theorem _root_.GlobalTheory.EtaleCoverDescent.exists_etale_cover_model_of_isColi
   have claim : ∃ (k : J) (f : j1 ⟶ k), ∀ p : Spec (D.obj k), Spec.map (D.map f) p ∉ W := by
     by_contra hcon
     push_neg at hcon
-    haveI : ∀ {i i' : Jᵒᵖ} (f : i ⟶ i'), IsAffineHom ((D.op ⋙ Scheme.Spec).map f) :=
+    have : ∀ {i i' : Jᵒᵖ} (f : i ⟶ i'), IsAffineHom ((D.op ⋙ Scheme.Spec).map f) :=
       fun f => inferInstanceAs (IsAffineHom (Spec.map (D.map f.unop)))
     obtain ⟨s, hs⟩ := exists_mem_of_isClosed_of_nonempty' (D.op ⋙ Scheme.Spec)
       (Scheme.Spec.mapCone c.op) (isLimitOfPreserves Scheme.Spec hc.op) (j := op j1)
@@ -170,7 +170,7 @@ theorem _root_.GlobalTheory.EtaleCoverDescent.exists_etale_cover_model_of_isColi
   choose B2 a2 h2 ha2 hH2 hpt using fun i => exists_etale_pushout_at_later_index_of_range c f (ha1 i) (hH1 i)
   refine ⟨k, f0 ≫ f, B2, a2, h2, fun i => ⟨ha2 i, hH2 i⟩, fun p => ?_⟩
   have hp := hk p
-  simp only [W, Set.mem_setOf_eq, not_forall, not_not] at hp
+  simp only [W, Set.mem_ofPred_eq, not_forall, not_not] at hp
   obtain ⟨i, hi⟩ := hp
   obtain ⟨v, hv⟩ := hpt i p hi
   exact ⟨i, v, hv⟩

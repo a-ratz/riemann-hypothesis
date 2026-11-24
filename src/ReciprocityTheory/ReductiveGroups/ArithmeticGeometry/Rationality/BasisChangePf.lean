@@ -112,7 +112,7 @@ lemma cb_lin [Fintype ι] (A : ι → ι → K) {c : ℝ} (hc : 0 ≤ c) (hA : �
   rw [MvPolynomial.coeff_C_mul, norm_mul]
   calc ‖A i k‖ * ‖AddMonoidAlgebra.coeff (X k : MvPolynomial ι K) μ‖ ≤ ‖A i k‖ * 1 := by
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        rw [MvPolynomial.coeff_X']
+        rw [coeff_X]
         split_ifs <;> simp
     _ ≤ c := by simpa using hA i k
 

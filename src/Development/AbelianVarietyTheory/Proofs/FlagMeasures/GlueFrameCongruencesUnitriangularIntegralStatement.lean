@@ -72,9 +72,9 @@ theorem exists_pow_sat {R : Type*} [CommRing R] [IsDedekindDomain R] (P : Height
     {g : R} (hg : g ≠ 0) :
     ∃ e : ℕ, ∀ x ∈ P.asIdeal ^ e, ∃ s : R, s ∉ P.asIdeal ∧ s * x ∈ Ideal.span {g} := by
   classical
-  haveI := P.isPrime
+  have := P.isPrime
   let Rp := Localization.AtPrime P.asIdeal
-  haveI : IsDiscreteValuationRing Rp :=
+  have : IsDiscreteValuationRing Rp :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R P.ne_bot Rp
   have hinj : Function.Injective (algebraMap R Rp) :=
     IsLocalization.injective Rp P.asIdeal.primeCompl_le_nonZeroDivisors
@@ -111,7 +111,7 @@ theorem GlobalTheory.FrameGlue.glue : ∀ {E : Type} [Field E] [NumberField E] [
   let ξP : HeightOneSpectrum (𝓞 E) → Matrix (Fin (r + 1)) (Fin (r + 1)) (𝓞 E) := fun P =>
     if h : (g : 𝓞 E) ∈ P.asIdeal then Classical.choose (hloc P h) else 0
   have hξP : ∀ P (h : (g : 𝓞 E) ∈ P.asIdeal), ξP P = Classical.choose (hloc P h) := by
-    intro P h; simp only [ξP, dif_pos h]
+    intro P h; simp only [ξP, dite_eq_left h]
   have hcrt : ∀ a b : Fin (r + 1), ∃ y : 𝓞 E, ∀ P (hP : P ∈ hfin.toFinset),
       y - ξP P a b ∈ P.asIdeal ^ e P := by
     intro a b
@@ -124,7 +124,7 @@ theorem GlobalTheory.FrameGlue.glue : ∀ {E : Type} [Field E] [NumberField E] [
   let ξ : Matrix (Fin (r + 1)) (Fin (r + 1)) (𝓞 E) := fun a b =>
     if b < a then 0 else if a = b then 1 else y a b
   refine ⟨ξ, fun a b hab => by simp [ξ, hab], fun a => by simp [ξ], fun b P hP => ?_⟩
-  haveI := P.isPrime
+  have := P.isPrime
   have hPs : P ∈ hfin.toFinset := by simpa using hP
   obtain ⟨hlow, hdiag, hmod⟩ := Classical.choose_spec (hloc P hP)
   rw [← hξP P hP] at hlow hdiag hmod
@@ -136,7 +136,7 @@ theorem GlobalTheory.FrameGlue.glue : ∀ {E : Type} [Field E] [NumberField E] [
     · by_cases hab : a = b
       · subst hab; simp [ξ, hdiag]
       · have := hy a b P hPs
-        simp only [ξ, hba, hab, if_false]
+        simp only [ξ, hba, hab, ite_false]
         rw [← neg_sub]; exact (Ideal.neg_mem_iff _).2 this
   set L := Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (Ideal.span {(g : 𝓞 E)} • Λ) with hL
   have key : ∀ (x : 𝓞 E) (v : S.V), ((x : E)) • v = x • v := fun x v => algebraMap_smul E x v

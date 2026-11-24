@@ -142,7 +142,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem base_integralClosure (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K] :
     ∃ _ : IsDiscreteValuationRing (integralClosure ℤ_[p] K), GlobalTheory.Mum.Base (integralClosure ℤ_[p] K) := by
-  haveI := GlobalTheory.isDiscreteValuationRing_integralClosure_padicInt p K
+  have := GlobalTheory.isDiscreteValuationRing_integralClosure_padicInt p K
   exact ⟨inferInstance, ⟨inferInstance, inferInstance, inferInstance,
     GlobalTheory.DiscEval.isAdicComplete_integralClosure K⟩, GlobalTheory.charZero_integralClosure_padicInt⟩
 
@@ -161,10 +161,10 @@ end GlobalTheory.Poinc.TraitOfPoint
 open GlobalTheory.Poinc.TraitOfPoint Polynomial in
 theorem GlobalTheory.Poinc.exists_trait_of_classical_point : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (Z : Scheme.{0}) (i : F.X ⟶ Z), IsOpenImmersion i → ∀ (W8 : Matrix (Fin 8) (Fin 8) ℤ) (X₁ : Setup F W8 i) (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z) (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ Y.Z), Set.range (gPt p ≫ y ≫ πY ≫ X₁.π) ⊆ Set.range i → ∃ (T : Trait F) (ι : FractionRing T.V →+* PadicAlgCl p) (j : T.V →+* OO p) (ξ : Sp T.V ⟶ Y.Z), (∀ x, ‖ι x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T.V (FractionRing T.V))) ∧ (∀ v, (j v : PadicAlgCl p) = ι (algebraMap T.V (FractionRing T.V) v)) ∧ IsLocalHom j ∧ spMap j ≫ ξ = y ∧ jK T.V ≫ ξ ≫ πY ≫ X₁.π = T.y ≫ i := by
   intro g n F Z i hi W8 X₁ Y πY p _ y hy
-  haveI := hi
-  haveI := lft_toInt Y
+  have := hi
+  have := lft_toInt Y
   obtain ⟨K, hK, H⟩ := GlobalTheory.padicAlgCl_integral_points.2 Y.Z (Y.s ≫ spMap (algebraMap ℤ X₁.o₁)) p y
-  haveI := hK
+  have := hK
   obtain ⟨j₀, y₀, hj₀, -, hy₀⟩ := H K le_rfl
   obtain ⟨hdvr, hbase⟩ := base_integralClosure K
 
@@ -189,19 +189,19 @@ theorem GlobalTheory.Poinc.exists_trait_of_classical_point : ∀ (g n : ℕ) (F 
   obtain ⟨T, f, fK, hfinj, -, hffin, hfK, hTy⟩ :=
     GlobalTheory.T.traitExistsAfterFiniteExtension_of_completeDVR g n (cycAway n) (zetaAway n) F (integralClosure ℤ_[p] K) hbase hdvr yK
 
-  letI : Algebra (integralClosure ℤ_[p] K) T.V := f.toAlgebra
-  haveI : Module.Finite (integralClosure ℤ_[p] K) T.V := hffin
-  haveI : Module.IsTorsionFree (integralClosure ℤ_[p] K) T.V :=
+  let : Algebra (integralClosure ℤ_[p] K) T.V := f.toAlgebra
+  have : Module.Finite (integralClosure ℤ_[p] K) T.V := hffin
+  have : Module.IsTorsionFree (integralClosure ℤ_[p] K) T.V :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr hfinj
-  haveI : Module.IsTorsionFree (integralClosure ℤ_[p] K) (FractionRing T.V) := by
+  have : Module.IsTorsionFree (integralClosure ℤ_[p] K) (FractionRing T.V) := by
     refine Module.isTorsionFree_iff_algebraMap_injective.mpr ?_
     rw [IsScalarTower.algebraMap_eq (integralClosure ℤ_[p] K) T.V (FractionRing T.V)]
     exact (IsFractionRing.injective T.V (FractionRing T.V)).comp hfinj
-  haveI : Module.IsTorsionFree (integralClosure ℤ_[p] K) (PadicAlgCl p) :=
+  have : Module.IsTorsionFree (integralClosure ℤ_[p] K) (PadicAlgCl p) :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr hinj₀
-  haveI : Algebra.IsAlgebraic (integralClosure ℤ_[p] K) T.V := inferInstance
-  haveI : Algebra.IsAlgebraic T.V (FractionRing T.V) := IsLocalization.isAlgebraic _ (nonZeroDivisors T.V)
-  haveI : Algebra.IsAlgebraic (integralClosure ℤ_[p] K) (FractionRing T.V) :=
+  have : Algebra.IsAlgebraic (integralClosure ℤ_[p] K) T.V := inferInstance
+  have : Algebra.IsAlgebraic T.V (FractionRing T.V) := IsLocalization.isAlgebraic _ (nonZeroDivisors T.V)
+  have : Algebra.IsAlgebraic (integralClosure ℤ_[p] K) (FractionRing T.V) :=
     Algebra.IsAlgebraic.trans (integralClosure ℤ_[p] K) T.V (FractionRing T.V)
   let ι' : FractionRing T.V →ₐ[integralClosure ℤ_[p] K] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -357,7 +357,7 @@ theorem pos_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : Quad
   have h : q a ≤ 0 := not_lt.1 h
   have hfin : {x | ¬ (0 : ℝ) < q x}.Finite := Filter.eventually_cofinite.1 (hq.eventually_gt_atTop 0)
   refine Set.infinite_of_injective_forall_mem (f := fun n : ℤ => n • a) (smul_left_injective ℤ ha) (fun n => ?_) hfin
-  simp only [Set.mem_setOf_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
+  simp only [Set.mem_ofPred_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
   push_cast
   exact mul_nonpos_of_nonneg_of_nonpos (mul_self_nonneg _) h
 
@@ -677,9 +677,9 @@ theorem GlobalTheory.Poinc.exists_approxAt : ∀ (g n : ℕ) (F : SFam g n (zeta
   have hcl : IsClosed ({z₁} : Set X₁.M.Z) := c₀.cen ▸ isClosed_singleton_cPt c₀.y
   obtain ⟨Φ, hM, hL, hR⟩ := _root_.GlobalTheory.Poinc.PreSys.main g n F W Z i hE hT X₁ p z₁ hcl
   have hF := _root_.GlobalTheory.Poinc.four_of_classical g n F W Z i X₁ p z₁ Φ hE.1 hR
-  haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
-  haveI := X₁.M.lft
-  haveI : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
+  have : IsDedekindDomain X₁.o₁ := X₁.ar.ded
+  have := X₁.M.lft
+  have : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
   have hA := approx_of_fpre ℤ id bddAct_int_and_cm.1 g φ hpol d₀ hsup 7 W hE.1 (X₁.S.r * X₁.S.N) p hN _ Φ hL hF
   obtain ⟨y₀, hev₀, e₀, he₀⟩ := hM c₀
   obtain ⟨f, hf1, hf2⟩ := hA y₀ e
@@ -727,7 +727,7 @@ theorem approxAt_mul_of_one_le (g n : ℕ) (F : SFam g n (zetaAway n)) (W8 : Mat
     exact norm_pow _ _
   have hexp : ∀ c : CTrait X₁ p z₁, Real.exp (-(c.sc * (((d * m : ℕ) : ℝ) * φ.evalZ c.T.β))) =
       Real.exp (-(c.sc * (d * φ.evalZ c.T.β))) ^ m := fun c => by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -798,7 +798,7 @@ theorem exists_cTrait_norm_eqAt {g n : ℕ} {F : SFam g n (zetaAway n)} {Z : Sch
       rw [map_ne_zero, Ne, IsFractionRing.to_map_eq_zero_iff]
       exact T.irr.ne_zero
     show _ = Real.exp (-(-Real.log ‖ι' (algebraMap T.V (FractionRing T.V) T.ϖ)‖ * (ι * φ.evalZ T.β)))
-    rw [key, ← ha, neg_mul, neg_neg, mul_comm, Real.exp_nat_mul, Real.exp_log hpos]
+    rw [key, ← ha, neg_mul, neg_neg, mul_comm, Real.exp_natCast_mul, Real.exp_log hpos]
 
 theorem val_comp_of_centre {g n : ℕ} {F : SFam g n (zetaAway n)} {Z : Scheme.{0}} {i : F.X ⟶ Z}
     {W8 : Matrix (Fin 8) (Fin 8) ℤ} (X₁ : Setup F W8 i) (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z)
@@ -962,7 +962,7 @@ open GlobalTheory.Poinc
 
 theorem _root_.GlobalTheory.Poinc.ideal_orders_of_proper_model : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W8 : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (φ : InvFun ℤ) (X₁ : Setup F W8 i) (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z), X₁.M.IsHom Y (AlgHom.id X₁.o₁ X₁.Ω₁) πY → IsProper πY → ∀ (ι : ℕ) (J₁ : X₁.M.Z.IdealSheafData), (∀ y ∈ (J₁.comap πY).support, X₁.π (πY y) ∉ Set.range i) → (∀ (T : Trait F) (ξ : Sp T.V ⟶ Y.Z), jK T.V ≫ ξ ≫ πY ≫ X₁.π = T.y ≫ i → ∃ a : ℕ, (a : ℝ) = ι * φ.evalZ T.β ∧ idlAlong (J₁.comap πY) ξ = Ideal.span {T.ϖ ^ a}) → (∀ (T : Trait F) (k : ℕ), 1 ≤ k → φ.evalZ ((k : ℤ) • T.β) = k * φ.evalZ T.β) → (∀ x ∈ J₁.support, X₁.π x ∉ Set.range i) ∧ ∀ (T : Trait F) (ξ₁ : Sp T.V ⟶ X₁.M.Z), jK T.V ≫ ξ₁ ≫ X₁.π = T.y ≫ i → ∃ a : ℕ, (a : ℝ) = ι * φ.evalZ T.β ∧ idlAlong J₁ ξ₁ = Ideal.span {T.ϖ ^ a} := by
   intro g n F W8 Z i φ X₁ Y πY hhom hprop ι J₁ hsupp hord hφ
-  haveI := hprop
+  have := hprop
 
   have hsurj : Function.Surjective πY := by
     have hgen : genericPoint X₁.M.Z ∈ Set.range πY := by
@@ -989,8 +989,8 @@ theorem _root_.GlobalTheory.Poinc.ideal_orders_of_proper_model : ∀ (g n : ℕ)
     have hB' : GlobalTheory.Mum.Base V' := ⟨⟨inferInstance, inferInstance, inferInstance, hc'⟩, inferInstance⟩
     obtain ⟨T₂, f₂, fK₂, hf₂i, hf₂l, -, hf₂K, hT₂y⟩ :=
       GlobalTheory.T.traitExistsAfterFiniteExtension_of_completeDVR g n _ _ F V' hB' inferInstance (spMap (τ.comp σ) ≫ T.y)
-    haveI := hfl
-    haveI := hf₂l
+    have := hfl
+    have := hf₂l
     have hjK : ∀ {R S : Type} [CommRing R] [IsDomain R] [CommRing S] [IsDomain S] (u : R →+* S)
         (uK : FractionRing R →+* FractionRing S), (∀ a, uK (algebraMap R _ a) = algebraMap S _ (u a)) →
         jK S ≫ spMap u = spMap uK ≫ jK R := by
@@ -1064,7 +1064,7 @@ namespace GlobalTheory.Poinc
 
 theorem Setup.range_π_eq : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W8 : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W8 i) (η : F.X) (W : Set Z), (∀ w, (spMap X₁.S.R.val.toRingHom ≫ X₁.u) w = η) → closure {i η} = W → Set.range X₁.π = W := by
   intro g n F W8 Z i X₁ η W hη hW
-  haveI := X₁.fin
+  have := X₁.fin
   have hc : IsClosedMap X₁.π.base := X₁.π.isClosedMap
   let w₀ : Sp X₁.Ω₁ := IsLocalRing.closedPoint X₁.Ω₁
   have hgen : X₁.M.pt w₀ = genericPoint X₁.M.Z := X₁.M.pt_apply w₀
@@ -1243,10 +1243,10 @@ theorem normDescent : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F 
     rw [e, Category.assoc, Scheme.ΓSpecIso_naturality, ← Category.assoc, CommRingCat.hom_comp]
     rfl
   have hne : ((⊤ : X₁.M.Z.Opens) : Set X₁.M.Z).Nonempty := Set.univ_nonempty
-  haveI : CharZero X₁.Ω₁ := X₁.ar.char
-  haveI hchar : CharZero Γ(X₁.M.Z, ⊤) := RingHom.charZero (X₁.M.res ⊤ hne)
-  haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
-  haveI := X₁.M.lft
+  have : CharZero X₁.Ω₁ := X₁.ar.char
+  have hchar : CharZero Γ(X₁.M.Z, ⊤) := RingHom.charZero (X₁.M.res ⊤ hne)
+  have : IsDedekindDomain X₁.o₁ := X₁.ar.ded
+  have := X₁.M.lft
   have hLN : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
   obtain ⟨d, J, hd, hJs, hJl⟩ := _root_.GlobalTheory.NormSheaf.normDescentSheaf X₁.M.Z Z X₁.π X₁.fin inferInstance hLN X₁.normal hZ.2.1
     (by rw [hπ]; exact hWc.isOpen) hchar J₁
@@ -1275,7 +1275,7 @@ theorem normDescent : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F 
     rw [h, show a = a₀ from by exact_mod_cast ha.trans ha₀.symm]
   have hcomp : spMap (f₂.comp f) = spMap f₂ ≫ spMap f := by
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-  haveI : IsLocalHom (f₂.comp f) := RingHom.isLocalHom_comp f₂ f
+  have : IsLocalHom (f₂.comp f) := RingHom.isLocalHom_comp f₂ f
   apply map_injective (f₂.comp f) (hi₂.comp hfi)
   have hmp := map_prod (Ideal.mapHom f₂) (fun j => idlAlong J₁ (ψ j)) Finset.univ
   simp only [Ideal.mapHom_apply] at hmp
@@ -1404,13 +1404,13 @@ theorem poinSt : PoinSt := by
   obtain ⟨hproj, hnorm, hoi, hiz, hdense, W8, hW8, hthi⟩ := hth
   obtain ⟨d, J, hd, hJ, hval⟩ :=
     _root_.GlobalTheory.Poinc.idealSt_holds g hg n hn hodd F Z z i ⟨hproj, hnorm, hoi, hiz, hdense, W8, hW8, hthi⟩ φ hφ
-  haveI := hoi
+  have := hoi
   let W : Z.Opens := i.opensRange
   have hWset : (W : Set Z) = Set.range i := by simp [W]
   obtain ⟨S, π, BD, hbl, hpS, hBD, hiso, hdS⟩ :=
     _root_.GlobalTheory.NormBlowupInt.exists_normBl n Z z hproj (GlobalTheory.IsNormalScheme.pred Z) J W (by rw [hWset]; exact hdense)
       (fun x hx hxW => hJ x hx (by have h : x ∈ (W : Set Z) := hxW; rwa [hWset] at h))
-  haveI := hiso
+  have := hiso
   let A : F.X ⟶ (π ⁻¹ᵁ W).toScheme := i.isoOpensRange.hom ≫ inv (π ∣_ W)
   let j : F.X ⟶ S := A ≫ (π ⁻¹ᵁ W).ι
   have hjπ : j ≫ π = i := by
@@ -1429,8 +1429,8 @@ theorem poinSt : PoinSt := by
     rw [hBD, GlobalTheory.PullAlong.idlAlong_comap_eq]
     exact hid
   · obtain ⟨S₀, π₀, ν, U, hb, hνπ, hfin, -⟩ := hbl.2
-    haveI : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
-    haveI : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
+    have : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
+    have : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
     obtain ⟨T₀, hT⟩ := _root_.GlobalTheory.BlowAmpleNoeth.ample_twist_of_blowup (cycAway n) Z S₀ S z J π₀ ν BD hproj hb hfin
       (by rw [hνπ]; exact hBD) OZ hamp
     refine ⟨T₀, fun k hk => ?_⟩

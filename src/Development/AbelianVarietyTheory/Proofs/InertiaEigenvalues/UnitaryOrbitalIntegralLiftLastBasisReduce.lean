@@ -122,9 +122,9 @@ theorem exists_compact_of_integral : ∀ {F E : Type} [NontriviallyNormedField F
     [StarRing E] [Unram F E] {n : ℕ} (Y : Hn n F E), Delta (inv Y.toGl) ≠ 0 →
     ∃ K : Set (Matrix.unitaryGroup (Fin n) E), IsCompact K ∧ ∀ g, unitU n F E (actU g Y) ≠ 0 → g ∈ K := by
   intro F E _ _ _ _ _ n Y hD
-  haveI : LocallyCompactSpace E := Unram.lcE (F := F)
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : NormedStarGroup E := ⟨fun x => (Unram.norm_star (F := F) x).le⟩
+  have : LocallyCompactSpace E := Unram.lcE (F := F)
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : NormedStarGroup E := ⟨fun x => (Unram.norm_star (F := F) x).le⟩
   set B := Bm Y.toGl with hBdef
   have hB : IsUnit B.det := by
     have h := GlobalTheory.JR.NormalFormL.hankel_eq Y.toGl
@@ -139,7 +139,7 @@ theorem exists_compact_of_integral : ∀ {F E : Type} [NontriviallyNormedField F
     apply IsCompact.prod
     · have : {A : Matrix (Fin n) (Fin n) E | ∀ i j, ‖A i j‖ ≤ 1} =
           Set.pi Set.univ (fun _ => Set.pi Set.univ fun _ => Metric.closedBall (0 : E) 1) := by
-        ext A; simp only [Set.mem_setOf_eq]
+        ext A; simp only [Set.mem_ofPred_eq]
         exact ⟨fun h i _ j _ => by simpa using h i j, fun h i j => by simpa using h i trivial j trivial⟩
       rw [this]
       exact isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_closedBall _ _
@@ -256,7 +256,7 @@ theorem unitU_liftH_of_norm_le_one {F E : Type} [NontriviallyNormedField F] [Non
     · subst hi; simpa [eL] using hν
     · simp [eL, Pi.single_eq_of_ne hi]
   unfold unitU
-  simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+  simp only [Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
   have e : ((∀ i j, ‖(liftH X ν l).1.1 i j‖ ≤ 1) ∧ (∀ i, ‖(liftH X ν l).2.1 i‖ ≤ 1) ∧ ‖(liftH X ν l).2.2‖ ≤ 1) ↔
       (‖l‖ ≤ 1 ∧ (∀ i j, ‖X.1.1 i j‖ ≤ 1) ∧ (∀ i, ‖X.2.1 i‖ ≤ 1) ∧ ‖X.2.2‖ ≤ 1) := by
     change ((∀ i j, ‖full X.toGl i j‖ ≤ 1) ∧ (∀ i, ‖(ν • eL r E) i‖ ≤ 1) ∧ ‖l‖ ≤ 1) ↔ _
@@ -265,7 +265,7 @@ theorem unitU_liftH_of_norm_le_one {F E : Type} [NontriviallyNormedField F] [Non
   simp only [e]
   by_cases h1 : ‖l‖ ≤ 1 <;>
     by_cases h2 : (∀ i j, ‖X.1.1 i j‖ ≤ 1) ∧ (∀ i, ‖X.2.1 i‖ ≤ 1) ∧ ‖X.2.2‖ ≤ 1 <;>
-    simp only [h1, h2, if_true, if_false, true_and, false_and, and_self, mul_one, mul_zero, zero_mul, implies_true]
+    simp only [h1, h2, ite_true, ite_false, true_and, false_and, and_self, mul_one, mul_zero, zero_mul, implies_true]
 
 end GlobalTheory.JR.Step
 end -- clump:auto
@@ -567,13 +567,13 @@ theorem good_all (hs : ∀ y : E, ‖star y‖ = ‖y‖)
   induction m with
   | zero =>
     intro n _ _ hc G _ _ _
-    haveI : IsEmpty n := Fintype.card_eq_zero_iff.1 hc
+    have : IsEmpty n := Fintype.card_eq_zero_iff.1 hc
     refine ⟨1, fun i => isEmptyElim i, by simp, ?_⟩
     ext i
     exact isEmptyElim i
   | succ m ih =>
     intro n _ _ hc G hG hGi hGd
-    haveI : Nonempty n := Fintype.card_pos_iff.1 (by omega)
+    have : Nonempty n := Fintype.card_pos_iff.1 (by omega)
     obtain ⟨P, hPi, hPd, k, hk⟩ := piv n G hG hGi hGd
     have hM : (Pᴴ * G * P).IsHermitian := isHermitian_conjTranspose_mul_mul P hG
     have hMi : Intg (Pᴴ * G * P) := intg_mul (intg_mul (intg_conjT hs hPi) hGi) hPi
@@ -634,7 +634,7 @@ include F in
 theorem pivot {n : Type} [Fintype n] [DecidableEq n] [Nonempty n] (G : Matrix n n E) (hG : G.IsHermitian)
     (hGi : Intg G) (hGd : ‖G.det‖ = 1) :
     ∃ P : Matrix n n E, Intg P ∧ ‖P.det‖ = 1 ∧ ∃ k, (Pᴴ * G * P) k k = 1 := by
-  haveI := Unram.ultraE (F := F) (E := E)
+  have := Unram.ultraE (F := F) (E := E)
   have hs : ∀ y : E, ‖star y‖ = ‖y‖ := Unram.norm_star (F := F)
   obtain ⟨-, ⟨e0, he0, he0'⟩, -⟩ := _root_.GlobalTheory.NTr.traceForm_perfect F E
   obtain ⟨i, w, hw, hwi, hq⟩ := pivot_w hs e0 he0 he0' G hG hGi hGd
@@ -681,7 +681,7 @@ theorem unimodular_hermitian_eq_conj : ∀ (F E : Type) [NontriviallyNormedField
     (∀ i j, ‖G i j‖ ≤ 1) → ‖G.det‖ = 1 →
     ∃ h : Matrix (Fin s) (Fin s) E, (∀ i j, ‖h i j‖ ≤ 1) ∧ ‖h.det‖ = 1 ∧ hᴴ * G * h = 1 := by
   intro F E _ _ _ _ _ s G hG hGi hGd
-  haveI := Unram.ultraE (F := F) (E := E)
+  have := Unram.ultraE (F := F) (E := E)
   exact good_all (Unram.norm_star (F := F)) (fun n _ _ _ G hG hGi hGd => pivot (F := F) (E := E) G hG hGi hGd) s (Fin s)
     (Fintype.card_fin s) G hG hGi hGd
 
@@ -745,7 +745,7 @@ namespace GlobalTheory.UnitaryTransitive
 theorem uO_transitive_of_last_unit (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (r : ℕ) (v : Fin (r + 1) → E) (hv : ∀ i, ‖v i‖ ≤ 1) (h1 : star v ⬝ᵥ v = 1)
     (hn : ‖v (Fin.last r)‖ = 1) : ∃ k ∈ uO (r + 1) E, k.1 *ᵥ Pi.single (Fin.last r) 1 = v := by
-  haveI := Unram.ultraE (F := F) (E := E)
+  have := Unram.ultraE (F := F) (E := E)
   have hst : ∀ x : E, ‖star x‖ = ‖x‖ := Unram.norm_star (F := F)
   set w : Fin r → E := fun j => v j.castSucc with hw
   set G : Matrix (Fin r) (Fin r) E := 1 + replicateCol Unit (-w) * replicateRow Unit (star w) with hG
@@ -840,7 +840,7 @@ theorem uO_transitive : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivial
     [StarRing E] [Unram F E] (r : ℕ) (v : Fin (r + 1) → E), (∀ i, ‖v i‖ ≤ 1) → star v ⬝ᵥ v = 1 →
     ∃ k ∈ uO (r + 1) E, k.1 *ᵥ Pi.single (Fin.last r) 1 = v := by
   intro F E _ _ _ _ _ r v hv h1
-  haveI := Unram.ultraE (F := F) (E := E)
+  have := Unram.ultraE (F := F) (E := E)
   have hst : ∀ x : E, ‖star x‖ = ‖x‖ := Unram.norm_star (F := F)
   obtain ⟨i, -, hi⟩ := IsUltrametricDist.exists_norm_finsetSum_le (Finset.univ : Finset (Fin (r + 1)))
     (fun i => star (v i) * v i)
@@ -1071,7 +1071,7 @@ theorem uO_isOpen {n : ℕ} [IsUltrametricDist E] : IsOpen (uO n E) := by
     ext g; simp [uO]
   rw [e]
   have hc : ∀ i j, Continuous (fun g : Matrix.unitaryGroup (Fin n) E => g.1 i j) := fun i j =>
-    (continuous_subtype_val (p := fun M => M ∈ Matrix.unitaryGroup (Fin n) E)).matrix_elem i j
+    (continuous_subtypeVal (p := fun M => M ∈ Matrix.unitaryGroup (Fin n) E)).matrix_elem i j
   exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
     (IsUltrametricDist.isOpen_closedBall (0 : E) one_ne_zero).preimage (hc i j)
 
@@ -1096,7 +1096,7 @@ theorem uO_isCompact {n : ℕ} [ProperSpace E] [ContinuousStar E] : IsCompact (u
 
 theorem preimage_uO (r : ℕ) : uEmb r E ⁻¹' uO (r + 1) E = uO r E := by
   ext s
-  simp only [Set.mem_preimage, uO, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, uO, Set.mem_ofPred_eq]
   constructor
   · intro h i j
     have := h (Fin.castSucc i) (Fin.castSucc j)
@@ -1159,7 +1159,7 @@ theorem compact_support {F E : Type} [NontriviallyNormedField F] [NontriviallyNo
     [StarRing E] [Unram F E] {r : ℕ} (X : Hn r F E) (ν : E) (l : F)
     (hΔ : Delta (inv (liftH X ν l).toGl) ≠ 0) :
     HasCompactSupport (fun s => unitU (r + 1) F E (actU (uEmb r E s) (liftH X ν l))) := by
-  haveI : NormedStarGroup E := ⟨fun x => (Unram.norm_star (F := F) x).le⟩
+  have : NormedStarGroup E := ⟨fun x => (Unram.norm_star (F := F) x).le⟩
   obtain ⟨K, hK, hsub⟩ := support_bounded (liftH X ν l) hΔ
   refine HasCompactSupport.intro ((uEmb_isClosedEmbedding r E).isCompact_preimage hK) ?_
   intro s hs
@@ -1168,23 +1168,23 @@ theorem compact_support {F E : Type} [NontriviallyNormedField F] [NontriviallyNo
 
 theorem orbU_liftH (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas (r + 1) F E) (M' : Meas r F E) (X : Hn r F E) (ν : E) (l : F) (hν : ‖ν‖ = 1) (hΔ : Delta (inv (GlobalTheory.JR.Step.liftH X ν l).toGl) ≠ 0) :
   orbU M (unitU (r + 1) F E) (GlobalTheory.JR.Step.liftH X ν l) = (if ‖l‖ ≤ 1 then 1 else 0) * orbU M' (unitU r F E) X := by
-  haveI : IsUltrametricDist E := Unram.ultraE (F := F)
-  haveI : NormedStarGroup E := ⟨fun x => (Unram.norm_star (F := F) x).le⟩
-  haveI : LocallyCompactSpace E := Unram.lcE (F := F)
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : SecondCountableTopology (Matrix (Fin (r+1)) (Fin (r+1)) E) :=
+  have : IsUltrametricDist E := Unram.ultraE (F := F)
+  have : NormedStarGroup E := ⟨fun x => (Unram.norm_star (F := F) x).le⟩
+  have : LocallyCompactSpace E := Unram.lcE (F := F)
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : SecondCountableTopology (Matrix (Fin (r+1)) (Fin (r+1)) E) :=
     inferInstanceAs (SecondCountableTopology (Fin (r+1) → Fin (r+1) → E))
-  haveI : SecondCountableTopology (Matrix.unitaryGroup (Fin (r+1)) E) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace (Matrix.unitaryGroup (Fin (r+1)) E) := by
+  have : SecondCountableTopology (Matrix.unitaryGroup (Fin (r+1)) E) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (Matrix.unitaryGroup (Fin (r+1)) E) := by
     exact IsCompact.locallyCompactSpace_of_mem_nhds_of_group (uO_isCompact (n := r + 1))
       (uO_isOpen.mem_nhds uO_one)
   let R₀ : Subgroup (Matrix.unitaryGroup (Fin (r+1)) E) :=
     { carrier := uO (r+1) E, mul_mem' := uO_mul, one_mem' := uO_one, inv_mem' := uO_inv }
   unfold orbU
-  letI := M.mU; haveI := M.bU; letI := M'.mU; haveI := M'.bU
-  haveI := M.haarU; haveI := M'.haarU
-  haveI := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E (r+1)).2 M
-  haveI := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M'
+  let := M.mU; have := M.bU; let := M'.mU; have := M'.bU
+  have := M.haarU; have := M'.haarU
+  have := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E (r+1)).2 M
+  have := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M'
   rw [GlobalTheory.CosetIntegral.integral_eq_of_coset_support _ _ (uEmb r E) (uEmb_isClosedEmbedding r E) M.μU M'.μU R₀
     uO_isOpen uO_isCompact M.volU (by
       show M'.μU (uEmb r E ⁻¹' uO (r + 1) E) = 1

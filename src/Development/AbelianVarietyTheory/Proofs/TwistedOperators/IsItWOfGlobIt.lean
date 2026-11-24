@@ -222,7 +222,7 @@ theorem deg_X_pderiv {σ : Type} (a b : σ) (P : MvPolynomial σ ℂ) :
   by_cases h : s b = 0
   · simp [h]
   · refine le_trans ?_ (MvPolynomial.le_totalDegree hs)
-    rw [MvPolynomial.X, MvPolynomial.monomial_mul]
+    rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial]
     refine (MvPolynomial.totalDegree_monomial_le _ _).trans (le_of_eq ?_)
     have h1 : s = Finsupp.single b 1 + (s - Finsupp.single b 1) := by
       rw [add_tsub_cancel_of_le]
@@ -273,19 +273,19 @@ theorem term_mem (i : Fin b) (j k : Fin a) :
     raiO τ ε ε' i j * lowO τ ε ε' i k - LinearMap.mulLeft ℂ (quad τ ε ε' i j k) ∈ nonRaising (FVar D b a) := by
   unfold raiO lowO quad
   by_cases h1 : ε' i = ε j <;> by_cases h2 : ε' i = ε k
-  · rw [if_pos h1, if_pos h2, if_neg (fun h => h.2 h2), LinearMap.mulLeft_zero_eq_zero, sub_zero,
+  · rw [ite_eq_left h1, ite_eq_left h2, ite_eq_right (fun h => h.2 h2), LinearMap.mulLeft_zero_eq_zero, sub_zero,
       smul_mul_smul_comm]
     exact Submodule.smul_mem _ _ (mem_nonRaising.2 fun P => deg_X_pderiv _ _ P)
-  · rw [if_pos h1, if_neg h2, if_pos ⟨h1, h2⟩]
+  · rw [ite_eq_left h1, ite_eq_right h2, ite_eq_left ⟨h1, h2⟩]
     convert Submodule.zero_mem _
     rw [sub_eq_zero]
     refine LinearMap.ext fun P => ?_
     simp [smul_smul, mul_assoc, mul_comm (sgn (ε k))]
-  · rw [if_neg h1, if_pos h2, if_neg (fun h => h1 h.1), LinearMap.mulLeft_zero_eq_zero, sub_zero,
+  · rw [ite_eq_right h1, ite_eq_left h2, ite_eq_right (fun h => h1 h.1), LinearMap.mulLeft_zero_eq_zero, sub_zero,
       smul_mul_smul_comm, neg_mul]
     exact Submodule.smul_mem _ _ (Submodule.neg_mem _
       (mem_nonRaising.2 fun P => (deg_pderiv _ _).trans (deg_pderiv _ P)))
-  · rw [if_neg h1, if_neg h2, if_neg (fun h => h1 h.1), LinearMap.mulLeft_zero_eq_zero, sub_zero,
+  · rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right (fun h => h1 h.1), LinearMap.mulLeft_zero_eq_zero, sub_zero,
       smul_mul_smul_comm, neg_mul]
     exact Submodule.smul_mem _ _ (Submodule.neg_mem _
       (mem_nonRaising.2 fun P => deg_pderiv_X _ _ P))
@@ -330,7 +330,7 @@ theorem quadS_ne_zero (X : Matrix (Fin a) (Fin a) ℂ) (i : Fin b) (j k : Fin a)
     by_cases h : i' = i ∧ j' = j ∧ k' = k
     · obtain ⟨rfl, rfl, rfl⟩ := h
       simp [quad, hj, f, hj ▸ hk]
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       unfold quad
       split_ifs with h'
       · simp only [map_smul, map_mul, MvPolynomial.aeval_X, f, Prod.mk.injEq, true_and]
@@ -484,14 +484,14 @@ theorem term_mem (i l : Fin b) (j : Fin a) :
   unfold raiO lowO quad
   rw [smul_mul_smul_comm, sgn_mul_self, one_smul]
   by_cases hi : ε' i = ε j <;> by_cases hl : ε' l = ε j
-  · simp only [hi, hl, if_true, ne_eq, not_true, and_false, if_false, LinearMap.mulLeft_zero_eq_zero, sub_zero]
+  · simp only [hi, hl, ite_true, ne_eq, not_true, and_false, ite_false, LinearMap.mulLeft_zero_eq_zero, sub_zero]
     exact mul_pderiv_mem _ _
-  · simp only [hi, hl, if_true, ne_eq, not_false_iff, and_self, if_false]
+  · simp only [hi, hl, ite_true, ne_eq, not_false_iff, and_self, ite_false]
     rw [LinearMap.mulLeft_mul, Module.End.mul_eq_comp, sub_self]
     exact Submodule.zero_mem _
-  · simp only [hi, hl, if_true, false_and, if_false, LinearMap.mulLeft_zero_eq_zero, sub_zero, neg_mul]
+  · simp only [hi, hl, ite_true, false_and, ite_false, LinearMap.mulLeft_zero_eq_zero, sub_zero, neg_mul]
     exact Submodule.neg_mem _ (mul_mem (pderiv_mem _) (pderiv_mem _))
-  · simp only [hi, hl, if_true, false_and, if_false, LinearMap.mulLeft_zero_eq_zero, sub_zero, neg_mul]
+  · simp only [hi, hl, ite_true, false_and, ite_false, LinearMap.mulLeft_zero_eq_zero, sub_zero, neg_mul]
     exact Submodule.neg_mem _ (pderiv_mul_mem _ _)
 
 def quadAll (Y : Matrix (Fin b) (Fin b) ℂ) : PolF D b a :=
@@ -515,14 +515,14 @@ theorem fockQuadraticPart_ne_zero_of_offBlock_entry (Y : Matrix (Fin b) (Fin b) 
     intro i l j
     unfold quad
     by_cases hc : ε' i = ε j ∧ ε' l ≠ ε j
-    · rw [if_pos hc, map_mul, eval_X, eval_X]
+    · rw [ite_eq_left hc, map_mul, eval_X, eval_X]
       by_cases hj : j = j₀
       · subst hj
         have h1 : i ≠ l₀ := fun h => hl (h ▸ hc.1)
         have h2 : l ≠ i₀ := fun h => hc.2 (h ▸ hi)
         by_cases h3 : i = i₀ <;> by_cases h4 : l = l₀ <;> simp [pt, h1, h2, h3, h4]
       · simp [pt, hj]
-    · rw [if_neg hc, map_zero, if_neg]
+    · rw [ite_eq_right hc, map_zero, ite_eq_right]
       rintro ⟨rfl, rfl, rfl⟩
       exact hc ⟨hi, hl⟩
   have := congrArg (eval pt) h0
@@ -668,7 +668,7 @@ theorem deriv_mem {Z : Type} (F : Submodule ℂ (Z → ℂ)) [FiniteDimensional 
     have := hasDerivAt_iff_tendsto_slope.1 (hd z)
     refine this.congr fun t => ?_
     simp [slope]
-  exact F.closed_of_finiteDimensional.mem_of_tendsto ht
+  exact F.isClosed_of_finiteDimensional.mem_of_tendsto ht
     (Filter.Eventually.of_forall fun t => F.smul_mem _ (F.sub_mem (hf t) (hf 0)))
 
 theorem mem_compact : ∀ (n : ℕ) (ε : Fin n → Bool) (fr G : Matrix (Fin n) (Fin n) ℂ) (σ Z : Type) [Finite σ] (pt : MvPolynomial σ ℂ →ₗ[ℂ] (Z → ℂ)) (R : Matrix (Fin n) (Fin n) ℂ → Module.End ℂ (Z → ℂ)) (L : Matrix (Fin n) (Fin n) ℂ → Module.End ℂ (MvPolynomial σ ℂ)), IsUnit fr → frᴴ * Formalism.REAL.Jm ε * fr = G → Function.Injective pt → R 1 = 1 → (∀ g ∈ Formalism.QuantumDeterminants.UH G, ∀ g' ∈ Formalism.QuantumDeterminants.UH G, R (g * g') = R g * R g') → (∀ X : Matrix (Fin n) (Fin n) ℂ, Xᴴ * G + G * X = 0 → ∀ φ z, HasDerivAt (fun t : ℝ => R (NormedSpace.exp (t • X)) (pt φ) z) (pt (L X φ) z) 0) → (∀ k ∈ Formalism.REAL.Kset ε, ∀ φ, ∃ ψ, ψ.totalDegree ≤ φ.totalDegree ∧ R (fr⁻¹ * k * fr) (pt φ) = pt ψ) → (∀ X : Matrix (Fin n) (Fin n) ℂ, Xᴴ * G + G * X = 0 → (∃ j k, ε j ≠ ε k ∧ (fr * X * fr⁻¹) j k ≠ 0 ∧ (fr * X * fr⁻¹) k j ≠ 0) → ∀ φ : MvPolynomial σ ℂ, φ ≠ 0 → ∀ F : Submodule ℂ (MvPolynomial σ ℂ), FiniteDimensional ℂ F → ¬ ∀ m : ℕ, (L X ^ m) φ ∈ F) → ∀ g ∈ Formalism.QuantumDeterminants.UH G, ∀ φ φ', φ ≠ 0 → pt φ' = R g (pt φ) → ∃ k ∈ Formalism.REAL.Kset ε, g = fr⁻¹ * k * fr := by

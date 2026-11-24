@@ -157,7 +157,7 @@ theorem mem_autGL {Λ : Submodule (𝓞 E) (Fin j → E)} {x : MatInf E j} : x �
     fun ⟨γ, h, h'⟩ => ⟨γ, h, fun _ _ _ => by rw [h']; rfl⟩⟩
 
 theorem countable_autGL (Λ : Submodule (𝓞 E) (Fin j → E)) : (autGL E j Λ).Countable := by
-  have : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
   have : Countable (Matrix (Fin j) (Fin j) E) := inferInstanceAs (Countable (Fin j → Fin j → E))
   have : Countable (GL (Fin j) E) := Units.val_injective.countable
   refine (Set.countable_range (embGL : GL (Fin j) E → MatInf E j)).mono fun x hx => ?_

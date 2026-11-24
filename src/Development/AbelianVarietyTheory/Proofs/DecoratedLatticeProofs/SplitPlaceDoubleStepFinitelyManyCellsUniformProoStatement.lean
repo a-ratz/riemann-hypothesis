@@ -197,7 +197,7 @@ theorem GlobalTheory.LocFlat.contr_support_finite_cells :
       ∃ r ∈ R k n₂ c ρ, ∃ t ∈ T, ∃ j ∈ J, y = r * t * j := by
   intro k _ _ _ _ _ _ ψ hψc hψ1 ν hsd n₀ n₁ n₂ _ _ _ _ _ _ c ρ hcρ μ μ' J hJ Φ₁ Φ₂ a x
   classical
-  haveI : ν.IsAddHaarMeasure := hsd.1
+  have : ν.IsAddHaarMeasure := hsd.1
   have hρ1 : 1 ≤ ρ := by omega
   have hρc : ρ ≤ c := by omega
   have hker : IsOpen (((1 : kˣ →* ℂˣ).ker : Subgroup kˣ) : Set kˣ) := by
@@ -268,7 +268,7 @@ theorem finOne : ∀ D : D7, FinOne D := by
   have hCo := _root_.GlobalTheory.ContrLocProof.contrLoc D _root_.GlobalTheory.LocFlat.contrFactor
   obtain ⟨-, hchar, hxi, -, hcomp⟩ := _root_.GlobalTheory.LocChar.weil_char_split D Q.k (ofSplit Q.q) ψ hstd
   obtain ⟨hψc, hψ1⟩ := hchar Q.ψk Q.char
-  haveI := Q.unitVol.1
+  have := Q.unitVol.1
   have hsd : IsSelfDual Q.ψk Q.ν := isSelfDual_of_isUnitVol Q.ν Q.cond Q.unitVol
   have hc : Q.c = 2 * σ := by have := Q.F.bes.1; omega
   obtain ⟨μV, hμV⟩ := hcomp S.s₁.χV

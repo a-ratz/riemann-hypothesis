@@ -63,8 +63,8 @@ open Topology
 
 theorem conjU_measurableEmbedding {D : D7} (S : HSp D) {J : Matrix (Fin S.rank) (Fin S.rank) D.host.E}
     (c : D.host.E) (hJ : J = c • S.gram) : MeasurableEmbedding (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU S c hJ) := by
-  haveI : BorelSpace (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB J) := ⟨rfl⟩
-  haveI : BorelSpace (GA D S) := ⟨rfl⟩
+  have : BorelSpace (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB J) := ⟨rfl⟩
+  have : BorelSpace (GA D S) := ⟨rfl⟩
   let κ : GL (Fin S.rank) (AE D) → GL (Fin S.rank) (AE D) := fun g => GeneralLinearGroup.map (cA D) g
   have hκc : Continuous κ := by
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
@@ -78,7 +78,7 @@ theorem conjU_measurableEmbedding {D : D7} (S : HSp D) {J : Matrix (Fin S.rank) 
   have hcomp : (Subtype.val : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB J → GL (Fin S.rank) (AE D)) ∘ GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU S c hJ =
       κ ∘ matHom S := rfl
   have hemb : IsEmbedding (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU S c hJ) := by
-    refine ⟨IsInducing.of_comp (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conjU S c hJ) continuous_subtype_val ?_, ?_⟩
+    refine ⟨IsInducing.of_comp (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conjU S c hJ) continuous_subtypeVal ?_, ?_⟩
     · rw [hcomp]; exact (hκe.comp hmat).isInducing
     · intro a b hab
       apply (hκe.comp hmat).injective
@@ -97,7 +97,7 @@ theorem conjU_measurableEmbedding {D : D7} (S : HSp D) {J : Matrix (Fin S.rank) 
       refine ⟨(⟨κ y.1, hy⟩ : HR (AF D.host.F) D.sp.cm.sig S.gram), Subtype.ext ?_⟩
       exact hκκ y.1
   rw [hrange]
-  exact ((PI.AdicCompletionValuation.isClosed_HR _ _ _).preimage (hκc.comp continuous_subtype_val)).measurableSet
+  exact ((PI.AdicCompletionValuation.isClosed_HR _ _ _).preimage (hκc.comp continuous_subtypeVal)).measurableSet
 
 theorem thetaInt_eq_modelI : ∀ (D : D7) (S X : HSp D) (d : ℕ) (Y : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E S.rank)
     (Wd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E d) (M : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Model D.sp.cm.sig Y Wd) (c : D.host.E)

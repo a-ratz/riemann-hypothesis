@@ -201,14 +201,14 @@ theorem diag_prod {V ι : Type*} [AddCommGroup V] [Module ℂ V] (c : ι → ι 
   simp only [sum_diag]
   rw [prod_alt (fun J => c (diagChart a b d o J) (diagChart a' b' d' o J)
     (diagChart z (-z) ((2 : ℂ) • z) 0 J))]
-  simp (config := {decide := true}) only [diagChart, if_true, if_false, ho]
+  simp (config := {decide := true}) only [diagChart, ite_true, ite_false, ho]
   simp only [inv_one, mul_one, one_mul]
   ring
 
 theorem isOpen_sums {g : ℕ} {ι : Type} (W : ι → Set (Fin g → ℂ)) (hW : ∀ i, IsOpen (W i))
     (j : Finset (Fin 3) → ι) :
     IsOpen {x : Fin 3 → Fin g → ℂ | ∀ I : Finset (Fin 3), ∑ a ∈ I, x a ∈ W (j I)} := by
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun I => ?_
   exact (hW _).preimage (f := fun x : Fin 3 → Fin g → ℂ => ∑ a ∈ I, x a) (by fun_prop)
 

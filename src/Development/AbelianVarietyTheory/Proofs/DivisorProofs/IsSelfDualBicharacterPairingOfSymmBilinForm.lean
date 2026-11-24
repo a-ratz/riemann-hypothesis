@@ -68,22 +68,22 @@ theorem mem_box_of_forall_dot {F : Type} [Field F] [ValuativeRel F] [Topological
     v ∈ box d (t₀ * s⁻¹) := by
   intro i _
   by_contra h
-  simp only [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, not_le] at h
+  simp only [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, not_le] at h
   have hw : v i ≠ 0 := by
     rintro h0
     rw [h0, map_zero] at h
-    exact absurd h (not_lt_of_ge zero_le')
+    exact absurd h (not_lt_of_ge zero_le)
   apply ht
   have hu : (Pi.single i ((t₀ : F) / v i) : d → F) ∈ box d s := by
     intro j _
     by_cases hj : j = i
     · subst hj
-      simp only [Pi.single_eq_same, GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq]
+      simp only [Pi.single_eq_same, GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq]
       have e : (t₀ : F) / v j = ((t₀ * s⁻¹ : Fˣ) : F) * s / v j := by
         push_cast
         field_simp
       have hpos : 0 < valuation F (v j) := by
-        rw [zero_lt_iff]; exact (map_ne_zero _).mpr hw
+        rw [pos_iff_ne_zero]; exact (map_ne_zero _).mpr hw
       rw [e, map_div₀, map_mul, div_le_iff₀ hpos, mul_comm (valuation F (s : F))]
       exact mul_le_mul' h.le le_rfl
     · simp [Pi.single_eq_of_ne hj, GlobalTheory.SplitWeil.cball]
@@ -92,8 +92,8 @@ theorem mem_box_of_forall_dot {F : Type} [Field F] [ValuativeRel F] [Topological
 
 theorem isPair_addChar_form : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (V : Type) [AddCommGroup V] [Module F V] [FiniteDimensional F V] [TopologicalSpace V] [IsModuleTopology F V] (ψ : AddChar F ℂ) (hψ : Continuous ψ) (_ : ∀ t, ‖ψ t‖ = 1) (_ : ψ ≠ 1) (β : V →ₗ[F] V →ₗ[F] F), (∀ x y, β x y = β y x) → (∀ y, (∀ x, β x y = 0) → y = 0) → IsPair fun x y => ψ (β x y) := by
   intro F _ _ _ _ _ V _ _ _ _ _ ψ hψ hn h1 β hs hnd
-  haveI := GlobalTheory.WeilM.nonarch_field F
-  haveI := IsModuleTopology.toContinuousAdd F V
+  have := GlobalTheory.WeilM.nonarch_field F
+  have := IsModuleTopology.toContinuousAdd F V
   obtain ⟨t, ht⟩ : ∃ t, ψ t ≠ 1 := by
     by_contra h
     push_neg at h

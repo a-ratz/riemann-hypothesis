@@ -76,7 +76,7 @@ theorem dualMap_injective_of_injective {A B : Type} [CommRing A] [CommRing B] (f
 
 theorem intData_models_iso : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (T : CDVR) (io : c.F →+* T.Fr) (y : letI := io.toAlgebra; FrPt Xo c T.Fr) (I I' : IntData Xo c T io y), ∃ n : SABMap I.G I'.G (𝟙 (Sp T.V)), ∀ τ i, (I.ub τ i).left ≫ n.φ = (I'.ub τ i).left := by
   intro E _ _ _ H Dw l Xo c T io y I I'
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨k, n, hk, hn⟩ := GlobalTheory.sab_extensions_iso E H Dw l Xo T.V T.Fr y.x I.G I'.G I.t' I'.t' I.m1 I.m2 I'.m1 I'.m2
   refine ⟨n, fun τ i => ?_⟩
   obtain ⟨u, hu1, hu2⟩ := I.lift τ i

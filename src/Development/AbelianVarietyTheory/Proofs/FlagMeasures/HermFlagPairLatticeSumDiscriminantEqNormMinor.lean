@@ -118,7 +118,7 @@ theorem sesqGram_posDef_of_basis (B : V →ₛₗ[σ] V →ₛₗ[ComplexEmbeddi
   rw [sesqGram_of_eq_sum B hf]
   refine hb.mul_mul_conjTranspose_same ?_
   rw [Matrix.vecMul_injective_iff]
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   have h1 : LinearIndependent K (fun i => (g i : ι → K)) :=
     he.map' (b.equivFun : V →ₗ[K] (ι → K)) b.equivFun.ker
   exact (linearIndependent_algebraMap_comp_iff (R := K) (S := ℂ)).2 h1
@@ -236,7 +236,7 @@ theorem posDef_gram (σ : K →+* ℂ) {ι : Type*} [Finite ι] {e : ι → V}
 
 theorem posSemidef_gram (σ : K →+* ℂ) {ι : Type*} [Finite ι] (e : ι → V) :
     (h.gram σ e).PosSemidef := by
-  haveI : FiniteDimensional K (Submodule.span K (Set.range e)) :=
+  have : FiniteDimensional K (Submodule.span K (Set.range e)) :=
     FiniteDimensional.span_of_finite K (Set.finite_range e)
   let W := Submodule.span K (Set.range e)
   let b := Module.finBasis K W
@@ -345,8 +345,8 @@ theorem index_range_eq_natAbs_norm_det {S M : Type*} [CommRing S] [Module.Free �
     [Module.Finite ℤ S] [AddCommGroup M] [Module S M] [Module.Free S M] [Module.Finite S M]
     (φ : M →ₗ[S] M) (hφ : Function.Injective φ) :
     (LinearMap.range φ).toAddSubgroup.index = (Algebra.norm ℤ (LinearMap.det φ)).natAbs := by
-  haveI : Module.Free ℤ M := Module.Free.trans (S := S)
-  haveI : Module.Finite ℤ M := Module.Finite.trans S M
+  have : Module.Free ℤ M := Module.Free.trans (S := S)
+  have : Module.Finite ℤ M := Module.Finite.trans S M
   rw [← LinearMap.det_restrictScalars]
   have := Submodule.natAbs_det_equiv (LinearMap.range (φ.restrictScalars ℤ))
     (LinearEquiv.ofInjective (φ.restrictScalars ℤ) hφ)
@@ -370,7 +370,7 @@ theorem finiteDimensional_span_of_fg {A : Submodule (𝓞 K) V} (hA : A.FG) :
 
 theorem finrank_lattice_pos {A : Submodule (𝓞 K) V} (hA : A.FG) (h0 : A ≠ ⊥) :
     0 < finrank (𝓞 K) A := by
-  haveI := finiteDimensional_span_of_fg hA
+  have := finiteDimensional_span_of_fg hA
   rw [finrank_lattice_eq_finrank_span]
   refine Nat.pos_of_ne_zero fun h => h0 ?_
   rw [Submodule.finrank_eq_zero, Submodule.span_eq_bot] at h
@@ -378,7 +378,7 @@ theorem finrank_lattice_pos {A : Submodule (𝓞 K) V} (hA : A.FG) (h0 : A ≠ �
 
 theorem mem_span_of_le_of_finrank_eq {A B : Submodule (𝓞 K) V} (hA : A.FG) (hBA : B ≤ A)
     (hr : finrank (𝓞 K) B = finrank (𝓞 K) A) : ∀ x ∈ A, x ∈ Submodule.span K (B : Set V) := by
-  haveI := finiteDimensional_span_of_fg hA
+  have := finiteDimensional_span_of_fg hA
   rw [finrank_lattice_eq_finrank_span, finrank_lattice_eq_finrank_span] at hr
   rw [Submodule.eq_of_le_of_finrank_eq (Submodule.span_mono hBA) hr]
   exact fun x hx => Submodule.subset_span hx
@@ -392,9 +392,9 @@ theorem relIndex_ne_zero_of_le_span {A B : Submodule (𝓞 K) V} (hA : A.FG)
     (hAB : ∀ x ∈ A, x ∈ Submodule.span K (B : Set V)) :
     B.toAddSubgroup.relIndex A.toAddSubgroup ≠ 0 := by
   rw [relIndex_toAddSubgroup_eq_card]
-  haveI : Module.Finite (𝓞 K) A := Module.Finite.iff_fg.2 hA
-  haveI : Module.Finite ℤ (A ⧸ B.submoduleOf A) := Module.Finite.trans (𝓞 K) _
-  haveI : Finite (A ⧸ B.submoduleOf A) := by
+  have : Module.Finite (𝓞 K) A := Module.Finite.iff_fg.2 hA
+  have : Module.Finite ℤ (A ⧸ B.submoduleOf A) := Module.Finite.trans (𝓞 K) _
+  have : Finite (A ⧸ B.submoduleOf A) := by
     refine Module.finite_of_fg_torsion _ fun q => ?_
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ q
     obtain ⟨a, ha, hax⟩ := exists_smul_mem_of_mem_span_lattice (hAB x x.2)
@@ -523,7 +523,7 @@ theorem isLatticeFrame_span {ι : Type*} {e : ι → V} (he : LinearIndependent 
 
 theorem exists_isLatticeFrame {A : Submodule (𝓞 K) V} (hA : A.FG) :
     ∃ e : Fin (finrank (𝓞 K) A) → V, IsLatticeFrame A e := by
-  haveI := finiteDimensional_span_of_fg hA
+  have := finiteDimensional_span_of_fg hA
   rw [finrank_lattice_eq_finrank_span]
   obtain ⟨e, h1, h2, h3⟩ := Submodule.exists_fun_fin_finrank_span_eq K (A : Set V)
   exact ⟨e, h1, h3, fun x hx => h2.ge (Submodule.subset_span hx)⟩
@@ -709,7 +709,7 @@ theorem muMax_of_finrank_eq_one (hA : A.FG) (h1 : finrank (𝓞 K) A = 1) :
     rintro rfl
     simp at h1
   refine le_antisymm (h.muMax_le_coe_iff.2 fun B hBA hB => ?_) (h.slope_le_muMax le_rfl h0)
-  haveI : Module.Finite (𝓞 K) A := Module.Finite.iff_fg.2 hA
+  have : Module.Finite (𝓞 K) A := Module.Finite.iff_fg.2 hA
   have hr : finrank (𝓞 K) B = 1 :=
     le_antisymm (h1 ▸ Submodule.finrank_mono hBA) (finrank_lattice_pos (hA.of_le hBA) hB)
   rw [h.slope_of_finrank_eq_one hr, h.slope_of_finrank_eq_one h1]
@@ -866,7 +866,7 @@ theorem Xa_succ (F : FlagD H r) (a : Fin r) :
   rw [← Submodule.span_union, ← Set.image_singleton (f := fun b : Fin r => F.e b.castSucc), ← Set.image_union]
   congr 2
   ext b
-  simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff]
   omega
 
 
@@ -896,7 +896,7 @@ theorem idx_flag (F : FlagD H r) (Λ : Submodule (𝓞 K) V) (y : Fin r → V) (
       rw [← Set.image_singleton, ← Set.image_union]
       congr 1
       ext b
-      simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff, ha]
+      simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff, ha]
       omega
     have hX : F.Xa (l + 1) = F.Xa l ⊔ Submodule.span K {F.e a.castSucc} := Xa_succ F a
     have hea : F.e a.castSucc - y a ∈ F.Xa l := he a
@@ -1001,11 +1001,11 @@ theorem exists_unitri (F : FlagD H r) (y : Fin r → V) (he : ∀ a, F.e a.castS
         intro h
         omega
       · rw [Finset.sum_eq_single ⟨c, hca⟩]
-        · simp only [if_true, one_smul]
+        · simp only [ite_true, one_smul]
           congr 1
         · intro b _ hb
           dsimp only
-          rw [if_neg (fun h => hb (Fin.ext h)), zero_smul]
+          rw [ite_eq_right (fun h => hb (Fin.ext h)), zero_smul]
         · intro h
           exact absurd (Finset.mem_univ _) h
     | zero => exact ⟨0, fun _ _ => rfl, by simp⟩
@@ -1019,12 +1019,12 @@ theorem exists_unitri (F : FlagD H r) (y : Fin r → V) (he : ∀ a, F.e a.castS
       exact ⟨c • m, fun b hb => by simp [hm b hb], by simp [Finset.smul_sum, smul_smul]⟩
   choose m h1 h2 using hc
   refine ⟨1 - Matrix.of m, ?_, fun a => ?_⟩
-  · rw [Matrix.det_of_lowerTriangular (1 - Matrix.of m) (fun a b hab => ?_)]
+  · rw [Matrix.det_of_isLowerTriangular (1 - Matrix.of m) (fun a b hab => ?_)]
     · simp [fun a => h1 a a le_rfl]
     · have hab : a < b := hab
       simp [h1 a b hab.le, Matrix.one_apply_ne hab.ne]
   · simp only [Matrix.sub_apply, Matrix.of_apply, sub_smul, Finset.sum_sub_distrib, ← h2 a, Matrix.one_apply,
-      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact (sub_sub_cancel _ _).symm
 
 

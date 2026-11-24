@@ -339,10 +339,10 @@ lemma ee_add (a b : ℂ) : ee (a + b) = ee a * ee b := by
   unfold ee; rw [← Complex.exp_add]; ring_nf
 
 lemma ee_int_mul (n : ℤ) (z : ℂ) : ee (n * z) = ee z ^ n := by
-  unfold ee; rw [← Complex.exp_int_mul]; ring_nf
+  unfold ee; rw [← Complex.exp_intCast_mul]; ring_nf
 
 lemma ee_nat_mul (n : ℕ) (z : ℂ) : ee (n * z) = ee z ^ n := by
-  unfold ee; rw [← Complex.exp_nat_mul]; ring_nf
+  unfold ee; rw [← Complex.exp_natCast_mul]; ring_nf
 
 lemma ee_ne_zero (z : ℂ) : ee z ≠ 0 := Complex.exp_ne_zero _
 
@@ -468,7 +468,7 @@ theorem siegel_distribution : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlg
     (c : ℕ) (m : ℕ) (x : Fin 2 → ℚ), admitted c x → 0 < m → Nat.Coprime c m →
     ∏ a ∈ Finset.range m, ∏ b ∈ Finset.range m, siegel T c ![(x 0 + a) / m, (x 1 + b) / m] = siegel T c x := by
   intro Ω _ _ _ ε T c m x hA hm hcm
-  haveI := codiscreteWithin_Hs_neBot
+  have := codiscreteWithin_Hs_neBot
   apply T.an.injective
   rw [map_prod, _root_.GlobalTheory.KZ.SiegelMem.an_siegel_eq Ω ε T c x hA]
   simp_rw [map_prod]
@@ -502,7 +502,7 @@ open GlobalTheory.KZ GlobalTheory.K4 UpperTheory.V.Z.Kato.Sym
 
 private theorem siegel_admissible_to_rat (c M : ℕ) (hc : 1 < c) (h6 : Nat.Coprime c 6) (hM : 0 < M) (hcM : Nat.Coprime c M)
     (x : Row M) (hx : x ≠ 0) : GlobalTheory.Sieg.admitted c (toQ M x) := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   refine ⟨hc, h6, ?_⟩
   rintro ⟨⟨n0, hn0⟩, ⟨n1, hn1⟩⟩
   apply hx
@@ -539,7 +539,7 @@ private theorem dn_val (k M : ℕ) [NeZero (k * M)] (x' : Row (k * M)) (i : Fin 
   rw [ZMod.castHom_apply, ZMod.cast_eq_val, ZMod.val_natCast]
 
 private theorem val_lt_mul_of_zmod_mul {k M : ℕ} (y : ZMod (k * M)) (hkM : k * M ≠ 0) : y.val < M * k := by
-  haveI : NeZero (k * M) := ⟨hkM⟩
+  have : NeZero (k * M) := ⟨hkM⟩
   have h := ZMod.val_lt y
   linarith [Nat.mul_comm k M]
 
@@ -550,7 +550,7 @@ theorem UpperTheory.V.Z.Kato.Sym.sgDist :
   have hkM : k * M ≠ 0 := NeZero.ne _
   have hk : 0 < k := Nat.pos_of_ne_zero (fun h => hkM (by simp [h]))
   have hM : 0 < M := Nat.pos_of_ne_zero (fun h => hkM (by simp [h]))
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hcM : c.Coprime M := Nat.Coprime.coprime_dvd_right (dvd_mul_left M k) hcop
   have hck : c.Coprime k := Nat.Coprime.coprime_dvd_right (dvd_mul_right k M) hcop
   have hMq : (M : ℚ) ≠ 0 := by exact_mod_cast hM.ne'
@@ -654,7 +654,7 @@ theorem pDist : PDist := by
   obtain ⟨hL, hcL, hdL⟩ := hLv
   have hM : 0 < M := Nat.pos_of_ne_zero (NeZero.ne M)
   have hk : 0 < k := Nat.pos_of_ne_zero (NeZero.ne k)
-  haveI : NeZero (k * M) := ⟨hL.ne'⟩
+  have : NeZero (k * M) := ⟨hL.ne'⟩
   have hcM : c.Coprime M := (Nat.coprime_mul_iff_right.mp hcL).2
   have hdM : d.Coprime M := (Nat.coprime_mul_iff_right.mp hdL).2
   obtain ⟨hAslR, hAgal, -⟩ := admB Ω ε X
@@ -714,14 +714,14 @@ theorem pDist : PDist := by
     intro s z
     refine ⟨?_, ?_, ?_⟩
     · intro i hi
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hi ⊢
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hi ⊢
       rw [hgrdn, hi]
     · intro i _ j _ hij
       rw [← hinvL s i, hij, hinvL]
     · intro j hj
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hj
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hj
       refine ⟨gr (k * M) s j, ?_, ?_⟩
-      · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+      · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
         rw [hgrdn, hj, hinvM]
       · have h1 := hinvL s⁻¹ j
         rwa [inv_inv] at h1
@@ -734,13 +734,13 @@ theorem pDist : PDist := by
         sg X c (k * M) i = X.gal s (sg X c (k * M) (gr (k * M) s⁻¹ i)) := by
       intro i hi
       have hm' := (hfibgr s x).1 hi
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hm'
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hm'
       rw [(sgc _ (hnz _ _ hm' hx1)).2.2.1 s, hinvL]
     have hv : ∀ j ∈ Finset.univ.filter (fun y' => dn k M y' = y),
         sg X d (k * M) j = X.gal s (sg X d (k * M) (gr (k * M) s⁻¹ j)) := by
       intro j hj
       have hm' := (hfibgr s y).1 hj
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hm'
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hm'
       rw [(sgd _ (hnz _ _ hm' hy1)).2.2.1 s, hinvL]
     have hf : ∀ i ∈ Finset.univ.filter (fun x' => dn k M x' = x),
         ∀ j ∈ Finset.univ.filter (fun y' => dn k M y' = y),
@@ -758,7 +758,7 @@ theorem pDist : PDist := by
     intro γ z
     refine ⟨?_, ?_, ?_⟩
     · intro i hi
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hi ⊢
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hi ⊢
       rw [hrtdn, hi, rt_rt _ _ _ (mul_inv_cancel γ)]
     · intro i _ j _ hij
       have hij' : rt (rt i γ⁻¹) γ = rt (rt j γ⁻¹) γ := by
@@ -766,9 +766,9 @@ theorem pDist : PDist := by
         rw [hij]
       rwa [rt_rt _ _ _ (inv_mul_cancel γ), rt_rt _ _ _ (inv_mul_cancel γ)] at hij'
     · intro j hj
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hj
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hj
       refine ⟨rt j γ, ?_, ?_⟩
-      · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+      · simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
         rw [hrtdn, hj]
       · exact rt_rt _ _ _ (mul_inv_cancel γ)
   have hQsl : ∀ (γ : SL(2, ℤ)) (x y : Row M), Ok x y →
@@ -780,7 +780,7 @@ theorem pDist : PDist := by
         sg X c (k * M) i = slR X (ofSL γ) (sg X c (k * M) (rt i γ⁻¹)) := by
       intro i hi
       have hm' := (hfibrt γ x).1 hi
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hm'
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hm'
       have e1 := (sgc _ (hnz _ _ hm' hx0)).2.1 γ
       rw [rt_rt _ _ _ (inv_mul_cancel γ)] at e1
       exact e1.symm
@@ -788,7 +788,7 @@ theorem pDist : PDist := by
         sg X d (k * M) j = slR X (ofSL γ) (sg X d (k * M) (rt j γ⁻¹)) := by
       intro j hj
       have hm' := (hfibrt γ y).1 hj
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hm'
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hm'
       have e1 := (sgd _ (hnz _ _ hm' hy0)).2.1 γ
       rw [rt_rt _ _ _ (inv_mul_cancel γ)] at e1
       exact e1.symm
@@ -799,7 +799,7 @@ theorem pDist : PDist := by
       intro i hi j hj
       have hi' := (hfibrt γ x).1 hi
       have hj' := (hfibrt γ y).1 hj
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hi' hj'
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hi' hj'
       have hi0 := hnz _ _ hi' hx0
       have hj0 := hnz _ _ hj' hy0
       have e := ((hsec _ _ (sgc _ hi0).1 (sgd _ hj0).1).2 γ)

@@ -83,7 +83,7 @@ variable {𝔸 L G : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [FiniteDim
   [NormedSpace ℝ L] [Group G] {σ : 𝔸 →ₗ[ℝ] 𝔸} {j : L →ₗ[ℝ] 𝔸} {s : 𝔸 → G} in
 private theorem isLieData_star_exp (H : _root_.GlobalTheory.SmoothForms.IsLieData σ j s) (x : 𝔸) :
     σ (exp x) = exp (σ x) := by
-  haveI := FiniteDimensional.complete ℝ 𝔸
+  have := FiniteDimensional.completeSpace ℝ 𝔸
   have h1 := (exp_series_hasSum_exp' (𝕂 := ℝ) x).mapL (LinearMap.toContinuousLinearMap σ)
   have h2 := exp_series_hasSum_exp' (𝕂 := ℝ) (σ x)
   have h3 : (fun n : ℕ => LinearMap.toContinuousLinearMap σ (((n.factorial : ℝ))⁻¹ • x ^ n)) =
@@ -100,9 +100,9 @@ variable {𝔸 L G : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [FiniteDim
   [NormedSpace ℝ L] [Group G] {σ : 𝔸 →ₗ[ℝ] 𝔸} {j : L →ₗ[ℝ] 𝔸} {s : 𝔸 → G} in
 theorem _root_.GlobalTheory.SmoothForms.SecondKind.exp_unitary (H : _root_.GlobalTheory.SmoothForms.IsLieData σ j s) (X : L) :
     σ (exp (j X)) * exp (j X) = 1 := by
-  haveI := FiniteDimensional.complete ℝ 𝔸
+  have := FiniteDimensional.completeSpace ℝ 𝔸
   have hX : σ (j X) = -(j X) := (H.skew _).2 ⟨X, rfl⟩
-  letI : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   rw [isLieData_star_exp H, hX, ← NormedSpace.exp_add_of_commute (Commute.neg_left (Commute.refl _)),
     neg_add_cancel, exp_zero]
 
@@ -124,7 +124,7 @@ open NormedSpace in
 variable {𝔸 L G : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [FiniteDimensional ℝ 𝔸] [NormedAddCommGroup L]
   [NormedSpace ℝ L] [Group G] {σ : 𝔸 →ₗ[ℝ] 𝔸} {j : L →ₗ[ℝ] 𝔸} {s : 𝔸 → G} in
 theorem _root_.GlobalTheory.SmoothForms.SecondKind.contDiff_exp : ContDiff ℝ ∞ (exp : 𝔸 → 𝔸) := by
-  haveI := FiniteDimensional.complete ℝ 𝔸
+  have := FiniteDimensional.completeSpace ℝ 𝔸
   exact AnalyticOnNhd.contDiff fun x _ => exp_analytic x
 
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
@@ -265,14 +265,14 @@ theorem _root_.GlobalTheory.SmoothForms.SecondKind.sm_iff (H : _root_.GlobalTheo
       (contDiff_list_prod_ofFn_exp_smul Y) (isLieData_prod_exp_smul_unitary H Y) g
   · intro h
     obtain ⟨-, -, -, hinj, -, -⟩ := id H
-    haveI : FiniteDimensional ℝ L := Module.Finite.of_injective j hinj
-    haveI := FiniteDimensional.complete ℝ L
-    haveI := FiniteDimensional.complete ℝ 𝔸
+    have : FiniteDimensional ℝ L := Module.Finite.of_injective j hinj
+    have := FiniteDimensional.completeSpace ℝ L
+    have := FiniteDimensional.completeSpace ℝ 𝔸
     have hj : ContDiff ℝ ∞ (j : L → 𝔸) := (LinearMap.toContinuousLinearMap j).contDiff
     obtain ⟨Λ, hΛ, hexpΛ, hΛexp⟩ := id hl
 
     obtain ⟨b, hbT, hbspan, hbli⟩ := exists_linearIndependent ℝ T
-    haveI : Fintype b := hbli.setFinite.fintype
+    have : Fintype b := hbli.setFinite.fintype
     let B : Module.Basis b ℝ L := Module.Basis.mk hbli (by rw [Subtype.range_coe, hbspan, hT])
     let Y : Fin (Fintype.card b) → L := B.reindex (Fintype.equivFin b)
     have hYT : ∀ i, Y i ∈ T := fun i => by
@@ -330,7 +330,7 @@ theorem _root_.GlobalTheory.SmoothForms.SecondKind.sm_iff (H : _root_.GlobalTheo
         simp only [ContinuousLinearEquiv.coe_coe, he, hsingle]
       rw [heq]
       exact hd
-    have hs := hΨ.hasStrictFDerivAt' hd (by simp)
+    have hs := hΨ.hasStrictFDerivAt hd (by simp)
     let Ψinv := hs.localInverse Ψ e 0
     have hinv0 : Ψinv 0 = 0 := by
       have := hs.localInverse_apply_image

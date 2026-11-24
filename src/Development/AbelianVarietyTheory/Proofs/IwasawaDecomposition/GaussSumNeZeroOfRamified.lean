@@ -110,7 +110,7 @@ theorem gaussTerm_eq (hψ : HasConductor ψ c) (hχ : HasExponent χ a) {x : k} 
   have h1 : ψ (x * y) = ψ (x * r) := addChar_eq_of_sub hψ (by
     rw [← mul_sub, map_mul]
     exact (mul_le_mul' hx h).trans_eq (one_mul _))
-  have hr0 : 0 < valuation k (r : k) := by simp [zero_lt_iff]
+  have hr0 : 0 < valuation k (r : k) := by simp [pos_iff_ne_zero]
   have h2 : χ (y * r⁻¹) = 1 := hχ.1 _ ⟨by
     rw [Units.val_mul, map_mul, valuation_eq_iff_ord.2 (hy.trans hr.symm), ← map_mul]; simp, by
     have : ((y * r⁻¹ : kˣ) : k) - 1 = ((y : k) - r) * (r : k)⁻¹ := by simp [sub_mul]

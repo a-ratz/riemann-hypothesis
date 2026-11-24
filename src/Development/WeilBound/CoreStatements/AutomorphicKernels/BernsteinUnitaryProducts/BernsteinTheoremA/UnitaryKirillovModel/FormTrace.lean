@@ -186,8 +186,8 @@ theorem DK_mono (hinv : ∀ g v w, B₀ (ρ g v) (ρ g w) = B₀ v w) {K K' : Su
     (hKo : IsOpen (K : Set G)) (hK'c : IsCompact (K' : Set G)) (hK'o : IsOpen (K' : Set G)) (hle : K' ≤ K)
     (C : Sesq V) (f : locallyConstantCompactSupport G ℂ ℂ) (hf : BiInv K f) :
     DK μ hρ hpos hK'c hK'o C f = DK μ hρ hpos hKc hKo C f := by
-  haveI := hρ.2 K hKc hKo
-  haveI := hρ.2 K' hK'c hK'o
+  have := hρ.2 K hKc hKo
+  have := hρ.2 K' hK'c hK'o
   have hWW : fixedVectors ρ K ≤ fixedVectors ρ K' := fixedVectors_antitone ρ hle
   let ι : fixedVectors ρ K →ₗ[ℂ] fixedVectors ρ K' := Submodule.inclusion hWW
   let p : fixedVectors ρ K' →ₗ[ℂ] fixedVectors ρ K := fixedProj ρ hρ.1 hKc hKo ∘ₗ (fixedVectors ρ K').subtype

@@ -212,7 +212,7 @@ theorem mem_of_mem_heightOne_localizations {R K : Type*} [CommRing R] [IsDomain 
       rcases hQ.1.mem_or_mem huq' with h | h
       · exact absurd (hQP h) hu
       · exact h
-  haveI : Submodule.IsPrincipal (Ideal.span {q0}) := ⟨⟨q0, rfl⟩⟩
+  have : Submodule.IsPrincipal (Ideal.span {q0}) := ⟨⟨q0, rfl⟩⟩
   have hle1 : (colonI b c).height ≤ 1 :=
     Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes (Ideal.span {q0}) _ hmin
   have hge1 : (1 : ℕ∞) ≤ (colonI b c).height := by

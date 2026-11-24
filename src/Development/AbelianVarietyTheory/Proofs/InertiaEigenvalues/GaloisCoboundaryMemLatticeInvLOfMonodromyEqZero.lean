@@ -200,10 +200,10 @@ theorem exists_pow_smul_eq_one_tmul : GlobalTheory.Published.FontaineBcris → �
   intro hF l _ O K _ _ _ _ _ _ _ G _ _ T C z hφ hz
   classical
   rcases subsingleton_or_nontrivial O with hO | hO
-  · haveI := Module.subsingleton O (TW (OB l O) T)
+  · have := Module.subsingleton O (TW (OB l O) T)
     exact ⟨0, 0, Subsingleton.elim _ _⟩
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
-  haveI : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have : Module.Free O ↥T.L.T := T.L.free
   let bO := Module.Free.chooseBasis ℤ_[l] O
   let bM := Module.Free.chooseBasis O ↥T.L.T
   let eR := TensorProduct.equivFinsuppOfBasisRight (M := OB l O) bM
@@ -322,7 +322,7 @@ theorem value_mul_E_pow_eq_sum : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZer
     simp only [inclL_smul_coord, hc]
     funext i
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [hYi i, pow_add]
     simp only [map_mul, map_pow]
     ring
@@ -466,8 +466,8 @@ end GlobalTheory.BKGal.HatVal
 open GlobalTheory.BKGal.HatVal in
 theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e), l ≠ 2 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (η H : ℕ) (D : BKDat O K l e a ι η H) (T : LocLat (Gl l) ℚ_[l] K O) (R : GalDat t ϖ (sQ l) D T), ∀ (σ : D.MMl) (y : Vec K a ι) (hy : y ∈ ME D.toPhiMod), σ.1 - y ∈ D.Man → ∀ b₂, IsCrisVal t ϖ D.toPhiMod R.jB (toW t ϖ D.toPhiMod ⟨y, hy⟩) b₂ → ∀ C : GlobalTheory.MemLoc.Core l, R.jB (toBcris t ϖ D.toPhiMod σ) - b₂ ∈ Submodule.span O {w : TW (OB l O) T | ∃ (β : Per.Bcris l) (x : ↥T.L.T), C.ι β ∈ Per.FilD l 0 ∧ w = ((1 : O) ⊗ₜ[ℤ_[l]] β) ⊗ₜ[O] x} := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ hl2 ι _ _ η H D T R σ y hy hσy b₂ hb₂ C
-  haveI : FiniteDimensional ℚ_[l] K := (inferInstance : TameDescentExponentData K l e a).finite
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : FiniteDimensional ℚ_[l] K := (inferInstance : TameDescentExponentData K l e a).finite
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
 
   obtain ⟨ζ, ε, h0, -, hz1, hr⟩ := GlobalTheory.MemLoc.exists_zeta_eps l
   have he : ε.untilt = 1 := Subtype.ext (by
@@ -1453,8 +1453,8 @@ open scoped Formalism.Per
 open GlobalTheory.BKGal.XiFil GlobalTheory.BKGal.ValueFil in
 theorem GlobalTheory.BKGal.XiFil.xi_value_gal_sub_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e), l ≠ 2 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (η H : ℕ) (D : BKDat O K l e a ι η H) (T : LocLat (Gl l) ℚ_[l] K O) (R : GalDat t ϖ (sQ l) D T), ∃ m₀ : ℕ, ∀ w ∈ D.Mext (invL l (A O K)), (∀ τ i, ∃ h ∈ A O K, ∃ k : ℕ, (l : K⟦X⟧) ^ k * N K (w τ i) = E K l e ^ m₀ * h) → ∀ (hw : D.xiExt w ∈ D.MMl) (g : Gl l), sQ l g ∈ GK (ϖ.field a) → ∀ C : GlobalTheory.MemLoc.Core l, actB (sQ l) T g (R.jB (toBcris t ϖ D.toPhiMod ⟨D.xiExt w, hw⟩)) - R.jB (toBcris t ϖ D.toPhiMod ⟨D.xiExt w, hw⟩) ∈ Submodule.span O {w : TW (OB l O) T | ∃ (β : Per.Bcris l) (x : ↥T.L.T), C.ι β ∈ Per.FilD l 0 ∧ w = ((1 : O) ⊗ₜ[ℤ_[l]] β) ⊗ₜ[O] x} := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ _ ι _ _ η H D T R
-  haveI : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (l := l) (e := e) (a := a)
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (l := l) (e := e) (a := a)
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
   refine ⟨η, fun w hwA hN hw g hg C => ?_⟩
   have hwS : ∀ τ j, w τ j ∈ invL l (S O K e) := fun τ j =>
     away_mono (A_le_S l e) (by simp) (mem_tot.1 hwA τ j)
@@ -1537,8 +1537,8 @@ theorem GlobalTheory.BKGal.sub_sub_xi_mem_Man : ∀ (l : ℕ) [Fact l.Prime] (a 
 
 theorem GlobalTheory.BKGal.gal_sub_value_sigma_sub_y_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e), l ≠ 2 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (η H : ℕ) (D : BKDat O K l e a ι η H) (T : LocLat (Gl l) ℚ_[l] K O) (R : GalDat t ϖ (sQ l) D T), ∀ y ∈ D.Y, D.Mon y = 0 → ∀ (hy : y ∈ ME D.toPhiMod) (σ : D.MMl), σ.1 ∈ D.desc.inv → D.conn σ.1 = D.zeta y → ∀ b₂, IsCrisVal t ϖ D.toPhiMod R.jB (toW t ϖ D.toPhiMod ⟨y, hy⟩) b₂ → ∀ g : Gl l, sQ l g ∈ GK (ϖ.field a) → ∀ C : GlobalTheory.MemLoc.Core l, actB (sQ l) T g (R.jB (toBcris t ϖ D.toPhiMod σ) - b₂) - (R.jB (toBcris t ϖ D.toPhiMod σ) - b₂) ∈ Submodule.span O {w : TW (OB l O) T | ∃ (β : Per.Bcris l) (x : ↥T.L.T), C.ι β ∈ Per.FilD l 0 ∧ w = ((1 : O) ⊗ₜ[ℤ_[l]] β) ⊗ₜ[O] x} := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ hl2 ι _ _ η H D T R y hyY hMon hy σ hσinv hconn b₂ hb₂ g hg C
-  haveI : FiniteDimensional ℚ_[l] K := (inferInstance : TameDescentExponentData K l e a).finite
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : FiniteDimensional ℚ_[l] K := (inferInstance : TameDescentExponentData K l e a).finite
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
   obtain ⟨m₀, hxi⟩ := _root_.GlobalTheory.BKGal.XiFil.xi_value_gal_sub_mem_filZero l a e O K t ϖ hl2 ι η H D T R
   obtain ⟨w, hw, hr, hN⟩ := GlobalTheory.BKGal.sub_sub_xi_mem_Man l a e O K ι η H D y hyY hMon σ hconn m₀
   have hwM : D.xiExt w ∈ D.MMl :=
@@ -1793,7 +1793,7 @@ open PowerSeries GlobalTheory.BK
 
 theorem GlobalTheory.BK.BKDat.phi_sub_sub_mem_xi : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K] [Algebra O K] [IsUnitBall O K] (l e a : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] [Fact l.Prime] [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a] (η H : ℕ) (D : BKDat O K l e a ι η H), ∀ y ∈ D.Y, ∀ σ : Vec K a ι, D.conn σ = D.zeta y → ∃ d : D.D, D.phi σ - σ - D.phi y = D.xi d := by
   intro O K _ _ _ _ _ _ l e a ι _ _ _ _ _ _ _ η H D y hy σ hσ
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hyl : y ∈ D.Yl := D.desc.mem_Yl_iff.2 ⟨0, by rw [pow_zero, one_smul]; exact hy⟩
   obtain ⟨⟨s, -, -, hs, d, -, hd⟩, -⟩ := _root_.GlobalTheory.BK.BKDat.Mon_mem_range_Lc O K l e a ι η H D y hyl
   have h0 : D.conn (σ - s) = 0 := by rw [map_sub, hσ, hs, sub_self]
@@ -1813,7 +1813,7 @@ theorem GlobalTheory.BK.BKDat.phi_sub_sub_mem_xi : ∀ (O K : Type) [CommRing O]
     · have h4 := congrArg (coeff n) (congrFun (congrFun hder τ) i)
       rw [derV_apply, coeff_derivative] at h4
       simp only [Pi.zero_apply, map_zero, mul_eq_zero] at h4
-      rw [cst_apply, coeff_C, if_neg (Nat.succ_ne_zero n)]
+      rw [cst_apply, coeff_C, ite_eq_right (Nat.succ_ne_zero n)]
       rcases h4 with h4 | h4
       · exact h4
       · exact absurd h4 (by exact_mod_cast Nat.succ_ne_zero n)
@@ -1920,7 +1920,7 @@ theorem frob_actB {l : ℕ} [Fact l.Prime] {O K : Type} [CommRing O] [Algebra �
 theorem frob_fixed_coboundary : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (η H : ℕ) (D : BKDat O K l e a ι η H) (T : LocLat (Gl l) ℚ_[l] K O) (R : GalDat t ϖ (sQ l) D T), ∀ y ∈ D.Y, ∀ b, R.IsPotential y b → ∀ g : Gl l, sQ l g ∈ GK (ϖ.field a) → TWmap (frobOB l O) T (actB (sQ l) T g b - b) = actB (sQ l) T g b - b := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ ι _ _ η H D T R y hyY b hb g hg
   obtain ⟨hy, m₀, σ, b₀, hm₀, -, hconn, hb₀, rfl⟩ := hb
-  haveI : CompleteSpace K := _root_.GlobalTheory.CoeffComplete.completeSpace_of_finite_unitBall l O K
+  have : CompleteSpace K := _root_.GlobalTheory.CoeffComplete.completeSpace_of_finite_unitBall l O K
   obtain ⟨d, hd⟩ := _root_.GlobalTheory.BK.BKDat.phi_sub_sub_mem_xi O K l e a ι η H D y hyY σ.1 hconn
   obtain ⟨-, hall⟩ := _root_.GlobalTheory.CrisComparison.main l a e O K t ϖ ι D.toPhiMod T R.I
   obtain ⟨hφ, huniq, hfrobv, -, -⟩ := hall R.jB R.cmp

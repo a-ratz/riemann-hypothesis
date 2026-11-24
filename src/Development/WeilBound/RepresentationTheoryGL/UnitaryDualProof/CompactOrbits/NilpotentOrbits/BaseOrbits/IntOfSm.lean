@@ -149,7 +149,7 @@ theorem sm_mul (γ : (ValueGroupWithZero k)ˣ) (A B : Matrix (Fin n) (Fin n) k) 
 theorem sm_zero (γ : (ValueGroupWithZero k)ˣ) : sm γ (0 : Matrix (Fin n) (Fin n) k) := by
   intro i j
   simp only [Matrix.zero_apply, map_zero]
-  exact ⟨zero_lt_iff.mpr γ.ne_zero, zero_lt_one⟩
+  exact ⟨pos_iff_ne_zero.mpr γ.ne_zero, zero_lt_one⟩
 
 def Ks (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (e : Matrix (Fin n) (Fin n) k) (γ : (ValueGroupWithZero k)ˣ) :
     Subgroup (Gs Z e) where

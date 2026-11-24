@@ -169,7 +169,7 @@ theorem exists_smul_eq_on_finset {R ι : Type} [Ring R] [Fintype ι] (M : ι →
 theorem exists_scalar_of_simple {A N : Type} [Ring A] [Algebra ℂ A] [AddCommGroup N] [Module ℂ N] [Module A N]
     [IsScalarTower ℂ A N] [FiniteDimensional ℂ N] [IsSimpleModule A N] (φ : N →ₗ[A] N) :
     ∃ c : ℂ, ∀ x, φ x = c • x := by
-  haveI : Nontrivial N := IsSimpleModule.nontrivial A N
+  have : Nontrivial N := IsSimpleModule.nontrivial A N
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (φ.restrictScalars ℂ : Module.End ℂ N)
   obtain ⟨w, hw⟩ := hc.exists_hasEigenvector
   refine ⟨c, ?_⟩
@@ -200,7 +200,7 @@ theorem exists_smul_eq_end : ∀ (A : Type) [Ring A] [Algebra ℂ A] (J : Type) 
     obtain ⟨c, hc⟩ := exists_scalar_of_simple φ
     simp [hc]
   let b : ∀ j, Module.Basis (Module.Free.ChooseBasisIndex ℂ (M j)) ℂ (M j) := fun j => Module.Free.chooseBasis ℂ (M j)
-  haveI : ∀ j, Fintype (Module.Free.ChooseBasisIndex ℂ (M j)) := fun j => inferInstance
+  have : ∀ j, Fintype (Module.Free.ChooseBasisIndex ℂ (M j)) := fun j => inferInstance
   let s : Finset (∀ j, M j) :=
     Finset.univ.biUnion fun j => Finset.univ.image fun k => (Pi.single j (b j k) : ∀ j, M j)
   obtain ⟨r, hr⟩ := exists_smul_eq_on_finset M hne (fun j => (f j).toAddMonoidHom) hf s
@@ -333,7 +333,7 @@ theorem isHk_cosetFn {K L : Subgroup (GL ι F)} [Fintype (K ⧸ L.subgroupOf K)]
       push_neg at h
       refine (Function.mem_support.1 hx) ?_
       unfold cosetFn
-      exact Finset.sum_eq_zero fun q _ => if_neg (h q)
+      exact Finset.sum_eq_zero fun q _ => ite_eq_right (h q)
     refine Set.mem_iUnion.2 ⟨q, _, QuotientGroup.eq.1 hq.symm, ?_⟩
     group
   · rw [cosetFn_right K L g _ h₂, cosetFn_left K L g hL _ h₁]
@@ -361,12 +361,12 @@ theorem hk_cosetFn {K L : Subgroup (GL ι F)} [Fintype (K ⧸ L.subgroupOf K)] (
     rw [finsum_eq_single _ (QuotientGroup.mk (((q.out : K) : GL ι F) * g))]
     · simp [map_mul, Module.End.mul_apply]
     · intro p hp
-      exact if_neg hp
+      exact ite_eq_right hp
   · intro q _
     refine (Set.finite_singleton (QuotientGroup.mk (((q.out : K) : GL ι F) * g) : GL ι F ⧸ K)).subset ?_
     intro p hp
     by_contra h
-    exact (Function.mem_support.1 hp) (if_neg h)
+    exact (Function.mem_support.1 hp) (ite_eq_right h)
 
 theorem exists_open_sub {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (s : Finset (GL ι F)) :
     ∃ L : Subgroup (GL ι F), IsOpen (L : Set (GL ι F)) ∧ L ≤ K ∧ ∀ g ∈ s, ∀ l ∈ L, g⁻¹ * l * g ∈ K := by
@@ -388,8 +388,8 @@ theorem exists_open_sub {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F
 
 theorem finite_quot {K L : Subgroup (GL ι F)} (hKc : IsCompact (K : Set (GL ι F)))
     (hLo : IsOpen (L : Set (GL ι F))) : Finite (K ⧸ L.subgroupOf K) := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
-  exact Subgroup.quotient_finite_of_isOpen _ (hLo.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  exact Subgroup.quotient_finite_of_isOpen _ (hLo.preimage continuous_subtypeVal)
 
 theorem eq_zero_of_rel {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (hKc : IsCompact (K : Set (GL ι F)))
     {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
@@ -401,8 +401,8 @@ theorem eq_zero_of_rel {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F)
     act τ (T ∘ₗ (fixed π K).subtype) x = 0 := by
   classical
   obtain ⟨L, hLo, -, hL⟩ := exists_open_sub hKo x.support
-  haveI := finite_quot hKc hLo
-  letI : Fintype (K ⧸ L.subgroupOf K) := Fintype.ofFinite _
+  have := finite_quot hKc hLo
+  let : Fintype (K ⧸ L.subgroupOf K) := Fintype.ofFinite _
   have hcard : (Fintype.card (K ⧸ L.subgroupOf K) : ℂ) ≠ 0 :=
     Nat.cast_ne_zero.2 Fintype.card_ne_zero
   have key : avg τ K L (act τ (T ∘ₗ (fixed π K).subtype) x) = T (avg π K L (act π (fixed π K).subtype x)) := by
@@ -463,8 +463,8 @@ theorem hecke_determines : ∀ (F : Type) [Field F] [ValuativeRel F] [Topologica
     rw [← hatr, hS, hS, hbtr]
   let Φ : Representation.IntertwiningMap π τ :=
     { S with isIntertwining' := fun g => by ext u; exact hint g u }
-  haveI := hπ
-  haveI := hτ
+  have := hπ
+  have := hτ
   have hΦ : Φ ≠ 0 := by
     intro h0
     have h1 : Φ v₀ = 0 := by rw [h0]; rfl
@@ -580,8 +580,8 @@ theorem isHk_unitFn {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F)))
       rw [Subgroup.mul_mem_cancel_right K hk₂, Subgroup.mul_mem_cancel_left K hk₁]
     unfold unitFn
     by_cases h : g ∈ K
-    · rw [if_pos h, if_pos (this.2 h)]
-    · rw [if_neg h, if_neg fun h' => h (this.1 h')]
+    · rw [ite_eq_left h, ite_eq_left (this.2 h)]
+    · rw [ite_eq_right h, ite_eq_right fun h' => h (this.1 h')]
 
 theorem hk_unitFn {K : Subgroup (GL ι F)} {V : Type} [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ (GL ι F) V) {v : V} (hv : v ∈ fixed ρ K) : hk ρ K (unitFn K) v = v := by
@@ -620,16 +620,16 @@ theorem unitFn_mul_right {K : Subgroup (GL ι F)} (y : GL ι F) {k : GL ι F} (h
   have : y * k ∈ K ↔ y ∈ K := Subgroup.mul_mem_cancel_right K hk'
   unfold unitFn
   by_cases h : y ∈ K
-  · rw [if_pos h, if_pos (this.2 h)]
-  · rw [if_neg h, if_neg fun h' => h (this.1 h')]
+  · rw [ite_eq_left h, ite_eq_left (this.2 h)]
+  · rw [ite_eq_right h, ite_eq_right fun h' => h (this.1 h')]
 
 theorem unitFn_mul_left {K : Subgroup (GL ι F)} (y : GL ι F) {k : GL ι F} (hk' : k ∈ K) :
     unitFn K (k * y) = unitFn K y := by
   have : k * y ∈ K ↔ y ∈ K := Subgroup.mul_mem_cancel_left K hk'
   unfold unitFn
   by_cases h : y ∈ K
-  · rw [if_pos h, if_pos (this.2 h)]
-  · rw [if_neg h, if_neg fun h' => h (this.1 h')]
+  · rw [ite_eq_left h, ite_eq_left (this.2 h)]
+  · rw [ite_eq_right h, ite_eq_right fun h' => h (this.1 h')]
 
 theorem exists_hk_avg {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F)))
     (hKc : IsCompact (K : Set (GL ι F))) (L : Subgroup K) [Fintype (K ⧸ L)] (g : GL ι F)
@@ -708,7 +708,7 @@ theorem exists_hk_avg {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))
   · intro p _ hp
     have h1 : unitFn K ((a q)⁻¹ * p.out) = 0 := by
       unfold unitFn
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       refine hp ?_
       rw [← QuotientGroup.out_eq' p]
@@ -722,7 +722,7 @@ theorem stable_top {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (
     (hi : π.IsIrreducible) (S : Submodule ℂ V) (hS : S ≤ fixed π K) (h0 : S ≠ ⊥)
     (hst : ∀ e, IsHk K e → ∀ s ∈ S, hk π K e s ∈ S) : fixed π K ≤ S := by
   classical
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   have hfin : ∀ L : Subgroup K, IsOpen (L : Set K) → Finite (K ⧸ L) := fun L hL =>
     Subgroup.quotient_finite_of_isOpen L hL
   let gen : Set V := {x | ∃ g, ∃ s ∈ S, x = π g s}
@@ -756,7 +756,7 @@ theorem stable_top {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (
       let L₀ : Subgroup K := (K.comap (MulAut.conj g⁻¹).toMonoidHom).subgroupOf K
       refine ⟨L₀, ?_, ?_⟩
       · have hc : Continuous fun x : GL ι F => g⁻¹ * x * g := by fun_prop
-        have := (hKo.preimage hc).preimage (continuous_subtype_val (p := (· ∈ K)))
+        have := (hKo.preimage hc).preimage (continuous_subtypeVal (p := (· ∈ K)))
         convert this using 1
         ext x
         simp [L₀, Subgroup.mem_subgroupOf]
@@ -783,8 +783,8 @@ theorem stable_top {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F))) (
     have := hw ⟨k, hk'⟩
     simpa using this
   obtain ⟨L, hLo, hL⟩ := hQ w
-  haveI := hfin L hLo
-  letI : Fintype (K ⧸ L) := Fintype.ofFinite _
+  have := hfin L hLo
+  let : Fintype (K ⧸ L) := Fintype.ofFinite _
   have h1 := hL L hLo le_rfl
   simp only [fun q : K ⧸ L => hwk _ (q.out : K).2, Finset.sum_const, Finset.card_univ] at h1
   have hn : ((Fintype.card (K ⧸ L) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -801,9 +801,9 @@ theorem abstract_density {I : Type} [Fintype I] (M : I → Type) [∀ i, AddComm
   classical
   let ev : ∀ i, A →+* Module.End ℂ (M i) := fun i =>
     (Pi.evalRingHom (fun i => Module.End ℂ (M i)) i).comp A.val.toRingHom
-  letI : ∀ i, Module A (M i) := fun i => Module.compHom _ (ev i)
-  haveI : ∀ i, IsScalarTower ℂ A (M i) := fun i => ⟨fun c a x => rfl⟩
-  haveI : ∀ i, IsSimpleModule A (M i) := by
+  let : ∀ i, Module A (M i) := fun i => Module.compHom _ (ev i)
+  have : ∀ i, IsScalarTower ℂ A (M i) := fun i => ⟨fun c a x => rfl⟩
+  have : ∀ i, IsSimpleModule A (M i) := by
     intro i
     refine (isSimpleModule_iff A (M i)).2 ⟨fun S => ?_⟩
     rcases hsimple i (S.restrictScalars ℂ) (fun a ha x hx => S.smul_mem ⟨a, ha⟩ hx) with h | h
@@ -860,9 +860,9 @@ theorem density_core {K : Subgroup (GL ι F)} (hKo : IsOpen (K : Set (GL ι F)))
     (f : ∀ i, Module.End ℂ (fixed (ρ i) K)) :
     ∃ e, IsHk K e ∧ ∀ i (x : fixed (ρ i) K), hk (ρ i) K e x = (f i x : Y i) := by
   classical
-  haveI : ∀ i, FiniteDimensional ℂ (fixed (ρ i) K) := fun i =>
+  have : ∀ i, FiniteDimensional ℂ (fixed (ρ i) K) := fun i =>
     (GlobalTheory.CompanionTheory.SmGLBridge.irreducibleAdmissible F ι (Y i) (ρ i) (hs i) (hi i)).2 K hKo hKc
-  haveI : ∀ i, Nontrivial (fixed (ρ i) K) := fun i => by
+  have : ∀ i, Nontrivial (fixed (ρ i) K) := fun i => by
     obtain ⟨v, hv, hv0⟩ := h0 i
     exact ⟨⟨⟨v, hv⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
   let A := heckeAlg K ρ hKo hKc
@@ -931,7 +931,7 @@ theorem isolateAt : ∀ (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace 
   let st : Setoid J' := ⟨fun a b => Nonempty ((τ a.1).Equiv (τ b.1)),
     ⟨fun a => ⟨Representation.Equiv.refl _⟩, fun ⟨T⟩ => ⟨T.symm⟩, fun ⟨S⟩ ⟨T⟩ => ⟨S.trans T⟩⟩⟩
   let R := Quotient st
-  haveI : Fintype R := Fintype.ofFinite _
+  have : Fintype R := Fintype.ofFinite _
   let b : Option R → BRep F ι := fun o => o.elim ⟨V, π⟩ (fun r => ⟨W r.out.1, τ r.out.1⟩)
   obtain ⟨l, hl⟩ : ∃ l : V →ₗ[ℂ] ℂ, l v₀ = 1 := by
     have h : ¬ ∀ f : Module.Dual ℂ V, f v₀ = 0 := fun h =>
@@ -1098,7 +1098,7 @@ private theorem hk_const_mul {F : Type} [Field F] [ValuativeRel F] [TopologicalS
 theorem UpperTheory.HeckeLevelFrameExistence.locE :
     UpperTheory.HeckeLevelFrameExistence.LocE := by
   intro E _ _ _ n w hw K' hKo hKle hlev σ hσ k D
-  have hUL : UL n w = ⊤ := by unfold UL; rw [if_pos hw]
+  have hUL : UL n w = ⊤ := by unfold UL; rw [ite_eq_left hw]
   have hmap : (K'.subgroupOf (UL n w)).map (UL n w).subtype = K' := by
     rw [Subgroup.subgroupOf_map_subtype, hUL, inf_top_eq]
   have hKc : IsCompact (K' : Set (GLw n w)) :=

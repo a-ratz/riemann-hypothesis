@@ -88,10 +88,10 @@ theorem exists_embedding (p : ℕ) [Fact p.Prime] {C : Type} [Field C] [IsAlgClo
     (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C] (hv : v.Integers R)
     (hp : v (p : C) < 1) (F : Type) [Field F] [Fintype F] [CharP F p] :
     Nonempty (F →+* R ⧸ mIdeal v R hv) := by
-  haveI := mIdeal_isMaximal v R hv
-  letI : Field (R ⧸ mIdeal v R hv) := Ideal.Quotient.field _
-  haveI : Nontrivial R := hv.nontrivial_iff.mpr inferInstance
-  haveI : IsAlgClosed (R ⧸ mIdeal v R hv) := by
+  have := mIdeal_isMaximal v R hv
+  let : Field (R ⧸ mIdeal v R hv) := Ideal.Quotient.field _
+  have : Nontrivial R := hv.nontrivial_iff.mpr inferInstance
+  have : IsAlgClosed (R ⧸ mIdeal v R hv) := by
     refine IsAlgClosed.of_exists_root _ fun P hP hirr => ?_
     have hl : P ∈ Polynomial.lifts (Ideal.Quotient.mk (mIdeal v R hv)) :=
       Polynomial.map_surjective _ Ideal.Quotient.mk_surjective P
@@ -108,12 +108,12 @@ theorem exists_embedding (p : ℕ) [Fact p.Prime] {C : Type} [Field C] [IsAlgClo
       rw [map_zero, ← Polynomial.eval_map_apply]
       exact hz
     rw [← hQ, Polynomial.eval_map_apply, h0, map_zero]
-  haveI : CharP (R ⧸ mIdeal v R hv) p := by
+  have : CharP (R ⧸ mIdeal v R hv) p := by
     rw [CharP.charP_iff_prime_eq_zero Fact.out, ← map_natCast (Ideal.Quotient.mk (mIdeal v R hv)),
       Ideal.Quotient.eq_zero_iff_mem, mem_mIdeal]
     simpa using hp
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
-  letI : Algebra (ZMod p) (R ⧸ mIdeal v R hv) := ZMod.algebra _ p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) (R ⧸ mIdeal v R hv) := ZMod.algebra _ p
   exact ⟨(IsAlgClosed.lift (R := ZMod p) (S := F) (M := R ⧸ mIdeal v R hv)).toRingHom⟩
 
 theorem fund_ex : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∃ σ : MulChar F R, (∀ a b, σ (a + b) - σ a - σ b ∈ Ideal.span {(p : R)}) := by
@@ -185,7 +185,7 @@ theorem fund_ex : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
   have hfix : ∀ c : F, σ c ^ p ^ (f * k) = σ c := by
     intro c
     rw [← map_pow, pow_mul, ← hc, FiniteField.pow_card_pow]
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (by
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (by
     intro hu
     have := hv.one_of_isUnit hu
     rw [map_natCast] at this
@@ -210,7 +210,7 @@ theorem finrank_eq (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [Fintype F] [Al
 theorem frob_pow_inj (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [Fintype F] [CharP F p]
     (f : ℕ) (hc : Fintype.card F = p ^ f) (n m : Fin f)
     (h : ∀ a : F, a ^ p ^ (n : ℕ) = a ^ p ^ (m : ℕ)) : n = m := by
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
   have hf := finrank_eq p F f hc
   subst hf
   apply (FiniteField.bijective_frobeniusAlgHom_pow (ZMod p) F).1
@@ -240,15 +240,15 @@ theorem addHom_eq_zero (p : ℕ) [Fact p.Prime] {F : Type} [Field F] [Algebra (Z
 
 theorem moore : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ σ : MulChar F R, (∀ a b, σ (a + b) - σ a - σ b ∈ Ideal.span {(p : R)}) → ∀ l : F → R, (∀ a b, l (a + b) - l a - l b ∈ Ideal.span {(p : R)}) → ∃ β : Fin f → R, (∀ a, l a - ∑ n, β n * (σ ^ p ^ (n : ℕ)) a ∈ Ideal.span {(p : R)}) ∧ ∀ β' : Fin f → R, (∀ a, l a - ∑ n, β' n * (σ ^ p ^ (n : ℕ)) a ∈ Ideal.span {(p : R)}) → ∀ n, β n - β' n ∈ Ideal.span {(p : R)} := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hc σ hσ l hl
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
   let b : Module.Basis (Fin f) (ZMod p) F :=
     Module.finBasisOfFinrankEq (ZMod p) F (finrank_eq p F f hc)
   have hn : ∀ k : ℕ, p ^ k ≠ 0 := fun k => pow_ne_zero _ (Fact.out : p.Prime).ne_zero
   let M : Matrix (Fin f) (Fin f) R := Matrix.of fun n i => (σ ^ p ^ (n : ℕ)) (b i)
   have hadd := frob_pow_additive p F σ hσ
   have hdet : IsUnit M.det := by
-    haveI := mIdeal_isMaximal v R hv
-    haveI : IsDomain (R ⧸ mIdeal v R hv) := Ideal.Quotient.isDomain _
+    have := mIdeal_isMaximal v R hv
+    have : IsDomain (R ⧸ mIdeal v R hv) := Ideal.Quotient.isDomain _
     by_contra hnu
     have hmem : M.det ∈ mIdeal v R hv := by
       rw [mem_mIdeal]

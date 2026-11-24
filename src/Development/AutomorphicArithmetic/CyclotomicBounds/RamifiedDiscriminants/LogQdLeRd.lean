@@ -113,7 +113,7 @@ private theorem rho_sum {N : ℕ} [NeZero N] (U : Subgroup (ZMod N)ˣ) {e : ℕ}
 theorem UpperTheory.HF.vd_two :
     ∀ {φ : Frame} (H : HostAx φ), (φ.e : ℝ) + 1 - (2 : ℝ) ^ (-(φ.e : ℝ)) ≤ H.vdH 2 ∧ 11 / 4 ≤ H.vdH 2 ∧ 4 + 2 * H.vdH 2 ≤ 2 + 3 * H.vdH 2 := by
   intro φ H
-  haveI : NeZero H.condN := ⟨by
+  have : NeZero H.condN := ⟨by
     have h := H.QS_pos
     have hq := (HostRaw.q_prime H.toHostRaw).pos
     have hd := (HostRaw.d_prime H.toHostRaw).pos

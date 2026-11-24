@@ -80,7 +80,7 @@ theorem decay_estimate : Decay := by
   have h3 : 0 ≤ hs (uMat g₀) := by rw [← nG_sq]; positivity
   have e1 : (Real.exp 1 * Real.sqrt m) ^ (12 * N ^ 2) =
       Real.exp (6 * (N : ℝ) ^ 2 * Real.log m + 12 * (N : ℝ) ^ 2) := by
-    rw [Real.sqrt_eq_rpow, Real.rpow_def_of_pos hm0, ← Real.exp_add, ← Real.exp_nat_mul]
+    rw [Real.sqrt_eq_rpow, Real.rpow_def_of_pos hm0, ← Real.exp_add, ← Real.exp_natCast_mul]
     congr 1
     push_cast; ring
   have e2 : (nG g)⁻¹ ^ (12 * N ^ 2) = hs (um g) ^ (-(6 * (N : ℝ) ^ 2)) := by
@@ -349,16 +349,16 @@ theorem lipschitz_estimate : Lip := by
     have hFn : ∀ k, ‖F k‖ = D * (nG k)⁻¹ ^ b := fun k => by
       rw [Complex.norm_real, Real.norm_of_nonneg (mul_nonneg hD0 (hτ k).1.le)]
     have hfF : ∀ k, ‖f k‖ₑ ≤ ‖F k‖ₑ := fun k => by
-      rw [enorm_le_iff_norm_le, hFn]
+      rw [eNorm_le_iff_norm_le, hFn]
       refine (hf k).trans (mul_le_mul hPD ?_ (by unfold nG; positivity) hD0)
       rw [two_mul, pow_add]
       exact mul_le_of_le_one_right (hτ k).1.le (hτ k).2
     have hFm : Measurable fun k => ‖F k‖ₑ := by
       have : Continuous (nG (ε := ε')) := (continuous_hs_real_place_taylor.comp (continuous_coeMatrix ε')).sqrt
-      exact (Complex.measurable_ofReal.comp (measurable_const.mul (this.measurable.inv.pow_const b))).enorm
+      exact (Complex.measurable_ofReal.comp (measurable_const.mul (this.measurable.inv.pow_const b))).eNorm
     have h1 := lint_le hn1 ν hD0 hδ hδ1 (f := F) fun k => (hFn k).le
     calc _ ≤ ∫⁻ h, ‖F ((c r)⁻¹ * h)‖ₑ + ‖F h‖ₑ ∂ν :=
-          lintegral_mono fun h => enorm_sub_le.trans (add_le_add (hfF _) (hfF _))
+          lintegral_mono fun h => eNorm_sub_le.trans (add_le_add (hfF _) (hfF _))
       _ = 2 * ∫⁻ h, ‖F h‖ₑ ∂ν := by
           rw [lintegral_add_right _ hFm, lintegral_mul_left_eq_self (fun h => ‖F h‖ₑ), two_mul]
       _ ≤ 2 * (ENNReal.ofReal (D * (2 * (16 * (n : ℝ) ^ 2 / δ) ^ (2 * n ^ 2))) * ν (nearSet ε' δ)) :=
@@ -442,7 +442,7 @@ theorem lipschitz_estimate : Lip := by
           have : 0 ≤ hs X' := Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => by positivity
           have : s ^ 2 ≤ 2 ^ 2 := pow_le_pow_left₀ hs'.1 hs'.2 2
           nlinarith
-        rw [hQ, mul_pow, Real.sq_sqrt (by linarith), ← Real.exp_nat_mul]
+        rw [hQ, mul_pow, Real.sq_sqrt (by linarith), ← Real.exp_natCast_mul]
         gcongr
         push_cast
         linarith

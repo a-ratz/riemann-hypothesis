@@ -65,7 +65,7 @@ variable {G : Type*} [Group G] [MeasurableSpace G] [MeasurableMul₂ G] [Measura
 
 omit [Group G] [MeasurableMul₂ G] [MeasurableInv G] [SigmaFinite μ] in
 theorem rrkb_sq_fin (f : Lp ℂ 2 (μ.restrict D)) : ∫⁻ y in D, ‖(f : G → ℂ) y‖ₑ ^ 2 ∂μ ≠ ∞ := by
-  have h := lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top (p := 2) two_ne_zero ENNReal.ofNat_ne_top
+  have h := lintegral_rpow_eNorm_lt_top_of_eLpNorm_lt_top (p := 2) two_ne_zero ENNReal.ofNat_ne_top
     (Lp.eLpNorm_lt_top f)
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two] at h
   exact h.ne

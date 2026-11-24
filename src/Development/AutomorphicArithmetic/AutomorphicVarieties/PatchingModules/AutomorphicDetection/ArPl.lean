@@ -98,8 +98,8 @@ private theorem UpperTheory.V.Pa.chebOne_split {L Ω : Type} [Field L] [NumberFi
     rcases Nat.mod_two_eq_zero_or_one k with h | h <;> rw [h] <;> simp
   have key : ρ = 1 := by
     refine h2.resolve_right fun hc => ?_
-    haveI : Fact (Ideal.absNorm w.asIdeal).Prime := ⟨hp⟩
-    haveI : Nontrivial (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
+    have : Fact (Ideal.absNorm w.asIdeal).Prime := ⟨hp⟩
+    have : Nontrivial (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
     have hQ : Nat.card (𝓞 L ⧸ w.asIdeal) = Ideal.absNorm w.asIdeal := by
       rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
     obtain ⟨n, hn⟩ := (AddSubmonoid.mem_multiples_iff _ _).mp
@@ -133,10 +133,10 @@ theorem UpperTheory.V.Pa.chebOne :
   intro L Ω _ _ _ _ _ _ U g A hU hA
   let φ : Plc L → Plc (Lp L) := fun w =>
     { asIdeal := w.asIdeal.comap (algebraMap (𝓞 (Lp L)) (𝓞 L))
-      isPrime := by haveI := w.isPrime; infer_instance
+      isPrime := by have := w.isPrime; infer_instance
       ne_bot := by
         obtain ⟨y, hy, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot w.ne_bot
-        exact Ideal.comap_ne_bot_of_integral_mem hy0 hy (Algebra.IsIntegral.isIntegral y) }
+        exact Ideal.under_ne_bot_of_integral_mem hy0 hy (Algebra.IsIntegral.isIntegral y) }
   have hφ : ∀ (w : Plc L) (B : ValuationSubring Ω), IsPlaceOver B w → IsPlaceOver B (φ w) := by
     intro w B hB y
     show _ ↔ algebraMap (𝓞 (Lp L)) (𝓞 L) y ∈ w.asIdeal
@@ -253,7 +253,7 @@ private theorem exists_hom (l : ℕ) [hl : Fact l.Prime] (Q : Type) [Group Q] [F
       rw [← pow_succ, Nat.sub_add_cancel (Nat.pos_of_ne_zero hk0)]
     rw [e] at h
     exact Nat.eq_of_mul_eq_mul_left (pow_pos hl.out.pos _) h
-  haveI : K.Normal := Subgroup.normal_of_index_eq_minFac_card
+  have : K.Normal := Subgroup.normal_of_index_eq_minFac_card
     (by rw [hidx, hk, Nat.Prime.pow_minFac hl.out hk0])
   have hcard : Nat.card (Q ⧸ K) = l := by rw [← Subgroup.index_eq_card, hidx]
   let e := mulEquivOfPrimeCardEq hcard (G' := Multiplicative (ZMod l)) (by simp)
@@ -281,7 +281,7 @@ private theorem frS_normal (l : ℕ) (K : Subgroup Γ) [hK : K.Normal] : (frS l 
   have hc : ∀ y : K, (c y : Γ) = g * y * g⁻¹ := fun y => MulAut.conjNormal_apply g y
   have hcc : Continuous c := by
     have h1 : Continuous fun y : K => g * (y : Γ) * g⁻¹ :=
-      (continuous_const.mul continuous_subtype_val).mul continuous_const
+      (continuous_const.mul continuous_subtypeVal).mul continuous_const
     have h2 := h1.subtype_mk (fun y => hK.conj_mem y y.2 g)
     convert h2 using 1
     funext y
@@ -296,10 +296,10 @@ private theorem frS_normal (l : ℕ) (K : Subgroup Γ) [hK : K.Normal] : (frS l 
 
 private theorem frS_open (l : ℕ) (h : PhiCond Γ l) (K : Subgroup Γ) (hK : IsOpen (K : Set Γ)) :
     IsOpen (frS l K : Set Γ) := by
-  haveI := h K hK
+  have := h K hK
   unfold frS
   rw [Subgroup.coe_map, Subgroup.coe_iInf]
-  exact hK.isOpenMap_subtype_val _ (isOpen_iInter_of_finite fun φ => φ.2)
+  exact hK.isOpenMap_subtypeVal _ (isOpen_iInter_of_finite fun φ => φ.2)
 
 private def fr (l : ℕ) (h : PhiCond Γ l) (K : OpenNormalSubgroup Γ) : OpenNormalSubgroup Γ where
   toSubgroup := frS l K.toSubgroup
@@ -314,11 +314,11 @@ private theorem fr_lt (l : ℕ) [Fact l.Prime] [CompactSpace Γ] (h : PhiCond Γ
     (fr l h K).toSubgroup.map (QuotientGroup.mk' V.toSubgroup) <
       K.toSubgroup.map (QuotientGroup.mk' V.toSubgroup) := by
   let π := (QuotientGroup.mk' V.toSubgroup).subgroupMap K.toSubgroup
-  haveI : Finite (Γ ⧸ V.toSubgroup) := (inferInstance : Finite (Γ ⧸ (V.toOpenSubgroup : Subgroup Γ)))
+  have : Finite (Γ ⧸ V.toSubgroup) := (inferInstance : Finite (Γ ⧸ (V.toOpenSubgroup : Subgroup Γ)))
   have hπk : ∀ k : K.toSubgroup, ((π k : K.toSubgroup.map (QuotientGroup.mk' V.toSubgroup)) :
       Γ ⧸ V.toSubgroup) = QuotientGroup.mk' V.toSubgroup k :=
     fun k => MonoidHom.subgroupMap_apply_coe _ _ k
-  haveI : Nontrivial (K.toSubgroup.map (QuotientGroup.mk' V.toSubgroup)) := by
+  have : Nontrivial (K.toSubgroup.map (QuotientGroup.mk' V.toSubgroup)) := by
     obtain ⟨k, hkK, hkV⟩ := Set.not_subset.mp hn
     refine ⟨⟨π ⟨k, hkK⟩, 1, fun h => hkV ?_⟩⟩
     have := congrArg Subtype.val h
@@ -346,7 +346,7 @@ private theorem fr_lt (l : ℕ) [Fact l.Prime] [CompactSpace Γ] (h : PhiCond Γ
         exact (QuotientGroup.eq_one_iff _).mpr hy
       show φ (π y) = 1
       rw [this, map_one]
-    · exact V.toOpenSubgroup.isOpen.preimage continuous_subtype_val
+    · exact V.toOpenSubgroup.isOpen.preimage continuous_subtypeVal
   refine lt_of_le_of_ne (Subgroup.map_mono (fr_le l h K)) fun heq => hφ ?_
   rw [eq_top_iff]
   intro q _
@@ -371,7 +371,7 @@ private theorem pow_mem (l : ℕ) [CompactSpace Γ] (H : Subgroup Γ) (V : OpenN
     (hV : PL l H ≤ V.toSubgroup) : ∀ k ∈ H, ∃ e : ℕ, k ^ l ^ e ∈ V.toSubgroup := by
   intro k hk
   let ι := {U : OpenNormalSubgroup Γ // ∀ h ∈ H, ∃ e : ℕ, h ^ l ^ e ∈ U.toSubgroup}
-  haveI : Nonempty ι := ⟨⟨{ toSubgroup := ⊤, isOpen' := isOpen_univ, isNormal' := inferInstance },
+  have : Nonempty ι := ⟨⟨{ toSubgroup := ⊤, isOpen' := isOpen_univ, isNormal' := inferInstance },
     fun h _ => ⟨0, Subgroup.mem_top _⟩⟩⟩
   let t : ι → Set Γ := fun i => (i.1.toSubgroup : Set Γ)
   have hdir : Directed (· ⊇ ·) t := by
@@ -425,7 +425,7 @@ theorem UpperTheory.V.Pa.frat :
   have hmono : Antitone fun N => (W N).toSubgroup := antitone_nat_of_succ_le hanti
   refine ⟨W, fun N => hmono (Nat.zero_le N), fun V hV => ?_⟩
   have hpow := pow_mem l H.toSubgroup V hV
-  haveI : Finite (Γ ⧸ V.toSubgroup) :=
+  have : Finite (Γ ⧸ V.toSubgroup) :=
     (inferInstance : Finite (Γ ⧸ (V.toOpenSubgroup : Subgroup Γ)))
   obtain ⟨m, ⟨N, rfl⟩, hmin⟩ :=
     (wellFounded_lt : WellFounded (α := Subgroup (Γ ⧸ V.toSubgroup)) (· < ·)).has_min
@@ -460,7 +460,7 @@ private theorem closure_normal_frattini_le_kernel (l : ℕ) {Γ : Type} [Group �
     simp [toAdd_pow]
   have hKo : IsOpen ((χ.ker.map H.subtype : Subgroup Γ) : Set Γ) := by
     rw [Subgroup.coe_map]
-    exact hH.isOpenMap_subtype_val _ hχ
+    exact hH.isOpenMap_subtypeVal _ hχ
   refine Subgroup.topologicalClosure_minimal _ ?_ (Subgroup.isClosed_of_isOpen _ hKo)
   refine sup_le ?_ ?_
   · rw [Subgroup.normalClosure, Subgroup.closure_le]
@@ -506,10 +506,10 @@ private theorem twisted_kernel_forms_nonvanishing (l : ℕ) {Γ' Γ : Type} [Gro
     (q.liftOfRightInverse (Function.surjInv hq) (Function.rightInverse_surjInv hq)) ⟨χ, hker⟩
   have hφ : ∀ x, φ (q x) = χ x := fun x =>
     q.liftOfRightInverse_comp_apply _ _ ⟨χ, hker⟩ x
-  have hcont : Continuous q := (hp.comp continuous_subtype_val).subtype_mk _
+  have hcont : Continuous q := (hp.comp continuous_subtypeVal).subtype_mk _
   have hNc : IsClosed ((H.comap p : Subgroup Γ') : Set Γ') :=
     (Subgroup.isClosed_of_isOpen H hH).preimage hp
-  haveI : CompactSpace (H.comap p) := isCompact_iff_compactSpace.1 hNc.isCompact
+  have : CompactSpace (H.comap p) := isCompact_iff_compactSpace.1 hNc.isCompact
   have hc : IsClosed ((χ.ker : Set (H.comap p))ᶜ) := hχ.isClosed_compl
   have himg : IsClosed (q '' (χ.ker : Set (H.comap p))ᶜ) := (hc.isCompact.image hcont).isClosed
   have hopen : IsOpen (φ.ker : Set H) := by
@@ -530,9 +530,9 @@ theorem UpperTheory.V.Pa.homBound :
     ∀ (l : ℕ) [Fact l.Prime] (Γ' : Type) [Group Γ'] [TopologicalSpace Γ'] [IsTopologicalGroup Γ'] [CompactSpace Γ'] [TotallyDisconnectedSpace Γ'] (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] (p : Γ' →* Γ) (H : OpenNormalSubgroup Γ) (q : ℕ) (ta : Fin q → Γ'), Continuous p → Function.Surjective p → (∀ j, p (ta j) = 1) → p.ker ≤ (Subgroup.normalClosure (Set.range ta) ⊔ PL l (H.toSubgroup.comap p)).topologicalClosure → Finite (HomL l H.toSubgroup) → Finite (HomL l (H.toSubgroup.comap p)) ∧ Nat.card (HomL l (H.toSubgroup.comap p)) ≤ Nat.card (HomL l H.toSubgroup) * l ^ (q * H.toSubgroup.index) := by
   intro l _ Γ' _ _ _ _ _ Γ _ _ _ _ _ p H q ta hp hs hta hker hfin
   set N : Subgroup Γ' := H.toSubgroup.comap p with hN
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hNo : IsOpen (N : Set Γ') := H.isOpen.preimage hp
-  haveI : Finite (Γ' ⧸ N) := Subgroup.quotient_finite_of_isOpen _ hNo
+  have : Finite (Γ' ⧸ N) := Subgroup.quotient_finite_of_isOpen _ hNo
   have hHn : H.toSubgroup.Normal := inferInstance
   have hmem : ∀ (g : Γ') (j : Fin q), g * ta j * g⁻¹ ∈ N := by
     intro g j
@@ -540,7 +540,7 @@ theorem UpperTheory.V.Pa.homBound :
     simp [hta]
   let f : HomL l N → (Fin q × (Γ' ⧸ N) → Multiplicative (ZMod l)) :=
     fun χ jc => χ.1 ⟨jc.2.out * ta jc.1 * jc.2.out⁻¹, hmem _ _⟩
-  haveI : Nonempty (HomL l N) := ⟨⟨1, by simp⟩⟩
+  have : Nonempty (HomL l N) := ⟨⟨1, by simp⟩⟩
   let g : (Fin q × (Γ' ⧸ N) → Multiplicative (ZMod l)) → HomL l N := Function.invFun f
   have hg : ∀ χ, f (g (f χ)) = f χ := fun χ => Function.invFun_eq ⟨χ, rfl⟩
   have key : ∀ χ : HomL l N, ∃ ψ : HomL l H.toSubgroup,
@@ -591,7 +591,7 @@ theorem UpperTheory.V.Pa.homBound :
     have e' := e x
     rw [MonoidHom.mul_apply, MonoidHom.mul_apply] at e'
     exact mul_right_cancel (G := Multiplicative (ZMod l)) e'
-  haveI : Finite (HomL l N) := Finite.of_injective F hF
+  have : Finite (HomL l N) := Finite.of_injective F hF
   refine ⟨inferInstance, ?_⟩
   have hidx : Nat.card (Γ' ⧸ N) = H.toSubgroup.index :=
     Subgroup.index_comap_of_surjective _ hs
@@ -680,7 +680,7 @@ theorem UpperTheory.V.Pa.prokerPL :
   simp only [Subgroup.mem_iInf]
   intro U hU
   let φ : I →* Γ ⧸ U.toSubgroup := (QuotientGroup.mk' U.toSubgroup).comp f
-  haveI : Finite (Γ ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
+  have : Finite (Γ ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
   have hp : IsPGroup l φ.range := by
     rintro ⟨y, x, rfl⟩
     obtain ⟨e, he⟩ := hU (f x) (hfH x)
@@ -763,17 +763,17 @@ theorem UpperTheory.V.Pa.kerLe :
     rintro j _ ⟨g, hg, rfl⟩
     refine prokerPL l (globOf r V).Γ (Ine (F := L) (B j))
       (π.comp ((resP L Ω).comp (Ine (F := L) (B j)).subtype)) (H.comap h.p)
-      (hπ.comp (continuous_resP.comp continuous_subtype_val)) (fun x => ?_) g hg
+      (hπ.comp (continuous_resP.comp continuous_subtypeVal)) (fun x => ?_) g hg
     have : h.p (π (resP L Ω x)) = 1 := h1 j x x.2
     show h.p (π (resP L Ω x)) ∈ H
     rw [this]
     exact H.one_mem
   refine ⟨h1, h2, ?_⟩
-  haveI := PL_normal l (H.comap h.p)
+  have := PL_normal l (H.comap h.p)
   set N : Subgroup (globOf r V).Γ := Subgroup.normalClosure (Set.range fun j => ((V.pr (τ j) : GS Ω V.S') : (globOf r V).Γ))
     ⊔ PL l (H.comap h.p) with hN
-  haveI : N.Normal := by rw [hN]; infer_instance
-  haveI hK : N.topologicalClosure.Normal := Subgroup.is_normal_topologicalClosure _
+  have : N.Normal := by rw [hN]; infer_instance
+  have hK : N.topologicalClosure.Normal := Subgroup.is_normal_topologicalClosure _
   have hc : IsClosed ((N.topologicalClosure.comap π : Subgroup (G (Lp L) Ω)) : Set (G (Lp L) Ω)) :=
     (Subgroup.isClosed_topologicalClosure N).preimage hπ
   have h3 : ∀ j, ∀ g ∈ Ine (F := L) (B j), π (resP L Ω g) ∈ N.topologicalClosure := fun j g hg => by
@@ -928,7 +928,7 @@ theorem UpperTheory.V.Pa.hEx :
           RingHom.mem_ker, map_sub, map_one, sub_eq_zero]
       simp_rw [e]
       exact isOpen_lt (continuous_norm.comp ((Units.continuous_val.comp
-        (F.ε_cont.comp continuous_subtype_val)).sub continuous_const)) continuous_const
+        (F.ε_cont.comp continuous_subtypeVal)).sub continuous_const)) continuous_const
     have e : (S : Set F.Γ) = Subtype.val ''
         ({x : F.G₀ | ∀ i, r.chib i x = 1} ∩ {x : F.G₀ | PadicInt.toZMod ((F.ε x : ℤ_[l]ˣ) : ℤ_[l]) = 1}) := by
       ext g
@@ -938,7 +938,7 @@ theorem UpperTheory.V.Pa.hEx :
       · rintro ⟨x, ⟨hχ, hε⟩, rfl⟩
         exact ⟨x.2, hχ, hε⟩
     rw [e]
-    exact F.η_open.isOpenMap_subtype_val _ (h1.inter h2)
+    exact F.η_open.isOpenMap_subtypeVal _ (h1.inter h2)
   have case1 : ∀ g, P g → ∀ a, F.η a = 1 → P (a * g * a⁻¹) := by
     rintro g ⟨h, hχ, hε⟩ a ha
     refine ⟨by simp [h, ha], fun i => ?_, ?_⟩
@@ -981,7 +981,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 theorem UpperTheory.V.Pa.arPl : ArPl := by
   intro hC l _ L Ω _ _ _ _ _ _ s V0 O _ _ _ hO _ n r hS
-  haveI : CharP (ResidueField O) l := hO.char
+  have : CharP (ResidueField O) l := hO.char
   have hphi : PhiCond V0.frame.Γ l := phiGS hC.gf l L Ω s V0
   refine ⟨hphi, ?_⟩
   intro q sg hsg

@@ -69,7 +69,7 @@ theorem finrank_split [inst : Fintype (K →ₐ[Qp] LL)]
     Module.finrank LL (DdR PD ρ) = ∑ τ : K →ₐ[Qp] LL, Module.finrank LL (DdRE PD ρ τ) ∧
       ∀ a : ℤ, Module.finrank LL ↥(DdR PD ρ ⊓ FilV PD (LL := LL) (V := V) a) =
         ∑ τ : K →ₐ[Qp] LL, Module.finrank LL (FildR PD ρ τ a) := by
-  haveI := PD.finK
+  have := PD.finK
   obtain rfl : inst = minpoly.AlgHom.fintype Qp K LL := Subsingleton.elim _ _
   have hm : ∀ (c : K) (v : V) (b : BdR),
       mulVdR (K := K) (BdR := BdR) (V := V) (LL := LL) (Qp := Qp) c (v ⊗ₜ b) = v ⊗ₜ (algebraMap K BdR c * b) :=
@@ -107,10 +107,10 @@ theorem finrank_split [inst : Fintype (K →ₐ[Qp] LL)]
     simp only [DdRE, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply,
       LinearMap.smul_apply, LinearMap.id_apply, sub_eq_zero]
     rfl
-  haveI : ∀ τ : K →ₐ[Qp] LL, FiniteDimensional LL (DdRE PD ρ τ) := fun τ =>
+  have : ∀ τ : K →ₐ[Qp] LL, FiniteDimensional LL (DdRE PD ρ τ) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := DdR PD ρ) inf_le_left
   refine ⟨GlobalTheory.Cmp.JumpDict.finrank_eq_sum_emb hcard m (DdR PD ρ) hst (DdRE PD ρ) hE, fun a => ?_⟩
-  haveI : ∀ τ : K →ₐ[Qp] LL, FiniteDimensional LL (FildR PD ρ τ a) := fun τ =>
+  have : ∀ τ : K →ₐ[Qp] LL, FiniteDimensional LL (FildR PD ρ τ a) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := DdRE PD ρ τ) inf_le_left
   refine GlobalTheory.Cmp.JumpDict.finrank_eq_sum_emb hcard m (DdR PD ρ ⊓ FilV PD (LL := LL) (V := V) a)
     (fun c x hx => ⟨hst c x hx.1, hF a c x hx.2⟩)

@@ -77,7 +77,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 
 theorem finite_out_ne_zero (K : Subgroup G) (hKo : IsOpen (K : Set G)) {φ : G → ℂ} (hφ : HasCompactSupport φ) :
     {q : G ⧸ K | φ q.out ≠ 0}.Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hKo
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hKo
   have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport φ) :=
     hφ.isCompact.image QuotientGroup.continuous_mk
   refine hc.finite_of_discrete.subset fun q hq => ?_
@@ -99,7 +99,7 @@ theorem integral_eq_sum (μ : Measure G) [μ.IsMulLeftInvariant] (K : Subgroup G
     (hr : ∀ g, ∀ k ∈ K, φ (g * k) = φ g) :
     ∫ g, φ g ∂μ = μ.real (K : Set G) • ∑ᶠ q : G ⧸ K, φ q.out := by
   classical
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hKo
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hKo
   have hF := finite_out_ne_zero K hKo hφ
   set S : Finset (G ⧸ K) := hF.toFinset with hS
   have hmeas : ∀ q : G ⧸ K, MeasurableSet ((QuotientGroup.mk : G → G ⧸ K) ⁻¹' {q}) := fun q =>
@@ -215,7 +215,7 @@ theorem hk_adjoint : ∀ (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace
     rw [show (k₁ * g * k₂)⁻¹ = k₂⁻¹ * g⁻¹ * k₁⁻¹ by group, hbi _ (K.inv_mem h₂) _ (K.inv_mem h₁)]
   · intro V _ _ ρ B hB v hv w hw
     borelize F
-    haveI := isInvInvariant (Measure.haar : Measure (GL ι F)) K hKo hKc
+    have := isInvInvariant (Measure.haar : Measure (GL ι F)) K hKo hKc
     exact adjoint_of_inv Measure.haar K hKo hKc e hc hbi ρ B hB v w
       (fun k hk => by simpa using hv ⟨k, hk⟩) (fun k hk => by simpa using hw ⟨k, hk⟩)
 

@@ -64,7 +64,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 theorem UpperTheory.V.Z.Sym.Loc.vMax : UpperTheory.V.Z.Sym.Loc.VMax := by
   intro O K _ _ _ _ _ Δ τ hl hτ x htr hnm hdisc
   have hg : PK.Gen1 O x := ⟨htr, hnm, hdisc⟩
-  letI := mulAct τ
+  let := mulAct τ
   have hsm : ∀ (t : (Etau K τ)ˣ) (S : Set (Etau K τ)), t • cls τ S = cls τ (PS.ml t S) := by
     intro t S
     exact PS.cls_ml t S
@@ -182,7 +182,7 @@ theorem UpperTheory.V.Z.Sym.Loc.gVals : UpperTheory.V.Z.Sym.Loc.GVals := by
     · exact ⟨u, by rw [hu]; simp⟩
   · rintro ⟨u, hu⟩ s ε hs
     have gZ := gLat O K Δ τ L hτ j χ hj hχ z s ε (by rw [hnz, hs])
-    haveI := L.frac
+    have := L.frac
     have hsO : ∃ c : O, algebraMap O K c = (s : K) := by
       have hint : IsIntegral O ((s : K) ^ 2) := by
         have : (s : K) ^ 2 = algebraMap O K (((ε⁻¹ : Oˣ) : O) * (2 + o)) := by

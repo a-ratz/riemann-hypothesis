@@ -86,7 +86,7 @@ instance injRes (F : Shv R) (n : ℤ) : Injective ((res R F).X n) :=
 theorem mono_a {W U V X : Scheme.{0}} {a : W ⟶ U} {b : W ⟶ V} {f : U ⟶ X} {g : V ⟶ X}
     (h : IsMV a b f g) : Mono a := by
   obtain ⟨_, hg, hp, _⟩ := h
-  haveI := hg
+  have := hg
   refine ⟨fun x y e => hp.hom_ext e ?_⟩
   rw [← cancel_mono g, Category.assoc, Category.assoc, ← hp.w, reassoc_of% e]
 
@@ -94,7 +94,7 @@ variable {F : Shv R} {W U V X : Scheme.{0}} {a : W ⟶ U} {b : W ⟶ V} {f : U �
 
 theorem conn_total (hD : Dict) (hG : Glue) (hF : Flasque) (h : IsMV a b f g)
     (w : H R (sch.obj W) F n) : ∃ x, Conn F a f g n w x := by
-  haveI := mono_a h
+  have := mono_a h
   obtain ⟨c, hc⟩ := (hD R (res R F) W n).2.1 w
   obtain ⟨s, rfl⟩ := hF R ((res R F).X n) a c
   have hcl := ((hD R (res R F) W n).2.2.1 w _ hc).1
@@ -126,7 +126,7 @@ theorem conn_neg (hD : Dict) {w x} (h1 : Conn F a f g n w x) : Conn F a f g n (-
 
 theorem conn_zero (hD : Dict) (hG : Glue) (hF : Flasque) (h : IsMV a b f g) {x}
     (hx : Conn F a f g n 0 x) : x = 0 := by
-  haveI := mono_a h
+  have := mono_a h
   obtain ⟨s, z, hs, hz, e1, e2⟩ := hx
   obtain ⟨c, hc⟩ := ((hD R (res R F) W n).2.2.1 0 _ hs).2.mp rfl
   obtain ⟨s', rfl⟩ := hF R ((res R F).X (n - 1)) a c

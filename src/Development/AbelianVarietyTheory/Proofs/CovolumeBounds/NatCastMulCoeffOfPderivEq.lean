@@ -114,8 +114,8 @@ theorem pderiv_subst [Fintype σ] {a : σ → MvPowerSeries τ S} (ha : HasSubst
     (f : MvPowerSeries σ R) (j : τ) :
     pderiv (R := S) j (subst a f) = ∑ i, subst a (pderiv (R := R) i f) * pderiv (R := S) j (a i) := by
   classical
-  letI : UniformSpace R := ⊥
-  letI : UniformSpace S := ⊥
+  let : UniformSpace R := ⊥
+  let : UniformSpace S := ⊥
   have hc := continuous_subst (R := R) ha
   refine congr_fun (DenseRange.equalizer
     (MvPowerSeries.WithPiTopology.denseRange_toMvPowerSeries (σ := σ) (R := R))
@@ -198,7 +198,7 @@ theorem existsUnique_primitive_param {e : ι → σ} (he : Function.Injective e)
       ∀ i, pderiv (R := A) (e i) f = a i := by
   classical
   have huniq : HasUniqueDiv A := HasUniqueDiv.of_module_rat A
-  haveI : IsAddTorsionFree A :=
+  have : IsAddTorsionFree A :=
     ⟨fun {n} hn {a b} _ hh => huniq.nsmul_right_injective (n := n) hn hh⟩
   have key : ∀ (α : σ →₀ ℕ) (i j : ι), α (e i) ≠ 0 → α (e j) ≠ 0 →
       (α (e j) : A) * coeff (α - single (e i) 1) (a i) =

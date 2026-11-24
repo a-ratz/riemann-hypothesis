@@ -187,7 +187,7 @@ theorem skewPart_split {d e : AE D} (he : cA D e = -e) (hde : d * e = 1) (x : Mx
 
 set_option synthInstance.maxHeartbeats 400000 in
 theorem continuous_skewPart : Continuous (skewPartHom D n) := by
-  haveI : IsTopologicalAddGroup (Mx D n n) := (lattice_Mx D n n).1
+  have : IsTopologicalAddGroup (Mx D n n) := (lattice_Mx D n n).1
   have h : Continuous fun x : Mx D n n => x - adj x := continuous_id.sub (continuous_adj (D := D) (m := n) (n := n))
   change Continuous fun x : Mx D n n => half D • (x - adj x)
   exact h.const_smul (half D)
@@ -205,16 +205,16 @@ set_option maxHeartbeats 1000000 in
 theorem map_skewConj : ∀ (D : D7) (r : ℕ) (κ : Measure (skewA D r)), κ.IsAddHaarMeasure → ∀ a : GL (Fin r) (AE D), κ.map (skewConj a.1) = ((absA D (Matrix.GeneralLinearGroup.det a) ^ r)⁻¹ : ℝ≥0) • κ := by
   intro D n κ hκ a
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
-  haveI : LocallyCompactSpace (Mx D n n) := i2
-  haveI : SecondCountableTopology (Mx D n n) := i3
-  haveI : T2Space (Mx D n n) := i4
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
-  haveI : BorelSpace (skewA D n) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (skewA D n) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (skewA D n) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : IsTopologicalAddGroup (Mx D n n) := i1
+  have : LocallyCompactSpace (Mx D n n) := i2
+  have : SecondCountableTopology (Mx D n n) := i3
+  have : T2Space (Mx D n n) := i4
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : BorelSpace (skewA D n) := Subtype.borelSpace _
+  have : SecondCountableTopology (skewA D n) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (skewA D n) := Topology.IsEmbedding.subtypeVal.t2Space
   have hcl : IsClosed (skewA D n : Set (Mx D n n)) := isClosed_eq continuous_adj continuous_neg
-  haveI : LocallyCompactSpace (skewA D n) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (skewA D n) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨d, e, hde, hd, he⟩ := exists_anti_units D
   have hsq := char_sq (skewA D n) (skewPartHom D n) continuous_skewPart skewPart_mem
     (fun s hs => skewPart_of_mem hs) (mulCE d e hde)
@@ -589,12 +589,12 @@ theorem map_lr {n : ℕ} (a : GL (Fin t) (AE D)) (h : GL (Fin n) (AE D))
     β.map (fun b : Mx D t n => (a.1 ⬝ b ⬝ h.1 : Mx D t n)) =
       ((absA D (Matrix.GeneralLinearGroup.det a) ^ n)⁻¹ : ℝ≥0) • β := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D t n
-  haveI : IsTopologicalAddGroup (Mx D t n) := i1
-  haveI : LocallyCompactSpace (Mx D t n) := i2
-  haveI : SecondCountableTopology (Mx D t n) := i3
-  haveI : T2Space (Mx D t n) := i4
-  haveI : BorelSpace (Mx D t n) := ⟨rfl⟩
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsTopologicalAddGroup (Mx D t n) := i1
+  have : LocallyCompactSpace (Mx D t n) := i2
+  have : SecondCountableTopology (Mx D t n) := i3
+  have : T2Space (Mx D t n) := i4
+  have : BorelSpace (Mx D t n) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   let φ := GlobalTheory.ModuLR.lrCE a h
   have hc : addEquivAddHaarChar φ = absA D (Matrix.GeneralLinearGroup.det a) ^ n *
       absA D (Matrix.GeneralLinearGroup.det h) ^ t :=
@@ -603,7 +603,7 @@ theorem map_lr {n : ℕ} (a : GL (Fin t) (AE D)) (h : GL (Fin n) (AE D))
   have e : (fun b : Mx D t n => (a.1 ⬝ b ⬝ h.1 : Mx D t n)) = φ :=
     funext fun y => (GlobalTheory.ModuLR.lrCE_apply a h y).symm
   have hA : absA D (Matrix.GeneralLinearGroup.det a) ^ n ≠ 0 := pow_ne_zero _ ((Group.isUnit _).map (absA D)).ne_zero
-  haveI := regular_of_haar β
+  have := regular_of_haar β
   have key := addEquivAddHaarChar_smul_map β φ
   rw [e, ← hc]
   rw [← hc] at hA
@@ -618,36 +618,36 @@ theorem exists_radN_measure (D : D7) (B W : HSp D) (t : ℕ) (d : HypDec B W t) 
         ((GlobalTheory.RegSW.absDet d m ^ (W.rank + t))⁻¹ : ℝ≥0) • νN := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D t W.rank
   obtain ⟨j1, j2, j3, j4, -, -⟩ := lattice_Mx D t t
-  haveI : IsTopologicalAddGroup (Mx D t W.rank) := i1
-  haveI : LocallyCompactSpace (Mx D t W.rank) := i2
-  haveI : SecondCountableTopology (Mx D t W.rank) := i3
-  haveI : T2Space (Mx D t W.rank) := i4
-  haveI : BorelSpace (Mx D t W.rank) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (Mx D t t) := j1
-  haveI : LocallyCompactSpace (Mx D t t) := j2
-  haveI : SecondCountableTopology (Mx D t t) := j3
-  haveI : T2Space (Mx D t t) := j4
-  haveI : BorelSpace (Mx D t t) := ⟨rfl⟩
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsTopologicalAddGroup (Mx D t W.rank) := i1
+  have : LocallyCompactSpace (Mx D t W.rank) := i2
+  have : SecondCountableTopology (Mx D t W.rank) := i3
+  have : T2Space (Mx D t W.rank) := i4
+  have : BorelSpace (Mx D t W.rank) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx D t t) := j1
+  have : LocallyCompactSpace (Mx D t t) := j2
+  have : SecondCountableTopology (Mx D t t) := j3
+  have : T2Space (Mx D t t) := j4
+  have : BorelSpace (Mx D t t) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have hcl : IsClosed (skewA D t : Set (Mx D t t)) := isClosed_eq continuous_adj continuous_neg
-  haveI : LocallyCompactSpace (skewA D t) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : BorelSpace (skewA D t) := Subtype.borelSpace _
-  haveI : T2Space (skewA D t) := inferInstance
-  haveI : SecondCountableTopology (skewA D t) :=
+  have : LocallyCompactSpace (skewA D t) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : BorelSpace (skewA D t) := Subtype.borelSpace _
+  have : T2Space (skewA D t) := inferInstance
+  have : SecondCountableTopology (skewA D t) :=
     hcl.isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
   let κ : Measure (skewA D t) := Measure.addHaar
   let β : Measure (Mx D t W.rank) := Measure.addHaar
-  haveI hκ : κ.IsAddHaarMeasure := inferInstance
-  haveI hβ : β.IsAddHaarMeasure := inferInstance
-  haveI := sFinite_of_haar κ
-  haveI := sFinite_of_haar β
+  have hκ : κ.IsAddHaarMeasure := inferInstance
+  have hβ : β.IsAddHaarMeasure := inferInstance
+  have := sFinite_of_haar κ
+  have := sFinite_of_haar β
   obtain ⟨Ψ, hΨ, hH, hR⟩ := GlobalTheory.T.unipotent_radical_haar_from_product D B W t d κ β hκ hβ
   refine ⟨(κ.prod β).map Ψ, hH, hR, ?_⟩
   rintro m ⟨g, a, hm⟩
   let f₁ : skewA D t → skewA D t := skewConj a.1
   let f₂ : Mx D t W.rank → Mx D t W.rank := fun b => (a.1 ⬝ b ⬝ (matHom W g⁻¹).1 : Mx D t W.rank)
   have hf₁ : Continuous f₁ := Continuous.subtype_mk
-    ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+    ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
   have hf₂ : Continuous f₂ := (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
   have hL : ∀ n : radN d, (((MulAut.conjNormal m n : radN d) : GlobalTheory.RegSW.stab d) : GA D B) =
       (m : GA D B) * ((n : GlobalTheory.RegSW.stab d) : GA D B) * (m : GA D B)⁻¹ := fun n => by
@@ -739,7 +739,7 @@ theorem iter_right (u : G → ℝ≥0∞) (hu : Measurable u) (q₀ : Q) (k₀ :
       (modularCharacterFun q₀ : ℝ≥0∞) * ∫⁻ q, u (q.1 * (k₀ * k).1) ∂ν := by
     intro k
     have hf : Measurable fun q : Q => u (q.1 * (k₀ * k).1) :=
-      hu.comp ((continuous_subtype_val.mul continuous_const).measurable)
+      hu.comp ((continuous_subtypeVal.mul continuous_const).measurable)
     rw [← lintegral_mul_right_modular ν hf q₀]
     congr 1
     ext q
@@ -754,7 +754,7 @@ theorem iter_right (u : G → ℝ≥0∞) (hu : Measurable u) (q₀ : Q) (k₀ :
 theorem iter_left (v : G → ℝ≥0∞) (q₀ : Q) (k₀ : K) :
     ∫⁻ k, ∫⁻ q, v ((q.1)⁻¹ * (q₀.1 * k₀.1) * (k.1)⁻¹) ∂ν ∂κ =
       ∫⁻ k, ∫⁻ q, v ((q.1)⁻¹ * k.1) ∂ν ∂κ := by
-  haveI := GlobalTheory.isInvInvariant_of_compactSpace κ
+  have := GlobalTheory.isInvInvariant_of_compactSpace κ
   have e1 : ∀ k : K, ∫⁻ q, v ((q.1)⁻¹ * (q₀.1 * k₀.1) * (k.1)⁻¹) ∂ν =
       ∫⁻ q, v ((q.1)⁻¹ * (k₀ * k⁻¹).1) ∂ν := by
     intro k
@@ -872,8 +872,8 @@ theorem lintegral_haar_eq_mul_iterated_closed_compact :
     ∀ (ν : Measure Q) (κ : Measure K) [ν.IsHaarMeasure] [κ.IsHaarMeasure], ∃ c : ENNReal, c ≠ 0 ∧ c ≠ ⊤ ∧
       ∀ φ : G → ENNReal, Measurable φ → ∫⁻ g, φ g ∂μ = c * ∫⁻ k, ∫⁻ q, φ (q.1 * k.1) ∂ν ∂κ := by
   intro G _ _ _ _ _ _ _ _ μ _ _ Q K hQ hK hdec ν κ _ _
-  haveI : LocallyCompactSpace Q := hQ.locallyCompactSpace
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : LocallyCompactSpace Q := hQ.locallyCompactSpace
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   obtain ⟨S, hS, hS1⟩ := exists_compact_mem_nhds (1 : G)
   have hS1' : (1 : G) ∈ interior S := mem_interior_iff_mem_nhds.mpr hS1
   set w : G → ℝ≥0∞ := S.indicator 1 with hw_def
@@ -971,7 +971,7 @@ theorem mass_const {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
   obtain ⟨q0, hq0, k, hk, rfl⟩ := hdec g
   obtain ⟨p, hp⟩ : ∃ p : Q, p.1 = q0 := ⟨⟨q0, hq0⟩, rfl⟩
   have hF : Measurable fun q : Q => E.indicator (1 : G → ℝ≥0∞) q.1 * (δ q : ℝ≥0∞) :=
-    ((measurable_one.indicator hEm).comp measurable_subtype_coe).mul hδc.measurable.coe_nnreal_ennreal
+    ((measurable_one.indicator hEm).comp measurable_subtypeVal).mul hδc.measurable.coe_nnreal_ennreal
   have hpt : ∀ q : Q, E.indicator (1 : G → ℝ≥0∞) (q.1 * (q0 * k)) * (δ q : ℝ≥0∞) =
       (δ p⁻¹ : ℝ≥0∞) * (E.indicator (1 : G → ℝ≥0∞) (q * p).1 * (δ (q * p) : ℝ≥0∞)) := by
     intro q
@@ -983,9 +983,9 @@ theorem mass_const {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     have h3 : E.indicator (1 : G → ℝ≥0∞) (q.1 * (q0 * k)) = E.indicator (1 : G → ℝ≥0∞) (q * p).1 := by
       classical
       by_cases hm : (q * p).1 ∈ E
-      · rw [Set.indicator_apply, Set.indicator_apply, if_pos (hmem.mpr hm), if_pos hm]
+      · rw [Set.indicator_apply, Set.indicator_apply, ite_eq_left (hmem.mpr hm), ite_eq_left hm]
         rfl
-      · rw [Set.indicator_apply, Set.indicator_apply, if_neg (fun h => hm (hmem.mp h)), if_neg hm]
+      · rw [Set.indicator_apply, Set.indicator_apply, ite_eq_right (fun h => hm (hmem.mp h)), ite_eq_right hm]
     rw [h3, h2]
     ring
   have hΔp : (Measure.modularCharacterFun p : ℝ≥0∞) = (δ p : ℝ≥0∞) := by
@@ -1006,10 +1006,10 @@ theorem mass_const {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
 
 theorem lintegral_mul_right_of_modular_law : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [T2Space G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (Q K : Subgroup G) [LocallyCompactSpace Q], IsClosed (Q : Set G) → IsCompact (K : Set G) → (∀ g, ∃ q ∈ Q, ∃ k ∈ K, g = q * k) → ∀ δ : Q →* ℝ≥0, Continuous δ → (∀ q : Q, Measure.modularCharacterFun q = δ q) → ∀ κ : Measure K, κ.IsHaarMeasure → ∀ s : G → ℝ≥0∞, Measurable s → (∀ (q : Q) (h : G), s (q * h) = (δ q : ℝ≥0∞) * s h) → ∀ g, ∫⁻ k, s (k * g) ∂κ = ∫⁻ k, s k ∂κ := by
   intro G _ _ _ _ _ _ _ _ μ _ _ Q K _ hQ hK hdec δ hδc hΔ κ hκ s hs hsq g
-  haveI := hκ
-  haveI : SecondCountableTopology Q := GlobalTheory.HaarQK.secondCountable_subgroup Q
+  have := hκ
+  have : SecondCountableTopology Q := GlobalTheory.HaarQK.secondCountable_subgroup Q
   obtain ⟨ν, hν⟩ : ∃ ν : Measure Q, ν.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
-  haveI := hν
+  have := hν
   obtain ⟨c, hc0, hctop, hdecomp⟩ :=
     GlobalTheory.lintegral_haar_eq_mul_iterated_closed_compact G μ Q K hQ hK hdec ν κ
   obtain ⟨S, hSc, hS1⟩ := exists_compact_mem_nhds (1 : G)
@@ -1034,7 +1034,7 @@ theorem lintegral_mul_right_of_modular_law : ∀ (G : Type) [Group G] [Topologic
     fun t => mass_const Q K hdec δ hδc hΔ ν hEm hEK t
   have hT : IsCompact (((↑) : Q → G) ⁻¹' E) := hQ.isClosedEmbedding_subtypeVal.isCompact_preimage hEc
   have hMeq : M = ∫⁻ q in ((↑) : Q → G) ⁻¹' E, (δ q : ℝ≥0∞) ∂ν := by
-    rw [hMdef, ← lintegral_indicator (hEm.preimage measurable_subtype_coe)]
+    rw [hMdef, ← lintegral_indicator (hEm.preimage measurable_subtypeVal)]
     refine lintegral_congr fun q => ?_
     by_cases hq : q.1 ∈ E
     · simp [Set.indicator_apply, hq]
@@ -1057,7 +1057,7 @@ theorem lintegral_mul_right_of_modular_law : ∀ (G : Type) [Group G] [Topologic
     rw [ae_iff] at h1
     have hTz : ν (((↑) : Q → G) ⁻¹' E) = 0 := by simpa using h1
     have hV : ((↑) : Q → G) ⁻¹' S ∈ 𝓝 (1 : Q) :=
-      continuous_subtype_val.continuousAt.preimage_mem_nhds hS1
+      continuous_subtypeVal.continuousAt.preimage_mem_nhds hS1
     have hpos := Measure.measure_pos_of_mem_nhds ν hV
     have hsub : ((↑) : Q → G) ⁻¹' S ⊆ ((↑) : Q → G) ⁻¹' E := fun q hq =>
       ⟨q.1, hq, 1, K.one_mem, mul_one _⟩
@@ -1071,7 +1071,7 @@ theorem lintegral_mul_right_of_modular_law : ∀ (G : Type) [Group G] [Topologic
       intro q
       rw [hsq q b, mul_assoc]
     have hmeas : Measurable fun q : Q => E.indicator (1 : G → ℝ≥0∞) (↑q * a) * (δ q : ℝ≥0∞) :=
-      ((measurable_one.indicator hEm).comp ((measurable_mul_const a).comp measurable_subtype_coe)).mul
+      ((measurable_one.indicator hEm).comp ((measurable_mul_const a).comp measurable_subtypeVal)).mul
         hδc.measurable.coe_nnreal_ennreal
     rw [lintegral_congr h1, lintegral_mul_const _ hmeas, hmass a]
   have hA : ∫⁻ h, E.indicator (1 : G → ℝ≥0∞) h * s (h * g) ∂μ = c * (M * ∫⁻ k : K, s (↑k * g) ∂κ) := by
@@ -1157,14 +1157,14 @@ theorem homeomorph_prod_of_closed_complements :
       (∀ x, x ∈ N → x ∈ M → x = 1) →
       ∃ Φ : (N × M) ≃ₜ Q, ∀ p, Φ p = (p.1 : Q) * (p.2 : Q) := by
   intro Q _ _ _ _ _ _ N M hN hM hprod hint
-  haveI : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace M := hM.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology N :=
+  have : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace M := hM.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology N :=
     TopologicalSpace.Subtype.secondCountableTopology (N : Set Q)
-  haveI : SecondCountableTopology M :=
+  have : SecondCountableTopology M :=
     TopologicalSpace.Subtype.secondCountableTopology (M : Set Q)
-  haveI : SigmaCompactSpace (N × M) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  letI act : MulAction (N × M) Q :=
+  have : SigmaCompactSpace (N × M) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  let act : MulAction (N × M) Q :=
     { smul := fun p q => (p.1 : Q) * q * (p.2 : Q)⁻¹
       one_smul := fun q => by
         change ((1 : N) : Q) * q * ((1 : M) : Q)⁻¹ = q
@@ -1174,12 +1174,12 @@ theorem homeomorph_prod_of_closed_complements :
           (p.1 : Q) * ((r.1 : Q) * q * (r.2 : Q)⁻¹) * (p.2 : Q)⁻¹
         simp [mul_assoc] }
   have hsmul : ∀ (p : N × M) (q : Q), p • q = (p.1 : Q) * q * (p.2 : Q)⁻¹ := fun _ _ => rfl
-  haveI : ContinuousSMul (N × M) Q := ⟨by
+  have : ContinuousSMul (N × M) Q := ⟨by
     have : (fun x : (N × M) × Q => x.1 • x.2) =
         fun x : (N × M) × Q => ((x.1.1 : Q)) * x.2 * ((x.1.2 : Q))⁻¹ := rfl
     rw [this]
     fun_prop⟩
-  haveI : MulAction.IsPretransitive (N × M) Q := ⟨fun x y => by
+  have : MulAction.IsPretransitive (N × M) Q := ⟨fun x y => by
     obtain ⟨n₁, hn₁, m₁, hm₁, rfl⟩ := hprod x
     obtain ⟨n₂, hn₂, m₂, hm₂, rfl⟩ := hprod y
     refine ⟨(⟨n₂ * n₁⁻¹, N.mul_mem hn₂ (N.inv_mem hn₁)⟩,
@@ -1237,15 +1237,15 @@ namespace GlobalTheory.CompanionTheory.ModChar
 theorem modularCharacterFun_semidirect :
     ∀ (Q : Type) [Group Q] [TopologicalSpace Q] [IsTopologicalGroup Q] [LocallyCompactSpace Q] [T2Space Q] [SecondCountableTopology Q] [MeasurableSpace Q] [BorelSpace Q] (N M : Subgroup Q) [N.Normal] [LocallyCompactSpace N] [LocallyCompactSpace M], IsClosed (N : Set Q) → IsClosed (M : Set Q) → (∀ q, ∃ n ∈ N, ∃ m ∈ M, q = n * m) → (∀ x, x ∈ N → x ∈ M → x = 1) → ∀ (νN : Measure N) (νM : Measure M), νN.IsHaarMeasure → νN.IsMulRightInvariant → νM.IsHaarMeasure → νM.IsMulRightInvariant → ∀ δ : Q →* ℝ≥0, (∀ n ∈ N, δ n = 1) → (∀ m ∈ M, νN.map (fun n : N => MulAut.conjNormal m n) = (δ m)⁻¹ • νN) → ∀ q : Q, Measure.modularCharacterFun q = δ q := by
   intro Q _ _ _ _ _ _ _ _ N M _ _ _ hN hM hgen hdisj νN νM hNH hNR hMH hMR δ hδN hδM q
-  haveI := hNH
-  haveI := hNR
-  haveI := hMH
-  haveI := hMR
-  haveI : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set Q))
-  haveI : BorelSpace M := Subtype.borelSpace (fun x => x ∈ (M : Set Q))
-  haveI : SecondCountableTopology N :=
+  have := hNH
+  have := hNR
+  have := hMH
+  have := hMR
+  have : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set Q))
+  have : BorelSpace M := Subtype.borelSpace (fun x => x ∈ (M : Set Q))
+  have : SecondCountableTopology N :=
     TopologicalSpace.Subtype.secondCountableTopology (N : Set Q)
-  haveI : SecondCountableTopology M :=
+  have : SecondCountableTopology M :=
     TopologicalSpace.Subtype.secondCountableTopology (M : Set Q)
   obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.CompanionTheory.TopGroup.homeomorph_prod_of_closed_complements Q N M hN hM hgen hdisj
   let Ψ : (M × N) ≃ₜ Q := (Homeomorph.prodComm M N).trans Φ
@@ -1254,7 +1254,7 @@ theorem modularCharacterFun_semidirect :
   set ρ : Measure Q := (νM.prod νN).map Ψ with hρ
   have hconj : ∀ (m : Q) (n : N), ((MulAut.conjNormal m n : N) : Q) = m * n * m⁻¹ :=
     fun m n => MulAut.conjNormal_apply m n
-  haveI : IsFiniteMeasureOnCompacts ρ := by
+  have : IsFiniteMeasureOnCompacts ρ := by
     refine ⟨fun K hK => ?_⟩
     rw [hρ, show ((νM.prod νN).map Ψ) K = (νM.prod νN) (Ψ ⁻¹' K) from
       Ψ.toMeasurableEquiv.map_apply K]
@@ -1262,12 +1262,12 @@ theorem modularCharacterFun_semidirect :
       have := hK.image Ψ.symm.continuous
       rwa [Ψ.symm.image_eq_preimage_symm, Ψ.symm_symm] at this
     exact this.measure_lt_top
-  haveI : ρ.IsOpenPosMeasure := by
+  have : ρ.IsOpenPosMeasure := by
     refine ⟨fun U hU hne => ?_⟩
     rw [hρ, show ((νM.prod νN).map Ψ) U = (νM.prod νN) (Ψ ⁻¹' U) from
       Ψ.toMeasurableEquiv.map_apply U]
     exact (hU.preimage Ψ.continuous).measure_ne_zero _ (hne.preimage Ψ.surjective)
-  haveI : ρ.IsMulRightInvariant := by
+  have : ρ.IsMulRightInvariant := by
     refine ⟨fun g => ?_⟩
     obtain ⟨⟨m₀, n₀⟩, rfl⟩ := Ψ.surjective g
     have hmul : Measurable (fun y : Q => y * Ψ (m₀, n₀)) := measurable_mul_const _
@@ -1350,7 +1350,7 @@ theorem isClosed_radN : ∀ (D : D7) (B W : HSp D) (t : ℕ) (d : HypDec B W t),
       obtain ⟨b, c, h⟩ := (GlobalTheory.MixPer.Decomp.mem_radX_iff d).1 h
       exact ⟨c, b, h.trans (d.nC_mul_nB b c).symm⟩
   rw [e]
-  exact (GlobalTheory.JacMeas.isClosed_radX d).preimage continuous_subtype_val
+  exact (GlobalTheory.JacMeas.isClosed_radX d).preimage continuous_subtypeVal
 
 end GlobalTheory.CompanionTheory.QKAvg
 end -- clump:auto
@@ -1529,10 +1529,10 @@ theorem mem_levM_of_pX {q : GlobalTheory.RegSW.stab d} (h₀ : d.pX ⬝ mt B (q 
 
 theorem isClosed_levM (D : D7) (B W : HSp D) (t : ℕ) (d : HypDec B W t) :
     IsClosed (levM d : Set (GlobalTheory.RegSW.stab d)) := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
-  haveI := t2Space_tensorProduct_finiteExtension (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_tensorProduct_finiteExtension (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have hc : Continuous fun q : GlobalTheory.RegSW.stab d => mt B (q : GA D B) :=
-    (continuous_mt B).comp continuous_subtype_val
+    (continuous_mt B).comp continuous_subtypeVal
   have h₀ : IsClosed {q : GlobalTheory.RegSW.stab d | d.pX ⬝ mt B (q : GA D B) ⬝ d.j0 = 0} :=
     isClosed_eq ((continuous_const.matrix_mul hc).matrix_mul continuous_const) continuous_const
   have hY : IsClosed {q : GlobalTheory.RegSW.stab d | d.pX ⬝ mt B (q : GA D B) ⬝ d.jY = 0} :=
@@ -1582,9 +1582,9 @@ namespace GlobalTheory.CompanionTheory.QKAvg
 theorem modular_stab (D : D7) (B W : HSp D) (t : ℕ) (d : HypDec B W t) [LocallyCompactSpace (GlobalTheory.RegSW.stab d)]
     (q : GlobalTheory.RegSW.stab d) :
     Measure.modularCharacterFun q = GlobalTheory.RegSW.absDet d q ^ (W.rank + t) := by
-  haveI : LocallyCompactSpace (radN d) := (GlobalTheory.T.isClosed_unipotent_radical_stabilizer D B W t d).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace (levM d) := (GlobalTheory.T.unipotent_radical_stabilizer_property D B W t d).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (GlobalTheory.RegSW.stab d) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (radN d) := (GlobalTheory.T.isClosed_unipotent_radical_stabilizer D B W t d).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (levM d) := (GlobalTheory.T.unipotent_radical_stabilizer_property D B W t d).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (GlobalTheory.RegSW.stab d) := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨νN, h1, h2, h3⟩ := GlobalTheory.T.exists_haar_unipotent_radical_conj_scaling D B W t d
   obtain ⟨νM, h4, h5⟩ := GlobalTheory.T.exists_right_invariant_haar_levi D B W t d
   exact _root_.GlobalTheory.CompanionTheory.ModChar.modularCharacterFun_semidirect (GlobalTheory.RegSW.stab d) (radN d) (levM d) (GlobalTheory.T.isClosed_unipotent_radical_stabilizer D B W t d) (GlobalTheory.T.unipotent_radical_stabilizer_property D B W t d)
@@ -1595,10 +1595,10 @@ theorem modular_stab (D : D7) (B W : HSp D) (t : ℕ) (d : HypDec B W t) [Locall
 theorem qk : PositivityTheory.Rg.Rsw.L.QK := by
   intro D t B W d l hl νK hνK s hs hlaw g
   obtain ⟨hIw, hK⟩ := GlobalTheory.RegSch.FirstTermCompare.hasIw_of_good d hl
-  haveI : LocallyCompactSpace (GlobalTheory.RegSW.stab d) :=
+  have : LocallyCompactSpace (GlobalTheory.RegSW.stab d) :=
     (GlobalTheory.RegSW.isClosed_stab d).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let μ : Measure (GA D B) := Measure.haar
-  haveI : μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D B μ inferInstance
+  have : μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D B μ inferInstance
   refine _root_.GlobalTheory.CompanionTheory.QKAvg.lintegral_mul_right_of_modular_law (GA D B) μ (GlobalTheory.RegSW.stab d) l.K (GlobalTheory.RegSW.isClosed_stab d) hK
     (fun g => ?_) ((powMonoidHom (W.rank + t) : ℝ≥0 →* ℝ≥0).comp (GlobalTheory.RegSW.absDet d))
     (show Continuous fun q => GlobalTheory.RegSW.absDet d q ^ (W.rank + t) from (GlobalTheory.RegSW.continuous_absDet d).pow _)

@@ -96,7 +96,7 @@ theorem isMulRightInvariant_of_compactSpace (L : Subgroup H) [DiscreteTopology L
     rw [Measure.map_apply (measurable_mul_const g) (measurableSet_fundamentalDomain L)]
     exact (isFundamentalDomain_preimage_mul_right L ν g).measure_eq hD
   have hc1 : c = 1 := by
-    rw [hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+    rw [hc, smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
     have : (c : ℝ≥0∞) * ν (fundamentalDomain L) = 1 * ν (fundamentalDomain L) := by
       rw [h2, one_mul]
     rwa [ENNReal.mul_left_inj h0 htop, ENNReal.coe_eq_one] at this

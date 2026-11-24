@@ -214,7 +214,7 @@ theorem continuous_gramX (ε : Fin m → Bool) : Continuous (gramX (n := n) ε) 
 
 theorem prod_aH (X : Fin n → ℝ) (h : ℝ) :
     (∏ j, aH X h j ^ (2 * m) : ℝ) = Real.exp (2 * (h * ((m : ℝ) * ∑ j, X j))) := by
-  simp only [aH, ← Real.exp_nat_mul, ← Real.exp_sum]
+  simp only [aH, ← Real.exp_natCast_mul, ← Real.exp_sum]
   congr 1
   rw [Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun j _ => ?_

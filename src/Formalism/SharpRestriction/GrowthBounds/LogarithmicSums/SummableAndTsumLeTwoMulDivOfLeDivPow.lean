@@ -257,7 +257,7 @@ theorem ask_bounds (P : ParameterChoice' D L) (X : Inst D L) {a b : HH D → ℤ
     · exact le_max_left _ _
     · exact le_rfl
   have hz : (if Odd 0 then max 0 ((a s : ℝ) / (p : ℝ) ^ 0 -
-      fillG X b j (partner D p s 0)) else 0) = 0 := if_neg hn0
+      fillG X b j (partner D p s 0)) else 0) = 0 := ite_eq_right hn0
   have h1 : ∀ e : ℕ, (if Odd e then max 0 ((a s : ℝ) / (p : ℝ) ^ e -
       fillG X b j (partner D p s e)) else 0) ≤ (a s : ℝ) / (p : ℝ) ^ e := by
     intro e
@@ -374,7 +374,7 @@ theorem ask_high (P : ParameterChoice' D L) (X : Inst D L) {a b : HH D → ℤ} 
       linarith [hfG (partner D p s e)]
     · rfl
   unfold askG
-  rw [tsum_eq_single 1 hsingle, if_pos odd_one, pow_one]
+  rw [tsum_eq_single 1 hsingle, ite_eq_left odd_one, pow_one]
   split_ifs with hlt
   · apply max_le (add_nonneg (mul_nonneg hθ.1.le hW.le) (by linarith))
     have h2 : (a s : ℝ) / p ≤ L.sc.w'' D.R.n * (1 + thW D L.sc) := by

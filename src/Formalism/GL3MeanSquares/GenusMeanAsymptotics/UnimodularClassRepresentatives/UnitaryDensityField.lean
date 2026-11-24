@@ -85,7 +85,7 @@ theorem card_lift_pred [Finite A] (hπ : Function.Surjective π) (hστ : ∀ a,
     intro a ha
     rw [RingHom.mem_ker] at ha ⊢
     rw [hστ, ha, map_zero]
-  haveI : Finite B := Finite.of_surjective π hπ
+  have : Finite B := Finite.of_surjective π hπ
 
   have hker : Nat.card (RingHom.ker π) = q ^ 2 := by
     have h1 : Nat.card A = Nat.card (RingHom.ker π) * Nat.card B := by
@@ -242,7 +242,7 @@ theorem mem_range_linPart (I : Ideal A) {M : ℕ} (y : Fin M → A) (i₀ : Fin 
   classical
   refine ⟨fun i => if i = i₀ then ⟨b * w, I.mul_mem_left b hwI⟩ else 0, ?_⟩
   rw [linPart_apply, Finset.sum_eq_single i₀]
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
     show σ (y i₀) * (b * w) + σ (b * w) * y i₀ = w
     rw [map_mul, hσw]
     linear_combination w * hb
@@ -332,7 +332,7 @@ theorem card_AQ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFix
 theorem card_split {X : Type*} [Finite X] (p r : X → Prop) :
     Nat.card {x // r x} = Nat.card {x // ¬ p x ∧ r x} + Nat.card {x // p x ∧ r x} := by
   classical
-  haveI := Fintype.ofFinite X
+  have := Fintype.ofFinite X
   simp only [Nat.card_eq_fintype_card, Fintype.card_subtype]
   rw [← Finset.card_union_of_disjoint]
   · congr 1
@@ -345,7 +345,7 @@ theorem card_split {X : Type*} [Finite X] (p r : X → Prop) :
 
 theorem cnt_eq_add (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (k M : ℕ) (n : 𝓞 K) :
     cnt hF 𝔭 k M n = cntP hF 𝔭 k M n + cntI hF 𝔭 k M n := by
-  haveI := finite_AQ (K := K) h𝔭 k
+  have := finite_AQ (K := K) h𝔭 k
   unfold cnt cntP cntI
   exact card_split (fun x : Fin M → AQ K 𝔭 k => ∀ i, InQ 𝔭 k (x i)) _
 

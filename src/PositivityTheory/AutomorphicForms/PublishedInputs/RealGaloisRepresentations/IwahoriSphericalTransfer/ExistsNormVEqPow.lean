@@ -76,7 +76,7 @@ namespace GlobalTheory.AttUniq
 
 theorem exists_normV_eq_pow (F L : Type) [Field F] [NumberField F] [Field L] [NumberField L] [Algebra F L]
     (w : HeightOneSpectrum (𝓞 L)) : ∃ f : ℕ, normV w = normV (w.under (𝓞 F)) ^ f := by
-  haveI := w.isMaximal
+  have := w.isMaximal
   refine ⟨w.asIdeal.inertiaDeg (𝓞 F), ?_⟩
   have h := Ideal.absNorm_eq_pow_inertiaDeg'_of_liesOver w.asIdeal (w.under (𝓞 F)).asIdeal (w.under (𝓞 F)).isPrime
       (w.under (𝓞 F)).ne_bot

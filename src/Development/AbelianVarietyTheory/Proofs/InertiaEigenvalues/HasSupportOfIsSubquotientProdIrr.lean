@@ -172,7 +172,7 @@ theorem clsGL_nonneg {n : ℕ} (π : Representation ℂ (GL (Fin n) k) V) (h : H
   · subst hm
     rw [clsGL_apply, cls_apply]
     exact Int.natCast_nonneg _
-  · rw [clsGL, Finsupp.mapDomain_notin_range]
+  · rw [clsGL, Finsupp.mapDomain_of_notMem_range]
     rintro ⟨c', h'⟩
     exact hm (congrArg Sigma.fst h').symm
 
@@ -308,7 +308,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem nonempty_equiv_unit {d : Fin 0 → ℕ} (e : (Σ i, Fin (d i)) ≃ Fin 0) {X : Fin 0 → Type}
     [∀ i, AddCommGroup (X i)] [∀ i, Module ℂ (X i)] (σ : ∀ i, Representation ℂ (GL (Fin (d i)) k) (X i)) :
     Nonempty ((multiProd e σ).Equiv (IrrRep.det (k := k) (Fin 0) 1 isSmoothChar_one).ρ) := by
-  haveI : Subsingleton (GL (Fin 0) k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton (GL (Fin 0) k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
   let κ : IndSp e (piTensor σ) ≃ₗ[ℂ] ⨂[ℂ] i, X i := LinearEquiv.ofBijective (ev _ 1) ⟨fun f g h =>
     Subtype.ext (Subtype.ext (funext fun x => by rw [Subsingleton.elim x 1]; exact h)), fun v =>
     ⟨⟨⟨fun _ => v, fun p _ => by rw [Subsingleton.elim p 1, map_one]; rfl⟩,
@@ -374,7 +374,7 @@ theorem pos_pc_sub (hΨ : IsProductIso k Ψ) {N : ℕ} {π : Representation ℂ 
     omega
   · have hz : (Finsupp.single (IrrGL.of π hs hi) (1 : ℤ)) y = 0 := by
       classical
-      exact (Finsupp.single_apply).trans (if_neg hy)
+      exact (Finsupp.single_apply).trans (ite_eq_right hy)
     have hg : ∀ a b : ℤ, 0 ≤ a → b = 0 → 0 ≤ a - b := fun a b h e => by omega
     exact hg _ _ h0 hz
 
@@ -389,7 +389,7 @@ theorem hasSupport_of_coef_ne (hΨ : IsProductIso k Ψ) {N : ℕ} {π : Represen
   have hN : N = ∑ a, (x a).1 := by
     by_contra hne
     refine h ?_
-    rw [clsGL, Finsupp.mapDomain_notin_range]
+    rw [clsGL, Finsupp.mapDomain_of_notMem_range]
     rintro ⟨c', h'⟩
     exact hne (congrArg Sigma.fst h').symm
   subst hN

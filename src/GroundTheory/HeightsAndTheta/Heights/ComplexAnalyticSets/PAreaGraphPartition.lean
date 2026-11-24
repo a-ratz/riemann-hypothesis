@@ -106,7 +106,7 @@ theorem AreaGraphPartition.proof : AreaGraphPartition.Statement := by
     exact (convex_ball _ _).norm_image_sub_le_of_norm_fderiv_le'
       (fun z hz => hdiff z (hεU (c n) hz)) (fun z hz => hεD (c n) z hz) hy' hx'
   · intro n x hx
-    rw [← NNReal.coe_le_coe, coe_nnnorm]
+    rw [← NNReal.coe_le_coe, coe_nnNorm]
     exact hεD (c n) x (disjointed_subset B n hx)
 
 end

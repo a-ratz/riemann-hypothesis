@@ -74,7 +74,7 @@ theorem spec_map_factorisation {X : Scheme.{0}} {A A' B B' : CommRingCat.{0}} (u
 
 theorem exists_factor {X : Scheme.{0}} {Ω₀ Ω₁ : Type} [Field Ω₀] [Field Ω₁] {ξ₀ : Sp Ω₀ ⟶ X} (ξ₁ : Sp Ω₁ ⟶ X)
     (h₀ : IsCptGen ξ₀) (h : genPt ξ₁ ⤳ genPt ξ₀) : ∃ i : Ω₀ →+* Ω₁, spMap i ≫ ξ₀ = ξ₁ := by
-  haveI : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
+  have : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
   refine ⟨(inv (Scheme.stalkClosedPointTo ξ₀) ≫ X.presheaf.stalkSpecializes h ≫ Scheme.stalkClosedPointTo ξ₁).hom, ?_⟩
   exact spec_map_factorisation (Scheme.stalkClosedPointTo ξ₀) (X.presheaf.stalkSpecializes h) (Scheme.stalkClosedPointTo ξ₁) _ _ ξ₀ ξ₁
     (Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ₀) (Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ₁)
@@ -108,9 +108,9 @@ theorem isGeom_of {l : Level H} {Xo : Moduli D l} {c : Coeff l} [NumberField c.F
       ← Y.jQ_over]
     simp only [Model.j, Category.assoc, pullback.condition]
   rintro x ⟨f, hf, hx⟩
-  letI : Algebra c.F Z.Ω := Z.inc.toAlgebra
-  haveI : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
-  haveI : Algebra.IsAlgebraic ℤ c.F := (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ)).2 inferInstance
+  let : Algebra c.F Z.Ω := Z.inc.toAlgebra
+  have : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
+  have : Algebra.IsAlgebraic ℤ c.F := (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ)).2 inferInstance
   have h0 : IsAlgebraic c.F x := ⟨f, hf, hx⟩
   have h1 : IsAlgebraic ℤ x := h0.restrictScalars ℤ
   obtain ⟨b, hb'⟩ := o.g_const (i x) (h1.algHom i.toIntAlgHom)
@@ -148,7 +148,7 @@ theorem exists_norms (hG : Top.Given) (hFD : FlatDegree) (hP : PeriodOf) (hχ : 
         ext x; simp [ComplexEmbedding.conjugate_coe_eq]
       have := ht' (ComplexEmbedding.conjugate s)
       rwa [e] at this
-  haveI : NeZero H.d := ⟨H.d_prime.ne_zero⟩
+  have : NeZero H.d := ⟨H.d_prime.ne_zero⟩
   obtain ⟨χ, hχ1, hχ2⟩ := hχ E H
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.TopLL.degree_frames hFD E H D l (Xo l) c g ty FU i U τ.1 φ N χ hχ1 hty τ.2 hφ hN htf
   refine ⟨φ, N, hf, hN, fun s => ?_, htf, h1, by rw [h2, hχ2]⟩

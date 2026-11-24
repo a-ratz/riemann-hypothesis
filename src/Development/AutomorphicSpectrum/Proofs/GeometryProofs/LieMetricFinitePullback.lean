@@ -83,8 +83,8 @@ theorem core_sum {V : Type} [AddCommGroup V] [Module ℂ V] (core : InnerProduct
     (a b : Fin n → ℂ) (x : Fin n → V) :
     core.inner (∑ i, a i • x i) (∑ j, b j • x j) =
       ∑ i, ∑ j, starRingEnd ℂ (a i) * b j * core.inner (x i) (x j) := by
-  letI : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ core
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ core
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
   change inner ℂ (∑ i, a i • x i) (∑ j, b j • x j) = ∑ i, ∑ j, starRingEnd ℂ (a i) * b j * inner ℂ (x i) (x j)
   rw [sum_inner]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -111,9 +111,9 @@ theorem span_tr {X : Scheme.{0}} {G : Over X} [GrpObj G] [Smooth G.hom] {R R' : 
       (smul : ∀ (s : R') n, P n → P (s • n))
       (add : ∀ n n', P n → P n' → P (n + n')) (n : E') : P n := by
     subst h
-    letI : Algebra R R' := c.toAlgebra
-    letI : Module R E' := Module.compHom E' c
-    haveI : IsScalarTower R R' E' := ⟨fun a b v => by
+    let : Algebra R R' := c.toAlgebra
+    let : Module R E' := Module.compHom E' c
+    have : IsScalarTower R R' E' := ⟨fun a b v => by
       change (c a * b) • v = c a • (b • v)
       rw [mul_smul]⟩
     let jl : E →ₗ[R] E' :=
@@ -235,7 +235,7 @@ noncomputable def ev {S : Scheme.{0}} (U : S.Opens) (f : Γ(S, U)) (z : Sp ℂ �
 
 theorem mem_nhds_centre {S : Scheme.{0}} (U : S.Opens) (z : Sp ℂ ⟶ S) (hz : centre z ∈ U) :
     {z' : Sp ℂ ⟶ S | centre z' ∈ U} ∈ @nhds _ (anTop S) z := by
-  letI := anTop S
+  let := anTop S
   refine IsOpen.mem_nhds ?_ hz
   refine TopologicalSpace.isOpen_generateFrom_of_mem ⟨U, 0, Set.univ, isOpen_univ, ?_⟩
   ext z'
@@ -243,7 +243,7 @@ theorem mem_nhds_centre {S : Scheme.{0}} (U : S.Opens) (z : Sp ℂ ⟶ S) (hz : 
 
 theorem ev_contAt {S : Scheme.{0}} (U : S.Opens) (f : Γ(S, U)) (z : Sp ℂ ⟶ S) (hz : centre z ∈ U) :
     @ContinuousAt _ _ (anTop S) _ (ev U f) z := by
-  letI := anTop S
+  let := anTop S
   refine continuousAt_def.2 fun A hA => ?_
   obtain ⟨O, hOA, hO, hzO⟩ := mem_nhds_iff.1 hA
   have ho : IsOpen {z' : Sp ℂ ⟶ S | ∃ hz : centre z' ∈ U, evalAt U f z' hz ∈ O} :=
@@ -256,7 +256,7 @@ theorem ev_contAt {S : Scheme.{0}} (U : S.Opens) (f : Γ(S, U)) (z : Sp ℂ ⟶ 
 
 theorem exists_ev {S : Scheme.{0}} {U : S.Opens} (hU : IsAffineOpen U) (z : Sp ℂ ⟶ S) (hz : centre z ∈ U) :
     ∃ g : Γ(S, U) →+* ℂ, spMap g ≫ (hU.fromSpec : Sp Γ(S, U) ⟶ S) = z ∧ ∀ f, ev U f z = g f := by
-  haveI : IsOpenImmersion (hU.fromSpec : Sp Γ(S, U) ⟶ S) := inferInstanceAs (IsOpenImmersion hU.fromSpec)
+  have : IsOpenImmersion (hU.fromSpec : Sp Γ(S, U) ⟶ S) := inferInstanceAs (IsOpenImmersion hU.fromSpec)
   obtain ⟨g, hg⟩ := exists_lift (R := Γ(S, U)) hU.fromSpec z (by
     rw [hU.opensRange_fromSpec]
     exact hz)
@@ -288,7 +288,7 @@ theorem exists_coords {X : Scheme.{0}} {Ω : Type} [Field Ω] {K : Type} [Fintyp
       · simp
     rw [e1] at h
     obtain ⟨σ, hσ⟩ := h
-    obtain ⟨U, hp, t, ht⟩ := X.presheaf.germ_exist (x := p) σ
+    obtain ⟨U, hp, t, ht⟩ := X.presheaf.exists_germ_eq (x := p) σ
     exact ⟨U, hp, t, by rw [ht]; exact hσ⟩
   choose U hp t ht using hreg
   obtain ⟨_, ⟨W, hW, rfl⟩, hpW, hWU⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open
@@ -332,19 +332,19 @@ theorem PositivityTheory.Xgn.torus_uniformization_continuous : ∀ (X : Scheme.{
         H zc = RootHt.gramAt h (zc ≫ ρ) v) →
     @Continuous _ _ (anTop Z') _ H := by
   intro X Ω _ K _ J _ y ξ hall tie G _ _ _ Li _ _ M h Z' ρ G' _ Φ hΦ Xc _ _ _ u _ r β H hH
-  letI := anTop Z'
+  let := anTop Z'
   refine continuous_iff_continuousAt.2 fun z₀ => ?_
   obtain ⟨W, hW, hpW, t, ht⟩ := exists_coords hall tie (ρ (centre z₀))
   obtain ⟨_, ⟨V, hV, rfl⟩, hzV, hVW⟩ := Z'.isBasis_affineOpens.exists_subset_of_mem_open
     (a := centre z₀) (u := ((ρ ⁻¹ᵁ W : Z'.Opens) : Set Z')) hpW (ρ ⁻¹ᵁ W).2
   replace hV : IsAffineOpen V := hV
   let x : Sp Γ(X, W) ⟶ X := hW.fromSpec
-  haveI : IsOpenImmersion x := inferInstanceAs (IsOpenImmersion hW.fromSpec)
+  have : IsOpenImmersion x := inferInstanceAs (IsOpenImmersion hW.fromSpec)
   let xV : Sp Γ(Z', V) ⟶ Z' := hV.fromSpec
   let φ : Γ(X, W) →+* Γ(Z', V) := (ρ.appLE W V hVW).hom
   have hφ : spMap φ ≫ x = xV ≫ ρ := IsAffineOpen.SpecMap_appLE_fromSpec ρ hW hV hVW
   obtain ⟨E, _, _, ⟨MR⟩⟩ := lieModel_exists X G Γ(X, W) x
-  haveI : Module.Finite Γ(X, W) E := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G Γ(X, W) x E MR).1
+  have : Module.Finite Γ(X, W) E := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G Γ(X, W) x E MR).1
   obtain ⟨n, s, hs⟩ := Module.Finite.exists_fin (R := Γ(X, W)) (M := E)
   obtain ⟨c, hc⟩ := local_formula h hΦ u β H hH x xV φ hφ MR s hs
   obtain ⟨ψ, hψ⟩ := exists_lift x ξ (by

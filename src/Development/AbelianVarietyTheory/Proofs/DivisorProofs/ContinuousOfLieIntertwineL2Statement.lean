@@ -76,7 +76,7 @@ theorem exists_weylAlg_conj {l : Type} [Fintype l] (L' : (l ⊕ l → ℝ) ≃�
     refine ⟨B' * dRho (L'.symm w), fun f => ?_⟩
     have e := hI (L'.symm w) f
     rw [LinearEquiv.apply_symm_apply] at e
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, ← e, h]
+    rw [mul_apply_eq_comp, mul_apply_eq_comp, ← e, h]
   · rintro A B ⟨A₁, h₁⟩ ⟨B₁, h₂⟩
     exact ⟨A₁ + B₁, fun f => by simp [h₁, h₂]⟩
   · rintro c A ⟨A₁, h⟩

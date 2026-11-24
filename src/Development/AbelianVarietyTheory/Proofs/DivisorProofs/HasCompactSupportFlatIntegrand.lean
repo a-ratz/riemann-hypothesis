@@ -142,7 +142,7 @@ theorem continuous_flatIntegrand (hs : 1 ≤ G.s) {ψ : AddChar k Circle} (hψ :
     (continuous_const.matrix_mul (continuous_apply b)).matrix_mul continuous_const
   exact (continuous_const.mul (continuous_const.mul
     ((isLocallyConstant_of_isTensor hT).continuous.comp (hm.comp (continuous_fill hs x y))))).mul
-    (continuous_subtype_val.comp (hψ.comp (continuous_phase x).neg))
+    (continuous_subtypeVal.comp (hψ.comp (continuous_phase x).neg))
 
 theorem hasCompactSupport_flatIntegrand (hs : 1 ≤ G.s) (ψ : AddChar k Circle) {ϖ : kˣ} {e : ℕ}
     {T : G.Args → ℂ} (hT : G.IsTensor ϖ e (oppositePath G.m) T) (keep : Bool) (g : G.VertexGroup)

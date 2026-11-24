@@ -111,7 +111,7 @@ theorem autV_nsmul {g : ℕ} (τ : Matrix (Fin g) (Fin g) ℂ) {a b : Fin g → 
   obtain ⟨q, hq⟩ := exists_two_mul_dot hb N
   obtain ⟨k, hk⟩ := Int.even_mul_pred_self (m : ℤ)
   have hk' : (m : ℂ) * (m - 1) = k + k := by exact_mod_cast hk
-  rw [autV, autV, ← Complex.exp_nat_mul, Complex.exp_eq_exp_iff_exists_int]
+  rw [autV, autV, ← Complex.exp_natCast_mul, Complex.exp_eq_exp_iff_exists_int]
   refine ⟨-(k * (p - q)), ?_⟩
   simp only [cv_nsmul, Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct, smul_eq_mul]
   push_cast
@@ -181,7 +181,7 @@ theorem exists_normalised_mulPull_fnT : ∀ (g : ℕ) (x : KeyIn ℂ) (hg : x.P.
     rw [← lift_snd (fst (baseOver (Sp ℂ)) x.P.A) (snd (baseOver (Sp ℂ)) x.P.A ^ m), Over.comp_left, ← Category.assoc]
     exact (congrArg (· ≫ _) (hψ z)).trans (exAt_snd _ _ _)
   obtain ⟨r, hr, hne, hrj⟩ := exists_fn_of_isGen (Φ := fun z => (m : ℂ) • z) hL (by fun_prop) hΦ hα
-  haveI := u.discrete
+  have := u.discrete
   obtain ⟨-, -, k3⟩ := appellHumbert_trivial_of_nowhere_vanishing g u.Λ u.full 0 (fun _ => 1) r
     Matrix.isHermitian_zero (fun _ => norm_one) hr hne (fun l z => by
       obtain ⟨i, hi⟩ := exists_chart u valueRules hL z
@@ -281,7 +281,7 @@ variable {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {u : HolUnif A L g}
 
 theorem const_of_periodic {r : (Fin g → ℂ) → ℂ} (hd : Differentiable ℂ r) (h0 : ∀ z, r z ≠ 0)
     (hp : ∀ l ∈ u.Λ, ∀ z, r (z + l) = r z) (z : Fin g → ℂ) : r z = r 0 := by
-  haveI := u.discrete
+  have := u.discrete
   refine (appellHumbert_trivial_of_nowhere_vanishing g u.Λ u.full 0 (fun _ => 1) r Matrix.isHermitian_zero
     (fun _ => norm_one) hd h0 (fun l z => ?_)).2.2 z
   rw [hp l l.2]
@@ -311,7 +311,7 @@ theorem Reads.period (hL : L.IsLB) {m : T ⊗ A ⟶ A} {k : ℤ}
   have n0 : u.fr i (z + l) ≠ 0 := u.fr_ne _ _ (by rw [ex_add_period u _ _ hl]; exact hi)
   rw [exAt_add_period u p z l hl, hw] at e2
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one] at e1 e2
-  rw [h0 i hi, h1 i' hi', mul_zpow, mul_zpow, ← Complex.exp_int_mul, ← Complex.exp_int_mul] at e1
+  rw [h0 i hi, h1 i' hi', mul_zpow, mul_zpow, ← Complex.exp_intCast_mul, ← Complex.exp_intCast_mul] at e1
   rw [Complex.exp_sub, div_mul_eq_mul_div, eq_div_iff (Complex.exp_ne_zero _)]
   refine mul_right_cancel₀ (zpow_ne_zero k n0) ?_
   linear_combination e1 - Complex.exp (k * t) * e2
@@ -479,7 +479,7 @@ theorem prod_exp (c s : ℂ) (n : ℕ) :
 theorem eq_exp_of_odd {c s t : ℂ} {j : ℕ} (h1 : c ^ 2 * Complex.exp (2 * s) = 1)
     (h2 : c ^ (2 * j + 1) * Complex.exp t = 1) : c = Complex.exp (2 * j * s - t) := by
   have h3 : (c ^ 2 * Complex.exp (2 * s)) ^ j = 1 := by rw [h1, one_pow]
-  rw [mul_pow, ← Complex.exp_nat_mul, ← pow_mul, show (j : ℂ) * (2 * s) = 2 * j * s by ring] at h3
+  rw [mul_pow, ← Complex.exp_natCast_mul, ← pow_mul, show (j : ℂ) * (2 * s) = 2 * j * s by ring] at h3
   rw [Complex.exp_sub, eq_div_iff (Complex.exp_ne_zero _)]
   linear_combination Complex.exp (2 * j * s) * h2 - c * Complex.exp t * h3
 
@@ -520,7 +520,7 @@ theorem exists_symLift_act_classical : ∀ (g : ℕ) (x : KeyIn ℂ) (hg : x.P.g
     ring
   simp only [dotProduct_smul, smul_eq_mul, show ∀ i s : ℂ, 2 * Real.pi * Complex.I * (i * s) =
     2 * (i * (Real.pi * Complex.I * s)) from fun i s => by ring] at h2
-  rw [prod_exp, zpow_natCast, autV, ← Complex.exp_nat_mul, _root_.mul_assoc, ← Complex.exp_add, hj] at h2
+  rw [prod_exp, zpow_natCast, autV, ← Complex.exp_natCast_mul, _root_.mul_assoc, ← Complex.exp_add, hj] at h2
   have h3 := eq_exp_of_odd h1' h2
   refine ⟨U, hU, fun s f hf => ?_⟩
   obtain ⟨t, ht⟩ := GlobalTheory.ThetaPtExist.exists_isTwistPull x.P.isLB (translT x.P.A U.pt) (translPt x.P.A U.pt) (lift_snd _ _)
@@ -871,7 +871,7 @@ theorem thJet_of_normalForm : ∀ (g : ℕ) (x : KeyIn ℂ) (hg : x.P.g = g) (u 
     refine h1.trans ?_
     rw [← h2, fderiv_const_mul (hd 0)]
     congr 3
-    simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [smul_apply, smul_eq_mul]
     ring
 
 end GlobalTheory.MBLow.Cl

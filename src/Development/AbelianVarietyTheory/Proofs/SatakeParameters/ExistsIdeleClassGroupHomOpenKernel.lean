@@ -101,7 +101,7 @@ theorem diagUnits_range_le_ker : (diagUnits E).range ≤ (GlobalTheory.Mem.UnitI
       FiniteAdeleRing.unitEmbedding (𝓞 E) E k := Units.ext rfl
   show ClassGroup.mk E _ = 1
   rw [ClassGroup.mk_eq_one_iff, classHom_val, hd, GlobalTheory.Idele.idealOf_unitEmbedding,
-    FractionalIdeal.coe_spanSingleton]
+    FractionalIdeal.coeToSubmodule_spanSingleton]
   exact ⟨⟨(k : E), rfl⟩⟩
 
 theorem localIdele_mem_unitIdl (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicCompletion E)ˣ)
@@ -122,11 +122,11 @@ theorem ord_vw_localIdele_unif (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicComp
   rw [GlobalTheory.Idele.ord_vw, finIdele_apply]
   by_cases hw : w = v
   · subst hw
-    rw [localIdele_snd_self', if_pos rfl]
+    rw [localIdele_snd_self', ite_eq_left rfl]
     have hx' : Valued.v (x : w.adicCompletion E) = WithZero.exp (-1) := hx
     rw [hx', WithZero.log_exp]
     rfl
-  · rw [localIdele_snd_ne' E v w hw, if_neg (Ne.symm hw), map_one]
+  · rw [localIdele_snd_ne' E v w hw, ite_eq_right (Ne.symm hw), map_one]
     rfl
 
 theorem classHom_localIdele_unif (v : HeightOneSpectrum (𝓞 E)) (x : (v.adicCompletion E)ˣ)

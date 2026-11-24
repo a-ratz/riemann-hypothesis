@@ -98,7 +98,7 @@ private def tt (P : Pre L) (v : Pl (Lp L)) (x : Lsq (Kv v) (cv v P.Δ)) : Kv v �
 private theorem tt_apply (P : Pre L) (v : Pl (Lp L)) (x : Lsq (Kv v) (cv v P.Δ)) (p : PlacesOver L v) :
     tensorEquiv L v (tt P v x) p = P.rho v p.1 (unOf p.2) x := by
   simp only [tt, map_add (f := _), tensorEquiv_tmul, map_one, mul_one, Pi.add_apply, Pi.mul_apply]
-  haveI := p.2
+  have := p.2
   show completionMap v p.1 x.re + completionMap v p.1 x.im * algebraMap L _ (P.e QuadraticAlgebra.omega) =
     P.φ v p.1 (unOf p.2) x.re + P.φ v p.1 (unOf p.2) x.im * P.rt p.1
   rw [phi_eq P v p.1 (unOf p.2), phi_eq P v p.1 (unOf p.2)]

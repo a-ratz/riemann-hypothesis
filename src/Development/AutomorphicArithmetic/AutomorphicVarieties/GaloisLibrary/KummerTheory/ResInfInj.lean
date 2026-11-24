@@ -59,8 +59,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem totient_le_finrank_mul_natDegree_minpoly (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [CharZero Ω] (ζ : Ω) (N : ℕ) (hζ : IsPrimitiveRoot ζ N) (hN : 0 < N) : N.totient ≤ Module.finrank ℚ F * (minpoly F ζ).natDegree := by
   have hint : IsIntegral F ζ := (hζ.isIntegral hN).tower_top
-  haveI : FiniteDimensional F (IntermediateField.adjoin F ({ζ} : Set Ω)) := IntermediateField.adjoin.finiteDimensional hint
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin F ({ζ} : Set Ω)) := Module.Finite.trans F (IntermediateField.adjoin F ({ζ} : Set Ω))
+  have : FiniteDimensional F (IntermediateField.adjoin F ({ζ} : Set Ω)) := IntermediateField.adjoin.finiteDimensional hint
+  have : FiniteDimensional ℚ (IntermediateField.adjoin F ({ζ} : Set Ω)) := Module.Finite.trans F (IntermediateField.adjoin F ({ζ} : Set Ω))
   rw [← IntermediateField.adjoin.finrank hint, Module.finrank_mul_finrank ℚ F (IntermediateField.adjoin F ({ζ} : Set Ω))]
   have h1 : minpoly ℚ ζ = minpoly ℚ ((⟨ζ, IntermediateField.mem_adjoin_simple_self F ζ⟩ : IntermediateField.adjoin F ({ζ} : Set Ω))) :=
     minpoly.algebraMap_eq (A := ℚ) (algebraMap (IntermediateField.adjoin F ({ζ} : Set Ω)) Ω).injective ⟨ζ, IntermediateField.mem_adjoin_simple_self F ζ⟩
@@ -71,9 +71,9 @@ private theorem totient_le_finrank_mul_natDegree_minpoly (F Ω : Type) [Field F]
 
 private theorem natDegree_minpoly_le_of_cycZ_pow_eq_one (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] [CharZero Ω] (l : ℕ) [Fact l.Prime] (k : ℕ) (hk : 0 < k) (h : ∀ g : G F Ω, cycZ F Ω l g ^ k = 1) (n : ℕ) (ζ : Ω) (hζ : IsPrimitiveRoot ζ (l ^ n)) : (minpoly F ζ).natDegree ≤ k := by
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Normal F Ω := IsAlgClosure.normal F Ω
-  haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Normal F Ω := IsAlgClosure.normal F Ω
+  have : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
   have hint : IsIntegral F ζ := (hζ.isIntegral (pow_pos (Fact.out : l.Prime).pos n)).tower_top
   have hsep : ((minpoly F ζ).map (algebraMap F Ω)).Separable :=
     (minpoly.irreducible hint).separable.map
@@ -121,7 +121,7 @@ theorem UpperTheory.V.Kum.resInfInj :
   have hINF : ∃ g : G F Ω, cycZ F Ω l g ^ e ≠ 1 := by
     by_contra hcon
     push_neg at hcon
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
     have hk : 0 < e.natAbs := Int.natAbs_pos.mpr he
     have hall : ∀ g : G F Ω, cycZ F Ω l g ^ e.natAbs = 1 := by
       intro g
@@ -131,9 +131,9 @@ theorem UpperTheory.V.Kum.resInfInj :
         exact h0
       · rw [h', zpow_neg, inv_eq_one, zpow_natCast] at h0
         exact h0
-    haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ (e.natAbs * Module.finrank ℚ F + 1))
+    have : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ (e.natAbs * Module.finrank ℚ F + 1))
     have hlb := totient_le_finrank_mul_natDegree_minpoly F Ω ζ _ hζ (pow_pos (Fact.out : l.Prime).pos _)
     have hub := natDegree_minpoly_le_of_cycZ_pow_eq_one F Ω l e.natAbs hk hall _ ζ hζ
     have htot : e.natAbs * Module.finrank ℚ F + 1 ≤ (l ^ (e.natAbs * Module.finrank ℚ F + 1)).totient := by

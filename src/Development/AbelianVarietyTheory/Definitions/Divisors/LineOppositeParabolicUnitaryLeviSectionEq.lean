@@ -106,7 +106,7 @@ theorem mem_fixed {ρ : Representation ℂ G V} {K : Subgroup G} {v : V} :
 theorem charRep_irreducible (χ : G →* ℂˣ) : (charRep χ).IsIrreducible := by
   have hne : (⊥ : Subrepresentation (charRep χ)) ≠ ⊤ := fun h =>
     bot_ne_top (congrArg Subrepresentation.toSubmodule h)
-  haveI : Nontrivial (Subrepresentation (charRep χ)) := ⟨⟨_, _, hne⟩⟩
+  have : Nontrivial (Subrepresentation (charRep χ)) := ⟨⟨_, _, hne⟩⟩
   refine ⟨fun S => ?_⟩
   rcases eq_bot_or_eq_top S.toSubmodule with h | h
   · exact Or.inl (Subrepresentation.toSubmodule_injective h)
@@ -169,7 +169,7 @@ def modulus (U : Subgroup G) (hU : IsClosed (U : Set G)) : Subgroup.normalizer (
 theorem modulus_measure (U : Subgroup G) (hU : IsClosed (U : Set G)) [MeasurableSpace U] [BorelSpace U]
     (μ : Measure U) [μ.IsHaarMeasure] [μ.Regular] (g : Subgroup.normalizer (U : Set G)) (X : Set U) :
     μ (conjAut U g '' X) = modulus U hU g * μ X := by
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   have h := mulEquivHaarChar_smul_preimage μ (X := conjAut U g '' X) (conjAut U g)
   rw [Set.preimage_image_eq _ (conjAut U g).injective] at h
   have e : modulus U hU g = mulEquivHaarChar (conjAut U g) := by
@@ -219,7 +219,7 @@ theorem Q_le_normalizer : P.Q ≤ Subgroup.normalizer (P.U : Set G) := by
 
 theorem closed_U [T1Space M] : IsClosed (P.U : Set G) := by
   have : IsClosed (P.p.ker : Set P.Q) := isClosed_singleton.preimage P.cont_p
-  exact P.closed_Q.isClosedMap_subtype_val _ this
+  exact P.closed_Q.isClosedMap_subtypeVal _ this
 
 def restrict (H : Subgroup G) (hH : ∀ q : P.Q, (q : G) ∈ H → P.s (P.p q) ∈ H) : LeviDatum H (H.comap P.s) where
   Q := P.Q.subgroupOf H
@@ -412,7 +412,7 @@ theorem continuous_blockProj (b : n → α) : Continuous (blockProj (k := k) b) 
   refine continuous_toHomUnits _ (continuous_matrix fun i j => ?_)
   show Continuous fun q : blockQ k b => if b i = b j then (q : GL n k).val i j else 0
   split_ifs
-  · exact (continuous_entry i j).comp continuous_subtype_val
+  · exact (continuous_entry i j).comp continuous_subtypeVal
   · exact continuous_const
 
 def parIn (b : n → α) (H : Subgroup (GL n k)) (hH : ∀ q : blockQ k b, (q : GL n k) ∈ H → blockProj b q ∈ H) :
@@ -659,20 +659,20 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
 theorem locallyCompact_GU_of_unram [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ σ q) (n : ℕ) :
     LocallyCompactSpace (GU σ n) := by
   obtain ⟨-, hv, -, hϖ, -, hq, hcard⟩ := h
-  haveI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
+  have : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
     ⟨ϖ, by rw [hϖ]; exact WithZero.coe_ne_zero, by rw [hϖ, ← WithZero.coe_one, ne_eq, WithZero.coe_inj]; decide⟩
-  letI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
+  let : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne _ (e := 2) (by norm_num)
   have hp := (Valued.integer.properSpace_iff_completeSpace_and_isDiscreteValuationRing_integer_and_finite_residueField
     (K := L)).2 ⟨inferInstance, (Valued.v : Valuation L _).valuationSubring_isDiscreteValuationRing,
       Nat.finite_of_card_ne_zero (by
         refine ne_of_eq_of_ne hcard (pow_ne_zero _ (by omega)))⟩
-  haveI : LocallyCompactSpace L := by
+  have : LocallyCompactSpace L := by
     open scoped Valued in exact inferInstance
   refine locallyCompact_GU σ (continuous_of_continuousAt_zero σ ?_) n
   rw [ContinuousAt, map_zero, (Valued.hasBasis_nhds_zero L _).tendsto_iff (Valued.hasBasis_nhds_zero L _)]
   refine fun γ _ => ⟨γ, trivial, fun x hx => ?_⟩
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   rwa [show Valued.v.restrict (σ x) = Valued.v.restrict x from (Valuation.restrict_inj _).2 (hv x)]
 
 end Examples
@@ -743,7 +743,7 @@ theorem sum_line {M : Type} [AddCommMonoid M] (f : Fin (n + 2) → M) :
 
 @[simp] theorem lineBlocks_mid (i : Fin n) : lineBlocks (n + 2) (midIdx i) = 0 := by
   have := i.2
-  rw [lineBlocks, midIdx_val, if_neg (by omega), if_neg (by omega), sub_zero]
+  rw [lineBlocks, midIdx_val, ite_eq_right (by omega), ite_eq_right (by omega), sub_zero]
 
 @[simp] theorem lineBlocks_last : lineBlocks (n + 2) (Fin.last (n + 1)) = 1 := by simp [lineBlocks]
 
@@ -931,7 +931,7 @@ theorem continuous_of_unramInv (h : IsUnramInv ϖ σ q) : Continuous σ := by
   refine continuous_of_continuousAt_zero σ ?_
   rw [ContinuousAt, map_zero, (Valued.hasBasis_nhds_zero L _).tendsto_iff (Valued.hasBasis_nhds_zero L _)]
   refine fun γ _ => ⟨γ, trivial, fun x hx => ?_⟩
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   rwa [show Valued.v.restrict (σ x) = Valued.v.restrict x from (Valuation.restrict_inj _).2 (h.2.1 x)]
 
 end Line

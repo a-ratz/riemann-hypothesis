@@ -82,7 +82,7 @@ theorem specializes_jK {V' : Type} [CommRing V'] [IsDomain V'] {z : M.Z} (ev : M
 theorem val_stalkHom {V' : Type} [CommRing V'] [IsDomain V'] {z : M.Z} (ev : M.Z.presheaf.stalk z →+* V')
     (x : M.Z.presheaf.stalk z) :
     M.val (jK V' ≫ spMap ev ≫ M.Z.fromSpecStalk z) (M.stalkHom z x) = algebraMap V' (FractionRing V') (ev x) := by
-  obtain ⟨U, hz, f, rfl⟩ := M.Z.presheaf.germ_exist x
+  obtain ⟨U, hz, f, rfl⟩ := M.Z.presheaf.exists_germ_eq x
   have hr : Set.range (jK V' ≫ spMap ev ≫ M.Z.fromSpecStalk z) ⊆ U := by
     rintro _ ⟨w, rfl⟩
     exact (specializes_jK ev w).mem_open U.isOpen hz

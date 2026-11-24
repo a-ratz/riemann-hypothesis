@@ -295,12 +295,12 @@ theorem UpperTheory.V.Ws.exists_stabilizer_index_dvd_of_not_irreducible_restrict
     { carrier := {g | tr g W = W}
       mul_mem' := by
         intro a c ha hc
-        simp only [Set.mem_setOf_eq] at ha hc ⊢
+        simp only [Set.mem_ofPred_eq] at ha hc ⊢
         rw [htr_mul, hc, ha]
       one_mem' := htr_one W
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← htr_mul, inv_mul_cancel, htr_one] }
   have hS : ∀ g, g ∈ S ↔ ∀ v ∈ W, r g *ᵥ v ∈ W := by

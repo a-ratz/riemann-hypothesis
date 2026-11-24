@@ -79,7 +79,7 @@ theorem linearDisjoint_algebraicClosure {K Ω L : Type} [Field K] [CharZero K] [
   refine Subalgebra.LinearDisjoint.of_linearDisjoint_finite_left _ _ fun B hB _ => ?_
   have halg : B.IsAlgebraic := fun x hx => (mem_algebraicClosure_iff (F := K)).1 (hB hx)
   let M : IntermediateField K L := halg.toIntermediateField
-  haveI : FiniteDimensional K M := ‹Module.Finite K B›
+  have : FiniteDimensional K M := ‹Module.Finite K B›
   change M.LinearDisjoint Ω
   obtain ⟨θ, hθ⟩ := Field.exists_primitive_element K M
   have hi : IsIntegral K (θ : L) := (Algebra.IsIntegral.isIntegral (R := K) θ).map M.val
@@ -103,12 +103,12 @@ theorem isDomain_tensor {K A Ω : Type} [Field K] [CharZero K] [CommRing A] [Fie
     (h : ∀ a : Ω, IsAlgebraic K a → a ∈ (algebraMap K Ω).range) (F : Type) [Field F] [Algebra K F] :
     IsDomain (F ⊗[K] A) := by
   let N := algebraicClosure K (AlgebraicClosure Ω)
-  haveI : IsDomain (N ⊗[K] Ω) := (linearDisjoint_algebraicClosure h).isDomain
-  haveI : IsAlgClosed N := IsAlgClosure.isAlgClosed K
+  have : IsDomain (N ⊗[K] Ω) := (linearDisjoint_algebraicClosure h).isDomain
+  have : IsAlgClosed N := IsAlgClosure.isAlgClosed K
   let φ := Algebra.TensorProduct.map (AlgHom.id K N) j
   have hφ : Function.Injective φ :=
     Module.Flat.lTensor_preserves_injective_linearMap (M := N) j.toLinearMap hj
-  haveI : IsDomain (N ⊗[K] A) := Function.Injective.isDomain φ.toRingHom hφ
+  have : IsDomain (N ⊗[K] A) := Function.Injective.isDomain φ.toRingHom hφ
   exact GlobalTheory.GeomComp.isDomain_tensor_of_closure K N A F
 
 theorem isPreconnected_points {K A : Type} [Field K] [CommRing A] [Algebra K A] [Algebra.FiniteType K A]
@@ -136,8 +136,8 @@ theorem isPreconnected_points_over {K A Ω : Type} [Field K] [CharZero K] [CommR
     [Algebra K Ω] [Algebra.FiniteType K A] (j : A →ₐ[K] Ω) (hj : Function.Injective j)
     (h : ∀ a : Ω, IsAlgebraic K a → a ∈ (algebraMap K Ω).range) (σ : K →+* ℂ) :
     IsPreconnected {g : A → ℂ | ∃ ρ : A →+* ℂ, ρ.comp (algebraMap K A) = σ ∧ ⇑ρ = g} := by
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI := isDomain_tensor j hj h ℂ
+  let : Algebra K ℂ := σ.toAlgebra
+  have := isDomain_tensor j hj h ℂ
   convert isPreconnected_points (K := K) (A := A) using 1
   ext g
   constructor
@@ -187,7 +187,7 @@ theorem ReadOn.eventually {U : Formalism.L2.PjFree.Unf Xo c σ r} (hσ : Formali
     else ψ₀
   have hψ' : ∀ b ∈ B, ∀ a, Formalism.L2.PjFree.toC (ψ' b a) = ψ b a := by
     intro b hb a
-    simp only [ψ', dif_pos hb]
+    simp only [ψ', dite_eq_left hb]
     rfl
   choose z hz using fun b => hL.bc _ _ (ψ' b) yA
   obtain ⟨h1, h2⟩ := hnear φ₀ hφ₀ (fun a _ => by simpa using hε)
@@ -235,7 +235,7 @@ theorem comp_eq_of_fnAlgClosed : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨hL, -, -, hA⟩ := _root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   obtain ⟨-, hmul, hinv, -⟩ := GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c (CAt σ)
   obtain ⟨C, ψ, z, t, hz, ht⟩ := hA h (Om Z) (genFr h Z)
-  haveI := C.sm
+  have := C.sm
   set_option synthInstance.maxHeartbeats 200000 in
   have hread : ∀ (k : U.Comp) (x : (U.X k).dom), (∃ (φ : Om Z →ₐ[c.F] CAt σ) (y' : FrPt Xo c (CAt σ))
       (t : Ix Dw → (CAt σ)ˣ), FrMap φ (genFr h Z) y' ∧ FrBor t (U.un k x) y') →

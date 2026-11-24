@@ -92,11 +92,11 @@ theorem KO_le_coreH {K : Subgroup (GL n k)} (hK : KO k n ≤ K) : KO k n ≤ cor
 
 theorem isOpen_coreH {K : Subgroup (GL n k)} (hK : IsOpen (K : Set (GL n k))) :
     IsOpen (coreH k n K : Set (GL n k)) := by
-  haveI : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
+  have : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
   have hU : IsOpen ((K.subgroupOf (KO k n) : Subgroup (KO k n)) : Set (KO k n)) :=
-    hK.preimage continuous_subtype_val
-  haveI : Finite (KO k n ⧸ K.subgroupOf (KO k n)) := Subgroup.quotient_finite_of_isOpen _ hU
-  haveI : (K.subgroupOf (KO k n)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    hK.preimage continuous_subtypeVal
+  have : Finite (KO k n ⧸ K.subgroupOf (KO k n)) := Subgroup.quotient_finite_of_isOpen _ hU
+  have : (K.subgroupOf (KO k n)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hC : IsClosed (((K.subgroupOf (KO k n)).normalCore : Subgroup (KO k n)) : Set (KO k n)) :=
     Subgroup.normalCore_isClosed _ (Subgroup.isClosed_of_isOpen _ hU)
   have hO := Subgroup.isOpen_of_isClosed_of_finiteIndex _ hC

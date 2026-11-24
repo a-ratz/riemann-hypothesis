@@ -302,8 +302,8 @@ theorem sec_q_smul (F : Shv (ZMod q)) (U : Scheme.{0}) (x : Sec F U) : q • x =
 theorem isEmpty_of_sub (W : Scheme.{0}) (h : Subsingleton Γ(W, ⊤)) : IsEmpty W := by
   by_contra hne
   rw [not_isEmpty_iff] at hne
-  haveI : Nonempty (⊤ : W.Opens) := ⟨⟨hne.some, trivial⟩⟩
-  haveI := Scheme.component_nontrivial W ⊤
+  have : Nonempty (⊤ : W.Opens) := ⟨⟨hne.some, trivial⟩⟩
+  have := Scheme.component_nontrivial W ⊤
   exact not_subsingleton _ h
 
 theorem smul_twGen_eq_zero (W : Scheme.{0}) (ζ : Prim q Γ(W, ⊤)) (c : ℕ) (h : ζ.1 ^ c = 1) :
@@ -314,7 +314,7 @@ theorem smul_twGen_eq_zero (W : Scheme.{0}) (ζ : Prim q Γ(W, ⊤)) (c : ℕ) (
   · have hu := (GlobalTheory.EtC.PrimBasic.prim_basic q Γ(W, ⊤)).2.2.1 ζ c 0 (by
       intro h'; exact hc (Nat.dvd_of_mod_eq_zero (by simpa [Nat.ModEq] using h')))
     rw [h, pow_zero, sub_self] at hu
-    haveI := isEmpty_of_sub W (subsingleton_of_zero_eq_one (isUnit_zero_iff.1 hu))
+    have := isEmpty_of_sub W (subsingleton_of_zero_eq_one (isUnit_zero_iff.1 hu))
     exact sec_empty _ W _ _
 
 theorem glue_inj {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) (hinj : ∀ U, Function.Injective (Sec.map φ (U := U)))

@@ -738,7 +738,7 @@ private theorem relIndex_span_le_natAbs_of_cross_zero (I : Submodule ℤ (Fin 2 
     (hb : w 1 ≠ 0) :
     (Submodule.span ℤ {w}).toAddSubgroup.relIndex I.toAddSubgroup ≤ (w 1).natAbs := by
   have hn0 : (w 1).natAbs ≠ 0 := Int.natAbs_ne_zero.mpr hb
-  haveI : NeZero (w 1).natAbs := ⟨hn0⟩
+  have : NeZero (w 1).natAbs := ⟨hn0⟩
   let f : I.toAddSubgroup →+ ZMod (w 1).natAbs :=
     (Int.castAddHom (ZMod (w 1).natAbs)).comp
       ((LinearMap.proj (R := ℤ) (φ := fun _ : Fin 2 => ℤ) 1).toAddMonoidHom.comp
@@ -981,7 +981,7 @@ private theorem exists_cuspData_cuspWeight_eq_of_torus_invariant (K : Type) [Fin
     have e1 : ((D.N - D.j : ℕ) : ℝ) * s z = Real.exp ((Real.log r0 - U z) / n) := by
       simp only [s]
       field_simp
-    rw [e1, ← Real.exp_nat_mul,
+    rw [e1, ← Real.exp_natCast_mul,
       show (n : ℝ) * ((Real.log r0 - U z) / n) = Real.log r0 - U z by field_simp,
       Real.exp_sub, Real.exp_log (by linarith), Real.exp_neg, div_eq_mul_inv]
   let Q : (Fin 2 → ℤ) → ℝ := fun w => ε ^ 2 * ((w 0 : ℤ) : ℝ) ^ 2 + ((w 1 : ℤ) : ℝ) ^ 2
@@ -1351,7 +1351,7 @@ theorem exists_samePot {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype 
       {x | eval (R.lift x x) (map (Int.castRingHom ℂ) g) = 0}, fun j => ?_, fun x hx => ?_⟩
     · rw [Set.preimage_union, Set.inter_union_distrib_left]
       exact measure_union_null (isNull_zeros R hP hf hfP j) (isNull_zeros R hP hg hgP j)
-    · simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_setOf_eq, not_or] at hx
+    · simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_ofPred_eq, not_or] at hx
       obtain ⟨V, hV, hxV, hVU, G, hG, hGe⟩ :=
         exists_log R.A (R.isOpen_U x) (holoOn_eval_lift R x f) (R.mem_U x) hx.1
       obtain ⟨V', hV', hxV', -, G', hG', hGe'⟩ :=
@@ -1497,8 +1497,8 @@ theorem abs_sub_le_telescope (II : IntersectionSystem) (hII : IsFullIntersection
         have hne' : ((τ i.castSucc : Fin (D + 1)) : ℕ) ≠ k := fun e => hne (Fin.ext e)
         simp only [Function.comp, Fin.snoc_castSucc, E, X]
         by_cases h1 : ((τ i.castSucc : Fin (D + 1)) : ℕ) < k
-        · rw [if_pos h1, if_pos (by omega)]
-        · rw [if_neg h1, if_neg (by omega)]
+        · rw [ite_eq_left h1, ite_eq_left (by omega)]
+        · rw [ite_eq_right h1, ite_eq_right (by omega)]
     rw [← hsym P _ (X k) τ hP (hX k), ← hsym P _ (X (k + 1)) τ hP (hX (k + 1)), e1, e2]
     refine h kk E fun i => ⟨τ i.castSucc, ?_⟩
     simp only [E, X]
@@ -1890,7 +1890,7 @@ theorem volumeTheoremX_of_inputs : Top.Given → PtsIntegrableStatement → Out.
   refine ⟨2 * max (Ch + Cu / 2) 0 + 3 * 4 + 5, by positivity, ?_⟩
   intro E _ _ _ _ H D Xo l c Y _ T o II hGl hX hII hq hpq hbad
   obtain ⟨hrd, hne, -⟩ := GlobalTheory.CompanionTheory.Ar.Top.HostNumbers.host_numbers E H
-  haveI := hne
+  have := hne
   have hp : 1 ≤ D.p := by omega
   have hqp : D.q ≤ D.p := by omega
   have hUnif := _root_.GlobalTheory.CompanionTheory.Relay.good_tower_real_agreement hG E H D Xo l c Y T o II hGl hX hII hp hq

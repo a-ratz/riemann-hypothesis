@@ -226,16 +226,16 @@ theorem isIntegral_zl (L : LocAt F E sig p) {s : L.Fp} (hs : s ∈ 𝒪[L.Fp]) :
     haveI := L.ellPrime
     letI := ((algebraMap ℚ_[resChar p] L.Fp).comp (algebraMap ℤ_[resChar p] ℚ_[resChar p])).toAlgebra
     IsIntegral ℤ_[resChar p] s := by
-  haveI := L.ellPrime
-  letI := ((algebraMap ℚ_[resChar p] L.Fp).comp (algebraMap ℤ_[resChar p] ℚ_[resChar p])).toAlgebra
-  haveI : IsScalarTower ℤ_[resChar p] ℚ_[resChar p] L.Fp := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI := L.lf
-  haveI := L.qlFin
+  have := L.ellPrime
+  let := ((algebraMap ℚ_[resChar p] L.Fp).comp (algebraMap ℤ_[resChar p] ℚ_[resChar p])).toAlgebra
+  have : IsScalarTower ℤ_[resChar p] ℚ_[resChar p] L.Fp := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have := L.lf
+  have := L.qlFin
   exact DeltaA.oint_isIntegral L.qlCont hs
 
 theorem trace_mem (L : LocAt F E sig p) {y : L.Ep} (hy : y ∈ L.O) : Algebra.trace L.Fp L.Ep y ∈ 𝒪[L.Fp] := by
-  haveI := L.free
-  haveI : Module.Finite L.Fp L.Ep := by
+  have := L.free
+  have : Module.Finite L.Fp L.Ep := by
     first
     | exact Module.finite_of_finrank_eq_succ L.rank
   have b := Module.finBasisOfFinrankEq L.Fp L.Ep L.rank
@@ -243,14 +243,14 @@ theorem trace_mem (L : LocAt F E sig p) {y : L.Ep} (hy : y ∈ L.O) : Algebra.tr
   exact mem_of_isIntegral_fp L (DeltaB.trace_isIntegral_rank2 b hy)
 
 theorem psiE_O (L : LocAt F E sig p) {y : L.Ep} (hy : y ∈ L.O) : L.psiE y = 1 := by
-  haveI := L.ellPrime
+  have := L.ellPrime
   obtain ⟨a, ⟨n, hn⟩, hTa, he⟩ := L.psiE_def y
   rw [he]
   refine PI.ProdFormulaE.Frac.exp_two_pi_of_den_eq_one (PI.ProdFormulaE.Frac.den_eq_one_of_norm_le_one hn ?_ hTa)
   rw [PI.ProdFormulaE.Base.trace_tower L y]
-  letI := ((algebraMap ℚ_[resChar p] L.Fp).comp (algebraMap ℤ_[resChar p] ℚ_[resChar p])).toAlgebra
-  haveI : IsScalarTower ℤ_[resChar p] ℚ_[resChar p] L.Fp := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI := L.qlFin
+  let := ((algebraMap ℚ_[resChar p] L.Fp).comp (algebraMap ℤ_[resChar p] ℚ_[resChar p])).toAlgebra
+  have : IsScalarTower ℤ_[resChar p] ℚ_[resChar p] L.Fp := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have := L.qlFin
   exact norm_le_one_of_isIntegral_zl (Algebra.isIntegral_trace (isIntegral_zl L (trace_mem L hy)))
 
 end Formalism.L2.SG.Pf.LocModel.LM.DeltaC
@@ -270,7 +270,7 @@ def DiffTrivCof : Prop :=
 theorem mem_of_alg_mem {D : Formalism.BasicNotions.D7} {p : PlF D} {a : (D.s.atP p).Fp}
     (h : algebraMap (D.s.atP p).Fp (D.s.atP p).Ep a ∈ (D.s.atP p).O) : a ∈ 𝒪[(D.s.atP p).Fp] := by
   rw [(D.s.atP p).O_def] at h
-  haveI : Nontrivial (D.s.atP p).Ep :=
+  have : Nontrivial (D.s.atP p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (D.s.atP p).Fp) (by rw [(D.s.atP p).rank]; norm_num)
   have hinj : Function.Injective
       (IsScalarTower.toAlgHom 𝒪[(D.s.atP p).Fp] (D.s.atP p).Fp (D.s.atP p).Ep) :=
@@ -343,7 +343,7 @@ theorem diffTrivCof_of (h1 : EpDualCof) (h2 : FpUnifCof) (h3 : FpDegCof) : DiffT
   filter_upwards [h1 D, h2 D, h3 D] with p hE hU hG
   intro z hz
   by_contra hzO
-  haveI := (D.s.atP p).ellPrime
+  have := (D.s.atP p).ellPrime
   obtain ⟨y, hyO, hs⟩ : ∃ y ∈ (D.s.atP p).O,
       Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep (z * y) ∉ 𝒪[(D.s.atP p).Fp] := by
     by_contra h
@@ -555,11 +555,11 @@ theorem t2Space_of_nonarchimedeanLocalField' (K : Type) [Field K] [ValuativeRel 
 theorem finrank_fp_le (D : Formalism.BasicNotions.D7) (p : PlF D) :
     haveI := (D.s.atP p).ellPrime
     Module.finrank ℚ_[Loc.resChar p] (D.s.atP p).Fp ≤ Module.finrank ℚ D.host.F := by
-  haveI := (D.s.atP p).ellPrime
-  haveI := (D.s.atP p).lf
-  haveI := (D.s.atP p).qlFin
-  haveI := t2Space_of_nonarchimedeanLocalField' (D.s.atP p).Fp
-  haveI : ContinuousSMul ℚ_[Loc.resChar p] (D.s.atP p).Fp :=
+  have := (D.s.atP p).ellPrime
+  have := (D.s.atP p).lf
+  have := (D.s.atP p).qlFin
+  have := t2Space_of_nonarchimedeanLocalField' (D.s.atP p).Fp
+  have : ContinuousSMul ℚ_[Loc.resChar p] (D.s.atP p).Fp :=
     continuousSMul_of_algebraMap _ _ (D.s.atP p).qlCont
   let b := Module.finBasis ℚ D.host.F
   let S : Submodule ℚ_[Loc.resChar p] (D.s.atP p).Fp :=
@@ -574,7 +574,7 @@ theorem finrank_fp_le (D : Formalism.BasicNotions.D7) (p : PlF D) :
       rw [Rat.smul_def, map_mul, map_ratCast, Algebra.smul_def, map_ratCast]
     rw [this]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  have hcl : IsClosed (S : Set (D.s.atP p).Fp) := Submodule.closed_of_finiteDimensional S
+  have hcl : IsClosed (S : Set (D.s.atP p).Fp) := Submodule.isClosed_of_finiteDimensional S
   have htop : S = ⊤ := by
     rw [eq_top_iff]
     intro x _
@@ -614,9 +614,9 @@ theorem residueDegree_almost_all : FpDegCof := by
   by_contra hlt
   push Not at hlt
   apply hp
-  haveI := (D.s.atP p).ellPrime
-  haveI := (D.s.atP p).lf
-  haveI := (D.s.atP p).qlFin
+  have := (D.s.atP p).ellPrime
+  have := (D.s.atP p).lf
+  have := (D.s.atP p).qlFin
   intro hdvd
   have hpos : 0 < Module.finrank ℚ_[Loc.resChar p] (D.s.atP p).Fp := Module.finrank_pos
   have := Nat.le_of_dvd hpos hdvd
@@ -631,7 +631,7 @@ open NumberField IsDedekindDomain ValuativeRel Formalism.MainNotions.S Formalism
 
 theorem withZero_exp_lt_one {a : WithZero (Multiplicative ℤ)} (h : a < 1) : a ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne a 0 with rfl | ha
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log ha] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -640,7 +640,7 @@ theorem withZero_exp_lt_one {a : WithZero (Multiplicative ℤ)} (h : a < 1) : a 
 theorem withZero_exp_gt_neg_two {a : WithZero (Multiplicative ℤ)} (h : WithZero.exp (-2 : ℤ) < a) :
     WithZero.exp (-1 : ℤ) ≤ a := by
   rcases eq_or_ne a 0 with rfl | ha
-  · exact absurd h not_lt_zero'
+  · exact absurd h not_lt_zero
   · rw [← WithZero.exp_log ha] at h ⊢
     rw [WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -676,8 +676,8 @@ theorem unif_loc {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
     rw [← heq]; exact (key y y₀).2 (hunif y hy1)
   rw [Valuation.mem_integer_iff, map_inv₀, map_mul]
   have hpos : 0 < valuation A.Fp (A.ιF y₀) * valuation A.Fp x := by
-    refine mul_pos ?_ (zero_lt_iff.2 hx0)
-    exact lt_of_lt_of_le (zero_lt_iff.2 hw0) hle
+    refine mul_pos ?_ (pos_iff_ne_zero.2 hx0)
+    exact lt_of_lt_of_le (pos_iff_ne_zero.2 hw0) hle
   rw [inv_le_one₀ hpos]
   rw [map_inv₀] at hle
   calc (1 : _) = (valuation A.Fp x)⁻¹ * valuation A.Fp x := (inv_mul_cancel₀ hx0).symm
@@ -782,7 +782,7 @@ theorem intMem_finite (n : ℤ) (hn : n ≠ 0) : {p : PlF D | (n : 𝓞 D.host.F
   have hI : Ideal.span {((n : 𝓞 D.host.F))} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast hn
   refine (Ideal.finite_factors hI).subset fun p hp => ?_
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hp
 
@@ -1064,10 +1064,10 @@ theorem good_place {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     by_cases hsp : a' + s - 1 = D.R.rS + 1 ∧ s = 1
     · have hnu : nu D.R.rS a' (a' + s - 1) = 0 := by unfold nu; omega
       have hb0 : blkMod δ T T' p a' s t = (D.s.atP p).ιE t := by rw [hbM, hnu, pow_zero, one_mul]
-      simp only [blkTop, if_pos hsp, hb0]
+      simp only [blkTop, ite_eq_left hsp, hb0]
       have hc : ∃ k : Fin 3, IsUnit ((D.s.atP p).ιE t + (((k : Fin 3) : ℕ) : (D.s.atP p).Ep)) :=
         ⟨0, by simpa using IsUnit.of_mul_eq_one _ htt⟩
-      simp only [nSh, dif_pos hc]
+      simp only [nSh, dite_eq_left hc]
       set k := hc.choose with hk
       have hku : IsUnit ((D.s.atP p).ιE t + (((k : Fin 3) : ℕ) : (D.s.atP p).Ep)) := hc.choose_spec
       have he : (D.s.atP p).ιE t + (((k : Fin 3) : ℕ) : (D.s.atP p).Ep) =
@@ -1079,7 +1079,7 @@ theorem good_place {δ : ∀ p : PlF D, (D.s.atP p).Fp}
         exact not_isUnit_zero hku
       obtain ⟨hk1, hk2⟩ := hNp (t, s) hb k hne
       exact ⟨hk1, _, hk2, by rw [← map_mul, mul_inv_cancel₀ hne, map_one]⟩
-    · simp only [blkTop, if_neg hsp, hbM]
+    · simp only [blkTop, ite_eq_right hsp, hbM]
       refine ⟨Subring.mul_mem _ (Subring.pow_mem _ hw1O _) h0.1, w0 ^ nu D.R.rS a' (a' + s - 1) *
         (D.s.atP p).ιE t⁻¹, Subring.mul_mem _ (Subring.pow_mem _ hw0O _) h0.2, ?_⟩
       calc w1 ^ nu D.R.rS a' (a' + s - 1) * (D.s.atP p).ιE t *
@@ -1090,7 +1090,7 @@ theorem good_place {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     (fun b hb => (w.2.1 b hb).2) hunit
   have hsum : (l.map (fun b => (b.2 : ℕ))).sum = n := by rw [hls]; exact w.2.2
   refine ⟨⟨l, hsum⟩, ?_, ?_⟩
-  · simp only [modPt, hl, dif_pos hsum]
+  · simp only [modPt, hl, dite_eq_left hsum]
   · apply inGLR_of_units
     intro b hb
     rw [hR]
@@ -1161,7 +1161,7 @@ theorem ptUnitAE_body (D : Formalism.BasicNotions.D7) : PtUnitAEBody D := by
   have hev := good_cofinite δ M hA (w.1.map Prod.fst).toFinset
   rw [Filter.eventually_cofinite] at hev
   refine hev.subset fun p hp => ?_
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   intro hgood
   apply hp
   obtain ⟨hs, ⟨hδ1, hδ2⟩, hUp, hX⟩ := hgood
@@ -1214,7 +1214,7 @@ theorem sub_iff_triv (M : Loc.Model F E) {m : ℕ} (Z : M.Mat (m + 1)) :
   · intro h
     have h2 : Quotient.mk (M.isoSetoid m) (oneMat M m) = Quotient.mk (M.isoSetoid m) Z := h.symm
     obtain ⟨φ⟩ := Quotient.exact h2
-    haveI := cok_one_subsingleton M m
+    have := cok_one_subsingleton M m
     exact φ.1.symm.injective.subsingleton
 
 theorem nAut_triv (M : Loc.Model F E) (m : ℕ) : M.nAut (trivCls M m) = 1 := by
@@ -1230,13 +1230,13 @@ theorem cls_of_nIso (M : Loc.Model F E) {m : ℕ} (ZZ : M.Mat (m + 1)) (c : M.Cl
     (Quotient.out_eq (s := M.isoSetoid m) c)
 
 theorem uLow_det {n : ℕ} (x : Loc.IL n → E) : (Loc.uLow x).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular _ (fun i j hij => by
+  rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => by
     have h' : i < j := OrderDual.toDual_lt_toDual.1 hij
     simp [Loc.uLow, h'.ne, not_lt.2 h'.le])]
   simp [Loc.uLow]
 
 theorem uUp_det {n : ℕ} (w : Loc.Pt E n) (y : Loc.IN w → E) : (Loc.uUp w y).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => by
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => by
     have h' : j < i := hij
     simp [Loc.uUp, h'.ne', not_lt.2 h'.le])]
   simp [Loc.uUp]
@@ -1266,15 +1266,15 @@ theorem cls_of_bb_ne (M : Loc.Model F E) {m : ℕ} (a : Loc.Pt E (m + 1)) (c : M
 
 theorem bb_glr (M : Loc.Model F E) (hOK : M.OK) (hψ : ∀ x ∈ M.R, M.psiR x = 1) {m : ℕ} (a : Loc.Pt E (m + 1))
     (ha : M.InGLR a) (c : M.Cls m) : M.BB a c = if c = trivCls M m then 1 else 0 := by
-  haveI := Formalism.MainNotions.LocalModelPeriodLattices.top_of_OK M hOK
+  have := Formalism.MainNotions.LocalModelPeriodLattices.top_of_OK M hOK
   obtain ⟨μ₁, μ₂, hi1, hi2, hs1, hs2, hv1, hv2, hint⟩ := Formalism.MainNotions.LocalOrbitGerms.ctAll F E M hOK (m + 1) a
   rw [Formalism.MainNotions.LocalOrbitGerms.Cls.BB_eq M a μ₁ μ₂ hint c]
   have hD := Formalism.MainNotions.LocalModelPeriodLattices.datum_of_OK M hOK
-  haveI := hD.t2
-  haveI := hi1
-  haveI := hi2
-  haveI := hs1
-  haveI := hs2
+  have := hD.t2
+  have := hi1
+  have := hi2
+  have := hs1
+  have := hs2
   rw [Formalism.DoubleCosetMeasures.Final.bbNorm E M.R hD.isOpen _ _ M.psiR hψ μ₁ μ₂ hv1 hv2 _ _ _
     (Formalism.DoubleCosetMeasures.Final.suppCompact E M.R hD.isOpen hD.isCompact _ _ _ _ _ _)]
   have hg := Formalism.MainNotions.LocalModelPeriodLattices.inGLR_tr a ha
@@ -1285,22 +1285,22 @@ theorem bb_glr (M : Loc.Model F E) (hOK : M.OK) (hψ : ∀ x ∈ M.R, M.psiR x =
     unfold Formalism.FourierDecayAlt.A5.orbZ Formalism.FourierDecayAlt.A5.rep at i1 j1 k1
     unfold Formalism.FourierDecayAlt.A5.phase Formalism.FourierDecayAlt.A5.rep at hph
     unfold Formalism.DoubleCosetMeasures.phi
-    rw [if_pos i1, hph, mul_one]
-    haveI hsub := Formalism.FourierDecayAlt.P.A5x7.coker_subsingleton M.R j1 k1
+    rw [ite_eq_left i1, hph, mul_one]
+    have hsub := Formalism.FourierDecayAlt.P.A5x7.coker_subsingleton M.R j1 k1
     by_cases hc : c = trivCls M m
-    · rw [if_pos hc, Nat.cast_eq_one, Nat.card_eq_one_iff_unique]
-      haveI hC : Subsingleton (M.Cok (Quotient.out c)) :=
+    · rw [ite_eq_left hc, Nat.cast_eq_one, Nat.card_eq_one_iff_unique]
+      have hC : Subsingleton (M.Cok (Quotient.out c)) :=
         (sub_iff_triv M _).2 ((Quotient.out_eq (s := M.isoSetoid m) c).trans hc)
       refine ⟨⟨fun x y => Subtype.ext (LinearEquiv.ext fun v => Subsingleton.elim _ _)⟩,
         ⟨⟨LinearEquiv.ofSubsingleton _ _, Subsingleton.elim _ _, fun v => ?_⟩⟩⟩
       rw [Formalism.FourierDecayAlt.P.A5x7.lamLin_zero M.R j1 v, Subsingleton.elim (LinearEquiv.ofSubsingleton _ _ _) 0, map_zero]
-    · rw [if_neg hc, Nat.cast_eq_zero, Nat.card_eq_zero]
+    · rw [ite_eq_right hc, Nat.cast_eq_zero, Nat.card_eq_zero]
       refine Or.inl ⟨fun x => hc ?_⟩
-      haveI : Subsingleton (M.Cok (Quotient.out c)) := x.1.symm.injective.subsingleton
+      have : Subsingleton (M.Cok (Quotient.out c)) := x.1.symm.injective.subsingleton
       exact (Quotient.out_eq (s := M.isoSetoid m) c).symm.trans ((sub_iff_triv M (Quotient.out c)).1 this)
   · intro q hq
     unfold Formalism.DoubleCosetMeasures.phi
-    rw [if_neg, zero_mul]
+    rw [ite_eq_right, zero_mul]
     intro hI
     exact hq ((Formalism.FourierDecayAlt.P.A5x7.int_iff M.R _ hg q).mp hI)
 
@@ -1366,7 +1366,7 @@ theorem topUnram_body (D : Formalism.BasicNotions.D7) : TopUnramBody D := by
   rw [Filter.eventually_cofinite] at hev
   refine ⟨hev.toFinset, fun p hp => ⟨autP_thTriv M p, fun o => ?_⟩⟩
   rw [Set.Finite.mem_toFinset] at hp
-  simp only [Set.mem_setOf_eq, not_not] at hp
+  simp only [Set.mem_ofPred_eq, not_not] at hp
   obtain ⟨hs, ⟨hδ1, hδ2⟩, hUp, hX⟩ := hp
   obtain ⟨hψ, a, ha, hG⟩ := good_place T T' w p (hA p) hs hδ1 hδ2 hUp
     (fun b hb k hk => hX b.1 (List.mem_toFinset.2 (List.mem_map.2 ⟨b, hb, rfl⟩)) k hk)
@@ -1676,7 +1676,7 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
       (1 : ℂ) * (starRingEnd ℂ) 1 * A5.Kp (placeOf M hOK p0).R (placeOf M hOK p0).ψ (ePt (placeOf M hOK p0).K)
         (ePt (placeOf M hOK p0).K) else 0) * z = z := by
     intro z
-    rw [Fintype.prod_unique, if_pos rfl, hk0, map_one, one_mul, one_mul, one_mul]
+    rw [Fintype.prod_unique, ite_eq_left rfl, hk0, map_one, one_mul, one_mul, one_mul]
   by_cases h0 : i = 0
   · subst h0
     refine ⟨Unit, inferInstance, fun _ => placeOf M hOK p0, fun _ _ => ePt _, fun _ _ => none, fun _ _ => 1,
@@ -1684,7 +1684,7 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     intro x _ y _
     rw [mul_comm, hunit]
     unfold KrOf
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     by_cases hx : x = [] <;> by_cases hy : y = [] <;> simp [hx, hy]
   by_cases hbig : D.R.rS + 1 < i
   · refine ⟨Unit, inferInstance, fun _ => placeOf M hOK p0, fun _ _ => ePt _, fun _ _ => none, fun _ _ => 1,
@@ -1692,7 +1692,7 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     intro x _ y _
     rw [mul_comm, hunit]
     unfold KrOf
-    rw [if_neg h0, if_pos hbig]
+    rw [ite_eq_right h0, ite_eq_left hbig]
     simp
   have hle : i ≤ D.R.rS + 1 := by omega
 
@@ -1716,19 +1716,19 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     intro x hx y hy
     rcases hxw : ptOfList (D.R.rS + 1) x with _ | w
     · have h1 : KrOf δ M T T' (D.R.rS + 1) x y = 0 := by
-        unfold KrOf; rw [if_neg (Nat.succ_ne_zero _), if_neg (lt_irrefl _), hxw]
+        unfold KrOf; rw [ite_eq_right (Nat.succ_ne_zero _), ite_eq_right (lt_irrefl _), hxw]
       have h2 : aL (D.R.rS + 1) x = 0 := by unfold aL; rw [hxw]
       rw [h1, h2]; simp
     rcases hyw : ptOfList (D.R.rS + 1) y with _ | w'
     · have h1 : KrOf δ M T T' (D.R.rS + 1) x y = 0 := by
-        unfold KrOf; rw [if_neg (Nat.succ_ne_zero _), if_neg (lt_irrefl _), hxw, hyw]
+        unfold KrOf; rw [ite_eq_right (Nat.succ_ne_zero _), ite_eq_right (lt_irrefl _), hxw, hyw]
       have h2 : aL (D.R.rS + 1) y = 0 := by unfold aL; rw [hyw]
       rw [h1, h2]; simp
     have hK : KrOf δ M T T' (D.R.rS + 1) x y = KtopG M δ T T' w w' / ((phi (D.R.rS + 1) x : ℂ) * (phi (D.R.rS + 1) y : ℂ)) := by
       unfold KrOf
-      rw [if_neg (Nat.succ_ne_zero _), if_neg (lt_irrefl _), hxw, hyw]
+      rw [ite_eq_right (Nat.succ_ne_zero _), ite_eq_right (lt_irrefl _), hxw, hyw]
       simp only
-      rw [Kglob, dif_pos rfl]
+      rw [Kglob, dite_eq_left rfl]
     rw [hK]
     have hcl : ∀ q : {p // p ∈ B}, (clT x = clT y) = (kind w = kind w') := by
       intro q; simp [clT, hxw, hyw]
@@ -1739,8 +1739,8 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
       have hc : (clT x = clT y) ↔ (kind w = kind w') := by simp [clT, hxw, hyw]
       unfold KtopG
       by_cases hk : kind w = kind w'
-      · rw [if_pos hk]
-        simp only [if_pos (hc.2 hk)]
+      · rw [ite_eq_left hk]
+        simp only [ite_eq_left (hc.2 hk)]
         have e1 : ∀ q : {p // p ∈ B}, dT M δ T T' q.1 x * (starRingEnd ℂ) (dT M δ T T' q.1 y) *
             A5.Kp (placeOf M hOK q.1).R (placeOf M hOK q.1).ψ (etaL δ T T' (D.R.rS + 1) q.1 x)
               (etaL δ T T' (D.R.rS + 1) q.1 y) = KtopP M δ T T' q.1 w w' := fun q =>
@@ -1759,9 +1759,9 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
         rw [Formalism.L2.SG.DataCut.dfac_eq_one hA hs, Formalism.L2.SG.DataCut.dfac_eq_one hA hs,
           Formalism.L2.SG.DataCut.locK_eq_one Formalism.MainNotions.LocalOrbitGerms.KKAll_proved hA g1 g2]
         simp
-      · rw [if_neg hk]
+      · rw [ite_eq_right hk]
         refine Finset.prod_eq_zero (Finset.mem_univ ⟨p0, hp0⟩) ?_
-        rw [if_neg (fun h => hk (hc.1 h))]
+        rw [ite_eq_right (fun h => hk (hc.1 h))]
     rw [hprod]
     have hax : aL (D.R.rS + 1) x = (phi (D.R.rS + 1) x)⁻¹ := by unfold aL; rw [hxw]
     have hay : aL (D.R.rS + 1) y = (phi (D.R.rS + 1) y)⁻¹ := by unfold aL; rw [hyw]
@@ -1773,17 +1773,17 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     intro x hx y hy
     rcases hxw : ptOfList i x with _ | w
     · have h1 : KrOf δ M T T' i x y = 0 := by
-        unfold KrOf; rw [if_neg h0, if_neg hbig, hxw]
+        unfold KrOf; rw [ite_eq_right h0, ite_eq_right hbig, hxw]
       have h2 : aL i x = 0 := by unfold aL; rw [hxw]
       rw [h1, h2]; simp
     rcases hyw : ptOfList i y with _ | w'
     · have h1 : KrOf δ M T T' i x y = 0 := by
-        unfold KrOf; rw [if_neg h0, if_neg hbig, hxw, hyw]
+        unfold KrOf; rw [ite_eq_right h0, ite_eq_right hbig, hxw, hyw]
       have h2 : aL i y = 0 := by unfold aL; rw [hyw]
       rw [h1, h2]; simp
     have hK : KrOf δ M T T' i x y = (∏ᶠ p, locK M δ T T' p i w w') / ((phi i x : ℂ) * (phi i y : ℂ)) := by
       unfold KrOf
-      rw [if_neg h0, if_neg hbig, hxw, hyw]
+      rw [ite_eq_right h0, ite_eq_right hbig, hxw, hyw]
       simp only
       rw [Kglob, dite_eq_right ht]
     rw [hK]
@@ -1791,7 +1791,7 @@ theorem clK_core {δ : ∀ p : PlF D, (D.s.atP p).Fp}
         dL δ T T' i q.1 x * (starRingEnd ℂ) (dL δ T T' i q.1 y) *
           A5.Kp (placeOf M hOK q.1).R (placeOf M hOK q.1).ψ (etaL δ T T' i q.1 x) (etaL δ T T' i q.1 y)
         else 0) = locK M δ T T' q.1 i w w' := fun q => by
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact locK_eq_kp hA T T' i q.1 hxw hyw
     rw [Fintype.prod_congr _ _ e1, Finset.prod_coe_sort B (fun p => locK M δ T T' p i w w')]
     have hf : ∏ᶠ p, locK M δ T T' p i w w' = ∏ p ∈ B, locK M δ T T' p i w w' := by

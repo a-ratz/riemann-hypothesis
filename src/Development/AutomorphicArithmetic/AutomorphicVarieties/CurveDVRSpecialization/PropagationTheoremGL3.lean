@@ -316,8 +316,8 @@ private theorem mem_of_forall_sup_pow {B : Type} [CommRing B] [IsLocalRing B] [I
   by_cases hP : P = ⊤
   · rw [hP]
     exact Submodule.mem_top
-  haveI : Nontrivial (B ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP
-  haveI : IsLocalRing (B ⧸ P) := IsLocalRing.of_surjective' (Ideal.Quotient.mk P) Ideal.Quotient.mk_surjective
+  have : Nontrivial (B ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP
+  have : IsLocalRing (B ⧸ P) := IsLocalRing.of_surjective' (Ideal.Quotient.mk P) Ideal.Quotient.mk_surjective
   have hPm : P ≤ maximalIdeal B := IsLocalRing.le_maximalIdeal hP
   have hmap : maximalIdeal B ≤ (maximalIdeal (B ⧸ P)).comap (Ideal.Quotient.mk P) := by
     intro x hx
@@ -346,7 +346,7 @@ theorem UpperTheory.V.Fr.frobenius_corner_maximalIdeal_le :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ (S : Space O F n) (P : Ideal S.B), (maximalIdeal O).map (algebraMap O S.B) ≤ P → (∀ x : S.B, (x : S.R) ∈ S.ρ.mon 0 → ∃ c : O, x - algebraMap O S.B c ∈ P) → (∀ v i g, ∃ c : O, S.ψB v i g - algebraMap O S.B c ∈ P) → S.mB ≤ P := by
   intro l _ O _ _ _ _ F C₀ n hF hn S P hO hmon hψ
   obtain ⟨hco, hmax⟩ := co_B hF hn S
-  haveI := hco
+  have := hco
   obtain ⟨-, -, h0, -, -, -, -⟩ := gr_A hF hn S
   obtain ⟨-, -, -, hcl⟩ := cont_u hF hn S
   have hinj : Function.Injective (algebraMap S.B S.A) := by
@@ -524,7 +524,7 @@ private theorem exists_prime_power_pow_eq_one {l : ℕ} [Fact l.Prime] {D : Type
     map_zero] at h4
     have h5 : (l : ResidueField D) = 0 := by
       rw [← map_natCast (residue D), CharP.cast_eq_zero, map_zero]
-    haveI : CharP (ResidueField D) l := (CharP.charP_iff_prime_eq_zero hl).2 h5
+    have : CharP (ResidueField D) l := (CharP.charP_iff_prime_eq_zero hl).2 h5
     exact hm ((CharP.cast_eq_zero_iff _ l m).1 h4)
 
 theorem UpperTheory.V.Fr.frobenius_corner_middle_trivial :
@@ -533,9 +533,9 @@ theorem UpperTheory.V.Fr.frobenius_corner_middle_trivial :
   have hl : l.Prime := Fact.out
   have hlO : (l : O) ∈ maximalIdeal O := by
     rw [← residue_eq_zero_iff, map_natCast, CharP.cast_eq_zero]
-  haveI : CharP D l := (CharP.charP_iff_prime_eq_zero hl).2 (by
+  have : CharP D l := (CharP.charP_iff_prime_eq_zero hl).2 (by
     rw [← map_natCast (algebraMap O D), hO _ hlO])
-  haveI : CompactSpace F.G0 :=
+  have : CompactSpace F.G0 :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ hF.del_open).isCompact
   obtain ⟨s, s', h, hh, -, hs', H⟩ := UpperTheory.V.Fr.ab_gen hF
   refine exists_prime_power_pow_eq_one (h1 g) hh ?_
@@ -548,8 +548,8 @@ theorem UpperTheory.V.Fr.frobenius_corner_middle_trivial :
       intro x n
       rw [← Ideal.Quotient.eq, Subtype.ext_iff, Units.ext_iff, map_pow, map_one]
       rfl
-    haveI : Finite φ.range := by
-      haveI hf : Finite (Set.range fun g => q (χ g)) := (hc N).range_finite
+    have : Finite φ.range := by
+      have hf : Finite (Set.range fun g => q (χ g)) := (hc N).range_finite
       refine Finite.of_injective (β := Set.range fun g => q (χ g))
         (fun y => ⟨(y.1 : D ⧸ maximalIdeal D ^ N), ?_⟩) ?_
       · obtain ⟨_, x, rfl⟩ := y
@@ -566,7 +566,7 @@ theorem UpperTheory.V.Fr.frobenius_corner_middle_trivial :
     have hop : IsOpen (φ.rangeRestrict.ker : Set F.G0) := by
       convert (hc N).isOpen_fiber 1 using 1
       ext x
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_ofPred_eq]
       rw [Subtype.ext_iff, Units.ext_iff]
       rfl
     refine (hone g h).1 ((H φ.range hP φ.rangeRestrict hop).2 (fun x => ?_) (fun a => ?_) g)
@@ -578,7 +578,7 @@ theorem UpperTheory.V.Fr.frobenius_corner_middle_trivial :
       show q (χ _) = 1
       rw [e, hI v x hx hΨ, map_one]
   rw [← sub_eq_zero]
-  haveI : IsNoetherianRing D := IsCO.toIsNoetherian O
+  have : IsNoetherianRing D := IsCO.toIsNoetherian O
   have hb := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal D) (maximalIdeal.isMaximal D).ne_top
   rw [← Ideal.mem_bot, ← hb]
   exact Ideal.mem_iInf.2 key
@@ -599,9 +599,9 @@ private theorem aux {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O
     (h1 : a 1 = 1) (hmul : ∀ g h, a (g * h) - a g * a h ∈ P) (hc : AdicCont (maximalIdeal B) a)
     (hres : ∀ g, a g - 1 ∈ maximalIdeal B) (hst : ∀ g, a (F.star g) = a g)
     (hloc : ∀ v g, g ∈ F.Iv v → F.Ψ (F.loc v g) = 1 → a (F.loc0 v g) - 1 ∈ P) (g : F.G0) : a g - 1 ∈ P := by
-  haveI : P.IsPrime := hP
-  haveI : Nontrivial (B ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
-  haveI : IsCO O (B ⧸ P) :=
+  have : P.IsPrime := hP
+  have : Nontrivial (B ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
+  have : IsCO O (B ⧸ P) :=
     co_quot O B (B ⧸ P) (Ideal.Quotient.mkₐ O P) (Ideal.Quotient.mkₐ_surjective O P)
   have hm : ∀ x ∈ maximalIdeal B, Ideal.Quotient.mk P x ∈ maximalIdeal (B ⧸ P) := by
     intro x hx
@@ -855,7 +855,7 @@ private theorem finite_lambda_surjective_injective_lift :
     apply Ideal.mem_sup_left
     rw [Ideal.mem_comap, hy]
     exact Ideal.mem_map_of_mem _ hb
-  haveI : (P.map p).IsPrime := Ideal.map_isPrime_of_surjective hp (fun y hy => hker y hy)
+  have : (P.map p).IsPrime := Ideal.map_isPrime_of_surjective hp (fun y hy => hker y hy)
   have hQ : S₂.mB ≤ (P.map p).comap β := by
     refine hI₂'.trans ((Ideal.radical_mono ?_).trans_eq (Ideal.IsPrime.radical inferInstance))
     refine sup_le (Ideal.map_le_iff_le_comap.mp hIP) ?_
@@ -947,10 +947,10 @@ private theorem finite_lambda_two_three_surjection_compat {l : ℕ} [Fact l.Prim
     (hj : Function.Injective j) (hpq : ∀ b, q (S₃.inc b) = j (p b)) (hker : RingHom.ker q = S₃.u.ee) :
     ∃ I₃ : Ideal S₃.B, S₃.FinLam I₃ ∧ ∀ ξ : Ideal S₃.A, ξ.IsPrime → S₃.u.TE ξ → I₃ ≤ S₃.π ξ := by
   obtain ⟨hcoB, -⟩ := co_B hF (Or.inr rfl) S₃
-  haveI := hcoB
-  haveI hcoC : IsCO O C := co_quot O S₃.B C p hp
-  letI : Algebra C K := j.toRingHom.toAlgebra
-  haveI : IsScalarTower O C K := IsScalarTower.of_algebraMap_eq (fun x => (j.commutes x).symm)
+  have := hcoB
+  have hcoC : IsCO O C := co_quot O S₃.B C p hp
+  let : Algebra C K := j.toRingHom.toAlgebra
+  have : IsScalarTower O C K := IsScalarTower.of_algebraMap_eq (fun x => (j.commutes x).symm)
   have hjinj : Function.Injective (algebraMap C K) := hj
   have hcone : Cone O C (S₃.u.map (q : S₃.A →+* K)) :=
     frobenius_corner_cone_map S₃.B S₃.A C K p (q : S₃.A →+* K) (fun c => hpq c) S₃.u (cone_u hF (Or.inr rfl) S₃).1
@@ -967,7 +967,7 @@ private theorem finite_lambda_two_three_surjection_compat {l : ℕ} [Fact l.Prim
   unfold NRep.TE NRep.OffTri at hTE
   obtain ⟨⟨hTP, hTM⟩, -, hee⟩ := hTE
   have hkerP : RingHom.ker q ≤ P := hker ▸ hee
-  haveI hP' : (P.map q).IsPrime := Ideal.map_isPrime_of_surjective hq hkerP
+  have hP' : (P.map q).IsPrime := Ideal.map_isPrime_of_surjective hq hkerP
   have hPc : (P.map q).comap q = P := by
     rw [Ideal.comap_map_of_surjective _ hq]
     exact sup_eq_left.mpr hkerP
@@ -1026,7 +1026,7 @@ theorem UpperTheory.V.Fr.l53 :
       exact le_top
     · intro P hP hTE
       exact absurd (top_le_iff.mp (htop ▸ hTE.2.2)) hP.ne_top
-  · haveI : Nontrivial (S₃.B ⧸ S₃.u.ee.comap S₃.inc) :=
+  · have : Nontrivial (S₃.B ⧸ S₃.u.ee.comap S₃.inc) :=
       Ideal.Quotient.nontrivial_iff.mpr (Ideal.comap_ne_top _ htop)
     exact finite_lambda_two_three_surjection_compat hF S₂ S₃ I₂ hI₂ hT (S₃.B ⧸ S₃.u.ee.comap S₃.inc) (S₃.A ⧸ S₃.u.ee)
       (Ideal.Quotient.mkₐ O _) (Ideal.Quotient.mkₐ O _) (Ideal.quotientMapₐ S₃.u.ee S₃.inc le_rfl)
@@ -1149,8 +1149,8 @@ private theorem ld_ok (hF : F.Ok C₀) (hB : F.Big C₀) {S : Space O F 3} {M : 
 
 private theorem chart_ex (hF : F.Ok C₀) {S : Space O F 3} (x : PrimeSpectrum S.A) (L : S.Loc x.asIdeal) :
     Chart x (PrimeSpectrum.comap (L.ι : S.A →+* L.R)) := by
-  letI : Algebra S.A L.R := (L.ι : S.A →+* L.R).toAlgebra
-  haveI : Module.Flat S.A L.R := (loc_flat hF (Or.inr rfl) S _ L).1
+  let : Algebra S.A L.R := (L.ι : S.A →+* L.R).toAlgebra
+  have : Module.Flat S.A L.R := (loc_flat hF (Or.inr rfl) S _ L).1
   have h := chartOfFlat (PrimeSpectrum S.A) S.A id Topology.IsOpenEmbedding.id L.R
   have hx : PrimeSpectrum.comap (algebraMap S.A L.R) (closedPoint L.R) = x := PrimeSpectrum.ext L.lies
   rw [hx] at h
@@ -1183,7 +1183,7 @@ private theorem gd_ok (hF : F.Ok C₀) (hB : F.Big C₀) {S : Space O F 3} {M : 
     intro x hx
     obtain ⟨L⟩ := loc_ex hF h3 S x.asIdeal hx.2 hx.1.1
     obtain ⟨I, hI⟩ := sharp3 hF S _ L hB hx.1.2
-    haveI : IsNoetherianRing L.R := L.co.toIsNoetherian
+    have : IsNoetherianRing L.R := L.co.toIsNoetherian
     exact ⟨L, I, hI, locProp _ _ (ld_ok hF hB hM h1 h23 hI₃ hE hx.1.2 L hI)⟩
   obtain ⟨-, hconn, hdense⟩ := preconnected_rank_three hF S
   refine ⟨fun _ h => h.1, hconn, fun C hC hne => ?_, ?_, fun Y hY => ?_, fun x hx Y Y' hY hY' hxY hxY' hG => ?_,
@@ -1215,7 +1215,7 @@ private theorem gd_ok (hF : F.Ok C₀) (hB : F.Big C₀) {S : Space O F 3} {M : 
     refine hc P (hG (subset_closure rfl)) hT (le_trans ?_ (hI.chained.1 _ (comp_of_ti hI hT hP))) P' hT' hP'
     exact Nat.cast_le.2 (Nat.le_succ _)
   · obtain ⟨L, I, hI, hc⟩ := hloc x hx.1
-    haveI : IsNoetherianRing L.R := L.co.toIsNoetherian
+    have : IsNoetherianRing L.R := L.co.toIsNoetherian
     refine (globOfCharts _ (gd S M) (ti_open S M) (good_closed S M) x L.R _ (chart_ex hF x L) (ld M L I)
       (ld_ti hF M L I) rfl hc).2.1 fun P hP => ?_
     have hI0 : I = ⊥ := hI.triv hx.2
@@ -1225,7 +1225,7 @@ private theorem gd_ok (hF : F.Ok C₀) (hB : F.Big C₀) {S : Space O F 3} {M : 
   · obtain ⟨ξ, Z, hξ, hT, hZ, hMZ, hle, hd⟩ := hs
     obtain ⟨x, hm, hx, h⟩ := seedpt hF h3 S Z ξ hZ hξ hT hle
     obtain ⟨L, I, hI, hc⟩ := hloc x ⟨hx, hm⟩
-    haveI : IsNoetherianRing L.R := L.co.toIsNoetherian
+    have : IsNoetherianRing L.R := L.co.toIsNoetherian
     obtain ⟨P, hP, hPT, hπ, hdim⟩ := h L
     refine (globOfCharts _ (gd S M) (ti_open S M) (good_closed S M) x L.R _ (chart_ex hF x L) (ld M L I)
       (ld_ti hF M L I) rfl hc).2.2 ⟨⟨P, hP⟩, hMZ.trans hπ.ge, hPT, ?_⟩
@@ -1242,7 +1242,7 @@ theorem UpperTheory.V.Pr.components_good_rank_three :
     UpperTheory.V.Pr.PropagationTheoremGL3 := by
   intro l _ O _ _ _ _ F C₀ hF hB S₂ M₂ hM₂ hG₂ S M hM h1 h23 hs
   obtain ⟨I₃, hI₃, hE⟩ := l53 hF S₂ S M₂ hM₂ hG₂
-  haveI : IsNoetherianRing S.A := (gr_A hF (Or.inr rfl) S).2.2.2.2.2.1
+  have : IsNoetherianRing S.A := (gr_A hF (Or.inr rfl) S).2.2.2.2.2.1
   have hG : AllGood S M := fun p hp hT =>
     globProp _ (gd S M) (gd_ok hF hB hM h1 h23 hs hI₃ hE) (a := ⟨p, hp⟩) hT
   refine ⟨hG, M ⊓ I₃, ?_, fun p hp ho => ?_⟩

@@ -143,7 +143,7 @@ theorem exists_isMarked_inRCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
   have hfin := finite_indec_inRCone X n τ
   set S := hfin.toFinset with hSdef
   have hS : ∀ x, x ∈ S ↔ InRCone τ x ∧ x ≠ 0 ∧ ∀ y z, InRCone τ y → InRCone τ z → y ≠ 0 → z ≠ 0 → y + z ≠ x :=
-    fun x => by simp only [hSdef, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    fun x => by simp only [hSdef, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   have hSτ : ∀ x ∈ S, InRCone τ x := fun x hx => ((hS x).1 hx).1
   have hcl : β ∈ AddSubmonoid.closure {y | IsIndec bar ψ lab β y} :=
     _root_.GlobalTheory.PolFan.Mark.mem_closure_isIndec _ bar ψ lab X β
@@ -399,7 +399,7 @@ theorem exists_markFun_props_gen : ∀ (O : Type) [CommRing O] [IsDedekindDomain
   · rw [ev]
     split_ifs <;> simp
   · obtain ⟨β₀, h0, hc0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fan.MarkedRayInCone.exists_isMarked_inRCone O bar hb q ψ lab i hD hψ hlab X hX m v hv β hβ hp hc hl
-    exact ⟨β₀, h0.1, h0.2.1, by rw [ev, if_pos h0], hc0⟩
+    exact ⟨β₀, h0.1, h0.2.1, by rw [ev, ite_eq_left h0], hc0⟩
 
 end GlobalTheory.CompanionTheory.Ar.Fan.MarkingFunction
 end -- clump:auto
@@ -522,7 +522,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Fan.IntegerFinrankMultiplicativity
 private theorem exists_int_ne_zero_eq_mul_of_ne_zero (O : Type) [CommRing O] [IsDomain O] [Module.Finite ℤ O]
     (s : O) (hs : s ≠ 0) : ∃ n : ℤ, n ≠ 0 ∧ ∃ o : O, o * s = (n : O) := by
   have hI : Ideal.comap (algebraMap ℤ O) (Ideal.span {s}) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hs (Ideal.mem_span_singleton_self s)
+    Ideal.under_ne_bot_of_integral_mem hs (Ideal.mem_span_singleton_self s)
       (Algebra.IsIntegral.isIntegral s)
   obtain ⟨n, hn, hn0⟩ := (Submodule.ne_bot_iff _).mp hI
   obtain ⟨o, ho⟩ := Ideal.mem_span_singleton'.mp (Ideal.mem_comap.mp hn)
@@ -572,12 +572,12 @@ private theorem isLocalizedModule_int_restrictScalars_mkLinearMap (O : Type) [Co
 private theorem finrank_int_eq_mul_finrank (O : Type) [CommRing O] [IsDomain O] [CharZero O]
     [Module.Finite ℤ O] (X : Type) [AddCommGroup X] [Module O X] :
     Module.finrank ℤ X = Module.finrank ℤ O * Module.finrank O X := by
-  haveI := isLocalizedModule_int_restrictScalars_mkLinearMap O X
-  haveI : CharZero (FractionRing O) :=
+  have := isLocalizedModule_int_restrictScalars_mkLinearMap O X
+  have : CharZero (FractionRing O) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective O (FractionRing O))
-  letI : Module ℚ (LocalizedModule (nonZeroDivisors O) X) :=
+  let : Module ℚ (LocalizedModule (nonZeroDivisors O) X) :=
     Module.compHom _ (algebraMap ℚ (FractionRing O))
-  haveI : IsScalarTower ℚ (FractionRing O) (LocalizedModule (nonZeroDivisors O) X) :=
+  have : IsScalarTower ℚ (FractionRing O) (LocalizedModule (nonZeroDivisors O) X) :=
     IsScalarTower.of_algebraMap_smul (fun _ _ => rfl)
   have e1 : Module.finrank ℤ (LocalizedModule (nonZeroDivisors O) X) = Module.finrank ℤ X :=
     IsLocalizedModule.finrank_eq (nonZeroDivisors ℤ)
@@ -589,7 +589,7 @@ private theorem finrank_int_eq_mul_finrank (O : Type) [CommRing O] [IsDomain O] 
       Module.finrank (FractionRing O) (LocalizedModule (nonZeroDivisors O) X) =
       Module.finrank ℚ (LocalizedModule (nonZeroDivisors O) X) :=
     Module.finrank_mul_finrank ℚ (FractionRing O) _
-  haveI : @IsScalarTower ℤ ℚ (FractionRing O) Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
+  have : @IsScalarTower ℤ ℚ (FractionRing O) Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
     IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
   have e4 : Module.finrank ℚ (FractionRing O) = Module.finrank ℤ O :=
     IsFractionRing.finrank_eq ℤ ℚ O (FractionRing O)
@@ -625,26 +625,26 @@ private theorem isTorsionFree_int_of_isTorsionFree (O : Type) [CommRing O] [IsDo
 
 theorem free_int_of_projective (O : Type) [CommRing O] [IsDomain O] [CharZero O] [Module.Finite ℤ O]
     {Y : Type} [AddCommGroup Y] [Module O Y] [Module.Finite O Y] [Module.Projective O Y] : Module.Free ℤ Y := by
-  haveI : Module.Finite ℤ Y := Module.Finite.trans O Y
+  have : Module.Finite ℤ Y := Module.Finite.trans O Y
   obtain ⟨s, hs⟩ := Module.projective_def'.mp (inferInstance : Module.Projective O Y)
   have hinj : Function.Injective s := fun a b h => by
     have ha := LinearMap.congr_fun hs a
     have hb := LinearMap.congr_fun hs b
     simp only [LinearMap.comp_apply, LinearMap.id_apply] at ha hb
     rw [← ha, ← hb, h]
-  haveI : Module.IsTorsionFree O Y :=
+  have : Module.IsTorsionFree O Y :=
     Function.Injective.moduleIsTorsionFree s hinj (fun r m => s.map_smul r m)
-  haveI : Module.IsTorsionFree ℤ Y := isTorsionFree_int_of_isTorsionFree O Y
+  have : Module.IsTorsionFree ℤ Y := isTorsionFree_int_of_isTorsionFree O Y
   exact Module.free_of_finite_type_torsion_free'
 
 theorem genRank_le_sq (O : Type) [CommRing O] [IsDomain O] [CharZero O] [Module.Finite ℤ O] (q : ℕ)
     (X : Type) [AddCommGroup X] [Module O X] [Module.Finite O X] [Module.Projective O X]
     (hX : Module.finrank O X ≤ q) {m : ℕ} (γ : Fin m → LinearMap.BilinForm ℤ X) :
     genRank γ ≤ (q * Module.finrank ℤ O) ^ 2 := by
-  haveI : Module.IsTorsionFree ℤ O := isTorsionFree_int_of_isTorsionFree O O
-  haveI : Module.Free ℤ O := Module.free_of_finite_type_torsion_free'
-  haveI : Module.Finite ℤ X := Module.Finite.trans O X
-  haveI : Module.Free ℤ X := free_int_of_projective O
+  have : Module.IsTorsionFree ℤ O := isTorsionFree_int_of_isTorsionFree O O
+  have : Module.Free ℤ O := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ X := Module.Finite.trans O X
+  have : Module.Free ℤ X := free_int_of_projective O
   have hX' : Module.finrank ℤ X ≤ q * Module.finrank ℤ O := by
     rw [finrank_int_eq_finrank_mul O X, mul_comm]
     exact Nat.mul_le_mul_right _ hX
@@ -1031,7 +1031,7 @@ theorem projective_quot_orad (O : Type) [CommRing O] [IsDedekindDomain O] [CharZ
   have hO : ∀ a : O, a ≠ 0 → ∀ y : X, a • y ∈ (orad β : Submodule O X) → y ∈ (orad β : Submodule O X) := by
     intro a ha y hy
     have hne : (Ideal.span {a}).comap (algebraMap ℤ O) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
+      Ideal.under_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
     obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     obtain ⟨a', ha'⟩ := Ideal.mem_span_singleton'.1 (Ideal.mem_comap.1 hn)
     refine hZ n hn0 y fun b z => ?_
@@ -1387,7 +1387,7 @@ theorem exists_cell_quot_orad_of_inRCone : ∀ (O : Type) [CommRing O] [IsDedeki
     rw [hcj, zero_smul]
   · rw [← GlobalTheory.PolFan.CarDim.genRank_pull hr δ, hfun]
     unfold GlobalTheory.PolFan.genRank
-    haveI : Module.Finite ℤ (Submodule.span ℤ (Set.range γ)) :=
+    have : Module.Finite ℤ (Submodule.span ℤ (Set.range γ)) :=
       Module.Finite.span_of_finite ℤ (Set.finite_range γ)
     exact Submodule.finrank_mono
       (Submodule.span_mono (Set.range_comp_subset_range s γ))

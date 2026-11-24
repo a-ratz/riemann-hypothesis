@@ -383,7 +383,7 @@ theorem theta_pt (I : IntData Xo c T io y.1) {g : I.t'.G.left ⟶ Gx (xOf y)}
     letI := io.toAlgebra
     ∃ τ, gs (r ≫ g) z ((PPx (xOf y)).U fun _ => j) (y.1.s.f fun _ => j) = (gw I.w1 r z j κ).val * τ ∧
       gs (r ≫ I.m2.φ) z _ (I.θ.f ν) = (gw I.w2 r z ν κ).val * τ := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have le : (Xo.univ.t.PP.L.pull I.m1.φ).U (fun _ => j) ≤ g ⁻¹ᵁ (PPx (xOf y)).U (fun _ => j) := fun z hz =>
     Set.mem_iInter.2 fun _ => (congrArg (fun q => q z ∈ Xo.univ.t.PP.L.U j) g₁).mpr (mem_pull.1 hz)
   refine ⟨_, ?_, (IntegralGenerator.pullSec_pt I.pull r z ν hν).symm.trans
@@ -435,7 +435,7 @@ theorem units_mul_relation_rearrange_commRing {R : Type} [CommRing R] {A₁ A₂
 theorem mem_range_of_reg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (T : CDVR) (io : c.F →+* T.Fr) (y y' : IntFr Xo c T io) (I : IntData Xo c T io y.1) (I' : IntData Xo c T io y'.1) (f : Fib Xo (xOf y) ⟶ Fib Xo (xOf y')) (F : I.G.G ⟶ I'.G.G) (F' : I'.G.G ⟶ I.G.G) (N M : ℕ) (a : T.Fr) (t : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((M : ℤ) ^ 2) (Over.mk (xOf y)))), IsMonHom F → IsMonHom F' → Ext I.m1 I.m2 I'.m1 I'.m2 f F → F' ≫ F = 𝟙 _ ^ N → IsUnit (N : T.V) → letI := io.toAlgebra; IsPullOf M f a y'.1.s t → Reg I M t → a ∈ Set.range (algebraMap T.V T.Fr) := by
   intro E _ _ _ H Dw l Xo c T io y y' I I' f F F' N M a t hF hF' ⟨ψ, hψ, hψ₂, hψ₁⟩ hFF hN
     ⟨β, s'', ⟨_, hβ, hrig⟩, hs'', hcar⟩ ⟨σ, hσ⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   by_contra ha
   obtain ⟨g, g₁, g₂⟩ := exists_toFibre (x := xOf y) I.m1
   obtain ⟨g', g₁', g₂'⟩ := exists_toFibre (x := xOf y') I'.m1

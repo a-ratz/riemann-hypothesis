@@ -79,7 +79,7 @@ theorem pow_factorial_mul {M : Type} [Monoid M] [Fintype M] (a : M) (t : ℕ) (h
 
 theorem int_dvd_pow_sub (m N t : ℕ) (hN : 0 < N) (ht : 0 < t) :
     ∃ c : ℤ, (m : ℤ) ^ (N ! * t) = (m : ℤ) ^ N ! + N * c := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have h := pow_factorial_mul (m : ZMod N) t ht
   rw [ZMod.card] at h
   obtain ⟨c, hc⟩ := (ZMod.intCast_zmod_eq_zero_iff_dvd ((m : ℤ) ^ (N ! * t) - (m : ℤ) ^ N !) N).1
@@ -168,7 +168,7 @@ theorem exists_local_generator {E : Type} [Field E] [NumberField E] (B : Ideal (
   have hβ0 : β ≠ 0 := by
     rintro rfl
     exact mul_ne_zero hB hC0 (by rw [← hC]; simp)
-  haveI : Finite (𝓞 E ⧸ C) := Ideal.finiteQuotientOfFreeOfNeBot C hC0
+  have : Finite (𝓞 E ⧸ C) := Ideal.finiteQuotientOfFreeOfNeBot C hC0
   have hu : IsUnit (Ideal.Quotient.mk C (m : 𝓞 E)) := by
     obtain ⟨x, hx, c, hc, e⟩ := Submodule.mem_sup.1 ((Ideal.eq_top_iff_one _).1 hsup)
     obtain ⟨a, rfl⟩ := Ideal.mem_span_singleton'.1 hx

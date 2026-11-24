@@ -275,7 +275,7 @@ theorem sum_zsmul (P : Pair p) (a b : ℤ) {J : Type} [Fintype J] (f : J → X.f
 
 theorem count_rank_lower : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (P : Pair p), IsAmpleLB P.L.B → ∀ (e : ℕ) (x : Fin (D + 1) → X.functionField), Gens P D e x → ∀ a b : ℤ, ∃ (c : ℕ) (C : ℝ), 0 < C ∧ ∀ q : ℕ, (∃ v : Fin (Module.finrank (ratF x) X.functionField * (q + D).choose D) → X.functionField, (∀ i, v i ∈ P.H (e * (q + c : ℕ) + a) b) ∧ LinearIndependent ℤ v) ∧ ∀ R : ℝ, 0 ≤ R → (∀ l (σ : k →+* ℂ) (y : CxPts p σ), P.nu e 0 σ y (x l) ≤ 1) → (((2 * ⌊R⌋₊ + 1) ^ (Module.finrank (ratF x) X.functionField * (q + D).choose D) : ℕ) : ℕ∞) ≤ (P.Bl (e * (q + c : ℕ) + a) b (C * (q + D).choose D * R)).encard := by
   intro k _ X _ p D hX P hA e x hx a b
-  haveI : CharZero X.functionField := (_root_.GlobalTheory.ArithFnField.charZero_and_trdeg_functionField k X p D hX).1
+  have : CharZero X.functionField := (_root_.GlobalTheory.ArithFnField.charZero_and_trdeg_functionField k X p D hX).1
   obtain ⟨hx0, halg, hfin⟩ := _root_.GlobalTheory.HSAmp.gens_quot_trBasis k X p D hX P hA e x hx
   set δ := Module.finrank (ratF x) X.functionField with hδ
   obtain ⟨c, g, hg, hgi⟩ : ∃ (c : ℕ) (g : Fin δ → X.functionField), (∀ i, g i ∈ P.H (e * c + a) b) ∧

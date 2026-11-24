@@ -82,7 +82,7 @@ theorem quot_fubini_mean : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopo
   have hSfd : IsFundamentalDomain Γ S μ := IsFundamentalDomain.mk' hSm.nullMeasurableSet hS
   have hfΓ' : ∀ (γ : Γ) (x : G), f (γ • x) = f x := fun γ x => hfΓ γ γ.2 x
   have hmh : ∀ h : G, Measurable (fun r : R => (r : G) * h) := fun h =>
-    (continuous_subtype_val.mul continuous_const).measurable
+    (continuous_subtypeVal.mul continuous_const).measurable
   have hSh : ∀ h : G, MeasurableSet {r : R | (r : G) * h ∈ S} := fun h => hmh h hSm
   have hShfd : ∀ h : G, IsFundamentalDomain (Γ.subgroupOf R) {r : R | (r : G) * h ∈ S} μR := fun h =>
     IsFundamentalDomain.mk' (hSh h).nullMeasurableSet (existsUnique_mul_mem hΓR hS h)

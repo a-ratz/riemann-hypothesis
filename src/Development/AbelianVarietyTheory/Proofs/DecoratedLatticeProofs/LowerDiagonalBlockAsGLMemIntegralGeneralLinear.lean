@@ -225,7 +225,7 @@ theorem inv_torusElt_int {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k)
   rw [diagonal_apply]; split_ifs
   · show valuation k _ ≤ 1
     rw [map_zpow₀]
-    exact zpow_le_one₀ (zero_lt_iff.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
+    exact zpow_le_one₀ (pos_iff_ne_zero.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
   · exact zero_mem _
 
 theorem key_mem {j' : GL (A ⊕ D) k} (hj : j' ∈ parahoric k A D) {E T : GL D k} (hE : E ∈ KO k D)
@@ -273,7 +273,7 @@ theorem lowerDiagonalBlockAsGL_val_eq_toBlocks_two_two {j : GL (A ⊕ D) k} (hj 
     refine isUnit_iff_ne_zero.2 fun h0 => ?_
     have := (GlobalTheory.DatumEigen.val_det_blocks hj).2
     rw [h0, map_zero] at this; exact zero_ne_one this
-  rw [lowerDiagonalBlockAsGL, dif_pos h]; rfl
+  rw [lowerDiagonalBlockAsGL, dite_eq_left h]; rfl
 
 theorem lowerDiagonalBlockAsGL_mem_integralGeneralLinear {j : GL (A ⊕ D) k} (hj : j ∈ parahoric k A D) : lowerDiagonalBlockAsGL j ∈ KO k D := by
   refine mem_KO_of ?_ ?_
@@ -322,7 +322,7 @@ theorem card_filter_eq {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (
     if h : ∃ g, g ∈ RK ∧ g⁻¹ * (lowerDiagonalBlockAsGL j * T) ∈ KO k D then h.choose else 1
   have spec : ∀ j ∈ parahoric k A D, pick j ∈ RK ∧ (pick j)⁻¹ * (lowerDiagonalBlockAsGL j * T) ∈ KO k D := fun j hj => by
     have h := (hRK.2 (lowerDiagonalBlockAsGL j) (lowerDiagonalBlockAsGL_mem_integralGeneralLinear hj)).exists
-    simp only [pick, dif_pos h]; exact h.choose_spec
+    simp only [pick, dite_eq_left h]; exact h.choose_spec
   have uniq : ∀ j ∈ parahoric k A D, ∀ g ∈ RK, g⁻¹ * (lowerDiagonalBlockAsGL j * T) ∈ KO k D → pick j = g :=
     fun j hj g hg h => (hRK.2 (lowerDiagonalBlockAsGL j) (lowerDiagonalBlockAsGL_mem_integralGeneralLinear hj)).unique (spec j hj) ⟨hg, h⟩
   have hY : ∀ j ∈ parahoric k A D, IsIntM (nmat u * j * dg A T).val.toBlocks₁₂ →
@@ -332,7 +332,7 @@ theorem card_filter_eq {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (
     simpa [mul_assoc] using this
   apply Finset.card_nbij pick
   · intro j hj
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_filter] at hj ⊢
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_filter] at hj ⊢
     obtain ⟨hjR, -, h22⟩ := hj
     have hJ := hJR j hjR
     obtain ⟨hg, hK⟩ := spec j hJ
@@ -342,7 +342,7 @@ theorem card_filter_eq {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (
     rw [e, ← Matrix.mul_assoc, Units.val_mul (lowerDiagonalBlockAsGL j), lowerDiagonalBlockAsGL_val_eq_toBlocks_two_two hJ, ← hW22]
     exact isIntM_mul h22 (isIntM_of_mem_KO (inv_mem hK))
   · intro j₁ hj₁ j₂ hj₂ he
-    simp only [Finset.coe_filter, Set.mem_setOf_eq] at hj₁ hj₂
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hj₁ hj₂
     obtain ⟨h1R, h1a, -⟩ := hj₁
     obtain ⟨h2R, h2a, -⟩ := hj₂
     have hJ1 := hJR _ h1R
@@ -361,7 +361,7 @@ theorem card_filter_eq {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (
       simp only [map_mul, map_inv]; group
     exact (hR.2 j₂ hJ2).unique ⟨h1R, hm⟩ ⟨h2R, by simp⟩
   · intro g hg
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_filter] at hg
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_filter] at hg
     obtain ⟨hgR, hSg⟩ := hg
     obtain ⟨κ, hκ, κ', hκ', hgdef⟩ := hRK.1 g hgR
     have hj₀ : (nmat u)⁻¹ * dg A κ ∈ parahoric k A D := mul_mem (inv_mem (nmat_mem hu)) (dg_mem hκ)
@@ -379,7 +379,7 @@ theorem card_filter_eq {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) (
       rw [Units.val_mul, lowerDiagonalBlockAsGL_val_eq_toBlocks_two_two hJ, ← hW22, hv, toBlocks_fromBlocks₂₂, Units.val_mul (κ * T), lowerDiagonalBlockAsGL_val_eq_toBlocks_two_two hm']
     have hE' : g⁻¹ * (lowerDiagonalBlockAsGL j * T) = κ'⁻¹ * lowerDiagonalBlockAsGL m' := by rw [hE, hgdef]; group
     refine ⟨j, ?_, uniq j hJ g hgR (by rw [hE']; exact mul_mem (inv_mem hκ') (lowerDiagonalBlockAsGL_mem_integralGeneralLinear hm'))⟩
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_filter]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_filter]
     refine ⟨hjR, ?_, ?_⟩
     · rw [hv, toBlocks_fromBlocks₁₂]; exact (isIntM_toBlocks (isIntM_of_mem_parahoric hm')).2.1
     · have e2 : lowerDiagonalBlockAsGL j * T = g * (κ'⁻¹ * lowerDiagonalBlockAsGL m') := by rw [← hE']; group
@@ -498,13 +498,13 @@ theorem term_eq {ξ : kˣ →* ℂˣ} (hξ : IsTame ξ) {x : Matrix (A ⊕ D') (
       show valuation k ((x * (j * dg A T).val).toBlocks₁₁.det - x.toBlocks₁₁.det * j.val.toBlocks₁₁.det) < 1
       rw [hz11]
       exact hc
-    simp only [datum, dif_pos hs, dif_pos hx]
+    simp only [datum, dite_eq_left hs, dite_eq_left hx]
     rw [t1, t2, ← Units.val_mul]
     congr 1
     simp only [map_mul]
     group
   · have hs : ¬ InSupp (x * (j * dg A T).val) := fun h => hP (hiff.1 h)
-    simp only [datum, dif_neg hs, mul_zero]
+    simp only [datum, dite_eq_right hs, mul_zero]
 
 end GlobalTheory.ParHeckeSource
 
@@ -526,8 +526,8 @@ theorem sum_reps_datum_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
       intro g _
       simp only [liftS, intInd]
       by_cases h : ∀ i j, (schur x * g.val) i j ∈ 𝒪[k]
-      · rw [if_pos h, if_pos (show IsIntM (schur x * g.val) from h), mul_one]
-      · rw [if_neg h, if_neg (show ¬ IsIntM (schur x * g.val) from h), mul_zero]
+      · rw [ite_eq_left h, ite_eq_left (show IsIntM (schur x * g.val) from h), mul_one]
+      · rw [ite_eq_right h, ite_eq_right (show ¬ IsIntM (schur x * g.val) from h), mul_zero]
     rw [Finset.sum_congr rfl hL, Finset.sum_congr rfl hRt, ← Finset.sum_filter, ← Finset.sum_filter,
       Finset.sum_const, Finset.sum_const, hcard (unip_int hx) (schur x)]
   · have hL : ∀ j ∈ R, ((ξ (GeneralLinearGroup.det j) * (ξ (d j))⁻¹ : ℂˣ) : ℂ) * datum ξ (x * (j * dg A T).1) = 0 := by
@@ -541,9 +541,9 @@ theorem sum_reps_datum_eq : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
         rw [e] at h1
         have h2 := (GlobalTheory.DatumEigen.inSupp_mul h1 (inv_mem hj)).1
         rwa [Matrix.mul_assoc, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.mul_one] at h2)
-      simp only [datum, dif_neg hs, mul_zero]
+      simp only [datum, dite_eq_right hs, mul_zero]
     rw [Finset.sum_eq_zero hL, Finset.sum_eq_zero]
     intro g _
-    simp only [liftS, datum, dif_neg hx, zero_mul]
+    simp only [liftS, datum, dite_eq_right hx, zero_mul]
 
 end GlobalTheory.ParHeckeSource

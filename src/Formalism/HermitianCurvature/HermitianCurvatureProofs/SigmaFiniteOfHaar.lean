@@ -121,8 +121,8 @@ def lmulHomeo (n : B.Mat k r) (hn : IsUnit n.det) : Mt k r ≃ₜ Mt k r where
 theorem kr_rightEq (Bs : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[ℂ] Wp)) (x n : B.Mat k r)
     (hn : n ∈ QuantumDeterminants.Nset k r) : Kr Bs F (x * n) = psi k r Bs.z' cStd n • Kr Bs F x := by
   have hU : IsUnit n.det := isUnit_det_of_UH hn.1
-  haveI := sigmaFinite_of_haar Bs.haarN
-  haveI := sigmaFinite_of_haar Bs.haarW'
+  have := sigmaFinite_of_haar Bs.haarN
+  have := sigmaFinite_of_haar Bs.haarW'
   set e := (lmulHomeo n hU).toMeasurableEquiv with he
   set Φ : Mt k r × Mt k r ≃ᵐ Mt k r × Mt k r := MeasurableEquiv.prodCongr (MeasurableEquiv.refl _) e with hΦ
   have hmpN : MeasurePreserving e Bs.μN Bs.μN := by

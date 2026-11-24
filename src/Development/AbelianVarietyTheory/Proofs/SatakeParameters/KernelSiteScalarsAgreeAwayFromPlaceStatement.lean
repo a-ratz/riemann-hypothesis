@@ -156,7 +156,7 @@ theorem mem_intU_of_oneOff_ordA : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     exact congrArg Prod.fst h
   have hss' : s.2 * s.1 = 1 := by rw [mul_comm]; exact hss
   have hset := G.P.setting v
-  haveI := hset.frac_alt
+  have := hset.frac_alt
   have hp := hset.p_unif
   set x : G.P.Qq v := (A.eQ v).symm s.1 with hx_def
   have hxe : A.eQ v x = s.1 := RingEquiv.apply_symm_apply _ _

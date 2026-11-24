@@ -188,7 +188,7 @@ theorem exists_terms_translate : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) 
   have hco : ∀ χ', coef s (g' c + GlobalTheory.TorusExt.torusPt 𝔪.D.toPre (FractionRing V) (Additive.ofMul χ)) w₃ χ' =
       u⁻¹ * ((χ (Multiplicative.ofAdd χ') : (FractionRing V)ˣ) : FractionRing V) * coef s (g' c) (w c) χ' := fun χ' =>
     GlobalTheory.UT.ThetaAverage.coef_translate hg₀ hadd (hc c).2.1 (fun z J hJ => by rw [hw₃v z J hJ, hw''v, cst_eq]) s χ'
-  haveI : IsIntegrallyClosed V := 𝔪.cn.2.1
+  have : IsIntegrallyClosed V := 𝔪.cn.2.1
   have hint : ∀ mu : X, ∃ a : V, algebraMap V (FractionRing V) a =
       u⁻¹ * ((χ (Multiplicative.ofAdd (𝔪.e₈ mu)) : (FractionRing V)ˣ) : FractionRing V) := fun mu => by
     refine IsIntegrallyClosed.isIntegral_iff.1 (IsIntegral.mul ?_ ?_)
@@ -390,12 +390,12 @@ theorem prim_ring : IsPrimitiveRoot (algebraMap X₁.o₁ X₁.S.R X₁.S.ζ) ((
 
 theorem prim_member (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) :
     IsPrimitiveRoot (𝔪.yK (algebraMap X₁.o₁ X₁.S.R X₁.S.ζ)) ((X₁.S.r * X₁.S.N) ^ 2) := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  haveI : CharZero (FractionRing V) := IsFractionRing.charZero V
+  have : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero (FractionRing V) := IsFractionRing.charZero V
   have hk : 0 < (X₁.S.r * X₁.S.N) ^ 2 := pow_pos (Nat.mul_pos X₁.S.r_pos (by have := X₁.S.N_ge; omega)) 2
   have h := ((prim_ring (X₁ := X₁)).isRoot_cyclotomic hk).map (f := 𝔪.yK)
   rw [Polynomial.map_cyclotomic] at h
-  haveI : NeZero ((((X₁.S.r * X₁.S.N) ^ 2 : ℕ)) : FractionRing V) := ⟨by exact_mod_cast hk.ne'⟩
+  have : NeZero ((((X₁.S.r * X₁.S.N) ^ 2 : ℕ)) : FractionRing V) := ⟨by exact_mod_cast hk.ne'⟩
   exact Polynomial.isRoot_cyclotomic_iff.1 h
 
 theorem exp_eq (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) {p q : ℕ}
@@ -459,7 +459,7 @@ theorem lifts_of_frExp (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ)
 theorem frExp_second_diff : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∀ τ ∈ X₁.S.TT X₁.M z₁, ∃ c : X₁.S.Gam → X₁.S.Gam → ZMod ((X₁.S.r * X₁.S.N) ^ 2), ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (Y : Type) [AddCommGroup Y] (t : Y → V) (δ : I → Y → Y) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev Y t δ) (E : X₁.S.Gam → ℕ), (∀ a ∈ X₁.S.HH X₁.M z₁, GlobalTheory.GSep.TransTerms.FrExp 𝔪 a τ (E a)) → ∀ a ∈ X₁.S.HH X₁.M z₁, ∀ b ∈ X₁.S.HH X₁.M z₁, ((E (a + b) : ℕ) : ZMod ((X₁.S.r * X₁.S.N) ^ 2)) - ((E a : ℕ) : ZMod ((X₁.S.r * X₁.S.N) ^ 2)) - ((E b : ℕ) : ZMod ((X₁.S.r * X₁.S.N) ^ 2)) + ((E 0 : ℕ) : ZMod ((X₁.S.r * X₁.S.N) ^ 2)) = c a b := by
   intro I X₁ z₁ act x₀ _ τ _
   obtain ⟨κ, hκ1, hκ⟩ := frame_cube_const I X₁ z₁ act
-  haveI : NeZero ((X₁.S.r * X₁.S.N) ^ 2) :=
+  have : NeZero ((X₁.S.r * X₁.S.N) ^ 2) :=
     ⟨(pow_pos (Nat.mul_pos X₁.S.r_pos (by have := X₁.S.N_ge; omega)) 2).ne'⟩
   choose k hk' hk using fun a a' a'' => (prim_ring (X₁ := X₁)).eq_pow_of_pow_eq_one (hκ1 a a' a'')
   refine ⟨fun a b => (k a b 0 : ZMod _) - (k a b τ : ZMod _), ?_⟩
@@ -1496,7 +1496,7 @@ theorem transExp_of_frExp : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁
   intro I X₁ z₁ act x₀ hdiv V _ _ _ ev Y _ t δ 𝔪 a _ τ _ e hF
   obtain ⟨-, x, fr, th, w₀, s, g', w, hx, hfr, hth, hw₀, hs, htor, hw, hov, htr⟩ := hF
   intro χ hχ C lab T hT c hc C' lab' T' hT' c' hc' mu
-  letI := GlobalTheory.TorusExt.gtGroup 𝔪.D.toPre (FractionRing V)
+  let := GlobalTheory.TorusExt.gtGroup 𝔪.D.toPre (FractionRing V)
   set g₀ := GlobalTheory.TorusExt.torusPt 𝔪.D.toPre (FractionRing V) (Additive.ofMul χ) with hg₀def
   have hg₀ : IsTor χ g₀ := (GlobalTheory.UT.isTor_iff _ _).2 (GlobalTheory.TorusExt.isTorusPtF_torusPt χ)
   have hadd : g'.IsAdd g₀ (g' + g₀) := (GlobalTheory.TorusExt.isAdd_iff_eq _ _ _).2 rfl
@@ -1587,10 +1587,10 @@ theorem trans_exp_affine : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ 
   let E2 : X₁.S.Gam → ℕ := fun a => if ha : a ∈ X₁.S.HH X₁.M z₁ then
     Classical.choose (GlobalTheory.T.thetaMember_exists_frame_exponent I X₁ z₁ act x₀ hd V2 ev2 Y2 t2 δ2 𝔪2 a ha τ hτ) else 0
   have h1 : ∀ a ∈ X₁.S.HH X₁.M z₁, FrExp 𝔪1 a τ (E1 a) := fun a ha => by
-    simp only [E1, dif_pos ha]
+    simp only [E1, dite_eq_left ha]
     exact Classical.choose_spec (GlobalTheory.T.thetaMember_exists_frame_exponent I X₁ z₁ act x₀ hd V1 ev1 Y1 t1 δ1 𝔪1 a ha τ hτ)
   have h2 : ∀ a ∈ X₁.S.HH X₁.M z₁, FrExp 𝔪2 a τ (E2 a) := fun a ha => by
-    simp only [E2, dif_pos ha]
+    simp only [E2, dite_eq_left ha]
     exact Classical.choose_spec (GlobalTheory.T.thetaMember_exists_frame_exponent I X₁ z₁ act x₀ hd V2 ev2 Y2 t2 δ2 𝔪2 a ha τ hτ)
   exact ⟨E1, E2, fun a ha => GlobalTheory.T.translationExponent_of_frameExponent I X₁ z₁ act x₀ hd V1 ev1 Y1 t1 δ1 𝔪1 a ha τ hτ _ (h1 a ha),
     fun a ha => GlobalTheory.T.translationExponent_of_frameExponent I X₁ z₁ act x₀ hd V2 ev2 Y2 t2 δ2 𝔪2 a ha τ hτ _ (h2 a ha),

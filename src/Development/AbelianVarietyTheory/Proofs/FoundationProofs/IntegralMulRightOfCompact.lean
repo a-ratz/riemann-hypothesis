@@ -148,17 +148,17 @@ theorem integral_eq_subgroup (h0 : ∀ g ∉ K, F g = 0) : ∫ g, F g ∂μ = �
 include ho hc
 
 theorem integral_mul_right_of_compact (h0 : ∀ g ∉ K, F g = 0) (k : K) : ∫ g, F (g * k) ∂μ = ∫ g, F g ∂μ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hc
-  haveI : (μ.comap K.subtype).IsHaarMeasure := .comap (mH := inferInstance) μ ho.isOpenEmbedding_subtypeVal
-  haveI := GlobalTheory.isMulRightInvariant_of_compactSpace (μ.comap K.subtype)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hc
+  have : (μ.comap K.subtype).IsHaarMeasure := .comap (mH := inferInstance) μ ho.isOpenEmbedding_subtypeVal
+  have := GlobalTheory.isMulRightInvariant_of_compactSpace (μ.comap K.subtype)
   rw [integral_eq_subgroup μ ho h0,
     integral_eq_subgroup μ ho fun g hg => h0 _ (by rwa [K.mul_mem_cancel_right k.2])]
   exact integral_mul_right_eq_self (fun x : K => F x) k
 
 theorem integral_inv_of_compact (h0 : ∀ g ∉ K, F g = 0) : ∫ g, F g⁻¹ ∂μ = ∫ g, F g ∂μ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hc
-  haveI : (μ.comap K.subtype).IsHaarMeasure := .comap (mH := inferInstance) μ ho.isOpenEmbedding_subtypeVal
-  haveI := GlobalTheory.isInvInvariant_of_compactSpace (μ.comap K.subtype)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hc
+  have : (μ.comap K.subtype).IsHaarMeasure := .comap (mH := inferInstance) μ ho.isOpenEmbedding_subtypeVal
+  have := GlobalTheory.isInvInvariant_of_compactSpace (μ.comap K.subtype)
   rw [integral_eq_subgroup μ ho h0, integral_eq_subgroup μ ho fun g hg => h0 _ (by rwa [K.inv_mem_iff])]
   exact integral_inv_eq_self (fun x : K => F x) _
 
@@ -175,14 +175,14 @@ theorem coe_mem_kerSet {k : K} : (k : G) ∈ kerSet r ↔ r k = 1 := Subtype.val
 
 omit [IsTopologicalGroup G] [MeasurableSpace G] [BorelSpace G] hc in
 include hk in
-theorem isOpen_kerSet : IsOpen (kerSet r) := ho.isOpenMap_subtype_val _ hk
+theorem isOpen_kerSet : IsOpen (kerSet r) := ho.isOpenMap_subtypeVal _ hk
 
 
 omit [MeasurableSpace G] [BorelSpace G] ho in
 include hk in
 theorem isCompact_kerSet : IsCompact (kerSet r) :=
   haveI : CompactSpace K := isCompact_iff_compactSpace.1 hc
-  (r.ker.isClosed_of_isOpen hk).isCompact.image continuous_subtype_val
+  (r.ker.isClosed_of_isOpen hk).isCompact.image continuous_subtypeVal
 
 
 omit hc in
@@ -196,7 +196,7 @@ theorem integral_eq_sum_ker [Fintype Q] (hF : Integrable F μ) (h0 : ∀ g ∉ K
     · have : ∀ q, g ∈ (((Function.surjInv hr q : K) : G)⁻¹ * ·) ⁻¹' kerSet r ↔ q = r ⟨g, hg⟩ := fun q => by
         refine (coe_mem_kerSet (r := r) (k := (Function.surjInv hr q)⁻¹ * ⟨g, hg⟩)).trans ?_
         rw [map_mul, map_inv, Function.surjInv_eq hr, inv_mul_eq_one]
-      simp only [indicator_apply, this, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [indicator_apply, this, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     · simp [indicator_apply, h0 g hg]
   rw [integral_congr_ae (.of_forall e), integral_finsetSum _ fun q _ => hF.indicator (hm.preimage (by fun_prop))]
   refine Finset.sum_congr rfl fun q _ => ?_
@@ -447,7 +447,7 @@ theorem isOpen_ker_red : IsOpen (s.red.ker : Set (stabLoc σ J L v)) := by
   rw [e]
   refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => hU.preimage ?_
   exact (((Units.continuous_val.comp ((continuous_const.mul (continuous_splitHom s.emb)).mul
-    continuous_const)).sub continuous_const).matrix_elem i j).comp continuous_subtype_val
+    continuous_const)).sub continuous_const).matrix_elem i j).comp continuous_subtypeVal
 
 end SplitAt
 

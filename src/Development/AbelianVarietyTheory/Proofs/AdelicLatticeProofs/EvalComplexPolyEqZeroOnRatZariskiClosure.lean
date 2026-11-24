@@ -82,7 +82,7 @@ private lemma mem_span_rational_of_vanishing {ι : Type} (Γ : Set (Matrix ι ι
         rw [ha g hg, hb g hg, add_zero]
       zero_mem' := fun g _ => by simp [_root_.GlobalTheory.ClassFin.evC]
       smul_mem' := fun c w hw g hg => by
-        simp only [_root_.GlobalTheory.ClassFin.evC, Set.mem_setOf_eq] at *
+        simp only [_root_.GlobalTheory.ClassFin.evC, Set.mem_ofPred_eq] at *
         rw [MvPolynomial.smul_eval, hw g hg, mul_zero] }
   have hstable : ∀ σ : ℂ ≃+* ℂ, ∀ w ∈ W, ∃ w' ∈ W, ∀ k,
       (MvPolynomial.basisMonomials (ι × ι) ℂ).repr w' k =

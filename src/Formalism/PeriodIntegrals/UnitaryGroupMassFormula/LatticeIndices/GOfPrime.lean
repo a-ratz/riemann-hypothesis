@@ -85,7 +85,7 @@ theorem measOfRed (hH : HaarIdx) (hR : RedIdx) {G : Type} [Group G] [Topological
     exact (Homeomorph.mulLeft (a : G)).isOpenMap _ hKg
   refine ⟨hopen, hsub, ?_, hR K Q ρ hρ A hA⟩
   have hidx : A.index ≠ 0 := by
-    haveI : Nonempty Q := ⟨1⟩
+    have : Nonempty Q := ⟨1⟩
     have h1 : ρ.ker.index ≠ 0 := by
       rw [Subgroup.index_ker]
       exact Nat.card_pos.ne'
@@ -113,7 +113,7 @@ theorem gOf_prime (p : TypX X) : (gOf p).Prime := by
   · exact D.host.g_prime 1
 
 theorem finite_GL (p : TypX X) : Finite (GL (Formalism.FourierDecayAlt.S3.Idx D.R.rS D.R.k) (ZMod (gOf p))) := by
-  haveI : Fact (gOf p).Prime := ⟨gOf_prime X p⟩
+  have : Fact (gOf p).Prime := ⟨gOf_prime X p⟩
   infer_instance
 
 theorem kg_sub (p : TypX X) : KgX X p ⊆ KvX X p := fun _ hx => hx.1
@@ -122,9 +122,9 @@ theorem measA_of (hH : HaarIdx) (hR : RedIdx) (p : TypX X) (hT : StTop X p) (hK 
     (hRed : StRed X p) (hIm : StImA X hb p) : StMeasA X hb p := by
   obtain ⟨K, hKv, -, -, hKgo⟩ := hK
   obtain ⟨ρ, hρs, hρk⟩ := hRed K hKv
-  haveI := finite_GL X p
+  have := finite_GL X p
   obtain ⟨A, hAeq, hAker, hAcard⟩ := hIm K hKv ρ hρs hρk
-  haveI : (muP X p).IsHaarMeasure := X.measG_norm.2.2.2.1 p.1
+  have : (muP X p).IsHaarMeasure := X.measG_norm.2.2.2.1 p.1
   have hKgK : KgX X p ⊆ (K : Set (HAp X p)) := hKv ▸ kg_sub X p
   obtain ⟨-, -, hmeas, hidx⟩ :=
     measOfRed hH hR hT (muP X p) K ρ hρs (KgX X p) hKgo hKgK hρk A hAker
@@ -143,9 +143,9 @@ theorem measB_of (hH : HaarIdx) (hR : RedIdx) (u : D.what₂.Word) (p : TypX X) 
     (hK : StK X p) (hRed : StRed X p) (hIm : StImB X u p) : StMeasB X u p := by
   obtain ⟨K, hKv, -, hKc, hKgo⟩ := hK
   obtain ⟨ρ, hρs, hρk⟩ := hRed K hKv
-  haveI := finite_GL X p
+  have := finite_GL X p
   obtain ⟨B, hBeq, hBker, hBcard⟩ := hIm K hKv ρ hρs hρk
-  haveI : (muP X p).IsHaarMeasure := X.measG_norm.2.2.2.1 p.1
+  have : (muP X p).IsHaarMeasure := X.measG_norm.2.2.2.1 p.1
   have hKgK : KgX X p ⊆ (K : Set (HAp X p)) := hKv ▸ kg_sub X p
   obtain ⟨hBo, hBK, hmeas, hidx⟩ :=
     measOfRed hH hR hT (muP X p) K ρ hρs (KgX X p) hKgo hKgK hρk B hBker

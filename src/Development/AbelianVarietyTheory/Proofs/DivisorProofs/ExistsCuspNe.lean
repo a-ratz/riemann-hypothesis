@@ -154,7 +154,7 @@ theorem tsum_pow_eventually_ne_zero : ∀ {ι : Type} (a : ι → ℂ) (i0 : ι)
     · intro i
       by_cases hi : i = i0
       · subst hi; simp [h0]
-      · simp only [hi, if_false]
+      · simp only [hi, ite_false]
         exact tendsto_pow_atTop_nhds_zero_of_norm_lt_one (hlt i hi)
     · filter_upwards [Filter.eventually_ge_atTop k0] with k hk i
       rw [norm_pow]
@@ -214,21 +214,21 @@ theorem phla_laS_cpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r
   set x := cpt X x0 z
   let L' : ℕ → ℝ := fun j => if h : j < r + 1 then IW.Lm X x τ ⟨j, h⟩ else 0
   have h1 : ∀ i : Fin r, IW.Lm X x τ i.succ = L' (i + 1) := fun i => by
-    simp only [L', dif_pos (Nat.succ_lt_succ i.isLt)]; rfl
+    simp only [L', dite_eq_left (Nat.succ_lt_succ i.isLt)]; rfl
   have h2 : ∀ i : Fin r, IW.Lm X x τ i.castSucc = L' i := fun i => by
-    simp only [L', dif_pos (Nat.lt_succ_of_lt i.isLt)]; rfl
+    simp only [L', dite_eq_left (Nat.lt_succ_of_lt i.isLt)]; rfl
   have hk : ∀ i : Fin r, ((laS X k τ i : ℤ) : ℝ) =
       2 * (k : ℝ) * (if (i : ℕ) < X.p0 then (0 : ℝ) else 1) - (k : ℝ) := fun i => by
     unfold laS
     by_cases h : (i : ℕ) < X.p0
-    · rw [if_neg (not_le.2 h), if_pos h]; push_cast; ring
-    · rw [if_pos (not_lt.1 h), if_neg h]; push_cast; ring
+    · rw [ite_eq_right (not_le.2 h), ite_eq_left h]; push_cast; ring
+    · rw [ite_eq_left (not_lt.1 h), ite_eq_right h]; push_cast; ring
   have hL0 : L' 0 = 0 := by
-    simp only [L', dif_pos (Nat.succ_pos r)]; exact IW.Lm_zero X x τ
+    simp only [L', dite_eq_left (Nat.succ_pos r)]; exact IW.Lm_zero X x τ
   have hLr : L' r = 0 := by
-    simp only [L', dif_pos (Nat.lt_succ_self r)]; exact IW.Lm_last_cpt X x0 ho z τ
+    simp only [L', dite_eq_left (Nat.lt_succ_self r)]; exact IW.Lm_last_cpt X x0 ho z τ
   have hLp : L' X.p0 = Real.log ‖dmin X.Gm x τ ⟨X.p0, Nat.lt_succ_of_le X.p0_le⟩‖ := by
-    simp only [L', dif_pos (Nat.lt_succ_of_le X.p0_le)]; rfl
+    simp only [L', dite_eq_left (Nat.lt_succ_of_le X.p0_le)]; rfl
   simp_rw [h1, h2, hk]
   rw [Fin.sum_univ_eq_sum_range
     (fun i => (2 * (k : ℝ) * (if i < X.p0 then (0 : ℝ) else 1) - (k : ℝ)) * (L' (i + 1) - L' i)) r]
@@ -384,7 +384,7 @@ theorem det_block_ne {r p : ℕ} (hp : p ≤ r) (m : Matrix (Fin r) (Fin r) ℂ)
     simp only [dotProduct, mulVec, Matrix.submatrix_apply, Matrix.mul_diagonal, Matrix.mul_apply,
     Matrix.transpose_apply, Matrix.map_apply, hu_def, map_sum, map_mul, Complex.conj_conj,
     Finset.mul_sum, Finset.sum_mul, Pi.star_apply, Matrix.diagonal_apply, mul_ite, ite_mul, mul_zero,
-    zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     conv_lhs => rw [Finset.sum_comm]
     conv_lhs => arg 2; ext b; rw [Finset.sum_comm]
     conv_lhs => rw [Finset.sum_comm]
@@ -403,7 +403,7 @@ theorem det_block_ne {r p : ℕ} (hp : p ≤ r) (m : Matrix (Fin r) (Fin r) ℂ)
       have := hu ⟨k, hk⟩
       rwa [show Fin.castLE hp ⟨k, hk⟩ = k from Fin.ext rfl] at this
     simp [h0]
-  · simp only [sgn, if_neg hk]
+  · simp only [sgn, ite_eq_right hk]
     nlinarith [Complex.normSq_nonneg (u k)]
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
@@ -501,7 +501,7 @@ theorem det_ratio_pow_mul_borel_eq_weight_prod {E : Type} [Field E] [NumberField
   have hD2ne : D2 ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => FrameDegreeData.bdiag_ne X hb τ _
   have hdetT : T.det = D1 * D2 := by
     have ht : (mat b τ).BlockTriangular id := fun i j hij => (hb τ).2 i j hij
-    rw [hT, KU.tl, Matrix.det_submatrix_equiv_self, Matrix.det_of_upperTriangular ht,
+    rw [hT, KU.tl, Matrix.det_submatrix_equiv_self, Matrix.det_of_isUpperTriangular ht,
       ← Fintype.prod_equiv (KU.eT X) (fun s => mat b τ (KU.eT X s) (KU.eT X s)) _ (fun _ => rfl),
       Fintype.prod_sum_type]
     rfl
@@ -510,7 +510,7 @@ theorem det_ratio_pow_mul_borel_eq_weight_prod {E : Type} [Field E] [NumberField
       intro i j hij
       simp only [hT, KU.tl, Matrix.toBlocks₂₂, Matrix.of_apply, Matrix.submatrix_apply, KU.eT_inr]
       exact (hb τ).2 _ _ (show (Fin.castLE X.p0_le j : ℕ) < Fin.castLE X.p0_le i from hij)
-    rw [Matrix.det_of_upperTriangular ht]
+    rw [Matrix.det_of_isUpperTriangular ht]
     rfl
   have hchar : (∏ i, b τ i i ^ laS X k τ i) = D1 ^ k * (D2 ^ k)⁻¹ := by
     rw [← Fintype.prod_equiv (KU.eT X) (fun s => b τ (KU.eT X s) (KU.eT X s) ^ laS X k τ (KU.eT X s)) _
@@ -639,7 +639,7 @@ theorem GlobalTheory.ScalarPoin.exists_cusp_ne : ∀ (E : Type) [Field E] [Numbe
     · simp only [laS]
       split_ifs with h1 h2 <;> omega
     · simp only [laS]
-      rw [if_neg (by omega), if_pos (by omega)]
+      rw [ite_eq_right (by omega), ite_eq_left (by omega)]
       omega
   · rw [hB.1.2.1 x0 hx0 b hb]
     refine mul_ne_zero ?_ ?_

@@ -130,14 +130,14 @@ theorem approx_family : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) (F : ι 
     (∃ M : ℝ, ∀ i k, ‖F i k‖ ≤ M) → (∀ δ : ℝ, 0 < δ → ∀ᶠ k in 𝓝 (1 : KG ε), ∀ i, ‖F i k - F i 1‖ < δ) →
     ∀ δ : ℝ, 0 < δ → ∃ e : KG ε → ℂ, KFinFun ε e ∧ ∀ i, ‖F i 1 - ∫ k, e k * F i k ∂(muK ε)‖ ≤ δ := by
   intro n ε ι F hFc ⟨M, hM⟩ hequi δ hδ
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
   obtain ⟨U, hU, hUo, h1U⟩ := eventually_nhds_iff.1 (hequi (δ / 3) (by positivity))
   obtain ⟨f, hf0, hf1, hf01⟩ := exists_continuous_zero_one_of_isClosed (X := KG ε)
     hUo.isClosed_compl isClosed_singleton (Set.disjoint_singleton_right.2 (fun h => h h1U))
   have hfn : 0 ≤ (f : KG ε → ℝ) := fun k => (hf01 k).1
   have hf1' : f 1 = 1 := hf1 rfl
   have hc : 0 < ∫ k, f k ∂(muK ε) :=
-    f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+    f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
       (HasCompactSupport.of_compactSpace _) hfn (by rw [hf1']; norm_num)
   set c := ∫ k, f k ∂(muK ε) with hcdef
   let g : C(KG ε, ℂ) := ⟨fun k => ((f k / c : ℝ) : ℂ), by fun_prop⟩
@@ -203,7 +203,7 @@ theorem unif_right : ∀ (D : D7) (V : HSp D) (φ : GA D V → ℂ), RapidDec V 
     [CompactSpace K] (a : K → GA D V), Continuous a → ∀ (k₀ : K) (δ : ℝ), 0 < δ →
     ∀ᶠ k in 𝓝 k₀, ∀ x, ‖φ (x * a k) - φ (x * a k₀)‖ < δ := by
   intro D V φ hφ K _ _ a ha k₀ δ hδ
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   obtain ⟨C, hC⟩ := hφ.decay 1
   obtain ⟨H, hH⟩ := isCompact_univ.exists_bound_of_continuousOn ((continuous_height V).comp ha).continuousOn
   have hHk : ∀ k, height V (a k) ≤ H := fun k => (le_abs_self _).trans (by
@@ -269,7 +269,7 @@ variable {𝒟 : Set (GA D V → ℂ)} (hθ : IsInfFam θ) (hκ : Continuous κ)
 include hθ hκ hU h𝒟
 
 theorem famSpan_cont' : ∀ F ∈ famSpan θ V τ κ 𝒟, Continuous fun p : K × GA D V => F p.1 p.2 := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   intro F hF
   induction hF using Submodule.span_induction with
   | mem x hx =>
@@ -434,7 +434,7 @@ theorem rapidDec_avg_famSpan {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) {V : H
     (hU : ∀ k, κ k ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) {𝒟 : Set (GA D V → ℂ)}
     (h𝒟 : ∀ ψ ∈ 𝒟, RapidDec V ψ ∧ ψ ∈ SmFun θ V) {G : KG ε → GA D V → ℂ} (hG : G ∈ famSpan θ V τ κ 𝒟) :
     RapidDec V (fun x => ∫ k, G k x ∂(muK ε)) := by
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
   obtain ⟨hl, hd⟩ := famSpan_rapid hθ hκ hU (fun ψ h => (h𝒟 ψ h).1) G hG
   refine ⟨fun γ hγ x => by simp only [hl _ γ hγ x], GlobalTheory.AvgFam.continuous_avg (muK ε)
     (famSpan_cont' hθ hκ hU (fun ψ h => ⟨(h𝒟 ψ h).1.continuous, (h𝒟 ψ h).2⟩) G hG), fun N => ?_⟩
@@ -448,8 +448,8 @@ theorem rapidDec_avg_famSpan {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) {V : H
 
 theorem avg_rapid : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (τ : D.what₂.Tau) (ε : Fin V.rank → Bool) (P : Matrix (Fin V.rank) (Fin V.rank) ℂ), IsUnit P → Pᴴ * Formalism.REAL.Jm ε * P = gramAt D V τ → ∀ e : Formalism.REAL.KG ε → ℂ, Continuous e → ∀ f : GA D V → ℂ, GlobalTheory.Size.RapidDecSm θ V f → GlobalTheory.Size.RapidDecSm θ V (GlobalTheory.SeriesToClosure.avg θ V τ ε P e f) := by
   intro D θ hθ V τ ε P hP hJ e he f hf
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
   set κ : KG ε → Matrix (Fin V.rank) (Fin V.rank) ℂ := fun k => P⁻¹ * toMK k * P with hκdef
   have hκ : Continuous κ := GlobalTheory.SeriesToClosure.continuous_conjK (ε := ε) (P := P)
   have hU : ∀ k, κ k ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) := fun k =>
@@ -503,7 +503,7 @@ theorem famSpan_glDer {F : KG ε → GA D V → ℂ} (hF : F ∈ famSpan θ V τ
     (a : D.what₂.Tau × Fin V.rank × Fin V.rank) :
     (fun k => GlobalTheory.Size.glDer θ V a (F k)) ∈ famSpan θ V τ κ 𝒟 ∧
       GlobalTheory.Size.glDer θ V a (fun x => ∫ k, F k x ∂(muK ε)) = fun x => ∫ k, GlobalTheory.Size.glDer θ V a (F k) x ∂(muK ε) := by
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
   obtain ⟨h1, h2⟩ := GlobalTheory.SmoothAutCheck.parts_mem V a.1 (Matrix.single a.2.1 a.2.2 1)
   have m1 := famSpan_Rder' hθ hκ hU h𝒟 hR F hF a.1 _ h1
   have m2 := famSpan_Rder' hθ hκ hU h𝒟 hR F hF a.1 _ h2
@@ -599,8 +599,8 @@ theorem famSpan_equi {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {�
 
 theorem family : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (τ : D.what₂.Tau) (ε : Fin V.rank → Bool) (P : Matrix (Fin V.rank) (Fin V.rank) ℂ), IsUnit P → Pᴴ * Formalism.REAL.Jm ε * P = gramAt D V τ → ∀ f : GA D V → ℂ, GlobalTheory.Size.RapidDecSm θ V f → ∀ w : List (D.what₂.Tau × Fin V.rank × Fin V.rank), ∃ G : Formalism.REAL.KG ε → GA D V → ℂ, (∀ x, Continuous fun k => G k x) ∧ (∃ M : ℝ, ∀ k x, ‖G k x‖ ≤ M) ∧ (∀ δ : ℝ, 0 < δ → ∀ᶠ k in nhds (1 : Formalism.REAL.KG ε), ∀ x, ‖G k x - G 1 x‖ < δ) ∧ G 1 = GlobalTheory.Size.wordAct (GlobalTheory.Size.glDer θ V) w f ∧ ∀ e : Formalism.REAL.KG ε → ℂ, Continuous e → GlobalTheory.Size.wordAct (GlobalTheory.Size.glDer θ V) w (GlobalTheory.SeriesToClosure.avg θ V τ ε P e f) = fun x => ∫ k, e k * G k x ∂(Formalism.REAL.muK ε) := by
   intro D θ hθ V τ ε P hP hJ f hf w
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds V.rank ε).1
   set κ : KG ε → Matrix (Fin V.rank) (Fin V.rank) ℂ := fun k => P⁻¹ * toMK k * P with hκdef
   have hκ : Continuous κ := GlobalTheory.SeriesToClosure.continuous_conjK (ε := ε) (P := P)
   have hU : ∀ k, κ k ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) := fun k =>
@@ -736,7 +736,7 @@ theorem approx_avgList : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (N : 
     refine ⟨fun τ => 0, fun τ => kFinFun_zero _, ?_⟩
     rw [GlobalTheory.CuspApproxAll.avgList_nil, sub_self]
     have h0 := GlobalTheory.Size.growthSob_smul (θ := θ) (V := N.V) (φ := 0) (0 : ℂ) d 0
-    rw [zero_smul, enorm_zero, zero_mul] at h0
+    rw [zero_smul, eNorm_zero, zero_mul] at h0
     rw [h0]
     exact zero_le
   | cons τ l ih =>

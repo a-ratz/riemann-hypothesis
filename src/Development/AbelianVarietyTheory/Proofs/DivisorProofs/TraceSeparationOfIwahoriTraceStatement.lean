@@ -144,7 +144,7 @@ theorem hasFinTrace_compress {V : Type} [AddCommGroup V] [Module ℂ V] (P : V �
   have hfix : ∀ u ∈ LinearMap.range P, P u = u := by
     rintro u ⟨w, rfl⟩; exact LinearMap.congr_fun hP w
   have hBU : LinearMap.range (P ∘ₗ A ∘ₗ P) ≤ LinearMap.range P := LinearMap.range_comp_le_range _ _
-  haveI : FiniteDimensional ℂ (LinearMap.range (P ∘ₗ A ∘ₗ P)) := Submodule.finiteDimensional_of_le hBU
+  have : FiniteDimensional ℂ (LinearMap.range (P ∘ₗ A ∘ₗ P)) := Submodule.finiteDimensional_of_le hBU
   refine ⟨inferInstance, ?_⟩
   have hQ : ∀ u, (P.rangeRestrict ∘ₗ A ∘ₗ (LinearMap.range P).subtype) u ∈
       (LinearMap.range (P ∘ₗ A ∘ₗ P)).comap (LinearMap.range P).subtype := by
@@ -175,14 +175,14 @@ theorem coeff_eq_zero_of_sum_trace_eq_zero : ∀ (G : Type) [Group G] (n : ℕ) 
     | smul c x hx =>
       simp only [Q, map_smul, LinearMap.smul_comp, LinearMap.comp_smul, smul_eq_mul] at hx ⊢
       rw [Finset.sum_congr rfl fun i _ => mul_left_comm (a i) c _, ← Finset.mul_sum, hx, mul_zero]
-  haveI : ∀ i, IsSimpleModule (MonoidAlgebra ℂ G) (σ i).asModule := fun i =>
+  have : ∀ i, IsSimpleModule (MonoidAlgebra ℂ G) (σ i).asModule := fun i =>
     (Representation.irreducible_iff_isSimpleModule_asModule _).mp (hirr i)
   have hzero : ∀ i j, i ≠ j → ∀ f : (σ i).asModule →ₗ[MonoidAlgebra ℂ G] (σ j).asModule, f = 0 := by
     intro i j hij f
-    haveI := hirr i
-    haveI := hirr j
-    haveI := hne i j hij
-    haveI := (Representation.IntertwiningMap.equivLinearMapAsModule (σ i) (σ j)).toEquiv.symm.subsingleton
+    have := hirr i
+    have := hirr j
+    have := hne i j hij
+    have := (Representation.IntertwiningMap.equivLinearMapAsModule (σ i) (σ j)).toEquiv.symm.subsingleton
     exact Subsingleton.elim _ _
   let b : ∀ i, Module.Basis (Fin (Module.finrank ℂ (LinearMap.range (P i)))) ℂ (LinearMap.range (P i)) :=
     fun i => Module.finBasis ℂ _
@@ -202,12 +202,12 @@ theorem coeff_eq_zero_of_sum_trace_eq_zero : ∀ (G : Type) [Group G] (n : ℕ) 
       have h1' : (σ i).asAlgebraHom x (b i k : W i) = b i k := by simpa using h1
       simp [Q, h1', hfix]
     · have h1' : (σ i).asAlgebraHom x (b i k : W i) = 0 :=
-        h1.trans (if_neg hi)
+        h1.trans (ite_eq_right hi)
       simp [Q, h1', hi]
   have h := hlin x
-  rw [Finset.sum_eq_single i₀ (fun i _ hi => by rw [hQx i, if_neg hi, map_zero, mul_zero])
+  rw [Finset.sum_eq_single i₀ (fun i _ hi => by rw [hQx i, ite_eq_right hi, map_zero, mul_zero])
     (by simp)] at h
-  rw [hQx i₀, if_pos rfl, LinearMap.trace_id] at h
+  rw [hQx i₀, ite_eq_left rfl, LinearMap.trace_id] at h
   have hpos : 0 < Module.finrank ℂ (LinearMap.range (P i₀)) := by
     rw [Module.finrank_pos_iff, Submodule.nontrivial_iff_ne_bot, Ne, LinearMap.range_eq_bot]
     exact hi₀
@@ -273,7 +273,7 @@ theorem continuous_locFin : Continuous (locFin V u) :=
   (GlobalTheory.AdelicU.continuous_emb _ _ u).subtype_mk _
 
 theorem continuous_finLoc : Continuous (finLoc V u) :=
-  (GlobalTheory.AdelicU.continuous_proj _ _ u).comp continuous_subtype_val
+  (GlobalTheory.AdelicU.continuous_proj _ _ u).comp continuous_subtypeVal
 
 theorem finLoc_inv_mul (g : GfC V) : finLoc V u ((locFin V u (finLoc V u g))⁻¹ * g) = 1 := by
   rw [map_mul, map_inv, finLoc_locFin, inv_mul_cancel]
@@ -285,7 +285,7 @@ theorem exists_locComp : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectrum (𝓞 D
     ∃ (N : Type) (_ : AddCommGroup N) (_ : Module ℂ N) (π : Representation ℂ (Gv V u) N),
       π.IsIrreducible ∧ IsAdmissible π ∧ FinHasLocComp V u π σ := by
   intro D V u W _ _ σ hirr hadm
-  letI : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
+  let : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
   obtain ⟨hnt, hinv⟩ := (GlobalTheory.CuspRep.isIrreducible_iff σ).1 hirr
   obtain ⟨x, hx0⟩ := exists_ne (0 : W)
   have hsplit : ∀ g (y : W), σ g y = σ (locFin V u (finLoc V u g)) (σ ((locFin V u (finLoc V u g))⁻¹ * g) y) :=
@@ -413,7 +413,7 @@ theorem apply_comm (φ : π.IntertwiningMap ρ) (g : G) (n : N) : φ.toLinearMap
   LinearMap.congr_fun (φ.isIntertwining' g) n
 
 theorem isSemisimple_of_isotypic (hπ : π.IsIrreducible) (h : IsIsotypicAlg π ρ) : ρ.IsSemisimpleRepresentation := by
-  haveI := hπ
+  have := hπ
   have hs : π.IsSemisimpleRepresentation :=
     (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule π).2 inferInstance
   exact GlobalTheory.ClassFin.isSemisimpleRepresentation_of_iSup_range G X ρ (π.IntertwiningMap ρ) (fun _ => N) (fun _ => π)
@@ -431,17 +431,17 @@ theorem stable_biSup (s : Finset (π.IntertwiningMap ρ)) (g : G) :
 
 theorem exists_intertwining_le (hπ : π.IsIrreducible) (h : IsIsotypicAlg π ρ) (C : Subrepresentation ρ)
     (hC : C ≠ ⊥) : ∃ ψ : π.IntertwiningMap ρ, Function.Injective ψ ∧ ∀ n, ψ n ∈ C.toSubmodule := by
-  haveI := hπ
-  haveI := isSemisimple_of_isotypic hπ h
+  have := hπ
+  have := isSemisimple_of_isotypic hπ h
   obtain ⟨C1, hc⟩ := exists_isCompl C
   have hc' : IsCompl C.toSubmodule C1.toSubmodule :=
     IsCompl.of_eq (congrArg Subrepresentation.toSubmodule hc.inf_eq_bot)
       (congrArg Subrepresentation.toSubmodule hc.sup_eq_top)
   let P : X →ₗ[ℂ] X := C.toSubmodule.subtype ∘ₗ Submodule.linearProjOfIsCompl _ _ hc'
   have hPl : ∀ a ∈ C.toSubmodule, P a = a := fun a ha =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc' ⟨a, ha⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hc' ⟨a, ha⟩)
   have hPr : ∀ b ∈ C1.toSubmodule, P b = 0 := fun b hb =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc' ⟨b, hb⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_right hc' ⟨b, hb⟩)
   have hPi : ∀ g x, P (ρ g x) = ρ g (P x) := fun g x => by
     have hx : x ∈ C.toSubmodule ⊔ C1.toSubmodule := by rw [hc'.sup_eq_top]; trivial
     obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.1 hx
@@ -484,7 +484,7 @@ theorem le_biSup_of_fixed (hπ : π.IsIrreducible) (h : IsIsotypicAlg π ρ) {v 
     (hY : ∀ g, ∀ x ∈ Y, ρ g x ∈ Y) (s : Finset (π.IntertwiningMap ρ))
     (hF : ∀ x ∈ Y, (∀ g, π g v = v → ρ g x = x) → x ∈ ⨆ φ ∈ s, LinearMap.range φ.toLinearMap) :
     Y ≤ ⨆ φ ∈ s, LinearMap.range φ.toLinearMap := by
-  haveI := isSemisimple_of_isotypic hπ h
+  have := isSemisimple_of_isotypic hπ h
   let A : Subrepresentation ρ := ⟨Y ⊓ ⨆ φ ∈ s, LinearMap.range φ.toLinearMap, fun g x hx =>
     ⟨hY g x hx.1, stable_biSup s g x hx.2⟩⟩
   obtain ⟨C0, hc⟩ := exists_isCompl A
@@ -523,7 +523,7 @@ theorem commute_locFin (x : Gv V u) {k : GfC V} (hk : finLoc V u k = 1) : Commut
   Subtype.ext (commute_emb D.sp.cm.sig V.gram x hk).eq
 
 theorem continuous_finLoc : Continuous (finLoc V u) :=
-  (continuous_proj D.sp.cm.sig V.gram u).comp continuous_subtype_val
+  (continuous_proj D.sp.cm.sig V.gram u).comp continuous_subtypeVal
 
 theorem continuous_locFin : Continuous (locFin V u) :=
   (continuous_emb D.sp.cm.sig V.gram u).subtype_mk _
@@ -560,7 +560,7 @@ theorem exists_finset_fixed_away : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectr
   obtain ⟨v, hv⟩ : ∃ v : N, v ≠ 0 := by
     by_contra hn
     push_neg at hn
-    haveI : Subsingleton N := ⟨fun a b => (hn a).trans (hn b).symm⟩
+    have : Subsingleton N := ⟨fun a b => (hn a).trans (hn b).symm⟩
     exact (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤) (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
   let St : Subgroup (Gv V u) :=
     { carrier := {g | π g v = v}
@@ -579,7 +579,7 @@ theorem exists_finset_fixed_away : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectr
     (hK0o.inter (hSt.preimage (continuous_finLoc u))).inter (hK.preimage (continuous_away u))
   have hK2c : IsCompact (K2 : Set (GfC V)) :=
     hK0c.of_isClosed_subset (K2.isClosed_of_isOpen hK2o) fun k hk => hk.1.1
-  haveI := hσa.2 K2 hK2o hK2c
+  have := hσa.2 K2 hK2o hK2c
   let Y : Submodule ℂ W := GlobalTheory.PRep.fixed σ (K ⊓ (finLoc V u).ker)
   have hmemY : ∀ x, x ∈ Y ↔ ∀ k ∈ K, finLoc V u k = 1 → σ k x = x := by
     intro x
@@ -599,7 +599,7 @@ theorem exists_finset_fixed_away : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectr
     have h1 : σ (locFin V u (finLoc V u k)) y = y := (GlobalTheory.CuspDec.mem_fixed.1 hy.2) _ hk.1.2
     have h2 : σ (away u k) y = y := (hmemY y).1 hy.1 _ hk.2 (finLoc_away u k)
     rw [← away_mul u k, map_mul, Module.End.mul_apply, h1, h2]
-  haveI : FiniteDimensional ℂ F := Submodule.finiteDimensional_of_le hFle
+  have : FiniteDimensional ℂ F := Submodule.finiteDimensional_of_le hFle
   have hFfg : F.FG := Module.Finite.iff_fg.1 inferInstance
   obtain ⟨s, hs⟩ := IsCompactElement.exists_finset_of_le_iSup ((Submodule.fg_iff_compact F).1 hFfg)
     (fun φ : π.IntertwiningMap (σ.comp (locFin V u)) => LinearMap.range φ.toLinearMap)
@@ -864,11 +864,11 @@ theorem trace_matrix_pi_operator : ∀ (W : Type) [AddCommGroup W] [Module ℂ W
     rw [LinearMap.trace_comp_comm', LinearMap.comp_assoc]
     by_cases hkj : k = j
     · subst hkj
-      rw [LinearMap.proj_comp_single_same, LinearMap.comp_id, if_pos rfl]
-    · rw [LinearMap.proj_comp_single_ne (R := ℂ) (φ := fun _ : Fin m => W) j k (Ne.symm hkj), LinearMap.comp_zero, map_zero, if_neg hkj]
+      rw [LinearMap.proj_comp_single_same, LinearMap.comp_id, ite_eq_left rfl]
+    · rw [LinearMap.proj_comp_single_ne (R := ℂ) (φ := fun _ : Fin m => W) j k (Ne.symm hkj), LinearMap.comp_zero, map_zero, ite_eq_right hkj]
 
   simp only [map_sum, map_smul, key, smul_eq_mul, mul_ite, mul_zero, Finset.sum_ite_eq,
-  Finset.mem_univ, if_true, Matrix.trace, Matrix.diag, Finset.sum_mul]
+  Finset.mem_univ, ite_true, Matrix.trace, Matrix.diag, Finset.sum_mul]
 
 end GlobalTheory
 end -- clump:auto
@@ -901,7 +901,7 @@ theorem intertwining_sum_apply {G N X : Type} [Group G] [AddCommGroup N] [Module
 theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup N] [Module ℂ N] [AddCommGroup X] [Module ℂ X] (π : Representation ℂ G N) (ρ : Representation ℂ G X), π.IsIrreducible → (∀ φ : π.IntertwiningMap π, ∃ c : ℂ, φ.toLinearMap = c • LinearMap.id) → IsIsotypicAlg π ρ → ∀ H : X →ₗ[ℂ] X, (∀ g x, H (ρ g x) = ρ g (H x)) → (∃ s : Finset (π.IntertwiningMap ρ), LinearMap.range H ≤ ⨆ φ ∈ s, LinearMap.range φ.toLinearMap) → ∃ c : ℂ, ∀ (A : N →ₗ[ℂ] N) (B : X →ₗ[ℂ] X), (∀ φ : π.IntertwiningMap ρ, B ∘ₗ φ.toLinearMap = φ.toLinearMap ∘ₗ A) → ∀ b, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.HasFinTrace A b → GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.HasFinTrace (H ∘ₗ B) (c * b) := by
   intro G _ N X _ _ _ _ π ρ hirr hschur hiso H hH ⟨s, hs⟩
   let S := Submodule.span ℂ (s : Set (π.IntertwiningMap ρ))
-  haveI : FiniteDimensional ℂ S := FiniteDimensional.span_finset ℂ s
+  have : FiniteDimensional ℂ S := FiniteDimensional.span_finset ℂ s
   let bS := Module.finBasis ℂ S
   let φ : Fin (Module.finrank ℂ S) → π.IntertwiningMap ρ := fun j => (bS j : π.IntertwiningMap ρ)
   have hli : LinearIndependent ℂ φ := bS.linearIndependent.map' S.subtype (Submodule.ker_subtype S)
@@ -962,7 +962,7 @@ theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup
     · simp
     · intro x y hx hy
       simpa using Z.add_mem hx hy
-  haveI : FiniteDimensional ℂ Z := LinearMap.finiteDimensional_range Φ'
+  have : FiniteDimensional ℂ Z := LinearMap.finiteDimensional_range Φ'
   have hT1 := _root_.GlobalTheory.IndefiniteRowSideFullHecke.RangeTrace.hasFinTrace_of_range_le X (H ∘ₗ B) Z hrange
   let e : (Fin (Module.finrank ℂ S) → R) ≃ₗ[ℂ] Z := LinearEquiv.ofInjective Φ' hinj'
   let A' : R →ₗ[ℂ] R := A.restrict (p := R) (q := R) fun v _ => LinearMap.mem_range_self A v
@@ -1046,7 +1046,7 @@ theorem isIntegralOp_smoothOp {G X : Type} [Group G] [TopologicalSpace G] [IsTop
 
 theorem hasTrace_update_eq_const_mul : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectrum (𝓞 D.host.F)) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)), (∀ v, (μf v).IsHaarMeasure) → (∀ᶠ v in cofinite, μf v (Kv V v) = 1) → ∀ ν, IsFinMeas V μf ν → ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (σ : Representation ℂ (GfC V) W), IsAdmissible σ → ∀ (N : Type) [AddCommGroup N] [Module ℂ N] (π : Representation ℂ (Gv V u) N), π.IsIrreducible → IsAdmissible π → FinHasLocComp V u π σ → ∀ ff, IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff → ∃ c : ℂ, ∀ f ∈ CcLoc D.sp.cm.sig V.gram u, (∃ b, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.HasTrace (μf u) π f b) ∧ ∀ b, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.HasTrace (μf u) π f b → GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.HasTrace ν σ (finFn V (Function.update ff u f)) (c * b) := by
   intro D V u μf hμ hK1 ν hν W _ _ σ hσ N _ _ π hπi hπa hloc ff hff
-  haveI : (μf u).IsHaarMeasure := hμ u
+  have : (μf u).IsHaarMeasure := hμ u
   obtain ⟨H, K, hKo, hHc, hHf, hHop⟩ := GlobalTheory.T.pureTensorOperator_eq_offPlace_mul_atPlace D V u μf hμ hK1 ν hν W σ hσ.1 ff hff
   have hcont : Continuous (locFin V u) := (continuous_emb _ _ u).subtype_mk _
   have hρ : GlobalTheory.PRep.IsSmooth (σ.comp (locFin V u)) := fun x => (hσ.1 x).preimage hcont
@@ -1120,7 +1120,7 @@ namespace GlobalTheory.TrMultSep
 theorem separation_of_iwahoriTrace (hI : GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IwahoriTrace) (hE : GlobalTheory.IndefiniteRowSideFullHecke.ExponentSeparationTwistedDiscreteSeries.ExponentsSeparate) :
     Separation := by
   intro D V T U hU μf hμ hK ν hν n Ws _ _ σs hσ a hyp
-  haveI : ν.IsHaarMeasure := hν.1
+  have : ν.IsHaarMeasure := hν.1
   obtain ⟨e, he, hP, hfam⟩ := GlobalTheory.T.exists_testFamilies_projectedTranslationOperators D V T U hU μf hμ hK ν hν
   have hex : ∀ i, ∃ P : Ws i →ₗ[ℂ] Ws i, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp ν (σs i) (finFn V e) P ∧
       FiniteDimensional ℂ (LinearMap.range P) := by
@@ -1138,8 +1138,8 @@ theorem separation_of_iwahoriTrace (hI : GlobalTheory.IndefiniteRowSideFullHecke
     ⟨_, hffOp (Ws i) (σs i) (hσ.2.1 i).1 (P i) (hPint i).1, hc i⟩
   have hloc := fun i => GlobalTheory.T.exists_irreducible_admissible_localComponent_finiteAdelic D V U.u (Ws i) (σs i) (hσ.1 i) (hσ.2.1 i)
   choose N instA instM π hπ using hloc
-  letI : ∀ i, AddCommGroup (N i) := instA
-  letI : ∀ i, Module ℂ (N i) := instM
+  let : ∀ i, AddCommGroup (N i) := instA
+  let : ∀ i, Module ℂ (N i) := instM
   have hfac := fun i => GlobalTheory.T.pure_tensor_trace_eq_const_mul_local_trace D V U.u μf hμ hK ν hν (Ws i) (σs i) (hσ.2.1 i) (N i) (π i) (hπ i).1
     (hπ i).2.1 (hπ i).2.2 ff hff
   choose c' hc' using hfac

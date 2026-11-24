@@ -261,7 +261,7 @@ theorem exists_digits_of_dvr (V : Type) [CommRing V] [IsDomain V] [IsDiscreteVal
     obtain ⟨y, hy⟩ := hf'
     refine ⟨Fin.snoc f (residue V y), ?_⟩
     rw [Fin.sum_univ_castSucc]
-    simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
+    simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.val_castSucc, Fin.val_last]
     have hxy : x - (∑ i : Fin n, s (f i) * ϖ ^ (i : ℕ) + s (residue V y) * ϖ ^ n) =
         ϖ ^ n * (y - s (residue V y)) := by
       rw [← sub_sub, hy]; ring
@@ -305,8 +305,8 @@ theorem exists_embedding_fractionField_of_finite :
       ∀ io : K →+* T'.Fr, ∃ ι : T'.Fr →+* ℂ, ι.comp io = σ := by
   intro K _ _ σ T T' g _ hfin hc io
   have hV : #T.V ≤ 𝔠 := mk_le_continuum_of_countable_residueField T.V
-  letI : Algebra T.V T'.V := g.toAlgebra
-  haveI : Module.Finite T.V T'.V := hfin
+  let : Algebra T.V T'.V := g.toAlgebra
+  have : Module.Finite T.V T'.V := hfin
   obtain ⟨d, φ, hφ⟩ := Module.Finite.exists_fin' T.V T'.V
   have hV' : #T'.V ≤ 𝔠 := by
     refine (mk_le_of_surjective hφ).trans ?_
@@ -344,7 +344,7 @@ theorem existsUnique_mulVec_of_inCell {V K : Type} [CommRing V] [CommRing K] (φ
   let A : Matrix (Fin r) (Fin r) V := u.submatrix ix id
   have hlow : A.BlockTriangular OrderDual.toDual := fun i j hij => hc.1 i j hij
   have hdet : A.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular A hlow]
+    rw [Matrix.det_of_isLowerTriangular A hlow]
     exact Finset.prod_eq_one fun i _ => hc.2 i
   have hAu : IsUnit A.det := hdet ▸ isUnit_one
   have hAK : IsUnit (A.map φ).det := by
@@ -461,7 +461,7 @@ theorem inV_of_extIn_eqChar : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have hG := (GlobalTheory.Reg.CellChart.mul_eq_smul_iff_cols (((M j).ρ a').map ((algebraMap T.V T.Fr).comp f₀))
       (algebraMap c.F T.Fr (embK c τ a')) (g τ)).mpr fun i => hgc i a'
     have hd : IsUnit (b τ).det := by
-      rw [Matrix.det_of_upperTriangular (hbt τ)]
+      rw [Matrix.det_of_isUpperTriangular (hbt τ)]
       exact (Finset.prod_ne_zero_iff.mpr fun i _ => hbd τ i).isUnit
     have hU : ((M j).ρ a').map ((algebraMap T.V T.Fr).comp f₀) * u τ = algebraMap c.F T.Fr (embK c τ a') • u τ := by
       have e : u τ = g τ * (b τ)⁻¹ := by rw [hgub τ, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hd, Matrix.mul_one]
@@ -914,7 +914,7 @@ theorem isIntegral_adjoin_of_forall_cdvr (K Ω : Type) [Field K] [NumberField K]
     rintro rfl
     exact hni isIntegral_zero
 
-  letI := invertibleOfNonzero (inv_ne_zero hx0)
+  let := invertibleOfNonzero (inv_ne_zero hx0)
   let B := Algebra.adjoin A {x⁻¹}
   let xinv : B := ⟨x⁻¹, Algebra.subset_adjoin rfl⟩
   have hne : (⊥ : Ideal A).map (algebraMap A B) ⊔ Ideal.span {xinv} ≠ ⊤ := by
@@ -1017,7 +1017,7 @@ theorem exists_cover_noPole : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     refine _root_.GlobalTheory.isIntegral_adjoin_of_forall_cdvr c.F (P j).Ω (P j).gens (P j).frac _ fun T hT φ hK hgn => ?_
     obtain ⟨e, he⟩ := (P j).es_ne
     let io : c.F →+* T.Fr := φ.comp (algebraMap c.F (P j).Ω)
-    letI := io.toAlgebra
+    let := io.toAlgebra
     let ψ : (P j).R e →ₐ[c.F] T.Fr :=
       { toRingHom := φ.comp ((P j).R e).val.toRingHom, commutes' := fun k => rfl }
     obtain ⟨z, hz⟩ := hE.bc _ _ ψ ((P j).y e he)
@@ -1158,14 +1158,14 @@ theorem exists_bddAll_cusp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   set_option synthInstance.maxHeartbeats 200000 in
     intro E _ _ _ H Dw l Xo c r U hU la p hp hpl hg a n f hd hf
     obtain ⟨J, hJ, P, hC, hreg⟩ := _root_.GlobalTheory.CuspReg.exists_cover_noPole E H Dw l Xo c r U hU la p hp hpl hg a n f hd hf
-    haveI := Fintype.ofFinite J
+    have := Fintype.ofFinite J
     choose κ hκ0 hκ using fun j =>
       exists_mul_mem_closure (O := (la.valuation c.F).valuationSubring) (K := c.F) ((P j).gens : Set (P j).Ω) (hreg j)
     have hF := cusp_le_sec Xo c U a n hf
     refine ⟨algebraMap (la.valuation c.F).valuationSubring c.F (∏ j, κ j), ?_, ?_⟩
     · exact (map_ne_zero_iff _ (IsFractionRing.injective _ c.F)).2 (Finset.prod_ne_zero_iff.2 fun j _ => hκ0 j)
     intro T io m ho y _
-    letI := io.toAlgebra
+    let := io.toAlgebra
     obtain ⟨hE, -, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
     have hev := GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hE a n f hF
     let W : ValuationSubring T.Fr := (valV T.V).valuationSubring

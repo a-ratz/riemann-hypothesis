@@ -110,7 +110,7 @@ theorem zeta_eq_pow_of_dvd {a n : ℕ} (hn : 0 < n) (h : a ∣ n) : ∃ k : ℕ,
     exact_mod_cast this
   refine ⟨k, ?_⟩
   unfold zeta
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp

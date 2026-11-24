@@ -80,7 +80,7 @@ theorem module_finite_of_semilinear {B R M N : Type*} [CommRing B] [CommRing R] 
     [Module B N] [Module R N] [IsScalarTower R B N] [Module.Finite B N]
     (σ : B →+* R) (hσ : Function.Surjective σ) (φ : M →+ N) (hφ : Function.Injective φ)
     (hφσ : ∀ (b : B) (m : M), φ (b • m) = σ b • φ m) : Module.Finite B M := by
-  letI : RingHomSurjective σ := ⟨hσ⟩
+  let : RingHomSurjective σ := ⟨hσ⟩
   have : Module.Finite R N := Module.Finite.trans B N
   have : IsNoetherian R N := isNoetherian_of_isNoetherianRing_of_finite R N
   let f : M →ₛₗ[σ] N :=

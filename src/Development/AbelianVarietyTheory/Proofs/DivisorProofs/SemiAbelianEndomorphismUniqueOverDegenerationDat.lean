@@ -265,7 +265,7 @@ theorem fromSpecStalk_comp_eq : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsN
     ∀ x : G.left, G.hom x = closedPoint R →
       G.left.fromSpecStalk x ≫ b.left = G.left.fromSpecStalk x ≫ b'.left := by
   intro R _ _ _ G hG b b' hb x hx
-  haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
+  have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
   let A := G.left.presheaf.stalk x
   let φ : CommRingCat.of R ⟶ A := Spec.preimage (G.left.fromSpecStalk x ≫ G.hom)
   have hφ : Spec.map φ = G.left.fromSpecStalk x ≫ G.hom := Spec.map_preimage _

@@ -231,9 +231,9 @@ open Formalism.BasicNotions NumberField IsDedekindDomain Formalism.ConjugateSelf
 variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} {N : NData R H what₂} {A : NAut N}
 
 theorem one_lt_q (w : PlE H) : 1 < normV w := by
-  haveI : Finite (𝓞 H.E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  letI : Field (𝓞 H.E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+  have : Finite (𝓞 H.E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  let : Field (𝓞 H.E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
   show 1 < Nat.card (𝓞 H.E ⧸ w.asIdeal)
   exact Finite.one_lt_card
 

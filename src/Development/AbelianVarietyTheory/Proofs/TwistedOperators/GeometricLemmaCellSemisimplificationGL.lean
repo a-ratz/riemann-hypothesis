@@ -162,7 +162,7 @@ theorem one_coord₂ (B : SmRep G) (h : HasFiniteLength B.ρ) (T : Finset (IrrCl
       simp at this
     rw [h1, h2, ih R hR.lt fun c hc => (add_eq_zero.1 ((hm c).symm.trans (hS' c hc))).1]
     simp only [hm, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq', if_pos h3]
+      Finset.sum_ite_eq', ite_eq_left h3]
   have h4 := key ⊤ (by simpa only [jhMult_congr_right _ (topEquiv B.ρ)] using hT)
   rw [← congr_equiv φ h0 hadd (B := sub B ⊤) (B' := B) (topEquiv B.ρ), h4]
   simp only [jhMult_congr_right _ (topEquiv B.ρ)]
@@ -194,7 +194,7 @@ theorem additive_family_expand : ∀ (α : Type) [Fintype α] [DecidableEq α] (
         by_contra hn
         obtain ⟨i, hi⟩ := hT c hn
         exact one_ne_zero ((jhMult_self (c i).rep.irr).symm.trans hi)
-      simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', if_pos h3]
+      simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', ite_eq_left h3]
     | insert i s his ih =>
       intro A hA hl T hT
       let μ : ∀ j, IrrCl (Γ j) → SmRep (Γ j) → ℕ∞ := fun j c B => jhMult c.rep.ρ B.ρ
@@ -231,7 +231,7 @@ theorem additive_family_expand : ∀ (α : Type) [Fintype α] [DecidableEq α] (
           change μ j (t j) (Function.update A i (SmRep.ofIrr c.rep) j) = 0
           rcases eq_or_ne j i with rfl | hji
           · rw [Function.update_self]
-            refine (jhMult_rep_rep _ _).trans (if_neg ?_)
+            refine (jhMult_rep_rep _ _).trans (ite_eq_right ?_)
             rintro rfl
             exact (hC.mem_toFinset.1 hc) hj
           · rw [Function.update_of_ne hji]; exact hj
@@ -332,7 +332,7 @@ theorem relInd_surjective (f : ∀ i, (Σ j, c i j) ≃ m i)
     choose q hq x hx e using fun i => (H i).2.2.2.2.2.2.2.2 (g i)
     exact ⟨q, fun i _ => hq i, x, fun i _ => hx i, funext e⟩
   have hcont : Continuous (relProj k f) := continuous_pi fun i =>
-    (H i).2.2.2.2.2.1.comp (((continuous_apply i).comp continuous_subtype_val).subtype_mk _)
+    (H i).2.2.2.2.2.1.comp (((continuous_apply i).comp continuous_subtypeVal).subtype_mk _)
   let σ₀ : Representation ℂ (relParab k f) W := (twist π (relDeltaHalf k c)).comp (relProj k f)
   let z : Representation.IntertwiningMap σ₀ σ₀ :=
     { toLinearMap := 0, isIntertwining' := fun _ => by ext; simp }
@@ -773,7 +773,7 @@ theorem jhMult_relInd_of_subsingleton {α β : Type} [Fintype α] [Fintype β] [
     [AddCommGroup V] [Module ℂ V] [Subsingleton V] (ρ : Representation ℂ (∀ i, Levi k (c i)) V)
     {Y : Type} [AddCommGroup Y] [Module ℂ Y] {τ : Representation ℂ (Levi k m) Y}
     (hτ : τ.IsIrreducible) : jhMult τ (relInd f ρ) = 0 := by
-  haveI : Subsingleton (smoothPart (ind (relParab k f) ((twist ρ (relDeltaHalf k c)).comp (relProj k f)))) :=
+  have : Subsingleton (smoothPart (ind (relParab k f) ((twist ρ (relDeltaHalf k c)).comp (relProj k f)))) :=
     ⟨fun a b => Subtype.ext (Subtype.ext (funext fun _ => Subsingleton.elim _ _))⟩
   exact jhMult_of_subsingleton hτ _
 
@@ -803,7 +803,7 @@ theorem GlobalTheory.SmGL.CellSemis.cellSemisimplification : GlobalTheory.Publis
     exact continuous_pi fun i => continuous_pi fun j => (continuous_apply i).comp (continuous_apply j)
   have hzero : ∀ τ (B : ∀ i, SmRep (Levi k (c i))) (i : α), Subsingleton (B i).V → Φ τ B = 0 := by
     intro τ B i hi
-    haveI := subsingleton_piTensor (X := fun a => (B a).V) i
+    have := subsingleton_piTensor (X := fun a => (B a).V) i
     exact jhMult_relInd_of_subsingleton _ _ τ.irr
   have hexact : ∀ τ (B : ∀ i, SmRep (Levi k (c i))) (i : α) (C C₁ C₂ : SmRep (Levi k (c i)))
       (ι : C₁.ρ.IntertwiningMap C.ρ) (p : C.ρ.IntertwiningMap C₂.ρ), Function.Injective ι →

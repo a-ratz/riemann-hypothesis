@@ -193,7 +193,7 @@ theorem smul_periodMap_mk_zero_fst_eq_neg_form (s : ℂ) (n : A.X →+ ℤ) (v' 
   simp [EF_n_left]
 
 theorem l_eq_zero_of_forall_smul_mem {v : A.La} (hv : v.y = 0) (h : ∀ s : ℂ, (s • A.P0 v).2 ∈ A.abelian₂) : v.l = 0 := by
-  have hc : Countable A.abelian₂ := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have hc : Countable A.abelian₂ := Countable.of_moduleFinite (R := ℤ)
   refine Subtype.ext (eq_zero_of_forall_smul_mem_countable (S := (A.abelian₂ : Set _)) (Set.countable_coe_iff.1 hc) fun s => ?_)
   simpa [hv] using h s
 

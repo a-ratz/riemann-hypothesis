@@ -396,8 +396,8 @@ theorem tst_finGL_inv_mul {E : Type} [Field E] [NumberField E] [_root_.NumberFie
   unfold tst ker
   rw [hinv, hfin, hinf]
   by_cases hm : GeneralLinearGroup.map (pFin E) y⁻¹ ∈ U
-  · rw [if_pos (U.mul_mem hm hu), if_pos hm]
-  · rw [if_neg (fun h => hm (by simpa using U.mul_mem h (U.inv_mem hu))), if_neg hm]
+  · rw [ite_eq_left (U.mul_mem hm hu), ite_eq_left hm]
+  · rw [ite_eq_right (fun h => hm (by simpa using U.mul_mem h (U.inv_mem hu))), ite_eq_right hm]
 
 theorem convR_tst_mul_finGL (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)
     (μ : Measure (GA E a)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant]
@@ -567,11 +567,11 @@ theorem contDiff_integral_density (Ω P Y : Type) [MeasurableSpace Ω] [NormedAd
     rw [hsplit]
     change fderiv ℝ ((fun p => ∫ x, (w x).re • h (p, ψ x) ∂ν) +
       (fun p => ∫ x, (w x).im • h₂ (p, ψ x) ∂ν)) p v = _
-    rw [hfd, ContinuousLinearMap.add_apply, ContinuousLinearMap.integral_apply hi₁,
+    rw [hfd, add_apply, ContinuousLinearMap.integral_apply hi₁,
       ContinuousLinearMap.integral_apply hi₂,
       ← integral_add (hi₁.apply_continuousLinearMap v) (hi₂.apply_continuousLinearMap v)]
     refine integral_congr_ae (Eventually.of_forall fun x => ?_)
-    simp only [ContinuousLinearMap.smul_apply]
+    simp only [smul_apply]
     rw [hp₂]
     exact (hdec _ _).symm
 
@@ -603,7 +603,7 @@ def wt (U : Subgroup (GL (Fin a) (Af E))) (F : GA E a → ℂ) (g : GA E a) : GA
 open Classical in
 theorem wt_apply (U : Subgroup (GL (Fin a) (Af E))) (F : GA E a → ℂ) (g v : GA E a) :
     wt U F g v = if GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U then F (g * v) else 0 := by
-  simp only [wt, Set.indicator_apply, Set.mem_setOf_eq]
+  simp only [wt, Set.indicator_apply, Set.mem_ofPred_eq]
 
 def hb (β : Lie E a → ℂ) (q : Lie E a × Lie E a) : ℂ := β (toL (Matrix.of q.2 * Matrix.of q.1))
 
@@ -708,7 +708,7 @@ theorem convR_tst_mul_infGL (μ : Measure (GA E a)) [μ.IsMulLeftInvariant] (U :
   rw [wt_apply]
   by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
   · have h' : GeneralLinearGroup.map (pFin E) (infGL E a y * v)⁻¹ ∈ U := hf ▸ h
-    simp only [tst, ker, if_pos h, if_pos h', hb, psi, hi]
+    simp only [tst, ker, ite_eq_left h, ite_eq_left h', hb, psi, hi]
     have he : toL ((GeneralLinearGroup.map (pInf E) v⁻¹ * y⁻¹).val * y.val) =
         toL (GeneralLinearGroup.map (pInf E) v⁻¹).val := by
       rw [← Units.val_mul, inv_mul_cancel_right]
@@ -717,7 +717,7 @@ theorem convR_tst_mul_infGL (μ : Measure (GA E a)) [μ.IsMulLeftInvariant] (U :
       β (toL ((GeneralLinearGroup.map (pInf E) v⁻¹ * y⁻¹).val * y.val)) * Fl (g * (infGL E a y * v))
     rw [he]
   · have h' : GeneralLinearGroup.map (pFin E) (infGL E a y * v)⁻¹ ∉ U := hf ▸ h
-    simp only [tst, ker, if_neg h, if_neg h']
+    simp only [tst, ker, ite_eq_right h, ite_eq_right h']
     simp
 end GlobalTheory.CompanionTheory.SmoothRep.TstConv
 
@@ -751,7 +751,7 @@ theorem integrand_eq_zero {U : Subgroup (GL (Fin a) (Af E))} {β : Lie E a → �
   rw [wt_apply]
   by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
   · rw [hb, image_eq_zero_of_notMem_tsupport (hC v hv h x hx), zero_mul]
-  · rw [if_neg h, mul_zero]
+  · rw [ite_eq_right h, mul_zero]
 
 end GlobalTheory.CompanionTheory.SmoothRep.TstConv
 
@@ -799,8 +799,8 @@ theorem GlobalTheory.CompanionTheory.SmoothRep.convR_tst_mem_Sm : ∀ (E : Type)
       show dTest X β (psi v) * wt U Fl g v = tst U (dTest X β) v * Fl (g * v)
       rw [wt_apply]
       by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
-      · simp only [tst, ker, if_pos h, psi]
-      · simp only [tst, ker, if_neg h, mul_zero, zero_mul]
+      · simp only [tst, ker, ite_eq_left h, psi]
+      · simp only [tst, ker, ite_eq_right h, mul_zero, zero_mul]
     · intro v hv
       rw [wt_apply]
       by_cases h : GeneralLinearGroup.map (pFin E) v⁻¹ ∈ U
@@ -810,8 +810,8 @@ theorem GlobalTheory.CompanionTheory.SmoothRep.convR_tst_mem_Sm : ∀ (E : Type)
         have h0 : fderiv ℝ β (psi v) = 0 := by
           by_contra h0
           exact hn (support_fderiv_subset ℝ h0)
-        rw [dTest, h0, ContinuousLinearMap.zero_apply, zero_mul]
-      · rw [if_neg h, mul_zero]
+        rw [dTest, h0, zero_apply, zero_mul]
+      · rw [ite_eq_right h, mul_zero]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -837,7 +837,7 @@ theorem convR_lift_splitCentre_mul (E : Type) [Field E] [NumberField E] [_root_.
   have hR := R_splitCentre (μ := μ) t hF
   have h1 := GlobalTheory.AutomorphicL2Unitary.lift_R (Γ := latticeGL E a) (μ := μ) (splitCentre E a t) F
   rw [hR] at h1
-  have h2 := (measurePreserving_mul_left μ x).quasiMeasurePreserving.ae_eq h1
+  have h2 := (measurePreserving_mul_left μ x).quasiMeasurePreserving.ae_eq_comp h1
   unfold convR
   refine integral_congr_ae ?_
   filter_upwards [h2] with y hy
@@ -878,7 +878,7 @@ theorem R_apply_eq {μ : Measure (GA E a)} [μ.IsHaarMeasure] [μ.IsMulRightInva
   have e : g = infGL E a (GeneralLinearGroup.map (pInf E) g⁻¹)⁻¹ * finGL E a (GeneralLinearGroup.map (pFin E) g⁻¹)⁻¹ := by
     rw [map_inv (infGL E a), map_inv (finGL E a), ← _root_.mul_inv_rev, ← infGL_comm, infGL_mul_finGL, inv_inv]
   conv_lhs => rw [e]
-  rw [map_mul, ContinuousLinearMap.mul_apply, hv _ (U.inv_mem hu)]
+  rw [map_mul, mul_apply_eq_comp, hv _ (U.inv_mem hu)]
 
 theorem exists_isTest_Rop_injective : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (U : Subgroup (GL (Fin a) (Af E))), IsOpen (U : Set (GL (Fin a) (Af E))) → IsCompact (U : Set (GL (Fin a) (Af E))) → ∀ X : Submodule ℂ (L2 (latticeGL E a) μ), FiniteDimensional ℂ X → (∀ u ∈ U, ∀ v ∈ X, R (latticeGL E a) μ (finGL E a u) v = v) → ∃ β : Lie E a → ℂ, IsTest β ∧ ConjInv β ∧ ∀ v ∈ X, Rop (latticeGL E a) μ (tst U β) v = 0 → v = 0 := by
   intro E _ _ _ a μ _ _ U hU hUc X hX hfix
@@ -921,7 +921,7 @@ theorem exists_isTest_Rop_injective : ∀ (E : Type) [Field E] [NumberField E] [
       simp [hfr, hf, tst, ker, U.one_mem]
     rw [this]; exact hpos.ne'
   have hIpos : 0 < ∫ g, fr g ∂μ :=
-    hfrc.integral_pos_of_hasCompactSupport_nonneg_nonzero hfrs hfr0 hfr1
+    hfrc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfrs hfr0 hfr1
   have hint : Integrable f μ := hc.integrable_of_hasCompactSupport hcs
   have hfrint : Integrable fr μ := hfrc.integrable_of_hasCompactSupport hfrs
   have hrep := (isRepOp_Rop (Γ := latticeGL E a) (μ := μ) hint) v
@@ -1014,7 +1014,7 @@ theorem exists_typeSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
         have hx' : R (latticeGL E a) μ (finGL E a x) F = F := hx
         have hy' : R (latticeGL E a) μ (finGL E a y) F = F := hy
         change R (latticeGL E a) μ (finGL E a (x * y)) F = F
-        rw [map_mul, map_mul, ContinuousLinearMap.mul_apply, hy', hx']
+        rw [map_mul, map_mul, mul_apply_eq_comp, hy', hx']
       one_mem' := by
         change R (latticeGL E a) μ (finGL E a 1) F = F
         simp
@@ -1022,7 +1022,7 @@ theorem exists_typeSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
         have hx' : R (latticeGL E a) μ (finGL E a x) F = F := hx
         change R (latticeGL E a) μ (finGL E a x⁻¹) F = F
         conv_lhs => rw [← hx']
-        rw [← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul, inv_mul_cancel]
+        rw [← mul_apply_eq_comp, ← map_mul, ← map_mul, inv_mul_cancel]
         simp }
   have hSo' : IsOpen (S : Set (GL (Fin a) (Af E))) := hSo
   let U : Subgroup (GL (Fin a) (Af E)) := K0 ⊓ S
@@ -1035,10 +1035,10 @@ theorem exists_typeSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
       R (latticeGL E a) μ (finGL E a u) (π k v) = π k (R (latticeGL E a) μ (finGL E a u) v) := by
     intro u k v
     have e := congrArg (fun g => R (latticeGL E a) μ g v) (infGL_comm (E := E) (a := a) (Unitary.toUnits k) u)
-    simp only [map_mul, ContinuousLinearMap.mul_apply] at e
+    simp only [map_mul, mul_apply_eq_comp] at e
     exact e.symm
   let Y : Submodule ℂ (L2 (latticeGL E a) μ) := Submodule.span ℂ (Set.range fun k : Kinf E a => π k F)
-  haveI : FiniteDimensional ℂ Y := hfd
+  have : FiniteDimensional ℂ Y := hfd
   have hYs : ∀ g, ∀ v ∈ Y, π g v ∈ Y := span_orbit_stable' π F
   have hFY : F ∈ Y := Submodule.subset_span ⟨1, by simp⟩
   have hYP : ∀ v ∈ Y, v ∈ H ∧ ∀ u ∈ U, R (latticeGL E a) μ (finGL E a u) v = v := by
@@ -1202,7 +1202,7 @@ open scoped Matrix.Norms.L2Operator
 theorem exists_exp_eq_of_unitary {n : ℕ} (k : Matrix (Fin n) (Fin n) ℂ)
     (hu : k ∈ unitary (Matrix (Fin n) (Fin n) ℂ)) :
     ∃ Y : Matrix (Fin n) (Fin n) ℂ, NormedSpace.exp Y = k := by
-  haveI : IsStarNormal k :=
+  have : IsStarNormal k :=
     ⟨(Unitary.star_mul_self_of_mem hu).trans (Unitary.mul_star_self_of_mem hu).symm⟩
   have hfin := Matrix.finite_spectrum k
   have hunit : IsUnit k := (Unitary.toUnits ⟨k, hu⟩).isUnit

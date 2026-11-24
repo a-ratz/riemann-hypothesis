@@ -101,9 +101,9 @@ theorem unipRad_stdBlocks_two_ne_bot : ∀ (R : Type) [CommRing R] [Nontrivial R
         · subst hp; subst hq
           rw [blk_apply, blk_apply] at hpq
           exact absurd hpq (by decide)
-        · rw [Matrix.single_apply, if_neg]
+        · rw [Matrix.single_apply, ite_eq_right]
           rintro ⟨_, h'⟩; exact hq h'.symm
-      · rw [Matrix.single_apply, if_neg]
+      · rw [Matrix.single_apply, ite_eq_right]
         rintro ⟨h', _⟩; exact hp h'.symm
     · intro c x y
       rw [hg, Matrix.add_apply]

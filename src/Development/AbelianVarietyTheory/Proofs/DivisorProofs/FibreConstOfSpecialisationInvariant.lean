@@ -83,7 +83,7 @@ theorem fibre_exists_finite_generizing {Y Z : Type} [TopologicalSpace Y] [Topolo
     intro C
     have hC : IsIrreducible C.1 := C.2.1
     have hCi : IsIrreducible (((↑) : q ⁻¹' {z} → Y) '' C.1) :=
-      hC.image _ continuous_subtype_val.continuousOn
+      hC.image _ continuous_subtypeVal.continuousOn
     have hgen := hCi.isGenericPoint_genericPoint_closure
     refine ⟨hCi.genericPoint, ?_, ?_⟩
     · obtain ⟨c, hc⟩ := hC.nonempty
@@ -100,7 +100,7 @@ theorem fibre_exists_finite_generizing {Y Z : Type} [TopologicalSpace Y] [Topolo
     · intro c hc
       exact hgen.specializes (subset_closure ⟨c, hc, rfl⟩)
   choose f hf using key
-  haveI : Finite (irreducibleComponents (q ⁻¹' {z})) := hfin.to_subtype
+  have : Finite (irreducibleComponents (q ⁻¹' {z})) := hfin.to_subtype
   refine ⟨Set.range f, Set.finite_range f, ?_, ?_⟩
   · rintro _ ⟨C, rfl⟩
     exact (hf C).1

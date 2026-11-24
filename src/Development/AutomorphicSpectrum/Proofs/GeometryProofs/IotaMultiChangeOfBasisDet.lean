@@ -62,7 +62,7 @@ theorem wedge_matrix_mul_family (Ω V : Type) [Field Ω] [AddCommGroup V] [Modul
     (f.compAlternatingMap (exteriorPower.ιMulti Ω n (M := V))).compLinearMap L
   have h := congrArg (fun g => g (fun i => P i))
     (AlternatingMap.eq_smul_basis_det (Pi.basisFun Ω (Fin n)) A)
-  simp only [AlternatingMap.smul_apply, Pi.basisFun_det_apply, smul_eq_mul] at h
+  simp only [smul_apply, Pi.basisFun_det_apply, smul_eq_mul] at h
   have h1 : A (fun i => P i) = f (exteriorPower.ιMulti Ω n (fun i => ∑ j, P i j • e j)) := by
     simp only [A, AlternatingMap.compLinearMap_apply, LinearMap.compAlternatingMap_apply]
     congr 2

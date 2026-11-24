@@ -131,7 +131,7 @@ theorem prod_factor_eq_one {g : ℕ} {Ix K : Type} [Fintype K] {S : Set (Fin g �
         ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
       refine Finset.prod_congr rfl fun k _ => ?_
       rw [hf _ (hΛ l hl k) (j k) (lam k z) (hj k), map_add (f := _), mul_zpow, mul_zpow,
-        ← Complex.exp_int_mul]
+        ← Complex.exp_intCast_mul]
       congr 3
       ring
     rw [hG j z hj, hG j _ hj', hTp l hl]
@@ -172,7 +172,7 @@ theorem factor_add {g : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} (hH : Hm.IsHermit
     push_cast
     ring
   have e2 : ((((Int.negOnePow n : ℤˣ) : ℤ)) : ℂ) = Complex.exp (n * (Real.pi * Complex.I)) := by
-    rw [Complex.exp_int_mul, Complex.exp_pi_mul_I, Int.cast_negOnePow]
+    rw [Complex.exp_intCast_mul, Complex.exp_pi_mul_I, Int.cast_negOnePow]
   have e3 : Complex.exp (Real.pi / 2 * hermForm Hm a a) *
       Complex.exp (Real.pi * hermForm Hm a b + Real.pi / 2 * hermForm Hm b b) =
       Complex.exp (n * (Real.pi * Complex.I)) * Complex.exp (Real.pi / 2 * hermForm Hm (a + b) (a + b)) := by
@@ -188,8 +188,8 @@ theorem exists_period_norm_le' {g : ℕ} {La : Type} [AddCommGroup La] (P : La �
     (hd : DiscreteTopology P.range) (hs : Submodule.span ℝ (Set.range P) = ⊤) :
     ∃ R : ℝ, ∀ z : Fin g → ℂ, ∃ l ∈ Set.range P, ‖z + l‖ ≤ R := by
   let Λ : Submodule ℤ (Fin g → ℂ) := P.range.toIntSubmodule
-  haveI : DiscreteTopology Λ := hd
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  have : DiscreteTopology Λ := hd
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   let b := (Module.Free.chooseBasis ℤ Λ).ofZLatticeBasis ℝ Λ
   refine ⟨∑ i, ‖b i‖, fun z => ⟨-(ZSpan.floor b z : Fin g → ℂ), Λ.neg_mem ?_, ?_⟩⟩
   · exact ((Module.Free.chooseBasis ℤ Λ).ofZLatticeBasis_span ℝ Λ).le (ZSpan.floor b z).2
@@ -283,7 +283,7 @@ theorem GlobalTheory.ahFrame_factor_eq_negOnePow : ∀ (E : Type) [Field E] [Num
     (fun j => {z | ⊤ ≤ (Fu.ex i Pm z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j}) (fun j => (hhol _ 0).1) hch
     (by
       rintro _ ⟨b, rfl⟩ j z hz
-      simpa only [Set.mem_setOf_eq, hex] using hz)
+      simpa only [Set.mem_ofPred_eq, hex] using hz)
     fr (fun j j' z => valAt' (Fu.ex i Pm z).left (Xo.univ.t.PP.L.U j ⊓ Xo.univ.t.PP.L.U j')
         (Xo.univ.t.PP.L.g j j').val) hd hne
     (fun j j' z hz hz' => hc j j' z ((le_preimage_inf _ _ _).2 ⟨hz, hz'⟩))

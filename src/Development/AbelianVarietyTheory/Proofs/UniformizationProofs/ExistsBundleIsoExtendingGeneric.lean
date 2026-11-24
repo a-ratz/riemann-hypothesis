@@ -170,7 +170,7 @@ theorem exists_local_unit [IsIntegral X] [IsLocallyNoetherian X] (q₀ : X₀ �
   have hu : IsUnit c₀ := by
     refine IsUnit.of_mul_eq_one c₁ (mul_left_cancel₀ (hd0 _ hpV) ?_)
     rw [← _root_.mul_assoc, ← hc₀, ← hc₁, _root_.mul_one]
-  obtain ⟨U, hU, c, rfl⟩ := X.presheaf.germ_exist c₀
+  obtain ⟨U, hU, c, rfl⟩ := X.presheaf.exists_germ_eq c₀
   have hpc : g p ∈ X.basicOpen c := (X.mem_basicOpen c _ hU).2 hu
   refine ⟨X.basicOpen c, (X.toRingedSpace.isUnit_res_basicOpen c).unit, hpc, fun Z r z h₁ h₂ => ?_⟩
   have hm : g p ∈ U ⊓ V := ⟨hU, hpV⟩

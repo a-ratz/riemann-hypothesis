@@ -67,7 +67,7 @@ theorem exists_pi_b {R : Type*} [CommRing R] [IsDedekindDomain R] (P : Ideal R) 
   have hPt : P ≠ ⊤ := hP.ne_top
   have hlt : P ^ 2 < P ^ 1 := Ideal.pow_right_strictAnti P hP0 hPt (show 1 < 2 by norm_num)
   rw [pow_one] at hlt
-  obtain ⟨π, hπP, hπ2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨π, hπP, hπ2⟩ := IsConcreteLE.exists_of_lt hlt
   have hπ0 : π ≠ 0 := by rintro rfl; exact hπ2 (Ideal.zero_mem _)
   have hdvd : P ∣ Ideal.span {π} :=
     Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem P).mpr hπP)
@@ -77,7 +77,7 @@ theorem exists_pi_b {R : Type*} [CommRing R] [IsDedekindDomain R] (P : Ideal R) 
     apply hπ2
     have : Ideal.span {π} ≤ P ^ 2 := by rw [hQ, pow_two]; exact Ideal.mul_mono_right hle
     exact this (Ideal.mem_span_singleton_self π)
-  obtain ⟨b, hbQ, hbP⟩ := SetLike.not_le_iff_exists.mp hQP
+  obtain ⟨b, hbQ, hbP⟩ := IsConcreteLE.not_le_iff_exists.mp hQP
   refine ⟨π, hπP, hπ0, b, hbP, fun p hp => ?_⟩
   rw [hQ, mul_comm b]
   exact Ideal.mul_mem_mul hp hbQ

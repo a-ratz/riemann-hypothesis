@@ -277,7 +277,7 @@ theorem dvd_of_forall_fil_add : ∀ (l : ℕ) [Fact l.Prime], ∀ s : Per.Acris0
       exact ⟨n, hγ n⟩
   have := XiHaus.isDomain_Fl (l := l)
   have hle : Submonoid.powers (l : Per.Ainf l) ≤ nonZeroDivisors _ :=
-    powers_le_nonZeroDivisors_of_noZeroDivisors (WittVector.p_nonzero l (Per.Fl l))
+    powers_le_nonZeroDivisors_of_noZeroDivisors (WittVector.p_ne_zero l (Per.Fl l))
   have hdom : IsDomain (Per.AinfP l) := IsLocalization.isDomain_of_le_nonZeroDivisors _ hle
   have hinj := IsLocalization.injective (Per.AinfP l) hle
   have hx0 : algebraMap (Per.Ainf l) (Per.AinfP l) (xi e) ≠ 0 := by

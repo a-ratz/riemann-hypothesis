@@ -123,12 +123,12 @@ private theorem killedBy_iff (o : Obj b N s) (v : Ideal (𝓞 D.F)) {T : Over Y}
 
 private theorem clopen_killedBy (o : Obj b N s) (c : ℕ) (hc : IsUnit (c : Γ(Y, ⊤))) (I : Ideal (𝓞 D.F)) :
     ClopenCond (torsion o.A c) fun _ z => KilledBy o I (z ≫ torsion.ι o.A c) := by
-  haveI := o.ab
+  have := o.ab
   obtain ⟨t, ht⟩ := (IsNoetherian.noetherian I : I.FG)
   have hgen : ∀ a : (t : Set (𝓞 D.F)), ClopenCond (torsion o.A c) fun _ z =>
       z ≫ (torsion.ι o.A c ≫ o.act.act (algebraMap (𝓞 D.F) D.O a)) = 1 := by
     intro a
-    haveI := o.act.hom (algebraMap (𝓞 D.F) D.O a)
+    have := o.act.hom (algebraMap (𝓞 D.F) D.O a)
     refine clopenCond_comp_eq_one _ o.A o.ab c hc _ ?_
     rw [← MonObj.pow_comp, torsionι_pow_eq_one, MonObj.one_comp]
   refine (ClopenCond.forall_finite hgen).congr fun T' z => ?_
@@ -165,7 +165,7 @@ private theorem exists_count_scheme (o : Obj b N s) {B : Over Y} [GrpObj B] (hB 
     (w : Ideal (𝓞 D.F)) :
     ∃ V : Over Y, IsFinite V.hom ∧ Etale V.hom ∧ ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ Y) (q : Sp k),
       V.hom.finrank (x q) = Nat.card {g : Over.mk x ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} := by
-  haveI := o.ab
+  have := o.ab
   obtain ⟨-, hTf, hTe⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion o.A hc
   have hψc : (torsion.ι o.A c ≫ ψ) ^ c = 1 := by
     rw [← MonObj.pow_comp, torsionι_pow_eq_one, MonObj.one_comp]
@@ -173,11 +173,11 @@ private theorem exists_count_scheme (o : Obj b N s) {B : Over Y} [GrpObj B] (hB 
       z ≫ (torsion.ι o.A c ≫ ψ) = 1 ∧ KilledBy o w (z ≫ torsion.ι o.A c) :=
     (clopenCond_comp_eq_one _ B hB c hc _ hψc).and (clopen_killedBy o c hc w)
   obtain ⟨U, hU, hUiff⟩ := hP
-  haveI := hTf
-  haveI := hTe
+  have := hTf
+  have := hTe
   obtain ⟨V, i, hVf, hVe, hi, hVi⟩ := exists_sub U hU
-  haveI := hVf
-  haveI := hVe
+  have := hVf
+  have := hVe
   refine ⟨V, hVf, hVe, fun k _ _ x q => ?_⟩
   have hιinj : ∀ {T : Over Y} (a a' : T ⟶ torsion o.A c),
       a ≫ torsion.ι o.A c = a' ≫ torsion.ι o.A c → a = a' := by
@@ -205,9 +205,9 @@ private theorem exists_killed_locus (o : Obj b N s) {B : Over Y} [GrpObj B] (hB 
     ∃ W : Set Y, IsOpen W ∧ IsClosed W ∧ ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ Y),
       Set.range x.base ⊆ W ↔
       ∀ g : Over.mk x ⟶ o.A, g ≫ ψ = 1 → (∃ e : ℕ, KilledBy o (uIdeal D r ^ e) g) → KilledBy o w g := by
-  haveI := o.ab
+  have := o.ab
   obtain ⟨-, hTf, hTe⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion o.A hc
-  haveI : Finite (𝓞 D.F ⧸ Ideal.span {(c : 𝓞 D.F)}) :=
+  have : Finite (𝓞 D.F ⧸ Ideal.span {(c : 𝓞 D.F)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact_mod_cast hc0)
@@ -245,8 +245,8 @@ theorem UpperTheory.Cb.exists_clopen_locus_of_annihilator :
   intro p _ D R _ b N c Y s o B _ _ ψ ψ' hp hce hB hq r w j
   obtain ⟨e, hce⟩ := hce
   obtain ⟨hψ, hψ', hψψ', -⟩ := hq
-  haveI := hψ
-  haveI := hψ'
+  have := hψ
+  have := hψ'
   have hpp : p.Prime := Fact.out
   have hu : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R) := by
     intro n hn
@@ -266,8 +266,8 @@ theorem UpperTheory.Cb.exists_clopen_locus_of_annihilator :
       _ = 1 := by rw [hg, MonObj.one_comp]
   obtain ⟨W1, hW1o, hW1c, hW1⟩ := UpperTheory.TjLocus.exists_killed_locus o hB ψ c hc0 hc hkill r w
   obtain ⟨V, hVf, hVe, hV⟩ := UpperTheory.TjLocus.exists_count_scheme o hB ψ c hc hkill w
-  haveI := hVf
-  haveI := hVe
+  have := hVf
+  have := hVe
   have hloc := (Scheme.Hom.isLocallyConstant_finrank V.hom).isClopen_fiber (Ideal.absNorm w ^ (D.m * j))
   refine ⟨W1 ∩ {y | V.hom.finrank y = Ideal.absNorm w ^ (D.m * j)}, hW1o.inter hloc.isOpen,
     hW1c.inter hloc.isClosed, fun Tb t => ⟨?_, ?_⟩⟩
@@ -283,7 +283,7 @@ theorem UpperTheory.Cb.exists_clopen_locus_of_annihilator :
   · intro ht
     rintro _ ⟨z, rfl⟩
     obtain ⟨k, _, _, a, ha⟩ := GlobalTheory.FinEt.exists_algClosed_point Tb z
-    haveI : CharZero k := UpperTheory.TjLocus.charZero_of_point hu (a ≫ t ≫ s)
+    have : CharZero k := UpperTheory.TjLocus.charZero_of_point hu (a ≫ t ≫ s)
     obtain ⟨hkil, hcnt⟩ := ht k (a ≫ t) ⟨a, rfl⟩
     obtain ⟨q, hq⟩ : z ∈ Set.range a.base := by
       rw [ha]

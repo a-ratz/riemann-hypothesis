@@ -176,7 +176,7 @@ theorem intChar_injective {g : ℕ} {N : ℕ} (hN : N ≠ 0) :
       cexp (2 * Real.pi * I / N) ^ (d i : ℕ) := by
     intro d
     change eC (ofRealVec (fun i => ((d i : ℕ) : ℝ) / N) ⬝ᵥ ofIntVec (Pi.single i 1)) = _
-    rw [GlobalTheory.ThetaSpan.ofIntVec_single, dotProduct_single_one, ← Complex.exp_nat_mul, eC]
+    rw [GlobalTheory.ThetaSpan.ofIntVec_single, dotProduct_single_one, ← exp_natCast_mul, eC]
     congr 1
     simp only [ofRealVec]
     push_cast
@@ -232,7 +232,7 @@ theorem exists_division_point_ne_zero :
   let w : Fin g → ℂ := fun j => Complex.log (β j) / (2 * Real.pi * I * N) + τ j j / 2
   have hw : ∀ j, β j * cexp (-(2 * Real.pi * I) * N * w j) = eC (-(τ j j) / 2) ^ N := by
     intro j
-    rw [eC, ← Complex.exp_nat_mul]
+    rw [eC, ← exp_natCast_mul]
     conv_lhs => rw [← Complex.exp_log (hβ j), ← Complex.exp_add]
     congr 1
     simp only [w]
@@ -361,7 +361,7 @@ theorem exists_ne_zero_of_principal {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ
     have e := hf ⟨_, hm⟩ (φ z)
     rw [h1 i ⟨_, hm⟩ z rfl] at e
     simp only [map_add (f := _)]
-    rw [e, ← Complex.exp_nat_mul, mul_right_comm, ← Complex.exp_add, mul_comm]
+    rw [e, ← exp_natCast_mul, mul_right_comm, ← Complex.exp_add, mul_comm]
     congr 2
     ring
   · intro j z
@@ -378,7 +378,7 @@ theorem exists_ne_zero_of_principal {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ
     have e := hf ⟨_, hm⟩ (φ z)
     rw [h2 j ⟨_, hm⟩ z rfl] at e
     simp only [map_add (f := _)]
-    rw [e, mul_pow, mul_pow, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+    rw [e, mul_pow, mul_pow, ← exp_natCast_mul, ← exp_natCast_mul]
     have : cexp (n * (Q (z + τ.mulVec (Pi.single j 1)) - Q z)) *
         cexp (-(n * Q (z + τ.mulVec (Pi.single j 1)))) = cexp (-(n * Q z)) := by
       rw [← Complex.exp_add]; congr 1; ring
@@ -412,13 +412,13 @@ theorem exists_ne_zero_of_selfDual : ∀ (V : Type) [AddCommGroup V] [Module ℚ
     Subtype.ext (eq_zero_of_im_eq_zero hpos hsp' fun m hm => by
       rw [← hE l ⟨m, hm⟩, hl]; simp)
   have hdisc : DiscreteTopology Λ := by
-    haveI : Module.Finite ℤ Λ := Module.Finite.iff_fg.2 (hfg.map p)
+    have : Module.Finite ℤ Λ := Module.Finite.iff_fg.2 (hfg.map p)
     obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ) (M := Λ)
     refine discreteTopology_of_isOpen_singleton_zero ?_
     have e : ({0} : Set Λ) = ⋂ m ∈ s, {l : Λ |
         |((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (m : Fin g → ℂ))).im| < 1} := by
       ext l
-      simp only [Set.mem_singleton_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_singleton_iff, Set.mem_iInter, Set.mem_ofPred_eq]
       refine ⟨fun h m _ => by simp [h], fun h => hker l (LinearMap.ext_on hs fun m hm => ?_)⟩
       have h1 := h m hm
       rw [← hE, ← Int.cast_abs, ← Int.cast_one, Int.cast_lt] at h1
@@ -427,7 +427,7 @@ theorem exists_ne_zero_of_selfDual : ∀ (V : Type) [AddCommGroup V] [Module ℚ
     refine isOpen_biInter_finset fun m _ => isOpen_lt ?_ continuous_const
     refine (Complex.continuous_im.comp ?_).abs
     exact continuous_finsetSum _ fun i _ =>
-      ((continuous_apply i).comp continuous_subtype_val).mul continuous_const
+      ((continuous_apply i).comp continuous_subtypeVal).mul continuous_const
   have hBinj : Function.Injective B := by
     refine (injective_iff_map_eq_zero B).2 fun u hu => hp ?_
     rw [map_zero]
@@ -457,7 +457,7 @@ theorem exists_ne_zero_of_selfDual : ∀ (V : Type) [AddCommGroup V] [Module ℚ
     (pow_eq_one_iff_of_nonneg (norm_nonneg _) hN0).1 (by rw [← norm_pow, hχ, hc])
   obtain ⟨_, ⟨v, hv, rfl⟩, h⟩ := exists_ne_zero_of_principal Λ hdisc hsp' Hm χ Ef hH hpos hχ1 hE
     hbij N hN f hdf h0 (fun l z => by
-      rw [mul_pow, hχ, ← Complex.exp_nat_mul, ← hpq l]
+      rw [mul_pow, hχ, ← exp_natCast_mul, ← hpq l]
       exact hf _ (hq l) z)
   exact ⟨v, hv, h⟩
 
@@ -805,7 +805,7 @@ theorem one_mem_harmA (c : Coeff l) (n : ℕ) : (1 : MvPolynomial (LtN Dw n) c.F
   · simp [harmK, lap]
   · have : m = 0 := by
       by_contra h0
-      rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm h0)] at hm
+      rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm h0)] at hm
       exact hm rfl
     subst this
     simp
@@ -860,7 +860,7 @@ theorem exists_const_fib (hC : Formalism.MainNotions.ModuliIntegralCharts.H1.Cha
       ∃ (A : AnFib (U.X k) bas idx e x.1 (U.X k).Λ (unC U k x)) (ϑ : (Fin g → ℂ) → ℂ), A.Reads 1 (unC U k x).s ϑ ∧
         IsTheta1 (U.X k) bas idx (H.w0 : E) x.1 (U.X k).Λ ϑ ∧ MeanOne (U.X k) bas idx x.1 (U.X k).Λ ϑ ∧
         ∀ z : Fin n → Fin g → ℂ, ∏ b, ϑ (z b) = C * thA (U.X k) bas idx v x.1 z := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨W⟩ := nonempty_uw hU
   obtain rfl : g = W.g := Fin.equiv_iff_eq.1 ⟨e.trans W.e.symm⟩
   obtain ⟨-, hL, hmk, -⟩ := uw_lattice E H Dw l Xo c σ r U hσ hU hr1 W k
@@ -923,7 +923,7 @@ theorem exists_const_fib (hC : Formalism.MainNotions.ModuliIntegralCharts.H1.Cha
         exact ⟨⟨a', ha', (Submodule.Quotient.eq _).1
           (hq.trans (Classical.choose_spec (Submodule.Quotient.mk_surjective _ (q b))).symm), hy⟩, hj⟩) 0 1 hP _
       (ThRead.thValAt_evR hC Xo c nab hnab _ hP hf ℂ (unC U k ⟨x', hx'⟩))
-    exact Eq.trans (dif_pos hx') this
+    exact Eq.trans (dite_eq_left hx') this
   have h1 := hCe _ _ hS.1 hhol.1 (fun x hx b hb => ⟨hS.2.1 x hx b hb, hhol.2.1 x hx b hb⟩) hval x.1 x.2
   have h2 := (fock_laws E r _ _ bas Dc.idx n hs hn x.1 x.2 1 ϑ).2.2.2.2 (fun _ => ϑ) _ v hv.1 hprod (Y q) 0
   have h3 : thA (U.X k) bas Dc.idx (heisG (U.X k) bas (Y q) v) x.1 0 ≠ 0 := by
@@ -948,7 +948,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.AdTh.prod_gen_eq_const_mul_thA : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Geo.Tor.Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r), GoodEmb c σ → IsUnf U → 1 ≤ r → l.A = 1 → ∀ (k : U.Comp) (n g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] (U.X k).Λ) (idx : Fin g ≃ (U.X k).Ψ × Fin r) (e : Fin g ≃ Lt1 Dw), Even n → IsSympl (U.X k) bas → IdxIs c σ (U.X k) idx e → ∀ v : TF n g, IsVac (U.X k) bas (H.w0 : E) (tens (stdL E n) (U.X k).Λ) v → ∃ C : ℂ, C ≠ 0 ∧ ∀ x : (U.X k).dom, IsUnitFr (U.X k) x.1 → (∃ ϑ, GenReads U k bas idx e x ϑ) ∧ ∀ ϑ, GenReads U k bas idx e x ϑ → IsTheta1 (U.X k) bas idx (H.w0 : E) x.1 (U.X k).Λ ϑ ∧ MeanOne (U.X k) bas idx x.1 (U.X k).Λ ϑ ∧ ∀ z : Fin n → Fin g → ℂ, ∏ b, ϑ (z b) = C * thA (U.X k) bas idx v x.1 z := by
   intro hC E _ _ _ H Dw l Xo c σ r U hσ hU hr1 _ k n g bas idx e hn hs hI v hv
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨hL, C, hC0, h⟩ := GenConst.exists_const_fib hC (Formalism.L2.PjFree.Unf.ofPj U) hσ hU hr1 k n bas idx e hn hs hI v hv
   refine ⟨C, hC0, fun x hux => ?_⟩
   obtain ⟨A, ϑ, hϑ, h1⟩ := h x hux

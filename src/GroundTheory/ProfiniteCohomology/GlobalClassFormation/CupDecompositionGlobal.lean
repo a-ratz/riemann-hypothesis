@@ -218,7 +218,7 @@ omit [Fact (K ≤ E)] in
 theorem isOpen_subgroupOf_fixingSubgroup :
     IsOpen ((E.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup : Subgroup K.1.fixingSubgroup) :
       Set K.1.fixingSubgroup) :=
-  E.1.fixingSubgroup_isOpen.preimage continuous_subtype_val
+  E.1.fixingSubgroup_isOpen.preimage continuous_subtypeVal
 
 theorem isCyclic_quotient_subgroupOf [IsGalois K.1 E.1] [IsCyclic (E.1 ≃ₐ[K.1] E.1)] :
     IsCyclic (K.1.fixingSubgroup ⧸ E.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup) := by

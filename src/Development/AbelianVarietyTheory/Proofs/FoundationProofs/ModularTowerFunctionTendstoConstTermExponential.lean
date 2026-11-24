@@ -91,7 +91,7 @@ theorem series_bound (a : ℕ → ℂ) (ψ : ℂ → ℂ) (C : ℝ)
     rw [hnorm]
     have e : Real.exp (-(2 * Real.pi * ((n + 1 : ℕ) : ℝ) * w.im)) =
         Real.exp (-(2 * Real.pi * ((n + 1 : ℕ) : ℝ) * t0)) * ρ ^ (n + 1) := by
-      rw [hρ, ← Real.exp_nat_mul, ← Real.exp_add]
+      rw [hρ, ← Real.exp_natCast_mul, ← Real.exp_add]
       congr 1
       ring
     rw [e, ← mul_assoc, mul_assoc B0, ← pow_succ']

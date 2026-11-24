@@ -325,8 +325,8 @@ private theorem gen {D D' : D7} {G G' : Type} [Group G] [Fintype G] [Group G'] [
     exact ⟨hY, hW⟩
   obtain ⟨k1, k2⟩ := key _ _ e e'
   have hli := li R' F' hM' i' t'
-  haveI := hli.finite
-  letI := Fintype.ofFinite (Module.Basis.ofVectorSpaceIndex D'.what₂.LL (A3'.A.fam.amb.FL i' t'))
+  have := hli.finite
+  let := Fintype.ofFinite (Module.Basis.ofVectorSpaceIndex D'.what₂.LL (A3'.A.fam.amb.FL i' t'))
   rw [zl_eq R F hp, zl_eq R' F' hp']
   exact core hX k1 (R.HV i t) (R'.HV i' t') _ _ hV k2 (R.thG i t) (R'.thG i' t') hθ (R.jV i t) (R'.jV i' t') L (hM.HV i t).1
     (fun v => (heq_of_eq (hM'.jV i' t' (L v))).trans ((hL v).trans (heq_of_eq (hM.jV i t v)).symm)) _ hli (rat R F hp hM hT i t)

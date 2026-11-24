@@ -106,7 +106,7 @@ theorem isCompact_stdK'_k (B : Base F E) (Y : Spc F E n) (hB : _root_.UpperTheor
         ((⋂ i, ⋂ j, {k : G2 σ Y | finOne F • inFrame b k i j ∈ intHat F E}) ∩
           (⋂ i, ⋂ j, {k : G2 σ Y | finOne F • inFrame b k⁻¹ i j ∈ intHat F E})) := by
     ext k
-    simp only [SetLike.mem_coe, hK k, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, Set.forall_mem_insert,
+    simp only [SetLike.mem_coe, hK k, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, Set.forall_mem_insert,
       Set.mem_singleton_iff, forall_eq]
   have hKc : IsClosed (K : Set (G2 σ Y)) := by
     rw [hKset]

@@ -73,7 +73,7 @@ theorem coeff_lin {K : Type} [Field K] {N : ℕ} (y : Fin N → K) (j : Fin N) :
     AddMonoidAlgebra.coeff (lin y) (Finsupp.single ((0 : Fin 1), j) 1) = y j := by
   classical
   rw [lin, coeff_sum]
-  simp only [mul_comm (X _) (C _), coeff_C_mul, coeff_X', Finsupp.single_left_inj (one_ne_zero' ℕ)]
+  simp only [mul_comm (X _) (C _), coeff_C_mul, coeff_X, Finsupp.single_left_inj (one_ne_zero' ℕ)]
   simp
 
 theorem isHomogeneous_lin {K : Type} [Field K] {N : ℕ} (y : Fin N → K) : (lin y).IsHomogeneous 1 :=

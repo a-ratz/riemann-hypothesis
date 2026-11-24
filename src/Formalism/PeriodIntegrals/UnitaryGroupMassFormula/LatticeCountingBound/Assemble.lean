@@ -257,7 +257,7 @@ theorem box_lattice_point_bound : BoxBound := by
   intro n ε g
   have hK : ∀ k : Matrix (Fin n) (Fin n) ℂ, k ∈ Formalism.REAL.Kset ε → kᴴ * k = 1 := by
     intro k hk
-    simp only [Formalism.REAL.Kset, Set.mem_setOf_eq] at hk
+    simp only [Formalism.REAL.Kset, Set.mem_ofPred_eq] at hk
     exact Matrix.mem_unitaryGroup_iff'.mp hk.1
   have hP : Formalism.REAL.Polar := Formalism.REAL.polar_decomposition_holds
   have hgi : Formalism.REAL.inUJ ε (((g : (Matrix (Fin n) (Fin n) ℂ)ˣ)) : Matrix (Fin n) (Fin n) ℂ) := g.2
@@ -903,7 +903,7 @@ def aI {K : Type} [Field K] [NumberField K] {k : ℕ} (X : Submodule (𝓞 K) (F
 
 theorem absNorm_eq_index {S : Type} [CommRing S] [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S]
     (I : Ideal S) : Ideal.absNorm I = I.toAddSubgroup.index := by
-  letI : Infinite S := Module.Free.infinite ℤ S
+  let : Infinite S := Module.Free.infinite ℤ S
   exact Ideal.absNorm_eq_index I
 
 theorem quot_le (K : Type) [Field K] [NumberField K] (𝔞 : Ideal (𝓞 K)) (h𝔞 : 𝔞 ≠ ⊥) (a : 𝓞 K)
@@ -1378,7 +1378,7 @@ namespace PI.UnitaryGroupMassFormula.LCG
 
 theorem sublattice_of_lattice : LatSub := by
   intro I x u u' hu hu'
-  simp only [PI.LatCountG.latSet, Set.mem_setOf_eq] at hu hu' ⊢
+  simp only [PI.LatCountG.latSet, Set.mem_ofPred_eq] at hu hu' ⊢
   have h : (fun i => Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) ((u - u') i)) =
       (fun i => Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) (u i)) -
         (fun i => Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) (u' i)) := by
@@ -1389,7 +1389,7 @@ theorem sublattice_of_lattice : LatSub := by
 
 theorem lattice_map_image : LatMap := by
   intro I x y γ g hγ hK u hu
-  simp only [PI.LatCountG.latSet, Set.mem_setOf_eq] at hu ⊢
+  simp only [PI.LatCountG.latSet, Set.mem_ofPred_eq] at hu ⊢
   have h1 : (fun i => Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F)
       (((g : Matrix (Fin I.n) (Fin I.n) I.E) *ᵥ u) i)) =
       I.fmat γ.2 *ᵥ (fun i => Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) (u i)) := by
@@ -1427,7 +1427,7 @@ theorem norm_positive : NPos := by
 
 theorem card_places_bound : CardPl := by
   intro I
-  haveI : NumberField.IsTotallyReal I.F := I.cm.totReal
+  have : NumberField.IsTotallyReal I.F := I.cm.totReal
   have h1 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank I.F
   have h2 := NumberField.InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces (K := I.F)
   have h3 := NumberField.IsTotallyReal.nrComplexPlaces_eq_zero (K := I.F)
@@ -1456,7 +1456,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarR
 theorem algebraMap_norm_eq (hc : Formalism.BasicNotions.CMData F E) (m : E) :
     algebraMap F E (Algebra.norm F m) = m * star m := by
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hc.deg2]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hc.deg2]; norm_num)
   have hfix : ∀ r : F, starRingAut (algebraMap F E r) = algebraMap F E r := fun r =>
     (hc.fixed _).mpr ⟨r, rfl⟩
   let σ : E ≃ₐ[F] E := AlgEquiv.ofRingEquiv (f := starRingAut) hfix
@@ -1472,12 +1472,12 @@ theorem algebraMap_norm_eq (hc : Formalism.BasicNotions.CMData F E) (m : E) :
   have hle : Fintype.card (E ≃ₐ[F] E) ≤ 2 := by
     rw [← hc.deg2]
     exact (Fintype.card_le_of_injective (fun e : E ≃ₐ[F] E => (e : E →ₐ[F] E))
-      (fun a b h => AlgEquiv.coe_algHom_injective h)).trans AlgHom.card_le
+      (fun a b h => AlgEquiv.coe_toAlgHom_injective h)).trans AlgHom.card_le
   have hge : 2 ≤ Fintype.card (E ≃ₐ[F] E) := by
     rw [← Finset.card_pair hne]; exact Finset.card_le_univ _
   have hcard : Fintype.card (E ≃ₐ[F] E) = Module.finrank F E := by
     rw [hc.deg2]; omega
-  haveI : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by rw [Nat.card_eq_fintype_card]; exact hcard)
+  have : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by rw [Nat.card_eq_fintype_card]; exact hcard)
   have huniv : (Finset.univ : Finset (E ≃ₐ[F] E)) = {1, σ} :=
     (Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
       (by rw [Finset.card_univ, Finset.card_pair hne]; omega)).symm
@@ -1492,7 +1492,7 @@ open PI.UnitaryGroupMassFormula.LSC.NormProd
 
 theorem norm_product_formula : NormProd := by
   intro I m
-  letI := I.fF; letI := I.nF; letI := I.fE; letI := I.nE; letI := I.sE; letI := I.aFE
+  let := I.fF; let := I.nF; let := I.fE; let := I.nE; let := I.sE; let := I.aFE
   have hc := I.cm
   set N := Algebra.norm I.F m with hN
   have hv : ∀ v : InfinitePlace I.F, ‖I.φ v m‖ ^ 2 = v N := by

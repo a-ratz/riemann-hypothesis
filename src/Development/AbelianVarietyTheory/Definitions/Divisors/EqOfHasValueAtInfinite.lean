@@ -110,7 +110,7 @@ theorem _root_.GlobalTheory.LGrp.nabs_det_of_mem_KO {x : GL n k}
   have h2 := valuation_det_le_one_of_entries_integer hx.2
   rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀] at h2
   have hpos : 0 < valuation k (GeneralLinearGroup.det x : k) := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     exact (Valuation.ne_zero_iff _).mpr (Units.ne_zero _)
   exact le_antisymm h1 ((inv_le_one₀ hpos).mp h2)
 

@@ -50,7 +50,7 @@ variable {F H V : Type} [Field F] [Group H] [AddCommGroup V] [Module F V]
 theorem wellFoundedGT_of_finiteLength {ρ : Representation F H V} (h : HasFiniteLength ρ) :
     WellFoundedGT (Subrepresentation ρ) := by
   have hN := (isFiniteLength_iff_isNoetherian_isArtinian.mp h).1
-  have := isNoetherian_iff'.mp hN
+  have := isNoetherian_iff.mp hN
   exact (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)).strictMono.wellFoundedGT
 
 theorem wellFoundedLT_of_finiteLength {ρ : Representation F H V} (h : HasFiniteLength ρ) :

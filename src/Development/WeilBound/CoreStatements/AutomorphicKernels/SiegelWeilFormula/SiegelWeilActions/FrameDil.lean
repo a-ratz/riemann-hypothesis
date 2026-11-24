@@ -73,7 +73,7 @@ theorem dM_apply {R : Type} [CommRing R] {n : ℕ} (i₀ : Fin n) (x y : R) (u v
     dM i₀ x y u v = if u = v then (if u = Sum.inl i₀ then x else if u = Sum.inr i₀ then y else 1) else 0 := by
   simp only [dM, Matrix.add_apply, Matrix.smul_apply, Matrix.single_apply, Matrix.one_apply, smul_eq_mul]
   rcases u with u | u <;> rcases v with v | v <;> simp only [Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq, and_false,
-    false_and, if_false, mul_zero, add_zero, and_self] <;> by_cases h : u = v <;> by_cases h' : u = i₀ <;> subst_vars <;>
+    false_and, ite_false, mul_zero, add_zero, and_self] <;> by_cases h : u = v <;> by_cases h' : u = i₀ <;> subst_vars <;>
     simp_all [eq_comm]
 
 theorem dM_map {R S : Type} [CommRing R] [CommRing S] {n : ℕ} (i₀ : Fin n) (f : R →+* S) (x y : R) :
@@ -146,7 +146,7 @@ theorem frame_dil (d : SD σ) (R : RD d) (w : InfinitePlace F) (r : ℝ → Grou
     rw [dM_apply]
     rcases u with u | u <;> rcases v with v | v <;>
       simp only [Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂,
-        Matrix.diagonal_apply, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq, if_false, Matrix.zero_apply] <;>
+        Matrix.diagonal_apply, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq, ite_false, Matrix.zero_apply] <;>
       by_cases h : u = v <;> by_cases h' : u = i₀ <;> subst_vars <;> simp_all [Pi.single_apply]
   refine Place.cw_ext d (fun w' => ?_) ?_
   · by_cases hw' : w' = w
@@ -180,7 +180,7 @@ theorem par_dil (d : SD σ) (R : RD d) (w : InfinitePlace F) (i₀ : Fin d.n) {�
     simp
   refine ⟨t, ht, ?_, ?_⟩
   · rw [habs, hy', Matrix.toBlocks_fromBlocks₁₁, hdetA, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos τ).le,
-      ← Real.exp_nat_mul]
+      ← Real.exp_natCast_mul]
     norm_num
   · have ht1 := ((kunf.isPar_frame ht0 (R.ι w y) t).1 ht).2
     set P := (inFrame d.b (R.ι w y)).toBlocks₁₁ with hP

@@ -109,7 +109,7 @@ lemma log_sup_support {ι : Type} [Fintype ι] (x : ι → L) (hx : ∃ i, x i �
     (Function.support fun v : FinitePlace L => Real.log (⨆ i, v (x i))).Finite := by
   classical
   obtain ⟨i₀, hi₀⟩ := hx
-  haveI : Nonempty ι := ⟨i₀⟩
+  have : Nonempty ι := ⟨i₀⟩
   have hS : (⋃ i ∈ Finset.univ.filter (fun i => x i ≠ 0),
       Function.mulSupport fun v : FinitePlace L => v (x i)).Finite := by
     refine Set.Finite.biUnion (Finset.finite_toSet _) fun i hi => ?_
@@ -200,7 +200,7 @@ lemma exists_bound (B : HermLine ι) (hB : IsSmoothHerm B) :
       |Real.log (B.h z) - ∑ k, (B.a k : ℝ) * Real.log (bnorm z k)| ≤ C := by
   set S : Set ((Σ k, ι k) → ℂ) := {z | ∀ k, bnorm z k = 1} with hS
   have hcl : IsClosed S := by
-    simp only [hS, Set.setOf_forall]
+    simp only [hS, Set.ofPred_forall]
     exact isClosed_iInter fun k => isClosed_eq (continuous_bnorm k) continuous_const
   have hsub : S ⊆ Metric.closedBall 0 1 := by
     intro z hz
@@ -821,7 +821,7 @@ private lemma degreeWith_bot {K : Type} [Field K] [NumberField K] (E : Hermitian
     simp only [h0, TensorProduct.tmul_zero, inner_zero_left]
     rcases Nat.eq_zero_or_pos r with rfl | hr
     · simp
-    · haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+    · have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
       have hc : (@inner ℂ _ (E.metric.form σ).toInner (0 : Fibre σ E.carrier) (0 : Fibre σ E.carrier)) = 0 := by
         have h : @inner ℂ _ (E.metric.form σ).toInner ((0 : Fibre σ E.carrier) + 0) 0 =
             @inner ℂ _ (E.metric.form σ).toInner (0 : Fibre σ E.carrier) 0 +
@@ -1424,9 +1424,9 @@ theorem transfer [DecidableEq Ψ] (M R : RootModel Ψ N) (i : R.Ω →+* M.Ω) (
   obtain ⟨-, -, hpts, hlift⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.main Ψ N M R i
   obtain ⟨z, hz, hzw⟩ := hlift (AlgebraicClosure L) _ hw'
   let F := IntermediateField.adjoin L (Set.range z)
-  haveI : FiniteDimensional L F :=
+  have : FiniteDimensional L F :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
-  haveI : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := Module.Finite.trans L F }
+  have : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := Module.Finite.trans L F }
   let z' : _ → F := fun p => ⟨z p, IntermediateField.subset_adjoin L _ ⟨p, rfl⟩⟩
   have hz' : z' ∈ ptsOver F (mCoordIdeal (joinOf M R i)) :=
     ptsOver_of_map (algebraMap F (AlgebraicClosure L)) hz

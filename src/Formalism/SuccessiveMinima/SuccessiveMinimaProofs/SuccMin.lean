@@ -83,8 +83,8 @@ theorem mem_smul_iff_gauge {K : Set E} (hKc : IsCompact K) (hKv : Convex ℝ K)
 
 theorem finite_lat_inter (L : Submodule ℤ E) [DiscreteTopology L] {s : Set E}
     (hs : Bornology.IsBounded s) : ((L : Set E) ∩ s).Finite := by
-  haveI : ProperSpace E := FiniteDimensional.proper_real E
-  have hcl : IsClosed (L : Set E) := L.toAddSubgroup.isClosed_of_discrete
+  have : ProperSpace E := FiniteDimensional.proper_real E
+  have hcl : IsClosed (L : Set E) := L.toAddSubgroup.isClosed_of_discreteTopology
   have hd : IsDiscrete (L : Set E) := by
     first
       | exact ⟨‹DiscreteTopology L›⟩
@@ -218,7 +218,7 @@ theorem Formalism.FN.existsSuccessiveMinimaVectors : Formalism.FN.SuccMinFacts :
       refine Fin.lastCases ?_ (fun i => ?_) j
       · simp only [Fin.snoc_last, Fin.val_last]
         exact ⟨hxL, hxK⟩
-      · simp only [Fin.snoc_castSucc, Fin.coe_castSucc]
+      · simp only [Fin.snoc_castSucc, Fin.val_castSucc]
         exact hwm i
   obtain ⟨v, hv, hvm⟩ := build (finrank ℝ E) le_rfl
   refine ⟨v, hv, fun i => (hvm i).1, fun i => (hvm i).2,
@@ -271,4 +271,4 @@ theorem Formalism.FN.existsSuccessiveMinimaVectors : Formalism.FN.SuccMinFacts :
     rw [← hUW] at huW
     refine Submodule.span_mono (Set.image_mono fun k hk => ?_) huW
     show k < i
-    exact Fin.lt_iff_val_lt_val.mpr (lt_of_lt_of_le hk hdi)
+    exact Fin.lt_def.mpr (lt_of_lt_of_le hk hdi)

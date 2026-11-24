@@ -152,7 +152,7 @@ theorem reduction_of (hM : DetMul D) (hS : DetSmul D) (hU : NormOneUnitIdeal D) 
     (h0 : ∀ N N', Even N → Even N' → B.ThZeroMem N N')
     (hSq : SqP D B.tor) (hTL : Tr0L D B.tor) (hTR : Tr0R D B.tor) (hP : PullIop D B.tor) (hJ1 : J1 B) (hJ2 : J2 B) :
     B.EqP χ := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   refine ⟨?_, ?_, ?_⟩
   · intro N N' L L' hN hN' γ γ'
     have h1 := hSm N' L'.1 γ' L'.2

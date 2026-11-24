@@ -53,7 +53,7 @@ namespace GlobalTheory.EtC
 
 theorem quasiIso_hypercohomology_bijective' : A1 := by
   intro R _ K L f _ F n
-  haveI : (res R F).IsKInjective := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).1
+  have : (res R F).IsKInjective := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).1
   exact GlobalTheory.T.hypercohomologyPullback_bijective_of_quasiIso R f (res R F) n
 
 end GlobalTheory.EtC

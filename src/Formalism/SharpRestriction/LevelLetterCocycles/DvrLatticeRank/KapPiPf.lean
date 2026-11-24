@@ -69,7 +69,7 @@ variable {p : ℕ} [hp : Fact p.Prime]
 private theorem prime_prime_padicInt : Prime (p : ℤ_[p]) := PadicInt.irreducible_p.prime
 
 private theorem not_prime_dvd_padicInt_unit (w : ℤ_[p]ˣ) : ¬ (p : ℤ_[p]) ∣ (w : ℤ_[p]) :=
-  fun h => prime_prime_padicInt.not_unit (isUnit_of_dvd_unit h (Units.isUnit _))
+  fun h => prime_prime_padicInt.not_isUnit (isUnit_of_dvd_unit h (Units.isUnit _))
 
 lemma emult_eq_valuation {x : ℤ_[p]} (hx : x ≠ 0) :
     emultiplicity (p : ℤ_[p]) x = x.valuation := by
@@ -100,7 +100,7 @@ lemma p_dvd_of_valuation_one {x : ℤ_[p]} (hx : x ≠ 0) (h1 : x.valuation = 1)
 lemma not_dvd_of_dvd_sub_one {u : ℤ_[p]} (h : (p : ℤ_[p]) ∣ u - 1) : ¬ (p : ℤ_[p]) ∣ u := by
   intro hu
   have h1 : (p : ℤ_[p]) ∣ 1 := by simpa using dvd_sub hu h
-  exact prime_prime_padicInt.not_unit (isUnit_of_dvd_one h1)
+  exact prime_prime_padicInt.not_isUnit (isUnit_of_dvd_one h1)
 
 lemma dvd_of_natCast_dvd_natCast {m : ℕ} (h : (p : ℤ_[p]) ∣ (m : ℤ_[p])) : p ∣ m := by
   have h1 := (PadicInt.norm_lt_one_iff_dvd _).mpr h
@@ -302,7 +302,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem kapPiPf_card (W : LocWach PD LL O v n) [FiniteDimensional K₀ K] (c : ZMod n) :
     Nat.card {τ : K →ₐ[Qp] LL // Formalism.MainNotions.DeltaInvariantLattices.OverLetter W τ c} ≤ finrank K₀ K := by
   classical
-  letI : Algebra K₀ LL := (W.emb c).toRingHom.toAlgebra
+  let : Algebra K₀ LL := (W.emb c).toRingHom.toAlgebra
   let F : {τ : K →ₐ[Qp] LL // Formalism.MainNotions.DeltaInvariantLattices.OverLetter W τ c} → (K →ₐ[K₀] LL) := fun τ =>
     { (τ.1 : K →+* LL) with
       commutes' := fun x => by
@@ -315,8 +315,8 @@ theorem kapPiPf_card (W : LocWach PD LL O v n) [FiniteDimensional K₀ K] (c : Z
     intro x
     exact congrArg (fun f : K →ₐ[K₀] LL => f x) hab
   have hli := linearIndependent_toLinearMap K₀ K LL
-  haveI : Finite (K →ₐ[K₀] LL) := hli.finite
-  letI := Fintype.ofFinite (K →ₐ[K₀] LL)
+  have : Finite (K →ₐ[K₀] LL) := hli.finite
+  let := Fintype.ofFinite (K →ₐ[K₀] LL)
   have h2 : Fintype.card (K →ₐ[K₀] LL) ≤ finrank K₀ K := by
     have h3 := hli.fintype_card_le_finrank
     rwa [Module.finrank_linearMap_self] at h3
@@ -410,7 +410,7 @@ theorem kapPiPf_main {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) (P : LocPrime l) (H
   obtain ⟨χ, hv1, hv0, hpow⟩ := kapPiPf_uU P H K LL hg
   have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have : FiniteDimensional ↥(K0 K) ↥K.1 := FiniteDimensional.right ℚ_[l] ↥(K0 K) ↥K.1
-  haveI : Fintype {τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1 // Formalism.MainNotions.DeltaInvariantLattices.OverLetter (H.W K 1 LL hg) τ c} :=
+  have : Fintype {τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1 // Formalism.MainNotions.DeltaInvariantLattices.OverLetter (H.W K 1 LL hg) τ c} :=
     Fintype.ofFinite _
   have hΩ : ∀ i ∈ OmF (H.W K 1 LL hg) c S h' up b,
       ∃ τ : {τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1 // Formalism.MainNotions.DeltaInvariantLattices.OverLetter (H.W K 1 LL hg) τ c},
@@ -444,7 +444,7 @@ theorem kapPiPf_main {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) (P : LocPrime l) (H
     have hi0 : i ≠ 0 := fun h2 => h0 (h2 ▸ hi)
     have he := DualFramesAlt.Val.emult_zpow_sub_one hl χ (DualFramesAlt.Val.p_dvd_of_valuation_one hv0 hv1)
       (DualFramesAlt.Val.emult_of_valuation_one hv0 hv1) hi0
-    rw [sub_eq_zero.2 (sub_eq_zero.1 h).symm, emultiplicity_zero] at he
+    rw [sub_eq_zero.2 (sub_eq_zero.1 h).symm, emultiplicity_zero_right] at he
     exact ENat.top_ne_natCast _ he
   obtain ⟨V, hV⟩ : ∃ V : ℕ, X.valuation = V := ⟨_, rfl⟩
   have hVκ : V ≤ kapA l (eK K) h' S := by

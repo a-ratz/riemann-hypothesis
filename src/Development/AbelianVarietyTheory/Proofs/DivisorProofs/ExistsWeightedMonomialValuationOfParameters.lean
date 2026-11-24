@@ -100,22 +100,22 @@ theorem exists_residue_coords_of_locModel : ∀ {L : Type} [Field L] (c : ℂ �
         IsUnit (MvPolynomial.eval₂ V.const
           (Fin.append u fun i => (⟨s i, hC _ (s i).2⟩ : V.ring)) P) := by
   intro L _ c Q hQ
-  letI := hQ.isLocalRing
+  let := hQ.isLocalRing
   intro N r V hC u hx hm hunitP hloc
   classical
   let φ : Q →+* V.ring := Q.subtype.codRestrict V.ring fun q => hC _ q.2
-  letI : Algebra ℂ V.ring := V.const.toAlgebra
-  letI : Algebra ℂ L := c.toAlgebra
-  letI : Algebra ℂ Q := (c.codRestrict Q hQ.const_mem).toAlgebra
-  letI : Algebra Q V.ring := φ.toAlgebra
-  haveI : IsScalarTower ℂ V.ring L := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℂ Q V.ring := IsScalarTower.of_algebraMap_eq fun _ => Subtype.ext rfl
-  haveI : IsLocalHom (algebraMap Q V.ring) := ⟨fun q hq => by
+  let : Algebra ℂ V.ring := V.const.toAlgebra
+  let : Algebra ℂ L := c.toAlgebra
+  let : Algebra ℂ Q := (c.codRestrict Q hQ.const_mem).toAlgebra
+  let : Algebra Q V.ring := φ.toAlgebra
+  have : IsScalarTower ℂ V.ring L := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower ℂ Q V.ring := IsScalarTower.of_algebraMap_eq fun _ => Subtype.ext rfl
+  have : IsLocalHom (algebraMap Q V.ring) := ⟨fun q hq => by
     by_contra hq'
     have hqm : q ∈ maximalIdeal Q := (mem_maximalIdeal _).2 hq'
     exact (mem_maximalIdeal _).1 (hm q hqm) hq⟩
-  haveI : Algebra.EssFiniteType ℂ V.ring := V.essFiniteType
-  haveI := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ V.ring
+  have : Algebra.EssFiniteType ℂ V.ring := V.essFiniteType
+  have := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ V.ring
   obtain ⟨x, hx⟩ := hx
   have h2 := IsTranscendenceBasis.cardinalMk_eq_trdeg (R := ℂ) hx
   rw [Cardinal.mk_fin] at h2
@@ -167,7 +167,7 @@ theorem exists_residue_coords_of_locModel : ∀ {L : Type} [Field L] (c : ℂ �
   have hc : (r : Cardinal) + Cardinal.mk T = ((N - 1 : ℕ) : Cardinal) := by
     rw [← h3, ← hB.cardinalMk_eq_trdeg, Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id,
       Cardinal.mk_fin]
-  haveI hfin : Finite T := Cardinal.lt_aleph0_iff_finite.1
+  have hfin : Finite T := Cardinal.lt_aleph0_iff_finite.1
     (lt_of_le_of_lt le_add_self (by rw [hc]; exact Cardinal.natCast_lt_aleph0))
   have hcard : r + Nat.card T = N - 1 := by
     rw [← Nat.cast_card (α := T)] at hc
@@ -289,7 +289,7 @@ theorem weightedRelation_step (z : Fin n → R) (w : Fin n → ℕ) (hw : ∀ i,
       (MvPolynomial.homogeneousComponent_isHomogeneous k H) hmem
   refine ⟨fun β hβ => ?_, ?_⟩
   · have := hI β
-    rwa [hcoeffk, if_pos hβ] at this
+    rwa [hcoeffk, ite_eq_left hβ] at this
   obtain ⟨G, hG, hGs⟩ := exists_eval_eq_shift z Hk hI
   have hGw : ∀ γ, G.coeff γ ≠ 0 → k + 1 ≤ γ.degree ∧ D + 1 ≤ Finsupp.weight w γ := by
     intro γ hγ
@@ -311,7 +311,7 @@ theorem weightedRelation_step (z : Fin n → R) (w : Fin n → ℕ) (hw : ∀ i,
     · exact hrest' β h1
   · rw [map_add (f := _), hG, ← map_add (f := _), sub_add_cancel, h0]
   · intro β hβw hβd
-    rw [MvPolynomial.coeff_add, hrest, if_neg (by omega)]
+    rw [MvPolynomial.coeff_add, hrest, ite_eq_right (by omega)]
     by_cases h : G.coeff β = 0
     · rw [h, add_zero]
     · have := hGw β h
@@ -374,15 +374,15 @@ theorem dvr_loc_principal_prime : ∀ {L : Type} [Field L] (A : Subring L) (t : 
       (A.subtype.codRestrict V fun a => hA _ a.2).EssFiniteType := by
   intro L _ A t hN ht hp hfr
   set p : Ideal A := Ideal.span {t} with hpdef
-  haveI : IsFractionRing A L := IsFractionRing.of_field A L fun z => by
+  have : IsFractionRing A L := IsFractionRing.of_field A L fun z => by
     obtain ⟨a, ha, b, hb, hb0, h⟩ := hfr z
     exact ⟨⟨a, ha⟩, ⟨b, hb⟩, by
       show z = a / b
       rw [← h, mul_div_cancel_right₀ _ hb0]⟩
   let V0 : Subalgebra A L := Localization.subalgebra.ofField L p.primeCompl p.primeCompl_le_nonZeroDivisors
-  haveI : IsLocalization.AtPrime V0 p := Localization.subalgebra.isLocalization_ofField _ _ _
-  haveI : IsLocalRing V0 := IsLocalization.AtPrime.isLocalRing V0 p
-  haveI : IsNoetherianRing V0 := IsLocalization.isNoetherianRing p.primeCompl V0 hN
+  have : IsLocalization.AtPrime V0 p := Localization.subalgebra.isLocalization_ofField _ _ _
+  have : IsLocalRing V0 := IsLocalization.AtPrime.isLocalRing V0 p
+  have : IsNoetherianRing V0 := IsLocalization.isNoetherianRing p.primeCompl V0 hN
   have hmax : IsLocalRing.maximalIdeal V0 = Ideal.span {algebraMap A V0 t} := by
     rw [← IsLocalization.AtPrime.map_eq_maximalIdeal p V0, hpdef, Ideal.map_span, Set.image_singleton]
   have ht0 : algebraMap A V0 t ≠ 0 := fun h => ht (congrArg Subtype.val h)
@@ -392,7 +392,7 @@ theorem dvr_loc_principal_prime : ∀ {L : Type} [Field L] (A : Subring L) (t : 
   have hdvr : IsDiscreteValuationRing V0 :=
     ((IsDiscreteValuationRing.TFAE V0 hnf).out 1 5).2
       (⟨⟨_, hmax⟩⟩ : (IsLocalRing.maximalIdeal V0).IsPrincipal)
-  haveI : IsFractionRing V0 L := IsFractionRing.of_field V0 L fun z => by
+  have : IsFractionRing V0 L := IsFractionRing.of_field V0 L fun z => by
     obtain ⟨a, ha, b, hb, hb0, h⟩ := hfr z
     exact ⟨algebraMap A V0 ⟨a, ha⟩, algebraMap A V0 ⟨b, hb⟩, by
       show z = a / b
@@ -521,15 +521,15 @@ theorem exists_weightedMonomialPlace : ∀ {L : Type} [Field L] (c : ℂ →+* L
         f * MvPolynomial.eval₂ (Q.subtype.codRestrict V.ring fun q => hC _ q.2) u R =
           MvPolynomial.eval₂ (Q.subtype.codRestrict V.ring fun q => hC _ q.2) u P := by
   intro L _ c Q hQ
-  letI := hQ.isLocalRing
+  let := hQ.isLocalRing
   intro r z wt hN hm hz hw0 hw
-  haveI := hN
+  have := hN
   have hz0 : (z 0 : L) ≠ 0 := by
     intro h
     have h1 : z 0 = 0 := Subtype.ext h
     have := _root_.GlobalTheory.weightedRelation_coeff_mem_span z wt hw hz (wt 0) (X 0) (isWeightedHomogeneous_X Q wt 0)
       (by simp [h1]) (Finsupp.single 0 1)
-    rw [coeff_X, if_pos rfl, hm] at this
+    rw [coeff_X, ite_eq_left rfl, hm] at this
     exact (IsLocalRing.maximalIdeal.isMaximal Q).ne_top ((Ideal.eq_top_iff_one _).mpr this)
   set u : Fin r → L := fun i => (z i.succ : L) / (z 0 : L) ^ wt i.succ with hu
   have key0 : ∀ P : MvPolynomial (Fin r) Q, eval₂ Q.subtype u P = 0 →
@@ -669,11 +669,11 @@ theorem isQuasiRegularSeq_of_locModel : ∀ {L : Type} [Field L] (c : ℂ →+* 
     IsLocalRing.maximalIdeal Q = Ideal.span (Set.range z) → ringKrullDim Q = r + 1 →
     IsNoetherianRing Q ∧ IsQuasiRegularSeq Q z := by
   intro L _ c Q hQ
-  letI := hQ.isLocalRing
+  let := hQ.isLocalRing
   intro r z hm hd
-  letI := (c.codRestrict Q hQ.const_mem).toAlgebra
-  haveI : Algebra.EssFiniteType ℂ Q := hQ.essFiniteType
-  haveI : IsNoetherianRing Q := Algebra.EssFiniteType.isNoetherianRing ℂ Q
+  let := (c.codRestrict Q hQ.const_mem).toAlgebra
+  have : Algebra.EssFiniteType ℂ Q := hQ.essFiniteType
+  have : IsNoetherianRing Q := Algebra.EssFiniteType.isNoetherianRing ℂ Q
   refine ⟨inferInstance, isQuasiRegularSeq_of_isRegular ?_⟩
   refine isRegular_of_ofList_eq_maximalIdeal ?_ ?_
   · rw [ofList_ofFn_eq_span_range, hm]
@@ -688,7 +688,7 @@ def powCoeffMatrix {A : Type} [CommRing A] (n : ℕ) (t : A) (e : Fin n → ℕ)
 
 theorem powCoeffMatrix_det {A : Type} [CommRing A] (n : ℕ) (t : A) (e : Fin n → ℕ)
     (w : Fin n → A) : (powCoeffMatrix n t e w).det = t ^ (∑ i, e i) := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · rw [Fin.prod_univ_succ]
     simp [powCoeffMatrix, Finset.prod_pow_eq_pow_sum]
   · intro i j hij
@@ -718,8 +718,8 @@ theorem dForm_cons_pow_mul : ∀ {k A : Type} [CommRing k] [CommRing A] (α : k 
   | zero => simp [powCoeffMatrix]
   | succ i' =>
     simp only [powCoeffMatrix, Fin.cons_succ, Fin.cases_zero, Fin.cases_succ, Fin.cons_zero,
-      ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-    letI := α.toAlgebra
+      ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+    let := α.toAlgebra
     change KaehlerDifferential.D k A (t ^ e i' * w i') = _
     rw [Derivation.leibniz, Derivation.leibniz_pow, add_comm]
     congr 1
@@ -734,7 +734,7 @@ theorem monomial_place : ∀ {L : Type} [Field L] (c : ℂ →+* L) (Q : Subring
     ∀ y : Fin N → Q, IsFreeGen Q (dForm (c.codRestrict Q hQ.const_mem) y) →
       V.formOrd (dForm c (fun i => (y i : L))) + 1 ≤ ∑ i, (wt i : ℤ) := by
   intro L _ c Q hQ
-  letI := hQ.isLocalRing
+  let := hQ.isLocalRing
   intro r N z wt hm hdim hw0 hw1 hx
   obtain ⟨hN, hqr⟩ := isQuasiRegularSeq_of_locModel c Q hQ r z hm hdim
   obtain ⟨V, hC, u, hu, hirr, hmV, hunit, hloc⟩ := _root_.GlobalTheory.exists_weightedMonomialPlace c Q hQ r z wt hN hm.symm hqr hw0 hw1
@@ -745,7 +745,7 @@ theorem monomial_place : ∀ {L : Type} [Field L] (c : ℂ →+* L) (Q : Subring
   have h1m : (1 : Q) ∉ IsLocalRing.maximalIdeal Q := fun h =>
     (IsLocalRing.maximalIdeal.isMaximal Q).ne_top ((Ideal.eq_top_iff_one _).mpr h)
   have huu : ∀ i, IsUnit (u i) := fun i => by
-    have h := hunit (MvPolynomial.X i) ⟨Finsupp.single i 1, by rw [MvPolynomial.coeff_X, if_pos rfl]; exact h1m⟩
+    have h := hunit (MvPolynomial.X i) ⟨Finsupp.single i 1, by rw [MvPolynomial.coeff_X, ite_eq_left rfl]; exact h1m⟩
     rw [MvPolynomial.eval₂_X] at h
     exact h
   have hu0 : ∀ i, (u i : L) ≠ 0 := fun i h => (huu i).ne_zero (Subtype.ext h)
@@ -794,11 +794,11 @@ theorem monomial_place : ∀ {L : Type} [Field L] (c : ℂ →+* L) (Q : Subring
     rw [← hw] at hsu
     have hG : IsFreeGen V.ring
         (dForm V.const (Fin.cons ⟨z 0, hC _ (z 0).2⟩ w : Fin (r + j + 1) → V.ring)) := by
-      letI := V.const.toAlgebra
-      letI := c.toAlgebra
-      haveI : IsScalarTower ℂ V.ring L := IsScalarTower.of_algebraMap_eq' rfl
-      haveI : Algebra.EssFiniteType ℂ V.ring := V.essFiniteType
-      haveI := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ V.ring
+      let := V.const.toAlgebra
+      let := c.toAlgebra
+      have : IsScalarTower ℂ V.ring L := IsScalarTower.of_algebraMap_eq' rfl
+      have : Algebra.EssFiniteType ℂ V.ring := V.essFiniteType
+      have := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ V.ring
       obtain ⟨m, z', b, -, hb⟩ := exists_basis_kaehler_uniformiser ℂ hirr
       have h1 := trdeg_eq_of_basis_kaehler ℂ L b
       have h2 := IsTranscendenceBasis.cardinalMk_eq_trdeg (R := ℂ) hxT

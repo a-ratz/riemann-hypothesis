@@ -86,7 +86,7 @@ theorem GlobalTheory.NullOverS.null_of_mul_null : ∀ (l : ℕ) [Fact l.Prime] (
   obtain ⟨n', hn'⟩ := hn m
   refine (Set.finite_iUnion fun c : Fin d => hσ n' c b).subset ?_
   intro i hi
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hi ⊢
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hi ⊢
   by_contra hc
   push_neg at hc
   apply hi

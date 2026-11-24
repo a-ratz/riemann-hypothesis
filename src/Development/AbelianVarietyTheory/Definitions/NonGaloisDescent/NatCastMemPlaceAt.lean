@@ -191,7 +191,7 @@ theorem valC_zero (z : FrPt Xo c (PAt φ)) : valC z 0 = 0 := evalAt_zero _ _ z
 theorem IsReadPt.valC {T : CDVR} {io : c.F →+* T.Fr} {k : T.Fr →+* ℂ_[p]} {h : IsReading φ T io k} {y : IntFr Xo c T io}
     {u : Ix Dw → (PAt φ)ˣ} {z : FrPt Xo c (PAt φ)} (hz : IsReadPt h y u z) {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {f : Rul Xo c}
     (hf : f ∈ sec Xo c a n) : valC z f = toCp φ (wchar (ex Dw a n) u) * k (evI y f) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hL : GlobalTheory.Reg.EvLaws Xo c := (GlobalTheory.Reg.evLaws_genFr_nonempty_comp E H Dw l Xo c).1
   obtain ⟨w, hw, hb⟩ := hz
   obtain ⟨q, χ, y₀, hy₀⟩ := hL.test _ y.1
@@ -213,7 +213,7 @@ theorem PtC.exists_valC (z : PtC Xo c φ) (a : (E →+* ℂ) × ℕ → ℕ) (n 
 theorem PtC.exists_of_reading {T : CDVR} {io : c.F →+* T.Fr} {k : T.Fr →+* ℂ_[p]} (h : IsReading φ T io k)
     (y : IntFr Xo c T io) (hy : y.IsAlg) :
     ∃ z : PtC Xo c φ, ∀ a n, ∀ f ∈ sec Xo c a n, valC z.1 f = k (evI y f) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨w, hw⟩ := (GlobalTheory.Reg.evLaws_genFr_nonempty_comp E H Dw l Xo c).1.bc _ _ h.alg y.1
   have hb : FrBor 1 w w :=
     ((GlobalTheory.Frames.frBor_calculus E H Dw l Xo c _ w w w).1 1).2 ⟨fun _ => 1, fun _ _ _ h => Matrix.one_apply_ne h.ne,

@@ -72,8 +72,8 @@ private theorem cu_ext {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Ide
   funext x
   refine IsHausdorff.eq_iff_smodEq (I := I).2 fun N => ?_
   rw [smul_eq_mul, Ideal.mul_top]
-  letI : TopologicalSpace (R ⧸ I ^ N) := ⊥
-  haveI : DiscreteTopology (R ⧸ I ^ N) := ⟨rfl⟩
+  let : TopologicalSpace (R ⧸ I ^ N) := ⊥
+  have : DiscreteTopology (R ⧸ I ^ N) := ⟨rfl⟩
   exact congrFun (Continuous.ext_on hS (hf N).continuous (hg N).continuous fun y hy => by simp only [h y hy]) x
 private theorem cu_prod {n : ℕ} {M : Type} [CommGroup M] (f g : Fin n → M)
     (h : ∀ j, ∏ i with i ≤ j, f i = ∏ i with i ≤ j, g i) : ∀ j, f j = g j := by
@@ -258,7 +258,7 @@ theorem UpperTheory.V.Hi.levelUR2SmulKey_alt :
   by_cases hne : (hset Q τ₀).MK θ' a' K = ⊥
   · exact sk_zero hne ν hν0 (μ (β t)) t y y₀ hy
   have hAx := _root_.UpperTheory.V.Hi.axU_s hN l L Ω s n hn V Q c m τ₀
-  haveI hF : Fact (CommOn ((hset Q τ₀).MK θ' a' K) ((hset Q τ₀).op A)) :=
+  have hF : Fact (CommOn ((hset Q τ₀).MK θ' a' K) ((hset Q τ₀).op A)) :=
     ⟨((hiComm L Ω l n c _ hAx A θ' hθ' K).2.2.2 a').1⟩
   obtain ⟨hCO, -⟩ := hiAlg L Ω l n c _ hAx A θ' hθ' a' K hne
   obtain ⟨f, hf, hνf⟩ := hν

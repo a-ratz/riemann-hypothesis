@@ -139,7 +139,7 @@ theorem exists_cover {K : Type} [Field K] [NumberField K] {i : ℕ}
       (sub N₂ N₁ h₂.1.le h₂.2 h₁.1.le h.symm.subset)
   have hfin : S.Finite := Set.Finite.of_finite_image (Set.toFinite (g '' S)) hinj
   obtain ⟨N, hN⟩ := hfin.exists_minimal ⟨F.lattice, hXF, le_rfl⟩
-  obtain ⟨w, hwN, hwX⟩ := SetLike.exists_of_lt hN.1.1
+  obtain ⟨w, hwN, hwX⟩ := IsConcreteLE.exists_of_lt hN.1.1
   refine ⟨w, hN.1.2 hwN, hwX, fun N' h1 h2 => ?_⟩
   have hle : X.lattice ⊔ RingOfIntegers K ∙ w ≤ N :=
     sup_le hN.1.1.le ((Submodule.span_singleton_le_iff_mem _ _).2 hwN)

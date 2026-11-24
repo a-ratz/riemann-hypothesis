@@ -216,7 +216,7 @@ theorem bijOn_basis {P₀ P₁ : Type} [AddCommGroup P₀] [Module A P₀] [AddC
   rw [LinearMap.toMatrix_baseChange, ← Module.Basis.equivFun_apply, LinearEquiv.apply_symm_apply,
     ← Module.Basis.equivFun_apply] at h
   change d.baseChange R ((Algebra.TensorProduct.basis R b₀).equivFun.symm v) = 0 ↔ _
-  rw [Set.mem_setOf_eq, h, map_eq_zero_iff _ (LinearEquiv.injective _)]
+  rw [Set.mem_ofPred_eq, h, map_eq_zero_iff _ (LinearEquiv.injective _)]
 
 theorem nonempty_dual_equiv {P₀ P₁ : Type} [AddCommGroup P₀] [Module A P₀] [AddCommGroup P₁] [Module A P₁]
     {a b : ℕ} (b₀ : Module.Basis (Fin a) A P₀) (b₁ : Module.Basis (Fin b) A P₁) (d : P₀ →ₗ[A] P₁) :
@@ -360,7 +360,7 @@ theorem computes_of_model {κ : Type} [LinearOrder κ] [Fintype κ] {D : κ → 
       (fun _ => inf_le_right)
       (fun k p => SecOnR.coord (f := f) ((φ.f 0).hom (b₀ k) ⟨{p.1}, Finset.card_singleton _⟩) p.2) := by
   intro R _ g Y' π f' H
-  letI := g.toAlgebra
+  let := g.toAlgebra
   have B := ((termMap_bijOn hM H hD).comp
     (bijOn_ker_and_exact_of_quasiIso_baseChange A R K _ φ (hq R)).1).comp
       (bijOn_basis b₀ b₁ (K.d 0 1).hom R)
@@ -389,8 +389,8 @@ theorem nonempty_equiv_of_model {κ : Type} [LinearOrder κ] [Fintype κ] {D : �
       (((ModuleCat.extendScalars.{0, 0, 0} (algebraMap A R)).mapHomologicalComplex _).map φ))
     (hK : ∀ i, Module.Free A (K.X i) ∧ Module.Finite A (K.X i)) (P : Perf f M) :
     Nonempty ((Module.Dual A (K.X 0) ⧸ LinearMap.range (K.d 0 1).hom.dualMap) ≃ₗ[A] Coker P.D₀) := by
-  haveI := fun p => (hK p).1
-  haveI := fun p => (hK p).2
+  have := fun p => (hK p).1
+  have := fun p => (hK p).2
   let b₀ := (Module.Free.chooseBasis A (K.X 0)).reindex (Fintype.equivFin _)
   let b₁ := (Module.Free.chooseBasis A (K.X 1)).reindex (Fintype.equivFin _)
   let V : P.I × κ → X.Opens := fun q => P.W q.1 ⊓ ((⨅ i ∈ ({q.2} : Finset κ), D i) ⊓ M.U (P.ch q.1))

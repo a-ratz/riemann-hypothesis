@@ -218,7 +218,7 @@ theorem measurable_pI : Measurable (pI : GA E a → GL (Fin a) (Cinf E)) :=
 theorem isHaarMeasure_levelMeasure (μ : Measure (GA E a)) [μ.IsHaarMeasure] {U : Subgroup (GL (Fin a) (Af E))}
     (hU : IsOpen (U : Set (GL (Fin a) (Af E)))) (hUc : IsCompact (U : Set (GL (Fin a) (Af E)))) :
     (levelMeasure μ U).IsHaarMeasure := by
-  haveI : T2Space (GL (Fin a) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
+  have : T2Space (GL (Fin a) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
   have hH := (isClopen_levelSet hU).isOpen.measurableSet
   have hp := measurable_pI (E := E) (a := a)
   have hmeas : ∀ {K : Set (GL (Fin a) (Cinf E))}, MeasurableSet K →
@@ -291,10 +291,10 @@ theorem cuspInvFin (hb : GlobalTheory.Published.CuspFormsBoundedGL)
     ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ), CuspInvFin E a := by
   intro E _ _ _ a L hL W _ _ _ ρ hρ J hJ
   obtain ⟨U, hUL, hUo, hUc⟩ := exists_compact_open hL
-  letI : MeasurableSpace (GL (Fin a) (Cinf E)) := borel _
-  haveI : BorelSpace (GL (Fin a) (Cinf E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin a) (Cinf E)) := borel _
+  have : BorelSpace (GL (Fin a) (Cinf E)) := ⟨rfl⟩
   let μ : Measure (GA E a) := Measure.haar
-  haveI := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   obtain ⟨α, hαc, hαs, hα⟩ := hu E a W ρ hρ J hJ (levelMeasure μ U) (isHaarMeasure_levelMeasure μ hUo hUc)
   set S : Set (Sm E a) := {φ | φ ∈ genSpace L ρ J ∧ IsCuspidal φ.1 ∧
     ∀ t g, φ.1 (GlobalTheory.UnitaryBC.splitCentre E a t * g) = φ.1 g} with hSdef

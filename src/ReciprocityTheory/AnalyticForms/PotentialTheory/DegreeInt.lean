@@ -103,7 +103,7 @@ theorem integralWith_localize_support [CompactSpace X] [T2Space X] (A : FinHolAt
     intro j
     refine (htr j).2.trans ?_
     symm
-    refine setIntegral_eq_of_subset_of_forall_diff_eq_zero
+    refine setIntegral_eq_of_subset_of_forall_sdiff_eq_zero
       (A.chart k).open_target.measurableSet Set.inter_subset_left ?_
     intro y hy
     have hys : (A.chart k).symm y ∉ (A.chart j).source := fun hs => hy.2 ⟨hy.1, hs⟩
@@ -126,7 +126,7 @@ theorem exists_sheet_partition [CompactSpace Y] [T2Space Y] [CompactSpace X] [T2
         Pairwise (Function.onFun Disjoint (W m)) ∧ h ⁻¹' V m = ⋃ i, W m i ∧
         ∀ i, Set.BijOn h (W m i) (V m) ∧ W m i ⊆ (B.chart (j m i)).source := by
   classical
-  haveI := dI_secondCountable A
+  have := dI_secondCountable A
   have hSc : (Sᶜ).Nonempty := by
     by_contra hne
     rw [Set.not_nonempty_iff_eq_empty, Set.compl_empty_iff] at hne
@@ -284,9 +284,9 @@ theorem degreeFormulaInt : DegreeFormulaIntStatement := by
       rw [hK]
       exact integrableOn_empty
     · simp [mInt, integralWith, hA, hB]
-  letI : MeasurableSpace X := borel X
+  let : MeasurableSpace X := borel X
   have : BorelSpace X := ⟨rfl⟩
-  letI : MeasurableSpace Y := borel Y
+  let : MeasurableSpace Y := borel Y
   have : BorelSpace Y := ⟨rfl⟩
   have hΨ : ∀ i, IsPotential B ((Φ i).pullback h hh.1) :=
     fun i => isPotentialPullback A B h hh (Φ i) (hΦ i)
@@ -369,8 +369,8 @@ theorem degreeFormulaInt : DegreeFormulaIntStatement := by
               ENNReal.ofReal |locDens B (fun i => (Φ i).pullback h hh.1) j' y| := by
         refine setLIntegral_mono' (hRm m) (fun y hy => ?_)
         have hyE : h ((B.chart j').symm y) ∈ E m := hy.2
-        simp only [Function.comp_apply, Set.indicator_of_mem hyE, enorm_mul,
-          Real.enorm_eq_ofReal_abs]
+        simp only [Function.comp_apply, Set.indicator_of_mem hyE, eNorm_mul,
+          Real.eNorm_eq_ofReal_abs]
         rw [mul_assoc]
         refine mul_le_of_le_one_left zero_le ?_
         exact ENNReal.ofReal_le_one.2 (by
@@ -396,7 +396,7 @@ theorem degreeFormulaInt : DegreeFormulaIntStatement := by
           rintro _ ⟨w, hw, rfl⟩; exact hVk ((hsh' i).1.mapsTo hw.1)
         have hSL := sheet_lintegral hh Φ hΦ j' (k m) hW' Set.inter_subset_right hV' hbij
           (fun x => ENNReal.ofReal |(E m).indicator g x|)
-        have hn := ofReal_integral_norm_eq_lintegral_enorm (hvX m)
+        have hn := ofReal_integral_norm_eq_lintegral_eNorm (hvX m)
         have h2 : ∫ z in (A.chart (k m)).target,
             ‖(E m).indicator g ((A.chart (k m)).symm z) * locDens A Φ (k m) z‖ = a m := by
           rw [ha]
@@ -417,7 +417,7 @@ theorem degreeFormulaInt : DegreeFormulaIntStatement := by
           _ = ENNReal.ofReal (a m) := by
             rw [hn]
             refine lintegral_congr (fun z => ?_)
-            simp only [enorm_mul, Real.enorm_eq_ofReal_abs]
+            simp only [eNorm_mul, Real.eNorm_eq_ofReal_abs]
       calc _ ≤ _ := s1
         _ ≤ ∫⁻ y in ⋃ i, (B.chart j') '' (W m i ∩ (B.chart j').source),
               ENNReal.ofReal |(E m).indicator g (h ((B.chart j').symm y))| *

@@ -60,8 +60,8 @@ theorem kappa_res_apply (A B : Type) [CommRing A] [CommRing B] [Algebra A B] {T 
       kappa A B g I U (Algebra.TensorProduct.map ρ (AlgHom.id A B) t) =
         (I.subscheme.presheaf.map (homOfLE (Scheme.Hom.preimage_mono
           (I.subschemeι ≫ pullback.snd _ g) h)).op).hom (kappa A B g I V t) := by
-  letI := (secAlg A g U).toAlgebra
-  letI := (secAlg A g V).toAlgebra
+  let := (secAlg A g U).toAlgebra
+  let := (secAlg A g V).toAlgebra
   intro ρ hρ t
   induction t using TensorProduct.induction_on with
   | zero => rw [map_zero, map_zero, map_zero, map_zero]
@@ -87,8 +87,8 @@ theorem kappa_res (A B : Type) [CommRing A] [CommRing B] [Algebra A B] {T : Sche
     ∃ ρ : Γ(T, V) →ₐ[A] Γ(T, U), ρ.toRingHom = (T.presheaf.map (homOfLE h).op).hom ∧
       (RingHom.ker (GlobalTheory.HilbAff.kappa A B g I V)).map
         (Algebra.TensorProduct.map ρ (AlgHom.id A B)) ≤ RingHom.ker (GlobalTheory.HilbAff.kappa A B g I U) := by
-  letI := (GlobalTheory.HilbAff.secAlg A g U).toAlgebra
-  letI := (GlobalTheory.HilbAff.secAlg A g V).toAlgebra
+  let := (GlobalTheory.HilbAff.secAlg A g U).toAlgebra
+  let := (GlobalTheory.HilbAff.secAlg A g V).toAlgebra
   let ρ : Γ(T, V) →ₐ[A] Γ(T, U) :=
     { toRingHom := (T.presheaf.map (homOfLE h).op).hom
       commutes' := fun a => by

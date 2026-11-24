@@ -62,7 +62,7 @@ theorem exists_union {ι : Type} [Finite ι] (a n h : ℕ) (hc : Nat.card ι ≤
     (H : ∀ τ, ∃ U : Finset ℤ, U.card ≤ n ∧ (∀ u ∈ U, -(h : ℤ) ≤ u ∧ u ≤ h) ∧ ∀ x, p τ x → x ∈ U) :
     ∃ U : Finset ℤ, U.card ≤ a * n ∧ (∀ u ∈ U, -(h : ℤ) ≤ u ∧ u ≤ h) ∧ ∀ τ x, p τ x → x ∈ U := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   choose U h1 h2 h3 using H
   refine ⟨Finset.univ.biUnion U, ?_, ?_, fun τ x hx => Finset.mem_biUnion.2 ⟨τ, Finset.mem_univ _, h3 τ x hx⟩⟩
   · refine Finset.card_biUnion_le.trans ((Finset.sum_le_card_nsmul _ _ n fun τ _ => h1 τ).trans ?_)

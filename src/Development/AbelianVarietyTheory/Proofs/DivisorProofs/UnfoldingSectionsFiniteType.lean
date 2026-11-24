@@ -96,17 +96,17 @@ theorem exists_chart_read_at_frames : ∀ (E : Type) [Field E] [NumberField E] [
   intro E _ _ _ H Dw l Xo c r σ U hU Z
   have h : GenFrEx Xo c := (Reg.genFrEx_and_genFromTest E H Dw l Xo c).1
   obtain ⟨C, rfl⟩ := exists_fChart h Z
-  haveI := C.sm
+  have := C.sm
   refine ⟨C.R, inferInstance, C.t, fun e f hf => ?_, fun φ hφ => ?_⟩
   · obtain ⟨b, hb, -⟩ := fChart_exists_val C hf
     exact hb ▸ b.2
-  · haveI : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
+  · have : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
     let ψ : C.R →ₐ[c.F] CAt σ := { (φ : C.R →+* CAt σ) with commutes' := fun a => DFunLike.congr_fun hφ a }
     obtain ⟨z, hz⟩ := exists_frMap ψ C.y
     obtain ⟨k, x, s, hs⟩ := hU.2.2.1 z
     have key : ∀ (e : Formalism.L2.Pj.Ix Dw → ℤ), ∀ f ∈ secZ Xo c e,
         toC (σ := σ) (evR Xo c f z) = ((∏ i, (show ℂˣ from s i) ^ e i : ℂˣ) : ℂ) * rdU U f k x.1 := fun e f hf => by
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dif_pos]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dite_eq_left]
       exact evR_frBor (S := CAt σ) hf hs
     refine ⟨⟨k, x.1⟩, by_contra fun hn => ?_, s, fun e f hf b hb => ?_⟩
     · have h1 := key 0 _ (idem_mem_secZ C.Z)

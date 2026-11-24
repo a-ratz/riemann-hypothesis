@@ -110,10 +110,10 @@ theorem hg_sch (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMeasure) {
     · funext k
       show (d.crd (d.cmb (c u y)) k).2 = y k
       rw [KFock.crd_cmb']
-  haveI := hνf
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : BorelSpace (Yf d) := Pi.borelSpace
+  have := hνf
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : BorelSpace (Yf d) := Pi.borelSpace
   have hint : ∀ g' ∈ SB (Yf d), Integrable (fun y => g' y * star (g y)) νf := by
     intro g' hg''
     have hc : Continuous (fun y => g' y * star (g y)) :=
@@ -134,7 +134,7 @@ theorem hg_sch (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMeasure) {
         fun u => ?_⟩⟩
       · simp only [e, mul_assoc]
         exact (hint g' hg'').const_mul _
-      · simp only [e, mul_assoc, integral_const_mul, SchwartzMap.smul_apply,
+      · simp only [e, mul_assoc, integral_const_mul, smul_apply,
           SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply, ContinuousLinearEquiv.trans_apply,
           smul_eq_mul]
         ring
@@ -145,14 +145,14 @@ theorem hg_sch (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMeasure) {
       refine ⟨fun u => ?_, k1 + k2, fun u => ?_⟩
       · simp only [Pi.add_apply, add_mul]
         exact (i1 u).add (i2 u)
-      · simp only [Pi.add_apply, add_mul, SchwartzMap.add_apply, e1, e2]
+      · simp only [Pi.add_apply, add_mul, add_apply, e1, e2]
         rw [integral_add (i1 u) (i2 u)]
     | smul a Φ _ h =>
       obtain ⟨i1, k1, e1⟩ := h
       refine ⟨fun u => ?_, a • k1, fun u => ?_⟩
       · simp only [Pi.smul_apply, smul_eq_mul, mul_assoc]
         exact (i1 u).const_mul a
-      · simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, SchwartzMap.smul_apply, e1, integral_const_mul]
+      · simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, smul_apply, e1, integral_const_mul]
   obtain ⟨-, h, eh⟩ := key (f ∘ d.cmb) hf
   refine ⟨h, funext fun u => ?_⟩
   rw [eh u]
@@ -189,7 +189,7 @@ theorem arc_apply (R : RD d) (X : Mx F E d.m d.n) (i : Iw d) :
 theorem norm_arc_sq (R : RD d) (X : Mx F E d.m d.n) :
     ‖arc R X‖ ^ 2 = ∑ w, ∑ a, ∑ j, ‖R.loc w X a j‖ ^ 2 := by
   rw [EuclideanSpace.norm_sq_eq]
-  simp only [Fintype.sum_prod_type, Fintype.sum_bool, arc_apply, if_true, Bool.false_eq_true, if_false,
+  simp only [Fintype.sum_prod_type, Fintype.sum_bool, arc_apply, ite_true, Bool.false_eq_true, ite_false,
     Real.norm_eq_abs, sq_abs]
   refine Finset.sum_congr rfl fun w _ => Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun j _ => ?_
   rw [Complex.sq_norm, Complex.normSq_apply]
@@ -211,10 +211,10 @@ def lin (a : Fin d.m) (j : Fin d.n) (b : Bool) : PX d.m d.n :=
 theorem evX_lin (a : Fin d.m) (j : Fin d.n) (b : Bool) (z : Fin d.m → Fin d.n → ℂ) :
     evX (lin (d := d) a j b) z = ((if b then (z a j).re else (z a j).im : ℝ) : ℂ) := by
   cases b
-  · simp only [lin, evX, Bool.false_eq_true, if_false, map_mul, map_sub, MvPolynomial.eval_C, MvPolynomial.eval_X,
-      if_true]
+  · simp only [lin, evX, Bool.false_eq_true, ite_false, map_mul, map_sub, MvPolynomial.eval_C, MvPolynomial.eval_X,
+      ite_true]
     apply Complex.ext <;> simp <;> ring
-  · simp only [lin, evX, if_true, Bool.false_eq_true, if_false, map_mul, map_add (f := _), MvPolynomial.eval_C,
+  · simp only [lin, evX, ite_true, Bool.false_eq_true, ite_false, map_mul, map_add (f := _), MvPolynomial.eval_C,
       MvPolynomial.eval_X]
     apply Complex.ext <;> simp <;> ring
 
@@ -379,10 +379,10 @@ theorem mem_fock_of (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMeasu
     funext i
     show gg i y = 0
     exact image_eq_zero_of_notMem_tsupport (f := gg i) fun h => hyK (Set.mem_iUnion.2 ⟨i, h⟩)
-  haveI := hνf
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : BorelSpace (Yf d) := Pi.borelSpace
+  have := hνf
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : BorelSpace (Yf d) := Pi.borelSpace
 
   let ψ : (Fin N → ℂ) → Vw d → ℂ := fun c u => ∑ i, a i * (φ i (L.symm (Zc u)) * c i)
   have hterm : ∀ c ∈ Vals, (fun X => ψ c (arc R X) * {y | Φv y = c}.indicator (fun _ => (1 : ℂ)) (fin d X)) ∈ R.fock := by
@@ -444,7 +444,7 @@ theorem mem_fock_of (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMeasu
     · have hmemK : fin d X ∈ K := hfib_sub _ h0 rfl
       have hmemt : Φv (fin d X) ∈ t := by
         have := ht hmemK
-        simp only [Set.mem_iUnion, Set.mem_setOf_eq] at this
+        simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at this
         obtain ⟨c, hct, hc⟩ := this
         rw [hc]
         exact hct

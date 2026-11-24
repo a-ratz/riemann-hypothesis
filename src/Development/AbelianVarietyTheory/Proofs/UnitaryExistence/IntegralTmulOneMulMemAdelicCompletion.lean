@@ -251,7 +251,7 @@ theorem _root_.GlobalTheory.AdLat.trivial_level_of_half : ∀ (F E : Type) [Fiel
     rw [hv, ← Nat.cast_smul_eq_nsmul F, smul_smul, mul_inv_cancel₀ hM0, one_smul]
   have hsg : _root_.GlobalTheory.AdLat.sg (FiniteAdeleRing (𝓞 F) F) c (e b) = e i' := by
     simp only [e, _root_.GlobalTheory.AdLat.sg, Algebra.TensorProduct.map_tmul, AlgHom.id_apply]
-    rw [AlgEquiv.coe_algHom, hbc, hc]
+    rw [AlgEquiv.coe_toAlgHom, hbc, hc]
   have hvL : v ∈ Lh := by
     refine (_root_.GlobalTheory.AdLat.hat_selfDual F E n L c G J hFG hspan hc hG hdet hJ hdual v).1
       fun y hy => ?_

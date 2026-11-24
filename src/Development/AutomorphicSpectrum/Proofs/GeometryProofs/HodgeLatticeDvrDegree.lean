@@ -161,7 +161,7 @@ open GlobalTheory.CompanionTheory.Ar.Flat.DegZ in
 theorem germ_degZero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X : Scheme.{0}) (t : SAB H X) (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Sp Ω ⟶ X) (d r : ℕ) (M : LieModel t.G ξ (Fin d → Ω)) (S : GermSys t ξ M) (ρ : 𝓞 E →+* Module.End Ω (Fin d → Ω)) (𝓗 : HodgeLat M.lat ρ H.bar r) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω] (s : X ⟶ Sp O) [IsSeparated s] [LocallyOfFiniteType s] (ϖ : O) (p : ℕ) (σ : E →+* Ω), Irreducible ϖ → p.Prime → ϖ ∣ (p : O) → ξ ≫ s = spMap (algebraMap O Ω) → IsCptGen ξ → PowFns t → S.Gives 𝓗 → (∀ q : Cpt ξ, (p : X.residueField q.1) = 0 → FibPF t q.1) → Nat.card (E →+* Ω) = Module.finrank ℚ E → (∀ (s' : E →+* Ω) (a : 𝓞 E), s' (a : E) ∈ (algebraMap O Ω).range) → 𝓗.DegZero σ (algebraMap O Ω ϖ) := by
   intro E _ _ _ H _ hstar X t Ω _ _ ξ d r M S ρ 𝓗 O _ _ _ _ s _ _ ϖ p σ hϖ hp hdvd hs hξ hpow hgive hfib hcard hrange
     u hu hsp Γ
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hinj : Function.Injective (algebraMap O Ω) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
@@ -203,7 +203,7 @@ theorem germ_degZero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rw [h3]
     have h4 : v0 s0 = 0 := hs1
     rw [h4, zero_mul]
-  haveI : CharP Γ.κ p := (CharP.charP_iff_prime_eq_zero hp).2 hpκ
+  have : CharP Γ.κ p := (CharP.charP_iff_prime_eq_zero hp).2 hpκ
   obtain ⟨F, hF0, hFi⟩ := GlobalTheory.T.fibre_curve_germ_powers E H hstar X t Ω ξ d M S O s _ p Γ hξ hpow hfib
   choose hFB φ' ψ' lam' he hφ hψ hlam using hFi
   choose xs A hxs hfr hpr using GlobalTheory.T.hodge_lattice_germ_eigen E H X t Ω ξ d r M S ρ 𝓗 σ u hξ hgive hσ hu hsp
@@ -249,7 +249,7 @@ theorem germ_degZero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     exact congrArg (· * (A q0).det) (RingHom.map_det (genMap ξ q0) (Mt i)).symm
   have hunit : ∀ i, IsUnit (Mt i).det := fun i => by
     have h1 : IsUnit (v0 (Mt i).det) := isUnit_iff_ne_zero.2 (hNdet i ▸ hne i)
-    haveI : IsLocalHom v0 := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo Γ.η).hom)
+    have : IsLocalHom v0 := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo Γ.η).hom)
     exact (isUnit_map_iff v0 _).1 h1
   refine ⟨(A q0).det, fun i => (A (qi i)).det, fun i => ((N i).det)⁻¹, hdet q0,
     fun i => ⟨FibreCurve.z_spec Γ i, hdet (qi i)⟩, fun i => ⟨inv_ne_zero (hne i), ?_⟩, ?_, ?_⟩

@@ -81,7 +81,7 @@ theorem exists_grpObj_of_mono {N B : 𝒞} [GrpObj B] (ν : N ⟶ B) [Mono ν] (
     intro T a
     rw [he, Hom.one_def, toUnit_unique a (toUnit T)]
   have hi' : i ≫ ν = ν⁻¹ := by rw [hi, Hom.inv_def]
-  letI M : MonObj N :=
+  let M : MonObj N :=
     { one := e
       mul := m
       one_mul := by
@@ -145,7 +145,7 @@ theorem geometricallyReduced_of_perfectField {k : Type u} [Field k] [PerfectFiel
     obtain ⟨φ, hφ⟩ := Spec.map_surjective (X.affineOpenCover.f i ≫ f)
     change IsReduced (pullback (X.affineOpenCover.f i ≫ f) _)
     rw [← hφ]
-    letI : Algebra k (X.affineOpenCover.X i) := φ.hom.toAlgebra
+    let : Algebra k (X.affineOpenCover.X i) := φ.hom.toAlgebra
     have h2 := ReducedAlg.isReduced_tensor (k := k) (X.affineOpenCover.X i) K
     have h3 := (affine_isReduced_iff
       (.of (TensorProduct k (X.affineOpenCover.X i) K))).mpr h2
@@ -224,7 +224,7 @@ theorem exists_smooth_closed_subgroup (k : Type) [Field k] [IsAlgClosed k] (B : 
     exact C.inv_mem (hmem _)
   obtain ⟨G, hG⟩ := exists_grpObj_of_mono ν e m i he hm hi
   refine ⟨N, G, ν, hG, hν, ?_, hr⟩
-  letI : GrpObj (Over.mk N.hom) := G
+  let : GrpObj (Over.mk N.hom) := G
   exact smooth_of_grpObj N.hom
 
 end GlobalTheory.ReducedSubgroup

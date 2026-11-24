@@ -142,7 +142,7 @@ theorem latO_acts_by_signs : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] 
           rw [Finset.sum_eq_single i]
           · simp
           · intro j _ hj
-            rw [if_neg (fun h => hj (hP.inj h).symm), zero_mul]
+            rw [ite_eq_right (fun h => hj (hP.inj h).symm), zero_mul]
           · intro h
             exact absurd (List.mem_toFinset.2 (hP.all i)) h
         · rw [hsupp v hv]

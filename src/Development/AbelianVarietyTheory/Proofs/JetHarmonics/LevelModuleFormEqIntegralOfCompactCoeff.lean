@@ -108,7 +108,7 @@ theorem integrable_zeta_of_integrable {k r : ℕ} {z z' : Fin (2 * r + k + 1) �
   have hne : μW.prod μW' ≠ 0 := by
     intro h0
     have h3 := congrArg (fun ν : Measure (Mt k r × Mt k r) => ν (Set.univ ×ˢ Set.univ)) h0
-    simp only [Measure.prod_prod, Measure.coe_zero, Pi.zero_apply, mul_eq_zero, Measure.measure_univ_eq_zero] at h3
+    simp only [Measure.prod_prod, FunLike.coe_zero, Pi.zero_apply, mul_eq_zero, Measure.measure_univ_eq_zero] at h3
     exact h3.elim hW.ne_zero hW'.ne_zero
   unfold rbP at hφ2
   have : NeZero (μW.prod μW') := ⟨hne⟩

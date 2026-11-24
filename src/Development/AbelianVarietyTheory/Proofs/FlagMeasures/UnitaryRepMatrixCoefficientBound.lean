@@ -107,9 +107,9 @@ private theorem integrable_and_integral_eq_of_lintegral_weight_one {G : Type} [G
   have hgl : ∫⁻ y, ‖g y‖ₑ ∂μ < ⊤ := hgi.hasFiniteIntegral
   have hnorm : ∀ y (z : ℂ), ‖((β y).toReal : ℂ) * z‖ₑ = β y * ‖z‖ₑ := by
     intro y z
-    rw [enorm_mul]
+    rw [eNorm_mul]
     congr 1
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs,
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs,
       abs_of_nonneg ENNReal.toReal_nonneg, ENNReal.ofReal_toReal (hfin y)]
   have hHm : Measurable (fun p : G × G => ((β p.2).toReal : ℂ) * g (p.1 * p.2)) :=
     (Complex.measurable_ofReal.comp (hβ.comp measurable_snd).ennreal_toReal).mul
@@ -117,12 +117,12 @@ private theorem integrable_and_integral_eq_of_lintegral_weight_one {G : Type} [G
   have hHi : Integrable (fun p : G × G => ((β p.2).toReal : ℂ) * g (p.1 * p.2)) (ν.prod μ) := by
     refine ⟨hHm.aestronglyMeasurable, ?_⟩
     show ∫⁻ p, ‖((β p.2).toReal : ℂ) * g (p.1 * p.2)‖ₑ ∂(ν.prod μ) < ⊤
-    rw [lintegral_prod_symm _ hHm.enorm.aemeasurable]
+    rw [lintegral_prod_symm _ hHm.eNorm.aemeasurable]
     simp only [hnorm]
     have h2 : ∀ y, ∫⁻ m, β y * ‖g (m * y)‖ₑ ∂ν = β y * ∫⁻ m, ‖g (m * y)‖ₑ ∂ν := fun y =>
-      lintegral_const_mul _ (hg.enorm.comp (measurable_mul_const y))
+      lintegral_const_mul _ (hg.eNorm.comp (measurable_mul_const y))
     simp only [h2]
-    rw [← hkey _ hg.enorm]
+    rw [← hkey _ hg.eNorm]
     exact hgl
   have heq : ∀ y, ∫ m, ((β y).toReal : ℂ) * g (m * y) ∂ν = ((β y).toReal : ℂ) * ∫ m, g (m * y) ∂ν :=
     fun y => integral_const_mul _ _
@@ -137,7 +137,7 @@ private theorem integrable_and_integral_eq_of_lintegral_weight_one {G : Type} [G
   have hKi : Integrable (fun p : G × G => ((β (p.1⁻¹ * p.2)).toReal : ℂ) * g p.2) (ν.prod μ) := by
     refine ⟨hKm.aestronglyMeasurable, ?_⟩
     show ∫⁻ p, ‖((β (p.1⁻¹ * p.2)).toReal : ℂ) * g p.2‖ₑ ∂(ν.prod μ) < ⊤
-    rw [lintegral_prod_symm _ hKm.enorm.aemeasurable]
+    rw [lintegral_prod_symm _ hKm.eNorm.aemeasurable]
     simp only [hnorm]
     have h3 : ∀ y, ∫⁻ m, β (m⁻¹ * y) * ‖g y‖ₑ ∂ν = ‖g y‖ₑ := by
       intro y
@@ -173,8 +173,8 @@ theorem weil_formula_cutoff : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsT
   intro G _ _ _ _ _ _ _ _ μ _ N ν _hN hH β hβ hfin hone
   have hH' := hH
   unfold IsHaarSub at hH'
-  haveI : IsFiniteMeasureOnCompacts ν := hH'.2.1
-  haveI : SigmaFinite ν := inferInstance
+  have : IsFiniteMeasureOnCompacts ν := hH'.2.1
+  have : SigmaFinite ν := inferInstance
   have hkey := lintegral_eq_lintegral_weight_mul_lintegral μ ν β hβ hone
   refine ⟨hkey, fun f hf => ?_⟩
   have hgm : Measurable (hf.aestronglyMeasurable.mk f) :=
@@ -327,7 +327,7 @@ private theorem dOp_nonneg_inv_subadditive_continuous (n : ℕ) (ε : Fin n → 
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · have h0 : ∀ g : UJ ε, dOp (umat g) = 0 := fun g => by
       rw [GlobalTheory.Count.Cartan.dOp_eq, Subsingleton.elim (α := Matrix (Fin 0) (Fin 0) ℂ) (umat g) 0]
-      letI : NormedRing (Matrix (Fin 0) (Fin 0) ℂ) := Matrix.instL2OpNormedRing
+      let : NormedRing (Matrix (Fin 0) (Fin 0) ℂ) := Matrix.instL2OpNormedRing
       exact Real.log_eq_zero.2 (Or.inl norm_zero)
     refine ⟨fun g => (h0 g).ge, fun g => by rw [h0, h0], fun g h => by rw [h0, h0, h0, add_zero], h5⟩
   · obtain ⟨-, h2, -⟩ := GlobalTheory.Count.Cartan.cartan_distances n ε
@@ -363,10 +363,10 @@ private theorem nw_one_mem_mul_mem_inv_mem_isClosed {n : ℕ} (ε : Fin n → Bo
       abel
   refine ⟨?_, ?_, ?_, ?_⟩
   · have e0 : umat (1 : UJ ε) - 1 = 0 := sub_self (1 : Matrix (Fin n) (Fin n) ℂ)
-    simp only [NW, Set.mem_setOf_eq, e0, zero_mulVec, hzero]
+    simp only [NW, Set.mem_ofPred_eq, e0, zero_mulVec, hzero]
     exact ⟨fun _ _ => trivial, fun _ _ => W.zero_mem, fun _ _ _ => trivial⟩
   · intro a ha b hb
-    simp only [NW, Set.mem_setOf_eq] at ha hb ⊢
+    simp only [NW, Set.mem_ofPred_eq] at ha hb ⊢
     obtain ⟨a1, a2, a3⟩ := ha
     obtain ⟨b1, b2, b3⟩ := hb
     refine ⟨fun x hx => ?_, fun y hy => ?_, fun y x hx => ?_⟩ <;>
@@ -376,7 +376,7 @@ private theorem nw_one_mem_mul_mem_inv_mem_isClosed {n : ℕ} (ε : Fin n → Bo
       exact W.add_mem (a2 y hy) (b2 y hy)
     · rw [hadd, hadd, a3 _ x hx, a3 y x hx, b3 y x hx, add_zero, add_zero]
   · intro g hg
-    simp only [NW, Set.mem_setOf_eq] at hg ⊢
+    simp only [NW, Set.mem_ofPred_eq] at hg ⊢
     obtain ⟨a1, a2, a3⟩ := hg
     have c1 : ∀ x ∈ W, (umat g⁻¹ - 1) *ᵥ x = 0 := by
       intro x hx
@@ -387,13 +387,13 @@ private theorem nw_one_mem_mul_mem_inv_mem_isClosed {n : ℕ} (ε : Fin n → Bo
     · rw [(hinv g).2, sub_mulVec, neg_mulVec, ← mulVec_mulVec, sub_eq_add_neg, hadd, hneg, hneg,
         a3 y x hx, a3 _ x hx, neg_zero, add_zero]
   · have hcu : Continuous (fun g : UJ ε => umat g - 1) :=
-      (Units.continuous_val.comp continuous_subtype_val).sub continuous_const
+      (Units.continuous_val.comp continuous_subtypeVal).sub continuous_const
     have hcv : ∀ y, Continuous (fun g : UJ ε => (umat g - 1) *ᵥ y) := fun y =>
       hcu.matrix_mulVec continuous_const
-    simp only [NW, Set.setOf_and, Set.setOf_forall]
+    simp only [NW, Set.ofPred_and, Set.ofPred_forall]
     refine IsClosed.inter (isClosed_iInter fun x => isClosed_iInter fun _ =>
       isClosed_eq (hcv x) continuous_const) (IsClosed.inter (isClosed_iInter fun y =>
-      isClosed_iInter fun _ => (W.closed_of_finiteDimensional).preimage (hcv y))
+      isClosed_iInter fun _ => (W.isClosed_of_finiteDimensional).preimage (hcv y))
       (isClosed_iInter fun y => isClosed_iInter fun x => isClosed_iInter fun _ =>
       isClosed_eq ?_ continuous_const))
     simp only [herm]
@@ -409,7 +409,7 @@ theorem constTerm_inner : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule ℂ
   obtain ⟨n1, nmul, ninv, ncl⟩ := nw_one_mem_mul_mem_inv_mem_isClosed ε W
   have hr := _root_.GlobalTheory.UnipUnimod.unimodular_NW n ε W ν hW hν
   obtain ⟨-, hνi⟩ := _root_.GlobalTheory.RadVol.radical_volume_growth n ε W ν hW hν
-  haveI : IsFiniteMeasureOnCompacts ν := hν.2.1
+  have : IsFiniteMeasureOnCompacts ν := hν.2.1
   have hnr : (0 : ℝ) ≤ (n : ℝ) * (rkR ε : ℝ) := by positivity
   have hc0 : 0 ≤ c := by nlinarith
   have hνc : Integrable (fun m : UJ ε => Real.exp (-(c * dOp (umat m)))) ν := hνi c (by nlinarith)
@@ -421,7 +421,7 @@ theorem constTerm_inner : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule ℂ
       hDc.measurable hD0 hC0 (by nlinarith)
   obtain ⟨C1, hC1⟩ := hf
   obtain ⟨C2, hC2⟩ := hf'
-  have hcu : Continuous (fun g : UJ ε => umat g) := Units.continuous_val.comp continuous_subtype_val
+  have hcu : Continuous (fun g : UJ ε => umat g) := Units.continuous_val.comp continuous_subtypeVal
   have hsc : ∀ x : H, Continuous (fun g : UJ ε => σ (umat g) x) := fun x =>
     (hσ.2.2 x).comp_continuous hcu (fun g => g.2)
   have cf : Continuous (fun g : UJ ε => ⟪v, σ (umat g) u⟫_ℂ) := continuous_const.inner (hsc u)

@@ -173,7 +173,7 @@ theorem pull_gen {N : LB Y} {F : Z ⟶ Y} {t : (N.pull F).Gen} (ht : t.IsGen) (z
   have H := congrArg (fun u => (Z.presheaf.germ _ z hz).hom (Units.val u)) (ht (fun _ => i) (fun _ => j))
   ext1
   rw [Units.val_mul, gm_id_val_eq_germ _ z hz.1, gm_id_val_eq_germ _ z hz.2, gm_val_eq_germ_app F z _ hij]
-  simp only [res, Units.coe_map, Units.val_mul, map_mul, MonoidHom.coe_coe, TopCat.Presheaf.germ_res_apply] at H
+  simp only [res, Units.coe_map, Units.val_mul, map_mul, MonoidHom.coe_ofClass, TopCat.Presheaf.germ_res_apply] at H
   have hg : (Z.presheaf.germ _ z hz).hom ((N.pull F).g (fun _ => i) (fun _ => j)).1 =
       (Z.presheaf.germ (F ⁻¹ᵁ (N.U i ⊓ N.U j)) z hij).hom (F.app _ (N.g i j).1) := by
     simp only [LB.pull, LB.LinComb, Fintype.prod_unique, zpow_one]

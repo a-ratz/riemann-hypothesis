@@ -59,7 +59,7 @@ theorem _root_.GlobalTheory.EtC.loc_iff_etale_affine_points : ∀ (U : Scheme.{0
   constructor
   · rintro ⟨S, hS, hSP⟩ x
     obtain ⟨𝒰, h𝒰⟩ := (Scheme.mem_grothendieckTopology_iff (P := @Etale)).1 hS
-    haveI : Scheme.JointlySurjective (Scheme.precoverage (@Etale : MorphismProperty Scheme.{0})) :=
+    have : Scheme.JointlySurjective (Scheme.precoverage (@Etale : MorphismProperty Scheme.{0})) :=
       Scheme.instJointlySurjectivePrecoverage
     obtain ⟨i, y, rfl⟩ := 𝒰.exists_eq x
     let A := (𝒰.X i).affineCover

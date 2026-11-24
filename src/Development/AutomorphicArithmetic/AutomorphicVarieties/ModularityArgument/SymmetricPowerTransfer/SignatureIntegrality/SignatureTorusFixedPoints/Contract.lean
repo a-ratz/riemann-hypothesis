@@ -127,7 +127,7 @@ noncomputable section
 open ValuativeRel Matrix Polynomial GlobalTheory.SmGL GlobalTheory.SplitWeil UpperTheory.V.Hi UpperTheory.V.AlgebraTools UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Sig UpperTheory.V.Z.Sym.Loc UpperTheory.V.Z.Sym.Glob
 
 private theorem quot0 {R : Type} [CommRing R] (I : Ideal R) (u v : R ⧸ I ^ 0) : u = v := by
-  haveI : Subsingleton (R ⧸ I ^ 0) := Ideal.Quotient.subsingleton_iff.mpr (by simp)
+  have : Subsingleton (R ⧸ I ^ 0) := Ideal.Quotient.subsingleton_iff.mpr (by simp)
   exact Subsingleton.elim u v
 
 private theorem mem_kc_zero_of_mem_ko {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]

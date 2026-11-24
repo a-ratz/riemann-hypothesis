@@ -136,7 +136,7 @@ theorem ker_inf_sq_le_of_isRegularLocalRing {S : Type*} [CommRing S] [IsRegularL
   by_cases hker : RingHom.ker f ≤ maximalIdeal P ^ 2
   · rw [ker_eq_bot_of_isRegularLocalRing_of_le_sq f hf hker]
     simp
-  obtain ⟨x, hx, hx2⟩ := SetLike.not_le_iff_exists.mp hker
+  obtain ⟨x, hx, hx2⟩ := IsConcreteLE.not_le_iff_exists.mp hker
   have hxm : x ∈ maximalIdeal P := le_maximalIdeal (RingHom.ker_ne_top f) hx
   have := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.quotient_span_singleton hxm hx2
   have hlt : (maximalIdeal (P ⧸ Ideal.span {x})).spanFinrank < n := by
@@ -700,7 +700,7 @@ theorem topologicalKrullDim_closure_eq_ringKrullDim_quotient {K : Type u} [Field
   obtain ⟨q', hq'⟩ := (specializes_iff_mem_closure.mpr z.2).mem_open
     j'.isOpenEmbedding.isOpen_range ⟨y, hy⟩
   refine ⟨Subtype.val ⁻¹' Set.range j',
-    j'.isOpenEmbedding.isOpen_range.preimage continuous_subtype_val, ⟨y, hy⟩, ?_⟩
+    j'.isOpenEmbedding.isOpen_range.preimage continuous_subtypeVal, ⟨y, hy⟩, ?_⟩
   rw [← topologicalKrullDim_eq_of_isEmbedding (IsEmbedding.subtypeVal.comp IsEmbedding.subtypeVal)
     (Z := Set.range j' ∩ closure {j q})
     (by rw [Set.range_comp, Subtype.range_coe, Subtype.image_preimage_coe, Set.inter_comm])]

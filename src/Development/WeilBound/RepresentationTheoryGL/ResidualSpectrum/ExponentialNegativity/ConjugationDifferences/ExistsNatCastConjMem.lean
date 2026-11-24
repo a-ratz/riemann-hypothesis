@@ -74,7 +74,7 @@ theorem exists_natCast_conj_mem (U : Subgroup (AdelicGLn.integralFiniteGL K n))
   classical
   set U' : Set (AdelicGLn.FiniteAdelicGL K n) :=
     Subtype.val '' (U : Set (AdelicGLn.integralFiniteGL K n))
-  have hU' : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtype_val _ hU
+  have hU' : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtypeVal _ hU
   have h1U' : (1 : AdelicGLn.FiniteAdelicGL K n) ∈ U' := ⟨1, U.one_mem, rfl⟩
   set Cf : Set (AdelicGLn.FiniteAdelicGL K n) :=
     (fun p : AdelicGLn.AdelicGL K n × AdelicGLn.AdelicGL K n => (AdelicGLn.prodEquiv K n (p.1 * p.2)).2) ''

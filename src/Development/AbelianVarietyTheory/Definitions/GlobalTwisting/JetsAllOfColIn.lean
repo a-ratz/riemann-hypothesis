@@ -78,14 +78,14 @@ open Formalism.L2.Host Formalism.HC Formalism.HC.Der Formalism.FrobeniusOrbits
 
 private theorem exists_aut_pow (N : ℕ) (hN : 0 < N) (u : ℕ) (hu : u.Coprime N) :
     ∃ s : Qb ≃ₐ[ℚ] Qb, ∀ z ∈ mus N, s z = z ^ u := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  obtain ⟨w, hw⟩ : ∃ w : Qb, IsPrimitiveRoot w N := HasEnoughRootsOfUnity.exists_primitiveRoot Qb N
+  have : NeZero N := ⟨hN.ne'⟩
+  obtain ⟨w, hw⟩ : ∃ w : Qb, IsPrimitiveRoot w N := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Qb N
   have hw' : IsPrimitiveRoot (w ^ u) N := hw.pow_of_coprime u hu
   have hc : IsConjRoot ℚ (w ^ u) w := by
     unfold IsConjRoot
     rw [← Polynomial.cyclotomic_eq_minpoly_rat hw hN, ← Polynomial.cyclotomic_eq_minpoly_rat hw' hN]
-  haveI : IsAlgClosure ℚ Qb := AlgebraicClosure.instIsAlgClosure ℚ
-  haveI : Normal ℚ Qb := IsAlgClosure.normal ℚ Qb
+  have : IsAlgClosure ℚ Qb := AlgebraicClosure.instIsAlgClosure ℚ
+  have : Normal ℚ Qb := IsAlgClosure.normal ℚ Qb
   obtain ⟨s, hs⟩ := hc.exists_algEquiv
   refine ⟨s, fun z hz => ?_⟩
   obtain ⟨i, -, rfl⟩ := hw.eq_pow_of_pow_eq_one hz

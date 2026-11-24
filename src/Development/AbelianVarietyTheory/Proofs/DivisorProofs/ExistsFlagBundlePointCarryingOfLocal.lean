@@ -188,7 +188,7 @@ theorem compat_of_uniq {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo 
     (zf : Sp (Localization.Away f) ⟶ Z) (zg : Sp (Localization.Away g) ⟶ Z) (hf : F.Lies zf Pf) (hg : F.Lies zg Pg)
     (T : Type) [CommRing T] (a : Localization.Away f →+* T) (b : Localization.Away g →+* T)
     (hab : a.comp (algebraMap S _) = b.comp (algebraMap S _)) : spMap a ≫ zf = spMap b ≫ zg := by
-  letI : Algebra c.F T := ((a.comp (algebraMap S _)).comp (algebraMap c.F S)).toAlgebra
+  let : Algebra c.F T := ((a.comp (algebraMap S _)).comp (algebraMap c.F S)).toAlgebra
   have hca : ∀ r : c.F, a (algebraMap c.F (Localization.Away f) r) = algebraMap c.F T r := fun r => by
     rw [IsScalarTower.algebraMap_apply c.F S (Localization.Away f)]
     rfl

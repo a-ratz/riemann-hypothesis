@@ -409,7 +409,7 @@ theorem _root_.GlobalTheory.KeyKa.KoszulTors.koszul_tors : ∀ (O : Type) [CommR
       · subst hI
         show ev 0 a l = ∑ b, Pm a b * (if (∅ : Finset (Fin g)) = ∅ then ev₀ 0 b l else 0)
         rw [hev]
-        exact Matrix.mul_apply.trans (Finset.sum_congr rfl fun b _ => by rw [if_pos rfl])
+        exact Matrix.mul_apply.trans (Finset.sum_congr rfl fun b _ => by rw [ite_eq_left rfl])
       · show (if I = ∅ then ev I.card a l else 0) = ∑ b, Pm a b * (if I = ∅ then ev₀ I.card b l else 0)
         simp [hI]
     · simp [hK, hK₀, kosD_inr_eq_zero]
@@ -542,8 +542,8 @@ theorem _root_.GlobalTheory.KeyKa.KoszulTors.koszul_tors : ∀ (O : Type) [CommR
         intro J
         by_cases h : ∃ i, J = {i}
         · obtain ⟨i, rfl⟩ := h
-          rw [Finset.sum_eq_single i (fun j _ hj => if_neg fun h' => hj (Finset.singleton_inj.mp h').symm)
-            (fun h' => absurd (Finset.mem_univ _) h'), if_pos rfl]
+          rw [Finset.sum_eq_single i (fun j _ hj => ite_eq_right fun h' => hj (Finset.singleton_inj.mp h').symm)
+            (fun h' => absurd (Finset.mem_univ _) h'), ite_eq_left rfl]
           refine Finset.sum_congr rfl fun l' _ => ?_
           congr 1
           · rw [hK₀]
@@ -554,7 +554,7 @@ theorem _root_.GlobalTheory.KeyKa.KoszulTors.koszul_tors : ∀ (O : Type) [CommR
               | (simp [wf]; done)
               | (simp [wf]; rfl)
         · push_neg at h
-          rw [Finset.sum_eq_zero fun i _ => if_neg (h i)]
+          rw [Finset.sum_eq_zero fun i _ => ite_eq_right (h i)]
           refine Finset.sum_eq_zero fun l' _ => ?_
           rw [hK₀]
           simp [_root_.GlobalTheory.KeyKa.kosD, h]
@@ -1052,14 +1052,14 @@ theorem ext_of_isHausdorff (π : MvPolynomial (Fin g) O →ₐ[O] B) (hπ : π.t
     {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) [IsHausdorff J A] (φ₁ φ₂ : B →ₐ[O] A)
     (h : ∀ b, φ₁ b - φ₂ b ∈ J)
     (hs : ∀ j : Fin g, φ₁ (π (MvPolynomial.X j)) = φ₂ (π (MvPolynomial.X j))) : φ₁ = φ₂ := by
-  letI : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
+  let : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
   let ρ : MvPolynomial (Fin g) O →ₐ[O] A := φ₁.comp π
   have hρ2 : φ₂.comp π = ρ := by
     apply MvPolynomial.algHom_ext
     intro j
     exact (hs j).symm
-  letI : Algebra (MvPolynomial (Fin g) O) A := ρ.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin g) O) A := ρ.toRingHom.toAlgebra
   let ψ₁ : B →ₐ[MvPolynomial (Fin g) O] A :=
     { φ₁.toRingHom with commutes' := fun p => rfl }
   let ψ₂ : B →ₐ[MvPolynomial (Fin g) O] A :=
@@ -1078,12 +1078,12 @@ theorem exists_expansion (π : MvPolynomial (Fin g) O →ₐ[O] B) (hπ : π.toR
     (e : B →ₐ[O] O) :
     ∃ φ : B →ₐ[O] MvPowerSeries (Fin g) O, (∀ b, MvPowerSeries.constantCoeff (φ b) = e b) ∧
       ∀ j, φ (π (MvPolynomial.X j) - algebraMap O B (e (π (MvPolynomial.X j)))) = MvPowerSeries.X j := by
-  letI : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
+  let : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
   let A := MvPowerSeries (Fin g) O
   let ρ : MvPolynomial (Fin g) O →ₐ[O] A :=
     MvPolynomial.aeval (fun j => algebraMap O A (e (π (MvPolynomial.X j))) + MvPowerSeries.X j)
-  letI : Algebra (MvPolynomial (Fin g) O) A := ρ.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin g) O) A := ρ.toRingHom.toAlgebra
   let J : Ideal A := Ideal.span (Set.range MvPowerSeries.X)
   have hf₀ : ((Ideal.Quotient.mkₐ O J).comp ((Algebra.ofId O A).comp e)).comp π =
       (Ideal.Quotient.mkₐ O J).comp ρ := by
@@ -1203,7 +1203,7 @@ theorem exists_formal_chart : ∀ (O : Type) [CommRing O] [IsLocalRing O] (X : S
       (Scheme.ΓSpecIso (CommRingCat.of O)).symm.commRingCatIsoToRingEquiv hs
   obtain ⟨π₀, hπ1, hπ⟩ := h2.exists_etale_mvPolynomial
   clear_value a
-  letI : Algebra O Γ(X, V) := a.toAlgebra
+  let : Algebra O Γ(X, V) := a.toAlgebra
   let π : MvPolynomial (Fin g) O →ₐ[O] Γ(X, V) := { π₀ with commutes' := fun r => RingHom.congr_fun hπ1 r }
   have hpt : ∀ (T : Type) [CommRing T] [Algebra O T] (w : Sp T ⟶ X), ⊤ ≤ w ⁻¹ᵁ V →
       w ≫ h = spMap (algebraMap O T) →
@@ -1297,12 +1297,12 @@ theorem mulVec_empty {R : Type} [CommRing R] (m : Fin g → ∀ j j', Matrix (Fi
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Fintype.sum_sigma, Finset.sum_eq_single {i}]
   · refine Finset.sum_congr rfl fun k _ => ?_
-    rw [if_pos ⟨by simp, by simp⟩]
+    rw [ite_eq_left ⟨by simp, by simp⟩]
     simp
     rfl
   · intro J _ hJ
     refine Finset.sum_eq_zero fun k _ => ?_
-    rw [if_neg (fun h => hJ (by simpa using h.2)), zero_mul]
+    rw [ite_eq_right (fun h => hJ (by simpa using h.2)), zero_mul]
   · simp
 
 theorem mulVec_inr {R : Type} [CommRing R] (m : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N j')) R)
@@ -1311,11 +1311,11 @@ theorem mulVec_inr {R : Type} [CommRing R] (m : Fin g → ∀ j j', Matrix (Fin 
   simp only [mulVec, dotProduct, Fintype.sum_sum_type, kosD, zero_mul, Finset.sum_const_zero, add_zero]
   rw [Fintype.sum_sigma, Finset.sum_eq_single ∅]
   · refine Finset.sum_congr rfl fun k _ => ?_
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     rfl
   · intro J _ hJ
     refine Finset.sum_eq_zero fun k _ => ?_
-    rw [if_neg hJ, zero_mul]
+    rw [ite_eq_right hJ, zero_mul]
   · simp
 
 theorem mulVec_inl_map {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) {d' : ℕ}
@@ -1343,7 +1343,7 @@ theorem div_unif {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O
   let u' : KIx g d N → O := fun q => if kdeg q = 2 then u q else 0
   have h1 : ∀ a : Fin (N 0), (kosD m ev *ᵥ u') (.inl ⟨∅, a⟩) = π * v a := fun a => by
     rw [hu a]
-    exact mulVec_congr_deg hD.1 _ _ _ fun q hq => if_pos hq
+    exact mulVec_congr_deg hD.1 _ _ _ fun q hq => ite_eq_left hq
   obtain ⟨wb, hwb⟩ := hk (Sum.elim (fun q => IsLocalRing.residue O (u' (.inl q))) 0) (by
     ext p
     rcases p with ⟨I, a⟩ | a
@@ -1352,7 +1352,7 @@ theorem div_unif {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O
       · subst hI
         rw [h1 a]
         exact (hres _).2 (dvd_mul_right _ _)
-      · rw [mulVec_congr_deg hD.1 u' 0 _ fun q hq => if_neg ?_]
+      · rw [mulVec_congr_deg hD.1 u' 0 _ fun q hq => ite_eq_right ?_]
         · simp
         · have : I.card ≠ 0 := by simpa using hI
           rw [hq]
@@ -1393,7 +1393,7 @@ theorem ker_and_image : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValu
   refine ⟨fun v hv => ?_, ?_⟩
   · let x : KIx g d N → O := Sum.elim (fun p => if h : p.1 = ∅ then v (Fin.cast (by rw [h]; rfl) p.2) else 0) 0
     have hx0 : ∀ a : Fin (N 0), x (.inl ⟨∅, a⟩) = v a := fun a => by
-      simp only [x, Sum.elim_inl, dif_pos]
+      simp only [x, Sum.elim_inl, dite_eq_left]
       rfl
     have hx : kosD m ev *ᵥ x = 0 := by
       ext p
@@ -1401,7 +1401,7 @@ theorem ker_and_image : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValu
       · rw [mulVec_congr_deg hD.1 x 0 _ ?_]
         · simp
         · rintro (q | q) hq
-          · refine dif_neg fun h => ?_
+          · refine dite_eq_right fun h => ?_
             simp [kdeg, h] at hq
           · rfl
       · rw [mulVec_inr, funext hx0, hv]
@@ -1426,7 +1426,7 @@ theorem ker_and_image : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValu
     rw [mulVec_sum]
     ext b
     simp only [mulVec_smul, hv, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [he b]
     ring
 
@@ -1488,7 +1488,7 @@ theorem exists_projection {O K : Type*} [CommRing O] [IsLocalRing O] [Field K] (
   let φ : IsLocalRing.ResidueField O →+* K :=
     Ideal.Quotient.lift _ f fun a ha => by rwa [← hf] at ha
   have hφ : ∀ o, φ (IsLocalRing.residue O o) = f o := fun _ => rfl
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨r, hr⟩ := (Algebra.linearMap (IsLocalRing.ResidueField O) K).exists_leftInverse_of_injective
     (LinearMap.ker_eq_bot.2 φ.injective)
   choose l hl using fun a => IsLocalRing.residue_surjective (R := O) (r a)

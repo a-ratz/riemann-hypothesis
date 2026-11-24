@@ -137,7 +137,7 @@ theorem iwahori_inv {g : GL (Fin m) F} (hg : g ∈ iwahori (m := m) F) : g⁻¹ 
   have hNM : N * M = 1 := by
     show Matrix.map _ φ * Matrix.map _ φ = 1
     rw [← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero φ) (map_one φ)]
-  letI : Invertible M := ⟨N, hNM, hMN⟩
+  let : Invertible M := ⟨N, hNM, hMN⟩
   have htri : M.BlockTriangular id := by
     intro a b hab
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hg.2 a b hab)
@@ -203,7 +203,7 @@ theorem iwahori_eq : iwahori (m := m) F =
     (⋂ i, ⋂ j, ⋂ _ : j < i, (fun g : GL (Fin m) F => (g : Matrix (Fin m) (Fin m) F) i j) ⁻¹'
         {x | valuation F x < 1}) := by
   ext g
-  simp only [iwahori, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq,
+  simp only [iwahori, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq,
     mem_unitGL_iff, and_assoc]
 
 theorem isClopen_iwahori : IsClopen (iwahori (m := m) F) := by
@@ -284,18 +284,18 @@ theorem val_aut_strictMono (τ : E ≃ₐ[k] E) {a b : E} (h : valuation E a < v
   have hτa : τ a ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hc
-    exact hτb ((valuation E).zero_iff.1 (le_zero_iff.1 hc))
+    exact hτb ((valuation E).zero_iff.1 (nonpos_iff_eq_zero.1 hc))
   have ha : a ≠ 0 := by simpa using hτa
   have h1 : valuation E (τ b / τ a) ≤ 1 := by
     rw [map_div₀]
-    exact div_le_one_of_le₀ hc zero_le'
+    exact div_le_one_of_le₀ hc zero_le
   have h2 := val_aut_le_one τ⁻¹ h1
   have h3 : τ⁻¹ (τ b / τ a) = b / a := by
     rw [map_div₀]
     simp
   rw [h3, map_div₀] at h2
   have h4 : valuation E a ≠ 0 := (valuation E).ne_zero_iff.2 ha
-  exact absurd ((div_le_one₀ (zero_lt_iff.2 h4)).1 h2) (not_le.2 h)
+  exact absurd ((div_le_one₀ (pos_iff_ne_zero.2 h4)).1 h2) (not_le.2 h)
 
 theorem not_val_lt_val_aut [IsGalois k E] (τ : E ≃ₐ[k] E) (y : E) :
     ¬ valuation E y < valuation E (τ y) := by
@@ -338,7 +338,7 @@ theorem incl_mem_iff {n : ℕ} (g : GL (Fin n) k) :
     intro i j
     rw [← map_inv]
     rfl
-  simp only [iwahori, Set.mem_setOf_eq, mem_unitGL_iff, h1, h2, val_algebraMap_le_one_iff,
+  simp only [iwahori, Set.mem_ofPred_eq, mem_unitGL_iff, h1, h2, val_algebraMap_le_one_iff,
     val_algebraMap_lt_one_iff]
 
 theorem sigma_mem_iff [IsGalois k E] {n : ℕ} (τ : E ≃ₐ[k] E) (g : GL (Fin n) E) :
@@ -350,7 +350,7 @@ theorem sigma_mem_iff [IsGalois k E] {n : ℕ} (τ : E ≃ₐ[k] E) (g : GL (Fin
     intro i j
     rw [← map_inv]
     rfl
-  simp only [iwahori, Set.mem_setOf_eq, mem_unitGL_iff, h1, h2, val_aut]
+  simp only [iwahori, Set.mem_ofPred_eq, mem_unitGL_iff, h1, h2, val_aut]
 
 end Ext
 
@@ -452,7 +452,7 @@ theorem contr_id : PositivityTheory.Rg.Bc.ArchbcB.B.M4.Tw.P_contr_id := by
   intro E _ _ _ w ϖ hϖ n y hy δ hδ
   have hδ' : ∃ x ∈ iwGL n w, ∃ z ∈ iwGL n w, δ = x * tdiag ϖ y * z := by
     by_contra h
-    exact hδ (if_neg h)
+    exact hδ (ite_eq_right h)
   obtain ⟨a, ha, b, hb, hab⟩ := hδ'
   obtain ⟨⟨U, hU⟩, -, hcpt, -⟩ := GlobalTheory.CompanionTheory.TfLoc.Iw.iwahori_compact_open_galois.1 (w.adicCompletion E) n
   have hcomp : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=

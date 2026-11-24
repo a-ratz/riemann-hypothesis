@@ -455,7 +455,7 @@ theorem exists_isOmegaLeb : ∀ P Q : ℕ, ∃ lam : Measure (lieU P Q), IsOmega
   have : SecondCountableTopology (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
     inferInstanceAs (SecondCountableTopology ((Fin P ⊕ Fin Q) → (Fin P ⊕ Fin Q) → ℂ))
   have : LocallyCompactSpace (lieU P Q) :=
-    (Submodule.closed_of_finiteDimensional (lieU P Q)).isClosedEmbedding_subtypeVal.locallyCompactSpace
+    (Submodule.isClosed_of_finiteDimensional (lieU P Q)).isClosedEmbedding_subtypeVal.locallyCompactSpace
   have : SecondCountableTopology (lieU P Q) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   have : FiniteDimensional ℝ (lieU P Q × lieU P Q) :=
@@ -505,7 +505,7 @@ theorem exists_density_of_chart (V M G : Type) [NormedAddCommGroup V] [NormedSpa
     (hm : ∀ g h, m (g * h) = L g (m h)) (hn : ∀ r : ℝ, 0 < r → e '' ball 0 r ∈ 𝓝 (1 : G)) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧
       Tendsto (fun r : ℝ => μ (e '' ball 0 r) / lam (ball 0 r)) (𝓝[>] 0) (𝓝 c) := by
-  haveI : ProperSpace V := FiniteDimensional.proper_real V
+  have : ProperSpace V := FiniteDimensional.proper_real V
 
   obtain ⟨δ₀, hδ₀, hinj⟩ : ∃ δ₀ : ℝ, 0 < δ₀ ∧ InjOn e (closedBall 0 δ₀) := by
     obtain ⟨s, hs, ha⟩ := hd.approximates_deriv_on_nhds (c := 1 / 2) (Or.inr (by norm_num))
@@ -525,7 +525,7 @@ theorem exists_density_of_chart (V M G : Type) [NormedAddCommGroup V] [NormedSpa
   set ν : Measure V := (μ.comap ((closedBall (0 : V) δ₀).domRestrict e)).map Subtype.val with hν
   have hνS : ∀ S : Set V, MeasurableSet S → ν S = μ (e '' (S ∩ closedBall 0 δ₀)) := by
     intro S hS
-    rw [hν, Measure.map_apply measurable_subtype_coe hS, hemb.comap_apply]
+    rw [hν, Measure.map_apply measurable_subtypeVal hS, hemb.comap_apply]
     congr 1
     ext g
     constructor
@@ -541,7 +541,7 @@ theorem exists_density_of_chart (V M G : Type) [NormedAddCommGroup V] [NormedSpa
     rw [mem_closedBall_zero_iff]
     have := norm_le_norm_add_norm_sub' y x
     linarith
-  haveI : IsFiniteMeasure ν := by
+  have : IsFiniteMeasure ν := by
     refine ⟨?_⟩
     rw [hνS _ MeasurableSet.univ, univ_inter]
     exact ((isCompact_closedBall _ _).image he).measure_lt_top
@@ -599,14 +599,14 @@ end Matrices
 theorem exp_strict {n : Type} [Fintype n] [DecidableEq n] :
     HasStrictFDerivAt (𝕜 := ℝ) (NormedSpace.exp : Matrix n n ℂ → Matrix n n ℂ)
       (ContinuousLinearMap.id ℝ (Matrix n n ℂ)) 0 := by
-  letI := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (n := n) (R := ℝ) (α := ℂ)
-  exact @hasStrictFDerivAt_exp_zero ℝ (Matrix n n ℂ) _ _ _ (FiniteDimensional.complete ℝ _)
+  let := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (n := n) (R := ℝ) (α := ℂ)
+  exact @hasStrictFDerivAt_exp_zero ℝ (Matrix n n ℂ) _ _ _ (FiniteDimensional.completeSpace ℝ _)
 
 theorem exp_cont {n : Type} [Fintype n] [DecidableEq n] :
     Continuous (NormedSpace.exp : Matrix n n ℂ → Matrix n n ℂ) := by
-  letI := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (n := n) (R := ℚ) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (n := n) (R := ℚ) (α := ℂ)
   exact @NormedSpace.exp_continuous (Matrix n n ℂ) _ _
     (inferInstanceAs (CompleteSpace (n → n → ℂ)))
 
@@ -643,11 +643,11 @@ theorem mat_injective {P Q : ℕ} : Function.Injective (UpqT.mat (P := P) (Q := 
 
 theorem continuous_expU {P Q : ℕ} : Continuous (expU (P := P) (Q := Q)) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact exp_cont.comp continuous_subtype_val
-  · exact exp_cont.comp continuous_subtype_val.neg
+  · exact exp_cont.comp continuous_subtypeVal
+  · exact exp_cont.comp continuous_subtypeVal.neg
 
 theorem continuous_mat {P Q : ℕ} : Continuous (UpqT.mat (P := P) (Q := Q)) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem image_expU {P Q : ℕ} (S : Set (lieU P Q)) :
     expU '' S = {g : UpqT P Q | ∃ X ∈ S, UpqT.mat g =
@@ -667,9 +667,9 @@ theorem exists_omegaDensity {P Q : ℕ} (μ : Measure (UpqT P Q)) [μ.IsHaarMeas
 
 theorem exists_haar_of_density (P Q : ℕ) (c : ℝ≥0∞) (h0 : c ≠ 0) (ht : c ≠ ⊤) :
     ∃ μ : Measure (UpqT P Q), μ.IsHaarMeasure ∧ OmegaDensity μ c := by
-  haveI : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
-  haveI : BorelSpace (UpqT P Q) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (UpqT P Q) :=
+  have : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
+  have : BorelSpace (UpqT P Q) := ⟨rfl⟩
+  have : LocallyCompactSpace (UpqT P Q) :=
     (UpqUnimodular.modelEquiv P Q).toHomeomorph.isClosedEmbedding.locallyCompactSpace
   obtain ⟨d, hd0, hdt, hd⟩ := exists_omegaDensity (Measure.haar : Measure (UpqT P Q))
   have hq : c / d ≠ ⊤ := ENNReal.div_ne_top ht hd0
@@ -681,9 +681,9 @@ theorem exists_haar_of_density (P Q : ℕ) (c : ℝ≥0∞) (h0 : c ≠ 0) (ht :
 
 theorem exists_prob_haar (N : ℕ) :
     ∃ μ : Measure (UpqT N 0), μ.IsHaarMeasure ∧ IsProbabilityMeasure μ := by
-  haveI : IsTopologicalGroup (UpqT N 0) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq N 0))
-  haveI : BorelSpace (UpqT N 0) := ⟨rfl⟩
-  haveI : CompactSpace (UpqT N 0) := GlobalTheory.compactSpace_UpqT_zero_right N
+  have : IsTopologicalGroup (UpqT N 0) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq N 0))
+  have : BorelSpace (UpqT N 0) := ⟨rfl⟩
+  have : CompactSpace (UpqT N 0) := GlobalTheory.compactSpace_UpqT_zero_right N
   exact ⟨Measure.haarMeasure ⊤, inferInstance,
     ⟨by simpa using Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (UpqT N 0)))⟩⟩
 

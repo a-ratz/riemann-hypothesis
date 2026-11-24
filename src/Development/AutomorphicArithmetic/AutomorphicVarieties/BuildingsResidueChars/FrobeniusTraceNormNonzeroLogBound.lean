@@ -126,7 +126,7 @@ theorem UpperTheory.frobenius_trace_norm_nonzero_log_bound :
   intro q e hq he D Orb _ z hz hσ
   classical
   have := D.fin
-  letI : Fintype D.S := Fintype.ofFinite D.S
+  let : Fintype D.S := Fintype.ofFinite D.S
   let f : Orb → D.S → ℂ := fun o s => (q : ℂ) ^ e * (D.t s - eis3 q e (z o))
   have key : ∀ o s, D.t s ≠ eis3 q e (z o) ∧ IsIntegral ℤ (f o s) ∧
       Real.log ‖f o s‖ ≤ 2 * e * Real.log q + 1 := by

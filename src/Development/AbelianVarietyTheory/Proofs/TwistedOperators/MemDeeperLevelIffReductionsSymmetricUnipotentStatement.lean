@@ -123,7 +123,7 @@ theorem redV_zero_of_frame {F E : Type} [Field F] [NumberField F] [Field E] [Num
 theorem single_mem_pi_bot {κ : Type} [CommRing κ] {n : ℕ} {A : Set (Fin n)} {p : Fin n} (hp : p ∈ A) :
     (Pi.single p (1 : κ) : Fin n → κ) ∈ Submodule.pi {q | q ∉ A} (fun _ => (⊥ : Submodule κ κ)) := by
   refine Submodule.mem_pi.2 fun q hq => ?_
-  rw [Submodule.mem_bot, Pi.single_apply, if_neg]
+  rw [Submodule.mem_bot, Pi.single_apply, ite_eq_right]
   intro h
   subst h
   exact hq hp
@@ -154,20 +154,20 @@ theorem restrictedBlock_mem_unipSym_of_columns {κ : Type} [CommRing κ] {n r : 
     exfalso
     have hi : i.1 < r := by have := i.2; omega
     have hj : j.1 < r := by have := j.2; omega
-    simp only [blk2, hi, hj, if_true, lt_irrefl] at hij
+    simp only [blk2, hi, hj, ite_true, lt_irrefl] at hij
   have hv : ∀ i j : Fin r, ((upperLeftBlock hle N : GL (Fin r) κ) : Matrix (Fin r) (Fin r) κ) i j =
       (N : Matrix (Fin n) (Fin n) κ) (Fin.castLE hle i) (Fin.castLE hle j) := by
     intro i j
     rw [upper_block_val_submatrix hle hall]
     rfl
   have hne : ∀ i j : Fin r, i.1 ≠ j.1 → (if Fin.castLE hle i = Fin.castLE hle j then (1 : κ) else 0) = 0 :=
-    fun i j h => if_neg (fun e => h (by simpa using congrArg Fin.val e))
+    fun i j h => ite_eq_right (fun e => h (by simpa using congrArg Fin.val e))
   refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, fun i j h0 h1 h2 => ?_⟩
   · have hij' : j.1 < i.1 := hij
     show ((upperLeftBlock hle N : GL (Fin r) κ) : Matrix (Fin r) (Fin r) κ) i j = 0
-    rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), hne i j (by omega)]
-  · rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), if_pos rfl]
-  · rw [hv, hcol _ _ (by simp only [Fin.coe_castLE]; omega), hne i j (by omega)]
+    rw [hv, hcol _ _ (by simp only [Fin.val_castLE]; omega), hne i j (by omega)]
+  · rw [hv, hcol _ _ (by simp only [Fin.val_castLE]; omega), ite_eq_left rfl]
+  · rw [hv, hcol _ _ (by simp only [Fin.val_castLE]; omega), hne i j (by omega)]
 
 theorem mem_hatL_of_Lf (D : D7) : ∀ v ∈ (II D).Lf, v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L :=
     fun v hv => (Set.ext_iff.1 (Formalism.IndefR.Eqv.lamAf_eq_hatL (V := Yc D 0) (II D).L) v).1 hv
@@ -307,14 +307,14 @@ theorem redFn_mem_unipSym_of_cong : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS �
     have hj2 := j.2
     by_cases h1 : j.1 < D.R.rS
     · refine redFn_col_of_Mo D g β PP hβ hg _ hw M hM j (e0 ⟨j.1, h1⟩) (flagV_of_lt _ _ _ _ _ _ _ j h1) _ {q | q.1 < j.1}
-        (he0 ⟨j.1, h1⟩) ?_ q (by simp only [Set.mem_setOf_eq]; omega)
+        (he0 ⟨j.1, h1⟩) ?_ q (by simp only [Set.mem_ofPred_eq]; omega)
       rintro s ⟨b, hb, rfl⟩
       have hb' : b.1 < j.1 := hb
       exact Or.inl ⟨⟨b.1, by omega⟩, hb', (flagV_of_lt _ _ _ _ _ _ _ ⟨b.1, by omega⟩ b.2).symm⟩
     by_cases h2 : j.1 < D.R.rS + D.R.k
     · refine redFn_col_of_Mo D g β PP hβ hg _ hw M hM j (bb ⟨j.1 - D.R.rS, by omega⟩)
         (flagV_of_mid _ _ _ _ _ _ _ j (by omega) h2) _ {q | q.1 < j.1}
-        (hbb _) ?_ q (by simp only [Set.mem_setOf_eq]; omega)
+        (hbb _) ?_ q (by simp only [Set.mem_ofPred_eq]; omega)
       rintro s ((⟨b, rfl⟩ | ⟨c, rfl⟩) | ⟨l, hl, rfl⟩)
       · have := b.2
         exact Or.inl ⟨⟨b.1, by omega⟩, (show b.1 < j.1 by omega), (flagV_of_lt _ _ _ _ _ _ _ ⟨b.1, by omega⟩ b.2).symm⟩
@@ -329,12 +329,12 @@ theorem redFn_mem_unipSym_of_cong : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS �
         simp
     by_cases h3 : j.1 = D.R.rS + D.R.k
     · refine redFn_col_of_Mo D g β PP hβ hg _ hw M hM j z0 (flagV_of_eq _ _ _ _ _ _ _ j h3) _ {q | q.1 < D.R.rS}
-        hz0 ?_ q (by simp only [Set.mem_setOf_eq]; omega)
+        hz0 ?_ q (by simp only [Set.mem_ofPred_eq]; omega)
       rintro s ⟨b, rfl⟩
       exact Or.inl ⟨⟨b.1, by omega⟩, b.2, (flagV_of_lt _ _ _ _ _ _ _ ⟨b.1, by omega⟩ b.2).symm⟩
     · refine redFn_col_of_Mo D g β PP hβ hg _ hw M hM j (f0 ⟨2 * D.R.rS + D.R.k - j.1, by omega⟩)
         (flagV_of_gt _ _ _ _ _ _ _ j (by omega) (by omega)) _ {q | q.1 < j.1}
-        (hf0 _) ?_ q (by simp only [Set.mem_setOf_eq]; omega)
+        (hf0 _) ?_ q (by simp only [Set.mem_ofPred_eq]; omega)
       rintro s ((((⟨a, rfl⟩ | rfl) | ⟨l, rfl⟩) | ⟨c, rfl⟩) | ⟨c, hc, rfl⟩)
       · have := a.2
         exact Or.inl ⟨⟨a.1, by omega⟩, (show a.1 < j.1 by omega), (flagV_of_lt _ _ _ _ _ _ _ ⟨a.1, by omega⟩ a.2).symm⟩
@@ -438,7 +438,7 @@ theorem bwd_move : ∀ (I : AutInst) (g : ℕ) {r k : ℕ} (e0 f0 : Fin r → VA
       · have hl' : l.1 < i.1 := hl
         have hlj : j ≠ l := fun e => hji (by rw [e]; exact hl')
         have := Zsym (h.dual j l)
-        rw [if_neg hlj, map_zero, sub_zero] at this
+        rw [ite_eq_right hlj, map_zero, sub_zero] at this
         exact this
 
 end GlobalTheory.SeeConjBwd
@@ -490,7 +490,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
     intro i
     obtain ⟨t, ht, he⟩ := hF.dual i i
     obtain ⟨t', ht', he'⟩ := Formalism.L2.SG.Pf.BunEx.Unip.Zsym (hF.dual i i)
-    simp only [if_pos (Eq.refl i), ↓reduceIte] at he he'
+    simp only [ite_eq_left (Eq.refl i), ↓reduceIte] at he he'
     have h1 := Formalism.L2.SG.Pf.unitaryCongruence.hA_int (II D) (hF.mem.2.2 i).2 (hF.mem.2.2 i).1
     have h2 := Formalism.L2.SG.Pf.unitaryCongruence.hA_int (II D) (hF.mem.2.2 i).1 (hF.mem.2.2 i).2
     have hg : ((g : (II D).E ⊗[(II D).F] Af (II D).F)) ∈ IntAf (II D).F (II D).E := natCast_mem _ g
@@ -510,7 +510,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
       have hi : ew ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := (hint i).1
       have hs := hred.2.1 ⟨ew, hi⟩ (bw i) (hLf _ (hF.mem.2.2 i).1)
       have h0 := hL.2.1 hi
-      simp only [Bool.false_eq_true, if_false] at h0
+      simp only [Bool.false_eq_true, ite_false] at h0
       rw [h0, zero_smul] at hs
       rw [hF.bw_w i]; exact hs
     · intro a; rw [← hM]; exact hc.1 a
@@ -549,7 +549,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
       have hi : sigA (II D) ew ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := (hint i).2
       have hs := hred.2.1 ⟨sigA (II D) ew, hi⟩ (bwd i) (hLf _ (hF.mem.2.2 i).2)
       have h0 := hL.2.2.1 hi
-      simp only [if_true] at h0
+      simp only [ite_true] at h0
       rw [h0, zero_smul] at hs
       rw [hF.bwd_w i]; exact hs
     · intro a; rw [← hM]; exact hc.1 a
@@ -1015,9 +1015,9 @@ theorem GlobalTheory.SeeConjRead.mem_deeperLevel_iff_reductions_symmetricUnipote
         flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 bw z0
       else flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 (fun i => bwd (Fin.rev i)) z0) := hred PP hP
     by_cases hc : GlobalTheory.StdFrames.cpt PP ew = 1
-    · rw [if_pos hc] at hr
+    · rw [ite_eq_left hc] at hr
       exact ⟨true, hgP PP hP, fun _ => by simpa using (hA1 hc).1, fun _ => by simpa using (hA1 hc).2, hr⟩
-    · rw [if_neg hc] at hr
+    · rw [ite_eq_right hc] at hr
       exact ⟨false, hgP PP hP, fun _ => by simpa using (hA0 hc).1, fun _ => by simpa using (hA0 hc).2, hr⟩
   have hxM : (II D).fmat ((Formalism.IndefR.RationalEmbedding.iota D) κ).2 = (finE (Yc D 0) κ).val := GlobalTheory.T.finiteMatrix_iota_eq_finitePart κ
   show _ ∧ _ ↔ _

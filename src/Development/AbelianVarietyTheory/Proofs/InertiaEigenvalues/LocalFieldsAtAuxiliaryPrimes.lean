@@ -104,7 +104,7 @@ theorem kw_eq_sup_of_gens (Kw : FinExt l) (hE : ∀ x : H.E, J x ∈ Kw.1)
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := ℚ_[l]) _)
   have hfN : FiniteDimensional ℚ_[l] ↥N := IntermediateField.finiteDimensional_sup _ _
   have hcl : IsClosed ((N : IntermediateField ℚ_[l] (Om l)) : Set (Om l)) :=
-    Submodule.closed_of_finiteDimensional N.toSubalgebra.toSubmodule
+    Submodule.isClosed_of_finiteDimensional N.toSubalgebra.toSubmodule
   have h1 : J g₁ ∈ N := le_sup_left (a := M) (IntermediateField.subset_adjoin _ _ (by simp))
   have h2 : J g₂ ∈ N := le_sup_left (a := M) (IntermediateField.subset_adjoin _ _ (by simp))
   have h3 : J g₃ ∈ N := le_sup_right (a := M) (IntermediateField.mem_adjoin_simple_self _ _)
@@ -221,7 +221,7 @@ theorem exists_unit_neg : ∃ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ 1
 theorem inertia_q : ∃ g : R.GG, g ≠ 1 ∧ ∀ (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(H.q : ℤ)})]
     (σ : H.E ≃ₐ[ℚ] H.E), (∀ x : 𝓞 H.E, σ • x - x ∈ P) ↔ (H.gal σ = 1 ∨ H.gal σ = g) := by
   obtain ⟨hq, hd, hq8, hd16, -⟩ := H.hyp
-  haveI : Fact (Nat.Prime H.q) := ⟨hq⟩
+  have : Fact (Nat.Prime H.q) := ⟨hq⟩
   obtain ⟨u0, hu0, hneg⟩ := exists_unit_neg H
   have hdq : Nat.Coprime H.d H.q := (Nat.coprime_primes hd hq).2 (by omega)
   have hsq : Nat.Coprime H.QS H.q := Nat.Coprime.coprime_dvd_right (dvd_mul_right _ _) H.QS_coprime
@@ -229,7 +229,7 @@ theorem inertia_q : ∃ g : R.GG, g ≠ 1 ∧ ∀ (P : Ideal (𝓞 H.E)) [P.IsPr
   have hN : H.condN = H.QS * H.d * H.q := by simp only [Formalism.HC.HostRaw.condN]; ring
   have hNpos : 0 < H.condN := by
     rw [hN]; exact Nat.mul_pos (Nat.mul_pos H.QS_pos hd.pos) hq.pos
-  haveI : NeZero H.condN := ⟨hNpos.ne'⟩
+  have : NeZero H.condN := ⟨hNpos.ne'⟩
   have hfq : H.condN.factorization H.q = 1 := by
     rw [hN, Nat.factorization_mul (Nat.mul_pos H.QS_pos hd.pos).ne' hq.ne_zero, Finsupp.add_apply,
       Nat.Prime.factorization_self hq, Nat.factorization_eq_zero_of_not_dvd]
@@ -263,7 +263,7 @@ theorem inertia_q : ∃ g : R.GG, g ≠ 1 ∧ ∀ (P : Ideal (𝓞 H.E)) [P.IsPr
     apply Subtype.ext; apply Units.ext
     rw [← ZMod.natCast_eq_natCast_iff, ZMod.natCast_zmod_val, ZMod.natCast_zmod_val] at hall
     exact hall
-  haveI : IsCyclic f.ker := isCyclic_of_injective fq hinj
+  have : IsCyclic f.ker := isCyclic_of_injective fq hinj
   obtain ⟨c, hc⟩ := IsCyclic.exists_generator (α := f.ker)
   have hc2 : H.art (c : (ZMod H.condN)ˣ) ^ 2 = 1 := H.art_q _ ((hmem _).1 c.2)
   have key : ∀ u : (ZMod H.condN)ˣ, u ∈ f.ker → H.art u = 1 ∨ H.art u = H.art c := by
@@ -408,7 +408,7 @@ theorem ramification_two_and_conjugation_at_q_and_d : ∀ D : D7, EmbeddingTypeJ
     rintro rfl σ hσ φ
     have hb : σ (D.host.sqd) = D.host.sqd :=
       (D.host.galE_mem_Psi_iff σ).1 (D.host.der.decomp_typeI _ hlp (dvd_mul_left _ _) v.asIdeal σ hσ)
-    simp only [InPhi, Formalism.HC.HostRaw.cmType, Set.mem_setOf_eq, RingHom.coe_comp, Function.comp_apply]
+    simp only [InPhi, Formalism.HC.HostRaw.cmType, Set.mem_ofPred_eq, RingHom.coe_comp, Function.comp_apply]
     rw [show ((σ : D.host.E →+* D.host.E) (D.host.sqd)) = D.host.sqd from hb]
   ·
     rintro rfl σ hσ hσ1 φ
@@ -417,7 +417,7 @@ theorem ramification_two_and_conjugation_at_q_and_d : ∀ D : D7, EmbeddingTypeJ
     have hb : σ (D.host.sqd) = -D.host.sqd := by
       rw [D.host.galE_bE σ, hg, show D.R.iod.1.2 = -1 from rfl]
       simp
-    simp only [InPhi, Formalism.HC.HostRaw.cmType, Set.mem_setOf_eq, RingHom.coe_comp, Function.comp_apply]
+    simp only [InPhi, Formalism.HC.HostRaw.cmType, Set.mem_ofPred_eq, RingHom.coe_comp, Function.comp_apply]
     rw [show ((σ : D.host.E →+* D.host.E) (D.host.sqd)) = -D.host.sqd from hb,
       map_neg]
     exact neg_mem_iff D φ
@@ -444,7 +444,7 @@ theorem sqrt_neg_l_mem_adjoin_roots_of_unity :
       y ∈ IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ 1) = 1} := by
   intro l _ h4 y hy
   set K := IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ 1) = 1} with hK
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hchar : ringChar (ZMod l) ≠ 2 := by rw [ZMod.ringChar_zmod_n]; omega
   have hm1 : quadraticChar (ZMod l) (-1) = -1 := by
     rw [quadraticChar_neg_one hchar, ZMod.card, ZMod.χ₄_nat_three_mod_four h4]

@@ -52,10 +52,10 @@ theorem UpperTheory.V.Hi.levelUR2BaseAct :
     ∀ (a : H.Op → c.O) (K : H.Lev) (R : Type) [CommRing R] [Algebra c.O R] (D₀ : W.GDet n R H.Gq) (ψ₀ : ∀ v, Fin n → Dec (F := L) (H.pl v) →* Rˣ) (lam : A →ₐ[c.O] R) (J : Ideal R), H.IsJ θ a K D₀ ψ₀ lam J → ∃ μ : R →+* Module.End A (H.MK θ a K), (∀ b y, μ (lam b) y = b • y) ∧ RingHom.ker μ = J ∧ (H.MK θ a K = ⊥ ∨ ∃ (_ : Fact (CommOn (H.MK θ a K) (H.op A))) (_ : Alg.IsCO c.O (H.TK θ a K)) (f : R →ₐ[c.O] H.TK θ a K), H.IsMap θ a K D₀ ψ₀ f ∧ ∀ t, μ t = (f t : Module.End A (H.MK θ a K))) := by
   intro L Ω _ _ _ _ _ l _ n c H _ A _ _ _ θ _ a K R _ _ D₀ ψ₀ lam J hJ
   rcases hJ with ⟨h0, hJ⟩ | ⟨x, x1, f, hne, hmap, hsurj, hlam, hker⟩
-  · haveI : Subsingleton (H.MK θ a K) := by
+  · have : Subsingleton (H.MK θ a K) := by
       rw [h0]
       infer_instance
-    haveI : Subsingleton (Module.End A (H.MK θ a K)) := inferInstance
+    have : Subsingleton (Module.End A (H.MK θ a K)) := inferInstance
     let μ : R →+* Module.End A (H.MK θ a K) :=
       { toFun := fun _ => 0
         map_one' := Subsingleton.elim _ _

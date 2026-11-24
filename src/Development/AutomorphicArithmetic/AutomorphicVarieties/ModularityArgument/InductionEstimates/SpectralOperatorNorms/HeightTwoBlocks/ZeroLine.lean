@@ -93,17 +93,17 @@ theorem indSec {G M : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G
     (lam : Measure (S ⊓ Kc : Subgroup G)) [IsFiniteMeasure lam] [lam.IsMulLeftInvariant] :
     ∃ f : G → ℂ, Continuous f ∧ ∀ (p : S), ∀ k ∈ Kc,
       f (p * k) = ∫ u : (S ⊓ Kc : Subgroup G), F (π p * π ⟨u, u.2.1⟩) * ψ ((u : G)⁻¹ * k) ∂lam := by
-  haveI : CompactSpace Kc := isCompact_iff_compactSpace.1 hK
-  haveI : CompactSpace (S ⊓ Kc : Subgroup G) := isCompact_iff_compactSpace.1 (hK.inter_left hS)
-  haveI : LocallyCompactSpace S := hS.locallyCompactSpace
-  haveI : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology (S ⊓ Kc : Subgroup G) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : CompactSpace Kc := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace (S ⊓ Kc : Subgroup G) := isCompact_iff_compactSpace.1 (hK.inter_left hS)
+  have : LocallyCompactSpace S := hS.locallyCompactSpace
+  have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (S ⊓ Kc : Subgroup G) := TopologicalSpace.Subtype.secondCountableTopology _
   choose p hp k hk he using hs
   set Φ : S × G → ℂ := fun q => ∫ u : (S ⊓ Kc : Subgroup G), F (π q.1 * π ⟨u, u.2.1⟩) * ψ ((u : G)⁻¹ * q.2) ∂lam with hΦ
   have hc : Continuous Φ := by
     refine cont_cpt lam (h := fun z : (S × G) × (S ⊓ Kc : Subgroup G) => F (π z.1.1 * π ⟨z.2, z.2.2.1⟩) * ψ ((z.2 : G)⁻¹ * z.1.2)) ?_
     have : Continuous fun z : (S × G) × (S ⊓ Kc : Subgroup G) => (⟨z.2, z.2.2.1⟩ : S) :=
-      (continuous_subtype_val.comp continuous_snd).subtype_mk _
+      (continuous_subtypeVal.comp continuous_snd).subtype_mk _
     fun_prop
   have hw : ∀ (q : S), ∀ c ∈ Kc, Φ (⟨p (q * c), hp _⟩, k (q * c)) = Φ (q, c) := by
     intro q c hc
@@ -171,7 +171,7 @@ theorem zero_line (J : ℝ → ℂ) (hJ : Continuous J) (h : ∀ β : ℝ → �
   simp only [e] at this
   rw [integral_complex_ofReal, Complex.ofReal_eq_zero] at this
   have hn := Complex.continuous_normSq
-  refine ne_of_gt (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := t₀)
+  refine ne_of_gt (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := t₀)
     (f := fun t => b t * (Real.exp (-4 * t) * Real.exp (2 * t) * Complex.normSq (J t))) (by fun_prop) hbc.mul_right
     (fun t => mul_nonneg (hb t).1 (mul_nonneg (by positivity) (Complex.normSq_nonneg _))) ?_) this
   have : b t₀ = 1 := hb1 rfl
@@ -183,7 +183,7 @@ theorem zero_cpt {Y : Type} [TopologicalSpace Y] [CompactSpace Y] [MeasurableSpa
   by_contra hy
   simp only [← Complex.normSq_eq_conj_mul_self] at h0
   rw [integral_complex_ofReal, Complex.ofReal_eq_zero] at h0
-  exact ne_of_gt (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := y) (f := fun y => Complex.normSq (h y))
+  exact ne_of_gt (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := y) (f := fun y => Complex.normSq (h y))
     (Complex.continuous_normSq.comp hc)
     (HasCompactSupport.of_compactSpace _) (fun t => Complex.normSq_nonneg _) (by simpa using hy)) h0
 
@@ -191,7 +191,7 @@ theorem avg_cpt {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [BorelSpace G] (U Kc : Subgroup G) [CompactSpace U] [CompactSpace Kc] (hU : U ≤ Kc) (lam : Measure U) [IsProbabilityMeasure lam]
     (κ : Measure Kc) [IsFiniteMeasure κ] [κ.IsMulLeftInvariant] (h : G → ℂ) (hc : Continuous h) :
     ∫ k : Kc, ∫ u : U, h ((u : G)⁻¹ * k) ∂lam ∂κ = ∫ k : Kc, h k ∂κ := by
-  haveI : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology _
   rw [integral_integral_swap (int_cpt _ (by fun_prop))]
   have : ∀ u : U, ∫ k : Kc, h ((u : G)⁻¹ * k) ∂κ = ∫ k : Kc, h k ∂κ := fun u =>
     integral_mul_left_eq_self (fun k : Kc => h k) (⟨u, hU u.2⟩⁻¹ : Kc)

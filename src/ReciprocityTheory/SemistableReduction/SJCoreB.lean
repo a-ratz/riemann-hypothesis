@@ -99,7 +99,7 @@ theorem integral_polar {n : ℕ} (hn : 0 < n) (f : EuclideanSpace ℂ (Fin n) �
   simp only [homeomorphUnitSphereProd_smul_eq]
   rw [integral_subtype_comap (measurableSet_singleton 0).compl
     (fun x : EuclideanSpace ℂ (Fin n) ↦ f x)]
-  haveI : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
+  have : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
     Module.nontrivial_of_finrank_pos (R := ℝ) (by rw [finrank_euclidean_complex]; omega)
   rw [Measure.restrict_congr_set (show ({0}ᶜ : Set (EuclideanSpace ℂ (Fin n))) =ᵐ[volume] univ from
     ae_eq_univ.mpr (by rw [compl_compl]; exact measure_singleton 0)), Measure.restrict_univ]
@@ -140,10 +140,10 @@ theorem sphere_linear_zero_null {n : ℕ} (c : EuclideanSpace ℂ (Fin n)) (hc :
   have hset : {z : UnitSphereC n | ∑ i, WithLp.ofLp c i * spherePoint z i = 0} =
       {z : UnitSphereC n | inner ℂ (conjVec c) (z : EuclideanSpace ℂ (Fin n)) = 0} := by
     ext z
-    simp only [Set.mem_setOf_eq, spherePoint, inner_conjVec]
+    simp only [mem_ofPred_eq, spherePoint, inner_conjVec]
   have hs : MeasurableSet
       {z : UnitSphereC n | inner ℂ (conjVec c) (z : EuclideanSpace ℂ (Fin n)) = 0} :=
-    (isClosed_eq (continuous_const.inner continuous_subtype_val) continuous_const).measurableSet
+    (isClosed_eq (continuous_const.inner continuous_subtypeVal) continuous_const).measurableSet
   rw [hset, Measure.toSphere_apply' _ hs,
     measure_mono_null ?_ (Measure.addHaar_submodule _ K hK), mul_zero]
   rintro _ ⟨t, -, _, ⟨z, hz, rfl⟩, rfl⟩

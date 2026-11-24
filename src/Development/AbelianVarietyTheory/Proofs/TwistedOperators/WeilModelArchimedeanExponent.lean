@@ -434,11 +434,11 @@ theorem gauss_line : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     fun y x => ?_
   · obtain ⟨u, -, u₁, hu, -, hu₁, -, hc₁, h0, -, h1⟩ := hy y
     have := congrArg (fun k : SInf F _ => k x) (hg u u₁ hu hu₁ hc₁ _ _ (hA u hu g) (hA u₁ hu₁ g))
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     rwa [hDx u hu, hDx u₁ hu₁, h0, h1] at this
   · obtain ⟨u, u', -, hu, hu', -, hc', -, h0, h', -⟩ := hy y
     have := congrArg (fun k : SInf F _ => k x) (hf u u' hu hu' hc' _ _ (hA u hu f) (hA u' hu' f))
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     rwa [hDx u hu, hDx u' hu', h0, h'] at this
 
 theorem exists_der {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d : ℕ}
@@ -467,7 +467,7 @@ theorem exists_der {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
 
       simp only [coord, hev, map_sum, Prod.fst_sum, Prod.snd_sum, Finset.sum_apply]
   ext x
-  rw [hDx _ hs, hc, SchwartzMap.sum_apply, Finset.sum_congr rfl fun i _ => hDx _ (hu i) f x]
+  rw [hDx _ hs, hc, sum_apply, Finset.sum_congr rfl fun i _ => hDx _ (hu i) f x]
 
   simp only [Prod.fst_sum, Prod.snd_sum, map_sum, Finset.sum_sub_distrib, Complex.ofReal_sum, Finset.mul_sum,
   Finset.sum_mul]
@@ -660,7 +660,7 @@ theorem eq_sum_lineAt {θ : InfFam D} (hθ : IsInfFam θ) {m n : ℕ} {x : Mx D 
         (if t' = t then ((1 : ℝ) : ℂ) • compAt θ t x else 0) i j := fun t => congrFun (congrFun ((hL t).2.2 1 t') i) j
 
     rw [RingHom.map_sub, RingHom.map_sub, map_sum, map_sum, Finset.sum_congr rfl fun t _ => h2 t, ← Matrix.sum_apply,
-    Finset.sum_ite_eq, if_pos (Finset.mem_univ _), Complex.ofReal_one, one_smul]
+    Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _), Complex.ofReal_one, one_smul]
     exact sub_self _
 
 theorem eq_sum_dir {θ : InfFam D} (hθ : IsInfFam θ) {u : Matrix (Fin M.rank) (Fin X.rank) (AE D)}
@@ -680,7 +680,7 @@ theorem cart_frSgn (A : Fr M) (t : D.what₂.Tau) : (frSgn ε A).cart t = -((if 
       · subst h; cases h' : A.ε t a <;> simp [Formalism.REAL.Jm, h']
       · simp [Formalism.REAL.Jm, h]
     show (A.fr t)⁻¹ * Formalism.REAL.Jm (fun a => xor true (A.ε t a)) * A.fr t = _
-    rw [e', if_pos rfl, one_smul, Fr.cart, Matrix.mul_neg, Matrix.neg_mul]
+    rw [e', ite_eq_left rfl, one_smul, Fr.cart, Matrix.mul_neg, Matrix.neg_mul]
 
 theorem compAt_cplx {θ : InfFam D} (hθ : IsInfFam θ) (A : Fr M) (B : Fr X)
     {τ : ∀ w : InfinitePlace D.host.F, EmbOver D.host.E w}

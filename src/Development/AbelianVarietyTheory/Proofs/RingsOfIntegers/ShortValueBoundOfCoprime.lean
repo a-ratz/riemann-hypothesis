@@ -167,7 +167,7 @@ theorem comp_act_nat {T : Over Xo.X} (u : T ⟶ Xo.univ.t.G) (k : ℕ) : u ≫ X
 
 theorem kills_pow {T : Over Xo.X} {n : ℕ} {mu : Matrix (Fin n) (Fin n) (𝓞 E)} {u : Fin n → (T ⟶ Xo.univ.t.G)}
     (h : Kills Xo mu u) (k : ℕ) : Kills Xo mu (fun b => u b ^ k) := by
-  letI := ZPart.ptMod Xo T
+  let := ZPart.ptMod Xo T
   rw [ZPart.kills_iff] at h ⊢
   intro i
   simp only [ofMul_pow, smul_comm (mu i _) k]
@@ -175,7 +175,7 @@ theorem kills_pow {T : Over Xo.X} {n : ℕ} {mu : Matrix (Fin n) (Fin n) (𝓞 E
 
 theorem kills_mul {T : Over Xo.X} {n : ℕ} {mu : Matrix (Fin n) (Fin n) (𝓞 E)} {u : Fin n → (T ⟶ Xo.univ.t.G)}
     (h : Kills Xo mu u) (nu : Matrix (Fin n) (Fin n) (𝓞 E)) : Kills Xo (nu * mu) u := by
-  letI := ZPart.ptMod Xo T
+  let := ZPart.ptMod Xo T
   rw [ZPart.kills_iff] at h ⊢
   exact h.mul nu
 
@@ -283,7 +283,7 @@ theorem ell_part (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)] (hst : ∀
     letI := io.toAlgebra
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (β⁻¹ * ((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) *
       ∑ i, hv Xo c nab y.1 (N ^ 2) (F i) P) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨A, hsim⟩ := GlobalTheory.T.exists_adapted_similitude_data_at_prime E H n Λ N M ℓ hU hL hp
   have hN : Odd N := hL.1
   have hkN : Odd (A.k * N) := A.odd.mul hN
@@ -361,7 +361,7 @@ end GlobalTheory.ShortPrime
 theorem GlobalTheory.short_value_bound_of_coprime : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (Λ : GenLat E n) (N M : ℕ), Λ.Unimod → Λ.LevOK N M → ∀ (β : c.F), β ≠ 0 → BetaIs (Dw := Dw) c Λ β → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmL c Λ w → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (tp : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo (xOf y) z → (∀ b, tp b ^ (N ^ 2) = 1) → (∀ i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) (z i b) (tp b) (F i b)) → AllRat Xo (xOf y) (N ^ 2) → (∃ m : ℕ, Nat.Coprime m ℓ ∧ ∀ b, tp b ^ m = 1) → letI := io.toAlgebra; ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (β⁻¹ * ((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
   intro E _ _ _ H Dw l Xo c _ hst T io y C hC nab hnab e ρ w n he hB ℓ hp hl Λ N M hU hL β hβ0 hβ P hP z tp F hz hg
     htp hF hR ⟨m', hm', htm⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨J, J', _, _, a, a', σ, hinj, ha, ⟨m, hm, ham⟩, hσ, -⟩ :=
     GlobalTheory.T.isotropic_group_primary_decomposition E H Dw l Xo T.Fr (xOf y) n Λ N M ℓ hU hL hp z hz hg
   rw [← Equiv.sum_comp σ, Fintype.sum_prod_type_right, Finset.mul_sum]

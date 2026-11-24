@@ -652,8 +652,8 @@ theorem isCompact_integers : IsCompact ((𝒪[F] : Subring F) : Set F) :=
   IsNonarchimedeanLocalField.isCompact_closedBall F 1
 
 theorem t2Space_isNonarchimedeanLocalField_singleBlock : T2Space F := by
-  letI := IsTopologicalAddGroup.rightUniformSpace F
-  haveI := isUniformAddGroup_of_addCommGroup (G := F)
+  let := IsTopologicalAddGroup.rightUniformSpace F
+  have := isUniformAddGroup_of_addCommGroup (G := F)
   infer_instance
 
 theorem unif_ne_zero (hϖ : Irreducible ϖ) : (ϖ : F) ≠ 0 :=

@@ -111,7 +111,7 @@ theorem finite_under_eq (v : Pl (F := F)) : {P : HeightOneSpectrum (𝓞 E) | P.
     rw [Ne, Ideal.zero_eq_bot, Ideal.map_eq_bot_iff_of_injective (FaithfulSMul.algebraMap_injective _ _)]
     exact v.ne_bot
   refine (Ideal.finite_factors h0).subset fun P hP => ?_
-  simp only [Set.mem_setOf_eq] at hP ⊢
+  simp only [Set.mem_ofPred_eq] at hP ⊢
   rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← hP]
   exact le_rfl
 
@@ -148,7 +148,7 @@ theorem chr_det_eq_one_any {d : ℕ} (W : Spc F E d) (hL : W.L.IsFullLattice E) 
       have := val_det_le_one W hL hu _ fun z hz => (ht z hz).2
       rw [← Matrix.GeneralLinearGroup.val_det_apply, map_inv] at this
       exact this
-    have h0 : 0 < Valued.v (y : P.adicCompletion E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 y.ne_zero)
+    have h0 : 0 < Valued.v (y : P.adicCompletion E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 y.ne_zero)
     rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ h0] at a2
     exact le_antisymm a1 a2
 

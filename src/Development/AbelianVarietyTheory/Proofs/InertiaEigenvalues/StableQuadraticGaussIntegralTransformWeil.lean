@@ -103,7 +103,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
   have hu : (u : A.L) = algebraMap A.K A.L (c : A.K) := rfl
   have hset : {y : A.L | ∃ z ∈ S, y = algebraMap A.K A.L (c : A.K) * z} = u • S := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_smul_set, Units.smul_def, hu, smul_eq_mul]
+    simp only [Set.mem_ofPred_eq, Set.mem_smul_set, Units.smul_def, hu, smul_eq_mul]
     exact ⟨fun ⟨z, hz, h⟩ => ⟨z, hz, h.symm⟩, fun ⟨z, hz, h⟩ => ⟨z, hz, h.symm⟩⟩
   have hc1 : Continuous (b.equivFun.symm : (Fin 2 → A.K) → A.L) :=
     IsModuleTopology.continuous_of_linearMap (b.equivFun.symm.toLinearMap.restrictScalars F)
@@ -256,7 +256,7 @@ theorem dual_eq_zpow : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriviall
       r * y ∈ {y : A.L | ∀ m ∈ O, A.kerL ψ (a : A.K) y m = 1} := by
     intro y hy r hr m hm
     have e1 : star (r * y) * m = star y * (star r * m) := by rw [star_mul']; ring
-    simp only [Et.kerL, Set.mem_setOf_eq] at hy ⊢
+    simp only [Et.kerL, Set.mem_ofPred_eq] at hy ⊢
     rw [e1]
     exact hy _ (O.mul_mem (hOstar r hr) hm)
 
@@ -341,10 +341,10 @@ namespace GlobalTheory.JR.WeilQuad
 theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.K) (μ : Measure A.L), IsStdChar ψ → μ.IsAddHaarMeasure → ∀ (t : A.K) (M D : AddSubgroup A.L), IsOpen (M : Set A.L) → IsCompact (M : Set A.L) → IsOpen (D : Set A.L) → IsCompact (D : Set A.L) → (∀ m ∈ M, A.psiK ψ (t * x * A.NL m) = 1) → (D : Set A.L) = {y : A.L | ∀ m ∈ M, A.kerL ψ (t * x) y m = 1} → IsStableGauss A ψ x μ t (gaussInt A ψ x μ t (D : Set A.L)) := by
   intro F E _ _ _ _ hU A ψ x μ hψ hμ t M D hMo hMc hDo hDc hN hD
   obtain ⟨⟨bas⟩, hinj, hNL, hTr, -⟩ := Et.quadratic_structure F E A
-  haveI : Module.Finite A.K A.L := Module.Finite.of_basis bas
-  haveI : Module.Finite F A.L := Module.Finite.trans A.K A.L
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
-  haveI : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F A.L
+  have : Module.Finite A.K A.L := Module.Finite.of_basis bas
+  have : Module.Finite F A.L := Module.Finite.trans A.K A.L
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
+  have : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F A.L
   have hpsi : ∀ u v : A.K, A.psiK ψ (u + v) = A.psiK ψ u * A.psiK ψ v := by
     intro u v
     simp only [Et.psiK, map_add (f := _), AddChar.map_add_eq_mul]
@@ -406,9 +406,9 @@ theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [
   have hmeas : ∀ S : Set A.L, IsOpen S → MeasurableSet S := fun S hS => hS.measurableSet
   have hint : IntegrableOn g (Λ : Set A.L) μ := hgc.continuousOn.integrableOn_compact' hΛc (hmeas _ hΛo)
   have hsplit : (Λ : Set A.L) = (D : Set A.L) ∪ ((Λ : Set A.L) \ (D : Set A.L)) :=
-    (Set.union_diff_cancel (show (D : Set A.L) ⊆ Λ from hDΛ)).symm
+    (Set.union_sdiff_cancel (show (D : Set A.L) ⊆ Λ from hDΛ)).symm
 
-  haveI : DiscreteTopology (A.L ⧸ D) := QuotientAddGroup.discreteTopology hDo
+  have : DiscreteTopology (A.L ⧸ D) := QuotientAddGroup.discreteTopology hDo
   have hmk : Continuous (QuotientAddGroup.mk : A.L → A.L ⧸ D) := continuous_quot_mk
   set S : A.L ⧸ D → Set A.L := fun q => ((Λ : Set A.L) \ (D : Set A.L)) ∩ QuotientAddGroup.mk ⁻¹' {q} with hS
   have hSo : ∀ q, MeasurableSet (S q) := fun q =>
@@ -437,7 +437,7 @@ theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [
       ring
     have hpre : (fun y => m₀ + y) ⁻¹' (S q) = S q := by
       ext y
-      simp only [hS, Set.mem_preimage, Set.mem_inter_iff, Set.mem_diff, SetLike.mem_coe, Set.mem_singleton_iff]
+      simp only [hS, Set.mem_preimage, Set.mem_inter_iff, Set.mem_sdiff, SetLike.mem_coe, Set.mem_singleton_iff]
       have e1 : m₀ + y ∈ Λ ↔ y ∈ Λ := ⟨fun h => by simpa using Λ.sub_mem h (hDΛ hm₀D), fun h => Λ.add_mem (hDΛ hm₀D) h⟩
       have e2 : m₀ + y ∈ D ↔ y ∈ D := ⟨fun h => by simpa using D.sub_mem h hm₀D, fun h => D.add_mem hm₀D h⟩
       have e3 : (QuotientAddGroup.mk (m₀ + y) : A.L ⧸ D) = QuotientAddGroup.mk y := by
@@ -474,7 +474,7 @@ theorem gaussInt_stable_of_dual : ∀ (F E : Type) [NontriviallyNormedField F] [
     · exact fun q _ => hint.mono_set (fun y hy => hy.1.1)
   show ∫ y in (Λ : Set A.L), g y ∂μ = ∫ y in (D : Set A.L), g y ∂μ
   rw [hsplit, setIntegral_union Set.disjoint_sdiff_right ((hmeas _ hΛo).diff (hmeas _ hDo))
-    (hint.mono_set hDΛ) (hint.mono_set Set.diff_subset), hrest, add_zero]
+    (hint.mono_set hDΛ) (hint.mono_set Set.sdiff_subset), hrest, add_zero]
 
 end GlobalTheory.JR.WeilQuad
 end -- clump:auto
@@ -560,8 +560,8 @@ theorem setIntegral_swap_of_continuous {X Y : Type} [TopologicalSpace X] [Topolo
     (S : Set X) (T : Set Y) (hS : μ S ≠ ⊤) (hT : ν T ≠ ⊤) (g : X → Y → ℂ)
     (hg : Continuous (Function.uncurry g)) (hb : ∀ x y, ‖g x y‖ ≤ 1) :
     ∫ x in S, ∫ y in T, g x y ∂ν ∂μ = ∫ y in T, ∫ x in S, g x y ∂μ ∂ν := by
-  haveI : IsFiniteMeasure (μ.restrict S) := ⟨by simpa using hS.lt_top⟩
-  haveI : IsFiniteMeasure (ν.restrict T) := ⟨by simpa using hT.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict S) := ⟨by simpa using hS.lt_top⟩
+  have : IsFiniteMeasure (ν.restrict T) := ⟨by simpa using hT.lt_top⟩
   apply integral_integral_swap
   exact Integrable.of_bound hg.aestronglyMeasurable 1 (Eventually.of_forall fun q => hb q.1 q.2)
 
@@ -842,18 +842,18 @@ theorem exists_isNonarchimedeanLocalField_spectralNorm :
       ∃ (_ : ValuativeRel K) (_ : TopologicalSpace K), IsNonarchimedeanLocalField K ∧
         ∀ x y : K, x ≤ᵥ y ↔ spectralNorm F K x ≤ spectralNorm F K y := by
   intro F _ _ _ _ K _ _ _
-  letI nK : NontriviallyNormedField K := spectralNorm.nontriviallyNormedField F K
-  haveI : IsUltrametricDist K := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm
+  let nK : NontriviallyNormedField K := spectralNorm.nontriviallyNormedField F K
+  have : IsUltrametricDist K := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm
     (isNonarchimedean_spectralNorm (K := F) (L := K))
-  letI rel : ValuativeRel K := ValuativeRel.ofValuation (NormedField.valuation (K := K))
+  let rel : ValuativeRel K := ValuativeRel.ofValuation (NormedField.valuation (K := K))
   refine ⟨rel, inferInstance, ?_, fun x y => Iff.rfl⟩
-  haveI : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
   have hc : (NormedField.valuation (K := K)).Compatible := Valuation.Compatible.ofValuation _
   refine { toIsValuativeTopology := ?_, toLocallyCompactSpace := ?_, toIsNontrivial := ?_ }
   · exact IsValuativeTopology.of_mem_nhds_zero_iff_vle (NormedField.valuation (K := K))
       (fun {s} => (NormedField.toValued (K := K)).is_topological_valuation s)
-  · letI : NormedSpace F K := spectralNorm.normedSpace F K
-    haveI : ProperSpace K := FiniteDimensional.proper F K
+  · let : NormedSpace F K := spectralNorm.normedSpace F K
+    have : ProperSpace K := FiniteDimensional.proper F K
     infer_instance
   · rw [isNontrivial_iff_isNontrivial (NormedField.valuation (K := K))]
     infer_instance
@@ -950,7 +950,7 @@ theorem spectralNorm_closedBall_isOpen_isCompact_nhds_basis : ∀ (F : Type) [No
   have hd : ∀ y : L, dist y 0 = spectralNorm F L y := fun y => by
     rw [dist_zero_right]; rfl
   have hS : {y : L | spectralNorm F L y ≤ 1} = Metric.closedBall (0 : L) 1 := by
-    ext y; simp only [Set.mem_setOf_eq, Metric.mem_closedBall, hd]
+    ext y; simp only [Set.mem_ofPred_eq, Metric.mem_closedBall, hd]
   refine ⟨?_, ?_, ?_⟩
   · rw [hS]; exact IsUltrametricDist.isOpen_closedBall _ one_ne_zero
   · rw [hS]; exact isCompact_closedBall _ _
@@ -977,7 +977,7 @@ open GroundTheory.LocalField IsLocalRing in
 theorem unramified_quadratic_uniformizer_trace_norm : ∀ (K L : Type) [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L] [ValuativeExtension K L] [FiniteDimensional K L], (_root_.Ideal.ramificationIdx (_root_.IsLocalRing.maximalIdeal (_root_.Valuation.integer (_root_.ValuativeRel.valuation L))) (_root_.Valuation.integer (_root_.ValuativeRel.valuation K))) = 1 → Module.finrank K L = 2 → ∃ ϖ : K, ϖ ≠ 0 ∧ ϖ ≤ᵥ 1 ∧ ¬ (1 : K) ≤ᵥ ϖ ∧ (¬ ∃ y : L, Algebra.norm K y = ϖ) ∧ (∀ y : L, y ≤ᵥ 1 → (∃ z : L, z ≤ᵥ 1 ∧ y = algebraMap K L ϖ * z) ∨ ∃ z : L, z ≤ᵥ 1 ∧ y * z = 1) ∧ (∀ s : K, s ≤ᵥ 1 → ∃ z : L, z ≤ᵥ 1 ∧ Algebra.trace K L z = s) ∧ ∀ s : K, s ≤ᵥ 1 → 1 ≤ᵥ s → ∃ w : L, w ≤ᵥ 1 ∧ Algebra.norm K w = s := by
   open GroundTheory.LocalField IsLocalRing in
   intro K L _ _ _ _ _ _ _ _ _ _ _ he h2
-  haveI : IsUnramified K L := ⟨he⟩
+  have : IsUnramified K L := ⟨he⟩
   have memK : ∀ x : K, x ∈ 𝒪[K] ↔ x ≤ᵥ 1 := fun x ↦ by
     rw [Valuation.mem_integer_iff, ← map_one (ValuativeRel.valuation K), ← Valuation.vle_iff_le]
   have memL : ∀ x : L, x ∈ 𝒪[L] ↔ x ≤ᵥ 1 := fun x ↦ by
@@ -1068,7 +1068,7 @@ theorem alg_main : ∀ (F E K L : Type) [NontriviallyNormedField F] [IsUltrametr
       (∀ r : ℝ, 0 < r → ∃ n : ℕ, ∀ z ∈ O, spectralNorm F L (algebraMap K L ((ϖ : K) ^ n) * z) < r) ∧
       ∀ y : L, ∃ n : ℕ, algebraMap K L ((ϖ : K) ^ n) * y ∈ O := by
   intro F E K L _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hunr h2 hgen
-  haveI : FiniteDimensional F L := Module.Finite.trans K L
+  have : FiniteDimensional F L := Module.Finite.trans K L
   have nmulL : ∀ x y : L, spectralNorm F L (x * y) = spectralNorm F L x * spectralNorm F L y :=
     fun x y => map_mul (spectralMulAlgNorm F L) x y
   have npowK : ∀ (x : K) (n : ℕ), spectralNorm F K (x ^ n) = spectralNorm F K x ^ n :=
@@ -1079,10 +1079,10 @@ theorem alg_main : ∀ (F E K L : Type) [NontriviallyNormedField F] [IsUltrametr
   obtain ⟨vE, hEloc, hEv⟩ := NormSign.exists_valuativeRel_of_normed E
   obtain ⟨vK, tK, hKloc, hKv⟩ := _root_.GlobalTheory.exists_isNonarchimedeanLocalField_spectralNorm F K
   obtain ⟨vL, tL, hLloc, hLv⟩ := _root_.GlobalTheory.exists_isNonarchimedeanLocalField_spectralNorm F L
-  haveI : ValuativeExtension F E := ⟨fun {a b} => by rw [hEv, hFv, norm_algebraMap', norm_algebraMap']⟩
-  haveI : ValuativeExtension F K := ⟨fun {a b} => by
+  have : ValuativeExtension F E := ⟨fun {a b} => by rw [hEv, hFv, norm_algebraMap', norm_algebraMap']⟩
+  have : ValuativeExtension F K := ⟨fun {a b} => by
     rw [hKv, hFv, spectralNorm_extends, spectralNorm_extends]⟩
-  haveI : ValuativeExtension K L := ⟨fun {a b} => by rw [hLv, hKv, ntow, ntow]⟩
+  have : ValuativeExtension K L := ⟨fun {a b} => by rw [hLv, hKv, ntow, ntow]⟩
   have heF : (_root_.Ideal.ramificationIdx (_root_.IsLocalRing.maximalIdeal (_root_.Valuation.integer (_root_.ValuativeRel.valuation E))) (_root_.Valuation.integer (_root_.ValuativeRel.valuation F))) = 1 := by
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[E]
     obtain ⟨x, hx⟩ := hunr (ϖ : E)
@@ -1105,14 +1105,14 @@ theorem alg_main : ∀ (F E K L : Type) [NontriviallyNormedField F] [IsUltrametr
   let O : Subring L :=
     { carrier := {y | spectralNorm F L y ≤ 1}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [nmulL]
         exact mul_le_one₀ ha (spectralNorm_nonneg _) hb
       one_mem' := by simp [spectralNorm_one]
       add_mem' := fun {a b} ha hb => (isNonarchimedean_spectralNorm a b).trans (max_le ha hb)
       zero_mem' := by simp [spectralNorm_zero]
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rwa [spectralNorm_neg (Algebra.IsAlgebraic.isAlgebraic a)] }
   have hmem : ∀ y : L, y ∈ O ↔ y ≤ᵥ 1 := fun y => (hleL y).symm
   refine ⟨Units.mk0 ϖ hϖ0, O, rfl, hN, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -1171,23 +1171,23 @@ namespace GlobalTheory.JR.UnramInt
 
 theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E), IsField A.K → IsField A.L → ∃ (ϖ : A.Kˣ) (O : Subring A.L), IsOpen (O : Set A.L) ∧ IsCompact (O : Set A.L) ∧ (∀ y ∈ O, star y ∈ O) ∧ (¬ ∃ y, A.NL y = (ϖ : A.K)) ∧ algebraMap A.K A.L (ϖ : A.K) ∈ O ∧ (¬ ∃ z ∈ O, algebraMap A.K A.L (ϖ : A.K) * z = 1) ∧ (∀ y ∈ O, (∃ z ∈ O, y = algebraMap A.K A.L (ϖ : A.K) * z) ∨ ∃ z ∈ O, y * z = 1) ∧ (∀ s : A.K, algebraMap A.K A.L s ∈ O → ∃ z ∈ O, Algebra.trace A.K A.L z = s) ∧ (∀ s : A.K, algebraMap A.K A.L s ∈ O → (∃ r ∈ O, algebraMap A.K A.L s * r = 1) → ∃ w ∈ O, A.NL w = s) ∧ (∀ U ∈ 𝓝 (0 : A.L), ∃ n : ℕ, ∀ z ∈ O, algebraMap A.K A.L ((ϖ : A.K) ^ n) * z ∈ U) ∧ ∀ y : A.L, ∃ n : ℕ, algebraMap A.K A.L ((ϖ : A.K) ^ n) * y ∈ O := by
   intro F E _ _ _ _ U A hK hL
-  letI : Field A.K := hK.toField
-  letI : Field A.L := hL.toField
-  haveI := U.ultraF
-  haveI := U.ultraE
-  haveI := U.lcF
-  haveI := U.lcE
-  haveI : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
-  haveI : CompleteSpace F := complete_of_proper
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ U.finrank_eq
+  let : Field A.K := hK.toField
+  let : Field A.L := hL.toField
+  have := U.ultraF
+  have := U.ultraE
+  have := U.lcF
+  have := U.lcE
+  have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : CompleteSpace F := complete_of_proper
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ U.finrank_eq
   have hKL : Module.finrank A.K A.L = 2 := by
-    haveI := A.push.symm
+    have := A.push.symm
     rw [← (Algebra.IsPushout.equiv F A.K E A.L).toLinearEquiv.finrank_eq, Module.finrank_baseChange,
       U.finrank_eq]
-  haveI : FiniteDimensional A.K A.L := Module.finite_of_finrank_eq_succ hKL
-  haveI : FiniteDimensional F A.L := Module.Finite.trans A.K A.L
+  have : FiniteDimensional A.K A.L := Module.finite_of_finrank_eq_succ hKL
+  have : FiniteDimensional F A.L := Module.Finite.trans A.K A.L
   have hgen : Algebra.adjoin A.K (Set.range (algebraMap E A.L)) = ⊤ := by
-    haveI := A.push.symm
+    have := A.push.symm
     rw [eq_top_iff]
     intro y _
     obtain ⟨t, rfl⟩ := (Algebra.IsPushout.equiv F A.K E A.L).surjective y
@@ -1243,7 +1243,7 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem stable_unique (A : Et F E) (ψ : AddChar F ℂ) (x : A.K) (μ : Measure A.L) (u : A.K)
     {G G' : ℂ} (h : IsStableGauss A ψ x μ u G) (h' : IsStableGauss A ψ x μ u G') : G = G' := by
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
   obtain ⟨Λ₀, ho, hc, hG⟩ := h
   obtain ⟨Λ₁, ho', hc', hG'⟩ := h'
   have hs : ((Λ₀ ⊔ Λ₁ : AddSubgroup A.L) : Set A.L) = (Λ₀ : Set A.L) + (Λ₁ : Set A.L) :=
@@ -1269,7 +1269,7 @@ theorem dual_mul (A : Et F E) (ψ : AddChar F ℂ) (O : Subring A.L) (t a : A.K)
     {y : A.L | ∀ m ∈ O, A.kerL ψ (t * a) y m = 1} =
       {y : A.L | ∀ m ∈ O, A.kerL ψ a (algebraMap A.K A.L t * y) m = 1} := by
   ext y
-  simp only [Set.mem_setOf_eq, Et.kerL]
+  simp only [Set.mem_ofPred_eq, Et.kerL]
   refine forall₂_congr fun m _ => ?_
   have : Algebra.trace A.K A.L (star (algebraMap A.K A.L t * y) * m) =
       t * Algebra.trace A.K A.L (star y * m) := by
@@ -1280,7 +1280,7 @@ theorem scaled_mul (A : Et F E) (O : Subring A.L) (t c : A.Kˣ) :
     {y : A.L | algebraMap A.K A.L (t : A.K) * y ∈ {y : A.L | ∃ z ∈ O, y = algebraMap A.K A.L (c : A.K) * z}} =
       {y : A.L | ∃ z ∈ O, y = algebraMap A.K A.L ((t⁻¹ * c : A.Kˣ) : A.K) * z} := by
   ext y
-  simp only [Set.mem_setOf_eq, Units.val_mul, map_mul]
+  simp only [Set.mem_ofPred_eq, Units.val_mul, map_mul]
   refine exists_congr fun z => and_congr_right fun _ => ?_
   have h1 : algebraMap A.K A.L ((t⁻¹ : A.Kˣ) : A.K) * algebraMap A.K A.L (t : A.K) = 1 := by
     rw [← map_mul, Units.inv_mul, map_one]
@@ -1356,7 +1356,7 @@ theorem scaledSub_eq_image [Unram F E] (A : Et F E) (O : Subring A.L) (c : A.Kˣ
     ((scaledSub A O c : AddSubgroup A.L) : Set A.L) = mulHomeo A c '' (O : Set A.L) := by
   ext y
   simp only [scaledSub, AddSubgroup.coe_set_mk, AddSubmonoid.coe_set_mk, AddSubsemigroup.coe_set_mk,
-    Set.mem_setOf_eq, Set.mem_image, SetLike.mem_coe]
+    Set.mem_ofPred_eq, Set.mem_image, SetLike.mem_coe]
   constructor
   · rintro ⟨z, hz, rfl⟩; exact ⟨z, hz, rfl⟩
   · rintro ⟨z, hz, rfl⟩; exact ⟨z, hz, rfl⟩
@@ -1401,7 +1401,7 @@ theorem level1 : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorme
   have hDeq : ((O.toAddSubgroup : AddSubgroup A.L) : Set A.L) =
       {y : A.L | ∀ m ∈ M, A.kerL ψ (t * x) y m = 1} := by
     ext y
-    simp only [Subring.coe_toAddSubgroup, SetLike.mem_coe, Set.mem_setOf_eq]
+    simp only [Subring.coe_toAddSubgroup, SetLike.mem_coe, Set.mem_ofPred_eq]
     have e1 : (∀ m ∈ M, A.kerL ψ (t * x) y m = 1) ↔ ∀ m ∈ O, A.kerL ψ (t * x) (algebraMap A.K A.L ϖ * y) m = 1 := by
       constructor
       · intro h m hm; rw [kerL_mul_left]; exact h _ ⟨m, hm, rfl⟩
@@ -1498,7 +1498,7 @@ open scoped Pointwise
 theorem isStableGauss_unique {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E]
     [NormedAlgebra F E] [StarRing E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.K) (μ : Measure A.L) (u : A.K)
     {G G' : ℂ} (h : IsStableGauss A ψ x μ u G) (h' : IsStableGauss A ψ x μ u G') : G = G' := by
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
   obtain ⟨Λ₀, ho, hc, hG⟩ := h
   obtain ⟨Λ₁, ho', hc', hG'⟩ := h'
   have hs : ((Λ₀ ⊔ Λ₁ : AddSubgroup A.L) : Set A.L) = (Λ₀ : Set A.L) + (Λ₁ : Set A.L) := AddSubgroup.add_normal Λ₀ Λ₁

@@ -202,12 +202,12 @@ theorem GlobalTheory.Mum.abLocus_iff_of_monomialTau : ∀ (R : Type) [CommRing R
   obtain ⟨-, -, hG, -, hU⟩ := hM
   obtain ⟨G', _, _, π, -, A, U, hpb, -, -⟩ := hU R' ρ hR' hinj hfin D e href
   have hG' : IsSemiAbelian G' := GlobalTheory.SiegLoc.TraitOrd.isSemiAbelian_of_isGrpPullback hpb hG
-  haveI : IsNoetherianRing R' := hR'.1
+  have : IsNoetherianRing R' := hR'.1
 
   obtain ⟨q, hq⟩ : ∃ q : Sp R', spMap ρ q = p := by
-    letI := ρ.toAlgebra
-    haveI : p.asIdeal.IsPrime := p.isPrime
-    haveI : Module.Finite R R' := hfin
+    let := ρ.toAlgebra
+    have : p.asIdeal.IsPrime := p.isPrime
+    have : Module.Finite R R' := hfin
     obtain ⟨Q', -, hQ', hc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral p.asIdeal (⊥ : Ideal R') (by
       intro x hx
       have : ρ x = 0 := hx
@@ -215,7 +215,7 @@ theorem GlobalTheory.Mum.abLocus_iff_of_monomialTau : ∀ (R : Type) [CommRing R
       exact p.asIdeal.zero_mem)
     exact ⟨⟨Q', hQ'⟩, PrimeSpectrum.ext hc⟩
   subst hq
-  haveI : q.asIdeal.IsPrime := q.isPrime
+  have : q.asIdeal.IsPrime := q.isPrime
   rw [abLocus_pullback abLocusOne hG hpb.1 q]
   have key : ∏ k, t k ∈ (spMap ρ q).asIdeal ↔ ∏ k, r k ∈ q.asIdeal := by
     show ρ (∏ k, t k) ∈ q.asIdeal ↔ _
@@ -277,7 +277,7 @@ theorem linEnd_act {D : DegData R I} {O : Type} [Ring O] [StarRing O] [Module O 
     {A : PolAV (Sp (FractionRing R))} {G : Over (Sp R)} [GrpObj G] [IsCommMonObj G] {U : UnifPre I D A G}
     {oA : A.OAct O} {oG : RingAct G O} (h : U.OLinear O o oA oG) (a : O) :
     LinEnd U (o.onB.act a) (DistribSMul.toAddMonoidHom D.toPre.X (star a)) (oG.act a) := by
-  haveI := oG.hom a
+  have := oG.hom a
   refine ⟨oG.hom a, fun e => inferInstance, fun e => thickMap_pullback_map _ e, fun e => h.q_lin e a, fun e => ?_⟩
   exact h.i_lin e a
 
@@ -1098,8 +1098,8 @@ open GlobalTheory.PsiTauCoordRel GlobalTheory.IndefiniteRowSideFullHecke.Generat
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Data R) (D' : DegPre R) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (pr : Fin r → (D'.P.A ⟶ Q.B)) (xe : D'.X ≃+ (Fin r → Q.X)), IsTens Q D' W pr xe → ∀ (y : D'.X) (k : Fin r → Fin r → (FractionRing R)ˣ), (∀ i j, Q.TauCoord (xe y i) (xe y j) (k i j)) → ∀ x : (FractionRing R)ˣ, GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.IsPsiCoord D' y x → ∃ u : Rˣ, x = Units.map (algebraMap R (FractionRing R)).toMonoidHom u * ∏ i, ∏ j, k i j ^ W i j := by
   intro R _ _ _ Q D' r W pr xe hT y k hk x hx
   obtain ⟨-, -, -, w, -, hpsi⟩ := hT
-  haveI : IsProper D'.P.A.hom := D'.P.isAb.proper
-  haveI : IsProper Q.B.hom := Q.isAb.proper
+  have : IsProper D'.P.A.hom := D'.P.isAb.proper
+  have : IsProper Q.B.hom := Q.isAb.proper
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨J', hJ', hc'⟩ := GlobalTheory.PeriodBalance.exists_good_integral ξ D'.P.isLB D'.P.A.hom
   obtain ⟨J, hJ, hc⟩ := GlobalTheory.PeriodBalance.exists_good_integral ξ Q.M.isLB Q.B.hom
@@ -1267,7 +1267,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Dat
     refine ⟨u, fun l => (∑ i, ∑ j, W i j * β l (xe y i) (xe y j)).toNat, fun l => by
       rw [tensForm_self W xe (β l) (hsym l), hn l], (GlobalTheory.PeriodFormCompare.psiCoord_iff D' y _).2 ⟨x, hx, ?_⟩⟩
     rw [hu, hprod]
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Units.coe_prod, map_mul, map_prod, map_pow]
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Units.coe_prod, map_mul, map_prod, map_pow]
     congr 1
     refine Finset.prod_congr rfl fun l _ => ?_
     rw [hn l, zpow_natCast, Units.val_pow_eq_pow_val]; rfl

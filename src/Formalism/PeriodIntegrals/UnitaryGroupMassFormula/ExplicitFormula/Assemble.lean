@@ -312,7 +312,7 @@ theorem logDerivLeft_of {Cw Cl : ℝ} (hCw : 0 ≤ Cw) (hCl : 0 ≤ Cl) (hW : Ze
       1 / 2 ≤ ‖((-1 / 2 : ℝ) : ℂ) + (t : ℂ) * I - ρ‖ := by
     intro ρ hρ
     unfold PI.ZerosNear at hρ
-    simp only [Set.mem_setOf_eq] at hρ
+    simp only [Set.mem_ofPred_eq] at hρ
     obtain ⟨a1, a2, -, -⟩ := hρ
     refine le_trans ?_ (Complex.abs_re_le_norm _)
     rw [Complex.sub_re, hre, abs_of_neg (by linarith)]
@@ -375,7 +375,7 @@ theorem norm_logDeriv_horiz {Cw Cl κ : ℝ} (hCw : 0 ≤ Cw) (hCl : 0 ≤ Cl) (
   have hnear : ∀ ρ ∈ ZerosNear χ s.im, 1 / (κ * ℓ) ≤ ‖s - ρ‖ := by
     intro ρ hρ
     unfold PI.ZerosNear at hρ
-    simp only [Set.mem_setOf_eq] at hρ
+    simp only [Set.mem_ofPred_eq] at hρ
     obtain ⟨a1, a2, -, a4⟩ := hρ
     have hgρ := hg ρ a1 a2 a4
     have k1 : |(|ρ.im|) - T'| ≤ |s.im - ρ.im| := by
@@ -680,7 +680,7 @@ theorem sum_nearB (u T : ℝ) :
       push_cast
       ring
     unfold nearB
-    rw [if_pos (by rw [← hn0]; exact hn'), hc, ← hn0]
+    rw [ite_eq_left (by rw [← hn0]; exact hn'), hc, ← hn0]
     ring
   have e2 : ∑ i ∈ range n0, nearB u T (n0 + (i + 1 + 1)) =
       (4 * u / T) * ∑ j ∈ range n0, 1 / ((j : ℝ) + 1) := by
@@ -688,16 +688,16 @@ theorem sum_nearB (u T : ℝ) :
     apply Finset.sum_congr rfl
     intro i _
     unfold nearB
-    rw [← hn0, if_neg (by omega), if_neg (by omega)]
+    rw [← hn0, ite_eq_right (by omega), ite_eq_right (by omega)]
     have : ((n0 + (i + 1 + 1) : ℕ) : ℝ) - n0 - 1 = (i : ℝ) + 1 := by push_cast; ring
     rw [this]
     ring
   have e3 : nearB u T (n0 + (0 + 1)) = 2 := by
     unfold nearB
-    rw [← hn0, if_neg (by omega), if_pos (by omega)]
+    rw [← hn0, ite_eq_right (by omega), ite_eq_left (by omega)]
   have e4 : nearB u T (n0 + 0) = 2 := by
     unfold nearB
-    rw [← hn0, if_neg (by omega), if_pos (by omega)]
+    rw [← hn0, ite_eq_right (by omega), ite_eq_left (by omega)]
   rw [e1, e2, e3, e4]
   ring
 
@@ -864,7 +864,7 @@ theorem pTerm_le {u T : ℝ} (hu : 2 ≤ u) (hT : 0 < T) (n : ℕ) :
     have hlt : n < ⌊u⌋₊ + (⌊u⌋₊ + 2) := by
       have : (n : ℝ) < ((⌊u⌋₊ + (⌊u⌋₊ + 2) : ℕ) : ℝ) := by push_cast; linarith [hfar.2]
       exact_mod_cast this
-    rw [if_pos hlt]
+    rw [ite_eq_left hlt]
     linarith
 
 theorem sum_pTerm_le {u T : ℝ} (hu : 2 ≤ u) (hT : 2 ≤ T) (K : ℕ) :

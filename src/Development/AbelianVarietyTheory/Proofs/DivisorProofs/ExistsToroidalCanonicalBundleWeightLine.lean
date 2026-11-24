@@ -160,7 +160,7 @@ theorem exists_genDer_extend : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     refine ⟨_, e.trans ?_⟩
     exact congrArg W.ι Scheme.fromSpecStalk_closedPoint
   have hmono : Mono (LogKS.chart U) := by
-    haveI := U.2.isOpenImmersion_fromSpec
+    have := U.2.isOpenImmersion_fromSpec
     unfold LogKS.chart; infer_instance
   have hρ' : ρ = (TF.Y.X.presheaf.germ U.1 (W.ι η₀) hη ≫ W.ι.stalkMap η₀).hom := by
     have e : CommRingCat.ofHom ρ = TF.Y.X.presheaf.germ U.1 (W.ι η₀) hη ≫ W.ι.stalkMap η₀ := by
@@ -175,9 +175,9 @@ theorem exists_genDer_extend : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     exact congrArg CommRingCat.Hom.hom e
   subst hρ'
   have hiso : IsIso (W.ι.stalkMap η₀) := inferInstance
-  letI iA : Algebra c.F Γ(TF.Y.X, U.1) := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX TF.Y.s U.1).toAlgebra
-  letI iK : Algebra c.F (X₀ TF.Y Z).functionField := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra
-  letI iAK : Algebra Γ(TF.Y.X, U.1) (X₀ TF.Y Z).functionField :=
+  let iA : Algebra c.F Γ(TF.Y.X, U.1) := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX TF.Y.s U.1).toAlgebra
+  let iK : Algebra c.F (X₀ TF.Y Z).functionField := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra
+  let iAK : Algebra Γ(TF.Y.X, U.1) (X₀ TF.Y Z).functionField :=
     (TF.Y.X.presheaf.germ U.1 (W.ι η₀) hη ≫ W.ι.stalkMap η₀).hom.toAlgebra
   have htow : IsScalarTower c.F Γ(TF.Y.X, U.1) (X₀ TF.Y Z).functionField := by
     refine IsScalarTower.of_algebraMap_eq' ?_
@@ -189,13 +189,13 @@ theorem exists_genDer_extend : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (germ_appLE_apply TF.Y.s ⊤ U.1 _ (W.ι η₀) hη trivial _)).symm
     rw [show s₀ TF.Y Z = W.ι ≫ TF.Y.s from rfl, Scheme.Hom.stalkMap_comp]
     rfl
-  letI iS : Algebra Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk (W.ι η₀)) :=
+  let iS : Algebra Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk (W.ι η₀)) :=
     TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf (U := U.1) ⟨W.ι η₀, hη⟩
   have hloc := U.2.isLocalization_stalk ⟨W.ι η₀, hη⟩
   let eK : TF.Y.X.presheaf.stalk (W.ι η₀) ≃ₐ[Γ(TF.Y.X, U.1)] (X₀ TF.Y Z).functionField :=
     AlgEquiv.ofRingEquiv (f := (asIso (W.ι.stalkMap η₀)).commRingCatIsoToRingEquiv) fun _ => rfl
-  haveI := IsLocalization.isLocalization_of_algEquiv (U.2.primeIdealOf ⟨W.ι η₀, hη⟩).asIdeal.primeCompl eK
-  haveI : Algebra.FormallyEtale Γ(TF.Y.X, U.1) (X₀ TF.Y Z).functionField :=
+  have := IsLocalization.isLocalization_of_algEquiv (U.2.primeIdealOf ⟨W.ι η₀, hη⟩).asIdeal.primeCompl eK
+  have : Algebra.FormallyEtale Γ(TF.Y.X, U.1) (X₀ TF.Y Z).functionField :=
     Algebra.FormallyEtale.of_isLocalization (U.2.primeIdealOf ⟨W.ι η₀, hη⟩).asIdeal.primeCompl
   choose D hD using fun j => exists_derivation_extend (k := c.F) (K := (X₀ TF.Y Z).functionField)
     (derivOfConst (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX TF.Y.s U.1) (Dl j).1 (Dl j).2.1)
@@ -392,8 +392,8 @@ theorem exists_frac_germ {X : Scheme.{0}} (B : X.Opens) (y : B.toScheme) (U : X.
     ∃ r s : Γ(X, U.1), IsUnit ((B.ι.stalkMap y).hom (X.presheaf.germ U.1 (B.ι y) hy s)) ∧
       a * (B.ι.stalkMap y).hom (X.presheaf.germ U.1 (B.ι y) hy s) =
         (B.ι.stalkMap y).hom (X.presheaf.germ U.1 (B.ι y) hy r) := by
-  letI := X.presheaf.algebra_section_stalk (⟨B.ι y, hy⟩ : U.1)
-  haveI := U.2.isLocalization_stalk ⟨B.ι y, hy⟩
+  let := X.presheaf.algebra_section_stalk (⟨B.ι y, hy⟩ : U.1)
+  have := U.2.isLocalization_stalk ⟨B.ι y, hy⟩
   let e := asIso (B.ι.stalkMap y)
   obtain ⟨⟨r, s⟩, hrs⟩ := IsLocalization.surj (U.2.primeIdealOf ⟨B.ι y, hy⟩).asIdeal.primeCompl (e.inv.hom a)
   refine ⟨r, s, (IsLocalization.map_units (X.presheaf.stalk (B.ι y)) s).map (B.ι.stalkMap y).hom, ?_⟩
@@ -428,8 +428,8 @@ end GlobalTheory.LogKSDiv
 
 theorem GlobalTheory.LogKSDiv.exists_stalkDer_extend : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), ∀ [IsIntegral (X₀ TF.Y Z)] [SmoothOfRelativeDimension Dw.dim (s₀ TF.Y Z)] (x : X₀ TF.Y Z) (U : TF.Y.X.affineOpens), U.1 ≤ barComp TF.Y Z → ∀ (hx : (barComp TF.Y Z).ι x ∈ U.1) (ρ : Γ(TF.Y.X, U.1) →+* (X₀ TF.Y Z).functionField), (∀ r, ρ r = algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField (GlobalTheory.LogKSDiv.stalkHom TF Z x U hx r)) → ∀ (d : Fin Dw.dim → Derivation ℤ Γ(TF.Y.X, U.1) Γ(TF.Y.X, U.1)) (D : Fin Dw.dim → GlobalTheory.LogKSDiv.GenDer TF Z), (letI := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra; ∀ j r, (show Derivation c.F (X₀ TF.Y Z).functionField (X₀ TF.Y Z).functionField from D j) (ρ r) = ρ (d j r)) → letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra; ∃ δ : Fin Dw.dim → Derivation c.F ((X₀ TF.Y Z).presheaf.stalk x) ((X₀ TF.Y Z).presheaf.stalk x), (letI := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra; ∀ j a, (show Derivation c.F (X₀ TF.Y Z).functionField (X₀ TF.Y Z).functionField from D j) (algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField a) = algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField (δ j a)) ∧ ∀ j r, δ j (GlobalTheory.LogKSDiv.stalkHom TF Z x U hx r) = GlobalTheory.LogKSDiv.stalkHom TF Z x U hx (d j r) := by
   intro E _ _ _ H Dw l Xo c TF Z _ _ x U _ hx ρ hρ d D hD
-  letI := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra
-  letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
+  let := (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)).toAlgebra
+  let := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
   have key := fun j => GlobalTheory.LogKSDiv.LocalExt.exists_restrict_der (k := c.F)
     (algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField)
     (IsFractionRing.injective _ _)
@@ -469,7 +469,7 @@ open GlobalTheory.TopForm
 
 theorem frame_eq_unit_smul_dForm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), ∀ [IsIntegral (X₀ TF.Y Z)] [SmoothOfRelativeDimension Dw.dim (s₀ TF.Y Z)] (x : X₀ TF.Y Z) (U' : (X₀ TF.Y Z).Opens) (ω : TopForm.FormsOn (s₀ TF.Y Z) Dw.dim U'), TopForm.IsFrame ω → ∀ hx : x ∈ U', letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra; ∃ (g : Fin Dw.dim → (X₀ TF.Y Z).presheaf.stalk x) (bΩ : Module.Basis (Fin Dw.dim) ((X₀ TF.Y Z).presheaf.stalk x) Ω[(X₀ TF.Y Z).presheaf.stalk x⁄c.F]) (u : (X₀ TF.Y Z).presheaf.stalk x), (∀ i, bΩ i = KaehlerDifferential.D c.F ((X₀ TF.Y Z).presheaf.stalk x) (g i)) ∧ IsUnit u ∧ formOf U' (gen_mem hx) ω = algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField u • TopForm.dForm (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)) (fun i => algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField (g i)) := by
   intro E _ _ _ H Dw l Xo c TF Z _ _ x U' ω hω hx
-  letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
+  let := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
   obtain ⟨U, y, b, hUU', hxU, hU, hb⟩ :=
     GlobalTheory.AdaptedFrame.exists_basis_dFun (s₀ TF.Y Z) Dw.dim hx
   have hy : IsFreeGen Γ(X₀ TF.Y Z, U) (dOn (s₀ TF.Y Z) y) := isFreeGen_dForm y b hb
@@ -485,8 +485,8 @@ theorem frame_eq_unit_smul_dForm : ∀ (E : Type) [Field E] [NumberField E] [IsC
     rw [← formOf_resForm hUU' hgU ω, ← ha, map_smulₛₗ]
     congr 1
     exact formMap_dForm _ _ _
-  letI iΓ : Algebra c.F Γ(X₀ TF.Y Z, U) := (algX (s₀ TF.Y Z) U).toAlgebra
-  letI iΓA : Algebra Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x) :=
+  let iΓ : Algebra c.F Γ(X₀ TF.Y Z, U) := (algX (s₀ TF.Y Z) U).toAlgebra
+  let iΓA : Algebra Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x) :=
     ((X₀ TF.Y Z).presheaf.germ U x hxU).hom.toAlgebra
   have hsc : algebraMap c.F ((X₀ TF.Y Z).presheaf.stalk x) =
       (algebraMap Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x)).comp
@@ -495,11 +495,11 @@ theorem frame_eq_unit_smul_dForm : ∀ (E : Type) [Field E] [NumberField E] [IsC
     change ((X₀ TF.Y Z).presheaf.germ ⊤ x trivial).hom (algX (s₀ TF.Y Z) ⊤ t) =
       ((X₀ TF.Y Z).presheaf.germ U x hxU).hom (algX (s₀ TF.Y Z) U t)
     rw [← resG_comp_algX (s₀ TF.Y Z) (le_top : U ≤ ⊤), RingHom.comp_apply, germ_resG]
-  haveI : IsScalarTower c.F Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x) :=
+  have : IsScalarTower c.F Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x) :=
     IsScalarTower.of_algebraMap_eq' hsc
-  haveI : IsLocalization.AtPrime ((X₀ TF.Y Z).presheaf.stalk x) (hU.primeIdealOf ⟨x, hxU⟩).asIdeal :=
+  have : IsLocalization.AtPrime ((X₀ TF.Y Z).presheaf.stalk x) (hU.primeIdealOf ⟨x, hxU⟩).asIdeal :=
     hU.isLocalization_stalk ⟨x, hxU⟩
-  haveI : Algebra.FormallyEtale Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x) :=
+  have : Algebra.FormallyEtale Γ(X₀ TF.Y Z, U) ((X₀ TF.Y Z).presheaf.stalk x) :=
     .of_isLocalization (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl
   have hbc := KaehlerDifferential.isBaseChange_of_formallyEtale c.F Γ(X₀ TF.Y Z, U)
     ((X₀ TF.Y Z).presheaf.stalk x)
@@ -538,7 +538,7 @@ namespace GlobalTheory.LogKSDiv.LocSpan
 theorem deriv_ext {k R A : Type} [CommRing k] [CommRing R] [CommRing A] [Algebra k A] (φ : R →+* A)
     (M : Submonoid R) (hloc : letI := φ.toAlgebra; IsLocalization M A) (D₁ D₂ : Derivation k A A)
     (h : ∀ r, D₁ (φ r) = D₂ (φ r)) : D₁ = D₂ := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   ext y
   obtain ⟨⟨r, t⟩, e⟩ := IsLocalization.surj M y
   have hu : IsUnit (φ t) := IsLocalization.map_units A t
@@ -567,9 +567,9 @@ theorem span_eq_top {k R A : Type} [Field k] [CommRing R] [CommRing A] [Algebra 
     (hlog : ∀ D : Derivation k R R, a • D.restrictScalars ℤ ∈ Submodule.span R (Set.range v))
     (δ : Fin n → Derivation k A A) (hδ : ∀ j r, δ j (φ r) = φ (v j r)) :
     Submodule.span A (Set.range δ) = ⊤ := by
-  letI := φ.toAlgebra
-  haveI : IsScalarTower k R A := IsScalarTower.of_algebraMap_eq fun c => (congrArg (· c) hk).symm
-  haveI : Algebra.FinitePresentation k R := Algebra.FinitePresentation.of_finiteType.mp inferInstance
+  let := φ.toAlgebra
+  have : IsScalarTower k R A := IsScalarTower.of_algebraMap_eq fun c => (congrArg (· c) hk).symm
+  have : Algebra.FinitePresentation k R := Algebra.FinitePresentation.of_finiteType.mp inferInstance
   rw [Submodule.eq_top_iff']
   intro d
   let g : Derivation k R A := d.compAlgebraMap R
@@ -652,8 +652,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l}
 
 theorem finiteType_algX (TF : TorFlag Xo c) (U : TF.Y.X.affineOpens) : (algX TF.Y.s U.1).FiniteType := by
-  haveI := TF.smooth
-  haveI : Smooth TF.Y.s := SmoothOfRelativeDimension.smooth Dw.dim _
+  have := TF.smooth
+  have : Smooth TF.Y.s := SmoothOfRelativeDimension.smooth Dw.dim _
   have h1 : (TF.Y.s.appLE ⊤ U.1 (by simp)).hom.FiniteType :=
     HasRingHomProperty.appLE @LocallyOfFiniteType TF.Y.s inferInstance ⟨⊤, isAffineOpen_top _⟩ U _
   exact h1.comp (RingHom.FiniteType.of_surjective _
@@ -663,7 +663,7 @@ theorem isLocalization_stalkHom (TF : TorFlag Xo c) (Z : Comp Xo c) (x : X₀ TF
     (hx : (barComp TF.Y Z).ι x ∈ U.1) :
     letI := (stalkHom TF Z x U hx).toAlgebra
     IsLocalization.AtPrime ((X₀ TF.Y Z).presheaf.stalk x) (U.2.primeIdealOf ⟨_, hx⟩).asIdeal := by
-  letI := TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf (⟨_, hx⟩ : U.1)
+  let := TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf (⟨_, hx⟩ : U.1)
   have h1 := U.2.isLocalization_stalk ⟨_, hx⟩
   let e := (asIso ((barComp TF.Y Z).ι.stalkMap x)).commRingCatIsoToRingEquiv
   have h2 := (IsLocalization.isLocalization_iff_of_ringEquiv _ e).1 h1
@@ -697,9 +697,9 @@ end GlobalTheory.LogKSDiv.LocSpan
 theorem GlobalTheory.LogKSDiv.span_logDer_germs : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), ∀ [IsIntegral (X₀ TF.Y Z)] [SmoothOfRelativeDimension Dw.dim (s₀ TF.Y Z)] (x : X₀ TF.Y Z) (U : TF.Y.X.affineOpens), U.1 ≤ barComp TF.Y Z → ∀ (hx : (barComp TF.Y Z).ι x ∈ U.1) (b : Module.Basis (Fin Dw.dim) Γ(TF.Y.X, U.1) (LogKS.logDer TF.Y.s (Scheme.IdealSheafData.vanishingIdeal (LogKS.interior TF.Y).compl) U)), letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra; ∀ δ : Fin Dw.dim → Derivation c.F ((X₀ TF.Y Z).presheaf.stalk x) ((X₀ TF.Y Z).presheaf.stalk x), (∀ j r, δ j (GlobalTheory.LogKSDiv.stalkHom TF Z x U hx r) = GlobalTheory.LogKSDiv.stalkHom TF Z x U hx ((b j).1 r)) → x ∈ (j₀ TF.Y Z).opensRange → Submodule.span ((X₀ TF.Y Z).presheaf.stalk x) (Set.range δ) = ⊤ := by
   intro E _ _ _ H Dw l Xo c TF Z _ _ x U _ hx b
   intro δ hδ hint
-  letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
-  letI : Algebra c.F Γ(TF.Y.X, U.1) := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX TF.Y.s U.1).toAlgebra
-  haveI : Algebra.FiniteType c.F Γ(TF.Y.X, U.1) := LocSpan.finiteType_algX TF U
+  let := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
+  let : Algebra c.F Γ(TF.Y.X, U.1) := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX TF.Y.s U.1).toAlgebra
+  have : Algebra.FiniteType c.F Γ(TF.Y.X, U.1) := LocSpan.finiteType_algX TF U
   obtain ⟨a, haI, hau⟩ := LocSpan.exists_unit TF Z x U hx hint
   refine LocSpan.span_eq_top (stalkHom TF Z x U hx) (LocSpan.stalkHom_comp_algX TF Z x U hx) _
     (LocSpan.isLocalization_stalkHom TF Z x U hx) a hau (fun j => (b j).1) ?_ δ hδ
@@ -841,12 +841,12 @@ theorem derivation_mem_map {k R A : Type} [CommRing k] [CommRing R] [CommRing A]
 
 theorem exists_boundary_param : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), ∀ [IsIntegral (X₀ TF.Y Z)] [SmoothOfRelativeDimension Dw.dim (s₀ TF.Y Z)] (x : X₀ TF.Y Z) (U : TF.Y.X.affineOpens), ∀ (hx : (barComp TF.Y Z).ι x ∈ U.1) (b : Module.Basis (Fin Dw.dim) Γ(TF.Y.X, U.1) (LogKS.logDer TF.Y.s (Scheme.IdealSheafData.vanishingIdeal (LogKS.interior TF.Y).compl) U)), letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra; ∀ δ : Fin Dw.dim → Derivation c.F ((X₀ TF.Y Z).presheaf.stalk x) ((X₀ TF.Y Z).presheaf.stalk x), (∀ j r, δ j (GlobalTheory.LogKSDiv.stalkHom TF Z x U hx r) = GlobalTheory.LogKSDiv.stalkHom TF Z x U hx ((b j).1 r)) → x ∉ (j₀ TF.Y Z).opensRange → ∃ t ∈ IsLocalRing.maximalIdeal ((X₀ TF.Y Z).presheaf.stalk x), KaehlerDifferential.D c.F ((X₀ TF.Y Z).presheaf.stalk x) t ∉ (IsLocalRing.maximalIdeal ((X₀ TF.Y Z).presheaf.stalk x)) • (⊤ : Submodule ((X₀ TF.Y Z).presheaf.stalk x) Ω[(X₀ TF.Y Z).presheaf.stalk x⁄c.F]) ∧ ∀ j, δ j t ∈ Ideal.span {t} := by
   intro E _ _ _ H Dw l Xo c TF Z _ _ x U hx b δ hδ hn
-  letI := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
+  let := (GlobalTheory.LogKSDiv.stalkAlg TF Z x).toAlgebra
   obtain ⟨hreg, n, f, J, hf, ⟨j, hj⟩, hI⟩ := _root_.GlobalTheory.LogKSDiv.boundary_germ_snc E H Dw l Xo c TF Z x U hx hn
   have hm : f j ∈ maximalIdeal ((X₀ TF.Y Z).presheaf.stalk x) := hf.1 ▸ Ideal.subset_span ⟨j, rfl⟩
   refine ⟨f j, hm, ?_, fun i => ?_⟩
   · obtain ⟨V, hV, hxV, -⟩ := Opens.isBasis_iff_nbhd.1 (X₀ TF.Y Z).isBasis_affineOpens (show x ∈ (⊤ : (X₀ TF.Y Z).Opens) from trivial)
-    haveI := GlobalTheory.AdaptedFrame.formallySmooth_residueField (s₀ TF.Y Z) (n := Dw.dim) hV x hxV (by
+    have := GlobalTheory.AdaptedFrame.formallySmooth_residueField (s₀ TF.Y Z) (n := Dw.dim) hV x hxV (by
       ext t
       change ((X₀ TF.Y Z).presheaf.germ ⊤ x trivial).hom (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX (s₀ TF.Y Z) ⊤ t) =
         ((X₀ TF.Y Z).presheaf.germ V x hxV).hom (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX (s₀ TF.Y Z) V t)
@@ -863,7 +863,7 @@ theorem local_topPair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have h1 := chartRestr_eq_germ E H Dw l Xo c TF Z x U hU hxU ρ hρ
   obtain ⟨δ, hδK, hδR⟩ := _root_.GlobalTheory.LogKSDiv.exists_stalkDer_extend E H Dw l Xo c TF Z x U hU hxU ρ h1 (fun j => (b j).1) D hD
   obtain ⟨g, bΩ, u, hg, hu, hform⟩ := frame_eq_unit_smul_dForm E H Dw l Xo c TF Z x U' ω hω hx
-  letI := (stalkAlg TF Z x).toAlgebra
+  let := (stalkAlg TF Z x).toAlgebra
   have key : topPair (GlobalTheory.Cartier.constFn (s₀ TF.Y Z)) D (formOf U' (gen_mem hx) ω) =
       algebraMap ((X₀ TF.Y Z).presheaf.stalk x) (X₀ TF.Y Z).functionField
         (u * (Matrix.of fun i j => δ j (g i)).det) := by
@@ -1078,8 +1078,8 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
     ⟨f, rfl⟩
   obtain ⟨U₀, hU₀, hy, x₀, hx₀, C, m, xc, hxc⟩ := GlobalTheory.ShFam.EigSpread.exists_affine_chart TF.Y.t (𝟙 TF.Y.X) y
   let lam : Γ(TF.Y.X, U₀) →+* (X₀ TF.Y Z).presheaf.stalk x := (TF.Y.X.presheaf.germ U₀ y hy ≫ (barComp TF.Y Z).ι.stalkMap x).hom
-  letI : Algebra Γ(TF.Y.X, U₀) ((X₀ TF.Y Z).presheaf.stalk x) := lam.toAlgebra
-  letI : Algebra Γ(TF.Y.X, U₀) (TF.Y.X.presheaf.stalk y) :=
+  let : Algebra Γ(TF.Y.X, U₀) ((X₀ TF.Y Z).presheaf.stalk x) := lam.toAlgebra
+  let : Algebra Γ(TF.Y.X, U₀) (TF.Y.X.presheaf.stalk y) :=
     TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf ⟨y, hy⟩
   have hloc0 := hU₀.isLocalization_stalk ⟨y, hy⟩
   have hloc : IsLocalization (hU₀.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl ((X₀ TF.Y Z).presheaf.stalk x) := by
@@ -1101,7 +1101,7 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
       ∃ (xc' : ∀ m : ℕ, ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := S') (ReciprocityTheory.ChartRestriction.G.Chart.JetR S' (Fin n) m) ⟶ (Over.pullback x').obj t.G),
         ReciprocityTheory.ChartRestriction.G.Chart.IsUnivChart _ n xc' ∧ ∀ cc : Fin n → S, vec t x' xc' (ψ ∘ cc) = spMap (dualMap ψ) ≫ vec t x xc cc := by
     subst h
-    letI : Algebra S S' := ψ.toAlgebra
+    let : Algebra S S' := ψ.toAlgebra
     obtain ⟨x₁, hx₁, hcomp⟩ := LieChart.univChart_baseChange_of_chart (R := S) (R' := S') _ C n xc hx
     have h₁ := IsGrpPullback.comp
       (isGrpPullback_pullback ((Over.pullback x).obj t.G) (ReciprocityTheory.ChartRestriction.G.Chart.fB S S'))
@@ -1129,9 +1129,9 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
     have : CharZero c.F := RingHom.charZero c.F.val.toRingHom
     obtain ⟨α, hinj, ⟨f, hf, hfs⟩, hN⟩ :=
       exists_sepElt (E := E) (F := c.F) c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
-    letI : Algebra c.F L := φ.toAlgebra
+    let : Algebra c.F L := φ.toAlgebra
     refine ⟨fun τ => LinearMap.toMatrix' (proj (rho hx) (embK c) α τ), fun {k} _ ψ {x' xc'} hx' hv τ => ?_⟩
-    letI : Algebra c.F k := (ψ.comp φ).toAlgebra
+    let : Algebra c.F k := (ψ.comp φ).toAlgebra
     have e₁ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) (proj (rho hx') (embK c) α τ m) := fun m =>
       eig_of_alpha _ _ α hN τ (proj_eig_alpha _ _ α hinj f hf hfs τ m)
     have e₂ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) m → proj (rho hx') (embK c) α τ m = m := fun m hm => by
@@ -1139,7 +1139,7 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
         by_cases h : τ' = τ
         · subst h; rwa [Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-      rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+      rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
     have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
       fun a cc => vec_inj hx' (by
         show vec TF.Y.t _ xc' (tmap hx' _ _) = vec TF.Y.t _ xc' (_ ∘ tmap hx _ _)
@@ -1184,7 +1184,7 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
     c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
   have hbasK : ∀ v : Fin m → (X₀ TF.Y Z).presheaf.stalk x,
       ∃! a : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) → (X₀ TF.Y Z).presheaf.stalk x, v = ∑ j, a j • B j.1 j.2 := by
-    letI : Algebra c.F ((X₀ TF.Y Z).presheaf.stalk x) := (lam.comp φ₀).toAlgebra
+    let : Algebra c.F ((X₀ TF.Y Z).presheaf.stalk x) := (lam.comp φ₀).toAlgebra
     exact
     SpreadFrame.basis_of_split (fun τ => ReciprocityTheory.ChartRestriction.G.PullbackSections.proj (rho hxL) (embK c) α τ)
       (ReciprocityTheory.ChartRestriction.G.PullbackSections.sum_proj _ _ _ hinj) (fun τ => eig c (lam.comp φ₀) hxL τ)
@@ -1235,8 +1235,8 @@ theorem GlobalTheory.LogKSDiv.exists_spread_eigFrame : ∀ (E : Type) [Field E] 
       (TF.Y.X.presheaf.stalk y) ⟨g, hg⟩
   have hκ : IsUnit (lam (g' * g)) := ((Scheme.mem_basicOpen _ _ _ hy).1 hyU).map ((barComp TF.Y Z).ι.stalkMap x).hom
   let θ : (X₀ TF.Y Z).presheaf.stalk x →+* (X₀ TF.Y Z).functionField := algebraMap _ _
-  letI : Algebra Γ(TF.Y.X, U₀) Γ(TF.Y.X, U.1) := ψ.toAlgebra
-  haveI : IsLocalization.Away (g' * g) Γ(TF.Y.X, U.1) := hU₀.isLocalization_basicOpen (g' * g)
+  let : Algebra Γ(TF.Y.X, U₀) Γ(TF.Y.X, U.1) := ψ.toAlgebra
+  have : IsLocalization.Away (g' * g) Γ(TF.Y.X, U.1) := hU₀.isLocalization_basicOpen (g' * g)
   let ρ : Γ(TF.Y.X, U.1) →+* (X₀ TF.Y Z).functionField := IsLocalization.Away.lift (g' * g) (g := θ.comp lam) (hκ.map θ)
   have hρψ : ρ.comp ψ = θ.comp lam := IsLocalization.lift_comp _
   let w : Γ(TF.Y.X, U.1) := ↑hsU.unit⁻¹
@@ -1362,14 +1362,14 @@ theorem topPair_change_matrix : ∀ {k A : Type} [CommRing k] [CommRing A] (α :
     (letI := α.toAlgebra; ∀ j, D j = ∑ i, L i j • D' i) →
     ∀ η, GlobalTheory.LogKSDiv.topPair α D η = L.det * GlobalTheory.LogKSDiv.topPair α D' η := by
   intro k A _ _ α n D D' L hD η
-  letI := α.toAlgebra
+  let := α.toAlgebra
   have key : (Matrix.detRowAlternating.compLinearMap
       (LinearMap.pi fun j => (KaehlerDifferential.linearMapEquivDerivation k A).symm (D j)) :
         (Ω[A⁄k]) [⋀^Fin n]→ₗ[A] A) =
       L.det • Matrix.detRowAlternating.compLinearMap
       (LinearMap.pi fun j => (KaehlerDifferential.linearMapEquivDerivation k A).symm (D' j)) := by
     ext v
-    simp only [AlternatingMap.compLinearMap_apply, AlternatingMap.smul_apply, smul_eq_mul]
+    simp only [AlternatingMap.compLinearMap_apply, smul_apply, smul_eq_mul]
     change Matrix.det (Matrix.of fun i j =>
         (KaehlerDifferential.linearMapEquivDerivation k A).symm (D j) (v i)) =
       L.det * Matrix.det (Matrix.of fun i j =>
@@ -1630,24 +1630,24 @@ theorem exOf_kapBase {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Rec
   · rfl
   · by_cases h' : τ (H.rt : E) = H.rt0
     · have hi : (i : ℕ) < Dw.p := by
-        have := i.2; simp only [Datum.mult, if_pos h'] at this; exact this
-      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, if_pos h', dif_pos h', dif_pos hi, kapBase, sub_zero,
-        if_pos hi]
+        have := i.2; simp only [Datum.mult, ite_eq_left h'] at this; exact this
+      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, ite_eq_left h', dite_eq_left h', dite_eq_left hi, kapBase, sub_zero,
+        ite_eq_left hi]
     · have hi : (i : ℕ) < Dw.q := by
-        have := i.2; simp only [Datum.mult, if_neg h'] at this; exact this
+        have := i.2; simp only [Datum.mult, ite_eq_right h'] at this; exact this
       have hc : conjEmb τ (H.rt : E) = H.rt0 := by
         have := (ReciprocityTheory.ChartRestriction.G.PullbackSections.CVA.inPsi_or H τ).resolve_left h'
         unfold InPsi at this
         rw [ComplexEmbedding.conjugate_coe_eq] at this
         exact this
       have hn : ¬ (Dw.p + (Dw.q - 1 - (i : ℕ)) < Dw.p) := by omega
-      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, if_neg h', dif_neg h', dif_pos hc, dif_pos hi, kapBase,
-        if_neg hn, neg_neg, sub_zero]
+      simp only [Option.elim, AllWt.exOf, exZ, AllWt.wtOf, ite_eq_right h', dite_eq_right h', dite_eq_left hc, dite_eq_left hi, kapBase,
+        ite_eq_right hn, neg_neg, sub_zero]
 
 theorem exists_kap_theta : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), 1 ≤ Dw.p + Dw.q → FnAlgClosed (Xo := Xo) (c := c) → ∀ [SmoothOfRelativeDimension Dw.dim (s₀ TF.Y Z)] (K : CanonLB (s₀ TF.Y Z) Dw.dim), ∃ (κ : LB (X₀ TF.Y Z)) (hκ : κ.IsLB), CechPic.pull (π₀ TF.X Z) (cls κ hκ) = cls (L₀ TF.X Z (kapBase Dw)) (isLB_L₀ TF.X Z _) ∧ ∃ θ : (LB.div κ K.bundle).Sec, nonzeroLocus θ = (j₀ TF.Y Z).opensRange := by
   intro E hE hNumber hCM H Dw l Xo c TF Z hpq hF hSmooth K
   obtain ⟨hI, -⟩ := GlobalTheory.BaseVar.isVariety_barComp E H Dw l Xo c TF Z hF
-  letI : IsIntegral (X₀ TF.Y Z) := hI
+  let : IsIntegral (X₀ TF.Y Z) := hI
   obtain ⟨φ₀, f₀, hgen, hdiv⟩ := _root_.GlobalTheory.EigDiv.exists_detDiv E H Dw l Xo c TF Z
   obtain ⟨D, hpull, hD⟩ := hdiv fun τ => if τ (H.rt : E) = H.rt0 then (Dw.q : ℤ) else Dw.p
   refine ⟨toLB D, isLB_toLB D, ?_, ?_⟩

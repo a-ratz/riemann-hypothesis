@@ -134,32 +134,32 @@ theorem chart_haar (S : Set H) (κ : H → C) (φ : C → H) (μC : Measure C) (
   let e : C ≃ₜ S' :=
     { toFun := fun c => ⟨φ c, hφS c⟩, invFun := fun y => κ y, left_inv := fun c => hκφ c,
       right_inv := fun y => Subtype.ext (hφκ y y.2), continuous_toFun := hφ.subtype_mk _,
-      continuous_invFun := hκ.comp continuous_subtype_val }
+      continuous_invFun := hκ.comp continuous_subtypeVal }
   let μS : Measure S' := μC.map e.toMeasurableEquiv
   have hval : (μS.map Subtype.val : Measure H) = μC.map φ := by
-    rw [Measure.map_map measurable_subtype_coe e.toMeasurableEquiv.measurable]
+    rw [Measure.map_map measurable_subtypeVal e.toMeasurableEquiv.measurable]
     rfl
   have hvemb : MeasurableEmbedding (Subtype.val : S' → H) :=
-    MeasurableEmbedding.subtype_coe hS'c.measurableSet
-  haveI : μS.IsMulRightInvariant := ⟨fun g => by
+    MeasurableEmbedding.subtypeVal hS'c.measurableSet
+  have : μS.IsMulRightInvariant := ⟨fun g => by
     have h2 : (μS.map (fun x => x * g)).map Subtype.val = μS.map Subtype.val := by
-      rw [Measure.map_map measurable_subtype_coe (measurable_mul_const g)]
+      rw [Measure.map_map measurable_subtypeVal (measurable_mul_const g)]
       have h3 : (Subtype.val ∘ fun x : S' => x * g) = (fun y : H => y * (g : H)) ∘ Subtype.val := by
         funext x; simp
-      rw [h3, ← Measure.map_map (measurable_mul_const _) measurable_subtype_coe, hval, hright _ g.2]
+      rw [h3, ← Measure.map_map (measurable_mul_const _) measurable_subtypeVal, hval, hright _ g.2]
     rw [← hvemb.comap_map (μS.map (fun x => x * g)), h2, hvemb.comap_map]⟩
-  haveI : IsFiniteMeasureOnCompacts μS := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts μS := ⟨fun K hK => by
     show μC.map e.toMeasurableEquiv K < ⊤
     rw [MeasurableEquiv.map_apply, Homeomorph.toMeasurableEquiv_coe, ← Homeomorph.image_symm]
     exact (hK.image e.symm.continuous).measure_lt_top⟩
-  haveI : Measure.IsOpenPosMeasure μS := ⟨fun U hU hne' => by
+  have : Measure.IsOpenPosMeasure μS := ⟨fun U hU hne' => by
     show μC.map e.toMeasurableEquiv U ≠ 0
     rw [MeasurableEquiv.map_apply, Homeomorph.toMeasurableEquiv_coe]
     exact (hU.preimage e.continuous).measure_ne_zero μC (hne'.preimage e.surjective)⟩
   obtain ⟨b, hb, hb1⟩ := Formalism.L2.SG.Pf.QuotIndep.QuotIndepPf.exists_bruhat S' hS'c μS
   have hb1' : ∀ x, ∫⁻ s, b (s * x) ∂(μC.map φ) = 1 := by
     intro x
-    rw [← hval, lintegral_map (show Measurable (fun s : H => b (s * x)) from hb.comp (measurable_mul_const x)) measurable_subtype_coe]
+    rw [← hval, lintegral_map (show Measurable (fun s : H => b (s * x)) from hb.comp (measurable_mul_const x)) measurable_subtypeVal]
     exact hb1 x
   refine ⟨fun x => if b x = ⊤ then 0 else b x, ?_, ?_, fun x => ?_⟩
   · exact Measurable.ite (hb (measurableSet_singleton ⊤)) measurable_const hb
@@ -184,7 +184,7 @@ theorem stCoordV_continuous (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u' 
     (γ : X.B.I.Ginf) (v : InfinitePlace X.B.I.F) : Continuous (stCoordV X u' w γ v) := by
   unfold stCoordV Formalism.L2.SG.HidaSetting.hJ
   have hu : Continuous fun y : Formalism.REAL.UJ (X.B.I.ε v) => uMat ((γ v)⁻¹ * y * γ v) :=
-    (Units.continuous_val.comp continuous_subtype_val).comp
+    (Units.continuous_val.comp continuous_subtypeVal).comp
       ((continuous_const.mul continuous_id).mul continuous_const)
   apply continuous_pi
   intro p
@@ -198,12 +198,12 @@ theorem muStabV_eq_smul (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (w : Poi
   have h : ENNReal.ofReal (D.host.ka / (X.B.g : ℝ) / Real.pi) • (volume : Measure ℂ) =
       (ENNReal.ofReal (D.host.ka / (X.B.g : ℝ) / Real.pi)).toNNReal • (volume : Measure ℂ) := by
     ext s hs
-    simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def,
+    simp only [smul_apply, smul_eq_mul, ENNReal.smul_def,
       ENNReal.coe_toNNReal ENNReal.ofReal_ne_top]
   simp only [h]
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, MeasureTheory.volume_pi, Measure.pi_pi]
-  simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def, Finset.prod_mul_distrib,
+  rw [smul_apply, MeasureTheory.volume_pi, Measure.pi_pi]
+  simp only [smul_apply, smul_eq_mul, ENNReal.smul_def, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, ENNReal.coe_toNNReal ENNReal.ofReal_ne_top]
 
 def StVGeo (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what₂.Word) : Prop :=
@@ -226,7 +226,7 @@ theorem muStabV_sigmaFinite (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (w :
   have h : ENNReal.ofReal (D.host.ka / (X.B.g : ℝ) / Real.pi) • (volume : Measure ℂ) =
       (ENNReal.ofReal (D.host.ka / (X.B.g : ℝ) / Real.pi)).toNNReal • (volume : Measure ℂ) := by
     ext s hs
-    simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def,
+    simp only [smul_apply, smul_eq_mul, ENNReal.smul_def,
       ENNReal.coe_toNNReal ENNReal.ofReal_ne_top]
   simp only [h]
   infer_instance
@@ -238,7 +238,7 @@ theorem stCoord_measurable (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u' :
   apply continuous_pi; intro v
   apply continuous_pi; intro p
   have hu : Continuous fun y : X.B.I.Ginf => uMat ((γ⁻¹ * y * γ) v) :=
-    (Units.continuous_val.comp continuous_subtype_val).comp
+    (Units.continuous_val.comp continuous_subtypeVal).comp
       ((continuous_apply v).comp ((continuous_const.mul continuous_id).mul continuous_const))
   exact continuous_const.mul
     (continuous_const.dotProduct (continuous_const.matrix_mulVec (hu.matrix_mulVec continuous_const)))
@@ -247,7 +247,7 @@ theorem locUni_of (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what
   intro w hok μR hμR hmap v
   obtain ⟨⟨h1, hmul, hinv⟩, φ, hφ, hφS, hφκ, hκφ, hL, hI⟩ := hG w hok v
   have heq := muStabV_eq_smul X w
-  haveI := muStabV_sigmaFinite X w
+  have := muStabV_sigmaFinite X w
   have hct : ENNReal.ofReal (D.host.ka / (X.B.g : ℝ) / Real.pi) ^ Fintype.card (FreeE w) ≠ ⊤ :=
     ENNReal.pow_ne_top ENNReal.ofReal_ne_top
   have hc0 : ENNReal.ofReal (D.host.ka / (X.B.g : ℝ) / Real.pi) ^ Fintype.card (FreeE w) ≠ 0 := by
@@ -264,17 +264,17 @@ theorem locUni_of (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.what
         rw [← h2, hmap]
         unfold muStab
         simp only [hz]
-        haveI : Nonempty (FreeE w) := Fintype.card_pos_iff.mp hcard
+        have : Nonempty (FreeE w) := Fintype.card_pos_iff.mp hcard
         rw [Measure.pi_univ]
         apply Finset.prod_eq_zero (Finset.mem_univ (Classical.arbitrary _))
         rw [Measure.pi_univ]
         apply Finset.prod_eq_zero (Finset.mem_univ (Classical.arbitrary _))
         simp
       exact Measure.measure_univ_eq_zero.mp hunivR
-  haveI : IsFiniteMeasureOnCompacts (muStabV X w) := ⟨fun Kc hKc => by
-    rw [heq, Measure.smul_apply, smul_eq_mul]
+  have : IsFiniteMeasureOnCompacts (muStabV X w) := ⟨fun Kc hKc => by
+    rw [heq, smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top hct.lt_top hKc.measure_lt_top⟩
-  haveI : Measure.IsOpenPosMeasure (muStabV X w) := by
+  have : Measure.IsOpenPosMeasure (muStabV X w) := by
     rw [heq]; exact Measure.isOpenPosMeasure_smul _ hc0
   have hMP : ∀ f : (FreeE w → ℂ) → (FreeE w → ℂ), MeasurePreserving f volume volume →
       MeasurePreserving f (muStabV X w) (muStabV X w) := by
@@ -292,7 +292,7 @@ theorem globProd_of (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wh
   intro w hok μR hμR hmap μRv hRv
   have hG' := fun v => (hG w hok v).2
   choose φ hφc hφS hφκ hκφ hL hI using hG'
-  haveI : ∀ v, SigmaFinite (μRv v) := fun v => (hRv v).1.1
+  have : ∀ v, SigmaFinite (μRv v) := fun v => (hRv v).1.1
   let Φ : (InfinitePlace X.B.I.F → FreeE w → ℂ) → X.B.I.Ginf := fun c v => φ v (c v)
   have hΦm : Measurable Φ :=
     Measurable.of_eval fun v => (hφc v).measurable.comp (measurable_pi_apply v)
@@ -317,7 +317,7 @@ theorem globProd_of (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wh
     exact ⟨fun v => (hy v).1, fun v => (hy v).2⟩
   have hall : ∀ v, (μRv v).map (stCoordV X u' w (gamW X u u' w) v) = muStabV X w :=
     fun v => (hRv v).2
-  haveI : ∀ v, SigmaFinite ((μRv v).map (stCoordV X u' w (gamW X u u' w) v)) := fun v => by
+  have : ∀ v, SigmaFinite ((μRv v).map (stCoordV X u' w (gamW X u u' w) v)) := fun v => by
     rw [hall v]; exact muStabV_sigmaFinite X w
   have hmap2 : (Measure.pi μRv).map (stCoord X u' w (gamW X u u' w)) = muStab X w := by
     rw [show stCoord X u' w (gamW X u u' w) =

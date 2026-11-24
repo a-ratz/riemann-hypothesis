@@ -98,7 +98,7 @@ theorem gauss_pair {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
     have hij : i = j :=
       Subtype.ext (by rw [Set.mem_singleton_iff.mp i.2, Set.mem_singleton_iff.mp j.2])
     subst hij
-    simp only [Set.restrict_apply, if_true]
+    simp only [domRestrict_apply, ite_true]
     rw [inner_self_eq_norm_sq_to_K]
     show ((‖u0‖ : ℝ) : ℂ) ^ 2 = 1
     rw [hu0n]; simp
@@ -126,7 +126,7 @@ theorem gauss_pair {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
       ∏ i, f i (y i) = log (‖c‖ * ‖y 0‖) * ∏ i, exp (-‖y i‖ ^ 2) := by
     intro y
     rw [Fin.prod_univ_succ, Fin.prod_univ_succ (fun i => exp (-‖y i‖ ^ 2))]
-    simp only [f, if_pos rfl, Fin.succ_ne_zero, if_false]
+    simp only [f, ite_eq_left rfl, Fin.succ_ne_zero, ite_false]
     ring
   have hF1 : ∀ x : EuclideanSpace ℂ (Fin (m + 1)),
       log ‖∑ i, WithLp.ofLp c i * WithLp.ofLp x i‖ * exp (-‖x‖ ^ 2) = ∏ i, f i (M x i) := by
@@ -137,7 +137,7 @@ theorem gauss_pair {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
     rw [hnorm2, hexp]
   set μ := (volume : Measure (EuclideanSpace ℂ (Fin (m + 1)))) with hμ
   let Me := M.toHomeomorph.toMeasurableEquiv
-  haveI : (μ.map Me).IsAddHaarMeasure := by
+  have : (μ.map Me).IsAddHaarMeasure := by
     have h := M.isAddHaarMeasure_map μ
     exact h
   set k := (μ.map Me).addHaarScalarFactor (volume : Measure (Fin (m + 1) → ℂ))
@@ -156,7 +156,7 @@ theorem gauss_pair {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
     exact Me.measurableEmbedding.integrable_map_iff.mp h1
   have hP1 : ∫ y : Fin (m + 1) → ℂ, ∏ i, f i (y i) = gaussLogC ‖c‖ * gaussOneC ^ m := by
     rw [volume_pi, integral_fintype_prod_eq_prod (f := f), Fin.prod_univ_succ]
-    simp only [f, if_pos rfl, Fin.succ_ne_zero, if_false, Finset.prod_const, Finset.card_univ,
+    simp only [f, ite_eq_left rfl, Fin.succ_ne_zero, ite_false, Finset.prod_const, Finset.card_univ,
       Fintype.card_fin, gaussLogC, gaussOneC]
   have hP2 : ∫ y : Fin (m + 1) → ℂ, ∏ i, g i (y i) = gaussOneC ^ (m + 1) := by
     rw [volume_pi, integral_fintype_prod_eq_prod (f := g)]
@@ -225,7 +225,7 @@ theorem polar_mean {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
       finrank_euclideanSpace_fin]
   have hk : Module.finrank ℝ (EuclideanSpace ℂ (Fin n)) - 1 = 2 * n - 1 := by rw [hdim]
   have hk1 : 1 ≤ 2 * n - 1 := by omega
-  haveI : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
+  have : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
     Module.nontrivial_of_finrank_pos (R := ℝ) (by rw [hdim]; omega)
   have hJ : radJ (2 * n - 1) ≠ 0 := (radJ_pos _).ne'
 
@@ -237,7 +237,7 @@ theorem polar_mean {n : ℕ} (hn : 0 < n) (c : EuclideanSpace ℂ (Fin n)) (hc :
   have hAtop : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere univ ≠ ⊤ := by
     rw [Measure.toSphere_apply_univ]
     exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) measure_ball_lt_top.ne
-  haveI : IsFiniteMeasure (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere := ⟨lt_top_iff_ne_top.mpr hAtop⟩
+  have : IsFiniteMeasure (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere := ⟨lt_top_iff_ne_top.mpr hAtop⟩
   have hA : ((volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere univ).toReal =
       (Module.finrank ℝ (EuclideanSpace ℂ (Fin n)) : ℝ) * (volume : Measure (EuclideanSpace ℂ (Fin n))).real (ball 0 1) := by
     rw [Measure.toSphere_apply_univ, ENNReal.toReal_mul, ENNReal.toReal_natCast, measureReal_def]

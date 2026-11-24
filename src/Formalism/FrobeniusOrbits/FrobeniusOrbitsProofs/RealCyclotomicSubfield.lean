@@ -212,7 +212,7 @@ private lemma finrank_adjoin_add_inv_eq_two_of_isPrimitiveRoot {M : Type*} [Fiel
 lemma finrank_real_subfield {e : ℕ} {ζ : L} (hζ : IsPrimitiveRoot ζ (2 ^ (e + 2))) :
     Module.finrank ℚ (F1 ζ) = 2 ^ e := by
   have hint : IsIntegral ℚ ζ := Algebra.IsIntegral.isIntegral ζ
-  haveI : FiniteDimensional ℚ ℚ⟮ζ⟯ := adjoin.finiteDimensional hint
+  have : FiniteDimensional ℚ ℚ⟮ζ⟯ := adjoin.finiteDimensional hint
   let z : ℚ⟮ζ⟯ := AdjoinSimple.gen ℚ ζ
   have hz : IsPrimitiveRoot z (2 ^ (e + 2)) :=
     (show IsPrimitiveRoot ((ℚ⟮ζ⟯).val z) (2 ^ (e + 2)) from hζ).of_map_of_injective Subtype.val_injective
@@ -241,7 +241,7 @@ lemma maxReal_iff {e : ℕ} {ζ : L} (hζ : IsPrimitiveRoot ζ (2 ^ (e + 2))) :
     ∀ x : ℚ⟮ζ⟯, x ∈ maximalRealSubfield ℚ⟮ζ⟯ ↔ (x : L) ∈ F1 ζ := by
   intro x
   have hint : IsIntegral ℚ ζ := Algebra.IsIntegral.isIntegral ζ
-  haveI : FiniteDimensional ℚ ℚ⟮ζ⟯ := adjoin.finiteDimensional hint
+  have : FiniteDimensional ℚ ℚ⟮ζ⟯ := adjoin.finiteDimensional hint
   let z : ℚ⟮ζ⟯ := AdjoinSimple.gen ℚ ζ
   have hz : IsPrimitiveRoot z (2 ^ (e + 2)) :=
     (show IsPrimitiveRoot ((ℚ⟮ζ⟯).val z) (2 ^ (e + 2)) from hζ).of_map_of_injective Subtype.val_injective
@@ -322,7 +322,7 @@ theorem real_subfield_of_galois_spec (hSpec : HostGalSpec) : TwoPowerCyclotomicL
   · exact hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
   · intro σ
     obtain ⟨-, -, h3, -⟩ := hSpec e q d hq L ζ a b h σ
-    haveI : Fact (1 < 2 ^ (e + 2)) := ⟨by
+    have : Fact (1 < 2 ^ (e + 2)) := ⟨by
       calc 1 < 2 ^ 1 := by norm_num
         _ ≤ 2 ^ (e + 2) := Nat.pow_le_pow_right (by norm_num) (by omega)⟩
     have key := h3 1
@@ -372,7 +372,7 @@ theorem hostCMType_of (hGal : HostGalois) (hSpec : HostGalSpec) : HostCMType := 
     · rw [map_neg, hcc, neg_neg]
       exact ⟨fun h' => absurd h' hcne.symm, fun h' => absurd rfl h'⟩
   refine ⟨ha, ?_, ?_⟩
-  · haveI : NumberField (hostE ζ a b) := {}
+  · have : NumberField (hostE ζ a b) := {}
     let f : (hostE ζ a b →+* ℂ) → (hostE ζ a b →+* ℂ) := fun φ => (starRingEnd ℂ).comp φ
     have hinv : Function.Involutive f := fun φ => RingHom.ext fun x => by simp [f]
     have hpre : f ⁻¹' (cmType ζ a b d) = (cmType ζ a b d)ᶜ := by
@@ -394,7 +394,7 @@ theorem hostCMType_of (hGal : HostGalois) (hSpec : HostGalSpec) : HostCMType := 
     show _ ↔ sgn σ (bE ζ a b) = 1
     unfold sgn
     by_cases hs : σ (bE ζ a b) = bE ζ a b
-    · rw [if_pos hs, hs, hφ']
+    · rw [ite_eq_left hs, hs, hφ']
       exact ⟨fun _ => rfl, fun _ => rfl⟩
     · have hsb : σ (bE ζ a b) = -(bE ζ a b) := by
         have hsq : (σ (bE ζ a b)) ^ 2 = (bE ζ a b) ^ 2 := by
@@ -402,7 +402,7 @@ theorem hostCMType_of (hGal : HostGalois) (hSpec : HostGalSpec) : HostCMType := 
         rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with h' | h'
         · exact absurd h' hs
         · exact h'
-      rw [if_neg hs, hsb, map_neg, hφ']
+      rw [ite_eq_right hs, hsb, map_neg, hφ']
       exact ⟨fun h' => absurd h'.symm hcne, fun h' => absurd h' (by decide)⟩
 
 end Formalism.FrobeniusOrbits

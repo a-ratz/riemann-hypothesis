@@ -335,7 +335,7 @@ theorem hilbertSamuel_ALogA_le (T D : ℕ) (PP b z : ℝ) (hD1 : 1 ≤ D) (hDT :
     rw [Real.log_lt_iff_lt_exp (by norm_num)]
     have he := Real.exp_one_gt_d9
     have : Real.exp 7 = Real.exp 1 ^ 7 := by
-      rw [← Real.exp_nat_mul]; norm_num
+      rw [← Real.exp_natCast_mul]; norm_num
     rw [this]
     have h27 : (2.7 : ℝ) ^ 7 ≤ Real.exp 1 ^ 7 := by
       apply pow_le_pow_left₀ (by norm_num); linarith

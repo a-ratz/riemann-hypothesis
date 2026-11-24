@@ -278,7 +278,7 @@ theorem map_vecMul_maxCompact' {k : GL (Fin n) 𝔸[K]}
     ext x
     exact vecMul_mem_unitBall_iff hk x
   have hc : (c : ℝ≥0∞) = 1 := by
-    rw [h, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hS
+    rw [h, smul_apply, ENNReal.smul_def, smul_eq_mul] at hS
     have h1 : (c : ℝ≥0∞) * adeleMeasurePi K (unitBall : Set (Fin n → 𝔸[K])) =
         1 * adeleMeasurePi K (unitBall : Set (Fin n → 𝔸[K])) := by
       rw [one_mul]; exact hS
@@ -290,7 +290,7 @@ theorem ideleModule_det_of_mem_maxCompact' {k : GL (Fin n) 𝔸[K]}
     (hk : k ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL K n))) :
     IdeleGroup.ideleModule K (Matrix.GeneralLinearGroup.det k) = 1 :=
   eq_one_of_isCompact isCompact_maxCompact ((IdeleGroup.ideleModule K).comp (AdelicGLn.det K n))
-    (continuous_subtype_val.comp
+    (continuous_subtypeVal.comp
       (IdeleGroup.continuous_ideleModule.comp (AdelicGLn.continuous_det K n))) hk
 
 theorem map_vecMul_diagonal (d : Fin n → IdeleGroup K) :
@@ -325,10 +325,10 @@ theorem map_vecMul_diagonal (d : Fin n → IdeleGroup K) :
   have h2 : (Measure.pi fun i => c i • adeleMeasure K) =
       (∏ i, c i) • adeleMeasurePi K (ι := Fin n) := by
     refine pi_eq fun s hs => ?_
-    rw [Measure.smul_apply, adeleMeasurePi, pi_pi, ENNReal.smul_def, smul_eq_mul,
+    rw [smul_apply, adeleMeasurePi, pi_pi, ENNReal.smul_def, smul_eq_mul,
       ENNReal.ofNNReal_finsetProd, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun i _ => ?_
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
   rw [hf, h1, h2, ENNReal.smul_def, ENNReal.ofNNReal_finsetProd]
   simp only [hc]
 

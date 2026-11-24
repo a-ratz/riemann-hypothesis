@@ -142,8 +142,8 @@ theorem fnOf_eq_ev {X : Scheme.{0}} [IsIntegral X] (O : X.Opens) (hO : genericPo
 
 theorem exists_tensor_fnOf : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] (ρ : R →+* R₁) (X Y V : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (p : X ⟶ Sp R) (q : Y ⟶ Sp R₁) (i : V ⟶ Y) [IsOpenImmersion i] (φ : V ⟶ X) (θ : X.functionField →+* Y.functionField), IsPullback φ (i ≫ q) p (spMap ρ) → PFF i φ θ → ∀ (U : X.Opens), IsAffineOpen U → ∀ hg : genericPoint X ∈ U, letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U).toAlgebra; letI := ρ.toAlgebra; ∃ β : Γ(X, U) ⊗[R] R₁ →+ Y.functionField, Function.Injective β ∧ (∀ b r, β (b ⊗ₜ[R] r) = θ (GlobalTheory.Cartier.fnOf U hg b) * GlobalTheory.Desc.cst q r) ∧ Set.range β = {v | ∀ z : V, φ z ∈ U → GlobalTheory.Cartier.RegAt (i z) v} := by
   intro R R₁ _ _ ρ X Y V _ _ p q i _ φ θ H hP U hU hg
-  letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U).toAlgebra
-  letI := ρ.toAlgebra
+  let := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U).toAlgebra
+  let := ρ.toAlgebra
   obtain ⟨l, hl1, hl2⟩ := hP
   let W : V.Opens := φ ⁻¹ᵁ U ⊓ (i ≫ q) ⁻¹ᵁ ⊤
   let O : Y.Opens := i ''ᵁ W
@@ -519,8 +519,8 @@ theorem span_chart {R R₁ : Type} [CommRing R] [CommRing R₁] {ρ : R →+* R�
     {U : X.Opens} (hU : IsAffineOpen U) (hg : genericPoint X ∈ U) :
     spanBy (GlobalTheory.Desc.cst q) (θ '' Set.range (GlobalTheory.Cartier.fnOf U hg)) =
       {v | ∀ z : V, φ z ∈ U → GlobalTheory.Cartier.RegAt (i z) v} := by
-  letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U).toAlgebra
-  letI := ρ.toAlgebra
+  let := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U).toAlgebra
+  let := ρ.toAlgebra
   obtain ⟨β, -, hβ, hr⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U hU hg
   rw [← hr]
   ext v; constructor
@@ -541,14 +541,14 @@ theorem span_chart {R R₁ : Type} [CommRing R] [CommRing R₁] {ρ : R →+* R�
 
 theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] (ρ : R →+* R₁), ρ.Flat → ∀ (X Y V : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (p : X ⟶ Sp R) (q : Y ⟶ Sp R₁) (i : V ⟶ Y) [IsOpenImmersion i] (φ : V ⟶ X) (θ : X.functionField →+* Y.functionField), QuasiCompact p → QuasiSeparated p → IsPullback φ (i ≫ q) p (spMap ρ) → PFF i φ θ → ∀ (D : CartierDiv X) (D₁ : CartierDiv Y), PPull i φ θ D D₁ → LinDisj (GlobalTheory.Desc.cst p) (GlobalTheory.Desc.cst q) θ ∧ ∀ k : ℕ, {v | ∀ z : V, (k • D₁).RegularAt (i z) v} = spanBy (GlobalTheory.Desc.cst q) (θ '' Sec D k) := by
   intro R R₁ _ _ ρ hρ X Y V _ _ p q i _ φ θ _ _ H hP D D₁ hD
-  letI : Algebra R X.functionField := (GlobalTheory.Desc.cst p).toAlgebra
-  letI : Algebra R R₁ := ρ.toAlgebra
-  haveI : Module.Flat R R₁ := hρ
+  let : Algebra R X.functionField := (GlobalTheory.Desc.cst p).toAlgebra
+  let : Algebra R R₁ := ρ.toAlgebra
+  have : Module.Flat R R₁ := hρ
   obtain ⟨U₀, hU₀, hg₀, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.1 X.isBasis_affineOpens
     (show genericPoint X ∈ (⊤ : X.Opens) from trivial)
   have hc : ∀ a : R, θ (algebraMap R X.functionField a) = GlobalTheory.Desc.cst q (algebraMap R R₁ a) := by
     intro a
-    letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U₀).toAlgebra
+    let := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U₀).toAlgebra
     obtain ⟨β, -, hβ, -⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
     have e : (algebraMap R Γ(X, U₀) a) ⊗ₜ[R] (1 : R₁) = (1 : Γ(X, U₀)) ⊗ₜ[R] (algebraMap R R₁ a) := by
       rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one a, TensorProduct.smul_tmul]
@@ -558,11 +558,11 @@ theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [Comm
     exact congrArg θ (fnOf_algX p U₀ hg₀ a).symm
   have hinj : ∀ (n : ℕ) (u : Fin n → X.functionField) (r : Fin n → R₁),
       ∑ j, GlobalTheory.Desc.cst q (r j) * θ (u j) = 0 → ∑ j, u j ⊗ₜ[R] r j = 0 := by
-    letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U₀).toAlgebra
-    haveI : Nonempty U₀ := ⟨⟨_, hg₀⟩⟩
-    haveI : IsFractionRing Γ(X, U₀) X.functionField := functionField_isFractionRing_of_isAffineOpen X U₀ hU₀
+    let := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U₀).toAlgebra
+    have : Nonempty U₀ := ⟨⟨_, hg₀⟩⟩
+    have : IsFractionRing Γ(X, U₀) X.functionField := functionField_isFractionRing_of_isAffineOpen X U₀ hU₀
     have hal : ∀ b, algebraMap Γ(X, U₀) X.functionField b = GlobalTheory.Cartier.fnOf U₀ hg₀ b := fun b => rfl
-    haveI : IsScalarTower R Γ(X, U₀) X.functionField :=
+    have : IsScalarTower R Γ(X, U₀) X.functionField :=
       IsScalarTower.of_algebraMap_eq fun a => ((hal _).trans (fnOf_algX p U₀ hg₀ a)).symm
     obtain ⟨β, hβi, hβ, -⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
     exact GlobalTheory.T.tensor_fraction_injective_of_tensor_injective R R₁ Γ(X, U₀) X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) β hβi
@@ -574,13 +574,13 @@ theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [Comm
     obtain ⟨U, hU, hxU, hUW⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.1 X.isBasis_affineOpens hxW
     exact ⟨U, g, hU, hxU, fun y hy => hg y (hUW hy)⟩
   choose U g hUa hxU hUg using hloc
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover (fun x => (U x : Set X)) (fun x => (U x).isOpen)
     (fun x _ => Set.mem_iUnion.2 ⟨x, hxU x⟩)
   have cov : ∀ y : X, ∃ j : t, y ∈ U j.1 := fun y => by
     obtain ⟨a, ha, h⟩ := Set.mem_iUnion₂.1 (ht (Set.mem_univ y))
     exact ⟨⟨a, ha⟩, h⟩
-  haveI : Nonempty t := ⟨(cov (genericPoint X)).choose⟩
+  have : Nonempty t := ⟨(cov (genericPoint X)).choose⟩
   have hgen : ∀ j : t, genericPoint X ∈ U j.1 := fun j => GlobalTheory.Cartier.gen_mem (hxU j.1)
   let N : t → Submodule R X.functionField := fun j =>
     { carrier := {u | ∀ y ∈ U j.1, (k • D).RegularAt y u}

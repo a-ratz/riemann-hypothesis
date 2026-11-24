@@ -107,7 +107,7 @@ private theorem eq_of_unipotent_lower_mul_eq_upper {n : ℕ} (A C B1 B2 N1 N2 : 
     (hd1 : ∀ a, N1 a a = 1) (hd2 : ∀ a, N2 a a = 1) (h1 : A * N1 = C * B1) (h2 : A * N2 = C * B2) :
     N1 = N2 := by
   have hN2u : IsUnit N2.det := by
-    rw [Matrix.det_of_lowerTriangular N2 hN2t]
+    rw [Matrix.det_of_isLowerTriangular N2 hN2t]
     simp [hd2]
   have h3 : N1 * B1⁻¹ = N2 * B2⁻¹ := by
     have e : A * (N1 * B1⁻¹) = A * (N2 * B2⁻¹) := by
@@ -120,10 +120,10 @@ private theorem eq_of_unipotent_lower_mul_eq_upper {n : ℕ} (A C B1 B2 N1 N2 : 
       rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hB1, Matrix.mul_one]
     rw [e3, h3, Matrix.mul_assoc N2, ← Matrix.mul_assoc N2⁻¹, Matrix.nonsing_inv_mul _ hN2u, Matrix.one_mul]
   have hPlow : (N2⁻¹ * N1).BlockTriangular OrderDual.toDual := by
-    haveI := Matrix.invertibleOfIsUnitDet N2 hN2u
+    have := Matrix.invertibleOfIsUnitDet N2 hN2u
     exact (Matrix.blockTriangular_inv_of_blockTriangular hN2t).mul hN1t
   have hPup : (N2⁻¹ * N1).BlockTriangular id := by
-    haveI := Matrix.invertibleOfIsUnitDet B2 hB2
+    have := Matrix.invertibleOfIsUnitDet B2 hB2
     rw [hk]
     exact (Matrix.blockTriangular_inv_of_blockTriangular hB2t).mul hB1t
   have hoff : ∀ a c, a ≠ c → (N2⁻¹ * N1) a c = 0 := by

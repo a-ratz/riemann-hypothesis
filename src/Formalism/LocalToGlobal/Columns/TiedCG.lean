@@ -55,7 +55,7 @@ section XP
 variable (D : ColRec)
 
 theorem rankP : letI := D.host.cmStar; D.sp.X'.rank = D.R.N D.R.m - 1 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h := D.sp.X'_rank
   have h2 := D.R.m_add_three_le_k
   rw [h]; unfold Ranks.rankX' Ranks.r Ranks.N; rw [Nat.mul_add, Nat.mul_one]; omega

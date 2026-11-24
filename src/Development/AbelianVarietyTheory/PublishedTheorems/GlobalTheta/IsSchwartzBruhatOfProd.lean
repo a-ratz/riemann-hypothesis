@@ -138,7 +138,7 @@ theorem normalise (hCM : IsCMExt F E σ) (hJ : IsHermND σ J) (μ : Measure (HA 
   have h1 : μ 𝓕 ≠ ⊤ := (GlobalTheory.Mem.VolFin.finVol F E σ hCM M J hJ μ hμ 𝓕 h𝓕).ne
   refine ⟨h0, h1, Measure.IsHaarMeasure.smul μ (ENNReal.inv_ne_zero.2 h1) (ENNReal.inv_ne_top.2 h0),
     h𝓕.mono Measure.smul_absolutelyContinuous, ?_⟩
-  rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]
+  rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]
 
 theorem exists_normalised (hCM : IsCMExt F E σ) (hJ : IsHermND σ J) :
     ∃ (μ : Measure (HA (AF F) σ J)) (𝓕 : Set (HA (AF F) σ J)),

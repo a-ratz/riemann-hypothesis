@@ -210,7 +210,7 @@ private theorem continuous_rep_coeff {E : Type} [Field E] [NumberField E] [IsCMF
 theorem UpperTheory.Gal.Gen.wBound_pf :
     UpperTheory.Gal.Gen.WBound := by
   intro E _ _ _ a W d B
-  haveI := GlobalTheory.InfUCompact.compactSpace_infU E a
+  have := GlobalTheory.InfUCompact.compactSpace_infU E a
   have hc : Continuous fun x : infU E a => fun (i j : Fin d) => B.repr (W.rep x (B i)) j :=
     continuous_pi fun i => continuous_pi fun j => continuous_rep_coeff W B i j
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hc.continuousOn

@@ -184,7 +184,7 @@ private theorem algX_chart (k : Type) [CommRing k] (N : ℕ) (i : Fin (N + 1)) :
       (Proj.awayToSection (ProjSpace.grading k N) (MvPolynomial.X i)).hom.comp
         ((HomogeneousLocalization.fromZeroRingHom (ProjSpace.grading k N)
           (Submonoid.powers (MvPolynomial.X i))).comp (algebraMap k (ProjSpace.grading k N 0))) := by
-  letI := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
+  let := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
   have h := ReciprocityTheory.AnForm.R.toSpecZero_appLE_basicOpen (ProjSpace.grading k N) (ProjSpace.X_mem k N i) one_pos
   unfold algX PSpace.str
   rw [← CommRingCat.hom_comp]
@@ -206,7 +206,7 @@ private theorem chart_ratio_eq (k : Type) [CommRing k] (N : ℕ) (i j : Fin (N +
     ProjSpace.ratio k N i j = (Proj.awayToSection (ProjSpace.grading k N) (MvPolynomial.X i)).hom
       (HomogeneousLocalization.Away.mk (ProjSpace.grading k N) (ProjSpace.X_mem k N i) 1
         (MvPolynomial.X j) (by simpa using ProjSpace.X_mem k N j)) := by
-  letI := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
+  let := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
   rw [GlobalTheory.ProjFrac.awayToSection_mk]
   unfold ProjSpace.ratio ProjSpace.ratioOn
   apply GlobalTheory.ProjFrac.frac_eq
@@ -219,7 +219,7 @@ private theorem bijective_dehom (k : Type) [CommRing k] (N : ℕ) (i : Fin (N + 
           (Submonoid.powers (MvPolynomial.X i))).comp (algebraMap k (ProjSpace.grading k N 0)))
       (fun a : Fin N => HomogeneousLocalization.Away.mk (ProjSpace.grading k N) (ProjSpace.X_mem k N i) 1
         (MvPolynomial.X (i.succAbove a)) (by simpa using ProjSpace.X_mem k N (i.succAbove a)))) := by
-  letI := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
+  let := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
   set κ := (HomogeneousLocalization.fromZeroRingHom (ProjSpace.grading k N)
           (Submonoid.powers (MvPolynomial.X i))).comp (algebraMap k (ProjSpace.grading k N 0)) with hκ
   set y := (fun a : Fin N => HomogeneousLocalization.Away.mk (ProjSpace.grading k N) (ProjSpace.X_mem k N i) 1
@@ -311,7 +311,7 @@ private theorem bijective_dehom (k : Type) [CommRing k] (N : ℕ) (i : Fin (N + 
 theorem bijective_ratio (k : Type) [CommRing k] (N : ℕ) (i : Fin (N + 1)) :
     Function.Bijective (MvPolynomial.eval₂Hom (algX (PSpace.str k N) (ProjSpace.chart k N i))
       (fun a : Fin N => ProjSpace.ratio k N i (i.succAbove a))) := by
-  letI := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
+  let := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := k)
   have hE : MvPolynomial.eval₂Hom (algX (PSpace.str k N) (ProjSpace.chart k N i))
       (fun a => ProjSpace.ratio k N i (i.succAbove a)) =
       (Proj.awayToSection (ProjSpace.grading k N) (MvPolynomial.X i)).hom.comp
@@ -360,7 +360,7 @@ theorem exists_stdChart : ∀ N : ℕ, ∃ (c : AlgChart (PSpace.str ℂ N) (Rin
   have key : (ProjAn.fsO1 ℂ (RingHom.id ℂ) N).φ (0 : Fin (N + 1)) (c.e.symm v) =
       Real.log (∑ a, ‖w.1 a / w.1 0‖ ^ 2) := by
     refine (Weight.fsBasis_φ _ _ _ _ _ _ _).trans (congrArg _ (Finset.sum_congr rfl fun a _ => ?_))
-    simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [div_eq_mul_inv, ← Ring.inverse_eq_inv, ← valR_pt_ratio (RingHom.id ℂ) w.1 w.2 hw0 a]
     rw [he]
     rfl

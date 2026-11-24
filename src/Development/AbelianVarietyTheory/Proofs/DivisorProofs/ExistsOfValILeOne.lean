@@ -93,7 +93,7 @@ theorem exists_clear_col {n : ℕ} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) F) (h
     apply exists_of_valI_le_one
     rw [map_div₀]
     have hpos : valI (V := V) (A p 0) ≠ 0 := by simpa using hp0
-    rw [div_le_one₀ (zero_lt_iff.2 hpos)]
+    rw [div_le_one₀ (pos_iff_ne_zero.2 hpos)]
     exact hp _ (Finset.mem_univ _)
   choose c hc using hc
   let E : Matrix (Fin (n + 1)) (Fin (n + 1)) V := Matrix.of fun i j =>
@@ -102,12 +102,12 @@ theorem exists_clear_col {n : ℕ} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) F) (h
   · rw [Matrix.det_mul]
     refine IsUnit.mul ?_ ?_
     · have hE : E.det = 1 := by
-        rw [Matrix.det_of_lowerTriangular E]
+        rw [det_of_isLowerTriangular E]
         · simp [E]
         · intro i j hij
           have hij' : i < j := hij
           have hj : j ≠ 0 := fun h => by subst h; exact Fin.not_lt_zero _ hij'
-          simp only [E, Matrix.of_apply, if_neg (ne_of_lt hij'), if_neg hj]
+          simp only [E, Matrix.of_apply, ite_eq_right (ne_of_lt hij'), ite_eq_right hj]
       rw [hE]; exact isUnit_one
     · simp only [P, Matrix.det_permutation]
       rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h <;> simp [h]
@@ -117,17 +117,17 @@ theorem exists_clear_col {n : ℕ} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) F) (h
       intro r
       simp [P, Matrix.mul_apply, PEquiv.toMatrix_apply, Equiv.toPEquiv_apply]
     simp only [hPA, Matrix.map_apply, E, Matrix.of_apply]
-    rw [if_neg (Fin.succ_ne_zero i)]
-    simp only [if_true, Fin.succ_ne_zero, map_neg, map_one, map_zero, zero_mul]
+    rw [ite_eq_right (Fin.succ_ne_zero i)]
+    simp only [ite_true, Fin.succ_ne_zero, map_neg, map_one, map_zero, zero_mul]
     rw [Finset.sum_eq_single i]
-    · simp only [if_true, map_one, one_mul]
+    · simp only [ite_true, map_one, one_mul]
       rw [hc]
       have : σ 0 = p := by simp [σ]
       rw [this]
       field_simp
       ring
     · intro j _ hji
-      rw [if_neg (fun h => hji (Fin.succ_injective _ h).symm)]
+      rw [ite_eq_right (fun h => hji (Fin.succ_injective _ h).symm)]
       simp
     · intro h; exact absurd (Finset.mem_univ i) h
 

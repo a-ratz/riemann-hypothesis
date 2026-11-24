@@ -89,7 +89,7 @@ section Lemmas
 variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G]
   [T2Space G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] {H : Subgroup G}
 
-theorem measurable_mul_coe : Measurable (fun p : G × H => p.1 * (p.2 : G)) := measurable_fst.mul (measurable_subtype_coe.comp measurable_snd)
+theorem measurable_mul_coe : Measurable (fun p : G × H => p.1 * (p.2 : G)) := measurable_fst.mul (measurable_subtypeVal.comp measurable_snd)
 
 theorem measurable_avg (ν : Measure H) [SFinite ν] {f : G → ℝ≥0∞} (hf : Measurable f) :
     Measurable (fun g : G => ∫⁻ h, f (g * (h : G)) ∂ν) := (hf.comp measurable_mul_coe).lintegral_prod_right'
@@ -152,12 +152,12 @@ theorem stepBruhat : StepBruhat := by
     rw [hA]; exact avg_mul_right ν _ g k
   have hAeq : ∀ n g, A n g = ν {h : H | g * (h : G) ∈ U n} := fun n g => by
     have hS : MeasurableSet {h : H | g * (h : G) ∈ U n} :=
-      (continuous_const.mul continuous_subtype_val).measurable (hUo n).measurableSet
+      (continuous_const.mul continuous_subtypeVal).measurable (hUo n).measurableSet
     rw [← lintegral_indicator_one hS, hA]
     rfl
   have hApos : ∀ n g, g ∈ U n → 0 < A n g := fun n g hg => by
     rw [hAeq]
-    refine IsOpen.measure_pos ν ((hUo n).preimage (continuous_const.mul continuous_subtype_val))
+    refine IsOpen.measure_pos ν ((hUo n).preimage (continuous_const.mul continuous_subtypeVal))
       ⟨1, ?_⟩
     show g * ((1 : H) : G) ∈ U n
     rw [OneMemClass.coe_one, mul_one]; exact hg
@@ -205,7 +205,7 @@ theorem stepBruhat : StepBruhat := by
   have hat : ∀ g, a g ≠ ⊤ := fun g => by rw [haA]; exact (hAfin _ g).ne
   refine ⟨fun g => b g * (a g)⁻¹, hbm.mul ham.inv, fun g => ?_⟩
   have hbg : Measurable (fun h : H => b (g * (h : G))) :=
-    hbm.comp (continuous_const.mul continuous_subtype_val).measurable
+    hbm.comp (continuous_const.mul continuous_subtypeVal).measurable
   calc ∫⁻ h, b (g * (h : G)) * (a (g * (h : G)))⁻¹ ∂ν
       = ∫⁻ h, b (g * (h : G)) * (a g)⁻¹ ∂ν := by
         refine lintegral_congr fun h => ?_

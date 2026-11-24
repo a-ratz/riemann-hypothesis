@@ -111,12 +111,12 @@ theorem exists_finset_adjoin_laurent_preimage (R : Type) [CommRing R] {A' B' A B
   let N : Submodule (ULift.{1} R) (((freeP R).obj B).obj (op T)) :=
     { carrier := {v | Presheaf.imageSieve (pcok R i' i a b w) ((cokernel.π ((freeP R).map i)).app (op T) v) ∈ J T}
       zero_mem' := by
-        simp only [Set.mem_setOf_eq]; rw [map_zero, imageSieve_zero']; exact J.top_mem T
+        simp only [Set.mem_ofPred_eq]; rw [map_zero, imageSieve_zero']; exact J.top_mem T
       add_mem' := fun {v₁ v₂} h₁ h₂ => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_add (f := _)]; exact J.superset_covering (imageSieve_add' _ _ _) (J.intersection_covering h₁ h₂)
       smul_mem' := fun r v h => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_smul]; exact J.superset_covering (imageSieve_smul' _ _ _) h }
   have gen : ∀ x, ModuleCat.freeMk x ∈ N := by
     rintro ⟨y⟩

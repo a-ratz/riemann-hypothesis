@@ -82,7 +82,7 @@ def Compat (t t' : TObj g k J b s) {X : Scheme.{0}} (c₀ : X ⟶ t.A.left) (f :
 theorem epi_spMap {K Ω : Type} [Field K] [Field Ω] (i : K →+* Ω) : Epi (spMap i) := by
   have : Flat (spMap i) := by
     refine (HasRingHomProperty.Spec_iff (P := @Flat)).2 ?_
-    letI := i.toAlgebra
+    let := i.toAlgebra
     exact (inferInstance : Module.Flat K Ω)
   have : Surjective (spMap i) := ⟨fun p => ⟨(default : PrimeSpectrum Ω), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _

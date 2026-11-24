@@ -706,7 +706,7 @@ theorem UpperTheory.hermitian_trace_form_entry_estimate :
       mul_le_mul hs3 (hqb Y x) (abs_nonneg _) (by positivity)
     calc _ ≤ C₂ * y * qf x + (1 + C₂) * (a * y * qf x) := add_le_add h1 h2
       _ = K * y * qf x := by rw [hK]; ring
-  haveI : Nonempty (lat L g) := ⟨0⟩
+  have : Nonempty (lat L g) := ⟨0⟩
   have key := hT (lat L g) (fun v => qf (pt (rt g) v.1)) (fun v => quad p (pt (rt g) v.1)) (K * y) (hN g)
     (by positivity) hKy (fun v => hu _)
   have e1 : fn L (g * infGL E a h) =
@@ -862,7 +862,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 private theorem smooth_inv (l : Matrix (Fin a) (Fin a) (Cinf E) →ₗ[ℝ] ℝ) :
     ContDiffOn ℝ ∞ (fun y : Lie E a => l (Ring.inverse (Matrix.of y))) (invSet E a) := by
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   intro y hy
   let S : Lie E a →L[ℝ] Matrix (Fin a) (Fin a) (Cinf E) :=
     LinearMap.toContinuousLinearMap (Matrix.ofLinearEquiv ℝ).toLinearMap
@@ -988,7 +988,7 @@ theorem UpperTheory.hermitian_chart_scalar_invariance :
     have hc := HasFDerivAt.comp (f := fun y : Lie E a => sc (Matrix.of y) • y) (oneL E a) hF1 hSd
     change fderiv ℝ (chart (gsum L (pg P)) g) (oneL E a) X = _
     rw [e.fderiv_eq, hc.fderiv]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    simp only [ContinuousLinearMap.comp_apply, add_apply, smul_apply,
       ContinuousLinearMap.id_apply, ContinuousLinearMap.smulRight_apply, h1', one_smul, hd, id]
     rw [hF']
     refine tsum_congr fun v => ?_
@@ -1185,7 +1185,7 @@ theorem UpperTheory.unitarySimilitudeGroup_isSmooth_cmDatum :
     rw [hs, hOne_val, mul_one] at h2
     exact h2.symm
   · have h3 : sand (τ (hOne E a + hv Y))⁻¹ (sand (τ (hOne E a + hv Y)) (hOne E a)) = hOne E a := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
+      rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl
     rw [hs] at h3
     rw [h3]; exact h1
 end -- clump:auto

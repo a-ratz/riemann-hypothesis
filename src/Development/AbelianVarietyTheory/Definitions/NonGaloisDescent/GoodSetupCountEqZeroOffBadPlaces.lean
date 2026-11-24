@@ -393,7 +393,7 @@ include T
 
 theorem thU_of_empty {Q : Finset (Pl D.host.E)} {M : ℕ} (hQ : InRange X i Q) (h0 : half (ρ.ch i) (admissibleConjugatePairPlaces X i Q M) = ∅)
     (d : Y.Dat i ((j : ℕ) + 1) b) : Y.thU i _ b Q M d = Y.th i _ b d ⊗ₜ[X.O i] 1 := by
-  haveI : IsEmpty ↥(half (ρ.ch i) (admissibleConjugatePairPlaces X i Q M)) := ⟨fun P => Finset.eq_empty_iff_forall_notMem.1 h0 P.1 P.2⟩
+  have : IsEmpty ↥(half (ρ.ch i) (admissibleConjugatePairPlaces X i Q M)) := ⟨fun P => Finset.eq_empty_iff_forall_notMem.1 h0 P.1 P.2⟩
   rw [T.thU_eq Q M d hQ (fun _ => Y.th i _ b d) fun a => by rw [T.th_eq, ρ.xi_of_empty i j b Y h0], grpSum,
     Finset.sum_eq_single 0 (fun a _ h => absurd (funext fun P => isEmptyElim P) h) (fun h => absurd (@Finset.mem_univ _ (_) _) h), map_zero]
   rfl

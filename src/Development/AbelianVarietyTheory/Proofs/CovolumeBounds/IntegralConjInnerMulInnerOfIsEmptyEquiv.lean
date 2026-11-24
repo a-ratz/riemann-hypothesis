@@ -189,7 +189,7 @@ theorem inner_rankOneAverage (hρc : ∀ v, Continuous fun k => ρ k v)
     (hρu : ∀ k v, ‖ρ k v‖ = ‖v‖) (hσc : ∀ w, Continuous fun k => σ k w) (u v : V) (u' w : W) :
     ⟪u', rankOneAverage μ ρ σ hρc hρu hσc v w u⟫_ℂ =
       ∫ k, conj ⟪u, ρ k v⟫_ℂ * ⟪u', σ k w⟫_ℂ ∂μ := by
-  have := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ W
   have h := integral_inner (𝕜 := ℂ) (integrable_of_continuous_of_compactSpace μ
         (((hρc v).inner (𝕜 := ℂ) (continuous_const (y := u))).smul (hσc w))) u'
   refine Eq.trans h.symm ?_

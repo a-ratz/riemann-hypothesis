@@ -185,11 +185,11 @@ theorem exists_sum (h : σ X = w * X ^ s) (hs : 0 < s) (hw : IsUnit w) (b : R⟦
     · rw [Nat.sub_add_cancel hn, Finset.sum_eq_zero, add_zero]
       intro k _
       have := k.2
-      rw [if_neg (by omega), zero_mul]
+      rw [ite_eq_right (by omega), zero_mul]
     · rw [zero_add, Finset.sum_eq_single ⟨n, by omega⟩]
       · simp
       · intro k _ hk
-        rw [if_neg (fun e => hk (Fin.ext e.symm)), zero_mul]
+        rw [ite_eq_right (fun e => hk (Fin.ext e.symm)), zero_mul]
       · simp
   have hG : ∀ b k, σ (G b k) = σ X * σ (G (T b) k) + C (coeff k b) := by
     intro b k
@@ -274,7 +274,7 @@ theorem invariants_param : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] 
     left
     by_contra hc
     apply hd
-    haveI : IsCyclic ↥Δ := isCyclic_of_injective_ringHom ((Units.coeHom ℤ_[l]).comp Δ.subtype)
+    have : IsCyclic ↥Δ := isCyclic_of_injective_ringHom ((Units.coeHom ℤ_[l]).comp Δ.subtype)
       (Units.val_injective.comp Subtype.val_injective)
     obtain ⟨d, hd⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := ↥Δ)
     rw [← Nat.card_eq_fintype_card, ← hd, orderOf_dvd_iff_pow_eq_one]
@@ -1132,7 +1132,7 @@ theorem not_dvd_card (l : ℕ) [Fact l.Prime] (h : ∀ g : W.Gam, g ^ l = 1 → 
   have hcard : Nat.card (CommGroup.torsion W.Gam) = W.DelF.card := by
     rw [← Nat.card_eq_finsetCard]
     exact Nat.card_congr (Equiv.subtypeEquivRight fun g => (mem_DelF_iff W g).symm)
-  haveI : Finite (CommGroup.torsion W.Gam) :=
+  have : Finite (CommGroup.torsion W.Gam) :=
     Finite.of_equiv _ (Equiv.subtypeEquivRight fun g => (mem_DelF_iff W g) :
       {g // g ∈ W.DelF} ≃ CommGroup.torsion W.Gam)
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' (G := CommGroup.torsion W.Gam) l (hcard ▸ hd)

@@ -56,7 +56,7 @@ private theorem fixBd_abs {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuat
   have h := he m
   set N := (⨅ s, (IsLocalRing.maximalIdeal A ^ m • (⊤ : Submodule A E)).comap (f s)).map
     (IsLocalRing.maximalIdeal A ^ m • (⊤ : Submodule A E)).mkQ with hN
-  have hne : Module.length A N ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) h
+  have hne : Module.length A N ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) h
   have hfin : Finite N := (UpperTheory.V.AlgebraTools.card_eq_pow_length (A := A) (X := N)).1.2 hne
   have hc := (UpperTheory.V.AlgebraTools.card_eq_pow_length (A := A) (X := N)).2 hfin
   have hsub : T ⊆ ((IsLocalRing.maximalIdeal A ^ m • (⊤ : Submodule A E)).liftQ r hk.ge) '' (SetLike.coe N) := by
@@ -73,7 +73,7 @@ private theorem fixBd_abs {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuat
   rw [this, hc]
   refine Nat.pow_le_pow_right Nat.card_pos ?_
   rw [mul_comm]
-  exact ENat.toNat_le_of_le_coe h
+  exact ENat.toNat_le_of_le_natCast h
 
 theorem UpperTheory.V.Th.fixCnt :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (S : Type) (Φ : S → Matrix (Fin n) (Fin n) O →ₗ[O] Matrix (Fin n) (Fin n) O), ∃ C : ℕ, ∀ m, {Y : Mm O n m | ∃ Y', red m Y' = Y ∧ ∀ s, red m (Φ s Y') = 0}.ncard ≤ Nat.card (ResidueField O) ^ (m * Module.finrank O (⨅ s, LinearMap.ker (Φ s) : Submodule O (Matrix (Fin n) (Fin n) O)) + C) := by

@@ -256,7 +256,7 @@ theorem linSubst_coordP {K A : Type} [Field K] [AddCommGroup A] [Module K A] {N 
 theorem prod_X_monomial {σ K : Type} [Field K] {t : ℕ} (f : Fin t → σ) :
     ∃ s, (∏ i, (X (f i) : MvPolynomial σ K)) = monomial s 1 := by
   refine Finset.prod_induction _ (fun q => ∃ s, q = monomial s 1) ?_ ?_ ?_
-  · rintro _ _ ⟨s, rfl⟩ ⟨s', rfl⟩; exact ⟨s + s', by rw [monomial_mul, one_mul]⟩
+  · rintro _ _ ⟨s, rfl⟩ ⟨s', rfl⟩; exact ⟨s + s', by rw [monomial_mul_monomial, one_mul]⟩
   · exact ⟨0, by simp⟩
   · intro i _; exact ⟨_, rfl⟩
 
@@ -329,16 +329,16 @@ theorem mh_C (r : R) : IsMultiHomogeneous (0 : Fin B → ℕ) (C r : MvPolynomia
   intro s hs b
   rw [mem_support_iff, coeff_C] at hs
   have : (0 : Fin B × Fin n →₀ ℕ) = s := by
-    by_contra h; exact hs (if_neg h)
+    by_contra h; exact hs (ite_eq_right h)
   subst this; simp
 
 theorem mh_X (i : Fin B) (j : Fin n) :
     IsMultiHomogeneous (Pi.single i 1) (X (i, j) : MvPolynomial (Fin B × Fin n) R) := by
   classical
   intro s hs b
-  rw [mem_support_iff, coeff_X'] at hs
+  rw [mem_support_iff, coeff_X] at hs
   have : Finsupp.single (i, j) 1 = s := by
-    by_contra h; exact hs (if_neg h)
+    by_contra h; exact hs (ite_eq_right h)
   subst this
   by_cases hb : b = i
   · subst hb; simp [Finsupp.single_apply]
@@ -455,7 +455,7 @@ theorem alt_linComb {E A' : Type} [Field E] [AddCommGroup A'] [Module E A'] {d :
     funext i; simp [Fintype.linearCombination_apply_single]
   have h2 : ω (fun j => Fintype.linearCombination E z (N j)) =
       (ω.compLinearMap (Fintype.linearCombination E z)) N := rfl
-  rw [h2, h, AlternatingMap.smul_apply, Pi.basisFun_det,
+  rw [h2, h, smul_apply, Pi.basisFun_det,
     AlternatingMap.compLinearMap_apply, e1, smul_eq_mul, mul_comm]
   rfl
 
@@ -483,9 +483,9 @@ theorem det_filtration_symbols : ∀ (E A' : Type) [Field E] [AddCommGroup A'] [
     refine ⟨fun k => if h : k ∈ Set.range ix then ((Classical.choose h).1 : ℕ) else r, ?_, ?_⟩
     · intro q
       have h : ix q ∈ Set.range ix := ⟨q, rfl⟩
-      simp only [dif_pos h]
+      simp only [dite_eq_left h]
       rw [ix.injective (Classical.choose_spec h)]
-    · intro k hk; simp only [dif_neg hk]
+    · intro k hk; simp only [dite_eq_right hk]
   have hβle : ∀ k, β k ≤ r := by
     intro k
     by_cases hk : k ∈ Set.range ix
@@ -530,7 +530,7 @@ theorem det_filtration_symbols : ∀ (E A' : Type) [Field E] [AddCommGroup A'] [
       have hmono : Submodule.span E (z '' {k | a + 1 ≤ β k}) ≤
           Submodule.span E (z '' {k | a ≤ β k}) :=
         Submodule.span_mono (Set.image_mono fun k hk => by
-          simp only [Set.mem_setOf_eq] at hk ⊢; omega)
+          simp only [Set.mem_ofPred_eq] at hk ⊢; omega)
       have hsum : ∑ i, sym ⟨a, har⟩ ⟨x, hx⟩ i • z (ix ⟨⟨a, har⟩, i⟩) ∈
           Submodule.span E (z '' {k | a ≤ β k}) := by
         refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _
@@ -551,7 +551,7 @@ theorem det_filtration_symbols : ∀ (E A' : Type) [Field E] [AddCommGroup A'] [
       simp only [map_smul, Fintype.linearCombination_apply_single, one_smul, sub_add_cancel]
     · intro k hk
       have hk' : β k < a := hk
-      have h1 : c k = 0 := hc0 k (by simp only [Set.mem_setOf_eq, not_le]; omega)
+      have h1 : c k = 0 := hc0 k (by simp only [Set.mem_ofPred_eq, not_le]; omega)
       simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, h1, zero_add]
       refine Finset.sum_eq_zero fun i _ => ?_
       have hne : k ≠ ix ⟨a, i⟩ := by
@@ -568,9 +568,9 @@ theorem det_filtration_symbols : ∀ (E A' : Type) [Field E] [AddCommGroup A'] [
     · intro q
       have h : ix q ∈ Set.range ix := ⟨q, rfl⟩
       funext j
-      simp only [Matrix.of_apply, dif_pos h]
+      simp only [Matrix.of_apply, dite_eq_left h]
       rw [ix.injective (Classical.choose_spec (Set.mem_range.1 h))]
-    · intro k hk; funext j; simp only [Matrix.of_apply, dif_neg hk]
+    · intro k hk; funext j; simp only [Matrix.of_apply, dite_eq_right hk]
   have hNL : ∀ j, Fintype.linearCombination E z (N j) = v j := by
     intro j
     by_cases hj : j ∈ Set.range ix
@@ -580,7 +580,7 @@ theorem det_filtration_symbols : ∀ (E A' : Type) [Field E] [AddCommGroup A'] [
     intro i j hij
     by_cases hi : i ∈ Set.range ix
     · obtain ⟨q, rfl⟩ := hi; rw [hNix]; exact hcol0 q j (by rw [hβix] at hij; exact hij)
-    · rw [hNout i hi, Pi.single_apply, if_neg]; rintro rfl; exact lt_irrefl _ hij
+    · rw [hNout i hi, Pi.single_apply, ite_eq_right]; rintro rfl; exact lt_irrefl _ hij
   have hdet : N.det = ∏ a : Fin r,
       (Matrix.of fun i i' : I a => sym a ⟨v (ix ⟨a, i'⟩), hv ⟨a, i'⟩⟩ i).det := by
     rw [hBT.det]
@@ -626,7 +626,7 @@ theorem det_filtration_symbols : ∀ (E A' : Type) [Field E] [AddCommGroup A'] [
       rw [hNix]
       exact hcoldiag ⟨a, i'⟩ i
     · intro b _ hb
-      haveI : IsEmpty {i // β i = b} :=
+      have : IsEmpty {i // β i = b} :=
         ⟨fun ⟨i, hi⟩ => hb (Finset.mem_image.2 ⟨i, Finset.mem_univ _, hi⟩)⟩
       exact Matrix.det_isEmpty
   have hv' : v = fun j => Fintype.linearCombination E z (N j) := funext fun j => (hNL j).symm
@@ -759,7 +759,7 @@ theorem det_rational_eq_pow : ∀ (F A : Type) [Field F] [NumberField F] [AddCom
     refine ⟨?_, (hsym l).2 k (hnotix k hk') hk'⟩
     rintro ⟨q, hq⟩
     exact hnotix k hk' ⟨_, (hix' q).symm.trans hq⟩
-  haveI := hfd
+  have := hfd
   have hrank' : Module.finrank E (Φ.U (S.T - S.D)) ≤ J.card := hfr ▸ hrank
   let B : ∀ a : Fin (S.T - S.D), Matrix (MonoDeg (Fin S.D) a × Fin δ) (MonoDeg (Fin S.D) a × Fin δ) E :=
     fun a => Matrix.of fun i i' => if i.1 = i'.1 then Φ.res (Φ.ι (m i'.2)) i.2 else 0
@@ -1027,14 +1027,14 @@ theorem finPart_props : ∀ (E : Type) [Field E] [NumberField E] (σ τ : Type),
   · intro g g' hg hg' hle
     unfold finPart
     refine div_le_div_of_nonneg_right ?_ hd.le
-    exact finsum_le_finsum' (log_gaussAbs_support_finite g') (log_gaussAbs_support_finite g)
+    exact finsum_le_finsum (log_gaussAbs_support_finite g') (log_gaussAbs_support_finite g)
       (fun v => Real.log_le_log (gauss_abs_pos_of_ne_zero v g' hg') (hle v))
   · intro g m hm
     have hg : g ≠ 0 := by
       rintro rfl; exact hm (by simp)
     set c := g.coeff m with hc
     have h1 : ∑ᶠ v : FinitePlace E, Real.log (v c) ≤ ∑ᶠ v : FinitePlace E, Real.log (gaussAbs v g) :=
-      finsum_le_finsum'
+      finsum_le_finsum
         ((FinitePlace.hasFiniteMulSupport hm).subset (by
           intro v hv h1; apply hv; simp only at h1 ⊢; rw [h1, Real.log_one]))
         (log_gaussAbs_support_finite g)
@@ -1225,7 +1225,7 @@ theorem norm_eval_le {B N : ℕ} {a : Fin B → ℕ} {A : Matrix (Fin N) (Fin N)
       have := congrFun hz q.2
       simp only [Pi.zero_apply] at this
       simp [h0, this]
-    · simp only [p, if_neg h0]
+    · simp only [p, ite_eq_right h0]
       rw [← mul_assoc, ← Complex.ofReal_inv, ← Complex.ofReal_mul, mul_inv_cancel₀ h0, Complex.ofReal_one, one_mul]
   have hval : ‖eval u h‖ = (∏ i, r i ^ a i) * ‖eval p h‖ := by
     rw [hup, eval_blockScale_multi hh (fun i => ((r i : ℝ) : ℂ)) p, norm_mul, norm_prod]
@@ -1370,7 +1370,7 @@ theorem pow_dvd_of_specialisations (F : Type) [Field F] [CharZero F] (D N δ b :
       (_ : Algebra F E) (γ : E), ∀ l : Fin N → F,
         algebraMap F E (eval (join s l) G) = γ * algebraMap F E (eval (join s l) f) ^ b) :
     f ^ b ∣ G := by
-  haveI : Infinite F := Infinite.of_injective Nat.cast Nat.cast_injective
+  have : Infinite F := Infinite.of_injective Nat.cast Nat.cast_injective
   have hf0 : f ≠ 0 := hirr.ne_zero
 
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, eval x₀ f ≠ 0 := by
@@ -1485,7 +1485,7 @@ theorem mh_pow {R : Type*} [CommSemiring R] {B n : ℕ} {a : Fin B → ℕ} {p :
     intro s hs b
     have : s = 0 := by
       rw [pow_zero, mem_support_iff, coeff_one] at hs
-      by_contra h; exact hs (if_neg (Ne.symm h))
+      by_contra h; exact hs (ite_eq_right (Ne.symm h))
     simp [this]
   | succ k ih =>
     rw [pow_succ]

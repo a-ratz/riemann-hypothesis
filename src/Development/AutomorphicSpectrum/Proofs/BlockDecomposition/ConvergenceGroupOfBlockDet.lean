@@ -385,7 +385,7 @@ theorem conv_of_line (hB : BdetLaw) (hE : ExtLaw) (A : Ad E R) (hA : A.GoodL) (t
 theorem conv_top {G : Type} [Group G] (Γ P : Subgroup G) (hP : P = ⊤) (l : G → ℝ) : Conv Γ P l := by
   subst hP
   intro g
-  haveI : Subsingleton (Cos (⊤ : Subgroup G) Γ) := ⟨fun a b => by
+  have : Subsingleton (Cos (⊤ : Subgroup G) Γ) := ⟨fun a b => by
     induction a using Quotient.inductionOn with | _ x => ?_
     induction b using Quotient.inductionOn with | _ y => ?_
     refine Quotient.sound ?_

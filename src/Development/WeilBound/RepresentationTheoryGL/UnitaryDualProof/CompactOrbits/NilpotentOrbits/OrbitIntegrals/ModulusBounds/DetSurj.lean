@@ -182,8 +182,8 @@ private theorem det_sq_lemma_3 (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ
     apply Subtype.ext
     show φ z1 * φ z2 = φ z2 * φ z1
     rw [← map_mul, ← map_mul, hZ.1 z1 hz1 z2 hz2]
-  letI : CommRing Z' := { (inferInstance : Ring Z') with mul_comm := hcomm }
-  haveI : IsReduced Z' := by
+  let : CommRing Z' := { (inferInstance : Ring Z') with mul_comm := hcomm }
+  have : IsReduced Z' := by
     constructor
     rintro ⟨_, z, hz, rfl⟩ ⟨m, hm⟩
     have hzm : (⟨z, hz⟩ : Z) ^ m = 0 := by
@@ -195,8 +195,8 @@ private theorem det_sq_lemma_3 (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ
     apply Subtype.ext
     have h3 : z = 0 := congrArg Subtype.val h2
     simp [h3]
-  haveI : IsArtinianRing Z' := IsArtinianRing.of_finite k Z'
-  haveI : IsSemisimpleRing Z' := IsArtinianRing.isSemisimpleRing_of_isReduced Z'
+  have : IsArtinianRing Z' := IsArtinianRing.of_finite k Z'
+  have : IsSemisimpleRing Z' := IsArtinianRing.isSemisimpleRing_of_isReduced Z'
   exact inferInstance
 
 private theorem det_sq_lemma_2 [CharZero k] (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z)
@@ -209,7 +209,7 @@ private theorem det_sq_lemma_2 [CharZero k] (Z : Subalgebra k (Matrix (Fin n) (F
     (Matrix.toLinAlgEquiv' : Matrix (Fin n) (Fin n) k ≃ₐ[k] Module.End k (Fin n → k)).toAlgHom
   have hφ : ∀ z v, φ z v = z *ᵥ v := fun z v => rfl
   let Z' := Z.map φ
-  haveI : IsSemisimpleModule Z' (Fin n → k) := det_sq_lemma_3 Z hZ
+  have : IsSemisimpleModule Z' (Fin n → k) := det_sq_lemma_3 Z hZ
   have hzb : ∀ z ∈ Z, z * b = b * z := fun z hz => (Subalgebra.mem_centralizer_iff k).mp hb z hz
   let β : (Fin n → k) →ₗ[Z'] (Fin n → k) :=
     { toFun := fun v => b *ᵥ v

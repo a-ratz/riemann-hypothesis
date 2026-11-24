@@ -174,18 +174,18 @@ theorem isDR_of_restrict : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' L
       IsDR (P.PD K') (V := V) (ρ.comp (Subgroup.inclusion hle)) → IsDR (P.PD K) ρ := by
   intro l _ P K K' LL hle h hst V _ _ _ _ ρ hρ
   unfold IsDR at hρ ⊢
-  haveI : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
+  have : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
   let L : IntermediateField ↥K.1 (Om l) := IntermediateField.extendScalars h
-  haveI : FiniteDimensional ℚ_[l] ↥L := K'.2
-  haveI : FiniteDimensional ↥K.1 ↥L := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
-  haveI : Normal ↥K.1 (Om l) := Normal.tower_top_of_normal ℚ_[l] _ _
+  have : FiniteDimensional ℚ_[l] ↥L := K'.2
+  have : FiniteDimensional ↥K.1 ↥L := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
+  have : Normal ↥K.1 (Om l) := Normal.tower_top_of_normal ℚ_[l] _ _
   let e : ↥(GK K) ≃* (Om l ≃ₐ[↥K.1] Om l) := IntermediateField.fixingSubgroupEquiv K.1
   have he : ∀ (g : ↥(GK K)) (x : Om l), e g x = (g : GQ l) x := fun _ _ => rfl
-  haveI : Normal ↥K.1 ↥L := IntermediateField.normal_iff_forall_map_le'.2 fun σ => by
+  have : Normal ↥K.1 ↥L := IntermediateField.normal_iff_forall_map_le'.2 fun σ => by
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨g, rfl⟩ := e.surjective σ
     exact hst g.1 g.2 x hx
-  haveI : IsGalois ↥K.1 ↥L := {}
+  have : IsGalois ↥K.1 ↥L := {}
   let ε : ↥(GK K) →* (↥L ≃ₐ[↥K.1] ↥L) := (AlgEquiv.restrictNormalHom ↥L).comp e.toMonoidHom
   have hεa : ∀ (g : ↥(GK K)) (x : ↥L), ((ε g x : ↥L) : Om l) = (g : GQ l) x := fun g x =>
     AlgEquiv.restrictNormalHom_apply L (e g) x

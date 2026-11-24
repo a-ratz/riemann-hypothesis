@@ -87,7 +87,7 @@ theorem lat_basis (L : IsLoc O Δ) (hD : τ ^ 2 - 4 ≠ 0) {Λ : Set (Etau K τ)
 omit [IsDomain O] [IsDiscreteValuationRing O] in
 theorem mem_S0_of_sum_eq {s : K} {β y₁ y₂ : Etau K τ} {Λ : Set (Etau K τ)} (h : ∀ b, b ∈ Λ ↔ ∃ p q : O, b = algebraMap O K p • y₁ + algebraMap O K q • y₂)
     {v : K × Etau K τ} : v ∈ S0 s β Λ ↔ psi s β v y₁ ∈ Λ ∧ psi s β v y₂ ∈ Λ := by
-  simp only [S0, Set.mem_setOf_eq]
+  simp only [S0, Set.mem_ofPred_eq]
   constructor
   · intro hv
     exact ⟨hv _ ((h _).2 ⟨1, 0, by simp⟩), hv _ ((h _).2 ⟨0, 1, by simp⟩)⟩

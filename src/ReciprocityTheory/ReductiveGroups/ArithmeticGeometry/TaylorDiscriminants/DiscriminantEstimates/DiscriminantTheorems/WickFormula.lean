@@ -143,7 +143,7 @@ theorem ordX_holds : OrdX := by
   refine MvPolynomial.induction_on' R (fun m c => ?_) (fun p q hp hq => ?_)
   · have hX : (X (Sum.inl i) : MvPolynomial (Fin r ⊕ Fin s) k) * monomial m c
         = monomial (m + Finsupp.single (Sum.inl i) 1) c := by
-      rw [X, monomial_mul, one_mul, add_comm]
+      rw [X, monomial_mul_monomial, one_mul, add_comm]
     rw [hX, ordEval_monomial, ordEval_monomial, mul_smul_comm]
     congr 1
     unfold omon
@@ -249,7 +249,7 @@ theorem lprod_comm {n : ℕ} (c : Fin n → AA) (hc : ∀ i i', Commute (c i) (c
     have ih' := ih (fun i => c i.succ) (fun i i' => hc _ _) (fun i => t i.succ) (fun j => h j.succ)
       (fun i => e i.succ)
     rw [key, ← mul_assoc, comm_pow b (c 0) (t 0) (h 0) (e 0), add_mul, mul_assoc, ih', Fin.sum_univ_succ]
-    simp only [key, Fin.succ_ne_zero, (Fin.succ_ne_zero _).symm, Fin.succ_inj, if_true, if_false, tsub_zero,
+    simp only [key, Fin.succ_ne_zero, (Fin.succ_ne_zero _).symm, Fin.succ_inj, ite_true, ite_false, tsub_zero,
       mul_add, Finset.mul_sum, mul_smul_comm, smul_mul_assoc, ← mul_assoc, ite_true, ite_false]
     abel
 
@@ -535,7 +535,7 @@ theorem claim (h1 : OrdLin) (h2 : OrdX) (h3 : Base) (h4 : BComm) (g1 : Gen.PowXL
         rw [← hm', xdeg_single] at this
         omega
       have hmon : monomial m (AddMonoidAlgebra.coeff R m) = X (Sum.inl i) * monomial m' (AddMonoidAlgebra.coeff R m) := by
-        rw [X, monomial_mul, one_mul, ← hm']
+        rw [X, monomial_mul_monomial, one_mul, ← hm']
       rw [hmon, phi_X h1 h2 h4 H, psi_X h1 h2 g1 g2 H]
       have e1 := ih (monomial m' (AddMonoidAlgebra.coeff R m)) (fun u hu => by
         have hu' := MvPolynomial.support_monomial_subset hu

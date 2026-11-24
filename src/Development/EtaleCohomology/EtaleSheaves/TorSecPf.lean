@@ -401,7 +401,7 @@ end Sheets
 
 theorem TorSec_of : TorSec := by
   rintro q _ S _ f g _hfg φ ε hε hφ
-  letI := (torMap f g hε).toAlgebra
+  let := (torMap f g hε).toAlgebra
   rintro ⟨s⟩
   have hs : ∀ a, s.toRingHom (torMap f g hε a) = a := fun a => s.commutes a
   obtain ⟨N, t, δ, hδ, ht, hσ⟩ := sheetF hε s.toRingHom hs
@@ -419,7 +419,7 @@ theorem TorSec_of : TorSec := by
   suffices h : k0 = m0 - φ P by rw [h]; ring
   by_contra hne
   have htor := (mem_tor hε _).1 (t k0).2 (m0 - φ P)
-  rw [ht k0, Pi.single_apply, if_neg (Ne.symm hne), map_zero] at htor
+  rw [ht k0, Pi.single_apply, ite_eq_right (Ne.symm hne), map_zero] at htor
   have h1 : ε (φ P) * rR f g ((t k0 : Amb f g q).2 m0) = 0 := by
     have := congrArg (ε (φ P) * ·) htor
     simp only [mul_zero] at this

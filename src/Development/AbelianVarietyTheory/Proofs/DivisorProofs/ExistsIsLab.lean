@@ -209,13 +209,13 @@ def sumChars {X X' : Type*} [AddCommGroup X] [AddCommGroup X'] (c : Fin 8 → (X
 
 theorem e8data : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → IsDiscreteValuationRing R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (G' : Over (Sp R)) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (D' : DegData R (maximalIdeal R)) (A' : PolAV (Sp (FractionRing R))) (U' : Unif (maximalIdeal R) D' A' G') (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (pr : Fin 8 → (A'.A ⟶ A.A)), (∀ a, IsMonHom (pr a)) → (∀ (T' : Over (Sp (FractionRing R))) (y : Fin 8 → (T' ⟶ A.A)), ∃! z : T' ⟶ A'.A, ∀ a, z ≫ pr a = y a) → LBIso A'.L (LB.LinComb (abelian₂ A.A A.L) (K := Fin 8 × Fin 8) (fun ab => (lift (pr ab.1) (pr ab.2)).left) (fun ab => W ab.1 ab.2)) → ∃ (pG : Fin 8 → (G' ⟶ G)) (c : Fin 8 → (D.toPre.X →+ D'.toPre.X)) (e : D'.toPre.X ≃+ (Fin 8 → D.toPre.X)), (∀ v, IsMonHom (pG v)) ∧ (∀ v, (Over.pullback (jK R)).map (pG v) ≫ U.gen.hom = U'.gen.hom ≫ pr v) ∧ (∀ v, TorMatch U U' (RingHom.id R) (pG v).left (c v)) ∧ ∀ y, ∑ v, c v (∑ u, (W + W.transpose) v u • e y u) = y := by
   intro R _ _ _ hR hdvr G _ _ hG D A U G' _ _ hG' D' A' U' W hW pr hpr huniv hL
-  haveI := hdvr
-  haveI := U.gen_hom
-  haveI := U'.gen_hom
+  have := hdvr
+  have := U.gen_hom
+  have := U'.gen_hom
   have hpG : ∀ v, ∃ F : G' ⟶ G, IsMonHom F ∧
       (Over.pullback (jK R)).map F = U'.gen.hom ≫ pr v ≫ U.gen.inv := by
     intro v
-    haveI := hpr v
+    have := hpr v
     obtain ⟨F, ⟨hF, hF'⟩, -⟩ := GlobalTheory.semiAbelian_hom_extends_uniquely_dvr R (FractionRing R) G' G hG' hG
       (U'.gen.hom ≫ pr v ≫ U.gen.inv) inferInstance
     exact ⟨F, hF, hF'⟩
@@ -372,13 +372,13 @@ theorem lattice_of_charMap {X Y : Type} [AddCommGroup X] [AddCommGroup Y] (S a a
 theorem endU_lattice_adjoint : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → IsDiscreteValuationRing R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (G' : Over (Sp R)) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (D' : DegData R (maximalIdeal R)) (A' : PolAV (Sp (FractionRing R))) (U' : Unif (maximalIdeal R) D' A' G') (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (pr : Fin 8 → (A'.A ⟶ A.A)), (∀ a, IsMonHom (pr a)) → (∀ (T' : Over (Sp (FractionRing R))) (y : Fin 8 → (T' ⟶ A.A)), ∃! z : T' ⟶ A'.A, ∀ a, z ≫ pr a = y a) → LBIso A'.L (LB.LinComb (abelian₂ A.A A.L) (K := Fin 8 × Fin 8) (fun ab => (lift (pr ab.1) (pr ab.2)).left) (fun ab => W ab.1 ab.2)) → ∀ (pG : Fin 8 → (G' ⟶ G)), (∀ v, IsMonHom (pG v)) → (∀ v, (Over.pullback (jK R)).map (pG v) ≫ U.gen.hom = U'.gen.hom ≫ pr v) → ∀ (c : Fin 8 → (D.toPre.X →+ D'.toPre.X)), (∀ v, TorMatch U U' (RingHom.id R) (pG v).left (c v)) → ∀ e : D'.toPre.X ≃+ (Fin 8 → D.toPre.X), (∀ y, ∑ v, c v (∑ u, (W + W.transpose) v u • e y u) = y) → ∀ (a a' : Matrix (Fin 8) (Fin 8) ℤ), (W + W.transpose) * a' = a.transpose * (W + W.transpose) → ∀ E' : GlobalTheory.UT.EndU U'.toUnifPre, (∀ u, E'.aA ≫ pr u = (List.ofFn fun v => pr v ^ a' u v).prod) → ∀ y, e (E'.h y) = fun u => ∑ v, a u v • e y v := by
   intro R _ _ _ hB hDVR G _ _ hG D A U G' _ _ hG' D' A' U' W hW pr hpr huniqA hL pG hpG hpGc c hc e he a a' haa' E' hE' y
   have hCN : GlobalTheory.TorRef.IsCN R := ⟨hB.1.1, hB.1.2.2.1, hB.1.2.2.2, hB.2⟩
-  haveI : IsNoetherianRing R := hCN.1
-  haveI : IsIntegrallyClosed R := hCN.2.1
-  haveI := E'.homG
-  haveI := U.gen_hom
+  have : IsNoetherianRing R := hCN.1
+  have : IsIntegrallyClosed R := hCN.2.1
+  have := E'.homG
+  have := U.gen_hom
   have hstep : ∀ u, E'.aG ≫ pG u = (List.ofFn fun v => pG v ^ a' u v).prod := by
     intro u
-    haveI := hpG u
+    have := hpG u
     have hR : IsMonHom (List.ofFn fun v => pG v ^ a' u v).prod := by
       refine isMonHom_of_mul _ fun T x z => ?_
       have key : ∀ w : T ⟶ G', w ≫ (List.ofFn fun v => pG v ^ a' u v).prod = ∏ v, (w ≫ pG v) ^ a' u v := fun w => by
@@ -386,7 +386,7 @@ theorem endU_lattice_adjoint : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
         exact map_ofFn_prod (preH w) pG (a' u)
       rw [key, key, key, ← Finset.prod_mul_distrib]
       refine Finset.prod_congr rfl fun v _ => ?_
-      haveI := hpG v
+      have := hpG v
       rw [MonObj.mul_comp, mul_zpow]
     obtain ⟨F0, -, huniq⟩ := GlobalTheory.semiAbelianHomExtension_holds.fractionField R (FractionRing R) G' G hG' hG
       ((Over.pullback (jK R)).map (E'.aG ≫ pG u))
@@ -648,7 +648,7 @@ attribute [local instance] gtGroup
 
 theorem congMod_y_of_end : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (E E' : GlobalTheory.UT.EndU U.toUnifPre), LBIso (cubeLB G ![fst G G ≫ E.aG, snd G G] U.LG.L) (cubeLB G ![fst G G, snd G G ≫ E'.aG] U.LG.L) → ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing R) K] (m : ℕ) (pk pk' : QkPt D.toPre K m) (x : TFK (R := R) K ⟶ A.A), 1 ≤ m → QkToAkU U.toUnifPre K m pk x → QkToAkU U.toUnifPre K m pk' (x ≫ E.aA) → CongMod m pk'.y (E'.h pk.y) := by
   intro R _ _ _ hBase G _ _ hG D A U E E' hE K _ _ _ m pk pk' x hm h1 h2
-  haveI : CharZero R := hBase.2
+  have : CharZero R := hBase.2
   have hAdm := hBase.1
   obtain ⟨-, hFE⟩ := GlobalTheory.UT.functorial_of_unif R (maximalIdeal R) hAdm D A G hG U
   obtain ⟨-, hK⟩ := hFE E E' hE
@@ -717,12 +717,12 @@ open GlobalTheory.CechPic GlobalTheory.ZH.EndoExtend GlobalTheory.UT GlobalTheor
 theorem lbIso_adj_of_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (E E' : GlobalTheory.UT.EndU U.toUnifPre), LBIso (cubeLB A.A ![fst A.A A.A ≫ E.aA, snd A.A A.A] A.L) (cubeLB A.A ![fst A.A A.A, snd A.A A.A ≫ E'.aA] A.L) → LBIso (cubeLB G ![fst G G ≫ E.aG, snd G G] U.LG.L) (cubeLB G ![fst G G, snd G G ≫ E'.aG] U.LG.L) := by
   intro R _ _ _ hB G _ _ hS D A U E E' hA
   have hR : AdmBase R (maximalIdeal R) := hB.1
-  haveI : IsNoetherianRing R := hR.1
-  haveI : IsIntegrallyClosed R := hR.2.2.1
-  haveI := hS.smooth
-  haveI := hS.geomConnected
-  haveI := GlobalTheory.smooth_tensorObj_hom G G
-  haveI := GlobalTheory.geometricallyIntegral_tensorObj_hom G G
+  have : IsNoetherianRing R := hR.1
+  have : IsIntegrallyClosed R := hR.2.2.1
+  have := hS.smooth
+  have := hS.geomConnected
+  have := GlobalTheory.smooth_tensorObj_hom G G
+  have := GlobalTheory.geometricallyIntegral_tensorObj_hom G G
   let U₁ := U.toUnifPre
   let δ := CartesianMonoidalCategory.prodComparison (Over.pullback (jK R)) G G
   let u := lift (fst ((Over.pullback (jK R)).obj G) ((Over.pullback (jK R)).obj G) ≫ U₁.gen.hom)
@@ -827,8 +827,8 @@ theorem endU_exists (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (hadm :
     (D : DegData R (maximalIdeal R)) (P : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G]
     (hG : IsSemiAbelian G) (U : Unif (maximalIdeal R) D P G) (aA : P.A ⟶ P.A) (haA : IsMonHom aA) :
     ∃ E : GlobalTheory.UT.EndU U.toUnifPre, E.aA = aA := by
-  haveI := hadm.1
-  haveI := hadm.2.2.1
+  have := hadm.1
+  have := hadm.2.2.1
   have := U.gen_hom
   have hinv : IsMonHom U.gen.inv := inferInstance
   obtain ⟨F, ⟨hF, hF'⟩, -⟩ := GlobalTheory.Published.SemiAbelianHomExtension.fractionField GlobalTheory.semiAbelianHomExtension_holds R
@@ -841,7 +841,7 @@ theorem isMonHom_matrix (S : Scheme.{0}) (X Y : Over S) [GrpObj X] [GrpObj Y] [I
     (hpr : ∀ a, IsMonHom (pr a))
     (hu : ∀ (T' : Over S) (y' : Fin 8 → (T' ⟶ Y)), ∃! x : T' ⟶ X, ∀ a, x ≫ pr a = y' a) (f : X ⟶ X)
     (a : Matrix (Fin 8) (Fin 8) ℤ) (hf : ∀ u, f ≫ pr u = (List.ofFn fun v => pr v ^ a u v).prod) : IsMonHom f := by
-  haveI : ∀ v, IsMonHom (pr v) := hpr
+  have : ∀ v, IsMonHom (pr v) := hpr
   refine ReciprocityTheory.ChartRestriction.G.Geo.Tor.isMonHom_of_mul f fun T x y => ?_
   have hz : ∀ (z : T ⟶ X) (u : Fin 8), z ≫ f ≫ pr u = ∏ v, (z ≫ pr v) ^ a u v := by
     intro z u
@@ -963,7 +963,7 @@ theorem ident_pow {g n : ℕ} (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (F
     exact LBIso.trans P.isLB (LB.isLB_linComb c.isLB _ _) (LB.isLB_linComb hΛ _ _) hL
       (LBIso.trans (LB.isLB_linComb c.isLB _ _) (LB.isLB_linComb F.univ.isLB _ _) (LB.isLB_linComb hΛ _ _) i₁ i₂.symm)
   · intro E a
-    haveI := he
+    have := he
     rw [hφp' a, ← Category.assoc, hε E a, prod_comp, List.map_map]
     congr 1
     refine List.map_congr_left fun b _ => ?_
@@ -1021,7 +1021,7 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (
   have hS : SharpOver F W P T.y := by
     obtain ⟨c, hc, pr, h₁, h₂, h₃, -⟩ := hD
     exact ⟨c, hc, pr, h₁, h₂, h₃⟩
-  haveI : IsCommMonObj (powObj T.G 8) := GlobalTheory.PowerExamples.comm_of_pow (powIsPowGrp T.G 8)
+  have : IsCommMonObj (powObj T.G 8) := GlobalTheory.PowerExamples.comm_of_pow (powIsPowGrp T.G 8)
   have hG' : IsSemiAbelian (powObj T.G 8) := GlobalTheory.PowGrp.isSemiAbelian_pow _ _ T.G 8 (powIsPowGrp T.G 8) T.semi
   obtain ⟨D', ⟨U'⟩⟩ := GlobalTheory.PowE8.exists_unif_pow8 g n _ _ F W hW T.V hCN T.D T.G T.A T.U T.y T.α T.α₂ T.semi T.cart
     T.sq T.lb P hS
@@ -1115,7 +1115,7 @@ theorem isDiagEnd_pull {g n : ℕ} (F : SFam g n (zetaAway n)) (W : Matrix (Fin 
   have injφ : ∀ {T₁ : Over T'} {x y : T₁ ⟶ P'.A}, pushPt hφ.1.w x = pushPt hφ.1.w y → x = y :=
     fun e => GlobalTheory.SiegelPull.push_injective hφ _ e
   have hmon : ∀ a, IsMonHom (pr' a) := fun a => by
-    haveI := hpr a
+    have := hpr a
     refine isMonHom_of_mul _ fun T₁ x y => injψ ?_
     rw [push_comp, pmψ, push_comp, push_comp, pmφ]
     exact MonObj.mul_comp _ _ _
@@ -1185,7 +1185,7 @@ theorem exists_pull_field : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Mat
         rigid := PolBaseChange.rigidified_pull (isGrpPullback_pullback P.A (spMap yK)) P.rigid
         sym := PolBaseChange.sym_pull (isGrpPullback_pullback P.A (spMap yK)) P.sym
         ample := by
-          haveI := P.isAb.proper
+          have := P.isAb.proper
           exact AmpleBaseChange.relAmple_of_isPullback P.isLB P.ample (IsPullback.of_hasPullback P.A.hom (spMap yK))
         ktriv := by
           obtain ⟨w, hw⟩ := PolBaseChange.lbIso_refl (pull_isLB P.isLB (pullback.fst P.A.hom (spMap yK)))
@@ -1247,30 +1247,30 @@ theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A
 
 theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (u' : Sp S.R ⟶ F.X) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (T : Trait F) (ι : FractionRing T.V →+* PadicAlgCl p), (∀ x, ‖ι x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T.V (FractionRing T.V))) → spMap y₀ ≫ u' = spMap ι ≫ T.y → ∃ (T' : Trait F) (ι' : FractionRing T'.V →+* PadicAlgCl p) (yK : S.R →+* FractionRing T'.V) (e : T'.D.toPre.X ≃+ T.D.toPre.X) (k : ℕ), (∀ x, ‖ι' x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T'.V (FractionRing T'.V))) ∧ ι'.comp yK = y₀ ∧ spMap yK ≫ u' = T'.y ∧ ‖ι (algebraMap T.V _ T.ϖ)‖ = ‖ι' (algebraMap T'.V _ T'.ϖ)‖ ^ k ∧ ∀ a b, T'.β a b = k * T.β (e a) (e b) := by
   intro g n F o Ω _ _ _ _ S u' p _ y₀ T ι hι hy
-  haveI : Algebra.FiniteType ℤ o := ArithBase.ft (o := o) (Ω := Ω)
-  haveI : Algebra.FiniteType o S.R := (Subalgebra.fg_iff_finiteType _).1 S.fg
-  haveI : Algebra.FiniteType ℤ S.R := Algebra.FiniteType.trans (S := o) inferInstance inferInstance
+  have : Algebra.FiniteType ℤ o := ArithBase.ft (o := o) (Ω := Ω)
+  have : Algebra.FiniteType o S.R := (Subalgebra.fg_iff_finiteType _).1 S.fg
+  have : Algebra.FiniteType ℤ S.R := Algebra.FiniteType.trans (S := o) inferInstance inferInstance
   have hQ := _root_.GlobalTheory.PadicUnitBall.padic_mem_range p T.V T.complete ι hι
   obtain ⟨W, _, _, _, hWc, _, fV, fK, κ, hfV, hfVl, -, hfK, hκι, hκ, hy₀⟩ :=
     _root_.GlobalTheory.DvrFinExt.exists_finite_extension p T.V T.complete ι hι hQ S.R y₀
   have hbase : GlobalTheory.Mum.Base W := ⟨⟨inferInstance, inferInstance, inferInstance, hWc⟩, inferInstance⟩
   obtain ⟨T', f, gK, hf, hfl, hff, hgK, hTy⟩ :=
     traitExtSt g n _ (zetaAway n) F W hbase inferInstance (spMap fK ≫ T.y)
-  letI : Algebra (FractionRing W) (FractionRing T'.V) := gK.toAlgebra
-  letI : Algebra W T'.V := f.toAlgebra
-  haveI : Module.Finite W T'.V := hff
-  haveI : Algebra.IsIntegral W T'.V := Algebra.IsIntegral.of_finite W T'.V
-  haveI : IsLocalHom (algebraMap W T'.V) := hfl
+  let : Algebra (FractionRing W) (FractionRing T'.V) := gK.toAlgebra
+  let : Algebra W T'.V := f.toAlgebra
+  have : Module.Finite W T'.V := hff
+  have : Algebra.IsIntegral W T'.V := Algebra.IsIntegral.of_finite W T'.V
+  have : IsLocalHom (algebraMap W T'.V) := hfl
   have hcomp : (algebraMap (FractionRing W) (FractionRing T'.V)).comp (algebraMap W (FractionRing W)) =
       (algebraMap T'.V (FractionRing T'.V)).comp (algebraMap W T'.V) := RingHom.ext hgK
   have hI : ∀ a : T'.V, _root_.IsIntegral (FractionRing W) (algebraMap T'.V (FractionRing T'.V) a) := fun a =>
     IsIntegral.map_of_comp_eq (algebraMap W (FractionRing W)) (algebraMap T'.V (FractionRing T'.V)) hcomp
       (Algebra.IsIntegral.isIntegral a)
-  haveI : Algebra.IsAlgebraic (FractionRing W) (FractionRing T'.V) := ⟨fun x => by
+  have : Algebra.IsAlgebraic (FractionRing W) (FractionRing T'.V) := ⟨fun x => by
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := T'.V) x
     rw [div_eq_mul_inv]
     exact (hI a).isAlgebraic.mul (hI b).isAlgebraic.inv⟩
-  letI : Algebra (FractionRing W) (PadicAlgCl p) := κ.toAlgebra
+  let : Algebra (FractionRing W) (PadicAlgCl p) := κ.toAlgebra
   let ιA : FractionRing T'.V →ₐ[FractionRing W] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1296,9 +1296,9 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (o Ω : Type) [CommRi
   have hne : f (fV T.ϖ) ≠ 0 := fun h => T.irr.ne_zero (hfV (hf (by rw [h, map_zero, map_zero])))
   obtain ⟨m, hm⟩ := IsDiscreteValuationRing.associated_pow_irreducible hne T'.irr
   have hbase' : GlobalTheory.Mum.Base T'.V := ⟨⟨inferInstance, inferInstance, inferInstance, T'.complete⟩, inferInstance⟩
-  haveI : IsLocalHom (f.comp fV) := by
-    haveI : IsLocalHom f := hfl
-    haveI : IsLocalHom fV := hfVl
+  have : IsLocalHom (f.comp fV) := by
+    have : IsLocalHom f := hfl
+    have : IsLocalHom fV := hfVl
     exact RingHom.isLocalHom_comp f fV
   obtain ⟨e₀, he₀⟩ := TraitUniq.traitUniq g n _ (zetaAway n) F T T' T'.V (f.comp fV) (RingHom.id _) (gK.comp fK)
     (RingHom.id _) hbase' inferInstance (hf.comp hfV) Function.injective_id inferInstance inferInstance
@@ -1306,7 +1306,7 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (o Ω : Type) [CommRi
     (by rw [hTy, spMap_comp', Category.assoc]; rw [show spMap (RingHom.id (FractionRing T'.V)) = 𝟙 _ from Spec.map_id _, Category.id_comp])
     T'.ϖ m 1 T'.irr hm (by rw [pow_one, RingHom.id_apply])
   refine ⟨T', ι', yK, e₀.symm, m, hint, hyK, ?_, ?_, ?_⟩
-  · haveI : Epi (spMap ι') := Flat.epi_of_flat_of_surjective _
+  · have : Epi (spMap ι') := Flat.epi_of_flat_of_surjective _
     rw [← cancel_epi (spMap ι'), ← Category.assoc, ← spMap_comp', hyK, hy, hTy, ← hιc, spMap_comp', spMap_comp',
       Category.assoc, Category.assoc]
   · obtain ⟨u, hu⟩ := hm
@@ -1388,7 +1388,7 @@ theorem traitLabels : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
   obtain ⟨A, φ, cart, lb, εA, hDA, huniq⟩ := GlobalTheory.T.exists_pullback_eighth_power_endomorphisms_field_point g n F W S.R ρ.P ε u' hD (FractionRing T'.V) yK
   rw [hy'] at hDA
   obtain ⟨G', _, _, hsemi, D', U', j', hpsi, hcong⟩ := GlobalTheory.T.eighthPower_trait_uniformisation_lattice_pow_eight g n F W hW T' A εA hDA
-  letI : Algebra (FractionRing T'.V) (PadicAlgCl p) := ι'.toAlgebra
+  let : Algebra (FractionRing T'.V) (PadicAlgCl p) := ι'.toAlgebra
   let u : ρ.UTest p y₀ := { V := T'.V, complete := T'.complete, norm_le := hι', yK := yK, fac := hfac, A := A, φ := φ, cart := cart, lb := lb, G := G', semi := hsemi, D := D', U := U' }
   obtain ⟨l⟩ := GlobalTheory.ZH.labels_exist GlobalTheory.abelianSchemeLaws_all.1 GlobalTheory.abelianSchemeLaws_all.2 GlobalTheory.ZH.uTors_closed o Ω S ρ p y₀ u hint
   let jj : u.D.toPre.X ≃+ (Fin 8 → T.D.toPre.X) := j'.trans (AddEquiv.piCongrRight fun _ => e)
@@ -1522,7 +1522,7 @@ theorem rechart_at_classical_trait : ∀ (g n : ℕ) (F : SFam g n (zetaAway n))
   have hdom : IsDominant (spMap (X₁.M.ringOn U).val.toRingHom) :=
     ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical _).2 (by
       rw [(RingHom.injective_iff_ker_eq_bot _).1 Subtype.val_injective]; exact bot_le)⟩
-  haveI : IsSeparated X₁.z := X₁.isProper_compactificationMap.toIsSeparated
+  have : IsSeparated X₁.z := X₁.isProper_compactificationMap.toIsSeparated
   have hgen2 : spMap (X₁.M.ringOn U).val.toRingHom ≫ (e ≫ X₁.π) =
       spMap (X₁.M.ringOn U).val.toRingHom ≫ (u' ≫ i) := by
     rw [← Category.assoc, hgen, X₁.comp, ← Category.assoc _ u' i, hpt, Category.assoc]
@@ -1531,7 +1531,7 @@ theorem rechart_at_classical_trait : ∀ (g n : ℕ) (F : SFam g n (zetaAway n))
       (ext_of_isDominant (spMap (X₁.M.ringOn U).val.toRingHom) (by
         simp only [← Category.assoc] at hgen2 ⊢; rw [hgen2]))
       (spMap (X₁.M.ringOn U).val.toRingHom) hgen2
-  haveI := himm
+  have := himm
   have hpt' : spMap y₀ ≫ u' = spMap c.ι ≫ c.T.y := by
     rw [← cancel_mono i, Category.assoc, ← hb, ← Category.assoc, ha, Category.assoc, c.comm, Category.assoc]
 

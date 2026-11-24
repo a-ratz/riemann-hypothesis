@@ -316,7 +316,7 @@ theorem relIndex_mulBy_ne_zero {b : 𝓞 L} (hb : b ≠ 0) :
   classical
   let I : Ideal (𝓞 L) := Ideal.span {b}
   have hI : I ≠ ⊥ := by simpa [I] using hb
-  haveI : Finite (𝓞 L ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have : Finite (𝓞 L ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
   let f : (Fin n → 𝓞 L) →+ (Fin n → 𝓞 L ⧸ I) :=
     (Ideal.Quotient.mk I).toAddMonoidHom.compLeft (Fin n)
   let m : (Fin n → 𝓞 L) →+ (Fin n → 𝓞 L) := DistribSMul.toAddMonoidHom _ b
@@ -498,7 +498,7 @@ theorem exists_mul_le_one {v w : FinitePlace L} (hvw : w ≠ v) (a : L) :
     hvw (FinitePlace.maximalIdeal_injective (HeightOneSpectrum.ext h))
   have hnle : ¬ w.maximalIdeal.asIdeal ≤ v.maximalIdeal.asIdeal := fun h =>
     hne (w.maximalIdeal.isMaximal.eq_of_le v.maximalIdeal.isPrime.ne_top h)
-  obtain ⟨p, hpw, hpv⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨p, hpw, hpv⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have hp0 : (p : L) ≠ 0 := by
     intro h
     have : p = 0 := by exact_mod_cast h
@@ -510,7 +510,7 @@ theorem exists_mul_le_one {v w : FinitePlace L} (hvw : w ≠ v) (a : L) :
     have h3 : w.maximalIdeal.valuation L (p : L) < 1 :=
       (HeightOneSpectrum.valuation_lt_one_iff_mem _ _).2 hpw
     have h4 : 0 < w.maximalIdeal.valuation L (p : L) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hp0)
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hp0)
     rw [map_inv₀, inv_le_one₀ h4] at h2
     exact absurd h3 (not_lt.2 h2)
   by_cases ha : w a = 0
@@ -550,7 +550,7 @@ theorem finite_notMem_locAt_frame {T : FinitePlace L → Matrix (Fin n) (Fin n) 
     {w : FinitePlace L | x ∉ locAt w (frame (T w))}.Finite := by
   refine (hfin.union (Set.finite_iUnion fun i => finite_not_le_one (x i))).subset fun w hw => ?_
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_not, not_exists] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion, not_or, not_not, not_exists] at hc
   apply hw
   rw [hc.1.locAt_frame]
   exact mem_locAt_frame_one.2 hc.2

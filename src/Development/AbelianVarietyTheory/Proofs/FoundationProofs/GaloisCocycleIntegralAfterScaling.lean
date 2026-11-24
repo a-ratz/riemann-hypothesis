@@ -65,15 +65,15 @@ theorem norm_natCast_lt_one (l : ℕ) [Fact l.Prime] : ‖((l:ℕ) : Qbar l)‖ 
   exact inv_lt_one_of_one_lt₀ (by exact_mod_cast (Fact.out : l.Prime).one_lt)
 
 theorem norm_le_one_of_mem {l : ℕ} [Fact l.Prime] (c : Coef l) {y : Qbar l} (hy : y ∈ c.O) : ‖y‖ ≤ 1 := by
-  haveI := c.fin
+  have := c.fin
   exact (GlobalTheory.isIntegral_padicInt_iff_norm_le_one y).1
     ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨y, hy⟩ : c.O)).map c.O.val)
 
 theorem exists_field_of_coef {l : ℕ} [Fact l.Prime] (c : Coef l) :
     ∃ K₀ : IntermediateField ℚ_[l] (Qbar l), FiniteDimensional ℚ_[l] K₀ ∧ ∀ y ∈ c.O, y ∈ K₀ := by
-  haveI := c.fin
+  have := c.fin
   obtain ⟨s, hs⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℤ_[l] c.O).FG)
-  haveI : Finite ((fun y : c.O => (y : Qbar l)) '' (s : Set c.O)) := (s.finite_toSet.image _).to_subtype
+  have : Finite ((fun y : c.O => (y : Qbar l)) '' (s : Set c.O)) := (s.finite_toSet.image _).to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] ((fun y : c.O => (y : Qbar l)) '' (s : Set c.O)),
     IntermediateField.finiteDimensional_adjoin fun z _ => (Algebra.IsAlgebraic.isAlgebraic z).isIntegral, ?_⟩
   intro y hy
@@ -147,8 +147,8 @@ theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalS
         rw [eq_neg_of_add_eq_zero_left h1.symm]
         exact neg_mem (hθ _ le_sup_left _ _ hg j) }
   have hcl : ∀ i, IsClosed (H i : Set Γ) := fun i => by
-    haveI := hK i
-    haveI : FiniteDimensional ℚ_[l] (K₀ ⊔ K i).toSubalgebra.toSubmodule :=
+    have := hK i
+    have : FiniteDimensional ℚ_[l] (K₀ ⊔ K i).toSubalgebra.toSubmodule :=
       (inferInstance : FiniteDimensional ℚ_[l] (K₀ ⊔ K i : IntermediateField ℚ_[l] (PadicAlgCl l)))
     have : (H i : Set Γ) = ⋂ j, (fun g => c g j) ⁻¹' ((K₀ ⊔ K i).toSubalgebra.toSubmodule : Set (PadicAlgCl l)) := by
       ext g
@@ -156,7 +156,7 @@ theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalS
       exact Iff.rfl
     rw [this]
     exact isClosed_iInter fun j =>
-      (Submodule.closed_of_finiteDimensional (K₀ ⊔ K i).toSubalgebra.toSubmodule).preimage
+      (Submodule.isClosed_of_finiteDimensional (K₀ ⊔ K i).toSubalgebra.toSubmodule).preimage
         ((continuous_apply j).comp hc)
   have hun : ⋃ i, (H i : Set Γ) = Set.univ := by
     refine Set.eq_univ_of_forall fun g => ?_
@@ -164,14 +164,14 @@ theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalS
     exact Set.mem_iUnion.2 ⟨i, fun j => (le_sup_right : K i ≤ K₀ ⊔ K i) (hi ⟨j, rfl⟩)⟩
   obtain ⟨i, x, hx⟩ := nonempty_interior_of_iUnion_of_closed hcl hun
   have hop : IsOpen (H i : Set Γ) := Subgroup.isOpen_of_mem_nhds _ (mem_interior_iff_mem_nhds.1 hx)
-  haveI : Finite (Γ ⧸ H i) := Subgroup.quotient_finite_of_isOpen _ hop
+  have : Finite (Γ ⧸ H i) := Subgroup.quotient_finite_of_isOpen _ hop
   have hfd : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l]
       (Set.range fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2)) := by
-    haveI : Finite (Set.range fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2) := (Set.finite_range _).to_subtype
+    have : Finite (Set.range fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2) := (Set.finite_range _).to_subtype
     exact IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
-  haveI := hfd
-  haveI := hK i
+  have := hfd
+  have := hK i
   refine ⟨IntermediateField.adjoin ℚ_[l] (Set.range fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2) ⊔ (K₀ ⊔ K i),
     inferInstance, le_sup_left.trans le_sup_right, fun g j => ?_⟩
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul (H i) g
@@ -188,7 +188,7 @@ theorem values_finExt [IsAlgClosure ℚ Ω] (W : R2 Ω l) (K₀ : IntermediateFi
     [FiniteDimensional ℚ_[l] K₀] (hW : ∀ s i j, mat W s i j ∈ K₀) {z : G ℚ Ω → Fin 2 → Qbar l}
     (hz : z ∈ Z1 (Loc.colRep W)) :
     ∃ E : IntermediateField ℚ_[l] (Qbar l), FiniteDimensional ℚ_[l] E ∧ K₀ ≤ E ∧ ∀ s i, z s i ∈ E := by
-  haveI : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
+  have : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
   refine coc_finext l (G ℚ Ω) K₀ 2 (fun g v => mat W g *ᵥ v) z ?_ (coc_one hz) ((mem_Z1_iff_cocycle _ _).1 hz).1
     (fun g h => coc hz g h)
   intro L hL g v hv j
@@ -211,7 +211,7 @@ open scoped Pointwise
 theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (S : Finset Pl) (W : R2 Ω l) (c : Coef l) (z : G ℚ Ω → Fin 2 → Qbar l), Continuous W → (∀ s i j, mat W s i j ∈ c.O) → (∀ w, w ∉ S → ∀ B : ValuationSubring Ω, IsPlaceOver B w → Ine (F := ℚ) B ≤ W.ker) → z ∈ Z1 (Loc.colRep W) → Unr W z → ∀ A : ValuationSubring Ω, ∃ (c' : Coef l) (k : ℕ), c.O ≤ c'.O ∧ (∀ s i, ((l : ℕ) : Qbar l) ^ k * z s i ∈ c'.O) ∧ (∀ q : Pl, ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal → ∀ B : ValuationSubring Ω, IsPlaceOver B q → ∃ x : Fin 2 → Qbar l, (∀ i, x i ∈ c'.O) ∧ ∀ s ∈ Ine (F := ℚ) B, ((l : ℕ) : Qbar l) ^ k • z s = mat W s *ᵥ x - x) ∧ (Triv W A z → ∃ x : Fin 2 → Qbar l, (∀ i, x i ∈ c'.O) ∧ ∀ s ∈ Dec (F := ℚ) A, ((l : ℕ) : Qbar l) ^ k • z s = mat W s *ᵥ x - x) ∧ (Gr W A z → ∃ x ∈ c'.O, ∀ s ∈ Dec (F := ℚ) A, ((l : ℕ) : Qbar l) ^ k * z s 1 = mat W s 1 1 * x - x) := by
   intro l _ Ω _ _ _ S W c z _ hWint hWunr hz hzU A
   classical
-  haveI : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
+  have : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
   choose B hB x hx using hzU
 
   let X : Pl → Fin 2 → Qbar l := fun q =>
@@ -219,11 +219,11 @@ theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
   have hX : ∀ q (h : ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal), ∀ s ∈ Ine (F := ℚ) (B q h), z s = mat W s *ᵥ X q - X q := by
     intro q h s hs
     by_cases hq : q ∈ S
-    · simp only [X, dif_pos h, if_pos hq]
+    · simp only [X, dite_eq_left h, ite_eq_left hq]
       exact hx q h s hs
     · have h1 : W s = 1 := hWunr q hq (B q h) (hB q h) hs
       have hm : mat W s = 1 := by simp [mat, h1]
-      simp only [X, dif_pos h, if_neg hq]
+      simp only [X, dite_eq_left h, ite_eq_right hq]
       rw [hx q h s hs, hm]
       simp
   have hXS : ∀ q, q ∉ S → X q = 0 := by
@@ -235,10 +235,10 @@ theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
   obtain ⟨K₀, hK₀fd, hK₀⟩ := exists_field_of_coef c
   let f : ((↥S × Fin 2) ⊕ Fin 2) ⊕ Unit → Qbar l :=
     Sum.elim (Sum.elim (fun p => X p.1.1 p.2) xT) (fun _ => xG)
-  haveI hfd₁ : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] (Set.range f)) := by
-    haveI : Finite (Set.range f) := (Set.finite_range _).to_subtype
+  have hfd₁ : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] (Set.range f)) := by
+    have : Finite (Set.range f) := (Set.finite_range _).to_subtype
     exact IntermediateField.finiteDimensional_adjoin fun z _ => (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
-  haveI := hK₀fd
+  have := hK₀fd
   obtain ⟨E, hEfd, hK₁E, hzE⟩ := values_finExt W (K₀ ⊔ IntermediateField.adjoin ℚ_[l] (Set.range f))
     (fun s i j => le_sup_left (b := IntermediateField.adjoin ℚ_[l] (Set.range f)) (hK₀ _ (hWint s i j))) hz
   have hfE : ∀ p, f p ∈ E := fun p =>
@@ -304,7 +304,7 @@ theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
       rw [h, Matrix.mulVec_smul, smul_sub]
   · intro hT
     have hxT : ∀ s ∈ Dec (F := ℚ) A, z s = mat W s *ᵥ xT - xT := by
-      simp only [xT, dif_pos hT]
+      simp only [xT, dite_eq_left hT]
       exact hT.choose_spec
     refine ⟨((l : ℕ) : Qbar l) ^ k • xT, fun i => ?_, fun s hs => ?_⟩
     · rw [Pi.smul_apply, smul_eq_mul]
@@ -312,7 +312,7 @@ theorem integral_after_scaling : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field
     · rw [hxT s hs, Matrix.mulVec_smul, smul_sub]
   · intro hG
     have hxG : ∀ s ∈ Dec (F := ℚ) A, z s 1 = mat W s 1 1 * xG - xG := by
-      simp only [xG, dif_pos hG]
+      simp only [xG, dite_eq_left hG]
       exact hG.choose_spec
     refine ⟨((l : ℕ) : Qbar l) ^ k * xG, key _ (hfE (Sum.inr ())) ((hfM (Sum.inr ())).trans hMN), fun s hs => ?_⟩
     rw [hxG s hs]

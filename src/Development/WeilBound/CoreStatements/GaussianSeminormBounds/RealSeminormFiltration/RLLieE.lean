@@ -227,7 +227,7 @@ theorem schur2 {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (T : Module.End ℂ ((
     (hinf : ∀ w, At (evI F) w → ∀ f, ∀ g ∈ SB (κ → Af F),
       T (pureA F (c.P (ω (rhoS (c.vec w) f))) g) = schr ψ w (T (pureA F (c.P (ω f)) g))) :
     ∃ z : ℂ, ∀ f, ∀ g ∈ SB (κ → Af F), T (pureA F (c.P (ω f)) g) = z • pureA F (c.P f) g := by
-  letI := fun v : HeightOneSpectrum (𝓞 F) => GlobalTheory.LocalData.complRel v
+  let := fun v : HeightOneSpectrum (𝓞 F) => GlobalTheory.LocalData.complRel v
   let L : ((κ → AF F) → ℂ) →ₗ[ℂ] ℂ := LinearMap.proj (0 : κ → AF F) ∘ₗ T
   have hl : L ∈ (adeleClass F).adm κ := hadm _ (SeminormBoundRestriction.eval_adm 0)
   let lf : SInf F κ → ((κ → Af F) → ℂ) →ₗ[ℂ] ℂ := fun f => L ∘ₗ

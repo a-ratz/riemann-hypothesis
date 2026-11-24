@@ -111,7 +111,7 @@ theorem rTr_mem {θ : InfFam D} (hθ : IsInfFam θ) (U : Set (GA D V → ℂ))
   have e : GlobalTheory.RealLift.prodAt θ V Finset.univ.toList (fun τ => Formalism.L2.Pj.archM V (θ τ) k) = k :=
     r3 _ (GlobalTheory.RealLift.prodAt_mem θ V _ _) _ hk fun τ => by
       rw [GlobalTheory.RealLift.infMat_prodAt hθ V hu τ _ (Finset.nodup_toList _),
-        if_pos (Finset.mem_toList.2 (Finset.mem_univ _))]
+        ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))]
       rfl
   rw [← e]
   clear e
@@ -160,7 +160,7 @@ theorem mem_multT_of_equivariant : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S :
     rw [e, e, ← heq]
     congr 1
     exact hinj ((actT_tprod τ _ v w hw).trans (hπ τ u _).symm)
-  · haveI := (hfd τ).1
+  · have := (hfd τ).1
     exact GlobalTheory.DefiniteEnd.exists_sobCont M τ _ v x
 
 end GlobalTheory.DefLiftMult

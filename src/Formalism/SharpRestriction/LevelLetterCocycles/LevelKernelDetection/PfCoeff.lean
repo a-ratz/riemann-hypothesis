@@ -393,7 +393,7 @@ theorem coeffStep_holds (hR : Ring9 W) : CoeffStep hR := by
     inj := fun i m m' hmm => by
       apply Subtype.ext
       have h := congrArg (pfCoeff_σ W i) hmm
-      simpa only [AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe,
+      simpa only [AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass,
         LinearMap.toAddMonoidHom_coe, Submodule.coe_subtype, pfCoeff_σ_σ] using h
     semi := fun i a m => by
       change pfCoeff_σ W i (algebraMap (LetA O n) W.EE ((baseIdOf hR).d a) * (m : W.EE)) = _

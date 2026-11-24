@@ -81,7 +81,7 @@ theorem multiplier_congr [IsDedekindDomain R] (F : (J → L) →ₘₗ[R] R) (I 
     rw [e] at this
     simpa using this)
   have hle : Ideal.span {D - c} * Ideal.span (Set.range F) ≤ (Ideal.span {c} * I) * Ideal.span (Set.range F) := by
-    rw [Ideal.span_mul_span', Ideal.span_le]
+    rw [Ideal.span_mul_span, Ideal.span_le]
     rintro _ ⟨_, rfl, _, ⟨v, rfl⟩, rfl⟩
     have h1 := multilinear_add_sub_mem F I v (fun j => g (v j) - v j) fun j => hg _
     have h2 : (fun j => g (v j) - v j) + v = fun j => g (v j) := by ext j; simp
@@ -193,7 +193,7 @@ theorem eq_zero_of_trace (z : E) (h : ∀ a : 𝓞 E, Algebra.trace ℚ E ((a : 
 
 theorem sub_mem_of_isLev (l : Level H) (Di : Datum H) (gm : Di.La ≃ₗ[𝓞 E] Di.La) (h : IsLev l Di gm) (v : Di.La) :
     gm v - v ∈ l.Mb • (⊤ : Submodule (𝓞 E) Di.La) := by
-  haveI := Di.proj
+  have := Di.proj
   have key : ∀ t ∈ l.Mb * l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E), ∃ y ∈ l.Mb • (⊤ : Submodule (𝓞 E) Di.La),
       t • (gm v - v) = (l.M : 𝓞 E) • y := by
     intro t ht
@@ -214,7 +214,7 @@ theorem exists_matrix (Di : Datum H) {J : Type} [Fintype J] [DecidableEq J] (x :
         ∀ k, f (gm (x k)) = ∑ j, f (x j) * ρ (m j k)) ∧
       ∀ I : Ideal (𝓞 E), (∀ v, gm v - v ∈ I • (⊤ : Submodule (𝓞 E) Di.La)) →
         ∃ d : 𝓞 E, d - 1 ∈ I ∧ m.det = d := by
-  haveI := Di.fin
+  have := Di.fin
   obtain ⟨hli, hsp, htr, -⟩ := hx
   obtain ⟨n, ψ, hn, hψ, hψx⟩ := exists_coord x hli hsp
   have hnE : (n : E) ≠ 0 := Nat.cast_ne_zero.2 hn

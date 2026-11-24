@@ -61,7 +61,7 @@ open Formalism.MainNotions.DIV.Bridge.LetterLogIntegrality (eV coeff_subst_scale
 theorem kur_sub_wfrac (l : ℕ) [Fact l.Prime] : ∀ x ∈ MaximalUnramifiedExtension l, x ∈ product_zeroth_first_parts.Wfrac l := by
   have hS : {ζ : ℂ_[l] | ∃ n : ℕ, 0 < n ∧ ¬ l ∣ n ∧ ζ ^ n = 1} = product_zeroth_first_parts.rootsPrimeTo l := by
     ext ζ
-    simp only [Set.mem_setOf_eq, product_zeroth_first_parts.rootsPrimeTo]
+    simp only [Set.mem_ofPred_eq, product_zeroth_first_parts.rootsPrimeTo]
     refine exists_congr fun n => and_congr_right fun _ => and_congr_left fun _ => ?_
     rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd (Fact.out : l.Prime)]
   have halg : ∀ x ∈ product_zeroth_first_parts.rootsPrimeTo l, IsAlgebraic ℚ_[l] x := by
@@ -104,7 +104,7 @@ theorem b3_of_noLowBidegree (l d : ℕ) [Fact l.Prime] [NeZero d] (be : MvPowerS
 theorem b2_of_subst_torus_eq (l d : ℕ) [Fact l.Prime] [NeZero d] (ζ : ℂ_[l]) (hζ : IsPrimitiveRoot ζ (l ^ d - 1))
     (be : MvPowerSeries (ZMod d) ℂ_[l]) (h : MvPowerSeries.subst (torus l ζ) be = be) : product_zeroth_first_parts.B2 l d be := by
   intro u hu m
-  haveI : NeZero (l ^ d - 1) := ⟨by
+  have : NeZero (l ^ d - 1) := ⟨by
     have h1 := (Fact.out : l.Prime).one_lt
     have : 1 < l ^ d := Nat.one_lt_pow (NeZero.ne d) h1
     omega⟩

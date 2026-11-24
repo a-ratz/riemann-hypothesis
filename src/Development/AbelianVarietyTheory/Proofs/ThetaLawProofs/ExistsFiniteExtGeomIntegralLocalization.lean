@@ -76,9 +76,9 @@ theorem exists_idempotent {A : Type} [CommRing A] [IsNoetherianRing A]
   have htop : z P ⊔ (z P).annihilator = ⊤ := by
     by_contra hne
     obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hne
-    haveI := hm.isPrime
-    haveI := zp P
-    haveI := zp m
+    have := hm.isPrime
+    have := zp P
+    have := zp m
     have h1 : z m ≤ z P := zle m (z P) (le_sup_left.trans hle)
     have h2 : z P ≤ z m := zle P (z m) (h1.trans (zle P P le_rfl))
     obtain ⟨s, hs⟩ := IsNoetherian.noetherian (z P)
@@ -114,8 +114,8 @@ theorem isDomain_away {A : Type} [CommRing A] {e : A} (he : IsIdempotentElem e) 
       exact (congrArg (e * ·) hn).trans (mul_zero _)
     rwa [he.pow_succ_eq] at h1
   have hs := IsLocalization.Away.algebraMap_surjective_of_isIdempotentElem e he (S := S)
-  haveI : Nontrivial S := ⟨1, 0, fun h1 => h0 (by simpa using (hz 1).1 (by rw [map_one, h1]))⟩
-  haveI : NoZeroDivisors S := ⟨fun {a b} hab => by
+  have : Nontrivial S := ⟨1, 0, fun h1 => h0 (by simpa using (hz 1).1 (by rw [map_one, h1]))⟩
+  have : NoZeroDivisors S := ⟨fun {a b} hab => by
     obtain ⟨x, rfl⟩ := hs a
     obtain ⟨y, rfl⟩ := hs b
     rw [← map_mul, hz] at hab
@@ -147,10 +147,10 @@ theorem isDomain_tensor_of_closure (k Ω S : Type) [Field k] [Field Ω] [IsAlgCl
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω L := j.toRingHom.toAlgebra
-  haveI : IsScalarTower k Ω L := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI := isDomain_tensor_of_isAlgClosed Ω (Ω ⊗[k] S) L
-  haveI : IsDomain (L ⊗[k] S) :=
+  let : Algebra Ω L := j.toRingHom.toAlgebra
+  have : IsScalarTower k Ω L := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have := isDomain_tensor_of_isAlgClosed Ω (Ω ⊗[k] S) L
+  have : IsDomain (L ⊗[k] S) :=
     (Algebra.TensorProduct.cancelBaseChange k Ω L L S).symm.toMulEquiv.isDomain _
   let φ := Algebra.TensorProduct.map (IsScalarTower.toAlgHom k F L) (AlgHom.id k S)
   have hφ : Function.Injective φ :=
@@ -164,13 +164,13 @@ theorem geomInt_away (k Ω B : Type) [Field k] [Field Ω] [IsAlgClosed Ω] [Alge
     (h : ∀ x y : Ω ⊗[k] B, ((1 : Ω) ⊗ₜ[k] e) * (x * y) = 0 →
       ((1 : Ω) ⊗ₜ[k] e) * x = 0 ∨ ((1 : Ω) ⊗ₜ[k] e) * y = 0) :
     GeomInt k (Localization.Away e) := by
-  haveI : Algebra.Smooth B (Localization.Away e) := Algebra.Smooth.of_isLocalization_Away e
-  haveI : Algebra.Smooth k (Localization.Away e) := Algebra.Smooth.comp k B _
+  have : Algebra.Smooth B (Localization.Away e) := Algebra.Smooth.of_isLocalization_Away e
+  have : Algebra.Smooth k (Localization.Away e) := Algebra.Smooth.comp k B _
   refine ⟨this, fun F _ _ => ?_⟩
-  letI : Algebra (Ω ⊗[k] B) (Ω ⊗[k] Localization.Away e) :=
+  let : Algebra (Ω ⊗[k] B) (Ω ⊗[k] Localization.Away e) :=
     (Algebra.TensorProduct.map (AlgHom.id Ω Ω)
       (IsScalarTower.toAlgHom k B (Localization.Away e))).toAlgebra
-  haveI : IsScalarTower Ω (Ω ⊗[k] B) (Ω ⊗[k] Localization.Away e) :=
+  have : IsScalarTower Ω (Ω ⊗[k] B) (Ω ⊗[k] Localization.Away e) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       simp [RingHom.algebraMap_toAlgebra]
   have hloc := IsLocalization.tensorProduct_tensorProduct_right k Ω (Submonoid.powers e)
@@ -178,8 +178,8 @@ theorem geomInt_away (k Ω B : Type) [Field k] [Field Ω] [IsAlgClosed Ω] [Alge
   rw [Submonoid.map_powers] at hloc
   have he' : IsIdempotentElem ((1 : Ω) ⊗ₜ[k] e) :=
     he.map (Algebra.TensorProduct.includeRight (R := k) (A := Ω) (B := B))
-  haveI : IsLocalization.Away ((1 : Ω) ⊗ₜ[k] e) (Ω ⊗[k] Localization.Away e) := hloc
-  haveI := isDomain_away he' h0 h (Ω ⊗[k] Localization.Away e)
+  have : IsLocalization.Away ((1 : Ω) ⊗ₜ[k] e) (Ω ⊗[k] Localization.Away e) := hloc
+  have := isDomain_away he' h0 h (Ω ⊗[k] Localization.Away e)
   exact isDomain_tensor_of_closure k Ω _ F
 
 theorem geomInt_away_baseChange (K k Ω R : Type) [Field K] [Field k] [Field Ω] [IsAlgClosed Ω] [Algebra K k]
@@ -242,11 +242,11 @@ theorem exists_finite_level (K C R : Type) [Field K] [Field C] [Algebra K C] [Co
 theorem exists_geomInt_component : ∀ (K : Type) [Field K] [NumberField K] [Algebra K ℂ] (R : Type) [CommRing R] [Algebra K R] [Algebra.Smooth K R] (p : R →ₐ[K] ℂ), ∃ (k : IntermediateField K ℂ) (e : k ⊗[K] R), FiniteDimensional K k ∧ IsIdempotentElem e ∧ Algebra.TensorProduct.lift k.val p (fun _ _ => Commute.all _ _) e = 1 ∧ GeomInt k (Localization.Away e) := by
   intro K _ _ _ R _ _ _ p
   let Ω : IntermediateField K ℂ := algebraicClosure K ℂ
-  haveI : IsAlgClosed Ω := (algebraicClosure.isAlgClosure K ℂ).isAlgClosed
-  haveI : Algebra.IsAlgebraic K Ω := algebraicClosure.isAlgebraic K ℂ
-  haveI hreg : IsRegularRing (Ω ⊗[K] R) := GlobalTheory.isRegularRing_of_smooth Ω _
+  have : IsAlgClosed Ω := (algebraicClosure.isAlgClosure K ℂ).isAlgClosed
+  have : Algebra.IsAlgebraic K Ω := algebraicClosure.isAlgebraic K ℂ
+  have hreg : IsRegularRing (Ω ⊗[K] R) := GlobalTheory.isRegularRing_of_smooth Ω _
   let π : Ω ⊗[K] R →ₐ[K] ℂ := Algebra.TensorProduct.lift Ω.val p (fun _ _ => Commute.all _ _)
-  haveI : (RingHom.ker π).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker π).IsPrime := RingHom.ker_isPrime _
   obtain ⟨e', he', hP, hpr⟩ := exists_idempotent (A := Ω ⊗[K] R)
     (fun q _ => GlobalTheory.isDomain_of_isRegularLocalRing _) (RingHom.ker π)
   obtain ⟨k, hk, e, hfin, rfl⟩ := exists_finite_level K ℂ R Ω e'
@@ -264,9 +264,9 @@ theorem exists_geomInt_component : ∀ (K : Type) [Field K] [NumberField K] [Alg
   refine ⟨k, e, hfin, he, ?_, ?_⟩
   · rw [← hπ]
     exact (IsIdempotentElem.iff_eq_zero_or_one.1 (he'.map π)).resolve_left hP
-  · letI : Algebra k Ω := (IntermediateField.inclusion hk).toRingHom.toAlgebra
-    haveI : IsScalarTower K k Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
-    haveI : Algebra.IsAlgebraic k Ω := Algebra.IsAlgebraic.tower_top (K := K) k
+  · let : Algebra k Ω := (IntermediateField.inclusion hk).toRingHom.toAlgebra
+    have : IsScalarTower K k Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+    have : Algebra.IsAlgebraic k Ω := Algebra.IsAlgebraic.tower_top (K := K) k
     exact geomInt_away_baseChange K k Ω R e he (fun h => hP (by
       rw [RingHom.mem_ker]
       exact (congrArg π h).trans (map_zero π))) hpr

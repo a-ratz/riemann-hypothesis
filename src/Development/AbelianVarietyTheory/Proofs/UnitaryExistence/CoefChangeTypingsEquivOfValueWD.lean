@@ -81,8 +81,8 @@ theorem exists_testRing_ext (p : TRing K) :
   · show e.symm (Algebra.TensorProduct.includeRight (algebraMap K p.R a)) = _
     rw [AlgHom.commutes, ← e.symm.commutes]
     rfl
-  · letI : Algebra K S := ((algebraMap K' S).comp (algebraMap K K')).toAlgebra
-    haveI : IsScalarTower K K' S := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  · let : Algebra K S := ((algebraMap K' S).comp (algebraMap K K')).toAlgebra
+    have : IsScalarTower K K' S := IsScalarTower.of_algebraMap_eq fun _ => rfl
     let φ' : p.R →ₐ[K] S := { φ with commutes' := hφ }
     refine ⟨(Algebra.TensorProduct.lift (Algebra.ofId K' S) φ' (fun _ _ => Commute.all _ _)).comp e.toAlgHom,
       fun v => ?_⟩
@@ -204,19 +204,19 @@ theorem frMap_down {S T : Type} [CommRing S] [Algebra c'.F S] [CommRing T] [Alge
     FrMap (resHom hle φ) (ptDown hle y) (ptDown hle z) ↔ FrMap φ y z := Iff.rfl
 
 theorem finite_incl : letI := (incl hle).toAlgebra; Module.Finite c.F c'.F := by
-  letI := (incl hle).toAlgebra
-  haveI : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by
+  let := (incl hle).toAlgebra
+  have : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by
     rw [eq_ratCast (algebraMap ℚ c'.F), eq_ratCast (algebraMap ℚ c.F), map_ratCast]
-  haveI := c'.fin
+  have := c'.fin
   exact Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
 
 theorem exists_testRing_res (q : TRing c'.F) : ∃ p : TRing c.F, Nonempty (p.R ≃ₐ[c.F] Res hle q.R) := by
   obtain ⟨hft, hred⟩ := (GlobalTheory.reduced_finiteType_iff_testRing c'.F).2 q
-  letI := (incl hle).toAlgebra
-  haveI := finite_incl hle
-  letI : Algebra c'.F (Res hle q.R) := inferInstanceAs (Algebra c'.F q.R)
-  haveI : IsScalarTower c.F c'.F (Res hle q.R) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType c'.F (Res hle q.R) := hft
+  let := (incl hle).toAlgebra
+  have := finite_incl hle
+  let : Algebra c'.F (Res hle q.R) := inferInstanceAs (Algebra c'.F q.R)
+  have : IsScalarTower c.F c'.F (Res hle q.R) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType c'.F (Res hle q.R) := hft
   exact (GlobalTheory.reduced_finiteType_iff_testRing c.F).1 _ (Algebra.FiniteType.trans (S := c'.F) inferInstance this) hred
 
 theorem fromT_down_test (hBC : HasBC Xo c) (q : TRing c'.F) (y : FrPt Xo c' q.R) : FromT (ptDown hle y) := by
@@ -228,7 +228,7 @@ theorem fromT_down_iff (hBC : HasBC Xo c) {S : Type} [CommRing S] [Algebra c'.F 
     FromT (ptDown hle y) ↔ FromT y := by
   constructor
   · rintro ⟨p, φ, y₀, h⟩
-    letI := (incl hle).toAlgebra
+    let := (incl hle).toAlgebra
     obtain ⟨q, α, hα, hu, -⟩ := exists_testRing_ext (K' := c'.F) p
     obtain ⟨β, hβ⟩ := hu S φ.toRingHom φ.commutes
     let α' : p.R →ₐ[c.F] Res hle q.R := { α with commutes' := hα }

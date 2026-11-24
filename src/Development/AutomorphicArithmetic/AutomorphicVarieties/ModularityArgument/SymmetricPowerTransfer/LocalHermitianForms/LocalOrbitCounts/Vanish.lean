@@ -81,8 +81,8 @@ private theorem vanish_det {O K : Type} [CommRing O] [IsDomain O] [IsPrincipalId
     | smul r x _ h =>
       rw [smul_dotProduct, Algebra.smul_def]
       exact mul_mem ⟨r, rfl⟩ h
-  haveI : Module.Finite O S := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free O S := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O S := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free O S := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex O S
   let b : Module.Basis ι O S := Module.Free.chooseBasis O S
   let v : ι → (Fin 3 → K) := fun i => (b i : Fin 3 → K)
@@ -124,7 +124,7 @@ private theorem vanish_det {O K : Type} [CommRing O] [IsDomain O] [IsPrincipalId
   let e : Fin 3 ≃ ι := (Fintype.equivFinOfCardEq hcard).symm
   let V : Matrix (Fin 3) (Fin 3) K := Matrix.of fun r j => v (e j) r
   have hVu : IsUnit V := by
-    rw [← linearIndependent_cols_iff_isUnit]
+    rw [← linearIndependent_col_iff_isUnit]
     have : V.col = v ∘ e := by
       funext j r
       rfl
@@ -192,7 +192,7 @@ private theorem vanish_unit {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
     {Δ : K} (hl : IsLoc O Δ) (hΔ : ¬ IsSquare Δ) (l : Lsq K Δ) (hl0 : l ≠ 0) :
     ∃ (k : K) (u u' : Lsq K Δ), k ≠ 0 ∧ IsInt O u ∧ IsInt O u' ∧ u * u' = 1 ∧ l = algebraMap K _ k * u := by
   classical
-  haveI := hl.frac
+  have := hl.frac
   obtain ⟨ε, s, hs0, hΔs⟩ := hl.even
   have hdesc : Δ * s⁻¹ ^ 2 = algebraMap O K ε := by
     rw [hΔs]; field_simp
@@ -298,17 +298,17 @@ private theorem vanish_inert {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteV
     {Δ : K} (hl : IsLoc O Δ) (hΔ : ¬ IsSquare Δ) (B : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) (x : K) (hx : x ≠ 0) (t : Lsq K Δ)
     (ht : IsUnit t) (hB : B.det = algebraMap K _ x * t ^ 2) (S : Submodule O (Fin 3 → Lsq K Δ)) (hfg : S.FG)
     (hd : ∀ y, y ∈ S ↔ ∀ x ∈ S, IsInt O (x ⬝ᵥ B *ᵥ y)) : EvenVal O x := by
-  haveI : IsFractionRing O K := hl.frac
-  haveI : Fact (∀ r : K, r ^ 2 ≠ Δ + 0 * r) := ⟨fun r hr => hΔ ⟨r, by rw [← sq]; simpa using hr.symm⟩⟩
-  letI : Field (Lsq K Δ) := inferInstanceAs (Field (QuadraticAlgebra K Δ 0))
+  have : IsFractionRing O K := hl.frac
+  have : Fact (∀ r : K, r ^ 2 ≠ Δ + 0 * r) := ⟨fun r hr => hΔ ⟨r, by rw [← sq]; simpa using hr.symm⟩⟩
+  let : Field (Lsq K Δ) := inferInstanceAs (Field (QuadraticAlgebra K Δ 0))
   have memI : ∀ w : Lsq K Δ, IsInt O w → w ∈ integralClosure O (Lsq K Δ) := fun w hw => hw
   have hK : ∀ k : K, IsIntegral O (algebraMap K (Lsq K Δ) k) → ∃ a : O, algebraMap O K a = k := by
     intro k hk
     have h1 : IsIntegral O k := (isIntegral_algebraMap_iff ).1 hk
     exact IsIntegrallyClosed.isIntegral_iff.1 h1
-  haveI hfr : IsFractionRing (integralClosure O (Lsq K Δ)) (Lsq K Δ) :=
+  have hfr : IsFractionRing (integralClosure O (Lsq K Δ)) (Lsq K Δ) :=
     integralClosure.isFractionRing_of_finite_extension K (Lsq K Δ)
-  haveI hpid : IsPrincipalIdealRing (integralClosure O (Lsq K Δ)) := by
+  have hpid : IsPrincipalIdealRing (integralClosure O (Lsq K Δ)) := by
     constructor
     intro I
     obtain ⟨g, hg⟩ := (IsPrincipalIdealRing.principal (I.comap (algebraMap O (integralClosure O (Lsq K Δ))))).principal
@@ -419,7 +419,7 @@ private theorem vanish_split {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteV
     {Δ : K} (hl : IsLoc O Δ) (hΔ : IsSquare Δ) (B : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) (x : K) (hx : x ≠ 0) (t : Lsq K Δ)
     (ht : IsUnit t) (hB : B.det = algebraMap K _ x * t ^ 2) (S : Submodule O (Fin 3 → Lsq K Δ)) (hfg : S.FG)
     (hd : ∀ y, y ∈ S ↔ ∀ x ∈ S, IsInt O (x ⬝ᵥ B *ᵥ y)) : EvenVal O x := by
-  haveI := hl.frac
+  have := hl.frac
   have h2 : (2 : K) ≠ 0 := by
     have := ((hl.two).map (algebraMap O K)).ne_zero
     rwa [map_ofNat] at this
@@ -554,7 +554,7 @@ theorem UpperTheory.V.Z.Sym.Loc.vanish :
     apply hD.reg
     rw [sub_eq_zero.1 h]
     norm_num
-  haveI := hL.frac
+  have := hL.frac
   obtain ⟨s, hs⟩ := hS.fg
   have memS : ∀ y, y ∈ S ↔ y ∈ Submodule.span O (s : Set (Sp Δ τ)) := by
     intro y

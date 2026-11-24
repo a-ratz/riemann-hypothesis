@@ -578,8 +578,8 @@ theorem PrimitiveScale.proof : PrimitiveScale.Statement := by
   have hcoeff : ∀ m, f.coeff m ∈ J := by
     intro m
     by_cases hm : f.coeff m = 0
-    · rw [hm, ← FractionalIdeal.mem_coe]; exact Submodule.zero_mem _
-    · rw [← FractionalIdeal.mem_coe, hJdef, FractionalIdeal.spanFinset_coe]
+    · rw [hm, ← FractionalIdeal.mem_coeToSubmodule]; exact Submodule.zero_mem _
+    · rw [← FractionalIdeal.mem_coeToSubmodule, hJdef, FractionalIdeal.coeToSubmodule_spanFinset]
       exact Submodule.subset_span ⟨m, MvPolynomial.mem_support_iff.mpr hm, rfl⟩
   have hint : ∀ c ∈ J⁻¹, ∀ m, ∃ y : 𝓞 K, algebraMap (𝓞 K) K y = c * f.coeff m := by
     intro c hc m
@@ -593,10 +593,10 @@ theorem PrimitiveScale.proof : PrimitiveScale.Statement := by
     push Not at hne
     let S : Submodule (𝓞 K) K := Submodule.map (Algebra.linearMap (𝓞 K) K) v.asIdeal
     have hle : ((J * J⁻¹ : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) ≤ S := by
-      rw [FractionalIdeal.coe_mul, Submodule.mul_le]
+      rw [FractionalIdeal.coeToSubmodule_mul, Submodule.mul_le]
       intro j hj c hc
       have hJS : (J : Submodule (𝓞 K) K) ≤ S.comap (LinearMap.mulRight (𝓞 K) c) := by
-        rw [hJdef, FractionalIdeal.spanFinset_coe, Submodule.span_le]
+        rw [hJdef, FractionalIdeal.coeToSubmodule_spanFinset, Submodule.span_le]
         rintro _ ⟨m, -, rfl⟩
         obtain ⟨y, hy⟩ := hint c hc m
         refine Submodule.mem_map.mpr ⟨y, hne c hc m y hy, ?_⟩
@@ -605,7 +605,7 @@ theorem PrimitiveScale.proof : PrimitiveScale.Statement := by
       exact hJS hj
     have h1 : (1 : K) ∈ S := by
       apply hle
-      rw [hJJ, FractionalIdeal.mem_coe, FractionalIdeal.mem_one_iff]
+      rw [hJJ, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_one_iff]
       exact ⟨1, map_one _⟩
     obtain ⟨y, hy, hy1⟩ := Submodule.mem_map.mp h1
     have : y = 1 := by

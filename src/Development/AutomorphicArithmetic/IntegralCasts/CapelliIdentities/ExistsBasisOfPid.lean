@@ -126,9 +126,9 @@ private theorem UpperTheory.Reformulated.B.Qi33.exists_basis_of_pid {D K Z : Typ
     [Module K Z] [Module D Z] [IsScalarTower D K Z] (M : Submodule D Z) (hM : M.FG)
     (hs : Submodule.span K (M : Set Z) = ⊤) :
     ∃ b : Module.Basis (Fin (Module.finrank K Z)) K Z, Submodule.span D (Set.range b) = M := by
-  haveI : Module.Finite D M := Module.Finite.iff_fg.mpr hM
-  haveI : Module.IsTorsionFree D Z := Module.IsTorsionFree.trans_faithfulSMul D K Z
-  haveI : Module.Free D M := inferInstance
+  have : Module.Finite D M := Module.Finite.iff_fg.mpr hM
+  have : Module.IsTorsionFree D Z := Module.IsTorsionFree.trans_faithfulSMul D K Z
+  have : Module.Free D M := inferInstance
   let c := Module.finBasis D M
   let v : Fin (Module.finrank D M) → Z := fun i => (c i : Z)
   have hli : LinearIndependent D v := c.linearIndependent.map' M.subtype M.ker_subtype
@@ -160,13 +160,13 @@ theorem UpperTheory.Reformulated.B.Qi33.exists_loc_basis :
   intro K _ _ _ Z _ _ _ _ _ w A hA hsp
   let D := Localization.subalgebra.ofField K w.asIdeal.primeCompl
     (Ideal.primeCompl_le_nonZeroDivisors w.asIdeal)
-  haveI hloc : IsLocalization w.asIdeal.primeCompl D :=
+  have hloc : IsLocalization w.asIdeal.primeCompl D :=
     Localization.subalgebra.isLocalization_ofField K _ _
-  haveI : IsFractionRing D K := Localization.subalgebra.isFractionRing_ofField K _ _
-  haveI : IsDiscreteValuationRing D :=
+  have : IsFractionRing D K := Localization.subalgebra.isFractionRing_ofField K _ _
+  have : IsDiscreteValuationRing D :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (NumberField.RingOfIntegers K) w.ne_bot D
-  haveI : IsScalarTower (NumberField.RingOfIntegers K) D Z :=
+  have : IsScalarTower (NumberField.RingOfIntegers K) D Z :=
     IsScalarTower.of_algebraMap_smul fun r z => algebraMap_smul K r z
   have hfg : (Submodule.span D (A : Set Z)).FG := by
     obtain ⟨t, rfl⟩ := hA

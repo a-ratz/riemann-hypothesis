@@ -129,7 +129,7 @@ theorem thetaMeas_ne (hcm : IsCMExt F E σ) {J : Matrix (Fin 2) (Fin 2) E} (hJ :
     thetaMeas σ J μ 𝓕 {X : Fin 1 → Fin 2 → E | X ≠ 0} =
       Measure.sum fun β : {β : F // β ≠ 0} => thetaMeas σ J μ 𝓕 (sph σ J β.1) := by
   ext s hs
-  simp only [thetaMeas, Measure.sum_apply _ hs, Measure.smul_apply, smul_eq_mul, ENNReal.tsum_mul_left]
+  simp only [thetaMeas, Measure.sum_apply _ hs, smul_apply, smul_eq_mul, ENNReal.tsum_mul_left]
   congr 1
   rw [← (sphEquiv hcm hJ hA).tsum_eq, ENNReal.tsum_sigma']
   rfl

@@ -578,7 +578,7 @@ theorem _root_.GlobalTheory.T.modW_of_rSideW : ∀ {B B' : Base} {f : Fr B.toPre
   (z : Dat (w.st Z) w.I hX T Wt) (Wt' : Set B'.places.Pl)
   (R' : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) Ks), Enl0 B B' → HEq w'.px w.px → RSideW z Wt' R' → ModW R'.toRealDat := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Ks _ _ _ Xg tr z Wt' R' hE hpx hS
-  letI := z.alg
+  let := z.alg
   have hP : B'.toPre = B.toPre := hE.1
   have hG := LiftExt.gc_eq hP hpx
   have hb := z.pins.char.base.models
@@ -1026,7 +1026,7 @@ theorem _root_.GlobalTheory.T.referenceTuple_hilbertModel_definiteForms_enlarged
   (z : Dat (w.st Z) w.I hX T Wt) (Wt' : Set B'.places.Pl)
   (R' : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) Ks), Enl0 B B' → R'.toRealDat.Pre0 (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr).lv2 → RSide z Wt' R' → LevSame z Wt' R' → ModVAt R'.toRealDat (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' Wt'))) := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Ks _ _ _ Xg tr z Wt' R' hE _ hS hL i'
-  letI := z.alg
+  let := z.alg
   have hP : B'.toPre = B.toPre := hE.1
   have hm := LiftExt.m_eq (a := Z) (a' := Z') hP
   let i : Fin (w.st Z).toD7.R.m := Fin.cast hm i'
@@ -1212,7 +1212,7 @@ theorem _root_.GlobalTheory.T.referenceTuple_rationalForm_lifts_algebraic_enlarg
   (z : Dat (w.st Z) w.I hX T Wt) (Wt' : Set B'.places.Pl)
   (R' : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) Ks), Enl0 B B' → RSide z Wt' R' → JSpan z Wt' R' → RatAt z.R.toRealDat (mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))) → RatAt R'.toRealDat (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' Wt'))) := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Ks _ _ _ Xg tr z Wt' R' hE hS hJ hr i' x' v hv
-  letI := z.alg
+  let := z.alg
   have hP : B'.toPre = B.toPre := hE.1
   have hm := LiftExt.m_eq (a := Z) (a' := Z') hP
   let i : Fin (w.st Z).toD7.R.m := Fin.cast hm i'
@@ -1588,7 +1588,7 @@ theorem _root_.GlobalTheory.T.referenceTuple_weilDatum_vector_polynomialMap_enla
   (z : Dat (w.st Z) w.I hX T Wt) (Wt' : Set B'.places.Pl)
   (R' : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) Ks), Enl0 B B' → z.R.toRealDat.ExAt → RSide z Wt' R' → LevSame z Wt' R' → WeilAt R'.toRealDat (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' Wt'))) := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Ks _ _ _ Xg tr z Wt' R' hE hEx hS hL i'
-  letI := z.alg
+  let := z.alg
   have hP : B'.toPre = B.toPre := hE.1
   have hm := LiftExt.m_eq (a := Z) (a' := Z') hP
   let i : Fin (w.st Z).toD7.R.m := Fin.cast hm i'
@@ -1743,7 +1743,7 @@ theorem exists_pins_rSide : GlobalTheory.Published.DiscreteSeriesCover → Globa
   intro K B' f' T' w' _ _ H B f T w hE hf _ hpx Z hX Wt z hG _ hFine hHolds Z' hX' hG' _ _ core' alg' _ _ _ _ _ _ _ _
   intro Xg tr₀ R₀ cG hyp
   obtain ⟨hLev, hId, hGood, hMu, hIdem, hPre, hIn, hTup, hAll, hKeep, hBrg, hSide⟩ := hyp
-  letI := alg'
+  let := alg'
   generalize {v | B'.places.resChar v ∈ T'.pl} = Wt' at *
   have hHH := (H (w'.st Z') rfl).1
   have hn := (H (w.st Z) hE.1.symm).2

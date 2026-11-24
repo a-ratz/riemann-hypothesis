@@ -64,7 +64,7 @@ theorem vw_eq_zero_of_notMem (w : HeightOneSpectrum (𝓞 K)) {s : 𝓞 K} (hs :
   have hJ : (Ideal.span {s} : Ideal (𝓞 K)) ≠ 0 := by
     rwa [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   unfold vw
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K w hJ]
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K w hJ]
   have hm : Associates.mk (Ideal.span {s} : Ideal (𝓞 K)) ≠ 0 := by rwa [ne_eq, Associates.mk_eq_zero]
   by_contra h
   have h1 : 1 ≤ (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {s} : Ideal (𝓞 K))).factors := by

@@ -77,8 +77,8 @@ open Matrix IsLocalRing UpperTheory.V.U3 UpperTheory.V.Alg UpperTheory.V.HV
 private theorem norm_lt_one_of_nonunit {l : ℕ} [Fact l.Prime] (c : Coef l) (b : c.O) (hb : ¬ IsUnit b) :
     ‖(b : PadicAlgCl l)‖ < 1 := by
   classical
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   by_cases h0 : b = 0
   · subst h0
     simp
@@ -463,7 +463,7 @@ private theorem mem_range_of_approx {l : ℕ} [Fact l.Prime] {R : Type} [CommRin
 
 private theorem norm_coe_coefO_le_one {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) :
     ‖(x : PadicAlgCl l)‖ ≤ 1 := by
-  haveI := c.fin
+  have := c.fin
   have hint : IsIntegral ℤ_[l] (x : PadicAlgCl l) := by
     have hx : IsIntegral ℤ_[l] x := Algebra.IsIntegral.isIntegral x
     exact hx.map c.O.val
@@ -520,10 +520,10 @@ theorem UpperTheory.V.U3.modelIdeal_finiteness_of_weightZero_finite :
       {U : Univ (GCond.noCondition c.O (η.comp ι) (Ψ.comp ι))} {I : Ideal U.R} {cc g₁ : Γ} (S : SRing N hι U I cc g₁) (M : Model S (PadicAlgCl l)), l ≠ 2 → Marks η Ψ cc g₁ →
       Module.Finite c.O (weightZeroSubalgebra c.O S.r.hom) → M2 M.𝒜 M.Q.ideal := by
   intro l _ c Γ H _ _ _ _ _ _ η Ψ N ι hι U I cc g₁ S M hl2 hmk hfin
-  haveI := c.dvr
-  haveI := c.fin
-  haveI hH : IsHausdorff (maximalIdeal S.R) S.R := (IsCO.complete (O := c.O) (R := S.R)).toIsHausdorff
-  haveI hloc : IsLocalHom (algebraMap c.O S.R) := IsCO.isLocalHom (O := c.O) (R := S.R)
+  have := c.dvr
+  have := c.fin
+  have hH : IsHausdorff (maximalIdeal S.R) S.R := (IsCO.complete (O := c.O) (R := S.R)).toIsHausdorff
+  have hloc : IsLocalHom (algebraMap c.O S.R) := IsCO.isLocalHom (O := c.O) (R := S.R)
   have hlm : ((l : ℕ) : S.R) ∈ maximalIdeal S.R := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     intro hu
@@ -589,10 +589,10 @@ theorem UpperTheory.V.U3.modelIdeal_finiteness_of_weightZero_finite :
   have hsub : (M.𝒜 0).map M.q.toLinearMap ≤ Subalgebra.toSubmodule (weightZeroSubalgebra c.O S.r.hom) := by
     rintro _ ⟨f, hf, rfl⟩
     exact key f hf
-  haveI : Module.Finite c.O (Subalgebra.toSubmodule (weightZeroSubalgebra c.O S.r.hom)) := hfin
-  haveI hpir : IsPrincipalIdealRing c.O := c.dvr.toIsPrincipalIdealRing
-  haveI hnr : IsNoetherianRing c.O := PrincipalIdealRing.isNoetherianRing
-  haveI : IsNoetherian c.O (Subalgebra.toSubmodule (weightZeroSubalgebra c.O S.r.hom)) :=
+  have : Module.Finite c.O (Subalgebra.toSubmodule (weightZeroSubalgebra c.O S.r.hom)) := hfin
+  have hpir : IsPrincipalIdealRing c.O := c.dvr.toIsPrincipalIdealRing
+  have hnr : IsNoetherianRing c.O := PrincipalIdealRing.isNoetherianRing
+  have : IsNoetherian c.O (Subalgebra.toSubmodule (weightZeroSubalgebra c.O S.r.hom)) :=
     isNoetherian_of_isNoetherianRing_of_finite _ _
   have hfg : ((M.𝒜 0).map M.q.toLinearMap).FG := isNoetherian_submodule.mp inferInstance _ hsub
   show (Submodule.map (Ideal.Quotient.mkₐ c.O M.Q.ideal).toLinearMap (M.𝒜 0)).FG
@@ -717,9 +717,9 @@ theorem UpperTheory.V.U3.model_upper :
         UpperTheory.V.Chr.nrm l c.O M.len ≤ 2 * ∑ f ∈ T, vl l (trDiff η Ψ S.r.hom σ f) := by
   classical
   intro l _ c Γ H _ _ _ _ _ _ η Ψ N ι hι U I cc g₁ S M hl hmk hLM hfin hpt σ hσ htr
-  letI := M.cr
-  letI := M.al
-  letI := M.gr
+  let := M.cr
+  let := M.al
+  let := M.gr
   have hM2 := modelIdeal_finiteness_of_weightZero_finite S M hl hmk hfin
   have hM1 := gradedModel_spansCot_of_rigid_weights S M hl hmk hM2 hpt.rigid0
   have hM3 := gradedModel_pointCondition_of_ptHyp S M hl hmk hM2 hpt
@@ -727,7 +727,7 @@ theorem UpperTheory.V.U3.model_upper :
   have hsg := model_signs S M hl hmk
   have hv := isNVal l c
   obtain ⟨-, -, -, hcomp, -, he0, hefin, -, -⟩ := UpperTheory.V.Base.dvrFacts l c.O
-  haveI := hcomp
+  have := hcomp
   have htp : ∀ f : S.R →ₐ[c.O] PadicAlgCl l, IsLocPt f →
       (TwoPt (η := η) S.r.hom f ↔ TwoSigned M.𝒜 (f.comp M.q)) := fun f hf =>
     ⟨fun h => ⟨fun hn => h.2.1 ((hsg f hf).1.1 hn), fun hp => h.2.2 ((hsg f hf).2.1.1 hp)⟩,
@@ -845,7 +845,7 @@ theorem UpperTheory.V.U3.model_upper :
   simp only [AlgHom.comp_apply, hqa] at hsum
   rw [← Finset.mul_sum] at hsum
   have hepos : (0 : ℝ) < ((UpperTheory.V.Base.eO l c.O).toNat : ℝ) := by
-    have hne : UpperTheory.V.Base.eO l c.O ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) hefin
+    have hne : UpperTheory.V.Base.eO l c.O ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) hefin
     have hz : (UpperTheory.V.Base.eO l c.O).toNat ≠ 0 := by
       rw [Ne, ENat.toNat_eq_zero]
       push_neg

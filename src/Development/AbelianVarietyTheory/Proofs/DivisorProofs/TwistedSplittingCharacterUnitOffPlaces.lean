@@ -89,8 +89,8 @@ theorem conjO_not_mem_sq {E : Type} [Field E] [NumberField E] [StarRing E] {P : 
 
 theorem natCard_mem {E : Type} [Field E] [NumberField E] (P : Pl E) (h : Nat.card (kP P) ≠ 0) :
     ((Nat.card (kP P) : ℕ) : 𝓞 E) ∈ P.asIdeal := by
-  haveI : Finite (kP P) := Nat.finite_of_card_ne_zero h
-  letI := Fintype.ofFinite (kP P)
+  have : Finite (kP P) := Nat.finite_of_card_ne_zero h
+  let := Fintype.ofFinite (kP P)
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, Nat.card_eq_fintype_card]
   exact Nat.cast_card_eq_zero (kP P)
 

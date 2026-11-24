@@ -54,7 +54,7 @@ namespace GlobalTheory.Dec
 private lemma exp_mul_exp_neg_eq_shell (a : ℝ) (r : ℕ) :
     Real.exp (2 * a * (r + 1)) * Real.exp (-(4 * a * r)) =
       Real.exp (2 * a) * Real.exp (-(2 * a)) ^ r := by
-  rw [← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+  rw [← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
   congr 1
   ring
 

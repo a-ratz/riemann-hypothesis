@@ -133,7 +133,7 @@ theorem exists_finset_eig {κ : Type} (φ : κ → Module.End k W) (T : κ → M
     · obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hz
       exact halg _
     · obtain ⟨t, -, hz⟩ := Finset.mem_biUnion.1 hz
-      letI : Algebra k ℂ := σ.toAlgebra
+      let : Algebra k ℂ := σ.toAlgebra
       have hi : IsIntegral k z := ⟨minpoly k (φ t), minpoly.monic (Algebra.IsIntegral.isIntegral _), by
         rw [eval₂_eq_eval_map]; exact (mem_roots'.1 (Multiset.mem_toFinset.1 hz)).2⟩
       exact (isIntegral_trans (R := ℚ) z hi).isAlgebraic
@@ -379,7 +379,7 @@ theorem exists_boundAt (hU : GlobalTheory.Published.DiscreteSeriesUpqUnique) (R 
       hkNorm R i k P • heckeOn (R.MW i (sg0 D A3.A)) Rr ((R.HW i (sg0 D A3.A)).e ((R.FW i).j (sg0 D A3.A) x))) :
     ∃ S : Finset ℂ, (∀ z ∈ S, IsAlgebraic ℚ z) ∧ BoundAt R.C i S := by
   obtain ⟨n, b, hb, -, hsp, -, hsp'⟩ := hK
-  haveI : FiniteDimensional Ks (R.FW i).WK := by
+  have : FiniteDimensional Ks (R.FW i).WK := by
     rw [← hsp]
     exact FiniteDimensional.span_of_finite Ks (Set.finite_range b)
   let ι : (R.FW i).WK →ₛₗ[(sg0 D A3.A).comp (algebraMap Ks D.what₂.LL)] MMap (R.MW i (sg0 D A3.A)) :=
@@ -676,8 +676,8 @@ theorem exists_intertwiner {V : HSp D} {S : D.what₂.Tau → SPar} (h1 : 1 ≤ 
     intro τ
     obtain ⟨hl, he⟩ := GlobalTheory.SignedParTest.isEnum_unique (M.enum τ) (M'.enum τ)
     have hd' : Formalism.MainNotions.S.IsDS (M.ε τ) (M.lam τ) (M'.σ τ) := hl ▸ he ▸ M'.ds τ
-    haveI : CompleteSpace (M.H τ) := (M.ds τ).1
-    haveI : CompleteSpace (M'.H τ) := (M'.ds τ).1
+    have : CompleteSpace (M.H τ) := (M.ds τ).1
+    have : CompleteSpace (M'.H τ) := (M'.ds τ).1
     have hgap : Formalism.QuantumDeterminants.GapAtLeast (M.ε τ) (M.lam τ) (16 * (V.rank : ℝ) ^ 19) := by
       obtain ⟨-, f, hf, e⟩ := M.enum τ
       intro a b hab
@@ -717,7 +717,7 @@ theorem exists_boundAt (hG : Formalism.L2.SG.ConcreteSettingExists.GapHyp D) (R 
     ∃ S : Finset ℂ, (∀ z ∈ S, IsAlgebraic ℚ z) ∧ BoundAt R.C i S := by
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   obtain ⟨n, b, hb, -, hsp, -, hsp'⟩ := hK
-  haveI : FiniteDimensional Ks (R.FW i).WK := by
+  have : FiniteDimensional Ks (R.FW i).WK := by
     rw [← hsp]
     exact FiniteDimensional.span_of_finite Ks (Set.finite_range b)
   let ι : (R.FW i).WK →ₛₗ[(sg0 D A3.A).comp (algebraMap Ks D.what₂.LL)] MMap (R.MW i (sg0 D A3.A)) :=
@@ -1010,11 +1010,11 @@ theorem spanC_core (R : RealDat3 D A3 Ks) (F : Face3 D A3) {X0 : BaseLevelRowSid
   have hT : ∀ t ∈ I, ∀ u : Fin (R.nW (idxOf D j)) → D.what₂.LL,
       iotaR R (idxOf D j) (hL j t.1 t.2 u) = T' t (iotaR R (idxOf D j) u) := by
     intro t ht u
-    simp only [T', dif_pos ht, LinearMap.smul_apply, iotaR_apply]
+    simp only [T', dite_eq_left ht, LinearMap.smul_apply, iotaR_apply]
     exact hRd j t.1 t.2 (α ⟨t, ht⟩) (Rr ⟨t, ht⟩) hj1 hj2 (hD ⟨t, ht⟩) u
   have hPa : ∀ σ ∈ s, ∀ t ∈ I, ∀ z ∈ Part σ, T' t z = sg0 D A3.A ((eig j σ t.1 t.2 : ↥D.LL0) : D.what₂.LL) • z := by
     rintro σ hσ t ht _ ⟨y, hy, rfl⟩
-    simp only [T', dif_pos ht, LinearMap.smul_apply]
+    simp only [T', dite_eq_left ht, LinearMap.smul_apply]
     have h1 := hEig (idxOf D j) σ t.1 t.2 (α ⟨t, ht⟩) (Rr ⟨t, ht⟩) (hD ⟨t, ht⟩) hσ.2 y hy
     have h2 : eig ((idxOf D j : ℕ) + 1) σ t.1 t.2 = eig j σ t.1 t.2 := by rw [hjj]
     rw [h2, hsg] at h1

@@ -263,7 +263,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat
 
 theorem isOpen_blockNonzero {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] :
     IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
-  simp only [Set.setOf_forall, Set.setOf_exists]
+  simp only [Set.ofPred_forall, Set.ofPred_exists]
   exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i =>
     isOpen_ne_fun (continuous_apply _) continuous_const
 
@@ -396,7 +396,7 @@ theorem _root_.GlobalTheory.T.unit_section_divisor_eq : ∀ (K : Type) [Fintype 
     have hm' : v * g - u * f ∈ P := by
       have := P.neg_mem hm
       rwa [neg_sub] at this
-    haveI := hW
+    have := hW
     unfold multAt
     rw [dite_eq_left hW, dite_eq_left hW,
       length_localizedModule_quot_eq W (J₁ := P ⊔ Ideal.span {f}) (J₂ := P ⊔ Ideal.span {g})

@@ -123,7 +123,7 @@ theorem isDR_of_summand (D : D7) (hFont : FontaineAtPlacesOverL (D := D)) (hP : 
   obtain ⟨K', h, hN, hF, hS, Sig, Fr, -, -, -, -, hx⟩ := hPot
   obtain ⟨a, x, j, hjinj, hjeq, -⟩ := hX
   let incl := Subgroup.inclusion (GK_le h)
-  have hincl : Continuous incl := Continuous.subtype_mk continuous_subtype_val _
+  have hincl : Continuous incl := Continuous.subtype_mk continuous_subtypeVal _
   let W' : GRep ↥(GK K') ℚ_[D.nd.l i] (Br.LL D.nbr i w hw) (Br.OLL D.nbr i w hw) :=
     { V := X.V, ρ := X.ρ.comp incl, cont := fun v => (X.cont v).comp hincl }
   let Ms' : ↥Xs → (↥(GK K') →* Matrix (Fin D.R.nV) (Fin D.R.nV) (Br.LL D.nbr i w hw)) :=

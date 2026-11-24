@@ -67,8 +67,8 @@ private theorem coeff_scale {A : Type} [CommRing A] {m : ℕ} (P : MvPolynomial 
       ring
     rw [h, Polynomial.C_mul_X_pow_eq_monomial, Polynomial.coeff_monomial_apply, MvPolynomial.coeff_monomial]
     split_ifs with h1 h2 h2
-    · rw [MvPolynomial.coeff_monomial, if_pos h2]
-    · rw [MvPolynomial.coeff_monomial, if_neg h2]
+    · rw [MvPolynomial.coeff_monomial, ite_eq_left h2]
+    · rw [MvPolynomial.coeff_monomial, ite_eq_right h2]
     · exact absurd (congrArg Finsupp.degree h2) h1
     · simp
   | add p q hp hq =>

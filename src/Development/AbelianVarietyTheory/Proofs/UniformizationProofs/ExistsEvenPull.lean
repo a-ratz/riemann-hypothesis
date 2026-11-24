@@ -201,7 +201,7 @@ theorem nonempty_biTriv (A : Type) [CommRing A] [IsLocalRing A] (hA : IsNilpoten
     {X : Type} [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (G : Over (Spec (CommRingCat.of A))) [GrpObj G]
     [IsCommMonObj G] [Smooth G.hom] [GeometricallyConnected G.hom] (P : CP G) (i : splitTorus _ X ⟶ G)
     (hi : IsMonHom i) : Nonempty (BiTriv P.c i) := by
-  letI : Field (A ⧸ IsLocalRing.maximalIdeal A) := Ideal.Quotient.field _
+  let : Field (A ⧸ IsLocalRing.maximalIdeal A) := Ideal.Quotient.field _
   let f := red (IsLocalRing.maximalIdeal A)
   have hF := isGrpPullback_pullback G f
   have : Smooth ((Over.pullback f).obj G).hom := by show Smooth (pullback.snd G.hom f); infer_instance

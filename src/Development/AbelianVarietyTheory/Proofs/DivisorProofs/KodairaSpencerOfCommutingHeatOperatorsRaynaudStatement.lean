@@ -183,17 +183,17 @@ theorem exists_symm_isKS_abLocus : ∀ (E : Type) [Field E] [NumberField E] [IsC
   have hx : ∀ s, ∏ i, tt i ∉ ((chart U) s).asIdeal := fun s =>
     h4 _ (by rw [← U.2.range_fromSpec]; exact ⟨s, rfl⟩)
   have hne : ∏ i, tt i ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => htt i
-  haveI : Nonempty (U.1 : (Sp R).Opens) := by
+  have : Nonempty (U.1 : (Sp R).Opens) := by
     refine ⟨⟨(⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum R), ?_⟩⟩
     show _ ∈ ((U.1 : (Sp R).Opens) : Set (Sp R))
     rw [h2]
     show ∏ i, tt i ∉ (⊥ : Ideal R)
     simpa using hne
-  haveI : IsDomain Γ(Sp R, U.1) := inferInstance
+  have : IsDomain Γ(Sp R, U.1) := inferInstance
   let K := FractionRing Γ(Sp R, U.1)
   let x₀ : Γ(Sp R, U.1) →+* K := algebraMap _ _
-  letI : Algebra ℚ K := ((x₀.comp ρ).comp (algebraMap ℚ R)).toAlgebra
-  haveI : CharZero K := algebraRat.charZero K
+  let : Algebra ℚ K := ((x₀.comp ρ).comp (algebraMap ℚ R)).toAlgebra
+  have : CharZero K := algebraRat.charZero K
   obtain ⟨PP', cub, sym, adj, prim, mm, -⟩ := sabPull proved_CubePullSt (spMap x₀ ≫ chart U) t
   have hx' : ∀ s, ∏ i, tt i ∉ ((spMap x₀ ≫ chart U) s).asIdeal := fun s => hx ((spMap x₀) s)
   obtain ⟨hP, hA, hK⟩ := GlobalTheory.AbLocusPol.isProper_relAmple_kTriv_of_abLocus E H R t P m tt htt hab _
@@ -300,11 +300,11 @@ theorem exists_derivation_cotangent (R B : Type) [CommRing R] [CommRing B] [IsLo
 theorem formallySmooth_of_charZero (F K : Type) [Field F] [CharZero F] [Field K] [Algebra F K] :
     Algebra.FormallySmooth F K := by
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis F K
-  haveI := hs.isAlgebraic_field
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
-  haveI : CharZero (IntermediateField.adjoin F (Set.range ((↑) : s → K))) :=
+  have := hs.isAlgebraic_field
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
+  have : CharZero (IntermediateField.adjoin F (Set.range ((↑) : s → K))) :=
     charZero_of_injective_algebraMap (algebraMap F _).injective
-  haveI : Algebra.IsSeparable (IntermediateField.adjoin F (Set.range ((↑) : s → K))) K :=
+  have : Algebra.IsSeparable (IntermediateField.adjoin F (Set.range ((↑) : s → K))) K :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
   exact Algebra.FormallySmooth.of_algebraicIndependent_of_isSeparable hs.1
 
@@ -315,22 +315,22 @@ theorem formallySmooth_residueField (R B : Type) [CommRing R] [IsDomain R] [Alge
   let K := FractionRing R
   have hu' : ∀ c : nonZeroDivisors R, IsUnit (algebraMap R B c) := fun c =>
     hu c (nonZeroDivisors.ne_zero c.2)
-  letI : Algebra K B := (IsLocalization.lift (M := nonZeroDivisors R) (S := K) hu').toAlgebra
-  haveI : IsScalarTower R K B := IsScalarTower.of_algebraMap_eq fun c =>
+  let : Algebra K B := (IsLocalization.lift (M := nonZeroDivisors R) (S := K) hu').toAlgebra
+  have : IsScalarTower R K B := IsScalarTower.of_algebraMap_eq fun c =>
     (IsLocalization.lift_eq hu' c).symm
-  haveI : IsScalarTower R K (ResidueField B) := IsScalarTower.of_algebraMap_eq fun c => by
+  have : IsScalarTower R K (ResidueField B) := IsScalarTower.of_algebraMap_eq fun c => by
     rw [IsScalarTower.algebraMap_apply K B (ResidueField B), ← IsScalarTower.algebraMap_apply R K B,
       ← IsScalarTower.algebraMap_apply]
-  haveI : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
-  haveI : CharZero K := IsFractionRing.charZero_of_isFractionRing R
-  haveI : Algebra.FormallySmooth K (ResidueField B) := formallySmooth_of_charZero K _
-  haveI : Algebra.FormallyEtale R K := .of_isLocalization (nonZeroDivisors R)
+  have : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
+  have : CharZero K := IsFractionRing.charZero_of_isFractionRing R
+  have : Algebra.FormallySmooth K (ResidueField B) := formallySmooth_of_charZero K _
+  have : Algebra.FormallyEtale R K := .of_isLocalization (nonZeroDivisors R)
   exact .comp R K (ResidueField B)
 
 theorem exists_derivation_extending :
     ∀ (R B : Type) [CommRing R] [IsDomain R] [Algebra ℚ R] [CommRing B] [IsLocalRing B] [Algebra R B], (∀ r : R, r ≠ 0 → IsUnit (algebraMap R B r)) → ∀ (lam : CotangentSpace B →ₗ[ResidueField B] ResidueField B), ∃ δ : Derivation R B (ResidueField B), ∀ y (hy : y ∈ maximalIdeal B), δ y = lam ((maximalIdeal B).toCotangent ⟨y, hy⟩) := by
   intro R B _ _ _ _ _ _ hu lam
-  haveI := formallySmooth_residueField R B hu
+  have := formallySmooth_residueField R B hu
   obtain ⟨D, hmul, hD⟩ := exists_derivation_cotangent R B
   have hsm : ∀ (a : B) (v : CotangentSpace B), lam (a • v) = a • lam v := fun a v => by
     rw [← algebraMap_smul (ResidueField B) a v, map_smul, algebraMap_smul]
@@ -373,7 +373,7 @@ open GlobalTheory.TangentOrigin
 
 theorem stalk_derivation_span : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Algebra ℚ R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G → ∀ (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G)) (dd : Fin n → Fld G.left), (∀ a, IsInv G (v a) (dd a)) → ∀ (p : G.left), G.hom.base p = genericPoint (Sp R) → ∀ (D : Fin n → G.left.presheaf.stalk p → G.left.presheaf.stalk p), (∀ a (W : G.left.Opens) (h : p ∈ W) (g : Γ(G.left, W)), D a (G.left.presheaf.germ W p h g) = G.left.presheaf.germ W p h (dd a W g)) → ∀ (δ : G.left.presheaf.stalk p → ResidueField (G.left.presheaf.stalk p)), (∀ u w, δ (u + w) = δ u + δ w) → (∀ u w, δ (u * w) = residue _ u * δ w + residue _ w * δ u) → (∀ r : R, δ ((G.left.presheaf.germ ⊤ p trivial).hom ((G.hom.appTop).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r))) = 0) → ∃ c : Fin n → G.left.presheaf.stalk p, ∀ y, δ y = residue _ (∑ a, c a * D a y) := by
   intro R _ _ _ _ G _ _ hsa n v dd hinv p _ D hD δ hadd hmul hbase
-  haveI : Smooth G.hom := hsa.smooth
+  have : Smooth G.hom := hsa.smooth
   have hv := GlobalTheory.VertCoeffRing.isLieBasis_tvE v
   have hdd := fun (B : Type) [CommRing B] [Algebra R B] e he z O h =>
     GlobalTheory.VertCoeffRing.evalPt_lieExp (fun a => v a) dd hinv B e he z O h
@@ -390,7 +390,7 @@ theorem stalk_derivation_span : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoet
         ∀ f, δ (G.left.presheaf.germ V p hpV f) = ∑ a, c a * ψ V hpV (dd a V f) := by
     intro V hpV hV
     obtain ⟨t, ht, et⟩ := exists_evalPt_eq hV (ψ V hpV)
-    letI : Algebra R (ResidueField (G.left.presheaf.stalk p)) := (Spec.preimage (t ≫ G.hom)).hom.toAlgebra
+    let : Algebra R (ResidueField (G.left.presheaf.stalk p)) := (Spec.preimage (t ≫ G.hom)).hom.toAlgebra
     let y : ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) (ResidueField (G.left.presheaf.stalk p)) ⟶ G :=
       Over.homMk t (Spec.map_preimage (t ≫ G.hom)).symm
     have h : ⊤ ≤ y.left ⁻¹ᵁ V := ht
@@ -431,7 +431,7 @@ theorem stalk_derivation_span : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoet
   obtain ⟨c₀, hc₀, hu₀⟩ := loc V₀ hpV₀ hV₀
   choose c hc using fun a => residue_surjective (R := G.left.presheaf.stalk p) (c₀ a)
   refine ⟨c, fun y => ?_⟩
-  obtain ⟨W, hpW, g, rfl⟩ := TopCat.Presheaf.germ_exist _ y
+  obtain ⟨W, hpW, g, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ y
   obtain ⟨V', hV', hpV', hle⟩ := exists_isAffineOpen_mem_and_subset (show p ∈ V₀ ⊓ W from ⟨hpV₀, hpW⟩)
   obtain ⟨c', hc', -⟩ := loc V' hpV' hV'
   have hcc : c' = c₀ := hu₀ c' (down V₀ V' (hle.trans inf_le_left) hpV₀ hpV' c' hc')
@@ -572,7 +572,7 @@ theorem exists_stalkDer (Z : Scheme) (d : Fld Z) (hd : IsField ⊤ d) (z : Z) :
     obtain ⟨V, hV, iU, iV, e'⟩ := TopCat.Presheaf.germ_eq Z.presheaf z h h' g g' e
     rw [← TopCat.Presheaf.germ_res_apply Z.presheaf iU z hV,
       ← TopCat.Presheaf.germ_res_apply Z.presheaf iV z hV, ← hres', ← hres', e']
-  choose W hW g hg using fun t : Z.presheaf.stalk z => TopCat.Presheaf.germ_exist Z.presheaf t
+  choose W hW g hg using fun t : Z.presheaf.stalk z => TopCat.Presheaf.exists_germ_eq Z.presheaf t
   have hD : ∀ (W₀ : Z.Opens) (h : z ∈ W₀) (g₀ : Γ(Z, W₀)),
       Z.presheaf.germ (W (Z.presheaf.germ W₀ z h g₀)) z (hW _) (d _ (g (Z.presheaf.germ W₀ z h g₀)))
         = Z.presheaf.germ W₀ z h (d W₀ g₀) := fun W₀ h g₀ => wd _ _ _ _ _ _ (hg _)
@@ -687,7 +687,7 @@ theorem span_of_parts (h1 : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetheri
   let ψ : R →+* G.left.presheaf.stalk p :=
     (G.left.presheaf.germ ⊤ p trivial).hom.comp
       ((G.hom.appTop).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
-  letI : Algebra R (G.left.presheaf.stalk p) := ψ.toAlgebra
+  let : Algebra R (G.left.presheaf.stalk p) := ψ.toAlgebra
   obtain ⟨δ, hδ⟩ := h2 R (G.left.presheaf.stalk p) (fun r hr => isUnit_baseGerm R G p hp r hr) lam
   obtain ⟨c, hc⟩ := h1 R G hSA n v dd hinv p hp D hD δ (fun u w => map_add δ u w)
     (fun u w => by simp only [Derivation.leibniz, Algebra.smul_def, IsLocalRing.ResidueField.algebraMap_eq]) (fun r => δ.map_algebraMap r)
@@ -695,10 +695,10 @@ theorem span_of_parts (h1 : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetheri
 
 theorem eq_zero_of_euler (heart : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Algebra ℚ R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G → ∀ (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G)) (dd : Fin n → Fld G.left), (∀ a, IsInv G (v a) (dd a)) → ∀ (p : G.left), G.hom.base p = genericPoint (Sp R) → ∀ (D : Fin n → G.left.presheaf.stalk p → G.left.presheaf.stalk p), (∀ a (W : G.left.Opens) (h : p ∈ W) (g : Γ(G.left, W)), D a (G.left.presheaf.germ W p h g) = G.left.presheaf.germ W p h (dd a W g)) → ∃ e : Fin n → G.left.presheaf.stalk p, (∀ a, e a ∈ maximalIdeal (G.left.presheaf.stalk p)) ∧ ∀ y ∈ maximalIdeal (G.left.presheaf.stalk p), y - ∑ a, e a * D a y ∈ maximalIdeal (G.left.presheaf.stalk p) ^ 2) : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Algebra ℚ R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G → ∀ (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G)) (dd : Fin n → Fld G.left), (∀ a, IsInv G (v a) (dd a)) → ∀ (Ω : Type) [CommRing Ω] [IsDomain Ω] (φ : R →+* Ω), Function.Injective φ → ∀ (x : Sp Ω ⟶ G.left), x ≫ G.hom = spMap φ → ∀ (O : G.left.Opens) (f : Γ(G.left, O)), ⊤ ≤ x ⁻¹ᵁ O → (∀ l : List (Fin n), valR x O (l.foldr (fun a g => dd a O g) f) = 0) → f = 0 := by
   intro R _ _ _ _ G _ _ hSA n v dd hinv Ω _ _ φ hφ x hx O f hO hf
-  haveI : ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G := hSA
-  haveI : AlgebraicGeometry.IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
-  haveI : Smooth G.hom := hSA.smooth
-  haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
+  have : ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G := hSA
+  have : AlgebraicGeometry.IsIntegral G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian G
+  have : Smooth G.hom := hSA.smooth
+  have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
   set q₀ := genericPoint (Sp Ω)
   set p := x.base q₀
   have hp : p ∈ O := hO (Set.mem_univ q₀)
@@ -727,9 +727,9 @@ theorem eq_zero_of_euler (heart : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNo
 theorem eq_zero_of_invDer_vanish : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Algebra ℚ R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G → ∀ (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G)) (dd : Fin n → Fld G.left), (∀ a, IsInv G (v a) (dd a)) → ∀ (Ω : Type) [CommRing Ω] [IsDomain Ω] (φ : R →+* Ω), Function.Injective φ → ∀ (x : Sp Ω ⟶ G.left), x ≫ G.hom = spMap φ → ∀ (O : G.left.Opens) (f : Γ(G.left, O)), ⊤ ≤ x ⁻¹ᵁ O → (∀ l : List (Fin n), valR x O (l.foldr (fun a g => dd a O g) f) = 0) → f = 0 := by
   refine eq_zero_of_euler ?_
   intro R _ _ _ _ G _ _ hSA n v dd hinv p hp D hD
-  haveI : ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G := hSA
-  haveI : Smooth G.hom := hSA.smooth
-  haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
+  have : ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G := hSA
+  have : Smooth G.hom := hSA.smooth
+  have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
   exact euler_of_span _ n D (span_of_parts GlobalTheory.T.stalkDerivation_mem_span_invariant_semiAbelian _root_.GlobalTheory.ConormalDer.exists_derivation_extending R G hSA n v dd hinv p hp D hD)
 
 end GlobalTheory.InvJet
@@ -876,7 +876,7 @@ theorem epsHom_comp {R Ω : Type} [CommRing R] [CommRing Ω] (φ : R →+* Ω) (
     (hδφ : ∀ r, δ (φ r) = 0) :
     letI : Algebra R Ω := φ.toAlgebra
     (epsHom δ).comp φ = algebraMap R (DualNumber Ω) := by
-  letI : Algebra R Ω := φ.toAlgebra
+  let : Algebra R Ω := φ.toAlgebra
   refine RingHom.ext fun r => TrivSqZeroExt.ext ?_ ?_
   · show (epsHom δ (φ r)).fst = (algebraMap R (DualNumber Ω) r).fst
     simp [epsHom, TrivSqZeroExt.algebraMap_eq_inl']
@@ -886,12 +886,12 @@ theorem epsHom_comp {R Ω : Type} [CommRing R] [CommRing Ω] (φ : R →+* Ω) (
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t), letI := H.starRing; ∀ (Y : Ray P.oD) (n : ℕ) (vH : Fin n → TanM (𝟙 (Sp R)) Y.H) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (vH a) (dd a)) → ∀ (v' : Fin n → TanM (𝟙 (Sp R)) t.G), (∀ a, GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ _ (tv (vH a))) (tv (v' a))) → ∀ (dd' : Fin n → Fld t.G.left), (∀ a, IsInv t.G (v' a) (dd' a)) → ∀ (Ω : Type) [CommRing Ω] [IsDomain Ω] [IsLocalRing Ω] (φ : R →+* Ω) (x : Sp Ω ⟶ Y.H.left) (δ : Fin n → Derivation ℤ Ω Ω), IsAdicComplete ((maximalIdeal R).map φ) Ω → ∀ (hx : x ≫ Y.H.hom = spMap φ), (∀ a r, δ a (φ r) = 0) → (∀ a O f, ⊤ ≤ x ⁻¹ᵁ O → valR x O (dd a O f) = δ a (valR x O f)) → ∀ (x' : Sp Ω ⟶ t.G.left) (hx' : x' ≫ t.G.hom = spMap φ), GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ (Over.mk (spMap φ)) (Over.homMk x hx)) (Over.homMk x' hx') → ∀ a O f, ⊤ ≤ x' ⁻¹ᵁ O → valR x' O (dd' a O f) = δ a (valR x' O f) := by
   intro E _ _ _ H R _ _ _ _ _ _ t P
-  letI := H.starRing
+  let := H.starRing
   intro Y n vH dd hdd v' hv' dd' hdd' Ω _ _ _ φ x δ hcomp hx hδφ hδ x' hx' hxx' a O f hO
-  letI : Algebra R Ω := φ.toAlgebra
+  let : Algebra R Ω := φ.toAlgebra
   have hε : (inr 1 : DualNumber Ω) * inr 1 = 0 := TrivSqZeroExt.inr_mul_inr _ _ _
-  haveI := isLocalRing_dual Ω
-  haveI : IsHausdorff ((maximalIdeal R).map (algebraMap R (DualNumber Ω))) (DualNumber Ω) :=
+  have := isLocalRing_dual Ω
+  have : IsHausdorff ((maximalIdeal R).map (algebraMap R (DualNumber Ω))) (DualNumber Ω) :=
     isHausdorff_dual φ (maximalIdeal R)
   let jη : epsR R ⟶ overAt (𝟙 (Sp R)) (DualNumber R) := Over.homMk (𝟙 _) (by simp)
   obtain ⟨u₀, hu₀, hut₀⟩ := exists_tangent_lift Y.H (vH a)
@@ -997,9 +997,9 @@ namespace GlobalTheory.FormalPointG
 
 theorem exists_point_sameDerivations : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (m : ℕ) (tt : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre tt gam → (∀ i, tt i ≠ 0) → (∀ p : Sp R, p ∈ abLocus t.G ↔ ∏ i, tt i ∉ p.asIdeal) → letI := H.starRing; ∀ (Y : Ray P.oD) (n : ℕ) (vH : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.H)) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (vH a) (dd a)) → ∀ (v' : Fin n → TanM (𝟙 (Sp R)) t.G), (∀ a, GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ _ (tv (vH a))) (tv (v' a))) → ∀ (Ω : Type) [CommRing Ω] [IsDomain Ω] [IsLocalRing Ω] (φ : R →+* Ω) (x : Sp Ω ⟶ Y.H.left) (δ : Fin n → Derivation ℤ Ω Ω), IsAdicComplete ((maximalIdeal R).map φ) Ω → Function.Injective φ → ∀ (hx : x ≫ Y.H.hom = spMap φ), (∀ a r, δ a (φ r) = 0) → (∀ a O f, ⊤ ≤ x ⁻¹ᵁ O → valR x O (dd a O f) = δ a (valR x O f)) → ∃ (x' : Sp Ω ⟶ t.G.left) (hx' : x' ≫ t.G.hom = spMap φ) (dd' : Fin n → Fld t.G.left), (∀ a, IsInv t.G (v' a) (dd' a)) ∧ (∀ a O f, ⊤ ≤ x' ⁻¹ᵁ O → valR x' O (dd' a O f) = δ a (valR x' O f)) ∧ (∀ O (f : Γ(t.G.left, O)), ⊤ ≤ x' ⁻¹ᵁ O → valR x' O f = 0 → f = 0) ∧ GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ (Over.mk (spMap φ)) (Over.homMk x hx)) (Over.homMk x' hx') := by
   intro E _ _ _ H R _ _ _ _ _ _ t P m tt gam _ _ _
-  letI := H.starRing
+  let := H.starRing
   intro Y n vH dd hdd v' hv' Ω _ _ _ φ x δ hΩ hφ hx hδ hxd
-  haveI := hΩ
+  have := hΩ
   obtain ⟨x', hx'p, -⟩ :=
     GlobalTheory.FormalPoint.existsUnique_isPointOf P.U.toUnifPre (Y.Φ (Over.mk (spMap φ)) (Over.homMk x hx))
   choose dd' hdd' using fun a => GlobalTheory.T.exists_invariant_vectorField_semiAbelian_triple_affine E H R t (v' a)
@@ -1086,15 +1086,15 @@ theorem isIntegral_of_isGt (R : Type) [CommRing R] [IsDomain R] (E : SplitExt (S
     IsIntegral G.left := by
   obtain ⟨d⟩ := hG
   have hB := E.isAbelian
-  haveI : Smooth E.B.hom := hB.smooth
-  haveI : GeometricallyConnected E.B.hom := hB.geomConnected
+  have : Smooth E.B.hom := hB.smooth
+  have : GeometricallyConnected E.B.hom := hB.geomConnected
   have hSne : Nonempty (Spec (CommRingCat.of R)) := inferInstance
   have hBne : Nonempty E.B.left := ⟨(η[E.B] : 𝟙_ _ ⟶ E.B).left (show (𝟙_ (Over _)).left from hSne.some)⟩
-  haveI : IrreducibleSpace E.B.left :=
+  have : IrreducibleSpace E.B.left :=
     GlobalTheory.irreducibleSpace_of_smooth_of_geometricallyConnected_domain R E.B ‹_› ‹_› hBne
-  haveI : IsReduced E.B.left := GlobalTheory.isReduced_of_smooth_of_isReduced E.B.hom
-  haveI : IsIntegral E.B.left := isIntegral_of_irreducibleSpace_of_isReduced _
-  haveI : IsReduced G.left := GlobalTheory.isReduced_of_smooth_of_isReduced G.hom
+  have : IsReduced E.B.left := GlobalTheory.isReduced_of_smooth_of_isReduced E.B.hom
+  have : IsIntegral E.B.left := isIntegral_of_irreducibleSpace_of_isReduced _
+  have : IsReduced G.left := GlobalTheory.isReduced_of_smooth_of_isReduced G.hom
   obtain ⟨b⟩ := hBne
   have hk : ∀ k, ∃ i, b ∈ (E.O (E.basis k)).L.U i := fun k => by
     have hb : b ∈ (⊤ : E.B.left.Opens) := trivial
@@ -1104,25 +1104,25 @@ theorem isIntegral_of_isGt (R : Type) [CommRing R] [IsDomain R] (E : SplitExt (S
   have hbj : b ∈ E.chart j := mem_chart_of_mem E j b hj
   obtain ⟨V, hV, hbV, hVj⟩ := (Opens.isBasis_iff_nbhd.mp E.B.left.isBasis_affineOpens) hbj
   have hbV' : b ∈ V := hbV
-  haveI : Nonempty V := ⟨⟨b, hbV'⟩⟩
-  haveI := d.q_affine
-  haveI := d.q_flat
+  have : Nonempty V := ⟨⟨b, hbV'⟩⟩
+  have := d.q_affine
+  have := d.q_flat
   have hsurj := d.q_surjective
   set W : G.left.Opens := d.q.left ⁻¹ᵁ V with hWdef
   have hV : IsAffineOpen V := hV
   have hW : IsAffineOpen W := hV.preimage d.q.left
   have hbij := d.coord j V hV hVj
-  haveI : IsDomain Γ(G.left, W) :=
+  have : IsDomain Γ(G.left, W) :=
     Function.Injective.isDomain (RingEquiv.ofBijective _ hbij).symm.toRingHom
       (RingEquiv.ofBijective _ hbij).symm.injective
   obtain ⟨g, hg⟩ := hsurj.surj b
   have hgW : g ∈ W := by show d.q.left g ∈ V; rw [hg]; exact hbV'
-  haveI : Nonempty W := ⟨⟨g, hgW⟩⟩
-  haveI : IsAffine W := hW
-  haveI : IsDomain Γ(W, ⊤) :=
+  have : Nonempty W := ⟨⟨g, hgW⟩⟩
+  have : IsAffine W := hW
+  have : IsDomain Γ(W, ⊤) :=
     Function.Injective.isDomain (W.topIso).commRingCatIsoToRingEquiv.toRingHom
       (W.topIso).commRingCatIsoToRingEquiv.injective
-  haveI : IsIntegral W := isIntegral_of_isAffine_of_isDomain W
+  have : IsIntegral W := isIntegral_of_isAffine_of_isDomain W
   have hirrW : IsIrreducible (W : Set G.left) := by
     have hI := (IrreducibleSpace.isIrreducible_univ W).image (⇑W.ι) (Scheme.Hom.continuous _).continuousOn
     rwa [Set.image_univ, Scheme.Opens.range_ι] at hI
@@ -1133,7 +1133,7 @@ theorem isIntegral_of_isGt (R : Type) [CommRing R] [IsDomain R] (E : SplitExt (S
     obtain ⟨z', hz', e⟩ := Flat.generalizingMap d.q.left (genericPoint_specializes (d.q.left z))
     have hz'W : z' ∈ (W : Set G.left) := by show d.q.left z' ∈ V; rw [e]; exact hη
     exact closure_mono (Set.singleton_subset_iff.2 hz'W) (specializes_iff_mem_closure.mp hz')
-  haveI : IrreducibleSpace G.left := by
+  have : IrreducibleSpace G.left := by
     rw [irreducibleSpace_def]
     have := hirrW.closure
     rwa [hcl] at this
@@ -1238,7 +1238,7 @@ theorem isKS_top_of_basicOpen : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       change (spMap φ) x ∈ (isAffineOpen_top (Sp R)).fromSpec ⁻¹ᵁ (Sp R).basicOpen s at h2
       rw [(isAffineOpen_top (Sp R)).fromSpec_preimage_basicOpen s] at h2
       exact h2
-    letI : Algebra Γ(Sp R, ⊤) Γ(Sp R, Wa.1) := ((Sp R).presheaf.map (homOfLE hle).op).hom.toAlgebra
+    let : Algebra Γ(Sp R, ⊤) Γ(Sp R, Wa.1) := ((Sp R).presheaf.map (homOfLE hle).op).hom.toAlgebra
     have hl : IsLocalization.Away s Γ(Sp R, Wa.1) :=
       (isAffineOpen_top (Sp R)).isLocalization_of_eq_basicOpen s (homOfLE hle) rfl
     obtain ⟨ψ, hψ⟩ : ∃ ψ : Γ(Sp R, Wa.1) →+* S, ψ.comp ((Sp R).presheaf.map (homOfLE hle).op).hom = φ :=
@@ -1305,7 +1305,7 @@ namespace GlobalTheory.TanRayBasis
 
 theorem vBasis_of_isPointOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t), letI := H.starRing; ∀ (Y : Ray P.oD) (n : ℕ) (vH : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.H)) (v' : Fin n → TanM (𝟙 (Sp R)) t.G), (∀ a, GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ _ (tv (vH a))) (tv (v' a))) → ∃ b : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) t.G), ⇑b = v' := by
   intro E _ _ _ H R _ _ _ _ _ _ t P
-  letI := H.starRing
+  let := H.starRing
   intro Y n vH v' hv
   obtain ⟨b, hb⟩ := GlobalTheory.TanRay.tanBasis_of_isPointOf E H R t P Y n vH v' hv
   exact ⟨b, funext hb⟩
@@ -1413,7 +1413,7 @@ theorem exists_der_frac (Ω : Type) [CommRing Ω] [IsDomain Ω] (δ : Derivation
 
 theorem isKS_of_heat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (m : ℕ) (tt : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre tt gam → (∀ i, tt i ≠ 0) → (∀ p : Sp R, p ∈ abLocus t.G ↔ ∏ i, tt i ∉ p.asIdeal) → letI := H.starRing; ∀ (Y : Ray P.oD) (n : ℕ) (vH : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.H)) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (vH a) (dd a)) → ∀ (v' : Fin n → TanM (𝟙 (Sp R)) t.G), (∀ a, GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ _ (tv (vH a))) (tv (v' a))) → ∀ (D : Derivation ℤ R R) (h : Heat Y.H Y.q.left P.D.toPre.P.L dd ⇑D), IsBasic Y h → HasDefect Y h (fun _ _ _ => 0) → IsKS t ((Sp R).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))) (⟨⊤, isAffineOpen_top _⟩ : (Sp R).affineOpens) (fun a => spMap (dualMap (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom) ≫ (tv (v' a)).left) (fun r => (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (D ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom r))) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom.mapMatrix h.Θ) := by
   intro E _ _ _ H R _ _ _ _ _ _ t P m tt gam hmon htt hab Y n vH dd hdd v' hv' D h hB hDef
-  letI := H.starRing
+  let := H.starRing
   have hsm : Smooth Y.H.hom := GlobalTheory.RayTan.smooth_H R _ _ _ Y
   have hint : IsIntegral Y.H.left := GlobalTheory.T.isIntegral_raynaudExtension_noetherian_local R _ _ _ Y
   obtain ⟨i0, hi0⟩ : ∃ i0, ⊤ ≤ (η[Y.H]).left ⁻¹ᵁ h.W i0 := by
@@ -1451,7 +1451,7 @@ theorem isKS_of_heat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     ((e.inv.hom.toAddMonoidHom.comp ((D : R →ₗ[ℤ] R).toAddMonoidHom.comp e.hom.hom.toAddMonoidHom)).toIntLinearMap)
     (fun a a' => by
       simp [Derivation.leibniz, smul_eq_mul])
-  haveI := (isAffineOpen_top (Sp R)).isLocalization_basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))
+  have := (isAffineOpen_top (Sp R)).isLocalization_basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))
   obtain ⟨DV, hDV⟩ := exists_der_ext (Submonoid.powers ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))) D₀ (S := Γ(Sp R, (Sp R).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))))
   have hDV' : ∀ r, DV (((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le (U := ⊤) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i)))).op).hom (e.inv.hom r)) = ((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le (U := ⊤) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i)))).op).hom (e.inv.hom (D r)) := fun r => by
     show DV (algebraMap _ _ (e.inv.hom r)) = algebraMap _ _ (e.inv.hom (D r))

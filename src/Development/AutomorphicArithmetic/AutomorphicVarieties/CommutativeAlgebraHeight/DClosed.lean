@@ -55,7 +55,7 @@ private theorem map_nat {n : ℕ} {A A' G B B' : Type} [CommRing A] [CommRing A'
     [CommRing B] [CommRing B'] [Algebra A B] [Algebra A' B'] (f : A →+* A') (φ : B →+* B')
     (hφ : ∀ a, φ (algebraMap A B a) = algebraMap A' B' (f a)) (x : MonoidAlgebra B G) :
     (D.map f).D B' (MonoidAlgebra.mapRingHom G φ x) = φ (D.D B x) := by
-  letI : Algebra A B' := ((algebraMap A' B').comp f).toAlgebra
+  let : Algebra A B' := ((algebraMap A' B').comp f).toAlgebra
   exact D.nat B B' { φ with commutes' := hφ } x
 
 private theorem mapR_comp {A B C G : Type} [CommRing A] [CommRing B] [CommRing C] [Group G]
@@ -67,7 +67,7 @@ private theorem kills_map {n : ℕ} {A A' G : Type} [CommRing A] [CommRing A'] [
     (f : A →+* A') (z : MonoidAlgebra A G) (hz : D.Kills z) :
     (D.map f).Kills (MonoidAlgebra.mapRingHom G f z) := by
   intro B _ _ h
-  letI : Algebra A B := ((algebraMap A' B).comp f).toAlgebra
+  let : Algebra A B := ((algebraMap A' B).comp f).toAlgebra
   rw [mapR_comp]
   exact hz B h
 

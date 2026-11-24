@@ -122,10 +122,10 @@ private theorem upl_normal (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
 
 private theorem cycMod_one {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [hl : Fact l.Prime] {ζ : Ω}
     (hζ : IsPrimitiveRoot ζ l) {s : G ℚ Ω} (hs : s ζ = ζ) : cycMod ℚ Ω l 1 s = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   unfold cycMod cycZ
   ext
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Units.val_one]
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Units.val_one]
   change PadicInt.toZModPow 1 ((cyclotomicCharacter Ω l) ((MulSemiringAction.toRingAut (G ℚ Ω) Ω) s)).val = 1
   rw [cyclotomicCharacter.toZModPow]
   symm
@@ -146,7 +146,7 @@ private theorem val_smul {Ω : Type} [Field Ω] [CharZero Ω] (g : G ℚ Ω) (B 
   by_cases hn : (n : Ω) = 0
   · rw [hn]
     generalize g • B = C
-    haveI : Nontrivial C.ValueGroup := ValuationRing.instNontrivialValueGroup C Ω
+    have : Nontrivial C.ValueGroup := ValuationRing.instNontrivialValueGroup C Ω
     rw [map_zero]
     exact zero_lt_one
   rw [key _ _ hn] at h ⊢
@@ -158,9 +158,9 @@ theorem UpperTheory.V.Pr.degEq :
     UpperTheory.V.Pr.DegEq := by
   unfold UpperTheory.V.Pr.DegEq
   intro Ω _ _ _ l _ ι c _ N _ e ψ η σ g₁ B M hL L _ _ _ _ _ Φ k a
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAbelianGalois ℚ L := k.ab
-  haveI : (upl Ω L).Normal := upl_normal Ω L
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAbelianGalois ℚ L := k.ab
+  have : (upl Ω L).Normal := upl_normal Ω L
   refine ⟨?_, ?_⟩
   · have hgal : galOf ℚ (W.Lp L) Ω = upl Ω L := by
       ext s

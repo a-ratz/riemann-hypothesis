@@ -210,7 +210,7 @@ open GlobalTheory.CechPic GlobalTheory.AbDual GlobalTheory.DualCon
 theorem exists_fam_finiteType : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A], IsAbelianScheme A → ∀ (T : Over (Sp R)) [IsAffine T.left] (N : LB (A ⊗ T).left), Fam A N → ∃ (T₀ : Over (Sp R)) (h : T ⟶ T₀) (N₀ : LB (A ⊗ T₀).left), IsAffine T₀.left ∧ LocallyOfFiniteType T₀.hom ∧ Fam A N₀ ∧ Same A N N₀ (𝟙 T) h := by
   intro R _ _ A _ hA T _ N hF
   have : IsProper A.hom := hA.proper
-  letI : Algebra R Γ(T.left, ⊤) := ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ T.hom.appTop).hom.toAlgebra
+  let : Algebra R Γ(T.left, ⊤) := ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ T.hom.appTop).hom.toAlgebra
   let e : T ≅ spO R Γ(T.left, ⊤) := Over.isoMk T.left.isoSpec (by
     show T.left.isoSpec.hom ≫ Spec.map (CommRingCat.ofHom
       ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ T.hom.appTop).hom) = T.hom

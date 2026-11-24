@@ -81,7 +81,7 @@ theorem integral_le_of_disjoint_translates {ι : Type} [Fintype ι]
     (f : EuclideanSpace ℂ ι → ℝ) (hf0 : ∀ u, 0 ≤ f u) (hfc : Continuous f)
     (hf : ∀ (y : A) u, f (y +ᵥ u) = f u) (hi : IntegrableOn f D) :
     ∫ u in t, f u ≤ ∫ u in D, f u := by
-  haveI : VAddInvariantMeasure A (EuclideanSpace ℂ ι) volume :=
+  have : VAddInvariantMeasure A (EuclideanSpace ℂ ι) volume :=
     ⟨fun g s _ => measure_preimage_add volume (g : EuclideanSpace ℂ ι) s⟩
   rw [integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall hf0) hfc.aestronglyMeasurable,
     integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall hf0) hfc.aestronglyMeasurable]
@@ -148,7 +148,7 @@ theorem sup_le_mean_square : ∀ (ι : Type) [Fintype ι] (A : AddSubgroup (Eucl
     have h3 : ‖q - p‖ ^ 2 < (2 * r) ^ 2 := by gcongr
     have h4 : (2 * r) ^ 2 = 1 / v := by rw [mul_pow, hr2]; field_simp; norm_num
     linarith
-  haveI : Countable A := by
+  have : Countable A := by
     rw [← Set.countable_univ_iff]
     refine Set.PairwiseDisjoint.countable_of_isOpen
       (s := fun y : A => y +ᵥ Metric.ball z r) (fun a _ b _ h => hdisj a b h) ?_ ?_
@@ -194,7 +194,7 @@ theorem sup_le_mean_square : ∀ (ι : Type) [Fintype ι] (A : AddSubgroup (Eucl
     have h4 : ‖φ u‖ ^ 2 * Real.exp (-Real.pi * ‖z‖ ^ 2)
         = Real.exp (Real.pi * ‖u - z‖ ^ 2) * N u := by
       simp only [hφ, hN]
-      rw [norm_mul, Complex.norm_exp, mul_pow, ← Real.exp_nat_mul, mul_assoc, ← Real.exp_add,
+      rw [norm_mul, Complex.norm_exp, mul_pow, ← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add,
         mul_left_comm, ← Real.exp_add, h2]
       congr 2
       simp only [innerSL_apply_apply, neg_mul, Complex.neg_re, Complex.re_ofReal_mul]

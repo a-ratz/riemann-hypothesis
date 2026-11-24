@@ -295,11 +295,11 @@ theorem exists_conj_integral {O K Γ : Type} [CommRing O] [IsDomain O] [IsDiscre
     refine Submodule.subset_span ⟨(1, j), ?_⟩
     funext i
     simp [col, Matrix.one_apply, Pi.single_apply]
-  haveI : Λ.IsFullLattice K := { toIsLattice := Submodule.IsLattice.of_fg K hfg, span_eq_top := htop }
+  have : Λ.IsFullLattice K := { toIsLattice := Submodule.IsLattice.of_fg K hfg, span_eq_top := htop }
   have := Submodule.IsLattice.finite K Λ
   have := Submodule.IsLattice.free K Λ
-  haveI : Module.Free O Λ := Submodule.IsLattice.free K Λ
-  haveI : Module.Finite O Λ := Module.Finite.iff_fg.2 hfg
+  have : Module.Free O Λ := Submodule.IsLattice.free K Λ
+  have : Module.Finite O Λ := Module.Finite.iff_fg.2 hfg
   have hrk : Module.finrank O Λ = n := by
     rw [((Submodule.IsFullLattice.finrank_eq K Λ).trans (Module.finrank_fintype_fun_eq_card K)), Fintype.card_fin]
   let b : Module.Basis (Fin n) O Λ := Module.finBasisOfFinrankEq O Λ hrk

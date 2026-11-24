@@ -139,15 +139,15 @@ theorem rk_fd_letter₂ (hS : Formalism.MainNotions.RamifiedCoefficientChains.Se
     FiniteDimensional LL ↥(DcrisL PD T₂.ρ (W.emb i)) := by
   have hS' := hS
   obtain ⟨-, -, -, -, -, ⟨-, hC2, -⟩, -, -, -, -⟩ := hS'
-  haveI := T₂.fdim
-  haveI := PD.finK₀
+  have := T₂.fdim
+  have := PD.finK₀
   have hle : DcrisL PD T₂.ρ (W.emb i) ≤ Dcris PD T₂.ρ := by
     unfold Formalism.WeaklyAdmissibleFiltrations.DcrisL
     exact inf_le_left
   suffices h : FiniteDimensional LL ↥(Dcris PD T₂.ρ) from
     Module.Finite.of_injective (Submodule.inclusion hle) (Submodule.inclusion_injective hle)
   rcases Nat.eq_zero_or_pos (finrank LL T₂.V) with h0 | h0
-  · haveI : Subsingleton T₂.V := Module.finrank_zero_iff.mp h0
+  · have : Subsingleton T₂.V := Module.finrank_zero_iff.mp h0
     infer_instance
   · apply Module.finite_of_finrank_pos
     unfold Formalism.WeaklyAdmissibleFiltrations.IsCrys at hC2
@@ -172,7 +172,7 @@ theorem rk_multV_nonneg (T : LocLat G Qp LL O) (τ : K →ₐ[Qp] LL) [FiniteDim
   have h0 : FildR PD T.ρ τ a ≤ DdRE PD T.ρ τ := by
     unfold Formalism.WeaklyAdmissibleFiltrations.FildR
     exact inf_le_left
-  haveI hfin : FiniteDimensional LL ↥(FildR PD T.ρ τ a) :=
+  have hfin : FiniteDimensional LL ↥(FildR PD T.ρ τ a) :=
     Module.Finite.of_injective (Submodule.inclusion h0) (Submodule.inclusion_injective h0)
   have hr : finrank LL ↥(FildR PD T.ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD T.ρ τ a) :=
     LinearMap.finrank_le_finrank_of_injective (Submodule.inclusion_injective hle)
@@ -192,7 +192,7 @@ theorem rk_corank₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.Dcris
   have hsum := hS.2.2.2.2.2.2.2.1 i τ hτ
   obtain ⟨-, hτ'⟩ := hQ hK T₂.V T₂.ρ h2
   obtain ⟨hfd, -, hF⟩ := hτ' τ
-  haveI := hfd
+  have := hfd
   have hrk : ∀ a : ℤ, finrank LL ↥(FilCris PD T₂.ρ a ⊓ DcrisL PD T₂.ρ (W.emb i)) =
       finrank LL ↥(FildR PD T₂.ρ τ a) := fun a => by
     rw [hF a, hτ]
@@ -215,7 +215,7 @@ theorem rk_corank₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.Dcris
         apply rk_multV_of_not_jump
         intro hj
         have hw := hwin a hj
-        simp only [Formalism.MainNotions.RamifiedCoefficientChains.JumpWinS, hodd, if_false, Set.mem_union, Set.mem_Icc] at hw
+        simp only [Formalism.MainNotions.RamifiedCoefficientChains.JumpWinS, hodd, ite_false, Set.mem_union, Set.mem_Icc] at hw
         simp only [Finset.mem_filter, Finset.mem_Ico, Finset.mem_Icc, not_and] at ha hna
         omega
     _ ≤ ∑ a ∈ Finset.Icc (-(η : ℤ)) η, multV PD T₂.ρ τ a :=
@@ -228,7 +228,7 @@ theorem rk_corankQ₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.Dcri
     (hi : (i.val + d) % 2 = 1) :
     finrank LL ↥((DcrisL PD T₂.ρ (W.emb i)).map (FilCris PD T₂.ρ (b i : ℤ)).mkQ) ≤ m := by
   have h := rk_corank₂ W hE hC hQ hS i hi
-  haveI := rk_fd_letter₂ W hS i
+  have := rk_fd_letter₂ W hS i
   set D := DcrisL PD T₂.ρ (W.emb i) with hD
   set Fl := FilCris PD T₂.ρ (b i : ℤ) with hFl
   have hrn := LinearMap.finrank_range_add_finrank_ker (Fl.mkQ ∘ₗ D.subtype)
@@ -247,7 +247,7 @@ theorem rk_corank_zero₂ (hE : Formalism.MainNotions.RamifiedCoefficientChains.
     DcrisL PD T₂.ρ (W.emb i) ≤ FilCris PD T₂.ρ (b i : ℤ) := by
   have h := rk_corankQ₂ W hE hC hQ hS i hi
   subst hm
-  haveI := rk_fd_letter₂ W hS i
+  have := rk_fd_letter₂ W hS i
   have hbot : (DcrisL PD T₂.ρ (W.emb i)).map (FilCris PD T₂.ρ (b i : ℤ)).mkQ = ⊥ :=
     Submodule.finrank_eq_zero.mp (by omega)
   intro x hx

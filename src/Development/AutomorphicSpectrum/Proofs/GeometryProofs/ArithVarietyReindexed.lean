@@ -256,7 +256,7 @@ theorem blockFnField_xPt_comp (y₀ : (Σ k, J₀ k) → Ω₀) (y : (Σ k, J k)
 theorem finrank_map_top (i : Ω₀ →+* Ω) :
     Module.finrank ((⊤ : IntermediateField ℚ Ω₀).map i.toRatAlgHom) Ω =
       (letI := i.toAlgebra; Module.finrank Ω₀ Ω) := by
-  letI := i.toAlgebra
+  let := i.toAlgebra
   rw [← AlgHom.fieldRange_eq_map]
   let e := AlgEquiv.ofInjectiveField i.toRatAlgHom
   symm
@@ -276,7 +276,7 @@ end Degree
 
 theorem exists_genFibre_chart_degree : ∀ (K₀ K : Type) [Fintype K₀] [Fintype K] (J₀ : K₀ → Type) (J : K → Type) [∀ k, Fintype (J₀ k)] [∀ k, Fintype (J k)] (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω] (y₀ : (Σ k, J₀ k) → Ω₀) (y : (Σ k, J k) → Ω) (bk : K₀ → K) (bx : ∀ k, J₀ k ≃ J (bk k)) (i : Ω₀ →+* Ω) (D d : ℕ), Function.Injective bk → (∀ k a, y ⟨bk k, bx k a⟩ = i (y₀ ⟨k, a⟩)) → IsArithVar (mCoordIdeal y₀) (D + 1) → IsArithVar (mCoordIdeal y) (D + 1) → Birational y₀ → Birational y → (letI := i.toAlgebra; Module.finrank Ω₀ Ω = d) → 0 < d → ∃ (Gf : GenFibre (GlobalTheory.CompanionTheory.Ar.Chg.blkV bk bx) (mCoordIdeal y)) (ch : ∀ k : FibreBlock bk, J k.1), (∀ k : FibreBlock bk, Gf.x' ⟨k.1, ch k⟩ ≠ 0) ∧ Module.finrank Gf.Φ (IntermediateField.adjoin Gf.Φ (Set.range fun q : Σ k : FibreBlock bk, J k.1 => Gf.x' ⟨q.1.1, q.2⟩ / Gf.x' ⟨q.1.1, ch q.1⟩)) = d := by
   intro K₀ K _ _ J₀ J _ _ Ω₀ Ω _ _ _ y₀ y bk bx i D d hbk hy hA₀ hA hb₀ hb hd _
-  haveI : CharZero Ω₀ := i.charZero
+  have : CharZero Ω₀ := i.charZero
   have hrel : ∀ {L : Type} {I : L → Type} [∀ k, Fintype (I k)] {F : Type} [Field F]
       (w : (Σ k, I k) → F) (_ : (mCoordIdeal w).IsPrime ∧ IsRelevant (mCoordIdeal w)),
       ∀ k, ∃ a, w ⟨k, a⟩ ≠ 0 := by
@@ -291,7 +291,7 @@ theorem exists_genFibre_chart_degree : ∀ (K₀ K : Type) [Fintype K₀] [Finty
   let v := GlobalTheory.CompanionTheory.Ar.Chg.blkV bk bx
   have hyv : ∀ p, y (v p) = i (y₀ p) := fun p => hy p.1 p.2
   let G := genFib y v
-  haveI : CharZero G.Φ' := inferInstanceAs (CharZero (Fn K Ω))
+  have : CharZero G.Φ' := inferInstanceAs (CharZero (Fn K Ω))
   let ch : ∀ k : FibreBlock bk, J k.1 := fun k => c k.1
   have hch : ∀ k : FibreBlock bk, G.x' ⟨k.1, ch k⟩ ≠ 0 := fun k => xPt_ne_zero (hc k.1)
   have hx : ∀ k, G.x ⟨k, c₀ k⟩ ≠ 0 := by

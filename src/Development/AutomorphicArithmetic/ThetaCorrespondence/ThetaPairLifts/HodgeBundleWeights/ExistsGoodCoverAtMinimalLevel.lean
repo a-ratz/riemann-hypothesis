@@ -109,7 +109,7 @@ theorem petW_le_of_homN_le : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) 
     have hb : ∀ q : AutQ (D.sp.W j), ‖AllWt.homN (Y.U (Formalism.L2.Pj.goodOf Y.d.c₂ σ)) (xiR D) G f
         (Y.dict (Formalism.L2.Pj.goodOf Y.d.c₂ σ) q.out)‖ₑ ≤ ENNReal.ofReal B := by
       intro q
-      rw [Real.enorm_eq_ofReal (AllWt.homN_nonneg _ _ _ _ _)]
+      rw [Real.eNorm_eq_ofReal (AllWt.homN_nonneg _ _ _ _ _)]
       apply ENNReal.ofReal_le_ofReal
       by_cases hz : (Y.dict (Formalism.L2.Pj.goodOf Y.d.c₂ σ) q.out).2 ∈
           ((Y.U (Formalism.L2.Pj.goodOf Y.d.c₂ σ)).X (Y.dict (Formalism.L2.Pj.goodOf Y.d.c₂ σ) q.out).1).dom
@@ -212,7 +212,7 @@ namespace GlobalTheory.SmallScal
 
 theorem exists_small_scalar : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (c : Coeff l) (n : ℕ) (La : GenLat E n), La.Unimod → ∃ s : c.F, s ≠ 0 ∧ Submodule.span (𝓞 c.F) {s} * ∏ τ : E →+* ℂ, idealAt c La.Ln τ ^ Dw.mult τ ≤ ∏ τ : E →+* ℂ, idealAt c La.La τ ^ Dw.mult τ ∧ ∀ σ : c.F →+* ℂ, ‖σ s‖ ^ 2 * ((La.Ln.toAddSubgroup.addSubgroupOf La.La.toAddSubgroup).index : ℝ) ^ (Dw.p + Dw.q) ≤ Real.exp (fieldSz c.F) ^ 2 := by
   intro E _ _ _ H Dw l c n La hU
-  haveI : IsTotallyComplex c.F := GlobalTheory.CompHS.isTotallyComplex_coeff c
+  have : IsTotallyComplex c.F := GlobalTheory.CompHS.isTotallyComplex_coeff c
   obtain ⟨𝔞, h0, h1, h2⟩ := GlobalTheory.BetaEx.exists_index_ideal La.Ln La.La inf_le_left
     (GlobalTheory.BetaEx.bdd_of_unimod La hU) (fun m hm => by
       obtain ⟨a, ha, h⟩ := GlobalTheory.BetaEx.exists_smul_std m
@@ -245,7 +245,7 @@ theorem exists_small_scalar : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       (B : Submodule (𝓞 c.F) c.F) := by
     have : (B : Submodule (𝓞 c.F) c.F) = FractionalIdeal.coeSubmoduleHom (𝓞 c.F)⁰ c.F B := rfl
     rw [this, map_prod]
-    refine Finset.prod_le_prod' fun τ _ => ?_
+    refine Finset.prod_le_prod fun τ _ => ?_
     rw [map_pow]
     exact pow_le_pow_left' (hS τ) _
 
@@ -287,7 +287,7 @@ theorem exists_small_scalar : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have := Int.one_le_abs (discr_ne_zero c.F)
     exact_mod_cast this
   have hdR : |(discr c.F : ℝ)| ≤ R ^ k := by
-    rw [hR, ← pow_mul, ← Real.exp_nat_mul, ← Real.exp_log (lt_of_lt_of_le one_pos hd1)]
+    rw [hR, ← pow_mul, ← Real.exp_natCast_mul, ← Real.exp_log (lt_of_lt_of_le one_pos hd1)]
     apply Real.exp_le_exp.2
     have hn : (0 : ℝ) < Module.finrank ℚ c.F := by exact_mod_cast Module.finrank_pos
     have hfs := GlobalTheory.CovTop.log_rd_le_fieldSz c.F
@@ -319,7 +319,7 @@ theorem exists_small_scalar : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       calc Submodule.span (𝓞 c.F) {b} * (B : Submodule (𝓞 c.F) c.F)
           ≤ ((B⁻¹ : FractionalIdeal (𝓞 c.F)⁰ c.F) : Submodule (𝓞 c.F) c.F) * (B : Submodule (𝓞 c.F) c.F) :=
             mul_le_mul' h1' le_rfl
-        _ = 1 := by rw [← FractionalIdeal.coe_mul, inv_mul_cancel₀ hB0, FractionalIdeal.coe_one]
+        _ = 1 := by rw [← FractionalIdeal.coeToSubmodule_mul, inv_mul_cancel₀ hB0, FractionalIdeal.coeToSubmodule_one]
     simp only [e, mul_pow, Finset.prod_mul_distrib]
     rw [← mul_assoc]
     calc Submodule.span (𝓞 c.F) {b} * (∏ τ : E →+* ℂ,
@@ -390,7 +390,7 @@ theorem exp_le_sizeK (Dw : Datum H) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ)
     have e : laOf Dw a n ⟨conjEmb τ, hc⟩ ⟨Dw.p + (Dw.q - 1 - i), by omega⟩ =
         -(a (τ, i) : ℤ) - ((n / 2 : ℕ) : ℤ) := by
       have e2 : Dw.q - 1 - (Dw.p + (Dw.q - 1 - i) - Dw.p) = i := by omega
-      simp only [laOf, GlobalTheory.AllWt.weightOf, hk, if_false, e2, GlobalTheory.AllWt.conjEmb_conjEmb]
+      simp only [laOf, GlobalTheory.AllWt.weightOf, hk, ite_false, e2, GlobalTheory.AllWt.conjEmb_conjEmb]
     have h1 := abs_laOf_le_sizeK Dw a n ⟨conjEmb τ, hc⟩ ⟨Dw.p + (Dw.q - 1 - i), by omega⟩
     have h4 : (a (τ, i) : ℤ) ≤ |laOf Dw a n ⟨conjEmb τ, hc⟩ ⟨Dw.p + (Dw.q - 1 - i), by omega⟩| := by
       rw [e]; exact le_trans (by omega) (neg_le_abs _)
@@ -718,7 +718,7 @@ theorem harm_short : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) 
   have hsq : Real.sqrt (Module.finrank ℚ Y.d.c₂.F : ℝ) ≤ Real.exp (o / 2) := by
     have h0 : (0 : ℝ) < Module.finrank ℚ Y.d.c₂.F := by exact_mod_cast Module.finrank_pos
     have h1 : (Module.finrank ℚ Y.d.c₂.F : ℝ) ≤ Real.exp (o / 2) ^ 2 := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       push_cast
       rw [show (2 : ℝ) * (o / 2) = o by ring]
       exact le_exp_of_log_le h0.le hG.deg
@@ -773,7 +773,7 @@ theorem GlobalTheory.CovGmin.span_thFam : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) 
     have hτ' : τ ↑T.Q.H.rt = T.Q.H.rt0 := hτ
     have hmp : (T.Q.Dw j).mult τ = (T.Q.Dw j).p := by simp [Datum.mult, hτ']
     have := hpos ⟨τ, hτ⟩ ⟨(T.Q.Dw j).p - 1, by omega⟩ (by simp; omega)
-    simp only [laOf, GlobalTheory.AllWt.weightOf, show (T.Q.Dw j).p - 1 < (T.Q.Dw j).p by omega, if_true] at this
+    simp only [laOf, GlobalTheory.AllWt.weightOf, show (T.Q.Dw j).p - 1 < (T.Q.Dw j).p by omega, ite_true] at this
     rw [hmp]
     omega
   have hn' : 8 * (Module.finrank ℚ D.host.E / 2) * ((T.Q.Dw j).p + (T.Q.Dw j).q) + 4 ≤ n := by

@@ -158,12 +158,12 @@ theorem leviO_smul {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (g : Frame X.Ψ 
       wdb (nd X) k (fun w => (t : ℂ) * f w) = fun y => (t : ℂ) * wdb (nd X) k f y := by
     intro k f
     funext y
-    simp only [wdb, leviO_fderiv_lemma, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [wdb, leviO_fderiv_lemma, smul_apply, smul_eq_mul]
     ring
   have hwd : ∀ (j : Fin (nd X)) (f : V (nd X) → ℂ) (y : V (nd X)),
       wd (nd X) j (fun w => (t : ℂ) * f w) y = (t : ℂ) * wd (nd X) j f y := by
     intro j f y
-    simp only [wd, leviO_fderiv_lemma, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [wd, leviO_fderiv_lemma, smul_apply, smul_eq_mul]
     ring
   rw [hf]
   simp only [leviV, hwdb, hwd, mul_assoc, ← Finset.mul_sum, Complex.re_ofReal_mul]

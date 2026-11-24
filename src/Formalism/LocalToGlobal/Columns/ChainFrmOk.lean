@@ -81,7 +81,7 @@ variable (Λ : LevFam X.E X.K n SG) (Θ : LevQFam X.E X.K n Q)
 
 theorem frm_root (hroot : ∀ c : ↥Θ.grp, ∃ m : ℕ, 0 < m ∧ ((Θ.chr c : X.Kˣ) : X.K) ^ m = 1) (g : FrmG Λ Θ) :
     ∃ m : ℕ, 0 < m ∧ (((Λ.chr g.2.1 * Θ.chr g.2.2 : X.Kˣ)) : X.K) ^ m = 1 := by
-  haveI : ∀ w : SG, Finite (𝓞 X.E ⧸ w.1.asIdeal) := fun w =>
+  have : ∀ w : SG, Finite (𝓞 X.E ⧸ w.1.asIdeal) := fun w =>
     Ideal.finiteQuotientOfFreeOfNeBot _ w.1.ne_bot
   obtain ⟨m2, hm2, h2⟩ := hroot g.2.2
   have hfo : IsOfFinOrder g.2.1 := isOfFinOrder_of_finite _
@@ -128,7 +128,7 @@ theorem frmGSD_ok_of_finIdx (hX : X.Ok) (C : CoefPk X n (DecoSet (E := X.E) (n :
       let cb : ∀ P : Q, ↥(GLint X.E n P.1) ⧸ (Θ P).H := fun P => QuotientGroup.mk ((c P)⁻¹)
       have hout : ∀ P : Q, ((c P)⁻¹)⁻¹ * (cb P).out ∈ (Θ P).H := fun P => QuotientGroup.eq.1 (QuotientGroup.out_eq' (cb P)).symm
       refine ⟨(⟨d0, hd0⟩, cb), ?_⟩
-      have hpt : pt ⟨d0, hd0⟩ cb = some (((1, 1, fun P => ((cb P).out)⁻¹) : UF X.E n × GLG (E := X.E) (n := n) (SG := SG) × GLQ X.E n Q) • hex.choose) := dif_pos hex
+      have hpt : pt ⟨d0, hd0⟩ cb = some (((1, 1, fun P => ((cb P).out)⁻¹) : UF X.E n × GLG (E := X.E) (n := n) (SG := SG) × GLQ X.E n Q) • hex.choose) := dite_eq_left hex
       show (match pt ⟨d0, hd0⟩ cb with
         | some p => (frmGSD (C.pull DecoF.deco) Λ Θ).cls p
         | none => c00) = _

@@ -168,7 +168,7 @@ theorem comb_roots_prod {K : Type} [Field K] {N : ℕ} (f : Fin N → K) :
 
 theorem contentLinkage_holds : Linkage := by
   intro l K _ _ N U U' c hl hprod
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hr := congrArg Polynomial.roots hprod
   have hU := comb_roots_prod (fun a => (((U a + c : ℤ)) : K))
   have hU' := comb_roots_prod (fun a => (((U' a + c : ℤ)) : K))
@@ -544,14 +544,14 @@ theorem le_sum_of_dvd_det_submatrix {R : Type*} [CommRing R] [IsDomain R] (π : 
   choose u hu using hdiag
   rw [hdet, Finset.prod_congr rfl (fun s _ => hu s), Finset.prod_mul_distrib,
     Finset.prod_pow_eq_pow_sum, ← Units.coe_prod, Units.dvd_mul_left] at hdvd
-  exact (pow_dvd_pow_iff hπ.ne_zero hπ.not_unit).1 hdvd
+  exact (pow_dvd_pow_iff hπ.ne_zero hπ.not_isUnit).1 hdvd
 
 theorem map_cast_le_of_map_neg_mul_le (l : ℕ) (hl : l.Prime) (F : Type) [Field F] [CharP F l] (a : F) (ha : a ≠ 0)
     {α β : Type} (A : Multiset α) (B : Multiset β) (f : α → ℤ) (g : β → ℤ)
     (h : Multiset.map (fun x => -a * ((f x : ℤ) : F)) A ≤
       Multiset.map (fun y => -a * ((g y : ℤ) : F)) B) :
     Multiset.map (fun x => ((f x : ℤ) : ZMod l)) A ≤ Multiset.map (fun y => ((g y : ℤ) : ZMod l)) B := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   let φ : ZMod l →+* F := ZMod.castHom (dvd_refl l) F
   have hφ : Function.Injective φ := φ.injective
   have hψ : Function.Injective (fun z : ZMod l => -a * φ z) := fun z w hzw =>
@@ -563,7 +563,7 @@ private lemma sub_one_mul_abs_kap_le {ι : Type} [Fintype ι] (σ : Equiv.Perm �
     (w kap : ι → ℤ) (hw : ∀ i, 0 ≤ w i ∧ w i ≤ (h : ℤ))
     (hd : ∀ i, 0 ≤ (l : ℤ) * kap (σ i) + w i - kap i ∧ (l : ℤ) * kap (σ i) + w i - kap i ≤ (h : ℤ))
     (i : ι) : ((l : ℤ) - 1) * |kap i| ≤ (h : ℤ) := by
-  haveI : Nonempty ι := ⟨i⟩
+  have : Nonempty ι := ⟨i⟩
   obtain ⟨i₀, hi₀⟩ := Finite.exists_max (fun i => |kap i|)
   have hσ : σ (σ.symm i₀) = i₀ := σ.apply_symm_apply i₀
   have h1 := hd (σ.symm i₀)
@@ -632,7 +632,7 @@ theorem twisted_block_bounds : LemmaWAssembled := by
     exact map_cast_le_of_map_neg_mul_le l hl F W.a ha Finset.univ.val Finset.univ.val
       (fun s : Fin t => bot i + ((s : ℕ) : ℤ) - kap i s) (U' i) hr
   · intro i
-    have hm := le_sum_of_dvd_det_submatrix (PowerSeries.X : PowerSeries F) PowerSeries.X_prime (W.Φ i) W.b W.pos hinj
+    have hm := le_sum_of_dvd_det_submatrix (PowerSeries.X : PowerSeries F) PowerSeries.prime_X (W.Φ i) W.b W.pos hinj
       hpos (hΦ i) (fun s => ((l : ℤ) * kap (σ i) s + (bot i + ((s : ℕ) : ℤ)) - kap i s).toNat)
       (hΦd i) (c i) (hc i)
     have hm' : ((c i : ℕ) : ℤ) ≤ ∑ s : Fin t,
@@ -831,7 +831,7 @@ theorem unit_series_constant_holds : UnConst := by
     intro h
     have h1 := hinj h
     have h2 := congrArg (coeff 1) h1
-    rw [map_sub, coeff_one_X, coeff_C, if_neg one_ne_zero, sub_zero, map_zero] at h2
+    rw [map_sub, coeff_one_X, coeff_C, ite_eq_right one_ne_zero, sub_zero, map_zero] at h2
     exact one_ne_zero h2
   have huniq : ∀ a b : O⟦X⟧, IsUn l O u a → IsUn l O u b → a = b := by
     intro a b ha hb
@@ -909,7 +909,7 @@ theorem blockTriangular_of_mul_eq_pow_smul_one {R : Type} [CommRing R] [IsDomain
   have hr : Φ.map φ * (((φ π) ^ h)⁻¹ • Φ'.map φ) = 1 := by
     rw [Matrix.mul_smul, hm', smul_smul, inv_mul_cancel₀ hc, one_smul]
   have hinv : (Φ.map φ)⁻¹ = ((φ π) ^ h)⁻¹ • Φ'.map φ := Matrix.inv_eq_right_inv hr
-  letI : Invertible (Φ.map φ) := by
+  let : Invertible (Φ.map φ) := by
     first
     | exact ⟨_, mul_eq_one_comm.mp hr, hr⟩
     | exact Matrix.invertibleOfIsUnitDet _ (Matrix.isUnit_det_of_right_inverse hr)
@@ -988,7 +988,7 @@ theorem theta_diagonal_holds : ThetaDiag := by
       rw [X_dvd_iff, map_sub, constantCoeff_C, sub_self]
     have e : y = C (constantCoeff y) + X * q := by rw [← hq]; ring
     rw [e, hadd, hmul, hC, hX]
-    rw [map_add (f := _), map_add (f := _), coeff_C, if_neg one_ne_zero, zero_add, zero_add]
+    rw [map_add (f := _), map_add (f := _), coeff_C, ite_eq_right one_ne_zero, zero_add, zero_add]
     rw [mul_assoc, e1, e1, map_mul, hcc0]
     simp
   have hc1 : ∀ f q : k⟦X⟧, coeff 1 (f * q) = coeff 1 f * constantCoeff q + constantCoeff f * coeff 1 q := by
@@ -1007,7 +1007,7 @@ theorem theta_diagonal_holds : ThetaDiag := by
   set V := hV.unit with hVdef
   have hV0 : constantCoeff (V : k⟦X⟧) = 1 := by rw [IsUnit.unit_spec]; simp
   have hV1' : coeff 1 (V : k⟦X⟧) = constantCoeff un := by
-    rw [IsUnit.unit_spec, map_add (f := _), coeff_one, if_neg one_ne_zero, zero_add, mul_comm, e1]
+    rw [IsUnit.unit_spec, map_add (f := _), coeff_one, ite_eq_right one_ne_zero, zero_add, mul_comm, e1]
   have hgs : gamSer 0 un = X * (V : k⟦X⟧) := by rw [gammaSeries_zero_eq, IsUnit.unit_spec]
   have hVcc : ∀ m : ℤ, constantCoeff ((V ^ m : (k⟦X⟧)ˣ) : k⟦X⟧) = 1 := by
     intro m
@@ -1030,7 +1030,7 @@ theorem theta_diagonal_holds : ThetaDiag := by
     · have hcc_inv : constantCoeff (((V ^ n)⁻¹ : (k⟦X⟧)ˣ) : k⟦X⟧) = 1 := by
         rw [map_units_inv, Units.val_pow_eq_pow_val, map_pow, hV0, one_pow, inv_one]
       have hinv := hc1 ((V ^ n : (k⟦X⟧)ˣ) : k⟦X⟧) (((V ^ n)⁻¹ : (k⟦X⟧)ˣ) : k⟦X⟧)
-      rw [Units.mul_inv, coeff_one, if_neg one_ne_zero, hcc_inv, Units.val_pow_eq_pow_val, hVn,
+      rw [Units.mul_inv, coeff_one, ite_eq_right one_ne_zero, hcc_inv, Units.val_pow_eq_pow_val, hVn,
         map_pow, hV0, one_pow] at hinv
       rw [zpow_neg, zpow_natCast]
       push_cast
@@ -1063,9 +1063,9 @@ theorem theta_diagonal_holds : ThetaDiag := by
     rw [← map_mul, Units.mul_inv, map_one]
   have hww1 : coeff 1 (w : k⟦X⟧) * constantCoeff ((w⁻¹ : (k⟦X⟧)ˣ) : k⟦X⟧) +
       constantCoeff (w : k⟦X⟧) * coeff 1 ((w⁻¹ : (k⟦X⟧)ˣ) : k⟦X⟧) = 0 := by
-    rw [← hc1, Units.mul_inv, coeff_one, if_neg one_ne_zero]
+    rw [← hc1, Units.mul_inv, coeff_one, ite_eq_right one_ne_zero]
   have hC1 : coeff 1 (1 + X * g) = constantCoeff g := by
-    rw [map_add (f := _), coeff_one, if_neg one_ne_zero, zero_add, e1]
+    rw [map_add (f := _), coeff_one, ite_eq_right one_ne_zero, zero_add, e1]
   have hC0 : constantCoeff (1 + X * g) = 1 := by simp
   rw [hc]
   refine ⟨?_, ?_⟩
@@ -1086,7 +1086,7 @@ theorem theta_base_change_holds : ThetaBaseChange := by
       rw [X_dvd_iff, map_sub, constantCoeff_C, sub_self]
     have e : y = C (constantCoeff y) + X * q := by rw [← hq]; ring
     rw [e, hadd, hmul, hC, hX]
-    rw [map_add (f := _), map_add (f := _), coeff_C, if_neg one_ne_zero, zero_add, zero_add]
+    rw [map_add (f := _), map_add (f := _), coeff_C, ite_eq_right one_ne_zero, zero_add, zero_add]
     rw [mul_assoc, e1, e1, map_mul, hcc0]
     simp
   have hc1 : ∀ f q : k⟦X⟧, coeff 1 (f * q) = coeff 1 f * constantCoeff q + constantCoeff f * coeff 1 q := by
@@ -1358,7 +1358,7 @@ theorem alpha_bounds_hold : AlphaBounds := by
     ⟨u0 * M (W.pos s) (W.pos s), by rw [← hline]; ring⟩
   have hle : e.toNat ≤ h := by
     first
-    | exact (pow_dvd_pow_iff X_ne_zero X_prime.not_unit).1 hdvd
+    | exact (pow_dvd_pow_iff X_ne_zero prime_X.not_isUnit).1 hdvd
     | exact (pow_dvd_pow_iff_le X_ne_zero X_prime.not_unit).1 hdvd
   have h2 : ((e.toNat : ℕ) : ℤ) ≤ (h : ℤ) := by exact_mod_cast hle
   linarith [Int.toNat_of_nonneg h1]
@@ -1451,11 +1451,11 @@ theorem weight_exponents_from_inputs : WEFromInputs := by
   · intro i J hJ
     by_cases hi : i = τ
     · subst hi
-      simp only [if_true]
+      simp only [ite_true]
       rw [Int.toNat_of_nonneg hT0]
       exact sum_tail_le_sum_of_antitone (U' i) (hU' i).antitone _ J (by rw [hJ, hcard]; omega)
     · simpa [hi] using Finset.sum_nonneg fun a _ => (hH1 i a).1
-  · simp only [if_true]
+  · simp only [ite_true]
     rw [Int.toNat_of_nonneg hT0]
 
 end Five
@@ -1670,7 +1670,7 @@ theorem weight_lattice_of_norm : LatWOfN := by
       ((associated_mul_unit_left _ _ hH).trans (associated_unit_mul_left _ _ hG)).symm
     have h3 : Associated ((X : L⟦X⟧) ^ (∑ j, (U' i j).toNat)) ((X : L⟦X⟧) ^ e) :=
       (h2.trans h1).trans (hq0X.pow_pow)
-    have hXu : ¬ IsUnit (X : L⟦X⟧) := PowerSeries.X_prime.not_isUnit
+    have hXu : ¬ IsUnit (X : L⟦X⟧) := prime_X.not_isUnit
     have h4 : ∑ j, (U' i j).toNat = e :=
       le_antisymm ((pow_dvd_pow_iff X_ne_zero hXu).1 h3.dvd)
         ((pow_dvd_pow_iff X_ne_zero hXu).1 h3.symm.dvd)

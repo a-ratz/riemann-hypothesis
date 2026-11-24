@@ -279,7 +279,7 @@ theorem jSqG_le_MM {large₂ : SizeData₂ D} {C1 Ca Ch Cg b : ℝ} {u u' : D.wh
     (hok : ∀ τ, LocOk D Ch Cg (I.L τ) (lamSH D.R (D.hc τ)) (kaRe D) b (kaRe D)) :
     ENNReal.ofReal (∏ τ, I.K τ) * jSqG D (bdOf I.toInputs hok) ≤ ∏ τ, MMv D u u' (I.A τ) (I.sec τ) := by
   rw [jSqG_bdOf, ENNReal.ofReal_prod_of_nonneg (fun τ _ => (I.hK τ).le), ← Finset.prod_mul_distrib]
-  exact Finset.prod_le_prod' fun τ _ => I.hMM τ (I.sec τ) (I.sec_spec τ)
+  exact Finset.prod_le_prod fun τ _ => I.hMM τ (I.sec τ) (I.sec_spec τ)
 
 end Amp
 
@@ -431,7 +431,7 @@ theorem normTie_bdOf {large₂ : SizeData₂ D} {C1 Ca Ch Cg Cβ Cb Cn Cfac Ire 
 
   have hreal : c ^ Fintype.card D.what₂.Tau * E * B ≤
       Real.exp ((max 0 Cb * Cβ + |Ca| + |Cn|) * ((2 * D.R.rS + 2 : ℕ) : ℝ) ^ 5 * D.R.f * Real.log large₂.sc.b) := by
-    rw [hc, hE, hB, Real.log_rpow hb0, Real.rpow_def_of_pos hb0, Real.rpow_def_of_pos hb0, ← Real.exp_nat_mul,
+    rw [hc, hE, hB, Real.log_rpow hb0, Real.rpow_def_of_pos hb0, Real.rpow_def_of_pos hb0, ← Real.exp_natCast_mul,
       ← Real.exp_add, ← Real.exp_add, Real.exp_le_exp, hcard, hm]
     have := expo_le (Real.log large₂.sc.b) (D.R.f : ℝ) (D.R.m : ℝ) Ca Cn Cb Cβ hlog (Nat.cast_nonneg _)
       (by have := D.R.two_le_m; exact_mod_cast (by omega : 1 ≤ D.R.m)) hβ

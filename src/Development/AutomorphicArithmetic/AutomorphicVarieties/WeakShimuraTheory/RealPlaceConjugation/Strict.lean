@@ -53,7 +53,7 @@ private theorem exists_natCard_eq_pow_and_separating_zmod_forms (l : ℕ) [Fact 
       ∀ x y : M, (∀ i, c i x = c i y) → x = y := by
   refine ⟨Module.finrank (ZMod l) M,
     fun i => ((Module.finBasis (ZMod l) M).coord i).toAddMonoidHom, ?_, ?_⟩
-  · letI : Fintype M := Fintype.ofFinite M
+  · let : Fintype M := Fintype.ofFinite M
     rw [Nat.card_eq_fintype_card, Module.card_eq_pow_finrank (K := ZMod l), ZMod.card]
   · intro x y h
     apply (Module.finBasis (ZMod l) M).ext_elem
@@ -76,10 +76,10 @@ private theorem eq_zero_of_nsmul_eq_zero_of_coprime_torsion (l : ℕ) [Fact l.Pr
 theorem UpperTheory.V.Ws.card_cocycles_vanishing_on_inertia_le_pow :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Finite M], (∀ m : M, l • m = 0) → ∀ (ρ : Representation R (G F Ω) M) (K : Subgroup (G F Ω)) (r : ℕ), ¬ l ∣ K.index → (∀ g ∈ K, ∀ m, ρ g m = m) → XRk l 1 K r → CardLe (cocOff ρ (ineOff F Ω 1 ∩ K)) (Nat.card M ^ (r + 1)) := by
   intro F Ω _ _ _ _ _ l _ R M _ _ _ _ htor ρ K r hdvd hK hX
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hidx : K.index ≠ 0 := fun h => hdvd (h ▸ dvd_zero l)
-  haveI : K.FiniteIndex := ⟨hidx⟩
-  letI : Fintype (G F Ω ⧸ K) := Fintype.ofFinite _
+  have : K.FiniteIndex := ⟨hidx⟩
+  let : Fintype (G F Ω ⧸ K) := Fintype.ofFinite _
   have hn : ¬ l ∣ Fintype.card (G F Ω ⧸ K) := by
     rw [← Nat.card_eq_fintype_card]
     exact hdvd
@@ -125,7 +125,7 @@ theorem UpperTheory.V.Ws.card_cocycles_vanishing_on_inertia_le_pow :
         ∀ (A : ValuationSubring Ω), A.valuation ((1 : ℕ) : Ω) < 1 → ∀ u : K, (u : G F Ω) ∈ Dec A →
           c i (z.1 u) = 0 := by
       refine ⟨?_, ?_, ?_, ?_⟩
-      · exact (hlc.comp_continuous continuous_subtype_val).comp (fun m => c i m)
+      · exact (hlc.comp_continuous continuous_subtypeVal).comp (fun m => c i m)
       · intro a e
         rw [Subgroup.coe_mul, hcoc, hK a a.2, map_add (f := _)]
       · intro A u hu
@@ -160,7 +160,7 @@ theorem UpperTheory.V.Ws.card_cocycles_vanishing_on_inertia_le_pow :
     apply Subtype.ext
     funext g
     exact sub_eq_zero.mp (congrFun hw g)
-  haveI : Finite ↥(UpperTheory.V.Kum.XDual (F := F) (Ω := Ω) 1 K (ZMod l) (ZMod l)) := hXfin
+  have : Finite ↥(UpperTheory.V.Kum.XDual (F := F) (Ω := Ω) 1 K (ZMod l) (ZMod l)) := hXfin
   refine (show Finite _ ∧ Nat.card _ ≤ _ from ⟨Finite.of_injective Φ hinj, ?_⟩)
   calc Nat.card ↥(cocOff ρ (ineOff F Ω 1 ∩ (K : Set (G F Ω))))
       ≤ Nat.card ((Fin d → ↥(UpperTheory.V.Kum.XDual (F := F) (Ω := Ω) 1 K (ZMod l) (ZMod l))) × M) :=

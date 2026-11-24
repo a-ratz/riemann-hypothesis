@@ -254,7 +254,7 @@ theorem exists_basis_choice_det_ne_zero : ∀ (F E A A' : Type) [Field F] [Field
     rw [this]
     exact hli.comp _ e.symm.injective
   have hunit : IsUnit (Matrix.of fun p' p => res (ι (bb (σ p))) p') := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     exact hli2
   exact ((Matrix.isUnit_iff_isUnit_det _).mp hunit).ne_zero
 
@@ -390,8 +390,8 @@ theorem linearIndependent_of_symbol_det_ne_zero :
           apply Finset.sum_eq_zero
           intro i _
           rcases lt_or_gt_of_ne hba with hlt | hlt
-          · rw [ih b (Fin.lt_iff_val_lt_val.mp hlt) b rfl i, zero_smul]
-          · have h1 := Fin.lt_iff_val_lt_val.mp hlt
+          · rw [ih b (Fin.lt_def.mp hlt) b rfl i, zero_smul]
+          · have h1 := Fin.lt_def.mp hlt
             have h2 := b.isLt
             rw [hker' _ (hle ((a : ℕ) + 1) (b : ℕ) (by omega) (by omega) (hv ⟨b, i⟩)), smul_zero]
         · intro hn; exact absurd (Finset.mem_univ a) hn
@@ -486,15 +486,15 @@ theorem pick_indep : ∀ (E M X : Type) [Field E] [AddCommGroup M] [Module E M] 
   have hBU : ∀ x ∈ B, x ∈ U := fun x hx => hBspan ▸ Submodule.subset_span hx
   have hind' : LinearIndependent E (fun x : B => (⟨x.1, hBU x.1 x.2⟩ : U)) :=
     LinearIndependent.of_comp U.subtype hBind
-  haveI : Finite B := hind'.finite_of_isNoetherian
-  haveI : Fintype B := Fintype.ofFinite B
+  have : Finite B := hind'.finite_of_isNoetherian
+  have : Fintype B := Fintype.ofFinite B
   have hsrc : ∀ x : B, ∃ y, g y = x.1 := fun x => hBsub x.2
   choose τ hτ using hsrc
   let e : Fin (Fintype.card B) ≃ B := (Fintype.equivFin B).symm
   refine ⟨Fintype.card B, fun k => τ (e k), ?_, ?_⟩
   · rw [← hBspan]
     have h := finrank_span_eq_card hBind
-    rw [Subtype.range_coe_subtype, Set.setOf_mem_eq] at h
+    rw [Subtype.range_coe_subtype, Set.ofPred_mem_eq] at h
     exact h.symm
   · have h := hBind.comp e e.injective
     convert h using 1
@@ -519,8 +519,8 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
   classical
   have hD1 := hS.one_le
   have hDT := hS.le_T
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
-  haveI : Infinite E := Infinite.of_injective (Nat.cast : ℕ → E) Nat.cast_injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  have : Infinite E := Infinite.of_injective (Nat.cast : ℕ → E) Nat.cast_injective
   obtain ⟨r0, b0, hb0⟩ := hS.short0
   obtain ⟨rD, bD, hbD⟩ := hS.shortD
   obtain ⟨rT, bT, hbT⟩ := hS.shortT
@@ -607,8 +607,8 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
       rw [Matrix.of_apply, Matrix.of_apply]
       refine ((hsym a i'.1 i'.2).choose_spec i.1 i.2).trans ?_
       by_cases h : i.1 = i'.1
-      · rw [if_pos (congrArg Subtype.val h), if_pos h]; rfl
-      · rw [if_neg (fun h' => h (Subtype.ext h')), if_neg h]
+      · rw [ite_eq_left (congrArg Subtype.val h), ite_eq_left h]; rfl
+      · rw [ite_eq_right (fun h' => h (Subtype.ext h')), ite_eq_right h]
     rw [heq]
     exact _root_.GlobalTheory.det_blockSymbolMatrix_ne_zero E _ δ _ _ _ hl hσ0
   have hrspec : ∀ k : J, ∃ k', e1 (Sum.inr k') = k.1 := fun k => hrange k.1 (Finset.mem_filter.1 k.2).2
@@ -674,17 +674,17 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
       · rw [hcolX']
         refine ⟨(hb0 _).1, fun σ => ?_⟩
         show _ ≤ if (0 : ℕ) = 0 then S.Lam0 else _
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         exact (hb0 _).2 σ
       · rw [hcolD]
         refine ⟨(hbD _).1, fun σ => ?_⟩
         show _ ≤ if S.D = 0 then S.Lam0 else if S.D = S.D then S.LamD else S.LamT
-        rw [if_neg hD0, if_pos rfl]
+        rw [ite_eq_right hD0, ite_eq_left rfl]
         exact (hbD _).2 σ
     · rw [hcol2]
       refine ⟨(hbT _).1, fun σ => ?_⟩
       show _ ≤ if S.T = 0 then S.Lam0 else if S.T = S.D then S.LamD else S.LamT
-      rw [if_neg hT0, if_neg hTD]
+      rw [ite_eq_right hT0, ite_eq_right hTD]
       exact (hbT _).2 σ
   · rw [← hrank, ← hn, Finset.card_filter, ← e2.sum_comp, Fintype.sum_sum_type]
     simp only [hcol1, hcol2]

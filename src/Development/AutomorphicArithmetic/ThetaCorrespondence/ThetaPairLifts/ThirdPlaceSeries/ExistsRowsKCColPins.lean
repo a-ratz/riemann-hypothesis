@@ -273,11 +273,11 @@ theorem wtTie_base {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {G
   have hN : 0 < B.R.N i := B.R.N_pos i
   have hN' : 0 < B.R.N (i + 1) := B.R.N_pos (i + 1)
   have hlt : B.R.N i < B.R.N (i + 1) := by unfold Ranks.N; rw [Nat.succ_mul]; omega
-  have d0 : ∀ τ, (B.wts.lamTrue u i τ).detShift = (B.wts.lamTrue u i τ).w ⟨B.R.N i - 1, by omega⟩ := fun τ => dif_pos hN
+  have d0 : ∀ τ, (B.wts.lamTrue u i τ).detShift = (B.wts.lamTrue u i τ).w ⟨B.R.N i - 1, by omega⟩ := fun τ => dite_eq_left hN
   have d' : ∀ τ, (B.wts.lamTrue u (i + 1) τ).detShift = (B.wts.lamTrue u (i + 1) τ).w ⟨B.R.N (i + 1) - 1, by omega⟩ :=
-    fun τ => dif_pos hN'
+    fun τ => dite_eq_left hN'
   have dn : ∀ τ, (B.wts.nuW u (i + 1) τ).detShift = (B.wts.nuW u (i + 1) τ).w (⟨B.R.N i - 1, by omega⟩ : Fin (B.R.N i)) :=
-    fun τ => dif_pos hN
+    fun τ => dite_eq_left hN
   have hs : ∀ (τ : Tau B.R) (r : Fin (B.R.N i)),
       (B.wts.nuW u (i + 1) τ).w r = (B.wts.lamTrue u i τ).w r + ((I.rec7 l Z).chTw u μ).sSharp i τ := fun τ r => by
     have e1 := B.wts.nuW_eq_true u hi' τ r
@@ -674,7 +674,7 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE
 theorem nrm_stepZero_eq : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X) (h : I.Ok) (hX : B.fields.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (x : ((I.fm l u a).lat 0).V) (φ : ColsK I u), IsCol I u a l x φ → ∀ v, nrm ((I.fm l u a).lat 0) v x = nrm (Mu0H (Pr := B.primes X) B.wts I.Ch hX u) v φ := by
   intro B X I h hX l u a x φ hc v
   have hL := h.idx_ok a
-  letI := StepZero.idxUnique hL
+  let := StepZero.idxUnique hL
   have key := majAt_eq_ipAt ((I.Tp a).pref u 0) (lamT (B.hcW u) 0) (I.pref u a 0) hX
     (StepZero.ysAt_zero I.sel (I.tup a) (I.cst a)) (StepZero.levGAt_zero (I.Tp a) hL) (StepZero.levQAt_zero (I.Tp a) hL)
     ((l.ch u a).step 0) ((l.fmL u a).fam 0) (colOk (Pr := B.primes X) B.wts I.Ch hX u 0) (colRat (Pr := B.primes X) B.wts I.Ch hX u 0) v x φ hc
@@ -811,7 +811,7 @@ theorem exists_eNu (l0 : I.Law0 l) (u : B.Word) :
       colForm I l h u I.mu0 (colOfCoord (Pr := B.primes X) B.wts I.Ch hX u x) := fun x =>
     (hn _).trans (congrArg (fun φ : MramV (Pr := B.primes X) B.wts I.Ch u => colForm I l h u I.mu0 φ.1) (eL.apply_symm_apply _))
   refine ⟨bs.equivFun.symm.trans eL.symm, fun v x y => ?_, hin⟩
-  haveI : IsTotallyComplex B.LL := hX.cplxK
+  have : IsTotallyComplex B.LL := hX.cplxK
   refine GlobalTheory.Mem.RowSides.majAt_eq_of_normAt _ _ _ _ v (bs.equivFun.symm.trans eL.symm).toLinearMap (fun x => congrArg (· ^ 2) ?_) x y
   refine (Z.V.nuIn_norm u v _).trans ?_
   rw [LinearEquiv.coe_coe, hin]

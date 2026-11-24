@@ -116,10 +116,10 @@ theorem _root_.GlobalTheory.T.haar_fundamentalDomain_map_isometry_conj : ∀ {D 
   m.IsHaarMeasure ∧ MeasureTheory.IsFundamentalDomain (GQ S) fd m →
   (m.map I.kap).IsHaarMeasure ∧ MeasureTheory.IsFundamentalDomain (GQ S') (I.kap.symm ⁻¹' fd) (m.map I.kap) := by
   intro D S S' I m fd ⟨h1, h2⟩
-  haveI : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : IsTopologicalGroup (GA D S') := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D S) := ⟨rfl⟩
-  haveI : BorelSpace (GA D S') := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D S') := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D S) := ⟨rfl⟩
+  have : BorelSpace (GA D S') := ⟨rfl⟩
   refine ⟨I.kap.isHaarMeasure_map m I.continuous_kap I.continuous_kap_symm, ?_⟩
   have hm : Measurable I.kap := I.continuous_kap.measurable
   have hm' : Measurable I.kap.symm := I.continuous_kap_symm.measurable
@@ -747,8 +747,8 @@ theorem exists_covolOne (IS : IsoMat S S') (IT : IsoMat T T') {μ : Measure (WO 
     (h : IsCovolOne (ratL T' S') μ 𝓕) : ∃ (ν : Measure (WO S T)) (𝓖 : Set (WO S T)), IsCovolOne (ratL T S) ν 𝓖 ∧
       ∀ f : WO S T → ℂ, nrm2 μ 𝓕 (trH IS IT f) = nrm2 ν 𝓖 f := by
   obtain ⟨hμ, h𝓕, h1⟩ := h
-  haveI hB : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI hB' : BorelSpace (WO S' T') := ⟨rfl⟩
+  have hB : BorelSpace (WO S T) := ⟨rfl⟩
+  have hB' : BorelSpace (WO S' T') := ⟨rfl⟩
   have hc := continuous_homMap IS IT
   have hcs := continuous_homMap_symm IS IT
   let m : WO S T ≃ᵐ WO S' T' :=
@@ -1034,8 +1034,8 @@ theorem isWeilDatumO_omS {ψ : AddChar (AF D.host.F) ℂ} {χS χT : (AE D)ˣ �
     rw [map_zero]
   · exact (H.om_cont _ (hT F hF) ((rS J T).symm w)).comp
       ((J.continuous_kap_symm.comp continuous_fst).prodMk continuous_snd)
-  · haveI : BorelSpace (WO A T) := ⟨rfl⟩
-    haveI : BorelSpace (WO A' T) := ⟨rfl⟩
+  · have : BorelSpace (WO A T) := ⟨rfl⟩
+    have : BorelSpace (WO A' T) := ⟨rfl⟩
     obtain ⟨ν, hν, h𝓖, hu⟩ := GlobalTheory.WeilSrc.haar_pull (rS J T) (continuous_rS J T) (continuous_rS_symm J T) (ratL T A)
       (ratL T A') (rat_iff J) μ 𝓕 hμ h𝓕
     have e1 := hu fun w => ‖omS J T om p F w‖ₑ ^ 2

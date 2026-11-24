@@ -53,8 +53,8 @@ theorem UpperTheory.Reformulated.B.CardEmbeddingsRestrict.card_embeddings_restri
     (open Classical in Finset.filter (fun σ : L →+* ℂ => σ.comp (Algebra.algebraMap K L) = τ) Finset.univ).card = Module.finrank K L := by
   intro K L _ _ _ _ _ τ
   classical
-  letI : Algebra K ℂ := τ.toAlgebra
-  haveI : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  let : Algebra K ℂ := τ.toAlgebra
+  have : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
   rw [← AlgHom.card K L ℂ, ← Finset.card_univ]
   symm
   refine Finset.card_bij (fun (f : L →ₐ[K] ℂ) _ => (f : L →+* ℂ)) ?_ ?_ ?_

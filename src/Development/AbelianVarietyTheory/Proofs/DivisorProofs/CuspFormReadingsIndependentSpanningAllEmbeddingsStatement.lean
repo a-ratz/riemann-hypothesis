@@ -242,7 +242,7 @@ theorem span_top {F U H H' : Type} [Field F] [AddCommGroup U] [Module F U] [AddC
     have h3 := congrArg (Submodule.map (c.symm : H' →ₗ⋆[ℂ] H)) h1
     rw [Submodule.map_span, ← Set.range_comp, Submodule.map_top, LinearEquiv.range] at h3
     exact h3
-  haveI : Module.Finite ℂ H := ⟨h2 ▸ Submodule.fg_span (Set.finite_range _)⟩
+  have : Module.Finite ℂ H := ⟨h2 ▸ Submodule.fg_span (Set.finite_range _)⟩
   have h4 : Module.finrank ℂ H ≤ n := by simpa using finrank_le_of_span_eq_top h2
   have h5 : Fintype.card (Fin n) = Module.finrank ℂ H :=
     le_antisymm hi.fintype_card_le_finrank (by simpa using h4)

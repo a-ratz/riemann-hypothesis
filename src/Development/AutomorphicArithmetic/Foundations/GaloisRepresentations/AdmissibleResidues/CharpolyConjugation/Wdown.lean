@@ -74,14 +74,14 @@ private theorem exists_place {F K Ω : Type} [Field F] [NumberField F] [Field K]
       zero_mem' := by simp
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         have e : algebraMap K Ω ((a + b : 𝓞 K) : K) = algebraMap K Ω (a : K) + algebraMap K Ω (b : K) := by
           simp
         rw [e]
         exact Valuation.map_add_lt _ ha hb
       smul_mem' := by
         intro c a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have e : algebraMap K Ω ((c • a : 𝓞 K) : K) = algebraMap K Ω (c : K) * algebraMap K Ω (a : K) := by
           simp
         rw [e, map_mul]

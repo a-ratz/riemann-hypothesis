@@ -157,8 +157,8 @@ theorem unitaryConj (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     ∃ e : HA R σ J ≃ₜ* HA R σ J,
       (∀ u, HA.mat R σ J (e u) = bc (inclR R) g * HA.mat R σ J u * (bc (inclR R) g)⁻¹) ∧
       ∀ u, HA.mat R σ J (e u) ∈ HFin R σ J ↔ HA.mat R σ J u ∈ HFin R σ J := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
-  haveI : IsTopologicalRing (R ⊗[F] E) := GlobalTheory.CompanionTheory.SW.HIsom.isTopologicalRing_tens F E R
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have : IsTopologicalRing (R ⊗[F] E) := GlobalTheory.CompanionTheory.SW.HIsom.isTopologicalRing_tens F E R
   set G : GL (Fin M) (R ⊗[F] E) := bc (inclR R) g with hG
   have hdcE : algebraMap F E l⁻¹ * algebraMap F E l = 1 := by
     rw [← map_mul, inv_mul_cancel₀ hl, map_one]
@@ -200,9 +200,9 @@ theorem theta_map (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M n : ℕ} (J : M
         (actTup (AF F) (bc (inclR (AF F)) g)) =
       thetaMeas σ J μ 𝓕 {X | gramE σ J X = c • T} := by
   obtain ⟨tg, -, -, -, bs, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
-  haveI := tg
-  haveI := bs
-  haveI : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) :=
+  have := tg
+  have := bs
+  have : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) :=
     (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)).2.2.2.2.2.2.2.1 n M
   set G : GL (Fin M) (AF F ⊗[F] E) := bc (inclR (AF F)) g with hG
   have hmG := SWIsom.measurable_actTup (n := n) σ hCM (AF F) G
@@ -240,14 +240,14 @@ end Theta
 theorem theta_simil : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (μ : Measure (HA (AF F) σ J)) (𝓕 : Set (HA (AF F) σ J)), IsHaarH F E σ M J μ → IsFDH F E σ M J μ 𝓕 → ∀ (γ : GL (Fin M) E) (l : F), l ≠ 0 → cT (σ : E →+* E) (γ : Matrix (Fin M) (Fin M) E) * J * (γ : Matrix (Fin M) (Fin M) E) = (algebraMap F E l) • J → ∃ (μ' : Measure (HA (AF F) σ J)) (𝓕' : Set (HA (AF F) σ J)), IsHaarH F E σ M J μ' ∧ IsFDH F E σ M J μ' 𝓕' ∧ ∀ (n : ℕ) (T T' : Matrix (Fin n) (Fin n) E), T' = (algebraMap F E l) • T → (thetaMeas σ J μ' 𝓕' {X | gramE σ J X = T}).map (actTup (AF F) (bc (inclR (AF F)) γ)) = thetaMeas σ J μ 𝓕 {X | gramE σ J X = T'} := by
   intro F E _ _ _ _ _ σ hCM M J hJ μ 𝓕 hμ h𝓕 γ l hl hγ
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨e, hmat, hrat⟩ := unitaryConj F E σ hCM M J γ l hl hγ (AF F)
   obtain ⟨tg, -, -, -, bs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
-  haveI := tg
-  haveI := bs
-  haveI : μ.IsHaarMeasure := hμ
+  have := tg
+  have := bs
+  have : μ.IsHaarMeasure := hμ
   let He := e.toHomeomorph.toMeasurableEquiv
   have hμ' : IsHaarH F E σ M J (μ.map He.symm) := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
   have hmm : (μ.map He.symm).map He = μ := by

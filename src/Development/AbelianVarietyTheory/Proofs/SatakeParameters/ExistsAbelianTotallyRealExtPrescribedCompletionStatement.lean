@@ -139,18 +139,18 @@ theorem GlobalTheory.WeilDeligne.exists_pow_normV_resPow (E Ω : Type) [Field E]
   intro hA L hL g hg
   classical
   set Q := primeBelow (F := E) A with hQ
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  haveI : Q.LiesOver w.asIdeal := ⟨(under_primeBelow hA).symm⟩
-  haveI : Q.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 E) Q
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  have : Q.LiesOver w.asIdeal := ⟨(under_primeBelow hA).symm⟩
+  have : Q.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 E) Q
     (by rw [show Ideal.under (𝓞 E) Q = w.asIdeal from under_primeBelow hA]
         exact w.isMaximal)
-  letI : Field (IntCl E Ω ⧸ Q) := Ideal.Quotient.field Q
-  letI : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
-  haveI : Finite (𝓞 E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-  letI : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
-  haveI : Algebra.IsIntegral (𝓞 E ⧸ w.asIdeal) (IntCl E Ω ⧸ Q) :=
+  let : Field (IntCl E Ω ⧸ Q) := Ideal.Quotient.field Q
+  let : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+  have : Finite (𝓞 E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
+  let : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
+  have : Algebra.IsIntegral (𝓞 E ⧸ w.asIdeal) (IntCl E Ω ⧸ Q) :=
     Ideal.Quotient.algebra_isIntegral_of_liesOver Q w.asIdeal
-  haveI : Algebra.IsAlgebraic (𝓞 E ⧸ w.asIdeal) (IntCl E Ω ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsAlgebraic (𝓞 E ⧸ w.asIdeal) (IntCl E Ω ⧸ Q) := Algebra.IsIntegral.isAlgebraic
   have hqc : Fintype.card (𝓞 E ⧸ w.asIdeal) = normV w := Fintype.card_eq_nat_card
   have hq1 : 1 < normV w := one_lt_normV w
 
@@ -191,9 +191,9 @@ theorem GlobalTheory.WeilDeligne.exists_pow_normV_resPow (E Ω : Type) [Field E]
       exact this.trans hdeg
     have hpos := minpoly.natDegree_pos hyInt
     set K' := IntermediateField.adjoin (𝓞 E ⧸ w.asIdeal) ({y} : Set (IntCl E Ω ⧸ Q))
-    haveI : FiniteDimensional (𝓞 E ⧸ w.asIdeal) K' := IntermediateField.adjoin.finiteDimensional hyInt
-    haveI : Finite K' := Module.finite_of_finite (𝓞 E ⧸ w.asIdeal)
-    letI : Fintype K' := Fintype.ofFinite _
+    have : FiniteDimensional (𝓞 E ⧸ w.asIdeal) K' := IntermediateField.adjoin.finiteDimensional hyInt
+    have : Finite K' := Module.finite_of_finite (𝓞 E ⧸ w.asIdeal)
+    let : Fintype K' := Fintype.ofFinite _
     have hcard : Fintype.card K' = normV w ^ (minpoly (𝓞 E ⧸ w.asIdeal) y).natDegree := by
       rw [Module.card_eq_pow_finrank (K := 𝓞 E ⧸ w.asIdeal), hqc,
         IntermediateField.adjoin.finrank hyInt]
@@ -220,7 +220,7 @@ theorem GlobalTheory.WeilDeligne.exists_pow_normV_resPow (E Ω : Type) [Field E]
         ((IntCl E Ω ⧸ Q) ≃ₐ[𝓞 E ⧸ w.asIdeal] (IntCl E Ω ⧸ Q)) y := h
       exact (Subgroup.zpowers_le.mpr hs) hf
   have hqM : 1 < normV w ^ M := Nat.one_lt_pow (Nat.factorial_ne_zero n) hq1
-  haveI : Finite R := by
+  have : Finite R := by
     have hfin := (Polynomial.X ^ (normV w ^ M) - Polynomial.X :
       Polynomial (𝓞 E ⧸ w.asIdeal)).rootSet_finite (IntCl E Ω ⧸ Q)
     refine Set.Finite.to_subtype (hfin.subset fun y hy => ?_)
@@ -272,9 +272,9 @@ theorem exists_mem_Ine_eq_on : ∀ (E Ω : Type) [Field E] [NumberField E] [Fiel
     (∀ x ∈ L, IsIntegral ℤ x → A.valuation (ψ x - x) < 1) →
     ∃ ι ∈ Ine (F := E) A, ∀ x ∈ L, ι x = ψ x := by
   intro E Ω _ _ _ _ _ A w _ L ψ hψ hL
-  letI : TopologicalSpace (IntCl E Ω) := ⊥
-  haveI : DiscreteTopology (IntCl E Ω) := ⟨rfl⟩
-  haveI := continuousSMul_intCl E Ω
+  let : TopologicalSpace (IntCl E Ω) := ⊥
+  have : DiscreteTopology (IntCl E Ω) := ⟨rfl⟩
+  have := continuousSMul_intCl E Ω
   let H := L.fixingSubgroup
   have hH : IsClosed (H : Set (Ω ≃ₐ[E] Ω)) := by
     have e : (H : Set (Ω ≃ₐ[E] Ω)) = ⋂ x : L, ((MulAction.stabilizer (Ω ≃ₐ[E] Ω) (x : Ω) :
@@ -287,7 +287,7 @@ theorem exists_mem_Ine_eq_on : ∀ (E Ω : Type) [Field E] [NumberField E] [Fiel
     exact isClosed_iInter fun x =>
       (MulAction.stabilizer (Ω ≃ₐ[E] Ω) (x : Ω)).isClosed_of_isOpen
         (stabilizer_isOpen_of_isIntegral (K := E) (x : Ω))
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
+  have : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
   let Q := primeBelow (F := E) A
   let R' := FixedPoints.subalgebra (𝓞 E) (IntCl E Ω) H
   have hR' : ∀ b : R', ∀ k ∈ H, k • (b : IntCl E Ω) = b := fun b k hk => b.2 ⟨k, hk⟩
@@ -399,7 +399,7 @@ theorem loc_char : ∀ (Ω : Type) [Field Ω] (F : Type) [Field F] [NumberField 
   have hξ : GlobalTheory.WeilDeligne.IsSmooth ξ := by
     have hc : Continuous (fun σ : Ine (F := F) A =>
         (⟨(σ : G F Ω), Weil_le_Dec h (Ine_le_Weil h σ.2)⟩ : Dec (F := F) A)) :=
-      continuous_subtype_val.subtype_mk _
+      continuous_subtypeVal.subtype_mk _
     exact hχ.preimage hc
   obtain ⟨θ, hθs, hθ⟩ := ha.factor ξ hξ
   have hfi : χ.ker.FiniteIndex := GlobalTheory.LocVec.finiteIndex_of_isOpen (Dec (F := F) A)
@@ -536,9 +536,9 @@ namespace GlobalTheory.AbStep
 
 theorem exists_abelian_real_field : ∀ (Ω : Type) [Field Ω] (F : Type) [Field F] [NumberField F] [Algebra F Ω] [IsAlgClosure F Ω] [IsTotallyReal F] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)) (h : IsPlaceOver A v) (V : Subgroup (Dec (F := F) A)), IsOpen (V : Set (Dec (F := F) A)) → commutator (Dec (F := F) A) ≤ V → ∀ T : Finset (HeightOneSpectrum (𝓞 F)), v ∉ T → ∃ F₁ : IntermediateField F Ω, FiniteDimensional F F₁ ∧ IsAbelianGalois F F₁ ∧ (∀ φ : F₁ →+* ℂ, ComplexEmbedding.IsReal φ) ∧ (∀ g : Dec (F := F) A, (g : G F Ω) ∈ F₁.fixingSubgroup ↔ g ∈ V) ∧ ∀ u ∈ T, ∀ A' : ValuationSubring Ω, IsPlaceOver A' u → Dec (F := F) A' ≤ F₁.fixingSubgroup := by
   intro Ω _ F _ _ _ _ _ A v h V hVo hVc T hvT
-  haveI : V.Normal := GlobalTheory.normal_of_commutator_le V hVc
-  haveI : V.FiniteIndex := GlobalTheory.LocVec.finiteIndex_of_isOpen (Dec (F := F) A) (ReciprocityTheory.Gal.isClosed_Dec A).isCompact subset_rfl V hVo
-  letI : CommGroup (Dec (F := F) A ⧸ V) := { (inferInstance : Group (Dec (F := F) A ⧸ V)) with
+  have : V.Normal := GlobalTheory.normal_of_commutator_le V hVc
+  have : V.FiniteIndex := GlobalTheory.LocVec.finiteIndex_of_isOpen (Dec (F := F) A) (ReciprocityTheory.Gal.isClosed_Dec A).isCompact subset_rfl V hVo
+  let : CommGroup (Dec (F := F) A ⧸ V) := { (inferInstance : Group (Dec (F := F) A ⧸ V)) with
     mul_comm := fun a b => by
       induction a using QuotientGroup.induction_on with | H a => ?_
       induction b using QuotientGroup.induction_on with | H b => ?_
@@ -572,8 +572,8 @@ theorem exists_abelian_real_field : ∀ (Ω : Type) [Field Ω] (F : Type) [Field
     rw [← IntermediateField.restrictNormalHom_ker, MonoidHom.mem_ker, hL, hφ]
   refine ⟨L, hLf, hLa, ?_, ?_, ?_⟩
   · intro φ'
-    haveI : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := F) L
-    haveI : IsGalois F Ω := {}
+    have : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := F) L
+    have : IsGalois F Ω := {}
     let j : Ω →+* ℂ := ComplexEmbedding.lift Ω φ'
     have hj : j.comp (algebraMap L Ω) = φ' := ComplexEmbedding.lift_comp_algebraMap _ _
     have hreal : ComplexEmbedding.IsReal (j.comp (algebraMap F Ω)) := by

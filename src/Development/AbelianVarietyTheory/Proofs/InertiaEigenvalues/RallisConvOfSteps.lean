@@ -753,8 +753,8 @@ theorem fundamentalDomain_integral_unfold_left (h𝓖 : IsFundamentalDomain Γ �
     rw [← lintegral_mul_left_eq_self _ x]
     refine lt_of_le_of_lt (le_of_eq ?_) hfin.lt_top
     refine lintegral_congr (fun g => ?_)
-    have hs : ‖star (a x)‖ₑ = ‖a x‖ₑ := by rw [enorm_eq_nnnorm, enorm_eq_nnnorm, nnnorm_star]
-    simp only [hF, enorm_mul, hs, inv_mul_cancel_left]
+    have hs : ‖star (a x)‖ₑ = ‖a x‖ₑ := by rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm, nnNorm_star]
+    simp only [hF, eNorm_mul, hs, inv_mul_cancel_left]
     ring
   have key : ∀ γ : Γ, ∀ y, star (a x) * b y * P (x⁻¹ * (γ : G)⁻¹ * y) = F (γ⁻¹ • y) := by
     intro γ y
@@ -777,7 +777,7 @@ theorem unfold_tsum_fundamentalDomain (ν : Measure G) [ν.IsHaarMeasure]
   have ham : Measurable a := ha.measurable
   have hbm : Measurable b := hbc.measurable
   have hPm : Measurable P := hP.measurable
-  have hs : ∀ z : ℂ, ‖star z‖ₑ = ‖z‖ₑ := fun z => by rw [enorm_eq_nnnorm, enorm_eq_nnnorm, nnnorm_star]
+  have hs : ∀ z : ℂ, ‖star z‖ₑ = ‖z‖ₑ := fun z => by rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm, nnNorm_star]
   set μ := ν.restrict 𝓖 with hμ
 
   have hT : ∫⁻ x, ∫⁻ g, ‖P g‖ₑ * ‖a x‖ₑ * ‖b (x * g)‖ₑ ∂ν ∂μ ≠ ⊤ := by
@@ -792,7 +792,7 @@ theorem unfold_tsum_fundamentalDomain (ν : Measure G) [ν.IsHaarMeasure]
     rw [lintegral_prod _ (by fun_prop)]
     refine lt_of_le_of_lt (le_of_eq ?_) hT.lt_top
     refine lintegral_congr (fun x => lintegral_congr (fun g => ?_))
-    simp only [hk, Function.uncurry_apply_pair, enorm_mul, hs]
+    simp only [hk, Function.uncurry_apply_pair, eNorm_mul, hs]
     ring
   refine ⟨?_, ?_⟩
   · have h1 := hki.swap.integral_prod_left
@@ -803,20 +803,20 @@ theorem unfold_tsum_fundamentalDomain (ν : Measure G) [ν.IsHaarMeasure]
   · set f : Γ → G × G → ℂ := fun γ z => star (a z.1) * b z.2 * P (z.1⁻¹ * (γ : G)⁻¹ * z.2) with hf
     have hfm : ∀ γ, Measurable (f γ) := fun γ => by simp only [hf]; fun_prop
     have hfe : ∀ γ x y, ‖f γ (x, y)‖ₑ = ‖P (x⁻¹ * (γ : G)⁻¹ * y)‖ₑ * ‖a x‖ₑ * ‖b y‖ₑ := by
-      intro γ x y; simp only [hf, enorm_mul, hs]; ring
+      intro γ x y; simp only [hf, eNorm_mul, hs]; ring
     have hsum : ∑' γ : Γ, ∫⁻ x, ∫⁻ y, ‖f γ (x, y)‖ₑ ∂μ ∂μ ≠ ⊤ := by
-      rw [← lintegral_tsum (fun γ => ((hfm γ).enorm.lintegral_prod_right').aemeasurable)]
+      rw [← lintegral_tsum (fun γ => ((hfm γ).eNorm.lintegral_prod_right').aemeasurable)]
       have hx : ∀ x, ∑' γ : Γ, ∫⁻ y, ‖f γ (x, y)‖ₑ ∂μ
           = ∫⁻ y, ∑' γ : Γ, ‖P (x⁻¹ * (γ : G)⁻¹ * y)‖ₑ * ‖a x‖ₑ * ‖b y‖ₑ ∂μ := fun x => by
         rw [← lintegral_tsum (f := fun γ y => ‖f γ (x, y)‖ₑ)
-          (fun γ => ((hfm γ).comp measurable_prodMk_left).enorm.aemeasurable)]
+          (fun γ => ((hfm γ).comp measurable_prodMk_left).eNorm.aemeasurable)]
         simp only [hfe]
       rw [lintegral_congr hx]
       exact hfin
     have hfi : ∀ γ, Integrable (f γ) (μ.prod μ) := fun γ =>
       ⟨(hfm γ).aestronglyMeasurable, by
         unfold HasFiniteIntegral
-        rw [lintegral_prod _ (hfm γ).enorm.aemeasurable]
+        rw [lintegral_prod _ (hfm γ).eNorm.aemeasurable]
         exact lt_of_le_of_lt (ENNReal.le_tsum (f := fun γ : Γ => ∫⁻ x, ∫⁻ y, ‖f γ (x, y)‖ₑ ∂μ ∂μ) γ)
           hsum.lt_top⟩
     have lhs : ∀ γ : Γ, ∫ p in 𝓖 ×ˢ 𝓖, star (a p.1) * b p.2 * P (p.1⁻¹ * (γ : G)⁻¹ * p.2) ∂(ν.prod ν)
@@ -824,7 +824,7 @@ theorem unfold_tsum_fundamentalDomain (ν : Measure G) [ν.IsHaarMeasure]
       intro γ; rw [← Measure.prod_restrict, ← integral_prod _ (hfi γ)]
     rw [tsum_congr lhs, ← integral_tsum (fun γ => (hfi γ).integral_prod_left.aestronglyMeasurable)
       (ne_top_of_le_ne_top hsum (ENNReal.tsum_le_tsum fun γ =>
-        lintegral_mono fun x => enorm_integral_le_lintegral_enorm _))]
+        lintegral_mono fun x => eNorm_integral_le_lintegral_eNorm _))]
     have hae : ∀ᵐ x ∂μ, ∫⁻ g, ‖P g‖ₑ * ‖a x‖ₑ * ‖b (x * g)‖ₑ ∂ν < ⊤ :=
       ae_lt_top (show Measurable (fun z : G × G => ‖P z.2‖ₑ * ‖a z.1‖ₑ * ‖b (z.1 * z.2)‖ₑ) by
         fun_prop).lintegral_prod_right' hT
@@ -897,10 +897,10 @@ theorem graph_term_of_termMove {D : D7} (hTM : TermMove D) {ψ : AddChar (AF D.h
 open scoped GlobalTheory.GaugeEx in
 theorem rallis_graphs : ∀ D : D7, EisAbs D → TermMove D → ∀ (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (χV χW : (AE D)ˣ →* Circle) (om : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (νV : Measure (GA D V)) (𝓗 : Set (GA D V)) (νW : Measure (GA D W)) (𝓖 : Set (GA D W)) (μ : Measure (WO V W)) (𝓕 : Set (WO V W)) (fr : Lag W → Matrix (Fin W.rank) (Fin W.rank) D.host.E × Matrix (Fin W.rank) (Fin W.rank) D.host.E), SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr → ∀ (θ : InfFam D), IsInfFam θ → ∀ (f₁ f₂ : WO V W → ℂ) (φ₁ φ₂ : GA D W → ℂ), IsThetaFunO ψ V W f₁ → IsThetaFunO ψ V W f₂ → IsAutFunSm θ W φ₁ → IsCuspFun W φ₁ → IsAutFunSm θ W φ₂ → IsCuspFun W φ₂ → Integrable (fun g => thetaIP μ 𝓕 (om (1, g) f₂) f₁ * ∫ x in 𝓖, star (φ₁ x) * φ₂ (x * g) ∂νW) νW ∧ ∑' Y : {Y : Lag W // Y.1.comap (LinearMap.inl D.host.E _ _) = ⊥}, ∫ p in 𝓖 ×ˢ 𝓖, star (φ₁ p.1) * φ₂ p.2 * lagTerm μ 𝓕 (fr Y.1) (om (1, p.1) f₁) (om (1, p.2) f₂) ∂(νW.prod νW) = ∫ g, thetaIP μ 𝓕 (om (1, g) f₂) f₁ * (∫ x in 𝓖, star (φ₁ x) * φ₂ (x * g) ∂νW) ∂νW := by
   intro D hEA hTM ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr hS θ hθ f₁ f₂ φ₁ φ₂ hf₁ hf₂ ha₁ hc₁ ha₂ hc₂
-  haveI := hS.haarW
+  have := hS.haarW
   obtain ⟨e, he⟩ := GlobalTheory.T.lagrangians_transverse_eq_graphs_rational_unitary D W
-  haveI : Countable (Lag W) := GlobalTheory.T.countable_doubled_hermitian_lagrangians D W
-  haveI : Countable (GQ W) := e.injective.countable
+  have : Countable (Lag W) := GlobalTheory.T.countable_doubled_hermitian_lagrangians D W
+  have : Countable (GQ W) := e.injective.countable
   choose c hc hcf using he
   let P : GA D W → ℂ := fun g => thetaIP μ 𝓕 (om (1, g) f₂) f₁
   have hT : ∀ (γ : GQ W) (p : GA D W × GA D W),
@@ -973,14 +973,14 @@ theorem rallis_kernel_step : ∀ D : D7, KerAbs D → SWPair D → ∀ (ψ : Add
   intro D hKer hSW ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr hS θ hθ f₁ f₂ φ₁ φ₂ hf₁ hf₂ hφ₁ hc₁ hφ₂ hc₂
   obtain ⟨lcV, scV, t2V⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D V
   obtain ⟨lcW, scW, t2W⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D W
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : BorelSpace (GA D W) := ⟨rfl⟩
-  haveI := hS.haarV
-  haveI := hS.haarW
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D W) := ⟨rfl⟩
+  have := hS.haarV
+  have := hS.haarW
   obtain ⟨hfin, hK⟩ := hKer ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr hS θ hθ
   obtain ⟨B₁, hB₁⟩ := hK f₁ hf₁ φ₁ hφ₁ hc₁
   obtain ⟨B₂, hB₂⟩ := hK f₂ hf₂ φ₂ hφ₂ hc₂
-  haveI : IsFiniteMeasure (νV.restrict 𝓗) := isFiniteMeasure_restrict.2 hfin
+  have : IsFiniteMeasure (νV.restrict 𝓗) := isFiniteMeasure_restrict.2 hfin
   have hk : ∀ f, IsThetaFunO ψ V W f → Continuous fun p : GA D V × GA D W => thetaKO om p.1 p.2 f :=
     fun f hf => hS.weil.om_cont f hf 0
   set μG := νW.restrict 𝓖 with hμG
@@ -1568,7 +1568,7 @@ theorem tsum_setIntegral_eq_zero_of_stabilizer :
       IsFundamentalDomain Γ 𝓓 ν → IntegrableOn (F x) 𝓓 ν → ∫ g in 𝓓, F x g ∂ν = 0) →
     ∑' x, ∫ g in 𝓖, F x g ∂ν = 0 := by
   intro G X _ _ _ ν _ _ Λ hΛ 𝓖 h𝓖 a ha1 ham F hF hmeas hfin hzero
-  letI : MulAction Λ X := { smul := a, one_smul := ha1, mul_smul := ham }
+  let : MulAction Λ X := { smul := a, one_smul := ha1, mul_smul := ham }
   have hsmul : ∀ (γ : Λ) (x : X), γ • x = a γ x := fun _ _ => rfl
   set T : X → ℂ := fun x => ∫ g in 𝓖, F x g ∂ν with hTdef
   have hT : ∀ (γ : Λ) x, T (γ • x) = ∫ g in γ⁻¹ • 𝓖, F x g ∂ν := by
@@ -1582,13 +1582,13 @@ theorem tsum_setIntegral_eq_zero_of_stabilizer :
   have hsum : Summable T := by
     refine Summable.of_norm ?_
     have h1 : ∑' x, ‖T x‖ₑ ≠ ⊤ := ne_top_of_le_ne_top hfin
-      (ENNReal.tsum_le_tsum fun x => enorm_integral_le_lintegral_enorm _)
+      (ENNReal.tsum_le_tsum fun x => eNorm_integral_le_lintegral_eNorm _)
     simpa using ENNReal.summable_toReal h1
   have horb : ∀ x₀ : X,
       HasSum (fun q : Λ ⧸ stabilizer Λ x₀ => T (ofQuotientStabilizer Λ x₀ q)) 0 := by
     intro x₀
     set S := stabilizer Λ x₀ with hSdef
-    haveI : Countable (Λ ⧸ S) := QuotientGroup.mk_surjective.countable
+    have : Countable (Λ ⧸ S) := QuotientGroup.mk_surjective.countable
     have hofq : ∀ q : Λ ⧸ S, ofQuotientStabilizer Λ x₀ q = q.out • x₀ := by
       intro q
       conv_lhs => rw [← QuotientGroup.out_eq' q]
@@ -1652,20 +1652,20 @@ theorem tsum_setIntegral_prod_eq_zero_of_inner :
   have hHm : ∀ x, AEStronglyMeasurable (H x) (μ.prod μ) := fun x => by
     rw [← hprod]; exact (hH x).restrict
   have hFm : AEMeasurable (fun p => ∑' x, ‖H x p‖ₑ) (μ.prod μ) :=
-    AEMeasurable.tsum fun x => (hHm x).enorm
+    AEMeasurable.tsum fun x => (hHm x).eNorm
   have hFint : ∫⁻ p, ∑' x, ‖H x p‖ₑ ∂(μ.prod μ) ≠ ⊤ := by
     rw [lintegral_prod _ hFm]; exact hfin
   have hsum : ∑' x, ∫⁻ p, ‖H x p‖ₑ ∂(μ.prod μ) = ∫⁻ p, ∑' x, ‖H x p‖ₑ ∂(μ.prod μ) :=
-    (lintegral_tsum fun x => (hHm x).enorm).symm
+    (lintegral_tsum fun x => (hHm x).eNorm).symm
   have hInt : ∀ x, Integrable (H x) (μ.prod μ) := fun x =>
     ⟨hHm x, by
       have : ∫⁻ p, ‖H x p‖ₑ ∂(μ.prod μ) ≤ ∫⁻ p, ∑' x, ‖H x p‖ₑ ∂(μ.prod μ) :=
         lintegral_mono fun p => ENNReal.le_tsum (f := fun x => ‖H x p‖ₑ) x
       exact lt_of_le_of_lt this (lt_top_iff_ne_top.2 hFint)⟩
   have hswap : ∀ x, ∫⁻ g₂, ∫⁻ g₁, ‖H x (g₁, g₂)‖ₑ ∂μ ∂μ = ∫⁻ p, ‖H x p‖ₑ ∂(μ.prod μ) :=
-    fun x => (lintegral_prod_symm _ (hHm x).enorm).symm
+    fun x => (lintegral_prod_symm _ (hHm x).eNorm).symm
   have hLm : ∀ x, AEMeasurable (fun g₂ => ∫⁻ g₁, ‖H x (g₁, g₂)‖ₑ ∂μ) μ := fun x =>
-    ((hHm x).enorm.prod_swap).lintegral_prod_right'
+    ((hHm x).eNorm.prod_swap).lintegral_prod_right'
   have hG2 : ∀ᵐ g₂ ∂μ, ∑' x, ∫⁻ g₁, ‖H x (g₁, g₂)‖ₑ ∂μ ≠ ⊤ := by
     have hm : AEMeasurable (fun g₂ => ∑' x, ∫⁻ g₁, ‖H x (g₁, g₂)‖ₑ ∂μ) μ :=
       AEMeasurable.tsum hLm
@@ -1679,7 +1679,7 @@ theorem tsum_setIntegral_prod_eq_zero_of_inner :
     rw [← hsum]
     refine ENNReal.tsum_le_tsum fun x => ?_
     rw [← hswap x]
-    exact lintegral_mono fun g₂ => enorm_integral_le_lintegral_enorm _
+    exact lintegral_mono fun g₂ => eNorm_integral_le_lintegral_eNorm _
   have key := integral_tsum hKm hKfin
   have h0 : ∫ g₂, ∑' x, ∫ g₁, H x (g₁, g₂) ∂μ ∂μ = 0 := by
     apply integral_eq_zero_of_ae
@@ -1713,9 +1713,9 @@ namespace GlobalTheory.RallisCusp
 
 theorem nonGraph_sum_eq_zero : ∀ D : D7, EisAbs D → TermMove D → TermInv D → CuspKill D → (∀ ψ (V W : HSp D) χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr, SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr → ∀ f₁ f₂, IsThetaFunO ψ V W f₁ → IsThetaFunO ψ V W f₂ → ∀ Y : Lag W, Y.1.comap (LinearMap.inl D.host.E _ _) ≠ ⊥ → Continuous fun g : GA D W => lagTerm μ 𝓕 (fr Y) (om (1, g) f₁) f₂) → ∀ (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (χV χW : (AE D)ˣ →* Circle) (om : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (νV : Measure (GA D V)) (𝓗 : Set (GA D V)) (νW : Measure (GA D W)) (𝓖 : Set (GA D W)) (μ : Measure (WO V W)) (𝓕 : Set (WO V W)) (fr : Lag W → Matrix (Fin W.rank) (Fin W.rank) D.host.E × Matrix (Fin W.rank) (Fin W.rank) D.host.E), SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr → ∀ (θ : InfFam D), IsInfFam θ → ∀ (f₁ f₂ : WO V W → ℂ) (φ₁ φ₂ : GA D W → ℂ), IsThetaFunO ψ V W f₁ → IsThetaFunO ψ V W f₂ → IsAutFunSm θ W φ₁ → IsCuspFun W φ₁ → IsAutFunSm θ W φ₂ → IsCuspFun W φ₂ → ∑' Y : {Y : Lag W // Y.1.comap (LinearMap.inl D.host.E _ _) ≠ ⊥}, ∫ p in 𝓖 ×ˢ 𝓖, star (φ₁ p.1) * φ₂ p.2 * lagTerm μ 𝓕 (fr Y.1) (om (1, p.1) f₁) (om (1, p.2) f₂) ∂(νW.prod νW) = 0 := by
   intro D hEis hMove hInv hKill hcont ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr hS θ hθ f₁ f₂ φ₁ φ₂ hf₁ hf₂ ha₁ hc₁ ha₂ hc₂
-  haveI : Countable (Lag W) := lag_countable D W
-  haveI : Countable D.host.E := countable_numberField_type D.host.E
-  haveI := hS.haarW
+  have : Countable (Lag W) := lag_countable D W
+  have : Countable D.host.E := countable_numberField_type D.host.E
+  have := hS.haarW
   have hw := hS.weil
   have hpres : ∀ p f, IsThetaFunO ψ V W f → IsThetaFunO ψ V W (om p f) := hw.om_pres
   have hom : ∀ (g h : GA D W) f, om (1, g) (om (1, h) f) = om (1, g * h) f := by
@@ -1736,7 +1736,7 @@ theorem nonGraph_sum_eq_zero : ∀ D : D7, EisAbs D → TermMove D → TermInv D
     intro g₂ hfin
     have hF₂ := hpres (1, g₂) f₂ hf₂
     have hGQ : Countable (GQ W) := by
-      haveI : Countable (Matrix (Fin W.rank) (Fin W.rank) D.host.E) :=
+      have : Countable (Matrix (Fin W.rank) (Fin W.rank) D.host.E) :=
         inferInstanceAs (Countable (Fin W.rank → Fin W.rank → D.host.E))
       refine Function.Injective.countable (f := fun γ : GQ W => gqMat W γ) ?_
       intro γ δ h
@@ -1804,9 +1804,9 @@ theorem nonGraph_sum_eq_zero : ∀ D : D7, EisAbs D → TermMove D → TermInv D
     have e : ∀ Y : NGLag W, ‖star (φ₁ g₁) * φ₂ g₂ * lagTerm μ 𝓕 (fr Y.1) (om (1, g₁) f₁) (om (1, g₂) f₂)‖ₑ =
         (fun Y : Lag W => ‖lagTerm μ 𝓕 (fr Y) (om (1, g₁) f₁) (om (1, g₂) f₂)‖ₑ * ‖φ₁ g₁‖ₑ * ‖φ₂ g₂‖ₑ) Y.1 := by
       intro Y
-      have hs : ‖star (φ₁ g₁)‖ₑ = ‖φ₁ g₁‖ₑ := by simp [enorm_eq_nnnorm]
+      have hs : ‖star (φ₁ g₁)‖ₑ = ‖φ₁ g₁‖ₑ := by simp [eNorm_eq_nnNorm]
       simp only
-      rw [enorm_mul, enorm_mul, hs]
+      rw [eNorm_mul, eNorm_mul, hs]
       ring
     rw [tsum_congr e]
     exact (by refine' _root_.le_trans _ (_root_.tsum_comp_le_tsum_of_injective Subtype.val_injective _); exact _root_.le_rfl)
@@ -1823,16 +1823,16 @@ theorem nonGraph_sum_eq_zero : ∀ D : D7, EisAbs D → TermMove D → TermInv D
       have e2 : ∀ Y : NGLag W, ∫⁻ g₁ in 𝓖, ‖star (φ₁ g₁) * φ₂ g₂ * lagTerm μ 𝓕 (fr Y.1) (om (1, g₁) f₁) (om (1, g₂) f₂)‖ₑ ∂νW =
           ‖φ₂ g₂‖ₑ * ∫⁻ g₁ in 𝓖, ‖star (φ₁ g₁) * lagTerm μ 𝓕 (fr Y.1) (om (1, g₁) f₁) (om (1, g₂) f₂)‖ₑ ∂νW := by
         intro Y
-        rw [← lintegral_const_mul' _ _ enorm_ne_top]
+        rw [← lintegral_const_mul' _ _ eNorm_ne_top]
         congr 1
         funext g₁
-        rw [enorm_mul, enorm_mul, enorm_mul]
+        rw [eNorm_mul, eNorm_mul, eNorm_mul]
         ring
       simp only at hfin ⊢
       rw [tsum_congr e2, ENNReal.tsum_mul_left] at hfin
       rw [tsum_congr e1, tsum_mul_left, hslice g₂ ?_, mul_zero]
       intro htop
-      rw [htop, ENNReal.mul_top (enorm_ne_zero.2 h0)] at hfin
+      rw [htop, ENNReal.mul_top (eNorm_ne_zero.2 h0)] at hfin
       exact hfin rfl
 
 end GlobalTheory.RallisCusp
@@ -1893,23 +1893,23 @@ theorem exch_general {X ι : Type*} [MeasurableSpace X] [Countable ι] (ν : Mea
   have hF : ∀ Y, AEStronglyMeasurable (F Y) ρ := fun Y => (ha'.mul hb').mul (hT Y)
   have hnorm : ∀ Y p, ‖F Y p‖ₑ = ‖T Y p‖ₑ * ‖a p.1‖ₑ * ‖b p.2‖ₑ := by
     intro Y p
-    have hs : ‖star (a p.1)‖ₑ = ‖a p.1‖ₑ := by rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, norm_star]
-    simp only [F, enorm_mul, hs]; ring
+    have hs : ‖star (a p.1)‖ₑ = ‖a p.1‖ₑ := by rw [← ofReal_norm, ← ofReal_norm, norm_star]
+    simp only [F, eNorm_mul, hs]; ring
   have hsum : ∑' Y, ∫⁻ p, ‖F Y p‖ₑ ∂ρ ≠ ⊤ := by
-    rw [← lintegral_tsum (fun Y => (hF Y).enorm)]
+    rw [← lintegral_tsum (fun Y => (hF Y).eNorm)]
     simp_rw [hnorm]
     rw [hρ, lintegral_prod _ ?_]
     · exact hfin
     · rw [← hρ]
       exact AEMeasurable.tsum fun Y => by
-        simpa [hnorm] using (hF Y).enorm
+        simpa [hnorm] using (hF Y).eNorm
   have hint : ∀ Y, Integrable (F Y) ρ := fun Y =>
     ⟨hF Y, lt_of_le_of_lt (ENNReal.le_tsum (f := fun Y => ∫⁻ p, ‖F Y p‖ₑ ∂ρ) Y)
       (lt_top_iff_ne_top.2 hsum)⟩
   refine ⟨hint, ?_, ?_⟩
   · refine Summable.of_norm_bounded (ENNReal.summable_toReal hsum) fun Y => ?_
-    have h1 := enorm_integral_le_lintegral_enorm (μ := ρ) (F Y)
-    rw [← ofReal_norm_eq_enorm] at h1
+    have h1 := eNorm_integral_le_lintegral_eNorm (μ := ρ) (F Y)
+    rw [← ofReal_norm] at h1
     exact (ENNReal.ofReal_le_iff_le_toReal (ne_top_of_le_ne_top hsum (ENNReal.le_tsum Y))).1 h1
   · have : (fun p : X × X => star (a p.1) * b p.2 * ∑' Y, T Y p) = fun p => ∑' Y, F Y p := by
       funext p; exact tsum_mul_left.symm
@@ -1924,8 +1924,8 @@ open scoped GlobalTheory.GaugeEx
 
 theorem eisAbs_exchange : ∀ D : D7, EisAbs D → ∀ (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (χV χW : (AE D)ˣ →* Circle) (om : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (νV : Measure (GA D V)) (𝓗 : Set (GA D V)) (νW : Measure (GA D W)) (𝓖 : Set (GA D W)) (μ : Measure (WO V W)) (𝓕 : Set (WO V W)) (fr : Lag W → Matrix (Fin W.rank) (Fin W.rank) D.host.E × Matrix (Fin W.rank) (Fin W.rank) D.host.E), SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr → ∀ (θ : InfFam D), IsInfFam θ → ∀ (f₁ f₂ : WO V W → ℂ) (φ₁ φ₂ : GA D W → ℂ), IsThetaFunO ψ V W f₁ → IsThetaFunO ψ V W f₂ → IsAutFunSm θ W φ₁ → IsCuspFun W φ₁ → IsAutFunSm θ W φ₂ → IsCuspFun W φ₂ → (∀ Y : Lag W, IntegrableOn (fun p : GA D W × GA D W => star (φ₁ p.1) * φ₂ p.2 * lagTerm μ 𝓕 (fr Y) (om (1, p.1) f₁) (om (1, p.2) f₂)) (𝓖 ×ˢ 𝓖) (νW.prod νW)) ∧ Summable (fun Y : Lag W => ∫ p in 𝓖 ×ˢ 𝓖, star (φ₁ p.1) * φ₂ p.2 * lagTerm μ 𝓕 (fr Y) (om (1, p.1) f₁) (om (1, p.2) f₂) ∂(νW.prod νW)) ∧ ∫ p in 𝓖 ×ˢ 𝓖, star (φ₁ p.1) * φ₂ p.2 * ∑' Y : Lag W, lagTerm μ 𝓕 (fr Y) (om (1, p.1) f₁) (om (1, p.2) f₂) ∂(νW.prod νW) = ∑' Y : Lag W, ∫ p in 𝓖 ×ˢ 𝓖, star (φ₁ p.1) * φ₂ p.2 * lagTerm μ 𝓕 (fr Y) (om (1, p.1) f₁) (om (1, p.2) f₂) ∂(νW.prod νW) := by
   intro D hE ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr hS θ hθ f₁ f₂ φ₁ φ₂ h1 h2 hA1 hC1 hA2 hC2
-  haveI : Countable (Lag W) := GlobalTheory.T.countable_doubled_hermitian_lagrangians D W
-  haveI : SigmaFinite νW := by haveI := hS.haarW; infer_instance
+  have : Countable (Lag W) := GlobalTheory.T.countable_doubled_hermitian_lagrangians D W
+  have : SigmaFinite νW := by have := hS.haarW; infer_instance
   have hT : ∀ Y : Lag W, AEStronglyMeasurable
       (fun p : GA D W × GA D W => lagTerm μ 𝓕 (fr Y) (om (1, p.1) f₁) (om (1, p.2) f₂))
       ((νW.prod νW).restrict (𝓖 ×ˢ 𝓖)) := fun Y =>

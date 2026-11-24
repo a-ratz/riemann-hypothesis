@@ -100,7 +100,7 @@ theorem agree_closed_subgroup [IsTopologicalRing LL] [T2Space LL] (T : LocLat G 
     exact add_right_cancel (e1.symm.trans e2)
   · have : {g | c g = c' g} = ⋂ f : Module.Dual LL T.V, {g | f (c g) = f (c' g)} := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
       refine ⟨fun h f => by rw [h], fun h => ?_⟩
       rw [← sub_eq_zero, ← Module.forall_dual_apply_eq_zero_iff LL]
       intro f
@@ -115,7 +115,7 @@ variable {R : Type} [CommRing R] [Algebra O R]
 
 theorem one_tmul_injective (hR : Function.Injective (algebraMap O R)) (T : LocLat G Qp LL O) :
     Function.Injective fun t : ↥T.L.T => ((1 : R) ⊗ₜ[O] t : TW R T) := by
-  haveI := T.L.free
+  have := T.L.free
   have h1 := Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T)
     (Algebra.linearMap O R) hR
   intro a b hab
@@ -143,7 +143,7 @@ theorem ses_tensor {T Yt Z : LocLat G Qp LL O} (ι : LatHom T.L Yt.L) (π : LatH
       exact ⟨⟨y, h5 y (hy ▸ x.2)⟩, Subtype.ext hy⟩
     · rintro ⟨y, rfl⟩
       exact Subtype.ext ((h4 _).2 ⟨y, rfl⟩)
-  haveI := Z.L.free
+  have := Z.L.free
   exact ⟨LinearMap.lTensor_injective_of_exact_of_flat (resT π) hs (resT ι) hi he R,
     lTensor_exact R he hs⟩
 
@@ -299,7 +299,7 @@ theorem exists_teich (χ : GQ l →* ℚ_[l]ˣ) (hχ : IsCyc χ) (K : FinExt l) 
   obtain ⟨hn, hc, hb⟩ := cyc_basic l χ hχ
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   have hU : IsCompact (Set.range fun a : ↥(GK K) => (χ a : ℚ_[l])) :=
-    isCompact_range (hc.comp continuous_subtype_val)
+    isCompact_range (hc.comp continuous_subtypeVal)
   obtain ⟨w, ⟨β, rfl⟩, φ, hφ, hlim⟩ := hU.tendsto_subseq
     (x := fun n : ℕ => (χ g : ℚ_[l]) ^ l ^ n) (fun n => ⟨g ^ l ^ n, by simp⟩)
   refine ⟨β, ?_, ?_⟩
@@ -361,7 +361,7 @@ theorem closed_eq_top (act : GQ l →* (PadicComplex l ≃+* PadicComplex l)) (�
   have hgen : IsGen χ K j' ((γ ^ d : ↥(GK K)) : GQ l) := ⟨hmem γ, by simpa using e⟩
   have hcl := ((gen_dense l act χ hact hχ K j' hL).2 _ hgen).2.2 (hmem g)
   have hP : IsClosed ((fun a : ↥(GK K) => (χ a : ℚ_[l]) ^ d) '' (A : Set ↥(GK K))) :=
-    (hA.isCompact.image ((hc.comp continuous_subtype_val).pow d)).isClosed
+    (hA.isCompact.image ((hc.comp continuous_subtypeVal).pow d)).isClosed
   have hin := closure_minimal (t := (fun σ : GQ l => (χ σ : ℚ_[l])) ⁻¹'
       ((fun a : ↥(GK K) => (χ a : ℚ_[l]) ^ d) '' (A : Set ↥(GK K)))) (by
     rintro x ⟨h, hh, a, rfl⟩
@@ -490,8 +490,8 @@ theorem dict_K : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonO
   have hG : l = 2 → GK K ≤ Gj K 2 := fun hl => by
     obtain ⟨i, hi⟩ := hi (hp.trans hl)
     exact localGalois_le_cyclotomicLevelTwo_of_sqrt_neg_one K hl i hi
-  haveI : IsTopologicalRing S.LL := inferInstanceAs (IsTopologicalRing ↥LL.1.toSubring)
-  haveI : T2Space S.LL := inferInstanceAs (T2Space ↥LL.1)
+  have : IsTopologicalRing S.LL := inferInstanceAs (IsTopologicalRing ↥LL.1.toSubring)
+  have : T2Space S.LL := inferInstanceAs (T2Space ↥LL.1)
   exact dict_of_dense S E (algebraMap_RW_injective LL)
     (fun hl => DelF_eq_one (D.loc l) S.W (D.locA l) hG (hp.symm.trans hl))
     (dense_DelF_gamK (D.loc l) S.W (D.locA l) hG) T Yt Z ι π hs yt z e hz he hδ pr h1 h2 c hc

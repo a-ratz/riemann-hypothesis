@@ -64,7 +64,7 @@ theorem star_eq_conj' (x : D.host.E) : (letI := D.host.cmStar; star x) = D.host.
     (D.host.conjE_apply D.host.φ₀ x).symm)
 
 theorem conj_conj' (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [← star_eq_conj', ← star_eq_conj', star_star]
 
 theorem conj_mul_conj : D.host.conj * D.host.conj = 1 :=
@@ -113,7 +113,7 @@ theorem mem_skewLat_iff {𝔪 : Ideal (𝓞 D.host.E)} {N : ℕ} (y : Fin N → 
 
 theorem skewLat_sd : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (N : ℕ), 𝔪 ≠ ⊥ → SD D (GlobalTheory.FunObj.SqNum.skewLat D 𝔪 N) := by
   intro D 𝔪 N h𝔪
-  letI := D.host.cmStar
+  let := D.host.cmStar
   set σ := D.host.conj
   set 𝔫 : Ideal (𝓞 D.host.E) := σ • 𝔪 with h𝔫
   have h𝔫0 : 𝔫 ≠ ⊥ := smul_ne_bot σ h𝔪
@@ -134,7 +134,7 @@ theorem skewLat_sd : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (N : ℕ), 𝔪
     exact Submodule.fg_iSup _ fun i => (FractionalIdeal.fg_of_isNoetherianRing le_rfl _).map _
   · obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
       (show (((𝔪 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) / (𝔫 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : Submodule (𝓞 D.host.E) D.host.E) ≠ ⊥ from fun e =>
-        hA0 (FractionalIdeal.coeToSubmodule_injective (e.trans FractionalIdeal.coe_zero.symm)))
+        hA0 (FractionalIdeal.coeToSubmodule_injective (e.trans FractionalIdeal.coeToSubmodule_zero.symm)))
     have hs : ∀ i, (Pi.single i a : Fin N → D.host.E) ∈ GlobalTheory.FunObj.SqNum.skewLat D 𝔪 N := fun i => by
       rw [hmem]
       intro j

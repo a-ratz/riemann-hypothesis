@@ -126,7 +126,7 @@ theorem projRep_of_fibres : ∀ (R σ : Type) [CommRing R] [Finite σ] (X : Sche
     refine ⟨?_, fun F hF => by rw [Ideal.mem_bot] at hF; simp [hF]⟩
     by_contra hne
     obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hne
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     let K := AlgebraicClosure (R' ⧸ m)
     let φ : R' →+* K := (algebraMap (R' ⧸ m) K).comp (Ideal.Quotient.mk m)
     obtain ⟨X', π, s', M', th', I, hpb, hrep, hc⟩ := H K (φ.comp β)

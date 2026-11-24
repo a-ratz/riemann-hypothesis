@@ -94,7 +94,7 @@ theorem exists_iotaB_eq_iff {β : PadicAlgCl p} :
   constructor
   · rintro ⟨x, hx⟩
     let L : IntermediateField ℚ_[p] (PadicAlgCl p) := IntermediateField.adjoin ℚ_[p] {β}
-    haveI : FiniteDimensional ℚ_[p] L :=
+    have : FiniteDimensional ℚ_[p] L :=
       IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral β)
     have hβL : β ∈ L := IntermediateField.subset_adjoin ℚ_[p] {β} (Set.mem_singleton β)
     have hfix : ∀ σ : Gal(PadicAlgCl p/L), galB hε σ x = x := fun σ => by

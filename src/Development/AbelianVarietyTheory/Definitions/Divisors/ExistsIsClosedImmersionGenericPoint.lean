@@ -403,7 +403,7 @@ theorem ord_algebraMap (hz : Order.coheight z = 1) {a : Z.presheaf.stalk z} (ha 
   have h0 := mem_nonZeroDivisors_of_ne_zero ha
   refine (Scheme.ord_eq_iff hz ((map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 ha)).2 ?_
   exact (Ring.ordFrac_eq_ord _).trans (Ring.ordMonoidWithZeroHom_eq_coe _ h0
-    (ENat.coe_toNat (Ring.ord_ne_top h0)).symm)
+    (ENat.natCast_toNat (Ring.ord_ne_top h0)).symm)
 
 namespace CartierDiv
 
@@ -436,7 +436,7 @@ theorem finite_support_mult [CompactSpace Z] (D : CartierDiv Z) :
     fun z hz => ?_
   obtain ⟨T, hT, hzT⟩ := mem_sUnion.1 (hU.le (mem_supp_of_mult_ne_zero hz))
   refine ⟨T, hT, ?_⟩
-  simp only [dif_pos (hi T hT)]
+  simp only [dite_eq_left (hi T hT)]
   have hg := (hi T hT).isGenericPoint_genericPoint (hc T hT)
   have h₁ : z ≤ (hi T hT).genericPoint := hg.specializes hzT
   have h₂ : (hi T hT).genericPoint < genericPoint Z := by
@@ -470,7 +470,7 @@ theorem ratVal_fnOf {U : Z.Opens} (hy : y ∈ ptsIn q σ U) (h : genericPoint Z 
   have hr := regAt_fnOf (mem_ptsIn.1 hy) h a
   have e := hr.exists_fnOf.choose_spec.choose_spec.choose_spec
   have hV := mem_ptsIn_inf.2 ⟨mem_ptsIn.2 hr.exists_fnOf.choose_spec.choose, hy⟩
-  rw [ratVal, dif_pos hr, ← ev_res inf_le_left hV, ← ev_res inf_le_right hV]
+  rw [ratVal, dite_eq_left hr, ← ev_res inf_le_left hV, ← ev_res inf_le_right hV]
   congr 1
   exact fn_ext fun _ => by rw [fnOf_resG, fnOf_resG, e]
 
@@ -536,7 +536,7 @@ variable {hL : L.IsLB} {s : L.Sec} {hs : genericPoint Z ∈ nonzeroLocus s}
 
 theorem val_ratOfSec {i : L.ι} (h : genericPoint Z ∈ L.U i) :
     (ratOfSec s hs i : Z.functionField) = fnOf _ h (s.f i) := by
-  rw [ratOfSec, dif_pos h, Units.val_mk0]
+  rw [ratOfSec, dite_eq_left h, Units.val_mk0]
 
 
 variable (s hs) in
@@ -638,8 +638,8 @@ theorem flat_int_iff_charZero [IsIntegral X] (t : X ⟶ Sp ℤ) : Flat t ↔ Cha
       algebraMap ℤ Γ(X, U) := RingHom.ext_int _ _
     rw [← RingHom.Flat.respectsIso.cancel_left_isIso (Scheme.ΓSpecIso (.of ℤ)).inv, e,
       RingHom.flat_algebraMap_iff, Module.Flat.flat_iff_torsion_eq_bot_of_isBezout,
-      ← Submodule.isTorsionFree_iff_torsion_eq_bot, Module.isTorsionFree_int_iff_isAddTorsionFree]
-    exact ⟨fun _ => .of_isAddTorsionFree _ Γ(X, U), fun _ => inferInstance⟩
+      ← Submodule.isTorsionFree_iff_torsion_eq_bot, Module.isTorsionFree_int_iff_hasUniqueDiv]
+    exact ⟨fun _ => .of_hasUniqueDiv _ Γ(X, U), fun _ => inferInstance⟩
   have res (U : X.Opens) [Nonempty U] : CharZero Γ(X, U) ↔ CharZero Γ(X, ⊤) :=
     ((resG X (le_top : U ≤ ⊤)).charZero_iff (map_injective_of_isIntegral X _)).symm
   refine ⟨fun h => ?_, fun h => ?_⟩
@@ -936,7 +936,7 @@ theorem exists_dim_eq : ∃ d : ℕ, topologicalKrullDim Z = d := by
   | bot => exact absurd h₂ (by simp)
   | coe a =>
     induction a with
-    | top => exact absurd h₁ (by rw [not_le]; exact WithBot.coe_lt_coe.2 (ENat.coe_lt_top _))
+    | top => exact absurd h₁ (by rw [not_le]; exact WithBot.coe_lt_coe.2 (ENat.natCast_lt_top _))
     | coe a => exact ⟨a, rfl⟩
 
 theorem dim_ne_zero (hc : CharZero Γ(Z, ⊤)) : topologicalKrullDim Z ≠ 0 := fun h0 => by
@@ -1409,7 +1409,7 @@ theorem isArithHeight_trivShift (t : ℝ) : (trivShift t).IsArithHeight fun x =>
       have := hd.symm.trans ((PrimeSpectrum.topologicalKrullDim_eq_ringKrullDim _).trans
         ((ringKrullDim_eq_of_ringEquiv (RingEquiv.ofBijective _ hb)).symm.trans (ringKrullDim_eq_zero_of_field κ)))
       exact_mod_cast this
-    rw [hk, if_neg h0, Nat.card_congr (RingHom.quotientKerEquivOfSurjective hs).toEquiv, topSelfIntersection,
+    rw [hk, ite_eq_right h0, Nat.card_congr (RingHom.quotientKerEquivOfSurjective hs).toEquiv, topSelfIntersection,
       interNum_of_isEmpty, chi_structureModule_of_isAffine,
       ← (AlgEquiv.ofBijective (Algebra.ofId _ _) hb).toLinearEquiv.finrank_eq, Module.finrank_self]
     simp
@@ -1429,7 +1429,7 @@ theorem isArithHeight_trivShift (t : ℝ) : (trivShift t).IsArithHeight fun x =>
     have hj (z : Z) : (((trivShift t).restr i).div hr).mult z = Scheme.ord (r j : Z.functionField) z :=
       ((presents_divOfRatSec _ hr).isEqn j z (mem_iInter.2 fun _ => trivial)).mult_eq
     have e' : (((trivShift t).restr i).φ σ).φ j y = 0 + 2 * t := ((trivShift t).φ σ).pull_φ i rfl j y
-    rw [if_pos h0, HermLB.curveDeg, finsum_eq_single _ σ fun σ' h => absurd (RingHom.ext_int _ _) h,
+    rw [ite_eq_left h0, HermLB.curveDeg, finsum_eq_single _ σ fun σ' h => absurd (RingHom.ext_int _ _) h,
       finsum_eq_single _ y fun y' h => absurd (hy y') h, logNorm]
     simp only [hj]
     rw [(product_formula e y (r j).ne_zero).2]
@@ -1442,7 +1442,7 @@ theorem isArithHeight_trivShift (t : ℝ) : (trivShift t).IsArithHeight fun x =>
     omega }
 
 theorem isSelfInter_trivShift (t : ℝ) : (trivShift t).IsSelfInter t :=
-  ⟨_, isArithHeight_trivShift t, if_pos (Ideal.ext fun n =>
+  ⟨_, isArithHeight_trivShift t, ite_eq_left (Ideal.ext fun n =>
     (mem_asIdeal_iff (𝟙 (Sp ℤ)) n).trans (have := isArithVar_int.charZero; Int.cast_eq_zero))⟩
 
 end ArithBase

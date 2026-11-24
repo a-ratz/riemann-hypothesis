@@ -137,7 +137,7 @@ theorem isSmoothChar_of_isUnram {χ : kˣ →* ℂˣ} (h : IsUnram χ) : IsSmoot
     have a2 : valuation k ((x⁻¹ : kˣ) : k) ≤ 1 := hx'
     refine h x (le_antisymm a1 ?_)
     rw [Units.val_inv_eq_inv_val, map_inv₀] at a2
-    exact (inv_le_one₀ (zero_lt_iff.2 (by simp))).1 a2
+    exact (inv_le_one₀ (pos_iff_ne_zero.2 (by simp))).1 a2
 
 def ord (x : kˣ) : ℤ :=
   -WithZero.log (IsNonarchimedeanLocalField.valueGroupWithZeroIsoInt k (valuation k (x : k)))

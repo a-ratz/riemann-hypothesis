@@ -175,7 +175,7 @@ namespace GlobalTheory.CompanionTheory.EisCovar
 theorem covAt_weyl : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F) ℂ) (χ : (AE D)ˣ →* Circle) (θ : InfFam D) (μ : Measure (Mx D V.rank n)) (ω : G D n →* Module.End ℂ (schwartzA θ V.rank n)), IsWeilSch ψ χ θ V μ ω → μ.IsAddHaarMeasure → ∀ g : G D n, mat g = blk4 0 1 (-1) 0 → CovAt ψ V ω g := by
   intro D n V ψ χ θ μ ω hω hμ g hg v Φ Ψ hΨ
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D V.rank n
-  haveI : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
   have hx : xPart (HMul.hMul v (mat g⁻¹) : Mx D V.rank (n + n)) = yPart v := by
     rw [Weyl.mat_inv_eq g hg, x_part_mul_block]; simp
   have hy : yPart (HMul.hMul v (mat g⁻¹) : Mx D V.rank (n + n)) = -xPart v := by

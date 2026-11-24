@@ -157,7 +157,7 @@ theorem cover_round {N : ℕ} (b : Fin N → Fin N → ℝ) (hb : LinearIndepend
   classical
   rcases Nat.eq_zero_or_pos N with rfl | hN
   · exact ⟨0, by simp [dotProduct]⟩
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   have hcard : Fintype.card (Fin N) = Module.finrank ℝ (Fin N → ℝ) := by simp
   let B := basisOfLinearIndependentOfCardEqFinrank hb hcard
   have hB : ∀ j, B j = b j := fun j => by simp [B]
@@ -253,9 +253,9 @@ theorem lattice_zbasis {K : Type} [Field K] [NumberField K] {r : ℕ} (L : Submo
     ∃ e : Fin (Module.finrank ℚ K * r) → (Fin r → K), (∀ j, e j ∈ L) ∧ LinearIndependent ℚ e ∧
       ∀ v ∈ L, ∃ n : Fin (Module.finrank ℚ K * r) → ℤ, v = ∑ j, (n j : ℚ) • e j := by
   classical
-  haveI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 K) L
-  haveI : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite ℤ L := Module.Finite.trans (𝓞 K) L
+  have : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
   set b := Module.Free.chooseBasis ℤ L
   set f : Module.Free.ChooseBasisIndex ℤ L → (Fin r → K) := fun j => (b j : Fin r → K) with hf
   have hfZ : LinearIndependent ℤ f :=

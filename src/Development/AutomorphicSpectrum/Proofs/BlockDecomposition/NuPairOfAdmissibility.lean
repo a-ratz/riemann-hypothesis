@@ -388,8 +388,8 @@ theorem idx_cases (i : Fin N) : (∃ a : Fin (d 0), i = stdBlocks d h ⟨0, a⟩
 
 theorem blk_two (i : Fin N) : blk (stdBlocks d h) i = if (i : ℕ) < d 0 then 0 else 1 := by
   rcases idx_cases d h i with ⟨a, rfl⟩ | ⟨a, rfl⟩
-  · rw [blk_apply, stdBlocks_zero_val, if_pos a.2]
-  · rw [blk_apply, stdBlocks_one_val, if_neg (by omega)]
+  · rw [blk_apply, stdBlocks_zero_val, ite_eq_left a.2]
+  · rw [blk_apply, stdBlocks_one_val, ite_eq_right (by omega)]
 
 theorem mem_unipRad_iff {g : GL (Fin N) k} :
     g ∈ unipRad k (stdBlocks d h) ↔
@@ -486,7 +486,7 @@ theorem det_eq_one {m : ℕ} {u : GL (Fin m) k} (hu : u ∈ unipB k (Fin m)) :
     GeneralLinearGroup.det u = 1 := by
   obtain ⟨u1, u2⟩ := (mem_unipB k).1 hu
   ext
-  rw [GeneralLinearGroup.val_det_apply, Matrix.det_of_upperTriangular (fun i j hij => u1 i j hij)]
+  rw [GeneralLinearGroup.val_det_apply, det_of_isUpperTriangular (fun i j hij => u1 i j hij)]
   simp [u2]
 
 theorem exists_decomp {w : GL (Fin N) k} (hw : w ∈ derUnip k N (d 0)) :
@@ -785,7 +785,7 @@ theorem isSubquotient_sub_or_quot :
     (A B : Subrepresentation ρ), A ≤ B → σ.IsIrreducible → IsSubquotient σ B.toRepresentation →
     IsSubquotient σ A.toRepresentation ∨ IsSubquotient σ (subQuot B A) := by
   intro G V W _ _ _ _ _ ρ σ A B hAB hσ hB
-  haveI : IsSimpleOrder (Subrepresentation σ) := hσ
+  have : IsSimpleOrder (Subrepresentation σ) := hσ
   unfold GlobalTheory.SmGL.IsSubquotient at hB ⊢
   obtain ⟨S, f, hf⟩ := hB
   let P : Submodule ℂ S.toSubmodule :=
@@ -1309,7 +1309,7 @@ theorem nuPair : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
   have hD := GlobalTheory.CompanionTheory.BZCuspPair.deriv_nontrivial ψ n j ω hnt2
   have hci : (contra ω).IsIrreducible := GlobalTheory.CompanionTheory.ZcDual.isIrreducible_contra hA ω hs hi
   obtain ⟨S, f, hf⟩ := deriv_irr_sub ψ hc (n + 1) j ω hs hi hD
-  haveI := GlobalTheory.CompanionTheory.BZCuspPair.nontrivial_of_irr S
+  have := GlobalTheory.CompanionTheory.BZCuspPair.nontrivial_of_irr S
   obtain ⟨w₀, hw₀⟩ := exists_ne (0 : S.V)
   have hw1 : f w₀ ≠ 0 := fun h => hw₀ (hf (by rw [h, map_zero]))
   obtain ⟨w', hw'⟩ := hn' (f w₀) hw1

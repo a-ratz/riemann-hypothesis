@@ -175,7 +175,7 @@ theorem exists_factor {A K : Type} [AddCommGroup A] [AddCommGroup K] {ev : A →
   have hc := continuous_put hev hι
   have hr : Continuous fun x => Φ (put ev ι x 0) := h1.comp (hc.comp (continuous_id.prodMk continuous_const))
   let w : A → ℝ≥0∞ := fun x => ‖Φ (put ev ι x 0)‖ₑ ^ 2
-  have hw : Measurable w := hr.measurable.enorm.pow_const 2
+  have hw : Measurable w := hr.measurable.eNorm.pow_const 2
   let ν : Measure K := (μ.withDensity w).map ev
   have hν : ∀ f : K → ℝ≥0∞, Measurable f → ∫⁻ y, f y ∂ν = ∫⁻ x, w x * f (ev x) ∂μ := fun f hf => by
     rw [lintegral_map hf hev.measurable]
@@ -217,10 +217,10 @@ theorem exists_factor {A K : Type} [AddCommGroup A] [AddCommGroup K] {ev : A →
     refine ((lintegral_pos_iff_support hw).2 ?_).ne this
     rw [show Function.support w = Function.support fun x => Φ (put ev ι x 0) by ext y; simp [w]]
     exact hr.isOpen_support.measure_pos μ ⟨0, by simpa [put] using h3⟩
-  · have := hν _ (hφ.measurable.enorm.pow_const 2)
+  · have := hν _ (hφ.measurable.eNorm.pow_const 2)
     rw [e, lintegral_smul_measure] at this
     refine Eq.trans (lintegral_congr fun x => ?_) this.symm
-    simp only [w, Pm_apply, enorm_mul, mul_pow, mul_comm]
+    simp only [w, Pm_apply, eNorm_mul, mul_pow, mul_comm]
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {v : Pl F}
 
@@ -241,10 +241,10 @@ theorem continuous_liftU {β : Type} [Fintype β] [DecidableEq β] {J : Matrix �
     (h : J.map (compFin F E v) = Jv) : Continuous (liftU (σ := σ) h) := by
   have : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
   have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
-  have : IsTopologicalAddGroup (Ev E v) := IsModuleTopology.topologicalAddGroup (Fv F v) _
+  have : IsTopologicalAddGroup (Ev E v) := IsModuleTopology.isTopologicalAddGroup (Fv F v) _
   have c1 : Continuous (liftM E v β) :=
     continuous_const.add ((continuous_id.sub continuous_const).matrix_map continuous_tensAt)
-  exact ((Units.continuous_map c1).comp continuous_subtype_val).subtype_mk _
+  exact ((Units.continuous_map c1).comp continuous_subtypeVal).subtype_mk _
 
 end PositivityTheory.ThKH.Locpair
 end -- clump:auto

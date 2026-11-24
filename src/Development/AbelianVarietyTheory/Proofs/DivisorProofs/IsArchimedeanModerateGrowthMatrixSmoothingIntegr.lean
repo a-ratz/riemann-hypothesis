@@ -104,8 +104,8 @@ theorem htInf_mul_le (g h : GL (Fin n) (Cinf E)) : htInf (g * h) ≤ htInf g * h
 theorem measurable_comp_GLInf {X β : Type} [MeasurableSpace X] [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β]
     {F : GL (Fin n) (Cinf E) → β} (hF : Continuous F) {γ : X → GL (Fin n) (Cinf E)}
     (hγ : ∀ i j, Measurable fun x => (γ x : Matrix (Fin n) (Fin n) (Cinf E)) i j) : Measurable fun x => F (γ x) := by
-  letI : MeasurableSpace (GL (Fin n) (Cinf E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (Cinf E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (Cinf E)) := borel _
+  have : BorelSpace (GL (Fin n) (Cinf E)) := ⟨rfl⟩
   have h : Measurable γ := (isOpenEmbedding_valGLInf.measurableEmbedding.measurable_comp_iff).1
     (Measurable.of_eval fun i => Measurable.of_eval fun j => hγ i j)
   exact hF.measurable.comp h
@@ -141,7 +141,7 @@ theorem isModGrowthInf_smoothMatInf : ∀ (E : Type) [Field E] [NumberField E] (
     Continuous α → HasCompactSupport α → tsupport α ⊆ {x | IsUnit (Matrix.of x)} →
     ∀ W : GL (Fin n) (Cinf E) → ℂ, IsModGrowthInf W → IsModGrowthInf (smoothMatInf α W) := by
   intro E _ _ n α hα hcs hsub W hW
-  haveI : FirstCountableTopology (GL (Fin n) (Cinf E)) :=
+  have : FirstCountableTopology (GL (Fin n) (Cinf E)) :=
     (isOpenEmbedding_valGLInf (E := E) (n := n)).isInducing.firstCountableTopology
   obtain ⟨hWc, C, N, hC⟩ := hW
   have hC0 : 0 ≤ C := by

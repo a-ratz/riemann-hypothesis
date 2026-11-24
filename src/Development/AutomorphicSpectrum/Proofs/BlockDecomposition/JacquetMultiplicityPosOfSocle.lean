@@ -58,7 +58,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem exists_eq_smul_id {n : ℕ} {X : Type} [AddCommGroup X] [Module ℂ X]
     (ρ : Representation ℂ (GL (Fin n) k) X) (hs : IsSmooth ρ) (hi : ρ.IsIrreducible)
     (φ : X →ₗ[ℂ] X) (hφ : ∀ g x, φ (ρ g x) = ρ g (φ x)) : ∃ c : ℂ, φ = c • LinearMap.id := by
-  haveI : ρ.IsIrreducible := hi
+  have : ρ.IsIrreducible := hi
   have hs' : GroundTheory.Automorphic.IsSmooth ρ := hs
   obtain ⟨c, hc⟩ := (GroundTheory.Automorphic.algebraMap_intertwiningMap_bijective_of_isSmooth hs').2
     (⟨φ, fun g => LinearMap.ext fun x => hφ g x⟩ : Representation.IntertwiningMap ρ ρ)
@@ -76,7 +76,7 @@ theorem jm_ne_zero_of_isSocle : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     (∀ a, 0 < (x a).1) → IsSocle π (prodIrr x hd) → Zc.jm x hd π ≠ 0 := by
   intro k _ _ _ _ h N x hd V _ _ π _ _ hS
   obtain ⟨hi, f, hf, -⟩ := hS
-  haveI : Nontrivial V := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
+  have : Nontrivial V := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   have h1 : 1 ≤ Zc.jm x hd π :=
     GlobalTheory.CompanionTheory.SocleJm.one_le_jhMult_jac (stdBlocks (fun a => (x a).1) hd) (isIrreducible_piTensor x) f

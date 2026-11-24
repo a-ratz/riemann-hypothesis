@@ -158,7 +158,7 @@ theorem _root_.GlobalTheory.PolarJacBound.polarJac_le_exp : ∀ (p q : ℕ) (h :
             (pow_le_pow_left₀ (shc_nonneg' _) (shc_le_exp_abs _) _)
             (pow_nonneg (shc_nonneg' _) _) (Real.exp_pos _).le
       _ = Real.exp ((2 + 2 * (k : ℝ)) * |h i|) := by
-          rw [← Real.exp_nat_mul, ← Real.exp_add, abs_mul, abs_two]; push_cast; ring_nf
+          rw [← Real.exp_natCast_mul, ← Real.exp_add, abs_mul, abs_two]; push_cast; ring_nf
   have hB : (∏ i ∈ r, ∏ j ∈ r,
         if i < j then (_root_.Formalism.MainNotions.SchurIrreducible.shc (h i - h j) * _root_.Formalism.MainNotions.SchurIrreducible.shc (h i + h j)) ^ 2 else 1) ≤
       ∏ i ∈ r, ∏ j ∈ r, Real.exp (if i < j then 4 * (|h i| + |h j|) else 0) := by
@@ -184,7 +184,7 @@ theorem _root_.GlobalTheory.PolarJacBound.polarJac_le_exp : ∀ (p q : ℕ) (h :
         calc (_root_.Formalism.MainNotions.SchurIrreducible.shc (h i - h j) * _root_.Formalism.MainNotions.SchurIrreducible.shc (h i + h j)) ^ 2
             ≤ Real.exp (2 * (|h i| + |h j|)) ^ 2 :=
               pow_le_pow_left₀ (mul_nonneg (shc_nonneg' _) (shc_nonneg' _)) h1 2
-          _ = Real.exp (4 * (|h i| + |h j|)) := by rw [← Real.exp_nat_mul]; ring_nf
+          _ = Real.exp (4 * (|h i| + |h j|)) := by rw [← Real.exp_natCast_mul]; ring_nf
       · simp
   set S := ∑ i ∈ r, |h i| with hS
   set Q := ∑ i ∈ r, h i ^ 2 with hQ
@@ -267,7 +267,7 @@ theorem inner_pi (U : URep T) (g : T.G) (x y : U.H) : inner ℂ (U.π g x) (U.π
 theorem skew (D : DSRep T) {X : Mat p q} (hX : X ∈ upq p q) (v w : D.HK.V) :
     inner ℂ (D.ι v) (D.ι (D.HK.act X w)) + inner ℂ (D.ι (D.HK.act X v)) (D.ι w) = 0 := by
   have h := (D.der X hX v).inner ℂ (D.der X hX w)
-  simp only [inner_pi, zero_smul, T.expt_zero, map_one, ContinuousLinearMap.one_apply] at h
+  simp only [inner_pi, zero_smul, T.expt_zero, map_one, one_apply_eq_self] at h
   exact h.unique (hasDerivAt_const _ _)
 
 theorem adj_Eab (D : DSRep T) {a b : Ix p q} (h : sameBlock a b) (v w : D.HK.V) :
@@ -441,15 +441,15 @@ theorem exponent_le {h : ℝ} (hh : rangeOfSeventhSum p q ≤ h) : ∃ C a : ℝ
   nlinarith
 
 theorem secondCountable_grp (T : GrpData p q) : SecondCountableTopology T.G := by
-  haveI : SecondCountableTopology (Matrix (Ix p q) (Ix p q) ℂ) :=
+  have : SecondCountableTopology (Matrix (Ix p q) (Ix p q) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Ix p q → Ix p q → ℂ))
-  haveI : SecondCountableTopology (Matrix (Ix p q) (Ix p q) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Ix p q) (Ix p q) ℂ)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology ℂᵐᵒᵖ :=
+  have : SecondCountableTopology ℂᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Ix p q) ℂ) :=
+  have : SecondCountableTopology (GL (Ix p q) ℂ) :=
     Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : SecondCountableTopology ℂˣ := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : SecondCountableTopology ℂˣ := Units.isEmbedding_embedProduct.secondCountableTopology
   exact T.emb.secondCountableTopology
 
 theorem continuous_eFun (D : DSRep T) (v : D.HK.V) : Continuous (eFun D v) := by
@@ -466,13 +466,13 @@ theorem integrable_eFun (X : ProvA) (h2 : DiscreteSeriesPositivity X) (h6 : Cove
   obtain ⟨C, a, ha, hC⟩ := exponent_le hh
   have hiso : (X.ds p q lam).ι v ∈ isoVec (X.ds p q lam) (blattner lam) := ⟨v, ofType_of_isHW (X.ds p q lam) hv.1, rfl⟩
   have hd := (X.ds p q lam).fdeg_pos
-  rw [hasFiniteIntegral_iff_enorm, hint _ hc.enorm.measurable]
+  rw [hasFiniteIntegral_iff_eNorm, hint _ hc.eNorm.measurable]
   refine ENNReal.mul_lt_top ENNReal.ofReal_lt_top ?_
-  haveI : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hI := ((integrable_exp_neg_norm (volume : Measure (Fin p → Fin q → ℂ)) ha).const_mul
     ((X.ds p q lam).fdeg * Real.exp C)).2
-  rw [hasFiniteIntegral_iff_enorm] at hI
+  rw [hasFiniteIntegral_iff_eNorm] at hI
   refine lt_of_le_of_lt (lintegral_mono fun B => ?_) hI
   set Y := pOf (Matrix.of B) with hY
   have hYm : Y ∈ pR p q := pOf_mem _
@@ -484,7 +484,7 @@ theorem integrable_eFun (X : ProvA) (h2 : DiscreteSeriesPositivity X) (h6 : Cove
       (hae.mono fun k hk => ?_)) (by simp)
     have := (h2 p q lam hl h hg hh).2 k hk Y hYm _ hiso _ hiso
     rw [hv.2, mul_one, mul_one] at this
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     refine ENNReal.ofReal_le_ofReal ?_
     rw [eFun, norm_mul, norm_star, Complex.norm_real, Real.norm_of_nonneg hd.le]
     exact mul_le_mul_of_nonneg_left this hd.le
@@ -496,7 +496,7 @@ theorem integrable_eFun (X : ProvA) (h2 : DiscreteSeriesPositivity X) (h6 : Cove
     rw [e1, e2, hJ]
     exact _root_.GlobalTheory.PolarJacBound.polarJac_le_exp p q t
   refine le_trans (mul_le_mul' b1 (ENNReal.ofReal_le_ofReal b2)) ?_
-  rw [← ENNReal.ofReal_mul (by positivity), Real.enorm_of_nonneg (by positivity)]
+  rw [← ENNReal.ofReal_mul (by positivity), Real.eNorm_of_nonneg (by positivity)]
   refine ENNReal.ofReal_le_ofReal ?_
   rw [mul_assoc _ E, mul_assoc _ (Real.exp C), hE, ← Real.exp_add, ← Real.exp_add]
   refine mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 ?_) hd.le
@@ -507,7 +507,7 @@ theorem integrable_eFun (X : ProvA) (h2 : DiscreteSeriesPositivity X) (h6 : Cove
 theorem discreteSeriesHighestVector_of_positivity : ∀ X : ProvA, DiscreteSeriesPositivity X → CoverHaarIntegration X → DiscreteSeriesHighestVector X := by
   intro X h2 h6 p q lam hl h hg hh v hv
   have hi := integrable_eFun X h2 h6 lam hl h hg hh v hv
-  haveI := secondCountable_grp (X.grp p q)
+  have := secondCountable_grp (X.grp p q)
   refine ⟨hi, fun πU => ?_⟩
   obtain ⟨hD1, hπ⟩ := _root_.GlobalTheory.CoefProjector.projector_of_integrable_coefficient p q (X.grp p q) (X.ds p q lam) v hv.2 hi
   obtain ⟨hsa, hPP, hio⟩ := hπ πU
@@ -515,7 +515,7 @@ theorem discreteSeriesHighestVector_of_positivity : ∀ X : ProvA, DiscreteSerie
     rw [inner_self_eq_norm_sq_to_K, hv.2]; simp
   refine ⟨fun x => ⟨?_, fun y hy => ?_⟩, hPP⟩
   · have h1 := hPP 1 x
-    simp only [map_one, ContinuousLinearMap.one_apply, mcoef, hvv, one_smul] at h1
+    simp only [map_one, one_apply_eq_self, mcoef, hvv, one_smul] at h1
     obtain ⟨io, hio1, hio2, -⟩ := hio _ h1
     exact Submodule.le_topologicalClosure _ (Submodule.subset_span ⟨io, hio1, hio2.symm⟩)
   · refine Submodule.inner_left_of_mem_orthogonal (K := ℂ ∙ (x - opE _ πU.π (eFun (X.ds p q lam) v) x))

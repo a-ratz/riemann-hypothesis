@@ -61,7 +61,7 @@ variable {Wq Wp : Type} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [Fini
 theorem sum_norm_sq_eq_trace {ι : Type} [Fintype ι] (A : Wq →L[ℂ] Wp) (b : OrthonormalBasis ι ℂ Wq) :
     ∑ i, ‖A (b i)‖ ^ 2 =
       (LinearMap.trace ℂ Wq (((ContinuousLinearMap.adjoint A).comp A : Wq →L[ℂ] Wq) : Wq →ₗ[ℂ] Wq)).re := by
-  have := FiniteDimensional.complete ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wq
   rw [LinearMap.trace_eq_sum_inner _ b, Complex.re_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [ContinuousLinearMap.coe_coe, ContinuousLinearMap.comp_apply,
@@ -151,12 +151,12 @@ variable {R : Ranks} {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
 
 theorem kmat_iso (s s' : Formalism.MainNotions.S.Draft.SData R F E sig Word Tau hc) (I : SIso s s') (u u' : Word)
     (x : s.Cu u') : Kmat s' u u' (I.eCu u' x) = I.eCu u (Kmat s u u' x) := by
-  have := FiniteDimensional.complete ℂ (s.Cu u)
-  have := FiniteDimensional.complete ℂ (s.Cu u')
-  have := FiniteDimensional.complete ℂ s.HH
-  have := FiniteDimensional.complete ℂ (s'.Cu u)
-  have := FiniteDimensional.complete ℂ (s'.Cu u')
-  have := FiniteDimensional.complete ℂ s'.HH
+  have := FiniteDimensional.completeSpace ℂ (s.Cu u)
+  have := FiniteDimensional.completeSpace ℂ (s.Cu u')
+  have := FiniteDimensional.completeSpace ℂ s.HH
+  have := FiniteDimensional.completeSpace ℂ (s'.Cu u)
+  have := FiniteDimensional.completeSpace ℂ (s'.Cu u')
+  have := FiniteDimensional.completeSpace ℂ s'.HH
   have hc0 : ∀ w, Formalism.MainNotions.S.c0 s w = Formalism.MainNotions.S.c0 s' w := fun w => by unfold Formalism.MainNotions.S.c0; rw [I.volN, I.volH]
   have hadj : ∀ y, ContinuousLinearMap.adjoint (s'.Pu u) (I.eHH y) =
       I.eCu u (ContinuousLinearMap.adjoint (s.Pu u) y) := by
@@ -167,13 +167,13 @@ theorem kmat_iso (s s' : Formalism.MainNotions.S.Draft.SData R F E sig Word Tau 
       LinearIsometryEquiv.inner_map_map, ContinuousLinearMap.adjoint_inner_right]
   unfold Kmat
   rw [hc0 u, hc0 u']
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, map_smul]
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, map_smul]
   rw [← I.Pu_eq, hadj]
 
 theorem isoNorm : IsoNorm := by
   intro R F E _ _ _ _ _ sig Word Tau _ hc s s' I u u'
-  have := FiniteDimensional.complete ℂ (s.Cu u)
-  have := FiniteDimensional.complete ℂ (s'.Cu u)
+  have := FiniteDimensional.completeSpace ℂ (s.Cu u)
+  have := FiniteDimensional.completeSpace ℂ (s'.Cu u)
   exact (hsNormSq_of_iso (Kmat s u u') (Kmat s' u u') (I.eCu u') (I.eCu u) (fun y => (I.eCu u).norm_map y)
     (kmat_iso s s' I u u')).symm
 
@@ -250,10 +250,10 @@ theorem kmat_eq {u u' : D.what₂.Word} (hd : DimTie (X := X) u) (hd' : DimTie (
     Kmat (sOf hF) u u' = tr (hF.shBij u) (hF.shBij u') K := by
   have := finiteDimensional_colT (hF.shBij u)
   have := finiteDimensional_colT (hF.shBij u')
-  have := FiniteDimensional.complete ℂ (ColT (hF.shInj u))
-  have := FiniteDimensional.complete ℂ (ColT (hF.shInj u'))
+  have := FiniteDimensional.completeSpace ℂ (ColT (hF.shInj u))
+  have := FiniteDimensional.completeSpace ℂ (ColT (hF.shInj u'))
   have : FiniteDimensional ℂ (HHX X) := hF.finHH
-  have := FiniteDimensional.complete ℂ (HHX X)
+  have := FiniteDimensional.completeSpace ℂ (HHX X)
   have aux : ∀ (T : ColT (hF.shInj u)) (T' : ColT (hF.shInj u')),
       ⟪T, (Kmat (sOf hF) u u' T' : ColT (hF.shInj u))⟫_ℂ = ⟪T, tr (hF.shBij u) (hF.shBij u') K T'⟫_ℂ := by
     intro T T'
@@ -286,7 +286,7 @@ theorem normTie (u u' : D.what₂.Word) : NormTie hF u u' := by
   rw [hKK, Formalism.L2.SG.PackageTie.norm_hsEmb_sq, hKm]
   have := finiteDimensional_colT (hF.shBij u)
   have := finiteDimensional_colT (hF.shBij u')
-  have := FiniteDimensional.complete ℂ (ColT (hF.shInj u))
+  have := FiniteDimensional.completeSpace ℂ (ColT (hF.shInj u))
   exact (hsNormSq_of_semi (tr (hF.shBij u) (hF.shBij u') K) K (shTAdd (hF.shInj u'))
     (fun c x => shT_smul _ c x) (fun x y => (inner_colT _ y x).symm) (hF.shBij u').2
     (shT (hF.shInj u)) norm_shT (fun x => (shT_tr _ _ K x).symm))
@@ -323,11 +323,11 @@ theorem tens_mem_span (u : D.what₂.Word) (x : ∀ v, X.Vloc u v) :
     simp only [e, X.tensU_inner]
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
-      exact Finset.prod_eq_one fun v _ => by rw [orthonormal_iff_ite.1 (b v).orthonormal, if_pos rfl]
-    · rw [if_neg hij]
+      rw [ite_eq_left rfl]
+      exact Finset.prod_eq_one fun v _ => by rw [orthonormal_iff_ite.1 (b v).orthonormal, ite_eq_left rfl]
+    · rw [ite_eq_right hij]
       obtain ⟨v, hv⟩ := Function.ne_iff.1 hij
-      exact Finset.prod_eq_zero (Finset.mem_univ v) (by rw [orthonormal_iff_ite.1 (b v).orthonormal, if_neg hv])
+      exact Finset.prod_eq_zero (Finset.mem_univ v) (by rw [orthonormal_iff_ite.1 (b v).orthonormal, ite_eq_right hv])
   have hc : ∀ i, ‖⟪e i, X.tensU u x⟫_ℂ‖ ^ 2 = ∏ v, ‖⟪b v (i v), x v⟫_ℂ‖ ^ 2 := by
     intro i
     rw [he_def]
@@ -377,11 +377,11 @@ theorem finrank_Vpi (u : D.what₂.Word) :
     simp only [e, X.tensU_inner]
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
-      exact Finset.prod_eq_one fun v _ => by rw [orthonormal_iff_ite.1 (b v).orthonormal, if_pos rfl]
-    · rw [if_neg hij]
+      rw [ite_eq_left rfl]
+      exact Finset.prod_eq_one fun v _ => by rw [orthonormal_iff_ite.1 (b v).orthonormal, ite_eq_left rfl]
+    · rw [ite_eq_right hij]
       obtain ⟨v, hv⟩ := Function.ne_iff.1 hij
-      exact Finset.prod_eq_zero (Finset.mem_univ v) (by rw [orthonormal_iff_ite.1 (b v).orthonormal, if_neg hv])
+      exact Finset.prod_eq_zero (Finset.mem_univ v) (by rw [orthonormal_iff_ite.1 (b v).orthonormal, ite_eq_right hv])
   have htop : ⊤ ≤ Submodule.span ℂ (Set.range e) := by
     rw [← X.tensU_span u, Submodule.span_le]
     rintro _ ⟨x, rfl⟩

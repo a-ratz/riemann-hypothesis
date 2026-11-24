@@ -230,10 +230,10 @@ theorem UpperTheory.V.Win.layeremb :
   intro l j N hl hN L₀ L₁ _ _ _ _ _ ⟨f⟩ ⟨⟨k, hk⟩, _⟩
   have hlk : 0 < l ^ k := pow_pos hl.pos k
   have hM : 0 < l ^ k * N := Nat.mul_pos hlk hN
-  haveI : NeZero (l ^ k) := ⟨hlk.ne'⟩
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
-  haveI : NeZero ((l ^ k * N : ℕ) : ℚ) := ⟨by exact_mod_cast hM.ne'⟩
+  have : NeZero (l ^ k) := ⟨hlk.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
+  have : NeZero ((l ^ k * N : ℕ) : ℚ) := ⟨by exact_mod_cast hM.ne'⟩
   refine ⟨l ^ k * N, hM, ?_, ?_⟩
   · exact Nat.mul_le_mul_right N (rootdeg L₁ l k hl ⟨_, IsCyclotomicExtension.zeta_spec (l ^ k) L₀ L₁⟩)
   · obtain ⟨ζ, hζ⟩ := @IsCyclotomicExtension.exists_isPrimitiveRoot _ ℚ (CyclotomicField (l ^ k * N) ℚ) _ _ _
@@ -245,8 +245,8 @@ theorem UpperTheory.V.Win.layeremb :
     let e : CyclotomicField N ℚ →+* CyclotomicField (l ^ k * N) ℚ :=
       (@Polynomial.IsSplittingField.lift (CyclotomicField (l ^ k * N) ℚ) ℚ (CyclotomicField N ℚ) _ _ _ _ _
         (Polynomial.X ^ N - 1) i2 (by simpa using Polynomial.X_pow_sub_one_splits hN')).toRingHom
-    letI : Algebra L₀ (CyclotomicField (l ^ k * N) ℚ) := (e.comp f.toRingHom).toAlgebra
-    haveI := IsCyclotomicExtension.isSplittingField_X_pow_sub_one (l ^ k) L₀ L₁
+    let : Algebra L₀ (CyclotomicField (l ^ k * N) ℚ) := (e.comp f.toRingHom).toAlgebra
+    have := IsCyclotomicExtension.isSplittingField_X_pow_sub_one (l ^ k) L₀ L₁
     let h : L₁ →ₐ[L₀] CyclotomicField (l ^ k * N) ℚ :=
       Polynomial.IsSplittingField.lift _ (Polynomial.X ^ (l ^ k) - 1)
         (by simpa using Polynomial.X_pow_sub_one_splits hl')
@@ -340,10 +340,10 @@ private theorem ne_top_and_toNat_le_of_le_one_add (a b : ℕ∞) (hb : b ≠ ⊤
     a ≠ ⊤ ∧ a.toNat ≤ 1 + b.toNat := by
   obtain ⟨n, rfl⟩ := ENat.ne_top_iff_exists.mp hb
   have h' : a ≤ ((1 + n : ℕ) : ℕ∞) := by push_cast; exact h
-  have ha : a ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) h'
+  have ha : a ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) h'
   obtain ⟨m, rfl⟩ := ENat.ne_top_iff_exists.mp ha
   refine ⟨ha, ?_⟩
-  simp only [ENat.toNat_coe]
+  simp only [ENat.toNat_natCast]
   exact_mod_cast h'
 
 theorem UpperTheory.V.Win.partA :
@@ -433,8 +433,8 @@ private theorem ker_congr (A : AbF) {a b : ℕ} (h : a ≡ b [MOD A.m]) (hb : A.
 
 private theorem exists_res {K L : Type} [Field K] [Field L] [Algebra ℚ K] [Algebra ℚ L] [Normal ℚ K]
     (f : K →ₐ[ℚ] L) (σ : L ≃ₐ[ℚ] L) : ∃ τ : K ≃ₐ[ℚ] K, ∀ x : K, σ (f x) = f (τ x) := by
-  letI : Algebra K L := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
+  let : Algebra K L := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
   exact ⟨σ.restrictNormal K, fun x => (σ.restrictNormal_commutes K x).symm⟩
 
 private theorem equiv_of_range {F L L' Ω : Type} [Field F] [Field L] [Field L'] [Field Ω] [Algebra F L]
@@ -459,12 +459,12 @@ theorem UpperTheory.V.Win.abiso :
   intro A L L' _ _ _ _ hL hL'
   obtain ⟨N, hN, i, ζ, hm, hζ, H0⟩ := hL
   obtain ⟨N', hN', j, ζ', hm', hζ', H⟩ := hL'
-  haveI : NeZero A.m := ⟨A.pos.ne'⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
-  haveI : IsCyclotomicExtension {N'} ℚ (CyclotomicField N' ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
-  haveI : IsAbelianGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isAbelianGalois {N} ℚ _
-  haveI : IsAbelianGalois ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.isAbelianGalois {N'} ℚ _
-  haveI : IsGalois ℚ (AlgebraicClosure ℚ) := by
+  have : NeZero A.m := ⟨A.pos.ne'⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
+  have : IsCyclotomicExtension {N'} ℚ (CyclotomicField N' ℚ) := CyclotomicField.isCyclotomicExtension _ ℚ
+  have : IsAbelianGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isAbelianGalois {N} ℚ _
+  have : IsAbelianGalois ℚ (CyclotomicField N' ℚ) := IsCyclotomicExtension.isAbelianGalois {N'} ℚ _
+  have : IsGalois ℚ (AlgebraicClosure ℚ) := by
     first
       | exact @IsAlgClosure.isGalois ℚ (AlgebraicClosure ℚ) _ _ (AlgebraicClosure.instAlgebra ℚ) _ _
       | convert @IsAlgClosure.isGalois ℚ (AlgebraicClosure ℚ) _ _ (AlgebraicClosure.instAlgebra ℚ) _ _
@@ -527,23 +527,23 @@ private theorem nonempty_ringEquiv_of_isCyclotomic_finrank_eq (l j k k' : ℕ) (
     (h₁' : IsCyclotomicExtension {l ^ k'} L₀' L₁')
     (d₁ : Module.finrank L₀ L₁ = l ^ j) (d₁' : Module.finrank L₀' L₁' = l ^ j) :
     Nonempty (L₁ ≃+* L₁') := by
-  haveI : NeZero (l ^ k') := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ k') := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hζ : IsPrimitiveRoot (IsCyclotomicExtension.zeta (l ^ k') L₀' L₁' ^ (l ^ (k' - k))) (l ^ k) :=
     (IsCyclotomicExtension.zeta_spec (l ^ k') L₀' L₁').pow (pow_pos hl.pos _)
       (by rw [← pow_add, Nat.sub_add_cancel hk])
-  letI : Algebra L₀ L₀' := e.toRingHom.toAlgebra
-  letI : Algebra L₀ L₁' := ((algebraMap L₀' L₁').comp e.toRingHom).toAlgebra
-  haveI : IsScalarTower L₀ L₀' L₁' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra L₀ L₀' := e.toRingHom.toAlgebra
+  let : Algebra L₀ L₁' := ((algebraMap L₀' L₁').comp e.toRingHom).toAlgebra
+  have : IsScalarTower L₀ L₀' L₁' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have h1 : Module.finrank L₀ L₀' = 1 := by
     rw [← (AlgEquiv.ofRingEquiv (R := L₀) (A₁ := L₀) (A₂ := L₀') (f := e)
       (fun _ => rfl)).toLinearEquiv.finrank_eq, Module.finrank_self]
   have h2 : Module.finrank L₀ L₁' = l ^ j := by
     rw [← Module.finrank_mul_finrank L₀ L₀' L₁', h1, one_mul, d₁']
-  haveI : FiniteDimensional L₀ L₁' :=
+  have : FiniteDimensional L₀ L₁' :=
     Module.finite_of_finrank_pos (by rw [h2]; exact pow_pos hl.pos _)
-  haveI : Algebra.IsIntegral L₀ L₁' := Algebra.IsIntegral.of_finite L₀ L₁'
-  haveI := hζ.intermediateField_adjoin_isCyclotomicExtension L₀
+  have : Algebra.IsIntegral L₀ L₁' := Algebra.IsIntegral.of_finite L₀ L₁'
+  have := hζ.intermediateField_adjoin_isCyclotomicExtension L₀
   let φ := IsCyclotomicExtension.algEquiv {l ^ k} L₀ L₁
     (IntermediateField.adjoin L₀ {IsCyclotomicExtension.zeta (l ^ k') L₀' L₁' ^ (l ^ (k' - k))})
   have htop : IntermediateField.adjoin L₀
@@ -600,7 +600,7 @@ private theorem exists_isPrimitiveRoot_of_hasMu_of_isAbField (A : AbF) (l : ℕ)
           rw [ha', hk]
           ring
       _ = ζ ^ k := by rw [pow_add, pow_mul, h2.pow_eq_one, one_pow, mul_one]
-  haveI : IsGalois ℚ (CyclotomicField N ℚ) :=
+  have : IsGalois ℚ (CyclotomicField N ℚ) :=
     IsCyclotomicExtension.isGalois (S := {N}) (K := ℚ) (L := CyclotomicField N ℚ)
   rw [IsGalois.fixedField_fixingSubgroup] at key
   obtain ⟨y, hy⟩ := key
@@ -619,7 +619,7 @@ theorem UpperTheory.V.Win.partB :
   intro CK hCK hK l R _ hl2 A hA L₀ _ _ hL₀ hAB J Ct eps A1 hJ hCt heps
   have hmu0 : HasMuQ l L₀ := by
     obtain ⟨ζ, hζ⟩ := exists_isPrimitiveRoot_of_hasMu_of_isAbField A l hA L₀ hL₀
-    exact ⟨ζ, by rw [if_neg hl2]; exact hζ⟩
+    exact ⟨ζ, by rw [ite_eq_right hl2]; exact hζ⟩
   obtain ⟨c, -, hc⟩ := exc l R L₀ hAB
   obtain ⟨L₂, i1, i2, i3, hL₂⟩ := layerex l (jZero l R) Fact.out L₀ hmu0
   have hc0 : 0 ≤ Real.log (2 * ((NumberField.discr L₂).natAbs : ℝ)) := by
@@ -807,7 +807,7 @@ theorem UpperTheory.V.Win.thmBab_of :
             IsLayer l (Nat.log l (Rl l (L l)) + 3) L₀' L₁ → VVat l L₁ (t x) (Real.exp (x ^ (4 * eps / 5))) := by
     intro l hl
     obtain ⟨hp, hl2, hmu⟩ := hAux l hl
-    haveI : Fact l.Prime := ⟨hp⟩
+    have : Fact l.Prime := ⟨hp⟩
     by_cases hex : ∃ (L₀ : Type) (_ : Field L₀) (_ : NumberField L₀), IsAbField (L l) L₀
     · obtain ⟨L₀, _, _, hab⟩ := hex
       have hP : ∃ R, P l (L l) R := by

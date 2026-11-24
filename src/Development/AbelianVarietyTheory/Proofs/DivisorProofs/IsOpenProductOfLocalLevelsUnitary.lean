@@ -53,7 +53,7 @@ theorem isOpen_globLev : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
   have hT : {w : Pl E | ¬ K' w = KL n w}.Finite := Filter.eventually_cofinite.1 hK.2
   let f : ∀ w : Pl E, finU (E := E) (n := n) → UL n w := fun w x => ⟨cLoc w x.1, GlobalTheory.BCT.ThBasic.cLoc_mem_UL hU n w x.1⟩
   have hf : ∀ w, Continuous (f w) := fun w =>
-    Continuous.subtype_mk ((GlobalTheory.DefU.Inert.continuous_cLoc w).comp continuous_subtype_val) _
+    Continuous.subtype_mk ((GlobalTheory.DefU.Inert.continuous_cLoc w).comp continuous_subtypeVal) _
   have h1 : ∀ w, f w 1 = 1 := fun w => Subtype.ext (by simp [f])
   have hA : ∀ᶠ k : finU (E := E) (n := n) in nhds 1, ∀ w : Pl E, cLoc w (k : UA E n) ∈ GlobalTheory.LFun.KGL w (n := n) := by
     filter_upwards [(UpperTheory.unitaryAdelic_localComponents_continuous_levels_open E n).2.2] with k hk w

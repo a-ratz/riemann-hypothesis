@@ -57,14 +57,14 @@ open ReciprocityTheory.ChartRestriction.G.Semi
 lemma res_res' {X : Scheme.{0}} {U W Z : X.Opens} (h : W ≤ U) (h' : Z ≤ W) (x : Γ(X, U)ˣ) :
     res h' (res h x) = res (h'.trans h) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [show (homOfLE (h'.trans h)).op = (homOfLE h).op ≫ (homOfLE h').op from rfl,
     Functor.map_comp, CommRingCat.hom_comp, RingHom.comp_apply]
 
 lemma pullU_res {X Y : Scheme.{0}} (f : Y ⟶ X) {U W : X.Opens} (h : W ≤ U) (x : Γ(X, U)ˣ) :
     pullU f W (res h x) = res ((TopologicalSpace.Opens.map f.base).monotone h) (pullU f U x) := by
   ext
-  simp only [pullU, res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullU, res, Units.coe_map, MonoidHom.coe_ofClass]
   have e := congrArg (fun φ => φ.hom (x : Γ(X, U))) (f.naturality (homOfLE h).op)
   simp only [CommRingCat.hom_comp, RingHom.comp_apply] at e
   exact e

@@ -229,8 +229,8 @@ theorem pair_zero (hr : X.μ.IsMulRightInvariant) (hb : KerBasic) (hl2 : KernelL
     (hz : ∀ z, ∫ x, starRingEnd ℂ (h x) * f (x * z) ∂X.ν = 0) :
     Integrable (fun x => starRingEnd ℂ (h x) * ∫ y, ker X.Γ φ x y * f y ∂X.ν) X.ν ∧
     ∫ x, starRingEnd ℂ (h x) * ∫ y, ker X.Γ φ x y * f y ∂X.ν ∂X.ν = 0 := by
-  haveI := hr
-  haveI : SigmaFinite X.ν := by unfold Ctx.ν; infer_instance
+  have := hr
+  have : SigmaFinite X.ν := by unfold Ctx.ν; infer_instance
   have hfm : AEStronglyMeasurable f X.μ := aesm_of_inv X hinv hf.aestronglyMeasurable
   have hνμ : X.ν ≪ X.μ := Measure.absolutelyContinuous_of_le (Measure.restrict_le_self : X.μ.restrict X.F ≤ X.μ)
   have hin : ∀ x, ∫ y, ker X.Γ φ x y * f y ∂X.ν = ∫ z, φ z * f (x * z) ∂X.μ := fun x => by
@@ -253,14 +253,14 @@ theorem pair_zero (hr : X.μ.IsMulRightInvariant) (hb : KerBasic) (hl2 : KernelL
     rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top hf.aestronglyMeasurable, ENNReal.toReal_ofNat]
   have hz_bd : ∀ z, ∫⁻ x, ‖Fc x z‖ₑ ∂X.ν ≤ ‖φ z‖ₑ * (eLpNorm h 2 X.ν * eLpNorm f 2 X.ν) := fun z => by
     have e : ∀ x, ‖Fc x z‖ₑ = ‖φ z‖ₑ * (‖h x‖ₑ * ‖f (x * z)‖ₑ) := fun x => by
-      simp only [hFc, enorm_mul, enorm_conj']
+      simp only [hFc, eNorm_mul, enorm_conj']
       ring
     simp_rw [e]
-    rw [lintegral_const_mul' _ _ enorm_ne_top]
+    rw [lintegral_const_mul' _ _ eNorm_ne_top]
     gcongr
     have hfz : AEStronglyMeasurable (fun x => f (x * z)) X.ν :=
       (hfm.comp_measurePreserving (measurePreserving_mul_right X.μ z)).mono_ac hνμ
-    have hol := ENNReal.lintegral_mul_le_Lp_mul_Lq X.ν Real.HolderConjugate.two_two hh.aestronglyMeasurable.enorm hfz.enorm
+    have hol := ENNReal.lintegral_mul_le_Lp_mul_Lq X.ν Real.HolderConjugate.two_two hh.aestronglyMeasurable.eNorm hfz.eNorm
     have hrt := lint_rt X hr (g := fun y => ‖f y‖ₑ ^ (2:ℝ)) (fun γ y => by simp only [hinv γ y]) z
     simp only [Pi.mul_apply] at hol
     rw [hrt] at hol
@@ -268,7 +268,7 @@ theorem pair_zero (hr : X.μ.IsMulRightInvariant) (hb : KerBasic) (hl2 : KernelL
     exact hol
   have hφint : ∫⁻ z, ‖φ z‖ₑ ∂X.μ < ⊤ := (hφ.1.integrable_of_hasCompactSupport hφ.2).2
   have hfin : ∫⁻ p, ‖Function.uncurry Fc p‖ₑ ∂(X.ν.prod X.μ) < ⊤ := by
-    rw [lintegral_prod_symm _ hFm.enorm]
+    rw [lintegral_prod_symm _ hFm.eNorm]
     calc ∫⁻ z, ∫⁻ x, ‖Function.uncurry Fc (x, z)‖ₑ ∂X.ν ∂X.μ
         ≤ ∫⁻ z, ‖φ z‖ₑ * (eLpNorm h 2 X.ν * eLpNorm f 2 X.ν) ∂X.μ := lintegral_mono fun z => hz_bd z
       _ = (∫⁻ z, ‖φ z‖ₑ ∂X.μ) * (eLpNorm h 2 X.ν * eLpNorm f 2 X.ν) :=
@@ -321,7 +321,7 @@ attribute [local instance] borelH
 theorem memLp_rt (X : PositivityTheory.Rg.BcB.E1.Ctx) (hr : X.μ.IsMulRightInvariant) {f : X.G → ℂ}
     (hinv : ∀ γ : X.Γ, ∀ y, f ((γ : X.G) * y) = f y) (hf : MemLp f 2 X.ν) (z : X.G) :
     MemLp (fun x => f (x * z)) 2 X.ν := by
-  haveI := hr
+  have := hr
   have hνμ : X.ν ≪ X.μ := Measure.absolutelyContinuous_of_le (Measure.restrict_le_self : X.μ.restrict X.F ≤ X.μ)
   have hm : AEStronglyMeasurable (fun x => f (x * z)) X.ν :=
     ((aesm_of_inv X hinv hf.aestronglyMeasurable).comp_measurePreserving (measurePreserving_mul_right X.μ z)).mono_ac hνμ
@@ -386,12 +386,12 @@ theorem piInv_of (hC : PiClosureInv) : PiInv := by
           · subst hl
             rw [Pi.single_eq_same]
             filter_upwards [hw.coeFn_toLp] with x hx
-            simp only [if_pos rfl]
+            simp only [ite_eq_left rfl]
             exact (show (w : H E n 0 → ℂ) x = Ft j (x * z) from hx)
           · rw [Pi.single_eq_of_ne hl]
             filter_upwards [Lp.coeFn_zero (E := ℂ) (p := 2) (μ := D.ν)] with x hx
             rw [hx]
-            simp only [if_neg hl, Submodule.coe_zero, ZeroMemClass.coe_zero, Pi.zero_apply, zero_mul]
+            simp only [ite_eq_right hl, Submodule.coe_zero, ZeroMemClass.coe_zero, Pi.zero_apply, zero_mul]
       have h0 : ⟪h, v⟫_ℂ = 0 := Submodule.inner_left_of_mem_orthogonal hv hh
       rw [PiLp.inner_apply, Finset.sum_eq_single i (fun l _ hl => by rw [hvl, Pi.single_eq_of_ne hl, inner_zero_right])
         (fun hi => absurd (Finset.mem_univ i) hi), hvl, Pi.single_eq_same, MeasureTheory.L2.inner_def] at h0

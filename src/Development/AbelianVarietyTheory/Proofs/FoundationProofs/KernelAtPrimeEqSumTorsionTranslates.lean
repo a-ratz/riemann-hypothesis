@@ -64,20 +64,20 @@ theorem coprime_index {V : Type*} [AddCommGroup V] (A₀ A₁ : AddSubgroup V) (
     rintro rfl
     rw [Nat.coprime_zero_left] at hs
     exact hp.one_lt.ne' hs
-  haveI : AddGroup.FG A₁ := (AddGroup.fg_iff_addSubgroup_fg A₁).2 hfg
+  have : AddGroup.FG A₁ := (AddGroup.fg_iff_addSubgroup_fg A₁).2 hfg
   have hk : ∀ q : A₁ ⧸ A₀.addSubgroupOf A₁, s • q = 0 := by
     intro q
     induction q using QuotientAddGroup.induction_on with
     | H x =>
       rw [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff, AddSubgroup.mem_addSubgroupOf]
       exact h x x.2
-  haveI : Finite (A₁ ⧸ A₀.addSubgroupOf A₁) := by
-    apply AddCommGroup.finite_of_fg_torsion
+  have : Finite (A₁ ⧸ A₀.addSubgroupOf A₁) := by
+    apply AddCommGroup.finite_of_fg_isAddTorsion
     intro q
     exact isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨s, Nat.pos_of_ne_zero hs0, hk q⟩
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hd
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨q, hq⟩ := exists_prime_addOrderOf_dvd_card' (G := A₁ ⧸ A₀.addSubgroupOf A₁) p hd
   have : p ∣ s := hq ▸ addOrderOf_dvd_of_nsmul_eq_zero (hk q)
   exact (Nat.Prime.coprime_iff_not_dvd hp).1 hs.symm this
@@ -267,7 +267,7 @@ theorem Cmb.transl (hn : n ≠ 0) (hB : ∀ x ∈ B, ∀ y ∈ B, ∃ m : ℤ, (
       rw [this] at hm
       exact_mod_cast hm
     refine bd_of_pow_mul_eq_one lam (n := 2 * n ^ 2) (m := 1) (by positivity) (Nat.coprime_one_left _) ?_
-    rw [Nat.cast_one, mul_one, ← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [Nat.cast_one, mul_one, ← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨-m, ?_⟩
     push_cast
     linear_combination (-2 * (Real.pi : ℂ) * Complex.I) * hm'
@@ -287,7 +287,7 @@ theorem Cmb.iop (hn : n ≠ 0) (hB : ∀ x ∈ B, ∀ y ∈ B, ∃ m : ℤ, (Hf 
     intro h0
     rw [h0, Nat.coprime_zero_left] at hi
     exact (Fact.out : p.Prime).one_lt.ne' hi
-  haveI : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := AddSubgroup.fintypeOfIndexNeZero hi0
+  have : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := AddSubgroup.fintypeOfIndexNeZero hi0
   have h1 : Bd lam 1 ((Real.sqrt ((A₁.addSubgroupOf A₂).index : ℝ))⁻¹ : ℂ) := by
     refine bd_of_pow_mul_eq_one lam (n := 2) two_ne_zero hi ?_
     rw [inv_pow, ← Complex.ofReal_pow, Real.sq_sqrt (Nat.cast_nonneg _), Complex.ofReal_natCast]

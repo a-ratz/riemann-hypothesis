@@ -164,11 +164,11 @@ theorem exists_pres_heq : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn
   refine ⟨c, fun v v' h => congrArg c0L (eq_of_heq ((he0 v).trans h.symm)), hint, fun t => ?_⟩
   obtain ⟨eG, eΓ, hchar, hι, hrat⟩ := GlobalTheory.T.exists_unitaryGroups_equiv_unitForm_gram_one X i hgram
   obtain ⟨hJ, hχ⟩ := GlobalTheory.T.liftAdelicForm_level_type_eq_columnLevel X px I U L hI hV hL i t eG hchar
-  letI : Algebra X.toD7.host.F X.B.fields.E := inferInstanceAs (Algebra X.toD7.host.F X.toD7.host.E)
+  let : Algebra X.toD7.host.F X.B.fields.E := inferInstanceAs (Algebra X.toD7.host.F X.toD7.host.E)
   have hneg : X.toD7.sp.Vneg ((i : ℕ) + 1) = false := X.B.V_pos _ (by omega) i.2
   have hgr : (if X.toD7.sp.Vneg ((i : ℕ) + 1) then -(Vc X.toD7 i).gram else (Vc X.toD7 i).gram) =
       (1 : Matrix (Fin X.B.R.nV) (Fin X.B.R.nV) X.toD7.host.E).reindex (finCongr (LiftBrg.rkEq X i)) (finCongr (LiftBrg.rkEq X i)) := by
-    rw [hneg, if_neg (by simp), hgram]
+    rw [hneg, ite_eq_right (by simp), hgram]
     ext a b
     simp [Matrix.one_apply]
   have hSG : Formalism.L2.Col.DecoPtSurj X.toD7.sp.cm X.B.R.nV ∅ (LiftBrg.sgL X I U t) :=

@@ -70,9 +70,9 @@ variable {K L Ω : Type} [Field Ω] [Field K] [NumberField K] [Algebra K Ω] [Fi
 theorem modEq_of_cong {v' : HeightOneSpectrum (𝓞 L)} (h' : IsPlaceOver A v') {Q a b : ℕ}
     (hc : ∀ ζ : 𝓞 L, A.valuation ((algebraMap L Ω (ζ : L)) ^ (Q ^ b) - (algebraMap L Ω (ζ : L)) ^ (Q ^ a)) < 1) :
     Q ^ a ≡ Q ^ b [MOD normV v' - 1] := by
-  haveI := v'.isMaximal
-  letI : Field (𝓞 L ⧸ v'.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 L ⧸ v'.asIdeal) := v'.asIdeal.finiteQuotientOfFreeOfNeBot v'.ne_bot
+  have := v'.isMaximal
+  let : Field (𝓞 L ⧸ v'.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 L ⧸ v'.asIdeal) := v'.asIdeal.finiteQuotientOfFreeOfNeBot v'.ne_bot
   obtain ⟨u, hu⟩ := IsCyclic.exists_generator (α := (𝓞 L ⧸ v'.asIdeal)ˣ)
   have hord : orderOf u = normV v' - 1 := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hu, Nat.card_units]; rfl

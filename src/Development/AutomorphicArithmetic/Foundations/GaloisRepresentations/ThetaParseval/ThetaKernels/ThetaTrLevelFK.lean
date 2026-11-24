@@ -68,7 +68,7 @@ theorem thetaTr_levelF_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
           ∀ Φ ∈ schA F κ, ∃ U : AddSubgroup (WOF F E nS nT), IsOpen (U : Set (WOF F E nS nT)) ∧
             ∀ u ∈ U, u.map (infPartF F E) = 0 → heisOF σ JS JT ξ₀ B.ψ u (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ) = GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ := by
   intro F E _ _ _ _ _ σ B _ hψ nS nT JS JT _ _ ξ₀ _ _ JA JB ξ hA hB κ _ co _ Φ hΦ
-  haveI : IsModuleTopology (AF F) (WOF F E nS nT) :=
+  have : IsModuleTopology (AF F) (WOF F E nS nT) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin nT → Fin nS → AF F ⊗[F] E))
   obtain ⟨K, hK⟩ := GlobalTheory.ThetaLevel.schr_fin_fix F B.ψ hψ.1.1 Φ hΦ
   have hcont : Continuous co.e := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap

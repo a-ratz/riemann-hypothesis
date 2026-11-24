@@ -279,7 +279,7 @@ theorem exists_lDiag_ne : ∃ φ ∈ schA F (κ ⊕ κ), lDiag F κ φ ≠ 0 := 
       by_contra h
       refine hu (mem_closedBall_zero_iff.2 ((norm_le_dI u).trans ?_))
       exact mul_le_mul_of_nonneg_left (le_of_lt (lt_of_not_ge h)) (norm_nonneg _)
-    have hpos := (b.continuous.comp (dI F κ).continuous).integral_pos_of_hasCompactSupport_nonneg_nonzero
+    have hpos := (b.continuous.comp (dI F κ).continuous).integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (μ := (volume : Measure (Vi F κ))) (x := 0) hcs (fun u => b.nonneg) (by
         simp only [Function.comp_apply, map_zero]
         rw [b.one_of_mem_closedBall (Metric.mem_closedBall_self zero_le_one)]

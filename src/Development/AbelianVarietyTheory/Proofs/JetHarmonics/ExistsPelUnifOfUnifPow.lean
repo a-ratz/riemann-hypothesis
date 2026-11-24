@@ -61,7 +61,7 @@ namespace GlobalTheory
 
 theorem exists_pelUnif_of_unifPow : Laws → Laws2 → Laws4 → TwistBaseChangeStatement → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (t : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t) (n : ℕ) (D' : DegData V (maximalIdeal V)) (A' : PolAV (Spec (CommRingCat.of (FractionRing V)))) (G' : Over (Sp V)) [GrpObj G'] [IsCommMonObj G'] (pD : IsPowDeg D'.toPre P.D.toPre n) (pA : IsPowPolAV A' P.A n) (pG : IsPowGrp G' t.G n) (U' : Unif (maximalIdeal V) D' A' G') (_PU : UnifPowOf3 pD pA pG U' P.U), letI := H.starRing; ∀ [Module (𝓞 E) D'.toPre.X] (oD' : D'.toPre.OAct (𝓞 E)), (∀ (a : 𝓞 E) (x : D'.toPre.X) (i : Fin n), pD.xe (a • x) i = a • pD.xe x i) → (∀ (a : 𝓞 E) (i : Fin n), oD'.onB.act a ≫ pD.pw.pr i = pD.pw.pr i ≫ P.oD.onB.act a) → ∃ (oA' : A'.OAct (𝓞 E)), (∀ (a : 𝓞 E) (i : Fin n), oA'.act a ≫ pA.pr i = pA.pr i ≫ P.oA.act a) ∧ ∃ (t' : SAB H (Sp V)) (P' : PELUnif (maximalIdeal V) t'), t'.G = G' ∧ HEq t'.grp (inferInstance : GrpObj G') ∧ HEq t'.comm (inferInstance : IsCommMonObj G') ∧ P'.D = D' ∧ HEq P'.mod (inferInstance : Module (𝓞 E) D'.toPre.X) ∧ HEq P'.oD oD' ∧ P'.A = A' ∧ HEq P'.oA oA' ∧ HEq P'.U U' := by
   intro _ _ _ _ V _ _ _ _ E _ _ _ H t P n D' A' G' _ _ pD pA pG U' Q
-  letI := H.starRing
+  let := H.starRing
   intro md oD' hxi hoD
   have hx : ∀ (a : 𝓞 E) (x : D'.toPre.X), pD.xe (a • x) = a • pD.xe x := fun a x => funext fun i => hxi a x i
   obtain ⟨act', hact⟩ := (GlobalTheory.exists_powAct _ _ _ n pG).2 _ t.act

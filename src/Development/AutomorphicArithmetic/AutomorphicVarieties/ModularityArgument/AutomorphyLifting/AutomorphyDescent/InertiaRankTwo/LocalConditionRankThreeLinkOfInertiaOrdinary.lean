@@ -51,17 +51,17 @@ variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [F
 private theorem cycZ_ine {A : ValuationSubring Ω} (hA : ¬ A.valuation (l : Ω) < 1) {s : G ℚ Ω}
     (hs : s ∈ Ine (F := ℚ) A) : cycZ ℚ Ω l s = 1 := by
   have hl : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   have hv1 : A.valuation (l : Ω) = 1 :=
     le_antisymm ((A.valuation_le_one_iff _).2 (natCast_mem A l)) (not_lt.1 hA)
   refine Units.ext (PadicInt.ext_of_toZModPow.mp fun m => ?_)
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hv : ¬ A.valuation ((l ^ m : ℕ) : Ω) < 1 := by
     rw [Nat.cast_pow, map_pow, hv1, one_pow]
     exact lt_irrefl _
   have hc : Chr.cls ℚ Ω (l ^ m) s = 1 := (Chr.clsFacts ℚ Ω (l ^ m)).2.2.2.2 A hv hs
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
   have h1 : s ζ = ζ ^ (PadicInt.toZModPow m ((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l])).val :=
     cyclotomicCharacter.spec (L := Ω) l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) ζ hζ.pow_eq_one
   have h2 := Chr.cls_spec (l ^ m) s ζ hζ.pow_eq_one

@@ -146,7 +146,7 @@ theorem hasSum_psTerm_eval₂ {σ : Type*} [Finite σ] (f : MvPowerSeries σ �
   have h2 : HasSum (fun d => ((algebraMap 𝒪[K] 𝒪[L] (coeff d f) *
       d.prod fun s e => a s ^ e : 𝒪[L]) : L))
       ((MvPowerSeries.eval₂ (algebraMap 𝒪[K] 𝒪[L]) a f : 𝒪[L]) : L) :=
-    hs.map (AddSubmonoidClass.subtype 𝒪[L]) continuous_subtype_val
+    hs.map (AddSubmonoidClass.subtype 𝒪[L]) continuous_subtypeVal
   simpa only [coe_psTerm_integer] using h2
 
 omit [TopologicalSpace K] [IsNonarchimedeanLocalField K] in
@@ -266,7 +266,7 @@ theorem hasSum_psEval_coe (E : IntermediateField K Ω) [FiniteDimensional K E] {
   have ha : ∀ i, a i ∈ 𝓂[E] := fun i =>
     mem_maximalIdeal_integer_iff.mpr ((valuation_coe_lt_one_iff E (x i)).mp (hx i))
   have hE : HasSum (psTerm f x) (psEval f x) := hasSum_psEval f a ha
-  have h := hE.map E.val.toRingHom.toAddMonoidHom continuous_subtype_val
+  have h := hE.map E.val.toRingHom.toAddMonoidHom continuous_subtypeVal
   convert (preTransparency := .reducible) h using 1
   · funext d
     exact (map_psTerm E.val f x d).symm

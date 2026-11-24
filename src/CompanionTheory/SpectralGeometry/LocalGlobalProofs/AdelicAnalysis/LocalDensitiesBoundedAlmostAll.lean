@@ -93,7 +93,7 @@ theorem exists_moved (hcm : IsCMExt F E σ) : ∃ c : E, σ c ≠ c := by
 theorem fixed_mem (hcm : IsCMExt F E σ) (x : E) (hx : σ x = x) : ∃ t : F, algebraMap F E t = x := by
   obtain ⟨c, hc⟩ := exists_moved hcm
   have hfr : Module.finrank F E = 2 := hcm.2.2.1
-  haveI : IsSimpleOrder (Subalgebra F E) :=
+  have : IsSimpleOrder (Subalgebra F E) :=
     Subalgebra.isSimpleOrder_of_finrank_prime F E (by rw [hfr]; exact Nat.prime_two)
   rcases eq_bot_or_eq_top (AlgHom.equalizer σ (AlgHom.id F E)) with h | h
   · have hm : x ∈ AlgHom.equalizer σ (AlgHom.id F E) := by
@@ -240,17 +240,17 @@ theorem exists_family (hcm : IsCMExt F E σ) {M : ℕ} {J : Matrix (Fin M) (Fin 
     (hJ : IsHermND σ J) {d : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F))
     (lam : Measure (Fv F v)) (hl : IsStdV v lam) (n : ℕ) :
     ∃ m, IsGramFib (Fv F v) σ J n (coordW (Fv F v) b lam n M) (coordHerm (Fv F v) σ b lam n) m := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨h1, h2, h3, h4, -⟩ := hloc
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI := hl.1
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have := hl.1
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm (Fv F v) d b lam hl.1
-  haveI := hW n M
-  haveI := hH n
+  have := hW n M
+  have := hH n
   exact _root_.GlobalTheory.CompanionTheory.SW.GramExist.exists_gramFib F E σ hcm M J hJ (Fv F v) (_root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) n _ _ (hW n M) (hH n)
 
 theorem absNorm_one_le (v : HeightOneSpectrum (𝓞 F)) : (1 : ℝ) ≤ (Ideal.absNorm v.asIdeal : ℝ) := by
@@ -271,7 +271,7 @@ theorem key (hcm : IsCMExt F E σ) : ∀ (n M : ℕ) (J : Matrix (Fin M) (Fin M)
     intro M J hJ _ T hT _ d b
     refine ⟨0, Filter.Eventually.of_forall ?_⟩
     intro v lam hl m hm
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have h0 := _root_.GlobalTheory.CompanionTheory.SW.GramEmpty.fibre_gram_zero F E σ hcm M J hJ (Fv F v) (_root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) d b lam hl.1 m hm
       (hermOf (Fv F v) σ T hT)
     have hU : (latV b v : Set (Fin 0 → Fin M → Fv F v ⊗[F] E)) = Set.univ := by

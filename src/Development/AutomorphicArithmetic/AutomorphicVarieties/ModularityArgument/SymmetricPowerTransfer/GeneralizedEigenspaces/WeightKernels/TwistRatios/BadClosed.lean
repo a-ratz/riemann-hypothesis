@@ -65,7 +65,7 @@ theorem UpperTheory.V.Z.Sym.Ga.badClosed :
     have hu : Continuous fun g : G L Ω => ((cycZ L Ω l g : ℤ_[l]ˣ) : ℤ_[l]) :=
       (Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ L Ω l)
     have hz : Continuous fun g : G L Ω => (((cycZ L Ω l g : ℤ_[l]) : ℚ_[l])) :=
-      continuous_subtype_val.comp hu
+      continuous_subtypeVal.comp hu
     have h := (continuous_algebraMap ℚ_[l] (Qbar l)).comp hz
     convert h using 1
     funext g
@@ -75,7 +75,7 @@ theorem UpperTheory.V.Z.Sym.Ga.badClosed :
   have hset : Ga.Bad r = ⋃ m ∈ Finset.Icc (-2 : ℤ) 2,
       {g | Ga.uf (r g) ^ 2 - 2 = Ga.ep l g ^ m + Ga.ep l g ^ (-m)} := by
     ext g
-    simp only [Ga.Bad, Set.mem_setOf_eq, Set.mem_iUnion, Finset.mem_Icc, exists_prop, abs_le]
+    simp only [Ga.Bad, Set.mem_ofPred_eq, Set.mem_iUnion, Finset.mem_Icc, exists_prop, abs_le]
   rw [hset]
   refine isClosed_biUnion_finset fun m _ => isClosed_eq ((hU.pow 2).sub continuous_const) ?_
   exact (hE.zpow₀ m fun g => Or.inl (hne g)).add (hE.zpow₀ (-m) fun g => Or.inl (hne g))

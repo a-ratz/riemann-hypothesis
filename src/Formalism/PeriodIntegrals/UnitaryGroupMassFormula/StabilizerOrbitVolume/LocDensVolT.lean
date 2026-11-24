@@ -186,7 +186,7 @@ theorem ev_triv (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) :
     rw [this]
     rfl
   have hx0U : x0 ∈ Φ ⁻¹' U := by
-    simp only [Set.mem_preimage, hx0, hUdef, Set.mem_setOf_eq, AddChar.map_zero_eq_one,
+    simp only [Set.mem_preimage, hx0, hUdef, Set.mem_ofPred_eq, AddChar.map_zero_eq_one,
       Complex.one_re]
     norm_num
   obtain ⟨I, u, hu, hsub⟩ := isOpen_pi_iff.1 (hU.preimage hΦ) x0 hx0U
@@ -210,7 +210,7 @@ theorem ev_triv (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) :
         simp
       · rw [Function.update_of_ne hj, Pi.single_eq_of_ne hj]
     have := hsub hmem
-    simp only [Set.mem_preimage, e, hUdef, Set.mem_setOf_eq] at this
+    simp only [Set.mem_preimage, e, hUdef, Set.mem_ofPred_eq] at this
     exact this
   intro y hy
   refine eq_one_of_pow (psiV F ψ v y) (hψ.2.1 _) ?_

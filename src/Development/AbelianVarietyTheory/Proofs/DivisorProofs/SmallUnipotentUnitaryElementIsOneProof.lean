@@ -113,13 +113,13 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
   intro K _ _ r L N P n hL hspan hP hN hNn
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · exact ⟨0, P.zero_mem, by simp [Matrix.trace]⟩
-  haveI : NeZero r := ⟨hr.ne'⟩
+  have : NeZero r := ⟨hr.ne'⟩
   set m := n + 1 with hm
   have hNm : ∀ x ∈ L, (N ^ m) *ᵥ x ∈ P • L := fun x hx => by
     rw [hm, pow_succ, ← Matrix.mulVec_mulVec]
     exact hNn _ (hN x hx)
   have hLm : ∀ x ∈ L, (N ^ m) *ᵥ x ∈ L := fun x hx => Submodule.smul_le_right (hNm x hx)
-  haveI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL
+  have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL
   let f : Module.End (𝓞 K) L :=
     ((Matrix.toLin' (N ^ m)).restrictScalars (𝓞 K)).restrict (fun x hx => by
       show Matrix.toLin' (N ^ m) x ∈ L
@@ -172,16 +172,16 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
     ext k
     rw [coeff_map, coeff_X_pow]
     rcases lt_trichotomy k q.natDegree with hk | rfl | hk
-    · rw [if_neg hk.ne, Ideal.Quotient.eq_zero_iff_mem]
+    · rw [ite_eq_right hk.ne, Ideal.Quotient.eq_zero_iff_mem]
       exact Ideal.pow_le_self (by omega) (hqc k)
     · simp [hqm.coeff_natDegree]
-    · rw [if_neg hk.ne', coeff_eq_zero_of_natDegree_lt hk, map_zero]
+    · rw [ite_eq_right hk.ne', coeff_eq_zero_of_natDegree_lt hk, map_zero]
   have hφπ : φ.map (Ideal.Quotient.mk P) = X ^ (m * q.natDegree) := by
     rw [hφdef, map_expand, hqπ, map_pow, expand_X, ← pow_mul]
   have hdvdπ : χ.map (Ideal.Quotient.mk P) ∣ X ^ (m * q.natDegree * r) := by
     rw [pow_mul, ← hφπ, ← Polynomial.map_pow]
     exact Polynomial.map_dvd _ hχdvd
-  haveI : IsDomain (𝓞 K ⧸ P) := Ideal.Quotient.isDomain P
+  have : IsDomain (𝓞 K ⧸ P) := Ideal.Quotient.isDomain P
   obtain ⟨i, -, hi⟩ := (dvd_prime_pow Polynomial.prime_X _).1 hdvdπ
   have hχπ : χ.map (Ideal.Quotient.mk P) = X ^ i :=
     eq_of_monic_of_associated (hχm.map _) (monic_X_pow i) hi
@@ -193,7 +193,7 @@ theorem _root_.GlobalTheory.trace_mem_prime_of_pow_mulVec_mem_smul : ∀ (K : Ty
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     have := congrArg (fun p => p.coeff (r - 1)) hχπ
     simp only [coeff_map, coeff_X_pow, hir] at this
-    rw [this, if_neg (by omega)]
+    rw [this, ite_eq_right (by omega)]
   refine ⟨-χ.coeff (r - 1), P.neg_mem hcoeff, ?_⟩
   rw [Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin, ← hχ, coeff_map]
   show algebraMap (𝓞 K) K (-χ.coeff (r - 1)) = _
@@ -254,7 +254,7 @@ theorem trace_sub_mem {r : ℕ} (X : DataX E r) (g : ℕ) (hg : IndefiniteRowSid
     have : z = t := RingOfIntegers.ext (hzt.trans ht.symm)
     exact this ▸ hz
   have hpZ : Prime (g : ℤ) := Nat.prime_iff_prime_int.1 hg.1
-  haveI hpr : (Ideal.span {(g : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).2 hpZ
+  have hpr : (Ideal.span {(g : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).2 hpZ
   have hmax : (Ideal.span {(g : ℤ)}).IsMaximal :=
     hpr.isMaximal (by rw [Ne, Ideal.span_singleton_eq_bot]; exact hpZ.ne_zero)
   have hrad := GlobalTheory.SplitRadical.isRadical_span_of_ncard_primesOver E g hg.1 hg.2
@@ -293,7 +293,7 @@ theorem normSq_star {r : ℕ} (u : Fin r → ℂ) : ReciprocityTheory.Multiplica
   simp [ReciprocityTheory.MultiplicativeHeights.normSq]
 
 theorem exp_sq (r : ℕ) : Real.exp (1 / (3 * (r : ℝ))) ^ 2 = Real.exp (2 / (3 * (r : ℝ))) := by
-  rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+  rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
 
 theorem det_ne_of_mul_eq_one {r : ℕ} {A B : Matrix (Fin r) (Fin r) ℂ} (h : A * B = 1) : A.det ≠ 0 := by
   intro h0
@@ -328,10 +328,10 @@ theorem smallElement : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E],
   let Q : (E →+* ℂ) → Matrix (Fin r) (Fin r) ℂ := fun σ =>
     if hσ : σ ∈ X.Ψ then (mat x1 ⟨σ, hσ⟩)⁻¹
     else ((mat x1 ⟨ComplexEmbedding.conjugate σ, hcΨ σ hσ⟩)⁻¹).map (starRingEnd ℂ)
-  have hQpos : ∀ σ (hσ : σ ∈ X.Ψ), Q σ = (mat x1 ⟨σ, hσ⟩)⁻¹ := fun σ hσ => dif_pos hσ
+  have hQpos : ∀ σ (hσ : σ ∈ X.Ψ), Q σ = (mat x1 ⟨σ, hσ⟩)⁻¹ := fun σ hσ => dite_eq_left hσ
   have hQneg : ∀ σ (hσ : σ ∉ X.Ψ),
       Q σ = ((mat x1 ⟨ComplexEmbedding.conjugate σ, hcΨ σ hσ⟩)⁻¹).map (starRingEnd ℂ) :=
-    fun σ hσ => dif_neg hσ
+    fun σ hσ => dite_eq_right hσ
   set G : Matrix (Fin r) (Fin r) E := (γ : Matrix (Fin r) (Fin r) E) with hG
   have hposB : ∀ (τ : X.Ψ) (u : Fin r → ℂ),
       ReciprocityTheory.MultiplicativeHeights.normSq (((mat x1 τ)⁻¹ * G.map τ.1 * ((mat x1 τ)⁻¹)⁻¹) *ᵥ u) ≤

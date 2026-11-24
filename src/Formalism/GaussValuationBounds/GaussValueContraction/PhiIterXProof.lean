@@ -106,7 +106,7 @@ theorem psIdeal_proof : PsIdeal := by
 
 theorem dUDeg_proof : DUDeg := by
   intro O _ _ ϖ hϖ ℓ p₀ p₁ v₀ v₁ w s₀ s₁ b₀ b₁ hs hb hv₀ hv₁ hw h₀ h₁ hmem
-  haveI hpr : (Ideal.span {ϖ}).IsPrime := (Ideal.span_singleton_prime hϖ.ne_zero).mpr hϖ
+  have hpr : (Ideal.span {ϖ}).IsPrime := (Ideal.span_singleton_prime hϖ.ne_zero).mpr hϖ
   have hϖ0 : (Ideal.Quotient.mk (Ideal.span {ϖ})) ϖ = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton_self ϖ)
   have hred : ∀ (p v : PowerSeries O) (N : ℕ), p - v * X ^ N ∈ Ideal.span {C ϖ} →
       PowerSeries.map (Ideal.Quotient.mk (Ideal.span {ϖ})) p = PowerSeries.map (Ideal.Quotient.mk (Ideal.span {ϖ})) v * X ^ N := by
@@ -128,7 +128,7 @@ theorem dUDeg_proof : DUDeg := by
   simp only [map_add (f := _), map_mul, map_pow, PowerSeries.map_C, hϖ0, map_zero, mul_zero, zero_add] at hm
   rw [hred p₀ v₀ _ h₀, hred p₁ v₁ _ h₁, mul_pow, mul_pow, ← pow_mul, ← pow_mul, ← mul_assoc, ← mul_assoc] at hm
   have hc := congrArg (PowerSeries.coeff (ℓ ^ s₀ * b₀)) hm
-  rw [PowerSeries.coeff_mul_X_pow', PowerSeries.coeff_mul_X_pow', if_neg (not_le.mpr hlt), if_pos le_rfl,
+  rw [PowerSeries.coeff_mul_X_pow', PowerSeries.coeff_mul_X_pow', ite_eq_right (not_le.mpr hlt), ite_eq_left le_rfl,
     Nat.sub_self, PowerSeries.coeff_zero_eq_constantCoeff_apply] at hc
   have hu : IsUnit (PowerSeries.map (Ideal.Quotient.mk (Ideal.span {ϖ})) w * PowerSeries.map (Ideal.Quotient.mk (Ideal.span {ϖ})) v₀ ^ b₀) :=
     (hw.map _).mul ((hv₀.map _).pow _)

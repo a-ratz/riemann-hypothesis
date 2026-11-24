@@ -137,8 +137,8 @@ theorem GlobalTheory.IdeleCyl.exists_isCompact_box : ∀ (F E : Type) [Field F] 
     ∃ K : Set (AE F E), IsCompact K ∧ ∀ z : AE F E, (∀ w, compInf F E w z ∈ M w) → (∀ v, compFin F E v z ∈ L v) → z ∈ K := by
   intro F E _ _ _ _ _ M L hM hL hLc
   classical
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
   let b := Module.finBasis F E
   let e := (Algebra.TensorProduct.basis (AF F) b).equivFun
   have he : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -147,10 +147,10 @@ theorem GlobalTheory.IdeleCyl.exists_isCompact_box : ∀ (F E : Type) [Field F] 
   let Lc : Fin (Module.finrank F E) → ∀ v : Pl (F := F), Set (Fv F v) := fun j v =>
     (fun y => (Algebra.TensorProduct.basis (Fv F v) b).repr y j) '' L v
   have hMc : ∀ j w, IsCompact (Mc j w) := fun j w => by
-    haveI : IsModuleTopology w.Completion (w.Completion ⊗[F] E) := ⟨rfl⟩
+    have : IsModuleTopology w.Completion (w.Completion ⊗[F] E) := ⟨rfl⟩
     exact (hM w).image (IsModuleTopology.continuous_of_linearMap ((Algebra.TensorProduct.basis w.Completion b).coord j))
   have hLc' : ∀ j v, IsCompact (Lc j v) := fun j v => by
-    haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+    have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
     exact (hL v).image (IsModuleTopology.continuous_of_linearMap ((Algebra.TensorProduct.basis (Fv F v) b).coord j))
   let Q : Fin (Module.finrank F E) → Set (AF F) := fun j =>
     (Set.univ.pi (Mc j)) ×ˢ {y : FiniteAdeleRing (𝓞 F) F | ∀ v, y v ∈ Lc j v}

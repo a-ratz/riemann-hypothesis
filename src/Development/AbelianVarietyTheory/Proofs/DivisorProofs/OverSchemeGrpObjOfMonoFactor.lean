@@ -55,7 +55,7 @@ theorem grpObj_of_mono_factor {C : Type*} [Category C] [CartesianMonoidalCategor
     {A K : C} [GrpObj A] (i : K ⟶ A) [Mono i] (m : K ⊗ K ⟶ K) (hm : m ≫ i = (i ⊗ₘ i) ≫ μ[A])
     (e : 𝟙_ C ⟶ K) (he : e ≫ i = η[A]) (v : K ⟶ K) (hv : v ≫ i = i ≫ ι[A]) :
     ∃ _ : GrpObj K, IsMonHom i := by
-  letI M : MonObj K :=
+  let M : MonObj K :=
     { one := e, mul := m
       one_mul := by
         rw [← cancel_mono i, Category.assoc, hm]
@@ -77,7 +77,7 @@ theorem grpObj_of_mono_factor {C : Type*} [Category C] [CartesianMonoidalCategor
             Category.comp_id]
         simp only [Category.assoc]
         rw [h1, h2, MonObj.mul_assoc (X := A), associator_naturality_assoc] }
-  letI G : GrpObj K :=
+  let G : GrpObj K :=
     { inv := v
       left_inv := by
         rw [← cancel_mono i]

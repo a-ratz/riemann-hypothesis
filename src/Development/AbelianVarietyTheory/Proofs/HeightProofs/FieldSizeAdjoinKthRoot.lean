@@ -192,14 +192,14 @@ theorem _root_.GlobalTheory.FieldSize.sz_sup_adjoin_root : ∀ (F : Intermediate
   obtain ⟨hfd, hdeg, hdisc⟩ := hF
   have hyint : IsIntegral ℚ (y : ℂ) := (Algebra.IsIntegral.isIntegral y).map F.val
   have hzint : IsIntegral ℚ z := IsIntegral.of_pow hk (by rw [hz]; exact hyint)
-  haveI : FiniteDimensional ℚ ℚ⟮z⟯ := IntermediateField.adjoin.finiteDimensional hzint
-  haveI hEfd : FiniteDimensional ℚ ↥(F ⊔ ℚ⟮z⟯) := IntermediateField.finiteDimensional_sup F ℚ⟮z⟯
+  have : FiniteDimensional ℚ ℚ⟮z⟯ := IntermediateField.adjoin.finiteDimensional hzint
+  have hEfd : FiniteDimensional ℚ ↥(F ⊔ ℚ⟮z⟯) := IntermediateField.finiteDimensional_sup F ℚ⟮z⟯
   set E := F ⊔ ℚ⟮z⟯ with hE
-  haveI : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := hfd }
-  haveI : NumberField E := { to_charZero := inferInstance, to_finiteDimensional := hEfd }
+  have : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := hfd }
+  have : NumberField E := { to_charZero := inferInstance, to_finiteDimensional := hEfd }
   have hle : F ≤ E := le_sup_left
-  letI : Algebra F E := (IntermediateField.inclusion hle).toAlgebra
-  letI : Module.Free F E := Module.Free.of_divisionRing F E
+  let : Algebra F E := (IntermediateField.inclusion hle).toAlgebra
+  let : Module.Free F E := Module.Free.of_divisionRing F E
   let z' : E := ⟨z, (le_sup_right : ℚ⟮z⟯ ≤ E) (IntermediateField.mem_adjoin_simple_self ℚ z)⟩
   have hz' : z' ^ k = algebraMap F E y :=
     Subtype.ext (by rw [IntermediateField.coe_pow]; exact hz)
@@ -236,7 +236,7 @@ theorem _root_.GlobalTheory.FieldSize.sz_sup_adjoin_root : ∀ (F : Intermediate
     calc (minpoly F z').natDegree ≤ (X ^ k - C y : F[X]).natDegree :=
           natDegree_le_of_dvd (minpoly.dvd F z' (by simp [hz'])) hp
       _ = k := natDegree_X_pow_sub_C _
-  haveI : FiniteDimensional F E := FiniteDimensional.right ℚ F E
+  have : FiniteDimensional F E := FiniteDimensional.right ℚ F E
   have hdF : 0 < Module.finrank ℚ F := Module.finrank_pos
   have hdFE : 0 < Module.finrank F E := Module.finrank_pos
   have htower : Module.finrank ℚ E = Module.finrank ℚ F * Module.finrank F E :=

@@ -61,7 +61,7 @@ theorem UpperTheory.Gal.W2.tanChart_of :
   have hv₀N : v₀ ∈ N := by
     refine ⟨hv, ?_⟩
     have := hy
-    simp only [CxPts.ptsIn, Set.mem_setOf_eq] at this
+    simp only [CxPts.ptsIn, Set.mem_ofPred_eq] at this
     rw [hy0] at this
     exact this
   have hNn : N ∈ 𝓝 v₀ := hNo.mem_nhds hv₀N
@@ -97,9 +97,9 @@ theorem UpperTheory.Gal.W2.tanChart_of :
     refine hFA E Y B s v₀ w hB hv hs W hW hv₀N.2 (fun f => ?_)
     have hf : fderiv ℂ (fun v => valAt' (s v) W f) v₀ = ψ (KaehlerDifferential.D ℂ (Sec s' W) f) :=
       (hψ2 f).symm
-    rw [hf, hK, ContinuousLinearMap.sum_apply]
+    rw [hf, hK, sum_apply]
     refine Finset.sum_eq_zero (fun l _ => ?_)
-    rw [ContinuousLinearMap.smul_apply, ← hτ, hw]
+    rw [smul_apply, ← hτ, hw]
     simp
   have hval : ∀ (c : Y ⟶ Z) (hc : W ≤ c ⁻¹ᵁ U) (f : Sec sZ U) (v : E), ⊤ ≤ s v ⁻¹ᵁ W →
       valAt' (s v) W (Sec.res s' hc (appSec sZ s' c U f)) = valAt' (s v ≫ c) U f := by
@@ -127,9 +127,9 @@ theorem UpperTheory.Gal.W2.tanChart_of :
       rw [heq.fderiv_eq]
       exact hcomp.fderiv
     have h2 : ψ (KaehlerDifferential.D ℂ (Sec s' W) (e₂ j)) w = ∑ l, A j l * τ w l := by
-      rw [hK, hφ3', ContinuousLinearMap.sum_apply]
+      rw [hK, hφ3', sum_apply]
       refine Finset.sum_congr rfl (fun l _ => ?_)
-      rw [ContinuousLinearMap.smul_apply, smul_eq_mul, hτ]
+      rw [smul_apply, smul_eq_mul, hτ]
     rw [Matrix.mulVec, dotProduct, ← h2, hψ2, hfd, hτ, hψ2]
     rfl
   exact hCC E d hd τ (G' : E →ₗ[ℂ] E) A hinj hrel

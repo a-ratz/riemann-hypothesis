@@ -135,14 +135,14 @@ theorem etaIn_holds : EtaIn σ J ψ v := by
     · have hc0 : c0 ≠ 0 := by
         rintro rfl
         have hc1 : c1 = 0 := by
-          rw [map_zero, le_zero_iff, map_eq_zero] at hle; exact hle
+          rw [map_zero, nonpos_iff_eq_zero, map_eq_zero] at hle; exact hle
         apply hy; rw [hc1]; simp [sc_eq']
       have e : sc (E := E) v c0⁻¹ * (sc (E := E) v c0 + sc (E := E) v c1 * iθ) =
           sc (E := E) v 1 + sc (E := E) v (c0⁻¹ * c1) * iθ := by
         simp only [mul_add, ← mul_assoc, ← scm, inv_mul_cancel₀ hc0]
       have hv : Valued.v (c0⁻¹ * c1) ≤ 1 :=
         calc Valued.v (c0⁻¹ * c1) = Valued.v c0⁻¹ * Valued.v c1 := map_mul _ _ _
-          _ ≤ Valued.v c0⁻¹ * Valued.v c0 := mul_le_mul_of_nonneg_left hle zero_le'
+          _ ≤ Valued.v c0⁻¹ * Valued.v c0 := mul_le_mul_of_nonneg_left hle zero_le
           _ = 1 := by rw [← map_mul, inv_mul_cancel₀ hc0, map_one]
       refine ⟨c0⁻¹, ?_, ?_⟩
       · rw [e]
@@ -153,13 +153,13 @@ theorem etaIn_holds : EtaIn σ J ψ v := by
       have hc1 : c1 ≠ 0 := by
         rintro rfl
         rw [map_zero] at hle
-        exact absurd hle (not_lt_of_ge zero_le')
+        exact absurd hle (not_lt_of_ge zero_le)
       have e : sc (E := E) v c1⁻¹ * (sc (E := E) v c0 + sc (E := E) v c1 * iθ) =
           sc (E := E) v (c1⁻¹ * c0) + sc (E := E) v 1 * iθ := by
         simp only [mul_add, ← mul_assoc, ← scm, inv_mul_cancel₀ hc1]
       have hv : Valued.v (c1⁻¹ * c0) ≤ 1 :=
         calc Valued.v (c1⁻¹ * c0) = Valued.v c1⁻¹ * Valued.v c0 := map_mul _ _ _
-          _ ≤ Valued.v c1⁻¹ * Valued.v c1 := mul_le_mul_of_nonneg_left hle.le zero_le'
+          _ ≤ Valued.v c1⁻¹ * Valued.v c1 := mul_le_mul_of_nonneg_left hle.le zero_le
           _ = 1 := by rw [← map_mul, inv_mul_cancel₀ hc1, map_one]
       refine ⟨c1⁻¹, ?_, ?_⟩
       · rw [e]
@@ -170,7 +170,7 @@ theorem etaIn_holds : EtaIn σ J ψ v := by
   push Not at hne
   obtain ⟨c, hc1, hc2⟩ := hnorm e hne.1
   obtain ⟨c', hc1', hc2'⟩ := hnorm (1 - e) (sub_ne_zero.2 (Ne.symm hne.2))
-  haveI : IsDomain (QE (E := E) v) := (Ideal.Quotient.isDomain_iff_prime _).2 hp
+  have : IsDomain (QE (E := E) v) := (Ideal.Quotient.isDomain_iff_prime _).2 hp
   have h0 : (sc (E := E) v c * e) * (sc (E := E) v c' * (1 - e)) = 0 := by
     have h1 : e * (1 - e) = 0 := by rw [mul_sub, mul_one, hee, sub_self]
     calc _ = sc (E := E) v c * sc (E := E) v c' * (e * (1 - e)) := by ring

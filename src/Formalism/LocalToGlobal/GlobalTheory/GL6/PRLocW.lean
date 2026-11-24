@@ -154,7 +154,7 @@ theorem rlv_coordFacts (i : ℕ) (hi : i ≤ D.R.m) :
     (∀ c, (Formalism.L2.GlobalTheoryTheory.Comp.dl (sigD D) (gramN D i hi) (clsCrd D u i hi c)).FG) ∧
     (∀ a b, hform (sigD D : D.host.E →+* D.host.E) (gramN D i hi) b a =
       sigD D (hform (sigD D : D.host.E →+* D.host.E) (gramN D i hi) a b)) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   set κ : (D.sp.X i).V ≃ₗ[D.host.E] (Fin (D.R.N i) → D.host.E) := (D.sp.X i).frame.equivFun.trans
     (LinearEquiv.funCongrLeft D.host.E D.host.E (finCongr (rankN D i hi)).symm) with hκ
   have hform_eq : ∀ x y, (D.sp.X i).hT x y = hform (D.sp.cm.sig : D.host.E →+* D.host.E) (gramN D i hi) (κ x) (κ y) := by

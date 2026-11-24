@@ -115,7 +115,7 @@ theorem isCompact_relax' (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) (J
     IsCompact (_root_.GlobalTheory.PenLev.relaxedLevelSubgroup J j hj α : Set (GA (I.rec7 l Z) ((I.rec7 l Z).sp.X j))) := by
   classical
   have hU := (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hW.tr.ok hW.tr.pins.some l Z u (W.P.I.tup t) J.Ch₀ J.A hR.is j (by omega) (J.ι j α)).1
-  haveI hNn : (GlobalTheory.FinPl.grpAt ((I.rec7 l Z).sp.X j) (_root_.GlobalTheory.PenBridge.finitePlaceCondition J)).Normal := by
+  have hNn : (GlobalTheory.FinPl.grpAt ((I.rec7 l Z).sp.X j) (_root_.GlobalTheory.PenBridge.finitePlaceCondition J)).Normal := by
     unfold GlobalTheory.FinPl.grpAt GlobalTheory.FinPl.congGrp
     infer_instance
   obtain ⟨n, ρ, Ψ, hc, hin, huniq⟩ := _root_.GlobalTheory.PenLev.exists_continuous_section_localHomProduct_upper J j hj

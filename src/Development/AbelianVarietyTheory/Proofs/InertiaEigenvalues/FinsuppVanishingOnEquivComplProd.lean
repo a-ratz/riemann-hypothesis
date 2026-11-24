@@ -59,7 +59,7 @@ theorem finsupp_vanishing_on_equiv_compl_prod :
     toFun := fun l => l.1.subtypeDomain (· ∉ S)
     invFun := fun l' => ⟨l'.embDomain (Function.Embedding.subtype _), by
       intro v hv
-      apply Finsupp.embDomain_notin_range
+      apply Finsupp.embDomain_of_notMem_range
       rintro ⟨i, rfl⟩
       exact i.2 hv⟩
     left_inv := by
@@ -68,7 +68,7 @@ theorem finsupp_vanishing_on_equiv_compl_prod :
       refine Finsupp.ext fun v => ?_
       by_cases hv : v ∈ S
       · show Finsupp.embDomain _ _ v = l v
-        rw [Finsupp.embDomain_notin_range, hl v hv]
+        rw [Finsupp.embDomain_of_notMem_range, hl v hv]
         rintro ⟨i, rfl⟩
         exact i.2 hv
       · show Finsupp.embDomain _ _ v = l v

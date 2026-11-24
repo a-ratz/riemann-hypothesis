@@ -172,11 +172,11 @@ theorem mem_spanOver_ker (R R₁ : Subalgebra o Ω) (hR : R ≤ R₁) (q : E →
   let J : Ideal R :=
     { carrier := {a | (a : Ω) • v ∈ spanOver R₁ {e | e ∈ L ∧ q e = 0}}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, Subalgebra.coe_add, add_smul] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, Subalgebra.coe_add, add_smul] at ha hb ⊢
         exact add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun a b hb => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, MulMemClass.coe_mul, mul_smul] at hb ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, MulMemClass.coe_mul, mul_smul] at hb ⊢
         exact smul_mem_spanOver R₁ _ (hR a.2) hb }
   have h1 : (1 : R) ∈ J.radical := by
     have : (1 : R) = ∑ l, (⟨c l, hc l⟩ : R) * ⟨f l, hf l⟩ := by

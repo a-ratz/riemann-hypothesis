@@ -158,6 +158,6 @@ theorem exists_fundamentalDomain_mass_one : ∀ (G : Type) [AddCommGroup G] [Top
   have htop : μ₀ F ≠ ⊤ := ((measure_mono hFK).trans_lt hK.measure_lt_top).ne
   refine ⟨(μ₀ F)⁻¹ • μ₀, F, Measure.IsAddHaarMeasure.smul μ₀ (ENNReal.inv_ne_zero.2 htop) (ENNReal.inv_ne_top.2 h0),
     IsAddFundamentalDomain.mk' hFm.nullMeasurableSet hex, ?_⟩
-  rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 htop]
+  rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 htop]
 
 end GlobalTheory.CuspGeneric

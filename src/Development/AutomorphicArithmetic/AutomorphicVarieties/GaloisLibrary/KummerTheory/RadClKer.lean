@@ -68,7 +68,7 @@ private theorem fin_add {f g : HeightOneSpectrum (𝓞 K) → ℤ} (hf : {v | f 
     (hg : {v | g v ≠ 0}.Finite) : {v | f v + g v ≠ 0}.Finite :=
   (hf.union hg).subset fun v hv => by
     by_contra h
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at h
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at h
     exact hv (by rw [h.1, h.2, add_zero])
 
 private theorem mem_clSub {S : Set (HeightOneSpectrum (𝓞 K))} {c : ClassGroup (𝓞 K)} (hc : c ∈ clSub S) :
@@ -79,9 +79,9 @@ private theorem mem_clSub {S : Set (HeightOneSpectrum (𝓞 K))} {c : ClassGroup
   | mem x hx =>
     obtain ⟨w, hw, rfl⟩ := hx
     refine ⟨fun v => if v = w then 1 else 0, (Set.finite_singleton w).subset fun v hv => ?_,
-      fun v hv => if_neg fun (h : v = w) => hv (h ▸ hw), ?_⟩
+      fun v hv => ite_eq_right fun (h : v = w) => hv (h ▸ hw), ?_⟩
     · by_contra h
-      exact hv (if_neg h)
+      exact hv (ite_eq_right h)
     · rw [finprod_eq_single _ w fun v hv => by simp [hv]]
       simp
   | one => exact ⟨fun _ => 0, by simp, by simp, by simp⟩

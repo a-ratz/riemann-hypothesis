@@ -123,12 +123,12 @@ theorem enorm_fl_le {D : D7} (ψ : AddChar (AF D.host.F) ℂ) {V V₀ : HSp D} {
     (x : Mx D W.rank ρ) (Ψ : WO V W → ℂ) :
     ‖fl ψ d W v vb vU Th x Ψ‖ₑ ≤
       ∫⁻ u, ∫⁻ b in vb.𝓕, ‖d.mixS W ψ v.μ v.𝓕 Ψ (x ⬝ u.1.1) (x ⬝ b)‖ₑ ∂vb.μ ∂vU.ν := by
-  refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun u => ?_)
-  refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun b => ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun u => ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun b => ?_)
   simp only [flFun]
-  rw [enorm_mul]
+  rw [eNorm_mul]
   refine mul_le_of_le_one_left' ?_
-  rw [← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm]
   exact ENNReal.ofReal_le_one.2 (hTh _)
 
 theorem liftS_mul {D : D7} {V W : HSp D} (om : Om V W) (μ : Measure (GA D W)) (𝓕 : Set (GA D W)) (G : GA D W → ℂ)
@@ -168,10 +168,10 @@ theorem besPer_lift_eq_integral_kerBF : ∀ (D : D7), Descent D → ∀ (ψ : Ad
 
   obtain ⟨i1, i2, i3⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D B.A
   obtain ⟨j1, j2, j3⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D J.W
-  haveI : BorelSpace (GA D B.A) := ⟨rfl⟩
-  haveI : BorelSpace (GA D J.W) := ⟨rfl⟩
-  haveI := B.vA.haar
-  haveI := s.vW.haar
+  have : BorelSpace (GA D B.A) := ⟨rfl⟩
+  have : BorelSpace (GA D J.W) := ⟨rfl⟩
+  have := B.vA.haar
+  have := s.vW.haar
   obtain ⟨hc, hd, -⟩ := GlobalTheory.T.rational_unitary_subgroup_countable_discrete_fundDomain D B.A (GQ B.A) le_rfl
 
   set f : GA D B.A → GA D J.W → ℂ := fun h₀ h => φ h₀ * (G h * flatBF s (s.om (embA B.d B.o h₀, h) Φ) 0) with hf
@@ -200,14 +200,14 @@ theorem besPer_lift_eq_integral_kerBF : ∀ (D : D7), Descent D → ∀ (ψ : Ad
     refine ⟨M.toNNReal, fun h₀ hh => ?_⟩
     calc ∫⁻ h in 𝓑, ‖f h₀ h‖ₑ ∂s.vW.μ
         = ‖φ h₀‖ₑ * ∫⁻ h in 𝓑, ‖G h‖ₑ * ‖flatBF s (s.om (embA B.d B.o h₀, h) Φ) 0‖ₑ ∂s.vW.μ := by
-          rw [← lintegral_const_mul' _ _ enorm_ne_top]
-          simp only [hf, enorm_mul]
+          rw [← lintegral_const_mul' _ _ eNorm_ne_top]
+          simp only [hf, eNorm_mul]
       _ ≤ ‖φ h₀‖ₑ * ENNReal.ofReal (C * height B.V (embA B.d B.o h₀) ^ A) := by
           refine mul_le_mul_right (le_trans (lintegral_mono fun h => mul_le_mul_right ?_ _) (hC _)) _
           rw [← hfl]
           exact enorm_fl_le ψ B.d J.W s.vS s.vT s.vU Th hn _ _
       _ = ENNReal.ofReal (‖φ h₀‖ * (C * height B.V (embA B.d B.o h₀) ^ A)) := by
-          rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm_eq_enorm]
+          rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm]
       _ ≤ M.toNNReal := ENNReal.ofReal_le_ofReal (hM ⟨h₀, hh, rfl⟩)
   have hker : kerBF s φ G Φ = fun h => ∫ h₀ in B.vA.𝓕, f h₀ h ∂B.vA.μ := by
     funext h
@@ -332,7 +332,7 @@ theorem unfBF_of_parts
   obtain ⟨om', hom'⟩ := (hD ψ B.V J.W s.χV s.χW s.om s.weil).1 B.V₀ ρ B.d
   obtain ⟨hcont, hinv, -, hval⟩ := GlobalTheory.T.unfoldedBesselJacobiKernel_laws D ψ ρ B J s om' hom' φ G Φ hφ hG hΦ
   obtain ⟨hΓc, hΓd, hfd⟩ := GlobalTheory.T.rational_unitary_subgroup_countable_discrete_fundDomain D J.W (GQ J.W ⊓ jacGrp J.d) inf_le_left
-  haveI := s.vW.haar
+  have := s.vW.haar
   obtain ⟨𝓑, h𝓑⟩ := hfd s.vW.μ s.vW.haar
   obtain ⟨hint, hper⟩ := hfub D hD ψ ρ B J s φ G Φ hφ hG hΦ 𝓑 h𝓑
   obtain ⟨-, -, -, -, hemb, hrat⟩ := GlobalTheory.T.unfolding_base_point_fourierJacobi_group D J.W J.W₀ ρ J.d

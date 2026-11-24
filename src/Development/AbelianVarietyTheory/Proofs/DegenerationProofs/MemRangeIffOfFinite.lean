@@ -492,7 +492,7 @@ namespace GlobalTheory.OneBasis
 
 theorem exists_extend_of_isAlgebraic {A B F : Type} [Field A] [Field B] [Field F] [IsAlgClosed F] [Algebra A B]
     [Algebra.IsAlgebraic A B] (g : A →+* F) : ∃ σ : B →+* F, ∀ x, σ (algebraMap A B x) = g x := by
-  letI : Algebra A F := g.toAlgebra
+  let : Algebra A F := g.toAlgebra
   let σ : B →ₐ[A] F := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -505,14 +505,14 @@ theorem exists_finite_normal_containing : ∀ (R₁ : Type) [CommRing R₁] [IsD
   let K := FractionRing R₁
   let L := AlgebraicClosure K
   let K₂ : IntermediateField K L := IntermediateField.adjoin K (Set.range Φ)
-  haveI : Finite (Set.range Φ) := (Set.finite_range Φ).to_subtype
-  haveI : FiniteDimensional K K₂ :=
+  have : Finite (Set.range Φ) := (Set.finite_range Φ).to_subtype
+  have : FiniteDimensional K K₂ :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
-  haveI : CharZero K := IsFractionRing.charZero_of_isFractionRing R₁
-  haveI : Algebra.IsSeparable K K₂ := inferInstance
+  have : CharZero K := IsFractionRing.charZero_of_isFractionRing R₁
+  have : Algebra.IsSeparable K K₂ := inferInstance
   let R₂ := integralClosure R₁ K₂
-  haveI : IsFractionRing R₂ K₂ := IsIntegralClosure.isFractionRing_of_finite_extension R₁ K K₂ R₂
-  haveI hfin : Module.Finite R₁ R₂ := IsIntegralClosure.finite R₁ K K₂ R₂
+  have : IsFractionRing R₂ K₂ := IsIntegralClosure.isFractionRing_of_finite_extension R₁ K K₂ R₂
+  have hfin : Module.Finite R₁ R₂ := IsIntegralClosure.finite R₁ K K₂ R₂
   let e : FractionRing R₂ ≃ₐ[R₂] K₂ := FractionRing.algEquiv R₂ K₂
   have hinj : Function.Injective (algebraMap R₁ K₂) := by
     rw [IsScalarTower.algebraMap_eq R₁ K K₂]
@@ -536,7 +536,7 @@ theorem exists_finite_normal_containing : ∀ (R₁ : Type) [CommRing R₁] [IsD
     change algebraMap K₂ L (e (e.symm _)) = _
     rw [e.apply_symm_apply]; rfl
   · intro F _ _ ga
-    haveI : Algebra.IsAlgebraic K₂ L := Algebra.IsAlgebraic.tower_top (K := K) K₂
+    have : Algebra.IsAlgebraic K₂ L := Algebra.IsAlgebraic.tower_top (K := K) K₂
     obtain ⟨σ, hσ⟩ := exists_extend_of_isAlgebraic (A := K₂) (B := L) (ga.comp (e.symm : K₂ →+* FractionRing R₂))
     refine ⟨σ, fun x => (hσ (e x)).trans ?_⟩
     exact congrArg ga (e.symm_apply_apply x)
@@ -586,7 +586,7 @@ theorem val_eq_one_iff {F : Type} [Field F] (O : ValuationSubring F) (x : F) :
     simp at h
   · rintro ⟨h0, h1, h2⟩
     have : 0 < O.valuation x := by
-      rw [zero_lt_iff]; simpa using h0
+      rw [pos_iff_ne_zero]; simpa using h0
     exact le_antisymm h1 ((inv_le_one₀ this).1 h2)
 
 theorem val_comap {K F : Type} [Field K] [Field F] (σ : K →+* F) (O : ValuationSubring F) (x : K) :
@@ -627,7 +627,7 @@ theorem exists_det_ne_zero {k J : Type} [Field k] {r : ℕ} (v : J → Fin r →
     exact hi (by rw [← e]; exact hφ (Submodule.subset_span ⟨i, rfl⟩))
   obtain ⟨b, hb, hsp, hli⟩ := exists_linearIndependent k (Set.range v)
   let B : Module.Basis b k (Fin r → k) := Module.Basis.mk hli (by
-    rw [Subtype.range_coe_subtype, Set.setOf_mem_eq, hsp, hs])
+    rw [Subtype.range_coe_subtype, Set.ofPred_mem_eq, hsp, hs])
   let e : Fin r ≃ b := (Pi.basisFun k (Fin r)).indexEquiv B
   choose f hf using fun i : Fin r => hb (e i).2
   refine ⟨f, ?_⟩
@@ -636,7 +636,7 @@ theorem exists_det_ne_zero {k J : Type} [Field k] {r : ℕ} (v : J → Fin r →
     have e2 : (Matrix.of fun i j => v (f i) j).row = Subtype.val ∘ e := funext fun i => hf i
     rw [e2]
     exact this
-  exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hl)).ne_zero
+  exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_row_iff_isUnit.1 hl)).ne_zero
 
 theorem exists_det_unit {F J : Type} [Field F] (O : ValuationSubring F) {r : ℕ} (v : J → Fin r → F)
     (hv : ∀ i j, v i j ∈ O)
@@ -880,7 +880,7 @@ namespace GlobalTheory.CentredPlace
 
 theorem exists_extension {F K M : Type} [Field F] [Field K] [Algebra F K] [Algebra.IsAlgebraic F K] [Field M]
     [IsAlgClosed M] (L : IntermediateField F K) (f : L →+* M) : ∃ σ : K →+* M, ∀ x : L, σ x = f x := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   let σ : K →ₐ[L] M := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -960,7 +960,7 @@ theorem isIntegral_inv {R₀ K : Type} [CommRing R₀] [IsLocalRing R₀] [IsNoe
 
 theorem mem_of_isIntegral {R K : Type} [CommRing R] [Field K] [Algebra R K] (S : ValuationSubring K)
     (h : ∀ r, algebraMap R K r ∈ S) {x : K} (hx : IsIntegral R x) : x ∈ S := by
-  letI : Algebra R S := ((algebraMap R K).codRestrict S h).toAlgebra
+  let : Algebra R S := ((algebraMap R K).codRestrict S h).toAlgebra
   have : IsScalarTower R S K := .of_algebraMap_eq fun _ => rfl
   obtain ⟨y, rfl⟩ := (IsIntegrallyClosed.isIntegral_iff (R := S) (K := K)).mp
     (IsIntegral.tower_top (R := R) hx)
@@ -970,7 +970,7 @@ theorem exists_place_detecting_units : ∀ (O' : Type) [CommRing O'] [IsDomain O
   intro O' _ _ _ ϖ hO R₁ _ _ g hg hfin P hR hP
   obtain ⟨_, _, hc⟩ : ∃ _ : IsLocalRing O', IsPrincipalIdealRing O' ∧ IsAdicComplete (maximalIdeal O') O' := by
     rcases hO with ⟨hF, -⟩ | ⟨hD, hi, hc⟩
-    · letI := hF.toField
+    · let := hF.toField
       refine ⟨inferInstance, inferInstance, ?_⟩
       rw [IsLocalRing.maximalIdeal_eq_bot]
       infer_instance
@@ -979,7 +979,7 @@ theorem exists_place_detecting_units : ∀ (O' : Type) [CommRing O'] [IsDomain O
   have hps : IsAdicComplete (maximalIdeal (PowerSeries O')) (PowerSeries O') := ReciprocityTheory.P1.isAdicComplete_ps
   have : CharZero (PowerSeries O') := charZero_of_injective_ringHom (PowerSeries.C_injective (R := O'))
   have : CharZero R₁ := charZero_of_injective_ringHom hg
-  letI := g.toAlgebra
+  let := g.toAlgebra
   have : Module.Finite (PowerSeries O') R₁ := hfin
   have : IsLocalRing R₁ := T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := PowerSeries O') R₁
   have : IsNoetherianRing R₁ := IsNoetherianRing.of_finite (PowerSeries O') R₁
@@ -992,7 +992,7 @@ theorem exists_place_detecting_units : ∀ (O' : Type) [CommRing O'] [IsDomain O
     rw [IsScalarTower.algebraMap_eq R₁ (FractionRing R₁)]
     exact (algebraMap (FractionRing R₁) _).injective.comp (IsFractionRing.injective R₁ _)
   have hnf : ¬ IsField R₁ := fun h => by
-    have hX : ¬ IsUnit (PowerSeries.X : PowerSeries O') := PowerSeries.X_prime.not_isUnit
+    have hX : ¬ IsUnit (PowerSeries.X : PowerSeries O') := PowerSeries.prime_X.not_isUnit
     refine hX (hloc.1 _ ?_)
     obtain ⟨b, hb⟩ := h.mul_inv_cancel ((map_ne_zero_iff g hg).2 PowerSeries.X_ne_zero)
     exact IsUnit.of_mul_eq_one b hb
@@ -1490,8 +1490,8 @@ theorem val_eq {k r r' mu mu' : ℕ} {Q : X → ℤ} {cls : Fin r → X} {cls' :
 
 theorem sum_eq {k r mu mu' : ℕ} {Q : X → ℤ} {cls cls' : Fin r → X} (h : Adapted k Q cls mu)
     (h' : Adapted k Q cls' mu') : ∑ i, Q (cls i) = ∑ i, Q (cls' i) := by
-  haveI : Finite (X ⧸ mulSub X k) := Finite.of_surjective _ (surj h)
-  letI : Fintype (X ⧸ mulSub X k) := Fintype.ofFinite _
+  have : Finite (X ⧸ mulSub X k) := Finite.of_surjective _ (surj h)
+  let : Fintype (X ⧸ mulSub X k) := Fintype.ofFinite _
   have a := sum_comp h (fun _ => 1)
   have a' := sum_comp h' (fun _ => 1)
   have hm : (mu : ℤ) = mu' := by
@@ -1702,7 +1702,7 @@ theorem exists_fraction_map {W W' : Type} [CommRing W] [IsDomain W] [CommRing W'
 
 theorem exists_closure_map {k F : Type} [Field k] [Field F] [IsAlgClosed F] (f : k →+* F) :
     ∃ i : AlgebraicClosure k →+* F, ∀ y, i (algebraMap k _ y) = f y := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   let i : AlgebraicClosure k →ₐ[k] F := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1765,13 +1765,13 @@ theorem exists_isFrame_pow_sq : GlobalTheory.Ex.HV → Laws6 → GlobalTheory.LN
   have hL := hV.1
   have hO' : IsLocalRing O' ∧ IsNoetherianRing O' := by
     rcases hB with ⟨h, -⟩ | ⟨h, -⟩
-    · letI := h.toField; exact ⟨inferInstance, inferInstance⟩
+    · let := h.toField; exact ⟨inferInstance, inferInstance⟩
     · exact ⟨inferInstance, inferInstance⟩
   obtain ⟨_, _⟩ := hO'
   obtain ⟨n, hnp, hno, hnu⟩ := exists_odd_prime_unit O'
   have : CharZero R₁ := ((g.comp (PowerSeries.C (R := O'))).charZero_iff (hg.comp PowerSeries.C_injective)).1 inferInstance
   have : IsNoetherianRing R₁ := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.Finite (PowerSeries O') R₁ := hgf
     exact IsNoetherianRing.of_finite (PowerSeries O') R₁
   obtain ⟨x₁, x₂, x₃, x₄⟩ := GlobalTheory.T.model_trait_extension_polarised_flat_bundleIso E H D l Xo c _ _ Y

@@ -342,7 +342,7 @@ private lemma gram_det_fromCols_eq_mul_residual [DecidableEq m] (X : Matrix m α
     (h : (Xᴴ * X).det ≠ 0) :
     ((fromCols X N)ᴴ * fromCols X N).det = (Xᴴ * X).det *
       (((1 - X * (Xᴴ * X)⁻¹ * Xᴴ) * N)ᴴ * ((1 - X * (Xᴴ * X)⁻¹ * Xᴴ) * N)).det := by
-  haveI := invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr h)
+  have := invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr h)
   rw [gram_fromCols_eq_fromBlocks, det_fromBlocks₁₁, invOf_eq_nonsing_inv, gram_projection_residual_eq X N h]
 
 open MeasureTheory Topology Matrix in
@@ -531,7 +531,7 @@ theorem _root_.GlobalTheory.sum_log_gramDet_ratio_pos : (∀ (m n : Type) [Finty
         ext x l
         have h2 := congrArg (fun f => f (Pi.single l 1) x) (LinearMap.range_eq_bot.mp h)
         simpa [Matrix.mulVecLin_apply] using h2
-      haveI : Nonempty (Fin i) := ⟨⟨0, hi0⟩⟩
+      have : Nonempty (Fin i) := ⟨⟨0, hi0⟩⟩
       rw [hM0] at hM
       simp at hM
     · have h1 := LinearMap.finrank_range_le (Matrix.mulVecLin M)

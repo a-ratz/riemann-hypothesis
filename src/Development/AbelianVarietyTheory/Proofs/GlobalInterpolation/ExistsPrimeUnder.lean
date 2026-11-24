@@ -154,7 +154,7 @@ theorem normOne_idTo (hs : s.Ok) {I J : Submodule (𝓞 X.E) X.E} (h1 : ∀ x, x
 theorem chi_span (hs : s.Ok) (hχ : TaylorLogMetric.IsChi D χ) {y : X.E} (hy : star y * y = 1) :
     χ (idTo s (Submodule.span (𝓞 X.E) {y})) = ∏ τ, (s.σ₀ (X.emb τ y))⁻¹ := by
   obtain ⟨-, -, -, t4, -⟩ := GlobalTheory.IdealTransport.transport D X s
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hst : star (s.iE y) = s.iE (star y) := by
     apply D.host.φ₀.injective
     rw [hs.2]

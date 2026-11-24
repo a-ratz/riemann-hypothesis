@@ -263,11 +263,11 @@ theorem eq_zero_of_orthogonal (ρ : Representation ℂ G V) (L : Subgroup G) {I 
     (h0 : ∀ x, x ∉ K → ∑ i, (((θ i x)⁻¹ : ℂˣ) : ℂ) = 0) : v = 0 := by
   classical
   choose M hMfin hMsum using hM
-  haveI : ∀ i, (M i).FiniteIndex := hMfin
-  haveI : (⨅ i, M i).FiniteIndex := Subgroup.finiteIndex_iInf hMfin
+  have : ∀ i, (M i).FiniteIndex := hMfin
+  have : (⨅ i, M i).FiniteIndex := Subgroup.finiteIndex_iInf hMfin
   set N : Subgroup L := K ⊓ ⨅ i, M i with hNdef
-  haveI : N.Normal := Subgroup.normal_of_isMulCommutative N
-  letI : Fintype (L ⧸ N) := Subgroup.fintypeQuotientOfFiniteIndex
+  have : N.Normal := Subgroup.normal_of_isMulCommutative N
+  let : Fintype (L ⧸ N) := Subgroup.fintypeQuotientOfFiniteIndex
   have hNK : N ≤ K := inf_le_left
   have hNM : ∀ i, N ≤ M i := fun i => inf_le_right.trans (iInf_le _ i)
   have htot : ∑ q : L ⧸ N, (∑ i, (((θ i q.out)⁻¹ : ℂˣ) : ℂ)) • ρ (q.out : G) v = 0 := by
@@ -332,7 +332,7 @@ theorem isOpen_ker_chiOn (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {n : ℕ} (a : 
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
   have hmem : (Subtype.val ⁻¹' {x : Multiplicative (Fin n → k) |
       a ⬝ᵥ x.toAdd ∈ valBall k (addCharConductor ψ)} : Set L) ∈ nhds (1 : L) :=
-    (hU.preimage continuous_subtype_val).mem_nhds (by simp [zero_mem])
+    (hU.preimage continuous_subtypeVal).mem_nhds (by simp [zero_mem])
   refine Filter.mem_of_superset hmem fun y hy => ?_
   rw [SetLike.mem_coe, MonoidHom.mem_ker]
   exact chi_eq_one hψ hψ1 hy
@@ -362,7 +362,7 @@ theorem sum_ev_eq_zero {n : ℕ} (S T : Subgroup (Multiplicative (Fin n → k)))
       ev ψ x ((s * t : S) : Multiplicative (Fin n → k)) = ev ψ x (s : Multiplicative (Fin n → k)) := by
     intro s t ht
     rw [Subgroup.coe_mul, ev_mul, ev_eq_one ψ (hT _ (Subgroup.mem_subgroupOf.mp ht)), mul_one]
-  haveI : (T.subgroupOf S).Normal := Subgroup.normal_of_isMulCommutative _
+  have : (T.subgroupOf S).Normal := Subgroup.normal_of_isMulCommutative _
   have key := sum_out_mul_right (T.subgroupOf S)
     (fun s : S => ev ψ x (s : Multiplicative (Fin n → k))) hf ⟨l, hl⟩
   simp only [Subgroup.coe_mul, ev_mul] at key
@@ -425,17 +425,17 @@ theorem fourier_finite : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
   have hfin : ∀ (A B : Subgroup (Multiplicative (Fin n → k))), IsCompact (A : Set (Multiplicative (Fin n → k))) →
       IsOpen (B : Set (Multiplicative (Fin n → k))) → (B.subgroupOf A).FiniteIndex := by
     intro A B hA hB
-    haveI : CompactSpace A := isCompact_iff_compactSpace.mp hA
-    haveI : Finite (A ⧸ B.subgroupOf A) := Subgroup.quotient_finite_of_isOpen _ (by
+    have : CompactSpace A := isCompact_iff_compactSpace.mp hA
+    have : Finite (A ⧸ B.subgroupOf A) := Subgroup.quotient_finite_of_isOpen _ (by
       rw [Subgroup.coe_subgroupOf]
-      exact hB.preimage continuous_subtype_val)
+      exact hB.preimage continuous_subtypeVal)
     exact Subgroup.finiteIndex_of_finite_quotient
-  haveI : ((box k n N).subgroupOf (box k n J)).FiniteIndex :=
+  have : ((box k n N).subgroupOf (box k n J)).FiniteIndex :=
     hfin _ _ (isCompact_box n J) (isOpen_box n N)
-  haveI : ((box k n (addCharConductor ψ - J)).subgroupOf
+  have : ((box k n (addCharConductor ψ - J)).subgroupOf
       (box k n (addCharConductor ψ - N))).FiniteIndex :=
     hfin _ _ (isCompact_box n (addCharConductor ψ - N)) (isOpen_box n (addCharConductor ψ - J))
-  letI : Fintype (box k n (addCharConductor ψ - N) ⧸
+  let : Fintype (box k n (addCharConductor ψ - N) ⧸
       (box k n (addCharConductor ψ - J)).subgroupOf (box k n (addCharConductor ψ - N))) :=
     Subgroup.fintypeQuotientOfFiniteIndex
   refine eq_zero_of_orthogonal ρ (box k n J)
@@ -697,7 +697,7 @@ theorem continuous_glEmb (n : ℕ) : Continuous (glEmb k n) := by
       first | exact continuous_const | exact (continuous_apply _).comp (continuous_apply _) | fun_prop
 
 theorem continuous_levi_comp_subtype (m : ℕ) : Continuous ((levi k (m + 1)).comp (Mir k m).subtype) :=
-  continuous_induced_rng.2 ((continuous_glEmb (m + 1)).comp continuous_subtype_val)
+  continuous_induced_rng.2 ((continuous_glEmb (m + 1)).comp continuous_subtypeVal)
 
 end Top
 
@@ -724,7 +724,7 @@ theorem exists_derivative_nontrivial (k : Type) [Field k] [ValuativeRel k] [Topo
         push_neg at hcon
         exact hv (_root_.GlobalTheory.CompanionTheory.MirFourier.eq_zero_of_forall_twKer k ψ hψc hψ m V τ hτ v h1 hcon)
       obtain ⟨g, hg⟩ := hex
-      haveI := nontrivial_quot_of_not_mem _ _ hg
+      have := nontrivial_quot_of_not_mem _ _ hg
       have hs : IsSmooth (phiMinus k ψ τ) :=
         _root_.GlobalTheory.CompanionTheory.BZMir.twAct_isSmooth τ hτ _ _ _ (continuous_levi_comp_subtype m) (levi_stab ψ m)
       obtain ⟨n, hn, hnt⟩ := ih _ (phiMinus k ψ τ) hs inferInstance

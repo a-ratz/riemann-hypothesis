@@ -87,22 +87,22 @@ theorem compactMatrix_off_block {ε : Fin n → Bool} (w : KCo ε) {a b : Fin n}
     kMat w a b = 0 := by
   have hab : a ≠ b := fun e => h (e ▸ rfl)
   unfold kMat
-  rw [if_neg hab, dif_neg (fun h' => h h'.2), dif_neg (fun h' => h h'.2.symm)]
+  rw [ite_eq_right hab, dite_eq_right (fun h' => h h'.2), dite_eq_right (fun h' => h h'.2.symm)]
 
 theorem compactMatrix_conjTranspose {ε : Fin n → Bool} (w : KCo ε) : (kMat w)ᴴ = -kMat w := by
   ext a b
   change star (kMat w b a) = -(kMat w a b)
   by_cases hab : a = b
   · subst hab
-    simp only [kMat, if_true]
+    simp only [kMat, ite_true]
     simp [Complex.ext_iff]
   · have hba : b ≠ a := Ne.symm hab
     by_cases h1 : b < a ∧ ε a = ε b
     · have h2 : ¬ (a < b ∧ ε b = ε a) := fun h => lt_asymm h.1 h1.1
-      simp only [kMat, if_neg hab, if_neg hba, dif_pos h1, dif_neg h2, star_neg, star_star]
+      simp only [kMat, ite_eq_right hab, ite_eq_right hba, dite_eq_left h1, dite_eq_right h2, star_neg, star_star]
     · by_cases h2 : a < b ∧ ε b = ε a
-      · simp only [kMat, if_neg hab, if_neg hba, dif_pos h2, dif_neg h1, neg_neg]
-      · simp only [kMat, if_neg hab, if_neg hba, dif_neg h2, dif_neg h1, star_zero, neg_zero]
+      · simp only [kMat, ite_eq_right hab, ite_eq_right hba, dite_eq_left h2, dite_eq_right h1, neg_neg]
+      · simp only [kMat, ite_eq_right hab, ite_eq_right hba, dite_eq_right h2, dite_eq_right h1, star_zero, neg_zero]
 
 theorem compactMatrix_comm_signature {ε : Fin n → Bool} (w : KCo ε) : kMat w * Jm ε = Jm ε * kMat w := by
   ext a b
@@ -128,7 +128,7 @@ theorem compactMatrix_injective (ε : Fin n → Bool) : Function.Injective (kMat
     simpa [kMat] using h2
   · have h2 := h1 ab.1.1 ab.1.2
     have hne : ab.1.1 ≠ ab.1.2 := ne_of_gt ab.2.1
-    simp only [kMat, if_neg hne, dif_pos ab.2] at h2
+    simp only [kMat, ite_eq_right hne, dite_eq_left ab.2] at h2
     exact h2
 
 theorem compactMatrix_continuous (ε : Fin n → Bool) :
@@ -136,14 +136,14 @@ theorem compactMatrix_continuous (ε : Fin n → Bool) :
   refine continuous_pi fun a => continuous_pi fun b => ?_
   unfold kMat
   by_cases h0 : a = b
-  · simp only [h0, if_true]; fun_prop
-  · simp only [if_neg h0]
+  · simp only [h0, ite_true]; fun_prop
+  · simp only [ite_eq_right h0]
     by_cases h1 : b < a ∧ ε a = ε b
-    · simp only [dif_pos h1]; fun_prop
-    · simp only [dif_neg h1]
+    · simp only [dite_eq_left h1]; fun_prop
+    · simp only [dite_eq_right h1]
       by_cases h2 : a < b ∧ ε b = ε a
-      · simp only [dif_pos h2]; fun_prop
-      · simp only [dif_neg h2]; fun_prop
+      · simp only [dite_eq_left h2]; fun_prop
+      · simp only [dite_eq_right h2]; fun_prop
 
 theorem compactMatrix_zero (ε : Fin n → Bool) : kMat (0 : KCo ε) = 0 := by
   ext a b
@@ -151,14 +151,14 @@ theorem compactMatrix_zero (ε : Fin n → Bool) : kMat (0 : KCo ε) = 0 := by
   split_ifs <;> simp
 
 theorem continuous_matrix_exp_compact : Continuous (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → _) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   exact continuous_iff_continuousAt.2 fun x => (NormedSpace.exp_analytic (𝕂 := ℂ) x).continuousAt
 
 theorem exists_exp_injOn_nhds_zero : ∃ U : Set (Matrix (Fin n) (Fin n) ℂ), IsOpen U ∧ (0 : Matrix (Fin n) (Fin n) ℂ) ∈ U ∧
     Set.InjOn (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → _) U := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have h : HasStrictFDerivAt (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → _)
       ((ContinuousLinearEquiv.refl ℂ (Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ →L[ℂ] _)) 0 := by
     rw [ContinuousLinearEquiv.coe_refl]
@@ -193,7 +193,7 @@ theorem measurableSet_exp_image {ε : Fin n → Bool} {B : Set (KCo ε)} (hB : M
     (hinj : Set.InjOn (expCompactMatrix (ε := ε)) B) : MeasurableSet (expImageOfCompact B) := by
   have hI : MeasurableSet (expCompactMatrix (ε := ε) '' B) :=
     hB.image_of_continuousOn_injOn (continuous_exp_compactMatrix ε).continuousOn hinj
-  have hc : Continuous (compactToMatrixEntries ε) := (continuous_toM ε).comp continuous_subtype_val
+  have hc : Continuous (compactToMatrixEntries ε) := (continuous_toM ε).comp continuous_subtypeVal
   have hm : Measurable (compactToMatrixEntries ε) := hc.measurable
   have e : expImageOfCompact B = compactToMatrixEntries ε ⁻¹' (expCompactMatrix (ε := ε) '' B) := by
     ext k
@@ -560,14 +560,14 @@ lemma kMat_eq_kdD {ε : Fin n → Bool} (w : KCo ε) : kMat w = kdD ε (fun s =>
         fun h => absurd ((kdE ε s).lt_iff_lt.1 h.1) (not_lt.2 hij.le)
       have h3 : kdE ε s i < kdE ε s j ∧ ε (kdE ε s j) = ε (kdE ε s i) :=
         ⟨(kdE ε s).lt_iff_lt.2 hij, hE.symm⟩
-      simp only [kMat, skMat, kdCoS, if_neg h1, dif_neg h2, dif_pos h3, if_neg hij.ne,
-        dif_neg (not_lt.2 hij.le), dif_pos hij]
+      simp only [kMat, skMat, kdCoS, ite_eq_right h1, dite_eq_right h2, dite_eq_left h3, ite_eq_right hij.ne,
+        dite_eq_right (not_lt.2 hij.le), dite_eq_left hij]
       rfl
     · simp [kMat, skMat, kdCoS]
     · have h1 : kdE ε s i ≠ kdE ε s j := (kdE ε s).injective.ne hij.ne'
       have h2 : kdE ε s j < kdE ε s i ∧ ε (kdE ε s i) = ε (kdE ε s j) :=
         ⟨(kdE ε s).lt_iff_lt.2 hij, hE⟩
-      simp only [kMat, skMat, kdCoS, if_neg h1, dif_pos h2, if_neg hij.ne', dif_pos hij]
+      simp only [kMat, skMat, kdCoS, ite_eq_right h1, dite_eq_left h2, ite_eq_right hij.ne', dite_eq_left hij]
       rfl
   · rw [Matrix.blockDiagonal'_apply_ne _ _ _ hst, kdSig_apply, kdSig_apply]
     have h1 := ε_kdE ε s i
@@ -581,7 +581,7 @@ lemma kMat_eq_kdD {ε : Fin n → Bool} (w : KCo ε) : kMat w = kdD ε (fun s =>
       have := h.2
       rw [h1, h2] at this
       exact this.symm)
-    simp only [kMat, if_neg hne, dif_neg hc2, dif_neg hc3]
+    simp only [kMat, ite_eq_right hne, dite_eq_right hc2, dite_eq_right hc3]
 
 lemma norm_kdCoS_le {ε : Fin n → Bool} (w : KCo ε) (s : Bool) : ‖kdCoS ε w s‖ ≤ ‖w‖ := by
   rw [Prod.norm_def, Prod.norm_def]
@@ -725,12 +725,12 @@ lemma kd_skMat_injective : Function.Injective (skMat (N := N)) := by
   have hd : ∀ a b, skMat x a b = skMat y a b := fun a b => by rw [h]
   refine Prod.ext (funext fun a => ?_) (funext fun ab => ?_)
   · have := hd a a
-    simp only [skMat, if_pos rfl] at this
+    simp only [skMat, ite_eq_left rfl] at this
     exact_mod_cast mul_left_cancel₀ Complex.I_ne_zero this
   · obtain ⟨⟨a, b⟩, hab⟩ := ab
     have hab' : b < a := hab
     have := hd a b
-    simp only [skMat, if_neg (ne_of_gt hab'), dif_pos hab'] at this
+    simp only [skMat, ite_eq_right (ne_of_gt hab'), dite_eq_left hab'] at this
     exact this
 
 lemma kd_continuous_skMat : Continuous (skMat (N := N)) := by
@@ -758,8 +758,8 @@ lemma kd_exp_injOn {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℂ 𝔸] [Co
 
 lemma kd_exp_injOn_nhds : ∃ V : Set (Matrix (Fin N) (Fin N) ℂ), IsOpen V ∧ (0 : Matrix (Fin N) (Fin N) ℂ) ∈ V ∧
     InjOn (NormedSpace.exp : Matrix (Fin N) (Fin N) ℂ → Matrix (Fin N) (Fin N) ℂ) V := by
-  letI : NormedRing (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedAlgebra
   exact kd_exp_injOn
 
 section KDCont
@@ -822,8 +822,8 @@ lemma kdNu_apply {m : Measure X} {f : E → X} {U : Set E} (hU : MeasurableSet U
     rw [e]
     have hsub : Subtype.val '' s ⊆ U := by rintro _ ⟨x, _, rfl⟩; exact x.2
     exact (hU.subtype_image hs).image_of_continuousOn_injOn (hf.mono hsub) (hinj.mono hsub)
-  rw [kdNu, Measure.map_apply measurable_subtype_coe hA,
-    Measure.comap_apply _ hI hM _ (measurable_subtype_coe hA)]
+  rw [kdNu, Measure.map_apply measurable_subtypeVal hA,
+    Measure.comap_apply _ hI hM _ (measurable_subtypeVal hA)]
   congr 1
   ext y
   constructor
@@ -838,14 +838,14 @@ lemma kdNu_le {m : Measure X} {f : E → X} {U : Set E} (hU : MeasurableSet U) (
     (hinj : InjOn f U) (lam : Measure E) (c : ℝ≥0∞)
     (h : ∀ A ⊆ U, MeasurableSet A → m (f '' A) ≤ c * lam A) : kdNu m f U ≤ c • lam.restrict U := by
   refine Measure.le_iff.2 fun A hA => ?_
-  rw [kdNu_apply hU hf hinj hA, Measure.smul_apply, Measure.restrict_apply hA, smul_eq_mul]
+  rw [kdNu_apply hU hf hinj hA, smul_apply, Measure.restrict_apply hA, smul_eq_mul]
   exact h _ inter_subset_right (hA.inter hU)
 
 lemma kdNu_ge {m : Measure X} {f : E → X} {U : Set E} (hU : MeasurableSet U) (hf : ContinuousOn f U)
     (hinj : InjOn f U) (lam : Measure E) (d : ℝ≥0∞)
     (h : ∀ A ⊆ U, MeasurableSet A → d * lam A ≤ m (f '' A)) : d • lam.restrict U ≤ kdNu m f U := by
   refine Measure.le_iff.2 fun A hA => ?_
-  rw [kdNu_apply hU hf hinj hA, Measure.smul_apply, Measure.restrict_apply hA, smul_eq_mul]
+  rw [kdNu_apply hU hf hinj hA, smul_apply, Measure.restrict_apply hA, smul_eq_mul]
   exact h _ inter_subset_right (hA.inter hU)
 
 end KDC
@@ -888,7 +888,7 @@ theorem kd_prod_bounds {m₁ : Measure X₁} {m₂ : Measure X₂} [IsFiniteMeas
       ((a • lam₁.restrict U₁).prod (b • lam₂.restrict U₂)) B = a * b * (lam₁.prod lam₂) B := by
     intro a b
     rw [Measure.prod_smul_left, Measure.prod_smul_right, Measure.prod_restrict, smul_smul,
-      Measure.smul_apply, Measure.restrict_apply hB, inter_eq_left.2 hBU, smul_eq_mul]
+      smul_apply, Measure.restrict_apply hB, inter_eq_left.2 hBU, smul_eq_mul]
   refine ⟨?_, ?_⟩
   · rw [e, ← hs c₁ c₂]
     exact Measure.le_iff'.1 (Measure.prod_mono

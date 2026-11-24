@@ -143,7 +143,7 @@ theorem dominates_of_above {l : Level H} {Xo : Moduli D l} {c : Coeff l} {O O' :
     rw [Category.assoc, hκ, hm]
   have hover : (e ≫ f) ≫ C₀.s = C.s ≫ spMap ((RingHom.id O').comp b₀) := by
     obtain ⟨⟨_, _⟩, -, hfr⟩ := hβ'
-    letI := β'.toAlgebra
+    let := β'.toAlgebra
     obtain ⟨-, -, -, -, -, h3, -⟩ :=
       GlobalTheory.genericPart_dense_proOpen O' c.F C.X _ C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
     have : IsDominant C.j := h3
@@ -277,7 +277,7 @@ theorem dominates_up {O₁ O V₁ V : Type} [CommRing O₁] [CommRing O] [CommRi
   obtain rfl : r = r₀ := pullback.hom_ext e₁ (hr.trans hr₀.symm)
 
   have hinj : Function.Injective β' := by
-    letI := β'.toAlgebra
+    let := β'.toAlgebra
     have := hβ'.2.2
     exact IsFractionRing.injective V c.F
   have hbb : e.comp b₁ = b.comp b₀ := RingHom.ext fun x => hinj (by
@@ -554,20 +554,20 @@ theorem exists_finite_point' {X Y : Scheme.{0}} (π : X ⟶ Y) [IsFinite π] (K 
     ∃ (L : Type) (_ : Field L) (_ : Algebra K L) (_ : FiniteDimensional K L) (η : Sp L ⟶ X),
       η ≫ π = spMap (algebraMap K L) ≫ x := by
   obtain ⟨p, hp⟩ := hx
-  haveI : IsAffine (pullback π x) := isAffine_of_isAffineHom (pullback.snd π x)
+  have : IsAffine (pullback π x) := isAffine_of_isAffineHom (pullback.snd π x)
   obtain ⟨S, e, -⟩ : ∃ (S : CommRingCat.{0}) (_ : Spec S ≅ pullback π x), True :=
     ⟨_, (pullback π x).isoSpec.symm, trivial⟩
   obtain ⟨f, hf⟩ := Spec.map_surjective (R := CommRingCat.of K) (S := S) (e.hom ≫ pullback.snd π x)
-  letI : Algebra K S := f.hom.toAlgebra
+  let : Algebra K S := f.hom.toAlgebra
   have hsp : spMap (algebraMap K S) = e.hom ≫ pullback.snd π x := hf
   have hfin : Module.Finite K S := by
     have h1 : IsFinite (Spec.map f) := by rw [hf]; infer_instance
     exact (IsFinite.SpecMap_iff f).1 h1
   obtain ⟨z, -, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := π) (g := x) p (closedPoint K) hp
-  haveI : Nontrivial S := (e.inv z).nontrivial
+  have : Nontrivial S := (e.inv z).nontrivial
   obtain ⟨m, hm⟩ := Ideal.exists_maximal S
-  letI : Field (S ⧸ m) := Ideal.Quotient.field m
-  haveI : FiniteDimensional K (S ⧸ m) :=
+  let : Field (S ⧸ m) := Ideal.Quotient.field m
+  have : FiniteDimensional K (S ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ K m).toLinearMap Ideal.Quotient.mk_surjective
   refine ⟨S ⧸ m, inferInstance, inferInstance, inferInstance, spMap (Ideal.Quotient.mk m) ≫ e.hom ≫ pullback.fst π x, ?_⟩
   rw [Category.assoc, Category.assoc, pullback.condition, ← Category.assoc e.hom, ← hsp, ← Category.assoc, spMap_comp'']
@@ -579,15 +579,15 @@ theorem exists_closure_finite (V : Type) [CommRing V] [IsDomain V] [IsDiscreteVa
       GlobalTheory.Mum.Base V₂ ∧ IsDiscreteValuationRing V₂ ∧ Function.Injective j ∧ IsLocalHom j ∧ j.Finite ∧
         ∀ a : V, e (algebraMap (FractionRing V) L (algebraMap V (FractionRing V) a)) =
           algebraMap V₂ (FractionRing V₂) (j a) := by
-  letI : Algebra V L := ((algebraMap (FractionRing V) L).comp (algebraMap V (FractionRing V))).toAlgebra
-  haveI : IsScalarTower V (FractionRing V) L := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Module.Finite V (integralClosure V L) := GlobalTheory.FormalIsogeny.finite_integralClosure V (FractionRing V) L
-  haveI := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_faithful V (FractionRing V) L
-  haveI hloc : IsLocalRing (integralClosure V L) := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_isLocalRing V L
-  haveI hdvr : IsDiscreteValuationRing (integralClosure V L) := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_dvr V (FractionRing V) L
-  haveI : IsFractionRing (integralClosure V L) L := integralClosure.isFractionRing_of_finite_extension (FractionRing V) L
+  let : Algebra V L := ((algebraMap (FractionRing V) L).comp (algebraMap V (FractionRing V))).toAlgebra
+  have : IsScalarTower V (FractionRing V) L := IsScalarTower.of_algebraMap_eq' rfl
+  have : Module.Finite V (integralClosure V L) := GlobalTheory.FormalIsogeny.finite_integralClosure V (FractionRing V) L
+  have := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_faithful V (FractionRing V) L
+  have hloc : IsLocalRing (integralClosure V L) := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_isLocalRing V L
+  have hdvr : IsDiscreteValuationRing (integralClosure V L) := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_dvr V (FractionRing V) L
+  have : IsFractionRing (integralClosure V L) L := integralClosure.isFractionRing_of_finite_extension (FractionRing V) L
   have hj := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_inj V L
-  haveI : CharZero (integralClosure V L) := charZero_of_injective_algebraMap hj
+  have : CharZero (integralClosure V L) := charZero_of_injective_algebraMap hj
   refine ⟨integralClosure V L, inferInstance, inferInstance, hloc, algebraMap V (integralClosure V L),
     (FractionRing.algEquiv (integralClosure V L) L).symm.toRingEquiv.toRingHom,
     ⟨⟨inferInstance, inferInstance, inferInstance,
@@ -630,10 +630,10 @@ theorem exists_pos {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host 
     ∃ (V₁ : Type) (_ : CommRing V₁) (_ : IsDomain V₁) (_ : IsLocalRing V₁) (f : V →+* V₁)
       (fK : FractionRing V →+* FractionRing V₁), CDvr V₁ ∧ Function.Injective f ∧ IsLocalHom f ∧ f.Finite ∧
       (∀ a, fK (algebraMap V _ a) = algebraMap V₁ _ (f a)) ∧ ∃ t : SAB H (Sp V₁), GenOf Xo c (spMap fK ≫ y) t := by
-  haveI := c.fin
+  have := c.fin
   obtain ⟨l₂, hdvd, -, hgood⟩ := GlobalTheory.GoodMultipleLevel.exists_good_multiple E H l
   obtain ⟨c₂, hle⟩ := GlobalTheory.TupleCover.exists_coeff_ge l₂ c.F
-  haveI := c₂.fin
+  have := c₂.fin
   let Xf : ∀ l' : Geo.Tor.Level H, Moduli Dw l' := fun l' => (GlobalTheory.moduliScheme_levelMaps_heckePoints.1 E H Dw l' hD).some
   obtain ⟨s, hs⟩ := GlobalTheory.GlobalAllLevels.exists_sys_global_models E H Dw hD Xf
   obtain ⟨Ygl, -⟩ := hs l₂ c₂ hgood
@@ -641,11 +641,11 @@ theorem exists_pos {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host 
     GlobalTheory.LevelMapBase.levelMap_coeff_le E H Dw l l₂ Xo (Xf l₂) c c₂ hle hD hdvd
   obtain ⟨hF, hS⟩ := finite_surjective_spMap hle
   have hrl : pullback.lift r _ h ≫ pullback.fst _ _ = r := pullback.lift_fst _ _ _
-  haveI : IsFinite r := hrl ▸ inferInstance
+  have : IsFinite r := hrl ▸ inferInstance
   have hrs : Surjective r := hrl ▸ inferInstance
   obtain ⟨L, _, _, _, η, hη⟩ := exists_finite_point' r (FractionRing V) y (hrs.surj _)
-  haveI : IsAdicComplete (maximalIdeal V) V := hB.1.2.2.2
-  haveI : CharZero V := hB.2
+  have : IsAdicComplete (maximalIdeal V) V := hB.1.2.2.2
+  have : CharZero V := hB.2
   obtain ⟨V₁, _, _, _, j, e, hB₁, hD₁, hj, hjl, hjf, he⟩ := exists_closure_finite V L
   obtain ⟨t, tK, ⟨mK⟩, ⟨mx⟩⟩ := exists_genOf_of_model Ygl V₁ (spMap e ≫ η)
   obtain ⟨mx', -⟩ := sabComp pullCubComp E H _ _ _ _ _ _ _ _ m mx
@@ -697,10 +697,10 @@ theorem exists_isMonomial_levelOne : ∀ {E : Type} [Field E] [NumberField E] [I
     (P : PELUnif (maximalIdeal W) t), ∃ be ∈ levelForms H 1 P.D.toPre.X, IsMonomial P.D.toPre ![ϖ] ![be] := by
   intro E _ _ _ H W _ _ _ hW ϖ hϖ t P
   obtain ⟨hdvr, hcomp, hchar⟩ := hW
-  haveI := hdvr
-  haveI := hcomp
-  haveI := hchar
-  letI := H.starRing
+  have := hdvr
+  have := hcomp
+  have := hchar
+  let := H.starRing
   choose Q hQ using QForm.exists_QVal hϖ P.D
   have hQ' : QForm.IsQ P.D.toPre ϖ Q := hQ
   have hex : ∀ χ, ∃ r, PsiCoord P.D.toPre χ r := fun χ =>
@@ -809,7 +809,7 @@ theorem uTraitExtSt : UTraitExtSt := by
   intro E _ _ _ H Dw l Xo c V _ _ _ hB hV y
   obtain ⟨V₁, _, _, _, f₁, fK₁, hC₁, hi₁, hl₁, hf₁, hc₁, t₁, hg₁⟩ := _root_.GlobalTheory.TraitSemi.exists_ext_semi E H Dw l Xo c V hB hV y
   obtain ⟨W, _, _, _, f₂, fK₂, hC₂, hi₂, hl₂, hf₂, hc₂, t, hg, ⟨P⟩⟩ := exists_ext_unif Xo c V₁ hC₁ _ t₁ hg₁
-  haveI : IsDiscreteValuationRing W := hC₂.1
+  have : IsDiscreteValuationRing W := hC₂.1
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
   have hg' : GenOf Xo c (spMap fK₂ ≫ spMap fK₁ ≫ y) t := by rw [← Category.assoc]; exact hg
   obtain ⟨be, hbe, hmono⟩ := GlobalTheory.MonPeriods.exists_isMonomial_levelOne hC₂ ϖ hϖ t P

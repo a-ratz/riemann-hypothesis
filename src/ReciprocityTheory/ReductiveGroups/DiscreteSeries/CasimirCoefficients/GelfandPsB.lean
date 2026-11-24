@@ -219,7 +219,7 @@ variable {g : Matrix (Fin n) (Fin n) ℂ × Matrix (Fin n) (Fin n) ℂ × Matrix
 
 lemma contOn_FD (T : KType ε Λ) (hg : ContDiffOn ℂ ∞ g (Wset n)) :
     ContinuousOn (fun q : Matrix (Fin n) (Fin n) ℂ × KG ε => FD T g q.1 q.2) (Ps1.Uset ε ×ˢ Set.univ) := by
-  have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtype_val.comp T.cont
+  have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtypeVal.comp T.cont
   have hPk : Continuous (Pk T) := (hop.mul continuous_const).mul (hop.comp continuous_inv)
   refine (continuousOn_clm_apply (𝕜 := ℂ) (E := 𝕄f) (F := T.V →L[ℂ] T.V)).2 ?_
   intro H
@@ -233,7 +233,7 @@ lemma contOn_FD (T : KType ε Λ) (hg : ContDiffOn ℂ ∞ g (Wset n)) :
 
 lemma cont_int (T : KType ε Λ) (hg : ContDiffOn ℂ ∞ g (Wset n)) {x : Matrix (Fin n) (Fin n) ℂ}
     (hx : x ∈ Ps1.Uset ε) : Continuous fun k => g (emb x k) • Pk T k := by
-  have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtype_val.comp T.cont
+  have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtypeVal.comp T.cont
   have hPk : Continuous (Pk T) := (hop.mul continuous_const).mul (hop.comp continuous_inv)
   have he : Continuous (fun k : KG ε => emb x k) := continuous_emb.comp (continuous_const.prodMk continuous_id)
   have hgc : Continuous (fun k => g (emb x k)) := hg.continuousOn.comp_continuous he (fun k => emb_mem hx k)

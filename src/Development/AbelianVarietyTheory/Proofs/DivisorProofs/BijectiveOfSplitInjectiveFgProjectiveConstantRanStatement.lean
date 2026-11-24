@@ -69,8 +69,8 @@ theorem bijective_of_split_of_FP : ∀ (R : Type) [CommRing R] (M N : Type) [Add
     simp [hrf])
   have hπ : ∀ k : K, π (k : N) = k := fun k => by
     ext; simp [π, LinearMap.mem_ker.1 k.2]
-  haveI : Module.Finite R K := Module.Finite.of_surjective π (fun k => ⟨k, hπ k⟩)
-  haveI : Module.Projective R K := Module.Projective.of_split K.subtype π (by ext k; simp [hπ])
+  have : Module.Finite R K := Module.Finite.of_surjective π (fun k => ⟨k, hπ k⟩)
+  have : Module.Projective R K := Module.Projective.of_split K.subtype π (by ext k; simp [hπ])
   let e : N ≃ₗ[R] M × K :=
     { toFun := fun x => (r x, π x)
       map_add' := fun x y => by simp
@@ -90,7 +90,7 @@ theorem bijective_of_split_of_FP : ∀ (R : Type) [CommRing R] (M N : Type) [Add
     have h2 := congrFun h1 p
     simp only [Pi.add_apply, hMr p, hNr p] at h2
     simp only [Pi.zero_apply]; omega
-  haveI : Subsingleton K := Module.rankAtStalk_eq_zero_iff_subsingleton.1 hK
+  have : Subsingleton K := Module.rankAtStalk_eq_zero_iff_subsingleton.1 hK
   refine ⟨hinj, fun y => ⟨r y, ?_⟩⟩
   have : π y = 0 := Subsingleton.elim _ _
   have h3 := congrArg Subtype.val this

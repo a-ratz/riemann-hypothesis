@@ -408,7 +408,7 @@ theorem exists_twisted_modification : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
     have := congrFun (congrFun (hcσ ⟨g, hg⟩) i) j
     simpa using this)
   choose x hxK hxc using hx
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   classical
   obtain ⟨y, hy0, hint⟩ := exists_integral_multiples ℤ_[l] ℚ_[l]
     (Finset.univ.image fun p : Fin d × Fin d => (⟨x p.1 p.2, hxK p.1 p.2⟩ : ↥K.1))
@@ -639,7 +639,7 @@ theorem texp_eq_exp {S : Type} [CommRing S] (ψ : ℚ →+* S) {d : ℕ} (N : Ma
     (hN : N ^ d = 0) (x : S) :
     letI : Algebra ℚ S := ψ.toAlgebra
     texp ψ N x = IsNilpotent.exp (x • N) := by
-  letI : Algebra ℚ S := ψ.toAlgebra
+  let : Algebra ℚ S := ψ.toAlgebra
   have h : (x • N) ^ d = 0 := by rw [smul_pow, hN, smul_zero]
   rw [IsNilpotent.exp_eq_sum h, texp]
   refine Finset.sum_congr rfl fun n _ => ?_
@@ -648,7 +648,7 @@ theorem texp_eq_exp {S : Type} [CommRing S] (ψ : ℚ →+* S) {d : ℕ} (N : Ma
 
 theorem texp_mul {S : Type} [CommRing S] (ψ : ℚ →+* S) {d : ℕ} (N : Matrix (Fin d) (Fin d) S)
     (hN : N ^ d = 0) (x y : S) : texp ψ N x * texp ψ N y = texp ψ N (x + y) := by
-  letI : Algebra ℚ S := ψ.toAlgebra
+  let : Algebra ℚ S := ψ.toAlgebra
   have hn : ∀ w : S, IsNilpotent (w • N) := fun w => ⟨d, by rw [smul_pow, hN, smul_zero]⟩
   rw [texp_eq_exp ψ N hN, texp_eq_exp ψ N hN, texp_eq_exp ψ N hN, add_smul,
     IsNilpotent.exp_add_of_commute (((Commute.refl N).smul_left x).smul_right y) (hn x) (hn y)]
@@ -907,7 +907,7 @@ theorem texp_map {R R' : Type} [CommRing R] [CommRing R'] (q : ℚ →+* R) (q' 
 
 theorem texp_add {R : Type} [CommRing R] (q : ℚ →+* R) {d : ℕ} (N : Matrix (Fin d) (Fin d) R) (hN : N ^ d = 0)
     (x y : R) : texp q N x * texp q N y = texp q N (x + y) := by
-  letI : Algebra ℚ R := q.toAlgebra
+  let : Algebra ℚ R := q.toAlgebra
   have h : ∀ z : R, (z • N) ^ d = 0 := fun z => by rw [smul_pow, hN, smul_zero]
   have e : ∀ z : R, texp q N z = IsNilpotent.exp (z • N) := fun z => by
     rw [IsNilpotent.exp_eq_sum (h z)]
@@ -1064,7 +1064,7 @@ theorem invariant_basis_approx : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     rw [map_neg a, map_mul a (q _), map_neg, map_mul (Per.σD (g : GQ l)), hq, e8]
     ring
   · obtain ⟨k', s, -, hs⟩ := happ m
-    haveI : CharZero bk.S := RingHom.charZero ((Per.θD l).comp ((aDp l).comp bk.ev))
+    have : CharZero bk.S := RingHom.charZero ((Per.θD l).comp ((aDp l).comp bk.ev))
     have hN : (Mn.map (PowerSeries.C : Wq l bk.a →+* bk.S)) ^ d = 0 := by
       change ((PowerSeries.C : Wq l bk.a →+* bk.S).mapMatrix Mn) ^ d = 0
       rw [← map_pow, hMn, map_zero]
@@ -1453,7 +1453,7 @@ theorem period_matrix_at_zero : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk 
   obtain ⟨k₂, F', hF2⟩ := GlobalTheory.SeedF.clear_den aw _ (hent f' hyF'fix)
   obtain ⟨k, Fm, hFm⟩ := GlobalTheory.SeedF.clear_den aw _ (hent m hyfix)
   have hinj : Function.Injective (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B) := by
-    haveI := nontrivial_B P; exact (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B).injective
+    have := nontrivial_B P; exact (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B).injective
   have hyN : y ^ N = 0 := by
     apply Matrix.map_injective hinj
     show (y ^ N).map (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B) = (0 : Matrix (Fin d) (Fin d) ↥(MaximalUnramifiedExtension l)).map (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B)

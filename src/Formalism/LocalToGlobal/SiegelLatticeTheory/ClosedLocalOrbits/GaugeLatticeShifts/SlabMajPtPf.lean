@@ -171,14 +171,14 @@ theorem col_lower (Y : Full X) (w : D.what₂.Word) :
     rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), norm_eq_sqrt_re_inner (𝕜 := ℂ) ξ, h2]
   have hval : ∀ j, ‖(f (c, j) : X.Vpi w →ₗ[ℂ] (Hinf X w × Hfin X w → ℂ)) ξ (1, h)‖ₑ = ‖inner ℂ (b j) ξ'‖ₑ := by
     intro j
-    rw [hh, col_val Y.hK w (f (c, j)) ξ γ c.out ⟨κ, hκ⟩, ← hξ', hf (c, j) ξ', enorm_mul,
+    rw [hh, col_val Y.hK w (f (c, j)) ξ γ c.out ⟨κ, hκ⟩, ← hξ', hf (c, j) ξ', eNorm_mul,
       ← ofReal_norm (((psiK X w Y.hK ⟨κ, hκ⟩ : ℂˣ) : ℂ)), norm_psiK, ENNReal.ofReal_one, one_mul]
   calc ‖ξ‖ₑ = ‖ξ'‖ₑ := by rw [← ofReal_norm, ← ofReal_norm, hn]
     _ = ‖∑ j, inner ℂ (b j) ξ' • b j‖ₑ := by rw [b.sum_repr']
-    _ ≤ ∑ j, ‖inner ℂ (b j) ξ' • b j‖ₑ := enorm_sum_le _ _
+    _ ≤ ∑ j, ‖inner ℂ (b j) ξ' • b j‖ₑ := eNorm_sum_le _ _
     _ = ∑ j, ‖inner ℂ (b j) ξ'‖ₑ := by
         refine Finset.sum_congr rfl fun j _ => ?_
-        rw [enorm_smul, ← ofReal_norm (b j), b.orthonormal.1 j, ENNReal.ofReal_one, mul_one]
+        rw [eNorm_smul, ← ofReal_norm (b j), b.orthonormal.1 j, ENNReal.ofReal_one, mul_one]
     _ = ∑ j, ‖(f (c, j) : X.Vpi w →ₗ[ℂ] (Hinf X w × Hfin X w → ℂ)) ξ (1, h)‖ₑ :=
         Finset.sum_congr rfl fun j _ => (hval j).symm
     _ ≤ ∑ p : ι, ‖(f p : X.Vpi w →ₗ[ℂ] (Hinf X w × Hfin X w → ℂ)) ξ (1, h)‖ₑ := by
@@ -195,7 +195,7 @@ theorem ph_lower (Y : Full X) (w : D.what₂.Word) {n : ℕ} (T : Fin n → Cu X
     (x : X.B.I.Ginf) (h : Hfin X w) (k : X.B.I.Gf) (hk : k ∈ X.K2) :
     ‖X.Wu w x‖ₑ ≤ ∑ i, ‖Ph X w Y.hK (T i) (x, (h : X.B.I.Gf) * X.xu w * k)‖ₑ := by
   refine (hT (X.Wu w x) h).trans (le_of_eq (Finset.sum_congr rfl fun i _ => ?_))
-  rw [Formalism.L2.SG.Pf.RegroupPf.ph_col Y.hK (Formalism.L2.SG.Pf.phWellDef_holds X w) (T i) x h k hk, enorm_mul,
+  rw [Formalism.L2.SG.Pf.RegroupPf.ph_col Y.hK (Formalism.L2.SG.Pf.phWellDef_holds X w) (T i) x h k hk, eNorm_mul,
     ← ofReal_norm (X.chi2 k), Y.hK.2.2.2.2 k hk, ENNReal.ofReal_one, one_mul]
 
 theorem pointwise_majorant_by_columns : Formalism.L2.SG.Pf.Slab.MajPtC := by

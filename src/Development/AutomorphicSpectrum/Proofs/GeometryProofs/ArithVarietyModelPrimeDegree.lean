@@ -278,9 +278,9 @@ theorem isIntegrallyClosed_of_denom {o O Ω : Type} [CommRing o] [CommRing O] [F
     (B : Subalgebra o Ω) (B' : Subalgebra O Ω) [IsIntegrallyClosed B] (hle : ∀ w ∈ B, w ∈ B')
     (hden : ∀ w ∈ B', ∃ s ∈ B, (∃ t ∈ B', s * t = 1) ∧ w * s ∈ B) : IsIntegrallyClosed B' := by
   let ψ : B →+* B' := (algebraMap B Ω).codRestrict _ fun s => hle _ s.2
-  letI : Algebra B B' := ψ.toAlgebra
+  let : Algebra B B' := ψ.toAlgebra
   let M : Submonoid B := (IsUnit.submonoid B').comap ψ
-  haveI hloc : IsLocalization M B' := by
+  have hloc : IsLocalization M B' := by
     refine ⟨fun s => s.2, fun a => ?_, fun {r s} h => ⟨1, ?_⟩⟩
     · obtain ⟨s, hs, ⟨t, ht, e⟩, hws⟩ := hden a a.2
       have hu : IsUnit (ψ ⟨s, hs⟩) := IsUnit.of_mul_eq_one (⟨t, ht⟩ : B') (Subtype.ext e)
@@ -297,7 +297,7 @@ theorem isIntegrallyClosed_of_denom {o O Ω : Type} [CommRing o] [CommRing O] [F
 
 theorem chart_facts : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω] (c' : ∀ k, J k), mseg y c' ≠ 0 → CharZero Ω ∧ IsNoetherianRing (CR O y c') ∧ IsIntegrallyClosed (CR O y c') ∧ IsFractionRing (CR O y c') Ω := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hV p _ hpS A _ _ _ m _ hpm O _ _ _ _ _ _ _ c' hc'
-  haveI hch : CharZero Ω := GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.charZero_of_isArithVar hV
+  have hch : CharZero Ω := GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.charZero_of_isArithVar hV
   obtain ⟨-, -, -, -, -, -, hchart⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS (zp Ω p) (mem_range_zp Ω p)
   obtain ⟨-, hic, hfr, -⟩ := hchart c' hc'
   obtain ⟨-, -, -, hconst, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.const_closure E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hV A
@@ -323,7 +323,7 @@ theorem chart_facts : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     rw [eZ] at h1
     exact mem_adjoin_of_int _ _ h1
   refine ⟨hch, ?_, ?_, ?_⟩
-  · haveI : Algebra.FiniteType O (CR O y c') := by
+  · have : Algebra.FiniteType O (CR O y c') := by
       refine (Subalgebra.fg_iff_finiteType _).1 ⟨(Set.finite_range fun j => mseg y j / mseg y c').toFinset, ?_⟩
       rw [Set.Finite.coe_toFinset]
       exact eO.symm
@@ -539,10 +539,10 @@ theorem PositivityTheory.Xgn.sequence_test_function : GlobalTheory.CompanionTheo
     (zp Ω p) (mem_range_zp Ω p)
   have hp := (Fact.out : p.Prime)
   have hn : p ^ 𝔐.R p ≠ 0 := pow_ne_zero _ hp.ne_zero
-  haveI : NeZero (p ^ 𝔐.R p) := ⟨hn⟩
+  have : NeZero (p ^ 𝔐.R p) := ⟨hn⟩
   have hR : 1 ≤ 𝔐.R p := le_trans (by norm_num) (𝔐.R_ge p hpS)
   have hinj : Function.Injective (algebraMap (CR O y c') Ω) := IsFractionRing.injective _ _
-  haveI : CharZero (CR O y c') := (algebraMap (CR O y c') Ω).charZero
+  have : CharZero (CR O y c') := (algebraMap (CR O y c') Ω).charZero
   obtain ⟨ev, ζ₀, hev⟩ := exists_isParam D 𝔐.t 𝔐.ξ _root_.GlobalTheory.CompanionTheory.Ar.HT.level_parametrisation (p ^ 𝔐.R p) (Nat.pos_of_ne_zero hn) hpq hprop
     (𝔐.tors p hpS) hT
   obtain ⟨u, hu, huz⟩ := exists_coords D 𝔐.t 𝔐.ξ p (𝔐.R p) hR hev G.t₂.pt G.t₂.onto G.t₂.lin
@@ -584,7 +584,7 @@ theorem PositivityTheory.Xgn.sequence_test_function : GlobalTheory.CompanionTheo
     congr 3
     ext r
     exact (RingEquiv.symm_apply_eq κ).2 (hκ r).symm
-  haveI := P.fin
+  have := P.fin
   refine _root_.GlobalTheory.CompanionTheory.Ar.HT.hasTestPoints_of_tate (PositivityTheory.HtPt.Ge.pointHT_of_fargues hF) E H D p (CR O y c') Ω (𝔐.R p) _ _ u hu 𝔐.X 𝔐.t P.x (relabel P.Γ₂ b) P.i₂
     ⟨P.tors₂.isOver, P.tors₂.mul, P.tors₂.inj, P.tors₂.kernel⟩ P.L P.M P.ρ P.act P.j P.j_bc π (P.ζ ^ a) _
     ⟨P.isHT.1, P.isHT.2.1, fun z => ?_⟩ hπ he ?_ (isProper_of_iso _ 𝔐.ξ _ _ hq) (fun k _ _ f => ?_)
@@ -654,7 +654,7 @@ theorem mem_of_loc {O Ω : Type} [CommRing O] [Field Ω] [Algebra O Ω] (R : Sub
       zero_mem' := by simpa using R.zero_mem
       smul_mem' := fun c v hv => by
         have := R.mul_mem c.2 hv
-        simp only [smul_eq_mul, Set.mem_setOf_eq, MulMemClass.coe_mul]
+        simp only [smul_eq_mul, Set.mem_ofPred_eq, MulMemClass.coe_mul]
         rwa [mul_left_comm] }
   have hI : I = ⊤ := by
     by_contra hne
@@ -934,11 +934,11 @@ theorem mem_of_isIntegral_loc (s : Set Ω) (hA : ∀ a : A, algebraMap A Ω a �
     (ha : _root_.IsIntegral (Algebra.adjoin O s) a) : a ∈ Algebra.adjoin O s := by
   let emb : Algebra.adjoin ℤ s →+* Algebra.adjoin O s :=
     incl _ _ fun _ hb => adjoin_int_le O s hb
-  letI : Algebra (Algebra.adjoin ℤ s) (Algebra.adjoin O s) := emb.toAlgebra
-  haveI : IsScalarTower (Algebra.adjoin ℤ s) (Algebra.adjoin O s) Ω :=
+  let : Algebra (Algebra.adjoin ℤ s) (Algebra.adjoin O s) := emb.toAlgebra
+  have : IsScalarTower (Algebra.adjoin ℤ s) (Algebra.adjoin O s) Ω :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   let M : Submonoid (Algebra.adjoin ℤ s) := (IsUnit.submonoid (Algebra.adjoin O s)).comap emb
-  haveI : IsLocalization M (Algebra.adjoin O s) := by
+  have : IsLocalization M (Algebra.adjoin O s) := by
     refine (isLocalization_iff M _).2 ⟨fun d => d.2, fun z => ?_, fun {u v} h => ⟨1, ?_⟩⟩
     · obtain ⟨d, hd, hz⟩ := exists_den m O (Algebra.adjoin ℤ s) hA s Algebra.subset_adjoin z.2
       refine ⟨⟨⟨_, hz⟩, ⟨⟨_, hA d⟩, isUnit_den m O _ hd _ rfl⟩⟩, Subtype.ext ?_⟩
@@ -1020,7 +1020,7 @@ theorem PositivityTheory.Xgn.sequence_ring_exists : ∀ (E : Type) [Field E] [Nu
       exact ⟨⟨_, PositivityTheory.Xgn.SequenceRing.adjoin_int_le O _ hz⟩,
         ⟨_, PositivityTheory.Xgn.SequenceRing.adjoin_int_le O _ hs⟩, (mul_div_cancel_left₀ z h0).symm⟩
   have hN : IsNoetherianRing (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c')) := by
-    haveI : Algebra.FiniteType O (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c')) :=
+    have : Algebra.FiniteType O (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c')) :=
       (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨_, Set.finite_range _, rfl⟩)
     exact Algebra.FiniteType.isNoetherianRing O _
   have hI : IsIntegrallyClosed (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c')) :=
@@ -1104,14 +1104,14 @@ theorem proj_transfer {R M Rp Mp : Type} [CommRing R] [AddCommGroup M] [Module R
     [AddCommGroup Mp] [Module R Mp] [Module Rp Mp] [IsScalarTower R Rp Mp] (S : Submonoid R) [IsLocalization S Rp]
     (f : M →ₗ[R] Mp) [IsLocalizedModule S f] (h : Module.Projective Rp Mp) :
     Module.Projective (Localization S) (LocalizedModule S M) := by
-  letI : Algebra Rp (Localization S) := (IsLocalization.algEquiv S Rp (Localization S)).toRingHom.toAlgebra
-  haveI : IsScalarTower R Rp (Localization S) :=
+  let : Algebra Rp (Localization S) := (IsLocalization.algEquiv S Rp (Localization S)).toRingHom.toAlgebra
+  have : IsScalarTower R Rp (Localization S) :=
     IsScalarTower.of_algebraMap_eq fun r => ((IsLocalization.algEquiv S Rp (Localization S)).commutes r).symm
-  letI : Module (Localization S) Mp := Module.compHom Mp (IsLocalization.algEquiv S Rp (Localization S)).symm.toRingHom
-  haveI : IsScalarTower R (Localization S) Mp := IsScalarTower.of_algebraMap_smul fun r x => by
+  let : Module (Localization S) Mp := Module.compHom Mp (IsLocalization.algEquiv S Rp (Localization S)).symm.toRingHom
+  have : IsScalarTower R (Localization S) Mp := IsScalarTower.of_algebraMap_smul fun r x => by
     change (IsLocalization.algEquiv S Rp (Localization S)).symm (algebraMap R _ r) • x = r • x
     rw [AlgEquiv.commutes, algebraMap_smul]
-  haveI : Module.Projective (Localization S) Mp :=
+  have : Module.Projective (Localization S) Mp :=
     Module.Projective.of_equiv (M := Mp) (R := Rp) (σ := (IsLocalization.algEquiv S Rp (Localization S)).toRingEquiv)
       { __ := AddEquiv.refl Mp
         map_smul' := fun r x => by
@@ -1124,11 +1124,11 @@ theorem proj_transfer {R M Rp Mp : Type} [CommRing R] [AddCommGroup M] [Module R
 theorem proj_of_loc [IsNoetherianRing R] (hinj : Function.Injective (algebraMap R Ω)) (M : Submodule R V) (hM : M.FG)
     (H : ∀ (𝔮 : Ideal R) [𝔮.IsPrime], Module.Projective (locAt Ω 𝔮) (Submodule.span (locAt Ω 𝔮) (M : Set V))) :
     Module.Projective R M := by
-  haveI : Module.Finite R M := Module.Finite.iff_fg.2 hM
-  haveI : Module.FinitePresentation R M := Module.finitePresentation_of_finite R M
+  have : Module.Finite R M := Module.Finite.iff_fg.2 hM
+  have : Module.FinitePresentation R M := Module.finitePresentation_of_finite R M
   refine Module.projective_of_localization_maximal fun P hP => ?_
-  haveI : IsLocalization.AtPrime (locAt Ω P) P := isLoc hinj P
-  haveI : IsLocalizedModule P.primeCompl (LinearMap.id : V →ₗ[R] V) :=
+  have : IsLocalization.AtPrime (locAt Ω P) P := isLoc hinj P
+  have : IsLocalizedModule P.primeCompl (LinearMap.id : V →ₗ[R] V) :=
     isLocalizedModule_id P.primeCompl V (locAt Ω P)
   refine proj_transfer P.primeCompl (Rp := locAt Ω P) (M.toLocalized' (locAt Ω P) P.primeCompl LinearMap.id) ?_
   have h := H P
@@ -1139,8 +1139,8 @@ theorem proj_of_loc [IsNoetherianRing R] (hinj : Function.Injective (algebraMap 
 
 theorem loc_of_proj (hinj : Function.Injective (algebraMap R Ω)) (M : Submodule R V) [Module.Projective R M]
     (P : Ideal R) [P.IsPrime] : Module.Projective (locAt Ω P) (Submodule.span (locAt Ω P) (M : Set V)) := by
-  haveI : IsLocalization.AtPrime (locAt Ω P) P := isLoc hinj P
-  haveI : IsLocalizedModule P.primeCompl (LinearMap.id : V →ₗ[R] V) :=
+  have : IsLocalization.AtPrime (locAt Ω P) P := isLoc hinj P
+  have : IsLocalizedModule P.primeCompl (LinearMap.id : V →ₗ[R] V) :=
     isLocalizedModule_id P.primeCompl V (locAt Ω P)
   have e : Submodule.span (locAt Ω P) (M : Set V) = M.localized' (locAt Ω P) P.primeCompl LinearMap.id := by
     rw [Submodule.localized'_eq_span]; simp
@@ -1156,7 +1156,7 @@ theorem proj_of_frame (B : Subring Ω) (S : Subalgebra R Ω) (hB : ∀ x, x ∈ 
   have e' : Submodule.span S (Set.range b) = Submodule.span S M := e
   rw [← e']
   have hb' : LinearIndependent S b := hb.restrict_scalars' S
-  haveI := Module.Free.of_basis (Module.Basis.span hb')
+  have := Module.Free.of_basis (Module.Basis.span hb')
   infer_instance
 
 end Loc
@@ -1233,7 +1233,7 @@ theorem PositivityTheory.Xgn.sequence_projection_exists : ∀ (E : Type) [Field 
   have hinj : Function.Injective (algebraMap (CR O y c') Ω) := Subtype.val_injective
   have h1 : Module.Projective (CR O y c') P.Dh.om' := by
     refine proj_of_loc hinj _ (by
-      haveI := isNoetherian_of_fg_of_noetherian _ P.Dh.om_lat.fg
+      have := isNoetherian_of_fg_of_noetherian _ P.Dh.om_lat.fg
       exact isNoetherian_submodule.1 this _ (om'_le P.Dh)) fun 𝔮 h𝔮 => ?_
     by_cases hq : (p : CR O y c') ∈ 𝔮
     · obtain ⟨q, hc, hO, hr⟩ := hpt 𝔮 h𝔮
@@ -1251,7 +1251,7 @@ theorem PositivityTheory.Xgn.sequence_projection_exists : ∀ (E : Type) [Field 
       obtain ⟨hli, hsp⟩ := hb q hf hU
       exact proj_of_frame (regAt 𝔐.ξ q) (locAt Ω 𝔮) hr _ b hli (hsp.symm.trans (hloc q hc hO))
     · rw [span_eq_of_notMem P.Dh hinj 𝔮 hq]
-      haveI := P.Dh.om_proj
+      have := P.Dh.om_proj
       exact loc_of_proj hinj _ 𝔮
   refine ⟨h1, fun t σ _ => omHT_proj P.Dh σ fun k => ?_⟩
   obtain ⟨hint, x, hx, o, ho⟩ := PositivityTheory.Xgn.SequenceDifferentials.main E Ω p hp A m hm O σ
@@ -1492,9 +1492,9 @@ theorem exists_form [IsNoetherianRing R] [IsFractionRing R Ω] [CharZero Ω] [Fa
       exact D.h_mem x
     · rintro _ ⟨w, hw, rfl⟩
       exact D.om.smul_mem _ hw
-  haveI hfin : Module.Finite R (D.omHT σ) :=
+  have hfin : Module.Finite R (D.omHT σ) :=
     Module.Finite.iff_fg.2 ((Submodule.FG.of_le D.om_lat.fg hle).map _)
-  haveI := hproj
+  have := hproj
   have hvec : ∀ g : Module.Dual R (D.omHT σ), ∃ e ∈ V', ∀ y : D.omHT σ,
       (y : Module.Dual Ω Li) e = algebraMap R Ω (g y) :=
     fun g => HTL.exists_vec D ρ hc hact σ g
@@ -1806,10 +1806,10 @@ theorem seq_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → ∀ 
   intro hF E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hA hpq p _ hpS hfree hp2 hdisc b hb A _ _ _ m _ hpm O _ _ _
     _ _ _ _ w hw G c' hc' P t
   obtain ⟨hchar, hN, hI, hFr, hreg, hpt⟩ := _root_.GlobalTheory.CompanionTheory.Relay.arith_variety_prime_hodge_relay E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hA hpq p hpS A m hpm O c' hc'
-  haveI := hchar
-  haveI := hN
-  haveI := hI
-  haveI := hFr
+  have := hchar
+  have := hN
+  have := hI
+  have := hFr
   have hc : ∀ x, HT.cmConj E (HT.cmConj E x) = x := fun x => by simp [HT.cmConj]
   obtain ⟨σ, hσ, hσ', huniq⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.Lab.exists_labelEmbedding E H D l Xo c O₀ β Y S Ω K J y 𝔐 t
   have hd := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.Diff.embedding_integers_and_different_unit E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hA hpq p hpS hdisc A m hpm O

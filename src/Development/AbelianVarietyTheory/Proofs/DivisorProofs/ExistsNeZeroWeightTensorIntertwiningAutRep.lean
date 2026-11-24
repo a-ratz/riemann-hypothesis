@@ -81,7 +81,7 @@ theorem exists_ne_zero_wsp_intertwining : ∀ (E : Type) [Field E] [NumberField 
       _ a.2 _ b.2
   have hspan : ∀ v, (⨆ f : (σ v).IntertwiningMap (π'.rep.comp (s v)), LinearMap.range f.toLinearMap) = ⊤ :=
     fun v => _root_.GlobalTheory.DefU.iSup_range_weight_eq_top E n π' v.embedding (lam v) (hW v)
-  haveI : Nontrivial π'.V := Submodule.nontrivial_iff_ne_bot.2 π'.isAut.ne_bot
+  have : Nontrivial π'.V := Submodule.nontrivial_iff_ne_bot.2 π'.isAut.ne_bot
   obtain ⟨F, hF0, hF⟩ := GlobalTheory.T.exists_multilinearMap_of_isotypic_commuting_subgroups (InfinitePlace E) (UA E n) π'.V (fun v => embU n v.embedding)
     (fun v => nablaSq ℂ n (lam v)) π'.rep s σ inferInstance hirr hcomm hspan
   let T : Wsp lam →ₗ[ℂ] (UA E n → ℂ) := π.subtype ∘ₗ PiTensorProduct.lift F
@@ -104,7 +104,7 @@ theorem exists_ne_zero_wsp_intertwining : ∀ (E : Type) [Field E] [NumberField 
         (Finset.nodup_toList _)
       have h2 : (Finset.univ.toList.map fun v => s v (y' v)).prod = x := hprod
       rw [h2] at h1
-      simp only [Finset.mem_toList, Finset.mem_univ, if_true] at h1
+      simp only [Finset.mem_toList, Finset.mem_univ, ite_true] at h1
       have h3 : wInf lam x (PiTensorProduct.tprod ℂ u) =
           PiTensorProduct.tprod ℂ (fun v => σ v (y' v) (u v)) := by
         change PiTensorProduct.map _ _ = _

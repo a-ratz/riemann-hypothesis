@@ -285,7 +285,7 @@ theorem rho_two {e M i : ℕ} (hM : Nat.Coprime 2 M) (hN : 2 ^ (e + 2) * M ∣ N
       unfold Nat.ModEq at h4'
       omega
     by_cases hi2 : i < 2
-    · rw [if_pos hi2]
+    · rw [ite_eq_left hi2]
       by_cases hw : ∃ w ∈ (KK N (2 ^ i * M)).filter (fun u => u ∈ U),
           ZMod.unitsMap h2 w = -1
       · obtain ⟨w, hwH, hw1⟩ := hw
@@ -313,7 +313,7 @@ theorem rho_two {e M i : ℕ} (hM : Nat.Coprime 2 M) (hN : 2 ^ (e + 2) * M ∣ N
               · exact hA u (hKM u hu.1) h1
               · exact absurd h1 (hw u (Finset.mem_filter.mpr hu)))
           _ ≤ 2 * _ := by omega
-    · rw [if_neg hi2]
+    · rw [ite_eq_right hi2]
       calc _ ≤ (KK N (2 ^ (e + 2) * M)).card := Finset.card_le_card (fun u hu => by
             rw [Finset.mem_filter] at hu
             rcases hU u hu.2 with h1 | h1
@@ -339,14 +339,14 @@ theorem rho_two {e M i : ℕ} (hM : Nat.Coprime 2 M) (hN : 2 ^ (e + 2) * M ∣ N
   have hkey : (((KK N (2 ^ i * M)).filter fun u => u ∈ U).card : ℝ) * (2 ^ i).totient
       ≤ (((2 ^ i).totient : ℝ) + if i < 2 then 1 else 0) * (KK N (2 ^ (e + 2) * M)).card := by
     by_cases hi2 : i < 2
-    · rw [if_pos hi2] at hcard ⊢
+    · rw [ite_eq_left hi2] at hcard ⊢
       have ht : (2 ^ i).totient = 1 := by interval_cases i <;> simp
       rw [ht]
       have : (((KK N (2 ^ i * M)).filter fun u => u ∈ U).card : ℝ)
           ≤ 2 * (KK N (2 ^ (e + 2) * M)).card := by exact_mod_cast hcard
       push_cast
       linarith
-    · rw [if_neg hi2] at hcard ⊢
+    · rw [ite_eq_right hi2] at hcard ⊢
       have : (((KK N (2 ^ i * M)).filter fun u => u ∈ U).card : ℝ)
           ≤ (KK N (2 ^ (e + 2) * M)).card := by
         have := hcard; rw [one_mul] at this; exact_mod_cast this
@@ -384,7 +384,7 @@ private theorem sum_range_ite_lt_two_eq_two (e : ℕ) :
     rw [Finset.sum_range_succ, Finset.sum_range_one]
     norm_num
   | succ k ih =>
-    rw [show k + 1 + 2 = k + 2 + 1 from rfl, Finset.sum_range_succ, ih, if_neg (by omega), add_zero]
+    rw [show k + 1 + 2 = k + 2 + 1 from rfl, Finset.sum_range_succ, ih, ite_eq_right (by omega), add_zero]
 
 theorem le_SS {e d : ℕ} (h2 : 2 ^ (e + 2) ∣ N) (hd : d.Prime) (hdN : d ∣ N) (hd2 : ¬ 2 ∣ d)
     (hU : ∀ u ∈ U, ZMod.unitsMap h2 u = 1 ∨ ZMod.unitsMap h2 u = -1) (rd : 1 / 2 ≤ rho U (N / d)) :
@@ -491,7 +491,7 @@ private theorem log_abs_eval_one_cyclotomic_eq_vonMangoldt {m : ℕ} (hm : 1 < m
   · obtain ⟨p, k, hp, hk, rfl⟩ := (isPrimePow_nat_iff m).1 h
     rcases k with _ | j
     · omega
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     rw [eval_one_cyclotomic_prime_pow, vonMangoldt_apply_pow (Nat.succ_ne_zero j),
       vonMangoldt_apply_prime hp]
     simp
@@ -532,7 +532,7 @@ private theorem log_abs_norm_sub_one_mul_totient_eq {m : ℕ} (hm : 1 < m) {L : 
   have habs : |((Algebra.norm ℚ (η - 1) : ℚ) : ℝ)| =
       |((eval 1 (cyclotomic m ℚ) : ℚ) : ℝ)| ^ Module.finrank ℚ⟮η - 1⟯ L := by
     rw [hnormval]; push_cast; rw [abs_pow, abs_mul, abs_pow]; simp
-  haveI : Module.Free ℚ ℚ⟮η - 1⟯ := Module.Free.of_divisionRing _ _
+  have : Module.Free ℚ ℚ⟮η - 1⟯ := Module.Free.of_divisionRing _ _
   rw [habs, Real.log_pow, log_abs_eval_one_cyclotomic_eq_vonMangoldt hm, ← Module.finrank_mul_finrank ℚ ℚ⟮η - 1⟯ L, hdeg]
   push_cast; ring
 
@@ -566,12 +566,12 @@ theorem gal_inj : Function.Injective fun σ : L ≃ₐ[E] L => σ ζ := by
   intro σ τ h
   have := AlgHom.ext_of_adjoin_eq_top (adjoin_top hζ E)
     (φ₁ := (σ : L →ₐ[E] L)) (φ₂ := (τ : L →ₐ[E] L)) (by simpa using h)
-  exact AlgEquiv.coe_algHom_injective this
+  exact AlgEquiv.coe_toAlgHom_injective this
 
 theorem minpoly_map : (minpoly E ζ).map (algebraMap E L) = Lagrange.nodal Finset.univ fun σ : L ≃ₐ[E] L => σ ζ := by
-  haveI : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
-  haveI : IsGalois ℚ L := IsCyclotomicExtension.isGalois {N} ℚ L
-  haveI : IsGalois E L := IsGalois.tower_top_of_isGalois ℚ E L
+  have : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
+  have : IsGalois ℚ L := IsCyclotomicExtension.isGalois {N} ℚ L
+  have : IsGalois E L := IsGalois.tower_top_of_isGalois ℚ E L
   have hint_r : IsIntegral E ζ := .of_finite E ζ
   have htop : E⟮ζ⟯ = ⊤ := by
     rw [eq_top_iff]; intro x _
@@ -599,7 +599,7 @@ theorem minpoly_map : (minpoly E ζ).map (algebraMap E L) = Lagrange.nodal Finse
 open Classical in
 theorem absNorm_diff : ((Ideal.absNorm (differentIdeal (𝓞 E) (𝓞 L)) : ℕ) : ℝ) =
     ∏ σ ∈ (Finset.univ : Finset (L ≃ₐ[E] L)).erase 1, |((Algebra.norm ℚ (ζ - σ ζ) : ℚ) : ℝ)| := by
-  haveI : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
+  have : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
   have hζL : algebraMap (𝓞 L) L hζ.toInteger = ζ := hζ.coe_toInteger
   have hadjZ : Algebra.adjoin ℤ ({hζ.toInteger} : Set (𝓞 L)) = ⊤ :=
     IsCyclotomicExtension.Rat.adjoin_singleton_eq_top hζ
@@ -651,7 +651,7 @@ open Classical in
 theorem log_discr_tower : Real.log |(discr L : ℝ)| =
     ∑ σ ∈ (Finset.univ : Finset (L ≃ₐ[E] L)).erase 1, Real.log |((Algebra.norm ℚ (ζ - σ ζ) : ℚ) : ℝ)| +
       Module.finrank E L * Real.log |(discr E : ℝ)| := by
-  haveI : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
+  have : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
   have hD := differentIdeal_eq_differentIdeal_mul_differentIdeal ℤ (𝓞 E) (𝓞 L)
   have h1 : ((Ideal.absNorm (differentIdeal ℤ (𝓞 L)) : ℕ) : ℝ) = |(discr L : ℝ)| := by
     rw [NumberField.absNorm_differentIdeal L (𝓞 L)]
@@ -764,8 +764,8 @@ theorem log_rd (U : Subgroup (ZMod N)ˣ)
       ∑ u ∈ (Finset.univ : Finset (ZMod N)ˣ).filter (fun u => u ∉ U),
         vonMangoldt (addOrderOf ((u : ZMod N) - 1)) / ((addOrderOf ((u : ZMod N) - 1)).totient : ℝ) := by
   classical
-  haveI : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
-  haveI : IsGalois ℚ L := IsCyclotomicExtension.isGalois {N} ℚ L
+  have : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
+  have : IsGalois ℚ L := IsCyclotomicExtension.isGalois {N} ℚ L
   have hφ : Module.finrank ℚ L = N.totient :=
     IsCyclotomicExtension.finrank L (cyclotomic.irreducible_rat (NeZero.pos N))
   have hcard : Fintype.card (L ≃ₐ[ℚ] L) = Fintype.card (ZMod N)ˣ := by
@@ -838,8 +838,8 @@ theorem cycRat (m : ℕ) : IsCyclotomicExtension {m} ℚ (CyclotomicField m ℚ)
       rw [show (⊥ : Subalgebra ℚ (CyclotomicField 0 ℚ)) = ⊤ from htop]
       exact Algebra.mem_top
     exact (bot_le : (⊥ : Subalgebra ℚ (CyclotomicField 0 ℚ)) ≤ _) hx
-  · haveI : NeZero m := ⟨hm.ne'⟩
-    haveI : NeZero (m : ℚ) := ⟨by exact_mod_cast hm.ne'⟩
+  · have : NeZero m := ⟨hm.ne'⟩
+    have : NeZero (m : ℚ) := ⟨by exact_mod_cast hm.ne'⟩
     exact CyclotomicField.isCyclotomicExtension m ℚ
 
 theorem dvd_discr_of_inertia {E : Type} [Field E] [NumberField E] [IsGalois ℚ E] {l : ℕ} (hl : l.Prime)

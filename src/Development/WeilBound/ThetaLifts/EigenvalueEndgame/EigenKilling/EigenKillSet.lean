@@ -155,7 +155,7 @@ theorem eigen_kill_set (h : IsCMExt F E σ) (hψ : IsStd ψ) (hX : X.J.det ≠ 0
   · obtain ⟨φ', h', e⟩ := key
     rw [← hb.2.1 h'.1 hφ e]
     exact h'.2
-  simp only [Set.mem_setOf_eq, not_forall] at hY
+  simp only [Set.mem_ofPred_eq, not_forall] at hY
   obtain ⟨⟨u, c⟩, ha, hne⟩ := hY
   obtain ⟨hu, h1⟩ := hA _ ha
   let m : Matrix (Fin n) (Fin d) (Fv F v) → ℂ := fun y => ψ (sy σ X W (xo y) u)
@@ -219,7 +219,7 @@ theorem form_swap (hσ : ∀ x, σ (σ x) = x) {J : Matrix (Fin n) (Fin n) E} (�
 theorem plane_span {H : Plane E n n₁} {i₀ i₁ : ℕ} (h : H.IsAdapted σ B X X₁ i₀ i₁) (hL : X.L.IsFullLattice E) (z : Fin n → E) :
     ∃ (s t : E) (u : Fin n₁ → E), z = s • H.x + H.ι *ᵥ u + t • H.y := by
   have hz : z ∈ Submodule.span E (X.L : Set (Fin n → E)) := by
-    letI := hL
+    let := hL
     rw [Submodule.IsFullLattice.span_eq_top]; trivial
   induction hz using Submodule.span_induction with
   | mem z hz =>
@@ -391,7 +391,7 @@ theorem stepN (hi : i ∉ S) {ν α : kˣ →* ℂˣ} (hν : USm ν) (h1 : ν �
       have i1 : ∀ a ∈ bx S c, ∀ b, f₁ (b + a) = f₁ b := fun a ha b => by rw [e1, e1, avg_inv _ _ i0 ha]
       have o1 : ∀ a ∉ bx S c, f₁ a = 0 := fun a ha => by rw [e1, avg_off _ _ o0 ha]
       have hm : ∀ a : S → k, a ∈ bx S ((x⁻¹ : kˣ) * c) ↔ (x : k) • a ∈ bx S c := fun a => forall_congr' fun s => by
-        have : 0 < valuation k (x : k) := zero_lt_iff.2 (by simp)
+        have : 0 < valuation k (x : k) := pos_iff_ne_zero.2 (by simp)
         simp [le_inv_mul_iff₀ this]
       rw [eY]
       simp only [mv_mv hi, one_smul, mul_zero, add_zero]
@@ -420,7 +420,7 @@ theorem indep_iff (Y : Matrix (Fin n) (Fin d) k) :
       exact (Finset.sum_subset (Finset.subset_univ _) fun j _ hj => by rw [h0 j hj, zero_smul]).trans
         ((vecMul_eq_sum p Y).symm.trans hp)
     · exact h0 j hj
-  · have := h (fun j => if j ∈ S then f j else 0) (fun j hj => if_neg hj) ((vecMul_eq_sum _ Y).trans (Eq.trans (by
+  · have := h (fun j => if j ∈ S then f j else 0) (fun j hj => ite_eq_right hj) ((vecMul_eq_sum _ Y).trans (Eq.trans (by
       simp only [ite_smul, zero_smul, Finset.sum_ite_mem, Finset.univ_inter]) hf))
     simpa [hj] using congrFun this j
 
@@ -461,7 +461,7 @@ theorem corank_one {ν α : kˣ →* ℂˣ} (hν : USm ν) (h1 : ν ≠ 1) {N : 
     (fun Y hY => ?_) Φ hΦ h0
   · obtain ⟨Ψ, hΨ, u, hu, rfl⟩ := Submodule.mem_sup.1 key
     exact ⟨Ψ, hΨ, by simpa using hu⟩
-  simp only [Set.mem_setOf_eq, not_forall, not_not] at hY
+  simp only [Set.mem_ofPred_eq, not_forall, not_not] at hY
   obtain ⟨i, hi⟩ := hY
   obtain ⟨V, hV, hYV, hVU⟩ := loc_compact_Haus_tot_disc_of_zero_dim.mem_nhds_iff.1 (indep_nhds hi)
   refine ⟨V.indicator 1, 0, (LocallyConstant.indicator (1 : LocallyConstant _ ℂ) hV).2, by simp [hYV], fun Ψ hΨ => ?_⟩
@@ -524,9 +524,9 @@ theorem lift {A : Type} [AddCommGroup A] [Module ℂ A] {SA : Submodule ℂ A} {
   set N : k := r⁻¹ * (c₂ * c₁) with hN
   have hNv : valuation k (c₂ * c₁) < valuation k N := by
     have h0 : 0 < valuation k (c₂ * c₁) := by
-      rw [map_mul]; exact mul_pos (lt_of_lt_of_le zero_lt_one h21) (zero_lt_iff.2 (by simpa using hc₁0))
+      rw [map_mul]; exact mul_pos (lt_of_lt_of_le zero_lt_one h21) (pos_iff_ne_zero.2 (by simpa using hc₁0))
     rw [hN, map_mul (valuation k) r⁻¹, map_inv₀]
-    exact lt_mul_of_one_lt_left h0 ((one_lt_inv₀ (zero_lt_iff.2 (by simpa using hr))).2 hr1)
+    exact lt_mul_of_one_lt_left h0 ((one_lt_inv₀ (pos_iff_ne_zero.2 (by simpa using hr))).2 hr1)
   let T : Matrix (Fin n) (Fin d) k → Matrix (Fin n) (Fin d) k := fun Y => Y + (-(Y * ι') * κ + vecMulVec (-Pi.single i N) ρ)
   have hT : Continuous T := continuous_id.add
     (((continuous_id.matrix_mul continuous_const).neg.matrix_mul continuous_const).add continuous_const)
@@ -623,7 +623,7 @@ theorem position_inj (hM : M.IsGood B.ψ) {f : SInf F (Fin n × Fin d)} (hf : f 
     let t : Pl F → ℂ := fun w => if w = v then z (fun i => evFin F v (y i)) else 1
     have ht : (Function.mulSupport t).Finite := (Set.finite_singleton v).subset fun w hw => by
       by_contra hn
-      exact hw (if_neg hn)
+      exact hw (ite_eq_right hn)
     have key : (fun w => Function.update M.vac v z w (fun i => evFin F w (y i))) =
         fun w => t w * Function.update M.vac v 1 w (fun i => evFin F w (y i)) := by
       funext w
@@ -631,8 +631,8 @@ theorem position_inj (hM : M.IsGood B.ψ) {f : SInf F (Fin n × Fin d)} (hf : f 
       · subst w; simp [t]
       · simp [t, hw, Function.update_of_ne hw]
     unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure
-    rw [key, finprod_mul_distrib ht hs, finprod_eq_single t v fun w hw => if_neg hw]
-    simp only [t, if_true]
+    rw [key, finprod_mul_distrib ht hs, finprod_eq_single t v fun w hw => ite_eq_right hw]
+    simp only [t, ite_true]
     ring
   have piK_repl' (y : Fin n × Fin d → Fv F v) :
       (fun i => evFin F v (repl v x y i)) = y := by

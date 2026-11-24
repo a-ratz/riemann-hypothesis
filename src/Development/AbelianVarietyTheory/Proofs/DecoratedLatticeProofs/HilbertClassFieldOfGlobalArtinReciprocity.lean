@@ -117,7 +117,7 @@ theorem tendsto_embedding {K : Type} [Field K] [NumberField K] {j : K →+* ℂ}
       (if InfinitePlace.mk σ = InfinitePlace.mk j then -1 else 1) = if σ = j then -1 else 1 := by
     by_cases hσ : σ = j
     · subst hσ; simp
-    · rw [if_neg (fun e => hσ ((mk_eq_mk_iff_of_isReal hj).1 e)), if_neg hσ, map_one]
+    · rw [ite_eq_right (fun e => hσ ((mk_eq_mk_iff_of_isReal hj).1 e)), ite_eq_right hσ, map_one]
   rw [hc] at h
   rcases InfinitePlace.embedding_mk_eq σ with e | e
   · rw [e] at h; exact h
@@ -134,7 +134,7 @@ theorem tendsto_norm {E K : Type} [Field E] [NumberField E] [Field K] [NumberFie
     (hσ : ∀ σ : K →+* ℂ, Tendsto (fun x => σ x) l (𝓝 (if σ = j then -1 else 1))) (u : InfinitePlace E) :
     Tendsto (fun x => u.embedding (Algebra.norm E x)) l
       (𝓝 (if u = InfinitePlace.mk (j.comp (algebraMap E K)) then -1 else 1)) := by
-  letI : Algebra E ℂ := u.embedding.toAlgebra
+  let : Algebra E ℂ := u.embedding.toAlgebra
   have hn : ∀ x : K, u.embedding (Algebra.norm E x) = ∏ σ : K →ₐ[E] ℂ, σ x :=
     fun x => Algebra.norm_eq_prod_embeddings E ℂ x
   simp_rw [hn]
@@ -147,11 +147,11 @@ theorem tendsto_norm {E K : Type} [Field E] [NumberField E] [Field K] [NumberFie
       rw [hu]; exact InfinitePlace.embedding_mk_eq_of_isReal (hj.comp _)
     let σ₀ : K →ₐ[E] ℂ := { toRingHom := j, commutes' := fun e => (RingHom.congr_fun he e).symm }
     have hiff : ∀ σ : K →ₐ[E] ℂ, (σ : K →+* ℂ) = j ↔ σ = σ₀ := fun σ =>
-      ⟨fun h => AlgHom.coe_ringHom_injective h, fun h => by rw [h]; rfl⟩
-    rw [if_pos hu, Finset.prod_congr rfl fun σ _ => if_congr (hiff σ) rfl rfl]
+      ⟨fun h => AlgHom.toRingHom_injective h, fun h => by rw [h]; rfl⟩
+    rw [ite_eq_left hu, Finset.prod_congr rfl fun σ _ => if_congr (hiff σ) rfl rfl]
     simp
-  · rw [if_neg hu]
-    refine (Finset.prod_eq_one fun σ _ => if_neg fun h => hu ?_).symm
+  · rw [ite_eq_right hu]
+    refine (Finset.prod_eq_one fun σ _ => ite_eq_right fun h => hu ?_).symm
     have he : u.embedding = j.comp (algebraMap E K) := by
       ext e
       have := σ.commutes e
@@ -172,7 +172,7 @@ theorem exists_norm_sign : ∀ (E K : Type) [Field E] [NumberField E] [Field K] 
   let y : GlobalTheory.FrobDense.Loc T := (fun u => if u = InfinitePlace.mk j then -1 else 1, fun _ => 1)
   let f : K → GlobalTheory.FrobDense.Loc T := fun x => GlobalTheory.FrobDense.proj T (algebraMap K (AdeleRing (𝓞 K) K) x)
   let l : Filter K := comap f (𝓝 y)
-  haveI : l.NeBot := comap_neBot_iff.2 fun t ht => by
+  have : l.NeBot := comap_neBot_iff.2 fun t ht => by
     obtain ⟨_, hz, a, rfl⟩ := mem_closure_iff_nhds.1 (GlobalTheory.FrobDense.denseRange_proj T y) t ht
     exact ⟨a, hz⟩
   have hf : Tendsto f l (𝓝 y) := tendsto_comap
@@ -185,7 +185,7 @@ theorem exists_norm_sign : ∀ (E K : Type) [Field E] [NumberField E] [Field K] 
 
   have h0 : ∀ᶠ x in l, x ≠ 0 := by
     have hj' := hσ j
-    rw [if_pos rfl] at hj'
+    rw [ite_eq_left rfl] at hj'
     filter_upwards [hj'.eventually_ne (by norm_num : (-1 : ℂ) ≠ 0)] with x hx e
     exact hx (by rw [e, map_zero])
 
@@ -197,7 +197,7 @@ theorem exists_norm_sign : ∀ (E K : Type) [Field E] [NumberField E] [Field K] 
     have hm : (1 : v.1.adicCompletion K) ∈ {z : v.1.adicCompletion K | Valued.v (z - 1) ≤ WithZero.exp (-(M : ℤ))} := by
       show Valued.v ((1 : v.1.adicCompletion K) - 1) ≤ _
       rw [sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
     filter_upwards [hfin v (ho.mem_nhds hm)] with x hx
     have e : Valued.v (algebraMap K (v.1.adicCompletion K) x - 1) = v.1.valuation K (x - 1) := by
       rw [← map_one (algebraMap K (v.1.adicCompletion K)), ← map_sub]
@@ -219,11 +219,11 @@ theorem exists_norm_sign : ∀ (E K : Type) [Field E] [NumberField E] [Field K] 
     intro u
     by_cases hu : u = w₀
     · subst hu
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       show InfinitePlace.Completion.extensionEmbedding _ ((P : AdeleRing (𝓞 E) E).1 _) = _
       rw [ReciprocityTheory.Neutral.Bridge.HCFR.infIdele_fst_self]
       simp
-    · rw [if_neg hu]
+    · rw [ite_eq_right hu]
       show InfinitePlace.Completion.extensionEmbedding _ ((P : AdeleRing (𝓞 E) E).1 _) = _
       rw [ReciprocityTheory.Neutral.Bridge.HCFR.infIdele_fst_ne E w₀ u hu, map_one]
   have hg : Tendsto (fun x => algebraMap E (InfiniteAdeleRing E) (Algebra.norm E x)) l
@@ -463,7 +463,7 @@ theorem chi_norm_local (ha : IsGlobalArtin art) {B : Type} [CommGroup B] (χ : G
     (hK : ∀ σ : G K Ω, χ (GlobalTheory.HeckeGal.toAb E Ω (σ.restrictScalars E)) = 1) (v : HeightOneSpectrum (𝓞 E))
     (hv : ∀ x, IsUnitAt v x → χ (art (localIdele E v x)) = 1) (a : Kˣ) :
     χ (art (locUnit E v (Units.map (Algebra.norm E (S := K)) a))) = 1 := by
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
   obtain ⟨k, hk⟩ := exists_unif v
   generalize atFin v k = p at hk
   let θ : (v.adicCompletion E)ˣ →* B := χ.comp (art.comp (localIdele E v))
@@ -507,14 +507,14 @@ theorem infPart_mul_finPart (a : Ideles E) : Units.map (infPart E) a * Units.map
 theorem art_sign_mem (ha : IsGlobalArtin art) (U : Subgroup (Gab E Ω)) (hU : IsOpen (U : Set (Gab E Ω)))
     (j : Ω →+* ℂ) (c : G E Ω) (hc : ∀ x, j (c x) = starRingEnd ℂ (j x)) (hcU : GlobalTheory.HeckeGal.toAb E Ω c ∈ U) :
     art (infIdele E (InfinitePlace.mk (j.comp (algebraMap E Ω))) (-1)) ∈ U := by
-  haveI : DiscreteTopology (Gab E Ω ⧸ U) := QuotientGroup.discreteTopology hU
+  have : DiscreteTopology (Gab E Ω ⧸ U) := QuotientGroup.discreteTopology hU
   let χ : Gab E Ω →* Gab E Ω ⧸ U := QuotientGroup.mk' U
   have hχ : ∀ g, χ g = 1 ↔ g ∈ U := fun g => QuotientGroup.eq_one_iff g
   let ψ : Ideles E →* Gab E Ω ⧸ U := χ.comp art
   have hψ : Continuous ψ := QuotientGroup.continuous_mk.comp ha.quot.continuous
   obtain ⟨L, _, _, hL⟩ := GlobalTheory.RayFromArtin.exists_field (χ.comp (GlobalTheory.HeckeGal.toAb E Ω))
     ((isOpen_discrete {1}).preimage (QuotientGroup.continuous_mk.comp QuotientGroup.continuous_mk))
-  haveI : NumberField L := NumberField.of_module_finite E L
+  have : NumberField L := NumberField.of_module_finite E L
   have hK : ∀ σ : G L Ω, χ (GlobalTheory.HeckeGal.toAb E Ω (σ.restrictScalars E)) = 1 := fun σ =>
     (hL _).1 (AlgEquiv.ext fun x => (algebraMap L Ω).injective
       (((σ.restrictScalars E).restrictNormal_commutes L x).trans (σ.commutes x)))
@@ -598,7 +598,7 @@ theorem art_sign_eq (ha : IsGlobalArtin art) (j : Ω →+* ℂ) (c : G E Ω) (hc
 
 theorem exists_conj (w : InfinitePlace E) (hw : w.IsReal) : ∃ (j : Ω →+* ℂ) (c : G E Ω),
     (∀ x, j (c x) = starRingEnd ℂ (j x)) ∧ InfinitePlace.mk (j.comp (algebraMap E Ω)) = w := by
-  haveI : IsGalois E Ω := {}
+  have : IsGalois E Ω := {}
   let j : Ω →+* ℂ := ComplexEmbedding.lift Ω w.embedding
   have hj : j.comp (algebraMap E Ω) = w.embedding := ComplexEmbedding.lift_comp_algebraMap _ _
   obtain ⟨σ, hσ⟩ := ComplexEmbedding.exists_comp_symm_eq_of_comp_eq (k := E) j (ComplexEmbedding.conjugate j) (by
@@ -609,9 +609,9 @@ theorem art_mem_of_class (ha : IsGlobalArtin art) (U : Subgroup (Gab E Ω)) (hU 
     (hI : ∀ (A : ValuationSubring Ω), ∀ σ ∈ Ine (F := E) A, GlobalTheory.HeckeGal.toAb E Ω σ ∈ U)
     (hC : ∀ c : G E Ω, IsComplexConjugation c → GlobalTheory.HeckeGal.toAb E Ω c ∈ U)
     (x : Ideles E) (hx : GlobalTheory.Mem.UnitIndex.classHom E x = 1) : art x ∈ U := by
-  haveI : IsGalois E Ω := {}
-  haveI : DiscreteTopology (Gab E Ω ⧸ U) := QuotientGroup.discreteTopology hU
-  haveI : Finite (Gab E Ω ⧸ U) := U.quotient_finite_of_isOpen hU
+  have : IsGalois E Ω := {}
+  have : DiscreteTopology (Gab E Ω ⧸ U) := QuotientGroup.discreteTopology hU
+  have : Finite (Gab E Ω ⧸ U) := U.quotient_finite_of_isOpen hU
   let ψ : Ideles E →* Gab E Ω ⧸ U := (QuotientGroup.mk' U).comp art
   have hψU : ∀ y, ψ y = 1 ↔ art y ∈ U := fun y => QuotientGroup.eq_one_iff _
   have hψ : Continuous ψ := QuotientGroup.continuous_mk.comp ha.quot.continuous
@@ -653,7 +653,7 @@ theorem mem_ine_iff (A : ValuationSubring Ω) (σ : G E Ω) :
 
 theorem mem_hilbertSubgroup (ha : IsGlobalArtin art) (σ : G E Ω) (x : Ideles E)
     (hσ : art x = GlobalTheory.HeckeGal.toAb E Ω σ) (hx : GlobalTheory.Mem.UnitIndex.classHom E x = 1) : σ ∈ hilbertSubgroup E Ω := by
-  haveI : IsGalois E Ω := {}
+  have : IsGalois E Ω := {}
   let N : ClosedSubgroup (G E Ω) := ⟨hilbertSubgroup E Ω, Subgroup.isClosed_topologicalClosure _⟩
   have hN : (IntermediateField.fixedField (hilbertSubgroup E Ω)).fixingSubgroup = hilbertSubgroup E Ω :=
     InfiniteGalois.fixingSubgroup_fixedField N
@@ -718,7 +718,7 @@ theorem GlobalTheory.Published.GlobalArtinReciprocity.hilbertClassField :
       exact Set.ext hk
     refine Subgroup.topologicalClosure_minimal _ ((Subgroup.closure_le _).2 ?_) (Subgroup.isClosed_of_isOpen _ ho)
     rintro g ((hg | ⟨A, hg⟩) | ⟨j, hg⟩)
-    · exact Abelianization.commutator_subset_ker _ hg
+    · exact Group.Abelianization.commutator_le_ker _ hg
     · have hg' := (ReciprocityTheory.Neutral.Bridge.HCF.mem_inertia_map_iff E A g).1 hg
       rcases GlobalTheory.inertiaEl_eq_one_or_liesAbove E Ω A g hg' with rfl | ⟨v, hv⟩
       · exact one_mem _

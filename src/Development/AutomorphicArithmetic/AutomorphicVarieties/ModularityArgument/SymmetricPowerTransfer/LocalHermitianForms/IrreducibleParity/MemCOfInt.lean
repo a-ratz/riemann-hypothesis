@@ -294,7 +294,7 @@ private theorem exists_norm_ne_zero_of_isLat {S : Set (Etau K τ)} (hτ : τ ^ 2
     intro w hw
     have e1 := hall 1 Submodule.mem_top w hw
     have e2 := hall ω Submodule.mem_top w hw
-    simp only [re_one, im_one, omega_re, omega_im] at e1 e2
+    simp only [re_one, im_one, re_omega, im_omega] at e1 e2
     have him : w.im = 0 := by
       have e : (τ ^ 2 - 4) * w.im = 0 := by linear_combination τ * e1 - 2 * e2
       exact (mul_eq_zero.1 e).resolve_left hτ
@@ -349,7 +349,7 @@ private theorem exists_denominator_norm_span_finset [IsFractionRing O K] (f : Fi
 private theorem exists_norm_ne_zero_norm_div_integral_of_isLat {Δ : K} (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {S : Set (Etau K τ)}
     (h : IsLat O τ S) : ∃ y ∈ S, QuadraticAlgebra.norm y ≠ 0 ∧
       ∀ w ∈ S, QuadraticAlgebra.norm w / QuadraticAlgebra.norm y ∈ (algebraMap O K).range := by
-  haveI := L.frac
+  have := L.frac
   have h2 : (2 : K) ≠ 0 := by
     have e := L.two.map (algebraMap O K)
     rw [map_ofNat] at e
@@ -413,7 +413,7 @@ theorem gen_ex {Δ : K} (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {S : Set (Etau
 
 theorem fix_div {Δ : K} (L : IsLoc O Δ) {S : Set (Etau K τ)} {t t' : K} {y : (Etau K τ)ˣ} (hy : Gen O τ S y)
     (h : IsFixP O τ t S) (h' : IsFixP O τ t' S) (ht : t ≠ 0) : ∃ r : O, t' = algebraMap O K r * t := by
-  haveI := L.frac
+  have := L.frac
   obtain ⟨f, rfl⟩ := h.fg
   have star_sm : ∀ (c : K) (w : Etau K τ), star (c • w) = c • star w := by
     intro c w
@@ -449,7 +449,7 @@ theorem fix_div {Δ : K} (L : IsLoc O Δ) {S : Set (Etau K τ)} {t t' : K} {y : 
 theorem fix_uniq {Δ : K} (L : IsLoc O Δ) {S : Set (Etau K τ)} {t t' : K} {y : (Etau K τ)ˣ} (hy : Gen O τ S y)
     (h : IsFixP O τ t S) (h' : IsFixP O τ t' S) (ht : t ≠ 0) (ht' : t' ≠ 0) :
     ∃ ε : Oˣ, t' = algebraMap O K ε * t := by
-  haveI := L.frac
+  have := L.frac
   obtain ⟨r, hr⟩ := fix_div L hy h h' ht
   obtain ⟨r', hr'⟩ := fix_div L hy h' h ht'
   have e : algebraMap O K (r * r') = 1 := by

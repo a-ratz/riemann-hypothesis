@@ -686,19 +686,19 @@ theorem not_dvd_both {r : ℚ} {p : ℕ} (hp : p.Prime) (h1 : p ∣ r.num.natAbs
 
 theorem padicValRat_ne_zero_of_dvd_num {r : ℚ} (hr : r ≠ 0) {p : ℕ} (hp : p.Prime)
     (hd : p ∣ r.num.natAbs) : padicValRat p r ≠ 0 := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hnd : ¬ p ∣ r.den := fun hd' => not_dvd_both hp hd hd'
   have h0 : r.num.natAbs ≠ 0 := by simpa using hr
-  have h1 := one_le_padicValNat_of_dvd h0 hd
-  simp only [padicValRat, padicValInt, padicValNat.eq_zero_of_not_dvd hnd]
+  have h1 := one_le_multiplicity_of_dvd h0 hd
+  simp only [padicValRat, padicValInt, multiplicity_eq_zero_of_not_dvd hnd]
   omega
 
 theorem padicValRat_ne_zero_of_dvd_den {r : ℚ} {p : ℕ} (hp : p.Prime)
     (hd : p ∣ r.den) : padicValRat p r ≠ 0 := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hnd : ¬ p ∣ r.num.natAbs := fun hd' => not_dvd_both hp hd' hd
-  have h1 := one_le_padicValNat_of_dvd r.den_nz hd
-  simp only [padicValRat, padicValInt, padicValNat.eq_zero_of_not_dvd hnd]
+  have h1 := one_le_multiplicity_of_dvd r.den_nz hd
+  simp only [padicValRat, padicValInt, multiplicity_eq_zero_of_not_dvd hnd]
   omega
 
 end GlobalTheory.Fam.RatioUnit
@@ -715,7 +715,7 @@ theorem RatioUnit.intCast_notMem_of_natAbs {R : Type} [CommRing R] (P : Ideal R)
 theorem vw_eq_zero_of_unitRatio : ∀ (K : Type) [Field K] [NumberField K] (σ : K →+* ℂ) (w : HeightOneSpectrum (𝓞 K)) (S : ℕ → Prop) (x y : ℂ), GlobalTheory.Fam.UnitRatio S x y → (∀ p : ℕ, p.Prime → S p → (p : 𝓞 K) ∉ w.asIdeal) → ∀ a : K, σ a = x / y → Formalism.DivisionValues.vw w a = 0 := by
   intro K _ _ σ w S x y hU hS a ha
 
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨_, n, hn, r, hr0, hpow, hrS⟩ := hU
   have hpow' : a ^ n = (r : K) := by
     apply σ.injective

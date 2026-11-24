@@ -153,7 +153,7 @@ private theorem span_fixed_eq_whole_of_semilinear_injective {K E : Type} [Field 
   classical
   set U := Submodule.span K {v : E | ψ v = v} with hU
   by_contra hne
-  obtain ⟨w0, -, hw0⟩ := SetLike.exists_of_lt (lt_top_iff_ne_top.mpr hne)
+  obtain ⟨w0, -, hw0⟩ := IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.mpr hne)
   set w : ℕ → E := fun i => (⇑ψ)^[i] w0 with hw
   have hwsucc : ∀ i, w (i + 1) = ψ (w i) := fun i => Function.iterate_succ_apply' _ _ _
   set W : ℕ → Submodule K E := fun i => U ⊔ Submodule.span K (Set.range fun j : Fin i => w j)
@@ -215,7 +215,7 @@ private theorem span_fixed_eq_whole_of_semilinear_injective {K E : Type} [Field 
     rw [← hsum, ← Fin.sum_univ_eq_sum_range (fun i => a' i • w i) (s + 1)]
     congr 1
     refine Finset.sum_congr rfl (fun i _ => ?_)
-    simp only [ha', dif_pos i.2, Fin.eta]
+    simp only [ha', dite_eq_left i.2, Fin.eta]
   let Xs : ℕ → Polynomial K := fun n => Nat.rec (Polynomial.C (a' 0) * Polynomial.X ^ p)
     (fun i P => P ^ p + Polynomial.C (a' (i + 1)) * Polynomial.X ^ p) n
   have hXs0 : Xs 0 = Polynomial.C (a' 0) * Polynomial.X ^ p := rfl
@@ -371,7 +371,7 @@ private theorem exists_matrix_frob_map_eq_mul {K : Type} [Field K] [IsAlgClosed 
         rfl
       rw [this]
       exact e.linearIndependent
-    exact (Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_cols_iff_isUnit.mp hli)
+    exact (Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_col_iff_isUnit.mp hli)
   · ext i j
     have h1 := congrFun (hback (e j)) i
     rw [heS] at h1
@@ -383,18 +383,18 @@ theorem UpperTheory.Kd.C7.pLangR :
     UpperTheory.Kd.C7.SLangR := by
   intro R _ p hp σ hσ hu hroot d N hN
   obtain ⟨hdom, hprime, hcompl, hfrob, hperf⟩ := hσ
-  have hpnu : ¬ IsUnit (p : R) := hprime.not_unit
+  have hpnu : ¬ IsUnit (p : R) := hprime.not_isUnit
   have hItop : Ideal.span {(p : R)} ≠ ⊤ := by
     rw [Ne, Ideal.span_singleton_eq_top]
     exact hpnu
-  haveI hmax : (Ideal.span {(p : R)}).IsMaximal := by
+  have hmax : (Ideal.span {(p : R)}).IsMaximal := by
     refine ⟨⟨hItop, fun J hJ => ?_⟩⟩
-    obtain ⟨x, hxJ, hxI⟩ := SetLike.exists_of_lt hJ
+    obtain ⟨x, hxJ, hxI⟩ := IsConcreteLE.exists_of_lt hJ
     exact Ideal.eq_top_of_isUnit_mem J hxJ (hu x hxI)
-  letI : Field (R ⧸ Ideal.span {(p : R)}) := Ideal.Quotient.field _
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (mem_nonunits_iff.mpr hpnu)
+  let : Field (R ⧸ Ideal.span {(p : R)}) := Ideal.Quotient.field _
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (mem_nonunits_iff.mpr hpnu)
   set π := Ideal.Quotient.mk (Ideal.span {(p : R)}) with hπ
-  haveI : IsAlgClosed (R ⧸ Ideal.span {(p : R)}) := by
+  have : IsAlgClosed (R ⧸ Ideal.span {(p : R)}) := by
     refine IsAlgClosed.of_exists_root _ fun P hPm hPirr => ?_
     obtain ⟨Q, hQmap, hQdeg, hQm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic
       ((Polynomial.mem_lifts P).mpr (Polynomial.map_surjective π Ideal.Quotient.mk_surjective P)) hPm
@@ -655,7 +655,7 @@ theorem UpperTheory.Kd.C7.pPeriod :
   intro l _ _ Ω _ _ _ A _ j Φ c β a ha
   obtain ⟨hval, -, -, -⟩ := (pBasEx l c).2 β
   have hH : IsHausdorff (Ideal.span {(l : Φ.R)}) Φ.R := by
-    haveI := Φ.fl.complete
+    have := Φ.fl.complete
     exact IsAdicComplete.toIsHausdorff
   have hσs : ∀ z : ℤ_[l], Φ.σ.symm (algebraMap ℤ_[l] Φ.R z) = algebraMap ℤ_[l] Φ.R z :=
     fun z => ringHom_algebraMap_padicInt_eq hH Φ.σ.symm.toRingHom z

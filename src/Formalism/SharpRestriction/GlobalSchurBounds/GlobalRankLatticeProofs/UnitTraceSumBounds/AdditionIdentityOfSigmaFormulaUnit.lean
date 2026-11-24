@@ -327,7 +327,7 @@ theorem zc_int (n : ℤ) : zc ((n : ℤ_[p])) = (n : ℂ_[p]) := by
 
 theorem zc_continuous : Continuous (zc : ℤ_[p] → ℂ_[p]) := by
   unfold zc
-  exact (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtype_val
+  exact (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtypeVal
 
 theorem isClosed_range_zc : IsClosed (Set.range (zc : ℤ_[p] → ℂ_[p])) :=
   (isCompact_range zc_continuous).isClosed
@@ -633,7 +633,7 @@ theorem coeff_one_subst (f s : PowerSeries ℂ_[p]) (hf : PowerSeries.constantCo
       PowerSeries.constantCoeff t := by
     intro t
     rw [key t, map_add (f := _), map_mul, hf, mul_zero, zero_add, PowerSeries.constantCoeff_C]
-  rw [key s, map_add (f := _), PowerSeries.coeff_C, if_neg one_ne_zero, add_zero, PowerSeries.coeff_mul,
+  rw [key s, map_add (f := _), PowerSeries.coeff_C, ite_eq_right one_ne_zero, add_zero, PowerSeries.coeff_mul,
     Finset.Nat.antidiagonal_succ]
   simp only [Finset.Nat.antidiagonal_zero, Finset.map_singleton, Finset.sum_cons, Finset.sum_singleton]
   simp [PowerSeries.coeff_zero_eq_constantCoeff_apply, hf, c0]

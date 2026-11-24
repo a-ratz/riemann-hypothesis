@@ -74,7 +74,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.derF :
   obtain ⟨hinf, hcc⟩ := parCont F
   obtain ⟨c0, ccont, -⟩ := hcc c Y hc
   have hf' : TR.lie F 2 Y f ∈ π.V := π.stable (.lie Y) f hf
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
   obtain ⟨m1, -⟩ := thMeas F E D W (W.L h φ)
   set T : G1 F → ℂ := fun g => Th (W.Om g (W.L h φ)).1 with hT
   set x₀ := dM (nu F h) with hx₀

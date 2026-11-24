@@ -64,8 +64,8 @@ namespace GlobalTheory.KeySpec
 theorem valueAt_of_point {κ : Rule} (hF : Funct κ) {S k : Type} [CommRing S] [Field k] [CharZero k] {y : KeyIn S} {u : S}
     (r : S →+* k) {xk : KeyIn k} (hk : KeyPB xk y r) (h : (κ k xk : k) = r u) : ValueAt κ y u (RingHom.ker r) := by
   intro K _ _ f x hf hx
-  haveI := RingHom.ker_isPrime r
-  haveI : CharZero (S ⧸ RingHom.ker r) := (RingHom.kerLift r).charZero
+  have := RingHom.ker_isPrime r
+  have : CharZero (S ⧸ RingHom.ker r) := (RingHom.kerLift r).charZero
   obtain ⟨y', hy⟩ := exists_keyPB_ring y (Ideal.Quotient.mk (RingHom.ker r))
   let F := FractionRing (S ⧸ RingHom.ker r)
   obtain ⟨xF, hxF⟩ := exists_keyPB_ring y' (algebraMap _ F)
@@ -95,16 +95,16 @@ theorem isValue_of_generic : ∀ κ : Rule, Funct κ → UnitSp κ → ∀ (S : 
   have h0 : ValueAt κ y u ⊥ := fun K _ _ f x hf hx => h K f x ((RingHom.injective_iff_ker_eq_bot f).2 hf) hx
   by_cases hp : RingHom.ker f = ⊥
   · exact h0 K f x hp hx
-  haveI := RingHom.ker_isPrime f
+  have := RingHom.ker_isPrime f
   obtain ⟨O, _, _, _, _, φ, hφ, hm⟩ :=
     GlobalTheory.exists_complete_discreteValuationRing_of_prime_lt (⊥ : Ideal S) (RingHom.ker f) (bot_lt_iff_ne_bot.2 hp)
-  haveI : CharZero O := charZero_of_injective_ringHom ((RingHom.injective_iff_ker_eq_bot φ).2 hφ)
+  have : CharZero O := charZero_of_injective_ringHom ((RingHom.injective_iff_ker_eq_bot φ).2 hφ)
   obtain ⟨yO, hy⟩ := exists_keyPB_ring y φ
   obtain ⟨u', hu'⟩ := exists_unit_dvr hF hU O yO
   have e : φ u = u' := (h0.map_bot φ hφ hy).unique (hu' ⊥)
   have hk : RingHom.ker ((IsLocalRing.residue O).comp φ) = RingHom.ker f := by
     rw [← RingHom.comap_ker, IsLocalRing.ker_residue, hm]
-  haveI : CharZero (IsLocalRing.ResidueField O) := charZero_of_inj_zero fun n hn => by
+  have : CharZero (IsLocalRing.ResidueField O) := charZero_of_inj_zero fun n hn => by
     have : (n : S) ∈ RingHom.ker ((IsLocalRing.residue O).comp φ) := by
       rw [RingHom.mem_ker, map_natCast, hn]
     rw [hk, RingHom.mem_ker, map_natCast] at this

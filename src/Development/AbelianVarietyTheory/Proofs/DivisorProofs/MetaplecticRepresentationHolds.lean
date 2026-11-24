@@ -190,11 +190,11 @@ theorem continuous_omS_prod (l : Type) [Fintype l] [DecidableEq l] (G : Type) [G
 
   have hjoint : Continuous fun x : G × L2 l => om x.1 x.2 :=
     continuous_prod_of_continuous_lipschitzWith' (fun x : G × L2 l => om x.1 x.2) 1
-      (fun g => (om g).isometry.lipschitz) hom
+      (fun g => (om g).isometry.lipschitzWith) hom
   have hentry : ∀ a b, Continuous fun g => (pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) a b := fun a b =>
     by
     have hv : Continuous fun g => (pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) :=
-      (continuous_subtype_val (p := fun M => M ∈ Matrix.symplecticGroup l ℝ)).comp hpr
+      (continuous_subtypeVal (p := fun M => M ∈ Matrix.symplecticGroup l ℝ)).comp hpr
     exact (continuous_apply b).comp ((continuous_apply a).comp hv)
 
   have key : ∀ {A : Sch l →L[ℂ] Sch l}, A ∈ weylAlg l →
@@ -205,7 +205,7 @@ theorem continuous_omS_prod (l : Type) [Fintype l] [DecidableEq l] (G : Type) [G
     · have e : (fun x : G × Sch l => schwartzToL2 l ((1 : Sch l →L[ℂ] Sch l) (omS x.1 x.2))) =
           fun x => om x.1 (schwartzToL2 l x.2) := by
         funext x
-        simp only [ContinuousLinearMap.one_apply, schwartzToL2_apply, h4]
+        simp only [one_apply_eq_self, schwartzToL2_apply, h4]
       rw [e]
       exact hjoint.comp (continuous_fst.prodMk ((schwartzToL2 l).continuous.comp continuous_snd))
     · intro A w ih
@@ -219,13 +219,13 @@ theorem continuous_omS_prod (l : Type) [Fintype l] [DecidableEq l] (G : Type) [G
       exact continuous_finsetSum _ fun b _ => Continuous.mul (Continuous.neg (continuous_finsetSum _ fun c _ =>
         Continuous.mul (continuous_finsetSum _ fun d _ => continuous_const.mul
           ((hentry _ _).comp continuous_fst)) continuous_const)) continuous_const
-    · simp only [ContinuousLinearMap.zero_apply, map_zero]
+    · simp only [zero_apply, map_zero]
       exact continuous_const
     · intro A B hA hB
-      simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+      simp only [add_apply, map_add (f := _)]
       exact hA.add hB
     · intro c A hA
-      simp only [ContinuousLinearMap.smul_apply, map_smul]
+      simp only [smul_apply, map_smul]
       exact hA.const_smul c
   rw [continuous_iff_continuousAt]
   intro x0
@@ -287,9 +287,9 @@ theorem fderiv_eq_of_annihilated : ∀ (l : Type) [Fintype l] [DecidableEq l] (s
   have hj : ∀ j, ∑ b, P b j * u b + 2 * π * I * (∑ b, Q b j * xC b) * f x = 0 := by
     intro j
     have e := congrArg (fun g : Sch l => g x) (hf j)
-    simp only [SchwartzMap.smul_apply, smul_eq_mul, dRho_apply_basis] at e
+    simp only [smul_apply, smul_eq_mul, dRho_apply_basis] at e
     simp only [mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq] at e
+      Finset.mem_univ, ite_true, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq] at e
     simp only [hP, hQ, sub_mul, Finset.sum_sub_distrib, mul_assoc, ← Finset.mul_sum]
     simp only [hu, hxC]
     linear_combination e
@@ -327,7 +327,7 @@ theorem metaplecticGaussianNormalised : ∀ (l : Type) [Fintype l] [DecidableEq 
   have hO : CompanionTheory.ThKR.Mp.Surj l := CompanionTheory.ThKR.Mp.surj_of CompanionTheory.ThKR.Mp.ddNe hS
   have hC : CompanionTheory.ThKR.Mp.Cover l :=
     CompanionTheory.ThKR.Mp.cover_of CompanionTheory.ThKR.Mp.topG hO CompanionTheory.ThKR.Mp.ker hS CompanionTheory.ThKR.Mp.secDer
-  haveI : IsTopologicalGroup (CompanionTheory.ThKR.Mp.G l) := CompanionTheory.ThKR.Mp.topG
+  have : IsTopologicalGroup (CompanionTheory.ThKR.Mp.G l) := CompanionTheory.ThKR.Mp.topG
   refine ⟨CompanionTheory.ThKR.Mp.G l, inferInstance, inferInstance, inferInstance, CompanionTheory.ThKR.Mp.pr, CompanionTheory.ThKR.Mp.om,
     CompanionTheory.ThKR.Mp.omS, CompanionTheory.ThKR.Mp.MpA.gs l, hC, hO, CompanionTheory.ThKR.Mp.ker, CompanionTheory.ThKR.Mp.continuous_om,
     CompanionTheory.ThKR.Mp.om_rho, CompanionTheory.ThKR.Mp.om_sch, ?_, ?_, ?_⟩
@@ -805,7 +805,7 @@ theorem metaplecticRepresentation_holds : GlobalTheory.Published.MetaplecticRepr
     obtain ⟨hP, hq⟩ := _root_.GlobalTheory.holPart_eq_and_gaussian_of_orthogonal_symplectic ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2 horth hdet
     refine ⟨c, by rw [hP]; exact hc, ?_⟩
     ext x
-    rw [hω, e.apply_symm_apply, hes, hcx, SchwartzMap.smul_apply, smul_eq_mul, hφ₀]
+    rw [hω, e.apply_symm_apply, hes, hcx, smul_apply, smul_eq_mul, hφ₀]
     simp only [PiLp.toLp_apply]
     rw [hq x]
 

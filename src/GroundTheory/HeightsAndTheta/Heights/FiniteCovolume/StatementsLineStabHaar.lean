@@ -111,8 +111,8 @@ theorem isClosed_lineStab (h : HermitianForm F E W) (v : Basis ι E W) (x₀ : W
       mem_lineStab]
     exact forall_congr' fun w => ⟨fun ⟨c, hc⟩ => ⟨c, hc.symm⟩, fun ⟨c, hc⟩ => ⟨c, hc.symm⟩⟩
   rw [this]
-  refine isClosed_iInter fun w => IsClosed.preimage ?_ (Submodule.closed_of_finiteDimensional _)
-  exact (Units.continuous_val.comp ((continuous_apply w).comp continuous_subtype_val)).matrix_mulVec
+  refine isClosed_iInter fun w => IsClosed.preimage ?_ (Submodule.isClosed_of_finiteDimensional _)
+  exact (Units.continuous_val.comp ((continuous_apply w).comp continuous_subtypeVal)).matrix_mulVec
     continuous_const
 
 instance locallyCompactSpace_lineStab (h : HermitianForm F E W) (v : Basis ι E W) (x₀ : W) :

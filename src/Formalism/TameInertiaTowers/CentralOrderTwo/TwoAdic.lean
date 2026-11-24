@@ -51,13 +51,13 @@ import Std.Tactic.BVDecide.Normalize.Prop
 namespace Formalism.TwoAdicCyclotomicDecomposition.TwoAdicValuation
 
 lemma vEq (z : ℤ) (hz : z ≠ 0) : (padicValInt 2 z : ℕ∞) = emultiplicity (2 : ℤ) z := by
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rw [padicValInt, multiplicity_eq_emultiplicity (Int.natAbs_ne_zero.mpr hz),
     Int.emultiplicity_natAbs]
   rfl
 
 lemma vNat (e : ℕ) (he : e ≠ 0) : (padicValNat 2 e : ℕ∞) = emultiplicity (2 : ℤ) (e : ℤ) := by
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rw [Nat.padicValNat_def, multiplicity_eq_emultiplicity he, ← Int.natCast_emultiplicity]
   rfl
 
@@ -82,12 +82,12 @@ lemma sq_split (a : ℤ) (ha2 : a ^ 2 ≠ 1) :
     intro h; apply ha2; rw [sub_eq_zero.mp h]; norm_num
   have h2 : a + 1 ≠ 0 := by
     intro h; apply ha2; rw [show a = -1 by linarith]; norm_num
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rw [show a ^ 2 - 1 = (a - 1) * (a + 1) by ring, padicValInt.mul h1 h2]
 
 lemma val_even (a : ℤ) (ha : Odd a) (ha2 : a ^ 2 ≠ 1) (e : ℕ) (he : 0 < e) (hev : Even e) :
     padicValInt 2 (a ^ e - 1) + 1 = padicValInt 2 (a ^ 2 - 1) + padicValNat 2 e := by
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hne := pow_sub_one_ne a ha2 e he
   have h1 : a - 1 ≠ 0 := by
     intro h; apply ha2; rw [sub_eq_zero.mp h]; norm_num
@@ -105,7 +105,7 @@ lemma val_even (a : ℤ) (ha : Odd a) (ha2 : a ^ 2 ≠ 1) (e : ℕ) (he : 0 < e)
 
 lemma val_odd (a : ℤ) (ha : Odd a) (ha2 : a ^ 2 ≠ 1) (e : ℕ) (hod : Odd e) :
     padicValInt 2 (a ^ e - 1) = padicValInt 2 (a - 1) := by
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have h1 : a - 1 ≠ 0 := by
     intro h; apply ha2; rw [sub_eq_zero.mp h]; norm_num
   have hs : Odd (∑ i ∈ Finset.range e, a ^ i) := (geom_odd a ha e).mpr hod
@@ -118,7 +118,7 @@ lemma val_odd (a : ℤ) (ha : Odd a) (ha2 : a ^ 2 ≠ 1) (e : ℕ) (hod : Odd e)
 
 lemma powEq (N m : ℕ) (a : ℤ) (hz : a ^ m - 1 ≠ 0) :
     (a : ZMod (2 ^ N)) ^ m = 1 ↔ N ≤ padicValInt 2 (a ^ m - 1) := by
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have h0 : ((a : ZMod (2 ^ N)) ^ m = 1) ↔ (((a ^ m - 1 : ℤ)) : ZMod (2 ^ N)) = 0 := by
     push_cast; exact sub_eq_zero.symm
   rw [h0, ZMod.intCast_zmod_eq_zero_iff_dvd]
@@ -136,18 +136,18 @@ theorem twoAdicVal : TwoAdicVal := by
   by_cases hev : Even e
   · have h := val_even a ha ha2 e he hev
     have hl : padicValNat 2 e ≤ Nat.log 2 e := by simpa only [Nat.padicValNat_def] using (multiplicity_le_nat_log (p := 2) e)
-    rw [if_pos hev]
+    rw [ite_eq_left hev]
     constructor <;> omega
   · have hod : Odd e := Nat.not_even_iff_odd.mp hev
     have h := val_odd a ha ha2 e hod
     have hs := sq_split a ha2
-    rw [if_neg hev]
+    rw [ite_eq_right hev]
     constructor <;> omega
 
 open TwoAdicValuation in
 theorem twoAdicOrder : TwoAdicOrder := by
   intro N a ha ha2
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   split_ifs with h1
   · rw [h1, orderOf_one]
   · have hv : ∀ j : ℕ, 1 ≤ j →

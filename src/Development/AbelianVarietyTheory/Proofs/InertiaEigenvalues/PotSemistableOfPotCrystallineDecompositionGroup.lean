@@ -85,9 +85,9 @@ theorem mulV_crisIncl_comm {LL : Type} [Field LL] [Algebra ℚ_[l] LL] {V : Type
 theorem isPst_of_isCrys (T : LocTied l P AI) {K LL : FinExt l} {V : Type} [AddCommGroup V] [Module ↥LL.1 V]
     [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V]
     (ρ : Representation ↥LL.1 ↥(GK K) V) (hc : IsCrys (P.PD K) ρ) : IsPst P ρ := by
-  haveI := LL.2
-  haveI : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥LL.1 V
-  haveI : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T K
+  have := LL.2
+  have : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥LL.1 V
+  have : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T K
   have hf := GlobalTheory.Per.TiedRestrict.fracInv_of_tied T K
   obtain ⟨hdom, hreg, -⟩ := GlobalTheory.Pst.stRegular l P AI ⟨T⟩
   have hup := GlobalTheory.PstRank.rank_DpstUr_le P hdom hreg ρ

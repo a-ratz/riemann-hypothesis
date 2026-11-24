@@ -1766,7 +1766,7 @@ theorem nonzeroDefect_height_power_absorbs_constants {X Hh S t d W : ℝ} {τ q 
       ring
     have e2 : Real.exp (((τ * q : ℕ) : ℝ) * (t + d)) * S ^ (τ * q) =
         (Real.exp (q * d) * S ^ q) ^ τ * Real.exp (q * t) ^ τ := by
-      rw [mul_pow, ← Real.exp_nat_mul, ← Real.exp_nat_mul, pow_mul' S]
+      rw [mul_pow, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, pow_mul' S]
       have : ((τ * q : ℕ) : ℝ) * (t + d) = τ * (q * d) + τ * (q * t) := by
         push_cast
         ring

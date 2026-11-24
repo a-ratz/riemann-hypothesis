@@ -67,15 +67,15 @@ theorem isIntegrallyClosed_regAt {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : S
   let e : X.presheaf.stalk q.1 ≃+* regAt ξ q :=
     RingEquiv.ofBijective (genMap ξ q).rangeRestrict
       ⟨fun x y hxy => hg.inj q (congrArg Subtype.val hxy), (genMap ξ q).rangeRestrict_surjective⟩
-  haveI := (hn q.1).1
-  haveI := (hn q.1).2
+  have := (hn q.1).1
+  have := (hn q.1).2
   exact IsIntegrallyClosed.of_equiv e
 
 theorem asIdeal_eq_bot {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} (hg : IsCptGen ξ)
     {F : Type} [Field F] [NumberField F] (s : X ⟶ Spec (CommRingCat.of (𝓞 F))) (b : 𝓞 F →+* Ω)
     (hs : ξ ≫ s = Spec.map (CommRingCat.ofHom b)) {p : Cpt ξ} (hp : p ∈ genFibre ℤ ξ) :
     (s p.1).asIdeal = ⊥ := by
-  letI : Algebra (𝓞 F) Ω := b.toAlgebra
+  let : Algebra (𝓞 F) Ω := b.toAlgebra
   have hreg := ConstReg.regular_const X Ω ξ (𝓞 F) s hs p
   refine (Submodule.eq_bot_iff _).2 fun o ho => ?_
   by_contra h0
@@ -203,8 +203,8 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   obtain ⟨hd, hi, -, hpt⟩ := hT
   have hg' := 𝔐.tie.gen
   have hg := Z.gen
-  haveI : CharZero Z.Ω := (RingHom.charZero_iff Z.inc.injective).1 inferInstance
-  haveI : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
+  have : CharZero Z.Ω := (RingHom.charZero_iff Z.inc.injective).1 inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
   have hq : ∀ r : ℕ, r.Prime → ¬ InFibre 𝔐.ξ r p := fun r hr hf =>
     hf (by simpa using hp (r : ℤ) (by exact_mod_cast hr.ne_zero))
   have hcore : ∀ s, 𝔐.V s p = (Z.M.eigLat Z.ρ (Z.inc.comp (labelEmb c s))).pull 𝔐.ξ 𝔐.f j p := by

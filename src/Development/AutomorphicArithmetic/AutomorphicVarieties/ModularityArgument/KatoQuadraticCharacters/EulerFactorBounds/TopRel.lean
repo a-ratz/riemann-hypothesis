@@ -280,10 +280,10 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 private theorem recip_mod [IsAlgClosure ℚ Ω] (X : Tower Ω ε) {M : ℕ} (hM : M ≠ 0) {σ : Ω ≃ₐ[ℚ] Ω} (hσ : σ ∈ fixMu Ω M)
     (f : X.K) (h : SL(2, ℤ)) : ∃ δ ∈ CongruenceSubgroup.Gamma M,
       X.gal σ (X.sl (ofSL (δ * h)) f) = X.sl (ofSL h) (X.gal σ f) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨M0, hM0, hf⟩ := X.level f
   have hM' : M0 * M ≠ 0 := mul_ne_zero hM0.ne' hM
-  haveI : NeZero (M0 * M) := ⟨hM'⟩
+  have : NeZero (M0 * M) := ⟨hM'⟩
   have hζ := isPrimitiveRoot_eOm ε hM'
   set ζ := eOm ε (1 / ((M0 * M : ℕ) : ℚ)) with hζd
   obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one (ξ := σ ζ) (by rw [← map_pow, hζ.pow_eq_one, map_one])
@@ -376,8 +376,8 @@ theorem UpperTheory.V.Z.Kato.Nb.sTrM :
     obtain ⟨h1, h2, -⟩ := trc ε X l N w n _ hle _ _ hT ![en g 0 0, en g 0 1] _ _ hRep
     rw [trM_eq]
     exact ⟨⟨_, h1 hU, hE.refl _⟩, h2 hH, hW n _ M (Nat.pos_of_ne_zero (NeZero.ne M)) le_rfl hle _ _ hT _ _ _ hU hH hRep⟩
-  · haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hlp.ne_zero⟩
-    haveI : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow (by have := hL.pos; omega) hlp.one_lt⟩
+  · have : NeZero (l ^ n) := ⟨pow_ne_zero _ hlp.ne_zero⟩
+    have : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow (by have := hL.pos; omega) hlp.one_lt⟩
     have hσ' : σ ∈ fixMu Ω (l ^ n) := by
       rw [mem_fixMu_iff] at hσ ⊢
       intro z hz

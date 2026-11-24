@@ -169,7 +169,7 @@ structure Fnl where
 variable {j}
 
 private theorem exists_fnl_apply_eq_one_of_ne_zero (c : Ω) (hc : c ≠ 0) : ∃ ρ : Fnl j, ρ.toFun c = 1 := by
-  letI : Algebra K Ω := j.toAlgebra
+  let : Algebra K Ω := j.toAlgebra
   obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual K Ω, φ c ≠ 0 := by
     by_contra h
     push_neg at h

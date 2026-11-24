@@ -138,7 +138,7 @@ theorem exists_avg_eq_zero (hfin : ∀ v, (stab ρ v).FiniteIndex) {x : V} (hx :
   induction hx using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨⟨h, v⟩, rfl⟩ := hy
-    haveI := hfin v
+    have := hfin v
     refine ⟨(stab ρ v).normalCore, Subgroup.normalCore_normal _,
       Subgroup.finiteIndex_normalCore _, fun S _ _ hS => ?_⟩
     have hSv : S ≤ stab ρ v := hS.trans (Subgroup.normalCore_le _)
@@ -164,8 +164,8 @@ theorem isCompl_invariants_coK (hfin : ∀ v, (stab ρ v).FiniteIndex) :
     exact (smul_eq_zero.1 h0).resolve_left (Nat.cast_ne_zero.2 Fintype.card_ne_zero)
   · rw [codisjoint_iff, eq_top_iff]
     intro v _
-    haveI := hfin v
-    haveI : (stab ρ v).normalCore.FiniteIndex := Subgroup.finiteIndex_normalCore _
+    have := hfin v
+    have : (stab ρ v).normalCore.FiniteIndex := Subgroup.finiteIndex_normalCore _
     have hSv : (stab ρ v).normalCore ≤ stab ρ v := Subgroup.normalCore_le _
     have hc : (Fintype.card (H ⧸ (stab ρ v).normalCore) : ℂ) ≠ 0 :=
       Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -215,10 +215,10 @@ variable [IsTopologicalGroup G]
 
 theorem finiteIndex_stab {π : Representation ℂ G V} (hπ : IsSmooth π) {K : Subgroup G}
     (hKc : IsCompact (K : Set G)) (v : V) : (stab (resK π K) v).FiniteIndex := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   have ho : IsOpen (stab (resK π K) v : Set K) :=
-    (hπ v).preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+    (hπ v).preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.finiteIndex_of_finite_quotient
 
 theorem isCompl_res {π : Representation ℂ G V} (hπ : IsSmooth π) {K : Subgroup G}

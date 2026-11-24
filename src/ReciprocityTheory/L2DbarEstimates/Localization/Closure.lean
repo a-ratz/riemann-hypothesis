@@ -109,7 +109,7 @@ theorem closIneq_lint_ip_le {M : Type*} [MeasurableSpace M] {n : ℕ} (μ : Meas
     intro x
     rw [hFd, hGd]
     dsimp only
-    rw [← ENNReal.ofReal_mul (by positivity), ← ofReal_norm_eq_enorm]
+    rw [← ENNReal.ofReal_mul (by positivity), ← ofReal_norm]
     apply ENNReal.ofReal_le_ofReal
     rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
     have he : Real.exp (-φ x) = Real.exp (-φ x / 2) * Real.exp (-φ x / 2) := by
@@ -123,7 +123,7 @@ theorem closIneq_lint_ip_le {M : Type*} [MeasurableSpace M] {n : ℕ} (μ : Meas
           ring
   have hsq2 : ∀ (a : ℝ) (x : M), (a * Real.exp (-φ x / 2)) ^ 2 = a ^ 2 * Real.exp (-φ x) := by
     intro a x
-    rw [mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, ← Real.exp_natCast_mul]
     congr 2
     push_cast
     ring
@@ -213,9 +213,9 @@ private lemma ofReal_norm_ipV_sq_le_mul_nV {M : Type*} [MeasurableSpace M] {n : 
     (hφ : Measurable φ) (v h : M → V n) (hv : AEStronglyMeasurable v (vol n z))
     (hh : AEStronglyMeasurable h (vol n z)) :
     ENNReal.ofReal (‖ipV n z v h φ‖ ^ 2) ≤ nV n z v φ * nV n z h φ := by
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   unfold ipV nV
-  exact (pow_le_pow_left₀ zero_le (enorm_integral_le_lintegral_enorm _) 2).trans
+  exact (pow_le_pow_left₀ zero_le (eNorm_integral_le_lintegral_eNorm _) 2).trans
     (closIneq_lint_ip_le (vol n z) φ hφ v h hv hh)
 
 private lemma lintegral_weighted_norm_add_sq_le {M : Type*} [MeasurableSpace M] {E : Type*} [NormedAddCommGroup E]

@@ -100,8 +100,8 @@ theorem UpperTheory.V.Fr.sharp2 :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ}, F.Ok C₀ → ∀ S : Space O F 2, ∀ (x : Ideal S.A) (L : S.Loc x), F.Big C₀ → ¬ S.u.triP ≤ x → Chained (⊥ : Ideal L.R) (2 * F.d + 1) ∧ ∀ P ∈ minimalPrimes L.R, L.ρ.TI P := by
   intro l _ O _ _ _ _ F C₀ hok S x L hbig hx
   obtain ⟨N, N', p, f, hN, hs, hk⟩ := pres hok (Or.inl rfl) S x L
-  haveI : IsAdicComplete (maximalIdeal L.O') L.O' := IsCoef.complete (l := l)
-  haveI : IsCO L.O' (MvPowerSeries (Fin N) L.O') := co_mvps _ _ _
+  have : IsAdicComplete (maximalIdeal L.O') L.O' := IsCoef.complete (l := l)
+  have : IsCO L.O' (MvPowerSeries (Fin N) L.O') := co_mvps _ _ _
   have hdim := ((UpperTheory.V.CA.cl_cm).1 L.O' N).2
   have hch : Chained (Ideal.span (Set.range f)) (2 * F.d + 1) := by
     apply c1ch _ N' (2 * F.d + 1) f

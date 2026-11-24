@@ -212,7 +212,7 @@ theorem GlobalTheory.exists_diagonal_coordinates_of_detCond :
   let ty' : Fin P.g → (𝓞 E →+* ℂ) := fun i => (ty i).comp (algebraMap (𝓞 E) E)
   have hinj : ∀ τ : 𝓞 E →+* ℂ, Function.Injective τ := by
     intro τ
-    refine (RingHom.injective_iff_ker_eq_bot τ).2 (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_)
+    refine (RingHom.injective_iff_ker_eq_bot τ).2 (Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_)
     ext n
     simp [RingHom.mem_ker]
   have hcard : ∀ τ : 𝓞 E →+* ℂ, ∃ σ : E →+* ℂ, σ (H.rt : E) = τ H.rt ∧
@@ -369,7 +369,7 @@ noncomputable def expRoot (n : ℕ) : ℂˣ :=
 
 theorem expRoot_zpow (n : ℕ) (m : ℤ) :
     ((expRoot n ^ m : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (m : ℂ) / n) := by
-  rw [Units.val_zpow_eq_zpow_val, expRoot, Units.val_mk0, ← Complex.exp_int_mul]
+  rw [Units.val_zpow_eq_zpow_val, expRoot, Units.val_mk0, ← Complex.exp_intCast_mul]
   congr 1
   ring
 
@@ -382,7 +382,7 @@ theorem expRoot_prim {n : ℕ} (hn : 0 < n) : IsPrimitiveRoot (expRoot n) n := b
 
 theorem expRoot_pow {n m : ℕ} (hn : 0 < n) (hm : 0 < m) : expRoot (n * m) ^ m = expRoot n := by
   apply Units.ext
-  rw [Units.val_pow_eq_pow_val, expRoot, expRoot, Units.val_mk0, Units.val_mk0, ← Complex.exp_nat_mul]
+  rw [Units.val_pow_eq_pow_val, expRoot, expRoot, Units.val_mk0, Units.val_mk0, ← Complex.exp_natCast_mul]
   congr 1
   have : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
   have : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -523,7 +523,7 @@ theorem exists_coord {g : ℕ} {La La' : Type} [AddCommGroup La] [AddCommGroup L
       obtain ⟨_, x, rfl⟩ := z
       exact ⟨e x, (hQ x).symm⟩⟩
     have hm : Continuous m :=
-      (L.continuous_of_finiteDimensional.comp continuous_subtype_val).subtype_mk _
+      (L.continuous_of_finiteDimensional.comp continuous_subtypeVal).subtype_mk _
     exact DiscreteTopology.of_continuous_injective hm fun z w hzw =>
       Subtype.ext (h.injective (congrArg Subtype.val hzw))
   · have r : Set.range Q' = (h.symm.toLinearMap.restrictScalars ℝ) '' Set.range Q := by
@@ -544,7 +544,7 @@ theorem exists_module {O : Type} [CommRing O] {g : ℕ} {La : Type} [AddCommGrou
     (Q : La →+ (Fin g → ℂ)) (inj : Function.Injective Q) (st : ∀ c x, ∃ y, ∀ i, Q y i = ty i c * Q x i) :
     ∃ _ : Module O La, ∀ (c : O) x i, Q (c • x) i = ty i c * Q x i := by
   choose sm hsm using st
-  letI : SMul O La := ⟨sm⟩
+  let : SMul O La := ⟨sm⟩
   have hs : ∀ (c : O) x i, Q (c • x) i = ty i c * Q x i := hsm
   refine ⟨{ one_smul := fun x => inj (funext fun i => by simp [hs])
             mul_smul := fun c d x => inj (funext fun i => by simp [hs, _root_.mul_assoc])
@@ -576,7 +576,7 @@ theorem exists_period : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Ou
   obtain ⟨Hm₁, inj₁, disc₁, span₁, herm₁, pos₁, him₁⟩ :=
     exists_coord Q₀ Hm₀ h (AddEquiv.refl _) Q₁ hQ₁ inj disc span herm pos
   obtain ⟨_, hs⟩ := exists_module (fun i => (ty i).comp (algebraMap (𝓞 E) E)) Q₁ inj₁ (fun c x => by
-    haveI := act.hom c
+    have := act.hom c
     have h1 : u.ex (Q₀ x) = 1 := (u.ker _).2 ((hΛ _).2 ⟨x, rfl⟩)
     have h2 : u.ex (F c (Q₀ x)) = 1 := by
       rw [hF, h1]
@@ -634,7 +634,7 @@ theorem exists_period : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Ou
       rw [← map_smul]
       congr 1
       obtain ⟨G, hG, hG'⟩ := hac j
-      haveI := u.discrete
+      have := u.discrete
       have h0 := linear_eq_zero_of_mem_discrete u.Λ (G - F (a j))
         (fun z => sub_mem_of_ex_eq u (by rw [hG', hF, haj])) (Q₀ x)
       apply inj
@@ -1006,7 +1006,7 @@ theorem entry_comm (Hm : Matrix (Fin g) (Fin g) ℂ) (t : Fin g → ℂ)
     have := h (Pi.single i s) (Pi.single j 1)
     rw [hermForm_eq_sum, hermForm_eq_sum] at this
     simp only [Pi.mul_apply, Pi.single_apply, Pi.star_apply, mul_ite, mul_zero, _root_.mul_one, ite_mul, zero_mul,
-      apply_ite (starRingEnd ℂ), map_zero, map_one, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+      apply_ite (starRingEnd ℂ), map_zero, map_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
       RCLike.star_def, Complex.conj_conj] at this
     convert this using 2 <;> ring
   have h1 := key 1
@@ -1112,7 +1112,7 @@ theorem exp_eq_zpow (k : ℕ) (hk : 0 < k) (m ν s : ℤ) (h : (k : ℤ) ∣ m -
   obtain ⟨c, hc⟩ := h
   have hm : m = ν * s + k * c := by linarith
   have hk' : (k : ℂ) ≠ 0 := by exact_mod_cast hk.ne'
-  rw [← Complex.exp_int_mul, Complex.exp_eq_exp_iff_exists_int]
+  rw [← Complex.exp_intCast_mul, Complex.exp_eq_exp_iff_exists_int]
   refine ⟨-c, ?_⟩
   rw [hm]
   push_cast

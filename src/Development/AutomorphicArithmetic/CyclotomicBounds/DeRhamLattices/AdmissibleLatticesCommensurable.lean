@@ -51,7 +51,7 @@ theorem _root_.UpperTheory.KN.admissible_lattices_commensurable :
       [AddCommGroup V] [Module LL V] [Module O V] [IsScalarTower O LL V] (Λ A : Submodule O V), Λ.FG → ∀ c : O, c ≠ 0 →
       ∃ μ : O, μ ≠ 0 ∧ ∀ u ∈ Λ, μ • u ∈ A → ∃ a ∈ A, μ • u = c • a := by
   intro O LL V _ _ _ _ _ _ _ _ _ _ Λ A hΛ c hc
-  haveI : IsNoetherian O Λ := isNoetherian_of_fg_of_noetherian Λ hΛ
+  have : IsNoetherian O Λ := isNoetherian_of_fg_of_noetherian Λ hΛ
   let f : ℕ →o Submodule O Λ :=
     ⟨fun n => (A.comap ((c ^ n) • LinearMap.id : V →ₗ[O] V)).comap Λ.subtype, by
       intro m n hmn x hx

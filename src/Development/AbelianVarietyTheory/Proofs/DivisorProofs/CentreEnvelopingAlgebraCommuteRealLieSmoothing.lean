@@ -146,7 +146,7 @@ theorem fderiv_integral_mul_kernel_apply :
   rw [hmain.fderiv, ContinuousLinearMap.integral_apply hF'i]
   refine integral_congr_ae (Eventually.of_forall fun y => ?_)
   by_cases hy : y ∈ U
-  · simp only [hF', ContinuousLinearMap.smul_apply, smul_eq_mul, (hKp x hx y hy).fderiv]
+  · simp only [hF', smul_apply, smul_eq_mul, (hKp x hx y hy).fderiv]
   · simp [hF', hα0 y hy]
 
 end GlobalTheory
@@ -239,10 +239,10 @@ theorem chartL_lie (g : GA E a) (X : Lie E a) (φ : Sm E a) :
     chartL g (lie E a X φ) = Lop X (chartL g φ) := Subtype.ext <| funext fun x => by
   by_cases hx : x ∈ invSet E a
   · change chart (lieD X φ.1) g x = lv X (chart φ.1 g) x
-    rw [lv, if_pos hx]
+    rw [lv, ite_eq_left hx]
     exact chart_lieD φ.2 X g hx
   · change chart (lieD X φ.1) g x = lv X (chart φ.1 g) x
-    rw [lv, if_neg hx]
+    rw [lv, ite_eq_right hx]
     simp [chart, show ¬ IsUnit (Matrix.of x) from hx]
 
 end GlobalTheory.CentreSmooth
@@ -274,10 +274,10 @@ theorem good_lop (X : Lie E a) : Good ν (Lop X) := by
   refine ⟨?_, fun α hα hI => funext fun x => ?_⟩
   · refine (contDiffOn_partial isOpen_invSet hG (rmul X).contDiff).congr fun p hp => ?_
     change lv X (G p.2).1 p.1 = _
-    rw [lv, if_pos hp.1]
+    rw [lv, ite_eq_left hp.1]
   · change lv X _ x = ∫ y, α y * lv X (G y).1 x ∂ν
     by_cases hx : x ∈ invSet E a
-    · simp only [lv, if_pos hx]
+    · simp only [lv, ite_eq_left hx]
       exact fderiv_integral_mul ν isOpen_invSet hα hG hx _
     · simp [lv, hx]
 

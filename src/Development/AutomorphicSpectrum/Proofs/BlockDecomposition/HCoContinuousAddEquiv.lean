@@ -65,9 +65,9 @@ theorem hCo_continuousAddEquiv : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
   obtain ⟨hinv, δ, hδ, hσδ⟩ := GlobalTheory.CompanionTheory.SW.HaarCoord.conj_facts hCM
   have hfin : Module.finrank F E = 2 := hCM.2.2.1
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
-  haveI : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R _
   let h1 : HermR R σ n ≃ₜ (Fin n → R) × ({p : Fin n × Fin n // p.1 < p.2} → R ⊗[F] E) :=
     (GlobalTheory.CompanionTheory.SW.HaarCoord.hermCoord_isHomeomorph R hinv hfin hδ hσδ n t5 t6).homeomorph _
   let h2 : (R ⊗[F] E) ≃ₜ (Fin d → R) := (t7 d b).homeomorph _

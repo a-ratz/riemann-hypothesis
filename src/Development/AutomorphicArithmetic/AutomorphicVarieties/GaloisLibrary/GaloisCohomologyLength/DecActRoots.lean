@@ -60,11 +60,11 @@ theorem UpperTheory.V.LDataCardLeFinrank.decActRoots :
     rintro rfl
     rw [Nat.coprime_zero_left] at hm
     exact hl.one_lt.ne' hm
-  haveI : NeZero m := ⟨hm0⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.mpr hm0⟩
-  obtain ⟨ζ0, hζ0⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+  have : NeZero m := ⟨hm0⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.mpr hm0⟩
+  obtain ⟨ζ0, hζ0⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   have hmemA : ∀ ξ : Ω, ξ ^ m = 1 → ξ ∈ A := by
     intro ξ hξ
     rw [← ValuationSubring.valuation_le_one_iff]
@@ -75,11 +75,11 @@ theorem UpperTheory.V.LDataCardLeFinrank.decActRoots :
   have hlm : ((l : A)) ∈ IsLocalRing.maximalIdeal A := by
     rw [ValuationSubring.valuation_lt_one_iff]
     simpa using hA
-  haveI : CharP (IsLocalRing.ResidueField A) l := by
+  have : CharP (IsLocalRing.ResidueField A) l := by
     rw [CharP.charP_iff_prime_eq_zero hl]
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff]
     exact hlm
-  letI : Algebra (ZMod l) (IsLocalRing.ResidueField A) := ZMod.algebra _ l
+  let : Algebra (ZMod l) (IsLocalRing.ResidueField A) := ZMod.algebra _ l
   let z0 : A := ⟨ζ0, hmemA ζ0 hζ0.pow_eq_one⟩
   let ω : IsLocalRing.ResidueField A := IsLocalRing.residue A z0
   have hσω : g' • ω = ω ^ a := by
@@ -108,8 +108,8 @@ theorem UpperTheory.V.LDataCardLeFinrank.decActRoots :
       rw [this, map_one]
     rw [h1]
     exact isIntegral_one
-  haveI : FiniteDimensional (ZMod l) E := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite E := Module.finite_of_finite (ZMod l)
+  have : FiniteDimensional (ZMod l) E := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite E := Module.finite_of_finite (ZMod l)
   have hEle : E ≤ IntermediateField.comap σ E := by
     rw [IntermediateField.adjoin_simple_le_iff]
     show σ ω ∈ E

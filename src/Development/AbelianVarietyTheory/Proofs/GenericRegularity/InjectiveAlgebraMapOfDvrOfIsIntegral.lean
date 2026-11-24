@@ -68,7 +68,7 @@ theorem _root_.GlobalTheory.dvr_finite_over_complete_dvr :
         IsAdicComplete (IsLocalRing.maximalIdeal V) V ∧ CharZero V ∧
           (Finite (IsLocalRing.ResidueField O) → Finite (IsLocalRing.ResidueField V)) := by
   intro O V _ _ _ _ _ _ _ _ _ _
-  haveI : Algebra.IsIntegral O V := Algebra.IsIntegral.of_finite O V
+  have : Algebra.IsIntegral O V := Algebra.IsIntegral.of_finite O V
   have hinj : Function.Injective (algebraMap O V) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     by_contra h
@@ -87,12 +87,12 @@ theorem _root_.GlobalTheory.dvr_finite_over_complete_dvr :
     exact IsDiscreteValuationRing.not_a_field V (IsLocalRing.eq_maximalIdeal hbot).symm
   have hloc : IsLocalHom (algebraMap O V) :=
     RingHom.IsIntegral.isLocalHom (fun x => Algebra.IsIntegral.isIntegral x) hinj
-  haveI := hloc
+  have := hloc
   refine ⟨hinj, hloc, ?_, charZero_of_injective_algebraMap hinj, fun h => ?_⟩
   swap
   · exact Module.finite_of_finite (ResidueField O)
-  haveI : Module.IsTorsionFree O V := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj
-  haveI : Module.Free O V := Module.free_of_finite_type_torsion_free'
+  have : Module.IsTorsionFree O V := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj
+  have : Module.Free O V := Module.free_of_finite_type_torsion_free'
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨q, hq⟩ := IsDiscreteValuationRing.exists_irreducible V
   have hπm : π ∈ maximalIdeal O := (mem_maximalIdeal _).2 (mem_nonunits_iff.2 hπ.not_isUnit)

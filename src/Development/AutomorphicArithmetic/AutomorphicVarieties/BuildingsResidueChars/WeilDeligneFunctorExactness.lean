@@ -57,9 +57,9 @@ private theorem count_dims {F D' D D'' : Type} [Field F] [AddCommGroup D'] [Modu
     (hex : Function.Exact j q) (a c : ℕ) (h' : Module.rank F D' ≤ a) (h'' : Module.rank F D'' ≤ c)
     (h : Module.rank F D = (a + c : ℕ)) :
     Module.rank F D' = a ∧ Module.rank F D'' = c ∧ Function.Surjective q := by
-  haveI : FiniteDimensional F D' := Module.rank_lt_aleph0_iff.mp (h'.trans_lt (Cardinal.natCast_lt_aleph0))
-  haveI : FiniteDimensional F D'' := Module.rank_lt_aleph0_iff.mp (h''.trans_lt (Cardinal.natCast_lt_aleph0))
-  haveI : FiniteDimensional F D := Module.rank_lt_aleph0_iff.mp (h.le.trans_lt (Cardinal.natCast_lt_aleph0))
+  have : FiniteDimensional F D' := Module.rank_lt_aleph0_iff.mp (h'.trans_lt (Cardinal.natCast_lt_aleph0))
+  have : FiniteDimensional F D'' := Module.rank_lt_aleph0_iff.mp (h''.trans_lt (Cardinal.natCast_lt_aleph0))
+  have : FiniteDimensional F D := Module.rank_lt_aleph0_iff.mp (h.le.trans_lt (Cardinal.natCast_lt_aleph0))
   rw [← finrank_eq_rank] at h' h'' h
   rw [← finrank_eq_rank, ← finrank_eq_rank]
   have e1 : finrank F D' ≤ a := Nat.cast_le.mp h'
@@ -86,10 +86,10 @@ theorem UpperTheory.dpst_right_exact :
     UpperTheory.V.Af.Wd.DRight := by
   intro l _ K L V' V V'' _ _ _ _ _ _ _ _ _ _ _ _ _ ρ' ρ ρ'' f p hf hp hfi hps hex hV
   obtain ⟨hdom, hreg, -⟩ := GlobalTheory.Pst.stRegular l (UpperTheory.V.Loc.PP l) (UpperTheory.V.Loc.AIP l) (UpperTheory.V.Loc.tiedP l)
-  haveI : FiniteDimensional ℚ_[l] ↥L.1 := L.2
-  haveI : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥L.1 V
-  haveI : FiniteDimensional ℚ_[l] V' := Module.Finite.of_injective (f.restrictScalars ℚ_[l]) hfi
-  haveI : FiniteDimensional ℚ_[l] V'' := Module.Finite.of_surjective (p.restrictScalars ℚ_[l]) hps
+  have : FiniteDimensional ℚ_[l] ↥L.1 := L.2
+  have : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥L.1 V
+  have : FiniteDimensional ℚ_[l] V' := Module.Finite.of_injective (f.restrictScalars ℚ_[l]) hfi
+  have : FiniteDimensional ℚ_[l] V'' := Module.Finite.of_surjective (p.restrictScalars ℚ_[l]) hps
   obtain ⟨hdi, hdex⟩ := UpperTheory.weilDeligne_dpst_leftExact l (UpperTheory.V.Loc.PP l) K L V' V V'' ρ' ρ ρ'' f p hf hp hfi hex
   have h' := _root_.GlobalTheory.PstRank.rank_DpstUr_le (UpperTheory.V.Loc.PP l) hdom hreg ρ'
   have h'' := _root_.GlobalTheory.PstRank.rank_DpstUr_le (UpperTheory.V.Loc.PP l) hdom hreg ρ''
@@ -171,16 +171,16 @@ theorem UpperTheory.weil_deligne_functor_exactness :
   intro l _ ι K L V' V V'' _ _ _ _ _ _ _ _ _ _ _ _ _ ρ' ρ ρ'' f p hf hp hfi hps hex hV
   obtain ⟨hV', hV'', hds⟩ := UpperTheory.dpst_right_exact l K L V' V V'' ρ' ρ ρ'' f p hf hp hfi hps hex hV
   obtain ⟨-, hde⟩ := UpperTheory.weilDeligne_dpst_leftExact l (UpperTheory.V.Loc.PP l) K L V' V V'' ρ' ρ ρ'' f p hf hp hfi hex
-  haveI : FiniteDimensional ↥L.1 V' := FiniteDimensional.of_injective f hfi
-  haveI : FiniteDimensional ↥L.1 V'' := Module.Finite.of_surjective p hps
+  have : FiniteDimensional ↥L.1 V' := FiniteDimensional.of_injective f hfi
+  have : FiniteDimensional ↥L.1 V'' := Module.Finite.of_surjective p hps
   have key : Function.Exact (wdLin (UpperTheory.V.Loc.PP l) ι hf) (wdLin (UpperTheory.V.Loc.PP l) ι hp) ∧
       Function.Surjective (wdLin (UpperTheory.V.Loc.PP l) ι hp) :=
     letI := algC ι L
     UpperTheory.weilDeligne_functor_exact _ _ _ _ _ ℂ (mulD (UpperTheory.V.Loc.PP l) ρ') (mulD (UpperTheory.V.Loc.PP l) ρ) (mulD (UpperTheory.V.Loc.PP l) ρ'') (urC ι)
       (dmap (UpperTheory.V.Loc.PP l) hf) (dmap (UpperTheory.V.Loc.PP l) hp) _ _ hde hds
   refine ⟨hV', hV'', ?_, key.2, key.1⟩
-  haveI := hV.finite
-  haveI := hV'.finite
+  have := hV.finite
+  have := hV'.finite
   have h1 := finrank_add_of_exact _ _ key.2 key.1
   have h2 := finrank_add_of_exact f p hps hex
   rw [LetterDim.finrank_wdSpace l _ ι K L V ρ hV, LetterDim.finrank_wdSpace l _ ι K L V' ρ' hV',

@@ -607,7 +607,7 @@ theorem norm_sub_pow_sub_le {F : Type*} [NormedField F] [IsUltrametricDist F] (h
     rw [norm_mul, norm_one] at h2
     have h3 : ‖(((u⁻¹ : Oˣ) : O) : F)‖ ≤ 1 := mem_normInteger.1 (u⁻¹ : Oˣ).val.2
     nlinarith [norm_nonneg ((p : F))]
-  haveI := CharP.quotient O p hnu
+  have := CharP.quotient O p hnu
   have h := sub_pow_char_pow (p := p) (n := k) (Ideal.Quotient.mk (Ideal.span {(p : O)}) a')
     (Ideal.Quotient.mk (Ideal.span {(p : O)}) b')
   rw [← map_sub, ← map_pow, ← map_pow, ← map_pow, ← map_sub, Ideal.Quotient.eq] at h

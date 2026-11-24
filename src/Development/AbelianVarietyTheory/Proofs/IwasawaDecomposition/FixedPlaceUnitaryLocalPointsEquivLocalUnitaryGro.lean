@@ -77,7 +77,7 @@ theorem continuous_finGL : Continuous (finGL E n) :=
 
 theorem continuous_cLoc (w : HeightOneSpectrum (𝓞 E)) : Continuous (cLoc (n := n) w) :=
   (Continuous.units_map _ (continuous_id.matrix_map
-    ((RestrictedProduct.continuous_eval w).comp continuous_snd))).comp continuous_subtype_val
+    ((RestrictedProduct.continuous_eval w).comp continuous_snd))).comp continuous_subtypeVal
 
 theorem mat_ext {A B : Matrix (Fin n) (Fin n) (Ad E)} (h1 : A.map (pInf E) = B.map (pInf E))
     (h2 : ∀ v, A.map ((pLoc E v).comp (pFin E)) = B.map ((pLoc E v).comp (pFin E))) : A = B := by
@@ -195,9 +195,9 @@ theorem locU_equiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
             left_inv := fun x => Subtype.ext (Subtype.ext (finGL_cLoc hw x))
             right_inv := fun g => Subtype.ext ?_
             map_mul' := fun x y => Subtype.ext (map_mul (cLoc w) (x : UA E n) y)
-            continuous_toFun := Continuous.subtype_mk ((continuous_cLoc w).comp continuous_subtype_val) _
+            continuous_toFun := Continuous.subtype_mk ((continuous_cLoc w).comp continuous_subtypeVal) _
             continuous_invFun := Continuous.subtype_mk (Continuous.subtype_mk
-              (continuous_finGL.comp ((CuspSub.continuous_locGL w).comp continuous_subtype_val)) _) _ }, fun _ => rfl⟩
+              (continuous_finGL.comp ((CuspSub.continuous_locGL w).comp continuous_subtypeVal)) _) _ }, fun _ => rfl⟩
   exact (map_finGL w _).trans (pLoc_locGL w _)
 
 end GlobalTheory.DefU.Inert

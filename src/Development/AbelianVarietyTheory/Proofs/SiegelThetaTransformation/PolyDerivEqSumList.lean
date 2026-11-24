@@ -154,7 +154,7 @@ theorem lineDerivList_exp (ℓ : W →L[ℂ] ℂ) (C : ℂ) (l : List W) :
     rw [lineDerivList_cons, ih]
     have h := (((ℓ.hasFDerivAt (x := w)).cexp.const_mul C).const_mul
       (l.map ℓ).prod).hasLineDerivAt v
-    simp only [h.lineDeriv, List.map_cons, List.prod_cons, ContinuousLinearMap.smul_apply,
+    simp only [h.lineDeriv, List.map_cons, List.prod_cons, smul_apply,
       smul_eq_mul]
     ring
 

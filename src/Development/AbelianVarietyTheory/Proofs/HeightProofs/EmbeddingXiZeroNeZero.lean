@@ -176,7 +176,7 @@ theorem continuous_tmul (D : D7) (e : D.host.E) : Continuous fun a : AF D.host.F
     funext a
     rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
   rw [this]
-  haveI : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul (AF D.host.F) _
+  have : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul (AF D.host.F) _
   exact Continuous.smul (f := fun a : AF D.host.F => a)
     (g := fun _ : AF D.host.F => ((1 : AF D.host.F) ⊗ₜ[D.host.F] e : AE D)) continuous_id continuous_const
 

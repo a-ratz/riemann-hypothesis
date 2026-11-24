@@ -503,7 +503,7 @@ theorem exists_round_lt_maxMult : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       SimpLab H.bar q φ' lab' ∧ Subordinate H.bar q φ' φ ∧ maxMult H.bar q φ' < maxMult H.bar q φ := by
   intro E _ _ _ H q φ lab hD hP hT hL hS hfin h2
   set M := (maxMult H.bar q φ).toNat with hMdef
-  have hMe : maxMult H.bar q φ = M := (ENat.coe_toNat hfin.ne).symm
+  have hMe : maxMult H.bar q φ = M := (ENat.natCast_toNat hfin.ne).symm
   have hM2 : 2 ≤ M := by rw [hMe] at h2; exact_mod_cast h2
   obtain ⟨n, hn⟩ := _root_.GlobalTheory.PolFan.CellClass.multCellsAmong_of_isPolyFan E H q φ hP M
   have key : ∀ (n : ℕ) (φ lab : InvFun (𝓞 E)), IsPolyFan H.bar q φ → IsTwInv H φ → IsTwInv H lab →

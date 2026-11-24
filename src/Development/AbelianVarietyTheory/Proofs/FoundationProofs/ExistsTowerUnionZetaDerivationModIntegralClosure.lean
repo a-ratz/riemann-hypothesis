@@ -195,7 +195,7 @@ theorem zeta_derivation : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [A
       IsDerOn (towerAlg T) D ∧ ∀ m : ℕ, D (zS T m) = Submodule.Quotient.mk (T.ζ m * p / (p : Ω) ^ m) ∧
         D (qS T m) = 0 := by
   intro p hp Ω _ _ hc T
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hc
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hc
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   have hlev : ∀ m : ℕ, ∃ D : (integralClosure (O0 p) Ω) → Frac p Ω,
       IsDerOn (levelAlg T (m + 1)) D ∧

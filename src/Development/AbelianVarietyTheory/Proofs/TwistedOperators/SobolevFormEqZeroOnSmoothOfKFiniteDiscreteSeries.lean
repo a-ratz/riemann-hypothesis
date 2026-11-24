@@ -260,7 +260,7 @@ end Coef
 
 theorem eq_zero_of_kFin : GlobalTheory.Published.HarishChandraModules → ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (τ : D.what₂.Tau) (ℓ : M.H τ →ₗ[ℂ] ℂ), Sobolev₂ (lieAt V τ) (M.rep τ) ℓ → (∀ w ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ, ℓ w = 0) → ∀ w ∈ M.sm τ, ℓ w = 0 := by
   intro hHC D V S M τ ℓ hℓ h0 w hw
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have h := std_of_isDS hHC (M.ds τ)
   have hℓ' : Sobolev₂ (lieSet (M.ε τ)) (M.σ τ) ℓ :=
     GlobalTheory.SmoothCyclic.sobCont_transport (M.fr_unit τ) (M.fr_gram τ) hℓ

@@ -81,7 +81,7 @@ theorem theta_pull {ψ : AddChar (AF D.host.F) ℂ} {A B C E : HSp D} (e : WO A 
   cont := hf.cont.comp hc
   smooth k L hL h0 w := by
     have := hf.smooth k ((e : WO A B →+ WO C E).comp L) (hc.comp hL) (fun t => hfin _ (h0 t)) (e w)
-    simpa only [AddMonoidHom.comp_apply, AddMonoidHom.coe_coe, map_add (f := _)] using this }
+    simpa only [AddMonoidHom.comp_apply, AddMonoidHom.coe_ofClass, map_add (f := _)] using this }
 
 theorem isDetAt_inv {e : AE D} (he : e * e = e) {V V₂ : HSp D} {g : GA D V} {k : GA D V₂} {x : (AE D)ˣ}
     (hx : IsDetAt e V g x) (hk : (mt V₂ k).det = (mt V g⁻¹).det) : IsDetAt e V₂ k x⁻¹ := by
@@ -172,8 +172,8 @@ theorem GlobalTheory.SwapWeil.isWeilDatumO_swap : ∀ (D : D7) (ψ : AddChar (AF
     rw [L.map_zero, H.om_aut _ (hGQ' γ' hγ') _ (hGQ γ hγ) _ (thLs F hF)]
     exact congrArg F L.symm.map_zero
   · exact (H.om_cont _ (thLs F hF) (L w)).comp ((hφ'.comp continuous_snd).prodMk (hφ.comp continuous_fst))
-  · haveI : BorelSpace (WO S T) := ⟨rfl⟩
-    haveI : BorelSpace (WO S' T') := ⟨rfl⟩
+  · have : BorelSpace (WO S T) := ⟨rfl⟩
+    have : BorelSpace (WO S' T') := ⟨rfl⟩
     obtain ⟨ν, hν, h𝓖, hu⟩ := GlobalTheory.WeilSrc.haar_pull L.symm.toAddEquiv hLsc hLc (ratL T S) (ratL T' S') hratS μ 𝓕 hμ h𝓕
     have e1 := hu fun w => ‖swapOm L φ φ' om p F w‖ₑ ^ 2
     have e2 := hu fun w => ‖F w‖ₑ ^ 2

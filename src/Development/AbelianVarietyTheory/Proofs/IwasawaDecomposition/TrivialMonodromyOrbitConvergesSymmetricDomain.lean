@@ -68,7 +68,7 @@ theorem exists_tendsto_norm_lt {T h c : ℝ} (hh : 0 < h) {f : ℂ → ℂ} (hd 
     ∃ L, Tendsto f imTop (𝓝 L) ∧ ‖L‖ < c := by
   classical
   let g : ℂ → ℂ := fun w => if T < w.im then f w else 0
-  have hg : ∀ w : ℂ, T < w.im → g w = f w := fun w hw => if_pos hw
+  have hg : ∀ w : ℂ, T < w.im → g w = f w := fun w hw => ite_eq_left hw
   have hgp : Function.Periodic g h := fun w => by
     by_cases hw : T < w.im
     · rw [hg w hw, hg _ (by simpa using hw), hp w hw]
@@ -104,7 +104,7 @@ theorem exists_tendsto_norm_lt {T h c : ℝ} (hh : 0 < h) {f : ℂ → ℂ} (hd 
   have hz0 : z ≠ 0 := fun h0 => by simp [h0] at hz; exact hr0.ne hz
   have h1 : ‖F 0‖ ≤ ‖F z‖ := hmax (subset_closure (Metric.mem_ball_self hr0))
   refine h1.trans_lt ?_
-  rw [hF, Function.Periodic.cuspFunction_eq_of_nonzero _ _ hz0, hg _ (him z hz0 hz.le)]
+  rw [hF, Function.Periodic.cuspFunction_eq_of_ne_zero _ _ hz0, hg _ (him z hz0 hz.le)]
   exact hb _ (him z hz0 hz.le)
 
 def nsq {n : ℕ} (u : Fin n → ℂ) : ℝ := ∑ a, ‖u a‖ ^ 2

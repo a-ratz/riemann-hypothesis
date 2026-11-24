@@ -148,36 +148,36 @@ theorem tri (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) (M : Matrix (Fin n
   refine ⟨Matrix.of fun c b => (if c = b then (1 : ℂ) else 0) + l b c, ?_, ?_, ?_⟩
   · intro i j hji
     have hji' : j < i := hji
-    rw [Matrix.of_apply, if_neg (ne_of_lt hji').symm, hz j i (not_lt.2 hji'.le), add_zero]
+    rw [Matrix.of_apply, ite_eq_right (ne_of_lt hji').symm, hz j i (not_lt.2 hji'.le), add_zero]
   · intro b
-    rw [Matrix.of_apply, if_pos rfl, hz b b (lt_irrefl b), add_zero]
+    rw [Matrix.of_apply, ite_eq_left rfl, hz b b (lt_irrefl b), add_zero]
   · intro b
     have e1 : M *ᵥ fam e z b = fam e z b + (M - 1) *ᵥ fam e z b := by
       rw [sub_mulVec, one_mulVec]; abel
     rw [e1, ← hlx b, Finsupp.linearCombination_apply,
       Finsupp.sum_fintype _ _ (fun i => zero_smul ℂ (fam e z i))]
     simp only [Matrix.of_apply, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem col_last (Q : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (hQ : Q.IsUpperTriangular) (hd : ∀ b, Q b b = 1) :
     Qᴴ *ᵥ Pi.single (Fin.last r) 1 = Pi.single (Fin.last r) 1 := by
   funext d
   simp only [mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, conjTranspose_apply]
+    Finset.mem_univ, ite_true, conjTranspose_apply]
   by_cases h : d = Fin.last r
-  · subst h; rw [hd, star_one, if_pos rfl]
+  · subst h; rw [hd, star_one, ite_eq_left rfl]
   · have h0 : Q (Fin.last r) d = 0 := hQ (lt_of_le_of_ne (Fin.le_last d) h)
-    rw [h0, star_zero, if_neg h]
+    rw [h0, star_zero, ite_eq_right h]
 
 theorem row_last (Q : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (hQ : Q.IsUpperTriangular) (hd : ∀ b, Q b b = 1) :
     Pi.single (Fin.last r) 1 ᵥ* Q = Pi.single (Fin.last r) 1 := by
   funext c
   simp only [vecMul, dotProduct, Pi.single_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   by_cases h : c = Fin.last r
-  · subst h; rw [hd, if_pos rfl]
+  · subst h; rw [hd, ite_eq_left rfl]
   · have h0 : Q (Fin.last r) c = 0 := hQ (lt_of_le_of_ne (Fin.le_last c) h)
-    rw [h0, if_neg h]
+    rw [h0, ite_eq_right h]
 
 theorem tri_adj (Z Q Q' : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (hQt : Q.IsUpperTriangular) (hQd : ∀ b, Q b b = 1)
     (hQt' : Q'.IsUpperTriangular) (hQd' : ∀ b, Q' b b = 1) :
@@ -214,7 +214,7 @@ theorem xPr_move (Z₂ Z Q' : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (G₂ G Nm
   have hc' : ∀ c, ∑ b, adjugate Z₂ b (Fin.last r) * Q' c b = adjugate Z c (Fin.last r) := fun c => by
     have h := congrFun hc c
     simp only [mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, Matrix.mul_apply] at h
+      Finset.mem_univ, ite_true, Matrix.mul_apply] at h
     rw [← h]
     exact Finset.sum_congr rfl fun b _ => mul_comm _ _
   unfold xPr
@@ -231,7 +231,7 @@ theorem xUn_move (Z₂ Z Q : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (Ni Ai : Ma
     intro d
     have h := congrFun hr d
     simp only [vecMul, dotProduct, Pi.single_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, Matrix.mul_apply, conjTranspose_apply] at h
+      Finset.mem_univ, ite_true, Matrix.mul_apply, conjTranspose_apply] at h
     rw [← h, star_sum]
     exact Finset.sum_congr rfl fun a _ => by rw [star_mul', star_star]
   unfold xUn
@@ -577,12 +577,12 @@ open scoped Matrix
 
 theorem rank_le_rank_map {K L : Type*} [Field K] [Field L] (φ : K →+* L) {m n : Type*} [Fintype m] [Fintype n]
     (A : Matrix m n K) : A.rank ≤ (A.map φ).rank := by
-  letI := φ.toAlgebra
-  haveI : FaithfulSMul K L := (faithfulSMul_iff_algebraMap_injective K L).2 φ.injective
+  let := φ.toAlgebra
+  have : FaithfulSMul K L := (faithfulSMul_iff_algebraMap_injective K L).2 φ.injective
   rw [← Matrix.finrank_span_range_col, ← Matrix.finrank_span_range_col]
   obtain ⟨b, hbs, hspan, hli⟩ := exists_linearIndependent K (Set.range A.col)
   have hbfin : b.Finite := (Set.finite_range _).subset hbs
-  haveI := hbfin.fintype
+  have := hbfin.fintype
   have h1 : finrank K (Submodule.span K (Set.range A.col)) = Fintype.card b := by
     rw [← hspan, finrank_span_set_eq_card hli, Set.toFinset_card]
   have hli' : LinearIndependent L (fun i : b => algebraMap K L ∘ (i : m → K)) :=
@@ -601,8 +601,8 @@ theorem rank_le_rank_map {K L : Type*} [Field K] [Field L] (φ : K →+* L) {m n
 theorem ker_map_le_span {K L : Type*} [Field K] [Field L] (φ : K →+* L) {m n : Type*} [Fintype m] [Fintype n]
     (A : Matrix m n K) (z : n → L) (hz : (A.map φ) *ᵥ z = 0) :
     z ∈ Submodule.span L ((fun x : n → K => φ ∘ x) '' {x | A *ᵥ x = 0}) := by
-  letI := φ.toAlgebra
-  haveI : FaithfulSMul K L := (faithfulSMul_iff_algebraMap_injective K L).2 φ.injective
+  let := φ.toAlgebra
+  have : FaithfulSMul K L := (faithfulSMul_iff_algebraMap_injective K L).2 φ.injective
   set S := LinearMap.ker A.mulVecLin
   let bS := Module.finBasis K S
   let w : Fin (finrank K S) → n → L := fun i => algebraMap K L ∘ ((bS i : S) : n → K)
@@ -1451,25 +1451,25 @@ variable (s : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ 
 theorem firstNormal_e (h : (ZE X u u' (Mof X Y u u' s)).det ≠ 0) (a : Fin D.R.rS) :
     (VS D).hT ((X.Fu u).e a) (Formalism.L2.SG.Pf.Level.toV X (nu1E X u u' (Mof X Y u u' s))) = 0 := by
   have := firstNormal_pairing X Y u u' s h a.castSucc
-  rw [if_neg (Fin.castSucc_lt_last a).ne] at this
+  rw [ite_eq_right (Fin.castSucc_lt_last a).ne] at this
   simpa [FlagG.fvec] using this
 
 theorem firstNormal_z (h : (ZE X u u' (Mof X Y u u' s)).det ≠ 0) :
     (VS D).hT (X.Fu u).z (Formalism.L2.SG.Pf.Level.toV X (nu1E X u u' (Mof X Y u u' s))) = 1 := by
   have := firstNormal_pairing X Y u u' s h (Fin.last _)
-  rw [if_pos rfl] at this
+  rw [ite_eq_left rfl] at this
   simpa [FlagG.fvec] using this
 
 theorem secondNormal_e (h : (ZE X u u' (Mof X Y u u' s)).det ≠ 0) (b : Fin D.R.rS) :
     (VS D).hT (Formalism.L2.SG.Pf.Level.toV X (x2E X u u' (Mof X Y u u' s))) (s.frame.fl.e b) = 0 := by
   have := secondNormal_pairing X Y u u' s h b.castSucc
-  rw [if_neg (Fin.castSucc_lt_last b).ne] at this
+  rw [ite_eq_right (Fin.castSucc_lt_last b).ne] at this
   simpa [FlagG.fvec] using this
 
 theorem secondNormal_z (h : (ZE X u u' (Mof X Y u u' s)).det ≠ 0) :
     (VS D).hT (Formalism.L2.SG.Pf.Level.toV X (x2E X u u' (Mof X Y u u' s))) s.frame.fl.z = 1 := by
   have := secondNormal_pairing X Y u u' s h (Fin.last _)
-  rw [if_pos rfl] at this
+  rw [ite_eq_left rfl] at this
   simpa [FlagG.fvec] using this
 
 theorem agree_pair (s₁ s₂ : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u'))
@@ -1630,7 +1630,7 @@ theorem classFrameAll_comp {V V' : Type*} [NormedAddCommGroup V] [InnerProductSp
     P.comp ((a • G.comp (T.comp G')).comp H') = a • K.comp (T.comp K') := by
   subst hK hK'
   ext x
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.mul_apply, map_smul]
+  simp only [ContinuousLinearMap.comp_apply, smul_apply, mul_apply_eq_comp, map_smul]
 
 variable {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (Y : Formalism.L2.SG.Full.Full X)
   (u u' : D.what₂.Word) (X0 : Fin (2 * D.R.rS + 2) → Fin X.B.I.n → X.B.I.E)
@@ -1698,7 +1698,7 @@ theorem vIndepLiftC_of_at (h3 : LiftDecompC X Y u u' κ) (h4' : LiftGPosC X Y u 
   have hO : Formalism.L2.SG.TermOp.OOt s.1 =
       (((vR s.1.toTerm : ℝ) : ℂ) * (X.psiInfU u g * conj (X.psiInfU u' g'))) •
         (((Formalism.L2.SG.RealObj.InfCut.piIso X u g hg).toContinuousLinearEquiv : X.Vpi u →L[ℂ] X.Vpi u).comp
-          ((haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+          ((haveI := FiniteDimensional.completeSpace ℂ (X.Vpi u)
             Formalism.L2.SG.TermOp.OO (νq (Formalism.L2.SG.RealObj.gamW X u u' (Formalism.L2.SG.PairVal.ptOf s.1.toTerm))) Set.univ
               (X.Wu u) (X.Wu u') (Formalism.L2.SG.RealObj.gamW X u u' (Formalism.L2.SG.PairVal.ptOf s.1.toTerm))).comp
             ((Formalism.L2.SG.RealObj.InfCut.piIso X u' g' hg').symm.toContinuousLinearEquiv : X.Vpi u' →L[ℂ] X.Vpi u'))) := by

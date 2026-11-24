@@ -101,7 +101,7 @@ private theorem gr_add (m m' : Fin k →₀ ℕ) :
         refine ⟨mono N m a ha * mono N m' b hb,
           Submodule.mul_mem_mul (mono_mem N m a ha) (mono_mem N m' b hb), ?_⟩
         show MvPolynomial.monomial m a * MvPolynomial.monomial m' b = _
-        rw [MvPolynomial.monomial_mul]
+        rw [MvPolynomial.monomial_mul_monomial]
       · rintro x y ⟨q₁, h₁, e₁⟩ ⟨q₂, h₂, e₂⟩
         refine ⟨q₁ + q₂, add_mem h₁ h₂, ?_⟩
         rw [map_add (f := _), ← e₁, ← e₂]
@@ -120,7 +120,7 @@ private theorem gr_add (m m' : Fin k →₀ ℕ) :
     have h : a * b = mono N (m + m') _ hab := by
       apply Subtype.ext
       show a.1 * b.1 = MvPolynomial.monomial (m + m') _
-      rw [← MvPolynomial.monomial_mul]
+      rw [← MvPolynomial.monomial_mul_monomial]
       exact congrArg₂ (· * ·) (congrArg Subtype.val (eq_mono N ha)) (congrArg Subtype.val (eq_mono N hb))
     rw [h]
     exact mono_mem N (m + m') _ hab

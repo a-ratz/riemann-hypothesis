@@ -62,15 +62,15 @@ theorem valCrit_proj {R : Type} [CommRing R] {X : Scheme.{0}} (f : X ⟶ Sp R) (
     [IsFractionRing V K] (b : R →+* V) (y : Sp K ⟶ X) (hy : y ≫ f = spMap (algebraMap V K) ≫ spMap b) :
     ∃ y' : Sp V ⟶ X, y' ≫ f = spMap b ∧ spMap (algebraMap V K) ≫ y' = y := by
   obtain ⟨N, i, hi, hif⟩ := hf
-  haveI : IsClosedImmersion i := hi
-  haveI : IsProper (PSpace.str R N) := isProper_str R N
+  have : IsClosedImmersion i := hi
+  have : IsProper (PSpace.str R N) := isProper_str R N
   have hU : UniversallyClosed (i ≫ PSpace.str R N) := inferInstance
   rw [hif] at hU
   have h2 : (ValuativeCriterion.Existence ⊓ @QuasiCompact) f := by
     rw [← UniversallyClosed.eq_valuativeCriterion]
     exact hU
   have hE : ValuativeCriterion.Existence f := h2.1
-  haveI : ValuationRing V := by
+  have : ValuationRing V := by
     first
       | exact inferInstance
       | exact ValuationRing.of_isDiscreteValuationRing V

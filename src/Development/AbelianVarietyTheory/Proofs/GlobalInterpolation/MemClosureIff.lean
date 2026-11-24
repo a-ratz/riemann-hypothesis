@@ -349,8 +349,8 @@ theorem delAtr_off {K ι : Type} [Field K] [NumberField K] [Fintype ι] (emb : �
         smul_left_injective E (fun hzero => hx₀ (e.map_eq_zero_iff.mp hzero)) (congrArg Subtype.val hab)
       exact RingOfIntegers.not_isField E
         (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
-    letI : Submodule.IsFullLattice E d.N := hn
-    letI : Submodule.IsLattice E d.Lsh := hd.Lsh_lattice
+    let : Submodule.IsFullLattice E d.N := hn
+    let : Submodule.IsLattice E d.Lsh := hd.Lsh_lattice
     exact Submodule.IsFullLattice.of_le E hd.N_le_Lsh
   refine (round_locP_congr emb lam w (full hd) (full hd') fun τ => ?_).1
   have hQ : (T : 𝓞 E) ∉ (bcBelow (emb τ) w).asIdeal := by rwa [bc_mem_below, map_natCast]

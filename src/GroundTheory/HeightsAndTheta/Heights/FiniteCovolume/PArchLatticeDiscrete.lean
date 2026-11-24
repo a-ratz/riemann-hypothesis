@@ -155,7 +155,7 @@ theorem ArchLatticeDiscrete.proof (h : HermitianForm F E W) (v : Basis ι E W) :
       simp only [LinearEquiv.coe_coe] at h1
       rw [map_sub, Finsupp.sub_apply, ← h1]
       simp only [Matrix.mulVec, dotProduct, sub_mul, Finset.sum_sub_distrib, Matrix.one_apply,
-        ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, hM]
+        ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, hM]
     have h1ij : ∀ (w : InfinitePlace E) i j,
         w.embedding ((1 : Matrix ι ι E) i j) = (1 : Matrix ι ι ℂ) i j := by
       intro w i j
@@ -208,7 +208,7 @@ theorem ArchLatticeDiscrete.proof (h : HermitianForm F E W) (v : Basis ι E W) :
   refine discreteTopology_of_isOpen_singleton_one ?_
   have hcont : Continuous fun x : archLatticeGroup h v La =>
       ((x : archUnitary h v) : InfinitePlace E → GL ι ℂ) :=
-    continuous_subtype_val.comp continuous_subtype_val
+    continuous_subtypeVal.comp continuous_subtypeVal
   have e : ({1} : Set (archLatticeGroup h v La)) = (fun x : archLatticeGroup h v La =>
       ((x : archUnitary h v) : InfinitePlace E → GL ι ℂ)) ⁻¹' U := by
     ext x

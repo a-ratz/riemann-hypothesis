@@ -86,8 +86,8 @@ theorem coef_left (hψ : IsCharAF D.host.F ψ) {μ : Measure (WO S T)} {𝓕 : S
     (hu : heisO ψ S T u f = f) (w : WO S T) :
     coef ψ S T μ 𝓕 f w = ψ (symplOH S T u w) * coef ψ S T μ 𝓕 f (w + u) := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have key := setIntegral_add_right (G := WO S T) (ratL T S) μ 𝓕 h𝓕
     (fun x => heisO ψ S T w f x * star (f x)) (by
       intro γ hγ x
@@ -215,7 +215,7 @@ theorem eventually_coef_of_ne (hψ : IsStdChar D ψ (-1)) {μ : Measure (WO S T)
 theorem eventually_coef_actO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratL T S) 𝓕 μ → ∀ f : WO S T → ℂ, IsThetaFunO ψ S T f → ∀ᶠ p : GA D S × GA D T in 𝓝 1, p.1 ∈ GfC S → p.2 ∈ GfC T → ∀ w, ∫ x in 𝓕, heisO ψ S T (actO S T p.1 p.2 w) f x * star (f x) ∂μ = ∫ x in 𝓕, heisO ψ S T w f x * star (f x) ∂μ := by
   intro D ψ hψ S T μ 𝓕 hμ h𝓕 f hf
   have h1 := eventually_coef_of_ne hψ hμ h𝓕 hf
-  haveI : ∀ V : HSp D, IsTopologicalGroup (GA D V) := fun V => Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : ∀ V : HSp D, IsTopologicalGroup (GA D V) := fun V => Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have ht : Filter.Tendsto (fun p : GA D S × GA D T => p⁻¹) (𝓝 1) (𝓝 1) := by
     have := (continuous_inv (G := GA D S × GA D T)).tendsto 1
     rwa [inv_one] at this

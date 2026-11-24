@@ -100,7 +100,7 @@ theorem theta_pos (D : D7) {τ : D.what₂.Tau} {w w' : D.what₂.Word} {θ : �
   have hN0 : W.μN = 0 := by rw [hN, hk]; unfold haarLie; exact zero_smul _ _
   have h1 := q1 (fun _ => 1) measurable_const
   rw [hN0] at h1
-  simp only [muS, Measure.prod_zero, Measure.map_zero, lintegral_const, one_mul, Measure.coe_zero,
+  simp only [muS, Measure.prod_zero, Measure.map_zero, lintegral_const, one_mul, FunLike.coe_zero,
     Pi.zero_apply, zero_mul] at h1
   exact hG.2.1 (Measure.measure_univ_eq_zero.1 h1)
 

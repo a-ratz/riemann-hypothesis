@@ -113,10 +113,10 @@ theorem exists_ext_points (K : Type) [Field K] (T : Over (Sp K)) (hT : IsFinite 
       ∀ (K'' Ω : Type) [Field K''] [Field Ω] [Algebra K' K''] [Algebra K K''] [IsScalarTower K K' K'']
         (σ : K'' →+* Ω) (t : Sp Ω ⟶ T.left), t ≫ T.hom = spMap (σ.comp (algebraMap K K'')) →
         ∃ w : Sp K'' ⟶ T.left, spMap σ ≫ w = t := by
-  haveI : IsAffine T.left := isAffine_of_isAffineHom T.hom
+  have : IsAffine T.left := isAffine_of_isAffineHom T.hom
   obtain ⟨ρ, hρ⟩ := Spec.map_surjective (T.left.isoSpec.inv ≫ T.hom)
-  letI : Algebra K Γ(T.left, ⊤) := ρ.hom.toAlgebra
-  haveI : Module.Finite K Γ(T.left, ⊤) := by
+  let : Algebra K Γ(T.left, ⊤) := ρ.hom.toAlgebra
+  have : Module.Finite K Γ(T.left, ⊤) := by
     have : IsFinite (Spec.map ρ) := by rw [hρ]; infer_instance
     exact (IsFinite.SpecMap_iff ρ).1 this
   obtain ⟨K', _, _, hfin, H⟩ := exists_ext_factor K Γ(T.left, ⊤)

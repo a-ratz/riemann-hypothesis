@@ -210,7 +210,7 @@ theorem compact_le (m : Measure V) [IsFiniteMeasure m] (hi : Integrable (chf m))
 theorem measure_le (m : Measure V) [IsFiniteMeasure m] (hi : Integrable (chf m)) {Y : Set V}
     (hY : MeasurableSet Y) : m Y ≤ ENNReal.ofReal (∫ ξ, ‖chf m ξ‖) * volume Y := by
   have hC : ENNReal.ofReal (∫ ξ, ‖chf m ξ‖) ≠ ⊤ := ENNReal.ofReal_ne_top
-  haveI : (ENNReal.ofReal (∫ ξ, ‖chf m ξ‖) • (volume : Measure V)).OuterRegular :=
+  have : (ENNReal.ofReal (∫ ξ, ‖chf m ξ‖) • (volume : Measure V)).OuterRegular :=
     Measure.OuterRegular.smul _ hC
   rw [hY.measure_eq_iSup_isCompact]
   refine iSup_le fun K => iSup_le fun hKY => iSup_le fun hK => ?_
@@ -254,7 +254,7 @@ theorem density_of_fourier_pairing_integrable (e : T ≃ₗ[ℝ] V) (B : T →�
   have hLC : ∀ ξ y, B (LC ξ) y = ⟪ξ, e y⟫ := hL0
   set G : T → ℂ := fun u => ∫ y, Complex.exp (2 * π * I * ((B u y : ℝ) : ℂ)) ∂m with hG
   let m' : Measure V := m.map eC
-  haveI : IsFiniteMeasure m' := Measure.isFiniteMeasure_map m _
+  have : IsFiniteMeasure m' := Measure.isFiniteMeasure_map m _
   have hchf : chf m' = fun ξ => G (LC ξ) := by
     funext ξ
     rw [chf, integral_map eC.continuous.measurable.aemeasurable (by fun_prop)]
@@ -313,8 +313,8 @@ theorem density_transport (B : T →ₗ[ℝ] T →ₗ[ℝ] ℝ) (hB : ∀ u, (�
   have hΨq : Measurable fun x => Ψ (q x) := Ψ.measurable.comp hq
   let μP : Measure X := μ.withDensity fun x => (P x : ℝ≥0∞)
   let m : Measure T := μP.map fun x => Ψ (q x)
-  haveI : IsFiniteMeasure μP := isFiniteMeasure_withDensity hfin
-  haveI : IsFiniteMeasure m := Measure.isFiniteMeasure_map μP _
+  have : IsFiniteMeasure μP := isFiniteMeasure_withDensity hfin
+  have : IsFiniteMeasure m := Measure.isFiniteMeasure_map μP _
   have hcont : ∀ u : T, Continuous fun y : T => Complex.exp (2 * π * I * ((B u y : ℝ) : ℂ)) := by
     intro u
     have : Continuous fun y : T => B u y := (B u).continuous_of_finiteDimensional
@@ -456,7 +456,7 @@ theorem exists_cutoff {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     (hF : IsTotallyReal F) (n M : ℕ) (S : Set (Fin n → Fin M → Ainf F ⊗[F] E)) (hS : IsCompact S) :
     ∃ P : (Fin n → Fin M → Ainf F ⊗[F] E) → ℝ≥0, Continuous P ∧ HasCompactSupport P ∧ (∀ X ∈ S, 1 ≤ P X) ∧
       GlobalTheory.Published.SiegelOneVector.IsSchwartzArch (F := F) (E := E) fun X => ((P X : ℝ) : ℂ) := by
-  haveI := hF
+  have := hF
   obtain ⟨k, eK, hK⟩ := PI.VolStabS.exists_coord_tens F E
   obtain ⟨k1, e1, h1⟩ := PI.VolStabS.exists_coord_pi eK hK (Fin M)
   obtain ⟨N, eV, hV⟩ := PI.VolStabS.exists_coord_pi e1 h1 (Fin n)
@@ -481,32 +481,32 @@ theorem density_inf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   intro F E _ _ _ _ _ σ hCM M J hJ n _ hM d b lam hlam S hS
   have hLoc := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   obtain ⟨l1, l2, l3, l4, -, -, -, -⟩ := id hLoc
-  haveI := l1
-  haveI := l2
-  haveI := l3
-  haveI := l4
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := l1
+  have := l2
+  have := l3
+  have := l4
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, -, t10⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := t8 n M
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := t8 n M
   obtain ⟨x1, x2, x3, x4, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Ainf F) n
-  haveI := x1
-  haveI := x2
-  haveI := x3
-  haveI := x4
-  haveI : LocallyCompactSpace (HermR (Ainf F) σ n) := x1
-  haveI : SecondCountableTopology (HermR (Ainf F) σ n) := x2
-  haveI : T2Space (HermR (Ainf F) σ n) := x3
-  haveI : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have := x1
+  have := x2
+  have := x3
+  have := x4
+  have : LocallyCompactSpace (HermR (Ainf F) σ n) := x1
+  have : SecondCountableTopology (HermR (Ainf F) σ n) := x2
+  have : T2Space (HermR (Ainf F) σ n) := x3
+  have : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   obtain ⟨-, hW, hH⟩ := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b lam hlam
   set μ := GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b lam n M with hμdef
   let ν : Measure (HermR (Ainf F) σ n) := GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b lam n
-  haveI hμH : μ.IsAddHaarMeasure := hW n M
-  haveI hνH : ν.IsAddHaarMeasure := hH n
+  have hμH : μ.IsAddHaarMeasure := hW n M
+  have hνH : ν.IsAddHaarMeasure := hH n
   have hqc : Continuous fun X : Fin n → Fin M → Ainf F ⊗[F] E => gramH hCM hJ (Ainf F) X :=
     (t10 n M J).subtype_mk _
   obtain ⟨ψ, hψ⟩ := GlobalTheory.CompanionTheory.SW.CharEx.exists_isCharAF F
@@ -532,7 +532,7 @@ theorem density_inf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     refine ne_of_lt (lt_of_le_of_lt (le_of_eq ?_) hint.2)
     refine lintegral_congr fun X => ?_
     beta_reduce
-    rw [Real.enorm_eq_ofReal (NNReal.coe_nonneg (P X)), ENNReal.ofReal_coe_nnreal]
+    rw [Real.eNorm_eq_ofReal (NNReal.coe_nonneg (P X)), ENNReal.ofReal_coe_nnreal]
   have hstar := integrable_starLoc_inf F E σ hCM M J hJ n hM ψ hψ μ hμH ν hνH _ hPS
   have hphase : ∀ (b' : HermR (Ainf F) σ n) (X : Fin n → Fin M → Ainf F ⊗[F] E),
       psiInf F ψ (algebraMap F (Ainf F) (1 / 2) * Algebra.trace (Ainf F) (Ainf F ⊗[F] E)

@@ -130,7 +130,7 @@ theorem exists_dvr_of_dimensionLEOne {R Ω : Type} [CommRing R] [IsDomain R] [Is
   obtain ⟨h1, h2⟩ := (localSubring_range_le_valuationSubring_iff_isLocalHom _ _).mp h
   have hi : Function.Injective ((algebraMap R (FractionRing R)).codRestrict V h1) :=
     fun a b hab => IsFractionRing.injective R (FractionRing R) (congrArg Subtype.val hab)
-  letI : Algebra R V := ((algebraMap R (FractionRing R)).codRestrict V h1).toAlgebra
+  let : Algebra R V := ((algebraMap R (FractionRing R)).codRestrict V h1).toAlgebra
   have : FaithfulSMul R V := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have hloc : IsLocalHom (algebraMap R V) := h2
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (isField_iff_maximalIdeal_eq.not.mp hR)
@@ -145,7 +145,7 @@ theorem exists_dvr_of_dimensionLEOne {R Ω : Type} [CommRing R] [IsDomain R] [Is
   have hf2 : Module.Finite R (ResidueField V) :=
     Module.Finite.of_surjective (Ideal.Quotient.factorₐ R hle).toLinearMap (Ideal.Quotient.factor_surjective hle)
   have hf3 : Module.Finite (ResidueField R) (ResidueField V) := Module.Finite.of_restrictScalars_finite R _ _
-  letI : Algebra (ResidueField R) Ω := (ResidueField.lift φ).toAlgebra
+  let : Algebra (ResidueField R) Ω := (ResidueField.lift φ).toAlgebra
   let ι₀ : ResidueField V →ₐ[ResidueField R] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

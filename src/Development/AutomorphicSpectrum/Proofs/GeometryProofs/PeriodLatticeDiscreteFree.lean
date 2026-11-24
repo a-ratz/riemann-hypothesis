@@ -98,7 +98,7 @@ theorem FamExp.per_discrete : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [Grp
         have : z = 0 := hU z h hz
         exact Subtype.ext this
     rw [this]
-    exact hUo.preimage continuous_subtype_val
+    exact hUo.preimage continuous_subtypeVal
   refine ⟨Γ₀, rfl, hdisc, ?_, ?_⟩
   · exact instModuleFinite_of_discrete_submodule Γ₀
   · exact instModuleFree_of_discrete_submodule Γ₀

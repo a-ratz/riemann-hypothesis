@@ -159,7 +159,7 @@ theorem neg_mem (V : VF C) (g : Fin 2) (hodd : V.l ≠ 2) (x : ℕ → I g ⊕ J
   unfold RawChart.TySet at hx ⊢
   obtain ⟨γ, lam, hγ, hlam, hlg, hq⟩ := hx
   have hγ0 : ∀ i, PowerSeries.constantCoeff (γ i) = 0 := fun i => (hγ i).1
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨fun i => PowerSeries.rescale (-1 : C) (γ i), fun q => PowerSeries.rescale (-1 : C) (lam q),
     isCv_rescale_neg_one V hγ, isCv_rescale_neg_one V hlam, ?_, ?_⟩
   · intro i

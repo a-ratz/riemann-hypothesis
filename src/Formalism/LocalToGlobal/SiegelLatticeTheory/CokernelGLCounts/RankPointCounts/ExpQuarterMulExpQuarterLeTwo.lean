@@ -89,7 +89,7 @@ theorem one_factor (k b g : ℝ) (f : ℕ) (hk : 1 ≤ k) (hb : 2 ≤ b) (hg : (
 theorem exp_quarter_mul_exp_quarter_le_two : Real.exp (1 / 4) * Real.exp (1 / 4) ≤ 2 := by
   rw [← Real.exp_add]
   have h : Real.exp (1 / 4 + 1 / 4) ^ 2 = Real.exp 1 := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     norm_num
   have h1 := Real.exp_one_lt_d9
   have hpos := Real.exp_pos (1 / 4 + 1 / 4)

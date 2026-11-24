@@ -76,10 +76,10 @@ theorem twCent_commute (hE : Unr E) (n : ℕ) (w : Pl E) (y : GLw n w) {g : GLw 
   have hg' : g * y = y * thL n w g := hg
   unfold nrmL
   split_ifs with hs
-  · have ht : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
+  · have ht : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
     rw [ht] at hg'
     exact hg'
-  · have ht : thL n w = thetaGL n (cj w) := by unfold thL; rw [if_neg hs]
+  · have ht : thL n w = thetaGL n (cj w) := by unfold thL; rw [ite_eq_right hs]
     rw [ht] at hg' hinv
     show g * (y * thetaGL n (cj w) y) = (y * thetaGL n (cj w) y) * g
     calc g * (y * thetaGL n (cj w) y) = (g * y) * thetaGL n (cj w) y := by rw [mul_assoc]
@@ -191,9 +191,9 @@ theorem isOpen_map_conj (K : Subgroup G) (hK : IsOpen (K : Set G)) (x : G) :
 
 theorem relIndex_ne_zero_of_isOpen (A H : Subgroup G) (hA : IsOpen (A : Set G)) (hH : IsCompact (H : Set G)) :
     A.relIndex H ≠ 0 := by
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp hH
-  have ho : IsOpen ((A.subgroupOf H : Subgroup H) : Set H) := hA.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+  have : CompactSpace H := isCompact_iff_compactSpace.mp hH
+  have ho : IsOpen ((A.subgroupOf H : Subgroup H) : Set H) := hA.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.index_ne_zero_of_finite
 
 theorem relIndex_cptPart_ne_zero (T A H : Subgroup G) (hA : IsOpen (A : Set G)) (hH : IsCompact (H : Set G))
@@ -242,19 +242,19 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 theorem nrmL_twConj (hU : Unr E) (n : ℕ) (w : Pl E) (x y : GLw n w) :
     nrmL n w (x⁻¹ * y * thL n w x) = x⁻¹ * nrmL n w y * x := by
   by_cases hs : IsSplitAt w
-  · have h1 : thL n w = MonoidHom.id _ := by rw [thL, if_pos hs]
-    simp only [nrmL, if_pos hs, h1, MonoidHom.id_apply]
-  · have h1 : thL n w = thetaGL n (cj w) := by rw [thL, if_neg hs]
+  · have h1 : thL n w = MonoidHom.id _ := by rw [thL, ite_eq_left hs]
+    simp only [nrmL, ite_eq_left hs, h1, MonoidHom.id_apply]
+  · have h1 : thL n w = thetaGL n (cj w) := by rw [thL, ite_eq_right hs]
     have h2 := (hKT E hU n w).2
     rw [h1] at h2
-    simp only [nrmL, if_neg hs, h1, map_mul, map_inv, h2]
+    simp only [nrmL, ite_eq_right hs, h1, map_mul, map_inv, h2]
     group
 
 theorem continuous_nrmL (hU : Unr E) (n : ℕ) (w : Pl E) : Continuous (nrmL n w) := by
   by_cases hs : IsSplitAt w
   · have e : nrmL n w = fun u => u := funext fun u => by simp [nrmL, hs]
     rw [e]; exact continuous_id
-  · have h1 : thL n w = thetaGL n (cj w) := by rw [thL, if_neg hs]
+  · have h1 : thL n w = thetaGL n (cj w) := by rw [thL, ite_eq_right hs]
     have hc := (hKT E hU n w).1
     rw [h1] at hc
     have e : nrmL n w = fun u => u * thetaGL n (cj w) u := funext fun u => by simp [nrmL, hs]

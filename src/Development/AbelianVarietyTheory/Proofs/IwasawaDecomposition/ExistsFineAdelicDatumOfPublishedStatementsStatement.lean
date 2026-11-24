@@ -332,7 +332,7 @@ theorem exists_thAd (hR : R.IsModels) (t : T0) {K' : Type} [Field K'] {σ' : K' 
       fun k => (h1 k).trans (h2 k).symm)
   refine ⟨fun x => if hx : ∃ y, Place R i t h c0' y x then onQ (Wc D i) (R.thF i t hx.choose v₀) else 0, fun y x hy => ?_⟩
   have hx : ∃ y, Place R i t h c0' y x := ⟨y, hy⟩
-  simp only [dif_pos hx]
+  simp only [dite_eq_left hx]
   rw [huniq _ _ _ hx.choose_spec hy]
 
 
@@ -965,7 +965,7 @@ theorem jMemL2_of_muUnit (h : MuUnit V dict mu) (h' : MuUnit V dict mu') (hc : C
     show mu' (γ * g) / mu (γ * g) = mu' g / mu g
     rw [h.1, h'.1, h.2.2.1 γ hγ, h'.2.2.1 γ hγ, one_mul, one_mul]
   have hm : AEStronglyMeasurable (onQ V (fun g => mu' g / mu g)) (muQ1 V) := by
-    haveI : BorelSpace (GA D V) := ⟨rfl⟩
+    have : BorelSpace (GA D V) := ⟨rfl⟩
     rw [onQ_eq_lift _ hinv]
     refine Measurable.aestronglyMeasurable ?_
     exact measurable_from_quotient.2 (hc'.div hc hne).measurable
@@ -1404,7 +1404,7 @@ theorem exists_baseFrame : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
       obtain rfl : i = i' := Fin.ext (Nat.add_right_cancel h1)
       obtain rfl : ρ = ρ' := tauE_injective h3
       rw [hF.1 i σ σ' h2 ρ]
-    exact (dif_pos h).trans (aux _ h.choose_spec)
+    exact (dite_eq_left h).trans (aux _ h.choose_spec)
   refine ⟨x₀, fun i σ _ => key i σ, fun j hj s hs k τ hτ => ?_⟩
   by_cases h : ∃ p : Fin D.R.m × (D.what₂.LL →+* ℂ) × D.what₂.Tau,
       j = (p.1 : ℕ) + 1 ∧ s = res T p.2.1 ∧ τ = tauE D p.2.2
@@ -1424,7 +1424,7 @@ theorem exists_baseFrame : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
         show (Wc D i).sig (tauE D ρ) = D.R.sigW ((i : ℕ) + 1) from D.sp.W_sigval _ hj.1 hj.2 _]
     rw [key i σ ρ, hM.1, (hU.2.1 k).1]
     exact gram_x0Mat _ _ ρ hU.1 hε
-  · have e : x₀ j s τ = T.x₀ j s τ := dif_neg h
+  · have e : x₀ j s τ = T.x₀ j s τ := dite_eq_right h
     rw [e]
     exact hL.familyUniformisationBasePointOrthogonal j hj s hs k τ hτ
 
@@ -1783,7 +1783,7 @@ theorem datExS_evLg (h1 : GlobalTheory.Published.DiscreteSeriesCover) (h2 : Glob
   have hsel : SelHalf I := selHalf_of_pin pin
   have hfin : Wt.Finite := GlobalTheory.Mem.Top.TwFin.finite_pl B T.pl
   have hconj : ∀ v ∈ Wt, B.places.conj v ∈ Wt :=
-    fun v hv => by simpa only [hWt, Set.mem_setOf_eq, GlobalTheory.Mem.Top.TwFin.resChar_conj] using hv
+    fun v hv => by simpa only [hWt, Set.mem_ofPred_eq, GlobalTheory.Mem.Top.TwFin.resChar_conj] using hv
   have hch : Fld.charField f ≤ B.KsC := (GlobalTheory.Mem.Base.KsExact.lower w.exact).2.2.1
   have hval : Formalism.L2.Host.ValLL0 X.toD7 (Fr.at X f) := w.val _ _ _ _ _ _
   obtain ⟨C, alg, hPin, hCe, hCL, hCK, hCE, hLJ, hAT, hVal, hmu⟩ := GlobalTheory.T.character_value_mem_smallField_of_infPart_eq_one X f hch hval hVol

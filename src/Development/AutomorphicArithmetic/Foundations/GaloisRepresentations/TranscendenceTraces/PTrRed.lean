@@ -63,7 +63,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.trRed_of :
   have key : ∀ (A : Sq p) (a : Sec (tw Q i) A.V),
       ((tr0 p w q i).app A) ((f A.V) a) = (f A.U) (((tr0 p w Q i).app A) a) := by
     intro A a
-    haveI := Sq.finite A
+    have := Sq.finite A
     apply hPt q i A.U
     intro Ω _ _ y
     have hfin := hFib A.r Ω y

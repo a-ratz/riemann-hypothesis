@@ -71,7 +71,7 @@ theorem grSq_pos {M : Matrix (Fin m) (Fin m) ℂ} (h : M.PosDef) (i : Fin m) : 0
 
 theorem lminor_eq_prod {T : Matrix (Fin m) (Fin m) ℂ} (hT : ∀ a c, c < a → T a c = 0) (k : Fin (m + 1)) :
     lminor T k = ∏ a : Fin k, T (a.castLE (Nat.le_of_lt_succ k.2)) (a.castLE (Nat.le_of_lt_succ k.2)) :=
-  det_of_upperTriangular fun _ _ h => hT _ _ h
+  det_of_isUpperTriangular fun _ _ h => hT _ _ h
 
 theorem lminor_tri {T : Matrix (Fin m) (Fin m) ℂ} (hT : ∀ a c, c < a → T a c = 0) (i : Fin m) :
     lminor T i.succ = lminor T i.castSucc * T i i := by
@@ -336,7 +336,7 @@ theorem Adapted.compare (h₁ : Y.Adapted p t₁ g₁ 1) (h : Y.Adapted p t g t'
     (fun i a' => (a.co τ hk).1 a' i) (fun i => (a.co τ hk).2 i ▸ (t τ i).ne_zero) (e1 τ) i d h).trans (map_zero _).symm)
   have hu (τ i) : IsUnit (f₁.co f τ i i) := by
     have := f₁.isUnit_det_co f τ
-    rw [det_of_upperTriangular (M := f₁.co f τ) fun _ _ h => hM τ _ _ h] at this
+    rw [det_of_isUpperTriangular (M := f₁.co f τ) fun _ _ h => hM τ _ _ h] at this
     exact isUnit_of_dvd_unit (Finset.dvd_prod_of_mem (fun i => f₁.co f τ i i) (Finset.mem_univ i)) this
   refine ⟨fun τ i => (hu τ i).unit, fun τ i => Units.ext ?_, fun τ i => ?_⟩
   · rw [← (a₁.co τ hk₁).2, e1, Units.val_mul, ← (a.co τ hk).2]

@@ -63,7 +63,7 @@ open GlobalTheory.TorusExt
 private theorem sumF_mul_left {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {F : Type} [Field F]
     [Algebra (FractionRing R) F] {Ix : Type} {x y : Ix → F} {s t : F} (a : F) (h : SumF I F x s)
     (hy : ∀ i, y i = a * x i) (ht : t = a * s) : SumF I F y t := by
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   obtain ⟨N, hN, hs, hx, happ⟩ := h
   let f : F →ₗ[R] F :=
     { toFun := fun u => a * u
@@ -121,9 +121,9 @@ theorem exhaust_of_labels : LL → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀
     have hg := (isAdd_iff_eq _ _ _).1 hg
     rw [hPg, hPg, ht0, add_zero] at hg
     exact Subtype.ext hg.symm
-  haveI : Finite {h : GtPtF D.toPre (AlgebraicClosure (FractionRing R)) // N • h = 0} := by
+  have : Finite {h : GtPtF D.toPre (AlgebraicClosure (FractionRing R)) // N • h = 0} := by
     have hc := GlobalTheory.UT.card_qk hLL R I hI D (AlgebraicClosure (FractionRing R)) N hN
-    haveI : Finite (Quot (QkPt.Equiv D.toPre (AlgebraicClosure (FractionRing R)) (k := N))) :=
+    have : Finite (Quot (QkPt.Equiv D.toPre (AlgebraicClosure (FractionRing R)) (k := N))) :=
       Nat.finite_of_card_ne_zero (by rw [hc]; exact pow_ne_zero _ hN0)
     refine Finite.of_injective (β := Quot (QkPt.Equiv D.toPre (AlgebraicClosure (FractionRing R)) (k := N)))
       (fun h => Quot.mk (QkPt.Equiv D.toPre (AlgebraicClosure (FractionRing R)) (k := N)) (P h)) fun h h' e => hEq h h' ?_

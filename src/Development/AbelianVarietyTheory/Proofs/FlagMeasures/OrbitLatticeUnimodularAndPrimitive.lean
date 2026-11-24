@@ -187,15 +187,15 @@ theorem pr_mem (v : (VS D).V) : pr X v ∈ Wb X := by
   · rw [pr_apply]
 
     simp only [map_sub, map_sum, map_smul, X.ee, X.ef, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
   · rw [pr_apply]
 
     simp only [map_sub, map_sum, map_smul, X.ff, hT_fe, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+    mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
 
 theorem pr_eX (c : Fin D.R.rS) : pr X (X.eX c) = 0 := by
   rw [pr_apply]
-  simp only [hT_fe, X.ee, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+  simp only [hT_fe, X.ee, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     Finset.sum_const_zero, sub_zero, sub_self]
 
 theorem pr_X {x : (VS D).V} (hx : x ∈ Submodule.span D.host.E (Set.range X.eX)) : pr X x = 0 := by
@@ -228,8 +228,8 @@ theorem lmap_isLattice (u : D.what₂.Word) (Λ : Submodule (𝓞 D.host.E) (VS 
     (hΛ : Submodule.IsLattice D.host.E Λ) : Submodule.IsLattice D.host.E (Lmap X u Λ) := by
   refine ⟨?_, ?_⟩
   · have hfg : (Λ.map ((pW X).restrictScalars (𝓞 D.host.E))).FG := hΛ.fg.map _
-    haveI : Module.Finite (𝓞 D.host.E) (Λ.map ((pW X).restrictScalars (𝓞 D.host.E))) := Module.Finite.iff_fg.2 hfg
-    haveI : IsNoetherian (𝓞 D.host.E) (Λ.map ((pW X).restrictScalars (𝓞 D.host.E))) :=
+    have : Module.Finite (𝓞 D.host.E) (Λ.map ((pW X).restrictScalars (𝓞 D.host.E))) := Module.Finite.iff_fg.2 hfg
+    have : IsNoetherian (𝓞 D.host.E) (Λ.map ((pW X).restrictScalars (𝓞 D.host.E))) :=
       isNoetherian_of_isNoetherianRing_of_finite _ _
     refine Submodule.FG.of_le_of_isNoetherian (T := Λ.map ((pW X).restrictScalars (𝓞 D.host.E))) ?_
     intro w hw
@@ -331,7 +331,7 @@ theorem lmap_unimod (Y : Full X) (u : D.what₂.Word) (Λ : Submodule (𝓞 D.ho
       rw [hw']
 
       simp only [map_sub, map_sum, map_smul, hfe, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
     have hw'e : ∀ b, (VS D).hT (X.eX b) w' = 0 := by
       intro b
       rw [hw']

@@ -104,7 +104,7 @@ private theorem latCls_basis {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteV
   obtain ⟨s, rfl⟩ := hS.fg
   have hspan := hS.span
   set M : Submodule O (Etau K τ) := Submodule.span O (s : Set (Etau K τ)) with hM
-  haveI : Module.Free O M := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O M := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis O M
   let f : Module.Free.ChooseBasisIndex O M → Etau K τ := fun i => (b i : Etau K τ)
   have hliO : LinearIndependent O f := b.linearIndependent.map' M.subtype (Submodule.ker_subtype M)
@@ -182,7 +182,7 @@ private theorem latCls_val {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
     intro x y hxy hy
     subst hy
     rw [map_zero] at hxy
-    exact (v.zero_iff).1 (le_antisymm hxy zero_le')
+    exact (v.zero_iff).1 (le_antisymm hxy zero_le)
   have hne : ¬ (a = 0 ∧ b = 0 ∧ c = 0) := by
     rintro ⟨rfl, rfl, rfl⟩
     simp at h
@@ -214,7 +214,7 @@ private theorem latCls_val {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
   have hs : v (a + b + c) = v b := by
     have e : a + b + c = (a + c) + b := by ring
     rw [e, v.map_add_eq_of_lt_right (v.map_add_lt hab hcb)]
-  have hb0 : b ≠ 0 := (v.pos_iff).1 (lt_of_le_of_lt zero_le' hab)
+  have hb0 : b ≠ 0 := (v.pos_iff).1 (lt_of_le_of_lt zero_le hab)
   have hs0 : a + b + c ≠ 0 := by
     rw [← v.ne_zero_iff, hs, v.ne_zero_iff]
     exact hb0
@@ -229,7 +229,7 @@ theorem UpperTheory.V.Z.Sym.Loc.latCls :
     ∀ S : Set (Etau K τ), IsLat O τ S → ∃ (y : (Etau K τ)ˣ) (x : Etau K τ), x.im ≠ 0 ∧ QuadraticAlgebra.trace x ∈ (algebraMap O K).range ∧
     QuadraticAlgebra.norm x ∈ (algebraMap O K).range ∧ S = ((y : Etau K τ) * ·) '' (Submodule.span O {1, x} : Submodule O (Etau K τ)) := by
   intro O K _ _ _ _ _ Δ τ hL hτ S hS
-  haveI := hL.frac
+  have := hL.frac
   obtain ⟨e₁, e₂, hd, rfl⟩ := latCls_basis S hS
   have hdisc : (trace (e₂ * star e₁)) ^ 2 - 4 * QuadraticAlgebra.norm e₁ * QuadraticAlgebra.norm e₂ ≠ 0 := by
     have e : (trace (e₂ * star e₁)) ^ 2 - 4 * QuadraticAlgebra.norm e₁ * QuadraticAlgebra.norm e₂ =

@@ -136,7 +136,7 @@ theorem exists_common_eigvector {V : Type*} [AddCommGroup V] [Module ℂ V] [Fin
     exact Submodule.eq_of_le_of_finrank_le hle (by omega)
   obtain ⟨v, hvU, hv0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hU
   refine ⟨v, hUW hvU, hv0, fun i => ?_⟩
-  haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU
+  have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU
   let r : Module.End ℂ U := (f i).restrict (hUinv i)
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue r
   obtain ⟨x, hx⟩ := hμ.exists_hasEigenvector
@@ -260,7 +260,7 @@ theorem killPoly_natDegree_le (G : Type) [Group G] (a : ℝ → G) (F₀ : G →
     rintro _ ⟨t, rfl⟩
     let ev : Module.Dual ℂ S := (LinearMap.proj t : (ℝ → ℂ) →ₗ[ℂ] ℂ).comp S.subtype
     exact ⟨ev, rfl⟩
-  haveI hTfin : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTle
+  have hTfin : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTle
   have hrank : Module.finrank ℂ T ≤ Module.finrank ℂ S :=
     (Submodule.finrank_mono hTle).trans
       ((LinearMap.finrank_range_le Λ).trans_eq (Subspace.dual_finrank_eq))
@@ -990,7 +990,7 @@ theorem levi_kill : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   refine ⟨l'.toList.map (· - ∑ τ, t τ), ?_, fun F hFN hFc p => ?_⟩
   · rw [List.length_map, Multiset.length_toList, hcard']
     simp [hcard, Multiset.card_powersetCard]
-  letI Rr : CommRing S := { S.toRing with mul_comm := fun x y => Subtype.ext (hcomm x x.2 y y.2) }
+  let Rr : CommRing S := { S.toRing with mul_comm := fun x y => Subtype.ext (hcomm x x.2 y y.2) }
   let Λ : S → (GA E r × GA E s) → (S →ₗ[ℂ] ℂ) := fun v p =>
     { toFun := fun w => ((w.1 * v.1) F).1 (GlobalTheory.CompanionTheory.CTFin.lev (Ad E) r s p)
       map_add' := fun x y => by
@@ -1089,11 +1089,11 @@ theorem exists_ct (r s : ℕ) (hr : 0 < r) (hs : 0 < s) (φ : Sm E (r + s)) (hφ
     (hc : ∀ τ u, cap (a := r + s) τ u φ = c τ u • φ) :
     ∃ G : Sm E (r + s), (∀ (v : BlockIx (r + s) r → Ad E) (g : GA E (r + s)), G.1 (unip v * g) = G.1 g) ∧
       (∀ τ u, cap (a := r + s) τ u G = c τ u • G) ∧ ∀ g, G.1 g = An.ctn r φ.1 g := by
-  letI : MeasurableSpace (BlockIx (r + s) r → Ad E) := borel _
-  haveI : BorelSpace (BlockIx (r + s) r → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (BlockIx (r + s) r → Ad E) := borel _
+  have : BorelSpace (BlockIx (r + s) r → Ad E) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, e⟩ := ((dict_holds E (r + s)).2.2.2 φ hφ r hr (by omega)).1
-  haveI : FiniteDimensional ℂ (orbSpan φ) := hφ.kfin
-  haveI := hφ.zfin
+  have : FiniteDimensional ℂ (orbSpan φ) := hφ.kfin
+  have := hφ.zfin
   let ρ := sub (cptRep E (r + s)) (orbSpan φ) (orbSpan_stable φ)
   let J : Set (Module.End ℂ (Sm E (r + s))) := {z | z ∈ Zalg E (r + s) ∧ z φ = 0}
   have hJ : Cofin J := cofin_ann φ

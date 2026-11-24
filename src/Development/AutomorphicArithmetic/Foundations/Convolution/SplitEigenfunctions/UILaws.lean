@@ -49,7 +49,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.uiLaws :
     UILaws := by
   intro E _ _ β hc hinv
   have hf : Continuous fun z : IdeleGroup.normOneSubgroup E => β (z : IdeleGroup E) :=
-    hc.comp continuous_subtype_val
+    hc.comp continuous_subtypeVal
   have hcl := isCompact_closure_normOneFundamentalDomain E
   have hinv' : ∀ (k : Eˣ) (u : IdeleGroup.normOneSubgroup E),
       β ((u * diagonalToNormOne E k : IdeleGroup.normOneSubgroup E) : IdeleGroup E) = β (u : IdeleGroup E) := by

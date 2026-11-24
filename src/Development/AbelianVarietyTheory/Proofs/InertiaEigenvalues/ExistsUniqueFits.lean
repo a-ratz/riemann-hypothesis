@@ -501,7 +501,7 @@ theorem existsUnique_fits (L : Formalism.WeaklyAdmissibleFiltrations.Lattice (O 
     have : j ∘ d = c := funext hd
     rw [this]; exact cc
   have dmem : (fun g => (d g : V)) ∈ latticeCocycles L := by
-    refine ⟨⟨continuous_subtype_val.comp dc, fun g h => ?_⟩, fun g _ => (d g).2⟩
+    refine ⟨⟨continuous_subtypeVal.comp dc, fun g h => ?_⟩, fun g _ => (d g).2⟩
     have : d (g * h) = d g + ⟨ρ g (d h), L.stable g _ (d h).2⟩ := by
       apply jemb.injective
       rw [map_add (f := _), ← ja, hd, hd, hd]
@@ -722,7 +722,7 @@ theorem eu_res (g1 : ∀ r, gR 1 r = r) (gmul : ∀ g h r, gR (g * h) r = gR g (
   have comm : ∀ g x, TWmap φR T (TWact (gR g) T g x) = TWact (gR g) T g (TWmap φR T x) :=
     fun g x => TWmap_act _ _ (gφ g) T g x
   have hf : Continuous (fun p : ↥S × TW RW T => ((p.1 : G), p.2)) :=
-    (continuous_subtype_val.comp continuous_fst).prodMk continuous_snd
+    (continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd
   have h3' : Continuous (fun p : ↥S × TW RW T => TWact (gR p.1) T (p.1 : G) p.2) := by
     have := h3.comp hf
     simpa only [Function.comp_def] using this
@@ -775,7 +775,7 @@ theorem nonempty_cl (g1 : ∀ r, gR 1 r = r) (gmul : ∀ g h r, gR (g * h) r = g
     · rw [← E.jD_act, ← E.jD_φ, hg₁, ← map_sub, ← map_sub, herr_eq p.2.1]
   have ex₁ := fun T : LocLat G Qp LL O => exists_class (resLat T Γ.GKs) (jT RW T)
     (fun g => TWact (gR g) T (g : G)) lam (TWmap φR T)
-    (fun x => (T.cont x).comp continuous_subtype_val) (fun g t => TWact_one_tmul _ T (g : G) t)
+    (fun x => (T.cont x).comp continuous_subtypeVal) (fun g t => TWact_one_tmul _ T (g : G) t)
     (hT T).1.1 (hT T).1.2
     ((E.jD T).comp ((LinearMap.fst O _ _).comp (herrCocycles (E.γD T Γ.gam) (E.φD T)).subtype))
     ((E.jD T).comp ((LinearMap.snd O _ _).comp (herrCocycles (E.γD T Γ.gam) (E.φD T)).subtype)) (eu₁ T)

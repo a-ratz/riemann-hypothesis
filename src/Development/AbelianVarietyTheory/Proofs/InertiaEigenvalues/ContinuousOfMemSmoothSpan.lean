@@ -105,7 +105,7 @@ theorem isUnit_of_mem_rowSet {ℓ : Fin a} {u : Fin a → Cinf E} (h : u ∈ row
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem isOpen_rowSet (ℓ : Fin a) : IsOpen (rowSet E ℓ) := by
-  rw [rowSet, Set.setOf_forall]
+  rw [rowSet, Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun w => isOpen_ne_fun (by fun_prop) continuous_const
 
 
@@ -148,7 +148,7 @@ theorem continuous_rsInf {ℓ : Fin a} {φ φ' : GA E a → ℂ} {Φ : (Fin a �
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem isOpen_latt (J : (FractionalIdeal (𝓞 E)⁰ E)ˣ) : IsOpen (latt a J) := by
-  rw [latt, Set.setOf_forall]
+  rw [latt, Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun i => (isOpen_idealFiniteAdeles J).preimage (continuous_apply i)
 
 omit [_root_.NumberField.IsTotallyComplex E] in
@@ -157,7 +157,7 @@ theorem isCompact_latt (J : (FractionalIdeal (𝓞 E)⁰ E)ˣ) : IsCompact (latt
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem isClosed_latt (J : (FractionalIdeal (𝓞 E)⁰ E)ˣ) : IsClosed (latt a J) := by
-  rw [latt, Set.setOf_forall]
+  rw [latt, Set.ofPred_forall]
   exact isClosed_iInter fun i =>
     (AddSubgroup.isClosed_of_isOpen _ (isOpen_idealFiniteAdeles J)).preimage (continuous_apply i)
 

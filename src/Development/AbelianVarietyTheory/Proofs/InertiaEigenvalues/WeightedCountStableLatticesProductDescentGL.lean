@@ -181,16 +181,16 @@ theorem finite_quot_span_singleton_of_dvr_sandwich (O : Type) [CommRing O] [IsDo
   obtain ⟨n, hn⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hne hp
   have hm : IsLocalRing.maximalIdeal O = Ideal.span {p} := hp.maximalIdeal_eq
   rw [hn, ← Ideal.span_singleton_pow, ← hm]
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) := hF
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) := hF
   exact Ideal.finite_quotient_pow (IsNoetherian.noetherian _) n
 
 theorem finite_submodules_between_smul_and_self :
     ∀ (O A : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Finite (IsLocalRing.ResidueField O)] [AddCommGroup A] [Module O A] (C : Submodule O A), C.FG → ∀ c : O, c ≠ 0 → {N : Submodule O A | N ≤ C ∧ ∀ x ∈ C, c • x ∈ N}.Finite := by
   intro O A _ _ _ _ _ _ C hC c hc
-  haveI := finite_quot_span_singleton_of_dvr_sandwich O c hc
-  haveI : Module.Finite O C := Module.Finite.iff_fg.mpr hC
+  have := finite_quot_span_singleton_of_dvr_sandwich O c hc
+  have : Module.Finite O C := Module.Finite.iff_fg.mpr hC
   let K : Submodule O C := (Ideal.span {c}) • (⊤ : Submodule O C)
-  haveI : Finite (C ⧸ K) := Submodule.finite_quotient_smul (Ideal.span {c}) Module.Finite.fg_top
+  have : Finite (C ⧸ K) := Submodule.finite_quotient_smul (Ideal.span {c}) Module.Finite.fg_top
   let f : Submodule O A → Set (C ⧸ K) := fun N => K.mkQ '' {x : C | (x : A) ∈ N}
   have key : ∀ N M : Submodule O A, (N ≤ C ∧ ∀ x ∈ C, c • x ∈ N) → (M ≤ C ∧ ∀ x ∈ C, c • x ∈ M) →
       f N = f M → N ≤ M := by
@@ -286,7 +286,7 @@ theorem integralClosure_fg_of_separable_charpoly : ∀ (O E A : Type) [CommRing 
   have hdeg_le : m.natDegree ≤ n := by
     simpa using (linearIndependent_pow (K := E) g).fintype_card_le_finrank
   have hdeg : m.natDegree = n := le_antisymm hdeg_le hdeg_ge
-  haveI : Nonempty (Fin m.natDegree) := ⟨⟨0, by rw [hdeg, hn]; exact Module.finrank_pos⟩⟩
+  have : Nonempty (Fin m.natDegree) := ⟨⟨0, by rw [hdeg, hn]; exact Module.finrank_pos⟩⟩
   let pb : PowerBasis E A :=
     { gen := g, dim := m.natDegree
       basis := basisOfLinearIndependentOfCardEqFinrank (linearIndependent_pow g) (by simp [hdeg, m, n])
@@ -419,7 +419,7 @@ theorem finite_orbits_stLat_of_separable : ∀ (O E A : Type) [CommRing O] [IsDo
   choose t ht using key
   let F : MulAction.orbitRel.Quotient Aˣ (stLat O E g) → {N : Submodule O A // N ∈ {N : Submodule O A | N ≤ C ∧ ∀ x ∈ C, c • x ∈ N}} :=
     fun q => ⟨_, ht q.out⟩
-  haveI : Finite {N : Submodule O A // N ∈ {N : Submodule O A | N ≤ C ∧ ∀ x ∈ C, c • x ∈ N}} := hfin.to_subtype
+  have : Finite {N : Submodule O A // N ∈ {N : Submodule O A | N ≤ C ∧ ∀ x ∈ C, c • x ∈ N}} := hfin.to_subtype
   refine Finite.of_injective F ?_
   intro q₁ q₂ h
   have h' : mulLat O (((t q₁.out)⁻¹ : Aˣ) : A) (q₁.out : Submodule O A) = mulLat O (((t q₂.out)⁻¹ : Aˣ) : A) (q₂.out : Submodule O A) :=
@@ -496,17 +496,17 @@ theorem counting_principle : ∀ (G X Y : Type) [CommGroup G] [MulAction G X] [M
     rintro x x' ⟨g, rfl⟩
     simp only [F, hπ, hw, stabilizer_smul_eq]
 
-  haveI : ∀ oY : MulAction.orbitRel.Quotient G Y, Finite ↥(π ⁻¹' {Quotient.out oY}) :=
+  have : ∀ oY : MulAction.orbitRel.Quotient G Y, Finite ↥(π ⁻¹' {Quotient.out oY}) :=
     fun oY => (hfin _).to_subtype
-  haveI hXf : Finite (MulAction.orbitRel.Quotient G X) := by
+  have hXf : Finite (MulAction.orbitRel.Quotient G X) := by
     refine Finite.of_surjective
       (fun p : (Σ oY : MulAction.orbitRel.Quotient G Y, ↥(π ⁻¹' {Quotient.out oY})) =>
         (Quotient.mk _ (p.2 : X) : MulAction.orbitRel.Quotient G X)) ?_
     intro oX
     obtain ⟨x0, hx0, hx0'⟩ := hrep oX (Quotient.out (q oX)) (Quotient.out_eq _).symm
     exact ⟨⟨q oX, ⟨x0, hx0⟩⟩, hx0'⟩
-  haveI := Fintype.ofFinite (MulAction.orbitRel.Quotient G X)
-  haveI := Fintype.ofFinite (MulAction.orbitRel.Quotient G Y)
+  have := Fintype.ofFinite (MulAction.orbitRel.Quotient G X)
+  have := Fintype.ofFinite (MulAction.orbitRel.Quotient G Y)
   have hL : ∀ oX : MulAction.orbitRel.Quotient G X,
       w (π (Quotient.out oX)) * ((MulAction.stabilizer G (Quotient.out oX)).relIndex Gc : ℚ) = F (Quotient.out oX) := fun _ => rfl
   have hR : ∀ oY : MulAction.orbitRel.Quotient G Y,
@@ -541,7 +541,7 @@ theorem counting_principle : ∀ (G X Y : Type) [CommGroup G] [MulAction G X] [M
       = {x | π x = π x0 ∧ x ∈ MulAction.orbit G x0} := by
     ext x
     simp only [hS, Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_preimage,
-      Set.mem_singleton_iff, Set.mem_setOf_eq, hx0]
+      Set.mem_singleton_iff, Set.mem_ofPred_eq, hx0]
     rw [← hx0']
     constructor
     · rintro ⟨h1, h2⟩
@@ -670,7 +670,7 @@ namespace GlobalTheory.UnitLemma.StabIdx
 theorem relIndex_ne_zero_of_map {G X : Type} [Group G] [Finite X] (H K : Subgroup G) (f : K → X)
     (hf : ∀ a b : K, f a = f b → (a : G)⁻¹ * b ∈ H) : H.relIndex K ≠ 0 := by
   classical
-  haveI : Finite (K ⧸ H.subgroupOf K) := by
+  have : Finite (K ⧸ H.subgroupOf K) := by
     refine Finite.of_injective (fun q : K ⧸ H.subgroupOf K => f q.out) ?_
     intro q q' h
     rw [← QuotientGroup.out_eq' q, ← QuotientGroup.out_eq' q', QuotientGroup.eq,
@@ -703,7 +703,7 @@ theorem finite_quotient_span [IsDomain O] [IsDiscreteValuationRing O]
   obtain ⟨n, hn⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hne hϖ
   have hm : IsLocalRing.maximalIdeal O = Ideal.span {ϖ} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
     (inferInstance : Finite (IsLocalRing.ResidueField O))
   have := Ideal.finite_quotient_pow (IsNoetherian.noetherian (IsLocalRing.maximalIdeal O)) n
   rwa [hm, Ideal.span_singleton_pow, ← hn] at this
@@ -744,11 +744,11 @@ theorem relIndex_ne_zero_of_fg [IsDiscreteValuationRing O] [Finite (IsLocalRing.
   classical
   set C := Subalgebra.toSubmodule (integralClosure O A) with hCdef
   obtain ⟨c, hc0, hcL⟩ := exists_smul_mul_mem (E := E) C (L : Submodule O A) hC L.2.1
-  haveI := finite_quotient_span hc0
-  haveI : Finite (C ⧸ (⊤ : Submodule O C)) := by
-    haveI : Subsingleton (C ⧸ (⊤ : Submodule O C)) := Submodule.Quotient.subsingleton_iff.2 rfl
+  have := finite_quotient_span hc0
+  have : Finite (C ⧸ (⊤ : Submodule O C)) := by
+    have : Subsingleton (C ⧸ (⊤ : Submodule O C)) := Submodule.Quotient.subsingleton_iff.2 rfl
     infer_instance
-  haveI : Finite (C ⧸ Ideal.span {c} • (⊤ : Submodule O C)) :=
+  have : Finite (C ⧸ Ideal.span {c} • (⊤ : Submodule O C)) :=
     Submodule.finite_quotient_smul _ ((Submodule.fg_top C).2 hC)
   have hmemC : ∀ x : A, IsIntegral O x → x ∈ C := fun x hx => hx
   let f : intUnits O A → C ⧸ Ideal.span {c} • (⊤ : Submodule O C) := fun t =>
@@ -788,7 +788,7 @@ theorem stabilizer_relIndex_intUnits_ne_zero : ∀ (O E A : Type) [CommRing O] [
     [Module.Finite E A] (g : A), (LinearMap.mulLeft E g).charpoly.Separable →
     ∀ L : stLat O E g, (MulAction.stabilizer Aˣ L).relIndex (intUnits O A) ≠ 0 := by
   intro O E A _ _ _ _ _ _ _ _ _ _ _ _ g hg L
-  haveI := _root_.GlobalTheory.etale_of_separable_charpoly_mulLeft E A g hg
+  have := _root_.GlobalTheory.etale_of_separable_charpoly_mulLeft E A g hg
   exact relIndex_ne_zero_of_fg (_root_.GlobalTheory.IntegralClosureFG.integralClosure_fg O E A) L
 
 end GlobalTheory.UnitLemma.StabIdx
@@ -812,7 +812,7 @@ variable {O E A : Type} [CommRing O] [Field E] [CommRing A] [Algebra O A] [Algeb
 
 theorem isIntegral_of_mul_mem_lat {L : Submodule O A} (hL : IsLat O E L) (t : A)
     (ht : ∀ y ∈ L, t * y ∈ L) : IsIntegral O t := by
-  haveI : Module.Finite O L := Module.Finite.iff_fg.mpr hL.1
+  have : Module.Finite O L := Module.Finite.iff_fg.mpr hL.1
   let f : Module.End O L := (LinearMap.mulLeft O t).restrict (fun y hy => ht y hy)
   obtain ⟨p, hp, hpf⟩ := LinearMap.exists_monic_and_aeval_eq_zero O f
   have hpow : ∀ (n : ℕ) (y : L), (((f ^ n) y : L) : A) = t ^ n * y := by
@@ -1063,7 +1063,7 @@ end PairOrbits
 theorem latPair_orbit_finite_and_sum : ∀ (O E A₁ A₂ : Type) [CommRing O] [Field E] [CommRing A₁] [CommRing A₂] [Algebra O A₁] [Algebra O A₂] [Algebra E A₁] [Algebra E A₂] (g₁ : A₁) (g₂ : A₂), Finite (MulAction.orbitRel.Quotient A₁ˣ (stLat O E g₁)) → Finite (MulAction.orbitRel.Quotient A₂ˣ (stLat O E g₂)) → Finite (MulAction.orbitRel.Quotient (A₁ × A₂)ˣ (LatPair O E g₁ g₂)) ∧ ∀ (f₁ : stLat O E g₁ → ℚ) (f₂ : stLat O E g₂ → ℚ), (∀ (t : A₁ˣ) (y : stLat O E g₁), f₁ (t • y) = f₁ y) → (∀ (t : A₂ˣ) (y : stLat O E g₂), f₂ (t • y) = f₂ y) → ∑ᶠ o : MulAction.orbitRel.Quotient (A₁ × A₂)ˣ (LatPair O E g₁ g₂), f₁ (Quotient.out o).1 * f₂ (Quotient.out o).2 = (∑ᶠ o : MulAction.orbitRel.Quotient A₁ˣ (stLat O E g₁), f₁ (Quotient.out o)) * (∑ᶠ o : MulAction.orbitRel.Quotient A₂ˣ (stLat O E g₂), f₂ (Quotient.out o)) := by
   intro O E A₁ A₂ _ _ _ _ _ _ _ _ g₁ g₂ h₁ h₂
   let e := latPairOrbitEquiv O E A₁ A₂ g₁ g₂
-  haveI hfin : Finite (MulAction.orbitRel.Quotient (A₁ × A₂)ˣ (LatPair O E g₁ g₂)) := Finite.of_equiv _ e.symm
+  have hfin : Finite (MulAction.orbitRel.Quotient (A₁ × A₂)ˣ (LatPair O E g₁ g₂)) := Finite.of_equiv _ e.symm
   refine ⟨hfin, ?_⟩
   intro f₁ f₂ hf₁ hf₂
 
@@ -1090,8 +1090,8 @@ theorem latPair_orbit_finite_and_sum : ∀ (O E A₁ A₂ : Type) [CommRing O] [
       rfl
     rw [inv₁ _ _ (Quotient.exact (h1.trans (Quotient.out_eq x.1).symm)),
       inv₂ _ _ (Quotient.exact (h2.trans (Quotient.out_eq x.2).symm))]
-  haveI := Fintype.ofFinite (MulAction.orbitRel.Quotient A₁ˣ (stLat O E g₁))
-  haveI := Fintype.ofFinite (MulAction.orbitRel.Quotient A₂ˣ (stLat O E g₂))
+  have := Fintype.ofFinite (MulAction.orbitRel.Quotient A₁ˣ (stLat O E g₁))
+  have := Fintype.ofFinite (MulAction.orbitRel.Quotient A₂ˣ (stLat O E g₂))
   rw [← finsum_comp_equiv e.symm]
   simp_rw [key]
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Fintype.sum_prod_type,
@@ -1159,8 +1159,8 @@ theorem countGL_prod : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValua
   have hres : resultant (LinearMap.mulLeft E g₁).charpoly (LinearMap.mulLeft E g₂).charpoly ≠ 0 :=
     resultant_ne_zero _ _ hsep.isCoprime
   rw [_root_.GlobalTheory.UnitLemma.countGL_eq_sum_orbits O E (A₁ × A₂) (g₁, g₂), _root_.GlobalTheory.UnitLemma.countGL_eq_sum_orbits O E A₁ g₁, _root_.GlobalTheory.UnitLemma.countGL_eq_sum_orbits O E A₂ g₂]
-  haveI hf₁ := _root_.GlobalTheory.UnitLemma.finite_orbits_stLat_of_separable O E A₁ g₁ hs₁
-  haveI hf₂ := _root_.GlobalTheory.UnitLemma.finite_orbits_stLat_of_separable O E A₂ g₂ hs₂
+  have hf₁ := _root_.GlobalTheory.UnitLemma.finite_orbits_stLat_of_separable O E A₁ g₁ hs₁
+  have hf₂ := _root_.GlobalTheory.UnitLemma.finite_orbits_stLat_of_separable O E A₂ g₂ hs₂
   obtain ⟨hfinY, hsum⟩ := _root_.GlobalTheory.UnitLemma.latPair_orbit_finite_and_sum O E A₁ A₂ g₁ g₂ hf₁ hf₂
   have hq : (Nat.card (IsLocalRing.ResidueField O) : ℚ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := IsLocalRing.ResidueField O)).ne'

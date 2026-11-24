@@ -236,7 +236,7 @@ theorem homog_of_mul {σ : Type} (w : σ → ℕ) {s g : MvPolynomial σ K} {n :
         have hw : Finsupp.weight w x.2 = j := by
           rw [← hsum, map_add (f := _), hx0] at hd
           omega
-        rw [if_pos hw]
+        rw [ite_eq_left hw]
     · symm
       refine Finset.sum_eq_zero fun x hx => ?_
       rw [coeff_weightedHomogeneousComponent]
@@ -247,7 +247,7 @@ theorem homog_of_mul {σ : Type} (w : σ → ℕ) {s g : MvPolynomial σ K} {n :
         have hw : Finsupp.weight w x.2 ≠ j := by
           rw [← hsum, map_add (f := _), hx0] at hd
           omega
-        rw [if_neg hw, mul_zero]
+        rw [ite_eq_right hw, mul_zero]
   intro m hm
   by_contra hne
   have hc : weightedHomogeneousComponent w (Finsupp.weight w m) g ≠ 0 := by
@@ -361,7 +361,7 @@ theorem chi_psi_dvd (i0 : Fin k) (f : Pol K k) :
     · simp [chiF, psiF]
     · by_cases hj : j = i0
       · subst hj
-        simp only [chiF, psiF, Sum.elim_inr, if_true, eq_self_iff_true]
+        simp only [chiF, psiF, Sum.elim_inr, ite_true, eq_self_iff_true]
         have e : X (Sum.inl j) * X (Sum.inr j) - -tp K j = tt K k := by
           rw [sub_neg_eq_add, tp, tt, ← Finset.add_sum_erase _ _ (Finset.mem_univ j)]
         rw [e]
@@ -375,7 +375,7 @@ theorem eval_aeval' (g : Fin k ⊕ Fin k → Pol K k) (p : Fin k ⊕ Fin k → K
 theorem psi_zero (i0 : Fin k) (f : Pol K k)
     (hv : ∀ p : Fin k ⊕ Fin k → K, ∑ i, p (Sum.inl i) * p (Sum.inr i) = 0 → eval p f = 0) :
     aeval (psiF K i0) f = 0 := by
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   apply MvPolynomial.funext
   intro p
   rw [eval_aeval', map_zero]
@@ -398,9 +398,9 @@ theorem psi_zero (i0 : Fin k) (f : Pol K k)
       = p (Sum.inl i0) * ∑ j ∈ Finset.univ.erase i0, p (Sum.inl j) * p (Sum.inr j) := by
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun i hi => ?_
-    rw [if_neg (Finset.ne_of_mem_erase hi)]
+    rw [ite_eq_right (Finset.ne_of_mem_erase hi)]
     ring
-  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i0), h3, if_pos rfl]
+  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i0), h3, ite_eq_left rfl]
   ring
 
 theorem dvd_pow_mul (i0 : Fin k) (d : ℕ) (f : Pol K k) (hf : f ∈ Bihom K k d)
@@ -431,7 +431,7 @@ theorem divT_one (d : ℕ) (hd : 1 ≤ d) (f : Pol K 1) (hf : f ∈ Bihom K 1 d)
     intro v
     rcases v with i | i <;> obtain rfl := Subsingleton.elim i 0 <;> simp <;> omega
   have key : monomial m (AddMonoidAlgebra.coeff f m) = tt K 1 * monomial (m - s) (AddMonoidAlgebra.coeff f m) := by
-    simp only [tt, Fin.sum_univ_one, X, monomial_mul, one_mul]
+    simp only [tt, Fin.sum_univ_one, X, monomial_mul_monomial, one_mul]
     rw [← hs, add_tsub_cancel_of_le hsm]
   rw [key]
   exact dvd_mul_right _ _
@@ -589,18 +589,18 @@ theorem bihom_le_Sc : ∀ c, c ≤ d → Bihom K k c ≤ Sc K k d c := by
       ext i
       rcases i with i | i
       · simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, single_apply,
-          Sum.inl.injEq, reduceCtorEq, if_false]
+          Sum.inl.injEq, reduceCtorEq, ite_false]
         split_ifs with h
         · subst h; omega
         · omega
       · simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply, single_apply,
-          Sum.inr.injEq, reduceCtorEq, if_false]
+          Sum.inr.injEq, reduceCtorEq, ite_false]
         split_ifs with h
         · subst h; omega
         · omega
     have hmono : X (Sum.inl a) * X (Sum.inr b) * monomial m' (1 : K) =
         monomial (m' + single (Sum.inl a) 1 + single (Sum.inr b) 1) 1 := by
-      simp only [X, monomial_mul, one_mul]
+      simp only [X, monomial_mul_monomial, one_mul]
       congr 1
       abel
     have hw1' : weight (wx k) m' = c := by
@@ -907,17 +907,17 @@ lemma vanish_at {d c : ℕ} (W : Submodule K (Pol K k)) (hW : W ≤ Bihom K k d)
       by_cases h : j = i0 <;> simp [shiftPt, rop_apply, pderiv_X, Pi.single_apply, h] <;> ring
     obtain ⟨s, hs⟩ : ∃ s : K, s = -(p (Sum.inl b) / p (Sum.inl i0)) := ⟨_, rfl⟩
     have hq0 : shiftPt i0 b s p (Sum.inl i0) = p (Sum.inl i0) := by
-      rw [hshl, if_neg hib, mul_zero, add_zero]
+      rw [hshl, ite_eq_right hib, mul_zero, add_zero]
     have hqb : shiftPt i0 b s p (Sum.inl b) = 0 := by
-      rw [hshl, if_pos rfl, hs, neg_mul, div_mul_cancel₀ _ hp0]
+      rw [hshl, ite_eq_left rfl, hs, neg_mul, div_mul_cancel₀ _ hp0]
       ring
     have hqj : ∀ j, j ≠ b → shiftPt i0 b s p (Sum.inl j) = p (Sum.inl j) := by
       intro j hj
-      rw [hshl, if_neg hj, mul_zero, add_zero]
+      rw [hshl, ite_eq_right hj, mul_zero, add_zero]
     have hquad : ∑ i, shiftPt i0 b s p (Sum.inl i) * shiftPt i0 b s p (Sum.inr i) = 0 := by
       simp only [hshl, hshr, mul_add, add_mul, mul_sub, sub_mul, Finset.sum_add_distrib,
         Finset.sum_sub_distrib, mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true, hbi, hib, if_false, hq]
+        Finset.mem_univ, ite_true, hbi, hib, ite_false, hq]
       ring
     have ihq : ∀ g ∈ W, eval (shiftPt i0 b s p) g = 0 := by
       refine ih _ (by rw [hq0]; exact hp0) ?_ hquad

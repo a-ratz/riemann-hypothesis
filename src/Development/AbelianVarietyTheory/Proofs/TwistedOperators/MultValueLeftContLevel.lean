@@ -59,19 +59,19 @@ theorem mult_value_left_cont_level :
   | zero =>
     refine ⟨fun γ _ g => ?_, ?_, fun k _ g => ?_⟩
     · simp
-    · simp only [MultilinearMap.zero_apply]
+    · simp only [zero_apply]
       exact continuous_zero
     · simp
   | add x y _ _ hx hy =>
     refine ⟨fun γ hγ g => ?_, ?_, fun k hk g => ?_⟩
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, hx.1 γ hγ g, hy.1 γ hγ g]
-    · simpa only [MultilinearMap.add_apply] using hx.2.1.add hy.2.1
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, hx.2.2 k hk g, hy.2.2 k hk g, mul_add]
+    · simp only [add_apply, Pi.add_apply, hx.1 γ hγ g, hy.1 γ hγ g]
+    · simpa only [add_apply] using hx.2.1.add hy.2.1
+    · simp only [add_apply, Pi.add_apply, hx.2.2 k hk g, hy.2.2 k hk g, mul_add]
   | smul c x _ hx =>
     refine ⟨fun γ hγ g => ?_, ?_, fun k hk g => ?_⟩
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx.1 γ hγ g]
-    · simpa only [MultilinearMap.smul_apply] using hx.2.1.const_smul c
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx.2.2 k hk g]
+    · simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx.1 γ hγ g]
+    · simpa only [smul_apply] using hx.2.1.const_smul c
+    · simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx.2.2 k hk g]
       ring
 
 end GlobalTheory

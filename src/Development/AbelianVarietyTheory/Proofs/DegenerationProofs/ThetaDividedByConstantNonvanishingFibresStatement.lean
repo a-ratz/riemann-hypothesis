@@ -112,8 +112,8 @@ theorem ZHPre.exists_testFac_of_large : ∀ (o Ω : Type) [CommRing o] [Field Ω
     RatModel.norm_val_le_one (y := y) rfl (x := algebraMap o Ω a) ((M.O _).algebraMap_mem a)
   have hat : S.At M y y₀ := fun _ => rfl
   obtain ⟨W, hW, hyW, -⟩ := exists_isAffineOpen_le y (le_preimage_top y)
-  haveI := hA.ft
-  haveI := M.lft
+  have := hA.ft
+  have := M.lft
   obtain ⟨t, ht⟩ := exists_finset_closure_eq_top M.s hW
   refine ⟨y₀, t.image (fun f => (((valMap y W hyW).hom f : OO p) : PadicAlgCl p)), hat, hn, fun u hu => ?_⟩
   let j : u.V →+* OO p :=
@@ -609,7 +609,7 @@ theorem exists_glue : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [
     refine ⟨g, j, hg, ?_⟩
     have hU : ⊤ ≤ g ⁻¹ᵁ (Q.G.hom ⁻¹ᵁ N z ⊓ Q.LOne.U j) := by
       by_contra hU
-      exact hv (dif_neg hU)
+      exact hv (dite_eq_right hU)
     rwa [← hval K g z j hU]
 
 end GlobalTheory.ZH.GlueTheta
@@ -795,7 +795,7 @@ theorem le_nonzeroLocus_iff (L : LB X) {V : X.Opens} (σ : ∀ j, Γ(X, V ⊓ (o
     obtain ⟨a, rfl⟩ : ∃ a, j = fun _ => a := ⟨j 0, funext fun i => congrArg j (Subsingleton.elim _ _)⟩
     have h₁ : ⊤ ≤ (x ≫ F) ⁻¹ᵁ (V ⊓ (one L).U fun _ => a) := by
       by_contra hc
-      exact hj (dif_neg hc)
+      exact hj (dite_eq_right hc)
     have h₂ : ⊤ ≤ x ⁻¹ᵁ (L.pull F).U (fun _ => a) := fun z hz =>
       Set.mem_iInter.2 fun _ => Set.mem_iInter.1 (h₁ hz).2 0
     rw [Points.valF_eq_valR, ← Points.valR_appLE x F (chart_le L F h fun _ => a) h₂] at hj
@@ -937,7 +937,7 @@ theorem pushHom_inj_of_cartesian {S S' : Scheme.{0}} {G : Over S} {G' : Over S'}
 
 theorem torsion_integral_descends : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (jV : u.V →+* OO p), (∀ x, (jV x : PadicAlgCl p) = algebraMap (FractionRing u.V) _ (algebraMap u.V (FractionRing u.V) x)) → ∀ b : Over.mk (spMap jV) ⟶ u.G, b ^ (S.r * S.N) = 1 → ∃ (a : S.Gam) (hV : Sp u.V ⟶ u.G.left) (x : Sp (FractionRing u.V) ⟶ pullback u.G.hom (jK u.V)), (hV ≫ u.G.hom = 𝟙 _ ∧ x ≫ pullback.fst _ _ = jK u.V ≫ hV ∧ x ≫ pullback.snd _ _ = 𝟙 _ ∧ x ≫ u.U.gen.hom.left ≫ u.φ = spMap u.yK ≫ (ρ.pt a).left) ∧ spMap jV ≫ hV = b.left := by
   intro o Ω _ _ _ _ S ρ p _ y₀ u jV hj b hb
-  haveI := u.U.gen_hom
+  have := u.U.gen_hom
   let k : FractionRing u.V →+* PadicAlgCl p := algebraMap _ _
   have hsq : gPt p ≫ spMap jV = spMap k ≫ jK u.V := by
     rw [← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← CommRingCat.ofHom_comp]
@@ -1374,7 +1374,7 @@ theorem ZHPre.exists_scale_section : ∀ (o Ω : Type) [CommRing o] [Field Ω] [
     obtain ⟨g, j, hg, hne⟩ := hF K x (hx.trans hN)
     have h1 : ⊤ ≤ g ⁻¹ᵁ (Q.G.hom ⁻¹ᵁ N ⊓ Q.LOne.U j) := by
       by_contra hc
-      exact hne (dif_neg hc)
+      exact hne (dite_eq_right hc)
     have hx' : ⊤ ≤ x ⁻¹ᵁ N' := (top_le_preimage_iff x N').2 hx
     have h2 : ⊤ ≤ g ⁻¹ᵁ (Q.G.hom ⁻¹ᵁ N' ⊓ Q.LOne.U j) := fun w hw =>
       ⟨(show ⊤ ≤ (g ≫ Q.G.hom) ⁻¹ᵁ N' from hg ▸ hx') hw, (h1 hw).2⟩
@@ -1663,8 +1663,8 @@ theorem exists_good_label (h0 : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsD
     (hzN : z ∈ N) : ∃ a ∈ S.HH M z, ∀ (W : M.Z.Opens) (h : W.toScheme ⟶ Q.G.left) (w : W.toScheme),
       Q.ExtPt a W h → W.ι w = z → ∃ (K : Type) (_ : Field K) (x : Sp K ⟶ W.toScheme) (j : Q.LOne.ι),
         Set.range x = {w} ∧ valF (x ≫ h) _ (σ j) ≠ 0 := by
-  haveI : Algebra.FiniteType ℤ o := ArithBase.ft (Ω := Ω)
-  haveI : CharZero Ω := ArithBase.char (o := o)
+  have : Algebra.FiniteType ℤ o := ArithBase.ft (Ω := Ω)
+  have : CharZero Ω := ArithBase.char (o := o)
   obtain ⟨⟨p, hp, y, hy⟩, -⟩ := (classical_points_and_local_regularity o Ω M U₀ ov.normal).1 U₀ le_rfl ov.ne z hz
   obtain ⟨y₀, Fs, hAt, hint, hfac⟩ := GlobalTheory.T.exists_classical_point_factor_large_model o Ω S ρ M U₀ Q ov z p y hy
   obtain ⟨u, l, τ, hmatch, hFs⟩ := (GlobalTheory.T.thetaSystem_hasTests_of_real_point hs hU h1 h2 hT o Ω S ρ).2 p y₀ Fs hint
@@ -1699,7 +1699,7 @@ theorem exists_good_label (h0 : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsD
   have hHH := (ThetaSys.mem_supI_iff_and_HH_eq_ker o Ω S M U₀ ov z p y y₀ τ hy hAt).2
   refine ⟨a, by rw [hHH]; exact hker, ?_⟩
   intro W h w hExt hwz
-  haveI := isLocalHom_of_test u jV hTF.1
+  have := isLocalHom_of_test u jV hTF.1
   have hzW : z ∈ W := by
     have hr : z ∈ Set.range W.ι := ⟨w, hwz⟩
     rwa [Scheme.Opens.range_ι] at hr
@@ -1737,9 +1737,9 @@ theorem exists_theta_div : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscre
   refine GlobalTheory.T.exists_glue_sections_same_theta_multiple o Ω S ρ M U₀ Q (S.th x₀)⁻¹
     (fun N N' σ σ' hσ hσ' j O h h' => GlobalTheory.T.restrict_eq_of_same_theta_multiple o Ω S ρ M U₀ Q ov N N' σ σ' _ hσ hσ' j O h h') W ?_
   intro z hzW
-  haveI : Algebra.FiniteType ℤ o := ArithBase.ft (Ω := Ω)
-  haveI : CharZero Ω := ArithBase.char (o := o)
-  haveI : JacobsonSpace M.Z := (classical_points_and_local_regularity o Ω M U₀ ov.normal).2
+  have : Algebra.FiniteType ℤ o := ArithBase.ft (Ω := Ω)
+  have : CharZero Ω := ArithBase.char (o := o)
+  have : JacobsonSpace M.Z := (classical_points_and_local_regularity o Ω M U₀ ov.normal).2
   obtain ⟨N₀, σ₀, hzN₀, hσ₀, hne₀⟩ := GlobalTheory.T.exists_localThetaSection_fibreNonzero o Ω S ρ M U₀ Q hLoc z
   obtain ⟨c₀, hc₀⟩ := Q.exists_thMul h1 h2 ov N₀ σ₀ hσ₀ ⟨z, hzN₀⟩
   have hext : ∀ (z' : M.Z), ∀ b ∈ S.HH M z', ∃ (Wb : M.Z.Opens) (hb : Wb.toScheme ⟶ Q.G.left) (wb : Wb.toScheme),

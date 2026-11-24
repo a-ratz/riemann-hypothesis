@@ -79,10 +79,10 @@ theorem surjective_of_conj {N : Type} [Field N] [NumberField N] [IsGalois ℚ N]
 theorem exists_splitsCompl (E : Type) [Field E] [NumberField E] (m : ℕ) :
     ∃ p : ℕ, p.Prime ∧ m < p ∧ Formalism.MainNotions.S.SplitsCompl E p := by
   let N : Type := IntermediateField.normalClosure ℚ E (AlgebraicClosure E)
-  haveI : NumberField N := { to_charZero := inferInstance, to_finiteDimensional := inferInstance }
-  haveI : IsAlgClosure ℚ (AlgebraicClosure E) := IsAlgClosure.ofAlgebraic ℚ E (AlgebraicClosure E)
-  haveI : Normal ℚ N := normalClosure.normal ℚ E (AlgebraicClosure E)
-  haveI : IsGalois ℚ N := IsGalois.mk
+  have : NumberField N := { to_charZero := inferInstance, to_finiteDimensional := inferInstance }
+  have : IsAlgClosure ℚ (AlgebraicClosure E) := IsAlgClosure.ofAlgebraic ℚ E (AlgebraicClosure E)
+  have : Normal ℚ N := normalClosure.normal ℚ E (AlgebraicClosure E)
+  have : IsGalois ℚ N := IsGalois.mk
   obtain ⟨P, hP, hm, hs⟩ := exists_degree_one_avoiding N ((m.factorial : ℤ) * discr E)
     (mul_ne_zero (by exact_mod_cast m.factorial_ne_zero) (discr_ne_zero E))
   have hp := GlobalTheory.SW.SplitPrime.absNorm_prime P hP hs

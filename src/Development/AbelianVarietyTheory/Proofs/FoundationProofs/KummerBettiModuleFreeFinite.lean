@@ -104,7 +104,7 @@ theorem exp_val_add (l n : ℕ) [Fact l.Prime] (x y : ZMod (l ^ n)) :
       Complex.exp (2 * Real.pi * Complex.I * ((x.val : ℕ) : ℂ) / ((l : ℂ) ^ n)) *
         Complex.exp (2 * Real.pi * Complex.I * ((y.val : ℕ) : ℂ) / ((l : ℂ) ^ n)) := by
   have hl : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero n hl⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero n hl⟩
   have hm : (l : ℂ) ^ n ≠ 0 := pow_ne_zero n (Nat.cast_ne_zero.2 hl)
   have hs := Nat.mod_add_div (x.val + y.val) (l ^ n)
   rw [ZMod.val_add, ← Complex.exp_add]
@@ -129,7 +129,7 @@ theorem eventually_ne_zero {b : ℂ → ℂ} (hb : DifferentiableOn ℂ b Hs) (h
 
 theorem germ_mul_ne_zero {b b' : ℂ → ℂ} (hb : DifferentiableOn ℂ b Hs) (hb' : DifferentiableOn ℂ b' Hs)
     (h : (b : Mero) ≠ 0) (h' : (b' : Mero) ≠ 0) : ((b * b' : ℂ → ℂ) : Mero) ≠ 0 := by
-  haveI := hs_codiscrete_neBot
+  have := hs_codiscrete_neBot
   intro H
   rw [← Filter.Germ.coe_zero, Filter.Germ.coe_eq] at H
   obtain ⟨z, h1, h2, h3⟩ := ((eventually_ne_zero hb h).and ((eventually_ne_zero hb' h').and H)).exists
@@ -230,7 +230,7 @@ theorem kummer_root_mem : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClos
   rw [hψ, ← Filter.Germ.coe_mul] at hg0
   have h3 : ∀ᶠ z in Filter.codiscreteWithin Hs, ψ z * b z = a z :=
     (Filter.Germ.coe_eq.1 hg0).mono fun z hz => by simpa using hz
-  haveI : Nontrivial Mero := ⟨⟨_, _, hb0⟩⟩
+  have : Nontrivial Mero := ⟨⟨_, _, hb0⟩⟩
   have hpow : g0 ^ m = (f : X.K) := by
     apply X.an.injective
     rw [map_pow, hψ, hφ, ← Filter.Germ.coe_pow]
@@ -389,12 +389,12 @@ open Matrix GlobalTheory.KZ GlobalTheory.KZ.BettiB
 namespace GlobalTheory.KZ.BettiB
 
 theorem gam_fg (N l : ℕ) [Fact l.Prime] (hN : 0 < N) : Group.FG (Gam N l) := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI : Group.FG SL(2, ℤ) := by
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : Group.FG SL(2, ℤ) := by
     rw [Group.fg_iff]
     exact ⟨{ModularGroup.S, ModularGroup.T}, SpecialLinearGroup.SL2Z_generators, Set.toFinite _⟩
-  haveI : (Gam N l).FiniteIndex := by unfold Gam; infer_instance
+  have : (Gam N l).FiniteIndex := by unfold Gam; infer_instance
   exact Subgroup.fg_of_index_ne_zero _
 
 theorem module_finite_z1_padicInt : ∀ (N l w : ℕ) [Fact l.Prime], 0 < N → Module.Finite ℤ_[l] (Z1 N l w) := by
@@ -402,8 +402,8 @@ theorem module_finite_z1_padicInt : ∀ (N l w : ℕ) [Fact l.Prime], 0 < N → 
   obtain ⟨s, hs, hfin⟩ := Group.fg_iff.1 (gam_fg N l hN)
   let t : Set (Gam N l) := insert 1 (s ∪ s⁻¹)
   have ht : t.Finite := (hfin.union hfin.inv).insert 1
-  haveI : Finite t := ht.to_subtype
-  haveI : Module.Finite ℤ_[l] (MvPolynomial.homogeneousSubmodule (Fin 2) ℤ_[l] w) :=
+  have : Finite t := ht.to_subtype
+  have : Module.Finite ℤ_[l] (MvPolynomial.homogeneousSubmodule (Fin 2) ℤ_[l] w) :=
     Module.Finite.iff_fg.2 (MvPolynomial.homogeneousSubmodule_fg _ _ _)
   let L : Z1 N l w →ₗ[ℤ_[l]] (t → MvPolynomial.homogeneousSubmodule (Fin 2) ℤ_[l] w) :=
     { toFun := fun c i => ⟨c.1 i.1, c.2.1 i.1⟩
@@ -460,12 +460,12 @@ theorem B_free_finite : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosur
     have h1 : ((p : X.Fn l × Z1 N l w) - q).1 = 0 := by
       apply L3
       have := hd
-      simp only [S, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq] at this
+      simp only [S, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq] at this
       rwa [h2] at this
     apply Subtype.ext
     exact sub_eq_zero.mp (Prod.ext h1 h2)
-  haveI : IsNoetherian ℤ_[l] (Z1 N l w) := inferInstance
-  haveI hSf : Module.Finite ℤ_[l] S := Module.Finite.of_injective _ hinj
+  have : IsNoetherian ℤ_[l] (Z1 N l w) := inferInstance
+  have hSf : Module.Finite ℤ_[l] S := Module.Finite.of_injective _ hinj
   have hle : X.B N l w ≤ S.map (LinearMap.fst ℤ_[l] (X.Fn l) (Z1 N l w)) := by
     refine Submodule.span_le.mpr ?_
     intro b hb
@@ -478,11 +478,11 @@ theorem B_free_finite : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosur
     rw [e]
     exact Module.Finite.iff_fg.mp inferInstance
   have hB : (X.B N l w).FG := by
-    haveI : IsNoetherian ℤ_[l] (S.map (LinearMap.fst ℤ_[l] (X.Fn l) (Z1 N l w))) := isNoetherian_of_fg_of_noetherian _ hfg
+    have : IsNoetherian ℤ_[l] (S.map (LinearMap.fst ℤ_[l] (X.Fn l) (Z1 N l w))) := isNoetherian_of_fg_of_noetherian _ hfg
     have := (isNoetherian_submodule.mp this) (X.B N l w) ?_
     · exact this
     · exact hle
-  haveI hBf : Module.Finite ℤ_[l] (X.B N l w) := Module.Finite.iff_fg.mpr hB
+  have hBf : Module.Finite ℤ_[l] (X.B N l w) := Module.Finite.iff_fg.mpr hB
 
   have Lpow : ∀ (k : ℕ) (x : X.Khat l), ((l : ℤ_[l]) ^ k) • x = 0 → x = 0 := by
     intro k
@@ -493,7 +493,7 @@ theorem B_free_finite : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosur
       apply ih
       apply L1
       rw [← mul_smul, ← pow_succ']; exact hx
-  haveI : NoZeroSMulDivisors ℤ_[l] (X.B N l w) := by
+  have : NoZeroSMulDivisors ℤ_[l] (X.B N l w) := by
     refine ⟨fun {r b} h => ?_⟩
     by_cases hr : r = 0
     · exact Or.inl hr

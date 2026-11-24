@@ -57,8 +57,8 @@ namespace GlobalTheory.ProdLocUnitPos
 theorem prod_locUnit_eq_one_of_pos : ∀ (F : Type) [Field F] [NumberField F] (B : Type) [CommGroup B] (ψ : Neutral.B1.Ideles F →* B), IsOpen (ψ.ker : Set (Neutral.B1.Ideles F)) → (∀ k : Fˣ, ψ (Neutral.B1.diagUnits F k) = 1) → (∀ y ∈ GlobalTheory.HeckeGal.infConn F, ψ y = 1) → ∀ a : Fˣ, (∀ φ : F →+* ℝ, 0 < φ (a : F)) → ∀ T : Finset (IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)), (∀ v ∉ T, ψ (GlobalTheory.NormCompat.locUnit F v a) = 1) → ∏ v ∈ T, ψ (GlobalTheory.NormCompat.locUnit F v a) = 1 := by
   intro F _ _ B _ ψ hker hd hconn a ha T hT
   classical
-  letI : TopologicalSpace B := ⊥
-  haveI : DiscreteTopology B := ⟨rfl⟩
+  let : TopologicalSpace B := ⊥
+  have : DiscreteTopology B := ⟨rfl⟩
   have hψ : Continuous ψ := continuous_of_isOpen_ker' ψ hker
   let ι : (InfiniteAdeleRing F)ˣ →* Ideles F :=
     Units.map (MonoidHom.inl (InfiniteAdeleRing F) (FiniteAdeleRing (𝓞 F) F))

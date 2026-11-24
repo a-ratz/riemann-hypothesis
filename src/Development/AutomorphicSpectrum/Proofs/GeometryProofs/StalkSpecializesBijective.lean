@@ -228,13 +228,13 @@ theorem exists_extend (hv : AI.I1.IsBlockMap κ v) (c' : ∀ k', J' k') (d' : �
       ((hv.2.2.1 ⟨h.choose, d' h.choose⟩).trans h.choose_spec) ▸ (v ⟨h.choose, d' h.choose⟩).2 else c' k', ?_, ?_⟩
   · intro k
     have h : ∃ k₀, κ k₀ = κ k := ⟨k, rfl⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     rw [hs]
     have : h.choose = k := hv.1 h.choose_spec
     rw [this]
   · intro k' hk
     have : ¬ ∃ k, κ k = k' := hk
-    simp only [dif_neg this]
+    simp only [dite_eq_right this]
 
 variable {Ω Ω' : Type} [Field Ω] [Field Ω'] {i : Ω →+* Ω'} {y : (Σ k, J k) → Ω} {y' : (Σ k, J' k) → Ω'}
 
@@ -328,8 +328,8 @@ theorem finrank_adjoin_pull (fn : Ω₀ →+* Ω) (fn' : Ω₀' →+* Ω') (ψ :
     letI := fn'.toAlgebra;
     Module.finrank (IntermediateField.adjoin Ω₀' (Set.range fun q => i (w q))) Ω' =
       Module.finrank i.fieldRange Ω' * Module.finrank (IntermediateField.adjoin Ω₀ (Set.range w)) Ω := by
-  letI := fn.toAlgebra
-  letI := fn'.toAlgebra
+  let := fn.toAlgebra
+  let := fn'.toAlgebra
   set A := IntermediateField.adjoin Ω₀ (Set.range w) with hA
   set A' := IntermediateField.adjoin Ω₀' (Set.range fun q => i (w q)) with hA'
   have hQ : A'.toSubfield = A.toSubfield.map i := by
@@ -365,8 +365,8 @@ theorem finrank_adjoin_pull (fn : Ω₀ →+* Ω) (fn' : Ω₀' →+* Ω') (ψ :
       map_mul' := fun _ _ => rfl
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
-  letI := g.toAlgebra
-  haveI : IsScalarTower A' i.fieldRange Ω' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := g.toAlgebra
+  have : IsScalarTower A' i.fieldRange Ω' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let e₀ : A →+* A' :=
     { toFun := fun x => ⟨i x.1, hmem x.1 x.2⟩
       map_one' := Subtype.ext (map_one i)
@@ -394,8 +394,8 @@ theorem genericFlag_pull (fn : Ω₀ →+* Ω) (fn' : Ω₀' →+* Ω') (ψ : Ω
     (h : letI := fn.toAlgebra; IsGenericFlag (Ω' := Ω) j₀ V b d) :
     letI := fn'.toAlgebra;
     IsGenericFlag (Ω' := Ω') (j.comp j₀) V' (fun s k => j (b s k)) (Module.finrank i.fieldRange Ω' * d) := by
-  letI := fn.toAlgebra
-  letI := fn'.toAlgebra
+  let := fn.toAlgebra
+  let := fn'.toAlgebra
   obtain ⟨c, u, hcV, hlin, hcj, hb, hd1, hup, hfl, hai, hd0, hfr⟩ := h
   have hsurj : ∀ a : Ω₀', ψ (ψ.symm a) = a := ψ.apply_symm_apply
   have hs' : ∀ (a : Ω₀') (e : E), a • e = ψ.symm a • e := fun a e => by rw [← hs, hsurj]
@@ -468,7 +468,7 @@ theorem mono_spec_comp {R : CommRingCat.{0}} (g : R →+* Ω₁) (hb : Function.
     {ξ : Spec (CommRingCat.of Ω₁) ⟶ X} (hξ : Spec.map (CommRingCat.ofHom g : R ⟶ CommRingCat.of Ω₁) ≫ F = ξ) :
     Mono ξ := by
   subst hξ
-  haveI : IsIso (CommRingCat.ofHom g : R ⟶ CommRingCat.of Ω₁) := (ConcreteCategory.isIso_iff_bijective _).2 hb
+  have : IsIso (CommRingCat.ofHom g : R ⟶ CommRingCat.of Ω₁) := (ConcreteCategory.isIso_iff_bijective _).2 hb
   infer_instance
 
 theorem mono_of_isCptGen {ξ : Spec (CommRingCat.of Ω₁) ⟶ X} (hg : IsCptGen ξ) : Mono ξ := by
@@ -631,7 +631,7 @@ end Eig
 
 theorem flag_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+* Ω') (K K' : Type) [Fintype K] [Fintype K'] (J : K → Type) (J' : K' → Type) [∀ k, Fintype (J k)] [∀ k, Fintype (J' k)] (y : (Σ k, J k) → Ω) (y' : (Σ k, J' k) → Ω') (A : HodgeCpt Y S y) (A' : HodgeCpt Y S y') (h : A'.X ⟶ A.X) (j : A.Li →+ A'.Li) (m : SABMap A'.t A.t h) (κ : K → K') (v : (Σ k, J k) → (Σ k, J' k)) (Fl : A.Flag), AI.I1.IsBlockMap κ v → (∀ q, y' (v q) = i (y q)) → GlobalTheory.CompanionTheory.Ar.Dominates A'.ξ A.ξ h i → A'.f = h ≫ A.f → A'.m.φ = m.φ ≫ A.m.φ → A'.cst = i.comp A.cst → IsExtOver i j → (∀ w, (A'.M.pt (j w)).left ≫ m.φ = spMap (dualMap i) ≫ (A.M.pt w).left) → (∀ s, A'.V s = (A.V s).pull A'.ξ h j) → FiniteDimensional i.fieldRange Ω' → ∃ Fl' : A'.Flag, (∀ s k, Fl'.b s k = j (Fl.b s k)) ∧ Fl'.deg = Module.finrank i.fieldRange Ω' * Fl.deg ∧ (∃ (ψ : A.Ω₀ ≃+* A'.Ω₀) (θ : Fl.Li₀ ≃+ Fl'.Li₀), A'.fn.comp ψ.toRingHom = i.comp A.fn ∧ spMap ψ.toRingHom ≫ A.ξ₀ = A'.ξ₀ ∧ (∀ e, (Fl'.M₀.pt (θ e)).left = spMap (dualMap ψ.toRingHom) ≫ (Fl.M₀.pt e).left) ∧ ∀ e, Fl'.j (θ e) = j (Fl.j e)) ∧ ∀ xdeg e, Fl.RootLines xdeg e → Fl'.RootLines (fun r => AI.I1.pullDeg κ (xdeg r)) (fun r => i (e r)) := by
   intro E _ _ _ H D l Xo c O _ β Y S Ω Ω' _ _ i K K' _ _ J J' _ _ y y' A A' h j m κ v Fl hv hy hd hf hφ hcst hj hpt hV hfin
-  haveI := hfin
+  have := hfin
   have hgen : genPt A.ξ₀ = genPt A'.ξ₀ := by
     have h1 := RegAtDom.map_genPt hd
     have h2 := RegAtDom.map_genPt A.fn_over
@@ -640,7 +640,7 @@ theorem flag_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     rfl
   obtain ⟨ψ, hψ⟩ := exists_iso A.gen₀ A'.gen₀ hgen
   have hfn : A'.fn.comp ψ.toRingHom = i.comp A.fn := by
-    haveI := mono_of_isCptGen A.gen₀
+    have := mono_of_isCptGen A.gen₀
     have e1 : spMap A'.fn ≫ A'.ξ₀ = A'.ξ ≫ A'.f := A'.fn_over.symm
     have e2 : spMap A.fn ≫ A.ξ₀ = A.ξ ≫ A.f := A.fn_over.symm
     have e3 : A'.ξ ≫ h = spMap i ≫ A.ξ := hd
@@ -649,7 +649,7 @@ theorem flag_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
       rw [spMap_comp, spMap_comp, Category.assoc, Category.assoc, hψ, e1, e2, hf, ← Category.assoc, e3,
         Category.assoc]
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e4)
-  letI mod' : Module A'.Ω₀ Fl.Li₀ := Module.compHom _ ψ.symm.toRingHom
+  let mod' : Module A'.Ω₀ Fl.Li₀ := Module.compHom _ ψ.symm.toRingHom
   have hs : ∀ (a : A.Ω₀) (e : Fl.Li₀), ψ a • e = a • e := fun a e => by
     show ψ.symm (ψ a) • e = a • e
     rw [ψ.symm_apply_apply]
@@ -666,7 +666,7 @@ theorem flag_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
       _ = (A'.M.pt (j w)).left ≫ (A'.t.act.act a).left ≫ m.cm.F := by rw [m.act, Category.assoc]
       _ = (A'.M.pt (A'.ρ a (j w))).left ≫ m.cm.F := by rw [a2, Over.comp_left, Category.assoc]
   have hb₀ : ∀ s, LinearIndependent Ω (Fl.b s) := by
-    letI := A.fn.toAlgebra
+    let := A.fn.toAlgebra
     obtain ⟨_, _, _, _, _, hb, _⟩ := Fl.generic
     exact hb
   have hemb : ∀ s, A'.emb s = i.comp (A.emb s) := fun s => by

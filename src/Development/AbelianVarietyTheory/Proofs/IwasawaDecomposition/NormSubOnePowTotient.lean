@@ -116,7 +116,7 @@ theorem norm_pow_sub_one_le {K : Type*} [NormedField K] [IsUltrametricDist K]
 theorem norm_sub_one_le {K : Type*} [NormedField K] [IsUltrametricDist K]
     {n : ℕ} (hn : n ≠ 0) {ζ μ : K} (hζ : IsPrimitiveRoot ζ n) (hμ : μ ^ n = 1) :
     ‖μ - 1‖ ≤ ‖ζ - 1‖ := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   obtain ⟨a, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hμ
   exact norm_pow_sub_one_le (norm_root_eq_one hn hζ.pow_eq_one) a
 
@@ -294,7 +294,7 @@ theorem GlobalTheory.CycTrace.normalised_trace_bound (l : ℕ) [hl : Fact l.Prim
     · intro i _ hi
       rw [coeff_mul_X_pow']
       split_ifs with h
-      · rw [coeff_expand hM, if_neg]
+      · rw [coeff_expand hM, ite_eq_right]
         intro hd
         have : l ^ m ∣ (i : ℕ) := by
           have := (Nat.dvd_sub_iff_right h (Dvd.intro_left j rfl)).1 hd

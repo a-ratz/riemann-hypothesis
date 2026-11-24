@@ -130,8 +130,8 @@ theorem oo_factor (γ : ∀ v, G v) (y : ∀ v, V' v) :
     haveI := FiniteDimensional.complete ℂ Vt
     (∫ x, TermOp.rk1 (Wt x) (Wt' (γ⁻¹ * x)) ∂(Measure.pi μ)) (T' y) =
       T fun v => (∫ s, TermOp.rk1 (W v s) (W' v ((γ v)⁻¹ * s)) ∂(μ v)) (y v) := by
-  have : ∀ v, CompleteSpace (V v) := fun v => FiniteDimensional.complete ℂ (V v)
-  have := FiniteDimensional.complete ℂ Vt
+  have : ∀ v, CompleteSpace (V v) := fun v => FiniteDimensional.completeSpace ℂ (V v)
+  have := FiniteDimensional.completeSpace ℂ Vt
   let f : ∀ v, G v → (V' v →L[ℂ] V v) := fun v s => TermOp.rk1 (W v s) (W' v ((γ v)⁻¹ * s))
   let F : (∀ v, G v) → (Vt' →L[ℂ] Vt) := fun x => TermOp.rk1 (Wt x) (Wt' (γ⁻¹ * x))
   show (∫ x, F x ∂(Measure.pi μ)) (T' y) = T fun v => (∫ s, f v s ∂(μ v)) (y v)
@@ -146,7 +146,7 @@ theorem oo_factor (γ : ∀ v, G v) (y : ∀ v, V' v) :
     intro v0 h0
     refine tens_eq_zero T hT _ v0 ?_
     show (∫ s, f v0 s ∂(μ v0)) (y v0) = 0
-    rw [integral_undef h0, ContinuousLinearMap.zero_apply]
+    rw [integral_undef h0, zero_apply]
   by_cases hF : Integrable F (Measure.pi μ)
   · by_cases hloc : ∀ v, Integrable (f v) (μ v)
     · refine eq_of_inner_tens T hS _ _ fun z => ?_
@@ -183,7 +183,7 @@ theorem oo_factor (γ : ∀ v, G v) (y : ∀ v, V' v) :
         simpa only [Pi.zero_apply] using norm_eq_zero.1 h1
       rw [integral_congr_ae hae]
       simp
-  · rw [integral_undef hF, ContinuousLinearMap.zero_apply]
+  · rw [integral_undef hF, zero_apply]
     by_cases hloc : ∀ v, Integrable (f v) (μ v)
     · exfalso
       apply hF

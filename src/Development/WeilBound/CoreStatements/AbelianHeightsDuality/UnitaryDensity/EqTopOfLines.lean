@@ -213,7 +213,7 @@ theorem isInducing_mat (hJ : J.det ≠ 0) : IsInducing (mat : UA σ J → _) := 
   have h1 : IsInducing fun g : UA σ J => Units.embedProduct _ g.1 :=
     Units.isInducing_embedProduct.comp IsInducing.subtypeVal
   refine IsInducing.of_comp (g := fun M => (M, MulOpposite.op (incM F J * M.map (cA σ) * (incM F J)⁻¹)ᵀ))
-    (Units.continuous_val.comp continuous_subtype_val) (continuous_id.prodMk (MulOpposite.continuous_op.comp
+    (Units.continuous_val.comp continuous_subtypeVal) (continuous_id.prodMk (MulOpposite.continuous_op.comp
       ((continuous_const.matrix_mul (continuous_id.matrix_map cc)).matrix_mul continuous_const).matrix_transpose)) ?_
   convert h1 using 1
   funext g
@@ -239,7 +239,7 @@ theorem exists_line {R : Matrix (Fin n) (Fin n) E} (hR : R * R = R) (ha : Rᵀ *
     rw [← Matrix.transpose_map, ← Matrix.map_mul, ← Matrix.map_mul, ha]
   have cS : Continuous (sec _ hR') := continuous_const.add ((continuous_id.sub continuous_const).smul continuous_const)
   refine ⟨((Units.map (sec _ hR')).comp (normOne (cA σ)).subtype).codRestrict _ fun z => ?_,
-    ((Continuous.units_map _ cS).comp continuous_subtype_val).subtype_mk _, fun z => rfl,
+    ((Continuous.units_map _ cS).comp continuous_subtypeVal).subtype_mk _, fun z => rfl,
     fun z ⟨k, k0, hk⟩ => ⟨Units.map (sec _ hR) (Units.mk0 k k0), Units.ext (Matrix.ext fun a b => ?_)⟩⟩
   · have hz : (z.1 : AE F E) * cA σ (z.1 : AE F E) = 1 := mem_normOne.1 z.2
     change (1 + ((z.1 : AE F E) - 1) • R.map i)ᵀ * J.map i * (1 + ((z.1 : AE F E) - 1) • R.map i).map (cA σ) = J.map i
@@ -339,7 +339,7 @@ theorem cut_place (hc : IsCMExt F E σ) (hJ : IsHermND σ Jᵀ) {L : Subgroup (U
   have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
   have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hσ := GlobalTheory.UnitaryHeckeBaseChange.sig_sig hc
-  letI : Algebra F k := (π.comp (algebraMap F (AF F))).toAlgebra
+  let : Algebra F k := (π.comp (algebraMap F (AF F))).toAlgebra
   have jπ : ∀ a, j (π a) = a * j 1 := fun a => by rw [mj, mul_one]
   have j1 : ∀ y, j y * j 1 = j y := fun y => by rw [mj, πj, mul_one]
   let jl : k →ₗ[F] AF F :=
@@ -354,7 +354,7 @@ theorem cut_place (hc : IsCMExt F E σ) (hJ : IsHermND σ Jᵀ) {L : Subgroup (U
     | zero => simp
     | tmul a x => exact (congrArg (· ⊗ₜ[F] x) ((jπ a).trans (mul_comm _ _)))
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy, smul_add]
-  letI : TopologicalSpace (k ⊗[F] E) := moduleTopology k _
+  let : TopologicalSpace (k ⊗[F] E) := moduleTopology k _
   have : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalRing (k ⊗[F] E) := IsModuleTopology.isTopologicalRing k _
   have : IsArtinianRing (k ⊗[F] E) := IsArtinianRing.of_finite k _

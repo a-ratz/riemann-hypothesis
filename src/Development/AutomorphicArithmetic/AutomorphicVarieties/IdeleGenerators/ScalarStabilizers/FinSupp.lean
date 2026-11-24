@@ -55,7 +55,7 @@ private theorem fin_supp' (y : (Af F)ˣ) : Function.HasFiniteMulSupport fun w : 
   have h2 := Filter.eventually_cofinite.1 ((y⁻¹ : (Af F)ˣ) : Af F).2
   refine (h1.union h2).subset fun w hw => ?_
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   have a1 : Valued.v (pLoc F w (y : Af F)) ≤ 1 := hc.1
   have a2 : Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) ≤ 1 := hc.2
   have a3 : Valued.v (pLoc F w (y : Af F)) * Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) = 1 := by

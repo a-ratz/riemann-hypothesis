@@ -142,7 +142,7 @@ theorem appTop_fst_injective [IsDiscreteValuationRing V] {X : Scheme.{0}} (p : X
     haveI := isOpenImmersion_frac (IsDiscreteValuationRing.exists_irreducible V).choose_spec
     Function.Injective (pullback.fst p (spMap (algebraMap V (FractionRing V)))).appTop := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
-  haveI := isOpenImmersion_frac hϖ
+  have := isOpenImmersion_frac hϖ
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
   have : QuasiSeparatedSpace X := quasiSeparatedSpace_of_quasiSeparated p
   set s := p.appTop ((Scheme.ΓSpecIso (CommRingCat.of V)).inv ϖ) with hs

@@ -96,7 +96,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.kvSpec :
   refine ⟨fun e => ⟨sp e, ⟨R, ((cutLaws (V := W) (Icc (-R) R) univ measurableSet_Icc .univ).2.2.2.2.2.2.2.1 _).2 ?_⟩, ?_⟩,
     fun a b u => ?_⟩
   · filter_upwards [sp e] with x hx hx'
-    rw [hx, hR _ (by rw [abs_neg]; exact not_le.1 fun h => hx' (abs_le.1 h)), ContinuousLinearMap.zero_apply]
+    rw [hx, hR _ (by rw [abs_neg]; exact not_le.1 fun h => hx' (abs_le.1 h)), zero_apply]
   · rw [integral_congr_ae (sp e), integral_neg_eq_self (fun x => κ x e), symb]
     simp only [zero_mul, Complex.exp_zero, one_smul]
     rw [ContinuousLinearMap.integral_apply hk1]

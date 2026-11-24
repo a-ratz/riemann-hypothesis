@@ -181,7 +181,7 @@ theorem _root_.UpperTheory.KN.exists_lattice_eq_add_smul_of_stable_fg_submodule 
     obtain ⟨a, ha, u, hu, rfl⟩ := (hmem x).1 hx
     refine (hmem _).2 ⟨ρ g a, hst g a ha, ρ g u, Λ.stable g u hu, ?_⟩
     rw [map_add (f := _), ← algebraMap_smul LL μ u, map_smul, algebraMap_smul]
-  · haveI : Module.Finite O ↥(A ⊔ Λ.T.map (μ • (LinearMap.id : V →ₗ[O] V))) :=
+  · have : Module.Finite O ↥(A ⊔ Λ.T.map (μ • (LinearMap.id : V →ₗ[O] V))) :=
       Module.Finite.iff_fg.2 hfg
     infer_instance
   · rw [eq_top_iff, ← Λ.span, Submodule.span_le]
@@ -382,8 +382,8 @@ private theorem span_pi_submodule_eq_top {O LL : Type} [CommRing O] [Field LL] [
 private theorem free_of_finitely_generated_pid {O LL : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] [Field LL]
     [Algebra O LL] [IsFractionRing O LL] {V : Type} [AddCommGroup V] [Module LL V] [Module O V]
     [IsScalarTower O LL V] (T : Submodule O V) (h : T.FG) : Module.Free O T := by
-  haveI : Module.Finite O T := Module.Finite.iff_fg.mpr h
-  haveI : Module.IsTorsionFree O V := Module.IsTorsionFree.trans_faithfulSMul O LL V
+  have : Module.Finite O T := Module.Finite.iff_fg.mpr h
+  have : Module.IsTorsionFree O V := Module.IsTorsionFree.trans_faithfulSMul O LL V
   infer_instance
 
 theorem _root_.UpperTheory.KN.exists_admissible_lattice_matrix_of_period_data :
@@ -503,9 +503,9 @@ theorem _root_.UpperTheory.KN.exists_admissible_extension_latticeTensor :
     Xs n N θ χ p V _ _ _ _ ρ L X _ _ z iW e x₀ hχ hlam hfull hpres hiW hρ he hfix hx₀ b hb
   subst hχ
   obtain ⟨a, x, E, Y, hfg, hst, hE, φ, hφ, hz⟩ := hpres
-  haveI : Module.Finite O ↥Y := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Finite O ↥L.T := Module.Finite.iff_fg.mpr L.fg
-  haveI : Module.IsTorsionFree O (Fin n → LL) := Module.IsTorsionFree.trans_faithfulSMul O LL _
+  have : Module.Finite O ↥Y := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite O ↥L.T := Module.Finite.iff_fg.mpr L.fg
+  have : Module.IsTorsionFree O (Fin n → LL) := Module.IsTorsionFree.trans_faithfulSMul O LL _
   let j : (↥Y × ↥L.T × O) →ₗ[O] ((Fin a ⊕ Bool) → Fin n → LL) :=
     { toFun := fun u => Sum.elim (fun k => (u.1 : Fin a → Fin n → LL) k + u.2.2 • E k)
         (fun c => cond c (iW (u.2.1 : V)) (u.2.2 • e))

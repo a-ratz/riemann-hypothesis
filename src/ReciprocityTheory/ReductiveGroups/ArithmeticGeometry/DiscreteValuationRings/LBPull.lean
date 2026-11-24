@@ -58,7 +58,7 @@ open ReciprocityTheory.ChartRestriction.G.Semi
 lemma pullU_comp {X Y Z : Scheme.{0}} (f : Z ⟶ Y) (g : Y ⟶ X) (U : X.Opens) (x : Γ(X, U)ˣ) :
     pullU (f ≫ g) U x = pullU f (g ⁻¹ᵁ U) (pullU g U x) := by
   ext
-  simp only [pullU, Units.coe_map, MonoidHom.coe_coe, Scheme.Hom.comp_app]
+  simp only [pullU, Units.coe_map, MonoidHom.coe_ofClass, Scheme.Hom.comp_app]
   rfl
 
 

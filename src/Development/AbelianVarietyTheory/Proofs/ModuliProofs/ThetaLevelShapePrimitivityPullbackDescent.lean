@@ -217,8 +217,8 @@ open ShapePull
 theorem shape_prim_pull_and_descend :
     ∀ (o : Type) [CommRing o] (g k : ℕ) (J : Type) (b : TBase o k) Mat κ (w w' : J) (S S' : Scheme.{0}) (s : S ⟶ Sp o) (s' : S' ⟶ Sp o) (f : S' ⟶ S) (t : TObj g k J b s) (t' : TObj g k J b s'), TMap t' t f → (t.Shape Mat κ → t'.Shape Mat κ) ∧ (t.Prim w w' → t'.Prim w w') ∧ ∀ (K : Type) [Field K] (e : S = Sp K), IsAffine S' → Nonempty S' → (t'.Shape Mat κ → t.Shape Mat κ) ∧ (IsIntegral S' → t'.Prim w w' → t.Prim w w') := by
   intro o _ g k J b Mat κ w w' S S' s s' f t t' ⟨φ, h, hL, hpt, hact⟩
-  letI := t.ab.comm
-  letI := t'.ab.comm
+  let := t.ab.comm
+  let := t'.ab.comm
   have lb : ∀ {X Y : Scheme.{0}} {L : LB X} (_ : L.IsLB) {K : Type} [Fintype K] (ψ : K → (Y ⟶ X)) (ε : K → ℤ),
       (LB.LinComb L ψ ε).IsLB := fun hL _ _ _ _ => DVR.linComb_isLB _ hL _ _
   have pt : ∀ i, pushPt h.1.w (t'.pt i) = baseMap f ≫ t.pt i := fun i => Over.OverMorphism.ext (hpt i)

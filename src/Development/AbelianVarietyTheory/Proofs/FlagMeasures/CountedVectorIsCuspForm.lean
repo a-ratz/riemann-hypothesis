@@ -89,7 +89,7 @@ theorem level_comp_Re (B : RowsAut) (k : B.I.Gf) (hk : k ∈ B.I.Kg B.g) (hg : 1
       (fun g => B.e g * ⟪x, B.R (1, g) y⟫_ℂ) (k * g) := by
     intro g
     simp only
-    rw [he, ← inv_inv k, ← hadj, inv_inv, ← ContinuousLinearMap.mul_apply, ← hπmul]
+    rw [he, ← inv_inv k, ← hadj, inv_inv, ← mul_apply_eq_comp, ← hπmul]
   calc ∫ g, B.e g * ⟪B.R (1, k⁻¹) x, B.R (1, g) y⟫_ℂ ∂B.μf
       = ∫ g, (fun g => B.e g * ⟪x, B.R (1, g) y⟫_ℂ) (k * g) ∂B.μf := by
         congr 1

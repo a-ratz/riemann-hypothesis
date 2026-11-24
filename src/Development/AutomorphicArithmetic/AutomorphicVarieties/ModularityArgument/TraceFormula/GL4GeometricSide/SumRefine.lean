@@ -77,7 +77,7 @@ private theorem exists_op {K : Type*} {M : Type*} [Group K] [AddCommGroup M] [Mo
       (∀ m, (∀ k, ρ k m = m) → A m = m) ∧
       (∀ m, m - A m ∈ Submodule.span ℂ {x : M | ∃ k y, x = y - ρ k y}) := by
   classical
-  haveI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : Fintype (K ⧸ H) := Fintype.ofFinite _
   have hc : ((Fintype.card (K ⧸ H) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
   have key : ∀ m, (∀ h ∈ H, ρ h m = m) → ∀ g : K, ρ g m = ρ ((g : K ⧸ H).out) m := by
     intro m hm g
@@ -125,16 +125,16 @@ private theorem exists_sub {K : Type*} {M : Type*} [Group K] [AddCommGroup M] [M
     { carrier := {k : K | ρ k m = m}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         nth_rewrite 1 [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-  haveI : Finite (K ⧸ S) := Subgroup.quotient_finite_of_isOpen S (hs m)
-  haveI : S.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (K ⧸ S) := Subgroup.quotient_finite_of_isOpen S (hs m)
+  have : S.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   exact ⟨S.normalCore, inferInstance, inferInstance, fun h hh => S.normalCore_le hh⟩
 
 theorem exists_avg {K : Type*} {M : Type*} [Group K] [AddCommGroup M] [Module ℂ M]
@@ -260,12 +260,12 @@ private theorem core (π : CuspSub E n) (K : Subgroup (GL (Fin n) (Af E))) (hKc 
     (v0 ψ : π.V) (hv0 : v0 ≠ 0) (hfix : ∀ k ∈ K, π.finPart k v0 = v0) (hψ : ψ ≠ 0) :
     ∃ v : π.V, v ≠ 0 ∧ (∀ k ∈ K, π.finPart k v = v) ∧ ∀ (T : Module.End ℂ π.V) (c : ℂ),
       (∀ g x, T (π.finPart g x) = π.finPart g (T x)) → T ψ = c • ψ → T v = c • v := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   let ρ : K →* Module.End ℂ π.V := MonoidHom.comp π.finPart K.subtype
   have hρ : ∀ (k : K) m, ρ k m = π.finPart k.1 m := fun _ _ => rfl
   have hs : ∀ m, IsOpen {k : K | ρ k m = m} := fun m => by
     have h1 := (π.cusp m.1 m.2).1.level
-    convert h1.preimage continuous_subtype_val using 1
+    convert h1.preimage continuous_subtypeVal using 1
     ext k
     exact Subtype.ext_iff
   obtain ⟨P, hPinv, hPfix, hPT⟩ := exists_avg ρ hs

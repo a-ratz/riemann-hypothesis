@@ -317,7 +317,7 @@ theorem exists_algebra {R : Type} [CommRing R] {W : Scheme.{0}} (π : W ⟶ Sp R
       e ≫ π = spMap (algebraMap R R₁) := by
   have : IsAffine W := isAffine_of_isAffineHom π
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (W.isoSpec.inv ≫ π)
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   have h1 : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance
   have h2 : Etale (Spec.map φ) := by rw [hφ]; infer_instance
   have h3 : Surjective (Spec.map φ) := by rw [hφ]; infer_instance

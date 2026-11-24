@@ -92,7 +92,7 @@ theorem finiteDimensional_types (hρ : IsUnitaryRep ρ) (hc : EnoughCompact ρ)
         rw [hiso _ (hW i0), top_le_iff, Submodule.orthogonal_eq_top_iff] at hle
         exact (hW i).2.1 hle
       exact Set.finite_univ_iff.1 (huniv ▸ hset)
-    · haveI := not_nonempty_iff.1 hne
+    · have := not_nonempty_iff.1 hne
       infer_instance
   have := Fintype.ofFinite ι
   have hsum : ∀ x : K, ∑ i, (W i).starProjection x = x := fun x => by
@@ -198,7 +198,7 @@ theorem apply_ne_zero_of_inner_eq_integral {Γ : Type} [Group Γ] [TopologicalSp
   have h3 := integral_re (𝕜 := ℂ) (μ := μ) ((hcf.mul hcc).integrable_of_hasCompactSupport hcs.mul_right)
   have h4 : 0 < (⟪v, ρ (p 1) v⟫_ℂ).re := by
     simpa [hp1] using (re_inner_self_pos (𝕜 := ℂ)).2 hv
-  refine ((hf.mul hc).integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) hs.mul_right (fun g => ?_)
+  refine ((hf.mul hc).integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) hs.mul_right (fun g => ?_)
     (mul_ne_zero h1 h4.ne')).ne' ?_
   · by_cases hg : f g = 0
     · simp [hg]
@@ -312,9 +312,9 @@ theorem continuous_finGL : Continuous (finGL E a) := by
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem locallyCompactSpace_GL : LocallyCompactSpace (GL (Fin a) (Cinf E)) := by
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin a) (Cinf E)) :=
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin a) (Cinf E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin a → Fin a → Cinf E))
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin a) (Cinf E))ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin a) (Cinf E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
   exact Units.isClosedEmbedding_embedProduct.locallyCompactSpace
 
@@ -324,7 +324,7 @@ theorem exists_testFn {N : Set (GL (Fin a) (Cinf E))} (hN : N ∈ 𝓝 1) {U : S
       ∀ g, f g ≠ 0 → GeneralLinearGroup.map (pInf E) g ∈ N ∧ GeneralLinearGroup.map (pFin E) g ∈ U := by
   set_option synthInstance.maxHeartbeats 200000 in
   classical
-  haveI := locallyCompactSpace_GL (E := E) (a := a)
+  have := locallyCompactSpace_GL (E := E) (a := a)
   obtain ⟨φ, hφ, hφs, hφ0, hφ1, hφN⟩ := GlobalTheory.CompanionTheory.Bump.exists_nonneg_bump (1 : GL (Fin a) (Cinf E)) N hN
   have hpi := ContAut.continuous_map_pInf E a
   have hpf := ContAut.continuous_map_pFin E a
@@ -377,14 +377,14 @@ theorem isSubrep_fixedPart {H : Submodule ℂ (L2 (latticeGL E a) μ)} (hH : IsS
     refine ⟨hH.2 _ _ h1, fun u hu => ?_⟩
     have e := congrArg (fun S : L2 (latticeGL E a) μ →L[ℂ] L2 (latticeGL E a) μ => S F)
       (congrArg (R (latticeGL E a) μ) (infGL_comm y u))
-    simp only [map_mul, ContinuousLinearMap.mul_apply, h2 u hu] at e
+    simp only [map_mul, mul_apply_eq_comp, h2 u hu] at e
     exact e.symm
 
 theorem R_apply_of_mem {H : Submodule ℂ (L2 (latticeGL E a) μ)} {U : Subgroup (GL (Fin a) (Af E))}
     {F : L2 (latticeGL E a) μ} (hF : F ∈ fixedPart μ H U) {g : GA E a}
     (hg : GeneralLinearGroup.map (pFin E) g ∈ U) :
     R (latticeGL E a) μ g F = R (latticeGL E a) μ (infGL E a (GeneralLinearGroup.map (pInf E) g)) F := by
-  conv_lhs => rw [← infGL_mul_finGL g, map_mul, ContinuousLinearMap.mul_apply, hF.2 _ hg]
+  conv_lhs => rw [← infGL_mul_finGL g, map_mul, mul_apply_eq_comp, hF.2 _ hg]
 
 theorem enoughCompact_fixedPart {H : Submodule ℂ (L2 (latticeGL E a) μ)} (hHc : H ≤ L2cusp μ)
     (hH : IsSubrep (R (latticeGL E a) μ) H) {U : Subgroup (GL (Fin a) (Af E))} (hU : IsOpen (U : Set (GL (Fin a) (Af E))))

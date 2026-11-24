@@ -70,7 +70,7 @@ theorem finite_quotient_span_pow (R : Type) [CommRing R] [IsDomain R] [IsDiscret
     [Finite (IsLocalRing.ResidueField R)] (ϖ : R) (m : ℕ) (hϖ : Irreducible ϖ) :
     Finite (R ⧸ Ideal.span {ϖ ^ m}) := by
   rw [← Ideal.span_singleton_pow, ← hϖ.maximalIdeal_eq]
-  haveI : Finite (R ⧸ IsLocalRing.maximalIdeal R) :=
+  have : Finite (R ⧸ IsLocalRing.maximalIdeal R) :=
     (inferInstance : Finite (IsLocalRing.ResidueField R))
   exact Ideal.finite_quotient_pow (IsNoetherian.noetherian _) m
 
@@ -111,10 +111,10 @@ theorem sum_tel (A : ℕ → ℤ) (i n : ℕ) (h : i ≤ n) :
     rw [Finset.sum_eq_zero]
     · simp
     · intro j hj
-      rw [if_neg]
+      rw [ite_eq_right]
       simpa using hj
   | succ n hn ih =>
-    rw [Finset.sum_range_succ, ih, if_pos hn]
+    rw [Finset.sum_range_succ, ih, ite_eq_left hn]
     ring
 
 theorem exists_lamOf (N : ℕ) (hN : 1 ≤ N) (a : Fin N → ℤ) (ha : Antitone a) :
@@ -153,8 +153,8 @@ noncomputable abbrev incl (N : ℕ) : GL (Fin N) 𝒪[k] →* GL (Fin N) k :=
   Matrix.GeneralLinearGroup.map (n := Fin N) (algebraMap 𝒪[k] k)
 
 theorem finite_red (N m : ℕ) : Finite (GL (Fin N) (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m})) := by
-  haveI : IsFractionRing 𝒪[k] k := GlobalTheory.CompanionTheory.LocalFieldValuationRing.isFractionRing_integer k
-  haveI : Finite (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) :=
+  have : IsFractionRing 𝒪[k] k := GlobalTheory.CompanionTheory.LocalFieldValuationRing.isFractionRing_integer k
+  have : Finite (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) :=
     GlobalTheory.CompanionTheory.Congruence.finite_quotient_span_pow 𝒪[k] (Zls.unif k) m Zls.irreducible_unif
   infer_instance
 
@@ -176,15 +176,15 @@ theorem diag_eq (N : ℕ) (a : Fin N → ℤ) (g : Fin (N - 1) → ℕ) (c : ℤ
 theorem cartan_cover : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N m : ℕ), 1 ≤ m → 1 ≤ N → ∃ s : Finset (GL (Fin N) k × GL (Fin N) k), (∀ p ∈ s, p.1 ∈ KO k (Fin N) ∧ p.2 ∈ KO k (Fin N)) ∧ ∀ h : GL (Fin N) k, ∃ p ∈ s, ∃ g : Fin (N - 1) → ℕ, ∃ x ∈ Zls.Km k N m, ∃ y ∈ Zls.Km k N m, ∃ z ∈ Subgroup.center (GL (Fin N) k), h = p.1 * x * Zls.diagPow k N (Zls.lamOf g) * y * p.2 * z := by
   intro k _ _ _ _ N m _ hN
   classical
-  haveI : IsFractionRing 𝒪[k] k := GlobalTheory.CompanionTheory.LocalFieldValuationRing.isFractionRing_integer k
-  haveI := finite_red k N m
+  have : IsFractionRing 𝒪[k] k := GlobalTheory.CompanionTheory.LocalFieldValuationRing.isFractionRing_integer k
+  have := finite_red k N m
 
   have hsec : ∀ u : GL (Fin N) 𝒪[k], ∃ w : GL (Fin N) 𝒪[k], red k N m w = red k N m u := fun u => ⟨u, rfl⟩
   let σ : GL (Fin N) (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) → GL (Fin N) 𝒪[k] := fun c =>
     if hc : ∃ w, red k N m w = c then hc.choose else 1
   have hσ : ∀ u, red k N m (σ (red k N m u)) = red k N m u := fun u => by
     have hc : ∃ w, red k N m w = red k N m u := hsec u
-    simp only [σ, dif_pos hc]
+    simp only [σ, dite_eq_left hc]
     exact hc.choose_spec
   let f : GL (Fin N) (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) × GL (Fin N) (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) →
       GL (Fin N) k × GL (Fin N) k := fun c => (incl k N (σ c.1), incl k N (σ c.2))

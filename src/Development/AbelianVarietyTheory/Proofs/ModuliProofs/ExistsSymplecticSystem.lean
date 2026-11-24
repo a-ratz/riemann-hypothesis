@@ -135,7 +135,7 @@ theorem exists_symplectic_system (hL : Out.Laws) {K : Type} [Field K] [IsAlgClos
       ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom a) = a := fun a => by simp
   have hleft' : ∀ a, (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom
       ((Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom a) = a := fun a => by simp
-  haveI : IsDomain Γ(Sp K, ⊤) := Function.Injective.isDomain (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom
+  have : IsDomain Γ(Sp K, ⊤) := Function.Injective.isDomain (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom
     (Function.LeftInverse.injective hleft')
   have hz' : IsPrimitiveRoot (unitOn ze) k :=
     hze.map_of_injective (f := Units.map (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom.toMonoidHom)

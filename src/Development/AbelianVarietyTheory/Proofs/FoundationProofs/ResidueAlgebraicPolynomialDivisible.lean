@@ -53,7 +53,7 @@ namespace GlobalTheory.K5
 
 theorem exists_int_poly_root_mod_p : ∀ (p : ℕ) [Fact p.Prime] (Ωl : Type) [Field Ωl] [Algebra (O0 p) Ωl], IsClo p Ωl → ∀ (v : Valuation Ωl ℝ≥0), (∀ x : Ωl, v x ≤ 1 ↔ IsInt (p := p) x) → v (p : Ωl) < 1 → ∀ (y : Ωl) (b : O0 p), IsAlgebraic ℤ y → v y ≤ 1 → v (y - algebraMap (O0 p) Ωl b) < 1 → ∃ P : ℤ[X], P.map (Int.castRingHom (ZMod p)) ≠ 0 ∧ (p : O0 p) ∣ aeval b P := by
   intro p hpf Ωl _ _ hC v hv _ y b hy hyv hyb
-  haveI : CharZero Ωl := Basic.charZero_of_isClo hC
+  have : CharZero Ωl := Basic.charZero_of_isClo hC
   obtain ⟨P0, hP0, hP0y⟩ := hy
   have hprim : P0.primPart.IsPrimitive := Polynomial.isPrimitive_primPart P0
   have hPy : aeval y P0.primPart = 0 := by
@@ -97,7 +97,7 @@ theorem exists_int_poly_root_mod_p : ∀ (p : ℕ) [Fact p.Prime] (Ωl : Type) [
       exact RingHom.ext_int _ _
     have hlt : v (algebraMap (O0 p) Ωl (aeval b P)) < 1 := by
       rw [hmap, hkey, Valuation.map_neg, Valuation.map_mul]
-      exact mul_lt_one_of_nonneg_of_lt_one_left zero_le' hyb d.2
+      exact mul_lt_one_of_nonneg_of_lt_one_left zero_le hyb d.2
     obtain ⟨hdom, hdvr, hirr⟩ := completed_laurent_isDVR p
     have hmax : IsLocalRing.maximalIdeal (O0 p) = Ideal.span {(p : O0 p)} :=
       (IsDiscreteValuationRing.irreducible_iff_uniformizer _).1 hirr
@@ -107,7 +107,7 @@ theorem exists_int_poly_root_mod_p : ∀ (p : ℕ) [Fact p.Prime] (Ωl : Type) [
       have h2 : v (algebraMap (O0 p) Ωl (aeval b P)) * v (algebraMap (O0 p) Ωl (u⁻¹ : (O0 p)ˣ)) = 1 := by
         rw [← Valuation.map_mul, ← map_mul, ← hu, Units.mul_inv, map_one, Valuation.map_one]
       have h3 : v (algebraMap (O0 p) Ωl (aeval b P)) * v (algebraMap (O0 p) Ωl (u⁻¹ : (O0 p)ˣ)) < 1 :=
-        mul_lt_one_of_nonneg_of_lt_one_left zero_le' hlt h1
+        mul_lt_one_of_nonneg_of_lt_one_left zero_le hlt h1
       rw [h2] at h3
       exact lt_irrefl _ h3
     have hm : aeval b P ∈ IsLocalRing.maximalIdeal (O0 p) := hnu

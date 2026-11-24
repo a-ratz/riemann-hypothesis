@@ -72,7 +72,7 @@ theorem alt_det {Ω E N : Type} [Field Ω] [AddCommGroup E] [Module Ω E] [AddCo
     (φ.compAlternatingMap (f.compLinearMap (Fintype.linearCombination Ω v)))
   have h2 := congrArg (fun g => g (fun i => c i)) h
   simp only [LinearMap.compAlternatingMap_apply, AlternatingMap.compLinearMap_apply,
-    AlternatingMap.smul_apply, Pi.basisFun_det_apply, Pi.basisFun_apply,
+    smul_apply, Pi.basisFun_det_apply, Pi.basisFun_apply,
     Fintype.linearCombination_apply_single, one_smul, smul_eq_mul] at h2
   simp only [Fintype.linearCombination_apply] at h2
   rw [map_sub, map_smul, h2, smul_eq_mul, mul_comm, sub_eq_zero]

@@ -213,7 +213,7 @@ theorem isLocalHom_jetTan (ℓ : Fin 1 × Fin g) :
       rintro rfl
       rw [MvPolynomial.mem_support_iff] at hm
       apply hm
-      rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, if_pos rfl]
+      rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_C, ite_eq_left rfl]
       exact sub_self _
     obtain ⟨i, hi⟩ : ∃ i, m i ≠ 0 := by
       by_contra hne
@@ -237,8 +237,8 @@ theorem jetPt_tan (e : (Fin g → ℂ) → (Sp ℂ ⟶ Y)) (hol : IsHolFam e) (�
     (v : Sp (DualNumber ℂ) ⟶ Y) (hd : IsDerivAt0 e (Pi.single ℓ.2 1) v) :
     spMap ((jetTan ℓ : Jet ℂ (Fin 1 × Fin g) (0 + 1) →ₐ[ℂ] DualNumber ℂ) :
       Jet ℂ (Fin 1 × Fin g) (0 + 1) →+* DualNumber ℂ) ≫ jetPt e hol (0 + 1) = v := by
-  haveI := isLocalHom_jetTan (g := g) ℓ
-  haveI hfl : IsLocalHom (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom :=
+  have := isLocalHom_jetTan (g := g) ℓ
+  have hfl : IsLocalHom (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom :=
     ⟨fun a ha => TrivSqZeroExt.isUnit_iff_isUnit_fst.mpr ha⟩
   unfold jetPt
   rw [spMap, spec_comp_nbhdPt]

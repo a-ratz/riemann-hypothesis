@@ -68,7 +68,7 @@ private theorem cl_proj {S : Type} [Group S] (ρ : Representation ℂ S M) (U : 
     ∃ P : M →ₗ[ℂ] M, (∀ y ∈ fixd ρ U, ∀ s, ρ s (P y) = P y) ∧ (∀ y, (∀ s, ρ s y = y) → P y = y) ∧
       ∀ Y : Submodule ℂ M, (∀ s, ∀ y ∈ Y, ρ s y ∈ Y) → ∀ y ∈ Y, P y ∈ Y := by
   classical
-  haveI : Fintype (S ⧸ U) := Fintype.ofFinite _
+  have : Fintype (S ⧸ U) := Fintype.ofFinite _
   have hc : (Fintype.card (S ⧸ U) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   refine ⟨(Fintype.card (S ⧸ U) : ℂ)⁻¹ • ∑ q : S ⧸ U, ρ q.out, fun y hy s => ?_, fun y hy => ?_, fun Y hY y hy => ?_⟩
 
@@ -127,7 +127,7 @@ private theorem cl_avg {G : Type} [Group G] (ρ : Representation ℂ G M) (K : S
   have hrel : (⨅ i : f.support, U i).relIndex K ≠ 0 := Subgroup.relIndex_iInf_ne_zero fun i => hU i
   have hrel' : (⨅ i : f.support, U i).relIndex S ≠ 0 :=
     fun h => hrel (Subgroup.relIndex_eq_zero_of_le_right (show S ≤ K from fun s hs => hs.1) h)
-  haveI : ((⨅ i : f.support, U i).subgroupOf S).FiniteIndex := ⟨hrel'⟩
+  have : ((⨅ i : f.support, U i).subgroupOf S).FiniteIndex := ⟨hrel'⟩
   obtain ⟨P, hP1, hP2, hP3⟩ := cl_proj ρ' ((⨅ i : f.support, U i).subgroupOf S)
   have hfi : ∀ s ∈ (⨅ i : f.support, U i).subgroupOf S, ∀ i ∈ f.support, ρ s (f i) = f i := fun s hs i hi =>
     hfix i _ (Subgroup.mem_iInf.1 (Subgroup.mem_subgroupOf.1 hs) ⟨i, hi⟩)
@@ -163,7 +163,7 @@ private theorem cl_multi {J : Type} [Fintype J] {G : J → Type} [∀ j, Group (
     | insert j s hj ih =>
       have := cl_avg (ρ j) (K j) (fun i => Y i ⊓ ⨅ j ∈ s, clE (ρ j) (K j) F) (fun i k hk y hy => ⟨hst j i k hk y hy.1, ?_⟩)
         (fun i y hy => hfin j i y hy.1) ih
-      · refine SetLike.le_def.1 (iSup_mono fun i => le_of_eq ?_) this
+      · refine IsConcreteLE.le_iff.1 (iSup_mono fun i => le_of_eq ?_) this
         rw [Finset.iInf_insert, inf_assoc, inf_comm (clE (ρ j) (K j) F)]
       · have h2 := hy.2
         simp only [SetLike.mem_coe, Submodule.mem_iInf] at h2 ⊢
@@ -187,9 +187,9 @@ private theorem cl_iso {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
           change σ.ρ a⁻¹ v = v
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl }
-    haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-    have ho : IsOpen (T.subgroupOf K : Set K) := (σ.smooth v).preimage continuous_subtype_val
-    haveI := Subgroup.quotient_finite_of_isOpen _ ho
+    have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+    have ho : IsOpen (T.subgroupOf K : Set K) := (σ.smooth v).preimage continuous_subtypeVal
+    have := Subgroup.quotient_finite_of_isOpen _ ho
     refine ⟨T, Subgroup.index_ne_zero_of_finite, fun u (hu : σ.ρ u v = v) => ?_⟩
     change ρ u (f v) = f v
     rw [← hf, hu]
@@ -203,7 +203,7 @@ private theorem cl_gen {κ : Type*} (Y : κ → Submodule ℂ M) (W : Submodule 
     (hW : ∀ y ∈ W, T y ∈ W) (hY : ∀ i, ∀ y ∈ Y i, T y ∈ Y i) (h : W ≤ ⨆ i, Y i ⊓ W) (μ : ℂ) :
     W ⊓ T.maxGenEigenspace μ ≤ ⨆ i, Y i ⊓ (W ⊓ T.maxGenEigenspace μ) := by
   have h1 : ∀ i, Y i ⊓ W ≤ ⨆ ν, (Y i ⊓ W) ⊓ T.maxGenEigenspace ν := fun i => by
-    haveI : FiniteDimensional ℂ (Y i ⊓ W : Submodule ℂ M) := Submodule.finiteDimensional_of_le inf_le_right
+    have : FiniteDimensional ℂ (Y i ⊓ W : Submodule ℂ M) := Submodule.finiteDimensional_of_le inf_le_right
     have hm : ∀ y ∈ Y i ⊓ W, T y ∈ Y i ⊓ W := fun y hy => ⟨hY i y hy.1, hW y hy.2⟩
     have h0 := congrArg (Submodule.map (Y i ⊓ W).subtype) (Module.End.iSup_maxGenEigenspace_eq_top (T.restrict hm))
     rw [Submodule.map_iSup, Submodule.map_subtype_top] at h0
@@ -370,7 +370,7 @@ theorem classical_in_iwahori_parts (hH : H.Ax) {κ : Type 1} (Y : κ → H.PartA
       clE_stab (H.atW ι d (H.wq q)) (K.1 q) F (H.atV d v k) (fun g z => cl_QV H ι q v g k z)
         ((Submodule.mem_iInf _).1 hy.2 q)⟩)
     (fun v i y hy => (cl_iso ((Y i).isoL v) hy.1).2 _ GlobalTheory.SplitFlip.isCompact_KO) hQ
-  refine SetLike.le_def.1 (iSup_mono fun i y hy => ?_) hV
+  refine IsConcreteLE.le_iff.1 (iSup_mono fun i y hy => ?_) hV
   exact ⟨hy.1.1, cl_back H ι θ x lam ξ K e F y hF ((Y i).le hy.1.1) ((Submodule.mem_iInf _).1 hy.1.2)
     ((Submodule.mem_iInf _).1 hy.2)⟩
 end Concrete
@@ -388,7 +388,7 @@ theorem UpperTheory.V.Hi.clParts_alt :
     exact _root_.classical_in_iwahori_parts H ι θ _ lam ξ K e hH (fun Y : {Y : H.PartAltAlt ι lam ξ // P lam Y.r} => Y.1) F hF
       (hP lam hlam d ξ hs.alg F hF'.1 ⟨K, hF'.2.1⟩ ⟨e, classical_fixed_by_iwahori H ι θ _ lam ξ K e c0 he hs.triv F hF⟩)
   refine ⟨le_antisymm h1 (iSup_le fun _ => inf_le_right), le_antisymm (iSup_le fun μ => ?_) (iSup_le fun _ => inf_le_right)⟩
-  haveI := hs.fin K e he
+  have := hs.fin K e he
   have h2 := cl_gen (fun Y : {Y : H.PartAltAlt ι lam ξ // P lam Y.r} => Y.1.Y) (H.ClAt θ ι x.toRingHom lam ξ K e) (H.uzC ι lam d)
     (cl_stab H ι θ _ lam ξ K e c0 he hs.triv) (fun Y => _root_.classical_parts_commute H ι lam ξ Y.1) h1 μ.1
   have h3 : H.ClAt θ ι x.toRingHom lam ξ K e ⊓ (H.uzC ι lam d).maxGenEigenspace μ.1 ≤ H.OrdAt θ ι x.toRingHom lam ξ K e :=

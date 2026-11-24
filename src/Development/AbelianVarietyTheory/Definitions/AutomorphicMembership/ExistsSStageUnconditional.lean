@@ -73,7 +73,7 @@ def ColsPos {B : Base} (C : Cols B) : Prop :=
     ∀ x ∈ (C.mem u).A.Mu0, x ≠ 0 → 0 < ((C.fm u).ipC 0 x x).re
 
 theorem conjF_ne (B : Pre) : B.conjF ≠ AlgHom.id B.host.F B.host.E := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   intro h
   have hs : Function.Surjective (algebraMap B.host.F B.host.E) := fun a =>
     (B.sp.cm.fixed a).1 (AlgHom.congr_fun h a)
@@ -106,7 +106,7 @@ theorem ncard_primesOver (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : p.
 theorem exists_atP (B : Pre) (p : HeightOneSpectrum (𝓞 B.host.F)) :
     ∃ L : LocAt B.host.F B.host.E B.conjF p,
       (L.split.isSome ↔ resChar p ∈ ({B.host.g 0, B.host.g 1} : Finset ℕ)) := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   obtain ⟨L, hL⟩ := GlobalTheory.LocalData.exists_locAt B.host.F B.host.E B.conjF B.sp.cm.deg2 p
   by_cases h : resChar p ∈ ({B.host.g 0, B.host.g 1} : Finset ℕ)
   · have hk : ∃ k, resChar p = B.host.g k := by
@@ -179,8 +179,8 @@ theorem exists_sStage {B : Base} {C : Cols B} (W : RowsRest B C) (h1 : CodeWords
   obtain ⟨Del, letter, hD, hl, hg, hu⟩ := h1
   choose L hL using exists_atP B.toPre
   obtain ⟨j⟩ := exists_conjIsom W.EE W.onb h3
-  letI nN : ∀ u, NormedAddCommGroup (ColSp C u) := fun u => (core C h2 u).toNormedAddCommGroup
-  letI nI : ∀ u, InnerProductSpace ℂ (ColSp C u) := fun u => InnerProductSpace.ofCore (core C h2 u).toCore
+  let nN : ∀ u, NormedAddCommGroup (ColSp C u) := fun u => (core C h2 u).toNormedAddCommGroup
+  let nI : ∀ u, InnerProductSpace ℂ (ColSp C u) := fun u => InnerProductSpace.ofCore (core C h2 u).toCore
   refine ⟨{
     dsig := d
     dsig_pos := hd

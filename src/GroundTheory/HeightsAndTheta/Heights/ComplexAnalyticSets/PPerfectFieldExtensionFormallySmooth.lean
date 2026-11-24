@@ -215,7 +215,7 @@ theorem exists_isGoodPartialLift_frobenius [PerfectField F] (p : ℕ) [hp : Fact
           show algebraMap F K (frobeniusEquiv F p b) = _
           rw [frobeniusEquiv_def, map_pow]
         simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe,
-          MonoidHom.coe_coe]
+          MonoidHom.coe_ofClass]
         rw [hb]
         show ψ (e.symm _) = _
         rw [he _ (algebraMap F K b) rfl]
@@ -257,7 +257,7 @@ theorem exists_isGoodPartialLift_extend (p : ℕ) [hp : Fact p.Prime] [CharP K p
   have : IsScalarTower F L B := IsScalarTower.of_algebraMap_eq fun a => (φ.commutes a).symm
   obtain ⟨hxp, hφx⟩ := hgood.1 x
   let a : L := ⟨x ^ p, hxp⟩
-  have hirr : Irreducible (X ^ p - Polynomial.C a) := X_pow_sub_C_irreducible_of_prime hp.out fun b hb => hx (by
+  have hirr : Irreducible (X ^ p - Polynomial.C a) := irreducible_X_pow_sub_C_of_prime hp.out fun b hb => hx (by
     have hb' : (b : K) ^ p = x ^ p := congrArg Subtype.val hb
     have hbx := frobenius_inj K p (show frobenius K p (b : K) = frobenius K p x by
       rw [frobenius_def, frobenius_def]; exact hb')

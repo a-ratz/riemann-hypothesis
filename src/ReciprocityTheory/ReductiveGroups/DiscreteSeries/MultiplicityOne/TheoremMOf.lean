@@ -321,7 +321,7 @@ theorem sig_inv (X : SigData k r) {a : Mat k r} (ha : a ∈ GV k r) :
   ext v
   have e1 := congrArg (fun T => T (X.σ a⁻¹ v)) h1
   have e2 := congrArg (fun T => T v) h2
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at e1 e2
+  simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self] at e1 e2
   rw [← e1, e2]
 
 theorem mc_conj (X : SigData k r) (x y : X.Hs) {s g s' : Mat k r} (hs : s ∈ GV k r) (hg : g ∈ GV k r)
@@ -423,7 +423,7 @@ theorem coefficient_integral_pointwise (h : UnitaryGroupStructuralFacts) {k r : 
 
 theorem stCut2 (h : UnitaryGroupStructuralFacts) : StCut2 := by
   intro k r Wp _ _ _ D X hD d hd f x y a₂ b₂ X₀ hf hU hV
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have h' := h
   obtain ⟨hB2, -⟩ := h'
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hCW, -⟩ := hB2
@@ -760,7 +760,7 @@ theorem repro_scalar (D : RealPlaceData k r Wp Wp) (X : SigData k r) (d : ℝ) {
   have hLa : ∀ (c : ℂ) (A : Wp →L[ℂ] Wp), L (c • A) = c * ⟪e, A f⟫_ℂ := fun c A => by
     rw [map_smul, hL, smul_eq_mul]
   refine ⟨(L.integrable_comp hI).congr (Filter.Eventually.of_forall fun y => hLa _ _), ?_⟩
-  rw [hR, ContinuousLinearMap.smul_apply, inner_smul_right, ← hL, ← L.integral_comp_comm hI]
+  rw [hR, smul_apply, inner_smul_right, ← hL, ← L.integral_comp_comm hI]
   congr 1
   exact integral_congr_ae (Filter.Eventually.of_forall fun y => hLa _ _)
 
@@ -969,7 +969,7 @@ theorem gi_of (hIn : UnitaryGroupStructuralFacts) (hXi : XiExists) (hSm : StSmoo
   rw [v1, v2] at sym
   have hc' : (c : ℂ) ≠ 0 := by exact_mod_cast hc.ne'
   have hd' : (d : ℂ) ≠ 0 := by exact_mod_cast hd.1.ne'
-  exact ((div_left_inj' hd').1 (mul_left_cancel₀ hc' sym)).symm
+  exact ((div_left_inj₀ hd').1 (mul_left_cancel₀ hc' sym)).symm
 
 theorem pq_of (h0cut : StCut0) (hInv : StInvGroup) (hD1 : StBeEquiv)
     (D : RealPlaceData k r Wp Wp) (X : SigData k r) (hD : IsDiag D) (hX : SqIntG D X)
@@ -1169,7 +1169,7 @@ theorem stCut4 (h : UnitaryGroupStructuralFacts) : StCut4 := by
     have e := (hL x y ξ η).symm.trans ((hE x y ξ η).trans e2)
     by_cases hn : (Module.finrank ℂ Wp : ℂ) = 0
     · simp [hdim hn η]
-    · exact (div_left_inj' hn).1 e
+    · exact (div_left_inj₀ hn).1 e
 
 end ReciprocityTheory.ChartRestriction.DS.Mult1
 end -- clump:auto

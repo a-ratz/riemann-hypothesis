@@ -60,7 +60,7 @@ private theorem nv_eq_sum {R S : Type} [CommRing R] [CommRing S] (s : R →+* S)
     (a : Fin n → Fin d → S) (N : ℕ) (hN : ∀ q : Fin n × Fin d, a q.1 q.2 ^ N = 0) :
     nv s f a = ∑ e : Fin n × Fin d → Fin N, s (MvPowerSeries.coeff
       (Finsupp.equivFunOnFinite.symm fun i => (e i : ℕ)) f) * ∏ i, a i.1 i.2 ^ (e i : ℕ) := by
-  letI := s.toAlgebra
+  let := s.toAlgebra
   exact evBasic_nEval_eq_tEval f (fun q : Fin n × Fin d => a q.1 q.2) N hN
 
 private theorem nEval_sqZero {R S κ : Type} [CommRing R] [CommRing S] [Algebra R S] [Fintype κ] [DecidableEq κ]
@@ -72,7 +72,7 @@ private theorem nEval_sqZero {R S κ : Type} [CommRing R] [CommRing S] [Algebra 
   have h1 := ChartCompare.nEval_sub_mem f a 0 ha h0 _ _ hm (fun _ => Ideal.zero_mem _)
     (fun i => by simpa using hm i)
   have h2 : Ideal.span (Set.range a) * Ideal.span (Set.range a) ≤ ⊥ := by
-    rw [Ideal.span_mul_span', Ideal.span_le]
+    rw [Ideal.span_mul_span, Ideal.span_le]
     rintro _ ⟨_, ⟨i, rfl⟩, _, ⟨j, rfl⟩, rfl⟩
     exact h i j
   have h3 := (Ideal.span_le.2 (by rintro _ ⟨i, rfl⟩; simp) : Ideal.span _ ≤ (⊥ : Ideal S))
@@ -86,7 +86,7 @@ theorem nv_calculus : ∀ (R S : Type) [CommRing R] [CommRing S] (s : R →+* S)
   intro R S _ _ s n d a ha
   have ha' : ∀ q : Fin n × Fin d, IsNilpotent (a q.1 q.2) := fun q => ha _ _
   obtain ⟨N, -, hN⟩ := evBasic_exists_pow (fun q : Fin n × Fin d => a q.1 q.2) ha'
-  letI := s.toAlgebra
+  let := s.toAlgebra
   refine ⟨?_, fun f hf => ⟨ChartCompare.isNilpotent_nEval f hf _ ha', ?_⟩, fun m e b f hb => ?_,
     fun R' _ β f => ?_, fun S' _ t f => ?_,
     fun h f => nEval_sqZero f (fun q : Fin n × Fin d => a q.1 q.2) ha' fun _ _ => h _ _ _ _⟩

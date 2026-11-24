@@ -136,8 +136,8 @@ variable {D : D7} {N : NData D.R D.host D.what₂} {X : NTw D.R D.host D.what₂
 
 theorem divisible_baseChange (Y : NExp D.R D.host D.what₂ D.LL0 N X) (i : X.Tw) (n : ℕ) (b : Bool) (k : ℕ) (a : X.Ok i k)
     (ha : a ≠ 0) (m : X.Ok i k ⊗[X.O i] Y.Fm i n b) : ∃ m', a • m' = m := by
-  haveI := X.Ok_fin i k
-  obtain ⟨d, hd, c, hc⟩ := (Algebra.IsIntegral.isIntegral (R := X.O i) a).isAlgebraic.exists_nonzero_dvd
+  have := X.Ok_fin i k
+  obtain ⟨d, hd, c, hc⟩ := (Algebra.IsIntegral.isIntegral (R := X.O i) a).isAlgebraic.exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero ha)
   have key : ∀ m : X.Ok i k ⊗[X.O i] Y.Fm i n b, ∃ m', d • m' = m := fun m => by
     induction m using TensorProduct.induction_on with

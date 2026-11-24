@@ -175,7 +175,7 @@ theorem exists_inChart_of_twist (hc : ∀ p : Cpt ξ, ∃ c, InChart ξ x c p)
     (hv : Λ.IsVB 1 ⊤) (p : Cpt ξ) : ∃ l, InChart ξ z l p := by
   obtain ⟨c, hcp⟩ := hc p
   obtain ⟨e, he, hL, -⟩ := Flat.exists_gen_of_isVB_one hv p
-  haveI := isLocalRing_regAt p
+  have := isLocalRing_regAt p
   obtain ⟨l, hl0, hl⟩ := exists_unit_gen (regAt ξ p) _ he ((H c p hcp).symm.trans hL)
   have hx : (x c ^ d)⁻¹ ≠ 0 := inv_ne_zero (pow_ne_zero _ hcp.1)
   refine ⟨l, fun h0 => hl0 (by simp [h0]), fun l' => ?_⟩
@@ -271,8 +271,8 @@ end Blocks
 theorem exists_blocks_of_lines : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Algebra o Ω] (κ : Type) [Finite κ] (x : κ → Ω) (M : PModel o x) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (A : Type) [Finite A] (Λ : A → Lat M.ξ Ω), (∀ p : Cpt M.ξ, ∃ c₀, InChart M.ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) c₀ p) → (∀ a, (Λ a).IsVB 1 ⊤) → ∃ (K' : Type) (_ : Fintype K') (J' : K' → Type) (_ : ∀ k, Fintype (J' k)) (y' : (Σ k, J' k) → Ω) (bk : K → K') (bx : ∀ k, J k ≃ J' (bk k)) (deg : A → K' → ℤ), Function.Injective bk ∧ (∀ k a, y' ⟨bk k, bx k a⟩ = y ⟨k, a⟩) ∧ CoordTie o M.ξ (fun c' : (k : K') → J' k => ∏ k, y' ⟨k, c' k⟩) ∧ ∀ a, (Λ a).IsDegOn Set.univ y' (deg a) 1 := by
   intro o _ Ω _ _ κ _ x M K _ J _ y A _ Λ hy hv
   classical
-  haveI := Fintype.ofFinite κ
-  haveI := Fintype.ofFinite A
+  have := Fintype.ofFinite κ
+  have := Fintype.ofFinite A
   have hs : ∀ a, ∃ (d n : ℕ) (z : Fin n → Ω), ∀ c (p : Cpt M.ξ), InChart M.ξ x c p →
       Λ a p = Submodule.span (regAt M.ξ p) (Set.range fun k => (x c ^ d)⁻¹ • z k) :=
     fun a => _root_.GlobalTheory.CompanionTheory.Ar.lat_twist_globally_generated o Ω κ x M Ω (Λ a) (isCohOn_of_isVBOn (hv a))

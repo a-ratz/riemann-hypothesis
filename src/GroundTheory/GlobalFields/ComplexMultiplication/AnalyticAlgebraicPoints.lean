@@ -92,7 +92,7 @@ theorem eventually_ne_zero_codiscrete {f : ℂ → ℂ} (hf : Meromorphic f)
     (h : ¬ f =ᶠ[codiscrete ℂ] 0) : ∀ᶠ z in codiscrete ℂ, f z ≠ 0 := by
   have hall : ∀ u ∈ (univ : Set ℂ), meromorphicOrderAt f u ≠ ⊤ := fun u _ ht ↦
     h (eventuallyEq_zero_codiscrete_of_nhdsNE hf (meromorphicOrderAt_eq_top_iff.1 ht))
-  exact MeromorphicAt.MeromorphicOn.codiscreteWithin_setOfPred_ne_zero
+  exact MeromorphicOn.codiscreteWithin_setOfPred_ne_zero
     (hf.meromorphicOn (s := univ)) hall
 
 theorem nonempty_of_mem_codiscrete {S : Set ℂ} (hS : S ∈ codiscrete ℂ) : S.Nonempty := by
@@ -170,7 +170,7 @@ def germ (f : ℂ → ℂ) : MeroField :=
   if h : Meromorphic f then Ideal.Quotient.mk meroNull ⟨f, h⟩ else 0
 
 theorem germ_of {f : ℂ → ℂ} (hf : Meromorphic f) : germ f = Ideal.Quotient.mk meroNull ⟨f, hf⟩ :=
-  dif_pos hf
+  dite_eq_left hf
 
 theorem germ_surjective (u : MeroField) : ∃ f : ℂ → ℂ, Meromorphic f ∧ germ f = u := by
   obtain ⟨⟨f, hf⟩, rfl⟩ := Ideal.Quotient.mk_surjective u

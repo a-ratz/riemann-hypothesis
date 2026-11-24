@@ -170,7 +170,7 @@ def colVal (C : IntegralChartA3 Xo c T io y) (k : ℕ) {n : ℕ} (f : Fin n → 
 
 theorem chartVal_boxSer (C : IntegralChartA3 Xo c T io y) (k : ℕ) {n : ℕ} (f : Fin n → Germ.PS T.Fr 1 (chD C.ch))
     (P : MvPolynomial (LtN Dw n) T.Fr) : chartVal C k (boxSer f) P = colVal C k f P := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨Q, rfl⟩ : ∃ Q, MvPolynomial.rename (letterEquiv (E →+* ℂ) Dw.mult n) Q = P :=
     MvPolynomial.rename_surjective _ (letterEquiv _ _ n).surjective P
   unfold chartVal colVal
@@ -190,7 +190,7 @@ theorem bound_all_iff_bound_prod (C : IntegralChartA3 Xo c T io y) (e k : ℕ) {
     (r : EReal) :
     (∀ f : Germ.PS T.Fr n (chD C.ch), IsIntPS T f → r ≤ nval T.V e (chartVal C k f P)) ↔
       ∀ f : Fin n → Germ.PS T.Fr 1 (chD C.ch), (∀ b, IsIntPS T (f b)) → r ≤ nval T.V e (colVal C k f P) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   constructor
   · intro h f hf
     rw [← chartVal_boxSer]

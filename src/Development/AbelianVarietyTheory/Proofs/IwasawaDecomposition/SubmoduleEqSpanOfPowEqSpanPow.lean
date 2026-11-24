@@ -74,7 +74,7 @@ theorem submodule_eq_span_of_pow_eq_span_pow :
   have hp : J ^ h = FractionalIdeal.spanSingleton (𝓞 K)⁰ β ^ h := by
     rw [FractionalIdeal.spanSingleton_pow]
     apply FractionalIdeal.coeToSubmodule_injective
-    simp only [FractionalIdeal.coe_pow, FractionalIdeal.coe_spanSingleton, hJI, hpow]
+    simp only [FractionalIdeal.coeToSubmodule_pow, FractionalIdeal.coeToSubmodule_spanSingleton, hJI, hpow]
   have hJ : J ≠ 0 := by
     intro h0
     rw [h0, zero_pow hh.ne'] at hp
@@ -84,6 +84,6 @@ theorem submodule_eq_span_of_pow_eq_span_pow :
     have := congrArg (FractionalIdeal.count K v) hp
     rw [FractionalIdeal.count_pow, FractionalIdeal.count_pow] at this
     exact mul_left_cancel₀ (by exact_mod_cast hh.ne') this
-  rw [← hJI, hJB, FractionalIdeal.coe_spanSingleton]
+  rw [← hJI, hJB, FractionalIdeal.coeToSubmodule_spanSingleton]
 
 end GlobalTheory

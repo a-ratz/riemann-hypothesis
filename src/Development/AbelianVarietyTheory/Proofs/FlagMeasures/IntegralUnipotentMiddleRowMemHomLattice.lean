@@ -234,7 +234,7 @@ theorem _root_.GlobalTheory.SnMass.VolN.mulVec_esI (k r : ℕ) (a : Fin r)
     (x : Fin (2 * r + k + 1) → ℂ) :
     x (_root_.Formalism.QuantumDeterminants.eI k r a) = (_root_.Formalism.QuantumDeterminants.Hpk k r *ᵥ x) (_root_.Formalism.QuantumDeterminants.esI k r a) := by
   simp only [Matrix.mulVec, dotProduct, Hpk_esI_applyFlagMeasures, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 end Model
 
@@ -326,7 +326,7 @@ theorem _root_.GlobalTheory.SnMass.VolN.row_mem_homLat : ∀ (F E : Type) [Field
   set t : Fin (2 * r + k + 1) → E := _root_.GlobalTheory.SnMass.VolN.projF (σ : E →+* E) J
     (fun c i => P i (Fin.castSucc c)) (fun c i => f i c) u with ht
   unfold _root_.GlobalTheory.SnMass.VolN.homLat _root_.GlobalTheory.SnMass.VolN.midLat
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine ⟨t, ⟨fun b => _root_.GlobalTheory.SnMass.VolN.projF_orth _ J _ _ hee hgg hge heg u b,
     fun c hc => ?_⟩, fun w l => ?_⟩
   · have hsm : c • t = _root_.GlobalTheory.SnMass.VolN.projF (σ : E →+* E) J

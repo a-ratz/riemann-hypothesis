@@ -136,7 +136,7 @@ theorem vals_mul_le (y : (Σ k, ι k) → Ω) (d e : K → ℕ) : vals F y d * v
   rw [vals_eq_span y d, vals_eq_span y e, Submodule.span_mul_span, Submodule.span_le]
   rintro _ ⟨_, ⟨a, ha, rfl⟩, _, ⟨b, hb, rfl⟩, rfl⟩
   show aeval y (monomial a (1 : F)) * aeval y (monomial b (1 : F)) ∈ vals F y (d + e)
-  rw [← map_mul, monomial_mul, one_mul]
+  rw [← map_mul, monomial_mul_monomial, one_mul]
   exact mem_vals_of y (by rw [map_add (f := _), ha, hb])
 
 theorem vals_single_le (y : (Σ k, ι k) → Ω) (d : K → ℕ) (k : K) :
@@ -144,7 +144,7 @@ theorem vals_single_le (y : (Σ k, ι k) → Ω) (d : K → ℕ) (k : K) :
   rw [vals_eq_span y (d + _), Submodule.span_le]
   rintro _ ⟨a, ha, rfl⟩
   obtain ⟨i, a', rfl, ha'⟩ := peel ha
-  rw [← one_mul (1 : F), ← monomial_mul, map_mul]
+  rw [← one_mul (1 : F), ← monomial_mul_monomial, map_mul]
   exact Submodule.mul_mem_mul (mem_vals_of y ha')
     (mem_vals_of y (by rw [Finsupp.weight_single, one_smul]; rfl))
 
@@ -285,7 +285,7 @@ theorem finrank_gradedPiece [Fintype K] (y : (Σ k, ι k) → Ω) (d : K → ℕ
 
 theorem hilbFn_eq [Fintype K] (y : (Σ k, ι k) → Ω) (m : K → ℤ) (hm : ∀ k, 0 ≤ m k) :
     NumbersDVR.hilbFn (mIdealOver F y) m = (Module.finrank F (vals F y fun k => (m k).toNat) : ℤ) := by
-  rw [NumbersDVR.hilbFn, if_pos hm, finrank_gradedPiece]
+  rw [NumbersDVR.hilbFn, ite_eq_left hm, finrank_gradedPiece]
 
 end Values
 

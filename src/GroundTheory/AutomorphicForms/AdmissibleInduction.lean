@@ -142,7 +142,7 @@ theorem isOpen_subgroupOf_levi {K : Subgroup (GL (Fin n) F)}
     (hK : IsOpen (K : Set (GL (Fin n) F))) :
     IsOpen ((K.subgroupOf (levi F n β) : Subgroup (levi F n β)) : Set (levi F n β)) := by
   rw [Subgroup.coe_subgroupOf]
-  exact hK.preimage continuous_subtype_val
+  exact hK.preimage continuous_subtypeVal
 
 section Admissible
 
@@ -211,7 +211,7 @@ theorem isAdmissible_parabolicInd (hσ : IsAdmissible σ) : IsAdmissible (parabo
   have hQ : Finite (K₀ ⧸ Km.subgroupOf K₀) := by
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
-    exact (isOpen_congruenceSubgroup F n m).preimage continuous_subtype_val
+    exact (isOpen_congruenceSubgroup F n m).preimage continuous_subtypeVal
   set L : Subgroup (levi F n β) := Km.subgroupOf (levi F n β)
   have hL : FiniteDimensional ℂ (fixedVectors σ L) :=
     hσ.2 L (isCompact_subgroupOf_levi (isCompact_congruenceSubgroup F n m))

@@ -96,10 +96,10 @@ theorem isMultiHomog_rename_block {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι
     rw [hb.1.extend_apply, Finset.sum_eq_single k]
     · simpa using hf m₀ hm₀ k
     · intro k₂ _ hne
-      exact Finset.sum_eq_zero fun i _ => if_neg (hb.1.ne hne)
+      exact Finset.sum_eq_zero fun i _ => ite_eq_right (hb.1.ne hne)
     · simp
   · rw [Function.extend_apply' _ _ _ hk]
-    exact Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun i _ => if_neg fun h => hk ⟨k, h⟩
+    exact Finset.sum_eq_zero fun k _ => Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hk ⟨k, h⟩
 
 theorem mConeMap_rename {Ω : Type} [Field Ω] {κ : K → K'} {v : (Σ k, ι k) → Σ k, ι' k} (hb : IsBlockMap κ v)
     (y : (Σ k, ι' k) → Ω) (g : MRing ι) : mConeMap y (rename v g) = rename κ (mConeMap (y ∘ v) g) := by
@@ -291,10 +291,10 @@ theorem detFac_one (j : ℕ) (i : Fin N) : detFac j i (1 : Matrix (Fin N) (Fin N
 theorem stepCols_nonempty {j : ℕ} (hj : j ≤ N) (i : Fin N) : (stepCols N j i).Nonempty := by
   by_cases h : (i : ℕ) + 1 ≤ j
   · refine ⟨⟨N - j, by omega⟩, ?_⟩
-    simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_pos h]
+    simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left h]
     omega
   · refine ⟨⟨0, by have := i.2; omega⟩, ?_⟩
-    simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_neg h]
+    simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right h]
     omega
 
 theorem detFac_ne_zero {L : Type} [Field L] {j : ℕ} (hj : j ≤ N) (i : Fin N) {T : Matrix (Fin N) (Fin N) L}
@@ -362,8 +362,8 @@ theorem frame_gen {F : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) {S : Typ
     f (algebraMap M.Ω Φ (detFac j p.2 (F.T p.1))) * (∏ c ∈ stepCols N j p.2, bb c c) * f (y ⟨k, m⟩) =
       f (algebraMap M.Ω Φ (∏ k', M.x ⟨k', F.c k'⟩ ^ M.b p k')) *
         ∑ I, f (algebraMap M.Ω Φ (F.u ⟨k, m⟩ I)) * minorIJ G I (stepCols N j p.2) := by
-  haveI : Infinite M.Ω := Infinite.of_injective (Nat.cast : ℕ → M.Ω) Nat.cast_injective
-  letI : Algebra M.Ω S := (f.comp (algebraMap M.Ω Φ)).toAlgebra
+  have : Infinite M.Ω := Infinite.of_injective (Nat.cast : ℕ → M.Ω) Nat.cast_injective
+  let : Algebra M.Ω S := (f.comp (algebraMap M.Ω Φ)).toAlgebra
   have h1 := _root_.GlobalTheory.CompanionTheory.Ar.PB.MinorAny.minor_any M.Ω N j (F.T p.1) _ _ (M.coef ⟨k, m⟩) (F.u ⟨k, m⟩) (stepCols N j p.2)
     (hF.2.1 p k hp m) S G hG
   have e' : (F.T p.1).map (algebraMap M.Ω S) * G = (M.g p.1).map f * bb := e

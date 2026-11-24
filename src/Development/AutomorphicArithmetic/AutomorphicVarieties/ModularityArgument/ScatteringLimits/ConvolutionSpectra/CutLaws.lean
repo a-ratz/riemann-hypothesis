@@ -73,13 +73,13 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.cutLaws :
     by_cases a : x ∈ s <;> simp [a]
   · refine ContinuousLinearMap.ext fun u => Lp.ext ?_
     filter_upwards [c s hs u, c t ht u, c _ (hs.union ht) u, Lp.coeFn_add (cut V s u) (cut V t u)] with x h1 h2 h3 h4
-    rw [ContinuousLinearMap.add_apply, h3, h4, Pi.add_apply, h1, h2, indicator_union_of_disjoint hd]
+    rw [add_apply, h3, h4, Pi.add_apply, h1, h2, indicator_union_of_disjoint hd]
   · refine ContinuousLinearMap.ext fun u => Lp.ext ?_
     filter_upwards [c _ .univ u] with x h1
     rw [h1]; simp
   · refine ContinuousLinearMap.ext fun u => Lp.ext ?_
     filter_upwards [c _ .empty u, Lp.coeFn_zero V 2 (volume : Measure ℝ)] with x h1 h2
-    rw [h1, ContinuousLinearMap.zero_apply, h2]; simp
+    rw [h1, zero_apply, h2]; simp
   · refine Lp.norm_le_norm_of_ae_le ?_
     filter_upwards [c s hs u] with x h
     rw [h]; exact norm_indicator_le_norm_self _ _

@@ -93,7 +93,7 @@ theorem incM_smul (a : E) (x : Matrix (Fin n) (Fin d) E) : incM F (a • x) = in
 theorem exists_dual (B : Base F E) {X : Spc F E n} {W : Spc F E d} {I : Set (Ten F E n d)} {v₀ z₀ : Matrix (Fin n) (Fin d) E}
     (hI : ∀ a : AE F E, a • incM F z₀ ∈ I) (hu : IsUnit (hTens (cA σ) (incM F X.J) (incM F W.J) (incM F z₀) (incM F v₀)))
     {m : ℕ} (b : Module.Basis (Fin m) F E) : ∃ z, Dual σ X W I (fun j => b j • v₀) z := by
-  haveI : Module.Finite F E := Module.Finite.of_basis b
+  have : Module.Finite F E := Module.Finite.of_basis b
   obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
   have h0 : hTens σ X.J W.J z₀ v₀ ≠ 0 := fun h => by
     rw [hTens_inc, h, map_zero] at hu
@@ -112,7 +112,7 @@ theorem exists_dual (B : Base F E) {X : Spc F E n} {W : Spc F E d} {I : Set (Ten
 
 theorem norm_piInf_smul (h : IsCMExt F E σ) {w : InfinitePlace F} (t : EmbOver E w) (y : AF F) (β : AE F E) :
     ‖piInf t (y • β)‖ = normAtPlace w (evI F y) * ‖piInf t β‖ := by
-  haveI := h.1
+  have := h.1
   rw [Algebra.smul_def, map_mul, norm_mul, normAtPlace_apply_of_isReal (IsTotallyReal.isReal w)]
   congr 1
   change ‖infEmb t (evInf F w y ⊗ₜ[F] (1 : E))‖ = ‖InfinitePlace.Completion.extensionEmbeddingOfIsReal (IsTotallyReal.isReal w) (y.1 w)‖
@@ -133,7 +133,7 @@ theorem nice (hS : Slice) (hT : TateAbs) {B : Base F E} {X : Spc F E n} {W : Spc
     (hΨ : Ψ ∈ schA F (Fin n × Fin d)) : Nice μ z fun a => e (M.co.rho B.ψ (τ a • incM F v₀) Ψ) := by
   induction hΨ using Submodule.span_induction with
   | zero =>
-    letI : IsEmpty Empty := ⟨Empty.elim⟩
+    let : IsEmpty Empty := ⟨Empty.elim⟩
     refine ⟨Empty, inferInstance, Empty.elim, fun i => i.elim, fun i => i.elim, fun i => i.elim, fun a => ?_, fun _ _ i => i.elim⟩
     rw [Finset.univ_eq_empty, Finset.sum_empty, ← map_zero e]
     exact congrArg e (funext fun x => mul_zero _)
@@ -157,8 +157,8 @@ theorem nice (hS : Slice) (hT : TateAbs) {B : Base F E} {X : Spc F E n} {W : Spc
   | mem x hx =>
     obtain ⟨f, φ, hφ, rfl⟩ := hx
     obtain ⟨⟨_, -⟩, -, _, -, -, _, -⟩ := ideleTop F E
-    haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-    haveI : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
+    have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+    have : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
     let b := Module.finBasis F E
     let Bt := Algebra.TensorProduct.basis (AF F) b
     obtain ⟨zz, hD⟩ := exists_dual B hI hu b
@@ -190,7 +190,7 @@ theorem nice (hS : Slice) (hT : TateAbs) {B : Base F E} {X : Spc F E n} {W : Spc
       ((lintegral_const_mul' (ENNReal.ofReal (p f * (1 + K) ^ N)) _ ENNReal.ofReal_ne_top).trans_lt
         (ENNReal.mul_lt_top ENNReal.ofReal_lt_top hN')))
     by_cases hl : (fun j => (y l j).2) ∈ C
-    · rw [Set.indicator_of_mem, ← ENNReal.ofReal_mul (by positivity), Real.enorm_eq_ofReal (by positivity)]
+    · rw [Set.indicator_of_mem, ← ENNReal.ofReal_mul (by positivity), Real.eNorm_eq_ofReal (by positivity)]
       · refine ENNReal.ofReal_le_ofReal ?_
         rw [← mul_div_assoc, mul_div_right_comm]
         refine mul_le_mul_of_nonneg_right ?_ (by positivity)
@@ -220,7 +220,7 @@ theorem nice (hS : Slice) (hT : TateAbs) {B : Base F E} {X : Spc F E n} {W : Spc
         refine Finset.sum_eq_zero fun j _ => ?_
         rw [← sub_smul, ← smul_assoc, show y l j - mk 0 (y l j).2 = mk (y l j).1 0 from
           Prod.ext (sub_zero _) (sub_self _), at_mk _ u hu, zero_smul]
-    · simp only [h5 i _ hl, ContinuousLinearMap.zero_apply, map_zero, zero_mul, enorm_zero, zero_le]
+    · simp only [h5 i _ hl, zero_apply, map_zero, zero_mul, eNorm_zero, zero_le]
 
 end PositivityTheory.ThKCT.Line
 
@@ -299,7 +299,7 @@ theorem dom_int {M : Model σ X W} {om : Rep σ X W} (hom : ∀ x, ∀ Φ ∈ sc
     (ENNReal.ofReal ((ht h : ℝ) ^ k i) * ∫⁻ x in M.dom, G i x ∂M.μ)) fun l => ?_) ?_
   · refine (mul_le_mul_left (lintegral_mono (g := fun x => ∑ i, ENNReal.ofReal (p i (g i l) * (ht h : ℝ) ^ k i) * G i x)
       fun x => ?_) _).trans (le_of_eq ?_)
-    · refine le_trans (le_of_eq ?_) ((enorm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => hb i (g i l) x h))
+    · refine le_trans (le_of_eq ?_) ((eNorm_sum_le _ _).trans (Finset.sum_le_sum fun i _ => hb i (g i l) x h))
 
       rw [theta, ← hl₀ _ (hom _ _ (Submodule.sum_mem _ fun i _ => pureA_mem _ (h1 i))), map_sum, map_sum]
       congr 1
@@ -334,7 +334,7 @@ theorem lineInt_of (hS : Slice) (hI : SchInt) (hT : TateAbs) : LineInt := by
       exact dom_int hom hD (fun i => (hφ' i).1) hφ' μ (fun i l => g i l) _ (fun l => by positivity) h4 h₁
   obtain ⟨-, -, _, -, -, _, -⟩ := ideleTop F E
   let c : (AE F E)ˣ → ℂ := fun l => (ν l : ℂ) * ((absE F E l : ℝ) : ℂ) ^ z
-  have hc : Continuous c := (continuous_subtype_val.comp hν).mul
+  have hc : Continuous c := (continuous_subtypeVal.comp hν).mul
     ((Complex.continuous_ofReal.comp (NNReal.continuous_coe.comp GlobalTheory.Doubling.continuous_absE)).pow z)
   choose f hf using fun i => hI _ _ μ (fun l : (AE F E)ˣ => c l • g i l) (hc.smul ((h2 i).comp Units.continuous_val)) fun k j =>
     (h4 _ ((schwartz_withSeminorms ℂ _ ℂ).continuous_seminorm (k, j)) i).congr (.of_forall fun l => by

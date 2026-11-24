@@ -228,8 +228,8 @@ open scoped Classical ENNReal nonZeroDivisors
 theorem UpperTheory.ConvolutionTheory.R2.G.absFin1 :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [IsTotallyComplex E] (D : Dat F E) (W : Weil D) (M : Meas F) (π : TR.CuspSub F 2), ∀ f ∈ π.V, ∀ φ ∈ Fock D.δ, ∀ h : GL (Fin 2) (A E), ((nu F h : (A F)ˣ) : A F).1 = 1 → ∑' ξ, abelian₂ M (ux W f.1 φ h ξ) ≠ ⊤ := by
   intro F E _ _ _ _ _ _ _ D W M π f hf φ hφ h hnu
-  haveI := M.prob
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have := M.prob
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
   obtain ⟨N, hN⟩ := UpperTheory.ConvolutionTheory.R2.G.zetaFin F
   obtain ⟨B', L, hB'0, hB'⟩ := UpperTheory.ConvolutionTheory.R2.G.majL F E D W φ hφ h hnu N
   have hC : IsCompact ((fun k : G1 F => gl k * dM (nu F h)) '' KK F) :=
@@ -297,7 +297,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.absFin1 :
       have hw0 : 0 ≤ B * B' := mul_nonneg hB0 hB'0
       calc _ ≤ ∫⁻ _ in fundamentalSet F, ENNReal.ofReal (B * B' * w p.1 ξ) ∂(adeleMeasure F) := by
             refine lintegral_mono fun b => ?_
-            rw [← ofReal_norm_eq_enorm]
+            rw [← ofReal_norm]
             exact ENNReal.ofReal_le_ofReal (pw p.1 p.2 hp b ξ)
         _ = _ := by
             rw [setLIntegral_const, adeleMeasure_fundamentalSet, mul_one, ENNReal.ofReal_mul hw0]
@@ -455,8 +455,8 @@ private theorem lint_add {F : Type} [Field F] [NumberField F] {h : A F → ℝ�
     (hh : ∀ (k : F) x, h (rt k + x) = h x) (a : A F) :
     ∫⁻ b in fundamentalSet F, h (b + a) ∂(adeleMeasure F) = ∫⁻ b in fundamentalSet F, h b ∂(adeleMeasure F) := by
   have hD := isAddFundamentalDomain_fundamentalSet F
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI : Countable (AdeleRing.principalSubgroup (𝓞 F) F) := by
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
+  have : Countable (AdeleRing.principalSubgroup (𝓞 F) F) := by
     refine (Set.countable_range (fun ξ : F => (rt ξ : A F))).mono ?_ |>.to_subtype
     rintro _ ⟨ξ, rfl⟩
     exact ⟨ξ, rfl⟩
@@ -480,7 +480,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.lamRight :
   have hUm : Measurable U :=
     Measurable.lintegral_prod_right' (ν := (adeleMeasure F).restrict (fundamentalSet F))
       (f := fun q : G1 F × A F => ‖u (nU q.2 * q.1)‖ₑ)
-      (hu.1.comp ((hnU.comp measurable_snd).mul measurable_fst)).enorm
+      (hu.1.comp ((hnU.comp measurable_snd).mul measurable_fst)).eNorm
   have hUi : ∀ b g, U (nU b * g) = U g := by
     intro a g
     have := lint_add (F := F) (h := fun b => ‖u (nU b * g)‖ₑ) (fun k x => by
@@ -488,7 +488,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.lamRight :
     simp only [hUdef]
     rw [← this]
     simp only [M.nU_add, mul_assoc]
-  have hc : ‖c‖ₑ ≠ ⊤ := enorm_ne_top
+  have hc : ‖c‖ₑ ≠ ⊤ := eNorm_ne_top
   have hJ := M.lintegral_unipotent_quotient_right_invariant F M₀ U hUm hUi g₀
   have hL : abelian₂ M₀ (fun g => c * u (g * g₀)) = ‖c‖ₑ * M.J0 M₀ (fun g => U (g * g₀)) := by
     simp only [abelian₂, M.J0]
@@ -496,7 +496,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.lamRight :
     refine lintegral_congr fun p => ?_
     have : ∫⁻ b in fundamentalSet F, ‖c * u (nU b * (mD p.1 * p.2) * g₀)‖ₑ ∂(adeleMeasure F) =
         ‖c‖ₑ * U (mD p.1 * p.2 * g₀) := by
-      simp only [hUdef, enorm_mul, mul_assoc]
+      simp only [hUdef, eNorm_mul, mul_assoc]
       exact lintegral_const_mul' _ _ hc
     rw [this]
     ring
@@ -573,7 +573,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.absFin :
     exact UpperTheory.ConvolutionTheory.R2.G.lamRight F M _ (UpperTheory.ConvolutionTheory.R2.G.uxAv F E D W f.1 hLf φ h₁ ξ).1 c _
   simp only [hterm]
   rw [ENNReal.tsum_mul_left]
-  exact ENNReal.mul_ne_top enorm_ne_top (UpperTheory.ConvolutionTheory.R2.G.absFin1 F E D W M π f hf φ hφ h₁ hnu₁)
+  exact ENNReal.mul_ne_top eNorm_ne_top (UpperTheory.ConvolutionTheory.R2.G.absFin1 F E D W M π f hf φ hφ h₁ hnu₁)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.AbsFin =====
@@ -663,12 +663,12 @@ private theorem enorm_tsum_le' {β : Type*} (f : β → ℂ) : ‖∑' b, f b‖
   by_cases h : ∑' b, ‖f b‖ₑ = ⊤
   · simp [h]
   · have hs : Summable fun b => ‖f b‖ := by
-      simpa [toReal_enorm] using ENNReal.summable_toReal h
+      simpa [toReal_eNorm] using ENNReal.summable_toReal h
     have h1 : ‖∑' b, f b‖ ≤ ∑' b, ‖f b‖ := norm_tsum_le_tsum_norm hs
     have h2 : ENNReal.ofReal (∑' b, ‖f b‖) = ∑' b, ‖f b‖ₑ := by
       rw [ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) hs]
-      simp [ofReal_norm_eq_enorm]
-    rw [← h2, ← ofReal_norm_eq_enorm]
+      simp [ofReal_norm]
+    rw [← h2, ← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal h1
 
 private theorem tsum_comm_of_enorm {α β : Type*} (f : α → β → ℂ) (h : ∑' a, ∑' b, ‖f a b‖ₑ ≠ ⊤) :
@@ -678,7 +678,7 @@ private theorem tsum_comm_of_enorm {α β : Type*} (f : α → β → ℂ) (h : 
       ENNReal.tsum_prod (f := fun a b => ‖f a b‖ₑ)
     rwa [this]
   have hs : Summable fun p => ‖Function.uncurry f p‖ := by
-    simpa [toReal_enorm] using ENNReal.summable_toReal h'
+    simpa [toReal_eNorm] using ENNReal.summable_toReal h'
   exact (Summable.of_norm hs).tsum_comm
 
 theorem UpperTheory.ConvolutionTheory.R2.G.unfoldSum :
@@ -686,14 +686,14 @@ theorem UpperTheory.ConvolutionTheory.R2.G.unfoldSum :
     Summable (fun i => ‖M.I0 (av (u i))‖) ∧ IntegrableOn (fun g => ∑' r, ∑' i, u i (ratS F (σ r) * g)) M.D M.μ ∧
     ∫ g in M.D, ∑' r, ∑' i, u i (ratS F (σ r) * g) ∂M.μ = ∑' i, M.I0 (av (u i)) := by
   intro F _ _ _ M σ hσ ι _ u hu hL
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
   have hLi : ∀ i, abelian₂ M (u i) ≠ ⊤ := fun i => ne_top_of_le_ne_top hL (ENNReal.le_tsum (f := fun i => abelian₂ M (u i)) i)
   have hC := fun i => _root_.UpperTheory.ConvolutionTheory.R2.M.unfC F M σ (u i) hσ (hu i).1 (hu i).2 (hLi i)
   have hTL : ∀ i, ∫⁻ g in M.D, ∑' r, ‖u i (ratS F (σ r) * g)‖ₑ ∂M.μ = abelian₂ M (u i) := fun i =>
-    _root_.UpperTheory.ConvolutionTheory.R2.M.unfL F M σ (fun g => ‖u i g‖ₑ) hσ (hu i).1.enorm
+    _root_.UpperTheory.ConvolutionTheory.R2.M.unfL F M σ (fun g => ‖u i g‖ₑ) hσ (hu i).1.eNorm
       (fun ξ g => by simp only [(hu i).2 ξ g])
   have hTm : ∀ i, Measurable fun g : G1 F => ∑' r, ‖u i (ratS F (σ r) * g)‖ₑ := fun i =>
-    Measurable.tsum fun r => ((hu i).1.comp (measurable_const_mul _)).enorm
+    Measurable.tsum fun r => ((hu i).1.comp (measurable_const_mul _)).eNorm
   have hTT : ∫⁻ g in M.D, ∑' i, ∑' r, ‖u i (ratS F (σ r) * g)‖ₑ ∂M.μ = ∑' i, abelian₂ M (u i) := by
     rw [lintegral_tsum fun i => (hTm i).aemeasurable]
     exact tsum_congr hTL
@@ -719,9 +719,9 @@ theorem UpperTheory.ConvolutionTheory.R2.G.unfoldSum :
   refine ⟨?_, ?_, ?_⟩
   · have hle : ∀ i, ‖M.I0 (av (u i))‖ₑ ≤ ∫⁻ g in M.D, ‖∑' r, u i (ratS F (σ r) * g)‖ₑ ∂M.μ := fun i => by
       rw [hI0 i]
-      exact enorm_integral_le_lintegral_enorm _
+      exact eNorm_integral_le_lintegral_eNorm _
     have : ∑' i, ‖M.I0 (av (u i))‖ₑ ≠ ⊤ := ne_top_of_le_ne_top hsum (ENNReal.tsum_le_tsum hle)
-    simpa [toReal_enorm] using ENNReal.summable_toReal this
+    simpa [toReal_eNorm] using ENNReal.summable_toReal this
   · have hsm : AEStronglyMeasurable (fun g => ∑' i, ∑' r, u i (ratS F (σ r) * g)) (M.μ.restrict M.D) := by
       refine aestronglyMeasurable_of_tendsto_ae (atTop : Filter (Finset ι))
         (f := fun (s : Finset ι) g => ∑ i ∈ s, ∑' r, u i (ratS F (σ r) * g)) ?_ ?_
@@ -731,7 +731,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.unfoldSum :
         have h1 : ∑' i, ‖∑' r, u i (ratS F (σ r) * g)‖ₑ ≠ ⊤ :=
           ne_top_of_le_ne_top hg (ENNReal.tsum_le_tsum fun i => hST i g)
         have h2 : Summable fun i => ‖∑' r, u i (ratS F (σ r) * g)‖ := by
-          simpa [toReal_enorm] using ENNReal.summable_toReal h1
+          simpa [toReal_eNorm] using ENNReal.summable_toReal h1
         exact (Summable.of_norm h2).hasSum
     have hint : Integrable (fun g => ∑' i, ∑' r, u i (ratS F (σ r) * g)) (M.μ.restrict M.D) := by
       refine ⟨hsm, ?_⟩
@@ -761,7 +761,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.expand1 :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] (D : Dat F E) (W : Weil D) (M : Meas F) (π : TR.CuspSub F 2), ∀ f ∈ π.V, ∀ φ ∈ Fock D.δ, ∀ h, Summable (fun ξ => ‖Wx W M f.1 φ h ξ‖) ∧
     lift W M f.1 φ h = T0 W M f.1 φ h + ∑' ξ, Wx W M f.1 φ h ξ := by
   intro F E _ _ _ _ _ _ _ D W M π f hf φ hφ h
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
   have hL := (UpperTheory.ConvolutionTheory.R2.Pp.cuspZero F π f hf).1
   obtain ⟨σ, hσ⟩ := exists_rowSec (F := F)
   have hN := fun ξ => UpperTheory.ConvolutionTheory.R2.G.uxAv F E D W f.1 hL φ h ξ

@@ -150,7 +150,7 @@ theorem isValueAt_congr {T : Over X} {s : LB.Sec (LPow A L a T)} {z z' : T ⟶ A
     have key2 := congrArg Units.val key
     simp only [MonoidHom.comp_apply] at key2
     unfold pullU at key2
-    simp only [Units.coe_map, MonoidHom.coe_coe] at key2
+    simp only [Units.coe_map, MonoidHom.coe_ofClass] at key2
     exact key2
   unfold IsValueAt at h ⊢
   intro j
@@ -165,7 +165,7 @@ private lemma gm_id_eq_germ_map {Y : Scheme.{0}} {U V : Y.Opens} (hVU : V ≤ U)
   rw [dite_eq_left (show (𝟙 Y : Y ⟶ Y) y ∈ U from hVU hy)]
   simp only [MonoidHom.comp_apply]
   unfold pullU
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   rw [Y.presheaf.germ_res_apply]
   rfl
 
@@ -177,7 +177,7 @@ private lemma gm_id_eq_of_units_map_eq {Y : Scheme.{0}} {U₁ U₂ V : Y.Opens} 
   apply Units.ext
   rw [gm_id_eq_germ_map h₁ y hy, gm_id_eq_germ_map h₂ y hy]
   have e2 := congrArg Units.val e
-  simp only [Units.coe_map, MonoidHom.coe_coe] at e2
+  simp only [Units.coe_map, MonoidHom.coe_ofClass] at e2
   rw [e2]
 
 theorem isValueAt_one_pull (ρ : LB.Gen (L.pull (eSec A))) {T T' : Over X} (g : T' ⟶ T)

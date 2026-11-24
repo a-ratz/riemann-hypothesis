@@ -114,7 +114,7 @@ private theorem cusp_of {E : Type} [Field E] [NumberField E] {a : ℕ} {φ : GA 
       left_inv := fun y => Subtype.ext (β.apply_symm_apply y)
       right_inv := fun x => Subtype.ext (β.symm_apply_apply x) }
   let m := β.toHomeomorph.toMeasurableEquiv
-  haveI : (μ.map m).IsAddHaarMeasure := β.isAddHaarMeasure_map μ
+  have : (μ.map m).IsAddHaarMeasure := β.isAddHaarMeasure_map μ
   have h2 := setIntegral_haar hl g (hφ r h0 h1 g) (μ.map m) (D := m '' 𝓕)
     (hF.image_of_equiv m.toEquiv (MeasurePreserving.symm m ⟨m.measurable, rfl⟩).quasiMeasurePreserving e fun y x => by
       change β (β.symm y + x) = y + β x
@@ -131,7 +131,7 @@ private theorem found_cusp {E : Type} [Field E] [NumberField E] {Φ : GL (Fin 2)
     AutomorphicForm.IsCuspidal Φ := by
   intro r hr hr2 g
   obtain rfl : r = 1 := by omega
-  letI : Unique (UPos 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
+  let : Unique (UPos 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
   rw [← h0 g, ← int_one (ι := UPos 2 1)]
   refine integral_congr_ae (Eventually.of_forall fun x => ?_)
   have : gl (nU (x default)) = unipGL x := by
@@ -183,8 +183,8 @@ theorem UpperTheory.ConvolutionTheory.R2.G.cuspE :
   refine cuspOf E Φ hl fun h => ?_
   let β : (Fin 2 → A F) ≃ₜ+ A E := D.coE.symm
   let m := β.toHomeomorph.toMeasurableEquiv
-  haveI : (adeleMeasurePi F (ι := Fin 2)).IsAddHaarMeasure := inferInstanceAs (Measure.pi fun _ : Fin 2 => adeleMeasure F).IsAddHaarMeasure
-  haveI : ((adeleMeasurePi F (ι := Fin 2)).map m).IsAddHaarMeasure := β.isAddHaarMeasure_map (adeleMeasurePi F)
+  have : (adeleMeasurePi F (ι := Fin 2)).IsAddHaarMeasure := inferInstanceAs (Measure.pi fun _ : Fin 2 => adeleMeasure F).IsAddHaarMeasure
+  have : ((adeleMeasurePi F (ι := Fin 2)).map m).IsAddHaarMeasure := β.isAddHaarMeasure_map (adeleMeasurePi F)
   have hF : IsAddFundamentalDomain (AdeleRing.principalSubgroup (𝓞 E) E) (m '' FS2 F) ((adeleMeasurePi F (ι := Fin 2)).map m) :=
     (isAddFundamentalDomain_vecDomain (K := F) (ι := Fin 2)).image_of_equiv m.toEquiv
       (MeasurePreserving.symm m ⟨m.measurable, rfl⟩).quasiMeasurePreserving (latE D).symm
@@ -201,7 +201,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.cuspE :
     obtain ⟨γ, hγ⟩ := Pp.rat_n k
     change Φ (gl (nU (rt k + x)) * h) = _
     rw [Pp.n_add, ← hγ, mul_assoc, hl]
-  haveI : Countable (AdeleRing.principalSubgroup (𝓞 E) E) := (latE D).symm.injective.countable
+  have : Countable (AdeleRing.principalSubgroup (𝓞 E) E) := (latE D).symm.injective.countable
   have h1 := (isAddFundamentalDomain_fundamentalSet E).setIntegral_eq hF' (f := fun x => Φ (gl (nU x) * h)) hper
   rw [h1, Measure.isAddLeftInvariant_eq_smul (adeleMeasure E) ((adeleMeasurePi F (ι := Fin 2)).map m), Measure.restrict_smul,
     integral_smul_nnreal_measure, m.measurableEmbedding.setIntegral_map, m.injective.preimage_image]

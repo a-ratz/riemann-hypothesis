@@ -325,10 +325,10 @@ theorem exists_cont_select {X : Type u} [TopologicalSpace X] [CompactSpace X] [T
       · intro x hx z hz
         by_cases hza : z ∈ C a
         · dsimp only
-          rw [if_pos hza]
+          rw [ite_eq_left hza]
           exact hCs a hza
         · dsimp only
-          rw [if_neg hza]
+          rw [ite_eq_right hza]
           rcases Finset.mem_insert.1 hx with rfl | hx'
           · exact absurd hz hza
           · exact hψ x hx' z hz
@@ -346,14 +346,14 @@ theorem isOpen_setOf_conj_eq (M : TRep R G) [DiscreteTopology M.V] (N : Subgroup
     (hNc : IsClosed (N : Set G)) [CompactSpace G] (f : N → M.V) (hf : Continuous f) (m : M.V) :
     IsOpen {s : G | ∀ n : N, M.rho s (f (cj N s n)) - f n = M.rho n m - m} := by
   have hact : Continuous (fun q : G × M.V => M.rho q.1 q.2) := M.cont
-  haveI : CompactSpace N := isCompact_iff_compactSpace.mp hNc.isCompact
+  have : CompactSpace N := isCompact_iff_compactSpace.mp hNc.isCompact
   have hcj : Continuous (fun p : G × N => cj N p.1 p.2) := by
     apply Continuous.subtype_mk
-    exact (continuous_fst.inv.mul (continuous_subtype_val.comp continuous_snd)).mul continuous_fst
+    exact (continuous_fst.inv.mul (continuous_subtypeVal.comp continuous_snd)).mul continuous_fst
   have hΦ : Continuous (fun p : G × N =>
       M.rho p.1 (f (cj N p.1 p.2)) - f p.2 - (M.rho (p.2 : G) m - m)) := by
     refine ((hact.comp (continuous_fst.prodMk (hf.comp hcj))).sub (hf.comp continuous_snd)).sub ?_
-    exact (hact.comp ((continuous_subtype_val.comp continuous_snd).prodMk continuous_const)).sub
+    exact (hact.comp ((continuous_subtypeVal.comp continuous_snd).prodMk continuous_const)).sub
       continuous_const
   have hO : IsOpen {p : G × N | M.rho p.1 (f (cj N p.1 p.2)) - f p.2 - (M.rho (p.2 : G) m - m) = 0} :=
     hΦ.isOpen_preimage {0} (isOpen_discrete _)
@@ -427,7 +427,7 @@ theorem exists_ext_cochain [CompactSpace G] [T2Space G] [TotallyDisconnectedSpac
       _ = _ := by rw [map_add (f := _), hrg, Module.End.mul_apply, hy]; simp only [← ht]; abel
   have hy1 : y 1 = 0 := by simp [hy, hr1, hf1, hσ]
   refine ⟨y, ?_, fun n => by simpa [hy1] using h3 n 1, h2, h3⟩
-  have hr' : Continuous fun g => (r g : G) := continuous_subtype_val.comp hrc
+  have hr' : Continuous fun g => (r g : G) := continuous_subtypeVal.comp hrc
   exact ((hf.comp hrc).add (M.cont.comp (hr'.prodMk (hψc.comp (hr'.inv.mul continuous_id))))).sub
     continuous_const
 

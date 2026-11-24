@@ -94,7 +94,7 @@ theorem expG_cont : Continuous C.expG := by
       | exact (NormedSpace.exp_continuous (𝕂 := ℝ) (𝔸 := 𝔸))
       | exact continuous_iff_continuousAt.2 fun Z => (NormedSpace.exp_analytic (𝕂 := ℝ) Z).continuousAt
       | exact NormedSpace.exp_continuous
-  exact hc.comp continuous_subtype_val
+  exact hc.comp continuous_subtypeVal
 
 theorem exists_rho : ∃ ρ > 0, ∀ Z : 𝔸, ‖Z‖ < ρ →
     logA (𝔸 := 𝔸) (exp Z) = Z ∧ ((∃ g, C.mat g = exp Z) → Z ∈ V) := by
@@ -120,8 +120,8 @@ variable [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V]
 include hR in
 theorem meas_image {s : Set V} (hs : MeasurableSet s) (hsub : s ⊆ ball 0 ρ) :
     MeasurableSet (C.expG '' s) := by
-  haveI : T2Space G := C.emb.t2Space
-  haveI : CompleteSpace V := FiniteDimensional.complete ℝ V
+  have : T2Space G := C.emb.t2Space
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℝ V
   exact hs.image_of_continuousOn_injOn C.expG_cont.continuousOn ((C.injOn hR).mono hsub)
 
 def nu (ρ : ℝ) (μ : Measure G) : Measure V :=
@@ -133,7 +133,7 @@ include hR in
 theorem nu_apply {s : Set V} (hs : MeasurableSet s) :
     C.nu ρ μ s = μ (C.expG '' (s ∩ ball 0 ρ)) := by
   unfold nu
-  rw [Measure.map_apply measurable_subtype_coe hs]
+  rw [Measure.map_apply measurable_subtypeVal hs]
   have hf : Function.Injective (fun x : ball (0 : V) ρ => C.expG x.1) :=
     fun a b h => Subtype.ext (C.injOn hR a.2 b.2 h)
   have hfm : ∀ t : Set (ball (0 : V) ρ), MeasurableSet t →
@@ -144,7 +144,7 @@ theorem nu_apply {s : Set V} (hs : MeasurableSet s) :
     rw [h1]
     exact C.meas_image hR (MeasurableSet.subtype_image measurableSet_ball ht)
       (by rintro _ ⟨x, -, rfl⟩; exact x.2)
-  rw [Measure.comap_apply _ hf hfm μ (measurable_subtype_coe hs)]
+  rw [Measure.comap_apply _ hf hfm μ (measurable_subtypeVal hs)]
   congr 1
   ext g
   constructor
@@ -274,7 +274,7 @@ theorem exists_density (lam : Measure V) [lam.IsAddHaarMeasure] :
       (∀ᶠ r in 𝓝[>] (0 : ℝ), lam (S r) ≠ 0 ∧ lam (S r) ≠ ⊤) →
       Tendsto (fun r => μ (C.img (S r)) / lam (S r)) (𝓝[>] 0) (𝓝 c) := by
   obtain ⟨ρ, hρ, hR⟩ := C.exists_rho
-  haveI := C.nu_finite hR μ
+  have := C.nu_finite hR μ
   obtain ⟨c, hc0, hctop, hup, hdown⟩ := Formalism.BasicNotions.Examples₂.CD.exists_density (nu := C.nu ρ μ) (lam := lam)
     (fun ε h0 h1 => C.nu_qinv hR μ hρ ε h0 h1) (fun r hr => C.nu_pos hR μ hρ r hr)
   refine ⟨c, hc0, hctop, fun S hS hsmall hlam => ?_⟩
@@ -308,14 +308,14 @@ theorem Chart.exists_density' {V : Submodule ℝ 𝔸} {G : Type*} [Group G] [To
       (∀ δ > 0, ∀ᶠ r in 𝓝[>] (0 : ℝ), ∀ X ∈ S r, ‖(X : 𝔸)‖ < δ) →
       (∀ᶠ r in 𝓝[>] (0 : ℝ), lam (S r) ≠ 0 ∧ lam (S r) ≠ ⊤) →
       Tendsto (fun r => μ {g | ∃ X ∈ S r, C.mat g = exp ((X : V) : 𝔸)} / lam (S r)) (𝓝[>] 0) (𝓝 c) := by
-  letI := mV
-  letI := mG
-  haveI := _hfd
-  haveI := _hbV
-  haveI := _hbG
-  haveI := _hG
-  haveI := _hμ
-  haveI := _hlam
+  let := mV
+  let := mG
+  have := _hfd
+  have := _hbV
+  have := _hbG
+  have := _hG
+  have := _hμ
+  have := _hlam
   obtain ⟨c, h0, h1, h⟩ := C.exists_density μ lam
   refine ⟨c, h0, h1, fun S hS hsm hl => h S hS (fun δ hδ => (hsm δ hδ).mono fun r hr X hX => ?_) hl⟩
   simpa using hr X hX

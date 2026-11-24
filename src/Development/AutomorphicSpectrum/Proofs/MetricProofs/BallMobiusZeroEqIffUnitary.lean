@@ -146,7 +146,7 @@ theorem single_fb {a p : Matrix (Fin j) (Fin j) ℂ} {b e : Matrix (Fin j) (Fin 
       rw [Matrix.sub_mul, this, sub_self]
     have hS : IsUnit (d - c * a⁻¹ * b).det := by
       have hd := IsSgU.det_unit hu
-      letI := Matrix.invertibleOfIsUnitDet a ha
+      let := Matrix.invertibleOfIsUnitDet a ha
       rw [Matrix.det_fromBlocks₁₁, Matrix.invOf_eq_nonsing_inv] at hd
       exact isUnit_of_mul_isUnit_right hd
     have : (d - c * a⁻¹ * b)⁻¹ * ((d - c * a⁻¹ * b) * r) = r :=

@@ -121,11 +121,11 @@ theorem finprod_split (M : Model σ Y W)
     refine ((Filter.eventually_cofinite.1 hstd).union (finite_nonint x)).subset ?_
     intro w hw
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
     apply hw
     by_cases hwT : w ∈ T
     · simp [ρ, hwT]
-    · simp only [ρ, hwT, if_false, hc.1]
+    · simp only [ρ, hwT, ite_false, hc.1]
       exact Set.indicator_of_mem (s := {x : Fin n × Fin d → Fv F w | ∀ i, x i ∈ w.adicCompletionIntegers F}) hc.2 1
   have hθ : Function.mulSupport θ ⊆ (T : Set (Pl F)) := by
     intro w hw

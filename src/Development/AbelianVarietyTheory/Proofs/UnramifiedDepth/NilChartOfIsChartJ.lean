@@ -151,7 +151,7 @@ private theorem psJet_eq_nv {R : Type} [CommRing R] {n d : ℕ} (m : ℕ) (f : P
   have h1 : nv (algebraMap R (Chart.JetR R (Fin n × Fin d) m)) f (fun i j => Chart.zR m (i, j)) =
       ∑ e : Fin n × Fin d → Fin (m + 1), algebraMap R (Chart.JetR R (Fin n × Fin d) m) (MvPowerSeries.coeff
       (Finsupp.equivFunOnFinite.symm fun i => (e i : ℕ)) f) * ∏ i, (Chart.zR (R := R) m i) ^ (e i : ℕ) := by
-    letI := (algebraMap R (Chart.JetR R (Fin n × Fin d) m)).toAlgebra
+    let := (algebraMap R (Chart.JetR R (Fin n × Fin d) m)).toAlgebra
     exact evBasic_nEval_eq_tEval f (fun q : Fin n × Fin d => Chart.zR m q) (m + 1) hz
   have h2 : nv (algebraMap R (Chart.JetR R (Fin n × Fin d) m)) f (fun i j => Chart.zR m (i, j)) =
       Ideal.Quotient.mk _ (∑ e : Fin n × Fin d → Fin (m + 1), MvPolynomial.monomial
@@ -172,9 +172,9 @@ private theorem psJet_eq_nv {R : Type} [CommRing R] {n d : ℕ} (m : ℕ) (f : P
     have he0 : (Finsupp.equivFunOnFinite.symm fun i => ((⟨e i, hle i⟩ : Fin (m + 1)) : ℕ)) = e := by
       ext i; rfl
     rw [MvPolynomial.coeff_sum, Finset.sum_eq_single (fun i => (⟨e i, hle i⟩ : Fin (m + 1)))]
-    · rw [he0, MvPolynomial.coeff_monomial, if_pos rfl]
+    · rw [he0, MvPolynomial.coeff_monomial, ite_eq_left rfl]
     · intro e' _ hne
-      rw [MvPolynomial.coeff_monomial, if_neg]
+      rw [MvPolynomial.coeff_monomial, ite_eq_right]
       intro h
       apply hne
       funext i
@@ -219,7 +219,7 @@ private theorem map_substJ {R S : Type} [CommRing R] [CommRing S] [Algebra R S] 
 theorem nilChart_of_isChartJ : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∀ (d : ℕ) (F : FGLaw R d) (x : ∀ m : ℕ, Geo.Tor.algOver R (Geo.Tor.JetR R (Fin 1 × Fin d) m) ⟶ G), IsChartJ G F x → ∃ X : Fam G d, NilChart G F.F X ∧ ∀ (OE : Type) [CommRing OE] (io : Out.RingAct G OE) (act : Geo.Tor.Germ.OAct OE F), ChartActs G x io act → ∀ a, Reads X X (io.act a) (act.act a) := by
   intro R _ _ G _ _ hG d F x₀ hx
   classical
-  haveI := hG
+  have := hG
   let x : ∀ m, sp (R₀ := R) (Chart.JetR R (Fin 1 × Fin d) m) ⟶ G := x₀
   have ht : ∀ m, spMap (Chart.jetTruncR R _ m) ≫ x (m + 1) = x m := hx.trunc
   have h0 : ∀ m, spMap (Chart.jetZeroR R _ m) ≫ x m = 1 := hx.zero
@@ -233,7 +233,7 @@ theorem nilChart_of_isChartJ : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : 
     intro S _ _ a m ψ hψ
     have h : ∃ (m : ℕ) (ψ : Chart.JetR R (Fin 1 × Fin d) m →ₐ[R] S), ∀ q, ψ (Chart.zR m q) = a q.2 :=
       ⟨m, ψ, hψ⟩
-    exact (dif_pos h).trans
+    exact (dite_eq_left h).trans
       (jetPt_indep x ht _ ψ fun q => (h.choose_spec.choose_spec q).trans (hψ q).symm)
   refine ⟨X, ⟨fun S _ _ => ?_, fun S _ _ S' _ _ φ a ha => ?_, fun S _ _ a b ha hb e => ?_,
     fun S _ _ S' _ _ ρ σ hρ hn z hz => ?_, fun S _ _ a b ha hb => ?_⟩,

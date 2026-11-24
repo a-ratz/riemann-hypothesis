@@ -216,11 +216,11 @@ namespace GlobalTheory.ShareEig
 theorem share_eig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (U C : Type) [Group U] [Finite U] [Finite C] [MulAction U C] (M : TwoLevels E r U C), ∀ (ka : Wt M.Ψ r) (ρ : Representation ℂ U (M.cusp ka)), IsPullRep M ka ρ → ∀ ep c : ℝ, Ranks M ka (sOf M) ep c → ∀ H : Subgroup U, LevelHyp (sub M H) → ∀ lam : H →* ℂˣ, finrank ℂ (M.cusp (ka - deMul M.Ψ r M.p0 (sOf M))) ≤ Nat.card H * finrank ℂ (GlobalTheory.BadCount.eig ρ H lam) ∧ (1 - ep) * finrank ℂ (M.cusp ka) ≤ (Nat.card H : ℝ) * finrank ℂ (GlobalTheory.BadCount.eig ρ H lam) := by
   intro E _ _ _ r U C _ _ _ _ M ka ρ hρ ep c0 hR H hL lam
   classical
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   obtain ⟨a, ha⟩ := hρ
   obtain ⟨u0, hu0, hdet⟩ := _root_.GlobalTheory.TranslatesDet.independentTranslates E r H C (sub M H) hL (sOf M) (even_sOf M) (le_sOf M)
   have hu0' : u0 ∈ M.SS (deMul M.Ψ r M.p0 (sOf M)) := hu0
-  haveI : Module.Finite ℂ (M.cusp ka) := hR.1
+  have : Module.Finite ℂ (M.cusp ka) := hR.1
   have hQ : ∀ (h : U) (c : C), (M.comp c).IsBddSec (castWt (M.comp_Ψ c) (deMul M.Ψ r M.p0 (sOf M)))
       (fun x => M.pull h u0 c (castFrame (M.comp_Ψ c) x)) := fun h c => bddSec_pull E r U C M _ u0 hu0' h c
   have hprod : ∀ (h : U) (X : C → Frame M.Ψ r → ℂ), X ∈ M.SS (ka - deMul M.Ψ r M.p0 (sOf M)) →

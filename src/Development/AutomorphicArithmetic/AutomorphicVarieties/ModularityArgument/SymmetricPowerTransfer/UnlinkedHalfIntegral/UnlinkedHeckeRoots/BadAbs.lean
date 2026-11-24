@@ -193,7 +193,7 @@ theorem unipotent_conj_moves_char : Ad3.R.U2 := by
     intro hle
     have : n ≤ n - 1 := Nat.sInf_le hle
     omega
-  obtain ⟨u, hu, hωu⟩ := SetLike.not_le_iff_exists.mp hnot
+  obtain ⟨u, hu, hωu⟩ := IsConcreteLE.not_le_iff_exists.mp hnot
   rw [MonoidHom.mem_ker] at hωu
   have h1 : (u : F) - 1 ≠ 0 := by
     intro h

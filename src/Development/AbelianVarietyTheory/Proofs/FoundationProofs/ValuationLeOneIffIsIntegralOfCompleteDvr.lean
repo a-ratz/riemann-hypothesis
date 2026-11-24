@@ -76,14 +76,14 @@ theorem exists_spectralValuation (K Ω : Type) [Field K] [Field Ω] [Algebra K �
     ∃ v : Valuation Ω ℝ≥0, (∀ x : K, (v (algebraMap K Ω x) : ℝ) = f x) ∧
       ∀ x : Ω, v x ≤ 1 ↔ ∀ i, f ((minpoly K x).coeff i) ≤ 1 := by
   obtain ⟨a, ha⟩ := hnt.exists_abv_gt_one
-  letI : NontriviallyNormedField (WithAbs f) :=
+  let : NontriviallyNormedField (WithAbs f) :=
     NontriviallyNormedField.ofNormNeOne ⟨WithAbs.toAbs f a, by
       intro h; rw [WithAbs.toAbs_eq_zero] at h; rw [h, map_zero] at ha; linarith, by
       rw [WithAbs.norm_toAbs_eq]; exact ha.ne'⟩
-  haveI : IsUltrametricDist (WithAbs f) :=
+  have : IsUltrametricDist (WithAbs f) :=
     IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm fun x y => hna x.ofAbs y.ofAbs
-  haveI : IsScalarTower K (WithAbs f) Ω := inferInstance
-  haveI : Algebra.IsAlgebraic (WithAbs f) Ω := Algebra.IsAlgebraic.tower_top (K := K) (WithAbs f)
+  have : IsScalarTower K (WithAbs f) Ω := inferInstance
+  have : Algebra.IsAlgebraic (WithAbs f) Ω := Algebra.IsAlgebraic.tower_top (K := K) (WithAbs f)
   have hmin : ∀ x : Ω, minpoly (WithAbs f) x = (minpoly K x).map (algebraMap K (WithAbs f)) := by
     intro x
     have hx : IsIntegral K x := (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
@@ -137,10 +137,10 @@ theorem valuation_le_one_iff_isIntegral_of_complete_dvr :
       [Algebra.IsAlgebraic R Ω], Function.Injective (algebraMap R Ω) →
       ∃ v : Valuation Ω ℝ≥0, ∀ x : Ω, v x ≤ 1 ↔ IsIntegral R x := by
   intro R Ω _ _ _ _ _ _ _ hinj
-  haveI : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).mpr hinj
-  letI : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
-  haveI : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
-  haveI : Algebra.IsAlgebraic (FractionRing R) Ω :=
+  have : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).mpr hinj
+  let : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
+  have : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
+  have : Algebra.IsAlgebraic (FractionRing R) Ω :=
     Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective R (FractionRing R))
   obtain ⟨f, hna, hnt, hball, hcomp⟩ := _root_.GlobalTheory.KLC.exists_absoluteValue_completeSpace_of_isDiscreteValuationRing R (FractionRing R)
   obtain ⟨v, -, hv⟩ := _root_.GlobalTheory.exists_spectralValuation (FractionRing R) Ω f hna hnt hcomp

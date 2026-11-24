@@ -98,8 +98,8 @@ theorem spec_dualMap_comp {R R' : Type} [CommRing R] [CommRing R'] (k : R →+* 
 theorem isFractionRing_stalk (h : IsCptGen ξ) (p : Cpt ξ) :
     letI := (genMap ξ p).toAlgebra
     IsFractionRing (X.presheaf.stalk p.1) Ω := by
-  letI := (genMap ξ p).toAlgebra
-  haveI : FaithfulSMul (X.presheaf.stalk p.1) Ω :=
+  let := (genMap ξ p).toAlgebra
+  have : FaithfulSMul (X.presheaf.stalk p.1) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (h.inj p)
   refine IsFractionRing.of_field _ _ fun z => ?_
   obtain ⟨⟨_, a, rfl⟩, ⟨_, b, rfl⟩, e⟩ := RegAtRing.exists_div h p z
@@ -158,8 +158,8 @@ theorem isHTFormOver_of_dvr [IsDomain R] [IsDiscreteValuationRing R]
     (tie : ∀ e, ∃ v : epsAt (𝟙 (Sp Ω)) ⟶ GΩ, v.left ≫ φ = (M.pt e).left ∧ v.left ≫ φ' = (M'.pt e).left)
     (N : ℕ) (w : Module.Dual Ω E) (h : M.IsHTFormOver N x k w) : M'.IsHTFormOver N x k w := by
   subst hx
-  letI := k.toAlgebra
-  haveI : IsFractionRing R Ω := hk
+  let := k.toAlgebra
+  have : IsFractionRing R Ω := hk
   obtain ⟨G₀, _, ψ, ψ', κ, hψ, hψ', hκ, e₁, e₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.semiAbelian_commonModel R Ω X X x x G G' GΩ φ φ' hG hG' hφ hφ'
   exact isHTFormOver_move hψ hψ' hκ.1.w e₁ e₂ M M' tie N w h
 

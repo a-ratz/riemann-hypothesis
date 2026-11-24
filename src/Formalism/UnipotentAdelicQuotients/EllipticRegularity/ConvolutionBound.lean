@@ -91,15 +91,15 @@ theorem convolution_bound : ConvBound := by
   obtain ⟨g1, hg1e⟩ : ∃ g1 : E d → ℝ≥0∞, g1 = fun η => ENNReal.ofReal (om s M ε η) * ‖F η‖ₑ := ⟨_, rfl⟩
   obtain ⟨g2, hg2e⟩ : ∃ g2 : E d → ℝ≥0∞, g2 = fun η => ENNReal.ofReal (om (s - 1) M ε η) * ‖F η‖ₑ :=
     ⟨_, rfl⟩
-  have hk1 : Measurable k1 := by rw [hk1e]; exact hKm.enorm
+  have hk1 : Measurable k1 := by rw [hk1e]; exact hKm.eNorm
   have hk3 : Measurable k3 := by
     rw [hk3e]
-    exact (ENNReal.measurable_ofReal.comp (by fun_prop)).mul hKm.enorm
+    exact (ENNReal.measurable_ofReal.comp (by fun_prop)).mul hKm.eNorm
   have hk2 : Measurable k2 := by rw [hk2e]; exact measurable_const.mul hk3
   have hg1 : Measurable g1 := by
-    rw [hg1e]; exact (ENNReal.measurable_ofReal.comp (om_measurable s M ε)).mul hFm.enorm
+    rw [hg1e]; exact (ENNReal.measurable_ofReal.comp (om_measurable s M ε)).mul hFm.eNorm
   have hg2 : Measurable g2 := by
-    rw [hg2e]; exact (ENNReal.measurable_ofReal.comp (om_measurable (s - 1) M ε)).mul hFm.enorm
+    rw [hg2e]; exact (ENNReal.measurable_ofReal.comp (om_measurable (s - 1) M ε)).mul hFm.eNorm
   have hprod : ∀ k g : E d → ℝ≥0∞, Measurable k → Measurable g →
       Measurable (Function.uncurry fun ξ η : E d => k (ξ - η) * g η) := fun k g hk hg =>
     (hk.comp (measurable_fst.sub measurable_snd)).mul (hg.comp measurable_snd)
@@ -111,9 +111,9 @@ theorem convolution_bound : ConvBound := by
     intro ξ
     have h1 : ‖conv K F ξ‖ₑ ≤ ∫⁻ η, ‖K (ξ - η)‖ₑ * ‖F η‖ₑ := by
       unfold conv
-      refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+      refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
       refine lintegral_congr fun η => ?_
-      rw [enorm_mul]
+      rw [eNorm_mul]
     have hmeas : Measurable fun η => k1 (ξ - η) * g1 η :=
       (hk1.comp (measurable_const.sub measurable_id)).mul hg1
     calc ENNReal.ofReal (om s M ε ξ) * ‖conv K F ξ‖ₑ

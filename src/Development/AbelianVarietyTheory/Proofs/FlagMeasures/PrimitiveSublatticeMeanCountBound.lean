@@ -229,12 +229,12 @@ theorem mass_nonneg (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V
 
 theorem isIntLat_latIn (h : V →ₗ⋆[K] V →ₗ[K] K) {L : Submodule (𝓞 K) V} (hL : IsIntLat h L)
     (U : Submodule K V) : IsIntLat (hRes h U) (latIn U L) := by
-  letI : Submodule.IsLattice K (latIn U L) := by
+  let : Submodule.IsLattice K (latIn U L) := by
     refine ⟨?_, ?_⟩
     · apply Submodule.fg_of_fg_map_injective (U.subtype.restrictScalars (𝓞 K)) U.injective_subtype
       exact hL.1.fg.of_le (Submodule.map_comap_le _ _)
     · intro s hs hli
-      letI : Submodule.IsLattice K L := hL.1.toIsLattice
+      let : Submodule.IsLattice K L := hL.1.toIsLattice
       apply LinearIndependent.of_comp U.subtype
       apply Submodule.IsLattice.linearIndependent K L
       · intro x
@@ -242,7 +242,7 @@ theorem isIntLat_latIn (h : V →ₗ⋆[K] V →ₗ[K] K) {L : Submodule (𝓞 K
       · exact hli.map' (U.subtype.restrictScalars (𝓞 K))
           (LinearMap.ker_eq_bot.mpr U.injective_subtype)
   refine ⟨{ span_eq_top := ?_ }, fun x hx y hy => hL.2 x hx y hy⟩
-  · letI : Submodule.IsFullLattice K L := hL.1
+  · let : Submodule.IsFullLattice K L := hL.1
     refine eq_top_iff.mpr fun x _ => ?_
     obtain ⟨a, hax⟩ := multiple_mem_span_of_mem_localization_span (nonZeroDivisors (𝓞 K)) K L (x : V)
       (show (x : V) ∈ Submodule.span K (L : Set V) by rw [Submodule.IsFullLattice.span_eq_top]; trivial)

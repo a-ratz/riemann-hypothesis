@@ -309,7 +309,7 @@ theorem lbSpreads : LBSpreads := by
   intro R R₀ _ _ φ Y Y₀ f f₀ π hmod M hM
   obtain ⟨hft, -, hqc, hqs, hpb⟩ := hmod
   classical
-  letI : Algebra R₀ R := φ.toAlgebra
+  let : Algebra R₀ R := φ.toAlgebra
   let A : Finset R → Subalgebra R₀ R := fun s => Algebra.adjoin R₀ (s : Set R)
   let F : Finset R ⥤ CommRingCat.{0} :=
     { obj s := .of (A s)

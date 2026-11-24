@@ -229,12 +229,12 @@ theorem exists_generator (he : IsSplitIdem D e) (hπ : Chart e v π) :
     rw [FractionalIdeal.eq_zero_iff]
     intro a ha
     have := hle a ha
-    rw [h, map_zero, le_zero_iff, map_eq_zero] at this
+    rw [h, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact (map_eq_zero (π.comp (incA D))).1 this
   refine ⟨a₀, ?_, h0, fun a ha => isInt_Ov.2 ?_⟩
   · show a₀ ∈ (D.host.AA : Submodule (𝓞 D.host.E) D.host.E)
     rw [← hs]; exact Submodule.subset_span ha₀
-  · rw [HeightOneSpectrum.mem_adicCompletionIntegers, Valuation.map_mul, map_inv₀, inv_mul_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))]
+  · rw [HeightOneSpectrum.mem_adicCompletionIntegers, Valuation.map_mul, map_inv₀, inv_mul_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))]
     exact hle a ha
 
 end Chart

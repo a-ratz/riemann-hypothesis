@@ -88,7 +88,7 @@ theorem hilbert90_involution_of_idempotent_unit {R : Type} [CommRing R] (σ : R 
 theorem aut_eq_one_or_of_finrank_two {F E : Type} [Field F] [CharZero F] [Field E] [Algebra F E]
     (c : E ≃ₐ[F] E) (h2 : Module.finrank F E = 2) (hc : c ≠ 1) (g : E ≃ₐ[F] E) : g = 1 ∨ g = c := by
   classical
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   have hcard : Nat.card (E ≃ₐ[F] E) = 2 := by rw [IsGalois.card_aut_eq_finrank, h2]
   by_contra hg
   push Not at hg
@@ -97,7 +97,7 @@ theorem aut_eq_one_or_of_finrank_two {F E : Type} [Field F] [CharZero F] [Field 
 
 theorem hilbert90_adeleRing_tensor_quadratic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (c : E ≃ₐ[F] E), Module.finrank F E = 2 → c ≠ 1 → ∀ u : AdeleRing (𝓞 F) F ⊗[F] E, u * sg (AdeleRing (𝓞 F) F) c u = 1 → ∃ x : (AdeleRing (𝓞 F) F ⊗[F] E)ˣ, (x : AdeleRing (𝓞 F) F ⊗[F] E) = u * sg (AdeleRing (𝓞 F) F) c (x : AdeleRing (𝓞 F) F ⊗[F] E) := by
   intro F E _ _ _ _ _ c h2 hc u hu
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   have hcc : ∀ x, c (c x) = x := by
     intro x
     rcases aut_eq_one_or_of_finrank_two c h2 hc (c * c) with h | h

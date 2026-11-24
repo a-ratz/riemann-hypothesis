@@ -104,7 +104,7 @@ theorem map_mem_ratSpan (lam : D.what₂.Tau → DomWeight n)
     {F : MvPolynomial (D.what₂.Tau × Fin n × Fin n) D.what₂.LL} (hF : F ∈ Formalism.L2.DIV.VV D.what₂.LL lam) :
     MvPolynomial.map D.what₂.embLL F ∈ RatSpan D lam := by
   classical
-  haveI : CharZero D.what₂.LL := D.what₂.embLL.charZero
+  have : CharZero D.what₂.LL := D.what₂.embLL.charZero
   let S : D.what₂.Tau → Set (MvPolynomial (D.what₂.Tau × Fin n × Fin n) D.what₂.LL) := fun τ =>
     Set.range fun w : List (Fin n × Fin n × ℕ) =>
       MvPolynomial.rename (Prod.mk τ) (Formalism.GradedWeylDivisibility.applyWord D.what₂.LL w (Formalism.GradedWeylDivisibility.hw D.what₂.LL le_rfl (lam τ).natW))

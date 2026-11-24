@@ -217,15 +217,15 @@ theorem UpperTheory.V.Fr.alg_quot :
       have := Ideal.pow_mem_pow hx (N + 1)
       rw [hMpow] at this
       exact (Submodule.mem_bot _).mp this
-  haveI : (nilradical (D ⧸ 𝔪 ^ (N + 1))).IsMaximal := hnil ▸ hMmax
-  haveI hloc : IsLocalRing (D ⧸ 𝔪 ^ (N + 1)) := IsLocalRing.of_isMaximal_nilradical _
+  have : (nilradical (D ⧸ 𝔪 ^ (N + 1))).IsMaximal := hnil ▸ hMmax
+  have hloc : IsLocalRing (D ⧸ 𝔪 ^ (N + 1)) := IsLocalRing.of_isMaximal_nilradical _
   have hMeq : maximalIdeal (D ⧸ 𝔪 ^ (N + 1)) = M := (IsLocalRing.eq_maximalIdeal hMmax).symm
   have halg : ∀ a : O, algebraMap O (D ⧸ 𝔪 ^ (N + 1)) a
       = Ideal.Quotient.mk (𝔪 ^ (N + 1)) (algebraMap C D (algebraMap O C a)) := by
     intro a
     rw [← IsScalarTower.algebraMap_apply]
     rfl
-  haveI : IsNoetherianRing D := hV.noeth
+  have : IsNoetherianRing D := hV.noeth
   refine ⟨@IsCO.mk O (D ⧸ 𝔪 ^ (N + 1)) _ _ _ _ hloc inferInstance ?_ ?_ ?_, hMeq⟩
   · rw [hMeq]
     exact adicComplete_of_pow_eq_bot M (N + 1) hMpow
@@ -265,7 +265,7 @@ theorem UpperTheory.V.Fr.alg_family :
   have hex : ∀ N, ∃! f : S.R →ₐ[O] D ⧸ 𝔪 ^ (N + 1),
       S.ρ.map (f : S.R →+* D ⧸ 𝔪 ^ (N + 1)) = ρ.map (Ideal.Quotient.mk (𝔪 ^ (N + 1))) := by
     intro N
-    letI := hco N
+    let := hco N
     exact S.univ _ _ (alg_lift C 𝔪 ρ hM _ (Ideal.Quotient.mkₐ O (𝔪 ^ (N + 1))) (fun x hx => by
       rw [hmax N]
       exact Ideal.mem_map_of_mem _ hx))
@@ -284,7 +284,7 @@ theorem UpperTheory.V.Fr.alg_family :
     rw [← hcomp, AlgHom.comp_apply, ← hd]
     rfl
   · intro N x hx
-    letI := hco N
+    let := hco N
     have hm : ∀ y ∈ maximalIdeal S.R,
         f N y ∈ Ideal.map (Ideal.Quotient.mk (𝔪 ^ (N + 1))) 𝔪 := by
       intro y hy
@@ -345,7 +345,7 @@ theorem UpperTheory.V.Fr.alg_limit :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] {F : Frame l (ResidueField O)} {n : ℕ} (S : Space O F n) (C : Type) [CommRing C] [Algebra O C] [IsCO O C] {D : Type} [CommRing D] [Algebra O D] [Algebra C D] [IsScalarTower O C D] (𝔪 : Ideal D) (ρ : NRep F n D), IsVertexRing C 𝔪 → IsModel O C 𝔪 ρ → ∃ (ξ : S.A →ₐ[O] D) (β : S.B →ₐ[O] C), S.u.map (ξ : S.A →+* D) = ρ ∧ ∀ b, ξ (S.inc b) = algebraMap C D (β b) := by
   intro l _ O _ _ F n S C _ _ _ D _ _ _ _ 𝔪 ρ hV hM
   obtain ⟨f, hf1, hf2, hf3⟩ := alg_family S C 𝔪 ρ hV hM
-  haveI : IsAdicComplete (maximalIdeal C) C := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal C) C := IsCO.complete (O := O)
   have hsep : ∀ d d' : D, (∀ N : ℕ, Ideal.Quotient.mk (𝔪 ^ (N + 1)) d = Ideal.Quotient.mk (𝔪 ^ (N + 1)) d') → d = d' := by
     intro d d' h
     have hmem : d - d' ∈ ⨅ N, 𝔪 ^ N := by
@@ -890,14 +890,14 @@ theorem UpperTheory.V.Fr.alg :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (K : Type) [CommRing K] [Algebra O K] [Algebra C K] [IsScalarTower O C K], Function.Injective (algebraMap C K) → ∀ ρ : NRep F n K, Cone O C ρ → ∃ (ξ : S.A →ₐ[O] K) (β : S.B →ₐ[O] C), S.u.map (ξ : S.A →+* K) = ρ ∧ ∀ b, ξ (S.inc b) = algebraMap C K (β b) := by
   intro l _ O _ _ _ _ F C₀ n hF hn S C _ _ _ K _ _ _ _ hi ρ hcone
   have hv := alg_vertex C ρ hcone
-  haveI := alg_ft C ρ hcone.fg
+  have := alg_ft C ρ hcone.fg
   have hN : IsNoetherianRing (lauSub (NRep.part C ρ)) := Algebra.FiniteType.isNoetherianRing C _
   have hvr := alg_vring hv hi hN
   obtain ⟨ρD, h1, h2⟩ := alg_lau C ρ hcone
   have hmod := alg_model C ρ hcone hv ρD h1 h2
-  letI : Algebra O (lauSub (NRep.part C ρ)) :=
+  let : Algebra O (lauSub (NRep.part C ρ)) :=
     ((algebraMap C (lauSub (NRep.part C ρ))).comp (algebraMap O C)).toAlgebra
-  haveI : IsScalarTower O C (lauSub (NRep.part C ρ)) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower O C (lauSub (NRep.part C ρ)) := IsScalarTower.of_algebraMap_eq' rfl
   obtain ⟨ξ, β, hξ, hβ⟩ := alg_limit S C (vertex hv) ρD hvr hmod
   obtain ⟨e, he⟩ := alg_ev C K
   let ev : lauSub (NRep.part C ρ) →ₐ[O] K := (e.comp (lauSub (NRep.part C ρ)).val).restrictScalars O

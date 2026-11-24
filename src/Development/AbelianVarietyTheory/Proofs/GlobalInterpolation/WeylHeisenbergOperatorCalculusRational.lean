@@ -136,7 +136,7 @@ theorem jetC_sum (κ : Type) (T : Finset κ) (c : κ → ℂ) (F : κ → VCx X.
       funext z; simp
     rw [e, iteratedFDeriv_sum_apply (f := fun i => c i • F i) (fun i hi => ((hF i hi n).const_smul (c i)).contDiffAt)]
     exact Finset.sum_congr rfl fun i hi => iteratedFDeriv_const_smul_apply (hF i hi n).contDiffAt
-  simp only [jetC, derivAt0, hd, ContinuousMultilinearMap.sum_apply, ContinuousMultilinearMap.smul_apply, smul_eq_mul,
+  simp only [jetC, derivAt0, hd, sum_apply, smul_apply, smul_eq_mul,
     Finset.mul_sum]
   exact Finset.sum_congr rfl fun _ _ => by ring
 

@@ -443,7 +443,7 @@ theorem unistab_iff : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpac
     exact (c a).2
   · intro hM
     have hdet : M.det = 1 := by
-      rw [Matrix.det_of_upperTriangular (fun i j hij => hU.1 i j hij)]
+      rw [Matrix.det_of_isUpperTriangular (fun i j hij => hU.1 i j hij)]
       simp [hU.2]
     let M₀ : Matrix (Fin m) (Fin m) L.O := fun i j => ⟨M i j, hM i j⟩
     have hM₀ : M₀.map L.O.subtype = M := by ext i j; rfl
@@ -555,10 +555,10 @@ theorem integralStabiliser_iff_rational_coords_alt : ∀ (D : D7) (X : HidaSetti
       ∀ a b : Fin (D.R.rS + 1), a < b → (D.s.atP p).ιE (B a b) * (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (Y.δ p) *
         (D.s.atP p).ιE (uP p : D.host.E)) ^ ((b : ℕ) - (a : ℕ)) ∈ (Y.M p).L.O := by
     intro p
-    haveI := (D.s.atP p).lf
-    haveI := (D.s.atP p).char0
-    haveI : IsNonarchimedeanLocalField ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp := (D.s.atP p).lf
-    haveI : CharZero ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp := (D.s.atP p).char0
+    have := (D.s.atP p).lf
+    have := (D.s.atP p).char0
+    have : IsNonarchimedeanLocalField ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp := (D.s.atP p).lf
+    have : CharZero ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).Fp := (D.s.atP p).char0
     obtain ⟨xp, hxp, hExt⟩ := hx p
     have huniq := ((GlobalTheory.HL.RatExt.rational_extend (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) _ p).2.2.1 x)
     have hK : (∃ g' ∈ (G.S p).K0, (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).Ext p x g') ↔ xp ∈ (G.S p).K0 := by
@@ -708,25 +708,25 @@ theorem stMat_int_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
       refine ⟨fun hji => ?_, fun hij => ?_⟩
       · have h1 : i ≠ j := fun h => (lt_irrefl j) (h ▸ hji)
         have h2 : ¬ (i < j ∧ Formalism.L2.SG.RealObj.blkOf w.1 i.1 = Formalism.L2.SG.RealObj.blkOf w.1 j.1) := fun h => (lt_asymm hji) h.1
-        simp only [B, if_neg h1, dif_neg h2]
-      · simp only [B, if_pos hij]
+        simp only [B, ite_eq_right h1, dite_eq_right h2]
+      · simp only [B, ite_eq_left hij]
     have hBblk : ∀ a b : Fin (D.R.rS + 1), Formalism.L2.SG.RealObj.blkOf w.1 a.1 ≠ Formalism.L2.SG.RealObj.blkOf w.1 b.1 →
         B a b = 0 := by
       intro a b hne
       have h1 : a ≠ b := fun h => hne (h ▸ rfl)
       have h2 : ¬ (a < b ∧ Formalism.L2.SG.RealObj.blkOf w.1 a.1 = Formalism.L2.SG.RealObj.blkOf w.1 b.1) := fun h => hne h.2
-      simp only [B, if_neg h1, dif_neg h2]
+      simp only [B, ite_eq_right h1, dite_eq_right h2]
     obtain ⟨x, ⟨hxSt, hxB⟩, -⟩ := hStCo.2 B hBU hBblk
     have hxK : x ∈ G.K0 := by
       refine (hK x hxSt B hxB).2 fun a b hab => ?_
       have h1 : a ≠ b := ne_of_lt hab
       by_cases h2 : a < b ∧ Formalism.L2.SG.RealObj.blkOf w.1 a.1 = Formalism.L2.SG.RealObj.blkOf w.1 b.1
-      · simp only [B, if_neg h1, dif_pos h2]
+      · simp only [B, ite_eq_right h1, dite_eq_left h2]
         have := hlam ⟨(a, b), h2⟩
         rw [hexp _ _ hab] at this
         exact this
-      · simp only [B, if_neg h1, dif_neg h2]
-        exact FractionalIdeal.mem_coe.1 (Submodule.zero_mem _)
+      · simp only [B, ite_eq_right h1, dite_eq_right h2]
+        exact FractionalIdeal.mem_coeToSubmodule.1 (Submodule.zero_mem _)
     have hspec := GlobalTheory.HL.TraceConjugationCover.stMat_spec G x ⟨B, hxB⟩
     have hM : GlobalTheory.HL.TraceConjugationCover.stMat G x = B := by
       funext a b
@@ -739,7 +739,7 @@ theorem stMat_int_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
     simp only [Formalism.L2.SG.NGCut.SplitEmbedding.embS, AddMonoidHom.coe_mk, ZeroHom.coe_mk, one_mul] at e1
     rw [hM, ← e1]
     have h1 : p.1.1 ≠ p.1.2 := ne_of_lt p.2.1
-    simp only [B, if_neg h1, dif_pos p.2]
+    simp only [B, ite_eq_right h1, dite_eq_left p.2]
     all_goals first | rfl | (congr 1)
 
 end GlobalTheory.HL.StIntLat
@@ -1147,8 +1147,8 @@ theorem stabL_relIndex_K0_ne_zero_of_four_mul_add_seven_le : ∀ {F E : Type} [F
   let K : ∀ p, Subgroup (G.S p).GLV := fun p => (G.S p).K0
   have hidx : ∀ p, (K p).relIndex (U p) ≠ 0 ∧ (U p).relIndex (K p) ≠ 0 := by
     intro p
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     obtain ⟨a, b, -⟩ := (GlobalTheory.HL.volSt (A.L p) r k (G.S p)).1 (A.lat p Λ) (hlat p)
     exact ⟨a, b⟩
   have hKU : {p | K p ≠ U p}.Finite := hfin.subset fun p hp h => hp h.symm
@@ -1451,7 +1451,7 @@ theorem GlobalTheory.RoEq.roinf_eq_realPts : ∀ (D : D7) (X : HidaSetting D) (Y
   obtain ⟨hN, hN', -⟩ := GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hmv
   have hrow : Submodule.IsFullLattice D.host.E t₀.lam := ((Y.rowsOK u).1 t₀.lam t₀.mem).1.1
   have hT : Submodule.IsFullLattice D.host.E (c.lat ρ t₀.lam) := by
-    haveI : Submodule.IsLattice D.host.E (c.lat ρ t₀.lam) :=
+    have : Submodule.IsLattice D.host.E (c.lat ρ t₀.lam) :=
       Submodule.IsLattice.of_fg _ (hrow.fg.map _)
     refine ⟨?_⟩
     change Submodule.span D.host.E (((ρ.trans c.e : (VS D).V ≃ₗ[D.host.E] G.V) : (VS D).V →ₗ[D.host.E] G.V) '' (t₀.lam : Set (VS D).V)) = ⊤
@@ -1625,10 +1625,10 @@ theorem GlobalTheory.CovMass.covol_eq_mass : ∀ (D : D7) (X : HidaSetting D) (Y
     simpa [Prod.fst_mul, Prod.fst_inv] using h2
   have hBR : ∀ y ∈ B, y ∈ Formalism.L2.SG.TermOp.Vanish.Rset t₀ := fun y hy =>
     Formalism.L2.SG.Pf.LoopBPin.roinf_sub_rset t₀ ((hBmem y).1 hy)
-  haveI hCA : Countable A := by
+  have hCA : Countable A := by
     have := (GlobalTheory.CovMass.realPts_countable X {σ | c.grp ρ σ ∈ G.K0}).to_subtype
     rw [← hAset] at this; exact this
-  haveI hCB : Countable B := by
+  have hCB : Countable B := by
     have := (GlobalTheory.CovMass.realPts_countable X {σ | c.grp ρ σ ∈ G.stabL (c.lat ρ t₀.lam)}).to_subtype
     rw [← hRO, ← hBset] at this; exact this
 

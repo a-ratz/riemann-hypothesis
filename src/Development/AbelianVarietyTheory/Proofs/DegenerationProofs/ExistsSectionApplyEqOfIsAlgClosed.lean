@@ -68,10 +68,10 @@ private lemma exists_retraction_of_flat_quasiFinite (V K : Type) [CommRing V] [I
     [CommRing B] (φ : V →+* B) (hflat : φ.Flat) (hqf : φ.QuasiFinite) (q : Ideal B) [q.IsPrime]
     (hq : q.comap φ = IsLocalRing.maximalIdeal V) :
     ∃ ψ : B →+* V, ψ.comp φ = RingHom.id V ∧ (IsLocalRing.maximalIdeal V).comap ψ = q := by
-  letI : Algebra V B := φ.toAlgebra
-  haveI : Module.Flat V B := hflat
-  haveI : Algebra.QuasiFinite V B := hqf.toAlgebra
-  haveI : q.LiesOver (IsLocalRing.maximalIdeal V) := ⟨hq.symm⟩
+  let : Algebra V B := φ.toAlgebra
+  have : Module.Flat V B := hflat
+  have : Algebra.QuasiFinite V B := hqf.toAlgebra
+  have : q.LiesOver (IsLocalRing.maximalIdeal V) := ⟨hq.symm⟩
   obtain ⟨P, hPq, hP, hPl⟩ := Ideal.exists_ideal_le_liesOver_of_le (p := (⊥ : Ideal V))
     (q := IsLocalRing.maximalIdeal V) q bot_le
   have hPV : P.comap φ = ⊥ := hPl.over.symm
@@ -82,11 +82,11 @@ private lemma exists_retraction_of_flat_quasiFinite (V K : Type) [CommRing V] [I
     rw [IsScalarTower.algebraMap_apply V B κ, Ideal.algebraMap_residueField_eq_zero] at hv
     have : v ∈ P.comap φ := hv
     rwa [hPV, Ideal.mem_bot] at this
-  letI : Algebra K κ := (IsFractionRing.lift (K := K) hinj).toAlgebra
-  haveI : IsScalarTower V K κ := IsScalarTower.of_algebraMap_eq
+  let : Algebra K κ := (IsFractionRing.lift (K := K) hinj).toAlgebra
+  have : IsScalarTower V K κ := IsScalarTower.of_algebraMap_eq
     (fun v => (IsFractionRing.lift_algebraMap (K := K) hinj v).symm)
-  haveI : Algebra.QuasiFinite K κ := Algebra.QuasiFinite.of_restrictScalars V K κ
-  haveI : Module.Finite K κ := Module.Finite.of_quasiFinite
+  have : Algebra.QuasiFinite K κ := Algebra.QuasiFinite.of_restrictScalars V K κ
+  have : Module.Finite K κ := Module.Finite.of_quasiFinite
   let e : K ≃+* κ := RingEquiv.ofBijective (algebraMap K κ)
     ⟨(algebraMap K κ).injective, IsSepClosed.algebraMap_surjective K κ⟩
   let χ : B →+* K := e.symm.toRingHom.comp (algebraMap B κ)
@@ -175,10 +175,10 @@ private lemma exists_section_through_closed_fiber_point (V K : Type) [CommRing V
   have hU : IsAffineOpen U := hU₀
   have hg : Spec.map (Spec.preimage (hU.fromSpec ≫ f)) = hU.fromSpec ≫ f := Spec.map_preimage _
   set φ := Spec.preimage (hU.fromSpec ≫ f)
-  haveI : Flat hU.fromSpec := inferInstance
-  haveI : LocallyQuasiFinite hU.fromSpec := inferInstance
-  haveI : Flat (hU.fromSpec ≫ f) := MorphismProperty.comp_mem _ _ _ ‹_› ‹_›
-  haveI : LocallyQuasiFinite (hU.fromSpec ≫ f) := MorphismProperty.comp_mem _ _ _ ‹_› ‹_›
+  have : Flat hU.fromSpec := inferInstance
+  have : LocallyQuasiFinite hU.fromSpec := inferInstance
+  have : Flat (hU.fromSpec ≫ f) := MorphismProperty.comp_mem _ _ _ ‹_› ‹_›
+  have : LocallyQuasiFinite (hU.fromSpec ≫ f) := MorphismProperty.comp_mem _ _ _ ‹_› ‹_›
   have hflat : φ.hom.Flat := (HasRingHomProperty.Spec_iff (P := @Flat)).mp (hg ▸ inferInstance)
   have hqf : φ.hom.QuasiFinite :=
     (HasRingHomProperty.Spec_iff (P := @LocallyQuasiFinite)).mp (hg ▸ inferInstance)

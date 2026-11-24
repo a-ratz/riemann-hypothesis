@@ -76,7 +76,7 @@ theorem mem_closure_iff (N : ℕ) (u : Fin N → AF F) :
     exact ⟨ξ l, rfl⟩
 
 theorem rat_injective (N : ℕ) : Function.Injective (rat : (Fin N → F) → (Fin N → AF F)) := by
-  haveI : Nontrivial (AF F) := by
+  have : Nontrivial (AF F) := by
     show Nontrivial (AdeleRing (𝓞 F) F)
     unfold AdeleRing
     infer_instance
@@ -112,7 +112,7 @@ open GlobalTheory.SWQ.RatLattice in
 theorem GlobalTheory.SWQ.rat_lattice_fundamentalDomain : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ν : Measure (AF F)), IsCov1 ν → (muV N ν).IsAddHaarMeasure ∧ (∀ u : (Fin N → AF F), u ∈ (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F)))) ↔ ∃ ξ, u = rat ξ) ∧ Function.Injective (rat : (Fin N → F) → (Fin N → AF F)) ∧ (∃ K : Set (Fin N → AF F), IsCompact K ∧ ∀ u, ∃ ξ, u - rat ξ ∈ K) ∧ ∃ D : Set (Fin N → AF F), MeasurableSet D ∧ IsAddFundamentalDomain (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F)))) D (muV N ν) ∧ muV N ν D = 1 := by
   intro F _ _ N ν hν
   obtain ⟨hH, D₀, hD₀m, hD₀, hD₀1⟩ := hν
-  haveI := hH
+  have := hH
   refine ⟨?_, mem_closure_iff N, rat_injective N, ?_, ?_⟩
   · unfold muV
     infer_instance

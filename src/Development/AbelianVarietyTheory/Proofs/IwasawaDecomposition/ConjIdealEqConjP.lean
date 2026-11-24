@@ -118,7 +118,7 @@ theorem g_notMem_of_levOff {X : Fields} {Pr : Primes X} (hPr : Pr.Ok)
     (P : letI := X.starE; LevOff (E := X.E) ∅ Pr.vGs ∅) (k : Fin 2) :
     ((Pr.g k : ℕ) : 𝓞 X.E) ∉ P.1.asIdeal := by
   classical
-  letI := X.starE
+  let := X.starE
   intro hk
   have h0 : X.conjO (Pr.piG k) ≠ 0 := by
     refine right_ne_zero_of_mul (a := Pr.piG k) ?_
@@ -162,7 +162,7 @@ theorem values : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) 
     ∀ t PP, PP ∈ L.Pg ∨ PP ∈ L.Q t → ∃ z : X.toD7.what₂.LL, IsPrimitiveRoot z (Nat.card (kP PP)) := by
   intro X px I hX U Xg tr L eG hI hV hL _
   classical
-  letI := X.B.fields.starE
+  let := X.B.fields.starE
   have hPr : (X.B.primes px).Ok := (GlobalTheory.Mem.Col2.base_fields_primes_ok X.B px).2.1
   refine ⟨fun i t P hP => ?_, fun P _ => ?_, fun t PP hPP => ?_⟩
   · have hP' : P.1 ∈ Formalism.L2.DIV.offSet (E := X.B.fields.E) ∅ (Formalism.L2.Col.rowSG (X.B.primes px) I.sel t.1) ∅ := hP

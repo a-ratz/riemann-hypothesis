@@ -149,7 +149,7 @@ theorem eq_of_imageZ_eq {κ : K → K'} {v : (Σ k, ι k) → (Σ k', ι' k')} (
   classical
   have := hy.1
   by_contra hne
-  obtain ⟨f, hfy, hfP⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hPy (Ne.symm hne))
+  obtain ⟨f, hfy, hfP⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hPy (Ne.symm hne))
   obtain ⟨D, hD⟩ := LocRingPow.exists_component_not_mem hfP
   set g := weightedHomogeneousComponent (LocRingPow.multiDegWeight ι') D f
   have hgy : g ∈ y := LocRingPow.component_mem hy.2.1 hfy D

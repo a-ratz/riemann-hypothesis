@@ -108,17 +108,17 @@ theorem countable_of_numberField (F : Type) [Field F] [NumberField F] : Countabl
 theorem map_unit_mul_eq (F : Type) [Field F] [NumberField F] (ν : Measure (AF F)) [ν.IsAddHaarMeasure]
     (w : (AF F)ˣ) : ν.map (fun x => w • x) = (distribHaarChar (AF F) w⁻¹ : ℝ≥0∞) • ν := by
   ext S hS
-  rw [Measure.map_apply (measurable_const_smul w) hS, Set.preimage_smul, Measure.smul_apply, smul_eq_mul,
+  rw [Measure.map_apply (measurable_const_smul w) hS, Set.preimage_smul, smul_apply, smul_eq_mul,
     distribHaarChar_mul]
 
 theorem modrat_main : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ν : Measure (AF F)), IsCov1 ν →
     ∀ t : F, t ≠ 0 → ν.map (fun x => (algebraMap F (AF F) t) * x) = ν := by
   intro F _ _ _ ν hν t ht
   obtain ⟨hH, D, _, hD, hD1⟩ := hν
-  haveI := hH
-  haveI := countable_of_numberField F
+  have := hH
+  have := countable_of_numberField F
   set K := (algebraMap F (AF F)).range.toAddSubgroup with hK
-  haveI : Countable K := by
+  have : Countable K := by
     refine Function.Surjective.countable (f := fun r : F => (⟨algebraMap F (AF F) r, ⟨r, rfl⟩⟩ : K)) ?_
     rintro ⟨x, ⟨r, rfl⟩⟩
     exact ⟨r, rfl⟩
@@ -181,14 +181,14 @@ theorem norm_inclR (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
 
 theorem modu_rat (F : Type) [Field F] [NumberField F] (w : (AF F)ˣ) (t : F) (hw : (w : AF F) = algebraMap F (AF F) t) :
     distribHaarChar (AdeleRing (𝓞 F) F) w = 1 := by
-  haveI : Nontrivial (AF F) :=
+  have : Nontrivial (AF F) :=
     nontrivial_of_ne 0 1 (fun h => zero_ne_one (congrArg (fun a : AF F => a.1) h))
   have ht : t ≠ 0 := by
     rintro rfl
     rw [map_zero] at hw
     exact not_isUnit_zero (hw ▸ w.isUnit)
   obtain ⟨ν, hν⟩ := GlobalTheory.SWQ.exists_adeles_haarMeasure_covolume_one F
-  haveI := hν.1
+  have := hν.1
   have h1 := GlobalTheory.SWQ.modrat_main F 0 ν hν t ht
   have h2 := GlobalTheory.SWQ.map_unit_mul_eq F ν w
   have e : (fun x : AF F => w • x) = fun x => algebraMap F (AF F) t * x := by
@@ -196,7 +196,7 @@ theorem modu_rat (F : Type) [Field F] [NumberField F] (w : (AF F)ˣ) (t : F) (hw
   rw [e, h1] at h2
   obtain ⟨K, hKc, hK0⟩ : ∃ K : Set (AF F), IsCompact K ∧ K ∈ nhds (0 : AF F) := exists_compact_mem_nhds 0
   have h3 := congrArg (fun m : Measure (AF F) => m K) h2
-  simp only [Measure.smul_apply, smul_eq_mul] at h3
+  simp only [smul_apply, smul_eq_mul] at h3
   have h4 : ((distribHaarChar (AF F) w⁻¹ : NNReal) : ENNReal) = 1 :=
     ((ENNReal.mul_left_inj (Measure.measure_pos_of_mem_nhds ν hK0).ne' hKc.measure_lt_top.ne).1
       (h3.symm.trans (one_mul _).symm))
@@ -284,12 +284,12 @@ def glueEquiv : (Vi F κ × Vf F κ) ≃+ (κ → AdeleRing (𝓞 F) F) where
 theorem exists_glue_measure :
     letI : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
     ∃ c : NNReal, 0 < c ∧ (mu F κ).map glue = c • (adeleMeasurePi F (ι := κ)) := by
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
-  haveI : BorelSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.borelSpace_adeleRing F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : (mu F κ).IsAddHaarMeasure := by unfold mu; infer_instance
-  haveI : ((mu F κ).map (glueEquiv F κ)).IsAddHaarMeasure :=
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
+  have : BorelSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.borelSpace_adeleRing F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : (mu F κ).IsAddHaarMeasure := by unfold mu; infer_instance
+  have : ((mu F κ).map (glueEquiv F κ)).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map _ (glueEquiv F κ) continuous_glue continuous_shiftOf
   have h := Measure.isAddLeftInvariant_eq_smul ((mu F κ).map (glueEquiv F κ)) (adeleMeasurePi F (ι := κ))
   refine ⟨_, ?_, h⟩
@@ -317,7 +317,7 @@ theorem diagForm_glue_integral : ∀ (F : Type) [Field F] [NumberField F] (κ : 
       Integrable H (adeleMeasurePi F)) ∧
       ∫ p, H (GlobalTheory.DiagForm.glue p) ∂(GlobalTheory.DiagForm.mu F κ) = c₀ * ∫ t, H t ∂(adeleMeasurePi F) := by
   intro F _ _ κ _
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
   obtain ⟨c, hc, hmap⟩ := DiagFormGlue.exists_glue_measure (F := F) (κ := κ)
   have hmap' : (GlobalTheory.DiagForm.mu F κ).map (DiagFormGlue.glueMEquiv F κ) = c • adeleMeasurePi F (ι := κ) := hmap
   refine ⟨c, hc, fun H => ⟨?_, ?_⟩⟩
@@ -371,7 +371,7 @@ theorem eq_adelicChar : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (
     ring
   have hp : Continuous fun y : Af F => pairA F 0 y := continuous_const.prodMk continuous_id
   have hc : Continuous fun a : AF F => (GroundTheory.Global.adelicChar F a : ℂ) :=
-    continuous_subtype_val.comp GroundTheory.Global.continuous_adelicChar
+    continuous_subtypeVal.comp GroundTheory.Global.continuous_adelicChar
   have hcl : IsClosed {y : Af F | ψ (pairA F 0 y) = (GroundTheory.Global.adelicChar F (pairA F 0 y) : ℂ)} :=
     isClosed_eq (hψ.1.comp hp) (hc.comp hp)
   have hrange : Set.range (algebraMap F (Af F)) ⊆
@@ -667,7 +667,7 @@ theorem finiteTensor_shift (J : (FractionalIdeal (𝓞 F)⁰ F)ˣ) (b : κ ⊕ �
       rw [show t i + u i - b (Sum.inl i) = (t i - b (Sum.inr i)) + (u i - (b (Sum.inl i) - b (Sum.inr i))) by ring]
       exact AddSubgroup.add_mem_cancel_left _ h
     simp only [this]
-  · simp only [if_neg h, mul_zero]
+  · simp only [ite_eq_right h, mul_zero]
 
 theorem summable_gen (f : SchwartzMap (κ ⊕ κ → mixedSpace F) ℂ) (J : (FractionalIdeal (𝓞 F)⁰ F)ˣ)
     (b : κ ⊕ κ → FiniteAdeleRing (𝓞 F) F) :
@@ -1003,7 +1003,7 @@ theorem exists_ratCoord {F E : Type} [Field F] [NumberField F] [Field E] [Number
       d.e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) :
     ∃ r : Matrix (Fin a) (Fin b) E ≃ (κ → F) × (κ → F), ∀ x,
       d.e (incM F x) = (fun i => algebraMap F (AF F) ((r x).1 i), fun i => algebraMap F (AF F) ((r x).2 i)) := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hE]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hE]; norm_num)
   let L : Matrix (Fin a) (Fin b) E →ₗ[F] (κ → AF F) × (κ → AF F) :=
     (d.e.toLinearMap.restrictScalars F).comp
       ((Algebra.TensorProduct.includeRight : E →ₐ[F] AF F ⊗[F] E).toLinearMap.mapMatrix)

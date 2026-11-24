@@ -71,7 +71,7 @@ private lemma glue (F G : ℂ → ℂ) (hF : ∀ s : ℂ, 1 / 4 < s.re → Diffe
     (hG : ∀ s : ℂ, s.re < 3 / 4 → DifferentiableAt ℂ G s)
     (h : ∀ s : ℂ, 1 / 4 < s.re → s.re < 3 / 4 → F s = G s) :
     ∃ Z : ℂ → ℂ, Differentiable ℂ Z ∧ (∀ s : ℂ, 1 / 4 < s.re → Z s = F s) ∧ ∀ s : ℂ, s.re < 3 / 4 → Z s = G s := by
-  have a : ∀ s : ℂ, 1 / 4 < s.re → (if 1 / 4 < s.re then F s else G s) = F s := fun s hs => if_pos hs
+  have a : ∀ s : ℂ, 1 / 4 < s.re → (if 1 / 4 < s.re then F s else G s) = F s := fun s hs => ite_eq_left hs
   have b : ∀ s : ℂ, s.re < 3 / 4 → (if 1 / 4 < s.re then F s else G s) = G s := fun s hs => by
     split_ifs with h'
     · exact h s h' hs

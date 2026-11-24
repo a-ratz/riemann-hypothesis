@@ -142,19 +142,19 @@ theorem exists_haar_prod {G H I : Type} [Fintype I] {U : I → Type} [Group G] [
   let j : H →* G := (e.symm.toMulEquiv.toMonoidHom).comp (MonoidHom.inr _ _)
   have hj : Topology.IsEmbedding j :=
     e.symm.toHomeomorph.isEmbedding.comp (isEmbedding_prodMkRight (1 : ∀ i, U i))
-  haveI : IsTopologicalGroup H := hj.isInducing.topologicalGroup j
-  haveI : SecondCountableTopology H := hj.secondCountableTopology
-  haveI : T2Space H := hj.t2Space
-  haveI : LocallyCompactSpace H :=
+  have : IsTopologicalGroup H := hj.isInducing.isTopologicalGroup j
+  have : SecondCountableTopology H := hj.secondCountableTopology
+  have : T2Space H := hj.t2Space
+  have : LocallyCompactSpace H :=
     hKc.locallyCompactSpace_of_mem_nhds_of_group (hKo.mem_nhds K.one_mem)
-  letI : MeasurableSpace H := borel H
-  haveI : BorelSpace H := ⟨rfl⟩
+  let : MeasurableSpace H := borel H
+  have : BorelSpace H := ⟨rfl⟩
   let K0 : TopologicalSpace.PositiveCompacts H :=
     ⟨⟨K, hKc⟩, by
       show (interior (K : Set H)).Nonempty
       rw [hKo.interior_eq]; exact ⟨1, K.one_mem⟩⟩
   let m : Measure ((∀ i, U i) × H) := (Measure.pi ν).prod (Measure.haarMeasure K0)
-  haveI : m.IsHaarMeasure := inferInstanceAs (((Measure.pi ν).prod (Measure.haarMeasure K0)).IsHaarMeasure)
+  have : m.IsHaarMeasure := inferInstanceAs (((Measure.pi ν).prod (Measure.haarMeasure K0)).IsHaarMeasure)
   refine ⟨m.map e.symm, e.symm.isHaarMeasure_map m, fun B hB => ?_⟩
   have hme : MeasurableEmbedding e.symm := e.symm.toHomeomorph.measurableEmbedding
   rw [hme.map_apply]
@@ -200,14 +200,14 @@ theorem exists_isVolMeasF : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   obtain ⟨L, hL, hLfg, hLsp⟩ := GlobalTheory.Mem.Vol.latC_full_lattice E W
   obtain ⟨K, hK, hKo, hKc⟩ := _root_.GlobalTheory.Mem.Vol.StabGroup.exists_compact_open_stab F E cm.sig W.rank W.gram L hLfg hLsp
   obtain ⟨-, hsc, ht2⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_adelicUnitary F E cm.sig W.rank W.gram
-  haveI : IsTopologicalGroup (HA (AF F) cm.sig W.gram) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (HA (AF F) cm.sig W.gram) := ⟨rfl⟩
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
+  have : IsTopologicalGroup (HA (AF F) cm.sig W.gram) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (HA (AF F) cm.sig W.gram) := ⟨rfl⟩
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
   have hinj := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.2.injective
-  haveI := cd.haar
+  have := cd.haar
   let e : HA (AF F) cm.sig W.gram ≃ₜ*
       (∀ i, UpqT (W.sig (τ i)).1 (W.sig (τ i)).2) × HA (Af F) cm.sig W.gram :=
     e0.trans
@@ -231,13 +231,13 @@ theorem exists_isVolMeasF : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       ((fun g => u i * g) ⁻¹' ((fun g => g * (u i)⁻¹) ⁻¹' B i)) =
       cd.cd (W.sig (τ i)).1 (W.sig (τ i)).2 (B i) := by
     intro i
-    haveI := GlobalTheory.UpqHaarRight.isMulRightInvariant _ _ _ (cd.haar (W.sig (τ i)).1 (W.sig (τ i)).2)
+    have := GlobalTheory.UpqHaarRight.isMulRightInvariant _ _ _ (cd.haar (W.sig (τ i)).1 (W.sig (τ i)).2)
     rw [measure_preimage_mul, measure_preimage_mul_right]
   rw [Finset.prod_congr rfl (fun i _ => hcj i)] at key
   rw [← key]
   congr 1
   ext h
-  simp only [Set.mem_setOf_eq, hee, Set.mem_preimage]
+  simp only [Set.mem_ofPred_eq, hee, Set.mem_preimage]
   rw [hK, (he0 h).1, hL]
   refine and_congr_right fun _ => forall_congr' fun i => ?_
   have h1 : UpqT.mat (e1 (e0 h).1 i) * A i = A i * infMat cm.sig W.gram (θ' i) h := by

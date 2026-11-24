@@ -85,7 +85,7 @@ theorem _root_.GlobalTheory.Published.JacquetShalikaModel.infinite_places : Infi
   rw [not_infinite_iff_finite] at h
   have hfin : (Set.range fun P : HeightOneSpectrum (𝓞 E) =>
       Ideal.comap (algebraMap ℤ (𝓞 E)) P.asIdeal).Finite := Set.finite_range _
-  apply Nat.infinite_setOf_prime
+  apply Nat.infinite_setOfPred_prime
   have hinj : Set.InjOn (fun p : ℕ => Ideal.span {(p : ℤ)}) {p | p.Prime} := by
     intro p _ q _ hpq
     have := Ideal.span_singleton_eq_span_singleton.mp hpq
@@ -93,7 +93,7 @@ theorem _root_.GlobalTheory.Published.JacquetShalikaModel.infinite_places : Infi
     simpa using this
   refine Set.Finite.of_finite_image (hfin.subset ?_) hinj
   rintro _ ⟨p, hp, rfl⟩
-  haveI hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
+  have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
   obtain ⟨Q, hQ, hlies⟩ :=
     Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) (Ideal.span {(p : ℤ)})
@@ -210,7 +210,7 @@ def strSet (c₁ c₂ : ℝ) (d₁ d₂ : ℕ) : Set ℝ :=
 
 theorem mem_strSet {c₁ c₂ x : ℝ} {d₁ d₂ : ℕ} :
     x ∈ strSet c₁ c₂ d₁ d₂ ↔ (∃ i : Fin d₁, x = c₁ + spehExp d₁ i) ∨ ∃ j : Fin d₂, x = c₂ + spehExp d₂ j := by
-  simp only [strSet, Set.mem_setOf_eq, spehExp]
+  simp only [strSet, Set.mem_ofPred_eq, spehExp]
   constructor
   · rintro (⟨i, hi, rfl⟩ | ⟨j, hj, rfl⟩)
     · exact Or.inl ⟨⟨i, hi⟩, by simp only; ring⟩

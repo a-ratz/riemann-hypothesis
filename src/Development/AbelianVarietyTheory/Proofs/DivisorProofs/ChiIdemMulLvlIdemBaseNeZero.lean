@@ -152,7 +152,7 @@ theorem norm_one_prod {ι : Type} [Fintype ι] {G : ι → Type} [∀ i, Group (
         funext t
         rw [Finset.prod_insert ha]; rfl
     exact this _
-  · letI : ∀ i, Fintype (G i) := fun i => Fintype.ofFinite _
+  · let : ∀ i, Fintype (G i) := fun i => Fintype.ofFinite _
     have h2 : ∏ i, pair (χ i) (χ i) = 1 := Finset.prod_eq_one fun i _ => (h i).2
     rw [← h2]
     simp only [pair, finsum_eq_sum_of_fintype, Finset.prod_mul_distrib, Finset.prod_inv_distrib]
@@ -283,7 +283,7 @@ theorem sum_character_eq_zero_iff {G V : Type} [Group G] [Fintype G] [AddCommGro
     [FiniteDimensional ℂ V] (ρ : Representation ℂ G V) :
     ∑ g, ρ.character g = 0 ↔ ∀ v, (∀ g, ρ g v = v) → v = 0 := by
   have hc : (Nat.card G : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
-  letI := invertibleOfNonzero hc
+  let := invertibleOfNonzero hc
   have h := ρ.card_inv_mul_sum_char_eq_finrank
   have e : ∑ g, ρ.character g = 0 ↔ ρ.invariants = ⊥ := by
     rw [← Submodule.finrank_eq_zero, ← Nat.cast_eq_zero (R := ℂ), ← h]
@@ -295,7 +295,7 @@ theorem character_coind_eq_ind {G V : Type} [Group G] [Finite G] (H : Subgroup G
     [FiniteDimensional ℂ V] (σ : Representation ℂ H V) (g : G) :
     (Representation.coind H.subtype σ).character g = ind H σ.character g := by
   classical
-  letI := Fintype.ofFinite G
+  let := Fintype.ofFinite G
   have hc : (Fintype.card H : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   have h := GlobalTheory.BadShare.trace_coind_mul_card H.subtype σ g
   unfold ind
@@ -317,13 +317,13 @@ theorem character_coind_eq_ind {G V : Type} [Group G] [Finite G] (H : Subgroup G
   unfold ext0
   split_ifs with hx
   · rw [Finset.sum_eq_single (⟨_, hx⟩ : H)⁻¹]
-    · rw [inv_inv, if_pos rfl]; rfl
+    · rw [inv_inv, ite_eq_left rfl]; rfl
     · intro γ _ hγ
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       exact hγ (inv_eq_iff_eq_inv.1 (Subtype.ext e))
     · simp
-  · exact Finset.sum_eq_zero fun γ _ => if_neg fun e : ((γ⁻¹ : H) : G) = x⁻¹ * g * x => hx (e ▸ (γ⁻¹).2)
+  · exact Finset.sum_eq_zero fun γ _ => ite_eq_right fun e : ((γ⁻¹ : H) : G) = x⁻¹ * g * x => hx (e ▸ (γ⁻¹).2)
 
 theorem isChar_prod {ι : Type} [Fintype ι] {G : Type} [Group G] {χ : ι → G → ℂ}
     (h : ∀ i, IsChar ℂ ℂ (χ i)) : IsChar ℂ ℂ (fun t => ∏ i, χ i t) := by
@@ -342,15 +342,15 @@ theorem isChar_prod {ι : Type} [Fintype ι] {G : Type} [Group G] {χ : ι → G
 theorem isIrrChar_of_isAbsIrrChar {K G : Type} [Field K] [CharZero K] [Group G] [Fintype G] (emb : K →+* ℂ) {χ : G → K}
     (h : IsAbsIrrChar χ) : IsIrrChar ℂ ℂ fun g => emb (χ g) := by
   obtain ⟨n, ρ, hi, hρ⟩ := h
-  letI : Algebra K ℂ := emb.toAlgebra
-  haveI : CharZero (AlgebraicClosure K) :=
+  let : Algebra K ℂ := emb.toAlgebra
+  have : CharZero (AlgebraicClosure K) :=
     charZero_of_injective_algebraMap (algebraMap K (AlgebraicClosure K)).injective
   let φ : AlgebraicClosure K →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra (AlgebraicClosure K) ℂ := φ.toRingHom.toAlgebra
+  let : Algebra (AlgebraicClosure K) ℂ := φ.toRingHom.toAlgebra
   have h1 := pair_self_of_isIrrChar_algClosed (AlgebraicClosure K) G _ ⟨n, ρ, hi, fun _ => rfl⟩
   rw [pair_character_eq_finrank] at h1
   refine ⟨n, extendScalarsRep _ ℂ ρ, GlobalTheory.GoodFamily.irreducible_extend _ ℂ ρ (by exact_mod_cast h1), fun g => ?_⟩
@@ -392,7 +392,7 @@ theorem exists_eq_of_idemOf {K G ι : Type} [Field K] [CharZero K] [Group G] [Fi
       (fun _ _ => Nat.zero_le _) hiY).trans h2.ge
   have hpos := Nat.pos_of_ne_zero (right_ne_zero_of_mul hi0)
   have hle' : m i ≤ n := le_trans (Nat.le_mul_of_pos_right _ hpos) hle
-  haveI := Module.nontrivial_of_finrank_pos hpos
+  have := Module.nontrivial_of_finrank_pos hpos
   obtain ⟨f, hf⟩ := exists_ne (0 : (τ i).IntertwiningMap ρ)
   have hs : Function.Surjective f := (Representation.IsIrreducible.surjective_or_eq_zero f).resolve_right hf
   have hge : n ≤ m i := by
@@ -441,7 +441,7 @@ theorem blocksHom_apply (b : Fin r → ℕ) (e : (Σ a, Fin (d a)) ≃ Fin r) (h
     (p : blockTri (κ := F) b) (a : ι) (i j : Fin (d a)) :
     (blocksHom b e he p a : Matrix (Fin (d a)) (Fin (d a)) F) i j =
       ((p : GL (Fin r) F) : Matrix (Fin r) (Fin r) F) (e ⟨a, i⟩) (e ⟨a, j⟩) :=
-  if_pos ((he ⟨a, i⟩ ⟨a, j⟩).2 rfl)
+  ite_eq_left ((he ⟨a, i⟩ ⟨a, j⟩).2 rfl)
 
 theorem blocksHom_diagHom (b : Fin r → ℕ) (e : (Σ a, Fin (d a)) ≃ Fin r) (he : ∀ x y, b (e x) = b (e y) ↔ x.1 = y.1)
     (x : ∀ a, GL (Fin (d a)) F) : blocksHom b e he (diagHom b e he x) = x := by
@@ -475,7 +475,7 @@ theorem exists_isCuspDatum [Finite F] {b : Fin r → ℕ} (hb : Monotone b) (e :
     obtain ⟨⟨a', j⟩, rfl⟩ := e.surjective j
     obtain rfl : a = a' := (he _ _).1 hij
     let c : Fin (d a) → ℕ := fun l => if e ⟨a, l⟩ ∈ S then 0 else 1
-    letI : Fintype (unipRadical F c) := Fintype.ofFinite _
+    let : Fintype (unipRadical F c) := Fintype.ofFinite _
     let τ : Representation ℂ (unipRadical F c) (Fin n → ℂ) :=
       ρ.comp ((MonoidHom.mulSingle (fun a => GL (Fin (d a)) F) a).comp (unipRadical F c).subtype)
     refine (sum_character_eq_zero_iff τ).1 ?_ y fun u => ?_
@@ -524,7 +524,7 @@ theorem irr_and_sum_of_isCusp {p n : ℕ} [Fact p.Prime] {χ : GlobalTheory.GLq.
   obtain rfl : V.character = χ := funext hχ
   have hcusp : IsCuspidal V.ρ := by
     refine (isCuspidal_iff_twoBlocks _).2 fun a h0 ha v hv => ?_
-    letI : Fintype (unipRadical (ZMod p) (twoBlocks n a)) := Fintype.ofFinite _
+    let : Fintype (unipRadical (ZMod p) (twoBlocks n a)) := Fintype.ofFinite _
     refine (sum_character_eq_zero_iff (show Representation ℂ _ V from
       MonoidHom.comp V.ρ (unipRadical (ZMod p) (twoBlocks n a)).subtype)).1 ?_ v fun u => hv u u.2
     have h1 := hres a h0 ha
@@ -536,7 +536,7 @@ theorem irr_and_sum_of_isCusp {p n : ℕ} [Fact p.Prime] {χ : GlobalTheory.GLq.
     rw [← h2]
     refine (Finset.sum_subtype _ (fun u => ?_) V.character).symm
     rw [Finset.mem_filter, ← GlobalTheory.GreenExists.mem_grUnipBlock_iff ha, mem_unipRadical]
-    simp only [Finset.mem_univ, true_and, Formalism.D.Classical.grUnipBlock, Set.mem_setOf_eq, twoBlocks, Matrix.sub_apply,
+    simp only [Finset.mem_univ, true_and, Formalism.D.Classical.grUnipBlock, Set.mem_ofPred_eq, twoBlocks, Matrix.sub_apply,
       sub_eq_zero, Matrix.one_apply]
     refine forall₂_congr fun i j => ?_
     by_cases h3 : (i : ℕ) < a <;> by_cases h4 : (j : ℕ) < a <;> simp [h3, h4] <;> omega
@@ -551,7 +551,7 @@ theorem irr_and_sum_of_isCusp {p n : ℕ} [Fact p.Prime] {χ : GlobalTheory.GLq.
     obtain ⟨h3, h4⟩ := GlobalTheory.asAlgebraHom_surjective_of_finrank_intertwiningMap_eq_one ℂ _ _ V.ρ (by exact_mod_cast h3)
     exact GlobalTheory.GoodFamily.irreducible_of_surjective _ h4
   · intro c hc
-    letI : Fintype (unipRadical (ZMod p) c) := Fintype.ofFinite _
+    let : Fintype (unipRadical (ZMod p) c) := Fintype.ofFinite _
     rw [finsum_eq_sum_of_fintype]
     exact (sum_character_eq_zero_iff (show Representation ℂ _ V from
       MonoidHom.comp V.ρ (unipRadical (ZMod p) c).subtype)).2 fun v hv =>
@@ -595,7 +595,7 @@ theorem apply_cycEquiv (b : Fin r → Fin r) (x : Σ c : Cyc b, Fin (cycLen b c)
 theorem isCuspProdChar_typeChar {s : SSParam p ℂ r} (hs : IsRegularParam s) :
     GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.IsCuspProdChar (typeChar s) := by
   classical
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   let b₀ : Fin r → ℕ := fun i => (s.1 i : ℕ)
   let w := Tuple.sort b₀
   let e := (cycEquiv s.1).trans w.symm
@@ -615,7 +615,7 @@ theorem isCuspProdChar_typeChar {s : SSParam p ℂ r} (hs : IsRegularParam s) :
   congr 1
   · congr 2
     exact (Nat.card_congr ((MulAut.conj (permGL (ZMod p) w)).toEquiv.subtypeEquiv fun z => (hm z).symm)).symm
-  · letI := Fintype.ofFinite (GL (Fin r) (ZMod p))
+  · let := Fintype.ofFinite (GL (Fin r) (ZMod p))
     rw [finsum_eq_sum_of_fintype]
     symm
     refine Fintype.sum_equiv (Equiv.mulRight (permGL (ZMod p) w)⁻¹) _ _ fun y => ?_
@@ -626,7 +626,7 @@ theorem isCuspProdChar_typeChar {s : SSParam p ℂ r} (hs : IsRegularParam s) :
     rw [h1]
     unfold ext0
     by_cases hz : y⁻¹ * x * y ∈ blockTri (κ := ZMod p) (b₀ ∘ w)
-    · rw [dite_eq_left hz, if_pos ((hm _).2 hz), hch]
+    · rw [dite_eq_left hz, ite_eq_left ((hm _).2 hz), hch]
       refine Finset.prod_congr rfl fun c _ => ?_
       unfold cuspOn
       congr 1
@@ -635,10 +635,10 @@ theorem isCuspProdChar_typeChar {s : SSParam p ℂ r} (hs : IsRegularParam s) :
       simp only [e, Equiv.trans_apply, cycEquiv_apply]
       rw [← conj_permGL_apply w, Equiv.apply_symm_apply, Equiv.apply_symm_apply]
       rfl
-    · rw [dite_eq_right hz, if_neg (mt (hm _).1 hz)]
+    · rw [dite_eq_right hz, ite_eq_right (mt (hm _).1 hz)]
 
 theorem isChar_of_isCuspProdChar {θ : GL (Fin r) (ZMod p) → ℂ} (h : GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.IsCuspProdChar θ) : IsChar ℂ ℂ θ := by
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   obtain ⟨n, b, σ, -, h⟩ := h
   rw [funext h]
   exact (isChar_and_isIrrChar_of_rep ℂ ℂ _ _ (parInd b σ)).1
@@ -668,7 +668,7 @@ theorem isProdCuspChar_of_idemTie {D : D7} {G : Type} [Group G] [Fintype G] {Pl0
   obtain ⟨τ, hτ, hχτ⟩ := exists_eq_of_idemOf D.what₂.embLL A.X hX (LevelCuspCharacters.goodTypes_finite (H := D.host) om).toFinset
     (fun τ g => τ (φ g)) (fun τ hτ => by
       obtain ⟨s, hs, rfl⟩ := (Set.Finite.mem_toFinset _).1 hτ
-      letI := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
+      let := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
       refine isChar_prod (χ := fun v g => LevelCuspCharacters.typeChar (s v) (φ g v)) fun v => ?_
       obtain ⟨n, ρ, hρ⟩ := isChar_of_isCuspProdChar (hreg s hs v)
       exact ⟨n, ρ.comp ((Pi.evalMonoidHom _ v).comp φ.toMonoidHom), fun g => hρ _⟩) (fun g => by
@@ -683,7 +683,7 @@ theorem isProdCuspChar_of_idemTie {D : D7} {G : Type} [Group G] [Fintype G] {Pl0
         ∀ g, θ (R.eG g PP) = f (plg.symm PP) g := by
     intro PP
     obtain ⟨kv, rfl⟩ := plg.surjective PP
-    letI := Ideal.Quotient.field (plg kv).1.asIdeal
+    let := Ideal.Quotient.field (plg kv).1.asIdeal
     refine ⟨_, GlobalTheory.FinGL.Transport.isCuspProdChar_transport _ _ (iso kv) _ _ (hreg s hs (sqEquiv D kv)), fun g => ?_⟩
     rw [Equiv.symm_apply_apply, h2, ← hφ]
     exact congrArg _ ((GlobalTheory.FinGL.Transport.glEquiv (iso kv) D.R.r).symm_apply_apply _)
@@ -691,7 +691,7 @@ theorem isProdCuspChar_of_idemTie {D : D7} {G : Type} [Group G] [Fintype G] {Pl0
   refine ⟨θ, hθ, fun x => ?_⟩
   obtain ⟨g, rfl⟩ := R.eG.surjective x
   simp only [hθ', MulEquiv.symm_apply_apply, hχτ]
-  letI := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
+  let := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
   exact (Fintype.prod_equiv (plg.symm.trans (sqEquiv D)) _ _ fun _ => rfl).symm
 
 theorem chiIdem_mul_lvlIdem_base_ne_zero : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
@@ -700,7 +700,7 @@ theorem chiIdem_mul_lvlIdem_base_ne_zero : ∀ {D : D7} {G : Type} [Group G] [Fi
     ∀ (om : ∀ i : Fin 2, (ZMod (D.host.g i))ˣ →* ℂˣ), GlobalTheory.DimPartsCompare.IdemTie D om →
     ∀ χ ∈ A.X, chiIdem χ * lvlIdem F.P0 F.ψ0 ≠ 0 := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F s hOk _ hG om hI χ hχ
-  letI : Fintype F.P0 := Fintype.ofFinite _
+  let : Fintype F.P0 := Fintype.ofFinite _
   refine chiIdem_mul_lvlIdem_ne_zero _ _ (fun h => ?_) ?_
   · exact GlobalTheory.FinGL.LeviChar.irrChar_one_ne_zero (isIrrChar_of_isAbsIrrChar D.what₂.embLL (hOk.irr χ hχ))
       (by rw [h, map_zero])

@@ -427,7 +427,7 @@ theorem cxHessian_comp_star (φ : (Fin D → ℂ) → ℝ) (z : Fin D → ℂ) :
       -(Complex.I • (Pi.single i 1 : Fin D → ℂ)) := fun i => by
     rw [star_smul, hs]; simp
   simp only [cxHessian, Matrix.map_apply, hess_comp_star, hs, hI, map_neg,
-    ContinuousLinearMap.neg_apply, neg_neg]
+    neg_apply, neg_neg]
   simp only [map_div₀, map_add (f := _), map_mul, Complex.conj_ofReal, Complex.conj_I]
   have h4 : starRingEnd ℂ (4 : ℂ) = 4 := map_ofNat _ 4
   simp [h4]
@@ -657,9 +657,9 @@ theorem logNorm_one_eq_indicator {Ω F : Type} [Field Ω] [Field F] [Algebra F �
   rw [hone, hB z hz s hs]
   by_cases hst : s = tg
   · subst hst
-    rw [Set.indicator_of_mem (show z ∈ {z | LiesOver y s z} from hs), if_pos rfl, one_div,
+    rw [Set.indicator_of_mem (show z ∈ {z | LiesOver y s z} from hs), ite_eq_left rfl, one_div,
       Real.log_inv, Real.log_exp, neg_neg]
-  · rw [Set.indicator_of_notMem (fun h => hst (hs' tg h).symm), if_neg hst]
+  · rw [Set.indicator_of_notMem (fun h => hst (hs' tg h).symm), ite_eq_right hst]
     simp
 
 end SlopeTestRemainingChoices

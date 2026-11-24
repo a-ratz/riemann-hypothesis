@@ -85,7 +85,7 @@ theorem finite_of_jumps {L M : Type} [Field L] [AddCommGroup M] [Module L M] (F 
     induction a, ha using Int.leInductionDown with
     | base => rfl
     | pred a ha ih =>
-      haveI := hfin (a - 1) (by omega)
+      have := hfin (a - 1) (by omega)
       have h1 := h (a - 1)
       have h2 : J.count (a - 1) = 0 := Multiset.count_eq_zero.2 fun hm => by
         have := hb' _ hm
@@ -93,7 +93,7 @@ theorem finite_of_jumps {L M : Type} [Field L] [AddCommGroup M] [Module L M] (F 
       rw [sub_add_cancel, h2] at h1
       rw [← ih]
       exact (Submodule.eq_of_le_of_finrank_eq (hA (by omega)) (by omega)).symm
-  haveI := hfin b hb0
+  have := hfin b hb0
   refine Submodule.finiteDimensional_of_le (S₂ := F b) fun x hx => ?_
   obtain ⟨a, ha⟩ := exh x hx
   rcases le_total a b with hab | hab
@@ -192,8 +192,8 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
 
 theorem finite_ddR_of_isField (hF : IsField BdR) [Module.Finite Qp V] (ρ : Representation LL G V) :
     Module.Finite LL (DdR PD ρ) := by
-  letI : Field BdR := hF.toField
-  haveI := PD.finK
+  let : Field BdR := hF.toField
+  have := PD.finK
   let σ : G → TensorProduct Qp BdR V →ₗ[Qp] TensorProduct Qp BdR V := fun g =>
     TensorProduct.map (((PD.actdR g).toAlgHom.toLinearMap).restrictScalars Qp) ((ρ g).restrictScalars Qp)
   have hσ : ∀ g (b : BdR) w, σ g (b • w) = PD.actdR g b • σ g w := by
@@ -208,9 +208,9 @@ theorem finite_ddR_of_isField (hF : IsField BdR) [Module.Finite Qp V] (ρ : Repr
       add_mem' := fun hx hy g => by rw [map_add (f := _), hx g, hy g]
       smul_mem' := fun c x hx g => by
         rw [← algebraMap_smul BdR c x, hσ, hx g, AlgEquiv.commutes] }
-  haveI : Module.Finite K U := finite_of_invariant (F := BdR) (fun g b => PD.actdR g b)
+  have : Module.Finite K U := finite_of_invariant (F := BdR) (fun g b => PD.actdR g b)
     (fun g => (σ g).toAddMonoidHom) hσ PD.invdR U fun _ hx => hx
-  haveI : Module.Finite Qp U := Module.Finite.trans K U
+  have : Module.Finite Qp U := Module.Finite.trans K U
   have hc : ∀ g x, σ g (TensorProduct.comm Qp V BdR x) =
       TensorProduct.comm Qp V BdR (actVdR PD ρ g x) := by
     intro g x
@@ -226,7 +226,7 @@ theorem finite_ddR_of_isField (hF : IsField BdR) [Module.Finite Qp V] (ρ : Repr
         rw [hc, this g]⟩
       map_add' := fun x y => Subtype.ext (map_add _ _ _)
       map_smul' := fun c x => Subtype.ext (map_smul (TensorProduct.comm Qp V BdR) c _) }
-  haveI : Module.Finite Qp (DdR PD ρ) := Module.Finite.of_injective f fun x y h =>
+  have : Module.Finite Qp (DdR PD ρ) := Module.Finite.of_injective f fun x y h =>
     Subtype.ext ((TensorProduct.comm Qp V BdR).injective (congrArg Subtype.val h))
   exact Module.Finite.of_restrictScalars_finite Qp LL _
 

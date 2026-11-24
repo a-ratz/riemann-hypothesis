@@ -221,7 +221,7 @@ theorem ringKrullDim_stalk_fromSpec {Z : Scheme.{0}} {U : Z.Opens} (hU : IsAffin
   have hmem : hU.fromSpec P ∈ U := by
     have : hU.fromSpec P ∈ Set.range hU.fromSpec := ⟨P, rfl⟩
     rwa [hU.range_fromSpec] at this
-  letI := TopCat.Presheaf.algebra_section_stalk Z.presheaf (U := U) ⟨hU.fromSpec P, hmem⟩
+  let := TopCat.Presheaf.algebra_section_stalk Z.presheaf (U := U) ⟨hU.fromSpec P, hmem⟩
   have := hU.isLocalization_stalk' P hmem
   exact @IsLocalization.AtPrime.ringKrullDim_eq_height _ _ P.asIdeal _ _ _ _ this
 
@@ -333,10 +333,10 @@ theorem isDVR_regAt [IsLocallyNoetherian X] (h : IsCptGen ξ) (hn : NormalCpt ξ
   let e : X.presheaf.stalk p.1 ≃+* regAt ξ p :=
     RingEquiv.ofBijective (genMap ξ p).rangeRestrict
       ⟨fun x y hxy => h.inj p (congrArg Subtype.val hxy), (genMap ξ p).rangeRestrict_surjective⟩
-  haveI := isFractionRing_regAt h p
-  haveI : IsLocalRing (regAt ξ p) := e.isLocalRing
-  haveI : IsNoetherianRing (regAt ξ p) := isNoetherianRing_of_ringEquiv _ e
-  haveI : IsIntegrallyClosed (regAt ξ p) :=
+  have := isFractionRing_regAt h p
+  have : IsLocalRing (regAt ξ p) := e.isLocalRing
+  have : IsNoetherianRing (regAt ξ p) := isNoetherianRing_of_ringEquiv _ e
+  have : IsIntegrallyClosed (regAt ξ p) :=
     (isIntegrallyClosed_iff Ω).2 fun {x} hx => ⟨⟨x, hn p x hx⟩, rfl⟩
   exact normal_noeth_local_dim_one_isDVR _ ((ringKrullDim_eq_of_ringEquiv e).symm.trans hd)
 
@@ -346,8 +346,8 @@ theorem exists_orders [IsLocallyNoetherian X] (h : IsCptGen ξ) (hn : NormalCpt 
     ∃ (m : ℕ) (n : ℤ), 0 < m ∧ ∀ (M : ℕ) (a : ℤ),
       ((M : ℤ) * n ≤ a * m → t ^ a / s ^ M ∈ regAt ξ p) ∧
       ((M : ℤ) * n = a * m → unitAt ξ p (s ^ M / t ^ a)) := by
-  haveI := isFractionRing_regAt h p
-  haveI := isDVR_regAt h hn p hd
+  have := isFractionRing_regAt h p
+  have := isDVR_regAt h hn p hd
   have hw0 : (⟨t, ht⟩ : regAt ξ p) ≠ 0 := fun e => ht0 (congrArg Subtype.val e)
   have hwu : ¬ IsUnit (⟨t, ht⟩ : regAt ξ p) := by
     rintro ⟨u, hu⟩
@@ -390,9 +390,9 @@ theorem finite_and_exists [IsLocallyNoetherian X] [CompactSpace X] (h : IsCptGen
     ∀ q : Cpt ξ, o ∈ (s q.1).asIdeal →
       ∃ p : Cpt ξ, o ∈ (s p.1).asIdeal ∧ ringKrullDim (X.presheaf.stalk p.1) = 1 := by
   obtain ⟨U, hU, hcl, hint⟩ := GlobalTheory.CompanionTheory.Ar.Flat.cpt_open_integral X Ω ξ h
-  haveI := hint
-  haveI : CompactSpace U := isCompact_iff_compactSpace.mp hcl.isCompact
-  haveI : IsNoetherian U.toScheme := { }
+  have := hint
+  have : CompactSpace U := isCompact_iff_compactSpace.mp hcl.isCompact
+  have : IsNoetherian U.toScheme := { }
   let g : U.toScheme ⟶ Spec (CommRingCat.of R) := U.ι ≫ s
   let w : Γ(U.toScheme, ⊤) := (Scheme.Hom.app g ⊤).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom o)
   have hb : ∀ x : U.toScheme, x ∉ U.toScheme.basicOpen w ↔ o ∈ (s x.1).asIdeal := by
@@ -462,8 +462,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat.ZLat
 
 theorem _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_regular_section_generator : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsProper s] (ϖ : O), Irreducible ϖ → Function.Injective (algebraMap O Ω) → ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → IsCptGen ξ → NormalCpt ξ → (zeroSet ξ (algebraMap O Ω ϖ)).Nonempty → ∀ (L : Lat ξ Ω) (σ : Ω), L.IsVB 1 ⊤ → (∀ p ∈ genFibre O ξ, L.IsGenAt p σ) → ∃ (M : ℕ) (a : ℤ), 0 < M ∧ (∀ (p : Cpt ξ) (e : Ω), L.IsGenAt p e → algebraMap O Ω ϖ ^ a / (σ / e) ^ M ∈ regAt ξ p) ∧ ∃ p : Cpt ξ, ¬ unitAt ξ p (algebraMap O Ω ϖ) ∧ ringKrullDim (X.presheaf.stalk p.1) = 1 ∧ OrderAt L σ (algebraMap O Ω ϖ) M a p := by
   intro X Ω _ ξ O _ _ _ _ s _ ϖ hϖ hinj hs hg hn hz L σ hvb hgen
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
   have hne : ∀ o : O, o ≠ 0 → algebraMap O Ω o ≠ 0 := fun o ho e =>
     ho (hinj (by rw [e, map_zero]))
   have ht0 : algebraMap O Ω ϖ ≠ 0 := hne ϖ hϖ.ne_zero
@@ -488,8 +488,8 @@ theorem _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_regular_section_gener
         rwa [Units.inv_mul] at this))
     · exact (hunit q ϖ).1 hq (hP.mem_of_pow_mem n h1)
   let S : Type := {p : Cpt ξ // ϖ ∈ (s p.1).asIdeal ∧ ringKrullDim (X.presheaf.stalk p.1) = 1}
-  haveI : Fintype S := hfin.fintype
-  haveI : Nonempty S := by
+  have : Fintype S := hfin.fintype
+  have : Nonempty S := by
     obtain ⟨q, hq, hnu⟩ := hz
     have hq' : ϖ ∈ (s (⟨q, hq⟩ : Cpt ξ).1).asIdeal := by
       by_contra hc

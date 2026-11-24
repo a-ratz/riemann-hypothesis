@@ -58,8 +58,8 @@ theorem toH1O_surjective_of_abelian : GlobalTheory.Published.AbelianHodgeDeRham 
   intro hH R _ A _ g hab hdim
   rw [Category.comp_id]
   have hsm : Smooth A.hom := hab.smooth
-  have hsep : IsSeparated A.hom := by haveI := hab.proper; infer_instance
-  have hqc : QuasiCompact A.hom := by haveI := hab.proper; infer_instance
+  have hsep : IsSeparated A.hom := by have := hab.proper; infer_instance
+  have hqc : QuasiCompact A.hom := by have := hab.proper; infer_instance
   have hcmp := GlobalTheory.Published.CrystallineSmoothLift.bijective_cechDeRhamComparison_degreeOne
     GlobalTheory.SmoothLift.crystallineSmoothLift_of_relations A.hom hsm hsep hqc
   have hsurj : Function.Surjective (GlobalTheory.CechDR.toHO1 A.hom) := (hH R A g hab hdim).2.2.2.2.1.2.2

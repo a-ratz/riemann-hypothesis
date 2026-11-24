@@ -150,7 +150,7 @@ theorem prj_val (β : nA σ d.Y d.b) : (prj L β).1 = β.1.submatrix L.em L.em :
 
 theorem continuous_prj : Continuous (prj L) := by
   refine Continuous.subtype_mk ?_ _
-  exact continuous_subtype_val.matrix_submatrix L.em L.em
+  exact continuous_subtypeVal.matrix_submatrix L.em L.em
 
 theorem pad_matrix_lower_block (M : Matrix (Fin L.n ⊕ Fin L.n) (Fin L.n ⊕ Fin L.n) (AE F E)) (hM : M.toBlocks₂₁ = 0) :
     (padM L M).toBlocks₂₁ = 0 := by

@@ -121,7 +121,7 @@ theorem isIrrChar_iff [Fintype G] (χ : G → ℂ) : IsIrrChar χ ↔ ∃ V : FD
 theorem sum_subgroup_eq_zero_iff [Fintype G] (V : FDRep ℂ G) (U : Subgroup G) [DecidablePred (· ∈ U)] :
     (∑ u : G, if u ∈ U then V.character u else 0) = 0 ↔ ∀ v : V, (∀ u ∈ U, V.ρ u v = v) → v = 0 := by
   have hc : (Nat.card U : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
-  haveI := invertibleOfNonzero hc
+  have := invertibleOfNonzero hc
   have h := Representation.card_inv_mul_sum_char_eq_finrank (V.ρ.comp U.subtype : Representation ℂ U V)
   have hs : (∑ u : G, if u ∈ U then V.character u else 0) =
       ∑ g : U, Representation.character (V.ρ.comp U.subtype : Representation ℂ U V) g := by
@@ -244,7 +244,7 @@ theorem isCuspChar_character {d : ℕ} (τ : FDRep ℂ (GL (Fin d) K)) (hs : Sim
           by_contra hj
           exact hb (by simp [twoBlock, show ¬ i.val < a by omega, show ¬ j.val < a by omega])
         have hne : i ≠ j := fun e => by subst e; omega
-        rw [if_neg hne]
+        rw [ite_eq_right hne]
         exact hu.1.1 i j (by simp [twoBlock, show ¬ i.val < a by omega, hj])
 
 theorem finrank_of_simple_cuspidal (θ : AlgebraicClosure K →* ℂ)
@@ -411,7 +411,7 @@ theorem iso_of_label (C : LabelConv K) {d : ℕ} (hd : 1 ≤ d) (τ τ' : FDRep 
   obtain ⟨x, hx⟩ := IsAlgClosed.exists_aeval_eq_zero (AlgebraicClosure K) P (degree_pos_of_irreducible h.2.1).ne'
   have hprim : IsPrimitiveRoot (C.gen d) (Fintype.card K ^ d - 1) := by
     rw [← C.gen_order d hd]; exact IsPrimitiveRoot.orderOf _
-  haveI : NeZero (Fintype.card K ^ d - 1) := ⟨by omega⟩
+  have : NeZero (Fintype.card K ^ d - 1) := ⟨by omega⟩
   have heq : τ.character = τ'.character := by
     refine GlobalTheory.CuspGL.cuspElliptic_statement K d _ _ (isCuspChar_character τ hs hc)
       (isCuspChar_character τ' hs' hc') fun γ hγ => ?_
@@ -438,7 +438,7 @@ theorem iso_of_label (C : LabelConv K) {d : ℕ} (hd : 1 ≤ d) (τ τ' : FDRep 
   rw [← hz, (zIdemIdemCentral_holds _ τ hs).1] at h1
   have h2 := _root_.GlobalTheory.CompanionTheory.TyFin.zIdemFacts.2.2.1 _ τ τ hs hs ⟨Iso.refl _⟩
   rw [h1, map_zero] at h2
-  haveI : Nontrivial τ := (isIrr_of_simple τ).1
+  have : Nontrivial τ := (isIrr_of_simple τ).1
   exact zero_ne_one h2
 
 theorem cuspParam_all (C : LabelConv K) : CuspParam K C := fun d hd =>
@@ -512,7 +512,7 @@ theorem fixed_eq_zero {K : Type} [Field K] [Fintype K] [DecidableEq K] {d a : �
       exact hu.2 i j (by simp [b, hi, hj])
     · by_cases hj : (j : ℕ) < a
       · have hne : i ≠ j := by rintro rfl; exact hi hj
-        rw [if_neg hne]
+        rw [ite_eq_right hne]
         exact hu.1.1 i j (by simp [b, hi, hj])
       · exact hu.2 i j (by simp [b, hi, hj])
 
@@ -552,7 +552,7 @@ theorem rad_iff {d a : ℕ} (had : a ≤ d) (M : Mt g d) :
           intro e
           subst e
           exact hi hj
-        rw [if_neg hne]
+        rw [ite_eq_right hne]
         exact hP i j hj (not_lt.mp hi)
       · left
         have hi' : (i : ℕ) - a < d - a := by omega
@@ -570,7 +570,7 @@ theorem rad_iff {d a : ℕ} (had : a ≤ d) (M : Mt g d) :
     refine ⟨?_, ?_, ?_⟩
     · intro i j hj hi
       rcases hM i j with h | h
-      · rw [h, if_neg]
+      · rw [h, ite_eq_right]
         intro e
         subst e
         omega
@@ -660,7 +660,7 @@ theorem thetaOf_gen_pow (L : LabelDatum g) {d : ℕ} (hd : 0 < d) {x : Formalism
     (m : ℕ) : thetaOf L d x (L.gen d ^ m) = L.teich x ^ m := by
   have hex : ∃ n : ℕ, L.gen d ^ m = L.gen d ^ n := ⟨m, rfl⟩
   unfold thetaOf
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   have hc : L.gen d ^ m = L.gen d ^ hex.choose := hex.choose_spec
   have hg2 := (Fact.out : g.Prime).two_le
   have hgd : g ≤ g ^ d := Nat.le_self_pow hd.ne' g
@@ -707,7 +707,7 @@ theorem isCuspOf_character (L : LabelDatum g) {d : ℕ} (hd : 0 < d) (τ : FDRep
     exact IsPrimitiveRoot.orderOf _
   have hg2 := (Fact.out : g.Prime).two_le
   have hgd : g ≤ g ^ d := Nat.le_self_pow hd.ne' g
-  haveI : NeZero (g ^ d - 1) := ⟨by omega⟩
+  have : NeZero (g ^ d - 1) := ⟨by omega⟩
   obtain ⟨m, -, hmz⟩ := hprim.eq_pow_of_pow_eq_one hz1
   simp only [Fintype.card_fin, conv, ZMod.card] at hlab
   have htr := hlab x hxP y hy z hzP m hmz
@@ -738,14 +738,14 @@ theorem green : GlobalTheory.GLq.Green := by
     if hP : IsPrimeLab d P then (σ P hP).character else 0
   refine ⟨rep, ?_, ?_, ?_⟩
   · intro P hP
-    simp only [rep, dif_pos hP]
+    simp only [rep, dite_eq_left hP]
     refine ⟨isCuspOf_character L hd (σ P hP) P (hσs P hP) (hσc P hP) (hσl P hP), ?_⟩
     rw [FDRep.char_one]
     have h2 := congrArg (Int.cast : ℤ → ℂ) (hA _ (hσs P hP) (hσc P hP)).2
     push_cast at h2
     simpa [ZMod.card] using h2
   · intro P P' hP hP' heq
-    simp only [rep, dif_pos hP, dif_pos hP'] at heq
+    simp only [rep, dite_eq_left hP, dite_eq_left hP'] at heq
     have hl2 : HasCuspLabel (conv L) (σ P hP) P' :=
       hasCuspLabel_of_character (conv L) heq.symm (hσl P' hP')
     exact (hA _ (hσs P hP) (hσc P hP)).1.unique (hσl P hP) hl2
@@ -757,7 +757,7 @@ theorem green : GlobalTheory.GLq.Green := by
     have hP : IsPrimeLab d P :=
       isPrimeLab_iff.mpr ⟨hPl.1, hPl.2.1, hPl.2.2.1, by simpa using hPl.2.2.2.1⟩
     refine ⟨P, hP, ?_⟩
-    simp only [rep, dif_pos hP]
+    simp only [rep, dite_eq_left hP]
     rw [← hχV]
     exact FDRep.char_iso (hC V (σ P hP) P hVs hVc (hσs P hP) (hσc P hP) hPl (hσl P hP)).some
 

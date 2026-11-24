@@ -163,7 +163,7 @@ theorem supp_locConst : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
     { toFun := fun t => restEmb V W K t
       map_zero' := Matrix.zero_mul _
       map_add' := fun x y => restEmb_add V W K x y }
-  have hRc : Continuous R := continuous_subtype_val.matrix_mul continuous_const
+  have hRc : Continuous R := continuous_subtypeVal.matrix_mul continuous_const
 
   let Gi : Matrix (Fin W.rank) (Fin W.rank) (AE D) := (W.gram⁻¹).map (incA D)
   have hGG : HMul.hMul (W.gram.map (incA D)) Gi = (1 : Matrix (Fin W.rank) (Fin W.rank) (AE D)) := by

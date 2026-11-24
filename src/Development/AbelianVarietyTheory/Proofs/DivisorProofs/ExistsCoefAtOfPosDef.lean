@@ -127,7 +127,7 @@ theorem exists_coef_round_at (V : HSp D) (hV : ∀ τ, (V.gram.map (tauE D τ)).
       ∀ a y, inner ℂ (c₁ (bVV D.what₂.LL lam a)) (c₁ y) = σ (pairVr (labLL D) lam V.gram (bVV D.what₂.LL lam a) y) := by
   obtain ⟨θ, hθ⟩ := GlobalTheory.Member.exists_isInfFam_family D
   obtain ⟨hc, hs⟩ := realGL_laws hθ V
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hG : ∀ τ, (((V.gram.map (tauE D (p τ)))⁻¹)ᵀ).PosDef := fun τ => (hV (p τ)).inv.transpose
   have hlab : ∀ τ x, σ (labLL D τ x) = tauE D (p τ) x := fun τ x => DFunLike.congr_fun (hp τ) x
   refine ⟨coefOf lam hG (invTrK.comp ((reindexFam p).comp (realGL θ V))),
@@ -188,7 +188,7 @@ theorem exists_coefAt_of_posDef (i : Fin D.R.m) (h : (Vc D i).IsPosDef) (σ : D.
     rw [h (tauE D τ)] at this
     exact GlobalTheory.DefiniteQuotient.posDef_of_signature this
   have hg : gramV D i = (Vc D i).gram := by
-    rw [gramV, GlobalTheory.StdFrame.neg_eq_false_of_posDef D i h, if_neg Bool.false_ne_true]
+    rw [gramV, GlobalTheory.StdFrame.neg_eq_false_of_posDef D i h, ite_eq_right Bool.false_ne_true]
   have H := exists_coef_round_at (Vc D i) hV (lamV D i) σ (Equiv.ofBijective _ hl.1).symm fun τ =>
     (congrArg (labE σ) ((Equiv.ofBijective _ hl.1).apply_symm_apply τ).symm).trans (hl.2 _)
   obtain ⟨c, c₁, h1, h2, h3, h4, h5⟩ := H

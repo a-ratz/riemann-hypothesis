@@ -372,14 +372,14 @@ theorem exists_labels_true_conj : ∀ (D : D7) (hE : IsEmpty D.nd.Loc) (Rw : Row
     D.naut.plGw_nconj D.ntypes.teichC γ
   have hA : ∀ k v (a : A.LP (A.plGw k v)), haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
       A.items₂ k (A.plGw k v) a = WD.lab (D.ntypes.teichC k) (D.ntypes.tg k v) (show WDAt D.nd (D.naut.plGw k v) from a) := fun k v a => by
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     exact congrArg (fun x => WD.lab (h := D.nd.plOm.2 (D.naut.plGw k v)) (D.ntypes.teichC k) x (show WDAt D.nd (D.naut.plGw k v) from a)) (hγ1 k v)
   have hl : ∀ k v (L : A.LP (A.plGw k v)), (A.items₂ k (A.plGw k v) L).natDegree = A.lpDim L →
       haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
       A.inePol L (D.ntypes.tg k v) =
         ((Formalism.CyclotomicNorms.rootsBar (A.items₂ k (A.plGw k v) L)).map fun x => X - Polynomial.C (D.ntypes.teichC k x)).prod := by
     intro k v L hL
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     rw [hA k v L] at hL ⊢
     exact WD.inePol_eq_of_natDegree_lab _ _ _ hL
   obtain ⟨C⟩ := GlobalTheory.MemN.nonempty_nbc_of_isEmpty_loc _ _ _ _ A hE

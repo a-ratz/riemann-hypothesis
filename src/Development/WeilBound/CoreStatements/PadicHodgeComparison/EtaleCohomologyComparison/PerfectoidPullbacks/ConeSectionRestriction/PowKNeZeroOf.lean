@@ -180,12 +180,12 @@ theorem exists_dual_derivations : ∀ {K : Type} [Field K] {X : Scheme.{0}} (q :
     (V : X.Opens) (d : ℕ) (c : Coord q V d), letI := (strV q V).toAlgebra;
     ∃ D : Fin d → Derivation K Γ(X, V) Γ(X, V), ∀ k j, D k (c.t j) = if k = j then 1 else 0 := by
   intro K _ X q V d c
-  letI := (strV q V).toAlgebra
-  letI : Algebra (MvPolynomial (Fin d) K) Γ(X, V) :=
+  let := (strV q V).toAlgebra
+  let : Algebra (MvPolynomial (Fin d) K) Γ(X, V) :=
     (MvPolynomial.eval₂Hom (strV q V) c.t : MvPolynomial (Fin d) K →+* Γ(X, V)).toAlgebra
-  haveI : IsScalarTower K (MvPolynomial (Fin d) K) Γ(X, V) :=
+  have : IsScalarTower K (MvPolynomial (Fin d) K) Γ(X, V) :=
     IsScalarTower.of_algebraMap_eq fun r => (MvPolynomial.eval₂Hom_C (strV q V) c.t r).symm
-  haveI : Algebra.Etale (MvPolynomial (Fin d) K) Γ(X, V) := c.etale
+  have : Algebra.Etale (MvPolynomial (Fin d) K) Γ(X, V) := c.etale
   obtain ⟨⟨b, hb⟩, -⟩ := GlobalTheory.EtaleCoordJacobian.exists_basis_of_etale K Γ(X, V) (Fin d)
   have hb' : ∀ j, KaehlerDifferential.D K Γ(X, V) (c.t j) = b j := fun j => by
     rw [hb j]
@@ -785,7 +785,7 @@ theorem dlog_ratio_det {K R : Type} [Field K] [CommRing R] [Algebra K R] (n : �
   have hg0 : g 0 = u 0 := by simp [g, hu]
   have hgs : ∀ (l : Fin (n + 1)) (h : (l : ℕ) ≠ 0), g l = (t ⟨l - 1, by omega⟩ : R) * u l := by
     intro l h
-    exact dif_neg h
+    exact dite_eq_right h
   have hgu : ∀ l, IsUnit (g l) := by
     intro l
     by_cases h : (l : ℕ) = 0
@@ -814,11 +814,11 @@ theorem dlog_ratio_det {K R : Type} [Field K] [CommRing R] [Algebra K R] (n : �
           have := congrArg Fin.val e
           simp at this
           omega
-        simp only [if_true, hne, if_false]
+        simp only [ite_true, hne, ite_false]
         ring
       · by_cases hs : (k : ℕ) + 1 = l
         · have hp : k = ⟨(l : ℕ) - 1, by omega⟩ := Fin.ext (by simp; omega)
-          rw [if_neg hkl, if_pos hp, if_neg hkl, if_pos hs, ← hp]
+          rw [ite_eq_right hkl, ite_eq_left hp, ite_eq_right hkl, ite_eq_left hs, ← hp]
           have := htu k
           linear_combination (-(u l)) * this
         · have hp : k ≠ ⟨(l : ℕ) - 1, by omega⟩ := by
@@ -826,10 +826,10 @@ theorem dlog_ratio_det {K R : Type} [Field K] [CommRing R] [Algebra K R] (n : �
             have := congrArg Fin.val e
             simp at this
             omega
-          rw [if_neg hkl, if_neg hp, if_neg hkl, if_neg hs]
+          rw [ite_eq_right hkl, ite_eq_right hp, ite_eq_right hkl, ite_eq_right hs]
           simp
   have hB : B.det = (-1) ^ (n + 1) := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [Matrix.det_of_isUpperTriangular]
     · simp [B]
     · intro i j hij
       have : (j : ℕ) < i := hij

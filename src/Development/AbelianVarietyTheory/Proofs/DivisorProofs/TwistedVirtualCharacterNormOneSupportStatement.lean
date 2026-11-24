@@ -237,10 +237,10 @@ theorem isSSRep_of_finiteIndex {Γ k : Type} [Group Γ] [Field k] [CharZero k] {
   let p : (Fin n → k) →ₗ[k] (Fin n → k) := W.subtype ∘ₗ W.linearProjOfIsCompl W' hc
   have hpW : ∀ v, p v ∈ W := fun v => (W.linearProjOfIsCompl W' hc v).2
   have hpl : ∀ w ∈ W, p w = w := fun w hw => by
-    have e := congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨w, hw⟩)
+    have e := congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨w, hw⟩)
     exact e
   have hpr : ∀ w ∈ W', p w = 0 := fun w hw => by
-    have e := congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨w, hw⟩)
+    have e := congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨w, hw⟩)
     exact e
   have hpN : ∀ m ∈ N, ∀ v, p (ρ m v) = ρ m (p v) := by
     intro m hm v
@@ -262,7 +262,7 @@ theorem isSSRep_of_finiteIndex {Γ k : Type} [Group Γ] [Field k] [CharZero k] {
     intro g w hw
     simp only [T, LinearMap.comp_apply]
     rw [hpl _ (hWρ _ w hw), hρ, mul_inv_cancel, hρ1]
-  haveI : Fintype (Γ ⧸ N) := Fintype.ofFinite _
+  have : Fintype (Γ ⧸ N) := Fintype.ofFinite _
   let S : (Fin n → k) →ₗ[k] (Fin n → k) := ∑ q : Γ ⧸ N, T q.out
   have hout : ∀ (h : Γ) (q : Γ ⧸ N), T (h • q).out = T (h * q.out) := by
     intro h q
@@ -321,7 +321,7 @@ namespace GlobalTheory.StableExt
 
 theorem isSSRep_of_finite {G : Type} [Group G] [Finite G] {d : ℕ} (ρ : G →* GL (Fin d) ℂ) :
     Formalism.MainNotions.N.IsSSRep ρ := by
-  haveI : (⊥ : Subgroup G).FiniteIndex := inferInstance
+  have : (⊥ : Subgroup G).FiniteIndex := inferInstance
   apply GlobalTheory.FiniteIndexSemisimple.isSSRep_of_finiteIndex ρ (⊥ : Subgroup G)
   intro W _
   obtain ⟨W', hW'⟩ := Submodule.exists_isCompl W
@@ -396,12 +396,12 @@ theorem exists_ext : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype 
     { carrier := {t | ∀ g, ρ (φ t g) = σ t * ρ g * (σ t)⁻¹}
       mul_mem' := by
         intro a b ha hb g
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_mul, MulAut.mul_apply, ha, hb, map_mul]; group
       one_mem' := by intro g; simp
       inv_mem' := by
         intro a ha g
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         have := ha ((φ a⁻¹) g)
         rw [← MulAut.mul_apply, ← map_mul, mul_inv_cancel, map_one, MulAut.one_apply] at this
         rw [map_inv σ]
@@ -468,7 +468,7 @@ theorem sum_trace_mul_star_nat {H V W : Type} [Group H] [Fintype H] [AddCommGrou
     (ρ : Representation ℂ H V) (σ : Representation ℂ H W) :
     ∃ k : ℕ, ∑ x, LinearMap.trace ℂ V (ρ x) * star (LinearMap.trace ℂ W (σ x)) = (Nat.card H : ℂ) * k := by
   have hne : (Nat.card H : ℂ) ≠ 0 := by exact_mod_cast Nat.card_pos.ne'
-  haveI : Invertible (Nat.card H : ℂ) := invertibleOfNonzero hne
+  have : Invertible (Nat.card H : ℂ) := invertibleOfNonzero hne
   have h := FDRep.scalar_product_char_eq_finrank_equivariant (FDRep.of σ) (FDRep.of ρ)
   refine ⟨Module.finrank ℂ (FDRep.of σ ⟶ FDRep.of ρ), ?_⟩
   rw [← h, mul_inv_cancel_left₀ hne]
@@ -481,14 +481,14 @@ end GlobalTheory.Shin.CosetOrth
 open GlobalTheory.Shin.CosetOrth in
 theorem GlobalTheory.Shin.finsum_coset_mul_star_eq_zero : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ X Y : G ⋊[φ] Γ → ℂ, IsChar ℂ ℂ X → IsChar ℂ ℂ Y → ∑ᶠ g, X (inl g) * star (Y (inl g)) = 0 → ∑ᶠ g, X (inl g * inr s) * star (Y (inl g * inr s)) = 0 := by
   intro G Γ _ _ _ _ φ s hp hs X Y hX hY h0
-  haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
+  have : Fact (Nat.card Γ).Prime := ⟨hp⟩
   have gen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
     intro t; rw [zpowers_eq_top_of_prime_card rfl hs]; trivial
   have hl0 : Nat.card Γ ≠ 0 := hp.ne_zero
   obtain ⟨η, -, -, hF⟩ := GlobalTheory.Shin.CosetFourier.fourier_coset_sums G Γ φ s gen _ (Complex.isPrimitiveRoot_exp _ hl0)
   obtain ⟨e1, e2⟩ := hF X Y
-  haveI : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
-  letI : Fintype (G ⋊[φ] Γ) := Fintype.ofFinite _
+  have : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  let : Fintype (G ⋊[φ] Γ) := Fintype.ofFinite _
   have hm : ∀ a : ℕ, ∃ k : ℕ, ∑ᶠ x, X x * star (Y x * (η x : ℂ) ^ a) = (Nat.card (G ⋊[φ] Γ) : ℂ) * k := by
     intro a
     obtain ⟨n, ρ, hρ⟩ := hX
@@ -558,8 +558,8 @@ namespace GlobalTheory.Shin
 
 theorem finsum_coset_pair_ne_zero : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ X ∈ Virt ℂ ℂ (G ⋊[φ] Γ), ∀ Y ∈ Virt ℂ ℂ (G ⋊[φ] Γ), ∀ z : ℤ, ∑ᶠ g, X (inl g) * star (Y (inl g)) = z * (Nat.card G : ℂ) → ¬ ((Nat.card Γ : ℤ) ∣ z) → ∑ᶠ g, X (inl g * inr s) * star (Y (inl g * inr s)) ≠ 0 := by
   intro G Γ _ _ _ _ φ s hp hs X hX Y hY z hz hnd hcos
-  haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
-  haveI : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have : Fact (Nat.card Γ).Prime := ⟨hp⟩
+  have : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
   have hgen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
     intro t; rw [zpowers_eq_top_of_prime_card rfl hs]; trivial
   have hζ := Complex.isPrimitiveRoot_exp (Nat.card Γ) hp.ne_zero
@@ -643,7 +643,7 @@ theorem sum_char_inv_mul_char_eq_zero_iff {V W : Type} [AddCommGroup V] [Module 
     [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (σ : Representation ℂ G V) (ρ : Representation ℂ G W) :
     ∑ g, σ.character g⁻¹ * ρ.character g = 0 ↔ (Representation.linHom σ ρ).invariants = ⊥ := by
   have hpos : (Nat.card G : ℂ) ≠ 0 := by exact_mod_cast (Nat.card_pos (α := G)).ne'
-  haveI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hpos
+  have : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hpos
   have hfr := Representation.card_inv_mul_sum_char_eq_finrank (Representation.linHom σ ρ)
   simp only [Representation.char_linHom] at hfr
   constructor
@@ -736,8 +736,8 @@ theorem kills_twist_of_pair_ne_zero : ∀ (G Γ : Type) [Group G] [Finite G] [Gr
     IsIrrChar ℂ ℂ (fun g => χ (inl g)) → IsChar ℂ ℂ Y → ∑ᶠ g, χ (inl g) * star (Y g) ≠ 0 →
     Kills (fun δ => χ (inl δ * inr s)) Y := by
   intro G Γ _ _ _ _ φ s χ Y hχ hirr hY hne V _ _ _ ρ h
-  haveI : Fintype G := Fintype.ofFinite G
-  haveI : Finite (G ⋊[φ] Γ) :=
+  have : Fintype G := Fintype.ofFinite G
+  have : Finite (G ⋊[φ] Γ) :=
     Finite.of_injective (fun x : G ⋊[φ] Γ => (x.left, x.right))
       (fun x y hxy => SemidirectProduct.ext (congrArg Prod.fst hxy) (congrArg Prod.snd hxy))
   obtain ⟨m, ρh, hρh⟩ := hχ
@@ -816,8 +816,8 @@ theorem clifford_prime_index : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ]
       (∀ δ, χ (inl δ * inr s) = 0) ∨ (IsIrrChar ℂ ℂ (fun g => χ (inl g)) ∧
         ∑ᶠ g, χ (inl g * inr s) * star (χ (inl g * inr s)) = (Nat.card G : ℂ)) := by
   intro G Γ _ _ _ _ φ s hl hs χ hχ
-  haveI : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
-  haveI := Fintype.ofFinite (G ⋊[φ] Γ)
+  have : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have := Fintype.ofFinite (G ⋊[φ] Γ)
   have hH : Nat.card (G ⋊[φ] Γ) = Nat.card G * Nat.card Γ := by
     rw [Nat.card_congr SemidirectProduct.equivProd, Nat.card_prod]
   have hHne : (Nat.card (G ⋊[φ] Γ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
@@ -842,10 +842,10 @@ theorem clifford_prime_index : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ]
   have hVR := virt_mul_comap_conj_ind_linear (G ⋊[φ] Γ)
   have hnorm : ∑ᶠ x, χ x * star (χ x) = (Nat.card (G ⋊[φ] Γ) : ℂ) := by
     obtain ⟨n, ρ, hρ, h⟩ := hχ
-    haveI := hρ
-    haveI : Invertible (Nat.card (G ⋊[φ] Γ) : ℂ) := invertibleOfNonzero hHne
+    have := hρ
+    have : Invertible (Nat.card (G ⋊[φ] Γ) : ℂ) := invertibleOfNonzero hHne
     have ho := Representation.char_orthonormal ρ ρ
-    rw [if_pos ⟨Representation.Equiv.refl ρ⟩] at ho
+    rw [ite_eq_left ⟨Representation.Equiv.refl ρ⟩] at ho
     have hc : χ = ρ.character := funext fun g => by simpa using h g
     rw [finsum_eq_sum_of_fintype]
     have hst : ∀ x, star (χ x) = χ x⁻¹ := star_virt_eq_inv _ χ (isChar_mem_virt_complex hχchar)
@@ -989,7 +989,7 @@ theorem cycloSq_coeff_eq {l : ℕ} (hl : l.Prime) {ζ : ℂ} (hζ : IsPrimitiveR
   have h1 : Q.coeff d = 0 := by rw [hQ0]; simp
   rw [hQdef, finsetSum_coeff] at h1
   simp only [coeff_C_mul_X_pow, Finset.sum_ite_eq, Finset.mem_range] at h1
-  rw [if_pos (by omega)] at h1
+  rw [ite_eq_left (by omega)] at h1
   have : ((a d - a (l - 1) : ℤ) : ℚ) = 0 := h1
   exact_mod_cast sub_eq_zero.mp (by exact_mod_cast this)
 
@@ -1024,7 +1024,7 @@ theorem cycloSq_mul_star {l : ℕ} (hl : 0 < l) {ζ : ℂ} (hζ : IsPrimitiveRoo
     _ = ∑ a ∈ Finset.range l, ∑ b ∈ Finset.range l, ∑ d ∈ Finset.range l,
           (if (a + (l - 1) * b) % l = d then ((f a * f b : ℤ) : ℂ) * ζ ^ d else 0) := by
         refine Finset.sum_congr rfl (fun a _ => Finset.sum_congr rfl (fun b _ => ?_))
-        rw [Finset.sum_ite_eq, if_pos (Finset.mem_range.mpr (Nat.mod_lt _ hl))]
+        rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_range.mpr (Nat.mod_lt _ hl))]
     _ = ∑ d ∈ Finset.range l, ∑ a ∈ Finset.range l, ∑ b ∈ Finset.range l,
           (if (a + (l - 1) * b) % l = d then ((f a * f b : ℤ) : ℂ) * ζ ^ d else 0) := by
         exact (Finset.sum_congr rfl (fun a _ => Finset.sum_comm)).trans Finset.sum_comm
@@ -1042,7 +1042,7 @@ theorem cycloSq_sum_coeff {l : ℕ} (hl : 0 < l) (f : ℕ → ℤ) :
   refine Finset.sum_congr rfl (fun a _ => ?_)
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun b _ => ?_)
-  rw [Finset.sum_ite_eq, if_pos (Finset.mem_range.mpr (Nat.mod_lt _ hl))]
+  rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_range.mpr (Nat.mod_lt _ hl))]
 
 theorem cycloSq_coeff_zero {l : ℕ} (hl : 0 < l) (f : ℕ → ℤ) :
     cycloSqCoeff l f 0 = ∑ a ∈ Finset.range l, f a ^ 2 := by
@@ -1051,7 +1051,7 @@ theorem cycloSq_coeff_zero {l : ℕ} (hl : 0 < l) (f : ℕ → ℤ) :
   rw [Finset.mem_range] at ha
   rw [Finset.sum_congr rfl (g := fun b => if b = a then f a * f b else 0) (fun b hb => by
     simp only [cycloSq_mod_eq_zero_iff hl ha (Finset.mem_range.mp hb)])]
-  rw [Finset.sum_ite_eq', if_pos (Finset.mem_range.mpr ha), sq]
+  rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_range.mpr ha), sq]
 
 theorem cycloSq_two_mul {l : ℕ} (f : ℕ → ℤ) :
     ∑ a ∈ Finset.range l, ∑ b ∈ Finset.range l, (f a - f b) ^ 2
@@ -1117,7 +1117,7 @@ theorem cyclo_sum_mul_star_eq_one_single : ∀ (l : ℕ) (ζ : ℂ), l.Prime →
     intro d hd
     rw [Finset.mem_erase, Finset.mem_range] at hd
     have h3 : A d = A 0 := (hAeq d hd.2).trans (hAeq 0 hl0).symm
-    simp only [hAdef, if_neg hd.1, if_true, sub_zero] at h3
+    simp only [hAdef, ite_eq_right hd.1, ite_true, sub_zero] at h3
     linarith
   have h0mem : 0 ∈ Finset.range l := Finset.mem_range.mpr hl0
   have hsumN : ∑ d ∈ Finset.range l, N d = N 0 + ((l : ℤ) - 1) * (N 0 - 1) := by
@@ -1221,8 +1221,8 @@ theorem GlobalTheory.Shin.coset_pair_eq_zero_or_twist :
     ∑ᶠ g, χ (inl g * inr s) * star (χ' (inl g * inr s)) = 0 ∨
       ∃ η : G ⋊[φ] Γ →* ℂˣ, (∀ g, η (inl g) = 1) ∧ ∀ x, χ x = χ' x * (η x : ℂ) := by
   intro G Γ _ _ _ _ φ s hp hs χ χ' hχ hχ'
-  haveI : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ (SemidirectProduct.equivProd (φ := φ)).symm
-  haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
+  have : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ (SemidirectProduct.equivProd (φ := φ)).symm
+  have : Fact (Nat.card Γ).Prime := ⟨hp⟩
   have hgen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
     intro t; rw [zpowers_eq_top_of_prime_card rfl hs]; trivial
   have hζ := Complex.isPrimitiveRoot_exp (Nat.card Γ) hp.ne_zero
@@ -1292,7 +1292,7 @@ theorem int_comb_unit_norm_single {ι G : Type} [Fintype ι] [Fintype G] (l : �
     (hrel : ∀ i j, R i j → ∃ a < l, ∀ g, f i g = ζ ^ a * f j g)
     (hsum : ∑ g, (∑ i, (c i : ℂ) * f i g) * star (∑ i, (c i : ℂ) * f i g) = Fintype.card G) :
     ∃ i₀ e, ∀ g, ∑ i, (c i : ℂ) * f i g = e * f i₀ g := by
-  letI S : Setoid ι := ⟨R, hR⟩
+  let S : Setoid ι := ⟨R, hR⟩
   let rep : Quotient S → ι := Quotient.out
   have hrep : ∀ t : ι, R t (rep ⟦t⟧) := fun t => hR.symm (Quotient.mk_out t)
   choose a ha hfa using fun t => hrel t _ (hrep t)
@@ -1307,9 +1307,9 @@ theorem int_comb_unit_norm_single {ι G : Type} [Fintype ι] [Fintype G] (l : �
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun t _ => ?_
       by_cases h : (⟦t⟧ : Quotient S) = i
-      · simp only [h, true_and, if_true]
+      · simp only [h, true_and, ite_true]
         rw [Finset.sum_ite_eq]
-        simp only [Finset.mem_range, ha t, if_true]
+        simp only [Finset.mem_range, ha t, ite_true]
         ring
       · simp [h]
     simp_rw [h1]
@@ -1365,8 +1365,8 @@ theorem virt_coset_norm_one_single : ∀ (G Γ : Type) [Group G] [Finite G] [Gro
     ∃ (χ : G ⋊[φ] Γ → ℂ) (e : ℂ), IsIrrChar ℂ ℂ χ ∧ IsIrrChar ℂ ℂ (fun g => χ (inl g)) ∧
       ∀ δ, X (inl δ * inr s) = e * χ (inl δ * inr s) := by
   intro G Γ _ _ _ _ φ s hp hs X hX hXn
-  haveI : Fintype G := Fintype.ofFinite G
-  haveI : Finite (G ⋊[φ] Γ) :=
+  have : Fintype G := Fintype.ofFinite G
+  have : Finite (G ⋊[φ] Γ) :=
     Finite.of_injective (fun x : G ⋊[φ] Γ => (x.left, x.right))
       (fun x y h => SemidirectProduct.ext (congrArg Prod.fst h) (congrArg Prod.snd h))
   obtain ⟨c, hirr, hXc, -⟩ := GlobalTheory.BI.virt_expand (G ⋊[φ] Γ) X hX
@@ -1395,7 +1395,7 @@ theorem virt_coset_norm_one_single : ∀ (G Γ : Type) [Group G] [Finite G] [Gro
     · rintro t u v ⟨η, h1, h2⟩ ⟨η', h1', h2'⟩
       refine ⟨η' * η, fun g => by simp [h1 g, h1' g], fun x => ?_⟩
       rw [h2 x, h2' x, MonoidHom.mul_apply, Units.val_mul, mul_assoc]
-  haveI : NeZero (Nat.card Γ) := ⟨hp.ne_zero⟩
+  have : NeZero (Nat.card Γ) := ⟨hp.ne_zero⟩
   have hζ := Complex.isPrimitiveRoot_exp (Nat.card Γ) hp.ne_zero
   have hnorm : ∀ t, ∑ g, f t g * star (f t g) = Fintype.card G := by
     intro t
@@ -1480,7 +1480,7 @@ theorem kills_of_norm_one_of_pairing_prime :
   intro G Γ _ _ _ _ φ s hp hs X hX hn Y hY hYs z hz hl
   obtain ⟨χ, e, hχ, hχG, hXe⟩ := GlobalTheory.T.virtualCharacter_coset_normOne_single G Γ φ s hp hs X hX hn
   have hgen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
-    haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
+    have : Fact (Nat.card Γ).Prime := ⟨hp⟩
     intro t
     rw [zpowers_eq_top_of_prime_card rfl hs]
     exact Subgroup.mem_top t

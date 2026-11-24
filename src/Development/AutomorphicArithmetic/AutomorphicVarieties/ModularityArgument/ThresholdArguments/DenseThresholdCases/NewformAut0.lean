@@ -75,7 +75,7 @@ private theorem ev_not_mem (N : ℕ) (hN : N ≠ 0) :
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors h0).subset fun w hw => ?_)
-  simp only [Set.mem_setOf_eq, not_not] at hw
+  simp only [Set.mem_ofPred_eq, not_not] at hw
   exact Ideal.dvd_span_singleton.2 hw
 private theorem normV_eq (w : HeightOneSpectrum (𝓞 ℚ)) : normV w = Ideal.absNorm w.asIdeal := by
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]; rfl
@@ -176,7 +176,7 @@ end UpperTheory.V.Af.NewformAutomorphy
 theorem UpperTheory.GalN.V.newformAut0_alt :
     _root_.UpperTheory.V.Af.Hypotheses' → NewformAut0 := by
   intro P k hk f l hl Ω _ _ _ ι W j hf hW K _ _ _ _ _ _ hK hirr
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   exact _root_.UpperTheory.V.Sd.up_quad_of_printed_results P ℚ K Ω l ι hK 2 one_le_two W hW (_root_.UpperTheory.V.Af.newformAutR_alt P k hk f l Ω ι W j hf) hirr
 end
 end -- clump:auto

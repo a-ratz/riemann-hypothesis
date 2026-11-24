@@ -67,7 +67,7 @@ namespace GlobalTheory.UnitLemma.UnrExt
 theorem invol_eq_pow {k : Type} [Field k] [Finite k] (p : ℕ) [Fact p.Prime] [CharP k p] {q : ℕ}
     (hq : Nat.card k = q ^ 2) (s : k ≃+* k) (hss : ∀ x, s (s x) = x) (hne : ∃ x, s x ≠ x) :
     (∃ f, q = p ^ f) ∧ ∀ x, s x = x ^ q := by
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
+  let : Algebra (ZMod p) k := ZMod.algebra k p
   let σ : k ≃ₐ[ZMod p] k := AlgEquiv.ofRingEquiv (f := s) (fun x => by
     obtain ⟨n, rfl⟩ := ZMod.natCast_zmod_surjective x
     simp)
@@ -156,13 +156,13 @@ theorem exists_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRin
       Nat.card (ResidueField W) = (q ^ d) ^ 2 ∧ (∀ y, c' (c' y) = y) ∧
       (∀ x, c' (algebraMap O W x) = algebraMap O W (c x)) ∧ z - c' z ∉ maximalIdeal W ∧
       IsPrimitiveRoot z ((q ^ d) ^ 2 - 1) ∧ Algebra.adjoin O {z} = ⊤ := by
-  haveI : NeZero d := ⟨hd.pos.ne'⟩
+  have : NeZero d := ⟨hd.pos.ne'⟩
   let k := ResidueField O
   let k' := FiniteField.Extension k p d
   have hrk : Module.finrank k k' = d := FiniteField.finrank_extension k p d
   have hcard : Nat.card k' = (q ^ d) ^ 2 := by
     rw [Module.natCard_eq_pow_finrank (K := k), hrk, hq, ← pow_mul, ← pow_mul, mul_comm]
-  haveI : CharP k' p := charP_of_injective_algebraMap (algebraMap k k').injective p
+  have : CharP k' p := charP_of_injective_algebraMap (algebraMap k k').injective p
   have hq2 : 2 ≤ q ^ d := by
     have h1 : 1 < Nat.card k' := Finite.one_lt_card
     rw [hcard] at h1
@@ -179,10 +179,10 @@ theorem exists_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRin
   have hα : IsPrimitiveRoot α N := by
     rw [← hαu]; exact IsPrimitiveRoot.coe_units_iff.2 (IsPrimitiveRoot.orderOf αu)
   have hpowk' : ∀ y : k', y ^ ((q ^ d) ^ 2) = y := fun y => by
-    haveI := Fintype.ofFinite k'
+    have := Fintype.ofFinite k'
     rw [← hcard, Nat.card_eq_fintype_card, FiniteField.pow_card]
   have hgen : ∀ y : k', y ≠ 0 → ∃ i, α ^ i = y := fun y hy => by
-    haveI : NeZero N := ⟨by omega⟩
+    have : NeZero N := ⟨by omega⟩
     have : y ^ N = 1 := by
       apply mul_left_cancel₀ hy
       rw [← pow_succ', mul_one, show N + 1 = (q ^ d) ^ 2 by omega, hpowk']
@@ -200,11 +200,11 @@ theorem exists_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRin
     rw [← IntermediateField.adjoin.finrank hint, htop, IntermediateField.finrank_top', hrk]
   obtain ⟨g, hgm, hgd, hg⟩ := Nb.exists_monic_lift (minpoly k α) (minpoly.monic hint)
   have hirr : Irreducible (g.map (residue O)) := hgm ▸ minpoly.irreducible hint
-  haveI := Nb.isDomain g hg hirr
-  haveI := Nb.isLocal g hg hirr
-  haveI := Nb.dvr g hg hirr
-  haveI := Nb.complete g hg hirr
-  haveI := Nb.finite g hg
+  have := Nb.isDomain g hg hirr
+  have := Nb.isLocal g hg hirr
+  have := Nb.dvr g hg hirr
+  have := Nb.complete g hg hirr
+  have := Nb.finite g hg
   let W := AdjoinRoot g
   let u : O →+* k' := (algebraMap k k').comp (residue O)
   have hgu : g.map u = (minpoly k α).map (algebraMap k k') := by rw [← hgm, Polynomial.map_map]
@@ -240,7 +240,7 @@ theorem exists_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRin
   have hτu : τ.comp u = u.comp c := by
     ext x
     have h1 : ∀ (y : k) (m : ℕ), y ^ (q ^ (2 * m + 1)) = y ^ q := fun y m => by
-      haveI := Fintype.ofFinite k
+      have := Fintype.ofFinite k
       rw [pow_succ, pow_mul, pow_mul, ← hq, Nat.card_eq_fintype_card, FiniteField.pow_card_pow]
     obtain ⟨m, hm⟩ := hd
     simp only [u, RingHom.comp_apply]
@@ -273,7 +273,7 @@ theorem exists_ring (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRin
       · rw [eval_map]; exact AdjoinRoot.eval₂_root g
       · exact (hvc' _).trans ((congrArg τ (hvc' _)).trans (hττ _))
   have hNk : (N : k') ≠ 0 := by
-    haveI := Fintype.ofFinite k'
+    have := Fintype.ofFinite k'
     have h1 : ((N + 1 : ℕ) : k') = 0 := by
       rw [show N + 1 = (q ^ d) ^ 2 by omega, ← hcard, Nat.card_eq_fintype_card, FiniteField.cast_card_eq_zero]
     intro h
@@ -353,7 +353,7 @@ theorem exists_unramified_ext : ∀ (K : UQ) (d : ℕ), Odd d → ∃ (K' : UQ) 
   let s := ResidueField.mapEquiv ce
   have hs : ∀ x, s (residue K.O x) = residue K.O (c x) := fun x => rfl
   obtain ⟨p, hp⟩ := CharP.exists (ResidueField K.O)
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime (ResidueField K.O) p⟩
+  have : Fact p.Prime := ⟨CharP.char_is_prime (ResidueField K.O) p⟩
   obtain ⟨⟨f, hf⟩, hsq⟩ := invol_eq_pow p K.card_res s (fun x => by
     obtain ⟨x, rfl⟩ := residue_surjective x
     rw [hs, hs, hcc]) (by
@@ -369,13 +369,13 @@ theorem exists_unramified_ext : ∀ (K : UQ) (d : ℕ), Odd d → ∃ (K' : UQ) 
   let φ : K.E →+* L := IsFractionRing.lift hj
   have hφ : ∀ x, φ (algebraMap K.O K.E x) = algebraMap W L (algebraMap K.O W x) :=
     IsFractionRing.lift_algebraMap hj
-  haveI : CharZero L := charZero_of_injective_ringHom φ.injective
+  have : CharZero L := charZero_of_injective_ringHom φ.injective
   let ce' : W ≃+* W := RingEquiv.ofRingHom c' c' (RingHom.ext hinv) (RingHom.ext hinv)
   let cL : L ≃+* L := IsFractionRing.ringEquivOfRingEquiv ce'
   have hcL : ∀ y, cL (algebraMap W L y) = algebraMap W L (c' y) := fun y =>
     IsFractionRing.ringEquivOfRingEquiv_algebraMap ce' y
-  letI : Algebra K.E L := φ.toAlgebra
-  haveI : IsScalarTower K.O K.E L := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra K.E L := φ.toAlgebra
+  have : IsScalarTower K.O K.E L := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply K.O W L]; exact (hφ x).symm
   refine ⟨{ O := W, E := L, c := cL
             c_c := fun x => ?_

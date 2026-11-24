@@ -76,7 +76,7 @@ private theorem unit_pow (K : Type) [Field K] [NumberField K] [_root_.NumberFiel
     omega
   refine ⟨Nat.card (Units.torsion K), Nat.card_pos, fun u => ?_⟩
   obtain ⟨⟨ζ, e⟩, h1, -⟩ := Units.exist_unique_eq_mul_prod K u
-  haveI : IsEmpty (Fin (Units.rank K)) := by rw [hr]; infer_instance
+  have : IsEmpty (Fin (Units.rank K)) := by rw [hr]; infer_instance
   rw [Finset.univ_eq_empty, Finset.prod_empty, mul_one] at h1
   rw [h1, ← Subgroup.coe_pow, pow_card_eq_one', Subgroup.coe_one]
 
@@ -186,7 +186,7 @@ private theorem exists_F (K : Type) [Field K] [NumberField K] [_root_.NumberFiel
   let F : Ideal (𝓞 K) → ℤ_[l]ˣ := fun I => if hI : ∃ u, P I u then hI.choose else 1
   have hF : ∀ I u, P I u → F I = u := fun I u hI => by
     have h1 : ∃ u, P I u := ⟨u, hI⟩
-    simp only [F, dif_pos h1]
+    simp only [F, dite_eq_left h1]
     exact uniq I _ _ h1.choose_spec hI
   have ex : ∀ I, I ≠ ⊥ → IsCoprime I w → ∃ a, IsUnit (ι a) ∧ I ^ h = Ideal.span {a} ∧
       (F I : ℤ_[l]) = ι a ^ (m * (l - 1)) := fun I hI hw => by
@@ -214,8 +214,8 @@ private theorem exists_F (K : Type) [Field K] [NumberField K] [_root_.NumberFiel
 private theorem exists_conj {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (K : IntermediateField ℚ Ω)
     [NumberField K] (hK : Module.finrank ℚ K = 2) (c : G ℚ Ω) :
     ∃ j : G K Ω → G K Ω, Continuous j ∧ (∀ s, resQ K (j s) = c * resQ K s * c⁻¹) ∧ Function.Injective (resQ K) := by
-  haveI : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := hK }
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
+  have : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := hK }
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
   have he := (galEmbTop ℚ K Ω).1
   have h1 : ∀ s, ∃ t, galEmb ℚ K Ω t = c * galEmb ℚ K Ω s * c⁻¹ := fun s => by
     have := (galOf_normal ℚ K Ω).conj_mem _ (galEmb_mem ℚ K Ω s) c
@@ -229,7 +229,7 @@ private theorem exists_conj {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure �
 theorem UpperTheory.V.Ws.Tw.muChar :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (K : IntermediateField ℚ Ω) [NumberField K] [_root_.NumberField.IsTotallyComplex K], Module.finrank ℚ K = 2 → ∀ A : ValuationSubring Ω, A.valuation (l : Ω) < 1 → Dec (F := ℚ) A ≤ K.fixingSubgroup → ∃ (μ : G K Ω →* ℤ_[l]ˣ) (n : ℕ), 0 < n ∧ Continuous μ ∧ (∀ s, ‖(μ s : ℤ_[l]) - 1‖ < 1) ∧ (∀ c ∉ K.fixingSubgroup, ∀ s s' : G K Ω, resQ K s' = c * resQ K s * c⁻¹ → μ s * μ s' = cycZ K Ω l s ^ n) ∧ ∀ B : ValuationSubring Ω, (∃ x ∈ K, ¬ (x ∈ B ↔ x ∈ A)) → Ine (F := K) B ≤ μ.ker := by
   intro Ω _ _ _ l hl hl2 K _ _ hK A hA hDec
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
   obtain ⟨τ, -, hN, hconj, hsplit, -⟩ := Tw.quadFacts Ω l hl2 K hK
   obtain ⟨w, hw, -, -, hφ⟩ := hsplit l A hl.out hA hDec
   obtain ⟨ι, hι⟩ := exists_iota w.asIdeal hφ
@@ -347,7 +347,7 @@ private theorem algClosure (K : IntermediateField ℚ Ω) : IsAlgClosure K Ω :=
 
 private theorem conj_of_agree [NumberField K] {A B : ValuationSubring Ω} (hA : A.valuation (l : Ω) < 1)
     (h : ∀ x ∈ K, x ∈ B ↔ x ∈ A) : ∃ g : G K Ω, ∀ x, g x ∈ B ↔ x ∈ A := by
-  haveI := algClosure K
+  have := algClosure K
   have hAT : A ≠ ⊤ := fun hT => ((places K Ω l A).2.1 hT).2 hA
   obtain ⟨v, hv⟩ := (places K Ω l A).1 hAT
   have hBv : IsPlaceOver B v := fun x => (val_agree h (SetLike.coe_mem (x : K))).trans (hv x)
@@ -391,9 +391,9 @@ private theorem differs [NumberField K] {A B B' : ValuationSubring Ω} (hA : A.v
 
 private theorem exists_lift [NumberField K] (hK : Module.finrank ℚ K = 2) :
     ∃ (σ : G ℚ Ω) (τ : K ≃+* K), σ ∉ K.fixingSubgroup ∧ IsLift τ σ.toRingEquiv := by
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
   have hc : Nat.card Gal(K/ℚ) = 2 := by rw [IsGalois.card_aut_eq_finrank, hK]
-  haveI : Nontrivial Gal(K/ℚ) := Finite.one_lt_card_iff_nontrivial.mp (by rw [hc]; norm_num)
+  have : Nontrivial Gal(K/ℚ) := Finite.one_lt_card_iff_nontrivial.mp (by rw [hc]; norm_num)
   obtain ⟨τ, hτ⟩ := exists_ne (1 : Gal(K/ℚ))
   let σ : G ℚ Ω := τ.liftNormal Ω
   have hlift : ∀ x : K, σ (x : Ω) = (τ x : Ω) := fun x => AlgEquiv.liftNormal_commutes τ Ω x
@@ -419,7 +419,7 @@ private theorem unit_div_near {a b : ℤ_[l]ˣ} (ha : ‖(a : ℤ_[l]) - 1‖ < 
 private theorem exists_open [NumberField K] (f : G K Ω → PadicAlgCl l) (hf : Continuous f) (h1 : f 1 = 1) {n : ℕ} (hn : 0 < n) :
     ∃ U : Subgroup (G K Ω), IsOpen (U : Set (G K Ω)) ∧ ∀ s ∈ U, f s ^ n = 1 → f s = 1 := by
   classical
-  haveI := algClosure K
+  have := algClosure K
   let F : Set (PadicAlgCl l) := {z | z ^ n = 1 ∧ z ≠ 1}
   have hF : F.Finite := by
     apply (Polynomial.nthRoots n (1 : PadicAlgCl l)).toFinset.finite_toSet.subset
@@ -452,7 +452,7 @@ private theorem padicInt_norm_units_mul_sub_one_lt_one {l : ℕ} [Fact l.Prime] 
 theorem UpperTheory.V.Ws.Tw.bt0 :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (K : IntermediateField ℚ Ω) [NumberField K] [_root_.NumberField.IsTotallyComplex K], Module.finrank ℚ K = 2 → ∀ A : ValuationSubring Ω, A.valuation (l : Ω) < 1 → Dec (F := ℚ) A ≤ K.fixingSubgroup → ∃ (t : G K Ω →* Multiplicative ℤ_[l]) (β : G K Ω →* (PadicAlgCl l)ˣ) (c₁ : Coef l), Continuous t ∧ t.ker ≤ β.ker ∧ Continuous β ∧ (∀ s, (β s : PadicAlgCl l) ∈ c₁.O ∧ ‖(β s : PadicAlgCl l) - 1‖ < 1) ∧ (∀ c ∉ K.fixingSubgroup, ∀ s s' : G K Ω, resQ K s' = c * resQ K s * c⁻¹ → t s * t s' = 1) ∧ (∀ c ∉ K.fixingSubgroup, ∀ s s' : G K Ω, resQ K s' = c * resQ K s * c⁻¹ → β s * β s' = 1) ∧ (∀ B : ValuationSubring Ω, ¬ B.valuation (l : Ω) < 1 → Ine (F := K) B ≤ t.ker) ∧ ∃ U : Subgroup (G K Ω), IsOpen (U : Set (G K Ω)) ∧ ∀ B : ValuationSubring Ω, (∀ x ∈ K, x ∈ B ↔ x ∈ A) → ∀ s ∈ U ⊓ Ine (F := K) B, (β s : PadicAlgCl l) ^ 2 = algebraMap ℤ_[l] (PadicAlgCl l) (cycZ K Ω l s : ℤ_[l]) := by
   intro Ω _ _ _ l _ hl K _ _ hK A hA hD
-  haveI := algClosure K
+  have := algClosure K
   obtain ⟨μ, n, hn, hμc, hμ1, hμconj, hμker⟩ := Tw.muChar Ω l hl K hK A hA hD
   obtain ⟨σ, τ, hσ, hlift⟩ := exists_lift hK
   have hσi : σ⁻¹ ∉ K.fixingSubgroup := fun h => hσ (by simpa using K.fixingSubgroup.inv_mem h)
@@ -501,7 +501,7 @@ theorem UpperTheory.V.Ws.Tw.bt0 :
         funext x
         exact IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l) x
       rw [e]
-      exact (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val
+      exact (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal
     exact ((Units.continuous_val.comp hβc).pow 2).mul
       (hc.comp (Units.continuous_val.comp ((continuous_cycZ K Ω l).inv)))
   have hf1 : f 1 = 1 := by simp [f]

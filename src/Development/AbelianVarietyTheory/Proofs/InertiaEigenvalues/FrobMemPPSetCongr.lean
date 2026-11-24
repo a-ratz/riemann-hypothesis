@@ -142,8 +142,8 @@ theorem coeff_frob2_congr_box : ∀ (l : ℕ) [Fact l.Prime] (K : Type) [NormedF
     rw [map_mul, hC, map_pow, frob_X, ← pow_mul]
   have hz : coeff n (coeff i (φ₂ (G - H))) = 0 := by
     rw [hAB, map_add (f := _), e1, e2, map_add (f := _), map_add (f := _), coeff_X_pow_mul',
-      if_neg (show ¬ (i + 1 ≤ i) by omega), map_zero, zero_add, coeff_C_mul, coeff_X_pow_mul',
-      if_neg (show ¬ (l * (n + 1) ≤ n) by nlinarith)]
+      ite_eq_right (show ¬ (i + 1 ≤ i) by omega), map_zero, zero_add, coeff_C_mul, coeff_X_pow_mul',
+      ite_eq_right (show ¬ (l * (n + 1) ≤ n) by nlinarith)]
   rwa [map_sub, map_sub, map_sub, sub_eq_zero] at hz
 
 end GlobalTheory.CrysPrism
@@ -297,18 +297,18 @@ theorem intCast_div_factorial_mem_QSet (z : ℤ) (m : ℕ) :
   rw [coeff_ofW, coeff_C]
   by_cases hi : i = 0
   · subst hi
-    rw [if_pos rfl, coeff_C_mul, coeff_X_pow]
+    rw [ite_eq_left rfl, coeff_C_mul, coeff_X_pow]
     by_cases hn : n = e * m
     · subst hn
       simp [dpDen, Nat.mul_div_cancel_left m (Nat.pos_of_ne_zero (NeZero.ne e))]
-    · rw [if_neg hn, Pi.single_eq_of_ne (by simpa using hn)]; simp
-  · rw [if_neg hi, Pi.single_eq_of_ne (by simp [hi])]; simp
+    · rw [ite_eq_right hn, Pi.single_eq_of_ne (by simpa using hn)]; simp
+  · rw [ite_eq_right hi, Pi.single_eq_of_ne (by simp [hi])]; simp
 
 end
 
 theorem dFam_mem_goodSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ (φ₂ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ f : K⟦X⟧, φ₂ (C f) = C (frob K l f)) → φ₂ X = (C X + X) ^ l - C (X ^ l) → ∀ q : ℕ, dFam a K e q ∈ GoodSet t e φ₂ := by
   intro l hl a e _ _ O K _ _ _ _ _ _ _ t φ₂ hC _ q
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   obtain ⟨A, B, D, hA, hB, hD⟩ := exists_factorial_quot l q hl.out.pos
   have hq : (q.factorial : K) ≠ 0 := by exact_mod_cast q.factorial_ne_zero
   have hlq : ((l * q).factorial : K) ≠ 0 := by exact_mod_cast (l * q).factorial_ne_zero
@@ -466,7 +466,7 @@ theorem mono_mem (c : Wq l a) (i n : ℕ) :
   rw [coeff_ofW, coeff_C_mul, coeff_X_pow]
   by_cases hj : j = i
   · subst hj
-    rw [if_pos rfl, mul_one, coeff_C_mul, coeff_X_pow]
+    rw [ite_eq_left rfl, mul_one, coeff_C_mul, coeff_X_pow]
     by_cases hm : m = n
     · subst hm; simp
     · simp [hm]
@@ -518,7 +518,7 @@ end Q
 
 theorem xFam_mem_GoodSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ (φ₂ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ f : K⟦X⟧, φ₂ (C f) = C (frob K l f)) → φ₂ X = (C X + X) ^ l - C (X ^ l) → (∀ x ∈ QSet t K e, ∀ y ∈ QSet t K e, x * y ∈ QSet t K e) → ∀ i : ℕ, xFam a K i ∈ GoodSet t e φ₂ := by
   intro l hl a e _ _ O K _ _ _ _ _ _ _ t φ₂ hC hX hmul i
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   refine ⟨xFam_mem t K e i, ?_⟩
   by_cases hi : i = 0
   · subst hi
@@ -590,7 +590,7 @@ theorem goodSet_of_finite_of_local (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero 
       have hm : (i', n') ∈ s := by
         simp only [hs, Finset.mem_product, Finset.mem_range]
         omega
-      rw [coeff_ofW, coeff_ofW, if_pos hm]
+      rw [coeff_ofW, coeff_ofW, ite_eq_left hm]
     refine ⟨v (i, n), b (i, n), fun τ => ?_⟩
     have h1 : coeff n (coeff i (frob2 φ₂ (ofW t K e w) τ)) =
         coeff n (coeff i (frob2 φ₂ (ofW t K e (fun p => if p ∈ s then w p else 0)) τ)) :=
@@ -651,21 +651,21 @@ theorem bd_CC (c : K) : Bd 0 (C (C c) : K⟦X⟧⟦X⟧) := by
   intro i n hin
   rw [coeff_C]
   split_ifs with h
-  · rw [coeff_C, if_neg (by omega)]
+  · rw [coeff_C, ite_eq_right (by omega)]
   · simp
 
 theorem bd_CX : Bd 1 (C X : K⟦X⟧⟦X⟧) := by
   intro i n hin
   rw [coeff_C]
   split_ifs with h
-  · rw [coeff_X, if_neg (by omega)]
+  · rw [coeff_X, ite_eq_right (by omega)]
   · simp
 
 theorem bd_X : Bd 1 (X : K⟦X⟧⟦X⟧) := by
   intro i n hin
   rw [coeff_X]
   split_ifs with h
-  · rw [coeff_one, if_neg (by omega)]
+  · rw [coeff_one, ite_eq_right (by omega)]
   · simp
 
 
@@ -692,13 +692,13 @@ theorem Bd.eq_sum {M : ℕ} {F : K⟦X⟧⟦X⟧} (h : Bd M F) :
 
   simp only [map_sum (coeff i), coeff_C_mul_X_pow, Finset.sum_ite_eq, Finset.mem_range]
   by_cases hi : i < M + 1
-  · simp only [if_pos hi]
+  · simp only [ite_eq_left hi]
 
     simp only [map_sum (coeff n), coeff_C_mul_X_pow, Finset.sum_ite_eq, Finset.mem_range]
     split_ifs with hn
     · rfl
     · exact h i n (by omega)
-  · simp only [if_neg hi, map_zero]
+  · simp only [ite_eq_right hi, map_zero]
     exact h i n (by omega)
 
 theorem map_mem (φ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧) (h1 : ∀ c : K, φ (C (C c)) ∈ fin K)
@@ -798,7 +798,7 @@ theorem box_cofinite (M : ℕ) : ∀ᶠ p : ℕ × ℕ in cofinite, M < p.1 ∨ 
   rw [Filter.eventually_cofinite]
   refine ((Set.finite_Iic M).prod (Set.finite_Iic M)).subset ?_
   rintro ⟨i, n⟩ h
-  simp only [Set.mem_setOf_eq, not_or, not_lt] at h
+  simp only [Set.mem_ofPred_eq, not_or, not_lt] at h
   exact h
 
 end GlobalTheory.CrysPrism.Decay
@@ -820,7 +820,7 @@ theorem frob_keeps_decay (l : ℕ) [hl : Fact l.Prime] (a e : ℕ) [NeZero a] [N
     (hb : frob2 φ₂ (ofW t K e w) = ofW t K e w ^ l + (l : ZMod a → K⟦X⟧⟦X⟧) * ofW t K e b) :
     LTo0 l v ∧ LTo0 l b := by
   classical
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hl0 : (l : K) ≠ 0 := Nat.cast_ne_zero.2 hl.out.ne_zero
   have hl2 : (l : K⟦X⟧⟦X⟧) ≠ 0 := natCast_ne_zero_ps (natCast_ne_zero_ps hl0)
   have hI := ofWHom_injective t K e hinj
@@ -835,15 +835,15 @@ theorem frob_keeps_decay (l : ℕ) [hl : Fact l.Prime] (a e : ℕ) [NeZero a] [N
       by_cases h : (l : Wq l a) ^ (r + 1) ∣ w p
       · obtain ⟨c, hc⟩ := id h
         refine ⟨c, ?_⟩
-        simp only [w1, if_pos h]
+        simp only [w1, ite_eq_left h]
         simp [hc]
-      · exact ⟨0, by simp only [w1, if_neg h]; simp⟩
+      · exact ⟨0, by simp only [w1, ite_eq_right h]; simp⟩
     choose w2 hw2 using hex
     have hw12 : w = w1 + (l ^ (r + 1) : ℕ) • w2 := funext hw2
     have hw1 : ∀ i n, max N1 N2 < i ∨ max N1 N2 < n → w1 (i, n) = 0 := by
       intro i n h
       by_cases h' : (l : Wq l a) ^ (r + 1) ∣ w (i, n)
-      · simp only [w1, if_pos h']
+      · simp only [w1, ite_eq_left h']
       · have h3 : (i, n) ≤ (N1, N2) := hN h'
         obtain ⟨h4, h5⟩ := h3
         simp only at h4 h5
@@ -920,7 +920,7 @@ theorem mul_mem_QSet_of_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a
   intro l _ a e _ _ O K _ _ _ _ _ _ _ t x hx y hy
   obtain ⟨w, rfl⟩ := hx
   obtain ⟨w', rfl⟩ := hy
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   refine ⟨fun p => ∑ q ∈ Finset.HasAntidiagonal.antidiagonal p.1, ∑ r ∈ Finset.HasAntidiagonal.antidiagonal p.2,
     ((dpDen e p.1 p.2 / (dpDen e q.1 r.1 * dpDen e q.2 r.2) : ℕ) : Wq l a) *
       (w (q.1, r.1) * w' (q.2, r.2)), ?_⟩
@@ -981,21 +981,21 @@ theorem uPow_mem_QSet_goodU [CharZero K] (m : ℕ) :
   by_cases h : (i, n) = (0, m)
   · obtain ⟨rfl, rfl⟩ := Prod.mk.inj h
     have : (dpDen e 0 n : K) ≠ 0 := Nat.cast_ne_zero.mpr (dpDen_pos e 0 n).ne'
-    simp only [if_true, map_natCast, coeff_X_pow_self]
+    simp only [ite_true, map_natCast, coeff_X_pow_self]
     exact div_self this
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simp only [map_zero, zero_div]
     by_cases hi : i = 0
     · subst hi
       have hn : n ≠ m := fun hn => h (by rw [hn])
-      rw [if_pos rfl, coeff_X_pow, if_neg hn]
-    · rw [if_neg hi, map_zero]
+      rw [ite_eq_left rfl, coeff_X_pow, ite_eq_right hn]
+    · rw [ite_eq_right hi, map_zero]
 
 end
 
 theorem uFam_mem_GoodSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ (φ₂ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ f : K⟦X⟧, φ₂ (C f) = C (frob K l f)) → φ₂ X = (C X + X) ^ l - C (X ^ l) → uFam a K ∈ GoodSet t e φ₂ := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ t φ₂ hC _
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hf : frob2 φ₂ (uFam a K) = (fun _ => C (X ^ l) : ZMod a → K⟦X⟧⟦X⟧) := by
     funext τ
     show φ₂ (C X) = _
@@ -1039,7 +1039,7 @@ theorem injective_of_charZero {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero a] {K :
 
 theorem emb_algebraMap_injective : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ τ : ZMod a, Function.Injective fun c : Wq l a => algebraMap O K (emb t τ c) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ t τ
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   exact injective_of_charZero ((algebraMap O K).comp (emb t τ).toRingHom)
 
 end GlobalTheory.CrysPrism
@@ -1167,7 +1167,7 @@ theorem good_fin (hφC : ∀ f : K⟦X⟧, φ₂ (C f) = C (frob K l f)) (hφX :
     (_root_.GlobalTheory.CrysPrism.GoodX.xFam_mem_GoodSet l a e O K t φ₂ hφC hφX (fun x hx y hy => Q_mul t hx hy) _)
 
 theorem ofW_mem_PPSet {w : ℕ × ℕ → Wq l a} (hw : LTo0 l w) : ofW t K e w ∈ PPSet t K e := by
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   refine ⟨w, hw, fun τ i n => ?_⟩
   rw [coeff_ofW]
   have : ((i.factorial * (n / e).factorial : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (dpDen_pos e i n).ne'
@@ -1177,7 +1177,7 @@ end Main
 
 theorem frob_mem_PPSet_congr : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ (sh : K⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ (f : K⟦X⟧) (i : ℕ), (i.factorial : K⟦X⟧) * coeff i (sh f) = (PowerSeries.derivative (R := K))^[i] f) → ∀ (φ₂ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ f : K⟦X⟧, φ₂ (PowerSeries.C f) = PowerSeries.C (frob K l f)) → (∀ f : K⟦X⟧, φ₂ (sh f) = sh (frob K l f)) → ∀ F ∈ PPSet t K e, frob2 φ₂ F ∈ PPSet t K e ∧ ∃ B ∈ PPSet t K e, frob2 φ₂ F = F ^ l + (l : ZMod a → K⟦X⟧⟦X⟧) * B := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t sh hsh φ₂ hφC hφsh F hF
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hφX : φ₂ X = (C X + X) ^ l - C (X ^ l) := by
     have h : (X : K⟦X⟧⟦X⟧) = sh X - C X := by rw [sh_X sh hsh]; ring
     have h2 : φ₂ X = sh (X ^ l) - C (X ^ l) := by rw [h, map_sub, hφsh, hφC, frob_X]

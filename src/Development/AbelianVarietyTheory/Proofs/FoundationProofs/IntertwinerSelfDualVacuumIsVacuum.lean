@@ -216,7 +216,7 @@ lemma genus_one (D : D7) (L : PeriodPair) (Λ : AddSubgroup ℂ) (h : ∀ z, z �
         fun z => (if ((x : ℂ) * L.ω₁ + y * L.ω₂) / 2 ∈ Λ then 1 else -1) * G z := funext (hG _ hω)
     have hE : Complex.exp (Real.pi * (t * starRingEnd ℂ (x * L.ω₁ + y * L.ω₂) -
         (x * L.ω₁ + y * L.ω₂) * starRingEnd ℂ t) / (area Λ : ℂ)) = (-1) ^ ((-e) * (x * v - y * u)) := by
-      rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+      rw [← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
       congr 1
       simp only [map_add (f := _), map_mul, map_intCast]
       field_simp

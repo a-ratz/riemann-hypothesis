@@ -201,7 +201,7 @@ theorem bdd_mem_span_shortGen : Formalism.MainNotions.ModuliIntegralCharts.H1.Ch
       field_simp
     · rw [hP0 k x hx]
       refine (Finset.sum_eq_zero fun j _ => Finset.sum_eq_zero fun i _ => ?_).symm
-      have : Formalism.L2.PjFree.rdU U (f j i) k x = 0 := dif_neg hx
+      have : Formalism.L2.PjFree.rdU U (f j i) k x = 0 := dite_eq_right hx
       rw [this, mul_zero]
   rw [hPe]
   refine Submodule.sum_mem _ fun j _ => Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ ?_
@@ -260,7 +260,7 @@ theorem exists_datum_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       (GlobalTheory.reading_linearIndependent_and_injective hB E H Dw l Xo c σ r U hU a n).1
       (shortGen Xo c nab 1 0 a n d) (fun g hg => hg.1) hf
       (bdd_mem_span_shortGen hC E H Dw l Xo c n d σ r U hσ hU hr hA hG hP hlev hnab hunit h3
-        (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a Nat.one_pos hdom hn hχ htot _ hb fun k x hx => dif_neg hx)
+        (fun _ => ⟨ph, 1, x₀, hpin⟩) nab 1 0 a Nat.one_pos hdom hn hχ htot _ hb fun k x hx => dite_eq_right hx)
 
 end GlobalTheory.SupFull
 end -- clump:auto
@@ -360,7 +360,7 @@ theorem exists_unf (D : D7) (Q : Par D) (hQ : Q.Pins) (j : ℕ) (hj : InR D j) :
     have hpos : 0 < (D.host.φ₀ D.host.sqrtMinusD).im := by
       rw [h0]
       simpa using d_pos D
-    rw [if_pos hpos, Int.cast_one, one_mul] at h
+    rw [ite_eq_left hpos, Int.cast_one, one_mul] at h
     simpa using h
   obtain ⟨Gm, φ, hφ⟩ := GlobalTheory.exists_herm_coord_of_datum _ Q.H (Q.Dw j) (-(-D.host.xi0))
     (by rw [neg_neg, GlobalTheory.LatticeData.flagDomainConj_hostXi_eq_neg D]) (by rw [neg_neg]; exact cmHost_imaginaryGenerator_ne_zero hP D) _ hr.symm
@@ -402,10 +402,10 @@ theorem fullAt_of_pins (D : D7) (T : Core D) (hQ : T.Q.Pins) (j : ℕ) (hj : InR
       (cusp_le_sec _ _ _ _ _ hf) fun k =>
         (Formalism.L2.Pj.abelian₂.holSub_SS siegelSpaceAlgebra_holds _ _ (((mem_cusp _ _ _ _ _ f).1 hf).2 _ T.good_σ₀) k).1
   constructor
-  · haveI : FiniteDimensional T.Q.c.F (cuspW T j w) :=
+  · have : FiniteDimensional T.Q.c.F (cuspW T j w) :=
       GlobalTheory.cuspForms_finiteDimensional_of_goodEmb _ _ _ _ _ _ _ (T.U j) T.σ₀ T.good_σ₀ hU _ _ (dom_wtA w)
     refine fg_latIn _ _ _ fun x hx hx0 => ?_
-    letI := T.Q.H.starRing
+    let := T.Q.H.starRing
     have hs := cusp_le_sec _ _ _ _ _ hx
     obtain ⟨z, La, hz, hG0⟩ := GlobalTheory.CMDetect.exists_good_cmPt_frPoly_ne_zero _ _ _ _ (T.Q.Xo j) T.Q.c (fun _ => rfl) _
       U'.toPj hU' hr1 hX _ _ x hs hx0 (hbdd _ _ (dom_wtA w) x hx)

@@ -78,7 +78,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : Deg
     ∀ (y : D.X) (x x' : (FractionRing R)ˣ), IsPsiCoord D y x → IsPsiCoord D (-y) x' →
       ∃ u : Rˣ, (x' : FractionRing R) = algebraMap R (FractionRing R) u * x := by
   intro R _ _ _ D hE y x x' hx hx'
-  haveI : IsProper D.P.A.hom := D.P.isAb.proper
+  have : IsProper D.P.A.hom := D.P.isAb.proper
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨J, hJ, hJc⟩ := exists_good_integral ξ D.P.isLB D.P.A.hom
   let cU : Rˣ →* ((Spec (CommRingCat.of (FractionRing R))).presheaf.stalk ξ)ˣ := Units.map (cst ξ).toMonoidHom

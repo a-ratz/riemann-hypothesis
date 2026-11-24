@@ -60,7 +60,7 @@ theorem orthCyc : CompanionTheory.D.LK.OrthCyc := by
   intro n ε V _ _ E μ v u _ hU hL h1 hu hvu m hm
   obtain ⟨S, hS, hSst, hmS⟩ := hL m
   set W : Submodule ℂ V := S ⊓ Cyc E v with hW
-  haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le (inf_le_left : W ≤ S)
+  have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le (inf_le_left : W ≤ S)
   have hWst : ∀ a b, ε a = ε b → ∀ x ∈ W, E a b x ∈ W := fun a b hab x hx =>
     ⟨hSst a b hab x hx.1, orthCyc_cyc_stable E v a b hx.2⟩
   have hOst : ∀ a b, ε a = ε b → ∀ x ∈ Wᗮ, E a b x ∈ Wᗮ := by

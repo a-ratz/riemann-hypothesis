@@ -62,7 +62,7 @@ variable (Xo : Moduli Dw l) (c : Coeff l)
 
 theorem chartJetTr_of (hTan : ChartJetTanSt Xo c) (hBas : ChartJetBasisSt Xo c) : ChartJetTrSt Xo c := by
   intro T io y I d FT actT tgT uvecT xT hbas hch hdir
-  letI := io.toAlgebra
+  let := io.toAlgebra
   refine ⟨xU I xT, xP I xT, ⟨fun m => ?_, fun m => ?_, fun m => ?_, fun m a => ?_,
     hTan T io y I d FT actT tgT uvecT xT hbas hch hdir, hBas T io y I d FT actT tgT uvecT xT hbas hch hdir⟩,
     fun m => xL_fst I xT m, fun m => rfl⟩

@@ -186,7 +186,7 @@ theorem exists_ramified {ϖ : kˣ} (hϖ : IsUnif ϖ) :
     intro h
     have h2 := ((QuotientGroup.eq_one_iff u).1 h).2
     simp only [u, Units.val_mk0, add_sub_cancel_left, Units.val_pow_eq_pow_val, map_pow] at h2
-    have h0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+    have h0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
     exact absurd h2 (not_le.2 (by rw [pow_two]; exact mul_lt_of_lt_one_right h0 hlt))
   obtain ⟨c, hc⟩ := CharacterModule.exists_character_apply_ne_zero_of_ne_zero hne
   let c' : Additive Q →+ AddCircle (1 : ℚ) := c
@@ -354,13 +354,13 @@ theorem rank_eq_card_iff_exists_frameMatrixFirstColumnBlock (σ : A ⊕ A' ≃ D
     have hb : LinearIndependent k (U.subtype ∘ b) := b.linearIndependent.map' _ U.ker_subtype
     have hs := (hX.sum_type hb (hU.disjoint.mono_right (Submodule.span_le.2 (by
       rintro _ ⟨i, rfl⟩; exact (b i).2)))).comp σ.symm σ.symm.injective
-    obtain ⟨B, hB⟩ := (Matrix.linearIndependent_rows_iff_isUnit
+    obtain ⟨B, hB⟩ := (linearIndependent_row_iff_isUnit
       (A := Matrix.of (Sum.elim X.row (U.subtype ∘ b) ∘ σ.symm))).1 hs
     refine ⟨invT B, ?_⟩
     ext i j
     simp [frameMatrixFirstColumnBlock_mul_apply, hB]
   · rintro ⟨h, rfl⟩
-    have := (Matrix.linearIndependent_rows_iff_isUnit.2 (invT h).isUnit).comp (σ ∘ Sum.inl)
+    have := (linearIndependent_row_iff_isUnit.2 (invT h).isUnit).comp (σ ∘ Sum.inl)
       (σ.injective.comp Sum.inl_injective)
     convert this using 1
     funext i j
@@ -410,7 +410,7 @@ theorem smul_diagLat (u : kˣ) (c : D → kˣ) : u • diagLat c = diagLat fun j
   ext x
   rw [mem_smul_lat, mem_diagLat, mem_diagLat]
   refine forall_congr' fun j => ?_
-  have h0 : 0 < valuation k (u : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (u : k) := pos_iff_ne_zero.2 (by simp)
   simp only [Pi.smul_apply, Units.smul_def, smul_eq_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀, Units.val_mul]
   exact inv_mul_le_iff₀ h0
 
@@ -449,7 +449,7 @@ theorem mem_dualLat {Λ : Submodule 𝒪[k] (D → k)} {x : D → k} : x ∈ dua
 
 theorem dualLat_diagLat (c : D → kˣ) : dualLat (diagLat c) = diagLat fun j => (c j)⁻¹ := by
   classical
-  have h0 : ∀ j, 0 < valuation k (c j : k) := fun j => zero_lt_iff.2 (by simp)
+  have h0 : ∀ j, 0 < valuation k (c j : k) := fun j => pos_iff_ne_zero.2 (by simp)
   ext x
   rw [mem_dualLat, mem_diagLat]
   simp only [Units.val_inv_eq_inv_val, map_inv₀]
@@ -522,7 +522,7 @@ theorem vecMul_blockScale_mem (ϖ : kˣ) (e : ℕ) (P : Finset D) (x : D → k) 
     x ᵥ* (blockScale ϖ e P).val ∈ blockLat ϖ e P ↔ x ∈ stdLat k D := by
   rw [mem_stdLat]
   refine forall_congr' fun j => ?_
-  have h0 : 0 < valuation k (blockUnits ϖ e P j : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (blockUnits ϖ e P j : k) := pos_iff_ne_zero.2 (by simp)
   rw [blockScale, diagGL_val, vecMul_diagonal, map_mul, Valuation.mem_integer_iff]
   exact mul_le_iff_le_one_left h0
 
@@ -1019,7 +1019,7 @@ theorem isOpen_detCong (c : kˣ) (n : Type*) [Fintype n] [DecidableEq n] : IsOpe
     (Units.continuous_val.matrix_det.sub continuous_const).div_const _
   convert isOpen_KO.inter (isOpen_int.preimage hc) using 1
   ext g
-  have h0 : 0 < valuation k (c : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (c : k) := pos_iff_ne_zero.2 (by simp)
   have h : (g.val.det - 1) / (c : k) ∈ 𝒪[k] ↔ valuation k (g.val.det - 1) ≤ valuation k (c : k) := by
     rw [Valuation.mem_integer_iff, map_div₀, div_le_one₀ h0]
   exact ⟨fun hg => ⟨hg.1, h.2 hg.2.2⟩, fun hg => ⟨hg.1, valuation_gdet_of_mem_KO hg.1, h.1 hg.2⟩⟩

@@ -138,10 +138,10 @@ private theorem wcoc_top {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω
       ((topW (K := topL X M) (topZeta X M l n) x y η (topLift X M (σ * τ))⁻¹ : topL X M) : X.K) =
         ((topW (K := topL X M) (topZeta X M l n) x y η (topLift X M σ)⁻¹ : topL X M) : X.K) *
           X.gal σ ((topW (K := topL X M) (topZeta X M l n) x y η (topLift X M τ)⁻¹ : topL X M) : X.K) * u ^ l ^ n := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero n hl⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
-  haveI : CharZero (topL X M) := inferInstance
+  have : NeZero (l ^ n) := ⟨pow_ne_zero n hl⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
+  have : CharZero (topL X M) := inferInstance
   have hζ := isPrimitiveRoot_topZeta X M hl n
   have hσL := isTopLift_topLift X hM0 hσ
   have hτL := isTopLift_topLift X hM0 hτ
@@ -175,7 +175,7 @@ theorem UpperTheory.Kd.L.wcoc :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N : ℕ) [NeZero N] (c d : ℕ) (gm : (ZMod l)ˣ → SL(2, ℤ)), Par l N c d gm → ∀ (x : ZMod N) (m n : ℕ), 1 ≤ m → (∀ σ, wkMu X l n m N x c d σ ∈ topL X (topMu l n m N) ∧ wkMu X l n m N x c d σ ≠ 0) ∧ ∀ σ ∈ fixMu Ω (topMu l n m N), ∀ τ ∈ fixMu Ω (topMu l n m N), ∃ u ∈ topL X (topMu l n m N), u ≠ 0 ∧ wkMu X l n m N x c d (σ * τ) = wkMu X l n m N x c d σ * X.gal σ (wkMu X l n m N x c d τ) * u ^ l ^ n := by
   intro Ω _ _ _ _ ε X l _ N _ c d gm hP x m n hm
   obtain ⟨hη, hex⟩ := topex ε X l N c d gm hP x m n hm
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
   have hN0 : N ≠ 0 := NeZero.ne N
   have hM0 : topMu l n m N ≠ 0 := by

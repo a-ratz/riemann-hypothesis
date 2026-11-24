@@ -160,7 +160,7 @@ private theorem trace_smul' (c : ℂ) (T : H →L[ℂ] H) : trace (c • T) = c 
   rw [← tsum_mul_left]
   congr 1
   ext i
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right]
+  rw [smul_apply, inner_smul_right]
 
 private theorem prj_of_closed (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) :
     (∀ v, prj V v ∈ V) ∧ (∀ v ∈ V, prj V v = v) ∧ ∀ v w, inner ℂ (prj V v) w = inner ℂ v (prj V w) := by
@@ -183,7 +183,7 @@ private theorem trOn_eig (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (A Q 
     [FiniteDimensional ℂ (eigIn V A x)] (hQV : Q ∘L prj V = prj V ∘L Q) (hQA : Q ∘L A = A ∘L Q)
     (ha : ∀ v ∈ eigIn V A x, Q v = a • v) :
     trOn (eigIn V A x) (A ∘L Q ∘L B) = x * a * trOn (eigIn V A x) B := by
-  have hE : IsClosed ((eigIn V A x : Submodule ℂ H) : Set H) := Submodule.closed_of_finiteDimensional _
+  have hE : IsClosed ((eigIn V A x : Submodule ℂ H) : Set H) := Submodule.isClosed_of_finiteDimensional _
   obtain ⟨e1, e2, e3⟩ := prj_of_closed _ hE
   obtain ⟨f1, f2, f3⟩ := prj_of_closed _ hV
   have hAa : ContinuousLinearMap.adjoint A = A := adjoint_eq_of_nonneg hA
@@ -220,7 +220,7 @@ private theorem trOn_eig (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (A Q 
   rw [← trace_smul']
   congr 1
   ext w
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, key]
+  simp only [ContinuousLinearMap.comp_apply, smul_apply, key]
 
 private theorem cheb_ev {σ : Type} (ψ : MvPolynomial (Option σ) ℂ →+* (H →L[ℂ] H)) (A : H →L[ℂ] H) (hA : 0 ≤ A)
     (hc : ∀ c : ℂ, ψ (C c) = c • 1) (hX : ψ (X none) = A) (η : ℝ) (m : ℕ) :
@@ -268,10 +268,10 @@ private theorem tn_bound (P A G Q U : H →L[ℂ] H) (j : ℕ) (h : IsTraceClass
   rw [e]
   refine ⟨h.comp_left _, ?_⟩
   have hfin : traceNorm (P ∘L (A ∘L G) ∘L P) ≠ ⊤ := ((isTraceClass_iff _).1 h).ne
-  have h1 := ENNReal.toReal_mono (ENNReal.mul_ne_top enorm_ne_top hfin)
+  have h1 := ENNReal.toReal_mono (ENNReal.mul_ne_top eNorm_ne_top hfin)
     (traceNorm_comp_left_le (Q * U ^ j) (P ∘L (A ∘L G) ∘L P))
   refine h1.trans ?_
-  rw [ENNReal.toReal_mul, toReal_enorm, mul_comm, mul_assoc]
+  rw [ENNReal.toReal_mul, toReal_eNorm, mul_comm, mul_assoc]
   refine mul_le_mul_of_nonneg_left ?_ ENNReal.toReal_nonneg
   rw [mul_comm]
   exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_left (norm_pow_le'' U j) (norm_nonneg _))
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cuspPart :
         ((𝔰.toAmp.A ∘L ev Q ∘L (𝔰.Uq 0 ^ j) ∘L Rop μ 𝔰.g) ∘L θ.U) := by
     refine Finset.sum_congr rfl fun p hp => ?_
     have hV := ((hs p).1 hp).2.1
-    haveI := hfd p hp
+    have := hfd p hp
     rw [reassoc', trOn_eig p.2 hV.closed 𝔰.toAmp.A (ev Q) _ hA p.1 (a p) (hin Q _ hV.closed hV.inv) (hQA Q).eq (ha p hp)]
   rw [e1, e2]
   exact h.trans t2
@@ -446,11 +446,11 @@ private theorem left_deriv {K : Type} [Field K] [NumberField K] {n : ℕ} {f : a
       ∀ A, HasDerivAt (fun t : ℝ => f ((isExpLieAlgebra K n).expG (t • Y) * A)) (E A) 0 := by
   set h := isExpLieAlgebra K n
   have hi : h.IsSmoothFun fun B => f B⁻¹ := by
-    letI := h.chartedSpace
-    haveI := h.lieGroup ((⊤ : ℕ∞) : WithTop ℕ∞)
+    let := h.chartedSpace
+    have := h.lieGroup ((⊤ : ℕ∞) : WithTop ℕ∞)
     exact ContMDiff.comp (I' := modelWithCornersSelf ℝ (archLie K n)) hf (contMDiff_inv _ _)
   have hc : Continuous (h.rightDeriv (-Y) fun B => f B⁻¹) := by
-    letI := h.chartedSpace
+    let := h.chartedSpace
     exact ContMDiff.continuous (h.isSmoothFun_rightDeriv hi (-Y))
   refine ⟨fun A => h.rightDeriv (-Y) (fun B => f B⁻¹) A⁻¹, hc.comp continuous_inv, fun A => ?_⟩
   have h1 := h.hasDerivAt_rightDeriv hi (-Y) A⁻¹
@@ -485,7 +485,7 @@ private theorem lip {K : Type} [Field K] [NumberField K] {n : ℕ} (a : CC K n) 
     refine continuous_iff_continuousAt.2 fun x₀ => ?_
     obtain ⟨E, hE, hd⟩ := key x₀
     have hq : Continuous fun g : G1 K n => ((g * x₀⁻¹ : G1 K n) : AdelicGLn.AdelicGL K n) :=
-      continuous_subtype_val.comp (continuous_id.mul continuous_const)
+      continuous_subtypeVal.comp (continuous_id.mul continuous_const)
     have hev : ∀ᶠ g in 𝓝 x₀, CuspidalSpectrum.finPart K n ((g * x₀⁻¹ : G1 K n) : AdelicGLn.AdelicGL K n) ∈
         finOpenSubgroup U hU := by
       refine (CuspidalSpectrum.continuous_finPart.comp hq).continuousAt.eventually_mem
@@ -674,7 +674,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.decayA :
       refine (hk.le_mul_norm (map_zero T) _).trans (mul_le_mul_of_nonneg_left ?_ k.2)
       refine (pi_norm_le_iff_of_nonneg (Finset.sum_nonneg fun _ _ => abs_nonneg _)).2 fun x => ?_
       have e : T ((((1 + |z.1.im| : ℝ) : ℂ) • symb β z.1) v) x = ((1 + |z.1.im| : ℝ) : ℂ) * A.sec (symb β z.1 v) x := by
-        rw [ContinuousLinearMap.smul_apply, map_smul]
+        rw [smul_apply, map_smul]
         rfl
       rw [e, norm_mul, Complex.norm_of_nonneg (by positivity)]
       exact ((hC x z.1 z.2).trans (le_abs_self _)).trans
@@ -983,7 +983,7 @@ private theorem conv_twist {V W : Type} [NormedAddCommGroup V] [InnerProductSpac
     (κ : ℝ → W →L[ℂ] W) (hκ : Ker κ) (hY : Conv J' J' Y κ) :
     Ker (fun t => κ t ∘L s) ∧ Conv J J' (Y ∘L U) (fun t => κ t ∘L s) ∧
       ∀ z, symb (fun t => κ t ∘L s) z = symb κ z ∘L s := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   refine ⟨⟨hκ.1.clm_comp continuous_const, ?_⟩, fun u v huv => ?_, fun z => ?_⟩
   · exact hκ.2.comp_left (g := fun k : W →L[ℂ] W => k ∘L s) (by simp)
   · have hw : ∀ᵐ x : ℝ, s.compLp u x = s (u x) := s.coeFn_compLp u

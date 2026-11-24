@@ -143,15 +143,15 @@ theorem GlobalTheory.ThK.EvUniq.finRel_of_ev : ∀ (F E : Type) [Field F] [Numbe
     if M₁.vac w = GlobalTheory.ThK.EvUniq.LocFin.ind w then M.vac w else (hpre w).choose
   have hψSB : ∀ w, ψs w ∈ SB _ := fun w => by
     by_cases h : M₁.vac w = GlobalTheory.ThK.EvUniq.LocFin.ind w
-    · simp only [ψs, if_pos h]; exact (hM.vac w).1
-    · simp only [ψs, if_neg h]; exact (hpre w).choose_spec.1
+    · simp only [ψs, ite_eq_left h]; exact (hM.vac w).1
+    · simp only [ψs, ite_eq_right h]; exact (hpre w).choose_spec.1
   have hψev : ∀ w, ev w (ψs w) = GlobalTheory.ThK.EvUniq.LocFin.ind w := fun w => by
     by_cases h : M₁.vac w = GlobalTheory.ThK.EvUniq.LocFin.ind w
-    · simp only [ψs, if_pos h]; rw [(hvm w).1, h]
-    · simp only [ψs, if_neg h]; exact (hpre w).choose_spec.2
+    · simp only [ψs, ite_eq_left h]; rw [(hvm w).1, h]
+    · simp only [ψs, ite_eq_right h]; exact (hpre w).choose_spec.2
   have hψM : ∀ᶠ w in cofinite, ψs w = M.vac w := by
     filter_upwards [hM₁.std] with w hw
-    simp only [ψs, if_pos hw]
+    simp only [ψs, ite_eq_left hw]
   have hψind : ∀ᶠ w in cofinite, ψs w = Set.indicator {x | ∀ i, x i ∈ w.adicCompletionIntegers F} 1 := by
     filter_upwards [hψM, hM.std] with w h1 h2
     rw [h1, h2]
@@ -252,15 +252,15 @@ theorem heis_loc {B : Base F E} {M M₁ : Model σ X W} (hM : M.IsGood B.ψ) (hM
     if M₁.vac w = GlobalTheory.ThK.EvUniq.LocFin.ind w then M.vac w else (hpre w).choose
   have hψSB : ∀ w, ψs w ∈ SB _ := fun w => by
     by_cases h : M₁.vac w = GlobalTheory.ThK.EvUniq.LocFin.ind w
-    · simp only [ψs, if_pos h]; exact (hM.vac w).1
-    · simp only [ψs, if_neg h]; exact (hpre w).choose_spec.1
+    · simp only [ψs, ite_eq_left h]; exact (hM.vac w).1
+    · simp only [ψs, ite_eq_right h]; exact (hpre w).choose_spec.1
   have hψev : ∀ w, ev w (ψs w) = GlobalTheory.ThK.EvUniq.LocFin.ind w := fun w => by
     by_cases h : M₁.vac w = GlobalTheory.ThK.EvUniq.LocFin.ind w
-    · simp only [ψs, if_pos h]; rw [(hvm w).1, h]
-    · simp only [ψs, if_neg h]; exact (hpre w).choose_spec.2
+    · simp only [ψs, ite_eq_left h]; rw [(hvm w).1, h]
+    · simp only [ψs, ite_eq_right h]; exact (hpre w).choose_spec.2
   have hψM : ∀ᶠ w in cofinite, ψs w = M.vac w := by
     filter_upwards [hM₁.std] with w hw
-    simp only [ψs, if_pos hw]
+    simp only [ψs, ite_eq_left hw]
   have hψind : ∀ᶠ w in cofinite, ψs w = Set.indicator {x | ∀ i, x i ∈ w.adicCompletionIntegers F} 1 := by
     filter_upwards [hψM, hM.std] with w h1 h2
     rw [h1, h2]

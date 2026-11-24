@@ -253,7 +253,7 @@ theorem wit_w {Z Z' : Scheme.{0}} {t : Z ⟶ S} {f : pullback A.hom t ⟶ B.left
     (h : Wit A B L M (g ≫ t) (pmap A t g ≫ f)) :
     pmap A t g ≫ f ≫ B.hom = pmap A t g ≫ pullback.snd A.hom t ≫ t := by
   obtain ⟨A', B', _, _, φA, φB, Φ, hA, hB, -, -, e, e1, e2, e3⟩ := h
-  haveI : IsIso e := by
+  have : IsIso e := by
     have : e = hA.1.isoPullback.hom :=
       pullback.hom_ext (by rw [e1, IsPullback.isoPullback_hom_fst]) (by rw [e2, IsPullback.isoPullback_hom_snd])
     rw [this]
@@ -339,10 +339,10 @@ theorem glue_wit : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsCommMonObj
   have hΦ : IsMonHom Φ := isMonHom_of_cover 𝒰 Φ fun i => isMonHom_pull_of_wit (𝒰.f i) (hw i) Φ hΦf
   have ab_pull (G : Over S) [GrpObj G] (hG : IsAbelianScheme G) :
       IsAbelianScheme ((Over.pullback t).obj G) := by
-    letI := hG.comm
-    letI := hG.smooth
-    letI := hG.proper
-    letI := hG.geomConnected
+    let := hG.comm
+    let := hG.smooth
+    let := hG.proper
+    let := hG.geomConnected
     constructor
     case comm => infer_instance
     case smooth =>
@@ -356,8 +356,8 @@ theorem glue_wit : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsCommMonObj
       infer_instance
   have hA' := ab_pull A hA
   have hB' := ab_pull B hB
-  haveI : IsCommMonObj ((Over.pullback t).obj A) := hA'.comm
-  haveI : IsCommMonObj ((Over.pullback t).obj B) := hB'.comm
+  have : IsCommMonObj ((Over.pullback t).obj A) := hA'.comm
+  have : IsCommMonObj ((Over.pullback t).obj B) := hB'.comm
   have hI : LBIso (L.pull (pullback.fst A.hom t)) ((M.pull (pullback.fst B.hom t)).pull Φ.left) :=
     hiso Z _ _ _ _ Φ hΦ hA' hB' (LB.isLB_pull hL _) (LB.isLB_pull hM _)
       (GlobalTheory.PolBaseChange.rigidified_pull (isGrpPullback_pullback A t) hrA)
@@ -701,7 +701,7 @@ theorem homFixRep_glue : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsComm
   have hy : ∀ i, ∃ y : HomGlue.Pt A B L M (R i).H, y.t = (R i).π ≫ j i ∧ ∀ (Z : Scheme.{0})
       (x : HomGlue.Pt A B L M Z) (b : Z ⟶ V i), x.t = b ≫ j i → ∃! c : Z ⟶ (R i).H, y.map hL hM c = x := by
     intro i
-    letI := gA i; letI := gB i
+    let := gA i; let := gB i
     exact _root_.GlobalTheory.EndLoc.HomGlue.localRep_universal S A B L M hL hM (V i) (j i) (A' i) (B' i) (φA i) (φB i) (R i) (hpA i) (hpB i)
   choose y hyt hyu using hy
   let W : Ix → S.Opens := fun i => (j i).opensRange

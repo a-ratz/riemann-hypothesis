@@ -206,7 +206,7 @@ theorem coefAlg_separates (h : IsGood st S ρ) (hi : Function.Injective ρ) (C :
     push Not at hc
     exact this (Matrix.ext hc)
   refine ⟨fun z : C => ρ z i j, ⟨⟨fun z : C => ρ z i j,
-    (h.cont.matrix_elem i j).comp continuous_subtype_val⟩, ?_, rfl⟩, hij⟩
+    (h.cont.matrix_elem i j).comp continuous_subtypeVal⟩, ?_, rfl⟩, hij⟩
   refine ⟨ι, inferInstance, inferInstance, ρ, Pi.single i 1, Pi.single j 1, h, fun z => ?_⟩
   simp
 
@@ -217,7 +217,7 @@ theorem exists_approx (h : IsGood st S ρ) (hi : Function.Injective ρ) {C : Set
   have : CompactSpace C := isCompact_iff_compactSpace.1 hC
   have htop := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints _
     (coefAlg_separates h hi C)
-  let F : C(C, ℂ) := ⟨fun x => Φ x, hΦ.comp continuous_subtype_val⟩
+  let F : C(C, ℂ) := ⟨fun x => Φ x, hΦ.comp continuous_subtypeVal⟩
   have hF : F ∈ closure (coefAlg st S C : Set C(C, ℂ)) := by
     have : F ∈ (coefAlg st S C).topologicalClosure := by rw [htop]; trivial
     exact this
@@ -299,7 +299,7 @@ theorem isFam_rep [SecondCountableTopology K] (he : Continuous e) {V : Type} [No
     intro x w
     have hw := h2 w
     have := (ℓ.comp ⟨τ x, h1 x⟩).integral_comp_comm (μ := μ) (φ := fun k : K => e k • τ k w)
-      (integrable_of_cont (he.smul (hw.comp continuous_subtype_val)))
+      (integrable_of_cont (he.smul (hw.comp continuous_subtypeVal)))
     rw [hE]
     refine Eq.trans this.symm ?_
     simp
@@ -346,7 +346,7 @@ theorem transfer_holds : Transfer := by
     let τ' : G →* Module.End ℂ (κ → ℂ) := (Matrix.toLinAlgEquiv' : Matrix κ κ ℂ ≃ₐ[ℂ] _).toMonoidHom.comp τ
     have hc : ∀ u : κ → ℂ, Continuous fun x => τ x *ᵥ u := fun u => hτ.cont.matrix_mulVec continuous_const
     have hint : ∀ u : κ → ℂ, Integrable (fun k : K => e k • (τ k *ᵥ u)) μ := fun u =>
-      integrable_of_cont (he.smul ((hc u).comp continuous_subtype_val))
+      integrable_of_cont (he.smul ((hc u).comp continuous_subtypeVal))
     let E' : Module.End ℂ (κ → ℂ) :=
       { toFun := fun u => ∫ k : K, e k • (τ k *ᵥ u) ∂μ
         map_add' := fun u w => by

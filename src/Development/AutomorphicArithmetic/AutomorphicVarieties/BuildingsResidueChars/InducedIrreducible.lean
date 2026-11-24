@@ -275,7 +275,7 @@ theorem UpperTheory.mix_invariant_plane_decomposition :
       (R (j h) : Matrix (Fin 4) (Fin 4) k) *ᵥ pY a = pY ((ρ h' : Matrix (Fin 2) (Fin 2) k) *ᵥ a) := by
     intro h h' e a
     rw [hm.on h h' e, mix_pY hm.two]
-  obtain ⟨s, hsU, hs⟩ := SetLike.not_le_iff_exists.1 hU
+  obtain ⟨s, hsU, hs⟩ := IsConcreteLE.not_le_iff_exists.1 hU
   obtain ⟨h₀, hh₀⟩ : s * t⁻¹ ∈ j.range := by
     simp only [Subgroup.mul_mem_iff_of_index_two hi, inv_mem_iff, hm.nmem, hs]
   obtain ⟨h₀', e₀⟩ := hcj h₀
@@ -467,8 +467,8 @@ private theorem ine_move {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
 theorem UpperTheory.induced_irreducible :
     UpperTheory.V.Sd.S2.IndIrr := by
   intro Ω _ _ _ l _ c D T k₀ _ _ φ ι k t r α β R δ hd
-  haveI : IsGalois ℚ Ω := {}
-  haveI : IsAlgClosure k₀ Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) k₀⟩
+  have : IsGalois ℚ Ω := {}
+  have : IsAlgClosure k₀ Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) k₀⟩
   set τ : G ℚ Ω := resQ T.F T.g0 with hτ
   let V : Subgroup (G ℚ Ω) := T.F.fixingSubgroup ⊓ T.K.fixingSubgroup
   let U : Subgroup (G ℚ Ω) := V ⊓ (cycZ ℚ Ω l).ker
@@ -499,8 +499,8 @@ theorem UpperTheory.induced_irreducible :
       have hcyc : ∀ h, cycBar k₀ Ω l (cj h) = cycBar k₀ Ω l h := hchar (cycBar ℚ Ω l)
       let H : Subgroup (G ℚ Ω) := V ⊓ k₀.fixingSubgroup
       have hH : IsOpen (H : Set (G ℚ Ω)) := hV.inter k₀.fixingSubgroup_isOpen
-      haveI : Finite (G ℚ Ω ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
-      haveI : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+      have : Finite (G ℚ Ω ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+      have : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
       obtain ⟨n, hn, -, hnH⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (H := H) Subgroup.FiniteIndex.index_ne_zero
         (D.s0 : G ℚ Ω)
       obtain ⟨s, hs⟩ : (D.s0 : G ℚ Ω) ^ n ∈ (resQ k₀).range := range_res k₀ ▸ hnH.2

@@ -151,11 +151,11 @@ theorem intAt_rulBC_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   rw [intAt_iff, intAt_iff]
   constructor
   · intro h T io N hN hp hT y
-    letI : Algebra c.F c'.F := (incF c c' hle).toAlgebra
-    haveI := c.fin
-    haveI := c'.fin
-    haveI : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun x => by simp
-    haveI : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ _ _
+    let : Algebra c.F c'.F := (incF c c' hle).toAlgebra
+    have := c.fin
+    have := c'.fin
+    have : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun x => by simp
+    have : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ _ _
     obtain ⟨L, _, _, g, hL, -, hg⟩ := GlobalTheory.exists_finite_separable_compositum c.F T.Fr c'.F io
     obtain ⟨T', iT, e, ψ, -, he, hv, hψ, -, hfin⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T L
     obtain ⟨⟨y₁, -, -, φ, hφ, hm⟩, -⟩ := GlobalTheory.PlaceInt.exists_isExt_and_trans E H Dw l Xo c T T' io y iT e he hv
@@ -167,12 +167,12 @@ theorem intAt_rulBC_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       rw [← map_natCast iT, hv]
       exact mul_pos (by exact_mod_cast he) hp
     have e1 : evI y₁ f = iT (evI y f) := by
-      letI := io.toAlgebra
-      letI := (iT.comp io).toAlgebra
+      let := io.toAlgebra
+      let := (iT.comp io).toAlgebra
       exact (pos_evR (GlobalTheory.TransferCompare.evalWD_framed Xo c) f hf.1 φ y.1 y.2.1 y₁.1 hm).trans
         (DFunLike.congr_fun hφ _)
-    letI := (iT.comp io).toAlgebra
-    letI := io'.toAlgebra
+    let := (iT.comp io).toAlgebra
+    let := io'.toAlgebra
     let y' : IntFr Xo c' T' io' := ⟨y₁.1.ext hle hio, GlobalTheory.FlagTan.fromTest_of_isLocalRing _,
       (integral_res_iff hle T' io' (iT.comp io) hio _).2 y₁.2.2⟩
     have e2 : evI y' (rulBC hle f) = evI y₁ f := hval T'.Fr hio y'.1
@@ -182,8 +182,8 @@ theorem intAt_rulBC_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   · intro h T io' N hN hp hT y'
     let io : c.F →+* T.Fr := io'.comp (incF c c' hle)
     have hio : ∀ x, io' (incF c c' hle x) = io x := fun _ => rfl
-    letI := io.toAlgebra
-    letI := io'.toAlgebra
+    let := io.toAlgebra
+    let := io'.toAlgebra
     let y : IntFr Xo c T io := ⟨y'.1.res hle hio, GlobalTheory.FlagTan.fromTest_of_isLocalRing _,
       (integral_res_iff hle T io' io hio _).1 y'.2.2⟩
     have e2 : evI y' (rulBC hle f) = evI y f := hval T.Fr hio y'.1

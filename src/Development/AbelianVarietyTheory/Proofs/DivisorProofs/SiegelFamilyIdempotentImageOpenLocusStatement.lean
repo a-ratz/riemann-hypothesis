@@ -181,8 +181,8 @@ theorem torsFamily_eq_isOpen : ∀ (m M : ℕ) (S' : Scheme.{0}) [IsLocallyNoeth
     have h2 := h1.map (Scheme.ΓSpecIso (CommRingCat.of (cycAway M))).inv.hom
     have h3 := h2.map t.appTop.hom
     simpa using h3
-  haveI := hA.smooth
-  haveI : Etale (𝟙 A ^ M).left := GlobalTheory.GrpTangent.etale_id_pow A hu
+  have := hA.smooth
+  have : Etale (𝟙 A ^ M).left := GlobalTheory.GrpTangent.etale_id_pow A hu
   have hpow : ∀ z : 𝟙_ (Over S') ⟶ A, z ^ M = 1 →
       z.left ≫ (𝟙 A ^ M).left = (1 : 𝟙_ (Over S') ⟶ A).left := by
     intro z hz
@@ -431,7 +431,7 @@ theorem lev_nsmul {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : Type} [AddCommGr
 
 theorem range_subset_iff_pt {k : Type} [Field k] {X : Scheme.{0}} (y : Sp k ⟶ X) (O : Set X) :
     Set.range y.base ⊆ O ↔ y.base (⊥ : PrimeSpectrum k) ∈ O := by
-  haveI : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))
+  have : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))
   rw [Set.range_subset_iff]
   refine ⟨fun H => H _, fun H p => ?_⟩
   have : p = (⊥ : PrimeSpectrum k) := Subsingleton.elim (α := Sp k) p (⊥ : PrimeSpectrum k)
@@ -444,14 +444,14 @@ theorem torsion_hom_ext {S : Scheme.{0}} {G : Over S} [GrpObj G] {M : ℕ} {X : 
 
 theorem exists_open_levSurj : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (M : ℕ) (t : S ⟶ Sp (cycAway M)) (G : Over S) [GrpObj G] [IsCommMonObj G] (h : ℕ) (lev : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over S) ⟶ G)), IsAbelianScheme G → 3 ≤ M → (∀ a b, lev (a + b) = lev a * lev b) → (∀ a, lev a ^ M = 1) → ∀ (k : Type) [Field k] [IsAlgClosed k] (x₀ : Sp k ⟶ S), (∀ g : Over.mk x₀ ⟶ G, g ^ M = 1 → ∃ a, toUnit _ ≫ lev a = g) → ∃ W : S.Opens, Set.range x₀.base ⊆ W ∧ ∀ (k' : Type) [Field k'] [IsAlgClosed k'] (x : Sp k' ⟶ S), Set.range x.base ⊆ W → ∀ g : Over.mk x ⟶ G, g ^ M = 1 → ∃ a, toUnit _ ≫ lev a = g := by
   intro S _ M t G _ _ h lev hab hM hadd htors k _ _ x₀ hx₀
-  haveI := hab
+  have := hab
   have hM0 : M ≠ 0 := by omega
   have hu : IsUnit (M : Γ(S, ⊤)) := by
     simpa using (GlobalTheory.SiegelTor.isUnit_natCast hM0).map
       ((Scheme.ΓSpecIso (CommRingCat.of (cycAway M))).inv ≫ t.appTop).hom
   obtain ⟨-, hfin, het⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion G hu
-  haveI := hfin
-  haveI := het
+  have := hfin
+  have := het
   let ℓ : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over S) ⟶ torsion G M) := fun a =>
     GlobalTheory.TorsionFamily.torsionLift G (lev a) M (htors a)
   have hℓ : ∀ a, ℓ a ≫ torsion.ι G M = lev a := fun a => GlobalTheory.TorsionFamily.torsionLift_ι _ _ _ _
@@ -474,8 +474,8 @@ theorem exists_open_levSurj : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (M : 
   have hZc : IsClosed Zs := isClosed_iUnion_of_finite fun c => hUc _
   let C : (torsion G M).left.Opens := ⟨Zsᶜ, hZc.isOpen_compl⟩
   obtain ⟨V, i, hVf, hVe, -, hV⟩ := GlobalTheory.LevCover.exists_sub C hZo.isClosed_compl
-  haveI := hVf
-  haveI := hVe
+  have := hVf
+  have := hVe
   haveI : IsFinite (𝟙_ (Over S)).hom := by show IsFinite (𝟙 S); infer_instance
   haveI : Etale (𝟙_ (Over S)).hom := by show Etale (𝟙 S); infer_instance
 
@@ -616,22 +616,22 @@ theorem GlobalTheory.levTriv_locus_open : ∀ (S : Scheme.{0}) [IsLocallyNoether
     by_cases hp : P a
     · convert (Uf (lev a)).isOpen using 1
       ext s
-      simp only [A, Set.mem_setOf_eq, hp, iff_true, SetLike.mem_coe]
+      simp only [A, Set.mem_ofPred_eq, hp, iff_true, SetLike.mem_coe]
     · convert (hUc (lev a)).isOpen_compl using 1
       ext s
-      simp only [A, Set.mem_setOf_eq, hp, iff_false, Set.mem_compl_iff, SetLike.mem_coe]
+      simp only [A, Set.mem_ofPred_eq, hp, iff_false, Set.mem_compl_iff, SetLike.mem_coe]
   have hAq : ∀ a a', q a = q a' → A a = A a' := fun a a' e => by
     obtain ⟨c, rfl⟩ := hq a a' e
     have hl : lev (a + M • c) = lev a := by rw [hadd, pow_nsmul lev hadd, hpow, _root_.mul_one]
     have hP : P (a + M • c) ↔ P a :=
       ⟨fun ⟨b, hb⟩ => ⟨b - c, by rw [smul_sub, ← hb]; abel⟩, fun ⟨b, hb⟩ => ⟨b + c, by rw [hb, smul_add]⟩⟩
     ext s
-    simp only [A, Set.mem_setOf_eq, hl, hP]
+    simp only [A, Set.mem_ofPred_eq, hl, hP]
   let pick : κ → (Fin h ⊕ Fin h → ℤ) := fun c => if hc : ∃ a, q a = c then hc.choose else 0
   have hpick : ∀ a, A a = A (pick (q a)) := fun a => by
     have hc : ∃ a', q a' = q a := ⟨a, rfl⟩
     refine hAq _ _ ?_
-    simp only [pick, dif_pos hc]
+    simp only [pick, dite_eq_left hc]
     exact hc.choose_spec.symm
   refine ⟨⟨⋂ c, A (pick c), isOpen_iInter_of_finite fun c => hAo _⟩, ?_, ?_⟩
   · rintro _ ⟨p, rfl⟩
@@ -854,7 +854,7 @@ theorem weil_open : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (M : ℕ) (t : 
     rw [e1, e1, hz']
     exact H β z hβ hz
   obtain ⟨κ, hκ, q, hq⟩ := exists_finite_mod (Fin h ⊕ Fin h → ℤ) hMpos
-  haveI := hκ
+  have := hκ
   let r : κ → (Fin h ⊕ Fin h → ℤ) := Function.invFun q
   have localization₂ : HkClopen.Loc (fun (k : Type) [Field k] [IsAlgClosed k] (g : Sp k ⟶ S) => ∀ a a', P2 a a' k g) := by
     refine (HkClopen.Loc.all (I₀ := κ × κ) (P := fun i => P2 (r i.1) (r i.2)) fun i => locPair _ _).congr
@@ -1259,12 +1259,12 @@ theorem exists_open_locus : ∀ (h h' M d : ℕ) (O : Type) [Ring O] (bar : O �
   set_option backward.isDefEq.respectTransparency false in
     intro h h' M d O _ bar e jl n o κ S' _ t z act hh hM hMo hd hMd hz hRA hAdj hee
     have hee' : act e ≫ act e = act e := by rw [← hRA.2.2.1, hee]
-    haveI hae := hRA.1 e
+    have hae := hRA.1 e
     obtain ⟨G, _, _, inc, pr, hGs, hinc, hpr, hip, hpi⟩ :=
       GlobalTheory.Mum.IdemImage.isSemiAbelian_image S' z.A (GlobalTheory.isSemiAbelian_of_isAbelianScheme z.A z.ab) (act e) (hRA.1 e)
         hee'
-    haveI := hinc
-    haveI := hpr
+    have := hinc
+    have := hpr
     have hGab : IsAbelianScheme G := GlobalTheory.T.isAbelianScheme_of_semiAbelian_hom_retract S' z.A G inc pr z.ab hGs hinc hpr hip
     let Pe : LB (G2 G).left := z.P.pull (inc ⊗ₘ inc).left
     have hPe : Pe.IsLB := pull_isLB z.isLB _
@@ -1289,11 +1289,11 @@ theorem exists_open_locus : ∀ (h h' M d : ℕ) (O : Type) [Ring O] (bar : O �
       (fun a => by simp only [y₂, z.lev_tors])
     obtain ⟨U₃, hU₃, hT₃⟩ := GlobalTheory.T.additive_torsion_families_equal_locus_open h' M S' t z.A z.ab hM1 z.lev y₃ z.lev_add
       (fun a b => by
-        haveI := fun k => hRA.1 (o k)
+        have := fun k => hRA.1 (o k)
         simp only [hy₃, map_add (f := _), z.lev_add, MonObj.mul_comp, Finset.prod_mul_distrib])
       z.lev_tors
       (fun a => by
-        haveI := fun k => hRA.1 (o k)
+        have := fun k => hRA.1 (o k)
         simp only [hy₃, ← Finset.prod_pow, ← MonObj.pow_comp, z.lev_tors, MonObj.one_comp, Finset.prod_const_one])
     obtain ⟨U₄, hU₄, hT₄⟩ := GlobalTheory.T.isOpen_symplecticLevel_locus h M S' t G Pe lev hGab hPe hr₁ hr₂ hsy hM hMo lev_add lev_tors
     obtain ⟨U₅, hU₅, hT₅⟩ := GlobalTheory.T.diagonal_restriction_relAmple_locus_open S' G Pe hGab hPe
@@ -1426,7 +1426,7 @@ theorem siegPre_actPB_pullback : ∀ (h M : ℕ) (B : Type) [CommRing B] (ζ : B
   obtain ⟨⟨w, φ, φ₂, hφ, hsq, hP, hlev⟩, hpr⟩ := GlobalTheory.siegPre_pullback h M B ζ S S' s s' f z hs
   have hwP : w.Principal := hpr w ⟨φ, φ₂, hφ, hsq, hP, hlev⟩ hz
   obtain ⟨e, he, heφ⟩ := grpPullback_iso hφ (isGrpPullback_pullback z.A f)
-  haveI := he
+  have := he
   have hie : e.inv.left ≫ e.hom.left = 𝟙 _ := by rw [← Over.comp_left, e.inv_hom_id, Over.id_left]
   let actw : O → (w.A ⟶ w.A) := fun a => e.hom ≫ (Over.pullback f).map (act a) ≫ e.inv
   have hv : ∀ a, (actw a).left ≫ φ = φ ≫ (act a).left := fun a => by
@@ -1497,8 +1497,8 @@ theorem zRel_of_pullback : ∀ (h h' M : ℕ) (B : Type) [CommRing B] (ζ : B) (
   obtain ⟨ψ, ψ₂, hψ, sqψ, hwP, hwl, hact⟩ := hA
   obtain ⟨φ, φ₂, hφ, sqφ, hcP, hcl⟩ := hS
   obtain ⟨inc₁, pr₁, mi₁, mp₁, ip₁, pi₁, hP₁, hl₁, hz₁⟩ := hZ
-  haveI := mi₁
-  haveI := mp₁
+  have := mi₁
+  have := mp₁
   have wi : (φ ≫ inc₁.left) ≫ w₁.A.hom = c₂.A.hom ≫ y := by
     rw [Category.assoc, Over.w inc₁]; exact hφ.1.w
   let inc₂ : c₂.A ⟶ w₂.A := Over.homMk (hψ.1.lift (φ ≫ inc₁.left) c₂.A.hom wi) (hψ.1.lift_snd _ _ _)
@@ -1657,8 +1657,8 @@ theorem siegPB_of_zRel_actPB : ∀ (h h' M : ℕ) (B : Type) [CommRing B] (ζ : 
   have hmul : ∀ (T : Over S₂) (x x' : T ⟶ c₂.A) (x₀ x₀' : Over.mk (T.hom ≫ y) ⟶ c₁.A),
       x₀.left = x.left ≫ φ → x₀'.left = x'.left ≫ φ → (x₀ * x₀').left = (x * x').left ≫ φ := by
     intro T x x' x₀ x₀' hx hx'
-    haveI := mi₂
-    haveI := mp₁
+    have := mi₂
+    have := mp₁
     have wx : ∀ z : T ⟶ c₂.A, ((z ≫ inc₂).left ≫ ψ) ≫ w₁.A.hom = (Over.mk (T.hom ≫ y)).hom := fun z => by
       rw [Category.assoc, hψ.1.w, ← Category.assoc, Over.w (z ≫ inc₂)]; rfl
     let X₀ : Over.mk (T.hom ≫ y) ⟶ w₁.A := Over.homMk ((x ≫ inc₂).left ≫ ψ) (wx x)

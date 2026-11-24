@@ -329,15 +329,15 @@ theorem jetLin_mul_monomial (J : (DVar ι a b →₀ ℕ) → K) (P : Pol K ι b
     jetLin J (rename Sum.inl P * rename Sum.inr (monomial m (1 : K))) = J m • P := by
   induction P using MvPolynomial.induction_on' with
   | monomial p c =>
-    rw [rename_monomial, rename_monomial, monomial_mul, mul_one, jetLin, constr_monomial]
+    rw [rename_monomial, rename_monomial, monomial_mul_monomial, mul_one, jetLin, constr_monomial]
     have h1 : (p.mapDomain Sum.inl + m.mapDomain Sum.inr).comapDomain Sum.inl Sum.inl_injective.injOn = p := by
       ext x
       rw [Finsupp.comapDomain_apply, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective Sum.inl_injective,
-        Finsupp.mapDomain_notin_range _ _ (by simp), add_zero]
+        Finsupp.mapDomain_of_notMem_range _ _ (by simp), add_zero]
     have h2 : (p.mapDomain Sum.inl + m.mapDomain Sum.inr).comapDomain Sum.inr Sum.inr_injective.injOn = m := by
       ext x
       rw [Finsupp.comapDomain_apply, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective Sum.inr_injective,
-        Finsupp.mapDomain_notin_range _ _ (by simp), zero_add]
+        Finsupp.mapDomain_of_notMem_range _ _ (by simp), zero_add]
     rw [h1, h2, smul_monomial, smul_monomial, smul_eq_mul, smul_eq_mul, mul_comm]
   | add p q hp hq => rw [map_add (f := _), add_mul, map_add (f := _), hp, hq, smul_add]
 
@@ -361,7 +361,7 @@ theorem subD_ten [DecidableEq ι] (h : a ≤ b) (F : ι → MvPolynomial (Fin a 
     congr 2
     funext v
     have hv : (v.2 : ℕ) < b := lt_of_lt_of_le v.2.2 h
-    simp only [Function.comp_apply, dif_pos hv]
+    simp only [Function.comp_apply, dite_eq_left hv]
     rfl
   rw [e1]
   refine (Finset.prod_congr rfl fun τ _ => aeval_subGen h

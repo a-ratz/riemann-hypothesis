@@ -141,17 +141,17 @@ private theorem open_ker {Ω K : Type} [Field Ω] [CharZero Ω] [IsAlgClosure �
       rw [key', Subgroup.mem_sInf]
       rintro U ⟨hU, hle⟩
       have hle' : (δ ^ N).ker ≤ U := hle
-      have hn : U.Normal := Subgroup.Normal.of_commutator_le _ ((Abelianization.commutator_subset_ker _).trans hle')
+      have hn : U.Normal := Subgroup.Normal.of_commutator_le _ ((Group.Abelianization.commutator_le_ker _).trans hle')
       rw [B3.minkowski Ω U hn hU fun B x hx => hle' (h B x hx)]
       trivial
     exact this
   have hfin : Finite δ.range := by
-    haveI : NeZero N := ⟨hN⟩
+    have : NeZero N := ⟨hN⟩
     have hle : δ.range ≤ rootsOfUnity N K := by
       rintro _ ⟨g, rfl⟩
       exact htop g
     exact Finite.of_injective _ (Subgroup.inclusion_injective hle)
-  haveI : δ.ker.FiniteIndex := Subgroup.finiteIndex_ker δ
+  have : δ.ker.FiniteIndex := Subgroup.finiteIndex_ker δ
   refine Subgroup.isOpen_of_isClosed_of_finiteIndex _ ?_
   have : (δ.ker : Set (G ℚ Ω)) = {g | (δ g : K) = 1} := by
     ext g
@@ -228,7 +228,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.diagChar :
   intro Ω _ _ _ l hl c D hD r hr hd
   obtain ⟨m, m1, m2⟩ := perm D hD r hr hd
   refine ⟨dchar r hd, m, fun _ _ => rfl, m1, m2, fun i => ?_⟩
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   obtain ⟨f1, -, -, f4, -, -, -, -, -, -, -, f12, f13, -⟩ := facts D hD
   obtain ⟨-, p2, -, -, p5, -⟩ := ptIn D hD _ r hr
   obtain ⟨e1, -⟩ := eptInt D hD r hr
@@ -242,14 +242,14 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.diagChar :
     rfl
   refine ⟨δ, ?_, fun g => by rw [hval, mul_inv_cancel_left₀ (hne g)]⟩
   have hf : Continuous (algebraMap ℤ_[l] (PadicAlgCl l)) := by
-    refine ((continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val).congr fun x => ?_
+    refine ((continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal).congr fun x => ?_
     exact (IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l) x).symm
   have hc : Continuous fun g => (δ g : PadicAlgCl l) := by
     simp only [hval]
     exact (((hf.comp (Units.continuous_val.comp (continuous_cycZ ℚ Ω l))).pow _).inv₀ hne).mul (e1.matrix_elem i i)
   let U : Subgroup (G ℚ Ω) := D.rbar.ker ⊓ (D.ψ.ker ⊓ D.om.ker)
   have hU : IsOpen (U : Set (G ℚ Ω)) := f12.inter (hD.psi_open.inter f13)
-  haveI : Finite (G ℚ Ω ⧸ U) := U.quotient_finite_of_isOpen hU
+  have : Finite (G ℚ Ω ⧸ U) := U.quotient_finite_of_isOpen hU
   have hI : U.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hunr : ∀ A : ValuationSubring Ω, ¬ A.valuation (l : Ω) < 1 → ∀ g ∈ Ine (F := ℚ) A, r g = 1 → δ g = 1 :=
     fun A hA g hg h1 => Units.ext (by

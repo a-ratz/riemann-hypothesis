@@ -112,7 +112,7 @@ theorem exists_closed_affineSpace {U S : Scheme.{0}} [IsAffine U] [IsAffine S] (
       IsClosedImmersion (AffineSpace.homOfVector u g) := by
   have h : u.appTop.hom.FiniteType :=
     (HasRingHomProperty.iff_of_isAffine (P := @LocallyOfFiniteType)).mp inferInstance
-  letI := u.appTop.hom.toAlgebra
+  let := u.appTop.hom.toAlgebra
   obtain ⟨t, ht⟩ := h.out
   refine ⟨t, inferInstance, fun a ↦ a.1, IsClosedImmersion.of_surjective_of_isAffine _ ?_⟩
   intro x

@@ -273,9 +273,9 @@ theorem hom_eq_zero {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
     { carrier := {g | f g = 0}
       one_mem' := h1
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *; rw [hm, ha, hb, add_zero]
+        simp only [Set.mem_ofPred_eq] at *; rw [hm, ha, hb, add_zero]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *; rw [hinv, ha, neg_zero] }
+        simp only [Set.mem_ofPred_eq] at *; rw [hinv, ha, neg_zero] }
   have hV : IsOpen (V : Set (G ℚ Ω)) := (isOpen_discrete ({0} : Set A)).preimage hc
   have key := UpperTheory.V.CF.minkAbs Ω V hV ?_
   · have hs : s ∈ V := key ▸ Subgroup.mem_top s
@@ -439,7 +439,7 @@ theorem coboundary_of_locTriv : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → �
     obtain ⟨u, hu, huO, hcg⟩ := hCob v.1 v.2
     refine ⟨fun g => red c n ⟨u g, huO g⟩,
       continuous_red_comp c n (fun g : Dec (F := ℚ) (Av v) => (⟨u g, huO g⟩ : c.O))
-        (continuousOn_iff_continuous_restrict.1 hu), ?_⟩
+        (continuousOn_iff_continuous_domRestrict.1 hu), ?_⟩
     funext p
     obtain ⟨g, h⟩ := p
     show rho c n μ (toGS Ω (S : Set Pl) g) (red c n ⟨u h, huO h⟩) - red c n ⟨u (g * h), huO _⟩ +

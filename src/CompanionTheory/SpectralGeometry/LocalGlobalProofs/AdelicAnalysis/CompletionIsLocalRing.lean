@@ -123,7 +123,7 @@ theorem isLocR_of_ultrametric (K : Type) [NontriviallyNormedField K] [IsUltramet
     hval, U, hU, ?_⟩
   refine IsOpenEmbedding.of_comp _ hval ?_
   refine IsOpenEmbedding.of_continuous_injective_isOpenMap ?_ ?_ ?_
-  · exact Units.continuous_val.comp (continuous_subtype_val.pow 2)
+  · exact Units.continuous_val.comp (continuous_subtypeVal.pow 2)
   · intro u w h
     simp only [Function.comp, Units.val_pow_eq_pow_val] at h
     refine e1.injective (e.injOn (hmem u) (hmem w) ?_)
@@ -140,12 +140,12 @@ theorem isLocR_of_ultrametric (K : Type) [NontriviallyNormedField K] [IsUltramet
 
 theorem isLocR_Fv : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)), IsLocR (Fv F v) := by
   intro F _ _ v
-  letI : NontriviallyNormedField (v.adicCompletion F) :=
+  let : NontriviallyNormedField (v.adicCompletion F) :=
     Valued.toNontriviallyNormedField (v.adicCompletion F) (WithZero (Multiplicative ℤ))
-  haveI : IsUltrametricDist (v.adicCompletion F) :=
+  have : IsUltrametricDist (v.adicCompletion F) :=
     inferInstanceAs (@IsUltrametricDist (v.adicCompletion F)
       (Valued.toNormedField (v.adicCompletion F) (WithZero (Multiplicative ℤ))).toDist)
-  haveI : ProperSpace (v.adicCompletion F) := Formalism.BasicNotions.Examples₂.LocF.proper v
+  have : ProperSpace (v.adicCompletion F) := Formalism.BasicNotions.Examples₂.LocF.proper v
   have h2 : (2 : v.adicCompletion F) ≠ 0 := two_ne_zero
   exact isLocR_of_ultrametric (v.adicCompletion F) h2
 

@@ -186,11 +186,11 @@ theorem gram_minor_swap_columns : ∀ (N : ℕ) (k : Matrix (Fin N) (Fin N) ℝ)
         apply Equiv.swap_apply_of_ne_of_ne
         · intro e
           have := congrArg Fin.val e
-          simp only [Fin.coe_castLE] at this
+          simp only [Fin.val_castLE] at this
           omega
         · intro e
           have := congrArg Fin.val e
-          simp only [Fin.coe_castLE] at this
+          simp only [Fin.val_castLE] at this
           omega
       ext x y
       simp only [Matrix.submatrix_apply, hfix]
@@ -290,7 +290,7 @@ theorem gram_minor_swap_columns : ∀ (N : ℕ) (k : Matrix (Fin N) (Fin N) ℝ)
       rw [hBe, hσc i hil]
       exact hMl _ _ (Fin.lt_def.2 (Fin.lt_def.1 hi))
     have hdB : B.det = (∏ i : Fin p, a (c i.castSucc)) * (a P * n P Q) := by
-      rw [Matrix.det_of_upperTriangular hBT, Fin.prod_univ_castSucc]
+      rw [det_of_isUpperTriangular hBT, Fin.prod_univ_castSucc]
       congr 1
       · refine Finset.prod_congr rfl fun i _ => ?_
         rw [hBe, hσc _ (Fin.castSucc_lt_last i).ne, hMd]
@@ -308,7 +308,7 @@ theorem gram_minor_swap_columns : ∀ (N : ℕ) (k : Matrix (Fin N) (Fin N) ℝ)
       intro s i hi
       exact hBT (Fin.castSucc_lt_castSucc_iff.2 hi)
     have hdB' : (B.submatrix Fin.castSucc Fin.castSucc).det = ∏ i : Fin p, a (c i.castSucc) := by
-      rw [Matrix.det_of_upperTriangular hBT']
+      rw [det_of_isUpperTriangular hBT']
       refine Finset.prod_congr rfl fun i _ => ?_
       rw [Matrix.submatrix_apply, hBe, hσc _ (Fin.castSucc_lt_last i).ne, hMd]
     have hprod : ∏ l ∈ Finset.univ.filter (· < P), a l ^ 2 = (∏ i : Fin p, a (c i.castSucc)) ^ 2 := by

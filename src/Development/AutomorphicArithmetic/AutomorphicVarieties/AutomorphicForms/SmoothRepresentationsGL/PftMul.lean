@@ -124,7 +124,7 @@ theorem UpperTheory.V.Af.Smo.pftMul :
   have key : (fun ξ : V => (c • LineDeriv.lineDerivOp ((w, (0 : M)) : V × M) G + SchwartzMap.smulLeftCLM ℂ (⇑L2) G) (ξ, m))
       = ⇑(c • LineDeriv.lineDerivOp w S + ((l (0, m) : ℝ) : ℂ) • S) := by
     funext ξ
-    simp only [SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hL2t,
+    simp only [add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hL2t,
       SchwartzMap.lineDerivOp_apply_eq_fderiv, hder, hSa]
     simp [hL2, smul_eq_mul]
   simp only [pft]
@@ -134,7 +134,7 @@ theorem UpperTheory.V.Af.Smo.pftMul :
     funext ξ; exact (hSa ξ).symm
   have hit : Function.HasTemperateGrowth (fun x : V ↦ ⟪x, w⟫) := ((innerSL ℝ).flip w).hasTemperateGrowth
   rw [hSf', ← SchwartzMap.fourier_coe]
-  simp only [SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hit]
+  simp only [add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hit]
   simp only [hwl]
   have hlv : l (v, m) = l1 v + l (0, m) := by
     rw [hl1, ContinuousLinearMap.comp_apply, ContinuousLinearMap.inl_apply, ← map_add (f := _)]

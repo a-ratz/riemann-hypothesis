@@ -191,7 +191,7 @@ theorem int_nhds (hL : Y.L.IsFullLattice E) : {g : UA σ Y.J | ∀ v, IntAt v g}
     rw [smul_smul, mul_assoc]
     exact Euler.gen_mem (Euler.idem_mem (by rw [map_mul]; exact mul_mem ((ha i).2 v) (hb j v))) (x j).2
   have o : IsOpen {g : UA σ Y.J | ∀ i, mat g *ᵥ incV F (x i).1 ∈ V} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => hV.preimage (Euler.cont_mat.matrix_mulVec continuous_const)
   have o1 : ∀ i, mat (1 : UA σ Y.J) *ᵥ incV F (x i).1 ∈ V := fun i => by
     rw [show mat (1 : UA σ Y.J) = 1 from rfl, Matrix.one_mulVec]

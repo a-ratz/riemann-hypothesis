@@ -558,7 +558,7 @@ theorem exists_log (V : HSp D) (τ : D.what₂.Tau) :
     simpa using h
   refine ⟨fun u => (L u).1, fun u => (L u).2, ?_, ?_⟩
   · have hc : Filter.Tendsto L (𝓝 1) (𝓝 0) := h0 ▸ hL.continuousAt.tendsto
-    exact (continuous_subtype_val.tendsto _).comp hc
+    exact (continuous_subtypeVal.tendsto _).comp hc
   · filter_upwards [nhdsWithin_le_nhds hexp, self_mem_nhdsWithin] with u hu hmem
     exact hu ((GlobalTheory.ConjMult.unit_iffM hJ u).2 hmem)
 
@@ -566,7 +566,7 @@ private theorem continuous_matrix_exp' (n : ℕ) : Continuous (fun M : Matrix (F
   let _ : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
   let _ : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   let _ : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := .restrictScalars ℚ ℂ _
-  have _ : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℂ _
+  have _ : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℂ _
   exact NormedSpace.exp_continuous
 
 
@@ -581,7 +581,7 @@ theorem exists_height_le (hθ : IsInfFam θ) (V : HSp D) (τ : D.what₂.Tau) :
   have hF : Continuous F := by
     have hin : Continuous fun p : {X : Matrix (Fin V.rank) (Fin V.rank) ℂ // X ∈ lieAt V τ} × ℝ =>
         NormedSpace.exp (p.2 • p.1.1) :=
-      hexp.comp (continuous_snd.smul (continuous_subtype_val.comp continuous_fst))
+      hexp.comp (continuous_snd.smul (continuous_subtypeVal.comp continuous_fst))
     exact hl.2.2.2.2.comp ((GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ V τ).comp_continuous hin
       fun p => GlobalTheory.Mem.Lift.exp_mem p.1.2 p.2)
   have h0mem : (0 : Matrix (Fin V.rank) (Fin V.rank) ℂ) ∈ lieAt V τ := by
@@ -842,7 +842,7 @@ theorem growthSob_RderC_le (hθ : IsInfFam θ) {φ : GA D V → ℂ} (hs : φ �
   induction s using Finset.induction_on with
   | empty =>
     have := growthSob_smul (θ := θ) (φ := φ) 0 d N
-    rw [zero_smul, enorm_zero, zero_mul] at this
+    rw [zero_smul, eNorm_zero, zero_mul] at this
     simp [this]
   | insert a s ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha]
@@ -904,7 +904,7 @@ theorem Rder_mem_cuspSub (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (F
     exact GlobalTheory.T.isCuspFun_of_tendsto_moderateGrowthSize D V N _ _ (fun n => ⟨(hm _).1, (hm _).2.1, (hm _).2.2.2.2.1⟩) b1 b2
       ((GlobalTheory.T.tendsto_moderateGrowthSize_differenceQuotient D θ hθ V τ N X hX φ a4 (a6 2)).comp ht)
   · rw [← GlobalTheory.SmoothAutCheck.RderC_eq θ V τ hX]
-    exact ne_top_of_le_ne_top (ENNReal.mul_ne_top (ENNReal.sum_ne_top.2 fun _ _ => enorm_ne_top) (a6 _))
+    exact ne_top_of_le_ne_top (ENNReal.mul_ne_top (ENNReal.sum_ne_top.2 fun _ _ => eNorm_ne_top) (a6 _))
       (growthSob_RderC_le hθ a4 τ X d)
 
 
@@ -1001,7 +1001,7 @@ theorem completeSpace (hθ : IsInfFam θ) : CompleteSpace (Sp θ N hU) := by
   refine ne_top_of_le_ne_top (ENNReal.add_ne_top.2 ⟨incl_fin _ d, ?_⟩)
     (growthSob_add_le (incl_sm _) (Submodule.smul_mem _ _ (sub_mem (incl_sm _) f2)) d N)
   rw [growthSob_smul]
-  exact ENNReal.mul_ne_top enorm_ne_top hn.ne
+  exact ENNReal.mul_ne_top eNorm_ne_top hn.ne
 
 theorem continuous_of_le (T : Sp θ N hU →ₗ[ℂ] Sp θ N hU) (h : ∀ d, ∃ (d' : ℕ) (c : ℝ≥0∞), c ≠ ⊤ ∧
     ∀ x, growthSob θ V d N (incl θ N hU (T x)) ≤ c * growthSob θ V d' N (incl θ N hU x)) : Continuous T := by
@@ -1144,7 +1144,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 theorem tendsto_ad_exp {n : ℕ} (X Z : Matrix (Fin n) (Fin n) ℂ) :
     Tendsto (fun t : ℝ => ((t : ℂ)⁻¹) • (NormedSpace.exp ((-t) • X) * Z * NormedSpace.exp (t • X) - Z)) (𝓝[≠] 0)
       (𝓝 (Z * X - X * Z)) := by
-  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h1 := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
   have h2 := HasDerivAt.scomp (0 : ℝ) (h := fun t : ℝ => -t) (by rw [neg_zero]; exact h1) (hasDerivAt_neg (0 : ℝ))
   have h3 := ((h2.mul_const Z).mul h1).tendsto_slope_zero
@@ -1262,7 +1262,7 @@ theorem isSmoothModRep (hθ : IsInfFam θ) (A : GlobalTheory.ChainFr.Fr V) (τ :
     refine h1.trans ((mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left h2 C.coe_nonneg)
       ENNReal.toReal_nonneg).trans_eq ?_)
     change _ = _ * (((C * ‖C'‖₊ ^ m : ℝ≥0) : ℝ) * (growthSob θ V i N (incl θ N hU v)).toReal)
-    rw [NNReal.coe_mul, NNReal.coe_pow, coe_nnnorm, Real.norm_eq_abs, mul_pow, pow_mul]
+    rw [NNReal.coe_mul, NNReal.coe_pow, coe_nnNorm, Real.norm_eq_abs, mul_pow, pow_mul]
     ring
 
 theorem exists_frechet : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (A : GlobalTheory.ChainFr.Fr V) (U : Subgroup (GA D V)) (N : ℕ), IsOpen (U : Set (GA D V)) → ∃ (E : Type) (_ : AddCommGroup E) (_ : Module ℂ E) (_ : UniformSpace E) (_ : IsUniformAddGroup E) (_ : CompleteSpace E) (_ : T2Space E) (p : ℕ → Seminorm ℂ E) (ι : E →ₗ[ℂ] (GA D V → ℂ)), Function.Injective ι ∧ (∀ φ, φ ∈ Set.range ι ↔ Continuous φ ∧ (∀ γ ∈ GQ V, ∀ g, φ (γ * g) = φ g) ∧ (∀ k ∈ U, k ∈ GfC V → ∀ g, φ (g * k) = φ g) ∧ φ ∈ GlobalTheory.Mem.AutSpace.SmFun θ V ∧ IsCuspFun V φ ∧ ∀ d, GlobalTheory.Size.growthSob θ V d N φ ≠ ⊤) ∧ (∀ d x, p d x = (GlobalTheory.Size.growthSob θ V d N (ι x)).toReal) ∧ ∀ τ, ∃ π dπ : Matrix (Fin V.rank) (Fin V.rank) ℂ → (E →L[ℂ] E), GlobalTheory.SmoothGlob.IsSmoothModRep (A.ε τ) p π dπ ∧ (∀ g ∈ Formalism.MainNotions.S.UJset (A.ε τ), ∀ x, ι (π g x) = rTr V (A.elt θ τ g) (ι x)) ∧ ∀ X ∈ GlobalTheory.SmoothGlob.lieSet (A.ε τ), ∀ x, ι (dπ X x) = Rder θ V τ ((A.fr τ)⁻¹ * X * A.fr τ) (ι x) := by

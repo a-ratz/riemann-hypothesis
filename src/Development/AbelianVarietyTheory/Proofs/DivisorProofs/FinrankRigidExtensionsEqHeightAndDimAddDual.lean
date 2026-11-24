@@ -185,7 +185,7 @@ open GlobalTheory.PDivGroup.CotDim in
 theorem GlobalTheory.PDivGroup.finrank_cot_add_finrank_cot_dual_le_of_cast_eq_zero (p : ℕ) [Fact p.Prime]
     (k : Type) [Field k] (hp : (p : k) = 0) (Γ : PDivGroup p k) :
     Module.finrank k (Cot k (Γ.A 1)) + Module.finrank k (Cot k (Γ.dual.A 1)) ≤ Γ.height := by
-  letI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 hp
+  let : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 hp
   have hdimD := finrank_level_one Γ.dual
   have hmulP : Function.Injective (Γ.mulP 1) := fun a b e => by
     refine CartierDual.eq_of_forall_apply (R := k) fun φ => ?_
@@ -239,7 +239,7 @@ open CategoryTheory TensorProduct Coalgebra Bialgebra GlobalTheory GlobalTheory.
 theorem GlobalTheory.PDivGroup.height_le_finrank_cot_add_finrank_cot_dual (p : ℕ) [Fact p.Prime] (K : Type)
     [Field K] (h : (p : K) = 0) (G : PDivGroup p K) :
     G.height ≤ Module.finrank K (Cot K (G.A 1)) + Module.finrank K (Cot K (G.dual.A 1)) := by
-  haveI : CharP K p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 h
+  have : CharP K p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 h
   have hp2 : 2 ≤ p := (Fact.out : p.Prime).two_le
   have hdimD : Module.finrank K (G.dual.A 1) = p ^ G.dual.height := by
     obtain ⟨q⟩ : Nonempty (PrimeSpectrum K) := inferInstance
@@ -290,7 +290,7 @@ namespace GlobalTheory.PDivGroup
 
 theorem finite_omega_of_eq_zero {p : ℕ} {K : Type} [Field K] (h : (p : K) = 0)
     (G : PDivGroup p K) : Module.Finite K G.omega := by
-  haveI : Module.Finite K (Cot K (G.A 1)) :=
+  have : Module.Finite K (Cot K (G.A 1)) :=
     Module.Finite.of_surjective (AugCot.d (counitAlgHom K (G.A 1))) (AugCot.d_surjective _)
   exact Module.Finite.equiv (LinearEquiv.ofBijective _ (G.omegaLevel_one_bijective h)).symm
 
@@ -313,7 +313,7 @@ theorem finrank_rigExt_omega (p : ℕ) [Fact p.Prime] (K : Type) [Field K] (h : 
     LinearMap.exact_iff.1 (G.exact_rigOfOmega_rigToLie h),
     (LinearEquiv.ofInjective _ (G.rigOfOmega_injective_of_eq_zero h)).rank_eq.symm] at hr
   have hfin : Module.Finite K G.RigExt := by
-    haveI : Module.Free K G.RigExt := Module.Free.of_divisionRing K _
+    have : Module.Free K G.RigExt := Module.Free.of_divisionRing K _
     rw [← Module.rank_lt_aleph0_iff, ← hr]
     exact Cardinal.add_lt_aleph0 (Module.rank_lt_aleph0 K _) (Module.rank_lt_aleph0 K _)
   refine ⟨h1, hfin, ?_, hsum⟩

@@ -74,7 +74,7 @@ theorem massAll_of (hH : HinfCompact) (hK : KCompactOpen) (hC : ClassFinite) : M
   obtain ⟨𝓕, h𝓕⟩ := fdExistsH_holds X u
   have hKU : MeasurableSet ((KH X u : Subgroup ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) :
       Set ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) :=
-    ((hK X).2.preimage continuous_subtype_val).measurableSet
+    ((hK X).2.preimage continuous_subtypeVal).measurableSet
   have hU := massUnfold_gen X.B.I.cm.sig X.B.I.J (frameOf X u) (isCMExt_of_cmData X.B.I.cm)
     (isHermND_of_setting X) (X.measW u) hN (KH X u) hKU hfin 𝓕 h𝓕
   have hcov : covol (X.measW u).μH = ((X.measW u).μH 𝓕).toReal :=
@@ -83,14 +83,14 @@ theorem massAll_of (hH : HinfCompact) (hK : KCompactOpen) (hC : ClassFinite) : M
     have h := (hT.2.2.2 u).2
     have h1 := congrArg (fun m => m Set.univ) h
     have hm : Measurable (X.toInf hb) := by
-      haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+      have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
       unfold Formalism.L2.SG.HidaSetting.HidaSetting.toInf
       exact (continuous_fst.comp ((continuous_splitA _ _).comp
         ((Formalism.L2.SG.AdBridge.toHA X.B.I hb).continuous.comp (continuous_id.prodMk continuous_const)))).measurable
     rw [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ] at h1
     rw [← h1]
     unfold Formalism.L2.SG.Measures.amb
-    rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, Set.preimage_univ]
+    rw [Measure.map_apply measurable_subtypeVal MeasurableSet.univ, Set.preimage_univ]
 
   have h1 := hN.2.1
   have h2 := hN.2.2.1
@@ -100,7 +100,7 @@ theorem massAll_of (hH : HinfCompact) (hK : KCompactOpen) (hC : ClassFinite) : M
     (h1.toIsFiniteMeasureOnCompacts.lt_top_of_isCompact (@isCompact_univ _ _ (hH X u))).ne
   have hKo : IsOpen (Subtype.val ⁻¹' (KX X : Set (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J)) :
       Set ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) :=
-    (hK X).2.preimage continuous_subtype_val
+    (hK X).2.preimage continuous_subtypeVal
   have hb0 : (X.measW u).μHf (Subtype.val ⁻¹' (KX X : Set (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J))) ≠ 0 :=
     h2.toIsOpenPosMeasure.open_pos _ hKo ⟨1, (KX X).one_mem⟩
   have hcl : IsClosed ((Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u) :

@@ -136,7 +136,7 @@ theorem CohDimTwoLocal.of_nsmul (h : CohDimTwoLocal) (r : ℕ)
     (rho : Representation R (Dec (F := F) A) M)
     (hA : IsPlaceOver A v) (hc : ContAction rho) (n : ℕ) (hn : 3 ≤ n) :
     Subsingleton (Hn rho n) := by
-  letI : Module (ZMod (l ^ r)) M := AddCommGroup.zmodModule hM
+  let : Module (ZMod (l ^ r)) M := AddCommGroup.zmodModule hM
   exact subsingleton_Hn_of_action_eq rho (zmodRep (l ^ r) rho) (fun _ _ => rfl) n (by omega)
     (h F Ω l r M v A (zmodRep (l ^ r) rho) hA hc n hn)
 
@@ -145,7 +145,7 @@ end Consequences
 theorem cohDimTwoLocal_of_localFiniteness (h : LocalFiniteness) : CohDimTwoLocal := by
   intro F Ω _ _ _ _ _ l _ r M _ _ _ _ _ v A rho hA hc n hn
   rcases Nat.eq_zero_or_pos r with rfl | hr
-  · haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+  · have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
     exact Module.subsingleton (ZMod (l ^ 0)) _
   · exact (h F Ω l r M A rho v hr hA hc).2.2.2 n hn
 

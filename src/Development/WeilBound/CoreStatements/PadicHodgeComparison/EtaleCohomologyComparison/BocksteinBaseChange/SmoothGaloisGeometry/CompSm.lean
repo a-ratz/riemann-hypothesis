@@ -154,8 +154,8 @@ theorem isStrictlySemistable_comp_openImmersion {O : Type} [CommRing O] (ϖ : O)
   intro y
   obtain ⟨U, hU, hxU, m, r, h1r, hrm, ψ, hψ, hcomp⟩ := h (f.base y)
   obtain ⟨g, hg, hyg⟩ := hU.exists_basicOpen_le (V := f.opensRange) ⟨f.base y, y, rfl⟩ hxU
-  haveI := hU.isLocalization_basicOpen g
-  haveI : IsIso (f.app (X.basicOpen g)) := f.isIso_app _ hg
+  have := hU.isLocalization_basicOpen g
+  have : IsIso (f.app (X.basicOpen g)) := f.isIso_app _ hg
   refine ⟨(Opens.map f.base).obj (X.basicOpen g), (hU.basicOpen g).preimage_of_isOpenImmersion f hg, hyg,
     m, r, h1r, hrm,
     (f.app (X.basicOpen g)).hom.comp ((X.presheaf.map (homOfLE (X.basicOpen_le g)).op).hom.comp ψ), ?_, ?_⟩

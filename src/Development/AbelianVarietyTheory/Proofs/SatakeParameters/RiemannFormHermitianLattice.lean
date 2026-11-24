@@ -72,17 +72,17 @@ theorem mOm_injective_and_omB (k K A : Type) [Field k] [Field K] [Algebra k K] [
     Function.Injective ((semiHom_algebraMap k A K).mOm q) ∧
       ∀ y : DR k K, y ∈ omB k K B q ↔
         ∃ z : Om k A q, ((semiHom_algebraMap k A K).mOm q z : DR k K) = y := by
-  haveI : IsDomain A := (IsFractionRing.injective A K).isDomain (algebraMap A K)
-  haveI : Algebra.FormallyEtale A K := .of_isLocalization (nonZeroDivisors A)
+  have : IsDomain A := (IsFractionRing.injective A K).isDomain (algebraMap A K)
+  have : Algebra.FormallyEtale A K := .of_isLocalization (nonZeroDivisors A)
   have hE : IsLocalizedModule (nonZeroDivisors A) (formLin k A K q) :=
     (isLocalizedModule_iff_isBaseChange _ K _).2 (isBaseChange_formLin k A K q)
-  haveI : Module.Projective A (⋀[A]^q Ω[A⁄k]) := by
+  have : Module.Projective A (⋀[A]^q Ω[A⁄k]) := by
     obtain ⟨s, hs⟩ := Module.projective_def'.1 (inferInstance : Module.Projective A Ω[A⁄k])
     exact Module.Projective.of_split (exteriorPower.map q s)
       (exteriorPower.map q (Finsupp.linearCombination A id))
       (by rw [← exteriorPower.map_comp, hs, exteriorPower.map_id])
-  haveI : Module.Flat A (⋀[A]^q Ω[A⁄k]) := inferInstance
-  haveI : Module.IsTorsionFree A (⋀[A]^q Ω[A⁄k]) := Module.Flat.isTorsionFree
+  have : Module.Flat A (⋀[A]^q Ω[A⁄k]) := inferInstance
+  have : Module.IsTorsionFree A (⋀[A]^q Ω[A⁄k]) := Module.Flat.isTorsionFree
   have hinj : Function.Injective (formLin k A K q) := by
     intro x y hxy
     obtain ⟨c, hc⟩ := IsLocalizedModule.exists_of_eq (S := nonZeroDivisors A) hxy

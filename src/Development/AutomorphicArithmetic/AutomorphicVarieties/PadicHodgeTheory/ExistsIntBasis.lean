@@ -67,8 +67,8 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
     [IsModuleTopology ℚ_[l] V] (ρ : Representation ℚ_[l] G V) (hρ : ∀ x, Continuous fun g => ρ g x) :
     ∃ (n : ℕ) (e : Basis (Fin n) ℚ_[l] V), ∀ g i j, ‖e.repr (ρ g (e j)) i‖ ≤ 1 := by
   classical
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let e₀ := Module.finBasis ℚ_[l] V
   let Λ : Submodule ℤ_[l] V := Submodule.span ℤ_[l] (Set.range fun p : G × Fin (finrank ℚ_[l] V) => ρ p.1 (e₀ p.2))
   have hc : Continuous fun g : G => (fun i j => e₀.repr (ρ g (e₀ j)) i) :=
@@ -95,16 +95,16 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
       rw [smul_smul, div_mul_cancel₀ _ hc0]
     rw [h2]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : Submodule.IsLattice ℚ_[l] Λ :=
+  have : Submodule.IsLattice ℚ_[l] Λ :=
     Submodule.IsLattice.of_fg ℚ_[l] ((Submodule.fg_span (Set.finite_range _)).of_le hle)
-  haveI : Submodule.IsFullLattice ℚ_[l] Λ :=
+  have : Submodule.IsFullLattice ℚ_[l] Λ :=
     { span_eq_top := by
         rw [eq_top_iff, ← e₀.span_eq]
         refine Submodule.span_mono ?_
         rintro _ ⟨i, rfl⟩
         exact Submodule.subset_span ⟨(1, i), by simp⟩ }
-  haveI : Module.Free ℤ_[l] Λ := Submodule.IsLattice.free ℚ_[l] Λ
-  haveI : Module.Finite ℤ_[l] Λ := Submodule.IsLattice.finite ℚ_[l] Λ
+  have : Module.Free ℤ_[l] Λ := Submodule.IsLattice.free ℚ_[l] Λ
+  have : Module.Finite ℤ_[l] Λ := Submodule.IsLattice.finite ℚ_[l] Λ
   let b := Module.finBasis ℤ_[l] Λ
   have hst : ∀ g, ∀ x ∈ Λ, ρ g x ∈ Λ := by
     intro g x hx
@@ -143,7 +143,7 @@ private theorem exists_split {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : Loc
   obtain ⟨n, e, hint⟩ := exists_int_basis ρ hcont
   obtain ⟨M, hM⟩ := exists_matrixHom ρ e hint
   obtain ⟨W, hW, hWg⟩ := exists_witt_matrix (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)) M
     (continuous_pi fun i => continuous_pi fun j => continuous_induced_rng.2 (by
       have h := (IsModuleTopology.continuous_of_linearMap (e.coord i)).comp (hcont (e j))
@@ -394,7 +394,7 @@ private theorem rat_case [TopologicalSpace G] [IsTopologicalGroup G] (hφ : IsOp
     [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V]
     [ContinuousConstSMul ℚ_[l] V] (hρ : ContAction ρ) (hI : ∀ g, φ g ∈ Iq l → ρ g = 1)
     (c : G → V) (hc : c ∈ Z1 ρ) : c ∈ UpperTheory.V.Loc.finiteCocycles φ ρ ↔ ∀ g, φ g ∈ Iq l → c g = 0 := by
-  haveI : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
+  have : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
   have hρ' : ContAction (extRep ρ c hc.2) := by
     have h1 : Continuous fun p : G × (V × ℚ_[l]) => ρ p.1 p.2.1 :=
       Continuous.comp (f := fun p : G × (V × ℚ_[l]) => (p.1, p.2.1)) hρ (by fun_prop)
@@ -428,6 +428,6 @@ end Ext
 theorem UpperTheory.V.Loc.z1fUnr :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) {A : Type} [CommRing A] [Algebra ℚ_[l] A] {V : Type} [AddCommGroup V] [Module A V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] A V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul A V] (ρ : Representation A G V), ContAction ρ → (∀ g, φ g ∈ Iq l → ρ g = 1) → ∀ c ∈ Z1 ρ, (c ∈ UpperTheory.V.Loc.finiteCocycles φ ρ ↔ ∀ g, φ g ∈ Iq l → c g = 0) := by
   intro _ l _ G _ _ _ φ hφ A _ _ V _ _ _ _ _ _ _ _ _ ρ hρ hI c hc
-  haveI : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
+  have : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
   exact rat_case φ (resCoef ℚ_[l] ρ) hφ hρ
     (fun g hg => LinearMap.ext fun x => DFunLike.congr_fun (hI g hg) x) c hc

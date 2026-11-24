@@ -391,7 +391,7 @@ theorem int_R' (hD : RingDef O T r₀ π χ₁ ε g₀ eB e₁ s Dd) :
   simp only [Finset.sum_apply, Matrix.sum_apply, map_sum, map_mul]
   refine Finset.sum_congr rfl fun g _ => ?_
   have := h7 g x'
-  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_comp, MonoidHom.coe_coe, Function.comp_apply] at *
+  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_comp, MonoidHom.coe_ofClass, Function.comp_apply] at *
   rw [Matrix.smul_apply, smul_eq_mul]
   congr 1
   show _ = ((Dd.r g : Dd.R') : Dd.X' → Matrix d d (FractionRing O)) x' i j

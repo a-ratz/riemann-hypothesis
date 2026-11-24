@@ -92,8 +92,8 @@ theorem vec_smul_real (v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))) (s 
 theorem exists_approx {L : Submodule (𝓞 E) (Fin r → E)} (hL : L.FG) {n : ℕ} (hn : 0 < n)
     (z : ∀ v : HeightOneSpectrum (𝓞 (maximalRealSubfield E)), Fin r → LocAlg v) (hz : ∀ v, z v ∈ locLattice v L) :
     ∃ b ∈ L, ∀ v, ∃ u ∈ locLattice v L, z v = vec v b + n • u := by
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
-  haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
+  have : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
   obtain ⟨m, t, ht⟩ := Module.Finite.exists_fin (R := ℤ) (M := L)
   have h1 : ∀ v, z v ∈ Submodule.span (v.adicCompletionIntegers (maximalRealSubfield E)) (Set.range fun i : Fin m => vec (E := E) (r := r) v (t i : Fin r → E)) := by
     intro v
@@ -161,9 +161,9 @@ theorem exists_linear_approx {L L' : Submodule (𝓞 E) (Fin r → E)} (hL : L.F
     (hγ : ∀ v, ∀ x ∈ locLattice v L, γ v *ᵥ x ∈ locLattice v L') :
     ∃ f : L →ₗ[𝓞 E] L', ∀ a : L, ∀ v, ∃ u ∈ locLattice v L',
       γ v *ᵥ vec v (a : Fin r → E) = vec v (f a : Fin r → E) + n • u := by
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
-  haveI : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 E) L := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
+  have : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 E) L := Module.Flat.projective_of_finitePresentation
   have hsurj : Function.Surjective ((LinearMap.fst (𝓞 E) L L').comp (rel L L' γ n).subtype) := by
     intro a
     obtain ⟨b, hb, h⟩ := exists_approx hL' hn (fun v => γ v *ᵥ vec v (a : Fin r → E))

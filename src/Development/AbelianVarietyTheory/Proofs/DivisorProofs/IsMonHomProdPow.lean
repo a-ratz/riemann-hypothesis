@@ -83,8 +83,8 @@ theorem isSquare_comp {S S' S'' : Scheme.{0}} {G : Over S} {G' : Over S'} {G'' :
 theorem isMonHom_prodPow {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj A] {r : ℕ} (f : Fin r → (A ⟶ A))
     (hf : ∀ k, IsMonHom (f k)) (c : Fin r → ℤ) : IsMonHom (∏ k, f k ^ c k) :=
   Finset.prod_induction _ (fun x => IsMonHom x) (fun a b ha hb => by
-    haveI := ha; haveI := hb; exact GlobalTheory.Serre.isMonHom_mul a b) GlobalTheory.Serre.isMonHom_one fun k _ => by
-    haveI := hf k; exact GlobalTheory.Serre.isMonHom_zpow _ _
+    have := ha; have := hb; exact GlobalTheory.Serre.isMonHom_mul a b) GlobalTheory.Serre.isMonHom_one fun k _ => by
+    have := hf k; exact GlobalTheory.Serre.isMonHom_zpow _ _
 
 theorem powext {S : Scheme.{0}} (A : Over S) (r : ℕ) {X : Scheme.{0}} (a b : X ⟶ (Out.powObj A r).left)
     (h0 : a ≫ (Out.powObj A r).hom = b ≫ (Out.powObj A r).hom)

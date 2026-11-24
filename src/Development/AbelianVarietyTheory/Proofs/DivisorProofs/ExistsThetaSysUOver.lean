@@ -71,7 +71,7 @@ namespace GlobalTheory.UPoinc.GSetup
 
 theorem finite_stalkMap_field {K Ω : Type} [Field K] [Field Ω] (f : K →+* Ω) (hf : f.Finite) (x : Sp Ω) :
     ((spMap f).stalkMap x).hom.Finite := by
-  haveI := x.isPrime
+  have := x.isPrime
   refine (RingHom.finite_respectsIso.arrow_mk_iso_iff
     (Scheme.arrowStalkMapSpecIso (CommRingCat.ofHom f) x)).2 ?_
   refine RingHom.Finite.of_comp_finite (f := algebraMap K _) ?_
@@ -87,20 +87,20 @@ theorem exists_base_root (o F Ω : Type) [CommRing o] [IsDedekindDomain o] [Fiel
     ∃ (o₁ : Type) (_ : CommRing o₁) (_ : Algebra o₁ Ω) (κ : o →+* o₁) (ze : o₁ˣ), IsDedekindDomain o₁ ∧ κ.Finite ∧
       Function.Injective (algebraMap o₁ Ω) ∧ (algebraMap o₁ Ω).comp κ = β.comp (algebraMap o F) ∧
       Units.map (algebraMap o₁ Ω).toMonoidHom ze = ζ := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have hz : (ζ : Ω) ^ m = 1 := by rw [← Units.val_pow_eq_pow_val, hζ, Units.val_one]
   have hint : ∀ (A : Type) [CommRing A] (L : Type) [CommRing L] [Algebra A L] (z : L), z ^ m = 1 → IsIntegral A z :=
     fun A _ L _ _ z h => IsIntegral.of_pow (by omega : 0 < m) (h ▸ isIntegral_one)
   let L : IntermediateField F Ω := IntermediateField.adjoin F {(ζ : Ω)}
-  haveI : FiniteDimensional F L := IntermediateField.adjoin.finiteDimensional (hint F Ω _ hz)
-  letI : Algebra o L := ((algebraMap F L).comp (algebraMap o F)).toAlgebra
-  haveI : IsScalarTower o F L := IsScalarTower.of_algebraMap_eq' rfl
+  have : FiniteDimensional F L := IntermediateField.adjoin.finiteDimensional (hint F Ω _ hz)
+  let : Algebra o L := ((algebraMap F L).comp (algebraMap o F)).toAlgebra
+  have : IsScalarTower o F L := IsScalarTower.of_algebraMap_eq' rfl
   let zL : L := ⟨ζ, IntermediateField.mem_adjoin_simple_self F _⟩
   have hzL : zL ^ m = 1 := Subtype.ext (by simpa using hz)
   let o₁ := integralClosure o L
   let z : o₁ := ⟨zL, hint o L _ hzL⟩
   have hz₁ : z ^ m = 1 := Subtype.ext (by simpa using hzL)
-  letI : Algebra o₁ Ω := ((algebraMap L Ω).comp (algebraMap o₁ L)).toAlgebra
+  let : Algebra o₁ Ω := ((algebraMap L Ω).comp (algebraMap o₁ L)).toAlgebra
   refine ⟨o₁, inferInstance, inferInstance, algebraMap o o₁, Units.ofPowEqOne z m hz₁ (by omega),
     integralClosure.isDedekindDomain o F L, RingHom.finite_algebraMap.2 (IsIntegralClosure.finite o F L o₁),
     (algebraMap L Ω).injective.comp Subtype.val_injective, rfl, Units.ext rfl⟩
@@ -109,10 +109,10 @@ theorem exists_level_finite (K : Type) [Field K] [CharZero K] (A : PolAV (Sp K))
     ∃ (Ω : Type) (_ : Field Ω) (f : K →+* Ω) (A₁ : PolAV (Sp Ω)) (ψ : A₁.A.left ⟶ A.A.left) (ze : Ωˣ),
       f.Finite ∧ IsPolFibre f A A₁ ψ ∧ ze ^ m = 1 ∧ Nonempty (Out.Level A₁ m (unitOn ze)) := by
   obtain ⟨K', _, _, hfin, H⟩ := LevelAfterExt.exists_ext_level K A m hm
-  haveI : FiniteDimensional K K' := hfin
+  have : FiniteDimensional K K' := hfin
   obtain ⟨Ω, _, _, _, _, j, ζ, hζ⟩ := MumLevel.exists_galois_root K K' m hm
   let f : K →+* Ω := algebraMap K Ω
-  haveI : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
+  have : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
   obtain ⟨A₁, ψ, hA⟩ := exists_isPolFibre GlobalTheory.laws_without_cohomology.2.2.1 f A
   let ze : Ωˣ := (hζ.isUnit (by omega)).unit
   have hze : IsPrimitiveRoot (ze : Ω) m := hζ
@@ -167,8 +167,8 @@ theorem exists_fg_ratHull {o F o₁ Ω A : Type} [CommRing o] [Field F] [CommRin
     (he : e.comp φ = β) :
     ∃ R₀ : Subalgebra o₁ Ω, R₀.FG ∧ (∀ z : Ω, ∃ a ∈ R₀, ∃ c ∈ R₀, z = a / c) ∧ ∀ a, e a ∈ ratHull R₀ := by
   classical
-  letI := β.toAlgebra
-  letI := φ.toAlgebra
+  let := β.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨σ, hσ⟩ := (Algebra.essFiniteType_iff F Ω).1 hβ
   obtain ⟨t, ht⟩ := hφ
   let R₀ : Subalgebra o₁ Ω := Algebra.adjoin o₁ ((σ : Set Ω) ∪ e '' (t : Set A))
@@ -216,8 +216,8 @@ theorem exists_thetaSys_uOver (Xo : Moduli D l) (c : Coeff l) {o Ω : Type} [Com
       S.g = A₁.g ∧ UOver Xo c ρ.P (toRat S.R) u ∧
       spMap (ratHull S.R).val.toRingHom ≫ u = spMap (ratHull R₀).val.toRingHom ≫ u₀ := by
   obtain ⟨hL, hL₂⟩ := GlobalTheory.abelianSchemeLaws_all
-  haveI := hb.ded
-  haveI := hb.char
+  have := hb.ded
+  have := hb.char
   have hM : IsUnit (((n ^ j * (n ^ k) ^ 2) ^ 2 : ℕ) : o) := by
     push_cast
     exact ((hun.pow _).mul ((hun.pow _).pow _)).pow _
@@ -239,11 +239,11 @@ theorem exists_thetaSys_uOver (Xo : Moduli D l) (c : Coeff l) {o Ω : Type} [Com
   have pt' : spMap (ratHull R').val.toRingHom ≫ u' = spMap (ratHull R₀).val.toRingHom ≫ u₀ := by
     rw [← ptR, ← Category.assoc, ← Spec.map_comp]; rfl
 
-  haveI : IsNoetherianRing o := inferInstance
-  haveI := (Subalgebra.fg_iff_finiteType R).1 hR
-  haveI := (Subalgebra.fg_iff_finiteType R').1 hR'
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing o R
-  haveI : IsNoetherianRing R' := Algebra.FiniteType.isNoetherianRing o R'
+  have : IsNoetherianRing o := inferInstance
+  have := (Subalgebra.fg_iff_finiteType R).1 hR
+  have := (Subalgebra.fg_iff_finiteType R').1 hR'
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing o R
+  have : IsNoetherianRing R' := Algebra.FiniteType.isNoetherianRing o R'
   obtain ⟨P'', φ', hP''⟩ := exists_isPolFibre GlobalTheory.laws_without_cohomology.2.2.1
     (Subalgebra.inclusion hle').toRingHom P'
   have hL'' : LBIso P''.L (P'.L.pull φ') := LBIso.symm hP''.2.2
@@ -300,7 +300,7 @@ theorem exists_fibre (Xo : Moduli D l) (c : Coeff l) {K : Type} [CommRing K] (y 
     ∃ P : PolAV (Sp K), HypS P.A P.L ∧ UOver Xo c P (RingHom.id K) y := by
   obtain ⟨P, g, hG, hL⟩ := exists_pol_baseChange (Obj.toPolAV Xo.univ) (y ≫ pullback.fst _ _)
   have := P.isAb.comm
-  haveI : IsMonHom (Iso.refl P.A).hom := inferInstanceAs (IsMonHom (𝟙 P.A))
+  have : IsMonHom (Iso.refl P.A).hom := inferInstanceAs (IsMonHom (𝟙 P.A))
   refine ⟨P, SymBaseChange.hypS_baseChange _ _ Xo.univ.t.G P.A _ g _ _ Xo.univ.t.PP.isLB P.isLB hG hL (hypS_univ Xo),
     P.A, inferInstance, 𝟙 _, g, (isGrpPullback_of_iso (Iso.refl P.A)).congr (Spec.map_id _).symm rfl, hG, ?_⟩
   exact LBIso.trans (pull_isLB P.isLB _) P.isLB (pull_isLB Xo.univ.t.PP.isLB _)
@@ -308,10 +308,10 @@ theorem exists_fibre (Xo : Moduli D l) (c : Coeff l) {K : Type} [CommRing K] (y 
 
 theorem exists_uSetup : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c), ∀ η ∈ genericPoints (Xo.XF c), ∀ B : ℕ, ∃ X₁ : USetup C, B ≤ X₁.S.N ∧ ∀ w, X₁.uΩ w = η := by
   intro E _ _ _ H Dw hpq l Xo c C η hη B
-  haveI := c.fin
-  haveI : NumberField c.F := {}
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim _
+  have := c.fin
+  have : NumberField c.F := {}
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim _
   obtain ⟨A, _, φ, j, P, _, hφ, hjs, hjo, hjx⟩ :=
     exists_chart (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) η
   let ev : A →+* P.ResidueField := algebraMap A P.ResidueField
@@ -324,14 +324,14 @@ theorem exists_uSetup : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
       exact Ideal.ker_algebraMap_residueField _
     show j (spMap ev w) = η
     rw [hp, hjx]
-  haveI : CharZero P.ResidueField := (ev.comp φ).charZero_iff (ev.comp φ).injective |>.1 inferInstance
+  have : CharZero P.ResidueField := (ev.comp φ).charZero_iff (ev.comp φ).injective |>.1 inferInstance
   obtain ⟨A₀, hS₀, hU₀⟩ := exists_fibre Xo c y
   have ho : Odd H.d := Nat.odd_iff.2 (by have := H.d_mod; omega)
   obtain ⟨k, j₁, hk, hBk, hj₁, big⟩ := exists_big_level A₀.g H.d H.d_prime.two_le B
   obtain ⟨Ω, _, f, A₁, ψ, ze, hf, hA₁, hze, ⟨lev⟩⟩ :=
     exists_level_finite P.ResidueField A₀ ((H.d ^ j₁ * (H.d ^ k) ^ 2) ^ 2) (Nat.one_le_iff_ne_zero.2 (by
       have := H.d_prime.pos; positivity))
-  haveI : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
+  have : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
   have hU₁ : UOver Xo c A₁ (RingHom.id Ω) (spMap f ≫ y) := by
     refine (uOver_baseChange_iff hA₁.2.1 (LBIso.symm hA₁.2.2) (RingHom.id Ω)).2 ?_
     rw [RingHom.id_comp]
@@ -340,18 +340,18 @@ theorem exists_uSetup : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     have := A₀.isAb.comm
     have := A₁.isAb.comm
     exact SymBaseChange.hypS_baseChange _ _ _ _ _ ψ _ _ A₀.isLB A₁.isLB hA₁.2.1 (LBIso.symm hA₁.2.2) hS₀
-  letI : Algebra C.o c.F := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI := C.ded
+  let : Algebra C.o c.F := C.b.toAlgebra
+  have := C.isFractionRing
+  have := C.ded
   let β : c.F →+* Ω := f.comp (ev.comp φ)
   obtain ⟨o₁, _, _, κ, ze₁, hded, hκ, hinj, hcomp, hze₁⟩ :=
     exists_base_root C.o c.F Ω β ze _ (Nat.one_le_iff_ne_zero.2 (by have := H.d_prime.pos; positivity)) hze
   have hft : Algebra.FiniteType ℤ o₁ := by
-    letI := κ.toAlgebra
-    haveI := C.ft
-    haveI : Algebra.FiniteType C.o o₁ := hκ.finiteType
+    let := κ.toAlgebra
+    have := C.ft
+    have : Algebra.FiniteType C.o o₁ := hκ.finiteType
     exact Algebra.FiniteType.trans C.ft this
-  haveI : ArithBase o₁ Ω := ⟨hded, hft, inferInstance, hinj⟩
+  have : ArithBase o₁ Ω := ⟨hded, hft, inferInstance, hinj⟩
   have hun : IsUnit (H.d : o₁) := by simpa using C.unit_d.map κ
   rw [← hze₁] at lev
   have hβ : β.EssFiniteType :=
@@ -365,9 +365,9 @@ theorem exists_uSetup : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     exists_thetaSys_uOver Xo c R₀ hR₀ hfr u₀ A₁ (hu₀ ▸ hU₁) hS₁ H.d k j₁ H.d_prime ho hk hj₁ hun ze₁ lev
   have hbig : S.Big := big j₁ le_rfl o₁ Ω S (hg.trans hA₁.1) hN hr
   have hp : spMap (ratHull S.R).val.toRingHom ≫ u = spMap f ≫ spMap ev ≫ j := hpt.trans hu₀
-  haveI : IsProper C.z := ThetaDescent.isProper_of_isProjOver C.proj
-  haveI := C.isPreimmersion_i
-  haveI : SurjectiveOnStalks (spMap ev) :=
+  have : IsProper C.z := ThetaDescent.isProper_of_isProjOver C.proj
+  have := C.isPreimmersion_i
+  have : SurjectiveOnStalks (spMap ev) :=
     (SurjectiveOnStalks.Spec_iff (φ := CommRingCat.ofHom ev)).2 (Ideal.surjectiveOnStalks_residueField P)
   have hi : C.i ≫ C.z = pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom) ≫ spMap C.b := by
     simp only [UCompact.i, Category.assoc, pullback.condition]

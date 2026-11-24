@@ -127,8 +127,8 @@ variable {K : Type} [CommRing K] {A B C : Type} [CommRing A] [CommRing B] [CommR
 
 theorem omMap_smul (φ : A →ₐ[K] B) {a : ℕ} (c : A) (ω : Om K A a) :
     omMap φ a (c • ω) = φ c • omMap φ a ω := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
   have h := map_smul (exteriorPower.alternatingMapLinearEquiv
     { ((exteriorPower.ιMulti B a (M := Ω[B⁄K])).toMultilinearMap.restrictScalars A).compLinearMap
         fun _ => KaehlerDifferential.map K K A B with
@@ -141,14 +141,14 @@ theorem omMap_ιMulti (φ : A →ₐ[K] B) {a : ℕ} (g : Fin a → Ω[A⁄K]) :
     letI : Algebra A B := φ.toRingHom.toAlgebra
     haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
     omMap φ a (exteriorPower.ιMulti A a g) = exteriorPower.ιMulti B a fun k => KaehlerDifferential.map K K A B (g k) := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
   exact exteriorPower.alternatingMapLinearEquiv_apply_ιMulti _ _
 
 theorem omMap_form (φ : A →ₐ[K] B) {a : ℕ} (g₀ : A) (g : Fin a → A) :
     omMap φ a (form K g₀ g) = form K (φ g₀) fun k => φ (g k) := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
   unfold form
   rw [omMap_smul, omMap_ιMulti]
   congr 2
@@ -182,13 +182,13 @@ theorem map_map_apply (φ : A →ₐ[K] B) (χ : B →ₐ[K] C) (v : Ω[A⁄K]) 
     haveI : IsScalarTower K B C := IsScalarTower.of_algHom χ
     haveI : IsScalarTower K A C := IsScalarTower.of_algHom (χ.comp φ)
     KaehlerDifferential.map K K B C (KaehlerDifferential.map K K A B v) = KaehlerDifferential.map K K A C v := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  letI : Algebra B C := χ.toRingHom.toAlgebra
-  letI : Algebra A C := (χ.comp φ).toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
-  haveI : IsScalarTower K B C := IsScalarTower.of_algHom χ
-  haveI : IsScalarTower K A C := IsScalarTower.of_algHom (χ.comp φ)
-  haveI : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  let : Algebra B C := χ.toRingHom.toAlgebra
+  let : Algebra A C := (χ.comp φ).toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  have : IsScalarTower K B C := IsScalarTower.of_algHom χ
+  have : IsScalarTower K A C := IsScalarTower.of_algHom (χ.comp φ)
+  have : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hs : v ∈ (⊤ : Submodule A Ω[A⁄K]) := trivial
   rw [← KaehlerDifferential.span_range_derivation] at hs
   induction hs using Submodule.span_induction with
@@ -341,7 +341,7 @@ theorem tdeg_oneE_inr (j : Fin d) : tdeg (oneE (Sum.inr j) : Gam n d) = 1 := by
 theorem ratE_mem {S : Finset (Fin d)} {k : Fin d} (hk : k ∈ S) (j : Fin d) : ratE k j ∈ (cone S : AddSubmonoid (Gam n d)) := by
   refine ⟨fun l => by simp [ratE, oneE], fun j' hj' => ?_, ?_⟩
   · have hne : j' ≠ k := fun h => hj' (h ▸ hk)
-    simp only [ratE, oneE, Pi.sub_apply, Pi.single_apply, Sum.inr.injEq, if_neg hne, sub_zero]
+    simp only [ratE, oneE, Pi.sub_apply, Pi.single_apply, Sum.inr.injEq, ite_eq_right hne, sub_zero]
     split_ifs <;> simp
   · have h1 := tdeg_add (ratE k j : Gam n d) (oneE (Sum.inr k))
     have h2 : (ratE k j : Gam n d) + oneE (Sum.inr k) = oneE (Sum.inr j) := by simp [ratE]

@@ -114,8 +114,8 @@ theorem UpperTheory.V.Z.Desc.V0.muRange :
     MuRange := by
   unfold MuRange
   intro O L B K _ _ _ _ _ _ _ _ _ lam J M _ _ _ h e he
-  letI : Algebra L B := (lam : L →+* B).toAlgebra
-  haveI : IsScalarTower L B M := ⟨fun a b m => by
+  let : Algebra L B := (lam : L →+* B).toAlgebra
+  have : IsScalarTower L B M := ⟨fun a b m => by
     rw [Algebra.smul_def, mul_smul, h.hs]
     rfl⟩
   let eB : M →ₗ[B] M :=
@@ -140,14 +140,14 @@ theorem UpperTheory.V.Z.Desc.V0.muRange :
   have hei : e.comp i = i := by
     ext ⟨x, m, rfl⟩
     exact hee m
-  haveI := h.free
-  haveI := h.fin
-  haveI : Module.Projective L P := Module.Projective.of_split i s hsi
-  haveI : Module.Finite L P := Module.Finite.of_surjective s (fun x => ⟨i x, by
+  have := h.free
+  have := h.fin
+  have : Module.Projective L P := Module.Projective.of_split i s hsi
+  have : Module.Finite L P := Module.Finite.of_surjective s (fun x => ⟨i x, by
     rw [← LinearMap.comp_apply, hsi, LinearMap.id_apply]⟩)
-  haveI : Module.Flat L P := Module.Flat.of_projective
-  haveI : Module.Free L P := Module.free_of_flat_of_isLocalRing
-  haveI : Module.IsTorsionFree L P := Module.Free.instIsTorsionFree _ _
+  have : Module.Flat L P := Module.Flat.of_projective
+  have : Module.Free L P := Module.free_of_flat_of_isLocalRing
+  have : Module.IsTorsionFree L P := Module.Free.instIsTorsionFree _ _
   let J' : Ideal B := (Module.annihilator B P).radical
   have hD : Dat lam J' P :=
     { hs := hsP
@@ -173,7 +173,7 @@ theorem UpperTheory.V.Z.Desc.V0.muRange :
     intro m
     exact Subtype.ext (hb m)
   refine ⟨J', P, inferInstance, inferInstance, inferInstance, hD, hJ, fun y => ?_⟩
-  letI : Algebra L K := ((y : B →+* K).comp (lam : L →+* B)).toAlgebra
+  let : Algebra L K := ((y : B →+* K).comp (lam : L →+* B)).toAlgebra
   let F : B → Module.End K (K ⊗[L] M) := fun b => LinearMap.baseChange K (actL lam M h.hs b)
   let G : B → Module.End K (K ⊗[L] P) := fun b => LinearMap.baseChange K (actL lam P hsP b)
   let E : Module.End K (K ⊗[L] M) := LinearMap.baseChange K e
@@ -251,8 +251,8 @@ theorem UpperTheory.V.Z.Desc.V0.muRange :
   have hGc : G a - c • 1 = c • (c⁻¹ • G a - 1) := by
     rw [smul_sub, smul_smul, mul_inv_cancel₀ hya, one_smul]
   rw [hGc, _root_.smul_pow, LinearMap.smul_apply] at hk
-  haveI : Module.Free K (K ⊗[L] P) := Module.Free.of_divisionRing K _
-  haveI : Module.IsTorsionFree K (K ⊗[L] P) := Module.Free.instIsTorsionFree _ _
+  have : Module.Free K (K ⊗[L] P) := Module.Free.of_divisionRing K _
+  have : Module.IsTorsionFree K (K ⊗[L] P) := Module.Free.instIsTorsionFree _ _
   have hk2 := (smul_eq_zero.mp hk).resolve_left (pow_ne_zero k hya)
   have hinj2 := (Module.End.isUnit_iff _).mp (hX.pow k)
   exact hw0 (hinj2.1 (by rw [hk2, map_zero]))
@@ -374,7 +374,7 @@ set_option linter.overlappingInstances false in
 private lemma approx_ideal {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [IsLocalRing R]
     [Algebra O R] [UpperTheory.V.Alg.IsCO O R] (I : Ideal R) :
     ∃ M : Submodule O R, M.FG ∧ ∀ z ∈ I, ∃ w ∈ M, z - w ∈ maximalIdeal R * I := by
-  haveI : IsNoetherianRing R := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := O)
+  have : IsNoetherianRing R := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := O)
   obtain ⟨s, hs⟩ : I.FG := IsNoetherian.noetherian I
   subst hs
   refine ⟨Submodule.span O s, Submodule.fg_span s.finite_toSet, fun z hz => ?_⟩
@@ -504,10 +504,10 @@ theorem UpperTheory.Reformulated.B.Ra2.finite_of_alg :
         (∀ (a : R), ∃ (P : Polynomial O), P ≠ (0 : Polynomial O) ∧ (Polynomial.aeval a : Polynomial O → R) P = (0 : R)) →
           Module.Finite O R := by
   intro O R _ _ _ _ _ _ _ _ hinj halg
-  haveI : IsLocalRing R := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := O)
-  haveI : IsNoetherianRing R := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := O)
-  haveI : IsLocalHom (algebraMap O R) := UpperTheory.V.Alg.IsCO.isLocalHom
-  haveI : IsHausdorff (maximalIdeal R) R :=
+  have : IsLocalRing R := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := O)
+  have : IsNoetherianRing R := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := O)
+  have : IsLocalHom (algebraMap O R) := UpperTheory.V.Alg.IsCO.isLocalHom
+  have : IsHausdorff (maximalIdeal R) R :=
     (UpperTheory.V.Alg.IsCO.complete (O := O) (R := R)).toIsHausdorff
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hrad : maximalIdeal R ≤ (Ideal.span {algebraMap O R ϖ}).radical := fun x hx => by
@@ -542,13 +542,13 @@ private theorem exists_sqz {O Λ A N : Type} [CommRing O] [IsLocalRing O] [CommR
     [IsCO O A] [AddCommGroup N] [Module A N] [Module O N] [IsScalarTower O A N] [Module.Finite A N] (p : Λ →ₐ[O] A)
     (d : Λ →ₗ[O] N) (hd : ∀ f g, d (f * g) = p f • d g + p g • d f) :
     ∃ (T : Type) (_ : CommRing T) (_ : Algebra O T) (_ : IsCO O T) (f₀ f₁ : Λ →ₐ[O] T), ∀ a, f₀ a = f₁ a ↔ d a = 0 := by
-  letI : Module Aᵐᵒᵖ N := Module.compHom N ((RingHom.id A).fromOpposite fun x y => Commute.all x y)
-  haveI : IsCentralScalar A N := ⟨fun _ _ => rfl⟩
-  haveI : SMulCommClass A Aᵐᵒᵖ N := ⟨fun a b n => smul_comm a (MulOpposite.unop b) n⟩
-  haveI : IsScalarTower O Aᵐᵒᵖ N := ⟨fun c b n => by
+  let : Module Aᵐᵒᵖ N := Module.compHom N ((RingHom.id A).fromOpposite fun x y => Commute.all x y)
+  have : IsCentralScalar A N := ⟨fun _ _ => rfl⟩
+  have : SMulCommClass A Aᵐᵒᵖ N := ⟨fun a b n => smul_comm a (MulOpposite.unop b) n⟩
+  have : IsScalarTower O Aᵐᵒᵖ N := ⟨fun c b n => by
     change (c • MulOpposite.unop b) • n = c • (MulOpposite.unop b • n)
     exact smul_assoc c _ n⟩
-  letI : Algebra O (TrivSqZeroExt A N) := TrivSqZeroExt.algebra' O A N
+  let : Algebra O (TrivSqZeroExt A N) := TrivSqZeroExt.algebra' O A N
   have h1 : d 1 = 0 := by
     have := hd 1 1
     simp only [mul_one, map_one, one_smul] at this
@@ -583,7 +583,7 @@ private theorem exists_pair_of_der {O Λ K : Type} [CommRing O] [IsDomain O] [Is
     ∃ (T : Type) (_ : CommRing T) (_ : Algebra O T) (_ : IsCO O T) (f₀ f₁ : Λ →ₐ[O] T), ∀ a, f₀ a = f₁ a ↔ d a = 0 := by
   classical
   have hsurj : Function.Surjective p.rangeRestrict := p.rangeRestrict_surjective
-  haveI : IsCO O p.range := co_quot O Λ p.range p.rangeRestrict hsurj
+  have : IsCO O p.range := co_quot O Λ p.range p.rangeRestrict hsurj
   have hfin : Module.Finite O p.range := finite_of_alg
     (fun a b h => hinj (congrArg Subtype.val h))
     fun a => by
@@ -591,7 +591,7 @@ private theorem exists_pair_of_der {O Λ K : Type} [CommRing O] [IsDomain O] [Is
       exact ⟨P, hP, Subtype.ext (by rw [← Subalgebra.aeval_coe]; simpa using h0)⟩
   obtain ⟨G, hG⟩ := hfin.fg_top
   choose ℓ hℓ using hsurj
-  haveI : IsNoetherianRing Λ := IsCO.toIsNoetherian (O := O)
+  have : IsNoetherianRing Λ := IsCO.toIsNoetherian (O := O)
   obtain ⟨Q, hQ⟩ : (RingHom.ker p).FG := IsNoetherian.noetherian _
   let N : Submodule p.range K := Submodule.span p.range (d '' ((G.image ℓ : Finset Λ) ∪ Q : Finset Λ))
   have hsub : ∀ f ∈ (G.image ℓ : Finset Λ) ∪ Q, d f ∈ N := fun f hf =>
@@ -638,14 +638,14 @@ private theorem exists_pair_of_der {O Λ K : Type} [CommRing O] [IsDomain O] [Is
     { toFun := fun f => ⟨d f, key f⟩
       map_add' := fun a b => Subtype.ext (map_add d a b)
       map_smul' := fun c a => Subtype.ext (map_smul d c a) }
-  haveI : Module.Finite p.range N := Module.Finite.iff_fg.2 (Submodule.fg_span (Set.Finite.image _ (Finset.finite_toSet _)))
+  have : Module.Finite p.range N := Module.Finite.iff_fg.2 (Submodule.fg_span (Set.Finite.image _ (Finset.finite_toSet _)))
   obtain ⟨T, i1, i2, i3, f₀, f₁, hf⟩ := exists_sqz p.rangeRestrict d' fun f g => Subtype.ext (hd f g)
   exact ⟨T, i1, i2, i3, f₀, f₁, fun a => (hf a).trans ⟨fun h => congrArg Subtype.val h, fun h => Subtype.ext h⟩⟩
 
 private theorem map_mem_max {O Λ T : Type} [CommRing O] [IsLocalRing O] [CommRing Λ] [IsLocalRing Λ]
     [Algebra O Λ] [IsCO O Λ] [CommRing T] [IsLocalRing T]
     [Algebra O T] [IsCO O T] (f : Λ →ₐ[O] T) {x : Λ} (hx : x ∈ maximalIdeal Λ) : f x ∈ maximalIdeal T := by
-  haveI : IsLocalHom (algebraMap O T) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap O T) := IsCO.isLocalHom
   by_contra hn
   obtain ⟨b, hb⟩ := IsCO.res_surj (O := O) (f x)
   have hbu : IsUnit (algebraMap O T b) := by
@@ -679,8 +679,8 @@ private theorem adic_push {O Λ T Γ : Type} [CommRing O] [IsLocalRing O] [CommR
 private theorem inert_push {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O]
     {n : ℕ} (r : W.Resid F O n) (Λ : W.LamObj r) {T : Type} [CommRing T] [Algebra O T] [IsCO O T] (f : Λ.Λ →ₐ[O] T) :
     W.IsInert r fun v i => W.pushCh (f : Λ.Λ →+* T) (Λ.κ v i) := fun v i => by
-  haveI : IsLocalRing Λ.Λ := IsCO.toIsLocalRing (O := O)
-  haveI : IsLocalRing T := IsCO.toIsLocalRing (O := O)
+  have : IsLocalRing Λ.Λ := IsCO.toIsLocalRing (O := O)
+  have : IsLocalRing T := IsCO.toIsLocalRing (O := O)
   obtain ⟨ψ, h, hk⟩ := Λ.inert v i
   refine ⟨W.pushCh (f : Λ.Λ →+* T) ψ, ⟨adic_push f h.cont, fun g => ?_, fun g => ?_⟩, ?_⟩
   · exact (res_map f _).trans (h.red g)
@@ -695,7 +695,7 @@ open UpperTheory.V.J UpperTheory.V.W UpperTheory.V.HV Formalism.ConjugateSelfDua
 theorem UpperTheory.V.J.lamDer :
     UpperTheory.V.J.LamDer := by
   intro l _ L Ω _ _ _ _ _ _ s V c n r B Λ x m _ δ hδ hk a
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
   have hinj : Function.Injective (algebraMap c.O (Qbar l)) := Subtype.val_injective
   have hal : ∀ a : Qbar l, ∃ P : c.O[X], P ≠ 0 ∧ aeval a P = 0 := fun a => by
     have h1 : IsAlgebraic ℚ_[l] a := Algebra.IsAlgebraic.isAlgebraic a
@@ -829,14 +829,14 @@ theorem UpperTheory.V.Z.Desc.V0.unramified_at_of_dense_purity_num_e_power_series
   obtain ⟨y₀, hy₀, hyb₀⟩ := hex
   have hone := (hmu x y₀ w hJ hy₀.1 hA hy₀.2 hI (hopen y₀ w hy₀.1 hy₀.2 hyb₀)).1
   obtain ⟨e⟩ := hiso
-  haveI : IsDomain (MvPowerSeries (Fin m) c.O) := GlobalTheory.CohenStructure.isDomain_mvPowerSeries c.O m
-  haveI : IsDomain Λ.Λ := e.toRingEquiv.toMulEquiv.isDomain _
-  haveI : IsIntegrallyClosed (MvPowerSeries (Fin m) c.O) := GlobalTheory.CohenStructure.isIntegrallyClosed_mvPowerSeries c.O m
-  haveI : IsIntegrallyClosed Λ.Λ := IsIntegrallyClosed.of_equiv e.toRingEquiv.symm
-  haveI : IsNoetherianRing Λ.Λ := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := c.O)
-  haveI : IsLocalRing Λ.Λ := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := c.O)
-  haveI : CharZero Λ.Λ := by
-    haveI : CharZero c.O :=
+  have : IsDomain (MvPowerSeries (Fin m) c.O) := GlobalTheory.CohenStructure.isDomain_mvPowerSeries c.O m
+  have : IsDomain Λ.Λ := e.toRingEquiv.toMulEquiv.isDomain _
+  have : IsIntegrallyClosed (MvPowerSeries (Fin m) c.O) := GlobalTheory.CohenStructure.isIntegrallyClosed_mvPowerSeries c.O m
+  have : IsIntegrallyClosed Λ.Λ := IsIntegrallyClosed.of_equiv e.toRingEquiv.symm
+  have : IsNoetherianRing Λ.Λ := UpperTheory.V.Alg.IsCO.toIsNoetherian (O := c.O)
+  have : IsLocalRing Λ.Λ := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := c.O)
+  have : CharZero Λ.Λ := by
+    have : CharZero c.O :=
       (RingHom.charZero_iff (ϕ := (c.O.val : c.O →ₐ[ℤ_[l]] PadicAlgCl l).toRingHom) Subtype.val_injective).2 inferInstance
     have hC : Function.Injective (MvPowerSeries.C : c.O →+* MvPowerSeries (Fin m) c.O) := fun a b hab => by
       simpa using congrArg MvPowerSeries.constantCoeff hab

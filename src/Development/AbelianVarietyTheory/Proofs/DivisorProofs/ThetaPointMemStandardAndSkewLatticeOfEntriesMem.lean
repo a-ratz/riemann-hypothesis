@@ -62,7 +62,7 @@ theorem pt_mem_of_entries_mem (D : D7) (δ : ℂ) (𝔪 : Ideal (𝓞 D.host.E))
     intro L' hL'
     refine AddSubgroup.subset_closure ⟨δ, AddSubgroup.subset_closure ⟨1, trivial, by simp⟩, w, ?_, rfl⟩
     refine Submodule.subset_span ⟨1, ?_, w, Submodule.subset_span hL', (one_smul _ _).symm⟩
-    refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
+    refine FractionalIdeal.one_mem_inv_coeIdeal fun h => ?_
     have h2 := D.host.𝔟_spec.2
     rw [h, Ideal.smul_bot, sup_bot_eq] at h2
     exact bot_ne_top h2
@@ -76,8 +76,8 @@ theorem pt_mem_of_entries_mem (D : D7) (δ : ℂ) (𝔪 : Ideal (𝓞 D.host.E))
     refine (FractionalIdeal.mem_coeIdeal _).2 ⟨b * y, 𝔪.mul_mem_right y hb, ?_⟩
     rw [hbw, ← hy, map_mul]
   refine ⟨key _ fun x hx i _ => ?_, key _ fun x hx i _ => ?_⟩
-  · have := (FractionalIdeal.coe_le_coe.2 FractionalIdeal.coeIdeal_le_one) (hent x hx i)
-    rw [FractionalIdeal.coe_one] at this
+  · have := (FractionalIdeal.coeToSubmodule_le_coeToSubmodule.2 FractionalIdeal.coeIdeal_le_one) (hent x hx i)
+    rw [FractionalIdeal.coeToSubmodule_one] at this
     exact this
   · by_cases h𝔪 : 𝔪 = ⊥
     · have := hent x hx i
@@ -101,6 +101,6 @@ theorem pt_mem_of_entries_mem (D : D7) (δ : ℂ) (𝔪 : Ideal (𝓞 D.host.E))
         | exact (mul_le_mul_left FractionalIdeal.coeIdeal_le_one _).trans_eq (mul_one _)
         | exact (FractionalIdeal.mul_le_mul_left FractionalIdeal.coeIdeal_le_one _).trans_eq (mul_one _)
         | exact (mul_le_mul_of_nonneg_left FractionalIdeal.coeIdeal_le_one (zero_le _)).trans_eq (mul_one _)
-      exact (FractionalIdeal.coe_le_coe.2 hle) (hent x hx i)
+      exact (FractionalIdeal.coeToSubmodule_le_coeToSubmodule.2 hle) (hent x hx i)
 
 end GlobalTheory.FunObj.SqNum

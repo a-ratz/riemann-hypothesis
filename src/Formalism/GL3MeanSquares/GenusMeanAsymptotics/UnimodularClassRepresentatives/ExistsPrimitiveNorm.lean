@@ -86,11 +86,11 @@ theorem exists_primitive (hS : IsHermSemilocal S) (hd : ∀ x, h x x = 0 → x =
   let A : AddSubgroup K :=
     { carrier := {c | c • ξ ∈ M}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, add_smul] at *
+        simp only [Set.mem_ofPred_eq, add_smul] at *
         exact M.add_mem ha hb
-      zero_mem' := by simp only [Set.mem_setOf_eq, zero_smul]; exact M.zero_mem
+      zero_mem' := by simp only [Set.mem_ofPred_eq, zero_smul]; exact M.zero_mem
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq, neg_smul] at *
+        simp only [Set.mem_ofPred_eq, neg_smul] at *
         exact M.neg_mem ha }
   have hA : ∀ c, c ∈ A ↔ c • ξ ∈ M := fun c => Iff.rfl
   obtain ⟨α, hαA, hα0, hα⟩ := hS.principal A

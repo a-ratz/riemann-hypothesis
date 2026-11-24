@@ -197,8 +197,8 @@ theorem ecoef_ringEquiv : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
     have ht' : Algebra.trace ℚ F (ξ * ((m : F) * x)) = (m : ℚ) * ((r : ℚ) / N) := by
       rw [hsm, LinearMap.map_smul, smul_eq_mul, ht]
     have e1 : eTr (ξ * x) = Complex.exp ((2 * Real.pi * Complex.I) / N) ^ r := by
-      rw [eTr, ht, ← Complex.exp_int_mul]; congr 1; push_cast; ring
-    rw [e1, map_zpow₀, hζ, ← Complex.exp_int_mul, eTr, ht']
+      rw [eTr, ht, ← Complex.exp_intCast_mul]; congr 1; push_cast; ring
+    rw [e1, map_zpow₀, hζ, ← Complex.exp_intCast_mul, eTr, ht']
     congr 1; push_cast; ring
   have key : ∀ ξ : F, g (a ξ * eTr (ξ * x) * ∏ i : Emb F, ((i ξ : ℝ) : ℂ) ^ μ i) =
       a ξ * eTr (ξ * ((m : F) * x)) * ∏ j : Emb F, ((j ξ : ℝ) : ℂ) ^ μ (π.symm j) := by
@@ -510,7 +510,7 @@ namespace GlobalTheory.HilbFam.GalFamily
 theorem ch_one (N : ℕ) [NeZero N] : ch N 1 = Complex.exp ((2 * Real.pi * Complex.I) / N) := by
   unfold ch
   rcases Nat.lt_or_ge 1 N with h | h
-  · haveI : Fact (1 < N) := ⟨h⟩
+  · have : Fact (1 < N) := ⟨h⟩
     rw [ZMod.val_one]; simp
   · have hN : N = 1 := by have := NeZero.pos N; omega
     subst hN

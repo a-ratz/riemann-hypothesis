@@ -157,7 +157,7 @@ theorem isIrredSubrep_of_isCopyFinDS : ∀ (D : D7) (V : HSp D) (S : D.what₂.T
   have hu0 : T w0 y0 ∈ (Submodule.span ℂ {v | ∃ w y, v = T w y}).topologicalClosure :=
     Submodule.le_topologicalClosure _ (Submodule.subset_span ⟨w0, y0, rfl⟩)
   refine ⟨hsub, fun h => hy0 ((Submodule.mem_bot ℂ).1 (h ▸ hu0)), fun U' hU'le hU' => ?_⟩
-  haveI : CompleteSpace U' := hU'.1.completeSpace_coe
+  have : CompleteSpace U' := hU'.1.completeSpace_coe
 
   have hPc : ∀ g v, U'.starProjection (ρ g v) = ρ g (U'.starProjection v) := by
     intro g v

@@ -151,7 +151,7 @@ private theorem eq_single_lemma_6 {κ : Type} (e : κ →₀ ℕ) (he : e.degree
   · subst hi
     rw [Finsupp.single_eq_same]
     omega
-  · rw [Finsupp.single_apply, if_neg (Ne.symm hi)]
+  · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hi)]
     by_contra hne
     exact hne (h3 i (Finset.mem_erase.2 ⟨hi, Finsupp.mem_support_iff.2 hne⟩))
 
@@ -284,7 +284,7 @@ theorem eq_single_of_degree_one {κ : Type} (e : κ →₀ ℕ) (he : e.degree =
   · subst hi
     rw [Finsupp.single_eq_same]
     omega
-  · rw [Finsupp.single_apply, if_neg (Ne.symm hi)]
+  · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hi)]
     by_contra hne
     exact hne (h3 i (Finset.mem_erase.2 ⟨hi, Finsupp.mem_support_iff.2 hne⟩))
 
@@ -309,12 +309,12 @@ private theorem coeff_psTrunc_lemma_2 {κ : Type} [Fintype κ] [DecidableEq κ] 
   rw [coeff_sum]
   simp only [coeff_monomial, Finset.sum_ite_eq', Finset.sum_ite_eq]
   by_cases h : x.degree ≤ n
-  · rw [if_pos (mem_degLE_lemma h), if_pos h]
+  · rw [ite_eq_left (mem_degLE_lemma h), ite_eq_left h]
   · have h' : x ∉ degLE n := by
       intro h'
       unfold degLE at h'
       exact h (Finset.mem_filter.1 h').2
-    rw [if_neg h', if_neg h]
+    rw [ite_eq_right h', ite_eq_right h]
 
 private theorem mem_pow_Io_lemma_3 {κ : Type} (k : ℕ) (p : MvPolynomial κ S)
     (hp : ∀ x ∈ p.support, k ≤ x.degree) : p ∈ Io S κ ^ k := by
@@ -340,7 +340,7 @@ theorem psTrunc_law_sub_mem (G : FGLaw S d) {m : ℕ} (hm : 1 ≤ m) (j : Fin d)
   rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_psTrunc_lemma_2] at hx
   by_contra hlt
   have h1 : x.degree ≤ 1 := by omega
-  rw [if_pos (h1.trans hm)] at hx
+  rw [ite_eq_left (h1.trans hm)] at hx
   apply hx
   rcases Nat.le_one_iff_eq_zero_or_eq_one.1 h1 with h0 | h0
   · have hx0 : x = 0 := by
@@ -348,17 +348,17 @@ theorem psTrunc_law_sub_mem (G : FGLaw S d) {m : ℕ} (hm : 1 ≤ m) (j : Fin d)
         | exact (Finsupp.degree_eq_zero_iff x).1 h0
         | exact Finsupp.degree_eq_zero_iff.1 h0
     subst hx0
-    simp [coeff_X', MvPowerSeries.coeff_zero_eq_constantCoeff_apply, G.const]
+    simp [coeff_X, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, G.const]
   · obtain ⟨⟨q1, q2⟩, rfl⟩ := eq_single_of_degree_one x h0
     obtain rfl | rfl : q1 = 0 ∨ q1 = 1 := by fin_cases q1 <;> simp
     · by_cases hq : q2 = j
       · subst hq
-        simp [coeff_X', formal_group_linear_first, Finsupp.single_left_inj one_ne_zero]
-      · simp [coeff_X', formal_group_linear_first, Finsupp.single_left_inj one_ne_zero, hq, Ne.symm hq]
+        simp [coeff_X, formal_group_linear_first, Finsupp.single_left_inj one_ne_zero]
+      · simp [coeff_X, formal_group_linear_first, Finsupp.single_left_inj one_ne_zero, hq, Ne.symm hq]
     · by_cases hq : q2 = j
       · subst hq
-        simp [coeff_X', formal_group_linear_second, Finsupp.single_left_inj one_ne_zero]
-      · simp [coeff_X', formal_group_linear_second, Finsupp.single_left_inj one_ne_zero, hq, Ne.symm hq]
+        simp [coeff_X, formal_group_linear_second, Finsupp.single_left_inj one_ne_zero]
+      · simp [coeff_X, formal_group_linear_second, Finsupp.single_left_inj one_ne_zero, hq, Ne.symm hq]
 
 def bil (M : Fin d → Fin d → S) : MvPolynomial (Fin 2 × Fin d) S :=
   ∑ i, ∑ l, C (M i l) * (X ((0 : Fin 2), i) * X ((1 : Fin 2), l))
@@ -381,13 +381,13 @@ theorem sil_inj {i l i0 l0 : Fin d} : sil i l = sil i0 l0 ↔ i = i0 ∧ l = l0 
 theorem coeff_XX (e : Fin 2 × Fin d →₀ ℕ) (i l : Fin d) :
     AddMonoidAlgebra.coeff (X ((0 : Fin 2), i) * X ((1 : Fin 2), l) : MvPolynomial (Fin 2 × Fin d) S) e =
       if sil i l = e then 1 else 0 := by
-  rw [MvPolynomial.X, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul, MvPolynomial.coeff_monomial]
+  rw [MvPolynomial.X, MvPolynomial.X, monomial_mul_monomial, one_mul, MvPolynomial.coeff_monomial]
 
 theorem coeff_bil (M : Fin d → Fin d → S) (i0 l0 : Fin d) : AddMonoidAlgebra.coeff (bil M) (sil i0 l0) = M i0 l0 := by
   simp only [bil, coeff_sum, coeff_C_mul, coeff_XX, sil_inj]
   rw [Finset.sum_eq_single i0]
   · rw [Finset.sum_eq_single l0]
-    · rw [if_pos ⟨rfl, rfl⟩, mul_one]
+    · rw [ite_eq_left ⟨rfl, rfl⟩, mul_one]
     · intro l _ hl
       simp [hl]
     · intro h
@@ -436,7 +436,7 @@ theorem psTrunc_sub_mem {κ : Type} [Fintype κ] [DecidableEq κ] (f : MvPowerSe
   rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_psTrunc_lemma_2, coeff_psTrunc_lemma_2] at hx
   by_contra hlt
   have h1 : x.degree ≤ k := by omega
-  rw [if_pos (h1.trans hkm), if_pos h1, sub_self] at hx
+  rw [ite_eq_left (h1.trans hkm), ite_eq_left h1, sub_self] at hx
   exact hx rfl
 
 section Poly
@@ -487,12 +487,12 @@ theorem coeff_linL (A B : Fin d → Fin d → S) (i0 l0 : Fin d) :
       C (B i l * A i j) * (X ((0 : Fin 2), j) * X ((1 : Fin 2), l)) by rw [map_mul]; ring]
     rw [coeff_C_mul, coeff_XX]
     by_cases h : j = i0 ∧ l = l0
-    · rw [if_pos (sil_inj.2 h), if_pos h, mul_one]
-    · rw [if_neg (fun h' => h (sil_inj.1 h')), if_neg h, mul_zero]
+    · rw [ite_eq_left (sil_inj.2 h), ite_eq_left h, mul_one]
+    · rw [ite_eq_right (fun h' => h (sil_inj.1 h')), ite_eq_right h, mul_zero]
   simp only [PairEvaluation.lin, xs, Finset.sum_mul, Finset.mul_sum, coeff_sum, key]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single l0 (fun l _ hl => Finset.sum_eq_zero fun j _ => by simp [hl]) (by simp)]
-  rw [Finset.sum_eq_single i0 (fun j _ hj => by simp [hj]) (by simp), if_pos ⟨rfl, rfl⟩, mul_comm]
+  rw [Finset.sum_eq_single i0 (fun j _ hj => by simp [hj]) (by simp), ite_eq_left ⟨rfl, rfl⟩, mul_comm]
 
 theorem coeff_linR (Ab B : Fin d → Fin d → S) (i0 l0 : Fin d) :
     AddMonoidAlgebra.coeff (∑ i, ∑ l, C (B i l) * (xs S d (0 : Fin 2) i * PairEvaluation.lin Ab (1 : Fin 2) l)) (sil i0 l0) =
@@ -504,12 +504,12 @@ theorem coeff_linR (Ab B : Fin d → Fin d → S) (i0 l0 : Fin d) :
       C (B i l * Ab l j) * (X ((0 : Fin 2), i) * X ((1 : Fin 2), j)) by rw [map_mul]; ring]
     rw [coeff_C_mul, coeff_XX]
     by_cases h : i = i0 ∧ j = l0
-    · rw [if_pos (sil_inj.2 h), if_pos h, mul_one]
-    · rw [if_neg (fun h' => h (sil_inj.1 h')), if_neg h, mul_zero]
+    · rw [ite_eq_left (sil_inj.2 h), ite_eq_left h, mul_one]
+    · rw [ite_eq_right (fun h' => h (sil_inj.1 h')), ite_eq_right h, mul_zero]
   simp only [PairEvaluation.lin, xs, Finset.sum_mul, Finset.mul_sum, coeff_sum, key]
   rw [Finset.sum_eq_single i0 (fun i _ hi => Finset.sum_eq_zero fun l _ => Finset.sum_eq_zero fun j _ => by simp [hi]) (by simp)]
   refine Finset.sum_congr rfl fun l _ => ?_
-  rw [Finset.sum_eq_single l0 (fun j _ hj => by simp [hj]) (by simp), if_pos ⟨rfl, rfl⟩]
+  rw [Finset.sum_eq_single l0 (fun j _ hj => by simp [hj]) (by simp), ite_eq_left ⟨rfl, rfl⟩]
 
 end Poly
 
@@ -525,7 +525,7 @@ theorem psTrunc_act_sub_mem (φ : Fin d → PS S 1 d) (hφ : ∀ i, MvPowerSerie
   rw [mem_support_iff, MvPolynomial.coeff_sub, coeff_psTrunc_lemma_2] at hx
   by_contra hlt
   have h1 : x.degree ≤ 1 := by omega
-  rw [if_pos (h1.trans hm)] at hx
+  rw [ite_eq_left (h1.trans hm)] at hx
   apply hx
   rw [coeff_sum]
   rcases Nat.le_one_iff_eq_zero_or_eq_one.1 h1 with h0 | h0
@@ -534,14 +534,14 @@ theorem psTrunc_act_sub_mem (φ : Fin d → PS S 1 d) (hφ : ∀ i, MvPowerSerie
         | exact (Finsupp.degree_eq_zero_iff x).1 h0
         | exact Finsupp.degree_eq_zero_iff.1 h0
     subst hx0
-    simp [coeff_C_mul, coeff_X', MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hφ]
+    simp [coeff_C_mul, coeff_X, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hφ]
   · obtain ⟨⟨q1, q2⟩, rfl⟩ := eq_single_of_degree_one x h0
     have hq1 : q1 = 0 := Subsingleton.elim _ _
     subst hq1
     rw [Finset.sum_eq_single q2]
-    · simp [coeff_C_mul, coeff_X', dLin]
+    · simp [coeff_C_mul, coeff_X, dLin]
     · intro j _ hj
-      simp [coeff_C_mul, coeff_X', Finsupp.single_left_inj one_ne_zero, hj]
+      simp [coeff_C_mul, coeff_X, Finsupp.single_left_inj one_ne_zero, hj]
     · simp
 
 theorem psIn_act_sub_mem (φ : Fin d → PS S 1 d) (hφ : ∀ i, MvPowerSeries.constantCoeff (φ i) = 0) {m : ℕ}

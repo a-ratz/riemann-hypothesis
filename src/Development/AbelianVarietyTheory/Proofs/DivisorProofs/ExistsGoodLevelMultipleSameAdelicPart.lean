@@ -126,7 +126,7 @@ theorem exists_good_multiple : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     (Ideal.isCoprime_span_singleton_iff _ _).2 hαα
   have hspan : l.Mb * Ideal.span {α} = Ideal.span ({x | x ∈ l.Mb ∧ x ∈ Algebra.adjoin ℤ {H.w0}} * ({α} : Set (𝓞 E))) := by
     conv_lhs => rw [l.fromK]
-    exact Ideal.span_mul_span' _ _
+    exact Ideal.span_mul_span _ _
   let l₂ : Level H :=
     { M := l.M * N
       three_le := by nlinarith

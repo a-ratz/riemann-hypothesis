@@ -59,7 +59,7 @@ theorem exists_proj {V : Type} [AddCommGroup V] [Module ℂ V] (B : V →ₗ⋆[
     (hherm : ∀ x ∈ S, ∀ y ∈ S, B x y = starRingEnd ℂ (B y x))
     (hpos : ∀ x ∈ S, x ≠ 0 → 0 < (B x x).re) (u : V) :
     ∃ p ∈ S, ∀ w ∈ S, B (u - p) w = 0 := by
-  letI core : InnerProductSpace.Core ℂ S :=
+  let core : InnerProductSpace.Core ℂ S :=
     { inner := fun x y => B x y
       conj_inner_symm := fun x y => by
         show starRingEnd ℂ (B y x) = B x y
@@ -82,8 +82,8 @@ theorem exists_proj {V : Type} [AddCommGroup V] [Module ℂ V] (B : V →ₗ⋆[
         change B x x = 0 at hx
         rw [hx] at this
         simp at this }
-  letI : NormedAddCommGroup S := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup S := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ S := InnerProductSpace.ofCore core.toCore
   let ℓ : S →ₗ[ℂ] ℂ := (B u).comp S.subtype
   let ℓc : StrongDual ℂ S := LinearMap.toContinuousLinearMap ℓ
   let p : S := (InnerProductSpace.toDual ℂ S).symm ℓc
@@ -199,8 +199,8 @@ theorem proj_level (hB : Good ρ B) (hfin : ∀ N : ℕ, 0 < N → FiniteDimensi
   have hle : U ⊓ fixN L n W N ≤ Submodule.span ℂ
       {f | f ∈ NG.AFall L n ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g} :=
     fun f hf => Submodule.subset_span ⟨hU.le hf.1, hf.2⟩
-  haveI := hfin N hN
-  haveI : FiniteDimensional ℂ ↥(U ⊓ fixN L n W N) := Submodule.finiteDimensional_of_le hle
+  have := hfin N hN
+  have : FiniteDimensional ℂ ↥(U ⊓ fixN L n W N) := Submodule.finiteDimensional_of_le hle
   exact exists_proj B (U ⊓ fixN L n W N) (fun x (hx : x ∈ U ⊓ fixN L n W N) y (hy : y ∈ U ⊓ fixN L n W N) => (hB x (hU.le hx.1) y (hU.le hy.1)).1)
     (fun x (hx : x ∈ U ⊓ fixN L n W N) h => (hB x (hU.le hx.1) x (hU.le hx.1)).2.1 h) u
 

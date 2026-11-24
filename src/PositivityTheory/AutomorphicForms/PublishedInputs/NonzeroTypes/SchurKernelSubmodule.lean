@@ -62,7 +62,7 @@ end SchurKernelSubmodule
 open SchurKernelSubmodule in
 theorem schurInjective_holds : SchurInjectiveFromIrreducible := by
   intro K _ d ξ hξ W _ _ ρ g hg hint
-  haveI : IsSimpleOrder (Subrepresentation ξ) := hξ
+  have : IsSimpleOrder (Subrepresentation ξ) := hξ
   rcases eq_bot_or_eq_top (kerSub ξ ρ g hint) with h | h
   · rw [← LinearMap.ker_eq_bot]
     have hk := congrArg Subrepresentation.toSubmodule h

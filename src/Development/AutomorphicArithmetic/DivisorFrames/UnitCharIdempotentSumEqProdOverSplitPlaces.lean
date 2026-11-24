@@ -121,6 +121,6 @@ theorem UpperTheory.unitChar_idempotentSum_eq_prod_over_splitPlaces :
     have h1 := (GlobalTheory.StdFrames.mem_OA_iff _).1 hdet (splitPrime (t v))
     rw [← GlobalTheory.BotMatch.complEquiv_evW, HeightOneSpectrum.mem_adicCompletionIntegers,
       GlobalTheory.LFun.SplitTie.complEquiv_apply, GlobalTheory.LFun.SplitTie.valued_complMap] at h1
-    haveI : (Valued.v : Valuation (v.1.adicCompletion D.host.F) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (v.1.adicCompletion D.host.F) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     exact (ValuativeRel.isEquiv (ValuativeRel.valuation _) Valued.v).le_one_iff_le_one.2 h1

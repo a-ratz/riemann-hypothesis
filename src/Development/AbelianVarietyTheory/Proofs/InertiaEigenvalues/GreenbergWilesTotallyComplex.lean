@@ -159,7 +159,7 @@ theorem greenbergWiles_totallyComplex : PoitouTateTotallyComplex → LocalFinite
   have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
   obtain ⟨inv, hinv, h⟩ := hPT F Ω l r hr ζ hζ
   obtain ⟨⟨δ₁, -, h0, h1, h2, h3, h4, -⟩, -⟩ := h S hS Av hA μ hμ M ρ hρ
   have := GlobalTheory.DualSide.finite_TDual_pow (l := l) (r := r) (M := M)

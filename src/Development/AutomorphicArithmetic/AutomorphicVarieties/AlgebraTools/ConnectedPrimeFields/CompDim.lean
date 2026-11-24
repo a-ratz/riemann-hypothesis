@@ -84,7 +84,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.dimFormula :
     exact Order.height_le_height_apply_of_strictMono
       (fun P : PrimeSpectrum R => (⟨P.asIdeal.comap (algebraMap A R),
         inferInstance⟩ : PrimeSpectrum A))
-      (fun P Q hPQ => Ideal.IsIntegral.comap_lt_comap (R := A)
+      (fun P Q hPQ => Ideal.IsIntegral.under_lt_under (R := A)
         (show P.asIdeal < Q.asIdeal from hPQ)) _
   rw [le_antisymm h2 h1,
     ReciprocityTheory.CA.ringKrullDim_quotient_eq_quotient_comap_of_isIntegral (A := A) q,
@@ -107,13 +107,13 @@ theorem UpperTheory.V.AlgebraTools.Conn.compDim :
   classical
   intro R _ _ hC p q s hp hq
   have hpq : p ≤ q := le_sup_left.trans hq.1.2
-  haveI := hp
-  haveI := hq.1.1
+  have := hp
+  have := hq.1.1
   obtain ⟨-, hDF⟩ := dimFormula (hC p hp)
   set f := Ideal.Quotient.mk p
   have hf : Function.Surjective f := Ideal.Quotient.mk_surjective
   have hker : RingHom.ker f ≤ q := by rw [Ideal.mk_ker]; exact hpq
-  haveI hQ : (q.map f).IsPrime := Ideal.map_isPrime_of_surjective hf hker
+  have hQ : (q.map f).IsPrime := Ideal.map_isPrime_of_surjective hf hker
   have hmin : q.map f ∈ (Ideal.span ((s.image f : Finset (R ⧸ p)) : Set (R ⧸ p))).minimalPrimes := by
     rw [Finset.coe_image, ← Ideal.map_span, Ideal.minimalPrimes_map_of_surjective hf]
     refine ⟨q, ?_, rfl⟩

@@ -92,7 +92,7 @@ theorem Regular.exists_mul_eq {τ : H0 p P O} (hτ : Regular τ) (C : ProdChart 
     rintro ⟨y, hy⟩
     obtain ⟨t, ha, hb, hc⟩ := C.cover y
     obtain ⟨q, hq⟩ := h t y hy ha hc hb
-    obtain ⟨U, hyU, s, hs⟩ := Y.presheaf.germ_exist q
+    obtain ⟨U, hyU, s, hs⟩ := Y.presheaf.exists_germ_eq q
     let V0 : Y.Opens := (O ⊓ (P.U (C.a t) ⊓ B.U (C.b t) ⊓ N.U (C.c t))) ⊓ U
     have hy0 : y ∈ V0 := ⟨⟨hy, ⟨ha, hb⟩, hc⟩, hyU⟩
     have h1 : V0 ≤ O ⊓ N.U (C.c t) := fun z hz => ⟨hz.1.1, hz.1.2.2⟩

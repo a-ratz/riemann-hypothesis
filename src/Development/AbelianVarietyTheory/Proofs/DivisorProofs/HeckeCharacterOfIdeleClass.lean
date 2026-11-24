@@ -98,8 +98,8 @@ theorem exists_hchar (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   let u : Neutral.B1.Ideles E →* (AF F ⊗[F] E)ˣ := Units.map Φ.symm.toRingHom.toMonoidHom
   have hu : Continuous u := Continuous.units_map _ hΦc
   have ht : Continuous (Circle.toUnits : Circle →* ℂˣ) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, by
-      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtype_val.comp continuous_inv
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, by
+      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtypeVal.comp continuous_inv
       refine h.congr fun z => ?_
       simp⟩
   have hdiag : ∀ k : Eˣ, u (Neutral.B1.diagUnits E k) = Units.map (inclR (F := F) (AF F)).toMonoidHom k := fun k =>

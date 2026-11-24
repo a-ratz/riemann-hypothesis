@@ -142,7 +142,7 @@ private theorem local_lower_triangular_cohomology (l : ℕ) [Fact l.Prime] (A : 
       _ ≤ Nat.card (triG A) ^ (1 + d) := Nat.pow_le_pow_left (triG_card A) _
       _ ≤ _ := Nat.le_mul_of_pos_right _ hHom
   let Z := zcG ρ'
-  haveI : Finite Z := hZfin.to_subtype
+  have : Finite Z := hZfin.to_subtype
   let p : Fin 3 → (triG A →+ A) := fun j =>
     { toFun := fun x => x.1 j j, map_zero' := rfl, map_add' := fun x y => rfl }
   have hp : ∀ z ∈ Z, IsLocallyConstant z ∧
@@ -182,6 +182,6 @@ theorem UpperTheory.V.Z.J.locLow :
   intro l _ O _ _ _ _ _ D _ _ _ _ I ε d t hl hLE hI ht k hk
   obtain ⟨hf, -, hA, -⟩ := okFin l O hl
   obtain ⟨⟨ρ, hc, ho⟩, -, hT, -⟩ := cjFacts l O D t k hl ht
-  haveI := hf k
+  have := hf k
   exact local_lower_triangular_cohomology l (Ok l O k) D I ε d k hk (hA k) hLE hI (cj k t) ρ hc ho
     (fun s X hX => ⟨(hT s X hX).1, (hT s X hX).2.1⟩) _ (fun _ => Iff.rfl)

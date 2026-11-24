@@ -123,13 +123,13 @@ theorem ballMean_norm_integral_le {α E : Type*} [MeasurableSpace α] [NormedAdd
     rw [← ENNReal.ofReal_rpow_of_nonneg ENNReal.toReal_nonneg (by norm_num),
       ENNReal.ofReal_toReal (measure_ne_top ν _)]
   have key : ‖∫ x, f x ∂ν‖ₑ ≤ ENNReal.ofReal (Real.sqrt C * (ν Set.univ).toReal ^ (1 / 2 : ℝ) * a) := by
-    calc ‖∫ x, f x ∂ν‖ₑ ≤ ∫⁻ x, ‖f x‖ₑ ∂ν := enorm_integral_le_lintegral_enorm _
+    calc ‖∫ x, f x ∂ν‖ₑ ≤ ∫⁻ x, ‖f x‖ₑ ∂ν := eNorm_integral_le_lintegral_eNorm _
       _ ≤ eLpNorm f 2 ν * ν Set.univ ^ (1 / 2 : ℝ) := h1
       _ ≤ ENNReal.ofReal (Real.sqrt C * a) * ENNReal.ofReal ((ν Set.univ).toReal ^ (1 / 2 : ℝ)) := by
           rw [hmu]; gcongr
       _ = _ := by
           rw [← ENNReal.ofReal_mul (by positivity)]; congr 1; ring
-  rw [← ofReal_norm_eq_enorm] at key
+  rw [← ofReal_norm] at key
   exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 key
 
 theorem ballMean_clm : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -147,7 +147,7 @@ theorem ballMean_clm : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerP
       Λ (σ (Matrix.of x) v) = avgR μG j (fun z : Mt k r => T v (Matrix.of z)) x := by
   intro k r H _ _ _ Wp _ _ _ σ μG T hμ hadd hsmul hL2 htr j
   have hBfin : μG (nbd k r j) < ⊤ := haar_compact_lt_top hμ (isCompact_nbd j)
-  haveI : IsFiniteMeasure (μG.restrict (nbd k r j)) :=
+  have : IsFiniteMeasure (μG.restrict (nbd k r j)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact hBfin⟩
   obtain ⟨C, hC⟩ := hL2 (nbd k r j) (isCompact_nbd j)
   have hb : ∀ u : H, Integrable (fun x : Mt k r => T u (Matrix.of x)) (μG.restrict (nbd k r j)) ∧
@@ -271,14 +271,14 @@ theorem exists_continuous_limit : ∀ (k r : ℕ) (μ : Measure (Mt k r)), IsHaa
                 ‖F (Matrix.of x) - f j (Matrix.of x)‖₊ + ‖f j (Matrix.of x) - g x‖₊ := by
               have : F (Matrix.of x) - g x = (F (Matrix.of x) - f j (Matrix.of x)) + (f j (Matrix.of x) - g x) := by
                 abel
-              rw [this]; exact nnnorm_add_le _ _
+              rw [this]; exact nnNorm_add_le _ _
             calc (‖F (Matrix.of x) - g x‖₊ : ENNReal)
                 ≤ (‖F (Matrix.of x) - f j (Matrix.of x)‖₊ : ENNReal) + ‖f j (Matrix.of x) - g x‖₊ := by
                   rw [← ENNReal.coe_add]; exact ENNReal.coe_le_coe.2 htri
               _ ≤ ENNReal.ofReal (1 / ((n : ℝ) + 1)) + ‖f j (Matrix.of x) - g x‖₊ := by
                   gcongr
                   exact ENNReal.coe_le_coe.2 ((Real.le_toNNReal_iff_coe_le hpos.le).2
-                    (by rw [coe_nnnorm, ← dist_eq_norm]; exact hd.le))
+                    (by rw [coe_nnNorm, ← dist_eq_norm]; exact hd.le))
         _ = 4 * (ENNReal.ofReal (1 / ((n : ℝ) + 1)) ^ 2 * μ Q +
               ∫⁻ x in Q, (‖f j (Matrix.of x) - g x‖₊ : ENNReal) ^ 2 ∂μ) := by
             rw [lintegral_const_mul' _ _ (by norm_num), lintegral_add_left measurable_const,
@@ -294,7 +294,7 @@ theorem exists_continuous_limit : ∀ (k r : ℕ) (μ : Measure (Mt k r)), IsHaa
     have hzero : ∫⁻ x in Q, a x ∂μ = 0 := le_antisymm (ge_of_tendsto' ht2 hbound) (zero_le)
     have hm : AEStronglyMeasurable (fun x => F (Matrix.of x) - g x) (μ.restrict Q) :=
       hFm.restrict.sub (hg Q hQ)
-    have hae := (lintegral_eq_zero_iff' (hm.nnnorm.aemeasurable.coe_nnreal_ennreal.pow_const 2)).1 hzero
+    have hae := (lintegral_eq_zero_iff' (hm.nnNorm.aemeasurable.coe_nnreal_ennreal.pow_const 2)).1 hzero
     filter_upwards [hae] with x hx
     simpa [ha, sub_eq_zero] using hx
   refine ⟨F, hFc, ?_, hF⟩
@@ -508,7 +508,7 @@ theorem sobolev_translate : ∀ (k r : ℕ) (μ : Measure (Mt k r)) (C₀ : ℝ)
         (fun y => (‖rdWord ws f (Matrix.of y)‖₊ : ENNReal) ^ 2)
       refine le_trans (le_of_eq ?_) hφ
       refine lintegral_congr fun y => ?_
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
       rfl)
   calc ENNReal.ofReal (‖f (Matrix.of x)‖ ^ 2)
       ≤ ENNReal.ofReal (|C₀| * (Ws.map fun ws =>
@@ -785,7 +785,7 @@ theorem sobolev_at_one_G : ∀ (k r : ℕ) (μG : Measure (Mt k r)), IsHaarOn (G
   let cj : Mat k r → Mat k r := fun Y => P⁻¹ * Y * P
   have hcjc : Continuous cj := (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
   let ψ : Formalism.REAL.UJ ε → Mt k r := fun y => Matrix.of.symm (cj (umat y))
-  have hψc : Continuous ψ := hcjc.comp (Units.continuous_val.comp continuous_subtype_val)
+  have hψc : Continuous ψ := hcjc.comp (Units.continuous_val.comp continuous_subtypeVal)
   have hmemG : ∀ g : Mat k r, Formalism.REAL.inUJ ε g → cj g ∈ GG k r := by
     intro g hg
     show cj g ∈ UH (Hpk k r)
@@ -817,7 +817,7 @@ theorem sobolev_at_one_G : ∀ (k r : ℕ) (μG : Measure (Mt k r)), IsHaarOn (G
   have hfin : IsFiniteMeasureOnCompacts μG := by
     obtain ⟨hG, -⟩ := closedSub_groups k r (bvec (wI k r (Fin.last k))) (fun i hi => by
       simp only [bvec, wI]
-      rw [Pi.single_apply, if_neg]
+      rw [Pi.single_apply, ite_eq_right]
       intro h; rw [h] at hi; simp at hi) (by
       have h : herm (Hpk k r) (bvec (wI k r (Fin.last k))) (bvec (wI k r (Fin.last k))) =
           Hpk k r (wI k r (Fin.last k)) (wI k r (Fin.last k)) := by
@@ -851,7 +851,7 @@ theorem sobolev_at_one_G : ∀ (k r : ℕ) (μG : Measure (Mt k r)), IsHaarOn (G
       obtain ⟨b, -, rfl⟩ := List.mem_map.1 hx; exact integral_nonneg fun _ => by positivity)
   by_cases h0 : f 1 = 0
   · rw [h0, norm_zero]; simpa using hnn
-  haveI : Nontrivial B := ⟨⟨f 1, 0, h0⟩⟩
+  have : Nontrivial B := ⟨⟨f 1, 0, h0⟩⟩
   obtain ⟨ℓ, hℓ1, hℓ⟩ := exists_dual_vector' ℂ (f 1)
   let F : List (Mat k r) → Mat k r → ℂ := fun l g => ℓ (rdWord (l.map cj) f (cj g))
   have hFc : ∀ l : List (Mat k r), (∀ Y ∈ l, Formalism.REAL.inG ε Y) → ContinuousOn (F l) (UJset ε) := fun l hl =>
@@ -956,14 +956,14 @@ theorem enorm_avg_sq_le {Wp : Type*} [NormedAddCommGroup Wp] [NormedSpace ℝ Wp
     (μ : Measure (Mt k r)) (S : Set (Mt k r)) (h0 : μ S ≠ 0) (htop : μ S ≠ ⊤) (f : Mt k r → Wp) :
     ‖(μ S).toReal⁻¹ • ∫ y in S, f y ∂μ‖ₑ ^ 2 ≤ (μ S)⁻¹ * ∫⁻ y in S, ‖f y‖ₑ ^ 2 ∂μ := by
   by_cases hf : AEStronglyMeasurable f (μ.restrict S)
-  · have hA : ‖∫ y in S, f y ∂μ‖ₑ ≤ ∫⁻ y in S, ‖f y‖ₑ ∂μ := enorm_integral_le_lintegral_enorm _
+  · have hA : ‖∫ y in S, f y ∂μ‖ₑ ≤ ∫⁻ y in S, ‖f y‖ₑ ∂μ := eNorm_integral_le_lintegral_eNorm _
     have hC := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (p := 1) (q := 2) (μ := μ.restrict S)
       (by norm_num) hf
-    rw [eLpNorm_one_eq_lintegral_enorm hf, eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero
+    rw [eLpNorm_one_eq_lintegral_eNorm hf, eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero
       ENNReal.ofNat_ne_top hf, Measure.restrict_apply_univ] at hC
     norm_num at hC
     have hsmul : ‖(μ S).toReal⁻¹ • ∫ y in S, f y ∂μ‖ₑ = (μ S)⁻¹ * ‖∫ y in S, f y ∂μ‖ₑ := by
-      rw [enorm_smul, Real.enorm_eq_ofReal (by positivity), ENNReal.ofReal_inv_of_pos
+      rw [eNorm_smul, Real.eNorm_eq_ofReal (by positivity), ENNReal.ofReal_inv_of_pos
         (ENNReal.toReal_pos h0 htop), ENNReal.ofReal_toReal htop]
     rw [hsmul, mul_pow]
     calc (μ S)⁻¹ ^ 2 * ‖∫ y in S, f y ∂μ‖ₑ ^ 2
@@ -982,12 +982,12 @@ theorem lint_avg_le {Wp : Type*} [NormedAddCommGroup Wp] [NormedSpace ℝ Wp] (�
     (hsub : ∀ y ∈ nbd k r 0, ∀ x ∈ K, rmulM (Matrix.of x) y ∈ K') (h : Mt k r → Wp)
     (hh : StronglyMeasurable h) (j : ℕ) :
     ∫⁻ x in K, ‖avgR μ j h x‖ₑ ^ 2 ∂μ ≤ ∫⁻ x in K', ‖h x‖ₑ ^ 2 ∂μ := by
-  haveI : SigmaFinite μ := hμ.1
+  have : SigmaFinite μ := hμ.1
   set B := nbd k r j with hBdef
   have h0 : μ B ≠ 0 := (nbd_pos hμ j).ne'
   have htop : μ B ≠ ⊤ := (haar_compact_lt_top hμ (isCompact_nbd j)).ne
   set F : Mt k r → ℝ≥0∞ := fun z => ‖h z‖ₑ ^ 2 with hFdef
-  have hF : Measurable F := hh.enorm.pow_const 2
+  have hF : Measurable F := hh.eNorm.pow_const 2
   have hG : ∀ᵐ y ∂(μ.restrict B), Matrix.of y ∈ GG k r :=
     ae_restrict_of_ae (ae_iff.2 hμ.2.2.1)
   calc ∫⁻ x in K, ‖avgR μ j h x‖ₑ ^ 2 ∂μ
@@ -1053,7 +1053,7 @@ theorem tendsto_avg_cont {Wp : Type*} [NormedAddCommGroup Wp] [NormedSpace ℝ W
     Filter.Tendsto (fun j => eLpNorm (fun x => avgR μ j c x - c x) 2 (μ.restrict K)) Filter.atTop
       (𝓝 0) := by
   have hKfin : μ K < ⊤ := haar_compact_lt_top hμ hK
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun C hC => haar_compact_lt_top hμ hC⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun C hC => haar_compact_lt_top hμ hC⟩
   apply tendsto_zero_of_eventually_le (M := μ K ^ (2:ℝ≥0∞).toReal⁻¹)
     (ENNReal.rpow_ne_top_of_nonneg (by norm_num) hKfin.ne)
   intro ε hε
@@ -1100,7 +1100,7 @@ theorem tendsto_avg_cont {Wp : Type*} [NormedAddCommGroup Wp] [NormedSpace ℝ W
 
 theorem eLp2_eq {Wp : Type*} [NormedAddCommGroup Wp] (ν : Measure (Mt k r)) (f : Mt k r → Wp) (hf : AEStronglyMeasurable f ν) :
     eLpNorm f 2 ν = (∫⁻ x, ‖f x‖ₑ ^ 2 ∂ν) ^ (1/2 : ℝ) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ENNReal.ofNat_ne_top hf]
+  rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top hf]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
 
 theorem map_restrict_le (μ : Measure (Mt k r)) (hU : IsUnimod (GG k r) μ) {x : Mt k r}
@@ -1124,8 +1124,8 @@ theorem GlobalTheory.SgInf.tendsto_average_L2 : ∀ (k r : ℕ) (μ : Measure (M
     ∀ K : Set (Mt k r), IsCompact K → Filter.Tendsto (fun j : ℕ =>
       ∫⁻ x in K, (‖avgR μ j g x - g x‖₊ : ENNReal) ^ 2 ∂μ) Filter.atTop (nhds 0) := by
   intro k r μ hμ Wp _ _ _ g hg K hK
-  haveI : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
-  haveI : SigmaFinite μ := hμ.1
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
+  have : SigmaFinite μ := hμ.1
   have hU := GlobalTheory.SgInf.isUnimod_GG k r μ hμ
   set K' := (fun p : Mt k r × Mt k r => rmulM (Matrix.of p.2) p.1) '' (nbd k r 0 ×ˢ K) with hK'def
   have hK'c : IsCompact K' := ((isCompact_nbd 0).prod hK).image continuous_mulPair
@@ -1136,7 +1136,7 @@ theorem GlobalTheory.SgInf.tendsto_average_L2 : ∀ (k r : ℕ) (μ : Measure (M
   have hle : μ.restrict K ≤ μ.restrict K' := Measure.restrict_mono hKK' le_rfl
   obtain ⟨hgm, hgI⟩ := hg K' hK'c
   set ν := μ.restrict K' with hνdef
-  haveI : IsFiniteMeasure ν := ⟨by rw [Measure.restrict_apply_univ]; exact haar_compact_lt_top hμ hK'c⟩
+  have : IsFiniteMeasure ν := ⟨by rw [Measure.restrict_apply_univ]; exact haar_compact_lt_top hμ hK'c⟩
   set g' := hgm.mk g
   have hg'm : StronglyMeasurable g' := hgm.stronglyMeasurable_mk
   have hgg' : g =ᵐ[ν] g' := hgm.ae_eq_mk
@@ -1283,7 +1283,7 @@ theorem list_sum_le_two {ι : Type} (l : List ι) (A a b : ι → ENNReal)
 
 theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] (σ : Mat k r → (H →L[ℂ] H)) (μG : Measure (Mt k r)) (T : H → Mat k r → Wp), IsURepOn (GG k r) σ → IsHaarOn (GG k r) μG → (∀ u u' : H, (fun x : Mt k r => T (u + u') (Matrix.of x)) =ᵐ[μG] fun x => T u (Matrix.of x) + T u' (Matrix.of x)) → (∀ (b : ℂ) (u : H), (fun x : Mt k r => T (b • u) (Matrix.of x)) =ᵐ[μG] fun x => b • T u (Matrix.of x)) → (∀ K : Set (Mt k r), IsCompact K → ∃ C : ℝ, ∀ u : H, AEStronglyMeasurable (fun x : Mt k r => T u (Matrix.of x)) (μG.restrict K) ∧ ∫⁻ x in K, (‖T u (Matrix.of x)‖₊ : ENNReal) ^ 2 ∂μG ≤ ENNReal.ofReal (C * ‖u‖ ^ 2)) → (∀ y ∈ GG k r, ∀ u : H, (fun x : Mt k r => T (σ y u) (Matrix.of x)) =ᵐ[μG] fun x => T u (Matrix.of x * y)) → ∃ (C : ℝ) (Ws : List (List (Mat k r))), (∀ ws ∈ Ws, ∀ X ∈ ws, InLieHpk k r X) ∧ ∀ u : H, IsSmoothVec σ u → ∃ f : Mat k r → Wp, ContinuousOn f (GG k r) ∧ (fun x : Mt k r => f (Matrix.of x)) =ᵐ[μG] (fun x => T u (Matrix.of x)) ∧ ‖f 1‖ ≤ C * (Ws.map fun ws => ‖dsigW σ ws u‖).sum := by
   intro k r H _ _ _ Wp _ _ _ σ μ T hσ hμ hadd hsm hbd heq
-  haveI : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hGae : ∀ᵐ y ∂μ, (Matrix.of y : Mat k r) ∈ GG k r := by
     rw [ae_iff]; exact hμ.2.2.1
   have hGm : MeasurableSet {x : Mt k r | (Matrix.of x : Mat k r) ∈ GG k r} :=
@@ -1342,7 +1342,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
       refine (hcm (Λ j) v).congr ?_
       filter_upwards [hGae] with x hx
       exact hΛ j v x hx
-    exact ((h1.restrict.sub (hloc v K hK).1).nnnorm.aemeasurable.coe_nnreal_ennreal).pow_const 2
+    exact ((h1.restrict.sub (hloc v K hK).1).nnNorm.aemeasurable.coe_nnreal_ennreal).pow_const 2
 
   have hsp : ∀ (j l : ℕ) (v : H) (K : Set (Mt k r)), IsCompact K →
       ∫⁻ y in K, (‖(Λ j - Λ l) (σ (Matrix.of y) v)‖₊ : ENNReal) ^ 2 ∂μ ≤
@@ -1353,7 +1353,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
       ← lintegral_add_left' ((hAm j v K hK).const_mul 2)]
     refine lintegral_mono_ae (ae_restrict_of_ae ?_)
     filter_upwards [hGae] with y hy
-    rw [ContinuousLinearMap.sub_apply, hΛ j v y hy, hΛ l v y hy]
+    rw [sub_apply, hΛ j v y hy, hΛ l v y hy]
     exact sq_nnnorm_sub_le _ _ _
   have hsp1 : ∀ (j : ℕ) (v : H) (K : Set (Mt k r)), IsCompact K →
       ∫⁻ y in K, (‖Λ j (σ (Matrix.of y) v)‖₊ : ENNReal) ^ 2 ∂μ ≤

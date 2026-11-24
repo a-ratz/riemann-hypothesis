@@ -103,7 +103,7 @@ theorem finite_units_quot_sq_field {k : Type} [NontriviallyNormedField k] [Compl
     simp_all
   let y : V → Kˣ := fun b => if h : e.symm b ≠ 0 then Units.mk0 _ h else 1
   have hy : ∀ b ∈ C, e (y b) = b := fun b hb => by
-    simp only [y, dif_pos (hCne b hb), Units.val_mk0, LinearEquiv.apply_symm_apply]
+    simp only [y, dite_eq_left (hCne b hb), Units.val_mk0, LinearEquiv.apply_symm_apply]
   let U : V → Set V := fun b => {a | ∀ g : Kˣ, e g = a → (y b)⁻¹ * g ∈ S}
   have hU : ∀ b ∈ C, U b ∈ 𝓝 b := fun b hb => by
     have := key (y b)
@@ -154,12 +154,12 @@ theorem finite_units_quot_sq_of_reduced {k : Type} [Field k]
     (R : Type) [CommRing R] [Algebra k R] [FiniteDimensional k R] [IsReduced R] :
     Finite (Rˣ ⧸ (powMonoidHom 2 : Rˣ →* Rˣ).range) := by
   classical
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite k R
-  haveI hmax : ∀ I : MaximalSpectrum R, I.asIdeal.IsMaximal := fun I => I.isMaximal
-  letI : ∀ I : MaximalSpectrum R, Field (R ⧸ I.asIdeal) := fun I => Ideal.Quotient.field _
-  haveI : ∀ I : MaximalSpectrum R, FiniteDimensional k (R ⧸ I.asIdeal) := fun I =>
+  have : IsArtinianRing R := IsArtinianRing.of_finite k R
+  have hmax : ∀ I : MaximalSpectrum R, I.asIdeal.IsMaximal := fun I => I.isMaximal
+  let : ∀ I : MaximalSpectrum R, Field (R ⧸ I.asIdeal) := fun I => Ideal.Quotient.field _
+  have : ∀ I : MaximalSpectrum R, FiniteDimensional k (R ⧸ I.asIdeal) := fun I =>
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ k I.asIdeal).toLinearMap (Ideal.Quotient.mkₐ_surjective k _)
-  haveI : Finite (MaximalSpectrum R) := inferInstance
+  have : Finite (MaximalSpectrum R) := inferInstance
   haveI : ∀ I : MaximalSpectrum R, Finite ((R ⧸ I.asIdeal)ˣ ⧸ (powMonoidHom 2 : (R ⧸ I.asIdeal)ˣ →* _).range) :=
     fun I => hK _
   let φ : Rˣ →* ∀ I : MaximalSpectrum R, (R ⧸ I.asIdeal)ˣ ⧸ (powMonoidHom 2 : (R ⧸ I.asIdeal)ˣ →* _).range :=
@@ -185,11 +185,11 @@ theorem finite_units_quot_sq_of_reduced {k : Type} [Field k]
     apply e.injective
     funext I
     have := congrArg Units.val (hw I)
-    simp only [Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_coe] at this
+    simp only [Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_ofClass] at this
     have hz : Ideal.Quotient.mk I.asIdeal z = w I := by rw [← he, e.apply_symm_apply]
     simp only [powMonoidHom_apply, Units.val_pow_eq_pow_val]
     rw [he, he, map_pow, hz, this]
-  haveI : Finite (Rˣ ⧸ φ.ker) := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange φ).toEquiv.symm
+  have : Finite (Rˣ ⧸ φ.ker) := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange φ).toEquiv.symm
   exact Finite.of_surjective (QuotientGroup.map _ _ (MonoidHom.id _) hker) (by
     intro q
     induction q using QuotientGroup.induction_on with
@@ -238,7 +238,7 @@ theorem finite_cls_of_fixSub (P : PPol σ r) (k : Type) [CommRing k] [Algebra F 
     rw [QuotientGroup.eq_one_iff, map_pow, Subgroup.mem_subgroupOf]
     refine ⟨(φ u).1, ?_⟩
     ext
-    simp only [MonoidHom.mul_apply, MonoidHom.id_apply, Units.val_mul, Units.coe_map, MonoidHom.coe_coe,
+    simp only [MonoidHom.mul_apply, MonoidHom.id_apply, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass,
       RingHom.toMonoidHom_eq_coe, Subgroup.coe_pow, Units.val_pow_eq_pow_val]
     rw [hfix (φ u), sq]
   exact Finite.of_surjective (QuotientGroup.lift _ ψ hsq) (by
@@ -257,8 +257,8 @@ theorem finite_cls_of_normed [NumberField F] [NumberField E] (P : PPol σ r) (k 
   have h2 : (2 : k) ≠ 0 := by
     have := (algebraMap F k).injective.ne (two_ne_zero (α := F))
     rwa [map_ofNat, map_zero] at this
-  haveI : Module.Finite F (Fld P) := Module.Finite.of_restrictScalars_finite ℚ F (Fld P)
-  haveI : IsReduced (fixSub P k) := isReduced_of_injective (fixSub P k).val Subtype.val_injective
+  have : Module.Finite F (Fld P) := Module.Finite.of_restrictScalars_finite ℚ F (Fld P)
+  have : IsReduced (fixSub P k) := isReduced_of_injective (fixSub P k).val Subtype.val_injective
   exact finite_cls_of_fixSub P k
     (finite_units_quot_sq_of_reduced (k := k) (by intro K _ _ _; exact finite_units_quot_sq_field h2 K) (fixSub P k))
 
@@ -267,20 +267,20 @@ theorem finite_cls : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   constructor
   · intro v
     obtain ⟨ψ, -, hb, -⟩ := GlobalTheory.TraceClasses.exists_finite_decomp F (Fld P)
-    letI : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
-    haveI := GlobalTheory.LocalData.isLocalField v
-    haveI : ProperSpace (v.adicCompletion F) :=
+    let : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
+    have := GlobalTheory.LocalData.isLocalField v
+    have : ProperSpace (v.adicCompletion F) :=
       ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace (v.adicCompletion F)
     exact finite_cls_of_normed P (v.adicCompletion F) (isReduced_of_injective (Pi.ringHom (ψ v)) (hb v).1)
   · intro w
     obtain ⟨χ, -, hb⟩ := GlobalTheory.TraceClasses.exists_infinite_decomp F (Fld P)
-    letI : NontriviallyNormedField w.Completion :=
+    let : NontriviallyNormedField w.Completion :=
       { (inferInstance : NormedField w.Completion) with
         non_trivial := ⟨2, by
           rw [← (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _),
             map_ofNat]
           simp⟩ }
-    haveI : ProperSpace w.Completion :=
+    have : ProperSpace w.Completion :=
       ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace w.Completion
     exact finite_cls_of_normed P w.Completion (isReduced_of_injective (Pi.ringHom (χ w)) (hb w).1)
 

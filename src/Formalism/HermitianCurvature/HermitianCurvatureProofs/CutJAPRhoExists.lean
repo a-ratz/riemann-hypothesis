@@ -267,7 +267,7 @@ theorem rho_projection_assembly : Assembly := by
       constructor
       · intro i hi
         simp only [SSn.prWv, SSn.wbP, Pi.add_apply, Pi.smul_apply, hz i hi, smul_eq_mul, mul_zero, add_zero]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
       · unfold SSn.prWv
         rw [Qx8.herm_add_left', Qx8.herm_smul_left', hzzT]
         have hT0 : ((Tz P.k P.r Bs.z : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hT.ne'
@@ -296,7 +296,7 @@ theorem rho_projection_assembly : Assembly := by
     rw [hLag Wp Bs.z (c • b) Bs.π hz hT hπ he1 he2 he3 (Fr a) hfe (C (Fr a)) hCv ρ]
     show PrDef P Bs.z Bs.π ρ a = _
     unfold PrDef
-    rw [if_pos ha]
+    rw [ite_eq_left ha]
     exact sp_congr (K_smul hc0 _ _).symm
   ·
     intro h hh ρ a
@@ -315,17 +315,17 @@ theorem rho_projection_assembly : Assembly := by
         rw [nrmW_smul]; exact mul_pos (Complex.normSq_pos.2 hc) ha
       show PrDef P Bs.z Bs.π ρ (c • a) = PrDef P Bs.z Bs.π ρ a
       unfold PrDef
-      rw [if_pos hpos, if_pos ha]
+      rw [ite_eq_left hpos, ite_eq_left ha]
       exact sp_congr (by rw [SSn.Geom.prWv_eq, SSn.Geom.prW_smul, ← SSn.Geom.prWv_eq]; exact K_smul hc _ _)
     · intro ρ x y
       show inner ℂ (PrDef P Bs.z Bs.π ρ a x) y = inner ℂ x (PrDef P Bs.z Bs.π ρ a y)
       unfold PrDef
-      rw [if_pos ha]
+      rw [ite_eq_left ha]
       exact Submodule.inner_starProjection_left_eq_right _ x y
     · intro ρ ρ'
       show (PrDef P Bs.z Bs.π ρ a).comp (PrDef P Bs.z Bs.π ρ' a) = if ρ = ρ' then PrDef P Bs.z Bs.π ρ a else 0
       unfold PrDef
-      rw [if_pos ha, if_pos ha]
+      rw [ite_eq_left ha, ite_eq_left ha]
       split_ifs with hρ
       · subst hρ
         ext x
@@ -345,7 +345,7 @@ theorem rho_projection_assembly : Assembly := by
     · intro ρ x
       show PrDef P Bs.z Bs.π ρ a x = x ↔ _
       unfold PrDef
-      rw [if_pos ha, Submodule.starProjection_eq_self_iff, mem_K hrep hcont]
+      rw [ite_eq_left ha, Submodule.starProjection_eq_self_iff, mem_K hrep hcont]
       exact Iff.rfl
 
 end Formalism.FourierDecayAlt.P.CutMP.JA.PRhoCut
@@ -430,7 +430,7 @@ theorem capacity_smoothness_holds : CapSmooth := by
   have hLext : ∀ Z (hZ : Qr.InGlW k r z Z), Lext Z = QrD.ecOp π Z := by
     intro Z hZ
     have hmem : Z ∈ glW k r z π hπ := hZ
-    have e := Submodule.linearProjOfIsCompl_apply_left hG' ⟨Z, hmem⟩
+    have e := Submodule.projectionOnto_apply_left hG' ⟨Z, hmem⟩
     show ecL z π hπ (Submodule.linearProjOfIsCompl _ _ hG' Z) = _
     erw [e]
     rfl
@@ -446,9 +446,9 @@ theorem capacity_smoothness_holds : CapSmooth := by
     exact contDiff_const.add (hLc.comp (unitB_contDiff _ _))
   · intro Bs hB v
     unfold capRep qmF
-    rw [ContinuousLinearMap.sum_apply]
+    rw [sum_apply]
     refine Finset.sum_congr rfl fun σ _ => ?_
-    rw [ContinuousLinearMap.smul_apply, ← foldr_apply]
+    rw [smul_apply, ← foldr_apply]
     congr 2
     simp only [List.map_ofFn]
     congr 1
@@ -456,7 +456,7 @@ theorem capacity_smoothness_holds : CapSmooth := by
     have hl := QrD.frame_lie hB (σ t) t
     have hgl : Qr.InGlW k r z (unitB (Hpk k r) Bs (σ t) t) := hl
     simp only [Function.comp_apply, T, id]
-    rw [ContinuousLinearMap.add_apply, QrD.ecRep_eq hπ.1 hπ.2 hl.1 hl.2 (k := k) (r := r), ← hLext _ hgl]
+    rw [add_apply, QrD.ecRep_eq hπ.1 hπ.2 hl.1 hl.2 (k := k) (r := r), ← hLext _ hgl]
     congr 1
     split_ifs <;> simp
 
@@ -635,12 +635,12 @@ theorem aeval_eig {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] (C : E 
     induction n with
     | zero => simp
     | succ n ih =>
-      rw [pow_succ', ContinuousLinearMap.mul_apply, ih, map_smul, hv, smul_smul, pow_succ]
+      rw [pow_succ', mul_apply_eq_comp, ih, map_smul, hv, smul_smul, pow_succ]
   induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [map_add (f := _), ContinuousLinearMap.add_apply, hp, hq, Polynomial.eval_add, add_smul]
+  | add p q hp hq => simp only [map_add (f := _), add_apply, hp, hq, Polynomial.eval_add, add_smul]
   | monomial n a =>
-    rw [Polynomial.aeval_monomial, Polynomial.eval_monomial, ContinuousLinearMap.mul_apply, hpow,
-      Algebra.algebraMap_eq_smul_one, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, smul_smul]
+    rw [Polynomial.aeval_monomial, Polynomial.eval_monomial, mul_apply_eq_comp, hpow,
+      Algebra.algebraMap_eq_smul_one, smul_apply, one_apply_eq_self, smul_smul]
 
 def lagP {ι κ : Type*} (c : ι → ℂ) (d : κ → ℂ) (bad : ι → Finset κ) (ρ : ι) : Polynomial ℂ :=
   ∏ σ ∈ bad ρ, (Polynomial.C (c ρ - d σ)⁻¹ * (Polynomial.X - Polynomial.C (d σ)))
@@ -687,7 +687,7 @@ theorem generic (P : M.Par) : ∃ Y : ℂ, ∀ (ρ : M.Ty P) (σ : M.Ty (Qx8.P2 
   refine Finset.prod_eq_zero (Finset.mem_univ ρ) ?_
   rw [Polynomial.eval_prod]
   refine Finset.prod_eq_zero (Finset.mem_univ σ) ?_
-  rw [if_neg hne, Polynomial.eval_sub, eval_qP, eval_qP, hEq, sub_self]
+  rw [ite_eq_right hne, Polynomial.eval_sub, eval_qP, eval_qP, hEq, sub_self]
 
 end LagrangeInterpolation
 

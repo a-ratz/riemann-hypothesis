@@ -105,7 +105,7 @@ instance : Group (Gt G) :=
     (fun a => ext_mat G (by simp)) (fun a => ext_mat G (by simp [inv_mul_of G (mat_mem G a)]))
 
 theorem continuous_mat : Continuous (mat G) := by
-  exact continuous_subtype_val
+  exact continuous_subtypeVal
 
 theorem isClosed_set : IsClosed {x : PI.MtM m | Matrix.of x ∈ G} := by
   show IsClosed (Matrix.of ⁻¹' G)
@@ -232,7 +232,7 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
     have hnull : ∀ n, lam (spanningSets κ n) = 0 := fun n => by
       have h1 := measure_spanningSets_lt_top κ n
       generalize spanningSets κ n = A at h1 ⊢
-      rw [hκeq, ht, Measure.smul_apply, smul_eq_mul] at h1
+      rw [hκeq, ht, smul_apply, smul_eq_mul] at h1
       by_contra hne
       rw [ENNReal.top_mul hne] at h1
       exact lt_irrefl _ h1
@@ -247,14 +247,14 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
     refine measurable_of_restrict_of_restrict_compl hGm ?_ ?_
     · have e1 : Set.domRestrict {y | Matrix.of y ∈ G} φ = fun y => β (mk G (Matrix.of y.1) y.2)⁻¹ := by
         funext y
-        exact dif_pos y.2
+        exact dite_eq_left y.2
       rw [e1]
       refine hβm.comp (measurable_inv.comp ?_)
       exact (continuous_mk G (f := fun y : {y : PI.MtM m | Matrix.of y ∈ G} => Matrix.of y.1)
-        continuous_subtype_val fun y => y.2).measurable
+        continuous_subtypeVal fun y => y.2).measurable
     · have e2 : Set.domRestrict {y | Matrix.of y ∈ G}ᶜ φ = fun _ => 0 := by
         funext y
-        exact dif_neg y.2
+        exact dite_eq_right y.2
       rw [e2]
       exact measurable_const
   refine ⟨μG.withDensity (fun y => c⁻¹ * φ y), inferInstance, fun f hf => ?_⟩
@@ -299,7 +299,7 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
         ext_mat G (by rw [mat_mk, mat_mul, mat_mk]; rfl)
       show (if hy' : Matrix.of (PI.lmulQ (mat G (h⁻¹ : H).1) y) ∈ G then
         β (mk G (Matrix.of (PI.lmulQ (mat G (h⁻¹ : H).1) y)) hy')⁻¹ else 0) = _
-      rw [dif_pos hm, hk, mul_inv_rev, Subgroup.coe_inv, inv_inv]
+      rw [dite_eq_left hm, hk, mul_inv_rev, Subgroup.coe_inv, inv_inv]
     simp_rw [hval]
     rw [hκeq, lintegral_smul_measure]
     have := hβ1 (mk G (Matrix.of y) hy)⁻¹
@@ -322,7 +322,7 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
         refine lintegral_lintegral_swap ?_
         have hc2 : Continuous fun p : H × PI.MtM m => PI.lmulQ (mat G (p.1⁻¹ : H).1) p.2 := by
           have h1 : Continuous fun p : H × PI.MtM m => (mat G (p.1⁻¹ : H).1) :=
-            (continuous_mat G).comp (continuous_subtype_val.comp (continuous_inv.comp continuous_fst))
+            (continuous_mat G).comp (continuous_subtypeVal.comp (continuous_inv.comp continuous_fst))
           refine continuous_pi fun i => continuous_pi fun j => ?_
           simp only [PI.lmulQ, Matrix.mul_apply, Matrix.of_apply]
           exact continuous_finsetSum _ fun l _ =>
@@ -335,7 +335,7 @@ theorem quotM_existsSF (hG : PI.IsMatGroup G) (hS : PI.IsMatGroup S) (hSG : S �
         have hmeas : Measurable fun h : H => φ (PI.lmulQ (mat G (h⁻¹ : H).1) y) := by
           refine hφm.comp (Continuous.measurable ?_)
           have h1 : Continuous fun h : H => (mat G (h⁻¹ : H).1) :=
-            (continuous_mat G).comp (continuous_subtype_val.comp continuous_inv)
+            (continuous_mat G).comp (continuous_subtypeVal.comp continuous_inv)
           refine continuous_pi fun i => continuous_pi fun j => ?_
           simp only [PI.lmulQ, Matrix.mul_apply, Matrix.of_apply]
           exact continuous_finsetSum _ fun l _ =>

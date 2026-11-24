@@ -122,7 +122,7 @@ theorem base (hR : GLRight) (hLf : GLLeft) (P : M.Par) (Bs : B.RealPlaceData P.k
   have horth : ∀ σ, σ ≠ ρ → inner ℂ (B.hsVec (e σ ζ)) (B.hsVec E) = 0 := by
     intro σ hσ
     have h := hR Wp Wq P Bs e hpl hk hF hQQ ζ hζ _ hFr' E hEF Y₀ (M.xC P ρ (Y₀ : ℂ) • E)
-      (fun v => by rw [hEc, ContinuousLinearMap.smul_apply]) σ
+      (fun v => by rw [hEc, smul_apply]) σ
     rw [hsVec_smul, inner_smul_right] at h
     have h2 : (M.xC P ρ (Y₀ : ℂ) - M.xC P σ (Y₀ : ℂ)) * inner ℂ (B.hsVec (e σ ζ)) (B.hsVec E) = 0 := by
       rw [sub_mul, h, sub_self]
@@ -144,7 +144,7 @@ theorem base (hR : GLRight) (hLf : GLLeft) (P : M.Par) (Bs : B.RealPlaceData P.k
     have h := hEc Y v
     generalize hcdef : inner ℂ (B.hsVec (e ρ ζ)) (B.hsVec E) = c at hE1 hc0
     rw [hE1] at h
-    simp only [ContinuousLinearMap.smul_apply] at h
+    simp only [smul_apply] at h
     rw [smul_comm (M.xC P ρ Y) c] at h
     exact smul_right_injective Wp hc0 h
   rw [hpass (e ρ ζ) ((hF.2 ζ hζ).1 ρ) w x]
@@ -251,7 +251,7 @@ theorem gauge_right_line_holds : GLRight := by
       (Formalism.FourierDecayAlt.P.Qx5.Dp_dom P.k P.r Bs.z Bs.z') Bs.π'_rep Bs.π'_cont
       (Formalism.FourierDecayAlt.P.Qx5.slice_FF hz hz' hΦ (fun _ => one_ne_zero)) ⟨hx.2.1, hx.2.2⟩ (ne_of_gt hx.2.2) Fr hFr (Y : ℂ) v
     show Q.tL P.k P.r Bs.z Bs.z' (Fin.last P.r) (Y : ℂ) 1 1 (Φ c0) g v = _
-    rw [ht, hval, ← hX', hGGv, ContinuousLinearMap.smul_apply]
+    rw [ht, hval, ← hX', hGGv, smul_apply]
   have hL : Gauge.rawR P Bs.μsec e (Q.QL P.k P.r Bs.z Bs.z' (Fin.last P.r) (↑Y) 1 1 Φ) ρ qq =
       ((Gauge.wR P.k P.TT ζ : ℝ) : ℂ) * (((Complex.normSq ζ - P.TT : ℝ) : ℂ) *
         inner ℂ (B.hsVec (e ρ ζ)) (B.hsVec X')) := by

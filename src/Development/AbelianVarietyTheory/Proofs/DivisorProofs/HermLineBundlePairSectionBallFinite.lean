@@ -177,15 +177,15 @@ namespace GlobalTheory
 theorem addGroupFG_sec_of_isArithVar : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X]
     (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ B : LB X, B.IsLB → AddGroup.FG B.Sec := by
   intro k _ X _ p D h B hB
-  letI : Algebra k Γ(X, ⊤) :=
+  let : Algebra k Γ(X, ⊤) :=
     ((Scheme.Hom.appTop p).hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).toAlgebra
   have hf : ∀ r : k, algebraMap k Γ(X, ⊤) r =
       (Scheme.Hom.appTop p) ((Scheme.ΓSpecIso (CommRingCat.of k)).inv r) := fun _ => rfl
-  haveI := h.finite
-  haveI : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
+  have := h.finite
+  have : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
   have hfin : Module.Finite k (coh (twist (QCoh.structureModule X) B) 0) :=
     finite_coh_twist_of_isProjOver hf (QCoh.structureModule X) h.isProjOver hB 0
-  haveI : Module.Finite ℤ (coh (twist (QCoh.structureModule X) B) 0) := Module.Finite.trans k _
+  have : Module.Finite ℤ (coh (twist (QCoh.structureModule X) B) 0) := Module.Finite.trans k _
   have hfg : AddGroup.FG (coh (twist (QCoh.structureModule X) B) 0) :=
     Module.Finite.iff_addGroup_fg.mp inferInstance
   exact AddGroup.fg_of_surjective (f := (cohZeroTwistEquiv B).toAddEquiv.toAddMonoidHom)
@@ -298,10 +298,10 @@ theorem fg_addSubgroup_field_finite_or_basis {K : Type} [Field K] (H : AddSubgro
     have : Finite H := Module.finite_of_fg_torsion H htor
     exact Set.toFinite _
   · right
-    haveI : CharP K 0 := h0 ▸ ringChar.charP K
-    haveI : CharZero K := CharP.charP_to_charZero K
-    haveI : NoZeroSMulDivisors ℤ H := inferInstance
-    haveI : Module.Free ℤ H := Module.free_of_finite_type_torsion_free'
+    have : CharP K 0 := h0 ▸ ringChar.charP K
+    have : CharZero K := CharP.charP_to_charZero K
+    have : NoZeroSMulDivisors ℤ H := inferInstance
+    have : Module.Free ℤ H := Module.free_of_finite_type_torsion_free'
     let bs := Module.finBasis ℤ H
     refine ⟨_, fun j => (bs j : K), fun j => (bs j).2, ?_, ?_⟩
     · exact bs.linearIndependent.map' H.subtype.toIntLinearMap

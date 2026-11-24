@@ -58,8 +58,8 @@ theorem finsum_quot_eq {V K : Type} [AddCommGroup V] [Field K] (f : V → K) (M 
     (hcov : ∀ v, f v ≠ 0 → ∃ s ∈ S, v - s ∈ N) :
     ∑ᶠ c : V ⧸ M, f c.out = (M.relIndex N : K) * ∑ s ∈ S, f s := by
   classical
-  haveI : Finite (N ⧸ M.addSubgroupOf N) := Nat.finite_of_card_ne_zero hidx
-  letI : Fintype (N ⧸ M.addSubgroupOf N) := Fintype.ofFinite _
+  have : Finite (N ⧸ M.addSubgroupOf N) := Nat.finite_of_card_ne_zero hidx
+  let : Fintype (N ⧸ M.addSubgroupOf N) := Fintype.ofFinite _
   let φ : V × (N ⧸ M.addSubgroupOf N) → V ⧸ M :=
     fun p => QuotientAddGroup.mk (p.1 + ((p.2.out : N) : V))
   have hout : ∀ v : V, f (QuotientAddGroup.mk v : V ⧸ M).out = f v := by

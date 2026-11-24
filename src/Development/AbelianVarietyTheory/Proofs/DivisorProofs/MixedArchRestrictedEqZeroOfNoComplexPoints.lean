@@ -53,7 +53,7 @@ theorem archInt_eq_zero_of_isEmpty {k : Type} [CommRing k] {Z : Scheme.{0}} [IsI
     {r : M.B.ι → Z.functionFieldˣ} (hr : IsRatSec M.B r) : L.archInt M e hr = 0 := by
   unfold HermLB.archInt
   refine finsum_eq_zero_of_forall_eq_zero fun σ => ?_
-  haveI := hq σ
+  have := hq σ
   simp [Weight.chernInt, MeasureTheory.integral_of_isEmpty]
 
 theorem mixArch_eq_zero_of_isEmpty {k : Type} [CommRing k] {Z : Scheme.{0}} [IsIntegral Z] {q : Z ⟶ Sp k}

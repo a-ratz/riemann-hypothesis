@@ -77,7 +77,7 @@ theorem mem_of_tmul_mem (v : HeightOneSpectrum (𝓞 F)) (t : v.adicCompletion F
     (ht : (1 : E) ⊗ₜ[F] t ∈ intV E v) : t ∈ v.adicCompletionIntegers F := by
   classical
   let ι : v.adicCompletion F →ₐ[F] E ⊗[F] v.adicCompletion F := Algebra.TensorProduct.includeRight
-  letI : Algebra (v.adicCompletionIntegers F) (E ⊗[F] v.adicCompletion F) :=
+  let : Algebra (v.adicCompletionIntegers F) (E ⊗[F] v.adicCompletion F) :=
     (ι.toRingHom.comp (algebraMap (v.adicCompletionIntegers F) (v.adicCompletion F))).toAlgebra
   let ιO : v.adicCompletion F →ₐ[v.adicCompletionIntegers F] E ⊗[F] v.adicCompletion F :=
     { ι.toRingHom with commutes' := fun _ => rfl }
@@ -147,7 +147,7 @@ theorem dual_not_loc_of_norm_inv : ∀ (F E : Type) [Field F] [NumberField F] [F
     exact (map_ne_zero _).2 (Nat.cast_ne_zero.2 hT.ne')
   rw [map_inv₀] at h3
   have hpos : 0 < Valued.v (T : v.adicCompletion F) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hne)
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hne)
   have h4 : 1 ≤ Valued.v (T : v.adicCompletion F) := (inv_le_one₀ hpos).1 h3
   exact absurd hval (not_lt.2 h4)
 
@@ -410,7 +410,7 @@ theorem mlat_main (D : D7) (X : HidaSetting D) (u : D.what₂.Word) (wt : (VS D)
       ∀ x ∈ Mq wt, h (φ x) (φ y) ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := by
     intro y
     rw [mlat_mem_dualL]
-    simp only [dualSet, Set.mem_setOf_eq, hh, hφ, mlat_hT_lc hW]
+    simp only [dualSet, Set.mem_ofPred_eq, hh, hφ, mlat_hT_lc hW]
 
   have hperp0 : ∀ x, h (φ x) z = 0 := fun x => by rw [hh, mlat_symm, ← hh, (mlat_lc_perp hW x).2, map_zero]
   have hsmulLb : ∀ (c : D.host.E), c ∈ (algebraMap (𝓞 D.host.E) D.host.E).range → ∀ v ∈ X.Lb, c • v ∈ X.Lb := by
@@ -489,7 +489,7 @@ theorem mlat_main (D : D7) (X : HidaSetting D) (u : D.what₂.Word) (wt : (VS D)
     exact selfDual_lattice_hermitian_form_integral hx0L0 hx0L0
   have hLat : IsLat (Mq wt) := by
     refine ⟨?_, ?_⟩
-    · haveI : IsNoetherian (𝓞 D.host.E) (VS D).L0 := isNoetherian_of_fg_of_noetherian _ (VS D).standardTuple_isLattice.fg
+    · have : IsNoetherian (𝓞 D.host.E) (VS D).L0 := isNoetherian_of_fg_of_noetherian _ (VS D).standardTuple_isLattice.fg
       let f : Mq wt →ₗ[𝓞 D.host.E] (VS D).L0 :=
         LinearMap.codRestrict (VS D).L0 ((φ.restrictScalars (𝓞 D.host.E)).comp (Mq wt).subtype) (fun x => x.2)
       refine Module.Finite.of_injective f ?_

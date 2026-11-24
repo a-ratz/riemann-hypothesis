@@ -241,7 +241,7 @@ theorem haarLie_map_cj {k r : ℕ} {d : Fin (2 * r + k + 1) → ℂ} (h : Uni d)
     have hexp : Continuous (fun X : Mx k r => NormedSpace.exp X) := by
       open scoped Matrix.Norms.Operator in
         exact NormedSpace.exp_continuous
-    have : Continuous E := hexp.comp (hu.comp continuous_subtype_val)
+    have : Continuous E := hexp.comp (hu.comp continuous_subtypeVal)
     exact this.measurable.aemeasurable
 
 section Tor

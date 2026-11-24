@@ -187,8 +187,8 @@ theorem torEx : GlobalTheory.IndefiniteRowSideFullHecke.LatticeNormTransport.Tra
   obtain ⟨Λ, hΛ, hne⟩ := (hl i j).2 c
   refine ⟨Λ s, ⟨hV, hTS Λ hΛ⟩, hne s hs1, fun Λ' h => by rw [hΛ.unique h], fun Λ₁ hΛ₁ => ?_⟩
   obtain ⟨φK, hcomp, hlat⟩ := exists_phiK D hFD'
-  haveI := hCM
-  haveI := hAb
+  have := hCM
+  have := hAb
   obtain ⟨t, 𝔞, Λσ, -, -, hTr⟩ := hT D.host.K D.host.d hd4 (GlobalTheory.CurveLattice.finrank_hostK D)
     (GlobalTheory.CurveLattice.discr_hostK D) φK Λ₁ (hlat Λ₁ hΛ₁)
   have hk := hTr D.host.E hU D.what₂.Tau (cmPhi D) hcard hφ hcomp s (kap D sc.cGap i j s) (condF G.pl) hs1

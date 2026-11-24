@@ -370,9 +370,9 @@ theorem InvMod.wB {X : Tower Ω ε} {l N : ℕ} [Fact l.Prime] [NeZero N] (h : N
 
 theorem cycM_apply [IsAlgClosure ℚ Ω] (M : ℕ) [NeZero M] (s : Ω ≃ₐ[ℚ] Ω) {z : Ω} (hz : z ^ M = 1) :
     s z = z ^ (cycM M s : ZMod M).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have h : ∃ y : (ZMod M)ˣ, ∀ z : Ω, z ^ M = 1 → s z = z ^ (y : ZMod M).val := by
     refine ⟨hζ.autToPow ℚ s, fun z hz => ?_⟩
     obtain ⟨i, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hz
@@ -381,10 +381,10 @@ theorem cycM_apply [IsAlgClosure ℚ Ω] (M : ℕ) [NeZero M] (s : Ω ≃ₐ[ℚ
 
 theorem repM_apply [IsAlgClosure ℚ Ω] (M : ℕ) [NeZero M] (y : (ZMod M)ˣ) {z : Ω} (hz : z ^ M = 1) :
     repM (Ω := Ω) M y z = z ^ (y : ZMod M).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have h : ∃ s : Ω ≃ₐ[ℚ] Ω, ∀ z : Ω, z ^ M = 1 → s z = z ^ (y : ZMod M).val := by
     have h2 := hζ.pow_of_coprime _ (ZMod.val_coe_unit_coprime y)
     have hm : ∀ {ξ : Ω}, IsPrimitiveRoot ξ M → Polynomial.cyclotomic M ℚ = minpoly ℚ ξ := fun hξ =>

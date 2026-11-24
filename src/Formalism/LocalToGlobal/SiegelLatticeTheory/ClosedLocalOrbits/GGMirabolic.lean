@@ -98,7 +98,7 @@ theorem gam_one (ψ₀ : AddChar F ℂ) :
   have hp : ∀ y : GL (Fin k) F, psiNat ψ₀ (y * 1 * y⁻¹) = 1 := by
     intro y
     rw [mul_one, mul_inv_cancel]
-    simp only [psiNat, isUni_one, if_true, psiU, Units.val_one, superdiag_one, AddChar.map_zero_eq_one]
+    simp only [psiNat, isUni_one, ite_true, psiU, Units.val_one, superdiag_one, AddChar.map_zero_eq_one]
   unfold gam
   rw [Finset.sum_congr rfl (fun y _ => hp y)]
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one]

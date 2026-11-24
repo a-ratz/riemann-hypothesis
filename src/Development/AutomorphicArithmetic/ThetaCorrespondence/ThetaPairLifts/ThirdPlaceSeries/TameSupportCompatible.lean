@@ -192,7 +192,7 @@ theorem supp_of_mapsToProd : GlobalTheory.Published.ZelevinskyPolynomialRing →
         show Λ (π x (π h v)) = Λ (π (x * h) v)
         rw [map_mul, Module.End.mul_apply])) }
   have hT : Function.Injective T := by
-    haveI := hπ
+    have := hπ
     refine (Representation.IsIrreducible.injective_or_eq_zero T).resolve_right fun h0 => hΛ0 (LinearMap.ext fun v => ?_)
     have h1 : (T v).1.1 1 = 0 := by rw [h0]; rfl
     change Λ (π 1 v) = 0 at h1
@@ -242,7 +242,7 @@ theorem isIrreducible_of_isIrrRep {G V : Type} [Group G] [AddCommGroup V] [Modul
 
 theorem isIrrRep_of_isIrreducible {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
     {ρ : Representation ℂ G V} (h : ρ.IsIrreducible) : IsIrrRep ρ := by
-  haveI := h
+  have := h
   refine ⟨?_, fun W hW => ?_⟩
   · by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn

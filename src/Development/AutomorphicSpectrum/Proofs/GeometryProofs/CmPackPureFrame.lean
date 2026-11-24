@@ -140,7 +140,7 @@ theorem type_part_linear_independent (H : Host E) (D : Datum H) {g : ℕ} (ty : 
     (hrk : k + k' = finrank (𝓞 E) D.La) (hli : LinearIndependent (𝓞 E) (Sum.elim y z)) :
     LinearIndependent ℂ (fun a => tyPart ty σ (P (y a))) ∧
       ∀ w : Fin g → ℂ, w ∈ Submodule.span ℂ (Set.range fun a => tyPart ty σ (P (y a))) ↔ tyPart ty σ w = w := by
-  haveI := D.fin
+  have := D.fin
   set T := pure_type_projection ty σ
   set S := Submodule.span ℂ (Set.range fun a => tyPart ty σ (P (y a)))
   have hT : ∀ w, T w = tyPart ty σ w := fun _ => rfl
@@ -264,7 +264,7 @@ theorem pure_type_projection_independent : ∀ (E : Type) [Field E] [NumberField
       split_ifs with h
       · apply hpure.2 b i
         rw [h, hτ]
-        simp only [sgnRt, Bool.false_eq_true, if_false]
+        simp only [sgnRt, Bool.false_eq_true, ite_false]
         exact hne
       · rfl
     · convert hli using 1
@@ -281,7 +281,7 @@ theorem pure_type_projection_independent : ∀ (E : Type) [Field E] [NumberField
       split_ifs with h
       · apply hpure.1 a i
         rw [h, hcτ]
-        simp only [sgnRt, if_true]
+        simp only [sgnRt, ite_true]
         exact hne.symm
       · rfl
     · have := hli.comp (Equiv.sumComm (Fin q) (Fin p)) (Equiv.injective _)
@@ -358,7 +358,7 @@ theorem mem_eigSp_iff_tyPart_eq_self {E : Type} [Field E] [NumberField E] {g : �
     · rw [hk]
     · have : w k = 0 := by
         have := congrFun h k
-        simp only [tyPart, hk, if_false] at this
+        simp only [tyPart, hk, ite_false] at this
         exact this.symm
       rw [this, mul_zero, mul_zero]
 

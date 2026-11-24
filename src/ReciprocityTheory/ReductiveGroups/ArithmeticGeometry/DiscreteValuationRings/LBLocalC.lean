@@ -223,8 +223,8 @@ lemma genHasVal_top {X : Scheme.{0}} (L : LB X) {Ix : Type} [Fintype Ix]
     rw [Category.id_comp, ← Functor.map_comp]
     erw [this, CategoryTheory.Functor.map_id]
     simp
-  · simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe, heV, hE, RingHom.toMonoidHom_eq_coe,
-      MonoidHom.coe_coe]
+  · simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass, heV, hE, RingHom.toMonoidHom_eq_coe,
+      MonoidHom.coe_ofClass]
     have hnat := congrArg (fun f => (CommRingCat.Hom.hom f)
         (((Spec (CommRingCat.of V)).presheaf.map (homOfLE hV).op).hom (e.s j₀).val))
       (Scheme.ΓSpecIso_naturality (CommRingCat.ofHom (algebraMap V (FractionRing V))))

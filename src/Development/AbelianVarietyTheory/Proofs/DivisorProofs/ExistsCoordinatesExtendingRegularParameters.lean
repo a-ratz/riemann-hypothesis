@@ -117,11 +117,11 @@ namespace GlobalTheory.CoordExt
 theorem formallySmooth_of_charZero (F K : Type) [Field F] [CharZero F] [Field K] [Algebra F K] :
     Algebra.FormallySmooth F K := by
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis F K
-  haveI := hs.isAlgebraic_field
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
-  haveI : CharZero (IntermediateField.adjoin F (Set.range ((↑) : s → K))) :=
+  have := hs.isAlgebraic_field
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
+  have : CharZero (IntermediateField.adjoin F (Set.range ((↑) : s → K))) :=
     charZero_of_injective_algebraMap (algebraMap F _).injective
-  haveI : Algebra.IsSeparable (IntermediateField.adjoin F (Set.range ((↑) : s → K))) K :=
+  have : Algebra.IsSeparable (IntermediateField.adjoin F (Set.range ((↑) : s → K))) K :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
   exact Algebra.FormallySmooth.of_algebraicIndependent_of_isSeparable hs.1
 
@@ -169,7 +169,7 @@ open GlobalTheory.CoordExt in
 theorem GlobalTheory.exists_coords_extending_regularParams : ∀ (F A R : Type) [Field F] [CharZero F] [CommRing A] [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsRegularLocalRing R] [Algebra F A] [Algebra A R] [Algebra F R] [IsScalarTower F A R] (P : Ideal A) [P.IsPrime] [IsLocalization.AtPrime R P] (n : ℕ) [Module.Free R Ω[R⁄F]] [Module.Finite R Ω[R⁄F]], Module.finrank R Ω[R⁄F] = n → ∀ (m : ℕ) (a : Fin m → A), ReciprocityTheory.AnForm.R.FinalTheorems.Rsp R m (fun i => algebraMap A R (a i)) → ∃ (x : Fin n → A) (e : Fin m ↪ Fin n), (∀ j, x (e j) = a j) ∧ ∃ bs : Module.Basis (Fin n) R Ω[R⁄F], ∀ i, bs i = KaehlerDifferential.D F R (algebraMap A R (x i)) := by
   classical
   intro F A R _ _ _ _ _ _ _ _ _ _ _ P _ _ n _ _ hn m a hrsp
-  haveI : Algebra.FormallySmooth F (IsLocalRing.ResidueField R) := formallySmooth_of_charZero F _
+  have : Algebra.FormallySmooth F (IsLocalRing.ResidueField R) := formallySmooth_of_charZero F _
   set r : Fin m → R := fun i => algebraMap A R (a i) with hr_def
   have hr : ∀ i, r i ∈ IsLocalRing.maximalIdeal R := fun i => hrsp.1 ▸ Ideal.subset_span ⟨i, rfl⟩
 
@@ -201,8 +201,8 @@ theorem GlobalTheory.exists_coords_extending_regularParams : ∀ (F A R : Type) 
     rw [← Set.image_eq_range, ← hVsp, ← Set.image_univ]
     exact Submodule.span_le.2 hbsp
   let bV := Module.Basis.mk hbli hbtop
-  haveI : Finite b := Module.Finite.finite_basis bV
-  letI : Fintype b := Fintype.ofFinite b
+  have : Finite b := Module.Finite.finite_basis bV
+  let : Fintype b := Fintype.ofFinite b
   have hcard : Fintype.card b = n := by
     rw [← Module.finrank_eq_card_basis bV, Module.finrank_baseChange, hn]
   let σ := Fintype.equivFinOfCardEq hcard

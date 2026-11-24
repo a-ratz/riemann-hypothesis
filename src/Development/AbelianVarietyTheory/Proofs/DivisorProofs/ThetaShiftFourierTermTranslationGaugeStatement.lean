@@ -738,7 +738,7 @@ namespace GlobalTheory.RayFlatDesc
 
 theorem gs_sub_of {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) (h : f y ∈ U) (a b : Γ(X, U)) :
     gs f y U (a - b) = gs f y U a - gs f y U b := by
-  simp only [gs, dif_pos h, map_sub]
+  simp only [gs, dite_eq_left h, map_sub]
 
 theorem gs_zero_of {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
   unfold gs; split_ifs <;> simp
@@ -1140,15 +1140,15 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
     refine ⟨fun φ => if h : ∃ ψ, p ≫ ψ = φ then J h.choose else (exists_chart Dd.toPre.P.isLB (φ w0)).choose,
       fun φ => ?_, fun ψ => ?_⟩
     · by_cases h : ∃ ψ, p ≫ ψ = φ
-      · simp only [dif_pos h]
+      · simp only [dite_eq_left h]
         have e := h.choose_spec
         have : (p ≫ h.choose) w0 ∈ Dd.toPre.P.L.U (J h.choose) := by
           rw [Scheme.Hom.comp_apply]; exact hJ _
         rwa [e] at this
-      · simp only [dif_neg h]
+      · simp only [dite_eq_right h]
         exact (exists_chart Dd.toPre.P.isLB (φ w0)).choose_spec
     · have h : ∃ ψ', p ≫ ψ' = p ≫ ψ := ⟨ψ, rfl⟩
-      simp only [dif_pos h]
+      simp only [dite_eq_left h]
       exact congrArg J ((cancel_epi p).1 h.choose_spec)
   obtain ⟨J₁, gJ₁, eJ₁⟩ := hJ₁
   have eJ : J = fun ψ => J₁ (p ≫ ψ) := funext fun ψ => (eJ₁ ψ).symm

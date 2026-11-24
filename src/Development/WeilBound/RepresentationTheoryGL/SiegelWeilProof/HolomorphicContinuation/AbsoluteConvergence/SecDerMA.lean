@@ -173,8 +173,8 @@ theorem cellM : CellM := by
     rw [hmA]
     simp only [toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, smul_zero, zero_add, neg_zero,
       det_fromBlocks_zero₂₁]
-    rw [← det_mul, h2, det_one, _root_.one_zpow, one_mul, det_aE, ← Complex.exp_int_mul,
-      ← Complex.exp_int_mul, ← Complex.exp_add]
+    rw [← det_mul, h2, det_one, _root_.one_zpow, one_mul, det_aE, ← Complex.exp_intCast_mul,
+      ← Complex.exp_intCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     ring

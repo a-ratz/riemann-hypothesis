@@ -287,7 +287,7 @@ theorem absE_idl (h : IsCMExt F E σ) (t : E →ₐ[F] Fv F v) (x y : (Fv F v)ˣ
     have := congrArg (splitProj t) (GlobalTheory.Doubling.algebraMap_norm_eq h z)
     rw [AlgHom.commutes, map_mul, ← splitProj_comp] at this
     exact this
-  rw [absE_of_mem (v := v) (mem_idelesAt.2 (at_idl h t x y)), GlobalTheory.Doubling.absEv_apply, coe_nnnorm, hN, norm_mul,
+  rw [absE_of_mem (v := v) (mem_idelesAt.2 (at_idl h t x y)), GlobalTheory.Doubling.absEv_apply, coe_nnNorm, hN, norm_mul,
     ← ((GlobalTheory.CompletionNorm.norm_nabs_valuation F v).1 x).1, ← ((GlobalTheory.CompletionNorm.norm_nabs_valuation F v).1 y).1]
   exact congrArg₂ (fun p q : Fv F v => ‖p‖ * ‖q‖) (piW_idl h t x y) (piW_comp_idl h t x y)
 

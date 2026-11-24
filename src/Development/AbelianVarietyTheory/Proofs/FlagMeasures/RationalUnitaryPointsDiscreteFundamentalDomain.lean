@@ -91,7 +91,7 @@ theorem finite_bounded {E : Type} [Field E] [NumberField E] {n : Type} [Fintype 
 variable (I : AutInst)
 
 theorem exists_place (τ : I.E →+* ℂ) : ∃ v, ∀ a, ‖τ a‖ = ‖I.φ v a‖ := by
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   let ψ : I.F →+* ℂ := τ.comp (algebraMap I.F I.E)
   have hψ : ComplexEmbedding.IsReal ψ :=
     InfinitePlace.isReal_mk_iff.1 (IsTotallyReal.isReal (InfinitePlace.mk ψ))
@@ -153,8 +153,8 @@ def ratSub : Subgroup I.GA where
   inv_mem' := fun ⟨γ, hγ, hx⟩ => ⟨γ⁻¹, inv_mem hγ, isImage_inv I hx⟩
 
 theorem countable_GFset : I.GFset.Countable := by
-  haveI : Countable I.E := Countable.of_equiv _ (Module.finBasis ℚ I.E).equivFun.toEquiv.symm
-  haveI : Countable (Matrix (Fin I.n) (Fin I.n) I.E) :=
+  have : Countable I.E := Countable.of_equiv _ (Module.finBasis ℚ I.E).equivFun.toEquiv.symm
+  have : Countable (Matrix (Fin I.n) (Fin I.n) I.E) :=
     inferInstanceAs (Countable (Fin I.n → Fin I.n → I.E))
   refine (Set.countable_iUnion fun γ => (subsingleton_isImage I γ).countable).mono ?_
   rintro x ⟨γ, -, hx⟩
@@ -164,7 +164,7 @@ theorem exists_bound {C : Set I.GA} (hC : IsCompact C) : ∃ B : ℝ, ∀ x ∈ 
     ‖(I.P v * uMat (x.1 v) * (I.P v)⁻¹) i j‖ ≤ B := by
   have hc : Continuous fun x : I.GA => fun v i j => (I.P v * uMat (x.1 v) * (I.P v)⁻¹) i j := by
     refine continuous_pi fun v => ?_
-    exact (continuous_const.matrix_mul (Units.continuous_val.comp (continuous_subtype_val.comp
+    exact (continuous_const.matrix_mul (Units.continuous_val.comp (continuous_subtypeVal.comp
       ((continuous_apply v).comp continuous_fst)))).matrix_mul continuous_const
   obtain ⟨B, hB⟩ := hC.exists_bound_of_continuousOn hc.continuousOn
   exact ⟨B, fun x hx v i j => (norm_le_pi_norm _ j).trans ((norm_le_pi_norm _ i).trans

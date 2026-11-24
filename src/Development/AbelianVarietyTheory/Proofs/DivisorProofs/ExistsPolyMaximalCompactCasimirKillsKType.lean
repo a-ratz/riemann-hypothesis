@@ -70,7 +70,7 @@ theorem slope_mem {K : Type} (V : Submodule ℂ (K → ℂ)) [FiniteDimensional 
     refine tendsto_pi_nhds.2 fun x => ?_
     refine (hasDerivAt_iff_tendsto_slope_zero.1 (hD x)).congr fun t => ?_
     simp [Complex.real_smul, zero_add]
-  exact (Submodule.closed_of_finiteDimensional V).mem_of_tendsto hlim (Eventually.of_forall hsV)
+  exact (Submodule.isClosed_of_finiteDimensional V).mem_of_tendsto hlim (Eventually.of_forall hsV)
 
 theorem slope_deriv {K : Type} (V : Submodule ℂ (K → ℂ)) [FiniteDimensional ℂ V] (F : ℝ → K → ℂ)
     (hF : ∀ t, F t ∈ V) (D : K → ℂ) (hD : ∀ x, HasDerivAt (fun t => F t x) (D x) 0) (hDV : D ∈ V)
@@ -94,7 +94,7 @@ variable {E : Type} [Field E] [NumberField E] {a : ℕ}
 
 theorem exists_curve (X : Lie E a) (hX : (Matrix.of X)ᴴ = -Matrix.of X) :
     ∃ c : ℝ → Kinf E a, c 0 = 1 ∧ HasDerivAt (fun t => toL (c t : Matrix (Fin a) (Fin a) (Cinf E))) X 0 := by
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   set A : Matrix (Fin a) (Fin a) (Cinf E) := Matrix.of X with hA
   have hmem : ∀ t : ℝ, NormedSpace.exp (t • A) ∈ Matrix.unitaryGroup (Fin a) (Cinf E) := by
     intro t
@@ -293,7 +293,7 @@ theorem exists_casK_poly : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
     FiniteDimensional ℂ W → ∃ q : Polynomial ℂ, q ≠ 0 ∧ ∀ φ : Sm E a,
       (∀ g : GA E a, (fun k : Kinf E a => (cptRep E a k φ).1 g) ∈ W) → Polynomial.aeval (casKOp E a) q φ = 0 := by
   intro E _ _ _ a W hW
-  haveI : FiniteDimensional ℂ (Vsp W) := Submodule.finiteDimensional_of_le (Vsp_le W)
+  have : FiniteDimensional ℂ (Vsp W) := Submodule.finiteDimensional_of_le (Vsp_le W)
   have hlie : ∀ X : Lie E a, (Matrix.of X)ᴴ = -Matrix.of X → ∃ O : Module.End ℂ (Vsp W), Rel (lie E a X) O := by
     intro X hX
     obtain ⟨c, hc0, hc⟩ := exists_curve X hX

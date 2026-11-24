@@ -59,7 +59,7 @@ theorem exists_exponent {K : Type} [Field K] (ξ ζ : ℕ → Kˣ) (hξ : ∀ n,
       ∀ n m : ℕ, 0 < n → 0 < m → (n : ℤ) ∣ ν (n * m) - ν n := by
   have h : ∀ n : ℕ, ∃ i : ℕ, 0 < n → ξ n ^ i = ζ n := fun n => by
     by_cases hn : 0 < n
-    · haveI : NeZero n := ⟨hn.ne'⟩
+    · have : NeZero n := ⟨hn.ne'⟩
       obtain ⟨i, -, hi⟩ := (hξ n hn).eq_pow_of_mem_rootsOfUnity
         ((mem_rootsOfUnity n (ζ n)).2 (hζ n hn).pow_eq_one)
       exact ⟨i, fun _ => hi⟩

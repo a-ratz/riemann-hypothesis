@@ -142,7 +142,7 @@ theorem hol : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (f : Hn
     exact (h1.and self_mem_nhdsWithin).exists
   set s : Set (InfinitePlace F → ℂ) := {z | ∀ v, m < (z v).im} with hs_def
   have hsopen : IsOpen s := by
-    rw [hs_def, Set.setOf_forall]
+    rw [hs_def, Set.ofPred_forall]
     exact isOpen_iInter_of_finite (fun v => isOpen_lt continuous_const (Complex.continuous_im.comp (continuous_apply v)))
   have hsconv : Convex ℝ s := by
     intro x hx y hy p q hp hq hpq v
@@ -266,7 +266,7 @@ theorem geo_bound {s : ℝ} (hs : 0 < s) (I : Finset ℤ) :
     rw [hr, ← Real.exp_zero]; exact Real.exp_lt_exp.mpr (by linarith)
   have hg : ∀ n : ℤ, Real.exp (-s * (n : ℝ) ^ 2) ≤ r ^ n.natAbs := by
     intro n
-    rw [hr, ← Real.exp_nat_mul]
+    rw [hr, ← Real.exp_natCast_mul]
     apply Real.exp_le_exp.mpr
     have h1 : ((n.natAbs : ℕ) : ℝ) ≤ (n : ℝ) ^ 2 := by
       have h2 : ((n.natAbs : ℕ) : ℝ) ^ 2 = (n : ℝ) ^ 2 := by
@@ -376,7 +376,7 @@ theorem normsq_mE_le (x : F) : ‖mixedEmbedding F x‖ ^ 2 ≤ ∑ v, reAt v x 
       have : InfinitePlace.embedding_of_isReal w.2 x = reAt w.1 x := by rw [reAt_eq]
       rw [this]
       exact Real.abs_le_sqrt (Finset.single_le_sum (f := fun v => reAt v x ^ 2) (fun _ _ => sq_nonneg _) (Finset.mem_univ w.1))
-    · haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+    · have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
         ⟨fun w => (InfinitePlace.not_isComplex_iff_isReal.mpr (IsTotallyReal.isReal w.1)) w.2⟩
       rw [Subsingleton.elim (mixedEmbedding F x).2 0, norm_zero]
       exact Real.sqrt_nonneg _
@@ -514,7 +514,7 @@ theorem gauss_sum_bound : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
     have hmem : ∀ x : aL κ a, (x : κ → F) = 0 := fun x => by
       obtain ⟨m, hm⟩ := exists_coord a x
       rw [hm]; funext i; simp [ha]
-    haveI : Subsingleton (aL κ a) := ⟨fun x y => Subtype.ext (by rw [hmem x, hmem y])⟩
+    have : Subsingleton (aL κ a) := ⟨fun x y => Subtype.ext (by rw [hmem x, hmem y])⟩
     have h1 : ∀ x : aL κ a, ‖ez (QF G (x : κ → F)) z‖ = 1 := fun x => by
       rw [hmem x, norm_ez]; simp [QF, BF, reAt]
     simp only [h1, Finset.sum_const, pow_zero, mul_one, nsmul_eq_mul]

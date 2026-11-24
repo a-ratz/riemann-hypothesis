@@ -228,9 +228,9 @@ theorem pullback [F.IsQuasicoherent] (he : IsFrame e) (f : Y ⟶ X) :
   obtain ⟨W, hW, hyW, hWle⟩ := QCoh.exists_affine_mem_le (U := V ⊓ f ⁻¹ᵁ U') y ⟨hy, hyU'⟩
   refine ⟨W, hWle.trans inf_le_left, hyW, ?_⟩
   have e₁ : W ≤ f ⁻¹ᵁ U' := hWle.trans inf_le_right
-  letI := QCoh.appLEAlgebra f e₁
-  letI := QCoh.appLEModule f ((Scheme.Modules.pullback f).obj F) e₁
-  haveI := QCoh.appLE_isScalarTower f ((Scheme.Modules.pullback f).obj F) e₁
+  let := QCoh.appLEAlgebra f e₁
+  let := QCoh.appLEModule f ((Scheme.Modules.pullback f).obj F) e₁
+  have := QCoh.appLE_isScalarTower f ((Scheme.Modules.pullback f).obj F) e₁
   let b := (QCoh.isBaseChange_pullbackSections f F hW hU' e₁).basis (he.basis hle)
   have hb (i : ι) : b i = resM _ ((hWle.trans inf_le_left).trans h)
       (QCoh.pullbackSections f F (le_refl (f ⁻¹ᵁ U)) (e i)) := by

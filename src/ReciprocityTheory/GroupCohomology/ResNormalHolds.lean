@@ -65,7 +65,7 @@ theorem cor_holds : CorStatement.{u} := by
   have P1 := prism_holds R U (M.resSub U) G U A (M.resSub U).coch eA eU hA hU0
   obtain ⟨φr, hφr⟩ := P1.1 (retr U) (continuous_retr U hU) (fun g x => retr_mul U g x)
   have P2 := prism_holds R U (M.resSub U) G G A A eA eA hA hA
-  have ha : Continuous fun g : G => (retr U g : G) := continuous_subtype_val.comp (continuous_retr U hU)
+  have ha : Continuous fun g : G => (retr U g : G) := continuous_subtypeVal.comp (continuous_retr U hU)
   have hae : ∀ (g : U) (x : G), (retr U (g • x) : G) = g • (retr U x : G) := fun g x => by
     show (retr U ((g : G) * x) : G) = (g : G) * (retr U x : G)
     rw [retr_mul]; rfl
@@ -86,7 +86,7 @@ theorem cor_holds : CorStatement.{u} := by
     rw [hφr, hU1]
     simp only [Fin.partialProd_zero, mul_one, retr_out, map_one, Module.End.one_apply]
     rfl
-  · have hcomp : ∀ n f, (N.comp φr).f n ((Pair.res M U.subtype continuous_subtype_val).hom.f n f) =
+  · have hcomp : ∀ n f, (N.comp φr).f n ((Pair.res M U.subtype continuous_subtypeVal).hom.f n f) =
         (N.comp (T.comp ι)).f n f := by
       intro n f
       apply (eG n).injective
@@ -103,7 +103,7 @@ theorem cor_holds : CorStatement.{u} := by
     have hNι : ∀ n f, (N.comp ι).f n f = U.index • f := by
       intro n f
       classical
-      haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
+      have : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
       apply (eG n).injective
       apply Subtype.ext
       rw [map_nsmul]
@@ -121,8 +121,8 @@ theorem cor_holds : CorStatement.{u} := by
       simp only [h1, Finset.sum_const, Finset.card_univ, card_rightRel]
       rfl
     intro n x
-    calc (N.comp φr).H n ((Pair.res M U.subtype continuous_subtype_val).hom.H n x)
-        = ((N.comp φr).comp (Pair.res M U.subtype continuous_subtype_val).hom).H n x :=
+    calc (N.comp φr).H n ((Pair.res M U.subtype continuous_subtypeVal).hom.H n x)
+        = ((N.comp φr).comp (Pair.res M U.subtype continuous_subtypeVal).hom).H n x :=
           (Hom.H_comp _ _ n x).symm
       _ = (N.comp (T.comp ι)).H n x := by
           rw [Hom.H_congr _ _ (fun n f => hcomp n f)]

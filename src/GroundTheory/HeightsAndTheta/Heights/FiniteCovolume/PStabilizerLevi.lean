@@ -86,7 +86,7 @@ theorem unitary_mat (g : archUnitary h v) (w : InfinitePlace E) :
   rwa [conjT_eq] at this
 
 theorem continuous_mat (w : InfinitePlace E) : Continuous fun g : archUnitary h v => mat g w :=
-  Units.continuous_val.comp ((continuous_apply w).comp continuous_subtype_val)
+  Units.continuous_val.comp ((continuous_apply w).comp continuous_subtypeVal)
 
 end Mat
 
@@ -184,12 +184,12 @@ theorem continuous_qHom : Continuous (qHom hp hh' (v := v) (v' := v')) := by
   refine continuous_induced_rng.2 (continuous_pi fun w => Units.continuous_iff.2 ⟨?_, ?_⟩)
   · change Continuous fun g : vecFixGroup h v x₀ =>
       leftInv (gramAt h v w) (bMat v v' w) * mat (g : archUnitary h v) w * bMat v v' w
-    exact (continuous_const.matrix_mul ((continuous_mat w).comp continuous_subtype_val)).matrix_mul
+    exact (continuous_const.matrix_mul ((continuous_mat w).comp continuous_subtypeVal)).matrix_mul
       continuous_const
   · change Continuous fun g : vecFixGroup h v x₀ =>
       leftInv (gramAt h v w) (bMat v v' w) * mat ((g⁻¹ : vecFixGroup h v x₀) : archUnitary h v) w *
         bMat v v' w
-    exact (continuous_const.matrix_mul (((continuous_mat w).comp continuous_subtype_val).comp
+    exact (continuous_const.matrix_mul (((continuous_mat w).comp continuous_subtypeVal).comp
       continuous_inv)).matrix_mul continuous_const
 
 theorem continuous_iHom : Continuous (iHom hp hh' (v := v) (v' := v')) := by

@@ -48,7 +48,7 @@ open scoped Matrix MatrixGroups Classical
 
 private theorem root_mem {l : ℕ} [hl : Fact l.Prime] (c : Coef l) {x : Qbar l} (hx : x ^ (l - 1) = 1) : x ∈ c.O := by
   have hpos : 0 < l - 1 := Nat.sub_pos_of_lt hl.out.one_lt
-  haveI : NeZero (l - 1) := ⟨hpos.ne'⟩
+  have : NeZero (l - 1) := ⟨hpos.ne'⟩
   obtain ⟨g, hg⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := (ZMod l)ˣ)
   rw [Nat.card_eq_fintype_card, ZMod.card_units] at hg
   have hg1 : g ∈ rootsOfUnity (l - 1) (ZMod l) := by

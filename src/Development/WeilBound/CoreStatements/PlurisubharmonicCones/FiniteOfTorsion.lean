@@ -64,8 +64,8 @@ variable {E : Type} [Field E] [NumberField E] {M N : Type} [AddCommGroup M] [Mod
 theorem index_range [Module.Free (𝓞 E) M] [Module.Finite (𝓞 E) M] (f : M →ₗ[𝓞 E] M) (hf : Function.Injective f) :
     (LinearMap.range f).toAddSubgroup.index = (Algebra.norm ℤ (LinearMap.det f)).natAbs := by
   classical
-  haveI : Module.Free ℤ M := Module.Free.trans (S := 𝓞 E)
-  haveI : Module.Finite ℤ M := Module.Finite.trans (𝓞 E) M
+  have : Module.Free ℤ M := Module.Free.trans (S := 𝓞 E)
+  have : Module.Finite ℤ M := Module.Finite.trans (𝓞 E) M
   set g : M →ₗ[ℤ] M := f.restrictScalars ℤ with hg
   have hdet : LinearMap.det g = Algebra.norm ℤ (LinearMap.det f) := LinearMap.det_restrictScalars
   have hgi : Function.Injective g := hf
@@ -92,7 +92,7 @@ theorem relIndex_map {R A B : Type} [Ring R] [AddCommGroup A] [Module R A] [AddC
 private theorem exists_int_eq_mul_of_ne_zero' {E : Type} [Field E] [NumberField E] {a : 𝓞 E} (ha : a ≠ 0) :
     ∃ n : ℤ, n ≠ 0 ∧ ∃ b : 𝓞 E, (n : 𝓞 E) = b * a := by
   have hne : (Ideal.span {a}).comap (algebraMap ℤ (𝓞 E)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a)
+    Ideal.under_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a)
       (Algebra.IsIntegral.isIntegral a)
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hn
@@ -100,7 +100,7 @@ private theorem exists_int_eq_mul_of_ne_zero' {E : Type} [Field E] [NumberField 
   exact ⟨n, hn0, b, by simpa using hb.symm⟩
 
 theorem finite_of_torsion [Module.Finite (𝓞 E) M] (h : Module.IsTorsion (𝓞 E) M) : Finite M := by
-  haveI : Module.Finite ℤ M := Module.Finite.trans (𝓞 E) M
+  have : Module.Finite ℤ M := Module.Finite.trans (𝓞 E) M
   apply Module.finite_of_fg_torsion
   intro x
   obtain ⟨⟨a, ha⟩, hax⟩ := @h x
@@ -154,8 +154,8 @@ private theorem relIndex_span_coe_eq_index_span {R N : Type} [CommRing R] [AddCo
 
 theorem exists_family [Module.Free ℤ M] [Module.Finite ℤ M] {I : Submodule (𝓞 E) M} (hI : I ≠ ⊥) :
     ∃ r v, IsNzFamily I r v := by
-  haveI : Module.Finite (𝓞 E) M := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) M
-  haveI : IsNoetherian (𝓞 E) M := isNoetherian_of_isNoetherianRing_of_finite (𝓞 E) M
+  have : Module.Finite (𝓞 E) M := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) M
+  have : IsNoetherian (𝓞 E) M := isNoetherian_of_isNoetherianRing_of_finite (𝓞 E) M
   obtain ⟨u, hu⟩ := exists_linearIndependent_of_le_finrank (R := 𝓞 E) (M := I)
     (le_refl (Module.finrank (𝓞 E) I))
   obtain ⟨x, hxI, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
@@ -207,8 +207,8 @@ theorem relIndex_matrix {r : ℕ} {v w : Fin r → M} (hv : LinearIndependent (�
   classical
   set V := Submodule.span (𝓞 E) (Set.range v) with hV
   let bV : Module.Basis (Fin r) (𝓞 E) V := Module.Basis.span hv
-  haveI : Module.Free (𝓞 E) V := Module.Free.of_basis bV
-  haveI : Module.Finite (𝓞 E) V := Module.Finite.of_basis bV
+  have : Module.Free (𝓞 E) V := Module.Free.of_basis bV
+  have : Module.Finite (𝓞 E) V := Module.Finite.of_basis bV
   let f : V →ₗ[𝓞 E] V := Matrix.toLin bV bV A
   have hfb : ∀ b, ((f (bV b) : V) : M) = w b := by
     intro b
@@ -255,7 +255,7 @@ private theorem ringOfIntegers_ringHom_complex_injective {E : Type} [Field E] [N
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro a ha
   have hker : RingHom.ker s = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [eq_bot_iff]
     intro n hn
     rw [Ideal.mem_comap, RingHom.mem_ker, algebraMap_int_eq, eq_intCast, map_intCast] at hn
@@ -269,7 +269,7 @@ private theorem bijective_algHom_comp_algebraMap {E : Type} [Field E] [NumberFie
     Function.Bijective fun σ : E →ₐ[ℚ] ℂ => (σ : E →+* ℂ).comp (algebraMap (𝓞 E) E) := by
   constructor
   · intro σ₁ σ₂ h
-    apply AlgHom.coe_ringHom_injective
+    apply AlgHom.toRingHom_injective
     exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) h
   · intro s
     refine ⟨(IsFractionRing.lift (ringOfIntegers_ringHom_complex_injective s)).toRatAlgHom, ?_⟩
@@ -416,8 +416,8 @@ theorem nzOf_of_le {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) {I : Subm
 
 theorem nzOf_eq {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) {I : Submodule (𝓞 E) Λ} {r r' : ℕ} {v : Fin r → Λ}
     {w : Fin r' → Λ} (hv : IsNzFamily I r v) (hw : IsNzFamily I r' w) : R.nzOf σ I w = R.nzOf σ I v := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   have hr := family_rank hv
   have hr' := family_rank hw
   obtain rfl : r' = r := hr'.trans hr.symm

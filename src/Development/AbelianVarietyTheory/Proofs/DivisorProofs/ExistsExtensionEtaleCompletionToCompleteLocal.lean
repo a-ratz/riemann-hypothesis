@@ -125,7 +125,7 @@ theorem existsUnique_lift (hm : (maximalIdeal O).map (algebraMap O S) = maximalI
     ∃! F : S →+* B, F.comp (algebraMap O S) = χ ∧ (Ideal.Quotient.mk K).comp F = g := by
   have := etale_quotient hm n
   set I := maximalIdeal O ^ (n + 1)
-  letI : Algebra (O ⧸ I) B := (Ideal.Quotient.lift I χ hχ).toAlgebra
+  let : Algebra (O ⧸ I) B := (Ideal.Quotient.lift I χ hχ).toAlgebra
   have desc : ∀ {C : Type} [CommRing C] [Algebra (O ⧸ I) C] (f : S →+* C),
       (∀ x, f (algebraMap O S x) = algebraMap (O ⧸ I) C (Ideal.Quotient.mk I x)) →
       ∃ f' : (S ⧸ I.map (algebraMap O S)) →ₐ[O ⧸ I] C, ∀ x, f' (Ideal.Quotient.mk _ x) = f x := by
@@ -177,7 +177,7 @@ theorem existsUnique_lift_of_isEtaleCompletion {O S : Type} [CommRing O] [IsLoca
     (hg : g.comp φ = w.comp χ) :
     ∃! F : S →+* B, F.comp φ = χ ∧ w.comp F = g := by
   obtain ⟨hfl, hm, hfin⟩ := h
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : Module.Flat O S := hfl
   have : Module.Finite O (S ⧸ maximalIdeal S) := RingHom.finite_algebraMap.1 hfin
   have : Algebra.FormallyUnramified O (S ⧸ maximalIdeal S) := RingHom.formallyUnramified_algebraMap.1 hun

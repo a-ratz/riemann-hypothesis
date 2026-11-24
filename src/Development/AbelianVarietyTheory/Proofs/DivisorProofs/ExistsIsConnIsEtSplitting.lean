@@ -85,8 +85,8 @@ theorem exists_perfectPart_algHom : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fie
   intro p _ k _ _ _ A _ _ _
   rcases subsingleton_or_nontrivial A with hA | hA
   · exact ⟨AlgHom.id k A, fun a => ⟨1, Subsingleton.elim _ _⟩, fun a => ⟨a, Subsingleton.elim _ _⟩⟩
-  haveI : CharP A p := charP_of_injective_algebraMap (algebraMap k A).injective p
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : CharP A p := charP_of_injective_algebraMap (algebraMap k A).injective p
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   obtain ⟨n, hn⟩ := IsNoetherianRing.isNilpotent_nilradical A
   set N := nilradical A with hNdef
   set q := p ^ (n + 1) with hqdef
@@ -99,8 +99,8 @@ theorem exists_perfectPart_algHom : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fie
       have := Nat.lt_pow_self (n := n + 1) hp1
       omega
     rw [← Nat.sub_add_cancel hle, pow_add, h1, mul_zero]
-  haveI : Module.Finite k (A ⧸ N) := Module.Finite.trans A (A ⧸ N)
-  haveI : IsReduced (A ⧸ N) := (Ideal.isRadical_iff_quotient_reduced N).mp (Ideal.radical_isRadical _)
+  have : Module.Finite k (A ⧸ N) := Module.Finite.trans A (A ⧸ N)
+  have : IsReduced (A ⧸ N) := (Ideal.isRadical_iff_quotient_reduced N).mp (Ideal.radical_isRadical _)
   have hroot : ∀ m : ℕ, ∀ a : A ⧸ N, ∃ b, a = b ^ p ^ m := by
     intro m
     induction m with
@@ -185,7 +185,7 @@ namespace GlobalTheory.PerfectProj
 theorem exists_pow_prime_pow_kill (p : ℕ) (hp : 1 < p) (k B : Type) [Field k] [CommRing B]
     [Algebra k B] [Module.Finite k B] :
     ∃ r : ℕ, ∀ x : B, IsNilpotent x → x ^ (p ^ r) = 0 := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
   obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_nilradical (R := B)
   refine ⟨n, fun x hx => ?_⟩
   have hmem : x ^ n ∈ (nilradical B) ^ n := Ideal.pow_mem_pow (mem_nilradical.mpr hx) n
@@ -208,7 +208,7 @@ theorem natural_idempotent_reduced : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fi
   rcases subsingleton_or_nontrivial B with hs | hs
   · exact ⟨fun _ _ => Subsingleton.elim _ _, fun _ => Subsingleton.elim _ _,
       fun _ _ => Subsingleton.elim _ _⟩
-  haveI : CharP B p := charP_of_injective_algebraMap (algebraMap k B).injective p
+  have : CharP B p := charP_of_injective_algebraMap (algebraMap k B).injective p
   obtain ⟨r, hr⟩ := exists_pow_prime_pow_kill p (Fact.out : p.Prime).one_lt k B
   have iA := exists_eq_pow_prime_pow p π hA.2 r
   have iB := exists_eq_pow_prime_pow p π' hB.2 r

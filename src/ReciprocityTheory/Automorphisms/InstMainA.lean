@@ -68,7 +68,7 @@ theorem val_le_exp_neg_one_of_lt_one {x : v.adicCompletion F} (h : Valued.v x < 
     Valued.v x ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne (Valued.v x) 0 with h0 | h0
   · rw [h0]
-    exact zero_le'
+    exact zero_le
   · obtain ⟨a, ha⟩ := WithZero.ne_zero_iff_exists.mp h0
     rw [← ha] at h ⊢
     have h1 : a < 1 := by exact_mod_cast h
@@ -97,7 +97,7 @@ theorem maxIdeal_eq_span {π : v.adicCompletionIntegers F}
     have hx1 := val_le_exp_neg_one_of_lt_one v hx
     have hq : Valued.v ((x : v.adicCompletion F) / π) ≤ 1 := by
       rw [map_div₀, hπ]
-      exact (div_le_one₀ (lt_of_le_of_ne zero_le' (Ne.symm (by rw [← hπ]; exact (map_ne_zero _).mpr hπ0)))).mpr hx1
+      exact (div_le_one₀ (lt_of_le_of_ne zero_le (Ne.symm (by rw [← hπ]; exact (map_ne_zero _).mpr hπ0)))).mpr hx1
     rw [Ideal.mem_span_singleton']
     refine ⟨⟨(x : v.adicCompletion F) / π, hq⟩, ?_⟩
     ext

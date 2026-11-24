@@ -154,7 +154,7 @@ theorem PositivityTheory.Xgn.vector_bundle_lattice_labels : ∀ (E : Type) [Fiel
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ J y 𝔐 p hpp hpS hdisc hgenf t
   classical
   have hp : p.Prime := hpp.out
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   have hgen : IsCptGen 𝔐.ξ := 𝔐.tie.gen
   have hN : Flat.NormalCpt 𝔐.ξ := PositivityTheory.Xgn.VectorBundleLabels.normalCpt_of_isCptGen hgen 𝔐.normal
   have hvb : (𝔐.V t).IsVB (labelRk D t) (𝔐.Vgen t) := 𝔐.vb t
@@ -164,7 +164,7 @@ theorem PositivityTheory.Xgn.vector_bundle_lattice_labels : ∀ (E : Type) [Fiel
     obtain ⟨hinj, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
     have hσinj : Function.Injective 𝔐.emb := fun a b hab =>
       hinj (RingHom.ext fun x => 𝔐.cst.injective (RingHom.congr_fun hab x))
-    letI : Fintype (CMType H ⊕ CMType H) := by
+    let : Fintype (CMType H ⊕ CMType H) := by
       haveI : Finite (CMType H ⊕ CMType H) := Nat.finite_of_card_ne_zero (by
         rw [hcard]; exact Module.finrank_pos.ne')
       exact Fintype.ofFinite _
@@ -172,7 +172,7 @@ theorem PositivityTheory.Xgn.vector_bundle_lattice_labels : ∀ (E : Type) [Fiel
       (CMType H ⊕ CMType H) 𝔐.emb hgen hσinj (by rw [← Nat.card_eq_fintype_card]; exact hcard)
       (HcVb.isVBOn_of_isVB hLat _)
       (fun q _ a e he => by
-        haveI := 𝔐.t.act.hom a
+        have := 𝔐.t.act.hom a
         exact HcVb.lat_stable 𝔐.M (𝔐.t.act.act a) (𝔐.ρ a) (𝔐.act a) q e he)
       (fun q _ s' a => HcVb.integers_regular hN _ q a)
       (fun q hq => HcVb.unitAt_discr fun r hr hd =>
@@ -281,10 +281,10 @@ theorem htW_eq_htDual {G : Over X} [GrpObj G] {Li : Type} [AddCommGroup Li] [Mod
 theorem exists_mul_of_isCp {p : ℕ} (hp : p.Prime) (h2 : p ≠ 2) {κ w : Ω} (hκ : HT.IsCp p κ) (hw : HT.IsCp p w)
     (R : Subring Ω) (hR : w ∈ R) : ∃ u ∈ R, w = u * κ := by
   unfold HT.IsCp at hκ hw
-  rw [if_neg h2] at hκ hw
+  rw [ite_eq_right h2] at hκ hw
   obtain ⟨z, hz, rfl⟩ := hκ
   obtain ⟨z', hz', rfl⟩ := hw
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   obtain ⟨j, -, hj⟩ := hz'.eq_pow_of_pow_eq_one hz.pow_eq_one
   obtain ⟨k, -, hk⟩ := hz.eq_pow_of_pow_eq_one hz'.pow_eq_one
   have h1 : z' ∈ R := by simpa using R.add_mem hR R.one_mem
@@ -294,7 +294,7 @@ theorem exists_mul_of_isCp {p : ℕ} (hp : p.Prime) (h2 : p ≠ 2) {κ w : Ω} (
 
 theorem sandwich_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (p : ℕ) [Fact p.Prime], p ∈ S → p ≠ 2 → ¬ (p : ℤ) ∣ NumberField.discr E → ∀ κ w : Ω, HT.IsCp p κ → HT.IsCp p w → HT.Sandwich 𝔐 p κ → ∀ q : Cpt 𝔐.ξ, InFibre 𝔐.ξ p q → w ∈ regAt 𝔐.ξ q → ∀ t : CMType H ⊕ CMType H, 𝔐.dR t q ≤ 𝔐.HT p t q ∧ ∀ e ∈ 𝔐.HT p t q, w • e ∈ 𝔐.dR t q := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ J y 𝔐 p hp _ h2 hd κ w hκ hw hS q hq hwq t
-  haveI : CharZero Ω := ⟨fun a b h => by
+  have : CharZero Ω := ⟨fun a b h => by
     have h' : 𝔐.cst (a : c.F) = 𝔐.cst (b : c.F) := by rw [map_natCast, map_natCast, h]
     exact Nat.cast_injective (𝔐.cst.injective h')⟩
   have hN : Flat.NormalCpt 𝔐.ξ := GlobalTheory.CompanionTheory.Ar.XR.normalCpt_of_isCptGen 𝔐.tie.gen 𝔐.normal
@@ -941,7 +941,7 @@ theorem PositivityTheory.Xgn.lattice_section_algebra : ∀ {o Ω : Type} [CommRi
     simp
   have hcov : ∀ q, ∃ l, (G (p l))⁻¹ ∈ reg q := by
     intro q
-    haveI := h1 q
+    have := h1 q
     obtain ⟨l, hl, -⟩ := some_unit (reg q) (fun l => (c l : Ω)) (fun l => G (p l))
       (fun l => h2 q _ (c l).2) (fun l => h2 q _ (hGR _)) hsum'
     exact ⟨l, hl⟩

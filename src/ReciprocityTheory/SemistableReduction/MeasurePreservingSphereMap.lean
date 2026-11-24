@@ -62,7 +62,7 @@ def sphereMap {n : ℕ} (U : EuclideanSpace ℂ (Fin n) ≃ₗᵢ[ℝ] Euclidean
 theorem continuous_sphereMap {n : ℕ}
     (U : EuclideanSpace ℂ (Fin n) ≃ₗᵢ[ℝ] EuclideanSpace ℂ (Fin n)) :
     Continuous (sphereMap U) :=
-  (U.continuous.comp continuous_subtype_val).subtype_mk _
+  (U.continuous.comp continuous_subtypeVal).subtype_mk _
 
 theorem toSphere_map_sphereMap {n : ℕ}
     (U : EuclideanSpace ℂ (Fin n) ≃ₗᵢ[ℝ] EuclideanSpace ℂ (Fin n)) :
@@ -150,7 +150,7 @@ theorem continuous_rotS {n : ℕ} {u : EuclideanSpace ℂ (Fin n)} (hu : ‖u‖
   refine continuous_induced_rng.2 ?_
   simp only [Function.comp_def, coe_rotS]
   have hc : Continuous fun p : ℝ × UnitSphereC n => (p.2 : EuclideanSpace ℂ (Fin n)) :=
-    continuous_subtype_val.comp continuous_snd
+    continuous_subtypeVal.comp continuous_snd
   have hθ : Continuous fun p : ℝ × UnitSphereC n => circleMap 0 1 p.1 :=
     (continuous_circleMap 0 1).comp continuous_fst
   have hi : Continuous fun p : ℝ × UnitSphereC n => inner ℂ u (p.2 : EuclideanSpace ℂ (Fin n)) :=
@@ -161,7 +161,7 @@ theorem sphereProb_inner_eq_zero {n : ℕ} {u : EuclideanSpace ℂ (Fin n)} (hu 
     sphereProb n {z | inner ℂ u (z : EuclideanSpace ℂ (Fin n)) = 0} = 0 := by
   set s : Set (UnitSphereC n) := {z | inner ℂ u (z : EuclideanSpace ℂ (Fin n)) = 0}
   have hs : MeasurableSet s :=
-    (isClosed_eq (continuous_const.inner continuous_subtype_val) continuous_const).measurableSet
+    (isClosed_eq (continuous_const.inner continuous_subtypeVal) continuous_const).measurableSet
   let P : Submodule ℝ (EuclideanSpace ℂ (Fin n)) :=
     LinearMap.ker (((innerSL ℂ u : EuclideanSpace ℂ (Fin n) →L[ℂ] ℂ) :
       EuclideanSpace ℂ (Fin n) →ₗ[ℂ] ℂ).restrictScalars ℝ)

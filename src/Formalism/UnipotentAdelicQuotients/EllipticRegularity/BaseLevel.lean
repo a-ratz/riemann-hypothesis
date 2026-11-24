@@ -82,11 +82,11 @@ theorem sobolevOfCompactSupport : BaseLevel := by
     push_cast
     ring
   have h1 : ‖𝓕 g ξ‖ₑ ≤ ENNReal.ofReal B := by
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (norm_fourier_le_integral_norm g ξ)
   have h2 : ‖B ^ 2 * (1 + ‖ξ‖ ^ 2) ^ (-(2 * ((d : ℝ) + 1)) / 2)‖ₑ =
       ENNReal.ofReal (B ^ 2 * (1 + ‖ξ‖ ^ 2) ^ (-(2 * ((d : ℝ) + 1)) / 2)) := by
-    rw [← ofReal_norm_eq_enorm, Real.norm_of_nonneg (by positivity)]
+    rw [← ofReal_norm, Real.norm_of_nonneg (by positivity)]
   rw [h2, hom]
   calc ENNReal.ofReal ((1 + ‖ξ‖ ^ 2) ^ ((-(d : ℝ) - 1) / 2)) ^ 2 * ‖𝓕 g ξ‖ₑ ^ 2
       ≤ ENNReal.ofReal ((1 + ‖ξ‖ ^ 2) ^ ((-(d : ℝ) - 1) / 2)) ^ 2 * ENNReal.ofReal B ^ 2 := by

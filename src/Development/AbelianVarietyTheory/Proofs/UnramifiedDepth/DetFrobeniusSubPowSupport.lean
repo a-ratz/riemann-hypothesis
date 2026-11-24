@@ -167,7 +167,7 @@ theorem Good.det {k n d : ℕ} (M : Matrix (Fin k) (Fin k) (MvPolynomial (α ⊕
 theorem Good.X_inl (a : α) : Good l L E 0 1 0 (X (Sum.inl a) : MvPolynomial (α ⊕ α) ℤ) := by
   classical
   intro m hm
-  rw [coeff_X'] at hm
+  rw [coeff_X] at hm
   have h : Finsupp.single (Sum.inl a) 1 = m := by
     by_contra h
     simp [h] at hm
@@ -178,7 +178,7 @@ theorem Good.C_mul_X_inr (a : α) :
     Good l L E 1 L 0 (MvPolynomial.C (l ^ E) * X (Sum.inr a) : MvPolynomial (α ⊕ α) ℤ) := by
   classical
   intro m hm
-  rw [coeff_C_mul, coeff_X'] at hm ⊢
+  rw [coeff_C_mul, coeff_X] at hm ⊢
   have h : Finsupp.single (Sum.inr a) 1 = m := by
     by_contra h
     simp [h] at hm
@@ -209,7 +209,7 @@ theorem X_inr_mem_freeIdeal (a : α) :
     (X (Sum.inr a) : MvPolynomial (α ⊕ α) ℤ) ∈ freeIdeal α l := by
   classical
   intro m hm
-  rw [coeff_X']
+  rw [coeff_X]
   split_ifs with h
   · subst h
     simp [Finsupp.single_apply] at hm
@@ -226,7 +226,7 @@ theorem Good.of_mem {n d : ℕ} {p : MvPolynomial (α ⊕ α) ℤ} (hp : Good l 
 
 theorem C_dvd_expand_sub_pow {σ : Type} (l i : ℕ) (hl : l.Prime) (f : MvPolynomial σ ℤ) :
     MvPolynomial.C (l : ℤ) ∣ expand (l ^ i) f - f ^ (l ^ i) := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   rw [C_dvd_iff_zmod, map_sub, map_expand, map_pow, sub_eq_zero]
   generalize map (Int.castRingHom (ZMod l)) f = g
   induction i with

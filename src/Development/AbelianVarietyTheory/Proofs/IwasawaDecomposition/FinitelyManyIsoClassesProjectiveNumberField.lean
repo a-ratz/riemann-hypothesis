@@ -121,7 +121,7 @@ theorem exists_split (X : Type) [AddCommGroup X] [Module R X] [Module.Projective
     exact ha hm
   let I : (Ideal R)⁰ := ⟨LinearMap.range f, mem_nonZeroDivisors_of_ne_zero hI⟩
   let g := f.rangeRestrict
-  haveI := projective_of_isTorsionFree (R := R) (LinearMap.range f)
+  have := projective_of_isTorsionFree (R := R) (LinearMap.range f)
   obtain ⟨l, hl⟩ := Module.projective_lifting_property g LinearMap.id f.surjective_rangeRestrict
   have hex : Function.Exact (LinearMap.ker g).subtype g := LinearMap.exact_subtype_ker_map g
   obtain ⟨e, -⟩ := hex.splitSurjectiveEquiv (LinearMap.ker g).injective_subtype ⟨l, hl⟩
@@ -143,7 +143,7 @@ theorem exists_equiv_pi (r : ℕ) : ∀ (X : Type) [AddCommGroup X] [Module R X]
   | succ r ih =>
     intro X _ _ _ _ h
     have : Nontrivial X := Module.nontrivial_of_finrank_pos (R := R) (by omega)
-    haveI := projective_of_isTorsionFree (R := R) X
+    have := projective_of_isTorsionFree (R := R) X
     obtain ⟨I, K, ⟨e⟩⟩ := exists_split (R := R) X
     have hK : Module.finrank R K = r := by
       have h1 := e.finrank_eq

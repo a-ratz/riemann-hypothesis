@@ -74,7 +74,7 @@ theorem gramX_isHermitian (ε : Fin m → Bool) (x : Fin m → Fin n → ℂ) : 
 
   simp only [gramX, Qp, Qb, evX, conjTranspose_apply, map_sub, map_sum, map_mul, eval_X, star_sub, star_sum,
   star_mul', star_star]
-  simp only [if_true, Bool.false_eq_true, if_false]
+  simp only [ite_true, Bool.false_eq_true, ite_false]
   congr 1 <;> (refine Finset.sum_congr rfl fun a _ => ?_; rw [star_star, mul_comm])
 
 theorem trace_im_zero {b Q : Matrix (Fin n) (Fin n) ℂ} (hb : b.IsHermitian) (hQ : Q.IsHermitian) :
@@ -246,7 +246,7 @@ theorem key (hI : IntegP) (hW : Wick) (hR : Rot) (ε : Fin m → Bool) {c : ℝ}
           rw [← hd, hdd, Finsupp.sum_add_index' (fun _ => rfl) (fun _ _ _ => rfl)]
           simp [Finsupp.sum_single_index]; ring
         have hmul : monomial d (1 : ℂ) = X k * monomial d' 1 := by
-          rw [hdd, X, monomial_mul, one_mul]
+          rw [hdd, X, monomial_mul_monomial, one_mul]
 
         have hder : ∀ j : Fin n, pderiv ((a, j, false) : Fin m × Fin n × Bool) (monomial d' (1 : ℂ)) ∈ S := by
           intro j

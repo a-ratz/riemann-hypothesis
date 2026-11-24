@@ -353,7 +353,7 @@ private theorem finite_dual_zmod_and_card_le (n : ℕ) [NeZero n] (X : Type) [Ad
   have hfin : Finite (Module.Dual (ZMod n) X) :=
     Finite.of_injective (fun φ : Module.Dual (ZMod n) X => (φ : X → ZMod n)) DFunLike.coe_injective
   refine ⟨hfin, ?_⟩
-  letI := Fintype.ofFinite X
+  let := Fintype.ofFinite X
   let e : Module.Dual (ZMod n) X → AddChar X ℂ :=
     fun φ => (ZMod.stdAddChar (N := n)).compAddMonoidHom φ.toAddMonoidHom
   have he : Function.Injective e := by
@@ -422,7 +422,7 @@ theorem shaDual_of_perfectPair
       (Sha1 (twDual μ ρ) (locFam S Av) (continuous_locFam S Av)))
     (h2 : PerfectPair (R := ZMod (l ^ r)) (Sha2 (twDual μ ρ) (locFam S Av) (continuous_locFam S Av))
       (Sha1 ρ (locFam S Av) (continuous_locFam S Av))) : ShaDual S Av μ ρ := by
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
   exact ⟨shaHalf_of_perfectPair h1, shaHalf_of_perfectPair h2⟩
 
 end Published

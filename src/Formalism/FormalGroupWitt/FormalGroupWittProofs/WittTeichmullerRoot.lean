@@ -87,8 +87,8 @@ theorem witt_teichmuller_root : Formalism.FG.WittTeichRoot := by
   have hNpos : 0 < l ^ d - 1 := by
     have : l ≤ l ^ d := Nat.le_self_pow (by omega) l
     omega
-  haveI : NeZero (((l ^ d - 1 : ℕ) : ZMod l)) := neZero_cast l d hd
-  haveI : NeZero (((l ^ d - 1 : ℕ) : AlgebraicClosure (ZMod l))) := by
+  have : NeZero (((l ^ d - 1 : ℕ) : ZMod l)) := neZero_cast l d hd
+  have : NeZero (((l ^ d - 1 : ℕ) : AlgebraicClosure (ZMod l))) := by
     have h := NeZero.of_injective (f := algebraMap (ZMod l) (AlgebraicClosure (ZMod l)))
       (a := (((l ^ d - 1 : ℕ) : ZMod l))) (algebraMap (ZMod l) (AlgebraicClosure (ZMod l))).injective
     rw [map_natCast] at h

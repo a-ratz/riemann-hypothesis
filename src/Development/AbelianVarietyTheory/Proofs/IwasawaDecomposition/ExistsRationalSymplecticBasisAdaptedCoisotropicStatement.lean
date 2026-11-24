@@ -141,7 +141,7 @@ theorem coords_in_rational_symplectic_basis :
     · have := pε (fun i => c (Sum.inl i)) (fun j => c (Sum.inr j)) k
       rw [hc, zero_dotProduct] at this
       linarith
-  haveI : Nonempty (Fin g ⊕ Fin g) := ⟨Sum.inl ⟨0, hg⟩⟩
+  have : Nonempty (Fin g ⊕ Fin g) := ⟨Sum.inl ⟨0, hg⟩⟩
   have hspan : Submodule.span ℚ (Set.range v) = ⊤ := by
     apply hli.span_eq_top_of_card_eq_finrank
     simp [Module.finrank_fin_fun]
@@ -238,7 +238,7 @@ theorem exists_isotropic_dual_of_skew {V : Type*} [AddCommGroup V] [Module ℚ V
 
     simp only [map_add (f := _), map_sum, map_smul, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, hε, h1, h2, mul_zero,
     Finset.sum_const_zero, add_zero, mul_ite, mul_one, mul_neg, Finset.sum_neg_distrib,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     linarith [hB (ψ i) (ψ j)]
   · intro i j
 
@@ -648,12 +648,12 @@ theorem exists_adapted_rational_symplectic_basis : ∀ (g r r₀ : ℕ) (M : Mat
     { carrier := {y | ∀ w ∈ V, y ⬝ᵥ Mq *ᵥ w = 0}
       add_mem' := by
         intro a b ha hb w hw
-        simp only [Set.mem_setOf_eq] at ha hb
+        simp only [Set.mem_ofPred_eq] at ha hb
         rw [add_dotProduct, ha w hw, hb w hw, add_zero]
       zero_mem' := by intro w _; simp
       smul_mem' := by
         intro t a ha w hw
-        simp only [Set.mem_setOf_eq] at ha
+        simp only [Set.mem_ofPred_eq] at ha
         rw [smul_dotProduct, ha w hw, smul_zero] }
   have hmemI : ∀ y, y ∈ I ↔ ∀ w ∈ V, y ⬝ᵥ Mq *ᵥ w = 0 := fun y => Iff.rfl
   have hIiso : ∀ x ∈ I, ∀ y ∈ I, x ⬝ᵥ Mq *ᵥ y = 0 :=

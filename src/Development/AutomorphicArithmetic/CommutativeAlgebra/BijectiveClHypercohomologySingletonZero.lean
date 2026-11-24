@@ -114,7 +114,7 @@ theorem UpperTheory.bijective_cl_hypercohomology_singleton_zero :
   have hz : ∀ p : ℤ, p ≠ 0 → IsZero ((sgl M).X p) := fun p hp =>
     HomologicalComplex.isZero_single_obj_X _ _ _ _ hp
   have hL : IsZero ((res ℤ F).X (-1)) := by
-    haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic ℤ F).2.2.1
+    have := (_root_.GlobalTheory.EtC.ResBasic.res_basic ℤ F).2.2.1
     exact CochainComplex.isZero_of_isStrictlyGE _ 0 (-1) (by norm_num)
   have hβ0 : ∀ β : Cochain (sgl M) (res ℤ F) (-1), β = 0 := by
     intro β

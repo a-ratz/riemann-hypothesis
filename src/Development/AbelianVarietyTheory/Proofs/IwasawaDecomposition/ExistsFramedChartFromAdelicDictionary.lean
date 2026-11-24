@@ -205,13 +205,13 @@ theorem exists_K1_isPtOf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       have ho := hoff P.1 (Or.inl P.2)
       rw [c3 _ ho.1 ho.2, ← hp.deco]
       simp only [decoRaw]
-      rw [if_pos (le_locP _ _ hv), e]
+      rw [ite_eq_left (le_locP _ _ hv), e]
       exact PtExist.hasRes_redA _ ((mem_globLat g v).1 hv i)
     · rw [← hN] at hv
       have ho := hoff P.1 (Or.inr P.2)
       rw [c3 _ ho.1 ho.2, ← hp.deco]
       simp only [decoRaw]
-      rw [if_pos (le_locP _ _ hv)]
+      rw [ite_eq_left (le_locP _ _ hv)]
       exact PtExist.hasRes_redA _ ((mem_globLat g v).1 hv i)
     · rw [c2 _ P.2, ptFr_of_mem p (hQ P.1 P.2).2.1 P.2]
       rfl
@@ -257,7 +257,7 @@ namespace GlobalTheory.StepLevelShrink
 theorem isCompact_of_isOpen_subgroupOf {G : Type} [Group G] [TopologicalSpace G] [ContinuousMul G]
     (H U A : Subgroup G) (hAU : A ≤ U) (hUH : U ≤ H) (hU : IsCompact (U : Set G))
     (hA : IsOpen {x : H | (x : G) ∈ A}) : IsCompact (A : Set G) := by
-  haveI : ContinuousMul H := inferInstanceAs (ContinuousMul H.toSubmonoid)
+  have : ContinuousMul H := inferInstanceAs (ContinuousMul H.toSubmonoid)
   have hcl : IsClosed ((A.subgroupOf H : Subgroup H) : Set H) := Subgroup.isClosed_of_isOpen _ hA
   have hU' : IsCompact (Subtype.val ⁻¹' (U : Set G) : Set H) := by
     rw [Subtype.isCompact_iff]
@@ -298,24 +298,24 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       Uloc_le := by
         intro v
         by_cases hq : v ∈ Qv
-        · rw [if_pos hq]
+        · rw [ite_eq_left hq]
           rintro _ ⟨y, hy, rfl⟩
           exact S.Uloc_le v ((hSU y (hAU hy)).2 v)
-        · rw [if_neg hq]
+        · rw [ite_eq_right hq]
           exact S.Uloc_le v
       Uloc_lev := by
         intro v
         by_cases hq : v ∈ Qv
-        · rw [if_pos hq]
+        · rw [ite_eq_left hq]
           rintro _ ⟨y, hy, rfl⟩
           exact S.Uloc_lev v ((hSU y (hAU hy)).2 v)
-        · rw [if_neg hq]
+        · rw [ite_eq_right hq]
           exact S.Uloc_lev v
       Uloc_hyp := by
         intro v hv hT
         have hb : v ∉ bad := fun h => hv (Or.inl h)
         have hq : v ∉ Qv := fun h => hv (Or.inr (Finset.mem_coe.2 h))
-        simp only [if_neg hq]
+        simp only [ite_eq_right hq]
         exact S.Uloc_hyp v hb hT
       fM := S.fM
       fM_acg := S.fM_acg
@@ -328,7 +328,7 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       UlocAlt := by
         intro v h
         have hq : v ∉ Qv := fun hq => hQT v hq h
-        simp only [if_neg hq]
+        simp only [ite_eq_right hq]
         exact S.UlocAlt v h
       U := A
       U_eq := by
@@ -337,30 +337,30 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
         · intro hx
           refine ⟨(hSU x (hAU hx)).1, fun v => ?_⟩
           by_cases hq : v ∈ Qv
-          · simp only [if_pos hq]
+          · simp only [ite_eq_left hq]
             exact ⟨x, hx, rfl⟩
-          · simp only [if_neg hq]
+          · simp only [ite_eq_right hq]
             exact (hSU x (hAU hx)).2 v
         · rintro ⟨hP, hv⟩
           have hxS : x ∈ S.U := by
             refine (S.U_eq x).2 ⟨hP, fun v => ?_⟩
             have h1 := hv v
             by_cases hq : v ∈ Qv
-            · simp only [if_pos hq] at h1
+            · simp only [ite_eq_left hq] at h1
               obtain ⟨y, hy, hyx⟩ := h1
               rw [← hyx]
               exact (hSU y (hAU hy)).2 v
-            · simp only [if_neg hq] at h1
+            · simp only [ite_eq_right hq] at h1
               exact h1
           refine hloc x hxS fun v hq => ?_
           have h1 := hv v
-          simp only [if_pos hq] at h1
+          simp only [ite_eq_left hq] at h1
           obtain ⟨y, hy, hyx⟩ := h1
           exact ⟨y, hy, hyx.symm⟩
       U_compact := by
-        letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-        letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
-        haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+        let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+        let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
+        have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
         let c : (FiniteAdeleRing (𝓞 F) F ⊗[F] E) →ₗ[FiniteAdeleRing (𝓞 F) F]
             (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           { toFun := TensorProduct.comm F _ _
@@ -374,10 +374,10 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
                 change e ⊗ₜ[F] (a * b) = ((1 : E) ⊗ₜ[F] a) * (e ⊗ₜ[F] b)
                 rw [Algebra.TensorProduct.tmul_mul_tmul, one_mul]
               | add x y hx hy => simp [smul_add, hx, hy] }
-        haveI : Module.Finite (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+        have : Module.Finite (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           Module.Finite.of_surjective c (TensorProduct.comm F _ _).surjective
-        haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-        haveI : IsTopologicalRing (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+        have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+        have : IsTopologicalRing (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           IsModuleTopology.isTopologicalRing (FiniteAdeleRing (𝓞 F) F) _
         exact isCompact_of_isOpen_subgroupOf (UPts σ J (FiniteAdeleRing (𝓞 F) F)) S.U A hAU
           (fun y hy => (hSU y hy).1) S.U_compact hopen
@@ -390,7 +390,7 @@ theorem exists_stepLevel_shrink : ∀ (F E : Type) [Field F] [NumberField F] [Fi
           hψ x (fun v hv => hx v (Or.inr (Finset.mem_coe.2 hv))), one_mul] }
   refine ⟨L, rfl, rfl, fun v hv => by
     show (if v ∈ Qv then A.map (bc (prV (E := E) v)) else S.Uloc v) = S.Uloc v
-    exact if_neg hv, ?_⟩
+    exact ite_eq_right hv, ?_⟩
   intro x x' x'' h1 h2
   show S.chi (Subgroup.inclusion hAU x) * ψ x = S.chi x' * ψ x''
   have e1 : Subgroup.inclusion hAU x = x' := Subtype.ext h1
@@ -533,7 +533,7 @@ theorem topU_open : ∀ (F E K : Type) [Field F] [NumberField F] [Field E] [Numb
       ((locLev P.1 (Θ P) (d P)).comap (rhoT F P.1 t)).subgroupOf (UPts σ J (FiniteAdeleRing (𝓞 F) F))
     have hn : (W : Set (UPts σ J (FiniteAdeleRing (𝓞 F) F))) ∈ 𝓝 (1 : UPts σ J (FiniteAdeleRing (𝓞 F) F)) := by
       have ht : Filter.Tendsto (fun x : UPts σ J (FiniteAdeleRing (𝓞 F) F) => (x : GL (Fin n) (AfE F E))) (𝓝 1) (𝓝 1) :=
-        continuous_subtype_val.tendsto 1
+        continuous_subtypeVal.tendsto 1
       filter_upwards [ht.eventually (rhoT_nhds P.1 t (hd P))] with x hx
       exact qbK_le_locLev P.1 (Θ P) (d P) hx
     exact Subgroup.isOpen_of_mem_nhds W hn
@@ -542,7 +542,7 @@ theorem topU_open : ∀ (F E K : Type) [Field F] [NumberField F] [Field E] [Numb
         ⋂ P : Q, {x : UPts σ J (FiniteAdeleRing (𝓞 F) F) |
           (x : GL (Fin n) (AfE F E)) ∈ (locLev P.1 (Θ P) (d P)).comap (rhoT F P.1 t)} := by
     ext x
-    simp only [topU, Subgroup.mem_inf, Subgroup.mem_iInf, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [topU, Subgroup.mem_inf, Subgroup.mem_iInf, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [e]
   exact hU.inter (isOpen_iInter_of_finite hW)
 
@@ -655,7 +655,7 @@ theorem rhoP_mem_qbK {z : GL (Fin n) (AfE F E)} (hz : z ∈ K1 hc n ST SG) (P : 
   · refine ⟨(locM P z - 1) i j / algebraMap E (P.adicCompletion E) c, ?_, ?_⟩
     · show Valued.v ((locM P z - 1) i j / algebraMap E (P.adicCompletion E) c) ≤ 1
       rw [map_div₀, valued_algebraMap]
-      exact div_le_one_of_le₀ (hs i j) zero_le'
+      exact div_le_one_of_le₀ (hs i j) zero_le
     · rw [mul_div_cancel₀ _ hc0]
       rfl
 

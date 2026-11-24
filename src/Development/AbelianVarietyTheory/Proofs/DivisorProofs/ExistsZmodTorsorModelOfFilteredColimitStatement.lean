@@ -196,7 +196,7 @@ theorem bijective_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsFiltered J]
       letI : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra;
       Function.Bijective (Algebra.TensorProduct.map (AlgHom.id (F.obj k) (F.obj k)) φ) := by
   intro J _ _ F c hc j R S _ _ _ _ _ _ φ _ hbij
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   let fR : F.obj j ⟶ CommRingCat.of R := CommRingCat.ofHom (algebraMap (F.obj j) R)
   let fS : F.obj j ⟶ CommRingCat.of S := CommRingCat.ofHom (algebraMap (F.obj j) S)
   have hfR : fR.hom.FinitePresentation := RingHom.finitePresentation_algebraMap.2 inferInstance
@@ -211,7 +211,7 @@ theorem bijective_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsFiltered J]
     GlobalTheory.BaseChangeColim.exists_isColimit_pushout_under J F c hc j _ _ fS _ _ sqS
   let G : CommRingCat.of (c.pt ⊗[F.obj j] R) ⟶ CommRingCat.of (c.pt ⊗[F.obj j] S) :=
     CommRingCat.ofHom (Algebra.TensorProduct.map (AlgHom.id c.pt c.pt) φ).toRingHom
-  haveI : IsIso G := (ConcreteCategory.isIso_iff_bijective G).2 hbij
+  have : IsIso G := (ConcreteCategory.isIso_iff_bijective G).2 hbij
   have hGr : g ≫ CommRingCat.ofHom (Algebra.TensorProduct.includeRight (R := F.obj j) (A := c.pt) (B := S)).toRingHom =
       CommRingCat.ofHom (Algebra.TensorProduct.includeRight (R := F.obj j) (A := c.pt) (B := R)).toRingHom ≫ G := by
     ext x; simp [g, G]
@@ -234,7 +234,7 @@ theorem bijective_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsFiltered J]
   obtain ⟨d, hd1, hd2, hdiso⟩ : ∃ d : ER.obj l ⟶ ES.obj l, vR.app l ≫ d = g ≫ vS.app l ∧
       uR.app l ≫ d = uS.app l ∧ IsIso d :=
     ⟨_, (hkR l).1.inl_desc _ _ _, (hkR l).1.inr_desc _ _ _, hm l (Under.homMk f rfl)⟩
-  letI : Algebra (F.obj j) (F.obj k) := (F.map (m.hom ≫ f)).hom.toAlgebra
+  let : Algebra (F.obj j) (F.obj k) := (F.map (m.hom ≫ f)).hom.toAlgebra
   have tR := (CommRingCat.isPushout_tensorProduct (F.obj j) (F.obj k) R).flip
   have tS := (CommRingCat.isPushout_tensorProduct (F.obj j) (F.obj k) S).flip
   let M : CommRingCat.of (F.obj k ⊗[F.obj j] R) ⟶ CommRingCat.of (F.obj k ⊗[F.obj j] S) :=
@@ -249,7 +249,7 @@ theorem bijective_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsFiltered J]
         IsPushout.inr_isoIsPushout_hom _ _ (hkS l).1 tS]
       ext x
       simp [M]
-  haveI : IsIso M := by rw [hM]; infer_instance
+  have : IsIso M := by rw [hM]; infer_instance
   exact (ConcreteCategory.isIso_iff_bijective M).1 this
 
 end GlobalTheory.BijDescent
@@ -291,7 +291,7 @@ theorem bc_prodMapOf_bijective_iff (R T A : Type) [CommRing R] [CommRing T] [Com
     [Algebra R A] (q : ℕ) (hq : 0 < q) (act : Multiplicative (ZMod q) →* (A ≃ₐ[R] A)) :
     Function.Bijective (prodMapOf T (T ⊗[R] A) q (bcAct T act)) ↔
       Function.Bijective (Algebra.TensorProduct.map (AlgHom.id T T) (prodMapOf R A q act)) := by
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   classical
   let e1 : (T ⊗[R] A) ⊗[T] (T ⊗[R] A) ≃ₐ[T] T ⊗[R] (A ⊗[R] A) :=
     (Algebra.TensorProduct.cancelBaseChange R T T (T ⊗[R] A) A).trans
@@ -329,7 +329,7 @@ theorem bc_prodMapOf_bijective_iff (R T A : Type) [CommRing R] [CommRing T] [Com
 
 theorem prodMapOf_finite (R A : Type) [CommRing R] [CommRing A] [Algebra R A] (q : ℕ) (hq : 0 < q)
     (act : Multiplicative (ZMod q) →* (A ≃ₐ[R] A)) : (prodMapOf R A q act).toRingHom.Finite := by
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   have hc : ((prodMapOf R A q act).toRingHom.comp
       (Algebra.TensorProduct.includeLeft (S := R) (A := A) (B := A)).toRingHom) =
       algebraMap A (Multiplicative (ZMod q) → A) := by
@@ -349,17 +349,17 @@ theorem eventually_prodMapOf_bijective : ∀ (J : Type) [SmallCategory J] [IsFil
       Function.Bijective (GlobalTheory.TorsorColim.prodMapOf (F.obj k) (F.obj k ⊗[F.obj j] A) q
         (GlobalTheory.TorsorColim.bcAct (F.obj k) actA)) := by
   intro J _ _ F c hc q hq j A _ _ _ actA hT
-  haveI : NeZero q := ⟨hq.ne'⟩
-  haveI : Algebra.FinitePresentation (F.obj j) (A ⊗[F.obj j] A) :=
+  have : NeZero q := ⟨hq.ne'⟩
+  have : Algebra.FinitePresentation (F.obj j) (A ⊗[F.obj j] A) :=
     Algebra.FinitePresentation.trans (F.obj j) A (A ⊗[F.obj j] A)
   have hb : letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra;
       Function.Bijective (Algebra.TensorProduct.map (AlgHom.id c.pt c.pt) (prodMapOf (F.obj j) A q actA)) := by
-    letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+    let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
     exact (bc_prodMapOf_bijective_iff (F.obj j) c.pt A q hq actA).1 hT.2.2.2
   obtain ⟨k₀, f₀, hk⟩ := GlobalTheory.T.bijective_baseChange_descends_filteredColimit J F c hc j _ _ (prodMapOf (F.obj j) A q actA)
     (prodMapOf_finite _ _ q hq actA) hb
   refine ⟨k₀, f₀, fun k f => ?_⟩
-  letI : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
+  let : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
   exact (bc_prodMapOf_bijective_iff (F.obj j) (F.obj k) A q hq actA).2 (hk k f)
 
 end GlobalTheory.TorsorColim
@@ -474,7 +474,7 @@ theorem exists_stage_rep (hc : IsColimit c) (k₁ : J) {ι : Type} [Finite ι] (
   classical
   have hc' := isColimitOfPreserves (forget _) hc
   choose jx x hx using fun i : ι => Types.jointly_surjective_of_isColimit hc' (t i)
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨K, hK⟩ := IsFiltered.sup_objs_exists (insert k₁ (Finset.univ.image jx))
   obtain ⟨h⟩ := hK (Finset.mem_insert_self k₁ _)
   have hm : ∀ i, Nonempty (jx i ⟶ K) := fun i =>
@@ -519,7 +519,7 @@ theorem exists_late_linear (hc : IsColimit c) (k₁ : J) (M : Type) [AddCommGrou
     ∃ (k₀ : J) (f₀ : k₁ ⟶ k₀), ∀ (k : J) (f : k₀ ⟶ k),
       letI : Algebra (F.obj k₁) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
       ∃ σk : M →ₗ[F.obj k₁] F.obj k, σk m = 1 := by
-  letI : Algebra (F.obj k₁) c.pt := (c.ι.app k₁).hom.toAlgebra
+  let : Algebra (F.obj k₁) c.pt := (c.ι.app k₁).hom.toAlgebra
   intro σ hσ
   classical
   obtain ⟨s, hs, K, hK⟩ := Module.FinitePresentation.out (R := F.obj k₁) (M := M)
@@ -559,7 +559,7 @@ theorem exists_late_linear (hc : IsColimit c) (k₁ : J) (M : Type) [AddCommGrou
       rw [this]
       rfl)
   refine ⟨k₀, f₀, fun k f => ?_⟩
-  letI : Algebra (F.obj k₁) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
+  let : Algebra (F.obj k₁) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
   obtain ⟨u, hu⟩ := hsol k f
   let φ := Finsupp.linearCombination (F.obj k₁) u
   have hφ : ∀ v : s →₀ F.obj k₁, φ v = MvPolynomial.eval₂ (F.map (f₀ ≫ f)).hom u (lin v) := by
@@ -598,7 +598,7 @@ theorem exists_late_split_of_isColimit :
       letI : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra;
       ∃ τ : (F.obj k ⊗[F.obj j] A) →ₗ[F.obj k] F.obj k, τ 1 = 1 := by
   intro J _ _ F c hc j A _ _ hfp h
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   obtain ⟨hfin, τ, hτ⟩ := h
   have hbase : ∃ (k₀ : J) (f₀ : j ⟶ k₀), ∀ (k : J) (f : k₀ ⟶ k),
       letI : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra;
@@ -612,8 +612,8 @@ theorem exists_late_split_of_isColimit :
         ext x; simp [rel]
       rw [this, hs]
       rfl
-    letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
-    haveI : Algebra.IsIntegral c.pt (c.pt ⊗[F.obj j] A) := Algebra.IsIntegral.of_finite _ _
+    let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+    have : Algebra.IsIntegral c.pt (c.pt ⊗[F.obj j] A) := Algebra.IsIntegral.of_finite _ _
     have hint : ∀ i, IsIntegral c.pt (bcPres (S := c.pt) φ (X i)) :=
       fun i => Algebra.IsIntegral.isIntegral _
     choose p hpm hp0 using hint
@@ -673,7 +673,7 @@ theorem exists_late_split_of_isColimit :
           MvPolynomial.coeff_mem_coeffs _ (MvPolynomial.mem_support_iff.1 hm)⟩)
       · simp [MvPolynomial.notMem_support_iff.1 hm]
     refine ⟨k₂, f₁ ≫ g₂, fun k f => ?_⟩
-    letI : Algebra (F.obj j) (F.obj k) := (F.map ((f₁ ≫ g₂) ≫ f)).hom.toAlgebra
+    let : Algebra (F.obj j) (F.obj k) := (F.map ((f₁ ≫ g₂) ≫ f)).hom.toAlgebra
     have hrel : ∀ l, φ (rel l) = 0 := fun l =>
       (RingHom.mem_ker).1 (hker ▸ Ideal.subset_span ⟨l, rfl⟩ : rel l ∈ RingHom.ker φ)
     refine finite_of_relations φ hφ rel hrel (fun i => (q i).map (F.map (g₂ ≫ f)).hom)
@@ -690,13 +690,13 @@ theorem exists_late_split_of_isColimit :
   obtain ⟨k₁, f₁, hk₁⟩ := hbase
   have hfin₁ := hk₁ k₁ (𝟙 k₁)
   rw [Category.comp_id] at hfin₁
-  letI : Algebra (F.obj j) (F.obj k₁) := (F.map f₁).hom.toAlgebra
-  letI : Algebra (F.obj k₁) c.pt := (c.ι.app k₁).hom.toAlgebra
-  haveI : IsScalarTower (F.obj j) (F.obj k₁) c.pt := IsScalarTower.of_algebraMap_eq (fun x => by
+  let : Algebra (F.obj j) (F.obj k₁) := (F.map f₁).hom.toAlgebra
+  let : Algebra (F.obj k₁) c.pt := (c.ι.app k₁).hom.toAlgebra
+  have : IsScalarTower (F.obj j) (F.obj k₁) c.pt := IsScalarTower.of_algebraMap_eq (fun x => by
     change (c.ι.app j).hom x = (c.ι.app k₁).hom ((F.map f₁).hom x)
     rw [← c.w f₁]; rfl)
-  haveI : Module.Finite (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) := hfin₁
-  haveI : Module.FinitePresentation (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) :=
+  have : Module.Finite (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) := hfin₁
+  have : Module.FinitePresentation (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) :=
     (Module.FinitePresentation.iff_finitePresentation_of_finite _ _).2 inferInstance
   let g : A →ₗ[F.obj j] c.pt :=
     (τ.restrictScalars (F.obj j)).comp (TensorProduct.mk (F.obj j) c.pt A 1)
@@ -707,9 +707,9 @@ theorem exists_late_split_of_isColimit :
     rw [← Algebra.TensorProduct.one_def]; exact hτ
   obtain ⟨k₀, f₀, hk₀⟩ := exists_late_linear hc k₁ _ (1 : F.obj k₁ ⊗[F.obj j] A) σ hσ
   refine ⟨k₀, f₁ ≫ f₀, fun k f => ?_⟩
-  letI : Algebra (F.obj j) (F.obj k) := (F.map ((f₁ ≫ f₀) ≫ f)).hom.toAlgebra
-  letI : Algebra (F.obj k₁) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
-  haveI : IsScalarTower (F.obj j) (F.obj k₁) (F.obj k) := IsScalarTower.of_algebraMap_eq (fun x => by
+  let : Algebra (F.obj j) (F.obj k) := (F.map ((f₁ ≫ f₀) ≫ f)).hom.toAlgebra
+  let : Algebra (F.obj k₁) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
+  have : IsScalarTower (F.obj j) (F.obj k₁) (F.obj k) := IsScalarTower.of_algebraMap_eq (fun x => by
     change (F.map ((f₁ ≫ f₀) ≫ f)).hom x = (F.map (f₀ ≫ f)).hom ((F.map f₁).hom x)
     rw [Category.assoc, Functor.map_comp, CommRingCat.hom_comp, RingHom.comp_apply])
   obtain ⟨σk, hσk⟩ := hk₀ k f
@@ -860,7 +860,7 @@ theorem projective_baseChange_presentation_matrix : ∀ (R B M : Type) [CommRing
     have h0 : (π.lTensor B) (e.symm y) = 0 := by
       have := hy
       simp only [πB, LinearMap.comp_apply, LinearEquiv.coe_coe] at this
-      rwa [LinearMap.baseChange_eq_ltensor] at this
+      rwa [LinearMap.baseChange_eq_lTensor] at this
     obtain ⟨z, hz⟩ := (hexB _).1 h0
     have hy' : y = e (f.lTensor B z) := by rw [hz, LinearEquiv.apply_symm_apply]
     rw [hy']
@@ -949,8 +949,8 @@ theorem poly_eventually_solvable :
       ∀ i, MvPolynomial.eval₂ (F.map (f₀ ≫ f)).hom y (p i) = 0 := by
   classical
   intro J _ _ F c hc j σ ι _ _ p x hx
-  haveI := Fintype.ofFinite σ
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite σ
+  have := Fintype.ofFinite ι
   have hc' := isColimitOfPreserves (forget _) hc
 
   choose jx x' hx' using fun s : σ => Types.jointly_surjective_of_isColimit hc' (x s)
@@ -1185,13 +1185,13 @@ theorem projective_eventually_of_finitePresentation : ∀ (J : Type) [SmallCateg
   have hker : Submodule.span (F.obj j) (Set.range r) = LinearMap.ker π := by
     rw [hr, LinearMap.ker_comp, LinearEquiv.ker]
     exact (Submodule.ker_mkQ K).symm
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   obtain ⟨v, w, h1, h2⟩ := GlobalTheory.T.exists_presentation_matrix_of_projective_baseChange (F.obj j) c.pt M n m π hπ r hker hproj
   obtain ⟨k₀, f₀, hk⟩ := GlobalTheory.T.polynomial_system_eventually_solvable_colimit J F c hc j _ _ (sysPoly n m r)
     (Sum.elim (fun p => v p.1 p.2) (fun p => w p.1 p.2))
     ((eval₂_sysPoly_eq_zero_iff _ n m r _).mpr ⟨h1, h2⟩)
   refine ⟨k₀, f₀, fun k f => ?_⟩
-  letI : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
+  let : Algebra (F.obj j) (F.obj k) := (F.map (f₀ ≫ f)).hom.toAlgebra
   obtain ⟨y, hy⟩ := hk k f
   obtain ⟨h1', h2'⟩ := (eval₂_sysPoly_eq_zero_iff _ n m r y).mp hy
   exact GlobalTheory.T.projective_baseChange_of_presentation_matrix_split (F.obj j) (F.obj k) M n m π hπ r hker (fun a l => y (.inl (a, l)))
@@ -1207,27 +1207,27 @@ theorem projective_eventually : ∀ (J : Type) [SmallCategory J] [IsFiltered J] 
       Module.Projective (F.obj k) (F.obj k ⊗[F.obj j] A) := by
   intro J _ _ F c hc j A _ _ _ hfp
   obtain ⟨hfin, hproj⟩ := hfp
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
   obtain ⟨k₁, g₁, hk₁⟩ := _root_.GlobalTheory.FiniteColim.eventually_finite_baseChange J F c hc j A hfin
-  letI : Algebra (F.obj j) (F.obj k₁) := (F.map (g₁ ≫ 𝟙 k₁)).hom.toAlgebra
-  haveI : Module.Finite (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) := hk₁ k₁ (𝟙 k₁)
-  haveI : Module.FinitePresentation (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) :=
+  let : Algebra (F.obj j) (F.obj k₁) := (F.map (g₁ ≫ 𝟙 k₁)).hom.toAlgebra
+  have : Module.Finite (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) := hk₁ k₁ (𝟙 k₁)
+  have : Module.FinitePresentation (F.obj k₁) (F.obj k₁ ⊗[F.obj j] A) :=
     Module.FinitePresentation.of_finite_of_finitePresentation _ _
-  letI : Algebra (F.obj k₁) c.pt := (c.ι.app k₁).hom.toAlgebra
-  haveI : IsScalarTower (F.obj j) (F.obj k₁) c.pt := IsScalarTower.of_algebraMap_eq (fun x => by
+  let : Algebra (F.obj k₁) c.pt := (c.ι.app k₁).hom.toAlgebra
+  have : IsScalarTower (F.obj j) (F.obj k₁) c.pt := IsScalarTower.of_algebraMap_eq (fun x => by
     change (c.ι.app j).hom x = (c.ι.app k₁).hom ((F.map (g₁ ≫ 𝟙 k₁)).hom x)
     rw [← c.w (g₁ ≫ 𝟙 k₁)]; rfl)
-  haveI : Module.Projective c.pt (c.pt ⊗[F.obj j] A) := hproj
+  have : Module.Projective c.pt (c.pt ⊗[F.obj j] A) := hproj
   have hproj₁ : Module.Projective c.pt (c.pt ⊗[F.obj k₁] (F.obj k₁ ⊗[F.obj j] A)) :=
     Module.Projective.of_equiv
       (TensorProduct.AlgebraTensorModule.cancelBaseChange (F.obj j) (F.obj k₁) c.pt c.pt A).symm
   obtain ⟨k₀, g₀, hk₀⟩ :=
     projective_eventually_of_finitePresentation J F c hc k₁ (F.obj k₁ ⊗[F.obj j] A) hproj₁
   refine ⟨k₀, (g₁ ≫ 𝟙 k₁) ≫ g₀, fun k f => ?_⟩
-  letI : Algebra (F.obj k₁) (F.obj k) := (F.map (g₀ ≫ f)).hom.toAlgebra
-  haveI : Module.Projective (F.obj k) (F.obj k ⊗[F.obj k₁] (F.obj k₁ ⊗[F.obj j] A)) := hk₀ k f
-  letI : Algebra (F.obj j) (F.obj k) := (F.map (((g₁ ≫ 𝟙 k₁) ≫ g₀) ≫ f)).hom.toAlgebra
-  haveI : IsScalarTower (F.obj j) (F.obj k₁) (F.obj k) := IsScalarTower.of_algebraMap_eq (fun x => by
+  let : Algebra (F.obj k₁) (F.obj k) := (F.map (g₀ ≫ f)).hom.toAlgebra
+  have : Module.Projective (F.obj k) (F.obj k ⊗[F.obj k₁] (F.obj k₁ ⊗[F.obj j] A)) := hk₀ k f
+  let : Algebra (F.obj j) (F.obj k) := (F.map (((g₁ ≫ 𝟙 k₁) ≫ g₀) ≫ f)).hom.toAlgebra
+  have : IsScalarTower (F.obj j) (F.obj k₁) (F.obj k) := IsScalarTower.of_algebraMap_eq (fun x => by
     change (F.map (((g₁ ≫ 𝟙 k₁) ≫ g₀) ≫ f)).hom x = (F.map (g₀ ≫ f)).hom ((F.map (g₁ ≫ 𝟙 k₁)).hom x)
     rw [Category.assoc, F.map_comp (g₁ ≫ 𝟙 k₁)]; rfl)
   exact Module.Projective.of_equiv
@@ -1271,7 +1271,7 @@ namespace GlobalTheory.TorsorColim
 theorem faithfullyFlat_of_split : ∀ (R D : Type) [CommRing R] [CommRing D] [Algebra R D], Module.Projective R D →
     (∃ τ : D →ₗ[R] R, τ 1 = 1) → Module.FaithfullyFlat R D := by
   intro R D _ _ _ hP ⟨τ, hτ⟩
-  haveI : Module.Flat R D := inferInstance
+  have : Module.Flat R D := inferInstance
   refine ⟨fun m hm h => ?_⟩
   have h1 : (1 : D) ∈ m • (⊤ : Submodule R D) := by rw [h]; exact Submodule.mem_top
   have h2 : ∀ x ∈ m • (⊤ : Submodule R D), τ x ∈ m := by
@@ -1321,12 +1321,12 @@ theorem exists_torsor_model_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsF
       GlobalTheory.LocAcyc.IsZModTorsor (F.obj j) Dj q actj ∧
       Nonempty (TensorProduct (F.obj j) c.pt Dj ≃ₐ[c.pt] D) := by
   intro J _ _ F c hc q hq D _ _ act hD
-  haveI : Module.Finite c.pt D := hD.1
-  haveI : Module.Projective c.pt D := hD.2.1
-  haveI : Module.FinitePresentation c.pt D := Module.finitePresentation_of_projective c.pt D
+  have : Module.Finite c.pt D := hD.1
+  have : Module.Projective c.pt D := hD.2.1
+  have : Module.FinitePresentation c.pt D := Module.finitePresentation_of_projective c.pt D
   obtain ⟨j, A, _, _, _, he0⟩ := GlobalTheory.T.exists_finitePresentation_descent_of_isColimit J F c hc D inferInstance
   obtain ⟨k, B, _, _, _, actB, e, he⟩ := GlobalTheory.T.exists_zmod_action_model_of_isColimit_filtered J F c hc q hq j A D act he0
-  letI : Algebra (F.obj k) c.pt := (c.ι.app k).hom.toAlgebra
+  let : Algebra (F.obj k) c.pt := (c.ι.app k).hom.toAlgebra
   have hT : GlobalTheory.LocAcyc.IsZModTorsor c.pt (c.pt ⊗[F.obj k] B) q
       (GlobalTheory.TorsorColim.bcAct c.pt actB) := by
     refine GlobalTheory.TorsorColim.isZModTorsor_of_algEquiv c.pt D _ q act _ e.symm (fun g y => ?_) hD
@@ -1341,9 +1341,9 @@ theorem exists_torsor_model_of_isColimit : ∀ (J : Type) [SmallCategory J] [IsF
   obtain ⟨m, f₀, hm⟩ := GlobalTheory.TorsorColim.eventually_and (fun (m : J) (h : k ⟶ m) => letI : Algebra (F.obj k) (F.obj m) := (F.map h).hom.toAlgebra; Module.Finite (F.obj m) (F.obj m ⊗[F.obj k] B)) (fun (m : J) (h : k ⟶ m) => letI : Algebra (F.obj k) (F.obj m) := (F.map h).hom.toAlgebra; Module.Projective (F.obj m) (F.obj m ⊗[F.obj k] B) ∧ (∃ τ : (F.obj m ⊗[F.obj k] B) →ₗ[F.obj m] F.obj m, τ 1 = 1) ∧ Function.Bijective (GlobalTheory.TorsorColim.prodMapOf (F.obj m) (F.obj m ⊗[F.obj k] B) q (GlobalTheory.TorsorColim.bcAct (F.obj m) actB))) h1 h234
   obtain ⟨i1, i2, ⟨τ, hτ⟩, i4⟩ := hm m (𝟙 m)
   refine ⟨m, ?_⟩
-  letI : Algebra (F.obj k) (F.obj m) := (F.map (f₀ ≫ 𝟙 m)).hom.toAlgebra
-  letI : Algebra (F.obj m) c.pt := (c.ι.app m).hom.toAlgebra
-  haveI : IsScalarTower (F.obj k) (F.obj m) c.pt := IsScalarTower.of_algebraMap_eq (fun x => by
+  let : Algebra (F.obj k) (F.obj m) := (F.map (f₀ ≫ 𝟙 m)).hom.toAlgebra
+  let : Algebra (F.obj m) c.pt := (c.ι.app m).hom.toAlgebra
+  have : IsScalarTower (F.obj k) (F.obj m) c.pt := IsScalarTower.of_algebraMap_eq (fun x => by
     change (c.ι.app k).hom x = (c.ι.app m).hom ((F.map (f₀ ≫ 𝟙 m)).hom x)
     rw [← c.w (f₀ ≫ 𝟙 m)]
     rfl)

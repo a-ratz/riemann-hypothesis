@@ -71,10 +71,10 @@ private theorem cp_pin (n : ℕ) (v : H.P ℚ) :
   refine h.trans ((finprod_eq_single _ v fun w hw => ?_).trans ?_)
   · rw [map_pow]
     change H.cp v ((pv w : (A ℚ)ˣ) : A ℚ) ^ _ = 1
-    rw [cp_pv, if_neg hw, one_pow]
+    rw [cp_pv, ite_eq_right hw, one_pow]
   · rw [map_pow]
     change H.cp v ((pv v : (A ℚ)ˣ) : A ℚ) ^ _ = _
-    rw [cp_pv, if_pos rfl]
+    rw [cp_pv, ite_eq_left rfl]
 
 private theorem val_nat (v : H.P ℚ) (n : ℕ) : Valued.v (n : H.Kv v) = v.intValuation (n : 𝓞 ℚ) := by
   have h1 := HeightOneSpectrum.valuedAdicCompletion_eq_valuation (K := ℚ) v (n : 𝓞 ℚ)
@@ -141,7 +141,7 @@ theorem UpperTheory.exists_factorization_of_ideleCongruence_divisor_level :
     obtain ⟨v, -, hv'⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hp)
     exact ⟨v, hv'⟩
   have hpr : ∀ p ∈ f.support, p.Prime := fun p hp => (hfs p hp).elim fun v h => h ▸ GlobalTheory.TwAtt.normV_prime v
-  have hfac := Nat.prod_pow_factorization_eq_self hpr
+  have hfac := Nat.factorization_prod_pow_eq_self hpr
   set n := f.prod (· ^ ·) with hn
   have hn0 : 0 < n := Finset.prod_pos fun p hp => pow_pos (hpr p hp).pos _
   have hr : re (y : A ℚ) ≠ 0 := by

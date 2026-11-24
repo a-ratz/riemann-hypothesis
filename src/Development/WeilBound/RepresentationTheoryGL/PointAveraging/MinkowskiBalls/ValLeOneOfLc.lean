@@ -122,10 +122,10 @@ namespace PositivityTheory.Rg.Ming.CoreX
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem vmul_lt {a b c : ValueGroupWithZero k} (h : a < b) (hc : c ≠ 0) : a * c < b * c :=
-  mul_lt_mul_of_pos_right h (zero_lt_iff.2 hc)
+  mul_lt_mul_of_pos_right h (pos_iff_ne_zero.2 hc)
 
 theorem vmul_le_iff {a b c : ValueGroupWithZero k} (hc : c ≠ 0) : c * a ≤ c * b ↔ a ≤ b := by
-  first | exact mul_le_mul_left₀ hc | exact mul_le_mul_iff_right₀ (zero_lt_iff.2 hc)
+  first | exact mul_le_mul_left₀ hc | exact mul_le_mul_iff_right₀ (pos_iff_ne_zero.2 hc)
 
 theorem near_id {j : ℕ} (E : Fin j → Fin j → k) (hE : ∀ a b, valuation k (E a b) < 1)
     (t : Fin j → k) (γ : ValueGroupWithZero k)
@@ -135,7 +135,7 @@ theorem near_id {j : ℕ} (E : Fin j → Fin j → k) (hE : ∀ a b, valuation k
   obtain ⟨a0, -, ha0⟩ := Finset.exists_max_image Finset.univ (fun b => valuation k (t b))
     ⟨a, Finset.mem_univ _⟩
   have hm : γ < valuation k (t a0) := hne.trans_le (ha0 a (Finset.mem_univ _))
-  have hm0 : valuation k (t a0) ≠ 0 := (lt_of_le_of_lt zero_le' hm).ne'
+  have hm0 : valuation k (t a0) ≠ 0 := (lt_of_le_of_lt zero_le hm).ne'
   have hS : valuation k (∑ b, E a0 b * t b) < valuation k (t a0) := by
     apply Valuation.map_sum_lt _ hm0
     intro b _
@@ -159,14 +159,14 @@ def Lc (hjr : j ≤ r) (c : kˣ) (x : Matrix (Fin n) (Fin r) k) : Prop :=
 
 theorem idem_JJ (hjn : j ≤ n) (hjr : j ≤ r) (a b : Fin j) :
     idem k r n j (Fin.castLE hjn a) (Fin.castLE hjr b) = if a = b then 1 else 0 := by
-  simp only [idem, Matrix.of_apply, Fin.coe_castLE]
+  simp only [idem, Matrix.of_apply, Fin.val_castLE]
   by_cases h : a = b
   · subst h; simp
-  · rw [if_neg h, if_neg]; intro h'; exact h (Fin.ext h'.1)
+  · rw [ite_eq_right h, ite_eq_right]; intro h'; exact h (Fin.ext h'.1)
 
 theorem idem_right (i : Fin n) (l : Fin r) (hl : j ≤ l.val) : idem k r n j i l = 0 := by
   simp only [idem, Matrix.of_apply]
-  rw [if_neg]; omega
+  rw [ite_eq_right]; omega
 
 theorem val_le_one_of_Lc (hjr : j ≤ r) {c : kˣ} (hc : valuation k (c : k) < 1)
     {x : Matrix (Fin n) (Fin r) k} (hL : Lc hjr c x) (i : Fin n) (a : Fin j) :
@@ -212,7 +212,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (hjn : j ≤ n) (hjr
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply, v] at this
       rw [this, Valuation.map_zero]
     have := (colC hjn hjr hc hL g 0).1 h0 a
-    exact (valuation k).zero_iff.1 (le_antisymm this zero_le')
+    exact (valuation k).zero_iff.1 (le_antisymm this zero_le)
   have hsub : Submodule.span k (Set.range v) ≤ LinearMap.range x.mulVecLin := by
     rw [Submodule.span_le]
     rintro _ ⟨a, rfl⟩
@@ -238,7 +238,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (hjn : j ≤ n) (hjr
 theorem mem_ball_iff (hjr : j ≤ r) (c : kˣ) (x : Matrix (Fin n) (Fin r) k) :
     x ∈ ballM c (idem k r n j) ↔
       Lc hjr c x ∧ ∀ i (l : Fin r), j ≤ l.val → valuation k (x i l) ≤ valuation k (c : k) := by
-  simp only [ballM, Set.mem_setOf_eq]
+  simp only [ballM, Set.mem_ofPred_eq]
   constructor
   · intro h
     refine ⟨fun i a => h i _, fun i l hl => ?_⟩
@@ -276,15 +276,15 @@ theorem Mr_det (j : ℕ) (w c : k) (L : 𝓀[k] → 𝒪[k]) (ρ : Fin j → {l 
     intro l l' hll
     have hne : l ≠ l' := fun h => lt_irrefl _ (h ▸ hll)
     have hv : l'.val < l.val := hll
-    simp only [Mr, Matrix.of_apply, if_neg hne, add_zero]
+    simp only [Mr, Matrix.of_apply, ite_eq_right hne, add_zero]
     split_ifs with h1 h2
     · rfl
     · omega
     · simp
-  rw [Matrix.det_of_upperTriangular hup]
+  rw [Matrix.det_of_isUpperTriangular hup]
   have hd : ∀ l : Fin r, Mr j w c L ρ l l = if l.val < j then 1 else w := by
     intro l
-    simp only [Mr, Matrix.of_apply, if_true]
+    simp only [Mr, Matrix.of_apply, ite_true]
     split_ifs with h1 <;> simp_all
   simp only [hd]
   rw [Finset.prod_ite, Finset.prod_const_one, one_mul, Finset.prod_const, Fintype.card_subtype]
@@ -308,7 +308,7 @@ theorem mulMr_right (hjr : j ≤ r) (w c : k) (L : 𝓀[k] → 𝒪[k])
       w * (x i l0 * (if h2 : l0.val < j then (c : k) * (L (ρ ⟨l0.val, h2⟩ ⟨l, hl⟩) : k) else 0)) +
         w * (x i l0 * if l0 = l then 1 else 0) := by
     intro l0
-    simp only [Mr, Matrix.of_apply, dif_neg (not_lt.2 hl)]
+    simp only [Mr, Matrix.of_apply, dite_eq_right (not_lt.2 hl)]
     ring
   rw [Finset.sum_congr rfl (fun l0 _ => e l0), Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum,
     ← mul_add]
@@ -361,10 +361,10 @@ theorem count [Fintype 𝓀[k]] [DecidableEq 𝓀[k]] {j r : ℕ} {c ϖ : kˣ} (
     if (∀ a (l : Fin r), j ≤ l.val → valuation k (T a l) ≤ valuation k (c : k)) then 1 else 0 := by
   classical
   by_cases hT : ∀ a (l : Fin r), j ≤ l.val → valuation k (T a l) ≤ valuation k (c : k)
-  · rw [if_pos hT]
+  · rw [ite_eq_left hT]
     have hc0 : valuation k (c : k) ≠ 0 := by simp
     let τ : Fin j → {l : Fin r // j ≤ l.val} → 𝒪[k] := fun a l => ⟨T a l / c, by
-      rw [Valuation.mem_integer_iff, map_div₀, div_le_iff₀ (zero_lt_iff.2 hc0), one_mul]
+      rw [Valuation.mem_integer_iff, map_div₀, div_le_iff₀ (pos_iff_ne_zero.2 hc0), one_mul]
       exact hT a l l.2⟩
     have hTe : ∀ a (l : {l : Fin r // j ≤ l.val}), T a l = (c : k) * τ a l := by
       intro a l
@@ -384,10 +384,10 @@ theorem count [Fintype 𝓀[k]] [DecidableEq 𝓀[k]] {j r : ℕ} {c ϖ : kˣ} (
         exact (entry2 hU _ _ _ (hL _)).2 rfl
     rw [Finset.sum_congr rfl (fun ρ _ => if_congr (key ρ) rfl rfl)]
     simp
-  · rw [if_neg hT]
+  · rw [ite_eq_right hT]
     apply Finset.sum_eq_zero
     intro ρ _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hT
     intro a l hl
@@ -420,7 +420,7 @@ theorem ind_eq [Fintype 𝓀[k]] [DecidableEq 𝓀[k]] {n r j : ℕ} (hjn : j �
     have ev : ∀ y : k, valuation k ((ϖ : k)⁻¹ * y) ≤ valuation k (c : k) ↔
         valuation k y ≤ valuation k (c : k) * valuation k (ϖ : k) := by
       intro y
-      rw [Valuation.map_mul, map_inv₀, inv_mul_eq_div, div_le_iff₀ (zero_lt_iff.2 (by simp))]
+      rw [Valuation.map_mul, map_inv₀, inv_mul_eq_div, div_le_iff₀ (pos_iff_ne_zero.2 (by simp))]
     have h2 : ∀ ρ : Fin j → {l : Fin r // j ≤ l.val} → 𝓀[k],
         (∀ i (l : Fin r), j ≤ l.val → valuation k ((x * Mr j ((ϖ : k)⁻¹) c L ρ) i l) ≤ valuation k (c : k)) ↔
         ∀ a (l : {l : Fin r // j ≤ l.val}),
@@ -449,11 +449,11 @@ theorem ind_eq [Fintype 𝓀[k]] [DecidableEq 𝓀[k]] {n r j : ℕ} (hjn : j �
     · exact absurd ⟨hx', hp⟩ hq
     · exact absurd hq.2 hp
     · rfl
-  · rw [if_neg (fun h => hx h.1)]
+  · rw [ite_eq_right (fun h => hx h.1)]
     symm
     apply Finset.sum_eq_zero
     intro ρ _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hx ((hLeq ρ).1 h.1)
 
@@ -494,7 +494,7 @@ namespace PositivityTheory.Rg.Ming
 theorem core : BallSt → RkSt → CoreSt := by
   intro _ _ k _ _ _ _ n r μ V _ _ W _ _ σ π B j hjr hjn2 hμ hσ hE hvan c hc Φ hΦ
   classical
-  letI : Fintype 𝓀[k] := Fintype.ofFinite _
+  let : Fintype 𝓀[k] := Fintype.ofFinite _
   have hjn : j ≤ n := by omega
   have hjr' : j ≤ r := hjr.le
   obtain ⟨ϖ, hϖ1, hU, hnabs⟩ := PositivityTheory.Rg.Ming.CoreX.exists_unif (k := k)

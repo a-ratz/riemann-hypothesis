@@ -67,20 +67,20 @@ variable {D : Type*}
 theorem IsUnif.inv_notMem {ϖ : kˣ} (hϖ : IsUnif ϖ) : (ϖ : k)⁻¹ ∉ 𝒪[k] := by
   have hlt : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
   rw [Valuation.mem_integer_iff, map_inv₀, not_le]
-  exact (one_lt_inv₀ (zero_lt_iff.2 (by simp))).2 hlt
+  exact (one_lt_inv₀ (pos_iff_ne_zero.2 (by simp))).2 hlt
 
 theorem IsUnif.inv_mul_inv_mem {ϖ : kˣ} (hϖ : IsUnif ϖ) {x : k} (hx : x ∉ 𝒪[k]) : (ϖ : k)⁻¹ * x⁻¹ ∈ 𝒪[k] := by
   rw [Valuation.mem_integer_iff, not_le] at hx
   have h : valuation k x⁻¹ ≤ valuation k (ϖ : k) := by
     rw [hϖ, le_uniformizer_iff, map_inv₀]; exact inv_lt_one_of_one_lt₀ hx
-  rw [Valuation.mem_integer_iff, map_mul, map_inv₀ _ (ϖ : k), inv_mul_le_iff₀ (zero_lt_iff.2 (by simp)), mul_one]
+  rw [Valuation.mem_integer_iff, map_mul, map_inv₀ _ (ϖ : k), inv_mul_le_iff₀ (pos_iff_ne_zero.2 (by simp)), mul_one]
   exact h
 
 theorem IsUnif.residue_eq_iff {ϖ : kˣ} (hϖ : IsUnif ϖ) (x y : 𝒪[k]) :
     IsLocalRing.residue _ x = IsLocalRing.residue _ y ↔ (ϖ : k)⁻¹ * ((x : k) - y) ∈ 𝒪[k] := by
   rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff,
     ← mem_cball_uniformiser hϖ.irreducible (x := ϖ) rfl, Valuation.mem_integer_iff, map_mul, map_inv₀,
-    inv_mul_le_iff₀ (zero_lt_iff.2 (by simp)), mul_one]
+    inv_mul_le_iff₀ (pos_iff_ne_zero.2 (by simp)), mul_one]
   rfl
 
 omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -166,7 +166,7 @@ theorem indicator_isPrimFrame_succ [Fintype D] [Fintype 𝓀[k]] {ϖ : kˣ} (hϖ
   swap
   · simp [h]
   obtain ⟨h1, h2⟩ := isPrimFrame_iff.1 h
-  simp only [h, true_and, if_true, one_mul]
+  simp only [h, true_and, ite_true, one_mul]
   generalize Y.submatrix Fin.succ id = Y' at *
   generalize Y.row 0 = y
   have key : ∀ c c' : Fin n → 𝒪[k], (ϖ : k)⁻¹ • (y + (fun i => (c i : k)) ᵥ* Y') ∈ Λ →
@@ -179,9 +179,9 @@ theorem indicator_isPrimFrame_succ [Fintype D] [Fintype 𝓀[k]] {ϖ : kˣ} (hϖ
     simp only [hϖ.residue_eq_iff]
     exact ⟨fun h => h2 _ h, fun h => vecMul_mem_of_int h1 h⟩
   by_cases h3 : ∀ c : Fin n → k, (∀ i, c i ∈ 𝒪[k]) → (ϖ : k)⁻¹ • (y + c ᵥ* Y') ∉ Λ
-  · rw [Finset.sum_eq_zero fun r _ => if_neg (h3 _ fun i => (l (r i)).2), sub_zero]
+  · rw [Finset.sum_eq_zero fun r _ => ite_eq_right (h3 _ fun i => (l (r i)).2), sub_zero]
     simp only [and_iff_left h3]
-  · rw [if_neg fun h => h3 h.2]
+  · rw [ite_eq_right fun h => h3 h.2]
     push Not at h3
     obtain ⟨c, hc, hc'⟩ := h3
     have hy : y ∈ Λ := by
@@ -244,7 +244,7 @@ theorem exists_comb_isPrimFrame.{u} {k : Type u} [Field k] [ValuativeRel k] [Top
         add_zero, Finset.sum_mul, ← Finset.sum_add_distrib]
       refine Finset.sum_congr rfl fun i _ => ?_
       by_cases h : γ i * Y.submatrix Fin.succ id ∈ matLat (Fin n) Λ
-      · simp only [h, true_and, if_true, mul_one, mul_sub, Finset.mul_sum, neg_mul, Finset.sum_neg_distrib]
+      · simp only [h, true_and, ite_true, mul_one, mul_sub, Finset.mul_sum, neg_mul, Finset.sum_neg_distrib]
         ring
       · simp [h]
     · rw [Finset.prod_range_succ, ← h3, Fintype.sum_sum_type, Fintype.sum_prod_type]

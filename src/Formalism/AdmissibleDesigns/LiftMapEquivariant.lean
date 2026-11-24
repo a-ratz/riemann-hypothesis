@@ -130,7 +130,7 @@ theorem mem_FsG (hcob : ∀ v : VT', (fun γ => Dt.ρT' γ v - v) ∈ finZ e PD 
     (x : ReciprocityTheory.Gal.Z1 Dt.ρTl') :
     Submodule.mkQ _ x ∈ FsG e PD ι Dt ↔ (fun γ => ((x : Γ → Dt.T') γ : VT')) ∈ finZ e PD Dt.ρT' ι := by
   have hx' : (fun γ => ((x : Γ → Dt.T') γ : VT')) ∈ ReciprocityTheory.Gal.Z1 Dt.ρT' :=
-    ⟨continuous_subtype_val.comp x.2.1, fun g h => by
+    ⟨continuous_subtypeVal.comp x.2.1, fun g h => by
       show (((x : Γ → Dt.T') (g * h) : Dt.T') : VT') = _
       rw [x.2.2 g h]
       rfl⟩
@@ -323,8 +323,8 @@ theorem len_eq_col (hι : Function.Bijective ι)
     (htop1 : ∀ c : Γ → T₁, Continuous (fun g => tr e (mkK (O := O) (c (ι g)))) → Continuous c) :
     Module.length O (↥(FsG e PD ι Dt) ⧸ (imG e PD ι Dt ρ₁ π v hc he).comap (FsG e PD ι Dt).subtype) =
       (FR e eO heO ι Dt ρ₁ π v he hsp).col PD := by
-  haveI h1 := RingHomInvPair.of_ringEquiv eO
-  haveI h2 := RingHomInvPair.symm (eO : O →+* Ow) (eO.symm : Ow →+* O)
+  have h1 := RingHomInvPair.of_ringEquiv eO
+  have h2 := RingHomInvPair.symm (eO : O →+* Ow) (eO.symm : Ow →+* O)
   rw [← len_comap_surj (Submodule.mkQ _) (Submodule.mkQ_surjective _)]
   unfold LatHom.col
   refine len_semi eO ((psiR e eO heO ι Dt).comp (ReciprocityTheory.Gal.Z1 Dt.ρTl').subtype)

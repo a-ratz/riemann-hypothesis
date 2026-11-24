@@ -103,7 +103,7 @@ private theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.bump_step (ν 
     (hh.comp (continuous_fst.mul (hπ.comp continuous_snd)))
   have hF0 : ∀ y, 0 ≤ F y := fun y => integral_nonneg fun q => mul_nonneg (hρ0 q) (hh0 _)
   have hF1 : 0 < F (π p₀)⁻¹ := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := p₀)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := p₀)
       (hρ.mul (hh.comp (continuous_const.mul hπ))) hρc.mul_right
       (fun q => mul_nonneg (hρ0 q) (hh0 _)) ?_
     simpa using ⟨hρ1, hh1⟩
@@ -115,7 +115,7 @@ private theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.bump_step (ν 
   · simp only [hF, mul_assoc, hu]
   · exact bump_cont ν hρ hρc (Φ := fun x p => F ((π p)⁻¹ * x))
       (hFc.comp ((hπ.comp continuous_snd).inv.mul continuous_fst))
-  · refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := p₀)
+  · refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := p₀)
       (hρ.mul (hFc.comp (hπ.inv.mul continuous_const))) hρc.mul_right
       (fun q => mul_nonneg (hρ0 q) (hF0 _)) ?_
     simpa using ⟨hρ1, hF1.ne'⟩
@@ -150,11 +150,11 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.bumpEx :
     ∀ {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (G1 K n)) [μ.IsHaarMeasure] (O : Set (G1 K n)), O ∈ 𝓝 (1 : G1 K n) →
       ∃ a : CC K n, tsupport a ⊆ O ∧ (∀ g, 0 ≤ (a g).re ∧ (a g).im = 0) ∧ ∫ g, a g ∂μ = 1 ∧ CuspidalProjection.ccStar a = a ∧ UpperTheory.ConvolutionTheory.C.IsLeftSmooth a := by
   intro K _ _ n μ _ O hO
-  letI : FirstCountableTopology (G1 K n) := by
+  let : FirstCountableTopology (G1 K n) := by
     set_option synthInstance.maxHeartbeats 200000 in exact inferInstance
-  letI : RegularSpace (G1 K n) := by
+  let : RegularSpace (G1 K n) := by
     set_option synthInstance.maxHeartbeats 200000 in exact inferInstance
-  letI : R1Space (G1 K n) := by
+  let : R1Space (G1 K n) := by
     set_option synthInstance.maxHeartbeats 200000 in exact inferInstance
   obtain ⟨O', hO', hO'O, hO'c⟩ := local_compact_nhds hO
   obtain ⟨V₂, hV₂, e₂⟩ := bump_split hO'
@@ -177,7 +177,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.bumpEx :
   have := compactSpace_of_isOpen U hU
   set_option synthInstance.maxHeartbeats 200000 in
    obtain ⟨F₁, h, -, hF₁, -, hc, h0, h1, hs, hV⟩ := bump_step (haarProb U) ((finOne K n).comp U.subtype)
-    (continuous_finOne.comp continuous_subtype_val) (ρ := fun _ => 1) continuous_const
+    (continuous_finOne.comp continuous_subtypeVal) (ρ := fun _ => 1) continuous_const
     (HasCompactSupport.of_compactSpace _) (fun _ => zero_le_one) (p₀ := 1) one_ne_zero (h := fun x => f x * f x⁻¹)
     (f.continuous.mul (f.continuous.comp continuous_inv)) (fun x => mul_nonneg (hf _).1 (hf _).1)
     (by simp [hf1']) (fun x => by simp [mul_comm]) (O := V₂)
@@ -201,7 +201,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.bumpEx :
   have acs : HasCompactSupport a := HasCompactSupport.intro hO'c fun x hx => by
     by_contra hn
     exact hx (aO x hn)
-  have hI : 0 < ∫ x, a x ∂μ := ac.integral_pos_of_hasCompactSupport_nonneg_nonzero acs a0 a1
+  have hI : 0 < ∫ x, a x ∂μ := ac.integral_pos_of_hasCompactSupport_nonneg_ne_zero acs a0 a1
   set I := ∫ x, a x ∂μ with hIdef
   refine ⟨⟨⟨fun x => ((a x * I⁻¹ : ℝ) : ℂ), Complex.continuous_ofReal.comp (ac.mul continuous_const)⟩,
     HasCompactSupport.comp_left (g := Complex.ofReal) (f := fun x => a x * I⁻¹) acs.mul_right Complex.ofReal_zero⟩,

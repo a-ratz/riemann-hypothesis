@@ -59,7 +59,7 @@ theorem thExpr_eq (hU : ThExprUniqSt) [StarRing (𝓞 E)] (nab nab' : NabV Xo c)
     (a : (E →+* ℂ) × ℕ → ℕ) (P : MvPolynomial (LtN Dw n) c.F) (hP : P ∈ harmA c a n)
     (F : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((l.M : ℤ) ^ 2) (ptO Xo y.x))) :
     thExpr Xo c nab y P F = thExpr Xo c nab' y P F := by
-  letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
+  let : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
   have key : ∀ (K : ℤ) (k : ℕ), K = (k : ℤ) →
       ∀ G : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L K (ptO Xo y.x)),
       ∑ m ∈ P.support, algebraMap c.F S (P.coeff m) * ∏ b, nab y K (G b) (colOf m b) =

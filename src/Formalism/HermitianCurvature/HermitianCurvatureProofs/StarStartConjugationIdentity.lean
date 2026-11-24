@@ -145,19 +145,19 @@ theorem kAlg_star {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {a 
   let T : Subalgebra ℂ A :=
     { carrier := {b | star b ∈ Algebra.adjoin ℂ ({a | ∃ Y, star Y = Y ∧ a = st.x Y} ∪ {a | ∃ Y ∈ st.inv, star Y = Y ∧ a = st.xi Y})}
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, star_mul] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq, star_mul] at hx hy ⊢
         exact Subalgebra.mul_mem _ hy hx
       one_mem' := by
-        simp only [Set.mem_setOf_eq, star_one]
+        simp only [Set.mem_ofPred_eq, star_one]
         exact Subalgebra.one_mem _
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, star_add] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq, star_add] at hx hy ⊢
         exact Subalgebra.add_mem _ hx hy
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, star_zero]
+        simp only [Set.mem_ofPred_eq, star_zero]
         exact Subalgebra.zero_mem _
       algebraMap_mem' := fun z => by
-        simp only [Set.mem_setOf_eq, ← algebraMap_star_comm]
+        simp only [Set.mem_ofPred_eq, ← algebraMap_star_comm]
         exact Subalgebra.algebraMap_mem _ _ }
   have hle : Algebra.adjoin ℂ ({a | ∃ Y, star Y = Y ∧ a = st.x Y} ∪ {a | ∃ Y ∈ st.inv, star Y = Y ∧ a = st.xi Y}) ≤ T := by
     rw [Algebra.adjoin_le_iff]

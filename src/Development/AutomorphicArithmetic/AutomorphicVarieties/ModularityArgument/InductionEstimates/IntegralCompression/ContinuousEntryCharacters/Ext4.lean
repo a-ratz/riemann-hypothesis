@@ -69,7 +69,7 @@ private theorem fixOf (μ : Measure U4) (hμ : Haar4 μ) (ψ : U4 → ℂ) (hψ 
     (hin : ∀ k, ∫ m, KT.psi n q n m * ψ ((ι m)⁻¹ * k) ∂μK = ((KT.normSqInt n q : ℝ) : ℂ) * ψ k)
     (Φ : U4 → ℂ) (hΦ : Continuous Φ) (hfix : RFix μ (eOf μ ψ) Φ) (g : U4) :
     ∫ m, T n q m * Φ (g * ι m) ∂μK = Φ g := by
-  haveI := hμ.prob
+  have := hμ.prob
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hcpt, -⟩ := UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.u4
   have hN : ((KT.normSqInt n q : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (KT.normSqInt_pos n q).ne'
   have hec : Continuous (eOf μ ψ) := by
@@ -335,8 +335,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coefInj :
   intro μ ψ n q n' q' hμ _ hψ Φ hΦ hfix hL hR h0
   obtain ⟨-, hmul, hone, -, hcont, -, -, -, -, -, -, hcpt, -⟩ := UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.u4
   obtain ⟨J, _, j₀, a, b, ν, hc, hexp, ha0, hb0, hν0, htor, hgood, hgood'⟩ := hψ.exp
-  haveI := hμ.prob
-  haveI : μ.IsMulLeftInvariant := ⟨fun k => (hμ.left k).map_eq⟩
+  have := hμ.prob
+  have : μ.IsMulLeftInvariant := ⟨fun k => (hμ.left k).map_eq⟩
   have int4 : ∀ f : U4 → ℂ, Continuous f → Integrable f μ := fun f hf =>
     hf.integrable_of_hasCompactSupport (isCompact_univ.of_isClosed_subset (isClosed_tsupport _) (Set.subset_univ _))
   set c : ℂ := ((∫ h, ‖ψ h‖ ^ 2 ∂μ : ℝ) : ℂ)⁻¹ with hcdef

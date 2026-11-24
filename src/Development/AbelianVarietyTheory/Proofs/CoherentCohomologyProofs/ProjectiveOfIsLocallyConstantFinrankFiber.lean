@@ -90,7 +90,7 @@ theorem isOpen_setOf_baseChange_surjective [Module.Finite R N] (φ : M →ₗ[R]
   have h := (Module.isClosed_support (R := R) (M := N ⧸ LinearMap.range φ)).isOpen_compl
   convert h using 1
   ext p
-  rw [Set.mem_setOf_eq, baseChange_surjective_iff, Set.mem_compl_iff,
+  rw [Set.mem_ofPred_eq, baseChange_surjective_iff, Set.mem_compl_iff,
     Module.mem_support_iff_nontrivial_residueField_tensorProduct, not_nontrivial_iff_subsingleton]
 
 theorem exists_baseChange_surjective [Module.Finite R M] (k : Type*) [Field k] [Algebra R k] :

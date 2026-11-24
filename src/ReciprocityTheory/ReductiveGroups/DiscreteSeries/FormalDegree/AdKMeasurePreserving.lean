@@ -141,7 +141,7 @@ theorem adKAux_shc_neg (u : ℝ) : shc (-u) = shc u := by
   unfold shc
   by_cases hu : u = 0
   · simp [hu]
-  · rw [if_neg (neg_ne_zero.mpr hu), if_neg hu, Real.sinh_neg, neg_div_neg_eq]
+  · rw [ite_eq_right (neg_ne_zero.mpr hu), ite_eq_right hu, Real.sinh_neg, neg_div_neg_eq]
 
 theorem adKAux_shc_pos (u : ℝ) : 0 < shc u := by
   unfold shc
@@ -291,7 +291,7 @@ theorem adK_measurePreserving {ε : Fin n → Bool} (k : KG ε) :
       nlinarith [norm_nonneg (z ab)]
     exact ((measure_mono hsub).trans_lt measure_ball_lt_top).ne
   have hS := congrArg (fun μ : Measure (PCoord ε → ℂ) => μ S) hmap
-  rw [Measure.map_apply hcont.measurable hSo.measurableSet, hpre, Measure.smul_apply, smul_eq_mul] at hS
+  rw [Measure.map_apply hcont.measurable hSo.measurableSet, hpre, smul_apply, smul_eq_mul] at hS
   have hc : ENNReal.ofReal |(LinearMap.det f)⁻¹| = 1 := by
     have h1 : 1 * volume S = ENNReal.ofReal |(LinearMap.det f)⁻¹| * volume S := by rw [one_mul]; exact hS
     exact ((ENNReal.mul_left_inj hpos hfin).mp h1).symm

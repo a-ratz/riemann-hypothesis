@@ -118,7 +118,7 @@ theorem lap_eq_rot (u : ℂ → ℝ) (z : ℂ) (θ : ℝ) :
     Δ u z = fderiv ℝ (fderiv ℝ u) z (ee θ) (ee θ)
       + fderiv ℝ (fderiv ℝ u) z (Complex.I * ee θ) (Complex.I * ee θ) := by
   rw [laplacian_eq_fderiv_fderiv, iee_smul, ee_smul]
-  simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+  simp only [map_add (f := _), map_smul, add_apply, FunLike.coe_smul, Pi.smul_apply,
     smul_eq_mul]
   have hsc := Real.sin_sq_add_cos_sq θ
   set H := fderiv ℝ (fderiv ℝ u) z
@@ -198,7 +198,7 @@ theorem integral_Arad {u : ℂ → ℝ} (hu : ContDiff ℝ 2 u) (a : ℂ) {R : �
     ∫ r in Ioi 0, Arad u a θ r = u a := by
   have hz : ∀ r, R < r → Arad u a θ r = 0 := fun r hr => by
     obtain ⟨h1, h2⟩ := vanish hR (z := a + r • ee θ) (by rw [norm_rad a (by linarith) θ]; exact hr)
-    simp only [Arad, h1, h2, ContinuousLinearMap.zero_apply, mul_zero, add_zero]
+    simp only [Arad, h1, h2, zero_apply, mul_zero, add_zero]
   rw [setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi
     (Ioc_subset_Ioi_self : Ioc (0:ℝ) (R + 1) ⊆ Ioi 0)
     (fun r hr => hz r (by
@@ -240,7 +240,7 @@ theorem integral_Bang_eq_zero {u : ℂ → ℝ} (hu : ContDiff ℝ 2 u) (a : ℂ
       (fderiv ℝ (fderiv ℝ u) (a + r • ee θ) (r • (Complex.I * ee θ)) (r • (Complex.I * ee θ))
         - r * fderiv ℝ u (a + r • ee θ) (ee θ)) := by
     intro θ
-    simp only [AngularPart, map_smul, ContinuousLinearMap.coe_smul', Pi.smul_apply, smul_eq_mul]
+    simp only [AngularPart, map_smul, FunLike.coe_smul, Pi.smul_apply, smul_eq_mul]
     field_simp
   simp_rw [hB]
   have hD1 := continuous_fderiv_of_contDiff_two hu
@@ -352,14 +352,14 @@ theorem green_at {u : ℂ → ℝ} (hu : ContDiff ℝ 2 u) (a : ℂ) {R : ℝ} (
           + fderiv ℝ u (a + p.1 • ee p.2) (ee p.2)) (by fun_prop) hR0 (fun p hp => by
         obtain ⟨h1, h2⟩ := vanish hR (z := a + p.1 • ee p.2)
           (by rw [norm_rad a (by linarith) p.2]; exact hp)
-        simp only [h1, h2, ContinuousLinearMap.zero_apply, mul_zero, add_zero])
+        simp only [h1, h2, zero_apply, mul_zero, add_zero])
     have hB : IntegrableOn (fun p : ℝ × ℝ => AngularPart u a p.1 p.2) (Ioi 0 ×ˢ Ioo (-Real.pi) Real.pi) :=
       integrableOn_log_mul (P := fun p : ℝ × ℝ =>
         p.1 * fderiv ℝ (fderiv ℝ u) (a + p.1 • ee p.2) (Complex.I * ee p.2) (Complex.I * ee p.2)
           - fderiv ℝ u (a + p.1 • ee p.2) (ee p.2)) (by fun_prop) hR0 (fun p hp => by
         obtain ⟨h1, h2⟩ := vanish hR (z := a + p.1 • ee p.2)
           (by rw [norm_rad a (by linarith) p.2]; exact hp)
-        simp only [h1, h2, ContinuousLinearMap.zero_apply, mul_zero, sub_zero])
+        simp only [h1, h2, zero_apply, mul_zero, sub_zero])
     rw [integral_add hA hB]
     rw [IntegrableOn, Measure.volume_eq_prod, ← Measure.prod_restrict] at hA hB
     rw [Measure.volume_eq_prod, ← Measure.prod_restrict, integral_prod_symm _ hA,

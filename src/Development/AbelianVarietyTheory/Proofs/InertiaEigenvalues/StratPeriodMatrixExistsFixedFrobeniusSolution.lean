@@ -94,7 +94,7 @@ theorem BK.hom_eq_of_X_C {K : FinExt l} (bk : BK K) {B : Obj l ↥(OL K)} (f g :
     rw [← map_pow]; exact hle bk.X_pow_natDegree_mem
   refine Hom.ext' (RingHom.ext fun (s : bk.S) => ?_)
   show BK.hf f s = BK.hf g s
-  haveI : IsAdicComplete (Ideal.span {(l : B.A)} ⊔ B.I) B.A := B.complete
+  have : IsAdicComplete (Ideal.span {(l : B.A)} ⊔ B.I) B.A := B.complete
   rw [← sub_eq_zero]
   refine IsHausdorff.haus (inferInstance : IsHausdorff (Ideal.span {(l : B.A)} ⊔ B.I) B.A) _ fun n => ?_
   rw [SModEq.zero]

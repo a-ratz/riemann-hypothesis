@@ -169,9 +169,9 @@ theorem dual_partner (t : ℕ) (c : ℚ) (P : SPar) (hc : ∀ x ∈ P, x.1 ≠ c
       have hne : -a ≠ c := hc _ h
       by_cases h1 : a < -c
       · have h3 : ¬ (-a < c) := by linarith
-        rw [if_pos h1] at h2; rw [if_neg h3]; subst h2; simp
+        rw [ite_eq_left h1] at h2; rw [ite_eq_right h3]; subst h2; simp
       · have h3 : -a < c := lt_of_le_of_ne (by linarith) hne
-        rw [if_neg h1] at h2; rw [if_pos h3]; subst h2; simp
+        rw [ite_eq_right h1] at h2; rw [ite_eq_left h3]; subst h2; simp
     · right; exact ⟨-a, mem_block_neg.1 ha, rfl, rfl⟩
   · rintro (⟨a, b', h, rfl, h2⟩ | ⟨a, ha, ha', hb⟩)
     · left
@@ -179,9 +179,9 @@ theorem dual_partner (t : ℕ) (c : ℚ) (P : SPar) (hc : ∀ x ∈ P, x.1 ≠ c
       refine ⟨y, b', h, rfl, ?_⟩
       by_cases h1 : y < -c
       · have h3 : ¬ (-y < c) := by linarith
-        rw [if_neg h3] at h2; rw [if_pos h1]; subst h2; simp
+        rw [ite_eq_right h3] at h2; rw [ite_eq_left h1]; subst h2; simp
       · have h3 : -y < c := lt_of_le_of_ne (by linarith) hne
-        rw [if_pos h3] at h2; rw [if_neg h1]; exact Bool.not_inj h2
+        rw [ite_eq_left h3] at h2; rw [ite_eq_right h1]; exact Bool.not_inj h2
     · right
       subst ha'
       refine ⟨y, mem_block_neg.2 ha, rfl, ?_⟩
@@ -723,14 +723,14 @@ theorem _root_.GlobalTheory.T.exists_representatives_half_quotient_pairing_trivi
   have finKΛ : GlobalTheory.AscFin.FinLat KΛ :=
     finLat_of_nsmul finΛ hKΛle hK (fun u hu => ⟨u, hu, rfl⟩)
   let N : AddSubgroup ↥Λ := KΛ.addSubgroupOf Λ
-  haveI : CompactSpace ↥Λ := isCompact_iff_compactSpace.mp finΛ.cpt
+  have : CompactSpace ↥Λ := isCompact_iff_compactSpace.mp finΛ.cpt
   have hNopen : IsOpen (N : Set ↥Λ) := by
     obtain ⟨U, hU, h0, hUK⟩ := finKΛ.opn
     refine AddSubgroup.isOpen_of_mem_nhds N (g := 0) ?_
-    refine Filter.mem_of_superset ((hU.preimage continuous_subtype_val).mem_nhds (by simpa using h0)) ?_
+    refine Filter.mem_of_superset ((hU.preimage continuous_subtypeVal).mem_nhds (by simpa using h0)) ?_
     intro a ha
     exact AddSubgroup.mem_addSubgroupOf.2 (hUK _ ha (finΛ.fin _ a.2))
-  haveI : Finite (↥Λ ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N hNopen
+  have : Finite (↥Λ ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N hNopen
   let f : ↥A →+ ↥Λ :=
     { toFun := fun y => ⟨K • (y : WO (G.pS (.core i)) (G.pT (.core i))), hKy _ y.2.1 y.2.2⟩
       map_zero' := by ext1; simp
@@ -748,8 +748,8 @@ theorem _root_.GlobalTheory.T.exists_representatives_half_quotient_pairing_trivi
       exact this ▸ hw
     · intro hy
       exact ⟨_, hy, by simp⟩
-  haveI : Finite (↥A ⧸ g.ker) := Finite.of_injective _ (QuotientAddGroup.kerLift_injective g)
-  haveI : Fintype (↥A ⧸ g.ker) := Fintype.ofFinite _
+  have : Finite (↥A ⧸ g.ker) := Finite.of_injective _ (QuotientAddGroup.kerLift_injective g)
+  have : Fintype (↥A ⧸ g.ker) := Fintype.ofFinite _
   let sec : ↥A ⧸ g.ker → ↥A := Function.surjInv QuotientAddGroup.mk_surjective
   have hsec : ∀ q, (QuotientAddGroup.mk (sec q) : ↥A ⧸ g.ker) = q := Function.surjInv_eq _
   have hsame : ∀ a b : ↥A, ((a : WO (G.pS (.core i)) (G.pT (.core i))) - b ∈ Λ) ↔

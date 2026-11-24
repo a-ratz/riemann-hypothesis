@@ -171,8 +171,8 @@ theorem exists_conj_integral {O : Type} [CommRing O] [IsDomain O] [IsPrincipalId
       exact hU k i
     intro x hx
     exact hle ⟨x, hx, rfl⟩
-  haveI : Module.Finite O M := Module.Finite.span_of_finite (R := O) (Set.finite_range gen)
-  haveI : Module.Free O M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O M := Module.Finite.span_of_finite (R := O) (Set.finite_range gen)
+  have : Module.Free O M := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex O M
   let b : Basis ι O M := Module.Free.chooseBasis O M
   let v : ι → (Fin n → K) := fun i => (b i : Fin n → K)
@@ -282,14 +282,14 @@ theorem isOpen_intSubgroup (l : ℕ) [Fact l.Prime] {Γ : Type} [Group Γ] [Topo
       (isOpen_lt (((hρ.matrix_elem i j).sub continuous_const).norm) continuous_const).inter
         (isOpen_lt ((((hρ.matrix_elem i j).comp continuous_inv).sub continuous_const).norm) continuous_const)
   have hV1 : (1 : Γ) ∈ V := by
-    simp only [V, Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq, inv_one, map_one, Units.val_one,
+    simp only [V, Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq, inv_one, map_one, Units.val_one,
       sub_self, norm_zero, zero_lt_one, and_self, implies_true]
   have hle : ∀ x y : PadicAlgCl l, ‖x - y‖ < 1 → ‖y‖ ≤ 1 → ‖x‖ ≤ 1 := fun x y hxy hy => by
     have := PadicAlgCl.isNonarchimedean l (x - y) y
     rw [sub_add_cancel] at this
     exact this.trans (max_le hxy.le hy)
   have hVU : V ⊆ (intSubgroup l ρ : Set Γ) := fun g hg i j => by
-    simp only [V, Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq] at hg
+    simp only [V, Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq] at hg
     exact ⟨hle _ _ (hg i j).1 (norm_one_apply_le l a i j), hle _ _ (hg i j).2 (norm_one_apply_le l a i j)⟩
   exact Subgroup.isOpen_of_mem_nhds _ (Filter.mem_of_superset (hVo.mem_nhds hV1) hVU)
 
@@ -297,12 +297,12 @@ theorem isOpen_intSubgroup (l : ℕ) [Fact l.Prime] {Γ : Type} [Group Γ] [Topo
 
 theorem exists_finExt_conj_intOf : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [T2Space Γ] (a : ℕ) (ρ : Γ →* GL (Fin a) (PadicAlgCl l)), Continuous (fun g => ((ρ g : GL (Fin a) (PadicAlgCl l)) : Matrix (Fin a) (Fin a) (PadicAlgCl l))) → ∃ (L : Loc.FinExt l) (P : GL (Fin a) (PadicAlgCl l)), ∀ g i k, ((P⁻¹ * ρ g * P : GL (Fin a) (PadicAlgCl l)) : Matrix (Fin a) (Fin a) (PadicAlgCl l)) i k ∈ Formalism.L2.TwC.intOf l L.1 := by
   intro l _ Γ _ _ _ _ _ a ρ hρ
-  letI : DecidableEq Γ := Classical.decEq Γ
+  let : DecidableEq Γ := Classical.decEq Γ
   obtain ⟨L, -, hL⟩ := GlobalTheory.CompactRepField.exists_finExt_entries_mem l Γ a ρ hρ ⟨⊥, inferInstance⟩
-  haveI : FiniteDimensional ℚ_[l] L.1 := L.2
+  have : FiniteDimensional ℚ_[l] L.1 := L.2
   let U := intSubgroup l ρ
-  haveI : Finite (Γ ⧸ U) := Subgroup.quotient_finite_of_isOpen _ (isOpen_intSubgroup l ρ hρ)
-  haveI : Fintype (Γ ⧸ U) := Fintype.ofFinite _
+  have : Finite (Γ ⧸ U) := Subgroup.quotient_finite_of_isOpen _ (isOpen_intSubgroup l ρ hρ)
+  have : Fintype (Γ ⧸ U) := Fintype.ofFinite _
   let T : Finset Γ := Finset.univ.image (fun q : Γ ⧸ U => q.out)
   have hTU : ∀ x : Γ, ∃ t ∈ T, t⁻¹ * x ∈ U := by
     intro x
@@ -500,7 +500,7 @@ theorem isRepOf_of_split (D : D7) (hC : GlobalTheory.RowTie.ChebSplit D.nd) (l :
   have hcp := GlobalTheory.TwistLG.charpoly_eq_of_dense ρ ρ' c₁ c₂ _ (hC hfin.toFinset).closure_eq (by
     rintro g ⟨w, hw, hsp, B, hB, hg⟩
     rw [Set.Finite.mem_toFinset] at hw
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hw
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hw
     apply Polynomial.map_injective ι.toRingHom ι.injective
     rw [hw.1 B g hB hg, hw.2 B g hB hg, hs w hsp])
   refine ⟨c₁, s₁, ?_⟩
@@ -675,7 +675,7 @@ theorem injective_of_comp {Λ : Type} [CommRing Λ] [IsDomain Λ] [Algebra ℤ_[
     (h : φ.comp (algebraMap ℤ_[p] Λ) = algebraMap ℤ_[p] (PadicAlgCl p)) :
     Function.Injective φ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ_[p])
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ_[p])
   change Ideal.comap (algebraMap ℤ_[p] Λ) (RingHom.ker φ) = ⊥
   rw [RingHom.comap_ker, h, ← RingHom.injective_iff_ker_eq_bot,
     IsScalarTower.algebraMap_eq ℤ_[p] ℚ_[p] (PadicAlgCl p), RingHom.coe_comp]
@@ -689,14 +689,14 @@ theorem exists_algEquiv {Λ : Type} [CommRing Λ] [IsDomain Λ] [Algebra ℤ_[p]
   have tf : ∀ φ : Λ →+* PadicAlgCl p, Function.Injective φ →
       letI := φ.toAlgebra
       Module.IsTorsionFree Λ (PadicAlgCl p) := fun φ hφ => by
-    letI := φ.toAlgebra
-    haveI : FaithfulSMul Λ (PadicAlgCl p) := (faithfulSMul_iff_algebraMap_injective _ _).2 hφ
+    let := φ.toAlgebra
+    have : FaithfulSMul Λ (PadicAlgCl p) := (faithfulSMul_iff_algebraMap_injective _ _).2 hφ
     infer_instance
   have alg : letI := φ₀.toAlgebra
       Algebra.IsAlgebraic Λ (PadicAlgCl p) := by
-    letI := φ₀.toAlgebra
-    haveI : IsScalarTower ℤ_[p] Λ (PadicAlgCl p) := IsScalarTower.of_algebraMap_eq' h₀.symm
-    haveI : Algebra.IsAlgebraic ℤ_[p] (PadicAlgCl p) := ⟨fun x =>
+    let := φ₀.toAlgebra
+    have : IsScalarTower ℤ_[p] Λ (PadicAlgCl p) := IsScalarTower.of_algebraMap_eq' h₀.symm
+    have : Algebra.IsAlgebraic ℤ_[p] (PadicAlgCl p) := ⟨fun x =>
       (IsFractionRing.isAlgebraic_iff ℤ_[p] ℚ_[p] (PadicAlgCl p)).2
         (Algebra.IsAlgebraic.isAlgebraic x)⟩
     exact Algebra.IsAlgebraic.extendScalars (R := ℤ_[p]) (FaithfulSMul.algebraMap_injective _ _)
@@ -802,7 +802,7 @@ theorem pick_spec_alt (l : ℕ) [Fact l.Prime] (j : ↥D.LL0 →+* PadicAlgCl l)
     ∀ π : D.naut.CG D.R.r, D.naut.csd π → D.naut.ralg π → (∀ w, IsSplitPl D.host w → D.naut.locG π w = A.row.locR σ w) →
       ∀ ι : Qbar l ≃+* ℂ, (∀ x, ι (j x) = embLL0 D x) →
         IsRepOf D l ι (D.naut.tw π D.naut.etaTinv) ((1 - (D.R.nV : ℝ)) / 2) (_root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding hA D cf jE A hG hR hC l j σ) := by
-  simp only [_root_.GlobalTheory.HeightCounting.RowRhoInt.pickL_alt, _root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding, dif_pos h]
+  simp only [_root_.GlobalTheory.HeightCounting.RowRhoInt.pickL_alt, _root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding, dite_eq_left h]
   exact (_root_.GlobalTheory.HeightCounting.RowRhoInt.core_data_of_point hA D cf jE A hG hR hC l j σ h.1 h.2).choose_spec.choose_spec
 def bigOfStarStable (hstar : ∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0) : Big D := fun l _ j =>
   ⟨⨆ σ : D.what₂.FT, ⨆ b : Bool, (_root_.GlobalTheory.HeightCounting.RowRhoInt.pickL_alt hA D cf jE A hG hR hC l (jSide D hstar l j b) σ).1, by
@@ -862,25 +862,25 @@ theorem rho_rows_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D 
   refine ⟨rho, fun i σ b => ?_, fun i σ b hocc hgood π hc hr hloc φ ι hφ hι => ?_⟩
   · by_cases h : GoodOcc D σ
     · have e : rho i σ b = mapRep (Sp.eO0 i).symm.toRingHom (restrictRep (Formalism.L2.TwC.intOf (T.l i) (Sp.K0 i).1)
-          (_root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ) (hmem i σ b h)) := dif_pos h
+          (_root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ) (hmem i σ b h)) := dite_eq_left h
       rw [e]
       refine continuous_pi fun k => continuous_pi fun k' => ?_
       refine (hemb i).continuous_iff.mpr ?_
       have hc0 := (_root_.GlobalTheory.HeightCounting.RowRhoInt.pick_spec_alt hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ h).1.matrix_elem k k'
       refine hc0.congr fun g => ?_
       exact (hks i ⟨_, hmem i σ b h g k k'⟩).symm
-    · have e : rho i σ b = 1 := dif_neg h
+    · have e : rho i σ b = 1 := dite_eq_right h
       rw [e]
       simp only [MonoidHom.one_apply, Units.val_one]
       exact continuous_const
   · have h : GoodOcc D σ := ⟨hocc, hgood⟩
     have e : rho i σ b = mapRep (Sp.eO0 i).symm.toRingHom (restrictRep (Formalism.L2.TwC.intOf (T.l i) (Sp.K0 i).1)
-        (_root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ) (hmem i σ b h)) := dif_pos h
+        (_root_.GlobalTheory.HeightCounting.RowRhoInt.padicRepresentationOfEmbedding hA D cf jE A hG hR hC (T.l i) (jSide D hstar (T.l i) (Sp.j0 i) b) σ) (hmem i σ b h)) := dite_eq_left h
     rw [e]
     have hstd : ∀ z : ℤ_[T.l i], algebraMap ℤ_[T.l i] (PadicAlgCl (T.l i)) z =
         algebraMap ℚ_[T.l i] (PadicAlgCl (T.l i)) (z : ℚ_[T.l i]) :=
       fun z => IsScalarTower.algebraMap_apply ℤ_[T.l i] ℚ_[T.l i] (PadicAlgCl (T.l i)) z
-    haveI : FaithfulSMul ℤ_[T.l i] (T.O0 i) := by
+    have : FaithfulSMul ℤ_[T.l i] (T.O0 i) := by
       rw [faithfulSMul_iff_algebraMap_injective]
       intro z z' hzz
       have h3 := congrArg (fun y => kap Sp i (algebraMap (T.O0 i) (FractionRing (T.O0 i)) y)) hzz
@@ -908,10 +908,10 @@ theorem rho_rows_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D 
     have hx := hι x
     cases b
     · have e1 : T.emb0b i x = T.emb0 i (starRestrictSubfield D hstar x) := T.restX_coefficientEmbedding_conj i x _ rfl
-      simp only [Bool.false_eq_true, if_false] at hx
+      simp only [Bool.false_eq_true, ite_false] at hx
       rw [e1, hφτ, kap_emb0] at hx
       exact hx
-    · simp only [if_true] at hx
+    · simp only [ite_true] at hx
       rw [hφτ, kap_emb0] at hx
       exact hx
 end GlobalTheory.HeightCounting.RowRhoInt

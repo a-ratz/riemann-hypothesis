@@ -163,7 +163,7 @@ theorem exists_nat (q : Unif k) : valuation k ((q.1 : 𝒪[k]) : k) < 1 ∧
   have hq := hlt _ q.2.not_isUnit
   refine ⟨hq, ?_⟩
   classical
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField 𝒪[k])
+  let := Fintype.ofFinite (IsLocalRing.ResidueField 𝒪[k])
   set Q := Fintype.card (IsLocalRing.ResidueField 𝒪[k])
   have hQ : (Q : 𝒪[k]) ∈ IsLocalRing.maximalIdeal 𝒪[k] := by
     rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]

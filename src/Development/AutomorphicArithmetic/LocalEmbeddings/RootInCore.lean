@@ -119,7 +119,7 @@ theorem pull_data : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (
       f = f' → ∀ (k : Type) [Field k] [IsAlgClosed k] [Algebra Y.d.c₂.F k] (y : FrPt Y.d.Xo₂ Y.d.c₂ k),
         evR Y.d.Xo₂ Y.d.c₂ u y = evR Y.d.Xo₂ Y.d.c₂ u' y := by
     rintro f _ u u' h h' rfl k _ _ _ y₂
-    letI := GlobalTheory.CoverSec.algBelow Y.d k
+    let := GlobalTheory.CoverSec.algBelow Y.d k
     obtain ⟨y, hy⟩ := GlobalTheory.CoverSec.exists_frOver_below Y.d (fun _ => rfl) y₂ (hO k (fun _ => rfl) y₂)
     rw [h k (fun _ => rfl) y₂ y hy, h' k (fun _ => rfl) y₂ y hy]
   let act := actLev (Xo := T.Q.Xo j) T.Q.c (fun g => (lev g, (LinearMap.id : (T.Q.Dw j).La →ₗ[𝓞 D.host.E] (T.Q.Dw j).La)))
@@ -134,7 +134,7 @@ theorem pull_data : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (
     refine GlobalTheory.CoverSec.eq_of_geometric (GlobalTheory.LevelEquivCompare.actLev_mem_sec hact₂ γ (s₂ (π v).2)).1 (s₂ (π _).2).1 (geo h1 (p1 ⟨_, hv'⟩) ?_)
     refine GlobalTheory.CoverSec.eq_of_geometric (GlobalTheory.LevelEquivCompare.actLev_mem_sec hact' _ hv).1
       ((_root_.GlobalTheory.FieldBC.rulBC_sec_val_linear _ _ _ _ _ _ _ Y.hle).1 a n _ (s₁ hv')).1.1 fun k _ _ _ y => ?_
-    letI := resAlg Y.hle k
+    let := resAlg Y.hle k
     exact (hbc a n (θ γ) 1 _ _ _ hv (fun _ => s₁ v.2) (GlobalTheory.LevelEquivCompare.isBC_rulBC Y.hle (s₁ v.2)) k (fun _ => rfl) y).trans
       (GlobalTheory.LevelEquivCompare.isBC_rulBC Y.hle (s₁ hv') k (fun _ => rfl) y).symm
   refine ⟨π, fun m b hb => p2 m b hb, fun γ v => ⟨hC.2 (hkeep _ _ (hC.1 v.2)), hc γ v _⟩, fun g hg => ?_⟩
@@ -167,9 +167,9 @@ theorem sum_entN {k : Type} [Field k] {r : ℕ} (M : Matrix (Fin r) (Fin r) k) :
     intro i
     unfold entN
     split_ifs with h
-    · rw [Finset.sum_eq_single ⟨i.val + 1, h.2⟩ (fun b _ hb => if_neg fun e => hb (Fin.ext e)) (by simp)]
+    · rw [Finset.sum_eq_single ⟨i.val + 1, h.2⟩ (fun b _ hb => ite_eq_right fun e => hb (Fin.ext e)) (by simp)]
       simp
-    · refine Finset.sum_eq_zero fun j _ => if_neg fun e => h ⟨i.2, by have := j.2; omega⟩
+    · refine Finset.sum_eq_zero fun j _ => ite_eq_right fun e => h ⟨i.2, by have := j.2; omega⟩
   rw [superDiag, Finset.sum_congr rfl fun i _ => h1 i, Fin.sum_univ_eq_sum_range (fun i => entN M i (i + 1)) r]
   refine Finset.sum_subset (Finset.range_subset_range.2 (Nat.sub_le r 1)) fun x hx hx' => ?_
   simp only [Finset.mem_range] at hx hx'
@@ -190,8 +190,8 @@ theorem root_in_core {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formali
 
 theorem idx_eq {D : D7} {k k' : Fin 2} {X X' : Type} [Semiring X] [Semiring X'] (e : ZMod (D.host.g k) ≃+* X)
     (e' : ZMod (D.host.g k') ≃+* X') (hX : Nat.card X = Nat.card X') : k = k' := by
-  haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
-  haveI : NeZero (D.host.g k') := ⟨(D.host.g_prime k').ne_zero⟩
+  have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+  have : NeZero (D.host.g k') := ⟨(D.host.g_prime k').ne_zero⟩
   have h : D.host.g k = D.host.g k' := by
     rw [← Nat.card_zmod (D.host.g k), ← Nat.card_zmod (D.host.g k'), Nat.card_congr e.toEquiv, Nat.card_congr e'.toEquiv, hX]
   fin_cases k <;> fin_cases k'

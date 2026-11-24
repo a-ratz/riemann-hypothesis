@@ -84,11 +84,11 @@ theorem unitElt_holds (hθ : IsSplitEquiv X p θ) : UnitElt X p θ := by
   let P : Ideal (𝓞 X.B.I.E) :=
     { carrier := {x | Valued.v (iota1 X p θ (algebraMap (𝓞 X.B.I.E) X.B.I.E x)) < 1}
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at hx hy ⊢
         exact Valuation.map_add_lt _ hx hy
       zero_mem' := by simp
       smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul] at hx ⊢
         exact lt_of_le_of_lt (mul_le_of_le_one_left' (hint c)) hx }
   have hmemP : ∀ x, x ∈ P ↔ Valued.v (iota1 X p θ (algebraMap (𝓞 X.B.I.E) X.B.I.E x)) < 1 :=
     fun x => Iff.rfl

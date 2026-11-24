@@ -76,7 +76,7 @@ section Num
 variable {S : Finset ℕ}
 
 theorem lamC_of_mem {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := by
-  unfold TaylorLogMetric.lamC; rw [dif_pos h]
+  unfold TaylorLogMetric.lamC; rw [dite_eq_left h]
 
 theorem lamC_add {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam (x + y) = TaylorLogMetric.lamC lam x + TaylorLogMetric.lamC lam y := by
@@ -127,7 +127,7 @@ theorem IntOff.of_pow {z : ℂ} {n : ℕ} (hn : 0 < n) (h : z ^ n = 1) : IntOff 
 theorem IntOff.exp_rat {r : ℝ} {n : ℕ} (hn : 0 < n) {m : ℤ} (h : (n : ℝ) * r = (m : ℝ)) (k : ℤ) :
     IntOff S (Complex.exp ((k : ℂ) * ((Real.pi : ℂ) * Complex.I * (r : ℂ)))) := by
   refine IntOff.of_pow (n := 2 * n) (by omega) ?_
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have h' : ((n : ℂ)) * (r : ℂ) = (m : ℂ) := by exact_mod_cast h
   have : ((2 * n : ℕ) : ℂ) * ((k : ℂ) * ((Real.pi : ℂ) * Complex.I * (r : ℂ))) = ((k * m : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) := by
     push_cast
@@ -433,7 +433,7 @@ theorem jetLin_inl_mul (J : (DVar ι a b →₀ ℕ) → K) (f : Pol K ι b) (q 
     jetLin J (rename Sum.inl f * rename Sum.inr (monomial q c)) = (c * J q) • f := by
   induction f using MvPolynomial.induction_on' with
   | monomial p d =>
-    rw [rename_monomial, rename_monomial, monomial_mul, jetLin_mixed, smul_monomial, smul_eq_mul]
+    rw [rename_monomial, rename_monomial, monomial_mul_monomial, jetLin_mixed, smul_monomial, smul_eq_mul]
     congr 1
     ring
   | add f g hf hg => rw [map_add (f := _), add_mul, map_add (f := _), hf, hg, smul_add]
@@ -447,7 +447,7 @@ theorem jetLin_liftL (J : (DVar ι a b →₀ ℕ) → K) (φ : Pol K ι b →�
     set q := m.comapDomain Sum.inr Sum.inr_injective.injOn
     have h : (monomial (p.mapDomain Sum.inl + q.mapDomain Sum.inr) c : MvPolynomial ((ι × Fin b × Fin b) ⊕ DVar ι a b) K) =
         rename Sum.inl (monomial p 1) * rename Sum.inr (monomial q c) := by
-      rw [rename_monomial, rename_monomial, monomial_mul, one_mul]
+      rw [rename_monomial, rename_monomial, monomial_mul_monomial, one_mul]
     rw [h, map_mul, liftL_inl, liftL_inr, jetLin_inl_mul, jetLin_inl_mul, map_smul]
   | add f g hf hg => rw [map_add (f := _), map_add (f := _), map_add (f := _), map_add (f := _), hf, hg]
 
@@ -464,10 +464,10 @@ theorem liftL_subD (h : a ≤ b) {β : ι → Matrix (Fin b) (Fin b) K} (hβ : I
     rintro ⟨τ, α, s⟩
     have hs : s.1 < b := lt_of_lt_of_le s.2 h
 
-    simp only [AlgHom.comp_apply, subD, colSub, aeval_X, dif_pos hs, map_sum, map_mul, liftL, Sum.elim_inl, Sum.elim_inr, rename_X,
+    simp only [AlgHom.comp_apply, subD, colSub, aeval_X, dite_eq_left hs, map_sum, map_mul, liftL, Sum.elim_inl, Sum.elim_inr, rename_X,
     algHom_C, algebraMap_eq]
     have h1 : ∀ r : Fin a, (r : ℕ) < b := fun r => lt_of_lt_of_le r.2 h
-    simp only [dif_pos (h1 _)]
+    simp only [dite_eq_left (h1 _)]
     simp only [Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     rw [sum_castLE h]
@@ -492,7 +492,7 @@ theorem jet_weight : JetWt := by
   rw [prod_castLE h]
   · refine Finset.prod_congr rfl fun r _ => ?_
     simp only [resB, extNu]
-    rw [dif_pos (show ((Fin.castLE h r : Fin b) : ℕ) < a from r.2)]
+    rw [dite_eq_left (show ((Fin.castLE h r : Fin b) : ℕ) < a from r.2)]
     rfl
   · intro r hr
     simp only [extNu]
@@ -757,10 +757,10 @@ theorem colAddS_insert (t l : Fin n) (hl : l ≠ t) (S : Finset (Fin n)) (hS : l
   intro v
   simp only [colAddS, colAdd, AlgHom.comp_apply, aeval_X]
   split_ifs with h
-  · rw [map_add (f := _), map_mul, aeval_X, aeval_X, algHom_C, if_pos h, if_neg hl, Finset.sum_insert hS]
+  · rw [map_add (f := _), map_mul, aeval_X, aeval_X, algHom_C, ite_eq_left h, ite_eq_right hl, Finset.sum_insert hS]
     simp only [algebraMap_eq]
     ring
-  · rw [aeval_X, if_neg h]
+  · rw [aeval_X, ite_eq_right h]
 
 theorem colAddS_inv {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) K} (hF : F ∈ dualWeyl K r n ν) (t : Fin n) (c : Fin n → K)
     (S : Finset (Fin n)) (hS : ∀ l ∈ S, l < t) : colAddS t S c F = F := by
@@ -838,16 +838,16 @@ theorem colOne_eq (β : Matrix (Fin n) (Fin n) K) (hβ : ∀ w s, s < w → β w
   split_ifs with h
   · rw [sum_split t _ fun w hw => by rw [hβ w t hw, C_0, zero_mul]]
 
-    rw [map_add (f := _), aeval_X, if_pos h, map_sum]
+    rw [map_add (f := _), aeval_X, ite_eq_left h, map_sum]
     congr 1
     · obtain ⟨a, s⟩ := v
       simp only at h
       subst h
       rfl
     · refine Finset.sum_congr rfl fun l hl => ?_
-      rw [map_mul, aeval_X, algHom_C, if_neg (Finset.mem_filter.1 hl).2.ne, C_1, one_mul]
+      rw [map_mul, aeval_X, algHom_C, ite_eq_right (Finset.mem_filter.1 hl).2.ne, C_1, one_mul]
       rfl
-  · rw [aeval_X, if_neg h, C_1, one_mul]
+  · rw [aeval_X, ite_eq_right h, C_1, one_mul]
 
 theorem colOne_good {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) K} (hF : F ∈ dualWeyl K r n ν) (β : Matrix (Fin n) (Fin n) K)
     (hβ : ∀ w s, s < w → β w s = 0) (t : Fin n) : colOne β t F = (β t t ^ ν t) • F := by
@@ -877,7 +877,7 @@ theorem colSub1_cut (β : Matrix (Fin n) (Fin n) K) (t : Fin n) (hid : ∀ s, s 
         unfold cutCol
         by_cases h1 : w = s
         · subst h1; simp
-        · rw [if_neg h1]
+        · rw [ite_eq_right h1]
           exact hid w (lt_of_le_of_ne (not_lt.1 hw) h1) x
       simp only [hc]
       rw [Finset.sum_eq_single w]
@@ -907,7 +907,7 @@ theorem colSub1_good {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) K} 
       · intro x _ hx
         simp [hx]
       · intro h; exact absurd (Finset.mem_univ _) h
-    rw [h2, AlgHom.id_apply, Finset.prod_eq_one (fun x _ => by rw [h1, if_pos rfl, one_pow]), one_smul]
+    rw [h2, AlgHom.id_apply, Finset.prod_eq_one (fun x _ => by rw [h1, ite_eq_left rfl, one_pow]), one_smul]
   | succ k ih =>
     intro t ht β hβ hid
     have htn : t < n := by omega
@@ -916,14 +916,14 @@ theorem colSub1_good {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) K} 
       intro w s hsw
       unfold cutCol
       by_cases h1 : s = tt
-      · rw [if_pos h1, if_neg (by rw [← h1]; exact hsw.ne')]
-      · rw [if_neg h1]; exact hβ w s hsw
+      · rw [ite_eq_left h1, ite_eq_right (by rw [← h1]; exact hsw.ne')]
+      · rw [ite_eq_right h1]; exact hβ w s hsw
     have hi : ∀ s : Fin n, s.1 < t + 1 → ∀ w, cutCol β tt w s = if w = s then 1 else 0 := by
       intro s hs w
       unfold cutCol
       by_cases h1 : s = tt
-      · rw [if_pos h1, h1]
-      · rw [if_neg h1]
+      · rw [ite_eq_left h1, h1]
+      · rw [ite_eq_right h1]
         refine hid s ?_ w
         have : s.1 ≠ t := fun h => h1 (Fin.ext h)
         omega
@@ -1049,7 +1049,7 @@ theorem colSub1_trans (l j : Fin n) (hlj : l ≠ j) (c : K) :
     · by_cases h2 : w = l
       · by_cases h3 : s = j <;> simp [h1, h2, h3, hlj]
       · simp [h1, h2]
-  simp only [e, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [e, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   split_ifs <;> simp
 
 theorem mem_dualWeyl_of_bor [Infinite K] {ν : Fin n → ℕ} {F : MvPolynomial (Fin r × Fin n) K}
@@ -1068,9 +1068,9 @@ theorem mem_dualWeyl_of_bor [Infinite K] {ν : Fin n → ℕ} {F : MvPolynomial 
       rw [coeff_colSc, MvPolynomial.coeff_smul, smul_eq_mul] at h3
       have h4 : (∏ y, (Matrix.diagonal (fun s => if s = t then x else 1) : Matrix (Fin n) (Fin n) K) y y ^ ν y) = x ^ ν t := by
         rw [Finset.prod_eq_single t]
-        · rw [Matrix.diagonal_apply_eq, if_pos rfl]
+        · rw [Matrix.diagonal_apply_eq, ite_eq_left rfl]
         · intro y _ hy
-          rw [Matrix.diagonal_apply_eq, if_neg hy, one_pow]
+          rw [Matrix.diagonal_apply_eq, ite_eq_right hy, one_pow]
         · intro h; exact absurd (Finset.mem_univ _) h
       rw [h4] at h3
       exact mul_right_cancel₀ hm h3
@@ -1085,7 +1085,7 @@ theorem mem_dualWeyl_of_bor [Infinite K] {ν : Fin n → ℕ} {F : MvPolynomial 
   · intro l j hlj c
     have h2 := h (fun w s => if w = s then 1 else if w = l ∧ s = j then c else 0)
       (fun w s hws => by
-        rw [if_neg hws.ne', if_neg]
+        rw [ite_eq_right hws.ne', ite_eq_right]
         rintro ⟨rfl, rfl⟩
         exact absurd hlj (not_lt.2 hws.le))
       (fun w => by simp)
@@ -1209,7 +1209,7 @@ theorem psi'_monomial (τ : ι) (r : Off ι n τ →₀ ℕ) (G : MvPolynomial (
 theorem psi_monomial (τ : ι) (m : ι × Fin n × Fin n →₀ ℕ) (c : K) :
     psi τ (monomial m c) = monomial (rOf τ m) (monomial (gOf τ m) c) := by
   have h : (monomial m c : Pol K ι n) = psi' τ (monomial (rOf τ m) (monomial (gOf τ m) c)) := by
-    rw [psi'_monomial, blockEmb, rename_monomial, monomial_mul, mul_one, ← split_pos]
+    rw [psi'_monomial, blockEmb, rename_monomial, monomial_mul_monomial, mul_one, ← split_pos]
   rw [h, psi_psi']
 
 def atPos (τ : ι) (π : MvPolynomial (Fin n × Fin n) K →ₗ[K] MvPolynomial (Fin n × Fin n) K) : Pol K ι n →ₗ[K] Pol K ι n :=
@@ -1800,7 +1800,7 @@ theorem period_lattice_finitely_generated : LamFG := by
   have h2 : Module.Finite ℤ (perO AA0 N N') := Module.Finite.trans (𝓞 E) _
   have h3 : AddGroup.FG (perO AA0 N N') := Module.Finite.iff_addGroup_fg.1 h2
   have h4 : (perO AA0 N N').toAddSubgroup.FG := (AddGroup.fg_iff_addSubgroup_fg _).1 h3
-  letI := h4
+  let := h4
   let f : (perO AA0 N N').toAddSubgroup →+ LamC emb δ AA0 N N' :=
     (embH emb δ).comp (perO AA0 N N').toAddSubgroup.subtype |>.codRestrict _ (by
       intro x

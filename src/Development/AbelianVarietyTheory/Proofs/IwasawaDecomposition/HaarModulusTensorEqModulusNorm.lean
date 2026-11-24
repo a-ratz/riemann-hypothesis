@@ -78,12 +78,12 @@ theorem modu_eq_modu_norm : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     rw [Algebra.norm_algebraMap_of_basis b, Fintype.card_fin] at h3
     exact (isUnit_pow_iff two_ne_zero).1 h3
   refine ⟨hku, ?_⟩
-  letI : StarRing (R ⊗[F] E) :=
+  let : StarRing (R ⊗[F] E) :=
     { star := sigR R σ
       star_involutive := hss
       star_mul := fun x y => by rw [map_mul, mul_comm]
       star_add := fun x y => map_add _ x y }
-  haveI : ContinuousStar (R ⊗[F] E) := ⟨GlobalTheory.AdelicUnitaryTop.continuous_sigR R σ⟩
+  have : ContinuousStar (R ⊗[F] E) := ⟨GlobalTheory.AdelicUnitaryTop.continuous_sigR R σ⟩
   rw [modu, modu, dite_eq_left hu, dite_eq_left hku]
   exact GlobalTheory.JR.ModuleNorm.distribHaarChar_eq_norm R (R ⊗[F] E) b.equivFun.symm
     (IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap)

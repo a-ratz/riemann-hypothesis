@@ -157,7 +157,7 @@ theorem deriv_Xi (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E) (hV
 
     simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, sA_single, map_add (f := _),
     smul_eq_mul, mul_add, sum_add_distrib, t1, t2, t3, mul_ite, mul_zero, sum_ite_eq, mem_univ,
-    if_true, adX, actM, Submodule.coe_sum, Submodule.coe_smul, inner_sum, inner_smul_right,
+    ite_true, adX, actM, Submodule.coe_sum, Submodule.coe_smul, inner_sum, inner_smul_right,
     Matrix.mul_apply, Pi.mul_apply, ← mul_sum, ← hB]
     have u1 : ∑ a, ∑ b, X a b * (ei X s c' p.2 *
         l (Finsupp.linearCombination ℂ (wB EM φ X s) (adLW a b p.1)) * A v) =
@@ -259,7 +259,7 @@ theorem lowestKType_vector_exists (ε : Fin n → Bool) (lam : Fin n → ℝ)
     have hs := KTypeIsomorphism.orbit_hasSum hσ hD hV.1 hV.2.1 hZ v
     let P : Submodule ℂ H := LinearMap.range (D.subtype ∘ₗ V.subtype)
     have hmem : σ (NormedSpace.exp Z) ((v : D) : H) ∈ P :=
-      P.closed_of_finiteDimensional.mem_of_tendsto hs (Filter.Eventually.of_forall fun t =>
+      P.isClosed_of_finiteDimensional.mem_of_tendsto hs (Filter.Eventually.of_forall fun t =>
         P.sum_mem fun m _ => P.smul_mem _ ⟨_, rfl⟩)
     obtain ⟨w, hw⟩ := hmem
     exact ⟨w, by rw [he]; exact hw⟩

@@ -154,7 +154,7 @@ private theorem length_local (Ω R : Type) [Field Ω] [IsAlgClosed Ω] [CommRing
   have h2 : Module.length (IsLocalRing.ResidueField Ω) (IsLocalRing.ResidueField R) = 1 := by
     rw [← Module.length_eq_of_surjective (S := Ω) (M := IsLocalRing.ResidueField R)
       IsLocalRing.residue_surjective]
-    haveI : Module.Finite Ω (IsLocalRing.ResidueField R) :=
+    have : Module.Finite Ω (IsLocalRing.ResidueField R) :=
       Module.Finite.of_surjective (IsScalarTower.toAlgHom Ω R (IsLocalRing.ResidueField R)).toLinearMap
         IsLocalRing.residue_surjective
     rw [Module.length_eq_finrank,
@@ -166,15 +166,15 @@ private theorem length_local (Ω R : Type) [Field Ω] [IsAlgClosed Ω] [CommRing
 theorem UpperTheory.Gal.TranscendenceTraces.artSum_of : ArtSum := by
   intro Ω B _ _ _ _ _
   classical
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite Ω B
-  haveI : Fintype (PrimeSpectrum B) := Fintype.ofFinite _
+  have : IsArtinianRing B := IsArtinianRing.of_finite Ω B
+  have : Fintype (PrimeSpectrum B) := Fintype.ofFinite _
   have hbij := PrimeSpectrum.discreteTopology_iff_toPiLocalization_bijective.mp
     (inferInstance : DiscreteTopology (PrimeSpectrum B))
   let e : B ≃ₗ[Ω] PrimeSpectrum.PiLocalization B :=
     LinearEquiv.ofBijective
       ((PrimeSpectrum.toPiLocalization B).restrictScalars Ω).toLinearMap hbij
-  haveI : Module.Finite Ω (PrimeSpectrum.PiLocalization B) := Module.Finite.equiv e
-  haveI : ∀ P : PrimeSpectrum B, Module.Finite Ω (Localization.AtPrime P.asIdeal) := fun P =>
+  have : Module.Finite Ω (PrimeSpectrum.PiLocalization B) := Module.Finite.equiv e
+  have : ∀ P : PrimeSpectrum B, Module.Finite Ω (Localization.AtPrime P.asIdeal) := fun P =>
     Module.Finite.of_surjective
       (LinearMap.proj (R := Ω) (φ := fun P : PrimeSpectrum B => Localization.AtPrime P.asIdeal) P)
       (fun x => ⟨Pi.single P x, by simp⟩)
@@ -200,8 +200,8 @@ private theorem pullHQ_comp' (l : ℕ) [Fact l.Prime] {A B C : Scheme.{0}} (f : 
 theorem UpperTheory.Gal.TranscendenceTraces.corrBCQ_of :
     TrBCQ → CorrBCQ := by
   intro hT l _ n i S' Y' S Y c' c g g' v hpb hf hw hl
-  haveI := c.fin
-  haveI := c'.fin
+  have := c.fin
+  have := c'.fin
   simp only [Corr.opQ]
   rw [← LinearMap.comp_assoc, hT l n i v c'.p c.p g c.w hpb c.wt hl, ← hw,
     LinearMap.comp_assoc, LinearMap.comp_assoc, ← pullHQ_comp', ← pullHQ_comp', hf]
@@ -219,8 +219,8 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.Gal.TranscendenceTraces.corrCompQ_of :
     CycComp → WtBC → WtComp → TrBCQ → TrCompQ → CorrCompQ := by
   intro hC hBC hWC hTB hTC S Y X c d
-  haveI := c.fin
-  haveI := d.fin
+  have := c.fin
+  have := d.fin
   have pb := IsPullback.of_hasPullback d.p c.f
   have hbw := hBC _ _ d.p c.f d.w pb d.wt
   have hw := hWC (pullback.snd d.p c.f) c.p (Wt.comap (pullback.fst d.p c.f) d.w) c.w hbw c.wt
@@ -255,7 +255,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.corrEq_of :
   intro hIF hTR hTP hWP q _ n i S Y B bS bY _ _ ι _ c m hc hq D hD hcyc y
   obtain ⟨G, pG, fG, h, hpG, hh, hp, hf, hmono⟩ :=
     hIF bS bY ι (fun a => (c a).Z) (fun a => (c a).p) (fun a => (c a).f) (fun a => (c a).fin) hc
-  haveI := hpG
+  have := hpG
   have hwt : ∀ a, IsWt (h a ≫ pG) (c a).w := by
     intro a
     rw [hp a]
@@ -263,20 +263,20 @@ theorem UpperTheory.Gal.TranscendenceTraces.corrEq_of :
   have key : ∀ a, (c a).op q n i y =
       tr pG (Wt.push (h a) (c a).w) q n i (pull (ZMod q) (sch.map fG) (tw q i) n y) := by
     intro a
-    haveI := hh a
+    have := hh a
     rw [← hTP q n i (h a) pG (c a).w (hwt a) hq, ← pull_comp, ← Functor.map_comp, hf a]
     simp only [Corr.op, AddMonoidHom.comp_apply]
     rw [hp a]
   simp only [key]
   refine hTR q n i pG ι (fun a => Wt.push (h a) (c a).w) m
-    (fun a => by haveI := hh a; exact hWP (h a) pG (c a).w (hwt a)) hq D hD ?_ _
+    (fun a => by have := hh a; exact hWP (h a) pG (c a).w (hwt a)) hq D hD ?_ _
   intro Ω _ _ z hz
   rw [← hcyc Ω (z ≫ pG) (z ≫ fG) hz]
   refine Finset.sum_congr rfl fun a _ => ?_
   congr 1
   have hs : fib (h a) z = {z' | z' ≫ (c a).p = z ≫ pG ∧ z' ≫ (c a).f = z ≫ fG} := by
     ext z'
-    simp only [fib, Set.mem_setOf_eq]
+    simp only [fib, Set.mem_ofPred_eq]
     constructor
     · rintro rfl
       exact ⟨by rw [Category.assoc, hp a], by rw [Category.assoc, hf a]⟩
@@ -304,14 +304,14 @@ private theorem hl_rel (hTr : TrHl) (hC : CorrEq) (l : ℕ) [Fact l.Prime] (n i 
       ∑ a, m a * (c a).cyc Ω x y = 0) :
     ∑ a, m a • (trHl l (c a).p (c a).w n i ∘ₗ pullHl l (sch.map (c a).f) n i) = 0 := by
   refine LinearMap.ext fun x => Subtype.ext (funext fun k => ?_)
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hq : IsUnit ((l ^ k : ℕ) : Γ(S, ⊤)) := by
     rw [Nat.cast_pow]
     exact hl.pow k
   have h := hC (l ^ k) n i bS bY ι c m hb hq D hD hz (x.1 k)
   have e : ∀ a, ((trHl l (c a).p (c a).w n i ∘ₗ pullHl l (sch.map (c a).f) n i) x).1 k =
       (c a).op (l ^ k) n i (x.1 k) := fun a => by
-    haveI := (c a).fin
+    have := (c a).fin
     exact hTr l n i (c a).p (c a).w (c a).wt hl _ k
   rw [LinearMap.sum_apply, Submodule.coe_sum, Finset.sum_apply]
   refine Eq.trans (Finset.sum_congr rfl fun a _ => ?_) h
@@ -354,7 +354,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.corrGraphQ_of :
     · intro h
       have hs : {z : gp Ω ⟶ S | z ≫ 𝟙 S = x ∧ z ≫ f = y} = {x} := by
         ext z
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, Category.comp_id]
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, Category.comp_id]
         constructor
         · exact fun hz => hz.1
         · rintro rfl
@@ -365,7 +365,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.corrGraphQ_of :
     · intro h
       have hs : {z : gp Ω ⟶ S | z ≫ 𝟙 S = x ∧ z ≫ f = y} = ∅ := by
         ext z
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, Category.comp_id]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, Category.comp_id]
         rintro ⟨rfl, h'⟩
         exact h h'
       change ∑ᶠ z ∈ {z : gp Ω ⟶ S | z ≫ 𝟙 S = x ∧ z ≫ f = y}, Wt.const S d Ω z = 0
@@ -392,7 +392,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.countEx_of :
       ∑ᶠ (j : ι) (_ : j ∈ {j | h.choose ≫ σ j = z}), m j else 0, ?_⟩
   intro Ω _ _ x z hz
   have hex : ∃ x : gp Ω ⟶ T, z ≫ p = x ≫ π := ⟨x, hz⟩
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   set x₀ := hex.choose with hx₀
   have h₀ : z ≫ p = x₀ ≫ π := hex.choose_spec
   obtain ⟨e, he⟩ := hsym Ω x x₀ (hz.symm.trans h₀)
@@ -400,14 +400,14 @@ theorem UpperTheory.Gal.TranscendenceTraces.countEx_of :
   apply finsum_mem_eq_of_bijOn e
   · refine ⟨?_, ?_, ?_⟩
     · intro j hj
-      simp only [Set.mem_setOf_eq] at hj ⊢
+      simp only [Set.mem_ofPred_eq] at hj ⊢
       rw [← (he j).1, hj]
     · intro a _ b _ hab
       exact e.injective hab
     · intro k hk
-      simp only [Set.mem_setOf_eq] at hk
+      simp only [Set.mem_ofPred_eq] at hk
       refine ⟨e.symm k, ?_, by simp⟩
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [(he (e.symm k)).1, Equiv.apply_symm_apply, hk]
   · intro j _
     exact ((he j).2).symm
@@ -438,11 +438,11 @@ theorem UpperTheory.Gal.TranscendenceTraces.coverOne_of :
   · refine ⟨fun x => ?_⟩
     obtain ⟨y, hy⟩ := hx x
     refine ⟨Sigma.ι Wf x y, ?_⟩
-    rw [← Scheme.Hom.comp_apply, Sigma.ι_desc, hy]
+    rw [← Scheme.Hom.comp_apply, Sigma.ι_comp_desc, hy]
   · refine (GlobalTheory.T.sec_sigma_res_bijective R G Wf).1 (funext fun i => ?_)
     show Sec.res (Sigma.ι Wf i) (Sec.map f a') = Sec.res (Sigma.ι Wf i) (Sec.res (Sigma.desc k) b)
     have e : Sec.res (Sigma.ι Wf i) a' = a i := congrFun ha' i
-    rw [← map_res, e, ha, res_res, Sigma.ι_desc]
+    rw [← map_res, e, ha, res_res, Sigma.ι_comp_desc]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TranscendenceTraces.PCoverOne =====
@@ -570,7 +570,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.isolate_of :
   have hU : IsAffineOpen U := hU0
   let u0 : Spec (CommRingCat.of Γ(S, U)) ⟶ S := hU.isoSpec.inv ≫ Scheme.Opens.ι U
   obtain ⟨B, iB, iAB, v0, hfin, hpb⟩ := hC p Γ(S, U) u0
-  haveI := hfin
+  have := hfin
   obtain ⟨y, hy⟩ : ∃ y : (U : Scheme), Scheme.Opens.ι U y = p z := ⟨⟨p z, hzU⟩, rfl⟩
   have ha : u0 (hU.isoSpec.hom y) = p z := by
     show (hU.isoSpec.hom ≫ hU.isoSpec.inv ≫ Scheme.Opens.ι U) y = p z
@@ -579,7 +579,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.isolate_of :
   have hw : v0 (hpb.isoPullback.inv w0) = z := by
     rw [← Scheme.Hom.comp_apply, hpb.isoPullback_inv_fst, hw1]
   obtain ⟨A', W, v, hEt, hW, hvW, hvv, hiso⟩ := hI Γ(S, U) B (hpb.isoPullback.inv w0)
-  haveI := hEt
+  have := hEt
   refine ⟨⟨A'.U, A'.V, A'.u ≫ u0, A'.v ≫ v0, A'.r, A'.pb.paste_horiz hpb⟩, W, v, ?_, hW, hvW, ?_, hiso⟩
   · show Etale (A'.u ≫ u0)
     infer_instance
@@ -600,8 +600,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.isolateSpec_of :
     IsolateSpec := by
   intro R B _ _ _ _ z
   let z' : PrimeSpectrum B := z
-  haveI : z'.asIdeal.IsPrime := z'.isPrime
-  haveI : Algebra.QuasiFiniteAt R z'.asIdeal := inferInstance
+  have : z'.asIdeal.IsPrime := z'.isPrime
+  have : Algebra.QuasiFiniteAt R z'.asIdeal := inferInstance
   obtain ⟨R', _, _, hEt, P, _, _, e, he, P', hP', hlo, hq, heP, -, -, huniq⟩ :=
     Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq (z'.asIdeal.under R) z'.asIdeal
   have pb := (isPullback_SpecMap_of_isPushout _ _ _ _
@@ -675,8 +675,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.locFinSec_of :
     CoverOne → LocFinGeo → LocFinSec := by
   intro hC hG R _ F G f V U r _ b hb
   obtain ⟨W, π, a, hE, hS, ha⟩ := hC R f V b hb
-  haveI := hE
-  haveI := hS
+  have := hE
+  have := hS
   refine (GlobalTheory.T.etaleLocal_property_calculus_rules).2.1 U _ _ (hG π r) ?_
   rintro U' g ⟨s, hs⟩ V' k r' hk
   refine ⟨Sec.res (pullback.lift k r' hk ≫ s) a, ?_⟩
@@ -812,8 +812,8 @@ private theorem length_stalk_eq_of_isIso {X Y : Scheme.{0}} (f : X ⟶ Y) [IsIso
 theorem UpperTheory.Gal.TranscendenceTraces.multSec_of :
     MultSec := by
   intro V Ω _ _ r z hz
-  haveI : IsIso (z ≫ r) := by rw [hz]; infer_instance
-  haveI : IsIso (pullback.fst r (z ≫ r)) := inferInstance
+  have : IsIso (z ≫ r) := by rw [hz]; infer_instance
+  have : IsIso (pullback.fst r (z ≫ r)) := inferInstance
   unfold mult
   rw [length_stalk_eq_of_isIso (pullback.fst r (z ≫ r)) _ (pt z)
     (by rw [← pt_comp, pullback.lift_fst])]
@@ -893,10 +893,10 @@ private theorem normal_affineOpen_integrallyClosed (S : Scheme.{0}) (hN : Nml S)
   have hmem : hU.fromSpec y ∈ U := by
     rw [← SetLike.mem_coe, ← hU.range_fromSpec]
     exact ⟨_, rfl⟩
-  letI := TopCat.Presheaf.algebra_section_stalk S.presheaf ⟨hU.fromSpec y, hmem⟩
-  haveI : IsLocalization.AtPrime (S.presheaf.stalk (hU.fromSpec y)) p := hU.isLocalization_stalk' y hmem
+  let := TopCat.Presheaf.algebra_section_stalk S.presheaf ⟨hU.fromSpec y, hmem⟩
+  have : IsLocalization.AtPrime (S.presheaf.stalk (hU.fromSpec y)) p := hU.isLocalization_stalk' y hmem
   obtain ⟨_, hint⟩ := hN (hU.fromSpec y)
-  haveI := hint
+  have := hint
   exact IsIntegrallyClosed.of_equiv
     (IsLocalization.algEquiv p.primeCompl (S.presheaf.stalk (hU.fromSpec y)) (Localization.AtPrime p)).toRingEquiv
 
@@ -904,8 +904,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.nmlInt_of :
     NmlInt := by
   intro S _ hN s
   obtain ⟨U, hU, hs, -⟩ := exists_isAffineOpen_mem_and_subset (x := s) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨s, hs⟩⟩
-  haveI : IsDomain Γ(S, U) := IsIntegral.component_integral U
+  have : Nonempty U := ⟨⟨s, hs⟩⟩
+  have : IsDomain Γ(S, U) := IsIntegral.component_integral U
   exact ⟨U, hU, hs, inferInstance, normal_affineOpen_integrallyClosed S hN U hU⟩
 end -- clump:auto
 end -- clump:auto
@@ -922,9 +922,9 @@ theorem UpperTheory.Gal.TranscendenceTraces.nmlLoc_of :
     NmlInt → NmlNoeth → NmlLoc := by
   intro hI hN S hS h
   rcases h with h | h
-  · haveI := h
+  · have := h
     exact hI S hS
-  · haveI := h
+  · have := h
     exact hN S hS
 end -- clump:auto
 end -- clump:auto
@@ -960,7 +960,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.nwtDeg_of :
   obtain ⟨hW, hgen⟩ := hN p hLoc
   obtain ⟨d, hd⟩ := hD p (nwt p) hW
   rw [hd]
-  haveI : IsFinite p' := MorphismProperty.of_isPullback (P := @IsFinite) hpb inferInstance
+  have : IsFinite p' := MorphismProperty.of_isPullback (P := @IsFinite) hpb inferInstance
   let Ω := AlgebraicClosure K
   let y : gp Ω ⟶ gp K := Spec.map (CommRingCat.ofHom (algebraMap K Ω))
   have hval := congrArg (fun w : Wt S => w Ω (y ≫ g)) hd
@@ -1001,7 +1001,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.Gal.TranscendenceTraces.nwtFlat_of :
     WtBC → WtFlat → WtUnique → MultBC → NwtFlat := by
   intro hBC hFlat hUniq hMBC Z' S' Z S v p' p g _ _ _ pb hN hD
-  haveI : IsFinite p' := MorphismProperty.of_isPullback pb ‹_›
+  have : IsFinite p' := MorphismProperty.of_isPullback pb ‹_›
   refine hUniq p' _ _ (hBC v p' p g _ pb hN.1) (hFlat p') _ hD ?_
   intro Ω _ _ z hz
   rw [hMBC v p' p g pb]
@@ -1082,12 +1082,12 @@ theorem UpperTheory.Gal.TranscendenceTraces.ptCommon_of :
   obtain ⟨φ', hφ'⟩ := key Ω' z' x (h.symm.trans hx)
   have i1 : Function.Injective φ.hom := φ.hom.injective
   have i2 : Function.Injective φ'.hom := φ'.hom.injective
-  letI := φ.hom.toAlgebra
-  letI := φ'.hom.toAlgebra
-  haveI : Nontrivial (TensorProduct (X.residueField x) Ω Ω') :=
+  let := φ.hom.toAlgebra
+  let := φ'.hom.toAlgebra
+  have : Nontrivial (TensorProduct (X.residueField x) Ω Ω') :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain _ _ _ i1 i2
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (TensorProduct (X.residueField x) Ω Ω')
-  letI := Ideal.Quotient.field M
+  let := Ideal.Quotient.field M
   let ψ : TensorProduct (X.residueField x) Ω Ω' →+* AlgebraicClosure (TensorProduct (X.residueField x) Ω Ω' ⧸ M) :=
     (algebraMap _ _).comp (Ideal.Quotient.mk M)
   have e1 : ∀ c, (φ.hom c ⊗ₜ[X.residueField x] (1 : Ω') : TensorProduct (X.residueField x) Ω Ω') =
@@ -1151,7 +1151,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.sHSec_of :
     (⟨IsLocalRing.maximalIdeal T, inferInstance⟩ : PrimeSpectrum T)
   have hq' : (PrimeSpectrum.asIdeal q).comap (algebraMap T C) = IsLocalRing.maximalIdeal T :=
     congrArg PrimeSpectrum.asIdeal hq
-  haveI : (PrimeSpectrum.asIdeal q).IsPrime := PrimeSpectrum.isPrime q
+  have : (PrimeSpectrum.asIdeal q).IsPrime := PrimeSpectrum.isPrime q
   obtain ⟨s, -⟩ := (GlobalTheory.StrictHensel.strictlyHenselian_iff T).2 ⟨inferInstance, inferInstance⟩
     C (PrimeSpectrum.asIdeal q) hq'
   exact ⟨s⟩
@@ -1171,7 +1171,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.sumComp_of :
   intro hF W V U r p _ _ Ω _ x M _ c
   have hset : fib (r ≫ p) x = ⋃ y ∈ fib p x, fib r y := by
     ext z
-    simp only [fib, Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+    simp only [fib, Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]
     constructor
     · intro hz
       exact ⟨z ≫ r, by rw [Category.assoc]; exact hz, rfl⟩
@@ -1182,7 +1182,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.sumComp_of :
     refine Set.disjoint_left.mpr ?_
     intro z h₁ h₂
     apply hne
-    simp only [fib, Set.mem_setOf_eq] at h₁ h₂
+    simp only [fib, Set.mem_ofPred_eq] at h₁ h₂
     rw [← h₁, ← h₂]
   change ∑ᶠ z ∈ fib (r ≫ p) x, c z = ∑ᶠ y ∈ fib p x, ∑ᶠ z ∈ fib r y, c z
   rw [hset]
@@ -1202,7 +1202,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.sumExLoc_of :
     SecFun → FunSec → FibFin → SumExLoc := by
   intro hSF hFS hFF q _ i Z S p _ w hw A hζ a
   obtain ⟨ζ⟩ := hζ
-  haveI : IsFinite A.r := Sq.finite A
+  have : IsFinite A.r := Sq.finite A
   have hgen : twGen i (ζ.map A.r.appTop.hom) = Sec.res A.r (twGen i ζ) :=
     ((GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1 A.V A.U A.r ζ).symm
   obtain ⟨φ, hφ, hv⟩ := hSF q i A.V (ζ.map A.r.appTop.hom) a
@@ -1251,7 +1251,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.Gal.TranscendenceTraces.trBCQ_of :
     TrHl → TrBC → WtBC → TrBCQ := by
   intro hHl hBC hWt l _ n i Z' S' Z S v p' p g _ w hpb hw hl
-  haveI : IsFinite p' := MorphismProperty.of_isPullback (P := @IsFinite) hpb inferInstance
+  have : IsFinite p' := MorphismProperty.of_isPullback (P := @IsFinite) hpb inferInstance
   have hw' : IsWt p' (Wt.comap v w) := hWt v p' p g w hpb hw
   have hl' : IsUnit ((l : ℕ) : Γ(S', ⊤)) := by
     have := hl.map g.appTop.hom
@@ -1351,7 +1351,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.trCompQ_of :
     intro x
     apply Subtype.ext
     funext k
-    haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     have hlk : IsUnit ((l ^ k : ℕ) : Γ(S, ⊤)) := by
       rw [Nat.cast_pow]
       exact hl.pow k
@@ -1434,7 +1434,7 @@ private theorem trHl_id_apply (hHl : TrHl) (hL : TrLin) (hW : WtLin) (l : ℕ) [
     trHl l (𝟙 S) (Wt.const S d) n i x = d • x := by
   have hw : IsWt (𝟙 S) (Wt.const S d) := hW.2.2 (𝟙 S) d
   refine Subtype.ext (funext fun k => ?_)
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hq : IsUnit ((l ^ k : ℕ) : Γ(S, ⊤)) := by
     rw [Nat.cast_pow]
     exact hu.pow k
@@ -1510,7 +1510,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.trSum_of :
       refine uniq A (a + a') _ _ (hf A (a + a')) ?_
       intro Ω _ _ x
       have hfin : (fib A.r x).Finite := by
-        haveI := Sq.finite A
+        have := Sq.finite A
         exact hFin A.r Ω x
       rw [show Sec.res x (f A a + f A a') = Sec.res x (f A a) + Sec.res x (f A a') by simp [Sec.res],
         hf A a Ω x, hf A a' Ω x, ← finsum_mem_add_distrib hfin]
@@ -1652,7 +1652,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.Gal.TranscendenceTraces.trBC_of :
     TrChar → FamBC → WtBC → RpBasic → RpOp → TrBC := by
   intro hChar hFam hWbc hRp hOp q _ n i Z' S' Z S v p' p g _ w hpb hw hq x
-  haveI : IsFinite p' := MorphismProperty.of_isPullback (P := @IsFinite) hpb inferInstance
+  have : IsFinite p' := MorphismProperty.of_isPullback (P := @IsFinite) hpb inferInstance
   have hw' : IsWt p' (Wt.comap v w) := hWbc v p' p g w hpb hw
   have hq' : IsUnit ((q : ℕ) : Γ(S', ⊤)) := by
     have := hq.map g.appTop.hom
@@ -1693,8 +1693,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.trHl_of :
     refine ⟨{ toFun := fun x => ⟨fun k => tr p w (l ^ k) n i (x.1 k), fun k => ?_⟩
               map_add' := fun x y => Subtype.ext (funext fun k => map_add (tr p w (l ^ k) n i) (x.1 k) (y.1 k))
               map_smul' := fun r x => Subtype.ext (funext fun k => ?_) }, fun _ _ => rfl⟩
-    · haveI := hne (k + 1)
-      haveI := hne k
+    · have := hne (k + 1)
+      have := hne k
       exact (hR (l ^ (k + 1)) (l ^ k) (pow_dvd_pow l (Nat.le_succ k)) n i p w hw (hu (k + 1)) (x.1 (k + 1))).trans
         (congrArg _ (x.2 k))
     · let f : HtL l k (sch.obj Z) n i →+ HtL l k (sch.obj S) n i := tr p w (l ^ k) n i

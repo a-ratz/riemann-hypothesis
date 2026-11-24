@@ -397,7 +397,7 @@ theorem UpperTheory.V.Pr.matIrr_open_gd :
   have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨hη, x, hx, hx'⟩ := (dat_facts D).2.2.2.2.2.2.2.2.2.2 B hv
   have hu : IsUnit (1 + (l : ℤ_[l])) := by
-    simpa using isUnit_one_sub_self_of_mem_nonunits (-(l : ℤ_[l])) (by simpa using PadicInt.prime_p.not_unit)
+    simpa using isUnit_one_sub_self_of_mem_nonunits (-(l : ℤ_[l])) (by simpa using PadicInt.prime_p.not_isUnit)
   obtain ⟨σ, hσ, hσ'⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l B hv hu.unit
   set m := U.normalCore.index * Nat.card (ZMod N)ˣ with hm
   have hm0 : m ≠ 0 := mul_ne_zero Subgroup.FiniteIndex.index_ne_zero Nat.card_pos.ne'

@@ -81,7 +81,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.cutLim :
       | empty => simp [(cutLaws (V := V) ∅ ∅ .empty .empty).2.2.2.2.1]
       | insert n F hn ih =>
         rw [Finset.sum_insert hn, ih, Finset.set_biUnion_insert,
-          (cutLaws (V := V) (I n) _ measurableSet_Ioc (hm F)).2.2.1, ContinuousLinearMap.add_apply]
+          (cutLaws (V := V) (I n) _ measurableSet_Ioc (hm F)).2.2.1, add_apply]
         exact disjoint_iUnion₂_right.2 fun k hk => hdis fun e => hn (e ▸ hk)
     have h1 := key (fun F : Finset ℤ => (⋃ n ∈ F, I n)ᶜ) (fun F => (hm F).compl)
       (fun F G h => compl_subset_compl.2 (biUnion_subset_biUnion_left h)) (by

@@ -467,13 +467,13 @@ private theorem one_mem_colon_one_smul_of_fg {E : Type} [Field E] [NumberField E
     exact one_ne_zero this
   have hmem : (1 : E) ∈ ((Af * Af⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) := by
     rw [mul_inv_cancel₀ hne]; exact FractionalIdeal.one_mem_one _
-  rw [FractionalIdeal.coe_mul] at hmem
+  rw [FractionalIdeal.coeToSubmodule_mul] at hmem
   refine Submodule.mul_induction_on hmem (fun a ha x hx => ?_) (fun _ _ => add_mem)
   have hinv : ∀ y ∈ A, x * y ∈ (1 : Submodule (𝓞 E) E) := by
     intro y hy
-    have := FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coe.mp hx) (show y ∈ Af from hy)
+    have := FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeToSubmodule.mp hx) (show y ∈ Af from hy)
     rw [inv_mul_cancel₀ hne] at this
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_one] at this
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_one] at this
     exact this
   obtain ⟨i, rfl⟩ := Submodule.mem_one.mp (by simpa using hinv 1 h1)
   have hi : i ∈ (1 : Submodule (𝓞 E) E).colon (A : Set E) := by
@@ -562,12 +562,12 @@ theorem exists_inv {K : Type} [Field K] [NumberField K] (𝔟 : Submodule (𝓞 
     intro h
     apply h0
     have : (I : Submodule (𝓞 K) K) = ((0 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K) := by rw [h]
-    rw [FractionalIdeal.coe_zero] at this
+    rw [FractionalIdeal.coeToSubmodule_zero] at this
     exact this
   refine ⟨((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K), ?_⟩
   have h1 : I⁻¹ * I = 1 := inv_mul_cancel₀ hI
   have h2 := congrArg (fun J : FractionalIdeal (nonZeroDivisors (𝓞 K)) K => (J : Submodule (𝓞 K) K)) h1
-  simp only [FractionalIdeal.coe_mul, FractionalIdeal.coe_one] at h2
+  simp only [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_one] at h2
   exact h2
 
 theorem mem_colon_iff {R K : Type} [CommRing R] [CommRing K] [Algebra R K]
@@ -1197,7 +1197,7 @@ theorem idealSt_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     Submodule.FG.of_le (LieLattice.lieLat_fg_and_span_eq_top K _ FP).1
       (Submodule.span_mono fun c ⟨u, hu, _⟩ => ⟨u, hu⟩)
   have hrk : latRank K (FP.eigLat (X.A true).t.act τ) = 1 := by
-    rw [(GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A true) FP 1 0 X.split X.typeP X.ρ_sq).1 τ, if_pos hτ]
+    rw [(GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A true) FP 1 0 X.split X.typeP X.ρ_sq).1 τ, ite_eq_left hτ]
   rw [subP, hdesc FP FB MP hMP τ hτ τE hτE]
   exact _root_.GlobalTheory.IdxTensor.idx_image_eq_map E K τ τE hτE p _ _ _ MP Λ hfgA hrk (fun a => hinj (.inl a))
     (iSupIndep.comp hind (f := fun a : Fin p => ((Sum.inl a : Fin p ⊕ Fin 0), τ)) fun a b e => by simpa using e)
@@ -1364,7 +1364,7 @@ theorem deg_iSup_map_of_gram : ∀ (K : Type) [Field K] [NumberField K] (W V : T
     p * deg hW ℓ - (∑ s : K →+* ℂ, Real.log ‖s y.det‖) / (2 * Module.finrank ℚ K) := by
   intro K _ _ W V _ _ _ _ _ _ _ _ hW hV p M ℓ y hfg hrk hinj hind hgram
   have hr : Module.finrank K (Submodule.span K (ℓ : Set W)) = 1 := hrk
-  haveI : FiniteDimensional K (Submodule.span K (ℓ : Set W)) :=
+  have : FiniteDimensional K (Submodule.span K (ℓ : Set W)) :=
     Module.finite_of_finrank_pos (by rw [hr]; norm_num)
   obtain ⟨c, hcℓ, hc0⟩ : ∃ c ∈ ℓ, c ≠ 0 := by
     by_contra hne
@@ -1467,7 +1467,7 @@ namespace GlobalTheory
 theorem ringOfIntegers_ringHom_injective {E K : Type} [Field E] [NumberField E] [Field K] [NumberField K]
     (σ : 𝓞 E →+* 𝓞 K) : Function.Injective σ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   rw [eq_bot_iff]
   intro n hn
   rw [Ideal.mem_comap, RingHom.mem_ker] at hn
@@ -1494,9 +1494,9 @@ theorem mean_log_norm_embeddings_ringHom :
     (RingOfIntegers.coe_injective).comp (ringOfIntegers_ringHom_injective σ)
   let τ : E →+* K := IsFractionRing.lift hinj
   have hτ : τ (x : E) = (σ x : K) := IsFractionRing.lift_algebraMap hinj x
-  letI : Algebra E K := τ.toAlgebra
-  haveI : IsScalarTower ℚ E K := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : Module.Finite E K := Module.Finite.of_restrictScalars_finite ℚ E K
+  let : Algebra E K := τ.toAlgebra
+  have : IsScalarTower ℚ E K := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : Module.Finite E K := Module.Finite.of_restrictScalars_finite ℚ E K
   have hx : (σ x : K) = algebraMap E K (x : E) := hτ.symm
   rw [sum_log_norm_embeddings, hx, ← Algebra.norm_norm (S := E), Algebra.norm_algebraMap, map_pow,
     ← Module.finrank_mul_finrank ℚ E K]
@@ -1644,8 +1644,8 @@ theorem deg_images : CMCurve → ThetaUnifAV → Out.Laws → HomExtDvr → ∀ 
   obtain ⟨-, -, hinj, hind, -⟩ := Indep.letters_independent hU hL E H K ρ σ₁ p q X FA FB M hM
   have hrP := (_root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A true) FP 1 0 X.split X.typeP X.ρ_sq).1 τ
   have hrQ := (_root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A false) FQ 0 1 X.split X.typeM X.ρ_sq).1 (τ.comp (H.bar : 𝓞 E →+* 𝓞 E))
-  rw [if_pos hτ] at hrP
-  rw [if_neg (by rw [hτ']; exact hne)] at hrQ
+  rw [ite_eq_left hτ] at hrP
+  rw [ite_eq_right (by rw [hτ']; exact hne)] at hrQ
   have hΩP : 2 * deg hP (FP.eigLat (X.A true).t.act τ) = (logOm E χ).re := by
     have := hD E H χ hχ K ρ (X.A true) X.split X.ρ_sq X.typeP FP hP hhP τ hτ
     rw [← this, Complex.ofReal_re]
@@ -1729,8 +1729,8 @@ theorem cmDiff_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have : (2 : 𝓞 K) * ρ = 0 := by linear_combination -e
     exact hρ ((mul_eq_zero.1 this).resolve_left two_ne_zero)
   have hdec := (GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ X.B F p 0 X.split X.typeB X.ρ_sq).1
-  have hrkP : latRank K (F.eigLat X.B.t.act τ) = p := by rw [hdec, if_pos hτ]
-  have hrkQ : latRank K (F.eigLat X.B.t.act τb) = 0 := by rw [hdec, if_neg hne]
+  have hrkP : latRank K (F.eigLat X.B.t.act τ) = p := by rw [hdec, ite_eq_left hτ]
+  have hrkQ : latRank K (F.eigLat X.B.t.act τb) = 0 := by rw [hdec, ite_eq_right hne]
   have hfg : ∀ σ, (F.eigLat X.B.t.act σ).FG := fun σ =>
     Submodule.FG.of_le (LieLattice.lieLat_fg_and_span_eq_top K _ F).1
       (Submodule.span_mono fun c ⟨u, hu, _⟩ => ⟨u, hu⟩)

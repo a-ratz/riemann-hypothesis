@@ -92,7 +92,7 @@ theorem exists_finset_cosetReps : ∀ {D : D7} {a b : ℕ} (β' : GL (Fin b) (Le
         ((valuation (Kw w.1)).map_add _ _).trans (max_le (hx w r s) (hy w r s))
       zero_mem' := fun w r s => by
         show valuation _ (0 : Kw w.1) ≤ _
-        rw [map_zero]; exact zero_le'
+        rw [map_zero]; exact zero_le
       neg_mem' := fun {x} hx w r s => by
         show valuation _ (-(x w r s)) ≤ _
         rw [Valuation.map_neg]; exact hx w r s }
@@ -135,7 +135,7 @@ theorem exists_finset_cosetReps : ∀ {D : D7} {a b : ℕ} (β' : GL (Fin b) (Le
   have hrep : ∀ c ∈ C, rep c ∈ S ∧ ((φ (rep c) : V) : V ⧸ H) = c := by
     intro c hc
     have h : ∃ t, t ∈ S ∧ ((φ t : V) : V ⧸ H) = c := (Finset.mem_filter.1 hc).2
-    simp only [rep, dif_pos h]
+    simp only [rep, dite_eq_left h]
     exact h.choose_spec
   refine ⟨C.image rep, ?_, ?_, ?_⟩
   · intro r hr

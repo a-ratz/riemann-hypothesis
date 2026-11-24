@@ -838,7 +838,7 @@ theorem arc_length_bound_theorem [Fintype (K →ₐ[Qp] LL)] (W : LocWach PD LL 
   obtain ⟨x₁, hx₁f, hx₁⟩ := LV_galois hA hc hRelay hArc hcase hl hW₁ hW₂ hb he₁ hLV u'' hu''I hu''P hu''R
     x'' hx''
 
-  obtain ⟨o, g, hgNL, hog⟩ := hJspan _ hfrFr (fun k hk => if_neg hk) hInvr
+  obtain ⟨o, g, hgNL, hog⟩ := hJspan _ hfrFr (fun k hk => ite_eq_right hk) hInvr
   obtain ⟨x₀, hx₀N, hx₀R⟩ := hNLx g hgNL
   have hsumI : InI W T₂ c (∑ i, o i • uJ i) := InI_sum W _ _ fun i _ => InI_smulO W _ (huJI i)
   have hsumR := RepVV_sum W h00 Finset.univ (fun i => o i • uJ i)
@@ -1157,7 +1157,7 @@ theorem padicValNat_eq_card_dvd_pows (l : ℕ) (hl : 2 ≤ l) (N b : ℕ) (hN : 
   have key : ∀ i, l ^ i ∣ N ↔ i ≤ padicValNat l N := by
     intro i
     have hfin : FiniteMultiplicity l N := Nat.finiteMultiplicity_iff.2 ⟨by omega, hN0⟩
-    rw [padicValNat_def']
+    rw [Nat.padicValNat_def]
     exact hfin.pow_dvd_iff_le_multiplicity
   have hv : padicValNat l N < b := by
     have h1 : l ^ padicValNat l N ≤ N := Nat.le_of_dvd hN0 ((key _).2 le_rfl)
@@ -1275,7 +1275,7 @@ theorem sum_padicValInt_Ico_le_div_sub_one_add_logb (l : ℕ) (hl2 : 2 ≤ l) (a
     have hr : ∑ k ∈ range S, padicValInt l (a + (k:ℤ)) = ∑ k ∈ range S, padicValNat l (m + 1 + k) := by
       refine Finset.sum_congr rfl (fun k _ => ?_)
       have e : a + (k:ℤ) = ((m + 1 + k : ℕ) : ℤ) := by push_cast; omega
-      rw [show padicValInt l (a + (k:ℤ)) = padicValNat l (a + (k:ℤ)).natAbs by simp [padicValInt, padicValNat_def'], e, Int.natAbs_cast]
+      rw [show padicValInt l (a + (k:ℤ)) = padicValNat l (a + (k:ℤ)).natAbs by simp [padicValInt, Nat.padicValNat_def], e, Int.natAbs_natCast]
     rw [hr]
     refine (sum_padicVal_window_le l hl2 m S).trans (add_le_add le_rfl ?_)
     exact Real.logb_le_logb_of_le hl1 (by exact_mod_cast (show 0 < m + S by omega))
@@ -1291,8 +1291,8 @@ theorem sum_padicValInt_Ico_le_div_sub_one_add_logb (l : ℕ) (hl2 : 2 ≤ l) (a
       simp only [Finset.mem_range] at hk
       have e : a + (((S - 1 - k : ℕ)) : ℤ) = -((m + 1 + k : ℕ) : ℤ) := by omega
       show padicValInt l (a + ((S - 1 - k : ℕ) : ℤ)) = _
-      rw [e, show padicValInt l (-((m + 1 + k : ℕ) : ℤ)) = padicValNat l (-((m + 1 + k : ℕ) : ℤ)).natAbs by simp [padicValInt, padicValNat_def'],
-        Int.natAbs_neg, Int.natAbs_cast]
+      rw [e, show padicValInt l (-((m + 1 + k : ℕ) : ℤ)) = padicValNat l (-((m + 1 + k : ℕ) : ℤ)).natAbs by simp [padicValInt, Nat.padicValNat_def],
+        Int.natAbs_neg, Int.natAbs_natCast]
     rw [hr]
     refine (sum_padicVal_window_le l hl2 m S).trans (add_le_add le_rfl ?_)
     exact Real.logb_le_logb_of_le hl1 (by exact_mod_cast (show 0 < m + S by omega))
@@ -1411,7 +1411,7 @@ theorem kappa_bound_of_length {n : ℕ} [NeZero n] (l : ℕ) (hl : 11 ≤ l) (b 
     intro i hi
     simp only [Formalism.MainNotions.ArcLiftingSetup.ArcP.JS, Finset.mem_union] at hi
     rcases hi with hi | hi
-    · rw [if_neg] at hi
+    · rw [ite_eq_right] at hi
       · simp at hi
       rintro ⟨s, -, hs⟩
       rw [hty] at hs
@@ -1615,7 +1615,7 @@ theorem sumAltW [Fintype (K →ₐ[Qp] LL)] [NeZero n] [FiniteDimensional Qp LL]
       Finset.mem_coe.2 (Finset.mem_biUnion.2 ⟨c, hc, Finset.mem_coe.1 hz⟩)
     rw [hE, pow_add, mul_comm, mul_smul]
     refine Submodule.smul_mem _ _ ?_
-    exact SetLike.le_def.1 (sup_le_sup_left (Submodule.span_mono hsub) ((latticeFiniteCohomology PD T₁.L).map f.H1map)) h
+    exact IsConcreteLE.le_iff.1 (sup_le_sup_left (Submodule.span_mono hsub) ((latticeFiniteCohomology PD T₁.L).map f.H1map)) h
   have hsp := split_sum W hcase co.l5 co.split co.ext (arcOf b w S η up size) hOK f hS.2.1.2.1 hW₂ rr
     hY E Zc hcutE
   have hZH1' : ∀ z ∈ (arcOf b w S η up size).cuts.biUnion Zc, z ∈ latticeFiniteCohomology PD T₂.L := by
@@ -1722,7 +1722,7 @@ theorem sumOneW [Fintype (K →ₐ[Qp] LL)] [NeZero n] [FiniteDimensional Qp LL]
       Finset.mem_coe.2 (Finset.mem_biUnion.2 ⟨c, hc, Finset.mem_coe.1 hz⟩)
     rw [hE, pow_add, mul_comm, mul_smul]
     refine Submodule.smul_mem _ _ ?_
-    exact SetLike.le_def.1 (sup_le_sup_left (Submodule.span_mono hsub) ((latticeFiniteCohomology PD T₁.L).map f.H1map)) h
+    exact IsConcreteLE.le_iff.1 (sup_le_sup_left (Submodule.span_mono hsub) ((latticeFiniteCohomology PD T₁.L).map f.H1map)) h
   have hsp := split_sum W hcase co.l5 co.split co.ext (arcOf b w S η up size) hOK f hS.2.1.2.1 hW₂ rr
     hY E Zc hcutE
   have hZH1' : ∀ z ∈ (arcOf b w S η up size).cuts.biUnion Zc, z ∈ latticeFiniteCohomology PD T₂.L := by
@@ -1847,7 +1847,7 @@ theorem sum_alt {CR CA CB CK : ℝ} (hU : AdmBoundsB D HW F Cm CR CA CB CK) (hJ 
   have hl : 11 ≤ l := by
     have h11 := hB.1
     rwa [hp] at h11
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := isAdicComplete_integers_local l LL
+  have : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := isAdicComplete_integers_local l LL
   have h := sumAltW ((HW l).W K 1 LL hG) (coresAt D HW F Cm hU hJ l K LL hG hK hl) f hB hAlt Cb hCb
     (by rw [hp]; exact hsm)
   rw [hp] at h
@@ -1869,7 +1869,7 @@ theorem sum_one {CR CA CB CK : ℝ} (hU : AdmBoundsB D HW F Cm CR CA CB CK) (hJ 
   have hl : 11 ≤ l := by
     have h11 := hB.1
     rwa [hp] at h11
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := isAdicComplete_integers_local l LL
+  have : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := isAdicComplete_integers_local l LL
   have h := sumOneW ((HW l).W K 1 LL hG) (coresAt D HW F Cm hU hJ l K LL hG hK hl) f hB R hR hOne
   rw [hp] at h
   exact h

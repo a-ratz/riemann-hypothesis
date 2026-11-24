@@ -237,8 +237,8 @@ instance isLattice_frameLattice [IsFractionRing A K] (g : GL ι K) : Submodule.I
 
 theorem exists_eq_frameLattice [IsDomain A] [IsPrincipalIdealRing A] [IsFractionRing A K]
     (M : Submodule A (ι → K)) [Submodule.IsFullLattice K M] : ∃ g : GL ι K, M = frameLattice A g := by
-  letI := Submodule.IsLattice.finite K M
-  letI := Submodule.IsLattice.free K M
+  let := Submodule.IsLattice.finite K M
+  let := Submodule.IsLattice.free K M
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex A M) = Fintype.card ι := by
     rw [← Module.finrank_eq_card_chooseBasisIndex, Submodule.IsFullLattice.finrank_eq K M,
       Module.finrank_fintype_fun_eq_card]

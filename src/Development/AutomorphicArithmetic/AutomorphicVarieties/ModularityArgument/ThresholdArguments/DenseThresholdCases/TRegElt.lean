@@ -111,7 +111,7 @@ private theorem regElt_key {K : Type} [Field K] (e x : Kˣ) (m k : ℕ) (hm : 2 
 theorem UpperTheory.V.Z.Sym.Ga.exists_regular_elt_in_open_subgroup_infinite_order :
     ∀ (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (M m : ℕ) (r : G L Ω →* GL (Fin 2) (Qbar l)), _root_.UpperTheory.V.Z.Sym.AdInAlt ι M m r → ∀ H : Subgroup (G L Ω), IsOpen (H : Set (G L Ω)) → ∃ s ∈ H, s ∉ Ga.Bad r ∧ ∃ a b : (Qbar l)ˣ, ¬ IsOfFinOrder (a / b) ∧ (r s : Matrix (Fin 2) (Fin 2) (Qbar l)).charpoly = (X - C (a : Qbar l)) * (X - C (b : Qbar l)) := by
   intro L Ω _ _ _ _ _ _ l _ ι M m r hr H hH
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
   obtain ⟨A, hA⟩ := regElt_place (Ω := Ω) l (Fact.out)
   obtain ⟨b0, k, κ, hk, ⟨g, hg⟩, hκ⟩ := hr.above A hA
   obtain ⟨s, hsH, hsI, hinf⟩ := UpperTheory.V.Z.Sym.Ga.ineInf L Ω l A hA H hH

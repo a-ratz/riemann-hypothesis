@@ -158,7 +158,7 @@ omit [IsAlgClosed C] [CharZero C] in
 private theorem htPoint_exists_e_left_eq_linearMap (P : HTPoint C O c κ N V Ω) (ℓ : V →ₗ[C] C) :
     ∃ w : V, ∀ y, P.e w y = ℓ y := by
   obtain ⟨B, -, -⟩ := htPoint_exists_basis_rho_t_span P
-  haveI : FiniteDimensional C V := Module.Finite.of_basis B
+  have : FiniteDimensional C V := Module.Finite.of_basis B
   have hinj : Function.Injective P.e := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro x hx
@@ -622,7 +622,7 @@ theorem chart_comp_zero_of
     exact_mod_cast this
   obtain ⟨C, O, _, _, _, _, _, v, φ, V, Ω', _, _, _, _, _, _, _, _, P, ι, hv, hφ, hcen, hred⟩ :=
     htest 𝔮 h𝔮 hht hp𝔮
-  letI : Algebra A O := φ.toAlgebra
+  let : Algebra A O := φ.toAlgebra
   have hOC := hv.hom_inj
   let ψ : K →+* C := IsFractionRing.lift (g := (algebraMap O C).comp φ) (hOC.comp hφ)
   have hψ : ∀ a, ψ (algebraMap A K a) = algebraMap O C (φ a) := fun a => IsFractionRing.lift_algebraMap _ a

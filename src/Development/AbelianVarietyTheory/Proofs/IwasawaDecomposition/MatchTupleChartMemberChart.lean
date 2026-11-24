@@ -134,7 +134,7 @@ theorem coset_match : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → �
           cosetIn ((I.stp u I.mu0 i).act c0.1 κ0 ((I.stp u I.mu0 i).rep c0)) = cosetIn ((I.stp u I.mu0 i).rep c0)) := by
   intro B X I hI l u a i h1 hm c b0
   classical
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   by_cases hl : i + 1 = B.R.m
   · have hq : ∀ w ∈ (B.primes X).vGs, ((qOf w : ℕ) : 𝓞 B.fields.E) ∉ w.asIdeal ^ 2 :=
       fun _ hw => GlobalTheory.TopStep.qOf_notMem_sq (GlobalTheory.Mem.FieldsLaws.fields_ok B) l.pr hw
@@ -152,7 +152,7 @@ theorem coset_match : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → �
         (extTo (QE I.sel (I.tup I.mu0 : Chr B.fields.F B.fields.E B.fields.K)) r.1.1).deco.1.N := by
       rw [ysAt_ys_of_eq _ _ _ hl]
       refine ⟨y, (mem_locLat _ _ _ _).2 fun P => ?_, rfl⟩
-      rw [if_pos (hGs P), _root_.zpow_neg_one, inv_inv]
+      rw [ite_eq_left (hGs P), _root_.zpow_neg_one, inv_inv]
       exact hy P.1 (hGs P)
     let q0 : PtAt B.R I.sel (I.tup I.mu0) (I.cst I.mu0) u i := ⟨(extTo _ r.1.1, Y0), hY0⟩
     have hbar : MemChart.bar q0 = MemChart.bar r := by
@@ -295,7 +295,7 @@ omit [StarRing E] in
 theorem frOf_apply {n : ℕ} {M : Matrix (Fin n) (Fin n) (𝓞 E)} (h : IsUnit (matE M).det) (v : Sp E n) :
     frOf M v = matE M *ᵥ v := by
   classical
-  rw [frOf, dif_pos h]
+  rw [frOf, dite_eq_left h]
   rfl
 
 omit [StarRing E] in
@@ -340,7 +340,7 @@ theorem exists_lift (hc : CMData F E) (n : ℕ) (Q : Finset (HeightOneSpectrum (
       fun _ _ _ i => i.elim0, fun _ r => r.elim0⟩
     rw [Subsingleton.elim z 0, Matrix.mulVec_zero]
     exact iff_of_true (zero_mem _) (zero_mem _)
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let lift : ∀ P : HeightOneSpectrum (𝓞 E), 𝓞 E ⧸ P.asIdeal → 𝓞 E := fun P =>
     Function.surjInv (Ideal.Quotient.mk_surjective (I := P.asIdeal))
   have hlift : ∀ (P : HeightOneSpectrum (𝓞 E)) c, Ideal.Quotient.mk P.asIdeal (lift P c) = c := fun P c =>
@@ -348,7 +348,7 @@ theorem exists_lift (hc : CMData F E) (n : ℕ) (Q : Finset (HeightOneSpectrum (
   let M : HeightOneSpectrum (𝓞 E) → Matrix (Fin n) (Fin n) (𝓞 E) := fun P =>
     if h : P ∈ Q then (x ⟨P, h⟩ : Matrix (Fin n) (Fin n) (𝓞 E ⧸ P.asIdeal)).map (lift P) else 1
   have hM : ∀ (P : Q) r j, M P.1 r j = lift P.1 ((x P).1 r j) := fun P r j => by
-    simp only [M, dif_pos P.2]
+    simp only [M, dite_eq_left P.2]
     rfl
   have hdet : ∀ P ∈ Q, (M P).det ∉ P.asIdeal := by
     intro P hP hmem
@@ -360,7 +360,7 @@ theorem exists_lift (hc : CMData F E) (n : ℕ) (Q : Finset (HeightOneSpectrum (
     rw [Ideal.Quotient.eq_zero_iff_mem.2 hmem] at h1
     have hu : IsUnit (x ⟨P, hP⟩ : Matrix (Fin n) (Fin n) (𝓞 E ⧸ P.asIdeal)).det := Matrix.isUnits_det_units (x ⟨P, hP⟩)
     rw [← h1] at hu
-    haveI : P.asIdeal.IsPrime := P.isPrime
+    have : P.asIdeal.IsPrime := P.isPrime
     exact not_isUnit_zero hu
   have hfr : ∀ P ∈ Q, CharValCompare.IsFr P (Formalism.UG.CS.globLat (1 : GL (Fin n) (AfE F E)) (stdLat E n)) (frOf (M P)) := by
     intro P hP
@@ -880,7 +880,7 @@ theorem natCast_not_mem_of_goodPl {F : Type} [Field F] [NumberField F] (E : Type
   have h0 : ((g : 𝓞 F ⧸ w.asIdeal)) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk w.asIdeal), Ideal.Quotient.eq_zero_iff_mem]; exact hmem
   have hdvd : ringChar (𝓞 F ⧸ w.asIdeal) ∣ g := ringChar.dvd h0
-  haveI : Nontrivial (𝓞 F ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
+  have : Nontrivial (𝓞 F ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
   have hne : ringChar (𝓞 F ⧸ w.asIdeal) ≠ 1 := CharP.ringChar_ne_one
   rcases (Nat.dvd_prime hg).1 hdvd with h | h
   · exact hne h
@@ -912,8 +912,8 @@ theorem locCQ_conj_iff_eq_one : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), 
       rw [MonoidHom.map_mul, MonoidHom.map_mul, MonoidHom.map_inv, htv, hsv, inv_one, one_mul, one_mul]
     have entry := bc_prV_entry w _ hm r j
     split_ifs with hrj
-    · exact GlobalTheory.Mem.Col2.FullDt.adAt_eq_one_of_prV P.1 (by rw [hvw, entry, if_pos hrj])
-    · exact GlobalTheory.Mem.Col2.TilX.adAt_eq_zero_of_prV P.1 _ (by rw [hvw, entry, if_neg hrj])
+    · exact GlobalTheory.Mem.Col2.FullDt.adAt_eq_one_of_prV P.1 (by rw [hvw, entry, ite_eq_left hrj])
+    · exact GlobalTheory.Mem.Col2.TilX.adAt_eq_zero_of_prV P.1 _ (by rw [hvw, entry, ite_eq_right hrj])
   constructor
   · intro hL
     funext P
@@ -978,7 +978,7 @@ theorem match_idx : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.
   intro B X I hI _hP l u a Q i hi h1 hm hQ
   by_cases ha : a = I.mu0
   · subst ha
-    haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+    have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
     refine ⟨fun β => β.2.choose, fun _ => 1, fun _ => ⟨DecoF.base _ _ _ _ _, isPtOf_base _, rfl⟩,
       fun _ _ _ => map_one _, fun _ _ => rfl, fun β => ⟨β.2.choose, Subtype.ext β.2.choose_spec, fun s _ => ?_⟩⟩
     simp only [inv_one, one_mul, mul_one]

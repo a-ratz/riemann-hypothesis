@@ -68,7 +68,7 @@ theorem exists_reps {G X : Type} [Group G] (J J' : Subgroup G) (φ : G → X) (A
   have hfin : (φ '' (J : Set G)).Finite := hA.subset (by rintro _ ⟨κ, hκ, rfl⟩; exact hφ κ hκ)
   have hs : ∀ x : ↥(φ '' (J : Set G)), ∃ u, u ∈ J ∧ φ u = x.1 := fun x => x.2
   choose s hsJ hsφ using hs
-  haveI := hfin.fintype
+  have := hfin.fintype
   refine ⟨Finset.univ.image s, fun u hu => ?_, fun κ hκ => ⟨s ⟨φ κ, κ, hκ, rfl⟩, ⟨?_, ?_⟩, ?_⟩⟩
   · obtain ⟨x, -, rfl⟩ := Finset.mem_image.1 hu
     exact hsJ x

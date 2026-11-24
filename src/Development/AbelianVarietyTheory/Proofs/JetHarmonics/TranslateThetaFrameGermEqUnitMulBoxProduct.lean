@@ -92,13 +92,13 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   obtain ⟨hL, hL2, -, hL4, -⟩ := GlobalTheory.firstFiveLaws
   have hT := GlobalTheory.twistBaseChange_and_valuation_statements.1
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y C hTr P hTor _ ϖ hϖ Q _ F _ _ _ _ _ _ v hv n D' A' G' _ _ pD pA pG U' PU _ oD' hx hact τ hτ hEL
     α N hN hα θ₁ θα₁ hθ₁ hθα₁ θ θα hθ hθα p w ζ x t₀ t q e σ' h hw _ hfin hpx hΦt hsm hexp hgerm
   subst e
   have hG := hL.globalFns
   have hk : 1 ≤ 1 * N := by omega
-  haveI : CharZero T.V := (algebraMap T.V F).charZero
+  have : CharZero T.V := (algebraMap T.V F).charZero
   obtain ⟨p₁, hp, hp₁⟩ := UnboxQk.exists_isBoxQk_toA hL hL2 hL4 hT T.V E H C.I.G P hTor n D' A' G' pD pA pG U' PU F
     (1 * N) hk p
   have hw₁ : ∀ i, ∃ w₁ : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F (p₁ i).g.b)

@@ -108,9 +108,9 @@ theorem lines_conj (hσ : ∀ x, σ (σ x) = x) {γ : Multiplicative ℝ →* UA
     {a : UA σ X.J} (ha : a ∈ UAt σ X (evI F)) : (MulAut.conj a).toMonoidHom.comp γ ∈ Lines σ X := by
   let e : UA σ X.J ≃* GAd σ ((1 : E) • X.J.map σ) :=
     MulEquiv.subgroupCongr (GlobalTheory.SiegelSet.ug_eq_hr (F := F) (J := X.J) hσ (one_ne_zero : (1 : E) ≠ 0))
-  have he : Continuous e := continuous_subtype_val.subtype_mk _
-  have he' : Continuous e.symm := continuous_subtype_val.subtype_mk _
-  haveI : ContinuousMul (UA σ X.J) := ⟨by
+  have he : Continuous e := continuous_subtypeVal.subtype_mk _
+  have he' : Continuous e.symm := continuous_subtypeVal.subtype_mk _
+  have : ContinuousMul (UA σ X.J) := ⟨by
     have h3 : (fun p : UA σ X.J × UA σ X.J => p.1 * p.2) = fun p => e.symm (e p.1 * e p.2) :=
       funext fun p => by rw [← map_mul, MulEquiv.symm_apply_apply]
     rw [h3]

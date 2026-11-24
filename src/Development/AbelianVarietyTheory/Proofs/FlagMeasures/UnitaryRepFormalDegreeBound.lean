@@ -207,7 +207,7 @@ theorem eq_zero_of_exp_decay_of_fourier_eq_zero_on_halfLine :
       (isOpen_lt Complex.continuous_im continuous_const)
   have hUc : Convex ℝ U := (convex_halfSpace_im_gt _).inter (convex_halfSpace_im_lt _)
   have hre : ∀ x : ℝ, (x : ℂ) ∈ U := fun x => by
-    simp only [hUdef, mem_inter_iff, mem_setOf_eq, Complex.ofReal_im]
+    simp only [hUdef, mem_inter_iff, mem_ofPred_eq, Complex.ofReal_im]
     constructor <;> linarith
   have hint : Integrable (fun s : ℝ => A * Real.exp (-(e / 2 * |s|))) :=
     (integrable_exp_neg_mul_abs_line (half_pos he)).const_mul A
@@ -309,7 +309,7 @@ theorem integral_prod_nonneg (ψ : ℝ → ℂ) (hc : Continuous ψ) (C : ℝ) (
         have e : ∀ l : Fin k, P.map (fun t => t l) = μ := fun l =>
           (measurePreserving_eval (fun _ : Fin k => μ) l).map_eq
         rw [e, e] at h2
-        rw [if_neg h, zero_add, hI, ← h2, integral_map (by fun_prop)]
+        rw [ite_eq_right h, zero_add, hI, ← h2, integral_map (by fun_prop)]
         exact (hc.comp (by fun_prop)).aestronglyMeasurable
     have h0 : 0 ≤ ∫ t, ∑ i, ∑ j, ψ (t j - t i) ∂P := integral_nonneg (fun t => hp k t)
     rw [MeasureTheory.integral_finsetSum _ (fun i _ => MeasureTheory.integrable_finsetSum _ (fun j _ => hint i j))] at h0
@@ -335,7 +335,7 @@ theorem integral_nonneg_of_sums (ψ : ℝ → ℂ) (hc : Continuous ψ) (C : ℝ
     (hp : ∀ (k : ℕ) (t : Fin k → ℝ), 0 ≤ ∑ i, ∑ j, ψ (t j - t i)) :
     0 ≤ ∫ s, ψ s := by
   let μ : Measure ℝ := volume.restrict (Set.Ioo 0 1)
-  haveI : IsProbabilityMeasure μ := ⟨by simp [μ]⟩
+  have : IsProbabilityMeasure μ := ⟨by simp [μ]⟩
   let G : ℕ → ℝ → ℂ := fun n x => ∫ s in (-((n : ℝ) * x))..((n : ℝ) * (1 - x)), ψ s
   have hG : ∀ n x, G n x = (n : ℝ) • ∫ y, ψ ((n : ℝ) * (y - x)) ∂μ := by
     intro n x
@@ -724,10 +724,10 @@ theorem eq_smul_map (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν : Measure G
     (h : IsHaarSub (N : Set G) ν) (μ : Measure N) [μ.IsHaarMeasure] :
     ∃ c : NNReal, ν = c • μ.map Subtype.val := by
   obtain ⟨hne, hfin, hnull, hinv⟩ := h
-  have hemb : MeasurableEmbedding (Subtype.val : N → G) := MeasurableEmbedding.subtype_coe hN.measurableSet
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set G)
-  haveI : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set G))
+  have hemb : MeasurableEmbedding (Subtype.val : N → G) := MeasurableEmbedding.subtypeVal hN.measurableSet
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set G)
+  have : BorelSpace N := Subtype.borelSpace (fun x => x ∈ (N : Set G))
   set ν₀ : Measure N := ν.comap Subtype.val with hν₀
 
   have hback : ν₀.map Subtype.val = ν := by
@@ -736,15 +736,15 @@ theorem eq_smul_map (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν : Measure G
     intro hxN
     exact hx ⟨⟨x, hxN⟩, rfl⟩
   have hcomap : ∀ ρ : Measure N, (ρ.map Subtype.val).comap Subtype.val = ρ := fun ρ => hemb.comap_map ρ
-  haveI : Measure.IsMulLeftInvariant ν₀ := ⟨fun g => by
+  have : Measure.IsMulLeftInvariant ν₀ := ⟨fun g => by
     rw [← hcomap (ν₀.map (g * ·)), Measure.map_map hemb.measurable (measurable_const_mul g)]
     have hfun : (Subtype.val ∘ fun x : N => g * x) = (fun y : G => (g : G) * y) ∘ Subtype.val := rfl
     rw [hfun, ← Measure.map_map (measurable_const_mul (g : G)) hemb.measurable, hback, hinv g g.2, ← hback,
       hcomap]⟩
-  haveI : IsFiniteMeasureOnCompacts ν₀ := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts ν₀ := ⟨fun K hK => by
     rw [hν₀, hemb.comap_apply]
-    haveI := hfin
-    exact (hK.image continuous_subtype_val).measure_lt_top⟩
+    have := hfin
+    exact (hK.image continuous_subtypeVal).measure_lt_top⟩
   refine ⟨Measure.haarScalarFactor ν₀ μ, ?_⟩
   have hsm := Measure.isMulLeftInvariant_eq_smul ν₀ μ
   calc ν = ν₀.map Subtype.val := hback.symm
@@ -754,7 +754,7 @@ theorem eq_smul_map (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν : Measure G
 theorem exists_exp_smul (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν ν' : Measure G}
     (h : IsHaarSub (N : Set G) ν) (h' : IsHaarSub (N : Set G) ν') :
     ∃ t : ℝ, ν' = ENNReal.ofReal (Real.exp t) • ν := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
   obtain ⟨c, hc⟩ := eq_smul_map N hN h (Measure.haar)
   obtain ⟨c', hc'⟩ := eq_smul_map N hN h' (Measure.haar)
   have hc0 : c ≠ 0 := by
@@ -768,7 +768,7 @@ theorem exists_exp_smul (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν ν' : M
   refine ⟨Real.log ((c' : ℝ) / c), ?_⟩
   rw [Real.exp_log hpos, ← NNReal.coe_div, ENNReal.ofReal_coe_nnreal, hc, hc']
   ext s _
-  simp only [ENNReal.smul_def, Measure.smul_apply, smul_eq_mul]
+  simp only [ENNReal.smul_def, smul_apply, smul_eq_mul]
   rw [← mul_assoc, ← ENNReal.coe_mul, div_mul_cancel₀ _ hc0]
 
 
@@ -784,7 +784,7 @@ theorem isHaarSub_conj {N : Set G} {ν : Measure G} (hν : IsHaarSub N ν) (g : 
   · intro h0
     exact hne ((Measure.map_eq_zero_iff e.measurable.aemeasurable).1 h0)
   · refine ⟨fun K hK => ?_⟩
-    haveI := hfin
+    have := hfin
     rw [e.map_apply]
     have hc : IsCompact ((fun x => g⁻¹ * x * g) '' K) := hK.image (by fun_prop)
     refine lt_of_le_of_lt (measure_mono fun x hx => ?_) hc.measure_lt_top
@@ -807,7 +807,7 @@ private theorem eq_of_exp_smul_measure_eq {X : Type} [MeasurableSpace X] {ν : M
     (htop : ν S ≠ ⊤) {t t' : ℝ} (h : ENNReal.ofReal (Real.exp t) • ν = ENNReal.ofReal (Real.exp t') • ν) :
     t = t' := by
   have h1 := congrArg (fun ρ : Measure X => (ρ S).toReal) h
-  simp only [Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
+  simp only [smul_apply, smul_eq_mul, ENNReal.toReal_mul,
     ENNReal.toReal_ofReal (Real.exp_pos _).le] at h1
   exact Real.exp_injective (mul_right_cancel₀ (ENNReal.toReal_pos h0 htop).ne' h1)
 
@@ -844,7 +844,7 @@ theorem modulus (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν : Measure G} (h
     rw [← Measure.measure_univ_eq_zero]
     have hU : (Set.univ : Set G) = ⋃ k : ℕ, {m | d m ≤ (k : ℝ)} := by
       ext x
-      simp only [Set.mem_univ, Set.mem_iUnion, Set.mem_setOf_eq, true_iff]
+      simp only [Set.mem_univ, Set.mem_iUnion, Set.mem_ofPred_eq, true_iff]
       exact exists_nat_ge (d x)
     rw [hU]
     exact measure_iUnion_null hcon
@@ -883,7 +883,7 @@ theorem modulus (N : Subgroup G) (hN : IsClosed (N : Set G)) {ν : Measure G} (h
     have hle : ν.map (e s) S ≤ ENNReal.ofReal (C * Real.exp (c * ((r0 : ℝ) + 2 * |s|))) := by
       rw [(e s).map_apply]
       exact (measure_mono hsub).trans (hv _ (by positivity))
-    rw [hT s, Measure.smul_apply, smul_eq_mul, ← ENNReal.ofReal_toReal hStop,
+    rw [hT s, smul_apply, smul_eq_mul, ← ENNReal.ofReal_toReal hStop,
       ← ENNReal.ofReal_mul (Real.exp_pos _).le] at hle
     have hpos : 0 < Real.exp (T s) * (ν S).toReal := mul_pos (Real.exp_pos _) hm0
     have hle' : Real.exp (T s) * (ν S).toReal ≤ C * Real.exp (c * ((r0 : ℝ) + 2 * |s|)) := by
@@ -978,8 +978,8 @@ theorem eq_zero_of_cutoff [IsTopologicalGroup G] [LocallyCompactSpace G] [Second
     (hβ1 : ∀ y, ∫⁻ m, β (m⁻¹ * y) ∂ν = 1) (F : G → ℂ) (hF : Continuous F)
     (hinv : ∀ m ∈ N, ∀ g, F (m * g) = F g)
     (h0 : (fun g => ((β g).toReal : ℂ) * (F g * star (F g))) =ᵐ[μ] 0) : ∀ g, F g = 0 := by
-  haveI := hν.2.1
-  have hFm : Measurable fun g => ‖F g‖ₑ := hF.measurable.enorm
+  have := hν.2.1
+  have hFm : Measurable fun g => ‖F g‖ₑ := hF.measurable.eNorm
   have h1 : ∫⁻ g, β g * ‖F g‖ₑ ∂μ = 0 := by
     refine (lintegral_eq_zero_iff (hβ.mul hFm)).2 ?_
     filter_upwards [h0] with g hg
@@ -1334,7 +1334,7 @@ theorem constant_term_zero : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule 
   let ρ : UJ ε → (H →L[ℂ] H) := fun g => σ (umat g)
   let D : UJ ε → ℝ := fun g => dOp (umat g)
   have hmem : ∀ g : UJ ε, umat g ∈ UJset ε := fun g => g.2
-  have hcu : Continuous fun g : UJ ε => umat g := Units.continuous_val.comp continuous_subtype_val
+  have hcu : Continuous fun g : UJ ε => umat g := Units.continuous_val.comp continuous_subtypeVal
   have hρ : IsURep ρ := ⟨hσ.1.1, fun a b => hσ.1.2 _ (hmem a) _ (hmem b), fun g => hσ.2.1 _ (hmem g),
     fun v => (hσ.2.2 v).comp_continuous hcu hmem⟩
   have hD : ∀ g g', D (g * g') ≤ D g + D g' := fun g g' =>

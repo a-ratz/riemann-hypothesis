@@ -334,7 +334,7 @@ theorem chart_facts [IsIntegral X] [SetLike.GradedMonoid 𝒜] (hL : L.IsLB)
       ∀ e, ∀ y ∈ 𝒜 (N * e), ∃ (n : ℕ) (G : MvPolynomial σ K), G.IsHomogeneous (n + e) ∧
         y * (Φ N (s i) : R) ^ n = MvPolynomial.aeval (fun j => (Φ N (s j) : R)) G := by
   obtain ⟨k, hk⟩ := exists_chart_pow hL (genericPoint X)
-  letI : Algebra K (X.presheaf.stalk (genericPoint X)) :=
+  let : Algebra K (X.presheaf.stalk (genericPoint X)) :=
     ((gr _ ⊤ trivial).comp (constHom p ⊤)).toAlgebra
   have hc : ∀ (U : X.Opens) (hU : genericPoint X ∈ U) a, gr _ U hU (constFn p U a) =
       algebraMap K (X.presheaf.stalk (genericPoint X)) a := fun U hU a =>
@@ -416,7 +416,7 @@ theorem card_fibre_zeros_le {K : Type} [Field K] [IsAlgClosed K] {X : Scheme.{0}
     Nat.card {z : Pt // ν z = b ∧ ¬ ⊤ ≤ pt z ⁻¹ᵁ Out.nonzeroLocus u} ≤
       N ^ g * g.factorial * d * a ^ (g - 1) := by
   choose ev hev hevr using fun z => exists_ev p Φ ρ hL hρc hρ (pt z) (hpt z)
-  letI alg : ∀ i, Algebra K Γ(X, Out.nonzeroLocus (s i)) := fun i => (constHom p _).toAlgebra
+  let alg : ∀ i, Algebra K Γ(X, Out.nonzeroLocus (s i)) := fun i => (constHom p _).toAlgebra
   have hgen' : ∀ i, Function.Surjective (MvPolynomial.aeval (r i) : MvPolynomial (Fin m) K →ₐ[K] _) :=
     fun i f => by
       obtain ⟨F, hF⟩ := hgen i f

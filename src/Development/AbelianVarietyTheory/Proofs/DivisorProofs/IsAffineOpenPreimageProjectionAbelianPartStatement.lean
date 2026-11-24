@@ -116,7 +116,7 @@ theorem GlobalTheory.RayEv.Ray.isAffineOpen_preimage_q : ∀ (R : Type) [CommRin
     [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa) (V : Q.P.A.left.affineOpens),
     IsAffineOpen (Y.q.left ⁻¹ᵁ V.1) := by
   intro R _ _ Q O _ _ _ oa Y V
-  haveI := Y.isAffineHom_q
+  have := Y.isAffineHom_q
   exact V.2.preimage Y.q.left
 end -- clump:auto
 end -- clump:auto

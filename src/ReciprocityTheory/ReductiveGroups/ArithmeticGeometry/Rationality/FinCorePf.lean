@@ -151,7 +151,7 @@ theorem cauchy_inequality_on_torus : CauchyTorusStatement := by
     rw [norm_mul, hprodnorm, mul_one]
     have hψ : (ψ : Fin n → ℤ) ∉ F := fun h => ψ.2 (Finset.mem_coe.2 h)
     rw [Set.Finite.mem_toFinset] at hψ
-    simp only [Set.mem_setOf_eq, not_not] at hψ
+    simp only [Set.mem_ofPred_eq, not_not] at hψ
     exact le_of_lt hψ
   have hne : ‖∑ ψ ∈ F, c ψ * ∏ i, τ i ^ ψ i‖ ≠
       ‖∑' ψ : ↑((F : Set (Fin n → ℤ))ᶜ), c ψ * ∏ i, τ i ^ (ψ : Fin n → ℤ) i‖ := by

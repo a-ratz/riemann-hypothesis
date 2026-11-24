@@ -223,7 +223,7 @@ theorem torsion_reduction_trivial (S : StepLevel F E σ J T f bad) (G : GLoc F E
     refine ⟨fun hqp => ?_, ?_⟩
     · have h1 := hInJ.1 p q (by
         unfold blkOf
-        rw [if_pos (lt_of_lt_of_le q.2 ha), if_pos (lt_of_lt_of_le p.2 ha)]
+        rw [ite_eq_left (lt_of_lt_of_le q.2 ha), ite_eq_left (lt_of_lt_of_le p.2 ha)]
         exact hqp)
       rw [hred] at h1
       exact h1
@@ -465,7 +465,7 @@ theorem level_places_prime_to_type (A : AtTTied u) (v : (D.mem u).A.vT) : (A.eV 
 theorem rank_zero_le_type_level : D.R.N 0 ≤ aOf D.R 0 := by
   have := D.R.two_le_m
   unfold aOf Ranks.N
-  rw [if_pos (by omega)]
+  rw [ite_eq_left (by omega)]
   simp
 
 theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLoc D.host.F D.host.E (sigD D) D.host.g)
@@ -495,7 +495,7 @@ theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLo
         bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) (g⁻¹ ^ N0)
       rw [hzp N0]; group
     obtain ⟨s, hs⟩ := hmem
-    haveI := hS c
+    have := hS c
     rw [Subsingleton.elim s 1, map_one] at hs
     exact (congrArg Subtype.val hs).symm
   have hcop : ∀ (i : Fin 2) (j N : ℕ), Nat.Coprime N (D.host.g i) → (g⁻¹ ^ j) ^ N = 1 → g⁻¹ ^ j = 1 := by
@@ -523,7 +523,7 @@ theorem rank_zero_le_weight : D.R.N 0 ≤ D.R.k := by
   have h := rank_zero_le_type_level (D := D)
   have e : aOf D.R 0 = D.R.k := by
     unfold aOf
-    rw [if_pos (by have := D.R.two_le_m; omega)]
+    rw [ite_eq_left (by have := D.R.two_le_m; omega)]
     simp
   omega
 
@@ -547,10 +547,10 @@ theorem diamond_free_on_classes (Tf : Forms0 D u) (hS : Formalism.MainNotions.pr
   have hT := (D.mem u).A.T_prime
   have hbad : ∀ w ∈ badG D, bc (prV (E := D.host.E) w) δ.1 = 1 := fun w hw =>
     hδ.1 w (fun v e => level_places_prime_to_type Tf.atT v (by subst e; exact hw))
-  haveI : Fact (D.mem u).A.T.Prime := ⟨hT⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨hT⟩
   have hkT : ∀ v, ((D.mem u).A.T : ℤ) ∣ (k ^ ((D.mem u).A.T - 1)) v - 1 := by
     intro v
-    haveI : CharP ((D.mem u).A.Fv v) (D.mem u).A.T := charP_of_card_eq_prime ((D.mem u).A.card_Fv v)
+    have : CharP ((D.mem u).A.Fv v) (D.mem u).A.T := charP_of_card_eq_prime ((D.mem u).A.card_Fv v)
     rw [← CharP.intCast_eq_zero_iff ((D.mem u).A.Fv v) (D.mem u).A.T, Pi.pow_apply]
     push_cast
     rw [← (D.mem u).A.card_Fv v, FiniteField.pow_card_sub_one_eq_one _ (hk0 v), sub_self]
@@ -561,7 +561,7 @@ theorem diamond_free_on_classes (Tf : Forms0 D u) (hS : Formalism.MainNotions.pr
     (fun κ hκ => pow_mul_mem_of_normalises _ δ.1 (fun κ' hκ' => multi_diamond_conj_mem _ _ _ hδ κ' hκ') _ hpowU κ hκ) hfix
   intro v
   have hdvd := multi_diamond_multiplier_congr _ hT _ _ hδ hmem v
-  haveI : CharP ((D.mem u).A.Fv v) (D.mem u).A.T := charP_of_card_eq_prime ((D.mem u).A.card_Fv v)
+  have : CharP ((D.mem u).A.Fv v) (D.mem u).A.T := charP_of_card_eq_prime ((D.mem u).A.card_Fv v)
   have := (CharP.intCast_eq_zero_iff ((D.mem u).A.Fv v) (D.mem u).A.T (k v - 1)).2 hdvd
   push_cast at this
   exact sub_eq_zero.1 this
@@ -623,7 +623,7 @@ theorem rational_stabiliser_trivial (Tf : Forms0 D u) (hS : Formalism.MainNotion
       (Tf.cls 0 (Nat.zero_le _) rfl).lev.U.map (MulAut.conj ((Tf.cls 0 (Nat.zero_le _) rfl).y c).1).toMonoidHom) :
     γ = 1 := by
   obtain ⟨s, hs⟩ := ((Tf.cls 0 (Nat.zero_le _) rfl).stabI_range c ⟨γ, hγ⟩).2 hm
-  haveI : Subsingleton ((D.mem u).C.stab 0 c) := hS c
+  have : Subsingleton ((D.mem u).C.stab 0 c) := hS c
   rw [Subsingleton.elim s 1, map_one] at hs
   simpa using (congrArg Subtype.val hs).symm
 
@@ -665,8 +665,8 @@ theorem forms_level_zero_linear_equiv (Tf : Forms0 D u) (hS : Formalism.MainNoti
     rfl
   by_cases hne : Nonempty ((D.mem u).C.cls 0)
   · obtain ⟨c0⟩ := hne
-    haveI : FiniteDimensional ℂ (D.mem u).A.Mu0 := (D.mem u).A.Mu0_fd
-    haveI : Module.Finite ℂ (levelZeroValues Tf) :=
+    have : FiniteDimensional ℂ (D.mem u).A.Mu0 := (D.mem u).A.Mu0_fd
+    have : Module.Finite ℂ (levelZeroValues Tf) :=
       Module.Finite.of_surjective
         ((LinearMap.proj (R := ℂ) (φ := fun _ : (D.mem u).C.cls 0 => levelZeroValues Tf) c0).comp e1.toLinearMap)
         (fun w => ⟨e1.symm (fun _ => w), by simp⟩)
@@ -676,8 +676,8 @@ theorem forms_level_zero_linear_equiv (Tf : Forms0 D u) (hS : Formalism.MainNoti
     simp only [LinearEquiv.trans_apply, LinearEquiv.piCongrRight_apply]
     rw [LinearEquiv.map_eq_zero_iff]
     exact he1 φ c
-  · haveI : IsEmpty ((D.mem u).C.cls 0) := not_nonempty_iff.mp hne
-    haveI : Subsingleton (D.mem u).A.Mu0 :=
+  · have : IsEmpty ((D.mem u).C.cls 0) := not_nonempty_iff.mp hne
+    have : Subsingleton (D.mem u).A.Mu0 :=
       ⟨fun φ ψ => Subtype.ext (Subsingleton.elim _ _)⟩
     refine ⟨0, LinearEquiv.ofSubsingleton _ _, ?_⟩
     intro φ c
@@ -859,7 +859,7 @@ theorem free_rank_model_of_free_action (A : ColumnsAtT R C) {H : Type} [CommGrou
   classical
   let G := A.vT → H
   let X := G × (MulAction.orbitRel.Quotient G (C.cls 0) × Fin d)
-  letI actX : MulAction G X :=
+  let actX : MulAction G X :=
     { smul := fun g x => (g * x.1, x.2)
       one_smul := fun x => by
         show ((1 : G) * x.1, x.2) = x
@@ -885,9 +885,9 @@ end ModelOf
 
 theorem free_rank_model_of_diamonds (Tf : Forms0 D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) (hE : DiamondElementsExist Tf) :
     Nonempty (FreeRankModel (D.mem u).A) := by
-  haveI : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
   obtain ⟨d, Φ, hΦ⟩ := forms_level_zero_linear_equiv Tf hS
-  letI : MulAction ((D.mem u).A.vT → (ZMod (D.mem u).A.T)ˣ) ((D.mem u).C.cls 0) :=
+  let : MulAction ((D.mem u).A.vT → (ZMod (D.mem u).A.T)ˣ) ((D.mem u).C.cls 0) :=
     MulAction.compHom _ (t2xAc Tf hE)
   refine free_rank_model_of_free_action (D.mem u).A (fun v => t2xU v) Φ (t2xRho Tf hE) ?_ ?_ ?_
   · intro g c φ h

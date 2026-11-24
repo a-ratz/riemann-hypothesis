@@ -155,7 +155,7 @@ theorem meas_FD (V W : HSp D) : MeasurableSet (FD V W) := by
       ((fun x => eM D.host.F (Phi V W x i j k).1) ⁻¹' ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis D.host.F) ∩
         (fun x => (Phi V W x i j k).2) ⁻¹' Ohat D.host.F) := by
     ext x
-    simp only [FD, F0, Pinf, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, Set.mem_inter_iff]
+    simp only [FD, F0, Pinf, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, Set.mem_inter_iff]
   rw [hset]
   refine MeasurableSet.iInter fun i => MeasurableSet.iInter fun j => MeasurableSet.iInter fun k => ?_
   refine MeasurableSet.inter ?_ ?_
@@ -191,8 +191,8 @@ instance measAddWA (V W : HSp D) : MeasurableAdd (WA V W) :=
   ⟨fun _ => (continuous_const.add continuous_id).measurable, fun _ => (continuous_id.add continuous_const).measurable⟩
 
 theorem countable_ratL (V W : HSp D) : Countable (ratL V W) := by
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin V.rank) (Fin W.rank) D.host.E) :=
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin V.rank) (Fin W.rank) D.host.E) :=
     inferInstanceAs (Countable (Fin V.rank → Fin W.rank → D.host.E))
   have h : (ratL V W : Set (WA V W)).Countable := by
     unfold ratL
@@ -201,7 +201,7 @@ theorem countable_ratL (V W : HSp D) : Countable (ratL V W) := by
   exact h.to_subtype
 
 theorem finCovol {D : D7} (V W : HSp D) : Formalism.IndefR.Heis.FinCovol V W := by
-  haveI := countable_ratL V W
+  have := countable_ratL V W
   obtain ⟨K, hK, hFK⟩ := FD_sub_compact V W
   have hfd : ∀ μ : Measure (WA V W), IsAddFundamentalDomain (ratL V W) (FD V W) μ :=
     fun μ => IsAddFundamentalDomain.mk' (meas_FD V W).nullMeasurableSet (exU V W)

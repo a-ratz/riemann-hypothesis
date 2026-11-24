@@ -76,7 +76,7 @@ theorem exists_over_iff {R : Type} [CommRing R] [IsDomain R] [IsIntegrallyClosed
     have := (IsUnit.mk0 (n : c.F) (Nat.cast_ne_zero.2 hn)).map (Spec.preimage σ).hom
     rwa [map_natCast] at this
   · intro hu
-    haveI := c.fin
+    have := c.fin
     let g : c.F →+* FractionRing R := (Spec.preimage (y ≫ pullback.snd _ _)).hom
     have hint : ∀ a : c.F, ∃ r : R, algebraMap R (FractionRing R) r = g a := fun a => by
       obtain ⟨m, hm, ha⟩ := ((IsFractionRing.isAlgebraic_iff ℤ ℚ c.F).2

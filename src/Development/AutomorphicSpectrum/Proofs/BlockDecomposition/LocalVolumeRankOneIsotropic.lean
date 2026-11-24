@@ -313,7 +313,7 @@ theorem near_compact_open {V K : Type} [TopologicalSpace V] [MeasurableSpace V] 
   obtain ⟨hint, hcont⟩ := h3 _ hφc hφs hφt
   have hfin : ∀ b, m b B ≠ ⊤ := fun b => by
     have h4 := (integrable_indicator_iff hBm).1 (hint b (Set.mem_univ b))
-    exact ((integrableOn_const_iff).1 h4).resolve_left (by rw [enorm_eq_zero]; exact (one_ne_zero : (1 : ℝ) ≠ 0)) |>.ne
+    exact ((integrableOn_const_iff).1 h4).resolve_left (by rw [eNorm_eq_zero]; exact (one_ne_zero : (1 : ℝ) ≠ 0)) |>.ne
   have hg : Continuous (fun b => (m b B).toReal) := by
     have he : (fun b => ∫ v, B.indicator (1 : V → ℝ) v ∂(m b)) = fun b => (m b B).toReal :=
       funext fun b => integral_indicator_one hBm
@@ -477,8 +477,8 @@ theorem exists_sphere {T : Type} [AddCommGroup T] [Module K T] [Module.Finite K 
     (hv : ∀ a : K, a ≠ 0 → ∃ j : ℤ, ‖a‖ = ‖π‖ ^ j) (A : Set T) (hA : IsCompact A) :
     ∃ (P : Set T) (k : ℕ), IsCompact P ∧ IsOpen P ∧ (0 : T) ∉ P ∧
       ∀ X ∈ A, X ≠ 0 → ∃ (i : ℕ), ∃ Y ∈ P, X = (π ^ ((i : ℤ) - k)) • Y := by
-  haveI : ContinuousAdd T := IsModuleTopology.toContinuousAdd K T
-  haveI : ContinuousSMul K T := IsModuleTopology.toContinuousSMul K T
+  have : ContinuousAdd T := IsModuleTopology.toContinuousAdd K T
+  have : ContinuousSMul K T := IsModuleTopology.toContinuousSMul K T
   let c : T ≃ₗ[K] (Fin (Module.finrank K T) → K) := (Module.finBasis K T).equivFun
   have hc : Continuous c := IsModuleTopology.continuous_of_linearMap c.toLinearMap
   have hc' : Continuous c.symm := IsModuleTopology.continuous_of_linearMap c.symm.toLinearMap
@@ -503,11 +503,11 @@ theorem exists_sphere {T : Type} [AddCommGroup T] [Module K T] [Module.Finite K 
   · intro X hX hX0
     have hw : c X ≠ 0 := by simpa using hX0
     obtain ⟨l, hl⟩ : ∃ l, c X l ≠ 0 := Function.ne_iff.1 hw
-    haveI : Nonempty (Fin (Module.finrank K T)) := ⟨l⟩
+    have : Nonempty (Fin (Module.finrank K T)) := ⟨l⟩
     obtain ⟨m, -, hm⟩ := Finset.exists_mem_eq_sup (Finset.univ) Finset.univ_nonempty
       (fun i => ‖c X i‖₊)
     have hnorm : ‖c X‖ = ‖c X m‖ := by
-      rw [← coe_nnnorm, Pi.nnnorm_def, hm, coe_nnnorm]
+      rw [← coe_nnNorm, Pi.nnNorm_def, hm, coe_nnNorm]
     have hm0 : c X m ≠ 0 := by
       intro h
       rw [h, norm_zero] at hnorm
@@ -540,7 +540,7 @@ variable {K R : Type} [NormedField K] [IsUltrametricDist K] [ProperSpace K] [Com
 
 theorem linearIndependent_of_ne_zero (hR : IsField R) {M : ℕ} {X : Fin 1 → Fin M → R}
     (hX : X ≠ 0) : LinearIndependent R X := by
-  haveI : IsDomain R := hR.isDomain
+  have : IsDomain R := hR.isDomain
   rw [Fintype.linearIndependent_iff]
   intro g hg i
   obtain rfl : i = 0 := Subsingleton.elim _ _
@@ -560,7 +560,7 @@ theorem exists_cover (hR : IsField R) (π : K) (h0 : π ≠ 0) (h1 : ‖π‖ < 
       Summable (fun i => ‖Algebra.norm K (u i : R)‖₊ ^ (M - 1)) ∧
       A ∩ {X : Fin 1 → Fin M → R | LinearIndependent R X} ⊆
         ⋃ i, (fun (X : Fin 1 → Fin M → R) (p : Fin 1) (k : Fin M) => (u i : R) * X p k) '' P := by
-  haveI : Nontrivial R := ⟨hR.exists_pair_ne⟩
+  have : Nontrivial R := ⟨hR.exists_pair_ne⟩
   obtain ⟨P, k, hPc, hPo, hP0, hcov⟩ := exists_sphere π h0 h1 hv A hA
   let w : Kˣ := Units.mk0 π h0
   let u : ℕ → Rˣ := fun i => Units.map (algebraMap K R).toMonoidHom (w ^ ((i : ℤ) - k))
@@ -572,14 +572,14 @@ theorem exists_cover (hR : IsField R) (π : K) (h0 : π ≠ 0) (h1 : ‖π‖ < 
   · intro X hX
     exact linearIndependent_of_ne_zero hR fun h => hP0 (h ▸ hX)
   · have hd : 0 < Module.finrank K R := Module.finrank_pos
-    have hπ : 0 < ‖π‖₊ := nnnorm_pos.2 h0
+    have hπ : 0 < ‖π‖₊ := nnNorm_pos.2 h0
     have hlt : ‖π‖₊ < 1 := by exact_mod_cast h1
     set e : ℕ := Module.finrank K R * (M - 1) with he
     have he0 : e ≠ 0 := Nat.mul_ne_zero hd.ne' (by omega)
     have hq : ‖π‖₊ ^ e < 1 := pow_lt_one₀ hπ.le hlt he0
     have hs := (NNReal.summable_geometric hq).mul_left ((‖π‖₊ ^ (-(k : ℤ))) ^ e)
     refine hs.congr fun i => ?_
-    rw [hu, Algebra.norm_algebraMap, nnnorm_pow, nnnorm_zpow, sub_eq_add_neg,
+    rw [hu, Algebra.norm_algebraMap, nnNorm_pow, nnNorm_zpow, sub_eq_add_neg,
       zpow_add₀ hπ.ne', zpow_natCast, he]
     ring
   · rintro X ⟨hXA, hXf⟩
@@ -624,9 +624,9 @@ theorem exists_uniformizer {F : Type} [Field F] [NumberField F] (v : HeightOneSp
 
 theorem coverF : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ), 2 ≤ M → ∀ (v : HeightOneSpectrum (𝓞 F)), IsField (Fv F v ⊗[F] E) → ∀ A : Set (Fin 1 → Fin M → Fv F v ⊗[F] E), IsCompact A → ∃ (ι : Type) (_ : Countable ι) (P : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) (u : ι → (Fv F v ⊗[F] E)ˣ), IsCompact P ∧ IsOpen P ∧ P ⊆ {X : Fin 1 → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X} ∧ Summable (fun i => ‖Algebra.norm (Fv F v) (u i : Fv F v ⊗[F] E)‖₊ ^ (M - 1)) ∧ A ∩ {X : Fin 1 → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X} ⊆ ⋃ i, (fun (X : Fin 1 → Fin M → Fv F v ⊗[F] E) (p : Fin 1) (k : Fin M) => (u i : Fv F v ⊗[F] E) * X p k) '' P := by
   intro F E _ _ _ _ _ σ h M hM v hF A hA
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; omega)
-  haveI : ProperSpace (Fv F v) := GlobalTheory.CompanionTheory.DictLoc.properSpace_Fv v
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; omega)
+  have : ProperSpace (Fv F v) := GlobalTheory.CompanionTheory.DictLoc.properSpace_Fv v
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   obtain ⟨π, h0, h1, hv⟩ := exists_uniformizer v
   exact exists_cover hF π h0 h1 hv hM A hA
 
@@ -687,11 +687,11 @@ theorem linearIndependent_of_isUnit_qR {F E : Type} [Field F] [NumberField F] [F
 theorem null_nonfree : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 1 ≤ M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → coordW (Fv F v) b lam 1 M {X : Fin 1 → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X}ᶜ = 0 := by
   intro F E _ _ _ _ _ σ hσ M J hJ hM d b v lam hlam
   obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hh := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam hlam.1
   have h0 := (NullV.null_nonunits F E σ hσ M J hJ hM v (coordW (Fv F v) b lam 1 M) lam (hh.2.1 1 M) hlam.1).2
   refine measure_mono_null ?_ h0
@@ -760,9 +760,9 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.DilPush
 
 theorem push_dil : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 1 ≤ M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ (P : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) (c : ℝ≥0), MeasurableSet P → (∀ S : Set (Fv F v), MeasurableSet S → coordW (Fv F v) b lam 1 M (P ∩ (fun X : Fin 1 → Fin M → Fv F v ⊗[F] E => algebraMap F (Fv F v) (1 / 2) * Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0)) ⁻¹' S) ≤ (c : ℝ≥0∞) * lam S) → ∀ (u : (Fv F v ⊗[F] E)ˣ) (S : Set (Fv F v)), MeasurableSet S → coordW (Fv F v) b lam 1 M ((fun (X : Fin 1 → Fin M → Fv F v ⊗[F] E) (p : Fin 1) (k : Fin M) => (u : Fv F v ⊗[F] E) * X p k) '' P ∩ (fun X : Fin 1 → Fin M → Fv F v ⊗[F] E => algebraMap F (Fv F v) (1 / 2) * Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0)) ⁻¹' S) ≤ ((c * ‖Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E)‖₊ ^ (M - 1) : ℝ≥0) : ℝ≥0∞) * lam S := by
   intro F E _ _ _ _ _ σ hσ M J hJ hM d b v lam hlam P c hP hbound u S hS
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
-  haveI := hlam.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : FiniteDimensional F E := Module.Finite.of_basis b
+  have := hlam.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   set Q : (Fin 1 → Fin M → Fv F v ⊗[F] E) → Fv F v := fun X => algebraMap F (Fv F v) (1 / 2) * Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0) with hQ
   set D : (Fin 1 → Fin M → Fv F v ⊗[F] E) → (Fin 1 → Fin M → Fv F v ⊗[F] E) := fun X p k => (u : Fv F v ⊗[F] E) * X p k with hD
   set n : Fv F v := Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E) with hn
@@ -794,10 +794,10 @@ theorem push_dil : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   have hlamS : lam S' = (‖n‖₊ : ℝ≥0∞)⁻¹ * lam S := by
     have h := GlobalTheory.CompanionTheory.SW.ProdFormula.map_mul_left_finite v n hn0 lam hlam.1
     have h2 := congrArg (fun μ : Measure (Fv F v) => μ S) h
-    simp only [Measure.smul_apply] at h2
+    simp only [smul_apply] at h2
     rw [Measure.map_apply hmul hS] at h2
     rw [hS'def, h2, ENNReal.smul_def, smul_eq_mul]
-    simp [ENNReal.coe_inv (nnnorm_ne_zero_iff.2 hn0)]
+    simp [ENNReal.coe_inv (nnNorm_ne_zero_iff.2 hn0)]
   rw [hset, _root_.GlobalTheory.CompanionTheory.SW.coordW_image_unit_mul F E σ hσ M d b v lam hlam u _ (hP.inter (hQm hS'))]
   set a : ℝ≥0∞ := (‖n‖₊ : ℝ≥0∞) with ha
   have ha0 : a ≠ 0 := by simpa [ha] using hn0
@@ -843,13 +843,13 @@ theorem isFibreFamily_field {F E : Type} [Field F] [NumberField F] [Field E] [Nu
       {X : Fin 1 → Fin M → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} lam Set.univ
       (fun s => m (hermScal R σ s)) := by
   obtain ⟨h1, h2, h3, h4, -⟩ := id hloc
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
+  have := h1
+  have := h2
+  have := h3
+  have := h4
   obtain ⟨-, -, -, hT2, -, htr, -, hBor, -, hgr⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h R
-  haveI := hT2
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have := hT2
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
   obtain ⟨hc1, hc2, hc3⟩ := hm
   have hcs : Continuous (hermScal R σ (F := F) (E := E)) := continuous_hermScal R
   have hcq : Continuous (qS R σ (F := F) (E := E)) := continuous_qS R htr
@@ -881,7 +881,7 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.Free
 
 theorem isFibreFamily_length : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ (m : HermR (Fv F v) σ 1 → Measure (Fin 1 → Fin M → Fv F v ⊗[F] E)), IsGramFibFree (Fv F v) σ J 1 (coordW (Fv F v) b lam 1 M) (coordHerm (Fv F v) σ b lam 1) m → Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily (coordW (Fv F v) b lam 1 M) (fun X : Fin 1 → Fin M → Fv F v ⊗[F] E => algebraMap F (Fv F v) (1 / 2) * Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0)) id {X : Fin 1 → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X} lam Set.univ (fun s => m (hermScal (Fv F v) σ s)) := by
   intro F E _ _ _ _ _ σ hσ M J hJ d b v lam hlam m hm
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   exact LengthFibre.isFibreFamily_field (Fv F v) (_root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) hσ b lam hlam.1 m hm
 
 end GlobalTheory.CompanionTheory.WeilSiegel.Free
@@ -949,7 +949,7 @@ theorem isOpen_unitVecs (τ : E →ₐ[F] Fv F v) : IsOpen (unitVecs (M := M) σ
   exact (hS.preimage (continuous_comp τ)).inter (hS.preimage (continuous_comp (τ.comp σ)))
 
 theorem isCompact_unitVecs (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) : IsCompact (unitVecs (M := M) σ τ) := by
-  haveI : ProperSpace (Fv F v) := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have : ProperSpace (Fv F v) := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
   have hS : IsCompact (Metric.sphere (0 : Fin 1 → Fin M → Fv F v) 1) := isCompact_sphere _ _
   have := (hS.prod hS).image (continuous_glue h τ)
   convert this using 1
@@ -998,12 +998,12 @@ theorem unitVecs_subset_free (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) :
   · rw [e, norm_zero] at h2; exact zero_ne_one h2
 
 theorem exists_entry_norm (hM : 0 < M) (Y : Fin 1 → Fin M → Fv F v) : ∃ p k, ‖Y p k‖ = ‖Y‖ := by
-  haveI : Nonempty (Fin M) := Fin.pos_iff_nonempty.1 hM
+  have : Nonempty (Fin M) := Fin.pos_iff_nonempty.1 hM
   obtain ⟨p, -, hp⟩ := Finset.exists_mem_eq_sup Finset.univ Finset.univ_nonempty (fun b => ‖Y b‖₊)
   obtain ⟨k, -, hk⟩ := Finset.exists_mem_eq_sup Finset.univ Finset.univ_nonempty (fun b => ‖Y p b‖₊)
   refine ⟨p, k, ?_⟩
-  have e1 : ‖Y‖₊ = ‖Y p‖₊ := by rw [Pi.nnnorm_def]; exact hp
-  have e2 : ‖Y p‖₊ = ‖Y p k‖₊ := by rw [Pi.nnnorm_def]; exact hk
+  have e1 : ‖Y‖₊ = ‖Y p‖₊ := by rw [Pi.nnNorm_def]; exact hp
+  have e2 : ‖Y p‖₊ = ‖Y p k‖₊ := by rw [Pi.nnNorm_def]; exact hk
   exact congrArg NNReal.toReal (e1.trans e2).symm
 
 theorem exists_scale {ϖ : Fv F v} (hϖ : ‖ϖ‖ = (Ideal.absNorm v.asIdeal : ℝ)⁻¹) (hM : 0 < M)
@@ -1046,7 +1046,7 @@ theorem splitProj_comp_mkU (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) (a b :
 
 theorem nnnorm_norm_mkU (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) (a b : (Fv F v)ˣ) :
     ‖Algebra.norm (Fv F v) (mkU h τ a b : Fv F v ⊗[F] E)‖₊ = ‖(a : Fv F v)‖₊ * ‖(b : Fv F v)‖₊ := by
-  rw [GlobalTheory.SplitInterDet.norm_eq_split h τ, splitProj_mkU, splitProj_comp_mkU, nnnorm_mul]
+  rw [GlobalTheory.SplitInterDet.norm_eq_split h τ, splitProj_mkU, splitProj_comp_mkU, nnNorm_mul]
 
 theorem summable_pow {t : ℝ≥0} (ht0 : t ≠ 0) (ht : t < 1) (k : ℕ) {n : ℕ} (hn : n ≠ 0) :
     Summable fun i : ℕ × ℕ => (t ^ ((i.1 : ℤ) - k) * t ^ ((i.2 : ℤ) - k)) ^ n := by
@@ -1102,7 +1102,7 @@ theorem cover (h : IsCMExt F E σ) (hM : 2 ≤ M) (τ : E →ₐ[F] Fv F v)
     rw [e, norm_zero] at hϖ
     exact inv_ne_zero hq0 hϖ.symm
   have hlt : ‖ϖ‖₊ < 1 := by
-    rw [← NNReal.coe_lt_coe, coe_nnnorm, hϖ, NNReal.coe_one]
+    rw [← NNReal.coe_lt_coe, coe_nnNorm, hϖ, NNReal.coe_one]
     exact inv_lt_one_of_one_lt₀ hq
   obtain ⟨C1, hC1⟩ := hA.exists_bound_of_continuousOn (continuous_comp (M := M) τ).continuousOn
   obtain ⟨C2, hC2⟩ := hA.exists_bound_of_continuousOn (continuous_comp (M := M) (τ.comp σ)).continuousOn
@@ -1110,9 +1110,9 @@ theorem cover (h : IsCMExt F E σ) (hM : 2 ≤ M) (τ : E →ₐ[F] Fv F v)
   let w : (Fv F v)ˣ := Units.mk0 ϖ hϖ0
   refine ⟨ℕ × ℕ, inferInstance, unitVecs σ τ, fun i => mkU h τ (w ^ ((i.1 : ℤ) - k)) (w ^ ((i.2 : ℤ) - k)),
     isCompact_unitVecs h τ, isOpen_unitVecs τ, unitVecs_subset_free h τ, ?_, ?_⟩
-  · refine (summable_pow (nnnorm_ne_zero_iff.2 hϖ0) hlt k (n := M - 1) (by omega)).congr fun i => ?_
+  · refine (summable_pow (nnNorm_ne_zero_iff.2 hϖ0) hlt k (n := M - 1) (by omega)).congr fun i => ?_
     rw [nnnorm_norm_mkU]
-    simp [w, Units.val_zpow_eq_zpow_val, nnnorm_zpow]
+    simp [w, Units.val_zpow_eq_zpow_val, nnNorm_zpow]
   · rintro X ⟨hXA, hXf⟩
     obtain ⟨j1, Y1, n1, e1, f1⟩ := exists_scale hϖ (by omega) (comp_ne_zero_of_free h τ hXf)
     obtain ⟨j2, Y2, n2, e2, f2⟩ := exists_scale hϖ (by omega) (comp_ne_zero_of_free h (τ.comp σ) hXf)
@@ -1199,8 +1199,8 @@ theorem linearIndependent_dil {A : Type} [CommRing A] {M : ℕ} (u : Aˣ) (X : F
 
 theorem dil_set : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (v : HeightOneSpectrum (𝓞 F)) (u : (Fv F v ⊗[F] E)ˣ) (P : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)), IsCompact P → IsOpen P → P ⊆ {X : Fin 1 → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X} → IsCompact ((fun (X : Fin 1 → Fin M → Fv F v ⊗[F] E) (p : Fin 1) (k : Fin M) => (u : Fv F v ⊗[F] E) * X p k) '' P) ∧ IsOpen ((fun (X : Fin 1 → Fin M → Fv F v ⊗[F] E) (p : Fin 1) (k : Fin M) => (u : Fv F v ⊗[F] E) * X p k) '' P) ∧ (fun (X : Fin 1 → Fin M → Fv F v ⊗[F] E) (p : Fin 1) (k : Fin M) => (u : Fv F v ⊗[F] E) * X p k) '' P ⊆ {X : Fin 1 → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X} := by
   intro F E _ _ _ _ _ σ _ M v u P hc ho hP
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := TopK.isTopRing (Fv F v)
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := TopK.isTopRing (Fv F v)
   refine ⟨hc.image (dilHomeo M u).continuous, (dilHomeo M u).isOpenMap _ ho, ?_⟩
   rintro _ ⟨X, hX, rfl⟩
   exact linearIndependent_dil u X (hP hX)
@@ -1227,18 +1227,18 @@ namespace GlobalTheory.CompanionTheory.SW.AvgZero
 theorem avg_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (h₀ : ∀ a b : Fin 1, σ ((0 : Matrix (Fin 1) (Fin 1) E) b a) = (0 : Matrix (Fin 1) (Fin 1) E) a b), ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ (m : HermR (Fv F v) σ 1 → Measure (Fin 1 → Fin M → Fv F v ⊗[F] E)), IsGramFibFree (Fv F v) σ J 1 (coordW (Fv F v) b lam 1 M) (coordHerm (Fv F v) σ b lam 1) m → ∀ A : Set (Fin 1 → Fin M → Fv F v ⊗[F] E), IsCompact A → IsOpen A → m (hermOf (Fv F v) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) A < ⊤ ∧ ∀ ε : ℝ, 0 < ε → ∃ U ∈ 𝓝 (0 : Fv F v), ∀ V : Set (Fv F v), MeasurableSet V → V ⊆ U → |(coordW (Fv F v) b lam 1 M (A ∩ {X | algebraMap F (Fv F v) (1 / 2) * Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (gramR (Fv F v) σ J X 0 0) ∈ V})).toReal - (m (hermOf (Fv F v) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) A).toReal * (lam V).toReal| ≤ ε * (lam V).toReal := by
   intro F E _ _ _ _ _ σ hCM M J hJ hM h₀ d b v lam hlam m hm A hAc hAo
   obtain ⟨r1, r2, r3, r4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨a1, a2, a3, a4, -, htr, -, a8, -, a10⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
-  haveI := a1
-  haveI := a2
-  haveI := a3
-  haveI := a4
-  haveI := a8 1 M
-  haveI : lam.IsAddHaarMeasure := hlam.1
+  have := a1
+  have := a2
+  have := a3
+  have := a4
+  have := a8 1 M
+  have : lam.IsAddHaarMeasure := hlam.1
   have hM1 : 1 ≤ M := by omega
   have hM2 : 2 ≤ M := by omega
   have hQ : Continuous fun X : Fin 1 → Fin M → Fv F v ⊗[F] E =>

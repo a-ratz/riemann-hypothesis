@@ -407,12 +407,12 @@ end Re
 
 lemma isOpen_coneC (r : ℝ) : IsOpen (coneC r) :=
   (open_convex2 (-1) 1 0 1 1 0 r fun x => by
-    simp only [coneC, affR, Set.mem_setOf_eq]
+    simp only [coneC, affR, Set.mem_ofPred_eq]
     constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith).1
 
 lemma isOpen_coneA (r : ℝ) : IsOpen (coneA r) :=
   (open_convex2 (-1) 1 0 0 1 0 r fun x => by
-    simp only [coneA, affR, Set.mem_setOf_eq]
+    simp only [coneA, affR, Set.mem_ofPred_eq]
     constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith).1
 
 lemma tube_coneI_iff {r : ℝ} {m : ℂ × ℂ} : m ∈ tube (coneI r) ↔ r < m.2.re ∧ r < m.2.re + m.1.re :=
@@ -427,8 +427,8 @@ lemma tube_coneA_iff {r : ℝ} {m : ℂ × ℂ} : m ∈ tube (coneA r) ↔ r < m
 theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
   intro _ hId hTC hCross G _ _ _ _ _ W _ _ _ K ρ hK hρ hFC Γ S A B Q₁ Q₂ c h a b N hAS hBS hAQ hBQ
     pS pA pB hS hQa hQb hconv hFirst hWc hWa hWb hLast
-  haveI := hFC
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have := hFC
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   obtain ⟨Rv, cS, cA, cB⟩ := hconv
   obtain ⟨R₀, D₀, Op₀, H₀, W₀, ⟨a₀, ha₀, hH₀⟩, O, hO, hOp⟩ := hFirst
   obtain ⟨Rc, Dc, Opc, Hc, Wc⟩ := hWc
@@ -494,7 +494,7 @@ theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
     have e₂ := rc (mc N l) t₂ (by rw [mc_re₁]; linarith)
       (conv_congr cv fun x => by rw [mc_re₁, mc_re₂]; ring) g
     refine ContinuousLinearMap.ext fun w => ?_
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+    simp only [smul_apply, ContinuousLinearMap.comp_apply]
     rw [e₁, e₂]
     exact eis_congr g _ rfl fun x => by simp only [chg, aff]; push_cast; ring
   have J₁ : ∀ l ∈ tube (chamberPairTwoThree (100 * R)), ∀ g,
@@ -513,7 +513,7 @@ theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
     have e₂ := ra (ma N l) t₂ (by rw [ma_re₁]; linarith)
       (conv_congr cv fun x => by rw [ma_re₁, ma_re₂]; ring) g
     refine ContinuousLinearMap.ext fun w => ?_
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+    simp only [smul_apply, ContinuousLinearMap.comp_apply]
     rw [e₁, e₂]
     exact eis_congr g _ rfl fun x => by simp only [chg, aff]; push_cast; ring
   have J₂ : ∀ l ∈ tube (chamberPairThreeFour (100 * R)), ∀ g, Db l.2 • outer Γ (Γ ⊓ S) h Ha (ma N l) g =
@@ -531,7 +531,7 @@ theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
     have e₂ := rb (mb N l) t₂ (by rw [mb_fst]; linarith)
       (conv_congr cv fun x => by rw [mb_fst, mb_re₂]; ring) g
     refine ContinuousLinearMap.ext fun w => ?_
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+    simp only [smul_apply, ContinuousLinearMap.comp_apply]
     rw [e₁, e₂]
     exact eis_congr g _ (by rw [mb_fst]) fun x => by simp only [chg, aff]; push_cast; ring
   have J₃ : ∀ l ∈ tube (chamberPairFourLast (100 * R)), ∀ g,
@@ -553,9 +553,9 @@ theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
     have e₂ := rl (ml N l) t₂ (by rw [ml_re₁]; linarith)
       (conv_congr cv fun x => by rw [ml_re₁, ml_re₂]) g
     refine ContinuousLinearMap.ext fun w => ?_
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+    simp only [smul_apply, ContinuousLinearMap.comp_apply]
     rw [hz]
-    simp only [ContinuousLinearMap.smul_apply, map_smul]
+    simp only [smul_apply, map_smul]
     rw [e₁, e₂, mb_fst, smul_smul, hDl]
     exact eis_congr g _ (by rw [ml_fst, nz_eq]; push_cast; ring)
       fun x => by simp only [chg, aff]; push_cast; ring
@@ -617,7 +617,7 @@ theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
     have e₂ := series_first hH₀ z g (s₀ (0, z) hm g) w
     change Φ (0, z) g w = _
     rw [eR (0, z) hm g]
-    simp only [ContinuousLinearMap.smul_apply]
+    simp only [smul_apply]
     rw [e₂]
     simp only [smul_smul]
     congr 1
@@ -647,7 +647,7 @@ theorem gallery : SecLaw → IdTube → TubeChain → Cross → Gallery := by
     set w' := (Opb y) ((Opa (aff 0 2 (1 - N) (0, y))) ((Opc (aff 0 1 (1 - N) (0, y))) (O 0 w)))
       with hw'
     have e' := DFunLike.congr_fun e w
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply] at e'
+    simp only [smul_apply, ContinuousLinearMap.comp_apply] at e'
     rw [series_last hT u g hs w'] at e'
     have hinv : (Φ (0, y) g) w = (-(d N))⁻¹ • ((-d N) • (Φ (0, y) g) w) := by
       rw [smul_smul, inv_mul_cancel₀ (neg_ne_zero.2 hdN'), one_smul]

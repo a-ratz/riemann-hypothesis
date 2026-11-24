@@ -459,7 +459,7 @@ theorem two_le_prod {L : Type*} [Field L] [NumberField L] (π : 𝓞 L) (hπ : �
     intro h
     apply hπ
     rw [NumberField.isUnit_iff_norm]
-    simpa [RingOfIntegers.coe_norm] using h
+    simpa [NumberField.RingOfIntegers.coe_norm] using h
   rw [NumberField.InfinitePlace.prod_eq_abs_norm, ← Algebra.coe_norm_int] at *
   have h1 : Algebra.norm ℤ π ≠ 0 := Algebra.norm_ne_zero_iff.mpr h0
   set n := Algebra.norm ℤ π
@@ -630,7 +630,7 @@ theorem mem_parahoricTimesPrincipalCongruence_iff (π : 𝓞 L) (hπ : (π : L) 
   · obtain ⟨rfl, rfl⟩ := hab
     simp [h, hi', hj]
     field_simp
-  · simp only [hab, if_false, add_zero]
+  · simp only [hab, ite_false, add_zero]
     split_ifs <;> simp_all
 
 theorem comm_mem {G : Subgroup (SpecialLinearGroup (Fin N) L)} {i j k : Fin N} (hik : i ≠ k) (hkj : k ≠ j)
@@ -735,7 +735,7 @@ open WordTransvectionCongruences in
 theorem dens_holds : Dens := by
   classical
   intro L _ _ hL π hp N hN
-  haveI : Nontrivial (Fin N) := Fin.nontrivial_iff_two_le.mpr (by omega)
+  have : Nontrivial (Fin N) := Fin.nontrivial_iff_two_le.mpr (by omega)
   have hπ : (π : L) ≠ 0 := by exact_mod_cast hp.ne_zero
   set H := Subgroup.map (jS L N) (Kg L N π 0 ⊔ Kg L N π 1) with hH
   have hv : ∀ {i j : Fin N} (h : i ≠ j) (v : InfinitePlace L → ℂ),
@@ -743,7 +743,7 @@ theorem dens_holds : Dens := by
     intro i j h v
     have hc : Continuous fun u : InfinitePlace L → ℂ => (fun w => SpecialLinearGroup.transvection h (u w) : Sp L N) :=
       continuous_pi fun w => (continuous_tv h).comp (continuous_apply w)
-    have hd := WordTransvectionCongruences.dense_pow π hp.not_unit hp.ne_zero
+    have hd := WordTransvectionCongruences.dense_pow π hp.not_isUnit hp.ne_zero
     have hr := hc.range_subset_closure_image_dense hd ⟨v, rfl⟩
     rw [← SetLike.mem_coe, Subgroup.topologicalClosure_coe]
     refine closure_mono ?_ hr
@@ -1052,7 +1052,7 @@ theorem bridge {Γ : Type*} [Group Γ] (H N : Subgroup Γ) [N.Normal] (hNH : N �
     exact hNH (‹N.Normal›.conj_mem _ (N.inv_mem n.2) g)
   have hsurj : Function.Surjective π := fun c =>
     ⟨(c.out : Γ ⧸ N), by rw [hπ]; exact Quotient.out_eq c⟩
-  haveI : Fintype (Quotient (QuotientGroup.rightRel H)) := Fintype.ofSurjective π hsurj
+  have : Fintype (Quotient (QuotientGroup.rightRel H)) := Fintype.ofSurjective π hsurj
   have hψ : ∀ q : Γ ⧸ N, φ q.out = φ (π q).out := fun q => (rel_out H φ hφ q.out).symm
   have hπmul : ∀ q t x : Γ ⧸ N, π q = π x → π (q * t) = π (x * t) := by
     intro q t x h
@@ -1070,10 +1070,10 @@ theorem bridge {Γ : Type*} [Group Γ] (H N : Subgroup Γ) [N.Normal] (hNH : N �
     symm
     refine Finset.card_nbij' (fun q => q * t) (fun q => q * t⁻¹) ?_ ?_ ?_ ?_
     · intro q hq
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hq ⊢
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hq ⊢
       simpa using hπmul q t 1 hq
     · intro q hq
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hq ⊢
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hq ⊢
       simpa using hπmul q t⁻¹ t hq
     · intro q _
       simp
@@ -1118,9 +1118,9 @@ theorem design_holds : Design := by
   subst hB
   set Bk := (E ⊓ E').subgroupOf K with hBk
   set N := Bk.normalCore with hN
-  haveI : Bk.FiniteIndex := Subgroup.finiteIndex_iff.mpr hidx
-  haveI : Finite (K ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (K ⧸ N) := Fintype.ofFinite _
+  have : Bk.FiniteIndex := Subgroup.finiteIndex_iff.mpr hidx
+  have : Finite (K ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (K ⧸ N) := Fintype.ofFinite _
   have hNB : N ≤ Bk := Subgroup.normalCore_le _
   let φ : (S → ℝ) → K → ℝ := fun u k => u (j (k : Λ) * x)
   have hinvB : ∀ u, LInv j (E ⊓ E') u → ∀ h ∈ Bk, ∀ k, φ u (h * k) = φ u k := by
@@ -1276,8 +1276,8 @@ theorem linv_out {j : Λ →* S} {B K : Subgroup Λ} {u : S → ℝ} (hu : LInv 
 
 theorem avg_linv (j : Λ →* S) (B K : Subgroup Λ) (hi : (B.subgroupOf K).index ≠ 0) (u : S → ℝ)
     (hu : LInv j B u) : LInv j K (avg j B K u) := by
-  haveI := finite_Q B K hi
-  letI := Fintype.ofFinite (RQ B K)
+  have := finite_Q B K hi
+  let := Fintype.ofFinite (RQ B K)
   intro γ hγ x
   rw [avg_eq_sum, avg_eq_sum]
   congr 1
@@ -1294,8 +1294,8 @@ theorem avg_linv (j : Λ →* S) (B K : Subgroup Λ) (hi : (B.subgroupOf K).inde
 
 theorem avg_of_linv (j : Λ →* S) (B K : Subgroup Λ) (hi : (B.subgroupOf K).index ≠ 0) (u : S → ℝ)
     (hu : LInv j K u) : avg j B K u = u := by
-  haveI := finite_Q B K hi
-  letI := Fintype.ofFinite (RQ B K)
+  have := finite_Q B K hi
+  let := Fintype.ofFinite (RQ B K)
   funext x
   rw [avg_eq_sum]
   have h : ∀ c : RQ B K, u (j ((c.out : K) : Λ) * x) = u x := fun c => hu _ (c.out : K).2 x
@@ -1306,8 +1306,8 @@ theorem avg_of_linv (j : Λ →* S) (B K : Subgroup Λ) (hi : (B.subgroupOf K).i
 theorem avg_meas [MeasurableSpace S] [MeasurableMul S] (j : Λ →* S) (B K : Subgroup Λ)
     (hi : (B.subgroupOf K).index ≠ 0) (u : S → ℝ) (hu : Measurable u) :
     Measurable (avg j B K u) := by
-  haveI := finite_Q B K hi
-  letI := Fintype.ofFinite (RQ B K)
+  have := finite_Q B K hi
+  let := Fintype.ofFinite (RQ B K)
   have h : avg j B K u = fun x => ((B.subgroupOf K).index : ℝ)⁻¹ *
       ∑ c : RQ B K, u (j ((c.out : K) : Λ) * x) := funext (avg_eq_sum j B K u)
   rw [h]
@@ -1321,12 +1321,12 @@ theorem avg_tower (j : Λ →* S) (B E K : Subgroup Λ) (hBE : B ≤ E) (hEK : E
     Subgroup.relIndex_mul_relIndex B E K hBE hEK
   have hBEi : (B.subgroupOf E).index ≠ 0 := fun h => hi (by rw [← hmul, h, zero_mul])
   have hEKi : (E.subgroupOf K).index ≠ 0 := fun h => hi (by rw [← hmul, h, mul_zero])
-  haveI := finite_Q B K hi
-  haveI := finite_Q B E hBEi
-  haveI := finite_Q E K hEKi
-  letI := Fintype.ofFinite (RQ B K)
-  letI := Fintype.ofFinite (RQ B E)
-  letI := Fintype.ofFinite (RQ E K)
+  have := finite_Q B K hi
+  have := finite_Q B E hBEi
+  have := finite_Q E K hEKi
+  let := Fintype.ofFinite (RQ B K)
+  let := Fintype.ofFinite (RQ B E)
+  let := Fintype.ofFinite (RQ E K)
   let φ : RQ E K × RQ B E → RQ B K := fun p => Quotient.mk _
     (⟨((p.2.out : E) : Λ) * ((p.1.out : K) : Λ), K.mul_mem (hEK (p.2.out : E).2) (p.1.out : K).2⟩ : K)
   have hinj : Function.Injective φ := by
@@ -1438,11 +1438,11 @@ theorem unfold_fd (Λ S : Type) [Group Λ] [Countable Λ] [Group S] [MeasurableS
         (IntegrableOn u D' μ → IntegrableOn (avg j B K u) D μ ∧
           ∫ x in D', u x ∂μ = (B.subgroupOf K).index * ∫ x in D, avg j B K u x ∂μ) := by
   intro D hD
-  haveI : Countable (K.map j) := countable_map j K
-  haveI : Countable (B.map j) := countable_map j B
-  haveI : Finite (Quotient (QuotientGroup.rightRel (B.subgroupOf K))) :=
+  have : Countable (K.map j) := countable_map j K
+  have : Countable (B.map j) := countable_map j B
+  have : Finite (Quotient (QuotientGroup.rightRel (B.subgroupOf K))) :=
     Nat.finite_of_card_ne_zero (by rw [card_quot]; exact hi)
-  letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
+  let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
   have hrepΓ : ∀ c, rep j B K c ∈ K.map j := fun c => ⟨((c.out : K) : Λ), c.out.2, rfl⟩
   have hBK' : B.map j ≤ K.map j := Subgroup.map_mono hBK
   have hn : ((B.subgroupOf K).index : ℝ) ≠ 0 := by exact_mod_cast hi

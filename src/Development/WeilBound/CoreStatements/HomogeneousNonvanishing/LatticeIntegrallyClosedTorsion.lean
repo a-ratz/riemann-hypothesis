@@ -182,7 +182,7 @@ theorem exists_alt [IsCommMonObj G] (hw : GenWeil G L ξ N e) (h : Γ'.IsTorsion
     if hg : g ^ N = 1 then Units.map kk.toMonoidHom (χ (tors_pt k h hk g hg).choose) else 1
   have hφ : ∀ g t, g ^ N = 1 → g.left = ptG k i t → φ g = Units.map kk.toMonoidHom (χ t) := by
     intro g t hg et
-    simp only [φ, dif_pos hg]
+    simp only [φ, dite_eq_left hg]
     rw [tors_inj k h ((tors_pt k h hk g hg).choose_spec.symm.trans et)]
   obtain ⟨y, hy, hye⟩ := hw.perfect φ (fun g g' hg hg' => by
     obtain ⟨t, ht⟩ := tors_pt k h hk g hg
@@ -755,9 +755,9 @@ theorem exists_EF_one {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
     have := D.rank
     rw [Module.finrank_zero_of_subsingleton] at this
     omega
-  haveI := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.IsTorsionFree ℤ D.La := by
+  have := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.IsTorsionFree ℤ D.La := by
     refine ⟨fun r hr a b hab => D.unimod.1 ?_⟩
     have hr0 : r ≠ 0 := hr.ne_zero
     ext y
@@ -772,8 +772,8 @@ theorem exists_EF_one {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
 
 theorem subsingleton_La {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (D : Datum H)
     (hpq : D.p + D.q = 0) : Subsingleton D.La := by
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   have h := D.rank
   rw [hpq] at h
   exact Module.finrank_zero_iff.1 h
@@ -830,7 +830,7 @@ def ex {k : Type} [Field k] (i : Ω →+* k) : Over.mk (spMap i) ⟶ Over.mk (�
 
 theorem eq_of_ex {k : Type} [Field k] (i : Ω →+* k) {y y' : Over.mk (𝟙 (Sp Ω)) ⟶ G'} (h : ex i ≫ y = ex i ≫ y') :
     y = y' := by
-  haveI := epi_sp i
+  have := epi_sp i
   apply Over.OverMorphism.ext
   rw [← cancel_epi (spMap i)]
   exact congrArg (fun z => z.left) h
@@ -947,7 +947,7 @@ theorem push_one {S S' : Scheme.{0}} {G' : Over S'} {G : Over S} [GrpObj G'] [Gr
 
 theorem tors_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n : ℕ} (hn : 0 < n)
     (hpq : D.p + D.q = 0) (g : Over.mk ξ ⟶ t.G) (hg : g ^ n = 1) : g = 1 := by
-  haveI := subsingleton_La D hpq
+  have := subsingleton_La D hpq
   let i := algebraMap Ω (AlgebraicClosure Ω)
   obtain ⟨I⟩ := exists_tate o i
   have hp := m.cart
@@ -958,7 +958,7 @@ theorem tors_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n : 
     rw [add_zero] at this
     exact left_eq_mul.1 this
   have ha1 : a = 1 := by rw [← hc, Subsingleton.elim c 0, h0]
-  haveI := epi_sp i
+  have := epi_sp i
   apply Over.OverMorphism.ext
   rw [← cancel_epi (spMap i)]
   have h2 : GenWeilModel.ext i ≫ g = GenWeilModel.ext i ≫ 1 := by
@@ -971,7 +971,7 @@ theorem genWeil_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n
   have triv := tors_trivial o t m hn hpq
   have hW := GlobalTheory.PairingLawZeroCounterexample.laws.1
   refine { finite := ?_, mul_left := ?_, mul_right := ?_, perfect := ?_, nondeg := ?_, weil := ?_ }
-  · haveI : Subsingleton {x : Over.mk ξ ⟶ t.G // x ^ n = 1} :=
+  · have : Subsingleton {x : Over.mk ξ ⟶ t.G // x ^ n = 1} :=
       ⟨fun a b => Subtype.ext ((triv _ a.2).trans (triv _ b.2).symm)⟩
     exact Finite.of_subsingleton
   · intros; simp

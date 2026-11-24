@@ -92,7 +92,7 @@ theorem meas_mulP : Measurable (fun p : Formalism.QuantumDeterminants.Mt k r × 
 
 theorem sigmaFinite_of_b {U : Set (Formalism.FourierDecayAlt.B.Mat k r)} {μ : Measure (Formalism.QuantumDeterminants.Mt k r)}
     (h : Formalism.FourierDecayAlt.B.IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
   infer_instance
 
 theorem haarOn_sk_of_b' {U : Set (Formalism.FourierDecayAlt.B.Mat k r)} {μ : Measure (Formalism.QuantumDeterminants.Mt k r)}
@@ -132,8 +132,8 @@ theorem muS_right {z : Fin (2 * r + k + 1) → ℂ} (hz : Formalism.QuantumDeter
   have hF : (μW.prod μN).map F = μW.prod μN := by
     have h2 : μN.map (Formalism.FourierDecayAlt.B.rmulF n0 ∘ Formalism.QuantumDeterminants.conjM h0⁻¹) = μN := by
       rw [← Measure.map_map (meas_rmul n0) (meas_conj _), hNc, hN1]
-    haveI : SigmaFinite (μW.map (Formalism.FourierDecayAlt.B.rmulF h0)) := by rw [hW1]; infer_instance
-    haveI : SigmaFinite (μN.map (Formalism.FourierDecayAlt.B.rmulF n0 ∘ Formalism.QuantumDeterminants.conjM h0⁻¹)) := by rw [h2]; infer_instance
+    have : SigmaFinite (μW.map (Formalism.FourierDecayAlt.B.rmulF h0)) := by rw [hW1]; infer_instance
+    have : SigmaFinite (μN.map (Formalism.FourierDecayAlt.B.rmulF n0 ∘ Formalism.QuantumDeterminants.conjM h0⁻¹)) := by rw [h2]; infer_instance
     rw [← Measure.map_prod_map _ _ (meas_rmul h0) ((meas_rmul n0).comp (meas_conj _)), hW1, h2]
   have hcomm : (Formalism.FourierDecayAlt.B.rmulF (h0 * n0)) ∘
       (fun p : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r => (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j : Formalism.QuantumDeterminants.Mt k r)) =

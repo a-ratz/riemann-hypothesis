@@ -289,12 +289,12 @@ theorem isURep_tensor {ι : Type} [Fintype ι] {H : ι → Type} [∀ i, NormedA
     apply ext_op hd
     intro x
     rw [ContinuousLinearMap.comp_apply, hs, hs, hs]
-    simp [Pi.mul_apply, map_mul, ContinuousLinearMap.mul_apply]
+    simp [Pi.mul_apply, map_mul, mul_apply_eq_comp]
   have hnorm : ∀ g u, ‖σs g u‖ = ‖u‖ := by
     intro g u
     have key : ⟪σs g u, σs g u⟫_ℂ = ⟪u, u⟫_ℂ := by
       rw [← inner_inv hi hd hs hn g (σs g u) u, ← ContinuousLinearMap.comp_apply, ← hmul,
-        inv_mul_cancel, h1, ContinuousLinearMap.one_apply]
+        inv_mul_cancel, h1, one_apply_eq_self]
     have h2 : ‖σs g u‖ ^ 2 = ‖u‖ ^ 2 := by
       rw [norm_sq_eq_re_inner (𝕜 := ℂ), norm_sq_eq_re_inner (𝕜 := ℂ), key]
     exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 h2
@@ -355,7 +355,7 @@ theorem isURep_rows :
   intro B hB
   have hmem : ∀ v (g : Formalism.REAL.UJ (B.I.ε v)), uMat g ∈ UJset (B.I.ε v) := fun v g => g.2
   have hcu : ∀ v, Continuous fun g : Formalism.REAL.UJ (B.I.ε v) => uMat g :=
-    fun v => Units.continuous_val.comp continuous_subtype_val
+    fun v => Units.continuous_val.comp continuous_subtypeVal
   exact isURep_tensor (H := B.H) (tens := B.tens)
     (π := fun v =>
       { toFun := fun g => B.σ v (uMat g)

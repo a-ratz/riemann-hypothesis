@@ -101,7 +101,7 @@ theorem firstJet_eq_prod_tangent : ∀ (R : Type) [CommRing R] (G : Over (Spec (
       have e : jetAug R (Fin d) 1 = (jetAug R (Fin d) 0).comp (jetZeroR R (Fin d) 1) :=
         jet_ext fun j => by rw [AlgHom.comp_apply, jetAug_zR]; exact (jetAug_zR (R := R) 0 j).symm
       rw [e, ← spMap_comp, Category.assoc, hx0 1, comp_one']
-    letI : Smooth G.hom := hG
+    let : Smooth G.hom := hG
     let J := RingHom.ker (jetAug R (Fin d) 1)
     have hJ : J ^ 2 = ⊥ := ker_jetAug_pow (R := R) (Fin d) 1
     obtain ⟨c', hc'⟩ := (expHom_bijective (A := JetR R (Fin d) 1) hv hJ).2

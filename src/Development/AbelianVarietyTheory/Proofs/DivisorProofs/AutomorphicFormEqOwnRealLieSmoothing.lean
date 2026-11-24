@@ -80,7 +80,7 @@ theorem exists_smoothing_eq_self : GlobalTheory.Published.AutomorphicFormsFinite
   let V₀ : Submodule ℂ (GA E a → ℂ) := V.map (Sm E a).subtype
   let V' : Submodule ℂ (GA E a → ℂ) := smoothings ν φ ⊓ V₀
   have hf : FiniteDimensional ℂ V' := Submodule.finiteDimensional_of_le (S₂ := V₀) inf_le_right
-  have hc : IsClosed (V' : Set (GA E a → ℂ)) := Submodule.closed_of_finiteDimensional V'
+  have hc : IsClosed (V' : Set (GA E a → ℂ)) := Submodule.isClosed_of_finiteDimensional V'
   have hmem : ∀ n, smoothing ν (α n) φ.1 ∈ V' := fun n => by
     obtain ⟨h, hv⟩ := hV (α n) (hα n).1 (hα n).2
     exact ⟨⟨α n, (hα n).1, rfl⟩, ⟨_, hv, rfl⟩⟩

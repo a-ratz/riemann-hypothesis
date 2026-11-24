@@ -110,7 +110,7 @@ theorem exists_linear_factor (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (hA : IsAb
   obtain ⟨B, _, MB, i, r, m, hB, hgB, hMB, hamp, hK, hi, hr, hm, hri⟩ :=
     SS.PrincIsog.exists_isogeny_kTriv ℂ A g hA hgA
   obtain ⟨Q, i', r', hQg, hi', hr', hir'⟩ := exists_polAV_retract_dim ℂ B g hB hgB MB hMB hamp hK
-  haveI := hi; haveI := hr; haveI := hi'; haveI := hr'
+  have := hi; have := hr; have := hi'; have := hr'
   suffices key : ∀ n, Q.g = n → ∃ (v : HolUnif Q.A Q.L n) (J : (Fin g → ℂ) →ₗ[ℂ] (Fin n → ℂ))
       (R : (Fin n → ℂ) →ₗ[ℂ] (Fin g → ℂ)), (∀ z, v.ex (J z) = u.ex z ≫ (i ≫ i')) ∧
       (∀ z, u.ex (R z) = v.ex z ≫ (r' ≫ r)) ∧ (∀ x ∈ u.Λ, J x ∈ v.Λ) ∧ (∀ x ∈ v.Λ, R x ∈ u.Λ) ∧
@@ -195,7 +195,7 @@ theorem exists_isMonHom_of_map_lattice :
     exists_linear_factor A' g hA' hgA' L' u'
   obtain ⟨β, hβ, hβe⟩ := _root_.GlobalTheory.exists_isMonHom_of_map_lattice thetaUnifAV_all hL Q Q' (8 * g) v v'
     (J' ∘ₗ M ∘ₗ R) hQ hQ' (fun l hl => hJΛ' _ (hM _ (hRΛ _ hl)))
-  haveI := hi; haveI := hr'; haveI := hβ
+  have := hi; have := hr'; have := hβ
   have hφ : ∀ z, u.ex z ≫ i ≫ β ≫ r' = u'.ex ((m' * m) • M z) := by
     intro z
     have e := hβe (J z)

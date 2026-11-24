@@ -295,7 +295,7 @@ private lemma fibre_pt {Z : Scheme.{0}} (p : Z ⟶ Spec (CommRingCat.of A)) {S :
       rw [← h2, h1]
       let y : PrimeSpectrum (IsLocalRing.ResidueField A) := (pullback.snd p (cpt A)).base w
       have hbot : y.asIdeal = ⊥ := by
-        haveI := y.isPrime
+        have := y.isPrime
         exact Ideal.eq_bot_of_prime y.asIdeal
       show Ideal.comap (IsLocalRing.residue A) y.asIdeal = _
       rw [hbot, ← RingHom.ker_eq_comap_bot, IsLocalRing.ker_residue]

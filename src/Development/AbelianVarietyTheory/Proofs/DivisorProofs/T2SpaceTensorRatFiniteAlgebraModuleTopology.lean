@@ -69,10 +69,10 @@ namespace LevelExists
 
 theorem isCompact_intCompl (v : HeightOneSpectrum ℤ) :
     IsCompact (v.adicCompletionIntegers ℚ : Set (v.adicCompletion ℚ)) := by
-  haveI : CompleteSpace (v.adicCompletionIntegers ℚ) :=
+  have : CompleteSpace (v.adicCompletionIntegers ℚ) :=
     (Valued.isClosed_valuationSubring (v.adicCompletion ℚ)).completeSpace_coe
-  haveI : Finite (ℤ ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI : Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers ℚ)) :=
+  have : Finite (ℤ ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have : Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers ℚ)) :=
     Finite.of_equiv _ (GroundTheory.Global.residueFieldEquiv (K := ℚ) v).toEquiv
   have hc : CompactSpace (Valued.integer (v.adicCompletion ℚ)) :=
     Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField.mpr
@@ -98,7 +98,7 @@ theorem isOpen_intAfP (p : ℕ) : IsOpen (intAfP p : Set (AfP p)) := by
     (fun w => Valued.isOpen_valuationSubring (w.1.adicCompletion ℚ))
 
 theorem isCompact_intAfP (p : ℕ) : IsCompact (intAfP p : Set (AfP p)) := by
-  haveI : ∀ w : AwayP p, CompactSpace (w.1.adicCompletionIntegers ℚ) :=
+  have : ∀ w : AwayP p, CompactSpace (w.1.adicCompletionIntegers ℚ) :=
     fun w => isCompact_iff_compactSpace.mp (isCompact_intCompl w.1)
   let e := RestrictedProduct.homeoTop (R := fun w : AwayP p => w.1.adicCompletion ℚ)
     (A := fun w => (w.1.adicCompletionIntegers ℚ : Set (w.1.adicCompletion ℚ)))
@@ -179,9 +179,9 @@ theorem isOpen_isCompact_tensorIntAlg (A : Type) [Ring A] [Algebra ℚ A] [Modul
     (hOo : IsOpen (O : Set R)) (hOc : IsCompact (O : Set R)) :
     @IsOpen _ (moduleTopology R (R ⊗[ℚ] A)) (tensorIntAlg R A O : Set (R ⊗[ℚ] A)) ∧
       @IsCompact _ (moduleTopology R (R ⊗[ℚ] A)) (tensorIntAlg R A O : Set (R ⊗[ℚ] A)) := by
-  letI : TopologicalSpace (R ⊗[ℚ] A) := moduleTopology R (R ⊗[ℚ] A)
-  haveI : IsModuleTopology R (R ⊗[ℚ] A) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[ℚ] A) := IsModuleTopology.isTopologicalRing R (R ⊗[ℚ] A)
+  let : TopologicalSpace (R ⊗[ℚ] A) := moduleTopology R (R ⊗[ℚ] A)
+  have : IsModuleTopology R (R ⊗[ℚ] A) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[ℚ] A) := IsModuleTopology.isTopologicalRing R (R ⊗[ℚ] A)
   set bS := Algebra.TensorProduct.basis R (Module.finBasis ℚ A) with hbS
   set L := mulMatAlg R A with hL
   have hLc : Continuous L := IsModuleTopology.continuous_of_linearMap L.toLinearMap
@@ -220,8 +220,8 @@ theorem isOpen_isCompact_tensorIntAlg (A : Type) [Ring A] [Algebra ℚ A] [Modul
 
 theorem t2Space_tensor_rat_finite_algebra_moduleTopology [T2Space R] (A : Type) [Ring A] [Algebra ℚ A] [Module.Finite ℚ A] :
     @T2Space (R ⊗[ℚ] A) (moduleTopology R (R ⊗[ℚ] A)) := by
-  letI : TopologicalSpace (R ⊗[ℚ] A) := moduleTopology R (R ⊗[ℚ] A)
-  haveI : IsModuleTopology R (R ⊗[ℚ] A) := ⟨rfl⟩
+  let : TopologicalSpace (R ⊗[ℚ] A) := moduleTopology R (R ⊗[ℚ] A)
+  have : IsModuleTopology R (R ⊗[ℚ] A) := ⟨rfl⟩
   set bS := Algebra.TensorProduct.basis R (Module.finBasis ℚ A)
   exact T2Space.of_injective_continuous bS.equivFun.injective
     (IsModuleTopology.continuous_of_linearMap bS.equivFun.toLinearMap)
@@ -254,12 +254,12 @@ def stdLevel (G : HTGroup p) (O : Subring (AfP p)) (P : Subring (AfP p ⊗[ℚ] 
 
 theorem level_exists : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), Nonempty G.Level := by
   intro p _ G
-  haveI : T2Space (AfP p) := inferInstanceAs
+  have : T2Space (AfP p) := inferInstanceAs
     (T2Space (Πʳ v : AwayP p, [v.1.adicCompletion ℚ, v.1.adicCompletionIntegers ℚ]))
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) _
-  haveI : T2Space (AfP p ⊗[ℚ] G.C) := t2Space_tensor_rat_finite_algebra_moduleTopology (AfP p) G.C
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) _
+  have : T2Space (AfP p ⊗[ℚ] G.C) := t2Space_tensor_rat_finite_algebra_moduleTopology (AfP p) G.C
   obtain ⟨hPo, hPc⟩ := isOpen_isCompact_tensorIntAlg (AfP p) G.C (intAfP p) (isOpen_intAfP p) (isCompact_intAfP p)
   have hOo := isOpen_intAfP p
   have hOc := isCompact_intAfP p

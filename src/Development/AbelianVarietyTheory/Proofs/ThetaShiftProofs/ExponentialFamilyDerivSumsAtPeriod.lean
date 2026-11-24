@@ -185,7 +185,7 @@ open scoped CategoryTheory.Obj LaurentSeries PowerSeries
 
 theorem exists_tanRel : Out.Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)] (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (b : O →+* ℂ) (a : ArcIn D l β ℂ b) (χ : Sp ℂ⟦X⟧ ⟶ Y.X) (W : ArcWit Y a (Ideal.span {PowerSeries.X}) (PowerSeries.C (R := ℂ)) PowerSeries.X χ) (ν : Out.GtPt a.D₀ (epsR ℂ)), ∃ g₁ : Out.GtPt W.P.D.toPre (epsR ℂ⟦X⟧), TanRel W ν g₁ := by
   intro _ E _ _ _ H _ D l Xo c O _ β Y _ _ b a χ W ν
-  haveI := isLocalRing_dual ℂ⟦X⟧
+  have := isLocalRing_dual ℂ⟦X⟧
   obtain ⟨gp, hw, -, -, hc, -⟩ := W.spec
   obtain ⟨g, hg⟩ := ConstPoint.exists_gtPt_genRelR (A := DualNumber ℂ⟦X⟧) globalFns_holds gp hw
     W.e.symm.toAddEquiv.toAddMonoidHom
@@ -479,7 +479,7 @@ theorem isTan_of_sections : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hρ' := eq_dualMapR _ ρ hρ hε
   have hK : ⊤ ≤ (νK ≫ pullback.fst _ _) ⁻¹ᵁ t.PP.L.U k₀ := by
     rw [hfst]; exact FormalValue.top_le_comp hk₀ _
-  haveI := isLocalRing_dual ℂ⸨X⸩
+  have := isLocalRing_dual ℂ⸨X⸩
   have hfrm := isFrm_spread t.PP.isLB (νK ≫ pullback.fst _ _) hK (hτ₁.map ρ)
   refine ⟨hsnd, ?_, _, hfrm, fun j _ α th hth F hF => ?_⟩
   · refine pullback.hom_ext ?_ ?_
@@ -548,7 +548,7 @@ theorem approx {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : Out.DegDa
       FormalValue.secVal U σ x jL = p * τ ^ j → p - ∑ α ∈ F, B α ∈ J ^ (e + 1) := by
   obtain ⟨F, hF⟩ := FormalValue.map_secVal_eq U h
   refine ⟨F.map q.symm.toEmbedding, fun S _ _ J _ s g x hx jL jM hL hM ω τ φ p B hω hτ e₁ hB hp => ?_⟩
-  haveI := isLocalRing_quotient_pow (ne_top_of_isHausdorff J) e
+  have := isLocalRing_quotient_pow (ne_top_of_isHausdorff J) e
   choose jf jt hc using FormalValue.exists_cohCharts g jM hM
   have e₂ := Ideal.Quotient.eq.1 ((hF S J s g x hx _ (Ideal.Quotient.mk _) Ideal.mk_ker.ge).2
     ((F.map q.symm.toEmbedding).map q.toEmbedding) jL jM jf jt
@@ -611,10 +611,10 @@ theorem main : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField 
   intro h₁ h₂ E _ _ _ H _ D l Xo c O _ β Y _ _ b a χ W Λ Ξ g₁ v z jL jM ω φ₁ τ j σ hv hL hM hω hτ e₁ hB ⟨f, hf, hs⟩
   have hJ : (Ideal.span {(PowerSeries.X : ℂ⟦X⟧)}).map (algebraMap ℂ⟦X⟧ ℂ⟦X⟧) = Ideal.span {PowerSeries.X} := by
     rw [Algebra.algebraMap_self, Ideal.map_id]
-  haveI : IsAdicComplete ((Ideal.span {(PowerSeries.X : ℂ⟦X⟧)}).map (algebraMap ℂ⟦X⟧ ℂ⟦X⟧)) ℂ⟦X⟧ := by
+  have : IsAdicComplete ((Ideal.span {(PowerSeries.X : ℂ⟦X⟧)}).map (algebraMap ℂ⟦X⟧ ℂ⟦X⟧)) ℂ⟦X⟧ := by
     rw [hJ]; infer_instance
-  haveI := isAdicComplete_idealEps
-  haveI := isLocalRing_dual ℂ⟦X⟧
+  have := isAdicComplete_idealEps
+  have := isLocalRing_dual ℂ⟦X⟧
   choose s₀ r hs using fun α : Λ.A.X => hs (Λ.ε α)
   choose F hF using fun e => approx W.P.U.toUnifPre (hf e) (Λ.ε.trans W.e).toEquiv
   have key : ∀ e u k p, ⊤ ≤ (Ξ.x u).left ⁻¹ᵁ W.P.U.LG.L.U k →
@@ -690,8 +690,8 @@ end
 
 theorem isTan_of_diffHyp : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)] (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (b : O →+* ℂ) (a : ArcIn D l β ℂ b) (χ : Sp ℂ⟦X⟧ ⟶ Y.X) (W : ArcWit Y a (Ideal.span {PowerSeries.X}) (PowerSeries.C (R := ℂ)) PowerSeries.X χ) (Λ : GtAn a) (Ξ : ConstPts W Λ) (Φ : GenPts Λ.A W.t gen) (g : ℕ) (h : Λ.A.V ≃L[ℂ] (Fin g → ℂ)) (z₀ : Fin g → ℂ) (ν : Out.GtPt a.D₀ (epsR ℂ)) (v : epsR (PowerSeries ℂ) ⟶ W.t.G) (ρ : DualNumber ℂ⟦X⟧ →+* DualNumber ℂ⸨X⸩) (νK : Sp (DualNumber ℂ⸨X⸩) ⟶ pullback W.t.G.hom gen), Ξ.IsGen Φ → DiffHyp W (fun z => Λ.ex0 (h.symm z)) z₀ ν v → (∀ r, ρ (TrivSqZeroExt.inl r) = TrivSqZeroExt.inl (algebraMap ℂ⟦X⟧ ℂ⸨X⸩ r)) → ρ DualNumber.eps = DualNumber.eps → νK ≫ pullback.fst _ _ = spMap ρ ≫ v.left → νK ≫ pullback.snd _ _ = spMap (algebraMap ℂ⸨X⸩ (DualNumber ℂ⸨X⸩)) → Φ.IsTan (h.symm z₀) νK := by
   intro h₁ h₂ E _ _ _ H _ D l Xo c O _ β Y _ _ b a χ W Λ Ξ Φ g h z₀ ν v ρ νK hΦ hd hρ hε hν₁ hν₂
-  haveI := isLocalRing_dual ℂ⟦X⟧
-  haveI := isLocalRing_dual ℂ
+  have := isLocalRing_dual ℂ⟦X⟧
+  have := isLocalRing_dual ℂ
   obtain ⟨g₁, hg₁⟩ := _root_.GlobalTheory.ConstTan.exists_tanRel h₁ E H D l Xo c O β Y b a χ W ν
   have hf := _root_.GlobalTheory.ConstTanFormal.main E H D l Xo c O β Y b a χ W g _ z₀ ν v g₁ hd hg₁
   have hr := _root_.GlobalTheory.ConstTanRed.main E H D l Xo c O β Y b a χ W Λ g h z₀ ν Ξ v g₁ hd hg₁ hf
@@ -883,7 +883,7 @@ theorem exists_deriv_comb {O : Type} [CommRing O] [StarRing O] (A : AnArc O) : �
   rw [key]
   refine ⟨Differentiable.fun_sum fun i _ => (hd i).const_mul _, ?_⟩
 
-  rw [fderiv_fun_sum fun i _ => ((hd i).const_mul _) 0, map_sum, ContinuousLinearMap.sum_apply]
+  rw [fderiv_fun_sum fun i _ => ((hd i).const_mul _) 0, map_sum, sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_mul, hFv, fderiv_const_mul (hd i 0)]
   rfl
@@ -926,11 +926,11 @@ theorem spec_tangent : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Numb
   have hw₁ : T₁ < w.im := (le_max_left _ _).trans_lt hw'
   have hwC : C.T < w.im := hT₁.trans_lt hw₁
   obtain ⟨hy, hg, hv⟩ := hs w ((le_max_right _ _).trans_lt hw')
-  haveI := ArcSectionValue.isLocalRing_germ Γ w
-  haveI := isLocalRing_dual (R := Γ.R w)
-  haveI := o.proper
-  haveI : IsLocalHom (Γ.ev w).toRingHom := ⟨fun a ha => Γ.unit w a ha.ne_zero⟩
-  haveI := isLocalHom_dualMapR (Γ.ev w).toRingHom
+  have := ArcSectionValue.isLocalRing_germ Γ w
+  have := isLocalRing_dual (R := Γ.R w)
+  have := o.proper
+  have : IsLocalHom (Γ.ev w).toRingHom := ⟨fun a ha => Γ.unit w a ha.ne_zero⟩
+  have := isLocalHom_dualMapR (Γ.ev w).toRingHom
   obtain ⟨j, hj⟩ := ArcSectionValue.exists_chart_local (ν ≫ pullback.fst o.t.G.hom y) o.t.PP.isLB
   obtain ⟨u, hu⟩ := hc j hj
   obtain ⟨i₀, hi₀⟩ := C.bpf w hwC 0

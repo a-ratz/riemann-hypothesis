@@ -99,7 +99,7 @@ theorem exists_scalar : ∀ (G V : Type) [Group G] [TopologicalSpace G] [IsTopol
     have := heckeVec_mem_fixed hK hh hx
     rw [hb] at this
     simpa using this
-  haveI : Nontrivial (fixed π K) := Submodule.nontrivial_iff_ne_bot.2 hb
+  have : Nontrivial (fixed π K) := Submodule.nontrivial_iff_ne_bot.2 hb
   let A : Module.End ℂ (fixed π K) := (heckeLin hK hh π).restrict fun x hx => heckeVec_mem_fixed hK hh hx
   obtain ⟨c, hcA⟩ := Module.End.exists_eigenvalue A
   obtain ⟨⟨x₀, hx₀⟩, hv⟩ := hcA.exists_hasEigenvector

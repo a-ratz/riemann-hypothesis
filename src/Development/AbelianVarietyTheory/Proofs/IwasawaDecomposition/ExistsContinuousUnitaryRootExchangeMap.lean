@@ -154,8 +154,8 @@ theorem exists_continuous_isK (D : D7) (B : HSp D) (η : AE D) (hη : η * cA D 
   refine ⟨fun y => ⟨⟨kMat B v y.1, kMat B v (-y.1), kMat_mul_neg hη y.2.1 y.2.2, kMat_neg_mul hη y.2.1 y.2.2⟩,
     unitary_of_hA (hA_kMat hη y.2.1 y.2.2)⟩, ?_, fun y x => kMat_mulVec v y.1 x⟩
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact (continuous_kMat v).comp continuous_subtype_val
-  · exact (continuous_kMat v).comp continuous_subtype_val.neg
+  · exact (continuous_kMat v).comp continuous_subtypeVal
+  · exact (continuous_kMat v).comp continuous_subtypeVal.neg
 
 end GlobalTheory.RootUnip
 

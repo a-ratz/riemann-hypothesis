@@ -85,8 +85,8 @@ omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 private theorem prim_lemma (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hc : ∀ a ∈ Z, ∀ b ∈ Z, a * b = b * a)
     (hr : IsReduced Z) (c : Z) (hc0 : c ≠ 0) :
     ∃ b : Z, b * c * (b * c) = b * c ∧ b * c ≠ 0 := by
-  letI : CommRing Z := { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hc _ a.2 _ b.2) }
-  haveI : IsArtinianRing Z := IsArtinianRing.of_finite k Z
+  let : CommRing Z := { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hc _ a.2 _ b.2) }
+  have : IsArtinianRing Z := IsArtinianRing.of_finite k Z
   obtain ⟨m, y, hy⟩ := IsArtinian.exists_pow_succ_smul_dvd c (1 : Z)
   simp only [smul_eq_mul, mul_one] at hy
   have hpow : ∀ j : ℕ, c ^ m * (c * y) ^ j = c ^ m := by
@@ -190,14 +190,14 @@ theorem one_dim (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (h0 : 
     (w0 w : Fin n → k) (hw0 : e *ᵥ w0 = w0) (hw0' : w0 ≠ 0) (hw : e *ᵥ w = w) :
     ∃ u ∈ Z, u * e = u ∧ u *ᵥ w0 = w := by
   classical
-  haveI hred : IsReduced Z := hZ.2
-  letI : CommRing Z := { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hZ.1 _ a.2 _ b.2) }
-  haveI : IsArtinianRing Z := IsArtinianRing.of_finite k Z
-  haveI : IsSemisimpleRing Z := IsArtinianRing.isSemisimpleRing_of_isReduced Z
+  have hred : IsReduced Z := hZ.2
+  let : CommRing Z := { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hZ.1 _ a.2 _ b.2) }
+  have : IsArtinianRing Z := IsArtinianRing.of_finite k Z
+  have : IsSemisimpleRing Z := IsArtinianRing.isSemisimpleRing_of_isReduced Z
   let ρ : Z →+* Module.End k (Fin n → k) :=
     (Matrix.toLinAlgEquiv' : Matrix (Fin n) (Fin n) k ≃ₐ[k] Module.End k (Fin n → k)).toRingHom.comp
       Z.val.toRingHom
-  letI : Module Z (Fin n → k) := Module.compHom (Fin n → k) ρ
+  let : Module Z (Fin n → k) := Module.compHom (Fin n → k) ρ
   have hsmul : ∀ (z : Z) (v : Fin n → k), z • v = (z : Matrix (Fin n) (Fin n) k) *ᵥ v := fun _ _ => rfl
   have halg : ∀ (c : k) (v : Fin n → k), (algebraMap k Z c) • v = c • v := by
     intro c v
@@ -227,7 +227,7 @@ theorem one_dim (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (h0 : 
   have hXZ : LinearMap.toMatrix' qk ∈ Z := cent_le Z hZ h0 _ hcomm
   have hqW : ∀ x, (q x : Fin n → k) = 0 ↔ x ∈ W := by
     intro x
-    rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff hWW'.symm]
+    rw [← Submodule.projectionOnto_apply_eq_zero_iff hWW'.symm]
     exact ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
   have hXw0 : LinearMap.toMatrix' qk *ᵥ w0 = 0 := by
     rw [hX, hqW]

@@ -137,7 +137,7 @@ theorem GlobalTheory.MixHt.exists_common_denom : ∀ (k : Type) [CommRing k] (Y 
       (fun _ => ⟨1, one_mem _, by rw [mul_one, Matrix.map_one _ (map_zero _) (map_one _)]⟩)
   let H : HermLB q := H₀.pull j hjq
   have hH : IsAmpleLB H.B := (isAmple_projective_O_one k n₀).pull_of_isClosedImmersion j
-  haveI := hH.compactSpace
+  have := hH.compactSpace
   obtain ⟨W, hW, hWr⟩ := exists_open_regularAt N.isLB hr
   obtain ⟨W', hW', hWr'⟩ := exists_open_regularAt N.isLB hr'
   obtain ⟨n, -, t, ht, hle, -⟩ :=
@@ -176,7 +176,7 @@ theorem recVal_indep_sec : ArchInteg → ArchRecip → ∀ (k : Type) [CommRing 
     (hr : IsRatSec N.B r) (r' : N.B.ι → Y.functionFieldˣ) (hr' : IsRatSec N.B r'),
     recVal (T (e + 1) L) L N hr = recVal (T (e + 1) L) L N hr' := by
   intro hI hR k _ Y _ _ q hq e hd T hT N L r hr r' hr'
-  haveI : IsNoetherian Y := hq.isNoetherian
+  have : IsNoetherian Y := hq.isNoetherian
   have step1 : ∀ (P : HermLB q) (t t' : P.B.Sec) (ht : genericPoint Y ∈ nonzeroLocus t)
       (ht' : genericPoint Y ∈ nonzeroLocus t'),
       recVal (T (e + 1) L) L P (isRatSec_ratOfSec t ht) = recVal (T (e + 1) L) L P (isRatSec_ratOfSec t' ht') := by

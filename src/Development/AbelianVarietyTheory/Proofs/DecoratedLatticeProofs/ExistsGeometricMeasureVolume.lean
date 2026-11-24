@@ -142,11 +142,11 @@ theorem haar_prod : ∀ (D : D7) (V : HSp D) (μf : Measure (GfC V)), μf.IsHaar
   obtain ⟨hLC, hSC, hT2, hB, hTG, -, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   have hi := GlobalTheory.AdelicSplit.isClosed_GinfC' V
   have hf := GlobalTheory.AdelicSplit.isClosed_GfC' V
-  haveI : LocallyCompactSpace (GinfC V) := hi.locallyCompactSpace
-  haveI : LocallyCompactSpace (GfC V) := hf.locallyCompactSpace
+  have : LocallyCompactSpace (GinfC V) := hi.locallyCompactSpace
+  have : LocallyCompactSpace (GfC V) := hf.locallyCompactSpace
   let e := GlobalTheory.AdelicSplit.splitEquiv V
   let μi : Measure (GinfC V) := Measure.haar
-  haveI : SFinite μf := inferInstance
+  have : SFinite μf := inferInstance
   refine ⟨Measure.map e (μi.prod μf), μi, ContinuousMulEquiv.isHaarMeasure_map _ e, fun S E => ?_⟩
   have hset : {h : GA D V | ∃ a ∈ S, ∃ k ∈ E, h = (a : GA D V) * k} = e '' (S ×ˢ E) := by
     ext h
@@ -198,7 +198,7 @@ open scoped ENNReal NNReal
 
 theorem common_measure : ∀ (D : D7) (V : HSp D) (T : Type) (K : T → Subgroup (GL (Fin V.rank) (Lev.EAf D))) (good : ∀ ρ : D.what₂.Tau, Measure (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2) → Prop), (∀ ρ m, good ρ m → m.IsHaarMeasure) → ∀ (μf : Measure (GfC V)), μf.IsHaarMeasure → ∀ (ν : T → Measure (GA D V)), (∀ t, Lev.IsMeasLevW V (K t) good (ν t)) → ∃ ν₀ : Measure (GA D V), ν₀.IsHaarMeasure ∧ ∀ t, μf {k | Lev.finE V k.1 ∈ K t} ≠ 0 ∧ μf {k | Lev.finE V k.1 ∈ K t} ≠ ⊤ ∧ μf {k | Lev.finE V k.1 ∈ K t} • ν t = ν₀ := by
   intro D V T K good hgood μf hμf ν hν
-  haveI : SecondCountableTopology (GA D V) := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
+  have : SecondCountableTopology (GA D V) := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
   obtain ⟨μR, μi, hR, hprod⟩ := GlobalTheory.T.exists_haar_adelicUnitary_product_real_finite D V μf hμf
   obtain ⟨hdec, hfin⟩ := GlobalTheory.T.adelicUnitary_real_mul_finite_decomposition D V
   rcases isEmpty_or_nonempty T with hT | ⟨⟨t₀⟩⟩
@@ -208,11 +208,11 @@ theorem common_measure : ∀ (D : D7) (V : HSp D) (T : Type) (K : T → Subgroup
   obtain ⟨⟨m, hm⟩, -⟩ := hAall A hA
   obtain ⟨B, hBm, hB0, hBT⟩ := GlobalTheory.T.exists_box_finite_pos_product_haar_unitaryGroups D.what₂.Tau (fun ρ => (V.sig (tauE D ρ)).1) (fun ρ => (V.sig (tauE D ρ)).2) m
     (fun ρ => hgood ρ _ (hm ρ))
-  haveI hνH : ∀ t, (ν t).IsHaarMeasure := fun t => (hν t).1
+  have hνH : ∀ t, (ν t).IsHaarMeasure := fun t => (hν t).1
   let S : Set (GinfC V) := {a | ∀ ρ, ∃ b ∈ B ρ, UpqT.mat b * A ρ = A ρ * infMat D.sp.cm.sig V.gram (θ ρ) (a : GA D V)}
   have key : ∀ t, ((ν t).haarScalarFactor μR : ℝ≥0∞) * (μi S * μf {k | Lev.finE V k.1 ∈ K t}) = ∏ ρ, m ρ (B ρ) := by
     intro t
-    haveI : (ν t).IsHaarMeasure := (hν t).1
+    have : (ν t).IsHaarMeasure := (hν t).1
     have e := Measure.isMulLeftInvariant_eq_smul (ν t) μR
     have hbox := (((hν t).2.2 θ hθ).2 A hA).2 m hm B hBm
     have hset : {h : GA D V | Lev.finE V h ∈ K t ∧ ∀ ρ, ∃ b ∈ B ρ, UpqT.mat b * A ρ = A ρ * infMat D.sp.cm.sig V.gram (θ ρ) h} =
@@ -232,10 +232,10 @@ theorem common_measure : ∀ (D : D7) (V : HSp D) (T : Type) (K : T → Subgroup
         refine ⟨by rw [e1]; exact hk, fun ρ => ?_⟩
         obtain ⟨b, hb, hb'⟩ := ha ρ
         exact ⟨b, hb, by rw [hb', e2 (θ ρ)]⟩
-    rw [e, hset, Measure.smul_apply, hprod] at hbox
+    rw [e, hset, smul_apply, hprod] at hbox
     rw [← hbox, ENNReal.smul_def, smul_eq_mul]
   have hc0 : ∀ t, ((ν t).haarScalarFactor μR : ℝ≥0∞) ≠ 0 := fun t => by
-    haveI : (ν t).IsHaarMeasure := (hν t).1
+    have : (ν t).IsHaarMeasure := (hν t).1
     exact_mod_cast (Measure.haarScalarFactor_pos_of_isHaarMeasure (ν t) μR).ne'
   have hcT : ∀ t, ((ν t).haarScalarFactor μR : ℝ≥0∞) ≠ ⊤ := fun t => ENNReal.coe_ne_top
   have hX0 : μi S ≠ 0 := fun h0 => hB0 (by rw [← key t₀, h0, zero_mul, mul_zero])
@@ -245,7 +245,7 @@ theorem common_measure : ∀ (D : D7) (V : HSp D) (T : Type) (K : T → Subgroup
     hBT (by rw [← key t, h0, ENNReal.mul_top hX0, ENNReal.mul_top (hc0 t)])
   refine ⟨((∏ ρ, m ρ (B ρ)) / μi S) • μR, ?_, fun t => ⟨hY0 t, hYT t, ?_⟩⟩
   · exact Measure.IsHaarMeasure.smul _ (ENNReal.div_pos_iff.2 ⟨hB0, hXT⟩).ne' (ENNReal.div_ne_top hBT hX0)
-  · haveI : (ν t).IsHaarMeasure := (hν t).1
+  · have : (ν t).IsHaarMeasure := (hν t).1
     have e := Measure.isMulLeftInvariant_eq_smul (ν t) μR
     have hv : μf {k | Lev.finE V k.1 ∈ K t} * ((ν t).haarScalarFactor μR : ℝ≥0∞) = (∏ ρ, m ρ (B ρ)) / μi S := by
       rw [ENNReal.eq_div_iff hX0 hXT, ← key t]
@@ -253,7 +253,7 @@ theorem common_measure : ∀ (D : D7) (V : HSp D) (T : Type) (K : T → Subgroup
     rw [← hv]
     conv_lhs => rw [e]
     ext s _
-    simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def, mul_assoc]
+    simp only [smul_apply, smul_eq_mul, ENNReal.smul_def, mul_assoc]
 
 noncomputable def volOf {D : D7} {V : HSp D} (μ : Measure (GA D V)) (h : μ.IsHaarMeasure) : Vol V :=
   ⟨μ, (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ h).2.choose, h,
@@ -265,7 +265,7 @@ theorem measures_common : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
   intro D L hT Gi Gl Kc Yd cX ex W u hP a y b _
   have hM : (pk W).IsModels := hP.bot.hyp.2.2.2.1.models
   have hm2 := D.R.two_le_m
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V =>
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V =>
     (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
   have hf : ∀ j, ∃ μ : Measure (GfC (Yc D j)), μ.IsHaarMeasure := fun j =>
     (GlobalTheory.T.exists_haar_finitePoints_fourierJacobi_bessel D (Yc D j)).1
@@ -301,28 +301,28 @@ theorem measures_common : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
   let vS : ∀ j, Vol (Yc D (j + 1)) := fun j => if h : j + 2 * 0 + 2 = D.R.m then volOf _ (hLH j h)
     else volOf (ν₀ (j + 1)) (hν₀H (j + 1))
   have hvS1 : ∀ j (h : j + 2 * 0 + 2 = D.R.m), (vS j).μ = Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ := by
-    intro j h; simp only [vS, dif_pos h, volOf_μ]
+    intro j h; simp only [vS, dite_eq_left h, volOf_μ]
   have hvS2 : ∀ j, ¬ (j + 2 * 0 + 2 = D.R.m) → (vS j).μ = ν₀ (j + 1) := by
-    intro j h; simp only [vS, dif_neg h, volOf_μ]
+    intro j h; simp only [vS, dite_eq_right h, volOf_μ]
   let vol : ∀ k, Vol (Yc D k) := fun k => Nat.casesOn (motive := fun k => Vol (Yc D k)) k (volOf (ν₀ 0) (hν₀H 0)) vS
   let κ : ℕ → ℝ := fun k => Nat.casesOn (motive := fun _ => ℝ) k 1 fun j => if h : j + 2 * 0 + 2 = D.R.m then
     ((Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) : ℝ) else 1
   have hκ1 : ∀ j (h : j + 2 * 0 + 2 = D.R.m), κ (j + 1) =
       ((Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) : ℝ) := by
-    intro j h; simp only [κ, dif_pos h]
+    intro j h; simp only [κ, dite_eq_left h]
   have hκ2 : ∀ k, k + 1 ≠ D.R.m → κ k = 1 := by
     intro k hk
     cases k with
     | zero => rfl
-    | succ j => simp only [κ, dif_neg (show ¬ (j + 2 * 0 + 2 = D.R.m) by omega)]
+    | succ j => simp only [κ, dite_eq_right (show ¬ (j + 2 * 0 + 2 = D.R.m) by omega)]
   have hκpos : ∀ k, 0 < κ k := by
     intro k
     by_cases hk : k + 1 = D.R.m
     · obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := ⟨k - 1, by omega⟩
       have h : j + 2 * 0 + 2 = D.R.m := by omega
       rw [hκ1 j h]
-      haveI := hLH j h
-      haveI := hν₀H (j + 1)
+      have := hLH j h
+      have := hν₀H (j + 1)
       exact_mod_cast Measure.haarScalarFactor_pos_of_isHaarMeasure _ _
     · rw [hκ2 k hk]; exact one_pos
   have hset : ∀ k (β : GL (Fin (Yc D k).rank) (Lev.EAf D)) (Ld : Formalism.L2.DIV.LevDat D.host.E ℂ (Yc D k).rank),
@@ -333,7 +333,7 @@ theorem measures_common : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
   · intro t j hj
     have hX := hν₀ (j + 1) hj t
     show (vS j).μ = _
-    rw [GlobalTheory.Fam.volLev, if_pos hj]
+    rw [GlobalTheory.Fam.volLev, ite_eq_left hj]
     change (vS j).μ = ENNReal.ofReal (κ (j + 1) * (μf (j + 1) {g | g.1 ∈ levS _ ((pk W).βY (j + 1))
       ((pk W).datYt t (j + 1) (pk W).triv)}).toReal) • (pk W).νY t (j + 1)
     rw [hset]
@@ -342,18 +342,18 @@ theorem measures_common : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
       ((pk W).datYt t (j + 1) (pk W).triv)} = X at hX0 hXT hXe ⊢
     by_cases hL : j + 2 * 0 + 2 = D.R.m
     · rw [hvS1 j hL, hκ1 j hL]
-      haveI := hLH j hL
-      haveI := hν₀H (j + 1)
+      have := hLH j hL
+      have := hν₀H (j + 1)
       have e := Measure.isMulLeftInvariant_eq_smul (Measure.map (y.jac j 0 hL).d.emb0 (a.x (j + 1)).vol.μ) (ν₀ (j + 1))
       generalize (Measure.map (y.jac j 0 hL).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) = c at e ⊢
       rw [e, ← hXe, ENNReal.ofReal_mul c.coe_nonneg, ENNReal.ofReal_coe_nnreal, ENNReal.ofReal_toReal hXT, mul_smul]
       ext s _
-      simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def]
+      simp only [smul_apply, smul_eq_mul, ENNReal.smul_def]
     · rw [hvS2 j hL, hκ2 (j + 1) (by omega), one_mul, ENNReal.ofReal_toReal hXT, hXe]
   · intro t
     obtain ⟨hX0, hXT, hXe⟩ := hν₀T t
     show ν₀T = _
-    rw [GlobalTheory.Fam.volLev, if_neg (by omega)]
+    rw [GlobalTheory.Fam.volLev, ite_eq_right (by omega)]
     change ν₀T = ENNReal.ofReal (κ D.R.m * (μT {k | k.1 ∈ levS _ (pk W).βX ((pk W).datXt t)}).toReal) • (pk W).νX t
     rw [hκ2 D.R.m (by omega), one_mul]
     have hs : {g : GfC D.sp.X' | g.1 ∈ levS _ (pk W).βX ((pk W).datXt t)} =

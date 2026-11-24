@@ -109,7 +109,7 @@ theorem exists_etChart : ∀ (R : Type) [CommRing R] [IsLocalRing R] (A : Type) 
   intro R _ _ A _ _ _ ε
   classical
   let p : Ideal A := (maximalIdeal R).comap ε
-  haveI : p.IsPrime := Ideal.comap_isPrime _ _
+  have : p.IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨κ, a, b, hb⟩ := Module.exists_basis_of_span_of_flat _
     (span_range_map_derivation_of_isLocalization R _ (Localization.AtPrime p) p.primeCompl)
   let t : κ → A := fun i => a i - algebraMap R A (ε (a i))
@@ -152,7 +152,7 @@ theorem exists_etChart : ∀ (R : Type) [CommRing R] [IsLocalRing R] (A : Type) 
   · have hg' : ε g ∉ maximalIdeal R := hg
     exact (IsLocalRing.notMem_maximalIdeal.mp hg')
   · unfold EtChart
-    letI inst : Algebra (MvPolynomial (Fin (Nat.card κ)) R) (Localization.Away g) :=
+    let inst : Algebra (MvPolynomial (Fin (Nat.card κ)) R) (Localization.Away g) :=
       ((algebraMap A (Localization.Away g)).comp (MvPolynomial.aeval (t ∘ eκ.symm)).toRingHom).toAlgebra
     show Algebra.Etale (MvPolynomial (Fin (Nat.card κ)) R) (Localization.Away g)
     have hsc : IsScalarTower R (MvPolynomial (Fin (Nat.card κ)) R) (Localization.Away g) :=
@@ -165,8 +165,8 @@ theorem exists_etChart : ∀ (R : Type) [CommRing R] [IsLocalRing R] (A : Type) 
       intro i
       change algebraMap A (Localization.Away g) (MvPolynomial.aeval (t ∘ eκ.symm) (MvPolynomial.X i)) = _
       rw [MvPolynomial.aeval_X]; rfl
-    haveI : Algebra.FormallySmooth A (Localization.Away g) := Algebra.FormallySmooth.of_isLocalization (Submonoid.powers g)
-    haveI : Algebra.FormallySmooth R (Localization.Away g) := Algebra.FormallySmooth.comp R A (Localization.Away g)
+    have : Algebra.FormallySmooth A (Localization.Away g) := Algebra.FormallySmooth.of_isLocalization (Submonoid.powers g)
+    have : Algebra.FormallySmooth R (Localization.Away g) := Algebra.FormallySmooth.comp R A (Localization.Away g)
     let P := MvPolynomial (Fin (Nat.card κ)) R
     let bP : Module.Basis (Fin (Nat.card κ)) (Localization.Away g) ((Localization.Away g) ⊗[P] Ω[P⁄R]) :=
       (mvPolynomialBasis R (Fin (Nat.card κ))).baseChange (Localization.Away g)
@@ -178,11 +178,11 @@ theorem exists_etChart : ∀ (R : Type) [CommRing R] [IsLocalRing R] (A : Type) 
         simp [bP, bB', hbB, ← hX, P]
       rw [this]
       exact (bP.equiv bB' (Equiv.refl _)).bijective
-    haveI : Algebra.FormallyEtale P (Localization.Away g) :=
+    have : Algebra.FormallyEtale P (Localization.Away g) :=
       formallyEtale_of_bijective_kaehler_mapBaseChange R P (Localization.Away g) hbij
-    haveI : Algebra.FinitePresentation R (Localization.Away g) :=
+    have : Algebra.FinitePresentation R (Localization.Away g) :=
       Algebra.FinitePresentation.trans R A (Localization.Away g)
-    haveI : Algebra.FinitePresentation P (Localization.Away g) :=
+    have : Algebra.FinitePresentation P (Localization.Away g) :=
       Algebra.FinitePresentation.of_restrict_scalars_finitePresentation R P (Localization.Away g)
     exact ⟨inferInstance, inferInstance⟩
 end GlobalTheory.DenseSec
@@ -213,7 +213,7 @@ theorem chart (R : Type) [CommRing R] [IsLocalRing R] (U : Over (Sp R)) (hU : Sm
   obtain ⟨_, ⟨V, hV, rfl⟩, hcV, -⟩ := U.left.isBasis_affineOpens.exists_subset_of_mem_open
     (Set.mem_univ (e (closedPoint R))) isOpen_univ
   have hV : IsAffineOpen V := hV
-  haveI : IsOpenImmersion hV.fromSpec := hV.isOpenImmersion_fromSpec
+  have : IsOpenImmersion hV.fromSpec := hV.isOpenImmersion_fromSpec
   have hrange : Set.range e ⊆ Set.range hV.fromSpec := by
     rintro _ ⟨y, rfl⟩
     rw [hV.range_fromSpec]
@@ -223,8 +223,8 @@ theorem chart (R : Type) [CommRing R] [IsLocalRing R] (U : Over (Sp R)) (hU : Sm
   have hφA : Spec.map φA = hV.fromSpec ≫ U.hom := Spec.map_preimage _
   let εr : Γ(U.left, V) ⟶ CommRingCat.of R := Spec.preimage (IsOpenImmersion.lift hV.fromSpec e hrange)
   have hεr : Spec.map εr = IsOpenImmersion.lift hV.fromSpec e hrange := Spec.map_preimage _
-  letI : Algebra R Γ(U.left, V) := φA.hom.toAlgebra
-  haveI := hU
+  let : Algebra R Γ(U.left, V) := φA.hom.toAlgebra
+  have := hU
   have hsm : Smooth (hV.fromSpec ≫ U.hom) := inferInstance
   rw [← hφA, HasRingHomProperty.Spec_iff (P := @Smooth)] at hsm
   have hcomp : φA ≫ εr = 𝟙 _ := by
@@ -283,7 +283,7 @@ theorem core (KEY : ∀ (R : Type) [CommRing R] [IsLocalRing R], IsAdicComplete 
       aΩ ≫ pullback.snd _ _ = 𝟙 _ ∧ Set.range aΩ ⊆ O := by
 
   have hirrA : IrreducibleSpace (PrimeSpectrum (TensorProduct R Ω A)) := by
-    haveI : Nontrivial (TensorProduct R Ω A) :=
+    have : Nontrivial (TensorProduct R Ω A) :=
       (GlobalTheory.DenseSec.pt ((Algebra.ofId R Ω).comp ε)).toRingHom.domain_nontrivial
     have hpre := (PreirreducibleSpace.isPreirreducible_univ
       (X := ↥(pullback U.hom (Spec.map (CommRingCat.ofHom (algebraMap R Ω)))))).preimage
@@ -343,7 +343,7 @@ theorem denseSections_of_algebraic : (∀ (R : Type) [CommRing R] [IsLocalRing R
   intro KEY R _ _ _ hR U hU e he Ω _ x hx hirr O hO
   obtain ⟨A, _, _, j, _, ε, hsm, hj⟩ := chart R U hU e he
   obtain ⟨φ, rfl⟩ : ∃ φ, Spec.map φ = x := ⟨_, Spec.map_preimage x⟩
-  letI : Algebra R Ω := φ.hom.toAlgebra
+  let : Algebra R Ω := φ.hom.toAlgebra
   have hker : RingHom.ker (algebraMap R Ω) ≠ maximalIdeal R := by
     intro h
     apply hx
@@ -396,17 +396,17 @@ theorem locQuot_finiteType_formallyUnramified (R : Type) [CommRing R] (A : Type)
     Algebra.FiniteType (MvPolynomial (Fin g) Ω) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h))) ∧
       Algebra.FormallyUnramified (MvPolynomial (Fin g) Ω)
         (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h)))) := by
-  letI algPD : Algebra (MvPolynomial (Fin g) Ω) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h))) :=
+  let algPD : Algebra (MvPolynomial (Fin g) Ω) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h))) :=
     (MvPolynomial.aeval (fun i => algebraMap (TensorProduct R Ω A ⧸ I)
       (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h))) (Ideal.Quotient.mk I (1 ⊗ₜ[R] t i)))).toRingHom.toAlgebra
-  letI algRA : Algebra (MvPolynomial (Fin g) R) (Localization.Away h) :=
+  let algRA : Algebra (MvPolynomial (Fin g) R) (Localization.Away h) :=
     ((algebraMap A (Localization.Away h)).comp (MvPolynomial.aeval t).toRingHom).toAlgebra
-  haveI hEt : Algebra.Etale (MvPolynomial (Fin g) R) (Localization.Away h) := hE
-  letI algRP : Algebra (MvPolynomial (Fin g) R) (MvPolynomial (Fin g) Ω) := MvPolynomial.algebraMvPolynomial
-  letI algRD : Algebra (MvPolynomial (Fin g) R) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h))) :=
+  have hEt : Algebra.Etale (MvPolynomial (Fin g) R) (Localization.Away h) := hE
+  let algRP : Algebra (MvPolynomial (Fin g) R) (MvPolynomial (Fin g) Ω) := MvPolynomial.algebraMvPolynomial
+  let algRD : Algebra (MvPolynomial (Fin g) R) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h))) :=
     ((algebraMap (MvPolynomial (Fin g) Ω) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h)))).comp
       (algebraMap (MvPolynomial (Fin g) R) (MvPolynomial (Fin g) Ω))).toAlgebra
-  haveI hST := @IsScalarTower.of_algebraMap_eq _ _ _ _ _ _ algRP algPD algRD (fun _ => rfl)
+  have hST := @IsScalarTower.of_algebraMap_eq _ _ _ _ _ _ algRP algPD algRD (fun _ => rfl)
   let f : A →+* Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h)) :=
     (algebraMap (TensorProduct R Ω A ⧸ I) (Localization.Away (Ideal.Quotient.mk I (1 ⊗ₜ[R] h)))).comp
       ((Ideal.Quotient.mk I).comp (Algebra.TensorProduct.includeRight (R := R) (A := Ω) (B := A)).toRingHom)
@@ -528,21 +528,21 @@ theorem exists_ne_zero_algebraMap_eq_mul_of_formallyUnramified :
   let K := FractionRing P
   let S := Algebra.algebraMapSubmonoid D M
   let L := Localization S
-  letI : Algebra K L := localizationAlgebra M D
-  haveI : IsScalarTower P K L := inferInstance
+  let : Algebra K L := localizationAlgebra M D
+  have : IsScalarTower P K L := inferInstance
   have hS : S ≤ nonZeroDivisors D := by
     intro x hx
     obtain ⟨q, hq, rfl⟩ := hx
     exact mem_nonZeroDivisors_of_ne_zero
       ((map_ne_zero_iff _ hinj).2 (nonZeroDivisors.ne_zero hq))
-  haveI : IsDomain L := IsLocalization.isDomain_localization hS
+  have : IsDomain L := IsLocalization.isDomain_localization hS
   have hDL : Function.Injective (algebraMap D L) := IsLocalization.injective L hS
-  haveI : IsLocalization (M.map (algebraMap P D)) L := inferInstanceAs (IsLocalization S L)
-  haveI : Algebra.FormallyUnramified K L := Algebra.FormallyUnramified.localization_map M (S := D)
-  haveI : Algebra.EssFiniteType D L := Algebra.EssFiniteType.of_isLocalization L S
-  haveI : Algebra.EssFiniteType P L := Algebra.EssFiniteType.comp P D L
-  haveI : Algebra.EssFiniteType K L := Algebra.EssFiniteType.of_comp P K L
-  haveI : Module.Finite K L := Algebra.FormallyUnramified.finite_of_free K L
+  have : IsLocalization (M.map (algebraMap P D)) L := inferInstanceAs (IsLocalization S L)
+  have : Algebra.FormallyUnramified K L := Algebra.FormallyUnramified.localization_map M (S := D)
+  have : Algebra.EssFiniteType D L := Algebra.EssFiniteType.of_isLocalization L S
+  have : Algebra.EssFiniteType P L := Algebra.EssFiniteType.comp P D L
+  have : Algebra.EssFiniteType K L := Algebra.EssFiniteType.of_comp P K L
+  have : Module.Finite K L := Algebra.FormallyUnramified.finite_of_free K L
   have hint : IsIntegral K (algebraMap D L f) := Algebra.IsIntegral.isIntegral _
   have hne : algebraMap D L f ≠ 0 := (map_ne_zero_iff _ hDL).2 hf
   obtain ⟨u, hu⟩ := hint.isUnit hne
@@ -588,11 +588,11 @@ theorem exists_poly_vanishing_of_fibre : ∀ (R : Type) [CommRing R] (A : Type) 
   set u : TensorProduct R Ω A ⧸ N := Ideal.Quotient.mk N (1 ⊗ₜ[R] h)
   have hu : u ≠ 0 := by
     simpa [u, Ideal.Quotient.eq_zero_iff_mem] using h1
-  letI : IsDomain (TensorProduct R Ω A ⧸ N) := Ideal.Quotient.isDomain N
+  let : IsDomain (TensorProduct R Ω A ⧸ N) := Ideal.Quotient.isDomain N
   have hle : Submonoid.powers u ≤ nonZeroDivisors (TensorProduct R Ω A ⧸ N) := powers_le_nonZeroDivisors_of_noZeroDivisors hu
-  letI : IsDomain (Localization.Away u) := IsLocalization.isDomain_localization hle
+  let : IsDomain (Localization.Away u) := IsLocalization.isDomain_localization hle
   obtain ⟨hFT, hFU⟩ := GlobalTheory.T.etaleChart_localization_finiteType_formallyUnramified R A g t h hE Ω N
-  letI : Algebra (MvPolynomial (Fin g) Ω) (Localization.Away u) :=
+  let : Algebra (MvPolynomial (Fin g) Ω) (Localization.Away u) :=
     (MvPolynomial.aeval (fun i => algebraMap (TensorProduct R Ω A ⧸ N) (Localization.Away u) (Ideal.Quotient.mk N (1 ⊗ₜ[R] t i)))).toRingHom.toAlgebra
   have hf' : algebraMap (TensorProduct R Ω A ⧸ N) (Localization.Away u) (Ideal.Quotient.mk N f) ≠ 0 := by
     intro h0
@@ -652,11 +652,11 @@ theorem hensel_etChart : ∀ (R : Type) [CommRing R] [IsLocalRing R], IsAdicComp
     ∃ a : A →ₐ[R] R, IsUnit (a h) ∧ ∀ i, a (t i) = c i := by
   intro R _ _ hc A _ _ g t h hE ε hε c hcε
   classical
-  haveI := hc
-  letI iPB : Algebra (MvPolynomial (Fin g) R) (Localization.Away h) :=
+  have := hc
+  let iPB : Algebra (MvPolynomial (Fin g) R) (Localization.Away h) :=
     ((algebraMap A (Localization.Away h)).comp (MvPolynomial.aeval t).toRingHom).toAlgebra
-  haveI hEt : Algebra.Etale (MvPolynomial (Fin g) R) (Localization.Away h) := hE
-  letI iPR : Algebra (MvPolynomial (Fin g) R) R := (MvPolynomial.aeval c).toRingHom.toAlgebra
+  have hEt : Algebra.Etale (MvPolynomial (Fin g) R) (Localization.Away h) := hE
+  let iPR : Algebra (MvPolynomial (Fin g) R) R := (MvPolynomial.aeval c).toRingHom.toAlgebra
   have hPB : ∀ p, algebraMap (MvPolynomial (Fin g) R) (Localization.Away h) p =
       algebraMap A (Localization.Away h) (MvPolynomial.aeval t p) := fun _ => rfl
   have hPR : ∀ p, algebraMap (MvPolynomial (Fin g) R) R p = MvPolynomial.aeval c p := fun _ => rfl

@@ -61,11 +61,11 @@ private theorem inPar_one {F : Type} [Field F] (a n : ℕ) : InPar a (1 : GL (Fi
 
 theorem frobTwo : FrobTwo := by
   intro F _ _ a b n _
-  haveI : Fintype (GL (Fin n) F) := Fintype.ofFinite _
-  haveI : Fintype (GL (Fin a) F) := Fintype.ofFinite _
-  haveI : Fintype (GL (Fin b) F) := Fintype.ofFinite _
+  have : Fintype (GL (Fin n) F) := Fintype.ofFinite _
+  have : Fintype (GL (Fin a) F) := Fintype.ofFinite _
+  have : Fintype (GL (Fin b) F) := Fintype.ofFinite _
   have hN : (Nat.card {p : GL (Fin n) F // InPar a p} : ℂ) ≠ 0 := by
-    haveI : Nonempty {p : GL (Fin n) F // InPar a p} := ⟨⟨1, inPar_one a n⟩⟩
+    have : Nonempty {p : GL (Fin n) F // InPar a p} := ⟨⟨1, inPar_one a n⟩⟩
     exact_mod_cast (Nat.card_pos (α := {p : GL (Fin n) F // InPar a p})).ne'
   have hG : (Fintype.card (GL (Fin n) F) : ℂ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero

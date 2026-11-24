@@ -276,7 +276,7 @@ variable (P : LocPrime l) (K LL : FinExt l)
 theorem mem_filV_iff (a : ℤ) (z : (Fin 1 → ↥LL.1) ⊗[ℚ_[l]] P.R.BdR) :
     z ∈ FilV (P.PD K) (LL := ↥LL.1) (V := Fin 1 → ↥LL.1) a ↔
       ∀ σ : ↥LL.1 →ₐ[ℚ_[l]] Om l, ev σ z ∈ (P.PD K).Fil a := by
-  haveI := LL.2
+  have := LL.2
   constructor
   · rintro ⟨x, rfl⟩ σ
     induction x using TensorProduct.induction_on with
@@ -401,7 +401,7 @@ theorem genCoord_law (ψ : ↥(GK K) →* (↥LL.1)ˣ) {σ₀ : ↥LL.1 →ₐ[�
       rintro ⟨g', h⟩
       refine hσ ⟨g⁻¹ * g', ?_⟩
       rw [gc_mul, h, ← gc_mul, inv_mul_cancel, gc_one]
-    rw [genCoord, dif_neg h2, genCoord, dif_neg hσ, map_zero, mul_zero]
+    rw [genCoord, dite_eq_right h2, genCoord, dite_eq_right hσ, map_zero, mul_zero]
 
 
 
@@ -414,9 +414,9 @@ theorem component_line {AI : LocAinf l P} (T : LocTied6 l P AI) (ψ : ↥(GK K) 
     ∃ z ∈ DdRE (P.PD K) (lineRep ψ) τ', (∀ w ∈ DdRE (P.PD K) (lineRep ψ) τ', ∃ c : ↥LL.1, w = c • z) ∧
       z ∈ FilV (P.PD K) (LL := ↥LL.1) (V := Fin 1 → ↥LL.1) (-d) ∧
       z ∉ FilV (P.PD K) (LL := ↥LL.1) (V := Fin 1 → ↥LL.1) (-d + 1) := by
-  haveI := LL.2
+  have := LL.2
   have hF := (PositivityTheory.LocInh.tied_field l P AI T).1
-  haveI : IsDomain P.R.BdR := hF.isDomain
+  have : IsDomain P.R.BdR := hF.isDomain
   have hy0 : y ≠ 0 := fun h => hd2 (h ▸ Submodule.zero_mem _)
   obtain ⟨u, hyu⟩ := hF.mul_inv_cancel hy0
   obtain ⟨hu1, hu2⟩ := inv_fil T K d hd1 hd2 hyu
@@ -434,7 +434,7 @@ theorem component_line {AI : LocAinf l P} (T : LocTied6 l P AI) (ψ : ↥(GK K) 
   set z : (Fin 1 → ↥LL.1) ⊗[ℚ_[l]] P.R.BdR := coordInv (Om := Om l) f with hzdef
   have hz : ∀ σ : ↥LL.1 →ₐ[ℚ_[l]] Om l, ev σ z = f σ := fun σ => ev_coordInv f σ
   have hoff : ∀ σ : ↥LL.1 →ₐ[ℚ_[l]] Om l, (¬ ∃ g : ↥(GK K), gc g σ₀ = σ) → f σ = 0 :=
-    fun σ h => dif_neg h
+    fun σ h => dite_eq_right h
   have hinv : ∀ g, actVdR (P.PD K) (lineRep ψ) g z = z := fun g => ev_injective (Om := Om l) fun σ => by
     obtain ⟨σ', rfl⟩ : ∃ σ', gc g σ' = σ := ⟨gc g⁻¹ σ, by rw [← gc_mul, mul_inv_cancel, gc_one]⟩
     rw [ev_act, hz, hz, hf, genCoord_law P ψ hlaw]
@@ -529,8 +529,8 @@ theorem jumps_of_periods : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : L
         multV (P.PD K) (lineRep ((Units.map ((τ : ↥K.1 →+* ↥LL.1) : ↥K.1 →* ↥LL.1)).comp χ)) τ' a =
           if a = (if τ' = τ then (-1 : ℤ) else 0) then 1 else 0 := by
   rintro l _ P AI ⟨T⟩ K LL hsplit χ hP τ
-  haveI := K.2
-  haveI := LL.2
+  have := K.2
+  have := LL.2
   set ψ : ↥(GK K) →* (↥LL.1)ˣ := (Units.map ((τ : ↥K.1 →+* ↥LL.1) : ↥K.1 →* ↥LL.1)).comp χ with hψ
   have key : ∀ τ' : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1, ∃ z ∈ DdRE (P.PD K) (lineRep ψ) τ',
       (∀ w ∈ DdRE (P.PD K) (lineRep ψ) τ', ∃ c : ↥LL.1, w = c • z) ∧
@@ -547,7 +547,7 @@ theorem jumps_of_periods : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : L
         rw [AlgHom.comp_apply, ← hτ]
         exact h₀ x
       obtain ⟨m1, m2⟩ := h1 hμ
-      rw [if_pos hτ]
+      rw [ite_eq_left hτ]
       have m2' : y ∉ (P.PD K).Fil (1 + 1) := by
         rw [show (1 + 1 : ℤ) = 2 by norm_num]
         exact m2
@@ -555,7 +555,7 @@ theorem jumps_of_periods : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : L
     · have hμ : σ₀.comp τ ≠ K.1.val := fun h => hτ (AlgHom.ext fun x =>
         σ₀.toRingHom.injective ((h₀ x).trans (DFunLike.congr_fun h x).symm))
       obtain ⟨m1, m2⟩ := h2 hμ
-      rw [if_neg hτ]
+      rw [ite_eq_right hτ]
       have m2' : y ∉ (P.PD K).Fil (0 + 1) := by
         rw [zero_add]
         exact m2
@@ -565,7 +565,7 @@ theorem jumps_of_periods : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : L
   refine ⟨?_, fun τ' a => ?_⟩
   · have hc : Fintype.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = Module.finrank ℚ_[l] ↥K.1 := by
       rw [← GlobalTheory.DeRhamSplit.card_emb K LL hsplit, Nat.card_eq_fintype_card]
-    haveI := (GlobalTheory.Per.FontaineBound.ddR_finite_le (P.PD K) (PositivityTheory.LocInh.tied_field l P AI T).1 (lineRep ψ)).1
+    have := (GlobalTheory.Per.FontaineBound.ddR_finite_le (P.PD K) (PositivityTheory.LocInh.tied_field l P AI T).1 (lineRep ψ)).1
     obtain ⟨e1, -⟩ := GlobalTheory.DeRhamSplit.finrank_DdR (P.PD K) (lineRep ψ) hc 0
     have hone : ∀ τ' : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1, Module.finrank ↥LL.1 ↥(DdRE (P.PD K) (lineRep ψ) τ') = 1 := by
       intro τ'

@@ -297,12 +297,12 @@ theorem selmer_inequality_of_inputs [IsNoetherian Dd.R' Dd.R']
     (hCR : ∀ l : Col i dc, colIdx i dc l ∉ rowsN i dc) (hRQ : ∀ w ∈ rowsN i dc, w ∉ qsN i dc)
     (hTie : TieRow i dc (rowLenS i r π dc g0 eB e₁ s Dd hD hc hT hrk) lenRow) :
     SelmerLengthInequality i ρ π dc lenRow e' cB := by
-  haveI := Topo.rTop_addGroup_RD i r π g0 eB e₁ s Dd hD
-  haveI := Topo.rTop_mul_RD i r π g0 eB e₁ s Dd hD
-  letI := modS i r π dc g0 eB e₁ s Dd hD hc
-  haveI := KLat.towerT Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
-  letI := modS' i r π dc g0 eB e₁ s Dd hD hc
-  haveI := KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
+  have := Topo.rTop_addGroup_RD i r π g0 eB e₁ s Dd hD
+  have := Topo.rTop_mul_RD i r π g0 eB e₁ s Dd hD
+  let := modS i r π dc g0 eB e₁ s Dd hD hc
+  have := KLat.towerT Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
+  let := modS' i r π dc g0 eB e₁ s Dd hD hc
+  have := KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc)
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12⟩ := Topo.topoHyps i r π dc g0 eB e₁ s Dd hD hc u0 hcyc
   have hA := tensor_lattice_facts Dd (D.nd.T i) (RepresentationBoundsCohomology.one_le_letterBlockLength D.R) hT hrk (epsU D.nd i)
   have hL := fun w => KLat.rowLat Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i)

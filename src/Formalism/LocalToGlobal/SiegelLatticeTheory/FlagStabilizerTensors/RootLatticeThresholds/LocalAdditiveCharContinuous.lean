@@ -234,9 +234,9 @@ theorem trQ_sub (y z : (D.s.atP p).Ep) : trQ p (y - z) = trQ p y - trQ p z := by
 
 theorem trQ_cj (y : (D.s.atP p).Ep) : trQ p ((D.s.atP p).cj y) = trQ p y := by
   unfold trQ
-  letI := ((algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).comp
+  let := ((algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).comp
     (algebraMap ℚ_[Loc.resChar p] (D.s.atP p).Fp)).toAlgebra
-  haveI : IsScalarTower ℚ_[Loc.resChar p] (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : IsScalarTower ℚ_[Loc.resChar p] (D.s.atP p).Fp (D.s.atP p).Ep :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   exact Algebra.trace_eq_of_algEquiv ((D.s.atP p).cj.restrictScalars ℚ_[Loc.resChar p]) y
 
@@ -267,7 +267,7 @@ theorem psiE_tr_zero (z : (D.s.atP p).Ep) (hz : trQ p z = 0) : (D.s.atP p).psiE 
   change ‖trQ p z - (a : ℚ_[Loc.resChar p])‖ ≤ 1 at hle
   rw [hz, zero_sub, norm_neg] at hle
   have h1 := den_one_of (Loc.resChar p) a n hden hle
-  have ha : ((a.num : ℚ) : ℂ) = (a : ℂ) := by rw [Rat.coe_int_num_of_den_eq_one h1]
+  have ha : ((a.num : ℚ) : ℂ) = (a : ℂ) := by rw [Rat.intCast_num_of_den_eq_one h1]
   rw [heq, ← ha, Rat.cast_intCast, mul_comm]
   exact Complex.exp_int_mul_two_pi_mul_I a.num
 
@@ -345,10 +345,10 @@ theorem local_additive_char_conj (y : (D.s.atP p).Ep) : psi0 p δ ((D.s.atP p).c
   rw [map_neg, map_mul, cj_alg']
 
 theorem local_additive_char_continuous (hc : Continuous (D.s.atP p).psiE) : Continuous (psi0 p δ) := by
-  haveI := (D.s.atP p).top
-  haveI := (D.s.atP p).lf
-  haveI := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
-  haveI := IsModuleTopology.toContinuousSMul (D.s.atP p).Fp (D.s.atP p).Ep
+  have := (D.s.atP p).top
+  have := (D.s.atP p).lf
+  have := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
+  have := IsModuleTopology.toContinuousSMul (D.s.atP p).Fp (D.s.atP p).Ep
   have hl : Continuous (LinearMap.mulRight (D.s.atP p).Fp (-(algebraMap (D.s.atP p).Fp (D.s.atP p).Ep δ⁻¹))) :=
     IsModuleTopology.continuous_of_linearMap _
   exact hc.comp hl
@@ -455,10 +455,10 @@ def psiFof : AddChar (D.s.atP p).Fp ℂ :=
 theorem psiFof_apply (y : (D.s.atP p).Fp) : psiFof p δ sg y = psi0 p δ (sg.e.symm (y, 0)) := rfl
 
 theorem psiFof_cont (hc : Continuous (D.s.atP p).psiE) : Continuous (psiFof p δ sg) := by
-  haveI := (D.s.atP p).top
-  haveI := (D.s.atP p).lf
-  haveI := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
-  haveI := IsModuleTopology.toContinuousSMul (D.s.atP p).Fp (D.s.atP p).Ep
+  have := (D.s.atP p).top
+  have := (D.s.atP p).lf
+  have := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
+  have := IsModuleTopology.toContinuousSMul (D.s.atP p).Fp (D.s.atP p).Ep
   have h1 : Continuous (sg.e.symm.toLinearMap.comp (LinearMap.inl (D.s.atP p).Fp (D.s.atP p).Fp (D.s.atP p).Fp)) :=
     IsModuleTopology.continuous_of_linearMap _
   exact (local_additive_char_continuous p δ hc).comp h1
@@ -621,30 +621,30 @@ theorem psiE_of_norm (z : (D.s.atP p).Ep) (hz : ‖trQ p z‖ ≤ 1) : (D.s.atP 
     rw [norm_neg, ← sub_eq_add_neg, sub_sub_cancel] at h
     exact h.trans (max_le hz hle)
   have h1 := den_one_of (Loc.resChar p) a n hden ha
-  have ha' : ((a.num : ℚ) : ℂ) = (a : ℂ) := by rw [Rat.coe_int_num_of_den_eq_one h1]
+  have ha' : ((a.num : ℚ) : ℂ) = (a : ℂ) := by rw [Rat.intCast_num_of_den_eq_one h1]
   rw [heq, ← ha', Rat.cast_intCast, mul_comm]
   exact Complex.exp_int_mul_two_pi_mul_I a.num
 
 theorem t2Fp : T2Space (D.s.atP p).Fp := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   refine IsTopologicalAddGroup.t2Space_of_zero_sep fun x hx => ?_
   have hv : ValuativeRel.valuation (D.s.atP p).Fp x ≠ 0 := (Valuation.ne_zero_iff _).2 hx
   refine ⟨{z | ValuativeRel.valuation (D.s.atP p).Fp z < ValuativeRel.valuation (D.s.atP p).Fp x},
     (IsValuativeTopology.mem_nhds_zero_iff _).2 ⟨Units.mk0 _ hv, fun z hz => by simpa using hz⟩,
-    by intro h; simp only [Set.mem_setOf_eq] at h; exact lt_irrefl _ h⟩
+    by intro h; simp only [Set.mem_ofPred_eq] at h; exact lt_irrefl _ h⟩
 
 theorem trQ_cont : Continuous (trQ p) := by
-  haveI := (D.s.atP p).lf
-  haveI := t2Fp p
-  haveI := (D.s.atP p).top
-  haveI := (D.s.atP p).free
-  haveI := (D.s.atP p).qlFin
-  haveI := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
-  letI := ((algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).comp
+  have := (D.s.atP p).lf
+  have := t2Fp p
+  have := (D.s.atP p).top
+  have := (D.s.atP p).free
+  have := (D.s.atP p).qlFin
+  have := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
+  let := ((algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).comp
     (algebraMap ℚ_[Loc.resChar p] (D.s.atP p).Fp)).toAlgebra
-  haveI : IsScalarTower ℚ_[Loc.resChar p] (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : IsScalarTower ℚ_[Loc.resChar p] (D.s.atP p).Fp (D.s.atP p).Ep :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : ContinuousSMul ℚ_[Loc.resChar p] (D.s.atP p).Fp := by
+  have : ContinuousSMul ℚ_[Loc.resChar p] (D.s.atP p).Fp := by
     refine ⟨?_⟩
     have : (fun x : ℚ_[Loc.resChar p] × (D.s.atP p).Fp => x.1 • x.2) =
         fun x => algebraMap ℚ_[Loc.resChar p] (D.s.atP p).Fp x.1 * x.2 := by
@@ -662,10 +662,10 @@ theorem trQ_cont : Continuous (trQ p) := by
   exact h2.comp h1
 
 theorem psiE_cont : Continuous (D.s.atP p).psiE := by
-  haveI := (D.s.atP p).top
-  haveI := (D.s.atP p).lf
-  haveI := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
-  haveI : IsTopologicalAddGroup (D.s.atP p).Ep := IsModuleTopology.topologicalAddGroup (D.s.atP p).Fp (D.s.atP p).Ep
+  have := (D.s.atP p).top
+  have := (D.s.atP p).lf
+  have := IsModuleTopology.toContinuousAdd (D.s.atP p).Fp (D.s.atP p).Ep
+  have : IsTopologicalAddGroup (D.s.atP p).Ep := IsModuleTopology.isTopologicalAddGroup (D.s.atP p).Fp (D.s.atP p).Ep
   have hU : IsOpen {y : (D.s.atP p).Ep | ‖trQ p y‖ ≤ 1} := by
     have := (IsUltrametricDist.isOpen_closedBall (0 : ℚ_[Loc.resChar p]) (one_ne_zero)).preimage (trQ_cont p)
     simpa [Metric.closedBall, dist_zero_right] using this

@@ -188,7 +188,7 @@ theorem kMinor_lower_lead {F : Type} [CommRing F] {r : ℕ} (L : Matrix (Fin r) 
     (h0 : ∀ l k, l < k → L l k = 0) (h1 : ∀ l, L l l = 1) (k : ℕ) (hk : k ≤ r) :
     kMinor L k hk (Fin.castLE hk) = 1 := by
   unfold kMinor
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · simp [h1]
   · intro a b hab
     exact h0 _ _ (by simpa using hab)
@@ -200,7 +200,7 @@ theorem kMinor_lower_lastRow {F : Type} [CommRing F] {r : ℕ} (L : Matrix (Fin 
     (h0 : ∀ l k, l < k → L l k = 0) (h1 : ∀ l, L l l = 1) (k l : Fin r) (hkl : k < l) :
     kMinor L ((k : ℕ) + 1) k.2 (lastRow k l) = L l k := by
   unfold kMinor
-  rw [Matrix.det_of_lowerTriangular, Fin.prod_univ_castSucc]
+  rw [Matrix.det_of_isLowerTriangular, Fin.prod_univ_castSucc]
   · have e1 : ∀ a : Fin (k : ℕ), (L.submatrix (lastRow k l) (Fin.castLE k.2)) a.castSucc a.castSucc = 1 := by
       intro a
       have : lastRow k l a.castSucc = Fin.castLE k.2 a.castSucc := by
@@ -220,7 +220,7 @@ theorem kMinor_lower_lastRow {F : Type} [CommRing F] {r : ℕ} (L : Matrix (Fin 
     have ha : (a : ℕ) ≠ k := by
       have : (a : ℕ) < b := hab'
       omega
-    simp only [Matrix.submatrix_apply, lastRow, dif_neg ha]
+    simp only [Matrix.submatrix_apply, lastRow, dite_eq_right ha]
     exact h0 _ _ (by rw [Fin.lt_def]; simpa using hab')
 
 theorem exists_normAt {F : Type} [Field F] (O : Subring F) [IsLocalRing O] {n r : ℕ}
@@ -295,7 +295,7 @@ theorem entries_mem {Ω K : Type} [Field Ω] [Field K] [Algebra Ω K] (Fd : Inte
 theorem genU_zero (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) (s : S) (l k : Fin (r s)) (h : l < k) :
     genU Ω r s l k = 0 := by
   unfold genU
-  rw [dif_neg (not_lt.2 h.le), if_neg h.ne]
+  rw [dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne]
 
 theorem genU_one (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) (s : S) (l : Fin (r s)) :
     genU Ω r s l l = 1 := by

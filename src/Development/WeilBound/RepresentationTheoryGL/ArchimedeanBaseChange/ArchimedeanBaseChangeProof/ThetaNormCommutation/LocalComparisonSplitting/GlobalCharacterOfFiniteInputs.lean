@@ -296,7 +296,7 @@ namespace GlobalTheory.CompanionTheory.QuotNorm
 
 theorem count_isInvInvariant {G : Type*} [Group G] [MeasurableSpace G] [MeasurableInv G]
     [MeasurableSingletonClass G] (H : Subgroup G) : (Measure.count : Measure H).IsInvInvariant := by
-  have hinv : MeasurableInv H := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
+  have hinv : MeasurableInv H := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
   refine ⟨?_⟩
   ext s hs
   rw [Measure.inv_apply, Measure.count_apply hs, Measure.count_apply hs.inv, ← Set.image_inv_eq_inv]
@@ -332,12 +332,12 @@ theorem phi_transpose (n : ℕ) (R : Type) [CommRing R] :
   simp only [Matrix.transpose_apply, Matrix.smul_apply, GlobalTheory.Tw.Phi, Matrix.of_apply, smul_eq_mul]
   by_cases h : (i : ℕ) + j + 1 = n
   · have h' : (j : ℕ) + i + 1 = n := by omega
-    rw [if_pos h, if_pos h', ← pow_add]
+    rw [ite_eq_left h, ite_eq_left h', ← pow_add]
     have e : n + 1 + (i : ℕ) = j + 2 * ((i : ℕ) + 1) := by omega
     rw [e, pow_add, pow_mul]
     simp
   · have h' : ¬ (j : ℕ) + i + 1 = n := by omega
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
     simp
 
 theorem phi_map (n : ℕ) {R : Type} [CommRing R] (c : R →+* R) : (GlobalTheory.Tw.Phi n R).map c = GlobalTheory.Tw.Phi n R := by
@@ -473,7 +473,7 @@ theorem exists_eigenbasis {n : ℕ} (N : Matrix (Fin n) (Fin n) ℂ) (hs : N.cha
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' N) γ hinj v
       (fun i => Module.End.hasEigenvector_iff.2
         ⟨Module.End.mem_eigenspace_iff.2 (by simpa using hNv i), hv0 i⟩)
-  have hu : IsUnit (Matrix.of v)ᵀ := linearIndependent_cols_iff_isUnit.1 hli
+  have hu : IsUnit (Matrix.of v)ᵀ := linearIndependent_col_iff_isUnit.1 hli
   obtain ⟨h, hh⟩ := hu
   refine ⟨h, γ, hinj, hroot, ?_⟩
   have hh' : h.val = (Matrix.of v)ᵀ := hh
@@ -1119,7 +1119,7 @@ theorem nontrivial_finiteAdeles : Nontrivial (Af E) := by
   exact ⟨⟨0, 1, fun h => zero_ne_one (congrArg (fun x : Af E => x v₀) h)⟩⟩
 
 theorem ratF_injective : Function.Injective (ratF E n) := by
-  haveI : Nontrivial (Af E) := nontrivial_finiteAdeles
+  have : Nontrivial (Af E) := nontrivial_finiteAdeles
   intro g h e
   apply Units.ext
   ext i j
@@ -1257,7 +1257,7 @@ theorem normaliser_unconj {H H' : Subgroup G} {g : G} (hH' : ∀ x, x ∈ H' ↔
 
 theorem qConjOf_holds : QConjOf := by
   intro hI G _ _ _ _ _ μ _ _ H H' _ F g hF hFH hH'
-  haveI : Countable H' := Countable.of_equiv _ (conjEquiv hH').symm
+  have : Countable H' := Countable.of_equiv _ (conjEquiv hH').symm
   by_cases hex : ∃ ρ, IsQuotNormaliser H Measure.count ρ
   · obtain ⟨ρ, hρ⟩ := hex
     have hρ' := normaliser_conj hH' hρ
@@ -1303,7 +1303,7 @@ theorem twConj_twConj {G : Type*} [Group G] (θ : Monoid.End G) (x g d : G) :
 theorem orbit_preimage_eq {G : Type*} [Group G] (θ : Monoid.End G) (g d : G) (C : Set G) :
     {x | twConj θ x (twConj θ g d) ∈ C} = (fun y => g⁻¹ * y) '' {y | twConj θ y d ∈ C} := by
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_image, twConj_twConj]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, twConj_twConj]
   constructor
   · intro h
     exact ⟨g * x, h, by group⟩
@@ -1460,7 +1460,7 @@ theorem locallyCompact_units {M : Type} [Ring M] [TopologicalSpace M] [IsTopolog
 
 theorem secondCountable_units {M : Type} [Monoid M] [TopologicalSpace M] [SecondCountableTopology M] :
     SecondCountableTopology Mˣ := by
-  haveI : SecondCountableTopology Mᵐᵒᵖ := (MulOpposite.opHomeomorph (M := M)).symm.secondCountableTopology
+  have : SecondCountableTopology Mᵐᵒᵖ := (MulOpposite.opHomeomorph (M := M)).symm.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
 theorem t2Space_units {M : Type} [Monoid M] [TopologicalSpace M] [T2Space M] : T2Space Mˣ :=
@@ -1469,10 +1469,10 @@ theorem t2Space_units {M : Type} [Monoid M] [TopologicalSpace M] [T2Space M] : T
 theorem top_GL {R : Type} [CommRing R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] [LocallyCompactSpace R]
     [SecondCountableTopology R] (n : ℕ) :
     LocallyCompactSpace (GL (Fin n) R) ∧ SecondCountableTopology (GL (Fin n) R) ∧ T2Space (GL (Fin n) R) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R))
-  haveI : T2Space (Matrix (Fin n) (Fin n) R) := inferInstanceAs (T2Space (Fin n → Fin n → R))
+  have : T2Space (Matrix (Fin n) (Fin n) R) := inferInstanceAs (T2Space (Fin n → Fin n → R))
   exact ⟨locallyCompact_units, secondCountable_units, t2Space_units⟩
 
 theorem continuous_thetaR {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A] (σ : A →+* A)
@@ -1485,8 +1485,8 @@ theorem countable_numberField (E : Type) [Field E] [NumberField E] : Countable E
   exact Function.Injective.countable b.equivFun.injective
 
 theorem countable_GL (E : Type) [Field E] [NumberField E] (n : ℕ) : Countable (GL (Fin n) E) := by
-  haveI := countable_numberField E
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have := countable_numberField E
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
   exact Function.Injective.countable (f := fun g : GL (Fin n) E => (g : Matrix (Fin n) (Fin n) E)) fun _ _ h => Units.ext h
 
 theorem continuous_thF (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) : Continuous (thF E n) := by
@@ -1498,12 +1498,12 @@ theorem continuous_thF (E : Type) [Field E] [NumberField E] [IsCMField E] (n : �
 
 theorem topo : Topo := by
   intro E _ _ _ n
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
   obtain ⟨c1, c2, -⟩ := top_GL (R := ℂ) n
   exact ⟨top_GL n, top_GL n, ⟨c1, c2⟩, countable_GL E n, continuous_thF E n,
     continuous_thetaR _ Complex.continuous_conj n⟩
@@ -1647,12 +1647,12 @@ theorem global_character_of_holds : GlobalCharacterOfInputs := by
     rw [hg₁, hg₂, hO E a b μ₁ μ₂ _ _ g₁ _ g₂ (hA E hU a b S u₁ u₂ hu₁ hu₂ ψ φ₁ φ₂ hψ hφ₁ hφ₂ _ _)]
   rw [finsum_eq_if]
   by_cases h : pol x₁ ∈ Ell E a ∧ pol x₂ ∈ Ell E b
-  · rw [if_pos (hiff.2 h), if_pos h, horb]
+  · rw [ite_eq_left (hiff.2 h), ite_eq_left h, horb]
     have ht := hc S hS u₁ u₂ hu₁ hu₂ l₁ l₂ val ψ φ₁ φ₂ hL hφ₁ hφ₂ (x₁.rep * u₁) (x₂.rep * u₂)
       (hr₁.1 (hiff.2 h).1) (hr₂.1 (hiff.2 h).2)
     simp only [mul_inv_cancel_right] at ht
     exact ht
-  · rw [if_neg (mt hiff.1 h), if_neg h, mul_zero]
+  · rw [ite_eq_right (mt hiff.1 h), ite_eq_right h, mul_zero]
 
 end PositivityTheory.Rg.BcB.G8
 
@@ -1700,8 +1700,8 @@ theorem termOf_holds : TermOf := by
   intro E _ _ _ hU a b _ _ _ _ _ _ _ _ μ₁ _ μ₂ _ ν₁ _ ν₂ _
   obtain ⟨⟨hlcA, hscA, ht2A⟩, ⟨hlcfA, hscfA, ht2fA⟩, ⟨hlcCA, hscCA⟩, hcntA, -, hθA⟩ := hTopo E a
   obtain ⟨⟨hlcB, hscB, ht2B⟩, ⟨hlcfB, hscfB, ht2fB⟩, ⟨hlcCB, hscCB⟩, hcntB, -, hθB⟩ := hTopo E b
-  letI mB : MeasurableSpace (Gf E a b) := borel _
-  haveI : BorelSpace (Gf E a b) := ⟨rfl⟩
+  let mB : MeasurableSpace (Gf E a b) := borel _
+  have : BorelSpace (Gf E a b) := ⟨rfl⟩
   obtain ⟨e, he⟩ := hCI E a b
   let e' : (GA E a × GA E b) →* (Gi E a b × Gf E a b) := e.toMulEquiv.toMonoidHom
   have he' : ∀ x, e' x = comps x := he
@@ -1710,7 +1710,7 @@ theorem termOf_holds : TermOf := by
   have hαH : (Measure.pi fun _ : InfinitePlace E => ν₁.prod ν₂).IsHaarMeasure := inferInstance
   let α : Measure (Gi E a b) := Measure.pi fun _ => ν₁.prod ν₂
   obtain ⟨β, hβ, hmap⟩ := hHS (GA E a × GA E b) (Gi E a b) (Gf E a b) (μ₁.prod μ₂) α e
-  haveI := hβ
+  have := hβ
   obtain ⟨hKo₁, hKc₁⟩ := hKf E a
   obtain ⟨hKo₂, hKc₂⟩ := hKf E b
   have hKo : IsOpen (((Kf E a).prod (Kf E b) : Subgroup (Gf E a b)) : Set (Gf E a b)) := by
@@ -1738,7 +1738,7 @@ theorem termOf_holds : TermOf := by
   have hF₁i : Integrable F₁ α := Integrable.fintype_prod hint
   have hF₁m : Measurable F₁ :=
     (continuous_finsetProd _ fun v _ => (hfc v).comp (continuous_apply v)).measurable
-  haveI : Countable ↥((ratCent d₁).prod (ratCent d₂)) := by
+  have : Countable ↥((ratCent d₁).prod (ratCent d₂)) := by
     have hsub : (((ratCent d₁).prod (ratCent d₂) : Subgroup (GA E a × GA E b)) : Set (GA E a × GA E b)) ⊆
         Set.range (fun p : GL (Fin a) E × GL (Fin b) E => (ratGL E a p.1, ratGL E b p.2)) := by
       intro x hx

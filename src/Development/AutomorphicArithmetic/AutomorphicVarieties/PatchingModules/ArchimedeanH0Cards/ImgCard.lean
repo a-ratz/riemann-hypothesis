@@ -215,7 +215,7 @@ private theorem selCard_mem {l : ℕ} [Fact l.Prime] {L : Loc} {G G0 : Glob l L}
   · obtain ⟨-, -, -, -, -, ht, -⟩ := finAm l G0.frame n x e 0
     rw [adicLC _ _ _ e _ ht]
     have hyc : IsLocallyConstant y.1 := (IsLocallyConstant.iff_continuous _).2 y.2.1
-    exact (hyc.comp_continuous continuous_subtype_val).comp
+    exact (hyc.comp_continuous continuous_subtypeVal).comp
       fun m => (o.e m : Matrix (Fin n) (Fin n) (x.Am e)) i j
   · show (o.e (y.1 ((g * g' : G.frame.G₀) : G.Γ)) : Matrix (Fin n) (Fin n) (x.Am e)) =
       o.e (y.1 g) + x.ρX (x.Am e) (h.p₀ g) * o.e (y.1 g') * x.ρX (x.Am e) (h.p₀ g⁻¹)
@@ -310,7 +310,7 @@ theorem UpperTheory.card_selmer_mul_card_boundary_le_card_selmerMatrix :
       rw [hmb b, hmb b', hdd]
     rw [hbb]
   rw [← Nat.card_coe_set_eq, ← Nat.card_coe_set_eq, ← Nat.card_prod]
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   exact Nat.card_le_card_of_injective Φ hinj
 end -- clump:auto
 end -- clump:auto
@@ -354,7 +354,7 @@ theorem UpperTheory.finite_selmerModule_of_finite_cohomology :
   intro l _ L G G0 h n x e hF
   classical
   have hA := finAm l G0.frame n x e e
-  haveI : Finite (x.Am e) := hA.1
+  have : Finite (x.Am e) := hA.1
   have ht : (algebraMap x.A (x.Am e)) x.t ^ e = 0 := hA.2.2.2.2.2.1
   obtain ⟨D, ⟨a⟩⟩ := odEx l L G G0 h n x (x.Am e) ⟨e, by rw [map_pow]; exact ht⟩
   have hK := odKill l L G G0 h n x (x.Am e) D a
@@ -589,7 +589,7 @@ private theorem fc_sol {J : Type} (Φ : (Y → Matrix (Fin n) (Fin n) K⟦X⟧) 
     · by_cases hk : k < m
       · simp only [e _ _ _ k hk]
         exact (fc_lc m fun g => f (φ g) i j).1 (h1 i j) k hk
-      · simp only [f', coeff_mk, if_neg hk]
+      · simp only [f', coeff_mk, ite_eq_right hk]
         exact IsLocallyConstant.const _
     · have : ∀ y i j, ∃ c, f' y i j - f y i j = X ^ m * c := fun y i j =>
         X_pow_dvd_iff.2 fun k hk => by rw [map_sub, e y i j k hk, sub_self]
@@ -619,7 +619,7 @@ theorem UpperTheory.finite_truncated_locallyConstant_matrix_solutions :
   have hker : B.comap (fcC K n φ).subtype ≤ LinearMap.ker (Φ.comp (fcC K n φ).subtype) :=
     fun f hf => (hB f.1 hf).2
   obtain ⟨-, e, he⟩ := UpperTheory.V.Pa.solCnt (PowerSeries K) (fcC K n φ) (J → PowerSeries K) PowerSeries.X
-    (Φ.comp (fcC K n φ).subtype) (B.comap (fcC K n φ).subtype) PowerSeries.X_irreducible
+    (Φ.comp (fcC K n φ).subtype) (B.comap (fcC K n φ).subtype) PowerSeries.irreducible_X
     (fun y hy => by
       refine Subtype.ext (funext fun a => funext fun i => funext fun j => ?_)
       exact (mul_eq_zero.1 (congrFun (congrFun (congrFun (congrArg Subtype.val hy) a) i) j)).resolve_left
@@ -810,7 +810,7 @@ private theorem img_card {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} (x : 
       z = fun g => ((∑ j, c j • k.κ j + b) g).map (Ideal.Quotient.mk (Ideal.span {x.t ^ m}))) :
     T.ncard ≤ (Bd F (x.ρX (x.Am m)) (Od x.A (x.Am m) n x.a)).ncard * Nat.card x.K ^ (k.g * m) := by
   classical
-  haveI : Finite (x.Am m) := (am_fin l F n x m 0).1
+  have : Finite (x.Am m) := (am_fin l F n x m 0).1
   set π : x.A →+* x.Am m := Ideal.Quotient.mk (Ideal.span {x.t ^ m}) with hπ
   set Bm := Bd F (x.ρX (x.Am m)) (Od x.A (x.Am m) n x.a) with hBm
   let Φ : (Fin k.g → x.Am m) × (F.G₀ → Matrix (Fin n) (Fin n) (x.Am m)) →
@@ -859,7 +859,7 @@ private theorem sel_cnt {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} (x : N
     ∃ C : ℕ, ∀ m, (SelZ F x.t (x.ρX (x.Am m)) (x.wX (x.Am m)) (x.wiX (x.Am m)) (Od x.A (x.Am m) n x.a)).ncard ≤
       (Bd F (x.ρX (x.Am m)) (Od x.A (x.Am m) n x.a)).ncard * Nat.card x.K ^ (k.g * m + C) := by
   classical
-  haveI : Fintype F.Vl := F.finV
+  have : Fintype F.Vl := F.finV
   obtain ⟨⟨Ssel, hSsel⟩, ⟨Sbd, hSbd⟩⟩ :=
     sel_lin l F n x.A x.A x.t (x.ρX x.A) (x.wX x.A) (x.wiX x.A) (Od x.A x.A n x.a)
   have memSel : ∀ z, z ∈ Ssel ↔ z ∈ SelZ F x.t (x.ρX x.A) (x.wX x.A) (x.wiX x.A) (Od x.A x.A n x.a) := by
@@ -938,7 +938,7 @@ private theorem sel_cnt {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} (x : N
       rw [e, Ideal.Quotient.eq_zero_iff_mem]
       exact hΦ j
   have hSol1 : (Sol 1).Finite := by
-    haveI : Finite (x.Am 1) := (am_fin l F n x 1 0).1
+    have : Finite (x.Am 1) := (am_fin l F n x 1 0).1
     let e := Equiv.sumArrowEquivProdArrow F.G₀ F.Vl (Matrix (Fin n) (Fin n) (x.Am 1))
     refine ((h1.prod (Set.finite_univ (α := F.Vl → Matrix (Fin n) (Fin n) (x.Am 1)))).preimage
       e.injective.injOn).subset ?_
@@ -1012,7 +1012,7 @@ theorem UpperTheory.V.Pa.B2.sel0 :
   have h1 := UpperTheory.card_selmer_mul_card_boundary_le_card_selmerMatrix l L G0 G0 (Glob.Hom.refl G0) n x e D hl hD (hfinM e)
   rw [hS e, hB e] at h1
   have h2 := hC e
-  haveI : Finite (x.Am e) := (am_fin l G0.frame n x e 0).1
+  have : Finite (x.Am e) := (am_fin l G0.frame n x e 0).1
   have hfinB : (Bd G0.frame (x.ρX (x.Am e)) (Od x.A (x.Am e) n x.a)).Finite := by
     refine (Set.finite_range (fun Y : Matrix (Fin n) (Fin n) (x.Am e) => dY G0.frame (x.ρX (x.Am e)) Y)).subset ?_
     rintro z ⟨Y, _, _, rfl⟩

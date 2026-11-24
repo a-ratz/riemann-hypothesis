@@ -77,7 +77,7 @@ private theorem exists_type (κ : Representation ℂ K V) (φ : V)
   have hO : ∀ k, ∀ y ∈ LinearMap.range (orb κ φ), κ k y ∈ LinearMap.range (orb κ φ) := by
     rintro k _ ⟨c, rfl⟩
     exact ⟨_, orb_act κ φ k c⟩
-  haveI : FiniteDimensional ℂ (LinearMap.range (orb κ φ)) := by
+  have : FiniteDimensional ℂ (LinearMap.range (orb κ φ)) := by
     rw [orb, Finsupp.range_linearCombination]; exact hφ
   let b := Module.finBasis ℂ (LinearMap.range (orb κ φ))
   obtain ⟨s, hs⟩ := (orb κ φ).rangeRestrict.exists_rightInverse_of_surjective (LinearMap.range_rangeRestrict _)

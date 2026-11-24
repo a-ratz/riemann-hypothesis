@@ -820,7 +820,7 @@ theorem bound_of_local_bounds_of_blockScale :
   have hmax : ∀ k, ∃ i, ∀ j, ‖w ⟨k, j⟩‖ ≤ ‖w ⟨k, i⟩‖ := by
     intro k
     obtain ⟨i₀, -⟩ := hT w hwT k
-    haveI : Nonempty (J k) := ⟨i₀⟩
+    have : Nonempty (J k) := ⟨i₀⟩
     exact Finite.exists_max fun j => ‖w ⟨k, j⟩‖
   choose m hm using hmax
   have hmpos : ∀ k, 0 < ‖w ⟨k, m k⟩‖ := by

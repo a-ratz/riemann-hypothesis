@@ -53,7 +53,7 @@ theorem part_pow {G : Type} [Monoid G] {l : ℕ} (hl : l.Prime) {x : G} (hx : Is
   have hmul : l ^ a * M = orderOf x := Nat.ordProj_mul_ordCompl_eq_self _ _
   have hcop : M.Coprime l := (Nat.coprime_ordCompl hl hn).symm
   have hM0 : M ≠ 0 := (Nat.ordCompl_pos l hn).ne'
-  haveI : NeZero M := ⟨hM0⟩
+  have : NeZero M := ⟨hM0⟩
   set u := (((l ^ a : ℕ) : ZMod M)⁻¹).val with hu
   have hz : Formalism.CyclotomicNorms.primeToPart l x = x ^ (l ^ a * u) := rfl
   have hone : (x ^ (l ^ a)) ^ M = 1 := by rw [← pow_mul, hmul, pow_orderOf_eq_one]
@@ -72,7 +72,7 @@ theorem part_pow_compl {G : Type} [Monoid G] (l : ℕ) (x : G) :
 
 theorem eq_of_pow_eq {G : Type} [Monoid G] {M k : ℕ} (hM : M ≠ 0) (hk : k.Coprime M) {y z : G}
     (hy : y ^ M = 1) (hz : z ^ M = 1) (h : y ^ k = z ^ k) : y = z := by
-  haveI : NeZero M := ⟨hM⟩
+  have : NeZero M := ⟨hM⟩
   set u := ((k : ZMod M)⁻¹).val with hu
   have hmod : k * u ≡ 1 [MOD M] := by
     rw [← ZMod.natCast_eq_natCast_iff, Nat.cast_mul, hu, ZMod.natCast_zmod_val, Nat.cast_one]
@@ -123,7 +123,7 @@ theorem thetaOf_gen (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < d) {
 theorem pow_eq_iff (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < d) {θ θ' : Tor p d →* ℂˣ} {x x' : Fbar p}
     (h : LabelsChar L θ x) (h' : LabelsChar L θ' x') (m : ℕ) : θ ^ m = θ' ^ m ↔ x ^ m = x' ^ m := by
   have hp : 0 < p ^ d - 1 := Nat.sub_pos_of_lt (Nat.one_lt_pow hd.ne' (Fact.out : p.Prime).one_lt)
-  haveI : NeZero (p ^ d - 1) := ⟨hp.ne'⟩
+  have : NeZero (p ^ d - 1) := ⟨hp.ne'⟩
   have hprim : IsPrimitiveRoot (L.gen d) (p ^ d - 1) := L.gen_order d hd ▸ IsPrimitiveRoot.orderOf _
   have hx0 : x ≠ 0 := fun e => by
     have := h.1; rw [e, zero_pow hp.ne'] at this; exact zero_ne_one this

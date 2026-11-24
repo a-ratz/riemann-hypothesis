@@ -133,7 +133,7 @@ theorem absNorm_span_rat (n : ℕ) : Ideal.absNorm (Ideal.span {(n : 𝓞 ℚ)})
   simp
 
 theorem exists_span_rat (I : Ideal (𝓞 ℚ)) : ∃ n : ℕ, I = Ideal.span {(n : 𝓞 ℚ)} := by
-  haveI := pir_rat
+  have := pir_rat
   obtain ⟨a, rfl⟩ : ∃ a, I = Ideal.span {a} := ⟨_, (IsPrincipalIdealRing.principal I).span_singleton_generator.symm⟩
   obtain ⟨m, rfl⟩ : ∃ m : ℤ, a = (m : 𝓞 ℚ) := ⟨Rat.ringOfIntegersEquiv a, by
     apply Rat.ringOfIntegersEquiv.injective; simp⟩
@@ -146,8 +146,8 @@ theorem exists_span_rat (I : Ideal (𝓞 ℚ)) : ∃ n : ℕ, I = Ideal.span {(n
 theorem isClassZeta_rat (C : ClassGroup (𝓞 ℚ)) : IsClassZeta C riemannZeta := by
   refine ⟨fun s hs => (differentiableAt_riemannZeta hs).differentiableWithinAt, fun s hs => ?_⟩
   have hs0 : s ≠ 0 := by rintro rfl; norm_num at hs
-  haveI := pir_rat
-  haveI : Subsingleton (ClassGroup (𝓞 ℚ)) :=
+  have := pir_rat
+  have : Subsingleton (ClassGroup (𝓞 ℚ)) :=
     (@Fintype.card_le_one_iff_subsingleton _ instFintypeClassGroupOfIsPrincipalIdealRing).1
       (card_classGroup_eq_one (R := 𝓞 ℚ)).le
   let g : IdealsIn C → ℕ := fun I => Ideal.absNorm (I.1 : Ideal (𝓞 ℚ))

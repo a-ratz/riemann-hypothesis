@@ -114,8 +114,8 @@ theorem le_powField_of_finSepDegree_lt (M : IntermediateField F E.toAffine.Funct
     have hall : ∀ a, 1 ≤ a → powAdjoin E p M a = ⊤ := fun a ha =>
       Nat.le_induction hT1 (fun n _ ih => powAdjoin_succ_eq_top E p M hT1 ih) a ha
     set S := separableClosure M E.toAffine.FunctionField
-    haveI : CharP S p := charP_of_injective_algebraMap (algebraMap F S).injective p
-    haveI : ExpChar S p := ExpChar.prime hp.out
+    have : CharP S p := charP_of_injective_algebraMap (algebraMap F S).injective p
+    have : ExpChar S p := ExpChar.prime hp.out
     obtain ⟨nx, hnx⟩ := IsPurelyInseparable.pow_mem S p (genX E)
     obtain ⟨ny, hny⟩ := IsPurelyInseparable.pow_mem S p (genY E)
     have hmem : ∀ (z : E.toAffine.FunctionField) (n a : ℕ),

@@ -61,7 +61,7 @@ theorem det_blocks_lower {S J : Type} [CommRing S] [Fintype J] [DecidableEq J] (
     (e : Fin n ≃ Σ τ : J, Fin (m τ)) :
     ((Matrix.blockDiagonal' g).submatrix e e).det = ∏ x : (Σ τ : J, Fin (m τ)), g x.1 x.2 x.2 := by
   rw [Matrix.det_submatrix_equiv_self, ReciprocityTheory.ChartRestriction.G.T0.HDiscLat.det_blockDiagonal', Fintype.prod_sigma]
-  exact Finset.prod_congr rfl fun τ _ => Matrix.det_of_lowerTriangular _ fun i j hij => hz τ i j hij
+  exact Finset.prod_congr rfl fun τ _ => Matrix.det_of_isLowerTriangular _ fun i j hij => hz τ i j hij
 
 theorem isCombAt_blocks {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
     {Dw : Datum H} {l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H} {Xo : Moduli Dw l} {S : Type} [CommRing S] {x : Sp S ⟶ Xo.X}

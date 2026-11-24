@@ -69,24 +69,24 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
       M (Fin.castSucc (Fin.natAdd i r)) (Fin.castSucc (Fin.castAdd t c)) = 0 := by
     intro r c
     have h₁ : Fin.castSucc (Fin.natAdd i r) = GlobalTheory.BZMir.Leib.ePG i t ⟨true, r⟩ :=
-      Fin.ext (by rw [Fin.coe_castSucc, GlobalTheory.CompanionTheory.BZPhiPG.Cells.ePG_true_val, Fin.coe_natAdd])
+      Fin.ext (by rw [Fin.val_castSucc, GlobalTheory.CompanionTheory.BZPhiPG.Cells.ePG_true_val, Fin.val_natAdd])
     have h₂ : Fin.castSucc (Fin.castAdd t c) =
         GlobalTheory.BZMir.Leib.ePG i t ⟨false, Fin.castSucc c⟩ :=
-      Fin.ext (by rw [Fin.coe_castSucc, GlobalTheory.CompanionTheory.BZPhiPG.Cells.ePG_false_val, Fin.coe_castAdd])
+      Fin.ext (by rw [Fin.val_castSucc, GlobalTheory.CompanionTheory.BZPhiPG.Cells.ePG_false_val, Fin.val_castAdd])
     rw [h₁, h₂]
     exact hp' r (Fin.castSucc c)
   have hlast : ∀ r : Fin t, M (Fin.castSucc (Fin.natAdd i r)) (Fin.last (i + t)) = 0 := by
     intro r
     have h₁ : Fin.castSucc (Fin.natAdd i r) = GlobalTheory.BZMir.Leib.ePG i t ⟨true, r⟩ :=
-      Fin.ext (by rw [Fin.coe_castSucc, GlobalTheory.CompanionTheory.BZPhiPG.Cells.ePG_true_val, Fin.coe_natAdd])
+      Fin.ext (by rw [Fin.val_castSucc, GlobalTheory.CompanionTheory.BZPhiPG.Cells.ePG_true_val, Fin.val_natAdd])
     rw [h₁, ← GlobalTheory.BZMir.Leib.ePG_false_last i t]
     exact hp' r (Fin.last i)
   have hgen : ∀ (r : Fin t) (c : Fin i) (x y : Fin (i + t)), (x : ℕ) = i + r → (y : ℕ) = c →
       ((GlobalTheory.BZMir.mirabolicProjection k (i + t) (h : GlobalTheory.BZMir.Mir k (i + t)) : GL (Fin (i + t)) k) :
         Matrix (Fin (i + t)) (Fin (i + t)) k) x y = 0 := by
     intro r c x y hx hy
-    have hx' : x = Fin.natAdd i r := Fin.ext (by rw [hx, Fin.coe_natAdd])
-    have hy' : y = Fin.castAdd t c := Fin.ext (by rw [hy, Fin.coe_castAdd])
+    have hx' : x = Fin.natAdd i r := Fin.ext (by rw [hx, Fin.val_natAdd])
+    have hy' : y = Fin.castAdd t c := Fin.ext (by rw [hy, Fin.val_castAdd])
     subst hx' hy'
     exact hzero r c
   have hq : GlobalTheory.BZMir.mirabolicProjection k (i + t) (h : GlobalTheory.BZMir.Mir k (i + t)) ∈

@@ -105,7 +105,7 @@ variable {F : Type*} [Field F] [ValuativeRel F]
 theorem vle_iff_not_valuation_div_lt_one {x : F} (hx : x ≠ 0) (y : F) :
     x ≤ᵥ y ↔ ¬ valuation F (y / x) < 1 := by
   have hx' : 0 < valuation F x := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     simpa using hx
   rw [(valuation F).vle_iff_le, map_div₀, div_lt_one₀ hx', not_lt]
 

@@ -121,7 +121,7 @@ theorem isHomeomorph_bcPt (k K : Type) [CommRing k] [CommRing K] (ρ : k →+* K
       mem_ptsIn_inf.2 ⟨(mem_ptsIn_preimage hm).2 (by rw [hE]; exact hw), mem_ptsIn_top⟩
     have hnb : ptsIn p (τ.comp ρ) U.1 ∈ 𝓝 y := (isOpen_ptsIn _).mem_nhds hyU
     have hev : ∀ᶠ w in 𝓝 y, E.symm w ∈ ptsIn q τ (j ⁻¹ᵁ U.1 ⊓ q ⁻¹ᵁ ⊤) := eventually_of_mem hnb hin
-    letI := ρ.toAlgebra
+    let := ρ.toAlgebra
     have hgen := CommRingCat.closure_range_union_range_eq_top_of_isPushout (isPushout_sections p q j hp U.1 hU)
     refine tendsto_subtype_rng.2 ((Points.tendsto_iff_of_generators hW (hin y hyU) hgen).2 ⟨hev, ?_⟩)
     rintro f (⟨a, rfl⟩ | ⟨b, rfl⟩)
@@ -231,8 +231,8 @@ theorem map_part {k K : Type} [CommRing k] [Field K] [Algebra k K] [IsFractionRi
   have hm : IsHomeomorph (bcPt hp.w τ) := _root_.GlobalTheory.Mix.isHomeomorph_bcPt k K (algebraMap k K) X G p q j hp τ
   obtain ⟨_, hT2, hSC⟩ := (IsArithVar.finite_emb_and_topology hX).2 (τ.comp (algebraMap k K))
   let h := hm.homeomorph (bcPt hp.w τ)
-  haveI : T2Space (CxPts q τ) := h.isEmbedding.t2Space
-  haveI : SecondCountableTopology (CxPts q τ) := h.isEmbedding.secondCountableTopology
+  have : T2Space (CxPts q τ) := h.isEmbedding.t2Space
+  have : SecondCountableTopology (CxPts q τ) := h.isEmbedding.secondCountableTopology
   obtain ⟨hGi, _, _, _, hgen, _⟩ := GlobalTheory.Mix.genericFibre_facts k K X G p q j hp D hX
   obtain ⟨U, hU, hηU, t, ht⟩ := GenericCoords.exists_affine_etale_coords hX
   have hZ : IsClosed ((U : Set X)ᶜ) := U.isOpen.isClosed_compl

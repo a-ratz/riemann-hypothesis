@@ -573,7 +573,7 @@ theorem Ft_e' {Y : Full X} {u : D.what₂.Word} (t : GT Y u) (a : Fin (D.R.rS + 
   have hi : t.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t.rep.2.2.1
   show (mapLF t.lin (lf D (X.Fu u))).fl.fvec a = t.lin ((lf D (X.Fu u)).fl.fvec a)
   unfold mapLF
-  simp only [dif_pos hi]
+  simp only [dite_eq_left hi]
   refine Fin.lastCases ?_ (fun i => ?_) a
   · simp only [FlagG.fvec, Fin.snoc_last, mapFlag]
   · simp only [FlagG.fvec, Fin.snoc_castSucc, mapFlag]

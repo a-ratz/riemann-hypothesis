@@ -94,7 +94,7 @@ theorem real_bound (h : CoefReal) (Y : Type) [NormedAddCommGroup Y] [NormedSpace
     _ ≤ K ^ N * (p (c f₁) * p (c f₂)) := by gcongr
     _ ≤ K ^ N * (K ^ N * (p (c f₁) * p (c f₂))) := mul_le_mul_of_nonneg_left (le_mul_of_one_le_left q hK1) (zero_le_one.trans hK1)
     _ = _ := by
-      simp only [Seminorm.smul_apply, Seminorm.comp_apply, NNReal.smul_def, NNReal.coe_pow, smul_eq_mul,
+      simp only [smul_apply, Seminorm.comp_apply, NNReal.smul_def, NNReal.coe_pow, smul_eq_mul,
         ContinuousLinearMap.coe_coe]
       ring
 

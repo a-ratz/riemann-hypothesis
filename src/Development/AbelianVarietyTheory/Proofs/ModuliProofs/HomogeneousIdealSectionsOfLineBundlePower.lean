@@ -103,7 +103,7 @@ theorem homogeneousComponent_mem {F : MvPolynomial σ R} (hF : F ∈ idealOf p M
   have h5 := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q e) h3
   simp only [h4, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply, Finset.sum_ite_eq', Finset.mem_range,
     Polynomial.coeff_zero] at h5
-  rwa [if_pos (by omega)] at h5
+  rwa [ite_eq_left (by omega)] at h5
 
 theorem isUnit_gs_iff {Z : Scheme.{0}} (r : Z ⟶ X) (z : Z) {U : X.Opens} (h : r z ∈ U) (a : Γ(X, U)) :
     IsUnit (gs r z U a) ↔ r z ∈ X.basicOpen a := by
@@ -192,7 +192,7 @@ theorem formSec_eq_zero_iff (hM : M.IsLB) {d : ℕ} {F : MvPolynomial σ R} (hF 
     refine fn_ext fun z hz => ?_
     obtain ⟨V, hV, hzV, hle⟩ := exists_isAffineOpen_mem_and_subset hz
     let x : Sp Γ(X, V) ⟶ X := hV.fromSpec
-    haveI : IsOpenImmersion x := inferInstanceAs (IsOpenImmersion hV.fromSpec)
+    have : IsOpenImmersion x := inferInstanceAs (IsOpenImmersion hV.fromSpec)
     have hr : Set.range x = V := hV.range_fromSpec
     obtain ⟨y, rfl⟩ : z ∈ Set.range x := hr.ge hzV
     obtain ⟨v, hv⟩ := exists_secCoord (th := th) hM (x := x) (k := j ⟨⟩)

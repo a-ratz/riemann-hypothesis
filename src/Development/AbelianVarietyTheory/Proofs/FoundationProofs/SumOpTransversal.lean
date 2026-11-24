@@ -128,7 +128,7 @@ theorem _root_.GlobalTheory.FinWeil.exists_transversal_of_idx_ne_zero (A B : Sub
     ∃ (n : ℕ) (f : Fin n → X), (∀ i, f i ∈ B) ∧ ∀ b ∈ B, ∃! i, b - f i ∈ A := by
   unfold _root_.GlobalTheory.FinWeil.idx at hi
   rw [AddSubgroup.relIndex, AddSubgroup.index] at hi
-  haveI := Nat.finite_of_card_ne_zero hi
+  have := Nat.finite_of_card_ne_zero hi
   let e := Finite.equivFin (B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup)
   refine ⟨_, fun i => ((Quotient.out (e.symm i) : B.toAddSubgroup) : X),
     fun i => (Quotient.out (e.symm i) : B.toAddSubgroup).2, ?_⟩

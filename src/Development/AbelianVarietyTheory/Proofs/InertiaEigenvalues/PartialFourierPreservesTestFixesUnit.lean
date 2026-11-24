@@ -156,13 +156,13 @@ theorem exists_trace_unit : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
     (∀ y : E, algebraMap F E (Algebra.trace F E y) = y + star y) →
       ∃ u : E, ‖u‖ ≤ 1 ∧ ‖Algebra.trace F E u‖ = 1 := by
   intro F E _ _ _ _ hU htr
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : CharZero F := hU.charZero
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : IsUltrametricDist F := hU.ultraF
+  have : IsUltrametricDist E := hU.ultraE
+  have : LocallyCompactSpace F := hU.lcF
+  have : LocallyCompactSpace E := hU.lcE
+  have : CharZero F := hU.charZero
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
   have h20 : (2 : E) ≠ 0 := by
     rw [← map_ofNat (algebraMap F E) 2]
     exact (map_ne_zero _).2 two_ne_zero
@@ -293,9 +293,9 @@ theorem isTest_indicator_one_of_clopen_compact {X : Type} [TopologicalSpace X] {
 theorem isTest_unitU (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [StarRing E]
     [IsUltrametricDist F] [LocallyCompactSpace F] [IsUltrametricDist E] [LocallyCompactSpace E] (r : ℕ)
     (hstar : ∀ y : E, ‖star y‖ = ‖y‖) : IsTest (unitU r F E) := by
-  haveI : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
-  haveI : ProperSpace E := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace E
-  haveI : ContinuousStar E := ⟨(AddMonoidHomClass.isometry_of_norm (starAddEquiv (R := E)) hstar).continuous⟩
+  have : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : ProperSpace E := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace E
+  have : ContinuousStar E := ⟨(AddMonoidHomClass.isometry_of_norm (starAddEquiv (R := E)) hstar).continuous⟩
   have hF : {x : F | ‖x‖ ≤ 1} = Metric.closedBall 0 1 := by ext x; simp
   have hE : {x : E | ‖x‖ ≤ 1} = Metric.closedBall 0 1 := by ext x; simp
   have cF : IsClopen {x : F | ‖x‖ ≤ 1} := hF ▸ IsUltrametricDist.isClopen_closedBall _ one_ne_zero
@@ -314,7 +314,7 @@ theorem isTest_unitU (F E : Type) [NontriviallyNormedField F] [NontriviallyNorme
   have hcl : IsClosed ((selfAdjoint (Matrix (Fin r) (Fin r) E)) : Set (Matrix (Fin r) (Fin r) E)) :=
     isClosed_eq continuous_star continuous_id
   have cA : IsClopen {A : selfAdjoint (Matrix (Fin r) (Fin r) E) | ∀ i j, ‖A.1 i j‖ ≤ 1} :=
-    cM.preimage continuous_subtype_val
+    cM.preimage continuous_subtypeVal
   have kA : IsCompact {A : selfAdjoint (Matrix (Fin r) (Fin r) E) | ∀ i j, ‖A.1 i j‖ ≤ 1} :=
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage kM
   exact isTest_indicator_one_of_clopen_compact (cA.prod (cV.prod cF)) (kA.prod (kV.prod kF))
@@ -359,7 +359,7 @@ theorem integral_ball_char {r : ℕ} [MeasurableSpace F] [BorelSpace F] [IsUltra
       exact mul_le_one₀ (hx i) (norm_nonneg _) (hv i)
   · rw [Set.indicator_of_notMem hv]
     obtain ⟨i, hi⟩ : ∃ i, 1 < ‖v i‖ := by
-      simp only [S, Set.mem_setOf_eq, not_forall, not_le] at hv; exact hv
+      simp only [S, Set.mem_ofPred_eq, not_forall, not_le] at hv; exact hv
     obtain ⟨x₀, hx₀, hx₀'⟩ := hψ.2
     have hvi : v i ≠ 0 := by
       intro h; rw [h, norm_zero] at hi; linarith
@@ -406,12 +406,12 @@ theorem fourG_unitG : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ →
     fourG M ψ (unitG r F) = unitG r F := by
   intro F E _ _ _ _ U r M ψ hψ
-  letI := M.mF
-  haveI := M.bF
-  haveI := U.ultraF
-  haveI := U.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI := M.haarF
+  let := M.mF
+  have := M.bF
+  have := U.ultraF
+  have := U.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have := M.haarF
   funext Y
   obtain ⟨A, b, c, l⟩ := Y
   unfold fourG
@@ -469,12 +469,12 @@ namespace GlobalTheory
 theorem fourU_hasCompactSupport : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → (∀ y : E, algebraMap F E (Algebra.trace F E y) = y + star y) → ∀ f : Hn r F E → ℂ, IsTest f → (∃ U ∈ 𝓝 (0 : Hn r F E), ∀ X : Hn r F E, ∀ u ∈ U, f (X + u) = f X) → HasCompactSupport (fourU M ψ f) := by
   intro F E _ _ _ _ hUn r M ψ hψ htr f hf hloc
   obtain ⟨U, hU, hfU⟩ := hloc
-  haveI : CharZero F := hUn.charZero
-  haveI : LocallyCompactSpace E := hUn.lcE
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  letI := M.mE
-  haveI := M.bE
-  haveI := M.haarE
+  have : CharZero F := hUn.charZero
+  have : LocallyCompactSpace E := hUn.lcE
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  let := M.mE
+  have := M.bE
+  have := M.haarE
   obtain ⟨x₀, hx₀, -⟩ := hψ.2
   set a : E := algebraMap F E (x₀ / 2) with ha
   have htra : Algebra.trace F E a = x₀ := by
@@ -565,7 +565,7 @@ theorem fourU_isLocallyConstant : ∀ (F E : Type) [NontriviallyNormedField F] [
     (∀ y : E, algebraMap F E (Algebra.trace F E y) = y + star y) → ∀ f : Hn r F E → ℂ, IsTest f →
     (∃ U ∈ 𝓝 (0 : Hn r F E), ∀ X : Hn r F E, ∀ u ∈ U, f (X + u) = f X) → IsLocallyConstant (fourU M ψ f) := by
   intro F E _ _ _ _ hU r M ψ hψ htr f hf ⟨U, hU0, hUf⟩
-  haveI : IsUltrametricDist E := Unram.ultraE (F := F)
+  have : IsUltrametricDist E := Unram.ultraE (F := F)
 
   have htr1 : ∀ d : E, ‖d‖ ≤ 1 → ψ (Algebra.trace F E d) = 1 := by
     intro d hd
@@ -676,7 +676,7 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem norm_trace_le (hU : Unram F E) (htr : ∀ y : E, algebraMap F E (Algebra.trace F E y) = y + star y) (w : E) :
     ‖Algebra.trace F E w‖ ≤ ‖w‖ := by
-  haveI := hU.ultraE
+  have := hU.ultraE
   rw [← norm_algebraMap' E, htr]
   exact (IsUltrametricDist.norm_add_le_max _ _).trans (by rw [hU.norm_star]; simp)
 
@@ -686,8 +686,8 @@ theorem integral_ball_char (hU : Unram F E) [MeasurableSpace E] [BorelSpace E] (
     (hu : ∃ u : E, ‖u‖ ≤ 1 ∧ ‖Algebra.trace F E u‖ = 1) (y : E) :
     ∫ z, (Metric.closedBall (0 : E) 1).indicator (fun z => ψ (Algebra.trace F E (star z * y))) z ∂μ =
       if ‖y‖ ≤ 1 then 1 else 0 := by
-  haveI := hU.ultraE
-  haveI := hU.ultraF
+  have := hU.ultraE
+  have := hU.ultraF
   split_ifs with hy
   · rw [Set.indicator_congr (g := fun _ => (1 : ℂ)) (fun z hz => ?_)]
     · rw [integral_indicator measurableSet_closedBall, setIntegral_const]
@@ -737,11 +737,11 @@ theorem fourU_unitU : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     (∀ y : E, algebraMap F E (Algebra.trace F E y) = y + star y) →
     (∃ u : E, ‖u‖ ≤ 1 ∧ ‖Algebra.trace F E u‖ = 1) → fourU M ψ (unitU r F E) = unitU r F E := by
   intro F E _ _ _ _ hU r M ψ hψ htr hu
-  letI := M.mE
-  haveI := M.bE
-  haveI := M.haarE
-  haveI := hU.lcE
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  let := M.mE
+  have := M.bE
+  have := M.haarE
+  have := hU.lcE
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
   funext X
   simp only [fourU]
   by_cases h0 : (∀ i j, ‖X.1.1 i j‖ ≤ 1) ∧ ‖X.2.2‖ ≤ 1
@@ -771,7 +771,7 @@ theorem fourU_unitU : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     rw [integral_fintype_prod_eq_prod]
     simp_rw [integral_ball_char hU M.μE M.volE ψ hψ htr hu]
     rw [Finset.prod_boole]
-    simp only [unitU, Set.indicator_apply, Set.mem_setOf_eq, Finset.mem_univ, true_implies, Pi.one_apply]
+    simp only [unitU, Set.indicator_apply, Set.mem_ofPred_eq, Finset.mem_univ, true_implies, Pi.one_apply]
     simp [h0.1, h0.2]
   · have e : ∀ c : Fin r → E, unitU r F E (X.1, c, X.2.2) = 0 := fun c => by
       simp only [unitU]
@@ -807,7 +807,7 @@ theorem isLocallyConstant_indicator_one {Z : Type} [TopologicalSpace Z] {W : Set
 
 theorem unitG_isTest (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] [LocallyCompactSpace F]
     (r : ℕ) : IsTest (unitG r F) := by
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   set B : Set F := Metric.closedBall 0 1 with hB
   have hBo : IsOpen B := IsUltrametricDist.isOpen_closedBall _ one_ne_zero
   have hBc : IsClosed B := Metric.isClosed_closedBall
@@ -824,7 +824,7 @@ theorem unitG_isTest (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F
   have hSeq : {Y : Gl r F | (∀ i j, ‖Y.1 i j‖ ≤ 1) ∧ (∀ i, ‖Y.2.1 i‖ ≤ 1) ∧ (∀ i, ‖Y.2.2.1 i‖ ≤ 1) ∧ ‖Y.2.2.2‖ ≤ 1}
       = S := by
     ext Y
-    rw [Set.mem_setOf_eq, hS, hA, hV, hB]
+    rw [Set.mem_ofPred_eq, hS, hA, hV, hB]
     constructor
     · rintro ⟨h1, h2, h3, h4⟩
       refine ⟨fun i _ j _ => ?_, fun i _ => ?_, fun i _ => ?_, ?_⟩
@@ -880,7 +880,7 @@ namespace GlobalTheory
 
 theorem fourier_test_unit : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → (∀ f', IsTest f' → IsTest (fourG M ψ f')) ∧ (∀ f, IsTest f → IsTest (fourU M ψ f)) ∧ IsTest (unitG r F) ∧ IsTest (unitU r F E) ∧ fourG M ψ (unitG r F) = unitG r F ∧ fourU M ψ (unitU r F E) = unitU r F E := by
   intro F E _ _ _ _ hU r M ψ hψ
-  haveI := hU.ultraF; haveI := hU.ultraE; haveI := hU.lcF; haveI := hU.lcE
+  have := hU.ultraF; have := hU.ultraE; have := hU.lcF; have := hU.lcE
   have htr := _root_.GlobalTheory.trace_eq_add_star F E
   refine ⟨fun f' hf => ⟨GlobalTheory.T.isLocallyConstant_partialFourierGLBlock F E r M ψ hψ f' hf (_root_.GlobalTheory.isTest_nhds_inv _ f' hf), _root_.GlobalTheory.JR.fourG_hasCompactSupport F E r M ψ hψ f' hf (_root_.GlobalTheory.isTest_nhds_inv _ f' hf)⟩,
     fun f hf => ⟨GlobalTheory.T.partialFourierHermitianBlock_isLocallyConstant F E r M ψ hψ htr f hf (_root_.GlobalTheory.isTest_nhds_inv _ f hf), _root_.GlobalTheory.fourU_hasCompactSupport F E r M ψ hψ htr f hf (_root_.GlobalTheory.isTest_nhds_inv _ f hf)⟩,

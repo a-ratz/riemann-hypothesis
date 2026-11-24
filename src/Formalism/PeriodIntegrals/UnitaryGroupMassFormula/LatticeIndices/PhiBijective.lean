@@ -75,7 +75,7 @@ theorem phi_bijective (σ : E →ₐ[F] E) (ι : E →ₐ[F] K) (h2 : Module.fin
     · ring
     · field_simp
       ring
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
   have hr : Module.finrank K (K ⊗[F] E) = Module.finrank K (K × K) := by
     rw [Module.finrank_baseChange, h2, Module.finrank_prod, Module.finrank_self]
   have key := (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hr

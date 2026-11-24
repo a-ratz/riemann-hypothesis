@@ -328,10 +328,10 @@ theorem exists_local_ext {o : Type} [CommRing o] [Algebra o Ω] {κ : Type} {x :
       _ →+* Ω) (regAt ξ p) hmem
   let M : Submonoid (Algebra.adjoin o (Set.range fun j => x j / x c)) :=
     Submonoid.comap ψ (IsUnit.submonoid R)
-  letI : Algebra (Algebra.adjoin o (Set.range fun j => x j / x c)) (regAt ξ p) := i.toAlgebra
+  let : Algebra (Algebra.adjoin o (Set.range fun j => x j / x c)) (regAt ξ p) := i.toAlgebra
   have hM : ∀ s : M, unitAt ξ p ((s : Algebra.adjoin o (Set.range fun j => x j / x c)) : Ω) :=
     fun s => (hψ s).1 s.2
-  haveI hloc : IsLocalization M (regAt ξ p) := by
+  have hloc : IsLocalization M (regAt ξ p) := by
     refine (isLocalization_iff M _).2 ⟨fun s => ?_, fun a => ?_, fun {a b} e => ?_⟩
     · obtain ⟨h0, _, hinv⟩ := hM s
       exact IsUnit.of_mul_eq_one ⟨_, hinv⟩ (Subtype.ext (mul_inv_cancel₀ h0))
@@ -426,7 +426,7 @@ theorem existsUnique_point (T : CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏
     rwa [aeval_X, aeval_X] at h1
   let I : Ideal (Algebra.adjoin ℤ (Set.range fun j => x j / x c)) :=
     (IsLocalRing.maximalIdeal R).comap ψ
-  haveI hIp : I.IsPrime := Ideal.comap_isPrime ψ _
+  have hIp : I.IsPrime := Ideal.comap_isPrime ψ _
   have hI : ∀ a, a ∉ I ↔ IsUnit (ψ a) := fun a => by
     simp [I, Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   obtain ⟨p, ⟨hpc, hpu⟩, hpuniq⟩ := _root_.GlobalTheory.CompanionTheory.Ar.chart_point_of_prime X Ω ξ ℤ _ x T c hxc I hIp

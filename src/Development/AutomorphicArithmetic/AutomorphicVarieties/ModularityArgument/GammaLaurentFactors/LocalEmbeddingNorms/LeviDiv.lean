@@ -74,8 +74,8 @@ private theorem exists_shape (hB : LdBlock) (hσ : IsAdmissible σ) [σ.IsIrredu
     ∃ γ : RatFunc ℂ, LdShape ((GroundTheory.LocalField.residueCard F : ℕ) : ℂ) γ (cntF σ) ∧ LeviFE F σ κ μM ψ γ := by
   classical
   have hsm : IsSmooth σ := hσ.1
-  haveI bGL : ∀ m, BorelSpace (GL (Fin m) F) := fun m => borelSpace_GL_units m
-  haveI nz : ∀ a : ↑(Set.range β), NeZero (blockSize β a) := fun a => ⟨(blockSize_pos β a).ne'⟩
+  have bGL : ∀ m, BorelSpace (GL (Fin m) F) := fun m => borelSpace_GL_units m
+  have nz : ∀ a : ↑(Set.range β), NeZero (blockSize β a) := fun a => ⟨(blockSize_pos β a).ne'⟩
   obtain ⟨e, he⟩ : ∃ e, e = leviEquivPi F β := ⟨_, rfl⟩
   obtain ⟨τ, hτ⟩ : ∃ τ, τ = twist (nnrealCharC κ) σ := ⟨_, rfl⟩
   obtain ⟨E, hE⟩ : ∃ E, E = (prodPUnitEquiv.{_, 0} ((a : ↑(Set.range β)) → GL (Fin (blockSize β a)) F)).trans e.symm :=
@@ -87,13 +87,13 @@ private theorem exists_shape (hB : LdBlock) (hσ : IsAdmissible σ) [σ.IsIrredu
   have hρx : ∀ x v, ρ (x, (1 : PUnit.{1})) v = nnrealCharC κ (e.symm x) • σ (e.symm x) v := fun x v => by
     subst hρ; rw [← hτm, ← hEx]; rfl
   have hτA : IsAdmissible τ := hτ ▸ isAdmissible_twist κ hκ σ hσ
-  haveI hτI : Representation.IsIrreducible τ := hτ ▸ isIrreducible_twist κ σ
+  have hτI : Representation.IsIrreducible τ := hτ ▸ isIrreducible_twist κ σ
   have hρA : IsAdmissible ρ := hρ ▸ (isAdmissible_comp_iff E τ).2 hτA
-  haveI hρI : Representation.IsIrreducible ρ := hρ ▸ (isIrreducible_comp_iff E τ).2 hτI
+  have hρI : Representation.IsIrreducible ρ := hρ ▸ (isIrreducible_comp_iff E τ).2 hτI
   have hℓ : ∀ ℓ, ℓ ∈ smoothVectors (Representation.dual ρ) ↔ ℓ ∈ smoothVectors σ.dual := fun ℓ => by
     subst hρ hτ
     rw [mem_smoothVectors_dual_comp_iff, mem_smoothVectors_dual_twist_iff κ hκ]
-  haveI : Nontrivial W := nontrivial_of_isIrreducible σ
+  have : Nontrivial W := nontrivial_of_isIrreducible σ
   obtain ⟨ω, hω⟩ := exists_blockChar (σ := τ) hτA.1
   have hω0 : ∀ b, ω b ≠ 0 := by
     intro b h0
@@ -140,7 +140,7 @@ private theorem exists_shape (hB : LdBlock) (hσ : IsAdmissible σ) [σ.IsIrredu
       constructor <;> linarith
   obtain ⟨μ', hμ'⟩ : ∃ μ' : (a : ↑(Set.range β)) → Measure (GL (Fin (blockSize β a)) F),
       μ' = fun _ => Measure.haar := ⟨_, rfl⟩
-  haveI hμ'H : ∀ a, (μ' a).IsHaarMeasure := fun a => by subst hμ'; infer_instance
+  have hμ'H : ∀ a, (μ' a).IsHaarMeasure := fun a => by subst hμ'; infer_instance
   obtain ⟨γ, hγs, hγfe⟩ := ldMulti_all (F := F) (W := W) hB hψ hψ1 (Fintype.card ↑(Set.range β))
     ↑(Set.range β) rfl (fun a => blockSize β a) μ' PUnit.{1} ρ hρA hρI ω hω0 hcent hcpt
   obtain ⟨s₁, hs₁⟩ := exists_integrable_multi ρ hρA.1 hω0 hcent hcpt μ'
@@ -195,7 +195,7 @@ private theorem exists_shape (hB : LdBlock) (hσ : IsAdmissible σ) [σ.IsIrredu
     obtain ⟨em, hem⟩ : ∃ em : levi F n β ≃ᵐ ((a : ↑(Set.range β)) → GL (Fin (blockSize β a)) F),
         em = e.toHomeomorph.toMeasurableEquiv := ⟨_, rfl⟩
     have hemx : ∀ m, em m = e m := fun m => by subst hem; rfl
-    haveI : (μM.map em).IsHaarMeasure := by
+    have : (μM.map em).IsHaarMeasure := by
       subst hem
       exact ContinuousMulEquiv.isHaarMeasure_map μM e
     obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, c = (μM.map em).haarScalarFactor (Measure.pi μ') := ⟨_, rfl⟩

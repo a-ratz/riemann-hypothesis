@@ -84,9 +84,9 @@ open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.CechPic
 
 theorem GlobalTheory.primeIdealOf_minimal_of_coheight_eq_one : ∀ (X : Scheme.{0}) [IsIntegral X] (U : X.Opens) (hU : IsAffineOpen U) (z : X) (hz : z ∈ U), Order.coheight z = 1 → (hU.primeIdealOf ⟨z, hz⟩).asIdeal ≠ ⊥ ∧ ∀ Q : Ideal Γ(X, U), Q.IsPrime → Q ≠ ⊥ → Q ≤ (hU.primeIdealOf ⟨z, hz⟩).asIdeal → Q = (hU.primeIdealOf ⟨z, hz⟩).asIdeal := by
   intro X _ U hU z hz h
-  haveI : Nonempty U := ⟨⟨z, hz⟩⟩
-  letI := X.presheaf.algebra_section_stalk (⟨z, hz⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨z, hz⟩
+  have : Nonempty U := ⟨⟨z, hz⟩⟩
+  let := X.presheaf.algebra_section_stalk (⟨z, hz⟩ : U)
+  have := hU.isLocalization_stalk ⟨z, hz⟩
   have hc : (hU.primeIdealOf ⟨z, hz⟩).asIdeal.height = 1 := by
     have := IsLocalization.AtPrime.ringKrullDim_eq_height (hU.primeIdealOf ⟨z, hz⟩).asIdeal
       (X.presheaf.stalk z)
@@ -96,7 +96,7 @@ theorem GlobalTheory.primeIdealOf_minimal_of_coheight_eq_one : ∀ (X : Scheme.{
   · rw [e, Ideal.height_bot] at hc
     exact zero_ne_one hc
   · by_contra hne
-    haveI : (⊥ : Ideal Γ(X, U)).IsPrime := Ideal.isPrime_bot
+    have : (⊥ : Ideal Γ(X, U)).IsPrime := Ideal.isPrime_bot
     have h1 := Ideal.height_add_one_le_of_lt_of_isPrime (bot_lt_iff_ne_bot.2 hQ0)
     have h2 := Ideal.height_add_one_le_of_lt_of_isPrime (lt_of_le_of_ne hQP hne)
     rw [Ideal.height_bot, zero_add] at h1
@@ -144,7 +144,7 @@ theorem heightOne_prime_locallyPrincipal_of_factorial_localization : ∀ (R S : 
     have h := IsLocalization.mk'_spec S a s
     rw [has] at h
     exact h.symm
-  haveI : (Ideal.span {w}).IsPrime := (Ideal.span_singleton_prime hw.ne_zero).mpr hw
+  have : (Ideal.span {w}).IsPrime := (Ideal.span_singleton_prime hw.ne_zero).mpr hw
   have hQprime : ((Ideal.span {w}).comap (algebraMap R S)).IsPrime := inferInstance
   have haQ : a ∈ (Ideal.span {w}).comap (algebraMap R S) := by
     rw [Ideal.mem_comap, hwa]
@@ -225,8 +225,8 @@ theorem ord_fnOf_eq_one_of_generates (X : Scheme.{0}) [IsIntegral X] [IsLocallyN
     (ht : t ∉ (hU.primeIdealOf ⟨z, hz⟩).asIdeal)
     (hg : ∀ g ∈ (hU.primeIdealOf ⟨z, hz⟩).asIdeal, ∃ r, t * g = a * r) :
     Scheme.ord (fnOf U (gen_mem hz) a) z = 1 := by
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨z, hz⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨z, hz⟩
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨z, hz⟩ : U)
+  have := hU.isLocalization_stalk ⟨z, hz⟩
   set P := (hU.primeIdealOf ⟨z, hz⟩).asIdeal with hP
   have halg : ∀ b : Γ(X, U), algebraMap Γ(X, U) (X.presheaf.stalk z) b = X.presheaf.germ U z hz b :=
     fun b => rfl
@@ -251,7 +251,7 @@ theorem ord_fnOf_eq_one_of_generates (X : Scheme.{0}) [IsIntegral X] [IsLocallyN
   have hne : X.presheaf.germ U z hz a ≠ 0 := fun h0 =>
     ha (fnOf_injective U (gen_mem hz) (by rw [← algebraMap_germ hz, h0, map_zero, map_zero]))
   rw [← algebraMap_germ hz a, ord_algebraMap h1 hne, ← hmax]
-  haveI := (isSimpleModule_iff_isCoatom.2
+  have := (isSimpleModule_iff_isCoatom.2
     (IsLocalRing.maximalIdeal.isMaximal (X.presheaf.stalk z)).out :
       IsSimpleModule _ (X.presheaf.stalk z ⧸ IsLocalRing.maximalIdeal (X.presheaf.stalk z)))
   simp [Module.length_eq_one]
@@ -281,8 +281,8 @@ theorem GlobalTheory.Cartier.ord_fnOf_eq_zero_off_center : ∀ (X : Scheme.{0}) 
   have key : ∀ (w : X) (hw : w ∈ U) (f : Γ(X, U)),
       w ∈ X.basicOpen f ↔ f ∉ (hU.primeIdealOf ⟨w, hw⟩).asIdeal := by
     intro w hw f
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨w, hw⟩ : U)
-    haveI := hU.isLocalization_stalk ⟨w, hw⟩
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨w, hw⟩ : U)
+    have := hU.isLocalization_stalk ⟨w, hw⟩
     rw [X.mem_basicOpen f w hw]
     exact IsLocalization.AtPrime.isUnit_to_map_iff (X.presheaf.stalk w) _ f
   have hle : (hU.primeIdealOf ⟨z, hz⟩).asIdeal ≤ (hU.primeIdealOf ⟨v, hv⟩).asIdeal := by
@@ -357,12 +357,12 @@ theorem exists_local_eqn (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X]
   by_cases hzx : z ⤳ x
   · obtain ⟨U, hU, hxU, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (x := x) (U := ⊤) trivial
     have hzU : z ∈ U := hzx.mem_open U.isOpen hxU
-    haveI : Nonempty U := ⟨⟨x, hxU⟩⟩
-    haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-    letI : Algebra Γ(X, U) (X.presheaf.stalk x) :=
+    have : Nonempty U := ⟨⟨x, hxU⟩⟩
+    have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+    let : Algebra Γ(X, U) (X.presheaf.stalk x) :=
       TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨x, hxU⟩
-    haveI := hU.isLocalization_stalk ⟨x, hxU⟩
-    haveI := hu x
+    have := hU.isLocalization_stalk ⟨x, hxU⟩
+    have := hu x
     have hPp : (hU.primeIdealOf ⟨z, hzU⟩).asIdeal ≤ (hU.primeIdealOf ⟨x, hxU⟩).asIdeal := by
       have h' : (⟨z, hzU⟩ : U) ⤳ ⟨x, hxU⟩ := Topology.IsInducing.subtypeVal.specializes_iff.1 hzx
       exact (PrimeSpectrum.le_iff_specializes _ _).2 (h'.map hU.isoSpec.hom.continuous)
@@ -382,7 +382,7 @@ theorem exists_local_eqn (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X]
   · refine ⟨⟨(closure {z})ᶜ, isClosed_closure.isOpen_compl⟩, ?_, 1, fun v hv => ?_⟩
     · exact fun h => hzx (specializes_iff_mem_closure.2 h)
     · have hvz : v ≠ z := fun e => hv (e ▸ subset_closure rfl)
-      rw [if_neg hvz, Units.val_one]
+      rw [ite_eq_right hvz, Units.val_one]
       exact (unitAt_one v).ord_eq_zero
 
 end GlobalTheory.PrimeDivCartier
@@ -394,8 +394,8 @@ theorem GlobalTheory.primeDivisor_isCartier : ∀ (X : Scheme.{0}) [IsIntegral X
       ∃ D : CartierDiv X, D.mult z = 1 ∧ ∀ v, v ≠ z → D.mult v = 0 := by
   intro X _ _ hu z h1
   classical
-  haveI : GlobalTheory.IsNormalScheme X := ⟨fun x => inferInstance, fun x => by
-    haveI := hu x; exact UniqueFactorizationMonoid.instIsIntegrallyClosed⟩
+  have : GlobalTheory.IsNormalScheme X := ⟨fun x => inferInstance, fun x => by
+    have := hu x; exact UniqueFactorizationMonoid.instIsIntegrallyClosed⟩
   choose U hxU π hπ using exists_local_eqn X hu z h1
   have hunit : ∀ x y, y ∈ U x → UnitAt y ((π x : X.functionField) / π y) := by
     intro x y hy
@@ -411,8 +411,8 @@ theorem GlobalTheory.primeDivisor_isCartier : ∀ (X : Scheme.{0}) [IsIntegral X
     ⟨fun y => germOf y (π y), fun x => ⟨U x, hxU x, π x, fun y hy => germOf_eq_iff.2 (hunit x y hy)⟩⟩
   have hD : ∀ y, D.IsEqn y (π y) := fun y => rfl
   refine ⟨D, ?_, fun v hv => ?_⟩
-  · rw [(hD z).mult_eq, hπ z z (hxU z), if_pos rfl]
-  · rw [(hD v).mult_eq, hπ v v (hxU v), if_neg hv]
+  · rw [(hD z).mult_eq, hπ z z (hxU z), ite_eq_left rfl]
+  · rw [(hD v).mult_eq, hπ v v (hxU v), ite_eq_right hv]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsPrimeCartierDivisor =====

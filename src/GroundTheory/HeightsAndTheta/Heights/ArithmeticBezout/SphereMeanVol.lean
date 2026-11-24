@@ -71,7 +71,7 @@ theorem setAverage_smul_measure {α : Type*} [MeasurableSpace α] (μ : Measure 
   have hc : 0 < c.toReal := ENNReal.toReal_pos hc0 hct
   rw [setAverage_eq, setAverage_eq, Measure.restrict_smul, integral_smul_measure, measureReal_def,
     measureReal_def]
-  simp only [Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul]
+  simp only [smul_apply, smul_eq_mul, ENNReal.toReal_mul]
   rw [mul_inv]
   field_simp
 

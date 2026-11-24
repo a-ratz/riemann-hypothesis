@@ -243,7 +243,7 @@ private theorem alg_inj : Function.Injective (algebraMap ℤ_[l] (Qbar l)) := by
 
 private theorem root_mem {w : Qbar l} (hw : w ^ (l - 1) = 1) : ∃ z : ℤ_[l], algebraMap ℤ_[l] (Qbar l) z = w := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l - 1) := ⟨by have := hp.two_le; omega⟩
+  have : NeZero (l - 1) := ⟨by have := hp.two_le; omega⟩
   obtain ⟨z, hz⟩ := prim_root (l := l)
   obtain ⟨i, -, hi⟩ := (hz.map_of_injective (f := algebraMap ℤ_[l] (Qbar l)) alg_inj).eq_pow_of_pow_eq_one hw
   exact ⟨z ^ i, by rw [map_pow, hi]⟩
@@ -396,9 +396,9 @@ private theorem logfun {Γ : Type} [Group Γ] [Fintype Γ] (γ : Γ) (τ : Qbar 
   refine ⟨fun y => ∑ i ∈ Finset.range (orderOf γ), if γ ^ i = y then τ ^ i else 0, fun j => ?_, ?_⟩
   · beta_reduce
     rw [Finset.sum_eq_single (j % orderOf γ)]
-    · rw [if_pos (pow_mod_orderOf γ j)]
+    · rw [ite_eq_left (pow_mod_orderOf γ j)]
     · intro i hi hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       rw [pow_inj_mod, Nat.mod_eq_of_lt (Finset.mem_range.1 hi)] at h
       exact hne h
@@ -546,7 +546,7 @@ private theorem root_mem (c : Coef l) {x : Qbar l} (hx : x ^ (l - 1) = 1) : x �
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (Qbar l), IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (Qbar l) b] at h
     exact Subtype.ext ((algebraMap ℚ_[l] (Qbar l)).injective h)
   have h4 := h3.map_of_injective (f := algebraMap ℤ_[l] (Qbar l)) hinj
-  haveI : NeZero (l - 1) := ⟨by have := (Fact.out : l.Prime).two_le; omega⟩
+  have : NeZero (l - 1) := ⟨by have := (Fact.out : l.Prime).two_le; omega⟩
   obtain ⟨i, -, hi⟩ := h4.eq_pow_of_pow_eq_one hx
   rw [← hi]
   exact c.O.pow_mem (c.O.algebraMap_mem _) i
@@ -821,7 +821,7 @@ private theorem red_cycMod_succ (l : ℕ) [Fact (Nat.Prime l)] (Ω : Type) [Fiel
 
 private theorem eta_one_of_one_le (l : ℕ) [Fact (Nat.Prime l)] (φ : DirichletCharacter (Qbar l) l) (k r : ℕ)
     (hr : 1 ≤ r) : eta φ k r 1 = 1 := by
-  haveI : Fact (1 < l ^ r) := ⟨Nat.one_lt_pow (by omega) (Fact.out : Nat.Prime l).one_lt⟩
+  have : Fact (1 < l ^ r) := ⟨Nat.one_lt_pow (by omega) (Fact.out : Nat.Prime l).one_lt⟩
   simp [eta, ZMod.val_one]
 
 private theorem cg_iff_norm_sub_le_norm_pow (l : ℕ) [Fact (Nat.Prime l)] (n : ℕ) (a b : Qbar l) :
@@ -879,7 +879,7 @@ theorem UpperTheory.Kd.C7.pDiv :
         (l : Qbar l) ^ c₂ * sp (eta φ k r) (Z r) s - (eta φ k r (cycMod ℚ Ω l r s) - 1) * w := by
       rw [Finset.sum_congr rfl (fun x _ => hx x), Finset.sum_add_distrib, Finset.sum_sub_distrib,
         ← Finset.mul_sum, ← Finset.mul_sum, ← Finset.mul_sum, Finset.sum_ite_eq', Finset.sum_ite_eq',
-        if_pos (Finset.mem_univ _), if_pos (Finset.mem_univ _), eta_one_of_one_le l φ k r (le_of_max_le_right hr)]
+        ite_eq_left (Finset.mem_univ _), ite_eq_left (Finset.mem_univ _), eta_one_of_one_le l φ k r (le_of_max_le_right hr)]
       simp only [sp]
       ring
     rw [cg_iff_norm_sub_le_norm_pow, sub_zero, e]
@@ -892,7 +892,7 @@ theorem UpperTheory.Kd.C7.pDiv :
       ∀ x, μ s r x = Z' r s (x * un g hg r) - φ ↑g * ↑g ^ k * Z' r s x := by
     refine ⟨fun r s => @dite _ (s ∈ Ine A) (Classical.dec _) (fun h => Classical.choose (hex s h r)) (fun _ => fun _ => 0), ?_⟩
     intro r s hs
-    simp only [dif_pos hs]
+    simp only [dite_eq_left hs]
     exact Classical.choose_spec (hex s hs r)
   have inj : ∀ r (q : (ZMod (l ^ r))ˣ → Qbar l),
       (∀ x, q (x * un g hg r) - φ ↑g * ↑g ^ k * q x = 0) → ∀ x, q x = 0 := by

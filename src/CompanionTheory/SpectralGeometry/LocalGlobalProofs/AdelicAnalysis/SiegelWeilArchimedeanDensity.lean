@@ -133,7 +133,7 @@ theorem main_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       have h := hs.comp (hp.comp (continuous_pi fun _ : Fin 1 => continuous_pi fun _ : Fin 1 =>
         (continuous_id : Continuous fun y : AF F ⊗[F] E => y)))
       simpa [Function.comp_def, sizeTup, projInf] using h
-    haveI : BorelSpace (AF F ⊗[F] E) := ⟨rfl⟩
+    have : BorelSpace (AF F ⊗[F] E) := ⟨rfl⟩
     have hm := hcont.measurable
     unfold sizeTup projInf
     refine Finset.measurable_sum _ fun p _ => Finset.measurable_sum _ fun i _ => ?_

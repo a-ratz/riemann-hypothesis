@@ -107,7 +107,7 @@ theorem exists_approx_mod_powers :
       (continuous_apply v).comp continuous_fst
     have : CharZero (v.1.adicCompletion F) :=
       charZero_of_injective_algebraMap (algebraMap F (v.1.adicCompletion F)).injective
-    letI : NontriviallyNormedField (v.1.adicCompletion F) :=
+    let : NontriviallyNormedField (v.1.adicCompletion F) :=
       Valued.toNontriviallyNormedField (v.1.adicCompletion F) ℤᵐ⁰
     exact hc.continuousAt.preimage_mem_nhds
       (mul_pow_mem_nhds (K := v.1.adicCompletion F) hp (hy v.1))
@@ -166,7 +166,7 @@ theorem exists_local_nonnorm : ∀ (p : ℕ) (F : Type) [Field F] [NumberField F
   intro p F _ _ ζ δ v hp hζ hδ
   by_contra hall
   push_neg at hall
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   have hζ' : IsPrimitiveRoot (algebraMap F (v.adicCompletion F) ζ) p :=
     hζ.map_of_injective (algebraMap F (v.adicCompletion F)).injective
@@ -274,8 +274,8 @@ theorem pow_card_le_index_iInf_of_prime :
   intro p G ι _ _ K hp hpow hx hind
   classical
   choose x hx1 hx2 using hx
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Finite (G ⧸ (⨅ i, K i)) := Nat.finite_of_card_ne_zero hind
+  have : Fact p.Prime := ⟨hp⟩
+  have : Finite (G ⧸ (⨅ i, K i)) := Nat.finite_of_card_ne_zero hind
   have hord : ∀ j, orderOf (QuotientGroup.mk' (K j) (x j)) = p := by
     intro j
     apply orderOf_eq_prime
@@ -349,7 +349,7 @@ theorem pow_tNon_le_index_finNorm :
   set A : Set (HeightOneSpectrum (𝓞 F)) :=
     {v | v ∈ S ∧ ∀ r : v.adicCompletion F, r ^ p ≠ algebraMap F (v.adicCompletion F) δ} with hA
   have hAf : A.Finite := S.finite_toSet.subset fun v hv => hv.1
-  letI : Fintype A := hAf.fintype
+  let : Fintype A := hAf.fintype
   let K : A → Subgroup Fˣ := fun v => kNorm p (algebraMap F (v.1.adicCompletion F)) δ
   have hle : finNorm p F δ S ≤ ⨅ i, K i := le_iInf fun v => iInf₂_le v.1 v.2.1
   have hdvd := Subgroup.index_dvd_of_le hle

@@ -65,11 +65,11 @@ theorem inter_of_module (E : Type) [Field E] [NumberField E] [IsCMField E] (L : 
   let I : Ideal (𝓞 (maximalRealSubfield E)) :=
     { carrier := {a | algebraMap (𝓞 (maximalRealSubfield E)) E a * t ∈ L}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _), add_mul] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _), add_mul] at ha hb ⊢
         exact L.add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun c {a} ha => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, mul_assoc] at ha ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, mul_assoc] at ha ⊢
         exact hL c _ ha }
   have hI : I ≠ ⊤ := by
     intro hI
@@ -100,7 +100,7 @@ theorem intersection_of_local : Formalism.FourierDecayAlt.J.IntersectionOfLocal 
   constructor
   · intro ht P hP
     unfold Formalism.FourierDecayAlt.S6.locAt
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     refine ⟨1, fun h1 => hP.ne_top ((Ideal.eq_top_iff_one P).mpr h1), ?_⟩
     rw [map_one, one_mul]
     exact ht

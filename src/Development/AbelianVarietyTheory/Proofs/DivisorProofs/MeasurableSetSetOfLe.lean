@@ -93,8 +93,8 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem setOf_le_eq_preimage (u : kˣ) :
     {x : k | valuation k x ≤ valuation k (u : k)} = (fun x => ((u⁻¹ : kˣ) : k) * x) ⁻¹' (𝒪[k] : Set k) := by
   ext x
-  have h0 : 0 < valuation k (u : k) := zero_lt_iff.2 (by simp)
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, Valuation.mem_integer_iff, map_mul,
+  have h0 : 0 < valuation k (u : k) := pos_iff_ne_zero.2 (by simp)
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, Valuation.mem_integer_iff, map_mul,
     Units.val_inv_eq_inv_val, map_inv₀]
   rw [inv_mul_le_one₀ h0]
 
@@ -158,8 +158,8 @@ theorem gdet_eq (ϖ : kˣ) (a a' : ℤ) (g : G.VertexGroup) (hg : ∀ j, g (G.m,
     (hg' : ∀ i j, i ≠ G.m → g (i, j) = 1) (X : ℕ × ℕ) : gdet (g X) = ϖ ^ vtxDet G a a' X := by
   obtain ⟨i, j⟩ := X
   by_cases hi : i = G.m
-  · rw [show (i, j) = (G.m, j) by rw [hi], hg, vtxDet, if_pos rfl, colDiag, gdet, det_diagGL, prod_zpow_units]
-  · rw [hg' i j hi, vtxDet, if_neg hi]
+  · rw [show (i, j) = (G.m, j) by rw [hi], hg, vtxDet, ite_eq_left rfl, colDiag, gdet, det_diagGL, prod_zpow_units]
+  · rw [hg' i j hi, vtxDet, ite_eq_right hi]
     simp
 
 end Expo

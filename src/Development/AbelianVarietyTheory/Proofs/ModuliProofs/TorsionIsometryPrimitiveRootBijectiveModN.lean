@@ -98,10 +98,10 @@ theorem _root_.GlobalTheory.TorsIsometry.ker_and_onto : ∀ (E : Type) [Field E]
   swap
   · rintro ⟨a, rfl⟩
     exact hevn a
-  haveI : NeZero n := ⟨hn.ne'⟩
-  haveI := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : NoZeroSMulDivisors ℤ D.La := ⟨fun {c x} h => by
+  have : NeZero n := ⟨hn.ne'⟩
+  have := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : NoZeroSMulDivisors ℤ D.La := ⟨fun {c x} h => by
     by_cases hc : c = 0
     · exact Or.inl hc
     · right
@@ -111,7 +111,7 @@ theorem _root_.GlobalTheory.TorsIsometry.ker_and_onto : ∀ (E : Type) [Field E]
       simp only [map_zsmul, LinearMap.smul_apply, smul_eq_mul, map_zero,
         LinearMap.zero_apply] at this
       simpa [hc] using this⟩
-  haveI : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ D.La
   let g : (Fin (Module.finrank ℤ D.La) → ZMod n) → {y : Q // y ^ n = 1} :=
     fun t => ⟨ev (b.equivFun.symm fun i => ((t i).val : ℤ)), hevn _⟩
@@ -133,7 +133,7 @@ theorem _root_.GlobalTheory.TorsIsometry.ker_and_onto : ∀ (E : Type) [Field E]
     have hcast := congrArg (Int.cast : ℤ → ZMod n) hi
     push_cast at hcast
     simpa [sub_eq_zero] using hcast
-  haveI : Finite {y : Q // y ^ n = 1} :=
+  have : Finite {y : Q // y ^ n = 1} :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
   have hbij : Function.Bijective g := hinj.bijective_of_nat_card_le (by
     rw [hcard, Nat.card_fun, Nat.card_zmod, Nat.card_fin])

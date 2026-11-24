@@ -163,7 +163,7 @@ theorem exists_mul_mem_span_X {A EA : Type} [CommRing A] [IsNoetherianRing A] [C
     (hker : RingHom.ker ρ = Ideal.span {algebraMap (Polynomial A) (Localization.AtPrime QA) X}) :
     ∃ s ∉ QA, ∀ e : EA, ρ (algebraMap EA (Localization.AtPrime QA) e) = 0 →
       s * e ∈ Ideal.span {algebraMap (Polynomial A) EA X} := by
-  haveI : IsNoetherianRing EA := Algebra.FiniteType.isNoetherianRing (Polynomial A) EA
+  have : IsNoetherianRing EA := Algebra.FiniteType.isNoetherianRing (Polynomial A) EA
   set L := Localization.AtPrime QA
   set I := RingHom.ker (ρ.comp (algebraMap EA L))
   set N := Ideal.span {algebraMap (Polynomial A) EA X}
@@ -244,10 +244,10 @@ theorem exists_baseChange_retract : ∀ (T O : Type) [CommRing T] [IsDomain T] [
         Ideal.span {algebraMap (Polynomial T) O Polynomial.X}) ∧
       (∀ x : EA₁, ρ' x = 0 → ∃ s ∉ QA₁, s * x ∈ Ideal.span {algebraMap (Polynomial A₁) EA₁ Polynomial.X}) := by
   intro T O _ _ _ _ _ _ _ _ hTO hXO A _ _ _ _ i EA _ _ _ _ _ QA _ jA ρ hQA hjA hρ A₁ _ _ _ j i₁ hi₁ hloc hij
-  haveI := hTO
-  haveI := hloc
-  letI algP : Algebra (Polynomial A) (Polynomial A₁) := (mapRingHom j).toAlgebra
-  letI algO : Algebra (Polynomial A) O := ((algebraMap (Polynomial T) O).comp (mapRingHom i)).toAlgebra
+  have := hTO
+  have := hloc
+  let algP : Algebra (Polynomial A) (Polynomial A₁) := (mapRingHom j).toAlgebra
+  let algO : Algebra (Polynomial A) O := ((algebraMap (Polynomial T) O).comp (mapRingHom i)).toAlgebra
   set L := Localization.AtPrime QA with hL
 
   have hρpoly : ρ.comp (algebraMap (Polynomial A) L) = evalRingHom 0 := by
@@ -275,7 +275,7 @@ theorem exists_baseChange_retract : ∀ (T O : Type) [CommRing T] [IsDomain T] [
   let g : EA₁ →+* O := (Algebra.TensorProduct.lift f₁ f₂ (fun _ _ => Commute.all _ _)).toRingHom
   have hg : ∀ p e, g (p ⊗ₜ[Polynomial A] e) = algebraMap (Polynomial T) O (p.map i₁) * jA (algebraMap EA L e) :=
     fun p e => Algebra.TensorProduct.lift_tmul _ _ _ p e
-  letI iA1 : Algebra A₁ EA₁ := ((algebraMap (Polynomial A₁) EA₁).comp C).toAlgebra
+  let iA1 : Algebra A₁ EA₁ := ((algebraMap (Polynomial A₁) EA₁).comp C).toAlgebra
   have hmapP : ∀ p : Polynomial A₁, algebraMap (Polynomial A₁) EA₁ p = p ⊗ₜ[Polynomial A] (1 : EA) := by
     intro p; rw [Algebra.TensorProduct.algebraMap_apply]; rfl
   have hAP : ∀ a : A₁, algebraMap A₁ EA₁ a = algebraMap (Polynomial A₁) EA₁ (C a) := fun a => rfl
@@ -711,7 +711,7 @@ theorem torsor_baseChange_point :
           (σ₁.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A₁ R₁) DA₁)).comp (algebraMap R₁ (GlobalTheory.LocAcyc.GenFib A₁ R₁)) =
             (algebraMap A₁ (FractionRing A₁)).comp ρ₁ := by
   intro A A₁ R R₁ _ _ _ _ _ _ _ j γ ρ ρ₁ β hβ hret hργ q hq DA _ _ actA hT
-  letI : Algebra (GlobalTheory.LocAcyc.GenFib A R) (GlobalTheory.LocAcyc.GenFib A₁ R₁) := β.toAlgebra
+  let : Algebra (GlobalTheory.LocAcyc.GenFib A R) (GlobalTheory.LocAcyc.GenFib A₁ R₁) := β.toAlgebra
   obtain ⟨act', -, hT'⟩ := GlobalTheory.LocAcyc.isZModTorsor_baseChange (GlobalTheory.LocAcyc.GenFib A R)
     (GlobalTheory.LocAcyc.GenFib A₁ R₁) DA q hq actA hT
 
@@ -740,7 +740,7 @@ theorem torsor_baseChange_point :
       apply IsLocalization.ringHom_ext (Algebra.algebraMapSubmonoid R (nonZeroDivisors A))
       rw [hσ, RingHom.comp_assoc, hβ, ← RingHom.comp_assoc, hρK, ← hργ]
       rfl
-    letI : Algebra (GlobalTheory.LocAcyc.GenFib A R) (FractionRing A₁) := (ρK.comp β).toAlgebra
+    let : Algebra (GlobalTheory.LocAcyc.GenFib A R) (FractionRing A₁) := (ρK.comp β).toAlgebra
     let fA : GlobalTheory.LocAcyc.GenFib A₁ R₁ →ₐ[GlobalTheory.LocAcyc.GenFib A R] FractionRing A₁ :=
       { ρK with commutes' := fun _ => rfl }
     let gA : DA →ₐ[GlobalTheory.LocAcyc.GenFib A R] FractionRing A₁ :=
@@ -845,7 +845,7 @@ theorem exists_baseChange_fits : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsL
               (algebraMap A₁ (FractionRing A₁)).comp ρ₁ := by
   intro T O _ _ _ _ _ _ _ _ P _ φ hφ hSH hP q hq A _ _ _ _ _ _ i EA _ _ _ _ _ QA _ jA ψA DA _ _ actA hFits ρ hRet
     A₁ _ _ _ _ _ _ j i₁ hj hi₁ hi₁l hij
-  haveI hφl : IsLocalHom φ := hSH.2.2.1
+  have hφl : IsLocalHom φ := hSH.2.2.1
   have hX : algebraMap (Polynomial T) O Polynomial.X ∈ maximalIdeal O := by
     rw [← hφ, RingHom.comp_apply]
     apply map_nonunit φ
@@ -1051,13 +1051,13 @@ namespace GlobalTheory.LocAcycEmbed
 theorem essFiniteType_int_of_finite_localization {A C A₁ : Type} [CommRing A] [CommRing C] [CommRing A₁]
     [Algebra A C] [Algebra C A₁] [Algebra.EssFiniteType ℤ A] [Module.Finite A C] (M : Submonoid C)
     [IsLocalization M A₁] : Algebra.EssFiniteType ℤ A₁ := by
-  haveI : IsScalarTower ℤ A C := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : IsScalarTower ℤ A C := IsScalarTower.of_algebraMap_eq (fun x => by
     rw [eq_intCast (algebraMap ℤ C), eq_intCast (algebraMap ℤ A), map_intCast])
-  haveI : IsScalarTower ℤ C A₁ := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : IsScalarTower ℤ C A₁ := IsScalarTower.of_algebraMap_eq (fun x => by
     rw [eq_intCast (algebraMap ℤ A₁), eq_intCast (algebraMap ℤ C), map_intCast])
-  haveI : Algebra.EssFiniteType A C := Algebra.EssFiniteType.of_finiteType A C
-  haveI : Algebra.EssFiniteType C A₁ := Algebra.EssFiniteType.of_isLocalization A₁ M
-  haveI : Algebra.EssFiniteType ℤ C := Algebra.EssFiniteType.comp ℤ A C
+  have : Algebra.EssFiniteType A C := Algebra.EssFiniteType.of_finiteType A C
+  have : Algebra.EssFiniteType C A₁ := Algebra.EssFiniteType.of_isLocalization A₁ M
+  have : Algebra.EssFiniteType ℤ C := Algebra.EssFiniteType.comp ℤ A C
   exact Algebra.EssFiniteType.comp ℤ C A₁
 
 theorem exists_fractionRing_hom {C A₁ : Type} [CommRing C] [IsDomain C] [CommRing A₁] [IsDomain A₁]
@@ -1088,19 +1088,19 @@ theorem exists_normal_local_between : ∀ (T : Type) [CommRing T] [IsDomain T] [
         κ.comp ((algebraMap (FractionRing A) L).comp (algebraMap A (FractionRing A))) =
           (algebraMap A₁ (FractionRing A₁)).comp j := by
   intro T _ _ _ hT A _ _ _ _ _ _ i hi L _ _ _ _
-  haveI : IsIntegrallyClosed T := isIntegrallyClosed_of_absIntClosed T hT
-  haveI : IsAlgClosed (FractionRing T) := isAlgClosed_fractionRing T hT
+  have : IsIntegrallyClosed T := isIntegrallyClosed_of_absIntClosed T hT
+  have : IsAlgClosed (FractionRing T) := isAlgClosed_fractionRing T hT
   have hgi : Function.Injective ((algebraMap T (FractionRing T)).comp i) :=
     (IsFractionRing.injective T (FractionRing T)).comp hi
   let φ : FractionRing A →+* FractionRing T := IsFractionRing.lift hgi
-  letI : Algebra (FractionRing A) (FractionRing T) := φ.toAlgebra
+  let : Algebra (FractionRing A) (FractionRing T) := φ.toAlgebra
   let σ : L →ₐ[FractionRing A] FractionRing T := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra A L := ((algebraMap (FractionRing A) L).comp (algebraMap A (FractionRing A))).toAlgebra
-  haveI : IsScalarTower A (FractionRing A) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra A L := ((algebraMap (FractionRing A) L).comp (algebraMap A (FractionRing A))).toAlgebra
+  have : IsScalarTower A (FractionRing A) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hAL : Function.Injective (algebraMap A L) :=
     (algebraMap (FractionRing A) L).injective.comp (IsFractionRing.injective A (FractionRing A))
   have h1 : (algebraMap T (FractionRing T)).comp i = (σ : L →+* FractionRing T).comp (algebraMap A L) := by
@@ -1111,10 +1111,10 @@ theorem exists_normal_local_between : ∀ (T : Type) [CommRing T] [IsDomain T] [
     rw [IsFractionRing.lift_algebraMap]
     rfl
   let C := integralClosure A L
-  haveI : Module.Finite A C := IsIntegralClosure.finite A (FractionRing A) L C
-  haveI : IsNoetherianRing C := IsNoetherianRing.of_finite A C
-  haveI : IsFractionRing C L := integralClosure.isFractionRing_of_finite_extension (FractionRing A) L
-  haveI : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing A)
+  have : Module.Finite A C := IsIntegralClosure.finite A (FractionRing A) L C
+  have : IsNoetherianRing C := IsNoetherianRing.of_finite A C
+  have : IsFractionRing C L := integralClosure.isFractionRing_of_finite_extension (FractionRing A) L
+  have : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing A)
   have hint : ∀ x : C, ∃ t : T, algebraMap T (FractionRing T) t = σ (x : L) := by
     intro x
     obtain ⟨f, hf, hfx⟩ := x.2
@@ -1143,7 +1143,7 @@ theorem exists_normal_local_between : ∀ (T : Type) [CommRing T] [IsDomain T] [
     rw [RingHom.comp_apply, hc]
     exact (RingHom.congr_fun h1 a).symm
   let P : Ideal C := (maximalIdeal T).comap c
-  haveI : P.IsPrime := Ideal.comap_isPrime c _
+  have : P.IsPrime := Ideal.comap_isPrime c _
   have hunit : ∀ y : P.primeCompl, IsUnit (c y) := fun y => by
     by_contra h
     exact y.2 ((IsLocalRing.mem_maximalIdeal _).2 h)
@@ -1170,9 +1170,9 @@ theorem exists_normal_local_between : ∀ (T : Type) [CommRing T] [IsDomain T] [
     show i₁ (algebraMap C _ (algebraMap A C a)) = i a
     rw [IsLocalization.lift_eq]
     exact RingHom.congr_fun hci a
-  haveI : IsDomain (Localization.AtPrime P) :=
+  have : IsDomain (Localization.AtPrime P) :=
     IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors P)
-  haveI : IsIntegrallyClosed (Localization.AtPrime P) :=
+  have : IsIntegrallyClosed (Localization.AtPrime P) :=
     isIntegrallyClosed_of_isLocalization _ P.primeCompl (Ideal.primeCompl_le_nonZeroDivisors P)
   obtain ⟨κ, hκ⟩ := exists_fractionRing_hom (A₁ := Localization.AtPrime P) L hCA₁
   refine ⟨Localization.AtPrime P, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
@@ -1295,7 +1295,7 @@ theorem enlarge_point : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing 
   refine ⟨A₁, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, i₁,
     EA₁, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, QA₁, inferInstance, jA₁, ψA₁,
     DA₁, inferInstance, inferInstance, actA₁, hF₁, ⟨ρ₁, hR₁, ?_⟩, β, h, hβ, hh⟩
-  letI := GlobalTheory.KeyOriginNoeth.closureAlg A₁ (Localization.AtPrime QA₁) DA₁
+  let := GlobalTheory.KeyOriginNoeth.closureAlg A₁ (Localization.AtPrime QA₁) DA₁
   refine ⟨σ₁.comp (GlobalTheory.KeyOriginNoeth.closure A₁ (Localization.AtPrime QA₁) DA₁).subtype, ?_⟩
   ext r
   exact congrArg (fun f => f r) hσ₁

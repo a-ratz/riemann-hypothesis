@@ -77,11 +77,11 @@ theorem lg (hR : ¬ IsField R) (A : Submodule R V) (x : V)
   let I : Ideal R :=
     { carrier := {r | r • x ∈ A}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, add_smul] at *
+        simp only [Set.mem_ofPred_eq, add_smul] at *
         exact A.add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun c r hr => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, mul_smul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, mul_smul] at *
         exact A.smul_mem c hr }
   by_contra hxA
   have hI : I ≠ ⊤ := fun h => hxA (by
@@ -100,13 +100,13 @@ theorem sep (w : HeightOneSpectrum R) (c : R) (hc : c ≠ 0) :
       (by simpa using hc)
   obtain ⟨J, hJ, hnd⟩ := hfin.exists_eq_pow_mul_and_not_dvd
   have hJw : ¬ J ≤ w.asIdeal := fun h => hnd (Ideal.dvd_iff_le.mpr h)
-  obtain ⟨s, hsJ, hsw⟩ := SetLike.not_le_iff_exists.mp hJw
+  obtain ⟨s, hsJ, hsw⟩ := IsConcreteLE.not_le_iff_exists.mp hJw
   refine ⟨s, hsw, fun w' hw' => ?_⟩
   have hpow : ¬ w.asIdeal ^ multiplicity w.asIdeal (Ideal.span {c}) ≤ w'.asIdeal := by
     intro h
     have h1 : w.asIdeal ≤ w'.asIdeal := w'.isPrime.le_of_pow_le h
     exact hw' (HeightOneSpectrum.ext (w.isMaximal.eq_of_le w'.isPrime.ne_top h1).symm)
-  obtain ⟨t, ht, htw⟩ := SetLike.not_le_iff_exists.mp hpow
+  obtain ⟨t, ht, htw⟩ := IsConcreteLE.not_le_iff_exists.mp hpow
   refine ⟨t, htw, ?_⟩
   have : t * s ∈ Ideal.span {c} := by
     rw [hJ]

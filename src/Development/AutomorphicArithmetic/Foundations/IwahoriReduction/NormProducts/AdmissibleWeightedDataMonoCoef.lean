@@ -154,7 +154,7 @@ theorem mem_O_of_pow_eq_one (c : Coef l) (z : Qbar l) (hz : z ^ (l - 1) = 1) : z
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ZMod l)ˣ)
   have ho : orderOf g = l - 1 := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.card_eq_fintype_card, ZMod.card_units]
-  haveI : NeZero (l - 1) := ⟨by have := hl.out.two_le; omega⟩
+  have : NeZero (l - 1) := ⟨by have := hl.out.two_le; omega⟩
   have h1 : IsPrimitiveRoot g (l - 1) := ho ▸ IsPrimitiveRoot.orderOf g
   have h2 : IsPrimitiveRoot (g : ZMod l) (l - 1) :=
     h1.map_of_injective (f := Units.coeHom (ZMod l)) Units.val_injective
@@ -201,7 +201,7 @@ theorem norm_inv_pow_sub_le {r : ℕ} (hr : r ≠ 0) (e : ℕ) {a b : ℤ_[l]} (
 
 theorem val_cast_eq {r : ℕ} (hr : r ≠ 0) (z : ZMod (l ^ r)) :
     ((z.val : ℕ) : ZMod l) = ZMod.castHom (dvd_pow_self l hr) (ZMod l) z := by
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   rw [ZMod.natCast_val]; rfl
 
 theorem val_cast_ne_zero {r : ℕ} (hr : r ≠ 0) (x : (ZMod (l ^ r))ˣ) : (((x : ZMod (l ^ r)).val : ℕ) : ZMod l) ≠ 0 := by
@@ -209,7 +209,7 @@ theorem val_cast_ne_zero {r : ℕ} (hr : r ≠ 0) (x : (ZMod (l ^ r))ˣ) : (((x 
   exact (x.isUnit.map _).ne_zero
 
 theorem val_level_zero (z : ZMod (l ^ 0)) : z.val = 0 := by
-  haveI : NeZero (l ^ 0) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ 0) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have := ZMod.val_lt z
   simp only [pow_zero] at this
   omega
@@ -242,7 +242,7 @@ theorem exists_cycRes_eq [IsAlgClosure ℚ Ω] {r : ℕ} (hr : r ≠ 0) (x : (ZM
 
 theorem continuous_cycBar' : Continuous (cycBar ℚ Ω l) :=
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ ℚ Ω l)
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ ℚ Ω l)
 
 theorem cycBar_val (s : G ℚ Ω) : (cycBar ℚ Ω l s : Qbar l) = algebraMap ℤ_[l] (Qbar l) (cycZ ℚ Ω l s : ℤ_[l]) := rfl
 
@@ -298,7 +298,7 @@ theorem eta_shift [IsAlgClosure ℚ Ω] (hχ : ∀ s, (χ s : Qbar l) = ψ (cycR
     ‖(((((x * cycMod ℚ Ω l r s : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val : ℕ) : Qbar l) ^ e)⁻¹ * chiK l ψ r (x * cycMod ℚ Ω l r s) -
       ((((x : ZMod (l ^ r)).val : ℕ) : Qbar l) ^ e)⁻¹ * chiK l ψ r x * ((eps l s ^ e)⁻¹ * (χ s : Qbar l))‖ ≤
       ‖((l : ℕ) : Qbar l) ^ r‖ := by
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have h := norm_inv_pow_sub_le (l := l) hr e
     (a := ((((x * cycMod ℚ Ω l r s : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val : ℕ) : ℤ_[l]))
     (b := (((x : ZMod (l ^ r)).val : ℕ) : ℤ_[l]) * (cycZ ℚ Ω l s : ℤ_[l]))
@@ -679,8 +679,8 @@ theorem UpperTheory.V.Z.Kato.Nb.kato_norm_compatible_cyclotomic_tower :
   have h'' : l * M₀ = N * l ^ (r + 1 + n) := by rw [h]; ring
   have lv := lv_r H _ M₀ h
   have lv' := lv_r H _ _ h'
-  haveI : NeZero M₀ := ⟨lv.1.ne'⟩
-  haveI : NeZero (l * M₀) := ⟨lv'.1.ne'⟩
+  have : NeZero M₀ := ⟨lv.1.ne'⟩
+  have : NeZero (l * M₀) := ⟨lv'.1.ne'⟩
   have lev := lev_r H n r M₀ hn h
   have lev' := lev_r H n (r + 1) _ hn h''
   have ok : Ok (rU l (r + n) N M₀ x) (rV l (r + n) N M₀) :=
@@ -742,11 +742,11 @@ theorem UpperTheory.V.Z.Kato.Nb.sTop0 :
   · have hlp : l.Prime := Fact.out
     have hL0 : r + n ≠ 0 := by omega
     have hM0 : N * l ^ (r + n) ≠ 0 := mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hlp.ne_zero)
-    haveI : NeZero (N * l ^ (r + n)) := ⟨hM0⟩
+    have : NeZero (N * l ^ (r + n)) := ⟨hM0⟩
     have hMeq : topM l n r (N * N) = N * (N * l ^ (r + n)) := by
       unfold topM
       ring
-    haveI : NeZero (topM l n r (N * N)) := ⟨by rw [hMeq]; exact mul_ne_zero (NeZero.ne N) hM0⟩
+    have : NeZero (topM l n r (N * N)) := ⟨by rw [hMeq]; exact mul_ne_zero (NeZero.ne N) hM0⟩
     have hLev : Lev l n N (N * l ^ (r + n)) (topM l n r (N * N)) g :=
       ⟨hMeq, ⟨l ^ (r + n), by ring⟩, ⟨N * l ^ r, by ring⟩, hn, hH.cop, hH.g0⟩
     have hLv : Lv c d (N * l ^ (r + n)) := hH.lv hlp.ne_zero (NeZero.ne N) rfl
@@ -966,7 +966,7 @@ theorem UpperTheory.V.Z.Kato.Nb.katoZetaElement_normCompatible_in_lTower :
     UpperTheory.V.Z.Kato.Nb.KatoClassCompatibleModPowers := by
   intro Ω _ _ _ ε X l _ N _ x c d w g H hws hL n r
   obtain ⟨ws, hw⟩ := hws
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hN0 : 0 < N := Nat.pos_of_ne_zero (NeZero.ne N)
   have hl0 : 0 < l := (Fact.out : l.Prime).pos
   have hcop : l.Coprime N := H.cop
@@ -1008,7 +1008,7 @@ theorem UpperTheory.V.Z.Kato.Nb.katoZetaElement_normCompatible_in_lTower :
     intro z
     rw [hπ1, hπ0]
     ext
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     exact (RingHom.congr_fun (Subsingleton.elim
       ((ZMod.castHom hT0 (ZMod (l ^ r))).comp (ZMod.castHom hTT (ZMod (topM l n r (N * N)))))
       (ZMod.castHom hT1 (ZMod (l ^ r)))) (z : ZMod _)).symm
@@ -1080,12 +1080,12 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped Matrix MatrixGroups Topology
 
 private theorem UpperTheory.Kd.K4.isCompact_integralCoefficients {l : ℕ} [Fact l.Prime] (c : Coef l) : IsCompact (c.O : Set (Qbar l)) := by
-  haveI : ContinuousSMul ℤ_[l] (PadicAlgCl l) := by
+  have : ContinuousSMul ℤ_[l] (PadicAlgCl l) := by
     refine ⟨?_⟩
     have : (fun q : ℤ_[l] × PadicAlgCl l => q.1 • q.2) = fun q => (q.1 : ℚ_[l]) • q.2 := by
       funext q; rfl
     rw [this]
-    exact (continuous_subtype_val.comp continuous_fst).smul continuous_snd
+    exact (continuous_subtypeVal.comp continuous_fst).smul continuous_snd
   have hfg : (Subalgebra.toSubmodule c.O).FG := Module.Finite.iff_fg.1 c.fin
   exact Submodule.isCompact_of_fg hfg
 
@@ -1391,7 +1391,7 @@ theorem exists_finset_unif [IsAlgClosure ℚ Ω] {T Q : Type} [Finite T] [Semino
     (f : (Ω ≃ₐ[ℚ] Ω) → T → Q) (hf : ∀ x, Continuous fun s => f s x) {δ : ℝ} (hδ : 0 < δ) :
     ∃ E0 : Finset Ω, ∀ (s s' : Ω ≃ₐ[ℚ] Ω) (x : T), (∀ z ∈ E0, s' z = z) → ‖f (s * s') x - f s x‖ ≤ δ := by
   classical
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   have hU : ∀ x, ∀ᶠ s' in nhds (1 : Ω ≃ₐ[ℚ] Ω), ∀ s ∈ (Set.univ : Set (Ω ≃ₐ[ℚ] Ω)),
       ‖f (s * s') x - f s x‖ < δ := by
     intro x

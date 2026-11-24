@@ -63,7 +63,7 @@ theorem conj_not_mem (D : D7) (ρ : D.what₂.Tau) (g : D.R.GG)
   intro hg
   have e1 := ((factEmb D.R D.host).2 _).2 (D.eTau ρ).2
   have e2 := ((factEmb D.R D.host).2 _).2 hg
-  simp only [Formalism.HC.HostRaw.cmType, Set.mem_setOf_eq] at e1 e2
+  simp only [Formalism.HC.HostRaw.cmType, Set.mem_ofPred_eq] at e1 e2
   rw [h, RingHom.comp_apply, tauE, e1] at e2
   have hd : (0 : ℝ) < Real.sqrt D.host.d :=
     Real.sqrt_pos.2 (by exact_mod_cast D.host.hyp.2.1.pos)
@@ -125,8 +125,8 @@ theorem parAt_conj {D : D7} (W : HSp D) (σ : D.what₂.LL →+* ℂ) :
   unfold Links.parAt
   rw [hk, lab_conj, labE_conj]
   rcases hs with h | h
-  · rw [h, if_neg (tauE_ne_conj D ρ).symm, if_pos rfl]
-  · rw [h, conj_conj, if_pos rfl, if_neg (tauE_ne_conj D ρ).symm, dualPar_dualPar]
+  · rw [h, ite_eq_right (tauE_ne_conj D ρ).symm, ite_eq_left rfl]
+  · rw [h, conj_conj, ite_eq_left rfl, ite_eq_right (tauE_ne_conj D ρ).symm, dualPar_dualPar]
 
 variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
 

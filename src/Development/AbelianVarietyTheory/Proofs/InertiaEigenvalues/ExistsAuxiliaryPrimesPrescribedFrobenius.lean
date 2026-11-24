@@ -132,7 +132,7 @@ theorem norm_mod [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : HeightOneSpe
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.mpr hn0⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω n
   have h1 : σ ζ = ζ ^ q := apply_root hA hn0 hn hσ.2 hζ.pow_eq_one
   have h2 : σ ζ = ζ := (show ∀ ζ : Ω, ζ ^ n = 1 → σ ζ = ζ from h) ζ hζ.pow_eq_one
   have h3 : ζ ^ q = ζ ^ 1 := by rw [← h1, h2, pow_one]
@@ -156,7 +156,7 @@ theorem dec_le [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : HeightOneSpect
 
   have hcl := GlobalTheory.TameQuot.closure_frob_sup_Ine F Ω A v hA ⟨σ, hσ.1⟩ hσ
   let K : Subgroup (Dec (F := F) A) := H.subgroupOf (Dec (F := F) A)
-  have hKo : IsOpen (K : Set (Dec (F := F) A)) := hH.preimage continuous_subtype_val
+  have hKo : IsOpen (K : Set (Dec (F := F) A)) := hH.preimage continuous_subtypeVal
   have hKc : IsClosed (K : Set (Dec (F := F) A)) := Subgroup.isClosed_of_isOpen K hKo
   have hle : Subgroup.zpowers (⟨σ, hσ.1⟩ : Dec (F := F) A) ⊔ (Ine (F := F) A).subgroupOf (Dec (F := F) A) ≤ K := by
     refine sup_le ?_ ?_
@@ -311,9 +311,9 @@ theorem not_mem_of_pD {v : PlE D.host} (hv : v ∈ X.pD i) (M : ℕ) :
   rw [X.pD_eq i] at hv'
   have h15 := D.host.pde_mod
   by_cases h : X.l i = D.host.pde
-  · rw [if_pos h] at hv'
+  · rw [ite_eq_left h] at hv'
     exact key _ D.host.pde'_prime (by omega) (fun e => D.host.pde_ne (h ▸ e).symm) hv'
-  · rw [if_neg h] at hv'
+  · rw [ite_eq_right h] at hv'
     exact key _ D.host.pde_prime (by omega) (fun e => h e.symm) hv'
 
 theorem stepAB : Cheb → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (i : X.Tw),

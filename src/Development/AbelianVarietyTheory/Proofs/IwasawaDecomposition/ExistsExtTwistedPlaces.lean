@@ -95,7 +95,7 @@ theorem exists_lt_of_stage (hG : GlobalTheory.Published.GreenCuspidal) {K : Ctx}
   obtain ⟨S, -⟩ := GlobalTheory.Mem.SProv.exists_sStage_true K B w.C W' G.cd hO (GlobalTheory.Mem.Df.cols_pos w.I w.ok w.pins w.l hX)
     (show R.W.Drows ≤ R.W.Dall by rw [R.std.drows, R.std.dall])
   have hMt : ∀ (μ : w.C.Tup) (j : ℕ), W'.eMt μ j = 0 := fun μ j => by
-    haveI := R.std.mt μ j
+    have := R.std.mt μ j
     exact LinearMap.ext fun _ => Subsingleton.elim _ _
   obtain ⟨N, -, -, hN, -⟩ := GlobalTheory.Mem.Top.exists_nStage_grpTrue hG B w.C W' R.std.sha (fun j v _ _ => R.std.eta j v)
     (fun _ => rfl) hMt f

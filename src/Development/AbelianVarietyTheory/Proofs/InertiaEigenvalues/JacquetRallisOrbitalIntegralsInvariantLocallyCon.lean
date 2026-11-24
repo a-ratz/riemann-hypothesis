@@ -95,9 +95,9 @@ theorem actU_mul {r : ℕ} {F E : Type} [CommRing F] [CommRing E] [StarRing E] [
 theorem part1 (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
     [Unram F E] (r : ℕ) (M : Meas r F E) (f' : Gl r F → ℂ) (g : GL (Fin r) F) (Y : Gl r F) :
     orbG M f' (act g Y) = orbG M f' Y := by
-  letI := M.mG
-  haveI := M.bG
-  haveI := _root_.GlobalTheory.JR.gl_unimodular F E r M
+  let := M.mG
+  have := M.bG
+  have := _root_.GlobalTheory.JR.gl_unimodular F E r M
   unfold orbG
   simp only [← act_mul]
   exact integral_mul_right_eq_self (fun h => f' (act h Y) * omega (act h Y)) g
@@ -105,9 +105,9 @@ theorem part1 (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField 
 theorem part2 (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
     [Unram F E] (r : ℕ) (M : Meas r F E) (f : Hn r F E → ℂ) (g : Matrix.unitaryGroup (Fin r) E) (X : Hn r F E) :
     orbU M f (actU g X) = orbU M f X := by
-  letI := M.mU
-  haveI := M.bU
-  haveI := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M
+  let := M.mU
+  have := M.bU
+  have := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M
   unfold orbU
   simp only [← actU_mul]
   exact integral_mul_right_eq_self (fun h => f (actU h X)) g
@@ -166,8 +166,8 @@ namespace GlobalTheory.JR.OrbLC
 theorem part3 (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
     [Unram F E] (r : ℕ) (M : Meas r F E) (f' : Gl r F → ℂ) (hf : IsTest f') (a₀ : Inv r F) (hΔ : Delta a₀ ≠ 0) :
     ∀ᶠ a in 𝓝 a₀, orbG M f' (sec a) = orbG M f' (sec a₀) := by
-  haveI : LocallyCompactSpace F := Unram.lcF (E := E)
-  haveI : IsUltrametricDist F := Unram.ultraF (E := E)
+  have : LocallyCompactSpace F := Unram.lcF (E := E)
+  have : IsUltrametricDist F := Unram.ultraF (E := E)
   obtain ⟨hcont, -, hDc, hprop⟩ := _root_.GlobalTheory.JR.OrbitProper.main F E r
   have hopen : IsOpen {a : Inv r F | Delta a ≠ 0} := isOpen_ne_fun hDc continuous_const
   obtain ⟨Ω, hΩn, hΩsub, hΩc⟩ := local_compact_nhds (hopen.mem_nhds hΔ)
@@ -218,11 +218,11 @@ theorem continuous_star_of_unram (F E : Type) [NontriviallyNormedField F] [Nontr
 theorem continuous_actU (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (r : ℕ) :
     Continuous (fun p : Matrix.unitaryGroup (Fin r) E × Hn r F E => actU p.1 p.2) := by
-  haveI : ContinuousStar E := ⟨continuous_star_of_unram F E⟩
+  have : ContinuousStar E := ⟨continuous_star_of_unram F E⟩
   have hg : Continuous (fun p : Matrix.unitaryGroup (Fin r) E × Hn r F E => (p.1 : Matrix (Fin r) (Fin r) E)) :=
-    continuous_subtype_val.comp continuous_fst
+    continuous_subtypeVal.comp continuous_fst
   have hA : Continuous (fun p : Matrix.unitaryGroup (Fin r) E × Hn r F E => (p.2.1 : Matrix (Fin r) (Fin r) E)) :=
-    continuous_subtype_val.comp (continuous_fst.comp continuous_snd)
+    continuous_subtypeVal.comp (continuous_fst.comp continuous_snd)
   have hb : Continuous (fun p : Matrix.unitaryGroup (Fin r) E × Hn r F E => p.2.2.1) :=
     continuous_fst.comp (continuous_snd.comp continuous_snd)
   have hl : Continuous (fun p : Matrix.unitaryGroup (Fin r) E × Hn r F E => p.2.2.2) :=

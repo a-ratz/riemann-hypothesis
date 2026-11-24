@@ -66,10 +66,10 @@ theorem sf_smul (c : ℝ≥0∞) (hc : c ≠ ⊤) : SigmaFinite (c • (volume :
 
 theorem pi_smul_vol {ι : Type*} [Fintype ι] (c : ι → ℝ≥0∞) (hc : ∀ i, c i ≠ ⊤) :
     Measure.pi (fun i => c i • (volume : Measure ℂ)) = (∏ i, c i) • (volume : Measure (ι → ℂ)) := by
-  haveI : ∀ i, SigmaFinite (c i • (volume : Measure ℂ)) := fun i => sf_smul (c i) (hc i)
+  have : ∀ i, SigmaFinite (c i • (volume : Measure ℂ)) := fun i => sf_smul (c i) (hc i)
   refine Measure.pi_eq fun s _ => ?_
-  rw [Measure.smul_apply, smul_eq_mul, volume_pi_pi, ← Finset.prod_mul_distrib]
-  simp only [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul, volume_pi_pi, ← Finset.prod_mul_distrib]
+  simp only [smul_apply, smul_eq_mul]
 
 theorem map_scale (s : ℂ) (hs : s ≠ 0) :
     (volume : Measure ℂ).map (fun z => s * z) = ENNReal.ofReal (Complex.normSq s)⁻¹ • volume := by
@@ -102,7 +102,7 @@ theorem pi_reindex_scale {ι κ : Type*} [Fintype ι] [Fintype κ] (e : ι ≃ �
       (∏ _k : κ, a) • (volume : Measure (κ → ℂ)) := pi_smul_vol (fun _ => a) (fun _ => ha)
   have hsc : (volume : Measure (ι → ℂ)).map (fun x i => s i * x i) =
       (∏ i, ENNReal.ofReal (Complex.normSq (s i))⁻¹) • (volume : Measure (ι → ℂ)) := by
-    haveI : ∀ i, SigmaFinite (Measure.map (fun x => s i * x) (volume : Measure ℂ)) := fun i => by
+    have : ∀ i, SigmaFinite (Measure.map (fun x => s i * x) (volume : Measure ℂ)) := fun i => by
       rw [map_scale _ (hs i)]
       exact sf_smul _ ENNReal.ofReal_ne_top
     rw [volume_pi, Measure.pi_map_pi (fun i => (measurable_const_mul (s i)).aemeasurable)]

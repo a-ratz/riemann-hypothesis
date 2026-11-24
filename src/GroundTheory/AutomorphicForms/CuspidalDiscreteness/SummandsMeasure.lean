@@ -419,7 +419,7 @@ def finUSet : Set (normOneGL (K := K) (n := n)) :=
   {x | finPart K n x ∈ (finOpenSubgroup U hU : Set (AdelicGLn.FiniteAdelicGL K n))}
 
 theorem isClopen_finUSet : IsClopen (finUSet U hU) :=
-  (finOpenSubgroup U hU).isClopen.preimage (continuous_finPart.comp continuous_subtype_val)
+  (finOpenSubgroup U hU).isClopen.preimage (continuous_finPart.comp continuous_subtypeVal)
 
 theorem coe_openSubgroupOf :
     (finOpenSubgroup U hU : Set (AdelicGLn.FiniteAdelicGL K n)) =
@@ -433,7 +433,7 @@ theorem isCompact_openSubgroupOf :
   have : CompactSpace (AdelicGLn.integralFiniteGL K n) :=
     isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL K n)
   rw [coe_openSubgroupOf]
-  exact (U.isClosed_of_isOpen hU).isCompact.image continuous_subtype_val
+  exact (U.isClosed_of_isOpen hU).isCompact.image continuous_subtypeVal
 
 theorem openSubgroupOf_subset :
     (finOpenSubgroup U hU : Set (AdelicGLn.FiniteAdelicGL K n)) ⊆ AdelicGLn.integralFiniteGL K n := by
@@ -452,7 +452,7 @@ def F0fun (κ : archGroup K n → ℂ) (x : normOneGL (K := K) (n := n)) : ℂ :
 theorem continuous_F0fun (hn : 0 < n) {κ : archGroup K n → ℂ} (hκ : Continuous κ)
     (hκc : HasCompactSupport κ) : Continuous (F0fun U hU κ) :=
   (isClopen_finUSet U hU).continuous_indicator
-    ((continuous_kbar hn hκ hκc).comp (continuous_infPart.comp continuous_subtype_val))
+    ((continuous_kbar hn hκ hκc).comp (continuous_infPart.comp continuous_subtypeVal))
 
 theorem detA_infPart {x : normOneGL (K := K) (n := n)} (hx : finPart K n x ∈ AdelicGLn.integralFiniteGL K n) :
     detA K n (infPart K n x) = 1 := by
@@ -473,7 +473,7 @@ theorem hasCompactSupport_F0fun (hn : 0 < n) {κ : archGroup K n → ℂ} (hκc 
   have hKc : IsCompact ((Subtype.val : normOneGL (K := K) (n := n) → AdelicGLn.AdelicGL K n) ⁻¹' K₀) :=
     Topology.IsInducing.subtypeVal.isCompact_preimage (by rw [Subtype.range_coe]; exact isClosed_normOneGL)
       hK₀c
-  refine HasCompactSupport.intro' hKc (hK₀c.isClosed.preimage continuous_subtype_val) fun x hx => ?_
+  refine HasCompactSupport.intro' hKc (hK₀c.isClosed.preimage continuous_subtypeVal) fun x hx => ?_
   by_contra hne
   apply hx
   have hxU : x ∈ finUSet U hU := by
@@ -623,7 +623,7 @@ theorem exists_cc_integral_mul_eq_of_pos (hn : 0 < n) (μ : Measure (normOneGL (
       refine (infFinEquiv K n).toHomeomorph.isCompact_preimage.2 ?_
       rw [← image_mul_centralSection_eq hn]
       exact (hΞc.isCompact.prod isCompact_posRealUnitInterval).image
-        ((continuous_subtype_val.comp continuous_fst).mul (continuous_centralSection.comp continuous_snd))
+        ((continuous_subtypeVal.comp continuous_fst).mul (continuous_centralSection.comp continuous_snd))
     refine integrable_of_bound_of_compact (hFm.comp (infFinEquiv K n).continuous.measurable).aestronglyMeasurable
       hC M (fun p _ => (norm_indicator_le_norm_self _ _).trans (hM _)) fun p hp => ?_
     simp only [hFpdef]

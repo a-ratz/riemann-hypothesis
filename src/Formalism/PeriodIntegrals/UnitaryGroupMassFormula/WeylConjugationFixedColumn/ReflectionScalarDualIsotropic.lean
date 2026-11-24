@@ -188,7 +188,7 @@ lemma conj_fixed_col {m : ℕ} (g H : Matrix (Fin m) (Fin m) ℂ) (p : Fin m)
     zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
 
 lemma reflection_mem_unitary (l : Fin r) (c : ℂ) (hc : c ≠ 0) : w1 k r l c ∈ UH (Hpk k r) := by
-  simp only [UH, Set.mem_setOf_eq]
+  simp only [UH, Set.mem_ofPred_eq]
   ext p q
   rw [monomial_conj _ _ (sw l) (al l c) (weyl_lift_eq_pair l c)]
   rcases trich l p with hp | hp | ⟨hp1, hp2⟩ <;> rcases trich l q with hq | hq | ⟨hq1, hq2⟩ <;>
@@ -204,7 +204,7 @@ lemma reflection_fixes_basis_vector (l : Fin r) (c : ℂ) (j : Fin (2 * r + k + 
   simp [bvec, Pi.single_apply]
 
 lemma reflection_mem_Glev_castSucc (l : Fin r) (c : ℂ) (hc : c ≠ 0) : w1 k r l c ∈ Glev k r l.castSucc := by
-  simp only [Glev, Set.mem_setOf_eq]
+  simp only [Glev, Set.mem_ofPred_eq]
   refine ⟨reflection_mem_unitary l c hc, fun a ha => ?_⟩
   have hal : a.val < l.val := by simpa using ha
   have h1 := a.isLt
@@ -219,7 +219,7 @@ include hg
 
 lemma g_col_e (i : Fin (2 * r + k + 1)) : g i (eI k r l) = if i = eI k r l then 1 else 0 := by
   have h := hg
-  simp only [Glev, Set.mem_setOf_eq] at h
+  simp only [Glev, Set.mem_ofPred_eq] at h
   have e := (h.2 l (by simp)).1
   rw [mulVec_bvec] at e
   have e' := congrFun e i
@@ -227,7 +227,7 @@ lemma g_col_e (i : Fin (2 * r + k + 1)) : g i (eI k r l) = if i = eI k r l then 
 
 lemma diagonal_column_dual_isotropic (i : Fin (2 * r + k + 1)) : g i (esI k r l) = if i = esI k r l then 1 else 0 := by
   have h := hg
-  simp only [Glev, Set.mem_setOf_eq] at h
+  simp only [Glev, Set.mem_ofPred_eq] at h
   have e := (h.2 l (by simp)).2
   rw [mulVec_bvec] at e
   have e' := congrFun e i
@@ -235,7 +235,7 @@ lemma diagonal_column_dual_isotropic (i : Fin (2 * r + k + 1)) : g i (esI k r l)
 
 lemma diagonal_row_dual_isotropic (j : Fin (2 * r + k + 1)) : g (esI k r l) j = if j = esI k r l then 1 else 0 := by
   have h := hg
-  simp only [Glev, UH, Set.mem_setOf_eq] at h
+  simp only [Glev, UH, Set.mem_ofPred_eq] at h
   have e := conj_fixed_col g (Hpk k r) (eI k r l) (g_col_e l g hg) j
   rw [h.1] at e
   simp only [hpk_e_row, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte] at e
@@ -243,7 +243,7 @@ lemma diagonal_row_dual_isotropic (j : Fin (2 * r + k + 1)) : g (esI k r l) j = 
 
 lemma g_row_e (j : Fin (2 * r + k + 1)) : g (eI k r l) j = if j = eI k r l then 1 else 0 := by
   have h := hg
-  simp only [Glev, UH, Set.mem_setOf_eq] at h
+  simp only [Glev, UH, Set.mem_ofPred_eq] at h
   have e := conj_fixed_col g (Hpk k r) (esI k r l) (diagonal_column_dual_isotropic l g hg) j
   rw [h.1] at e
   simp only [hpk_s_row, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte] at e
@@ -251,9 +251,9 @@ lemma g_row_e (j : Fin (2 * r + k + 1)) : g (eI k r l) j = if j = eI k r l then 
 
 lemma g_mem_cast : g ∈ Glev k r l.castSucc := by
   have h := hg
-  simp only [Glev, Set.mem_setOf_eq] at h ⊢
+  simp only [Glev, Set.mem_ofPred_eq] at h ⊢
   refine ⟨h.1, fun a ha => h.2 a ?_⟩
-  simp only [Fin.coe_castSucc, Fin.val_succ] at ha ⊢
+  simp only [Fin.val_castSucc, Fin.val_succ] at ha ⊢
   omega
 
 lemma w1_commute_of_mem_Glev (c : ℂ) : w1 k r l c * g = g * w1 k r l c := by
@@ -272,7 +272,7 @@ lemma w1_commute_of_mem_Glev (c : ℂ) : w1 k r l c * g = g * w1 k r l c := by
 lemma reflection_hermitian_value (c : ℂ) :
     herm (Hpk k r) ((w1 k r l c * g) *ᵥ bvec (eI k r l)) (bvec (eI k r l)) = c := by
   have h := hg
-  simp only [Glev, Set.mem_setOf_eq] at h
+  simp only [Glev, Set.mem_ofPred_eq] at h
   have hge : g *ᵥ bvec (eI k r l) = bvec (eI k r l) := (h.2 l (by simp)).1
   rw [herm_bvec, ← Matrix.mulVec_mulVec, hge, mulVec_bvec]
   simp only [Matrix.mulVec, dotProduct, hpk_e_row, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',

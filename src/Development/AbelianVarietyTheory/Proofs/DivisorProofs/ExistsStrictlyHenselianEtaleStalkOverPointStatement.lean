@@ -65,11 +65,11 @@ theorem _root_.GlobalTheory.EtC.exists_isStalk_over_point : ∀ (S : Scheme.{0})
   obtain ⟨y, hy⟩ := 𝒰.covers u
   let R : CommRingCat := 𝒰.X (𝒰.idx u)
   let f : Spec R ⟶ U.left := 𝒰.f (𝒰.idx u)
-  haveI : IsOpenImmersion f := 𝒰.map_prop _
-  haveI := hU
+  have : IsOpenImmersion f := 𝒰.map_prop _
+  have := hU
   let j : Spec R ⟶ S := f ≫ U.hom
   let y' : Spec R := y
-  haveI := y'.isPrime
+  have := y'.isPrime
   obtain ⟨O, hO, hAO, hloc, hsh, hind, hcomap⟩ :=
     _root_.GlobalTheory.StrictHensPrime.exists_sh_indEt R y'.asIdeal
   let φ : Spec (CommRingCat.of O) ⟶ Spec R := Spec.map (CommRingCat.ofHom (algebraMap R O))

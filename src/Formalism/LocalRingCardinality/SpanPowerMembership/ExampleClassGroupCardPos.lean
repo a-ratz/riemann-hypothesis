@@ -304,9 +304,9 @@ theorem rat_not_lt {σ : G E Ω} (hσ : σ ∈ Dec (F := E) A) (y : Ω) (hy : y 
   intro h
   have step : ∀ j : ℕ, A.valuation ((σ ^ j) (σ y)) < A.valuation ((σ ^ j) y) := fun j => by
     have h1 : A.valuation (σ y / y) < 1 := by
-      rw [map_div₀, div_lt_one₀ (zero_lt_iff.mpr (by simpa using hy))]; exact h
+      rw [map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr (by simpa using hy))]; exact h
     have h2 := (valuation_apply_lt_one_iff (pow_mem hσ j) (σ y / y)).mpr h1
-    rwa [map_div₀, map_div₀, div_lt_one₀ (zero_lt_iff.mpr
+    rwa [map_div₀, map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr
       ((Valuation.ne_zero_iff _).mpr ((map_ne_zero (σ ^ j)).mpr hy)))] at h2
   have all : ∀ j : ℕ, A.valuation ((σ ^ (j + 1)) y) < A.valuation y := fun j => by
     induction j with
@@ -614,7 +614,7 @@ theorem exists_sum_trivialSeriesIdempotent_eq_one [Fact g.Prime] (hr : r ≠ 0) 
   refine ⟨hfin.toFinset, fun f => by simp, ?_⟩
   unfold trivialSeriesIdempotent
   rw [Finset.sum_ite_eq']
-  rw [if_pos]
+  rw [ite_eq_left]
   simpa using labelPolynomial_monic_degree r g hr
 
 end Series
@@ -735,7 +735,7 @@ theorem exampleNewtypes_idempotent_zero (ht htm teichC teichC_inj iota iota_inj)
     refine Finset.prod_eq_zero (Finset.mem_univ ⟨0, (⟨0, hf⟩ : Fin R.f)⟩) ?_
     show (trivialSeriesIdempotent _ _ _).coeff _ = 0
     unfold trivialSeriesIdempotent
-    rw [if_neg]
+    rw [ite_eq_right]
     · rfl
     · intro e
       have h2 : 2 ≤ R.r := by have := R.m_add_three_le_k; unfold Ranks.r; omega

@@ -102,7 +102,7 @@ theorem GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound : ∀ (E : Type) [Fi
             subst hs
             rfl
   subst hinst
-  letI : StarRing (𝓞 E) := H.starRing
+  let : StarRing (𝓞 E) := H.starRing
   obtain ⟨BT, hF, hA, h1, h2, hs, had, hK⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y C
   obtain ⟨hFK, hAK, hG, hC⟩ := hK T.Fr
   refine ⟨BT, ⟨hF, hA, h1, h2, hs, had⟩, ?_⟩
@@ -126,7 +126,7 @@ theorem GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound : ∀ (E : Type) [Fi
     exact (hG _).2 hC
   have hgauge : B.IsCanonGauge T.Fr (gaugeOf C) := hgB.2 hgT
   refine ⟨hgauge, GlobalTheory.ChartBiext.constantCoeff_gauge B hgauge, ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have eFK' : B.FK T.Fr = C.ch.B.FK T.Fr := eFK.trans hFK
   have eAK' : ∀ a, B.actK T.Fr a = C.ch.B.actK T.Fr a := fun a => (eAK a).trans (hAK a)
   refine ⟨fun ℓ a => ?_, ?_⟩

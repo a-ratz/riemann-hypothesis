@@ -58,7 +58,7 @@ theorem appLE_injective_of_genericPoint_map {X Y : Scheme.{0}} [IsIntegral X] [I
   have hF : IsField (X.presheaf.stalk (π (genericPoint Y))) :=
     isField_stalk_of_closure_mem_irreducibleComponents X _
       (by rw [hπ]; simp [irreducibleComponents_eq_singleton])
-  letI := hF.toField
+  let := hF.toField
   have key : ∀ s, (π.stalkMap (genericPoint Y)).hom (X.presheaf.germ U _ hxU s) =
       Y.presheaf.germ V (genericPoint Y) hy ((π.appLE U V h).hom s) := by
     intro s

@@ -237,7 +237,7 @@ theorem det_of_basis_ne_zero (v : Basis n E (n → E)) :
     ext k i
     simp [Basis.toMatrix_apply]
   rw [h]
-  letI := (Pi.basisFun E n).invertibleToMatrix v
+  let := (Pi.basisFun E n).invertibleToMatrix v
   exact (Matrix.isUnit_det_of_invertible _).ne_zero
 
 theorem ne_zero_of_congr_diagonal {G P : Matrix n n E} {d : n → E} (hP : P.det ≠ 0)

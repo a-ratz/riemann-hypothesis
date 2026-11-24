@@ -84,8 +84,8 @@ def HasLevelStructureOfLevel (b : Base D R) (N h M : ℕ) : Prop :=
       ∃! f : S ⟶ X, f ≫ s = t ∧ f ≫ s₁ = t₁ ∧ ∃ m : ObjMap o u f, ∀ a, (l a).left ≫ m.φ = f ≫ (lev a).left
 
 theorem Datum.two_le_finrank_La {p : ℕ} [Fact p.Prime] (D : Datum p) : 2 ≤ Module.finrank ℤ D.La := by
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   have hF : 0 < Module.finrank ℚ D.F := Module.finrank_pos
   have hpos : 0 < Module.finrank ℤ D.La := by
     rw [D.rankLa]
@@ -108,7 +108,7 @@ theorem Datum.two_le_finrank_La {p : ℕ} [Fact p.Prime] (D : Datum p) : 2 ≤ M
     ext y
     simp [hzero]
   have : Module.finrank ℤ D.La = 0 := by
-    haveI : Subsingleton D.La := ⟨fun a b => by rw [hsub a, hsub b]⟩
+    have : Subsingleton D.La := ⟨fun a b => by rw [hsub a, hsub b]⟩
     exact Module.finrank_zero_of_subsingleton
   omega
 

@@ -118,7 +118,7 @@ private theorem Lv_eq (f : G → ℂ) : Lv ρ K f = ∑ᶠ q : G ⧸ K, f q.out 
 
 private theorem cs_finite [TopologicalSpace G] [IsTopologicalGroup G] (hK : IsOpen (K : Set G)) {f : G → ℂ}
     (hf : HasCompactSupport f) : (cs K f).Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have h1 : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport f) :=
     IsCompact.image hf QuotientGroup.continuous_mk
   refine h1.finite_of_discrete.subset fun q hq => ?_
@@ -274,9 +274,9 @@ private theorem mem_dcs_of_positions {S : Set (Pl E)} {N : ∀ w : Pl E, Subgrou
     simp only [map_mul, map_inv]
     rw [hc i hi, hd i hi]
     by_cases hiJ : i ∈ hfin.toFinset
-    · rw [if_pos hiJ, if_pos hiJ, (hAB i hi).2.2]
+    · rw [ite_eq_left hiJ, ite_eq_left hiJ, (hAB i hi).2.2]
       simp [mul_assoc, (N i.1).one_mem]
-    · rw [if_neg hiJ, if_neg hiJ]
+    · rw [ite_eq_right hiJ, ite_eq_right hiJ]
       have hn : ¬ (qw n i.1 i.2 x ∉ N i.1 ∨ qw n i.1 i.2 g ∉ N i.1) := fun h =>
         hiJ ((hfin.mem_toFinset).2 ⟨hi, h⟩)
       push_neg at hn
@@ -333,7 +333,7 @@ private theorem pf_eq {Z : Finset (Pl E)} {S : Set (Pl E)} {N : ∀ w : Pl E, Su
         have hsp : GlobalTheory.UnitaryBC.IsSplitAt w := hi.2 rfl
         simp only at hix
         simp only
-        rw [if_pos hsp, Set.indicator_of_notMem hix, mul_zero]
+        rw [ite_eq_left hsp, Set.indicator_of_notMem hix, mul_zero]
     · refine ((Z.finite_toSet).union
         (((hbad x).union (hbad g)).image fun i : Pl E × Bool => i.1)).subset ?_
       intro w hw

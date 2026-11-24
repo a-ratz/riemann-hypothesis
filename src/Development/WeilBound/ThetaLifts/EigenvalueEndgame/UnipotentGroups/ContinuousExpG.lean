@@ -155,7 +155,7 @@ theorem right_of_fd [LocallyCompactSpace G] [SecondCountableTopology G] (μ : Me
       change _ * x * g = _ * (x * g)
       rw [mul_assoc]; rfl
   have h3 : μ ((· * g) ⁻¹' 𝓕) = μ 𝓕 := h2.measure_eq h
-  rw [← Measure.map_apply (measurable_mul_const g) hm, e, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
+  rw [← Measure.map_apply (measurable_mul_const g) hm, e, smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
   have h4 : (c : ℝ≥0∞) = 1 := (ENNReal.mul_left_inj (h.measure_ne_zero (NeZero.ne μ)) hf.ne).1 (h3.trans (one_mul _).symm)
   rw [e, ENNReal.coe_eq_one.1 h4, one_smul]
 
@@ -362,7 +362,7 @@ theorem mat_unit {J : Matrix (Fin d) (Fin d) E} (g : UA σ J) : (mat g)ᵀ * inc
 theorem mat_inj {J : Matrix (Fin d) (Fin d) E} {g h : UA σ J} (e : mat g = mat h) : g = h := Subtype.ext (Units.ext e)
 
 theorem continuous_mat {J : Matrix (Fin d) (Fin d) E} : Continuous fun g : UA σ J => mat g :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem incM_mul {a b e : Type} [Fintype b] (A : Matrix a b E) (B : Matrix b e E) : incM F (A * B) = incM F A * incM F B :=
   Matrix.map_mul
@@ -485,8 +485,8 @@ theorem lie_cocompact (p : Matrix (Fin d) (Fin d) E) : ∃ C : Set (Matrix (Fin 
     (∀ x ∈ C, eqs (cA σ) (incM F W.J) (incM F e) (incM F f) (incM F p) x = 0) ∧
     ∀ x, eqs (cA σ) (incM F W.J) (incM F e) (incM F f) (incM F p) x = 0 → ∃ v : Matrix (Fin d) (Fin d) E, Tri e f v ∧
       eqs (cA σ) (incM F W.J) (incM F e) (incM F f) (incM F p) (incM F v) = 0 ∧ x - incM F v ∈ C := by
-  letI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  let : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨K, hK, hc⟩ := GlobalTheory.AdeleCocompact.exists_compact_adele F
   have b := incL_bc (F := F) (E := E) (d := d)
   have comm : ∀ v, eqs (cA σ) (incM F W.J) (incM F e) (incM F f) (incM F p) (incL F E v) =
@@ -514,12 +514,12 @@ theorem continuous_expG : Continuous (expG : lie σ W e f → _) := by
   have c : Continuous (ex (AF F) : Matrix (Fin d) (Fin d) (AE F E) → _) :=
     (continuous_const.add continuous_id).add ((continuous_id.matrix_mul continuous_id).const_smul (⅟2 : AF F))
   refine Continuous.subtype_mk (Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _) _
-  · exact c.comp continuous_subtype_val
-  · exact c.comp continuous_subtype_val.neg
+  · exact c.comp continuous_subtypeVal
+  · exact c.comp continuous_subtypeVal.neg
 
 theorem expG_rat {v : Matrix (Fin d) (Fin d) E} (hv : Tri e f v) (h : incM F v ∈ lie σ W e f) :
     (expG ⟨_, h⟩).1 ∈ ratU σ W.J := by
-  letI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  let : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   refine Subgroup.mem_subgroupOf.2 ⟨⟨ex F v, ex F (-v), ex_neg (hv.three hv hv), by
     simpa using ex_neg (A := F) (hv.neg.three hv.neg hv.neg)⟩, Units.ext ?_⟩
   change incL F E (ex F v) = ex (AF F) (incM F v)
@@ -573,13 +573,13 @@ theorem unipGood_of {J : Matrix (Fin d) (Fin d) E} [DiscreteTopology (ratU σ J)
     (hc : IsClosed (N : Set (UA σ J))) (cov : ∃ C : Set N, IsCompact C ∧ ∀ u : N, ∃ γ : N, γ.1 ∈ ratU σ J ∧ γ * u ∈ C) :
     UnipGood N := by
   obtain ⟨-, h1, h2, h3⟩ := GlobalTheory.UnitaryAdelicTop.lcsc_UA F E σ d J
-  haveI := PositivityTheory.ThKF.countable_ratU σ J
-  haveI lc : LocallyCompactSpace N := hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have := PositivityTheory.ThKF.countable_ratU σ J
+  have lc : LocallyCompactSpace N := hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let j : (ratU σ J).subgroupOf N → ratU σ J := fun γ => ⟨γ.1.1, γ.2⟩
   have ji : Function.Injective j := fun a b h => Subtype.ext (Subtype.ext (congrArg Subtype.val h :))
-  haveI cnt : Countable ((ratU σ J).subgroupOf N) := ji.countable
-  haveI : DiscreteTopology ((ratU σ J).subgroupOf N) := DiscreteTopology.of_continuous_injective
-    ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) ji
+  have cnt : Countable ((ratU σ J).subgroupOf N) := ji.countable
+  have : DiscreteTopology ((ratU σ J).subgroupOf N) := DiscreteTopology.of_continuous_injective
+    ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) ji
   have dom := (GlobalTheory.RationalUnitaryDomains.isDiscreteWithDomains_of_discrete ((ratU σ J).subgroupOf N)).2.2
   obtain ⟨C, hC, hcov⟩ := cov
   have fin : ∀ (μ : Measure N) (𝓕 : Set N), μ.IsHaarMeasure → IsFundamentalDomain ((ratU σ J).subgroupOf N) 𝓕 μ →
@@ -589,7 +589,7 @@ theorem unipGood_of {J : Matrix (Fin d) (Fin d) E} [DiscreteTopology (ratU σ J)
     obtain ⟨h0, h1⟩ := fin _ _ inferInstance h
     exact ⟨(Measure.haar 𝓕)⁻¹ • Measure.haar, 𝓕,
       Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 h1.ne) (ENNReal.inv_ne_top.2 h0),
-      h.mono Measure.smul_absolutelyContinuous, by rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1.ne]⟩
+      h.mono Measure.smul_absolutelyContinuous, by rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1.ne]⟩
   · obtain ⟨𝓕, hm, h⟩ := dom μ hμ
     exact right_of_fd μ hm h (fin _ _ hμ h).2
 
@@ -605,7 +605,7 @@ theorem unipU_eq (U : Submodule E (Fin d → E)) : ∃ e f, unipU σ W U = triG 
 
 theorem unipUGood : UnipUGood := by
   intro F E _ _ _ _ _ σ h d W hJ hd U
-  haveI : DiscreteTopology (ratU σ W.J) := hJ.elim
+  have : DiscreteTopology (ratU σ W.J) := hJ.elim
     (fun k => PositivityTheory.ThKF.discrete_ratU h (ε := 1) (fun i j => by simp [k]) hd)
     fun k => PositivityTheory.ThKF.discrete_ratU h (ε := -1) (fun i j => by simp [k]) hd
   obtain ⟨e, f, h1, h2⟩ := unipU_eq (σ := σ) (W := W) U

@@ -91,7 +91,7 @@ namespace GlobalTheory.GeomBasis
 theorem basis_of_weil : ∀ (h N : ℕ) (k : Type) [Field k] (S : Scheme.{0}) (x : Sp k ⟶ S) (A : Over S) [GrpObj A] [IsCommMonObj A] (L : LB A.left) (z : kˣ) (e₀ e : (Fin h ⊕ Fin h → ℤ) → (Over.mk x ⟶ A)), L.IsLB → Odd N → IsPrimitiveRoot z N → (∀ a a', e₀ (a + a') = e₀ a * e₀ a') → (∀ a, e₀ a = 1 ↔ ∃ a', a = N • a') → (∀ g : Over.mk x ⟶ A, g ^ N = 1 → ∃ a, e₀ a = g) → (∀ a a', e (a + a') = e a * e a') → (∀ a, e a ^ N = 1) → (∀ a a', Out.WeilIs A L N (e a) (e a') (unitOn (z ^ (2 * omegaStd a a')))) → (∀ a, e a = 1 ↔ ∃ a', a = N • a') ∧ ∀ g : Over.mk x ⟶ A, g ^ N = 1 → ∃ a, e a = g := by
   intro h N k _ S x A _ _ L z e₀ e hL hN hz add₀ ker₀ onto₀ add tors weil
   have hN0 : N ≠ 0 := by rintro rfl; exact (Nat.not_even_iff_odd.2 hN) (by decide)
-  haveI : NeZero N := ⟨hN0⟩
+  have : NeZero N := ⟨hN0⟩
   have e0 : e 0 = 1 := GlobalTheory.LevCover.add_map_zero add
   have kerE : ∀ a, e a = 1 ↔ ∃ a', a = N • a' := by
     intro a
@@ -460,8 +460,8 @@ theorem exists_levelCover : ∀ (h n N : ℕ) (B B' : Type) [CommRing B] [CommRi
   obtain ⟨Z, et, hfin, het, hadd, hpow, huniv⟩ :=
     GlobalTheory.exists_finiteEtale_latticeTorsionHom S c₀.A N (Fin h ⊕ Fin h → ℤ) c₀.ab hNS
   have R : RepTors c₀.A N _ Z et := ⟨hfin, het, hadd, hpow, huniv⟩
-  haveI := hfin
-  haveI := het
+  have := hfin
+  have := het
   have hNZ : IsUnit (N : Γ(Z.left, ⊤)) := by
     have := hNS.map Z.hom.appTop.hom
     rwa [map_natCast] at this
@@ -502,7 +502,7 @@ theorem exists_levelCover : ∀ (h n N : ℕ) (B B' : Type) [CommRing B] [CommRi
         exact CommutatorPairing.weilIs_unique hG c₀.ab hLB hW' (hu ▸ H β hβ)
 
   obtain ⟨κ, hκ, q, hq⟩ := exists_finite_mod (Fin h ⊕ Fin h → ℤ) hNpos
-  haveI := hκ
+  have := hκ
   have inv : ∀ (k : Type) [Field k] [IsAlgClosed k] (g : Sp k ⟶ Z.left) (a a' c₁ c₂ : Fin h ⊕ Fin h → ℤ),
       P2 a a' k g → P2 (a + N • c₁) (a' + N • c₂) k g := by
     intro k _ _ g a a' c₁ c₂ H β hβ

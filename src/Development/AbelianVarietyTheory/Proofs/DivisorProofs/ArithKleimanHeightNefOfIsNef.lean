@@ -104,8 +104,8 @@ theorem height_nonneg_of_vertical : ∀ (k : Type) [CommRing k] (X : Scheme.{0})
   intro k _ X _ p D hX C h hC H z hz
   obtain ⟨Z, i, _, _, rfl⟩ := exists_isClosedImmersion_genericPoint z
   rcases hX.vertical_or_horizontal i with ⟨ℓ, _, ⟨a⟩⟩ | ⟨hc, -⟩
-  · letI := a
-    haveI := hX.finite
+  · let := a
+    have := hX.finite
     obtain ⟨d, hd⟩ := hX.exists_dim_eq i
     rw [H.vertical Z i (ZMod ℓ) d hd, Nat.card_zmod]
     refine mul_nonneg ?_ (Real.log_nonneg (by exact_mod_cast (Fact.out : ℓ.Prime).one_le))
@@ -114,7 +114,7 @@ theorem height_nonneg_of_vertical : ∀ (k : Type) [CommRing k] (X : Scheme.{0})
     rw [topSelf_def]
     exact_mod_cast GlobalTheory.nefNumerics_outright.1.interNum_nonneg
       (GlobalTheory.FibreNef.isProjOver_fibre hX.isProjOver ℓ i) hd fun _ => hN
-  · haveI := charZero_residueField_genericPoint Z hc
+  · have := charZero_residueField_genericPoint Z hc
     exact absurd ((i.residueFieldMap (genericPoint Z)).hom.charZero) hz
 
 end GlobalTheory.VertHeight
@@ -145,9 +145,9 @@ theorem GlobalTheory.HSNef.factorial_mul_card_le_gdeg_of_boxFam : GlobalTheory.P
   intro m hm
   rcases isEmpty_or_nonempty J with hJ | ⟨⟨j⟩⟩
   · have h0 : Fintype.card J = 0 := Fintype.card_eq_zero
-    haveI : IsEmpty (Fin (Fintype.card J * m ^ D)) := by rw [h0, zero_mul]; exact Fin.isEmpty'
+    have : IsEmpty (Fin (Fintype.card J * m ^ D)) := by rw [h0, zero_mul]; exact Fin.isEmpty'
     exact ⟨isEmptyElim, linearIndependent_empty_type, isEmptyElim⟩
-  · haveI : CharZero X.functionField := charZero_of_inj_zero fun n hn => by
+  · have : CharZero X.functionField := charZero_of_inj_zero fun n hn => by
       have h := he.smul_left_injective j (a₁ := (n : ℤ)) (a₂ := 0) (by simp [hn])
       exact_mod_cast h
     obtain ⟨v, hv, hvs⟩ := _root_.GlobalTheory.many_independent_products_in_function_field X.functionField D x hxb J e he m hm
@@ -155,7 +155,7 @@ theorem GlobalTheory.HSNef.factorial_mul_card_le_gdeg_of_boxFam : GlobalTheory.P
     obtain ⟨w, n, hn, hvs'⟩ := hvs s
     rw [hvs']
     have h := _root_.GlobalTheory.HSNef.BoxProd.prod_mem_Bl k X p P D J e x 1 0 (Real.exp (∑ c, u c)) (Real.exp_pos _).le hall m w n hn
-    rw [← Real.exp_nat_mul, mul_comm (m : ℝ)] at h
+    rw [← Real.exp_natCast_mul, mul_comm (m : ℝ)] at h
     exact h
 end -- clump:auto
 end -- clump:auto
@@ -245,7 +245,7 @@ theorem gdeg_pos_of_ample : GlobalTheory.Published.ArCalc → AmpleHS → ∀ (k
     rw [hQ]
     exact (isAmpleLB_pow_iff hL.isLB hc).2 hL
   have hQs : Q.L.SemiPos D := by rw [hQ]; exact hs.pow c
-  haveI : CharZero X.functionField :=
+  have : CharZero X.functionField :=
     have := hX.charZero
     ((fnOf (X := X) ⊤ trivial).charZero_iff (fnOf_injective _ _)).1 this
   have hli : LinearIndependent ℤ (fun _ : Unit => g) := linearIndependent_unique_iff.2 hg
@@ -371,12 +371,12 @@ theorem height_add_mul_gdeg_nonneg_of_smallSec : GlobalTheory.Published.ArCalc �
     linarith
   have hA : C'.archInt (C'.pow m) D hr' ≤ m * u * gdeg C D := by
     rw [HermLB.archInt, gdeg, chInt, mul_finsum]
-    refine finsum_le_finsum' (Set.toFinite _) (Set.toFinite _) fun σ => ?_
+    refine finsum_le_finsum (Set.toFinite _) (Set.toFinite _) fun σ => ?_
     have hS : MeasurableSet (offSupp p σ ((C'.pow m).div hr')) := (isOpen_offSupp _).measurableSet
     have hint := hI σ
     rw [← hiso.chernIntegrableOn_eq] at hint
     rw [← hiso.chernInt_eq]
-    haveI := hfin σ
+    have := hfin σ
     simp only [Weight.chernInt, hneg σ, Measure.restrict_zero, integral_zero_measure, sub_zero,
       setIntegral_const, smul_eq_mul, mul_one]
     calc ∫ y in offSupp p σ ((C'.pow m).div hr'), logNorm ((C'.pow m).φ σ) r' y ∂(C.φ σ).chernPart D 1
@@ -554,9 +554,9 @@ theorem htNef_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull 
         by_contra hle
         push_neg at hle
         obtain ⟨c, hc'⟩ : ∃ c : ℕ, Order.coheight (i (genericPoint Z)) = c := by
-          refine ⟨(Order.coheight (i (genericPoint Z))).toNat, (ENat.coe_toNat fun ht => ?_).symm⟩
+          refine ⟨(Order.coheight (i (genericPoint Z))).toNat, (ENat.natCast_toNat fun ht => ?_).symm⟩
           rw [ht, top_add] at hco
-          exact ENat.top_ne_coe _ hco
+          exact ENat.top_ne_natCast _ hco
         rw [hc'] at hco hne
         have : c + (e + 1) = D + 1 := by exact_mod_cast hco
         have : c ≠ 0 := by exact_mod_cast hne

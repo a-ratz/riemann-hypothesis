@@ -76,8 +76,8 @@ namespace GlobalTheory.CompHS
 
 theorem exists_generisation_of_mem_closure {T : Type} [TopologicalSpace T] [NoetherianSpace T] [QuasiSober T]
     {U : Set T} (hU : IsOpen U) {y : T} (hy : y ∈ closure U) : ∃ g ∈ U, g ⤳ y := by
-  haveI : NoetherianSpace (closure U) := NoetherianSpace.set _
-  haveI : QuasiSober (closure U) := isClosed_closure.isClosedEmbedding_subtypeVal.quasiSober
+  have : NoetherianSpace (closure U) := NoetherianSpace.set _
+  have : QuasiSober (closure U) := isClosed_closure.isClosedEmbedding_subtypeVal.quasiSober
   have hd : Dense (Subtype.val ⁻¹' U : Set (closure U)) := fun z => by
     rw [Topology.IsInducing.subtypeVal.closure_eq_preimage_closure_image,
       Subtype.image_preimage_coe, Set.inter_eq_self_of_subset_right subset_closure]
@@ -87,9 +87,9 @@ theorem exists_generisation_of_mem_closure {T : Type} [TopologicalSpace T] [Noet
     isClosed_irreducibleComponent
   obtain ⟨o, ho, hne, hle⟩ := NoetherianSpace.exists_isOpen_nonempty_subset_irreducibleComponent _ hC
   obtain ⟨p, hp, hpU⟩ := hd.inter_open_nonempty o ho hne
-  have hU' : IsOpen (Subtype.val ⁻¹' U : Set (closure U)) := hU.preimage continuous_subtype_val
+  have hU' : IsOpen (Subtype.val ⁻¹' U : Set (closure U)) := hU.preimage continuous_subtypeVal
   exact ⟨_, (hg.mem_open_set_iff hU').2 ⟨p, hle hp, hpU⟩,
-    (hg.specializes mem_irreducibleComponent).map continuous_subtype_val⟩
+    (hg.specializes mem_irreducibleComponent).map continuous_subtypeVal⟩
 
 theorem exists_generic_generisation (X : Scheme.{0}) (x : X) (hd : IsDomain (X.presheaf.stalk x)) :
     ∃ ξ : X, ∀ y, y ⤳ x → ξ ⤳ y := by

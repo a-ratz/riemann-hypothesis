@@ -101,7 +101,7 @@ lemma HasUnitLeadingExpansion.mul {n : ℝ} {f g : ℍ → ℂ} (hf : HasUnitLea
 
 lemma qParam_one_eq_pow {n : ℕ} (hn : n ≠ 0) (z : ℂ) : 𝕢 1 z = 𝕢 n z ^ n := by
   have : (n : ℂ) ≠ 0 := by exact_mod_cast hn
-  simp only [Periodic.qParam, ← Complex.exp_nat_mul]
+  simp only [Periodic.qParam, ← exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -174,7 +174,7 @@ lemma hasUnitLeadingExpansion_sub {n a d : ℕ} {b : ℤ} (hn : a * d = n) (hn0 
   have hd' : (d : ℂ) ≠ 0 := by exact_mod_cast hd
   set ζ : ℂ := cexp (2 * π * Complex.I * b / d) with hζ
   have hζd : ζ ^ d = 1 := by
-    rw [hζ, ← Complex.exp_nat_mul, ← Complex.exp_int_mul_two_pi_mul_I b]
+    rw [hζ, ← exp_natCast_mul, ← Complex.exp_int_mul_two_pi_mul_I b]
     congr 1
     field_simp
   have hζ0 : ζ ≠ 0 := Complex.exp_ne_zero _
@@ -185,7 +185,7 @@ lemma hasUnitLeadingExpansion_sub {n a d : ℕ} {b : ℤ} (hn : a * d = n) (hn0 
     isIntegral_one hn0 (fun τ ↦ by rw [one_mul, id, qParam_one_eq_pow hn0])
   obtain ⟨ψ, hψ1, hψ2, hψ3⟩ := exists_hasQExpansion_modularJ_comp (n := n) (w := w)
     hζ1 (e := a * a) (mul_ne_zero ha ha) (fun τ ↦ by
-      simp only [hw, hζ, Periodic.qParam, ← Complex.exp_nat_mul, ← Complex.exp_add, ← hn]
+      simp only [hw, hζ, Periodic.qParam, ← exp_natCast_mul, ← Complex.exp_add, ← hn]
       congr 1
       push_cast
       field_simp

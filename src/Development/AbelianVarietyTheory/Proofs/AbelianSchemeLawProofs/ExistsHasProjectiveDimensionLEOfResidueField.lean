@@ -92,7 +92,7 @@ theorem exists_hasProjectiveDimensionLE_of_residueField (R : Type u) [CommRing R
     · rw [hp]
       exact hk
     have hlt : p.asIdeal < maximalIdeal R := lt_of_le_of_ne (le_maximalIdeal p.2.ne_top) hp
-    obtain ⟨x, hx, hxp⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hxp⟩ := IsConcreteLE.exists_of_lt hlt
     have hreg : IsSMulRegular (R ⧸ p.asIdeal) x := by
       intro a b hab
       have hx0 : Ideal.Quotient.mk p.asIdeal x ≠ 0 := by

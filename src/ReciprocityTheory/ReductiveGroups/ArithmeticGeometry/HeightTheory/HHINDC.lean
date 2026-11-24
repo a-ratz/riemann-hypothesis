@@ -241,7 +241,7 @@ theorem pf (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (a : Ω c) (ha : a ≠ 0) :
         (Module.finrank ℚ K : ℝ) +
       ∑ᶠ (p : Ideal (KTp K d.D d.N)) (_ : p ∈ d.HtOne), (d.nPa h c p a : ℝ) * h0 (d.gen p) =
       meanK (fun sg => ∫ z, d.lsum c sg a z ∂(blockSphereProb d.D (d.N + 1))) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
   set y := algebraMap (Ω c) (OmS (Ω c) d.D d.N) a with hydef
   have hy : y ≠ 0 := (map_ne_zero _).2 ha
   obtain ⟨κ, hκ, hN⟩ := (d.norm_factorization hd h).1 c a ha
@@ -538,9 +538,9 @@ theorem nsg_smul (hd : d.AxH 𝒜) (h : d.S1) (Nr : ∀ c, A c → (Ω c →+* �
       ∫ z, (∑ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg (d.tOf z)), -Real.log (Nr c f P))
         ∂(blockSphereProb d.D (d.N + 1)) - ∫ z, d.lsum c sg a z ∂(blockSphereProb d.D (d.N + 1)) := by
   have hfin : ∀ᵐ z ∂(blockSphereProb d.D (d.N + 1)), (d.ST c sg (d.tOf z)).Finite := by
-    letI : Countable K := countable_numberField K
-    letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-    letI := d.KT_finiteDimensional hd c
+    let : Countable K := countable_numberField K
+    let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+    let := d.KT_finiteDimensional hd c
     let e : KTf K d.D d.N ≃+* d.KT c :=
       ((d.KTtoS h c).rangeRestrictFieldEquiv).trans (RingEquiv.subfieldCongr (d.KTtoS_fieldRange h c))
     have hmap : (algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)).comp e.symm.toRingHom =
@@ -548,7 +548,7 @@ theorem nsg_smul (hd : d.AxH 𝒜) (h : d.S1) (Nr : ∀ c, A c → (Ω c →+* �
       ext x
       change d.KTtoS h c (e.symm x) = (x : OmS (Ω c) d.D d.N)
       exact congrArg Subtype.val (e.apply_symm_apply x)
-    letI : Module.Finite (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+    let : Module.Finite (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
       Module.Finite.of_equiv_equiv e.symm (RingEquiv.refl _) hmap
     filter_upwards [NPB.ae_gen (K := K) (D := d.D) (N := d.N) sg] with z hz
     obtain ⟨y, -, hpt⟩ := NPB.exists_gen sg (fun q => d.tOf z q.1 q.2) hz 1 one_ne_zero
@@ -556,7 +556,7 @@ theorem nsg_smul (hd : d.AxH 𝒜) (h : d.S1) (Nr : ∀ c, A c → (Ω c →+* �
     have hy : ∀ i, y (Fin.natAdd (d.N + 1) i) ≠ 0 := by
       intro i h0
       exact hpt (MvPolynomial.X (i.succ, 0)) (MvPolynomial.X_ne_zero _) (by simp [NPB.gpt, h0])
-    letI : Algebra (KTf K d.D d.N) ℂ := (tauPev sg pt hpt).toAlgebra
+    let : Algebra (KTf K d.D d.N) ℂ := (tauPev sg pt hpt).toAlgebra
     rw [← d.ST_scale c sg (d.tOf z) y hy]
     refine (Set.finite_range (fun σ : OmS (Ω c) d.D d.N →ₐ[KTf K d.D d.N] ℂ =>
       (σ : OmS (Ω c) d.D d.N →+* ℂ).comp (algebraMap (Ω c) (OmS (Ω c) d.D d.N)))).subset ?_
@@ -585,7 +585,7 @@ theorem aNla_supp (hd : d.AxH 𝒜) (h : d.S1) (O : ∀ c, AddValuation (Ω c) (
   intro la hla
   by_contra hno
   apply hla
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_and, not_not] at hno
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, not_and, not_not] at hno
   unfold aNla
   refine Finset.sum_eq_zero fun c _ => ?_
   refine (finsum_mem_congr rfl fun w hw => ?_).trans (finsum_mem_zero _)

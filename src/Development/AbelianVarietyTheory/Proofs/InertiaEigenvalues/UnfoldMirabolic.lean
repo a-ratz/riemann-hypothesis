@@ -199,8 +199,8 @@ theorem tsum_enorm_sq_integral {X G A : Type} [TopologicalSpace X] [CompactSpace
     (hsep : ∀ x y, x ≠ y → ∃ a, e a x ≠ e a y)
     (horth : ∀ a b, ∫ x, (starRingEnd ℂ) (e a (π x)) * e b (π x) ∂ν = if a = b then 1 else 0) (φ : C(X, ℂ)) :
     ∑' a, ‖∫ x, (starRingEnd ℂ) (e a (π x)) * φ (π x) ∂ν‖ₑ ^ 2 = ∫⁻ x, ‖φ (π x)‖ₑ ^ 2 ∂ν := by
-  letI : MeasurableSpace X := borel X
-  haveI : BorelSpace X := ⟨rfl⟩
+  let : MeasurableSpace X := borel X
+  have : BorelSpace X := ⟨rfl⟩
   have hm : AEMeasurable π ν := hπ.measurable.aemeasurable
   have hi : ∀ p q : C(X, ℂ), ∫ x, (starRingEnd ℂ) (p x) * q x ∂(ν.map π) =
       ∫ x, (starRingEnd ℂ) (p (π x)) * q (π x) ∂ν := fun p q =>
@@ -215,7 +215,7 @@ theorem tsum_enorm_sq_integral {X G A : Type} [TopologicalSpace X] [CompactSpace
         exact pow_le_pow_left₀ (norm_nonneg _) (φ.norm_coe_le_norm _) 2)
   have h2 := ENNReal.ofReal_tsum_of_nonneg (fun a => sq_nonneg _) hs.summable
   rw [hs.tsum_eq, ofReal_integral_eq_lintegral_ofReal hint (Filter.Eventually.of_forall fun x => sq_nonneg _)] at h2
-  simp only [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm] at h2
+  simp only [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm] at h2
   exact h2.symm
 
 variable {E : Type} [Field E] [NumberField E] {ι : Type} [Fintype ι] {ψ : AddChar (Ad E) ℂ}
@@ -370,7 +370,7 @@ variable {U : Type*} [Group U] [MeasurableSpace U] [MeasurableMul₂ U] [Measura
 theorem isMulRightInvariant_of_covolume_one (ν : Measure U) [SigmaFinite ν] [ν.IsMulLeftInvariant]
     (U₀ : Subgroup U) [Countable U₀] {D : Set U} (hD : IsFundamentalDomain U₀ D ν) (hνD : ν D = 1) :
     ν.IsMulRightInvariant := by
-  haveI : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
+  have : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
   refine ⟨fun u => ?_⟩
   have hD' : IsFundamentalDomain U₀ ((· * u) ⁻¹' D) ν :=
     hD.preimage_of_equiv (quasiMeasurePreserving_mul_right ν u) (e := id) Function.bijective_id
@@ -379,7 +379,7 @@ theorem isMulRightInvariant_of_covolume_one (ν : Measure U) [SigmaFinite ν] [�
     have := (MeasurableEquiv.mulRight u).map_apply (μ := ν) D
     simp only [MeasurableEquiv.coe_mulRight] at this
     rw [this, hD'.measure_eq hD, hνD]
-  haveI : SigmaFinite (ν.map (· * u)) := (MeasurableEquiv.mulRight u).sigmaFinite_map
+  have : SigmaFinite (ν.map (· * u)) := (MeasurableEquiv.mulRight u).sigmaFinite_map
   have h := measure_eq_div_smul (ν.map (· * u)) ν (s := D) (by rw [hνD]; exact one_ne_zero)
     (by rw [hνD]; exact ENNReal.one_ne_top)
   rw [h, h1, hνD]; simp
@@ -387,7 +387,7 @@ theorem isMulRightInvariant_of_covolume_one (ν : Measure U) [SigmaFinite ν] [�
 theorem isInvInvariant_of_covolume_one (ν : Measure U) [SigmaFinite ν] [ν.IsMulLeftInvariant]
     (U₀ : Subgroup U) [Countable U₀] {D : Set U} (hD : IsFundamentalDomain U₀ D ν) (hνD : ν D = 1) :
     ν.IsInvInvariant := by
-  haveI := isMulRightInvariant_of_covolume_one ν U₀ hD hνD
+  have := isMulRightInvariant_of_covolume_one ν U₀ hD hνD
   have h := measure_eq_div_smul ν.inv ν (s := D) (by rw [hνD]; exact one_ne_zero)
     (by rw [hνD]; exact ENNReal.one_ne_top)
   rw [hνD, div_one] at h
@@ -415,7 +415,7 @@ theorem tsum_setLIntegral_eq_index (ν : Measure U) [ν.IsMulLeftInvariant]
     (U₀ L : Subgroup U) [Countable U₀] (hle : U₀ ≤ L) {D : Set U} (hD : IsFundamentalDomain U₀ D ν)
     (ψ : U → ℝ≥0∞) :
     ∑' l : L, ∫⁻ u in D, ψ (l * u) ∂ν = ∑' _q : L ⧸ U₀.subgroupOf L, ∫⁻ u, ψ u ∂ν := by
-  haveI : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
+  have : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
   rw [tsum_eq_tsum_quotient (U₀.subgroupOf L)]
   refine tsum_congr fun q => ?_
   rw [← lintegral_mul_left_eq_self ψ ((q.out : L) : U), hD.lintegral_eq_tsum'',
@@ -462,7 +462,7 @@ theorem tsum_setLIntegral_inv (ι : U →* G) (hι : Function.Injective ι) (hι
     (hconj : ∀ γ ∈ Γ, ∃ c : U → U, MeasurePreserving c ν ν ∧ ∀ u, ι (c u) = γ⁻¹ * ι u * γ)
     (φ : G → ℝ≥0∞) (hφ : Measurable φ) :
     ∑' γ : Γ, ∫⁻ u in D, φ ((ι u)⁻¹ * γ) ∂ν = ∑' γ : Γ, ∫⁻ u in D, φ (γ * ι u) ∂ν := by
-  haveI : (ι.range.subgroupOf Γ).Normal := ⟨by
+  have : (ι.range.subgroupOf Γ).Normal := ⟨by
     rintro ⟨n, hn⟩ ⟨u, hu⟩ g
     obtain ⟨c, -, hc⟩ := hconj (g : G)⁻¹ (Γ.inv_mem g.2)
     have hu' : ι u = n := hu
@@ -501,7 +501,7 @@ theorem lintegral_mul_tsum_weight (μ : Measure G) [μ.IsMulLeftInvariant] (Γ :
     (h𝓕 : IsFundamentalDomain Γ 𝓕 μ) {β : G → ℝ≥0∞} (hβm : Measurable β)
     (hβ : ∀ f : G → ℝ≥0∞, ∫⁻ g in 𝓕, f g ∂μ = ∫⁻ g, β g * f g ∂μ) (ρ : G → ℝ≥0∞) (hρ : Measurable ρ) (w : G) :
     ∫⁻ g, ρ g * ∑' γ : Γ, β (γ * w * g) ∂μ = ∫⁻ g, ρ g ∂μ := by
-  haveI : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
+  have : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
   simp_rw [← ENNReal.tsum_mul_left]
   rw [lintegral_tsum (f := fun (γ : Γ) g => ρ g * β (γ * w * g))
       fun γ => (hρ.mul (hβm.comp (measurable_const_mul _))).aemeasurable,
@@ -523,11 +523,11 @@ theorem setLIntegral_average (ι : U →* G) (hι : Function.Injective ι) (hιm
     {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ 𝓕 μ)
     (F : G → ℝ≥0∞) (hF : Measurable F) (hinv : ∀ γ ∈ Γ, ∀ g, F (γ * g) = F g) :
     ∫⁻ g in 𝓕, F g ∂μ = ∫⁻ g in 𝓕, ∫⁻ u in D, F (ι u * g) ∂ν ∂μ := by
-  haveI : Countable U₀ := (show Function.Injective (fun b : U₀ => (⟨ι b, hle b b.2⟩ : Γ)) from
+  have : Countable U₀ := (show Function.Injective (fun b : U₀ => (⟨ι b, hle b b.2⟩ : Γ)) from
     fun b b' h => Subtype.ext (hι (congrArg Subtype.val h))).countable
-  haveI := isMulRightInvariant_of_covolume_one ν U₀ hD hνD
-  haveI := isInvInvariant_of_covolume_one ν U₀ hD hνD
-  haveI : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
+  have := isMulRightInvariant_of_covolume_one ν U₀ hD hνD
+  have := isInvInvariant_of_covolume_one ν U₀ hD hνD
+  have : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
   have hconj' : ∀ γ ∈ Γ, ∃ c : U → U, MeasurePreserving c ν ν ∧ ∀ u, ι (c u) = γ⁻¹ * ι u * γ := by
     intro γ hγ
     obtain ⟨a, ha, b, -, rfl⟩ := hcov γ hγ
@@ -615,10 +615,10 @@ theorem measurePreserving_mulEquiv_of_covolume_one (ν : Measure U) [SigmaFinite
     (U₀ : Subgroup U) [Countable U₀] {D : Set U} (hD : IsFundamentalDomain U₀ D ν) (hνD : ν D = 1)
     (c : U ≃* U) (hc : Measurable c) (hc' : Measurable c.symm)
     (h₁ : ∀ b ∈ U₀, c b ∈ U₀) (h₂ : ∀ b ∈ U₀, c.symm b ∈ U₀) : MeasurePreserving c ν ν := by
-  haveI : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
+  have : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
   let e : U ≃ᵐ U := ⟨c.toEquiv, hc, hc'⟩
-  haveI : SigmaFinite (ν.map c) := e.sigmaFinite_map
-  haveI : (ν.map c).IsMulLeftInvariant := ⟨fun g => by
+  have : SigmaFinite (ν.map c) := e.sigmaFinite_map
+  have : (ν.map c).IsMulLeftInvariant := ⟨fun g => by
     rw [map_map (measurable_const_mul g) hc]
     conv_rhs => rw [← map_mul_left_eq_self ν (c.symm g), map_map hc (measurable_const_mul _)]
     congr 1
@@ -644,8 +644,8 @@ theorem setLIntegral_mul_right_of_covolume_one (ν : Measure U) [SigmaFinite ν]
     (U₀ : Subgroup U) [Countable U₀] {D : Set U} (hD : IsFundamentalDomain U₀ D ν) (hνD : ν D = 1)
     (f : U → ℝ≥0∞) (hf : ∀ b ∈ U₀, ∀ u, f (b * u) = f u) (v : U) :
     ∫⁻ u in D, f (u * v) ∂ν = ∫⁻ u in D, f u ∂ν := by
-  haveI : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
-  haveI := isMulRightInvariant_of_covolume_one ν U₀ hD hνD
+  have : SMulInvariantMeasure U₀ U ν := ⟨fun γ s _ => measure_preimage_mul ν (γ : U) s⟩
+  have := isMulRightInvariant_of_covolume_one ν U₀ hD hνD
   have hD' : IsFundamentalDomain U₀ ((· * v) ⁻¹' D) ν :=
     hD.preimage_of_equiv (quasiMeasurePreserving_mul_right ν v) (e := id) Function.bijective_id
       (fun g x => mul_assoc (g : U) x v)
@@ -661,7 +661,7 @@ theorem setLIntegral_add_left_of_periodic {A : Type*} [AddCommGroup A] [Measurab
     (ν : Measure A) [ν.IsAddLeftInvariant] (A₀ : AddSubgroup A) [Countable A₀] {D : Set A}
     (hD : IsAddFundamentalDomain A₀ D ν) (f : A → ℝ≥0∞) (hf : ∀ b ∈ A₀, ∀ y, f (b + y) = f y) (t : A) :
     ∫⁻ y in D, f (t + y) ∂ν = ∫⁻ y in D, f y ∂ν := by
-  haveI : VAddInvariantMeasure A₀ A ν := ⟨fun γ s _ => measure_preimage_add ν (γ : A) s⟩
+  have : VAddInvariantMeasure A₀ A ν := ⟨fun γ s _ => measure_preimage_add ν (γ : A) s⟩
   have hD' : IsAddFundamentalDomain A₀ ((t + ·) ⁻¹' D) ν :=
     hD.preimage_of_equiv (measurePreserving_add_left ν t).quasiMeasurePreserving (e := id) Function.bijective_id
       (fun g x => add_left_comm t (g : A) x)
@@ -675,10 +675,10 @@ theorem exists_covolume_one_of_cocompact {U : Type*} [Group U] [TopologicalSpace
     [LocallyCompactSpace U] [SecondCountableTopology U] [MeasurableSpace U] [BorelSpace U]
     (U₀ : Subgroup U) [DiscreteTopology U₀] {K : Set U} (hK : IsCompact K) (hcov : ∀ u, ∃ b ∈ U₀, b * u ∈ K) :
     ∃ (ν : Measure U) (D : Set U), SigmaFinite ν ∧ ν.IsMulLeftInvariant ∧ IsFundamentalDomain U₀ D ν ∧ ν D = 1 := by
-  haveI := countable_of_discrete_subgroup U₀
+  have := countable_of_discrete_subgroup U₀
   obtain ⟨D, -, -, hD⟩ := exists_isFundamentalDomain_subgroup U₀
   let m : Measure U := haar
-  haveI : SMulInvariantMeasure U₀ U m := ⟨fun γ s _ => measure_preimage_mul m (γ : U) s⟩
+  have : SMulInvariantMeasure U₀ U m := ⟨fun γ s _ => measure_preimage_mul m (γ : U) s⟩
   have h0 : m D ≠ 0 := (hD m).measure_ne_zero (NeZero.ne m)
   have h1 : m D ≠ ⊤ := by
     refine ne_of_lt (lt_of_le_of_lt ?_ (hK.measure_lt_top (μ := m)))
@@ -686,21 +686,21 @@ theorem exists_covolume_one_of_cocompact {U : Type*} [Group U] [TopologicalSpace
     refine le_trans (measure_mono fun u hu => ?_) (measure_iUnion_le _)
     obtain ⟨b, hb, hbu⟩ := hcov u
     exact mem_iUnion.2 ⟨(⟨b, hb⟩ : U₀)⁻¹, mem_inv_smul_set_iff.2 hbu, hu⟩
-  haveI : ((m D)⁻¹ • m).IsHaarMeasure := IsHaarMeasure.smul m (ENNReal.inv_ne_zero.2 h1) (ENNReal.inv_ne_top.2 h0)
+  have : ((m D)⁻¹ • m).IsHaarMeasure := IsHaarMeasure.smul m (ENNReal.inv_ne_zero.2 h1) (ENNReal.inv_ne_top.2 h0)
   exact ⟨(m D)⁻¹ • m, D, inferInstance, inferInstance, hD _, by
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]⟩
+    rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]⟩
 
 theorem setLIntegral_average_abelian_quotient : ∀ (G A : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] [AddCommGroup A] [MeasurableSpace A] [MeasurableAdd₂ A] [MeasurableNeg A] (μ : Measure G) [SFinite μ] [μ.IsMulLeftInvariant] (Γ U : Subgroup G) [DiscreteTopology Γ], IsClosed (U : Set G) → (∀ γ ∈ Γ, ∀ u ∈ U, γ⁻¹ * u * γ ∈ U) → (∃ K : Set G, IsCompact K ∧ ∀ u ∈ U, ∃ γ ∈ Γ, γ ∈ U ∧ γ * u ∈ K) → ∀ (ι : A → G), (∀ x y, ι (x + y) = ι x * ι y) → Measurable ι → (∀ x, ι x ∈ U) → ∀ (ν : Measure A) [SigmaFinite ν] [ν.IsAddLeftInvariant] (A₀ : AddSubgroup A) [Countable A₀], (∀ b ∈ A₀, ι b ∈ Γ) → ∀ (D : Set A), IsAddFundamentalDomain A₀ D ν → ν D = 1 → ∀ (𝓕 : Set G), IsFundamentalDomain Γ 𝓕 μ → ∀ (Φ : G → ENNReal), Measurable Φ → (∀ γ ∈ Γ, ∀ g, Φ (γ * g) = Φ g) → (∀ u ∈ U, ∃ y : A, ∀ g, Φ (u * g) = Φ (ι y * g)) → ∫⁻ g in 𝓕, Φ g ∂μ = ∫⁻ g in 𝓕, ∫⁻ y in D, Φ (ι y * g) ∂ν ∂μ := by
   intro G A _ _ _ _ _ _ _ _ _ _ _ _ μ _ _ Γ U _ hU hnorm ⟨K, hK, hcov⟩ ι hadd hιm hιU ν _ _ A₀ _ hA₀ D hD hνD 𝓕 h𝓕
     Φ hΦ hinv hact
-  haveI := countable_of_discrete_subgroup Γ
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
-  haveI : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set G)
-  haveI : DiscreteTopology (Γ.subgroupOf U) :=
+  have := countable_of_discrete_subgroup Γ
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set G)
+  have : DiscreteTopology (Γ.subgroupOf U) :=
     DiscreteTopology.of_continuous_injective (f := fun b : Γ.subgroupOf U => (⟨(b : U), b.2⟩ : Γ))
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
       (fun b b' h => Subtype.ext (Subtype.ext (congrArg (fun z : Γ => (z : G)) h)))
-  haveI := countable_of_discrete_subgroup (Γ.subgroupOf U)
+  have := countable_of_discrete_subgroup (Γ.subgroupOf U)
   obtain ⟨m, E, _, _, hE, hmE⟩ := exists_covolume_one_of_cocompact (Γ.subgroupOf U)
     (hU.isClosedEmbedding_subtypeVal.isCompact_preimage hK) (fun u => by
       obtain ⟨γ, h1, h2, h3⟩ := hcov u u.2
@@ -716,11 +716,11 @@ theorem setLIntegral_average_abelian_quotient : ∀ (G A : Type) [Group G] [Topo
         right_inv := fun u => Subtype.ext (by simp only; group)
         map_mul' := fun u v => Subtype.ext (by simp only [Subgroup.coe_mul]; group) }
     exact ⟨c, measurePreserving_mulEquiv_of_covolume_one m _ hE hmE c
-      (((measurable_subtype_coe.const_mul _).mul_const _).subtype_mk)
-      (((measurable_subtype_coe.const_mul _).mul_const _).subtype_mk)
+      (((measurable_subtypeVal.const_mul _).mul_const _).subtype_mk)
+      (((measurable_subtypeVal.const_mul _).mul_const _).subtype_mk)
       (fun b hb => Γ.mul_mem (Γ.mul_mem (Γ.inv_mem ha) hb) ha)
       (fun b hb => Γ.mul_mem (Γ.mul_mem ha hb) (Γ.inv_mem ha)), fun _ => rfl⟩
-  rw [setLIntegral_average U.subtype Subtype.val_injective measurable_subtype_coe μ m Γ (Γ.subgroupOf U)
+  rw [setLIntegral_average U.subtype Subtype.val_injective measurable_subtypeVal μ m Γ (Γ.subgroupOf U)
     (fun b hb => hb) Γ (fun γ hγ => ⟨γ, hγ, 1, one_mem _, by simp⟩) hconj hE hmE h𝓕 Φ hΦ hinv]
   refine lintegral_congr fun g => ?_
   calc ∫⁻ u in E, Φ (U.subtype u * g) ∂m = ∫⁻ _y in D, ∫⁻ u in E, Φ ((u : G) * g) ∂m ∂ν := by simp [hνD]
@@ -730,7 +730,7 @@ theorem setLIntegral_average_abelian_quotient : ∀ (G A : Type) [Group G] [Topo
           (fun b hb u => by rw [Subgroup.coe_mul, mul_assoc, hinv (b : G) hb]) ⟨ι y, hιU y⟩]
         simp only [Subgroup.coe_mul, mul_assoc]
     _ = ∫⁻ u in E, ∫⁻ y in D, Φ ((u : G) * (ι y * g)) ∂ν ∂m :=
-        lintegral_lintegral_swap (hΦ.comp ((measurable_subtype_coe.comp measurable_snd).mul
+        lintegral_lintegral_swap (hΦ.comp ((measurable_subtypeVal.comp measurable_snd).mul
           ((hιm.comp measurable_fst).mul_const g))).aemeasurable
     _ = ∫⁻ _u in E, ∫⁻ y in D, Φ (ι y * g) ∂ν ∂m := by
         refine lintegral_congr fun u => ?_
@@ -801,11 +801,11 @@ theorem integral_mul_conj_eq_of_lintegral {μ : Measure X} {ν : Measure Y} {f f
       ∫ x, f x * conj (f' x) * (v x : ℝ) ∂μ = ∫ y, h y * conj (h' y) * (w y : ℝ) ∂ν := by
   have e1 : ∀ φ : X → ℂ, Measurable φ →
       ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂(μ.withDensity fun x => v x) = ∫⁻ x, ‖φ x‖ₑ ^ 2 * v x ∂μ := fun φ hφ => by
-    rw [lintegral_withDensity_eq_lintegral_mul _ hv.coe_nnreal_ennreal (hφ.enorm.pow_const 2)]
+    rw [lintegral_withDensity_eq_lintegral_mul _ hv.coe_nnreal_ennreal (hφ.eNorm.pow_const 2)]
     simp only [Pi.mul_apply, mul_comm]
   have e2 : ∀ φ : Y → ℂ, Measurable φ →
       ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂(ν.withDensity fun x => w x) = ∫⁻ x, ‖φ x‖ₑ ^ 2 * w x ∂ν := fun φ hφ => by
-    rw [lintegral_withDensity_eq_lintegral_mul _ hw.coe_nnreal_ennreal (hφ.enorm.pow_const 2)]
+    rw [lintegral_withDensity_eq_lintegral_mul _ hw.coe_nnreal_ennreal (hφ.eNorm.pow_const 2)]
     simp only [Pi.mul_apply, mul_comm]
   have H1 := H 1 0
   have H2 := H 0 1
@@ -832,9 +832,9 @@ end Polar
 variable {E : Type} [Field E] [NumberField E] {a : ℕ} {ψ : AddChar (Ad E) ℂ}
 
 theorem secondCountable_GA : SecondCountableTopology (GA E a) := by
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E)) :=
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E)) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin a → Ad E))
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
@@ -878,7 +878,7 @@ theorem sum_eLast_mul {m : ℕ} (hm : m + 1 < a) (φ : Fin a → E) :
   rw [Finset.sum_eq_single (⟨(⟨m, by omega⟩, ⟨m + 1, hm⟩), by simp⟩ : UnipotentBlockColumnIndex a (m + 1) (m + 1))]
   · simp [eLast]
   · intro s _ hs
-    rw [eLast, if_neg, zero_mul]
+    rw [eLast, ite_eq_right, zero_mul]
     intro e
     have := s.2
     exact hs (Subtype.ext (Prod.ext (Fin.ext (by simp only; omega)) (Fin.ext (by simp only; omega))))
@@ -939,23 +939,23 @@ theorem lintegral_step (hψ : StdPsi ψ) {m : ℕ} (hm : m + 1 < a) {𝓕 𝓕' 
     (hwU : ∀ k, m < k → ∀ (y : UnipotentBlockColumnIndex a k k → Ad E) g, w (blkU y * g) = w g)
     {f : GA E a → ℂ} (hf : Good ψ (m + 1) f) :
     ∫⁻ g in 𝓕, ‖f g‖ₑ ^ 2 * w g ∂μ = ∫⁻ g in 𝓕', ‖colT ψ (m + 1) f g‖ₑ ^ 2 * w g ∂μ := by
-  haveI : T2Space (Matrix (Fin a) (Fin a) (Ad E)) :=
+  have : T2Space (Matrix (Fin a) (Fin a) (Ad E)) :=
     inferInstanceAs (T2Space (Fin a → Fin a → Ad E))
-  haveI : T2Space (GA E a) := Units.isEmbedding_embedProduct.t2Space
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin a) (Ad E)) := inferInstanceAs (LocallyCompactSpace (Fin a → Fin a → Ad E))
-  haveI : LocallyCompactSpace (GA E a) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI := secondCountable_GA (E := E) (a := a)
-  haveI : DiscreteTopology (ratMirU E a (m + 1)) := discrete_of_le_range (Subgroup.map_le_range _ _)
-  haveI : Countable (ratMirU E a (m + 1)) := GlobalTheory.countable_of_discrete_subgroup _
-  letI : MeasurableSpace (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) := borel _
-  haveI : BorelSpace (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) := ⟨rfl⟩
+  have : T2Space (GA E a) := Units.isEmbedding_embedProduct.t2Space
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin a) (Ad E)) := inferInstanceAs (LocallyCompactSpace (Fin a → Fin a → Ad E))
+  have : LocallyCompactSpace (GA E a) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have := secondCountable_GA (E := E) (a := a)
+  have : DiscreteTopology (ratMirU E a (m + 1)) := discrete_of_le_range (Subgroup.map_le_range _ _)
+  have : Countable (ratMirU E a (m + 1)) := GlobalTheory.countable_of_discrete_subgroup _
+  let : MeasurableSpace (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) := borel _
+  have : BorelSpace (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) := ⟨rfl⟩
   have hL := isCoLat_ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))
-  haveI := hL.1
-  haveI : Countable (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) := GlobalTheory.countable_of_discrete_addSubgroup _
+  have := hL.1
+  have : Countable (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) := GlobalTheory.countable_of_discrete_addSubgroup _
   obtain ⟨ν, D, hν, hD, hνD⟩ := exists_fundamentalDomain_mass_one _ _ hL
   have hT := GlobalTheory.CuspRep.Generic.good_colT hψ hm hf
   have hnorm : ∀ k, m + 1 < k → ∀ (y : UnipotentBlockColumnIndex a k k → Ad E) g, ‖f (blkU y * g)‖ₑ = ‖f g‖ₑ := fun k hk y g => by
-    rw [hf.law k hk, enorm_mul, ← ofReal_norm (ψ _), hψ.norm, ENNReal.ofReal_one, one_mul]
+    rw [hf.law k hk, eNorm_mul, ← ofReal_norm (ψ _), hψ.norm, ENNReal.ofReal_one, one_mul]
   have havg := _root_.GlobalTheory.UnipAvg.setLIntegral_average_abelian_quotient (GA E a) (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) μ (ratMirU E a (m + 1)) (lateU (Ad E) a (m + 1))
     (isClosed_lateU _) (by rintro _ ⟨γ, hγ, rfl⟩ u hu; exact conj_mem_lateU (map_mem_mirU _ hγ) hu)
     (by
@@ -965,7 +965,7 @@ theorem lintegral_step (hψ : StdPsi ψ) {m : ℕ} (hm : m + 1 < a) {𝓕 𝓕' 
       exact ⟨_, ⟨γ, mirU_mono (Nat.zero_le _) h1, rfl⟩, h2, h3⟩)
     blkU blkU_add (continuous_posU (isNil_blk a (m + 1) (m + 1))).measurable (blkU_mem_lateU le_rfl) ν (ratV E _)
     (by rintro _ ⟨c, rfl⟩; exact ⟨blkU c, blkU_mem_mirU _ c, ratGL_blkU c⟩) D hD hνD 𝓕 h𝓕
-    (fun g => ‖f g‖ₑ ^ 2 * w g) ((hf.cont.measurable.enorm.pow_const 2).mul hw)
+    (fun g => ‖f g‖ₑ ^ 2 * w g) ((hf.cont.measurable.eNorm.pow_const 2).mul hw)
     (by rintro _ ⟨γ, hγ, rfl⟩ g; simp only [good_left_mirU hψ hf hγ, hwΓ γ hγ])
     (fun u hu => by
       obtain ⟨v, hv, y, rfl⟩ := exists_eq_colGen_mul_blkU hu
@@ -977,7 +977,7 @@ theorem lintegral_step (hψ : StdPsi ψ) {m : ℕ} (hm : m + 1 < a) {𝓕 𝓕' 
   rw [havg, ← GlobalTheory.ThetaUnfold.lintegral_unfold μ _ _ (fun ξ => ratGL E a (γ ξ)) e he h𝓕 h𝓕'
     (fun g => ‖colT ψ (m + 1) f g‖ₑ ^ 2 * w g)
     (by rintro _ ⟨δ, hδ, rfl⟩ g; simp only [good_left_mirU hψ hT hδ, hwΓ δ (mirU_mono (Nat.le_succ m) hδ)])
-    ((hT.cont.measurable.enorm.pow_const 2).mul hw).aemeasurable]
+    ((hT.cont.measurable.eNorm.pow_const 2).mul hw).aemeasurable]
   refine lintegral_congr fun g => ?_
   have hper : Per (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) (fun x => f (blkU x * g)) :=
     per_blk hf.cont (fun c g => hf.left _ (isMir_blkU c) g) g
@@ -990,7 +990,7 @@ theorem lintegral_step (hψ : StdPsi ψ) {m : ℕ} (hm : m + 1 < a) {𝓕 𝓕' 
     rw [colT, coefF_ratGL_mul E a ψ hψ m f hf.cont hf.left _ (hγ ξ).1, (hγ ξ).2]
   have hwγ : ∀ ξ, w (ratGL E a (γ ξ) * g) = w g := fun ξ => hwΓ _ (fun i k hi _ => (hγ ξ).1 i k (Or.inl hi)) g
   simp only [hwU (m + 1) (Nat.lt_succ_self m), hc, hwγ]
-  rw [lintegral_mul_const _ (hper.1.measurable.enorm.pow_const 2), ENNReal.tsum_mul_right,
+  rw [lintegral_mul_const _ (hper.1.measurable.eNorm.pow_const 2), ENNReal.tsum_mul_right,
     ← _root_.GlobalTheory.AdelicParseval.tsum_enorm_avg_sq E _ ψ hψ _ hper ν D hν hD hνD]
   congr 1
   refine (tsum_subtype_eq_of_support_subset (f := fun ξ => ‖coefF ψ (m + 1) ξ f g‖ₑ ^ 2) (s := {ξ | ξ ≠ 0}) ?_).symm
@@ -1003,12 +1003,12 @@ theorem lintegral_tower (hψ : StdPsi ψ) {m : ℕ} (hm : m < a ∨ m = 0) {𝓕
     (hwU : ∀ k, 0 < k → ∀ (y : UnipotentBlockColumnIndex a k k → Ad E) g, w (blkU y * g) = w g)
     {f : GA E a → ℂ} (hf : Good ψ m f) :
     ∫⁻ g in 𝓕, ‖f g‖ₑ ^ 2 * w g ∂μ = ∫⁻ g in 𝓕', ‖whit ψ m f g‖ₑ ^ 2 * w g ∂μ := by
-  haveI := secondCountable_GA (E := E) (a := a)
-  haveI : ∀ n, DiscreteTopology (ratMirU E a n) := fun n => discrete_of_le_range (Subgroup.map_le_range _ _)
+  have := secondCountable_GA (E := E) (a := a)
+  have : ∀ n, DiscreteTopology (ratMirU E a n) := fun n => discrete_of_le_range (Subgroup.map_le_range _ _)
   induction m generalizing f 𝓕 with
   | zero =>
-    haveI : Countable (ratMirU E a 0) := GlobalTheory.countable_of_discrete_subgroup _
-    haveI : SMulInvariantMeasure (ratMirU E a 0) (GA E a) μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : GA E a) s⟩
+    have : Countable (ratMirU E a 0) := GlobalTheory.countable_of_discrete_subgroup _
+    have : SMulInvariantMeasure (ratMirU E a 0) (GA E a) μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : GA E a) s⟩
     refine h𝓕.setLIntegral_eq h𝓕' _ ?_
     rintro ⟨_, γ, hγ, rfl⟩ g
     change ‖f (ratGL E a γ * g)‖ₑ ^ 2 * w (ratGL E a γ * g) = _

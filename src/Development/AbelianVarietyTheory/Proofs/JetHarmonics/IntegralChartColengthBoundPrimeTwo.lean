@@ -86,7 +86,7 @@ theorem family_cast_iff {V : Type} (P : ∀ s : ℕ, (Fin s → V) → Prop) {n 
 
 theorem colength_bound_at_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p), y.IsAlg → ∀ (f : ℕ) (vd : ℝ), UpperTheory.Depth.SplitPlaces p H f vd → ∃ xs : (E →+* ℂ) → NNReal, (∀ τ, InPsi H τ → HasAF X.v (fun i => MvPowerSeries.map X.ι (Ch.FT i)) (fun (i : Fin (Dw.mult τ)) j => X.ι (Ch.uvecT ⟨τ, i⟩ j)) (xs τ)) ∧ (open Classical in (X.v ((p : ℕ) : X.C) : ℝ) ^ ((f : ℝ) * Dw.q * (1 + vd / 2)) ≤ ∏ τ ∈ Finset.univ.filter (fun τ => InPsi H τ), (xs τ : ℝ)) := by
   intro p _ hAV E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y Ch X hy f vd hTP
   classical
   obtain ⟨U⟩ := GlobalTheory.T.nonempty_uniformised_formal_chart_algebraic_point E H Dw l Xo c T io y Ch hy p X
@@ -97,9 +97,9 @@ theorem colength_bound_at_two : ∀ (p : ℕ) [Fact p.Prime], AvFSt p → ∀ (E
   choose t hvd using hvd
   choose s hs hst using fun (i : Fin n) (j : Fin (w i).n) => he i (t i j : 𝓞 E →+* X.O) (t i j).2
   have hp : ∀ τ, InPsi H τ → Dw.p = Dw.mult τ := fun τ h => by
-    unfold Datum.mult; exact (if_pos h).symm
+    unfold Datum.mult; exact (ite_eq_left h).symm
   have hq : ∀ τ, ¬ InPsi H τ → Dw.q = Dw.mult τ := fun τ h => by
-    unfold Datum.mult; exact (if_neg h).symm
+    unfold Datum.mult; exact (ite_eq_right h).symm
   have hact : actMap U.ι' U.act = fun a i => MvPowerSeries.map X.ι (Ch.actT a i) := funext U.act_eq
   have hnu : ¬ IsUnit ((p : U.T'.V)) := fun h => X.nonunit.out (by have h' := h.map U.ι'; rwa [map_natCast] at h')
   have key := fun i0 : Fin n => hAV U.T'.V hnu U.t.G U.P.D U.P.A U.P.U.toUnifPre _ U.F U.x U.chart (𝓞 E)

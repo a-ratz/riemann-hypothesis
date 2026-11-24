@@ -64,8 +64,8 @@ namespace GlobalTheory.UnrKill
 
 theorem exists_prime_mem {K : Type} [Field K] [NumberField K] (P : HeightOneSpectrum (𝓞 K)) :
     ∃ q : ℕ, q.Prime ∧ ((q : ℕ) : 𝓞 K) ∈ P.asIdeal := by
-  haveI := P.isPrime
-  haveI : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  have := P.isPrime
+  have : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   refine ⟨ringChar (𝓞 K ⧸ P.asIdeal), CharP.char_is_prime (𝓞 K ⧸ P.asIdeal) _, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ringChar.spec]
 

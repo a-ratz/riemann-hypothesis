@@ -124,11 +124,11 @@ private lemma err_bound2 (p : ℕ) (hp : 0 < p) (c₁ cq a₀ : ℝ) (h0 : 0 < a
     have : (1 : ℝ) ≤ 4 / a₀ := by rw [le_div_iff₀ h0]; linarith
     calc (4 / a₀) ^ m ≤ (4 / a₀) ^ j := pow_le_pow_right₀ this (Nat.div_le_self _ _)
       _ = Real.exp (g * j) := by
-        rw [mul_comm, Real.exp_nat_mul, hg, Real.exp_log (by positivity)]
+        rw [mul_comm, Real.exp_natCast_mul, hg, Real.exp_log (by positivity)]
   have h5 : (η / a₀) ^ m ≤ Real.exp (-(m * p * A)) := by
     have : η / a₀ ≤ Real.exp (-(p * A)) := by rw [div_le_iff₀ h0, mul_comm]; exact hη
     calc _ ≤ Real.exp (-(p * A)) ^ m := by gcongr
-      _ = _ := by rw [← Real.exp_nat_mul]; congr 1; ring
+      _ = _ := by rw [← Real.exp_natCast_mul]; congr 1; ring
   have hmp : (j : ℝ) ≤ m * p + p := by
     have := Nat.lt_div_mul_add (a := j) hp
     rw [← hm] at this
@@ -197,7 +197,7 @@ private lemma solve_bound2 (x a z η a₀ cq K₁ K E : ℝ) (d m j : ℕ) (hx :
     have : η / a₀ * (a₀ / η) = 1 := by field_simp
     rw [this, one_pow]
   have e3 : Real.exp ((cq + 1) * j) * Real.exp (-cq) ^ j = Real.exp j := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]; congr 1; ring
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]; congr 1; ring
   refine le_of_mul_le_mul_right ?_ hpos
   calc _ = x * a₀ ^ (d + 1) * (a₀ / η) ^ m * Real.exp (-cq) ^ j := by ring
     _ ≤ a₀ ^ (d + 1) * Real.exp j * E := h6
@@ -408,13 +408,13 @@ private theorem UpperTheory.ConvolutionTheory.Ci.finSplit {A B : Type} (x : ℝ)
       (fun V : B => (Sum.inr (x, V) : (ℝ × A) ⊕ (ℝ × B))) '' {V | PF V} := by
     ext i
     rcases i with ⟨a, V⟩ | ⟨a, V⟩
-    · simp only [Set.mem_setOf_eq, hE, Set.mem_union, Set.mem_image]
+    · simp only [Set.mem_ofPred_eq, hE, Set.mem_union, Set.mem_image]
       constructor
       · rintro ⟨rfl, h⟩; exact Or.inl ⟨V, h, rfl⟩
       · rintro (⟨W, h, e⟩ | ⟨W, h, e⟩)
         · cases e; exact ⟨rfl, h⟩
         · cases e
-    · simp only [Set.mem_setOf_eq, hF, Set.mem_union, Set.mem_image]
+    · simp only [Set.mem_ofPred_eq, hF, Set.mem_union, Set.mem_image]
       constructor
       · rintro ⟨rfl, h⟩; exact Or.inr ⟨V, h, rfl⟩
       · rintro (⟨W, h, e⟩ | ⟨W, h, e⟩)
@@ -486,14 +486,14 @@ private theorem UpperTheory.ConvolutionTheory.Ci.abs2 {A B : Type} (τE : ℝ ×
         · simpa [hg] using this.2 hg
     · rintro (y | y) - hg ha
       · simp only [Sum.elim_inl] at hg ha ⊢
-        rw [if_pos hg, ha]
+        rw [ite_eq_left hg, ha]
       · simp only [Sum.elim_inr] at hg ha ⊢
-        rw [if_pos hg, ha]
+        rw [ite_eq_left hg, ha]
     · rintro (y | y) - hg
       · simp only [Sum.elim_inl] at hg ⊢
-        rw [if_neg hg]
+        rw [ite_eq_right hg]
       · simp only [Sum.elim_inr] at hg ⊢
-        rw [if_neg hg]
+        rw [ite_eq_right hg]
     · intro N s₀
       obtain ⟨ME, MF, hME, hMF, hev⟩ := hb N s₀
       refine ⟨ME + (1 + ‖c‖) * MF, ?_⟩
@@ -732,7 +732,7 @@ theorem UpperTheory.ConvolutionTheory.Ci.ciOf :
     have r1 := (bE κ₁ κ₂ D₁ D₂ (d j) D₂ _ _).1 (hBd (d j)) hP₀
     have r2 := (bE (κ₁ ∪ κ₂) (κ₁ ∪ κ₂) 0 (D₁ + D₂) (j / (2 * p) + m) (d j + D₂) _ _).1
       ((bE (κ₁ ∪ κ₂) ∅ 0 0 0 0 0 0).2.1 η _) r1
-    rw [Finset.union_idempotent, zero_add] at r2
+    rw [Finset.union_self, zero_add] at r2
     have hdiv : j / p ≤ (j + m') / p := Nat.div_le_div_right (Nat.le_add_right _ _)
     obtain ⟨fE, fF, g1, g2, g3⟩ := hj₀ (j + m') (by omega) _ r2.1 r2.2.1 (fun β => (r2.2.2 β).trans (by omega))
     have q1 : (map C γ * (chebP η (j / (2 * p) + m) * (trunc (d j) G * P₀)) : PR E n) =

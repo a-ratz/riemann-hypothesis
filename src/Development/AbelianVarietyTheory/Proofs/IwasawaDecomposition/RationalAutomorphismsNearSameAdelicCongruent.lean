@@ -58,14 +58,14 @@ theorem entries_le_of_add_mul {K : Type} [Field K] (v : Valuation K (WithZero (M
     (fun p => v (D p.1 p.2)) ⟨(r, s), Finset.mem_univ _⟩
   refine (hmax (r, s) (Finset.mem_univ _)).trans ?_
   by_cases hμ : v (D p.1 p.2) = 0
-  · rw [hμ]; exact zero_le'
+  · rw [hμ]; exact zero_le
   have hlt : v ((A * D) p.1 p.2) < v (D p.1 p.2) := by
     rw [Matrix.mul_apply]
     refine Valuation.map_sum_lt _ hμ fun k _ => ?_
     rw [map_mul]
     calc v (A p.1 k) * v (D k p.2) ≤ v (A p.1 k) * v (D p.1 p.2) :=
           mul_le_mul_right (hmax (k, p.2) (Finset.mem_univ _)) _
-      _ < 1 * v (D p.1 p.2) := mul_lt_mul_of_pos_right (hA p.1 k) (zero_lt_iff.2 hμ)
+      _ < 1 * v (D p.1 p.2) := mul_lt_mul_of_pos_right (hA p.1 k) (pos_iff_ne_zero.2 hμ)
       _ = v (D p.1 p.2) := one_mul _
   have e := Valuation.map_add_eq_of_lt_left v hlt
   rw [← e, ← Matrix.add_apply]

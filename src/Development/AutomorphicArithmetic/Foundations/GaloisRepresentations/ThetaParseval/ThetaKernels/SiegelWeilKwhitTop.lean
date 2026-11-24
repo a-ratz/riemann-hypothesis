@@ -1389,7 +1389,7 @@ theorem absE_split_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (x 
   rw [GlobalTheory.Doubling.absE_apply, NNReal.coe_mul, NNReal.coe_prod]
   congr 1
   · refine Finset.prod_congr rfl fun w _ => ?_
-    rw [GlobalTheory.Doubling.absEw_eq_sq d.ok.good.cm (d.B.emb w), NNReal.coe_pow, coe_nnnorm]
+    rw [GlobalTheory.Doubling.absEw_eq_sq d.ok.good.cm (d.B.emb w), NNReal.coe_pow, coe_nnNorm]
     rfl
   · set s := (GlobalTheory.Doubling.finite_mulSupport_absEv x).toFinset with hs
     rw [finprod_eq_prod_of_mulSupport_subset _ (s := s) (by simp [s]), NNReal.coe_prod,
@@ -1735,10 +1735,10 @@ theorem meas_hOf_k{d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} {R : _
       IsAddFundamentalDomain (MeasP.ratHerm F E σ d.n) (hOf '' 𝓖) (lam.map hOf) ∧ lam.map hOf (hOf '' 𝓖) = 1 := by
   have hσ := _root_.PositivityTheory.SiegelWeilFormula.kfour.sigma_sigma_of_good_k d.ok.good
   obtain ⟨-, -, -, hbo⟩ := nA_top hσ d.ok.frame
-  haveI := hbo
-  haveI : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR (AF F) σ d.n) := ⟨rfl⟩
+  have := hbo
+  have : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR (AF F) σ d.n) := ⟨rfl⟩
   obtain ⟨-, hlam, hfd, h1⟩ := hc
-  haveI := hlam
+  have := hlam
   let e := _root_.PositivityTheory.SiegelWeilFormula.MeasD.hEq_k hOf hR.ne hR.hof hR.herm
   let eM := e.toHomeomorph.toMeasurableEquiv
   have hemb : MeasurableEmbedding hOf := eM.measurableEmbedding
@@ -1858,19 +1858,19 @@ theorem measDict_of_k (hH : MeasP.HermCovol) (hT : MeasP.TupCovol) : _root_.Posi
   constructor
   · intro nb lam 𝓖 hc ν hν
     obtain ⟨i1, i2, i3, i4, i5⟩ := _root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_herm_top_k d
-    haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
+    have := i1; have := i2; have := i3; have := i4; have := i5
     obtain ⟨hemb, hH', hfd, h1⟩ := _root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_hOf_k hR hc
-    haveI := hH'
+    have := hH'
     obtain ⟨𝓕, hF, hF1⟩ := hH F E σ (_root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_cm_k d) d.B.ψ (_root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_char_k d) d.n ν hν
-    haveI := hν.1
+    have := hν.1
     exact ⟨hemb, hemb.measurable, @MeasG.covol_unique _ _ _ _ _ _ _ _ (MeasP.ratHerm F E σ d.n) _ _ _ hν.1 hH' _ _ hF hfd hF1 h1⟩
   · intro μ νc hμ hνc
     obtain ⟨i1, i2, i3, i4, i5⟩ := _root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_mx_top_k d
-    haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
+    have := i1; have := i2; have := i3; have := i4; have := i5
     obtain ⟨𝓕, hF, hF1⟩ := hT F E σ (_root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_cm_k d) d.m (_root_.PositivityTheory.SiegelWeilFormula.KWhit.Jd_k d η) (_root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_hermND_k d hR.ne hR.herm) d.B.ψ (_root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_char_k d) d.n μ hμ
     obtain ⟨hemb, hH', hfd, h1⟩ := _root_.PositivityTheory.SiegelWeilFormula.KWhit.meas_toMx_k d μ 𝓕 hμ.1 hF hF1
     obtain ⟨hνH, 𝓖, hG, hG1⟩ := hνc
-    haveI := hνH; haveI := hH'
+    have := hνH; have := hH'
     exact ⟨hemb, hemb.measurable, @MeasG.covol_unique _ _ _ _ _ _ _ _ d.ratM _ _ _ hνH hH' _ _ hG hfd hG1 h1⟩
 theorem measDict_k : _root_.PositivityTheory.SiegelWeilFormula.KWhit.MeasDict_k := _root_.PositivityTheory.SiegelWeilFormula.KWhit.measDict_of_k _root_.GlobalTheory.CompanionTheory.SW.HermCov.hermCovol _root_.GlobalTheory.CompanionTheory.SiegelND.TupCovolume.tupCovol
 end PositivityTheory.SiegelWeilFormula.KWhit
@@ -1992,9 +1992,9 @@ theorem th_mem_iff_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {η
 def thE_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {η : E} (hη : η ≠ 0) : UA σ d.A.J ≃* HeckeCharacterZeroLocus.SiegelWeilU.HA (AF F) σ (_root_.PositivityTheory.SiegelWeilFormula.KWhit.Jd_k d η) :=
   MulEquiv.subgroupCongr (Subgroup.ext (_root_.PositivityTheory.SiegelWeilFormula.KWhit.th_mem_iff_k d hη))
 theorem thE_cont_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {η : E} (hη : η ≠ 0) : Continuous (_root_.PositivityTheory.SiegelWeilFormula.KWhit.thE_k d hη) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 theorem thE_symm_cont_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {η : E} (hη : η ≠ 0) : Continuous (_root_.PositivityTheory.SiegelWeilFormula.KWhit.thE_k d hη).symm :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 end PositivityTheory.SiegelWeilFormula.KWhit
 end
 end

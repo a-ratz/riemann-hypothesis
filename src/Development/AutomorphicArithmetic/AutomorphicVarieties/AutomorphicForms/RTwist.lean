@@ -261,7 +261,7 @@ theorem lie_mulChi (χ : HChar E) (X : Lie E a) (φ : Sm E a) :
   change fderiv ℝ (chart (fun x => φ.1 x * (chiDet a χ x : ℂˣ)) g) _ X = (lieD X φ.1 g + _ * φ.1 g) * _
   rw [chart_mul_chi]
   refine (congrArg (fun L : Lie E a →L[ℝ] ℂ => L X) h2).trans ?_
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     fderiv_det_one, h1, h3, h4, smul_eq_mul, lieD]
   ring
 

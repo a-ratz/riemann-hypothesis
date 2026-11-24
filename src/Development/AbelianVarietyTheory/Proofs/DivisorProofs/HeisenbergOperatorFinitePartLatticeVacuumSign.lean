@@ -258,7 +258,7 @@ theorem GlobalTheory.LatVacSign.heisO_finRat_sign : ∀ {D : D7} (ψ : AddChar (
     have e : Algebra.trace ℚ D.host.F (1 / 2 * Algebra.trace D.host.F D.host.E z) = (1 / 2 : ℚ) * k := by
       have h12 : (1 / 2 : D.host.F) = algebraMap ℚ D.host.F (1 / 2) := by simp
       rw [h12, ← Algebra.smul_def, map_smul, Algebra.trace_trace, hk, smul_eq_mul]
-    rw [e, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+    rw [e, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
     congr 1
     push_cast
     ring

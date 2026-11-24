@@ -69,7 +69,7 @@ theorem algebraMap_intTrace_eq_sum (x : 𝓞 L) :
 theorem not_dvd_of_inertia (P : Ideal (𝓞 L)) [P.IsPrime] (hP : P ≠ ⊥)
     (h : ∀ σ : L ≃ₐ[K] L, (∀ x : 𝓞 L, σ • x - x ∈ P) → σ = 1) :
     ¬ P ∣ differentIdeal (𝓞 K) (𝓞 L) := by
-  have hp : P.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot hP
+  have hp : P.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_under_eq_bot hP
   have := Ideal.IsPrime.isMaximal inferInstance hP
   have : IsGaloisGroup (L ≃ₐ[K] L) (𝓞 K) (𝓞 L) :=
     IsGaloisGroup.of_isFractionRing (L ≃ₐ[K] L) (𝓞 K) (𝓞 L) K L
@@ -90,7 +90,7 @@ theorem not_pow_dvd (n : ℕ) (hn : 0 < n) (P Q : Ideal (𝓞 L)) [hP : P.IsMaxi
   have hco : IsCoprime (P ^ m) Q := (Ideal.isCoprime_iff_sup_eq.2 hPQ).pow_left
   obtain ⟨a, ha, x, hx, hax⟩ := Submodule.mem_sup.1
     ((Ideal.eq_top_iff_one _).1 (Ideal.isCoprime_iff_sup_eq.1 hco))
-  refine not_dvd_differentIdeal_of_intTrace_not_mem (𝓞 K)
+  refine not_dvd_differentIdeal_of_intTrace_notMem (𝓞 K)
     (p := Ideal.span {((n * Module.finrank K L : ℕ) : 𝓞 K)}) (P ^ m) Q ?_ x hx ?_
   · rw [Ideal.map_span, Set.image_singleton, map_natCast, h]
   intro htr
@@ -163,7 +163,7 @@ theorem natCast_mul_finrank_mem_differentIdeal :
   · obtain ⟨Q, hPQ, h⟩ := Ideal.eq_prime_pow_mul_coprime hI P
     have h1 := not_pow_dvd K L n hn P Q _ hnP hPQ h
     exact (emultiplicity_lt_iff_not_dvd.2 h1).le.trans (le_emultiplicity_of_pow_dvd ⟨Q, h⟩)
-  · have hp : P.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot hP0
+  · have hp : P.under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_under_eq_bot hP0
     have h1 := hu ⟨P.under (𝓞 K), inferInstance, hp⟩ (fun e => hnP (by simpa using Ideal.mem_comap.1 e))
     have h2 := not_dvd_of_inertia K L P hP0 fun σ hσ => h1 σ ⟨P, hPp, ⟨rfl⟩, hσ⟩
     rw [emultiplicity_eq_zero.2 h2]

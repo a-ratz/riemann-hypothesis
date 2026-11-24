@@ -65,7 +65,7 @@ def part (k : Fin 4) (z : ℂ) : ℝ≥0∞ :=
 theorem part_ne_top (k : Fin 4) (z : ℂ) : part k z ≠ ⊤ := ENNReal.ofReal_ne_top
 
 theorem part_le (k : Fin 4) (z : ℂ) : part k z ≤ ‖z‖ₑ := by
-  rw [← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm]
   apply ENNReal.ofReal_le_ofReal
   fin_cases k
   · simpa using Complex.re_le_norm z
@@ -115,8 +115,8 @@ theorem complex_double_coset : CplxDC.{u} := by
   unfold CplxDC
   intro G _ _ _ μ _ Γ S S' _ hSΓ hS'Γ D D' hD hD' R hR Fs hFs FΓ hFΓ φ ψ hφ hψ hφS hψS hφf hψf hfin
   have hΓc : (Γ : Set G).Countable := Set.countable_coe_iff.1 (by assumption)
-  haveI : Countable D := (hΓc.mono hD.1).to_subtype
-  haveI : Countable D' := (hΓc.mono hD'.1).to_subtype
+  have : Countable D := (hΓc.mono hD.1).to_subtype
+  have : Countable D' := (hΓc.mono hD'.1).to_subtype
   set g : Fin 4 → G → ℝ≥0∞ := fun k y => part k (φ y) with hg_def
   set h : Fin 4 → G → ℝ≥0∞ := fun j y => part j (ψ y) with hh_def
   have hgm : ∀ k, Measurable (g k) := fun k => (measurable_part k).comp hφ

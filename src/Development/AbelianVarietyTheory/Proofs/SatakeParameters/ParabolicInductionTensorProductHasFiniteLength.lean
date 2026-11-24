@@ -89,8 +89,8 @@ theorem exists_mem_adjoin_eq {G V : Type} [Group G] [AddCommGroup V] [Module ℂ
   classical
   let A : Subalgebra ℂ (Module.End ℂ V) := Algebra.adjoin ℂ (Set.range π)
   have hmem : ∀ g, π g ∈ A := fun g => Algebra.subset_adjoin ⟨g, rfl⟩
-  haveI : IsSimpleOrder (Subrepresentation π) := hirr
-  haveI : IsSimpleModule A V := by
+  have : IsSimpleOrder (Subrepresentation π) := hirr
+  have : IsSimpleModule A V := by
     rw [isSimpleModule_iff]
     refine { exists_pair_ne := ?_, eq_bot_or_eq_top := fun U => ?_ }
     · obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := by
@@ -144,14 +144,14 @@ theorem piTensor_isIrreducible_of_schur {α : Type} [Finite α] {Γ X : α → T
   classical
   cases nonempty_fintype α
   have hnt : ∀ a, Nontrivial (X a) := fun a => by
-    haveI : IsSimpleOrder (Subrepresentation (ρ a)) := hirr a
+    have : IsSimpleOrder (Subrepresentation (ρ a)) := hirr a
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     apply (bot_ne_top : (⊥ : Subrepresentation (ρ a)) ≠ ⊤)
     ext v
     exact ⟨fun _ => trivial, fun _ => Subsingleton.elim v 0⟩
-  haveI : ∀ a, Nontrivial (X a) := hnt
-  haveI : Nontrivial (PiTensorProduct ℂ fun a => X a) := GlobalTheory.ProdSupport.nontrivial_piTensor X hnt
+  have : ∀ a, Nontrivial (X a) := hnt
+  have : Nontrivial (PiTensorProduct ℂ fun a => X a) := GlobalTheory.ProdSupport.nontrivial_piTensor X hnt
   have hcomp : ∀ (f g : ∀ a, X a →ₗ[ℂ] X a) (x : PiTensorProduct ℂ fun a => X a),
       PiTensorProduct.map (fun a => f a ∘ₗ g a) x =
         PiTensorProduct.map f (PiTensorProduct.map g x) := by

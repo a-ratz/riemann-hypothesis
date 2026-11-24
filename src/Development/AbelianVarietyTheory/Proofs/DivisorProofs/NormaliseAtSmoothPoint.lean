@@ -184,7 +184,7 @@ theorem exists_coords (k A : Type) [Field k] [CommRing A] [IsLocalRing A] [IsNoe
     ∃ (r : ℕ) (τ : Fin r → A), maximalIdeal A = Ideal.span (Set.range τ) ∧
       ∃ b : Module.Basis (Fin r) A Ω[A⁄k], ∀ i, b i = D k A (τ i) := by
   classical
-  haveI : Algebra.FormallySmooth k (ResidueField A) :=
+  have : Algebra.FormallySmooth k (ResidueField A) :=
     Algebra.FormallySmooth.of_equiv
       (AlgEquiv.ofBijective (Algebra.ofId k (ResidueField A)) ⟨(algebraMap k _).injective, hres⟩)
   let b0 := Module.finBasis (ResidueField A) (CotangentSpace A)
@@ -203,7 +203,7 @@ theorem exists_coords (k A : Type) [Field k] [CommRing A] [IsLocalRing A] [IsNoe
       rw [this]
       exact b0.linearIndependent)
   have hsp := span_one_tmul_D hres (fun i => (τ' i : A)) hspan
-  haveI : Module.FinitePresentation A Ω[A⁄k] := Module.finitePresentation_of_finite A _
+  have : Module.FinitePresentation A Ω[A⁄k] := Module.finitePresentation_of_finite A _
   exact Module.exists_basis_of_basis_baseChange (R := A) (fun i => D k A (τ' i : A)) hli hsp
     (Module.Flat.rTensor_preserves_injective_linearMap (maximalIdeal A).subtype
       Subtype.val_injective)
@@ -211,8 +211,8 @@ theorem exists_coords (k A : Type) [Field k] [CommRing A] [IsLocalRing A] [IsNoe
 theorem formallyEtale_eval₂Hom_of_basis (k A : Type) [CommRing k] [CommRing A] [Algebra k A]
     [Algebra.FormallySmooth k A] {r : ℕ} (τ : Fin r → A) (b : Module.Basis (Fin r) A Ω[A⁄k])
     (hb : ∀ i, b i = D k A (τ i)) : (MvPolynomial.eval₂Hom (algebraMap k A) τ).FormallyEtale := by
-  letI := (MvPolynomial.eval₂Hom (algebraMap k A) τ).toAlgebra
-  haveI : IsScalarTower k (MvPolynomial (Fin r) k) A :=
+  let := (MvPolynomial.eval₂Hom (algebraMap k A) τ).toAlgebra
+  have : IsScalarTower k (MvPolynomial (Fin r) k) A :=
     IsScalarTower.of_algebraMap_eq fun c => (MvPolynomial.eval₂Hom_C _ τ c).symm
   have hX (i : Fin r) : algebraMap (MvPolynomial (Fin r) k) A (MvPolynomial.X i) = τ i :=
     MvPolynomial.eval₂Hom_X' _ τ i
@@ -251,12 +251,12 @@ theorem exists_etaleCoords : ∀ {κ' : Type} [Field κ'] [Algebra ℂ κ'] (B :
       (MvPolynomial.eval₂Hom ((algebraMap ℂ κ').codRestrict B hB.const_mem) τ).FormallyEtale ∧
       TrBasis (algebraMap ℂ κ') (fun i => (τ i : κ')) := by
   intro κ' _ _ B hB hres hsm
-  letI := hB.isLocalRing
+  let := hB.isLocalRing
   let c0 : ℂ →+* B := (algebraMap ℂ κ').codRestrict B hB.const_mem
-  letI : Algebra ℂ B := c0.toAlgebra
-  haveI : Algebra.EssFiniteType ℂ B := hB.essFiniteType
-  haveI : Algebra.FormallySmooth ℂ B := hsm
-  haveI : IsNoetherianRing B := Algebra.EssFiniteType.isNoetherianRing ℂ B
+  let : Algebra ℂ B := c0.toAlgebra
+  have : Algebra.EssFiniteType ℂ B := hB.essFiniteType
+  have : Algebra.FormallySmooth ℂ B := hsm
+  have : IsNoetherianRing B := Algebra.EssFiniteType.isNoetherianRing ℂ B
   have hres' : Function.Surjective (algebraMap ℂ (ResidueField B)) := by
     intro y
     obtain ⟨x, rfl⟩ := residue_surjective y
@@ -327,10 +327,10 @@ theorem main : ∀ {κ : Type} [inst : Field κ] (R : Subring κ) [IsNoetherianR
   set A : Subalgebra R κ := Localization.subalgebra.ofField κ Q.primeCompl hS with hAdef
   have memA : ∀ x : κ, x ∈ A ↔ ∃ (a s : R) (_ : s ∈ Q.primeCompl),
       x = algebraMap R κ a * (algebraMap R κ s)⁻¹ := fun x => Iff.rfl
-  haveI : IsLocalization.AtPrime A Q := Localization.subalgebra.isLocalization_ofField κ _ hS
-  haveI : IsLocalRing A := IsLocalization.AtPrime.isLocalRing A Q
-  haveI : IsNoetherianRing A := IsLocalization.isNoetherianRing Q.primeCompl A inferInstance
-  haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A Q.primeCompl hS
+  have : IsLocalization.AtPrime A Q := Localization.subalgebra.isLocalization_ofField κ _ hS
+  have : IsLocalRing A := IsLocalization.AtPrime.isLocalRing A Q
+  have : IsNoetherianRing A := IsLocalization.isNoetherianRing Q.primeCompl A inferInstance
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A Q.primeCompl hS
   have hcm : (maximalIdeal A).comap (algebraMap R A) = Q :=
     IsLocalization.AtPrime.under_maximalIdeal A Q
   have hmap : ∀ r : R, algebraMap R κ r = (r : κ) := fun r => rfl
@@ -412,15 +412,15 @@ theorem exists_normal_finiteType_subring_le_valuationSubring :
   set_option synthInstance.maxHeartbeats 200000 in
     intro κ _ _ V T hc hT hgen
     classical
-    haveI : CharZero κ := charZero_of_injective_algebraMap (algebraMap ℂ κ).injective
+    have : CharZero κ := charZero_of_injective_algebraMap (algebraMap ℂ κ).injective
     let A : Subalgebra ℂ κ := Algebra.adjoin ℂ (T : Set κ)
-    haveI : Algebra.FiniteType ℂ A := .adjoin_of_finite T.finite_toSet
-    haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing ℂ A
+    have : Algebra.FiniteType ℂ A := .adjoin_of_finite T.finite_toSet
+    have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing ℂ A
     have hAV : ∀ y ∈ A, y ∈ V := fun y hy => by
       let E' : Subalgebra ℂ κ := { V.toSubring with algebraMap_mem' := fun a => hc a }
       have : A ≤ E' := Algebra.adjoin_le fun x hx => hT x hx
       exact this hy
-    haveI : Algebra.IsAlgebraic A κ := ⟨fun f => by
+    have : Algebra.IsAlgebraic A κ := ⟨fun f => by
       obtain ⟨a, ha, b, hb, hb0, he⟩ := hgen f
       have hf : f = a / b := by rw [eq_div_iff hb0, he]
       have ha' : IsAlgebraic A a := isAlgebraic_algebraMap (⟨a, ha⟩ : A)
@@ -437,17 +437,17 @@ theorem exists_normal_finiteType_subring_le_valuationSubring :
       have hf : f = a / b := by rw [eq_div_iff hb0, he]
       rw [hf]
       exact Subfield.div_mem _ (hle ha) (hle hb)
-    haveI : Algebra.EssFiniteType ℂ κ := by
+    have : Algebra.EssFiniteType ℂ κ := by
       refine essFiniteType_of_finiteDimensional_subfield_closure T.finite_toSet ?_
       rw [htop]
       exact finiteDimensional_top_subfield κ
-    haveI : Algebra.EssFiniteType A κ := .of_comp ℂ A κ
-    haveI : Module.Finite A (integralClosure A κ) := finite_integralClosure_of_essFiniteType_field (R := A) ℂ κ
+    have : Algebra.EssFiniteType A κ := .of_comp ℂ A κ
+    have : Module.Finite A (integralClosure A κ) := finite_integralClosure_of_essFiniteType_field (R := A) ℂ κ
     let S := integralClosure A κ
-    haveI : Algebra.FiniteType ℂ S := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
-    haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℂ S
-    haveI : IsFractionRing S κ := integralClosure.isFractionRing_of_algebraic fun x hx => Subtype.ext hx
-    haveI : IsIntegrallyClosed S := (isIntegrallyClosed_iff κ).mpr fun {x} hx =>
+    have : Algebra.FiniteType ℂ S := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
+    have : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℂ S
+    have : IsFractionRing S κ := integralClosure.isFractionRing_of_algebraic fun x hx => Subtype.ext hx
+    have : IsIntegrallyClosed S := (isIntegrallyClosed_iff κ).mpr fun {x} hx =>
       ⟨⟨x, isIntegral_trans x hx⟩, rfl⟩
     have hcR : ∀ a : ℂ, algebraMap ℂ κ a ∈ S.toSubring := fun a =>
       S.algebraMap_mem (⟨algebraMap ℂ κ a, A.algebraMap_mem a⟩ : A)
@@ -495,7 +495,7 @@ namespace GlobalTheory.DvrDom
 theorem exists_fractions_of_essFiniteType : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O : Subring κ) (hc : ∀ a : ℂ, algebraMap ℂ κ a ∈ O), ((algebraMap ℂ κ).codRestrict O hc).EssFiniteType → ∃ G : Finset κ, (∀ x ∈ G, x ∈ O) ∧ ∀ o ∈ O, ∃ b ∈ Algebra.adjoin ℂ (G : Set κ), ∃ d ∈ Algebra.adjoin ℂ (G : Set κ), d ≠ 0 ∧ d⁻¹ ∈ O ∧ o = b / d := by
   classical
   intro κ _ _ O hc h
-  letI : Algebra ℂ O := ((algebraMap ℂ κ).codRestrict O hc).toAlgebra
+  let : Algebra ℂ O := ((algebraMap ℂ κ).codRestrict O hc).toAlgebra
   have h' : Algebra.EssFiniteType ℂ O := h
   obtain ⟨s, hs⟩ := h'.cond
   refine ⟨s.image (fun x : O => (x : κ)), ?_, ?_⟩
@@ -547,8 +547,8 @@ theorem exists_minimal_prime_le : ∀ {R : Type} [CommRing R] [IsDomain R] [IsNo
   refine ⟨Q, hQp, haQ, hQP, hQ0, fun p hp hp0 hpQ => ?_⟩
   by_contra hne
   have hlt : p < Q := lt_of_le_of_ne hpQ hne
-  haveI := hp
-  haveI := hQp
+  have := hp
+  have := hQp
   have h1 : p.height + 1 ≤ Q.height := Ideal.height_add_one_le_of_lt_of_isPrime hlt
   have hp1 : 1 ≤ p.height :=
     Order.one_le_iff_ne_zero.mpr (fun h => hp0 (Ideal.height_eq_zero_iff_eq_bot.1 h))
@@ -558,13 +558,13 @@ theorem exists_minimal_prime_le : ∀ {R : Type} [CommRing R] [IsDomain R] [IsNo
 theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O : Subring κ) (hO : IsLocModel (algebraMap ℂ κ) O), letI := hO.isLocalRing;
   ¬ IsField O → ∃ F : Place (algebraMap ℂ κ), F.Contains O ∧ ∀ f : O, f ∈ IsLocalRing.maximalIdeal O → (f : κ) ≠ 0 → 0 < F.ord f := by
   intro κ _ _ O hO
-  letI := hO.isLocalRing
+  let := hO.isLocalRing
   intro hnf
   classical
   obtain ⟨G, hGO, hGfrac⟩ := exists_fractions_of_essFiniteType O hO.const_mem hO.essFiniteType
-  letI : Algebra ℂ O := ((algebraMap ℂ κ).codRestrict O hO.const_mem).toAlgebra
-  haveI : Algebra.EssFiniteType ℂ O := hO.essFiniteType
-  haveI : IsNoetherianRing O := Algebra.EssFiniteType.isNoetherianRing ℂ O
+  let : Algebra ℂ O := ((algebraMap ℂ κ).codRestrict O hO.const_mem).toAlgebra
+  have : Algebra.EssFiniteType ℂ O := hO.essFiniteType
+  have : IsNoetherianRing O := Algebra.EssFiniteType.isNoetherianRing ℂ O
   obtain ⟨Y, hY⟩ := (IsNoetherian.noetherian (IsLocalRing.maximalIdeal O) :
     (IsLocalRing.maximalIdeal O).FG)
 
@@ -601,7 +601,7 @@ theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O
     rw [← ValuationSubring.valuation_le_one_iff, map_div₀]
     have h1 := hamax y (Finset.mem_filter.2 ⟨hy, hy0⟩)
     have h2 : V.valuation (a : κ) ≠ 0 := (Valuation.ne_zero_iff _).2 ha0
-    exact (div_le_one₀ (zero_lt_iff.2 h2)).2 h1
+    exact (div_le_one₀ (pos_iff_ne_zero.2 h2)).2 h1
 
   let T : Finset κ := G ∪ Y.image (fun y : O => (y : κ)) ∪ Y.image (fun y : O => (y : κ) / a)
   have hTV : ∀ x ∈ T, x ∈ V := by
@@ -626,9 +626,9 @@ theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O
     linear_combination hfz
   have hcV : ∀ z : ℂ, algebraMap ℂ κ z ∈ V := fun z => hOV' _ (hO.const_mem z)
   obtain ⟨R, hcR, hft, hTR, hRV, hRn, hRi, hRf⟩ := _root_.GlobalTheory.exists_normal_finiteType_subring_le_valuationSubring V T hcV hTV hfracT
-  haveI := hRn
-  haveI := hRi
-  haveI := hRf
+  have := hRn
+  have := hRi
+  have := hRf
   have hadjR : ∀ x ∈ Algebra.adjoin ℂ (T : Set κ), x ∈ R := by
     let R' : Subalgebra ℂ κ := { R with algebraMap_mem' := hcR }
     have : Algebra.adjoin ℂ (T : Set κ) ≤ R' := Algebra.adjoin_le (fun x hx => hTR x hx)
@@ -641,13 +641,13 @@ theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
   let P : Ideal R := (IsLocalRing.maximalIdeal V).comap ι
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   have haT : (a : κ) ∈ T := by simp [T, haY]
   let a' : R := ⟨a, hTR _ haT⟩
   have ha'0 : a' ≠ 0 := fun h => ha0 (congrArg Subtype.val h)
   have ha'P : a' ∈ P := hVnu a (hY ▸ Submodule.subset_span haY) _
   obtain ⟨Q, hQp, haQ, hQP, hQ0, hmin⟩ := exists_minimal_prime_le P a' ha'0 ha'P
-  haveI := hQp
+  have := hQp
   obtain ⟨W, hWd, hRW, hinvW, hninvW, hWfrac⟩ := _root_.GlobalTheory.AuxiliaryLemmaSecond.main R Q hQ0 hmin
 
   have hcW : ∀ z : ℂ, algebraMap ℂ κ z ∈ W := fun z => hRW ⟨_, hcR z⟩
@@ -727,7 +727,7 @@ theorem exists_locRing_closedPoint_centre : ∀ {κ' : Type} [Field κ'] [Algebr
       ((algebraMap ℂ κ').codRestrict B hB.const_mem).FormallySmooth := by
   set_option synthInstance.maxHeartbeats 400000 in
     intro κ' _ _ F A hsm hAF hfrac
-    haveI : IsFractionRing A κ' := IsFractionRing.of_field A κ' fun z => by
+    have : IsFractionRing A κ' := IsFractionRing.of_field A κ' fun z => by
       obtain ⟨a, ha, b, hb, hb0, e⟩ := hfrac z
       exact ⟨⟨a, ha⟩, ⟨b, hb⟩, by simp [← e, hb0]⟩
     let ι : A →+* F.ring := (algebraMap A κ').codRestrict F.ring (fun x => hAF x.2)
@@ -749,11 +749,11 @@ theorem exists_locRing_closedPoint_centre : ∀ {κ' : Type} [Field κ'] [Algebr
       exact u.2
     have hle : n.primeCompl ≤ nonZeroDivisors A := n.primeCompl_le_nonZeroDivisors
     let B0 : Subalgebra A κ' := Localization.subalgebra.ofField κ' n.primeCompl hle
-    haveI : IsLocalization.AtPrime B0 n := Localization.subalgebra.isLocalization_ofField κ' _ hle
+    have : IsLocalization.AtPrime B0 n := Localization.subalgebra.isLocalization_ofField κ' _ hle
     have hAB : A.toSubring ≤ B0.toSubring := fun x hx => B0.algebraMap_mem (⟨x, hx⟩ : A)
     have hc : ∀ a, algebraMap ℂ κ' a ∈ B0.toSubring := fun a => hAB (A.algebraMap_mem a)
-    letI : Algebra ℂ B0 := ((algebraMap A B0).comp (algebraMap ℂ A)).toAlgebra
-    haveI : IsScalarTower ℂ A B0 := IsScalarTower.of_algebraMap_eq' (R := ℂ) (S := A) (A := B0) rfl
+    let : Algebra ℂ B0 := ((algebraMap A B0).comp (algebraMap ℂ A)).toAlgebra
+    have : IsScalarTower ℂ A B0 := IsScalarTower.of_algebraMap_eq' (R := ℂ) (S := A) (A := B0) rfl
     have hloc : IsLocalRing B0 := IsLocalization.AtPrime.isLocalRing B0 n
     refine ⟨B0.toSubring, ⟨hc, hloc, ?_, ?_⟩, ?_, hAB, ?_, ?_⟩
     · show (algebraMap ℂ B0).EssFiniteType
@@ -765,8 +765,8 @@ theorem exists_locRing_closedPoint_centre : ∀ {κ' : Type} [Field κ'] [Algebr
       exact ⟨a, hAB ha, b, hAB hb, hb0, e⟩
     · intro r hr
       let r' : B0 := ⟨r, hr⟩
-      letI : Field (A ⧸ n) := Ideal.Quotient.field n
-      haveI : Module.Finite ℂ (A ⧸ n) := finite_of_finite_type_of_isJacobsonRing ℂ (A ⧸ n)
+      let : Field (A ⧸ n) := Ideal.Quotient.field n
+      have : Module.Finite ℂ (A ⧸ n) := finite_of_finite_type_of_isJacobsonRing ℂ (A ⧸ n)
       have hsurj : Function.Surjective (algebraMap ℂ (A ⧸ n)) :=
         IsAlgClosed.algebraMap_bijective_of_isIntegral.2
       let e := IsLocalization.AtPrime.equivQuotMaximalIdeal n B0
@@ -783,8 +783,8 @@ theorem exists_locRing_closedPoint_centre : ∀ {κ' : Type} [Field κ'] [Algebr
     · rintro x ⟨a, s, hs, rfl⟩
       exact F.ring.toSubring.mul_mem (hAF a.2) (hinv s hs)
     · show (algebraMap ℂ B0).FormallySmooth
-      haveI : Algebra.FormallyEtale A B0 := Algebra.FormallyEtale.of_isLocalization n.primeCompl
-      haveI : Algebra.FormallySmooth ℂ B0 := Algebra.FormallySmooth.comp ℂ A B0
+      have : Algebra.FormallyEtale A B0 := Algebra.FormallyEtale.of_isLocalization n.primeCompl
+      have : Algebra.FormallySmooth ℂ B0 := Algebra.FormallySmooth.comp ℂ A B0
       exact RingHom.formallySmooth_algebraMap.2 inferInstance
 
 end GlobalTheory.FieldPair
@@ -815,9 +815,9 @@ theorem Place.exists_smooth_subalgebra : ∀ {κ' : Type} [Field κ'] [Algebra �
   intro κ' _ _ F S hS
   classical
   let R := F.ring
-  letI : Algebra ℂ R := F.const.toAlgebra
-  haveI : IsScalarTower ℂ R κ' := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.EssFiniteType ℂ R := F.essFiniteType
+  let : Algebra ℂ R := F.const.toAlgebra
+  have : IsScalarTower ℂ R κ' := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.EssFiniteType ℂ R := F.essFiniteType
   obtain ⟨σ, hσ⟩ := (Algebra.essFiniteType_iff ℂ R).mp inferInstance
   let R' : Subalgebra ℂ κ' :=
     { F.ring.toSubring with algebraMap_mem' := F.const_mem }
@@ -844,12 +844,12 @@ theorem Place.exists_smooth_subalgebra : ∀ {κ' : Type} [Field κ'] [Algebra �
     exact Or.inl ⟨y, hy, rfl⟩
   have hfg : Algebra.FiniteType ℂ A₀ :=
     (Subalgebra.fg_iff_finiteType A₀).mp (Subalgebra.fg_adjoin_finset _)
-  haveI : Algebra.FinitePresentation ℂ A₀ := Algebra.FinitePresentation.of_finiteType.mp hfg
+  have : Algebra.FinitePresentation ℂ A₀ := Algebra.FinitePresentation.of_finiteType.mp hfg
   let ι : A₀ →+* R := (A₀.val.toRingHom).codRestrict R (fun x => hA₀R x.2)
-  letI : Algebra A₀ R := ι.toAlgebra
-  haveI : IsScalarTower ℂ A₀ R := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra A₀ R := ι.toAlgebra
+  have : IsScalarTower ℂ A₀ R := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let q : Ideal A₀ := (IsLocalRing.maximalIdeal R).comap ι
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
+  have : q.IsPrime := Ideal.comap_isPrime _ _
   have hloc : IsLocalization q.primeCompl R := by
     refine (isLocalization_iff _ _).2 ⟨?_, ?_, ?_⟩
     · rintro ⟨t, ht⟩
@@ -862,8 +862,8 @@ theorem Place.exists_smooth_subalgebra : ∀ {κ' : Type} [Field κ'] [Algebra �
       refine ⟨1, ?_⟩
       have : (x : κ') = y := congrArg (fun z : R => (z : κ')) e
       simp [Subtype.ext this]
-  haveI : Algebra.FormallySmooth ℂ R := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ R
-  haveI : Algebra.IsSmoothAt ℂ q := by
+  have : Algebra.FormallySmooth ℂ R := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ R
+  have : Algebra.IsSmoothAt ℂ q := by
     have e := (IsLocalization.algEquiv q.primeCompl (Localization.AtPrime q) R).restrictScalars ℂ
     exact Algebra.FormallySmooth.of_equiv e.symm
   obtain ⟨g, hgq, hsm⟩ := Algebra.IsSmoothAt.exists_notMem_smooth ℂ q
@@ -906,7 +906,7 @@ theorem Place.exists_smooth_subalgebra : ∀ {κ' : Type} [Field κ'] [Algebra �
     rw [ha, map_zero] at e
     exact (IsLocalization.map_units (Localization.Away g) (⟨s, hs⟩ : Submonoid.powers g)).mul_left_eq_zero.1 e
   let A : Subalgebra ℂ κ' := φ.range
-  haveI : Algebra.Smooth ℂ A := Algebra.Smooth.of_equiv (AlgEquiv.ofInjective φ hinj)
+  have : Algebra.Smooth ℂ A := Algebra.Smooth.of_equiv (AlgEquiv.ofInjective φ hinj)
   have hA₀A : ∀ a ∈ A₀, a ∈ A := fun a ha => ⟨algebraMap A₀ _ ⟨a, ha⟩, hφ ⟨a, ha⟩⟩
   refine ⟨A, inferInstance, ?_, fun x hx => hA₀A x (Algebra.subset_adjoin ?_), ?_⟩
   · rintro _ ⟨x, rfl⟩
@@ -1000,7 +1000,7 @@ theorem top_model_of_const {κ' : Type} [Field κ'] [Algebra ℂ κ']
   · intro r _
     obtain ⟨α, hα⟩ := hc r
     exact ⟨α, by rw [hα, sub_self]; exact nonUnit_zero _⟩
-  · letI := hB.isLocalRing
+  · let := hB.isLocalRing
     have hfield : IsField (⊤ : Subring κ') := by
       refine ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun {a} ha => ?_⟩
       have ha' : (a : κ') ≠ 0 := fun e => ha (Subtype.ext e)
@@ -1014,7 +1014,7 @@ theorem top_model_of_const {κ' : Type} [Field κ'] [Algebra ℂ κ']
         exact congrArg _ (((algebraMap ℂ κ').codRestrict ⊤ hB.const_mem).injective e)
       · obtain ⟨α, hα⟩ := hsurj x
         exact ⟨MvPolynomial.C α, by simpa using hα⟩
-    letI := (MvPolynomial.eval₂Hom ((algebraMap ℂ κ').codRestrict ⊤ hB.const_mem) (Fin.elim0 : Fin 0 → (⊤ : Subring κ'))).toAlgebra
+    let := (MvPolynomial.eval₂Hom ((algebraMap ℂ κ').codRestrict ⊤ hB.const_mem) (Fin.elim0 : Fin 0 → (⊤ : Subring κ'))).toAlgebra
     exact Algebra.FormallyEtale.of_equiv (AlgEquiv.ofBijective (Algebra.ofId _ _) hb)
   · have e : (algebraMap ℂ κ').toAlgebra = (inferInstance : Algebra ℂ κ') :=
       Algebra.algebra_ext _ _ fun _ => rfl
@@ -1072,8 +1072,8 @@ theorem normalise_at_smooth_point : ∀ {κ' : Type} [Field κ'] [Algebra ℂ κ
         rw [← F.ord_nonneg_iff hne, div_eq_mul_inv, F.ord_mul hi (inv_ne_zero hj₀), F.ord_inv]
         have := hmin i (Finset.mem_filter.2 ⟨Finset.mem_univ _, hi⟩)
         omega
-    letI : Algebra ℂ O := ((algebraMap ℂ κ').codRestrict O hO.const_mem).toAlgebra
-    haveI : Algebra.EssFiniteType ℂ O := hO.essFiniteType
+    let : Algebra ℂ O := ((algebraMap ℂ κ').codRestrict O hO.const_mem).toAlgebra
+    have : Algebra.EssFiniteType ℂ O := hO.essFiniteType
     obtain ⟨σ, hσ⟩ := (Algebra.essFiniteType_iff ℂ O).1 inferInstance
     let S : Finset κ' := σ.image (fun x : O => (x : κ')) ∪ Finset.univ.image (fun i => a i / a j₀)
     have hS : ∀ x ∈ S, x ∈ F.ring := by
@@ -1087,8 +1087,8 @@ theorem normalise_at_smooth_point : ∀ {κ' : Type} [Field κ'] [Algebra ℂ κ
     obtain ⟨B, hB, hRB, hAB, hBF, hsm⟩ := _root_.GlobalTheory.FieldPair.exists_locRing_closedPoint_centre F A hAs hAF hAfrac
     obtain ⟨r, τ, hm, het, htr⟩ := _root_.GlobalTheory.EtaleCoordLocal.exists_etaleCoords B hB hRB hsm
     have hSB : ∀ x ∈ S, x ∈ B := fun x hx => hAB (hSA x hx)
-    letI := hB.isLocalRing
-    letI := hO.isLocalRing
+    let := hB.isLocalRing
+    let := hO.isLocalRing
 
     have hadj : ∀ t : O, t ∈ Algebra.adjoin ℂ (σ : Set O) → (t : κ') ∈ B := by
       intro t ht

@@ -51,8 +51,8 @@ theorem UpperTheory.Gal.G3.pLiesAbs :
   intro hF hB hP B R _ T hT Z Y C D pZ pY pC pD π hπ sg tg htg s t ht κ h d m hsg hs hκt hsd hℓ tr trg htr htrg x
   have hpb : IsPullback (pullback.snd π s) (pullback.fst π s) s π := (IsPullback.of_hasPullback π s).flip
   have hfst : FEt (pullback.fst π s) d := hF.1 _ _ s π d hpb hsd
-  haveI : IsFinite (pullback.fst π s) := hfst.1
-  haveI : Etale (pullback.fst π s) := hfst.2.1
+  have : IsFinite (pullback.fst π s) := hfst.1
+  have : Etale (pullback.fst π s) := hfst.2.1
   obtain ⟨tr1, htr1⟩ := hT.tr pZ (pullback.fst π s ≫ pZ) (pullback.fst π s) rfl
   have hsndp : pullback.snd π s ≫ pD = pullback.fst π s ≫ pZ := by
     rw [← hs, ← Category.assoc, ← pullback.condition, Category.assoc, hπ]

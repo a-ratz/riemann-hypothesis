@@ -129,7 +129,7 @@ theorem coeff_inBlock_embDomain {K : Type} [Field K] {ι B : Type} (k : B) (f : 
   · intro b hb hbk
     exfalso
     apply hbk
-    simp only [Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq] at hb
+    simp only [Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq] at hb
     exact Finsupp.mapDomain_injective (blockEmb B ι k).injective hb
   · intro hκ
     exfalso
@@ -158,7 +158,7 @@ theorem rep_apply (B : Type) [Fintype B] {ι : Type} (m : B → ι →₀ ℕ) (
   · first
       | exact Finsupp.embDomain_apply_self (blockEmb B ι k) (m k) i
   · intro k' _ hk'
-    rw [Finsupp.embDomain_notin_range]
+    rw [Finsupp.embDomain_of_notMem_range]
     rintro ⟨j, hj⟩
     exact hk' (congrArg Prod.fst hj)
   · intro h
@@ -204,7 +204,7 @@ theorem coeff_prod_inBlock {K : Type} [Field K] {ι B : Type} [Fintype B]
       first
         | exact Finsupp.embDomain_apply_self (blockEmb B ι k) (m k) i
     · intro k' _ hk'
-      rw [Finsupp.embDomain_notin_range]
+      rw [Finsupp.embDomain_of_notMem_range]
       rintro ⟨j, hj⟩
       exact hk' (congrArg Prod.fst hj)
     · intro h
@@ -221,7 +221,7 @@ theorem coeff_prod_inBlock {K : Type} [Field K] {ι B : Type} [Fintype B]
         | exact Finsupp.embDomain_apply_self (blockEmb B ι k) κ i
     · intro k' _ hk'
       show (Finsupp.embDomain (blockEmb B ι k') κ) (k, i) = 0
-      rw [Finsupp.embDomain_notin_range]
+      rw [Finsupp.embDomain_of_notMem_range]
       rintro ⟨j, hj⟩
       exact hk' (congrArg Prod.fst hj)
     · intro h
@@ -253,7 +253,7 @@ private theorem intPS_derivative' {K : Type} [Field K] {R : Subring K} {f : Powe
   intro n
   have h : PowerSeries.coeff n (PowerSeries.derivative (R := K) f) = PowerSeries.coeff (n + 1) f * (n + 1) := by
     first
-      | exact PowerSeries.coeff_derivativeFun f n
+      | exact PowerSeries.coeff_derivative f n
       | (rw [PowerSeries.derivative_coe, PowerSeries.coeff_derivativeFun])
   rw [h]
   have hn : ((n : K) + 1) ∈ R := R.add_mem (by simpa using R.natCast_mem n) R.one_mem

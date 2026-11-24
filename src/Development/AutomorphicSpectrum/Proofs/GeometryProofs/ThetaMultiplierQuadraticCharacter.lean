@@ -144,7 +144,7 @@ theorem exists_compare (D : PPData H L) (σ : L →+* ℂ) (a : D.Frame σ) :
   have hpc : IsGrpPullback P'.A D.t.G (emb σ) (ψ ≫ D.m.φ) :=
     (hpb.comp D.m.cart).congr (by rw [spMap_comp_spMap]) rfl
   obtain ⟨e, hmon, he⟩ := grpPullback_iso a.cart hpc
-  haveI := hmon
+  have := hmon
   obtain ⟨rig, hrig⟩ := P'.rigid
   obtain ⟨u₀, H₀, χ₀, Ef, hu₀, -, hv, hw, -, -, hE, hB, -⟩ := GlobalTheory.thetaUnifAV_closed P' rig hrig
   have hol : IsHolTo (Set.univ : Set (Fin D.g → ℂ)) (fun w => (a.u.ex w ≫ e.hom).left) := by
@@ -159,7 +159,7 @@ theorem exists_compare (D : PPData H L) (σ : L →+* ℂ) (a : D.Frame σ) :
     have h' := congrArg (· ≫ e.inv) h
     simpa [MonObj.one_comp] using h')
   have hsurj : Function.Surjective F := by
-    haveI := u₀.discrete
+    have := u₀.discrete
     refine LinearMap.range_eq_top.1 (GlobalTheory.AHWeil.eq_top_of_add_discrete u₀.Λ _ fun w => ?_)
     obtain ⟨z, hz⟩ := a.u.ex_onto (u₀.ex w ≫ e.inv)
     have hz' : u₀.ex (F z) = u₀.ex w := by

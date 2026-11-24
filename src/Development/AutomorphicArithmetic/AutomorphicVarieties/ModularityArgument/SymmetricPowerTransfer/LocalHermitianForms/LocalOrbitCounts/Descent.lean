@@ -60,7 +60,7 @@ theorem UpperTheory.V.Z.Sym.Loc.descent :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ : K), IsLoc O Δ → ∀ (s : K) (ε : Oˣ), Δ * s ^ 2 = algebraMap O K ε →
     ∀ x : Lsq K Δ, (IsInt O x ↔ x.re ∈ (algebraMap O K).range ∧ ∃ b : O, x.im = s * algebraMap O K b) ∧ (IsInt O x → IsInt O (star x)) := by
   intro O K _ _ _ _ _ Δ hL s ε hs x
-  haveI := hL.frac
+  have := hL.frac
   have hinj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   have hstar : ∀ y : Lsq K Δ, IsIntegral O y → IsIntegral O (star y) := by
     intro y hy
@@ -124,9 +124,9 @@ theorem UpperTheory.V.Z.Sym.Loc.descent :
       have hsq : (algebraMap K (Lsq K Δ) s * ω) ^ 2 = algebraMap O (Lsq K Δ) ε := by
         rw [IsScalarTower.algebraMap_apply O K (Lsq K Δ), ← hs, sq]
         ext
-        · simp only [re_mul, im_mul, algebraMap_re, algebraMap_im, omega_re, omega_im]
+        · simp only [re_mul, im_mul, algebraMap_re, algebraMap_im, re_omega, im_omega]
           ring
-        · simp only [re_mul, im_mul, algebraMap_re, algebraMap_im, omega_re, omega_im]
+        · simp only [re_mul, im_mul, algebraMap_re, algebraMap_im, re_omega, im_omega]
           ring
       rw [hsq]
       exact isIntegral_algebraMap

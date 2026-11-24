@@ -117,7 +117,7 @@ theorem isTransfer_id (X : Scheme.{0}) : IsTransfer R (𝟙 X) (𝟙 _) := by
   · obtain ⟨pt⟩ := hS
     have hc : (Sigma.desc (fun j => pullback.lift (s j) (𝟙 S) (by rw [hs j, Category.id_comp])) :
         ∐ (fun _ : Fin m => S) ⟶ pullback (𝟙 X) x) ≫ pullback.snd _ _ = Sigma.desc (fun _ : Fin m => 𝟙 S) := by
-      apply Sigma.hom_ext; intro j; rw [Sigma.ι_desc_assoc, Sigma.ι_desc]; exact pullback.lift_snd _ _ _
+      apply Sigma.hom_ext; intro j; rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc]; exact pullback.lift_snd _ _ _
     have : IsIso (Sigma.desc (fun _ : Fin m => 𝟙 S) : ∐ (fun _ : Fin m => S) ⟶ S) := by
       rw [← hc]; infer_instance
     rw [eq_one_of_isIso_codiag pt this, one_smul]
@@ -127,7 +127,7 @@ theorem eq_id_of_isTransfer_id {X : Scheme.{0}} {t : freeSch R X ⟶ freeSch R X
     ⟨⟨Sigma.ι (fun _ : Fin 1 => X) 0, by ext j; fin_cases j; simp, by simp⟩⟩
   have hc : (Sigma.desc (fun _ : Fin 1 => pullback.lift (𝟙 X) (𝟙 X) (by simp)) :
       ∐ (fun _ : Fin 1 => X) ⟶ pullback (𝟙 X) (𝟙 X)) ≫ pullback.snd _ _ = Sigma.desc (fun _ : Fin 1 => 𝟙 X) := by
-    apply Sigma.hom_ext; intro j; rw [Sigma.ι_desc_assoc, Sigma.ι_desc]; exact pullback.lift_snd _ _ _
+    apply Sigma.hom_ext; intro j; rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc]; exact pullback.lift_snd _ _ _
   have hiso : IsIso (Sigma.desc (fun _ : Fin 1 => pullback.lift (𝟙 X) (𝟙 X) (by simp)) :
       ∐ (fun _ : Fin 1 => X) ⟶ pullback (𝟙 X) (𝟙 X)) := by
     rw [← hc] at hcod

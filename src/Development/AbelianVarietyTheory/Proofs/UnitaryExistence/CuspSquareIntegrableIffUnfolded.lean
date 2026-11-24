@@ -288,7 +288,7 @@ theorem _root_.GlobalTheory.PeterssonFrameChange.frame_change : ∀ (E : Type) [
   refine ⟨e, α, u, he, ?_, ?_, ?_⟩
   · have hcont : Continuous α := by
       refine continuous_pi fun τ => Continuous.subtype_mk ?_ _
-      exact (continuous_const.mul ((continuous_apply τ).subtype_val)).mul continuous_const
+      exact (continuous_const.mul ((continuous_apply τ).subtypeVal)).mul continuous_const
     exact hcont.measurable
   · intro t
     funext τ
@@ -434,7 +434,7 @@ theorem map_restrict_subgroup_eq_common_smul_haar : ∀ (G : Type) [Group G] [Me
       (Measure.measure_pos_of_nonempty_interior (ν k) K.interior_nonempty).ne'
     have hKt : ν k K ≠ ⊤ := K.isCompact.measure_ne_top
     have h6 := congrArg (fun m : Measure (R k) => m K) h5
-    simp only [Measure.smul_apply, smul_eq_mul] at h6
+    simp only [smul_apply, smul_eq_mul] at h6
     have h7 : κ k' * κ k' = κ k * κ k := (ENNReal.mul_left_inj hK0 hKt).1 h6
     rcases lt_trichotomy (κ k) (κ k') with h | h | h
     · exact absurd h7 (ENNReal.mul_lt_mul h h).ne'
@@ -1099,7 +1099,7 @@ theorem lintegral_dict {Comp : Type} [Fintype Comp] (X : Comp → Data E r) {G :
     have h2 := congrArg (· * mat (y k) τ) (h τ)
     simp only [Matrix.nonsing_inv_mul_cancel_right _ _ (hyu k τ)] at h2
     exact Subtype.ext (Units.ext (((Matrix.isUnit_iff_isUnit_det _).2 (hyu k τ)).mul_left_cancel h2))
-  haveI : ∀ k, (haarR (X k)).IsHaarMeasure := fun k => by unfold haarR; infer_instance
+  have : ∀ k, (haarR (X k)).IsHaarMeasure := fun k => by unfold haarR; infer_instance
   refine Exists.elim (_root_.GlobalTheory.PeterssonUnfold.unfold_lintegral G μ Γ H Kf 𝓕 h𝓕 h0 h1 hH
     (fun z hz => (hmem z).2 ⟨1, one_mem _, z, hz, (one_mul _).symm⟩) Comp (fun k => RealGrp (X k))
     (fun k => haarR (X k)) ψ Λ s g _ (SameOrb X) dict (fun k a => ⟨k, rmul (frameOf (X k) a) (b k)⟩)
@@ -1115,7 +1115,7 @@ theorem lintegral_dict {Comp : Type} [Fintype Comp] (X : Comp → Data E r) {G :
     simp only [e]
     congr 1
     refine Finset.sum_congr rfl fun k _ => ?_
-    haveI := (hD k).1
+    have := (hD k).1
     rw [quotInt_eq _ (hΛ k) (hD k).2 (hFΓ k)]
   · intro k a
     obtain ⟨h, hh, e⟩ := hs k (fun τ => mat (y k) τ * ((a τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) *
@@ -1252,12 +1252,12 @@ theorem lintegral_adelic (V : HSp D) {Comp : Type} [Fintype Comp] {r : ℕ} (X :
       Measurable (fun g => F (dict g).1 (dict g).2) ∧
         ∫⁻ g in 𝓕, F (dict g).1 (dict g).2 ∂μ = κ * ∑ k, IndefiniteRowSideFullHecke.UnitaryHaarVolume.quotInt (X k) (F k) := by
   subst hr
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig V.gram
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA D.sp.cm.sig V.gram
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA D.sp.cm.sig V.gram
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
   obtain ⟨_, _, _⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_adelicUnitary D.host.F D.host.E D.sp.cm.sig V.rank V.gram
-  haveI : μ.IsMulRightInvariant := ⟨GlobalTheory.AutQuotCheck.rightInvariant_of_covolume (GQ V) μ h𝓕 h0 h1⟩
+  have : μ.IsMulRightInvariant := ⟨GlobalTheory.AutQuotCheck.rightInvariant_of_covolume (GQ V) μ h𝓕 h0 h1⟩
   have hmem : ∀ h, h ∈ (Kf.map (finHom V)).comap (finHom V) ↔ ∃ a ∈ GinfC V, ∃ z ∈ Kf, h = a * z := by
     intro h
     constructor
@@ -1349,7 +1349,7 @@ theorem measurable_onQ_adel (V : HSp D) {Comp : Type} {X : Comp → Data D.host.
     rw [hm.2.2.1 _ h4, one_mul] at e'
     rw [e, e']
     exact congrArg (mu g' * ·) (hΓ _ γ hγ _ (hd.2.2.2.1 _)).symm
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig V.gram
   rw [measurable_from_quotient]
   have : (Pj.onQ V (Pj.adel V dict mu P) ∘ Quotient.mk'') = fun g => mu g * P (dict g).1 (dict g).2 :=
     funext fun g => hL g (Pj.autMk V g).out (QuotientGroup.rightRel_apply.1 (Quotient.mk_out g))

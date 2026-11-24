@@ -122,7 +122,7 @@ theorem exists_isCoverIt : ∀ (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (
         { toFun := fun y => ContinuousLinearMap.adjoint (Tm.flip y) (F.ι P)
           map_add' := fun y y' => by simp
           map_smul' := fun c y => by
-            rw [map_smul, LinearIsometryEquiv.map_smulₛₗ, ContinuousLinearMap.smul_apply] }
+            rw [map_smul, LinearIsometryEquiv.map_smulₛₗ, smul_apply] }
       map_add' := fun P P' => by ext y; simp
       map_smul' := fun c P => by ext y; simp }
   have hB : ∀ P y, B P y = ContinuousLinearMap.adjoint (Tm.flip y) (F.ι P) := fun _ _ => rfl
@@ -141,7 +141,7 @@ theorem exists_isCoverIt : ∀ (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (
     have hk := (GlobalTheory.FockKFin.kfin_fock p q r s T₀ T₁ T₂ F
       (GlobalTheory.FockDegree.Om_Kset_homog p q r s T₀ T₁ T₂ F) P).1
     unfold KFin at hk
-    haveI := hk
+    have := hk
     refine Submodule.finiteDimensional_of_le (S₂ := Submodule.map
       (ContinuousLinearMap.adjoint (Tm.flip y)).toLinearMap
       (Submodule.span ℂ (Set.range fun k : ↥T₁.Kset => F.π ((k : T₁.G), 1) (F.ι P)))) ?_
@@ -151,7 +151,7 @@ theorem exists_isCoverIt : ∀ (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (
   · intro y hy
     by_contra hcon
     push_neg at hcon
-    haveI := R₁.nontriv
+    have := R₁.nontriv
     obtain ⟨x, hx⟩ := exists_ne (0 : R₁.U.H)
     have hz : (fun v : F.H => inner ℂ v (Tm x y)) = fun _ => 0 := by
       refine Continuous.ext_on F.dense (continuous_id.inner continuous_const) continuous_const ?_

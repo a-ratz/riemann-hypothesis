@@ -69,7 +69,7 @@ theorem of_three (hD : HeckeLAdicCharacterDeRham) (hB : DeRhamPotSemistable) (hW
       rw [Subsingleton.elim i j]
       simp [rk1]
     rw [e]
-    exact Units.continuous_val.comp (h2.comp continuous_subtype_val)
+    exact Units.continuous_val.comp (h2.comp continuous_subtypeVal)
   have hr := hB.isPstAt hT.some Bw _ hc (hD E Ω l P AI hT ι art ha χ n μ h1 h2 h3 w A h O Bw hj).1
   rw [← GlobalTheory.PstLaws.unr_wdAt_iff Bw h hj P ι _ hr,
     hW E Ω l P AI hT ι art ha χ n μ h1 h2 h3 w A h O Bw hj _ hξ a ha',

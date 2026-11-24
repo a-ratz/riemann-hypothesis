@@ -90,7 +90,7 @@ theorem neg_of_perp' {x : Frame X.Ψ r} (τ : X.Ψ) (hA : (X.gramPos x τ).PosDe
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [hermC_smul_left, hermC_sum_right]
     simp_rw [hermC_smul_right, hg, Matrix.diagonal_apply]
-    simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring
   by_contra hcon
   push_neg at hcon
@@ -208,7 +208,7 @@ theorem psgn_dmin_gt {x : Frame X.Ψ r} (τ : X.Ψ) (hdet : (mat x τ).det ≠ 0
   let D : Matrix (Fin k) (Fin k) ℂ := fun j l => hermC τ.1 X.Gm (d j) (d l)
   have hApos : 0 < A.det := Matrix.PosDef.det_pos hA
   have hAu : IsUnit A.det := isUnit_iff_ne_zero.2 hApos.ne'
-  haveI : Invertible A := Matrix.invertibleOfIsUnitDet A hAu
+  have : Invertible A := Matrix.invertibleOfIsUnitDet A hAu
   have hdm : dmin X.Gm x τ i = (Matrix.fromBlocks A B C D).det := by
     let e : Fin X.p0 ⊕ Fin k ≃ Fin (i : ℕ) := finSumFinEquiv.trans (finCongr hik.symm)
     unfold dmin lminor
@@ -262,15 +262,15 @@ theorem psgn_dmin_gt {x : Frame X.Ψ r} (τ : X.Ψ) (hdet : (mat x τ).det ≠ 0
     · exfalso
       have h1 := congrArg Fin.val hst
       have := a.isLt
-      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.coe_castLE, Fin.val_mk] at h1
+      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.val_castLE, Fin.val_mk] at h1
       omega
     · exfalso
       have h1 := congrArg Fin.val hst
       have := b.isLt
-      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.coe_castLE, Fin.val_mk] at h1
+      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.val_castLE, Fin.val_mk] at h1
       omega
     · have h1 := congrArg Fin.val hst
-      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.coe_castLE, Fin.val_mk] at h1
+      simp only [Sum.elim_inl, Sum.elim_inr, gr, Fin.val_castLE, Fin.val_mk] at h1
       exact congrArg Sum.inr (Fin.ext (by omega))
   have hli := hli0.comp _ hg
   have hS : (-(D - α * B)).PosDef := by

@@ -91,14 +91,14 @@ theorem polar_radial (n : ℕ) (hn : 1 ≤ n) (a b : ℝ) (ha : 0 < a) (hab : a 
     classical
     rw [Set.indicator_apply, Set.indicator_apply]
     by_cases hy : y ∈ Icc (Real.sqrt a) (Real.sqrt b)
-    · rw [if_pos hy, if_pos hy]
+    · rw [ite_eq_left hy, ite_eq_left hy]
       have hy0 : 0 < y := hsa.trans_le hy.1
       rw [smul_eq_mul, Real.rpow_neg (by positivity), Real.rpow_natCast]
       obtain ⟨k, rfl⟩ : ∃ k, n = k + 1 := ⟨n - 1, by omega⟩
       rw [show 2 * (k + 1) - 1 = 2 * k + 1 by omega]
       have hsplit : (y ^ 2) ^ (k + 1) = y ^ (2 * k + 1) * y := by ring
       rw [hsplit, mul_inv, ← mul_assoc, mul_inv_cancel₀ (pow_ne_zero _ hy0.ne'), one_mul]
-    · rw [if_neg hy, if_neg hy, smul_zero]
+    · rw [ite_eq_right hy, ite_eq_right hy, smul_zero]
   calc ∫ y in Ioi (0:ℝ), y ^ (2 * n - 1) •
         (Icc (Real.sqrt a) (Real.sqrt b)).indicator (fun t : ℝ => (t ^ 2) ^ (-(n : ℝ))) y
       = ∫ y in Ioi (0:ℝ), (Icc (Real.sqrt a) (Real.sqrt b)).indicator (fun t : ℝ => t⁻¹) y := by
@@ -170,8 +170,8 @@ theorem polar (n : ℕ) : PolarStatement n := by
     classical
     rw [Set.indicator_apply, Set.indicator_apply]
     by_cases hy : y ∈ {y : ReciprocityTheory.L2DbarEstimates.V n | a ≤ ‖y‖ ^ 2 ∧ ‖y‖ ^ 2 ≤ b}
-    · rw [if_pos hy, if_pos (show ‖y‖ ∈ Icc (Real.sqrt a) (Real.sqrt b) from (hmem y).1 hy)]
-    · rw [if_neg hy, if_neg (show ‖y‖ ∉ Icc (Real.sqrt a) (Real.sqrt b) from
+    · rw [ite_eq_left hy, ite_eq_left (show ‖y‖ ∈ Icc (Real.sqrt a) (Real.sqrt b) from (hmem y).1 hy)]
+    · rw [ite_eq_right hy, ite_eq_right (show ‖y‖ ∉ Icc (Real.sqrt a) (Real.sqrt b) from
         fun h => hy ((hmem y).2 h))]
   have hI : ∫ y in {y : ReciprocityTheory.L2DbarEstimates.V n | a ≤ ‖y‖ ^ 2 ∧ ‖y‖ ^ 2 ≤ b}, (‖y‖ ^ 2) ^ (-(n : ℝ)) =
       ∫ y : ReciprocityTheory.L2DbarEstimates.V n, (Icc (Real.sqrt a) (Real.sqrt b)).indicator (fun t : ℝ => (t ^ 2) ^ (-(n : ℝ))) ‖y‖ := by

@@ -51,11 +51,11 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem pt_of_ft {K C : Type} [Field K] [IsAlgClosed K] [CommRing C] [Algebra K C] [Nontrivial C]
     [Algebra.FiniteType K C] : Nonempty (C →ₐ[K] K) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal C
-  letI : Field (C ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType K (C ⧸ m) :=
+  let : Field (C ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType K (C ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ K m) (Ideal.Quotient.mkₐ_surjective K m)
-  haveI : Module.Finite K (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (C ⧸ m)
-  haveI : Algebra.IsIntegral K (C ⧸ m) := Algebra.IsIntegral.of_finite K _
+  have : Module.Finite K (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (C ⧸ m)
+  have : Algebra.IsIntegral K (C ⧸ m) := Algebra.IsIntegral.of_finite K _
   have hb : Function.Bijective (algebraMap K (C ⧸ m)) := IsAlgClosed.algebraMap_bijective_of_isIntegral
   exact ⟨((AlgEquiv.ofBijective (Algebra.ofId K (C ⧸ m)) hb).symm : (C ⧸ m) →ₐ[K] K).comp
     (Ideal.Quotient.mkₐ K m)⟩
@@ -67,12 +67,12 @@ private theorem pt_of_lin {A B K : Type} [CommRing A] [CommRing B] [Field K] [Is
   have hf : f 1 = 1 := by
     rw [Algebra.TensorProduct.one_def]
     simp [f, h]
-  haveI : Nontrivial (TensorProduct A K B) := by
+  have : Nontrivial (TensorProduct A K B) := by
     refine ⟨⟨1, 0, fun h0 => ?_⟩⟩
     have h1 := congrArg f h0
     rw [hf, map_zero] at h1
     exact one_ne_zero h1
-  haveI : Algebra.FiniteType K (TensorProduct A K B) := Algebra.FiniteType.baseChange K
+  have : Algebra.FiniteType K (TensorProduct A K B) := Algebra.FiniteType.baseChange K
   obtain ⟨φ⟩ := pt_of_ft (K := K) (C := TensorProduct A K B)
   exact ⟨(φ.restrictScalars A).comp Algebra.TensorProduct.includeRight⟩
 
@@ -82,8 +82,8 @@ private theorem ext_of_proj {O A B K : Type} [CommRing O] [CommRing A] [CommRing
     (s : Set B) (hs : s.Finite) (hg : Algebra.adjoin O (Set.range φ ∪ s) = ⊤) :
     ∃ ξ : B →ₐ[O] K, ξ.comp φ = x := by
   classical
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  letI : Algebra A K := x.toRingHom.toAlgebra
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  let : Algebra A K := x.toRingHom.toAlgebra
   have hwd : ∀ f g, φ f = φ g → x f = x g := fun f g hfg => by
     have h0 := hk (f - g) (by rw [map_sub, hfg, sub_self])
     rwa [map_sub, sub_eq_zero] at h0
@@ -108,7 +108,7 @@ private theorem ext_of_proj {O A B K : Type} [CommRing O] [CommRing A] [CommRing
     rw [← map_one x]
     apply hwd
     rw [hpre, h1, map_one]
-  haveI : Algebra.FiniteType A B := by
+  have : Algebra.FiniteType A B := by
     refine ⟨⟨hs.toFinset, ?_⟩⟩
     rw [eq_top_iff]
     rintro b -

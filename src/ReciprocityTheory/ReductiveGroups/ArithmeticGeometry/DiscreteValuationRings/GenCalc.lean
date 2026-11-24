@@ -104,8 +104,8 @@ variable {V : Type} [CommRing V] [IsDomain V] (F : Type) [Field F] [Algebra (Fra
 
 theorem vpt_ext {q₁ q₂ : Spec (CommRingCat.of V) ⟶ P.A.left} (h₁ : q₁ ≫ P.A.hom = 𝟙 _)
     (h₂ : q₂ ≫ P.A.hom = 𝟙 _) (h : DegPre.jFR (R := V) F ≫ q₁ = DegPre.jFR (R := V) F ≫ q₂) : q₁ = q₂ := by
-  haveI := isDominant_jFR (V := V) F
-  haveI : IsProper P.A.hom := P.isAb.proper
+  have := isDominant_jFR (V := V) F
+  have : IsProper P.A.hom := P.isAb.proper
   exact ext_of_isDominant_of_isSeparated P.A.hom (h₁.trans h₂.symm) (DegPre.jFR (R := V) F) h
 
 end Sep

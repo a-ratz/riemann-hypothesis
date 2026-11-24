@@ -141,12 +141,12 @@ open GlobalTheory.DualPairFormula GlobalTheory.SelInf in
 theorem greenbergWiles_pair : PoitouTateTotallyComplex → LocalFiniteness → GlobalFiniteness → GlobalEulerChar → ∀ (F Ω : Type) [Field F] [NumberField F] [_root_.NumberField.IsTotallyComplex F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (n : ℕ) (Λ : Type) [CommRing Λ] (W : Type) [AddCommGroup W] [Module Λ W] [TopologicalSpace W] [DiscreteTopology W] [Finite W] (W' : Type) [AddCommGroup W'] [Module Λ W'] [TopologicalSpace W'] [DiscreteTopology W'] [Finite W'] (ρ : Representation Λ (G F Ω) W) (ρ' : Representation Λ (G F Ω) W') (P : W →+ W' →+ ZMod (l ^ n)), 0 < n → ContAction ρ → ContAction ρ' → (∀ x, (∀ y, P x y = 0) → x = 0) → (∀ y, (∀ x, P x y = 0) → y = 0) → (∀ g x y, P (ρ g x) (ρ' g y) = ((cycMod F Ω l n g : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) * P x y) → ∀ (S : Finset (HeightOneSpectrum (𝓞 F))) (A : Formalism.GaloisCohomology.Places F Ω), ContainsAbove S l → (∀ v ∉ S, ∀ B : ValuationSubring Ω, IsPlaceOver B v → ∀ τ ∈ Ine (F := F) B, ρ τ = 1 ∧ ρ' τ = 1) → ∀ (L : ∀ v, Submodule Λ (H1 (ρ.comp (Dec (F := F) (A.1 v)).subtype))), (∀ v ∉ S, L v = Formalism.GaloisCohomology.unrAt ρ (A.1 v)) → ∀ C : Set (H1 ρ'), (∀ y : Z1 ρ', Submodule.Quotient.mk y ∈ C ↔ (∀ v ∉ S, ∀ τ ∈ Ine (F := F) (A.1 v), y.1 τ = 0) ∧ ∀ v ∈ S, ∀ x : Z1 (ρ.comp (Dec (F := F) (A.1 v)).subtype), Submodule.Quotient.mk x ∈ L v → CupB (fun g : Dec (F := F) (A.1 v) => ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n))) (fun g m => ρ' g.1 m) P x.1 (fun g => y.1 g.1)) → Finite C ∧ Nat.card (Formalism.GaloisCohomology.SelAll ρ A L) * Nat.card (H0 ρ') * (∏ v ∈ S, Nat.card (H0 (ρ.comp (Dec (F := F) (A.1 v)).subtype))) * Nat.card W ^ InfinitePlace.nrComplexPlaces F = Nat.card C * Nat.card (H0 ρ) * ∏ v ∈ S, Nat.card (L v) := by
   intro hPT hLF hGF hEC F Ω _ _ _ _ _ _ l _ n Λ _ W _ _ _ _ _ W' _ _ _ _ _ ρ ρ' P hn hρ hρ' h1 h2 hP
     S A hS hur L hL C hC
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hk : ∀ (x : W) (y : W'), (l ^ n) • P x y = 0 := fun x y => by
     rw [nsmul_eq_mul, ZMod.natCast_self, zero_mul]
-  haveI : Module (ZMod (l ^ n)) W := AddCommGroup.zmodModule fun x => h1 _ fun y => by
+  have : Module (ZMod (l ^ n)) W := AddCommGroup.zmodModule fun x => h1 _ fun y => by
     rw [map_nsmul, AddMonoidHom.nsmul_apply, hk]
-  haveI : Module (ZMod (l ^ n)) W' := AddCommGroup.zmodModule fun y => h2 _ fun x => by
+  have : Module (ZMod (l ^ n)) W' := AddCommGroup.zmodModule fun y => h2 _ fun x => by
     rw [map_nsmul, hk]
   obtain ⟨ρS, hρS, hd⟩ := exists_descent (zmodRep (l ^ n) ρ) hρ (S : Set _)
     fun v hv B hB σ hσ => by
@@ -205,7 +205,7 @@ theorem greenbergWiles_pair : PoitouTateTotallyComplex → LocalFiniteness → G
       P μ ρS (locFam S (fun v => A.1 v.1) v) (fun g x => hd g x) _
       (fun g => ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n))) (fun g => hμ' g.1)
       (fun g => hP g.1) (L v.1) (LS v) (hLS2 v)
-      (restrictCocycles1 ρ' (Dec (F := F) (A.1 v.1)).subtype continuous_subtype_val (infZ e hee z))
+      (restrictCocycles1 ρ' (Dec (F := F) (A.1 v.1)).subtype continuous_subtypeVal (infZ e hee z))
       (restrictCocycles1 (twDual μ ρS) (locFam S (fun v => A.1 v.1) v) (continuous_locFam S _ v) z)
       (fun g x => by
         change z.1 (toGS Ω _ g.1) x = P x (e.symm (z.1 (toGS Ω _ g.1)))
@@ -383,7 +383,7 @@ theorem card_six [Finite M] (u : M' →ₗ[R] M) (hu : ∀ g m, u (ρ' g m) = ρ
     _ = _ := by rw [a', a'', c]; ring
 
 theorem contAction_sub (hc : ContAction ρ) (U : Subgroup Γ) : ContAction (ρ.comp U.subtype) :=
-  hc.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+  hc.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
 
 end Abstract
 
@@ -403,7 +403,7 @@ theorem finite_places (F : Type) [Field F] [NumberField F] (l : ℕ) (hl : l ≠
 
 theorem locCountFin : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), ∀ (A : Type) [CommRing A] [IsLocalRing A] [Finite A] [Algebra (X.O0 i) A] (κ : GE N →* Aˣ) (Q : Finset (PlE D.host)), Setup bkP i s κ Q → Kills i A → LocSat bkP i s κ → LocCount bkP i s κ → LocCountFin bkP i s κ := by
   intro D N X bkP i s A _ _ _ _ κ Q hS hK hL hC Y _ _ _ _ _
-  haveI := hS.2.1
+  have := hS.2.1
   have hfin := finite_places D.host.E (X.l i) (Fact.out : (X.l i).Prime).ne_zero
   have hcont : ∀ (B : Type) [AddCommGroup B] [Module A B] [TopologicalSpace B] [DiscreteTopology B] (v : PlE D.host),
       ContAction ((repOn (Tgl i s) κ B).comp (DecV N v).subtype) := fun B _ _ _ _ v =>
@@ -414,7 +414,7 @@ theorem locCountFin : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host 
   subst hn
   rcases subsingleton_or_nontrivial Y with hY | hY
   · have e1 : ∀ v, Nat.card (bkOn bkP i (Tgl i s) κ Y v) = 1 := fun v => by
-      haveI : Subsingleton (H1 ((repOn (Tgl i s) κ Y).comp (DecV N v).subtype)) :=
+      have : Subsingleton (H1 ((repOn (Tgl i s) κ Y).comp (DecV N v).subtype)) :=
         (Submodule.Quotient.mk_surjective _).subsingleton
       exact Nat.card_unique
     have e2 : ∀ v, Nat.card (H0 ((repOn (Tgl i s) κ Y).comp (DecV N v).subtype)) = 1 := fun v => Nat.card_unique
@@ -422,13 +422,13 @@ theorem locCountFin : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host 
     simp only [e1, e2, e3, one_pow, mul_one]
   · obtain ⟨K, hKa, -⟩ := (eq_bot_or_exists_atom_le (⊤ : Submodule A Y)).resolve_left top_ne_bot
     have hKs : IsSimpleModule A K := isSimpleModule_iff_isAtom.2 hKa
-    letI : TopologicalSpace (Y ⧸ K) := ⊥
-    haveI : DiscreteTopology (Y ⧸ K) := ⟨rfl⟩
-    haveI : Finite (Y ⧸ K) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective K)
+    let : TopologicalSpace (Y ⧸ K) := ⊥
+    have : DiscreteTopology (Y ⧸ K) := ⟨rfl⟩
+    have : Finite (Y ⧸ K) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective K)
     have hex : Function.Exact K.subtype K.mkQ := LinearMap.exact_subtype_mkQ K
     have hcard := card_of_exact K.subtype K.mkQ K.subtype_injective hex K.mkQ_surjective
     have hlt : Nat.card (Y ⧸ K) < Nat.card Y := by
-      haveI := IsSimpleModule.nontrivial A K
+      have := IsSimpleModule.nontrivial A K
       have h1 : 1 < Nat.card K := Finite.one_lt_card
       have h2 : 0 < Nat.card (Y ⧸ K) := Nat.card_pos
       rw [hcard]
@@ -540,7 +540,7 @@ theorem order_formula (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (
   have hfin := GlobalTheory.SelObstruction.finite_above (F := F) l
   have hsub : ∀ {M : Type} [AddCommGroup M] [Module Λ M] [TopologicalSpace M] [DiscreteTopology M]
       (π : Representation Λ (G F Ω) M), ContAction π → ∀ U : Subgroup (G F Ω), ContAction (π.comp U.subtype) :=
-    fun π h U => h.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    fun π h U => h.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
   have hloc := fun v => _root_.GlobalTheory.LocalPair.local_pair hLF hLD hLE F Ω l n (A.1 v) v (A.2 v) Λ W W'
     (ρ.comp (Dec (F := F) (A.1 v)).subtype) (ρ'.comp (Dec (F := F) (A.1 v)).subtype) P hn (hsub ρ hc _) (hsub ρ' hc' _)
     hl hr (fun g x y => hP g.1 x y)
@@ -548,12 +548,12 @@ theorem order_formula (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (
   have hS' : ∀ v, v ∉ hfin.toFinset ∪ (hT.toFinset ∪ Q) ↔ v ∉ placesOver F l ∧ v ∉ T ∧ v ∉ Q := fun v => by
     rw [hS, not_or, not_or]
   have hnl : ∀ v, v ∈ T ∨ v ∈ Q → v ∉ placesOver F l := fun v h => h.elim (hTl v) (hQl v)
-  have b1 : ∀ v ∈ placesOver F l, bkCond ρ A l (T ∪ ↑Q) L v = L v := fun v hv => if_pos hv
-  have b2 : ∀ v, v ∈ T ∨ v ∈ Q → bkCond ρ A l (T ∪ ↑Q) L v = ⊤ := fun v hv => (if_neg (hnl v hv)).trans (if_pos hv)
+  have b1 : ∀ v ∈ placesOver F l, bkCond ρ A l (T ∪ ↑Q) L v = L v := fun v hv => ite_eq_left hv
+  have b2 : ∀ v, v ∈ T ∨ v ∈ Q → bkCond ρ A l (T ∪ ↑Q) L v = ⊤ := fun v hv => (ite_eq_right (hnl v hv)).trans (ite_eq_left hv)
   obtain ⟨fC, e⟩ := _root_.GlobalTheory.PairFormula.greenbergWiles_pair hPT hLF hGF hGE F Ω l n Λ W W' ρ ρ' P hn hc hc' hl hr hP
     (hfin.toFinset ∪ (hT.toFinset ∪ Q)) A (fun v hv => (hS v).2 (.inl hv))
     (fun v hv => hur v ((hS' v).1 hv).1 ((hS' v).1 hv).2.1 ((hS' v).1 hv).2.2) (bkCond ρ A l (T ∪ ↑Q) L)
-    (fun v hv => (if_neg ((hS' v).1 hv).1).trans (if_neg (not_or.2 ((hS' v).1 hv).2))) C (fun y => by
+    (fun v hv => (ite_eq_right ((hS' v).1 hv).1).trans (ite_eq_right (not_or.2 ((hS' v).1 hv).2))) C (fun y => by
       rw [hC]
       constructor
       · rintro ⟨y', ⟨k1, k2, k3⟩, e⟩
@@ -572,13 +572,13 @@ theorem order_formula (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (
               (fun g x y => hP g.1 x y) x.1 _ _ m x.2.1 x.2.2
               ((hsub ρ' hc' _).comp (continuous_id.prodMk continuous_const)) (fun g => hm' g.1) (k3 v hv x hx)
           · obtain ⟨m', hm''⟩ := k2 v hv
-            refine ((hloc v).1 (restrictCocycles1 ρ' _ continuous_subtype_val y)).2 ⟨m' - m, fun g => ?_⟩ x
+            refine ((hloc v).1 (restrictCocycles1 ρ' _ continuous_subtypeVal y)).2 ⟨m' - m, fun g => ?_⟩ x
             change y.1 g.1 = ρ' g.1 (m' - m) - (m' - m)
             rw [hm', hm'' g.1 g.2, map_sub]
             abel
       · rintro ⟨k1, k2⟩
         refine ⟨y, ⟨fun v a b c => k1 v ((hS' v).2 ⟨a, b, c⟩), fun v hv => ?_, fun v hv x hx => ?_⟩, rfl⟩
-        · obtain ⟨m, hm⟩ := ((hloc v).1 (restrictCocycles1 ρ' _ continuous_subtype_val y)).1 fun x =>
+        · obtain ⟨m, hm⟩ := ((hloc v).1 (restrictCocycles1 ρ' _ continuous_subtypeVal y)).1 fun x =>
             k2 v ((hS v).2 (.inr hv)) x (by rw [b2 v hv]; trivial)
           exact ⟨m, fun g hg => hm ⟨g, hg⟩⟩
         · exact k2 v ((hS v).2 (.inl hv)) x (by rw [b1 v hv]; exact hx))
@@ -616,8 +616,8 @@ end General
 theorem orderFormula : PoitouTateTotallyComplex → LocalFiniteness → LocalTateDuality → LocalEulerChar → GlobalFiniteness → GlobalEulerChar → Gen.ArchimedeanSignatureMatching → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), ∀ (A : Type) [CommRing A] [IsLocalRing A] [Finite A] [Algebra (X.O0 i) A] (κ : GE N →* Aˣ) (Q : Finset (PlE D.host)) (ρ : GE N →* GL (Fin D.R.r) (X.O0 i)), Setup bkP i s κ Q → Kills i A → IsDual i s ρ → NoInvDual i κ ρ → OrderFormula bkP i s κ ρ Q := by
   intro hPT hLF hLD hLE hGF hGE h4 D N X bkP i s A _ _ _ _ κ Q ρ hS hK hD hNI Y Y' _ _ _ _ _ _ _ _ _ _ β hβ
   classical
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI := hS.2.1
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have := hS.2.1
   have hcx : InfinitePlace.nrComplexPlaces D.host.E = D.R.f := by
     have h1 := IsTotallyComplex.finrank D.host.E
     have h2 : Module.finrank ℚ D.host.E = 2 * D.R.f := by

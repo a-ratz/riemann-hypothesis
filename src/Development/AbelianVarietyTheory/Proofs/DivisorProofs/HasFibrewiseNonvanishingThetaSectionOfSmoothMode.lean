@@ -235,7 +235,7 @@ theorem exists_theta_of_flat {X : Scheme.{0}} {G : Over X} [GrpObj G] (hG : IsSe
   have : QuasiSeparatedSpace (pullback G.hom hU.fromSpec : Scheme.{0}) := quasiSeparatedSpace_of_quasiSeparated f
   have hflat : gm.Flat := by
     have h₀ : (X.presheaf.germ U x hx).hom.Flat := by
-      letI := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
+      let := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
       have := hU.isLocalization_stalk ⟨x, hx⟩
       exact RingHom.flat_algebraMap_iff.2
         (IsLocalization.flat (X.presheaf.stalk x) (hU.primeIdealOf ⟨x, hx⟩).asIdeal.primeCompl)
@@ -282,21 +282,21 @@ theorem exists_theta_of_flat {X : Scheme.{0}} {G : Over X} [GrpObj G] (hG : IsSe
 theorem hasTheta_of_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (RingHom.id c.F)), SmoothOfRelativeDimension Dw.dim Y.s → GlobalTheory.Models.HasTheta Y.t.G Y.t.PP.L := by
   intro E _ _ _ H Dw _ l Xo c Y hsm x
   have : Smooth Y.s := SmoothOfRelativeDimension.smooth Dw.dim _
-  haveI hAr : IsRegularRing (Y.X.presheaf.stalk x) :=
+  have hAr : IsRegularRing (Y.X.presheaf.stalk x) :=
     ExtendRig.isRegularRing_stalk isRegularRing_of_smooth c.F Y.s x
-  haveI : IsRegularLocalRing (Y.X.presheaf.stalk x) :=
+  have : IsRegularLocalRing (Y.X.presheaf.stalk x) :=
     IsRegularLocalRing.of_isRegularRing_of_isLocalRing _
-  haveI : IsRegularLocalRing (AdicCompletion (maximalIdeal (Y.X.presheaf.stalk x)) (Y.X.presheaf.stalk x)) :=
+  have : IsRegularLocalRing (AdicCompletion (maximalIdeal (Y.X.presheaf.stalk x)) (Y.X.presheaf.stalk x)) :=
     RegularCompletion.isRegularLocalRing_adicCompletion _
   obtain ⟨hdC, hnC⟩ := isDomain_and_isIntegrallyClosed_of_isRegularLocalRing
     (AdicCompletion (maximalIdeal (Y.X.presheaf.stalk x)) (Y.X.presheaf.stalk x))
 
-  haveI hκ : CharZero (Y.X.residueField x) := by
+  have hκ : CharZero (Y.X.residueField x) := by
     let φ : c.F →+* Y.X.residueField x := (Y.X.evaluation ⊤ x trivial).hom.comp (GlobalTheory.QCoh.structureRingHom Y.s)
     exact charZero_of_injective_ringHom φ.injective
   obtain ⟨k, _, _, hk, S', hS'⟩ := CoveringCompare.exists_finite_splitOver Y.t.G Y.t.semi x
 
-  haveI : Algebra.IsSeparable (Y.X.residueField x) k := inferInstance
+  have : Algebra.IsSeparable (Y.X.residueField x) k := inferInstance
   obtain ⟨R, _, _, _, _, j, _, _, hj⟩ := LocM.Bdy.exists_etale_local
     (AdicCompletion (maximalIdeal (Y.X.presheaf.stalk x)) (Y.X.presheaf.stalk x)) (Y.X.residueField x) k
     (ResidueField.map (algebraMap (Y.X.presheaf.stalk x)
@@ -317,19 +317,19 @@ theorem hasTheta_of_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     (Y.X.presheaf.stalk x)) R).comp (algebraMap (Y.X.presheaf.stalk x) (AdicCompletion (maximalIdeal (Y.X.presheaf.stalk x)) (Y.X.presheaf.stalk x)))
   have hinj : Function.Injective ψ :=
     (FaithfulSMul.algebraMap_injective _ _).comp (FaithfulSMul.algebraMap_injective _ _)
-  haveI : CharZero (ResidueField (Y.X.presheaf.stalk x)) := hκ
-  haveI : CharZero (Y.X.presheaf.stalk x) := RingHom.charZero (residue (Y.X.presheaf.stalk x))
-  haveI : CharZero R := charZero_of_injective_ringHom hinj
+  have : CharZero (ResidueField (Y.X.presheaf.stalk x)) := hκ
+  have : CharZero (Y.X.presheaf.stalk x) := RingHom.charZero (residue (Y.X.presheaf.stalk x))
+  have : CharZero R := charZero_of_injective_ringHom hinj
   have hadm := isAdmissibleCompleteLocalDomainPrime_maximalIdeal R hNR hn hc
   have hψf : ψ.Flat := RingHom.Flat.comp (RingHom.flat_algebraMap_iff.2 inferInstance)
     (RingHom.flat_algebraMap_iff.2 inferInstance)
-  haveI : IsLocalHom ψ := inferInstance
+  have : IsLocalHom ψ := inferInstance
 
   obtain ⟨t, ⟨m⟩⟩ := ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_sab (spMap ψ ≫ Y.X.fromSpecStalk x) Y.t
-  haveI : IsProper Y.s := ProperFamily.isProper_of_isProjOver Y.proj
-  haveI : IsLocallyNoetherian Y.X := LocallyOfFiniteType.isLocallyNoetherian Y.s
-  haveI : CompactSpace Y.X := QuasiCompact.compactSpace_of_compactSpace Y.s
-  haveI : IsNoetherian Y.X := {}
+  have : IsProper Y.s := ProperFamily.isProper_of_isProjOver Y.proj
+  have : IsLocallyNoetherian Y.X := LocallyOfFiniteType.isLocallyNoetherian Y.s
+  have : CompactSpace Y.X := QuasiCompact.compactSpace_of_compactSpace Y.s
+  have : IsNoetherian Y.X := {}
   have hjo := GenFan.Tri.isOpenImmersion_j_id Y
   have hopen : IsOpen (Set.range Y.j) := Y.j.isOpenEmbedding.isOpen_range
   have hdense : Dense (Set.range Y.j) := by

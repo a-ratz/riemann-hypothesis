@@ -127,7 +127,7 @@ theorem continuous_midV (i t : ℕ) : Continuous (midV k i t) := by
 
 theorem continuous_col_inv (n : ℕ) : Continuous (fun c : Mir k n => col k n c⁻¹) :=
   continuous_pi fun j =>
-    (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_elem (Fin.castSucc j) (Fin.last n)
+    (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_elem (Fin.castSucc j) (Fin.last n)
 
 theorem isLocallyConstant_uM {Z : Type} (n : ℕ) (F : Mir k n → Z) (S : Set (Mir k n)) (hS : IsOpen S)
     (h1 : (1 : Mir k n) ∈ S) (hF : ∀ s ∈ S, ∀ p, F (p * s) = F p) (g : GL (Fin n) k) :

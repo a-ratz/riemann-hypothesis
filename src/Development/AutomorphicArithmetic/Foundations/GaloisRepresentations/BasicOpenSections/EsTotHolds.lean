@@ -150,15 +150,15 @@ private lemma rho_comp (V : Type) [CommRing V] [IsLocalRing V] {W : Scheme.{0}}
 theorem UpperTheory.Gal.Mod.clopenAt :
     ResClosed → HensSplit → ClopenAt := by
   intro _ hHS V _ _ _ _ W g _ z₀ hz₀
-  haveI : IsAffine W := isAffine_of_isAffineHom g
+  have : IsAffine W := isAffine_of_isAffineHom g
   set φ : V →+* Γ(W, ⊤) := ((Scheme.ΓSpecIso (CommRingCat.of V)).inv ≫ g.appTop).hom with hφ
   have hfin : φ.Finite := by
     have h1 := g.finite_appTop
     have h2 : (Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom.Finite :=
       RingHom.Finite.of_surjective _ (fun a => ⟨(Scheme.ΓSpecIso (CommRingCat.of V)).hom a, by simp⟩)
     exact h1.comp h2
-  letI : Algebra V Γ(W, ⊤) := φ.toAlgebra
-  haveI : Module.Finite V Γ(W, ⊤) := hfin
+  let : Algebra V Γ(W, ⊤) := φ.toAlgebra
+  have : Module.Finite V Γ(W, ⊤) := hfin
   have hc : ∀ z : gp (IsLocalRing.ResidueField V) ⟶ W, z ≫ g = resPt V →
       ∀ v : V, rho z (φ v) = IsLocalRing.residue V v := by
     intro z hz v
@@ -229,8 +229,8 @@ private lemma resPt_closedPoint (V : Type) [CommRing V] [IsLocalRing V] :
 
 private lemma exists_frob (p f : ℕ) (hp : p.Prime) (F : Type) [Field F] (h : (p : F) = 0) :
     ∃ φ : F →+* F, ∀ a, φ a = a ^ p ^ f := by
-  haveI : CharP F p := (CharP.charP_iff_prime_eq_zero hp).2 h
-  haveI : ExpChar F p := ExpChar.prime hp
+  have : CharP F p := (CharP.charP_iff_prime_eq_zero hp).2 h
+  have : ExpChar F p := ExpChar.prime hp
   exact ⟨iterateFrobenius F p f, fun a => iterateFrobenius_def p f a⟩
 
 theorem UpperTheory.Gal.Mod.cycAll :
@@ -238,7 +238,7 @@ theorem UpperTheory.Gal.Mod.cycAll :
   intro hRC hVL hCR hCE p f n hp Y π T w hOne hPt hdense hbasic Ω _ _ x hgen
   obtain ⟨η, hη, hsp⟩ := hdense (pt x)
   obtain ⟨V, _, _, _, _, y, Ω', _, _, a, b, hpV, hsq⟩ := hVL p Y Ω x η hsp hη
-  haveI := hRC V
+  have := hRC V
   have hx0 : pt x ∉ Y.basicOpen (p : Γ(Y, ⊤)) := fun h => hgen.1 (hbasic _ h)
   have hptA : pt (sp a ≫ x) = pt x := by
     change x (sp a (IsLocalRing.closedPoint Ω')) = _
@@ -305,7 +305,7 @@ private lemma sum_eq (hF : FibExt) (hWt : TranscendenceTraces.WtPt) {p : ℕ} {Y
     (φ : Ω →+* Ω) (φ' : Ω' →+* Ω') (hc : a.comp φ = φ'.comp a) (x y : gp Ω ⟶ Y) :
     ∑ᶠ z ∈ {z : gp Ω ⟶ T.Z | z ≫ T.p = x ∧ (twist φ Y)^[m] (z ≫ T.r) = y}, w Ω z =
       ∑ᶠ z ∈ {z : gp Ω' ⟶ T.Z | z ≫ T.p = sp a ≫ x ∧ (twist φ' Y)^[m] (z ≫ T.r) = sp a ≫ y}, w Ω' z := by
-  haveI : IsFinite T.p := T.fin
+  have : IsFinite T.p := T.fin
   obtain ⟨-, hb, hinj⟩ := hF T.p Ω Ω' a x
   refine finsum_mem_eq_of_bijOn (fun z => sp a ≫ z) ⟨?_, ?_, ?_⟩ ?_
   · rintro z ⟨h1, h2⟩
@@ -336,9 +336,9 @@ theorem UpperTheory.Gal.Mod.cycExt :
     · refine Finset.sum_eq_zero fun j _ => ?_
       have : {z : gp Ω' ⟶ (T j).Z | z ≫ (T j).p = sp a ≫ x ∧ (twist φ' Y)^[n - j] (z ≫ (T j).r) = y'} = ∅ := by
         ext z'
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
         intro h1 h2
-        haveI : IsFinite (T j).p := (T j).fin
+        have : IsFinite (T j).p := (T j).fin
         obtain ⟨z, -, rfl⟩ := (hF (T j).p Ω Ω' a x).2.1.surjOn (show z' ∈ fib (T j).p (sp a ≫ x) from h1)
         refine hy ⟨(twist φ Y)^[n - j] (z ≫ (T j).r), ?_⟩
         rw [sp_iter a φ φ' hc, ← h2, Category.assoc]
@@ -366,7 +366,7 @@ private lemma finsum_fib {A P : Type*} [Finite A] (f : A → P) (S : Set P) (g :
     (hg : ∀ z ∈ S, g z = (Nat.card {a // f a = z} : ℤ)) :
     ∑ᶠ z ∈ S, g z = (Nat.card {a // f a ∈ S} : ℤ) := by
   classical
-  haveI := Fintype.ofFinite A
+  have := Fintype.ofFinite A
   have h1 : ∑ᶠ z ∈ S, g z = ∑ᶠ z ∈ S, (Nat.card {a // f a = z} : ℤ) :=
     finsum_mem_congr rfl hg
   set s : Finset A := Finset.univ.filter fun a => f a ∈ S with hs
@@ -415,8 +415,8 @@ theorem UpperTheory.Gal.Mod.cycRes :
   intro hW p q n Y π T w hOne hPt V _ _ _ _ _ hp y hgen φ hφ y₀
   classical
   have hv := fun j => hW p Y (T j) (w j) (hOne j) V hp y
-  haveI : ∀ j, Finite ((T j).Sec y) := fun j => (hv j).1
-  letI : ∀ j, Fintype ((T j).Sec y) := fun j => Fintype.ofFinite _
+  have : ∀ j, Finite ((T j).Sec y) := fun j => (hv j).1
+  let : ∀ j, Fintype ((T j).Sec y) := fun j => Fintype.ofFinite _
   have hA := hPt V hp y hgen φ hφ (fun j => (T j).Sec y) (fun j => id)
     (fun j => Function.bijective_id)
   have hc := congrArg (Multiset.count y₀) hA
@@ -437,7 +437,7 @@ theorem UpperTheory.Gal.Mod.cycRes :
     refine congrArg Multiset.card (Multiset.filter_congr fun i _ => ?_)
     have h1 : (resPt V ≫ i.1) ≫ (T j).p = resPt V ≫ y := by
       rw [Category.assoc, i.2]
-    simp only [Set.mem_setOf_eq, h1, true_and, Category.assoc]
+    simp only [Set.mem_ofPred_eq, h1, true_and, Category.assoc]
     exact eq_comm
   simp only [key, co_eq, sub_mul, Finset.sum_sub_distrib]
   rw [sub_eq_zero]
@@ -785,11 +785,11 @@ private theorem exists_common_algClosed_embedding {k A B : Type} [Field k] [Fiel
     [Algebra k B] :
     ∃ (C : Type) (_ : Field C) (_ : IsAlgClosed C) (f : A →+* C) (g : B →+* C),
       f.comp (algebraMap k A) = g.comp (algebraMap k B) := by
-  haveI : Nontrivial (TensorProduct k A B) :=
+  have : Nontrivial (TensorProduct k A B) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_flat_left k A B
       (algebraMap k B).injective
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (TensorProduct k A B)
-  letI := Ideal.Quotient.field M
+  let := Ideal.Quotient.field M
   let q : TensorProduct k A B →+* TensorProduct k A B ⧸ M := Ideal.Quotient.mk M
   let iA : A →ₐ[k] TensorProduct k A B := Algebra.TensorProduct.includeLeft
   let iB : B →ₐ[k] TensorProduct k A B := Algebra.TensorProduct.includeRight
@@ -804,7 +804,7 @@ theorem UpperTheory.Gal.Mod.valLiftB :
   intro p Y Ω _ x η hsp hp
   let O := Y.presheaf.stalk (pt x)
   let sx : O ⟶ CommRingCat.of Ω := Scheme.stalkClosedPointTo x
-  haveI : IsLocalHom sx.hom := Scheme.isLocalHom_stalkClosedPointTo' x
+  have : IsLocalHom sx.hom := Scheme.isLocalHom_stalkClosedPointTo' x
   have hx : Spec.map sx ≫ Y.fromSpecStalk (pt x) = x :=
     Scheme.Spec_stalkClosedPointTo_fromSpecStalk x
   let K := AlgebraicClosure (Y.residueField η)
@@ -812,14 +812,14 @@ theorem UpperTheory.Gal.Mod.valLiftB :
     ((Y.residue η).hom.comp (Y.presheaf.stalkSpecializes hsp).hom)
   obtain ⟨A, hA, hloc⟩ := IsLocalRing.exists_factor_valuationRing f
   let g : O →+* A := f.codRestrict A.toSubring hA
-  haveI : IsLocalHom g := hloc
-  haveI : IsAlgClosed (FractionRing A) :=
+  have : IsLocalHom g := hloc
+  have : IsAlgClosed (FractionRing A) :=
     IsAlgClosed.of_ringEquiv K _ (FractionRing.algEquiv A K).symm.toRingEquiv
   let φ : IsLocalRing.ResidueField O →+* Ω := IsLocalRing.ResidueField.lift sx.hom
   let ψ : IsLocalRing.ResidueField O →+* IsLocalRing.ResidueField A :=
     IsLocalRing.ResidueField.map g
-  letI : Algebra (IsLocalRing.ResidueField O) Ω := φ.toAlgebra
-  letI : Algebra (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField A) := ψ.toAlgebra
+  let : Algebra (IsLocalRing.ResidueField O) Ω := φ.toAlgebra
+  let : Algebra (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField A) := ψ.toAlgebra
   obtain ⟨C, _, _, fa, fb, hab⟩ := exists_common_algClosed_embedding (k := IsLocalRing.ResidueField O) (A := Ω)
     (B := IsLocalRing.ResidueField A)
   refine ⟨A, inferInstance, inferInstance, inferInstance, inferInstance,
@@ -879,14 +879,14 @@ private theorem finsum_count {α : Type*} {s : Set α} (hs : s.Finite) (P : α �
   have : ∑ᶠ b ∈ s, (if P b then (1 : ℤ) else 0) = ∑ᶠ b ∈ s ∩ {b | P b}, (if P b then (1 : ℤ) else 0) := by
     apply finsum_mem_inter_support_eq
     ext b
-    simp only [Set.mem_inter_iff, Function.mem_support, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Function.mem_support, Set.mem_ofPred_eq]
     by_cases hb : P b <;> simp [hb]
   rw [this, finsum_mem_eq_finite_toFinset_sum _ hB, Set.ncard_eq_toFinset_card _ hB]
   rw [Finset.sum_congr rfl (g := fun _ => (1 : ℤ))]
   · simp
   · intro b hb
     have := (hB.mem_toFinset.1 hb).2
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     simp [this]
 
 theorem wtVal : FibExt → SecGen → ClopenAt → WtVal := by
@@ -916,8 +916,8 @@ theorem wtVal : FibExt → SecGen → ClopenAt → WtVal := by
     convert h using 1
     funext x
     by_cases hx : x ∈ U
-    · exact (if_pos hx).trans ((LocallyConstant.charFn_eq_one (Y := ℤ) x hU).2 hx).symm
-    · exact (if_neg hx).trans ((LocallyConstant.charFn_eq_zero (Y := ℤ) x hU).2 hx).symm
+    · exact (ite_eq_left hx).trans ((LocallyConstant.charFn_eq_one (Y := ℤ) x hU).2 hx).symm
+    · exact (ite_eq_right hx).trans ((LocallyConstant.charFn_eq_zero (Y := ℤ) x hU).2 hx).symm
   obtain ⟨ψ, hψ, hsum⟩ : ∃ ψ : Spec (CommRingCat.of V) → ℤ, IsLocallyConstant ψ ∧
       ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x : gp Ω ⟶ Spec (CommRingCat.of V)),
         ψ (pt x) = ∑ᶠ z ∈ fib r x, w Ω (z ≫ v) * φ (pt z) := hw.1 (TranscendenceTraces.Sq.of T.p y) φ hφ
@@ -1127,7 +1127,7 @@ theorem UpperTheory.Gal.Mod.esPt :
     · refine Finset.sum_eq_zero fun j _ => ?_
       have e : {z : gp Ω ⟶ (c' j).Z | z ≫ (c' j).p = x ∧ z ≫ (c' j).f = y} = ∅ := by
         ext z
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         rintro ⟨h1, h2⟩
         apply hy
         rw [← h2, ← h1]
@@ -1185,7 +1185,7 @@ theorem UpperTheory.Gal.Mod.frEx :
       rw [GlobalTheory.SS.FrobField.absFrob_nat _ p f hp h hk']
       congr 1
       exact GlobalTheory.SS.FrobField.absFrob_spec kb p f hp hk' (τ : kb →+* kb) hτ
-    · haveI : IsEmpty (geom kb t) := by
+    · have : IsEmpty (geom kb t) := by
         refine ⟨fun x => hk ?_⟩
         have hinj := (((geom kb t).presheaf.germ ⊤ x trivial).hom.comp
           ((pullback.snd t (Spec.map (CommRingCat.ofHom (algebraMap κ kb)))).appTop.hom.comp
@@ -1230,10 +1230,10 @@ private theorem nml_spec (O : Type) [CommRing O] [IsDomain O] [IsIntegrallyClose
     (y : Spec (CommRingCat.of O)) :
     IsDomain ((Spec (CommRingCat.of O)).presheaf.stalk y) ∧
       IsIntegrallyClosed ((Spec (CommRingCat.of O)).presheaf.stalk y) := by
-  haveI : y.asIdeal.IsPrime := PrimeSpectrum.isPrime y
-  letI : Algebra O ((Spec (CommRingCat.of O)).presheaf.stalk y) :=
+  have : y.asIdeal.IsPrime := PrimeSpectrum.isPrime y
+  let : Algebra O ((Spec (CommRingCat.of O)).presheaf.stalk y) :=
     StructureSheaf.stalkAlgebra (CommRingCat.of O) y
-  haveI : IsLocalization.AtPrime ((Spec (CommRingCat.of O)).presheaf.stalk y) y.asIdeal :=
+  have : IsLocalization.AtPrime ((Spec (CommRingCat.of O)).presheaf.stalk y) y.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk (CommRingCat.of O) y
   exact GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_isDomain y.asIdeal _
 
@@ -1258,8 +1258,8 @@ private theorem exists_generic {O : Type} [CommRing O] [IsDomain O] {Y : Scheme.
 theorem UpperTheory.Gal.Mod.baseFacts :
     BaseFacts := by
   intro p O _ _ _ ϖ hϖ hp0 hpu Y g _
-  haveI : Flat g := inferInstance
-  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian g
+  have : Flat g := inferInstance
+  have : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian g
   have hbo : Y.basicOpen (p : Γ(Y, ⊤)) = Y.basicOpen (fn g (p : O)) := by
     rw [natCast_eq_fn g p]
   have hϖp : ϖ ∣ (p : O) := by
@@ -1347,7 +1347,7 @@ theorem UpperTheory.Gal.Mod.corrPull :
   have hsq : (pullback.fst T.p s ≫ T.r) ≫ g = (pullback.snd T.p s ≫ bS) ≫ β := by
     rw [Category.assoc, hr, ← Category.assoc, pullback.condition, Category.assoc, hS.w,
       Category.assoc]
-  haveI := T.fin
+  have := T.fin
   refine ⟨⟨pullback T.p s, pullback.snd T.p s, hS.lift _ _ hsq, Wt.comap (pullback.fst T.p s) w,
     inferInstance,
     TranscendenceTraces.wtBC_holds _ _ _ _ w (IsPullback.of_hasPullback T.p s) hw⟩,
@@ -1395,7 +1395,7 @@ private theorem pullHQ_surjective_of_forall_pull_bijective (l : ℕ) [Fact l.Pri
       funext k
       exact hx k
   unfold pullHQ
-  rw [LinearMap.baseChange_eq_ltensor]
+  rw [LinearMap.baseChange_eq_lTensor]
   exact LinearMap.lTensor_surjective _ hs
 
 theorem UpperTheory.Gal.Mod.esGen :
@@ -1434,8 +1434,8 @@ theorem UpperTheory.Gal.Mod.esGen :
     rw [← map_natCast (algebraMap O κ), ← hu, map_mul, hκ, mul_zero]
   have hpkb : (p : kb) = 0 := by
     rw [← map_natCast (algebraMap κ kb), hpκ, map_zero]
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : CharP kb p := (CharP.charP_iff_prime_eq_zero hp).2 hpkb
+  have : Fact p.Prime := ⟨hp⟩
+  have : CharP kb p := (CharP.charP_iff_prime_eq_zero hp).2 hpkb
   let τ : Gal(kb/κ) := AlgEquiv.ofRingEquiv (f := iterateFrobeniusEquiv kb p f) (fun a => by
     show iterateFrobenius kb p f _ = _
     rw [iterateFrobenius_def, ← map_pow, hfin])
@@ -1638,7 +1638,7 @@ theorem UpperTheory.Gal.Mod.frobQ :
   intro hT l _ X p f hp h hl k
   have key : pullHl l (sch.map (absFrob X p f hp h)) k 0 = LinearMap.id := by
     refine LinearMap.ext fun x => Subtype.ext (funext fun j => ?_)
-    haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     have hu : IsUnit (((l ^ j : ℕ)) : Γ(X, ⊤)) := by
       rw [Nat.cast_pow]; exact hl.pow j
     exact hT (l ^ j) X p f hp h hu k (x.1 j)
@@ -1672,8 +1672,8 @@ private theorem prim_pow {m : ℕ} {A : Type} [CommRing A] (ζ : Prim m A) : ζ.
 
 private theorem prim_ex (m : ℕ) [NeZero m] (Ω : Type) [Field Ω] [IsAlgClosed Ω] (hm : IsUnit (m : Ω)) :
     Nonempty (Prim m Γ(gp Ω, ⊤)) := by
-  haveI : NeZero (m : Ω) := ⟨hm.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+  have : NeZero (m : Ω) := ⟨hm.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   refine ⟨Prim.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom ⟨ζ, hm, ?_⟩⟩
   rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
   exact hζ.isRoot_cyclotomic (NeZero.pos m)
@@ -1705,7 +1705,7 @@ private theorem frob_pt (m : ℕ) [NeZero m] (Ω : Type) [Field Ω] [IsAlgClosed
         rintro ⟨k, hk⟩
         apply hm.ne_zero
         rw [hk, Nat.cast_mul, hpΩ, zero_mul]
-      haveI : Fact (1 < m) := ⟨by
+      have : Fact (1 < m) := ⟨by
         have := NeZero.ne m
         omega⟩
       rw [hI.2.2.2.2.1 (gp Ω) ζ _ (ZMod.unitOfCoprime (p ^ f) hcop)]
@@ -1846,11 +1846,11 @@ private theorem mem_basicOpen_of_ne {p : ℕ} {Y : Scheme.{0}} (Ω : Type) [Fiel
 theorem nwtOne : NwtOne := by
   intro p Y T hL _
   obtain ⟨_, _, _, _, _, _, _, hMB, _, _, hWN, _, hNF, _, _⟩ := all_holds.1
-  haveI := T.fin
+  have := T.fin
   have hN : IsNwt T.p (nwt T.p) := hWN T.p hL
   refine ⟨hN.1, ?_⟩
   intro Ω _ _ z hp
-  haveI := T.et
+  have := T.et
   have hD : Dense {s | GenPt ((Y.basicOpen (p : Γ(Y, ⊤))).ι s)} := by
     have hs : {s | GenPt ((Y.basicOpen (p : Γ(Y, ⊤))).ι s)} =
         {s | GenPt s} := by

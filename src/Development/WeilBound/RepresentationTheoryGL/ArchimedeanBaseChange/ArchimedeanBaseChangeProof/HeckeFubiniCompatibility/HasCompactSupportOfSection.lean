@@ -173,7 +173,7 @@ theorem entA_adjK (M : Mods E n) (k : Kers M) (i j : IxA M) (g : GA E n) :
   refine Finset.prod_congr rfl fun v _ => ?_
   have e : (gInf v g⁻¹).val = (gInf v g).val⁻¹ := by rw [map_inv]; exact Matrix.coe_units_inv _
   rw [e]
-  have := FiniteDimensional.complete ℂ (M v).V
+  have := FiniteDimensional.completeSpace ℂ (M v).V
   exact ent_adjoint (M v) _ (i v) (j v)
 
 theorem tens_entry {Ma : Mods E a} {Mb : Mods E b} {κ : Type} [MeasurableSpace (G a)] [MeasurableSpace (G b)]

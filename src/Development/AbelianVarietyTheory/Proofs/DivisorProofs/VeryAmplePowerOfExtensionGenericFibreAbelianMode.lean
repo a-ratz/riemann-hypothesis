@@ -118,11 +118,11 @@ theorem exists_generating_sq (W K' : Type) [CommRing W] [IsDomain W] [IsDiscrete
   have hg : Function.Injective g := fun a b e =>
     IsFractionRing.injective W K' ((algebraMap K' F).injective (congrArg Subtype.val e))
   have hflat : g.Flat := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.IsTorsionFree W O := Module.isTorsionFree_iff_algebraMap_injective.2 hg
     exact (inferInstance : Module.Flat W O)
   have : Surjective (spMap g) := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.Flat W O := hflat
     have : IsLocalHom (algebraMap W O) := ‹_›
     have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := W) (B := O)

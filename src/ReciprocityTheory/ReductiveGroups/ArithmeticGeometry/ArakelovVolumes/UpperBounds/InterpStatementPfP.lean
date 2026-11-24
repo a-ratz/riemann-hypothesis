@@ -115,21 +115,21 @@ private theorem exists_dmin_rmul_eq_normSq_mul (x b : Frame X.Ψ r) (hb : b ∈ 
     exact (hb τ).2 a c hac
   refine ⟨((mat b τ).submatrix (Fin.castLE h) (Fin.castLE h)).det, ?_, ?_⟩
   · have hdet := (hb τ).1
-    rw [Matrix.det_of_upperTriangular hB] at hdet
-    rw [Matrix.det_of_upperTriangular (by intro a c hac; exact hB (show Fin.castLE h c < Fin.castLE h a from hac))]
+    rw [Matrix.det_of_isUpperTriangular hB] at hdet
+    rw [Matrix.det_of_isUpperTriangular (by intro a c hac; exact hB (show Fin.castLE h c < Fin.castLE h a from hac))]
     exact Finset.prod_ne_zero_iff.2 fun a _ =>
       Finset.prod_ne_zero_iff.1 hdet (Fin.castLE h a) (Finset.mem_univ _)
   · have hL : ∀ (a : Fin (i : ℕ)) (k : Fin r), (i : ℕ) ≤ (k : ℕ) →
         (mat b τ)ᵀ (Fin.castLE h a) k = 0 := by
       intro a k hik
       have ha := a.isLt
-      exact hB (show Fin.castLE h a < k by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE]; omega)
+      exact hB (show Fin.castLE h a < k by rw [Fin.lt_def, Fin.val_castLE]; omega)
     have hU : ∀ (k : Fin r) (c : Fin (i : ℕ)), (i : ℕ) ≤ (k : ℕ) →
         ((mat b τ).map (starRingEnd ℂ)) k (Fin.castLE h c) = 0 := by
       intro k c hik
       have hc := c.isLt
       have hz : mat b τ k (Fin.castLE h c) = 0 :=
-        hB (show Fin.castLE h c < k by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE]; omega)
+        hB (show Fin.castLE h c < k by rw [Fin.lt_def, Fin.val_castLE]; omega)
       rw [Matrix.map_apply, hz, map_zero]
     unfold dmin lminor
     rw [show mat (rmul x b) τ = mat x τ * mat b τ from rfl, gram_eq_transpose_mul_map_mul', gram_eq_transpose_mul_map_mul',
@@ -154,7 +154,7 @@ private theorem rmul_mem_dom' {x b : Frame X.Ψ r} (hx : x ∈ X.dom) (hb : b �
     rmul x b ∈ X.dom := by
   have hx' : x ∈ GG X.Ψ X.Gm X.p0 := hx
   show rmul x b ∈ GG X.Ψ X.Gm X.p0
-  simp only [GG, Set.mem_setOf_eq] at hx' ⊢
+  simp only [GG, Set.mem_ofPred_eq] at hx' ⊢
   intro τ
   refine ⟨?_, fun i => ?_⟩
   · show (mat x τ * mat b τ).det ≠ 0
@@ -173,7 +173,7 @@ private theorem rmul_assoc_upper_bounds (u v w : Frame X.Ψ r) : rmul (rmul u v)
 
 private theorem rmul_mem_bor_of_mem {u v : Frame X.Ψ r} (hu : u ∈ Bor X.Ψ r) (hv : v ∈ Bor X.Ψ r) :
     rmul u v ∈ Bor X.Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq]
+  simp only [Bor, Set.mem_ofPred_eq]
   intro τ
   have h1 : (mat u τ).BlockTriangular id := by
     intro a c h
@@ -189,10 +189,10 @@ private theorem rmul_mem_bor_of_mem {u v : Frame X.Ψ r} (hu : u ∈ Bor X.Ψ r)
 private theorem exists_mem_bor_rmul_rmul_eq {u : Frame X.Ψ r} (hu : u ∈ Bor X.Ψ r) :
     ∃ v ∈ Bor X.Ψ r, ∀ y : Frame X.Ψ r, rmul (rmul y u) v = y := by
   refine ⟨fun τ => ((mat u τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ), ?_, fun y => ?_⟩
-  · simp only [Bor, Set.mem_setOf_eq]
+  · simp only [Bor, Set.mem_ofPred_eq]
     intro τ
     have hdu : IsUnit (mat u τ).det := (hu τ).1.isUnit
-    letI : Invertible (mat u τ) := Matrix.invertibleOfIsUnitDet _ hdu
+    let : Invertible (mat u τ) := Matrix.invertibleOfIsUnitDet _ hdu
     have h1 : (mat u τ).BlockTriangular id := by
       intro a c h
       exact (hu τ).2 a c h
@@ -293,7 +293,7 @@ private theorem data_dom_isOpen : IsOpen X.dom := by
   have he : X.dom = ⋂ τ : X.Ψ, ({x | (mat x τ).det ≠ 0} ∩
       ⋂ i : Fin (r + 1), {x | 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}) := by
     ext x
-    simp only [Data.dom, GG, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+    simp only [Data.dom, GG, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
   rw [he]
   exact isOpen_iInter_of_finite fun τ => IsOpen.inter (isOpen_ne_fun (hdet τ) continuous_const)
     (isOpen_iInter_of_finite fun i => isOpen_lt continuous_const
@@ -319,7 +319,7 @@ private theorem bchar_ne_zero_upper_bounds {b : Frame X.Ψ r} (hb : b ∈ Bor X.
   unfold bchar
   refine Finset.prod_ne_zero_iff.2 (fun τ _ => Finset.prod_ne_zero_iff.2 (fun i _ => zpow_ne_zero _ ?_))
   have hdet := (hb τ).1
-  rw [Matrix.det_of_upperTriangular (by intro a c h; exact (hb τ).2 a c h)] at hdet
+  rw [Matrix.det_of_isUpperTriangular (by intro a c h; exact (hb τ).2 a c h)] at hdet
   exact Finset.prod_ne_zero_iff.1 hdet i (Finset.mem_univ _)
 
 theorem exp_neg_phla_rmul (hR : NfacRmulStatement (E := E)) (la : Wt X.Ψ r) {x : Frame X.Ψ r}

@@ -219,7 +219,7 @@ theorem purity_alt (hRP : GlobalTheory.Published.RegularAlgebraicPurity) (hL : _
         (D.naut.infG π τ).map (w₀ - ·) := by
   have := host_isCMField D.host
   rcases Nat.eq_zero_or_pos a with rfl | ha1
-  · haveI := P.cg.zero
+  · have := P.cg.zero
     exact isEmptyElim π
   obtain ⟨π₀, hπ₀⟩ := Quotient.exists_rep (P.cg.e a π).1
   have hmk : CG.mk π₀ = (P.cg.e a π).1 := hπ₀
@@ -424,7 +424,7 @@ theorem galRep_rankTwo_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL →
       rfl
     have hρ'c : Continuous fun g => (ρ' g : Matrix (Fin a) (Fin a) ↥LL'.1) := by
       have hi : Continuous (IntermediateField.inclusion hK) :=
-        continuous_induced_rng.2 continuous_subtype_val
+        continuous_induced_rng.2 continuous_subtypeVal
       exact hρc.matrix_map hi
     have hmodel : IsModel Bw (resDec D.nd.plOm.1 r w) LL' (ρ'.comp (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype) :=
       ⟨hB, by rw [← hρ']; rfl⟩
@@ -1031,7 +1031,7 @@ theorem galois_twist_alt : GlobalTheory.Published.DeRhamPotSemistable → ∀ (h
     rw [hdR w hw χ hχ] at h
     rw [hdR w hw _ htc, hdR w hw ρ hρ]
     rw [GlobalTheory.Pst.resDec, GlobalTheory.TwistGal.comp_twGL]
-    exact GlobalTheory.T.deRham_characterTwist_iff_localEmbedding (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) ⟨D.locT (D.nd.l i)⟩ D.host.E D.nd.Om _ (D.nd.O i) (D.nbr i w hw) a (GlobalTheory.Pst.resDec D.nd.plOm.1 ρ w) (GlobalTheory.Pst.resDec D.nd.plOm.1 χ w) (hρ.comp continuous_subtype_val) (hχ.comp continuous_subtype_val) h
+    exact GlobalTheory.T.deRham_characterTwist_iff_localEmbedding (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) ⟨D.locT (D.nd.l i)⟩ D.host.E D.nd.Om _ (D.nd.O i) (D.nbr i w hw) a (GlobalTheory.Pst.resDec D.nd.plOm.1 ρ w) (GlobalTheory.Pst.resDec D.nd.plOm.1 χ w) (hρ.comp continuous_subtypeVal) (hχ.comp continuous_subtypeVal) h
   have p3 : ∀ τ (c : ℤ), (∀ w, InducesW D.nd i τ w → D.naut.IsdRW i ρ w ∧ D.naut.IsdRW i χ w) → D.naut.jumpsW i χ τ = {c} → D.naut.jumpsW i (Formalism.MainNotions.SumRepresentations.At.twGL ρ (Matrix.GeneralLinearGroup.det.comp χ)) τ = (D.naut.jumpsW i ρ τ).map (· + c) := by
     intro τ c h hc
     have w0 : HeightOneSpectrum (𝓞 D.host.E) := PI.CompDegEF.plOf τ
@@ -1046,7 +1046,7 @@ theorem galois_twist_alt : GlobalTheory.Published.DeRhamPotSemistable → ∀ (h
       (Bw : LocBridge (D.nd.l i) D.host.E D.nd.Om (Dec (F := D.host.E) (D.nd.plOm.1 w)) O), GlobalTheory.Pst.Induces Bw →
       GlobalTheory.Pst.IsPstAt (D.loc (D.nd.l i)) Bw (GlobalTheory.Pst.resDec D.nd.plOm.1 r w) := by
     intro w hw b r hr hd O _ _ _ Bw hj
-    exact hB.isPstAt (D.locT (D.nd.l i)) Bw _ (hr.comp continuous_subtype_val)
+    exact hB.isPstAt (D.locT (D.nd.l i)) Bw _ (hr.comp continuous_subtypeVal)
       ((GlobalTheory.T.deRham_galoisSide_iff_deRham_at_localEmbedding D P.T P.wd (D.nd.l i) (D.naut.iotaQC i) w hw O Bw hj b r hr).1 ((P.wdOf i b r w).2.2.2.1.1 hd))
   have p2 : ∀ w, Formalism.MainNotions.SumRepresentations.At.WDok D.nd D.naut i ρ w → Formalism.MainNotions.SumRepresentations.At.WDok D.nd D.naut i χ w → D.naut.wdOf i (Formalism.MainNotions.SumRepresentations.At.twGL ρ (Matrix.GeneralLinearGroup.det.comp χ)) w = D.naut.lpChar (D.naut.wdOf i ρ w) (D.naut.wdOf i χ w) := by
     intro w h1 h2
@@ -1065,18 +1065,18 @@ theorem galois_twist_alt : GlobalTheory.Published.DeRhamPotSemistable → ∀ (h
       have T0 : Nonempty (LocTied (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i))) := ⟨D.locT (D.nd.l i)⟩
       have hN := D.nbr_ind i w hw
       rw [GlobalTheory.T.fontaineParameter_independent_of_localEmbedding (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) T0 (D.naut.iotaQC i) D.host.E D.nd.Om _ w (D.nd.plOm.2 w)
-          _ (D.nd.O i) B1 (D.nbr i w hw) j1 hN a _ (htc.comp continuous_subtype_val)
+          _ (D.nd.O i) B1 (D.nbr i w hw) j1 hN a _ (htc.comp continuous_subtypeVal)
           (pst w hw _ htc d3 _ B1 j1) (pst w hw _ htc d3 _ (D.nbr i w hw) hN),
         GlobalTheory.T.fontaineParameter_independent_of_localEmbedding (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) T0 (D.naut.iotaQC i) D.host.E D.nd.Om _ w (D.nd.plOm.2 w)
-          _ (D.nd.O i) B2 (D.nbr i w hw) j2 hN a _ (hρ.comp continuous_subtype_val)
+          _ (D.nd.O i) B2 (D.nbr i w hw) j2 hN a _ (hρ.comp continuous_subtypeVal)
           (pst w hw _ hρ d1 _ B2 j2) (pst w hw _ hρ d1 _ (D.nbr i w hw) hN),
         GlobalTheory.T.fontaineParameter_independent_of_localEmbedding (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) T0 (D.naut.iotaQC i) D.host.E D.nd.Om _ w (D.nd.plOm.2 w)
-          _ (D.nd.O i) B3 (D.nbr i w hw) j3 hN 1 _ (hχ.comp continuous_subtype_val)
+          _ (D.nd.O i) B3 (D.nbr i w hw) j3 hN 1 _ (hχ.comp continuous_subtypeVal)
           (pst w hw _ hχ d2 _ B3 j3) (pst w hw _ hχ d2 _ (D.nbr i w hw) hN)]
       have q3 := pst w hw _ htc d3 _ (D.nbr i w hw) hN
       rw [GlobalTheory.Pst.resDec, GlobalTheory.TwistGal.comp_twGL] at q3 ⊢
       exact GlobalTheory.T.fontaineParameter_twist_potentiallySemistable (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) T0 (D.naut.iotaQC i) D.host.E D.nd.Om _ w (D.nd.plOm.2 w)
-        (D.nd.O i) (D.nbr i w hw) hN a _ _ (hρ.comp continuous_subtype_val) (hχ.comp continuous_subtype_val)
+        (D.nd.O i) (D.nbr i w hw) hN a _ _ (hρ.comp continuous_subtypeVal) (hχ.comp continuous_subtypeVal)
         (pst w hw _ hρ d1 _ (D.nbr i w hw) hN) (pst w hw _ hχ d2 _ (D.nbr i w hw) hN) q3
     · rw [P.wd.away _ _ _ w hw, P.wd.away _ _ _ w hw, P.wd.away _ _ _ w hw]
       exact GlobalTheory.T.weilDeligneParamOfLadicRep_twist_det_awayFrom_l D.host.E D.nd.Om _ w (D.nd.plOm.2 w) (D.nd.l i) hw (D.naut.iotaQC i) a ρ χ hρ hχ
@@ -1328,7 +1328,7 @@ theorem model_enlarge {a : ℕ} {L₁ L₂ : FinExt l} (h : L₁.1 ≤ L₂.1) (
     mapRep (algebraMap ↥L₂.1 (Qbar l)) (mapRep (IntermediateField.inclusion h).toRingHom ρ₁) =
       mapRep (algebraMap ↥L₁.1 (Qbar l)) ρ₁ := by
   refine ⟨continuous_matrix fun i j => continuous_induced_rng.2 ?_, ?_⟩
-  · exact (continuous_subtype_val.comp (hc.matrix_elem i j)).congr fun g => rfl
+  · exact (continuous_subtypeVal.comp (hc.matrix_elem i j)).congr fun g => rfl
   · ext g i j; rfl
 
 theorem two_models {a b : ℕ} (ρ : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l))
@@ -1417,7 +1417,7 @@ theorem pst_of_dR (hB : GlobalTheory.Published.DeRhamPotSemistable) {m : ℕ} (r
       (r₁.comp (Dec (F := D.host.E) (D.nd.plOm.1 w)).subtype) := ⟨hL, rfl⟩
   have hdR : GlobalTheory.Pst.IsdRAt (D.loc l) B (GlobalTheory.Pst.resDec D.nd.plOm.1 (mapRep (algebraMap ↥LL'.1 (Qbar l)) r₁) w) :=
     (hm.isdRAt_iff (D.loc l)).2 (hd'.1 hd)
-  exact hB.isPstAt (D.locT l) B _ (hr.comp continuous_subtype_val) hdR
+  exact hB.isPstAt (D.locT l) B _ (hr.comp continuous_subtypeVal) hdR
 
 theorem wd_sum_above (hB : GlobalTheory.Published.DeRhamPotSemistable) {a b : ℕ} (ρ : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l))
     (ρ' : G D.host.E D.nd.Om →* GL (Fin b) (Qbar l))
@@ -1439,9 +1439,9 @@ theorem wd_sum_above (hB : GlobalTheory.Published.DeRhamPotSemistable) {a b : �
   have p21 := pst_of_dR D T W l ι hB _ hρ' w hw d₂ B1 j1
   have p22 := pst_of_dR D T W l ι hB _ hρ' w hw d₂ B2 j2
   rw [wdAt_bridge l (D.loc l) (D.locA l) tie ι D.host.E D.nd.Om (D.nd.plOm.1 w) w _ _ B3 B1 (D.nd.plOm.2 w) j3 j1 (a + b) _
-      (c₃.comp continuous_subtype_val) p33 p31,
+      (c₃.comp continuous_subtypeVal) p33 p31,
     wdAt_bridge l (D.loc l) (D.locA l) tie ι D.host.E D.nd.Om (D.nd.plOm.1 w) w _ _ B2 B1 (D.nd.plOm.2 w) j2 j1 b _
-      (hρ'.comp continuous_subtype_val) p22 p21]
+      (hρ'.comp continuous_subtypeVal) p22 p21]
   rw [GlobalTheory.Pst.resDec, comp_sumRep] at p31 ⊢
   exact wdAt_sumRep l (D.loc l) (D.locA l) tie ι D.host.E D.nd.Om (D.nd.plOm.1 w) w _ B1 (D.nd.plOm.2 w) j1 a b _ _ p11 p21 p31
 

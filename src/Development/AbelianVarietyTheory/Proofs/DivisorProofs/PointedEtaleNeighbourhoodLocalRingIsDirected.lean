@@ -56,7 +56,7 @@ theorem etNbhd_isDirected (R : Type) [CommRing R] [IsLocalRing R] :
     IsDirected (EtNbhd R) (· ≤ ·) := by
   refine ⟨fun i j => ?_⟩
   let C := i.A ⊗[R] j.A
-  haveI : Algebra.Etale R C := Algebra.Etale.comp R i.A C
+  have : Algebra.Etale R C := Algebra.Etale.comp R i.A C
   obtain ⟨n, f, hf⟩ := (Algebra.FiniteType.iff_quotient_mvPolynomial'' (R := R) (S := C)).1 inferInstance
   let e := Ideal.quotientKerAlgEquivOfSurjective hf
   let P : C →ₐ[R] ResidueField R := Algebra.TensorProduct.lift i.pt j.pt (fun _ _ => Commute.all _ _)

@@ -208,7 +208,7 @@ theorem fderiv_b (K : (I → ℝ) × (I → ℝ) → (V →L[ℂ] V)) (A : V →
         trL (A * (∑ j, (v - o) j • c j) * fderiv ℝ K (path o s v) (s • w, w)) := by
   set Jd : (I → ℝ) →L[ℝ] (V →L[ℂ] V) :=
     ∑ j, (ContinuousLinearMap.proj j : (I → ℝ) →L[ℝ] ℝ).smulRight (c j) with hJd
-  have hJa : ∀ x, Jd x = ∑ j, x j • c j := fun x => by simp [hJd, ContinuousLinearMap.sum_apply]
+  have hJa : ∀ x, Jd x = ∑ j, x j • c j := fun x => by simp [hJd, sum_apply]
   have hJ : HasFDerivAt (fun v => ∑ j, (v - o) j • c j) Jd v := by
     have h := Jd.hasFDerivAt.comp v ((hasFDerivAt_id v).sub_const o)
     have h2 : (⇑Jd ∘ fun x => id x - o) = fun v => ∑ j, (v - o) j • c j := by
@@ -360,8 +360,8 @@ theorem homot : PositivityTheory.RgBcC.Homot := by
   have h0 : (0 : ℝ) ∈ Icc (0 : ℝ) 1 := by simp
   have h1 : (1 : ℝ) ∈ Icc (0 : ℝ) 1 := by simp
   have hgoal : ∫ v in U, A 1 v = ∫ v in U, A 0 v := by
-    rw [setIntegral_eq_of_subset_of_forall_diff_eq_zero hU.measurableSet hCU (hz1 1 h1),
-      setIntegral_eq_of_subset_of_forall_diff_eq_zero hU.measurableSet hCU (hz1 0 h0),
+    rw [setIntegral_eq_of_subset_of_forall_sdiff_eq_zero hU.measurableSet hCU (hz1 1 h1),
+      setIntegral_eq_of_subset_of_forall_sdiff_eq_zero hU.measurableSet hCU (hz1 0 h0),
       ← sub_eq_zero, ← integral_sub (((hAc 1 h1).mono hCU).integrableOn_compact hC)
         (((hAc 0 h0).mono hCU).integrableOn_compact hC)]
     calc ∫ v in C, (A 1 v - A 0 v) = ∫ v in C, ∫ s in (0 : ℝ)..1, D s v :=

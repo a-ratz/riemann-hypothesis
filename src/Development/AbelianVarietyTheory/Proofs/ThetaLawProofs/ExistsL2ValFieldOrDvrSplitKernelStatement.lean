@@ -240,7 +240,7 @@ theorem span_ev (A : Over (Sp R)) (L : LB A.left) (t : ℤ) (N : ℕ) (b : Fin N
     intro s
     have hW : LB.wchart L (K := Fin 0) (fun c => (Out.powPr A c).left) Fin.elim0 = ⊤ :=
       top_le_iff.1 fun _ _ => Set.mem_iInter.2 fun k => k.elim0
-    haveI : IsIso (Out.powObj A 0).hom := inferInstanceAs (IsIso (𝟙 (Sp R)))
+    have : IsIso (Out.powObj A 0).hom := inferInstanceAs (IsIso (𝟙 (Sp R)))
     obtain ⟨c, hc⟩ := (cst_bijective (Out.powObj A 0).hom hW).2 (s.f Fin.elim0)
     refine ⟨fun _ => c, fun Z r z J hJ => ?_⟩
     rw [sval_of s r z J Fin.elim0 (fun k => k.elim0), ← hc, Fintype.sum_unique, Fin.prod_univ_zero, _root_.mul_one]
@@ -677,8 +677,8 @@ theorem det_ne_zero : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (x :
   refine hc ?_
   let S : Over (Sp K) := 𝟙_ _
   let T := Out.powObj x.P.A 4
-  haveI : IsIntegral S.left := inferInstanceAs (IsIntegral (Spec (CommRingCat.of K)))
-  haveI : Subsingleton S.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : IsIntegral S.left := inferInstanceAs (IsIntegral (Spec (CommRingCat.of K)))
+  have : Subsingleton S.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   let p : S.left := IsLocalRing.closedPoint K
   choose J hJ using fun χ : S.left ⟶ x.P.A.left => exists_chart hL (χ p)
   replace hJ : Good x.P.L p J := hJ

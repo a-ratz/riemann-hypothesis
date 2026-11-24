@@ -64,8 +64,8 @@ theorem char_trivial_modSetF : ∀ (F E : Type) [Field F] [NumberField F] [Field
     ∃ N : ℕ, 0 < N ∧ ∀ x ∈ GlobalTheory.HeckeSplitGen.modSetF F E N, ν x = 1 := by
   intro F E _ _ _ _ _ ν hν
   obtain ⟨e, he, -, he'⟩ := GlobalTheory.AdSplit.exists_adele_equiv F E
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (GlobalTheory.AdLat.RA F E) := ⟨rfl⟩
-  haveI : ContinuousAdd (GlobalTheory.AdLat.RA F E) :=
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (GlobalTheory.AdLat.RA F E) := ⟨rfl⟩
+  have : ContinuousAdd (GlobalTheory.AdLat.RA F E) :=
     IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) _
   have hsmall := (GlobalTheory.AdLat.OpenLat.isOpen_nsmul_hat F E 0 ⊤ (by simp)).2
   obtain ⟨N, hN, hker, -⟩ := GlobalTheory.CharFin.finite_order_of_small (infPartF F E) (finPartF F E) e.symm he'

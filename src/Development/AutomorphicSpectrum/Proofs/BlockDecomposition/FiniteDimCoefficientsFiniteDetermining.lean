@@ -93,7 +93,7 @@ theorem finiteDimensional_coeffSpan {K W : Type} [Group K] [AddCommGroup W] [Mod
   let b := Module.Free.chooseBasis ℂ W
   let m : (Module.Free.ChooseBasisIndex ℂ W) × (Module.Free.ChooseBasisIndex ℂ W) → (K → ℂ) :=
     fun ij k => b.repr (ρ k (b ij.2)) ij.1
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range m)) :=
+  have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range m)) :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range m)
   have hle : GlobalTheory.Published.AutFin.coeffSpan ρ ≤ Submodule.span ℂ (Set.range m) := by
     unfold GlobalTheory.Published.AutFin.coeffSpan
@@ -126,7 +126,7 @@ theorem finiteDimensional_coeffSpan {K W : Type} [Group K] [AddCommGroup W] [Mod
 theorem coeffSpan_unisolvent : ∀ (K W : Type) [Group K] [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (ρ : Representation ℂ K W), ∃ S : Finset K, ∀ c ∈ GlobalTheory.Published.AutFin.coeffSpan ρ, (∀ κ ∈ S, c κ = 0) → c = 0 := by
   intro K W _ _ _ _ ρ
-  haveI := finiteDimensional_coeffSpan ρ
+  have := finiteDimensional_coeffSpan ρ
   exact exists_finset_separating _
 
 end GlobalTheory.CompanionTheory.CTFin.UniSol

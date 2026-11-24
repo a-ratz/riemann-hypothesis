@@ -248,7 +248,7 @@ theorem fibreComp : ReciprocityTheory.ChartRestriction.G.AI.I2.FibreCompStatemen
   have hdim : ringKrullDim (MRing ι ⧸ W) = ((n + Fintype.card K : ℕ) : WithBot ℕ∞) :=
     withBot_eq_of_add_one (by rw [h1, show n + 1 + Fintype.card K = n + Fintype.card K + 1 by omega])
   refine ⟨hp, natCast_charOf_mem W, hmp, ?_⟩
-  haveI : Fact (charOf W).Prime := ⟨hp⟩
+  have : Fact (charOf W).Prime := ⟨hp⟩
   exact isProjVarF_map_redMap (natCast_charOf_mem W) hmp hdim
 
 end GlobalTheory.CompanionTheory.Ar.Pub

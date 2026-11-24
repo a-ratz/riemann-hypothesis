@@ -89,7 +89,7 @@ theorem locGen_ideal (J : Ideal (𝓞 E)) (hJ : J ≠ ⊥) (P : HeightOneSpectru
     apply hP
     have h2 : J * P.asIdeal = J * ⊤ := by rw [h, Ideal.mul_top]
     exact mul_left_cancel₀ hJ h2
-  obtain ⟨d, hdJ, hdP⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨d, hdJ, hdP⟩ := IsConcreteLE.exists_of_lt hlt
   have hd0 : d ≠ 0 := by
     rintro rfl
     exact hdP (zero_mem _)
@@ -101,7 +101,7 @@ theorem locGen_ideal (J : Ideal (𝓞 E)) (hJ : J ≠ ⊥) (P : HeightOneSpectru
       rw [hI]
       exact Ideal.mul_mono_right hle
     exact h3 (Ideal.mem_span_singleton_self d)
-  obtain ⟨t, htI, htP⟩ := SetLike.not_le_iff_exists.mp hIP
+  obtain ⟨t, htI, htP⟩ := IsConcreteLE.not_le_iff_exists.mp hIP
   refine ⟨d, hdJ, hd0, t, htP, fun y hy => ?_⟩
   have h4 : y * t ∈ J * I := Ideal.mul_mem_mul hy htI
   rw [← hI, Ideal.mem_span_singleton'] at h4
@@ -183,11 +183,11 @@ end XS
 
 theorem locGenXS_of (hD : DdOffG) : LocGenXS := by
   intro D u F0 P
-  haveI := P.isPrime
+  have := P.isPrime
   have hJ : ∀ a : Fin D.R.rS, (ddI D ^ (D.R.rS - (a : ℕ))) ≠ ⊥ := fun a => pow_ne_zero _ (ddI_ne_bot D)
   have h1P : (1 : 𝓞 D.host.E) ∉ P.asIdeal := (Ideal.ne_top_iff_one _).mp P.isPrime.ne_top
   by_cases hg : ((gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal
-  · obtain ⟨t, htd, htP⟩ := SetLike.not_le_iff_exists.mp (hD D P hg)
+  · obtain ⟨t, htd, htP⟩ := IsConcreteLE.not_le_iff_exists.mp (hD D P hg)
     refine ⟨fun _ => 1, fun _ => one_ne_zero, fun _ _ => rfl, localization_eq_localization_span D F0 P.asIdeal _ ?_ ?_⟩
     · intro a x hx
       rw [aaI_eq, mem_inv_coe D (hJ a)] at hx
@@ -254,9 +254,9 @@ theorem different_coprime_split : DdOffG := by
   have : v.asIdeal.IsMaximal := v.isMaximal
   obtain ⟨Q, hQ1, hQ2⟩ := Ideal.eq_prime_pow_mul_coprime hmap v.asIdeal
   rw [← hcount, pow_one] at hQ2
-  haveI := Formalism.L2.SG.Pf.TypedLoc.span_p_maximal hp
-  haveI : NeZero (D.host.g i) := ⟨hp.ne_zero⟩
-  haveI : Finite (ℤ ⧸ Ideal.span {((D.host.g i : ℕ) : ℤ)}) :=
+  have := Formalism.L2.SG.Pf.TypedLoc.span_p_maximal hp
+  have : NeZero (D.host.g i) := ⟨hp.ne_zero⟩
+  have : Finite (ℤ ⧸ Ideal.span {((D.host.g i : ℕ) : ℤ)}) :=
     Finite.of_equiv _ (Int.quotientSpanNatEquivZMod (D.host.g i)).symm.toEquiv
   have hnd := not_dvd_differentIdeal_of_isCoprime ℤ v.asIdeal Q (Ideal.isCoprime_iff_sup_eq.mpr hQ1) hQ2.symm
   apply hnd

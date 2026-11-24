@@ -142,9 +142,9 @@ private theorem un_group (X : Tower Ω ε) (m : ℕ) :
 variable [IsAlgClosure ℚ Ω]
 
 private theorem exPrim (M : ℕ) [NeZero M] : ∃ ζ : Ω, IsPrimitiveRoot ζ M := by
-  haveI := IsAlgClosure.isAlgClosed ℚ (K := Ω)
-  haveI := algebraRat.charZero Ω
-  haveI : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 (NeZero.ne M)⟩
+  have := IsAlgClosure.isAlgClosed ℚ (K := Ω)
+  have := algebraRat.charZero Ω
+  have : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 (NeZero.ne M)⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic M Ω)
     (by rw [Polynomial.degree_cyclotomic]; exact_mod_cast (Nat.totient_pos.2 (NeZero.pos M)).ne')
   exact ⟨ζ, Polynomial.isRoot_cyclotomic_iff.1 hζ⟩
@@ -175,8 +175,8 @@ private theorem cyc_eq (M : ℕ) [NeZero M] (s : Ω ≃ₐ[ℚ] Ω) (a : ℕ) (h
 
 private theorem rep_app (M : ℕ) [NeZero M] (y : (ZMod M)ˣ) (z : Ω) (hz : z ^ M = 1) :
     repM (Ω := Ω) M y z = z ^ (y : ZMod M).val := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   obtain ⟨ζ, hζ⟩ := exPrim (Ω := Ω) M
   have hm : ∀ {ξ : Ω}, IsPrimitiveRoot ξ M → Polynomial.cyclotomic M ℚ = minpoly ℚ ξ := fun hξ =>
     minpoly.eq_of_irreducible_of_monic (Polynomial.cyclotomic.irreducible_rat (NeZero.pos M))

@@ -82,7 +82,7 @@ theorem pt_unitInv (z : Over.mk (𝟙 S) ⟶ A) : z.left ≫ (unitInv A).left = 
   exact CartesianMonoidalCategory.hom_ext _ _ (to_base_ext _ _) (by simp [unitInv])
 
 theorem isPullback_unitInv : IsPullback (unitInv A).left A.hom (fst (Over.mk (𝟙 S)) A).left (𝟙 S) := by
-  haveI : IsIso (unitInv A).left := ⟨_, unitInv_snd A, snd_unitInv A⟩
+  have : IsIso (unitInv A).left := ⟨_, unitInv_snd A, snd_unitInv A⟩
   exact IsPullback.of_horiz_isIso ⟨by rw [unitInv_fst, Category.comp_id]⟩
 
 def chartPullUnit (L : LB A.left) (k : ℕ) (a : ℤ) (ha : a = k) :

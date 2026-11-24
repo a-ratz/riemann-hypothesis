@@ -374,7 +374,7 @@ theorem dichotomy {V X T : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup X
   by_cases hφ : φ = 0
   · exact Or.inl hφ
   right
-  haveI : Module.Finite ℂ V := Module.Finite.of_injective ι hι
+  have : Module.Finite ℂ V := Module.Finite.of_injective ι hι
   have hV : Module.finrank ℂ V ≤ 1 := (LinearMap.finrank_le_finrank_of_injective hι).trans hX
   obtain ⟨v, hv⟩ : ∃ v, φ v ≠ 0 := by
     by_contra hne
@@ -383,11 +383,11 @@ theorem dichotomy {V X T : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup X
   have hv0 : v ≠ 0 := by
     rintro rfl
     exact hv (map_zero φ)
-  haveI : Nontrivial V := ⟨⟨v, 0, hv0⟩⟩
+  have : Nontrivial V := ⟨⟨v, 0, hv0⟩⟩
   have hV1 : Module.finrank ℂ V = 1 := le_antisymm hV Module.finrank_pos
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (φ v) hv).mp hT (ψ v)
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (φ v) hv).mp hT (ψ v)
   refine ⟨c, LinearMap.ext fun w => ?_⟩
-  obtain ⟨t, ht⟩ := (finrank_eq_one_iff_of_nonzero' v hv0).mp hV1 w
+  obtain ⟨t, ht⟩ := (finrank_eq_one_iff_of_ne_zero' v hv0).mp hV1 w
   first
   | (rw [← ht, map_smul, map_smul, LinearMap.smul_apply, ← hc]; done)
   | (rw [← ht, ← hc]; simp [smul_comm])
@@ -752,7 +752,7 @@ theorem prod₂_detRep_isIrreducible :
       IsUnitaryChar χ₂ → (a ≠ b ∨ χ₁ ≠ χ₂) →
       (prod₂ (detRep (Fin a) χ₁) (detRep (Fin b) χ₂)).IsIrreducible := by
   intro hJ k _ _ _ _ a b χ₁ χ₂ s₁ s₂ u₁ u₂ hne
-  haveI := GlobalTheory.CompanionTheory.DegPrinSeries.nontrivial_subrepresentation k a b χ₁ χ₂ s₁ s₂
+  have := GlobalTheory.CompanionTheory.DegPrinSeries.nontrivial_subrepresentation k a b χ₁ χ₂ s₁ s₂
   show IsSimpleOrder (Subrepresentation (parInd (two (stdSum (rfl : a + b = a + b)))
     ((extTensor (detRep (Fin a) χ₁) (detRep (Fin b) χ₂)).comp (leviTwo k (Fin a) (Fin b)).symm.toMonoidHom)))
   refine ⟨fun W => ?_⟩
@@ -807,9 +807,9 @@ theorem isSmoothChar_of_condLE {ϖ : kˣ} {e : ℕ} {χ : kˣ →* ℂˣ} (h : C
     have hc : valuation k (((ϖ ^ e : kˣ) : k)) ≠ 0 := by simp
     refine h x ⟨le_antisymm a1 ?_, ?_⟩
     · rw [Units.val_inv_eq_inv_val, map_inv₀] at a2
-      exact (inv_le_one₀ (zero_lt_iff.2 (by simp))).1 a2
+      exact (inv_le_one₀ (pos_iff_ne_zero.2 (by simp))).1 a2
     · rw [map_mul, map_inv₀] at a3
-      have a4 := (mul_inv_le_iff₀ (zero_lt_iff.2 hc)).1 a3
+      have a4 := (mul_inv_le_iff₀ (pos_iff_ne_zero.2 hc)).1 a3
       rwa [one_mul] at a4
 
 def IndIrredNarrow : Prop :=

@@ -554,7 +554,7 @@ def epsBar : G H.E N.Om →* Qbar (N.l i) :=
 
 theorem continuous_epsBar : Continuous (epsBar N i) :=
   (continuous_algebraMap ℚ_[N.l i] (Qbar (N.l i))).comp
-    ((continuous_subtype_val : Continuous fun x : ℤ_[N.l i] => (x : ℚ_[N.l i])).comp
+    ((continuous_subtypeVal : Continuous fun x : ℤ_[N.l i] => (x : ℚ_[N.l i])).comp
       ((Units.continuous_val (M := ℤ_[N.l i])).comp (continuous_cycZ H.E N.Om (N.l i))))
 
 variable (A i) in

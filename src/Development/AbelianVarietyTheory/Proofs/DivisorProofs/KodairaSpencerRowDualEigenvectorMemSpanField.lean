@@ -75,7 +75,7 @@ theorem ksRow_exists_lieComb : ∀ {K : Type} [Field K] {A : Over (Sp K)} [GrpOb
     rw [hval, e, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply]
 
   have hact : ∀ z, act (dp0 K) (𝟙 _) a z f = χ τ z • f := fun z => by
-    haveI := a.hom z
+    have := a.hom z
     have hz : act (dp0 K) (𝟙 _) a z f ∈ Fil A := by
       rw [act_apply]; exact push_mem_Fil _ hf
     have hf' : act (dp0 K) (𝟙 _) a z f - χ τ z • f ∈ Fil A :=

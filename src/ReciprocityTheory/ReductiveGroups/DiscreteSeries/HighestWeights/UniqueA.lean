@@ -213,12 +213,12 @@ lemma uq_bij {P U : Type} [NormedAddCommGroup P] [InnerProductSpace ℂ P] [Fini
         { carrier := {y | ⟪nn, y⟫_ℂ * ((‖x‖ : ℂ) ^ 2) = ⟪nn, x⟫_ℂ * ⟪x, y⟫_ℂ}
           add_mem' := by
             intro y z hy hz
-            simp only [Set.mem_setOf_eq, inner_add_right] at hy hz ⊢
+            simp only [Set.mem_ofPred_eq, inner_add_right] at hy hz ⊢
             rw [add_mul, mul_add, hy, hz]
           zero_mem' := by simp
           smul_mem' := by
             intro c y hy
-            simp only [Set.mem_setOf_eq, inner_smul_right] at hy ⊢
+            simp only [Set.mem_ofPred_eq, inner_smul_right] at hy ⊢
             rw [mul_assoc, hy]; ring }
       have hBS : B ≤ S := by
         refine hBle S ?_ ?_
@@ -330,7 +330,7 @@ private theorem eq_bot_of_KStable_of_highest_not_mem (ε : Fin n → Bool) (F : 
   have hFU : ∀ a b, ε a = ε b → ∀ y, S.mkQ (F a b y) = FU a b (S.mkQ y) := by
     intro a b h y
     rw [hFUdef]
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     rfl
   have hTU : kSpan ε FU (S.mkQ w) = ⊤ := by
     refine eq_top_iff.2 fun z _ => ?_
@@ -373,7 +373,7 @@ theorem uq_exists_isometry (ε : Fin n → Bool) (F : Fin n → Fin n → Module
     intro a b hab v
     refine ext_inner_right ℂ fun u => ?_
     rw [hAinner, hφ a b hab, hU' a b hab, ← hφ b a hab.symm, ← hAinner, hU a b hab]
-  haveI : Nontrivial V := ⟨⟨w, 0, hw0⟩⟩
+  have : Nontrivial V := ⟨⟨w, 0, hw0⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue A
   have hEst : KStable ε F (Module.End.eigenspace A c) := by
     intro a b hab v hv

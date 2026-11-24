@@ -75,13 +75,13 @@ theorem eq_one_of_pow_eq_one (hl : l ≠ 2) (x : ℤ_[l]) (n : ℕ) (hn : n ≠ 
   have hm2 : ¬ (l : ℤ_[l]) ∣ (m : ℤ_[l]) := by
     rw [dvd_iff_toZMod, map_natCast, ZMod.natCast_eq_zero_iff]; exact hm
   have e2 := emultiplicity_pow_sub_pow_of_prime hP hd2 hnd2 hm2
-  rw [← pow_mul, hx, one_pow, sub_self, emultiplicity_zero] at e2
+  rw [← pow_mul, hx, one_pow, sub_self, emultiplicity_zero_right] at e2
   rw [one_pow, ← e2] at e1
   by_contra hne
   have hf : FiniteMultiplicity (l : ℤ_[l]) (x - 1) :=
     FiniteMultiplicity.of_prime_left hP (sub_ne_zero.2 hne)
   rw [hf.emultiplicity_eq_multiplicity] at e1
-  exact absurd e1.symm (by exact_mod_cast ENat.coe_ne_top _)
+  exact absurd e1.symm (by exact_mod_cast ENat.natCast_ne_top _)
 
 theorem toZMod_unit_ne_zero (u : ℤ_[l]ˣ) : PadicInt.toZMod (u : ℤ_[l]) ≠ 0 :=
   (u.isUnit.map _).ne_zero
@@ -127,7 +127,7 @@ theorem sum_pow_eq_zero (D : Finset ℤ_[l]ˣ) (hl : l ≠ 2) (hc : D.card = l -
   classical
   let G : Subgroup ℤ_[l]ˣ := CommGroup.torsion ℤ_[l]ˣ
   have hG : ∀ x, x ∈ D ↔ x ∈ G := fun x => ⟨hD x, mem_of_torsion D hl hc hD x⟩
-  letI : Fintype G := Fintype.ofFinset D (fun x => hG x)
+  let : Fintype G := Fintype.ofFinset D (fun x => hG x)
   have hcard : Fintype.card G = D.card := Fintype.card_of_subtype D hG
   rw [Finset.sum_subtype D hG (F := inferInstance) (fun δ : ℤ_[l]ˣ => (δ : ℤ_[l]) ^ i)]
   exact FiniteField.sum_subgroup_pow_eq_zero hi (by omega)
@@ -211,7 +211,7 @@ theorem associated_trace_and_lvl_dvd {l : ℕ} [Fact l.Prime] {O : Type} [CommRi
       intro k hk
       have e : (1 - (l : O⟦X⟧)) = C (1 - (l : O)) := by simp
 
-      rw [e, map_add (f := _), coeff_C, if_neg hk, zero_add, map_sum, map_sum]
+      rw [e, map_add (f := _), coeff_C, ite_eq_right hk, zero_add, map_sum, map_sum]
       refine Finset.sum_congr rfl fun δ _ => ?_
       rw [binomialSeries_coeff, Algebra.smul_def, mul_one]
     obtain ⟨g, hg⟩ : (X : O⟦X⟧) ^ (l - 1) ∣ 1 - (l : O⟦X⟧) + ∑ δ ∈ D, bin O (δ : ℤ_[l]) := by

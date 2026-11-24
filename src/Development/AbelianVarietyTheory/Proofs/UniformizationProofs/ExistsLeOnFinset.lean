@@ -123,7 +123,7 @@ theorem sumV_of_sumI {V : Type} [CommRing V] (I : Ideal V) {F : Type} [Field F] 
 
 theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (ϖ : V), Irreducible ϖ → ∀ (F : Type) [Field F] [Algebra (FractionRing V) F] (v : AddValuation F (WithTop ℚ)), ValOver ϖ F v → ∀ (Ix : Type) (x : Ix → F) (s : F), SumF (maximalIdeal V) F x s → SumV v x s ∧ NullV v x := by
   intro V _ _ _ ϖ hϖ F _ _ v hval Ix x s hsum
-  letI : Module V F := Module.compHom F (algebraMap V (FractionRing V))
+  let : Module V F := Module.compHom F (algebraMap V (FractionRing V))
   have hI : SumI (maximalIdeal V) x s := hsum
   have hV : SumV v x s := by
     refine sumV_of_sumI (maximalIdeal V) (fun a => algebraMap (FractionRing V) F (algebraMap V (FractionRing V) a))

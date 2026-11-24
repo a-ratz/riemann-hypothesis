@@ -123,7 +123,7 @@ theorem BlowUpOverLocPointMax.proof (hfin : BlowUpOverLocFinite.Statement.{u})
   have h𝔫 : 𝔫.IsMaximal :=
     Ideal.isMaximal_of_isIntegral_of_isMaximal_under 𝔫 hcomapA
   refine ⟨hBR, 𝔫, h𝔫, ?_⟩
-  letI := (Subring.inclusion hBR).toAlgebra
+  let := (Subring.inclusion hBR).toAlgebra
   have := h𝔫.isPrime
   refine (isLocalization_iff _ _).mpr ⟨?_, ?_, ?_⟩
   · rintro ⟨s, hs⟩

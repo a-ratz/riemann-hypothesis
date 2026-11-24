@@ -309,7 +309,7 @@ theorem isOrbQuot_withDensity : ∀ (k r : ℕ) (L : LocBessel k r) (x : B.Mat k
   have aW' : ∀ᵐ h ∂L.μW', Matrix.of h ∈ UWset k r L.z' := ae_iff.mpr L.hμW'.1.2.2.1
   have aN : ∀ᵐ n ∂L.μN, Matrix.of n ∈ Nset k r := by
     refine ae_iff.mpr ?_
-    rw [hμN, Measure.smul_apply, smul_eq_mul]
+    rw [hμN, smul_apply, smul_eq_mul]
     exact mul_eq_zero_of_right _ hH.conc
   have aP : ∀ᵐ p ∂pairMeas L, (Matrix.of p.1.1 ∈ UWset k r L.z ∧ Matrix.of p.1.2 ∈ Nset k r) ∧
       (Matrix.of p.2.1 ∈ UWset k r L.z' ∧ Matrix.of p.2.2 ∈ Nset k r) := by

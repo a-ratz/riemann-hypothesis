@@ -82,7 +82,7 @@ theorem hasDerivAt_exp_add_smul_duhamel (A : Type) [NormedRing A] [NormedAlgebra
     [CompleteSpace A] (X V : A) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp (X + t • V))
       (∫ s in (0 : ℝ)..1, NormedSpace.exp ((1 - s) • X) * V * NormedSpace.exp (s • X)) 0 := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   have hc : Continuous (NormedSpace.exp : A → A) := NormedSpace.exp_continuous
   set f : ℝ → ℝ → A := fun t s =>
     NormedSpace.exp ((1 - s) • X) * V * NormedSpace.exp (s • (X + t • V)) with hf
@@ -408,8 +408,8 @@ theorem integral_duhamel_eq_sAd {p q : ℕ} (Y V : Mat p q) :
 theorem hasDerivAt_exp_two_add_smul (p q : ℕ) (Y V : Mat p q) (a b : Ix p q) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp (Y + Y + t • V) a b)
       ((NormedSpace.exp Y * sAd Y V * NormedSpace.exp Y) a b) 0 := by
-  letI : NormedRing (Mat p q) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mat p q) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Mat p q) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mat p q) := Matrix.linftyOpNormedAlgebra
   have hD0 := GlobalTheory.hasDerivAt_exp_add_smul_duhamel (Mat p q) (Y + Y) V
   have hD : HasDerivAt (fun t : ℝ => NormedSpace.exp (Y + Y + t • V))
       (NormedSpace.exp Y * sAd Y V * NormedSpace.exp Y) 0 := by

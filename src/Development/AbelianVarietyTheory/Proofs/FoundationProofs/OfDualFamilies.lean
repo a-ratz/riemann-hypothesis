@@ -140,11 +140,11 @@ theorem expand (hG : admG1 D) {r : ℕ} (y y' : Fin r → Matrix (Fin N') (Fin N
   let P : Submodule ℂ (VC D N N') :=
     { carrier := {z | z = ∑ i, sq z (embV D (tor0 D cc δ) (y' i)) • embV D (tor0 D cc δ) (y i)}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, sq_add_left, add_smul, Finset.sum_add_distrib] at *
+        simp only [Set.mem_ofPred_eq, sq_add_left, add_smul, Finset.sum_add_distrib] at *
         rw [← ha, ← hb]
       zero_mem' := by simp [sq_zero_left]
       smul_mem' := fun c a ha => by
-        simp only [Set.mem_setOf_eq, sq_smul_left, mul_smul, ← Finset.smul_sum] at *
+        simp only [Set.mem_ofPred_eq, sq_smul_left, mul_smul, ← Finset.smul_sum] at *
         rw [← ha] }
   have hP : ∀ x, embV D (tor0 D cc δ) x ∈ P := fun x => by
     change _ = _
@@ -251,11 +251,11 @@ theorem of_dual_families (hG : admG1 D) (hC : Crv D cc δ)
     simp [w0]
     ring
   have hdisc : DiscreteTopology A := by
-    haveI : DiscreteTopology L.lattice := inferInstance
+    have : DiscreteTopology L.lattice := inferInstance
     let f : A → Fin r → L.lattice := fun z i =>
       ⟨sq z.1 (embV D (tor0 D cc δ) (y' i)), (hL _).1 (hsq z.1 z.2 _ (hy' i))⟩
     have hf : Continuous f := continuous_pi fun i =>
-      Continuous.subtype_mk ((continuous_sq _).comp continuous_subtype_val) _
+      Continuous.subtype_mk ((continuous_sq _).comp continuous_subtypeVal) _
     refine DiscreteTopology.of_continuous_injective hf fun z u hzu => Subtype.ext ?_
     rw [hexp z.1, hexp u.1]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -267,7 +267,7 @@ theorem of_dual_families (hG : admG1 D) (hC : Crv D cc δ)
   · obtain ⟨m, hm⟩ := hq x hx
     funext z
     have hm' : Real.sqrt D.host.d / 2 * (Hf D (tor0 D cc δ) x x).re = m := hm
-    rw [Wd, wdPh, hm, al, hm', round_intCast, ee, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+    rw [Wd, wdPh, hm, al, hm', round_intCast, ee, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
     congr 2
     push_cast
     ring

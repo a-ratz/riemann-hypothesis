@@ -363,7 +363,7 @@ theorem haar_character_frame_annihilator (h : Fr s J X Y) [LocallyCompactSpace (
         abel
       right_inv := fun U => by simp only; abel
       map_add' := fun p q => by simp only [Prod.fst_add, Prod.snd_add, AddSubgroup.coe_add, Matrix.mul_add]; abel
-      continuous_toFun := ((continuous_subtype_val.comp continuous_fst).add
+      continuous_toFun := ((continuous_subtypeVal.comp continuous_fst).add
         (continuous_const.matrix_mul continuous_snd.fst)).add (continuous_const.matrix_mul continuous_snd.snd)
       continuous_invFun := (((continuous_id.sub (continuous_const.matrix_mul (continuous_const.matrix_mul continuous_id))).sub
         (continuous_const.matrix_mul (continuous_const.matrix_mul continuous_id))).subtype_mk _).prodMk
@@ -400,8 +400,8 @@ theorem haar_character_skew_hermitian [Invertible (2 : R)] (hs : Continuous s) (
         simp only [smul_smul ω.1, Units.mul_inv, one_smul, ← smul_add]
         rw [show U - cT s U + (U + cT s U) = U + U by abel, smul_add, half_add]
       map_add' := fun p q => by simp only [Prod.fst_add, Prod.snd_add, AddSubgroup.coe_add, smul_add]; abel
-      continuous_toFun := (continuous_subtype_val.comp continuous_fst).add
-        ((continuous_subtype_val.comp continuous_snd).const_smul ω.1)
+      continuous_toFun := (continuous_subtypeVal.comp continuous_fst).add
+        ((continuous_subtypeVal.comp continuous_snd).const_smul ω.1)
       continuous_invFun := (((continuous_id.sub (continuous_cT hs continuous_id)).const_smul (⅟2 : R)).subtype_mk _).prodMk
         ((((continuous_id.add (continuous_cT hs continuous_id)).const_smul (⅟2 : R)).const_smul ω⁻¹.1).subtype_mk _) }
   refine _root_.GlobalTheory.HaarOpenEmb.addEquivAddHaarChar_eq_of_isOpenEmbedding _ _ e.toAddMonoidHom e.toHomeomorph.isOpenEmbedding _ _ fun p => ?_
@@ -418,7 +418,7 @@ theorem char_conj [Invertible (2 : R)] (h : Fr s J X Y) (hs : Continuous s) (ω 
     mulEquivHaarChar φ * addEquivAddHaarChar (scalM k k u) = addEquivAddHaarChar (scalM n k u) := by
   have : LocallyCompactSpace (W1 s J X Y) := isClosed_frame_annihilator.locallyCompactSpace
   have : LocallyCompactSpace (W2 s k) := (isClosed_skew_hermitian hs).locallyCompactSpace
-  have c1 : Continuous fun Z : W1 s J X Y => Z.1 := continuous_subtype_val
+  have c1 : Continuous fun Z : W1 s J X Y => Z.1 := continuous_subtypeVal
   have hβ : Continuous fun p : W1 s J X Y × W1 s J X Y => h.β p.1 p.2 :=
     (((((continuous_cT hs (c1.comp continuous_snd)).matrix_mul continuous_const).matrix_mul (c1.comp continuous_fst)).sub
       (((continuous_cT hs (c1.comp continuous_fst)).matrix_mul continuous_const).matrix_mul
@@ -461,7 +461,7 @@ theorem char_conj [Invertible (2 : R)] (h : Fr s J X Y) (hs : Continuous s) (ω 
   have hι : ∀ x, (j (ι x)).1 = h.nMat x := hι₀
   have cn : Continuous h.nMat := by
     have d1 : Continuous fun x : Heis h.β => x.1.1 := c1.comp continuous_fst
-    have d2 : Continuous fun x : Heis h.β => x.2.1 := continuous_subtype_val.comp continuous_snd
+    have d2 : Continuous fun x : Heis h.β => x.2.1 := continuous_subtypeVal.comp continuous_snd
     exact ((continuous_const.add (d1.matrix_mul continuous_const)).sub
       (continuous_const.matrix_mul ((continuous_cT hs d1).matrix_mul continuous_const))).add
       ((continuous_const.matrix_mul (d2.sub ((((continuous_cT hs d1).matrix_mul continuous_const).matrix_mul d1).const_smul

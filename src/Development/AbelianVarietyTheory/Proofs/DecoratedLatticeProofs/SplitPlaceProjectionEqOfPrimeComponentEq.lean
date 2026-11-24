@@ -73,11 +73,11 @@ theorem exists_near (v : HeightOneSpectrum (𝓞 F)) (c : v.adicCompletion F) (n
   have hN : {y : v.adicCompletion F | Valued.v (c - y) < Valued.v r} ∈ nhds c := by
     have ho := (Valued.isOpen_ball (v.adicCompletion F) (Valued.v.restrict r)).preimage
       (continuous_const.sub continuous_id : Continuous fun y : v.adicCompletion F => c - y)
-    simp only [Set.preimage_setOf_eq, Valuation.restrict_lt_iff] at ho
+    simp only [Set.preimage_ofPred_eq, Valuation.restrict_lt_iff] at ho
     refine ho.mem_nhds ?_
     show Valued.v (c - c) < _
     rw [sub_self, map_zero]
-    exact zero_lt_iff.2 hr0
+    exact pos_iff_ne_zero.2 hr0
   obtain ⟨k, hk⟩ := (HeightOneSpectrum.denseRange_algebraMap (K := F) v).mem_nhds hN
   exact ⟨k, (le_of_lt hk).trans_eq hr⟩
 

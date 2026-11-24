@@ -99,24 +99,24 @@ variable [FiniteDimensional LL V]
 
 theorem finite_DdR (h : IsDR PD ρ) : Module.Finite LL ↥(DdR PD ρ) := by
   rcases subsingleton_or_nontrivial V with hV | hV
-  · haveI : Subsingleton (V ⊗[Qp] BdR) := subsingleton_tensor (V := V) BdR
-    haveI : Subsingleton ↥(DdR PD ρ) := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
+  · have : Subsingleton (V ⊗[Qp] BdR) := subsingleton_tensor (V := V) BdR
+    have : Subsingleton ↥(DdR PD ρ) := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
     first | exact inferInstance | exact Module.Finite.of_finite
-  · haveI := PD.finK
+  · have := PD.finK
     apply Module.finite_of_finrank_pos
     unfold IsDR at h
     rw [h]
     exact Nat.mul_pos Module.finrank_pos Module.finrank_pos
 
 theorem finite_FildR (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) : Module.Finite LL ↥(FildR PD ρ τ a) := by
-  haveI := finite_DdR PD ρ h
+  have := finite_DdR PD ρ h
   have hle : FildR PD ρ τ a ≤ DdR PD ρ := fun x hx => (Submodule.mem_inf.1 (Submodule.mem_inf.1 hx).1).1
   first
     | exact Submodule.finiteDimensional_of_le hle
     | exact Module.Finite.of_injective (Submodule.inclusion hle) (Submodule.inclusion_injective hle)
 
 theorem multV_nonneg (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) : 0 ≤ multV PD ρ τ a := by
-  haveI := finite_FildR PD ρ h τ a
+  have := finite_FildR PD ρ h τ a
   have hle : finrank LL ↥(FildR PD ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD ρ τ a) := by
     first
       | exact Submodule.finrank_le_finrank_of_le (FildR_anti PD ρ τ a)
@@ -126,7 +126,7 @@ theorem multV_nonneg (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) : 0 ≤ m
 
 theorem isJumpV_iff (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) (a : ℤ) :
     IsJumpV PD ρ τ a ↔ 0 < multV PD ρ τ a := by
-  haveI := finite_FildR PD ρ h τ a
+  have := finite_FildR PD ρ h τ a
   have hle : finrank LL ↥(FildR PD ρ τ (a + 1)) ≤ finrank LL ↥(FildR PD ρ τ a) := by
     first
       | exact Submodule.finrank_le_finrank_of_le (FildR_anti PD ρ τ a)
@@ -358,14 +358,14 @@ end Plain
 
 theorem crys_zero (xs : Fin 0 → ι) : IsCrys PD (sumRho Ms xs) := by
   unfold IsCrys
-  haveI : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] B) := subsingleton_tensor (V := Fin 0 → Fin k → LL) B
-  haveI : Subsingleton ↥(Dcris PD (sumRho Ms xs)) := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] B) := subsingleton_tensor (V := Fin 0 → Fin k → LL) B
+  have : Subsingleton ↥(Dcris PD (sumRho Ms xs)) := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
   have e1 : finrank LL ↥(Dcris PD (sumRho Ms xs)) = 0 := Module.finrank_zero_of_subsingleton
   have e2 : finrank LL (Fin 0 → Fin k → LL) = 0 := Module.finrank_zero_of_subsingleton
   rw [e1, e2, mul_zero]
 
 theorem noJump_zero (xs : Fin 0 → ι) (τ : K →ₐ[Qp] LL) (a : ℤ) : ¬ IsJumpV PD (sumRho Ms xs) τ a := by
-  haveI : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] BdR) := subsingleton_tensor (V := Fin 0 → Fin k → LL) BdR
+  have : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] BdR) := subsingleton_tensor (V := Fin 0 → Fin k → LL) BdR
   unfold IsJumpV
   intro hne
   apply hne

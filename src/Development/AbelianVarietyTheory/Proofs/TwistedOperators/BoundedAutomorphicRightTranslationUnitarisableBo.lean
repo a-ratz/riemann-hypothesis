@@ -78,8 +78,8 @@ private theorem integrableOn_fundamentalDomain_of_bounded {E : Type} [NormedAddC
     (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 ν) {φ : GA D V → E} (hφ : Continuous φ) (C : ℝ)
     (hC : ∀ g, ‖φ g‖ ≤ C) : IntegrableOn φ 𝓕 ν := by
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.2.1
-  haveI := hT.2.2.2.1
+  have := hT.2.1
+  have := hT.2.2.2.1
   exact Measure.integrableOn_of_bounded
     (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol V ν 𝓕 hν h𝓕).ne hφ.aestronglyMeasurable
     (Filter.Eventually.of_forall hC)
@@ -115,11 +115,11 @@ theorem exists_form_bddAut (hν : ν.IsHaarMeasure) (h𝓕 : IsFundamentalDomain
 
 theorem petersson_self_re_pos_of_ne_zero (hν : ν.IsHaarMeasure) (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 ν) (f : bddAut V) (hf : f ≠ 0) :
     0 < (l2 ν 𝓕 (f : GA D V → ℂ) f).re := by
-  haveI := hν
+  have := hν
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.2.2.2.1
-  haveI := hT.2.2.2.2.1
-  haveI := hT.2.2.2.2.2.2
+  have := hT.2.2.2.1
+  have := hT.2.2.2.2.1
+  have := hT.2.2.2.2.2.2
   obtain ⟨hc, hi, C, hC⟩ := zero_one_mem_gammaSet_one f
   have key : l2 ν 𝓕 (f : GA D V → ℂ) f =
       ((∫ x in 𝓕, Complex.normSq ((f : GA D V → ℂ) x) ∂ν : ℝ) : ℂ) := by
@@ -166,12 +166,12 @@ theorem petersson_self_re_pos_of_ne_zero (hν : ν.IsHaarMeasure) (h𝓕 : IsFun
 
 theorem petersson_bounded_automorphic_right_translation_invariant (hν : ν.IsHaarMeasure) (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 ν) (g : GA D V) (f f₂ : bddAut V) :
     l2 ν 𝓕 (bddRep V g f : GA D V → ℂ) (bddRep V g f₂ : GA D V → ℂ) = l2 ν 𝓕 (f : GA D V → ℂ) f₂ := by
-  haveI := hν
+  have := hν
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.2.2.2.1
-  haveI := hT.2.2.2.2.1
-  haveI := hT.2.2.2.2.2.2
-  haveI := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V ν hν).1
+  have := hT.2.2.2.1
+  have := hT.2.2.2.2.1
+  have := hT.2.2.2.2.2.2
+  have := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V ν hν).1
   obtain ⟨-, hi, -⟩ := zero_one_mem_gammaSet_one f
   obtain ⟨-, hi₂, -⟩ := zero_one_mem_gammaSet_one f₂
   rw [coe_bddRep, coe_bddRep]
@@ -185,11 +185,11 @@ end
 theorem bddRep_unitarisable_and_bounded : ∀ (D : D7) (V : HSp D), IsUnitarisable (bddRep V) ∧ ∀ (ν : Measure (GA D V)) (𝓕 : Set (GA D V)), ν.IsHaarMeasure → IsFundamentalDomain (GQ V) 𝓕 ν → ∀ f₂ : bddAut V, ∃ ℓ : bddAut V →ₗ[ℂ] ℂ, (∀ f : bddAut V, ℓ f = l2 ν 𝓕 (f : GA D V → ℂ) f₂) ∧ ∀ f : bddAut V, ∃ C : ℝ, ∀ g, ‖ℓ (bddRep V g f)‖ ≤ C := by
   intro D V
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.1
-  haveI := hT.2.1
-  haveI := hT.2.2.1
-  haveI := hT.2.2.2.1
-  haveI := hT.2.2.2.2.1
+  have := hT.1
+  have := hT.2.1
+  have := hT.2.2.1
+  have := hT.2.2.2.1
+  have := hT.2.2.2.2.1
   refine ⟨?_, fun ν 𝓕 hν h𝓕 f₂ => ?_⟩
   · have hH : (Measure.haar : Measure (GA D V)).IsHaarMeasure := inferInstance
     obtain ⟨𝓕, h𝓕⟩ :=

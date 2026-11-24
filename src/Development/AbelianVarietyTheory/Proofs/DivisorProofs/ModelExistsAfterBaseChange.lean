@@ -81,7 +81,7 @@ theorem exists_finite_set (o : Obj D l b s) {M : ℕ} (hM : 0 < M) {K F : Type} 
     ∃ T : Set F, T.Finite ∧ ∀ L : IntermediateField K F, T ⊆ L →
       ∀ w : Over.mk (spMap (algebraMap K F) ≫ x) ⟶ o.t.G, w ^ M = 1 →
         ∃ q : Over.mk (spMap (algebraMap K L) ≫ x) ⟶ o.t.G, spMap (algebraMap L F) ≫ q.left = w.left := by
-  haveI := o.proper
+  have := o.proper
   obtain ⟨J, _, hJ⟩ := exists_enum o hM
   obtain ⟨u, -, hu⟩ := hJ F (spMap (algebraMap K F) ≫ x)
   choose T hT using fun j => TorsionRat.exists_finset_over o.t.G x (u j)

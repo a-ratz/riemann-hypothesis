@@ -62,7 +62,7 @@ theorem kumVal_unique {n : ℕ} {ζ u : Ω} {s : G ℚ Ω} {k k' : ZMod (l ^ n)}
   obtain ⟨v, hv, hsv⟩ := hk
   obtain ⟨w, hw, hsw⟩ := hk'
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  haveI : NeZero (l ^ n) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   have hv0 : v ≠ 0 := by rintro rfl; exact hu (by rw [← hv, zero_pow hpos.ne'])
   have hw0 : w ≠ 0 := by rintro rfl; exact hu (by rw [← hw, zero_pow hpos.ne'])
   have h1 : (w / v) ^ (l ^ n) = 1 := by rw [div_pow, hv, hw, div_self hu]

@@ -130,7 +130,7 @@ private theorem hk_zero (w : Pl E) {φ : Sm E n} (h : ∀ k ∈ KGL w (n := n), 
     unfold Tj dosetInd
     congr 1
     ext g
-    simp only [d, Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset, mul_one, SetLike.mem_coe, ← Units.val_mul, Units.val_inj]
+    simp only [d, Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset, mul_one, SetLike.mem_coe, ← Units.val_mul, Units.val_inj]
   rw [hk_apply, e, SatCompare.heckeVec_one (Final.GLintComm E w n) (GlobalTheory.LGrp.mem_fixed.2 h)]
   simp
 

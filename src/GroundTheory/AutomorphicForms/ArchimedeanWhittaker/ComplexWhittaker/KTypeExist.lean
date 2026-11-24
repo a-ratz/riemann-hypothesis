@@ -94,16 +94,16 @@ theorem eq_zero_of_forall_Q_eq_zero (hQ : ∀ (n : ℕ) (q : ℤ) (y : H), Q σ 
       have hσ : σ (kC (l₁ * k * l₂)) (σ (kC l₂)⁻¹ v) = σ (kC l₁) (σ (kC k) v) := by
         rw [map_mul, map_mul, UnitaryRep.map_mul_apply, UnitaryRep.map_mul_apply,
           ← UnitaryRep.map_mul_apply σ (kC l₂) (kC l₂)⁻¹, mul_inv_cancel,
-          UnitaryRep.map_one, ContinuousLinearMap.one_apply]
+          UnitaryRep.map_one, one_apply_eq_self]
       rw [← mul_assoc l₁ k l₂, map_mul (starRingEnd ℂ), starRingEnd_self_apply, inner_conj_symm,
         psi_mul_mul, hσ, UnitaryRep.inner_map_left, ← UnitaryRep.map_mul_apply, inv_mul_cancel,
-        UnitaryRep.map_one, ContinuousLinearMap.one_apply, hg]
+        UnitaryRep.map_one, one_apply_eq_self, hg]
       ring
     simp_rw [e] at h2
     rw [integral_mul_const] at h2
     exact (mul_eq_zero.1 h2).resolve_right hne
   have h1 : g 1 = 0 := by rw [hg0]; rfl
-  simp only [hg, map_one, UnitaryRep.map_one, ContinuousLinearMap.one_apply] at h1
+  simp only [hg, map_one, UnitaryRep.map_one, one_apply_eq_self] at h1
   exact inner_self_eq_zero.1 h1
 
 end KT

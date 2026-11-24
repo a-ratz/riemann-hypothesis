@@ -126,7 +126,7 @@ theorem semiPos_up_of_isCan : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIn
         Complex.normSq (ratVal (P.loc e 0 (x l) i j) z ^ n) * Real.exp (-((e : ℝ) * n) * (P.L.φ σ).φ i z) := by
       intro l
       rw [GlobalTheory.VolBr.nu_eq k X p P e 0 (x l) (hx.mem l) σ z i j hz.1 hz.2, Complex.normSq_eq_norm_sq, norm_pow,
-        mul_pow, ← pow_mul, ← Real.exp_nat_mul]
+        mul_pow, ← pow_mul, ← Real.exp_natCast_mul]
       congr 2
       · ring_nf
       · push_cast; ring
@@ -253,7 +253,7 @@ theorem good_twist_mul (x : Fin (D + 1) → K) {c : ℕ} {A : ℕ → AddSubgrou
 theorem exists_finite_homogeneous_generators : ∀ (K : Type) [CommRing K] (D c : ℕ) (x : Fin (D + 1) → K) (ι : Type) [Fintype ι] (w : ι → K) (Λ : ℕ → AddSubgroup K), (∀ q l, ∀ f ∈ Λ q, x l * f ∈ Λ (q + 1)) → (∀ q, ∀ f ∈ Λ q, ∃ T : ι → MvPolynomial (Fin (D + 1)) ℤ, (∀ i, (T i).IsHomogeneous (q + c)) ∧ f = ∑ i, aeval x (T i) * w i) → ∃ G : Finset (ℕ × K), (∀ g ∈ G, g.2 ∈ Λ g.1) ∧ ∀ q, Λ q ≤ AddSubgroup.closure {f | ∃ g ∈ G, ∃ α : Fin (D + 1) → ℕ, ∑ l, α l + g.1 = q ∧ f = (∏ l, x l ^ α l) * g.2} := by
   intro K _ D c x ι _ w Λ hx hw
   classical
-  letI : Module (MvPolynomial (Fin (D + 1)) ℤ) (Polynomial K) := (twist x).toModule
+  let : Module (MvPolynomial (Fin (D + 1)) ℤ) (Polynomial K) := (twist x).toModule
   have hsmul : ∀ (r : MvPolynomial (Fin (D + 1)) ℤ) (p : Polynomial K), r • p = twist x r * p := fun _ _ => rfl
   let S : Set (ℕ × K) := {g | g.2 ∈ Λ g.1}
   let v : ℕ × K → Polynomial K := fun g => Polynomial.C g.2 * Polynomial.X ^ (g.1 + c)
@@ -310,12 +310,12 @@ theorem exists_finite_homogeneous_generators : ∀ (K : Type) [CommRing K] (D c 
     | mem p hp =>
       obtain ⟨g, hg, rfl⟩ := hp
       refine ⟨fun b hb => ?_, fun q => ?_⟩
-      · simp only [v, Polynomial.coeff_C_mul_X_pow]; rw [if_neg (by omega)]
+      · simp only [v, Polynomial.coeff_C_mul_X_pow]; rw [ite_eq_right (by omega)]
       · simp only [v, Polynomial.coeff_C_mul_X_pow]
         by_cases hq : q = g.1
-        · subst hq; rw [if_pos rfl]
+        · subst hq; rw [ite_eq_left rfl]
           exact AddSubgroup.subset_closure ⟨g, hg, 0, by simp, by simp⟩
-        · rw [if_neg (by omega)]; exact (A q).zero_mem
+        · rw [ite_eq_right (by omega)]; exact (A q).zero_mem
     | zero => exact good_zero c A
     | add a b _ _ ha hb => exact good_add ha hb
     | smul r a _ ha => rw [hsmul]; exact good_twist_mul x hA r a ha
@@ -329,7 +329,7 @@ theorem exists_finite_homogeneous_generators : ∀ (K : Type) [CommRing K] (D c 
     exact Submodule.span_mono (by
       intro p hp; simp only [Finset.coe_biUnion, Set.mem_iUnion, Finset.mem_coe]; exact ⟨s, hs, hp⟩) (hsT s hs)
   have h := (hgood _ hmem).2 q
-  simp only [v, Polynomial.coeff_C_mul_X_pow, if_pos rfl] at h
+  simp only [v, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at h
   exact h
 
 end GlobalTheory.HSAmpGen
@@ -416,7 +416,7 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
     have e1 : ((e * (q + c) + s : ℕ) : ℤ) = (e : ℤ) * ((q + c : ℕ) : ℤ) + (s : ℤ) := by push_cast; ring
     have hfg := (hc' (q + c)).1
     rw [e1] at hfg ⊢
-    haveI : Module.Finite ℤ (P.H ((e : ℤ) * ((q + c : ℕ) : ℤ) + (s : ℤ)) 1) :=
+    have : Module.Finite ℤ (P.H ((e : ℤ) * ((q + c : ℕ) : ℤ) + (s : ℤ)) 1) :=
       Module.Finite.iff_addGroup_fg.2 ((AddGroup.fg_iff_addSubgroup_fg _).2 hfg)
     let w : Fin (Module.finrank (ratF x) X.functionField * (q + D).choose D) →
         P.H ((e : ℤ) * ((q + c : ℕ) : ℤ) + (s : ℤ)) 1 := fun i => ⟨v i, hv i⟩
@@ -804,9 +804,9 @@ theorem selfInter_canWeight_le : GlobalTheory.Published.ArCalc → ∀ (k : Type
     Gens P D e x → ∃ C : ℝ, ∀ (n : ℕ) (u : SmFn p) (a : ℝ), 1 ≤ n → IsCan P e n x u →
       (up P.L u).IsSelfInter a → |a| ≤ C / n := by
   intro hC k _ X _ p D hX P hA e x hG
-  haveI := hX.isDomain
-  haveI := hX.finite
-  haveI := hX.charZero_base
+  have := hX.isDomain
+  have := hX.finite
+  have := hX.charZero_base
   have hf : 0 < Module.finrank ℤ k := Module.finrank_pos
   have he : 0 < e := hG.pos
   obtain ⟨hPI, -, -, -, -, -, -⟩ := _root_.GlobalTheory.HSAmp.toProj_gens k X p D hX P hA e x hG

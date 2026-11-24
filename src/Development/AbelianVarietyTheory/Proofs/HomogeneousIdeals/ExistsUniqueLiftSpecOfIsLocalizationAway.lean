@@ -193,8 +193,8 @@ theorem existsUnique_lift_of_isOpenImmersion_of_isDominant (j : U ⟶ T) [IsOpen
       exact hZS ((huniq Z hZ hx0Z).trans (huniq _ hS mem_irreducibleComponent).symm)
     have hOirr : IsIrreducible O :=
       ⟨⟨x0, hx0O⟩, isIrreducible_irreducibleComponent.2.open_subset hOo hOS⟩
-    exact ⟨⟨Subtype.val '' O, V'.2.isOpenMap_subtype_val O hOo⟩, ⟨x0, hx0O, rfl⟩,
-      hOirr.image _ continuous_subtype_val.continuousOn⟩
+    exact ⟨⟨Subtype.val '' O, V'.2.isOpenMap_subtypeVal O hOo⟩, ⟨x0, hx0O, rfl⟩,
+      hOirr.image _ continuous_subtypeVal.continuousOn⟩
   suffices IsIso j.fromNormalization from existsUnique_lift_of_isIso_fromNormalization j p a b h
   apply IsZariskiLocalAtTarget.of_forall_exists_morphismRestrict
     (P := MorphismProperty.isomorphisms Scheme)

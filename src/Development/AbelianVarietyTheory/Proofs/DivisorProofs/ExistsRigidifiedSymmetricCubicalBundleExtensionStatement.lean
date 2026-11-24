@@ -106,14 +106,14 @@ namespace GlobalTheory.BdLocalExt
 theorem exists_extension_of_smooth {A : CommRingCat.{0}} [IsRegularRing A] {X Y : Scheme.{0}} (p : X ⟶ Spec A) [Smooth p]
     [QuasiCompact p] (u : Y ⟶ X) [IsOpenImmersion u] (L : LB Y) (hL : L.IsLB) :
     ∃ M : LB X, M.IsLB ∧ LBIso (M.pull u) L := by
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
   have h : ∀ x : X, IsDomain (X.presheaf.stalk x) ∧ UniqueFactorizationMonoid (X.presheaf.stalk x) := fun x => by
-    haveI : Smooth (show X ⟶ Spec (CommRingCat.of A) from p) := ‹Smooth p›
-    haveI : IsRegularRing (X.presheaf.stalk x) :=
+    have : Smooth (show X ⟶ Spec (CommRingCat.of A) from p) := ‹Smooth p›
+    have : IsRegularRing (X.presheaf.stalk x) :=
       GlobalTheory.ExtendRig.isRegularRing_stalk GlobalTheory.isRegularRing_of_smooth A p x
-    haveI : IsRegularLocalRing (X.presheaf.stalk x) := IsRegularLocalRing.of_isRegularRing_of_isLocalRing _
-    haveI : IsDomain (X.presheaf.stalk x) := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
+    have : IsRegularLocalRing (X.presheaf.stalk x) := IsRegularLocalRing.of_isRegularRing_of_isLocalRing _
+    have : IsDomain (X.presheaf.stalk x) := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
     exact ⟨inferInstance, GlobalTheory.uniqueFactorizationMonoid_of_isRegularRing_of_isLocalRing
       GlobalTheory.exists_hasProjectiveDimensionLE_of_isRegularLocalRing
       GlobalTheory.isPrincipal_map_away_of_hasProjectiveDimensionLE _⟩
@@ -124,7 +124,7 @@ theorem exists_extension_stalk {S X Y : Scheme.{0}} (g : X ⟶ S) [Smooth g] [Qu
     ∃ M : LB (pullback g (S.fromSpecStalk x)), M.IsLB ∧
       LBIso (M.pull (pullback.map (e ≫ g) (S.fromSpecStalk x) g (S.fromSpecStalk x) e (𝟙 _) (𝟙 _) (by simp) (by simp)))
         (L.pull (pullback.fst (e ≫ g) (S.fromSpecStalk x))) := by
-  haveI : IsRegularRing (S.presheaf.stalk x) := GlobalTheory.isRegularRing_of_isRegularLocalRing _
+  have : IsRegularRing (S.presheaf.stalk x) := GlobalTheory.isRegularRing_of_isRegularLocalRing _
   exact exists_extension_of_smooth (pullback.snd g (S.fromSpecStalk x)) _ _ (pull_isLB hL _)
 
 end GlobalTheory.BdLocalExt
@@ -168,21 +168,21 @@ theorem exists_extension_test {S X Y : Scheme.{0}} (g : X ⟶ S) [Smooth g] [Qua
 theorem exists_extension_at_boundary : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ {Z : Scheme.{0}} (zs : Z ⟶ Sp c.F) (i : Xo.XF c ⟶ Z) (OZ : LB Z) (N d : ℕ) (J : Z.IdealSheafData) {S : Scheme.{0}} (π : S ⟶ Z) (j : Xo.XF c ⟶ S) [IsOpenImmersion j] (BD : EffCartierData S), GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD → (∀ x : S, x ∉ Set.range j → UPre Xo c φ j BD d x) → ∀ (tF : SAB H (Xo.XF c)), SABMap tF Xo.univ.t (pullback.fst _ _) → ∀ (G : Over S) [GrpObj G] [IsCommMonObj G] (e : tF.G.left ⟶ G.left), IsSemiAbelian G → IsGrpPullback tF.G G j e → (∀ {k : Type} [Field k] {m n : ℕ} (C : MonoFam Xo c φ (ChartRing k m n)), IsTaut C → ∀ ξ : Sp (ChartRing k m n) ⟶ S, C.y ≫ j = jK _ ≫ ξ → ∀ (tK : SAB H (Sp (FractionRing (ChartRing k m n)))) (a : SABMap tK C.t (jK _)) (b : SABMap tK tF C.y), ∃ πC : C.t.G.left ⟶ G.left, IsGrpPullback C.t.G G ξ πC ∧ a.φ ≫ πC = b.φ ≫ e) → ∀ x : S, x ∉ Set.range j → ∃ N : LB (pullback G.hom (S.fromSpecStalk x)), N.IsLB ∧ ∀ (T : Scheme.{0}) (a : T ⟶ pullback G.hom (S.fromSpecStalk x)) (b : T ⟶ tF.G.left), a ≫ pullback.fst G.hom (S.fromSpecStalk x) = b ≫ e → LBIso (N.pull a) (tF.PP.L.pull b) := by
   intro E _ _ _ H Dw l Xo c φ _ _ _ Z zs i OZ N d J S π j _ BD hU hpre tF _ G _ _ e hsa he _ x hx
   obtain ⟨-, -, -, -, ⟨-, hproj, -⟩, -⟩ := hU
-  haveI := hsa.smooth
-  haveI := hsa.quasiCompact
-  haveI : LocallyOfFiniteType (π ≫ zs) := by
+  have := hsa.smooth
+  have := hsa.quasiCompact
+  have : LocallyOfFiniteType (π ≫ zs) := by
     obtain ⟨M, i', hi', hcomp⟩ := hproj
-    haveI := hi'
-    haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
+    have := hi'
+    have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
     rw [← hcomp]
     infer_instance
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
   obtain ⟨k, _, m, n, C, ξ, a, -, -, rfl, het, -⟩ := hpre x hx
-  haveI : IsRegularLocalRing (ChartRing k m n) :=
+  have : IsRegularLocalRing (ChartRing k m n) :=
     GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin n)
   haveI : IsRegularLocalRing (S.presheaf.stalk (ξ (closedPoint _))) :=
     (GlobalTheory.RegSmooth.isRegularLocalRing_of_isEtaleCompletion _ het).1
-  haveI : IsOpenImmersion e := MorphismProperty.of_isPullback (P := @IsOpenImmersion) he.1.flip inferInstance
+  have : IsOpenImmersion e := MorphismProperty.of_isPullback (P := @IsOpenImmersion) he.1.flip inferInstance
   exact exists_extension_test G.hom e _ tF.PP.L tF.PP.isLB
 
 end GlobalTheory.BdStalkExt
@@ -294,12 +294,12 @@ theorem exists_lb_nhd : ∀ {S X : Scheme.{0}} [IsLocallyNoetherian S] (h : X �
     (GlobalTheory.StalkLimit.nonempty_isLimit hpb).some
   have hcpt : ∀ V : GlobalTheory.StalkLimit.AffNhd x, CompactSpace ((GlobalTheory.StalkLimit.diagram x h).obj V) := by
     intro V
-    haveI : IsAffine V.1.toScheme := V.2.2
+    have : IsAffine V.1.toScheme := V.2.2
     exact QuasiCompact.compactSpace_of_compactSpace (pullback.snd h V.1.ι)
   have hqs : ∀ V : GlobalTheory.StalkLimit.AffNhd x,
       QuasiSeparatedSpace ((GlobalTheory.StalkLimit.diagram x h).obj V) := by
     intro V
-    haveI : IsAffine V.1.toScheme := V.2.2
+    have : IsAffine V.1.toScheme := V.2.2
     exact quasiSeparatedSpace_of_quasiSeparated (pullback.snd h V.1.ι)
   obtain ⟨j, M, hM, -, hall⟩ := GlobalTheory.LBLimit.exists_lb_of_isLimit (GlobalTheory.StalkLimit.diagram x h)
     (fun V => (GlobalTheory.StalkLimit.cone hpb).π.app V) (fun f => (GlobalTheory.StalkLimit.cone hpb).w f) hlim N hN
@@ -349,9 +349,9 @@ theorem exists_spread : ∀ {S Y U YU : Scheme.{0}} [IsLocallyNoetherian S] (f :
   let q₁ := IsOpenImmersion.lift (f ⁻¹ᵁ W₁).ι (pullback.fst f (S.fromSpecStalk x)) hr1
   have hq₁ : q₁ ≫ (f ⁻¹ᵁ W₁).ι = pullback.fst f (S.fromSpecStalk x) := IsOpenImmersion.lift_fac _ _ _
   have iso1 := hq q₁ hq₁
-  haveI : IsOpenImmersion e := MorphismProperty.of_isPullback (P := @IsOpenImmersion) hpb.flip inferInstance
-  haveI : QuasiCompact e := MorphismProperty.of_isPullback (P := @QuasiCompact) hpb.flip inferInstance
-  haveI : QuasiCompact (f ⁻¹ᵁ W₁).ι := MorphismProperty.of_isPullback (P := @QuasiCompact) (isPullback_morphismRestrict f W₁) inferInstance
+  have : IsOpenImmersion e := MorphismProperty.of_isPullback (P := @IsOpenImmersion) hpb.flip inferInstance
+  have : QuasiCompact e := MorphismProperty.of_isPullback (P := @QuasiCompact) hpb.flip inferInstance
+  have : QuasiCompact (f ⁻¹ᵁ W₁).ι := MorphismProperty.of_isPullback (P := @QuasiCompact) (isPullback_morphismRestrict f W₁) inferInstance
   let h : pullback (f ⁻¹ᵁ W₁).ι e ⟶ S := pullback.fst (f ⁻¹ᵁ W₁).ι e ≫ (f ⁻¹ᵁ W₁).ι ≫ f
 
   obtain ⟨W₂, hx₂, iso2⟩ := _root_.GlobalTheory.StalkLBIso.exists_lbIso_nhd h x (N₁.pull (pullback.fst (f ⁻¹ᵁ W₁).ι e))
@@ -935,9 +935,9 @@ namespace GlobalTheory.RigLBDense
 
 theorem exists_extension_of_local_ext : ∀ {S Y U YU : Scheme.{0}} [IsLocallyNoetherian S] [GlobalTheory.IsNormalScheme S] (f : Y ⟶ S) [Smooth f] [GeometricallyConnected f] (j : U ⟶ S) [IsOpenImmersion j], Dense (Set.range j) → ∀ (e : YU ⟶ Y) (fU : YU ⟶ U), IsPullback e fU f j → ∀ (σ : S ⟶ Y) (σU : U ⟶ YU), σ ≫ f = 𝟙 S → σU ≫ e = j ≫ σ → ∀ (L : LB YU), L.IsLB → ∀ (r : LB.Gen (L.pull σU)), r.IsGen → (∀ x : S, x ∉ Set.range j → ∃ W : S.Opens, x ∈ W ∧ ∃ N : LB ↑(f ⁻¹ᵁ W), N.IsLB ∧ ∀ (T : Scheme.{0}) (a : T ⟶ ↑(f ⁻¹ᵁ W)) (b : T ⟶ YU), a ≫ (f ⁻¹ᵁ W).ι = b ≫ e → LBIso (N.pull a) (L.pull b)) → ∃ M : LB Y, M.IsLB ∧ LBIso (M.pull e) L := by
   intro S Y U YU _ _ f _ _ j _ hj e fU hP σ σU hσ hσU L hL r hr hloc
-  haveI : IsOpenImmersion e := MorphismProperty.of_isPullback hP.flip ‹IsOpenImmersion j›
-  haveI : IsReduced S := isReduced_of_isReduced_stalk S
-  haveI : GeometricallyIntegral f := (GlobalTheory.geometricallyIntegral_of_smooth_of_geometricallyConnected.1 f).1
+  have : IsOpenImmersion e := MorphismProperty.of_isPullback hP.flip ‹IsOpenImmersion j›
+  have : IsReduced S := isReduced_of_isReduced_stalk S
+  have : GeometricallyIntegral f := (GlobalTheory.geometricallyIntegral_of_smooth_of_geometricallyConnected.1 f).1
   exact GlobalTheory.DenseGlue.exists_glue j hj f hσ hP hσU hL ⟨r, hr⟩ (by
     intro x hx
     obtain ⟨W, hxW, N, hN, hagr⟩ := hloc x hx
@@ -995,15 +995,15 @@ theorem exists_lb_extension : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
   have := hsa.geomConnected
   have := hsa.quasiCompact
   have := hsa.separated
-  haveI : LocallyOfFiniteType (π ≫ zs) := by
+  have : LocallyOfFiniteType (π ≫ zs) := by
     obtain ⟨M, i', hi', hcomp⟩ := hproj
-    haveI := hi'
-    haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
+    have := hi'
+    have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
     rw [← hcomp]
     infer_instance
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
   have hS : Geo.Tor.IsNormalScheme S := (GlobalTheory.isNormalScheme_iff_pred S).mp hnorm
-  haveI := GlobalTheory.IsNormalScheme.of_pred hS
+  have := GlobalTheory.IsNormalScheme.of_pred hS
   have hst := GlobalTheory.T.exists_lineBundle_extension_at_boundaryPoint Xo c φ h1 h2 h3 zs i OZ N d J π j BD hU hpre tF hmap G e hsa he hch
   exact _root_.GlobalTheory.RigLBDense.exists_extension_of_local_ext G.hom j hdense e tF.G.hom he.1 (eSec G) (eSec tF.G) (Over.w η[G]) (cubeMapOf he).e_comm
     tF.PP.L tF.PP.isLB tF.PP.rig tF.PP.rigGen fun x hx => by
@@ -1056,13 +1056,13 @@ theorem exists_rigLB_cubical_symm : ∀ {E : Type} [Field E] [NumberField E] [Is
   have := hsa.geomConnected
   obtain ⟨h1, h2⟩ : QuasiCompact (π ≫ zs) ∧ LocallyOfFiniteType (π ≫ zs) := by
     obtain ⟨M, i', hi', hcomp⟩ := hproj
-    haveI := hi'
-    haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
+    have := hi'
+    have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
     rw [← hcomp]
     exact ⟨inferInstance, inferInstance⟩
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
-  haveI : CompactSpace S := QuasiCompact.compactSpace_of_compactSpace (π ≫ zs)
-  haveI : IsDominant j := ⟨hdense⟩
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have : CompactSpace S := QuasiCompact.compactSpace_of_compactSpace (π ≫ zs)
+  have : IsDominant j := ⟨hdense⟩
   have hS : Geo.Tor.IsNormalScheme S := (GlobalTheory.isNormalScheme_iff_pred S).mp hnorm
   obtain ⟨L', c', m, hF, he', hpc, hsym⟩ :=
     DenseCubeExt.exists_cubical_extension S _ j hS G tF.G e he tF.PP tF.cub M hM hw

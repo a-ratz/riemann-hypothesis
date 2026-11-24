@@ -56,8 +56,8 @@ open CategoryTheory
 variable {G : Type} [Group G] [Fintype G]
 
 theorem zOf_coeff (χ : G → ℂ) (y : G) : (zOf χ).coeff y = χ 1 / (Fintype.card G : ℂ) * χ y⁻¹ := by
-  simp only [zOf, MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply, MonoidAlgebra.single_apply,
-    Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [zOf, MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply, MonoidAlgebra.coeff_single_apply,
+    Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem irr_one_eq_finrank {χ : G → ℂ} {V : FDRep ℂ G} (hV : ∀ x, V.character x = χ x) :
     χ 1 = (Module.finrank ℂ V : ℂ) := by
@@ -88,7 +88,7 @@ theorem zOf_injOn : Set.InjOn (zOf (G := G)) {χ | IsIrr χ} := by
     linear_combination e1
   have hn : Module.finrank ℂ V = Module.finrank ℂ V' := Nat.mul_self_inj.mp (by exact_mod_cast e2)
   have h11 : χ 1 = χ' 1 := by rw [h1, h1', hn]
-  haveI := PI.GreenLabelSurjWork.nontrivial_of_simple V hs
+  have := PI.GreenLabelSurjWork.nontrivial_of_simple V hs
   have hpos : (Module.finrank ℂ V : ℂ) ≠ 0 := by
     exact_mod_cast (Module.finrank_pos (R := ℂ) (M := V)).ne'
   have hk : χ 1 / (Fintype.card G : ℂ) ≠ 0 := div_ne_zero (h1 ▸ hpos) hc

@@ -111,7 +111,7 @@ theorem span_ker_eq_top_of_isOpenMap_of_compact [NormedSpace ℝ V] [FiniteDimen
   rw [eq_top_iff]
   intro v _
   rw [← SetLike.mem_coe,
-    ← (Submodule.span ℝ (e.ker : Set V)).closed_of_finiteDimensional.closure_eq,
+    ← (Submodule.span ℝ (e.ker : Set V)).isClosed_of_finiteDimensional.closure_eq,
     Metric.mem_closure_iff]
   intro η hη
   have ht : (0 : ℝ) < (n + 1) / η := by positivity

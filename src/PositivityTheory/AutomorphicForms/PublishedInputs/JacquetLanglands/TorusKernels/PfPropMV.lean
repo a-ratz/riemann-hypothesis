@@ -101,7 +101,7 @@ theorem cyc_mem (s : G F Ω) : cycBar F Ω l s ^ (l - 1) ∈ oneU l := by
 
 theorem cont_cyc : Continuous (cycBar F Ω l) :=
   have h : Continuous fun x : ℤ_[l] => algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l]) :=
-    (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val
+    (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom h).comp (continuous_cycZ F Ω l)
 
 theorem cyc_frob [IsAlgClosure F Ω] {A : ValuationSubring Ω} {v : Pl F} (hl : ((l : ℕ) : 𝓞 F) ∉ v.asIdeal)
@@ -233,23 +233,23 @@ theorem norm_eq_one {x y : Qbar l} (hy : ‖y‖ = 1) (h : ‖x - y‖ < 1) : �
   rwa [sub_add_cancel, hy, max_eq_right h.le] at h2
 
 theorem nu_lt {ι : Qbar l ≃+* ℂ} {x : ℂ} : Wc.nu ι x < 1 ↔ ‖ι.symm x‖ < 1 := by
-  rw [Wc.nu_apply, ← NNReal.coe_lt_one, coe_nnnorm]
+  rw [Wc.nu_apply, ← NNReal.coe_lt_one, coe_nnNorm]
 
 theorem nu_eq {ι : Qbar l ≃+* ℂ} {x : ℂ} : Wc.nu ι x = 1 ↔ ‖ι.symm x‖ = 1 := by
-  rw [Wc.nu_apply, ← NNReal.coe_eq_one, coe_nnnorm]
+  rw [Wc.nu_apply, ← NNReal.coe_eq_one, coe_nnNorm]
 
 open Classical in
 theorem prod_away {ι : Qbar l ≃+* ℂ} (D : Wc.LDat F ι) (S : Set (InfinitePlace F)) (t : ℕ) (w : Pl F)
     (hw : ((l : ℕ) : 𝓞 F) ∉ w.asIdeal) : (∏ v, if D.pl v = w ∧ v ∈ S then (l : ℂ) ^ t else 1) = 1 :=
   Finset.prod_eq_one fun v _ => by
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨h, -⟩
     exact hw (h ▸ D.mem v)
 
 open Classical in
 theorem prod_at {ι : Qbar l ≃+* ℂ} (D : Wc.LDat F ι) (S : Set (InfinitePlace F)) (t : ℕ) (w : Pl F) (v₀ : InfinitePlace F)
     (hv : D.pl v₀ = w) : (∏ v, if D.pl v = w ∧ v ∈ S then (l : ℂ) ^ t else 1) = if v₀ ∈ S then (l : ℂ) ^ t else 1 := by
-  rw [Finset.prod_eq_single v₀ (fun v _ hne => if_neg fun h => hne (D.inj (h.1.trans hv.symm)))
+  rw [Finset.prod_eq_single v₀ (fun v _ hne => ite_eq_right fun h => hne (D.inj (h.1.trans hv.symm)))
     (fun h => absurd (Finset.mem_univ _) h)]
   by_cases h : v₀ ∈ S <;> simp [hv, h]
 

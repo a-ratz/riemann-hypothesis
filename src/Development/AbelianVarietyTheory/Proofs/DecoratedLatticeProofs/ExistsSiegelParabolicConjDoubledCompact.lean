@@ -628,7 +628,7 @@ theorem exists_idele (σ : E →ₐ[F] E) (q : ℕ) (hq : 1 < q) (a α η : 𝓞
   have hαE : (α : E) ≠ 0 := by
     intro h; rw [h, zero_mul] at hα; exact mul_ne_zero haE hηE hα.symm
   obtain ⟨k, hk, d, hd⟩ : ∃ k : ℕ, 0 < k ∧ η ∣ (q : 𝓞 E) ^ k - 1 := by
-    haveI : Finite (𝓞 E ⧸ Ideal.span {η}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hη)
+    have : Finite (𝓞 E ⧸ Ideal.span {η}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hη)
     have hcq : IsCoprime η (q : 𝓞 E) := by
       have := (hcop.pow_right (n := 2)).neg_right
       rwa [ha, neg_neg] at this
@@ -669,9 +669,9 @@ theorem different_le (D : D7) (a : 𝓞 D.host.E) (ha : a ^ 2 = -(D.host.q : �
     rintro rfl
     rw [Ideal.bot_pow (by norm_num), Ideal.mem_bot] at hqP
     exact hq.ne_zero (by exact_mod_cast hqP)
-  haveI := hp.isMaximal hP0
-  haveI : Fact D.host.q.Prime := ⟨hq⟩
-  haveI : (Ideal.span {(D.host.q : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime _
+  have := hp.isMaximal hP0
+  have : Fact D.host.q.Prime := ⟨hq⟩
+  have : (Ideal.span {(D.host.q : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime _
   have h2 := pow_sub_one_dvd_differentIdeal ℤ (p := Ideal.span {(D.host.q : ℤ)}) P 2 (by simpa using hq.ne_zero)
     (by rw [Ideal.dvd_iff_le, Ideal.map_span, Set.image_singleton, map_natCast, Ideal.span_singleton_le_iff_mem]
         exact hqP)
@@ -846,7 +846,7 @@ theorem keepsDiag_of_mul_stkRows_one {R : Type} [CommRing R] {n : ℕ} {M : Matr
     rw [← finSumFinEquiv.sum_comp, Fintype.sum_sum_type] at h1
     simp only [stkRows, Matrix.submatrix_apply, id, Equiv.symm_apply_apply, Matrix.fromRows_apply_inl,
       Matrix.fromRows_apply_inr, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at h1
+      Finset.mem_univ, ite_true] at h1
     rw [h1]
     rcases s with s | s <;> rfl
   intro i j

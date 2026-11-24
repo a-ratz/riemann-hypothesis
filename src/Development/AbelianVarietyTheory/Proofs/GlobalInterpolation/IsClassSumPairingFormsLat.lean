@@ -147,7 +147,7 @@ def gramAt (v : InfinitePlace K) : Matrix (Fin (S.hDim h)) (Fin (S.hDim h)) ℂ 
 theorem gramAt_form (v : InfinitePlace K) (a b : Fin (S.hDim h) → ℂ) :
     star a ⬝ᵥ gramAt S h v *ᵥ b = @wForm _ _ h.fintypeCl _ (S.toCSD h).wt (S.gramV.map v.embedding)
       (∑ i, a i • coordAt S v (S.hB h i : S.D → S.V)) (∑ i, b i • coordAt S v (S.hB h i : S.D → S.V)) := by
-  letI := h.fintypeCl
+  let := h.fintypeCl
   have e : ∀ i j, gramAt S h v i j = _ := fun i j => ipAt_eq S h v _ _
   rw [dotProduct]
   simp only [Matrix.mulVec, dotProduct, e, Finset.mul_sum]
@@ -170,8 +170,8 @@ theorem coordAt_sum (v : InfinitePlace K) (x : S.EqFun) :
 
 theorem coordAt_indep (v : InfinitePlace K) :
     LinearIndependent ℂ fun i => fun p : S.Cl × S.ιV => coordAt S v (S.hB h i : S.D → S.V) p.1 p.2 := by
-  letI := h.fintypeCl
-  letI : Algebra K ℂ := v.embedding.toAlgebra
+  let := h.fintypeCl
+  let : Algebra K ℂ := v.embedding.toAlgebra
   let f : S.EqFun →ₗ[K] (S.Cl × S.ιV → K) := LinearMap.pi fun p =>
     S.bV.coord p.2 ∘ₗ LinearMap.proj (S.outSec.rep p.1) ∘ₗ S.EqFun.subtype
   have hf : LinearMap.ker f = ⊥ := by
@@ -185,7 +185,7 @@ theorem coordAt_indep (v : InfinitePlace K) :
   exact (linearIndependent_algebraMap_comp_iff (S := ℂ)).2 ((S.hB h).linearIndependent.map' f hf)
 
 theorem gramAt_posDef (v : InfinitePlace K) (hG : (S.gramV.map v.embedding).PosDef) : (gramAt S h v).PosDef := by
-  letI := h.fintypeCl
+  let := h.fintypeCl
   refine Matrix.PosDef.of_dotProduct_mulVec_pos ?_ fun a ha => ?_
   · ext i j
     rw [Matrix.conjTranspose_apply, gramAt, Matrix.of_apply, Matrix.of_apply, ipAt_eq, ipAt_eq]
@@ -232,7 +232,7 @@ open GlobalTheory.TestLat.Compare
 
 theorem pairBDualK : PairBDualK := by
   intro K _ _ ι _ n lam M hM x
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   have h := GlobalTheory.TransDual.nabDelDual K ι n lam (fun _ => 1) M (fun _ => Matrix.conjTranspose_one) (fun _ => by simp) hM
   have e : (fun τ => hdualFr (1 : Matrix (Fin n) (Fin n) K) (M τ)) = fun τ => dualFr (M τ) := by
     funext τ
@@ -257,7 +257,7 @@ theorem pairK_one_basis [StarRing K] (i j : VVIdx lam) :
   exact h
 
 theorem gramB_posDef (φ : K →+* ℂ) : ((gramB K lam).map φ).PosDef := by
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   have h := pairingPositive_holds K ι n lam (fun _ => 1) φ fun τ => by
     rw [Matrix.map_one _ (map_zero _) (map_one _)]; exact Matrix.PosDef.one
   simp only [pairK_one_basis] at h

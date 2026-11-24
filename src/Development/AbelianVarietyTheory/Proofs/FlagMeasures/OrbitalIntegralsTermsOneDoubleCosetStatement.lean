@@ -81,8 +81,8 @@ theorem sum_norm_sq_basis_indep {Wq Wp : Type} [NormedAddCommGroup Wq] [InnerPro
     [FiniteDimensional ℂ Wq] [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp]
     {ι : Type} [Fintype ι] (T : Wq →L[ℂ] Wp) (b e : OrthonormalBasis ι ℂ Wq) :
     ∑ i, ‖T (b i)‖ ^ 2 = ∑ i, ‖T (e i)‖ ^ 2 := by
-  haveI := FiniteDimensional.complete ℂ Wq
-  haveI := FiniteDimensional.complete ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wp
   set c := stdOrthonormalBasis ℂ Wp
   have key : ∀ f : OrthonormalBasis ι ℂ Wq,
       ∑ i, ‖T (f i)‖ ^ 2 = ∑ k, ‖ContinuousLinearMap.adjoint T (c k)‖ ^ 2 := by
@@ -156,7 +156,7 @@ theorem wu_move {D : D7} (X : HidaSetting D) (v : D.what₂.Word) (s : X.B.I.Gin
   have hNS : ∀ {s : X.B.I.Ginf}, s ∈ X.NinfU v → s ∈ X.SinfU v := fun hs p => (hs p).1
   have hsi : s⁻¹ ∈ X.NinfU v := ninf_inv X v hs
   rw [mul_assoc, (X.Wu_spec v).1 s⁻¹ (hNS hsi) (h * x), (X.piU_rep v).2.2.2.1 s⁻¹ hsi,
-    ContinuousLinearMap.one_apply, (X.Wu_spec v).1 h hh x, Formalism.L2.SG.RealObj.InfCut.piIso_apply, smul_smul]
+    one_apply_eq_self, (X.Wu_spec v).1 h hh x, Formalism.L2.SG.RealObj.InfCut.piIso_apply, smul_smul]
   rfl
 
 end GlobalTheory.CosetOrbital
@@ -177,10 +177,10 @@ theorem pinned_form (νq : X.B.I.Ginf → Measure X.B.I.Ginf) (hP : Formalism.L2
       OOt t = (μR (FundOf t)).toReal •
         (haveI := FiniteDimensional.complete ℂ (X.Vpi u)
          OO ((νq (Formalism.L2.SG.RealObj.gamW X u u' w)).map (fun x => g * x)) Set.univ (X.Wu u) (X.Wu u') t.pt.1) := by
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   set γw := Formalism.L2.SG.RealObj.gamW X u u' w with hγw
   have hγwP : Formalism.L2.SG.RealObj.IsPtRep X u u' w γw := by
-    simp only [hγw, Formalism.L2.SG.RealObj.gamW, dif_pos hreal]; exact hreal.choose_spec
+    simp only [hγw, Formalism.L2.SG.RealObj.gamW, dite_eq_left hreal]; exact hreal.choose_spec
   obtain ⟨μw, hμwH, hμwQ, hμwS⟩ := hP.2 w hreal
   set cj : X.B.I.Ginf → X.B.I.Ginf := fun y => g * y * g⁻¹ with hcj
   have hcjm : Measurable cj := (measurable_const_mul g).mul_const g⁻¹
@@ -201,7 +201,7 @@ theorem pinned_form (νq : X.B.I.Ginf → Measure X.B.I.Ginf) (hP : Formalism.L2
     · intro h0
       apply h2
       have := congrArg (fun m : Measure X.B.I.Ginf => m univ) h0
-      simp only [hμR, Measure.map_apply hcjm MeasurableSet.univ, preimage_univ, Measure.coe_zero,
+      simp only [hμR, Measure.map_apply hcjm MeasurableSet.univ, preimage_univ, FunLike.coe_zero,
         Pi.zero_apply] at this
       exact Measure.measure_univ_eq_zero.1 this
     · have hcje : ⇑((MeasurableEquiv.mulLeft g).trans (MeasurableEquiv.mulRight g⁻¹)) = cj := rfl
@@ -235,7 +235,7 @@ theorem pinned_form (νq : X.B.I.Ginf → Measure X.B.I.Ginf) (hP : Formalism.L2
     exact (lintegral_mul_left_eq_self f g).symm
   have hFE : ∃ Ω, IsSFund X.B.I (ROinf t) Ω := Formalism.L2.SG.Pf.fundExistsC_holds D X Y u u' t
   have hFO : IsSFund X.B.I (ROinf t) (FundOf t) := by
-    unfold FundOf; rw [dif_pos hFE]; exact hFE.choose_spec
+    unfold FundOf; rw [dite_eq_left hFE]; exact hFE.choose_spec
   set Γ0 := ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin with hΓ0
   have hKu : ∀ r ∈ Rset t, ∃! s, s ∈ ROinf t ∧ s * r ∈ FundOf t := by
     intro r _
@@ -263,7 +263,7 @@ theorem conj_inv_of_norm_one (z : ℂ) (hz : ‖z‖ = 1) : conj (z⁻¹) = z :=
 
 theorem coset_orbital_form : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), Formalism.MainNotions.S.Cnt.Stand D u u' → ∀ ν, Formalism.L2.SG.RealObj.NuQPin X u u' ν → ∀ t₀ : TauC Y u u', t₀.relevant → t₀.G ≠ 0 → ∀ w, w = Formalism.L2.SG.PairVal.ptOf t₀.toTerm → (∃ g, Formalism.L2.SG.RealObj.IsPtRep X u u' w g) ∧ ∃ T : X.Vpi u' →L[ℂ] X.Vpi u, ‖Formalism.L2.SG.PackageTie.hsEmb T‖ = ‖Formalism.L2.SG.PackageTie.hsEmb (haveI := FiniteDimensional.complete ℂ (X.Vpi u); OO (ν (Formalism.L2.SG.RealObj.gamW X u u' w)) Set.univ (X.Wu u) (X.Wu u') (Formalism.L2.SG.RealObj.gamW X u u' w))‖ ∧ ∀ (t : TauC Y u u') (n m : ((VS D).V ≃ₗ[D.host.E] (VS D).V)) (xn xm : X.B.I.GA), n ∈ NRat (lf D (X.Fu u)) ∧ m ∈ NRat (lf D (X.Fu u')) ∧ t.lin = n⁻¹ * t₀.lin * m → RatLink X xn n → RatLink X xm m → ∃ (μR : Measure X.B.I.Ginf) (K : Set X.B.I.Ginf), Formalism.L2.SG.VolPin.IsPinnedR t w μR ∧ (MeasurableSet K ∧ ∀ y ∈ Formalism.L2.SG.TermOp.Vanish.Rset t, ∃! s, s ∈ ROinf t ∧ s * y ∈ K) ∧ OOt t = (((μR K).toReal : ℂ) * ((X.psiInfU u xn.1)⁻¹ * X.psiInfU u' xm.1)) • T := by
   intro D X Y u u' hSt ν hν t₀ hrel₀ hG₀ w hw
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   have hRD := Formalism.L2.SG.Pf.RowForm.RealDecompL.realDecompC_of X Y u u'
     (Formalism.L2.SG.LeadingMinorsNonvanishing.atSomeAll_holds D X Y u u')
   obtain ⟨hpt, g, hg, g', hg', hdec⟩ := Formalism.L2.SG.Pf.RowForm.realDecompC_gamW X Y u u' hRD t₀ hrel₀ hG₀

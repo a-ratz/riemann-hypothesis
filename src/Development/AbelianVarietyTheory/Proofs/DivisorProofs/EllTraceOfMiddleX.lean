@@ -134,12 +134,12 @@ theorem hasSum_conjClasses_tsum_of_finite_support {G : Type} [Group G] (g : G �
   have h1 := hsum.tsum_fiberwise c
   have hfib : ∀ γ : G, c ⁻¹' {c γ} = c γ := by
     intro γ; ext b
-    simp only [c, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq]
+    simp only [c, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq]
     constructor
     · intro h
       have : b ∈ {δ' | IsConj b δ'} := IsConj.refl b
       rw [h] at this; exact this
-    · intro h; ext x; simp only [Set.mem_setOf_eq]
+    · intro h; ext x; simp only [Set.mem_ofPred_eq]
       exact ⟨fun hx => h.trans hx, fun hx => h.symm.trans hx⟩
   have hsupp : Function.support (fun s : Set G => ∑' b : c ⁻¹' {s}, g b)
       ⊆ {s | ∃ γ, R γ ∧ s = {δ | IsConj γ δ}} := by
@@ -308,10 +308,10 @@ theorem mem_iwahori_valued {F : Type} [Field F] [NumberField F] (v : HeightOneSp
     letI := GlobalTheory.LocalData.complRel v
     haveI := GlobalTheory.LocalData.isLocalField v
     g ∈ GlobalTheory.SmGL.iwahori (Fv F v) (Fin n) → g ∈ GlobalTheory.IndefiniteRowSideFullHecke.IwahoriSubgroup.iwahori (Fv F v) n := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
   intro hg
-  haveI hc : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible :=
+  have hc : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he : (ValuativeRel.valuation (Fv F v)).IsEquiv Valued.v := ValuativeRel.isEquiv _ _
   obtain ⟨h, hh, rfl⟩ := Subgroup.mem_map.1 hg
@@ -340,7 +340,7 @@ namespace GlobalTheory.RegSupp
 theorem isRegSS_of_tensor_ne_zero : GlobalTheory.IndefiniteRowSideFullHecke.IwahoriSubgroup.IwahoriEigenvalues → ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (ff : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ), IsTestFin T U μf ff → ∀ (fa : ∀ w, GArch D.sp.cm.sig V.gram w → ℂ) (δ : GF V) (x : GA D V), tensor D.sp.cm.sig V.gram fa ff (x⁻¹ * rat V δ * x) ≠ 0 → IsRegSS δ.1.1 := by
   intro hI D V T U μf ff hT fa δ x h
   obtain ⟨-, -, ⟨t, ht, hfu⟩, -, hcof⟩ := hT
-  letI : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
+  let : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
   have hfin : (Function.mulSupport fun v =>
       ff v (proj D.sp.cm.sig V.gram v (x⁻¹ * rat V δ * x))).Finite :=
     Filter.eventually_cofinite.1 ((hcof.and (eventually_proj_mem_stabLoc D.sp.cm.sig V.gram (frameLat V)
@@ -467,11 +467,11 @@ namespace GlobalTheory.CompanionTheory.EllTrace
 open GlobalTheory.TruncKer
 
 theorem countable_GF {D : D7} (V : HSp D) : Countable (GF V) := by
-  haveI : Countable D.host.E :=
+  have : Countable D.host.E :=
     (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin V.rank) (Fin V.rank) D.host.E) :=
+  have : Countable (Matrix (Fin V.rank) (Fin V.rank) D.host.E) :=
     (show Countable (Fin V.rank → Fin V.rank → D.host.E) from inferInstance)
-  haveI : Countable (GL (Fin V.rank) D.host.E) := Units.val_injective.countable
+  have : Countable (GL (Fin V.rank) D.host.E) := Units.val_injective.countable
   infer_instance
 
 theorem kernel_diag_hasSum {D : D7} (V : HSp D) {f : GA D V → ℂ} (hf : f ∈ CcGA V) (x : GA D V) :
@@ -704,7 +704,7 @@ theorem archUnimod : ArchUnimod := by
   intro D V w μ hμ
   obtain ⟨hcm, hJ'⟩ := GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND D.host.F D.host.E D.sp.cm
   have hJ := hJ' V
-  haveI : SecondCountableTopology w.Completion :=
+  have : SecondCountableTopology w.Completion :=
     (InfinitePlace.Completion.isometry_extensionEmbedding w).isEmbedding.secondCountableTopology
   have hU := (GlobalTheory.ArchUnitaryUnimod.unimodularOver_of_artinian (σ := D.sp.cm.sig) w.Completion hcm hJ).1
   exact hU.2.2.2.2.2.2 μ hμ
@@ -1112,7 +1112,7 @@ theorem ne_zero (hι : Continuous (matCoord ι)) (hB : IsWeight ι s B) (μ : Me
     (hφc : Continuous φ) (hφ : HasCompactSupport φ) (hφ0 : ∀ y, 0 ≤ φ y) (hφs : 0 < φ s) :
     ∫ h, G ι s B φ 1 h ∂μ ≠ 0 := by
   have hpos : 0 < ∫ h, gR ι s B φ 1 h ∂μ := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (gR_cont hι hB hφc 1)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (gR_cont hι hB hφc 1)
       (gR_supp hB hφ 1) (fun h => mul_nonneg (hB.nonneg _) (hφ0 _)) ?_
     simp only [gR, inv_one, one_mul, mul_one]
     exact (mul_pos hB.pos hφs).ne'
@@ -1255,7 +1255,7 @@ theorem kerSwap : KerUnif → KerSwap := by
         ((hk.mq i).comp measurable_snd).prodMk measurable_fst
       exact hGc.measurable.comp this
     · have hae : ∀ᵐ z ∂((μ.restrict K).prod m), z.1 ∈ K :=
-        Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst (ae_restrict_mem hKm)
+        QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst (ae_restrict_mem hKm)
       filter_upwards [hae] with z hz
       have hs : HasSum (fun i => c i z.2 * W (matCoord ι (q i z.2), p z.1))
           (∑' i, c i z.2 * W (matCoord ι (q i z.2), p z.1)) :=
@@ -1422,17 +1422,17 @@ lemma key (S : ℂ → ℝ) (hS : ∀ z, 0 < S z) (z w : ℂ) (h : star z * w = 
     have hs : (((Real.sqrt (S z)) : ℝ) : ℂ) ≠ 0 :=
       Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr (hS z)).ne'
     simp only [rho, hn, hcc]
-    rw [if_pos h1, if_neg (by linarith), if_pos h2, Complex.star_def, Complex.conj_ofReal]
+    rw [ite_eq_left h1, ite_eq_right (by linarith), ite_eq_left h2, Complex.star_def, Complex.conj_ofReal]
     exact mul_inv_cancel₀ hs
   · have h2 : ‖z‖⁻¹ = 1 := by rw [← h1, inv_one]
     simp only [rho, hn, hcc]
-    rw [if_neg (by linarith), if_neg (by linarith), if_neg (by linarith), if_neg (by linarith)]
+    rw [ite_eq_right (by linarith), ite_eq_right (by linarith), ite_eq_right (by linarith), ite_eq_right (by linarith)]
     simp
   · have h2 : 1 < ‖z‖⁻¹ := by nlinarith
     have hs : (((Real.sqrt (S (star z)⁻¹)) : ℝ) : ℂ) ≠ 0 :=
       Complex.ofReal_ne_zero.mpr (Real.sqrt_pos.mpr (hS _)).ne'
     simp only [rho, hn, hcc]
-    rw [if_neg (by linarith), if_pos h1, if_pos h2, star_inv₀, Complex.star_def, Complex.conj_ofReal]
+    rw [ite_eq_right (by linarith), ite_eq_left h1, ite_eq_left h2, star_inv₀, Complex.star_def, Complex.conj_ofReal]
     exact inv_mul_cancel₀ hs
 
 end MainStatements.WeightKernel.PShiftT
@@ -1453,7 +1453,7 @@ theorem shiftT : ShiftT := by
   have hSl : ∀ i, S (l i) = σ i := by
     intro i
     have h : ∃ j, l j = l i := ⟨i, rfl⟩
-    simp only [S, dif_pos h]
+    simp only [S, dite_eq_left h]
     rw [hl (Classical.choose_spec h)]
   refine ⟨fun i => rho S (l i), ?_, ?_⟩
   · ext i j
@@ -1470,7 +1470,7 @@ theorem shiftT : ShiftT := by
       _ = J i j := by rw [e2, one_mul]
   · intro i hi
     show ‖rho S (l i)‖ ^ 2 = σ i
-    rw [rho, if_pos hi, hSl, Complex.norm_real, Real.norm_of_nonneg (Real.sqrt_nonneg _),
+    rw [rho, ite_eq_left hi, hSl, Complex.norm_real, Real.norm_of_nonneg (Real.sqrt_nonneg _),
       Real.sq_sqrt (hσ i).le]
 
 end MainStatements.WeightKernel
@@ -1614,7 +1614,7 @@ theorem exists_diag (n : ℕ) (s : Matrix (Fin n) (Fin n) ℂ) (hs : s.charpoly.
   let P : Matrix (Fin n) (Fin n) ℂ := Matrix.of fun i j => v j i
   have hcol : P.col = v := by
     ext j i; rfl
-  have hP : IsUnit P := Matrix.linearIndependent_cols_iff_isUnit.mp (by rw [hcol]; exact hli)
+  have hP : IsUnit P := linearIndependent_col_iff_isUnit.mp (by rw [hcol]; exact hli)
   have hdet : IsUnit P.det := (Matrix.isUnit_iff_isUnit_det _).1 hP
   have hsP : s * P = P * diagonal l := by
     ext i j
@@ -1760,8 +1760,8 @@ theorem hyperX : CuspAny → ArchZero → GlobalTheory.IndefiniteRowSideFullHeck
     exact hreg
   obtain ⟨hodd, -, -, hNF, hRP, hA, hF⟩ := hTD
   have hff := hF.isFinFamily
-  haveI : ∀ w, (μa w).IsHaarMeasure := hRP.haar_arch
-  haveI : ∀ v, (μf v).IsHaarMeasure := hRP.haar_loc
+  have : ∀ w, (μa w).IsHaarMeasure := hRP.haar_arch
+  have : ∀ v, (μf v).IsHaarMeasure := hRP.haar_loc
   obtain ⟨w⟩ : Nonempty (InfinitePlace D.host.F) := inferInstance
   have hnc := (GlobalTheory.T.centralizer_regular_levi_commutative_noncompact D V Φ P hpar γ0 hreg0 hmem).2.2 (Finset.nonempty_iff_ne_empty.1 hne) w
   have hcm := isCMExt_host D
@@ -1769,13 +1769,13 @@ theorem hyperX : CuspAny → ArchZero → GlobalTheory.IndefiniteRowSideFullHeck
       [ds.IsMulRightInvariant], HasOrbInt (μa w) (projArch D.sp.cm.sig V.gram w (rat V γ0)) ds (fa w) 0 := by
     obtain ⟨ρ, rfl⟩ := (placeOf_bijective D).2 w
     intro ds _ _
-    haveI := (M.ds ρ).1
+    have := (M.ds ρ).1
     have hs : IsRegSS (matAt V ρ (projArch D.sp.cm.sig V.gram (placeOf D ρ) (rat V γ0))) :=
       (isRegSS_archMat_iff hcm (embOverOf D ρ)).2 (isRegSS_projArch_ratEmb hreg0 _)
     exact (hA ρ).orb_noncompact _ hs hnc ds
   obtain ⟨ds, hds1, hds2⟩ : ∃ ds : Measure (cent (projArch D.sp.cm.sig V.gram w (rat V γ0))),
       ds.IsHaarMeasure ∧ ds.IsMulRightInvariant := by
-    haveI : LocallyCompactSpace (cent (projArch D.sp.cm.sig V.gram w (rat V γ0))) :=
+    have : LocallyCompactSpace (cent (projArch D.sp.cm.sig V.gram w (rat V γ0))) :=
       (isClosed_cent _).locallyCompactSpace
     exact ⟨Measure.haar, inferInstance, isMulRightInvariant_cent
       (isMulCommutative_cent_projArch_ratEmb (σ := D.sp.cm.sig) (J := V.gram) hreg0 w) _⟩
@@ -1824,8 +1824,8 @@ theorem ellTrace_of_middleX : MainStatements.RegularCuspidalTrace.RegClassInt �
   have hcc : f ∈ CcGA V := tensor_mem_ccAd harch.mem hfin.isFinFamily
   have hcs := continuous_of_mem_ccAd hcc
   obtain ⟨hH, -⟩ := GlobalTheory.T.typeHypothesis_forms_agree D V T hnf
-  haveI := hμa
-  haveI := hμf
+  have := hμa
+  have := hμf
   have hconst := hPC.2 D V hodd S M T hH U μa μf f ⟨fa, ff, harch, hfin, rfl⟩
   have hcusp : GlobalTheory.IndefiniteRowSideFullHecke.CuspidalNoRadicalFixed.IsCuspidalOp V μ f :=
     hCO D V μ f hcc (fun 𝔉 h𝔉 ν hν x y => ((hconst 𝔉 h𝔉).1 ν x y).2)
@@ -1833,9 +1833,9 @@ theorem ellTrace_of_middleX : MainStatements.RegularCuspidalTrace.RegClassInt �
   have hcuspFn : MainStatements.RegularCuspidalTrace.IsCuspFn f := fun 𝔉 h => (hconst 𝔉 h).1
   refine ⟨hcusp.traceClass, ?_⟩
   rw [hcusp.trace_eq_integral]
-  haveI : Countable (GF V) := countable_GF V
+  have : Countable (GF V) := countable_GF V
   let ι := {𝔬 : Set (GF V) // ∃ γ : GF V, IsRegSS γ.1.1 ∧ 𝔬 = {δ | IsConj γ δ}}
-  haveI : Countable ι := by
+  have : Countable ι := by
     have hs : Function.Surjective
         (fun γ : {γ : GF V // IsRegSS γ.1.1} => (⟨{δ | IsConj γ.1 δ}, γ.1, γ.2, rfl⟩ : ι)) := by
       rintro ⟨_, γ, hγ, rfl⟩

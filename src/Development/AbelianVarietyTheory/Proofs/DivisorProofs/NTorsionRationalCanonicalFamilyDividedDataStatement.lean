@@ -109,12 +109,12 @@ theorem lbIso_cube_of_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoca
     LBIso (cubeLB A.A ![fst A.A A.A ≫ cx, snd A.A A.A ≫ cy] A.L) (cubeLB A.A ![fst A.A A.A ≫ cx', snd A.A A.A ≫ cy'] A.L) →
     LBIso (cubeLB G ![fst G G ≫ x, snd G G ≫ y] U.LG.L) (cubeLB G ![fst G G ≫ x', snd G G ≫ y'] U.LG.L) := by
   intro R _ _ _ J hR D₁ A₁ G₁ _ _ U₁ hS x₁ y₁ x₂ y₂ cx₁ cy₁ cx₂ cy₂ hx₁ hy₁ hx₂ hy₂ hA
-  haveI : IsNoetherianRing R := hR.1
-  haveI : IsIntegrallyClosed R := hR.2.2.1
-  haveI := hS.smooth
-  haveI := hS.geomConnected
-  haveI := GlobalTheory.smooth_tensorObj_hom G₁ G₁
-  haveI := GlobalTheory.geometricallyIntegral_tensorObj_hom G₁ G₁
+  have : IsNoetherianRing R := hR.1
+  have : IsIntegrallyClosed R := hR.2.2.1
+  have := hS.smooth
+  have := hS.geomConnected
+  have := GlobalTheory.smooth_tensorObj_hom G₁ G₁
+  have := GlobalTheory.geometricallyIntegral_tensorObj_hom G₁ G₁
   let δ := CartesianMonoidalCategory.prodComparison (Over.pullback (jK R)) G₁ G₁
   let u := lift (fst ((Over.pullback (jK R)).obj G₁) ((Over.pullback (jK R)).obj G₁) ≫ U₁.gen.hom)
     (snd ((Over.pullback (jK R)).obj G₁) ((Over.pullback (jK R)).obj G₁) ≫ U₁.gen.hom)
@@ -206,7 +206,7 @@ namespace GlobalTheory.Mum.EFix
 theorem exists_equiv_act_of_fixed : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], IsCN R → ∀ (n : ℕ), 1 ≤ n → IsUnit (n : R) → ∀ (Q : Data R) (D' : DegData R (maximalIdeal R)) (F : PFactor Q D'.toPre) (A' : PolAV (Sp (FractionRing R))) (G' : Over (Sp R)) [GrpObj G'] [IsCommMonObj G'] (U' : Unif (maximalIdeal R) D' A' G') (oA : A'.OAct F.O) (oG : RingAct G' F.O), IsSemiAbelian G' → U'.toUnifPre.OLinear F.O F.o oA oG → ∀ (a : TFK (R := R) (AlgebraicClosure (FractionRing R)) ⟶ A'.A), a ^ n = 1 → a ≫ oA.act F.e = a → ∀ p : QkPt D'.toPre (AlgebraicClosure (FractionRing R)) n, QkToAkU U'.toUnifPre (AlgebraicClosure (FractionRing R)) n p a → ∃ p₁ : QkPt D'.toPre (AlgebraicClosure (FractionRing R)) n, p₁.y = F.e • p.y ∧ GtPtAct F.o F.e p.g p₁.g ∧ QkPt.Equiv D'.toPre (AlgebraicClosure (FractionRing R)) p₁ p := by
   intro R _ _ _ hR n hn _ Q D' F A' G' _ _ U' oA oG hS hl a _ hae p hp
   have hAdm : AdmBase R (maximalIdeal R) := ⟨hR.1, inferInstance, hR.2.1, hR.2.2.1⟩
-  haveI : CharZero R := hR.2.2.2
+  have : CharZero R := hR.2.2.2
   have hL := GlobalTheory.firstFiveLaws
   obtain ⟨q, hqy, hqg⟩ := exists_gtPtAct (F := AlgebraicClosure (FractionRing R)) hL.1.globalFns F.o F.e p
   obtain ⟨E, eG, eA, -, -, eact⟩ := endU_of_oLinear hL R (maximalIdeal R) hAdm D' A' G' hS U' F.O F.o oA oG hl F.e
@@ -893,8 +893,8 @@ theorem data_c_zero {R : Type} [CommRing R] [IsDomain R] (Q : Data R) : Q.c 0 = 
 theorem factor_origin {R : Type} [CommRing R] [IsDomain R] {Q : Data R} {D : DegPre R} (hB : D.TauBimult) (F : PFactor Q D) :
     ∀ (T : Over (Sp R)) (z : T.left) (J : (T.left ⟶ D.P.A.left) → D.P.L.ι) (J' : (T.left ⟶ Q.B.left) → Q.M.L.ι),
       Good D.P.L z J → Good Q.M.L z J' → lamVal F.w (lift (1 : T ⟶ Q.B) (1 : T ⟶ Q.B)).left z J J' = 1 := by
-  haveI := F.inc_hom
-  haveI := F.o.onB.hom F.f
+  have := F.inc_hom
+  have := F.o.onB.hom F.f
   refine origin_of_generic D.P.A Q.B D.P.L Q.M.L D.P.isLB Q.M.isLB _ F.w (1 : 𝟙_ (Over (Sp R)) ⟶ D.P.A).left
     (fun I => ?_) F.w_gen fun z J J' hJ hJ' => ?_
   · rw [GlobalTheory.MumRigidZero.lift_comp_left, MonObj.one_comp, MonObj.one_comp]
@@ -928,8 +928,8 @@ theorem exists_root {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (T : 
       ∀ h : GtPtF D (FractionRing R), h.b = (toUnit _ ≫ d) ≫ F.inc → ∀ y z J', Good D.P.L z J' →
         ∃ u, charVal (iota hB (FractionRing R) (F.xi a)) (F.f • F.xi y) z J' =
           u ^ n * charVal (n • h) (F.f • F.xi y) z J' := by
-  haveI := F.inc_hom
-  haveI := F.o.onB.hom F.f
+  have := F.inc_hom
+  have := F.o.onB.hom F.f
   obtain ⟨β, β₂, w, hpb, hsq, hw, hc, htau⟩ := hD
   have hcomm : (spMap iw ≫ (T.c₀ (e a)).left) ≫ T.B.hom = 𝟙 (Sp R) ≫ spMap iw := by
     rw [Category.assoc, Over.w (T.c₀ (e a))]; simp
@@ -1058,7 +1058,7 @@ theorem exists_rational {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (
     (hn : 1 ≤ n) (Q : Data R) (e : Q.X ≃+ (Fin T.r → ℤ)) (hD : DataFrom T iw s ε n Q e) {D : DegPre R} (hB : D.TauBimult)
     (F : PFactor Q D) (a : Q.X) : ∃ h : GtPtF D (FractionRing R), n • h = iota hB _ (F.xi a) ∧
       ptSmul GlobalTheory.globalFns_holds F.o F.e h = h := by
-  haveI := F.inc_hom
+  have := F.inc_hom
   have hG := GlobalTheory.globalFns_holds
   obtain ⟨d, hdn, hd⟩ := exists_root T iw s ε hn Q e hD hB F a
   let E := ptSmulHom hG F.o (FractionRing R) F.e
@@ -1237,8 +1237,8 @@ theorem pow_comp' {S : Scheme.{0}} {G H Z : Over S} [GrpObj G] [GrpObj H] (φ : 
 
 theorem ratBase : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (T : TautBase o W) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (iw : W →+* R) {I : Type} [Fintype I] (s : I → R) (ε : I → LinearMap.BilinForm ℤ (Fin T.r → ℤ)) (n : ℕ), IsCN R → 1 ≤ n → IsUnit (n : R) → ∀ ζ : R, IsPrimitiveRoot ζ n → ∀ (Q : Data R) (e : Q.X ≃+ (Fin T.r → ℤ)), DataFrom T iw s ε n Q e → TorsRat Q.B n → ∀ (D' : DegData R (maximalIdeal R)) (F : PFactor Q D'.toPre) (p₀ p : QkPt D'.toPre (AlgebraicClosure (FractionRing R)) n), p.y = F.e • p₀.y → GtPtAct F.o F.e p₀.g p.g → ∃ b : TF (R := R) (FractionRing R) ⟶ D'.toPre.P.A, p.g.b.left = spMap (algebraMap (FractionRing R) (AlgebraicClosure (FractionRing R))) ≫ b.left := by
   intro o W _ _ _ T R _ _ _ iw I _ s ε n _ hn _ ζ _ Q e hD hT D' F p₀ p hy hg
-  haveI := F.inc_hom
-  haveI := F.pr_hom
+  have := F.inc_hom
+  have := F.pr_hom
   set L := AlgebraicClosure (FractionRing R)
   set a := F.xp p₀.y
   let b₀ : TF (R := R) L ⟶ Q.B := p₀.g.b ≫ F.pr
@@ -1397,7 +1397,7 @@ namespace GlobalTheory.Mum.CanonTors
 theorem galois_fixed : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (T : TautBase o W) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (iw : W →+* R) {I : Type} [Fintype I] (s : I → R) (ε : I → LinearMap.BilinForm ℤ (Fin T.r → ℤ)) (n : ℕ), IsCN R → 1 ≤ n → IsUnit (n : R) → ∀ ζ : R, IsPrimitiveRoot ζ n → ∀ (Q : Data R) (e : Q.X ≃+ (Fin T.r → ℤ)), DataFrom T iw s ε n Q e → TorsRat Q.B n → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (P : LB (G2 G).left), Canon Q G P → ∀ (σ : AlgebraicClosure (FractionRing R) ≃ₐ[FractionRing R] AlgebraicClosure (FractionRing R)) (x : Over.mk (spMap (algebraMap (FractionRing R) (AlgebraicClosure (FractionRing R))) ≫ jK R) ⟶ G), x ^ n = 1 → spMap σ.toAlgHom.toRingHom ≫ x.left = x.left := by
   intro o W _ _ _ T R _ _ _ iw I _ s ε n hCN hn hnu ζ hζ Q e hD hQ G _ _ P hC σ x hx
   obtain ⟨-, D', F, A', G', _, _, U', oA, oG, inc, pr, hG', hlin, hinc, hpr, hip, hpi, -⟩ := hC
-  haveI : CharZero R := hCN.2.2.2
+  have : CharZero R := hCN.2.2.2
   have hadm : AdmBase R (maximalIdeal R) := ⟨hCN.1, inferInstance, hCN.2.1, hCN.2.2.1⟩
   obtain ⟨y, hy0⟩ : ∃ y : (Over.map (jK R)).obj (TFK (R := R) (AlgebraicClosure (FractionRing R))) ⟶ G', y = x ≫ inc := ⟨_, rfl⟩
   obtain ⟨h, hh0⟩ : ∃ h : TFK (R := R) (AlgebraicClosure (FractionRing R)) ⟶ (Over.pullback (jK R)).obj G',
@@ -1411,7 +1411,7 @@ theorem galois_fixed : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W
     | succ m ih => rw [pow_succ, Functor.map_mul, ih, pow_succ]
   have hh : h ^ n = 1 := by
     rw [hh0, ← MonObj.comp_pow, ← hmp, hy, Functor.map_one, MonObj.comp_one]
-  haveI := U'.gen_hom
+  have := U'.gen_hom
   obtain ⟨a, ha0⟩ : ∃ a : TFK (R := R) (AlgebraicClosure (FractionRing R)) ⟶ A'.A, a = h ≫ U'.gen.hom := ⟨_, rfl⟩
   have ha : a ^ n = 1 := by
     rw [ha0, ← MonObj.pow_comp, hh, MonObj.one_comp]
@@ -1506,7 +1506,7 @@ namespace GlobalTheory.Mum
 
 theorem torsRat_of_canon : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (T : TautBase o W) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (iw : W →+* R) {I : Type} [Fintype I] (s : I → R) (ε : I → LinearMap.BilinForm ℤ (Fin T.r → ℤ)) (n : ℕ), IsCN R → 1 ≤ n → IsUnit (n : R) → ∀ ζ : R, IsPrimitiveRoot ζ n → ∀ (Q : Data R) (e : Q.X ≃+ (Fin T.r → ℤ)), DataFrom T iw s ε n Q e → TorsRat Q.B n → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (P : LB (G2 G).left), Canon Q G P → TorsRat G n := by
   intro o W _ _ _ T R _ _ _ iw I _ s ε n hCN hn hu ζ hζ Q e hD hQB G _ _ P hC
-  haveI : CharZero R := hCN.2.2.2
+  have : CharZero R := hCN.2.2.2
   have hfix := GlobalTheory.T.torsion_galoisFixed_canonical_nDivided_family T R iw s ε n hCN hn hu ζ hζ Q e hD hQB G P hC
   obtain ⟨_, D', F, A', G', _, _, U', oA, oG, inc, pr, _, _, hinc, hpr, hip, _, _⟩ := hC
   exact GlobalTheory.T.torsionRational_of_retract_galoisFixed_points G G' A' U'.gen inc pr n U'.gen_hom hinc hpr hip hn hfix

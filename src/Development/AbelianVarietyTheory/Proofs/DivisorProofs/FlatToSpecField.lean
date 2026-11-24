@@ -59,8 +59,8 @@ namespace GlobalTheory
 
 theorem flat_to_spec_field : ∀ (K : Type) [Field K] (Z : Scheme.{0}) (f : Z ⟶ Sp K), Flat f := by
   intro K _ Z f
-  haveI : IsIntegral (Sp K) := by unfold Sp; infer_instance
-  haveI : Subsingleton (Sp K) := by unfold Sp; infer_instance
+  have : IsIntegral (Sp K) := by unfold Sp; infer_instance
+  have : Subsingleton (Sp K) := by unfold Sp; infer_instance
   infer_instance
 
 end GlobalTheory

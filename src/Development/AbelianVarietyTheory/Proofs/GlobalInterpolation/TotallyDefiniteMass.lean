@@ -83,8 +83,8 @@ theorem isTotDef_gram (hc : CMData F E) (S : HSpace E) (h1 : S.SigOK) (h2 : S.Is
     IsTotDef hc.sig S.gram := by
   obtain ⟨hσ, hJ⟩ := GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND F E hc
   refine ⟨hc.totReal, fun ι => ?_⟩
-  letI : Algebra F ℂ := ((algebraMap ℝ ℂ).comp ι).toAlgebra
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  let : Algebra F ℂ := ((algebraMap ℝ ℂ).comp ι).toAlgebra
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let τ : E →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

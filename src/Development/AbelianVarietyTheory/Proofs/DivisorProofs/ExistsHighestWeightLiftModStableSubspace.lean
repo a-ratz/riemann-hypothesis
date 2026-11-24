@@ -75,9 +75,9 @@ theorem lift_mod : ∀ (p q : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (a
   obtain ⟨U, hvU, hUfd, hUst, -⟩ := hloc {v}
   have hU : KStable act U := kstable_of_units act U hUst
   have hvU' : v ∈ U := hvU v (Finset.mem_singleton_self v)
-  haveI : FiniteDimensional ℂ U := hUfd
+  have : FiniteDimensional ℂ U := hUfd
   let W : Submodule ℂ V := N' ⊓ U
-  haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le (inf_le_right : W ≤ U)
+  have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le (inf_le_right : W ≤ U)
   have sW : KStable act W := fun X hX w hw => ⟨hN' X hX w hw.1, hU X hX w hw.2⟩
   have hKL : Formalism.MainNotions.SchurIrreducible.IsKLieAct act := fun Y Z _ _ => hLie Y Z
   obtain ⟨T', hT'W, hTN, hhw⟩ := GlobalTheory.DegKeep.joint_lift (ι := Unit) (fun _ => act) (fun _ => hKL) (fun _ v => hwt v)

@@ -50,7 +50,7 @@ namespace GlobalTheory.CompanionTheory.Ar.QuotUnif.Dich
 theorem ringOfIntegers_hom_injective {F : Type} [Field F] [NumberField F] (r : 𝓞 F →+* ℂ) :
     Function.Injective r := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+  refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
   rw [eq_bot_iff]
   intro n hn
   have h0 : r (algebraMap ℤ (𝓞 F) n) = 0 := hn
@@ -81,7 +81,7 @@ theorem conj_eq_neg_of_sq_eq_neg_natCast {x : ℂ} {d : ℕ} (h : x ^ 2 = -(d : 
 
 theorem goodPt_or_conj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (z : Sp ℂ ⟶ 𝔐.X), GoodPt 𝔐 z ∨ GoodPt 𝔐 (spMap (starRingEnd ℂ) ≫ z) := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J y 𝔐 z
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   let r : 𝓞 c.F →+* ℂ := (Spec.preimage (z ≫ 𝔐.f ≫ Y.s)).hom
   have hr : z ≫ 𝔐.f ≫ Y.s = spMap r := by
     simp [r, spMap]

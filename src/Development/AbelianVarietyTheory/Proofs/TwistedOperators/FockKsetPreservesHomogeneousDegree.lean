@@ -183,11 +183,11 @@ theorem inner_Om_eq_zero {p q r s : ℕ} {T0 : GrpData (p * r + q * s) (p * s + 
     ((d' : ℝ) + (Fintype.card (Ln p q r s) : ℝ) / 2)
     ((d : ℝ) + (Fintype.card (Ln p q r s) : ℝ) / 2) ?_ ?_ ?_
   · intro t x
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, ← T0.expt_add _ (I_Jm_mem _ _),
+    rw [← mul_apply_eq_comp, ← map_mul, ← T0.expt_add _ (I_Jm_mem _ _),
       add_neg_cancel, zero_smul, T0.expt_zero, map_one]
     rfl
   · intro t x
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, commute_expt T0 k hk, map_mul]
+    rw [← mul_apply_eq_comp, ← map_mul, commute_expt T0 k hk, map_mul]
     rfl
   · intro h
     exact hd (by exact_mod_cast add_right_cancel h)
@@ -209,7 +209,7 @@ instance finiteDimensional_homog (σ : Type) [Finite σ] (d : ℕ) :
 theorem Om_Kset_homog : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q * s) (p * s + q * r)) (T1 : GrpData p q) (T2 : GrpData r s) (F : FockData T0 T1 T2), ∀ k ∈ T0.Kset, ∀ (d : ℕ), ∀ P ∈ homog (Ix p q × Ix r s) d, ∃ Q ∈ homog (Ix p q × Ix r s) d, F.Om k (F.ι P) = F.ι Q := by
   intro p q r s T0 T1 T2 F k hk d P hP
   let E : Submodule ℂ F.H := (homog (Ix p q × Ix r s) d).map F.ι
-  haveI : FiniteDimensional ℂ E := inferInstance
+  have : FiniteDimensional ℂ E := inferInstance
   obtain ⟨e, he, w', hw', hw⟩ := E.exists_add_mem_mem_orthogonal (F.Om k (F.ι P))
   obtain ⟨Q, hQ, rfl⟩ := he
   refine ⟨Q, hQ, ?_⟩
@@ -224,7 +224,7 @@ theorem Om_Kset_homog : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q * s) (p * s
       · exact hw' _ ⟨_, h ▸ hm, rfl⟩
       · have h1 := inner_Om_eq_zero F k hk h _ hm P hP
         have h2 := inner_Om_eq_zero F 1 (one_mem_Kset T0) h _ hm Q hQ
-        rw [map_one, ContinuousLinearMap.one_apply] at h2
+        rw [map_one, one_apply_eq_self] at h2
         rwa [hw, inner_add_right, h2, zero_add] at h1
   have : w' = 0 := by
     have hc : IsClosed {x : F.H | inner ℂ x w' = 0} :=

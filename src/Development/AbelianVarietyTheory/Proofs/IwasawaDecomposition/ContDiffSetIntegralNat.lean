@@ -210,7 +210,7 @@ theorem exists_garding {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddComm
     (hψ.smul hb).integrable_of_hasCompactSupport hψc.smul_right
   have hψi : Integrable (fun g : Formalism.REAL.UJ ε => φ (umat g)) μ := hψ.integrable_of_hasCompactSupport hψc
   have hpos : 0 < ∫ g : Formalism.REAL.UJ ε, φ (umat g) ∂μ :=
-    hψ.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hψc (fun g => hφ0 _)
+    hψ.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hψc (fun g => hφ0 _)
       (by show φ 1 ≠ 0; rw [hφ1]; exact one_ne_zero)
   refine ⟨∫ g : Formalism.REAL.UJ ε, φ (umat g) • σ (umat g) w ∂μ, ?_, ?_⟩
   · intro h0

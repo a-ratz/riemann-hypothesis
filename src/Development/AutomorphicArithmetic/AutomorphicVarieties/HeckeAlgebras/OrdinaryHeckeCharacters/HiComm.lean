@@ -262,8 +262,8 @@ theorem UpperTheory.V.Hi.hiComm :
     ∀ (A : Type) [CommRing A] [Algebra c.O A] [Alg.IsCO c.O A] (θ : H.X.I.T →* Aˣ), H.IsWt θ →
     ∀ K, CommOn (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) ∧ Module.Finite A (H.X.Ord (H.τA A) θ (H.lev K)) ∧ Module.Free A (H.X.Ord (H.τA A) θ (H.lev K)) ∧ ∀ a, CommOn (H.MK θ a K) (H.op A) ∧ Module.Finite A (H.MK θ a K) ∧ Module.Free A (H.MK θ a K) := by
   intro L Ω _ _ _ _ _ l _ n c H hA A _ _ _ θ hθ K
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨hfi, hfr, -⟩ := ordFree _ _ _ H.X A H.m (H.τA A) θ hθ.cont (H.lev K) (hA.fin K) (hθ.free K)
   have hC := hiC_main H hA θ hθ.cont K
   refine ⟨hC, hfi, hfr, fun a => ?_⟩

@@ -62,18 +62,18 @@ private theorem ordExStep (hS : OrdStep) {Z Y W : Scheme.{0}} (s : Y ⟶ Z) [IsF
       ∀ (U : Scheme.{0}) (z : U ⟶ Z) (y : Fin (d + 1) → (U ⟶ Y)), (∀ j, y j ≫ s = z) →
         (∀ (Ω : Type) [Field Ω] (x : sp Ω ⟶ U), Function.Injective fun j => x ≫ y j) →
         ∃! w : U ⟶ W', w ≫ c' = z ∧ ∀ j, w ≫ σ' j = y j := by
-  haveI := hcf
-  haveI := hce
+  have := hcf
+  have := hce
   let P := pullback s c
   have hsq : ∀ j, σ j ≫ s = 𝟙 W ≫ c := fun j => by rw [hσ j, Category.id_comp]
   let sec : Fin d → (W ⟶ P) := fun j => pullback.lift (σ j) (𝟙 W) (hsq j)
   have hsec1 : ∀ j, sec j ≫ pullback.fst s c = σ j := fun j => pullback.lift_fst _ _ _
   have hsec2 : ∀ j, sec j ≫ pullback.snd s c = 𝟙 W := fun j => pullback.lift_snd _ _ _
-  haveI hOP : MorphismProperty.HasOfPostcompProperty (@IsOpenImmersion : MorphismProperty Scheme)
+  have hOP : MorphismProperty.HasOfPostcompProperty (@IsOpenImmersion : MorphismProperty Scheme)
       (@Etale : MorphismProperty Scheme) := by
     apply MorphismProperty.hasOfPostcompProperty_iff_le_diagonal.2
     intro X Y f hf
-    haveI : Etale f := hf
+    have : Etale f := hf
     exact inferInstanceAs <| IsOpenImmersion (pullback.diagonal f)
   have hopen : ∀ j, IsOpenImmersion (sec j) := fun j =>
     MorphismProperty.of_postcomp (W := (@IsOpenImmersion : MorphismProperty Scheme))
@@ -81,7 +81,7 @@ private theorem ordExStep (hS : OrdStep) {Z Y W : Scheme.{0}} (s : Y ⟶ Z) [IsF
       (inferInstanceAs (Etale (pullback.snd s c)))
       (by rw [hsec2]; exact inferInstanceAs (IsOpenImmersion (𝟙 W)))
   have hclosed : ∀ j, IsClosedImmersion (sec j) := fun j => by
-    haveI : IsClosedImmersion (sec j ≫ pullback.snd s c) := by
+    have : IsClosedImmersion (sec j ≫ pullback.snd s c) := by
       rw [hsec2]; infer_instance
     exact IsClosedImmersion.of_comp (sec j) (pullback.snd s c)
   let S : Set P := ⋃ j, Set.range (sec j).base
@@ -89,7 +89,7 @@ private theorem ordExStep (hS : OrdStep) {Z Y W : Scheme.{0}} (s : Y ⟶ Z) [IsF
   have hSo : IsOpen S := isOpen_iUnion fun j => (hopen j).base_open.isOpen_range
   let O : P.Opens := ⟨Sᶜ, hSc.isOpen_compl⟩
   have hOr : Set.range O.ι.base = Sᶜ := O.range_ι
-  haveI : IsClosedImmersion O.ι := .of_isPreimmersion _ (by rw [hOr]; exact hSo.isClosed_compl)
+  have : IsClosedImmersion O.ι := .of_isPreimmersion _ (by rw [hOr]; exact hSo.isClosed_compl)
   have hpt : ∀ (j : Fin d) (Ω : Type) [Field Ω] (x : sp Ω ⟶ P),
       x.base (IsLocalRing.closedPoint Ω) ∈ Set.range (sec j).base →
       x ≫ pullback.fst s c = x ≫ pullback.snd s c ≫ σ j := by
@@ -97,7 +97,7 @@ private theorem ordExStep (hS : OrdStep) {Z Y W : Scheme.{0}} (s : Y ⟶ Z) [IsF
     have hr : Set.range x.base ⊆ Set.range (sec j).base := by
       rintro _ ⟨p, rfl⟩
       rwa [Subsingleton.elim p (IsLocalRing.closedPoint Ω)]
-    haveI := hopen j
+    have := hopen j
     have hf := IsOpenImmersion.lift_fac (sec j) x hr
     rw [← hf, Category.assoc, Category.assoc, hsec1, reassoc_of% hsec2]
   have hback : ∀ (j : Fin d) {T : Scheme.{0}} (x : T ⟶ P),

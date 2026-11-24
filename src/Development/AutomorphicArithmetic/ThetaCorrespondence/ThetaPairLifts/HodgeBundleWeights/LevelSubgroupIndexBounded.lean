@@ -94,7 +94,7 @@ theorem card_GL_le (R : Type) [CommRing R] [Finite R] (r : ℕ) : Nat.card (GL (
 theorem card_levelQuotientGroup_le_prod_absNorm_pow_sq (Pg : Finset (Pl E)) (r : ℕ) :
     Nat.card (G0 Pg r) ≤ (∏ PP ∈ Pg, Ideal.absNorm PP.asIdeal) ^ (r ^ 2) := by
   rw [Nat.card_pi, ← Finset.prod_pow, ← Finset.prod_coe_sort Pg]
-  refine Finset.prod_le_prod' fun PP _ => ?_
+  refine Finset.prod_le_prod fun PP _ => ?_
   simpa only [Ideal.absNorm_eq_natCard] using card_GL_le (kP PP.1) r
 
 theorem prod_absNorm_le (Pg : Finset (Pl E)) {N : ℕ} (hN : N ≠ 0) (h : ∀ PP ∈ Pg, ((N : ℕ) : 𝓞 E) ∈ PP.asIdeal) :
@@ -165,7 +165,7 @@ theorem GlobalTheory.CovTop.LevelIndex.level_index_le_bound : ∀ (hP : _root_.G
   intro _ D Tu C t0 hC i P
   have hB : GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.levW C i (LevelP.full _ _ _) = parLev D.sp.cm (Wc D i).gram (C.βW i) (C.datWp i P) := by
     have e : C.datWp i (LevelP.full _ _ _) = { C.datWp i P with P := LevelP.full (C.datWp i P).Pg (C.datWp i P).r ℂ } := by
-      simp only [LevCh.datWp, datY, if_true]
+      simp only [LevCh.datWp, datY, ite_true]
     rw [← GlobalTheory.CovTop.LevelIndex.lev_full, ← e]
   obtain ⟨h0, h1⟩ := GlobalTheory.CovTop.LevelIndex.relIndex_lev_le D.sp.cm (Wc D i).gram (C.βW i) (C.datWp i P) _ hB
   refine ⟨h0, ?_⟩

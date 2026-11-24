@@ -75,7 +75,7 @@ theorem _root_.GlobalTheory.ThetaReal.exists_monomial_matrices : ∀ (o A M : Ty
     fun j k => ((j k : ℕ) : ZMod (r * m ^ 2))
   let cls : (Fin g ⊕ Fin g → ZMod (r * m ^ 2)) → (Fin g ⊕ Fin g → Fin m) :=
     fun a k => ⟨(a k).val % m, Nat.mod_lt _ hm⟩
-  haveI : NeZero (r * m ^ 2) := ⟨(Nat.mul_pos (by omega) (pow_pos (by omega) 2)).ne'⟩
+  have : NeZero (r * m ^ 2) := ⟨(Nat.mul_pos (by omega) (pow_pos (by omega) 2)).ne'⟩
   have hzero : ((r : ZMod (r * m ^ 2)) * (m : ZMod (r * m ^ 2)) ^ 2) = 0 := by
     exact_mod_cast ZMod.natCast_self (r * m ^ 2)
   have hcls : ∀ a, (r * m) • (a - rep (cls a)) = 0 := fun a => by

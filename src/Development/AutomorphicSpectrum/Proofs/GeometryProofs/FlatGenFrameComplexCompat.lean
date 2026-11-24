@@ -238,7 +238,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.flatGen_ratio_complex : ∀ (E : Ty
     rw [(FU.sig i).1, (FU.sig i).2]; simp
   have hcard' : Fintype.card (Fin D.p ⊕ Fin D.q) = Module.finrank (𝓞 E) (FU.Di i).La := by
     rw [hcard, (FU.Di i).rank]
-  haveI := (FU.Di i).fin
+  have := (FU.Di i).fin
   choose n cf hn hrow using fun m => exists_row e₀ he₀ hcard' (e m)
   set Tm : Matrix (Fin D.p ⊕ Fin D.q) (Fin D.p ⊕ Fin D.q) ℂ :=
     Matrix.of fun m k => τ (cf m k : E) / τ (n m : E) with hTm
@@ -337,13 +337,13 @@ theorem isComb_single {G : Over S} [GrpObj G] {x : Sp R ⟶ S} {n : ℕ} (w : Fi
     by_cases hij : i = j
     · subst hij
       simp [epsMul_one_eq, spMap]
-    · rw [if_neg hij, Pi.single_eq_of_ne hij, epsMul_zero_eq]
+    · rw [ite_eq_right hij, Pi.single_eq_of_ne hij, epsMul_zero_eq]
       have h1 := comp_one_over (M := G)
         (Over.homMk (Spec.map (CommRingCat.ofHom (algebraMap R (DualNumber R)))) rfl :
           GlobalTheory.CompanionTheory.Ar.epsAt x ⟶ Over.mk x)
       rw [← h1, Over.comp_left, ← hw i]
       simp [spMap]
-  · rw [prod_ofFn_single _ j fun i hi => if_neg hi, if_pos rfl]
+  · rw [prod_ofFn_single _ j fun i hi => ite_eq_right hi, ite_eq_left rfl]
 
 end Comb
 

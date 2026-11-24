@@ -55,9 +55,9 @@ theorem countable_numberField_type (K : Type) [Field K] [NumberField K] : Counta
 
 theorem lag_countable : ∀ (D : D7) (W : HSp D), Countable (Lag W) := by
   intro D W
-  haveI : Countable D.host.E := countable_numberField_type D.host.E
+  have : Countable D.host.E := countable_numberField_type D.host.E
   let M := (Fin W.rank → D.host.E) × (Fin W.rank → D.host.E)
-  haveI : Countable (Submodule D.host.E M) := by
+  have : Countable (Submodule D.host.E M) := by
     have hs : Function.Surjective (fun s : Finset M => Submodule.span D.host.E (s : Set M)) := by
       intro N
       obtain ⟨s, hs⟩ := (IsNoetherian.noetherian N : N.FG)

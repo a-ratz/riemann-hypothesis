@@ -102,8 +102,8 @@ private lemma spanTo_le_span_image_of_triangular {h : Fin (r + 1) → S.V}
     have hmono : Submodule.span E (h '' {i | (i : ℕ) < j}) ≤
         Submodule.span E (h '' {i | (i : ℕ) < j + 1}) :=
       Submodule.span_mono (Set.image_mono fun x hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢; omega)
-    simp only [Set.mem_setOf_eq] at hi
+        simp only [Set.mem_ofPred_eq] at hx ⊢; omega)
+    simp only [Set.mem_ofPred_eq] at hi
     rcases Nat.lt_succ_iff_lt_or_eq.1 hi with hi | hi
     · exact hmono (ih (_root_.GlobalTheory.HL.TermBasic.self_mem S g hi))
     · have h1 : h i ∈ Submodule.span E (h '' {i | (i : ℕ) < j + 1}) :=
@@ -146,8 +146,8 @@ private lemma levelRep_good_add_add_smul (hθ : S.th ≠ 0) {j : ℕ} {u u' m : 
           simp only [Finset.sum_add_distrib, Finset.smul_sum, smul_add]
       _ = _ := by rw [Finset.sum_congr rfl fun i _ => key i, Finset.sum_add_distrib]
   · intro i hi
-    have hci : c i = 0 := hc0 i (by simp only [Set.mem_setOf_eq, not_lt]; exact hi)
-    have hci' : c' i = 0 := hc0' i (by simp only [Set.mem_setOf_eq, not_lt]; exact hi)
+    have hci : c i = 0 := hc0 i (by simp only [Set.mem_ofPred_eq, not_lt]; exact hi)
+    have hci' : c' i = 0 := hc0' i (by simp only [Set.mem_ofPred_eq, not_lt]; exact hi)
     refine ⟨by simpa [hci'] using (b i).2, a i, (a i).2, ?_⟩
     simp only [hci, hci']
     ring
@@ -264,12 +264,12 @@ theorem _root_.GlobalTheory.HL.LevelRep.level_rep : ∀ {F : Type} [Field F] [Va
       S.spanTo S.f i := fun i =>
     _root_.GlobalTheory.HL.TermBasic.sub_mem (S := S) (g := S.f)
       (fun a j => (S.gram a j.castSucc).trans
-        (if_neg fun h => (Fin.castSucc_lt_last j).ne h.2)) hp i
+        (ite_eq_right fun h => (Fin.castSucc_lt_last j).ne h.2)) hp i
   have hsub' : ∀ i : Fin (r + 1), S.fr' d Λ i - S.f' i ∈
       S.spanTo S.f' i := fun i =>
     _root_.GlobalTheory.HL.TermBasic.sub_mem (S := S) (g := S.f')
       (fun a j => (S.gram' a j.castSucc).trans
-        (if_neg fun h => (Fin.castSucc_lt_last j).ne h.2)) hq i
+        (ite_eq_right fun h => (Fin.castSucc_lt_last j).ne h.2)) hq i
   have hti : algebraMap F E S.th⁻¹ * algebraMap F E S.th = 1 := by
     rw [← map_mul, inv_mul_cancel₀ hθ, map_one]
   have hspan : ∀ j, Submodule.span E (S.fr d Λ '' {i | (i : ℕ) < j}) ≤

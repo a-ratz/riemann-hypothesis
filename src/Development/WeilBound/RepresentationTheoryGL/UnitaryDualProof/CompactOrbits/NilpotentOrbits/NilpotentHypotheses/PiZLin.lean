@@ -85,9 +85,9 @@ theorem qL_apply {n : ℕ} (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (x : Ma
 
 theorem exists_idem {n : ℕ} (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (c : Z) (hc : c ≠ 0) :
     ∃ b : Z, IsIdempotentElem (b * c) ∧ b * c ≠ 0 := by
-  haveI hred : IsReduced Z := hZ.2
-  letI : CommRing Z := { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hZ.1 _ a.2 _ b.2) }
-  haveI : IsArtinianRing Z := IsArtinianRing.of_finite k Z
+  have hred : IsReduced Z := hZ.2
+  let : CommRing Z := { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hZ.1 _ a.2 _ b.2) }
+  have : IsArtinianRing Z := IsArtinianRing.of_finite k Z
   obtain ⟨m, y, hy⟩ := IsArtinian.exists_pow_succ_smul_dvd c (1 : Z)
   simp only [smul_eq_mul, mul_one] at hy
   have hpow : ∀ j : ℕ, c ^ m * (c * y) ^ j = c ^ m := by

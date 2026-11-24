@@ -78,7 +78,7 @@ def HintIS (c : ι) (sg : K →+* ℂ) (φ : (Ω c →+* ℂ) → ℝ) : Prop :=
 theorem hint_fs (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (sg : K →+* ℂ) :
     ∀ᵐ z ∂(blockSphereProb d.D (d.N + 1)), ∃ s : Finset (Ω c →+* ℂ), s.card = d.delc c ∧
       (∀ P ∈ s, P ∈ PT (Ω := Ω c) sg) ∧ ∀ φ, d.hintSm c sg φ z = ∑ P ∈ s, φ P := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
   refine (d.norm_at_sg_B hd h c sg).mono ?_
   intro z hz
   obtain ⟨hfin, hcard, -, -⟩ := hz
@@ -90,7 +90,7 @@ theorem hintIS_lin (hd : d.AxH 𝒜) (h : d.S1) {c : ι} {sg : K →+* ℂ}
     {φ₁ φ₂ : (Ω c →+* ℂ) → ℝ} (h₁ : d.HintIS c sg φ₁) (h₂ : d.HintIS c sg φ₂) (a₁ a₂ b : ℝ) :
     d.HintIS c sg (fun P => a₁ * φ₁ P + a₂ * φ₂ P + b) := by
   have hfs := d.hint_fs hd h c sg
-  haveI : IsFiniteMeasure (blockSphereProb d.D (d.N + 1)) := by
+  have : IsFiniteMeasure (blockSphereProb d.D (d.N + 1)) := by
     unfold blockSphereProb; infer_instance
   unfold HintIS at *
   refine (((h₁.const_mul a₁).add (h₂.const_mul a₂)).add
@@ -114,7 +114,7 @@ theorem hintIS_bounds (hd : d.AxH 𝒜) (h : d.S1) {c : ι} {sg : K →+* ℂ}
     (hψ : d.HintIS c sg ψ) (hle : ∀ P ∈ PT (Ω := Ω c) sg, ψ P ≤ φ P) (B : ℝ)
     (hB : ∀ P ∈ PT (Ω := Ω c) sg, φ P ≤ B) : d.HintIS c sg φ := by
   have hfs := d.hint_fs hd h c sg
-  haveI : IsFiniteMeasure (blockSphereProb d.D (d.N + 1)) := by
+  have : IsFiniteMeasure (blockSphereProb d.D (d.N + 1)) := by
     unfold blockSphereProb; infer_instance
   unfold HintIS at *
   refine Integrable.mono' (hψ.abs.add (integrable_const |(d.delc c : ℝ) * B|)) hm ?_
@@ -136,14 +136,14 @@ theorem hint_bsp_smul : blockSphereProb d.D (d.N + 1) =
       d.sphMeasure := by
   unfold blockSphereProb
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, smul_eq_mul, sphMeasure, Measure.pi_pi]
+  rw [smul_apply, smul_eq_mul, sphMeasure, Measure.pi_pi]
   simp only [sphereProb, ProbabilityTheory.cond_apply MeasurableSet.univ, Set.univ_inter,
     Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
 private theorem eq_ratio_smul_of_mem_graded {d' : Data K ι Ω WT A} (hd : d'.AxH 𝒜) {c : ι} {G : WT} {f e : A c}
     (he : e ∈ 𝒜 c G) (he0 : e ≠ 0) (hf : f ∈ 𝒜 c G) : f = ratio (Ω := Ω c) f e • e := by
   have hnz : (⟨e, he⟩ : 𝒜 c G) ≠ 0 := fun h0 => he0 (by simpa using congrArg Subtype.val h0)
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨e, he⟩ : 𝒜 c G) hnz).mp (hd.finrank_one c G) ⟨f, hf⟩
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨e, he⟩ : 𝒜 c G) hnz).mp (hd.finrank_one c G) ⟨f, hf⟩
   have hex : ∃ a : Ω c, f = a • e := ⟨a, by simpa using (congrArg Subtype.val ha).symm⟩
   rw [ratio, dite_eq_left hex]
   exact hex.choose_spec
@@ -185,7 +185,7 @@ theorem hint_pow (hd : d.AxH 𝒜) {c : ι} {G : WT} {f : A c} (hf : f ∈ 𝒜 
     ∀ k : ℕ, 0 < k → f ^ k ∈ 𝒜 c (k • G) ∧ f ^ k ≠ 0 ∧
       ∀ P, Real.log (d.nrm c (k • G) (f ^ k) P) = k * Real.log (d.nrm c G f P) := by
   intro k hk
-  haveI := hd.graded c
+  have := hd.graded c
   induction k with
   | zero => exact absurd hk (lt_irrefl 0)
   | succ n ih =>

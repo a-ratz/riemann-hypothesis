@@ -73,7 +73,7 @@ theorem emb_zero {D : D7} (V W : HSp D) {a b : ℕ} (P : Matrix (Fin W.rank) (Fi
 theorem meanX_translate : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) (Fin a) D.host.E) (Q : Matrix (Fin b) (Fin V.rank) D.host.E), (∀ y y' : Mx D a b, symplO V W (GlobalTheory.IsoMean.emb V W P Q y) (GlobalTheory.IsoMean.emb V W P Q y') = 0) → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D a b)) (𝓨 : Set (Mx D a b)), IsCovolOne ((incA D).toAddMonoidHom.mapMatrix (m := Fin a) (n := Fin b)).range μ 𝓨 → ∀ F : WO V W → ℂ, IsThetaFunO ψ V W F → ∀ x : WO V W, (∀ y : Mx D a b, symplO V W x (GlobalTheory.IsoMean.emb V W P Q y) = 0) → ∀ y₀ : Mx D a b, GlobalTheory.IsoMean.meanX V W P Q μ 𝓨 F (GlobalTheory.IsoMean.emb V W P Q y₀ + x) = GlobalTheory.IsoMean.meanX V W P Q μ 𝓨 F x := by
   intro D V W a b P Q hiso ψ hψ μ 𝓨 hμ F hF x hx y₀
   obtain ⟨hHaar, h𝓨, -⟩ := hμ
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
   obtain ⟨l1, l2, l3, -, -⟩ := GlobalTheory.OrientedFormLaws.symplOH_laws D V W
   have hH0 : ∀ x y, symplO V W x y = 0 → symplOH V W x y = 0 := fun x y e => by
     unfold symplOH; rw [e, mul_zero]
@@ -96,22 +96,22 @@ theorem meanX_translate : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fi
     simp only [hf, emb_add]
     congr 1; abel
   rw [e1]
-  haveI : Countable D.host.E := by
-    haveI : FiniteDimensional ℚ D.host.E := inferInstance
+  have : Countable D.host.E := by
+    have : FiniteDimensional ℚ D.host.E := inferInstance
     exact (Module.finBasis ℚ D.host.E).equivFun.injective.countable
   have hmp : MeasurePreserving (fun y : Mx D a b => y₀ + y) μ μ := measurePreserving_add_left μ y₀
   have hemb : MeasurableEmbedding (fun y : Mx D a b => y₀ + y) := (MeasurableEquiv.addLeft y₀).measurableEmbedding
-  haveI : Countable (Matrix (Fin a) (Fin b) D.host.E) := inferInstanceAs (Countable (Fin a → Fin b → D.host.E))
-  haveI : Countable (((incA D).toAddMonoidHom.mapMatrix (m := Fin a) (n := Fin b)).range) := (Set.countable_range _).to_subtype
+  have : Countable (Matrix (Fin a) (Fin b) D.host.E) := inferInstanceAs (Countable (Fin a → Fin b → D.host.E))
+  have : Countable (((incA D).toAddMonoidHom.mapMatrix (m := Fin a) (n := Fin b)).range) := (Set.countable_range _).to_subtype
   rw [← hmp.setIntegral_image_emb hemb f 𝓨]
-  haveI : VAddInvariantMeasure (Mx D a b) (Mx D a b) μ := ⟨fun c s _ => measure_preimage_add μ c s⟩
+  have : VAddInvariantMeasure (Mx D a b) (Mx D a b) μ := ⟨fun c s _ => measure_preimage_add μ c s⟩
   have h2 := h𝓨.vadd_of_comm y₀
   rw [← Set.image_vadd] at h2
   exact h2.setIntegral_eq h𝓨 fun g y => per g g.2 y
 
 theorem coef_integral_eq : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) (Fin a) D.host.E) (Q : Matrix (Fin b) (Fin V.rank) D.host.E) (ψ : AddChar (AF D.host.F) ℂ) (χS χT : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)), IsWeilDatumO ψ V W χS χT ω → ∀ (κ : Measure (Mx D a b)), κ.IsAddHaarMeasure → ∀ (g : GA D V) (h : GA D W), (∀ y : Mx D a b, actO V W g h (GlobalTheory.IsoMean.emb V W P Q y) = GlobalTheory.IsoMean.emb V W P Q y) → (∀ x : WO V W, (∀ y : Mx D a b, symplO V W x (GlobalTheory.IsoMean.emb V W P Q y) = 0) → ∃ y : Mx D a b, actO V W g h x = x + GlobalTheory.IsoMean.emb V W P Q y) → ∀ (ν : Measure (WO V W)) (𝓕 : Set (WO V W)), ν.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V) 𝓕 ν → ∀ f f' : WO V W → ℂ, IsThetaFunO ψ V W f → IsThetaFunO ψ V W f' → ∀ w : WO V W, (∀ y : Mx D a b, symplO V W w (GlobalTheory.IsoMean.emb V W P Q y) = 0) → ∫ y, (∫ u in 𝓕, heisO ψ V W (w + GlobalTheory.IsoMean.emb V W P Q y) (ω (g, h) f) u * star (ω (g, h) f' u) ∂ν) ∂κ = ∫ y, (∫ u in 𝓕, heisO ψ V W (w + GlobalTheory.IsoMean.emb V W P Q y) f u * star (f' u) ∂ν) ∂κ := by
   intro D V W a b P Q ψ χS χT ω hω κ hκ g h hfix hunip ν 𝓕 hν h𝓕 f f' hf hf' w hw
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
   have hψ := hω.std
   obtain ⟨y₀, hy₀⟩ := hunip w hw
   have key : ∀ y : Mx D a b,

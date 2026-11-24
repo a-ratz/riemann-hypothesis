@@ -743,7 +743,7 @@ theorem exists_unit_origin_sum : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
   · intro W _ _ _ T σ' f' hP hE J' hJ'
     have hw : ∀ x, OrigVal T.D'.toPre (f' x) (T.φ (v (T.hD.xe x))) := fun x =>
       GlobalTheory.T.rigidifiedValueAtOrigin_pullback_degeneration R W T.φ D.toPre T.D'.toPre T.hD k x (F₀.f (T.hD.xe x)) (f' x) (v (T.hD.xe x)) (hP x) (hv _)
-    haveI : IsLocalHom T.φ := T.loc
+    have : IsLocalHom T.φ := T.loc
     have hmap : ∀ e, (maximalIdeal R ^ (e + 1)).map T.φ ≤ maximalIdeal W ^ (e + 1) := fun e => by
       rw [Ideal.map_pow]
       refine Ideal.pow_right_mono ?_ _
@@ -779,7 +779,7 @@ theorem exists_unit_origin_sum : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
       rw [heq, hsum1]
       congr 2
       ring
-    haveI : IsDiscreteValuationRing W := ((GlobalTheory.LN.cDvr_iff W).1 T.cdvr).1
+    have : IsDiscreteValuationRing W := ((GlobalTheory.LN.cDvr_iff W).1 T.cdvr).1
     choose c hc heq using step
     have hce : ∀ e, c e = c 0 := fun e => by
       have := (heq e).symm.trans (heq 0)
@@ -860,7 +860,7 @@ theorem gs_comp_gv {A B : Type} [CommRing A] [CommRing B] (ψ : A →+* B) {X : 
   rfl
 
 theorem sp_field_eq {F : Type} [Field F] (a b : Sp F) : a = b :=
-  PrimeSpectrum.ext (by haveI := a.isPrime; haveI := b.isPrime; rw [Ideal.eq_bot_of_prime a.asIdeal, Ideal.eq_bot_of_prime b.asIdeal])
+  PrimeSpectrum.ext (by have := a.isPrime; have := b.isPrime; rw [Ideal.eq_bot_of_prime a.asIdeal, Ideal.eq_bot_of_prime b.asIdeal])
 
 end GlobalTheory.Mum.UnitGen
 
@@ -1332,13 +1332,13 @@ theorem isIso_jK {R : Type} [CommRing R] [IsDomain R] (hR : IsField R) : IsIso (
   infer_instance
 
 theorem isIso_gp {R : Type} [CommRing R] [IsDomain R] (M : Modif R) (hR : IsField R) : IsIso M.gp := by
-  haveI := isIso_jK hR
-  haveI := M.integral
-  haveI := M.proper
-  haveI := M.dominant
-  haveI : IsClosedImmersion M.gp :=
+  have := isIso_jK hR
+  have := M.integral
+  have := M.proper
+  have := M.dominant
+  have : IsClosedImmersion M.gp :=
     isClosedImmersion_of_comp_eq_id (M.π ≫ inv (jK R)) M.gp (by rw [← Category.assoc, M.gp_π, IsIso.hom_inv_id])
-  haveI : Surjective M.gp := ⟨by
+  have : Surjective M.gp := ⟨by
     have h1 := M.gp.isClosedEmbedding.isClosed_range
     have h2 := M.gp.denseRange
     exact Set.range_eq_univ.1 (h1.closure_eq ▸ h2.closure_range)⟩
@@ -1374,7 +1374,7 @@ theorem scal_cancel {W : Type} [CommRing W] [IsDomain W] {Y : Scheme.{0}} (f : Y
     have hi := germ_injective_of_isIntegral (Sp W) (U := (𝟙 (Sp W)) ⁻¹ᵁ ⊤) (f y) trivial
     have := hi (h0.trans (map_zero _).symm)
     exact this
-  letI := (f.stalkMap y).hom.toAlgebra
+  let := (f.stalkMap y).hom.toAlgebra
   haveI : Module.Flat _ (Y.presheaf.stalk y) := Flat.stalkMap f y
   have hreg := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := Y.presheaf.stalk y) (mem_nonZeroDivisors_of_ne_zero he0)
   apply hreg
@@ -1390,10 +1390,10 @@ namespace GlobalTheory.Mum
 open GlobalTheory.Mum.CancelField in
 theorem cancel_field : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (C : LabCover D) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (k : ℕ) (σ : SecK C.P.L.L T.β k) (s : SecK C.P.L.L C.α k) (b : W) (c : FractionRing R), IsField R → b ≠ 0 → (∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ C.A.A.left), p ≫ T.β = p' ≫ C.α → ∀ z J, Good C.P.L.L z J → gs p z ⊤ (scal T.G.hom b) * sval σ p z J = gs p z ⊤ (scal T.G.hom b) * (gs p' z ⊤ (scal C.A.A.hom c) * sval s p' z J)) → ∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ C.A.A.left), p ≫ T.β = p' ≫ C.α → ∀ z J, Good C.P.L.L z J → sval σ p z J = gs p' z ⊤ (scal C.A.A.hom c) * sval s p' z J := by
   intro R _ _ _ _ D C W _ _ _ T k σ s b c hR hb H Z p p' hp z J hJ
-  haveI : IsIso C.α := C.α_cart.1.isIso_fst_of_isIso (isIso_gp C.toModif hR)
-  haveI : Smooth C.G.hom := C.semi.smooth
-  haveI : Flat C.G.hom := inferInstance
-  haveI : Flat T.G.hom := MorphismProperty.of_isPullback (P := @Flat) T.cart.1 inferInstance
+  have : IsIso C.α := C.α_cart.1.isIso_fst_of_isIso (isIso_gp C.toModif hR)
+  have : Smooth C.G.hom := C.semi.smooth
+  have : Flat C.G.hom := inferInstance
+  have : Flat T.G.hom := MorphismProperty.of_isPullback (P := @Flat) T.cart.1 inferInstance
   obtain ⟨q, hq⟩ : ∃ q : T.G.left ⟶ C.A.A.left, q ≫ C.α = T.β := ⟨T.β ≫ inv C.α, by simp⟩
   have key : ∀ y J', Good C.P.L.L y J' → sval σ (𝟙 _) y J' = gs q y ⊤ (scal C.A.A.hom c) * sval s q y J' := by
     intro y J' hJ'

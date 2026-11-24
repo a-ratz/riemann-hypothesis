@@ -132,10 +132,10 @@ theorem GlobalTheory.HSAmp.volDens_meas_finite_openPos : ∀ (k : Type) [CommRin
     (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → GenSmooth p D → ∀ (σ : k →+* ℂ) (ω : VolDens p σ D),
     IsFiniteMeasure ω.meas ∧ ω.meas.IsOpenPosMeasure := by
   intro k _ X _ p D hX hS σ ω
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ hX.isProjOver
-  haveI := hX.compactSpace σ
+  have := CxPts.secondCountableTopology_of_isProjOver σ hX.isProjOver
+  have := hX.compactSpace σ
   obtain ⟨R⟩ := hS σ
-  haveI : IsLocallyFiniteMeasure ω.meas := ⟨fun y => by
+  have : IsLocallyFiniteMeasure ω.meas := ⟨fun y => by
     obtain ⟨i, hi⟩ := R.cover y
     obtain ⟨O, hO, hyO, hfin⟩ := exists_open_lt_top ω (R.chart i) hi
     exact ⟨O, hO.mem_nhds hyO, hfin⟩⟩

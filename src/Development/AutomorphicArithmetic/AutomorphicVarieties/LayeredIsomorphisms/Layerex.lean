@@ -53,7 +53,7 @@ open Polynomial
 
 private theorem winlx_up {K : Type} [Field K] {l m : ℕ} (hl : l.Prime) {b : K}
     (h : IsPrimitiveRoot (b ^ l) (l ^ (m + 1))) : IsPrimitiveRoot b (l ^ (m + 2)) := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have h1 : ¬ b ^ (l ^ (m + 1)) = 1 := by
     intro e
     have : (b ^ l) ^ (l ^ m) = 1 := by rw [← pow_mul, ← pow_succ']; exact e
@@ -91,11 +91,11 @@ private theorem winlx_step (K : Type) [Field K] [NumberField K] {l m : ℕ} (hl 
     ∃ (K' : Type) (_ : Field K') (_ : NumberField K') (_ : Algebra K K'),
       IsCyclotomicExtension {l ^ (m + 2)} K K' ∧ Module.finrank K K' = l := by
   have hirr : Irreducible (X ^ l - C z : K[X]) :=
-    X_pow_sub_C_irreducible_of_prime hl (fun b hb => hn ⟨b, winlx_up hl (hb ▸ hz)⟩)
-  haveI : Fact (Irreducible (X ^ l - C z : K[X])) := ⟨hirr⟩
+    irreducible_X_pow_sub_C_of_prime hl (fun b hb => hn ⟨b, winlx_up hl (hb ▸ hz)⟩)
+  have : Fact (Irreducible (X ^ l - C z : K[X])) := ⟨hirr⟩
   let pb := AdjoinRoot.powerBasis hirr.ne_zero
-  haveI : Module.Finite K (AdjoinRoot (X ^ l - C z : K[X])) := pb.finite
-  haveI : NeZero (l ^ (m + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Module.Finite K (AdjoinRoot (X ^ l - C z : K[X])) := pb.finite
+  have : NeZero (l ^ (m + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hr : IsPrimitiveRoot (AdjoinRoot.root (X ^ l - C z : K[X])) (l ^ (m + 2)) := by
     apply winlx_up hl
     rw [root_X_pow_sub_C_pow]
@@ -118,16 +118,16 @@ theorem UpperTheory.V.Win.layerex :
     obtain ⟨ζ, hζ⟩ := hq
     by_cases h2 : l = 2
     · subst h2
-      rw [if_pos rfl] at hζ
+      rw [ite_eq_left rfl] at hζ
       exact ⟨ζ ^ 2, hζ.pow (by norm_num) (by norm_num)⟩
-    · rw [if_neg h2] at hζ
+    · rw [ite_eq_right h2] at hζ
       exact ⟨ζ, hζ⟩
   have key : ∃ (L' : Type) (_ : Field L') (_ : NumberField L') (_ : Algebra L L'),
       (∃ k : ℕ, IsCyclotomicExtension {l ^ (k + 1)} L L') ∧ Module.finrank L L' = l ^ j := by
     induction j with
     | zero =>
       refine ⟨L, inferInstance, inferInstance, inferInstance, ⟨0, ?_⟩, by simp⟩
-      haveI : NeZero (l ^ (0 + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+      have : NeZero (l ^ (0 + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
       rw [IsCyclotomicExtension.iff_singleton]
       exact ⟨by simpa using hz, fun x => Subalgebra.algebraMap_mem _ x⟩
     | succ j ih =>
@@ -135,10 +135,10 @@ theorem UpperTheory.V.Win.layerex :
       obtain ⟨m, hkm, ⟨z, hz⟩, hn⟩ := winlx_max K (k := k) hl
         (hk.exists_isPrimitiveRoot (Set.mem_singleton _) (pow_ne_zero _ hl.ne_zero))
       obtain ⟨K', _, _, _, hc, hd'⟩ := winlx_step K hl hz hn
-      letI : Algebra L K' := ((algebraMap K K').comp (algebraMap L K)).toAlgebra
-      haveI : IsScalarTower L K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+      let : Algebra L K' := ((algebraMap K K').comp (algebraMap L K)).toAlgebra
+      have : IsScalarTower L K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
       refine ⟨K', inferInstance, inferInstance, inferInstance, ⟨m + 1, ?_⟩, ?_⟩
-      · haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+      · have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
         have h1 := IsCyclotomicExtension.trans {l ^ (k + 1)} {l ^ (m + 2)} L K K' (algebraMap K K').injective
         rw [Set.union_comm] at h1
         exact (IsCyclotomicExtension.iff_union_of_dvd L K'

@@ -76,7 +76,7 @@ theorem loc_mulVec {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i)
   congr 1
   ext a b
   simp only [Br.loc, Br.locM, Br.locO, mapM, MonoidHom.coe_comp, Function.comp_apply, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply, toK]
+    MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply, toK]
   exact congrArg Subtype.val (Br.toLLK_alg (D.nbr i w hw) _).symm
 
 variable (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i)))

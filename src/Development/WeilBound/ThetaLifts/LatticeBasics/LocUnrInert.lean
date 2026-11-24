@@ -191,10 +191,10 @@ theorem prod_fold (T : ℕ → ℂ) (n : ℕ) :
     (∏ i : Fin (n / 2), T (n - 1 - i) * T i) * (if Odd n then T (n / 2) else 1) = ∏ k ∈ Finset.range n, T k := by
   rw [Fin.prod_univ_eq_prod_range (fun i => T (n - 1 - i) * T i), Finset.prod_mul_distrib]
   obtain ⟨m, rfl | rfl⟩ := Nat.even_or_odd' n
-  · rw [if_neg (by simp), show 2 * m / 2 = m by omega, two_mul, Finset.prod_range_add, mul_one, mul_comm,
+  · rw [ite_eq_right (by simp), show 2 * m / 2 = m by omega, two_mul, Finset.prod_range_add, mul_one, mul_comm,
       ← Finset.prod_range_reflect (fun i => T (m + i))]
     exact congrArg _ (Finset.prod_congr rfl fun i hi => congrArg T (by have := Finset.mem_range.1 hi; omega))
-  · rw [if_pos (by simp), show (2 * m + 1) / 2 = m by omega, show 2 * m + 1 = m + 1 + m by ring, Finset.prod_range_add,
+  · rw [ite_eq_left (by simp), show (2 * m + 1) / 2 = m by omega, show 2 * m + 1 = m + 1 + m by ring, Finset.prod_range_add,
       Finset.prod_range_succ, ← Finset.prod_range_reflect (fun i => T (m + 1 + i)), mul_assoc, mul_comm]
     exact congrArg _ (Finset.prod_congr rfl fun i hi => congrArg T (by have := Finset.mem_range.1 hi; omega))
 
@@ -353,7 +353,7 @@ theorem abs_at (hσ : IsCMExt F E σ) (hw : IsInertAt F E v w) {h : w.under (�
     rw [valued_complMap h n0, isUnram_iff.1 (isUnram_of_isInertAt hw) w h, pow_one, map_mul, hv, h1, ← WithZero.exp_add] at h4
     rw [h4]; congr 1; ring
   have h5 : (absE F E x : ℝ) = (qV F v : ℝ) ^ ((-(2 * ordL y.1) : ℤ) : ℝ) := by
-    rw [GlobalTheory.InertChars.eq_ideleAt_of_at x hx, GlobalTheory.Doubling.absE_ideleAt, GlobalTheory.Doubling.absEv_apply, coe_nnnorm,
+    rw [GlobalTheory.InertChars.eq_ideleAt_of_at x hx, GlobalTheory.Doubling.absE_ideleAt, GlobalTheory.Doubling.absEv_apply, coe_nnNorm,
       FinitePlace.norm_def, h2, WithZeroMulInt.toNNReal_neg_apply _ WithZero.exp_ne_zero, Real.rpow_intCast]
     exact NNReal.coe_zpow _ _
   rw [h5, ← Complex.cpow_mul_ofReal_nonneg (Nat.cast_nonneg _), secVal, MonoidHom.one_apply, Units.val_one, one_mul]
@@ -539,7 +539,7 @@ theorem main : LocUnrInert := by
   rw [integral_map_equiv] at i2
   simp only [e2] at i1 i2
   refine ⟨i1, ?_⟩
-  rw [locD, if_neg fun ⟨τ⟩ => not_isSplit_of_isInertAt hw (SplitChart.isSplit_of_algHom hB.cm τ)]
+  rw [locD, ite_eq_right fun ⟨τ⟩ => not_isSplit_of_isInertAt hw (SplitChart.isSplit_of_algHom hB.cm τ)]
   refine i2.trans (Finset.prod_congr rfl fun i _ => ?_)
   rw [Lv, show Formalism.L2.Host.aboveF (L := E) F v = {w} by ext u; simp [mem_aboveF, under_eq_iff hw], Finset.prod_singleton, locL,
     charFam_of_unrAt (hu w h), eulerFac_singleton, val, locChar, MonoidHom.comp_apply, MonoidHom.comp_apply, chi_at hw hr (hu w h),

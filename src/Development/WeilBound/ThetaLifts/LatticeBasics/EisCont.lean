@@ -82,7 +82,7 @@ theorem reg_of_weak {s₀ : ℂ} {U : Set ℂ} (hU : U ∈ 𝓝 s₀) {H : ℂ �
     (h : ∀ μ, IsGrowForm μ → DifferentiableOn ℂ (fun s => μ (H s)) U) :
     An.Reg (fun x : G2 σ Y => (ht2 x : ℝ)) (fun s => (H s).1) s₀ := by
   obtain ⟨D, hD, hU', cD⟩ := local_compact_nhds hU
-  refine An.reg_of_bound (NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtype_val)) hD
+  refine An.reg_of_bound (NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtypeVal)) hD
     (fun x => (h ((LinearMap.proj x).comp (modFun σ Y).subtype) fun N => ⟨_, fun f hf => hf x⟩).mono hU')
     (fun s _ => (modFun_spec (H s).2).1) (An.unif_bound one_le_height_GL2 (fun f hf => (modFun_spec hf).2) fun μ hμ => ?_)
   exact cD.exists_bound_of_continuousOn ((h μ hμ).mono hU').continuousOn
@@ -111,7 +111,7 @@ theorem eisCont_of_reg {f Ê : ℂ → G2 σ Y → ℂ} {t : ℝ} (h1 : ∀ s : 
 
 theorem eisContinues_of (h1 : EisBL) (h2 : FrameConj) : EisContinues := by
   intro F E _ _ _ _ _ σ B n Y r s hB hn hY χ hχ c hc K a hK ha s₁ f hf
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨b, K₀, p, t, hb, hK₀, hp, hk⟩ := h2 F E σ B n Y r s hB hY K hK
   obtain ⟨d, hd⟩ : ∃ d : ℝ, d = absE F E (Matrix.GeneralLinearGroup.det t) := ⟨_, rfl⟩
   have d0 : 0 < d := hd ▸ absE_pos _
@@ -128,7 +128,7 @@ theorem eisContinues_of (h1 : EisBL) (h2 : FrameConj) : EisContinues := by
       field_simp
   have hf₀ : IsSec K₀ χ s₁ fun x => f (x * p⁻¹) := by
     refine ⟨hf.cont.comp (continuous_mul_const _), fun q u x hq => by rw [mul_assoc, hf.law q u _ hq], ?_⟩
-    haveI := hf.fin
+    have := hf.fin
     refine Submodule.finiteDimensional_of_le (S₂ := (Submodule.span ℂ (Set.range fun k : K => fun x => f (x * k.1))).map
       (LinearMap.funLeft ℂ ℂ fun x => x * p⁻¹)) (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩

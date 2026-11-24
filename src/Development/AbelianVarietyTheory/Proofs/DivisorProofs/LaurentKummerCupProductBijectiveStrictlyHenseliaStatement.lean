@@ -274,8 +274,8 @@ theorem _root_.GlobalTheory.EtC.DescZero.desc_zero : ∀ (q : ℕ) [NeZero q] (A
   intro q _ A A' _ _ _ hint hker hq j b hb
   let f : Spec (CommRingCat.of A') ⟶ Spec (CommRingCat.of A) :=
     Spec.map (CommRingCat.ofHom (algebraMap A A'))
-  haveI : IsIntegralHom f := by rw [IsIntegralHom.SpecMap_iff]; exact hint.isIntegral
-  haveI : Surjective f := spec_map_surjective_of_integral_ker_le_nilradical A A' hker
+  have : IsIntegralHom f := by rw [IsIntegralHom.SpecMap_iff]; exact hint.isIntegral
+  have : Surjective f := spec_map_surjective_of_integral_ker_le_nilradical A A' hker
   have hbij : Function.Bijective
       (_root_.GlobalTheory.EtC.pull (ZMod q) (_root_.GlobalTheory.EtC.cechAug f) (_root_.GlobalTheory.EtC.tw q j) 0) :=
     _root_.GlobalTheory.EtC.b4 q f
@@ -422,7 +422,7 @@ theorem exists_factor (q : ℕ) [NeZero q] (A : Type) [CommRing A] [HenselianLoc
   let D := A ⧸ p
   let Ω := AlgebraicClosure (FractionRing D)
   let T := integralClosure D Ω
-  letI : Algebra A T := ((algebraMap D T).comp (Ideal.Quotient.mk p)).toAlgebra
+  let : Algebra A T := ((algebraMap D T).comp (Ideal.Quotient.mk p)).toAlgebra
   have hint : Algebra.IsIntegral A T := by
     have h1 : (Ideal.Quotient.mk p).IsIntegral := RingHom.isIntegral_of_surjective _ Ideal.Quotient.mk_surjective
     have h2 : (algebraMap D T).IsIntegral := fun x => Algebra.IsIntegral.isIntegral (R := D) x
@@ -719,7 +719,7 @@ theorem laurent_univ (R : Type) [CommRing R] (g : Fin (1 + 1) → (LaurentPolyno
     have := RingHom.congr_fun (hg j) (LaurentPolynomial.T 1)
     simp only [RingHom.comp_apply, GmPhiNat.laurentMap_T] at this
     exact this
-  letI : Algebra A R := ((g 0).comp ((LaurentPolynomial.C : A' →+* LaurentPolynomial A').comp (algebraMap A A'))).toAlgebra
+  let : Algebra A R := ((g 0).comp ((LaurentPolynomial.C : A' →+* LaurentPolynomial A').comp (algebraMap A A'))).toAlgebra
   let g0 : A' →ₐ[A] R := ⟨(g 0).comp LaurentPolynomial.C, fun r => rfl⟩
   let g1 : A' →ₐ[A] R := ⟨(g 1).comp LaurentPolynomial.C, fun r => by
     change g 1 (LaurentPolynomial.C (algebraMap A A' r)) = g 0 (LaurentPolynomial.C (algebraMap A A' r))
@@ -862,7 +862,7 @@ theorem cobd_laurent (q : ℕ) [NeZero q] (hint : Algebra.IsIntegral A A')
     have := hq.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
     simpa using this
   have hE := GlobalTheory.EtC.b4 q (fB A A') hqA i
-  haveI := hA i
+  have := hA i
   have hqT : IsUnit (q : A' ⊗[A] A') := by simpa using hq.map (algebraMap A (A' ⊗[A] A'))
   refine cobd_of_retract (cP A A') (cS A A') (fun σ' => ?_)
     (cobd_of_h1_zero _ (fB A A') hE (fun x => Subsingleton.elim _ _)) σ hσ
@@ -1020,7 +1020,7 @@ theorem uniq (B : Subalgebra ℤ A) {T : Type} [CommRing T] [HenselianLocalRing 
     (τ : ResidueField T →+* ResidueField A) (f : RB A B →+* T) (g₁ g₂ : O A B →+* T)
     (h₁ : g₁.comp (algebraMap _ _) = f) (h₂ : g₂.comp (algebraMap _ _) = f)
     (hr : τ.comp ((residue T).comp g₁) = τ.comp ((residue T).comp g₂)) : g₁ = g₂ := by
-  letI : Algebra (RB A B) T := f.toAlgebra
+  let : Algebra (RB A B) T := f.toAlgebra
   let G₁ : O A B →ₐ[RB A B] T := { g₁ with commutes' := fun r => DFunLike.congr_fun h₁ r }
   let G₂ : O A B →ₐ[RB A B] T := { g₂ with commutes' := fun r => DFunLike.congr_fun h₂ r }
   have hres : ∀ x, residue T (g₁ x) = residue T (g₂ x) := fun x => τ.injective (DFunLike.congr_fun hr x)
@@ -1031,7 +1031,7 @@ theorem uniq (B : Subalgebra ℤ A) {T : Type} [CommRing T] [HenselianLocalRing 
 theorem exist (B : Subalgebra ℤ A) {T : Type} [CommRing T] [HenselianLocalRing T]
     (f : RB A B →+* T) (ψ : O A B →+* ResidueField T) (hψ : ψ.comp (algebraMap _ _) = (residue T).comp f) :
     ∃ g : O A B →+* T, g.comp (algebraMap _ _) = f ∧ (residue T).comp g = ψ := by
-  letI : Algebra (RB A B) T := f.toAlgebra
+  let : Algebra (RB A B) T := f.toAlgebra
   let Ψ : O A B →ₐ[RB A B] ResidueField T := { ψ with commutes' := fun r => DFunLike.congr_fun hψ r }
   obtain ⟨G, hG⟩ := (GlobalTheory.IndEtaleHensel.bijective_residue_comp (RB A B) (O A B) T (sh A B).pieces).2 Ψ
   exact ⟨G.toRingHom, RingHom.ext fun r => G.commutes r, RingHom.ext fun x => DFunLike.congr_fun hG x⟩
@@ -1090,8 +1090,8 @@ theorem toA_loc {B B' : Subalgebra ℤ A} (h : B ≤ B') (r : RB A B) : toA A B'
   exact DFunLike.congr_fun this r
 
 theorem Om_le {B B' : Subalgebra ℤ A} (h : B ≤ B') (x : ResidueField A) (hx : x ∈ Om A B) : x ∈ Om A B' := by
-  letI : Algebra (ResidueField (RB A B)) (ResidueField (RB A B')) := (ResidueField.map (loc h)).toAlgebra
-  haveI : IsScalarTower (ResidueField (RB A B)) (ResidueField (RB A B')) (ResidueField A) := by
+  let : Algebra (ResidueField (RB A B)) (ResidueField (RB A B')) := (ResidueField.map (loc h)).toAlgebra
+  have : IsScalarTower (ResidueField (RB A B)) (ResidueField (RB A B')) (ResidueField A) := by
     refine IsScalarTower.of_algebraMap_eq fun y => ?_
     obtain ⟨r, rfl⟩ := residue_surjective y
     change ResidueField.map (toA A B) (residue _ r) =
@@ -1250,8 +1250,8 @@ theorem isLocalHom_g (B : Subalgebra ℤ A) : IsLocalHom (g A B) :=
 def fromB (B : Subalgebra ℤ A) : B →+* O A B := (algebraMap (RB A B) (O A B)).comp (algebraMap B (RB A B))
 
 theorem indEt_fromB (B : Subalgebra ℤ A) : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (fromB B) := by
-  letI : Algebra B (O A B) := (fromB B).toAlgebra
-  haveI : IsScalarTower B (RB A B) (O A B) := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra B (O A B) := (fromB B).toAlgebra
+  have : IsScalarTower B (RB A B) (O A B) := IsScalarTower.of_algebraMap_eq' rfl
   have h1 : Pieces B (RB A B) := ⟨Unit, inferInstance, inferInstance, inferInstance, fun _ => ⊤,
     fun _ _ _ => le_rfl, fun _ => ⟨(), Algebra.mem_top⟩,
     fun _ => ⟨B, inferInstance, inferInstance, inferInstance, pB A B, inferInstance, ⟨Subalgebra.topEquiv.symm⟩⟩⟩
@@ -1263,7 +1263,7 @@ theorem indEt_fromB (B : Subalgebra ℤ A) : GlobalTheory.IndefiniteRowSideFullH
 
 theorem isStalk_O (B : Subalgebra ℤ A) :
     IsStalk (O A B) (Spec.map (CommRingCat.ofHom (fromB B))) := by
-  letI : Algebra B (O A B) := (fromB B).toAlgebra
+  let : Algebra B (O A B) := (fromB B).toAlgebra
   exact ⟨⟨inferInstance, (sh A B).sep⟩, B, inferInstance, inferInstance, 𝟙 _, inferInstance, indEt_fromB B,
     (Category.comp_id _).symm⟩
 
@@ -1483,8 +1483,8 @@ theorem GlobalTheory.EtC.gmPhi_surjective_of_noetherian : ∀ (q : ℕ) [NeZero 
     simpa using hq.map (LaurentPolynomial.C : A →+* LaurentPolynomial A)
   obtain ⟨j, y, hy⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (D ⋙ laurentFunctor) _ (isColimit_laurent hc) 1 i).1 x hqL
   obtain ⟨B, _, _, s, hs⟩ := hst j
-  haveI := hl j
-  haveI : IsNoetherianRing (D.obj j) := GlobalTheory.StalkNoeth.isNoetherianRing_of_isStalk B (D.obj j) s hs
+  have := hl j
+  have : IsNoetherianRing (D.obj j) := GlobalTheory.StalkNoeth.isNoetherianRing_of_isStalk B (D.obj j) s hs
   obtain ⟨b, hb⟩ := hN (D.obj j) hs.1 (hqj j) i y
   have hn := gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q (A := D.obj j) (B := A) (ι.app j).hom (hqj j) i b
   rw [hb] at hn

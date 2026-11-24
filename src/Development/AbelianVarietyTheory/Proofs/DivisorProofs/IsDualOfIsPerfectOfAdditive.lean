@@ -70,10 +70,10 @@ theorem mono_of_isPerfect {S : Scheme.{0}} {A B B' : Over S} [GrpObj A] [GrpObj 
   rwa [mul_inv_eq_one] at t
 
 theorem isIso_of_isEmpty {S : Scheme.{0}} (hS : IsEmpty S) {X Y : Over S} (f : X ⟶ Y) : IsIso f := by
-  haveI : IsEmpty X.left := ⟨fun p ↦ hS.false (X.hom p)⟩
-  haveI : IsEmpty Y.left := ⟨fun p ↦ hS.false (Y.hom p)⟩
-  haveI : IsIso f.left := ⟨⟨isInitialOfIsEmpty.to _, isInitialOfIsEmpty.hom_ext _ _, isInitialOfIsEmpty.hom_ext _ _⟩⟩
-  haveI : IsIso ((Over.forget S).map f) := ‹IsIso f.left›
+  have : IsEmpty X.left := ⟨fun p ↦ hS.false (X.hom p)⟩
+  have : IsEmpty Y.left := ⟨fun p ↦ hS.false (Y.hom p)⟩
+  have : IsIso f.left := ⟨⟨isInitialOfIsEmpty.to _, isInitialOfIsEmpty.hom_ext _ _, isInitialOfIsEmpty.hom_ext _ _⟩⟩
+  have : IsIso ((Over.forget S).map f) := ‹IsIso f.left›
   exact isIso_of_reflects_iso f (Over.forget S)
 
 theorem isDual_of_isPerfect_of_additive (hD : GlobalTheory.Published.DualAbelianScheme) {S : Scheme.{0}} [IsLocallyNoetherian S]

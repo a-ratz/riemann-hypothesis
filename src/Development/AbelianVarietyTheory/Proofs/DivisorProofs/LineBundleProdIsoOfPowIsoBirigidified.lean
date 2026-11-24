@@ -130,9 +130,9 @@ theorem GlobalTheory.BirigidRoot.iso_of_lbPow_iso : ∀ (S : Scheme.{0}) (A : Ov
   have hpow : x₁ ^ k = x₂ ^ k := GlobalTheory.BirigidLift.dual_ext q (by rw [pw, pw, ← ex₁, ← ex₂, hk'])
   have hx : x₁ = x₂ := by
     obtain ⟨hfl, hsu, -⟩ := GlobalTheory.UPel.HT.SiegUniqBase.flat_surjective_qc_pow S A hA k hk
-    haveI := hfl
-    haveI := hsu
-    haveI : Epi ((𝟙 A) ^ k).left := Flat.epi_of_flat_of_surjective _
+    have := hfl
+    have := hsu
+    have : Epi ((𝟙 A) ^ k).left := Flat.epi_of_flat_of_surjective _
     have c : (((𝟙 A) ^ k) ≫ x₁).left = (((𝟙 A) ^ k) ≫ x₂).left := by
       rw [GlobalTheory.BirigidRoot.pow_comp_hom, GlobalTheory.BirigidRoot.pow_comp_hom, Category.id_comp, Category.id_comp, hpow]
     rw [Over.comp_left, Over.comp_left] at c

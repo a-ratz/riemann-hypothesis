@@ -159,7 +159,7 @@ theorem xi_unit (hu : q.UnitAA) : valuation k (ofSplit q).xi = 1 := by
   rw [map_mul, q.pr_sec, mul_one] at h3 h4
   change valuation k ((q.pr.comp (incA D)) _) ≤ 1 at h4
   rw [map_inv₀, map_inv₀] at h4
-  exact le_antisymm h3 ((inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 (Witness.xi_ne (ofSplit q))))).1 h4)
+  exact le_antisymm h3 ((inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 (Witness.xi_ne (ofSplit q))))).1 h4)
 
 theorem exists_char (hu : q.UnitAA) {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) :
     ∃ ψk, (ofSplit q).IsChar ψ ψk ∧ HasConductor ψk 1 := by

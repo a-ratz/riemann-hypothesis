@@ -475,9 +475,9 @@ theorem exists_full_frac : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) [IsDoma
     (∀ g ∈ GK K, b * P.actQ g b' - P.actQ g b * b' = b * P.actQ g b * ((kummer P g : ℚ_[l]) • P.tB)) →
     ∃ x y : P.R.B, x ≠ 0 ∧ ∀ g : GQ l, x * P.actQ g y - P.actQ g x * y = x * P.actQ g x * ((kummer P g : ℚ_[l]) • P.tB) := by
   intro l _ P _ K b b' hb h
-  haveI := K.2
-  haveI : Finite (GQ l ⧸ GK K) := Subgroup.quotient_finite_of_isOpen _ K.1.fixingSubgroup_isOpen
-  haveI := Fintype.ofFinite (GQ l ⧸ GK K)
+  have := K.2
+  have : Finite (GQ l ⧸ GK K) := Subgroup.quotient_finite_of_isOpen _ K.1.fixingSubgroup_isOpen
+  have := Fintype.ofFinite (GQ l ⧸ GK K)
   let ι : P.R.B →+* FractionRing P.R.B := algebraMap P.R.B (FractionRing P.R.B)
   have hι : Function.Injective ι := IsFractionRing.injective P.R.B (FractionRing P.R.B)
   let e : GQ l → FractionRing P.R.B ≃+* FractionRing P.R.B := fun g =>
@@ -526,7 +526,7 @@ theorem exists_full_frac : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) [IsDoma
     obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul (GK K) g
     rw [hk, h2]
   have hnB : ((Fintype.card (GQ l ⧸ GK K) : ℕ) : P.R.B) ≠ 0 := by
-    haveI := nontrivial_B P
+    have := nontrivial_B P
     rw [← map_natCast (algebraMap ℚ_[l] P.R.B)]
     exact (map_ne_zero_iff _ (FaithfulSMul.algebraMap_injective ℚ_[l] P.R.B)).2
       (Nat.cast_ne_zero.2 Fintype.card_ne_zero)
@@ -577,7 +577,7 @@ theorem filtration_eq_span_pow : ∀ (l : ℕ) [Fact l.Prime] (Co : Core l) (ϖ 
   have he := core_isEps l Co
   obtain ⟨hfil, -, -, -⟩ := filtration_eq_xi_pow l Co.ε he
   obtain ⟨-, -, -, -, hdom, -, hk⟩ := thetaP_facts l
-  haveI := hdom
+  have := hdom
   have hass : Associated (algebraMap (Per.Ainf l) (Per.AinfP l) (xi Co.ε)) (beta ϖ) :=
     Ideal.span_singleton_eq_span_singleton.1 ((hk Co.ε he).symm.trans hb)
   have hD : Associated (aDp l (xi Co.ε) ^ n) (betaD ϖ ^ n) :=
@@ -707,22 +707,22 @@ theorem log_trunc_pow : ∀ (l : ℕ) [Fact l.Prime] (ϖ : Per.Fl l), Per.kerP l
     · have h2 : ¬ k = n - 1 := by omega
       have hk1 : k + 1 = M := by omega
       have hda : d (k + 1) = 0 := by simp [d, hk1]
-      rw [if_pos h1, if_neg h2]
+      rw [ite_eq_left h1, ite_eq_right h2]
       simp only [a, hda, map_zero, mul_zero, zero_mul, add_zero, zero_add]
       rw [← hq, hk1, hM, Nat.cast_pow]
       ring
     · by_cases h2 : k = n - 1
       · have hk1 : k + 1 = n := by omega
         have hda : d (k + 1) = 0 := by simp [d, hk1]
-        rw [if_neg h1, if_pos h2]
+        rw [ite_eq_right h1, ite_eq_left h2]
         simp only [a, hda, map_zero, mul_zero, zero_mul, add_zero, zero_add]
         ring
       · have hne : ¬ (k + 1 = M ∨ k + 1 = n) := by omega
-        have hda : d (k + 1) = c (k + 1) := by simp only [d, hne, if_false]
+        have hda : d (k + 1) = c (k + 1) := by simp only [d, hne, ite_false]
         have hck := hc (k + 1) ⟨by omega, by omega, by omega⟩
         have hck' := congrArg (Per.zP l) hck
         rw [map_mul, map_natCast, map_pow, map_natCast] at hck'
-        rw [if_neg h1, if_neg h2]
+        rw [ite_eq_right h1, ite_eq_right h2]
         simp only [a, hda, add_zero]
         rw [← hq]
         linear_combination -(-1) ^ k * ((n.factorial / (k + 1) : ℕ) : Per.AinfP l) * β ^ (k + 1) *
@@ -734,7 +734,7 @@ theorem log_trunc_pow : ∀ (l : ℕ) [Fact l.Prime] (ϖ : Per.Fl l), Per.kerP l
       Finset.sum_ite_eq', Finset.sum_ite_eq', ← Finset.mul_sum]
     have hm1 : M - 1 ∈ Finset.range n := Finset.mem_range.2 (by omega)
     have hn1 : n - 1 ∈ Finset.range n := Finset.mem_range.2 (by omega)
-    rw [if_pos hm1, if_pos hn1, Nat.sub_add_cancel (by omega : 1 ≤ M)]
+    rw [ite_eq_left hm1, ite_eq_left hn1, Nat.sub_add_cancel (by omega : 1 ≤ M)]
     simp only [S, e0, T]
     ring
   have hβI : β ∈ Per.kerP l := by rw [hker]; exact Ideal.mem_span_singleton_self _
@@ -874,7 +874,7 @@ theorem eq_C_mul_of_fixed {ι : Type} (s : ι → F ≃+* F) (t : ι → F)
     by_contra hne
     have hr : A q₀ - q₀ ≠ 0 := sub_ne_zero.mpr hne
     have hlt : (A q₀ - q₀).degree < (A q₀).degree :=
-      degree_sub_lt (by rw [degree_eq_natDegree hAm.ne_zero, degree_eq_natDegree hm.ne_zero,
+      degree_sub_lt_left (by rw [degree_eq_natDegree hAm.ne_zero, degree_eq_natDegree hm.ne_zero,
         natDegree_shift]) hAm.ne_zero (by rw [hAm.leadingCoeff, hm.leadingCoeff])
     have hlt' : (A q₀ - q₀).natDegree < Nat.find hex := by
       rw [← hdeg, ← natDegree_shift (s g) (t g) q₀]; exact natDegree_lt_natDegree hr hlt
@@ -918,7 +918,7 @@ theorem fixed_ratio_const_of {B G : Type} (F : Type) [Field F] [CommRing B] [IsD
     ∃ d d' : B, d ≠ 0 ∧ C d * p = C d' * q ∧ ∀ g, d * σ g d' = σ g d * d' := by
   classical
   have hinj : Function.Injective (algebraMap B F) := IsFractionRing.injective B F
-  haveI : CharZero F := charZero_of_injective_algebraMap hinj
+  have : CharZero F := charZero_of_injective_algebraMap hinj
   have hι0 : ∀ x : B, x ≠ 0 → (algebraMap B F) x ≠ 0 := fun x hx => by
     rwa [Ne, ← map_zero (algebraMap B F), hinj.eq_iff]
   let s : G → F ≃+* F := fun g => IsFractionRing.ringEquivOfRingEquiv (σ g)
@@ -1038,14 +1038,14 @@ theorem StLat.not_frac (l : ℕ) [Fact l.Prime] (Co : Core l) (ϖ : Per.Fl l)
     have h3 : Co.j Co.t = 0 := hinjD (h0.trans (map_zero _).symm)
     apply IsDiscreteValuationRing.not_a_field (Per.BdRp l)
     rw [hmax, h3, Ideal.span_singleton_eq_bot]
-  haveI : IsDomain (Per.BdR l) := IsFractionRing.isDomain (Per.BdRp l)
+  have : IsDomain (Per.BdR l) := IsFractionRing.isDomain (Per.BdRp l)
   rw [map_mul, map_pow] at hz2
   exact mul_ne_zero hx (pow_ne_zero _ htne) hz2
 
 theorem StLat.kummer_not_frac : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K : FinExt l) (b b' : P.R.B), b ≠ 0 →
   ¬ ∀ g ∈ GK K, b * P.actQ g b' - P.actQ g b * b' = b * P.actQ g b * ((kummer P g : ℚ_[l]) • P.tB) := by
   intro l _ P AI T K b b' hb h
-  haveI : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T (botExt l)
+  have : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T (botExt l)
   obtain ⟨x, y, hx, hxy⟩ := _root_.GlobalTheory.Pst.NoLog.exists_full_frac l P K b b' hb h
   obtain ⟨Co, hC⟩ := GlobalTheory.MemLoc.FitsEx.exists_fits l P AI T
   obtain ⟨ϖ, hr⟩ := exists_tilt (lRoot l) (lRoot_succ l) l (lRoot_zero l)
@@ -1056,7 +1056,7 @@ theorem StLat.kummer_not_frac : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
   obtain ⟨u, hu⟩ := _root_.GlobalTheory.Pst.LogExist.exists_isLogP l (beta ϖ) (by
     rw [_root_.GlobalTheory.Pst.StLat.ker_localizedTheta_eq_span_beta l ϖ hϖ]; exact Ideal.mem_span_singleton_self _)
   have hg := _root_.GlobalTheory.Pst.StLat.gal_log l P Co hC.ζ ϖ hr hϖ u hu
-  letI : Field P.R.BdR := (GlobalTheory.RegularRing.isField_of_tied T).toField
+  let : Field P.R.BdR := (GlobalTheory.RegularRing.isField_of_tied T).toField
   set U := T.eD.symm (algebraMap (Per.BdRp l) (Per.BdR l) u) with hUdef
   have hct : ∀ g : GQ l, T.eD (P.ιB ((kummer P g : ℚ_[l]) • P.tB)) =
       algebraMap (Per.BdRp l) (Per.BdR l)
@@ -1113,12 +1113,12 @@ theorem stRegular : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf 
     (∀ (K : FinExt l) (b : Bst P), b ≠ 0 →
       (∀ g : ↥(GK K), ∃ x : ℚ_[l], actSt P (g : GQ l) b = algebraMap ℚ_[l] (Bst P) x * b) → IsUnit b) := by
   intro l _ P AI ⟨T⟩
-  haveI : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T (botExt l)
+  have : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T (botExt l)
   obtain ⟨Co, hC⟩ := GlobalTheory.MemLoc.FitsEx.exists_fits l P AI T
   have hinj : Co.TensorInj := GlobalTheory.Published.FontaineBcris_holds.tensorInj Co
   have hreg : Co.Regular := GlobalTheory.Published.FontaineBcris_holds.regular Co
   refine ⟨inferInstance, fun K b b' hb h => ?_, fun K b hb h => ?_⟩
-  · haveI : CharZero P.R.B := by
+  · have : CharZero P.R.B := by
       have := (algebraMap ℚ_[l] P.R.B).injective
       exact charZero_of_injective_algebraMap this
     have hA : ∀ (g : GQ l) (p : Bst P), actSt P g p = (p.map ((P.actQ g).toRingEquiv : P.R.B →+* P.R.B)).comp (X + C ((kummer P g : ℚ_[l]) • P.tB)) :=

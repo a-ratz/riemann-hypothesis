@@ -77,7 +77,7 @@ theorem isParamFun_one_trivPar : ∀ {D : D7} (A : HSp D) (LA : Lat A) (Sf : Fin
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
     exact Formalism.IndefR.Datum.IsSelfDualC.isFullLattice V Λ hΛ
-  haveI : Submodule.IsFullLattice D.host.E L := hfull V L hLd
+  have : Submodule.IsFullLattice D.host.E L := hfull V L hLd
   have hd := GlobalTheory.Core.Rk.IwSplit.isSelfDualAt_of_isSelfDualC hLd v
   have hun : Formalism.MainNotions.SchurIrreducible.IsUnram (E := D.host.E) v := fun P _ => by
     have := GlobalTheory.BaseChangeExistsCompare.unram_of_cm D D.sp.cm P

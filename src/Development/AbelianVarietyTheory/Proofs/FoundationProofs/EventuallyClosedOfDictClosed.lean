@@ -153,9 +153,9 @@ theorem finrank_eq_one_of_jump {L M : Type} [Field L] [AddCommGroup M] [Module L
     (h : ∀ a, (finrank L (F a) : ℤ) - finrank L (F (a + 1)) = if a = a₀ then 1 else 0) :
     finrank L U = 1 := by
   have hA : Antitone F := antitone_int_of_succ_le anti
-  haveI : ∀ a, FiniteDimensional L (F a) := fun a => Submodule.finiteDimensional_of_le (le a)
+  have : ∀ a, FiniteDimensional L (F a) := fun a => Submodule.finiteDimensional_of_le (le a)
   have hs : ∀ a, a ≠ a₀ → F (a + 1) = F a := fun a ha =>
-    Submodule.eq_of_le_of_finrank_eq (anti a) (by have := h a; rw [if_neg ha] at this; omega)
+    Submodule.eq_of_le_of_finrank_eq (anti a) (by have := h a; rw [ite_eq_right ha] at this; omega)
   have hlo : ∀ a ≤ a₀, F a = F a₀ := by
     intro a ha
     induction a, ha using Int.leInductionDown with
@@ -176,7 +176,7 @@ theorem finrank_eq_one_of_jump {L M : Type} [Field L] [AddCommGroup M] [Module L
     · exact hA hab hx
     · rwa [hhi a hab]
   have h3 := h a₀
-  rw [h2, if_pos rfl, finrank_bot] at h3
+  rw [h2, ite_eq_left rfl, finrank_bot] at h3
   rw [h1]
   omega
 
@@ -214,7 +214,7 @@ theorem finrank_ddR_of_one_jump [FiniteDimensional Qp K] (hcard : Fintype.card (
     (h : ∀ τ : K →ₐ[Qp] LL, ∃ a₀ : ℤ, ∀ a, multV PD ρ τ a = if a = a₀ then 1 else 0) :
     finrank LL (DdR PD ρ) = finrank Qp K := by
   choose a₀ h using h
-  haveI : ∀ τ, FiniteDimensional LL (DdRE PD ρ τ) := fun τ =>
+  have : ∀ τ, FiniteDimensional LL (DdRE PD ρ τ) := fun τ =>
     finite_ddRE_of_multV PD ρ τ {a₀ τ} (by simp) fun a => by
       rw [h, Multiset.count_singleton]; split_ifs <;> rfl
   have h1 : ∀ τ, finrank LL (DdRE PD ρ τ) = 1 := fun τ =>

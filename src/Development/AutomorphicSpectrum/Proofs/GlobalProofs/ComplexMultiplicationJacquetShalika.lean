@@ -64,7 +64,7 @@ theorem latticeCurve_j (L : PeriodPair) : (GlobalTheory.latticeCurve L).j = (wei
 
 theorem under_ne_bot (M : IntermediateField K ℂ) [NumberField M] {P : Ideal (𝓞 M)} (hP : P ≠ ⊥) :
     P.under (𝓞 K) ≠ ⊥ :=
-  fun h => hP (Ideal.eq_bot_of_comap_eq_bot h)
+  fun h => hP (Ideal.eq_bot_of_under_eq_bot h)
 
 theorem isUnramifiedAbelian_hilbertClassField :
     GlobalTheory.Published.IsUnramifiedAbelian (hilbertClassField K ℂ) := by

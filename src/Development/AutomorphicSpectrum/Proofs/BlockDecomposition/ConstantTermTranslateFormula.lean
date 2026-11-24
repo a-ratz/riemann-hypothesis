@@ -58,7 +58,7 @@ theorem constTerm_unip_left : ∀ (E : Type) [Field E] [NumberField E] [_root_.N
     ∀ (y : BlockIx a r → Ad E) (g : GA E a),
       ∫ x in 𝓕, φ.1 (unip x * (unip y * g)) ∂μ = ∫ x in 𝓕, φ.1 (unip x * g) ∂μ := by
   intro E _ _ _ a r φ hl _ _ _ μ 𝓕 hμ h𝓕 y g
-  haveI := countable_ratN (E := E) (a := a) r
+  have := countable_ratN (E := E) (a := a) r
   have hper : ∀ n ∈ ratN E a r, ∀ x, φ.1 (unip (n + x) * g) = φ.1 (unip x * g) := by
     rintro _ ⟨q, rfl⟩ x
     rw [unip_add, mul_assoc]

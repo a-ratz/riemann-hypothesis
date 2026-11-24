@@ -93,9 +93,9 @@ theorem hasFDerivAt_fsv {m : ℕ} (t : ℂ) (l : Fin m) (c : Fin m → ℂ) :
       rfl
     rw [he, ← hc]
     exact h2
-  · simp only [ContinuousLinearMap.smul_apply, hL, Pi.single_eq_same, map_one, smul_eq_mul]
+  · simp only [smul_apply, hL, Pi.single_eq_same, map_one, smul_eq_mul]
     ring
-  · simp only [ContinuousLinearMap.smul_apply, hL, Pi.single_eq_same, Complex.conj_I, smul_eq_mul]
+  · simp only [smul_apply, hL, Pi.single_eq_same, Complex.conj_I, smul_eq_mul]
     ring
 
 section Leibniz
@@ -112,7 +112,7 @@ theorem wirt_fsv_smul (t : ℂ) (l : Fin m) (φ : (Fin m → ℂ) → E) (c : Fi
     hD.smul hφ.hasFDerivAt
   unfold wirt wirtBar
   rw [hP.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.smulRight_apply, h1, hI, smul_add, smul_sub, smul_smul, ← mul_assoc, Complex.I_mul_I]
   constructor <;> module
 
@@ -122,9 +122,9 @@ theorem pOp_fsv_smul (t : ℂ) (l : Fin m) (φ : (Fin m → ℂ) → E) (c : Fin
       fsv t (c l) • pOp l φ c + t • fsv t (c l) • (c l • φ c) := by
   unfold pOp
   by_cases h : c ∈ OmX m
-  · rw [if_pos h, if_pos h, (wirt_fsv_smul t l φ c (hd h)).1]
+  · rw [ite_eq_left h, ite_eq_left h, (wirt_fsv_smul t l φ c (hd h)).1]
     module
-  · rw [if_neg h, if_neg h, h0 h]
+  · rw [ite_eq_right h, ite_eq_right h, h0 h]
     simp
 
 theorem pbOp_fsv_smul (t : ℂ) (l : Fin m) (φ : (Fin m → ℂ) → E) (c : Fin m → ℂ)
@@ -133,10 +133,10 @@ theorem pbOp_fsv_smul (t : ℂ) (l : Fin m) (φ : (Fin m → ℂ) → E) (c : Fi
       fsv (-t) (c l) • pbOp l φ c + conj t • fsv (-t) (c l) • (star (c l) • φ c) := by
   unfold pbOp
   by_cases h : c ∈ OmX m
-  · rw [if_pos h, if_pos h, (wirt_fsv_smul (-t) l φ c (hd h)).2]
+  · rw [ite_eq_left h, ite_eq_left h, (wirt_fsv_smul (-t) l φ c (hd h)).2]
     simp only [map_neg, neg_neg, Complex.star_def]
     module
-  · rw [if_neg h, if_neg h, h0 h]
+  · rw [ite_eq_right h, ite_eq_right h, h0 h]
     simp
 
 end Leibniz
@@ -152,11 +152,11 @@ theorem radSp_regular (Φ : RadSp k r z z' π π') (g : Mx k r) (c : Fin r → �
   have hΦm : (Φ : Fn k r (Wq →L[ℂ] Wp)) ∈ RadSp k r z z' π π' := Φ.2
   obtain ⟨h0, hs, -⟩ := hΦm
   refine ⟨fun hc => ?_, fun hc => h0 (c, g) (fun hx => hc (by
-    simp only [DomR, Set.mem_setOf_eq] at hx
+    simp only [DomR, Set.mem_ofPred_eq] at hx
     exact hx.1))⟩
   by_cases hg : g ∈ Glev k r (Fin.last r) ∧ 0 < GGl k r z z' g
   · obtain ⟨U, F, hU, hxU, hF, hΦ⟩ := hs (c, g) (by
-      simp only [DomR, Set.mem_setOf_eq]
+      simp only [DomR, Set.mem_ofPred_eq]
       exact ⟨hc, hg.1, hg.2⟩)
     have hcont : Continuous (fun c' : Fin r → ℂ => (c', g)) := by fun_prop
     have hev : ∀ᶠ c' in nhds c, (Φ : Fn k r (Wq →L[ℂ] Wp)) c' g = F (c', g) := by
@@ -170,7 +170,7 @@ theorem radSp_regular (Φ : RadSp k r z z' π π') (g : Mx k r) (c : Fin r → �
   · have hz : (fun c' => (Φ : Fn k r (Wq →L[ℂ] Wp)) c' g) = fun _ => 0 := by
       funext c'
       refine h0 (c', g) (fun hx => hg ?_)
-      simp only [DomR, Set.mem_setOf_eq] at hx
+      simp only [DomR, Set.mem_ofPred_eq] at hx
       exact ⟨hx.2.1, hx.2.2⟩
     rw [hz]
     exact differentiableAt_const 0

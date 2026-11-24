@@ -93,7 +93,7 @@ theorem mem_mulG (I : Ideal (𝓞 F)) {γ : Af F} (hγ : γ ∈ intAf F)
     exact ht₁0
   set Z := (Ideal.finite_factors hspan).toFinset with hZdef
   have hZ : ∀ v, v ∈ Z ↔ t₁ ∈ v.asIdeal := fun v => by
-    rw [hZdef, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+    rw [hZdef, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   have h' : ∀ v : HeightOneSpectrum (𝓞 F), ∃ t ∈ I, γ v = 0 ∨ t ∉ v.asIdeal := fun v =>
     (h v).elim (fun e => ⟨0, I.zero_mem, Or.inl e⟩) fun ⟨t, ht, hv⟩ => ⟨t, ht, Or.inr hv⟩
   choose τ hτI hτ using h'
@@ -132,11 +132,11 @@ theorem mem_mulG (I : Ideal (𝓞 F)) {γ : Af F} (hγ : γ ∈ intAf F)
     simp only [map_mul, ev_apply, eβ₁, eβ]
     by_cases hv : t₁ ∈ v.asIdeal
     · have hvZ : v ∈ Z := (hZ v).2 hv
-      rw [Finset.sum_eq_single v (fun w _ hwv => by rw [if_neg (Ne.symm hwv), mul_zero])
-        (fun hn => absurd hvZ hn), if_pos hv, if_pos rfl, mul_zero, zero_add, hc']
+      rw [Finset.sum_eq_single v (fun w _ hwv => by rw [ite_eq_right (Ne.symm hwv), mul_zero])
+        (fun hn => absurd hvZ hn), ite_eq_left hv, ite_eq_left rfl, mul_zero, zero_add, hc']
     · rw [Finset.sum_eq_zero (fun w hw => by
         have hne : v ≠ w := fun e => hv (e ▸ (hZ w).1 hw)
-        rw [if_neg hne, mul_zero]), if_neg hv, add_zero, mul_comm, mul_assoc,
+        rw [ite_eq_right hne, mul_zero]), ite_eq_right hv, add_zero, mul_comm, mul_assoc,
         inv_mul_cancel₀ (coe_ne_zero _ _ hv), mul_one]
   rw [e]
   refine add_mem (AddSubgroup.subset_closure ⟨t₁, ht₁I, β₁, hβ₁, rfl⟩) (sum_mem fun w _ => ?_)

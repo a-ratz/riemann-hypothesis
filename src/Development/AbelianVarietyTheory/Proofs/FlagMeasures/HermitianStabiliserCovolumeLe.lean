@@ -201,7 +201,7 @@ theorem covol_of_act {G α : Type} [Group G] [MeasurableSpace α] (act : G → �
     (hinv : ∀ s ∈ A ⊔ B, (∀ x ∈ R, act s x ∈ R) ∧ μ.map (act s) = μ) (hAB : A.relIndex B ≠ 0) (hBA : B.relIndex A ≠ 0)
     (hΩ : MeasurableSet Ω) (hK : MeasurableSet K) (fA : ∀ x ∈ R, ∃! s, s ∈ A ∧ act s x ∈ Ω)
     (fB : ∀ x ∈ R, ∃! s, s ∈ B ∧ act s x ∈ K) : μ K = ENNReal.ofReal (GlobalTheory.HL.invVol A B) * μ Ω := by
-  letI : MulAction G α := { smul := act, one_smul := h1, mul_smul := h2 }
+  let : MulAction G α := { smul := act, one_smul := h1, mul_smul := h2 }
   exact _root_.GlobalTheory.CovolIdx.measure_eq_invVol_mul G α μ R A B Ω K hm cA cB hR hinv hAB hBA hΩ hK fA fB
 
 theorem continuous_lmulM {k r : ℕ} (a : Mat k r) : Continuous (lmulM (k := k) (r := r) a) := by
@@ -222,8 +222,8 @@ theorem rset_mul {k r : ℕ} {γ : Mat k r} (hu : IsUnit γ.det) {a b : Mat k r}
 
 theorem countable_aut (K V : Type) [Field K] [NumberField K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] :
     Countable (V ≃ₗ[K] V) := by
-  haveI : Countable K := (Module.finBasis ℚ K).equivFun.injective.countable
-  haveI : Countable V := (Module.finBasis K V).equivFun.injective.countable
+  have : Countable K := (Module.finBasis ℚ K).equivFun.injective.countable
+  have : Countable V := (Module.finBasis K V).equivFun.injective.countable
   let b := Module.finBasis K V
   refine Function.Injective.countable (f := fun s : V ≃ₗ[K] V => fun i => s (b i)) fun s t e => ?_
   exact LinearEquiv.toLinearMap_injective (b.ext fun i => congrFun e i)
@@ -241,7 +241,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
   have hH : ∀ v, IsHaarOn (Rset k r (g v)) (lebR0 k r N.j β) := fun v => by
     obtain ⟨-, hz, hz', hT0, ⟨c, hc⟩, -⟩ := hF v
     exact (GlobalTheory.Amp.StabHaar.lebesgue_haar_unimodular_stabilizer k r N.j N.j_le (z v) (z' v) (g v) β c hz hz' hT0 hc).1
-  haveI : SigmaFinite (lebR0 k r N.j β) := (hH v0).1
+  have : SigmaFinite (lebR0 k r N.j β) := (hH v0).1
   have hu : ∀ v, IsUnit (g v).det := fun v => RealMat.isUnit_det (hF v).2.2.2.2.1.choose_spec.1
   have hone : m 1 = fun _ => Matrix.of.symm (1 : Mat k r) :=
     (hmu 1 _ fun v x => by simp only [Equiv.apply_symm_apply, Matrix.one_mulVec]; rfl).symm
@@ -264,14 +264,14 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
     refine measure_mono_null (t := ⋃ v, Function.eval v ⁻¹' {x : Mt k r | Matrix.of x ∉ Rset k r (g v)}) ?_
       (measure_iUnion_null fun v => Measure.pi_eval_preimage_null _ (hH v).2.2.1)
     intro x hx
-    simp only [RP, Set.mem_compl_iff, Set.mem_setOf_eq, not_forall] at hx
+    simp only [RP, Set.mem_compl_iff, Set.mem_ofPred_eq, not_forall] at hx
     obtain ⟨v, hv'⟩ := hx
     exact Set.mem_iUnion.2 ⟨v, hv'⟩
   have hpres : ∀ s ∈ N.R, (Measure.pi fun _ : ι => lebR0 k r N.j β).map (mulP (m s)) =
       Measure.pi fun _ : ι => lebR0 k r N.j β := fun s hs => by
     have e : ∀ v, (lebR0 k r N.j β).map (lmulM (Matrix.of (m s v))) = lebR0 k r N.j β :=
       fun v => (hH v).2.2.2 _ (hmR s hs v)
-    haveI : ∀ v, SigmaFinite ((lebR0 k r N.j β).map (lmulM (Matrix.of (m s v)))) := fun v => by rw [e]; infer_instance
+    have : ∀ v, SigmaFinite ((lebR0 k r N.j β).map (lmulM (Matrix.of (m s v)))) := fun v => by rw [e]; infer_instance
     have := Measure.pi_map_pi (μ := fun _ : ι => lebR0 k r N.j β)
       (f := fun v => lmulM (Matrix.of (m s v))) fun v => (continuous_lmulM _).measurable.aemeasurable
     simp only [e] at this
@@ -316,7 +316,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
   have hnil := (GlobalTheory.UnipStab.common_unipotent_stabiliser K V H hK r N).2.2.2.2
   have hc1 := (GlobalTheory.DegCnt.Unimod.invVol_smul K V N.R (2 * r + 1) hnil _ _ hRefFull hΛ).1
   have hc2 := (GlobalTheory.DegCnt.Unimod.invVol_smul K V N.R (2 * r + 1) hnil _ _ hΛ hRefFull).1
-  haveI := countable_aut K V
+  have := countable_aut K V
   have key := covol_of_act (fun s x => mulP (m s) x) h1 h2 (Measure.pi fun _ : ι => lebR0 k r N.j β) (RP k r g)
     (N.Gam (N.Ref (latL N.F N.F' Λ))) (N.Gam Λ) Ω Kf hmeas inferInstance inferInstance hnull
     (fun s hs => by

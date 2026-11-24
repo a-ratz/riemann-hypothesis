@@ -78,9 +78,9 @@ theorem eta_left_hom {S : Scheme.{0}} (G : Over S) [GrpObj G] :
 theorem nonempty_algHom_of_finiteType (k C : Type) [Field k] [IsAlgClosed k] [CommRing C] [Nontrivial C]
     [Algebra k C] [Algebra.FiniteType k C] : Nonempty (C →ₐ[k] k) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal C
-  letI : Field (C ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType k (C ⧸ m) := Algebra.FiniteType.trans (S := C) inferInstance inferInstance
-  haveI : Module.Finite k (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (C ⧸ m)
+  let : Field (C ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType k (C ⧸ m) := Algebra.FiniteType.trans (S := C) inferInstance inferInstance
+  have : Module.Finite k (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (C ⧸ m)
   let e : k ≃ₐ[k] (C ⧸ m) := AlgEquiv.ofBijective (Algebra.ofId k (C ⧸ m))
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   exact ⟨e.symm.toAlgHom.comp (Ideal.Quotient.mkₐ k m)⟩
@@ -146,7 +146,7 @@ theorem exists_endo_spread_specialise : ∀ (k₀ K : Type) [Field k₀] [IsAlgC
   have hΨsnd : Ψl ≫ pullback.snd _ _ = pullback.snd _ _ := pullback.lift_snd _ _ _
   let Ψ : (Over.pullback (spMap (algebraMap k₀ R))).obj B ⟶ (Over.pullback (spMap (algebraMap k₀ R))).obj B :=
     Over.homMk Ψl hΨsnd
-  haveI : Algebra.FiniteType k₀ R := (Subalgebra.fg_iff_finiteType R).mp hRfg
+  have : Algebra.FiniteType k₀ R := (Subalgebra.fg_iff_finiteType R).mp hRfg
   obtain ⟨g⟩ := nonempty_algHom_of_finiteType k₀ R
   have hgc : spMap g.toRingHom ≫ spMap (algebraMap k₀ R) = 𝟙 _ := by
     first
@@ -235,7 +235,7 @@ theorem exists_endo_spread_specialise : ∀ (k₀ K : Type) [Field k₀] [IsAlgC
     exact (Over.w (fst ((Over.pullback (spMap (algebraMap k₀ R))).obj B) ((Over.pullback (spMap (algebraMap k₀ R))).obj B))).trans (Over.w (snd ((Over.pullback (spMap (algebraMap k₀ R))).obj B) ((Over.pullback (spMap (algebraMap k₀ R))).obj B))).symm
   have hμψ : μ[((Over.pullback (spMap (algebraMap k₀ R))).obj B)].left ≫ ψ =
       pullback.lift ((fst ((Over.pullback (spMap (algebraMap k₀ R))).obj B) ((Over.pullback (spMap (algebraMap k₀ R))).obj B)).left ≫ ψ) ((snd ((Over.pullback (spMap (algebraMap k₀ R))).obj B) ((Over.pullback (spMap (algebraMap k₀ R))).obj B)).left ≫ ψ) hLc ≫ μ[B].left := by
-    haveI : IsIso (Functor.OplaxMonoidal.δ (Over.pullback (spMap (algebraMap k₀ R))) B B).left :=
+    have : IsIso (Functor.OplaxMonoidal.δ (Over.pullback (spMap (algebraMap k₀ R))) B B).left :=
       (inferInstance : IsIso ((Over.forget _).map (Functor.OplaxMonoidal.δ (Over.pullback (spMap (algebraMap k₀ R))) B B)))
     rw [← cancel_epi (Functor.OplaxMonoidal.δ (Over.pullback (spMap (algebraMap k₀ R))) B B).left, ← Category.assoc, hδμR]
     apply hom_ext_bcMap (B ⊗ B).hom R.val hinj B.hom

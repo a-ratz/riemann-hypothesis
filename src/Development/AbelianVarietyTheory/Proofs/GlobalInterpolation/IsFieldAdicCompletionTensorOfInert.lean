@@ -67,7 +67,7 @@ theorem _root_.GlobalTheory.InertField.exists_not_congr {F E : Type} [Field F] [
     ∃ a : 𝓞 E, ∀ r : 𝓞 F, a - algebraMap (𝓞 F) (𝓞 E) r ∉ v.asIdeal.map (algebraMap (𝓞 F) (𝓞 E)) := by
   by_contra hcon
   push_neg at hcon
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
+  have : v.asIdeal.IsMaximal := v.isMaximal
   have hrank := Ideal.finrank_quotient_map v.asIdeal F E (S := 𝓞 E)
   rw [h2] at hrank
   have hle : Module.finrank (𝓞 F ⧸ v.asIdeal)
@@ -132,7 +132,7 @@ private lemma exists_integer_valuation_sub_lt_one {F : Type} [Field F] [NumberFi
       rwa [← hEq, ← pow_succ] at hdL
   have hnval : v.intValuation n ≤ v.intValuation d := by
     rw [map_div₀, valuation_of_algebraMap, valuation_of_algebraMap] at hs
-    have hpos : 0 < v.intValuation d := zero_lt_iff.mpr hne
+    have hpos : 0 < v.intValuation d := pos_iff_ne_zero.mpr hne
     rwa [div_le_one₀ hpos] at hs
   have hn : n ∈ Ideal.span {d} ⊔ v.asIdeal ^ (c + 1) := by
     rw [hsup, ← Ideal.dvd_span_singleton, ← intValuation_le_pow_iff_dvd]
@@ -146,7 +146,7 @@ private lemma exists_integer_valuation_sub_lt_one {F : Type} [Field F] [NumberFi
     field_simp
     ring
   rw [heq, map_div₀, valuation_of_algebraMap, valuation_of_algebraMap,
-    div_lt_one₀ (zero_lt_iff.mpr hne)]
+    div_lt_one₀ (pos_iff_ne_zero.mpr hne)]
   have hz' : v.intValuation z ≤ WithZero.exp (-((c + 1 : ℕ) : ℤ)) := by
     rw [intValuation_le_pow_iff_dvd, Ideal.dvd_span_singleton]; exact hz
   exact lt_of_le_of_lt hz' (not_le.mp hdc1)
@@ -177,7 +177,7 @@ private lemma exists_quadratic_root_mod_of_adic_root {F : Type} [Field F] [Numbe
     have hle : Valued.v (B * β + C) ≤ Valued.v β := by
       apply Valuation.map_add_le
       · rw [map_mul]
-        calc Valued.v B * Valued.v β ≤ 1 * Valued.v β := mul_le_mul_of_nonneg_right hB1 zero_le'
+        calc Valued.v B * Valued.v β ≤ 1 * Valued.v β := mul_le_mul_of_nonneg_right hB1 zero_le
           _ = Valued.v β := one_mul _
       · exact hC1.trans h.le
     have hlt : Valued.v β < Valued.v (β ^ 2) := by
@@ -218,7 +218,7 @@ private lemma exists_quadratic_root_mod_of_adic_root {F : Type} [Field F] [Numbe
     have h2 : Valued.v (R + β + B) ≤ 1 :=
       Valuation.map_add_le _ (Valuation.map_add_le _ hR1 hβ1) hB1
     calc Valued.v (R - β) * Valued.v (R + β + B) ≤ Valued.v (R - β) * 1 :=
-          mul_le_mul_of_nonneg_left h2 zero_le'
+          mul_le_mul_of_nonneg_left h2 zero_le
       _ < 1 := by rw [mul_one]; exact hδ
   have heq : R ^ 2 + B * R + C
       = algebraMap F (v.adicCompletion F) (algebraMap (𝓞 F) F (r ^ 2 + b * r + c)) := by

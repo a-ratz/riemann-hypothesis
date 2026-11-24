@@ -112,14 +112,14 @@ theorem coreSharp (hSC : SharpCount) (lam : Measure (Fv F v)) (hlam : IsStdV v l
   let 𝓴 := IsLocalRing.ResidueField 𝒪
   let res := IsLocalRing.residue 𝒪
   have hLoc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : SecondCountableTopology (Fv F v) := hLoc.2.2.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : SecondCountableTopology (Fv F v) := hLoc.2.2.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨-, -, -, hcard⟩ := _root_.GlobalTheory.CompanionTheory.SW.Vol.volumes_in_completion F v lam hlam
   have hq0 : Ideal.absNorm v.asIdeal ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]
     exact v.ne_bot
-  haveI : Finite 𝓴 := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq0)
-  letI : Fintype 𝓴 := Fintype.ofFinite _
+  have : Finite 𝓴 := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq0)
+  let : Fintype 𝓴 := Fintype.ofFinite _
   have hcardk : Fintype.card 𝓴 = Ideal.absNorm v.asIdeal := by
     rw [← Nat.card_eq_fintype_card]; exact hcard
   obtain ⟨BO, rfl⟩ : ∃ BO : Matrix ι ι 𝒪, BO.map phi = B :=
@@ -198,7 +198,7 @@ theorem coreSharp (hSC : SharpCount) (lam : Measure (Fv F v)) (hlam : IsStdV v l
         (∃ i, Valued.v (x i) = 1) ∧ (2 : Fv F v)⁻¹ * (x ⬝ᵥ ((BO.map phi) *ᵥ x)) ∈ A} =
         ⋃ y ∈ T0, P y := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+      simp only [Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]
       constructor
       · rintro ⟨h1, h3, h4⟩
         obtain ⟨y, hy, h⟩ := (cover x).1 ⟨h1, h3⟩

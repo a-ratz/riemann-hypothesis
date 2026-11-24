@@ -796,7 +796,7 @@ theorem mod_noPTorsion : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [Char
     rw [map_natCast]
     intro h0
     have := IsFractionRing.injective (WittVector p k) (Fr p k)
-    apply WittVector.p_nonzero (p := p) (R := k)
+    apply WittVector.p_ne_zero (p := p) (R := k)
     apply this; rw [map_natCast, map_zero]; exact h0
   have : f = g := by
     ext α
@@ -942,7 +942,7 @@ theorem semiHom_constantCoeff_and_ev : ∀ (p : ℕ) (k k' : Type) [CommRing k] 
       change IsNilpotent (evA k' (c'.x n) (c'.nil n) (X t))
       rw [_root_.GlobalTheory.Katz.evA_X]; exact c'.nil n t) φ hconst _ hy (fun j => hφ n j) (MvPowerSeries.map σ g)
   rw [h1]
-  letI : Algebra k (G'.A n) := ((algebraMap k' (G'.A n)).comp σ).toAlgebra
+  let : Algebra k (G'.A n) := ((algebraMap k' (G'.A n)).comp σ).toAlgebra
   let S : G.A n →ₐ[k] G'.A n :=
     { (s.app n).toRingHom with commutes' := fun r => (s.app n).map_algebraMap r }
   have h2 := (_root_.GlobalTheory.evA_subst_and_map k (Fin d) (G.A n)).2 (G'.A n) S (c.x n) (c.nil n) _ hy (fun _ => rfl) g
@@ -1048,7 +1048,7 @@ theorem wittModule_free_finite_of_reduction : ∀ (p : ℕ) [Fact p.Prime] (k : 
       intro m h
       rw [pow_succ, mul_smul] at h
       exact htf m (ih _ h)
-  haveI : Module.IsTorsionFree (WittVector p k) M :=
+  have : Module.IsTorsionFree (WittVector p k) M :=
     Module.IsTorsionFree.of_smul_eq_zero fun a m h => by
       by_cases ha : a = 0
       · exact Or.inl ha
@@ -1058,12 +1058,12 @@ theorem wittModule_free_finite_of_reduction : ∀ (p : ℕ) [Fact p.Prime] (k : 
       have h1 := hpow j _ h
       rw [← Units.smul_def] at h1
       exact (smul_eq_zero_iff_eq u).mp h1
-  haveI : IsHausdorff I M := hH
+  have : IsHausdorff I M := hH
   let b := Module.finBasis k V
   choose m hm using fun i => hr (b i)
   let F : (Fin (Module.finrank k V) → WittVector p k) →ₗ[WittVector p k] M :=
     Fintype.linearCombination (WittVector p k) m
-  haveI : IsPrecomplete I (Fin (Module.finrank k V) → WittVector p k) :=
+  have : IsPrecomplete I (Fin (Module.finrank k V) → WittVector p k) :=
     GlobalTheory.isPrecomplete_pi I _
   have hs : Function.Surjective F := by
     apply surjective_of_mkQ_comp_surjective (I := I)
@@ -1083,7 +1083,7 @@ theorem wittModule_free_finite_of_reduction : ∀ (p : ℕ) [Fact p.Prime] (k : 
     have : ((p : WittVector p k)) • y ∈ (I • ⊤ : Submodule (WittVector p k) M) :=
       Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _) Submodule.mem_top
     simpa [Nat.cast_smul_eq_nsmul] using this
-  haveI : Module.Finite (WittVector p k) M := Module.Finite.of_surjective F hs
+  have : Module.Finite (WittVector p k) M := Module.Finite.of_surjective F hs
   exact ⟨Module.free_of_finite_type_torsion_free', inferInstance⟩
 
 end GlobalTheory
@@ -1350,7 +1350,7 @@ theorem exists_base_isConn_katz : ∀ (p : ℕ) [Fact p.Prime],
   have hff : ∀ (k : Type) [Field k] [CharP k p] [PerfectRing k p] (G : PDivGroup p k) (hG : G.IsConn),
       Module.Free (WittVector p k) (Mod p (hlaw k G hG)) ∧ Module.Finite (WittVector p k) (Mod p (hlaw k G hG)) := by
     intro k _ _ _ G hG
-    haveI : Module.Finite k G.RigExt :=
+    have : Module.Finite k G.RigExt :=
       (GlobalTheory.PDivGroup.finrank_rigExt_omega p k (CharP.cast_eq_zero k p) G).2.1
     exact GlobalTheory.wittModule_free_finite_of_reduction p k _ G.RigExt (r k G hG)
       (GlobalTheory.Katz.WittHaus.haus p k _ _ (hlaw k G hG))

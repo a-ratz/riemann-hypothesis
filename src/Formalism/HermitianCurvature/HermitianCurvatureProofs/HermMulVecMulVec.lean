@@ -130,10 +130,10 @@ lemma herm_mulVec_mulVec (H h : Mx k r) (hh : hᴴ * H * h = H) (v w : Fin (2 * 
 
 lemma zeta_inv (g : Mx k r) (h h' : Mx k r) (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') :
     zeta k r z z' (h * g * h') = zeta k r z z' g := by
-  simp only [UWset, Set.mem_setOf_eq] at hh hh'
+  simp only [UWset, Set.mem_ofPred_eq] at hh hh'
   obtain ⟨hU, hb, hz⟩ := hh
   obtain ⟨hU', hb', hz'⟩ := hh'
-  simp only [UH, Set.mem_setOf_eq] at hU
+  simp only [UH, Set.mem_ofPred_eq] at hU
   have hf' : h' *ᵥ fvec k r z' (Fin.last r) = fvec k r z' (Fin.last r) := by
     unfold fvec
     rw [dite_eq_right (by simp)]

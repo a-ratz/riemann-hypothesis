@@ -507,7 +507,7 @@ theorem mem_flagSub {j : ℕ} {x : Fin n → F} :
     have hm : k ∈ ((Pi.basisFun F (Fin n)).repr x).support := by
       simpa using hx
     have := h hm
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     omega
   · intro h k hk
     have hk' : x k ≠ 0 := by simpa using hk
@@ -548,7 +548,7 @@ theorem mem_xIdeal_res (M : Submodule R ((Fin n → F) → C)) (i : Fin n) (σ�
 
 theorem mem_vanSub {j : ℕ} {h : (Fin n → F) → C} :
     h ∈ vanSub C F n j ↔ ∀ x ∈ flagSub (Pi.basisFun F (Fin n)) j, h x = 0 := by
-  simp only [vanSub, Submodule.mem_pi, Submodule.mem_bot, mem_flagSub, Set.mem_setOf_eq]
+  simp only [vanSub, Submodule.mem_pi, Submodule.mem_bot, mem_flagSub, Set.mem_ofPred_eq]
 
 variable {Sg : Type} {r s : Sg → ℕ} (D : LieLatticeData C F n Sg r s)
 

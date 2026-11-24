@@ -172,7 +172,7 @@ theorem algComb_of_ratScalar (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A} 
 
   obtain ⟨nδ, hnδ, hδ⟩ := de_values hρ i j b
   have hcard : Nat.card (ρ.B i j b).G.P.H ≠ 0 := Nat.card_pos.ne'
-  haveI := GlobalTheory.CoverSmall.smallF_normal D hgal
+  have := GlobalTheory.CoverSmall.smallF_normal D hgal
   let K : Subfield ℂ := (algebraicClosure ℚ ℂ).toSubfield
   have hK : ∀ {z : ℂ} {m : ℕ}, m ≠ 0 → z ^ m = 1 → z ∈ K := fun hm hz =>
     mem_algebraicClosure_iff.2 (GlobalTheory.BigOn.Exp.isAlgebraic_of_pow_eq_one hm hz)

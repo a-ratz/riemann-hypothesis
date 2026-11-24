@@ -273,7 +273,7 @@ theorem GlobalTheory.exists_irreducible_sub_trivOutside_split : ∀ (L : Type) [
   obtain ⟨f₀, hf₀S, hf₀ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot π.ne
   obtain ⟨N, hN, hf₀N⟩ := π.smooth f₀ hf₀S
   let VN := Fix (NG.Cong L n N)
-  haveI : FiniteDimensional ℂ VN := finFix N hN
+  have : FiniteDimensional ℂ VN := finFix N hN
   let W₀ := Fix (fun y => NG.Cong L n N y ∧ TrivOutside {s.v}ᶜ y)
   let Hst : Submodule ℂ (GAf L n → ℂ) → Prop := fun U =>
     ∀ x : GAf L n, TrivOutside {s.v} x → ∀ f ∈ U, NG.rt L n x f ∈ U
@@ -291,7 +291,7 @@ theorem GlobalTheory.exists_irreducible_sub_trivOutside_split : ∀ (L : Type) [
   have hmin : ∀ U', 𝒰 U' → Nat.find hex ≤ Module.finrank ℂ ↥(U' ⊓ VN) :=
     fun U' hU' => Nat.find_min' hex ⟨U', hU', rfl⟩
   let X := U ⊓ VN
-  haveI : FiniteDimensional ℂ X := Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional ℂ X := Submodule.finiteDimensional_of_le inf_le_right
   let gen : Set (GAf L n → ℂ) := {g | ∃ x, TrivOutside {s.v} x ∧ ∃ f ∈ X, g = NG.rt L n x f}
   let Wsp := Submodule.span ℂ gen
   have hWU : Wsp ≤ U := Submodule.span_le.2 (by
@@ -333,8 +333,8 @@ theorem GlobalTheory.exists_irreducible_sub_trivOutside_split : ∀ (L : Type) [
     intro w' hw'S hw'W' f hfS hfX
     obtain ⟨N₁, hN₁, hw'N₁⟩ := π.smooth w' hw'S
     let F : Submodule ℂ π.S := (Fix (NG.Cong L n N₁)).comap π.S.subtype
-    haveI := finFix N₁ hN₁
-    haveI : FiniteDimensional ℂ F := by
+    have := finFix N₁ hN₁
+    have : FiniteDimensional ℂ F := by
       let φ : F →ₗ[ℂ] Fix (NG.Cong L n N₁) :=
         LinearMap.codRestrict (Fix (NG.Cong L n N₁)) (π.S.subtype ∘ₗ F.subtype) (fun c => c.2)
       refine Module.Finite.of_injective φ ?_
@@ -342,7 +342,7 @@ theorem GlobalTheory.exists_irreducible_sub_trivOutside_split : ∀ (L : Type) [
       have h' := congrArg Subtype.val h
       apply Subtype.ext; apply Subtype.ext; exact h'
     let E : Submodule ℂ π.S := F ⊓ W'.comap π.S.subtype
-    haveI : FiniteDimensional ℂ E := Submodule.finiteDimensional_of_le inf_le_left
+    have : FiniteDimensional ℂ E := Submodule.finiteDimensional_of_le inf_le_left
     have stabE : ∀ k : GAf L n, k ∈ Umax L n → TrivOutside {s.v} k → ∀ v ∈ E,
         (⟨NG.rt L n k v, π.stable k v v.2⟩ : π.S) ∈ E := by
       intro k hkU hkT v hv

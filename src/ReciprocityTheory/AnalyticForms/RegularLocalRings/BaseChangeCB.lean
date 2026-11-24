@@ -135,7 +135,7 @@ theorem withBot_enat_cancel {h : ℕ∞} {a b : WithBot ℕ∞} {N : ℕ}
       congr 1
       induction h using ENat.recTopCoe with
       | top => simp at ha'
-      | coe h => exact WithTop.add_left_cancel (ENat.coe_ne_top h) (ha'.trans hb'.symm)
+      | coe h => exact WithTop.add_left_cancel (ENat.natCast_ne_top h) (ha'.trans hb'.symm)
 
 theorem ringKrullDim_of_mem_minimalPrimes_map (𝔭 : Ideal (MvPolynomial σ ℚ)) [𝔭.IsPrime]
     (Q : Ideal (MvPolynomial σ ℂ))

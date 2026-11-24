@@ -80,8 +80,8 @@ theorem UpperTheory.Gal.G3.pTransOfMap :
     intro c
     ext
     simpa [θ] using m.act c
-  haveI : IsIso m.φ := m.cart.1.isIso_fst_of_isIso
-  haveI : IsIso θ := by
+  have : IsIso m.φ := m.cart.1.isIso_fst_of_isIso
+  have : IsIso θ := by
     have : IsIso ((Over.forget S).map θ) := by
       change IsIso m.φ
       infer_instance

@@ -97,7 +97,7 @@ theorem tw_contDiff (m : ℕ) (e : ℤ) (μK : Measure (KR n)) [μK.IsHaarMeasur
     exact (Complex.ofRealCLM.contDiff.comp (hβ.comp h1)).contDiffOn
   have hv : Continuous (fun k : KR n => (mR (k : GR n))ᴴ) := continuous_kR.matrix_conjTranspose
   have hh : Continuous (fun k : KR n => (F0 m 0 e (k : GR n))⁻¹) :=
-    ((Vac.continuous_weight_factor detU1 m 0 e).comp continuous_subtype_val).inv₀ fun k => Vac.spherical_section_ne_zero detU1 m 0 e _
+    ((Vac.continuous_weight_factor detU1 m 0 e).comp continuous_subtypeVal).inv₀ fun k => Vac.spherical_section_ne_zero detU1 m 0 e _
   have := PCD.contDiffOn_integral' (F := M2 n) (X := KR n) isOpen_univ μK
     (fun p : M2 n × M2 n => ((β (p.2 * p.1) : ℝ) : ℂ)) hk (fun k : KR n => (mR (k : GR n))ᴴ) hv
     (fun k : KR n => (F0 m 0 e (k : GR n))⁻¹) hh
@@ -364,12 +364,12 @@ theorem tw_zero_off {u : GR n} (hu : u ∉ (mR : GR n → M2 n) ⁻¹' tsupport 
 
 theorem continuous_twR [IsFiniteMeasure μK] (hβc : Continuous β) : Continuous fun u : GR n => tw m e μK β (mR u) := by
   have hF : Continuous fun k : KR n => (F0 m 0 e (k : GR n))⁻¹ :=
-    ((Vac.continuous_weight_factor detU1 m 0 e).comp continuous_subtype_val).inv₀
+    ((Vac.continuous_weight_factor detU1 m 0 e).comp continuous_subtypeVal).inv₀
       (fun k => Vac.spherical_section_ne_zero detU1 m 0 e _)
   have hc : Continuous (Function.uncurry fun (X : M2 n) (k : KR n) =>
       (F0 m 0 e (k : GR n))⁻¹ * (β ((mR (k : GR n))ᴴ * X) : ℂ)) := by
     refine (hF.comp continuous_snd).mul (Complex.continuous_ofReal.comp (hβc.comp ?_))
-    exact ((continuous_mR.comp (continuous_subtype_val.comp continuous_snd)).matrix_conjTranspose).matrix_mul
+    exact ((continuous_mR.comp (continuous_subtypeVal.comp continuous_snd)).matrix_conjTranspose).matrix_mul
       continuous_fst
   have h := continuous_parametric_integral_of_continuous (μ := μK) hc isCompact_univ
   simp only [Measure.restrict_univ] at h
@@ -382,7 +382,7 @@ theorem integral_restrict_C (F : GR n → ℂ) (hF : ∀ u, u ∉ (mR : GR n →
 theorem cw_differentiable [ν.IsHaarMeasure] [μK.IsHaarMeasure] (hβc : Continuous β) (hβs : HasCompactSupport β) :
     Differentiable ℂ fun w => cw m e ν μK β w := by
   have hC := twC (m := m) (e := e) μK hβs
-  haveI : IsFiniteMeasure (ν.restrict ((mR : GR n → M2 n) ⁻¹' tsupport (tw m e μK β))) :=
+  have : IsFiniteMeasure (ν.restrict ((mR : GR n → M2 n) ⁻¹' tsupport (tw m e μK β))) :=
     isFiniteMeasure_restrict.mpr hC.measure_lt_top.ne
   have hcont : Continuous fun u : GR n => tw m e μK β (mR u) := continuous_twR μK hβc
   have key := holParam (GR n) (ν.restrict ((mR : GR n → M2 n) ⁻¹' tsupport (tw m e μK β)))
@@ -413,7 +413,7 @@ theorem lhs_diff (hD : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) (ν : Measure (GR
     (μK : Measure (KR n)) [μK.IsHaarMeasure] {β : M2 n → ℝ} (hβc : Continuous β) (hβs : HasCompactSupport β)
     (g : G) (y : GR n) : DifferentiableOn ℂ (fun z => ∫ u, Ê z (g * ι (y * u)) * tw m e μK β (mR u) ∂ν) U := by
   have hC := twC (m := m) (e := e) μK hβs
-  haveI : IsFiniteMeasure (ν.restrict ((mR : GR n → M2 n) ⁻¹' tsupport (tw m e μK β))) :=
+  have : IsFiniteMeasure (ν.restrict ((mR : GR n → M2 n) ⁻¹' tsupport (tw m e μK β))) :=
     isFiniteMeasure_restrict.mpr hC.measure_lt_top.ne
   have hcont : Continuous fun u : GR n => tw m e μK β (mR u) := continuous_twR μK hβc
   have hmap : Continuous fun q : GR n × ℂ => (q.2, g * ι (y * q.1)) :=
@@ -456,13 +456,13 @@ theorem conv_far (hD : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) (ν : Measure (GR
   set C := (mR : GR n → M2 n) ⁻¹' tsupport (tw m e μK β) with hCdef
   have hC : IsCompact C := twC μK hβs
   have hCm : MeasurableSet C := hC.isClosed.measurableSet
-  haveI : IsFiniteMeasure (ν.restrict C) := isFiniteMeasure_restrict.mpr hC.measure_lt_top.ne
+  have : IsFiniteMeasure (ν.restrict C) := isFiniteMeasure_restrict.mpr hC.measure_lt_top.ne
   have hcont : Continuous fun u : GR n => tw m e μK β (mR u) := continuous_twR μK hβc
   have hι : Continuous fun u : GR n => g * ι (y * u) :=
     continuous_const.mul (hD.ιc.comp (continuous_const.mul continuous_id))
   obtain ⟨b, hb, hbd⟩ := hfar (insert (g * ι y) ((fun u => g * ι (y * u)) '' C)) ((hC.image hι).insert _)
   obtain ⟨M, hM⟩ := hC.exists_bound_of_continuousOn hcont.continuousOn
-  haveI : Countable (Function.support b) := hb.countable_support.to_subtype
+  have : Countable (Function.support b) := hb.countable_support.to_subtype
   have hmemC : ∀ u ∈ C, g * ι (y * u) ∈ insert (g * ι y) ((fun u => g * ι (y * u)) '' C) :=
     fun u hu => mem_insert_of_mem _ ⟨u, hu, rfl⟩
   have hzero : ∀ h ∈ insert (g * ι y) ((fun u => g * ι (y * u)) '' C), ∀ q,
@@ -551,7 +551,7 @@ theorem conv_U (hD : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) (ν : Measure (GR n
   obtain ⟨σ, hσ⟩ := hD.hR.1
   have hz0U : (((max σ t + 1 : ℝ)) : ℂ) ∈ U := by
     apply hσ
-    simp only [GlobalTheory.Cont.rightOf, mem_setOf_eq, Complex.ofReal_re]
+    simp only [GlobalTheory.Cont.rightOf, mem_ofPred_eq, Complex.ofReal_re]
     linarith [le_max_left σ t]
   have hL : AnalyticOnNhd ℂ (fun z => ∫ u, Ê z (g * ι (y * u)) * tw m e μK β (mR u) ∂ν) U :=
     (lhs_diff hD ν μK hβc hβs g y).analyticOnNhd hD.hU
@@ -563,7 +563,7 @@ theorem conv_U (hD : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) (ν : Measure (GR n
       (fun z => cw m e ν μK β (z - s₀) * Ê z (g * ι y)) := by
     have hopen : IsOpen {w : ℂ | t < w.re} := isOpen_lt continuous_const Complex.continuous_re
     have hmem : (((max σ t + 1 : ℝ)) : ℂ) ∈ {w : ℂ | t < w.re} := by
-      simp only [mem_setOf_eq, Complex.ofReal_re]
+      simp only [mem_ofPred_eq, Complex.ofReal_re]
       linarith [le_max_right σ t]
     filter_upwards [hopen.mem_nhds hmem] with w hw
     exact conv_far hD ν μK hβc hβs w hw g y
@@ -603,9 +603,9 @@ theorem psi_continuous (m : ℕ) (e : ℤ) (μK : Measure (KR n)) [IsFiniteMeasu
       (F0 m 0 e (k : GR n))⁻¹ * F0 m 0 e ((k : GR n) * u)) := by
     show Continuous fun p : GR n × KR n => (F0 m 0 e (p.2 : GR n))⁻¹ * F0 m 0 e ((p.2 : GR n) * p.1)
     refine Continuous.mul ?_ ?_
-    · exact ((Vac.continuous_weight_factor detU1 m 0 e).comp (continuous_subtype_val.comp continuous_snd)).inv₀
+    · exact ((Vac.continuous_weight_factor detU1 m 0 e).comp (continuous_subtypeVal.comp continuous_snd)).inv₀
         fun p => Vac.spherical_section_ne_zero detU1 m 0 e _
-    · exact (Vac.continuous_weight_factor detU1 m 0 e).comp ((continuous_subtype_val.comp continuous_snd).mul continuous_fst)
+    · exact (Vac.continuous_weight_factor detU1 m 0 e).comp ((continuous_subtypeVal.comp continuous_snd).mul continuous_fst)
   have := continuous_parametric_integral_of_continuous (μ := μK) hF isCompact_univ
   have e : psi m e μK = fun u => ∫ k : KR n, (F0 m 0 e (k : GR n))⁻¹ * F0 m 0 e ((k : GR n) * u) ∂μK := rfl
   rw [e]
@@ -636,7 +636,7 @@ theorem cw_zero (m : ℕ) (e : ℤ) (ν : Measure (GR n)) [ν.IsHaarMeasure] (μ
   have hFne : ∀ g, F0 (n := n) m 0 e g ≠ 0 := fun g => Vac.spherical_section_ne_zero detU1 m 0 e g
   have hCc : IsCompact (mR ⁻¹' (tsupport β)) := isCompact_preimage_mR hβs.isCompact
   have hk : Continuous (fun p : GR n × KR n => ((p.2 : GR n))) :=
-    continuous_subtype_val.comp continuous_snd
+    continuous_subtypeVal.comp continuous_snd
   let A : GR n × KR n → ℂ := fun p =>
     F0 m 0 e p.1 * ((F0 m 0 e (p.2 : GR n))⁻¹ * (β (mR ((p.2 : GR n)⁻¹ * p.1)) : ℂ))
   let B : GR n × KR n → ℂ := fun p =>
@@ -651,7 +651,7 @@ theorem cw_zero (m : ℕ) (e : ℤ) (ν : Measure (GR n)) [ν.IsHaarMeasure] (μ
   have hAs : HasCompactSupport A := by
     refine HasCompactSupport.intro
       ((((isCompact_univ (X := KR n)).prod hCc).image
-        ((continuous_subtype_val.comp continuous_fst).mul continuous_snd)).prod
+        ((continuous_subtypeVal.comp continuous_fst).mul continuous_snd)).prod
         (isCompact_univ (X := KR n))) ?_
     intro p hp
     have hz : β (mR ((p.2 : GR n)⁻¹ * p.1)) = 0 := by
@@ -727,7 +727,7 @@ theorem exists_bump (m : ℕ) (e : ℤ) (ν : Measure (GR n)) [ν.IsHaarMeasure]
     (Complex.continuous_ofReal.comp (b.continuous.comp continuous_mR)).mul hpc
   have hre : ∀ u, (g u).re = b (mR u) * (psi m e μK u).re := fun u => Complex.re_ofReal_mul _ _
   have hpos : 0 < ∫ u, (g u).re ∂ν := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
       (Complex.continuous_re.comp hgc) (hgs.comp_left Complex.zero_re) ?_ ?_
     · intro u
       show 0 ≤ (g u).re
@@ -787,7 +787,7 @@ theorem holInt (ν : Measure (GR n)) [ν.IsHaarMeasure] {C : Set (GR n)} (hC : I
       ∀ z ∈ U, ∀ r : ℕ, iteratedDeriv r (fun z => ∫ u, F u z ∂ν) z = ∫ u, iteratedDeriv r (F u) z ∂ν := by
   classical
   have hCm : MeasurableSet C := hC.isClosed.measurableSet
-  haveI : IsFiniteMeasure (ν.restrict C) := isFiniteMeasure_restrict.mpr hC.measure_lt_top.ne
+  have : IsFiniteMeasure (ν.restrict C) := isFiniteMeasure_restrict.mpr hC.measure_lt_top.ne
   have hdF : ∀ u, DifferentiableOn ℂ (F u) U := by
     intro u
     by_cases hu : u ∈ C
@@ -924,7 +924,7 @@ private theorem taylor_cont_lemma {X : Type} [TopologicalSpace X] {U : Set ℂ} 
   have hS : IsOpen S := isOpen_univ.prod Metric.isOpen_ball
   have hmem : (x₀, z₀) ∈ S := ⟨trivial, Metric.mem_ball_self rpos⟩
   have hK : ContinuousOn K S := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hsph : ∀ θ : ℝ, circleMap z₀ (ε / 2) θ ∈ U := fun θ =>
       hsub (Metric.sphere_subset_closedBall (circleMap_mem_sphere z₀ rpos.le θ))
     have h3 : Continuous (fun q : S × ℝ => Φ q.1.1.1 (circleMap z₀ (ε / 2) q.2)) := by
@@ -991,7 +991,7 @@ theorem smoothX : SmoothX := by
   obtain ⟨ν, hν⟩ : ∃ ν : Measure (GR n), ν.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
   obtain ⟨μK, hμK⟩ : ∃ μ : Measure (KR n), μ.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
   obtain ⟨β, hβs, hβc, hβ0⟩ := exists_bump m e ν μK
-  have hmR : Continuous (fun u : GR n => mR u) := Units.continuous_val.comp continuous_subtype_val
+  have hmR : Continuous (fun u : GR n => mR u) := Units.continuous_val.comp continuous_subtypeVal
   have hcont : ∀ z ∈ U, Continuous (fun u : GR n => Ê z (g * ι u)) := by
     intro z hz
     have := hD.cont.comp_continuous (f := fun u : GR n => (z, g * ι u))

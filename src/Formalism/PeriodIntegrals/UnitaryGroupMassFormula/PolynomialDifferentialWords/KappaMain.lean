@@ -72,8 +72,8 @@ lemma mapDomain_inl_add_inr (u g : Fin k →₀ ℕ) :
     u.mapDomain Sum.inl + g.mapDomain Sum.inr = Finsupp.sumElim u g := by
   ext v
   rcases v with i | i
-  · simp [Finsupp.mapDomain_apply_of_injective Sum.inl_injective, Finsupp.mapDomain_notin_range]
-  · simp [Finsupp.mapDomain_apply_of_injective Sum.inr_injective, Finsupp.mapDomain_notin_range]
+  · simp [Finsupp.mapDomain_apply_of_injective Sum.inl_injective, mapDomain_of_notMem_range]
+  · simp [Finsupp.mapDomain_apply_of_injective Sum.inr_injective, mapDomain_of_notMem_range]
 
 lemma sumElim_inj {u g u' g' : Fin k →₀ ℕ} :
     Finsupp.sumElim u g = Finsupp.sumElim u' g' ↔ u = u' ∧ g = g' := by
@@ -117,7 +117,7 @@ lemma coeff_term (P : MvPolynomial (Fin k) K) (m g g' : Fin k →₀ ℕ) :
   classical
   induction P using MvPolynomial.induction_on'
   next u c =>
-    rw [rename_monomial, monomial_mul, mapDomain_inl_add_inr]
+    rw [rename_monomial, monomial_mul_monomial, mapDomain_inl_add_inr]
     simp only [coeff_monomial, sumElim_inj, mul_one]
     by_cases h1 : u = m <;> by_cases h2 : g' = g <;> simp [h1, h2]
   next p q hp hq =>
@@ -168,7 +168,7 @@ lemma eq_sum_mono (F : ↥(homogeneousSubmodule (Fin k) K d)) :
   rw [Submodule.coe_sum]
   conv_lhs => rw [(F : MvPolynomial (Fin k) K).as_sum]
   refine Finset.sum_congr rfl fun g hg => ?_
-  rw [Submodule.coe_smul, mono_val, if_pos (degree_of_coeff_ne F (MvPolynomial.mem_support_iff.1 hg)),
+  rw [Submodule.coe_smul, mono_val, ite_eq_left (degree_of_coeff_ne F (MvPolynomial.mem_support_iff.1 hg)),
     smul_monomial, smul_eq_mul, mul_one]
 
 lemma prodFact_fintype (g : Fin k →₀ ℕ) :
@@ -228,13 +228,13 @@ lemma Ed_mono (a b : Fin k) (g : Fin k →₀ ℕ) :
   · split_ifs <;> simp [pderiv_monomial, hb]
   · rw [degree_sub_add g a b hb]
     split_ifs with h
-    · rw [pderiv_monomial, X, monomial_mul, smul_monomial, add_comm (Finsupp.single a 1)]
+    · rw [pderiv_monomial, X, monomial_mul_monomial, smul_monomial, add_comm (Finsupp.single a 1)]
       simp
     · simp
 
 lemma pderiv_inl_xi (b : Fin k) (g : Fin k →₀ ℕ) :
     pderiv (Sum.inl b) (monomial (g.mapDomain Sum.inr) (1 : K) : Pol K k) = 0 := by
-  simp [pderiv_monomial, Finsupp.mapDomain_notin_range]
+  simp [pderiv_monomial, mapDomain_of_notMem_range]
 
 lemma weight_wx (m g : Fin k →₀ ℕ) : Finsupp.weight (wx k) (Finsupp.sumElim m g) = m.degree := by
   simp [Finsupp.weight_apply, Finsupp.sum_fintype, wx, Fintype.sum_sum_type, Finsupp.degree_eq_sum]

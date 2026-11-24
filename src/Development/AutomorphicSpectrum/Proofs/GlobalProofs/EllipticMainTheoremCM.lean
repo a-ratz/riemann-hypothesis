@@ -210,11 +210,11 @@ theorem exists_approx {𝔮 : Ideal (𝓞 K)} (h𝔮 : 𝔮 ≠ ⊥) {x : 𝓞 K
       Set.mem_iInter.1 hk1 ⟨v, (Ideal.finite_factors h𝔮).mem_toFinset.2 hv⟩
     have h0 : Valued.v (algebraMap K (v.adicCompletion K) (x : K) * compAt v a) ≠ 0 :=
       (map_ne_zero _).2 (mul_ne_zero ((map_ne_zero _).2 hxK) (comp_ne_zero K a v))
-    rwa [map_mul, map_inv₀, mul_inv_le_iff₀ (zero_lt_iff.2 h0), one_mul, map_mul] at h
+    rwa [map_mul, map_inv₀, mul_inv_le_iff₀ (pos_iff_ne_zero.2 h0), one_mul, map_mul] at h
   have h2 : ∀ v : HeightOneSpectrum (𝓞 K), v.asIdeal ∣ 𝔮 →
       Valued.v (algebraMap K (v.adicCompletion K) k) = Valued.v (compAt v a) := fun v hv => by
     refine Valuation.map_eq_of_sub_lt _ ((h1 v hv).trans_lt ?_)
-    exact mul_lt_of_lt_one_left (zero_lt_iff.2 (valued_comp_ne_zero K a v))
+    exact mul_lt_of_lt_one_left (pos_iff_ne_zero.2 (valued_comp_ne_zero K a v))
       (valued_lt_one_of_mem v (Ideal.le_of_dvd hv hx))
   have h3 : ∀ (w : InfinitePlace K) (hw : w.IsReal), 0 < InfinitePlace.embedding_of_isReal hw k *
       InfinitePlace.Completion.ringEquivRealOfIsReal hw (compInf w a) := fun w hw => by
@@ -227,7 +227,7 @@ theorem exists_approx {𝔮 : Ideal (𝓞 K)} (h𝔮 : 𝔮 ≠ ⊥) {x : 𝓞 K
       simp
     change 0 < _ * t' _ at h
     rw [e] at h
-    simpa only [t', dif_pos hw] using h
+    simpa only [t', dite_eq_left hw] using h
   by_cases hk : k = 0
   · subst hk
     refine ⟨1, fun v hv => absurd (h2 v hv).symm ?_, fun w hw => absurd (h3 w hw) (by simp)⟩
@@ -239,7 +239,7 @@ theorem exists_approx {𝔮 : Ideal (𝓞 K)} (h𝔮 : 𝔮 ≠ ⊥) {x : 𝓞 K
       show (algebraMap K (v.adicCompletion K) k)⁻¹ * compAt v a - 1 =
         (compAt v a - algebraMap K (v.adicCompletion K) k) * (algebraMap K (v.adicCompletion K) k)⁻¹ by
           field_simp, map_mul, map_inv₀, h2 v hv, Valuation.map_sub_swap,
-      mul_inv_le_iff₀ (c := Valued.v (compAt v a)) (zero_lt_iff.2 (valued_comp_ne_zero K a v))]
+      mul_inv_le_iff₀ (c := Valued.v (compAt v a)) (pos_iff_ne_zero.2 (valued_comp_ne_zero K a v))]
     exact h1 v hv
   · let e := InfinitePlace.Completion.ringEquivRealOfIsReal hw
     have he : e (algebraMap K w.Completion k) = InfinitePlace.embedding_of_isReal hw k := by
@@ -273,7 +273,7 @@ theorem exists_diag_mul_ray_mul_unif : ∀ (K : Type) [Field K] [NumberField K] 
     by_cases hv : v.asIdeal ∣ 𝔮
     · rw [map_mul, map_inv, hb2 v hv, inv_one, mul_one]
       exact ⟨x, hx, hk1 v hv⟩
-    · obtain ⟨y, hy, hyv⟩ := SetLike.not_le_iff_exists.mp (Ideal.dvd_iff_le.not.1 hv)
+    · obtain ⟨y, hy, hyv⟩ := IsConcreteLE.not_le_iff_exists.mp (Ideal.dvd_iff_le.not.1 hv)
       refine ⟨y, hy, ?_⟩
       rw [valued_algebraMap_eq_one K v y hyv]
       exact Valuation.map_sub_le _ h1.le (map_one _).le
@@ -305,7 +305,7 @@ theorem exists_ideal_unramified (L : Type) [Field L] [NumberField L] [Algebra K 
   refine ⟨(differentIdeal (𝓞 K) (𝓞 L)).under (𝓞 K), ?_, fun v hv Q hQ hl => ?_⟩
   · obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
       (differentIdeal_ne_bot (A := 𝓞 K) (B := 𝓞 L))
-    exact Ideal.comap_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral x)
+    exact Ideal.under_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral x)
   · have hnd : ¬ Q ∣ differentIdeal (𝓞 K) (𝓞 L) := fun hd => hv (Ideal.dvd_iff_le.2 (by
       rw [hl.over]
       exact Ideal.comap_mono (Ideal.dvd_iff_le.1 hd)))
@@ -360,8 +360,8 @@ theorem localIdele_eq {Art Art' : IdeleClassGroup K →* Field.absoluteGaloisGro
     (v : HeightOneSpectrum (𝓞 K)) (hv : IsUnramifiedIn K v L) (x : (v.adicCompletion K)ˣ) :
     abRestrict K L h (Art (QuotientGroup.mk (localIdele K v x))) =
       abRestrict K L h (Art' (QuotientGroup.mk (localIdele K v x))) := by
-  haveI := h.finiteDimensional
-  haveI : NumberField L := NumberField.of_module_finite K L
+  have := h.finiteDimensional
+  have : NumberField L := NumberField.of_module_finite K L
   obtain ⟨π, hπ⟩ := exists_isUniformiserAt K v
   obtain ⟨Q, hQ, hQv⟩ := ReciprocityTheory.DiscreteGroups.GlobalClassField.exists_liesOver (K := K) L v
   refine mem_of_units_of_unif v (MonoidHom.eqLocus (localComposite K Art L h v)
@@ -384,7 +384,7 @@ def infI : (InfiniteAdeleRing K)ˣ →* Ideles K :=
 theorem inf_mem [_root_.NumberField.IsTotallyComplex K] (N : Subgroup (Ideles K)) (m : ℕ) (hm : 0 < m)
     (hpow : ∀ x : Ideles K, x ^ m ∈ N) (y : (InfiniteAdeleRing K)ˣ) :
     infI y ∈ N := by
-  haveI : ∀ w : InfinitePlace K, IsAlgClosed w.Completion := fun w =>
+  have : ∀ w : InfinitePlace K, IsAlgClosed w.Completion := fun w =>
     IsAlgClosed.of_ringEquiv ℂ _
       (InfinitePlace.Completion.ringEquivComplexOfIsComplex (IsTotallyComplex.isComplex w)).symm
   choose r hr using fun w : InfinitePlace K =>
@@ -420,9 +420,9 @@ theorem abRestrict_eq : ∀ (K : Type) [Field K] [NumberField K] [_root_.NumberF
       (c : IdeleClassGroup K),
       abRestrict K L h (Art c) = abRestrict K L h (Art' c) := by
   intro K _ _ _ Art Art' hA hA' L h c
-  haveI := h.finiteDimensional
-  haveI := h.isGalois
-  haveI : NumberField L := NumberField.of_module_finite K L
+  have := h.finiteDimensional
+  have := h.isGalois
+  have : NumberField L := NumberField.of_module_finite K L
   let f : Ideles K →* (L ≃ₐ[K] L) :=
     (abRestrict K L h).comp (Art.comp (QuotientGroup.mk' (diagUnits K).range))
   let f' : Ideles K →* (L ≃ₐ[K] L) :=
@@ -437,7 +437,7 @@ theorem abRestrict_eq : ∀ (K : Type) [Field K] [NumberField K] [_root_.NumberF
         {a : Ideles K | abRestrict K L h (Art (QuotientGroup.mk a)) = τ} ∩
         {a : Ideles K | abRestrict K L h (Art' (QuotientGroup.mk a)) = τ} := by
       ext a
-      simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_ofPred_eq]
       exact ⟨fun ha => ⟨_, rfl, ha.symm⟩, fun ⟨τ, h1, h2⟩ => h1.trans h2.symm⟩
     rw [e]
     exact isOpen_iUnion fun τ => (hfib Art hA.1 τ).inter (hfib Art' hA'.1 τ)

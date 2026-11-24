@@ -136,9 +136,9 @@ private theorem tc_mul (x y : GG (m := m) (R := DualNumber κ)) : tc (x * y) = t
   unfold GG.adFun
   rw [e, GG.map_mat, GG.map_right]
   rcases Int.units_eq_one_or s with rfl | rfl
-  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_one, if_true, _root_.mul_inv_rev, Units.val_mul,
+  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_one, ite_true, _root_.mul_inv_rev, Units.val_mul,
       sn_mul, Matrix.map_mul, Matrix.add_mul, Matrix.mul_assoc, h1]
-  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_neg_one, h, if_false, _root_.mul_inv_rev,
+  · simp only [tc, GG.mat, SemidirectProduct.mul_left, sgnAct_neg_one, h, ite_false, _root_.mul_inv_rev,
       Units.val_mul, theta_val, theta_inv_val, thetaLie, sn_mul, sn_J, Matrix.map_mul, Jmat_map,
       Matrix.transpose_map, sn_inv, Matrix.add_mul, Matrix.mul_add, Matrix.mul_assoc, Matrix.zero_mul,
       Matrix.mul_zero, zero_add, add_zero, Matrix.transpose_neg, Matrix.transpose_mul, Matrix.neg_mul,
@@ -156,8 +156,8 @@ open TrivSqZeroExt Matrix TensorProduct
 private theorem qcont_lin {l : ℕ} [Fact l.Prime] {X V W : Type} [TopologicalSpace X] [AddCommGroup V] [Module ℚ_[l] V]
     [AddCommGroup W] [Module ℚ_[l] W] [TopologicalSpace W] [ContinuousAdd W] [ContinuousSMul ℚ_[l] W]
     (φ : V →ₗ[ℚ_[l]] W) (f : X → V) (hf : QCont l f) : Continuous fun x => φ (f x) := by
-  letI : TopologicalSpace V := moduleTopology ℚ_[l] V
-  haveI : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
+  let : TopologicalSpace V := moduleTopology ℚ_[l] V
+  have : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
   exact (IsModuleTopology.continuous_of_linearMap φ).comp hf
 
 private theorem cont_inv {X E : Type} [TopologicalSpace X] [Field E] [TopologicalSpace E] [IsTopologicalRing E]
@@ -207,7 +207,7 @@ private theorem fin_case (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] 
     [TopologicalSpace E] [IsModuleTopology ℚ_[l] E] [IsTopologicalRing E] [ContinuousInv₀ E]
     (F : U.R →ₐ[O] DualNumber E) (hF : D.It U ≤ RingHom.ker F) :
     tanCoc F U.r.hom ∈ finiteCocycles (MonoidHom.id _) (adRep (push (dualFst F) U.r.hom)) := by
-  haveI : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
+  have : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
   obtain ⟨hc, -, hcr⟩ := rtPoints hP D U (DualNumber E) (push F U.r.hom) ⟨F, rfl, hF⟩
   have h1 : Continuous fun g => (push (dualFst F) U.r.hom g).mat :=
     continuous_matrix fun a b => qcont_lin (LinearMap.fst ℚ_[l] E E) _ (hc a b)
@@ -231,13 +231,13 @@ theorem UpperTheory.V.Loc.rtDual :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) [Algebra O (PadicAlgCl l)] [IsScalarTower ℤ_[l] O (PadicAlgCl l)] (F : U.R →ₐ[O] DualNumber (PadicAlgCl l)), D.It U ≤ RingHom.ker F → IsLocPt (dualFst F) → tanCoc F U.r.hom ∈ finiteCocycles (MonoidHom.id _) (adRep (push (dualFst F) U.r.hom)) := by
   intro hP l _ O _ _ _ _ _ _ _ D U _ _ F hF hloc
   obtain ⟨⟨K, hfin⟩, hE⟩ := ptFin U.R F hloc
-  haveI : FiniteDimensional ℚ_[l] ↥K := hfin
-  haveI : IsModuleTopology ℚ_[l] ↥K := isModuleTopologyOfFiniteDimensional
+  have : FiniteDimensional ℚ_[l] ↥K := hfin
+  have : IsModuleTopology ℚ_[l] ↥K := isModuleTopologyOfFiniteDimensional
   have hO : ∀ x : O, algebraMap O (PadicAlgCl l) x ∈ K := fun x => by
     have := (hE (algebraMap O U.R x)).1
     rwa [F.commutes] at this
-  letI : Algebra O ↥K := ((algebraMap O (PadicAlgCl l)).codRestrict K hO).toAlgebra
-  haveI : IsScalarTower ℤ_[l] O ↥K := IsScalarTower.of_algebraMap_eq fun z =>
+  let : Algebra O ↥K := ((algebraMap O (PadicAlgCl l)).codRestrict K hO).toAlgebra
+  have : IsScalarTower ℤ_[l] O ↥K := IsScalarTower.of_algebraMap_eq fun z =>
     Subtype.ext (IsScalarTower.algebraMap_apply ℤ_[l] O (PadicAlgCl l) z)
   let F' : U.R →ₐ[O] DualNumber ↥K :=
     { toFun := fun a => ⟨⟨(F a).fst, (hE a).1⟩, ⟨(F a).snd, (hE a).2⟩⟩
@@ -254,7 +254,7 @@ theorem UpperTheory.V.Loc.rtDual :
   have hF' : D.It U ≤ RingHom.ker F' := fun a ha => by
     have h : F a = 0 := hF ha
     exact TrivSqZeroExt.ext (Subtype.ext (congrArg TrivSqZeroExt.fst h)) (Subtype.ext (congrArg TrivSqZeroExt.snd h))
-  have h := map_mem_finiteCocycles_adRep_of_continuous K.val continuous_subtype_val _ _ (fin_case hP D U ↥K F' hF')
+  have h := map_mem_finiteCocycles_adRep_of_continuous K.val continuous_subtypeVal _ _ (fin_case hP D U ↥K F' hF')
   have e : (fun g => (tanCoc F' U.r.hom g).map K.val) = tanCoc F U.r.hom := by
     funext g
     exact Matrix.map_mul (f := (K.val : ↥K →+* PadicAlgCl l))
@@ -277,7 +277,7 @@ private theorem tanBK_avg {k G W : Type} [Field k] [CharZero k] [Group G] [AddCo
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → W := fun g => f g - (a g x - x) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
     intro g h
@@ -378,10 +378,10 @@ private theorem tan_coc (F : R →ₐ[O] DualNumber κ) (r : Γ →* GG (m := 3)
   generalize (r g).left = a
   generalize (r h).left = b
   rcases Int.units_eq_one_or (r g).right with hs | hs <;> rw [hs]
-  · simp only [sgnAct_one, if_true, _root_.mul_inv_rev, Units.val_mul, sndM_mul, map_mul, Matrix.add_mul,
+  · simp only [sgnAct_one, ite_true, _root_.mul_inv_rev, Units.val_mul, sndM_mul, map_mul, Matrix.add_mul,
       Matrix.mul_assoc, hc]
     rw [add_comm]
-  · simp only [sgnAct_neg_one, hn, if_false, _root_.mul_inv_rev, Units.val_mul, theta_val, theta_inv_val, sndM_mul,
+  · simp only [sgnAct_neg_one, hn, ite_false, _root_.mul_inv_rev, Units.val_mul, theta_val, theta_inv_val, sndM_mul,
       map_mul, sndM_J, fstM_J, sndM_tr, fstM_tr, sndM_inv, thetaLie, Matrix.add_mul, Matrix.mul_zero, Matrix.zero_mul,
       add_zero, zero_add, Matrix.transpose_neg, Matrix.transpose_mul, Matrix.neg_mul, Matrix.mul_neg,
       Matrix.mul_assoc, hJ, hc']
@@ -395,9 +395,9 @@ private theorem tan_cont {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
     (F : R →ₐ[O] DualNumber (PadicAlgCl l)) (hF : IsLocPt (dualFst F)) {X : Type} [TopologicalSpace X] (f : X → R)
     (hf : AdicCont (maximalIdeal R) f) :
     Continuous (fun x => (F (f x)).fst) ∧ Continuous fun x => (F (f x)).snd := by
-  haveI : IsAdicComplete (maximalIdeal O) O := (abelian₂.dvr_finite l O).1
+  have : IsAdicComplete (maximalIdeal O) O := (abelian₂.dvr_finite l O).1
   obtain ⟨E, hE⟩ := Loc.ptFin (l := l) R F hF
-  haveI : FiniteDimensional ℚ_[l] E.1 := E.2
+  have : FiniteDimensional ℚ_[l] E.1 := E.2
   let B : Subalgebra ℚ_[l] (DualNumber (PadicAlgCl l)) :=
     { carrier := {x | x.fst ∈ E.1 ∧ x.snd ∈ E.1}
       mul_mem' := fun {x y} hx hy => ⟨mul_mem hx.1 hy.1, by
@@ -407,19 +407,19 @@ private theorem tan_cont {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
   let p₁ : B →ₗ[ℚ_[l]] PadicAlgCl l := (TrivSqZeroExt.fstHom ℚ_[l] _ _).toLinearMap.comp B.val.toLinearMap
   let p₂ : B →ₗ[ℚ_[l]] PadicAlgCl l :=
     ((TrivSqZeroExt.sndHom (PadicAlgCl l) (PadicAlgCl l)).restrictScalars ℚ_[l]).comp B.val.toLinearMap
-  haveI : Module.Finite ℚ_[l] B := Module.Finite.of_injective
+  have : Module.Finite ℚ_[l] B := Module.Finite.of_injective
     ((p₁.codRestrict E.1.toSubmodule fun x => x.2.1).prod (p₂.codRestrict E.1.toSubmodule fun x => x.2.2))
     (fun x y h => Subtype.ext (TrivSqZeroExt.ext (congrArg (fun z => (z.1 : PadicAlgCl l)) h)
       (congrArg (fun z => (z.2 : PadicAlgCl l)) h)))
   let x₀ : R →+* B := (F : R →+* DualNumber (PadicAlgCl l)).codRestrict B hE
-  letI : Algebra O B := (x₀.comp (algebraMap O R)).toAlgebra
-  haveI : IsScalarTower ℤ_[l] O B := IsScalarTower.of_algebraMap_eq fun a => Subtype.ext (by
+  let : Algebra O B := (x₀.comp (algebraMap O R)).toAlgebra
+  have : IsScalarTower ℤ_[l] O B := IsScalarTower.of_algebraMap_eq fun a => Subtype.ext (by
     show algebraMap ℤ_[l] (DualNumber (PadicAlgCl l)) a = F (algebraMap O R _)
     rw [AlgHom.commutes, ← IsScalarTower.algebraMap_apply])
   let x : R →ₐ[O] B := { x₀ with commutes' := fun _ => rfl }
   have h := (Loc.ptCont (l := l) R B x).1 X f hf
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
   exact ⟨(IsModuleTopology.continuous_of_linearMap p₁).comp h, (IsModuleTopology.continuous_of_linearMap p₂).comp h⟩
 
 theorem UpperTheory.V.U3.tanCoc_isBK :
@@ -428,8 +428,8 @@ theorem UpperTheory.V.U3.tanCoc_isBK :
       ∀ F : S.R →ₐ[c.O] DualNumber (PadicAlgCl l), IsLocPt (dualFst F) →
         tanCoc F S.r.hom ∈ Z1 (adRep (push (dualFst F) S.r.hom)) ∧ Af.IsBK l (adRep (push (dualFst F) S.r.hom)) (tanCoc F S.r.hom) := by
   intro hI Ω _ _ _ K _ _ _ l _ c N _ e ψ D U g₁ _ S F hF
-  haveI : IsLocalRing c.O := c.dvr.toIsLocalRing
-  haveI := (abelian₂.dvr_finite l c.O).1
+  have : IsLocalRing c.O := c.dvr.toIsLocalRing
+  have := (abelian₂.dvr_finite l c.O).1
   obtain ⟨-, hkill, f, hf, hfI⟩ := (S.rep S.R).1 (AlgHom.id _ _)
   have hZ : tanCoc F S.r.hom ∈ Z1 (adRep (push (dualFst F) S.r.hom)) := by
     refine ⟨?_, tan_coc F _⟩
@@ -451,8 +451,8 @@ theorem UpperTheory.V.U3.tanCoc_isBK :
   · refine ⟨placeOf Ω w, isPlaceOver_placeOf Ω w, ?_⟩
     have hA : ¬ (placeOf Ω w).valuation (l : Ω) < 1 := fun h =>
       hw (((places ℚ Ω l _).2.2.1 w (isPlaceOver_placeOf Ω w)).1 h)
-    haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
-    haveI : Finite (GG (m := 3) (R := ResidueField c.O)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+    have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+    have : Finite (GG (m := 3) (R := ResidueField c.O)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
     obtain ⟨y, hy⟩ := tanBK_avg (k := PadicAlgCl l) (G := Ine (F := ℚ) (placeOf Ω w))
       (fun g => adRep (push (dualFst F) S.r.hom) g) (fun g h x => by simp)
       (fun g => tanCoc F S.r.hom g) (fun g h => hZ.2 g h)

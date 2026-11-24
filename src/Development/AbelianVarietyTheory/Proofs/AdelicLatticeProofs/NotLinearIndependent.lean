@@ -109,7 +109,7 @@ theorem _root_.GlobalTheory.differentiable_exp_mul_of_annihilated :
       (w ⬝ᵥ Hm.mulVec (star z) + z ⬝ᵥ Hm.mulVec (star w)))) := by
     intro z
     clear hann hQ hF hTdef
-    simp only [T, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+    simp only [T, add_apply, FunLike.coe_smul, Pi.smul_apply,
       ContinuousLinearMap.precompR_apply, ContinuousLinearMap.precompL_apply,
       ContinuousLinearMap.compL_apply, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.id_apply, hB, smul_eq_mul]
@@ -227,13 +227,13 @@ theorem exists_coord {U : Type} [AddCommGroup U] [Module ℝ U] [FiniteDimension
     (J : U →ₗ[ℝ] U) (hJ : ∀ x, J (J x) = -x) :
     ∃ (g : ℕ) (e : U ≃ₗ[ℝ] (Fin g → ℂ)), ∀ v, e (J v) = Complex.I • e v := by
   let φ : ℂ →ₐ[ℝ] Module.End ℝ U := Complex.liftAux (J : Module.End ℝ U) (by ext x; simp [hJ])
-  letI : Module ℂ U := Module.compHom U (φ : ℂ →+* Module.End ℝ U)
+  let : Module ℂ U := Module.compHom U (φ : ℂ →+* Module.End ℝ U)
   have hsm : ∀ (z : ℂ) (v : U), z • v = z.re • v + z.im • J v := fun z v => by
     change φ z v = _
     simp [φ, Complex.liftAux_apply]
-  haveI : IsScalarTower ℝ ℂ U := ⟨fun r z v => by
+  have : IsScalarTower ℝ ℂ U := ⟨fun r z v => by
     simp [hsm, smul_add, smul_smul]⟩
-  haveI : FiniteDimensional ℂ U := Module.Finite.of_restrictScalars_finite ℝ ℂ U
+  have : FiniteDimensional ℂ U := Module.Finite.of_restrictScalars_finite ℝ ℂ U
   have hI : ∀ v : U, Complex.I • v = J v := fun v => by simp [hsm]
   let e := (Module.finBasis ℂ U).equivFun
   exact ⟨_, e.restrictScalars ℝ, fun v => by rw [← hI]; exact e.map_smul _ _⟩

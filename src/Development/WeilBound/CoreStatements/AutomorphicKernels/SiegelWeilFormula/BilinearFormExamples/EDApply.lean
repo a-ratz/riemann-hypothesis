@@ -333,7 +333,7 @@ theorem eD_form [FiniteDimensional F E] (σ : E →ₐ[F] E) (J : Matrix (Fin m)
 
 theorem sDarb : SDarb := by
   intro F E _ _ _ _ _ σ B bs m n A Y b ε r s hB hm hn hsg hb hε
-  haveI : FiniteDimensional F E := Module.Finite.of_basis bs
+  have : FiniteDimensional F E := Module.Finite.of_basis bs
   have hσ : ∀ a, σ (σ a) = a := by
     obtain ⟨-, -, -, h⟩ := hB.cm
     intro a

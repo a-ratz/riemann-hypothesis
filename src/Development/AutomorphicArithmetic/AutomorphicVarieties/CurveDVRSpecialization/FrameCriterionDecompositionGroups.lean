@@ -49,7 +49,7 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.
 private theorem open_toZMod (l : ℕ) [Fact l.Prime] : IsOpen {x : ℤ_[l] | PadicInt.toZMod x = 1} := by
   have hS : {x : ℤ_[l] | PadicInt.toZMod x = 1} = {x | ‖x - 1‖ < 1} := by
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← PadicInt.mem_nonunits, ← IsLocalRing.mem_maximalIdeal, ← PadicInt.ker_toZMod,
       RingHom.mem_ker, map_sub, map_one, sub_eq_zero]
   rw [hS]
@@ -94,9 +94,9 @@ theorem UpperTheory.frame_criterion_decomposition_groups :
       exact (hfix τ).symm
     rw [hset]
     exact (galEmbTop (W.Lp L) L Ω).2.1
-  haveI hN1 : U1.Normal := (Φ.Ψ.normal_ker).comap ρ
+  have hN1 : U1.Normal := (Φ.Ψ.normal_ker).comap ρ
   let U : Subgroup (G (W.Lp L) Ω) := U1 ⊓ U2 ⊓ U3
-  haveI : U.Normal := inferInstance
+  have : U.Normal := inferInstance
   have hOU : IsOpen (U : Set (G (W.Lp L) Ω)) := (hO1.inter hO2).inter hO3
   let g' : G (W.Lp L) Ω := W.resP L Ω g
   obtain ⟨w, A, p, σ', -, hp, hpM, -, hpw, hnorm, -, hA, hIne, hFrob, hσU⟩ :=

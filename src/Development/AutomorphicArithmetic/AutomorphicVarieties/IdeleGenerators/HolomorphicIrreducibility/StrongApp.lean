@@ -56,7 +56,7 @@ private theorem exists_sign (F : Type) [Field F] [NumberField F] [IsTotallyReal 
   have hd : DenseRange ((TR.pInf F).comp (algebraMap F (Ad F))) :=
     (TR.infEq F).symm.surjective.denseRange.comp (InfiniteAdeleRing.denseRange_algebraMap F) hc
   have ho : IsOpen {x : TR.Rinf F | ∀ v, 0 < x v * (d : TR.Rinf F) v} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun v => isOpen_lt continuous_const (by fun_prop)
   have hne : ∀ v, (d : TR.Rinf F) v ≠ 0 := fun v h => by
     have := congrFun d.mul_inv v
@@ -79,7 +79,7 @@ private theorem exists_sl (F : Type) [Field F] [NumberField F] (K : Subgroup (GL
   have ho : IsOpen {s : GL (Fin 2) (Af F) | (aff y 0)⁻¹ * s⁻¹ * g ∈ K} :=
     hK.preimage (f := fun s : GL (Fin 2) (Af F) => (aff y 0)⁻¹ * s⁻¹ * g) ((continuous_const.mul continuous_inv).mul continuous_const)
   obtain ⟨_, hu, σ, hσ, rfl⟩ := mem_closure_iff.1 hcl _ ho (by
-    rw [Set.mem_setOf_eq, _root_.mul_inv_rev, inv_inv, inv_mul_cancel_left, inv_mul_cancel]; exact one_mem K)
+    rw [Set.mem_ofPred_eq, _root_.mul_inv_rev, inv_inv, inv_mul_cancel_left, inv_mul_cancel]; exact one_mem K)
   refine ⟨σ, y, _, hu, hσ, ?_⟩
   rw [mul_assoc, mul_inv_cancel_left]
   exact (mul_inv_cancel_left _ g).symm

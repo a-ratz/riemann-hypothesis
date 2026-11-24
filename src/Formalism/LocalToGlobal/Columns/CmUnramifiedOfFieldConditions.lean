@@ -232,7 +232,7 @@ theorem cm_unramified_of_field_conditions {X : Fields} (hX : X.AbelianUnramified
   have hPp : P.IsPrime := hP.isPrime
   have hun := hX.unram ⟨P, hPp, hP0⟩
   have hlo : P.LiesOver (P.under (𝓞 X.F)) := ⟨rfl⟩
-  have hp0 : P.under (𝓞 X.F) ≠ ⊥ := Ideal.IsIntegral.comap_ne_bot (𝓞 X.F) hP0
+  have hp0 : P.under (𝓞 X.F) ≠ ⊥ := Ideal.IsIntegral.under_ne_bot (𝓞 X.F) hP0
   have hcard : Nat.card (P.inertia Gal(X.E/X.F)) = 1 := by
     rw [Ideal.card_inertia_eq_ramificationIdxIn (G := Gal(X.E/X.F)) (P.under (𝓞 X.F)) P,
       Ideal.ramificationIdxIn_eq_ramificationIdx (P.under (𝓞 X.F)) P Gal(X.E/X.F),

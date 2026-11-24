@@ -576,7 +576,7 @@ theorem isClosed_image_coe_of_finiteDimensional [FiniteDimensional ℚ_[p] K] :
   have : FiniteDimensional ℚ_[p] (Subalgebra.toSubmodule K.toSubalgebra) :=
     ‹FiniteDimensional ℚ_[p] K›
   have hK : IsComplete (K : Set (PadicAlgCl p)) :=
-    (Subalgebra.toSubmodule K.toSubalgebra).complete_of_finiteDimensional
+    (Subalgebra.toSubmodule K.toSubalgebra).isComplete_of_finiteDimensional
   exact ((isComplete_image_iff (Completion.isUniformInducing_coe (PadicAlgCl p))).2 hK).isClosed
 
 theorem fixedPoints_gal_eq [FiniteDimensional ℚ_[p] K] :

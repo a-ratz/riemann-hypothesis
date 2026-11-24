@@ -84,7 +84,7 @@ lemma rr_prod_ite {l : ℕ} (w x : Fin l → Fin n × Fin n) :
   split_ifs with h
   · subst h; simp
   · obtain ⟨i, hi⟩ := Function.ne_iff.mp h
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 
 lemma rr_op_one {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) : T.op 1 = 1 := by
   simp [KType.op]
@@ -99,7 +99,7 @@ theorem rho_representation_holds : CompanionTheory.RgDs.K.RhoRep := by
   · intro a
     funext x'
     simp only [rhoA, rr_toMK_one, rr_adC_one, rr_prod_ite, rr_op_one, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rfl
   · intro k k' a
     funext x'
@@ -126,12 +126,12 @@ theorem rho_representation_holds : CompanionTheory.RgDs.K.RhoRep := by
     rw [smul_comm]
   · intro a
     have hK : Continuous fun k : KG ε => toMK k :=
-      (continuous_toM ε).comp continuous_subtype_val
+      (continuous_toM ε).comp continuous_subtypeVal
     have hKi : Continuous fun k : KG ε => (toMK k)⁻¹ := by
       simp only [rr_toMK_inv]
       exact hK.comp continuous_inv
     have hop : ∀ v : T.V, Continuous fun k : KG ε => T.op k v := fun v =>
-      (continuous_subtype_val.comp T.cont).clm_apply continuous_const
+      (continuous_subtypeVal.comp T.cont).clm_apply continuous_const
     refine continuous_pi fun x' => ?_
     simp only [rhoA]
     refine continuous_finsetSum _ fun w _ => ?_

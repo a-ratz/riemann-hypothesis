@@ -183,8 +183,8 @@ theorem measurable_bet_Gm (x : Mt k r) : Measurable (fun p : Mt k r × Mt k r =>
 
 theorem integrable_bet (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r Wp Wp) (hD : IsDiag D) {x : Mt k r}
     (hx : (Matrix.of x : Mat k r) ∈ GV k r) : Integrable (fun p => bet (Gm p x)) (D.μW.prod D.μN) := by
-  haveI : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
   have hGL : GNLower := gnLower_of h
   have hfin := ReciprocityTheory.ChartRestriction.DS.Mult1.bc_lintegral_S_pow_AB h D hD.μW_eq
   have hmeasB : Measurable (fun p : Mt k r × Mt k r =>
@@ -209,7 +209,7 @@ theorem integrable_bet (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r 
     refine measure_mono_null (t := ({y : Mt k r | (Matrix.of y : Mat k r) ∈ UWset k r D.z}ᶜ ×ˢ Set.univ) ∪
       (Set.univ ×ˢ {y : Mt k r | (Matrix.of y : Mat k r) ∈ Nset k r}ᶜ)) ?_ ?_
     · intro p hp
-      simp only [Set.mem_setOf_eq, not_and_or] at hp
+      simp only [Set.mem_ofPred_eq, not_and_or] at hp
       rcases hp with hp | hp
       · exact Or.inl ⟨hp, Set.mem_univ _⟩
       · exact Or.inr ⟨Set.mem_univ _, hp⟩
@@ -228,8 +228,8 @@ theorem integrable_bet (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r 
 
 theorem orbN_pos (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r Wp Wp) (hD : IsDiag D) {x : Mt k r}
     (hx : (Matrix.of x : Mat k r) ∈ GV k r) : 0 < orbN D x := by
-  haveI : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
   have hGL : GNLower := gnLower_of h
   have hint := integrable_bet h D hD hx
   have hmul : ∀ u ∈ GV k r, ∀ v ∈ GV k r, u * v ∈ GV k r := by
@@ -254,7 +254,7 @@ theorem orbN_pos (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r Wp Wp)
     have hc : D.μW {y : Mt k r | (Matrix.of y : Mat k r) ∈ UWset k r D.z}ᶜ = 0 := D.haarW.conc
     apply D.haarW.ne_zero
     rw [← Measure.measure_univ_eq_zero]
-    refine le_antisymm ?_ (zero_le')
+    refine le_antisymm ?_ (zero_le)
     calc D.μW Set.univ = D.μW ({y : Mt k r | (Matrix.of y : Mat k r) ∈ UWset k r D.z} ∪
           {y : Mt k r | (Matrix.of y : Mat k r) ∈ UWset k r D.z}ᶜ) := by rw [Set.union_compl_self]
       _ ≤ _ := measure_union_le _ _
@@ -264,7 +264,7 @@ theorem orbN_pos (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r Wp Wp)
     have hc : D.μN {y : Mt k r | (Matrix.of y : Mat k r) ∈ Nset k r}ᶜ = 0 := D.haarN.conc
     apply D.haarN.ne_zero
     rw [← Measure.measure_univ_eq_zero]
-    refine le_antisymm ?_ (zero_le')
+    refine le_antisymm ?_ (zero_le)
     calc D.μN Set.univ = D.μN ({y : Mt k r | (Matrix.of y : Mat k r) ∈ Nset k r} ∪
           {y : Mt k r | (Matrix.of y : Mat k r) ∈ Nset k r}ᶜ) := by rw [Set.union_compl_self]
       _ ≤ _ := measure_union_le _ _
@@ -298,8 +298,8 @@ theorem orbN_inv (h : UnitaryGroupStructuralFacts) (D : RealPlaceData k r Wp Wp)
   simp only [bet, e1]
 
 theorem measurable_orbN (D : RealPlaceData k r Wp Wp) : Measurable (orbN D) := by
-  haveI : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
   have hc : Continuous (fun q : Mt k r × (Mt k r × Mt k r) => (Gm q.2 q.1 : Mat k r)) := by
     have h1 : Continuous (fun q : Mt k r × (Mt k r × Mt k r) => (sP q.2 : Mat k r)) :=
       continuous_sP.comp continuous_snd
@@ -471,7 +471,7 @@ end MFix
 open MFix in
 theorem stMFix (h : UnitaryGroupStructuralFacts) : StMFix := by
   intro k r Wp _ _ _ D X hD hsq ha l hl d hd W' hWm hWeq hWint
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hGL := gnLower_of h
   obtain ⟨b, -, -, hfold⟩ := foldS h D hD
   refine ⟨∫ y : Mt k r, (b y : ℂ) * ((d : ℂ) * ⟪l (X.σ (Matrix.of y) X.w), W' (Matrix.of y)⟫_ℂ) ∂D.μG, fun x hx => ?_⟩

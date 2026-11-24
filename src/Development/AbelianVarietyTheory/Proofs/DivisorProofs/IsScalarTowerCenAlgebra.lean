@@ -140,7 +140,7 @@ theorem isScalarTower_cenAlgebra (Λ : Subring B)
     (hΛ : ∀ a : NumberField.RingOfIntegers F, algebraMap F B (a : F) ∈ Λ) :
     letI := cenAlgebra ℓ F B Λ hΛ
     IsScalarTower ℤ_[ℓ] (cenOrder ℓ F) (locOrder ℓ Λ) := by
-  letI := cenAlgebra ℓ F B Λ hΛ
+  let := cenAlgebra ℓ F B Λ hΛ
   exact IsScalarTower.of_algebraMap_eq fun r => ((cenIncl ℓ F B Λ hΛ).commutes r).symm
 
 end GlobalTheory.LocMatrix

@@ -198,7 +198,7 @@ theorem cont_coef (hV : ∀ v ∈ V, ∀ k : K, (fun x => v (x * (k : G))) ∈ V
   | mem ℓ h =>
     obtain ⟨x, rfl⟩ := h
     have h1 : Continuous fun k : K => x * (((k⁻¹ : K)) : G) :=
-      continuous_const.mul (continuous_subtype_val.comp continuous_inv)
+      continuous_const.mul (continuous_subtypeVal.comp continuous_inv)
     exact (hc v.1 v.2).comp h1
   | zero => simpa using continuous_const
   | add a b _ _ ha hb => exact ha.add hb
@@ -284,7 +284,7 @@ theorem exists_rep : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologica
     rfl
   · intro k
     have h := sum_repr_apply (V := V) ⟨f, hfV⟩ (k : G)
-    simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
+    simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
       Pi.smul_apply, ContinuousLinearMap.proj_apply, smul_eq_mul]
     simp only [rho_w₀]
     simpa using h
@@ -668,8 +668,8 @@ theorem siegelMult_of : SecLaw → WallLaw → Dict → DictInf → CMGood → G
   obtain ⟨-, hparU⟩ := hPar E (AE F E) (adCM σ χ) hgood (Fin n) ε (Set.univ : Set (Fin n))
   obtain ⟨hIP', hIH, -⟩ := hparU (by rwa [inf_idem])
   rw [inf_idem] at hIP'
-  haveI := ht2'
-  haveI := hlc'
+  have := ht2'
+  have := hlc'
   have hW := hSg F E σ χ c hcm hunr hχ hres ε (Fin n) (by simpa using hn) hiwa
   obtain ⟨σ₀, hσ₀⟩ := GlobalTheory.CompanionTheory.GodementH.godement_sum F E σ B n Y r s hB hn hY b K a hb' hK ha
   refine eis_from_U hSec hWL Φ (continuous_frameEquiv χ ε b hε) _ _ _ ((adCM σ χ).uC ε (Fin n))

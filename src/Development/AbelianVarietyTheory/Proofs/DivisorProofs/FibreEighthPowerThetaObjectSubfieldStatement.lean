@@ -249,7 +249,7 @@ theorem fibre_theta_consts_in_subfield : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), I
     LBIso (D.P.L.pull (pullback.fst D.P.A.hom (spMap ev))) (t.L.pull ψ) →
     ∃ v : Ix (8 * gQ) ((l ^ j) ^ 2) → k₀, t.HasTh (𝟙 _) (fun a => k₀.subtype (v a)) := by
   intro W _ gQ J l hl hlo j hj V V₁ _ _ _ _ _ hCN hlu Q _ ρ _ D e _ C u mo hmo hT K _ _ ev k₀ hk₀ hrat bT t ψ hψ hL
-  haveI : IsAlgClosed k₀ := hk₀
+  have : IsAlgClosed k₀ := hk₀
   obtain ⟨v₀, hv₀⟩ := GlobalTheory.FamRep.exists_hasTh_field GlobalTheory.abelianSchemeLaws_all.1 GlobalTheory.abelianSchemeLaws_all.2 hlo.pow t K (𝟙 _)
   obtain ⟨th, κ, hth, hκ, hy⟩ := GlobalTheory.T.exists_generator_thetaConstants_fibre V₁ D K ev k₀ (8 * gQ) (l ^ j) J bT _ t ψ hψ hL v₀ hv₀
   obtain ⟨M, lam, hM, hA⟩ := GlobalTheory.T.normalisedThetaConstant_eq_scalar_root_mul_unit l hl hlo j hj V₁ hCN hlu D _ C e u mo hmo hT K ev D.rig D.rig_gen th hth
@@ -576,7 +576,7 @@ theorem prod_prod_zpow {G C J : Type} [CommGroup G] [Fintype C] [Fintype J] (b :
 
 theorem pow_val_intCast {G : Type} [Group G] {N : ℕ} (hN : 0 < N) {g : G} (hg : g ^ N = 1) (k : ℤ) :
     g ^ ((k : ZMod N)).val = g ^ k := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   rw [← zpow_natCast, ZMod.val_intCast]
   exact (zpow_eq_zpow_emod' k hg).symm
 
@@ -610,13 +610,13 @@ theorem ptOf_torsion_and_act : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (hW : IsE8 W
   have ext : ∀ x y : T ⟶ A, (∀ u, x ≫ pr u = y ≫ pr u) → x = y := fun x y h =>
     (hP.2 T fun u => y ≫ pr u).unique h fun _ => rfl
   refine ⟨fun i => ext _ _ fun u => ?_, fun act hact a i => ext _ _ fun u => ?_⟩
-  · haveI := hP.1 u
+  · have := hP.1 u
     have := map_pow (postHom T (pr u)) (ptOf hP b (sharpBasis W hW.2 gQ (Pi.single i 1))) N
     refine this.trans ?_
     change (ptOf hP b _ ≫ pr u) ^ N = _
     rw [ptOf_pr, prod_zpow_pow_eq_one hb]
     exact (map_one (postHom T (pr u))).symm
-  · haveI := hP.1 u
+  · have := hP.1 u
     have h1 : (ptOf hP b (sharpBasis W hW.2 gQ (Pi.single i 1)) ≫ act a) ≫ pr u =
         ∏ c, b c ^ (∑ v, actMat W a u v * sharpBasis W hW.2 gQ (Pi.single i 1) v c) := by
       rw [Category.assoc, hact a u, ← prod_prod_zpow]
@@ -952,7 +952,7 @@ theorem exists_hom {A B : Over S} [GrpObj A] [GrpObj B] [IsCommMonObj B] {pr : F
     exact (map_zpow (PrimPic.preH (G := B) x) _ _).trans (congrArg (· ^ s a) (Category.comp_id x))
   refine ⟨f, isMonHom_of_mul f fun T x y => ?_, h⟩
   refine (hP.2 T fun a => ((x * y) ≫ f) ≫ pr a).unique (fun a => rfl) fun a => ?_
-  haveI := hP.1 a
+  have := hP.1 a
   rw [MonObj.mul_comp, h, h, h, mul_zpow]
 
 theorem bil_zpow {B : Over S} [GrpObj B] [IsCommMonObj B] (M : RigLB B) (cub : CubicalStr B M) {T : Over S}
@@ -979,7 +979,7 @@ theorem weilIs_of_form_eq : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀
     (∀ u, x' ≫ pr u = p ^ s' u) → (∀ u, y' ≫ pr u = q ^ t' u) →
     ∀ c, Out.WeilIs P'.A P'.L N x y c → Out.WeilIs P'.A P'.L N x' y' c := by
   intro W _ gQ K _ _ P' B _ _ M pr hF hP hE N _ s t s' t' hst p q hp hq x y x' y' hx hy hx' hy' c hc
-  letI := P'.isAb.comm
+  let := P'.isAb.comm
   obtain ⟨cub⟩ := hF.2.2.1
   obtain ⟨r, hr, ⟨cL⟩⟩ := GlobalTheory.PolAV_exists_cubical GlobalTheory.abelianSchemeLaws_all.1.cube P'
   obtain ⟨f, hfm, hf⟩ := exists_hom hP s
@@ -1074,7 +1074,7 @@ theorem exists_symplectic_labels : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W 
   have hNodd : Odd ((l ^ j) ^ 2) := (hlo.pow).pow
   have hNpos : 0 < (l ^ j) ^ 2 := hNodd.pos
   have hN0 : (((l ^ j) ^ 2 : ℕ) : k₀) ≠ 0 := fun h => hNK (by simpa using congrArg k₀.subtype h)
-  haveI : NeZero (((l ^ j) ^ 2 : ℕ) : k₀) := ⟨hN0⟩
+  have : NeZero (((l ^ j) ^ 2 : ℕ) : k₀) := ⟨hN0⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic ((l ^ j) ^ 2) k₀)
     (Polynomial.degree_cyclotomic_pos _ k₀ hNpos).ne'
   have hp : IsPrimitiveRoot ζ ((l ^ j) ^ 2) := (Polynomial.isRoot_cyclotomic_iff).1 hζ
@@ -1083,7 +1083,7 @@ theorem exists_symplectic_labels : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W 
   have hz : IsPrimitiveRoot z ((l ^ j) ^ 2) := IsPrimitiveRoot.coe_units_iff.1 (bT.prim K k₀.subtype)
   have hu : unitS (spMap k₀.subtype) bT.ζ = unitOn z := by
     ext
-    simp only [unitS, unitOn, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, z]
+    simp only [unitS, unitOn, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, z]
     have := Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom k₀.subtype)
     exact (congrArg (fun f => f.hom (bT.ζ : k₀)) this).symm
   obtain ⟨b, hb, hpair⟩ := GlobalTheory.T.exists_symplecticBasis_e8Factor_torsion W hW gQ _ hNodd K hNK z hz P' hg B pr hP
@@ -1169,7 +1169,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.Poinc.Sep.E8Fibration.exists_monHom_actsBy : ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A] [GrpObj B] [IsCommMonObj B] (pr : Fin 8 → (A ⟶ B)),
   E8Fibration.IsProd pr → ∀ m : Matrix (Fin 8) (Fin 8) ℤ, ∃ f : A ⟶ A, IsMonHom f ∧ E8Fibration.ActsBy pr f m := by
   intro S A B _ _ _ pr hP m
-  letI cG : ∀ Z : Over S, CommGroup (Z ⟶ B) := fun Z => Hom.commGroup
+  let cG : ∀ Z : Over S, CommGroup (Z ⟶ B) := fun Z => Hom.commGroup
   have mc : ∀ {T : Over S} (u v : T ⟶ A) (e : A ⟶ B), IsMonHom e → (u * v) ≫ e = (u ≫ e) * (v ≫ e) := by
     intro T u v e he
     rw [Hom.mul_def, Hom.mul_def, Category.assoc, IsMonHom.mul_hom, ← Category.assoc, lift_map]
@@ -1232,7 +1232,7 @@ theorem isProd_pullback_iso : ∀ {S S' : Scheme.{0}} (f : S' ⟶ S) {A B : Over
   intro S S' f A B _ _ pr hpr P _ i hi
   obtain ⟨hmon, huniv⟩ := hpr
   refine ⟨fun a => ?_, fun T y => ?_⟩
-  · haveI := hmon a
+  · have := hmon a
     infer_instance
   · let adj := Over.mapPullbackAdj f
     obtain ⟨x', hx', hu⟩ := huniv ((Over.map f).obj T) (fun a => (adj.homEquiv T B).symm (y a))
@@ -1473,7 +1473,7 @@ theorem fibre_exists : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (gQ : ℕ) (V V₁ :
     rw [(Over.OverMorphism.ext hx : x₀ = toBase hφ.w x), (Over.OverMorphism.ext hy : y₀ = toBase hφ.w y), ← hm]
     rfl⟩
   obtain ⟨i, hi, hiφ⟩ := grpPullback_iso (isGrpPullback_pullback D.P.A (spMap ev)) hgp
-  haveI := hi
+  have := hi
   have hinv : i.inv.left ≫ pullback.fst D.P.A.hom (spMap ev) = φ := by
     rw [← hiφ, ← Category.assoc, ← Over.comp_left, i.inv_hom_id, Over.id_left, Category.id_comp]
 
@@ -1600,7 +1600,7 @@ theorem eighthPowerFibre_thetaObj : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W
   refine ⟨Fin 2, inferInstance, Mat, κ, 0, 1, ?_⟩
   intro l hl hlo j hj V V₁ _ _ _ _ _ hCN hlu Q hQ ρ hρ D e hS K _ _ ev k₀ hk₀
   obtain ⟨P', ψ, B, _, M, pr, hg, hψ, hL, hB, hpr, hE, hpt⟩ := GlobalTheory.T.exists_polarized_specialization_field W gQ V V₁ Q hQ ρ hρ D e hS K ev
-  haveI : IsCommMonObj B := hB.1.comm
+  have : IsCommMonObj B := hB.1.comm
   choose act hact1 hact2 using fun i : Fin 2 => GlobalTheory.T.exists_eighth_power_endomorphism_acting_by_matrix _ _ _ pr hpr (E8Fibration.actMat W i)
   have hlK : (l : K) ≠ 0 := by
     have := hlu.map ev

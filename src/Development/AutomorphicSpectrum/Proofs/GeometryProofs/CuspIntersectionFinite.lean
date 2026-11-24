@@ -179,7 +179,7 @@ theorem weil_fibre {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
       sym := GlobalTheory.PolBaseChange.sym_pull hpb fun _ => ⟨⊤, trivial, gen_of_iso ((isGen_iff ws).1 gs') _⟩
       ample := hak.1
       ktriv := hak.2 }
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have tors : ∀ w : Fin g → ℂ, w ∈ u.Λ → u.ex ((N : ℂ)⁻¹ • w) ^ N = 1 := fun w hw => by
     rw [← ex_nsmul_hol, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, mul_inv_cancel₀ hN0, one_smul]
     exact (u.ker w).2 hw
@@ -316,7 +316,7 @@ theorem torus_deriv {X : Type} [AddCommGroup X] {d : ℕ} (β : Module.Basis (Fi
     have h5 : fderiv ℂ (fun z => Complex.exp (pairing β z χ)) 0 (fun a => δ (β a)) = δ χ := by
       have : HasFDerivAt (fun z => Complex.exp (Lc z)) (Complex.exp (Lc 0) • Lc) 0 := Lc.hasFDerivAt.cexp
       simp only [hLc] at this
-      rw [this.fderiv, ContinuousLinearMap.smul_apply, hLc, ← hLc 0, map_zero, Complex.exp_zero, one_smul]
+      rw [this.fderiv, smul_apply, hLc, ← hLc 0, map_zero, Complex.exp_zero, one_smul]
 
       conv_rhs => rw [← β.sum_repr χ, map_sum]
       simp only [pairing, map_zsmul, zsmul_eq_mul]
@@ -389,13 +389,13 @@ theorem torus_lift (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) (P
       ∀ (A : Over (Sp ℂ)) [GrpObj A] (φ : A.left ⟶ P.tB.G.left) (g' : ℕ) (u : HolUnif A (P.tB.PP.L.pull φ) g')
         (ℓ : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)), IsGrpPullback A P.tB.G (𝟙 _) φ → IsAbLift e b P φ u ℓ →
         ∀ y, ℓ y = 0 ↔ ∃ z, y = h z := by
-  letI := P.τ.grpB
-  letI := P.τ.addCommGroup
-  haveI := P.τ.free
-  haveI := P.τ.finite
-  haveI := P.τ.q_hom
-  haveI := P.τ.i_hom
-  haveI : IsMonHom P.e.hom := P.e_hom
+  let := P.τ.grpB
+  let := P.τ.addCommGroup
+  have := P.τ.free
+  have := P.τ.finite
+  have := P.τ.q_hom
+  have := P.τ.i_hom
+  have : IsMonHom P.e.hom := P.e_hom
   let β := Module.finBasis ℤ P.τ.X
   obtain ⟨ρ, hρ⟩ := GlobalTheory.AlphaPair.exists_ptEquiv P.m.cart (𝟙 (Sp ℂ)) (spMap (ψ b)) (Category.id_comp _).symm
   let v : (Fin (Module.finrank ℤ P.τ.X) → ℂ) → (Over.mk (spMap (ψ b)) ⟶ t.G) := fun z => ρ (torusExp β z ≫ P.τ.i)
@@ -448,7 +448,7 @@ theorem torus_lift (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) (P
       obtain ⟨Γ₀, hΓ, hd, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.FamExp.per_discrete R t.G g n M B ψ e b hb
       have hcount : (e.per b).Countable := by
         rw [← hΓ]
-        haveI := hd
+        have := hd
         have : Countable Γ₀ := countable_of_Lindelof_of_discrete
         exact Set.countable_coe_iff.1 this
       have h0 : (LinearMap.range (h' 0)).mkQ y = 0 := by
@@ -478,7 +478,7 @@ theorem torus_lift (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) (P
       exact ⟨z, hz.symm⟩
     · rintro ⟨z, rfl⟩
       have hcount : (u.Λ : Set (Fin g' → ℂ)).Countable := by
-        haveI := u.discrete
+        have := u.discrete
         have : Countable u.Λ := countable_of_Lindelof_of_discrete
         exact Set.countable_coe_iff.1 this
       refine GlobalTheory.eq_zero_of_forall_smul_mem_countable hcount fun c => ?_
@@ -524,7 +524,7 @@ theorem centre_ident (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) 
     ∃ Φ : V ≃ₗ[ℂ] (Fin g → ℂ), (∀ x, (Mz.pt (Φ x)).left = (MV.pt x).left ≫ P.m.φ) ∧
       (∀ a x, Bb a (Φ x) = Φ (ρ a x)) ∧ (∀ x x', hf x x' = Real.pi * (Φ x' ⬝ᵥ Hb *ᵥ star (Φ x))) ∧
       ∀ p, p ∈ I' ↔ ∃ x ∈ I, p = (2 * Real.pi * Complex.I : ℂ) • Φ x := by
-  letI := P.τ.addCommGroup
+  let := P.τ.addCommGroup
   obtain ⟨Φ, hΦ⟩ := lie_equiv P.m.cart MV Mz
   obtain ⟨d, β, h, t1, t2, t3⟩ := torus_lift e hb P Mz hL
   have key : ∀ (A : Over (Sp ℂ)) [GrpObj A] (φ : A.left ⟶ P.tB.G.left) (g' : ℕ) (u : HolUnif A (P.tB.PP.L.pull φ) g')
@@ -891,7 +891,7 @@ theorem chart_centre (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) (a : Fin Dc.
         Real.log ν - ε ≤ (Fintype.card (CMType H) : ℝ) * (((Dc.N - Dc.j : ℕ) : ℝ) * Real.log Real.pi) +
           (L.riem w hw).logDet (fun τ i => b τ i (GroundTheory.Heights₂.Heights.Regular.expCover a₀ w)) -
             Real.log ((L.riem w hw).nz σ I) := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hpq : 1 ≤ D.p + D.q := by
     have h1 := Or.N_eq
     have h2 := Dc.two_le_N
@@ -927,7 +927,7 @@ theorem chart_centre (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) (a : Fin Dc.
     refine (hper w hw _).1 ?_
     show e.ex _ _ = 1
     rw [hBe _ hb, h1]
-    haveI := C.t.act.hom c
+    have := C.t.act.hom c
     simp
   obtain ⟨instM, hact⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.PeriodAction.exists_module_of_period_action E _ a₀ C.g Λ L₀ (fun z => Bf ((ρ₂ : ℂ) • z)) hBhol hclosed
   have hInt : ∀ u ∈ Metric.ball (0 : Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) 1,
@@ -1216,7 +1216,7 @@ theorem factor_near {u : Ω} {w : (Σ k, J k) → ℂ} (hw : w ∈ mcPts (mCoord
         Real.log (‖valAt y u w'‖ * ∏ k, ‖w' ⟨k, cc k⟩‖ ^ a k) := by
   have hex : ∃ v, IsValueAt y u w v := by
     by_contra hn
-    exact hv (dif_neg hn)
+    exact hv (dite_eq_right hn)
   obtain ⟨v₀, dg, pg, ph, hpg, hph, hne, heq, hhne, hv₀⟩ := hex
   have e0 : GroundTheory.Heights₂.Heights.LowerBoundFree.valAt y u w = v₀ :=
     valAt_eq hw ⟨dg, pg, ph, hpg, hph, hne, heq, hhne, hv₀⟩
@@ -1243,14 +1243,14 @@ theorem exists_lift {n a : ℕ} (h : a ≤ n) {u : Fin n → ℂ} (hu : u ∈ Fl
   have h1 : ∀ k, ‖u k‖ < 1 := (pi_norm_lt_iff one_pos).1 (mem_ball_zero_iff.1 hu.1)
   refine ⟨logLift a u, ⟨fun i => ?_, fun k hk => ?_⟩, funext fun k => ?_⟩
   · have hi : ((Fin.castLE h i : Fin n) : ℕ) < a := i.2
-    simp only [logLift, if_pos hi, Complex.log_re]
+    simp only [logLift, ite_eq_left hi, Complex.log_re]
     exact Real.log_neg (norm_pos_iff.2 (hu.2 _ hi)) (h1 _)
-  · simp only [logLift, if_neg (not_lt.2 hk)]
+  · simp only [logLift, ite_eq_right (not_lt.2 hk)]
     exact h1 k
   · by_cases hk : (k : ℕ) < a
-    · simp only [expCover, logLift, if_pos hk]
+    · simp only [expCover, logLift, ite_eq_left hk]
       exact Complex.exp_log (hu.2 k hk)
-    · simp only [expCover, logLift, if_neg hk]
+    · simp only [expCover, logLift, ite_eq_right hk]
 
 theorem neg_log_nz_le {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ} {Λ : Type} [AddCommGroup Λ]
     [Module (𝓞 E) Λ] {Ψ : Type} [Fintype Ψ] (R : RiemLat E g Λ) (σ : Ψ → (𝓞 E →+* ℂ)) {m : ℕ} (hσ : IsCMFam σ)
@@ -1259,7 +1259,7 @@ theorem neg_log_nz_le {E : Type} [Field E] [NumberField E] [IsCMField E] {g : �
   obtain ⟨-, -, h3, h4, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.cuspW_le E g Λ Ψ R σ m hσ hr hm
   by_cases hI : I = ⊥
   · have : R.nz σ I = 1 := by
-      refine dif_neg ?_
+      refine dite_eq_right ?_
       rintro ⟨r, v, hr1, hv, hli, -⟩
       have := hv ⟨0, hr1⟩
       rw [hI, Submodule.mem_bot] at this
@@ -1438,7 +1438,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.cusp_intersection_finite : Top
   intro hG E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or U M S' z w x hU hz hx
   have hw : w ∈ mcPts (mCoordIdeal Dc.y) :=
     (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt _ Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie w).2 ⟨z, Or.𝔐.all _, hz⟩
-  haveI := LevelTowerAlt.Xo_dense Dc hw
+  have := LevelTowerAlt.Xo_dense Dc hw
   refine le_of_forall_pos_le_add fun ε hε => ?_
   obtain ⟨δ, hδ, h⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.GVal.corrW_lower_near hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or U z w x hU hz hx (ε / 3) (by linarith)
   have hsub : Dc.Xo ⊆ mcPts (mCoordIdeal Dc.y) := fun _ h => h.1

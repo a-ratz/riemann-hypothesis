@@ -122,15 +122,15 @@ private lemma isAlgebraic_frac_lemma {A K : Type} [CommRing A] [IsDomain A] [Fie
 
 theorem fnTrdeg_of (d : ℕ) (h : KapTrdeg Xo c d) : FnTrdeg Xo c (d + Nat.card (FlagVar Dw)) := by
   intro Z
-  haveI h1 : FaithfulSMul (kap Z) (MvPolynomial (FlagVar Dw) (kap Z)) :=
+  have h1 : FaithfulSMul (kap Z) (MvPolynomial (FlagVar Dw) (kap Z)) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr
       (algebraMap (kap Z) (MvPolynomial (FlagVar Dw) (kap Z))).injective
-  haveI h2 : FaithfulSMul (MvPolynomial (FlagVar Dw) (kap Z)) (Om Z) :=
+  have h2 : FaithfulSMul (MvPolynomial (FlagVar Dw) (kap Z)) (Om Z) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr
       (IsFractionRing.injective (MvPolynomial (FlagVar Dw) (kap Z)) (Om Z))
-  haveI h3 : FaithfulSMul c.F (kap Z) :=
+  have h3 : FaithfulSMul c.F (kap Z) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (algebraMap c.F (kap Z)).injective
-  haveI h4 : FaithfulSMul (kap Z) (Om Z) :=
+  have h4 : FaithfulSMul (kap Z) (Om Z) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (algebraMap (kap Z) (Om Z)).injective
   have e1 : Algebra.trdeg (kap Z) (MvPolynomial (FlagVar Dw) (kap Z)) = Cardinal.mk (FlagVar Dw) := by
     first

@@ -214,7 +214,7 @@ theorem locOrbG_of (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 :
             simp only [Matrix.mul_assoc]
         _ = Qics C τ * (uMat (γ (vOf X τ))⁻¹ * uMat x) * Qcs C τ * yi := by
             rw [h2, Matrix.mul_one]; simp only [Matrix.mul_assoc]
-    rw [hW x, hW' ((γ (vOf X τ))⁻¹ * x), enorm_smul, enorm_smul, ← key x, ← key ((γ (vOf X τ))⁻¹ * x)]
+    rw [hW x, hW' ((γ (vOf X τ))⁻¹ * x), eNorm_smul, eNorm_smul, ← key x, ← key ((γ (vOf X τ))⁻¹ * x)]
     simp only [hF]
     rw [e2]
     show ‖a‖ₑ * ‖l (σc (Formalism.L2.SG.RealObj.trG (Qcs C τ) (Qics C τ) x * yi) w0)‖ₑ *
@@ -230,10 +230,10 @@ theorem locOrbG_of (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 :
     _ = (‖a‖ₑ * ‖a'‖ₑ) * ∫⁻ x,
           F (Formalism.FourierDecayAlt.B.rmulF yi (Matrix.of.symm (Formalism.L2.SG.RealObj.trG (Qcs C τ) (Qics C τ) x)))
           ∂(Formalism.REAL.muG (X.B.I.ε (vOf X τ))) :=
-        lintegral_const_mul' _ _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)
+        lintegral_const_mul' _ _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)
     _ < ⊤ := by
         rw [hCV, hR]
-        exact ENNReal.mul_lt_top (ENNReal.mul_lt_top enorm_lt_top enorm_lt_top) hFfin
+        exact ENNReal.mul_lt_top (ENNReal.mul_lt_top eNorm_lt_top eNorm_lt_top) hFfin
 
 theorem stepIntG_of (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : L2RightTranslation) (hGp : GapOfHyp)
     (hLF : ∀ (D : D7), Formalism.L2.SG.ConcreteSettingExists.GapHyp D → ∀ (X : HidaSetting D) (θ : ℝ) (C : Choice X θ), LocFactor C) :
@@ -413,7 +413,7 @@ theorem weilPairJ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : 
           (σc (Matrix.of (Tm C τ x')) w0)⟫_ℂ‖₊ : NNReal) : ℝ≥0∞) * ((‖l u (σc (Matrix.of (Tm C τ x)) w0)‖₊ : NNReal) : ℝ≥0∞) *
           ((‖l u (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞)) := by
       intro x x' s
-      rw [key, key, hsig s, hWl, hWl, enorm_smul, enorm_smul]
+      rw [key, key, hsig s, hWl, hWl, eNorm_smul, eNorm_smul]
       show _ * (‖a u‖ₑ * ‖l u (σc (Matrix.of (Tm C τ x)) w0)‖ₑ) * (‖a u‖ₑ * ‖l u (σc (Matrix.of (Tm C τ x')) w0)‖ₑ) = _
       simp only [eNorm_eq_nnNorm]
       ring
@@ -426,11 +426,11 @@ theorem weilPairJ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : 
           (σc (Matrix.of (Tm C τ x')) w0)⟫_ℂ‖₊ : NNReal) : ℝ≥0∞) * ((‖l u (σc (Matrix.of (Tm C τ x)) w0)‖₊ : NNReal) : ℝ≥0∞) *
           ((‖l u (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞))
           ∂((Formalism.MainNotions.S.muS (C.muW u τ) μNc).comap (Tm C τ)) ∂((νq u).comap (Tm C τ)) ∂((νq u).comap (Tm C τ)) := by
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x => ?_
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x' => ?_
-      rw [← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun s => ?_
       exact e x x' s
     rw [step]
@@ -439,7 +439,7 @@ theorem weilPairJ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : 
           ((‖l u (σc (Matrix.of m') w0)‖₊ : NNReal) : ℝ≥0∞))
     beta_reduce at hL
     rw [hL]
-    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top enorm_lt_top enorm_lt_top) hint
+    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top eNorm_lt_top eNorm_lt_top) hint
   · intro s hs
     have hmap : ((Formalism.MainNotions.S.muS (C.muW u τ) μNc).comap (Tm C τ)).map (Tm C τ) = Formalism.MainNotions.S.muS (C.muW u τ) μNc := by
       rw [(Tm_emb C τ).map_comap, Measure.restrict_eq_self_of_ae_mem]
@@ -487,7 +487,7 @@ theorem weilPairJ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : 
           ((‖l u (σc (Matrix.of (Tm C τ x)) w0)‖₊ : NNReal) : ℝ≥0∞) *
           ((‖l u' (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞)) := by
       intro x x' s s'
-      rw [key, key, hsg, hWl, hWl, enorm_smul, enorm_smul]
+      rw [key, key, hsg, hWl, hWl, eNorm_smul, eNorm_smul]
       show _ * (‖a u‖ₑ * ‖l u (σc (Matrix.of (Tm C τ x)) w0)‖ₑ) * (‖a u'‖ₑ * ‖l u' (σc (Matrix.of (Tm C τ x')) w0)‖ₑ) = _
       simp only [eNorm_eq_nnNorm]
       ring
@@ -503,13 +503,13 @@ theorem weilPairJ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : 
           ((‖l u' (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞))
           ∂((Formalism.MainNotions.S.muS (C.muW u' τ) μNc).comap (Tm C τ)) ∂((Formalism.MainNotions.S.muS (C.muW u τ) μNc).comap (Tm C τ))
           ∂((νq u').comap (Tm C τ)) ∂((νq u).comap (Tm C τ)) := by
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x => ?_
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x' => ?_
-      rw [← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun s => ?_
-      rw [← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun s' => ?_
       exact e x x' s s'
     rw [step]
@@ -518,7 +518,7 @@ theorem weilPairJ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : 
           ((‖l u (σc (Matrix.of m) w0)‖₊ : NNReal) : ℝ≥0∞) * ((‖l u' (σc (Matrix.of m') w0)‖₊ : NNReal) : ℝ≥0∞))
     beta_reduce at hL
     rw [hL]
-    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top enorm_lt_top enorm_lt_top) hint
+    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top eNorm_lt_top eNorm_lt_top) hint
 
 end BM
 

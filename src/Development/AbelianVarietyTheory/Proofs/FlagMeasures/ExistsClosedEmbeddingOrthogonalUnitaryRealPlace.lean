@@ -140,9 +140,9 @@ theorem exists_closedEmbedding_unitary_orthogonal (n m : ℕ) (ε : Fin n → Bo
     rw [Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc A' (vecMulVec x₀ u), h0, Matrix.mul_zero, zero_add,
       Matrix.mul_assoc, Matrix.mul_assoc, hA'B, Matrix.mul_one, ← Matrix.mul_assoc, hA'B, Matrix.one_mul]
   have hval' : Continuous fun g : Formalism.REAL.UJ ε' => ((g : GL (Fin m) ℂ) : Matrix (Fin m) (Fin m) ℂ) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hinv' : Continuous fun g : Formalism.REAL.UJ ε' => (((g : GL (Fin m) ℂ)⁻¹ : GL (Fin m) ℂ) : Matrix (Fin m) (Fin m) ℂ) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   have hjinv : ∀ g, ((((jj g : GL (Fin n) ℂ))⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) =
       vecMulVec x₀ u + B * (((g : GL (Fin m) ℂ)⁻¹ : GL (Fin m) ℂ) : Matrix (Fin m) (Fin m) ℂ) * A' := by
     intro g
@@ -162,10 +162,10 @@ theorem exists_closedEmbedding_unitary_orthogonal (n m : ℕ) (ε : Fin n → Bo
       MulOpposite.op (A' * (((h : GL (Fin n) ℂ)⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) * B))
   have hψc : Continuous ψ := by
     refine Continuous.prodMk ?_ ?_
-    · exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul
+    · exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul
         continuous_const
     · exact MulOpposite.continuous_op.comp ((continuous_const.matrix_mul
-        (Units.continuous_coe_inv.comp continuous_subtype_val)).matrix_mul continuous_const)
+        (Units.continuous_coe_inv.comp continuous_subtypeVal)).matrix_mul continuous_const)
   have hψ : ∀ g, ψ (jj g) = Units.embedProduct _ (g : GL (Fin m) ℂ) := by
     intro g
     refine Prod.ext ?_ ?_
@@ -193,7 +193,7 @@ theorem exists_closedEmbedding_unitary_orthogonal (n m : ℕ) (ε : Fin n → Bo
       exact hrange h hh
   have hclosed : IsClosed (Set.range jj) := by
     rw [hrng]
-    exact isClosed_eq ((Units.continuous_val.comp continuous_subtype_val).matrix_mulVec continuous_const)
+    exact isClosed_eq ((Units.continuous_val.comp continuous_subtypeVal).matrix_mulVec continuous_const)
       continuous_const
   exact ⟨jj, ⟨⟨hind, hinj⟩, hclosed⟩, fun g => ⟨hfix g, hcomm g⟩⟩
 

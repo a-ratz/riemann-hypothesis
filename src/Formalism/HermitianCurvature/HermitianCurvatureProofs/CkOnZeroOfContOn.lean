@@ -66,10 +66,10 @@ theorem gv_closed (k r : ℕ) : IsClosed (B.GV k r) := by
 theorem ckOn_zero_of_contOn {k r : ℕ} (f : Mx k r → ℂ) (hf : ContinuousOn f (B.GV k r)) :
     B.CkOn ((0 : ℕ) : ℕ∞) (B.GV k r) (fun g => f g • (1 : ℂ →L[ℂ] ℂ)) := by
   have hcl := gv_closed k r
-  haveI : NormalSpace (B.Mat k r) :=
+  have : NormalSpace (B.Mat k r) :=
     inferInstanceAs (NormalSpace (Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → ℂ))
   obtain ⟨g, hg⟩ := ContinuousMap.exists_extension' hcl.isClosedEmbedding_subtypeVal
-    (⟨fun x : B.GV k r => f x, hf.restrict⟩ : C(B.GV k r, ℂ))
+    (⟨fun x : B.GV k r => f x, hf.domRestrict⟩ : C(B.GV k r, ℂ))
   intro g₀ hg₀
   refine ⟨Set.univ, fun y => g y • (1 : ℂ →L[ℂ] ℂ), isOpen_univ, Set.mem_univ _, ?_, fun y _ hy => ?_⟩
   · show ContDiffOn ℝ 0 _ _

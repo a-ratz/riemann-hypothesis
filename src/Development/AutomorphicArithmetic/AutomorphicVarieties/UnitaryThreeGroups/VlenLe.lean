@@ -311,8 +311,8 @@ private theorem lift_X (hΨ : ∀ j : ℤ, AdicCont (maximalIdeal O) fun g => ((
     convert hu.comp fun t => if t = X 2 1 then (!![0, 0, 0; y, 0, 0; 0, z, 0] : Matrix (Fin 3) (Fin 3) O) i j else
       -(!![0, 0, 0; y, 0, 0; 0, z, 0] : Matrix (Fin 3) (Fin 3) O) j.rev i.rev using 2 with g
     by_cases hg : η g = 1
-    · simp only [Function.comp_apply, if_pos hg, if_true]
-    · simp only [Function.comp_apply, if_neg hg, if_neg (Ne.symm h)]
+    · simp only [Function.comp_apply, ite_eq_left hg, ite_true]
+    · simp only [Function.comp_apply, ite_eq_right hg, ite_eq_right (Ne.symm h)]
 
 variable [IsAdicComplete (maximalIdeal O) O] [IsCO O (TrivSqZeroExt O O)]
 
@@ -370,8 +370,8 @@ private theorem main_der (S : SRing N hι U I cc g₁) (M : Model S K) (hc : Ψ 
     ∃ D ∈ PtDer M.x₀ (O ⧸ Ideal.span {a}),
       (∀ g i j, D ((S.r.hom g).mat i j) = ((Ψ g ^ wt1 j : Oˣ) : O) • γ g i j) ∧
       ∃ D' ∈ PtDer M.x O, HasWt M.𝒜 (-1) D' ∧ ∀ f, D (M.q f) = Ideal.Quotient.mk _ (D' f) := by
-  haveI : IsCO O (TrivSqZeroExt O O) := co_sqz O O O fun _ => rfl
-  haveI : IsCO O (TrivSqZeroExt O (O ⧸ Ideal.span {a})) := co_sqz O O _ fun _ => rfl
+  have : IsCO O (TrivSqZeroExt O O) := co_sqz O O O fun _ => rfl
+  have : IsCO O (TrivSqZeroExt O (O ⧸ Ideal.span {a})) := co_sqz O O _ fun _ => rfl
   obtain ⟨hlc, hw, hcoc, hnorm, hkill, X, hX, hcob⟩ := hγ
   change IsCoc (rb η Ψ _) γ at hcoc
   change NormCoc cc g₁ (rb η Ψ _) γ at hnorm
@@ -450,7 +450,7 @@ theorem UpperTheory.V.U3.model_lower :
         (γ : MM →+ (Γ → Matrix (Fin 3) (Fin 3) (O ⧸ Ideal.span {a}))), Function.Injective γ → (∀ x, γ x ∈ shaCoc η Ψ N ι cc g₁ a) →
         Module.length O MM ≤ M.len := by
   intro O _ _ _ _ _ K _ _ Γ H _ _ _ _ _ _ η Ψ N ι hι U I cc g₁ S M _ hm hM hU hΨ hN a ha MM _ _ γ hinj hγ
-  haveI : IsCO O (TrivSqZeroExt O (O ⧸ Ideal.span {a})) := co_sqz O O _ fun _ => rfl
+  have : IsCO O (TrivSqZeroExt O (O ⧸ Ideal.span {a})) := co_sqz O O _ fun _ => rfl
   choose D hD hDe hl using fun μ => main_der S M hm.Ψc hU hΨ hN ha (γ μ) (hγ μ)
   have hadd : ∀ μ ν, D (μ + ν) = D μ + D ν := fun μ ν =>
     der_uniq S M.x₀ (hD _) (add_mem (hD μ) (hD ν)) fun g i j => by
@@ -932,11 +932,11 @@ theorem UpperTheory.V.U3.vlen_le :
     CohInp → LemmaM' → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {K : Type} [Field K] [NumberField K] [Algebra K Ω]
       {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N] {e : ℕ} {ψ : DirichletCharacter c.O N} (D : Dat Ω K c e ψ) {U : (_root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition _ (D.η.comp D.ι) (D.Ψ.comp D.ι)))} {g₁ : G ℚ Ω}, D.Marked g₁ → ∀ (S : D.Ring U g₁), ∀ M : Model S (PadicAlgCl l), Vlen Ω c e ψ ≤ M.len := by
   intro hC hM' Ω _ _ _ K _ _ _ l _ c N _ e ψ D U g₁ hg S M
-  haveI : IsLocalRing c.O := c.dvr.toIsLocalRing
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
-  haveI : Finite (ResidueField c.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : IsLocalRing c.O := c.dvr.toIsLocalRing
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
+  have : Finite (ResidueField c.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
   obtain ⟨-, -, -, -, -, hK, h2, -⟩ := dat_facts D
   have hG : LocGood U (D.loc.It U) := Loc.locGood hC.loc D.loc U

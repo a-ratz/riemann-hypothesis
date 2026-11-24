@@ -57,7 +57,7 @@ namespace GlobalTheory.GenericFibreUnif
 
 theorem exists_isGrpPullback_genericFibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (χ : Sp R ⟶ Y.X) (t : SAB H (Sp R)) (m : SABMap t Y.t χ) (P : PELUnif I t) (z : Sp (FractionRing R) ⟶ Xo.XF c), z ≫ Y.j = jK R ≫ χ → letI := H.starRing; ∃ ψ : P.A.A.left ⟶ Y.oF.t.G.left, IsGrpPullback P.A.A Y.oF.t.G z ψ ∧ LBIso P.A.L (Y.oF.t.PP.L.pull ψ) ∧ (∀ a : 𝓞 E, (P.oA.act a).left ≫ ψ = ψ ≫ (Y.oF.t.act.act a).left) ∧ ψ ≫ Y.m.φ = P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R) ≫ m.φ := by
   intro E _ _ _ H Dw l Xo c O _ β Y R _ _ I χ t m P z hz
-  letI := H.starRing
+  let := H.starRing
   have := P.U.gen_hom
   have : IsMonHom P.U.gen.symm.hom := by show IsMonHom P.U.gen.inv; infer_instance
   set k : P.A.A.left ⟶ t.G.left := P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R) with hk

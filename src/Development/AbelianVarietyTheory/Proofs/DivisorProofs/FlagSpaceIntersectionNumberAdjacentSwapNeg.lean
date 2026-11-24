@@ -168,7 +168,7 @@ theorem main : ∀ (F : Type) [Field F] (Y : Var F) (W : Dbl Y), ∀ j : W.Z.fun
   have hp := W.proj
   have hlft : LocallyOfFiniteType (W.p₁ ≫ Y.str) := by
     obtain ⟨N, i, hi, hcomp⟩ := hp
-    haveI : IsProper (PSpace.str F N) := isProper_str F N
+    have : IsProper (PSpace.str F N) := isProper_str F N
     rw [← hcomp]; infer_instance
   obtain ⟨d, hd⟩ := exists_dim F (W.p₁ ≫ Y.str)
   have hY : Y.X.fromSpecStalk (genericPoint Y.X) ≫ Y.str = spMap (algebraMap F Y.Fn) := (ratOf Y).pt_s
@@ -332,7 +332,7 @@ theorem mul_diag {E : Fin n → Fin n → Prop} {C R : Matrix (Fin n) (Fin n) K}
   · rw [hC x l h (hx l h), zero_mul]
 
 theorem lo_diag_ne {M : Matrix (Fin n) (Fin n) K} (hM : Lo M) (hd : M.det ≠ 0) (i : Fin n) : M i i ≠ 0 := by
-  rw [Matrix.det_of_lowerTriangular M (fun i j h => hM i j (OrderDual.toDual_lt_toDual.1 h))] at hd
+  rw [Matrix.det_of_isLowerTriangular M (fun i j h => hM i j (OrderDual.toDual_lt_toDual.1 h))] at hd
   exact Finset.prod_ne_zero_iff.1 hd i (Finset.mem_univ _)
 
 section Pair
@@ -341,7 +341,7 @@ variable {a b : Fin n} {L C R : Matrix (Fin n) (Fin n) K}
 theorem lower_index_pair_unique (hab : (b : ℕ) = a + 1) : ∀ i j k : Fin n, (k = a ∧ j = b) → k ≤ i → i < j → (i = a ∧ j = b) := by
   rintro i j k ⟨rfl, rfl⟩ h1 h2
   refine ⟨Fin.ext ?_, rfl⟩
-  rw [Fin.le_iff_val_le_val] at h1; rw [Fin.lt_iff_val_lt_val] at h2; omega
+  rw [Fin.le_iff_val_le_val] at h1; rw [Fin.lt_def] at h2; omega
 
 theorem l_aa (hab : (b : ℕ) = a + 1) (hL : Lo L) (hC : AL (fun i j => i = a ∧ j = b) C) :
     (L * C) a a = L a a * C a a :=
@@ -353,8 +353,8 @@ theorem l_ab (hab : (b : ℕ) = a + 1) (hL : Lo L) (hC : AL (fun i j => i = a �
   refine Fintype.sum_eq_single a fun k hk => ?_
   have hk' : (k : ℕ) ≠ a := fun h => hk (Fin.ext h)
   rcases lt_or_gt_of_ne hk' with h | h
-  · rw [hC k b (Fin.lt_iff_val_lt_val.2 (by omega)) (fun e => hk e.1), mul_zero]
-  · rw [hL a k (Fin.lt_iff_val_lt_val.2 h), zero_mul]
+  · rw [hC k b (Fin.lt_def.2 (by omega)) (fun e => hk e.1), mul_zero]
+  · rw [hL a k (Fin.lt_def.2 h), zero_mul]
 
 theorem l_ba (hab : (b : ℕ) = a + 1) (hL : Lo L) (hC : AL (fun i j => i = a ∧ j = b) C) :
     (L * C) b a = L b a * C a a + L b b * C b a := by
@@ -364,8 +364,8 @@ theorem l_ba (hab : (b : ℕ) = a + 1) (hL : Lo L) (hC : AL (fun i j => i = a �
   have hka' : (k : ℕ) ≠ a := fun h => hka (Fin.ext h)
   have hkb' : (k : ℕ) ≠ b := fun h => hkb (Fin.ext h)
   rcases lt_or_gt_of_ne hkb' with h | h
-  · rw [hC k a (Fin.lt_iff_val_lt_val.2 (by omega)) (fun e => hka e.1), mul_zero]
-  · rw [hL b k (Fin.lt_iff_val_lt_val.2 h), zero_mul]
+  · rw [hC k a (Fin.lt_def.2 (by omega)) (fun e => hka e.1), mul_zero]
+  · rw [hL b k (Fin.lt_def.2 h), zero_mul]
 
 theorem l_bb (hab : (b : ℕ) = a + 1) (hL : Lo L) (hC : AL (fun i j => i = a ∧ j = b) C) :
     (L * C) b b = L b a * C a b + L b b * C b b := by
@@ -376,7 +376,7 @@ theorem l_bb (hab : (b : ℕ) = a + 1) (hL : Lo L) (hC : AL (fun i j => i = a �
   have hkb' : (k : ℕ) ≠ b := fun h => hkb (Fin.ext h)
   rcases lt_or_gt_of_ne hkb' with h | h
   · rw [hC k b h (fun e => hka e.1), mul_zero]
-  · rw [hL b k (Fin.lt_iff_val_lt_val.2 h), zero_mul]
+  · rw [hL b k (Fin.lt_def.2 h), zero_mul]
 
 theorem r_aa (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) (hR : Lo R) :
     (C * R) a a = C a a * R a a + C a b * R b a := by
@@ -386,8 +386,8 @@ theorem r_aa (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) 
   have hla' : (l : ℕ) ≠ a := fun h => hla (Fin.ext h)
   have hlb' : (l : ℕ) ≠ b := fun h => hlb (Fin.ext h)
   rcases lt_or_gt_of_ne hla' with h | h
-  · rw [hR l a (Fin.lt_iff_val_lt_val.2 h), mul_zero]
-  · rw [hC a l (Fin.lt_iff_val_lt_val.2 h) (fun e => hlb e.2), zero_mul]
+  · rw [hR l a (Fin.lt_def.2 h), mul_zero]
+  · rw [hC a l (Fin.lt_def.2 h) (fun e => hlb e.2), zero_mul]
 
 theorem r_ab (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) (hR : Lo R) :
     (C * R) a b = C a b * R b b := by
@@ -395,8 +395,8 @@ theorem r_ab (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) 
   refine Fintype.sum_eq_single b fun l hl => ?_
   have hl' : (l : ℕ) ≠ b := fun h => hl (Fin.ext h)
   rcases lt_or_gt_of_ne hl' with h | h
-  · rw [hR l b (Fin.lt_iff_val_lt_val.2 h), mul_zero]
-  · rw [hC a l (Fin.lt_iff_val_lt_val.2 (by omega)) (fun e => hl e.2), zero_mul]
+  · rw [hR l b (Fin.lt_def.2 h), mul_zero]
+  · rw [hC a l (Fin.lt_def.2 (by omega)) (fun e => hl e.2), zero_mul]
 
 theorem r_ba (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) (hR : Lo R) :
     (C * R) b a = C b a * R a a + C b b * R b a := by
@@ -406,8 +406,8 @@ theorem r_ba (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) 
   have hla' : (l : ℕ) ≠ a := fun h => hla (Fin.ext h)
   have hlb' : (l : ℕ) ≠ b := fun h => hlb (Fin.ext h)
   rcases lt_or_gt_of_ne hla' with h | h
-  · rw [hR l a (Fin.lt_iff_val_lt_val.2 h), mul_zero]
-  · rw [hC b l (Fin.lt_iff_val_lt_val.2 (by omega)) (fun e => hne e.1.symm), zero_mul]
+  · rw [hR l a (Fin.lt_def.2 h), mul_zero]
+  · rw [hC b l (Fin.lt_def.2 (by omega)) (fun e => hne e.1.symm), zero_mul]
 
 theorem r_bb (hab : (b : ℕ) = a + 1) (hC : AL (fun i j => i = a ∧ j = b) C) (hR : Lo R) :
     (C * R) b b = C b b * R b b :=
@@ -426,7 +426,7 @@ theorem root_lower_pair_unique_left (hab : (b : ℕ) = a + 1) (σ : ι) : ∀ i 
   obtain rfl := eq_of_heq hk
   obtain rfl := eq_of_heq (Sigma.mk.inj_iff.1 h2).2
   refine ⟨congrArg (Sigma.mk _) (Fin.ext ?_), rfl⟩
-  rw [Fin.le_iff_val_le_val] at hki; rw [Fin.lt_iff_val_lt_val] at hij; omega
+  rw [Fin.le_iff_val_le_val] at hki; rw [Fin.lt_def] at hij; omega
 
 theorem root_lower_pair_unique_right (hab : (b : ℕ) = a + 1) (σ : ι) : ∀ i j l : Fin (m σ),
     ((⟨σ, i⟩ : Root m) = ⟨τ, a⟩ ∧ (⟨σ, l⟩ : Root m) = ⟨τ, b⟩) → j ≤ l → i < j →
@@ -436,7 +436,7 @@ theorem root_lower_pair_unique_right (hab : (b : ℕ) = a + 1) (σ : ι) : ∀ i
   obtain rfl := eq_of_heq hk
   obtain rfl := eq_of_heq (Sigma.mk.inj_iff.1 h2).2
   refine ⟨rfl, congrArg (Sigma.mk _) (Fin.ext ?_)⟩
-  rw [Fin.le_iff_val_le_val] at hjl; rw [Fin.lt_iff_val_lt_val] at hij; omega
+  rw [Fin.le_iff_val_le_val] at hjl; rw [Fin.lt_def] at hij; omega
 
 end Root
 
@@ -883,7 +883,7 @@ theorem genPair_specializes_diagonal : ∀ (F : Type) [Field F] (Y : Var F) (K :
   have h : (spMap ψ₁ ≫ (ratOf Y).pt) ≫ Y.str = (spMap ψ₂ ≫ (ratOf Y).pt) ≫ Y.str := by
     rw [k, k, hF]
   refine ⟨h, ?_⟩
-  haveI : IsDominant (spMap (algebraMap V K)) := by
+  have : IsDominant (spMap (algebraMap V K)) := by
     refine ⟨?_⟩
     change DenseRange (PrimeSpectrum.comap (algebraMap V K))
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical,
@@ -941,7 +941,7 @@ theorem exists_dbl_of_genPair : ∀ (F : Type) [Field F] (Y : Var F) (K : Type) 
   obtain ⟨h, hsp⟩ := _root_.GlobalTheory.FlagPush.genPair_specializes_diagonal F Y K ψ₁ ψ₂ hg
   obtain ⟨Z, hZi, p₁, p₂, hZ, ζ, hci, hζ₁, hζ₂, hζg⟩ :=
     _root_.GlobalTheory.FlagPush.exists_closure_pair F Y K (spMap ψ₁ ≫ (ratOf Y).pt) (spMap ψ₂ ≫ (ratOf Y).pt) h
-  haveI := hZi
+  have := hZi
   have hcomp : ζ ≫ Limits.pullback.lift p₁ p₂ hZ =
       Limits.pullback.lift (f := Y.str) (g := Y.str) (spMap ψ₁ ≫ (ratOf Y).pt) (spMap ψ₂ ≫ (ratOf Y).pt) h := by
     apply Limits.pullback.hom_ext
@@ -982,8 +982,8 @@ namespace GlobalTheory.FlagPush
 
 theorem exists_lift_of_var : ∀ (F : Type) [Field F] (X Y : Var F) (f : Y.X ⟶ X.X), f ≫ X.str = Y.str → ∀ (K : Type) [Field K] (V : ValuationSubring K) (v₁ : Sp V ⟶ Y.X) (q₂ : Sp K ⟶ Y.X), q₂ ≫ f = spMap (algebraMap V K) ≫ v₁ ≫ f → ∃ v₂ : Sp V ⟶ Y.X, spMap (algebraMap V K) ≫ v₂ = q₂ ∧ v₂ ≫ f = v₁ ≫ f := by
   intro F _ X Y f hs K _ V v₁ q₂ hq
-  haveI : IsProper (f ≫ X.str) := hs ▸ inferInstance
-  haveI : UniversallyClosed f := UniversallyClosed.of_comp_of_isSeparated f X.str
+  have : IsProper (f ≫ X.str) := hs ▸ inferInstance
+  have : UniversallyClosed f := UniversallyClosed.of_comp_of_isSeparated f X.str
   have hE : ValuativeCriterion.Existence f :=
     (UniversallyClosed.eq_valuativeCriterion ▸ (inferInstance : UniversallyClosed f) :
       (ValuativeCriterion.Existence ⊓ @QuasiCompact) f).1
@@ -1266,7 +1266,7 @@ theorem exists_genPair : ∀ (F : Type) [Field F] (X Y : Var F) (ι : Type) [Fin
   have h1 : (spMap c ≫ pt) (IsLocalRing.closedPoint V) = genericPoint Y.X := hpa _
   have h2 : v₂ (IsLocalRing.closedPoint V) = genericPoint Y.X := by
     rw [← ClosedPt.closedPt_comp v₂, ← hmeet, ClosedPt.closedPt_comp, h1]
-  letI : Algebra F (RatFunc Y.Fn) := ((algebraMap Y.Fn (RatFunc Y.Fn)).comp (algebraMap F Y.Fn)).toAlgebra
+  let : Algebra F (RatFunc Y.Fn) := ((algebraMap Y.Fn (RatFunc Y.Fn)).comp (algebraMap F Y.Fn)).toAlgebra
   have hsp : q₂ (IsLocalRing.closedPoint (RatFunc Y.Fn)) ⤳ genericPoint Y.X := by
     have := ClosedPt.gen_specializes v₂ (IsLocalRing.closedPoint (RatFunc Y.Fn))
     rwa [hv₂, h2] at this
@@ -1301,7 +1301,7 @@ namespace GlobalTheory.FlagPush
 
 theorem interNumRed_section : ∀ (F : Type) [Field F] (Y : Var F) (W : Dbl Y), ∀ (y : Fin Y.dim → CartierDiv W.Z) (e : Fin Y.dim → Y.Dv), (∀ i, IsPull W.p₁ (y i) (e i) ∨ IsPull W.p₂ (y i) (e i)) → letI := algebraΓOfHom (W.p₁ ≫ Y.str); interNumRed F (⟨closure {W.δ (genericPoint Y.X)}, isClosed_closure⟩ : Closeds W.Z) (fun i => toLB (y i)) = Y.inter e := by
   intro F _ Y W y e h
-  letI := algebraΓOfHom (W.p₁ ≫ Y.str)
+  let := algebraΓOfHom (W.p₁ ≫ Y.str)
   have hemb := W.δ.isClosedEmbedding
   have hcl : Set.range W.δ = closure {W.δ (genericPoint Y.X)} := by
     rw [← Set.image_singleton, hemb.closure_image_eq, genericPoint_spec Y.X, Set.image_univ]
@@ -1397,7 +1397,7 @@ namespace GlobalTheory.FlagPush
 
 theorem Dbl.num_eq_zero_of_isPull : ∀ (F : Type) [Field F] (Y : Var F) (W : Dbl Y), W.Small → ∀ (q : W.Z ⟶ Y.X) [IsDominant q] (y : Fin (Y.dim + 1) → CartierDiv W.Z) (e : Fin (Y.dim + 1) → Y.Dv), (∀ i, IsPull q (y i) (e i)) → W.num y = 0 := by
   intro F _ Y W hW q _ y e h
-  letI := algebraΓOfHom (W.p₁ ≫ Y.str)
+  let := algebraΓOfHom (W.p₁ ≫ Y.str)
   have hp : IsProjOver (strHom F (X := W.Z)) := by
     rw [strHom_eq (f := W.p₁ ≫ Y.str) fun _ => rfl]
     exact W.proj
@@ -1479,7 +1479,7 @@ theorem _root_.GlobalTheory.FlagPush.MultiLevel.antisymm_of_multilinear : ∀ (�
   have hcons : ∀ (x y : A) (Z : Fin n → A),
       T (Fin.cons (x - y) Z) = T (Fin.cons x Z) - T (Fin.cons y Z) := by
     intro x y Z
-    simp only [← MultilinearMap.curryLeft_apply, map_sub, MultilinearMap.sub_apply]
+    simp only [← MultilinearMap.curryLeft_apply, map_sub, sub_apply]
   have hmixeq : ∀ t t' : Fin n → κ ⊕ κ, (∀ i, Sum.elim id id (t i) = Sum.elim id id (t' i)) →
       T (Fin.cons w (Sum.elim u v ∘ t)) = T (Fin.cons w (Sum.elim u v ∘ t')) := by
     intro t t' htt
@@ -1537,7 +1537,7 @@ theorem _root_.GlobalTheory.FlagPush.MultiLevel.antisymm_of_multilinear : ∀ (�
     have h1 : T (Fin.cons (v b) (v ∘ s')) = 0 := by rw [← Fin.comp_cons]; exact hv _
     have h2 : T (Fin.cons (v a) (v ∘ s')) = 0 := by rw [← Fin.comp_cons]; exact hv _
     rw [hw, hcons, h1, hua]
-    simp only [← MultilinearMap.curryLeft_apply, map_add (f := _), MultilinearMap.add_apply] at h2 ⊢
+    simp only [← MultilinearMap.curryLeft_apply, map_add (f := _), add_apply] at h2 ⊢
     rw [h2]
     abel
   have hdiff : ∀ x : κ, ∃ ε : ℤ, u (Equiv.swap a b x) - v x = ε • w := by
@@ -1576,10 +1576,10 @@ theorem _root_.GlobalTheory.FlagPush.MultiLevel.antisymm_of_multilinear : ∀ (�
             · subst hi
               simp [Y, K]
             · have hik : (i : ℕ) ≠ k := fun e => hi (Fin.ext e)
-              simp only [Y, Function.update_apply, hi, if_false]
+              simp only [Y, Function.update_apply, hi, ite_false]
               by_cases hlt : (i : ℕ) < k
-              · rw [if_pos hlt, if_pos (by omega)]
-              · rw [if_neg hlt, if_neg (by omega)]
+              · rw [ite_eq_left hlt, ite_eq_left (by omega)]
+              · rw [ite_eq_right hlt, ite_eq_right (by omega)]
           have e0 : Y k = Function.update (Y k) K (v (s K)) := by
             rw [eq_comm, Function.update_eq_self_iff]
             simp [Y, K]
@@ -1666,7 +1666,7 @@ namespace GlobalTheory.FlagPush.Dbl
 
 theorem num_cons_eq_mul_of_supp_eq_range : ∀ (F : Type) [Field F] (Y : Var F) (W : Dbl Y), W.Small → ∀ Θ : CartierDiv W.Z, Θ.Eff → (Θ.supp : Set W.Z) = Set.range W.δ → ∃ μ : ℤ, μ ≠ 0 ∧ ∀ y : Fin Y.dim → CartierDiv W.Z, letI := algebraΓOfHom (W.p₁ ≫ Y.str); W.num (Fin.cons Θ y : Fin (Y.dim + 1) → CartierDiv W.Z) = μ * interNumRed F (⟨closure {W.δ (genericPoint Y.X)}, isClosed_closure⟩ : Closeds W.Z) fun i => toLB (y i) := by
   intro F _ Y W hW Θ hΘ hsupp
-  letI := algebraΓOfHom (W.p₁ ≫ Y.str)
+  let := algebraΓOfHom (W.p₁ ≫ Y.str)
   have hstr : strHom F W.Z = W.p₁ ≫ Y.str := GlobalTheory.strHom_eq fun _ => rfl
   have hp : IsProjOver (strHom F (X := W.Z)) := hstr ▸ W.proj
   have : IsLocallyNoetherian W.Z := by
@@ -1797,7 +1797,7 @@ theorem shear_apply_of_ne {ι : Type} {m : ι → ℕ} (τ : ι) (a b : Fin (m �
     {σ : ι} (h : σ ≠ τ) : shear τ a b t σ = 1 := by
   ext i k
   simp only [shear, Matrix.add_apply, Matrix.of_apply]
-  rw [if_neg, add_zero]
+  rw [ite_eq_right, add_zero]
   rintro ⟨h1, -⟩
   exact h (congrArg Sigma.fst h1)
 
@@ -1811,7 +1811,7 @@ theorem shear_self_mul_apply {ι : Type} {m : ι → ℕ} (τ : ι) (a b : Fin (
     by_cases h1 : i = a <;> by_cases h2 : k = b <;> simp [h1, h2]
   rw [Matrix.mul_apply]
   simp only [e, add_mul, Finset.sum_add_distrib, Matrix.one_apply, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   by_cases h1 : i = a <;> simp [h1]
 
 theorem almostLow_of_shear : ∀ (ι : Type) (m : ι → ℕ) (τ : ι) (a b : Fin (m τ)), (b : ℕ) = a + 1 →
@@ -1827,7 +1827,7 @@ theorem almostLow_of_shear : ∀ (ι : Type) (m : ι → ℕ) (τ : ι) (a b : F
     have hbt : (shear τ a b t σ * (C.map j) σ).BlockTriangular OrderDual.toDual := fun p q hpq =>
       hz σ p q (OrderDual.toDual_lt_toDual.1 hpq)
     have := hd σ
-    rw [Matrix.det_of_lowerTriangular _ hbt] at this
+    rw [Matrix.det_of_isLowerTriangular _ hbt] at this
     exact Finset.prod_ne_zero_iff.1 this i (Finset.mem_univ _)
   have hab' : a < b := by rw [Fin.lt_def]; omega
   have hba : b ≠ a := ne_of_gt hab'
@@ -1837,8 +1837,8 @@ theorem almostLow_of_shear : ∀ (ι : Type) (m : ι → ℕ) (τ : ι) (a b : F
     have h1 := hz τ a b hab'
     have h2 := hdiag τ b
     rw [shear_self_mul_apply] at h1 h2
-    rw [if_pos rfl, hmap, h0, map_zero, zero_add] at h1
-    rw [if_neg hba, add_zero] at h2
+    rw [ite_eq_left rfl, hmap, h0, map_zero, zero_add] at h1
+    rw [ite_eq_right hba, add_zero] at h2
     exact h2 ((mul_eq_zero.1 h1).resolve_left ht)
   · intro σ i c hic hn
     refine (map_eq_zero j).1 ?_
@@ -1856,10 +1856,10 @@ theorem almostLow_of_shear : ∀ (ι : Type) (m : ι → ℕ) (τ : ι) (a b : F
           have : (c : ℕ) ≠ b := fun h => hcb (Fin.ext h)
           omega
         have h2 := hz σ b c hbc
-        rw [shear_self_mul_apply, if_neg hba, add_zero] at h2
-        rw [if_pos rfl, h2, mul_zero, add_zero] at h1
+        rw [shear_self_mul_apply, ite_eq_right hba, add_zero] at h2
+        rw [ite_eq_left rfl, h2, mul_zero, add_zero] at h1
         exact h1
-      · rw [if_neg hi, add_zero] at h1
+      · rw [ite_eq_right hi, add_zero] at h1
         exact h1
     · have h1 := hz σ i c hic
       rw [shear_apply_of_ne τ a b t hσ, one_mul] at h1

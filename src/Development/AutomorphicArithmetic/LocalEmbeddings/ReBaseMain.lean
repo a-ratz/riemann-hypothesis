@@ -386,8 +386,8 @@ theorem zeta_rel (hB : B.IsGood σ) (hG : G.IsGood B) (hG₂ : (reG G V V' Z).Is
   subst z1 z1'
   have hs := (SB _).smul_mem (chrW X.ν (B.τ v) (kap G V V' Z v.1) : ℂ) hφ
   rw [H₂ _ hs _ hφ', ← one_smul ℂ (ι₂ _), ← one_smul ℂ (ι₂' _), ← hz _ hs, ← hz' _ hφ', map_smul]
-  letI : MeasurableSpace (Fv F v.1) := borel _
-  haveI : BorelSpace (Fv F v.1) := ⟨rfl⟩
+  let : MeasurableSpace (Fv F v.1) := borel _
+  have : BorelSpace (Fv F v.1) := ⟨rfl⟩
   exact zeta_change _ _ _ _ _ _ _ (fun x => by
       simp only [Chars.ν, chrW, locChar, MonoidHom.comp_apply, MonoidHom.div_apply, map_div, div_mul_cancel])
     (mem_KO_of_bases (hG.hV.bas v) (hG₂.hV.bas v)) (mem_KO_of_bases (hG.hV'.bas v) (hG₂.hV'.bas v))
@@ -478,7 +478,7 @@ theorem acts_pureA {κ : Type} [Fintype κ] {T : ((κ → AF F) → ℂ) → (κ
 theorem pureA_smul {κ : Type} [Fintype κ] (c : ℂ) (f : SInf F κ) (g : (κ → Af F) → ℂ) :
     pureA F (⇑(c • f)) g = c • pureA F f g := by
   funext x
-  simp only [pureA, SchwartzMap.smul_apply, smul_eq_mul, Pi.smul_apply, mul_assoc]
+  simp only [pureA, smul_apply, smul_eq_mul, Pi.smul_apply, mul_assoc]
 
 theorem acts_congr {κ : Type} [Fintype κ] {T T₁ : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ} (e : ∀ Φ ∈ schA F κ, T Φ = T₁ Φ)
     {f f₁ : (κ → mixedEmbedding.mixedSpace F) → ℂ} (h : Acts (evI F) T f f₁) : Acts (evI F) T₁ f f₁ :=

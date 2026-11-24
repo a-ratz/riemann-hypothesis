@@ -82,7 +82,7 @@ theorem setIntegral_comp_contAddEquiv {X : Type} [AddCommGroup X] [TopologicalSp
     (f : X → ℂ) (hf : ∀ n ∈ N, ∀ x, f (n + x) = f x) :
     ∫ x in 𝓕, f (T x) ∂μ = ∫ x in 𝓕, f x ∂μ := by
   let m := T.toHomeomorph.toMeasurableEquiv
-  haveI : (μ.map m).IsAddHaarMeasure := T.isAddHaarMeasure_map μ
+  have : (μ.map m).IsAddHaarMeasure := T.isAddHaarMeasure_map μ
   let e : N ≃ N :=
     { toFun := fun n => ⟨T.symm n, hT' _ n.2⟩
       invFun := fun n => ⟨T n, hT _ n.2⟩
@@ -101,7 +101,7 @@ theorem setIntegral_comp_contAddEquiv {X : Type} [AddCommGroup X] [TopologicalSp
     rw [m.map_apply, m.preimage_image, h1]
   have hc1 : c = 1 := by
     have h3 := hD.measure_eq hD2
-    rw [hm, hc, Measure.smul_apply, h1] at h3
+    rw [hm, hc, smul_apply, h1] at h3
     have h4 : (c : ENNReal) = 1 := by simpa [ENNReal.smul_def] using h3.symm
     exact_mod_cast h4
   have step := m.measurableEmbedding.setIntegral_map (μ := μ) f (m '' 𝓕)
@@ -118,7 +118,7 @@ def shear (D : Matrix (Fin a) (Fin a) R) (x : BlockIx a r → R) : BlockIx a r �
 
 theorem nilM_apply_ix (x : BlockIx a r → R) (p : BlockIx a r) : nilM x p.1.1 p.1.2 = x p := by
   unfold nilM
-  rw [Matrix.of_apply, dif_pos p.2]
+  rw [Matrix.of_apply, dite_eq_left p.2]
 
 theorem nilM_injective : Function.Injective (fun x : BlockIx a r → R => nilM x) := by
   intro x y h
@@ -139,7 +139,7 @@ theorem nilM_shear (D : Matrix (Fin a) (Fin a) R) (hD : ∀ i j : Fin a, r ≤ (
     (x : BlockIx a r → R) : nilM (shear D x) = nilM x * D := by
   ext i j
   by_cases h : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-  · conv_lhs => rw [nilM, Matrix.of_apply, dif_pos h]
+  · conv_lhs => rw [nilM, Matrix.of_apply, dite_eq_left h]
     rfl
   · have h0 : nilM (shear D x) i j = 0 := by
       unfold nilM
@@ -244,11 +244,11 @@ theorem slice_ratGL_mul : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     ∀ (m₁ : GA E r) (t : GL (Fin a) (Af E)) (κ : Kinf E a) (γ : GL (Fin (a - r)) E) (g : GA E (a - r)),
     GlobalTheory.SliceTwo.slice E μ 𝓕 hr φ m₁ t κ (ratGL E (a - r) γ * g) = GlobalTheory.SliceTwo.slice E μ 𝓕 hr φ m₁ t κ g := by
   intro E _ _ _ a r hr _ _ μ 𝓕 hμ h𝓕 h1 φ _ hφ m₁ t κ γ g
-  haveI := hμ
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
-  haveI : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-  haveI : Countable (ratN E a r) := by
+  have := hμ
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
+  have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
+  have : Countable (ratN E a r) := by
     have : ((ratN E a r : AddSubgroup _) : Set (BlockIx a r → Ad E)) = Set.range
         (AddMonoidHom.compLeft (algebraMap E (Ad E)).toAddMonoidHom (BlockIx a r)) := AddMonoidHom.coe_range _
     change Countable (((ratN E a r : AddSubgroup _) : Set (BlockIx a r → Ad E)))
@@ -604,7 +604,7 @@ theorem slice_mem_Sm : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
     ∀ φ : Sm E a, IsAutForm φ → ∀ (m₁ : GA E r) (t : GL (Fin a) (Af E)) (κ : Kinf E a),
       GlobalTheory.SliceTwo.slice E μ 𝓕 hr φ.1 m₁ t κ ∈ Sm E (a - r) := by
   intro E _ _ _ a r hr _ _ μ 𝓕 _ _ h1 φ hφ m₁ t κ g
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 (by rw [h1]; exact ENNReal.one_ne_top)
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 (by rw [h1]; exact ENNReal.one_ne_top)
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.ConstNotCusp.exists_compact_ratN E a r
   set G := GlobalTheory.LeviGA.blkGL hr (m₁, g) * finGL E a t
   let H : (BlockIx a r → Ad E) → Lie E (a - r) → ℂ := fun u x => chart φ.1 (unip u * G) (blkA hr κ x)
@@ -837,7 +837,7 @@ theorem finiteDim_functions_detected_by_finset (K : Type) (W : Submodule ℂ (K 
     (hW : FiniteDimensional ℂ W) :
     ∃ s : Finset K, ∀ w ∈ W, (∀ k ∈ s, w k = 0) → w = 0 := by
   classical
-  haveI := hW
+  have := hW
   let N : Finset K → Submodule ℂ (K → ℂ) := fun s =>
     W ⊓ ⨅ k ∈ s, LinearMap.ker (LinearMap.proj k : (K → ℂ) →ₗ[ℂ] ℂ)
   have memN : ∀ s w, w ∈ N s ↔ w ∈ W ∧ ∀ k ∈ s, w k = 0 := by
@@ -909,7 +909,7 @@ theorem constTerm_cptTranslate_mem : ∀ (E : Type) [Field E] [NumberField E] [_
       exact ⟨hx.1.const_smul c, fun γ h => congrArg (c * ·) (hx.2.1 γ h), fun h => W.smul_mem c (hx.2.2 h)⟩
   obtain ⟨hc, hl, hK⟩ := hP
   obtain ⟨s, b, hb⟩ := exists_interp W hW
-  haveI := hμ
+  have := hμ
   have hint : ∀ h, IntegrableOn (fun x => φ.1 (unip x * h)) 𝓕 μ := fun h =>
     CuspidalL2GL.integrableOn_unip hc hl μ h𝓕 h
   have hpt : ∀ k (x : BlockIx a r → Ad E), φ.1 (unip x * (g * infGL E a (Unitary.toUnits k))) =

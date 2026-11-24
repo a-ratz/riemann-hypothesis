@@ -161,21 +161,21 @@ theorem perAll_tame : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ σ : ℕ
   have hψn : ∀ x, ‖ψ x‖ = 1 := hψ.1.2.1
   have hGc : Continuous G := hG.2.1
   have hφc : Continuous φ := hφ.2.1
-  haveI : SecondCountableTopology (flagN J.d) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (flagN J.d) := TopologicalSpace.Subtype.secondCountableTopology _
   have hF : J.v0.μ J.v0.𝓕 < ⊤ :=
     GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol J.W₀ J.v0.μ J.v0.𝓕 J.v0.haar J.v0.fund
   have hFA : B.vA.μ B.vA.𝓕 < ⊤ :=
     GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol B.A B.vA.μ B.vA.𝓕 B.vA.haar B.vA.fund
   have hN : J.vN.ν J.vN.𝓝 = 1 := J.vN.unit.2.2
-  haveI : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.mpr hF.ne
-  haveI : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.mpr hFA.ne
-  haveI : IsFiniteMeasure (J.vN.ν.restrict J.vN.𝓝) :=
+  have : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.mpr hF.ne
+  have : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.mpr hFA.ne
+  have : IsFiniteMeasure (J.vN.ν.restrict J.vN.𝓝) :=
     isFiniteMeasure_restrict.mpr (by rw [hN]; exact ENNReal.one_ne_top)
   have hpf : Continuous (psiFlag ψ J.d) := GlobalTheory.Unf.EvalCont.continuous_psiFlag hψc J.d
   have hcen : Continuous (cenT J.d B.L (yZero B.L ρ B.ζ)) := GlobalTheory.Unf.EvalCont.continuous_cenT J.d B.L _
   have hpt : Continuous (ptT J.d B.L (yZero B.L ρ B.ζ)) := GlobalTheory.Unf.EvalCont.continuous_ptT J.d B.L _
   have hn : Continuous fun y : (GA D J.W₀ × flagN J.d) × GA D B.A => (y.1.2 : GA D J.W) :=
-    continuous_subtype_val.comp (continuous_snd.comp continuous_fst)
+    continuous_subtypeVal.comp (continuous_snd.comp continuous_fst)
   have hh1 : Continuous fun y : (GA D J.W₀ × flagN J.d) × GA D B.A => y.1.1 :=
     continuous_fst.comp continuous_fst
   have hx : Continuous fun y : (GA D J.W₀ × flagN J.d) × GA D B.A => (y.1.2 : GA D J.W) * J.d.emb0 y.1.1 :=
@@ -388,7 +388,7 @@ theorem conjBessel_isTh (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdCh
   have hC := GlobalTheory.T.flag_unipotent_bessel_character_laws D ψ hψ.1 B.V B.V₀ B.A B.L ρ B.d B.o B.ζ 1
   set z := vecB B.o B.ζ with hz
   refine ⟨?_, ?_, ?_, ?_⟩
-  · exact continuous_star.comp ((hC.1 z).comp continuous_subtype_val)
+  · exact continuous_star.comp ((hC.1 z).comp continuous_subtypeVal)
   · intro γ hγ hγN n hn
     rw [psiBes_mul B.d ψ 1 z hγN hn, hC.2.1 z γ hγ, one_mul]
   · intro c n hn
@@ -614,7 +614,7 @@ theorem ker_le_quot (hΦ : IsThetaFunO ψ B.V J.W Φ) : ∃ (C : ℝ) (a b : ℕ
   obtain ⟨C, a, b, hC0, hC⟩ := ker_le s hΦ
   obtain ⟨C₃, hC₃⟩ := GlobalTheory.EmbHeight.unitaryAdelicHeight_wittEmbedding_le D J.W J.W₀ ρ J.d
   obtain ⟨KN, hKN, cN⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D J.W ρ J.d.e (isIsoSub_e J.d)).1
-  obtain ⟨M, hM⟩ := exists_height_le_of_isCompact J.W (hKN.image continuous_subtype_val)
+  obtain ⟨M, hM⟩ := exists_height_le_of_isCompact J.W (hKN.image continuous_subtypeVal)
   refine ⟨C * (|M| * (|C₃| * 2)) ^ b, a, b, by positivity, fun h₀ n hn h' h => ?_⟩
   obtain ⟨γ, hγ, e1⟩ := exists_height_le_two_mul_quotHeight J.W₀ h'
   obtain ⟨δ, hδ, m, hm, e⟩ := cN ⟨J.d.emb0 γ * n * (J.d.emb0 γ)⁻¹, GlobalTheory.MixPer.witt_anisotropic_group_normalizes_flag_unipotent D J.W J.W₀ ρ J.d n hn γ⟩
@@ -654,10 +654,10 @@ variable {φ : GA D B.A → ℂ} {G : GA D J.W → ℂ}
 theorem inner_law (hφ : RapidDec B.A φ) (hΦ : IsThetaFunO ψ B.V J.W Φ) : Continuous (inner s φ Φ) ∧
     ∃ (C : ℝ) (b : ℕ), 0 ≤ C ∧ ∀ n ∈ flagN J.d, ∀ h' h,
       ‖inner s φ Φ (n * J.d.emb0 h' * h)‖ ≤ C * (quotHeight J.W₀ h' * height J.W h) ^ b := by
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
-  haveI : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
+  have : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
   have hfin : B.vA.μ B.vA.𝓕 < ⊤ := GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol B.A _ _ B.vA.haar B.vA.fund
-  haveI : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2 hfin.ne
   constructor
   · obtain ⟨C, a, b, hC0, hC⟩ := ker_le s hΦ
     obtain ⟨c, hc⟩ := hφ.decay a
@@ -683,11 +683,11 @@ theorem fjAllFun_eq (hΦ : IsThetaFunO ψ B.V J.W Φ) (h : GA D J.W) (h' : GA D 
 
 theorem perAll_flBF_cont : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B : BesL D ρ) (J : JacL D ρ) (s : StBF ψ B J), ∀ (φ : GA D B.A → ℂ) (G : GA D J.W → ℂ) (Φ : WO B.V J.W → ℂ), RapidDec B.A φ → RapidDec J.W G → IsThetaFunO ψ B.V J.W Φ → (∀ h, AbsConv J.v0.μ J.v0.𝓕 J.vN.ν J.vN.𝓝 (fjAllFun ψ J.d B.o B.ζ s.om₀ B.vA.μ B.vA.𝓕 φ (rTrans h G) (flBF s (s.om (1, h) Φ)))) ∧ Continuous fun h => J.perAll ψ B s.om₀ φ (rTrans h G) (flBF s (s.om (1, h) Φ)) := by
   intro D ψ ρ B J s φ G Φ hφ hG hΦ
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
-  haveI : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
-  haveI : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.2
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
+  have : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
+  have : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.2
     (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol J.W₀ _ _ J.v0.haar J.v0.fund).ne
-  haveI : IsFiniteMeasure (J.vN.ν.restrict J.vN.𝓝) := isFiniteMeasure_restrict.2 (by rw [J.vN.unit.2.2]; exact ENNReal.one_ne_top)
+  have : IsFiniteMeasure (J.vN.ν.restrict J.vN.𝓝) := isFiniteMeasure_restrict.2 (by rw [J.vN.unit.2.2]; exact ENNReal.one_ne_top)
   obtain ⟨hIc, C, b, hC0, hI⟩ := inner_law s hφ hΦ
   obtain ⟨C₁, a₁, h1⟩ := GlobalTheory.T.unitaryQuotientHeight_comparable_wittDecomposition D J.W J.W₀ ρ J.d
   obtain ⟨C₃, h3⟩ := (GlobalTheory.RTransDecay.rapidDec_rTrans D J.W G hG).2 (a₁ * b)
@@ -710,7 +710,7 @@ theorem perAll_flBF_cont : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : �
   have hcont : Continuous fun q : GA D J.W × (GA D J.W₀ × flagN J.d) => F q.1 q.2 := by
     subst hF
     have hg : Continuous fun q : GA D J.W × (GA D J.W₀ × flagN J.d) => (q.2.2 : GA D J.W) * J.d.emb0 q.2.1 * q.1 :=
-      ((continuous_subtype_val.comp (continuous_snd.comp continuous_snd)).mul
+      ((continuous_subtypeVal.comp (continuous_snd.comp continuous_snd)).mul
         (J.d.continuous_embed.comp (continuous_fst.comp continuous_snd))).mul continuous_fst
     exact (hG.continuous.comp hg).mul (hIc.comp hg)
   have hint : ∀ h, AbsConv J.v0.μ J.v0.𝓕 J.vN.ν J.vN.𝓝
@@ -814,8 +814,8 @@ def gen (φ : GA D B.A → ℂ) : Gen ψ B.V B.V₀ J.W ρ (GA D B.A) where
 
 theorem gen_is {φ : GA D B.A → ℂ} (hφ : RapidDec B.A φ) : (gen s φ).Is := by
   obtain ⟨i1, i2, i3⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D B.A
-  haveI : BorelSpace (GA D B.A) := ⟨rfl⟩
-  haveI := B.vA.haar
+  have : BorelSpace (GA D B.A) := ⟨rfl⟩
+  have := B.vA.haar
   have hTh := (GlobalTheory.T.besselLevel_unfolding_character_and_flatMap D ψ ρ B J s).1
   have hg : Continuous fun h₀ : GA D B.A => B.o.emb (h₀, 1) :=
     B.o.continuous_emb.comp (continuous_id.prodMk continuous_const)
@@ -883,10 +883,10 @@ theorem vanBF : ∀ D : D7, VanBF D := by
   obtain ⟨hb, -, hx, hR, hemb, hrat⟩ := GlobalTheory.T.unfolding_base_point_fourierJacobi_group D J.W J.W₀ ρ J.d
   obtain ⟨i1, i2, i3⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D B.A
   obtain ⟨j1, j2, j3⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D J.W
-  haveI : BorelSpace (GA D B.A) := ⟨rfl⟩
-  haveI : BorelSpace (GA D J.W) := ⟨rfl⟩
-  haveI := B.vA.haar
-  haveI := s.vW.haar
+  have : BorelSpace (GA D B.A) := ⟨rfl⟩
+  have : BorelSpace (GA D J.W) := ⟨rfl⟩
+  have := B.vA.haar
+  have := s.vW.haar
   have ha := gen_is s hφ
   obtain ⟨-, -, hfd⟩ := GlobalTheory.T.rational_unitary_subgroup_countable_discrete_fundDomain D J.W (GQ J.W ⊓ jacGrp J.d) inf_le_left
   obtain ⟨𝓑, h𝓑⟩ := hfd s.vW.μ s.vW.haar

@@ -233,7 +233,7 @@ theorem exists_complementary_theta
     rw [him]
     have he : cexp (Real.pi * I * (hermForm Hm l m).im) ^ d * cexp (-(Real.pi * I * (hermForm K l m).im)) ^ N =
         cexp (Real.pi * I * ((d * (hermForm Hm l m).im - N * (hermForm K l m).im : ℝ) : ℂ)) := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add]
       congr 1
       push_cast
       ring
@@ -251,7 +251,7 @@ theorem exists_complementary_theta
         Real.pi / 2 * (d * hermForm Hm l l - N * hermForm K l l)) *
         cexp (Real.pi * hermForm K z l + Real.pi / 2 * hermForm K l l) ^ N =
         cexp (Real.pi * hermForm Hm z l + Real.pi / 2 * hermForm Hm l l) ^ d := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add]
       congr 1
       ring
     show θ (F (z + l)) * G (z + l) = _ * (θ (F z) * G z)

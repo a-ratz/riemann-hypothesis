@@ -180,17 +180,17 @@ private theorem htd_of_tower (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAl
   obtain ⟨G, _, _, Q, ψ, ψ₂, hGab, hQ, hQ1, hQ2, hQs, hQa, hQp, hψ, hsq, hlam⟩ :=
     GlobalTheory.T.exists_lift_principally_polarised_abelian_square_zero p C v ((Ainf.ainfTowerL p O hv ε hε).O : Type) hv' T P₀ io P φ h₁ h₂ h₃ h₄
       (Ainf.R0 p O ε) (algebraMap _ _) hπs hπk
-  haveI : IsLocalRing (Ainf.R0 p O ε) :=
+  have : IsLocalRing (Ainf.R0 p O ε) :=
     Ainf.local_of_surj_sq _ hπs fun k hk => thetaBar_mul p O hv ε hε k k hk hk
   have hsm : SmoothOfRelativeDimension P.g G.hom :=
     GlobalTheory.T.smoothOfRelativeDimension_of_grpPullback_localRing (Ainf.R0 p O ε) _ (algebraMap _ _) G P.A ψ P.g hGab hψ P.smoothDim
   have hM := LB.isLB_pull hQ (lift (𝟙 G) (𝟙 G)).left
   obtain ⟨hθ, hmult⟩ := GlobalTheory.T.cube_trivial_and_finite_flat_surjective_mul_abelianScheme (Ainf.R0 p O ε) G _ Q hGab hM hQa hQ
   have hfin := hmult p (Fact.out : p.Prime).one_le
-  letI : Algebra (Ainf.R0 p O ε) C :=
+  let : Algebra (Ainf.R0 p O ε) C :=
     ((algebraMap ((Ainf.ainfTowerL p O hv ε hε).O : Type) C).comp
       (algebraMap (Ainf.R0 p O ε) ((Ainf.ainfTowerL p O hv ε hε).O : Type))).toAlgebra
-  haveI : IsScalarTower (Ainf.R0 p O ε) ((Ainf.ainfTowerL p O hv ε hε).O : Type) C :=
+  have : IsScalarTower (Ainf.R0 p O ε) ((Ainf.ainfTowerL p O hv ε hε).O : Type) C :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hpC : ((p : ℕ) : C) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero
   have hcard := GlobalTheory.T.card_torsion_of_polarisedAbelianScheme_lift (Ainf.R0 p O ε) ((Ainf.ainfTowerL p O hv ε hε).O : Type) C G P ψ hψ p hpC
@@ -219,11 +219,11 @@ theorem exists_htd_chars : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [Is
   intro p _ C _ _ _ v O _ _ hv _ _ _ T _ _ P₀ io P φ h₁ h₂ h₃ h₄ g hg OE _ _ o F X hX α hα
   subst hg
   obtain ⟨ε, hε⟩ := exists_eps (p := p) (C := C) (v := v) (O := O) hv
-  letI : Algebra ((Ainf.ainfTowerL p O hv ε hε).O : Type) C := ‹Algebra O C›
-  haveI : Fact ¬IsUnit (p : ((Ainf.ainfTowerL p O hv ε hε).O : Type)) := ‹Fact ¬IsUnit (p : O)›
-  haveI : IsAdicComplete (Ideal.span {(p : ((Ainf.ainfTowerL p O hv ε hε).O : Type))})
+  let : Algebra ((Ainf.ainfTowerL p O hv ε hε).O : Type) C := ‹Algebra O C›
+  have : Fact ¬IsUnit (p : ((Ainf.ainfTowerL p O hv ε hε).O : Type)) := ‹Fact ¬IsUnit (p : O)›
+  have : IsAdicComplete (Ideal.span {(p : ((Ainf.ainfTowerL p O hv ε hε).O : Type))})
       ((Ainf.ainfTowerL p O hv ε hε).O : Type) := ‹IsAdicComplete (Ideal.span {(p : O)}) O›
-  letI : Algebra ℤ_[p] ((Ainf.ainfTowerL p O hv ε hε).O : Type) := ‹Algebra ℤ_[p] O›
+  let : Algebra ℤ_[p] ((Ainf.ainfTowerL p O hv ε hε).O : Type) := ‹Algebra ℤ_[p] O›
   refine ⟨(Ainf.ainfTowerL p O hv ε hε).c, GlobalTheory.T.hodgeTate_datum_hypotheses_period_tower p O hv ε hε OE, ?_⟩
   exact htd_of_tower p C v O hv ε hε (Ainf.ainfTowerL p O hv ε hε) rfl hv T P₀ io P φ h₁ h₂ h₃ h₄
     OE o F X hX α hα
@@ -372,8 +372,8 @@ theorem nilChart_baseChange : ∀ (R R' : Type) [CommRing R] [CommRing R'] (β :
   · exact @hX.inj S _ (resAlg β S) a b ha hb ((e S).symm.injective hab)
   · obtain ⟨a, ha, hz'⟩ := @hX.surj S _ (resAlg β S) S' _ (resAlg β S') (resHom β ρ) (resHom β σ)
       (by
-        letI := resAlg β S
-        letI := resAlg β S'
+        let := resAlg β S
+        let := resAlg β S'
         exact AlgHom.ext fun x => DFunLike.congr_fun hρ x) hn (e S z)
       (by rw [← hnat, hz, map_one])
     exact ⟨a, ha, by rw [← hz', MulEquiv.symm_apply_apply]⟩

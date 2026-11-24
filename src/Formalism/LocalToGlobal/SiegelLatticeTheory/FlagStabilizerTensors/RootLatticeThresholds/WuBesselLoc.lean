@@ -131,12 +131,12 @@ theorem theta_pos (C : Choice X θ) (u : D.what₂.Word) (τ : D.what₂.Tau) : 
       Matrix.of.symm (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) γ)) := by
     apply Continuous.measurable
     unfold Formalism.L2.SG.RealObj.trG
-    exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul continuous_const
   have hpos : (Formalism.REAL.muG (X.B.I.ε (vOf X τ))) Set.univ ≠ 0 := by
     unfold Formalism.REAL.muG
     exact (isOpen_univ.measure_pos _ Set.univ_nonempty).ne'
   have h1 := hq (fun _ => 1) measurable_const
-  simp only [lintegral_const, Measure.coe_zero, Pi.zero_apply, zero_mul, lintegral_zero, mul_one] at h1
+  simp only [lintegral_const, FunLike.coe_zero, Pi.zero_apply, zero_mul, lintegral_zero, mul_one] at h1
   unfold muGB at h1
   rw [Measure.map_apply hmeas MeasurableSet.univ, Set.preimage_univ] at h1
   simp only [one_mul, mul_zero, zero_mul] at h1

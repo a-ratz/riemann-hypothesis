@@ -59,15 +59,15 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem exists_pow_succ_lt {a γ : ValueGroupWithZero k} (ha0 : a ≠ 0) (ha : a < 1) (hγ : γ ≠ 0) :
     ∃ m : ℕ, a ^ (m + 1) < γ := by
-  haveI : MulArchimedean (ValueGroupWithZero k) :=
+  have : MulArchimedean (ValueGroupWithZero k) :=
     ValuativeRel.isRankLeOne_iff_mulArchimedean.1 inferInstance
-  have h1 : 1 < a⁻¹ := (one_lt_inv₀ (zero_lt_iff.2 ha0)).2 ha
+  have h1 : 1 < a⁻¹ := (one_lt_inv₀ (pos_iff_ne_zero.2 ha0)).2 ha
   obtain ⟨n, hn⟩ := MulArchimedean.arch γ⁻¹ h1
   refine ⟨n, ?_⟩
   have h2 : a ^ n ≤ γ := by
     rw [inv_pow] at hn
-    exact (inv_le_inv₀ (zero_lt_iff.2 hγ) (zero_lt_iff.2 (pow_ne_zero n ha0))).1 hn
-  exact lt_of_lt_of_le (pow_lt_pow_right_of_lt_one₀ (zero_lt_iff.2 ha0) ha n.lt_succ_self) h2
+    exact (inv_le_inv₀ (pos_iff_ne_zero.2 hγ) (pos_iff_ne_zero.2 (pow_ne_zero n ha0))).1 hn
+  exact lt_of_lt_of_le (pow_lt_pow_right_of_lt_one₀ (pos_iff_ne_zero.2 ha0) ha n.lt_succ_self) h2
 
 theorem inv_mem_of_mem {N : ℕ} {t : ValueGroupWithZero k} (ht : t < 1) (g : GL (Fin N) k)
     (hg : ∀ i j, valuation k ((g : Matrix (Fin N) (Fin N) k) i j -
@@ -95,7 +95,7 @@ theorem inv_mem_of_mem {N : ℕ} {t : ValueGroupWithZero k} (ht : t < 1) (g : GL
     (fun p => valuation k (B p.1 p.2)) ⟨(i, j), Finset.mem_univ _⟩
   set M := valuation k (B i₀ j₀) with hM
   have hMt : t < M := lt_of_lt_of_le hcon (hmax (i, j) (Finset.mem_univ _))
-  have hM0 : 0 < M := lt_of_le_of_lt zero_le' hMt
+  have hM0 : 0 < M := lt_of_le_of_lt zero_le hMt
   have hprod : valuation k ((A * B) i₀ j₀) ≤ t * M := by
     rw [Matrix.mul_apply]
     refine Valuation.map_sum_le _ fun l _ => ?_
@@ -130,7 +130,7 @@ theorem exists_congruence_subset : ∀ (k : Type) [Field k] [ValuativeRel k] [To
   let K : ℕ → Set (GL (Fin N) k) := fun m => {g | ∀ i j,
     valuation k ((g : Matrix (Fin N) (Fin N) k) i j - (1 : Matrix (Fin N) (Fin N) k) i j) ≤ a ^ (m + 1)}
   have hanti : Antitone K := fun m n hmn g hg i j =>
-    (hg i j).trans (pow_le_pow_of_le_one zero_le' hϖ1.le (by omega))
+    (hg i j).trans (pow_le_pow_of_le_one zero_le hϖ1.le (by omega))
   have hbasis : (⨅ m, 𝓟 (K m)).HasBasis (fun _ => True) K :=
     hasBasis_iInf_principal hanti.directed_ge
   have hent : ∀ (i j : Fin N) (c : GL (Fin N) k → k), (∀ m, ∀ g ∈ K m, valuation k (c g - (1 : Matrix (Fin N) (Fin N) k) i j) ≤ a ^ (m + 1)) →
@@ -148,7 +148,7 @@ theorem exists_congruence_subset : ∀ (k : Type) [Field k] [ValuativeRel k] [To
     · refine (MulOpposite.continuous_op.tendsto _).comp ?_
       refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun j => ?_
       exact hent i j (fun g => ((g⁻¹ : GL (Fin N) k) : Matrix (Fin N) (Fin N) k) i j) fun m g hg =>
-        inv_mem_of_mem (pow_lt_one₀ zero_le' hϖ1 (by omega)) g hg i j
+        inv_mem_of_mem (pow_lt_one₀ zero_le hϖ1 (by omega)) g hg i j
   obtain ⟨m, -, hm⟩ := hbasis.mem_iff.1 (hlim hU)
   refine ⟨m + 1, by omega, fun g hg => hm fun i j => ?_⟩
   simpa [ha, map_pow] using hg i j

@@ -134,7 +134,7 @@ variable {K : Type} [Field K] [NumberField K]
 
 theorem lt_one_le_exp {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
   by_cases hx : x = 0
-  · rw [hx]; exact zero_le'
+  · rw [hx]; exact zero_le
   · rw [← WithZero.exp_log hx] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]; omega
@@ -151,7 +151,7 @@ theorem isUnif_of (P : HeightOneSpectrum (𝓞 K)) (ι : K →+* k) (hint : ∀ 
   have K1 : ∀ a : K, valuation k (ι a) < 1 → valuation k (ι a) ≤ valuation k (ι N) := by
     intro a ha
     by_cases a0 : a = 0
-    · rw [a0, map_zero, map_zero]; exact zero_le'
+    · rw [a0, map_zero, map_zero]; exact zero_le
     have ha0 : valuation k (ι a) ≠ 0 := by
       rw [Ne, Valuation.zero_iff]; exact (map_ne_zero ι).2 a0
     have h1 : ¬ P.valuation K a⁻¹ ≤ 1 := by
@@ -182,7 +182,7 @@ theorem isUnif_of (P : HeightOneSpectrum (𝓞 K)) (ι : K →+* k) (hint : ∀ 
   refine ⟨Units.mk0 (ι N) ((map_ne_zero ι).2 hN0), fun x => ⟨fun hx => ?_, fun hx => lt_of_le_of_lt hx K2⟩, rfl⟩
   rw [Units.val_mk0]
   by_cases x0 : x = 0
-  · rw [x0, map_zero]; exact zero_le'
+  · rw [x0, map_zero]; exact zero_le
   have hx0 : valuation k x ≠ 0 := by rw [Ne, Valuation.zero_iff]; exact x0
   have hs : {y : k | valuation k (y - x) < valuation k x} ∈ 𝓝 x :=
     IsValuativeTopology.mem_nhds_iff'.mpr ⟨Units.mk0 _ hx0, fun y hy => by simpa using hy⟩

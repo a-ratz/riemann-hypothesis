@@ -68,7 +68,7 @@ theorem goal1 :
   intro F _ _ v
   have := v.isPrime
   have hne : v.asIdeal.comap (algebraMap ℤ (NumberField.RingOfIntegers F)) ≠ ⊥ :=
-    fun h => v.ne_bot (Ideal.eq_bot_of_comap_eq_bot h)
+    fun h => v.ne_bot (Ideal.eq_bot_of_under_eq_bot h)
   have hpr : (v.asIdeal.comap (algebraMap ℤ (NumberField.RingOfIntegers F))).IsPrime :=
     Ideal.comap_isPrime _ _
   obtain ⟨x, hx, hxp⟩ := hpr.exists_mem_prime_of_ne_bot hne
@@ -124,7 +124,7 @@ theorem finCd2_GK (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (Padic
 theorem localFiniteness : ReciprocityTheory.Gal.LocalFiniteness := by
   intro F Ω _ _ _ _ _ l _ r M _ _ _ _ _ A rho v _ hA hc
   obtain ⟨p, hp, hpv⟩ := exists_prime_mem_asIdeal v
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨K, hK, e, he, he', -⟩ := GlobalTheory.DecLocal.exists_mulEquiv_cyc F Ω p v A hpv hA
   let E : GK p K ≃ₜ* Dec (F := F) A :=
     { e.symm with continuous_toFun := he', continuous_invFun := he }

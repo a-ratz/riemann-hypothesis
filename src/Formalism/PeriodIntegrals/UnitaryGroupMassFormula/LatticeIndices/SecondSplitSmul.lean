@@ -81,7 +81,7 @@ theorem ker_fwd (c : K) (g : GL n T)
     rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
   have hyL : y ∈ Lat O θ J P := by
     unfold Lat
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine ⟨?_, ?_⟩
     · rw [ht1, hcol, Matrix.mulVec_mulVec, hPinv, Matrix.one_mulVec]
       unfold IntV
@@ -95,7 +95,7 @@ theorem ker_fwd (c : K) (g : GL n T)
       simp
   obtain ⟨z, hz, e⟩ := hg y hyL
   unfold Lat at hz
-  simp only [Set.mem_setOf_eq] at hz
+  simp only [Set.mem_ofPred_eq] at hz
   have e1 : ((g : Matrix n n T).map (t1 θ) - 1) *ᵥ (fun k => (P : Matrix n n K) k j) =
       c • (fun k => t1 θ (z k)) := by
     funext k

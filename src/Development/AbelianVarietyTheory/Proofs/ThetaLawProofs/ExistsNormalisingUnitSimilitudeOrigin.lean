@@ -154,13 +154,13 @@ theorem pow_eq_one_of_similitude {A I : Type} [CommGroup A] [Fintype I] [Decidab
         mul_ite, _root_.mul_one, mul_zero] at this
       rw [← this]
       exact (map_prod (zpowersHom A (ξ r')) (fun c => Multiplicative.ofAdd (al r' c * al r c)) Finset.univ).symm
-    simp only [this, pow_ite, zpow_zero, Finset.prod_ite_eq', Finset.mem_univ, if_true, zpow_natCast]
+    simp only [this, pow_ite, zpow_zero, Finset.prod_ite_eq', Finset.mem_univ, ite_true, zpow_natCast]
   rw [← e]
   simp only [hk, one_zpow, Finset.prod_const_one]
 
 theorem exists_normalising_unit : ∀ (R : Type) [CommRing R] (x : KeyIn R) (m : ℕ) (al : Matrix (Fin 4) (Fin 4) ℤ) (ξ : Fin 4 → Pt x) (mu : LB.Gen (LB.LinComb x.P.L (K := Fin 2) ![((𝟙 x.P.A) ^ m).left, 𝟙 x.P.A.left] ![1, -(m : ℤ) ^ 2])) (w : LB.Gen (LB.LinComb x.P.L (K := Fin 4 ⊕ Fin 4) (Sum.elim (fun r => (alMap x al r (ξ r)).left) (fun c => (Out.powPr x.P.A c).left)) (Sum.elim (fun _ => 1) (fun _ => -(m : ℤ))))), m ≠ 0 → al.transpose * al = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ) → (∀ c, (List.ofFn fun r : Fin 4 => ξ r ^ al r c).prod = 1) → mu.IsGen → w.IsGen → ∃ rho : Rˣ, ∀ (p : (𝟙_ (Over (Sp R))).left) J, Good x.P.L p J → (val w (eSec (Out.powObj x.P.A 4)) p J ^ (m ^ 2) * ∏ r, val mu (ξ r).left p J).val = gs (𝟙_ (Over (Sp R))).hom p ⊤ (cst (𝟙 (Sp R)) ⊤ rho) * (val x.rig (𝟙 _) p J ^ (4 - 4 * (m : ℤ) ^ 3)).val := by
   intro R _ x m al ξ mu w hm hal hk hmu hw
-  haveI := x.P.isAb.comm
+  have := x.P.isAb.comm
   have hξ : ∀ r, ξ r ^ m = 1 := pow_eq_one_of_similitude m hm al hal ξ fun c => by
     simpa only [List.prod_ofFn] using hk c
   have e₁ : ∀ c, eSec (Out.powObj x.P.A 4) ≫ (Out.powPr x.P.A c).left = eSec x.P.A := fun c =>

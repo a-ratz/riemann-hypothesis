@@ -103,8 +103,8 @@ theorem exists_of_red_eq_zero (D : PowerSeries R) (hD : red p D = 0) :
 
 theorem red_pow_eq (σ : R ≃+* R) (hfl : FrobLift R p σ) (h : PowerSeries R) :
     red p h ^ p = red p (phi (R := R) p hp.out.pos (smap σ h)) := by
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (hfl.prime.not_unit)
-  haveI : CharP (PowerSeries (R ⧸ Ideal.span {(p : R)})) p :=
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (hfl.prime.not_isUnit)
+  have : CharP (PowerSeries (R ⧸ Ideal.span {(p : R)})) p :=
     charP_of_injective_algebraMap (R := R ⧸ Ideal.span {(p : R)}) (PowerSeries.C_injective) p
   have hX1 : ((frobenius (PowerSeries (R ⧸ Ideal.span {(p : R)})) p).comp (red p)) X = X ^ p := by
     simp [frobenius_def]
@@ -141,14 +141,14 @@ theorem normOp_eq_smap_add (σ : R ≃+* R) (hfl : FrobLift R p σ)
     (b : @Module.Basis (Fin p) (PowerSeries R) (PowerSeries R) _ _
       ((phi (R := R) p hp.out.pos).toRingHom.toAlgebra.toModule)) (h : PowerSeries R) :
     ∃ r : PowerSeries R, normOp p h = smap σ h + (p : PowerSeries R) * r := by
-  haveI := hfl.dom
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (hfl.prime.not_unit)
-  haveI : CharP (PowerSeries (R ⧸ Ideal.span {(p : R)})) p :=
+  have := hfl.dom
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (hfl.prime.not_isUnit)
+  have : CharP (PowerSeries (R ⧸ Ideal.span {(p : R)})) p :=
     charP_of_injective_algebraMap (R := R ⧸ Ideal.span {(p : R)}) (PowerSeries.C_injective) p
-  haveI : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hfl.prime.ne_zero).2 hfl.prime
-  letI := (phi (R := R) p hp.out.pos).toRingHom.toAlgebra
-  letI : Module (PowerSeries R) (PowerSeries R) := Algebra.toModule
-  haveI : Module.Free (PowerSeries R) (PowerSeries R) := Module.Free.of_basis b
+  have : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hfl.prime.ne_zero).2 hfl.prime
+  let := (phi (R := R) p hp.out.pos).toRingHom.toAlgebra
+  let : Module (PowerSeries R) (PowerSeries R) := Algebra.toModule
+  have : Module.Free (PowerSeries R) (PowerSeries R) := Module.Free.of_basis b
   have hrank : Module.finrank (PowerSeries R) (PowerSeries R) = p := by
     rw [Module.finrank_eq_card_basis b, Fintype.card_fin]
   have hred0 : red p (p : PowerSeries R) = 0 := by

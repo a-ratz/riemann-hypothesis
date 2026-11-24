@@ -133,7 +133,7 @@ private theorem smithMatrix_lemma {O : Type} [CommRing O] [IsDomain O] [IsPrinci
   · have hEa : E (Sum.inl a) = snf.f a := rfl
     rw [hEa] at hij
     rw [hB1, hx, snf.snf a, map_smul, Module.Basis.repr_self, Finsupp.smul_apply,
-      Finsupp.single_apply, if_neg hij.symm, smul_zero]
+      Finsupp.single_apply, ite_eq_right hij.symm, smul_zero]
   · rw [hK _ (hB2 l), map_zero, Finsupp.zero_apply]
 
 theorem smithMatrix {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] (n : ℕ)
@@ -212,7 +212,7 @@ theorem smith_block {σ : Type} (Λ : Submodule O (MvPolynomial σ (KK O))) (hfg
       (∀ i l, i ≠ l → fock (al i) (be l) = 0) ∧ LinearIndependent O al ∧
       Submodule.span O (Set.range al) = Λ ∧ Submodule.span O (Set.range be) = Λ := by
   classical
-  haveI : Module.Free O Λ := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O Λ := Module.free_of_finite_type_torsion_free'
   let e := Module.finBasis O Λ
   obtain ⟨P, Q, hP, hQ, hd⟩ := Formalism.InvariantFactorPaths.KP.smithPairing O (KK O) (Module.finrank O Λ)
     (Matrix.of fun a c => fock (e a : MvPolynomial σ (KK O)) (e c : MvPolynomial σ (KK O)))
@@ -297,11 +297,11 @@ theorem smithData_seg {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationR
     fun b => if Kept p r S aTop b then blockLat O p r S aTop aPlus m b else ⊥
   have hMfg : ∀ b, Module.Finite O (M b) := fun b => by
     by_cases hb : Kept p r S aTop b
-    · have e : M b = blockLat O p r S aTop aPlus m b := if_pos hb
+    · have e : M b = blockLat O p r S aTop aPlus m b := ite_eq_left hb
       rw [e]; exact hFG b
-    · have e : M b = ⊥ := if_neg hb
+    · have e : M b = ⊥ := ite_eq_right hb
       rw [e]; infer_instance
-  have hM0 : ∀ b, b ∉ T → M b = ⊥ := fun b hb => if_neg fun h => hb ((hmemT b).2 h)
+  have hM0 : ∀ b, b ∉ T → M b = ⊥ := fun b hb => ite_eq_right fun h => hb ((hmemT b).2 h)
   choose n al be hmem horth hli hsa hsb using fun b => smith_block (M b) (hMfg b)
   let ι := Σ b : {b // b ∈ T}, Fin (n b.1)
   let ev : ι ≃ Fin (Fintype.card ι) := Fintype.equivFin ι
@@ -406,7 +406,7 @@ theorem fg_inter {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
     (V : Submodule (KK O) (MvPolynomial σ (KK O))) (hV : FiniteDimensional (KK O) V) :
     Module.Finite O (V.restrictScalars O ⊓ bbSpec O p σ sp : Submodule O (MvPolynomial σ (KK O))) := by
   classical
-  haveI := hV
+  have := hV
   let bV := Module.finBasis (KK O) V
   let Sμ : Finset (σ →₀ ℕ) := Finset.univ.biUnion fun k => ((bV k : V) : MvPolynomial σ (KK O)).support
   have hsupp : ∀ F ∈ V, ∀ μ, μ ∉ Sμ → F.coeff μ = 0 := by
@@ -454,8 +454,8 @@ theorem fg_inter {p : ℕ} (S : UniformizedDVR p O) (h2 : S.w ^ 2 = (p : O)) {σ
     by_cases hμ : μ ∈ Sμ
     · exact congrFun h0 ⟨μ, hμ⟩
     · simpa using hsupp F hF.1 μ hμ
-  haveI : Module.Finite O N := Module.Finite.span_of_finite O (Set.finite_range gen)
-  haveI : IsNoetherian O N := isNoetherian_of_isNoetherianRing_of_finite O N
+  have : Module.Finite O N := Module.Finite.span_of_finite O (Set.finite_range gen)
+  have : IsNoetherian O N := isNoetherian_of_isNoetherianRing_of_finite O N
   let f : Λ →ₗ[O] N := (Φ.comp Λ.subtype).codRestrict N fun F => hΦN F.1 F.2
   refine Module.Finite.of_injective f ?_
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']

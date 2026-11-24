@@ -69,7 +69,7 @@ theorem pure_ne_zero {κ : Type} [Fintype κ] (g : SInf F κ) (hg : g ≠ 0) (φ
   choose y hy using hy
   let xf : κ → Af F := fun i => ⟨fun v => if v ∈ T then y v i else 0, by
     filter_upwards [T.eventually_cofinite_notMem] with v hv
-    simp only [if_neg hv]
+    simp only [ite_eq_right hv]
     exact zero_mem _⟩
   let x : κ → AF F := fun i => ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (a i), xf i)
   intro hz
@@ -83,7 +83,7 @@ theorem pure_ne_zero {κ : Type} [Fintype κ] (g : SInf F κ) (hg : g ≠ 0) (φ
   · rcases mul_eq_zero.1 hx with h | h
     · exact ha h
     · obtain ⟨v, hv, h⟩ := Finset.prod_eq_zero_iff.1 h
-      simp only [hv, if_true] at h
+      simp only [hv, ite_true] at h
       exact hy v h
   · intro v hv
     by_contra hvT
@@ -92,7 +92,7 @@ theorem pure_ne_zero {κ : Type} [Fintype κ] (g : SInf F κ) (hg : g ≠ 0) (φ
       by_contra hc
       exact hvT (hfin.mem_toFinset.2 hc)
     have hvT' : v ∉ T := hvT
-    simp only [hvT', if_false, hφ]
+    simp only [hvT', ite_false, hφ]
     rw [Set.indicator_of_mem (s := {x : κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F}) (a := fun _ => 0)
       (fun i => zero_mem _)]
     rfl

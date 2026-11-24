@@ -501,7 +501,7 @@ theorem eigen_decomp_graphFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.U
         algebraMap k (DualNumber k) (β (b.t i c)) • w i ∈ GlobalTheory.HTRealise.graphFil o₀.A f) ∧
       d - ∑ i, w i ∈ GlobalTheory.HTRealise.graphFil o₀.A f := by
   intro p _ D R _ b N k _ β s o₀ f hZ hfZ d hd
-  haveI := o₀.act.hom
+  have := o₀.act.hom
   obtain ⟨u, v, huv⟩ := exists_coords d
   set Ω := GlobalTheory.HTCount.crysAct o₀ (algebraMap (𝓞 D.F) D.O D.ω) with hΩ
   set ρ := β b.ρ with hρ

@@ -61,7 +61,7 @@ variable {T : CDVR} {io : c.F →+* T.Fr} {y : IntFr Xo c T io}
 
 theorem const_zero (C : IntegralChartA3 Xo c T io y) :
     (∀ j, MvPowerSeries.constantCoeff (C.FT j) = 0) ∧ ∀ a j, MvPowerSeries.constantCoeff (C.actT a j) = 0 := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨⟨h1, h2, -⟩, -⟩ := C.gen
   refine ⟨fun j => ?_, fun a j => ?_⟩
   · have := C.ch.B.G.const j
@@ -72,7 +72,7 @@ theorem const_zero (C : IntegralChartA3 Xo c T io y) :
     exact (map_eq_zero_iff _ (IsFractionRing.injective T.V T.Fr)).1 this
 
 theorem dim_eq (C : IntegralChartA3 Xo c T io y) : chD C.ch = Fintype.card (Lt1 Dw) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let f : (Lt1 Dw → T.Fr) →ₗ[T.Fr] (Fin C.ch.d → T.Fr) :=
     { toFun := fun a j => ∑ ℓ, a ℓ * C.ch.uvec ℓ j
       map_add' := fun a b => by funext j; simp [add_mul, Finset.sum_add_distrib]

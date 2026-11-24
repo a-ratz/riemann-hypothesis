@@ -75,8 +75,8 @@ theorem exists_trunc_mul_inK : ∀ {D : D7} (V : HSp D) (L : GlobalTheory.FinPl.
   ∀ (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) (b : GA D V), ∃ (b' : GA D V) (P : Finset (HeightOneSpectrum (𝓞 D.host.F))),
     (∀ v ∉ P, GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v b' = 1) ∧ GlobalTheory.FinPl.InK V L (fun v => v ∉ S) (b'⁻¹ * b) := by
   intro D V L hfg hspan S b
-  haveI : Submodule.IsLattice D.host.E L := Submodule.IsLattice.of_fg _ hfg
-  haveI : Submodule.IsFullLattice D.host.E L := ⟨hspan⟩
+  have : Submodule.IsLattice D.host.E L := Submodule.IsLattice.of_fg _ hfg
+  have : Submodule.IsFullLattice D.host.E L := ⟨hspan⟩
   have hfin := Filter.eventually_cofinite.1 (eventually_proj_mem_stabLoc D.sp.cm.sig V.gram L b)
   classical
   let P : Finset (HeightOneSpectrum (𝓞 D.host.F)) := S ∪ hfin.toFinset

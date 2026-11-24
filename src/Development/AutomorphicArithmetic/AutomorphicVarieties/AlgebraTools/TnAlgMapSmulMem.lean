@@ -82,7 +82,7 @@ private theorem UpperTheory.V.AlgebraTools.tnAlg_mem_radical {R A : Type} [CommR
     [CommRing A] [Algebra R A] [Module.Finite R A] {a : A}
     (ha : ∀ n : Ideal A, n.IsMaximal → a ∈ n) :
     a ∈ ((IsLocalRing.maximalIdeal R).map (algebraMap R A)).radical := by
-  haveI : Algebra.IsIntegral R A := Algebra.IsIntegral.of_finite R A
+  have : Algebra.IsIntegral R A := Algebra.IsIntegral.of_finite R A
   rw [Ideal.radical_eq_sInf, Submodule.mem_sInf]
   rintro P ⟨hle, hP⟩
   apply ha
@@ -104,7 +104,7 @@ theorem UpperTheory.V.AlgebraTools.topNil_eq_idem :
         ∀ (M : Type) [AddCommGroup M] [Module R M] [Module A M] [IsScalarTower R A M] [Module.Finite R M] (x : M),
           x ∈ topNil (IsLocalRing.maximalIdeal R) (fun i => (Algebra.lsmul R R M (t i) : Module.End R M)) ↔ e • x = x := by
   intro R _ _ _ _ A κ _ _ _ t
-  haveI : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_henselianRing R
+  have : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_henselianRing R
   obtain ⟨e, he, hT⟩ := GlobalTheory.exists_idempotent_notMem_iff_mem_of_henselian R (S := A)
     {n : MaximalSpectrum A | ∀ i, t i ∈ n.asIdeal}
   have hmax : ∀ n : Ideal A, n.IsMaximal → (e ∉ n ↔ ∀ i, t i ∈ n) := fun n hn => hT ⟨n, hn⟩

@@ -73,7 +73,7 @@ theorem semiHom_ev₂_pull2 : ∀ (p : ℕ) (k k' : Type) [CommRing k] [CommRing
       rw [hφ n j, (s.app n).counit_map, c.aug, map_zero]
   have hs : HasSubst a := hasSubst_of_constantCoeff_zero ha
   let B := G'.A n ⊗[k'] G'.A n
-  letI : Algebra k B := ((algebraMap k' B).comp σ).toAlgebra
+  let : Algebra k B := ((algebraMap k' B).comp σ).toAlgebra
   let u : G.A n →ₐ[k] B :=
     { ((Algebra.TensorProduct.includeLeft : G'.A n →ₐ[k'] B) : G'.A n →+* B).comp
         (s.app n).toRingHom with

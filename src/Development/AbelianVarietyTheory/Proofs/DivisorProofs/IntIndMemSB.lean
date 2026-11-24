@@ -74,10 +74,10 @@ theorem intInd_mem_SB (n d : ℕ) : intInd k n d ∈ GlobalTheory.WeilM.SB (Matr
   intro x
   by_cases hx : x ∈ {Y : Matrix (Fin n) (Fin d) k | ∀ i j, Y i j ∈ 𝒪[k]}
   · filter_upwards [hW.isOpen.mem_nhds hx] with y hy
-    simp only [Set.mem_setOf_eq] at hx
+    simp only [Set.mem_ofPred_eq] at hx
     simp [intInd, Set.indicator_apply, hy, hx]
   · filter_upwards [hW.isClosed.isOpen_compl.mem_nhds hx] with y hy
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hx hy
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hx hy
     simp [intInd, Set.indicator_apply, hy, hx]
 
 theorem intInd_zero (n d : ℕ) : intInd k n d 0 = 1 :=
@@ -85,7 +85,7 @@ theorem intInd_zero (n d : ℕ) : intInd k n d 0 = 1 :=
     fun _ _ => zero_mem _) _
 
 theorem det_diagAt {n : ℕ} (x : kˣ) (i0 : Fin n) : Matrix.GeneralLinearGroup.det (diagAt x i0) = x := by
-  rw [diagAt, SplitFlip.det_diagGL, Fintype.prod_eq_single i0 (fun i hi => if_neg hi), if_pos rfl]
+  rw [diagAt, SplitFlip.det_diagGL, Fintype.prod_eq_single i0 (fun i hi => ite_eq_right hi), ite_eq_left rfl]
 
 theorem diagAt_val {n : ℕ} (x : kˣ) (i0 : Fin n) :
     (diagAt x i0).val = Matrix.diagonal fun i => if i = i0 then (x : k) else 1 := by

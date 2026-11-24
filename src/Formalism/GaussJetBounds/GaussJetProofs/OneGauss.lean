@@ -269,7 +269,7 @@ open OneGauss in
 theorem one_letter_gauss_sum : OneLetterGauss := by
   intro l _ N0 N1 C hl3 K0 hK0 ζ hζ be hbe ep hep g hg hgl U hU sgn hsgn p hp I a ha hpa n
   have hprime : Nat.Prime l := Fact.out
-  haveI : Fact (1 < l) := ⟨hprime.one_lt⟩
+  have : Fact (1 < l) := ⟨hprime.one_lt⟩
   have hl1 : ‖(l : ℂ_[l])‖ < 1 := by
     have h := norm_intCast_padicComplex l (l : ℤ)
     push_cast at h
@@ -315,7 +315,7 @@ theorem one_letter_gauss_sum : OneLetterGauss := by
     have hm := minorProd_mem_opInt (K := K) (σ := Fin N0 × Fin N1)
       (fun (i : Fin N0) (b : Fin N1) => (MvPolynomial.X (i, b) : MvPolynomial (Fin N0 × Fin N1) K))
       (fun i b κ => by
-        rw [MvPolynomial.coeff_X']
+        rw [MvPolynomial.coeff_X]
         split_ifs <;> simp) p hp I
     exact hm
   have hlpos : 0 < ‖(l : ℂ_[l])‖ := by

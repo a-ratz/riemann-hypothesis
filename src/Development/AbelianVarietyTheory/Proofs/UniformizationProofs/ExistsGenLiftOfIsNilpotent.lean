@@ -73,8 +73,8 @@ theorem pullSec_surjective_of_le (f : Y ⟶ X) [IsClosedImmersion f] {L : LB X} 
 theorem pullSec_surjective (f : Y ⟶ X) [IsClosedImmersion f] [IsAffine X] {L : LB X}
     (hL : L.IsLB) : Function.Surjective (pullSec L f ⊤) := by
   intro s
-  haveI := isQuasicoherent_toMod hL
-  haveI := isQuasicoherent_toMod (Semi.LB.isLB_pull hL f)
+  have := isQuasicoherent_toMod hL
+  have := isQuasicoherent_toMod (Semi.LB.isLB_pull hL f)
   let I : Ideal Γ(X, ⊤) :=
     { carrier := {c | ∃ σ, pullSec L f ⊤ σ = (f.app ⊤).hom c • s}
       add_mem' := by

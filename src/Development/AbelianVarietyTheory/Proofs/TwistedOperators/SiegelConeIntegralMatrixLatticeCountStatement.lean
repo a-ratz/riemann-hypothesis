@@ -358,7 +358,7 @@ theorem lattice_count : ∀ {D : D7} (θ : InfFam D), IsInfFam θ → ∀ (m r :
     _ = ∏ _p : P, ∑' z : ℤ, ENNReal.ofReal (((1 + b * |(z : ℝ)|) ^ 2)⁻¹) :=
         GlobalTheory.HL.tsum_pi_prod_ennreal (X := fun _ : P => ℤ)
           (fun (_ : P) (z : ℤ) => ENNReal.ofReal (((1 + b * |(z : ℝ)|) ^ 2)⁻¹))
-    _ ≤ ∏ _p : P, ENNReal.ofReal (1 + 2 / b) := Finset.prod_le_prod' fun _ _ => tsum_int_le hb
+    _ ≤ ∏ _p : P, ENNReal.ofReal (1 + 2 / b) := Finset.prod_le_prod fun _ _ => tsum_int_le hb
     _ = ENNReal.ofReal ((1 + 2 / b) ^ Fintype.card P) := by
         rw [Finset.prod_const, Finset.card_univ, ENNReal.ofReal_pow (by positivity)]
     _ ≤ ENNReal.ofReal ((1 + 2 * C / c0) ^ Fintype.card P * (L : ℝ) ^ Fintype.card P) := by

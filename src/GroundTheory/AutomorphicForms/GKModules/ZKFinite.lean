@@ -218,12 +218,12 @@ theorem finiteDimensional_zkSpan (f : h.smoothFuns (F := F))
     (hK : IsRightKFinite K (f : G → F)) (hZ : h.IsZFinite f) :
     FiniteDimensional ℂ (h.zkSpan K f) := by
   set W : Submodule ℂ (h.smoothFuns (F := F)) := Submodule.span ℂ (range fun k : K => h.rightTranslateEnd (k : G) f)
-  haveI : FiniteDimensional ℂ W := by
+  have : FiniteDimensional ℂ W := by
     have hW : W.map (h.smoothFuns (F := F)).subtype = Submodule.span ℂ (range fun k : K => rightTranslate (k : G) (f : G → F)) := by
       rw [Submodule.map_span, ← range_comp]; rfl
-    haveI : FiniteDimensional ℂ (W.map (h.smoothFuns (F := F)).subtype) := by rw [hW]; exact hK
+    have : FiniteDimensional ℂ (W.map (h.smoothFuns (F := F)).subtype) := by rw [hW]; exact hK
     exact (Submodule.equivMapOfInjective _ (h.smoothFuns (F := F)).injective_subtype W).symm.finiteDimensional
-  haveI : FiniteDimensional ℂ (h.zSpan f) := hZ
+  have : FiniteDimensional ℂ (h.zSpan f) := hZ
 
   have hfin : ∀ w ∈ W, FiniteDimensional ℂ (h.zSpan w) := by
     intro w hw
@@ -251,9 +251,9 @@ theorem finiteDimensional_zkSpan (f : h.smoothFuns (F := F))
       dsimp only
       rw [SetLike.mem_coe, map_smul]
       exact Submodule.smul_mem _ c (Submodule.subset_span ⟨z, hz, rfl⟩)
-  haveI : Module.Free ℂ W := Module.Free.of_divisionRing ℂ W
+  have : Module.Free ℂ W := Module.Free.of_divisionRing ℂ W
   let b := Module.finBasis ℂ W
-  haveI : ∀ i, FiniteDimensional ℂ (h.zSpan (b i : h.smoothFuns (F := F))) := fun i => hfin _ (b i).2
+  have : ∀ i, FiniteDimensional ℂ (h.zSpan (b i : h.smoothFuns (F := F))) := fun i => hfin _ (b i).2
   refine Submodule.finiteDimensional_of_le (S₂ := ⨆ i, h.zSpan (b i : h.smoothFuns (F := F))) ?_
   rw [zkSpan, Submodule.span_le]
   rintro _ ⟨⟨z, k⟩, rfl⟩
@@ -303,8 +303,8 @@ theorem rightDeriv_mem_of_isKStable {V : Submodule ℂ (h.smoothFuns (F := F))}
     {X : 𝔤} (hX : ∀ t : ℝ, h.expG (t • X) ∈ K) {w : h.smoothFuns (F := F)} (hw : w ∈ V) :
     h.rightDerivEnd X w ∈ V := by
   set V' : Submodule ℂ (G → F) := V.map (h.smoothFuns (F := F)).subtype
-  haveI : FiniteDimensional ℂ V' := inferInstance
-  have hcl : IsClosed (V' : Set (G → F)) := Submodule.closed_of_finiteDimensional V'
+  have : FiniteDimensional ℂ V' := inferInstance
+  have hcl : IsClosed (V' : Set (G → F)) := Submodule.isClosed_of_finiteDimensional V'
   have hlim : Tendsto (fun t : ℝ => t⁻¹ • (rightTranslate (h.expG (t • X)) (w : G → F) - w))
       (𝓝[≠] 0) (𝓝 (h.rightDeriv X w)) := by
     rw [tendsto_pi_nhds]

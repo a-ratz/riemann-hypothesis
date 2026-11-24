@@ -128,7 +128,7 @@ theorem inner_rep (π : G → (H →L[ℂ] H)) (h1 : π 1 = 1) (hm : ∀ a b, π
     (hn : ∀ g v, ‖π g v‖ = ‖v‖) (g : G) (x y : H) : ⟪x, π g y⟫_ℂ = ⟪π g⁻¹ x, y⟫_ℂ := by
   have hback : π g (π g⁻¹ x) = x := by
     have := congrArg (fun S : H →L[ℂ] H => S x) (hm g g⁻¹)
-    simp only [mul_inv_cancel, h1, ContinuousLinearMap.one_apply, ContinuousLinearMap.mul_apply] at this
+    simp only [mul_inv_cancel, h1, one_apply_eq_self, mul_apply_eq_comp] at this
     exact this.symm
   let U : H →ₗᵢ[ℂ] H := ⟨(π g).toLinearMap, hn g⟩
   calc ⟪x, π g y⟫_ℂ = ⟪U (π g⁻¹ x), U y⟫_ℂ := by
@@ -151,7 +151,7 @@ theorem op_idem (K : Subgroup G) (hc : IsCompact (K : Set G))
     simp only [inv_mul_cancel_left] at shift
     rw [inner_rep π h1 hm hn g, hT, ← shift]
     congr 1; funext h
-    rw [hm, ContinuousLinearMap.mul_apply, inner_rep π h1 hm hn g]
+    rw [hm, mul_apply_eq_comp, inner_rep π h1 hm hn g]
   have hint : Integrable (Function.uncurry fun g h => e g * (e (g⁻¹ * h) * ⟪x, π h y⟫_ℂ))
       (μ.prod μ) := by
     apply Continuous.integrable_of_hasCompactSupport
@@ -207,7 +207,7 @@ theorem op_fixed (π : G → (H →L[ℂ] H)) (h1 : π 1 = 1) (hm : ∀ a b, π 
   rw [ContinuousLinearMap.comp_apply, inner_rep π h1 hm hn k, hT, hT]
   have key : ∀ g, e g * ⟪π k⁻¹ x, π g y⟫_ℂ = e (k * g) * ⟪x, π (k * g) y⟫_ℂ := by
     intro g
-    rw [hk g, hm, ContinuousLinearMap.mul_apply, inner_rep π h1 hm hn k]
+    rw [hk g, hm, mul_apply_eq_comp, inner_rep π h1 hm hn k]
   simp_rw [key]
   exact integral_mul_left_eq_self (fun h => e h * ⟪x, π h y⟫_ℂ) k
 
@@ -278,8 +278,8 @@ theorem re_orth_proj : ∀ B : RowsAut, IsOrthProjOnto B.Re (LinearMap.range (B.
     congr 1; funext k
     have hcomm : ((1 : B.I.Ginf), k) * (g, 1) = (g, 1) * ((1 : B.I.Ginf), k) := by
       simp only [Prod.mk_mul_mk, one_mul, mul_one]
-    rw [← inner_rep B.R hR1 hRm hRn (g, 1), ← ContinuousLinearMap.mul_apply,
-      ← ContinuousLinearMap.mul_apply, ← hRm, ← hRm, hcomm]
+    rw [← inner_rep B.R hR1 hRm hRn (g, 1), ← mul_apply_eq_comp,
+      ← mul_apply_eq_comp, ← hRm, ← hRm, hcomm]
   · obtain ⟨g, hg1, hgsub⟩ := B.I.topf_basis _ (eventually_left_inv K hKc' hKo' B.e hlc hs)
     exact ⟨g, hg1, fun k hk => op_fixed B.μf (fun g => B.R (1, g)) h1 hm hn B.e B.Re hT k
       (hgsub hk)⟩

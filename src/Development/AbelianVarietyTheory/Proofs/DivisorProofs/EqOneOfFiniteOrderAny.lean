@@ -120,13 +120,13 @@ open GlobalTheory.TorusExt
 theorem gtOnto_any : LL → AnyD fun {R} _ _ {I} D F _ _ => (∀ b : TF (R := R) F ⟶ D.toPre.P.A, ∃ g : GtPtF D.toPre F, g.b = b) ∧ (∀ n, 1 ≤ n → ∀ g : GtPtF D.toPre F, ∃ g', GtPtF.IsNsmul n g' g) ∧ (∀ t, ∃! g : GtPtF D.toPre F, IsTor t g) ∧ (∀ g : GtPtF D.toPre F, g.b = 1 → ∃! t, IsTor t g) ∧ ∀ t t' (g g' g'' : GtPtF D.toPre F), IsTor t g → IsTor t' g' → (g.IsAdd g' g'' ↔ IsTor (t * t') g'') := by
   intro hL R _ _ I hA D F _ _ _
   refine ⟨exists_lift, fun n hn g => ?_, fun t => ?_, fun g hb => ?_, fun t t' g g' g'' h h' => ?_⟩
-  · letI := gtGroup D.toPre F
+  · let := gtGroup D.toPre F
     exact (exists_nsmul_eq hL.1.mulN (Or.inl hA.1) (by omega) g).imp fun _ e => (isNsmul_iff_eq _ _ _).2 e.symm
   · exact ⟨_, (isTor_iff _ _).2 (isTorusPtF_torusPt t), fun g h => (isTorusPtF_iff_eq g t).1 ((isTor_iff _ _).1 h)⟩
   · obtain ⟨t, ht⟩ := exists_isTorusPtF_of_b hb
     refine ⟨t, (isTor_iff _ _).2 ht, fun t' ht' => MonoidHom.ext fun χ => Units.ext ?_⟩
     exact congrFun (((isTor_iff _ _).1 ht').fun_unique ht) χ.toAdd
-  · letI := gtGroup D.toPre F
+  · let := gtGroup D.toPre F
     have a := ((isTor_iff _ _).1 h).add ((isTor_iff _ _).1 h')
     rw [isTor_iff]
     exact (isAdd_iff_eq _ _ _).trans ⟨fun e => e ▸ a, fun e => e.unique a⟩
@@ -278,7 +278,7 @@ theorem sumF_any : LL → AnyD fun {R} _ _ {I} D F _ _ => ∀ (K : Type) [Fintyp
   obtain ⟨i₀, hi₀⟩ := exists_mem P (b.left z)
   let t := trF φ ε b.left z (P.ch i₀) (fun k => J (b.left ≫ φ k)) * val τ (𝟙 _) z J
   choose y hy using fun k => CoefBasic.cstH_surj z (gs b.left z _ (P.u k i₀) * (t⁻¹).val)
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   let ev : (Fin P.a → R) →ₗ[R] F := Fintype.linearCombination R y
   have key : ∀ (s : LB.Sec (LB.LinComb D.toPre.P.L φ ε)) (w : Fin P.a → R) (c : F),
       (∀ i, AbLaw.rs _ (P.le i) (s.f (P.ch i)) = loc₀ P w i) →
@@ -435,7 +435,7 @@ theorem phiMul_any : LL → AnyUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ => ∀
   obtain ⟨r, hr, -⟩ := hB.1 u
   have hrs : r = s' 2 := by
     refine famEq_any hL R I hI D F (N 2) r (s' 2) fun g₀ => ?_
-    letI := GlobalTheory.TorusExt.gtGroup D.toPre F
+    let := GlobalTheory.TorusExt.gtGroup D.toPre F
     have hadd : g₀.IsAdd p.g (g₀ + p.g) := (GlobalTheory.TorusExt.isAdd_iff_eq _ _ _).2 rfl
     obtain ⟨ω₀, hω₀⟩ : ∃ ω₀ : Frm D.toPre F k g₀.b, ω₀.IsGen :=
       exists_gen_of_local (V := F) D.toPre.P.L D.toPre.P.isLB _ _
@@ -580,8 +580,8 @@ theorem indAtTransl_any : LL → AnyUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ =
     exact e₂ ▸ e₁
   · intro H
     refine ⟨lift_fst _ _, fun w₀ hw₀ => (key w₀).2 ?_⟩
-    haveI : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (PrimeSpectrum F))
-    haveI : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (PrimeSpectrum F))
+    have : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (PrimeSpectrum F))
+    have : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (PrimeSpectrum F))
     obtain ⟨θ, rfl⟩ := BoxTheta.exists_theta hL.1.kerPow A hN x (H w₀ hw₀).1
     obtain ⟨w, hw, h⟩ := (H w₀ hw₀).2 θ rfl
     exact ⟨θ.φ, w, θ.isGen, hw, h⟩
@@ -593,7 +593,7 @@ section
 theorem dimEq_any :
     LL → AnyU fun {R} _ _ {I} {D} {A} {G} _ _ U => A.g = D.toPre.rank + D.toPre.P.g := by
   rintro ⟨hL, hL₂, -, -, -⟩ R _ _ I hadm D A G _ _ hG U
-  haveI := hG.geomConnected
+  have := hG.geomConnected
   have h₁ := GlobalTheory.finrank_fam_of_expBij hL.secBaseChange R I hadm D A G U.toUnifPre 2 (by norm_num)
     (U.expand 2 (by norm_num))
   have h₂ := (GlobalTheory.FamDimension.main hL.globalFns hL.cube hL.square hL₂.secTwist R I D (FractionRing R) 2
@@ -939,7 +939,7 @@ theorem exists_qkToAkU : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R),
     rintro ⟨p⟩ ⟨p'⟩ h
     have h' : f p = f p' := congrArg Subtype.val h
     exact Quot.sound (hinj p p' (f p) (hf p) (h' ▸ hf p'))
-  haveI : Finite {x : TFK (R := R) F ⟶ A.A // x ^ k = 1} :=
+  have : Finite {x : TFK (R := R) F ⟶ A.A // x ^ k = 1} :=
     Nat.finite_of_card_ne_zero (by rw [hA]; positivity)
   have hb : Function.Bijective φ := hφ.bijective_of_nat_card_le (by rw [hA, hQ, hd])
   intro x hx

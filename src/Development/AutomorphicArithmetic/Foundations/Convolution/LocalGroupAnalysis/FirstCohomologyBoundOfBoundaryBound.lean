@@ -217,7 +217,7 @@ private theorem abstract_hilbert90 (σ : R ≃ₐ[k] R) (q : ℕ) (hσ : IsGal �
     have h2 : σ.symm r = (σ ^ (q - 1)) r := by
       rw [eq_inv_of_mul_eq_one_left h1]; rfl
     rw [h2]; exact hpow _ _ hr
-  letI : Algebra O S := (((algebraMap k R).comp O.subtype).codRestrict S fun c => (hOS _).2 c.2).toAlgebra
+  let : Algebra O S := (((algebraMap k R).comp O.subtype).codRestrict S fun c => (hOS _).2 c.2).toAlgebra
   have hji : ∀ c : O, S.subtype (algebraMap O S c) = algebraMap k R (O.subtype c) := fun _ => rfl
   let s : S ≃ₐ[O] S :=
     { toFun := fun r => ⟨σ r, hS _ r.2⟩
@@ -329,7 +329,7 @@ private theorem mem_intOver {v : HeightOneSpectrum (𝓞 F)} (y : CompletionsOve
 
 private theorem mem_unitSet {n : ℕ} {v : HeightOneSpectrum (𝓞 F)} (g : GL (Fin n) (CompletionsOver E v)) :
     g ∈ unitSet E n v ↔ IntGL (intOver E v) g := by
-  simp only [unitSet, Set.mem_setOf_eq, GLnLocal.mem_integralGL_iff, IntGL, mem_intOver, ← map_inv]
+  simp only [unitSet, Set.mem_ofPred_eq, GLnLocal.mem_integralGL_iff, IntGL, mem_intOver, ← map_inv]
   exact ⟨fun h => ⟨fun i j w => (h w).1 i j, fun i j w => (h w).2 i j⟩,
     fun h w => ⟨fun i j => h.1 i j w, fun i j => h.2 i j w⟩⟩
 
@@ -394,7 +394,7 @@ private theorem ev_poly (p : F[X]) : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Fi
 private theorem ev_over (t : E) : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite,
     algebraMap E (CompletionsOver E v) t ∈ intOver E v := by
   refine ((Filter.eventually_cofinite.1 (ev_elt t)).image (below F)).subset fun v hv => ?_
-  rw [Set.mem_compl_iff, Set.mem_setOf_eq, mem_intOver, not_forall] at hv
+  rw [Set.mem_compl_iff, Set.mem_ofPred_eq, mem_intOver, not_forall] at hv
   obtain ⟨w, hw⟩ := hv
   exact ⟨w.1, hw, (below_eq_iff _ _).2 w.2⟩
 

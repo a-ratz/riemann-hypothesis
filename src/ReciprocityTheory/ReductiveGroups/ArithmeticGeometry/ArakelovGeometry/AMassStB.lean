@@ -92,7 +92,7 @@ theorem gb_segre_injective : Function.Injective (segre (ι := GlobalTheory κ)) 
 
 theorem gb_mcPts_eq (P : Ideal (MRing (GlobalTheory κ))) : mcPts P = pts P := by
   ext z
-  simp only [mcPts, pts, conePts, Set.mem_setOf_eq]
+  simp only [mcPts, pts, conePts, Set.mem_ofPred_eq]
   refine and_congr_left' ⟨fun h h0 => ?_, fun h k => ?_⟩
   · obtain ⟨i, hi⟩ := h ()
     exact hi (congrFun h0 _)
@@ -103,7 +103,7 @@ theorem gb_mcPts_eq (P : Ideal (MRing (GlobalTheory κ))) : mcPts P = pts P := b
 theorem gb_fibre_eq (x : Ix κ → Ω) (e : Fin (D + 1) → Ix κ) (y : Fin D → ℂ) :
     fibre (coordIdeal ℤ x) (gbPsi e) y = segre (ι := GlobalTheory κ) '' prFib x e (Fin.cons 1 y) := by
   ext w
-  simp only [fibre, Set.mem_setOf_eq, Set.mem_image, prFib, gb_mcPts_eq]
+  simp only [fibre, Set.mem_ofPred_eq, Set.mem_image, prFib, gb_mcPts_eq]
   constructor
   · rintro ⟨z, hz, rfl, hΨ⟩
     rw [gbPsi_segre] at hΨ

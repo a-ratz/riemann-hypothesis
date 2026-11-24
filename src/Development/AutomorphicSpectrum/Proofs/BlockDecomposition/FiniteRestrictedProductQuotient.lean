@@ -76,7 +76,7 @@ theorem finite_cosets_of_components_mem
     (hQV : ∀ᶠ i in cofinite, Q i ⊆ V i) :
     {q : Γ ⧸ (⨅ i, (V i).comap (p i)) | ∀ i, p i q.out ∈ Q i}.Finite := by
   have hT : {i | ¬ Q i ⊆ V i}.Finite := Filter.eventually_cofinite.mp hQV
-  haveI : Finite {i | ¬ Q i ⊆ V i} := hT.to_subtype
+  have : Finite {i | ¬ Q i ⊆ V i} := hT.to_subtype
   let f : Γ ⧸ (⨅ i, (V i).comap (p i)) → ∀ i : {i | ¬ Q i ⊆ V i}, Hl i.1 ⧸ V i.1 :=
     fun q i => ((p i.1 q.out : Hl i.1) : Hl i.1 ⧸ V i.1)
   have hfin : (Set.univ.pi fun i : {i | ¬ Q i ⊆ V i} =>

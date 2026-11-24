@@ -179,9 +179,9 @@ theorem isotropic_of_hgt_lt : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J →
     ∃ ε : ℝ, 0 < ε ∧ ∀ (g : GAd σ J) (v : Fin n → E), v ≠ 0 → hgt σ J g v < ε → hE σ J v v = 0 := by
   intro F E _ _ _ _ _ σ h n J _
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
-  haveI : IsTotallyReal F := h.1
-  haveI : IsTotallyComplex E := h.2.1
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : IsTotallyReal F := h.1
+  have : IsTotallyComplex E := h.2.1
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   obtain rfl : σ = (conj F E).toAlgHom := AlgHom.ext fun x =>
     τ.injective ((h.2.2.2 τ x).trans (GroundTheory.Heights₂.Heights.FiniteCovolume.embedding_conj τ x).symm)
@@ -239,7 +239,7 @@ theorem ideleModule_rIdele [IsTotallyReal F] (c : ℝ) :
         ∏ᶠ v : IsDedekindDomain.HeightOneSpectrum (𝓞 F), ‖(rId F c).2 v‖ :=
     GroundTheory.Global.IdeleGroup.ideleModule_eq _
   rw [e, finprod_eq_one_of_forall_eq_one hfin, mul_one, Finset.prod_congr rfl fun w _ => hinf w,
-    Finset.prod_const, Finset.card_univ, card_infinitePlace, ← Real.exp_nat_mul]
+    Finset.prod_const, Finset.card_univ, card_infinitePlace, ← Real.exp_natCast_mul]
 
 variable {n r : ℕ}
 
@@ -320,8 +320,8 @@ theorem vecMul_trG_torus {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
 open GroundTheory.Automorphic GlobalTheory.CompanionTheory.RedCov.Bridge in
 theorem exp_le_hgt : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin (r + 1)) E), IsWittFrame σ J X Y → ∀ a, IsTorus σ J X Y a → ∀ (Ω C : Set (GAd σ J)), IsCompact Ω → Ω ⊆ minPar σ J X → IsCompact C → ∃ P : ℝ, 0 < P ∧ ∀ ω ∈ Ω, ∀ s : Fin (r + 1) → ℝ, ∀ κ ∈ C, ∀ e : E, e ≠ 0 → Real.exp (- ((Module.finrank ℚ F : ℝ) * s 0)) ≤ P * hgt σ J (ω * a s * κ) (e • Xᵀ 0) := by
   intro F E _ _ _ _ _ σ h n J hJ r X Y hW a ha Ω C hΩ hΩP hC
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
-  haveI : IsTotallyReal F := h.1
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : IsTotallyReal F := h.1
   have hcont : Continuous fun g : GAd σ J => (trG σ J g)⁻¹ := (continuous_trG σ J).inv
   obtain ⟨P₁, hP₁, hb₁⟩ := Reduction.exists_adelicNorm_vecMul_le_mul (hC.image hcont)
   obtain ⟨P₂, hP₂, hb₂⟩ := Reduction.exists_adelicNorm_vecMul_le_mul (hΩ.image hcont)
@@ -604,7 +604,7 @@ theorem exists_isCompact_unitary_set (hH : IsUnit H.det)
   let Ω : Set (unitaryPoints K E H 𝔸[K]) := {v | trHom b 𝔸[K] (v : GL ι (𝔸[K] ⊗[K] E)) ∈ C₃}
   refine ⟨Ω, ?_, ?_⟩
   · have hΩcl : IsClosed Ω :=
-      hC₃.isClosed.preimage ((continuous_trHom b 𝔸[K]).comp continuous_subtype_val)
+      hC₃.isClosed.preimage ((continuous_trHom b 𝔸[K]).comp continuous_subtypeVal)
     let F : Matrix (Fin 𝒩') (Fin 𝒩') 𝔸[K] → ι × ι × Fin (Module.finrank K E) → 𝔸[K] :=
       fun A p =>
       coords b 𝔸[K] ((readoff (ι := ι) b 𝔸[K] A)ᵀ p.1 p.2.1) p.2.2
@@ -697,7 +697,7 @@ def pointsHomeo {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
 theorem exists_isCompact_of_le_hgt : (∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [Algebra.IsQuadraticExtension F E] (n : ℕ) (H : Matrix (Fin n) (Fin n) E), IsUnit H.det → ∀ (Y : Set (unitaryPoints F E H 𝔸[F])) (ε : ℝ), 0 < ε → (∀ u ∈ Y, ∀ x : Fin (Fintype.card (Fin n × Fin (Module.finrank F E))) → F, x ≠ 0 → ε ≤ Reduction.height (trHom (ι := Fin n) (Module.finBasis F E) 𝔸[F] (u : GL (Fin n) (𝔸[F] ⊗[F] E))) x) → ∃ Ω : Set (unitaryPoints F E H 𝔸[F]), IsCompact Ω ∧ ∀ u ∈ Y, ∃ θ ∈ (unitaryDiagonal F H).range, θ⁻¹ * u ∈ Ω) → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ t : ℝ, 0 < t → ∃ C₀ : Set (GAd σ J), IsCompact C₀ ∧ ∀ g : GAd σ J, (∀ v : Fin n → E, v ≠ 0 → t ≤ hgt σ J g v) → ∃ γ ∈ ratPts σ J, γ⁻¹ * g ∈ C₀ := by
   intro hM F E _ _ _ _ _ σ hσ n J hJ t ht
   obtain ⟨hF, hE', h2, hc⟩ := hσ
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   obtain rfl : σ = (conj F E).toAlgHom := AlgHom.ext fun x =>
     τ.injective ((hc τ x).trans (GroundTheory.Heights₂.Heights.FiniteCovolume.embedding_conj τ x).symm)
@@ -857,7 +857,7 @@ theorem GlobalTheory.CompanionTheory.RedCov.First.exp_neg_le (F E : Type) [Field
     (Ω C : Set (GAd σ J)) (hΩ : IsCompact Ω) (hΩP : Ω ⊆ minParOne σ J X) (hC : IsCompact C) :
     ∃ M : ℝ, 0 < M ∧ ∀ ω ∈ Ω, ∀ s : Fin (r + 1) → ℝ, ∀ κ ∈ C, ∀ e : E, e ≠ 0 →
       NearMin σ J (ω * a s * κ) (e • Xᵀ 0) → Real.exp (- s 0) ≤ M := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
   obtain ⟨C₁, hC₁, hu⟩ := exists_isotropic_le (_root_.GlobalTheory.CompanionTheory.RedCov.isotropic_of_hgt_lt F E σ h n J hJ) ((GlobalTheory.T.unitary_points_height_bound_finite GlobalTheory.T.unitary_points_height_bound_compact) F E σ h n J hJ)
     (fun hC _ hv => GlobalTheory.CompanionTheory.RedCov.Bridge.exists_hgt_le σ J hC hv) (first_witt_vector_ne_zero hW) (first_witt_vector_isotropic hW)
   obtain ⟨P, hP, hlow⟩ := _root_.GlobalTheory.CompanionTheory.RedCov.FirstLower.exp_le_hgt F E σ h n J hJ r X Y hW a ha Ω C hΩ

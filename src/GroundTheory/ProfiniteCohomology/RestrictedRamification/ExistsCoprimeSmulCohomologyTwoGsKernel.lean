@@ -100,7 +100,7 @@ theorem exists_finiteSubfield_of_isOpen (U : Subgroup K.1.fixingSubgroup)
       ext σ
       simp [U', Subgroup.coe_map]
     rw [e]
-    exact hKo.isOpenMap_subtype_val _ hU
+    exact hKo.isOpenMap_subtypeVal _ hU
   have hU'c : IsClosed (U' : Set (ℚ̄ ≃ₐ[ℚ] ℚ̄)) := Subgroup.isClosed_of_isOpen _ hU'o
   let L' : IntermediateField ℚ ℚ̄ := IntermediateField.fixedField U'
   have hfix : L'.fixingSubgroup = U' := InfiniteGalois.fixingSubgroup_fixedField ⟨U', hU'c⟩

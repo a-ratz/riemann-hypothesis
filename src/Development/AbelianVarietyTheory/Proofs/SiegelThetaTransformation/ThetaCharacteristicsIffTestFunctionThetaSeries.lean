@@ -88,7 +88,7 @@ theorem isSB_chi (a b : Fin n → Fin g → ℚ) : IsSB (chi a b) := by
   refine ⟨R * S, Nat.mul_pos hR hS, fun x hx k i => ?_, fun x y hy => ?_⟩
   · have h : ∀ k i, IsIntegral ℤ (x k i - a k i) := by
       by_contra h
-      exact hx (if_neg h)
+      exact hx (ite_eq_right h)
     obtain ⟨z, hz⟩ := (isIntegral_iff_int _).1 (h k i)
     refine (isIntegral_iff_int _).2 ⟨R * S * z + S * u k i, ?_⟩
     simp only [Matrix.smul_apply, smul_eq_mul]
@@ -135,7 +135,7 @@ theorem thS_chi (a b : Fin n → Fin g → ℚ) {τ : Matrix (Fin g) (Fin g) ℂ
     have h1 : ∀ k i, IsIntegral ℤ (f m k i - a k i) := fun k i =>
       (isIntegral_iff_int _).2 ⟨m k i, by simp [f]⟩
     simp only [CanTh.thTerm]
-    rw [chi, if_pos h1, ← Complex.exp_sum, ← Complex.exp_add]
+    rw [chi, ite_eq_left h1, ← Complex.exp_sum, ← Complex.exp_add]
     congr 1
     have h2 : ∀ k, ((fun i => (m k i : ℂ)) + fun i => (((a k i : ℚ) : ℝ) : ℂ)) = qv (f m k) :=
       fun k => by funext i; simp [qv, f]
@@ -146,7 +146,7 @@ theorem thS_chi (a b : Fin n → Fin g → ℚ) {τ : Matrix (Fin g) (Fin g) ℂ
   · intro x hx
     have h1 : ∀ k i, IsIntegral ℤ (x k i - a k i) := by
       by_contra h
-      exact hx (by simp only [chi, if_neg h, zero_mul])
+      exact hx (by simp only [chi, ite_eq_right h, zero_mul])
     choose z hz using fun k i => (isIntegral_iff_int _).1 (h1 k i)
     exact ⟨z, by ext k i; simp [f, hz]⟩
 
@@ -181,7 +181,7 @@ theorem avg_int {R : ℕ} (hR : 0 < R) (z : ℤ) : avg R z = if (R : ℤ) ∣ z 
   split_ifs with h
   · rw [h1.2 h]
     simp [hq]
-  · rw [geom_sum_eq (mt h1.1 h), ← Complex.exp_nat_mul]
+  · rw [geom_sum_eq (mt h1.1 h), ← exp_natCast_mul]
     have : (R : ℂ) * (2 * π * I * ((z : ℚ) / R)) = z * (2 * π * I) := by
       push_cast
       field_simp
@@ -204,8 +204,8 @@ theorem mul_avg_mem {f : TF n g} (hf : f ∈ spanChi n g) (R : ℕ) (c : ℚ) (k
     · simp
   simp only [avg, Pi.smul_apply, Finset.sum_apply, smul_eq_mul, h1, Finset.mul_sum]
   refine Finset.sum_congr rfl fun s _ => ?_
-  rw [mul_left_comm (f m), mul_left_comm (_ ^ s) (f m), ← Complex.exp_nat_mul,
-    ← Complex.exp_nat_mul, ← Complex.exp_add]
+  rw [mul_left_comm (f m), mul_left_comm (_ ^ s) (f m), ← exp_natCast_mul,
+    ← exp_natCast_mul, ← Complex.exp_add]
   congr 3
   push_cast
   ring
@@ -232,10 +232,10 @@ theorem ind_mem {R : ℕ} (hR : 0 < R) (c : Fin n → Fin g → ℚ) :
       refine forall₂_congr fun k i => exists_congr fun w => ?_
       rw [← hz]
       norm_cast
-    rw [chi, if_pos h1, if_congr h2 rfl rfl]
+    rw [chi, ite_eq_left h1, if_congr h2 rfl rfl]
     simp only [← hz, avg_int hR, Finset.prod_boole]
     simp
-  · rw [chi, if_neg h1, zero_mul, if_neg]
+  · rw [chi, ite_eq_right h1, zero_mul, ite_eq_right]
     intro h2
     refine h1 fun k i => ?_
     obtain ⟨z, hz⟩ := h2 k i
@@ -264,7 +264,7 @@ theorem mem_spanChi {φ : TF n g} (hφ : IsSB φ) : φ ∈ spanChi n g := by
       field_simp
       ring
     rw [Finset.sum_eq_single_of_mem (fun k i => z k i % (R * R))]
-    · rw [if_pos fun k i => ⟨_, h2 k i⟩, mul_one,
+    · rw [ite_eq_left fun k i => ⟨_, h2 k i⟩, mul_one,
         ← hp (fun k i => ((z k i % (R * R) : ℤ) : ℚ) / R) (fun k i => ((z k i / (R * R) : ℤ) : ℚ))
           fun k i => (isIntegral_iff_int _).2 ⟨_, rfl⟩]
       congr 1
@@ -274,7 +274,7 @@ theorem mem_spanChi {φ : TF n g} (hφ : IsSB φ) : φ ∈ spanChi n g := by
     · simp only [T, Fintype.mem_piFinset, Finset.mem_Ico]
       exact fun k i => ⟨Int.emod_nonneg _ hz.ne', Int.emod_lt_of_pos _ hz⟩
     · intro c hc hne
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h3
       refine hne (funext fun k => funext fun i => ?_)
       simp only [T, Fintype.mem_piFinset, Finset.mem_Ico] at hc
@@ -288,7 +288,7 @@ theorem mem_spanChi {φ : TF n g} (hφ : IsSB φ) : φ ∈ spanChi n g := by
       rw [h4, Int.add_mul_emod_self_left, Int.emod_eq_of_lt (hc k i).1 (hc k i).2]
   · rw [not_not.1 (mt (h0 m) h1), Finset.sum_eq_zero]
     intro c _
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h3
     refine h1 fun k i => ?_
     obtain ⟨w, hw⟩ := h3 k i

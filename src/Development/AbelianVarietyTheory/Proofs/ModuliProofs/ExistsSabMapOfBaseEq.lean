@@ -60,7 +60,7 @@ theorem zeta_eq_pow_div_of_dvd {a b : ℕ} (hb : 0 < b) (h : a ∣ b) : zeta a =
   have hc : 0 < c := Nat.pos_of_mul_pos_left hb
   have ha' : (a : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr ha.ne'
   have hc' : (c : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hc.ne'
-  rw [Nat.mul_div_cancel_left c ha, zeta, zeta, ← Complex.exp_nat_mul]
+  rw [Nat.mul_div_cancel_left c ha, zeta, zeta, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp

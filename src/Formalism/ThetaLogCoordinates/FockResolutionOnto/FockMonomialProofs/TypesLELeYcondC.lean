@@ -61,7 +61,7 @@ private theorem HWC_le_restrictSupport_wt_le [NeZero r] (LL : Letters N) (j : �
   rw [MvPolynomial.mem_restrictSupport_iff]
   intro m hm
   have hm' := hw hm
-  simp only [Set.mem_setOf_eq] at hm' ⊢
+  simp only [Set.mem_ofPred_eq] at hm' ⊢
   rw [hm' 0 h0]
   exact hla
 
@@ -84,7 +84,7 @@ private theorem glAct_mem_restrictSupport_wt_le_of_ne [NeZero r] (LL : Letters N
       subst hd
       rfl
     · have hc : c ≠ 0 := hcd.resolve_right hd
-      rw [if_neg hd, if_neg (Ne.symm hc), sub_self] at h
+      rw [ite_eq_right hd, ite_eq_right (Ne.symm hc), sub_self] at h
       exact sub_eq_zero.mp h
 
 theorem isoC_le_ycondC [NeZero r] (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (h0 : (0 : Fin r) ∈ Cs)

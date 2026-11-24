@@ -95,7 +95,7 @@ theorem valuationRing (P : LocPrime l) (LL : FinExt l) : ValuationRing ↥(OL LL
     field_simp
 
 theorem not_isField (P : LocPrime l) (LL : FinExt l) : ¬ IsField ↥(OL LL) := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   intro hF
   have hp : l.Prime := Fact.out
   have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := by
@@ -128,19 +128,19 @@ theorem not_isField (P : LocPrime l) (LL : FinExt l) : ¬ IsField ↥(OL LL) := 
   linarith
 
 theorem isDVR (P : LocPrime l) (LL : FinExt l) : IsDiscreteValuationRing ↥(OL LL) := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : ValuationRing ↥(OL LL) := valuationRing P LL
-  haveI : IsNoetherianRing ↥(OL LL) := integralClosure.isNoetherianRing (A := ℤ_[l]) (K := ℚ_[l]) ↥LL.1
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : ValuationRing ↥(OL LL) := valuationRing P LL
+  have : IsNoetherianRing ↥(OL LL) := integralClosure.isNoetherianRing (A := ℤ_[l]) (K := ℚ_[l]) ↥LL.1
   exact ((IsDiscreteValuationRing.TFAE ↥(OL LL) (not_isField P LL)).out 2 1).mp (valuationRing P LL)
 
 theorem isFractionRing (LL : FinExt l) : IsFractionRing ↥(OL LL) ↥LL.1 := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   unfold OL
   exact integralClosure.isFractionRing_of_finite_extension ℚ_[l] _
 
 theorem natCard_emb (K LL : FinExt l) (hg : Good K 1 LL) :
     Nat.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = finrank ℚ_[l] ↥K.1 := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   let Φ : (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) → (↥K.1 →ₐ[ℚ_[l]] Om l) := fun σ => LL.1.val.comp σ
   have hinj : Function.Injective Φ := by
     intro σ σ' h
@@ -274,9 +274,9 @@ theorem gen_core (LT : LocTheory) (hgen : H1fGeneratorBoundAll LT) (hfon : Fonta
     ∃ s : Finset (↥(GK K) → T.V),
       s.card ≤ 2 * ((finrank ℚ_[l] ↥(K0 K) * finrank ↥(K0 K) ↥K.1 + 1) * r) ∧
       Submodule.span ↥(OL LL) (s : Set (↥(GK K) → T.V)) ⊔ latticeCoboundaries T.L = latticeFiniteCocycles ((LT l).PD K) T.L := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  letI : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
-  haveI : IsTopologicalAddGroup T.V := IsModuleTopology.topologicalAddGroup ↥LL.1 T.V
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  let : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
+  have : IsTopologicalAddGroup T.V := IsModuleTopology.isTopologicalAddGroup ↥LL.1 T.V
   have H := hgen l hl K LL hg T
   obtain ⟨s, hspan, hcard⟩ := H (goodCoeffs (LT l) K LL hg T) hc T.cont
   obtain ⟨t, ht, heq⟩ := lift_gens ((LT l).PD K) T.cont T.L s hspan

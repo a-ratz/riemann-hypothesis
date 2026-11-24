@@ -66,9 +66,9 @@ theorem UpperTheory.isKFinite_totallyRealModel_of_isKFinite :
         show TR.finRep E a (v.1⁻¹) φ = φ
         conv_lhs => rw [← hv']
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl }
-  have hV : IsOpen (V : Set Kf) := hopen.preimage continuous_subtype_val
-  haveI : CompactSpace Kf := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL E a)
-  haveI : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
+  have hV : IsOpen (V : Set Kf) := hopen.preimage continuous_subtypeVal
+  have : CompactSpace Kf := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL E a)
+  have : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
   unfold IsKFinite
   refine Submodule.finiteDimensional_of_le (S₂ := ⨆ q : Kf ⧸ V,
     ((Submodule.span ℂ (Set.range fun k => TR.cptRep E a k φ)).map (TR.finRep E a q.out.1)).map

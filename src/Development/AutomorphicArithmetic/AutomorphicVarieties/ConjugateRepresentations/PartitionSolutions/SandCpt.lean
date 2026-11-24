@@ -64,6 +64,6 @@ theorem UpperTheory.V.Cj.A.sandCpt :
   · exact hC g _ (Set.mem_insert _ _) (Set.mem_insert_of_mem _ hg)
   · refine hC g⁻¹ _ (Set.mem_insert_of_mem _ hg) ?_
     have e : sand g⁻¹ (sand g (hOne E a)) = hOne E a := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
+      rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl
     rw [e]
     exact Set.mem_insert _ _

@@ -71,8 +71,8 @@ namespace GlobalTheory.KZ.H3
 
 theorem rootOfUnity_pow {Ω K : Type} [Field Ω] [CharZero Ω] [IsAlgClosed Ω] [Field K] [Algebra Ω K]
     (l : ℕ) (hl : 0 < l) (ζ : Kˣ) (hζ : ζ ^ l = 1) (m : ℕ) (hm : 0 < m) : ∃ η : Kˣ, ζ = η ^ m := by
-  haveI : NeZero l := ⟨hl.ne'⟩
-  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : NeZero l := ⟨hl.ne'⟩
+  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   have hω' : IsPrimitiveRoot (algebraMap Ω K ω) l := hω.map_of_injective (algebraMap Ω K).injective
   have hζK : (ζ : K) ^ l = 1 := by rw [← Units.val_pow_eq_pow_val, hζ, Units.val_one]
   obtain ⟨i, -, hi⟩ := hω'.eq_pow_of_pow_eq_one hζK
@@ -109,7 +109,7 @@ theorem khat_l_smul_eq_zero {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →
   set ζ : X.Kˣ := f * (g ^ (l ^ n))⁻¹ with hζdef
   have hζ : ζ ^ l = 1 := by
     rw [hζdef, mul_pow, hg, inv_pow, ← pow_mul, ← pow_succ, mul_inv_cancel]
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain ⟨η, hη⟩ := rootOfUnity_pow (Ω := Ω) l hl ζ hζ (l ^ n) (pow_pos hl n)
   have hf' : f = 1 * (η * g) ^ (l ^ n) := by
     rw [one_mul, mul_pow, ← hη, hζdef, inv_mul_cancel_right]

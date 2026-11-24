@@ -346,7 +346,7 @@ theorem pull_cls_translDiff_div {S : Scheme.{0}} {A T Y Z : Over S} [GrpObj A] [
 
 theorem same_lam_iff_locally_triv : ∀ {S : Scheme.{0}} (A T : Over S) [GrpObj A], IsAbelianScheme A → ∀ (L : LB A.left), L.IsLB → ∀ (N : LB (A ⊗ T).left), Fam A N → ∀ (Y : Over S) (a : Y ⟶ A) (t : Y ⟶ T), Same A (abelian₂ A L) N a t ↔ ∀ p : Y.left, ∃ U : Y.left.Opens, p ∈ U ∧ Triv ((LB.div (translDiff A L a) (ev N (snd Y A) (fst Y A ≫ t))).pull ((fst Y A).left ⁻¹ᵁ U).ι) := by
   intro S A T _ hA L hL N hN Y a t
-  haveI := hA.comm
+  have := hA.comm
   have hP : (abelian₂ A L).IsLB := LB.isLB_linComb hL _ _
   have hF : Fam A (abelian₂ A L) := ⟨hP, (GlobalTheory.CubeDual.isAdditive_lam _root_.GlobalTheory.SpreadingModels.cubeTheorem_holds hA hL hP).1⟩
   have hT : (translDiff A L a).IsLB := LB.isLB_linComb hL _ _
@@ -660,7 +660,7 @@ theorem isNoetherianRing_top (R : Type) [CommRing R] [IsNoetherianRing R] (X : S
   have h1 : (f.appTop).hom.FiniteType := (HasRingHomProperty.iff_of_isAffine (P := @LocallyOfFiniteType)).1 hf
   have : IsNoetherianRing Γ(Sp R, ⊤) :=
     isNoetherianRing_of_ringEquiv R (Scheme.ΓSpecIso (CommRingCat.of R)).symm.commRingCatIsoToRingEquiv
-  letI := (f.appTop).hom.toAlgebra
+  let := (f.appTop).hom.toAlgebra
   have : Algebra.FiniteType Γ(Sp R, ⊤) Γ(X, ⊤) := h1
   exact Algebra.FiniteType.isNoetherianRing Γ(Sp R, ⊤) Γ(X, ⊤)
 
@@ -669,7 +669,7 @@ theorem flat_twisted_kernel : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (
   have : IsNoetherianRing Γ(T.left, ⊤) := isNoetherianRing_top R T.left T.hom hT
   let e := T.left.isoSpec
   let f := (h ≫ snd A T).left
-  haveI : IsFinite f := hfin
+  have : IsFinite f := hfin
   let H' : Over (Sp Γ(T.left, ⊤)) := Over.mk (f ≫ e.hom)
   have hfin' : IsFinite H'.hom := by
     show IsFinite (f ≫ e.hom)
@@ -678,7 +678,7 @@ theorem flat_twisted_kernel : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (
     refine GlobalTheory.flat_of_isFinite_of_flat_localization_maximal Γ(T.left, ⊤) H' hfin' fun m _ => ?_
     let φ : Sp (Localization.AtPrime m) ⟶ T.left := spMap (algebraMap Γ(T.left, ⊤) (Localization.AtPrime m)) ≫ e.inv
     have hf : IsFinite (pullback.snd f φ) := MorphismProperty.of_isPullback (P := @IsFinite) (IsPullback.of_hasPullback f φ) hfin
-    haveI := flat_local R A hA L hL ha T N hN H h hh hH (Localization.AtPrime m) φ hf
+    have := flat_local R A hA L hL ha T N hN H h hh hH (Localization.AtPrime m) φ hf
     have sq : IsPullback (pullback.fst f φ) (pullback.snd f φ) (f ≫ e.hom)
         (spMap (algebraMap Γ(T.left, ⊤) (Localization.AtPrime m))) :=
       (IsPullback.of_hasPullback f φ).of_iso (Iso.refl _) (Iso.refl _) (Iso.refl _) e (by simp) (by simp)
@@ -749,7 +749,7 @@ theorem add_inv_eq_of_same {S : Scheme.{0}} {A T Y : Over S} [GrpObj A] [IsCommM
 
 theorem isFinite_twisted_kernel : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A], IsAbelianScheme A → ∀ L : LB A.left, L.IsLB → Out.RelAmple A L → ∀ (T : Over (Sp R)) [IsAffine T.left], LocallyOfFiniteType T.hom → ∀ N : LB (A ⊗ T).left, Fam A N → ∀ (H : Over (Sp R)) (h : H ⟶ A ⊗ T), IsClosedImmersion h.left → (∀ (Y : Over (Sp R)) (a : Y ⟶ A) (t : Y ⟶ T), Same A (abelian₂ A L) N a t ↔ ∃ z : Y ⟶ H, z ≫ h = lift a t) → IsFinite (h ≫ snd A T).left := by
   intro R _ _ A _ hB L hL hA T _ _ N hN H h hh hH
-  haveI := hB.comm
+  have := hB.comm
   have := hB.proper
   obtain ⟨d, -, n, s, hc, ha⟩ := (GlobalTheory.Unif.relAmple_iff_veryAmpleBy R A L hL).1 hA
   have hAT : IsPullback (fst A T).left (snd A T).left A.hom T.hom := IsPullback.of_hasPullback A.hom T.hom
@@ -850,7 +850,7 @@ namespace GlobalTheory.KLFinite
 theorem finite_of_isFinite {K : Type} [Field K] {Z : Scheme.{0}} (f : Z ⟶ Spec (CommRingCat.of K)) [IsFinite f] :
     Finite Z := by
   have : IsAffine Z := isAffine_of_isAffineHom f
-  letI : Algebra K Γ(Z, ⊤) := ((Scheme.ΓSpecIso (.of K)).inv ≫ f.appTop).hom.toAlgebra
+  let : Algebra K Γ(Z, ⊤) := ((Scheme.ΓSpecIso (.of K)).inv ≫ f.appTop).hom.toAlgebra
   have hmod : Module.Finite K Γ(Z, ⊤) := by
     show ((Scheme.ΓSpecIso (.of K)).inv ≫ f.appTop).hom.Finite
     rw [CommRingCat.hom_comp]
@@ -961,10 +961,10 @@ theorem cech_sliceFst_singleton_acyclic {𝔦 𝔧 : Type} [LinearOrder 𝔦] [L
     (ordConnected_partsIn (inlEmb 𝔦 𝔧) (inrEmb 𝔦 𝔧) hQ ordConnected_nonempty)
     (ordConnected_partsIn (inlEmb 𝔦 𝔧) (inrEmb 𝔦 𝔧) hQ hT₂)
     (fun u => by
-      simp only [mem_partsIn, Set.mem_setOf_eq, ← Finset.card_pos]
+      simp only [mem_partsIn, Set.mem_ofPred_eq, ← Finset.card_pos]
       constructor <;> intro h <;> omega)
     (fun u hu hu' => by
-      simp only [mem_partsIn, Set.mem_setOf_eq] at hu hu'
+      simp only [mem_partsIn, Set.mem_ofPred_eq] at hu hu'
       omega)
     (fun _ _ hst hs ht => ⟨ht.1, le_trans hs.2 (Finset.card_le_card (monotone_part _ hst))⟩))
 
@@ -982,7 +982,7 @@ theorem cech_sliceFst_singleton_acyclic {𝔦 𝔧 : Type} [LinearOrder 𝔦] [L
     | 0 | 1 =>
       refine ExactAt.of_isZero (isZero_cubeComplex_X_of_subsingleton _ _ fun u hu => ?_)
       refine subsingleton_supp A (ordConnected_partsIn _ _ ordConnected_nonempty ordConnected_nonempty) fun hmem => ?_
-      simp only [mem_partsIn, Set.mem_setOf_eq] at hmem
+      simp only [mem_partsIn, Set.mem_ofPred_eq] at hmem
       obtain ⟨⟨i, hi⟩, ⟨j, hj⟩⟩ := hmem
       rw [mem_part] at hi hj
       have : 1 < u.card := Finset.one_lt_card.2 ⟨_, hi, _, hj, by simp⟩
@@ -998,14 +998,14 @@ theorem cech_sliceFst_singleton_acyclic {𝔦 𝔧 : Type} [LinearOrder 𝔦] [L
   have hPk := ordConnected_partsIn (inlEmb 𝔦 𝔧) (inrEmb 𝔦 𝔧) hQ hTk
   have hP₂ := ordConnected_partsIn (inlEmb 𝔦 𝔧) (inrEmb 𝔦 𝔧) hQ hT₂
   let ι₁ := suppMap (𝟙 A) hPk hP₂ fun s t hst hs ht => by
-    simp only [mem_partsIn, Set.mem_setOf_eq, Set.mem_singleton_iff] at hs ht ⊢
+    simp only [mem_partsIn, Set.mem_ofPred_eq, Set.mem_singleton_iff] at hs ht ⊢
     refine iff_of_true ⟨ht.1, ?_⟩ ⟨hs.1, by rw [hs.2]; rfl⟩
     obtain ⟨a, ha⟩ := Finset.card_eq_one.1 ht.2
     have : k ∈ part (inrEmb 𝔦 𝔧) t := monotone_part _ hst (by rw [hs.2]; exact Finset.mem_singleton_self k)
     rw [ha, Finset.mem_singleton] at this
     rw [ha, this]
   let ρ₁ := suppMap (𝟙 A) hP₂ hPk fun s t hst hs ht => by
-    simp only [mem_partsIn, Set.mem_setOf_eq, Set.mem_singleton_iff] at hs ht ⊢
+    simp only [mem_partsIn, Set.mem_ofPred_eq, Set.mem_singleton_iff] at hs ht ⊢
     refine iff_of_true ⟨ht.1, by rw [ht.2]; rfl⟩ ⟨hs.1, ?_⟩
     obtain ⟨a, ha⟩ := Finset.card_eq_one.1 hs.2
     have : a ∈ part (inrEmb 𝔦 𝔧) t := monotone_part _ hst (by rw [ha]; exact Finset.mem_singleton_self a)
@@ -1015,7 +1015,7 @@ theorem cech_sliceFst_singleton_acyclic {𝔦 𝔧 : Type} [LinearOrder 𝔦] [L
     ext s x
     refine supp_ext fun hs => ?_
     have hs₂ : s ∈ partsIn (inlEmb 𝔦 𝔧) (inrEmb 𝔦 𝔧) {s | s.Nonempty} {t | t.card = 1} := by
-      simp only [mem_partsIn, Set.mem_setOf_eq, Set.mem_singleton_iff] at hs ⊢
+      simp only [mem_partsIn, Set.mem_ofPred_eq, Set.mem_singleton_iff] at hs ⊢
       exact ⟨hs.1, by rw [hs.2]; rfl⟩
     change suppEquiv A hPk hs (suppMapApp (𝟙 A) hP₂ hPk s (suppMapApp (𝟙 A) hPk hP₂ s x)) =
       suppEquiv A hPk hs x
@@ -1105,7 +1105,7 @@ namespace GlobalTheory.ProductAcyclicFin
 theorem acyclic_over_affine_of_finite_closed : ∀ (K : Type) [Field K] (Z T : Scheme.{0}) (p : Z ⟶ T) (g : T ⟶ Spec (CommRingCat.of K)) (X : Scheme.{0}) (q : Z ⟶ X) (h : X ⟶ Spec (CommRingCat.of K)), IsPullback p q g h → IsSeparated g → QuasiCompact g → IsSeparated h → QuasiCompact h → ∀ F : LB Z, F.IsLB → ∀ S : Finset T, (∀ s ∈ S, IsClosed ({s} : Set T)) → (∀ (R : Type) [CommRing R] (t : Spec (CommRingCat.of R) ⟶ T) (Y : Scheme.{0}) (π : Y ⟶ Z) (f : Y ⟶ Spec (CommRingCat.of R)), IsPullback π f p t → IsOpenImmersion t → (∀ y, t y ∉ S) → (∀ (κ : Type) [LinearOrder κ] [Fintype κ] (D : κ → (Y).Opens), (∀ i, IsAffineOpen (D i)) → ⨆ i, D i = ⊤ → (cechLB (f) (F.pull π) D).Acyclic)) → (∀ (κ : Type) [LinearOrder κ] [Fintype κ] (D : κ → (Z).Opens), (∀ i, IsAffineOpen (D i)) → ⨆ i, D i = ⊤ → (cechLB (p ≫ g) (F) D).Acyclic) → (∀ (R : Type) [CommRing R] (t : Spec (CommRingCat.of R) ⟶ T) (Y : Scheme.{0}) (π : Y ⟶ Z) (f : Y ⟶ Spec (CommRingCat.of R)), IsPullback π f p t → IsOpenImmersion t → (∀ (κ : Type) [LinearOrder κ] [Fintype κ] (D : κ → (Y).Opens), (∀ i, IsAffineOpen (D i)) → ⨆ i, D i = ⊤ → (cechLB (f) (F.pull π) D).Acyclic)) := by
   intro K _ Z T p g X q h sq _ _ _ _ F hF S hS H hac R _ t Y π f H₀ ht
   classical
-  haveI := ht
+  have := ht
   have : CompactSpace T := QuasiCompact.compactSpace_of_compactSpace g
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace h
   obtain ⟨m, B, hB, hBc, -, -⟩ :=

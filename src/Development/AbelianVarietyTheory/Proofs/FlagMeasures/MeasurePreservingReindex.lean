@@ -309,7 +309,7 @@ theorem gauge_pos {n : ℕ} {ε : Fin n → Bool} {c : ℝ} (h : IsGauge ε c) :
     (mul_nonpos_of_nonpos_of_nonneg (not_lt.1 hc) ENNReal.toReal_nonneg) h3.le))
 
 theorem card_places (I : AutInst) : Fintype.card (InfinitePlace I.F) = I.f := by
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   rw [AutInst.f, IsTotallyReal.finrank, InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces,
     IsTotallyReal.nrComplexPlaces_eq_zero, add_zero]
 
@@ -403,7 +403,7 @@ theorem cube_bound (B : RowsAut) (c : InfinitePlace B.I.F → ℝ) (s : ℝ) {m 
       simp [matAt, onePar, atPlace]
   obtain ⟨S, hSm, hSd, hSi⟩ := _root_.GlobalTheory.ProductChartAll.lintegral_chart_all_le B.I c s (fun v i => (E v i).1) (fun t => (Pr (ψ t)).1) hc
     (fun v i => (E v i).2) hE hs h3 h5 hΘ
-  have hΦm : Measurable fun x => ‖φ x‖ₑ ^ 2 := (hφ.1.measurable.enorm.pow_const 2)
+  have hΦm : Measurable fun x => ‖φ x‖ₑ ^ 2 := (hφ.1.measurable.eNorm.pow_const 2)
   have hU := _root_.GlobalTheory.BoundedUnfold.lintegral_le_multiplicity B S y (fun x => ‖φ x‖ₑ ^ 2) hn hg hSm hSd hΦm
     (fun γ hγ z => by simp only [hφ.2.1 γ hγ z]) (fun k hk' z => by simp only [hk k hk' z])
   rw [((_root_.GlobalTheory.ContRepUniq.contRep_unique_linear B).2.2.2 F φ hφ).2] at hU
@@ -429,7 +429,7 @@ theorem cube_bound (B : RowsAut) (c : InfinitePlace B.I.F → ℝ) (s : ℝ) {m 
   have hL : ∫⁻ t in Set.pi Set.univ (fun _ : Fin (m * B.I.n ^ 2) => Set.Icc (0 : ℝ) s), ‖φ (y * Pr t)‖ₑ ^ 2 ≤
       ENNReal.ofReal (Real.exp B.I.f * ∏ v, c v) * ∫⁻ a in S, ‖φ (y * (a, 1))‖ₑ ^ 2 ∂(muInf B.I) := by
     rw [← hψ.setLIntegral_comp_preimage (MeasurableSet.univ_pi fun _ => measurableSet_Icc)
-      (hcont.measurable.enorm.pow_const 2), hpre]
+      (hcont.measurable.eNorm.pow_const 2), hpre]
     refine le_of_eq_of_le ?_ hJ
     congr 1
     funext t
@@ -443,7 +443,7 @@ theorem cube_bound (B : RowsAut) (c : InfinitePlace B.I.F → ℝ) (s : ℝ) {m 
   rw [integral_eq_lintegral_of_nonneg_ae (f := fun t => ‖φ (y * Pr t)‖ ^ 2) (Filter.Eventually.of_forall fun t => by positivity)
     (hcont.norm.pow 2).aestronglyMeasurable]
   refine ENNReal.toReal_le_of_le_ofReal (by positivity) ?_
-  simp only [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  simp only [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   refine hL.trans ((mul_le_mul_right hI _).trans (le_of_eq ?_))
   rw [← ENNReal.ofReal_mul (by positivity)]
   congr 1

@@ -206,14 +206,14 @@ theorem padicValNat_absNorm_eq_sum (ℓ : ℕ) [Fact ℓ.Prime] {X : Ideal (𝓞
     rw [Nat.padicValNat_def]
     apply multiplicity_eq_zero_of_not_dvd
     intro hdvd
-    haveI : Q.IsMaximal := hQp.isMaximal hQ0
-    letI : Field (𝓞 E ⧸ Q) := Ideal.Quotient.field Q
+    have : Q.IsMaximal := hQp.isMaximal hQ0
+    let : Field (𝓞 E ⧸ Q) := Ideal.Quotient.field Q
     have hfin : Finite (𝓞 E ⧸ Q) := by
       apply Nat.finite_of_card_ne_zero
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
       exact hQ0
-    haveI := Fintype.ofFinite (𝓞 E ⧸ Q)
-    haveI := ringChar.charP (𝓞 E ⧸ Q)
+    have := Fintype.ofFinite (𝓞 E ⧸ Q)
+    have := ringChar.charP (𝓞 E ⧸ Q)
     obtain ⟨n, hp, hcard⟩ := FiniteField.card (𝓞 E ⧸ Q) (ringChar (𝓞 E ⧸ Q))
     have hN : Ideal.absNorm Q = Fintype.card (𝓞 E ⧸ Q) := by
       rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
@@ -272,7 +272,7 @@ theorem liesOver_span (E : Type) [Field E] [NumberField E] (ℓ : ℕ) (hℓ : �
     (Ideal.span_singleton_prime hne).mpr (Nat.prime_iff_prime_int.mp hℓ)
   have hmax : (Ideal.span {(ℓ : ℤ)}).IsMaximal :=
     hpr.isMaximal (by rw [Ne, Ideal.span_singleton_eq_bot]; exact hne)
-  haveI := hP
+  have := hP
   refine ⟨hmax.eq_of_le ?_ ?_⟩
   · exact (inferInstance : (P.under ℤ).IsPrime).ne_top
   · rw [Ideal.span_singleton_le_iff_mem, Ideal.under, Ideal.mem_comap]
@@ -280,7 +280,7 @@ theorem liesOver_span (E : Type) [Field E] [NumberField E] (ℓ : ℕ) (hℓ : �
 
 theorem diffExp : DiffExpSt := by
   intro E _ _ _ ℓ a m hℓ hm hd P hP hl
-  haveI : Fact ℓ.Prime := ⟨hℓ⟩
+  have : Fact ℓ.Prime := ⟨hℓ⟩
   classical
   have hP0 : P ≠ ⊥ := by
     rintro rfl
@@ -311,8 +311,8 @@ theorem diffExp : DiffExpSt := by
       ∃ σ : E ≃ₐ[ℚ] E, σ • P = Q := by
     intro Q hQ
     obtain ⟨hQp, -, hlQ⟩ := of_mem_factors_span ℓ (Multiset.mem_toFinset.mp hQ)
-    haveI := hP
-    haveI := hQp
+    have := hP
+    have := hQp
     have hPQ : P.under ℤ = Q.under ℤ := by
       rw [← (liesOver_span E ℓ hℓ hP hl).over, ← (liesOver_span E ℓ hℓ hQp hlQ).over]
     obtain ⟨σ, hσ⟩ := Algebra.IsInvariant.exists_smul_of_under_eq (A := ℤ) (B := 𝓞 E) (G := E ≃ₐ[ℚ] E) P Q hPQ
@@ -345,7 +345,7 @@ theorem diffExp : DiffExpSt := by
 
 theorem count_span_pos (E : Type) [Field E] [NumberField E] (ℓ : ℕ) (hℓ : ℓ.Prime) {P : Ideal (𝓞 E)}
     (hP : P.IsPrime) (hl : (ℓ : 𝓞 E) ∈ P) : 0 < (normalizedFactors (Ideal.span {(ℓ : 𝓞 E)})).count P := by
-  haveI : Fact ℓ.Prime := ⟨hℓ⟩
+  have : Fact ℓ.Prime := ⟨hℓ⟩
   have hP0 : P ≠ ⊥ := by
     rintro rfl
     exact natCast_ne_zero_oe (E := E) ℓ (Ideal.mem_bot.mp hl)

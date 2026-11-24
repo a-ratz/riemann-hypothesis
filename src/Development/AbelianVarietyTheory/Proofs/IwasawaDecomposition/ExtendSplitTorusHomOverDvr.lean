@@ -64,8 +64,8 @@ theorem extend_torus_hom_dvr : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscr
       ∃ j : splitTorus (Sp V) X ⟶ G, IsMonHom j ∧ GlobalTheory.TorusPart.pullTorus h j = i := by
   intro V _ _ _ G _ _ hG G₁ _ φ₁ h₁ hT Ω _ α G' _ φ h X _ _ _ i hi
   obtain ⟨T⟩ := hT
-  letI := T.addCommGroup; letI := T.grpB
-  haveI := T.free; haveI := T.finite
+  let := T.addCommGroup; let := T.grpB
+  have := T.free; have := T.finite
   have := T.i_hom; have := T.q_hom; have := T.isAbelian.proper
   set a := algebraMap V (FractionRing V)
   have ef : spMap (α.comp a) = spMap α ≫ spMap a := by
@@ -88,7 +88,7 @@ theorem extend_torus_hom_dvr : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscr
   have : IsMonHom u' := Serre.isMonHom_of_mul_comp u' fun S x y => by
     rw [← cancel_mono (pullTorus h₂ T.i), MonObj.mul_comp (x ≫ u'), Category.assoc, Category.assoc,
       Category.assoc, hu', MonObj.mul_comp]
-  haveI : ConnectedSpace (Sp Ω) := SplitTorus.connectedSpace_of_isLocalRing Ω
+  have : ConnectedSpace (Sp Ω) := SplitTorus.connectedSpace_of_isLocalRing Ω
   obtain ⟨u, hu⟩ := SplitTorus.exists_eq_torusMap u'
 
   obtain ⟨e, he, heφ⟩ := grpPullback_iso h₁ (isGrpPullback_pullback G (spMap a))

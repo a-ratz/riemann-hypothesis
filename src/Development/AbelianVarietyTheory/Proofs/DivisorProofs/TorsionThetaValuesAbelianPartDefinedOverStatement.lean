@@ -390,7 +390,7 @@ theorem sharp_fibre_iso_exists : ∀ (g l : ℕ), l.Prime → Odd l → ∀ W : 
   intro y hy q hq1 hq2
   obtain ⟨k, hk⟩ := hy
   obtain ⟨y', hy'1, hy'2⟩ := GlobalTheory.T.torsion_fibre_point_transfer_fixed_model V₁ D.P.A K ev t.A ψ hψ k₀ k₀.subtype t₀.A φ hφ (l ^ k) y hk q hq1 hq2
-  haveI : IsAlgClosed k₀ := hk₀
+  have : IsAlgClosed k₀ := hk₀
   have hlk : IsUnit ((l ^ k : ℕ) : k₀) := by
     have h1 : IsUnit (ev (l : V₁)) := hlu.map ev
     have h2 : IsUnit ((l : k₀) : K) := by simpa using h1
@@ -498,7 +498,7 @@ namespace GlobalTheory
 
 theorem baseChange_eighthPower_product_monHom : ∀ (S S' : Scheme.{0}) (t : S' ⟶ S) (G H : Over S) [GrpObj G] [GrpObj H] (pr : Fin 8 → (G ⟶ H)), (∀ a, IsMonHom (pr a)) → (∀ (T : Over S) (y : Fin 8 → (T ⟶ H)), ∃! x : T ⟶ G, ∀ a, x ≫ pr a = y a) → (∀ a, IsMonHom ((Over.pullback t).map (pr a))) ∧ ∀ (T : Over S') (y : Fin 8 → (T ⟶ (Over.pullback t).obj H)), ∃! x : T ⟶ (Over.pullback t).obj G, ∀ a, x ≫ (Over.pullback t).map (pr a) = y a := by
   intro S S' t G H _ _ pr hmon hlim
-  refine ⟨fun a => by haveI := hmon a; infer_instance, ?_⟩
+  refine ⟨fun a => by have := hmon a; infer_instance, ?_⟩
   let c : Fan (fun _ : Fin 8 => H) := Fan.mk G pr
   have hc : IsLimit c := by
     refine Fan.IsLimit.mk c (fun s => (hlim s.pt s.proj).choose) (fun s j => ?_) (fun s m hm => ?_)
@@ -580,13 +580,13 @@ theorem exists_sections {G H : C} [MonObj G] [MonObj H] {n : Type} [DecidableEq 
   · intro T
     apply ext
     intro a
-    haveI := hp a
+    have := hp a
     rw [Category.assoc, key, MonObj.one_comp]
     split_ifs <;> rfl
   · intro T x y
     apply ext
     intro a
-    haveI := hp a
+    have := hp a
     simp only [Category.assoc, key, MonObj.mul_comp]
     split_ifs <;> simp
 
@@ -597,7 +597,7 @@ theorem hom_ext_sections {G H H' : C} [MonObj G] [MonObj H] [MonObj H']
     (j : n → (H ⟶ G)) (h1 : ∀ b, j b ≫ p b = 𝟙 H) (h2 : ∀ b c, c ≠ b → j b ≫ p c = 1)
     (f g : G ⟶ H') [IsMonHom f] [IsMonHom g] (h : ∀ b, j b ≫ f = j b ≫ g) : f = g := by
   classical
-  haveI := Fintype.ofFinite n
+  have := Fintype.ofFinite n
   have ext : ∀ {T : C} (x y : T ⟶ G), (∀ a, x ≫ p a = y ≫ p a) → x = y := fun {T} x y h =>
     (hu T fun a => y ≫ p a).unique h (fun _ => rfl)
   have hcomp : ∀ {K : C} [MonObj K] (k : G ⟶ K) [IsMonHom k] (l : List n),
@@ -621,7 +621,7 @@ theorem hom_ext_sections {G H H' : C} [MonObj G] [MonObj H] [MonObj H']
   have hs : (Finset.univ.toList.map fun b => p b ≫ j b).prod = 𝟙 G := by
     apply ext
     intro c
-    haveI := hp c
+    have := hp c
     rw [hcomp (p c), hlist c _ (Finset.nodup_toList _)]
     simp
   calc f = (Finset.univ.toList.map fun b => p b ≫ j b).prod ≫ f := by rw [hs, Category.id_comp]
@@ -637,11 +637,11 @@ theorem exists_diagonal : ∀ (K : Type) [Field K] [IsAlgClosed K] (G₀ G₁ H�
   classical
   obtain ⟨j₀, hj₀m, hj₀1, hj₀2⟩ := exists_sections p₀ hp₀ hu₀
   obtain ⟨j₁, hj₁m, hj₁1, hj₁2⟩ := exists_sections p₁ hp₁ hu₁
-  haveI := hF
-  haveI := hFi
-  haveI := fun a => hp₀ a
-  haveI := fun a => hp₁ a
-  haveI := fun b => hj₀m b
+  have := hF
+  have := hFi
+  have := fun a => hp₀ a
+  have := fun a => hp₁ a
+  have := fun b => hj₀m b
   have hpj : ∀ b a : Fin 8, j₀ b ≫ p₀ a = if a = b then 𝟙 H₀ else 1 := by
     intro b a
     split_ifs with h
@@ -656,26 +656,26 @@ theorem exists_diagonal : ∀ (K : Type) [Field K] [IsAlgClosed K] (G₀ G₁ H�
   have htors : ∀ (b : Fin 8) (y : 𝟙_ (Over (Sp K)) ⟶ H₀) (k : ℕ), y ^ (l ^ k) = 1 →
       ∃ k : ℕ, (y ≫ j₀ b) ^ (l ^ k) = 1 := by
     intro b y k hy
-    haveI := hj₀m b
+    have := hj₀m b
     exact ⟨k, by rw [← MonObj.pow_comp, hy, MonObj.one_comp]⟩
 
   have hoff : ∀ b a : Fin 8, a ≠ b → j₀ b ≫ F ≫ p₁ a = 1 := by
     intro b a hab
-    haveI := hj₀m b
-    haveI := hp₁ a
+    have := hj₀m b
+    have := hp₁ a
     refine GlobalTheory.TorsionDense.eq_one_of_torsion_comp_eq_one K H₀ H₁ hH₀ hH₁ l hl hlK _ inferInstance
       (fun _ _ y k hy => ?_)
     have := htor (y ≫ j₀ b) 1 (htors b y k hy) ⟨0, _root_.one_pow _⟩ a a
-      (by rw [Category.assoc, hpj, if_neg hab, MonObj.comp_one, MonObj.one_comp])
+      (by rw [Category.assoc, hpj, ite_eq_right hab, MonObj.comp_one, MonObj.one_comp])
     rw [MonObj.one_comp (F ≫ p₁ a)] at this
     simpa [Category.assoc] using this
 
   have hdiag : ∀ a : Fin 8, j₀ a ≫ F ≫ p₁ a = j₀ 0 ≫ F ≫ p₁ 0 := by
     intro a
-    haveI := hj₀m a
-    haveI := hj₀m 0
-    haveI := hp₁ a
-    haveI := hp₁ 0
+    have := hj₀m a
+    have := hj₀m 0
+    have := hp₁ a
+    have := hp₁ 0
     have hpt : ∀ (T : Over (Sp K)) (x : T ⟶ H₀),
         x ≫ ((j₀ a ≫ F ≫ p₁ a) * (j₀ 0 ≫ F ≫ p₁ 0)⁻¹) =
           (x ≫ j₀ a ≫ F ≫ p₁ a) * (x ≫ j₀ 0 ≫ F ≫ p₁ 0)⁻¹ := by
@@ -690,20 +690,20 @@ theorem exists_diagonal : ∀ (K : Type) [Field K] [IsAlgClosed K] (G₀ G₁ H�
     have h1 := GlobalTheory.TorsionDense.eq_one_of_torsion_comp_eq_one K H₀ H₁ hH₀ hH₁ l hl hlK _ hmon
       (fun _ _ y k hy => by
         have := htor (y ≫ j₀ a) (y ≫ j₀ 0) (htors a y k hy) (htors 0 y k hy) a 0
-          (by rw [Category.assoc, Category.assoc, hpj, hpj, if_pos rfl, if_pos rfl])
+          (by rw [Category.assoc, Category.assoc, hpj, hpj, ite_eq_left rfl, ite_eq_left rfl])
         rw [hpt, _root_.mul_inv_eq_one]
         simpa [Category.assoc] using this)
     exact _root_.mul_inv_eq_one.mp h1
   let f₁ : H₀ ⟶ H₁ := j₀ 0 ≫ F ≫ p₁ 0
-  haveI : IsMonHom f₁ := by
-    haveI := hj₀m 0
-    haveI := hp₁ 0
+  have : IsMonHom f₁ := by
+    have := hj₀m 0
+    have := hp₁ 0
     dsimp [f₁]
     infer_instance
   have hcomm : ∀ a, F ≫ p₁ a = p₀ a ≫ f₁ := by
     intro a
-    haveI := hp₁ a
-    haveI := hp₀ a
+    have := hp₁ a
+    have := hp₀ a
     refine hom_ext_sections p₀ hp₀ hu₀ j₀ hj₀1 hj₀2 _ _ (fun b => ?_)
     rw [← Category.assoc (j₀ b) (p₀ a), hpj]
     split_ifs with hab
@@ -768,7 +768,7 @@ theorem exists_compare {S S' : Scheme.{0}} {G : Over S} [GrpObj G] {G₁ G₂ : 
 
 theorem isGrpPullback_of_isIso {S : Scheme.{0}} {G₁ G₂ : Over S} [GrpObj G₁] [GrpObj G₂] (e : G₁ ⟶ G₂)
     [IsMonHom e] [IsIso e] : IsGrpPullback G₁ G₂ (𝟙 S) e.left := by
-  haveI : IsIso e.left := inferInstanceAs (IsIso ((Over.forget S).map e))
+  have : IsIso e.left := inferInstanceAs (IsIso ((Over.forget S).map e))
   refine ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy => ?_⟩
   let k : Over.mk (T.hom ≫ 𝟙 S) ⟶ T := Over.homMk (𝟙 T.left) (by simp)
   have ex : x₀ = k ≫ x ≫ e := Over.OverMorphism.ext (by simp [k, hx])
@@ -883,15 +883,15 @@ theorem torsPull :∀ (S S' : Scheme.{0}) (t : S' ⟶ S) (X : Over S) [GrpObj X]
 
 theorem fibreIso_eq_pow : ∀ (l : ℕ), l.Prime → Odd l → ∀ W : Matrix (Fin 8) (Fin 8) ℤ, IsE8 W → ∀ j, 1 ≤ j → ∀ (V V₁ : Type) [CommRing V] [IsDomain V] [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsUnit (l : V₁) → ∀ (Q : Data V) (ρ : V →+* V₁), Function.Injective ρ → ∀ (D : DegPre V₁), ∀ (pr : Fin 8 → (D.P.A ⟶ (Over.pullback (spMap ρ)).obj Q.B)) (w : LB.Iso D.P.L (LB.LinComb Q.M.L (K := (Fin 8 × Fin 8) × Fin 4) (fun k => lamPts (pr k.1.1) (pr k.1.2) k.2 ≫ pullback.fst Q.B.hom (spMap ρ)) (fun k => -(W k.1.1 k.1.2 * negε k.2)))), (∀ a, IsMonHom (pr a)) → (∀ (T : Over (Sp V₁)) (y : Fin 8 → (T ⟶ (Over.pullback (spMap ρ)).obj Q.B)), ∃! x : T ⟶ D.P.A, ∀ a, x ≫ pr a = y a) → w.IsGen → ∀ (K : Type) [Field K] [IsAlgClosed K] (ev : V₁ →+* K) (σ : K ≃+* K), ∀ (f : ((Over.pullback (spMap ev)).obj D.P.A).left ⟶ ((Over.pullback (spMap (σ.toRingHom.comp ev))).obj D.P.A).left), IsGrpPullback ((Over.pullback (spMap ev)).obj D.P.A) ((Over.pullback (spMap (σ.toRingHom.comp ev))).obj D.P.A) (𝟙 _) f → LBIso (D.P.L.pull (pullback.fst D.P.A.hom (spMap ev))) (D.P.L.pull (f ≫ pullback.fst D.P.A.hom (spMap (σ.toRingHom.comp ev)))) → (∀ (y : Over.mk (spMap ev) ⟶ D.P.A), (∃ k : ℕ, y ^ (l ^ k) = 1) → ∀ q : Sp K ⟶ ((Over.pullback (spMap ev)).obj D.P.A).left, q ≫ pullback.fst D.P.A.hom (spMap ev) = y.left → q ≫ pullback.snd D.P.A.hom (spMap ev) = 𝟙 _ → q ≫ f ≫ pullback.fst D.P.A.hom (spMap (σ.toRingHom.comp ev)) = spMap σ.toRingHom ≫ y.left) → ∃ f₁ : ((Over.pullback (spMap (ev.comp ρ))).obj Q.B).left ⟶ ((Over.pullback (spMap (σ.toRingHom.comp (ev.comp ρ)))).obj Q.B).left, IsGrpPullback ((Over.pullback (spMap (ev.comp ρ))).obj Q.B) ((Over.pullback (spMap (σ.toRingHom.comp (ev.comp ρ)))).obj Q.B) (𝟙 _) f₁ ∧ ∀ (a : Fin 8) (T : Scheme.{0}) (x : T ⟶ ((Over.pullback (spMap ev)).obj D.P.A).left) (y : T ⟶ ((Over.pullback (spMap (ev.comp ρ))).obj Q.B).left), y ≫ pullback.fst Q.B.hom (spMap (ev.comp ρ)) = x ≫ pullback.fst D.P.A.hom (spMap ev) ≫ (pr a).left ≫ pullback.fst Q.B.hom (spMap ρ) → y ≫ pullback.snd Q.B.hom (spMap (ev.comp ρ)) = x ≫ pullback.snd D.P.A.hom (spMap ev) → x ≫ f ≫ pullback.fst D.P.A.hom (spMap (σ.toRingHom.comp ev)) ≫ (pr a).left ≫ pullback.fst Q.B.hom (spMap ρ) = y ≫ f₁ ≫ pullback.fst Q.B.hom (spMap (σ.toRingHom.comp (ev.comp ρ))) := by
   intro l hl hodd W hW j hj V V₁ _ _ _ _ _ hlu Q ρ hρ D pr w hpr huniv hw K _ _ ev σ f hf hL htor
-  haveI := D.P.isAb.comm
+  have := D.P.isAb.comm
   have hfw : f ≫ ((Over.pullback (spMap (σ.toRingHom.comp ev))).obj D.P.A).hom = ((Over.pullback (spMap ev)).obj D.P.A).hom := by
     simpa using hf.1.w
   let F : (Over.pullback (spMap ev)).obj D.P.A ⟶ (Over.pullback (spMap (σ.toRingHom.comp ev))).obj D.P.A := Over.homMk f hfw
-  haveI : IsIso f := hf.1.isIso_fst_of_isIso
-  haveI hFi : IsIso F := by
+  have : IsIso f := hf.1.isIso_fst_of_isIso
+  have hFi : IsIso F := by
     have : IsIso ((Over.forget _).map F) := by change IsIso f; infer_instance
     exact isIso_of_reflects_iso F (Over.forget _)
-  haveI hFm : IsMonHom F := GlobalTheory.AmpleRigid.isMonHom_of_mul_comp F
+  have hFm : IsMonHom F := GlobalTheory.AmpleRigid.isMonHom_of_mul_comp F
     (fun T x y => GlobalTheory.AmpleRigid.mul_comp_of_grpPullback_id F hf x y)
   obtain ⟨hm₀, hu₀⟩ := GlobalTheory.T.isMonHom_pullback_pr_and_unique_lift_fin_eight _ _ (spMap ev) D.P.A _ pr hpr huniv
   obtain ⟨hm₁, hu₁⟩ := GlobalTheory.T.isMonHom_pullback_pr_and_unique_lift_fin_eight _ _ (spMap (σ.toRingHom.comp ev)) D.P.A _ pr hpr huniv

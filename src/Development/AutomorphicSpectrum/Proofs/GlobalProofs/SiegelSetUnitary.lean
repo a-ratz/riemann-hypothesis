@@ -93,9 +93,9 @@ namespace GlobalTheory.CompanionTheory.RapidDecay
 
 theorem norm_le_of_unipRad_variation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ φ : GAd σ J → ℂ, (∀ γ ∈ ratPts σ J, ∀ g, φ (γ * g) = φ g) → Continuous φ → IsCuspidal σ J φ → ∀ (k : ℕ) (Cc : Matrix (Fin n) (Fin k) E), 0 < k → GlobalTheory.UAut.IsIsoCols σ J Cc → ∀ (g : GAd σ J) (e : ℝ), (∀ m ∈ unipRad σ J Cc, ‖φ (m * g) - φ g‖ ≤ e) → ‖φ g‖ ≤ e := by
   intro F E _ _ _ _ _ σ hCM n J hJ φ hleft hcont hcusp k Cc hk hC g e he
-  haveI := GlobalTheory.UAut.locallyCompact_unipRad hCM hJ hC
+  have := GlobalTheory.UAut.locallyCompact_unipRad hCM hJ hC
   have hc : GlobalTheory.Cusp.Cocompact (ratPts σ J) (unipRad σ J Cc) := GlobalTheory.UAut.cocompact_unipRad hCM hJ hC
-  haveI hP := hc.isProbabilityMeasure
+  have hP := hc.isProbabilityMeasure
   have hL : GlobalTheory.AutomorphicL2Unitary.LeftInv (ratPts σ J) φ := hleft
   have h0 : GlobalTheory.Cusp.constTermOn (ratPts σ J) (unipRad σ J Cc) φ g = 0 :=
     (hc.constTermOn_eq_zero_iff (GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom _ Measure.haar) hL g).2
@@ -153,9 +153,9 @@ theorem continuous_lineDer_of_growth (h : IsCMExt F E σ) {φ : GAd σ J → ℂ
         funext t i j; simp only [Function.comp_apply, GlobalTheory.Orb.matCoord, hy t]
       rw [e]
       have hexp : Continuous fun t : ℝ => NormedSpace.exp (t • Z) := by
-        letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-        letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-        letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+        let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+        let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+        let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
         exact NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
       exact continuous_pi fun i => continuous_pi fun j => (continuous_apply j).comp ((continuous_apply i).comp hexp)
     have : γ = fun t => embArch σ J w (y t) := funext hγ'
@@ -216,7 +216,7 @@ theorem isCuspidal_lineDer (h : IsCMExt F E σ) (hJ : IsHermND σ J) {φ : GAd �
     (hc' : Continuous (lineDer γ φ)) : IsCuspidal σ J (lineDer γ φ) := by
   intro r C hC μ 𝓕 hμ h𝓕 x
   have hI : GlobalTheory.UAut.IsIsoCols σ J C := hC.2
-  haveI := GlobalTheory.UAut.locallyCompact_unipRad h hJ hI
+  have := GlobalTheory.UAut.locallyCompact_unipRad h hJ hI
   have hco := GlobalTheory.UAut.cocompact_unipRad h hJ hI
   have hl' : GlobalTheory.AutomorphicL2Unitary.LeftInv (ratPts σ J) (lineDer γ φ) := GlobalTheory.UAut.ConstAut.leftInv_foldr hl [γ]
   have h0 : ∀ y, GlobalTheory.Cusp.constTermOn (ratPts σ J) (unipRad σ J C) φ y = 0 := fun y =>
@@ -231,9 +231,9 @@ theorem isCuspidal_lineDer (h : IsCMExt F E σ) (hJ : IsHermND σ J) {φ : GAd �
           funext t i j; simp only [Function.comp_apply, GlobalTheory.Orb.matCoord, hy t]
         rw [e]
         have hexp : Continuous fun t : ℝ => NormedSpace.exp (t • Z) := by
-          letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-          letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-          letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+          let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+          let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+          let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
           exact NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
         exact continuous_pi fun i => continuous_pi fun j => (continuous_apply j).comp ((continuous_apply i).comp hexp)
       have : γ = fun t => embArch σ J w (y t) := funext hγ'
@@ -320,7 +320,7 @@ theorem height_le_rbar_pow : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   obtain ⟨Ch, Ah, hCh⟩ := @GlobalTheory.TorusHeight.height_torus_le F E _ _ _ _ _ σ hσ n J r X Y _ hc'
   refine ⟨r * r * Ah, fun Ω Cm hΩ hCm => ?_⟩
   have hcont : Continuous fun g : GAd σ J => (height σ J g : ℝ) :=
-    NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtype_val)
+    NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtypeVal)
   obtain ⟨R₁, hR₁⟩ := (hΩ.image hcont).bddAbove
   obtain ⟨R₂, hR₂⟩ := (hCm.image hcont).bddAbove
   set R₁' := max R₁ 0 with hR₁'
@@ -509,8 +509,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem absE_entry_le {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {n : ℕ} (x : GL (Fin n) (AF F ⊗[F] E))
     (u : (AF F ⊗[F] E)ˣ) (i j : Fin n) (hu : u.1 = x.1 i j) : absE F E u ≤ heightGL F x ^ 2 := by
   rw [absE_apply, heightGL, mul_pow, ← Finset.prod_pow, finprod_pow (finite_mulSupport_htFin F x)]
-  refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_)
-    (finprod_le_finprod' (finite_mulSupport_absEv u) ?_ fun v => ?_)
+  refine mul_le_mul' (Finset.prod_le_prod fun w _ => ?_)
+    (finprod_le_finprod (finite_mulSupport_absEv u) ?_ fun v => ?_)
   · obtain ⟨τ⟩ : Nonempty (EmbOver E w) := inferInstance
     rw [absEw_eq_sq hσ τ]
     refine pow_le_pow_left' ?_ 2
@@ -688,7 +688,7 @@ theorem exists_prod_le {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {n : ℕ} {J 
 theorem height_le_pow : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∀ (K : Subgroup (GAd σ J)) (Ω : Set (GAd σ J)) (c : ℝ), IsCompact (K : Set (GAd σ J)) → IsCompact Ω → Ω ⊆ minParOne σ J X → 0 < c → ∃ (C : ℝ≥0) (A : ℕ), ∀ g ∈ siegelSet σ J X Y Ω c K, ∀ γ ∈ ratPts σ J, height σ J g ≤ C * height σ J (γ * g) ^ A := by
   intro F E _ _ _ _ _ σ hσ n J hJ r X Y hW K Ω c hK hΩ hΩ' hc
   have hcont : Continuous fun g : GAd σ J => (height σ J g : ℝ) :=
-    NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtype_val)
+    NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtypeVal)
   obtain ⟨R₁, hR₁⟩ := (hΩ.image hcont).bddAbove
   obtain ⟨R₂, hR₂⟩ := (hK.image hcont).bddAbove
   obtain ⟨B, hB0, hB⟩ := exists_prod_le hσ hW hc
@@ -785,7 +785,7 @@ theorem sum_single (r : ℕ) : ∑ i : Fin r, (Matrix.single i i 1 : Matrix (Fin
     · simp [Matrix.single_apply, Matrix.one_apply, h]
   · intro k _ hk
     simp only [Matrix.single_apply]
-    rw [if_neg (fun e => hk e.1)]
+    rw [ite_eq_right (fun e => hk e.1)]
   · simp
 
 theorem sum_pr (X Y : Matrix (Fin n) (Fin r) R) (X' Y' : Matrix (Fin r) (Fin n) R) :
@@ -1037,7 +1037,7 @@ theorem torus_unique (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame
 theorem torus_mat (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J X Y) {a : (Fin r → ℝ) → GAd σ J}
     (ha : IsTorus σ J X Y a) (s : Fin r → ℝ) :
     (matHom _ σ J (a s)).1 = ∑ α, eA F E (Real.exp (dl s α)) • Pj σ J X Y α := by
-  haveI := h.1
+  have := h.1
   let P : Matrix (Fin n) (Fin n) E := 1 - X * (cT (σ : E →+* E) Y * J) - Y * (cT (σ : E →+* E) X * J)
   have yx : cT (σ : E →+* E) Y * J * X = 1 :=
     (show Sieg.Fr (σ : E →+* E) J X Y from ⟨sigma_sigma h, Matrix.ext fun i j => hJ.1 i j, hW.xx, hW.yy, hW.xy⟩).yx
@@ -1109,7 +1109,7 @@ theorem conj_eq (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J
     (ha : IsTorus σ J X Y a) (s : Fin r → ℝ) {p : GAd σ J} (hp : p ∈ minPar σ J X) :
     (matHom _ σ J ((a s)⁻¹ * p * a s)).1 =
       Psi σ J X Y (fun α β => if rk α ≤ rk β then Real.exp (dl s β - dl s α) else 0, p) := by
-  haveI := h.1
+  have := h.1
   have ha0 : a 0 = 1 := by
     have e := ha.add 0 0
     rw [add_zero] at e
@@ -1123,14 +1123,14 @@ theorem conj_eq (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J
   dsimp only
   rw [Matrix.smul_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul, dl_neg]
   by_cases hr : rk α ≤ rk β
-  · rw [if_pos hr, eA_exp_mul]
+  · rw [ite_eq_left hr, eA_exp_mul]
   · rw [pj_mul_pj_eq_zero h hJ hW hp (not_le.1 hr), smul_zero, smul_zero]
 
 theorem isCompact_mat (K : Set (Matrix (Fin n) (Fin n) (AF F ⊗[F] E))) (hK : IsCompact K) :
     IsCompact {g : GAd σ J | (matHom _ σ J g).1 ∈ K ∧ (matHom _ σ J g⁻¹).1 ∈ K} := by
   have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
   have h1 := (Units.isClosedEmbedding_embedProduct (α := Matrix (Fin n) (Fin n) (AF F ⊗[F] E))).comp
     (isClosedEmbedding_matHom_GAd σ J)
   have h2 := h1.isCompact_preimage (hK.prod (hK.image MulOpposite.continuous_op))
@@ -1154,7 +1154,7 @@ end Ad
 
 theorem conj_compact : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∀ (Ω : Set (GAd σ J)) (c : ℝ), IsCompact Ω → Ω ⊆ minParOne σ J X → 0 < c → ∃ C : Set (GAd σ J), IsCompact C ∧ ∀ p ∈ Ω, ∀ t ∈ cone r c, ∀ a, IsTorusElt σ J X Y t a → a⁻¹ * p * a ∈ C := by
   intro F E _ _ _ _ _ σ h n J hJ r X Y hW Ω c hΩ hsub hc
-  haveI := h.1
+  have := h.1
   obtain ⟨a, ha⟩ := exists_isTorus h hJ hW
   obtain ⟨M, hM⟩ := cone_bound r hc
   have hΩ' : IsCompact (Ω ∪ Ω⁻¹) := hΩ.union hΩ.inv

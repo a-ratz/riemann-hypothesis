@@ -227,7 +227,7 @@ theorem det_gm_one_ne : (gm I (rho I) 1 (eB I)).det ≠ 0 := by
       rw [eB, vec_one_bQ]
     rw [heq]
     exact h
-  exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 hli)).ne_zero
+  exact ((Matrix.isUnit_iff_isUnit_det _).1 (linearIndependent_col_iff_isUnit.1 hli)).ne_zero
 
 end GlobalTheory.RealCoordCusp
 

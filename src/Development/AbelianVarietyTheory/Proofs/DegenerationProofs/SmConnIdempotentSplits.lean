@@ -117,7 +117,7 @@ theorem isMonHom_ret : letI := grpObj i r hir; IsMonHom r :=
   letI := grpObj i r hir
   { one_hom := rfl
     mul_hom := by
-      haveI : Mono i := (SplitMono.mk r hir).mono
+      have : Mono i := (SplitMono.mk r hir).mono
       change μ[G] ≫ r = (r ⊗ₘ r) ≫ (i ⊗ₘ i) ≫ μ[G] ≫ r
       rw [← cancel_mono i, Category.assoc, Category.assoc (r ⊗ₘ r), mul_comp i r hir,
         tensorHom_comp_tensorHom_assoc, IsMonHom.mul_hom] }
@@ -143,7 +143,7 @@ theorem smConn_idempotent_splits : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G],
   have hir : i ≫ r = 𝟙 _ := by
     rw [← cancel_mono i, Category.assoc, hri, Category.id_comp]
     simpa using equalizer.condition e (𝟙 G)
-  haveI : IsMonHom (r ≫ i) := by rw [hri]; exact he
+  have : IsMonHom (r ≫ i) := by rw [hri]; exact he
   have hl : i.left ≫ r.left = 𝟙 _ := by rw [← Over.comp_left, hir, Over.id_left]
   have hw := Over.w r
   exact ⟨_, IdemSplit.grpObj i r hir, i, r,

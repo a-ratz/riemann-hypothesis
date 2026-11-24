@@ -87,7 +87,7 @@ theorem setLIntegral_comp_addEquiv {G : Type} [AddCommGroup G] [TopologicalSpace
   have h2 : (μ.map e.symm) F = μ F := (hF''.measure_eq hF').trans h1
   have h0 : μ F ≠ 0 := hF.measure_ne_zero (NeZero.ne μ)
   have hc1 : (c : ENNReal) = 1 := by
-    rw [hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+    rw [hc, smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
     exact (ENNReal.mul_left_inj h0 hfin).1 (by rw [h2, one_mul])
   have hc2 : c = 1 := by exact_mod_cast hc1
   rw [hc2, one_smul] at hc
@@ -193,7 +193,7 @@ theorem rational_substitution : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), I
       have h7 : ‖f (ratW T S y + x)‖ = ‖f x‖ := by
         rw [h6, norm_mul, hψ.1.2.1, one_mul]
       show ‖f (ratW T S y + x)‖ₑ ^ 2 = ‖f x‖ₑ ^ 2
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, h7]
+      rw [← ofReal_norm, ← ofReal_norm, h7]
 
 end GlobalTheory.RatSubst
 

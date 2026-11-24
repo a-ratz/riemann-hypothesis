@@ -347,7 +347,7 @@ theorem pull_inv_hom {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] (f : 
 
 theorem lab_add {o : Type} [CommRing o] {S : Scheme.{0}} {g k : ℕ} [NeZero k] {J : Type} {b : TBase o k} {s : S ⟶ Sp o}
     (t : TObj g k J b s) (a a' : Ix g k) : t.lab (a + a') = t.lab a * t.lab a' := by
-  haveI := t.ab.comm
+  have := t.ab.comm
   simp only [TObj.lab, Out.linComb, List.prod_ofFn]
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
@@ -376,7 +376,7 @@ theorem square_data {K : Type} [Field K] (P P₂ : Out.PolAV (Sp K)) (e : P₂.A
       (∀ x y : Out.baseOver (Sp K) ⟶ Z, (lift (x ≫ π) (y ≫ π) ≫ e.inv).left ≫ E.inv = (lift x y).left) ∧
       ∀ (k : ℕ) (I : Type) (u : I → (Out.baseOver (Sp K) ⟶ P.A)), (∀ x, x ^ k = 1 → ∃ i, u i = x) →
         ∀ x : Out.baseOver (Sp K) ⟶ P₂.A, x ^ k = 1 → ∃ i : I × I, lift (u i.1) (u i.2) ≫ e.inv = x := by
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   let F : Z ⊗ Z ≅ P.A ⊗ P.A := tensorIso (asIso π) (asIso π)
   have F₁ : F.hom ≫ fst _ _ = fst Z Z ≫ π := tensorHom_fst _ _
   have F₂ : F.hom ≫ snd _ _ = snd Z Z ≫ π := tensorHom_snd _ _
@@ -426,11 +426,11 @@ open GlobalTheory.AddGraph GlobalTheory.CechPic in
 theorem GlobalTheory.cutBy_graph_addition : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Finite J] (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ (o : Type) [CommRing o] (b : TBase o ((n ^ j) ^ 2)), ∃ (Q : Polynomial ℚ) (d : ℕ), ∀ (K : Type) [Field K] [IsAlgClosed K] (β : o →+* K) (t : TObj g ((n ^ j) ^ 2) J b (spMap β)) σ (p : Ix g ((n ^ j) ^ 2) → Ix g ((n ^ j) ^ 2) → K) (M₂ : LB ((Over.mk (𝟙 (Sp K)) ⊗ t.A) ⊗ (Over.mk (𝟙 (Sp K)) ⊗ t.A)).left) (th₂ : Ix g ((n ^ j) ^ 2) × Ix g ((n ^ j) ^ 2) → M₂.Sec), M₂.IsLB → t.Emb (n ^ 2) (Over.mk (𝟙 _)) σ → (∀ (T : Type) [CommRing T] (x : Sp T ⟶ ((Over.mk (𝟙 (Sp K)) ⊗ t.A) ⊗ (Over.mk (𝟙 (Sp K)) ⊗ t.A)).left) (v₁ v₂ : _ → T), SecCoord _ σ (x ≫ (fst (Over.mk (𝟙 (Sp K)) ⊗ t.A) (Over.mk (𝟙 (Sp K)) ⊗ t.A)).left) v₁ → SecCoord _ σ (x ≫ (snd (Over.mk (𝟙 (Sp K)) ⊗ t.A) (Over.mk (𝟙 (Sp K)) ⊗ t.A)).left) v₂ → SecCoord M₂ th₂ x (fun i => v₁ i.1 * v₂ i.2)) → (∀ h, SecCoord _ σ (lift (𝟙 (Over.mk (𝟙 (Sp K)))) (t.lab h ^ n ^ j)).left (p h)) → CutBy (graphIdeal ((Over.mk (𝟙 (Sp K)) ⊗ t.A) ⊗ (Over.mk (𝟙 (Sp K)) ⊗ t.A)).hom M₂ th₂ (𝟙 _) _ σ (lift (toUnit _ ≫ (Over.homMk (𝟙 _) (by simp) : 𝟙_ (Over (Sp K)) ⟶ Over.mk (𝟙 (Sp K)))) ((fst (Over.mk (𝟙 (Sp K)) ⊗ t.A) (Over.mk (𝟙 (Sp K)) ⊗ t.A) ≫ snd _ t.A) * (snd (Over.mk (𝟙 (Sp K)) ⊗ t.A) (Over.mk (𝟙 (Sp K)) ⊗ t.A) ≫ snd _ t.A))).left) Q d (fun (h : Ix g ((n ^ j) ^ 2) × Ix g ((n ^ j) ^ 2)) i => p h.1 i.1.1 * p h.2 i.1.2 * p (h.1 + h.2) i.2) := by
   intro hL hL2 g J _ Mat κ n hn hodd
   have hn1 := hn.one_lt
-  haveI : NeZero ((n ^ 2) ^ 2) := ⟨by positivity⟩
+  have : NeZero ((n ^ 2) ^ 2) := ⟨by positivity⟩
   obtain ⟨d, k₀, H⟩ := _root_.GlobalTheory.cutBy_idealOf_torsion hL hL2 (2 * g) (2 * (n ^ 2) ^ 2)
     ((Ix g ((n ^ 2) ^ 2) × Ix g ((n ^ 2) ^ 2)) × Ix g ((n ^ 2) ^ 2))
   refine ⟨max 2 k₀, fun j hj o _ b => ?_⟩
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨by positivity⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨by positivity⟩
   have hdiv : n ^ 2 ∣ n ^ j := pow_dvd_pow n (le_of_max_le_left hj)
   have hdiv' : (n ^ 2) ^ 2 ∣ (n ^ j) ^ 2 := pow_dvd_pow_of_dvd hdiv 2
   have hδ : 3 ^ g * ((n ^ 2) ^ 2) ^ (2 * g) ≤ (2 * (n ^ 2) ^ 2) ^ (2 * g) := by
@@ -442,8 +442,8 @@ theorem GlobalTheory.cutBy_graph_addition : Out.Laws → Out.Laws2 → ∀ (g : 
   refine ⟨Q, d, fun K _ _ β t σ p M₂ th₂ hM₂ hemb hseg hp => ?_⟩
   obtain ⟨hiso, hH, hva, hHiso, hper, -, hlab⟩ := GlobalTheory.embSec_veryAmple_periodic hL hL2 o g (n ^ j) J b K β t (n ^ 2) σ hodd.pow hdiv
     (hn.two_le.trans (Nat.le_self_pow two_ne_zero n)) hemb
-  haveI := t.ab.comm
-  haveI hπ : IsIso (snd (Over.mk (𝟙 (Sp K))) t.A) := by
+  have := t.ab.comm
+  have hπ : IsIso (snd (Over.mk (𝟙 (Sp K))) t.A) := by
     haveI : IsIso ((Over.forget _).map (snd (Over.mk (𝟙 (Sp K))) t.A)) := hiso
     exact isIso_of_reflects_iso _ (Over.forget _)
   have hZ : (fst (Over.mk (𝟙 (Sp K))) t.A).left = ((Over.mk (𝟙 (Sp K))) ⊗ t.A).hom := (Category.comp_id _).symm.trans (Over.w (fst (Over.mk (𝟙 (Sp K))) t.A))

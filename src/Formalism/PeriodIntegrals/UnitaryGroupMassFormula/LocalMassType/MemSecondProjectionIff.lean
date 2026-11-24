@@ -69,8 +69,8 @@ theorem lat_basis {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (�
       ∀ y, y ∈ L ↔ ∃ c : Fin n → v.adicCompletion F, (∀ i, c i ∈ v.adicCompletionIntegers F) ∧
         y = A.mulVec c := by
   classical
-  haveI : Module.Finite (v.adicCompletionIntegers F) L := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free (v.adicCompletionIntegers F) L := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite (v.adicCompletionIntegers F) L := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free (v.adicCompletionIntegers F) L := Module.free_of_finite_type_torsion_free'
   obtain ⟨ι, hιf, b, hb⟩ : ∃ (ι : Type) (_ : Fintype ι) (b : Module.Basis ι (v.adicCompletionIntegers F) L), True :=
     ⟨_, inferInstance, Module.Free.chooseBasis (v.adicCompletionIntegers F) L, trivial⟩
   obtain ⟨w, hw⟩ : ∃ w : ι → (Fin n → v.adicCompletion F), w = fun i => (b i : Fin n → v.adicCompletion F) :=
@@ -108,7 +108,7 @@ theorem lat_basis {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (�
       refine Matrix.ext fun i j => ?_
       simp [Module.Basis.toMatrix_apply, Module.Basis.reindex_apply, bK, Module.Basis.mk_apply]
     rw [hA]
-    letI := (Pi.basisFun (v.adicCompletion F) (Fin n)).invertibleToMatrix (bK.reindex e.symm)
+    let := (Pi.basisFun (v.adicCompletion F) (Fin n)).invertibleToMatrix (bK.reindex e.symm)
     exact isUnit_of_invertible _
   · intro y
     constructor

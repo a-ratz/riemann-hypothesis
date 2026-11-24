@@ -57,15 +57,15 @@ theorem mem_O_of_forall_dvr {F : Type} [Field F] (Y : Var F) (y : (ratOf Y).Z) (
     (hx : ∀ V : ValuationSubring Y.Fn, IsDiscreteValuationRing V →
       LocalSubring.range (algebraMap ((ratOf Y).O y) Y.Fn) ≤ V.toLocalSubring → x ∈ V) :
     x ∈ (ratOf Y).O y := by
-  haveI := (ratOf Y).lft
-  haveI : IsLocallyNoetherian (ratOf Y).Z := LocallyOfFiniteType.isLocallyNoetherian (ratOf Y).s
-  haveI : IsNoetherianRing ((ratOf Y).O y) :=
+  have := (ratOf Y).lft
+  have : IsLocallyNoetherian (ratOf Y).Z := LocallyOfFiniteType.isLocallyNoetherian (ratOf Y).s
+  have : IsNoetherianRing ((ratOf Y).O y) :=
     isNoetherianRing_of_ringEquiv _ ((ratOf Y).stalkEquiv y)
-  haveI : Algebra.EssFiniteType ((ratOf Y).O y) Y.Fn :=
+  have : Algebra.EssFiniteType ((ratOf Y).O y) Y.Fn :=
     Algebra.EssFiniteType.of_isLocalization Y.Fn (nonZeroDivisors ((ratOf Y).O y))
   have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme (ratOf Y).Z := fun z =>
     ⟨(Y.isNormalScheme).isDomain_stalk z, (Y.isNormalScheme).isIntegrallyClosed_stalk z⟩
-  haveI := RatModel.isIntegrallyClosed_O hN y
+  have := RatModel.isIntegrallyClosed_O hN y
   by_contra hn
   have hi : ¬ IsIntegral ((ratOf Y).O y) x := fun h => by
     obtain ⟨a, rfl⟩ := IsIntegrallyClosed.isIntegral_iff.1 h
@@ -84,12 +84,12 @@ theorem exists_pt_of_le {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M 
         spMap (IsLocalRing.residue V) ≫ v = spMap σ ≫ spMap (IsLocalRing.residue _) ≫ M.Z.fromSpecStalk z := by
   obtain ⟨h1, h2⟩ := (GlobalTheory.localSubring_range_le_valuationSubring_iff _ V).1 hV
   let ι : M.O z →+* V := (algebraMap (M.O z) Ω).codRestrict V h1
-  haveI hι : IsLocalHom ι := ⟨fun r hr => by
+  have hι : IsLocalHom ι := ⟨fun r hr => by
     by_contra hn
     obtain ⟨_, hm⟩ := (ValuationSubring.mem_nonunits_iff_exists_mem_maximalIdeal).1 (h2 r hn)
     exact hm hr⟩
   let g : M.Z.presheaf.stalk z →+* V := ι.comp (M.stalkEquiv z).toRingHom
-  haveI : IsLocalHom g := ⟨fun a ha =>
+  have : IsLocalHom g := ⟨fun a ha =>
     (isUnit_map_iff (M.stalkEquiv z) a).1 (IsLocalHom.map_nonunit (f := ι) _ ha)⟩
   refine ⟨spMap g ≫ M.Z.fromSpecStalk z, ?_, ?_, IsLocalRing.ResidueField.map g, ?_⟩
   · show M.Z.fromSpecStalk z (spMap g (IsLocalRing.closedPoint V)) = z
@@ -143,10 +143,10 @@ theorem dominates_O (F : Type) [Field F] (ι : Type) [Fintype ι] (m : ι → �
   refine ⟨s (IsLocalRing.closedPoint κ), fun a ha => ?_⟩
   refine mem_O_of_forall_dvr Y₁ y (ψ a) fun V _ hV => ?_
   obtain ⟨v, -, hv1, σ, hv2⟩ := exists_pt_of_le (ratOf Y₁) y V hV
-  haveI : IsProper (f₂ ≫ X.str) := by
+  have : IsProper (f₂ ≫ X.str) := by
     rw [show f₂ ≫ X.str = Y₂.str from h₂.1.inducedModelMorphism_comp_structureMap]
     infer_instance
-  haveI : IsProper f₂ := IsProper.of_comp f₂ X.str
+  have : IsProper f₂ := IsProper.of_comp f₂ X.str
   have hψ' : spMap ψ.toRingHom ≫ spMap φ₂.toRingHom = spMap φ₁.toRingHom := by
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, ← hψ]
     rfl

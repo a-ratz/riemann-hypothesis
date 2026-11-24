@@ -345,7 +345,7 @@ theorem injective_of_retracts {C : Type*} [Category C] [Preadditive C] {ι : Typ
 theorem biproduct_push : ∀ (R : Type) [CommRing R] {ι : Type} [Fintype ι] (L : ι → Cx R) (C : Cx R) (g : ∀ j, L j ⟶ C) (m : ℤ), (∀ j, (L j).IsStrictlyGE m) → (∀ j n, CategoryTheory.Injective ((L j).X n)) → ∃ (D : Cx R) (f : D ⟶ C), D.IsStrictlyGE m ∧ (∀ n, CategoryTheory.Injective (D.X n)) ∧ ∀ (K : Cx R) (n : ℤ), ∃ e : (∀ j, CohomologyClass K (L j) n) ≃ CohomologyClass K D n, ∀ a, cpush K f n (e a) = ∑ j, cpush K (g j) n (a j) := by
   intro R _ ι _ L C g m hL hI
   classical
-  haveI : HasFiniteBiproducts (Cx R) := HasFiniteBiproducts.of_hasFiniteProducts
+  have : HasFiniteBiproducts (Cx R) := HasFiniteBiproducts.of_hasFiniteProducts
   have htot : ∀ n, ∑ j, (biproduct.π L j).f n ≫ (biproduct.ι L j).f n = 𝟙 ((⨁ L).X n) := by
     intro n
     have := (HomologicalComplex.eval _ (ComplexShape.up ℤ) n).map_sum (fun j => biproduct.π L j ≫ biproduct.ι L j) Finset.univ
@@ -417,10 +417,10 @@ theorem GlobalTheory.EtC.cone_kinj_and_bijective_iff : ∀ (R : Type) [CommRing 
       ((∀ n, Function.Bijective (cpush K f n)) ↔ ∀ n, Subsingleton (CohomologyClass K (mappingCone f) n)) := by
   intro R _ D C f m hD hC iD iC
   refine ⟨?_, ?_⟩
-  · haveI : ∀ n, Injective ((mappingCone f).X n) := fun n =>
+  · have : ∀ n, Injective ((mappingCone f).X n) := fun n =>
       Injective.of_iso (HomologicalComplex.homotopyCofiber.XIsoBiprod f n (n + 1) rfl).symm
         (@Injective.instBiprod _ _ _ _ _ _ (iD (n + 1)) (iC n))
-    haveI : (mappingCone f).IsStrictlyGE (m - 1) := CochainComplex.isStrictlyGE_mappingCone f m m (m - 1) (by omega)
+    have : (mappingCone f).IsStrictlyGE (m - 1) := CochainComplex.isStrictlyGE_mappingCone f m m (m - 1) (by omega)
     exact isKInjective_of_injective _ (m - 1)
   · intro K
     have ex := fun n => GlobalTheory.T.hypercohomology_mappingCone_second_variable_exact R K f n
@@ -573,7 +573,7 @@ theorem assemble : ∀ (R : Type) [CommRing R] {ι : Type} [Fintype ι] (L : ι 
   choose L' g hb hi he using fun j => GlobalTheory.T.cocycle_eq_chainMap_shift_compat_classes R (L j) C (d j) (ψ j)
   choose e he using he
   have hm : ∀ j, (L' j).IsStrictlyGE (m₀ - ∑ k, |d k|) := fun j => by
-    haveI := hb j m₀ (hL j)
+    have := hb j m₀ (hL j)
     refine isStrictlyGE_of_ge (L' j) _ (m₀ + d j) ?_
     have h1 : |d j| ≤ ∑ k, |d k| := Finset.single_le_sum (f := fun k => |d k|) (fun k _ => abs_nonneg (d k)) (Finset.mem_univ j)
     have h2 := neg_abs_le (d j)
@@ -811,7 +811,7 @@ def evD (γ : Cochain (totChains R X) K k) (t : ℤ) (a b : ℕ) (U : Scheme.{0}
   if h : -((a + b : ℕ) : ℤ) + k = t then evT γ a b t h U y else 0
 
 theorem evD_eq (γ : Cochain (totChains R X) K k) (t : ℤ) (a b : ℕ) (h : -((a + b : ℕ) : ℤ) + k = t) (U : Scheme.{0})
-    (y : BSx X a b U) : evD γ t a b U y = evT γ a b t h U y := dif_pos h
+    (y : BSx X a b U) : evD γ t a b U y = evT γ a b t h U y := dite_eq_left h
 
 def hB (γ : Cochain (totChains R X) K k) (t : ℤ) : ∀ (a b : ℕ) (U : Scheme.{0}), BSx X a b U → Sec (K.X t) U
   | 0, _, _, _ => 0
@@ -946,7 +946,7 @@ theorem xv_eq (α : Cochain ((chains R).obj E) I n) (z : Cochain ((chains R).obj
     xv μ α z w p r x v =
       μ.mul U s t w h (GlobalTheory.EtC.ev (R := R) α p s hs U x) (GlobalTheory.EtC.ev (R := R) z r t ht U v) := by
   subst hs ht
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem xv_δ_left {n₁ : ℤ} (hn : n + 1 = n₁) (α : Cochain ((chains R).obj E) I n) (z : Cochain ((chains R).obj B) J m)
     (w : ℤ) (p r : ℕ) (x : Sx E p U) (v : Sx B r U) (s s' t : ℤ) (hs : -(p : ℤ) + n = s) (hs' : s + 1 = s')

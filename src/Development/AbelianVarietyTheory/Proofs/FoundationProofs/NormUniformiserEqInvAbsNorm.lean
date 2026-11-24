@@ -54,7 +54,7 @@ theorem norm_uniformiser_eq_inv_absNorm :
       Formalism.UG.IsUnifV F v ϖ → ‖ϖ‖₊ = ((Ideal.absNorm v.asIdeal : ℕ) : ℝ≥0)⁻¹ := by
   intro F _ _ v ϖ h
   apply NNReal.eq
-  rw [coe_nnnorm, FinitePlace.norm_def]
+  rw [coe_nnNorm, FinitePlace.norm_def]
   unfold Formalism.UG.IsUnifV at h
   rw [h]
   have hne : ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) ≠ 0 :=

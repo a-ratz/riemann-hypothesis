@@ -84,7 +84,7 @@ theorem exists_mat {K K' : Type} [Field K] [Field K'] (φ : K →+* K') {n n' : 
     · intro h; funext k; exact h k k rfl
     · rintro rfl k k' hk; rw [Fin.ext hk]
   have hS : {x' | ∃ x ∈ V, ∀ (k k' : Fin n), (k : ℕ) = k' → x' k' = φ (x k)} = Φ '' V := by
-    ext x'; simp only [Set.mem_setOf_eq, Set.mem_image]
+    ext x'; simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨x, hx, h⟩; exact ⟨x, hx, ((hrel x' x).1 h).symm⟩
     · rintro ⟨x, hx, rfl⟩; exact ⟨x, hx, (hrel _ x).2 rfl⟩
@@ -99,7 +99,7 @@ theorem exists_mat {K K' : Type} [Field K] [Field K'] (φ : K →+* K') {n n' : 
   let c : Fin (Module.finrank K V) → Fin n → K' := fun i => Φ (b i)
   have hc_mem : ∀ i, c i ∈ V' := fun i => hV ▸ Submodule.subset_span ⟨b i, (b i).2, rfl⟩
   have hli : LinearIndependent K' c := by
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     have h0 : LinearIndependent K (fun i => (b i : Fin n → K)) := b.linearIndependent.map' V.subtype V.ker_subtype
     exact (linearIndependent_algebraMap_comp_iff).2 h0
   have hspan : Submodule.span K' (Set.range c) = V' := by

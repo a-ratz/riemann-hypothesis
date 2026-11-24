@@ -68,7 +68,7 @@ theorem exists_factor_openImmersion {X : Scheme.{0}} {R S : Type} [CommRing R] [
 theorem openChart_factor_near_prime :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (R : Type) [CommRing R] [Algebra c.F R] (j : Sp R ⟶ Xo.XF c) (y₀ : FrPt Xo c R), OpenChart j y₀ → ∀ (S : Type) [CommRing S] [Algebra c.F S] (xF : Sp S ⟶ Xo.XF c), xF ≫ pullback.snd _ _ = spMap (algebraMap c.F S) → ∀ p : Sp S, xF p ∈ Set.range j → ∃ g : S, g ∉ p.asIdeal ∧ ∀ (T : Type) [CommRing T] [Algebra c.F T] (lam : S →ₐ[c.F] T), IsUnit (lam g) → ∃ ψ : R →ₐ[c.F] T, spMap lam.toRingHom ≫ xF = spMap ψ.toRingHom ≫ j := by
   intro E _ _ _ H Dw l Xo c R _ _ j y₀ hj S _ _ xF hx p hp
-  haveI := hj.1
+  have := hj.1
   obtain ⟨g, hg, h⟩ := exists_factor_openImmersion j xF p hp
   refine ⟨g, hg, fun T _ _ lam hu => ?_⟩
   obtain ⟨ψ, hψ⟩ := h T lam.toRingHom hu

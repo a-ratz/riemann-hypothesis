@@ -119,7 +119,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.move :
   refine ⟨D, hD, fun w g x h b hh hs => ?_⟩
   obtain ⟨h1, -, h3⟩ := hb h hh.1 hh.2
   have e : sand h⁻¹ (sand h (hOne E a)) = hOne E a := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
   rw [Cs.Tw_eq U Ξ w.1 g h x]
   refine hd _ _ _ _ b (ContinuousLinearMap.opNorm_le_bound _ hB h3)
     (ContinuousLinearMap.opNorm_le_bound _ hB fun y => by rw [mulVecL_apply]; exact h1 y) ?_ (by rw [e]; exact hs)

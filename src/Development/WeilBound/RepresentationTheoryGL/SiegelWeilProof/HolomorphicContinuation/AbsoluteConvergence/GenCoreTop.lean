@@ -602,10 +602,10 @@ def fLoc (p q : ℕ) (e : ℤ) (A B : GR n) (ψ : (Fin n → Fin n → ℝ) → 
 theorem continuous_fLoc (p q : ℕ) (e : ℤ) (A B : GR n) {ψ : (Fin n → Fin n → ℝ) → ℂ} (hψ : Continuous ψ) :
     Continuous (fun y : (KR n × (Fin n → Fin n → ℝ)) × ℂ => fLoc p q e A B ψ y.1 y.2) := by
   have hg : Continuous (fun y : (KR n × (Fin n → Fin n → ℝ)) × ℂ => ((y.1.1 : GR n) * A * nbEl y.1.2 * B)) :=
-    (((continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).mul continuous_const).mul
+    (((continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)).mul continuous_const).mul
       (continuous_nbEl.comp (continuous_snd.comp continuous_fst))).mul continuous_const
   unfold fLoc
-  refine (((continuous_weight_factor p q e).comp (continuous_subtype_val.comp (continuous_fst.comp continuous_fst))).inv₀
+  refine (((continuous_weight_factor p q e).comp (continuous_subtypeVal.comp (continuous_fst.comp continuous_fst))).inv₀
     (fun _ => weight_factor_ne_zero _ _ _ _)).mul ?_
   refine ((Continuous.cpow ?_ continuous_snd ?_).mul ((continuous_weight_factor p q e).comp hg)).mul
     (hψ.comp (continuous_snd.comp continuous_fst))
@@ -648,7 +648,7 @@ theorem cz_diff (hH : HolParam) (p q : ℕ) (e : ℤ) (A B : GR n) {ψ : (Fin n 
   have hK : IsCompact ((univ : Set (KR n)) ×ˢ tsupport ψ) := isCompact_univ.prod hψ.2.1
   have hmeas : MeasurableSet ((univ : Set (KR n)) ×ˢ tsupport ψ) :=
     MeasurableSet.univ.prod (isClosed_tsupport ψ).measurableSet
-  haveI : IsFiniteMeasure ((μ.prod volume).restrict ((univ : Set (KR n)) ×ˢ tsupport ψ)) :=
+  have : IsFiniteMeasure ((μ.prod volume).restrict ((univ : Set (KR n)) ×ˢ tsupport ψ)) :=
     ⟨by
       rw [Measure.restrict_apply_univ, Measure.prod_prod]
       exact ENNReal.mul_lt_top (measure_lt_top _ _) hψ.2.1.measure_lt_top⟩
@@ -678,7 +678,7 @@ theorem cz_diff (hH : HolParam) (p q : ℕ) (e : ℤ) (A B : GR n) {ψ : (Fin n 
 theorem locOp : LV → Iwa → Mult → HolParam → LocOp := by
   intro hLV hIwa hMult hHol n p q e hgood _ _ μ _ _
   let ι : KR n →* M2 n := (Units.coeHom (M2 n)).comp ((GR n).subtype.comp (KR n).subtype)
-  have hι : Continuous ι := continuous_mR.comp continuous_subtype_val
+  have hι : Continuous ι := continuous_mR.comp continuous_subtypeVal
   have hιs : ∀ g : M2 n, InK g ↔ ∃ k, ι k = g := by
     intro g
     constructor
@@ -821,7 +821,7 @@ lemma dense_cell (y : GR n) : y ∈ closure {z : GR n | ((mR z).toBlocks₂₁).
     apply Set.Finite.subset ((P.roots.toFinset.finite_toSet).preimage
       Complex.ofReal_injective.injOn)
     intro s hs
-    simp only [Set.mem_setOf_eq] at hs
+    simp only [mem_ofPred_eq] at hs
     simp [Polynomial.mem_roots hP, hs]
   have hT : Tendsto (fun s : ℝ => y * lowG n s) (𝓝[≠] (0 : ℝ)) (𝓝 y) := by
     have h0 : Tendsto (fun s : ℝ => y * lowG n s) (𝓝 0) (𝓝 (y * lowG n 0)) :=
@@ -830,7 +830,7 @@ lemma dense_cell (y : GR n) : y ∈ closure {z : GR n | ((mR z).toBlocks₂₁).
     exact h0.mono_left nhdsWithin_le_nhds
   apply mem_closure_of_tendsto hT
   have hopen : ({s : ℝ | P.eval (s : ℂ) = 0} \ {0})ᶜ ∈ 𝓝 (0 : ℝ) :=
-    (hfin.subset Set.diff_subset).isClosed.isOpen_compl.mem_nhds (by simp)
+    (hfin.subset sdiff_subset).isClosed.isOpen_compl.mem_nhds (by simp)
   filter_upwards [nhdsWithin_le_nhds hopen, self_mem_nhdsWithin] with s hs hs0
   show ((mR (y * lowG n s)).toBlocks₂₁).det ≠ 0
   rw [lower_left_block_lowering_mul, ← hC, ← hD, ← hev]
@@ -1178,7 +1178,7 @@ open PositivityTheory.Rg.Sw
 
 theorem integrable_of_cpt {K : Type*} [TopologicalSpace K] [MeasurableSpace K] [BorelSpace K] (μ : Measure K)
     [IsFiniteMeasure μ] (hK : IsCompact (univ : Set K)) {f : K → ℂ} (hf : Continuous f) : Integrable f μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun _ _ => measure_lt_top μ _⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun _ _ => measure_lt_top μ _⟩
   exact hf.integrable_of_hasCompactSupport (hK.of_isClosed_subset (isClosed_tsupport f) (subset_univ _))
 
 theorem finInt {K : Type*} [TopologicalSpace K] [MeasurableSpace K] [BorelSpace K] (μ : Measure K) [IsFiniteMeasure μ]
@@ -1228,7 +1228,7 @@ theorem thSph_of' (hA : HelpA) (hC : HelpC) (hKAK : KAK) (hMult : Mult) (hD : De
   have hKc : IsCompact (univ : Set (KR n)) := hAcpt n
   have hF0 : Continuous (F0 (n := n) p q e) := (hAF0 n p q e).1
   have hF0ne : ∀ k : KR n, F0 p q e (k : GR n) ≠ 0 := fun k => (hAF0 n p q e).2 k k.2
-  have hw : Continuous fun k : KR n => (F0 p q e (k : GR n))⁻¹ := (hF0.comp continuous_subtype_val).inv₀ hF0ne
+  have hw : Continuous fun k : KR n => (F0 p q e (k : GR n))⁻¹ := (hF0.comp continuous_subtypeVal).inv₀ hF0ne
   have hF01 : F0 (n := n) p q e 1 = 1 := by
     have h := ((hMult n p q e).1 1 1 (KR n).one_mem).1
     rw [mul_one] at h
@@ -1260,7 +1260,7 @@ theorem thSph_of' (hA : HelpA) (hC : HelpC) (hKAK : KAK) (hMult : Mult) (hD : De
         I 1 g * ∫ k : KR n, (F0 p q e (k : GR n))⁻¹ * F0 p q e ((k : GR n) * (k1 * a 1)) ∂μ := by
     intro k1 hk1 X a ha
     obtain ⟨U, F, hUo, hUR, hFc, hF⟩ := hG.Idil g X a ha
-    have hmc : Continuous fun k : KR n => (k : GR n) * k1 := continuous_subtype_val.mul continuous_const
+    have hmc : Continuous fun k : KR n => (k : GR n) * k1 := continuous_subtypeVal.mul continuous_const
     obtain ⟨V, hVo, hVR, hVc, hVd⟩ := hAV n p q e X _ (hKc.image hmc)
     have hKm : ∀ k : KR n, (k : GR n) * k1 ∈ KR n := fun k => (KR n).mul_mem k.2 hk1
     have hSm : ∀ k : KR n, (k : GR n) * k1 ∈ (fun k : KR n => (k : GR n) * k1) '' univ :=
@@ -1291,7 +1291,7 @@ theorem thSph_of' (hA : HelpA) (hC : HelpC) (hKAK : KAK) (hMult : Mult) (hD : De
       rw [hφD 0 ⟨h0U, h0V⟩ r]
       set Qr : PX m n := (dil c X ^ r) 1 with hQr
       obtain ⟨W, hWf, hQW, hWst, hWc⟩ := hL.kfin Qr
-      haveI := hWf
+      have := hWf
       have hvW : ∀ k : KR n, ρ ((k : GR n) * k1) Qr ∈ W := fun k => hWst _ (hKm k) Qr hQW
       have hvc : ∀ l : PX m n →ₗ[ℂ] ℂ, Continuous fun k : KR n => l (ρ ((k : GR n) * k1) Qr) := fun l =>
         (hWc Qr hQW l).comp_continuous hmc (fun k => hKm k)
@@ -1404,9 +1404,9 @@ theorem thSph_of' (hA : HelpA) (hC : HelpC) (hKAK : KAK) (hMult : Mult) (hD : De
             linear_combination hLC'
     have hz := hCzero (fun z => ∫ k, Gk k z ∂μ) (U ∩ V) (hUo.inter hVo) (fun s => ⟨hUR s, hVR s⟩) hφd hder 1
     have hcI : Continuous fun k : KR n => (F0 p q e (k : GR n))⁻¹ * I 1 (g * ι ((k : GR n) * (k1 * a 1))) :=
-      hw.mul (hG.Icont.comp (continuous_const.mul (hG.ιcont.comp (continuous_subtype_val.mul continuous_const))))
+      hw.mul (hG.Icont.comp (continuous_const.mul (hG.ιcont.comp (continuous_subtypeVal.mul continuous_const))))
     have hcS : Continuous fun k : KR n => (F0 p q e (k : GR n))⁻¹ * F0 p q e ((k : GR n) * (k1 * a 1)) :=
-      hw.mul (hF0.comp (continuous_subtype_val.mul continuous_const))
+      hw.mul (hF0.comp (continuous_subtypeVal.mul continuous_const))
     have hz' : (∫ k : KR n, ((F0 p q e (k : GR n))⁻¹ * I 1 (g * ι ((k : GR n) * (k1 * a 1))) -
         I 1 g * ((F0 p q e (k : GR n))⁻¹ * F0 p q e ((k : GR n) * (k1 * a 1)))) ∂μ) = 0 := by
       rw [← hz]

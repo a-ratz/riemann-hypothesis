@@ -153,7 +153,7 @@ namespace GlobalTheory.LevelDenom
 theorem exists_denom_congLev : ∀ (D : D7) (V : HSp D) (Λ : Lat V), IsSelfDualC V Λ → ∃ b : ℕ, 0 < b ∧ ∀ k ∈ congLev D.sp.cm V.gram Λ ⊤, ∀ i j, (b : Lev.EAf D) * k.1 i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := by
   intro D V Λ hΛ
   classical
-  haveI := hΛ.1
+  have := hΛ.1
   obtain ⟨c, hc, hcΛ⟩ := exists_nsmul_le_std Λ (Submodule.IsLattice.fg D.host.E Λ)
   have hsp : Submodule.span D.host.E (Λ : Set (Fin V.rank → D.host.E)) = ⊤ := by
     apply top_unique
@@ -380,7 +380,7 @@ theorem card_box_le {ι : Type} [Fintype ι] [Nonempty ι] (n : ℕ) (hn : n ≠
       _ ≤ _ := Real.rpow_le_rpow (by positivity) h (by positivity)
   have hset : {s ∈ (T : Set (ι → Matrix (Fin n) (Fin n) ℂ)) | ∀ v, ‖s v‖ ≤ (2 : ℝ) ^ (j v + 1)} = (T : Set _) := by
     ext s
-    simp only [Set.mem_setOf_eq, Finset.mem_coe, and_iff_left_iff_imp]
+    simp only [Set.mem_ofPred_eq, Finset.mem_coe, and_iff_left_iff_imp]
     intro hs v
     rw [← hsn_eq_norm]
     exact hj s hs v
@@ -509,7 +509,7 @@ theorem hsn_le_sum {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) : hsn X ≤ ∑ i,
         Finset.sum_sq_le_sq_sum_of_nonneg fun i _ => Finset.sum_nonneg fun j _ => norm_nonneg _
 
 theorem hsn_mul_le {n : ℕ} (X Y : Matrix (Fin n) (Fin n) ℂ) : hsn (X * Y) ≤ hsn X * hsn Y := by
-  letI := Matrix.frobeniusSeminormedAddCommGroup (m := Fin n) (n := Fin n) (α := ℂ)
+  let := Matrix.frobeniusSeminormedAddCommGroup (m := Fin n) (n := Fin n) (α := ℂ)
   have e : ∀ Z : Matrix (Fin n) (Fin n) ℂ, hsn Z = ‖Z‖ := fun Z => by
     rw [Matrix.frobenius_norm_def, hsn, Real.sqrt_eq_rpow]
     congr 1
@@ -521,7 +521,7 @@ theorem one_le_prod_tauE (D : D7) {y : D.host.E} (hy : y ≠ 0) (hi : IsIntegral
   have hnorm : ∏ τ, ‖tauE D τ y‖ ^ 2 = |((Algebra.norm ℚ y : ℚ) : ℝ)| := by
     rw [← Rat.cast_abs, ← NumberField.InfinitePlace.prod_eq_abs_norm]
     refine (Fintype.prod_bijective _ (GlobalTheory.LevelSeries.mk_tauE_bij D) _ _ (fun τ => ?_))
-    rw [NumberField.InfinitePlace.mult, if_neg (GlobalTheory.LevelSeries.mk_tauE_complex D τ)]
+    rw [NumberField.InfinitePlace.mult, ite_eq_right (GlobalTheory.LevelSeries.mk_tauE_complex D τ)]
     rfl
   have h1 : (1 : ℝ) ≤ |((Algebra.norm ℚ y : ℚ) : ℝ)| := by
     let z : 𝓞 D.host.E := ⟨y, hi⟩
@@ -664,7 +664,7 @@ theorem poincare_count : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : 
       ∑ γ ∈ s, ∏ τ, ((1 + hsn (GlobalTheory.SepPer.cmp θ τ (c * (γ : GA D V) * g))) ^ (2 * V.rank ^ 2 + 1))⁻¹ ≤
         C * height V g ^ A := by
   intro D θ hθ V Λ hΛ c
-  haveI : Nonempty D.what₂.Tau := ⟨((GlobalTheory.LevelSeries.mk_tauE_bij D).2 (Classical.arbitrary _)).choose⟩
+  have : Nonempty D.what₂.Tau := ⟨((GlobalTheory.LevelSeries.mk_tauE_bij D).2 (Classical.arbitrary _)).choose⟩
   obtain ⟨C3, A3, h3⟩ := exists_den D V Λ hΛ c
   obtain ⟨C4, hC4, h4⟩ := hsn_cmp_le hθ V
   obtain ⟨C5, hC5, h5⟩ := sum_sep_le D.what₂.Tau V.rank

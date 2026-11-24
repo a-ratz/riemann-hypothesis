@@ -66,8 +66,8 @@ namespace GlobalTheory.PlaceInt
 
 theorem integral_of_frOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ) (d : DeltaDat Xo c n) (T : CDVR) (io : c.F →+* T.Fr) (io₂ : d.c₂.F →+* T.Fr) (y : IntFr Xo c T io), letI := io.toAlgebra; letI := io₂.toAlgebra; (∀ a : c.F, io₂ (d.eF a) = io a) → ∀ y₂ : FrPt d.Xo₂ d.c₂ T.Fr, FrOver d y₂ y.1 → Integral T io₂ y₂ := by
   intro E _ _ _ H Dw l Xo c n d T io io₂ y hio y₂ hy
-  letI := io.toAlgebra
-  letI := io₂.toAlgebra
+  let := io.toAlgebra
+  let := io₂.toAlgebra
   obtain ⟨y, hInt⟩ := y
   have hy' : FrOver d y₂ y := hy
   obtain ⟨G, t', m1, m2, ⟨ub, b1, b2, b3, b4⟩, θ, hθ, w1, w2, σ, s1, θ2, r1, r2, i1, i2, p2, hg⟩ := hInt.2

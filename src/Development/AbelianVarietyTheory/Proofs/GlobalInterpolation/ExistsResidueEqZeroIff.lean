@@ -79,7 +79,7 @@ theorem _root_.GlobalTheory.ResidueBoxVolume.isOpen_val_lt_one {F : Type} [Field
   intro x hx
   rw [Valued.mem_nhds]
   refine ⟨1, fun y hy => ?_⟩
-  simp only [Set.mem_setOf_eq] at hx hy ⊢
+  simp only [Set.mem_ofPred_eq] at hx hy ⊢
   have hy' : y = (y - x) + x := by ring
   rw [hy']
   exact Valuation.map_add_lt _ (by simpa using hy) hx
@@ -137,7 +137,7 @@ private theorem exists_residueBox_eq_preimage_add_lemma_2 (e : V ≃L[_root_.For
   choose t ht using fun i => IsLocalRing.residue_surjective (s i)
   refine ⟨-e.symm (fun i => (t i : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)), ?_⟩
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, mem_residue_box_singleton_iff, Pi.zero_apply,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, mem_residue_box_singleton_iff, Pi.zero_apply,
     map_add, map_neg, map_sub, ContinuousLinearEquiv.apply_symm_apply, Pi.add_apply,
     Pi.neg_apply, Pi.sub_apply, ← sub_eq_add_neg]
   exact forall_congr' fun i => exists_residue_eq_iff_exists_residue_sub_eq_zero v _ _ _ (ht i)
@@ -154,7 +154,7 @@ private theorem measurableSet_residue_box_zero (e : V ≃L[_root_.Formalism.Main
       (fun i => IsLocalRing.residue (v.adicCompletionIntegers F) (y i)) ∈ ({0} : Set _)} =
       ⋂ i, (fun x => e x i) ⁻¹' {a : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v | Valued.v a < 1} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, mem_residue_box_singleton_iff,
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, mem_residue_box_singleton_iff,
       Pi.zero_apply, _root_.GlobalTheory.ResidueBoxVolume.exists_residue_eq_zero_iff]
   rw [h]
   exact (isOpen_iInter_of_finite fun i =>
@@ -173,7 +173,7 @@ private theorem measure_residueBox_lemma (μ : Measure V) [μ.IsAddHaarMeasure]
     S.ncard * μ {x | ∃ y : ι → v.adicCompletionIntegers F, (∀ i, e x i = (y i : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)) ∧
       (fun i => IsLocalRing.residue (v.adicCompletionIntegers F) (y i)) ∈ ({0} : Set _)} := by
   classical
-  haveI : Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) :=
+  have : Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) :=
     _root_.GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
   have hS : S.Finite := S.toFinite
   have hunion : {x | ∃ y : ι → v.adicCompletionIntegers F, (∀ i, e x i = (y i : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)) ∧
@@ -182,7 +182,7 @@ private theorem measure_residueBox_lemma (μ : Measure V) [μ.IsAddHaarMeasure]
         (∀ i, e x i = (y i : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)) ∧
         (fun i => IsLocalRing.residue (v.adicCompletionIntegers F) (y i)) ∈ ({s} : Set _)} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.Finite.mem_toFinset, Set.mem_singleton_iff,
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.Finite.mem_toFinset, Set.mem_singleton_iff,
       exists_prop]
     constructor
     · rintro ⟨y, h1, h2⟩
@@ -216,7 +216,7 @@ theorem _root_.GlobalTheory.ResidueBoxVolume.measureReal_residueBox (F : Type) [
       {x | ∃ y : ι → v.adicCompletionIntegers F, (∀ i, e x i = (y i : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)) ∧
         (fun i => IsLocalRing.residue (v.adicCompletionIntegers F) (y i)) ∈ Set.univ} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_univ, and_true]
+    simp only [Set.mem_ofPred_eq, Set.mem_univ, and_true]
     constructor
     · intro h
       exact ⟨fun i => ⟨e x i, h i⟩, fun i => rfl⟩

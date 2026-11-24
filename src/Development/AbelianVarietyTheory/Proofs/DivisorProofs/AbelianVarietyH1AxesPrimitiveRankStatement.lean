@@ -69,10 +69,10 @@ namespace GlobalTheory.AbCoh.Axes
 
 theorem exists_cover {K : Type} [Field K] {X : Scheme.{0}} (s : X ⟶ Sp K) [QuasiCompact s] :
     ∃ (n : ℕ) (D : Fin n → X.Opens), (∀ i, IsAffineOpen (D i)) ∧ ⨆ i, D i = ⊤ := by
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
   obtain ⟨t, ht, hU⟩ := isCompact_and_isOpen_iff_finite_and_eq_biUnion_affineOpens.mp
     ⟨(isCompact_univ : IsCompact (Set.univ : Set X)), isOpen_univ⟩
-  haveI := ht.fintype
+  have := ht.fintype
   refine ⟨Fintype.card t, fun i ↦ ((Fintype.equivFin t).symm i).1.1, fun i ↦ ((Fintype.equivFin t).symm i).1.2, ?_⟩
   refine eq_top_iff.2 fun x _ ↦ ?_
   have hx : x ∈ (Set.univ : Set X) := trivial
@@ -85,11 +85,11 @@ theorem exists_cover {K : Type} [Field K] {X : Scheme.{0}} (s : X ⟶ Sp K) [Qua
 theorem ho1_fin {K : Type} [Field K] [IsAlgClosed K] (A : Over (Sp K)) [GrpObj A] (g : ℕ)
     (hA : IsAbelianScheme A) (hg : SmoothOfRelativeDimension g A.hom) :
     FiniteDimensional K (HO1 A.hom) ∧ Module.finrank K (HO1 A.hom) = g := by
-  haveI := hA.proper
+  have := hA.proper
   obtain ⟨n, D, hD, hcov⟩ := exists_cover A.hom
   obtain ⟨⟨e⟩, -⟩ := GlobalTheory.T.cech_cohomology_structure_sheaf_iso K A.left A.hom (Fin n) D inferInstance hD hcov
   obtain ⟨hf, h1, -⟩ := GlobalTheory.T.cech_cohomology_trivial_bundle_abelian K A g hA hg (Fin n) D hD hcov
-  haveI := hf 1
+  have := hf 1
   exact ⟨Module.Finite.equiv e.symm, e.finrank_eq.trans h1⟩
 
 theorem smooth_sq {K : Type} [Field K] {A : Over (Sp K)} {g : ℕ} (hg : SmoothOfRelativeDimension g A.hom) :
@@ -113,7 +113,7 @@ theorem pO1_unit {K : Type} [Field K] {X Y : Over (Sp K)} (f : X ⟶ 𝟙_ (Over
     (a : HO1 Y.hom) : pO1 (f ≫ h) a = 0 := by
   have : IsAffine (𝟙_ (Over (Sp K))).left := by
     show IsAffine (Spec _); infer_instance
-  haveI := (GlobalTheory.AbCoh.Vanish.main.1 K _ (𝟙_ (Over (Sp K))).hom this).1
+  have := (GlobalTheory.AbCoh.Vanish.main.1 K _ (𝟙_ (Over (Sp K))).hom this).1
   rw [pO1_comp, Subsingleton.elim (pO1 h a) 0, map_zero]
 
 def axesRes {K : Type} [Field K] (A : Over (Sp K)) [GrpObj A] : HO1 (A ⊗ A).hom →ₗ[K] HO1 A.hom × HO1 A.hom :=

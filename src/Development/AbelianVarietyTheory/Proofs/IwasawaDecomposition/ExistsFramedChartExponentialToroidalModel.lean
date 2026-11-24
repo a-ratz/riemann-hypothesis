@@ -242,11 +242,11 @@ theorem exists_expMaps_near_chart_centre : ∀ (E : Type) [Field E] [NumberField
     filter_upwards [(Metric.isOpen_ball.prod isOpen_univ).mem_nhds hq] with q' hq'
     have hs : e0.symm q'.1 ∈ e0.source := e0.map_target (hρB hq'.1).2
     have hr : e0 (e0.symm q'.1) = q'.1 := e0.right_inv (hρB hq'.1).2
-    simp only [ex, dif_pos hs, Over.homMk_left]
+    simp only [ex, dite_eq_left hs, Over.homMk_left]
     rw [hr]
   · have hb : e0 x ∈ B' := (hρB (mem_ball_zero_iff.2 hxρ)).1
     obtain ⟨-, hadd, hsurj, -, h1, h2⟩ := hfib _ hb
-    have hex : ex x = fun w => (Over.homMk (e (e0 x) w).left (hw x hx w) : Over.mk (x.1 ≫ genι Z) ⟶ Z.t.G) := funext fun w => dif_pos hx
+    have hex : ex x = fun w => (Over.homMk (e (e0 x) w).left (hw x hx w) : Over.mk (x.1 ≫ genι Z) ⟶ Z.t.G) := funext fun w => dite_eq_left hx
     rw [hex]
     refine ⟨fun a => ?_, isExpAt_homMk Z.t _ _ (hyx x hx) _ (hw x hx) hadd h1 h2⟩
     obtain ⟨z, hz⟩ := hsurj (Over.homMk a.left (a.w.trans (hyx x hx).symm))
@@ -348,8 +348,8 @@ theorem exists_frame {K : Set (Fin g → ℂ)} {b : Fin r → Fin g → ℂ} (hb
   obtain ⟨s, hsub, hss, hli⟩ := exists_linearIndependent ℂ (Set.range b)
   rw [hsp] at hss
   let B := Module.Basis.mk hli (by rw [Subtype.range_coe, hss])
-  haveI : Finite s := (Set.finite_range b).subset hsub
-  haveI : Fintype s := Fintype.ofFinite _
+  have : Finite s := (Set.finite_range b).subset hsub
+  have : Fintype s := Fintype.ofFinite _
   have hcard : Fintype.card s = g := by
     rw [← Module.finrank_eq_card_basis B]
     simp
@@ -362,7 +362,7 @@ theorem exists_frame {K : Set (Fin g → ℂ)} {b : Fin r → Fin g → ℂ} (hb
       simp [colMat, hidx, Matrix.col]
     rw [heq]
     exact hli.comp f f.injective
-  exact (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 hl)
+  exact (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_col_iff_isUnit.1 hl)
 
 end Frame
 
@@ -603,7 +603,7 @@ theorem exists_framed_of_chart {n a : ℕ} (e0 : OpenPartialHomeomorph (CxPts (g
       simp [frameSec]
     rw [h1]
     refine IsLatBasis.inv_mulVec (hdet 0 h0b) hlat fun w => ?_
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [hex' _ hx0, e00]
   · exact exists_bound_frameSec hρ κ han hdet
   · exact fun j => ⟨κ j, fun z hzb => frameSec_single κ (hdet _ (hsc z hzb)) j⟩

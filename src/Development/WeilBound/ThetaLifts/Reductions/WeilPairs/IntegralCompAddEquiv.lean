@@ -97,10 +97,10 @@ theorem integral_mul_left (e : AEF F E) [MeasurableSpace (conjHalf σ e nS nT)] 
       map_add' := fun x y => Subtype.ext (Matrix.mul_add M x.1 y.1) }
   have hc : Continuous T := by
     show Continuous fun x : conjHalf σ e nS nT => (⟨M * x.1, mul_mem_conjHalf M x.2⟩ : conjHalf σ e nS nT)
-    exact Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtype_val) _
+    exact Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtypeVal) _
   have hc' : Continuous T.symm := by
     show Continuous fun x : conjHalf σ e nS nT => (⟨M⁻¹ * x.1, mul_mem_conjHalf M⁻¹ x.2⟩ : conjHalf σ e nS nT)
-    exact Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtype_val) _
+    exact Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtypeVal) _
   obtain ⟨r, hr, hφ⟩ := integral_comp_addEquiv μ T hc hc'
   exact ⟨r, hr, fun φ => hφ fun x => φ x.1⟩
 
@@ -115,7 +115,7 @@ theorem prof_level (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)) {
   obtain ⟨U, hU, hUf⟩ := hf.level
   let m : conjHalf σ e nS nT →+ WOF F E nS (nT + nT) :=
     AddMonoidHom.mk' (fun y => aC F E nT * y.1) fun a b => Matrix.mul_add _ a.1 b.1
-  have hm : Continuous m := continuous_const.matrix_mul continuous_subtype_val
+  have hm : Continuous m := continuous_const.matrix_mul continuous_subtypeVal
   refine ⟨U.comap m, hU.preimage hm, fun t l hl => ?_⟩
   rw [AddSubgroup.coe_add, ← prof_heis_aC ν 𝓕 he f t.2 l.2,
     hUf (aC F E nT * l.1) hl (GlobalTheory.SplitVacF.fin_of_mem he (mul_mem_conjHalf _ l.2))]
@@ -171,7 +171,7 @@ theorem commF_eventually (hB : B.IsGood σ) {e : AEF F E} (he : IsSplitIdemF σ 
   have hφ : Continuous φ :=
     (GlobalTheory.HeisThetaF.continuous_symplOHF_right g).sub (GlobalTheory.HeisThetaF.continuous_symplOHF_left g)
   let ρ : conjHalf σ e nS nT → Af F := fun u => (φ u.1).2
-  have hρ : Continuous ρ := continuous_snd.comp (hφ.comp continuous_subtype_val)
+  have hρ : Continuous ρ := continuous_snd.comp (hφ.comp continuous_subtypeVal)
   have h0 : ρ 0 = 0 := by
     show (symplOHF σ JS JT ξ₀ g 0 - symplOHF σ JS JT ξ₀ 0 g).2 = 0
     rw [GlobalTheory.HeisThetaF.symplOHF_zero_left, GlobalTheory.HeisThetaF.symplOHF_zero_right, sub_zero]

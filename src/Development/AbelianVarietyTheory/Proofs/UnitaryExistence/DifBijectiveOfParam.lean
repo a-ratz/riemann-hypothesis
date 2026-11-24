@@ -231,7 +231,7 @@ theorem coord_exists {m : ℕ} {N : Ideal B} (hN : N ^ (m + 1) = ⊥) (y : sp (R
         ext a; rfl
       have h2 := fac _ q ih
       rw [hq, ← spMap_comp, Category.assoc, Category.assoc] at h2
-      haveI := hG
+      have := hG
       obtain ⟨c, hc, -⟩ := SqZero.existsUnique_eq_lieExp_mul hv hJ h2.symm
       choose δ hδ hδc using fun j => (Ideal.mem_map_iff_of_surjective π hπ).1 (c j).2
       have hb' : ∀ j, b j + δ j ∈ N := fun j =>
@@ -344,7 +344,7 @@ theorem tan_jIn (j : Fin d) :
     rw [MvPolynomial.aeval_X]
     by_cases hij : i = j
     · subst hij; simp
-    · rw [if_neg (fun h => hij (Prod.ext_iff.1 h).2), Pi.single_eq_of_ne hij, zero_smul]
+    · rw [ite_eq_right (fun h => hij (Prod.ext_iff.1 h).2), Pi.single_eq_of_ne hij, zero_smul]
 
 theorem jetVec_z_one {σ : Type} (c : σ → S) (i : σ) : jetVec c (z 1 i) = TrivSqZeroExt.inr (c i) := by
   rw [jetVec_X]

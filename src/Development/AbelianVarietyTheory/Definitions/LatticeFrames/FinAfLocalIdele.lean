@@ -179,7 +179,7 @@ theorem idem_comp {e : AfE F E} {P : HeightOneSpectrum (𝓞 E)} (he : e * e = e
     rw [hv, h1, one_mul, valued_algebraMap, map_inv₀] at h2
     have h3 := (HeightOneSpectrum.valuation_lt_one_iff_mem (K := E) Q x).2 hx
     have h4 : 0 < Q.valuation E (algebraMap (𝓞 E) E x) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (RingOfIntegers.coe_ne_zero_iff.2 hx0))
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (RingOfIntegers.coe_ne_zero_iff.2 hx0))
     exact absurd ((inv_le_one₀ h4).1 h2) (not_le.2 h3)
   refine ⟨(h01 P).resolve_left fun h1 => ?_, h0⟩
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot P.ne_bot

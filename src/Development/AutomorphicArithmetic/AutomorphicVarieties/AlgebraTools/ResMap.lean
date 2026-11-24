@@ -72,7 +72,7 @@ theorem UpperTheory.V.AlgebraTools.proLRes_map :
     let M : OpenNormalSubgroup G :=
       { toOpenSubgroup := OpenSubgroup.comap f hf N.toOpenSubgroup
         isNormal' := Subgroup.Normal.comap inferInstance f }
-    haveI : (M.toOpenSubgroup : Subgroup G).Normal := M.isNormal'
+    have : (M.toOpenSubgroup : Subgroup G).Normal := M.isNormal'
     have hM : IsPGroup l (G ⧸ (M.toOpenSubgroup : Subgroup G)) := by
       rw [pq_iff]
       intro x
@@ -88,14 +88,14 @@ theorem UpperTheory.V.AlgebraTools.proLRes_map :
     let t : {N : OpenNormalSubgroup G // IsPGroup l (G ⧸ (N.toOpenSubgroup : Subgroup G))} → Set G :=
       fun N => f ⁻¹' {h} ∩ (N.1.toOpenSubgroup : Set G)
     let T0 : OpenNormalSubgroup G := { toOpenSubgroup := ⊤, isNormal' := by simpa using Subgroup.normal_top }
-    haveI : (T0.toOpenSubgroup : Subgroup G).Normal := T0.isNormal'
+    have : (T0.toOpenSubgroup : Subgroup G).Normal := T0.isNormal'
     have htop : IsPGroup l (G ⧸ (T0.toOpenSubgroup : Subgroup G)) := by
       rw [pq_iff]
       intro g
       refine ⟨0, ?_⟩
       show g ^ l ^ 0 ∈ (⊤ : OpenSubgroup G)
       simp
-    haveI : Nonempty {N : OpenNormalSubgroup G // IsPGroup l (G ⧸ (N.toOpenSubgroup : Subgroup G))} := ⟨⟨_, htop⟩⟩
+    have : Nonempty {N : OpenNormalSubgroup G // IsPGroup l (G ⧸ (N.toOpenSubgroup : Subgroup G))} := ⟨⟨_, htop⟩⟩
     have hcl : ∀ i, IsClosed (t i) := fun i =>
       (isClosed_singleton.preimage hf).inter i.1.toOpenSubgroup.isClosed
     have hdir : Directed (fun x1 x2 => x1 ⊇ x2) t := by
@@ -125,8 +125,8 @@ theorem UpperTheory.V.AlgebraTools.proLRes_map :
       have hMcl : IsClosed (((i.1.toOpenSubgroup : Subgroup G).map f : Subgroup H) : Set H) := by
         rw [Subgroup.coe_map]
         exact hf.isClosedMap _ hNcl
-      haveI : (i.1.toOpenSubgroup : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-      haveI : ((i.1.toOpenSubgroup : Subgroup G).map f).FiniteIndex := by
+      have : (i.1.toOpenSubgroup : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+      have : ((i.1.toOpenSubgroup : Subgroup G).map f).FiniteIndex := by
         rw [Subgroup.finiteIndex_iff]
         intro h0
         have hd := Subgroup.index_map_dvd (i.1.toOpenSubgroup : Subgroup G) hs
@@ -136,7 +136,7 @@ theorem UpperTheory.V.AlgebraTools.proLRes_map :
         { toOpenSubgroup := ⟨(i.1.toOpenSubgroup : Subgroup G).map f,
             Subgroup.isOpen_of_isClosed_of_finiteIndex _ hMcl⟩
           isNormal' := Subgroup.Normal.map inferInstance f hs }
-      haveI : (M.toOpenSubgroup : Subgroup H).Normal := M.isNormal'
+      have : (M.toOpenSubgroup : Subgroup H).Normal := M.isNormal'
       have hM : IsPGroup l (H ⧸ (M.toOpenSubgroup : Subgroup H)) := by
         rw [pq_iff]
         intro y

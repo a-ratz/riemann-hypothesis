@@ -264,11 +264,11 @@ theorem continuous_congrUnitary (hQP : Q * P = 1) (hPQ : P * Q = 1) (hH' : Pᴴ 
     Continuous (congrUnitary hQP hPQ hH') := by
   have h1 : Continuous fun x : unitaryGroupMatrix (starRingEnd ℂ) H =>
       Q * ((x : GL ι ℂ) : Matrix ι ι ℂ) * P :=
-    (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul
+    (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul
       continuous_const
   have h2 : Continuous fun x : unitaryGroupMatrix (starRingEnd ℂ) H =>
       Q * (((x : GL ι ℂ)⁻¹ : GL ι ℂ) : Matrix ι ι ℂ) * P :=
-    (continuous_const.matrix_mul (Units.continuous_coe_inv.comp continuous_subtype_val)).matrix_mul
+    (continuous_const.matrix_mul (Units.continuous_coe_inv.comp continuous_subtypeVal)).matrix_mul
       continuous_const
   exact Continuous.subtype_mk (Units.continuous_iff.2 ⟨h1, h2⟩) _
 
@@ -434,7 +434,7 @@ def fromPi (h : HermitianForm F E W) (v : Basis ι E W) :
 
 theorem continuous_fromPi (h : HermitianForm F E W) (v : Basis ι E W) :
     Continuous (fromPi h v) :=
-  Continuous.subtype_mk (continuous_pi fun w => continuous_subtype_val.comp
+  Continuous.subtype_mk (continuous_pi fun w => continuous_subtypeVal.comp
     ((placeEquiv h v w).symm.continuous.comp (continuous_apply w))) _
 
 theorem mulEquivHaarChar_conjCME_eq_one_of_reflect {G : Type*} [Group G] [TopologicalSpace G]
@@ -764,13 +764,13 @@ theorem LineStabHaar.proof (h : HermitianForm F E W) (v : Basis ι E W)
   set N := finrank E W with hNdef
   let δ : (InfinitePlace E → ℂˣ) → ℝ≥0 := fun t => ∏ w, ‖(((t w)⁻¹ : ℂˣ) : ℂ)‖₊ ^ (2 * (N - 1))
   have hδc : Continuous δ := continuous_finsetProd _ fun w _ =>
-    ((Units.continuous_coe_inv.comp (continuous_apply w)).nnnorm).pow _
+    ((Units.continuous_coe_inv.comp (continuous_apply w)).nnNorm).pow _
   have hδcoe : ∀ t, (δ t : ℝ≥0∞) = ∏ w, ‖(t w : ℂ)‖ₑ⁻¹ ^ (2 * (N - 2 + 1)) := by
     intro t
     rw [show N - 2 + 1 = N - 1 by omega, ENNReal.ofNNReal_finsetProd]
     refine Finset.prod_congr rfl fun w _ => ?_
-    rw [ENNReal.coe_pow, Units.val_inv_eq_inv_val, nnnorm_inv,
-      ENNReal.coe_inv (nnnorm_ne_zero_iff.mpr (t w).ne_zero), enorm_eq_nnnorm]
+    rw [ENNReal.coe_pow, Units.val_inv_eq_inv_val, nnNorm_inv,
+      ENNReal.coe_inv (nnNorm_ne_zero_iff.mpr (t w).ne_zero), eNorm_eq_nnNorm]
   let ν₀ : Measure (vecFixGroup h v x₀) := Measure.haar
   let ρ : Measure (InfinitePlace E → ℂˣ) := Measure.haar
   have hδ : ∀ (t : InfinitePlace E → ℂˣ) (f : archUnitary h v → ℝ≥0∞), Measurable f →
@@ -787,7 +787,7 @@ theorem LineStabHaar.proof (h : HermitianForm F E W) (v : Basis ι E W)
     if ∀ w, b w ≠ 0 then τ₀ (LineStabHaar.invUnits b) else 1
   have hτb : ∀ b (hb : ∀ w, b w ≠ 0), τ b = τ₀ fun w => (Units.mk0 (b w) (hb w))⁻¹ := by
     intro b hb
-    simp only [τ, if_pos hb, LineStabHaar.invUnits_of_ne hb]
+    simp only [τ, ite_eq_left hb, LineStabHaar.invUnits_of_ne hb]
   have hset : MeasurableSet {b : InfinitePlace E → ℂ | ∀ w, b w ≠ 0} := by
     rw [Set.ofPred_forall]
     exact MeasurableSet.iInter fun w => (measurableSet_singleton (0 : ℂ)).compl.preimage
@@ -798,14 +798,14 @@ theorem LineStabHaar.proof (h : HermitianForm F E W) (v : Basis ι E W)
   · by_cases hb : ∀ w, b w ≠ 0
     · rw [hτb b hb]
       exact hmemP _
-    · simp only [τ, if_neg hb]
+    · simp only [τ, ite_eq_right hb]
       exact one_mem _
   · funext w
     rw [invApply, hτb b hb, ← map_inv, (hτ _ w).1]
     simp
   · have hg : Measurable fun t => ∫⁻ x : vecFixGroup h v x₀, φ (x * τ₀ t) ∂ν₀ :=
       Measurable.lintegral_prod_right' (f := fun q : (InfinitePlace E → ℂˣ) × vecFixGroup h v x₀ =>
-        φ (q.2 * τ₀ q.1)) (hφ.comp ((continuous_subtype_val.comp continuous_snd).mul
+        φ (q.2 * τ₀ q.1)) (hφ.comp ((continuous_subtypeVal.comp continuous_snd).mul
           (hτc.comp continuous_fst)).measurable)
     have key := hc' (N - 2) (fun t => ∫⁻ x : vecFixGroup h v x₀, φ (x * τ₀ t) ∂ν₀)
       (fun b => ∫⁻ x : vecFixGroup h v x₀, φ (x * τ b) ∂ν₀) hg (fun b hb => by rw [hτb b hb])
@@ -907,7 +907,7 @@ theorem SemidirectCovering.proof (H L N : Type*) [Group H] [TopologicalSpace H]
 
   refine ⟨Φ.symm ⁻¹' (C ×ˢ T), Φ.symm.continuous.measurable (hC.isClosed.measurableSet.prod hT),
     ?_, ?_⟩
-  · rw [isMulLeftInvariant_eq_smul ν μ', Measure.smul_apply,
+  · rw [isMulLeftInvariant_eq_smul ν μ', smul_apply,
       Measure.map_apply Φ.continuous.measurable
         (Φ.symm.continuous.measurable (hC.isClosed.measurableSet.prod hT))]
     have : Φ ⁻¹' (Φ.symm ⁻¹' (C ×ˢ T)) = C ×ˢ T := by ext p; simp

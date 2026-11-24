@@ -98,8 +98,8 @@ theorem relation_baseChange_field : ∀ (E : Type) [Field E] [NumberField E] [Is
   classical
   intro E _ _ _ H Dw l Xo c K _ _ y₀ e k he F hF G hG S _ _ φ z z' Y s hY hz hz'
   have hS : Out.SecBaseChangeSt := GlobalTheory.lawsFieldsSeparately.2.1
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
-  haveI : Infinite K := inferInstance
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
+  have : Infinite K := inferInstance
   obtain ⟨P, N, hP⟩ := GlobalTheory.FrameDenseZ.exists_poly_div_det_secZ E H Dw l Xo c K y₀ e F hF
 
   have hevK : ∀ (n : (E →+* ℂ) → ℕ) (X : ∀ b : E →+* ℂ, Matrix (Fin (Dw.mult b)) (Fin (Dw.mult b)) K),
@@ -204,7 +204,7 @@ theorem coeff_mul_prod_mem_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H Dw l Xo c _ z f La hz e k he0 p T iK hT hiK M
   intro φ yT y' g a hφ hyT hy' ha hg hL hS cl hcl F hF hv G hG μ
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hτ : (∏ b, (g b).det ^ k b) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun b _ => pow_ne_zero _ (hg b).ne_zero
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hφ, hz.2.2.2.1]
@@ -218,7 +218,7 @@ theorem coeff_mul_prod_mem_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       apply IsFractionRing.injective T.V T.Fr
       apply fW.injective
       rw [hfW, hfW, h]
-    haveI : CharZero W := charZero_of_injective_ringHom hinj
+    have : CharZero W := charZero_of_injective_ringHom hinj
     let T' : Formalism.L2.Pj.CDVR := ⟨W⟩
     let κ : KW →+* T'.Fr := ((FractionRing.algEquiv W KW).symm : KW ≃ₐ[W] FractionRing W).toRingEquiv.toRingHom
     have hκ : ∀ w : W, κ (algebraMap W KW w) = algebraMap T'.V T'.Fr w := fun w =>
@@ -229,7 +229,7 @@ theorem coeff_mul_prod_mem_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       show _ = κ (fW _)
       rw [hfW, hκ]
       rfl
-    letI := (i.comp io).toAlgebra
+    let := (i.comp io).toAlgebra
     let iA : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
     obtain ⟨yW, hyW⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ iA yT
     obtain ⟨y'', hy''⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ iA y'

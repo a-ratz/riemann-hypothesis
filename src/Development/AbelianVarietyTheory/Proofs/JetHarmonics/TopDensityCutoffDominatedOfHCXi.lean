@@ -169,7 +169,7 @@ theorem ld_cut_pow_bound (χ : ℝ → ℝ) (hχ : C6.IsCut0 χ) (e j : ℕ) :
       fun u : ℝ => h (u - Real.log ε) * Real.exp ((e : ℝ) * u) := by
     funext u
     simp only [hh]
-    rw [Real.exp_sub, Real.exp_log hε, Real.exp_nat_mul]
+    rw [Real.exp_sub, Real.exp_log hε, Real.exp_natCast_mul]
   have c1 : ContDiff ℝ j (fun u : ℝ => h (u - Real.log ε)) :=
     (hsm.of_le (by exact_mod_cast le_top)).comp (contDiff_id.sub contDiff_const)
   have c2 : ContDiff ℝ j (fun u : ℝ => Real.exp ((e : ℝ) * u)) :=
@@ -179,7 +179,7 @@ theorem ld_cut_pow_bound (χ : ℝ → ℝ) (hχ : C6.IsCut0 χ) (e j : ℕ) :
   refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
   rw [iteratedDeriv_comp_sub_const, iteratedDeriv_exp_const_mul]
   beta_reduce
-  rw [Real.exp_nat_mul, Real.exp_log hx, abs_mul, abs_mul, abs_of_nonneg (by positivity : (0:ℝ) ≤ (j.choose i : ℝ)),
+  rw [Real.exp_natCast_mul, Real.exp_log hx, abs_mul, abs_mul, abs_of_nonneg (by positivity : (0:ℝ) ≤ (j.choose i : ℝ)),
     abs_of_nonneg (by positivity : (0:ℝ) ≤ (e : ℝ) ^ (j - i) * x ^ e), ← mul_assoc]
   have := hB i (Real.log x - Real.log ε)
   gcongr

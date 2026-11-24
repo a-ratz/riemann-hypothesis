@@ -75,7 +75,7 @@ private theorem charPol_supp {E Ω : Type} [Field E] [NumberField E] [Field Ω] 
     (L : LawsT (h := h) a ha rc) (x : IrrGL (k := w.adicCompletion E))
     (S : Multiset (IrrGL (k := w.adicCompletion E))) (hS : HasSupport x.rep S) (σ : Weil h) :
     (rc x).charPol σ = (S.map fun y => (rc y).charPol σ).prod := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
   have hs : HasSupport x.rep (msupp 𝔪) := GlobalTheory.LocGL.hasSupport_msupp_of_isL Pr.zel _ 𝔪 x hm
   obtain rfl := (goodSeg (w.adicCompletion E)).2.2 x _ _ hS hs

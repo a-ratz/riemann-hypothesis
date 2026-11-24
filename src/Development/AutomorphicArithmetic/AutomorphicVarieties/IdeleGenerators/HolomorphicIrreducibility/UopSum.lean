@@ -200,7 +200,7 @@ private theorem gen (φ : O →+* K) (hφ : Function.Injective φ) [Finite (Resi
   classical
   have hpm : p ∈ maximalIdeal O := by rw [hm]; exact Ideal.mem_span_singleton_self p
   have hfin : (MulAction.orbit (KK φ n) ((aff π 0 : GL (Fin 2) K) : GL (Fin 2) K ⧸ KK φ n)).Finite := by
-    letI := Fintype.ofFinite (ResidueField O)
+    let := Fintype.ofFinite (ResidueField O)
     choose s hs using (residue_surjective (R := O))
     have hS : Set.SurjOn (residue O) ((Finset.univ.image s : Finset O) : Set O) Set.univ :=
       fun r _ => ⟨s r, by simp, hs r⟩
@@ -223,7 +223,7 @@ private theorem gen (φ : O →+* K) (hφ : Function.Injective φ) [Finite (Resi
       intro h
       obtain ⟨u, -, h⟩ := Finset.mem_image.1 h
       exact yz_ne φ hφ 0 π p hp hpm u (congrArg _ h)
-    rw [h1 (insert (zz π) (S.image fun u => aff π (φ u))) ?_ ?_ v hv, Finset.sum_insert hz, hsum, if_pos rfl, add_comm]
+    rw [h1 (insert (zz π) (S.image fun u => aff π (φ u))) ?_ ?_ v hv, Finset.sum_insert hz, hsum, ite_eq_left rfl, add_comm]
     · intro y hy
       rcases Finset.mem_insert.1 hy with rfl | hy
       · exact z_mem φ π
@@ -243,7 +243,7 @@ private theorem gen (φ : O →+* K) (hφ : Function.Injective φ) [Finite (Resi
         · rfl
         · obtain ⟨u', hu', rfl⟩ := Finset.mem_image.1 hy
           exact absurd h (yz_ne φ hφ 0 π p hp hpm u')
-  · rw [h1 (S.image fun u => aff π (φ u)) ?_ ?_ v hv, hsum, if_neg hn, add_zero]
+  · rw [h1 (S.image fun u => aff π (φ u)) ?_ ?_ v hv, hsum, ite_eq_right hn, add_zero]
     · intro y hy
       obtain ⟨u, -, rfl⟩ := Finset.mem_image.1 hy
       exact y_mem φ n π u
@@ -272,14 +272,14 @@ private theorem span_unif {F : Type} [Field F] [NumberField F] (w : HeightOneSpe
     have h1 : Valued.v (x : w.adicCompletion F) < 1 := lt_of_le_of_ne x.2 h
     have h2 : Valued.v (x : w.adicCompletion F) ≤ WithZero.exp (-1 : ℤ) := by
       rcases eq_or_ne (Valued.v (x : w.adicCompletion F)) 0 with h0 | h0
-      · rw [h0]; exact zero_le'
+      · rw [h0]; exact zero_le
       rw [← WithZero.exp_log h0] at h1 ⊢
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
       rw [WithZero.exp_le_exp]
       omega
     refine ⟨⟨(x : w.adicCompletion F) / p, ?_⟩, Subtype.ext (div_mul_cancel₀ _ hp0)⟩
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, hp]
-    exact div_le_one_of_le₀ h2 zero_le'
+    exact div_le_one_of_le₀ h2 zero_le
   · rintro ⟨z, rfl⟩ h
     have hz : Valued.v (z : w.adicCompletion F) ≤ 1 := z.2
     have h1 : Valued.v ((z : w.adicCompletion F) * p) ≤ WithZero.exp (-1 : ℤ) := by
@@ -291,7 +291,7 @@ private theorem span_unif {F : Type} [Field F] [NumberField F] (w : HeightOneSpe
 theorem UpperTheory.V.Sd.uopSum :
     UpperTheory.V.Sd.UopSum := by
   intro F _ _ w V _ _ ρ c v hv
-  haveI := Formalism.UG.P.glint_finite_residueField w
+  have := Formalism.UG.P.glint_finite_residueField w
   have hπ : Valued.v ((atFin w (unif w) : (w.adicCompletion F)ˣ) : w.adicCompletion F) = WithZero.exp (-1 : ℤ) :=
     unif_spec w
   have hmem : ((atFin w (unif w) : (w.adicCompletion F)ˣ) : w.adicCompletion F) ∈ w.adicCompletionIntegers F := by

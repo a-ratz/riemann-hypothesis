@@ -79,8 +79,8 @@ theorem coaction_base (h : ∀ (R : Type) [CommRing R], IsTorsorOn R α ρ) (a :
 theorem exists_eq_of_invariant (hα : α.FaithfullyFlat)
     (h : ∀ (R : Type) [CommRing R], IsTorsorOn R α ρ) (c : C)
     (hc : ρ c = AddMonoidAlgebra.single 0 c) : ∃ a, α a = c := by
-  letI : Algebra A C := α.toAlgebra
-  haveI : Module.FaithfullyFlat A C := hα
+  let : Algebra A C := α.toAlgebra
+  have : Module.FaithfullyFlat A C := hα
   obtain ⟨φ, hφ⟩ := (h (TensorProduct A C C)).2.2.2
     (Algebra.TensorProduct.includeRight : C →ₐ[A] TensorProduct A C C).toRingHom
     Algebra.TensorProduct.includeLeftRingHom
@@ -102,16 +102,16 @@ theorem exists_homogeneous_cofactor (h : ∀ (R : Type) [CommRing R], IsTorsorOn
 theorem exists_unit [Subsingleton (CommRing.Pic A)] (hα : α.FaithfullyFlat)
     (h : ∀ (R : Type) [CommRing R], IsTorsorOn R α ρ) (χ : X) :
     ∃ u : Cˣ, ρ u.val = AddMonoidAlgebra.single χ u.val := by
-  letI : Algebra A C := α.toAlgebra
-  haveI : Module.FaithfullyFlat A C := hα
+  let : Algebra A C := α.toAlgebra
+  have : Module.FaithfullyFlat A C := hα
   let M : X → Submodule A C := fun x =>
     { carrier := {c | ρ c = AddMonoidAlgebra.single x c}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_add (f := _), ha, hb, AddMonoidAlgebra.single_add]
       zero_mem' := by simp
       smul_mem' := fun a c hc => by
-        simp only [Set.mem_setOf_eq] at hc ⊢
+        simp only [Set.mem_ofPred_eq] at hc ⊢
         change ρ (α a * c) = AddMonoidAlgebra.single x (α a * c)
         rw [map_mul, coaction_base h, hc, AddMonoidAlgebra.single_mul_single, zero_add] }
   have hM : ∀ x c, c ∈ M x ↔ ρ c = AddMonoidAlgebra.single x c := fun _ _ => Iff.rfl
@@ -271,11 +271,11 @@ theorem exists_lift_oneParameter : ∀ (k : Type) [Field k] [IsAlgClosed k] (G :
   obtain ⟨E, _, p, r, _, _, hE⟩ := exists_pullback_grp q f
   obtain ⟨i', _, hi'⟩ := exists_ker_pullback hi hE
   have hE' : IsPullback p.left r.left q.left f.left := hE.map (Over.forget _)
-  haveI : Flat r.left := MorphismProperty.of_isPullback hE' hfl
-  haveI : Surjective r.left := MorphismProperty.of_isPullback hE' hsu
-  haveI : IsAffineHom r.left := MorphismProperty.of_isPullback hE' haf
-  haveI : IsAffine (Gm (Sp k)).left := .of_isIso (Rosenlicht.torusIso k (ULift.{0} ℤ)).inv
-  haveI := subsingleton_pic_torus k (ULift.{0} ℤ)
+  have : Flat r.left := MorphismProperty.of_isPullback hE' hfl
+  have : Surjective r.left := MorphismProperty.of_isPullback hE' hsu
+  have : IsAffineHom r.left := MorphismProperty.of_isPullback hE' haf
+  have : IsAffine (Gm (Sp k)).left := .of_isIso (Rosenlicht.torusIso k (ULift.{0} ℤ)).inv
+  have := subsingleton_pic_torus k (ULift.{0} ℤ)
   obtain ⟨s, hs⟩ := exists_section hi'
   have hs₀ : (s ≫ p) ≫ q = f := by rw [Category.assoc, hE.w, ← Category.assoc, hs, Category.id_comp]
   have hone : ∀ {Z : Over (Sp k)}, (1 : Z ⟶ Gm (Sp k)) ≫ f = 1 := fun {Z} => MonObj.one_comp f
@@ -298,7 +298,7 @@ theorem exists_lift_oneParameter : ∀ (k : Type) [Field k] [IsAlgClosed k] (G :
       z ≫ hi.lift c _ hc = toUnit _ ≫ η := fun z hz => by
     refine hi.hom_ext ?_ (toUnit_unique _ _)
     rw [Category.assoc, hi.lift_fst, hz, Category.assoc, IsMonHom.one_hom, Hom.one_def]
-  haveI : TwoUniqueSums (ULift.{0} ℤ) :=
+  have : TwoUniqueSums (ULift.{0} ℤ) :=
     (TwoUniqueSums.of_injective_addHom (AddEquiv.ulift : ULift.{0} ℤ ≃+ ℤ).toAddHom
       (AddEquiv.ulift : ULift.{0} ℤ ≃+ ℤ).injective inferInstance)
   have h0 := splitTorus_rigidity k (ULift.{0} ℤ) X (hi.lift c _ hc)

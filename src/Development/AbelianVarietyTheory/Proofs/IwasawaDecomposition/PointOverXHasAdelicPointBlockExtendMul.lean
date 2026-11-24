@@ -118,7 +118,7 @@ theorem adAt_of_bc_one {B : Base} {n : ℕ} {k : GA B n} (P : HeightOneSpectrum 
 
 theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → Pins B X → ∀ (l : I.Laws) (Z : Later B (I.cols l)) (u : B.Word) (a : I.ι) (k t : GA B (B.R.N B.R.m)), (∃ p : DecoF B.fields.E (B.R.N B.R.m) ∅ ∅ ∅, PtOf k p ∧ p.deco.1.N = stdLat B.fields.E (B.R.N B.R.m)) → (∀ v : HeightOneSpectrum (𝓞 B.host.F), (B.T u : 𝓞 B.host.F) ∉ v.asIdeal → bc (prV (E := B.host.E) v) k = 1) → (∀ (P : (B.primes X).vT u) (r j : Fin (B.R.N B.R.m)), r.1 + 1 = (B.R.N B.R.m) → HasRes P.1 (adAt B.host.F P.1 ((k⁻¹ : GA B (B.R.N B.R.m)).1 r j)) (if j = r then Ideal.Quotient.mk P.1.asIdeal (B.fields.conjO (X.piT u)) else 0)) → t ∈ K1 B.sp.cm (B.R.N B.R.m) ((B.primes X).vT u) (B.primes X).vGs → (∀ (P : I.Q a) (i j : Fin (B.R.N B.R.m)), adAt B.host.F P.1 (t.1 i j) = algebraMap B.host.E _ (if i = j then (if i.1 + 1 = (B.R.N B.R.m) then ((X.piT u : 𝓞 B.host.E) : B.host.E) else 1) else 0)) → ∀ (d : XPt (B.primes X) B.R I.sel (I.tup a)) (g' : GA B (B.R.N B.R.m - 1)) (g : GA B (B.R.N B.R.m)), PtOf g' d → IsExt (I.rec7 l Z) (z0 X u) (inclE (F := (I.rec7 l Z).host.F) (FiniteAdeleRing (𝓞 (I.rec7 l Z).host.F) (I.rec7 l Z).host.F)) g'.1 g.1 → PtOf (g * (k * t)) (tilF I.sel (I.tup a) u d) := by
   intro B X I hI hP l Z u a k t hk1 hk2 hk3 ht htP d g' g hg' hext
-  haveI : IsEmpty ↥(∅ : Finset (HeightOneSpectrum (𝓞 B.fields.E))) := ⟨fun x => Finset.notMem_empty _ x.2⟩
+  have : IsEmpty ↥(∅ : Finset (HeightOneSpectrum (𝓞 B.fields.E))) := ⟨fun x => Finset.notMem_empty _ x.2⟩
   obtain ⟨p0, hp0, hN0⟩ := hk1
   have hPr := (base_fields_primes_ok B X).2.1
   have hN := N_m_succ B.R
@@ -226,15 +226,15 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
           rw [map_mul, hkP, Matrix.one_apply_ne hl, mul_zero]
         · simp
       · intro l _ hl
-        rw [map_mul, htP P l j, if_neg hl, map_zero, mul_zero]
+        rw [map_mul, htP P l j, ite_eq_right hl, map_zero, mul_zero]
       · simp
-    rw [e1, htP P j j, if_pos rfl, tilF_fr I.sel (I.tup a) hPr u hQ d P]
+    rw [e1, htP P j j, ite_eq_left rfl, tilF_fr I.sel (I.tup a) hPr u hQ d P]
     rcases GlobalTheory.TopStep.idx_cases hN i with ⟨i', rfl⟩ | rfl <;> rcases GlobalTheory.TopStep.idx_cases hN j with ⟨j', rfl⟩ | rfl
     · have h1 : ¬ ((Br.iC hN j').1 + 1 = B.R.N B.R.m) := by
         show ¬ (j'.1 + 1 = B.R.N B.R.m)
         have := j'.2
         omega
-      rw [if_neg h1, map_one, mul_one, extM_iC_iC, hg'.fr P i' j']
+      rw [ite_eq_right h1, map_one, mul_one, extM_iC_iC, hg'.fr P i' j']
       congr 1
       exact ((congrFun (GlobalTheory.TopStep.prH_sumE hN (d.fr P) _ (Pi.single (Br.iC hN j') 1)) i').trans
         (by rw [prH_single_iC])).symm
@@ -250,7 +250,7 @@ theorem pt_tilF_gen : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → P
     · have h1 : (Br.iL hN).1 + 1 = B.R.N B.R.m := by
         show (B.R.N B.R.m - 1) + 1 = B.R.N B.R.m
         omega
-      rw [if_pos h1, extM_iL_iL, map_one, one_mul, GlobalTheory.TopStep.sumE_last, Pi.single_eq_same, mul_one,
+      rw [ite_eq_left h1, extM_iL_iL, map_one, one_mul, GlobalTheory.TopStep.sumE_last, Pi.single_eq_same, mul_one,
         unitOf_val (hQ P)]
 
 end GlobalTheory.Mem.Col2.TilQ

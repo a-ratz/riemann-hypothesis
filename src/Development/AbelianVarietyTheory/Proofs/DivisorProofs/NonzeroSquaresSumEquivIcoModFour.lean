@@ -74,7 +74,7 @@ end GlobalTheory.SqSplit
 open GlobalTheory.SqSplit in
 theorem GlobalTheory.sq_sum_equiv_Ico : ∀ (p : ℕ), p.Prime → p % 4 = 3 → ∃ e : Sq p ⊕ Sq p ≃ (Finset.Ico 1 p : Finset ℕ), ∀ k : Sq p, ((e (Sum.inl k) : ℕ) = (k.1 : ℕ)) ∧ ((e (Sum.inr k) : ℕ) = p - (k.1 : ℕ)) := by
   intro p hp h3
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have pos : ∀ k : Sq p, 1 ≤ (k.1 : ℕ) := by
     intro k
     rcases Nat.eq_zero_or_pos (k.1 : ℕ) with h | h

@@ -139,7 +139,7 @@ open UpperTheory.LineAct in
 theorem UpperTheory.affineLineAction_fst_twistEquiv :
     ∀ (q : ℕ) [NeZero q] (S : Spc) (i : ℤ), Inv q S → Eqv _ (Sp.fst S affC) (tw q i) := by
   intro q _ S i hS
-  haveI : IsIso lineMap := UpperTheory.isIso_of_bijective_on_simplices lineMap lineMap_bij
+  have : IsIso lineMap := UpperTheory.isIso_of_bijective_on_simplices lineMap lineMap_bij
   let u : sch.obj Pbf.A1 ⨯ S ⟶ Sp S affC := mulS.lift prod.snd (prod.fst ≫ lineMap)
   let v : Sp S affC ⟶ sch.obj Pbf.A1 ⨯ S := prod.lift (Sp.snd S affC ≫ inv lineMap) (Sp.fst S affC)
   have hu1 : u ≫ mulS.fst _ _ = prod.snd := rfl

@@ -66,7 +66,7 @@ theorem eLpNorm_two_of_lintegral_sq {α E : Type*} [MeasurableSpace α] {μ : Me
   have h2 : ∫⁻ x, ‖f x‖ₑ ^ (2 : ℝ≥0∞).toReal ∂μ = ENNReal.ofReal c ^ (2 : ℝ) := by
     rw [ENNReal.ofReal_rpow_of_nonneg hc (by norm_num), Real.rpow_two, ← h]
     refine lintegral_congr fun x => ?_
-    simp [enorm_eq_nnnorm]
+    simp [eNorm_eq_nnNorm]
   rw [h2, ← ENNReal.rpow_mul]
   norm_num
 

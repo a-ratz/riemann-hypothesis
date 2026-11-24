@@ -88,7 +88,7 @@ theorem mulMatHom_algebraMap (x : K.E) :
     mulMatHom e b (algebraMap K.E B.A x) = algebraMap (w.adicCompletion E) _ (e x) := by
   simp only [mulMatHom, RingHom.comp_apply, AlgHom.toRingHom_eq_coe, AlgEquiv.coe_toRingEquiv,
     RingEquiv.toRingHom_eq_coe, AlgHom.coe_toRingHom, AlgHom.commutes, RingEquiv.coe_toRingHom,
-    AlgEquiv.coe_ringEquiv, AlgEquiv.commutes]
+    AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes]
   rw [Matrix.algebraMap_eq_diagonal, Matrix.algebraMap_eq_diagonal]
   simp [Pi.algebraMap_def]
 
@@ -213,7 +213,7 @@ theorem isCompact_intGL :
   rw [GlobalTheory.LFun.IntPtsUnitary.coe_GLint] at this
   convert this using 1
   ext h
-  simp only [Set.mem_setOf_eq, Set.mem_inter_iff, ValuationSubring.mem_toSubring, mem_adicCompletionIntegers]
+  simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, ValuationSubring.mem_toSubring, mem_adicCompletionIntegers]
 
 def unitsIn (R : Subalgebra K.O B.A) : Subgroup B.Aˣ where
   carrier := {u | (u : B.A) ∈ R ∧ ((u⁻¹ : B.Aˣ) : B.A) ∈ R}
@@ -236,7 +236,7 @@ open IsDedekindDomain.HeightOneSpectrum
 theorem isCompact_closure_zpowers_mulU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → ∀ (B : GlobalTheory.UnitLemma.InvAlg K) (m : ℕ) (b : Module.Basis (Fin m) K.E B.A) (a : B.Aˣ), a ∈ GlobalTheory.UnitLemma.intUnits K.O B.A → IsCompact (closure (Subgroup.zpowers (GlobalTheory.TwLat.mulU e b a) : Set (GLw m w))) := by
   intro E _ _ _ hU w hw K e hc hint hval B m b a ha
   let R : Subalgebra K.O B.A := Algebra.adjoin K.O {(a : B.A), ((a⁻¹ : B.Aˣ) : B.A)}
-  haveI : Module.Finite K.O R := by
+  have : Module.Finite K.O R := by
     apply Algebra.finite_adjoin_of_finite_of_isIntegral (Set.toFinite _)
     intro x hx
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx
@@ -338,11 +338,11 @@ theorem isom_eq_mul : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.Unit
     { carrier := {x | ∀ y, f (x * y) = x * f y}
       mul_mem' := by
         intro a b ha hb y
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [mul_assoc, ha, hb, mul_assoc]
       add_mem' := by
         intro a b ha hb y
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [add_mul, map_add (f := _), ha, hb, add_mul]
       algebraMap_mem' := by
         intro e y
@@ -388,7 +388,7 @@ namespace GlobalTheory.TwLat
 
 theorem twCent_iff_gram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E) (B : GlobalTheory.UnitLemma.InvAlg K) (m : ℕ) (b : Module.Basis (Fin m) K.E B.A) (β : B.A), IsUnit (GlobalTheory.TwLat.gram e b β) → ∀ g : GLw m w, g ∈ twCent (thL m w) (GlobalTheory.TwLat.dlt e b β) ↔ g.valᵀ * GlobalTheory.TwLat.gram e b β * g.val.map (cj w) = GlobalTheory.TwLat.gram e b β := by
   intro E _ _ _ w hw K e B m b β hG g
-  have hth : thL m w = thetaGL m (cj w) := by rw [thL, if_neg hw]
+  have hth : thL m w = thetaGL m (cj w) := by rw [thL, ite_eq_right hw]
   have hd : dlt e b β = invT m _ hG.unit * (PhiU m _)⁻¹ := by rw [dlt, dite_eq_left hG]
   rw [hth, hd]
   change g * _ = _ * _ ↔ _

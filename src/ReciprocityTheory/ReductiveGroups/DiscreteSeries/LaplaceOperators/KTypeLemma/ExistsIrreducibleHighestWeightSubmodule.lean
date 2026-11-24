@@ -75,7 +75,7 @@ theorem highest_weight_dominant_of_unitary (hA : IsGlRep A) (hU : IsKUnitary ε 
     (hy : IsKHWVec ε A ν y) (hy0 : y ≠ 0) {a b : Fin n} (hab : a < b) (he : ε a = ε b) :
     ν b ≤ ν a := by
   have hc := hA a b b a
-  rw [if_pos rfl, if_pos rfl] at hc
+  rw [ite_eq_left rfl, ite_eq_left rfl] at hc
   have h1 : A a b (A b a y) = ((ν a - ν b : ℝ) : ℂ) • y := by
     have := congrArg (fun T : Module.End ℂ X => T y) hc
     simp only [LinearMap.sub_apply, Module.End.mul_apply, hy.2 a b hab he, map_zero, sub_zero] at this
@@ -105,7 +105,7 @@ theorem exists_irreducible_highest_weight_submodule (hU : IsKUnitary ε A) {ν :
   obtain ⟨S', hS'T, hS', hS'0, hS'ne⟩ := hirr
   have hlt : S' < T := lt_of_le_of_ne hS'T hS'ne
   have hfdS : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'T
-  have : CompleteSpace S' := FiniteDimensional.complete ℂ S'
+  have : CompleteSpace S' := FiniteDimensional.completeSpace ℂ S'
   have hw1 : IsKHWVec ε A ν (S'.starProjection w) := isKHWVec_starProjection hU hS' hw
   by_cases h1 : S'.starProjection w = 0
   · set T2 : Submodule ℂ X := T ⊓ S'ᗮ
@@ -177,7 +177,7 @@ theorem exists_highest_weight_lift_pi (hU : IsKUnitary ε E) {Y : Type*} [AddCom
     exact Module.Finite.of_injective
       ((e.toLinearMap.domRestrict S').codRestrict S (fun z => (hmem z).1 z.2)) (by
         intro u v huv; apply hinj; simpa [LinearMap.codRestrict] using congrArg Subtype.val huv)
-  haveI : CompleteSpace S' := FiniteDimensional.complete ℂ S'
+  have : CompleteSpace S' := FiniteDimensional.completeSpace ℂ S'
   have hU' := k3vdTA_isKUnitary (ε := ε) hU
   have hS' : IsKStableSub ε (coordinateTensorEndAction E) S' := by
     intro a b hab z hz

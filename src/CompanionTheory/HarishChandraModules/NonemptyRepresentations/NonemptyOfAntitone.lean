@@ -148,7 +148,7 @@ theorem tpow_mulVec (b : Matrix (Fin k) (Fin k) ℂ) (I : {a // p a} → Fin k) 
   · simp [mul_comm]
   · intro J _ hJ
     obtain ⟨s, hs⟩ := Function.ne_iff.1 hJ
-    rw [Finset.prod_eq_zero (f := fun s => if J s = (σ s).1 then (1 : ℂ) else 0) (Finset.mem_univ s) (if_neg hs)]
+    rw [Finset.prod_eq_zero (f := fun s => if J s = (σ s).1 then (1 : ℂ) else 0) (Finset.mem_univ s) (ite_eq_right hs)]
     simp
   · simp
 

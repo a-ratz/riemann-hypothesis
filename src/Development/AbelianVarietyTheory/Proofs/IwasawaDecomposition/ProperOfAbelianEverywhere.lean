@@ -74,8 +74,8 @@ theorem apply_genericPoint_of_flat {X Y : Scheme.{0}} [IrreducibleSpace X] [Irre
 theorem isProper_dvr {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (V : Type) [CommRing V]
     [IsDomain V] [IsLocalRing V] (hW : GlobalTheory.LN.CDvr V) (t : SAB H (Sp V)) (hP : GlobalTheory.LN.PolAt t (jK V))
     (hab : abLocus t.G = Set.univ) : IsProper t.G.hom := by
-  haveI := hW.1
-  haveI := hW.2.2
+  have := hW.1
+  have := hW.2.2
   obtain ⟨l₁, l₂, -⟩ := GlobalTheory.firstFiveLaws
   have ht : ∀ z, z ∈ abLocus t.G := fun z => hab ▸ Set.mem_univ z
   obtain ⟨P, -⟩ := GlobalTheory.LN.uDvrSt_holds E H V hW t hP (GlobalTheory.GoodTrait.splitOver_of_abLocus t.G t.semi ht)
@@ -95,11 +95,11 @@ theorem isProper_of_polAt_of_abLocus : ∀ (E : Type) [Field E] [NumberField E] 
     [CommRing R] [IsDomain R] [IsNoetherianRing R] [CharZero R] (t : SAB H (Sp R)), GlobalTheory.LN.PolAt t (jK R) →
     abLocus t.G = Set.univ → IsProper t.G.hom := by
   intro E _ _ _ H R _ _ _ _ t hP hab
-  haveI : IsSemiAbelian t.G := t.semi
-  haveI := t.semi.separated
-  haveI := t.semi.quasiCompact
-  haveI := t.semi.smooth
-  haveI : IsIntegral t.G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian t.G
+  have : IsSemiAbelian t.G := t.semi
+  have := t.semi.separated
+  have := t.semi.quasiCompact
+  have := t.semi.smooth
+  have : IsIntegral t.G.left := GlobalTheory.isIntegral_left_of_isSemiAbelian t.G
   refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint R t.G.left t.G.hom ?_
   intro V K _ _ _ _ _ _ _ x y hx hxy
   obtain ⟨φ, rfl⟩ : ∃ φ : R →+* V, spMap φ = y := ⟨(Spec.preimage y).hom, by simp [spMap]⟩
@@ -117,7 +117,7 @@ theorem isProper_of_polAt_of_abLocus : ∀ (E : Type) [Field E] [NumberField E] 
     have : a ∈ Ideal.comap φ (Ideal.comap (algebraMap V K) (⊥ : Ideal K)) := by simp [ha]
     rw [h₃] at this
     simpa using this
-  haveI : CharZero V := charZero_of_injective_ringHom hinj
+  have : CharZero V := charZero_of_injective_ringHom hinj
 
   obtain ⟨tV, ⟨m⟩⟩ := exists_sab (spMap φ) t
   have hinj' : Function.Injective ((algebraMap V (FractionRing V)).comp φ) :=

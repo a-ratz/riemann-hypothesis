@@ -407,7 +407,7 @@ theorem paPF_diff (p : MvPolynomial ι ℂ) : Differentiable ℂ (paPF p) ∧
   | add p r hp hr =>
     rw [paPF_add]
     refine ⟨hp.1.add hr.1, fun j y => ?_⟩
-    rw [fderiv_add (hp.1 y) (hr.1 y), ContinuousLinearMap.add_apply, hp.2, hr.2, map_add (f := _), paPF_add]
+    rw [fderiv_add (hp.1 y) (hr.1 y), add_apply, hp.2, hr.2, map_add (f := _), paPF_add]
     rfl
   | mul_X p k hp =>
     have hd : Differentiable ℂ (fun v : EuclideanSpace ℂ ι => v k) :=
@@ -418,7 +418,7 @@ theorem paPF_diff (p : MvPolynomial ι ℂ) : Differentiable ℂ (paPF p) ∧
     have e1 : fderiv ℂ (fun v : EuclideanSpace ℂ ι => v k) y =
         (EuclideanSpace.proj k : EuclideanSpace ℂ ι →L[ℂ] ℂ) :=
       (EuclideanSpace.proj k : EuclideanSpace ℂ ι →L[ℂ] ℂ).fderiv
-    rw [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply,
+    rw [add_apply, smul_apply, smul_apply,
       e1, hp.2, Derivation.leibniz, MvPolynomial.pderiv_X]
     simp only [EuclideanSpace.coe_proj, PiLp.single_apply, smul_eq_mul, paPF, map_add (f := _),
       map_mul, MvPolynomial.eval_X, Pi.single_apply]
@@ -459,7 +459,7 @@ theorem paFact_succ (β : ι →₀ ℕ) (i : ι) (h : 1 ≤ β i) :
   have e : ∏ x ∈ Finset.univ.erase i, (β x).factorial =
       ∏ x ∈ Finset.univ.erase i, ((β - Finsupp.single i 1 : ι →₀ ℕ) x).factorial := by
     refine Finset.prod_congr rfl fun x hx => ?_
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg (Finset.ne_of_mem_erase hx).symm, Nat.sub_zero]
+    rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right (Finset.ne_of_mem_erase hx).symm, Nat.sub_zero]
   rw [e, Finsupp.tsub_apply, Finsupp.single_eq_same]
   obtain ⟨k, hk⟩ : ∃ k, β i = k + 1 := ⟨β i - 1, by omega⟩
   rw [hk, Nat.add_sub_cancel, Nat.factorial_succ]
@@ -474,7 +474,7 @@ theorem paPD_monomial (n : ℕ) : ∀ (m : Fin n → ι) (β : ι →₀ ℕ) (a
     simp only [paPD, MvPolynomial.constantCoeff_monomial, List.ofFn_zero, Multiset.coe_nil]
     by_cases h : β = 0
     · subst h; simp [paFact]
-    · rw [if_neg h, if_neg]
+    · rw [ite_eq_right h, ite_eq_right]
       intro h2; exact h (pa_tm_inj (by rw [h2, Finsupp.toMultiset_zero]))
   | succ n ih =>
     intro m β a
@@ -488,7 +488,7 @@ theorem paPD_monomial (n : ℕ) : ∀ (m : Fin n → ι) (β : ι →₀ ℕ) (a
     by_cases hb : β i = 0
     · rw [hb]
       simp only [Nat.cast_zero, mul_zero, zero_mul, ite_self]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       have := congrArg (Multiset.count i) h
       rw [Finsupp.count_toMultiset, hb, Multiset.count_add, Multiset.count_singleton_self] at this
@@ -500,8 +500,8 @@ theorem paPD_monomial (n : ℕ) : ∀ (m : Fin n → ι) (β : ι →₀ ℕ) (a
         rw [map_add (f := _), Finsupp.toMultiset_single, one_nsmul]
       rw [hsplit]
       by_cases hc : Finsupp.toMultiset (β - Finsupp.single i 1) = (List.ofFn (Fin.init m) : Multiset ι)
-      · rw [if_pos hc, if_pos (by rw [hc]), paFact_succ β i hb1]; ring
-      · rw [if_neg hc, if_neg (fun h => hc (add_right_cancel h))]
+      · rw [ite_eq_left hc, ite_eq_left (by rw [hc]), paFact_succ β i hb1]; ring
+      · rw [ite_eq_right hc, ite_eq_right (fun h => hc (add_right_cancel h))]
 
 theorem paPF_zero (p : MvPolynomial ι ℂ) : paPF p 0 = MvPolynomial.constantCoeff p := by
   have : (fun i => (0 : EuclideanSpace ℂ ι) i) = 0 := by funext i; simp
@@ -510,8 +510,8 @@ theorem paPF_zero (p : MvPolynomial ι ℂ) : paPF p 0 = MvPolynomial.constantCo
 
 theorem paD_mono (α β : ι →₀ ℕ) : paD α (paMono β) = if α = β then (paFact α : ℂ) else 0 := by
   unfold paD polyDeriv
-  rw [MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton,
-    MvPolynomial.coeff_monomial, if_pos rfl, one_mul]
+  rw [MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton,
+    MvPolynomial.coeff_monomial, ite_eq_left rfl, one_mul]
   have := paPF_iter _ (MvPolynomial.monomial β 1)
     (fun k => (Finsupp.toMultiset α).toList.get (k.cast (Multiset.length_toList _).symm)) 0
   simp only at this ⊢
@@ -524,7 +524,7 @@ theorem paD_mono (α β : ι →₀ ℕ) : paD α (paMono β) = if α = β then 
   rw [hl, Multiset.coe_toList]
   by_cases h : α = β
   · subst h; simp
-  · rw [if_neg (fun h' => h (pa_tm_inj h').symm), if_neg h]
+  · rw [ite_eq_right (fun h' => h (pa_tm_inj h').symm), ite_eq_right h]
 
 end
 

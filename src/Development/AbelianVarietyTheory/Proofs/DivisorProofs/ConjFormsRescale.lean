@@ -76,10 +76,10 @@ variable {K S V W W' : Type} [Field K] [AddCommGroup S] [Module K S] [AddCommGro
 
 theorem rescale_span_eq {ι κ : Type} [Finite κ] (K0 : Subfield K) (f : Module.Basis ι K V) (b : Module.Basis κ K V)
     (h : ∀ i j, b.repr (f i) j ∈ K0) : Submodule.span K0 (Set.range f) = Submodule.span K0 (Set.range b) := by
-  haveI : Finite ι := Finite.of_equiv κ (b.indexEquiv f)
-  haveI := Fintype.ofFinite ι
-  haveI := Fintype.ofFinite κ
-  haveI : FiniteDimensional K0 (Submodule.span K0 (Set.range b)) := FiniteDimensional.span_of_finite K0 (Set.finite_range b)
+  have : Finite ι := Finite.of_equiv κ (b.indexEquiv f)
+  have := Fintype.ofFinite ι
+  have := Fintype.ofFinite κ
+  have : FiniteDimensional K0 (Submodule.span K0 (Set.range b)) := FiniteDimensional.span_of_finite K0 (Set.finite_range b)
   refine Submodule.eq_of_le_of_finrank_eq ?_ ?_
   · refine Submodule.span_le.2 ?_
     rintro _ ⟨i, rfl⟩
@@ -130,7 +130,7 @@ theorem rescale_pair [StarRing K] {κ : Type} (b : κ → V) (σ : K →+* ℂ) 
 
 theorem rescale_inj {κ : Type} [Finite κ] (b : Module.Basis κ K V) (σ : K →+* ℂ) (c : V →ₛₗ[σ] W)
     (h : LinearIndependent ℂ fun a => c (b a)) : Function.Injective c := by
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   refine (injective_iff_map_eq_zero c).2 fun x hx => ?_
 
   rw [← b.sum_repr x, map_sum] at hx
@@ -141,7 +141,7 @@ theorem rescale_inj {κ : Type} [Finite κ] (b : Module.Basis κ K V) (σ : K �
 theorem rescale_span_top {κ : Type} [Finite κ] (b : Module.Basis κ K V) (σ : K →+* ℂ) (c : V →ₛₗ[σ] W) (φ : V ≃ₗ[K] V)
     (h : Submodule.span ℂ (Set.range fun a => c (b a)) = ⊤) :
     Submodule.span ℂ (Set.range fun a => c (φ (b a))) = ⊤ := by
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   refine top_le_iff.1 (h ▸ Submodule.span_le.2 ?_)
   rintro _ ⟨a, rfl⟩
   have : b a = ∑ k, b.repr (φ.symm (b a)) k • φ (b k) := by
@@ -157,7 +157,7 @@ theorem rescale_span_top {κ : Type} [Finite κ] (b : Module.Basis κ K V) (σ :
 
 theorem rescale_indep {κ : Type} [Finite κ] (u v : κ → W) (hi : LinearIndependent ℂ u)
     (hu : Submodule.span ℂ (Set.range u) = ⊤) (hv : Submodule.span ℂ (Set.range v) = ⊤) : LinearIndependent ℂ v := by
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   exact linearIndependent_of_top_le_span_of_card_eq_finrank hv.ge
     (Module.finrank_eq_card_basis (Module.Basis.mk hi hu.ge)).symm
 

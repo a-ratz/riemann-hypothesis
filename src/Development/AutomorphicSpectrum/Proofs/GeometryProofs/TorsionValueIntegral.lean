@@ -197,7 +197,7 @@ theorem exists_frame_of_norm {R : Type} [CommRing R] [IsDomain R] (A : PolAV (Sp
     exact (gm_res _ y htop trivial _).symm
   obtain ⟨a, ha⟩ := kon_surj (R := R) (F := F) u₀.val
   have hinj : Function.Injective (kon R F) := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of F)).inv).1
-  haveI : Nontrivial (Γ((TFK (R := R) F).left, ⊤)) := hinj.nontrivial
+  have : Nontrivial (Γ((TFK (R := R) F).left, ⊤)) := hinj.nontrivial
   have ha0 : a ≠ 0 := by
     rintro rfl
     rw [map_zero] at ha
@@ -604,7 +604,7 @@ theorem polAt_generic {L : Type} [Field L] [NumberField L] (D : PPData H L) :
 theorem injective_of_charZero {L : Type} [Field L] [NumberField L] {B : Type} [Field B] [CharZero B] (ψ : 𝓞 L →+* B) :
     Function.Injective ψ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+  refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
   rw [eq_bot_iff]
   intro n hn
   have h0 : ψ (algebraMap ℤ (𝓞 L) n) = 0 := hn

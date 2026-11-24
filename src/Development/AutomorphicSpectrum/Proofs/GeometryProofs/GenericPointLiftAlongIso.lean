@@ -57,7 +57,7 @@ namespace GlobalTheory.CompanionTheory.Ar.SncBase
 
 theorem eq_of_isIso_restrict {W X' : Scheme.{0}} (f : X' ⟶ W) (U : W.Opens) (hU : IsIso (f ∣_ U)) {y y' : X'}
     (hy : f y ∈ U) (hy' : f y' ∈ U) (e : f y = f y') : y = y' := by
-  haveI := IsOpenImmersion.of_isIso (f ∣_ U)
+  have := IsOpenImmersion.of_isIso (f ∣_ U)
   let a : (f ⁻¹ᵁ U : Scheme) := ⟨y, hy⟩
   let a' : (f ⁻¹ᵁ U : Scheme) := ⟨y', hy'⟩
   have h : (f ∣_ U) a = (f ∣_ U) a' :=

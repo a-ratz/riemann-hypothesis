@@ -60,7 +60,7 @@ theorem UpperTheory.V.Lit.Geo.levD :
   · obtain ⟨w', hc', hg'⟩ := (levGood E a ho U Ξ q).1 β hβ
     obtain ⟨γ, hc'', hl⟩ := (levGood E a ho U Ξ q).2 _ (hom.2.1 w w' hg hg')
     have hs : Corr U Ξ (α - β) (w - w').1 := fun g x X => by
-      rw [AlternatingMap.sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← hc g x X, ← hc' g x X]
+      rw [sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← hc g x X, ← hc' g x X]
       rfl
     rw [(corrUniq E a ho U Ξ q).1 _ _ _ hs hc'']
     exact hl

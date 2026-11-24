@@ -94,7 +94,7 @@ private theorem qo_proj (l : ℕ) [Fact l.Prime] (O K : Type) [CommRing O] [Alge
     [Algebra ℚ_[l] K] [Algebra ℤ_[l] K] [IsScalarTower ℤ_[l] ℚ_[l] K] [IsScalarTower ℤ_[l] O K]
     [IsLocalization (Algebra.algebraMapSubmonoid O ℤ_[l]⁰) K] :
     ∃ π : K →ₗ[O] QO l O, Function.Surjective π ∧ ∀ x, π x = 0 ↔ ∃ o : O, algebraMap O K o = x := by
-  haveI : Algebra.IsPushout ℤ_[l] O ℚ_[l] K := Algebra.isPushout_of_isLocalization ℤ_[l]⁰ ℚ_[l] O K
+  have : Algebra.IsPushout ℤ_[l] O ℚ_[l] K := Algebra.isPushout_of_isLocalization ℤ_[l]⁰ ℚ_[l] O K
   let φ := Algebra.IsPushout.equiv ℤ_[l] O ℚ_[l] K
   let π : O ⊗[ℤ_[l]] ℚ_[l] →ₗ[O] QO l O := (ZlSub l).mkQ.baseChange O
   have hs : Function.Surjective π := LinearMap.lTensor_surjective O (ZlSub l).mkQ_surjective
@@ -152,7 +152,7 @@ private theorem core {G O K W : Type} [Group G] [TopologicalSpace G] [CommRing O
     intro n
     have hqn : q ^ (n + N) ≠ 0 := pow_ne_zero _ hp0
     let z : Z1U ρ ⊤ := ⟨fun u => π ((q ^ (n + N))⁻¹ * c u.1),
-      hc.comp (continuous_const.mul (hcc.comp continuous_subtype_val)), fun g h => by
+      hc.comp (continuous_const.mul (hcc.comp continuous_subtypeVal)), fun g h => by
         show π (_ * c (g.1 * h.1)) = π _ + ρ g.1 (π _)
         rw [hco, hρ, mul_add, map_add (f := _), mul_smul_comm, map_smul]⟩
     have hz : Submodule.Quotient.mk z ∈ LocSel ρ ⊤ 𝒟 := by
@@ -214,9 +214,9 @@ theorem UpperTheory.V.X.soVec :
   obtain ⟨h1, h2, h3⟩ := UpperTheory.V.abelian₂.dvr_intClosure l E
   let O := integralClosure ℤ_[l] E
   have hint : ∀ x : E, IsIntegral ℤ_[l] x ↔ ‖x‖ ≤ 1 := int_iff_norm E.val
-  haveI : IsGalois k Ω := {}
-  haveI : CompactSpace (G k Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[k] Ω))
-  haveI : Finite (G k Ω ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
+  have : IsGalois k Ω := {}
+  have : CompactSpace (G k Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[k] Ω))
+  have : Finite (G k Ω ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
   have hidx : ψ.ker.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hψ1 : ∀ g, ‖(ψ g : PadicAlgCl l)‖ ≤ 1 := by
     intro g
@@ -253,7 +253,7 @@ theorem UpperTheory.V.X.soVec :
     intro g x
     rw [← hθO]
     rfl
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O ℤ_[l]⁰) E := IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] E O
+  have : IsLocalization (Algebra.algebraMapSubmonoid O ℤ_[l]⁰) E := IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] E O
   obtain ⟨π, hs, hk⟩ := qo_proj l O E
   have hk' : ∀ x, π x = 0 ↔ ‖x‖ ≤ 1 := fun x =>
     (hk x).trans ⟨fun ⟨o, ho⟩ => (hint x).1 (ho ▸ o.2), fun h => ⟨⟨x, (hint x).2 h⟩, rfl⟩⟩
@@ -320,14 +320,14 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem fd_adjoin_range (l : ℕ) [Fact l.Prime] {ι : Type} [Finite ι] (f : ι → PadicAlgCl l) :
     FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] (Set.range f)) := by
-  haveI : Finite (Set.range f) := (Set.finite_range _).to_subtype
+  have : Finite (Set.range f) := (Set.finite_range _).to_subtype
   exact IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
 
 private theorem char_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ]
     [CompactSpace Γ] (ψ : Γ →* (PadicAlgCl l)ˣ) (hψ : IsOpen (ψ.ker : Set Γ)) :
     ∃ K : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] K ∧ ∀ g, (ψ g : PadicAlgCl l) ∈ K := by
-  haveI : Finite (Γ ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
+  have : Finite (Γ ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
   refine ⟨_, fd_adjoin_range l (fun q : Γ ⧸ ψ.ker => (ψ q.out : PadicAlgCl l)), fun g => ?_⟩
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul ψ.ker g
   refine IntermediateField.subset_adjoin _ _ ⟨(g : Γ ⧸ ψ.ker), ?_⟩
@@ -360,19 +360,19 @@ private theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topo
         rw [eq_neg_of_add_eq_zero_left h1.symm]
         exact neg_mem (mul_mem ((le_sup_left : K₀ ≤ _) (hθ _)) hg) }
   have hcl : ∀ i, IsClosed (H i : Set Γ) := fun i => by
-    haveI := hK i
-    haveI : FiniteDimensional ℚ_[l] (K₀ ⊔ K i).toSubalgebra.toSubmodule :=
+    have := hK i
+    have : FiniteDimensional ℚ_[l] (K₀ ⊔ K i).toSubalgebra.toSubmodule :=
       (inferInstance : FiniteDimensional ℚ_[l] (K₀ ⊔ K i : IntermediateField ℚ_[l] (PadicAlgCl l)))
-    exact (Submodule.closed_of_finiteDimensional (K₀ ⊔ K i).toSubalgebra.toSubmodule).preimage hc
+    exact (Submodule.isClosed_of_finiteDimensional (K₀ ⊔ K i).toSubalgebra.toSubmodule).preimage hc
   have hun : ⋃ i, (H i : Set Γ) = Set.univ := by
     refine Set.eq_univ_of_forall fun g => ?_
     obtain ⟨i, hi⟩ := hcov {c g} (Set.finite_singleton _)
     exact Set.mem_iUnion.2 ⟨i, (le_sup_right : K i ≤ K₀ ⊔ K i) (hi rfl)⟩
   obtain ⟨i, x, hx⟩ := nonempty_interior_of_iUnion_of_closed hcl hun
   have hop : IsOpen (H i : Set Γ) := Subgroup.isOpen_of_mem_nhds _ (mem_interior_iff_mem_nhds.1 hx)
-  haveI : Finite (Γ ⧸ H i) := Subgroup.quotient_finite_of_isOpen _ hop
-  haveI := fd_adjoin_range l (fun q : Γ ⧸ H i => c q.out)
-  haveI := hK i
+  have : Finite (Γ ⧸ H i) := Subgroup.quotient_finite_of_isOpen _ hop
+  have := fd_adjoin_range l (fun q : Γ ⧸ H i => c q.out)
+  have := hK i
   refine ⟨IntermediateField.adjoin ℚ_[l] (Set.range fun q : Γ ⧸ H i => c q.out) ⊔ (K₀ ⊔ K i), inferInstance,
     le_sup_left.trans le_sup_right, fun g => ?_⟩
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul (H i) g

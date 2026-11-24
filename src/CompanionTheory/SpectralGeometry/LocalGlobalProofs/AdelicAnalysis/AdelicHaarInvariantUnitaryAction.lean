@@ -369,7 +369,7 @@ lemma mem_of_unit_pivot {s : Finset ι} {k : ι}
         simp [hv, hx, hD, Matrix.one_apply]
         rw [mul_comm]; exact hui
       · have : A i i * ui = 1 := hui
-        simp only [hv, hx, if_true, hj, if_false, hD, Function.update_self,
+        simp only [hv, hx, ite_true, hj, ite_false, hD, Function.update_self,
           Matrix.one_apply, Ne.symm hj]
         linear_combination (-(ui * A i j)) * this
     · by_cases hj : j = k
@@ -380,7 +380,7 @@ lemma mem_of_unit_pivot {s : Finset ι} {k : ι}
       · have hDi : D i = 1 := by simp [hD, Function.update_of_ne hi]
         have hvx : (A i k + v i * A k k) = 0 := by
           have : A k k * ui = 1 := hui
-          simp only [hv, hi, if_false]
+          simp only [hv, hi, ite_false]
           linear_combination (-A i k) * this
         rw [hDi, hvx, zero_mul, add_zero, one_mul]
         rcases hij with h | h
@@ -441,13 +441,13 @@ lemma exists_unit_pivot (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + 
         rcases hij with h | h
         · exact absurd (Finset.mem_insert_self _ _) h
         · exact h
-      rw [if_pos rfl, hwsum, hF i j (Or.inr hj), Finset.sum_eq_zero, mul_zero, add_zero]
+      rw [ite_eq_left rfl, hwsum, hF i j (Or.inr hj), Finset.sum_eq_zero, mul_zero, add_zero]
       intro l hl
       have hlj : l ≠ j := fun h => hj (h ▸ Finset.mem_insert_of_mem hl)
       rw [hF l j (Or.inr hj), Matrix.one_apply_ne hlj, mul_zero]
-    · rw [if_neg hi, add_zero]
+    · rw [ite_eq_right hi, add_zero]
       exact hF i j hij
-  · rw [rowOp_mul_apply, if_pos rfl, hwsum]
+  · rw [rowOp_mul_apply, ite_eq_left rfl, hwsum]
     exact ht
 
 lemma mem_of_fixed (hR : ∀ a b : R, IsCoprime a b → ∃ t, IsUnit (a + t * b))
@@ -654,7 +654,7 @@ theorem map_mulVec_eq_of_transpose_mul_mul_eq :
     calc scale B * scale g ^ 2 = scale g * scale B * scale g := by ring
       _ = scale B := e
       _ = scale B * 1 := (mul_one _).symm
-  have h1 : scale g = 1 := (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 hsq
+  have h1 : scale g = 1 := (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 hsq
   have hmap := addEquivAddHaarChar_smul_map μ (mulVecEquiv g hg)
   rw [← scale_of_isUnit hg, h1, one_smul] at hmap
   exact hmap
@@ -722,10 +722,10 @@ open GlobalTheory.CompanionTheory.SW.HaarInv in
 theorem GlobalTheory.CompanionTheory.SW.HaarInv.actW_map_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (μ : Measure (Fin 1 → Fin M → AF F ⊗[F] E)), μ.IsAddHaarMeasure → ∀ h : HA (AF F) σ J, μ.map (actW (AF F) σ J h) = μ := by
   intro F E _ _ _ _ _ σ hσ M J hJ μ _ h
   obtain ⟨⟨i3, i4, i5⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  letI : MeasurableSpace (AF F) := borel (AF F)
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  let : MeasurableSpace (AF F) := borel (AF F)
+  have : BorelSpace (AF F) := ⟨rfl⟩
   obtain ⟨iR, -, -, -, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := hBor 1 M
+  have := hBor 1 M
   let b := Module.finBasis F E
   obtain ⟨B, -, hBdet, hB⟩ := GlobalTheory.CompanionTheory.SW.CoordMat.coord_orthogonal F E σ hσ M J hJ _ b
   obtain ⟨g, hg, hconj⟩ := hB (AF F) h
@@ -746,7 +746,7 @@ theorem GlobalTheory.CompanionTheory.SW.HaarInv.actW_map_eq : ∀ (F E : Type) [
       rfl
     rw [this]
     exact (Ne.isUnit hBdet).map _
-  haveI : (μ.map e.toHomeomorph).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
+  have : (μ.map e.toHomeomorph).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
   have hinv : (μ.map e.toHomeomorph).map (fun x => g *ᵥ x) = μ.map e.toHomeomorph :=
     GlobalTheory.CompanionTheory.Adelic.OrthHaar.map_mulVec_eq_of_transpose_mul_mul_eq (AF F) (GlobalTheory.CompanionTheory.AdeleStableRange.adeleRing_stableRange_one F) _ (μ.map e.toHomeomorph) (B.map (algebraMap F (AF F))) g hdet hg
   exact map_eq_of_conj e.toHomeomorph μ (actW (AF F) σ J h) (fun x => g *ᵥ x)

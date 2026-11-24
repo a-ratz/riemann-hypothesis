@@ -100,7 +100,7 @@ theorem fibConst_iff_invariant : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.C
   constructor
   · intro hF γ hγ
     refine GlobalTheory.CoverSec.eq_of_geometric (hact γ).1 hg.1 fun k _ _ _ y₂ => ?_
-    letI := GlobalTheory.CoverSec.algBelow d k
+    let := GlobalTheory.CoverSec.algBelow d k
     have hk : ∀ t : c.F, algebraMap d.c₂.F k (d.eF t) = algebraMap c.F k t := fun _ => rfl
     obtain ⟨y₂', hy₂'⟩ := hL.total γ k y₂
     obtain ⟨y, hy⟩ := GlobalTheory.CoverSec.exists_frOver_below d hk y₂ (hO k hk y₂)

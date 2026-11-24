@@ -147,8 +147,8 @@ theorem _root_.GlobalTheory.ThK.Dbl.badFactor_of (hD : DblX) (hS : StabEx) (hV :
   classical
   choose! β β1 β2 β3 using hB F E σ B n d X W M χX χW om r s r' s' P hn
   let φ : ∀ v : Pl F, (Fin n × Fin d → Fv F v) → ℂ := fun v => if v ∈ T then β v else M.vac v
-  have φ1 : ∀ v ∈ T, φ v = β v := fun v h => if_pos h
-  have φ2 : ∀ v ∉ T, φ v = M.vac v := fun v h => if_neg h
+  have φ1 : ∀ v ∈ T, φ v = β v := fun v h => ite_eq_left h
+  have φ2 : ∀ v ∉ T, φ v = M.vac v := fun v h => ite_eq_right h
   have hSB : ∀ v, φ v ∈ SB _ := fun v => by
     by_cases h : v ∈ T
     exacts [φ1 v h ▸ β1 v (hT h), φ2 v h ▸ (P.good.vac v).1]
@@ -216,7 +216,7 @@ theorem _root_.GlobalTheory.ThK.Dbl.badFactor_of (hD : DblX) (hS : StabEx) (hV :
     rw [bx] at this
     exact funext fun x => mul_right_cancel₀ (star_ne_zero.2 hy) (congrFun this (Sum.elim x y))
   have cl : IsClosed {g : UA σ X.J | ∀ v ∉ T, IntAt v g} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun v => isClosed_iInter fun _ => Euler.isClosed_int P.herm.lat.toIsLattice v
   have ct : Continuous (coef om ν Φ) := by
     refine (((d1.weil.2.1.cont l d1.adm _ (d2 Φ m Φ m).1).comp (cont_emb he)).div_const (c : ℂ)).congr fun g => ?_

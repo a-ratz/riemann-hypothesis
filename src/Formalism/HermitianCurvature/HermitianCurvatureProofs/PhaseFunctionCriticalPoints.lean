@@ -140,7 +140,7 @@ theorem gradSmall6 (m : ℕ) (D' : ℂ) (hD : D' ≠ 0) (x : Fin (m + 1) → ℂ
       _ = ((m : ℝ) + 1) * (3 / 2 * η) := by simp
       _ ≤ 3 / 2 * η * ((m : ℝ) + 2) := by nlinarith
   have hexp : Complex.exp L ^ (m + 2) = ∏ k, (1 - e k) := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have : ((m + 2 : ℕ) : ℂ) * L = ∑ k, Complex.log (1 + -e k) := by
       rw [hL]; push_cast; field_simp
     rw [this, Complex.exp_sum]
@@ -227,7 +227,7 @@ theorem phase_function_deriv : Formalism.FourierDecayAlt.G.PhaseFunctionDeriv :=
       unfold hess
       rw [prod_split x j]
       have := hx i; have := hx j; have := hQ j
-      simp only [if_neg hij]
+      simp only [ite_eq_right hij]
       field_simp
 
 theorem phase_function_critical_points : Formalism.FourierDecayAlt.G.PhaseFunctionCritical := by
@@ -324,7 +324,7 @@ theorem root_set_characterization : Formalism.FourierDecayAlt.G.RootSetSpec := b
     have hprim := Complex.isPrimitiveRoot_exp s hs.ne'
     unfold rootSet
     rw [Multiset.toFinset_card_of_nodup (hprim.nthRoots_nodup ha), hprim.card_nthRoots]
-    rw [if_pos (IsAlgClosed.exists_pow_nat_eq a hs)]
+    rw [ite_eq_left (IsAlgClosed.exists_pow_nat_eq a hs)]
 
 theorem stationary_leading_constant : Formalism.FourierDecayAlt.G.LeadingConstant := by
   intro m τ ζ hτ hζ

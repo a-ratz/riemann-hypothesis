@@ -238,7 +238,7 @@ private theorem exp_tors (K : Type) [Field K] [NumberField K] :
 private theorem conj_root {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] (g u : Ω ≃ₐ[F] Ω) (β : Ω)
     (hβ : IsOfFinOrder β) : g (u (g.symm β)) = u β := by
   have hp := IsPrimitiveRoot.orderOf β
-  haveI : NeZero (orderOf β) := ⟨hβ.orderOf_pos.ne'⟩
+  have : NeZero (orderOf β) := ⟨hβ.orderOf_pos.ne'⟩
   have key : ∀ s : Ω ≃ₐ[F] Ω, ∃ i : ℕ, β ^ i = s β := fun s => by
     obtain ⟨i, -, hi⟩ := hp.eq_pow_of_pow_eq_one (ξ := s β) (by rw [← map_pow, pow_orderOf_eq_one, map_one])
     exact ⟨i, hi⟩
@@ -250,10 +250,10 @@ private theorem exists_gen (K Ω : Type) [Field K] [NumberField K] [Field Ω] [A
     ∃ (ξ : Ωˣ) (b : K), (ξ : Ω) ^ n = algebraMap K Ω b ∧
       ∀ (β : Ω) (a : Kˣ), β ^ n = algebraMap K Ω a → IsOfFinOrder β → ∃ j : ℤ, (ξ : Ω) ^ j = β := by
   obtain ⟨m, hm, hK⟩ := exp_tors K
-  haveI : NeZero (n * m) := ⟨mul_ne_zero (NeZero.ne n) hm⟩
+  have : NeZero (n * m) := ⟨mul_ne_zero (NeZero.ne n) hm⟩
   let T : Subgroup Ωˣ := rootsOfUnity (n * m) Ω ⊓
     ((Units.map (algebraMap K Ω).toMonoidHom).range).comap (powMonoidHom n)
-  haveI : Finite T := Finite.of_injective _ (Subgroup.inclusion_injective (inf_le_left : T ≤ _))
+  have : Finite T := Finite.of_injective _ (Subgroup.inclusion_injective (inf_le_left : T ≤ _))
   obtain ⟨⟨ξ, hξ⟩, hg⟩ := (isCyclic_subgroup_units T).exists_generator
   obtain ⟨b, hb⟩ := hξ.2
   refine ⟨ξ, b, ?_, fun β a h hβ => ?_⟩
@@ -295,7 +295,7 @@ private theorem exists_generator_kummer_cocycle {F Ω : Type} [Field F] [Field �
   have hle : f.range ≤ rootsOfUnity n Ω := by
     rintro _ ⟨u, rfl⟩
     exact (mem_rootsOfUnity _ _).2 (Units.ext (by simpa [f] using h1 u))
-  haveI : Finite f.range := Finite.of_injective _ (Subgroup.inclusion_injective hle)
+  have : Finite f.range := Finite.of_injective _ (Subgroup.inclusion_injective hle)
   obtain ⟨⟨_, u0, rfl⟩, hg⟩ := (isCyclic_subgroup_units f.range).exists_generator
   refine ⟨u0, fun u => ?_⟩
   obtain ⟨k, hk⟩ := hg ⟨f u, u, rfl⟩
@@ -763,8 +763,8 @@ theorem UpperTheory.V.FW.reflOdd :
     ∀ (K : Type) [Field K] [NumberField K] [IsCMField K] (l : ℕ) [Fact l.Prime] (ζ : K), l ≠ 2 → IsPrimitiveRoot ζ l → (powR (Cl K) l ⊔ difR (clMap (cE K))).index ≤ l * Nat.card (minK (clMap (cE K)) ⊓ torK (Cl K) l : Subgroup (Cl K)) := by
   intro K _ _ _ l _ ζ hl2 hζ
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
-  haveI : Fact (1 < l) := ⟨hp.one_lt⟩
+  have : NeZero l := ⟨hp.ne_zero⟩
+  have : Fact (1 < l) := ⟨hp.one_lt⟩
   have hodd : Odd l := hp.odd_of_ne_two hl2
   obtain ⟨σ, hσ⟩ := @exists_isConjOm K (AlgebraicClosure K) _ _ _ _ _
   have hσl : IsLift (cE K) σ := hσ.isLift

@@ -106,8 +106,8 @@ theorem genSemi_of (hHaar : GenHaarSub) : GenSemi := by
   obtain ⟨hσH, -, hcH, htH, hfinH, hposH⟩ := hHaar G H hH
   set μN := haarSub N hN with hμN
   set μH := haarSub H hH with hμH
-  haveI : SigmaFinite μN := hσN
-  haveI : SigmaFinite μH := hσH
+  have : SigmaFinite μN := hσN
+  have : SigmaFinite μH := hσH
   have hmul : Measurable (fun p : G × G => p.1 * p.2) := measurable_fst.mul measurable_snd
 
   have hNH : (N : Set G) * (H : Set G) =
@@ -684,11 +684,11 @@ theorem tensU_basis (p : Idx Vl) : tensU (fun i => bas Vl i (p i)) = EuclideanSp
   rw [tensU_apply, PiLp.single_apply]
   by_cases hqp : q = p
   · subst hqp
-    simp only [if_true]
+    simp only [ite_true]
     refine Finset.prod_eq_one fun i _ => ?_
     rw [inner_self_eq_norm_sq_to_K, (bas Vl i).orthonormal.1 (q i)]
     simp
-  · rw [if_neg hqp]
+  · rw [ite_eq_right hqp]
     obtain ⟨i, hi⟩ : ∃ i, q i ≠ p i := by
       by_contra hne
       push Not at hne
@@ -753,18 +753,18 @@ theorem tensOp_one : tensOp (fun i => (1 : Vl i →L[ℂ] Vl i)) = 1 :=
 theorem tensOp_mul (A B : ∀ i, Vl i →L[ℂ] Vl i) :
     tensOp (fun i => A i * B i) = tensOp A * tensOp B :=
   clm_ext fun x => by
-    rw [ContinuousLinearMap.mul_apply, tensOp_tensU, tensOp_tensU, tensOp_tensU]
+    rw [mul_apply_eq_comp, tensOp_tensU, tensOp_tensU, tensOp_tensU]
     rfl
 
 theorem inner_tensOp (A : ∀ i, Vl i →L[ℂ] Vl i) (hA : ∀ i (u w : Vl i), ⟪A i u, A i w⟫_ℂ = ⟪u, w⟫_ℂ)
     (u w : TV Vl) : ⟪tensOp A u, tensOp A w⟫_ℂ = ⟪u, w⟫_ℂ := by
   have hQ : (ContinuousLinearMap.adjoint (tensOp A)) * tensOp A = 1 := clm_ext fun y => by
     refine eq_of_inner_tensU fun x => ?_
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.adjoint_inner_right, tensOp_tensU,
-      tensOp_tensU, ContinuousLinearMap.one_apply, inner_tensU, inner_tensU]
+    rw [mul_apply_eq_comp, ContinuousLinearMap.adjoint_inner_right, tensOp_tensU,
+      tensOp_tensU, one_apply_eq_self, inner_tensU, inner_tensU]
     exact Finset.prod_congr rfl fun i _ => hA i (x i) (y i)
-  rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.mul_apply, hQ,
-    ContinuousLinearMap.one_apply]
+  rw [← ContinuousLinearMap.adjoint_inner_right, ← mul_apply_eq_comp, hQ,
+    one_apply_eq_self]
 
 theorem continuousOn_tensOp {X : Type*} [TopologicalSpace X] (A : X → ∀ i, Vl i →L[ℂ] Vl i) (S : Set X)
     (hA : ∀ i (y : Vl i), ContinuousOn (fun s => A s i y) S) (v : TV Vl) :
@@ -881,7 +881,7 @@ lemma inUJ_uMat (I : AutInst) (s : I.Ginf) (v : InfinitePlace I.F) : Formalism.R
   (s v).2
 
 lemma cont_uMat (I : AutInst) (v : InfinitePlace I.F) : Continuous fun s : I.Ginf => uMat (s v) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v))
+  Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v))
 
 theorem build : Build := by
   intro hW I r k e f z lam hn hF hz hlam hw
@@ -994,7 +994,7 @@ private theorem pos_of_vanish_lemma_2 (ε : Fin n → Bool) {r : ℕ} (σ : Fin 
       exact (hi (by rw [← hk]; exact hw0 k)).elim
     · rfl
   calc (0 : ℝ) < (if ε i then (1 : ℝ) else -1) * Complex.normSq (w i) := by
-        rw [if_pos hεi, one_mul]
+        rw [ite_eq_left hεi, one_mul]
         exact Complex.normSq_pos.mpr hi
     _ ≤ ∑ j, (if ε j then (1 : ℝ) else -1) * Complex.normSq (w j) :=
         Finset.single_le_sum (fun j _ => nonneg_term_lemma ε σ hσ w hw0 j) (Finset.mem_univ i)
@@ -1043,7 +1043,7 @@ theorem pos_of_perp (ε : Fin n → Bool) {r : ℕ} (σ : Fin (r + 1) → Fin n)
     rw [hv, hJ_sum_smul_left, Complex.re_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [hJ_sum_smul_right]
-    simp only [hG, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hG, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact re_star_mul_mul _ _
   have hterm : ∀ k, Complex.normSq (g k) * (D k).re ≤ 0 := by
     intro k
@@ -1140,14 +1140,14 @@ theorem gs_step (ε : Fin n → Bool) {r k : ℕ} (hn : n = 2 * r + k + 1) (σ :
   refine ⟨Fin.cons ((((Real.sqrt s)⁻¹ : ℝ) : ℂ) • y) w, ?_, ?_⟩
   · intro a b
     refine Fin.cases ?_ (fun a' => ?_) a <;> refine Fin.cases ?_ (fun b' => ?_) b
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
       simp only [Fin.cons_zero, hJ_smul_left, hJ_smul_right]
       rw [mul_left_comm]
       exact hμ
-    · rw [if_neg (Fin.succ_ne_zero b').symm]
+    · rw [ite_eq_right (Fin.succ_ne_zero b').symm]
       simp only [Fin.cons_zero, Fin.cons_succ, hJ_smul_left, hJ_conj ε (w b') y, hwy, star_zero,
         mul_zero]
-    · rw [if_neg (Fin.succ_ne_zero a')]
+    · rw [ite_eq_right (Fin.succ_ne_zero a')]
       simp only [Fin.cons_zero, Fin.cons_succ, hJ_smul_right, hwy, mul_zero]
     · simp only [Fin.cons_succ, Fin.succ_inj]
       exact hwo a' b'

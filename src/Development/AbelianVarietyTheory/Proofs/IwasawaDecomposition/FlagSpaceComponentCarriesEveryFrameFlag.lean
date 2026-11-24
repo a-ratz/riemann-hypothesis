@@ -93,7 +93,7 @@ theorem diag_mul_of_blockTriangular {R : Type} [CommRing R] {n : ℕ} {A B : Mat
 
 theorem isUnit_diag_of_blockTriangular {R : Type} [CommRing R] {n : ℕ} {A : Matrix (Fin n) (Fin n) R}
     (hA : A.BlockTriangular id) (hd : IsUnit A.det) (i : Fin n) : IsUnit (A i i) := by
-  rw [Matrix.det_of_upperTriangular hA] at hd
+  rw [Matrix.det_of_isUpperTriangular hA] at hd
   exact isUnit_of_dvd_unit (Finset.dvd_prod_of_mem (fun j => A j j) (Finset.mem_univ i)) hd
 
 theorem tri_of_carries : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (F : Type) [Field F] (e : F ≃+* c.F) (C : FlagCpt Z e) (k : Type) [Field k] (φ : c.F →+* k) (x : Sp k ⟶ Z.X) (g : EigFrame Z φ x) (p : Sp k ⟶ C.Y.X), C.Carries p g → ∀ (y : C.Y.X) (ψ : C.Y.X.presheaf.stalk y →+* k) (φ₁ : c.F →+* C.Y.X.presheaf.stalk y) (f : EigFrame Z φ₁ (stalkPt C.Y y ≫ C.π ≫ genι Z)) (t : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → C.Y.Fnˣ), p = spMap ψ ≫ stalkPt C.Y y → f.Tri (algebraMap (C.Y.X.presheaf.stalk y) C.Y.X.functionField) C.f0 t → ∃ t' : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → kˣ, f.Tri ψ g t' := by
@@ -185,7 +185,7 @@ theorem tri_of_carries : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     have hW : fF.co f₁F τ = fF.co C.f0 τ * (f₁F.co C.f0 τ)⁻¹ := by
       rw [← fF.co_mul f₁F C.f0 τ, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hU₁d, Matrix.mul_one]
     have hWt : (fF.co f₁F τ).BlockTriangular id := by
-      haveI := Matrix.invertibleOfIsUnitDet _ hU₁d
+      have := Matrix.invertibleOfIsUnitDet _ hU₁d
       rw [hW]
       exact Matrix.BlockTriangular.mul (fun a i h => hU.1 a i h) (Matrix.blockTriangular_inv_of_blockTriangular hU₁t)
     have hM : fF.co f₁F τ = (f'.co f₁' τ).map alg := EigFrame.IsMap.co τ hfF hf₁F hgen
@@ -315,7 +315,7 @@ theorem tri_spec {R V L k : Type} [CommRing R] [CommRing V] [CommRing L] [CommRi
     have hWu := EigFrame.isUnit_det_co gVL gL τ
     set W := gVL.co gL τ
     have hWt : W.BlockTriangular id := fun a b h => hW a b h
-    letI := Matrix.invertibleOfIsUnitDet W hWu
+    let := Matrix.invertibleOfIsUnitDet W hWu
     have hWi : W⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hWt
     have hM : hLf.co gVL τ = hLf.co gL τ * W⁻¹ := by
       rw [← hmul, Matrix.mul_nonsing_inv_cancel_right _ _ hWu]
@@ -327,7 +327,7 @@ theorem tri_spec {R V L k : Type} [CommRing R] [CommRing V] [CommRing L] [CommRi
     rw [this, map_zero]
   have hAd : ∀ τ i, IsUnit (h.co gV τ i i) := fun τ i => by
     have hdet := EigFrame.isUnit_det_co h gV τ
-    rw [Matrix.det_of_upperTriangular (fun a b hab => hA τ a b hab)] at hdet
+    rw [Matrix.det_of_isUpperTriangular (fun a b hab => hA τ a b hab)] at hdet
     exact isUnit_of_dvd_unit (Finset.dvd_prod_of_mem (fun j => h.co gV τ j j) (Finset.mem_univ i)) hdet
 
   obtain ⟨hkf, hhk⟩ := EigFrame.exists_isMap h r hk.2.1 hk.1

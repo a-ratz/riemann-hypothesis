@@ -96,7 +96,7 @@ theorem exists_trait_pull {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [
           (x' : TFK (R := W) (AlgebraicClosure (FractionRing W)) ⟶ A'.A), p'.y = xe.symm p.y ∧
           QkToAkU U'.toUnifPre (AlgebraicClosure (FractionRing W)) k p' x' ∧ x'.left ≫ a = spMap em ≫ x.left := by
   obtain ⟨hL, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
-  haveI := hR.1
+  have := hR.1
   obtain ⟨W, _, _, _, φ, hW, hφ, hc⟩ := GlobalTheory.PrimeUnif.exists_cdvr R (maximalIdeal R)
   have hloc : IsLocalHom φ := ⟨fun r hr => by
     by_contra h
@@ -118,7 +118,7 @@ theorem exists_trait_pull {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [
   have hb : (Iso.refl ((Over.pullback (specOf φ)).obj G)).hom.left ≫ pullback.fst G.hom (specOf φ) =
       pullback.fst G.hom (specOf φ) := Category.id_comp _
   have gp : IsGrpPullback A'.A A.A (spMap ga) a := g₁.cancel (g₂.congr rfl ha.symm) (g₁.1.lift_snd _ _ _)
-  letI : Algebra (FractionRing R) (AlgebraicClosure (FractionRing W)) :=
+  let : Algebra (FractionRing R) (AlgebraicClosure (FractionRing W)) :=
     ((algebraMap (FractionRing W) (AlgebraicClosure (FractionRing W))).comp ga).toAlgebra
   obtain ⟨em⟩ : Nonempty (AlgebraicClosure (FractionRing R) →ₐ[FractionRing R] AlgebraicClosure (FractionRing W)) :=
     ⟨IsAlgClosed.lift⟩
@@ -172,8 +172,8 @@ theorem div_and_translate {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (F
     (hx₀ : X₁.M.Div X₁.S.th x₀ z₁) (a : X₁.S.Gam) (mu : Fin 8 → X) (ha : 𝔪.YY a mu) :
     (a ∈ X₁.S.supI X₁.M z₁ → ∃ w, mu = (X₁.S.r * X₁.S.N) • w) ∧
       ((∃ w, mu = (X₁.S.r * X₁.S.N) • w) → ∃ b : X₁.S.Gam, X₁.ρ.n • b = 0 ∧ a + b ∈ X₁.S.supI X₁.M z₁) := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  haveI := 𝔪.loc
+  have : CharZero V := 𝔪.cn.2.2.2
+  have := 𝔪.loc
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hk : 1 ≤ X₁.S.r * X₁.S.N := by
     have := X₁.S.r_pos; have := X₁.S.N_ge
@@ -188,7 +188,7 @@ theorem div_and_translate {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (F
   have hU : IsUnit ((X₁.S.r * X₁.S.N : ℕ) : T) := by
     have := (X₁.S.unit.map (Spec.preimage (ξ ≫ X₁.M.s)).hom).map φ
     rwa [map_natCast, map_natCast] at this
-  haveI : CharZero (FractionRing T) := charZero_of_injective_algebraMap (IsFractionRing.injective T (FractionRing T))
+  have : CharZero (FractionRing T) := charZero_of_injective_algebraMap (IsFractionRing.injective T (FractionRing T))
   have cart : IsGrpPullback A'.A X₁.ρ.P.A (spMap (ga.comp 𝔪.yK)) (α ≫ 𝔪.φ) :=
     (gp.comp 𝔪.cart).congr (Spec.map_comp (CommRingCat.ofHom 𝔪.yK) (CommRingCat.ofHom ga)).symm rfl
   have lb' : LBIso A'.L (X₁.ρ.P.L.pull (α ≫ 𝔪.φ)) :=
@@ -288,8 +288,8 @@ theorem UMem.exists_th_ne_zero : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W 
     (t : Fin m → V) (δ : Fin m → LinearMap.BilinForm ℤ X) (𝔪 : UMem X₁ z₁ act V ev X t δ),
     ∃ b, 𝔪.yK ⟨X₁.S.th b, X₁.S.th_mem b⟩ ≠ 0 := by
   intro g n F W Z i X₁ z₁ act V _ _ _ ev X _ m t δ 𝔪
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  haveI : CharZero (FractionRing V) :=
+  have : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero (FractionRing V) :=
     (RingHom.charZero_iff (IsFractionRing.injective V (FractionRing V))).1 inferInstance
   exact GlobalTheory.ThetaGeneric.exists_th_ne_zero GlobalTheory.abelianSchemeLaws_all.1 GlobalTheory.abelianSchemeLaws_all.2 _ _ X₁.S X₁.ρ
     (FractionRing V) 𝔪.yK
@@ -351,7 +351,7 @@ theorem uMem_baseChange_values : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W 
   have hwl : LBIso A'.L (X₁.ρ.P.L.pull (gA ≫ 𝔪.φ)) :=
     LBIso.trans A'.isLB (pull_isLB 𝔪.A.isLB _) (pull_isLB X₁.ρ.P.isLB _) htA (lbIso_pull_comp ⟨𝔪.wl, 𝔪.wl_gen⟩ gA)
   obtain ⟨wl, hwl⟩ := hwl
-  haveI := 𝔪.loc
+  have := 𝔪.loc
   have hk : 1 ≤ X₁.S.r * X₁.S.N := Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega))
   refine ⟨{
     cn := hV'
@@ -544,7 +544,7 @@ theorem label_zero_of_mem_supI : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W 
     pow_ne_zero _ ((Valuation.ne_zero_iff ν).2 hane)
   have h1 : 1 ≤ ν (algebraMap V (FractionRing V) (mono W t δ w)) := by
     have := mul_le_mul_of_nonneg_left hle
-      (zero_le' : (0 : WithZero (Multiplicative ℤ)) ≤ (ν (𝔪.yK ⟨X₁.S.th a, X₁.S.th_mem a⟩) ^ ((X₁.S.r * X₁.S.N) ^ 2))⁻¹)
+      (zero_le : (0 : WithZero (Multiplicative ℤ)) ≤ (ν (𝔪.yK ⟨X₁.S.th a, X₁.S.th_mem a⟩) ^ ((X₁.S.r * X₁.S.N) ^ 2))⁻¹)
     rwa [← _root_.mul_assoc, inv_mul_cancel₀ h0, _root_.one_mul] at this
   by_cases hw0 : w = 0
   · exact hw0 ▸ hw
@@ -682,7 +682,7 @@ theorem mem_closure_iff (p J : ℕ) (hJ : 2 ≤ J) (hN : N = p ^ J) (hG : ∀ a 
 theorem zmod_tors {p J M : ℕ} (hp : 0 < p) (hJ : 1 ≤ J) (hM : M = p ^ J) (x : ZMod M) (hx : p • x = 0) :
     ∃ y : ZMod M, x = p ^ (J - 1) • y := by
   subst hM
-  haveI : NeZero (p ^ J) := ⟨pow_ne_zero _ hp.ne'⟩
+  have : NeZero (p ^ J) := ⟨pow_ne_zero _ hp.ne'⟩
   have h1 : p ^ J ∣ p * x.val := by
     rw [← CharP.cast_eq_zero_iff (ZMod (p ^ J)) (p ^ J)]
     push_cast

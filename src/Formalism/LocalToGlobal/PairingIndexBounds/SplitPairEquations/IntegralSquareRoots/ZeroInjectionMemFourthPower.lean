@@ -81,13 +81,13 @@ theorem zero_injection_mem_fourth_power (ΛM : AddSubgroup (n → ℂ)) {x : n �
 theorem is_lattice_of_fourth_power (ΛM : AddSubgroup (n → ℂ)) (g : (Fin 4 × n → ℂ) ≃ₗ[ℂ] (Fin 4 × n → ℂ))
     (h : IsLat (imgLat (g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 ΛM))) : IsLat ΛM := by
   constructor
-  · haveI := h.1
+  · have := h.1
     let f : ΛM → imgLat (g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 ΛM) := fun x =>
       ⟨g (inj0 n x.1), ⟨inj0 n x.1, zero_injection_mem_fourth_power ΛM x.2, rfl⟩⟩
     have hf : Continuous f :=
       Continuous.subtype_mk
         ((((g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)).comp (inj0 n)).continuous_of_finiteDimensional).comp
-          continuous_subtype_val) _
+          continuous_subtypeVal) _
     have hinj : Function.Injective f := by
       intro x y hxy
       have h1 : g (inj0 n x.1) = g (inj0 n y.1) := congrArg Subtype.val hxy
@@ -139,12 +139,12 @@ theorem sum_putL (N N' : ℕ) (z : n → Fin N' → Fin N → ℂ) :
 
 theorem isLat_powLat (ΛM : AddSubgroup (n → ℂ)) (h : IsLat ΛM) (N N' : ℕ) : IsLat (Ker.powLat ΛM N N') := by
   constructor
-  · haveI := h.1
+  · have := h.1
     let f : Ker.powLat ΛM N N' → (∀ _ : Fin N' × Fin N, ΛM) := fun x k => ⟨fun τ => x.1 τ k.1 k.2, x.2 k.1 k.2⟩
     have hf : Continuous f := by
       refine continuous_pi fun k => Continuous.subtype_mk (continuous_pi fun τ => ?_) _
       have h1 : Continuous fun z : n → Fin N' → Fin N → ℂ => z τ k.1 k.2 := by fun_prop
-      exact h1.comp continuous_subtype_val
+      exact h1.comp continuous_subtypeVal
     have hinj : Function.Injective f := by
       intro x y hxy
       apply Subtype.ext

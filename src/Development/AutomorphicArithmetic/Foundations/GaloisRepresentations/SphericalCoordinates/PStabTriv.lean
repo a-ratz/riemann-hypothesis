@@ -84,7 +84,7 @@ theorem UpperTheory.Gal.W2.stabTriv_of :
     apply Matrix.toLin'.injective
     rw [Matrix.toLin'_one]
     exact LinearMap.ext fun z => by rw [Matrix.toLin'_apply, key]; rfl
-  letI : Invertible H := invertibleOfLeftInverse H H' hHH
+  let : Invertible H := invertibleOfLeftInverse H H' hHH
   have hfix : ∀ u, w u = u :=
     hRig D.O D.inv D.g ρ D.La N D' t P w (Matrix.toLinearEquiv' H this) hN3
       (GlobalTheory.UPel.HT.Datum.Cls.fullMark D N (by omega) hNp D' t hCls) hPer hwm

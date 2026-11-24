@@ -351,7 +351,7 @@ theorem base_χ_cont (l : ℕ) [Fact l.Prime] : Continuous (χ : GQ l → ℚ_[l
   by
   have h1 : Continuous (fun g : GQ l => ((DeRhamTwist.Twist.chi0 l g : ℤ_[l]ˣ) : ℤ_[l])) :=
     Units.continuous_val.comp (DeRhamTwist.Twist.continuous_cyclotomic_character (l := l))
-  have h2 : Continuous (fun x : ℤ_[l] => (x : ℚ_[l])) := continuous_subtype_val
+  have h2 : Continuous (fun x : ℤ_[l] => (x : ℚ_[l])) := continuous_subtypeVal
   exact h2.comp h1
 
 private theorem mem_of_mul_pows_mul_eq {K : Type*} [Field K] {S : Subring K}

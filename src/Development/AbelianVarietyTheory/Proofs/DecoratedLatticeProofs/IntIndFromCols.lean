@@ -62,8 +62,8 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem intInd_mem_SB (a b : Type) [Fintype a] [Fintype b] :
     Set.indicator {x : Matrix a b k | ∀ r q, x r q ∈ 𝒪[k]} (fun _ => (1 : ℂ)) ∈ SB (Matrix a b k) := by
   classical
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI : T2Space (Matrix a b k) := inferInstanceAs (T2Space (a → b → k))
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space (Matrix a b k) := inferInstanceAs (T2Space (a → b → k))
   have e : {x : Matrix a b k | ∀ r q, x r q ∈ 𝒪[k]} =
       Set.pi Set.univ fun _ : a => Set.pi Set.univ fun _ : b => (𝒪[k] : Set k) := by
     ext x; exact ⟨fun h r _ q _ => h r q, fun h r q => h r trivial q trivial⟩
@@ -102,7 +102,7 @@ theorem hat_int {n : Type} [Fintype n] [DecidableEq n] {ψ : AddChar k Circle} (
         cosetInd (box n (1 : kˣ)) (Submodule.Quotient.mk 0) x := fun z hz x => by
       have : (Submodule.Quotient.mk (x + z) : (n → k) ⧸ box n (1 : kˣ)) = Submodule.Quotient.mk x :=
         (Submodule.Quotient.eq _).2 (by simpa using hz)
-      simp only [cosetInd, Set.indicator_apply, Set.mem_setOf_eq, this]
+      simp only [cosetInd, Set.indicator_apply, Set.mem_ofPred_eq, this]
     refine Eq.trans ?_ (FourierPi.fourier_eq_zero_pi (Measure.pi fun _ => ν) hψ (s := 1)
       (fun z hz x => hs z (fun i => hz i trivial) x) (y := ε • η) fun h' => hη fun i => ?_)
     · simp only [hat, dotProduct_smul, smul_eq_mul, dotProduct_comm]
@@ -113,7 +113,7 @@ variable {s : ℕ} {X : ℕ → Type} [∀ j, Fintype (X j)] [∀ j, DecidableEq
 
 theorem psi_mem_SB (T : Chain k s X Z) (hT : T.Regular) (y : X (s + 1) → k) :
     (fun x₀ => T.Psi 1 x₀ y) ∈ SB (Matrix (X (s + 1)) (X s) k) := by
-  haveI := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := X (s + 1)) (n' := X s)
+  have := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := X (s + 1)) (n' := X s)
   refine GlobalTheory.FinPl.Comm.comp_mem_SB (om_mem_SB (T.mu (s + 1)) 1 1 (hT.1 s 0 rfl))
     (p := fun x₀ => withCol x₀ y) (s := fun x => x.toBlocks₁₁) ?_ ?_ fun x => rfl
   · unfold withCol; fun_prop
@@ -124,7 +124,7 @@ variable [MeasurableSpace k] [BorelSpace k]
 theorem xiTop_mem_SB (T : Chain k s X Z) (hT : T.Regular) {ψ : AddChar k Circle} (hψ : HasConductor ψ 1)
     {ν : Measure k} (hν : IsUnitVol ν) {ε : k} (hε : valuation k ε = 1) (yb : (X (s + 1) → k) ⧸ box (X (s + 1)) (1 : kˣ)) :
     T.xiTop (box _ (1 : kˣ)) ψ ν ε yb ∈ SB (Matrix (Z ⊕ Unit) (X (s + 1)) k) := by
-  haveI := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := Z ⊕ Unit) (n' := X (s + 1))
+  have := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := Z ⊕ Unit) (n' := X (s + 1))
   have hh := (GlobalTheory.IndefiniteRowSideFullHecke.OmegaColumnSlices.hat_mem_SB_and_hat_omCol k ψ ν ε hψ hν hε (X (s + 1)) 1 1 _ (cosetInd_mem_SB 1 yb)).1
   refine GlobalTheory.FinPl.Comm.prod_mem_SB hT.2.1 hh
     (p := fun x : Matrix (Z ⊕ Unit) (X (s + 1)) k => fromCols x.toRows₁ (0 : Matrix Z (Fin 0) k))
@@ -155,9 +155,9 @@ theorem cosetInd_zero (y : a → k) :
   unfold cosetInd
   by_cases h : ∀ i, y i ∈ 𝒪[k]
   · rw [Set.indicator_of_mem (s := {y : a → k | Submodule.Quotient.mk y = Submodule.Quotient.mk 0}) (a := y)
-      (hy.2 h), if_pos h]
+      (hy.2 h), ite_eq_left h]
   · rw [Set.indicator_of_notMem (s := {y : a → k | Submodule.Quotient.mk y = Submodule.Quotient.mk 0}) (a := y)
-      (mt hy.1 h), if_neg h]
+      (mt hy.1 h), ite_eq_right h]
 
 
 open Classical in
@@ -177,12 +177,12 @@ theorem intInd_fromCols (q : Matrix a b k) (y : a → k) :
   rw [cosetInd_zero]
   by_cases h : ∀ r c, fromCols q (Matrix.of fun r (_ : Unit) => y r) r c ∈ 𝒪[k]
   · rw [Set.indicator_of_mem (s := {x : Matrix a (b ⊕ Unit) k | ∀ r c, x r c ∈ 𝒪[k]}) (a := _) h,
-      Set.indicator_of_mem (s := {x : Matrix a b k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q) (hf.1 h).1, if_pos (hf.1 h).2,
+      Set.indicator_of_mem (s := {x : Matrix a b k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q) (hf.1 h).1, ite_eq_left (hf.1 h).2,
       mul_one]
   · rw [Set.indicator_of_notMem (s := {x : Matrix a (b ⊕ Unit) k | ∀ r c, x r c ∈ 𝒪[k]}) (a := _) h]
     by_cases hq : ∀ r c, q r c ∈ 𝒪[k]
     · rw [Set.indicator_of_mem (s := {x : Matrix a b k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q) hq,
-        if_neg fun h2 => h (hf.2 ⟨hq, h2⟩), mul_zero]
+        ite_eq_right fun h2 => h (hf.2 ⟨hq, h2⟩), mul_zero]
     · rw [Set.indicator_of_notMem (s := {x : Matrix a b k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q) hq, zero_mul]
 
 
@@ -201,11 +201,11 @@ theorem intInd_rows (q : Matrix (c ⊕ Unit) a k) :
   by_cases h : ∀ r c, q r c ∈ 𝒪[k]
   · rw [Set.indicator_of_mem (s := {x : Matrix (c ⊕ Unit) a k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q) h,
       Set.indicator_of_mem (s := {x : Matrix c a k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q.toRows₁) (hr.1 h).1,
-      if_pos (hr.1 h).2, mul_one]
+      ite_eq_left (hr.1 h).2, mul_one]
   · rw [Set.indicator_of_notMem (s := {x : Matrix (c ⊕ Unit) a k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q) h]
     by_cases h1 : ∀ r c, q.toRows₁ r c ∈ 𝒪[k]
     · rw [Set.indicator_of_mem (s := {x : Matrix c a k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q.toRows₁) h1,
-        if_neg fun h2 => h (hr.2 ⟨h1, h2⟩), mul_zero]
+        ite_eq_right fun h2 => h (hr.2 ⟨h1, h2⟩), mul_zero]
     · rw [Set.indicator_of_notMem (s := {x : Matrix c a k | ∀ r c, x r c ∈ 𝒪[k]}) (a := q.toRows₁) h1, zero_mul]
 
 end Ones

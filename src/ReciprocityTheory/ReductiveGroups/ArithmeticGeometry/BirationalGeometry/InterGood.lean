@@ -139,7 +139,7 @@ theorem goodProjExists : GoodProjExistsStatement := by
         split_ifs <;> simp [Finset.mul_sum, mul_left_comm] }
   have hΨ : ∀ w (j : Fin r), Ψ w ⟨j.1, lt_of_lt_of_le j.2 hr⟩ = ∑ t, algebraMap ℚ ℂ (L j t) * w t := by
     intro w j
-    simp only [Ψ, LinearMap.coe_mk, AddHom.coe_mk, dif_pos j.2, Fin.eta]
+    simp only [Ψ, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left j.2, Fin.eta]
   have hA : ∀ z' (hz' : z' ∈ mcPts P), Ψ (segre z') = 0 →
       ∀ t, ((p t).map ((algebraMap ℚ ℂ).comp MvPolynomial.constantCoeff)).IsRoot (segre z' t) := by
     intro z' hz' h0 t
@@ -198,7 +198,7 @@ theorem goodProjExists : GoodProjExistsStatement := by
       simp only at hab
       have h6 := mul_right_cancel₀ hs hab
       exact_mod_cast add_right_cancel h6) hroot
-  exact hinf (Polynomial.finite_setOf_isRoot ((hpm t0).map _).ne_zero)
+  exact hinf (Polynomial.finite_setOfPred_isRoot ((hpm t0).map _).ne_zero)
 
 end
 

@@ -97,7 +97,7 @@ theorem exists_equiv_tensor {α : Type} [Fintype α] [DecidableEq α] (X : α �
         · subst h
           simp [d]
         · have h' : i ≠ i₀ := fun e => h e.symm
-          simp only [d, dif_neg h', Function.update_of_ne h']
+          simp only [d, dite_eq_right h', Function.update_of_ne h']
           exact ((hc i h').2 (f i)).symm
       have e2 : PiTensorProduct.tprod ℂ f =
           (∏ i, d i) • PiTensorProduct.tprod ℂ (Function.update x i₀ (f i₀)) := by
@@ -191,7 +191,7 @@ theorem multiProd_single {α : Type} [Fintype α] [LinearOrder α] (b : α → �
     OneBlockCell.mem_parab_of_single g i₀ h0 x
   have hsub : ∀ i, i ≠ i₀ → Subsingleton (GL (Fin (b i)) k) := by
     intro i hi
-    haveI : IsEmpty (Fin (b i)) := by rw [h0 i hi]; infer_instance
+    have : IsEmpty (Fin (b i)) := by rw [h0 i hi]; infer_instance
     exact ⟨fun x y => Units.ext (Subsingleton.elim _ _)⟩
   obtain ⟨x, ι, hι⟩ := exists_equiv_tensor (fun i => (σ i).V) i₀ (fun i hi =>
     haveI := hsub i hi
@@ -216,7 +216,7 @@ theorem multiProd_single {α : Type} [Fintype α] [LinearOrder α] (b : α → �
         rw [Function.update_self, Function.update_self, hwp, ← Module.End.mul_apply, ← map_mul,
           inv_mul_cancel_right, map_mul, Module.End.mul_apply]
       · have h' : i ≠ i₀ := fun e => h e.symm
-        haveI := hsub i h'
+        have := hsub i h'
         rw [Function.update_of_ne h', Function.update_of_ne h',
           Subsingleton.elim (leviProj k g p i) 1, map_one]
         rfl)

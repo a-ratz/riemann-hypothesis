@@ -49,9 +49,9 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.coverComm :
   constructor
   · refine Sigma.hom_ext _ _ fun p => ?_
     have h1 : wI B p.1 ≫ cP B = (oW B p.1).ι := by
-      simp only [wI, cP, Sigma.ι_desc]
+      simp only [wI, cP, Sigma.ι_comp_desc]
     have h2 : rhoC B j r hw p ≫ (oW B p.1).ι = (oT B j p).ι ≫ r := by
       simp only [rhoC, IsOpenImmersion.lift_fac]
-    simp only [rhoP, eP, Sigma.ι_desc_assoc, Category.assoc, h1, h2]
+    simp only [rhoP, eP, Sigma.ι_comp_desc_assoc, Category.assoc, h1, h2]
   · refine Sigma.hom_ext _ _ fun p => ?_
-    simp only [tauP, eP, Sigma.ι_desc_assoc, secOf_f]
+    simp only [tauP, eP, Sigma.ι_comp_desc_assoc, secOf_f]

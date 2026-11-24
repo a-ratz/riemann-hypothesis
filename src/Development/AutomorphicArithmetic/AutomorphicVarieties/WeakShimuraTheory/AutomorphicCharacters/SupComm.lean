@@ -59,13 +59,13 @@ private theorem sup_comm' {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] [Nor
 theorem UpperTheory.V.Ws.auGal :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (T : Tower D), IsGalois ℚ T.L ∧ IsSolvable (T.L ≃ₐ[ℚ] T.L) := by
   intro Ω _ _ _ l _ c D T
-  haveI : Algebra.IsQuadraticExtension ℚ T.K := ⟨T.degK⟩
-  haveI hK : IsGalois ℚ T.K := inferInstance
-  haveI : IsCyclic (T.K ≃ₐ[ℚ] T.K) := inferInstance
-  haveI hF : IsGalois ℚ T.F := inferInstance
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : Algebra.IsQuadraticExtension ℚ T.K := ⟨T.degK⟩
+  have hK : IsGalois ℚ T.K := inferInstance
+  have : IsCyclic (T.K ≃ₐ[ℚ] T.K) := inferInstance
+  have hF : IsGalois ℚ T.F := inferInstance
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   have hN : Normal ℚ ↥(T.F ⊔ T.K) := @IntermediateField.normal_sup ℚ Ω _ _ _ T.F T.K hF.to_normal hK.to_normal
   have hc := @sup_comm' ℚ Ω _ _ _ _ T.F T.K hF.to_normal hK.to_normal (fun a b => T.abF.is_comm.comm a b)
     (fun a b => (IsAbelianGalois.of_isCyclic ℚ T.K).is_comm.comm a b)
   rw [← T.hL] at hN hc
-  exact ⟨{ to_isSeparable := inferInstance, to_normal := hN }, isSolvable_of_comm hc⟩
+  exact ⟨{ to_isSeparable := inferInstance, to_normal := hN }, Group.isSolvable_of_comm hc⟩

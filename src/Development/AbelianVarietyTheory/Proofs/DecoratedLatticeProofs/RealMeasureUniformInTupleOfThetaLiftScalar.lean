@@ -79,7 +79,7 @@ theorem eq_map_of_lev {V : HSp D} (K : Subgroup (GA D V)) (hK : K ≤ GfC V) (A 
       IntegrableOn F A ν ∧ ∫ g in A, F g ∂ν = ∫ b, f b ∂mR) :
     mR = Measure.map (GlobalTheory.AutMult.toInf V) (ν.restrict A) := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7, i8⟩ := ginfC_facts V
-  haveI := hH
+  have := hH
   have hmeas : Measurable (GlobalTheory.AutMult.toInf V) := (GlobalTheory.AutMult.continuous_toInf V).measurable
 
   have hfin : ∀ G : Set (GinfC V), MeasurableSet G → mR G < ⊤ →
@@ -132,8 +132,8 @@ theorem eq_of_measLevW {V : HSp D}
     (e₁ : m₁ = Measure.map (GlobalTheory.AutMult.toInf V) (ν₁.restrict {g | Lev.finE V g ∈ K₁}))
     (e₂ : m₂ = Measure.map (GlobalTheory.AutMult.toInf V) (ν₂.restrict {g | Lev.finE V g ∈ K₂})) : m₁ = m₂ := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7, i8⟩ := ginfC_facts V
-  haveI := hH₁
-  haveI := hH₂
+  have := hH₁
+  have := hH₂
   have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
   have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.1
   have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
@@ -162,10 +162,10 @@ theorem eq_of_measLevW {V : HSp D}
     · exact ((B ρ).isCompact.image ((GlobalTheory.UpqTopology.continuous_mat).matrix_mul continuous_const)).isClosed
   have hS : MeasurableSet S := hSc.measurableSet
   let E : Set (GinfC V) := Subtype.val ⁻¹' S
-  have hE : MeasurableSet E := measurable_subtype_coe hS
+  have hE : MeasurableSet E := measurable_subtypeVal hS
   have hpre : GlobalTheory.AutMult.toInf V ⁻¹' E = S := by
     ext h
-    simp only [E, S, Set.mem_preimage, Set.mem_setOf_eq, infMat_toInf]
+    simp only [E, S, Set.mem_preimage, Set.mem_ofPred_eq, infMat_toInf]
   have hval : ∀ (K : Subgroup (GL (Fin V.rank) (Lev.EAf D))) (ν : Measure (GA D V)),
       Measure.map (GlobalTheory.AutMult.toInf V) (ν.restrict {g | Lev.finE V g ∈ K}) E =
         ν {h | Lev.finE V h ∈ K ∧ ∀ ρ, ∃ b ∈ (B ρ : Set _), UpqT.mat b * A ρ = A ρ * infMat D.sp.cm.sig V.gram (θ ρ) h} := by
@@ -184,7 +184,7 @@ theorem eq_of_measLevW {V : HSp D}
     exact (B ρ).isCompact.measure_lt_top.ne
   have e : m₂ = ((Measure.haarScalarFactor m₂ m₁ : NNReal) : ENNReal) • m₁ := Measure.isMulLeftInvariant_eq_smul m₂ m₁
   have e' := v2
-  rw [e, Measure.smul_apply, v1, smul_eq_mul] at e'
+  rw [e, smul_apply, v1, smul_eq_mul] at e'
   have hc : ((Measure.haarScalarFactor m₂ m₁ : NNReal) : ENNReal) = 1 :=
     (ENNReal.mul_left_inj h0 ht).1 (e'.trans (one_mul _).symm)
   rw [e, hc, one_smul]

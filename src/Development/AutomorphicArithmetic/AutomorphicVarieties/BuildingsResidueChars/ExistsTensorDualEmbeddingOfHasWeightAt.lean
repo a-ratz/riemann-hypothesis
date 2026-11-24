@@ -164,7 +164,7 @@ private theorem multi_fin (n : ℕ) : ∀ (Γ : Fin n → Type) [∀ i, Group (�
     intro Γ _ X _ _ _ σ hσ Y _ _ _ ρ hc hiso
     have hc' : ∀ k : Fin n, ∀ a b y, ρ k.castSucc a (ρ (Fin.last n) b y) =
         ρ (Fin.last n) b (ρ k.castSucc a y) := fun k => hc _ _ (Fin.castSucc_lt_last k).ne
-    haveI : Nontrivial (eqv (σ (Fin.last n)) (ρ (Fin.last n))) := by
+    have : Nontrivial (eqv (σ (Fin.last n)) (ρ (Fin.last n))) := by
       by_contra hn
       rw [not_nontrivial_iff_subsingleton] at hn
       have h1 := hiso (Fin.last n)
@@ -288,7 +288,7 @@ private theorem exists_multi {I : Type} [Finite I] (emb : I → (E →+* ℂ))
     ∃ μ : MultilinearMap (RingHom.id ℂ) (fun i => nablaSq ℂ n (lam i)) N, μ ≠ 0 ∧ ∀ x ∈ infU E n, ∀ v k,
       RU E n x ((μ v).1 k) = (μ fun i => sqRep ℂ n (lam i) (cEmb (emb i) x) (v i)).1 k := by
   classical
-  haveI : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 h0
+  have : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 h0
   obtain ⟨hgen, hcomm⟩ := UpperTheory.archimedeanUnitary_le_iSup_embU_and_commute E n
   obtain ⟨μ, hμ0, hμ⟩ := UpperTheory.exists_multilinear_intertwiner_of_commuting_subgroups (infU E n) I (fun i => (embU n (emb i)).subgroupOf (infU E n))
     (fun i j hij a ha b hb' => Subtype.ext (hcomm (emb i) (emb j) (fun e => hij (hb.1 e)) a.1 ha b.1 hb'))

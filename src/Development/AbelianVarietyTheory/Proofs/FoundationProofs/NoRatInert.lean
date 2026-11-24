@@ -80,8 +80,8 @@ theorem no_rat_inert {q d : ℕ} [Fact d.Prime] (h : HostHyp q d) {m : ℕ} (hm 
     (hp : p.Prime) (hp2 : p ≠ 2) (hf : Odd f) (hpd : p ≠ d → ¬ IsSquare (-(d : ZMod p))) (A W : ℚ) :
     W ^ 2 ≠ q * d * (A ^ 2 - 4 * (p ^ f * m)) := by
   obtain ⟨hq, hd, hq8, hd16, hj⟩ := h
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact q.Prime := ⟨hq⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨k, u, rfl, hu⟩ := hm
   have h1 := hq.pos
   have h2 := hd.pos
@@ -147,7 +147,7 @@ theorem norm_neg : ∀ (D : D7) (t : 𝓞 D.host.E) (P B : Ideal (𝓞 D.host.E)
   obtain ⟨-, p, f, hp, -, hp2, -, hf, hN, hpd⟩ := (_root_.GlobalTheory.InertResidue.norm_prime D P hP).2.1 hc
   rw [prod_embT]
   generalize D.host = H at *
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
   have ha : H.sqq ^ 2 = -(H.q : H.E) := H.sqq_sq
   have hb : H.sqd ^ 2 = -(H.d : H.E) := H.sqd_sq
   have hB0 : B ≠ ⊥ := by

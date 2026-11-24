@@ -103,7 +103,7 @@ theorem exists_mul_involution_add_one_mem_pow (O : Type) [CommRing O] (s : O →
   have hPP : P ≤ P.comap s := fun x hx => hsP x hx
   rcases Nat.eq_zero_or_pos N with hN | hN
   · subst hN
-    letI : Field (O ⧸ P) := Ideal.Quotient.field P
+    let : Field (O ⧸ P) := Ideal.Quotient.field P
     let σ := Ideal.quotientMap P s hPP
     have hσ : ∀ x, σ (σ x) = x := by
       intro x

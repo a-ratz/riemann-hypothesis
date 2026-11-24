@@ -66,12 +66,12 @@ theorem isFinite_mul : ∀ (K : Type) [Field K] [IsAlgClosed K] (A : Over (Sp K)
     ∀ n : ℕ, 1 ≤ n → IsFinite (𝟙 A ^ n : A ⟶ A).left := by
   intro k _ _ B _ hB n hn1
   have hG := GlobalTheory.laws_without_cohomology.1
-  haveI := hB.comm
-  haveI := hB.smooth
-  haveI := hB.proper
-  haveI : GeometricallyIntegral B.hom :=
+  have := hB.comm
+  have := hB.smooth
+  have := hB.proper
+  have : GeometricallyIntegral B.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
-  haveI : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
+  have : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
   have hq : 1 ≤ n ^ 2 := Nat.one_le_pow _ _ hn1
   have hproj := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k B hB
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k B hB hproj

@@ -96,7 +96,7 @@ private theorem pow_mem (ρ : Representation ℂ G V) (N : Subrepresentation ρ)
 private theorem exists_nil {ρ : Representation ℂ G V} (hl : HasFiniteLength ρ) {x : V} (hx : x ≠ 0) :
     ∃ N : Subrepresentation ρ, N ≠ ⊤ ∧ ∀ (t : G) (c : ℂ), ρ t x = c • x →
       ∃ m : ℕ, ∀ v, ((ρ t - c • (1 : Module.End ℂ V)) ^ m) v ∈ N.toSubmodule := by
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨N, hN, hmax⟩ := (wellFounded_gt (α := Subrepresentation ρ)).has_min {N | x ∉ N.toSubmodule}
     ⟨⊥, fun h => hx ((Submodule.mem_bot ℂ).1 h)⟩
   refine ⟨N, fun h => hN (by rw [h]; trivial), fun t c hc => ?_⟩
@@ -196,7 +196,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
     {x : V} (hx : x ≠ 0) : ∃ μ : G →* ℂˣ, IsSmoothChar μ ∧ (∀ (t : G) (c : ℂ), ρ t x = c • x → (μ t : ℂ) = c) ∧
       ∃ l : V →ₗ[ℂ] ℂ, l ≠ 0 ∧ ∀ g v, l (ρ g v) = (μ g : ℂ) * l v := by
   obtain ⟨T, hT, hnil⟩ := exists_nil hl hx
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, hTM⟩ := (eq_top_or_exists_le_coatom T).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=
@@ -267,7 +267,7 @@ private theorem inv_inj (hφ : ∀ t : I.T, (t : G) ∈ I.Tc c → φ t = 1) (hs
     [FiniteDimensional ℂ (fixd π (I.I1 c))] {v : M}
     (hv : v ∈ ⨅ j : ℕ, (I.eig π c φ).map (I.uOp π I.z ^ j)) (h0 : v ∈ I.jacKer π) : v = 0 := by
   have st := ((uOpLevel G I ℂ M π c).2.2 φ hφ).1 _ I.z_mem
-  haveI : FiniteDimensional ℂ (I.eig π c φ) := Submodule.finiteDimensional_of_le (eig_le I π c φ hφ)
+  have : FiniteDimensional ℂ (I.eig π c φ) := Submodule.finiteDimensional_of_le (eig_le I π c φ hφ)
   have hv0 : v ∈ I.eig π c φ := by simpa using (Submodule.mem_iInf _).1 hv 0
   let f : Module.End ℂ (I.eig π c φ) := (I.uOp π I.z).restrict st
   have hf : ∀ (j : ℕ) (x : I.eig π c φ), ((f ^ j) x : M) = (I.uOp π I.z ^ j) x := by
@@ -350,7 +350,7 @@ theorem UpperTheory.V.Hi.exists_principal_series_of_distinct_inv_ne_bot :
       exact ⟨eT k n i (y i), hφ0 i _ (hy' c ht i), rfl⟩
     obtain ⟨s, hs, e⟩ := e
     exact (Subtype.ext e : s = t) ▸ hs
-  haveI : FiniteDimensional ℂ (fixd π ((glIwa k n).I1 c)) := by
+  have : FiniteDimensional ℂ (fixd π ((glIwa k n).I1 c)) := by
     have hfix : fixd π ((glIwa k n).I1 c) = fixed π ((glIwa k n).I1 c) := by
       ext v
       exact ⟨fun h u => by simpa using h u u.2, fun h u hu => by simpa using h ⟨u, hu⟩⟩
@@ -382,7 +382,7 @@ theorem UpperTheory.V.Hi.exists_principal_series_of_distinct_inv_ne_bot :
   have hl : HasFiniteLength (jacB π) :=
     (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).2
       ((H.loc.bz k).2.1 _ _ _ (points (Fin n)) _ π hπ (hasFiniteLength_of_isIrreducible hirr))
-  haveI := GlobalTheory.TorusEigenform.secondCountableTopology_units k
+  have := GlobalTheory.TorusEigenform.secondCountableTopology_units k
   obtain ⟨μ, hμs, hμ, l, hl0, hle⟩ := OrdB.exists_form (isSmooth_jacB hπ) hl fun h => hx0 (hinj x hx h)
   obtain ⟨ψ, hψ, rfl⟩ : ∃ ψ : Fin n → kˣ →* ℂˣ, (∀ i, IsSmoothChar (ψ i)) ∧ torusChar ψ = μ := by
     refine ⟨fun i => μ.comp (MonoidHom.mulSingle (fun _ => kˣ) i),
@@ -424,7 +424,7 @@ theorem UpperTheory.V.Hi.exists_principal_series_of_distinct_inv_ne_bot :
     · simp [hy0]
     have hy1 : (⟨y, hy⟩ : E) ≠ 0 := fun h => hy0 (congrArg Subtype.val h)
     have : Nontrivial E := nontrivial_of_ne _ _ hy1
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hy1).1 (le_antisymm hE1 Module.finrank_pos) ⟨_, hEs t y hy⟩
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hy1).1 (le_antisymm hE1 Module.finrank_pos) ⟨_, hEs t y hy⟩
     have ha' : jacB π t y = a • y := (congrArg Subtype.val ha).symm
     rw [ha', OrdB.eq_of_gen ha' hy0 ((Submodule.mem_iInf _).1 (hgen hy) t)]
   obtain ⟨ω, rfl⟩ : ∃ ω : Fin n → kˣ →* ℂˣ, (fun i => ω i * absPow k (((n : ℂ) - 1) / 2)) = ψ :=
@@ -443,7 +443,7 @@ theorem UpperTheory.V.Hi.exists_principal_series_of_distinct_inv_ne_bot :
     rw [h, MonoidHom.mul_apply, isUnram_absPow k _ _ u.2, mul_one]
   · refine le_trans (LinearMap.finrank_le_finrank_of_injective (f := p.restrict hpE) ?_) hE1
     exact (injective_iff_map_eq_zero _).2 fun v h => Subtype.ext (hinj v v.2 (congrArg Subtype.val h))
-  · haveI : FiniteDimensional ℂ (invPart π c φ) :=
+  · have : FiniteDimensional ℂ (invPart π c φ) :=
       Submodule.finiteDimensional_of_le (heig.trans (OrdB.eig_le _ π c φ hφ))
     exact Nat.pos_of_ne_zero fun h => hne (Submodule.finrank_eq_zero.1 h)
   · rw [← sub_eq_zero]
@@ -481,7 +481,7 @@ private theorem onto_inf {M : Type} [AddCommGroup M] [Module ℂ M] (T : Module.
     refine LinearMap.injective_iff_surjective.2 fun y => ?_
     obtain ⟨z, hz, e⟩ : (y : M) ∈ S.map T := hS.symm ▸ y.2
     exact ⟨⟨z, hz⟩, Subtype.ext e⟩
-  haveI : FiniteDimensional ℂ (Y ⊓ S : Submodule ℂ M) := Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional ℂ (Y ⊓ S : Submodule ℂ M) := Submodule.finiteDimensional_of_le inf_le_right
   have sur : Function.Surjective (T.restrict h2) := by
     refine LinearMap.injective_iff_surjective.1 fun a b e => Subtype.ext ?_
     have : T.restrict h1 ⟨a, a.2.2⟩ = T.restrict h1 ⟨b, b.2.2⟩ := Subtype.ext (Subtype.ext_iff.1 e :)
@@ -704,12 +704,12 @@ theorem UpperTheory.V.Hi.goodScalB_alt : _root_.GlobalTheory.Mem.LiteralAutomorp
             H.opC ι lam d (.inr (v, j)) F = ((H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1)) • F := by
   intro hLit L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι x lam d ξ c0 sp hsp hgood Y K e he hne
   classical
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : IsCNL A := IsCNL.ofCO c.O A
   set S := H.OrdAt θ ι x.toRingHom lam ξ K e with hSdef
   have hSC : S ≤ H.ClAt θ ι x.toRingHom lam ξ K e := iSup_le fun _ => inf_le_left
-  haveI := hsp.fin K e he
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSC
+  have := hsp.fin K e he
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSC
   obtain ⟨F₀, hF₀, hF₀'⟩ := (Submodule.ne_bot_iff _).1 hne
   obtain ⟨hfin, -, hbij⟩ := ordFree _ _ _ H.X A H.m (H.τA A) θ hθ.cont (H.lev K) (hH.fin K) (hθ.free K)
   let s : H.X.Ord (H.τA A) θ (H.lev K) →ₛₗ[ι.toRingHom.comp x.toRingHom] (Fin H.m → H.X.Fn ℂ d) :=

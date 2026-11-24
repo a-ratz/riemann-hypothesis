@@ -102,8 +102,8 @@ private theorem unit_of_trace_one (k : Type) [Field k] [CharZero k] {A A' : Type
   let L := LocalizedModule M.primeCompl A'
   have base := IsLocalizedModule.isBaseChange M.primeCompl Am
     (LocalizedModule.mkLinearMap M.primeCompl A')
-  haveI : Module.Free Am L := Module.free_of_flat_of_isLocalRing
-  haveI : Nontrivial L := by
+  have : Module.Free Am L := Module.free_of_flat_of_isLocalRing
+  have : Nontrivial L := by
     refine ⟨⟨LocalizedModule.mkLinearMap M.primeCompl _ 1, 0, fun h ↦ ?_⟩⟩
     obtain ⟨t, ht⟩ := (IsLocalizedModule.eq_zero_iff M.primeCompl
       (LocalizedModule.mkLinearMap M.primeCompl A')).1 h
@@ -128,10 +128,10 @@ variable {k : Type} [Field k] [CharZero k] {X X' : Scheme.{0}} {s : X ⟶ Sp k} 
 
 private theorem unit_secTrace [Surjective f] {U : X.Opens} (hU : IsAffineOpen U) :
     IsUnit (secTrace (f := f) s s' hU 1) := by
-  letI := secAlg s s' f U
-  haveI := sec_finite (s := s) (s' := s') (f := f) hU
-  haveI := sec_etale (s := s) (s' := s') (f := f) hU
-  haveI := projective_of_etale (Sec s U) (Sec s' (f ⁻¹ᵁ U))
+  let := secAlg s s' f U
+  have := sec_finite (s := s) (s' := s') (f := f) hU
+  have := sec_etale (s := s) (s' := s') (f := f) hU
+  have := projective_of_etale (Sec s U) (Sec s' (f ⁻¹ᵁ U))
   have hsq : Surjective (Spec.map (f.app U)) :=
     MorphismProperty.of_isPullback (P := @Surjective)
       (isPullback_fromSpec_app_preimage f hU (hU.preimage f)) inferInstance
@@ -177,7 +177,7 @@ end
 theorem UpperTheory.Gal.G3.pHodgeInj :
     HodgeInj := by
   intro k _ _ a b Z W p r c _ _ _ hc x y hxy
-  letI := algΓ p
+  let := algΓ p
   obtain ⟨ψ, hψ⟩ := pull_trace_leftInv hc a
   have back : ∀ z : hodgeH p a b,
       cohOn.map k ψ ⊤ b (hodgeTrace hc a b (hodgePull hc a b z)) = z := fun z ↦ by

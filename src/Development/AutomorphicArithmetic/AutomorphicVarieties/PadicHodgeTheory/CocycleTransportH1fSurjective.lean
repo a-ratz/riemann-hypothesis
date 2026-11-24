@@ -193,7 +193,7 @@ theorem UpperTheory.V.Loc.bkDim :
     rw [IsDR, DdR_tr]
     exact hdR
   obtain ⟨hfin, hdim⟩ := hD V (tr e ρ) hcont hdR'
-  haveI : Module.Finite ℚ_[l] ↥(finiteCohomology ((GK K).subtype.comp e.toMonoidHom) ρ) :=
+  have : Module.Finite ℚ_[l] ↥(finiteCohomology ((GK K).subtype.comp e.toMonoidHom) ρ) :=
     Module.Finite.equiv (h1fEquiv e ρ he he')
   refine ⟨Module.Finite.of_restrictScalars_finite ℚ_[l] E _, ?_⟩
   have hH1 : finrank ℚ_[l] (FiniteCohomology ((PP l).PD K) (tr e ρ)) =

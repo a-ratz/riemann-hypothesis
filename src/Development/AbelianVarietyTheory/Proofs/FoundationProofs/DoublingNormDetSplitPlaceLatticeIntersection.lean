@@ -80,8 +80,8 @@ theorem nnnorm_det_eq_one {k : GL (Fin n) (Fv F v)}
   have h1 := nnnorm_det_le hk.1
   have h2 := nnnorm_det_le hk.2
   have h3 : ‖k.1.det‖₊ * ‖(k⁻¹).1.det‖₊ = 1 := by
-    rw [← nnnorm_mul, ← Matrix.det_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.det_one,
-      nnnorm_one]
+    rw [← nnNorm_mul, ← Matrix.det_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.det_one,
+      nnNorm_one]
   refine le_antisymm h1 ?_
   calc (1 : ℝ≥0) = ‖k.1.det‖₊ * ‖(k⁻¹).1.det‖₊ := h3.symm
     _ ≤ ‖k.1.det‖₊ * 1 := mul_le_mul_of_nonneg_left h2 (by positivity)
@@ -113,12 +113,12 @@ private theorem unit_mul_mem_iff' (t : (Fv F v)ˣ) (z : Fv F v) :
     (z ∈ v.adicCompletionIntegers F ∧ ((t⁻¹ : (Fv F v)ˣ) : Fv F v) * z ∈ v.adicCompletionIntegers F) ↔
       (((if ‖(t : Fv F v)‖₊ ≤ 1 then t else 1 : (Fv F v)ˣ)⁻¹ : (Fv F v)ˣ) : Fv F v) * z ∈
         v.adicCompletionIntegers F := by
-  have ht : 0 < ‖(t : Fv F v)‖₊ := nnnorm_pos.2 t.ne_zero
+  have ht : 0 < ‖(t : Fv F v)‖₊ := nnNorm_pos.2 t.ne_zero
   split_ifs with h
-  · simp only [mem_int_iff, nnnorm_mul, Units.val_inv_eq_inv_val, nnnorm_inv, inv_mul_le_iff₀ ht, mul_one]
+  · simp only [mem_int_iff, nnNorm_mul, Units.val_inv_eq_inv_val, nnNorm_inv, inv_mul_le_iff₀ ht, mul_one]
     exact ⟨fun h' => h'.2, fun h' => ⟨h'.trans h, h'⟩⟩
-  · simp only [mem_int_iff, nnnorm_mul, Units.val_inv_eq_inv_val, nnnorm_inv, inv_mul_le_iff₀ ht, mul_one,
-      inv_one, Units.val_one, nnnorm_one, one_mul]
+  · simp only [mem_int_iff, nnNorm_mul, Units.val_inv_eq_inv_val, nnNorm_inv, inv_mul_le_iff₀ ht, mul_one,
+      inv_one, Units.val_one, nnNorm_one, one_mul]
     exact ⟨fun h' => h'.1, fun h' => ⟨h', h'.trans (not_le.1 h).le⟩⟩
 
 theorem nnnorm_det_inter {a x : GL (Fin n) (Fv F v)} {d : Fin n → (Fv F v)ˣ} (hd : IsElemDiv x d)
@@ -156,16 +156,16 @@ theorem nnnorm_det_inter {a x : GL (Fin n) (Fv F v)} {d : Fin n → (Fv F v)ˣ} 
     rw [Units.val_mul, ← Matrix.mulVec_mulVec, key, Matrix.mulVec_mulVec, ← Units.val_mul, inv_mul_cancel,
       Units.val_one, Matrix.one_mulVec]
   have hdet : ‖a.1.det‖₊ = ‖c.1.det‖₊ := by
-    rw [← mul_inv_cancel_left a c, Units.val_mul, Matrix.det_mul, nnnorm_mul, nnnorm_det_eq_one hg, mul_one]
-  rw [hdet, hc, Units.val_mul, Matrix.det_mul, nnnorm_mul, nnnorm_det_eq_one hk₁, one_mul]
+    rw [← mul_inv_cancel_left a c, Units.val_mul, Matrix.det_mul, nnNorm_mul, nnnorm_det_eq_one hg, mul_one]
+  rw [hdet, hc, Units.val_mul, Matrix.det_mul, nnNorm_mul, nnnorm_det_eq_one hk₁, one_mul]
   show ‖(Matrix.diagonal fun i => ((m i : (Fv F v)ˣ) : Fv F v)).det‖₊ = _
-  rw [Matrix.det_diagonal, nnnorm_prod]
+  rw [Matrix.det_diagonal, nnNorm_prod]
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [hm]
   show ‖((if ‖(d i : Fv F v)‖₊ ≤ 1 then d i else 1 : (Fv F v)ˣ) : Fv F v)‖₊ = _
   split_ifs with hi
   · exact (min_eq_left hi).symm
-  · rw [Units.val_one, nnnorm_one]
+  · rw [Units.val_one, nnNorm_one]
     exact (min_eq_right (not_le.1 hi).le).symm
 
 theorem mulVec_splitIncl (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) (M : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))
@@ -283,11 +283,11 @@ theorem absEv_det_split (F E : Type) [Field F] [NumberField F] [Field E] [Number
       group
     rw [e]
     exact isElemDiv_dual hd
-  rw [absEv_apply, Matrix.GeneralLinearGroup.val_det_apply, norm_eq_split h τ, nnnorm_mul,
+  rw [absEv_apply, Matrix.GeneralLinearGroup.val_det_apply, norm_eq_split h τ, nnNorm_mul,
     nnnorm_splitProj_det h hJ hβ H hd, nnnorm_splitProj_det h hJ hβ' H hd', ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
-  have hpos : 0 < ‖(d i : Fv F v)‖₊ := nnnorm_pos.2 (d i).ne_zero
-  rw [Units.val_inv_eq_inv_val, nnnorm_inv]
+  have hpos : 0 < ‖(d i : Fv F v)‖₊ := nnNorm_pos.2 (d i).ne_zero
+  rw [Units.val_inv_eq_inv_val, nnNorm_inv]
   rcases le_total ‖(d i : Fv F v)‖₊ 1 with hle | hle
   · rw [min_eq_left hle, min_eq_right ((one_le_inv₀ hpos).2 hle), mul_one,
       min_eq_left (hle.trans ((one_le_inv₀ hpos).2 hle))]

@@ -84,7 +84,7 @@ lemma twRep_apply (h : IsCh Γ ⊤ c₀) (ρ : K →* (W →L[ℂ] W)) (r : K) :
 
 lemma twRep_cont (h : IsCh Γ ⊤ c₀) {ρ : K →* (W →L[ℂ] W)} (hρ : Continuous ρ) :
     Continuous (twRep h K ρ) :=
-  ((ch_cont h).comp continuous_subtype_val).smul hρ
+  ((ch_cont h).comp continuous_subtypeVal).smul hρ
 
 lemma secSp_twist (h : IsCh Γ ⊤ c₀) (ρ : K →* (W →L[ℂ] W)) (P : Subgroup G) (c : G → ℂ) :
     secSp K P (c * c₀) ρ = secSp K P c (twRep h K ρ) := by

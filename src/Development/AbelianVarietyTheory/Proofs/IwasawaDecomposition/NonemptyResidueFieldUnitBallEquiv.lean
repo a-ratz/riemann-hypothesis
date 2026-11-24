@@ -62,7 +62,7 @@ namespace GlobalTheory.AlgebraMapToZMod
 theorem algebraMap_toZMod_eq {l : ℕ} [inst : Fact (Nat.Prime l)] {R : Type} [inst_1 : Field R]
     [inst_2 : Algebra (ZMod l) R] (f : ℤ_[l] →+* R) (hf : f (l : ℤ_[l]) = 0) (x : ℤ_[l]) :
     algebraMap (ZMod l) R (PadicInt.toZMod x) = f x := by
-  haveI : NeZero l := ⟨(Fact.out : Nat.Prime l).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : Nat.Prime l).ne_zero⟩
   have h := PadicInt.toZMod_spec x
   rw [PadicInt.maximalIdeal_eq_span_p, Ideal.mem_span_singleton'] at h
   obtain ⟨y, hy⟩ := h
@@ -102,7 +102,7 @@ theorem valuation_le_one_iff_of_lt_iff {K F : Type} [Field K] [NumberField K] [N
   by_cases hx : x = 0
   · simp [hx]
   have h1 := h x⁻¹
-  have hv : 0 < v.valuation K x := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hx)
+  have hv : 0 < v.valuation K x := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hx)
   have hn : 0 < ‖a x‖ := norm_pos_iff.mpr ((map_ne_zero a).mpr hx)
   rw [map_inv₀, map_inv₀, norm_inv, inv_lt_one₀ hv, inv_lt_one₀ hn] at h1
   rw [← not_lt, ← not_lt, h1]
@@ -124,8 +124,8 @@ theorem exists_embedding_inducing_place (K : Type) [Field K] [NumberField K] [Is
     first | exact map_natCast _ _ | simp
   have := v.isPrime
   have := w₀.isPrime
-  haveI := Formalism.BasicNotions.Examples₂.PlOver.liesOver_of_mem v.asIdeal hl
-  haveI := Formalism.BasicNotions.Examples₂.PlOver.liesOver_of_mem w₀.asIdeal hlw
+  have := Formalism.BasicNotions.Examples₂.PlOver.liesOver_of_mem v.asIdeal hl
+  have := Formalism.BasicNotions.Examples₂.PlOver.liesOver_of_mem w₀.asIdeal hlw
   obtain ⟨σ, hσ⟩ := Ideal.exists_smul_eq_of_isGaloisGroup (Ideal.span {(l : ℤ)}) v.asIdeal
     w₀.asIdeal (K ≃ₐ[ℚ] K)
   let a : K →+* PadicAlgCl l := a₀.comp (σ : K →+* K)
@@ -174,7 +174,7 @@ theorem isAlgebraic_residueField {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B
       rw [PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p] at h2
       exact Ideal.mem_span_singleton.mp h2
     have hu := hp _ hdvd
-    exact PadicInt.prime_p.not_unit hu
+    exact PadicInt.prime_p.not_isUnit hu
   · rw [Polynomial.aeval_def, Polynomial.eval₂_map, hcomp, ← Polynomial.hom_eval₂, hb, map_zero]
 
 theorem exists_isPrimitive_eval₂_eq_zero {l : ℕ} [Fact l.Prime] (x : PadicAlgCl l) :
@@ -184,11 +184,11 @@ theorem exists_isPrimitive_eval₂_eq_zero {l : ℕ} [Fact l.Prime] (x : PadicAl
   have hmap : algebraMap ℤ_[l] (PadicAlgCl l) =
       (algebraMap ℚ_[l] (PadicAlgCl l)).comp PadicInt.Coe.ringHom :=
     IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (PadicAlgCl l)
-  haveI : FaithfulSMul ℤ_[l] (PadicAlgCl l) :=
+  have : FaithfulSMul ℤ_[l] (PadicAlgCl l) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (by
       rw [hmap]
       exact (algebraMap ℚ_[l] (PadicAlgCl l)).injective.comp fun a b h => Subtype.ext h)
-  letI : NormalizedGCDMonoid ℤ_[l] := Classical.arbitrary _
+  let : NormalizedGCDMonoid ℤ_[l] := Classical.arbitrary _
   have hx : IsAlgebraic ℤ_[l] x :=
     (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] (PadicAlgCl l)).mpr
       (Algebra.IsAlgebraic.isAlgebraic x)
@@ -248,17 +248,17 @@ theorem nonempty_residueField_unitBall_equiv {l : ℕ} [Fact l.Prime] (ι : Padi
   have hlR : ((l : ℕ) : ResidueField B) = 0 := by
     have := (residue_eq_zero_iff _).mpr hcl
     simpa using this
-  haveI : CharP (ResidueField B) l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hlR
-  letI : Algebra (ZMod l) (ResidueField B) := ZMod.algebra _ l
-  haveI : Algebra.IsAlgebraic (ZMod l) (ResidueField B) := isAlgebraic_residueField c hcl halg
-  haveI : IsAlgClosed (ResidueField B) :=
+  have : CharP (ResidueField B) l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hlR
+  let : Algebra (ZMod l) (ResidueField B) := ZMod.algebra _ l
+  have : Algebra.IsAlgebraic (ZMod l) (ResidueField B) := isAlgebraic_residueField c hcl halg
+  have : IsAlgClosed (ResidueField B) :=
     GlobalTheory.isAlgClosed_residueField_of_valuationRing_of_isAlgClosed B ℂ
-  haveI : IsAlgClosure (ZMod l) (ResidueField B) := ⟨inferInstance, inferInstance⟩
+  have : IsAlgClosure (ZMod l) (ResidueField B) := ⟨inferInstance, inferInstance⟩
   exact ⟨(IsAlgClosure.equiv (ZMod l) (ResidueField B) (AlgebraicClosure (ZMod l))).toRingEquiv⟩
 
 theorem val_nonneg_iff (D : D7) (lam : D.what₂.places.Pl) (x : D.what₂.LL) :
     0 ≤ D.what₂.places.val lam x ↔ (D.plEq lam).valuation D.what₂.LL x ≤ 1 := by
-  haveI := D.nfLL
+  have := D.nfLL
   by_cases hx : x = 0
   · simp [hx]
   rw [D.val_eq lam x hx]
@@ -272,8 +272,8 @@ theorem val_nonneg_iff (D : D7) (lam : D.what₂.places.Pl) (x : D.what₂.LL) :
 
 theorem nonempty_plSide : ∀ D : D7, Nonempty (PlSide D) := by
   intro D
-  haveI := D.nfLL
-  haveI := D.galLL
+  have := D.nfLL
+  have := D.galLL
   have key : ∀ lam : D.what₂.places.Pl, ∃ ι : Qbar (D.what₂.places.resChar lam) ≃+* ℂ,
       ∀ x : D.what₂.LL, 0 ≤ D.what₂.places.val lam x ↔ ‖ι.symm (D.what₂.embLL x)‖ ≤ 1 := by
     intro lam

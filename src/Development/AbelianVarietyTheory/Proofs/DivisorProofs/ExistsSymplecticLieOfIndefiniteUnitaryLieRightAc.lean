@@ -156,10 +156,10 @@ theorem exists_sp_rightAct : ∀ (ι l : Type) [Fintype ι] [DecidableEq ι] [Fi
         rw [this, ih]
         congr 1; funext w
         rw [pow_succ, Matrix.transpose_mul, Matrix.mul_assoc]
-    letI : NormedRing (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℝ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedAlgebra
-    letI : NormedRing (Mat R S) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℝ (Mat R S) := Matrix.linftyOpNormedAlgebra
+    let : NormedRing (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℝ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedAlgebra
+    let : NormedRing (Mat R S) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℝ (Mat R S) := Matrix.linftyOpNormedAlgebra
     have h1 : HasSum (fun n : ℕ => (((n.factorial : ℝ)⁻¹) • (t • Z) ^ n) *ᵥ φ c)
         (NormedSpace.exp (t • Z) *ᵥ φ c) :=
       (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) (t • Z)).map

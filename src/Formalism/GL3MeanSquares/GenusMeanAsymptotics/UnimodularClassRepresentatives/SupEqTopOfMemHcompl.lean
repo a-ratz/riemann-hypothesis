@@ -76,7 +76,7 @@ theorem sup_eq_top_of_mem_hcompl (hK : Formalism.HermitianLatticesTheory.IsCMUnr
     Ideal.map_le_iff_le_comap.1 hext
   have hmax : (P.comap (algebraMap (𝓞 F) (𝓞 K))).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal P
-  haveI := hQ.isPrime
+  have := hQ.isPrime
   have heq : P.comap (algebraMap (𝓞 F) (𝓞 K)) = Q.comap (algebraMap (𝓞 F) (𝓞 K)) :=
     hmax.eq_of_le (inferInstance : (Q.comap (algebraMap (𝓞 F) (𝓞 K))).IsPrime).ne_top hpQ
   rcases (comap_eq_comap_iff hK hF hP hQ).1 heq with h | h

@@ -91,27 +91,27 @@ theorem fsum_le_of {α : Type*} (s : Set α) (f g : α → ℤ) (hf : {x | x ∈
   set u : Finset α := (hf.union hg).toFinset with hu
   have hus : ∀ x ∈ u, x ∈ s := by
     intro x hx
-    simp only [hu, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq] at hx
+    simp only [hu, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq] at hx
     rcases hx with h | h
     · exact h.1
     · exact h.1
   have ef : ∑ᶠ x ∈ s, f x = ∑ x ∈ u, f x := by
     apply finsum_mem_eq_sum_of_inter_support_eq
     ext x
-    simp only [hu, Set.Finite.coe_toFinset, Set.mem_inter_iff, Set.mem_union, Set.mem_setOf_eq,
+    simp only [hu, Set.Finite.coe_toFinset, Set.mem_inter_iff, Set.mem_union, Set.mem_ofPred_eq,
       Function.mem_support]
     tauto
   have eg : ∑ᶠ x ∈ s, g x = ∑ x ∈ u, g x := by
     apply finsum_mem_eq_sum_of_inter_support_eq
     ext x
-    simp only [hu, Set.Finite.coe_toFinset, Set.mem_inter_iff, Set.mem_union, Set.mem_setOf_eq,
+    simp only [hu, Set.Finite.coe_toFinset, Set.mem_inter_iff, Set.mem_union, Set.mem_ofPred_eq,
       Function.mem_support]
     tauto
   rw [ef, eg, Int.cast_sum, Int.cast_sum, Finset.mul_sum]
   exact Finset.sum_le_sum fun x hx => hle x (hus x hx)
 
 theorem wx_mem (hd : d.AxH 𝒜) (x : Fin (d.N + 1) → K) (c : ι) : d.wx x c ∈ 𝒜 c d.wL := by
-  haveI := hd.tower c
+  have := hd.tower c
   unfold wx
   rw [Finset.sum_apply]
   refine Submodule.sum_mem _ (fun j _ => ?_)
@@ -121,7 +121,7 @@ theorem wx_mem (hd : d.AxH 𝒜) (x : Fin (d.N + 1) → K) (c : ι) : d.wx x c �
 theorem pow_mem_ne (hd : d.AxH 𝒜) {G : WT} {ta : ∀ c, A c} (hta : ∀ c, ta c ∈ 𝒜 c G ∧ ta c ≠ 0)
     (n : ℕ) : ∀ c, (ta ^ (n + 1)) c ∈ 𝒜 c ((n + 1) • G) ∧ (ta ^ (n + 1)) c ≠ 0 := by
   intro c
-  haveI := hd.graded c
+  have := hd.graded c
   induction n with
   | zero => simpa using hta c
   | succ n ih =>

@@ -86,7 +86,7 @@ theorem ws_sum_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (hp : ∀ g g'
   refine Finset.le_sum_of_subadditive_on_pred (wordSum (heisDer ψ θ) p k) (IsThetaFunO ψ V W) ?_
     (fun _ _ a b => ws_add_le hψ hθ hp a b k) (fun _ _ => theta_add) g hg
   have := ws_smul (ψ := ψ) (θ := θ) hs k 0 (0 : WO V W → ℂ)
-  rw [zero_smul, enorm_zero, zero_mul] at this
+  rw [zero_smul, eNorm_zero, zero_mul] at this
   simp [this]
 
 theorem ws_dRho_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (hp : ∀ g g', p (g + g') ≤ p g + p g')
@@ -110,11 +110,11 @@ theorem ws_dRho_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (hp : ∀ g g
   exact (ws_add_le hψ hθ hp (ht _ _) (ht _ _) k).trans (add_le_add (hb _ _) (hb _ _))
 
 theorem supN_add_le (g g' : WO V W → ℂ) : (⨆ w, ‖(g + g') w‖ₑ) ≤ (⨆ w, ‖g w‖ₑ) + ⨆ w, ‖g' w‖ₑ :=
-  iSup_le fun w => (enorm_add_le (g w) (g' w)).trans (add_le_add (le_iSup (fun w => ‖g w‖ₑ) w)
+  iSup_le fun w => (eNorm_add_le (g w) (g' w)).trans (add_le_add (le_iSup (fun w => ‖g w‖ₑ) w)
     (le_iSup (fun w => ‖g' w‖ₑ) w))
 
 theorem supN_smul (c : ℂ) (g : WO V W → ℂ) : (⨆ w, ‖(c • g) w‖ₑ) = ‖c‖ₑ * ⨆ w, ‖g w‖ₑ := by
-  simp only [Pi.smul_apply, enorm_smul, ENNReal.mul_iSup]
+  simp only [Pi.smul_apply, eNorm_smul, ENNReal.mul_iSup]
 
 theorem wordSum_sup_sub_and_derAlong :
     ∀ (D : D7) (V W : HSp D) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ θ : InfFam D, IsInfFam θ → (∀ (G H : WO V W → ℂ) (c : ℂ) (k : ℕ), IsThetaFunO ψ V W G → IsThetaFunO ψ V W H → GlobalTheory.Size.wordSum (GlobalTheory.Size.heisDer ψ θ) (fun φ : WO V W → ℂ => ⨆ w, ‖φ w‖ₑ) k (G - c • H) ≤ GlobalTheory.Size.wordSum (GlobalTheory.Size.heisDer ψ θ) (fun φ : WO V W → ℂ => ⨆ w, ‖φ w‖ₑ) k G + ‖c‖ₑ * GlobalTheory.Size.wordSum (GlobalTheory.Size.heisDer ψ θ) (fun φ : WO V W → ℂ => ⨆ w, ‖φ w‖ₑ) k H) ∧ ∀ (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (x : Matrix (Fin W.rank) (Fin r) D.host.E), ∃ c : ℝ, 0 ≤ c ∧ ∀ G : WO V W → ℂ, IsThetaFunO ψ V W G → ∀ k : ℕ, GlobalTheory.Size.wordSum (GlobalTheory.Size.heisDer ψ θ) (fun φ : WO V W → ℂ => ⨆ w, ‖φ w‖ₑ) k (derAlong ψ θ V W C x G) ≤ ENNReal.ofReal c * GlobalTheory.Size.wordSum (GlobalTheory.Size.heisDer ψ θ) (fun φ : WO V W → ℂ => ⨆ w, ‖φ w‖ₑ) (k + 1) G := by
@@ -126,7 +126,7 @@ theorem wordSum_sup_sub_and_derAlong :
   refine ⟨fun G H c k hG hH => ?_, fun r C x => ?_⟩
   · rw [sub_eq_add_neg, ← neg_smul]
     refine (ws_add_le hψ hθ ha hG (theta_smul _ hH) k).trans ?_
-    rw [ws_smul hs, enorm_neg]
+    rw [ws_smul hs, eNorm_neg]
   · refine ⟨∑ τ, ∑ i, ∑ j, (|(dirAt V W C τ (x.map (tauE D τ)) i j).re| +
       |(dirAt V W C τ (x.map (tauE D τ)) i j).im|), by positivity, fun G hG k => ?_⟩
     unfold derAlong

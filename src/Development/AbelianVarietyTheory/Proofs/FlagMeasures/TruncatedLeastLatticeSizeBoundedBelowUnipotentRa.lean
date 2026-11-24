@@ -55,7 +55,7 @@ theorem one_le_rank_of_isIsot (I : AutInst) (W : Submodule I.E (Fin I.n → I.E)
     1 ≤ I.n := by
   by_contra h
   have h0 : I.n = 0 := by omega
-  haveI : IsEmpty (Fin I.n) := by rw [h0]; infer_instance
+  have : IsEmpty (Fin I.n) := by rw [h0]; infer_instance
   exact hW.1 (Subsingleton.elim _ _)
 
 theorem exists_pos_le_tau1_mul_of_mem_NA_of_isIsot (I : AutInst) (W : Submodule I.E (Fin I.n → I.E)) (x : I.GA)

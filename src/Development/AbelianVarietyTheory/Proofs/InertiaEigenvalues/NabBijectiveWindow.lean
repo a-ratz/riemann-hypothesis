@@ -70,9 +70,9 @@ theorem bij_of_gmult_zero {k U : Type} [Field k] [AddCommGroup U] [Module k U] (
     have hle : LinearMap.range (Q.mkQ ∘ₗ P'.subtype) ≤ P.map Q.mkQ := by
       rw [LinearMap.range_comp, Submodule.range_subtype]
       exact Submodule.map_mono inf_le_left
-    haveI : FiniteDimensional k (LinearMap.range (Q.mkQ ∘ₗ P'.subtype)) :=
+    have : FiniteDimensional k (LinearMap.range (Q.mkQ ∘ₗ P'.subtype)) :=
       Submodule.finiteDimensional_of_le hle
-    haveI : FiniteDimensional k (↥P' ⧸ Q.submoduleOf P') := by
+    have : FiniteDimensional k (↥P' ⧸ Q.submoduleOf P') := by
       rw [← hker]
       exact LinearEquiv.finiteDimensional (LinearMap.quotKerEquivRange _).symm
     have hsub : Subsingleton (↥P' ⧸ Q.submoduleOf P') := Module.finrank_zero_iff.mp h
@@ -234,7 +234,7 @@ theorem finite_quot {N : Submodule k⟦X⟧ V} (hN : N.FG) :
         refine mem_sh_iff.mpr ⟨c' • x, N.smul_mem _ hxN, ?_⟩
         rw [zpow_one, vv_coe, coe_smul_eq, smul_smul, ← hc', sub_smul, algebraMap_smul]
       rw [this]; exact Submodule.smul_mem _ _ ih
-  haveI : FiniteDimensional k (Submodule.span k (Q.mkQ '' (s : Set V))) :=
+  have : FiniteDimensional k (Submodule.span k (Q.mkQ '' (s : Set V))) :=
     FiniteDimensional.span_of_finite k (s.finite_toSet.image _)
   exact Submodule.finiteDimensional_of_le hle
 
@@ -242,7 +242,7 @@ theorem graded {l : ℕ} (R : RingPG k l) {g : V →ₗ[k] V} (hg : Semi R.γ g)
     (hN : N.FG) (hC : CondC g N) (b : ℤ) (h : sen g N (b : k) = 0) :
     (∀ x ∈ sh b N, nab g x ∈ sh (b + 1) N → x ∈ sh (b + 1) N) ∧
       ∀ y ∈ sh b N, ∃ x ∈ sh b N, y - nab g x ∈ sh (b + 1) N := by
-  haveI := finite_quot hN
+  have := finite_quot hN
   obtain ⟨h1, h2⟩ := bij_of_gmult_zero (nab g) (N.restrictScalars k) ((sh 1 N).restrictScalars k)
     (fun p hp => nab_mem hC hp) (fun p hp => nab_mem_sh R hg hC 1 hp) (b : k) h
   have hv : vv k ≠ 0 := vv_ne_zero

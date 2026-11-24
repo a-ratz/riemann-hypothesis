@@ -158,8 +158,8 @@ private theorem count_eq (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj 
     (z : Sp V ⟶ S) (B : Type) [CommRing B] [Algebra V B] [Module.Finite V B] [Module.Free V B] (k : Sp B ⟶ K.left)
     (hk : IsPullback k (spMap (algebraMap V B)) K.hom z) :
     Module.finrank V B = Nat.card {g : Over.mk (spMap (algebraMap V (FractionRing V)) ≫ z) ⟶ A // P _ g} := by
-  haveI := hfin
-  haveI := hfl
+  have := hfin
+  have := hfl
   have hcF : ((c : FractionRing V)) ≠ 0 := by
     intro h
     apply hc
@@ -188,8 +188,8 @@ private theorem count_eq (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj 
 theorem fFRead_of : AlgOf → FFRead := by
   intro hAlg S A _ _ hab P hRep c hc V _ _ _ _ hcV z A' φ hpb P' hP'
   obtain ⟨K, i, hm, hfin, hfl, hiP⟩ := hRep
-  haveI := hfin
-  haveI := hfl
+  have := hfin
+  have := hfl
   have hi : i ^ c = 1 := hc K i ((hiP K i).1 ⟨𝟙 _, by simp⟩)
   obtain ⟨BV, _, _, kV, _, _, hkV⟩ := hAlg S K.left K.hom hfin hfl V z
   have hcount := count_eq S A hab K i hm hfin hfl c hi P hiP V hcV z BV kV hkV
@@ -216,7 +216,7 @@ theorem fFRead_of : AlgOf → FFRead := by
     constructor
     intro X a b hab'
     apply hkk.hom_ext
-    · haveI := Over.mono_left_of_mono i
+    · have := Over.mono_left_of_mono i
       have h1 := congrArg (· ≫ φ) hab'
       simp only [Category.assoc, hlf] at h1
       simpa only [Category.assoc] using (cancel_mono i.left).1 (by simpa only [Category.assoc] using h1)

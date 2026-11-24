@@ -105,7 +105,7 @@ private theorem pk_eps (R B : Type) [CommRing R] [Algebra O R] [CommRing B] [Alg
     [IsScalarTower O R B] (g : F.G₀) (m : ℤ) :
     algebraMap R B ((F.eps O R g ^ m : Rˣ) : R) = ((F.eps O B g ^ m : Bˣ) : B) := by
   simp only [GFrame.eps, pushCh, MonoidHom.comp_apply, ← map_zpow, Units.coe_map, RingHom.coe_comp,
-    Function.comp_apply, MonoidHom.coe_coe]
+    Function.comp_apply, MonoidHom.coe_ofClass]
   exact (IsScalarTower.algebraMap_apply O R B _).symm
 
 private theorem pk_bc (R B : Type) [CommRing R] [Algebra O R] [CommRing B] [Algebra R B] [Algebra O B]
@@ -158,11 +158,11 @@ theorem UpperTheory.V.CA.pair_kills :
       p.D.D B (ofT R F.G₀ B (toT R F.G₀ B y)) at h1
     rw [pk_bc, ofT_toT] at h1
     exact h1
-  haveI : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   have he : Function.Injective (ResidueField.map (algebraMap O R)) := (resMap_bijective O R).1
-  haveI : Finite (ResidueField R) := Finite.of_surjective _ (resMap_bijective O R).2
-  haveI : CharP (ResidueField R) l := charP_of_injective_ringHom he l
+  have : Finite (ResidueField R) := Finite.of_surjective _ (resMap_bijective O R).2
+  have : CharP (ResidueField R) l := charP_of_injective_ringHom he l
   let χ : Fin n → F.G₀ →* (ResidueField R)ˣ := fun i =>
     (Units.map (ResidueField.map (algebraMap O R) : ResidueField O →* ResidueField R)).comp (r.chib i)
   have hres : (ResidueField.map (algebraMap O R)).comp (res O R : R →+* ResidueField O) = residue R := by
@@ -201,7 +201,7 @@ theorem UpperTheory.V.CA.pair_kills :
     have h2 := congrArg (fun f : F.G₀ →* (ResidueField R)ˣ => ((f g : (ResidueField R)ˣ) : ResidueField R))
       hij
     simpa [χ] using h2
-  haveI : CompactSpace F.G₀ :=
+  have : CompactSpace F.G₀ :=
     isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   obtain ⟨h, hh⟩ := exists_multFree_of_phiCond_of_injective_chars l χ hphi hopen hinj
   have hK : ∀ y, p.D.Kills y ↔ ∀ g : F.G₀, p.D.tr (MonoidAlgebra.single g 1 * y) = 0 :=

@@ -87,7 +87,7 @@ theorem exists_mem_stabilizer_of_comap_eq (L : IntermediateField ℚ ℚ̄) (P :
   have : SMulCommClass G (𝓞 L) (𝓞 ℚ̄) := ⟨fun g a b => by
     rw [Algebra.smul_def, Algebra.smul_def, smul_mul', RingHom.algebraMap_toAlgebra, hfix]⟩
   have : ContinuousSMul G (𝓞 ℚ̄) := continuousSMul_iff_stabilizer_isOpen.2 fun b =>
-    (isOpen_stabilizer_ringOfIntegers b).preimage continuous_subtype_val
+    (isOpen_stabilizer_ringOfIntegers b).preimage continuous_subtypeVal
   have : Algebra.IsInvariant (𝓞 L) (𝓞 ℚ̄) G := ⟨fun b hb => by
     have hmem : (b : ℚ̄) ∈ fixedField L.fixingSubgroup := by
       rw [mem_fixedField_iff]
@@ -161,7 +161,7 @@ theorem eq_of_natCast_mem_rootsOfUnityField {p : ℕ} [hp : Fact p.Prime] (k : �
     (h₁ : (p : 𝓞 (rootsOfUnityField (p ^ (k + 1)))) ∈ Q₁)
     (h₂ : (p : 𝓞 (rootsOfUnityField (p ^ (k + 1)))) ∈ Q₂) : Q₁ = Q₂ := by
   let L := rootsOfUnityField (p ^ (k + 1))
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot ℚ̄ (p ^ (k + 1))
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot ℚ̄ (p ^ (k + 1))
   let ζL : L := ⟨ζ, subset_adjoin ℚ _ hζ.pow_eq_one⟩
   have hζL : IsPrimitiveRoot ζL (p ^ (k + 1)) :=
     IsPrimitiveRoot.of_map_of_injective (f := algebraMap L ℚ̄) hζ (algebraMap L ℚ̄).injective

@@ -120,8 +120,8 @@ theorem exists_act {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
           (fun n y y' c => Out.WeilIs t.pol.A t.pol.L n y y' (unitOn c)),
         (I.ζ k : ℂ) = em b.ζ ∧ ∀ i, (I.ev k (bas (Pi.single i 1))).left = (t.pt i).left := by
   obtain ⟨τ, φ, hφ, hL, hj, hd⟩ := h
-  haveI := hφ
-  haveI := t.ab.comm
+  have := hφ
+  have := t.ab.comm
   have hi : IsGrpPullback t.A τ.G (𝟙 _) φ.inv.left := GlobalTheory.FibreAct.isGrpPullback_of_iso φ.inv
   have e₁ : φ.inv.left ≫ φ.hom.left = 𝟙 _ := by rw [← Over.comp_left, φ.inv_hom_id, Over.id_left]
   have hL' : LBIso t.L (τ.PP.L.pull φ.inv.left) :=

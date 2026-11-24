@@ -64,7 +64,7 @@ namespace GlobalTheory.ParabIndex
 theorem card_GL_real (κ : Type) [Field κ] [Finite κ] (m : ℕ) :
     (Nat.card (GL (Fin m) κ) : ℝ)
       = (Nat.card κ : ℝ) ^ (m * m) * ∏ i ∈ Finset.Ioc 0 m, (1 - ((Nat.card κ : ℝ) ^ i)⁻¹) := by
-  letI := Fintype.ofFinite κ
+  let := Fintype.ofFinite κ
   rw [GlobalTheory.Mem.card_GL_eq_pow_mul_qE κ m, Nat.card_eq_fintype_card, Formalism.MainNotions.ZetaProductPairs.qE]
   congr 1
   have h : Finset.Icc 1 m = Finset.Ioc 0 m := by

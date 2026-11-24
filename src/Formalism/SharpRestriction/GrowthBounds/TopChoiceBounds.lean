@@ -167,7 +167,7 @@ theorem bc_old {n' : ℕ} {TT : Finset (Fin n')} {r L₁ L₂ u M₀ G' N₁ : �
     rw [bc_fwd_le hin le_rfl] at hd1
     omega
   · rw [bc_fwd_gt hyn hgt] at hd1 hd2 ⊢
-    rw [if_neg (by omega), Nat.mod_eq_of_lt (by omega)]
+    rw [ite_eq_right (by omega), Nat.mod_eq_of_lt (by omega)]
     omega
 
 theorem bc_gap {r u : ℕ} {f : Fin (3 * r) → ℕ} (hf : StrictMono f)
@@ -485,7 +485,7 @@ theorem bc_frames (TT : Finset (Fin n')) (r u L₂ Gp M J : ℕ) (B : ℤ → �
       rw [bf_F_fr TT r u J B _ hi, bf_F_fr TT r u J B _ hi, hper]
       exact bf_tp_shift TT r u (hMT j) (by rw [← hper]; exact hMT _) (by omega) (by omega) (hev i)
     · show (if i < r then _ else B (j + (J : ℤ))) = (if i < r then _ else B j) + (n' : ℤ)
-      rw [if_neg hi, if_neg hi]
+      rw [ite_eq_right hi, ite_eq_right hi]
       exact hper j
   · intro j i hi
     rw [bf_F_fr TT r u J B _ (show i < r by omega), bf_F_fr TT r u J B _ hi]
@@ -770,7 +770,7 @@ theorem bs_segs (TT : Finset (Fin n')) (r L₁ L₂ u M₀ G' N₁ : ℕ) (hr : 
   obtain ⟨m1, m2⟩ := bs_min TT h2 j e heT heE hne'
   have hG : segG TT j = cdist (segStart TT j) (segNext TT j) := by
     unfold segG
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   refine ⟨by omega, ?_⟩
   unfold segS segDists
   rw [Finset.length_sort]
@@ -900,7 +900,7 @@ theorem base_point_of_representative (X : Inst D L) {p : ℕ} (hc : IsResidueCla
 
 theorem period_eq_addOrderOf {p : ℕ} (hc : IsResidueClassZero D p) : nP D p = addOrderOf (hP D p) := by
   unfold nP
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hs
   have h1 : D.host.cls p = PrimeClass.signal := hs
   have h2 : D.host.cls p = PrimeClass.inertClass := hc
@@ -1761,7 +1761,7 @@ theorem prime_power_band_log_sum_le_log_sq (X ρ P₀ : ℝ) (hX : 1 ≤ X) (hρ
   have hdOf : ∀ p ∈ S, 1 ≤ dOf p ∧ X * (1 - ρ) ≤ (p : ℝ) ^ dOf p ∧ (p : ℝ) ^ dOf p ≤ X * (1 + ρ) := by
     intro p hp
     have h := (hS p hp).2.2.2
-    simp only [dOf, dif_pos h]
+    simp only [dOf, dite_eq_left h]
     exact h.choose_spec
   have hmaps : ∀ p ∈ S, dOf p ∈ Finset.Icc 1 ⌊1 + 2 * Real.log X⌋₊ := by
     intro p hp
@@ -2174,7 +2174,7 @@ theorem bt_cand (X : Inst D L) (K : Consts) (a b : HH D → ℤ) (p : ℕ) (h : 
     Cand D L K p := by
   unfold VV at h
   by_contra hc
-  exact h (if_neg (fun hh => hc hh.1))
+  exact h (ite_eq_right (fun hh => hc hh.1))
 
 theorem bt_good (X : Inst D L) (K : Consts) (a b : HH D → ℤ) (p : ℕ) {t0 : HH D} (h : t0 ∈ VV X K a b p) :
     t0 ∈ reps X p ∧ Good X p t0 := by
@@ -2423,7 +2423,7 @@ theorem bt_I (X : Inst D L) (K : Consts) (hK : K.Nonneg) (Ce S Ce9 : ℝ) (H : b
         · refine le_trans (min_le_left _ _) ?_
           have e : wPos D p t0 (bL L) y = L.bT ⟨_, hyTT⟩ := by
             unfold wPos bL
-            rw [dif_pos hyTT]
+            rw [dite_eq_left hyTT]
           rw [e]
           have := H.bot ⟨_, hyTT⟩
           linarith only [this, O.bB]
@@ -2456,9 +2456,9 @@ theorem bt_at (X : Inst D L) (K : Consts) (hK : K.Nonneg) (Ce S Ce9 : ℝ) (H : 
     unfold tv Dp
     rw [period_eq_addOrderOf O.hcl]
     by_cases hpp : (p : ℝ) < L.sc.p0 D.R.k
-    · rw [if_pos hpp, if_pos hpp]
+    · rw [ite_eq_left hpp, ite_eq_left hpp]
       exact bt_II X K hK Ce S Ce9 H h90 p t0 O hNC hpp
-    · rw [if_neg hpp, if_neg hpp]
+    · rw [ite_eq_right hpp, ite_eq_right hpp]
       exact bt_I X K hK Ce S Ce9 H h90 p t0 O (not_lt.1 hpp)
   · intro hne
     obtain ⟨hp, _, _, _, _⟩ := bt_cand X K _ _ p hne
@@ -2603,7 +2603,7 @@ theorem bt_H_of (L : SizeData₂ D) (K : Consts) (hK : K.Nonneg) (Ce : ℝ) (hCe
   · exact bt_pw hx0 (by unfold Scale.A; linarith only [n2])
   ·
     unfold Scale.X'
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     apply Real.exp_le_exp.2
     have g1 : (Gp L.sc : ℝ) ≤ L.sc.x ^ (L.sc.eps / 24) * L.sc.x ^ (L.sc.eps / 8) := by
       have : (Gp L.sc : ℝ) ≤ Ce * Real.log L.sc.x / L.sc.delta1 := hG'
@@ -2615,7 +2615,7 @@ theorem bt_H_of (L : SizeData₂ D) (K : Consts) (hK : K.Nonneg) (Ce : ℝ) (hCe
     rw [e, hy] at g2
     exact g2
   ·
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     unfold Scale.b' Scale.a Scale.b Scale.L Scale.X'
     rw [le_div_iff₀ (Real.exp_pos _), ← Real.exp_add]
     have h1 : Real.exp (((20 : ℕ) : ℝ) * y + L.sc.x ^ (L.sc.eps / 3)) ≤ Real.exp (L.sc.x ^ L.sc.eps) := by
@@ -2846,7 +2846,7 @@ theorem bt_tau_pt (X : Inst D L) (K : Consts) (C : ℝ) (hC : 0 ≤ C) (hT : Cor
   have hlp : 0 < Real.log p := Real.log_pos hp1
   have ha0 : 0 < L.sc.a := lt_trans one_pos (bt_a L.sc)
   unfold tauP
-  rw [if_neg hne]
+  rw [ite_eq_right hne]
   have e1 : ∑ t0 ∈ VV X K (aL L) (bL L) p,
       (D.R.m : ℝ) * ((⌈tv X K (aL L) (bL L) p t0⌉₊ : ℝ) + (Dp K L p : ℝ) + 1) ≤
       ∑ t0 ∈ VV X K (aL L) (bL L) p, (D.R.m : ℝ) * ((2 * C + 1) * (L.sc.a / p)) * (Nv X p t0 : ℝ) := by
@@ -2910,7 +2910,7 @@ theorem bt_Ta_at (X : Inst D L) (K : Consts) (C : ℝ) (hC : 0 ≤ C) (hM : Corn
   have hpt : ∀ p : ℕ, Real.log p * tauP X K (aL L) (bL L) p ≤ if p ∈ P' then A + Bc * (Real.log p / p) else 0 := by
     intro p
     by_cases hne : VV X K (aL L) (bL L) p = ∅
-    · have : tauP X K (aL L) (bL L) p = 0 := by unfold tauP; rw [if_pos hne]
+    · have : tauP X K (aL L) (bL L) p = 0 := by unfold tauP; rw [ite_eq_left hne]
       rw [this, mul_zero]
       split_ifs
       · exact hf0 p
@@ -2919,7 +2919,7 @@ theorem bt_Ta_at (X : Inst D L) (K : Consts) (C : ℝ) (hC : 0 ≤ C) (hM : Corn
       have hm : p ∈ P' := by
         rw [hP', Finset.mem_filter, Finset.mem_range]
         exact ⟨Nat.lt_ceil.2 hpX, hp⟩
-      rw [if_pos hm]
+      rw [ite_eq_left hm]
       exact bt_tau_pt X K C hC hT hNB p hne
   have s3 : ∑ p ∈ L.supp.image D.what₂.places.resChar, Real.log (p : ℝ) * tauP X K (aL L) (bL L) p ≤
       ∑ p ∈ P', (A + Bc * (Real.log p / p)) := by
@@ -3012,7 +3012,7 @@ theorem stmtFTa_proved {eps : ℝ} (Fm : FamP eps) : CornerGLContinuity.FamilyWe
 
   have hb : (Fm.L x i).sc.b ^ (8 * x ^ (-(eps / 2))) = Real.exp ((Fm.L x i).sc.x ^ ((Fm.L x i).sc.eps / 2)) ^ 8 := by
     unfold Scale.b Scale.L
-    rw [hX, hE, ← Real.exp_mul, ← Real.exp_nat_mul]
+    rw [hX, hE, ← Real.exp_mul, ← Real.exp_natCast_mul]
     congr 1
     have : x ^ eps = x ^ (eps / 2) * x ^ (eps / 2) := by
       rw [← Real.rpow_add hx0]; congr 1; ring
@@ -3123,15 +3123,15 @@ theorem fill_nonneg₂ (X : Inst D L) (j : ℕ) (z : Bool × HH D) : 0 ≤ fill 
   have hx := x_pos₂ L.sc
   unfold fill
   by_cases ht : z.1 = false ∧ z.2 ∈ D.host.TT
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     have h1 := (X.off_top j z ht).1
     have h2 : L.sc.b' ≤ (bL L z.2 : ℝ) := by
       unfold bL
-      rw [dif_pos ht.2]
+      rw [dite_eq_left ht.2]
       exact L.bT_ge _
     have h3 : 0 ≤ L.sc.b' / L.sc.x := div_nonneg hb hx.le
     linarith
-  · rw [if_neg ht]
+  · rw [ite_eq_right ht]
     by_cases hth : IsThickPl D z
     · have := (X.off_thick j z hth).1
       have := one_le_b₂ L.sc
@@ -3203,7 +3203,7 @@ theorem hLarge_proved (X : Inst D L) (K : Consts) (hK : K.Nonneg) (h1 : 1 ≤ K.
   have hTT : ∀ s ∈ topsOn X p t0, s ∈ D.host.TT := fun s hs => (Finset.mem_filter.1 hs).1
   have hal : ∀ s ∈ topsOn X p t0, 0 ≤ al L (aL L) s ∧ al L (aL L) s ≤ 6 / 5 * L.sc.a := by
     intro s hs
-    have h1 : aL L s = L.aT ⟨s, hTT s hs⟩ := by unfold aL; rw [dif_pos (hTT s hs)]
+    have h1 : aL L s = L.aT ⟨s, hTT s hs⟩ := by unfold aL; rw [dite_eq_left (hTT s hs)]
     obtain ⟨h2, h3⟩ := L.aT_win ⟨s, hTT s hs⟩
     have h4 : L.sc.a / ((D.R.k : ℝ) * L.sc.x ^ (Scale.A / 2)) ≤ L.sc.a / 5 := by
       apply div_le_div_of_nonneg_left (by linarith) (by norm_num)
@@ -3251,7 +3251,7 @@ theorem hLarge_proved (X : Inst D L) (K : Consts) (hK : K.Nonneg) (h1 : 1 ≤ K.
         have hs' := hTT s (Finset.mem_filter.1 hs).1
         have h1 : fill X (bL L) j (false, s) = (bL L s : ℝ) + X.off j (false, s) := by
           unfold fill
-          rw [if_pos ⟨rfl, hs'⟩]
+          rw [ite_eq_left ⟨rfl, hs'⟩]
         have h2 := (X.off_top j (false, s) ⟨rfl, hs'⟩).1
         have h3 := kappa_le_Sc P j hj
         unfold fillG

@@ -82,18 +82,18 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
     obtain ⟨N, c, hc, rfl⟩ := hs
     have := isProper_str F N
     infer_instance
-  haveI : IsProper p := hprop hp
-  haveI : IsProper (M.σ ≫ p) := hprop M.proj
-  haveI : IsProper M.σ := IsProper.of_comp M.σ p
-  haveI : Nonempty M.X := by
-    haveI := M.iso
+  have : IsProper p := hprop hp
+  have : IsProper (M.σ ≫ p) := hprop M.proj
+  have : IsProper M.σ := IsProper.of_comp M.σ p
+  have : Nonempty M.X := by
+    have := M.iso
     obtain ⟨u, hu⟩ := hU
     obtain ⟨z, -⟩ := (M.σ ∣_ U).surjective ⟨u, hu⟩
     exact ⟨z.1⟩
-  haveI : IsIntegral M.X := HSApp.ValCrit.isIntegral_X M
+  have : IsIntegral M.X := HSApp.ValCrit.isIntegral_X M
   let R := Y.presheaf.stalk y
-  haveI : IsDomain R := inferInstanceAs (IsDomain (Y.presheaf.stalk y))
-  haveI : IsDiscreteValuationRing R := hR
+  have : IsDomain R := inferInstanceAs (IsDomain (Y.presheaf.stalk y))
+  have : IsDiscreteValuationRing R := hR
   let η := genericPoint Y
   have hηU : η ∈ U := ((genericPoint_spec Y).mem_open_set_iff U.isOpen).2 (by simpa using hU)
   let i₂ : Spec R ⟶ Y := Y.fromSpecStalk y
@@ -111,7 +111,7 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
     intro s u
     refine (PrimeSpectrum.le_iff_specializes _ _).1 ?_
     change Ideal.comap (algebraMap R K) s.asIdeal ≤ u.asIdeal
-    haveI : s.asIdeal.IsPrime := s.isPrime
+    have : s.asIdeal.IsPrime := s.isPrime
     rw [Ideal.eq_bot_of_prime s.asIdeal, ← RingHom.ker_eq_comap_bot,
       (RingHom.injective_iff_ker_eq_bot _).1 (IsFractionRing.injective R K)]
     exact bot_le
@@ -137,8 +137,8 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
     rintro _ rfl
     have e : i₂.stalkMap c ≫ (stalkClosedPointIso R).hom = (Y.presheaf.stalkCongr _).hom :=
       Scheme.stalkClosedPointTo_fromSpecStalk y
-    haveI : IsIso (i₂.stalkMap c ≫ (stalkClosedPointIso R).hom) := by rw [e]; infer_instance
-    haveI : IsIso (i₂.stalkMap c) := IsIso.of_isIso_comp_right _ (stalkClosedPointIso R).hom
+    have : IsIso (i₂.stalkMap c ≫ (stalkClosedPointIso R).hom) := by rw [e]; infer_instance
+    have : IsIso (i₂.stalkMap c) := IsIso.of_isIso_comp_right _ (stalkClosedPointIso R).hom
     exact ConcreteCategory.bijective_of_isIso _
   have hb := key _ hfr
   have e₀ := Scheme.Hom.stalkMap_comp L.l M.σ c
@@ -155,7 +155,7 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
       hσt ▸ ((genericPoint_spec M.X).specializes (Set.mem_univ (L.l t))).map M.σ.continuous
     exact (h1.antisymm ((genericPoint_spec Y).specializes (Set.mem_univ _))).eq
   have hlt : L.l t = genericPoint M.X := by
-    haveI := M.iso
+    have := M.iso
     have m1 : L.l t ∈ M.opn := show M.σ (L.l t) ∈ U from hσt ▸ hηU
     have m2 : genericPoint M.X ∈ M.opn := show M.σ (genericPoint M.X) ∈ U from hσg ▸ hηU
     have e : (M.σ ∣_ U) ⟨L.l t, m1⟩ = (M.σ ∣_ U) ⟨genericPoint M.X, m2⟩ :=
@@ -169,11 +169,11 @@ theorem exists_bijective_stalkMap_of_dvr : ∀ (F : Type) [Field F] (Y : Scheme.
     have hf : IsField (M.X.presheaf.stalk (L.l t)) := by
       rw [hlt]; exact Field.toIsField M.X.functionField
     have i1 : Function.Injective (L.l.stalkMap t).hom := by
-      letI := hf.toField
+      let := hf.toField
       exact RingHom.injective _
     have i2 : Function.Injective (M.X.presheaf.stalkSpecializes (hsp.map L.l.continuous)).hom := by
       refine (injective_iff_map_eq_zero _).2 fun a ha => ?_
-      obtain ⟨V, hV, f, rfl⟩ := M.X.presheaf.germ_exist a
+      obtain ⟨V, hV, f, rfl⟩ := M.X.presheaf.exists_germ_eq a
       have e := congrArg (fun φ => φ.hom f) (M.X.presheaf.germ_stalkSpecializes hV (hsp.map L.l.continuous))
       simp only [CommRingCat.hom_comp, RingHom.comp_apply] at e
       rw [e] at ha

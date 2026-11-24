@@ -500,8 +500,8 @@ theorem exists_alg (hG : GlobalFnsSt) (V : Type) [CommRing V] [IsDomain V] [IsDi
 
 theorem nonempty_alg : (∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B] (g n : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → (n : k) ≠ 0 → Nat.card {x : (𝟙_ (Over (Sp k)) ⟶ B) // x ^ n = 1} = n ^ (2 * g)) → Laws → AllSet fun s => ∀ t : Tower s, Nonempty t.Alg := by
   intro hcard hL V _ _ _ A G _ _ s t
-  haveI : IsDiscreteValuationRing V := s.cdvr.1
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal V) V := s.cdvr.2.1
+  have : IsDiscreteValuationRing V := s.cdvr.1
+  have : IsAdicComplete (IsLocalRing.maximalIdeal V) V := s.cdvr.2.1
   obtain ⟨B, _, _, M, b, hB, ha, hb, hbβ⟩ := exists_alg hL.globalFns V (fun e => (t.l e).Q.B)
     (fun e => (t.l e).Q.isAb) (fun e => (t.l e).D.M) t.β t.β_pb (GlobalTheory.T.descended_bundle_ample_special_fibre hcard hL V A G s t)
   exact ⟨{ B := B, isAb := hB, M := M, ample := ha, b := b, b_pb := hb, b_β := hbβ }⟩

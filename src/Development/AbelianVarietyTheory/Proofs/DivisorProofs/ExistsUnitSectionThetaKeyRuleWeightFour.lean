@@ -79,10 +79,10 @@ theorem exists_unit_secZ_keyRule : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalThe
         charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
       choose Ψ hΨ using fun Z : Comp Xo c => _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om Z) (genFr h Z) hpq
       refine ⟨fun Z => κ (Om Z) (Ψ Z).key, fun C => ?_⟩
-      haveI := C.sm
-      haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-      haveI : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
-      haveI : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
+      have := C.sm
+      have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+      have : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
+      have : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
       obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e C.R C.y hpq
       obtain ⟨Φ', hΦ'⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om C.Z) C.yg hpq
       obtain ⟨u, hu⟩ := h₃ C.R Φ.key

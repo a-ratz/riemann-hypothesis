@@ -101,12 +101,12 @@ theorem exists_not_mem_not_isSquare_completion :
     intro v _
     by_cases hv : v ∈ S₀
     · exact h1 v hv
-    · haveI : CharZero (v.adicCompletion F) :=
+    · have : CharZero (v.adicCompletion F) :=
         charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
       exact normSub_eq_top_of_isSquare_image _ u hu (hcon v hv) x
   have hidx := (_root_.GlobalTheory.QNorm.two_pow_le_index_locNorm F u S₀ hu).1
-  haveI : (locNorm F u S₀).FiniteIndex := ⟨hidx⟩
-  haveI : Fintype (Fˣ ⧸ locNorm F u S₀) := Fintype.ofFinite _
+  have : (locNorm F u S₀).FiniteIndex := ⟨hidx⟩
+  have : Fintype (Fˣ ⧸ locNorm F u S₀) := Fintype.ofFinite _
   obtain ⟨S₁, -, hS₁⟩ := exists_superset_mem_sUnits F
     (insert (Units.mk0 u hu)
       (Finset.univ.image (fun q : Fˣ ⧸ locNorm F u S₀ => q.out))) S₀
@@ -327,7 +327,7 @@ private theorem relIndex_sqSub_le_two_of_not_mem {F : Type} [Field F] [NumberFie
       (_root_.GlobalTheory.QNorm.sUnits F S) ≤ 2 := by
   by_cases h : _root_.GlobalTheory.QNorm.sUnits F S ≤ _root_.GlobalTheory.QNorm.sqSub (algebraMap F (v.adicCompletion F))
   · rw [Subgroup.relIndex_eq_one.2 h]; norm_num
-  · obtain ⟨a, haG, haK⟩ := SetLike.not_le_iff_exists.1 h
+  · obtain ⟨a, haG, haK⟩ := IsConcreteLE.not_le_iff_exists.1 h
     refine (Subgroup.index_eq_two_iff.2 ⟨⟨a, haG⟩, fun b => ?_⟩).le
     rw [xor_iff_iff_not, Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, Subgroup.coe_mul,
       _root_.GlobalTheory.QNorm.mem_sqSub, _root_.GlobalTheory.QNorm.mem_sqSub,

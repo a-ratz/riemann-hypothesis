@@ -120,9 +120,9 @@ private theorem ker_closed {H k : Type} [Group H] [TopologicalSpace H] [CommRing
     (r : H →* GL (Fin n) k) (hr : Continuous r) : IsClosed (r.ker : Set H) := by
   have h : (r.ker : Set H) = {g | ∀ i j, (r g).val i j = (1 : Matrix (Fin n) (Fin n) k) i j} :=
     Set.ext fun g => ⟨fun hg i j => by rw [show r g = 1 from hg]; rfl, fun hg => Units.ext (Matrix.ext hg)⟩
-  rw [h, Set.setOf_forall]
+  rw [h, Set.ofPred_forall]
   refine isClosed_iInter fun i => ?_
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   refine isClosed_iInter fun j => isClosed_eq ?_ continuous_const
   have hv : Continuous fun g => (r g).val := Units.continuous_val.comp hr
   exact hv.matrix_elem i j
@@ -138,7 +138,7 @@ theorem UpperTheory.exists_descent_to_level_group_of_unramified :
   let ρ : V.frame.G₀ →* GL (Fin n) (Qbar l) := V.pr.liftOfSurjective (pr_surj V) ⟨r, hker⟩
   have hρ : ∀ g, ρ (V.pr g) = r g := fun g => V.pr.liftOfRightInverse_comp_apply _ _ _ g
   refine ⟨ρ, ?_, MonoidHom.ext hρ, fun P hP g => ?_⟩
-  · haveI := isClosed_NS Ω V.S'
+  · have := isClosed_NS Ω V.S'
     have hq : Topology.IsQuotientMap V.pr :=
       (V.pr_cont W.continuous_resP).isClosedMap.isQuotientMap (V.pr_cont W.continuous_resP) (pr_surj V)
     exact hq.continuous_iff.2 (hcont.congr fun g => (hρ g).symm)

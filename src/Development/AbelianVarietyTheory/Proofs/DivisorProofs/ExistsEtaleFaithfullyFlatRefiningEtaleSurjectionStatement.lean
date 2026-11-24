@@ -90,12 +90,12 @@ theorem exists_etFF_refine_of_etale_surjective :
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover _ hopen hcov
   let Y : t → Scheme.{0} := fun i => V.affineCover.X i.1
   let u : ∀ i, Y i ⟶ V := fun i => V.affineCover.f i.1
-  haveI : ∀ i, IsAffine (Y i) := fun i => inferInstanceAs (IsAffine (Spec _))
-  haveI : ∀ i, IsOpenImmersion (u i) := fun i => inferInstanceAs (IsOpenImmersion (V.affineCover.f i.1))
-  haveI : Etale (Sigma.desc u) := etale_sigmaDesc_of_isOpenImmersion V Y u
+  have : ∀ i, IsAffine (Y i) := fun i => inferInstanceAs (IsAffine (Spec _))
+  have : ∀ i, IsOpenImmersion (u i) := fun i => inferInstanceAs (IsOpenImmersion (V.affineCover.f i.1))
+  have : Etale (Sigma.desc u) := etale_sigmaDesc_of_isOpenImmersion V Y u
   have hcomp : Sigma.desc u ≫ f = Sigma.desc fun i => u i ≫ f := by
     ext i; simp
-  haveI hsurj : Surjective (Sigma.desc u ≫ f) := by
+  have hsurj : Surjective (Sigma.desc u ≫ f) := by
     rw [hcomp]
     apply Surjective.sigmaDesc_of_union_range_eq_univ
     refine Set.eq_univ_of_univ_subset (fun y hy => ?_)

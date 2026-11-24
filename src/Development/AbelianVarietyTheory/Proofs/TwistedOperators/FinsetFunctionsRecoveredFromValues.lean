@@ -72,7 +72,7 @@ theorem finset_functions_recovered_from_values {X : Type} (V : Submodule ℂ (X 
     ∃ (s : Finset X) (E : X → X → ℂ), (∀ x, E x ∈ V) ∧ ∀ u ∈ F, u = ∑ x ∈ s, u x • E x := by
   classical
   set W : Submodule ℂ (X → ℂ) := Submodule.span ℂ (F : Set (X → ℂ)) with hWdef
-  haveI : FiniteDimensional ℂ W := FiniteDimensional.span_finset ℂ F
+  have : FiniteDimensional ℂ W := FiniteDimensional.span_finset ℂ F
   have hWV : W ≤ V := Submodule.span_le.mpr (fun u hu => hF u hu)
   let ev : X → Module.Dual ℂ W := fun x => (LinearMap.proj x).comp W.subtype
   have hev : ∀ x (w : W), ev x w = (w : X → ℂ) x := fun x w => rfl

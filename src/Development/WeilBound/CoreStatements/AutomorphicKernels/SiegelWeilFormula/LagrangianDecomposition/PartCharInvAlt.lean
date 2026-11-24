@@ -450,15 +450,15 @@ theorem param_hadamard (f : SchwartzMap (κ' ⊕ κ'' → W) ℂ) (hf : ∀ x : 
   have hr : (fun x : κ' ⊕ κ'' → W => x ∘ Sum.inr).HasTemperateGrowth :=
     (GlobalTheory.SchwartzBox.restr W (Sum.inr : κ'' → κ' ⊕ κ'')).hasTemperateGrowth
   have ha : ∀ i, (a i).HasTemperateGrowth := fun i =>
-    Function.Complex.hasTemperateGrowth_ofReal.comp
+    Complex.hasTemperateGrowth_ofReal.comp
       (((L i).hasTemperateGrowth.mul (GlobalTheory.SchwartzDiv.hasTemperateGrowth_invCut.comp hq)).comp hr)
   have hLc : ∀ i, (fun x : κ' ⊕ κ'' → W => (L i (x ∘ Sum.inr) : ℂ)).HasTemperateGrowth := fun i =>
-    Function.Complex.hasTemperateGrowth_ofReal.comp ((L i).hasTemperateGrowth.comp hr)
+    Complex.hasTemperateGrowth_ofReal.comp ((L i).hasTemperateGrowth.comp hr)
   let hh : Fin (Module.finrank ℝ (κ'' → W)) → SchwartzMap (κ' ⊕ κ'' → W) ℂ := fun i =>
     N i + SchwartzMap.smulLeftCLM ℂ (a i) f
   have hhh : ∀ i x, hh i x = (β (x ∘ Sum.inr) : ℂ) * (∫ s in Ioc (0 : ℝ) 1, d i (Ain s x)) + a i x * f x := by
     intro i x
-    simp only [hh, SchwartzMap.add_apply, hN, SchwartzMap.smulLeftCLM_apply_apply (ha i), smul_eq_mul]
+    simp only [hh, add_apply, hN, SchwartzMap.smulLeftCLM_apply_apply (ha i), smul_eq_mul]
   refine ⟨Module.finrank ℝ (κ'' → W), L, hh, fun i => SchwartzMap.smulLeftCLM ℂ
     (fun x : κ' ⊕ κ'' → W => (L i (x ∘ Sum.inr) : ℂ)) (hh i),
     fun i x => by rw [SchwartzMap.smulLeftCLM_apply_apply (hLc i), smul_eq_mul], fun x => ?_⟩
@@ -524,7 +524,7 @@ theorem kills_linear_mul {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [
     let u : SchwartzMap V ℂ := (t : ℂ)⁻¹ • M - I • g - (t : ℂ)⁻¹ • f
     have hu : ∀ x, u x = GlobalTheory.CharFormDeriv.rem t (L x) * f x := by
       intro x
-      simp only [u, SchwartzMap.sub_apply, SchwartzMap.smul_apply, smul_eq_mul, hM x, hg x,
+      simp only [u, sub_apply, smul_apply, smul_eq_mul, hM x, hg x,
         GlobalTheory.CharFormDeriv.rem]
       ring
     have hTu : T u = -I * T g := by
@@ -715,7 +715,7 @@ theorem partCharInv_of (hfin : FinPart) : PartCharInv := by
             funext j; rcases j with j | j
             · rfl
             · exact congrFun hv j
-          rw [SchwartzMap.sub_apply, hf₁, hfs, hv, hf₀, mul_one]
+          rw [sub_apply, hf₁, hfs, hv, hf₀, mul_one]
           rw [← hv', sub_self])
       rw [map_sub, sub_eq_zero] at h
       exact h

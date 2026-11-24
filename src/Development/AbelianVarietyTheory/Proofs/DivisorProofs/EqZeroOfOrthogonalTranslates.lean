@@ -147,7 +147,7 @@ theorem eq_zero_of_orthogonal_translates (D : D7) (ψ : AddChar (AF D.host.F) �
     (h𝓕 : IsAddFundamentalDomain (ratL T S) 𝓕 μ)
     (horth : ∀ w, ∫ x in 𝓕, heisO ψ S T w f₀ x * star (f x) ∂μ = 0) : f = 0 := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨hl, hr, halt, hdbl, hcont, -⟩ := GlobalTheory.OrientedFormLaws.symplOH_laws D S T
   obtain ⟨hψc, hψn, -, -⟩ := hψ.1
   have hann : ∀ x : WO S T, (∀ γ ∈ ratL T S, ψ (symplOH S T x γ + symplOH S T x γ) = 1) ↔ x ∈ ratL T S := by

@@ -433,7 +433,7 @@ variable {k : Type u} [Field k] {Ω : Type w} [Field Ω] [Algebra k Ω] {N : ℕ
 private theorem span_homog (Gs : Set (Poly k N)) (h : ∀ f ∈ Gs, ∃ c : ℕ, f.IsHomogeneous c) :
     ∀ p ∈ Ideal.span Gs, ∀ d : ℕ, homogeneousComponent d p ∈ Ideal.span Gs := by
   classical
-  letI : GradedAlgebra (homogeneousSubmodule (Fin (N + 1)) k) := gradedAlgebra
+  let : GradedAlgebra (homogeneousSubmodule (Fin (N + 1)) k) := gradedAlgebra
   have hh : (Ideal.span Gs).IsHomogeneous (homogeneousSubmodule (Fin (N + 1)) k) :=
     Ideal.homogeneous_span _ _ fun f hf => by
       obtain ⟨c, hc⟩ := h f hf
@@ -476,7 +476,7 @@ private theorem sum_eq_finsum (x : Fin (N + 1) → Ω) (n : ℕ) (J : Ideal (Pol
     apply hq
     dsimp only
     split_ifs with h
-    · haveI : qq.IsPrime := h.1.1.1
+    · have : qq.IsPrime := h.1.1.1
       have hc := hcard qq h.1
       have h0 : (Finset.univ.filter fun j => P j = qq).card = 0 :=
         Finset.card_eq_zero.mpr (Finset.filter_eq_empty_iff.mpr fun j _ hj =>
@@ -491,10 +491,10 @@ private theorem sum_eq_finsum (x : Fin (N + 1) → Ω) (n : ℕ) (J : Ideal (Pol
   obtain ⟨j, -, rfl⟩ := Finset.mem_image.mp hG
   by_cases h : IsSubvar x (P j) n
   · have hm := hmin j h
-    haveI : (P j).IsPrime := h.isPrime
+    have : (P j).IsPrime := h.isPrime
     have hc := hcard (P j) hm
-    rw [if_pos h, dite_eq_left ⟨hm, h⟩, ← hc, ENat.toNat_coe, nsmul_eq_mul]
-  · rw [if_neg h, dite_eq_right (fun h' => h h'.2), smul_zero]
+    rw [ite_eq_left h, dite_eq_left ⟨hm, h⟩, ← hc, ENat.toNat_natCast, nsmul_eq_mul]
+  · rw [ite_eq_right h, dite_eq_right (fun h' => h h'.2), smul_zero]
 
 private theorem main : CycleSplit.Filt.Statement.{u, w} → CutRestrLenExact.Statement.{u, w} →
     MixedTwistShift.Statement.{u, w} → InterNumCut.Statement.{u, w} := by
@@ -503,7 +503,7 @@ private theorem main : CycleSplit.Filt.Statement.{u, w} → CutRestrLenExact.Sta
   have hle : pp ≤ pp ⊔ zeroIdeal Lc.toSubSystem s := le_sup_left
   obtain ⟨f, hfZ, hfp⟩ := exists_form Lc s pp hs hnz
   have hfJ : f ∈ pp ⊔ zeroIdeal Lc.toSubSystem s := Ideal.mem_sup_right hfZ
-  haveI := hsub.isPrime
+  have := hsub.isPrime
   have hJh : ∀ p ∈ pp ⊔ zeroIdeal Lc.toSubSystem s, ∀ d : ℕ,
       homogeneousComponent d p ∈ pp ⊔ zeroIdeal Lc.toSubSystem s :=
     sup_homog hsub.homog (span_homog _ fun f ⟨c, hc, _⟩ => ⟨c, hc⟩)
@@ -515,13 +515,13 @@ private theorem main : CycleSplit.Filt.Statement.{u, w} → CutRestrLenExact.Sta
     exact dim_lt (hle.trans hJq) (hJq hfJ) hfp hsub.dim.le
   have hmin : ∀ j, IsSubvar x (P j) n → P j ∈ (pp ⊔ zeroIdeal Lc.toSubSystem s).minimalPrimes := by
     intro j hj
-    haveI := hj.isPrime
+    have := hj.isPrime
     obtain ⟨G, hG, hGP⟩ := Ideal.exists_minimalPrimes_le (hP j).2.2
-    haveI : G.IsPrime := hG.1.1
+    have : G.IsPrime := hG.1.1
     by_cases hPG : P j ≤ G
     · rwa [← le_antisymm hGP hPG]
     · exfalso
-      obtain ⟨r, hr, hrG⟩ := SetLike.not_le_iff_exists.mp hPG
+      obtain ⟨r, hr, hrG⟩ := IsConcreteLE.not_le_iff_exists.mp hPG
       have h1 := dim_lt hGP hr hrG (hdim G hG.1.1 hG.1.2)
       rw [hj.dim] at h1
       have h2 : n + 1 ≤ n := by exact_mod_cast h1

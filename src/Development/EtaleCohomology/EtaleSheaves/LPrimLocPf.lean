@@ -70,7 +70,7 @@ theorem prim_pow_q (ζ : Prim q A) : ζ.1 ^ q = 1 := by
 theorem prim_isPrim {B : Type} [CommRing B] [IsDomain B] (φ : A →+* B) (ζ : Prim q A) :
     IsPrimitiveRoot (φ ζ.1) q := by
   have hq : IsUnit (q : B) := by simpa using ζ.2.1.map φ
-  haveI : NeZero (q : B) := ⟨hq.ne_zero⟩
+  have : NeZero (q : B) := ⟨hq.ne_zero⟩
   rw [← Polynomial.isRoot_cyclotomic_iff]
   have h := (Prim.map φ ζ).2.2
   rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic] at h
@@ -150,7 +150,7 @@ theorem ee_nil {q : ℕ} [NeZero q] {A : Type} [CommRing A] (ζ ξ : Prim q A) (
     IsNilpotent (ee ζ ξ.1 a) := by
   rw [← mem_nilradical, nilradical_eq_sInf, Submodule.mem_sInf]
   intro p hp
-  haveI : Ideal.IsPrime p := hp
+  have : Ideal.IsPrime p := hp
   rw [← Ideal.Quotient.eq_zero_iff_mem]
   by_contra hne
   have hk := congrArg (Ideal.Quotient.mk p) (ee_kill ζ ξ.1 (prim_pow_q ξ) a)

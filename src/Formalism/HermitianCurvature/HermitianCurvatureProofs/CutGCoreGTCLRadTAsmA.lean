@@ -69,7 +69,7 @@ theorem exists_pr {V : Type} [AddCommGroup V] [Module ℂ V] (S : Submodule ℂ 
     ∃ Pr : V →ₗ[ℂ] V, (∀ x, Pr x ∈ S) ∧ ∀ x ∈ S, Pr x = x := by
   obtain ⟨q, hq⟩ := S.exists_isCompl
   refine ⟨S.subtype ∘ₗ S.linearProjOfIsCompl q hq, fun x => (S.linearProjOfIsCompl q hq x).2, fun x hx => ?_⟩
-  exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hq ⟨x, hx⟩)
+  exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hq ⟨x, hx⟩)
 
 def e2 : Fin 2 → ℂ := ![1, Complex.I]
 

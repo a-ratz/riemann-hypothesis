@@ -121,7 +121,7 @@ theorem diag_mul_unip {a r : ℕ} {R : Type} [CommRing R] (g : GL (Fin a) R) (d 
     split_ifs with hij
     · rfl
     · symm
-      simp only [Z, hg, hg', Matrix.mul_diagonal, Matrix.diagonal_mul, nilM, Matrix.of_apply, dif_neg hij, mul_zero,
+      simp only [Z, hg, hg', Matrix.mul_diagonal, Matrix.diagonal_mul, nilM, Matrix.of_apply, dite_eq_right hij, mul_zero,
         zero_mul]
   apply Units.ext
   change g.val * (1 + nilM y) = (1 + nilM fun q : BlockIx a r => Z q.1.1 q.1.2) * g.val
@@ -206,7 +206,7 @@ theorem cofin_ann {a : ℕ} (φ : Sm E a)
       map_add' := fun x y => Subtype.ext (LinearMap.add_apply _ _ _)
       map_smul' := fun c x => Subtype.ext (LinearMap.smul_apply _ _ _) }
   obtain ⟨V', hV'⟩ := Submodule.exists_isCompl (LinearMap.ker ev)
-  haveI : FiniteDimensional ℂ V' := by
+  have : FiniteDimensional ℂ V' := by
     refine FiniteDimensional.of_injective (ev.comp V'.subtype) ?_
     intro x y hxy
     have hxy' : ev x = ev y := hxy
@@ -227,11 +227,11 @@ theorem cofin_ann {a : ℕ} (φ : Sm E a)
 theorem finTr : FinTr := by
   intro E _ _ _ N φ hφ r hr0 hrN F hF
   obtain ⟨s, rfl⟩ : ∃ s, N = r + s := ⟨N - r, by omega⟩
-  letI : MeasurableSpace (BlockIx (r + s) r → Ad E) := borel _
-  haveI : BorelSpace (BlockIx (r + s) r → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (BlockIx (r + s) r → Ad E) := borel _
+  have : BorelSpace (BlockIx (r + s) r → Ad E) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, rfl⟩ := hF
-  haveI : FiniteDimensional ℂ (orbSpan φ) := hφ.kfin
-  haveI := hφ.zfin
+  have : FiniteDimensional ℂ (orbSpan φ) := hφ.kfin
+  have := hφ.zfin
   let ρ := sub (cptRep E (r + s)) (orbSpan φ) (orbSpan_stable φ)
   have hρ : GlobalTheory.Published.AutFin.IsContRep ρ := isContRep_sub _ _
   have hL : IsOpen ((stabFin φ : Subgroup (GL (Fin (r + s)) (Af E))) : Set (GL (Fin (r + s)) (Af E))) := hφ.level
@@ -241,7 +241,7 @@ theorem finTr : FinTr := by
     ⟨hφ, fun k hk => hk, fun g => GlobalTheory.Published.AutFinGL.type_of_map ρ (orbSpan φ).subtype (fun _ _ => rfl)
       ⟨φ, Submodule.subset_span ⟨1, by simp⟩⟩ g, fun z hz => hz.2⟩
   obtain ⟨G, hG, hGe⟩ := exists_mem_goodCT (stabFin φ) ρ J hJ φ hφg μ 𝓕 hμ h𝓕
-  haveI := finiteDimensional_goodCT (PositivityTheory.Rg.HF.GL.genFin E r) (PositivityTheory.Rg.HF.GL.genFin E s) (stabFin φ) hL ρ hρ J hJ
+  have := finiteDimensional_goodCT (PositivityTheory.Rg.HF.GL.genFin E r) (PositivityTheory.Rg.HF.GL.genFin E s) (stabFin φ) hL ρ hρ J hJ
   refine Submodule.finiteDimensional_of_le (S₂ := (goodCT (stabFin φ) ρ J).map (Sm E (r + s)).subtype)
     (Submodule.span_le.2 ?_)
   rintro _ ⟨t, rfl⟩

@@ -79,8 +79,8 @@ theorem exists_subset_range (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [Fini
       s ⊆ Set.range (residueEmb K') := by
   choose l hl using residue_surjective (R := GlobalTheory.ZJ.OO p)
   let t : Set (PadicAlgCl p) := (fun x => (l x : PadicAlgCl p)) '' s
-  haveI : Finite t := (hs.image _).to_subtype
-  haveI : FiniteDimensional ℚ_[p] (IntermediateField.adjoin ℚ_[p] t) :=
+  have : Finite t := (hs.image _).to_subtype
+  have : FiniteDimensional ℚ_[p] (IntermediateField.adjoin ℚ_[p] t) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine ⟨K ⊔ IntermediateField.adjoin ℚ_[p] t, le_sup_left, inferInstance, fun x hx => ?_⟩
   have hm : (l x : PadicAlgCl p) ∈ K ⊔ IntermediateField.adjoin ℚ_[p] t :=
@@ -123,15 +123,15 @@ theorem exists_finite_torusExtension_specialFibre {R Ω : Type} [CommRing R] [Is
       ∃ E : SplitExt (Sp (ResidueField R')),
         E.IsGt ((Over.pullback (spMap (residue R'))).obj ((Over.pullback (spMap f)).obj G)) := by
   have h₀ : IsSemiAbelian ((Over.pullback (spMap (residue R))).obj G) := IsSemiAbelian.pullback _ G hG
-  haveI := h₀.smooth
-  haveI := h₀.quasiCompact
-  haveI := h₀.separated
+  have := h₀.smooth
+  have := h₀.quasiCompact
+  have := h₀.separated
   obtain ⟨T⟩ := h₀.fibres _ (spMap σ)
   obtain ⟨s, hs, H⟩ := FieldModel.exists_finite_torusExtension_range σ _ T
   refine ⟨s, hs, fun R' _ _ f _ β hβ hr => ?_⟩
   obtain ⟨T'⟩ := H _ (ResidueField.map f) β hβ hr
   obtain ⟨i, hi⟩ := exists_iso_of_square (ResidueField.map_comp_residue f) G
-  haveI := hG.comm
+  have := hG.comm
   exact exists_splitExt_isGt_of_torusExtension _ _ ⟨torusExtOfIso i T'⟩
 
 theorem exists_isGrpPullback_of_square {R R₁ R₂ T K : Type} [CommRing R] [CommRing R₁] [CommRing R₂] [CommRing T]
@@ -153,7 +153,7 @@ open SplitReduction in
 theorem exists_semiAbelian_model_split_specialFibre : GlobalTheory.Published.SemistableReductionSt → ∀ (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K] (P : Out.PolAV (Sp K)), ∃ (K' : IntermediateField ℚ_[p] (PadicAlgCl p)) (h : K ≤ K') (_ : IsLocalRing (integralClosure ℤ_[p] K')), FiniteDimensional ℚ_[p] K' ∧ ∃ (G : Over (Sp (integralClosure ℤ_[p] K'))) (_ : GrpObj G), IsSemiAbelian G ∧ (∃ E : SplitExt (Sp (IsLocalRing.ResidueField (integralClosure ℤ_[p] K'))), E.IsGt ((Over.pullback (spMap (IsLocalRing.residue (integralClosure ℤ_[p] K')))).obj G)) ∧ ∃ φ : pullback G.hom (spMap (algebraMap (integralClosure ℤ_[p] K') K')) ⟶ P.A.left, IsGrpPullback ((Over.pullback (spMap (algebraMap (integralClosure ℤ_[p] K') K'))).obj G) P.A (spMap (IntermediateField.inclusion h).toRingHom) φ := by
   intro H p _ K _ P
   obtain ⟨K₁, h₁, f₁, G, gG, hG, φ, hφ⟩ := H p K P
-  haveI := GlobalTheory.ZJ.isAlgClosed_kb (p := p)
+  have := GlobalTheory.ZJ.isAlgClosed_kb (p := p)
   obtain ⟨s, hs, T⟩ := exists_finite_torusExtension_specialFibre (residueEmb K₁) G hG
   obtain ⟨K', h, f', hr⟩ := exists_subset_range K₁ s hs
   exact ⟨K', h₁.trans h, inferInstance, f', (Over.pullback (spMap (intIncl h))).obj G, inferInstance,

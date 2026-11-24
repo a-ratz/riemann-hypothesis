@@ -212,7 +212,7 @@ theorem isPshAdd : IsPshAddStatement := by
   unfold ReciprocityTheory.AnForm.levi at hp hq ⊢
   rw [fderiv_fderiv_add' (eventually_contDiffAt_potential_chart_symm A P hP x j hyP)
     (eventually_contDiffAt_potential_chart_symm A Q hQ x j hyQ)]
-  simp only [ContinuousLinearMap.add_apply]
+  simp only [add_apply]
   linarith
 
 private theorem fderiv_fderiv_const_mul {n : ℕ} {F : (Fin n → ℂ) → ℝ} {y : Fin n → ℂ}
@@ -232,7 +232,7 @@ theorem isPshRsmul : IsPshRsmulStatement := by
   rw [hrw]
   unfold ReciprocityTheory.AnForm.levi at hp ⊢
   rw [fderiv_fderiv_const_mul (eventually_contDiffAt_potential_chart_symm A P hP x j hy') c]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   rw [show ∀ a b : ℝ, (c * a + c * b) / 4 = c * ((a + b) / 4) from fun a b => by ring]
   exact mul_nonneg hc hp
 

@@ -73,10 +73,10 @@ theorem tsum_integral_swap : ∀ (K X : Type) [Countable K] [MeasurableSpace X] 
   have hint : ∀ b, Integrable (T b) μ := fun b =>
     Integrable.of_bound (hm b) C (ae_of_all _ (hbound b))
   have hlin : ∑' b, ∫⁻ x, ‖T b x‖ₑ ∂μ ≠ ⊤ := by
-    rw [← lintegral_tsum (fun b => (hm b).enorm)]
+    rw [← lintegral_tsum (fun b => (hm b).eNorm)]
     have h1 : ∀ x, ∑' b, ‖T b x‖ₑ ≤ ENNReal.ofReal C := by
       intro x
-      have h2 : ∀ b, ‖T b x‖ₑ = ENNReal.ofReal ‖T b x‖ := fun b => (ofReal_norm_eq_enorm _).symm
+      have h2 : ∀ b, ‖T b x‖ₑ = ENNReal.ofReal ‖T b x‖ := fun b => (ofReal_norm _).symm
       simp only [h2]
       rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hs x)]
       exact ENNReal.ofReal_le_ofReal (hb x)
@@ -86,7 +86,7 @@ theorem tsum_integral_swap : ∀ (K X : Type) [Countable K] [MeasurableSpace X] 
   have hsn : Summable fun b => ∫ x, ‖T b x‖ ∂μ := by
     have h3 := ENNReal.summable_toReal hlin
     refine h3.congr fun b => ?_
-    exact (integral_norm_eq_lintegral_enorm (hm b)).symm
+    exact (integral_norm_eq_lintegral_eNorm (hm b)).symm
   have hS := hasSum_integral_of_summable_integral_norm hint hsn
   refine ⟨?_, hS.summable, hS.tsum_eq.symm⟩
   refine Integrable.of_bound ?_ C (ae_of_all _ fun x => (norm_tsum_le_tsum_norm (hs x)).trans (hb x))
@@ -214,7 +214,7 @@ theorem mass_multiples : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpa
   have h3 := h2 (N : F) hN0 (Oh F) hOopen.measurableSet
   have h4 : (fun x => algebraMap F (A F) (N : F) * x) '' Oh F = {x : A F | ∃ z ∈ Oh F, x = (N : A F) * z} := by
     ext x
-    simp only [Set.mem_image, Set.mem_setOf_eq, map_natCast]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, map_natCast]
     constructor
     · rintro ⟨z, hz, rfl⟩
       exact ⟨z, hz, rfl⟩
@@ -272,8 +272,8 @@ theorem fourier_coeff_eis : ∀ (F : Type) [Field F] [NumberField F] [Measurable
   obtain ⟨-, hψ'⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F
   obtain ⟨hψ1, hψO, -⟩ := hψ' ψ hψ
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.EiBound.ei_bound F lf hlf h1 ψ hψ ι M B ρ P hQ hM φ hφ 1 one_pos
-  haveI := hLcount
-  haveI : lf.IsAddHaarMeasure := hlf
+  have := hLcount
+  have : lf.IsAddHaarMeasure := hlf
 
   set Φ := fstar ψ (hf F) (Bf B) (muF B lf) φ with hΦdef
   set c : (InfinitePlace F → ℝ) → ℂ := fun x => cG B ρ P (fun w => (x w : ℂ) + Complex.I) with hcdef
@@ -375,7 +375,7 @@ theorem fourier_coeff_eis : ∀ (F : Type) [Field F] [NumberField F] [Measurable
     rw [h7, one_mul] at h6
     exact h6
   have hDfin : volume D ≠ ⊤ := by rw [hvol]; exact ENNReal.ofReal_ne_top
-  haveI : IsFiniteMeasure (volume.restrict D) :=
+  have : IsFiniteMeasure (volume.restrict D) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.2 hDfin⟩
   set T : F → (InfinitePlace F → ℝ) → ℂ := fun b x => Φ (al b) * c (x + j b) * e x with hT
   have hTnorm : ∀ b x, ‖T b x‖ = ‖Φ (al b) * c (x + j b)‖ := by
@@ -465,7 +465,7 @@ theorem fourier_coeff_eis : ∀ (F : Type) [Field F] [NumberField F] [Measurable
         exact Oh_mul_mem F _ _ (hOr _) hz
       simp only [hG]
       rw [hper z hz y, h11, AddChar.map_add_eq_mul, hψO _ h12, mul_one]
-    haveI : Countable (F ⧸ H) := Function.Surjective.countable (f := fun b : F => (b : F ⧸ H))
+    have : Countable (F ⧸ H) := Function.Surjective.countable (f := fun b : F => (b : F ⧸ H))
       (fun q => ⟨q.out, QuotientAddGroup.out_eq' q⟩)
     have hsum := hasSum_integral_cosets (A F) (F ⧸ H) lf (fun q => al q.out) W (hWopen N hN) hcov hdis G hGint hGper
     have h13 : ∀ q : F ⧸ H, G (al q.out) = Φ (al q.out) * e (-(j q.out)) := by

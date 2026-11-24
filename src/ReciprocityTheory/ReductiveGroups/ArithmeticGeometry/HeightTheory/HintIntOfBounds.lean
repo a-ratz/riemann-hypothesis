@@ -70,7 +70,7 @@ theorem hint_mpSplit (D n : ℕ) (hn : 0 < n) :
   exact measurePreserving_piFinSuccAbove (fun _ : Fin (D + 1) => sphereProb n) 0
 
 private theorem isProbabilityMeasure_sphereProb' (n : ℕ) (hn : 0 < n) : IsProbabilityMeasure (sphereProb n) := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   unfold sphereProb
   have hpos : 0 < Module.finrank ℝ (EuclideanSpace ℂ (Fin n)) := Module.finrank_pos
   have h1 : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ 0 := by
@@ -84,8 +84,8 @@ private theorem isProbabilityMeasure_sphereProb' (n : ℕ) (hn : 0 < n) : IsProb
 theorem hint_mpTail (D n : ℕ) (hn : 0 < n) :
     MeasurePreserving (fun z : BlockSphere (D + 1) n => fun i : Fin D => z i.succ)
       (blockSphereProb (D + 1) n) (blockSphereProb D n) := by
-  haveI := isProbabilityMeasure_sphereProb' n hn
-  haveI : SFinite (blockSphereProb D n) := by
+  have := isProbabilityMeasure_sphereProb' n hn
+  have : SFinite (blockSphereProb D n) := by
     unfold blockSphereProb
     infer_instance
   have h := (measurePreserving_snd (μ := sphereProb n) (ν := blockSphereProb D n)).comp
@@ -188,8 +188,8 @@ theorem hint_fubini {D n : ℕ} (hn : 0 < n) {a : Fin (D + 1) → ℕ}
     Integrable (fun z : BlockSphere D n =>
       ∫ s, Real.log ‖MvPolynomial.eval (hintPt (spherePoint s) z) F‖ ∂(sphereProb n))
       (blockSphereProb D n) := by
-  haveI := sphereMeasure_isProbability hn
-  haveI := blockSphereMeasure_isProbability (B := D) hn
+  have := sphereMeasure_isProbability hn
+  have := blockSphereMeasure_isProbability (B := D) hn
   set G : UnitSphereC n × BlockSphere D n → ℝ :=
     fun p => Real.log ‖MvPolynomial.eval (hintPt (spherePoint p.1) p.2) F‖ with hG
   have hint : Integrable G ((sphereProb n).prod (blockSphereProb D n)) := by
@@ -230,7 +230,7 @@ theorem hint_lin_ae {n : ℕ} (c : Fin n → ℂ) (hc : c ≠ 0) :
   apply mul_eq_zero_of_right
   refine measure_mono_null ?_ hvol
   rintro _ ⟨r, _, _, ⟨s, hs, rfl⟩, rfl⟩
-  simp only [Set.mem_setOf_eq, not_not] at hs
+  simp only [Set.mem_ofPred_eq, not_not] at hs
   show r • (s : EuclideanSpace ℂ (Fin n)) ∈ H
   refine H.smul_mem r ?_
   rw [hH, LinearMap.mem_ker, LinearMap.restrictScalars_apply, hL]

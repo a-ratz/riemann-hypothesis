@@ -52,7 +52,7 @@ theorem _root_.GlobalTheory.BI.AbByP.subgroup :
   intro G _ T h
   unfold _root_.GlobalTheory.BI.AbByP at h ⊢
   obtain ⟨p, hp, A, hA, hcomm, hpow⟩ := h
-  haveI := hA
+  have := hA
   refine ⟨p, hp, A.subgroupOf T, Subgroup.normal_subgroupOf, ?_, ?_⟩
   · intro a ha b hb
     exact Subtype.ext (hcomm _ ha _ hb)

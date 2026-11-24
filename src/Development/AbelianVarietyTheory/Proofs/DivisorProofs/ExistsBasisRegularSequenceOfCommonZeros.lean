@@ -167,7 +167,7 @@ theorem exists_regular_basis : ∀ (K : Type) [Field K] [NumberField K] (G : Geo
         simpa [Pi.single_apply] using h
       · exact (mem_support_cutIdeal _ _ x).2 fun i => hx.ge (Submodule.mem_top (x := v i))
   rw [bot_sup_eq] at hv
-  refine ⟨Matrix.of v, (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1
+  refine ⟨Matrix.of v, (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_row_iff_isUnit.1
     (linearIndependent_of_top_le_span_of_card_eq_finrank hv.ge (by simp))), hr⟩
 
 end GlobalTheory.RegBasis

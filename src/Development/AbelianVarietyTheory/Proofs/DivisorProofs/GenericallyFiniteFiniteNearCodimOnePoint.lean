@@ -98,7 +98,7 @@ theorem isFinite_restrict_of_le {X Y : Scheme.{0}} (g : Y ⟶ X) {U V : X.Opens}
     rw [Scheme.Hom.image_preimage_eq_opensRange_inf, Scheme.Opens.opensRange_ι]
     exact inf_eq_right.2 hVU
   have h1 : IsFinite ((g ∣_ U) ∣_ (U.ι ⁻¹ᵁ V)) := inferInstance
-  haveI : MorphismProperty.RespectsIso (@IsFinite : MorphismProperty Scheme.{0}) :=
+  have : MorphismProperty.RespectsIso (@IsFinite : MorphismProperty Scheme.{0}) :=
     MorphismProperty.RespectsIso.of_respects_arrow_iso _ fun f g e hf => by
       have : IsFinite g.hom := by
         rw [← Arrow.inv_left_hom_right e.hom]
@@ -153,7 +153,7 @@ theorem finite_near_coheight_one : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}
     subst this
     exact hdw
   have hfin : (g ⁻¹' {z}).Finite := by
-    haveI := hq.isNoetherian
+    have := hq.isNoetherian
     let U : Y.Opens := g ⁻¹ᵁ ⟨(closure ({z} : Set X))ᶜ, isClosed_closure.isOpen_compl⟩
     have hU : genericPoint Y ∈ U := by
       show g (genericPoint Y) ∈ (closure ({z} : Set X))ᶜ

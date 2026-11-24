@@ -152,7 +152,7 @@ theorem valuation_apply_of_mem_Dec [IsAlgClosure E Ω] {σ : G E Ω} (hσ : σ �
   have key : ∀ τ : G E Ω, τ ∈ Dec (F := E) A → ∀ z : Ω, z ≠ 0 → ¬ A.valuation (τ z) < A.valuation z := by
     intro τ hτ z hz hlt
     have hz0 : ∀ i : ℕ, (τ ^ i) z ≠ 0 := fun i => (map_ne_zero (τ ^ i)).2 hz
-    have hv0 : ∀ x : Ω, x ≠ 0 → 0 < A.valuation x := fun x hx => zero_lt_iff.mpr (by simpa using hx)
+    have hv0 : ∀ x : Ω, x ≠ 0 → 0 < A.valuation x := fun x hx => pos_iff_ne_zero.mpr (by simpa using hx)
     have h1 : A.valuation (τ z / z) < 1 := by rwa [map_div₀, div_lt_one₀ (hv0 z hz)]
     have hs : StrictAnti fun i : ℕ => A.valuation ((τ ^ i) z) := by
       refine strictAnti_nat_of_succ_lt fun i => ?_
@@ -279,8 +279,8 @@ theorem rootsBar_mul {f f' : (ZMod g)[X]} (h : f * f' ≠ 0) :
 
 theorem isOfFinOrder_of_ne_zero {x : Formalism.CyclotomicNorms.Fbar g} (hx : x ≠ 0) : IsOfFinOrder x := by
   have hint : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
+  have := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
   let y : IntermediateField.adjoin (ZMod g) {x} := IntermediateField.AdjoinSimple.gen (ZMod g) x
   have hy : y ≠ 0 := fun h => hx (congrArg Subtype.val h)
   have h1 : IsOfFinOrder (Units.mk0 y hy) := isOfFinOrder_of_finite _

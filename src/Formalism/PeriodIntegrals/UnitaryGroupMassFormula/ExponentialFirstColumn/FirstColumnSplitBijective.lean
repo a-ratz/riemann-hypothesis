@@ -150,7 +150,7 @@ theorem expLast {A : Type*} [Ring A] [Algebra ℂ A] {n m : ℕ} (E : Fin n → 
     intro k
     first
     | exact finRotate_castSucc k
-    | exact Fin.ext (by rw [coe_finRotate_of_ne_last (Fin.castSucc_lt_last k).ne, Fin.coe_castSucc, Fin.val_succ])
+    | exact Fin.ext (by rw [coe_finRotate_of_ne_last (Fin.castSucc_lt_last k).ne, Fin.val_castSucc, Fin.val_succ])
   have hbij : Function.Bijective
       (fun p : Fin (m + 1) × Equiv.Perm (Fin m) => phi0 m p * finRotate (m + 1)) :=
     (Equiv.mulRight (finRotate (m + 1))).bijective.comp (firstColumnSplit_bijective m)
@@ -172,7 +172,7 @@ theorem expLast {A : Type*} [Ring A] [Algebra ℂ A] {n m : ℕ} (E : Fin n → 
     intro k
     simp only [Equiv.Perm.mul_apply, hr, phi0, extByZero_succ, cycle_perm_succ]
   simp only [hs, List.ofFn_succ', List.concat_eq_append, List.prod_append, List.prod_cons,
-    List.prod_nil, mul_one, hl, hk, Function.comp_apply, Fin.val_last, Fin.coe_castSucc]
+    List.prod_nil, mul_one, hl, hk, Function.comp_apply, Fin.val_last, Fin.val_castSucc]
   simp only [← zsmul_eq_mul, smul_mul_assoc, mul_smul_comm, smul_smul]
   congr 1
   first

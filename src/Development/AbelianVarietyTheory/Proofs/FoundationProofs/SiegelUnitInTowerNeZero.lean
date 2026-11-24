@@ -62,7 +62,7 @@ theorem codiscreteWithin_Hs_neBot : (Filter.codiscreteWithin Hs).NeBot := by
   rw [mem_codiscreteWithin] at hmem
   have hI : Complex.I ∈ Hs := by simp [Hs]
   have hd := hmem Complex.I hI
-  simp only [Set.diff_empty] at hd
+  simp only [Set.sdiff_empty] at hd
   have hopen : IsOpen Hs := isOpen_lt continuous_const Complex.continuous_im
   have hle : nhdsWithin Complex.I {Complex.I}ᶜ ≤ Filter.principal Hs :=
     le_trans nhdsWithin_le_nhds (Filter.le_principal_iff.2 (hopen.mem_nhds hI))
@@ -83,7 +83,7 @@ theorem siegel_ne_zero : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosu
     have hz' : 0 < z.im := hz
     simp only [sgC, UpperHalfPlane.ofComplex_apply_of_im_pos hz']
     exact sg_ne_zero c x _ hx
-  haveI := codiscreteWithin_Hs_neBot
+  have := codiscreteWithin_Hs_neBot
   obtain ⟨z, h1, h2⟩ := (hev.and hne).exists
   exact h2 h1
 

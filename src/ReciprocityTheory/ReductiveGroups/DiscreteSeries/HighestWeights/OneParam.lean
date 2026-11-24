@@ -103,7 +103,7 @@ lemma onep_inUJ {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (hX : inK
 lemma onep_Kset {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (hX : inK ε X) (t : ℝ) :
     NormedSpace.exp ((t : ℂ) • X) ∈ Kset ε := by
   unfold Kset
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine ⟨?_, (onep_commJ hX t).eq.symm⟩
   rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, onep_exp_conjT hX t, onep_exp_mul_neg]
 

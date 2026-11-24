@@ -201,7 +201,7 @@ theorem submatrix_mul_upper {E : Type} [CommRing E] {N m : ℕ} (hm : m ≤ N) {
 theorem det_sub_upper {E : Type} [CommRing E] {N m : ℕ} (hm : m ≤ N)
     (B : Matrix (Fin N) (Fin N) E) (hB : ∀ i j, j < i → B i j = 0) (h1 : ∀ i, B i i = 1) :
     (B.submatrix (Fin.castLE hm) (Fin.castLE hm)).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [Matrix.det_of_isUpperTriangular]
   · simp [h1]
   · intro i j hij
     exact hB _ _ hij

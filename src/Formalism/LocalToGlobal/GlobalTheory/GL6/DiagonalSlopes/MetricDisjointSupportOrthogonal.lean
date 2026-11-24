@@ -78,8 +78,8 @@ theorem polynomial_rep_of_rational_form (Tf : Forms0 D u) (x : ((D.fm u).lat 0).
   refine ⟨fun c => if (D.fm u).emb 0 x c = 0 then 0 else Q c, fun c h => by simp [h], fun c z => ?_⟩
   by_cases h : (D.fm u).emb 0 x c = 0
   · rw [h]
-    simp only [h, if_true, map_zero, Pi.zero_apply]
-  · simp only [h, if_false, hQ]
+    simp only [h, ite_true, map_zero, Pi.zero_apply]
+  · simp only [h, ite_false, hQ]
     exact hPe c z
 
 theorem norm_form_zero {n : ℕ} (lam : D.what₂.Tau → DomWeight n) : nfAll lam 0 0 = 0 := by
@@ -100,7 +100,7 @@ theorem metric_disjoint_support_orthogonal (Tf : Forms0 D u) : MetricOrthogonalC
   set s := v.embedding with hs
   have hv : InfinitePlace.mk s = v := InfinitePlace.mk_embedding v
   obtain ⟨C, hC, -, -⟩ := (Tf.val 0 (Nat.zero_le _) rfl).de
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨o, ho⟩ := exists_isON_of_gram (sigD D : D.host.E →+* D.host.E) (embS D s)
     (fun τ x => D.sp.cm.cmUnram.2.1 (embS D s τ) x) (gramN D 0 (Nat.zero_le _)) C hC
   obtain ⟨Px, hPx0, hPx⟩ := polynomial_rep_of_rational_form Tf x

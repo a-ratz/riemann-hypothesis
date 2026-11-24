@@ -231,7 +231,7 @@ def Qset (r : ℕ) (TT : ℝ) : Set (E r) := {x | (∀ l, x.1 l ≠ 0) ∧ TT < 
 
 theorem Qset_open (r : ℕ) (TT : ℝ) : IsOpen (Qset r TT) := by
   have h1 : IsOpen {x : E r | ∀ l, x.1 l ≠ 0} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun l =>
       isOpen_ne_fun ((continuous_apply l).comp continuous_fst) continuous_const
   have h2 : IsOpen {x : E r | TT < Complex.normSq x.2} :=
@@ -384,8 +384,8 @@ theorem Gq_pos (q : Qp P.r P.TT) : 0 < Gq P q := by
 theorem Gq_meas : Measurable (Gq P) := by
   apply Continuous.measurable
   exact (continuous_finsetProd _ fun l _ => Complex.continuous_normSq.comp
-      ((continuous_apply l).comp (continuous_fst.comp continuous_subtype_val))).mul
-    ((Complex.continuous_normSq.comp (continuous_snd.comp continuous_subtype_val)).sub continuous_const)
+      ((continuous_apply l).comp (continuous_fst.comp continuous_subtypeVal))).mul
+    ((Complex.continuous_normSq.comp (continuous_snd.comp continuous_subtypeVal)).sub continuous_const)
 
 def baseQ : LE.Base where
   Ω := Qp P.r P.TT

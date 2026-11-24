@@ -140,7 +140,7 @@ theorem det_block_change (F : Type) [Field F] {N : Type} [AddCommGroup N] [Modul
             simp only [Finset.smul_sum, smul_smul, Finset.sum_smul]
             exact Finset.sum_comm
         _ = 0 := by simp [hcol]
-    have hu := Matrix.linearIndependent_rows_iff_isUnit.mp hrows
+    have hu := linearIndependent_row_iff_isUnit.mp hrows
     exact (Matrix.isUnit_iff_isUnit_det U |>.mp hu).ne_zero
   refine ⟨hdet, ?_⟩
 

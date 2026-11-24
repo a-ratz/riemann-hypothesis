@@ -88,7 +88,7 @@ theorem combine : ∀ (o Ω o₁ o₂ Ω' : Type) [CommRing o] [Field Ω] [Algeb
   obtain ⟨P₀, a, a₁, ε₀, ha, ha₁, hLa, hLa₁, hε, hw⟩ := h₁
   obtain ⟨P₀', b, b₂, ε₀', hb, hb₂, hLb, hLb₂, hε', hw'⟩ := h₂
   obtain ⟨θ, hθm, hθ⟩ := grpPullback_iso ha hb
-  haveI := hθm
+  have := hθm
 
   have ext : ∀ {T : Scheme.{0}} (u v : T ⟶ P₀'.A.left), u ≫ b = v ≫ b → u ≫ P₀'.A.hom = v ≫ P₀'.A.hom → u = v :=
     fun u v e₁ e₂ => hb.1.hom_ext e₁ e₂

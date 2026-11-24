@@ -77,8 +77,8 @@ theorem growthSob_zero_ne_top {θ : InfFam D} {V : HSp D} {φ : GA D V → ℂ} 
   let M : Submodule ℂ (GA D V → ℂ) :=
     { carrier := {f | growthSize V 0 f ≠ ∞}
       add_mem' := fun a b => ne_top_of_le_ne_top (ENNReal.add_ne_top.2 ⟨a, b⟩) growthSize_add_le
-      zero_mem' := (growthSize_const (0 : ℂ)).trans_ne enorm_ne_top
-      smul_mem' := fun c _ a => (growthSize_smul c).trans_ne (ENNReal.mul_ne_top enorm_ne_top a) }
+      zero_mem' := (growthSize_const (0 : ℂ)).trans_ne eNorm_ne_top
+      smul_mem' := fun c _ a => (growthSize_smul c).trans_ne (ENNReal.mul_ne_top eNorm_ne_top a) }
   have hM : φ ∈ allDer θ V M := ⟨h.smooth, fun l hl => modGrowthExp_iff.1
     ((h.decay l hl).bounded.imp fun _ hC g => (hC g).trans_eq (by simp))⟩
   refine wordSum_ne_top_iff.2 fun l _ => ?_

@@ -76,7 +76,7 @@ theorem cst_eq (z : (TF (R := R) F).left) (x : F) : cst F z x = cstH z x :=
 omit [IsDomain R] in
 theorem cstH_surj (z : (TF (R := R) F).left) : Function.Surjective (cstH (R := R) z) := by
   intro a
-  obtain ⟨U, hU, s, rfl⟩ := (TF (R := R) F).left.presheaf.germ_exist a
+  obtain ⟨U, hU, s, rfl⟩ := (TF (R := R) F).left.presheaf.exists_germ_eq a
   obtain rfl : U = ⊤ := eq_top_iff.2 fun y _ => pt_eq z y ▸ hU
   obtain ⟨x, hx⟩ := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of F)).inv).2 s
   exact ⟨x, congrArg ((TF (R := R) F).left.presheaf.germ ⊤ z trivial).hom hx⟩

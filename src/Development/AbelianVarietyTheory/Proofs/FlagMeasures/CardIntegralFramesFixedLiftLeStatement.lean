@@ -241,7 +241,7 @@ theorem centre_gen {T : E} (F : LFlag S r T) (Λ : Submodule (𝓞 E) S.V)
       rw [← cen_symm_apply F.fl.e hiso _ y]
       exact LinearEquiv.apply_symm_apply _ y
   have hN : cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)) ∈ NLam Λ F := by
-    simp only [NLam, IsAutLam, Set.mem_setOf_eq]
+    simp only [NLam, IsAutLam, Set.mem_ofPred_eq]
     exact ⟨⟨cen_isom _ _ _ hc, hmap⟩, hflag, horth⟩
   refine ⟨cen F.fl.e hiso (c.map (algebraMap (𝓞 E) E)), ⟨hN, hframe⟩, hfix, fun x => ?_⟩
   rw [cen_apply, nil_apply]
@@ -1040,12 +1040,12 @@ theorem xClasses : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (A : Id
     refine ⟨fun x i j => if h : ∃ o : J.toAddSubgroup, ((o : 𝓞 K) : K) = (a : K) * Sx x i j
       then ((Classical.choose h : J.toAddSubgroup) : Q) else 0, fun x hG i j => ?_⟩
     have h := hent x hG i j
-    exact ⟨Classical.choose h, Classical.choose_spec h, by simp only [dif_pos h]⟩
+    exact ⟨Classical.choose h, Classical.choose_spec h, by simp only [dite_eq_left h]⟩
   obtain ⟨g, hg⟩ : ∃ g : (Fin r → Fin r → Q) → Matrix (Fin r) (Fin (r + 1)) K,
       ∀ q, (∃ x, Good x ∧ key x = q) → Good (g q) ∧ key (g q) = q := by
     refine ⟨fun q => if h : ∃ x, Good x ∧ key x = q then Classical.choose h else 0,
       fun q h => ?_⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     exact Classical.choose_spec h
   refine ⟨Finset.univ.image g, ?_, ?_⟩
   · calc (Finset.univ.image g).card ≤ (Finset.univ : Finset (Fin r → Fin r → Q)).card :=
@@ -1542,7 +1542,7 @@ theorem card_frames_le : ∀ (D : D7) (u u' : D.what₂.Word) (F0 : Fb D u) (Λ 
     gcongr
   let Pw : (Fin (D.R.rS + 1) → (D.sp.X 0).V) → Fg D ((Tu D u' : ℕ) : D.host.E) → Prop := fun w F' =>
     F' ∈ X ∧ ∀ b, IsWcomp D P (frame F' b) (w b)
-  haveI : Nonempty (Fg D ((Tu D u' : ℕ) : D.host.E)) := ⟨F1⟩
+  have : Nonempty (Fg D ((Tu D u' : ℕ) : D.host.E)) := ⟨F1⟩
   let G : (Fin (D.R.rS + 1) → (D.sp.X 0).V) → Fg D ((Tu D u' : ℕ) : D.host.E) := fun w =>
     Classical.epsilon (Pw w)
   let g : (Fin (D.R.rS + 1) → (D.sp.X 0).V) × Matrix (Fin D.R.rS) (Fin (D.R.rS + 1)) D.host.E →

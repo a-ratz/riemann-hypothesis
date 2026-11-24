@@ -351,7 +351,7 @@ theorem eq_zero_of_forall_embedding_sum_eq_zero :
     ∀ (K K₁ : Type) [Field K] [CharZero K] [Field K₁] [Algebra K K₁] [FiniteDimensional K K₁] (σ₀ : K →+* ℂ) (n : ℕ) (e : Fin n → ℂ) (y : Fin n → K₁), (∀ c : Fin n → K, ∑ b, σ₀ (c b) * e b = 0 → c = 0) → (∀ σ₁ : K₁ →+* ℂ, σ₁.comp (algebraMap K K₁) = σ₀ → ∑ b, e b * σ₁ (y b) = 0) → y = 0 := by
   intro K K₁ _ _ _ _ _ σ₀ n e y hind hrel
   classical
-  letI : Algebra K ℂ := σ₀.toAlgebra
+  let : Algebra K ℂ := σ₀.toAlgebra
   have hσ : ∀ x : K, algebraMap K ℂ x = σ₀ x := fun _ => rfl
   let ω := Module.finBasis K K₁
   have hcard : Fintype.card (Fin (Module.finrank K K₁)) = Fintype.card (K₁ →ₐ[K] ℂ) := by
@@ -406,10 +406,10 @@ theorem exists_basis_over_embedding (K : Type) [Field K] (σ₀ : K →+* ℂ) (
     ∃ (n : ℕ) (e : Fin n → ℂ) (c : Fin m → Fin n → K),
       (∀ t : Fin n → K, ∑ b, σ₀ (t b) * e b = 0 → t = 0) ∧
         ∀ i, a i = ∑ b, σ₀ (c i b) * e b := by
-  letI : Algebra K ℂ := σ₀.toAlgebra
+  let : Algebra K ℂ := σ₀.toAlgebra
   have hs : ∀ (k : K) (z : ℂ), k • z = σ₀ k * z := fun k z => rfl
   let V : Submodule K ℂ := Submodule.span K (Set.range a)
-  haveI : FiniteDimensional K V := FiniteDimensional.span_of_finite K (Set.finite_range a)
+  have : FiniteDimensional K V := FiniteDimensional.span_of_finite K (Set.finite_range a)
   let B := Module.finBasis K V
   have ha : ∀ i, a i ∈ V := fun i => Submodule.subset_span ⟨i, rfl⟩
   refine ⟨Module.finrank K V, fun b => (B b : ℂ), fun i b => B.repr ⟨a i, ha i⟩ b, ?_, ?_⟩
@@ -457,8 +457,8 @@ theorem exists_regroup_vectors {K : Type} [Field K] (σ₀ : K →+* ℂ) {M : T
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun i _ => by ring
   · intro K₁ _ _ _ y hy b
-    haveI : CharZero K := σ₀.charZero
-    haveI : FiniteDimensional K K₁ := Module.Finite.of_restrictScalars_finite ℚ K K₁
+    have : CharZero K := σ₀.charZero
+    have : FiniteDimensional K K₁ := Module.Finite.of_restrictScalars_finite ℚ K K₁
     exact congrFun (GlobalTheory.eq_zero_of_forall_embedding_sum_eq_zero K K₁ σ₀ n e y hind hy) b
 
 open NumberField IsDedekindDomain ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.MainNotions Formalism.MainNotions.WeightAlgebra Formalism.BasicNotions GlobalTheory.Shares

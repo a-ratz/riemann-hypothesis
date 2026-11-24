@@ -90,10 +90,10 @@ theorem vol_eq_index_mul_mass : ∀ (D : D7) (V : HSp D) (K : Subgroup (GL (Fin 
   have hcm := GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm
   have h3 := hπ.measure_toReal hcm.1 (hcm.2 V) hd hc hL (((K.relIndex (latLev V) : ℕ) : ENNReal)⁻¹ • ν)
     (by
-      rw [← toLev_latLev, comap_toLev V _ hπ, Measure.smul_apply, ← h2, smul_eq_mul]
+      rw [← toLev_latLev, comap_toLev V _ hπ, smul_apply, ← h2, smul_eq_mul]
       exact ENNReal.inv_mul_cancel hn0 hnt)
     (hν.2.mono (Measure.smul_absolutelyContinuous))
-  rw [← h3, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_inv, ENNReal.toReal_natCast,
+  rw [← h3, smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_inv, ENNReal.toReal_natCast,
     mul_inv_cancel_left₀ (Nat.cast_ne_zero.2 hi)]
 
 end GlobalTheory.VolIndex

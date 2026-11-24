@@ -91,7 +91,7 @@ theorem krull_pointIdeal (y : (Σ b, ι b) → Ω) (d : ℕ) (h : IsPt k y d) [(
       Algebra.adjoin_eq (fnField k y).toSubalgebra
     rw [this]
     rfl
-  haveI : FiniteDimensional (fnField k y) Ω := hfin
+  have : FiniteDimensional (fnField k y) Ω := hfin
   have htr' : Algebra.trdeg k (MRing ι k ⧸ pointIdeal k y) = ((d + Fintype.card K : ℕ) : Cardinal) := by
     have e : Algebra.trdeg k (MRing ι k ⧸ pointIdeal k y) = Algebra.trdeg k (Algebra.adjoin k ((IndefiniteRowSideFullHecke.NumbersDVR.Bundles.fnField k y : Subfield Ω) : Set Ω)) + (Fintype.card K : Cardinal) := hcone
     rw [e, hadj, trdeg_eq_of_finite k (fnField k y), htr]

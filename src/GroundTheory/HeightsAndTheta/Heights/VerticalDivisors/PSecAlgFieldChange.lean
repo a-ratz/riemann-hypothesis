@@ -64,7 +64,7 @@ namespace SecAlgFieldChange
 theorem normForm_eq_det {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] {ι : Type*}
     [Fintype ι] [DecidableEq ι] (b : Module.Basis ι R A) {n : ℕ} (x : Fin n → A) :
     normForm A x = Matrix.det (Matrix.of fun i k => ∑ j, X j * C (b.repr (x j * b k) i)) := by
-  letI : Algebra (MvPolynomial (Fin n) R) (MvPolynomial (Fin n) A) :=
+  let : Algebra (MvPolynomial (Fin n) R) (MvPolynomial (Fin n) A) :=
     MvPolynomial.algebraMvPolynomial
   let e₀ : MvPolynomial (Fin n) R ⊗[R] A ≃ₐ[R] MvPolynomial (Fin n) A :=
     (Algebra.TensorProduct.comm R _ A).trans
@@ -119,7 +119,7 @@ end SecAlgFieldChange
 theorem SecAlgFieldChange.proof : SecAlgFieldChange.Statement := by
   intro E₀ E _ _ φ n e Q₀ y₀ hfin
   classical
-  letI : Algebra E₀ E := φ.toAlgebra
+  let : Algebra E₀ E := φ.toAlgebra
   have hI := SecAlgFieldChange.secIdeal_map φ Q₀ y₀
   set Q := Q₀.map (MvPolynomial.map φ)
   set y : Par e n → E := φ ∘ y₀
@@ -173,7 +173,7 @@ theorem SecAlgFieldChange.proof : SecAlgFieldChange.Statement := by
           show ψ (θ (1 ⊗ₜ Ideal.Quotient.mk _ (X j))) = 1 ⊗ₜ Ideal.Quotient.mk _ (X j)
           rw [hθ, hg, map_X, hψ, aeval_X]
           rfl)
-  haveI := hfin
+  have := hfin
   let b := Module.Free.chooseBasis E₀ (SecAlg Q₀ y₀)
   let B := (Algebra.TensorProduct.basis E b).map eqv.toLinearEquiv
   have hB : ∀ a i, B.repr (g a) i = φ (b.repr a i) := by

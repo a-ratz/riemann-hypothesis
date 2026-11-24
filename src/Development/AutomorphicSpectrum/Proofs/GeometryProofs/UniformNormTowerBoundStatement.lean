@@ -143,7 +143,7 @@ theorem rdU_eq_of_reads' {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (h : GenFrEx X
     (Z : Comp Xo c) (x : (U.X k).dom) (φ : Om Z →ₐ[c.F] CAt σ) (y' : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ)
     (hm : FrMap φ (genFr h Z) y') (hb : FrBor t (U.un k x) y') (u : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) :
     ∃ w : ℂ, w ≠ 0 ∧ ∀ f ∈ Formalism.L2.Pj.sec Xo c u n, w * rdU U f k x = toC (φ (evC h Z f)) := by
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨hL, -, -, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   have h3 : wchar (ex Dw u n) t ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (t i).ne_zero
@@ -209,7 +209,7 @@ theorem exists_two_emb {K Ω : Type} [Field K] [CharZero K] [Countable K] [Field
     (σ : K →+* ℂ) (a : Ω) (ha : IsAlgebraic K a) (hne : a ∉ (algebraMap K Ω).range) :
     letI := σ.toAlgebra
     ∃ φ₁ φ₂ : Ω →ₐ[K] ℂ, φ₁ a ≠ φ₂ a := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have hi : IsIntegral K a := ha.isIntegral
   have hirr := minpoly.irreducible hi
   have hdeg : 2 ≤ (minpoly K a).natDegree := by
@@ -227,7 +227,7 @@ theorem exists_two_emb {K Ω : Type} [Field K] [CharZero K] [Countable K] [Field
   obtain ⟨ψ₁, ψ₂, hψ⟩ := exists_pair_ne (K⟮a⟯ →ₐ[K] ℂ)
   have hext : ∀ ψ : K⟮a⟯ →ₐ[K] ℂ, ∃ φ : Ω →ₐ[K] ℂ, φ a = ψ (IntermediateField.AdjoinSimple.gen K a) := by
     intro ψ
-    letI : Algebra K⟮a⟯ ℂ := ψ.toRingHom.toAlgebra
+    let : Algebra K⟮a⟯ ℂ := ψ.toRingHom.toAlgebra
     have : FaithfulSMul K⟮a⟯ Ω :=
       (faithfulSMul_iff_algebraMap_injective _ _).2 (algebraMap K⟮a⟯ Ω).injective
     have : FaithfulSMul K⟮a⟯ ℂ :=
@@ -518,8 +518,8 @@ theorem frBor_of_proportional_readings : ∀ (E : Type) [Field E] [NumberField E
   intro E _ _ _ H Dw l Xo c r U h e hC σ hσ Z k hOver a N g hg hB φ x₀ y y₁ t hφ hb w hw hr
   obtain ⟨hL, -, -, hA⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   have hS : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-  haveI hdom : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
-  haveI hred : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have hdom : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
+  have hred : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   have hrd : ∀ f : Rul Xo c, rdU (U σ) f k y.1 = toC (evR Xo c f ((U σ).un k y)) := by
     intro f
     classical
@@ -527,7 +527,7 @@ theorem frBor_of_proportional_readings : ∀ (E : Type) [Field E] [NumberField E
     rw [dite_eq_left y.2]
   obtain ⟨C, ψ, z, t', hz, hbz⟩ : ∃ (C : GlobalTheory.Reg.FChart h) (ψ : C.R →ₐ[c.F] CAt σ) (z : FrPt Xo c (CAt σ))
       (t' : Ix Dw → (CAt σ)ˣ), FrMap ψ C.y z ∧ FrBor t' z ((U σ).un k y) := by
-    letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+    let : Field (CAt σ) := inferInstanceAs (Field ℂ)
     exact hA h (CAt σ) ((U σ).un k y)
 
   have hCZ : C.Z = Z := by
@@ -543,7 +543,7 @@ theorem frBor_of_proportional_readings : ∀ (E : Type) [Field E] [NumberField E
       exact Subtype.ext h1
     have h3 : evR Xo c (e Z) z = 0 := by rw [evR_map hL he.1 ψ hz, h2, map_zero]
     have h4 : evR Xo c (e Z) ((U σ).un k y) = 0 := by
-      letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+      let : Field (CAt σ) := inferInstanceAs (Field ℂ)
       rw [hL.wt 0 0 (e Z) he _ t' _ _ (hL.test _ _) (hL.test _ _) hbz, h3, mul_zero]
     have h5 := hOver y.1 y.2
     rw [hrd, h4] at h5
@@ -773,7 +773,7 @@ theorem homN_eq_of_frBor {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hσ : GoodEmb
       simp only [a]
       by_cases hj : j < Dw.mult τ
       · have hi : i < Dw.mult τ := lt_of_le_of_lt hij hj
-        rw [dif_pos hj, dif_pos hi]
+        rw [dite_eq_left hj, dite_eq_left hi]
         exact Int.toNat_le_toNat (by linarith [hanti τ ⟨i, hi⟩ ⟨j, hj⟩ hij])
       · rw [dite_eq_right hj]; exact Nat.zero_le _
     have hgp := GlobalTheory.ReadCont.pow_succ_mem_secZ (Xo := Xo) (c := c) (by rw [GlobalTheory.AllWt.secZ_nat]; exact hg) M
@@ -784,7 +784,7 @@ theorem homN_eq_of_frBor {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hσ : GoodEmb
       · simp [ex, hnone]
       · have hi := i.2
         rw [Pi.add_apply, Pi.smul_apply]
-        simp only [ex, a, dif_pos hi, nsmul_eq_mul]
+        simp only [ex, a, dite_eq_left hi, nsmul_eq_mul]
         rw [Int.toNat_of_nonneg (by linarith [hM (some ⟨τ, i⟩)])]
         push_cast
         ring
@@ -807,7 +807,7 @@ theorem homN_eq_of_frBor {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hσ : GoodEmb
       homN_pow_mul' U x hEg hEG g f (z := ⟨k, x₁.1⟩) x₁.2, h2] at h1
     have hA : 0 < GlobalTheory.AllWt.homN U x Gg g ⟨k, x₁.1⟩ := by
       have hr : rdU U g k x₁.1 ≠ 0 := by
-        have : rdU U g k x₁.1 = toC (evR Xo c g (U.un k x₁)) := dif_pos x₁.2
+        have : rdU U g k x₁.1 = toC (evR Xo c g (U.un k x₁)) := dite_eq_left x₁.2
         rwa [this]
       show 0 < _ * (‖rdU U g k x₁.1‖ * _)
       exact mul_pos (GlobalTheory.AllWt.lieFacZ_pos _ _) (mul_pos (norm_pos_iff.2 hr) (ReciprocityTheory.ChartRestriction.G.FD.BoundedSectionAlgebra.nfac_pos _ x₁.2 _))
@@ -889,7 +889,7 @@ theorem exists_frame_of_hom [DecidableEq (CMType H)] (hG : Top.Given) (hL : Comp
     rw [← hψ]
     exact hasVal_hom RM.y RM.birational RM.arith.2.1.2.2 0 _ ψ
   have h0 := hread σ _ hz hv (aeval_ne_zero RM.y huu ψ)
-  rw [show goodOf c σ = σ from if_pos hσ] at h0
+  rw [show goodOf c σ = σ from ite_eq_left hσ] at h0
   obtain ⟨k', hk', y', hy', hall⟩ := h0
   obtain rfl : k' = k := GlobalTheory.CompanionTheory.Ar.Plug.ArchimedeanSections.over_unique hL hσ hk' hk
   have hpos : ∀ n' : Option (RootIx Dw) → ℤ, 0 < ∏ ρ, (Or.sing ρ).h (fun p => ψ (RM.y p)) ^ n' (some ρ) := fun n' =>
@@ -950,12 +950,12 @@ theorem bound_at_frame [DecidableEq (CMType H)] (hG : Top.Given) (hL : CompLaws 
     GlobalTheory.AllWt.homN (U σ) x (GlobalTheory.AllWt.wtOf Dw u 0) f ⟨k, x₀.1⟩ ≤ Or.Fl.deg * R := by
   obtain ⟨uu, huu, hfr⟩ := exists_frame_of_hom hG hL x hx Fr Z Rd u hf
   obtain ⟨w, hw, hle⟩ := hH
-  letI := Rd.φ.toAlgebra
+  let := Rd.φ.toAlgebra
   let φc : Om Z →+* ℂ := φ.toRingHom
-  letI : Algebra (Om Z) ℂ := φc.toAlgebra
-  haveI : CharZero (Om Z) := (RingHom.charZero_iff φc.injective).2 inferInstance
+  let : Algebra (Om Z) ℂ := φc.toAlgebra
+  have : CharZero (Om Z) := (RingHom.charZero_iff φc.injective).2 inferInstance
   have hdpos := GlobalTheory.CompanionTheory.Ar.Plug.Test.deg_pos Or
-  haveI : Module.Finite (Om Z) RM.Ω := Module.finite_of_finrank_pos (by
+  have : Module.Finite (Om Z) RM.Ω := Module.finite_of_finrank_pos (by
     have := Rd.deg
     omega)
   set N := GlobalTheory.AllWt.homN (U σ) x (GlobalTheory.AllWt.wtOf Dw u 0) f ⟨k, x₀.1⟩ with hN
@@ -1051,7 +1051,7 @@ theorem vs_arch : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hcl : y₀ ∈ closure (((U σ).X k).dom ∩ ⋂ n, (S n)ᶜ) := hd.open_subset_closure_inter ho hy₀
   have hct : ContinuousAt (fun y => GlobalTheory.AllWt.homN (U σ) x (GlobalTheory.AllWt.wtOf Dw u 0) f ⟨k, y⟩) y₀ :=
     (continuousOn_homN (U σ) hU hpq x u hf k).continuousAt (ho.mem_nhds hy₀)
-  haveI := mem_closure_iff_nhdsWithin_neBot.1 hcl
+  have := mem_closure_iff_nhdsWithin_neBot.1 hcl
   exact le_of_tendsto (hct.tendsto.mono_left nhdsWithin_le_nhds) (eventually_nhdsWithin_of_forall hbd)
 
 end GlobalTheory.CompanionTheory.Ar.Plug

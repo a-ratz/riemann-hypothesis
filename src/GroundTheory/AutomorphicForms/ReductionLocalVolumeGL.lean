@@ -432,9 +432,9 @@ theorem unipotentOfCoords_unipotentPart_mul {b : GL (Fin n) 𝕜}
   by_cases hij : i = j
   · subst hij; simp
   · by_cases h : i < j
-    · simp only [hij, h, if_false, dite_true, zero_add, unipotentPart]
+    · simp only [hij, h, ite_false, dite_true, zero_add, unipotentPart]
       rw [div_mul_cancel₀ _ (apply_self_ne_zero_of_isUpperTriangular hb j)]
-    · simp only [hij, h, if_false, dite_false, add_zero, zero_mul]
+    · simp only [hij, h, ite_false, dite_false, add_zero, zero_mul]
       exact (hb (lt_of_le_of_ne (not_lt.1 h) (Ne.symm hij))).symm
 
 def phaseUnitary (τ : Fin n → 𝕜) (hτ : ∀ i, τ i ≠ 0) : unitaryGroup (Fin n) 𝕜 :=
@@ -536,14 +536,14 @@ theorem isClosed_chamberGL (t : ℝ) : IsClosed (chamberGL (𝕜 := 𝕜) (m := 
     (continuous_apply_apply i j).comp (Units.continuous_val (M := Matrix (Fin (m + 1)) (Fin (m + 1)) 𝕜))
   have hCc : IsClosed C := by
     refine IsClosed.inter (IsClosed.inter ?_ ?_) ?_
-    · simp only [setOf_forall]
+    · simp only [ofPred_forall]
       refine isClosed_iInter fun i => isClosed_iInter fun j => isClosed_eq (hent i j) ?_
       split_ifs
       · exact RCLike.continuous_ofReal.comp (RCLike.continuous_re.comp (hent i i))
       · exact continuous_const
-    · simp only [setOf_forall]
+    · simp only [ofPred_forall]
       exact isClosed_iInter fun i => isClosed_le continuous_const (RCLike.continuous_re.comp (hent i i))
-    · simp only [setOf_forall]
+    · simp only [ofPred_forall]
       exact isClosed_iInter fun l => isClosed_le (continuous_const.mul
         (RCLike.continuous_re.comp (hent _ _))) (RCLike.continuous_re.comp (hent _ _))
   convert hCc using 1
@@ -665,12 +665,12 @@ theorem measure_siegelGL_lt_top [MeasurableSpace (unitaryGroup (Fin (m + 1)) �
     ∏ i, RCLike.re (((a : GL (Fin (m + 1)) 𝕜) : Matrix (Fin (m + 1)) (Fin (m + 1)) 𝕜) i i) ≤ c₂} with hR
   have hentA : ∀ i j, Continuous fun a : diagPosSubgroup (Fin (m + 1)) 𝕜 =>
       RCLike.re (((a : GL (Fin (m + 1)) 𝕜) : Matrix (Fin (m + 1)) (Fin (m + 1)) 𝕜) i j) := fun i j =>
-    RCLike.continuous_re.comp ((hent i j).comp continuous_subtype_val)
+    RCLike.continuous_re.comp ((hent i j).comp continuous_subtypeVal)
   have hRc : IsClosed R := by
     rw [hR]
-    simp only [Set.setOf_and]
+    simp only [ofPred_and]
     refine IsClosed.inter ?_ (IsClosed.inter ?_ ?_)
-    · simp only [setOf_forall]
+    · simp only [ofPred_forall]
       exact isClosed_iInter fun l => isClosed_le (continuous_const.mul (hentA _ _)) (hentA _ _)
     · exact isClosed_le continuous_const (continuous_finsetProd _ fun i _ => hentA i i)
     · exact isClosed_le (continuous_finsetProd _ fun i _ => hentA i i) continuous_const
@@ -721,7 +721,7 @@ theorem measure_siegelGL_lt_top [MeasurableSpace (unitaryGroup (Fin (m + 1)) �
 
   set μK : Measure (unitaryGroup (Fin (m + 1)) 𝕜) := Measure.haar with hμK
   set μN : Measure (upperUnipotentSubgroup (Fin (m + 1)) 𝕜) := Measure.haar with hμN
-  haveI := isHaarMeasure_map_expDiag (𝕜 := 𝕜) (m := m)
+  have := isHaarMeasure_map_expDiag (𝕜 := 𝕜) (m := m)
   set μA : Measure (diagPosSubgroup (Fin (m + 1)) 𝕜) :=
     Measure.map (expDiag 𝕜 m) (volume : Measure (Fin (m + 1) → ℝ)) with hμA
   obtain ⟨c, -, hc⟩ := hANK μK μA μN
@@ -739,7 +739,7 @@ theorem measure_siegelGL_lt_top [MeasurableSpace (unitaryGroup (Fin (m + 1)) �
     intro a
     have hpre : μN (diagConj a ⁻¹' Nc) = δi a * μN Nc := by
       rw [← Measure.map_apply (continuous_diagConj a).measurable hNcm, map_diagConj_haar,
-        Measure.smul_apply, smul_eq_mul]
+        smul_apply, smul_eq_mul]
     calc ∫⁻ u, ∫⁻ k, (siegelGL ω t c₁ c₂).indicator (1 : GL (Fin (m + 1)) 𝕜 → ℝ≥0∞)
           ((a : GL (Fin (m + 1)) 𝕜) * (u : GL (Fin (m + 1)) 𝕜) * Unitary.toUnits k) ∂μK ∂μN
         ≤ ∫⁻ u, ∫⁻ _k, R.indicator (1 : diagPosSubgroup (Fin (m + 1)) 𝕜 → ℝ≥0∞) a *
@@ -799,7 +799,7 @@ theorem measure_siegelGL_lt_top [MeasurableSpace (unitaryGroup (Fin (m + 1)) �
                 ∑ p : StrictUpperIndex (Fin (m + 1)), (x p.1.1 - x p.1.2)) := by
             rw [iwasawaDelta_diagPosOf, Finset.mul_sum, Real.exp_sum]
             refine Finset.prod_congr rfl fun p _ => ?_
-            rw [← Real.exp_sub, ← Real.exp_nat_mul]
+            rw [← Real.exp_sub, ← Real.exp_natCast_mul]
           rw [← ENNReal.ofReal_coe_nnreal, ← ENNReal.ofReal_inv_of_pos (by rw [hD]; exact Real.exp_pos _),
             hD, ← Real.exp_neg]
         · rw [indicator_of_notMem hx]; exact zero_le

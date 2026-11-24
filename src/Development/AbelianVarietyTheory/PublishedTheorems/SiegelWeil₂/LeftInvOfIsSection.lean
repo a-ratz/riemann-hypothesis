@@ -94,13 +94,13 @@ theorem isSection_iff {χ : (AE D)ˣ →* Circle} {s : ℂ} {φ : G D n → ℂ}
 
 theorem isSection_stdSec {χ : (AE D)ˣ →* Circle} {H : G D n → ℝ≥0} (h : IsHeight H) {s₁ : ℂ} {φ : G D n → ℂ}
     (hφ : IsSection χ s₁ φ) (s : ℂ) : IsSection χ s (stdSec H φ s₁ s) := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   rw [height_eq h, isSection_iff]
   exact isIwasawa.flatSec_mem isClosed_P continuous_modP isCompact_K (isSection_iff.1 hφ) s
 
 theorem hypotheses_hold (D : D7) (n k : ℕ) (s₁ : ℂ) : ∃ (H : G D n → ℝ≥0) (φ : G D n → ℂ),
     IsHeckeChar D 1 ∧ ResEta D 1 (2 * k) ∧ IsHeight H ∧ IsSection 1 s₁ φ ∧ ∀ g, φ g ≠ 0 := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   obtain ⟨H, hH⟩ := exists_height D n
   refine ⟨H, fun g => npow (iwAbs modP (K D n) g) (s₁ + (n : ℂ) / 2), ⟨continuous_const, fun _ => rfl⟩,
     SimplePoleModel.resEta_one_two_mul D k, hH, isSection_iff.2 ?_, fun g => npow_ne_zero (iwAbs_pos _ _ g) _⟩
@@ -133,7 +133,7 @@ theorem summable_spherical (τ : ℝ) (hτ : (n : ℝ) / 2 < τ) : Summable fun 
 theorem cosetConv_stdSec {χ : (AE D)ˣ →* Circle} {H : G D n → ℝ≥0} (h : IsHeight H) {s₁ : ℂ} {φ : G D n → ℂ}
     (hφ : IsSection χ s₁ φ) {s : ℂ} (hs : (n : ℝ) / 2 < s.re) (g : G D n) :
     CosetConv (P D n) (GF D n) (stdSec H φ s₁ s) g := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   have h1 : Continuous (iwAbs modP (K D n)) := isIwasawa.continuous_iwAbs isClosed_P continuous_modP isCompact_K
   have h2 : Continuous fun g => Real.log (iwAbs modP (K D n) g) :=
     (NNReal.continuous_coe.comp h1).log fun g => (NNReal.coe_pos.2 (iwAbs_pos _ _ g)).ne'

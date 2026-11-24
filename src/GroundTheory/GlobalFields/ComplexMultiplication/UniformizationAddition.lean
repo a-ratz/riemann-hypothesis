@@ -225,7 +225,7 @@ lemma addDefect_algebra_neg (a b c n u z w : ℂ) (ht : z - -w ≠ 0) (hu : u �
 lemma analyticAt_dslope {f : ℂ → ℂ} {a : ℂ} (hf : AnalyticAt ℂ f a) :
     AnalyticAt ℂ (dslope f a) a := by
   obtain ⟨p, hp⟩ := hf
-  exact hp.has_fpower_series_dslope_fslope.analyticAt
+  exact hp.dslope_fslope.analyticAt
 
 lemma exists_analyticAt_addDefect_zero {w : ℂ} (hw : w ∉ L.lattice) :
     ∃ H : ℂ → ℂ, AnalyticAt ℂ H 0 ∧ H 0 = 0 ∧ addDefect L w =ᶠ[𝓝[≠] 0] H := by

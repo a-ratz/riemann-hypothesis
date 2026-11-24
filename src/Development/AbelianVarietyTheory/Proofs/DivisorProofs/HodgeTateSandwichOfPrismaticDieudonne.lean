@@ -126,7 +126,7 @@ variable {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact ¬IsUnit (p : O)
 theorem form_map_smul (M : PDivGroup p O ⥤ ModuleCat.{0} (Ainf p O)) [M.Additive]
     {G G' : PDivGroup p O} (l : M.obj G' →ₗ[Ainf p O] Ainf p O) (m : M.obj G) (a : ℤ_[p])
     (f : G ⟶ G') : l (M.map (a • f) m) = ofPadic p O a * l (M.map f m) := by
-  haveI : IsAdicComplete (span {(p : Ainf p O)}) (Ainf p O) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (span {(p : Ainf p O)}) (Ainf p O) := WittVector.isAdicCompleteIdealSpanP
   let T : (G ⟶ G') →+ Ainf p O :=
     AddMonoidHom.mk' (fun f => l (M.map f m)) fun f g => by
       rw [M.map_add (f := _), ← map_add (f := _)]; rfl
@@ -195,7 +195,7 @@ theorem sandwichAt_of_covariant {C : Type} [Field C] [IsAlgClosed C] [CharZero C
   obtain ⟨hdom, -, hker, hsurj, hnu, -, -⟩ := GlobalTheory.AinfXi.ainf_local_xi_order p C v O hv ε hε1
   have hxi : fontaineTheta O p (xi ε) = 0 := by
     rw [← RingHom.mem_ker, hker]; exact Ideal.mem_span_singleton_self _
-  haveI : IsIntegrallyClosedIn O C := isIntegrallyClosedIn_iff.2
+  have : IsIntegrallyClosedIn O C := isIntegrallyClosedIn_iff.2
     ⟨hv.hom_inj, fun hx => hv.exists_of_le_one (hv.isIntegral_iff_v_le_one.1 hx)⟩
   obtain ⟨M, H, ψ, r, ι, π, hadd, hM, hψ, nψ, hr, nr, hex, nι, nπ, -, e₀, e₁, u, he₀, -, hu⟩ := hcov
 
@@ -215,10 +215,10 @@ theorem sandwichAt_of_covariant {C : Type} [Field C] [IsAlgClosed C] [CharZero C
     obtain ⟨m, rfl⟩ := (hr _).1 z
     exact ⟨_, by rw [reduction_generates _ e₁ m, map_smul]⟩
   refine ⟨u₁, Units.map (padicToO p O : ℤ_[p] →* O) u⁻¹ * u₂⁻¹, fun G Λ _ _ ρ => ?_⟩
-  haveI := (hM G).1
-  haveI := (hM G).2.1
-  haveI := G.finite_tate C
-  haveI := G.free_tate C
+  have := (hM G).1
+  have := (hM G).2.1
+  have := G.finite_tate C
+  have := G.free_tate C
   let b := Module.finBasisOfFinrankEq (Ainf p O) (M.obj G) (hM G).2.2
   let tb := Module.finBasisOfFinrankEq ℤ_[p] G.Tate (G.finrank_tate C)
   let e := tb.equivFun
@@ -364,7 +364,7 @@ theorem sandwichAt_of_covariant {C : Type} [Field C] [IsAlgClosed C] [CharZero C
     rw [dlog_smul (padicToO p O), map_smul, smul_eq_mul]
     have : bQuot D (D.Fil.mkQ (c.equivFun y)) i = _ := hbb y i
     rw [this]
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass]
     ring
 
 theorem hodgeTateSandwich_of_prismaticDieudonne₂ : GlobalTheory.Published.PrismaticDieudonneHodge →

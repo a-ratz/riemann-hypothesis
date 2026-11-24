@@ -65,7 +65,7 @@ theorem lt_of_add_one_le_natCast {a : WithBot ℕ∞} {n : ℕ} (h : a + 1 ≤ (
     | top =>
       exfalso
       rw [← WithBot.coe_one, ← WithBot.coe_add, top_add, ← WithBot.coe_natCast, WithBot.coe_le_coe] at h
-      exact absurd h (not_le.mpr (ENat.coe_lt_top n))
+      exact absurd h (not_le.mpr (ENat.natCast_lt_top n))
     | coe m =>
       have h' : ((m + 1 : ℕ) : WithBot ℕ∞) ≤ (n : WithBot ℕ∞) := by exact_mod_cast h
       have : m + 1 ≤ n := by exact_mod_cast h'

@@ -237,7 +237,7 @@ theorem szRow_cond_qd_pde : SzRow (fun _ _ L => SizeCond L ∧ SizeQD L ∧ Size
             Real.exp (Real.log L.sc.x * 401) ^ 150 := by gcongr
       _ = Real.exp (((36 : ℕ) : ℝ) * (2 * L.sc.x ^ (L.sc.eps / 5) * Real.log L.sc.x ^ 2) +
             ((150 : ℕ) : ℝ) * (Real.log L.sc.x * 401)) := by
-          rw [Real.exp_add, Real.exp_nat_mul, Real.exp_nat_mul]
+          rw [Real.exp_add, Real.exp_natCast_mul, Real.exp_natCast_mul]
       _ ≤ Real.exp (L.sc.x ^ L.sc.eps / 2) := by
           apply Real.exp_le_exp.mpr
           push_cast

@@ -135,7 +135,7 @@ theorem exists_finite_subset_span_cap :
   obtain ⟨b, hb, hspan, hli⟩ := exists_linearIndependent ℂ {z | ∃ (τ : E →+* ℂ) (u : ℂ), z = cap (a := n) τ u}
   have hF : (⋃ τ : E →+* ℂ, ((GroundTheory.BlockD.FourierDecayAlt.GaugeExists.qdetPoly (Eop (a := n) τ)).coeffs :
       Set (Module.End ℂ (Sm E n)))).Finite := Set.finite_iUnion fun τ => Finset.finite_toSet _
-  haveI := FiniteDimensional.span_of_finite ℂ hF
+  have := FiniteDimensional.span_of_finite ℂ hF
   have hle : Submodule.span ℂ {z | ∃ (τ : E →+* ℂ) (u : ℂ), z = cap (a := n) τ u} ≤ Submodule.span ℂ
       (⋃ τ : E →+* ℂ, ((GroundTheory.BlockD.FourierDecayAlt.GaugeExists.qdetPoly (Eop (a := n) τ)).coeffs :
       Set (Module.End ℂ (Sm E n)))) := by
@@ -144,7 +144,7 @@ theorem exists_finite_subset_span_cap :
     exact Submodule.span_mono (Set.subset_iUnion (fun τ : E →+* ℂ =>
       ((GroundTheory.BlockD.FourierDecayAlt.GaugeExists.qdetPoly (Eop (a := n) τ)).coeffs : Set (Module.End ℂ (Sm E n)))) τ)
       (cap_mem_span_coeffs τ u)
-  haveI := Submodule.finiteDimensional_of_le hle
+  have := Submodule.finiteDimensional_of_le hle
   have hfin : b.Finite := by
     have hli' : LinearIndependent ℂ (fun x : b => (⟨x.1, hspan ▸ Submodule.subset_span x.2⟩ :
         Submodule.span ℂ {z | ∃ (τ : E →+* ℂ) (u : ℂ), z = cap (a := n) τ u})) :=
@@ -204,7 +204,7 @@ theorem cofin_of_monic (E : Type) [Field E] [NumberField E] [_root_.NumberField.
     (J : Set (Module.End ℂ (Sm E n))) (hJ : J ⊆ Zalg E n)
     (hq : ∀ (τ : E →+* ℂ) (u : ℂ), ∃ q : Polynomial ℂ, q.Monic ∧ Polynomial.aeval (cap (a := n) τ u) q ∈ J) :
     Cofin J := by
-  letI : CommRing (Zalg E n) := { (inferInstance : Ring (Zalg E n)) with
+  let : CommRing (Zalg E n) := { (inferInstance : Ring (Zalg E n)) with
     mul_comm := fun x y => Subtype.ext (GlobalTheory.AutGrowth.KilledFin.Zalg_commute x.property y.property).eq }
   exact @cofin_of_algHom E _ _ _ n (Zalg E n) inferInstance (Subalgebra.algebra _)
     (Zalg E n).val Subtype.val_injective (Subalgebra.range_val _) J hJ hq

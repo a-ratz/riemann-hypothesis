@@ -62,7 +62,7 @@ theorem measure_le_card_mul {G Q : Type} [Group G] [MeasurableSpace G] [Measurab
     (μ : Measure G) [μ.IsMulLeftInvariant] [Finite Q] (K H : Set G) (q : K → Q)
     (hq : ∀ x y : K, q x = q y → (y : G)⁻¹ * x ∈ H) : μ K ≤ (Nat.card Q : ENNReal) * μ H := by
   classical
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   have h1 : K ⊆ ⋃ c : Q, Subtype.val '' (q ⁻¹' {c}) := fun x hx =>
     Set.mem_iUnion.2 ⟨q ⟨x, hx⟩, ⟨x, hx⟩, rfl, rfl⟩
   have h2 : ∀ c : Q, μ (Subtype.val '' (q ⁻¹' {c})) ≤ μ H := by
@@ -175,8 +175,8 @@ variable {E : Type} [Field E] [NumberField E] {n : ℕ} (L : Submodule (𝓞 E) 
 theorem exists_inj (hL : Submodule.span E (L : Set (Fin n → E)) = ⊤) :
     ∃ m ≤ n, ∃ e : (L →ₗ[𝓞 E] L) →ₗ[ℤ] (Fin m → Fin n → E), Function.Injective e := by
   obtain ⟨b, hbL, hb, hli⟩ := exists_linearIndependent E (L : Set (Fin n → E))
-  haveI : Finite b := hli.finite
-  haveI := Fintype.ofFinite b
+  have : Finite b := hli.finite
+  have := Fintype.ofFinite b
   have hc : Fintype.card b ≤ n := by simpa using hli.fintype_card_le_finrank
   let u := (Fintype.equivFin b).symm
   let e : (L →ₗ[𝓞 E] L) →+ (Fin (Fintype.card b) → Fin n → E) :=
@@ -200,12 +200,12 @@ theorem card_end_quot (hL : Submodule.span E (L : Set (Fin n → E)) = ⊤) (hfg
     ∃ r ≤ n ^ 2 * Module.finrank ℚ E,
       (nsmulAddMonoidHom (α := L →ₗ[𝓞 E] L) g).range.index = g ^ r := by
   obtain ⟨m, hm, e, he⟩ := exists_inj L hL
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hfg
-  haveI : IsNoetherian (𝓞 E) L := isNoetherian_of_isNoetherianRing_of_finite _ _
-  haveI : IsNoetherian (𝓞 E) (L →ₗ[𝓞 E] L) := isNoetherian_linearMap _ _ _
-  haveI : Module.Finite (𝓞 E) (L →ₗ[𝓞 E] L) := Module.IsNoetherian.finite _ _
-  haveI : Module.Finite ℤ (L →ₗ[𝓞 E] L) := Module.Finite.trans (𝓞 E) _
-  haveI : Module.IsTorsionFree ℤ (L →ₗ[𝓞 E] L) := he.moduleIsTorsionFree e e.map_smul
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hfg
+  have : IsNoetherian (𝓞 E) L := isNoetherian_of_isNoetherianRing_of_finite _ _
+  have : IsNoetherian (𝓞 E) (L →ₗ[𝓞 E] L) := isNoetherian_linearMap _ _ _
+  have : Module.Finite (𝓞 E) (L →ₗ[𝓞 E] L) := Module.IsNoetherian.finite _ _
+  have : Module.Finite ℤ (L →ₗ[𝓞 E] L) := Module.Finite.trans (𝓞 E) _
+  have : Module.IsTorsionFree ℤ (L →ₗ[𝓞 E] L) := he.moduleIsTorsionFree e e.map_smul
   refine ⟨_, ?_, AddSubgroup.index_range_nsmul _ g⟩
   have h1 := e.rank_le_of_injective he
   rw [← IsFractionRing.rank_right_eq ℤ ℚ (Fin m → Fin n → E), ← Module.finrank_eq_rank,
@@ -222,9 +222,9 @@ theorem measure_Kset_le : ∀ (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeas
   obtain ⟨-, -, hsc, hc, -, -, h⟩ := GlobalTheory.CongTop.adelic_topology I
   obtain ⟨ho, ⟨H, hH⟩, -⟩ := h g hg
   refine ⟨?_, ho.measure_pos μf ⟨1, hH ▸ H.one_mem⟩, hc.measure_lt_top⟩
-  haveI : Module.Finite (𝓞 I.E) I.L := Module.Finite.iff_fg.2 I.L_fg
-  haveI : Module.FinitePresentation (𝓞 I.E) I.L := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 I.E) I.L := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 I.E) I.L := Module.Finite.iff_fg.2 I.L_fg
+  have : Module.FinitePresentation (𝓞 I.E) I.L := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 I.E) I.L := Module.Flat.projective_of_finitePresentation
   let ι : I.L →ₗ[𝓞 I.E] (Fin I.n → I.E ⊗[I.F] Af I.F) :=
     { toFun := fun x i => Formalism.UG.inclE (F := I.F) (Af I.F) ((x : Fin I.n → I.E) i)
       map_add' := fun x y => by ext i; simp
@@ -246,7 +246,7 @@ theorem measure_Kset_le : ∀ (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeas
   obtain ⟨r, hr, hi⟩ := card_end_quot I.L I.L_span I.L_fg g
   set N := (nsmulAddMonoidHom (α := I.L →ₗ[𝓞 I.E] I.L) g).range
   have hi' : Nat.card ((I.L →ₗ[𝓞 I.E] I.L) ⧸ N) = g ^ r := hi
-  haveI : Finite ((I.L →ₗ[𝓞 I.E] I.L) ⧸ N) := Nat.finite_of_card_ne_zero (by rw [hi']; positivity)
+  have : Finite ((I.L →ₗ[𝓞 I.E] I.L) ⧸ N) := Nat.finite_of_card_ne_zero (by rw [hi']; positivity)
   have h1 := measure_le_card_mul μf I.Kset (I.Kg g) (fun x => (QuotientAddGroup.mk (φ x) : _ ⧸ N))
     fun x y hxy => by
       obtain ⟨θ, hθ⟩ := QuotientAddGroup.eq.1 hxy.symm

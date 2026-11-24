@@ -166,7 +166,7 @@ theorem factor : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     ∃ p q : GlobalTheory.DblVac.UD σ W, p ∈ GlobalTheory.DblVac.KD σ W v ∧ p ∈ GlobalTheory.DblVac.PDiag σ W ∧
       q ∈ GlobalTheory.DblVac.KD σ W v ∧ q ∈ GlobalTheory.DblVac.PAnti σ W ∧ g = p * q := by
   intro F E _ _ _ _ _ σ d W v h2 g hg hdet hC
-  letI : Invertible (2 : AE F E) := invTwoE
+  let : Invertible (2 : AE F E) := invTwoE
   have hNt : (antiCols (F := F) (E := E) d)ᵀ = fromCols (1 : Matrix (Fin d) (Fin d) (AE F E)) (-1) := by
     rw [antiCols, transpose_fromRows, transpose_one, transpose_neg, transpose_one]
   rw [hNt] at hdet hC

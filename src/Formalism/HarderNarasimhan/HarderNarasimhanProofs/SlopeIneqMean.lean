@@ -349,9 +349,9 @@ private theorem slopeIneq_of_lemma {R V W E F : Type*} [Ring R] [AddCommGroup V]
       exact ⟨g.1, g.2, rfl⟩
   have eA := range_comp_eq_imageLattice ρ N j hj
   have eB := range_comp_eq_imageLattice ρ' N' j' hj'
-  haveI : DiscreteTopology (LinearMap.range (ρ.comp j).toIntLinearMap) := by
+  have : DiscreteTopology (LinearMap.range (ρ.comp j).toIntLinearMap) := by
     rw [eA]; exact hN.2
-  haveI : DiscreteTopology (LinearMap.range (ρ'.comp j').toIntLinearMap) := by
+  have : DiscreteTopology (LinearMap.range (ρ'.comp j').toIntLinearMap) := by
     rw [eB]; exact hN'l.2
   have hz : ∀ g : ↥(N.comap L.subtype), ρ (j g) = 0 → g = 0 := by
     intro g hg
@@ -512,10 +512,10 @@ theorem slopeIneq_of (hmV : MuChar.{uR, uV, uE}) (hmW : MuChar.{uR, uW, uF})
         rfl
       have hsatQ := Formalism.F.degQuot E (zl ρ L) (zl ρ N) hL.2 hsatN
       have hsatQ' := Formalism.F.degQuot F (zl ρ' Im) (zl ρ' N'') hImLat.2 sp.1
-      haveI : DiscreteTopology
+      have : DiscreteTopology
           (LinearMap.range (pE.toLinearMap.toAddMonoidHom.comp α0).toIntLinearMap) := by
         rw [eQL]; exact hsatQ.1
-      haveI : DiscreteTopology
+      have : DiscreteTopology
           (LinearMap.range (pF.toLinearMap.toAddMonoidHom.comp β0).toIntLinearMap) := by
         rw [eQM]; exact hsatQ'.1
       have hR := rank_range_eq_and_degree_le (pE.toLinearMap.toAddMonoidHom.comp α0)

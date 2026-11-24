@@ -371,7 +371,7 @@ theorem exists_restrict (l : Level H) (n : ℕ) (β : RZ H n l.A →+* KA l)
 theorem exists_extend (l : Level H) (n : ℕ) (β : RZ H n l.A →+* KA l)
     (hβ : IsInc (RZ H n l.A).subtype (KA l).val.toRingHom β) (hd : IsDedFrac β) {k : Type} [Field k] [CharZero k]
     (δ : RZ H n l.A →+* k) : ∃ gam : KA l →+* k, gam.comp β = δ := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have := hd.2.2
   have := BaseRing.finiteDimensional_KA l
   have hinj : Function.Injective δ := by
@@ -382,7 +382,7 @@ theorem exists_extend (l : Level H) (n : ℕ) (β : RZ H n l.A →+* KA l)
       have h₁ : IsAlgebraic ℤ (β z) :=
         (IsFractionRing.isAlgebraic_iff ℤ ℚ (KA l)).2 (Algebra.IsAlgebraic.isAlgebraic _)
       exact (isAlgebraic_algHom_iff β.toIntAlgHom (IsFractionRing.injective (RZ H n l.A) (KA l))).1 h₁
-    refine Ideal.comap_ne_bot_of_algebraic_mem (I := RingHom.ker δ) h0 hz ha ?_
+    refine Ideal.under_ne_bot_of_algebraic_mem (I := RingHom.ker δ) h0 hz ha ?_
     refine (Submodule.eq_bot_iff _).2 fun m hm => ?_
     simpa using hm
   exact ⟨IsFractionRing.lift hinj, RingHom.ext fun x => IsFractionRing.lift_algebraMap hinj x⟩
@@ -466,7 +466,7 @@ theorem GlobalTheory.famCore_exists_aut : Out.Laws → Out.Laws2 → ∀ (E : Ty
   · rw [hρ', reassoc_of% hρ, hss, Category.comp_id]
   · rw [hρ, reassoc_of% hρ', hss', Category.comp_id]
   · have hf : Flat (spMap β) := by
-      letI := β.toAlgebra
+      let := β.toAlgebra
       have := hd.2.2
       exact Flat.SpecMap_iff.2 (RingHom.flat_algebraMap_iff.2 (IsLocalization.flat (KA l) (nonZeroDivisors (RZ H n l.A))))
     have hfl : Flat (r.hom ≫ a ≫ sM) := by rw [h]; infer_instance
@@ -764,7 +764,7 @@ theorem exists_inc {n N : ℕ} (hn : n.Prime) (hN : ∃ j, 1 ≤ j ∧ N = n ^ j
   obtain ⟨j, -, hj⟩ := hN
   obtain ⟨⟨β, hβ⟩, -, h⟩ := BaseRing.isDedFrac_RZ E H l n j hn.pos hj.dvd
   obtain ⟨⟨_, hd⟩, -, hf⟩ := h β hβ
-  letI := β.toAlgebra
+  let := β.toAlgebra
   refine ⟨hd, β, hβ, IsFractionRing.injective (RZ H n l.A) (KA l), ?_⟩
   rw [Flat.SpecMap_iff]
   exact IsLocalization.flat (KA l) (nonZeroDivisors (RZ H n l.A))

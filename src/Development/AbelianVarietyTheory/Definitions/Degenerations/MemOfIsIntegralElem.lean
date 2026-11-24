@@ -81,18 +81,18 @@ theorem not_allC_false (hi : Function.Injective (i.comp g))
   let j : PowerSeries O' →+* C := j₀.comp (PowerSeries.map (algebraMap O' (FractionRing O')))
   have hj : Function.Injective j := ((algebraMap (FractionRing V) C).injective.comp (IsFractionRing.injective V _)).comp
     (PowerSeries.map_injective _ (IsFractionRing.injective O' _))
-  letI : Algebra (PowerSeries O') K := (i.comp g).toAlgebra
-  letI : Algebra (PowerSeries O') C := j.toAlgebra
-  haveI : FaithfulSMul (PowerSeries O') K := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
-  haveI : FaithfulSMul (PowerSeries O') C := (faithfulSMul_iff_algebraMap_injective _ _).2 hj
-  haveI : Algebra.IsAlgebraic (PowerSeries O') K := ⟨halg⟩
+  let : Algebra (PowerSeries O') K := (i.comp g).toAlgebra
+  let : Algebra (PowerSeries O') C := j.toAlgebra
+  have : FaithfulSMul (PowerSeries O') K := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+  have : FaithfulSMul (PowerSeries O') C := (faithfulSMul_iff_algebraMap_injective _ _).2 hj
+  have : Algebra.IsAlgebraic (PowerSeries O') K := ⟨halg⟩
   let gam : K →ₐ[PowerSeries O'] C := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hc : ∀ f, gam.toRingHom (i (g f)) = j f := fun f => gam.commutes f
-  letI : Algebra (FractionRing O') C := (j₀.comp PowerSeries.C).toAlgebra
+  let : Algebra (FractionRing O') C := (j₀.comp PowerSeries.C).toAlgebra
   have hX : j PowerSeries.X = j₀ PowerSeries.X := congrArg j₀ (PowerSeries.map_X _)
   refine h C gam.toRingHom (Units.mk0 (j PowerSeries.X) fun e => PowerSeries.X_ne_zero (hj (e.trans (map_zero j).symm)))
     (fun x => (congrArg j₀ (PowerSeries.map_C _ x).symm).trans (hc _).symm) (fun r => ?_) (hc _).symm ?_

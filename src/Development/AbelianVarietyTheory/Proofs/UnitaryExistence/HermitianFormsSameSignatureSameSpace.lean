@@ -131,10 +131,10 @@ theorem pow_mem_pow' (c : FractionalIdeal R⁰ K) {t : K} (ht : t ∈ c) (n : �
 
 theorem det_mem_pow (c : FractionalIdeal R⁰ K) (M : Matrix (Fin r) (Fin r) K) (hM : ∀ i j, M i j ∈ c) :
     M.det ∈ c ^ r := by
-  rw [Matrix.det_apply, ← FractionalIdeal.mem_coe]
+  rw [Matrix.det_apply, ← FractionalIdeal.mem_coeToSubmodule]
   refine Submodule.sum_mem _ fun σ _ => ?_
   have h := prod_mem_pow c Finset.univ (fun i => M (σ i) i) fun i _ => hM _ _
-  rw [Finset.card_univ, Fintype.card_fin, ← FractionalIdeal.mem_coe] at h
+  rw [Finset.card_univ, Fintype.card_fin, ← FractionalIdeal.mem_coeToSubmodule] at h
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs
   · rw [hs, one_smul]; exact h
   · rw [hs, Units.neg_smul, one_smul]; exact neg_mem h
@@ -147,11 +147,11 @@ theorem exists_local_generator (V : FractionalIdeal R⁰ K) (hV : V ≠ 0) (S : 
   have hle : V * V⁻¹ ≤ (P : FractionalIdeal R⁰ K) := by
     rw [FractionalIdeal.mul_le]
     intro a ha u hu
-    rw [← FractionalIdeal.mem_coe, hS] at ha
+    rw [← FractionalIdeal.mem_coeToSubmodule, hS] at ha
     induction ha using Submodule.span_induction with
     | mem a ha =>
       have haV : a ∈ V := by
-        rw [← FractionalIdeal.mem_coe, hS]; exact Submodule.subset_span ha
+        rw [← FractionalIdeal.mem_coeToSubmodule, hS]; exact Submodule.subset_span ha
       have h1 := FractionalIdeal.mul_mem_mul haV hu
       rw [mul_inv_cancel₀ hV] at h1
       obtain ⟨s, hs⟩ := (FractionalIdeal.mem_one_iff _).mp h1
@@ -161,9 +161,9 @@ theorem exists_local_generator (V : FractionalIdeal R⁰ K) (hV : V ≠ 0) (S : 
       exact hcon a ha u hu s hsP hs
     | zero => rw [zero_mul]; exact FractionalIdeal.zero_mem _
     | add x y _ _ hx hy =>
-      rw [add_mul, ← FractionalIdeal.mem_coe]; exact Submodule.add_mem _ hx hy
+      rw [add_mul, ← FractionalIdeal.mem_coeToSubmodule]; exact Submodule.add_mem _ hx hy
     | smul t x _ hx =>
-      rw [smul_mul_assoc, ← FractionalIdeal.mem_coe]; exact Submodule.smul_mem _ t hx
+      rw [smul_mul_assoc, ← FractionalIdeal.mem_coeToSubmodule]; exact Submodule.smul_mem _ t hx
   rw [mul_inv_cancel₀ hV, ← FractionalIdeal.coeIdeal_top, FractionalIdeal.coeIdeal_le_coeIdeal K] at hle
   exact hP (top_le_iff.mp hle)
 
@@ -173,7 +173,7 @@ theorem det_mul_vol_le (c : FractionalIdeal R⁰ K) (L L' : Set (Fin r → R)) (
   have key : ∀ z ∈ vol L * vol L', A.det * algebraMap R K z ∈ ((c ^ r : FractionalIdeal R⁰ K) : Submodule R K) := by
     intro z hz
     unfold vol at hz
-    rw [Ideal.span_mul_span'] at hz
+    rw [Ideal.span_mul_span] at hz
     induction hz using Submodule.span_induction with
     | mem z hz =>
       obtain ⟨_, ⟨X, hX, rfl⟩, _, ⟨Y, hY, rfl⟩, rfl⟩ := hz
@@ -183,7 +183,7 @@ theorem det_mul_vol_le (c : FractionalIdeal R⁰ K) (L L' : Set (Fin r → R)) (
         rw [Matrix.mul_assoc]
         simp [Matrix.mul_apply, dotProduct, Matrix.mulVec]
       rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose] at this
-      rw [FractionalIdeal.mem_coe]
+      rw [FractionalIdeal.mem_coeToSubmodule]
       convert this using 1
       simp only [map_mul, RingHom.map_det, RingHom.mapMatrix_apply]
       ring
@@ -195,7 +195,7 @@ theorem det_mul_vol_le (c : FractionalIdeal R⁰ K) (L L' : Set (Fin r → R)) (
   intro a ha b hb
   obtain ⟨t, rfl⟩ := (FractionalIdeal.mem_spanSingleton _).mp ha
   obtain ⟨z, hz, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).mp hb
-  rw [smul_mul_assoc, ← FractionalIdeal.mem_coe]
+  rw [smul_mul_assoc, ← FractionalIdeal.mem_coeToSubmodule]
   exact Submodule.smul_mem _ t (key z hz)
 
 theorem det_mul_vol_eq (c : FractionalIdeal R⁰ K) (hc : c ≠ 0) (L L' : Set (Fin r → R))
@@ -218,7 +218,7 @@ theorem det_mul_vol_eq (c : FractionalIdeal R⁰ K) (hc : c ≠ 0) (L L' : Set (
   obtain ⟨_, ⟨_, ⟨Y, hY, rfl⟩, rfl⟩, u, hu, s, hs, hse⟩ :=
     exists_local_generator ((vol L' : Ideal R) : FractionalIdeal R⁰ K)
       (FractionalIdeal.coeIdeal_ne_zero.mpr hL') (algebraMap R K '' _)
-      (by rw [FractionalIdeal.coe_coeIdeal, vol, IsLocalization.coeSubmodule_span]) P hP.ne_top
+      (by rw [FractionalIdeal.coeToSubmodule_coeIdeal, vol, IsLocalization.coeSubmodule_span]) P hP.ne_top
   set Yk := Y.map (algebraMap R K) with hYk
   have hdetY : algebraMap R K Y.det = Yk.det := RingHom.map_det _ _
   set Xk : Matrix (Fin r) (Fin r) K := (u * t) • (adjugate Ykᵀ * A⁻¹) with hXk
@@ -240,7 +240,7 @@ theorem det_mul_vol_eq (c : FractionalIdeal R⁰ K) (hc : c ≠ 0) (L L' : Set (
       · rw [Matrix.updateRow_ne hj]; exact hY j
     have h1 := FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeIdeal_of_mem R⁰ (P := K) hmem) hu
     rw [mul_inv_cancel₀ (FractionalIdeal.coeIdeal_ne_zero.mpr hL')] at h1
-    have h2 := FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coe.mp ht) h1
+    have h2 := FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeToSubmodule.mp ht) h1
     rw [mul_one] at h2
     rw [e1]; exact h2
   choose X hX hXe using hrows
@@ -296,7 +296,7 @@ theorem exists_det_ne_zero (S : Set (Fin r → K)) (hS : Submodule.span K S = �
   have e : r = Module.finrank K (Submodule.span K S) := by rw [hS]; simp
   refine ⟨Matrix.of fun i => f (Fin.cast e i), fun i => hf _, ?_⟩
   apply IsUnit.ne_zero
-  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_rows_iff_isUnit]
+  rw [← Matrix.isUnit_iff_isUnit_det, ← linearIndependent_row_iff_isUnit]
   exact hli.comp _ (Fin.cast_injective e)
 
 end Denominators

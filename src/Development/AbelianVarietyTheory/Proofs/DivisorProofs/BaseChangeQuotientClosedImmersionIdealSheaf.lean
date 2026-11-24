@@ -91,10 +91,10 @@ theorem baseChange_quotient : ∀ (R : Type) [CommRing R] (J : Ideal R) (W Y : S
       IsClosedImmersion b ∧ b.ker = baseIdeal f J ∧ ∀ V : W.Opens, IsAffineOpen V →
         Function.Surjective (b.app V).hom ∧ RingHom.ker (b.app V).hom = J.map (cst f V) := by
   intro R _ J W Y f b q h
-  haveI : IsClosedImmersion (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))) :=
+  have : IsClosedImmersion (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))) :=
     IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
   have e : h.isoPullback.hom ≫ pullback.fst _ _ = b := h.isoPullback_hom_fst
-  haveI hb : IsClosedImmersion b := by
+  have hb : IsClosedImmersion b := by
     rw [← e]
     infer_instance
   have hk : b.ker = baseIdeal f J := by

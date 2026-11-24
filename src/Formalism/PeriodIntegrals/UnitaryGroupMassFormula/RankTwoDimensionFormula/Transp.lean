@@ -102,7 +102,7 @@ theorem tr_crd (M : GL (Fin X.B.I.n) X.B.I.E) (y : (VS D).V) :
 theorem tr_af_nontrivial (F : Type) [Field F] [NumberField F] : Nontrivial (IsDedekindDomain.FiniteAdeleRing (𝓞 F) F) := by
   obtain ⟨p, hp0, hp⟩ := Ring.not_isField_iff_exists_prime.mp (NumberField.RingOfIntegers.not_isField F)
   let v : IsDedekindDomain.HeightOneSpectrum (𝓞 F) := ⟨p, hp, hp0⟩
-  haveI : Nonempty (IsDedekindDomain.HeightOneSpectrum (𝓞 F)) := ⟨v⟩
+  have : Nonempty (IsDedekindDomain.HeightOneSpectrum (𝓞 F)) := ⟨v⟩
   first
     | infer_instance
     | exact (RestrictedProduct.evalRingHom _ v).domain_nontrivial

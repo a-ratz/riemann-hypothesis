@@ -447,7 +447,7 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
           show L (π h (π g u)) = 0
           rw [← Module.End.mul_apply, ← map_mul]
           exact hu (h * g)⟩
-    haveI : IsSimpleOrder (Subrepresentation π) := hi
+    have : IsSimpleOrder (Subrepresentation π) := hi
     rcases eq_bot_or_eq_top W with hW | hW
     · have hvW : v ∈ W.toSubmodule := h3
       rw [hW] at hvW
@@ -459,7 +459,7 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
       have := hvW 1
       rw [map_one, Module.End.one_apply] at this
       exact hl this
-  · haveI := isMulRightInvariant μ
+  · have := isMulRightInvariant μ
     have hinv : ∀ x, Φ (π h v) (π h w) x = Φ v w (x * QuotientGroup.mk h) := by
       intro x
       obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective x

@@ -72,7 +72,7 @@ theorem _root_.GlobalTheory.BI.finsum_mul_star_virt_int : ∀ (G : Type) [Group 
     a ∈ _root_.GlobalTheory.BI.Virt ℂ ℂ G → b ∈ _root_.GlobalTheory.BI.Virt ℂ ℂ G →
     ∃ m : ℤ, ∑ᶠ g, a g * star (b g) = m * (Nat.card G : ℂ) := by
   intro G _ _ a b ha hb
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   have hstar : ∀ g, star (b g) = b g⁻¹ := _root_.GlobalTheory.CuspGL.star_virt_eq_inv G b hb
   rw [finsum_eq_sum_of_fintype]
   simp_rw [hstar]

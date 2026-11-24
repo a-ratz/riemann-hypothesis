@@ -450,7 +450,7 @@ theorem gapNorm_of (hD : DegPsi) : GapNorm := by
     (fun v => ⟨uniformisationL2 ε (PsiM T μ) T.w v, datumEmbedding_mem_Hlam hP v⟩) C (dimVlam lam) (muCD ε) hC0 (fun v v' => ?_) (fun g v v' => ?_) hd
   · have e := G2.formulaF_sigLam hgap' hP hw h1 v v'
     rw [hP.2.1] at e
-    simp only [ContinuousLinearMap.one_apply] at e
+    simp only [one_apply_eq_self] at e
     rw [← e, (G2.sigLam_isURepOn hgap' hP hw).1.1]
     rfl
   · exact G2.formulaF_sigLam hgap' hP hw (umat_mem_UJset ε g) v v'
@@ -487,7 +487,7 @@ theorem op_norm {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (k 
     rw [← @inner_self_eq_norm_sq ℂ, ← @inner_self_eq_norm_sq ℂ]
     congr 1
     rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.star_eq_adjoint,
-      ← ContinuousLinearMap.mul_apply, hs, ContinuousLinearMap.one_apply]
+      ← mul_apply_eq_comp, hs, one_apply_eq_self]
   have := h
   nlinarith [norm_nonneg (T.op k v), norm_nonneg v, sq_nonneg (‖T.op k v‖ - ‖v‖), sq_nonneg (‖T.op k v‖ + ‖v‖)]
 
@@ -510,7 +510,7 @@ theorem prod_cpair (ε : Fin n → Bool) (f : Fin n → Fin n → ℝ) :
 theorem kNull_of (hW : MomW) (hP : CoefPow) : KNull := by
   intro n ε lam hl T TD
   classical
-  haveI : CompactSpace (KG ε) := compactSpace_KG ε
+  have : CompactSpace (KG ε) := compactSpace_KG ε
   set F : ℝ := (∏ i ∈ range (pOf ε), (i.factorial : ℝ)) * ∏ i ∈ range (qOf ε), (i.factorial : ℝ) with hF
   have hFpos : 0 < F := by positivity
   let α : CPair ε → ℝ := fun p => lam p.1.1 - lam p.1.2 + (nab ε p.1.1 p.1.2 : ℝ)
@@ -604,7 +604,7 @@ theorem inP_entry_zero {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (h
     (h : ε a = ε b) : X a b = 0 := by
   have h1 := congrFun (congrFun hX.2 a) b
   simp only [Matrix.mul_apply, Matrix.neg_apply, Jm, Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
+    Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h1
   rw [h] at h1
   split_ifs at h1 with hb
   · have : (2 : ℂ) * X a b = 0 := by linear_combination h1

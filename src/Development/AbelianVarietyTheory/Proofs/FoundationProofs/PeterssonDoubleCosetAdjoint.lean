@@ -107,10 +107,10 @@ theorem integrable_tsum_of_summable_norm_integral {ι Y : Type} [Countable ι]
     (AEMeasurable.tsum fun i => (hF i).aemeasurable).aestronglyMeasurable
   have hle : ∫⁻ y, ‖∑' i, F i y‖ₑ ∂μ ≤ ENNReal.ofReal (∑' i, ∫ y, ‖F i y‖ ∂μ) := by
     calc ∫⁻ y, ‖∑' i, F i y‖ₑ ∂μ ≤ ∫⁻ y, ∑' i, ‖F i y‖ₑ ∂μ :=
-          lintegral_mono fun a => enorm_tsum_le_tsum_enorm
-      _ = ∑' i, ∫⁻ y, ‖F i y‖ₑ ∂μ := lintegral_tsum fun i => (hF i).aemeasurable.enorm
+          lintegral_mono fun a => eNorm_tsum_le_tsum_eNorm
+      _ = ∑' i, ∫⁻ y, ‖F i y‖ₑ ∂μ := lintegral_tsum fun i => (hF i).aemeasurable.eNorm
       _ = ∑' i, ENNReal.ofReal (∫ y, ‖F i y‖ ∂μ) :=
-          tsum_congr fun i => (ofReal_integral_norm_eq_lintegral_enorm (hF i)).symm
+          tsum_congr fun i => (ofReal_integral_norm_eq_lintegral_eNorm (hF i)).symm
       _ = _ := (ENNReal.ofReal_tsum_of_nonneg
           (fun i => integral_nonneg fun y => norm_nonneg _) hs).symm
   exact ⟨hm, lt_of_le_of_lt hle ENNReal.ofReal_lt_top⟩
@@ -382,7 +382,7 @@ theorem GlobalTheory.EisM.pet_hsum_adjoint : ∀ (k L N q : ℕ) (ε : Dirichlet
   have hP : ∀ i, Integrable (fun x : ℍ => (ρ x : ℂ) * K k N ε h f (β i) x) := fun i => by
     refine ((hint i).const_mul (ch ε (β i 0 0))).congr (Eventually.of_forall fun x => ?_)
     simp only [K]; ring
-  haveI : Countable SL(2, ℤ) := by
+  have : Countable SL(2, ℤ) := by
     unfold Matrix.SpecialLinearGroup Matrix; infer_instance
   obtain ⟨hQ, key⟩ := _root_.GlobalTheory.EisM.abstract_double_coset_adjoint (GL (Fin 2) ℝ) ℍ (Gamma0 L) ι κ volume φ ρ (fun i => toG (β i))
     (fun j => toG (α j)) e (fun i => K k N ε h f (β i)) (fun j => K k N ε h f (α j))

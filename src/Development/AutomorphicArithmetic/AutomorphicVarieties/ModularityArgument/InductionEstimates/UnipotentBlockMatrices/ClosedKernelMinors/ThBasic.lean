@@ -89,9 +89,9 @@ private theorem exists_rep {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : 
   have h2 : ∀ᵐ y ∂μ.restrict (fundamentalDomain (Gam K n)), (hm.toLp f) (mk (Gam K n) y) = f (mk (Gam K n) y) :=
     ae_of_ae_map (measurable_mk (Gam K n)).aemeasurable h1
   have hF := isFundamentalDomain_fundamentalDomain (Gam K n) μ
-  haveI : SMulInvariantMeasure (G1 K n) (G1 K n) μ :=
+  have : SMulInvariantMeasure (G1 K n) (G1 K n) μ :=
     ⟨fun a s _ => measure_preimage_mul μ a s⟩
-  haveI : SMulInvariantMeasure (Gam K n) (G1 K n) μ :=
+  have : SMulInvariantMeasure (Gam K n) (G1 K n) μ :=
     Subgroup.smulInvariantMeasure _
   have h3 : μ {y | ¬ (hm.toLp f) (mk (Gam K n) y) = f (mk (Gam K n) y)} = 0 := by
     refine hF.measure_zero_of_invariant _ (fun γ => ?_) ?_
@@ -146,7 +146,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.thBasic :
         have hp := pow_pos (height_pos (((γ : G1 K (2 + 2)) * ((q.out : G1 K (2 + 2)) * g) : G1 K (2 + 2)) :
           AdelicGLn.AdelicGL K (2 + 2))) N
         have hC0 : 0 ≤ C := le_trans (mul_nonneg (norm_nonneg _) hp.le) hb
-        rw [← ENNReal.ofReal_mul hC0, ← ofReal_norm_eq_enorm]
+        rw [← ENNReal.ofReal_mul hC0, ← ofReal_norm]
         refine ENNReal.ofReal_le_ofReal ?_
         rw [← div_eq_mul_inv, le_div_iff₀ hp]
         exact hb
@@ -159,9 +159,9 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.thBasic :
   have hbd : ∀ g, ‖th F g‖ ≤ (ENNReal.ofReal C * C₀).toReal := fun g => by
     have hf : (Function.support fun q : Cos K => F ((q.out : G1 K (2 + 2)) * g)).Finite :=
       (hfin {g} isCompact_singleton).subset fun q hq => ⟨g, rfl, hq⟩
-    rw [← toReal_enorm]
+    rw [← toReal_eNorm]
     refine ENNReal.toReal_mono hne (le_trans ?_ (hsum g))
     unfold th
     rw [finsum_eq_sum _ hf]
-    exact (enorm_sum_le _ _).trans (ENNReal.sum_le_tsum _)
+    exact (eNorm_sum_le _ _).trans (ENNReal.sum_le_tsum _)
   exact ⟨⟨_, hne, hsum⟩, ⟨_, hbd⟩, exists_rep μ _ hcont hinv _ hbd⟩

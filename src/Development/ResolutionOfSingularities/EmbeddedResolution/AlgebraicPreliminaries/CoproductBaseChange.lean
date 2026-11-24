@@ -73,7 +73,7 @@ private theorem isIso_sigmaDesc_of_isPullback {ι : Type u} [Finite ι] {P : Sch
       = (IsColimit.coconePointUniqueUpToIso (colimit.isColimit (Discrete.functor C)) hc').hom := by
     apply Sigma.hom_ext
     intro a
-    rw [Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc]
     exact (IsColimit.comp_coconePointUniqueUpToIso_hom
       (colimit.isColimit (Discrete.functor C)) hc' ⟨a⟩).symm
   rw [key]
@@ -85,7 +85,7 @@ theorem isPullback_sigmaMap_sigmaDesc {ι : Type u} [Finite ι] {A Y : Scheme.{u
     IsPullback (Limits.Sigma.map j) (Limits.Sigma.desc q) (Limits.Sigma.desc h) i := by
   have hcomm : ∀ a, (j a ≫ Sigma.ι B a) ≫ Sigma.desc h = q a ≫ i := by
     intro a
-    rw [Category.assoc, Sigma.ι_desc]
+    rw [Category.assoc, Sigma.ι_comp_desc]
     exact (hsq a).w
   obtain ⟨u, hufst, husnd⟩ : ∃ u : ∀ a, C a ⟶ pullback (Sigma.desc h) i,
       (∀ a, u a ≫ pullback.fst (Sigma.desc h) i = j a ≫ Sigma.ι B a) ∧
@@ -97,7 +97,7 @@ theorem isPullback_sigmaMap_sigmaDesc {ι : Type u} [Finite ι] {A Y : Scheme.{u
   have hsq2 : ∀ a, IsPullback (j a) (u a) (Sigma.ι B a) (pullback.fst (Sigma.desc h) i) := by
     intro a
     refine IsPullback.of_bot ?_ (hufst a).symm hP
-    rw [husnd a, Sigma.ι_desc]
+    rw [husnd a, Sigma.ι_comp_desc]
     exact hsq a
   have : IsIso (Sigma.desc u) :=
     isIso_sigmaDesc_of_isPullback B C (pullback.fst (Sigma.desc h) i) j u

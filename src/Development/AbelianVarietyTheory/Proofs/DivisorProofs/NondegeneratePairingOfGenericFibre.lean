@@ -250,8 +250,8 @@ theorem sq_eq_one_of_memKL_generic : ∀ (O K : Type) [CommRing O] [Field K] [Al
 
 theorem nondeg_of_generic : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsNoetherianRing O] [Field K] [Algebra O K] [IsFractionRing O K] (A : Over (Sp O)) [GrpObj A] (A' : Over (Sp K)) [GrpObj A'] (φ : A'.left ⟶ A.left) (φ₂ : (A' ⊗ A').left ⟶ (A ⊗ A).left), IsAbelianScheme A → IsGrpPullback A' A (spMap (algebraMap O K)) φ → IsSquare φ φ₂ → ∀ (P : LB (A ⊗ A).left) (P' : LB (A' ⊗ A').left), P.IsLB → P'.IsLB → LBIso P' (P.pull φ₂) → (∃ t : (P.pull (lift (1 : A ⟶ A) (𝟙 A)).left).Gen, t.IsGen) → (∃ t : (P.pull (lift (𝟙 A) (1 : A ⟶ A)).left).Gen, t.IsGen) → LBIso P (P.pull (lift (snd A A) (fst A A)).left) → Out.RelAmple A (P.pull (lift (𝟙 A) (𝟙 A)).left) → (∀ (T : Over (Sp K)) (x : T ⟶ A'), (∃ t : (P'.pull (lift (snd A' T ≫ x) (fst A' T)).left).Gen, t.IsGen) → x = 1) → ∀ (T : Over (Sp O)) (x : T ⟶ A), (∃ t : (P.pull (lift (snd A T ≫ x) (fst A T)).left).Gen, t.IsGen) → x = 1 := by
   intro O K _ _ _ _ _ _ A _ A' _ φ φ₂ hA h sq P P' hP hP' H r₁ r₂ hs ha gen T y hy
-  haveI := hA.comm
-  haveI := hA.proper
+  have := hA.comm
+  have := hA.proper
   have hL : (P.pull (lift (𝟙 A) (𝟙 A)).left).IsLB := pull_isLB hP _
   obtain ⟨hB, hS⟩ := pairing_add_and_symm _ A hA P hP r₁ r₂ hs ha
   obtain ⟨H₀, _, i, -, -, hfin, hflat, hZ⟩ := GlobalTheory.kernel_finiteFlat_subgroup O A hA _ hL ha

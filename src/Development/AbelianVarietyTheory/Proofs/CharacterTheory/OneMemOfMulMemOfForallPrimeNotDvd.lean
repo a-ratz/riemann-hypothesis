@@ -98,7 +98,7 @@ theorem one_mem_of_mul_mem_of_forall_prime_not_dvd (X : Type) [Finite X]
           = f a + (1 - ∏ x ∈ s, (1 - f x)) - f a * (1 - ∏ x ∈ s, (1 - f x)) := by ring
       rw [e]
       exact S.sub_mem (S.add_mem (hfS a) ih) (hmul _ (hfS a) _ ih)
-  haveI := Fintype.ofFinite X
+  have := Fintype.ofFinite X
   have h0 : ∏ x : X, (1 - f x) = 0 := by
     funext y
     rw [Finset.prod_apply]

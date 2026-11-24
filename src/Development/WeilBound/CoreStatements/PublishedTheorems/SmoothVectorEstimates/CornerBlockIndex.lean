@@ -131,7 +131,7 @@ theorem lastE_eq {R : Type} [CommRing R] (hm : m + 1 < a) (y : UnipotentBlockCol
   rw [Finset.sum_eq_single (t0 hm)]
   · simp [t0, ix, mm]
   · intro t _ ht
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h1
     apply ht
     obtain ⟨⟨i, k⟩, h1', h2', h3'⟩ := t
@@ -356,7 +356,7 @@ theorem mirabolic_induction_step_exists : S2 → S3 → S5 → S6 → S8 → Mir
       have e1 : L (ρ (blkU y) (FT μ (CornerBlockIndex.bet l) F y)) =
           Λ (ρ (blkU y') (ρ h (FT μ (CornerBlockIndex.bet l) F y))) := by
         simp only [L, ContinuousLinearMap.comp_apply]
-        rw [← ContinuousLinearMap.mul_apply, ← map_mul, hcomm, map_mul, ContinuousLinearMap.mul_apply]
+        rw [← mul_apply_eq_comp, ← map_mul, hcomm, map_mul, mul_apply_eq_comp]
       have e2 : Λ (ρ h (FT μ (CornerBlockIndex.bet l) F y)) = FT μ (CornerBlockIndex.bet l) φ y := by
         show L (∫ x, Complex.exp (-↑((CornerBlockIndex.bet l x) y) * Complex.I) • F x ∂μ) = _
         rw [← L.integral_comp_comm (hFint y)]
@@ -382,7 +382,7 @@ theorem mirabolic_induction_step_exists : S2 → S3 → S5 → S6 → S8 → Mir
     · simp [h0]
     · congr 1
       rw [CornerBlockIndex.orb_sI hm ρ v (hfO (hne _ h0))]
-      simp only [L, ContinuousLinearMap.comp_apply, map_mul, ContinuousLinearMap.mul_apply]
+      simp only [L, ContinuousLinearMap.comp_apply, map_mul, mul_apply_eq_comp]
 
 end PositivityTheory.jumpWindows
 

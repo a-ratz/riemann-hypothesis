@@ -85,9 +85,9 @@ theorem exists_bound_of_isCompact (w : Pl E) {S : Set (w.adicCompletion E)} (hS 
     ∃ γ : WithZero (Multiplicative ℤ), ∀ x ∈ S, Valued.v x ≤ γ := by
   have hcov : S ⊆ ⋃ m : ℕ, {y : w.adicCompletion E | Valued.v y ≤ WithZero.exp (m : ℤ)} := by
     intro x _
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
     rcases eq_or_ne (Valued.v x) 0 with h | h
-    · exact ⟨0, by rw [h]; exact zero_le'⟩
+    · exact ⟨0, by rw [h]; exact zero_le⟩
     · refine ⟨(WithZero.log (Valued.v x)).toNat, ?_⟩
       conv_lhs => rw [← WithZero.exp_log h]
       rw [WithZero.exp_le_exp]
@@ -142,7 +142,7 @@ theorem charpoly_det_bounded_of_isCompact : ∀ (E : Type) [Field E] [NumberFiel
   · exact hγ _ (Or.inl (Set.mem_biUnion (Finset.mem_range.2 hk) ⟨y, hy, rfl⟩))
   · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by
       rw [Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin]; omega), map_zero]
-    exact zero_le'
+    exact zero_le
 
 end GlobalTheory.BCT
 end -- clump:auto
@@ -199,7 +199,7 @@ theorem exists_nat_mul_integral_of_valuation_le : ∀ (E : Type) [Field E] [Numb
             ≤ 1 * 1 := mul_le_mul' ((hx u).trans hu) (u.intValuation_le_one _)
           _ = 1 := one_mul 1
       · have huS : u ∈ S := by
-          simp only [S, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact hu
+          simp only [S, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; exact hu
         have hmem : ((∏ w ∈ S, N w ^ k w : ℕ) : 𝓞 E) ∈ u.asIdeal ^ k u := by
           obtain ⟨c, hc⟩ := Finset.dvd_prod_of_mem (fun w => N w ^ k w) huS
           rw [hc, Nat.cast_mul]
@@ -208,7 +208,7 @@ theorem exists_nat_mul_integral_of_valuation_le : ∀ (E : Type) [Field E] [Numb
           exact Ideal.pow_mem_pow (Ideal.absNorm_mem u.asIdeal) _
         have hle := (u.intValuation_le_pow_iff_mem _ (k u)).2 hmem
         have h0 : γ u ≠ 0 := by
-          intro h; exact hu (h ▸ zero_le')
+          intro h; exact hu (h ▸ zero_le)
         calc u.valuation E x * u.intValuation ((∏ w ∈ S, N w ^ k w : ℕ) : 𝓞 E)
             ≤ γ u * WithZero.exp (-(k u : ℤ)) := mul_le_mul' (hx u) hle
           _ = WithZero.exp (WithZero.log (γ u) + -(k u : ℤ)) := by
@@ -418,7 +418,7 @@ theorem bound_at (n : ℕ) (w : Pl E) (f : UL n w → ℂ) (hf : HasCompactSuppo
     have hy1 : y.1 ∈ GlobalTheory.LFun.KGL w (n := n) := (Subgroup.mem_subgroupOf).1 hyK
     obtain ⟨h1, h2⟩ := int_pts E n w y.1 hy1
     exact transfer w y.1 P hP 1 h1 h2
-  · obtain ⟨γ, hγ⟩ := GlobalTheory.T.charpoly_coeff_det_inv_valuation_bounded_of_isCompact_GL E n w (Subtype.val '' tsupport f) (hf.image continuous_subtype_val)
+  · obtain ⟨γ, hγ⟩ := GlobalTheory.T.charpoly_coeff_det_inv_valuation_bounded_of_isCompact_GL E n w (Subtype.val '' tsupport f) (hf.image continuous_subtypeVal)
     refine ⟨γ, fun h => absurd h hind, ?_⟩
     rintro P ⟨y, hy, hP⟩
     obtain ⟨h1, h2⟩ := hγ y.1 ⟨y, subset_tsupport f hy, rfl⟩
@@ -453,7 +453,7 @@ theorem finpoly : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E 
   have hpart := GlobalTheory.T.exists_mem_section_valuation_eq_conj E S hS
   let p : Pl E → Pl E := fun u => if h : u ∈ S then u else (hpart u h).choose
   have hpS : ∀ u, u ∉ S → p u ∈ S ∧ ∀ x : E, u.valuation E x = (p u).valuation E (IsCMField.complexConj E x) := by
-    intro u hu; simp only [p, dif_neg hu]; exact (hpart u hu).choose_spec
+    intro u hu; simp only [p, dite_eq_right hu]; exact (hpart u hu).choose_spec
   let Γ : Pl E → WithZero (Multiplicative ℤ) := fun u => if u ∈ S then γ u else γ (p u) * γ (p u)
   have hB : {w | ¬ f w = (KL n w : Set (UL n w)).indicator 1}.Finite := Filter.eventually_cofinite.1 hev
   have hΓ : ∀ᶠ u in cofinite, Γ u ≤ 1 := by
@@ -475,14 +475,14 @@ theorem finpoly : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E 
   rintro P ⟨hP, hPS⟩
   refine ⟨hP.1, hP.2.1, hP.2.2.2, fun k => hd _ fun u => ?_⟩
   by_cases huS : u ∈ S
-  · simp only [Γ, if_pos huS]; exact (hγ u P (hPS u huS)).1 k
-  · simp only [Γ, if_neg huS]
+  · simp only [Γ, ite_eq_left huS]; exact (hγ u P (hPS u huS)).1 k
+  · simp only [Γ, ite_eq_right huS]
     obtain ⟨hpu, hv⟩ := hpS u huS
     obtain ⟨hb1, hb2⟩ := hγ (p u) P (hPS _ hpu)
     rw [hv, conj_coeff n P hP k]
     split_ifs
     · rw [map_mul]; exact mul_le_mul' (hb1 _) hb2
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
 
 end GlobalTheory.FinPolySupp
 end -- clump:auto

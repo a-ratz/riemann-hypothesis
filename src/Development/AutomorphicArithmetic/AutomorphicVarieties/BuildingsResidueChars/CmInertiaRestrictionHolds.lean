@@ -44,7 +44,7 @@ theorem UpperTheory.cm_inertia_restriction_holds : UpperTheory.V.Af.Cr.IneRes :=
   intro F₀ F Ω _ _ _ _ _ _ _ _ _ _
   classical
   unfold Ine IsPlaceOver Inertia
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have hint : ∀ (A : ValuationSubring Ω) (x : Ω), IsIntegral ℤ x → A.valuation x ≤ 1 := by
     intro A x h
     obtain ⟨y, rfl⟩ := IsIntegrallyClosed.isIntegral_iff.mp (h.tower_top : IsIntegral A x)
@@ -89,7 +89,7 @@ theorem UpperTheory.cm_inertia_restriction_holds : UpperTheory.V.Af.Cr.IneRes :=
     exact hD0
   refine Filter.eventually_cofinite.mpr ((Ideal.finite_factors hspan).subset ?_)
   intro v hv
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   by_contra hDv
   apply hv
@@ -153,7 +153,7 @@ theorem UpperTheory.cm_inertia_restriction_holds : UpperTheory.V.Af.Cr.IneRes :=
     exact hDv ((hA D).mp hdv)
   have hfix1 : σ (algebraMap F Ω α₁) = algebraMap F Ω α₁ := by
     have h : σ (algebraMap F Ω α) = algebraMap F Ω α := hfix
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
     simp only [hαdef, zsmul_eq_mul, map_mul, map_intCast] at h
     exact mul_left_cancel₀ (Int.cast_ne_zero.mpr hm0) h
   have hφ : ((σ : Ω ≃ₐ[F₀] Ω).toAlgHom).comp (IsScalarTower.toAlgHom F₀ F Ω) =

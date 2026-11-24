@@ -77,7 +77,7 @@ theorem norm_wt (ν : Chr F E) (z : ℕ) (l : (AE F E)ˣ) : ‖wt ν z l‖ = (a
   rw [wt, norm_mul, Circle.norm_coe, one_mul, norm_pow, Complex.norm_real, Real.norm_of_nonneg NNReal.zero_le_coe]
 
 theorem cont_wt {ν : Chr F E} (hν : Continuous ν) (z : ℕ) : Continuous (wt ν z) :=
-  (continuous_subtype_val.comp hν).mul
+  (continuous_subtypeVal.comp hν).mul
     ((Complex.continuous_ofReal.comp (NNReal.continuous_coe.comp GlobalTheory.Doubling.continuous_absE)).pow z)
 
 
@@ -116,9 +116,9 @@ theorem tate (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) {B : Base F E} {M : M
     {φ : Fl F v n d} (hφ : φ ∈ SB _) :
     (∀ y, @Integrable _ _ _ _ (borel _) (fun l : idAt E (evFin F v) => ev v (rv B M v (idem F v • u l.1) φ) y * wt ν z l.1) (m.xf v)) ∧
       (fun y => @integral _ _ _ _ (borel _) (m.xf v) fun l => ev v (rv B M v (idem F v • u l.1) φ) y * wt ν z l.1) ∈ SB _ := by
-  letI : MeasurableSpace (idAt E (evFin F v)) := borel _
-  haveI : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
-  haveI := (hm.xf v).1
+  let : MeasurableSpace (idAt E (evFin F v)) := borel _
+  have : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
+  have := (hm.xf v).1
   obtain ⟨V₀, V₁, c, hu, -, -, hinv, hcomp⟩ := dirs hc
   obtain ⟨r, s, hX⟩ := hc.herm
   obtain ⟨r', s', hW⟩ := hc.skew
@@ -138,19 +138,19 @@ theorem tate (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) {B : Base F E} {M : M
     rw [locCo_smul, evFin_idem, one_smul, hu]
   have hG : IsLocallyConstant fun l : idAt E (evFin F v) => ev v (rv B M v (idem F v • u l.1) φ) := by
     simp only [rv, e1]
-    exact hg.comp_continuous ((cont_loc M v c V₀).comp (Units.continuous_val.comp continuous_subtype_val))
+    exact hg.comp_continuous ((cont_loc M v c V₀).comp (Units.continuous_val.comp continuous_subtypeVal))
   have hk : ∀ l : (AE F E)ˣ, ev v (rv B M v (idem F v • u l) φ) ≠ 0 → (N : AF F) • idem F v • u l ∈ latAtV X W v := fun l hl => by
     have e2 : idem F v • u l = (idem F v • c l.1) • V₀ := by rw [hu, smul_assoc]
     rw [e2] at hl ⊢
     exact key hc h hinv (hcomp v) hφ N (fun t ht => hfix _ ht) _ (e2 ▸ at_idem v _) hl
   have hN' : (N : Fv F v) ≠ 0 := by
-    haveI : CharZero (Fv F v) := algebraRat.charZero _
+    have : CharZero (Fv F v) := algebraRat.charZero _
     exact Nat.cast_ne_zero.2 hN
   refine int_fin (m.xf v) (fun l => ev v (rv B M v (idem F v • u l.1) φ)) (fun l => wt ν z l.1) ?_
     (fun a => (hG.isOpen_fiber a).measurableSet) {l | ev v (rv B M v (idem F v • u l.1) φ) ≠ 0} (fun a ha => not_not.1 ha) ?_ _
     fun l => (h.vac v).2 ▸ Submodule.mem_map_of_mem (rv_sb hc.base M v _ hφ)
-  · haveI := isCompact_iff_compactSpace.1 hC
-    have hf := (hg.comp_continuous ((continuous_subtype_val (p := (· ∈ C))).const_smul (N : Fv F v)⁻¹)).range_finite
+  · have := isCompact_iff_compactSpace.1 hC
+    have hf := (hg.comp_continuous ((continuous_subtypeVal (p := (· ∈ C))).const_smul (N : Fv F v)⁻¹)).range_finite
     refine (hf.insert 0).subset ?_
     rintro _ ⟨l, rfl⟩
     by_cases h0 : ev v (rv B M v (idem F v • u l.1) φ) = 0
@@ -179,10 +179,10 @@ theorem tate (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) {B : Base F E} {M : M
       rw [show absE F E l₀.1 = 0 from NNReal.coe_eq_zero.1 e.symm, zero_mul] at this
       exact zero_ne_one this
     refine Integrable.mono' (((hint.comp_mul_left l₀).norm.const_mul (((absE F E l₀.1 : ℝ) ^ z)⁻¹)).integrableOn)
-      ((cont_wt hν z).comp continuous_subtype_val).aestronglyMeasurable
+      ((cont_wt hν z).comp continuous_subtypeVal).aestronglyMeasurable
       (ae_restrict_of_forall_mem (hG.isClosed_fiber 0).measurableSet.compl fun l hl => ?_)
     have := (hin v (l₀ * l).1).1 (e3 l ▸ hk _ hl)
-    rw [if_pos this, one_mul, norm_wt, norm_wt, Subgroup.coe_mul, map_mul, NNReal.coe_mul, mul_pow,
+    rw [ite_eq_left this, one_mul, norm_wt, norm_wt, Subgroup.coe_mul, map_mul, NNReal.coe_mul, mul_pow,
       inv_mul_cancel_left₀ (pow_pos h0 z).ne']
 
 theorem finCone2_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) : FinCone2 := by
@@ -208,9 +208,9 @@ theorem finCone2_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) : FinCone2 := 
     ⟨hP.base, ⟨r, s, hP.herm⟩, ⟨r', s', hP.skew⟩, hP.good, χX, χW, hP.weil⟩ v
   obtain ⟨K', -, -, hK', hKc, -⟩ := hS F E σ B n X r s hP.base hP.herm
   obtain rfl : K = K' := Subgroup.ext fun g => (hK g).trans (hK' g).symm
-  haveI := kAt_compact hKc v
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
-  haveI : IsProbabilityMeasure (m.kf v) := ⟨(hm.kf v).2⟩
+  have := kAt_compact hKc v
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have : IsProbabilityMeasure (m.kf v) := ⟨(hm.kf v).2⟩
   have o1 : (1 : UA σ W.J) ∈ UAt σ W (evFin F v) := (uSub σ W v).one_mem
   have sb : ∀ k : kAt K (evFin F v), ∀ φ ∈ SB _, ω (k.1, 1) φ ∈ SB _ := fun k φ hφ => L.pres _ (kAt_mem k) _ o1 φ hφ
   have op : ∀ (k : kAt K (evFin F v)) (l : (AE F E)ˣ), ∀ φ ∈ SB _,
@@ -225,7 +225,7 @@ theorem finCone2_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) : FinCone2 := 
     obtain ⟨U, hU, hU'⟩ := (PositivityTheory.ThKF0.actsEx F E σ B n d X W M χX χW om r s r' s' hP v).2.2 _ (sb k₀ φ hφ)
     have t : Tendsto (fun k : kAt K (evFin F v) => (((k * k₀⁻¹).1, 1) : UA σ X.J × UA σ W.J)) (𝓝 k₀) (𝓝 1) := by
       have : Continuous fun k : kAt K (evFin F v) => (((k * k₀⁻¹).1, 1) : UA σ X.J × UA σ W.J) :=
-        (continuous_subtype_val.comp (continuous_mul_const k₀⁻¹)).prodMk continuous_const
+        (continuous_subtypeVal.comp (continuous_mul_const k₀⁻¹)).prodMk continuous_const
       have := this.tendsto k₀
       rwa [mul_inv_cancel] at this
     filter_upwards [t.eventually hU] with k hk
@@ -242,7 +242,7 @@ theorem finCone2_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) : FinCone2 := 
     fun φ hφ => funext fun y => by
       simp only [coneF, op _ _ φ hφ, A, wt, mul_assoc]
   have Al : ∀ φ ∈ SB _, ∀ φ' ∈ SB _, ∀ (a : ℂ) y, A (φ + a • φ') y = A φ y + a * A φ' y := fun φ hφ φ' hφ' a y => by
-    letI : MeasurableSpace (idAt E (evFin F v)) := borel _
+    let : MeasurableSpace (idAt E (evFin F v)) := borel _
     simp only [A, rv, schr_lin, map_add (f := _), map_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul, add_mul, mul_assoc]
     rw [integral_add ((hA φ hφ).1 y) (((hA φ' hφ').1 y).const_mul a), integral_const_mul]
   have cl : ∀ φ ∈ SB _, ∀ φ' ∈ SB _, ∀ a : ℂ, coneF B M om m v (ev v) u ν z (φ + a • φ') =

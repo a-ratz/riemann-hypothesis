@@ -148,7 +148,7 @@ theorem GlobalTheory.Top.link_gl : ∀ (𝒜 : FamClass)
   have hC0' : (0 : ℝ) < 3 := by norm_num
   have hCe : Real.exp 1 ≤ 3 := le_trans (le_of_lt (lt_trans Real.exp_one_lt_d9 (by norm_num))) hC0
   have hCabs : (0 : ℝ) ≤ 2 := by norm_num
-  haveI : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.hermRepUnram⟩
+  have : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.hermRepUnram⟩
   have hGLm := Formalism.MainNotions.Wire.famGLmin_of_realPlaceSecondLayer (D3 3 𝒜) tie hU hG
   have hRk : Closed (D3 3 𝒜) fun Fm CH => ChosenE Fm 3 CH → NuFullF Fm ∧ J.MuRank Fm :=
     ((hGLm.muRank 3 hC0').and
@@ -1094,7 +1094,7 @@ theorem sizesRec_at {eps : ℝ} (Fm : FamP eps) {x : ℝ} (hx : Fm.x1 < x) (hx4 
   ·
     have hg := (hG j j).1
     have hb : Real.exp (8 * x ^ eps) = (Real.exp (x ^ eps)) ^ 8 := by
-      rw [← Real.exp_nat_mul]; norm_num
+      rw [← Real.exp_natCast_mul]; norm_num
     have hb0 : 0 ≤ Real.exp (x ^ eps) := (Real.exp_pos _).le
     have hkb : Real.exp (x ^ eps) ≤ ((Fm.D x i).R.k : ℝ) * Real.exp (x ^ eps) := by
       have : (1 : ℝ) ≤ (Fm.D x i).R.k := by linarith
@@ -1518,7 +1518,7 @@ theorem GlobalTheory.Top.wire_sel_alt : ∀ (𝒜 : FamClass)
     (hDcPtG : ∀ {eps : ℝ} (Fm : FamP eps) (hc : 𝒜 Fm) (x : ℝ) (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x) (i : Fm.Ix x),
       Formalism.L2.DIV.DcPtG (selP Fm hc x hx h i).1), _root_.Formalism.L2.Top4.Wire4Alt sel selS selP selDH selC (_root_.Formalism.L2.Top4.kernelChoiceOfSelection selB) (_root_.Formalism.L2.Top4.indefiniteRealisationChoiceOfSelection selB) hPA (fun Fm hc x hx h i C CH => _root_.Formalism.L2.Top4Wire2.DefRowsFAlt (_root_.Formalism.L2.Top4.indefiniteRealisationChoiceOfSelection selB) Fm hc x hx h i C CH) (_root_.Formalism.L2.Top4.SingleMapCondition selB) 2 := by
   intro 𝒜 sel selS selP selDH selC selB hTw hPA hDivG hDcPtG
-  haveI : ∀ {eps : ℝ} (Fm : FamP eps) (x : ℝ) (i : Fm.Ix x), NumberField.IsTotallyComplex (Fm.D x i).what₂.LL :=
+  have : ∀ {eps : ℝ} (Fm : FamP eps) (x : ℝ) (i : Fm.Ix x), NumberField.IsTotallyComplex (Fm.D x i).what₂.LL :=
     fun Fm x i => (Fm.D x i).tcLL
   have hDivR : ∀ {eps : ℝ} (Fm : FamP eps) (hc : 𝒜 Fm) (x : ℝ) (hx : Fm.x1 < x) (h : (sel Fm hc).1 ≤ x) (i : Fm.Ix x),
       Formalism.L2.DIV.DivRows3 (Fm.D x i) (selP Fm hc x hx h i).1.A3 (selP Fm hc x hx h i).1.P0 (selP Fm hc x hx h i).1.ψ0 (selP Fm hc x hx h i).1.Ps

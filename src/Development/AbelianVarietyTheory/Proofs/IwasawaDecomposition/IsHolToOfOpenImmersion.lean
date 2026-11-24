@@ -98,10 +98,10 @@ theorem continuousOn_of_isHolTo {B : Set W} {y : W → CxPts p σ} (h : IsHolTo 
   rw [continuousOn_iff_continuous_domRestrict, CxPts.continuous_iff]
   intro U
   refine ⟨?_, fun f => ?_⟩
-  · convert (h U 0).1.preimage (continuous_subtype_val (p := (· ∈ B))) using 1
+  · convert (h U 0).1.preimage (continuous_subtypeVal (p := (· ∈ B))) using 1
     ext b
     exact ⟨fun hb => ⟨b.2, hb⟩, fun hb => hb.2⟩
-  · exact (h U f).2.continuousOn.comp continuous_subtype_val.continuousOn fun b hb => ⟨b.2, hb⟩
+  · exact (h U f).2.continuousOn.comp continuous_subtypeVal.continuousOn fun b hb => ⟨b.2, hb⟩
 
 theorem differentiableAt_chart {B : Set W} (hB : IsOpen B) {y : W → CxPts p σ} (h : IsHolTo B fun b => (y b).1)
     (ch : AlgChart p σ D) {b : W} (hb : b ∈ B) (hy : y b ∈ ch.e.source) :

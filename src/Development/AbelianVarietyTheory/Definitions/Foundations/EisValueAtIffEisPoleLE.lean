@@ -283,7 +283,7 @@ theorem flat_mem (s : ℂ) : flat V a φ s₁ s ∈ degPS V a μ s :=
   hI.flatH_mem continuous_absE (isCompact_Khat V a) hφ s
 
 theorem continuous_flat : Continuous fun x : ℂ × GA D (dblSp V) => flat V a φ s₁ x.1 x.2 := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   have h1 : Continuous (hgt V a) := hI.continuous_hgtH continuous_absE (isCompact_Khat V a)
   have h2 : Continuous fun g => Real.log (hgt V a g) :=
     (NNReal.continuous_coe.comp h1).log fun g => (NNReal.coe_pos.2 (hgtH_pos g)).ne'
@@ -363,7 +363,7 @@ theorem continuous_detA : Continuous (detA V) := by
 open scoped Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes in
 theorem continuous_dblIntegrand (hμ : IsHeckeChar D μ) (hE : Continuous E) (h₁ : Continuous f₁) (h₂ : Continuous f₂) :
     Continuous (dblIntegrand V μ E f₁ f₂) :=
-  have h : Continuous fun g : GA D V => (μ (detA V g) : ℂ) := continuous_subtype_val.comp (hμ.1.comp continuous_detA)
+  have h : Continuous fun g : GA D V => (μ (detA V g) : ℂ) := continuous_subtypeVal.comp (hμ.1.comp continuous_detA)
   (((hE.comp (continuous_io V)).mul (Complex.continuous_conj.comp (h₁.comp continuous_fst))).mul
     (h₂.comp continuous_snd)).mul ((h.comp continuous_snd).inv₀ fun _ => Circle.coe_ne_zero _)
 

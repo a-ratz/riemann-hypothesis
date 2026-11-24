@@ -173,7 +173,7 @@ theorem exists_rightInvariant_measure_unitaryGroup
     [BorelSpace (Matrix.unitaryGroup (Fin n) ℂ)] :
     ∃ κ : Measure (Matrix.unitaryGroup (Fin n) ℂ),
       IsFiniteMeasure κ ∧ κ.IsMulRightInvariant ∧ κ.IsOpenPosMeasure := by
-  haveI : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) :=
+  have : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) :=
     GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
   let μ : Measure (Matrix.unitaryGroup (Fin n) ℂ) := Measure.haarMeasure ⊤
   refine ⟨μ.inv, inferInstance, inferInstance, inferInstance⟩
@@ -841,16 +841,16 @@ theorem exp_mem_unitary {n : ℕ} {X : Mat n} (hX : Xᴴ = -X) (t : ℝ) :
 
 theorem integral_Rd_skew : ∀ (n : ℕ) [MeasurableSpace (Matrix.unitaryGroup (Fin n) ℂ)] [BorelSpace (Matrix.unitaryGroup (Fin n) ℂ)] (κ : Measure (Matrix.unitaryGroup (Fin n) ℂ)) [IsFiniteMeasure κ] [κ.IsMulRightInvariant] (u : Mat n → ℂ), ContDiffOn ℝ ∞ u (GLs n) → ∀ X : Mat n, Xᴴ = -X → ∫ k : Matrix.unitaryGroup (Fin n) ℂ, Rd X u k.1 ∂κ = 0 := by
   intro n _ _ κ _ _ u hu X hX
-  haveI : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
-  haveI : SecondCountableTopology (Mat n) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix.unitaryGroup (Fin n) ℂ) :=
+  have : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
+  have : SecondCountableTopology (Mat n) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
+  have : SecondCountableTopology (Matrix.unitaryGroup (Fin n) ℂ) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   have hmem (k : Matrix.unitaryGroup (Fin n) ℂ) : k.1 ∈ GLs n :=
     (Matrix.UnitaryGroup.det_isUnit k).ne_zero
   let kt : ℝ → Matrix.unitaryGroup (Fin n) ℂ := fun t => ⟨NormedSpace.exp (t • X), exp_mem_unitary hX t⟩
   have hval : ∀ (y : Matrix.unitaryGroup (Fin n) ℂ) (t : ℝ),
       y.1 * (NormedSpace.exp (t • X) : Mat n) = (y * kt t).1 := fun _ _ => rfl
-  have hcv : Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => k.1 := continuous_subtype_val
+  have hcv : Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => k.1 := continuous_subtypeVal
   have hRd := GlobalTheory.CompanionTheory.RCalc.Rd_contDiffOn X hu
   have cU : Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => u k.1 :=
     hu.continuousOn.comp_continuous hcv hmem
@@ -1056,7 +1056,7 @@ variable [MeasurableSpace (Matrix.unitaryGroup (Fin n) ℂ)] [BorelSpace (Matrix
 omit [MeasurableSpace (Matrix.unitaryGroup (Fin n) ℂ)] [BorelSpace (Matrix.unitaryGroup (Fin n) ℂ)] in
 theorem cont_on_unit {f : Mat n → ℂ} (hf : ContinuousOn f (GLs n)) :
     Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => f k.1 :=
-  hf.comp_continuous continuous_subtype_val fun k => unit_mem k
+  hf.comp_continuous continuous_subtypeVal fun k => unit_mem k
 
 theorem integrable_of_cont {f : Matrix.unitaryGroup (Fin n) ℂ → ℂ} (hf : Continuous f) : Integrable f κ :=
   hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace f)
@@ -1153,7 +1153,7 @@ theorem compactSpace_unitary (n : ℕ) : CompactSpace (Matrix.unitaryGroup (Fin 
 
 theorem continuous_restrict {n : ℕ} (x : SmF n) :
     Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => x.1 k.1 :=
-  x.2.1.continuousOn.comp_continuous continuous_subtype_val unit_mem
+  x.2.1.continuousOn.comp_continuous continuous_subtypeVal unit_mem
 
 section
 
@@ -1163,13 +1163,13 @@ variable {n : ℕ} [MeasurableSpace (Matrix.unitaryGroup (Fin n) ℂ)]
 
 theorem integrable_integrand (x y : SmF n) :
     Integrable (fun k : Matrix.unitaryGroup (Fin n) ℂ => conj (x.1 k.1) * y.1 k.1) κ := by
-  haveI := compactSpace_unitary n
+  have := compactSpace_unitary n
   exact ((Complex.continuous_conj.comp (continuous_restrict x)).mul
     (continuous_restrict y)).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
 theorem integrable_normSq (x : SmF n) :
     Integrable (fun k : Matrix.unitaryGroup (Fin n) ℂ => ‖x.1 k.1‖ ^ 2) κ := by
-  haveI := compactSpace_unitary n
+  have := compactSpace_unitary n
   exact ((continuous_restrict x).norm.pow 2).integrable_of_hasCompactSupport
     (HasCompactSupport.of_compactSpace _)
 
@@ -1747,7 +1747,7 @@ theorem model_of_ops (lam : Fin n → ℤ) (lev : Fin n → ℕ) (hlev : IsLev l
         intro w hw
         obtain ⟨T, hT, rfl⟩ := (hS w).1 hw
         exact hstab T hT x hx₁
-      haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hle
+      have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hle
       have h0 := sep S inferInstance (fun a b w hw => ?_) (fun w hw => ?_) x ((hS x).2 ⟨1, A.one_mem, rfl⟩)
       · exact hx0 h0
       · obtain ⟨T, hT, rfl⟩ := (hS w).1 hw
@@ -1799,8 +1799,8 @@ theorem evaluation_raising_lowering (lev : Fin n → ℕ) (f h : SmF n) (hf : f 
 theorem modelEx_main : ModelEx := by
   intro n lam hlam lev hlev
   classical
-  letI : MeasurableSpace (Matrix.unitaryGroup (Fin n) ℂ) := borel _
-  haveI : BorelSpace (Matrix.unitaryGroup (Fin n) ℂ) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix.unitaryGroup (Fin n) ℂ) := borel _
+  have : BorelSpace (Matrix.unitaryGroup (Fin n) ℂ) := ⟨rfl⟩
   obtain ⟨κ, hκ1, hκ2, hκ3⟩ := GlobalTheory.T.exists_haar_unitary_group n
   have hmem := GlobalTheory.T.inducedFunction_smooth n lam hlam lev hlev
   let F : SmF n := ⟨fRaw lam lev, hmem⟩
@@ -1852,8 +1852,8 @@ theorem modelEx_main : ModelEx := by
       add_left := fun x y z => hadd x.1 y.1 z.1
       smul_left := fun x y c => hsm c x.1 y.1
       definite := fun x hx => Subtype.ext (hzero x.1 x.2 (hdef x.1 hx)) }
-  letI : NormedAddCommGroup (cyc F) := @InnerProductSpace.Core.toNormedAddCommGroup ℂ _ _ _ _ core
-  letI : InnerProductSpace ℂ (cyc F) := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup (cyc F) := @InnerProductSpace.Core.toNormedAddCommGroup ℂ _ _ _ _ core
+  let : InnerProductSpace ℂ (cyc F) := InnerProductSpace.ofCore core.toCore
   obtain ⟨g1, g2, cm⟩ := GlobalTheory.CompanionTheory.GLK.Pair.gl_pair n (SmF n) DR (GlobalTheory.T.right_derivative_real_lie_hom n).1 (GlobalTheory.T.right_derivative_real_lie_hom n).2.1 (GlobalTheory.T.right_derivative_real_lie_hom n).2.2
   let F1 : Fin n → Fin n → Module.End ℂ (cyc F) := fun a b => (e1 DR a b).restrict (st1 a b)
   let F2 : Fin n → Fin n → Module.End ℂ (cyc F) := fun a b => (e2 DR a b).restrict (st2 a b)
@@ -1913,26 +1913,26 @@ theorem modelEx_main : ModelEx := by
     have := (evaluation_raising_lowering lev F v.1 hFe hF1 (hWE _ v.2) a b hl).1
     have h0 := (hder a b hl).1
     show (e1 DR a b v.1).1 1 = 0
-    rw [this, h0, if_neg hne, zero_mul]
+    rw [this, h0, ite_eq_right hne, zero_mul]
   · intro a v
     have := (evaluation_raising_lowering lev F v.1 hFe hF1 (hWE _ v.2) a a le_rfl).1
     have h0 := (hder a a le_rfl).1
     show (e1 DR a a v.1).1 1 = _ * v.1.1 1
-    rw [this, h0, if_pos rfl]
+    rw [this, h0, ite_eq_left rfl]
   · intro a b v hl hne
     have := (evaluation_raising_lowering lev F v.1 hFe hF1 (hWE _ v.2) a b hl).2
     have h0 := (hder a b hl).2
     show (-(e2 DR b a v.1)).1 1 = 0
     simp only [e2, neg_neg, LinearMap.neg_apply]
-    rw [this, h0, if_neg hne, zero_mul]
+    rw [this, h0, ite_eq_right hne, zero_mul]
   · intro a v
     have := (evaluation_raising_lowering lev F v.1 hFe hF1 (hWE _ v.2) a a le_rfl).2
     have h0 := (hder a a le_rfl).2
     show (-(e2 DR a a v.1)).1 1 = _ * v.1.1 1
     simp only [e2, neg_neg, LinearMap.neg_apply]
-    rw [this, h0, if_pos rfl]
+    rw [this, h0, ite_eq_left rfl]
   · intro S fdS stS ev0 w hw
-    haveI := fdS
+    have := fdS
     have hS := _root_.GlobalTheory.CompanionTheory.ModelS.Sep.main n (S.map (cyc F).subtype) inferInstance (by
         intro a b u hu
         obtain ⟨v, hv, rfl⟩ := Submodule.mem_map.1 hu

@@ -122,7 +122,7 @@ theorem range_spec_map_eq {O S : Type} [CommRing O] [IsLocalRing O] [CommRing S]
 
 theorem range_thickQ (O : Type) [CommRing O] [IsLocalRing O] (n : ℕ) :
     Set.range (Spec.map (CommRingCat.ofHom (thickQ O n))) = {IsLocalRing.closedPoint O} := by
-  haveI : Nontrivial (O ⧸ IsLocalRing.maximalIdeal O ^ (n + 1)) :=
+  have : Nontrivial (O ⧸ IsLocalRing.maximalIdeal O ^ (n + 1)) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal O).ne_top
       (Ideal.pow_le_self (Nat.succ_ne_zero n)))
   refine range_spec_map_eq _ fun Q hQ => ?_

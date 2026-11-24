@@ -152,7 +152,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
       ∃ l : V →ₗ[ℂ] ℂ, l ≠ 0 ∧ ∀ g v, l (ρ g v) = (μ g : ℂ) * l v := by
   have hT : (⊥ : Subrepresentation ρ) ≠ ⊤ := fun h =>
     hx ((Submodule.mem_bot ℂ).1 (show x ∈ (⊥ : Subrepresentation ρ).toSubmodule by rw [h]; trivial))
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, -⟩ := (eq_top_or_exists_le_coatom ⊥).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=
@@ -315,7 +315,7 @@ theorem UpperTheory.V.Z.J.D.dense_threshold_order_one :
   have hl : HasFiniteLength (jacB π) :=
     (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).2
       ((H.loc.bz k).2.1 _ _ _ (points (Fin n)) _ π hπ (hasFiniteLength_of_isIrreducible hirr))
-  haveI := GlobalTheory.TorusEigenform.secondCountableTopology_units k
+  have := GlobalTheory.TorusEigenform.secondCountableTopology_units k
   obtain ⟨ν, hνs, l, hl0, hle⟩ := OrdinaryOrderOne.exists_form (isSmooth_jacB hπ) hl fun h => hx0 (hinj x hx h)
   obtain ⟨ψ, hψ, rfl⟩ : ∃ ψ : Fin n → kˣ →* ℂˣ, (∀ i, IsSmoothChar (ψ i)) ∧ torusChar ψ = ν := by
     refine ⟨fun i => ν.comp (MonoidHom.mulSingle (fun _ => kˣ) i),

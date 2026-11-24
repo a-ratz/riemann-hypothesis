@@ -65,9 +65,9 @@ open NumberField KStar.Tree
 
 private theorem UpperTheory.Mu.exists_aut_pow (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (M : ℕ) (hM : M ≠ 0)
     (a : ℕ) (ha : a.Coprime M) : ∃ σ : Ω ≃ₐ[ℚ] Ω, ∀ t : Ω, t ^ M = 1 → σ t = t ^ a := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero M := ⟨hM⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero M := ⟨hM⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have hξ' : IsPrimitiveRoot (ξ ^ a) M := hξ.pow_of_coprime a ha
   have hpos : 0 < M := Nat.pos_of_ne_zero hM
   have hc : IsConjRoot ℚ (ξ ^ a) ξ := by
@@ -85,7 +85,7 @@ private theorem UpperTheory.Mu.dvd_sub_iff (l : ℕ) [Fact l.Prime] (r : ℕ) (x
 theorem UpperTheory.Mu.autApprox :
     ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (N : ℕ), N ≠ 0 → ∀ (ζ : Ω), IsPrimitiveRoot ζ N → ∀ (v : (ZMod N)ˣ) (u : ℤ_[l]ˣ), (l : ℤ_[l]) ^ N.factorization l ∣ (u : ℤ_[l]) - (((v : ZMod N).val : ℕ) : ℤ_[l]) → ∀ k : ℕ, ∃ σ : Ω ≃ₐ[ℚ] Ω, σ ζ = ζ ^ (v : ZMod N).val ∧ (l : ℤ_[l]) ^ k ∣ ((cyc l ℚ Ω σ : ℤ_[l]ˣ) : ℤ_[l]) - u := by
   intro l hl Ω _ _ _ N hN ζ hζ v u huv k
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hp : l.Prime := hl.out
   set s := N.factorization l with hs
   set N' := N / l ^ s with hN'
@@ -97,7 +97,7 @@ theorem UpperTheory.Mu.autApprox :
     rw [h, mul_zero] at hNN
     exact hN hNN.symm
   have hP0 : l ^ (s + k) ≠ 0 := pow_ne_zero _ hp.ne_zero
-  haveI : NeZero (l ^ (s + k)) := ⟨hP0⟩
+  have : NeZero (l ^ (s + k)) := ⟨hP0⟩
   obtain ⟨a, ha1, ha2⟩ := Nat.chineseRemainder hcP (v : ZMod N).val
     (PadicInt.toZModPow (s + k) (u : ℤ_[l])).val
   have hau : ((a : ℕ) : ZMod (l ^ (s + k))) = PadicInt.toZModPow (s + k) (u : ℤ_[l]) := by
@@ -133,9 +133,9 @@ theorem UpperTheory.Mu.autApprox :
     exact haN
   · refine (pow_dvd_pow _ (Nat.le_add_left k s)).trans ?_
     rw [UpperTheory.Mu.dvd_sub_iff, ← hau]
-    obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ (s + k))
-    haveI (i : ℕ) : HasEnoughRootsOfUnity Ω (l ^ i) := by
-      haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ hp.ne_zero⟩
+    obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ (s + k))
+    have (i : ℕ) : HasEnoughRootsOfUnity Ω (l ^ i) := by
+      have : NeZero (l ^ i) := ⟨pow_ne_zero _ hp.ne_zero⟩
       infer_instance
     have h1 := cyclotomicCharacter.spec l (n := s + k) (σ : Ω ≃+* Ω) η hη.pow_eq_one
     have h2 : σ η = η ^ a := hσ η (by rw [mul_comm, pow_mul, hη.pow_eq_one, one_pow])
@@ -158,24 +158,24 @@ open NumberField Formalism.HC KStar.Tree
 theorem UpperTheory.Mu.hostApprox :
     ∀ (φ : Frame) (H : HostRaw φ) (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra H.E Ω] [IsAlgClosure H.E Ω] (v : (ZMod H.condN)ˣ), H.art v = 1 → ∀ u : ℤ_[l]ˣ, (l : ℤ_[l]) ^ H.condN.factorization l ∣ (u : ℤ_[l]) - (((v : ZMod H.condN).val : ℕ) : ℤ_[l]) → ∀ k : ℕ, ∃ g : Ω ≃ₐ[H.E] Ω, (l : ℤ_[l]) ^ k ∣ ((cyc l H.E Ω g : ℤ_[l]ˣ) : ℤ_[l]) - u := by
   intro φ H l _ Ω _ _ _ v hv u hu k
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap H.E Ω).injective
-  haveI : IsScalarTower ℚ H.E Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed H.E
-  haveI : Algebra.IsAlgebraic H.E Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ H.E Ω
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap H.E Ω).injective
+  have : IsScalarTower ℚ H.E Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed H.E
+  have : Algebra.IsAlgebraic H.E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ H.E Ω
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
   have hN : H.condN ≠ 0 := by
     obtain ⟨hq, hd, -⟩ := H.hyp
     exact Nat.mul_ne_zero (Nat.mul_ne_zero H.QS_pos.ne' hq.ne_zero) hd.ne_zero
-  haveI : NeZero (H.QS * H.q * H.d) := ⟨hN⟩
-  haveI : NeZero (((H.QS * H.q * H.d : ℕ)) : ℚ) := ⟨by exact_mod_cast hN⟩
-  haveI : IsGalois ℚ (CyclotomicField (H.QS * H.q * H.d) ℚ) :=
+  have : NeZero (H.QS * H.q * H.d) := ⟨hN⟩
+  have : NeZero (((H.QS * H.q * H.d : ℕ)) : ℚ) := ⟨by exact_mod_cast hN⟩
+  have : IsGalois ℚ (CyclotomicField (H.QS * H.q * H.d) ℚ) :=
     @IsCyclotomicExtension.isGalois {H.QS * H.q * H.d} ℚ (CyclotomicField (H.QS * H.q * H.d) ℚ) _ _ _
       (CyclotomicField.isCyclotomicExtension (H.QS * H.q * H.d) ℚ)
-  letI : Algebra H.E (CyclotomicField (H.QS * H.q * H.d) ℚ) := H.cycEmb.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ H.E (CyclotomicField (H.QS * H.q * H.d) ℚ) :=
+  let : Algebra H.E (CyclotomicField (H.QS * H.q * H.d) ℚ) := H.cycEmb.toRingHom.toAlgebra
+  have : IsScalarTower ℚ H.E (CyclotomicField (H.QS * H.q * H.d) ℚ) :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : Algebra.IsAlgebraic H.E (CyclotomicField (H.QS * H.q * H.d) ℚ) :=
+  have : Algebra.IsAlgebraic H.E (CyclotomicField (H.QS * H.q * H.d) ℚ) :=
     Algebra.IsAlgebraic.tower_top (K := ℚ) H.E
   let ι : CyclotomicField (H.QS * H.q * H.d) ℚ →ₐ[H.E] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -186,8 +186,8 @@ theorem UpperTheory.Mu.hostApprox :
   have hι : ∀ x : H.E, ιQ (H.cycEmb x) = algebraMap H.E Ω x := fun x => ι.commutes x
   have hζ : IsPrimitiveRoot (ιQ H.cycZeta) H.condN := H.cycZeta_prim.map_of_injective ιQ.injective
   obtain ⟨σ, hσζ, hσu⟩ := UpperTheory.Mu.autApprox l Ω H.condN hN (ιQ H.cycZeta) hζ v u hu k
-  letI : Algebra (CyclotomicField (H.QS * H.q * H.d) ℚ) Ω := ιQ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ (CyclotomicField (H.QS * H.q * H.d) ℚ) Ω :=
+  let : Algebra (CyclotomicField (H.QS * H.q * H.d) ℚ) Ω := ιQ.toRingHom.toAlgebra
+  have : IsScalarTower ℚ (CyclotomicField (H.QS * H.q * H.d) ℚ) Ω :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   let τ := σ.restrictNormal (CyclotomicField (H.QS * H.q * H.d) ℚ)
   have hτ : ∀ y, ιQ (τ y) = σ (ιQ y) := fun y => AlgEquiv.restrictNormal_commutes σ _ y

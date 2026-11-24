@@ -93,7 +93,7 @@ lemma analyticAt_dslopeIter {p : ℂ} {g : ℂ → ℂ} (hg : AnalyticAt ℂ g p
   | succ k ih =>
     rw [dslopeIter_succ']
     obtain ⟨q, hq⟩ := ih
-    exact hq.has_fpower_series_dslope_fslope.analyticAt
+    exact hq.dslope_fslope.analyticAt
 
 lemma swap_dslope_sub_mul {p : ℂ} {g : ℂ → ℂ} (hg : DifferentiableAt ℂ g p) :
     Function.swap dslope p (fun z ↦ (z - p) * g z) = g := by
@@ -361,7 +361,7 @@ theorem residue_ne_zero_of_meromorphicOrderAt_eq_neg_one {f : ℂ → ℂ} {p : 
   obtain ⟨g, hg, hgp, hfg⟩ := (meromorphicOrderAt_eq_int_iff hf).1 h
   simp only [smul_eq_mul] at hfg
   obtain ⟨q, hq⟩ := hg
-  have hu : AnalyticAt ℂ (dslope g p) p := hq.has_fpower_series_dslope_fslope.analyticAt
+  have hu : AnalyticAt ℂ (dslope g p) p := hq.dslope_fslope.analyticAt
   rw [residue_eq_of_eventuallyEq (c := g p) hu ?_]
   · exact hgp
   filter_upwards [hfg, self_mem_nhdsWithin] with z hz hzp

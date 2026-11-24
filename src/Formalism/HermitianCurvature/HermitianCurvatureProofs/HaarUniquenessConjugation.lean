@@ -232,7 +232,7 @@ theorem vol_crude (hE : UJEmb) (hV : VolGrowth) (hC : UHConj) (hP : IsUnit P.det
       have : Measurable fun g : Mt k r => g i j := (measurable_pi_apply j).comp (measurable_pi_apply i)
       exact Complex.continuous_normSq.measurable.comp this
     exact this measurableSet_Iic
-  rw [Measure.smul_apply, Measure.map_apply hm hms, ENNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, Measure.map_apply hm hms, ENNReal.smul_def, smul_eq_mul]
   have hsub : phi ε P ⁻¹' {g : Mt k r | gN (Matrix.of g) ≤ R} ⊆ {u : UJ ε | hsG u ≤ (M * R) ^ 2} := by
     intro u hu
     have hu' : gN (Matrix.of (phi ε P u)) ≤ R := hu

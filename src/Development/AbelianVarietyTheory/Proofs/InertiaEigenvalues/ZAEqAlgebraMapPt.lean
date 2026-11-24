@@ -441,7 +441,7 @@ namespace GlobalTheory.BKGal.JumpDR
 
 theorem zA_eq_algebraMap_pt (l : ℕ) [Fact l.Prime] (z : ℤ_[l]) :
     Per.zA l z = algebraMap ℤ_[l] (Ainf l) z := by
-  haveI : IsAdicComplete (Ideal.span {(l : WittVector l (PreTilt (OC l) l))}) (WittVector l (PreTilt (OC l) l)) :=
+  have : IsAdicComplete (Ideal.span {(l : WittVector l (PreTilt (OC l) l))}) (WittVector l (PreTilt (OC l) l)) :=
     WittVector.isAdicCompleteIdealSpanP
   have h := padicInt_ringHom_ext_of_isHausdorff l (WittVector l (PreTilt (OC l) l)) (Per.zA l) (algebraMap ℤ_[l] (Ainf l))
   exact RingHom.congr_fun h z

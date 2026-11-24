@@ -77,7 +77,7 @@ theorem exists_finset_algebraMap_mem (s : Finset ℚ) :
   have hden : (q.den : ℤ) ∉ v.asIdeal := by
     intro h
     apply hv
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact Ideal.mem_of_dvd _ (Finset.dvd_prod_of_mem _ hq) h
   rw [HeightOneSpectrum.mem_adicCompletionIntegers]
   have e : Valued.v (algebraMap ℚ (v.adicCompletion ℚ) q) = v.valuation ℚ q :=

@@ -176,7 +176,7 @@ private theorem sum_zero_multiplicity_le_two_mul_of_separated {M : ℕ} [NeZero 
     refine ⟨fun χ k => if h : ∃ ρ ∈ V χ, ⌊ρ.im⌋ = k then h.choose else 0, ?_⟩
     intro χ k hk
     have h : ∃ ρ ∈ V χ, ⌊ρ.im⌋ = k := Finset.mem_image.mp hk
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     exact h.choose_spec
   have hper : ∀ χ, ∑ ρ ∈ V χ, (m χ ρ : ℝ) ≤ (((V χ).image (fun ρ => ⌊ρ.im⌋)).card : ℝ) * K := by
     intro χ
@@ -406,7 +406,7 @@ theorem zeroSum_core (a B C : ℝ) (ha : 1 ≤ a) (hB : 0 ≤ B) (hC : 1 ≤ C)
     have hirc : InRegion cZ M ((ρ.re : ℝ) : ℂ) := by rw [hρeq]; exact hir
     have hex : ∃ p : DirichletCharacter ℂ M × ℝ, IsExcPair p.1 p.2 ∧ InRegion cZ M (p.2 : ℂ) :=
       ⟨(χ, ρ.re), hExc, hirc⟩
-    have heOf : eOf M = some hex.choose := by unfold eOf; rw [dif_pos hex]
+    have heOf : eOf M = some hex.choose := by unfold eOf; rw [dite_eq_left hex]
     obtain ⟨⟨χ₁, β₁⟩, hq⟩ : ∃ q, hex.choose = q := ⟨_, rfl⟩
     have hspec := hex.choose_spec
     rw [hq] at hspec heOf
@@ -416,7 +416,7 @@ theorem zeroSum_core (a B C : ℝ) (ha : 1 ≤ a) (hB : 0 ≤ B) (hC : 1 ≤ C)
     have hexc1 : excW (eOf M) χ ρ = 1 := by
       rw [heOf]
       simp only [excW]
-      rw [if_pos ⟨hχeq, hβeq⟩]
+      rw [ite_eq_left ⟨hχeq, hβeq⟩]
     rw [hexc1, hm1]
     simp
   have hout : ∀ χ, ∀ ρ ∈ Z χ, ¬ InRegion cZ M ρ →
@@ -542,7 +542,7 @@ theorem zeroSum_core (a B C : ℝ) (ha : 1 ≤ a) (hB : 0 ≤ B) (hC : 1 ≤ C)
     have hexpj : Real.exp (a * ((j : ℝ) + 1)) * Real.exp (-((a + Real.log 2) * (((j + 1 : ℕ) : ℝ) - 1))) =
         Real.exp a * (1 / 2 : ℝ) ^ j := by
       have h2 : (1 / 2 : ℝ) ^ j = Real.exp (j * Real.log (1 / 2)) := by
-        rw [Real.exp_nat_mul, Real.exp_log (by norm_num)]
+        rw [Real.exp_natCast_mul, Real.exp_log (by norm_num)]
       rw [h2, ← Real.exp_add, ← Real.exp_add]
       congr 1
       rw [one_div, Real.log_inv]

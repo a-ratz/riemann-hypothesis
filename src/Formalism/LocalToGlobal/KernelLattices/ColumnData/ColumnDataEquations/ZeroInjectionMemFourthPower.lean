@@ -83,20 +83,20 @@ theorem is_lattice_of_fourth_power (ΛM : AddSubgroup (n → ℂ)) (g : (Fin 4 �
     (h : IsLat (imgLat (g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 ΛM))) : IsLat ΛM := by
   obtain ⟨hd, hs⟩ := h
   refine ⟨?_, ?_⟩
-  · haveI := hd
+  · have := hd
     let φ : ΛM → imgLat (g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)) (pow4 ΛM) :=
       fun x => ⟨g (inj0 n x), ⟨inj0 n x, zero_injection_mem_fourth_power ΛM x.2, rfl⟩⟩
     have hφc : Continuous φ := by
       apply Continuous.subtype_mk
       exact ((g : (Fin 4 × n → ℂ) →ₗ[ℂ] (Fin 4 × n → ℂ)).comp (inj0 n)).continuous_of_finiteDimensional.comp
-        continuous_subtype_val
+        continuous_subtypeVal
     have hφi : Function.Injective φ := by
       intro x y hxy
       have h1 := congrArg Subtype.val hxy
       have h2 := g.injective h1
       apply Subtype.ext
       have h3 := congrArg (slice 0) h2
-      rwa [slice_zero_injection, slice_zero_injection, if_pos rfl, if_pos rfl] at h3
+      rwa [slice_zero_injection, slice_zero_injection, ite_eq_left rfl, ite_eq_left rfl] at h3
     exact DiscreteTopology.of_continuous_injective hφc hφi
   · rw [eq_top_iff]
     intro x _
@@ -115,7 +115,7 @@ theorem is_lattice_of_fourth_power (ΛM : AddSubgroup (n → ℂ)) (g : (Fin 4 �
     apply hmap
     refine ⟨g (inj0 n x), ?_⟩
     show slice 0 (g.symm (g (inj0 n x))) = x
-    rw [g.symm_apply_apply, slice_zero_injection, if_pos rfl]
+    rw [g.symm_apply_apply, slice_zero_injection, ite_eq_left rfl]
 
 def putL (n : Type) (N N' : ℕ) (k : Fin N' × Fin N) : (n → ℂ) →ₗ[ℂ] (n → Fin N' → Fin N → ℂ) where
   toFun x := fun τ i j => if (i, j) = k then x τ else 0
@@ -145,7 +145,7 @@ theorem sum_putL (N N' : ℕ) (z : n → Fin N' → Fin N → ℂ) :
 theorem isLat_powLat (ΛM : AddSubgroup (n → ℂ)) (h : IsLat ΛM) (N N' : ℕ) : IsLat (Ker.powLat ΛM N N') := by
   obtain ⟨hd, hs⟩ := h
   refine ⟨?_, ?_⟩
-  · haveI := hd
+  · have := hd
     let ψ : Ker.powLat ΛM N N' → (Fin N' × Fin N → ΛM) :=
       fun z k => ⟨fun τ => z.1 τ k.1 k.2, z.2 k.1 k.2⟩
     have hψc : Continuous ψ := by
@@ -155,7 +155,7 @@ theorem isLat_powLat (ΛM : AddSubgroup (n → ℂ)) (h : IsLat ΛM) (N N' : ℕ
       apply continuous_pi
       intro τ
       have hc : Continuous (fun z : Ker.powLat ΛM N N' => (z : n → Fin N' → Fin N → ℂ)) :=
-        continuous_subtype_val
+        continuous_subtypeVal
       have hc1 : Continuous (fun z : Ker.powLat ΛM N N' => (z : n → Fin N' → Fin N → ℂ) τ) :=
         (continuous_apply τ).comp hc
       have hc2 : Continuous (fun z : Ker.powLat ΛM N N' => (z : n → Fin N' → Fin N → ℂ) τ k.1) :=

@@ -114,9 +114,9 @@ theorem nnnorm_entry_le {ι : Type} [Fintype ι] [DecidableEq ι] (A : Matrix ι
     change ∑ d, A i d * (EuclideanSpace.single j (1 : ℂ) : EuclideanSpace ℂ ι) d = A i j
     simp
   have h2 := ContinuousLinearMap.le_opNNNorm (Matrix.toEuclideanCLM (n := ι) (𝕜 := ℂ) A) (EuclideanSpace.single j 1)
-  rw [PiLp.nnnorm_single, nnnorm_one, mul_one] at h2
+  rw [PiLp.nnNorm_single, nnNorm_one, mul_one] at h2
   rw [← h1]
-  exact (PiLp.nnnorm_apply_le _ i).trans h2
+  exact (PiLp.nnNorm_apply_le _ i).trans h2
 
 theorem nnnorm_det_le {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (c : ℝ≥0) (h : ∀ i j, ‖M i j‖₊ ≤ c) :
     ‖M.det‖₊ ≤ (n.factorial : ℝ≥0) * c ^ n := by
@@ -300,7 +300,7 @@ theorem absFin_minor_mul_le (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     calc _ ≤ ∏ i : Fin n, absFin F v (((compFin F E v).mapMatrix ((X.1 * κ).submatrix f e)) (σ i) i) :=
           Finset.le_prod_of_submultiplicative _ (absFin_one F v).le (absFin_mul_le F v) _ _
       _ ≤ ∏ _i : Fin n, htFin F v (Formalism.UG.bc (compFin F E v) X) :=
-          Finset.prod_le_prod' fun i _ => hent _ _
+          Finset.prod_le_prod fun i _ => hent _ _
       _ = _ := by simp
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h
   · rw [h, one_smul]; exact hprod
@@ -489,13 +489,13 @@ theorem absEw_mul_locInf_le (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     intro τ y
     rcases infEmb_eq_or_conj hσ e τ with h | h
     · rw [h]
-    · rw [h, RingHom.comp_apply, RCLike.nnnorm_conj]
+    · rw [h, RingHom.comp_apply, RCLike.nnNorm_conj]
   have hterm : ∀ p : EmbOver E w × J, ‖infEmb e δ.1‖₊ * ‖p.1.1 (u p.2)‖₊ ≤ c := by
     rintro ⟨τ, f⟩
     have h1 : infEmb τ (z f) = τ.1 (u f) * infEmb τ δ.1 := by
       rw [hz f, map_mul, infEmb_tmul, map_one, one_mul]
     calc ‖infEmb e δ.1‖₊ * ‖τ.1 (u f)‖₊ = ‖infEmb τ δ.1‖₊ * ‖τ.1 (u f)‖₊ := by rw [hnorm τ]
-      _ = ‖infEmb τ (z f)‖₊ := by rw [h1, nnnorm_mul, mul_comm]
+      _ = ‖infEmb τ (z f)‖₊ := by rw [h1, nnNorm_mul, mul_comm]
       _ = ‖infEmb e (z f)‖₊ := hnorm τ _
       _ ≤ c := hc f
   have hsup : ‖infEmb e δ.1‖₊ * (Finset.univ.sup fun p : EmbOver E w × J => ‖p.1.1 (u p.2)‖₊) ≤ c := by
@@ -543,7 +543,7 @@ theorem trace_norm_local_sizes : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       rw [hcon w] at h1
       exact h1.symm
     exact InfinitePlace.not_isReal_iff_isComplex.2 (hEc.isComplex (InfinitePlace.mk τ0)) ⟨τ0, hreal, rfl⟩
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   have hfix : ∀ z : E, σ z = z → ∃ y : F, algebraMap F E y = z := by
     intro z hz
     have hSle : Submodule.span F {(1 : E)} ≤ LinearMap.ker (σ.toLinearMap - LinearMap.id) := by
@@ -695,7 +695,7 @@ theorem one_le_supInf (w : InfinitePlace F) {u : J → E} {f₀ : J} (hu : u f�
     1 ≤ Finset.univ.sup fun p : EmbOver E w × J => ‖p.1.1 (u p.2)‖₊ := by
   obtain ⟨τ⟩ := nonempty_embOver (E := E) F w
   have := le_supInf w τ u f₀
-  rwa [hu, map_one, nnnorm_one] at this
+  rwa [hu, map_one, nnNorm_one] at this
 
 theorem one_le_locInf (w : InfinitePlace F) {u : J → E} {f₀ : J} (hu : u f₀ = 1) : 1 ≤ locInf w u :=
   one_le_pow₀ (one_le_supInf w hu)
@@ -721,7 +721,7 @@ theorem finite_mulSupport_locFin (σ : E →ₐ[F] E) {u : J → E} {f₀ : J} (
   exact le_antisymm (by simpa [locFin] using mul_le_mul' (h1 (embBar F E v)) (h1 ((embBar F E v).comp σ))) (one_le_locFin v hu)
 
 theorem one_le_vecHt {u : J → E} {f₀ : J} (hu : u f₀ = 1) : 1 ≤ vecHt σ u :=
-  one_le_mul_of_one_le_of_one_le (Finset.one_le_prod' fun w _ => one_le_locInf w hu)
+  one_le_mul_of_one_le_of_one_le (Finset.one_le_prod fun w _ => one_le_locInf w hu)
     (one_le_finprod' fun v => one_le_locFin v hu)
 
 theorem absE_mul_vecHt_le (hcm : IsCMExt F E σ) (e : ∀ w : InfinitePlace F, EmbOver E w) {u : J → E} {f₀ : J} (hu : u f₀ = 1)
@@ -732,7 +732,7 @@ theorem absE_mul_vecHt_le (hcm : IsCMExt F E σ) (e : ∀ w : InfinitePlace F, E
   have hs := finite_mulSupport_locFin σ hu
   have hs2 := GlobalTheory.Doubling.finite_mulSupport_absEv δ
   rw [GlobalTheory.Doubling.absE_apply, vecHt, mul_mul_mul_comm, ← Finset.prod_mul_distrib, ← finprod_mul_distrib hs2 hs]
-  refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_) (finprod_le_finprod' (hs2.union hs |>.subset (Function.mulSupport_mul _ _))
+  refine mul_le_mul' (Finset.prod_le_prod fun w _ => ?_) (finprod_le_finprod (hs2.union hs |>.subset (Function.mulSupport_mul _ _))
     (hB.subset (Function.mulSupport_pow _ _)) fun v => ?_)
   · refine _root_.GlobalTheory.CompanionTheory.GodementH.absEw_mul_locInf_le F E σ hcm J w (e w) u _ (fun f => compInf F E w (z f)) (Bi w) (fun f => ?_) (fun f => hi w f)
     rw [hz, map_mul]
@@ -792,7 +792,7 @@ theorem denom_one (hcm : IsCMExt F E σ) {u : J → E} {f₀ : J} (hu : u f₀ =
     have hsub : (Function.mulSupport fun v : Pl F => max 1 ‖algebraMap F (Fv F v) y‖₊).Finite := by
       refine hs.subset fun v hv hv' => hv ?_
       exact le_antisymm ((hy v).trans (le_of_eq hv')) (le_max_left _ _)
-    exact finprod_le_finprod' hsub hs hy
+    exact finprod_le_finprod hsub hs hy
   obtain ⟨m₁, p₁, l₁, i₁⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.Den.denominator_le F y₁
   obtain ⟨m₂, p₂, l₂, i₂⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.Den.denominator_le F y₂
   refine ⟨m₁ * m₂, Nat.mul_pos p₁ p₂, ?_, ?_⟩
@@ -817,7 +817,7 @@ theorem denom_all (hcm : IsCMExt F E σ) {u : J → E} {f₀ : J} (hu : u f₀ =
   choose m hm hl hi using denom_one hcm hu
   refine ⟨∏ f, m f, Finset.prod_pos fun f _ => hm f, ?_, fun f => ?_⟩
   · push_cast
-    calc ∏ f, (m f : ℝ≥0) ≤ ∏ _f : J, (∏ᶠ v, locFin σ v u) ^ 2 := Finset.prod_le_prod' fun f _ => hl f
+    calc ∏ f, (m f : ℝ≥0) ≤ ∏ _f : J, (∏ᶠ v, locFin σ v u) ^ 2 := Finset.prod_le_prod fun f _ => hl f
       _ = _ := by rw [Finset.prod_const, Finset.card_univ, ← pow_mul]
   · rw [← Finset.mul_prod_erase Finset.univ m (Finset.mem_univ f)]
     push_cast
@@ -843,7 +843,7 @@ theorem count (hcm : IsCMExt F E σ) (J : Type) [Fintype J] : ∃ (C : ℝ) (c :
   have hsub : {u : J → E | (∃ f₀, u f₀ = 1) ∧ (vecHt σ u : ℝ) ≤ T} ⊆ φ '' (P : Set _) := by
     rintro u ⟨⟨f₀, hu⟩, huT⟩
     obtain ⟨m, hm, hl, hi⟩ := denom_all hcm hu
-    have hHi : 1 ≤ ∏ w : InfinitePlace F, locInf w u := Finset.one_le_prod' fun w _ => one_le_locInf w hu
+    have hHi : 1 ≤ ∏ w : InfinitePlace F, locInf w u := Finset.one_le_prod fun w _ => one_le_locInf w hu
     have hHf : 1 ≤ ∏ᶠ v, locFin σ v u := one_le_finprod' fun v => one_le_locFin v hu
     have hHf' : ((∏ᶠ v, locFin σ v u : ℝ≥0) : ℝ) ≤ T := by
       refine le_trans ?_ huT
@@ -860,7 +860,7 @@ theorem count (hcm : IsCMExt F E σ) (J : Type) [Fintype J] : ∃ (C : ℝ) (c :
       have h1 := le_supInf w e u f
       have h2 := one_le_supInf w (u := u) hu
       have h3 : locInf w u ≤ ∏ w : InfinitePlace F, locInf w u :=
-        Finset.single_le_prod' (f := fun w : InfinitePlace F => locInf w u) (fun w _ => one_le_locInf w hu) (Finset.mem_univ w)
+        Finset.single_le_prod (f := fun w : InfinitePlace F => locInf w u) (fun w _ => one_le_locInf w hu) (Finset.mem_univ w)
       have h4 : ‖e.1 (u f)‖₊ ≤ locInf w u := by
         refine h1.trans ?_
         rw [locInf]

@@ -235,11 +235,11 @@ theorem IsHolMarkingOn.exists_glue {U V : Set (Fin n → ℂ)} (hU : IsOpen U) (
     ∃ R, IsHolMarkingOn Γ Q e (U ∪ V) R := by
   classical
   obtain ⟨R, hR, hRP⟩ := h.exists_twist hU hV hc hne h'
-  have eU : ∀ b ∈ U, (if b ∈ U then P b else R b) = P b := fun b hb => if_pos hb
+  have eU : ∀ b ∈ U, (if b ∈ U then P b else R b) = P b := fun b hb => ite_eq_left hb
   have eV : ∀ b ∈ V, (if b ∈ U then P b else R b) = R b := fun b hb => by
     by_cases hbU : b ∈ U
-    · rw [if_pos hbU, hRP b ⟨hbU, hb⟩]
-    · rw [if_neg hbU]
+    · rw [ite_eq_left hbU, hRP b ⟨hbU, hb⟩]
+    · rw [ite_eq_right hbU]
   refine ⟨fun b => if b ∈ U then P b else R b, fun x => ?_, ?_⟩
   · have d1 : DifferentiableOn ℂ (fun b => (if b ∈ U then P b else R b) x) U :=
       (h.1 x).congr fun b hb => by rw [eU b hb]
@@ -307,7 +307,7 @@ theorem exists_marking_tube {B : Set (Fin n → ℂ)} (hconv : Convex ℝ B)
   let ι := {N : Set (Fin n → ℂ) // IsOpen N ∧ N ⊆ B ∧ ∃ P, IsHolMarkingOn Γ Q e N P}
   let c : ι → Set unitInterval := fun N => (fun s : unitInterval => γ s) ⁻¹' N.1
   obtain ⟨t, ht0, hmono, ⟨m, hm⟩, hcov⟩ := exists_monotone_Icc_subset_open_cover_unitInterval
-    (c := c) (fun N => N.2.1.preimage (hγ.comp continuous_subtype_val)) (fun s _ => by
+    (c := c) (fun N => N.2.1.preimage (hγ.comp continuous_subtypeVal)) (fun s _ => by
       obtain ⟨N, h1, h2, h3, h4⟩ := H _ (hmem s s.2)
       exact mem_iUnion.2 ⟨⟨N, h1, h3, h4⟩, h2⟩)
   have claim : ∀ k, ∃ δ : ℝ, 0 < δ ∧ Metric.thickening δ (γ '' Icc 0 (t k : ℝ)) ⊆ B ∧
@@ -398,7 +398,7 @@ variable {n a : ℕ}
 lemma expCover_mem_punctured (h : a ≤ n) {w : Fin n → ℂ} (hw : w ∈ logCover h) :
     expCover a w ∈ {z | z ∈ ball (0 : Fin n → ℂ) 1 ∧ ∀ i : Fin n, i.val < a → z i ≠ 0} := by
   refine ⟨expCover_mem_ball h hw, fun i hi => ?_⟩
-  simp only [expCover, hi, if_true]
+  simp only [expCover, hi, ite_true]
   exact Complex.exp_ne_zero _
 
 lemma exists_mem_logCover (h : a ≤ n) {z : Fin n → ℂ}
@@ -409,22 +409,22 @@ lemma exists_mem_logCover (h : a ≤ n) {z : Fin n → ℂ}
   refine ⟨logLift a z, ⟨fun i => ?_, fun k hk => ?_⟩, ?_⟩
   · have hi : (Fin.castLE h i).val < a := i.2
     have h0 := hz.2 _ hi
-    simp only [logLift, if_pos hi, Complex.log_re]
+    simp only [logLift, ite_eq_left hi, Complex.log_re]
     exact Real.log_neg (norm_pos_iff.2 h0) (hlt _)
-  · simp only [logLift, if_neg (not_lt.2 hk)]
+  · simp only [logLift, ite_eq_right (not_lt.2 hk)]
     exact hlt k
   · funext k
     by_cases hk : k.val < a
-    · simp only [expCover, logLift, if_pos hk]
+    · simp only [expCover, logLift, ite_eq_left hk]
       exact Complex.exp_log (hz.2 k hk)
-    · simp only [expCover, logLift, if_neg hk]
+    · simp only [expCover, logLift, ite_eq_right hk]
 
 lemma differentiable_expCover : Differentiable ℂ (expCover (n := n) a) := by
   refine differentiable_pi.2 fun k => ?_
   by_cases hk : k.val < a
-  · simp only [expCover, if_pos hk]
+  · simp only [expCover, ite_eq_left hk]
     exact Complex.differentiable_exp.comp (differentiable_apply k)
-  · simp only [expCover, if_neg hk]
+  · simp only [expCover, ite_eq_right hk]
     exact differentiable_apply k
 
 lemma expCover_add_single (h : a ≤ n) (i : Fin a) (w : Fin n → ℂ) :
@@ -522,7 +522,7 @@ open Matrix Metric Filter Topology GroundTheory.Heights₂.Heights.Regular QuotL
 theorem exists_logPeriods_range_eq : ∀ (n a g : ℕ) (_h : a ≤ n) (Λ : Type) [AddCommGroup Λ] [Module.Free ℤ Λ] [Module.Finite ℤ Λ] (E : LinearMap.BilinForm ℤ Λ) (Γ : (Fin n → ℂ) → AddSubgroup (Fin g → ℂ)) (Hf : (Fin n → ℂ) → Matrix (Fin g) (Fin g) ℂ) (U : Set (Fin n → ℂ)) (Γ₀ : Submodule ℤ (Fin g → ℂ)) (S : Γ₀ → (Fin n → ℂ) → (Fin g → ℂ)), U = {z | z ∈ Metric.ball (0 : Fin n → ℂ) 1 ∧ ∀ i : Fin n, i.val < a → z i ≠ 0} → Module.finrank ℤ Λ = 2 * g → (∀ x, E x x = 0) → Function.Bijective E → (∀ z ∈ U, (Hf z).IsHermitian ∧ ∀ x : Fin g → ℂ, x ≠ 0 → 0 < (x ⬝ᵥ Hf z *ᵥ star x).re) → (∀ z₀ ∈ U, ∃ N : Set (Fin n → ℂ), IsOpen N ∧ z₀ ∈ N ∧ N ⊆ U ∧ ∃ P : (Fin n → ℂ) → (Λ →+ (Fin g → ℂ)), (∀ x, DifferentiableOn ℂ (fun z => P z x) N) ∧ ∀ z ∈ N, Function.Injective (P z) ∧ (P z).range = Γ z ∧ ∀ x y, (P z x ⬝ᵥ Hf z *ᵥ star (P z y)).im = E x y) → (∀ x, DifferentiableOn ℂ (S x) (Metric.ball 0 1) ∧ S x 0 = x ∧ ∀ z ∈ U, S x z ∈ Γ z) → (∀ x y z, S (x + y) z = S x z + S y z) → (∀ s : (Fin n → ℂ) → (Fin g → ℂ), ContinuousAt s 0 → (∀ z ∈ U, s z ∈ Γ z) → s 0 ∈ Γ₀) → Submodule.span ℂ (Γ₀ : Set (Fin g → ℂ)) = ⊤ → (∀ N : ℕ, 0 < N → ∃ T : Set (Γ₀ ⧸ LinearMap.range ((N : ℤ) • (LinearMap.id : Γ₀ →ₗ[ℤ] Γ₀))), Nat.card (Γ₀ ⧸ LinearMap.range ((N : ℤ) • (LinearMap.id : Γ₀ →ₗ[ℤ] Γ₀))) * Nat.card T = N ^ (2 * g) ∧ ∀ x y : Γ₀, Submodule.Quotient.mk x ∈ T → ∀ z ∈ U, ∃ k : ℤ, (S x z ⬝ᵥ Hf z *ᵥ star (S y z)).im = N * k) → ∃ L : LogPeriods n a g Λ, L.H = Hf ∧ ∀ w ∈ GroundTheory.Heights₂.Heights.Regular.logCover L.a_le, (L.P w).range = Γ (GroundTheory.Heights₂.Heights.Regular.expCover a w) := by
   intro n a g h Λ _ _ _ E Γ Hf U Γ₀ S hU hrank halt hbij hpos hloc hS hadd hlim hspan hcount
   subst hU
-  haveI : Countable Λ := (Module.finBasis ℤ Λ).equivFun.injective.countable
+  have : Countable Λ := (Module.finBasis ℤ Λ).equivFun.injective.countable
   have hmem : ∀ w ∈ logCover h, expCover a w ∈ _ := fun w hw => expCover_mem_punctured h hw
   have hBo := isOpen_logCover h
   have hBc := convex_logCover h

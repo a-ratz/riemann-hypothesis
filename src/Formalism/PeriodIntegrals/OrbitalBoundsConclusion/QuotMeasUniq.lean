@@ -82,7 +82,7 @@ theorem qmuWeight : QmuWeight := by
   refine ⟨fun x => ∑' n, (2⁻¹ : ℝ≥0∞) ^ n * (d n • interior K).indicator 1 x,
     Measurable.tsum fun n => (hind n).const_mul _, fun g => ?_⟩
   have hmg : ∀ n, Measurable fun h : H => (d n • interior K).indicator (1 : G → ℝ≥0∞) (g * (h : G)) :=
-    fun n => (hind n).comp ((measurable_const_mul g).comp measurable_subtype_coe)
+    fun n => (hind n).comp ((measurable_const_mul g).comp measurable_subtypeVal)
   have hterm : ∀ n, Measurable fun h : H =>
       (2⁻¹ : ℝ≥0∞) ^ n * (d n • interior K).indicator 1 (g * (h : G)) :=
     fun n => (hmg n).const_mul _
@@ -105,7 +105,7 @@ theorem qmuWeight : QmuWeight := by
         hVo.preimage (continuous_inv.mul continuous_const)
       exact hd.exists_mem_open ho ⟨g, by simpa using h1V⟩
     have hSo : IsOpen {h : H | g * (h : G) ∈ d n • interior K} :=
-      (hCo n).preimage (continuous_const.mul continuous_subtype_val)
+      (hCo n).preimage (continuous_const.mul continuous_subtypeVal)
     have hS1 : (1 : H) ∈ {h : H | g * (h : G) ∈ d n • interior K} := by
       show g * ((1 : H) : G) ∈ d n • interior K
       rw [Set.mem_smul_set_iff_inv_smul_mem, smul_eq_mul]
@@ -157,12 +157,12 @@ namespace PI.QuotMeasUniqW
 theorem wqUnique_of (hw : QmuWeight) (hl : QmuLift) : PI.WeilQuotMeas.WqUnique := by
   unfold PI.WeilQuotMeas.WqUnique
   intro G _ _ _ _ _ _ _ _ H hH ρ ρ' hρ hK hinv hK' hinv'
-  haveI : LocallyCompactSpace H := hH.locallyCompactSpace
+  have : LocallyCompactSpace H := hH.locallyCompactSpace
   obtain ⟨ν, hνdef⟩ : ∃ ν : Measure H, ν = Measure.haar := ⟨_, rfl⟩
   have hν : ν.IsHaarMeasure := by rw [hνdef]; infer_instance
-  haveI := hν
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
-  haveI : SigmaFinite ν := inferInstance
+  have := hν
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : SigmaFinite ν := inferInstance
   obtain ⟨w, hwm, hwW⟩ := hw G H hH ν hν
   obtain ⟨l, hlI, hlF, hlW⟩ := hl G H hH ν hν ρ hK hinv
   obtain ⟨l', hlI', hlF', hlW'⟩ := hl G H hH ν hν ρ' hK' hinv'
@@ -176,11 +176,11 @@ theorem wqUnique_of (hw : QmuWeight) (hl : QmuLift) : PI.WeilQuotMeas.WqUnique :
     have := lintegral_mul_left_eq_self (μ := ν) (fun h : H => w (g * h)) h₀
     simpa only [Subgroup.coe_mul, mul_assoc] using this
   have hwc : ∀ g : G, Measurable fun h : H => w (g * h) :=
-    fun g => hwm.comp (measurable_const.mul measurable_subtype_coe)
+    fun g => hwm.comp (measurable_const.mul measurable_subtypeVal)
   have hWm : Measurable W := by
     have e : W = fun g => ∫⁻ h : H, w (g * h) ∂ν := funext hW
     rw [e]
-    exact (hwm.comp (measurable_fst.mul (measurable_subtype_coe.comp measurable_snd))).lintegral_prod_right'
+    exact (hwm.comp (measurable_fst.mul (measurable_subtypeVal.comp measurable_snd))).lintegral_prod_right'
 
   obtain ⟨f, hf⟩ : ∃ f : Set (G ⧸ H) → G → ℝ≥0∞, ∀ s x,
       f s x = s.indicator 1 (QuotientGroup.mk x : G ⧸ H) * (w x * (W x)⁻¹) := ⟨_, fun _ _ => rfl⟩
@@ -206,9 +206,9 @@ theorem wqUnique_of (hw : QmuWeight) (hl : QmuLift) : PI.WeilQuotMeas.WqUnique :
     rw [lintegral_const_mul _ ((hwc _).mul_const _), lintegral_mul_const _ (hwc _), ← hW,
       ENNReal.mul_inv_cancel (hW0 _) (hWt _), mul_one]
 
-  haveI := hlI; haveI := hlF; haveI := hlI'; haveI := hlF'
+  have := hlI; have := hlF; have := hlI'; have := hlF'
   obtain ⟨μG, hμG⟩ : ∃ μG : Measure G, μG = Measure.haar := ⟨_, rfl⟩
-  haveI : μG.IsHaarMeasure := by rw [hμG]; infer_instance
+  have : μG.IsHaarMeasure := by rw [hμG]; infer_instance
   obtain ⟨c, hc1⟩ : ∃ c : NNReal, l = c • μG := ⟨_, Measure.isMulLeftInvariant_eq_smul l μG⟩
   obtain ⟨c', hc2⟩ : ∃ c' : NNReal, l' = c' • μG := ⟨_, Measure.isMulLeftInvariant_eq_smul l' μG⟩
   have e1 : ∀ s, MeasurableSet s → ρ s = (c : ℝ≥0∞) * ∫⁻ x, f s x ∂μG := fun s hs => by
@@ -224,7 +224,7 @@ theorem wqUnique_of (hw : QmuWeight) (hl : QmuLift) : PI.WeilQuotMeas.WqUnique :
     rw [e1 s hs, h0]
     simp
   refine ⟨((c' / c : NNReal) : ℝ≥0∞), Measure.ext fun s hs => ?_⟩
-  rw [Measure.smul_apply, e1 s hs, e2 s hs, smul_eq_mul, ← mul_assoc, ← ENNReal.coe_mul,
+  rw [smul_apply, e1 s hs, e2 s hs, smul_eq_mul, ← mul_assoc, ← ENNReal.coe_mul,
     div_mul_cancel₀ _ hc]
 
 end PI.QuotMeasUniqW

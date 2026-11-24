@@ -75,7 +75,7 @@ theorem UpperTheory.inertia_fixes_roots_of_unity_prime_to_residue_char :
   have hvz : A.valuation ζ = 1 := by
     have hp : A.valuation ζ ^ M = 1 := by rw [← map_pow, hζ, map_one]
     rcases lt_trichotomy (A.valuation ζ) 1 with h | h | h
-    · exact absurd hp (pow_lt_one₀ zero_le' h hM0).ne
+    · exact absurd hp (pow_lt_one₀ zero_le h hM0).ne
     · exact h
     · exact absurd hp (one_lt_pow₀ h hM0).ne'
   have hI : s ∈ Inertia A := hs

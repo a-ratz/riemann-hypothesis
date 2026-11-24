@@ -100,7 +100,7 @@ theorem tensor_lattice_twist_eq (h : HidaSetting p n' W Qq O Kf ι σ j w) (m : 
     tensorLat O Kf (fun x => H0 O m (letterWt m (d x) (vec x)) (extO O ι σ (pos x).val (colSpan W hmat))) =
       tensorLat O Kf (fun x => nablaLTw O Kf m (letterWt m (d x) (vec x)) (la_tw ι σ (pos x).val hmat)) := by
   have hinj : Function.Injective (algebraMap O Kf) := by
-    haveI := h.frac_O
+    have := h.frac_O
     exact IsFractionRing.injective O Kf
   congr 1
   funext x
@@ -114,13 +114,13 @@ theorem tens_Le [Fact p.Prime] (h : HidaSetting p n' W Qq O Kf ι σ j w) (φ : 
     tensorLat O Kf (fun x => H0 O m (letterWt m (d x) (vec x)) (LeAt p ι σ w (pos x).val e)) =
       tensorLat O Kf (fun x => nablaLTw O Kf m (letterWt m (d x) (vec x)) (Mx ι σ w φ r pos hmat g x)) := by
   have hinj : Function.Injective (algebraMap O Kf) := by
-    haveI := h.frac_O
+    have := h.frac_O
     exact IsFractionRing.injective O Kf
   have hw : algebraMap O Kf w ≠ 0 := by
     intro h0
     have hp : (p : W) ≠ 0 := h.p_unif.ne_zero
     have h1 := h.ι_comp (p : W)
-    haveI := h.frac_alt
+    have := h.frac_alt
     have h2 : algebraMap W Qq (p : W) ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective W Qq)).mpr hp
     have h3 : ι (algebraMap W Qq (p : W)) ≠ 0 := (map_ne_zero ι).mpr h2
     rw [h1, map_natCast, ← h.w_sq, map_pow, h0, zero_pow two_ne_zero] at h3
@@ -135,7 +135,7 @@ end
 
 theorem flatHH : Formalism.MainNotions.ColumnSystems.FlatHH := by
   intro p n' _ W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ jO w hS φ hφ m TT aT bT hm h hh
-  letI : Algebra (WF p n') O := algOfIdent jO φ
+  let : Algebra (WF p n') O := algOfIdent jO φ
   have hw := w_ne hS
   obtain ⟨Θ0, hΘ0⟩ := gen_equiv hS m hm (fun x : TT × Bool => x.2) (Formalism.MainNotions.ColumnSystems.hhDegs TT aT bT)
     (fun x => la_tw ι σ x.1.val.val h) (fun x => la_tw_det _ _ _ _ hh)
@@ -165,7 +165,7 @@ theorem flatHH : Formalism.MainNotions.ColumnSystems.FlatHH := by
     have hA : (Avec (fun x : TT × Bool => x.2) (Formalism.MainNotions.ColumnSystems.hhDegs TT aT bT) : ℤ) = AHH TT aT bT := by
       unfold Avec AHH Formalism.MainNotions.ColumnSystems.hhDegs
       rw [Fintype.sum_prod_type]
-      simp only [Fintype.sum_bool, if_true, Bool.false_eq_true, if_false, add_zero]
+      simp only [Fintype.sum_bool, ite_true, Bool.false_eq_true, ite_false, add_zero]
       push_cast
       rw [← Finset.sum_coe_sort TT]
     have h2 := mem_scale2 (O := O) (VHH (m := m) Kf TT aT bT)
@@ -217,7 +217,7 @@ theorem flat_Ar {n' m : ℕ} (r : ℕ) (hr1 : 1 ≤ r) (hr2 : r < m + 1) (vec : 
 
 theorem flatTop : FlatTop := by
   intro p n' _ W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ j w hS φ hφ m r vec d lam0 hr1 hr2 hfl h hh
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   have hw := w_ne hS
   have hm : 1 ≤ m := by omega
   have hlam := flat_lam vec d lam0 hfl
@@ -225,7 +225,7 @@ theorem flatTop : FlatTop := by
     unfold VS Vsp
     congr 1
     funext s
-    rw [hlam s, if_pos (letterWt_anti _ _ _)]
+    rw [hlam s, ite_eq_left (letterWt_anti _ _ _)]
   obtain ⟨Θ0, hΘ0⟩ := gen_equiv hS m hm vec d (fun x => la_tw ι σ x.val h) (fun x => la_tw_det _ _ _ _ hh)
   let Θ : ↥((Pol (KK O) (ι := Fin n') (m + 1) d).restrictScalars O) ≃ₗ[O] ↥(Vsp Kf lam0) :=
     Θ0.trans ((LinearEquiv.ofEq _ _ hV).restrictScalars O)

@@ -94,9 +94,9 @@ def evCH (h : LawsP T) {j : ℕ} (hj : InR D j) (hG : GenFrEx (T.Q.Xo j) T.Q.c) 
 
 theorem rdU_one_of (h : LawsP T) {j : ℕ} (hj : InR D j) (k : (T.U j T.σ₀).Comp)
     {y : Frame ((T.U j T.σ₀).X k).Ψ D.R.r} (hy : y ∈ ((T.U j T.σ₀).X k).dom) : rdU (T.U j T.σ₀) 1 k y = 1 := by
-  haveI : IsReduced (CAt T.σ₀) := inferInstanceAs (IsReduced ℂ)
+  have : IsReduced (CAt T.σ₀) := inferInstanceAs (IsReduced ℂ)
   unfold rdU
-  simp only [LinearMap.coe_mk, AddHom.coe_mk, dif_pos hy]
+  simp only [LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left hy]
   show toC (evalAt (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S) (fun φ y z => FrMap φ y z) 1
     ((T.U j T.σ₀).un k ⟨y, hy⟩)) = 1
   rw [evalAt_one (K := T.Q.c.F) (fun S _ _ => FrPt (T.Q.Xo j) T.Q.c S) (fun φ y z => FrMap φ y z) _

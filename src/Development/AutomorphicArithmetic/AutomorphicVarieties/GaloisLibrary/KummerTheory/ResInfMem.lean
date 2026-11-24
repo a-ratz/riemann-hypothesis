@@ -95,7 +95,7 @@ theorem UpperTheory.V.Kum.resInfMem :
     rw [hconj g (g⁻¹ * u.1 * g) u.1 (by group) hu1, h2, map_zero]
   refine ⟨⟨?_, fun a b => ?_, fun A u hu => ?_, hdec⟩, (Submodule.mem_iInf _).2 fun g u u' h => ?_⟩
   · exact (IsLocallyConstant.iff_continuous _).2
-      (z.2.1.comp ((continuous_toGS Ω _).comp continuous_subtype_val))
+      (z.2.1.comp ((continuous_toGS Ω _).comp continuous_subtypeVal))
   · rw [resInf_mk, resInf_mk, resInf_mk, Subgroup.coe_mul, map_mul, hz, htriv _ a.2.2]
   · rw [resInf_mk]
     by_cases hA : A = ⊤

@@ -123,7 +123,7 @@ theorem det_ne_zero_of_real_indep_isotropic : ∀ (g : ℕ) (Hm : Matrix (Fin g)
     · simpa using congrFun hre i
     · simpa using congrFun him' i
   have hcol : LinearIndependent ℂ (Matrix.of fun k i => E i k : Matrix (Fin g) (Fin g) ℂ).col := hC
-  have hu := Matrix.linearIndependent_cols_iff_isUnit.mp hcol
+  have hu := Matrix.linearIndependent_col_iff_isUnit.mp hcol
   exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
 
 end GlobalTheory

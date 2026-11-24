@@ -204,29 +204,29 @@ end Alg
 theorem fold : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (t : F) (n : ℕ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R] (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R) (m₁ : HermR R σ 1 → Measure (Fin 1 → Fin (M + 1) → R ⊗[F] E)) (m' : HermR R σ n → Measure (Fin n → Fin M → R ⊗[F] E)) (s : (Fin 1 → Fin (M + 1) → R ⊗[F] E) → HA R σ (blockOne (algebraMap F E t) J)) (B₀ : Set R) (a : R → Rˣ) (κ₁ cm : Rˣ → ℝ≥0), StageData σ J t n b lam m₁ m' s B₀ a κ₁ cm → ∀ φ : (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) → ℝ≥0∞, Measurable φ → ∫⁻ S, ∫⁻ v, φ v ∂(fibS σ J t m₁ m' s B₀ a κ₁ cm S) ∂(coordHerm R σ b lam (n + 1)) = Mid σ J t m₁ m' s B₀ a κ₁ b lam φ := by
   intro F E _ _ _ _ _ σ M J t n R _ _ _ _ _ d b lam m₁ m' s B₀ a κ₁ cm D φ hφ
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := D.hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   have hσ := D.hCM
   have hlam := D.hlam
-  haveI := hlam
+  have := hlam
   obtain ⟨hKring, hKlc, hKsc, hKt2, hsig, htr, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hKring
-  haveI := hKlc
-  haveI := hKsc
-  haveI := hKt2
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have := hKring
+  have := hKlc
+  have := hKsc
+  have := hKt2
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hκh, -, hνh⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam hlam
-  haveI := hκh
-  haveI hHb : ∀ m, BorelSpace (HermR R σ m) := fun _ => ⟨rfl⟩
-  haveI hHlc : ∀ m, LocallyCompactSpace (HermR R σ m) := fun m =>
+  have := hκh
+  have hHb : ∀ m, BorelSpace (HermR R σ m) := fun _ => ⟨rfl⟩
+  have hHlc : ∀ m, LocallyCompactSpace (HermR R σ m) := fun m =>
     (_root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R m).1
-  haveI hHsc : ∀ m, SecondCountableTopology (HermR R σ m) := fun m =>
+  have hHsc : ∀ m, SecondCountableTopology (HermR R σ m) := fun m =>
     (_root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R m).2.1
-  haveI : (coordHerm R σ b lam n).IsAddHaarMeasure := hνh n
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
-  haveI : SigmaFinite (coordHerm R σ b lam n) := inferInstance
+  have : (coordHerm R σ b lam n).IsAddHaarMeasure := hνh n
+  have : SigmaFinite (coordK R b lam) := inferInstance
+  have : SigmaFinite (coordHerm R σ b lam n) := inferInstance
   obtain ⟨e, he00, he0j, heij, hemap⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermSplit.herm_split F E σ hσ R d b lam hlam n
   obtain ⟨hs0c, hacS, hcvc, hschc, hBopen⟩ :=
     _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.Coord.coords F E σ M J t n R d b lam m₁ m' s B₀ a κ₁ cm D
@@ -263,9 +263,9 @@ theorem fold : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     refine measurable_of_restrict_of_restrict_compl hBopen.measurableSet ?_ ?_
     · have hsub : (Bset R σ t a B₀ : Set (HermR R σ (n + 1))) ⊆
           {S | s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) ∈ B₀} := fun S h => h.1
-      have hk := continuousOn_iff_continuous_restrict.1 (hacS.mono hsub)
-      have hc := continuousOn_iff_continuous_restrict.1 (hcvc.mono hsub)
-      have hw := continuousOn_iff_continuous_restrict.1 (hschc.mono hsub)
+      have hk := continuousOn_iff_continuous_domRestrict.1 (hacS.mono hsub)
+      have hc := continuousOn_iff_continuous_domRestrict.1 (hcvc.mono hsub)
+      have hw := continuousOn_iff_continuous_domRestrict.1 (hschc.mono hsub)
       have hP := hmeas.comp (((Units.continuous_val.comp hk).prodMk (hc.prodMk hw)).measurable)
       have hE : (Bset R σ t a B₀ : Set (HermR R σ (n + 1))).domRestrict G = _ :=
         funext fun S => hGon S S.2

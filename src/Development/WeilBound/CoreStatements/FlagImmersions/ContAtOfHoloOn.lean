@@ -103,7 +103,7 @@ theorem analytic_off {A : FinHolAtlas e X} {B : FinHolAtlas e Y} {h : Y → X} {
     rw [← hφp]
     exact hc.localInverse_apply_image hL hn
   have hri : ∀ᶠ t in 𝓝 q, φ (ψ t) = t := by
-    have := (hc.hasStrictFDerivAt' hL hn).eventually_right_inverse
+    have := (hc.hasStrictFDerivAt hL hn).eventually_right_inverse
     rw [hφp] at this
     exact this
   have hfa : AnalyticAt ℂ (f ∘ (B.chart j).symm) (ψ q) := by

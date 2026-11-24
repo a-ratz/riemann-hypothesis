@@ -123,7 +123,7 @@ theorem xi_mem_span (n : ℕ) (g : MvPolynomial (Formalism.GM.M.BVar N r G.T.t) 
     rw [Finset.sum_eq_single c]
     · simp
     · intro d _ hd
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro h
       exact hd (xiVar_inj G h)
     · intro h; exact absurd (Finset.mem_univ c) h
@@ -132,7 +132,7 @@ theorem xi_mem_span (n : ℕ) (g : MvPolynomial (Formalism.GM.M.BVar N r G.T.t) 
       exact hv (hsupp v (Finsupp.mem_support_iff.2 hne))
     rw [h0]
     refine Finset.sum_eq_zero fun c _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     exact hv ⟨c, h.symm⟩
 
@@ -140,8 +140,8 @@ theorem finrank_Ljj_le (j : Fin G.T.t → ℕ) (jp : ℕ) :
     Module.finrank ℤ_[p] (Ljj p (r := r) G j jp) ≤ dimY p (r := r) G j jp * dXi r (G.B - jp) := by
   classical
   set Yq := Formalism.GM.M.Y p (r := r) (G.lettersAt j jp) G.T.J G.T.thr with hYq
-  haveI : FiniteDimensional ℚ_[p] (Formalism.GM.M.Pol p r (G.lettersAt j jp)) := Formalism.CountingSumsFrames.pol_finiteDimensional _
-  haveI : FiniteDimensional ℚ_[p] Yq := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℚ_[p] (Formalism.GM.M.Pol p r (G.lettersAt j jp)) := Formalism.CountingSumsFrames.pol_finiteDimensional _
+  have : FiniteDimensional ℚ_[p] Yq := Submodule.finiteDimensional_of_le inf_le_left
   let bY := Module.finBasis ℚ_[p] Yq
   let Ms := xiMons (r := r) G (G.B - jp)
   let fam : Fin (Module.finrank ℚ_[p] Yq) × Ms → MvPolynomial (Formalism.GM.M.BVar N r G.T.t) ℚ_[p] :=
@@ -174,7 +174,7 @@ theorem finrank_Ljj_le (j : Fin G.T.t → ℕ) (jp : ℕ) :
       rintro _ ⟨u, ⟨a, rfl⟩, v, ⟨m, hm, rfl⟩, rfl⟩
       exact ⟨(a, ⟨m, hm⟩), rfl⟩
     exact hle hx
-  haveI : FiniteDimensional ℚ_[p] W := FiniteDimensional.span_of_finite ℚ_[p] (Set.finite_range fam)
+  have : FiniteDimensional ℚ_[p] W := FiniteDimensional.span_of_finite ℚ_[p] (Set.finite_range fam)
   have h1 := finrank_zp_le (Ljj p (r := r) G j jp) W hsub
   have h2 : Module.finrank ℚ_[p] W ≤ Fintype.card (Fin (Module.finrank ℚ_[p] Yq) × Ms) := finrank_range_le_card fam
   rw [Fintype.card_prod, Fintype.card_fin, Fintype.card_coe] at h2

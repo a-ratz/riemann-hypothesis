@@ -362,7 +362,7 @@ theorem simple_zeros_move_holomorphically :
 
   have hS : IsClosed {x : (Fin g → ℝ) × (Fin g → ℝ) | ∀ i,
       x.1 i ∈ Set.range ((↑) : ℤ → ℝ) ∧ x.2 i ∈ Set.range ((↑) : ℤ → ℝ)} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun i => ?_
     change IsClosed ({x : (Fin g → ℝ) × (Fin g → ℝ) | x.1 i ∈ Set.range ((↑) : ℤ → ℝ)} ∩
       {x : (Fin g → ℝ) × (Fin g → ℝ) | x.2 i ∈ Set.range ((↑) : ℤ → ℝ)})
@@ -471,7 +471,7 @@ theorem valT_comp {T : Type} [CommRing T] {X Y : Scheme.{0}} (w : Sp T ⟶ X) (�
     (f : Γ(Y, U)) : valT (w ≫ φ) U f = valT w (φ ⁻¹ᵁ U) ((φ.app U).hom f) := by
   unfold valT
   by_cases h : ⊤ ≤ w ⁻¹ᵁ (φ ⁻¹ᵁ U)
-  · rw [dif_pos h, dif_pos (show ⊤ ≤ (w ≫ φ) ⁻¹ᵁ U from h)]
+  · rw [dite_eq_left h, dite_eq_left (show ⊤ ≤ (w ≫ φ) ⁻¹ᵁ U from h)]
     rfl
   · rw [dite_eq_right h, dite_eq_right (show ¬ ⊤ ≤ (w ≫ φ) ⁻¹ᵁ U from h)]
 
@@ -521,7 +521,7 @@ theorem snd_valT_translate {v : epsR ℂ ⟶ A} (hv : IsTangent v) {w : Fin g �
   have h1 := le_of_isTangent hv _ h0
   rw [translate_left]
   refine (congrArg _ (valT_comp _ _ _ _)).trans ?_
-  refine (congrArg TrivSqZeroExt.snd (dif_pos h1)).trans ((hd _ h1 _).trans ?_)
+  refine (congrArg TrivSqZeroExt.snd (dite_eq_left h1)).trans ((hd _ h1 _).trans ?_)
   have e : (fun y => valAt' (u.ex y).left (((toUnit A ≫ u.ex z) * 𝟙 A).left ⁻¹ᵁ U)
       ((((toUnit A ≫ u.ex z) * 𝟙 A).left.app U).hom f)) = fun y => valAt' (u.ex (z + y)).left U f := by
     funext y
@@ -562,7 +562,7 @@ theorem unif_value_jac_zeros : ThetaUnifAV → ∀ (g : ℕ) (x : KeyIn ℂ) (h 
     rw [show (Pi.single k (2 * Real.pi * Complex.I)⁻¹ : Fin x.P.g → ℂ) =
       (2 * Real.pi * Complex.I : ℂ)⁻¹ • Pi.single k 1 by rw [← Pi.single_smul, smul_eq_mul, _root_.mul_one], map_smul]
     rfl
-  · haveI := x.P.isAb.smooth
+  · have := x.P.isAb.smooth
     by_contra hne
     have hcl : IsClosed {y : x.P.A.left | ∃ a, ∃ p : Sp ℂ, (u.ex (zs a)).left p = y} := by
       have : {y : x.P.A.left | ∃ a, ∃ p : Sp ℂ, (u.ex (zs a)).left p = y} =
@@ -570,14 +570,14 @@ theorem unif_value_jac_zeros : ThetaUnifAV → ∀ (g : ℕ) (x : KeyIn ℂ) (h 
         ext y; simp
       rw [this]
       refine isClosed_iUnion_of_finite fun a => ?_
-      haveI := x.P.isAb.proper
+      have := x.P.isAb.proper
       have : IsClosedImmersion (u.ex (zs a)).left := by
         have hw : (u.ex (zs a)).left ≫ x.P.A.hom = 𝟙 _ := Over.w _
         have : IsClosedImmersion ((u.ex (zs a)).left ≫ x.P.A.hom) := by rw [hw]; infer_instance
         exact IsClosedImmersion.of_comp _ x.P.A.hom
       exact (u.ex (zs a)).left.isClosedEmbedding.isClosed_range
     have hcz : IsClosed {y : x.P.A.left | ∀ i, y ∉ Out.nonzeroLocus (s i)} := by
-      rw [Set.setOf_forall]
+      rw [Set.ofPred_forall]
       exact isClosed_iInter fun i => (Out.nonzeroLocus (s i)).isOpen.isClosed_compl
     obtain ⟨q, hq, hqZ⟩ := ComplexPoints.exists_point_mem x.P.A.hom
       (hcz.isLocallyClosed.inter hcl.isOpen_compl.isLocallyClosed) ⟨y, hy, hne⟩
@@ -594,7 +594,7 @@ theorem unif_value_jac_zeros : ThetaUnifAV → ∀ (g : ℕ) (x : KeyIn ℂ) (h 
         ((ComplexPoints.top_le_preimage_basicOpen_iff q _ hj' _).2 ?_)
       have hv := (hF i).2 j w (by rw [hw']; exact hj')
       rw [hw'] at hv
-      exact ((dif_pos hj').symm.trans hv).trans_ne (mul_ne_zero hi (pow_ne_zero _ (u.fr_ne j w (by rw [hw']; exact hj'))))
+      exact ((dite_eq_left hj').symm.trans hv).trans_ne (mul_ne_zero hi (pow_ne_zero _ (u.fr_ne j w (by rw [hw']; exact hj'))))
     refine (hqZ p).2 ⟨a', p, ?_⟩
     rw [← hw', hwe, u.ex_add, (u.ker e).2 he, _root_.mul_one]
 
@@ -695,7 +695,7 @@ theorem ex_eq_iff (z w : Fin g → ℂ) : u.ex z = u.ex w ↔ z - w ∈ u.Λ := 
   exact mul_eq_right
 
 theorem pt_eq_of_apply_eq {q q' : Pt x} {p p' : Sp ℂ} (h : q.left p = q'.left p') : q = q' := by
-  haveI := x.P.isAb.proper
+  have := x.P.isAb.proper
   obtain rfl : p = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
   obtain rfl : p' = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
   exact Over.OverMorphism.ext (ext_of_apply_closedPoint_eq x.P.A.hom (Over.w q) (Over.w q') h)
@@ -1094,7 +1094,7 @@ theorem exists_data (laws : Out.Laws) (hT : ThetaUnifAV) {n l d : ℕ} {a b : Fi
   let m : (Fin g → Fin g → ℂ) → Fin g → ∀ j j', Matrix (Fin ((l - j * n) ^ g)) (Fin ((l - j' * n) ^ g)) ℂ :=
     fun p i j j' => if h : j' = j + 1 then Matrix.of fun k' k => c p i j (h ▸ k) k' else 0
   have hmc : ∀ p i j k' k, m p i j (j + 1) k' k = c p i j k k' := fun p i j k' k => by
-    simp only [m, dif_pos, Matrix.of_apply]
+    simp only [m, dite_eq_left, Matrix.of_apply]
   have hm : ∀ p ∈ Key.phDom g,
       AnMul (N := fun j => (l - j * n) ^ g) (fun i => F i p) (fun j k => Th j k p) (m p) := by
     intro p hp i j hj k y

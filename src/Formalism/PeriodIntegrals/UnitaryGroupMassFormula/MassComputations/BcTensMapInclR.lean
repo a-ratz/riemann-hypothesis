@@ -87,10 +87,10 @@ theorem continuous_haMap [FiniteDimensional F E] {R S : Type} [CommRing R] [Alge
     PI.VolStabSW.PositiveNearLattice.continuous_map_tens (Module.finBasis F E) φ hφ
   have hv : Continuous fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-    Units.continuous_val.comp (continuous_subtype_val : Continuous fun g : HR R σ J => (g : GL (Fin n) (R ⊗[F] E)))
+    Units.continuous_val.comp (continuous_subtypeVal : Continuous fun g : HR R σ J => (g : GL (Fin n) (R ⊗[F] E)))
   have hi : Continuous fun g : HA R σ J =>
       (((HA.mat R σ J g)⁻¹ : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-    Units.continuous_coe_inv.comp (continuous_subtype_val : Continuous fun g : HR R σ J => (g : GL (Fin n) (R ⊗[F] E)))
+    Units.continuous_coe_inv.comp (continuous_subtypeVal : Continuous fun g : HR R σ J => (g : GL (Fin n) (R ⊗[F] E)))
   have key : Continuous fun g : HA R σ J => Formalism.UG.bc (tensMap (E := E) φ) (HA.mat R σ J g) := by
     rw [Units.continuous_iff]
     refine ⟨?_, ?_⟩

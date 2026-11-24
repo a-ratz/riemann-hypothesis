@@ -75,7 +75,7 @@ theorem exists_compl_centralCuspForms (U : Submodule ℂ (cuspForms K n)) (hU : 
     (fun φ => exists_aeval_uActionCusp_laplacianU_eq_zero φ b ε B hε horth hsymm hinv hK)
     (fun U₀ _ P hP hPd S hS => finiteDimensional_of_eigen b P hP hPd 0
       ((U₀ : Subgroup (AdelicGLn.FiniteAdelicGL K n)).comap (AdelicGLn.integralFiniteGL K n).subtype)
-      (U₀.isOpen.preimage continuous_subtype_val) S fun φ hφ =>
+      (U₀.isOpen.preimage continuous_subtypeVal) S fun φ hφ =>
         ⟨(hS φ hφ).1, by rw [zero_smul]; exact (hS φ hφ).2.1, fun u hu => (hS φ hφ).2.2 _ hu⟩)
     U hU hUρ hUσ hUτ
 

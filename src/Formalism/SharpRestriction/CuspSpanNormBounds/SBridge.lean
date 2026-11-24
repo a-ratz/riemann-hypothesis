@@ -145,9 +145,9 @@ theorem leadMinor_cell {N : ℕ} (L P U : Matrix (Fin N) (Fin N) ℂ) (hL : IsLo
     (hl : l ≤ N) : leadMinor (L * P * U) l hl = leadMinor P l hl := by
   unfold leadMinor
   have hLs : ∀ (i : Fin l) (a : Fin N), l ≤ a.val → L (Fin.castLE hl i) a = 0 := fun i a ha =>
-    (hL (Fin.castLE hl i) a).1 (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le i.isLt ha))
+    (hL (Fin.castLE hl i) a).1 (Fin.lt_def.2 (lt_of_lt_of_le i.isLt ha))
   have hUs : ∀ (b : Fin N) (j : Fin l), l ≤ b.val → U b (Fin.castLE hl j) = 0 := fun b j hb =>
-    (hU b (Fin.castLE hl j)).1 (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le j.isLt hb))
+    (hU b (Fin.castLE hl j)).1 (Fin.lt_def.2 (lt_of_lt_of_le j.isLt hb))
   have key : (L * P * U).submatrix (Fin.castLE hl) (Fin.castLE hl) =
       L.submatrix (Fin.castLE hl) (Fin.castLE hl) * P.submatrix (Fin.castLE hl) (Fin.castLE hl) *
         U.submatrix (Fin.castLE hl) (Fin.castLE hl) := by
@@ -171,8 +171,8 @@ theorem leadMinor_cell {N : ℕ} (L P U : Matrix (Fin N) (Fin N) ℂ) (hL : IsLo
   have h2 : ∏ i : Fin l, U.submatrix (Fin.castLE hl) (Fin.castLE hl) i i = 1 :=
     Finset.prod_eq_one (fun i _ => (hU (Fin.castLE hl i) (Fin.castLE hl i)).2 rfl)
   rw [key, Matrix.det_mul, Matrix.det_mul,
-    Matrix.det_of_lowerTriangular (M := L.submatrix (Fin.castLE hl) (Fin.castLE hl)) hLt,
-    Matrix.det_of_upperTriangular (M := U.submatrix (Fin.castLE hl) (Fin.castLE hl)) hUt, h1, h2,
+    Matrix.det_of_isLowerTriangular (M := L.submatrix (Fin.castLE hl) (Fin.castLE hl)) hLt,
+    Matrix.det_of_isUpperTriangular (M := U.submatrix (Fin.castLE hl) (Fin.castLE hl)) hUt, h1, h2,
     one_mul, mul_one]
 
 theorem normSq_leadMinor_ZhatO (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (g : Mx k r) (l : ℕ) (hl : l ≤ r + 1) :

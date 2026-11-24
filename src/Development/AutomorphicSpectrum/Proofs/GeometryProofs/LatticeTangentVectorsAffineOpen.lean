@@ -166,8 +166,8 @@ theorem exists_affine_frame : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCo
   have hc := fun k => he2 (⟨b k, hb k⟩ : Stalk M q)
   choose c hc using hc
 
-  letI : Algebra Γ(X, W₀) (X.presheaf.stalk q.1) := f.toAlgebra
-  haveI := hW₀.isLocalization_stalk ⟨q.1, hq⟩
+  let : Algebra Γ(X, W₀) (X.presheaf.stalk q.1) := f.toAlgebra
+  have := hW₀.isLocalization_stalk ⟨q.1, hq⟩
   obtain ⟨⟨s, hs⟩, hint⟩ := IsLocalization.exist_integer_multiples_of_finite
     (hW₀.primeIdealOf ⟨q.1, hq⟩).asIdeal.primeCompl (fun p : Fin N × Fin n => c p.1 p.2)
   choose a ha using hint

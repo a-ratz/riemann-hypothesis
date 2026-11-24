@@ -304,8 +304,8 @@ theorem det_uLow {n : ℕ} (x : Loc.IL n → E) : (Loc.uLow x).det = 1 := by
     intro i j hij
     have hij' : i < j := hij
     simp only [Loc.uLow]
-    rw [if_neg (ne_of_lt hij'), dite_eq_right (lt_asymm hij')]
-  rw [Matrix.det_of_lowerTriangular _ hlt]
+    rw [ite_eq_right (ne_of_lt hij'), dite_eq_right (lt_asymm hij')]
+  rw [det_of_isLowerTriangular _ hlt]
   simp [Loc.uLow]
 
 theorem det_uUp {n : ℕ} (w : Loc.Pt E n) (y : Loc.IN w → E) : (Loc.uUp w y).det = 1 := by
@@ -313,8 +313,8 @@ theorem det_uUp {n : ℕ} (w : Loc.Pt E n) (y : Loc.IN w → E) : (Loc.uUp w y).
     intro i j hij
     have hij' : j < i := hij
     simp only [Loc.uUp]
-    rw [if_neg (ne_of_gt hij'), dite_eq_right (fun h => lt_asymm hij' h.1)]
-  rw [Matrix.det_of_upperTriangular hut]
+    rw [ite_eq_right (ne_of_gt hij'), dite_eq_right (fun h => lt_asymm hij' h.1)]
+  rw [det_of_isUpperTriangular hut]
   simp [Loc.uUp]
 
 theorem bb_ne (Mo : Loc.Model F E) {m : ℕ} (w : Loc.Pt E (m + 1)) (c : Mo.Cls m) (h : Mo.BB w c ≠ 0) :
@@ -402,9 +402,9 @@ theorem blkTop_eq (δ : ∀ p, (D.s.atP p).Fp) (T T' : ℕ) (p : PlF D) :
     apply hn
     constructor <;> omega
   unfold blkTop
-  rw [if_neg hc]
+  rw [ite_eq_right hc]
   unfold blkMod
-  rw [if_neg hc, sub_zero]
+  rw [ite_eq_right hc, sub_zero]
   unfold tMod
   rw [twist_eq]
   have hν : nu D.R.rS a (a + s - 1) = (D.R.rS - x) + (D.R.rS - y) := by
@@ -510,14 +510,14 @@ theorem last_one (w : Point D.host.E (D.R.rS + 1)) (hD : Dmin w D.R.rS ≠ 0) :
     · have := j.isLt
       have := hmem.2
       simp only [ptEntry, Nat.sub_self]
-      rw [if_pos ⟨by omega, by omega⟩, if_neg (by omega)]
+      rw [ite_eq_left ⟨by omega, by omega⟩, ite_eq_right (by omega)]
     · rfl
 
 theorem ptMat_last (w : Point D.host.E (D.R.rS + 1)) (l0 : List (D.host.E × ℕ)) (t : D.host.E)
     (hb : w.1 = l0 ++ [(t, 1)]) (hs : (l0.map Prod.snd).sum = D.R.rS) :
     ptMat w (Fin.last _) (Fin.last _) = t := by
   show ptEntry w.1 (Fin.last D.R.rS).val (Fin.last D.R.rS).val = t
-  rw [hb, Fin.val_last, ptEntry_append_ge l0 [(t, 1)] D.R.rS D.R.rS (by omega), if_pos (by omega), hs,
+  rw [hb, Fin.val_last, ptEntry_append_ge l0 [(t, 1)] D.R.rS D.R.rS (by omega), ite_eq_left (by omega), hs,
     Nat.sub_self]
   simp [ptEntry]
 
@@ -528,7 +528,7 @@ theorem dmin_snoc (w : Point D.host.E (D.R.rS + 1)) (l0 : List (D.host.E × ℕ)
   have hrow : ∀ j : Fin (D.R.rS + 1), j ≠ Fin.last _ → ptMat w (Fin.last _) j = 0 := by
     intro j hj
     show ptEntry w.1 _ _ = 0
-    rw [hb, Fin.val_last, ptEntry_append_ge l0 [(t, 1)] _ _ (by omega), if_neg]
+    rw [hb, Fin.val_last, ptEntry_append_ge l0 [(t, 1)] _ _ (by omega), ite_eq_right]
     intro hle
     apply hj
     ext
@@ -543,7 +543,7 @@ theorem dmin_snoc (w : Point D.host.E (D.R.rS + 1)) (l0 : List (D.host.E × ℕ)
     · simp [B, hj, hrow j hj])
   have hc := det_corner (ptMat w) B (fun x y hxy => by
     simp only [B, Matrix.of_apply]
-    rw [if_neg hxy])
+    rw [ite_eq_right hxy])
   have hsub : B.submatrix Fin.castSucc Fin.castSucc = (ptMat w).submatrix Fin.castSucc Fin.castSucc := by
     ext x y
     simp [B, Fin.castSucc_ne_last]
@@ -557,7 +557,7 @@ theorem amat_last (δ : ∀ p, (D.s.atP p).Fp) (T T' : ℕ) (p : PlF D) (w : Poi
     a.mat (Fin.last _) (Fin.last _) = blkTop δ T T' p (D.R.rS + 1) 1 t := by
   show Formalism.MainNotions.S.Loc.ptEntryL a.blocks (Fin.last D.R.rS).val (Fin.last D.R.rS).val = _
   rw [ptEntryL_eq, modPt_blocks δ T T' p w a ha, hb, mapBlocks_append, Fin.val_last,
-    ptEntry_append_ge _ _ _ _ (by rw [mapBlocks_snd]; omega), if_pos (by rw [mapBlocks_snd]; omega),
+    ptEntry_append_ge _ _ _ _ (by rw [mapBlocks_snd]; omega), ite_eq_left (by rw [mapBlocks_snd]; omega),
     mapBlocks_snd, hs, Nat.sub_self]
   simp [mapBlocks, ptEntry, Nat.add_comm 1 D.R.rS]
 

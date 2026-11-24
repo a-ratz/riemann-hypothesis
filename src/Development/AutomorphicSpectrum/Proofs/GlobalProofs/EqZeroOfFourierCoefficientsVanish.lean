@@ -149,7 +149,7 @@ theorem eq_zero_of_coeffs_vanish [SecondCountableTopology V] [MeasurableSpace V]
     (hsep : ∀ x y, (∀ t, χ t x = χ t y) → -x + y ∈ Λ)
     (g : V → ℂ) (hg : Continuous g) (hgp : ∀ x, ∀ l ∈ Λ, g (x + l) = g x)
     (hF : ∀ t, ∫ b in D, g b * χ (-t) b ∂μ = 0) (x : V) : g x = 0 := by
-  haveI : CompactSpace (V ⧸ Λ) := compactSpace_quotient Λ hK hc
+  have : CompactSpace (V ⧸ Λ) := compactSpace_quotient Λ hK hc
   choose c hcχ using fun t => exists_descent Λ (χ t) (hχc t) (hχp t)
   obtain ⟨gb, hgb⟩ := exists_descent Λ g hg hgp
   have hext : ∀ a b : C(V ⧸ Λ, ℂ),
@@ -178,7 +178,7 @@ theorem eq_zero_of_coeffs_vanish [SecondCountableTopology V] [MeasurableSpace V]
     refine ⟨-l, Λ.neg_mem hl, ?_⟩
     have h1 : -l + y = y - l := by abel
     rwa [h1])
-  haveI : IsFiniteMeasure (μ.restrict D) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure (μ.restrict D) := ⟨by simpa using hfin⟩
   let L : C(V ⧸ Λ, ℂ) → ℂ := fun s => ∫ b in D, g b * s (QuotientAddGroup.mk b) ∂μ
   have hbd : ∀ (s : C(V ⧸ Λ, ℂ)) (b : V), ‖g b * s (QuotientAddGroup.mk b)‖ ≤ ‖gb‖ * ‖s‖ := by
     intro s b

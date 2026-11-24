@@ -97,7 +97,7 @@ variable [Fintype ι]
 
 theorem eq_one_of_forall (M : CommRing.Pic ((j : ι) → R j))
     (h : ∀ i, CommRing.Pic.mapRingHom (Pi.evalRingHom R i) M = 1) : M = 1 := by
-  letI inst : ∀ i, Algebra ((j : ι) → R j) (R i) := fun i => (Pi.evalRingHom R i).toAlgebra
+  let inst : ∀ i, Algebra ((j : ι) → R j) (R i) := fun i => (Pi.evalRingHom R i).toAlgebra
   have hA : ∀ i, algebraMap ((j : ι) → R j) (R i) = Pi.evalRingHom R i := fun i => rfl
   have e : ∀ i, (R i ⊗[(j : ι) → R j] M) ≃ₗ[R i] R i := by
     intro i
@@ -154,7 +154,7 @@ theorem pic_pi_isOfFinOrder : ∀ (ι : Type) [Finite ι] (R : ι → Type) [∀
       ∀ M : CommRing.Pic ((i : ι) → R i), IsOfFinOrder M := by
   intro ι _ R _ hR M
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have hk : 0 < ∏ i, orderOf (CommRing.Pic.mapRingHom (Pi.evalRingHom R i) M) :=
     Finset.prod_pos fun i _ => (hR i _).orderOf_pos
   refine isOfFinOrder_iff_pow_eq_one.mpr ⟨_, hk, ?_⟩

@@ -329,9 +329,9 @@ theorem bt_pgsh : ∀ (R C : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [Fi
         funext x
         simp [Algebra.smul_def] }
   have hφ : ∀ g x, φ g x = algebraMap R C (g (Multiplicative.ofAdd x)) := fun _ _ => rfl
-  haveI := hA.finite
-  haveI := hA.projective
-  haveI : Module.Free R A := Module.free_of_flat_of_isLocalRing
+  have := hA.finite
+  have := hA.projective
+  have : Module.Free R A := Module.free_of_flat_of_isLocalRing
   obtain ⟨d, hd0, hd⟩ := hA.full
   have hcardT : Module.finrank R (Multiplicative N → R) = Fintype.card N := by
     rw [Module.finrank_fintype_fun_eq_card]
@@ -696,7 +696,7 @@ theorem order_ind (Γ : QFGroup R T) (U : Γ.G.left.Opens) (hU : Γ.IsFinOpenSub
       obtain ⟨s, hs⟩ := (hAf _).1 (hf t)
       exact ⟨s, fun t' h => hs ⟨t', (hK t').2 h⟩ h⟩
   · have hU' := SubOrder.isAffineOpen_of_fin Γ hU
-    letI : Algebra R Γ(Γ.G.left, U) := (SubOrder.secRho Γ hU').toAlgebra
+    let : Algebra R Γ(Γ.G.left, U) := (SubOrder.secRho Γ hU').toAlgebra
     have hρ : hU'.fromSpec ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, U))) :=
       SubOrder.fromSpec_hom Γ hU'
     have hfin := SubOrder.sec_finite hρ hU
@@ -801,10 +801,10 @@ theorem res_core {R : Type} [CommRing R] [IsDomain R] [IsIntegrallyClosed R] {T 
     apply hext
     rw [Over.comp_left, Category.assoc, ha', ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.BT.genericPoint_baseChange R H Γ₁ R' Γ₁' F₁ hF₁ κ hκ h,
       _root_.GlobalTheory.CompanionTheory.Ar.BT.genericPoint_baseChange R T Γ R' Γ' F hF κ hκ, Category.assoc, ← Over.comp_left, hα]
-  haveI := Γ'.quasiFinite
-  haveI := Γ'.separated
-  haveI := Γ'.quasiCompact
-  haveI := Γ'.finPres
+  have := Γ'.quasiFinite
+  have := Γ'.separated
+  have := Γ'.quasiCompact
+  have := Γ'.finPres
   obtain ⟨U, hUfin, hUcl⟩ := Twhopf.finite_part R' Γ'.G.left Γ'.G.hom
   have hU : Γ'.IsFinOpenSub U := Twhopf.finite_sub R' T Γ' U hUfin hUcl
   have hres := (res_fin_core hE Γ' Γ₁' a' hmul' α hα' hcl' U hU).2
@@ -1155,7 +1155,7 @@ theorem exists_complete_normal (V : Type) [CommRing V] [IsDomain V] [IsLocalRing
   let R₁ := MvPolynomial s R₀
   let f₁ : R₁ →+* V := MvPolynomial.eval₂Hom f fun a => a.1
   let P : Ideal R₁ := (maximalIdeal V).comap f₁
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   let R₂ := Localization.AtPrime P
   have hu : ∀ y : P.primeCompl, IsUnit (f₁ y) := fun y => by
     by_contra hy
@@ -1165,17 +1165,17 @@ theorem exists_complete_normal (V : Type) [CommRing V] [IsDomain V] [IsLocalRing
   have hm₂ : (maximalIdeal R₂).map f₂ ≤ maximalIdeal V := by
     rw [← Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_map, hf₂]
     exact Ideal.map_comap_le
-  haveI l₂ : IsLocalHom f₂ := ((IsLocalRing.local_hom_tfae f₂).out 3 1).1 hm₂
+  have l₂ : IsLocalHom f₂ := ((IsLocalRing.local_hom_tfae f₂).out 3 1).1 hm₂
   have hfg : (maximalIdeal R₂).FG := IsNoetherian.noetherian _
   obtain ⟨k, hk⟩ := Ideal.exists_pow_le_of_le_radical_of_fg (hm₂.trans hnil) (hfg.map f₂)
   let R₃ := AdicCompletion (maximalIdeal R₂) R₂
-  haveI : IsNoetherianRing R₃ := _root_.GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion R₂ _
+  have : IsNoetherianRing R₃ := _root_.GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion R₂ _
   obtain ⟨ψ, hψ, -⟩ := GlobalTheory.exists_extend_adicCompletion f₂ (maximalIdeal R₂) _ hk
-  haveI l₃ : IsLocalHom ψ := @GlobalTheory.isLocalHom_of_extend_adicCompletion _ _ _ _ _ _ hfg ψ (hψ ▸ l₂)
+  have l₃ : IsLocalHom ψ := @GlobalTheory.isLocalHom_of_extend_adicCompletion _ _ _ _ _ _ hfg ψ (hψ ▸ l₂)
   let S₀ : Subring V := ψ.range
-  letI : Algebra R₃ S₀ := ψ.rangeRestrict.toAlgebra
-  haveI : Module.Finite R₃ S₀ := RingHom.Finite.of_surjective ψ.rangeRestrict ψ.rangeRestrict_surjective
-  haveI : IsLocalRing S₀ := IsLocalRing.of_surjective' ψ.rangeRestrict ψ.rangeRestrict_surjective
+  let : Algebra R₃ S₀ := ψ.rangeRestrict.toAlgebra
+  have : Module.Finite R₃ S₀ := RingHom.Finite.of_surjective ψ.rangeRestrict ψ.rangeRestrict_surjective
+  have : IsLocalRing S₀ := IsLocalRing.of_surjective' ψ.rangeRestrict ψ.rangeRestrict_surjective
   have hN₀ : IsNoetherianRing S₀ := IsNoetherianRing.of_finite R₃ S₀
   have hc₀ : IsAdicComplete (maximalIdeal S₀) S₀ := GlobalTheory.CompleteFiniteExtension.isAdicComplete_of_finite_local R₃ S₀
   have l₀ : IsLocalHom S₀.subtype := ⟨by
@@ -1200,7 +1200,7 @@ theorem exists_complete_normal (V : Type) [CommRing V] [IsDomain V] [IsLocalRing
       map_zero' := hK (by simp [hh₀])
       map_add' := fun a b => hK (by simp [hh₀]) }
   have hhS : ∀ a : S₀, h (algebraMap S₀ D a) = a := fun a => hK ((hh₀ _).trans (hj a))
-  haveI : IsFractionRing D (FractionRing S₀) :=
+  have : IsFractionRing D (FractionRing S₀) :=
     integralClosure.isFractionRing_of_finite_extension (FractionRing S₀) (FractionRing S₀)
   refine ⟨D, inferInstance, inferInstance, hl,
     (algebraMap S₀ D).comp (ψ.rangeRestrict.comp ((algebraMap R₂ R₃).comp ((algebraMap R₁ R₂).comp MvPolynomial.C))),
@@ -1247,14 +1247,14 @@ theorem exists_unif {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
       IsNoetherianRing D ∧ IsIntegrallyClosed D ∧ IsAdicComplete (maximalIdeal D) D ∧ Function.Injective h ∧
       h.comp g = f ∧ IsGrpPullback t'.G t.G (spMap g ≫ x) φ ∧ Nonempty (UnifPre (maximalIdeal D) Dd A t'.G) := by
   classical
-  haveI := isAlgClosed_residueField V
+  have := isAlgClosed_residueField V
   obtain ⟨D₀, _, _, _, g₀, h₀, hN₀, -, -, -, l₀, e₀, -⟩ := exists_complete_normal V p hp hpV hnil R₀ f ∅
   obtain ⟨t₀, ⟨m₀⟩⟩ := Geo.Tor.exists_sab (spMap g₀ ≫ x) t
   obtain ⟨s, hs, hsp⟩ := GlobalTheory.Ex.UnifModel.exists_finite_split (ResidueField.map h₀) t₀.G t₀.semi
   choose r hr using residue_surjective (R := V)
   obtain ⟨R, _, _, _, g₁, h, hN, hic, hc, hi, l₁, e₁, hs₁⟩ :=
     exists_complete_normal V p hp hpV hnil D₀ h₀ (hs.toFinset.image r)
-  haveI : IsLocalHom g₁ := @isLocalHom_of_comp _ _ _ _ _ _ g₁ h (e₁ ▸ l₀)
+  have : IsLocalHom g₁ := @isLocalHom_of_comp _ _ _ _ _ _ g₁ h (e₁ ▸ l₀)
   obtain ⟨E₁, hE₁⟩ := hsp R g₁ (ResidueField.map h) (by rw [← ResidueField.map_comp]; congr 1) fun a ha => by
     obtain ⟨b, hb⟩ := hs₁ (r a) (Finset.mem_image.2 ⟨a, hs.mem_toFinset.2 ha, rfl⟩)
     exact ⟨residue R b, by rw [ResidueField.map_residue, hb, hr]⟩
@@ -1279,7 +1279,7 @@ theorem exists_unif {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
       (GlobalTheory.Ex.UnifModel.spMap_comp (IsFractionRing.lift_algebraMap j)).symm)
   have hA : admitted R (maximalIdeal R) := by
     refine ⟨⟨hN, inferInstance, hic, hc⟩, hc, h.charZero, inferInstance, ?_⟩
-    letI := Ideal.Quotient.field (maximalIdeal R)
+    let := Ideal.Quotient.field (maximalIdeal R)
     infer_instance
   obtain ⟨h1, h2, -⟩ := GlobalTheory.allSixLaws
   obtain ⟨A, -, gen, hgen, hL, -⟩ := GlobalTheory.LN.exists_polAV_of_polAt h1 h2 E H R t' hpol'
@@ -1308,8 +1308,8 @@ theorem exists_split (p : ℕ) [Fact p.Prime] {M T C : Type} [CommGroup M] [Comm
   have hC : ∀ c : C, c ^ p = 1 := fun c => by
     obtain ⟨t, rfl⟩ := hπ c
     rw [← map_pow, hT, map_one]
-  letI : Module (ZMod p) (Additive T) := AddCommGroup.zmodModule fun x => hT x.toMul
-  letI : Module (ZMod p) (Additive C) := AddCommGroup.zmodModule fun x => hC x.toMul
+  let : Module (ZMod p) (Additive T) := AddCommGroup.zmodModule fun x => hT x.toMul
+  let : Module (ZMod p) (Additive C) := AddCommGroup.zmodModule fun x => hC x.toMul
   let L : Additive T →ₗ[ZMod p] Additive C := (MonoidHom.toAdditive π).toZModLinearMap p
   have hfree : Module.Free (ZMod p) (Additive C) := Module.Free.of_divisionRing (ZMod p) (Additive C)
   have hproj : Module.Projective (ZMod p) (Additive C) := @Module.Projective.of_free _ _ _ _ _ hfree
@@ -1453,7 +1453,7 @@ theorem exists_struct (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNo
       IsHopfOrder (muOrder R M) ∧ ∀ f : T → R, f ∈ Γ.btOrder ⊤ ↔ (fun z => f (e z)) ∈ Submodule.span R {F : (M × C) × Q → R |
         ∃ a ∈ muOrder R M, ∃ b ∈ ΓB.btOrder ⊤, ∃ c : Q → R, F = fun z => a z.1.1 * b z.1.2 * c z.2} := by
   have hp1 : 1 ≤ p := (Fact.out : p.Prime).one_le
-  haveI : HenselianLocalRing R :=
+  have : HenselianLocalRing R :=
     { is_henselian := fun f hf a₀ h₁ h₂ =>
         HenselianRing.is_henselian (I := maximalIdeal R) f hf a₀ h₁ (h₂.map _) }
   have := Γ.quasiFinite
@@ -1474,8 +1474,8 @@ theorem exists_struct (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNo
     rw [← cancel_mono a.left]
     exact congrArg CommaMorphism.left h1
   have hπs := map_surjective Γf ΓB b π hπ hbs
-  haveI : Finite M := Finite.of_injective α hαi
-  haveI : Finite C := Finite.of_surjective π hπs
+  have : Finite M := Finite.of_injective α hαi
+  have : Finite C := Finite.of_surjective π hπs
   have hk : ∀ h, π h = 1 ↔ ∃ m, α m = h := fun h => by
     constructor
     · intro h1
@@ -1593,7 +1593,7 @@ theorem exists_rep (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsInteg
         rw [← cancel_mono j, hw, h]
         exact h₀
     refine ⟨⟨φ₀.hom, fun r => RingHom.congr_fun (congrArg CommRingCat.Hom.hom h₁) r⟩, (h₂ _).2 rfl, fun φ h => ?_⟩
-    exact AlgHom.coe_ringHom_injective ((h₂ φ).1 h)
+    exact AlgHom.toRingHom_injective ((h₂ φ).1 h)
   let Tr : TorsRep G p :=
     { A := A, free := hfree, fin := inferInstance, y := w ≫ iG, y_p := (hker _ _).2 ⟨w, rfl⟩
       univ := fun S _ _ z hz => by
@@ -1712,7 +1712,7 @@ theorem mu_eq [IsDomain R] [IsDomain V] [IsIntegrallyClosed V] [CommGroup T] [Fi
       spn C h (muOrder R T) Additive.toMul := by
   refine le_antisymm (Submodule.span_le.2 ?_) ?_
   · rintro _ ⟨ψ, rfl⟩
-    letI := h.toAlgebra
+    let := h.toAlgebra
     obtain ⟨d, hd, hdf⟩ := hA.full
     have hB := (PositivityTheory.HtPt.Mh.ext_tensor R T V _ hA ⟨d, (map_ne_zero_iff h hh).2 hd, hdf⟩).1
     have hr : ∀ t : T, ∃ r : V, algebraMap V C r = ψ (Additive.ofMul t) := fun t => by
@@ -1763,8 +1763,8 @@ theorem val_facts {C V : Type} [Field C] [IsAlgClosed C] [CharZero C] [CommRing 
     (v : Valuation C NNReal) (hint : v.Integers V) (p : ℕ) (hp : p ≠ 0) (hvp : v (p : C) < 1) :
     ∃ _ : IsLocalRing V, IsIntegrallyClosed V ∧ IsAlgClosed (FractionRing V) ∧ (p : V) ∈ IsLocalRing.maximalIdeal V ∧
       IsLocalRing.maximalIdeal V ≤ (Ideal.span {(p : V)}).radical := by
-  haveI : IsFractionRing V C := hint.isFractionRing
-  haveI : ValuationRing V := ValuationRing.of_integers v hint
+  have : IsFractionRing V C := hint.isFractionRing
+  have : ValuationRing V := ValuationRing.of_integers v hint
   have hm : ∀ a : V, a ∈ IsLocalRing.maximalIdeal V ↔ v (algebraMap V C a) < 1 := fun a =>
     (not_congr hint.isUnit_iff_valuation_eq_one).trans
       ⟨fun h => lt_of_le_of_ne (hint.map_le_one a) h, fun h => h.ne⟩
@@ -1797,17 +1797,17 @@ theorem core (hD : HodgeTateDatumStatement) (hO : OrdinaryCurveStatement) (p : �
   obtain ⟨M, B, Q, _, _, _, ΓB, iB, e, hB, hmu, hsp⟩ := exists_struct R D A G U p _ Γ i hi
   have hT : ∀ t : Multiplicative N, t ^ p = 1 := _root_.GlobalTheory.CompanionTheory.Ar.BT.TorsionKilled.pow_eq_one R _ Γ _ G _ p i hi
   have hT' : ∀ z : (M × B) × Q, z ^ p = 1 := fun z => e.injective (by rw [map_pow, hT, map_one])
-  haveI : Finite ((M × B) × Q) := Finite.of_equiv _ e.toEquiv.symm
-  haveI : Finite M := Finite.of_injective (fun m : M => (((m, 1), 1) : (M × B) × Q)) fun _ _ h =>
+  have : Finite ((M × B) × Q) := Finite.of_equiv _ e.toEquiv.symm
+  have : Finite M := Finite.of_injective (fun m : M => (((m, 1), 1) : (M × B) × Q)) fun _ _ h =>
     congrArg (fun z => z.1.1) h
-  haveI : Finite B := Finite.of_injective (fun m : B => (((1, m), 1) : (M × B) × Q)) fun _ _ h =>
+  have : Finite B := Finite.of_injective (fun m : B => (((1, m), 1) : (M × B) × Q)) fun _ _ h =>
     congrArg (fun z => z.1.2) h
-  haveI : Finite Q := Finite.of_injective (fun m : Q => ((1, m) : (M × B) × Q)) fun _ _ h =>
+  have : Finite Q := Finite.of_injective (fun m : Q => ((1, m) : (M × B) × Q)) fun _ _ h =>
     congrArg (fun z => z.2) h
-  letI := Fintype.ofFinite (Additive M)
-  letI := Fintype.ofFinite (Additive B)
-  letI := Fintype.ofFinite (Additive Q)
-  letI : Algebra R V := h.toAlgebra
+  let := Fintype.ofFinite (Additive M)
+  let := Fintype.ofFinite (Additive B)
+  let := Fintype.ofFinite (Additive Q)
+  let : Algebra R V := h.toAlgebra
   obtain ⟨hL, -⟩ := GlobalTheory.allSixLaws
   obtain ⟨P', gA, pA, -, mA, -⟩ := hL.polBaseChange _ _ (spMap h) D.toPre.P
   have gpA : IsGrpPullback P'.A D.toPre.P.A (spMap h) gA := ⟨pA, fun T x y x₀ y₀ hx hy => by
@@ -1890,7 +1890,7 @@ theorem PositivityTheory.Xgn.tight_hopf_order_test : GlobalTheory.CompanionTheor
     t₀ Sg _ e φ' F _ _ _ pq sc w σ hOr hsec G c' h9 P i h10 h11 C _ _ _ _ RC hT χ hχ _ _ _ v hv hvp
   obtain ⟨hC, -, hcompl, hle⟩ := hT
   obtain ⟨hch, hN, hic, hfr, -⟩ := PositivityTheory.Xgn.torsion_packing_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d h1 p h3 A m h8 O c' h9
-  haveI : CharZero C := charZero_of_injective_ringHom (algebraMap Ω C).injective
+  have : CharZero C := charZero_of_injective_ringHom (algebraMap Ω C).injective
   have hint : v.Integers RC := ⟨Subtype.val_injective, fun x => (hv _).1 x.2, fun r hr => ⟨⟨r, (hv _).2 hr⟩, rfl⟩⟩
   obtain ⟨_, _, _, hpm, hnil⟩ := val_facts v hint p (Fact.out : p.Prime).ne_zero hvp
   let f : CR O y c' →+* RC := ((algebraMap Ω C).comp (algebraMap (CR O y c') Ω)).codRestrict RC fun a => hle a a.2
@@ -1901,9 +1901,9 @@ theorem PositivityTheory.Xgn.tight_hopf_order_test : GlobalTheory.CompanionTheor
   rw [← P.x_gen] at hpol
   obtain ⟨R, _, _, _, g, h, t', ψ, Dd, A', hRN, hRi, hRc, hh, hgf, hpb, ⟨U⟩⟩ :=
     exists_unif RC p Fact.out hpm hnil (CR O y c') f hf Ω 𝔐.t P.x hpol
-  haveI : CharZero R := h.charZero
+  have : CharZero R := h.charZero
   have hg : Function.Injective g := Function.Injective.of_comp (f := h) (by rw [← RingHom.coe_comp, hgf]; exact hf)
-  letI : Algebra (CR O y c') R := g.toAlgebra
+  let : Algebra (CR O y c') R := g.toAlgebra
   obtain ⟨Γ', F', hF⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exists_isBaseChange_of_injective _ _ P.Γ₁ R g hg
   have t₁ := _root_.GlobalTheory.CompanionTheory.Ar.TorBC.isTorsionAlong_baseChange _ _ P.Γ₁ _ _ _ p P.i₁ P.tors₁ R g Γ' F' hF
   obtain ⟨i₀, -, t₂⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.torsionAlong_iff_pullback_torsion R _ Γ' _ _ _ t'.G ψ p hpb).1 _ t₁

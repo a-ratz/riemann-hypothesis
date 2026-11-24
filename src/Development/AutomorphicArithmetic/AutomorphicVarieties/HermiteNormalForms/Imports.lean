@@ -67,7 +67,7 @@ theorem UpperTheory.V.KT.psdcone :
   intro L _ _ N
   have hc : ∀ (w : InfinitePlace L) (i j : Fin N), Continuous (fun h : HS L N => mat h w i j) := by
     intro w i j
-    exact (continuous_apply j).comp ((continuous_apply i).comp ((continuous_apply w).comp continuous_subtype_val))
+    exact (continuous_apply j).comp ((continuous_apply i).comp ((continuous_apply w).comp continuous_subtypeVal))
   have htr : ∀ k ∈ Psd L N, ∀ w, 0 ≤ (mat k w).trace := by
     intro k hk w
     exact Finset.sum_nonneg fun i _ => (hk w).diag_nonneg
@@ -75,7 +75,7 @@ theorem UpperTheory.V.KT.psdcone :
   · have hP : Psd L N = ⋂ w : InfinitePlace L, ⋂ x : Fin N →₀ ℂ,
         {h : HS L N | 0 ≤ x.sum fun i xi => x.sum fun j xj => star xi * mat h w i j * xj} := by
       ext h
-      simp only [Psd, Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Psd, Set.mem_ofPred_eq, Set.mem_iInter]
       constructor
       · intro hh w x
         exact (hh w).2 x

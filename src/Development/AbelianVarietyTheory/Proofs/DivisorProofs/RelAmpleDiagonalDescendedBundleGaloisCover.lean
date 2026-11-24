@@ -77,7 +77,7 @@ theorem exists_finFree_away_fp {φ : A →+* B} (hf : φ.Finite) (hfl : φ.Flat)
   have P : Algebra.IsPushout A B A' B' := CommRingCat.isPushout_iff_isPushout.1 H
   have hb : IsBaseChange A' (IsScalarTower.toAlgHom A B B').toLinearMap := P.symm.out
   refine ⟨Module.Finite.equiv hb.equiv, ?_⟩
-  letI : Algebra (Localization.Away r) A' := (IsLocalization.Away.lift r (g := α) hu).toAlgebra
+  let : Algebra (Localization.Away r) A' := (IsLocalization.Away.lift r (g := α) hu).toAlgebra
   have : IsScalarTower A (Localization.Away r) A' :=
     IsScalarTower.of_algebraMap_eq fun x => (IsLocalization.Away.lift_eq r hu x).symm
   have h₁ : Module.Free (Localization.Away r) (TensorProduct A (Localization.Away r) B) :=

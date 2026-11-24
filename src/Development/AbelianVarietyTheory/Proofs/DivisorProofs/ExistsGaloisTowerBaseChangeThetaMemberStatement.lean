@@ -94,8 +94,8 @@ theorem GMem.exists_baseChange : ∀ {I : Type} (X₁ : GlobalTheory.GSep.GSet) 
   have aR : AdmBase V (maximalIdeal V) := ⟨hV.1, inferInstance, hV.2.1, hV.2.2.1⟩
   have aR' : AdmBase V' (maximalIdeal V') := ⟨hcn.1, inferInstance, hcn.2.1, hcn.2.2.1⟩
   have hI : (maximalIdeal V).map io ≤ maximalIdeal V' := by
-    letI := io.toAlgebra
-    haveI : Algebra.IsIntegral V V' := ⟨hfin.to_isIntegral⟩
+    let := io.toAlgebra
+    have : Algebra.IsIntegral V V' := ⟨hfin.to_isIntegral⟩
     have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (R := V) (algebraMap _ _) hfin.to_isIntegral (maximalIdeal V')
     rw [Ideal.map_le_iff_le_comap]
     exact (IsLocalRing.eq_maximalIdeal hmax).ge
@@ -800,7 +800,7 @@ theorem terms_witnesses_baseChange : ∀ {I : Type} (X₁ : GlobalTheory.GSep.GS
       ∀ b, 𝔪₂.yK ⟨𝔗.X₂.S.th (𝔗.lam b), 𝔗.X₂.S.th_mem _⟩ * (ρ b : FractionRing V') = K * f (𝔪.yK ⟨X₁.S.th b, X₁.S.th_mem b⟩) := by
   intro I X₁ act 𝔗 z₁ z₂ _ x₀ hdiv V _ _ _ ev X _ t δ 𝔪 C lab x fr th w₀ s g' w hx hfr hth hw₀ hE hc V' _ _ _ io f hf hinj hfin
     ev₂ 𝔪₂ ψ hD bc _ hy gψ wψ hwψ hφ hbc hU hxe hgen x₂ fr₂ hx₂ hfr₂ ρ hρ
-  letI : Algebra (FractionRing V) (FractionRing V') := f.toAlgebra
+  let : Algebra (FractionRing V) (FractionRing V') := f.toAlgebra
   have hG : GlobalFnsSt := GlobalTheory.abelianSchemeLaws_all.1.globalFns
   have hI : (maximalIdeal V).map io ≤ maximalIdeal V' := by
     have := RingHom.IsIntegral.isLocalHom hfin.to_isIntegral hinj
@@ -829,7 +829,7 @@ theorem terms_witnesses_baseChange : ∀ {I : Type} (X₁ : GlobalTheory.GSep.GS
   obtain ⟨e, he⟩ := exists_linearEquiv_expandsF hG 𝔪₂.U (FractionRing V') (k := 1) le_rfl w₀₂ hw₀₂
   refine ⟨th₂, w₀₂, K • s', g₂, w₂, K, hth₂, hw₀₂, (he _ _).2 ?_, fun c => ⟨?_, hw₂ c, ?_⟩, fun mu c => ?_, fun b => ?_⟩
   · exact (congrArg e hK).trans ((map_smul e K _).trans (congrArg (K • ·) ((he _ _).1 E')))
-  · letI := @TorusExt.gtGroup
+  · let := @TorusExt.gtGroup
     obtain ⟨o, o₁, o₂⟩ := ht₂ c _ (hc c).1
     rw [TorusExt.isNsmul_iff_eq] at o₁
     rw [TorusExt.isZero_iff_eq] at o₂
@@ -963,7 +963,7 @@ theorem terms_baseChange : ∀ {I : Type} (X₁ : GlobalTheory.GSep.GSet) (act :
   refine ⟨x₂, fr₂, th₂, w₀₂, s₂, g'₂, w₂, h1', h2', h3', h4', h5', h6', ?_⟩
   intro mu c
   have hz : algebraMap V' (FractionRing V') (ev₂ zt) = ζ' := by
-    haveI : IsLocalHom ev₂ := 𝔪₂.loc
+    have : IsLocalHom ev₂ := 𝔪₂.loc
     rw [← GlobalTheory.GSep.TwistModel.val_stalkHom (X₁ := 𝔗.X₂) (z₁ := z₂) (V := V') (ev := ev₂) zt, hzt, hζ', 𝔪₂.yK_eq]
   have hF0 : f (𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩) ≠ 0 :=
     (map_ne_zero_iff f f.injective).2 (GlobalTheory.GSep.TwistModel.yK_th_ne_zero 𝔪 hdiv)
@@ -1084,8 +1084,8 @@ theorem Tower.regAt : ∀ {I : Type} {X₁ : GlobalTheory.GSep.GSet} {act : I �
     exact Spec_closedPoint
   intro a ha
   set P₂ := (jK V' ≫ spMap ev₂ ≫ 𝔗.X₂.M.Z.fromSpecStalk z₂) (closedPoint (FractionRing V'))
-  haveI := 𝔗.X₂.normal.isIntegrallyClosed_stalk P₂
-  haveI : IsIntegrallyClosed (𝔗.X₂.M.O P₂) := IsIntegrallyClosed.of_equiv (𝔗.X₂.M.stalkEquiv P₂)
+  have := 𝔗.X₂.normal.isIntegrallyClosed_stalk P₂
+  have : IsIntegrallyClosed (𝔗.X₂.M.O P₂) := IsIntegrallyClosed.of_equiv (𝔗.X₂.M.stalkEquiv P₂)
   have hmem : ∀ c : X₁.S.R, ((algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁).comp X₁.S.R.val.toRingHom) c ∈ 𝔗.X₂.M.O P₂ := fun c =>
     𝔗.map_mem_O (by rw [hpt]; exact hreg c.1 c.2)
   let q : X₁.S.R →+* 𝔗.X₂.M.O P₂ := ((algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁).comp X₁.S.R.val.toRingHom).codRestrict _ hmem
@@ -1157,7 +1157,7 @@ theorem Tower.valF_app_p {I : Type} {X₁ : GSet} {act : I → (X₁.ρ.P.A ⟶ 
 theorem Tower.stalkHom_stalkMap_p {I : Type} {X₁ : GSet} {act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)} (𝔗 : Tower X₁ act)
     (z₂ : 𝔗.X₂.M.Z) (x : X₁.M.Z.presheaf.stalk (𝔗.p z₂)) :
     𝔗.X₂.M.stalkHom z₂ (𝔗.p.stalkMap z₂ x) = algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁ (X₁.M.stalkHom (𝔗.p z₂) x) := by
-  obtain ⟨U, hz, f, rfl⟩ := X₁.M.Z.presheaf.germ_exist x
+  obtain ⟨U, hz, f, rfl⟩ := X₁.M.Z.presheaf.exists_germ_eq x
   rw [Scheme.Hom.germ_stalkMap_apply, RatModel.stalkHom_germ hz f]
   exact (RatModel.stalkHom_germ (M := 𝔗.X₂.M) (U := 𝔗.p ⁻¹ᵁ U) hz _).trans (𝔗.valF_app_p ⟨_, hz⟩ f)
 

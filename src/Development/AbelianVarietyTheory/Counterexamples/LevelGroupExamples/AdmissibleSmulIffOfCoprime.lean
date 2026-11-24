@@ -129,7 +129,7 @@ theorem _root_.GlobalTheory.LevelCoverDatum.zetaM_cover (d : _root_.Formalism.L2
   change ((_root_.Formalism.L2.Pj.zetaM d.c₂ : ℂ)) ^ d.pd = (_root_.Formalism.L2.Pj.zetaM c : ℂ)
   rw [_root_.GlobalTheory.LevelPairing.zetaM_coe, _root_.GlobalTheory.LevelPairing.zetaM_coe, h]
   unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp

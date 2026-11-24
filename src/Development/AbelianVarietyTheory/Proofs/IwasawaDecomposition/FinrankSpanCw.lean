@@ -109,7 +109,7 @@ theorem finrank_span_cw (V : Submodule K (Fin n → K)) :
     rw [span_cw_span, ← Set.range_comp]
     rfl
   have hli : LinearIndependent K' fun i => cw φ (b i : Fin n → K) := by
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     have h0 : LinearIndependent K (fun i => (b i : Fin n → K)) := b.linearIndependent.map' V.subtype V.ker_subtype
     exact (linearIndependent_algebraMap_comp_iff).2 h0
   rw [hs, finrank_span_eq_card hli, Fintype.card_fin]

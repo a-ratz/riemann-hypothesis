@@ -87,7 +87,7 @@ private theorem mem_max_iff {l : ℕ} [Fact l.Prime] (c : Coef l) (b : c.O) :
     obtain ⟨-, -, -, -, -, e0, hfin, -, -⟩ := dvrFacts l c.O
     have hE : (eO l c.O).toNat ≠ 0 := by
       rw [Ne, ENat.toNat_eq_zero, not_or]
-      exact ⟨e0, ne_top_of_le_ne_top (ENat.coe_ne_top _) hfin⟩
+      exact ⟨e0, ne_top_of_le_ne_top (ENat.natCast_ne_top _) hfin⟩
     rw [IsDiscreteValuationRing.addVal_eq_zero_iff.2 hu] at h
     have := pow_lt_one₀ (norm_nonneg _) hb hE
     rw [h] at this
@@ -97,7 +97,7 @@ private theorem norm_le {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) : ‖(x 
   obtain ⟨-, -, -, -, -, h0, hfin, -, -⟩ := dvrFacts l c.O
   have hE : (eO l c.O).toNat ≠ 0 := by
     rw [Ne, ENat.toNat_eq_zero, not_or]
-    exact ⟨h0, ne_top_of_le_ne_top (ENat.coe_ne_top _) hfin⟩
+    exact ⟨h0, ne_top_of_le_ne_top (ENat.natCast_ne_top _) hfin⟩
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   have hl0 : (0 : ℝ) < (l : ℝ)⁻¹ := by positivity
   have hl1 : (l : ℝ)⁻¹ < 1 := inv_lt_one_of_one_lt₀ hl
@@ -272,7 +272,7 @@ private theorem core {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] 
       · rw [Matrix.single_mul_apply_of_ne (h := hi), Matrix.single_mul_apply_of_ne (h := hi)]; rfl)
   have hbK : (b : PadicAlgCl l) ≠ 0 := fun h => hb (Subtype.ext h)
   have hcK : ∀ g, r g s u = b * cc g := fun g => by rw [← hR, hc]; rfl
-  haveI : Finite (ResidueField c'.O) := (UpperTheory.V.abelian₂.dvr_finite l c'.O).2.1
+  have : Finite (ResidueField c'.O) := (UpperTheory.V.abelian₂.dvr_finite l c'.O).2.1
   let red : c.O →+* ResidueField c'.O := (residue c'.O).comp (Subalgebra.inclusion hle).toRingHom
   have hred : ∀ x : c.O, red x = 0 ↔ residue c.O x = 0 := fun x => by
     rw [mem_max_iff]; exact mem_max_iff c' _
@@ -351,7 +351,7 @@ private theorem core {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] 
         field_simp
         linear_combination e
       · obtain ⟨m, hm⟩ := locVanP D hD hL _ red hred0 _ (root_mem D s u hsu) p hp (fun g => z g)
-          (hzl.comp_continuous continuous_subtype_val) (fun g h => hcoc g h)
+          (hzl.comp_continuous continuous_subtypeVal) (fun g h => hcoc g h)
         exact ⟨m, fun g hg => hm ⟨g, hg⟩⟩)
   refine hns m fun g => ?_
   have := hm g

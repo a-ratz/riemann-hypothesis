@@ -85,8 +85,8 @@ theorem isSeparable_and_natDegree_le_of_fixed {F E : Type} [Field F] [Field E] [
     (x : E) (hx : ∀ n ∈ N, act n x = x) :
     IsIntegral F x ∧ IsSeparable F x ∧ (minpoly F x).natDegree ≤ N.index := by
   classical
-  haveI : Finite (G ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  have : Finite (G ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
+  have : Fintype (G ⧸ N) := Fintype.ofFinite _
   let f : G ⧸ N → E := fun q => Quotient.liftOn' q (fun g => act g x) (by
     intro a b hab
     rw [QuotientGroup.leftRel_apply] at hab
@@ -175,8 +175,8 @@ theorem finiteDimensional_fixedField_map_of_finiteIndex : ∀ {F E : Type} [Fiel
     intro y hy
     have hx := key x hxL
     have hy' := key y hy
-    haveI := isSeparable_adjoin_pair_of_isSeparable F E hx.2.1 hy'.2.1
-    haveI : FiniteDimensional F F⟮x, y⟯ := finiteDimensional_adjoin (by
+    have := isSeparable_adjoin_pair_of_isSeparable F E hx.2.1 hy'.2.1
+    have : FiniteDimensional F F⟮x, y⟯ := finiteDimensional_adjoin (by
       rintro z (rfl | rfl)
       · exact hx.1
       · exact hy'.1)
@@ -195,7 +195,7 @@ theorem finiteDimensional_fixedField_map_of_finiteIndex : ∀ {F E : Type} [Fiel
       exact hle _ (hKL α.2)
     rw [heq]
     exact subset_adjoin F _ (by simp)
-  haveI : FiniteDimensional F F⟮x⟯ := adjoin.finiteDimensional (key x hxL).1
+  have : FiniteDimensional F F⟮x⟯ := adjoin.finiteDimensional (key x hxL).1
   exact Module.Finite.of_injective (IntermediateField.inclusion hLx).toLinearMap
     (IntermediateField.inclusion_injective hLx)
 
@@ -514,8 +514,8 @@ theorem finiteDimensional_lev : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε 
     @FiniteDimensional (RatFunc Ω) (GlobalTheory.K4.lev X Γ') _ _
       (@Algebra.toModule _ _ _ _ (GlobalTheory.K4.algRat X Γ')) := by
   intro Ω _ _ ε X Γ' M hM hle
-  letI := GlobalTheory.K4.algRat X Γ'
-  letI : Algebra (RatFunc Ω) X.K := ((lev X Γ').subtype.comp (jRat X Γ')).toAlgebra
+  let := GlobalTheory.K4.algRat X Γ'
+  let : Algebra (RatFunc Ω) X.K := ((lev X Γ').subtype.comp (jRat X Γ')).toAlgebra
   have hpoly : ∀ P : Polynomial Ω,
       algebraMap (RatFunc Ω) X.K (algebraMap (Polynomial Ω) (RatFunc Ω) P) = Polynomial.aeval X.jK P := by
     intro P
@@ -537,7 +537,7 @@ theorem finiteDimensional_lev : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε 
         show X.sl (ofSL (g * h)⁻¹) f = X.sl (ofSL g⁻¹) (X.sl (ofSL h⁻¹) f)
         rw [mul_inv_rev, map_mul, X.sl_mul] }
   have hact : ∀ γ f, act γ f = X.sl (ofSL γ⁻¹) f := fun _ _ => rfl
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hfi : Γ'.FiniteIndex := Subgroup.finiteIndex_of_le hle
   have hfin := _root_.GlobalTheory.finiteDimensional_fixedField_map_of_finiteIndex SL(2, ℤ) act Γ' hfi (by
     intro x hx

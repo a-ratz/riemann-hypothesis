@@ -82,7 +82,7 @@ theorem isPullback_overPullback_map_left {S S' : Scheme.{0}} (f : S' ⟶ S) {X Y
 theorem flat_of_flat_fieldBaseChange (k k' : Type) [Field k] [Field k'] (σ : k →+* k')
     (X Y : Over (Sp k)) (φ : X ⟶ Y)
     (h : Flat ((Over.pullback (spMap σ)).map φ).left) : Flat φ.left := by
-  haveI := flat_descendsAlong_fpqc
+  have := flat_descendsAlong_fpqc
   have h₁ : Flat (spMap σ) := inferInstance
   have h₂ : Surjective (spMap σ) := inferInstance
   have h₃ : QuasiCompact (spMap σ) := inferInstance

@@ -89,7 +89,7 @@ theorem exists_open_congr : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     refine ⟨fun v => ?_, (GlobalTheory.RayChar.mem_congrIdl hm).2 fun v _ => ?_⟩
     · show Valued.v (GlobalTheory.RayChar.cmp (φ z) v) = 1
       rw [hv v, map_one]
-    · rw [hv v, sub_self, map_zero]; exact zero_le'
+    · rw [hv v, sub_self, map_zero]; exact zero_le
   · have he : φ (Units.map (incAF F E).toMonoidHom k) = Neutral.B1.diagUnits E k := Units.ext (by
       change Θ ((1 : AF F) ⊗ₜ[F] (k : E)) = _
       rw [hΘ, map_one, one_mul]; rfl)

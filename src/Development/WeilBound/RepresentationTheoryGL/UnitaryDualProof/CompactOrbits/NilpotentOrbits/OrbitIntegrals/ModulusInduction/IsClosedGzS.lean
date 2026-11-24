@@ -145,7 +145,7 @@ theorem contSMulH (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) : ContinuousSMul
   have := contSMul (k := k) (n := n)
   refine ⟨?_⟩
   show Continuous fun p : GzS Z × SpT k n => (p.1 : GL (Fin n) k) • p.2
-  exact (continuous_subtype_val.comp continuous_fst).smul continuous_snd
+  exact (continuous_subtypeVal.comp continuous_fst).smul continuous_snd
 
 theorem isOpen_UU : IsOpen (UU : Set (Sp k n)) := by
   have := GlobalTheory.SplitWeil.t2Space k
@@ -155,11 +155,11 @@ theorem isOpen_UU : IsOpen (UU : Set (Sp k n)) := by
 open scoped Pointwise in
 theorem relIndex_ne_zero {H : Type*} [Group H] [TopologicalSpace H] [IsTopologicalGroup H] {J A : Subgroup H}
     (hJ : IsCompact (J : Set H)) (hA : IsOpen (A : Set H)) : A.relIndex J ≠ 0 := by
-  letI : SMul J (Set J) := ⟨fun g s => (fun x => g * x) '' s⟩
+  let : SMul J (Set J) := ⟨fun g s => (fun x => g * x) '' s⟩
   have : CompactSpace J := isCompact_iff_compactSpace.mp hJ
   have hA' : IsOpen ((A.subgroupOf J : Subgroup J) : Set J) := by
     rw [Subgroup.coe_subgroupOf]
-    exact hA.preimage continuous_subtype_val
+    exact hA.preimage continuous_subtypeVal
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover
     (fun g : J => g • ((A.subgroupOf J : Subgroup J) : Set J))
     (fun g => by

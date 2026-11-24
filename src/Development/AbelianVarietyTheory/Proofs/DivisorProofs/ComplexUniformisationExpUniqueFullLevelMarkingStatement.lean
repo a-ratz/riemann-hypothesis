@@ -84,7 +84,7 @@ theorem unifAt_exp_unique : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (�
     refine GlobalTheory.ExpUnique.end_eq_one_of_invariant D'.La σw (fun a b hab => w.injective hab)
       (fun a => (hermForm Hm (P a) (P a)).re) (fun c => ?_) (fun a => ?_) N hN fun a => ?_
     · refine Set.Finite.of_finite_image (f := P) ((Metric.finite_isBounded_inter_isClosed
-        (s := P.range) DiscreteTopology.isDiscrete (hbd c) AddSubgroup.isClosed_of_discrete).subset ?_) hinj.injOn
+        (s := P.range) DiscreteTopology.isDiscrete (hbd c) AddSubgroup.isClosed_of_discreteTopology).subset ?_) hinj.injOn
       rintro _ ⟨a, ha, rfl⟩
       exact ⟨ha, a, rfl⟩
     · have h1 : h (Complex.I • P a) = Complex.I • h (P a) := map_smul h _ _

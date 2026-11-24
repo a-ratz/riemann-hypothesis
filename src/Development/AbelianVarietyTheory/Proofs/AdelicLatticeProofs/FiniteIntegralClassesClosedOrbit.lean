@@ -243,7 +243,7 @@ theorem borel_harishChandra : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] [Lin
     (fun t => by rw [hφh, ← map_mul, t.2.1.orth, map_one])
     (fun t => hφd _ t.2.1.det_k)
     (fun t => hφd _ (by
-      rw [det_of_upperTriangular (fun i j h => t.2.1.lower i j h)]
+      rw [det_of_isUpperTriangular (fun i j h => t.2.1.lower i j h)]
       simp [t.2.1.diag]))
     (fun t => hφd _ (by rw [det_diagonal, t.2.1.prod_eq]))
     (fun t => by rw [hφh, diagonal_transpose])
@@ -546,12 +546,12 @@ lemma mul_adj {y : Matrix ι ι ℂ} (hy : y.det = 1) : y * y.adjugate = 1 := by
 lemma exists_interior (v : TIdx ι d → ℂ) (hX : IsClosed (orb d v)) :
     ∃ (n : ℝ) (O : Set (TIdx ι d → ℂ)) (y₀ : Matrix ι ι ℂ), IsOpen O ∧ y₀.det = 1 ∧ act d v y₀ ∈ O ∧
       ∀ w ∈ O, w ∈ orb d v → w ∈ act d v '' box ι n := by
-  haveI : CompleteSpace (orb d v) := hX.completeSpace_coe
-  haveI : Nonempty (orb d v) := ⟨⟨act d v 1, 1, Matrix.det_one, rfl⟩⟩
+  have : CompleteSpace (orb d v) := hX.completeSpace_coe
+  have : Nonempty (orb d v) := ⟨⟨act d v 1, 1, Matrix.det_one, rfl⟩⟩
   obtain ⟨n, x, hx⟩ := nonempty_interior_of_iUnion_of_closed (X := orb d v)
     (f := fun n : ℕ => Subtype.val ⁻¹' (act d v '' box ι n))
     (fun n => ((isCompact_box (n : ℝ)).image (continuous_act_right d v)).isClosed.preimage
-      continuous_subtype_val)
+      continuous_subtypeVal)
     (by
       refine Set.eq_univ_of_forall fun ⟨w, y, hy, hw⟩ => ?_
       obtain ⟨M, hM⟩ := box_mul (ι := ι) 1 y hy
@@ -661,7 +661,7 @@ theorem finite_bdd_denominator_vectors {κ : Type} [Fintype κ] (D : ℕ) (hD : 
 
 theorem finite_integral_classes_closed_orbit : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (m : ℕ) (d : Fin m → ℕ) (t : TIdx ι d → ℚ), IsClosed (orb d (fun k => ((t k : ℚ) : ℂ))) → ∀ D : ℕ, 0 < D → ∃ Z : Finset (TIdx ι d → ℚ), ∀ h : Matrix ι ι ℚ, h.det = 1 → (∀ k, ∃ z : ℤ, (D : ℚ) * act d t h k = z) → ∃ γ : Matrix ι ι ℤ, γ.det = 1 ∧ act d t (h * γ.map (Int.cast : ℤ → ℚ)) ∈ Z := by
   intro ι _ _ m d t hcl D hD
-  letI : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
+  let : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
   have hC := (_root_.GlobalTheory.ClassFin.tpow_act_algebra ι ℂ).2 m d
   have hQ := (_root_.GlobalTheory.ClassFin.tpow_act_algebra ι ℚ).2 m d
   set tC : TIdx ι d → ℂ := fun k => ((t k : ℚ) : ℂ) with htC

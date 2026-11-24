@@ -131,14 +131,14 @@ theorem tC_exists (D : D7) (M : MtFam D) (B : NLocBase D M) (hstd : HeckeStdTw B
   subst hμ
   classical
   obtain ⟨hfd, -⟩ := finrank_V B j w
-  haveI := hfd
-  haveI := Formalism.L2.finite_chooseBasisIndex (D := D) j w
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
+  have := hfd
+  have := Formalism.L2.finite_chooseBasisIndex (D := D) j w
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
-  haveI : Module.Finite D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
+  have : Module.Finite D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
   have hjb := D.what₂.jMt_basis (D.what₂.muTw w) j b
   let bC := Module.Basis.mk hjb.1 hjb.2.ge
-  haveI : Module.Finite ℂ (D.what₂.Mt (D.what₂.muTw w) j) := Module.Finite.of_basis bC
+  have : Module.Finite ℂ (D.what₂.Mt (D.what₂.muTw w) j) := Module.Finite.of_basis bC
   have hbC : ∀ a, bC a = D.what₂.jMt (D.what₂.muTw w) j (b a) := fun a => by simp [bC]
   let tC : Module.End ℂ (D.what₂.Mt (D.what₂.muTw w) j) :=
     bC.constr ℂ fun a => D.what₂.jMt (D.what₂.muTw w) j (B.hL j w v k (b a))
@@ -267,7 +267,7 @@ theorem main : ∀ (D : D7) (M : MtFam D), HeckeTied D M → AVTied D M → ∀ 
         ∀ y ∈ D.naut.typeV i P, NG.tN (M.loc i).J s ϖ k ((M.loc i).real y) =
           φ (algebraMap _ _ (κF v k)) • (M.loc i).real y := by
     intro v k hvk
-    simp only [κF, dif_pos hvk]
+    simp only [κF, dite_eq_left hvk]
     exact Classical.choose_spec (key v k hvk)
 
   obtain ⟨e, hene, he⟩ := GlobalTheory.PtLocalEig.eig_descends D M NL.B (D.nd.j i) (D.nd.w i) (D.nd.mu i) hj1 hj2 hμ φ hφ

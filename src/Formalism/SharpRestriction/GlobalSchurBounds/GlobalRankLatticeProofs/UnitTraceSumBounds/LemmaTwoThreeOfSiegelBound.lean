@@ -76,7 +76,7 @@ theorem finrank_K : Module.finrank ℚ H.K = 2 := by
     exact hd.squarefree
   have h1 : (-(H.d : ℤ)) ≠ 1 := by omega
   have hirr : Irreducible (X ^ 2 - C ((-(H.d : ℤ) : ℤ) : ℚ)) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two (Formalism.HF.P.quad_not_sq_rat _ hsf h1)
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two (Formalism.HF.P.quad_not_sq_rat _ hsf h1)
   have hmon : (X ^ 2 - C ((-(H.d : ℤ) : ℤ) : ℚ)).Monic := monic_X_pow_sub_C _ two_ne_zero
   have hev : aeval x (X ^ 2 - C ((-(H.d : ℤ) : ℤ) : ℚ)) = 0 := by simp [hx]
   have hmin : minpoly ℚ x = X ^ 2 - C ((-(H.d : ℤ) : ℤ) : ℚ) :=

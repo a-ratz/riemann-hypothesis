@@ -43,7 +43,7 @@ theorem UpperTheory.complex_conjugations_are_conjugate :
   intro Ω _ _ _ a b ha hb
   obtain ⟨j, hj⟩ := ha
   obtain ⟨j', hj'⟩ := hb
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨σ, hσ⟩ := NumberField.ComplexEmbedding.exists_comp_symm_eq_of_comp_eq (k := ℚ) j j'
     (Subsingleton.elim _ _)
   have h : ∀ x, j (σ.symm x) = j' x := fun x => by

@@ -62,9 +62,9 @@ theorem ptAt_cosetG (q : PtAt R sel mu cst u j) (h : j + 1 = R.m) :
   refine ⟨y, fun w hw => ?_, ?_, fun z hz w hw => ?_⟩
   · have := (Formalism.L2.Col.mem_locLat _ _ _ _).1 hy ⟨w, Finset.mem_union_left _ hw⟩
     simpa [hw] using this
-  · rw [hY, Set.mem_setOf_eq, sub_self]
+  · rw [hY, Set.mem_ofPred_eq, sub_self]
     exact zero_mem _
-  · rw [hY, Set.mem_setOf_eq, Formalism.L2.Col.mem_locLat] at hz
+  · rw [hY, Set.mem_ofPred_eq, Formalism.L2.Col.mem_locLat] at hz
     simpa [hw] using hz ⟨w, Finset.mem_union_left _ hw⟩
 
 theorem cosetIn_eqG (q : PtAt R sel mu cst u j) {y : Sp X.E (R.N j)} (hy0 : y ∈ q.1.2)
@@ -75,7 +75,7 @@ theorem cosetIn_eqG (q : PtAt R sel mu cst u j) {y : Sp X.E (R.N j)} (hy0 : y �
     unfold frsF
     rw [dite_eq_left hP]
   ext z
-  simp only [cosetIn, Set.mem_setOf_eq, if_pos hP, pow_zero, inv_one, one_smul, hfr]
+  simp only [cosetIn, Set.mem_ofPred_eq, ite_eq_left hP, pow_zero, inv_one, one_smul, hfr]
   constructor
   · rintro ⟨y', hy', hz⟩
     have h1 : (q.1.1.deco.1.liftFr ⟨P.1, hP⟩).symm y' - (q.1.1.deco.1.liftFr ⟨P.1, hP⟩).symm y ∈ stdAt X.E (R.N j) P.1 := by
@@ -100,7 +100,7 @@ theorem bar_eqG (q : PtAt R sel mu cst u j) {y : Sp X.E (R.N j)}
       (hf.1 _).1 (by rw [LinearEquiv.apply_symm_apply]; exact hq)
     rw [← hf.2 _ hs, LinearEquiv.apply_symm_apply]
   ext v
-  simp only [bar, Set.mem_setOf_eq, Set.mem_singleton_iff]
+  simp only [bar, Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · rintro ⟨z, hz, rfl⟩
     rw [← key]

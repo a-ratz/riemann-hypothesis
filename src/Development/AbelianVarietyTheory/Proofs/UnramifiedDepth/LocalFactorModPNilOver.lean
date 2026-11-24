@@ -69,7 +69,7 @@ private theorem exists_localFactor_lemma {R₀ : Type} [CommRing R₀] {O R K A 
   have hmR : ∀ x ∈ maximalIdeal R.carrier, IsNilpotent x := by
     intro x hx
     apply hρ.2
-    haveI := ρ.2
+    have := ρ.2
     have h1 : (ρ.1 : R.carrier →+* K.carrier) x ∈ maximalIdeal K.carrier := map_nonunit _ x hx
     rw [hK] at h1
     exact h1
@@ -82,14 +82,14 @@ private theorem exists_localFactor_lemma {R₀ : Type} [CommRing R₀] {O R K A 
     rw [hc0] at h1
     exact not_isUnit_zero h1
   have hsc : ¬ IsUnit (s.1 c) := by
-    haveI := s.2
+    have := s.2
     exact fun h => hc ((isUnit_map_iff (s.1 : O.carrier →+* A.carrier) c).1 h)
   set I : Ideal A.carrier := Ideal.span {s.1 c} with hI
   have hItop : I ≠ ⊤ := by
     rw [hI, Ne, Ideal.span_singleton_eq_top]
     exact hsc
-  haveI : Nontrivial (A.carrier ⧸ I) := _root_.ReciprocityTheory.PGsh.Ainf.quot_nontrivial I hItop
-  haveI : IsLocalRing (A.carrier ⧸ I) :=
+  have : Nontrivial (A.carrier ⧸ I) := _root_.ReciprocityTheory.PGsh.Ainf.quot_nontrivial I hItop
+  have : IsLocalRing (A.carrier ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   let Λ : _root_.ReciprocityTheory.PGsh.LAlg R₀ := _root_.ReciprocityTheory.PGsh.LAlg.mk (A.carrier ⧸ I)
   let μ : _root_.ReciprocityTheory.PGsh.LHom A Λ := ⟨Ideal.Quotient.mkₐ R₀ I,
@@ -139,8 +139,8 @@ private theorem exists_localFactor_lemma {R₀ : Type} [CommRing R₀] {O R K A 
     intro x hx
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
     have h1 : IsUnit (q.1 (φ.1 a)) := hx
-    haveI := q.2
-    haveI := φ.2
+    have := q.2
+    have := φ.2
     have h2 : IsUnit (φ.1 a) := isUnit_of_map_unit (q.1 : O.carrier →+* R.carrier) _ h1
     have h3 : IsUnit a := isUnit_of_map_unit (φ.1 : A.carrier →+* O.carrier) _ h2
     exact h3.map (Ideal.Quotient.mk I)
@@ -163,8 +163,8 @@ private theorem exists_localFactor_lemma {R₀ : Type} [CommRing R₀] {O R K A 
   have hmK : ∀ φ hφ (l : A.carrier ⧸ I), l ∈ maximalIdeal (A.carrier ⧸ I) →
       ρ.1 (ψ₀ φ hφ l) = 0 := by
     intro φ hφ l hl
-    haveI := hψ₀loc φ hφ
-    haveI := ρ.2
+    have := hψ₀loc φ hφ
+    have := ρ.2
     have h1 : (ρ.1 : R.carrier →+* K.carrier) ((ψ₀ φ hφ : A.carrier ⧸ I →+* R.carrier) l) ∈
         maximalIdeal K.carrier :=
       map_nonunit _ _ (map_nonunit _ l hl)
@@ -204,7 +204,7 @@ private theorem exists_localFactor_lemma {R₀ : Type} [CommRing R₀] {O R K A 
     have hmax : (J.comap ((Ideal.Quotient.mk I).comp (s.1 : O.carrier →+* A.carrier))).IsMaximal := by
       rw [hcomp, ← Ideal.comap_comap, hJR]
       exact Ideal.comap_isMaximal_of_surjective (q.1 : O.carrier →+* R.carrier) hq
-    have hJmax := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' _ hint J hmax
+    have hJmax := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap _ hint J hmax
     rw [eq_maximalIdeal hJmax]
     exact hm
   · exact Subtype.ext (AlgHom.ext fun r => by
@@ -262,7 +262,7 @@ theorem _root_.GlobalTheory.localFactor_mod_p_nilOver :
     exact one_ne_zero h1
   obtain ⟨φ₀, hφ₀⟩ := hsec
   have hfin : ((D.fin.sO i).1 : Tw.O.carrier →+* (D.fin.AAx i).carrier).Finite := by
-    letI : Algebra Tw.O.carrier (D.fin.AAx i).carrier :=
+    let : Algebra Tw.O.carrier (D.fin.AAx i).carrier :=
       ((D.fin.sO i).1 : Tw.O.carrier →+* (D.fin.AAx i).carrier).toAlgebra
     exact (D.fin.free i).2
   exact exists_localFactor_lemma (Tw.q 0) D.tower_zero_surjective (p : Tw.O.carrier) D.tower_zero_ker D.wd.ρ1 hρ1 hK

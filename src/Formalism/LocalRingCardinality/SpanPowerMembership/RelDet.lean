@@ -118,7 +118,7 @@ theorem detIdeal_ne_bot (L : Submodule (𝓞 E) (Fin N → E))
   let B : Module.Basis b E (Fin N → E) :=
     Module.Basis.mk hbli (le_of_eq (by rw [Subtype.range_coe, hbspan]))
   have : Finite b := Module.Finite.finite_basis B
-  letI : Fintype b := Fintype.ofFinite b
+  let : Fintype b := Fintype.ofFinite b
   have hcard : Fintype.card b = N := by
     rw [← Module.finrank_eq_card_basis B, Module.finrank_fin_fun]
   let e : b ≃ Fin N := Fintype.equivFinOfCardEq hcard
@@ -127,7 +127,7 @@ theorem detIdeal_ne_bot (L : Submodule (𝓞 E) (Fin N → E))
   have hli : LinearIndependent E (fun j => Matrix.of v j) := hbli.comp e.symm e.symm.injective
   have hdet : (Matrix.of v).det ≠ 0 :=
     ((Matrix.isUnit_iff_isUnit_det _).mp
-      (Matrix.linearIndependent_rows_iff_isUnit.mp hli)).ne_zero
+      (Matrix.linearIndependent_row_iff_isUnit.mp hli)).ne_zero
   rw [Submodule.ne_bot_iff]
   exact ⟨(Matrix.of v).det, det_mem_detIdeal_lemma L v hvL, hdet⟩
 

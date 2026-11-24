@@ -71,7 +71,7 @@ theorem isCompact_span_range {ι M : Type} [Fintype ι] [AddCommGroup M] [Module
     isCompact_iff_compactSpace.mp (ReciprocityTheory.GeneralLinearIntegers.GeneralLinearIntegersOpenCompact.isCompact_integers v)
   have hc : Continuous (fun c : ι → v.adicCompletionIntegers F => ∑ i, ((c i : Fv F v)) • w i) :=
     continuous_finsetSum _ fun i _ =>
-      (continuous_subtype_val.comp (continuous_apply i)).smul continuous_const
+      (continuous_subtypeVal.comp (continuous_apply i)).smul continuous_const
   have e : ((Submodule.span (v.adicCompletionIntegers F) (Set.range w) :
       Submodule (v.adicCompletionIntegers F) M) : Set M) =
       Set.range (fun c : ι → v.adicCompletionIntegers F => ∑ i, ((c i : Fv F v)) • w i) := by
@@ -159,7 +159,7 @@ theorem hermOC_holds (σ : E →ₐ[F] E) (a : ℕ) : HermOC σ v a := by
     ext z
     exact ⟨fun h i _ j _ => h i j, fun h i j => h i trivial j trivial⟩
   have hc : Continuous (fun z : HermR (Fv F v) σ a => (z : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E))) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   constructor
   · rw [hSe]
     exact IsOpen.preimage hc (isOpen_set_pi Set.finite_univ fun _ _ =>
@@ -231,7 +231,7 @@ theorem isOpen_latLoc
     IsOpen (latLoc (E := E) v Λ : Set (Fin n → Fv F v ⊗[F] E)) := by
   classical
   obtain ⟨L, hLat, rfl⟩ := hL
-  letI : Submodule.IsFullLattice E L := hLat
+  let : Submodule.IsFullLattice E L := hLat
   have hsp := Submodule.IsFullLattice.span_eq_top (A := E) (M := L)
   have hm : ∀ i : Fin n, ∃ m : ℤ, m ≠ 0 ∧ m • (Pi.single i (1 : E) : Fin n → E) ∈ L := fun i =>
     exists_int_smul_mem L _ (by rw [hsp]; exact Submodule.mem_top)

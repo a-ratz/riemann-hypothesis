@@ -68,12 +68,12 @@ theorem toUnits_unitaryCharToCircle {A : Type} [CommGroup A] (a : A →* ℂˣ)
 private lemma continuous_toUnits_comp {X : Type} [TopologicalSpace X] {f : X → Circle}
     (hf : Continuous f) : Continuous fun x => Circle.toUnits (f x) := by
   rw [Units.continuous_iff]
-  refine ⟨continuous_subtype_val.comp hf, ?_⟩
+  refine ⟨continuous_subtypeVal.comp hf, ?_⟩
   have h : (fun x => (((Circle.toUnits (f x))⁻¹ : ℂˣ) : ℂ)) = fun x => (((f x)⁻¹ : Circle) : ℂ) := by
     funext x
     simp
   rw [h]
-  exact continuous_subtype_val.comp hf.inv
+  exact continuous_subtypeVal.comp hf.inv
 
 theorem exists_unitary_char_of_open_subgroup_and_hom :
     ∀ (G A : Type) [CommGroup G] [TopologicalSpace G] [IsTopologicalGroup G] [CommGroup A] (U : Subgroup G), IsOpen (U : Set G) → ∀ (α : A →* G) (a : A →* ℂˣ) (ψ : G →* ℂˣ), Continuous ψ → (∀ x, ‖((ψ x : ℂˣ) : ℂ)‖ = 1) → (∀ y, ‖((a y : ℂˣ) : ℂ)‖ = 1) → (∀ y, α y ∈ U → a y = ψ (α y)) → ∃ χ : G →* ℂˣ, Continuous χ ∧ (∀ x, ‖((χ x : ℂˣ) : ℂ)‖ = 1) ∧ (∀ x ∈ U, χ x = ψ x) ∧ ∀ y, χ (α y) = a y := by
@@ -96,9 +96,9 @@ theorem exists_unitary_char_of_open_subgroup_and_hom :
   have hφ : ∀ x : H, φ x = ψ₁ (x : G × A).1 / a₁ (x : G × A).2 := fun x => rfl
   have hφc : Continuous φ := by
     have h1 : Continuous fun x : H => ψ₁ (x : G × A).1 :=
-      hψ₁c.comp (continuous_fst.comp continuous_subtype_val)
+      hψ₁c.comp (continuous_fst.comp continuous_subtypeVal)
     have h2 : Continuous fun x : H => a₁ (x : G × A).2 :=
-      continuous_of_discreteTopology.comp (continuous_snd.comp continuous_subtype_val)
+      continuous_of_discreteTopology.comp (continuous_snd.comp continuous_subtypeVal)
     have hfun : (φ : H → Circle) = fun x : H => ψ₁ (x : G × A).1 / a₁ (x : G × A).2 := funext hφ
     rw [hfun]
     exact h1.div' h2

@@ -412,7 +412,7 @@ theorem finite_minimiser_systems_upTo_aut : ∀ (g : ℕ) (φ : InvFun ℤ), IsP
     rw [hbyy] at this
     simp [hz] at this
   have hmem : μ' ∈ T i := by
-    simp only [T, dif_pos hPi]
+    simp only [T, dite_eq_left hPi]
     refine Classical.choose_spec (_root_.GlobalTheory.Poinc.MinSys.finite_minimiser_systems φ W hW N hN r i.1.val _ hPi.1 hPi.2) (pull e.toLinearMap b) 1 cf
       one_pos hcf ?_ μ' h1 h2
     ext a c
@@ -854,7 +854,7 @@ theorem subset_abLocus {o' Ω : Type} [CommRing o'] [Field Ω] [Algebra o' Ω] {
   obtain ⟨z', rfl⟩ : z ∈ Set.range U₀.ι := by rw [Scheme.Opens.range_ι]; exact hz
   rw [abLocus_pullback (G' := (Over.pullback FinalForm.u₀).obj ρ.P.A) abLocusOne FinalForm.semi FinalForm.cart.1]
   intro K _ _ t _
-  haveI := ρ.P.isAb.proper
+  have := ρ.P.isAb.proper
   show IsProper (pullback.snd (pullback.snd ρ.P.A.hom FinalForm.u₀) t)
   infer_instance
 
@@ -870,7 +870,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam 
     GlobalTheory.TraitLift.exists_lift_of_isCpl (M.Z.presheaf.stalk x) R T.V j hj f
   have heq : spMap g' ≫ ξR = spMap h ≫ ξ := by
     rw [hξR, ← hf, ← Category.assoc, ← Category.assoc, ← spMap_comp', ← spMap_comp', hcomp]
-  haveI : CharZero V' := (RingHom.charZero_iff hinj).1 inferInstance
+  have : CharZero V' := (RingHom.charZero_iff hinj).1 inferInstance
   have hBV : GlobalTheory.Mum.Base V' := ⟨⟨inferInstance, inferInstance, inferInstance, hc⟩, inferInstance⟩
   have hle : nonZeroDivisors T.V ≤ (nonZeroDivisors V').comap h :=
     nonZeroDivisors_le_comap_nonZeroDivisors_of_injective h hinj
@@ -906,7 +906,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam 
   have h'' : IsGrpPullback ((Over.pullback (spMap g')).obj G) FinalForm.G ξ' (pullback.fst G.hom (spMap g') ≫ gm) :=
     (isGrpPullback_pullback G (spMap g')).comp hgm
   obtain ⟨e, he1, he2⟩ := grpPullback_iso hpb' h''
-  haveI := he1
+  have := he1
   set β : ((Over.pullback ξ').obj FinalForm.G).left ⟶ G.left := e.hom.left ≫ pullback.fst G.hom (spMap g') with hβdef
   have hβ : IsGrpPullback ((Over.pullback ξ').obj FinalForm.G) G (spMap g') β :=
     ((isGrpPullback_of_iso e).comp (isGrpPullback_pullback G (spMap g'))).congr (Category.id_comp _) rfl
@@ -915,7 +915,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam 
   clear_value β
   have hGsemi : IsSemiAbelian G := by
     obtain ⟨e2, he21, -⟩ := grpPullback_iso hgm (isGrpPullback_pullback FinalForm.G ξR)
-    haveI := he21
+    have := he21
     exact GlobalTheory.isSemiAbelian_of_grpIso e2 (IsSemiAbelian.pullback ξR FinalForm.G FinalForm.semi)
   have hLBβ : LBIso U'.LG.L (U.LG.L.pull β) := by
     have h1 : LBIso (U.LG.L.pull β) (FinalForm.L.L.pull (pullback.fst FinalForm.G.hom ξ')) :=
@@ -952,7 +952,7 @@ theorem main : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam 
     exact ⟨h0, (hcoord y r r' hr hr').trans has⟩
   · intro a b y
     obtain ⟨f, fR, hMO, hfR, hcomm, hEC⟩ := hm a b
-    haveI : IsMonHom f := hMO.1
+    have : IsMonHom f := hMO.1
     let f' : (Over.pullback ξ').obj FinalForm.G ⟶ (Over.pullback ξ').obj FinalForm.G := (Over.pullback ξ').map f
     have hf'fst : f'.left ≫ pullback.fst FinalForm.G.hom ξ' = pullback.fst FinalForm.G.hom ξ' ≫ f.left := pullback.lift_fst _ _ _
     have hf' : IsMonHom f' := PullGtPf.isMonHom_of_grpPullback hpb' hpb' f f' hf'fst
@@ -1028,7 +1028,7 @@ theorem isSemiAbelian_of_isGrpPullback {S S' : Scheme.{0}} {s : S' ⟶ S} {G : O
     [IsCommMonObj G] [GrpObj H] {gm : G.left ⟶ H.left} (hp : IsGrpPullback G H s gm) (hH : IsSemiAbelian H) :
     IsSemiAbelian G := by
   let e : G ≅ (Over.pullback s).obj H := Over.isoMk hp.1.isoPullback (by simp)
-  haveI : IsMonHom e.hom := PullGtPf.isMonHom_of_grpPullback hp (isGrpPullback_pullback H s) (𝟙 H) e.hom
+  have : IsMonHom e.hom := PullGtPf.isMonHom_of_grpPullback hp (isGrpPullback_pullback H s) (𝟙 H) e.hom
     (by simp [e])
   exact GlobalTheory.isSemiAbelian_of_grpIso e (IsSemiAbelian.pullback s H hH)
 
@@ -1151,14 +1151,14 @@ theorem GlobalTheory.Poinc.Clocx.exists_at_closedPoint : ∀ (g n : ℕ), 1 ≤ 
   obtain ⟨c, pr, hSB⟩ := (sharpOver_iff F W ρ.P u).1 hsharp
   obtain ⟨R, _, _, _, j, G, _, _, gm, D, A, U, hB, hcpl, hpb, hLB, hpsiU⟩ :=
     GlobalTheory.Poinc.CompletedStalk.exists_completion_unif o' Ω S ρ hBig M U₀ EE FinalForm hAdm hEE x hx
-  haveI : CharZero R := hB.2
+  have : CharZero R := hB.2
   have hRi : IsIntegrallyClosed R := hB.1.2.2.1
   have hGsemi : IsSemiAbelian G := isSemiAbelian_of_isGrpPullback hpb FinalForm.semi
   have hm : ∀ a b, ∃ (mab : D.toPre.X →+ D.toPre.X), ∃ (f : FinalForm.G ⟶ FinalForm.G) (fR : G ⟶ G), MatOn FinalForm pr a b f ∧
       IsMonHom fR ∧ fR.left ≫ gm = gm ≫ f.left ∧ EndChar U fR mab := by
     intro a b
     obtain ⟨f, hf⟩ := matOn_exists o' Ω S ρ M U₀ EE FinalForm hU c.A pr hSB.2.1 hSB.2.2.1 a b
-    haveI : IsMonHom f := hf.1
+    have : IsMonHom f := hf.1
     obtain ⟨fR, hfR, hfR'⟩ := exists_pull_endo hpb f
     obtain ⟨mab, hmab⟩ := endChar_exists_of_isMonHom R hB G hGsemi D A U fR hfR
     exact ⟨mab, f, fR, hf, hfR, hfR', hmab⟩
@@ -1171,8 +1171,8 @@ theorem GlobalTheory.Poinc.Clocx.exists_at_closedPoint : ∀ (g n : ℕ), 1 ≤ 
   obtain ⟨T₀, ξ₀, hT₀, hξ₀⟩ :=
     GlobalTheory.Poinc.TraitCen.exists_trait_cen g n _ (zetaAway n) F o' Ω M U₀ hU (Sp S.R) FinalForm.u₀ u x hx
   obtain ⟨V₀, _, _, _, h₀, g₀, ρ₀, hh₀, hirr₀, hsq₀, hρ₀s, hord₀, hrel₀⟩ := key T₀ ξ₀ hT₀ (hξ₀ ▸ specializes_rfl)
-  haveI := GlobalTheory.Poinc.TraitCen.isNoetherianRing_stalk M x
-  haveI := isLocalHom_of_irreducible h₀ T₀.irr hirr₀
+  have := GlobalTheory.Poinc.TraitCen.isNoetherianRing_stalk M x
+  have := isLocalHom_of_irreducible h₀ T₀.irr hirr₀
   have hloc₀ := mem_maximalIdeal_of_square x j hcpl h₀ g₀ ξ₀ hξ₀ hsq₀
   have hρ₀i : Function.Injective ρ₀ := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -1358,24 +1358,24 @@ theorem GlobalTheory.Poinc.exists_locTuples_theta_of_adm : ∀ (g n : ℕ), 1 �
   have hNodd : Odd S.N := by rw [ρ.N_eq]; exact (ρ.n_odd.pow).pow
   have hN2 := S.N_ge
   have hN3 : 3 ≤ S.N := by obtain ⟨j, hj⟩ := hNodd; omega
-  haveI hN0 : NeZero S.N := ⟨by omega⟩
+  have hN0 : NeZero S.N := ⟨by omega⟩
   have hn2 : ρ.n ≠ 2 := by
     intro h2; have := ρ.n_odd; rw [h2] at this; exact (Nat.not_odd_iff_even.2 even_two) this
   have hε : ∃ ε : Fin 8 → ℤ, Nat.Coprime S.N (2 * (∑ u, ∑ v, W u v * ε u * ε v).natAbs) := by
     rw [ρ.N_eq]; exact GlobalTheory.T.exists_e8Form_value_coprime_oddPrimePow W hW ρ.n ρ.k ρ.n_prime hn2
   have hC := _root_.GlobalTheory.Poinc.finite_types g φ hφ W hW.1 S.N hN3 hε
   choose ιf 𝓛f hιf using fun R : Fin (g + 1) => hC R.1 (Nat.lt_succ_iff.1 R.2)
-  haveI : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by omega)⟩
-  haveI : NeZero ((S.r * S.N) ^ 2) := ⟨pow_ne_zero _ (NeZero.ne _)⟩
-  haveI : Finite (AddSubgroup S.Gam) :=
+  have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by omega)⟩
+  have : NeZero ((S.r * S.N) ^ 2) := ⟨pow_ne_zero _ (NeZero.ne _)⟩
+  have : Finite (AddSubgroup S.Gam) :=
     Finite.of_injective (fun H : AddSubgroup S.Gam => (H : Set S.Gam)) SetLike.coe_injective
-  haveI : ∀ T₀ : AddSubgroup S.Gam, Finite (T₀ →+ ZMod S.N) := fun T₀ =>
+  have : ∀ T₀ : AddSubgroup S.Gam, Finite (T₀ →+ ZMod S.N) := fun T₀ =>
     Finite.of_injective (fun f : T₀ →+ ZMod S.N => (f : T₀ → ZMod S.N)) DFunLike.coe_injective
   let Dt := Σ T₀ : AddSubgroup S.Gam, (T₀ →+ ZMod S.N) × (S.J × (T₀ → ZMod ((S.r * S.N) ^ 2))) × S.Gam
-  haveI : Finite Dt := inferInstance
+  have : Finite Dt := inferInstance
   let Es : Set Ω := {v | v ≠ 0} ∩ Set.range (fun d : Dt => S.FF d.1 d.2.1 d.2.2.1 / S.th d.2.2.2)
   have hEs : Es.Finite := (Set.finite_range _).inter_of_right _
-  letI : Fintype Es := hEs.fintype
+  let : Fintype Es := hEs.fintype
   let mult : Fin (g + 1) → ℕ := fun R => ∏ s ∈ Finset.univ.erase R, ιf s
   let K := Σ R : Fin (g + 1), Σ _ : {L // L ∈ 𝓛f R}, ((Fin 8 → Fin R.1 → ZMod S.N) → Es)
   let Jk : K → Type := fun k => {ν // ν ∈ k.2.1.1}
@@ -1421,7 +1421,7 @@ theorem GlobalTheory.Poinc.exists_locTuples_theta_of_adm : ∀ (g n : ℕ), 1 �
   have hOv := hAdm.1
   have hFFR : ∀ (T₀ : AddSubgroup S.Gam) c' κ, S.FF T₀ c' κ ∈ S.R := by
     intro T₀ c' κ
-    haveI : Fintype T₀ := Fintype.ofFinite _
+    have : Fintype T₀ := Fintype.ofFinite _
     unfold ThetaSys.FF
     rw [finsum_eq_sum_of_fintype]
     exact Subalgebra.sum_mem _ fun t _ => Subalgebra.mul_mem _ (Subalgebra.algebraMap_mem _ _)

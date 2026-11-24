@@ -144,7 +144,7 @@ theorem GlobalTheory.AffCxPts.homeomorph_zeroSet : ∀ (X : Scheme.{0}) (p : X �
     have e (w : Z) : ReciprocityTheory.ChartRestriction.G.Geo.Tor.valR (s w).1 U (φ (MvPolynomial.X i)) = (w : Fin k → ℂ) i := hcoords w i
     rw [show (fun w : Z => ReciprocityTheory.ChartRestriction.G.Geo.Tor.valR (s w).1 U (φ (MvPolynomial.X i))) =
         fun w : Z => (w : Fin k → ℂ) i from funext e]
-    exact (e z).symm ▸ ((continuous_apply i).comp continuous_subtype_val).tendsto z
+    exact (e z).symm ▸ ((continuous_apply i).comp continuous_subtypeVal).tendsto z
   exact
     { toFun := fun y => ⟨coords φ y, htZ y⟩
       invFun := fun z => ⟨s z, ofHom_mem hU _ (hψ z)⟩
@@ -259,7 +259,7 @@ theorem GlobalTheory.JacSpan.ker_le_span_jac : ∀ (X : Scheme.{0}) (p : X ⟶ S
       have e : CxPts.ev p (RingHom.id ℂ) U (f + g) ∘ ch.e.symm =
           (CxPts.ev p (RingHom.id ℂ) U f ∘ ch.e.symm) + (CxPts.ev p (RingHom.id ℂ) U g ∘ ch.e.symm) :=
         funext fun v => CxPts.ev_add _ _ _
-      simp only [e, fderiv_add (hd f) (hd g), ContinuousLinearMap.add_apply])
+      simp only [e, fderiv_add (hd f) (hd g), add_apply])
   have hmul : ∀ b (f g : Γ(X, U)), δ b (f * g) =
       CxPts.evHom hz f * δ b g + CxPts.evHom hz g * δ b f := by
     intro b f g
@@ -267,8 +267,8 @@ theorem GlobalTheory.JacSpan.ker_le_span_jac : ∀ (X : Scheme.{0}) (p : X ⟶ S
         (CxPts.ev p (RingHom.id ℂ) U f ∘ ch.e.symm) * (CxPts.ev p (RingHom.id ℂ) U g ∘ ch.e.symm) :=
       funext fun v => CxPts.ev_mul _ _ _
     simp only [δ, AddMonoidHom.mk'_apply, e, fderiv_mul (hd f) (hd g), Function.comp_apply,
-      ch.e.left_inv hzc, CxPts.ev_eq hz, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.smul_apply, smul_eq_mul]
+      ch.e.left_inv hzc, CxPts.ev_eq hz, add_apply,
+      smul_apply, smul_eq_mul]
   have hc : ∀ b (c : ℂ), δ b (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U c) = 0 := by
     intro b c
     have e : CxPts.ev p (RingHom.id ℂ) U (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U c) ∘ ch.e.symm
@@ -401,20 +401,20 @@ variable {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {d : ℕ}
 theorem countable_charts [SmoothOfRelativeDimension d p] {U : X.Opens} (hU : IsAffineOpen U) :
     ∃ C : Set (AlgChart p (RingHom.id ℂ) d), C.Countable ∧
       ∀ z ∈ ptsIn p (RingHom.id ℂ) U, ∃ ch ∈ C, z ∈ ch.e.source := by
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
+  have : Smooth p := SmoothOfRelativeDimension.smooth d p
   have h1 := Scheme.Hom.finiteType_appLE p (isAffineOpen_top (Sp ℂ)) hU (by simp)
   have h2 : ((Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv).hom.FiniteType :=
     RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso (CommRingCat.of ℂ)).commRingCatIsoToRingEquiv.symm.surjective
   have hft : (algX p U).FiniteType := h1.comp h2
   obtain ⟨k, G, ⟨hom⟩⟩ := GlobalTheory.AffCxPts.homeomorph_zeroSet X p U hU hft
-  haveI : SecondCountableTopology (ptsIn p (RingHom.id ℂ) U) := hom.secondCountableTopology
+  have : SecondCountableTopology (ptsIn p (RingHom.id ℂ) U) := hom.secondCountableTopology
   choose ch hch using fun y : ptsIn p (RingHom.id ℂ) U =>
     AlgChart.exists_mem_source (p := p) (D := d) (σ := RingHom.id ℂ) y.1
   obtain ⟨T, hT, hTU⟩ := TopologicalSpace.isOpen_iUnion_countable
     (fun y : ptsIn p (RingHom.id ℂ) U =>
       (Subtype.val ⁻¹' (ch y).e.source : Set (ptsIn p (RingHom.id ℂ) U)))
-    (fun y => (ch y).e.open_source.preimage continuous_subtype_val)
+    (fun y => (ch y).e.open_source.preimage continuous_subtypeVal)
   refine ⟨ch '' T, hT.image _, fun z hz => ?_⟩
   have hm : (⟨z, hz⟩ : ptsIn p (RingHom.id ℂ) U) ∈ ⋃ i ∈ T, Subtype.val ⁻¹' (ch i).e.source := by
     rw [hTU]; exact mem_iUnion.2 ⟨⟨z, hz⟩, hch _⟩
@@ -509,10 +509,10 @@ theorem eq_top_of_forall_cxPts_mem : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) [Lo
     RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso (CommRingCat.of ℂ)).commRingCatIsoToRingEquiv.symm.surjective
   have hft : (algX p V).FiniteType := h1.comp h2
-  letI : Algebra ℂ Γ(X, V) := (algX p V).toAlgebra
-  haveI : Algebra.FiniteType ℂ Γ(X, V) := hft
-  letI : Field (Γ(X, V) ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite ℂ (Γ(X, V) ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ (Γ(X, V) ⧸ m)
+  let : Algebra ℂ Γ(X, V) := (algX p V).toAlgebra
+  have : Algebra.FiniteType ℂ Γ(X, V) := hft
+  let : Field (Γ(X, V) ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite ℂ (Γ(X, V) ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ (Γ(X, V) ⧸ m)
   have hbij : Function.Bijective (algebraMap ℂ (Γ(X, V) ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : ℂ ≃+* (Γ(X, V) ⧸ m) := RingEquiv.ofBijective _ hbij
@@ -683,24 +683,24 @@ theorem finite_transv_zeros : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) [LocallyOf
     RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso (CommRingCat.of ℂ)).commRingCatIsoToRingEquiv.symm.surjective
   have hft : (algX p U).FiniteType := h1.comp h2
-  letI : Algebra ℂ Γ(X, U) := (algX p U).toAlgebra
-  haveI : Algebra.FiniteType ℂ Γ(X, U) := hft
-  haveI : IsNoetherianRing Γ(X, U) := Algebra.FiniteType.isNoetherianRing ℂ _
+  let : Algebra ℂ Γ(X, U) := (algX p U).toAlgebra
+  have : Algebra.FiniteType ℂ Γ(X, U) := hft
+  have : IsNoetherianRing Γ(X, U) := Algebra.FiniteType.isNoetherianRing ℂ _
   classical
   let F : CxPts p (RingHom.id ℂ) → Ideal Γ(X, U) := fun z =>
     if hz : z ∈ CxPts.ptsIn p (RingHom.id ℂ) U then RingHom.ker (CxPts.evHom hz) else ⊥
   refine Set.Finite.of_finite_image (f := F)
     ((Ideal.finite_minimalPrimes_of_isNoetherianRing _ (Ideal.span (Set.range φ))).subset ?_) ?_
   · rintro _ ⟨z, ⟨hz, hv, hsq⟩, rfl⟩
-    simp only [F, dif_pos hz]
-    haveI : (RingHom.ker (CxPts.evHom hz)).IsMaximal :=
+    simp only [F, dite_eq_left hz]
+    have : (RingHom.ker (CxPts.evHom hz)).IsMaximal :=
       RingHom.ker_isMaximal_of_surjective _ fun c => ⟨algX p U c, evHom_algX hz c⟩
     refine mem_minimalPrimes_of_le_sup_sq (IsNoetherian.noetherian _) ?_ hsq
     rw [Ideal.span_le]
     rintro _ ⟨j, rfl⟩
     exact hv j
   · rintro y ⟨hy, -⟩ z ⟨hz, -⟩ e
-    simp only [F, dif_pos hy, dif_pos hz] at e
+    simp only [F, dite_eq_left hy, dite_eq_left hz] at e
     exact eq_of_ker_eq hU hy hz e
 
 end GlobalTheory.TransvZeros
@@ -817,8 +817,8 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
         RingHom.ker (CxPts.evHom hy) ≤ Ideal.span (Set.range fun j => fRatio ι (F j) f₀ (hF j) hf₀) ⊔
           RingHom.ker (CxPts.evHom hy) ^ 2 := by
   classical
-  haveI : IsClosedImmersion ι := hι
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
+  have : IsClosedImmersion ι := hι
+  have : Smooth p := SmoothOfRelativeDimension.smooth d p
   obtain ⟨n, h, g, hh, hg, hn, hgen, hgS, hbase, hjet⟩ := GlobalTheory.T.exists_forms_vanishing_complexPoints_fullJets X p d N ι hι hp S
   have hUh : IsAffineOpen (fOpen ι h) := (Proj.isAffineOpen_basicOpen (grading ℂ N) h hh hn).preimage ι
   obtain ⟨E, hE, hEgood⟩ := GlobalTheory.T.algebraicSard_shifted_functions_regularZeros X p d (fOpen ι h) hUh (fun j => fRatio ι (g j) h (hg j) hh)

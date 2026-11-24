@@ -182,13 +182,13 @@ theorem conv_mem {K : Type} [Group K] [TopologicalSpace K] [IsTopologicalGroup K
 theorem kFinAt_avg : ∀ (D : Formalism.BasicNotions.D7) (θ : Formalism.IndefR.Datum.InfFam D), Formalism.L2.Theta.IsInfFam θ → ∀ (N : GlobalTheory.Grid.Node D) (ψ : Formalism.L2.Theta.GA D (GlobalTheory.Grid.Node.V N) → ℂ), Formalism.L2.Theta.IsAutFunSm θ (GlobalTheory.Grid.Node.V N) ψ → ∀ (τ : Formalism.BasicNotions.Rows.Data.Tau (Formalism.BasicNotions.D7.what₂ D)) (e : ↥(Formalism.REAL.KG (Formalism.IndefR.Mult.DSModel.ε (GlobalTheory.Grid.Node.M N) τ)) → ℂ), GlobalTheory.TypeSum.KFinFun (Formalism.IndefR.Mult.DSModel.ε (GlobalTheory.Grid.Node.M N) τ) e → GlobalTheory.CuspKFin.KFinAt θ N τ (GlobalTheory.SeriesToClosure.avg θ (GlobalTheory.Grid.Node.V N) τ (Formalism.IndefR.Mult.DSModel.ε (GlobalTheory.Grid.Node.M N) τ) (Formalism.IndefR.Mult.DSModel.fr (GlobalTheory.Grid.Node.M N) τ) e ψ) := by
   intro D θ hθ N ψ hψ τ e he
   obtain ⟨F, hfd, heF, hc, hF⟩ := he
-  haveI : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hP := N.M.fr_unit τ
   have hJ := N.M.fr_gram τ
   have hmem := GlobalTheory.Published.AutFin.conj_mem_UH hP hJ
   have hd : IsUnit (N.M.fr τ).det := (Matrix.isUnit_iff_isUnit_det _).1 hP
   have hK : Continuous fun k : Formalism.REAL.KG (N.M.ε τ) => Formalism.REAL.toMK k :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hk : Continuous (GlobalTheory.Published.AutFin.kAt θ N.V τ (N.M.ε τ) (N.M.fr τ)) :=
     (GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ N.V τ).comp_continuous
       ((continuous_const.matrix_mul hK).matrix_mul continuous_const) hmem
@@ -631,7 +631,7 @@ theorem coeffSpan_finDim {K W : Type} [Group K] [AddCommGroup W] [Module ℂ W] 
       exact Finset.sum_congr rfl fun i _ => by ring
     rw [SetLike.mem_coe, this]
     exact Submodule.sum_mem _ fun ij _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨ij, rfl⟩)
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range g)) :=
+  have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range g)) :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range g)
   exact Submodule.finiteDimensional_of_le hle
 
@@ -691,7 +691,7 @@ namespace GlobalTheory.ReproKFin
 theorem reproduce_one : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Type) [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (ρ : Representation ℂ (Formalism.REAL.KG ε) W), GlobalTheory.Published.AutFin.IsContRep ρ → ∃ e : Formalism.REAL.KG ε → ℂ, KFinFun ε e ∧ ∀ h ∈ GlobalTheory.Published.AutFin.coeffSpan ρ, ∫ k, e k * h k ∂(Formalism.REAL.muK ε) = h 1 := by
   intro n ε W _ _ _ ρ hρ
   obtain ⟨hcS, hLS, hRS⟩ := coeffSpan_props ρ hρ
-  haveI : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := coeffSpan_finDim ρ
+  have : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := coeffSpan_finDim ρ
   set S := GlobalTheory.Published.AutFin.coeffSpan ρ with hS
   obtain ⟨hcT, hTT⟩ := sup_props hcS hLS hRS
   set T := S ⊔ conjSub S with hT
@@ -871,7 +871,7 @@ theorem placeDecomposition_gkMap_rankOne_values : ∀ (D : D7) (θ : InfFam D), 
   intro D θ hθ hp N τ φ S v ℓ C hS hc h c ψ hψ
   have hσ : Std (N.M.ε τ) (N.M.σ τ) := std_of_isDS hp.harishChandraModules (N.M.ds τ)
   have hP := N.M.fr_unit τ
-  haveI : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
+  have : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
   have hJ := N.M.fr_gram τ
   have hb := fun x => (h x).sobFun (hS x) c
   have hsm : ∀ u : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin N.M τ, Sm (N.M.ε τ) (N.M.σ τ) u := fun u => hσ.2.2.1 _ u.2
@@ -952,7 +952,7 @@ noncomputable section
 namespace GlobalTheory.PlaceDecomp
 theorem placeDecomposition_hasCtp_of_isClosed : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (N : GlobalTheory.Grid.Node D) (U : Subgroup (GA D N.V)) (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (N.M.ε τ)) (W τ)) (τ : D.what₂.Tau), (∀ f f' : GA D N.V → ℂ, f ∈ Cls θ N U → f' ∈ Cls θ N U → f + f' ∈ Cls θ N U) → (0 : GA D N.V → ℂ) ∈ Cls θ N U → (∀ (c : ℂ) (f : GA D N.V → ℂ), f ∈ Cls θ N U → c • f ∈ Cls θ N U) → (∀ T T' : N.M.H τ → N.M.H τ, HasCtp θ N U (TyOf θ N ρ) τ T → HasCtp θ N U (TyOf θ N ρ) τ T' → HasCtp θ N U (TyOf θ N ρ) τ (fun w => T w + T' w) ∧ HasCtp θ N U (TyOf θ N ρ) τ (fun w => T (T' w))) ∧ (∀ (c : ℂ) (T : N.M.H τ → N.M.H τ), HasCtp θ N U (TyOf θ N ρ) τ T → HasCtp θ N U (TyOf θ N ρ) τ (fun w => c • T w)) ∧ HasCtp θ N U (TyOf θ N ρ) τ (fun _ => 0) := by
   intro D θ _ hp N U W _ _ ρ τ hadd _ hsmul
-  haveI : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
+  have : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
   have hσ := (std_of_isDS hp.harishChandraModules (N.M.ds τ)).1
   have hs : ∀ (c : ℂ) (T : N.M.H τ → N.M.H τ), HasCtp θ N U (TyOf θ N ρ) τ T →
       HasCtp θ N U (TyOf θ N ρ) τ (fun w => c • T w) := by
@@ -1024,8 +1024,8 @@ noncomputable section
 namespace GlobalTheory.PlaceDecomp
 theorem placeDecomposition_kAverage : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (N : GlobalTheory.Grid.Node D) (U : Subgroup (GA D N.V)) (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] [∀ τ, FiniteDimensional ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (N.M.ε τ)) (W τ)) (τ : D.what₂.Tau) (e : Formalism.REAL.KG (N.M.ε τ) → ℂ), KFinFun (N.M.ε τ) e → HasCtp θ N U (TyOf θ N ρ) τ (kAvg (N.M.ε τ) (N.M.σ τ) e) := by
   intro D θ hθ hp N U W _ _ _ ρ τ e he
-  haveI : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
-  haveI : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
+  have : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hP := N.M.fr_unit τ
   have hJ := N.M.fr_gram τ
   have hσ : Std (N.M.ε τ) (N.M.σ τ) := std_of_isDS hp.harishChandraModules (N.M.ds τ)
@@ -1053,7 +1053,7 @@ theorem placeDecomposition_kAverage : ∀ (D : D7) (θ : InfFam D), IsInfFam θ 
     rw [mul_assoc, ← GlobalTheory.PointAtPlaceHom.comm_of_mem N.V (GlobalTheory.PointAtPlaceHom.atTau_mem N.V τ _) hkf, ← mul_assoc,
       hf.2 k hk hkf]
   · intro τ' hne f hf hT x
-    haveI := GlobalTheory.AvgCoeff.coeffSpan_finiteDimensional (ρ τ')
+    have := GlobalTheory.AvgCoeff.coeffSpan_finiteDimensional (ρ τ')
     have hAc : Continuous fun k' : KG (N.M.ε τ) => atTau θ N.V τ ((N.M.fr τ)⁻¹ * toMK k' * N.M.fr τ) :=
       GlobalTheory.RealAverage.continuous_atTau hθ hκ hU
     have hc : ∀ k k', GlobalTheory.Published.AutFin.kAt θ N.V τ' (N.M.ε τ') (N.M.fr τ') k *
@@ -1125,10 +1125,10 @@ noncomputable section
 namespace GlobalTheory.PlaceDecomp
 theorem placeDecomposition_translate : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (N : GlobalTheory.Grid.Node D) (U : Subgroup (GA D N.V)) (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (N.M.ε τ)) (W τ)) (τ : D.what₂.Tau), ∀ g ∈ UJset (N.M.ε τ), HasCtp θ N U (TyOf θ N ρ) τ (N.M.σ τ g) := by
   intro D θ hθ hp N U W _ _ ρ τ g hg
-  haveI : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hP := N.M.fr_unit τ
   have hJ := N.M.fr_gram τ
-  haveI : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
+  have : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
   have hσ : Std (N.M.ε τ) (N.M.σ τ) := std_of_isDS hp.harishChandraModules (N.M.ds τ)
   have hk : (N.M.fr τ)⁻¹ * g * N.M.fr τ ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ) := conj_inv_mem hP hJ hg
   have comm : ∀ τ', τ' ≠ τ → ∀ h ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ'),
@@ -1206,7 +1206,7 @@ open Formalism.REAL Formalism.MainNotions.S GlobalTheory.SmoothGlob GlobalTheory
 open scoped InnerProductSpace
 theorem GlobalTheory.PlaceDecomp.weil_decomposition_at_place : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (N : GlobalTheory.Grid.Node D) (U : Subgroup (GA D N.V)) (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] [∀ τ, FiniteDimensional ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (N.M.ε τ)) (W τ)), (∀ τ, GlobalTheory.Published.AutFin.IsContRep (ρ τ)) → ∀ τ, GlobalTheory.KFinDecomp.DecompAt θ N (GlobalTheory.KFinDecomp.Cls θ N U) (fun τ f => GlobalTheory.Published.AutFin.HasTypeAt θ N.V τ (N.M.ε τ) (N.M.fr τ) (ρ τ) f) τ := by
   intro D θ hθ hp N U W _ _ _ ρ hρ τ
-  haveI : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
+  have : CompleteSpace (N.M.H τ) := (N.M.ds τ).1
   have hσ : Std (N.M.ε τ) (N.M.σ τ) := std_of_isDS hp.harishChandraModules (N.M.ds τ)
   obtain ⟨e, he, he1⟩ := GlobalTheory.T.exists_K_finite_reproducing_function _ (N.M.ε τ) (W τ) (ρ τ) (hρ τ)
   have hcl := _root_.GlobalTheory.T.twist_placeDecomposition_hasCtp D θ hθ hp N U W ρ τ (fun f f' hf hf' => _root_.GlobalTheory.T.kFinite_isotypic_decomposition_additive D θ hθ hp N U f f' hf hf')
@@ -1265,7 +1265,7 @@ open Classical in
 theorem GlobalTheory.KFinDecomp.cuspForm_kFinite_decomposition : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (N : GlobalTheory.Grid.Node D) (ψ : GA D N.V → ℂ), GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.IsCuspOfType θ N ψ → ∀ (U : Subgroup (GA D N.V)), IsOpen (U : Set (GA D N.V)) → (∀ k ∈ U, k ∈ GfC N.V → ∀ g, ψ (g * k) = ψ g) → (∀ τ, GlobalTheory.CuspKFin.KFinAt θ N τ ψ) → ∀ (μ : Measure (GA D N.V)) (𝓕 : Set (GA D N.V)), μ.IsHaarMeasure → IsFundamentalDomain (GQ N.V) 𝓕 μ → ∃ (n : ℕ) (T₀ : Fin n → GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.KMap N.M) (u : Fin n → GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.KVec N.M), (∀ j, GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.IsGKMap θ N.M {k | k ∈ U ∧ k ∈ GfC N.V} 1 μ 𝓕 (T₀ j)) ∧ ψ = ∑ j, T₀ j (u j) := by
   intro D θ hθ hP N ψ hψ U hU hlev hK μ 𝓕 hμ h𝓕
   choose W i1 i2 i3 ρ hρc hρ using hK
-  letI := i1; letI := i2; letI := i3
+  let := i1; let := i2; let := i3
   obtain ⟨n, T₀, u, hv, hk, hl, he⟩ := GlobalTheory.T.kFiniteDecomposition_assemble_realPlaces D θ N (GlobalTheory.KFinDecomp.Cls θ N U)
     (fun τ f => GlobalTheory.Published.AutFin.HasTypeAt θ N.V τ (N.M.ε τ) (N.M.fr τ) (ρ τ) f)
     (fun f hf => hf.1.1.cont) (_root_.GlobalTheory.T.weil_representation_place_decomposition D θ hθ hP N U W ρ hρc) ψ ⟨hψ, hlev⟩ hρ

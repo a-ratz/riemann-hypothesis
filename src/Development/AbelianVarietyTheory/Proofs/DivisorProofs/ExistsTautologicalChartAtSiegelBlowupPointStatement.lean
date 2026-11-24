@@ -568,11 +568,11 @@ theorem eq_sum_halfForm {r : ℕ} (e : Module.Basis (Fin r) ℤ X) (β : LinearM
   refine LinearMap.ext_basis e e fun i₀ j₀ => ?_
   simp only [LinearMap.sum_apply, LinearMap.smul_apply, halfForm_basis, smul_eq_mul, mul_ite, mul_one, mul_zero]
   rw [Finset.sum_eq_single (min i₀ j₀, max i₀ j₀)]
-  · simp only [and_self, if_true]
+  · simp only [and_self, ite_true]
     rcases le_total i₀ j₀ with h | h
     · rw [min_eq_left h, max_eq_right h]
     · rw [min_eq_right h, max_eq_left h, hβ]
-  · intro p _ hp; rw [if_neg]; rintro ⟨h1, h2⟩; exact hp (Prod.ext h1 h2)
+  · intro p _ hp; rw [ite_eq_right]; rintro ⟨h1, h2⟩; exact hp (Prod.ext h1 h2)
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem bimul_ext {G : Type} [CommGroup G] {r : ℕ} (e : Module.Basis (Fin r) ℤ X) (f g : X → X → G)
@@ -661,11 +661,11 @@ theorem existsUnique_coeff {ε : ι → LinearMap.BilinForm ℤ X} (hε : IsSymB
       (fun i j => by
         simp only [halfForm_basis]
         rw [Finset.prod_eq_single (min i j, max i j)]
-        · simp only [and_self, if_true, zpow_one]
+        · simp only [and_self, ite_true, zpow_one]
           rcases le_total i j with h | h
           · rw [min_eq_left h, max_eq_right h]
           · rw [min_eq_right h, max_eq_left h, hsym]
-        · intro p _ hp; rw [if_neg, zpow_zero]; rintro ⟨h1, h2⟩; exact hp (Prod.ext h1 h2)
+        · intro p _ hp; rw [ite_eq_right, zpow_zero]; rintro ⟨h1, h2⟩; exact hp (Prod.ext h1 h2)
         · intro h; exact absurd (Finset.mem_univ _) h)
     exact congrFun (congrFun this x) y
   · have h0 : ∀ x y, ∏ k, (σ k / ∏ p, q (e p.1) (e p.2) ^ c p k) ^ ε k x y = 1 := fun x y => by
@@ -678,11 +678,11 @@ theorem existsUnique_coeff {ε : ι → LinearMap.BilinForm ℤ X} (hε : IsSymB
         (fun i j => by
           simp only [halfForm_basis]
           rw [Finset.prod_eq_single (min i j, max i j)]
-          · simp only [and_self, if_true, zpow_one]
+          · simp only [and_self, ite_true, zpow_one]
             rcases le_total i j with h | h
             · rw [min_eq_left h, max_eq_right h]
             · rw [min_eq_right h, max_eq_left h, hsym]
-          · intro p _ hp; rw [if_neg, zpow_zero]; rintro ⟨h1, h2⟩; exact hp (Prod.ext h1 h2)
+          · intro p _ hp; rw [ite_eq_right, zpow_zero]; rintro ⟨h1, h2⟩; exact hp (Prod.ext h1 h2)
           · intro h; exact absurd (Finset.mem_univ _) h)
       exact congrFun (congrFun this x) y
     exact div_eq_one.1 (eq_one_of_prod_zpow hε _ h0 k)
@@ -761,7 +761,7 @@ theorem exists_nthRoots_ext (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValu
       Function.Injective f ∧ f.Finite ∧ IsLocalHom f ∧ ∀ k, s k ^ n = f (a k) := by
   classical
   let K := FractionRing V
-  haveI : CharZero K := algebraRat.charZero _
+  have : CharZero K := algebraRat.charZero _
   let p : I → K[X] := fun k => X ^ n - C (algebraMap V K (a k))
   have hp : ∀ k, (p k).Monic := fun k => monic_X_pow_sub_C _ (by omega)
   let L := (∏ k, p k).SplittingField
@@ -1131,7 +1131,7 @@ theorem IsMumPol.exists_isMumfordFam {o : Type} [CommRing o] {ζ : o} {g n : ℕ
   refine ⟨ω ≫ φ, hω.comp hφ, hR, hpos, fun R' _ _ _ ρ hR' hρ hf D ε hD => ?_⟩
   obtain ⟨G', _, _, π, π₂, A, U, hπ, hπ₂, hL⟩ := hU R' ρ hR' hρ hf D ε hD
   obtain ⟨κ, hκ⟩ := exists_genericMap hρ
-  letI := A.isAb.comm
+  let := A.isAb.comm
   have w' : (pullback.fst G'.hom (jK R') ≫ π) ≫ G₁.hom = (pullback.snd G'.hom (jK R') ≫ κ) ≫ jK R := by
     rw [Category.assoc, hπ.1.w, Category.assoc, hκ, pullback.condition_assoc]
   obtain ⟨πK, p₁, p₂⟩ : ∃ πK : pullback G'.hom (jK R') ⟶ pullback G₁.hom (jK R),
@@ -1141,8 +1141,8 @@ theorem IsMumPol.exists_isMumfordFam {o : Type} [CommRing o] {ζ : o} {g n : ℕ
   have h₂ := isGrpPullback_pullback G' (jK R')
   have hπK : IsGrpPullback ((Over.pullback (jK R')).obj G') ((Over.pullback (jK R)).obj G₁) κ πK :=
     h₁.cancel ((h₂.comp hπ).congr hκ.symm p₁.symm) p₂
-  haveI := U.gen_hom
-  haveI : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
+  have := U.gen_hom
+  have : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
   have hi := isGrpPullback_of_iso U.gen.symm
   have e₁ : U.gen.hom.left ≫ U.gen.symm.hom.left = 𝟙 _ := by
     rw [← Over.comp_left, Iso.symm_hom, U.gen.hom_inv_id, Over.id_left]
@@ -1177,7 +1177,7 @@ theorem dense_generic_away {o R : Type} [CommRing o] [CommRing R] [IsDomain R] {
     {f : R} (hf : f ≠ 0) :
     Dense {x : Sp (Localization.Away f) | (spMap ((algebraMap R (Localization.Away f)).comp b) x).asIdeal = ⊥} := by
   have hle := powers_le_nonZeroDivisors_of_noZeroDivisors hf
-  haveI : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
+  have : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
   have hinj : Function.Injective ((algebraMap R (Localization.Away f)).comp b) :=
     (IsLocalization.injective (Localization.Away f) hle).comp hb
   let p : PrimeSpectrum (Localization.Away f) := ⟨⊥, Ideal.isPrime_bot⟩
@@ -1194,7 +1194,7 @@ theorem Taut.exists_isFam_of_siegPre : ∀ (g n : ℕ) (φ : InvFun ℤ), 3 ≤ 
   intro g n φ hn _ F C G₁ _ _ P hM hab c hc ⟨a, a₂, ha, ha₂, hPa⟩
   obtain ⟨-, -, hinj, -, hrel, -⟩ := Taut.isRegularLocalRing_and_isRelParam g n φ hn C
   have hf : ∏ k, C.t k ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => ne_zero_of_isRelParam hrel i
-  haveI : IsDomain (Localization.Away (∏ k, C.t k)) :=
+  have : IsDomain (Localization.Away (∏ k, C.t k)) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors hf)
   obtain ⟨yU, hs, hPB⟩ := F.rep _ _ c inferInstance (dense_generic_away hinj hf) hc
   have hu : IsUnit (algebraMap C.R (FractionRing C.R) (∏ k, C.t k)) :=
@@ -1253,7 +1253,7 @@ theorem exists_specializes_of_dense {X : Type} [TopologicalSpace X] [QuasiSober 
   have hη : IsGenericPoint hCi.genericPoint (irreducibleComponent x) := by
     simpa [hCc.closure_eq] using hCi.isGenericPoint_genericPoint_closure
   let F := ⋃ C' ∈ (irreducibleComponents X \ {irreducibleComponent x}), C'
-  have hFc : IsClosed F := (NoetherianSpace.finite_irreducibleComponents.diff).isClosed_biUnion
+  have hFc : IsClosed F := (NoetherianSpace.finite_irreducibleComponents.sdiff).isClosed_biUnion
     (fun C' h => isClosed_of_mem_irreducibleComponents C' h.1)
   have hηF : hCi.genericPoint ∉ F := by
     simp only [F, Set.mem_iUnion]
@@ -1274,11 +1274,11 @@ theorem exists_specializes_of_dense {X : Type} [TopologicalSpace X] [QuasiSober 
 theorem exists_specializes_of_dense_scheme (N : Scheme.{0}) [IsLocallyNoetherian N] (W : Set N) (hWo : IsOpen W)
     (hWd : Dense W) (n : N) : ∃ w ∈ W, w ⤳ n := by
   obtain ⟨_, ⟨O, hO, rfl⟩, hnO, -⟩ := N.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ n) isOpen_univ
-  haveI : IsNoetherianRing Γ(N, O) := IsLocallyNoetherian.component_noetherian ⟨O, hO⟩
+  have : IsNoetherianRing Γ(N, O) := IsLocallyNoetherian.component_noetherian ⟨O, hO⟩
   obtain ⟨w, hw, hwn⟩ := @exists_specializes_of_dense (O : Set N) _ O.isOpen.isOpenEmbedding_subtypeVal.quasiSober
-    (noetherianSpace_of_isAffineOpen O hO) (Subtype.val ⁻¹' W : Set (O : Set N)) (hWo.preimage continuous_subtype_val)
-    (hWd.preimage O.isOpen.isOpenMap_subtype_val) ⟨n, hnO⟩
-  exact ⟨w, hw, hwn.map continuous_subtype_val⟩
+    (noetherianSpace_of_isAffineOpen O hO) (Subtype.val ⁻¹' W : Set (O : Set N)) (hWo.preimage continuous_subtypeVal)
+    (hWd.preimage O.isOpen.isOpenMap_subtypeVal) ⟨n, hnO⟩
+  exact ⟨w, hw, hwn.map continuous_subtypeVal⟩
 
 end GlobalTheory.BlowOpen
 end -- clump:auto
@@ -1305,7 +1305,7 @@ theorem exists_complete_dvr_of_local (A : Type) [CommRing A] [IsDomain A] [IsLoc
     ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsDiscreteValuationRing W)
       (_ : IsAdicComplete (maximalIdeal W) W) (ψ : A →+* W), Function.Injective ψ ∧ IsLocalHom ψ := by
   by_cases h : IsField A
-  · letI := h.toField
+  · let := h.toField
     refine ⟨PowerSeries A, inferInstance, inferInstance, inferInstance, ?_, PowerSeries.C,
       RingHom.injective _, inferInstance⟩
     rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance
@@ -1317,20 +1317,20 @@ theorem exists_trait_at : ∀ {g n : ℕ} (F : SFam g n (zetaAway n)) (S : Schem
     j ≫ s = F.s → ∀ x : S, ∃ (T : GlobalTheory.Poinc.Trait F) (ξT : Sp T.V ⟶ S) (b : cycAway n →+* T.V),
       ξT (closedPoint T.V) = x ∧ jK T.V ≫ ξT = T.y ≫ j ∧ ξT ≫ s = spMap b := by
   intro g n F S s _ _ j _ _ hd hjs x
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
-  haveI : Flat F.s := inferInstance
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have : Flat F.s := inferInstance
   obtain ⟨_, ⟨y0, rfl⟩, hw⟩ :=
     GlobalTheory.BlowOpen.exists_specializes_of_dense_scheme S _ j.isOpenEmbedding.isOpen_range hd x
   obtain ⟨y1, hy1, e1⟩ := Flat.generalizingMap F.s (genericPoint_specializes (F.s y0))
   have hη : j y1 ⤳ x := (hy1.map j.continuous).trans hw
   obtain ⟨q, hq⟩ : j y1 ∈ Set.range (S.fromSpecStalk x) := by rw [Scheme.range_fromSpecStalk]; exact hη
-  haveI : q.asIdeal.IsPrime := q.isPrime
-  haveI : IsLocalRing (S.presheaf.stalk x ⧸ q.asIdeal) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : q.asIdeal.IsPrime := q.isPrime
+  have : IsLocalRing (S.presheaf.stalk x ⧸ q.asIdeal) := .of_surjective' _ Ideal.Quotient.mk_surjective
   obtain ⟨W, _, _, _, hWc, ψ, hψi, hψl⟩ := exists_complete_dvr_of_local (S.presheaf.stalk x ⧸ q.asIdeal)
-  haveI : IsLocalHom (Ideal.Quotient.mk q.asIdeal) := .of_surjective _ Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk q.asIdeal) := .of_surjective _ Ideal.Quotient.mk_surjective
   let ψ' : S.presheaf.stalk x →+* W := ψ.comp (Ideal.Quotient.mk q.asIdeal)
-  haveI : IsLocalHom ψ' := RingHom.isLocalHom_comp _ _
+  have : IsLocalHom ψ' := RingHom.isLocalHom_comp _ _
   let ξ0 : Sp W ⟶ S := spMap ψ' ≫ S.fromSpecStalk x
   have hξc : ξ0 (closedPoint W) = x := by
     show S.fromSpecStalk x (spMap ψ' (closedPoint W)) = x
@@ -1366,10 +1366,10 @@ theorem exists_trait_at : ∀ {g n : ℕ} (F : SFam g n (zetaAway n)) (S : Schem
     rw [genericPoint_eq_bot_of_affine] at h1
     rw [RingHom.injective_iff_ker_eq_bot, RingHom.ker_eq_comap_bot]
     exact congrArg PrimeSpectrum.asIdeal h1
-  haveI : CharZero W := charZero_of_injective_ringHom hb0i
+  have : CharZero W := charZero_of_injective_ringHom hb0i
   have hBase : GlobalTheory.Mum.Base W := ⟨⟨inferInstance, inferInstance, inferInstance, hWc⟩, inferInstance⟩
   obtain ⟨T, f, fK, -, hfl, -, hcomp, hTy⟩ := GlobalTheory.T.traitExistsAfterFiniteExtension_of_completeDVR g n (cycAway n) (zetaAway n) F W hBase inferInstance y
-  haveI := hfl
+  have := hfl
   refine ⟨T, spMap f ≫ ξ0, f.comp b0, ?_, ?_, ?_⟩
   · show ξ0 (spMap f (closedPoint T.V)) = x
     have e : spMap f (closedPoint T.V) = closedPoint W := IsLocalRing.comap_closedPoint f
@@ -1425,13 +1425,13 @@ theorem setup : ∀ {g n : ℕ} (F : SFam g n (zetaAway n)) (Z : Scheme.{0}) (z 
   obtain ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, ⟨-, -, -, hiz, -⟩, -⟩ := hMin
   have hP := GlobalTheory.ArithCurve.isProper_of_projOver hproj
   have hlft : LocallyOfFiniteType (π ≫ z) := GlobalTheory.isProjOver_locallyOfFiniteType _ _ _ hproj
-  haveI : IsNoetherianRing (cycAway n) := is_noetherian_subring_closure _ (Set.toFinite _)
+  have : IsNoetherianRing (cycAway n) := is_noetherian_subring_closure _ (Set.toFinite _)
   refine ⟨⟨by rw [← terminal.comp_from (π ≫ z)]; infer_instance⟩, hlft, LocallyOfFiniteType.isLocallyNoetherian (π ≫ z), hdense, ?_⟩
   rw [← Category.assoc, hji, hiz]
 
 theorem away_hom_ext : ∀ (R : Type) [CommRing R] [IsDomain R] (t : R), t ≠ 0 → ∀ (l : Localization.Away t →+* FractionRing R), l.comp (algebraMap R (Localization.Away t)) = algebraMap R (FractionRing R) → ∀ (S : Scheme.{0}) [S.IsSeparated] (a b : Sp (Localization.Away t) ⟶ S), spMap l ≫ a = spMap l ≫ b → a = b := by
   intro R _ _ t ht l hl S _ a b h
-  haveI : IsDomain (Localization.Away t) :=
+  have : IsDomain (Localization.Away t) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors ht)
   have hinj : Function.Injective l := by
     refine (injective_iff_map_eq_zero l).2 fun x hx => ?_
@@ -1452,18 +1452,18 @@ end GlobalTheory.ChartHit
 namespace GlobalTheory.ChartHit
 
 theorem lowBase_regular {n : ℕ} (L : LowBase (zetaAway n) n) : IsRegularLocalRing L.W := by
-  haveI : IsNoetherianRing L.W := L.noeth
+  have : IsNoetherianRing L.W := L.noeth
   let y := L.u (closedPoint L.W)
   let φ₀ := (Scheme.stalkClosedPointTo L.u).hom
-  haveI : IsRegularLocalRing ((LowChart.powA L.F L.T.r).left.presheaf.stalk y) := LowChart.isRegularLocalRing_stalk L.F y
+  have : IsRegularLocalRing ((LowChart.powA L.F L.T.r).left.presheaf.stalk y) := LowChart.isRegularLocalRing_stalk L.F y
   have het := L.u_et
-  letI : Algebra ((LowChart.powA L.F L.T.r).left.presheaf.stalk y) L.W := φ₀.toAlgebra
-  haveI : Module.Flat ((LowChart.powA L.F L.T.r).left.presheaf.stalk y) L.W := het.1
+  let : Algebra ((LowChart.powA L.F L.T.r).left.presheaf.stalk y) L.W := φ₀.toAlgebra
+  have : Module.Flat ((LowChart.powA L.F L.T.r).left.presheaf.stalk y) L.W := het.1
   exact GlobalTheory.isRegularLocalRing_of_flat_of_map_eq_maximalIdeal _ _ (maximalIdeal _) het.2.1.symm
 
 theorem chart : ∀ {g n : ℕ} (φ : InvFun ℤ), 3 ≤ n → ∀ (L : LowBase (zetaAway n) n) (m N : ℕ) (ε : Module.Basis (Fin m ⊕ Fin N) ℤ (balForms (id : ℤ → ℤ) (Fin L.T.r → ℤ))) (V' : Type) [CommRing V'] [IsDomain V'] [IsLocalRing V'] (κ : L.W →+* V') (s : Fin m ⊕ Fin N → V') (D' : DegData V' (maximalIdeal V')) (e : D'.toPre.X ≃+ (Fin L.T.r → ℤ)), L.h + L.T.r = g → IsCone id φ (fun k => (ε (.inl k) : LinearMap.BilinForm ℤ (Fin L.T.r → ℤ))) → (∀ x, x ≠ 0 → ∃ k, 0 < (ε (.inl k) : LinearMap.BilinForm ℤ (Fin L.T.r → ℤ)) x x) → IsCN V' → IsLocalHom κ → (∀ k, s (.inl k) ∈ maximalIdeal V' ∧ s (.inl k) ≠ 0) → (∀ k, IsUnit (s (.inr k))) → DegFrom L.T κ s (fun k => (ε k : LinearMap.BilinForm ℤ (Fin L.T.r → ℤ))) n D'.toPre e → ∃ (C : Taut (zetaAway n) g n φ) (θ : C.R →+* V') (e' : D'.toPre.X ≃+ (Fin C.T.r → ℤ)), IsLocalHom θ ∧ (∀ k, θ (C.s k) ≠ 0) ∧ θ.comp C.b = κ.comp L.T.b ∧ DegFrom C.T (θ.comp C.iw) (fun k => θ (C.s k)) C.form n D'.toPre e' := by
   intro g n φ hn L m N ε V' _ _ _ κ sv D' e hgen hcone hdef hV hκ hs1 hs2 hD
-  haveI : IsRegularLocalRing L.W := lowBase_regular L
+  have : IsRegularLocalRing L.W := lowBase_regular L
   have hψV : IsLocalHom ((MvPolynomial.eval₂Hom κ sv).comp MvPolynomial.C) := by
     rw [MvPolynomial.eval₂Hom_comp_C]; exact hκ
   obtain ⟨R, _, _, _, ψ, θ, hcompl, hθ, hθψ, hψl⟩ :=

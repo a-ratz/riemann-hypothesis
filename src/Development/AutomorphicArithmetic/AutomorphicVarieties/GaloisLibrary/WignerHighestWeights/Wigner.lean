@@ -228,7 +228,7 @@ theorem UpperTheory.V.AlgRepEndIrreducible.homot :
       have h4 : L (toL (hp (toL X)).1) (ω Y) = 0 := by simpa using h3
       rw [congrArg L hX, map_add (f := _), LinearMap.add_apply, h4, hinf 0 ω h0 Z hZ Y]
       simp
-    rw [← hα.retr (ω Y) 0 fun X => (key (Matrix.of X)).symm, map_zero, AlternatingMap.zero_apply]
+    rw [← hα.retr (ω Y) 0 fun X => (key (Matrix.of X)).symm, map_zero, zero_apply]
   · let F : Herm E a [⋀^Fin q]→ₗ[ℝ] (Lie E a →ₗ[ℝ] M) := altFlip (ω.curryLeft ∘ₗ hp)
     have hF : ∀ Y X, F Y X = ω (Matrix.vecCons (hp X) Y) := fun _ _ => rfl
     let ad : Matrix (Fin a) (Fin a) (Cinf E) → Lie E a →ₗ[ℝ] Lie E a := fun Y =>

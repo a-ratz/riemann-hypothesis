@@ -65,7 +65,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 private theorem exists_zpow_eq_ringEquiv_on_roots_of_unity {K : Type*} [Field K] (M : ℕ) (hM : 1 ≤ M) (σ : K ≃+* K) :
     ∃ m : ℤ, ∀ x : K, x ^ M = 1 → σ x = x ^ m := by
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   obtain ⟨m, hm⟩ := MonoidHom.map_cyclic ((σ.toMulEquiv.restrictRootsOfUnity M).toMonoidHom)
   refine ⟨m, fun x hx => ?_⟩
   have hx0 : x ≠ 0 := by
@@ -96,7 +96,7 @@ theorem UpperTheory.irreducible_weilDeligne_tame_level_eq_character :
     (∀ s : ↥(Ine (F := F) A), (∀ ζ : Ω, ζ ^ M = 1 → (s : G F Ω) ζ = ζ) → b.ρ (ineIncl h s) = 1) →
     ∃ (ξ : Weil h →* ℂˣ) (hξ : IsSmooth ξ), WD.mk b = WD.lpOfChar h ξ hξ ∧ ∀ σ, b.ρ σ = 1 → ξ σ = 1 := by
   intro F Ω _ _ _ _ _ w A h M hM m b hirr hine
-  haveI := hirr
+  have := hirr
   have hcomm : ∀ σ τ : Weil h, b.ρ σ * b.ρ τ = b.ρ τ * b.ρ σ := by
     intro σ τ
     have hdeg : deg (σ * τ * σ⁻¹ * τ⁻¹) = 0 := by

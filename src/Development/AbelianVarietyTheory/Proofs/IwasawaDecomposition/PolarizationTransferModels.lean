@@ -73,7 +73,7 @@ theorem idlAlong_comp {X : Scheme.{0}} (J : X.IdealSheafData) {R S : Type} [Comm
 theorem map_injective {R S : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [CommRing S] [IsDomain S]
     [IsLocalRing S] (f : R →+* S) (hf : Function.Injective f) [IsLocalHom f] {I J : Ideal R}
     (h : I.map f = J.map f) : I = J := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
   have : IsLocalHom (algebraMap R S) := ‹IsLocalHom f›
   have : Module.Flat R S := inferInstance

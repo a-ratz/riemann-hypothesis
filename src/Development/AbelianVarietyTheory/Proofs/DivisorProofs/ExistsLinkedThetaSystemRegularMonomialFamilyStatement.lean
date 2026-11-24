@@ -210,10 +210,10 @@ namespace GlobalTheory.UCovSep.GenModel
 
 theorem exists_genModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (x₀ : Xo.XF c) (n : ℕ), n.Prime → Odd n → ∃ g₀ : ℕ, ∀ e : ℕ, ∃ (o₁ Ω : Type) (_ : CommRing o₁) (_ : Field Ω) (_ : Algebra o₁ Ω) (_ : ArithBase o₁ Ω) (ze : o₁ˣ) (uη : Sp Ω ⟶ Xo.XF c) (A₁ : PolAV (Sp Ω)) (_ : Out.Level A₁ (n ^ e) (unitOn (Units.map (algebraMap o₁ Ω).toMonoidHom ze))) (M : RatModel o₁ Ω) (U : C.Z.Opens) (g : M.Z ⟶ U.toScheme), A₁.g = g₀ ∧ IsUnit (n : o₁) ∧ (∀ w, uη w = x₀) ∧ UOver Xo c A₁ (RingHom.id Ω) uη ∧ M.pt ≫ g ≫ U.ι = uη ≫ C.i ∧ GlobalTheory.IsNormalScheme M.Z ∧ IsProjOver M.s ∧ IsFinite g ∧ Set.range (pullback.fst C.z (spMap C.b)) ⊆ (U : Set C.Z) := by
   intro E _ _ _ H Dw _ l Xo c C x₀ n hn ho
-  haveI := c.fin
-  haveI : NumberField c.F := {}
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim _
+  have := c.fin
+  have : NumberField c.F := {}
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth Dw.dim _
   obtain ⟨A, _, φ, j, P, _, hφ, hjs, hjo, hjx⟩ :=
     GlobalTheory.UPoinc.GSetup.exists_chart (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) x₀
   let ev : A →+* P.ResidueField := algebraMap A P.ResidueField
@@ -226,30 +226,30 @@ theorem exists_genModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       exact Ideal.ker_algebraMap_residueField _
     show j (spMap ev w) = x₀
     rw [hp, hjx]
-  haveI : CharZero P.ResidueField := (ev.comp φ).charZero_iff (ev.comp φ).injective |>.1 inferInstance
+  have : CharZero P.ResidueField := (ev.comp φ).charZero_iff (ev.comp φ).injective |>.1 inferInstance
   obtain ⟨A₀, -, hU₀⟩ := GlobalTheory.UPoinc.GSetup.exists_fibre Xo c y
   refine ⟨A₀.g, fun e => ?_⟩
   have hpos : 1 ≤ n ^ e := Nat.one_le_iff_ne_zero.2 (by have := hn.pos; positivity)
   obtain ⟨Ω, _, f, A₁, ψ, ze, hf, hA₁, hze, ⟨lev⟩⟩ := GlobalTheory.UPoinc.GSetup.exists_level_finite P.ResidueField A₀ _ hpos
-  haveI : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
+  have : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
   have hU₁ : UOver Xo c A₁ (RingHom.id Ω) (spMap f ≫ y) := by
     refine (uOver_baseChange_iff hA₁.2.1 (LBIso.symm hA₁.2.2) (RingHom.id Ω)).2 ?_
     rw [RingHom.id_comp]
     simpa only [RingHom.comp_id] using hU₀.comp f
-  letI : Algebra C.o c.F := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI := C.ded
+  let : Algebra C.o c.F := C.b.toAlgebra
+  have := C.isFractionRing
+  have := C.ded
   have hnF : C.b (n : C.o) ≠ 0 := by rw [map_natCast]; exact Nat.cast_ne_zero.2 hn.ne_zero
   have hno : (n : C.o) ≠ 0 := fun h => hnF (by rw [h, map_zero])
   have hle : Submonoid.powers (n : C.o) ≤ nonZeroDivisors C.o := powers_le_nonZeroDivisors_of_noZeroDivisors hno
   let o' := Localization.Away (n : C.o)
-  haveI : IsDomain o' := IsLocalization.isDomain_localization hle
-  haveI : IsDedekindDomain o' := IsLocalization.isDedekindDomain C.o hle o'
+  have : IsDomain o' := IsLocalization.isDomain_localization hle
+  have : IsDedekindDomain o' := IsLocalization.isDedekindDomain C.o hle o'
   let b' : o' →+* c.F := IsLocalization.Away.lift (n : C.o) (IsUnit.mk0 _ hnF)
   have hb' : b'.comp (algebraMap C.o o') = C.b := IsLocalization.Away.lift_comp _ _
-  letI : Algebra o' c.F := b'.toAlgebra
-  haveI : IsScalarTower C.o o' c.F := IsScalarTower.of_algebraMap_eq' hb'.symm
-  haveI : IsFractionRing o' c.F := IsFractionRing.isFractionRing_of_isLocalization _ o' c.F hle
+  let : Algebra o' c.F := b'.toAlgebra
+  have : IsScalarTower C.o o' c.F := IsScalarTower.of_algebraMap_eq' hb'.symm
+  have : IsFractionRing o' c.F := IsFractionRing.isFractionRing_of_isLocalization _ o' c.F hle
   let β : c.F →+* Ω := f.comp (ev.comp φ)
   obtain ⟨o₁, _, _, κ, ze₁, hded, hκ, hinj, hcomp, hze₁⟩ :=
     GlobalTheory.UPoinc.GSetup.exists_base_root o' c.F Ω β ze _ hpos hze
@@ -259,24 +259,24 @@ theorem exists_genModel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have h₃ := hκ.finiteType.comp (h₂.comp h₁)
     rw [RingHom.ext_int (κ.comp _) (algebraMap ℤ o₁)] at h₃
     exact RingHom.finiteType_algebraMap.1 h₃
-  haveI : ArithBase o₁ Ω := ⟨hded, hft, inferInstance, hinj⟩
+  have : ArithBase o₁ Ω := ⟨hded, hft, inferInstance, hinj⟩
   have hun : IsUnit (n : o₁) := by
     simpa using (IsLocalization.Away.algebraMap_isUnit (S := o') (n : C.o)).map κ
   rw [← hze₁] at lev
-  haveI : IsProper C.z := ThetaDescent.isProper_of_isProjOver C.proj
-  haveI := C.iF_open
-  haveI : SurjectiveOnStalks (spMap ev) :=
+  have : IsProper C.z := ThetaDescent.isProper_of_isProjOver C.proj
+  have := C.iF_open
+  have : SurjectiveOnStalks (spMap ev) :=
     (SurjectiveOnStalks.Spec_iff (φ := CommRingCat.ofHom ev)).2 (Ideal.surjectiveOnStalks_residueField P)
   let a : Sp o' ⟶ Sp C.o := spMap (algebraMap C.o o')
-  haveI : IsOpenImmersion a := IsOpenImmersion.of_isLocalization (n : C.o)
+  have : IsOpenImmersion a := IsOpenImmersion.of_isLocalization (n : C.o)
   have hba : spMap b' ≫ a = spMap C.b := by rw [← hb']; exact (Spec.map_comp _ _).symm
   let inc : pullback C.z a ⟶ C.Z := pullback.fst _ _
   let gf : pullback C.z (spMap C.b) ⟶ pullback C.z a := pullback.lift (pullback.fst _ _) (pullback.snd _ _ ≫ spMap b')
     (by rw [Category.assoc, hba, pullback.condition])
   have hgf : gf ≫ inc = pullback.fst _ _ := pullback.lift_fst _ _ _
-  haveI : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
-  haveI : IsPreimmersion (gf ≫ inc) := hgf ▸ inferInstance
-  haveI : IsPreimmersion gf := IsPreimmersion.of_comp gf inc
+  have : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
+  have : IsPreimmersion (gf ≫ inc) := hgf ▸ inferInstance
+  have : IsPreimmersion gf := IsPreimmersion.of_comp gf inc
   have hpz : (spMap f ≫ spMap ev ≫ j ≫ C.iF ≫ gf) ≫ pullback.snd _ _ = spMap ((algebraMap o₁ Ω).comp κ) := by
     simp only [Category.assoc, gf, pullback.lift_snd]
     rw [← Category.assoc C.iF, C.iF_over, ← Category.assoc j, hjs, hcomp]
@@ -350,7 +350,7 @@ theorem exists_common_baseChange_of_uOver : ∀ (E : Type) [Field E] [NumberFiel
   obtain ⟨P₀, φ, hφ, hLφ⟩ := exists_pol_baseChange P (spMap σ)
   obtain ⟨e₀, _, he₀⟩ := grpPullback_iso hφ hα
   obtain ⟨e, _, he⟩ := grpPullback_iso hβ hβ'
-  haveI : IsMonHom (e₀ ≪≫ e).hom := inferInstanceAs (IsMonHom (e₀.hom ≫ e.hom))
+  have : IsMonHom (e₀ ≪≫ e).hom := inferInstanceAs (IsMonHom (e₀.hom ≫ e.hom))
   have hU := Xo.univ.t.PP.isLB
   have X1 : LBIso (P.L.pull φ) (Xo.univ.t.PP.L.pull (e₀.hom.left ≫ β)) :=
     GlobalTheory.GenSpread.lbIso_pull_comp e₀.hom.left he₀.symm rfl hL
@@ -392,11 +392,11 @@ theorem exists_chart (C : UCompact Xo c) {o₁ Ω : Type} [CommRing o₁] [Field
     (hw : π w ∈ Set.range C.i) :
     ∃ (U₀ : M.Z.Opens) (u₀ : Sp (ratHull (M.ringOn U₀)) ⟶ Xo.XF c), w ∈ U₀ ∧
       spMap (ratHull (M.ringOn U₀)).val.toRingHom ≫ u₀ = uη := by
-  haveI := C.iF_open
-  haveI := C.ded
-  letI := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
+  have := C.iF_open
+  have := C.ded
+  let := C.b.toAlgebra
+  have := C.isFractionRing
+  have : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
   have hemb := Scheme.Hom.isEmbedding (pullback.fst C.z (spMap C.b))
   obtain ⟨V, hVo, hV⟩ := hemb.isInducing.isOpen_iff.1 C.iF.isOpenEmbedding.isOpen_range
   have hwV : w ∈ π ⁻¹ᵁ ⟨V, hVo⟩ := by
@@ -444,7 +444,7 @@ theorem exists_chart (C : UCompact Xo c) {o₁ Ω : Type} [CommRing o₁] [Field
   have hf : spMap R₀.val.toRingHom ≫ f = M.pt := by
     simp only [f, ← Category.assoc]
     rw [spMap, ← Spec.map_comp, hφ, specMap_valMap_fromSpec]
-  haveI := C.isPreimmersion_i
+  have := C.isPreimmersion_i
   rw [← cancel_mono C.i, ← hπ, Category.assoc, UCompact.i, ← Category.assoc (IsOpenImmersion.lift _ _ _),
     IsOpenImmersion.lift_fac, pullback.lift_fst]
   show spMap (ratHull R₀).val.toRingHom ≫ spMap (toRat R₀) ≫ f ≫ π = _
@@ -504,18 +504,18 @@ theorem exists_uAct {R R' Ω : Type} [CommRing R] [IsDomain R] [IsNoetherianRing
           congr 1
         exact ⟨η, h.symm, toUnit_unique _ _⟩
       exact IsPullback.of_vert_isIso ⟨Category.comp_id _⟩
-  haveI := P.isAb.proper
-  haveI : Smooth G.hom := MorphismProperty.of_isPullback (P := @Smooth) hα.1 P.isAb.smooth
-  haveI : IsSchemeTheoreticallyDominant (spMap τ) := ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hτ
-  haveI : IsSchemeTheoreticallyDominant (pullback.fst G.hom (spMap τ)) := .of_isPullback hG.1.flip
+  have := P.isAb.proper
+  have : Smooth G.hom := MorphismProperty.of_isPullback (P := @Smooth) hα.1 P.isAb.smooth
+  have : IsSchemeTheoreticallyDominant (spMap τ) := ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hτ
+  have : IsSchemeTheoreticallyDominant (pullback.fst G.hom (spMap τ)) := .of_isPullback hG.1.flip
   have key : ∀ a : 𝓞 E, ∃ F : P.A ⟶ P.A, IsMonHom F ∧ ∃ f : G ⟶ G, f.left ≫ α = α ≫ F.left ∧
       f.left ≫ β = β ≫ (Xo.univ.t.act.act (H.bar a)).left := fun a => by
     have w : (β ≫ (Xo.univ.t.act.act (H.bar a)).left) ≫ Xo.univ.t.G.hom = G.hom ≫ u ≫ pullback.fst _ _ := by
       rw [Category.assoc, Over.w, hβ.1.w]
     let f : G ⟶ G := Over.homMk (hβ.1.lift _ _ w) (hβ.1.lift_snd _ _ w)
     have hf : f.left ≫ β = β ≫ (Xo.univ.t.act.act (H.bar a)).left := hβ.1.lift_fst _ _ w
-    haveI := Xo.univ.t.act.hom (H.bar a)
-    haveI : IsMonHom f := GlobalTheory.SharpPull.isMonHom_lift hβ hβ hf
+    have := Xo.univ.t.act.hom (H.bar a)
+    have : IsMonHom f := GlobalTheory.SharpPull.isMonHom_lift hβ hβ hf
     obtain ⟨F, ⟨hF, hF'⟩, -⟩ := GlobalTheory.semiAbelianHomExtension_holds.fractionField_of_isGrpPullback hs hs hGP hGP
       ((Over.pullback (spMap τ)).map f)
     refine ⟨F, hF, f, ExtUnique.hom_ext_of_dominant P.A.hom ?_ (pullback.fst G.hom (spMap τ)) ?_, hf⟩
@@ -527,8 +527,8 @@ theorem exists_uAct {R R' Ω : Type} [CommRing R] [IsDomain R] [IsNoetherianRing
 
 theorem exists_local_spread : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (o₁ Ω : Type) [CommRing o₁] [Field Ω] [Algebra o₁ Ω] [ArithBase o₁ Ω] (M : RatModel o₁ Ω) (π : M.Z ⟶ C.Z) (uη : Sp Ω ⟶ Xo.XF c), GlobalTheory.IsNormalScheme M.Z → M.pt ≫ π = uη ≫ C.i → ∀ (A₁ : PolAV (Sp Ω)) (m : ℕ) (ze : o₁ˣ), IsUnit (m : o₁) → UOver Xo c A₁ (RingHom.id Ω) uη → Out.Level A₁ m (unitOn (Units.map (algebraMap o₁ Ω).toMonoidHom ze)) → ∀ (K : Type) [Field K] (yM : Sp K ⟶ M.Z) (y : Sp K ⟶ Xo.XF c), yM ≫ π = y ≫ C.i → ∃ (R : Subalgebra o₁ Ω) (P : PolAV (Sp R)) (act : 𝓞 E → (P.A ⟶ P.A)) (u : Sp (ratHull R) ⟶ Xo.XF c) (𝔭 : Ideal R), R.FG ∧ (∀ x : Ω, ∃ a ∈ R, ∃ b ∈ R, x = a / b) ∧ P.g = A₁.g ∧ HypS P.A P.L ∧ Nonempty (Out.Level P m (unitOn (Units.map (algebraMap o₁ R).toMonoidHom ze))) ∧ (∀ a, IsMonHom (act a)) ∧ GlobalTheory.UCovSep.UAct Xo c P act (toRat R) u ∧ spMap (ratHull R).val.toRingHom ≫ u = uη ∧ 𝔭.IsPrime ∧ ∀ a b : R, b ∉ 𝔭 → (a : Ω) / (b : Ω) ∈ M.O (yM (closedPoint K)) := by
   intro E _ _ _ H Dw _ l Xo c C o₁ Ω _ _ _ hb M π uη hM hπ A₁ m ze hm hU₁ lev K _ yM y hy
-  haveI := hb.char
-  haveI := hb.ded
+  have := hb.char
+  have := hb.ded
   let w : M.Z := yM (closedPoint K)
   have hw : π w ∈ Set.range C.i := ⟨y (closedPoint K), (congrArg (fun χ : Sp K ⟶ C.Z => χ (closedPoint K)) hy).symm⟩
   obtain ⟨U₀, u₀, hw₀, hu₀⟩ := exists_chart C M π uη hπ w hw
@@ -542,10 +542,10 @@ theorem exists_local_spread : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have := hP.comp (ratHull (M.ringOn U)).val.toRingHom
     rw [hu] at this
     exact this
-  haveI := RatModel.isFractionRing_ringOn hU hne
-  haveI := GlobalTheory.Poinc.TorsExtend.isIntegrallyClosed_ringOn M ((isNormalScheme_iff_pred _).1 hM) hU hne
+  have := RatModel.isFractionRing_ringOn hU hne
+  have := GlobalTheory.Poinc.TorsExtend.isIntegrallyClosed_ringOn M ((isNormalScheme_iff_pred _).1 hM) hU hne
   have fg : (M.ringOn U).FG := GlobalTheory.Poinc.fg_ringOn_of_isAffineOpen _ _ M U hU hne
-  haveI : IsNoetherianRing (M.ringOn U) := isNoetherianRing_of_fg fg
+  have : IsNoetherianRing (M.ringOn U) := isNoetherianRing_of_fg fg
 
   obtain ⟨Q, a, a', ha, ha', hL, hL'⟩ :=
     exists_common_baseChange_of_uOver E H Dw l Xo c Ω _ _ A₁ P₁ _ _ uη hU₁ (gen P₁ hP₁)
@@ -616,15 +616,15 @@ theorem genericPoints_XF_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   intro E _ _ _ H Dw l Xo c
   obtain ⟨N, i, hi, hq, he⟩ := Xo.qproj
   have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str (KA l) N
-  haveI : QuasiCompact Xo.s := he ▸ inferInstance
-  haveI : LocallyOfFiniteType Xo.s := he ▸ inferInstance
-  haveI : QuasiCompact (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) := inferInstance
-  haveI : LocallyOfFiniteType (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) := inferInstance
-  haveI : IsLocallyNoetherian (Xo.XF c) :=
+  have : QuasiCompact Xo.s := he ▸ inferInstance
+  have : LocallyOfFiniteType Xo.s := he ▸ inferInstance
+  have : QuasiCompact (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) := inferInstance
+  have : LocallyOfFiniteType (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) := inferInstance
+  have : IsLocallyNoetherian (Xo.XF c) :=
     LocallyOfFiniteType.isLocallyNoetherian (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom))
-  haveI : CompactSpace (Xo.XF c) :=
+  have : CompactSpace (Xo.XF c) :=
     QuasiCompact.compactSpace_of_compactSpace (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom))
-  haveI : IsNoetherian (Xo.XF c) := {}
+  have : IsNoetherian (Xo.XF c) := {}
   exact genericPoints.finite finite_irreducibleComponents_of_isNoetherian
 
 end GlobalTheory.XScov
@@ -751,8 +751,8 @@ namespace GlobalTheory.UCovSep
 theorem exists_linked_cov : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c), ∀ n : ℕ, n.Prime → Odd n → ∀ j₀ : ℕ, ∃ (j : ℕ) (Y : Scheme.{0}) (q : Y ⟶ Xo.XF c), j₀ ≤ j ∧ IsFinite q ∧ Surjective q ∧ ∀ (K : Type) [Field K] (y' : Sp K ⟶ Y), ∃ (X₁ : GlobalTheory.GSep.GSet) (act : 𝓞 E → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (u : Sp (ratHull X₁.S.R) ⟶ Xo.XF c) (π : X₁.M.Z ⟶ C.Z) (yM : Sp K ⟶ X₁.M.Z), GlobalTheory.GSep.ULink C X₁ act u π ∧ X₁.S.r * X₁.S.N = (n ^ j) ^ 2 ∧ (∃ (U : C.Z.Opens) (g' : X₁.M.Z ⟶ U.toScheme), IsFinite g' ∧ g' ≫ U.ι = π ∧ Set.range (pullback.fst C.z (spMap C.b)) ⊆ (U : Set C.Z)) ∧ yM ≫ π = y' ≫ q ≫ C.i ∧ ∀ a ∈ X₁.S.R, a ∈ X₁.M.O (yM (closedPoint K)) := by
   intro E _ _ _ H Dw hpq l Xo c C n hn ho j₀
   classical
-  haveI : Finite (genericPoints (Xo.XF c)) := (GlobalTheory.T.genericPoints_finite_unitaryModuli_coefficientField E H Dw l Xo c).to_subtype
-  letI : Fintype (genericPoints (Xo.XF c)) := Fintype.ofFinite _
+  have : Finite (genericPoints (Xo.XF c)) := (GlobalTheory.T.genericPoints_finite_unitaryModuli_coefficientField E H Dw l Xo c).to_subtype
+  let : Fintype (genericPoints (Xo.XF c)) := Fintype.ofFinite _
   choose g₀ hA using fun τ : genericPoints (Xo.XF c) => GlobalTheory.T.exists_levelStructure_normalModel_unitaryModuliPoint E H Dw hpq l Xo c C τ.1 n hn ho
   choose k j₁ hk _hB hj₁ big using fun τ : genericPoints (Xo.XF c) =>
     GlobalTheory.UPoinc.GSetup.exists_big_level (g₀ τ) n hn.two_le 0
@@ -775,10 +775,10 @@ theorem exists_linked_cov : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       exact hsp.map C.i.continuous)
   refine ⟨J, Y, q, by omega, hqf, hqs, fun K _ y' => ?_⟩
   obtain ⟨t, yM, hyM⟩ := hY K y'
-  letI := i₁ t
-  letI := i₂ t
-  letI := i₃ t
-  haveI := i₄ t
+  let := i₁ t
+  let := i₂ t
+  let := i₃ t
+  have := i₄ t
   obtain ⟨R, P, act, u, 𝔭, hRfg, hfr, hPg, hS, ⟨levR⟩, hact, hUA, hu, h𝔭, hreg𝔭⟩ :=
     GlobalTheory.T.exists_local_spread_universal_abelian_scheme E H Dw hpq l Xo c C (o₁ t) (Ω t) (M t) (g t ≫ (U t).ι) (uτ t) (hMn t) (hpt t)
       (A₁ t) (n ^ (4 * J)) (ze t) (by rw [Nat.cast_pow]; exact (hun t).pow _) (hUO t) (lev t) K yM (y' ≫ q)
@@ -870,11 +870,11 @@ theorem exists_ext (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (hV : Gl
     ∃ (V₁ : Type) (_ : CommRing V₁) (_ : IsDomain V₁) (_ : IsLocalRing V₁) (ρ : V →+* V₁) (σ : L →+* FractionRing V₁),
       GlobalTheory.Mum.Base V₁ ∧ Function.Injective ρ ∧ ρ.Finite ∧
       (σ.comp (algebraMap (FractionRing V) L)).comp (algebraMap V _) = (algebraMap V₁ _).comp ρ ∧ RootsIn ρ F := by
-  haveI := hV.2
+  have := hV.2
   let K := FractionRing V
   let F₁ : Polynomial L := F.map ((algebraMap K L).comp (algebraMap V K))
   let L₂ := F₁.SplittingField
-  haveI : FiniteDimensional K L₂ := Module.Finite.trans L L₂
+  have : FiniteDimensional K L₂ := Module.Finite.trans L L₂
   obtain ⟨E, _, _, _, _, j, ζ, hζ⟩ := MumLevel.exists_galois_root K L₂ 1 le_rfl
   obtain ⟨V₁, _, _, _, ρ, e, -, hρ, he, -, -⟩ := MumLevel.exists_ring V hV E ζ 1 le_rfl hζ
   let τ : L₂ →+* FractionRing V₁ := e.toRingHom.comp j.toRingHom
@@ -882,7 +882,7 @@ theorem exists_ext (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (hV : Gl
     RingHom.ext fun r => (congrArg e ((congrArg j (IsScalarTower.algebraMap_apply K L L₂ _).symm).trans
       (j.commutes _))).trans (he r)
   have hinj := IsFractionRing.injective V₁ (FractionRing V₁)
-  haveI := hρ.1.2.2.1
+  have := hρ.1.2.2.1
   refine ⟨V₁, inferInstance, inferInstance, inferInstance, ρ, τ.comp (algebraMap L L₂),
     ⟨hρ.1, (ρ.charZero_iff hρ.2.1).1 inferInstance⟩, hρ.2.1, hρ.2.2, hσ, rootsIn_of_splits ρ hF ?_⟩
   refine Polynomial.Splits.of_splits_map_of_injective hinj ?_ fun a ha => ?_
@@ -910,8 +910,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem exists_lift_genericFibre (C : UCompact Xo c) {O W : Type} [CommRing O] [CommRing W] (ev : O →+* W) [IsLocalHom ev]
     (t : Sp O ⟶ C.Z) (ξ : Sp W ⟶ pullback C.z (spMap C.b)) (h : spMap ev ≫ t = ξ ≫ pullback.fst _ _) :
     ∃ ζ : Sp O ⟶ pullback C.z (spMap C.b), ζ ≫ pullback.fst _ _ = t := by
-  letI : Algebra C.o c.F := C.b.toAlgebra
-  haveI := C.isFractionRing
+  let : Algebra C.o c.F := C.b.toAlgebra
+  have := C.isFractionRing
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (t ≫ C.z)
   obtain ⟨β, hβ⟩ := Spec.map_surjective (ξ ≫ pullback.snd _ _)
   have e : φ ≫ CommRingCat.ofHom ev = CommRingCat.ofHom C.b ≫ β := Spec.map_injective (by
@@ -984,11 +984,11 @@ theorem exists_uLink_regAt_chart : ∀ (E : Type) [Field E] [NumberField E] [IsC
     (spMap ρ₁ ≫ f) (spMap σ ≫ yM) hcomp
   have hev' : spMap ev ≫ X₁.M.Z.fromSpecStalk z₁ ≫ π = (spMap ρ₁ ≫ ξ) ≫ pullback.fst _ _ := by
     rw [← hgU, reassoc_of% hev, hf, Category.assoc]
-  haveI := hloc
+  have := hloc
   obtain ⟨ζ, hζ⟩ := GlobalTheory.USep.Setup.exists_lift_genericFibre C ev _ _ hev'
-  haveI : IsPreimmersion (spMap C.b) := by
-    letI : Algebra C.o c.F := C.b.toAlgebra
-    haveI := C.isFractionRing
+  have : IsPreimmersion (spMap C.b) := by
+    let : Algebra C.o c.F := C.b.toAlgebra
+    have := C.isFractionRing
     exact IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
   have hgen : ∀ p : Sp (X₁.M.Z.presheaf.stalk z₁), p.asIdeal = ⊥ → ζ p ∈ Set.range C.iF := by
     intro p hp

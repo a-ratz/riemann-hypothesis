@@ -120,11 +120,11 @@ theorem exists_mul_mem_adjoin_of_mem_pow_range {K T : Type} [Field K] [CommRing 
   let C : Ideal S :=
     { carrier := {a | s * (a : T) ∈ S}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, Subalgebra.coe_add, mul_add] at *
+        simp only [Set.mem_ofPred_eq, Subalgebra.coe_add, mul_add] at *
         exact S.add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun c a ha => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, Subalgebra.coe_mul] at *
         rw [mul_left_comm]
         exact S.mul_mem c.2 ha }
   have hle : Ideal.span (Set.range x') ≤ C.radical := by

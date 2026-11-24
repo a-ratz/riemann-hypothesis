@@ -75,7 +75,7 @@ theorem _root_.GlobalTheory.WeilM.HaarUniq.indicator_mem [IsTopologicalAddGroup 
     (K : OpenAddSubgroup V) (hK : IsCompact (K : Set V)) :
     Set.indicator (K : Set V) (fun _ => (1 : ℂ)) ∈ _root_.GlobalTheory.WeilM.SB V := by
   simp only [_root_.GlobalTheory.WeilM.SB, Submodule.mem_mk,
-    AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+    AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   refine ⟨?_, HasCompactSupport.intro hK fun x hx => Set.indicator_of_notMem hx _⟩
   refine (IsLocallyConstant.iff_exists_open _).2 fun x => ?_
   by_cases hx : x ∈ (K : Set V)

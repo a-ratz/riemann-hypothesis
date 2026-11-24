@@ -81,12 +81,12 @@ theorem exists_cDvr_two_embeddings : ∀ (R R₁ R' : Type) [CommRing R] [IsLoca
   obtain ⟨V, _, _, _, g₂, ψ₂, hcd, hg₂, hlg₂, hlψ₂, hc₂⟩ :=
     _root_.GlobalTheory.FieldExtensionExists.exists_extension R R₁ ρ hρ hfin V₁ hcd₁ (g₁.comp (φ₀.comp θ₂)) inferInstance
   obtain ⟨hdvr, hcomp, hcz⟩ := hcd
-  letI : Algebra R R₁ := ρ.toAlgebra
-  haveI : Module.Finite R R₁ := hfin
-  haveI : Algebra.IsIntegral R R₁ := Algebra.IsIntegral.of_finite R R₁
+  let : Algebra R R₁ := ρ.toAlgebra
+  have : Module.Finite R R₁ := hfin
+  have : Algebra.IsIntegral R R₁ := Algebra.IsIntegral.of_finite R R₁
   have inj_of : ∀ f : R₁ →+* V, Function.Injective (f.comp ρ) → Function.Injective f := by
     intro f hf
-    refine (RingHom.injective_iff_ker_eq_bot f).2 (Ideal.eq_bot_of_comap_eq_bot (R := R) ?_)
+    refine (RingHom.injective_iff_ker_eq_bot f).2 (Ideal.eq_bot_of_under_eq_bot (R := R) ?_)
     have : Ideal.comap (algebraMap R R₁) (RingHom.ker f) = RingHom.ker (f.comp ρ) := rfl
     change Ideal.comap (algebraMap R R₁) (RingHom.ker f) = ⊥
     rw [this]

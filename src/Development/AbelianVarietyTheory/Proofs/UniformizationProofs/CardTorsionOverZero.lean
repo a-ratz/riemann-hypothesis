@@ -93,10 +93,10 @@ attribute [local instance] Over.cartesianMonoidalCategory in
 theorem _root_.GlobalTheory.GtCount.card_torus_torsion (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (F : Type) [Field F]
     [IsAlgClosed F] (n : ℕ) (hn : (n : F) ≠ 0) :
     Nat.card {t : Multiplicative X →* Fˣ // t ^ n = 1} = n ^ Module.finrank ℤ X := by
-  haveI : NeZero (n : F) := ⟨hn⟩
-  haveI : NeZero n := ⟨by rintro rfl; simp at hn⟩
+  have : NeZero (n : F) := ⟨hn⟩
+  have : NeZero n := ⟨by rintro rfl; simp at hn⟩
   have hroots : Nat.card (rootsOfUnity n F) = n := by
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F n
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F n
     exact hζ.card_rootsOfUnity
   let b := Module.Free.chooseBasis ℤ X
   let e₁ : {t : Multiplicative X →* Fˣ // t ^ n = 1} ≃ (Multiplicative X →* rootsOfUnity n F) :=

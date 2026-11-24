@@ -101,7 +101,7 @@ theorem finiteGroupAction_preserves_principalFlagMultiplicity : ∀ {D : D7} {V 
     have hκ : IsLevelLift V β L g0 hk.choose := hk.choose_spec
     have hEq : U = (levChi V β (flagL L) hk.choose)⁻¹ • heckeOn M {hk.choose} T := by
       ext v h
-      rw [hU v, MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul]
+      rw [hU v, smul_apply, Pi.smul_apply, smul_eq_mul]
       unfold actG0
       rw [dite_eq_left hk]
       congr 1

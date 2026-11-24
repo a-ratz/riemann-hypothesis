@@ -109,9 +109,9 @@ theorem UpperTheory.V.Ws.Bl.cardP :
   have hfin : ∀ k, Finite (T ⧸ lev A T k) := by
     intro k
     have h1 : (maximalIdeal A).FG := IsNoetherian.noetherian _
-    haveI : Finite (A ⧸ maximalIdeal A) := (inferInstance : Finite (ResidueField A))
-    haveI := Ideal.finite_quotient_pow h1 k
-    haveI : Finite (T ⧸ (⊤ : Submodule A T)) := inferInstance
+    have : Finite (A ⧸ maximalIdeal A) := (inferInstance : Finite (ResidueField A))
+    have := Ideal.finite_quotient_pow h1 k
+    have : Finite (T ⧸ (⊤ : Submodule A T)) := inferInstance
     exact Submodule.finite_quotient_smul _ (Module.finite_def.mp inferInstance)
   obtain ⟨y, hyP, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP
   have hx : ∃ x ∈ P, x ∉ lev A T 1 := by
@@ -136,7 +136,7 @@ theorem UpperTheory.V.Ws.Bl.cardP :
     exact hy0 ((Submodule.mem_bot A).mp hmem)
   obtain ⟨x, hxP, hx1⟩ := hx
   refine ⟨hfin n, ?_⟩
-  haveI := hfin n
+  have := hfin n
   have key : ∀ i j : ℕ, i < j → j < n → ϖ ^ i • x - ϖ ^ j • x ∉ lev A T n := by
     intro i j hij hjn hmem
     obtain ⟨s, hs⟩ := (hL n _).mp hmem
@@ -182,8 +182,8 @@ theorem UpperTheory.Reformulated.B.Qj7.seq_ex :
         ∀ (t : (n : ℕ) → S (n + (1 : ℕ)) → S n), ∃ (u : (n : ℕ) → S n), ∀ (n : ℕ), t n (u (n + (1 : ℕ))) = u n := by
   intro S hfin hne t
   classical
-  letI : ∀ n, TopologicalSpace (S n) := fun _ => ⊥
-  haveI : ∀ n, DiscreteTopology (S n) := fun _ => ⟨rfl⟩
+  let : ∀ n, TopologicalSpace (S n) := fun _ => ⊥
+  have : ∀ n, DiscreteTopology (S n) := fun _ => ⟨rfl⟩
   let C : ℕ → Set ((n : ℕ) → S n) := fun k => {u | ∀ n < k, t n (u (n + 1)) = u n}
   have hclosed : ∀ k, IsClosed (C k) := by
     intro k
@@ -275,7 +275,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem card_one_of {R N : Type} [Ring R] [AddCommGroup N] [Module R N] (P : Submodule R N)
     (h : ∀ x ∈ P, x = 0) : Nat.card P = 1 := by
-  haveI : Subsingleton P := ⟨fun a b => Subtype.ext ((h a a.2).trans (h b b.2).symm)⟩
+  have : Subsingleton P := ⟨fun a b => Subtype.ext ((h a a.2).trans (h b b.2).symm)⟩
   exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, ⟨0⟩⟩
 
 theorem UpperTheory.V.Ws.Bl.gwIneq :
@@ -403,7 +403,7 @@ theorem UpperTheory.V.Ws.Bl.plusCard :
   have hρP : ∀ h (x : P), ((ρP h x : P) : M) = ρ h x := fun _ _ => rfl
   have hcP : ContAction ρP := by
     have h1 : Continuous fun p : Dec (F := ℚ) B × P => ρ p.1 (p.2 : M) :=
-      hc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))
+      hc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))
     exact continuous_induced_rng.2 h1
   obtain ⟨hH0, hH1, hH2, -⟩ := hFin ℚ Ω l r P B ρP v hr hB hcP
   have hE := (hEul ℚ Ω l r P B ρP v hr hB hcP).1 hl
@@ -417,7 +417,7 @@ theorem UpperTheory.V.Ws.Bl.plusCard :
     calc Nat.card P ≤ Nat.card P ^ locDeg v := Nat.le_self_pow hdeg.ne' _
       _ ≤ Nat.card (H0 ρP) * Nat.card (H2 ρP) * Nat.card P ^ locDeg v :=
         Nat.le_mul_of_pos_left _ (Nat.mul_pos a0 a2)
-  have hu : Continuous (P.subtype : P → M) := continuous_subtype_val
+  have hu : Continuous (P.subtype : P → M) := continuous_subtypeVal
   have heq : ∀ (g : Dec (F := ℚ) B) (m : P), P.subtype (ρP g m) = ρ g (P.subtype m) := fun _ _ => rfl
   let φ := mapH1 ρP ρ P.subtype hu heq
   obtain ⟨s, hsb⟩ := hs
@@ -663,14 +663,14 @@ theorem UpperTheory.V.Ws.Bl.gwCount :
   classical
   intro hC Ω _ _ _ l hl S c s B hP R M _ _ _ _ ρ r hr hlc K hK hun hc hs P hPs
   have hfin := zcFin hC.gf S c s B hP R M ρ r hr hlc K hK hun (P : Set M)
-  haveI : Finite (Zc (fun g m => ρ g m) c (neSet l K) (Dec (F := ℚ) B) (P : Set M)) := hfin
+  have : Finite (Zc (fun g m => ρ g m) c (neSet l K) (Dec (F := ℚ) B) (P : Set M)) := hfin
   obtain ⟨S', Av, v0, hS', hAv, hB, hv0, hNS⟩ := placeSet (l := l) S B hP.prime hP.mem hP.ovl
   subst hB
   have hr1 : ∀ m : M, (l ^ (r + 1)) • m = 0 := fun m => by rw [pow_succ', mul_smul, hr, smul_zero]
-  haveI : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
-  haveI : Module (ZMod (l ^ (r + 1))) M := AddCommGroup.zmodModule hr1
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
+  have : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : Module (ZMod (l ^ (r + 1))) M := AddCommGroup.zmodModule hr1
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
   have hcl : IsClosed (ρ.ker : Set (G ℚ Ω)) := by
     have e : (ρ.ker : Set (G ℚ Ω)) = ⋂ m : M, (fun g => ρ g m) ⁻¹' {m} := by
       ext g
@@ -762,7 +762,7 @@ private theorem isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecom
 private theorem isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by
   obtain ⟨r, π, hπ⟩ := Module.Finite.exists_fin' R M
-  haveI := isPrecomplete_pi I r
+  have := isPrecomplete_pi I r
   rw [← AdicCompletion.of_surjective_iff]
   intro y
   obtain ⟨z, rfl⟩ := AdicCompletion.map_surjective I hπ y
@@ -812,7 +812,7 @@ theorem UpperTheory.V.Ws.Bl.limit :
     ∀ (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] (T : Type) [AddCommGroup T] [Module A T] [Module.Finite A T] [Module.Free A T] (Γ : Type) [Group Γ] [TopologicalSpace Γ] (ρ : Representation A Γ T) (c : Γ) (N : Set Γ) (H : Subgroup Γ) (P : Submodule A T), IsAdicComplete (maximalIdeal A) A → ∀ (z : ∀ n, Γ → T ⧸ lev A T n) (y : ∀ n, T ⧸ lev A T n), (∀ n, IsZn ρ c N H P n (z n) (y n)) → (∀ n g, redn A T n (z (n + 1) g) = z n g) → (∀ n, redn A T n (y (n + 1)) = y n) → Prim (z 1) →
           ∃ (z' : Γ → T) (y' : T), IsZT ρ c N H P z' y' ∧ z' ≠ 0 := by
   intro A _ _ _ T _ _ _ _ Γ _ _ ρ c N H P hA z y hZ hz hy hP
-  haveI : IsPrecomplete (maximalIdeal A) T := isPrecomplete_finite _
+  have : IsPrecomplete (maximalIdeal A) T := isPrecomplete_finite _
   choose z' hz' using fun g => lift_seq (fun n => z n g) fun n => hz n g
   obtain ⟨y', hy'⟩ := lift_seq y hy
   refine ⟨z', y', ⟨fun n => ?_, fun g h => ?_, ?_, fun g hg => ?_, fun h hh => ?_⟩, ?_⟩
@@ -1020,7 +1020,7 @@ theorem UpperTheory.V.Ws.Bl.primEx :
       exact ih _ ⟨_, hr.1⟩ (hr.2.1 hpz (by omega))
   have hB : ∀ k, Nat.card (Zn ρ c N H P (n + k + 1)) ≤ Nat.card (Zn ρ c N H P (n + k)) := by
     intro k
-    haveI := (hfin (n + k)).to_subtype
+    have := (hfin (n + k)).to_subtype
     have key : ∀ z : Zn ρ c N H P (n + k + 1), ∃ z' : Zn ρ c N H P (n + k),
         ∀ g x, (lev A T (n + k)).mkQ x = z'.1 g → (lev A T (n + k + 1)).mkQ (t • x) = z.1 g := by
       intro z
@@ -1081,7 +1081,7 @@ theorem UpperTheory.V.Ws.Bl.cocT :
     rw [modRep_mk, hc, map_neg]
   have hbij : ∀ n, Function.Bijective fun m : T ⧸ lev A T n => modRep ρ n s m - m := by
     intro n
-    haveI := hfin n
+    have := hfin n
     refine Finite.surjective_iff_bijective.1 fun m => ?_
     obtain ⟨x, rfl⟩ := (lev A T n).mkQ_surjective m
     obtain ⟨y, rfl⟩ := hs.2 x
@@ -1090,10 +1090,10 @@ theorem UpperTheory.V.Ws.Bl.cocT :
     rintro n h hh _ ⟨x, hx, rfl⟩
     exact ⟨ρ h x, hL.stab h hh x hx, rfl⟩
   have hZ : ∀ n, (Zn ρ c (neSet l K) (Dec (F := ℚ) B) P n).Finite := fun n => by
-    haveI := hfin n
+    have := hfin n
     exact zcFin hC.gf S c s B hP A _ (modRep ρ n) n (htor n) (hlc n) K (hker n) hU _
   have hge : ∀ n, n ≤ Nat.card (Zn ρ c (neSet l K) (Dec (F := ℚ) B) P n) := fun n => by
-    haveI := hfin n
+    have := hfin n
     exact (hcard n).2.trans
       (gwCount hC S c s B hP A _ (modRep ρ n) n (htor n) (hlc n) K (hker n) hU (hneg n) (hbij n) _ (hstab n))
   obtain ⟨z, y, h1, h2, h3, h4⟩ := compat A T _ ρ c _ _ P hfin hZ (primEx A T _ ρ c _ _ P hL hZ hge)

@@ -187,7 +187,7 @@ theorem omegaDensity_smul {μ : Measure (UpqT P Q)} {c : ℝ≥0∞} (h : OmegaD
   obtain ⟨lam, hl, hc⟩ := h
   refine ⟨lam, hl, ?_⟩
   refine (ENNReal.Tendsto.const_mul hc (Or.inr ht)).congr (fun r => ?_)
-  rw [Measure.smul_apply, smul_eq_mul, mul_div_assoc]
+  rw [smul_apply, smul_eq_mul, mul_div_assoc]
 
 def mu0 : Measure (UpqT P Q) := Measure.haar
 

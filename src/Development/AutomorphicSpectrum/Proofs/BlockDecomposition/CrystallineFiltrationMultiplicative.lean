@@ -91,7 +91,7 @@ theorem Fil0_zero : A.Fil0 0 = ⊤ :=
 
 theorem Fil0_mul_le (r s : ℕ) : A.Fil0 r * A.Fil0 s ≤ A.Fil0 (r + s) := by
   unfold PAlg.Fil0
-  rw [Ideal.span_mul_span', Ideal.span_le]
+  rw [Ideal.span_mul_span, Ideal.span_le]
   rintro _ ⟨_, ⟨i, hi, rfl⟩, _, ⟨j, hj, rfl⟩, rfl⟩
   show A.dxi0 i * A.dxi0 j ∈ Ideal.span _
   rw [divided_power_xi_mul]

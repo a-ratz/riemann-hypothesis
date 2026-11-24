@@ -226,7 +226,7 @@ theorem isIrreducible_comp {π : Representation ℂ G V} (φ : G →* G) (hφ : 
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : IsSimpleOrder (Subrepresentation π) := h
+  have : IsSimpleOrder (Subrepresentation π) := h
   exact E.isSimpleOrder
 
 variable [TopologicalSpace G]
@@ -298,16 +298,16 @@ theorem equiv_contra (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
     (ha : IsAdmissible π) (hi : π.IsIrreducible) :
     Nonempty (Representation.Equiv (π.comp (invTranspose n k)) (contra π)) := by
   borelize k
-  letI : MeasurableSpace (GL (Fin n) k) := Units.instMeasurableSpace
-  haveI : BorelSpace (GL (Fin n) k) := borel_GL
+  let : MeasurableSpace (GL (Fin n) k) := Units.instMeasurableSpace
+  have : BorelSpace (GL (Fin n) k) := borel_GL
   have hb : ∀ U ∈ nhds (1 : GL (Fin n) k), ∃ K : Subgroup (GL (Fin n) k),
       IsOpen (K : Set (GL (Fin n) k)) ∧ IsCompact (K : Set (GL (Fin n) k)) ∧ (K : Set (GL (Fin n) k)) ⊆ U := by
     intro U hU
     obtain ⟨J, h1, h2, h3, -⟩ := exists_open_normalised_subgroup_subset k (Fin n) U hU
     exact ⟨J, h1, isCompact_KO.of_isClosed_subset (J.isClosed_of_isOpen h1) h3, h2⟩
   let μ : Measure (GL (Fin n) k) := haarVol (KO k (Fin n))
-  haveI : μ.IsHaarMeasure := isHaarMeasure_haarVol isOpen_KO le_rfl
-  haveI : μ.IsMulRightInvariant := isMulRightInvariant_of_haar μ
+  have : μ.IsHaarMeasure := isHaarMeasure_haarVol isOpen_KO le_rfl
+  have : μ.IsMulRightInvariant := isMulRightInvariant_of_haar μ
   have := GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
   have hinv := invTranspose_invTranspose n k
   have hcont := continuous_invTranspose n k

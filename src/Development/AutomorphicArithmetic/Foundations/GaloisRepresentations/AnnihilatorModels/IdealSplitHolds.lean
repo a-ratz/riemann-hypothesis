@@ -184,8 +184,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.adjoint_of :
   obtain ⟨a₁', a₂', -, -, -⟩ := hPC p D R b N _ s o'
   obtain ⟨-, hmon, -, -, hiso, -⟩ := hψ
   have hsim' := (hsim o' ψ c).1 hiso
-  haveI := hmon
-  haveI := hψ'
+  have := hmon
+  have := hψ'
 
   have hsym : ∀ (q : Obj b N s) {Y : Over (Sp k)} (u v : Y ⟶ q.A),
       evc q.isLB u v = evc q.isLB v u := by
@@ -258,11 +258,11 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.algOf_of :
     AlgOf := by
   intro S K h hfin hflat V _ _ z
   let h' : pullback h z ⟶ Sp V := pullback.snd h z
-  haveI : IsFinite h' := MorphismProperty.of_isPullback (IsPullback.of_hasPullback h z) hfin
-  haveI : Flat h' := MorphismProperty.of_isPullback (IsPullback.of_hasPullback h z) hflat
-  haveI : IsAffine (pullback h z) := isAffine_of_isAffineHom h'
+  have : IsFinite h' := MorphismProperty.of_isPullback (IsPullback.of_hasPullback h z) hfin
+  have : Flat h' := MorphismProperty.of_isPullback (IsPullback.of_hasPullback h z) hflat
+  have : IsAffine (pullback h z) := isAffine_of_isAffineHom h'
   let φ : CommRingCat.of V ⟶ Γ(pullback h z, ⊤) := (Scheme.ΓSpecIso (.of V)).inv ≫ h'.appTop
-  letI alg : Algebra V Γ(pullback h z, ⊤) := φ.hom.toAlgebra
+  let alg : Algebra V Γ(pullback h z, ⊤) := φ.hom.toAlgebra
   have hfinite : φ.hom.Finite := by
     have h1 : h'.appTop.hom.Finite := Scheme.Hom.finite_appTop h'
     have h2 : (Scheme.ΓSpecIso (.of V)).inv.hom.Finite :=
@@ -273,8 +273,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.algOf_of :
     have h2 : (Scheme.ΓSpecIso (.of V)).inv.hom.Flat :=
       RingHom.Flat.of_bijective (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (.of V)).inv)
     exact RingHom.Flat.comp h2 h1
-  haveI mf : Module.Finite V Γ(pullback h z, ⊤) := hfinite
-  haveI mfl : Module.Flat V Γ(pullback h z, ⊤) := hflat'
+  have mf : Module.Finite V Γ(pullback h z, ⊤) := hfinite
+  have mfl : Module.Flat V Γ(pullback h z, ⊤) := hflat'
   refine ⟨Γ(pullback h z, ⊤), inferInstance, alg, (pullback h z).isoSpec.inv ≫ pullback.fst h z, mf,
     Module.free_of_flat_of_isLocalRing, ?_⟩
   have key : (pullback h z).isoSpec.inv ≫ h' = spMap (algebraMap V Γ(pullback h z, ⊤)) := by
@@ -389,8 +389,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.constSub_of : ConstSub := by
     rw [← Category.assoc]
     erw [h]
     simp
-  haveI := hsplit.isFinite
-  haveI := hsplit.etale
+  have := hsplit.isFinite
+  have := hsplit.etale
   refine ⟨constObj (Sp K) Γ, hG, constDesc (Subtype.val : Γ → (𝟙_ (Over (Sp K)) ⟶ A)), hmon, hmono,
     hsplit.isFinite, hsplit.etale, ?_, ?_, ?_, ?_⟩
   · refine ⟨hsplit.isFinite, (inferInstance : Flat (constObj (Sp K) Γ).hom), ?_, hsplit.finrank_eq⟩
@@ -407,7 +407,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.constSub_of : ConstSub := by
       let z : (𝟙_ (Over (Sp K))).left := (⊥ : PrimeSpectrum K)
       obtain ⟨V, hzV, c, hc⟩ := locally_const_desc (Subtype.val : Γ → (𝟙_ (Over (Sp K)) ⟶ A)) y z
       haveI : Nonempty (openObj (𝟙_ (Over (Sp K))) V).left := ⟨⟨z, hzV⟩⟩
-      haveI := epi_toUnit (openObj (𝟙_ (Over (Sp K))) V)
+      have := epi_toUnit (openObj (𝟙_ (Over (Sp K))) V)
       have e : openι (𝟙_ (Over (Sp K))) V = toUnit _ := toUnit_unique _ _
       rw [hy, e] at hc
       have := (cancel_epi _).1 hc
@@ -470,8 +470,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.corrBC_of :
     rw [hV]
     exact etale_restrict_of_isPullback hpb _ T.et
   · intro K _ _ hp y
-    haveI : ValuationRing K := ValuationRing.of_field K
-    haveI : IsAlgClosed (FractionRing K) :=
+    have : ValuationRing K := ValuationRing.of_field K
+    have : IsAlgClosed (FractionRing K) :=
       IsAlgClosed.of_ringEquiv K (FractionRing K) (FractionRing.algEquiv K K).symm.toRingEquiv
     obtain ⟨W⟩ := hW p D O b N M.X M.s M.univ w (Over.mk (y ≫ h))
     obtain ⟨hfin, hrk⟩ := hR p D O f b N r w hstd M K hp (y ≫ h) W
@@ -563,7 +563,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobHom_of :
     Over.homMk (GlobalTheory.SS.FrobField.absFrob T.left p f hp (hTz T)) (by
       simp only [Over.mk_hom]
       rw [GlobalTheory.SS.FrobField.absFrob_nat T.hom p f hp (hTz T) hκ, hfrκ])
-  haveI hF : IsMonHom F := by
+  have hF : IsMonHom F := by
     apply isMonHom_of_mul F
     intro T x y
     apply Over.OverMorphism.ext
@@ -849,10 +849,10 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.isogComp_of :
   intro hP p _ D R _ b N S s c c' o o₁ o₂ ψ χ h1 h2
   obtain ⟨⟨k, rfl⟩, hψ, ha, he, hL, ψ', hψ', hψ1, hψ2⟩ := h1
   obtain ⟨⟨k', rfl⟩, hχ, ha', he', hL', χ', hχ', hχ1, hχ2⟩ := h2
-  haveI := hψ
-  haveI := hχ
-  haveI := hψ'
-  haveI := hχ'
+  have := hψ
+  have := hχ
+  have := hψ'
+  have := hχ'
   refine ⟨⟨k + k', (pow_add p k k').symm⟩, inferInstance, ?_, ?_, ?_, ⟨χ' ≫ ψ', inferInstance, ?_, ?_⟩⟩
   · intro a
     rw [← Category.assoc, ha, Category.assoc, ha', Category.assoc]
@@ -907,8 +907,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.liftFF_of :
     AlgOf → LiftPt → LiftFF := by
   intro hAlg hPt S K h hfin hflat V _ _ _ _ z g hg
   obtain ⟨B, _, _, k, hfinB, hfreeB, hp⟩ := hAlg S K h hfin hflat V z
-  haveI : Module.Finite V B := hfinB
-  haveI : Module.Free V B := hfreeB
+  have : Module.Finite V B := hfinB
+  have : Module.Free V B := hfreeB
   let u : Sp (IsLocalRing.ResidueField V) ⟶ Sp B := hp.lift g (resPt V) hg
   have huk : u ≫ k = g := hp.lift_fst _ _ _
   have hua : u ≫ spMap (algebraMap V B) = resPt V := hp.lift_snd _ _ _
@@ -1367,9 +1367,9 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.quasiInv_of :
   have hgψ : ψ ≫ g.hom = 𝟙 o.A ^ c := by
     rw [← hfhom, ← hg]
     rfl
-  haveI : Flat (Over.Hom.left ψ) := (GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny κ Av Av' q hq).2.1
-  haveI : Surjective (Over.Hom.left ψ) := hsur
-  haveI : Epi (Over.Hom.left ψ) := Flat.epi_of_flat_of_surjective _
+  have : Flat (Over.Hom.left ψ) := (GlobalTheory.T.dim_eq_flat_finrank_eq_deg_of_isIsogeny κ Av Av' q hq).2.1
+  have : Surjective (Over.Hom.left ψ) := hsur
+  have : Epi (Over.Hom.left ψ) := Flat.epi_of_flat_of_surjective _
   refine ⟨g.hom, hgm, hgψ, ?_⟩
   ext1
   rw [← cancel_epi (Over.Hom.left ψ), ← Over.comp_left, ← Over.comp_left, ← Category.assoc, hgψ,
@@ -1412,8 +1412,8 @@ theorem redPts_of : RedPts := by
   have hcard : ∀ V : Submodule k (H ⧸ C), Nat.card V = Nat.card k ^ Module.finrank k V := by
     intro V
     have : Finite (H ⧸ C) := Module.finite_of_finite k
-    letI := Fintype.ofFinite k
-    letI := Fintype.ofFinite V
+    let := Fintype.ofFinite k
+    let := Fintype.ofFinite V
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     exact Module.card_eq_pow_finrank
   refine ⟨?_, ?_⟩
@@ -1512,9 +1512,9 @@ namespace UpperTheory.Gal.crystallineComparison.Mod
 private theorem exists_algHom_ker (κ B : Type) [Field κ] [IsAlgClosed κ] [CommRing B] [Algebra κ B]
     [Module.Finite κ B] (p : PrimeSpectrum B) :
     ∃ ε : B →ₐ[κ] κ, RingHom.ker ε.toRingHom = p.asIdeal := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite κ B
-  haveI : p.asIdeal.IsMaximal := Ideal.isMaximal_of_isPrime p.asIdeal
-  letI : Field (B ⧸ p.asIdeal) := Ideal.Quotient.field _
+  have : IsArtinianRing B := IsArtinianRing.of_finite κ B
+  have : p.asIdeal.IsMaximal := Ideal.isMaximal_of_isPrime p.asIdeal
+  let : Field (B ⧸ p.asIdeal) := Ideal.Quotient.field _
   have hb : Function.Bijective (algebraMap κ (B ⧸ p.asIdeal)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e := AlgEquiv.ofBijective (Algebra.ofId κ (B ⧸ p.asIdeal)) hb
@@ -1525,8 +1525,8 @@ private theorem exists_algHom_ker (κ B : Type) [Field κ] [IsAlgClosed κ] [Com
 
 theorem ringHomog_of : RingHomog := by
   intro κ B _ _ _ _ _ ε₀ _ hτ
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite κ B
-  haveI hfin : Module.Finite κ (Localization.AtPrime (RingHom.ker ε₀.toRingHom)) :=
+  have : IsArtinianRing B := IsArtinianRing.of_finite κ B
+  have hfin : Module.Finite κ (Localization.AtPrime (RingHom.ker ε₀.toRingHom)) :=
     Module.Finite.of_surjective
       (Algebra.algHom κ B (Localization.AtPrime (RingHom.ker ε₀.toRingHom))).toLinearMap
       (IsArtinianRing.localization_surjective (RingHom.ker ε₀.toRingHom).primeCompl
@@ -1602,7 +1602,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.secCard_of :
   intro p _ D R _ b N M r w j c T hm K _ _ hp x y hxy
   subst hxy
   let β : R →+* K := (Spec.preimage (y ≫ T.s ≫ M.s)).hom
-  haveI : CharZero K := by
+  have : CharZero K := by
     rcases CharP.char_is_prime_or_zero K (ringChar K) with hq | hq
     · exfalso
       have hcast : ((ringChar K : ℕ) : K) = 0 := ringChar.Nat.cast_ringChar
@@ -1613,7 +1613,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.secCard_of :
         have hu := (b.unit _ hcop).map β
         rw [map_natCast, hcast] at hu
         exact not_isUnit_zero hu
-    · haveI : CharP K 0 := ringChar.of_eq hq
+    · have : CharP K 0 := ringChar.of_eq hq
       exact CharP.charP_to_charZero K
   obtain ⟨-, hcard⟩ := T.tj K y
   rw [hm, Nat.one_mul] at hcard
@@ -1812,13 +1812,13 @@ private def killedSub {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRin
 theorem UpperTheory.Gal.crystallineComparison.Mod.wModEx_of :
     WModEx := by
   intro p _ D R _ b N S s o w T
-  letI := ptModuleWvs o T
+  let := ptModuleWvs o T
   have htor : Module.IsTorsionBySet (𝓞 D.F) (killedSub o w T) (w : Set (𝓞 D.F)) := by
     intro x a
     apply Subtype.ext
     show (a : 𝓞 D.F) • (x : Additive (T ⟶ o.A)) = Additive.ofMul 1
     exact x.2 a a.2
-  letI : Module (𝓞 D.F ⧸ w) (killedSub o w T) := htor.module
+  let : Module (𝓞 D.F ⧸ w) (killedSub o w T) := htor.module
   refine ⟨⟨killedSub o w T, fun x => Additive.toMul (x : Additive (T ⟶ o.A)), ?_, ?_, ?_, ?_⟩⟩
   · intro x y h
     exact Subtype.ext (Additive.toMul.injective h)

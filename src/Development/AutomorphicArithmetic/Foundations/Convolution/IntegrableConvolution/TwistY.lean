@@ -139,7 +139,7 @@ private lemma coe_cmp (W : Submodule ℂ H) [FiniteDimensional ℂ W] (B : H →
 private lemma trOn_eq (W : Submodule ℂ H) [FiniteDimensional ℂ W] (B : H →L[ℂ] H) :
     trOn W B = LinearMap.trace ℂ W (cmp W B) := by
   classical
-  have hcl := Submodule.closed_of_finiteDimensional W
+  have hcl := Submodule.isClosed_of_finiteDimensional W
   let e := stdOrthonormalBasis ℂ W
   rw [LinearMap.trace_eq_sum_inner _ e]
   have he : Orthonormal ℂ (fun k => ((e k : W) : H)) :=
@@ -170,7 +170,7 @@ private lemma trOn_eq (W : Submodule ℂ H) [FiniteDimensional ℂ W] (B : H →
       exact hi (by simp [hout i h])
     rw [← hf.tsum_eq hs, tsum_fintype]
     exact ENNReal.sum_lt_top.2 fun k _ => by
-      exact ENNReal.pow_lt_top enorm_lt_top
+      exact ENNReal.pow_lt_top eNorm_lt_top
   have hT : IsTraceClass (prj W ∘L B ∘L prj W) := isTraceClass_comp hHS (hHS.comp_left B)
   have h1 := hT.hasSum_trace b
   have h2 : HasSum ((fun i => ⟪b i, (prj W ∘L B ∘L prj W) (b i)⟫_ℂ) ∘ f) (trace (prj W ∘L B ∘L prj W)) :=
@@ -301,13 +301,13 @@ private lemma key2 (h : Slots π V m ι E A U) {y : ℝ}
 private lemma irr (h : Slots π V m ι E A U) (y : ℝ) [FiniteDimensional ℂ (jointEig V E A y)]
     (p : Submodule ℂ (jointEig V E A y))
     (hp : ∀ i g, ∀ w ∈ p, cmp (jointEig V E A y) (π (ι i g)) w ∈ p) : p = ⊥ ∨ p = ⊤ := by
-  have hW : IsClosed (jointEig V E A y : Set H) := Submodule.closed_of_finiteDimensional _
+  have hW : IsClosed (jointEig V E A y : Set H) := Submodule.isClosed_of_finiteDimensional _
   obtain ⟨hRc, hRinv, hirr⟩ := cutIrr Γ G H π V m ι E A U h
   let p' : Submodule ℂ H := p.map (jointEig V E A y).subtype
   have hp'W : ∀ w ∈ p', w ∈ jointEig V E A y := by
     rintro _ ⟨w, -, rfl⟩
     exact w.2
-  have hp'c : IsClosed (p' : Set H) := Submodule.closed_of_finiteDimensional p'
+  have hp'c : IsClosed (p' : Set H) := Submodule.isClosed_of_finiteDimensional p'
   have hp' : ∀ i g, ∀ w ∈ p', prj (jointEig V E A y) (π (ι i g) w) ∈ p' := by
     rintro i g _ ⟨w, hw, rfl⟩
     exact ⟨_, hp i g w hw, rfl⟩
@@ -397,7 +397,7 @@ private lemma aux (h : Slots π V m ι E A U) (y : ℝ) [FiniteDimensional ℂ (
       (∀ j, j ≠ i₀ → ∀ v, S (A j v) = A j (S v)) →
       (∀ j, j ≠ i₀ → ∀ g v, S (π (ι j g) v) = π (ι j g) (S v)) →
       trOn (jointEig V E A y) (S ∘L (U : H →L[ℂ] H)) = c * trOn (jointEig V E A y) S := by
-  have hW : IsClosed (jointEig V E A y : Set H) := Submodule.closed_of_finiteDimensional _
+  have hW : IsClosed (jointEig V E A y : Set H) := Submodule.isClosed_of_finiteDimensional _
   let T : Fin (m + 1) → G → Module.End ℂ (jointEig V E A y) :=
     fun i g => cmp (jointEig V E A y) (π (ι i g))
   have hTc : ∀ i j, i ≠ j → ∀ x z, Commute (T i x) (T j z) := by
@@ -496,11 +496,11 @@ private theorem trace_starProjection {H : Type} [NormedAddCommGroup H] [InnerPro
 private theorem trOn_one {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (W : Submodule ℂ H) [FiniteDimensional ℂ W] :
     trOn W 1 = (Module.finrank ℂ W : ℂ) := by
-  have hc : W.topologicalClosure = W := W.closed_of_finiteDimensional.submodule_topologicalClosure_eq
-  haveI : FiniteDimensional ℂ W.topologicalClosure := by rw [hc]; infer_instance
+  have hc : W.topologicalClosure = W := W.isClosed_of_finiteDimensional.submodule_topologicalClosure_eq
+  have : FiniteDimensional ℂ W.topologicalClosure := by rw [hc]; infer_instance
   have hp : prj W ∘L (1 : H →L[ℂ] H) ∘L prj W = W.topologicalClosure.starProjection := by
     ext x
-    simp only [prj, ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply]
+    simp only [prj, ContinuousLinearMap.comp_apply, one_apply_eq_self]
     exact Submodule.starProjection_eq_self_iff.2 (Submodule.starProjection_apply_mem _ x)
   rw [trOn, hp, trace_starProjection, hc]
 
@@ -508,7 +508,7 @@ theorem UpperTheory.ConvolutionTheory.L1.twTrace :
     UpperTheory.ConvolutionTheory.L1.TwTrace := by
   intro Γ G H _ _ _ _ _ _ π V m ι E A U hS y hy hfin
   obtain ⟨hle, hdiag⟩ := UpperTheory.ConvolutionTheory.L1.diagOnly Γ G H π V m ι E A U hS y hy hfin
-  haveI hfin' : FiniteDimensional ℂ (UpperTheory.ConvolutionTheory.L1.jointEig V E A y) := Submodule.finiteDimensional_of_le hle
+  have hfin' : FiniteDimensional ℂ (UpperTheory.ConvolutionTheory.L1.jointEig V E A y) := Submodule.finiteDimensional_of_le hle
   obtain ⟨c, hc, htr⟩ := UpperTheory.ConvolutionTheory.L1.jointTrace Γ G H π V m ι E A U hS y hfin'
   refine ⟨c, hc, ?_, fun i₀ S h1 h2 => (hdiag i₀ S h1).trans (htr i₀ S h1 h2)⟩
   have h := (hdiag 0 1 fun _ _ _ => rfl).trans (htr 0 1 (fun _ _ _ => rfl) fun _ _ _ _ => rfl)
@@ -576,11 +576,11 @@ private theorem fin_abs {m : ℕ} {V W₀ Wn Ty C : Submodule ℂ H} {W : Fin (m
       rw [Submodule.coe_inf]; exact hV.inter h₀
     refine cast (congrArg _ (funext fun v => ?_)) (hK.comp_clm (prj (V ⊓ W₀)))
     have hu := prj_mem hcl v
-    simp only [Function.comp_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.mul_apply]
-    rw [prj_self (hVC hu.1), hTy, ← prj_mul hn h₀ hc₀, ContinuousLinearMap.mul_apply, prj_self hu.2]
+    simp only [Function.comp_apply, ContinuousLinearMap.comp_apply, mul_apply_eq_comp]
+    rw [prj_self (hVC hu.1), hTy, ← prj_mul hn h₀ hc₀, mul_apply_eq_comp, prj_self hu.2]
   · rw [hTy, hWn] at hv
     refine ⟨0, v, eig_one V h₀ ▸ ⟨hv.1, hv.2.2⟩, ?_⟩
-    rwa [ContinuousLinearMap.mul_apply, prj_self ((Submodule.mem_iInf _).1 hv.2.1 0)]
+    rwa [mul_apply_eq_comp, prj_self ((Submodule.mem_iInf _).1 hv.2.1 0)]
 
 end Hil
 
@@ -698,7 +698,7 @@ theorem UpperTheory.ConvolutionTheory.L1.twistY :
   have hrep : ∀ x y : normOneGL (K := E) (n := n), Commute x y →
       Commute (rightRegularRep (rationalGLOne (K := E) (n := n)) μ x) (rightRegularRep (rationalGLOne (K := E) (n := n)) μ y) := fun x y h =>
     ContinuousLinearMap.ext fun v => by
-      simp only [ContinuousLinearMap.mul_apply]
+      simp only [mul_apply_eq_comp]
       rw [← UnitaryRep.map_mul_apply, ← UnitaryRep.map_mul_apply, h.eq]
   have hQO : ∀ A i, Commute (Q A) (O i) := fun A i => hOc _ i fun g => (GA_arch μ A _).symm
   have hOa : ∀ i j, i ≠ j → ∀ g, Commute (O i) (rightRegularRep (rationalGLOne (K := E) (n := n)) μ (archP E n (s j g))) :=
@@ -710,7 +710,7 @@ theorem UpperTheory.ConvolutionTheory.L1.twistY :
   have hOr : ∀ i u g, Commute (O i) (rhoL μ u g) := fun i u g => (hOc _ i fun x => (hrep _ _ (arch_fin _ _)).symm).symm
   have hOV : ∀ i, ∀ v ∈ V, O i v ∈ V := fun i v hv => by
     have h := hOc (prj V) i fun g => ContinuousLinearMap.ext fun y => inv_commute _ hV.closed hV.inv _ y
-    rw [← prj_self hv, ← ContinuousLinearMap.mul_apply, ← h.eq]
+    rw [← prj_self hv, ← mul_apply_eq_comp, ← h.eq]
     exact prj_mem hV.closed _
   have hQQ : ∀ i j, Commute (Q (R i)) (Q (R j)) := fun i j => by
     by_cases e : i = j
@@ -720,7 +720,7 @@ theorem UpperTheory.ConvolutionTheory.L1.twistY :
   have hcof : ∀ᶠ u in Filter.cofinite, T.J u = GLnLocal.integralGL (u.adicCompletion E) n ∧ T.χ u = 1 := by
     refine Filter.eventually_cofinite.2 (((insert q T.S).finite_toSet.biUnion fun v _ => finite_over (E := E) v).subset fun u hu => ?_)
     by_contra h
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop, exists_eq_right', Finset.coe_insert, Set.mem_insert_iff,
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop, exists_eq_right', Finset.coe_insert, Set.mem_insert_iff,
       Finset.mem_coe, not_or] at h
     exact hu (T.off u h.2 h.1)
   have hcomm : ∀ i j, i ≠ j → ∀ g h, Commute (FreeGroup.lift (gen s w i) g) (FreeGroup.lift (gen s w j) h) :=

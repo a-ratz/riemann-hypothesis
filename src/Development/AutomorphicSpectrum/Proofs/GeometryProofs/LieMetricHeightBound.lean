@@ -334,7 +334,7 @@ private theorem exists_pos_mul_norm_sq_le_re_quadratic {N : ℕ} (G : Matrix (Fi
     have hc : c = 0 := Subsingleton.elim _ _
     subst hc
     simp
-  haveI : Nonempty (Fin N) := ⟨⟨0, Nat.pos_of_ne_zero hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, Nat.pos_of_ne_zero hN⟩⟩
   have hne : (sphere (0 : Fin N → ℂ) 1).Nonempty := by
     refine ⟨fun _ => 1, ?_⟩
     rw [mem_sphere_zero_iff_norm, pi_norm_const]
@@ -514,7 +514,7 @@ theorem PositivityTheory.Xgn.quotient_uniformization_lower : ∀ (E : Type) [Fie
     obtain ⟨M', hM'⟩ := hpull u Mz
     obtain ⟨core, hcoreip⟩ := h.herm _ (Fin C.g → ℂ) M'
     refine ⟨core, fun i j => ?_, fun x v₀ hx => ?_⟩
-    · simp only [Γ, dif_pos hu]
+    · simp only [Γ, dite_eq_left hu]
       rw [hcoreip, hkey u hu Mz hl M' hM' i, hkey u hu Mz hl M' hM' j]
     · have hpt : M'.pt x = v₀ := Over.OverMorphism.ext (by rw [← hM']; exact hx)
       rw [hcoreip, hpt]
@@ -523,7 +523,7 @@ theorem PositivityTheory.Xgn.quotient_uniformization_lower : ∀ (E : Type) [Fie
     obtain ⟨F, hF, hFeq⟩ := h.cont (s i) (s j)
     have heq : ∀ u ∈ ball (0 : Fin n → ℂ) 1, F (ww u) = Γ u i j := by
       intro u hu
-      simp only [Γ, dif_pos hu]
+      simp only [Γ, dite_eq_left hu]
       exact hFeq _ (ww u) _ _ (hco u hu) (hvv u hu i).1 (hvv u hu j).1
     refine ContinuousOn.congr (hF.comp hww ?_) (fun u hu => (heq u hu).symm)
     intro u hu
@@ -598,7 +598,7 @@ theorem exists_arith [CharZero Ω] (hK : Nonempty K) (y : (Σ k, J k) → Ω) (c
     (Set.subset_univ _)
   obtain ⟨hi, hsub, halg⟩ := AlgebraicIndependent.matroid_isBasis_iff.1 hs
   have hfin : s.Finite := (Set.finite_range _).subset hsub
-  haveI : Fintype s := hfin.fintype
+  have : Fintype s := hfin.fintype
   let e : Fin (Fintype.card s) ≃ s := (Fintype.equivFin s).symm
   have hr : Set.range (fun i => (e i : Ω)) = s := by
     ext x
@@ -646,7 +646,7 @@ theorem exists_charts (hR : Geo.ResK.ResKStatement) [CharZero Ω] (y : (Σ k, J 
         x = GroundTheory.Heights₂.Heights.LowerBoundFree.torusSmul b (w i t) := by
   classical
   rcases isEmpty_or_nonempty K with hK | hK
-  · haveI : IsEmpty (Σ k, J k) := ⟨fun p => hK.false p.1⟩
+  · have : IsEmpty (Σ k, J k) := ⟨fun p => hK.false p.1⟩
     obtain ⟨m, rfl⟩ : ∃ m : ℤ, β = C m := ⟨_, eq_C_of_isEmpty β⟩
     refine ⟨0, 1, fun _ _ => 0, fun _ => 0, fun _ => le_rfl, fun _ => analyticOnNhd_const, fun _ t _ => ?_,
       fun _ t _ _ => ?_, fun x _ => ⟨0, 0, fun _ => 1, by rw [norm_zero]; norm_num, fun _ => one_ne_zero, Subsingleton.elim _ _⟩⟩
@@ -780,15 +780,15 @@ theorem exists_open {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
     {Xo : Moduli D l} {c : Coeff l} {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset ℕ} {Ω : Type} [Field Ω]
     {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {y : (Σ k, J k) → Ω} (𝔐 : HodgeCpt Y S y) :
     ∃ V : 𝔐.X.Opens, genPt 𝔐.ξ ∈ V ∧ ∀ z : Sp ℂ ⟶ 𝔐.X, centre z ∈ V → 𝔐.Interior z := by
-  haveI := c.fin
-  haveI : NumberField c.F := ⟨⟩
+  have := c.fin
+  have : NumberField c.F := ⟨⟩
   obtain ⟨-, ⟨x, hx⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c _ _ Y S Ω K J y 𝔐 (IsFractionRing.injective (𝓞 c.F) c.F)
-  haveI : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
+  have : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
     IsPreimmersion.of_isLocalization (nonZeroDivisors (𝓞 c.F))
   have hind : Topology.IsInducing (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))) :=
     (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))).isEmbedding.isInducing
   have hopen : IsOpen (Set.range Y.jQ) := by
-    haveI := Y.jQ_open
+    have := Y.jQ_open
     exact Y.jQ.isOpenEmbedding.isOpen_range
   obtain ⟨C, hC, hCe⟩ := hind.isClosed_iff.1 hopen.isClosed_compl
   refine ⟨⟨(𝔐.f ⁻¹' C)ᶜ, (hC.preimage 𝔐.f.continuous).isOpen_compl⟩, ?_, fun z hzV => ?_⟩
@@ -827,7 +827,7 @@ end
 open PositivityTheory.Xgn.QuotientUniformizationCharts in
 theorem PositivityTheory.Xgn.quotient_uniformization_charts : Geo.ResK.ResKStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y), ∃ (n nc : ℕ) (w : Fin nc → (Fin n → ℂ) → (Σ k, J k) → ℂ) (a : Fin nc → ℕ), (∀ i, a i ≤ n) ∧ (∀ i, AnalyticOnNhd ℂ (w i) (ball 0 1)) ∧ (∀ i, ∀ t ∈ ball (0 : Fin n → ℂ) 1, w i t ∈ mcPts (mCoordIdeal y)) ∧ (∀ i, ∀ t ∈ ball (0 : Fin n → ℂ) 1, (∀ j : Fin n, (j : ℕ) < a i → t j ≠ 0) → ∀ z : Sp ℂ ⟶ 𝔐.X, CoordsAt 𝔐.ξ y z (w i t) → 𝔐.Interior z) ∧ ∀ x ∈ mcPts (mCoordIdeal y), ∃ (i : Fin nc) (t : Fin n → ℂ) (b : K → ℂ), ‖t‖ ≤ 1 / 2 ∧ (∀ k, b k ≠ 0) ∧ x = GroundTheory.Heights₂.Heights.LowerBoundFree.torusSmul b (w i t) := by
   intro hR E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   obtain ⟨V, hV, hint⟩ := exists_open 𝔐
   obtain ⟨c₀, β, b, hc, hβ, hβ0, hoff⟩ := exists_form_off 𝔐.ξ y 𝔐.all 𝔐.tie V hV
   obtain ⟨n, nc, w, a, h1, h2, h3, h4, h5⟩ := exists_charts hR y c₀ hc β b hβ hβ0
@@ -906,7 +906,7 @@ theorem PositivityTheory.Xgn.quotient_uniformization_chart_at : ∀ (E : Type) [
   have hall := 𝔐.all
   have hex : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, ∃ z : Sp ℂ ⟶ 𝔐.X, genPt 𝔐.ξ ⤳ centre z ∧ CoordsAt 𝔐.ξ y z (w u) := fun u hu =>
     (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y htie (w u)).1 (hmem u hu)
-  haveI : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨z₀⟩
+  have : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨z₀⟩
   choose! p hp₀ hp using hex
   have huniq : ∀ (z z' : Sp ℂ ⟶ 𝔐.X) (w' : (Σ k, J k) → ℂ), CoordsAt 𝔐.ξ y z w' → CoordsAt 𝔐.ξ y z' w' → z = z' := fun z z' w' h h' => by
     obtain ⟨e1, -, e3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X Ω 𝔐.ξ K J y htie ℂ
@@ -914,8 +914,8 @@ theorem PositivityTheory.Xgn.quotient_uniformization_chart_at : ∀ (E : Type) [
   have hb0 : (0 : Fin n → ℂ) ∈ Metric.ball (0 : Fin n → ℂ) 1 := by simp
   have hp0 : p 0 = z₀ := huniq _ _ (w 0) (hp 0 hb0) hz₀
   have hhol : IsHolTo (Metric.ball 0 1) p := _root_.GlobalTheory.CompanionTheory.Ar.PeriodsHol.isHolTo_of_coordsAt_family 𝔐.X Ω 𝔐.ξ K J y htie hall n _ w p Metric.isOpen_ball hw hp
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
   obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ConstEmbedding.exists_embedding c.F 𝔐.X (𝔐.f ≫ Y.s) n p hhol
   have hint : ∀ u ∈ Flat.punct n a 1, 𝔐.Interior (p u) := fun u hu => hI u hu _ (hp u hu.1)
   have hlat : ∀ k : Fin N, s k ∈ 𝔐.M.lat ⟨centre z₀, hall _⟩ := fun k => by
@@ -1141,7 +1141,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
   have hall := 𝔐.all
   have htie := 𝔐.tie
   obtain ⟨z₀, hz₀g, hz₀⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y htie (w t₀)).1 (hm _ ht₀)
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   obtain ⟨N, s, hs, hfr⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.lie_frame_values_basis 𝔐.X Ω 𝔐.ξ 𝔐.t.G 𝔐.Li 𝔐.M z₀ htie.gen hz₀g
   have hw0 : w' 0 = w t₀ := by simp only [hw', HodgeMetric.recentre_zero]
   obtain ⟨ρ₁, τ, C, jj, m, sc, hρ₁, hρ₁', hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.exists_chart_at_of_polydisc E H D l Xo c Y S Ω K J y 𝔐 n a₀ w' N s z₀ ha₀ hw'd
@@ -1214,8 +1214,8 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
     obtain ⟨τ', e1, e2⟩ := hG
     exfalso
     apply hgood
-    haveI : FiniteDimensional ℚ c.F := c.fin
-    haveI : NumberField c.F := ⟨⟩
+    have : FiniteDimensional ℚ c.F := c.fin
+    have : NumberField c.F := ⟨⟩
     have e3 := (hC u hu).2.1
     rw [Category.assoc] at e1
     rw [e1] at e3

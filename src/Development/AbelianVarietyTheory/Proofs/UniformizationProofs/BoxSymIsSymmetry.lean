@@ -71,7 +71,7 @@ private theorem gm_res_eq_gm {X Z : Scheme.{0}} (r : Z ⟶ X) (z : Z) {U V : X.O
   rw [dite_eq_left hz, dite_eq_left (hUV hz)]
   unfold pullU
   ext
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
   have e := congrArg (fun f => CommRingCat.Hom.hom f (x : Γ(X, V))) key
   simpa using e
 

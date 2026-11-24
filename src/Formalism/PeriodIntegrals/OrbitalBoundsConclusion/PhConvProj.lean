@@ -141,7 +141,7 @@ theorem urep_mul_apply {π : G → (K →L[ℂ] K)} (hπ : IsURep π) (a b : G) 
 theorem urep_adj {π : G → (K →L[ℂ] K)} (hπ : IsURep π) (k : G) (u v : K) :
     ⟪π k u, v⟫_ℂ = ⟪u, π k⁻¹ v⟫_ℂ := by
   have h1 : π k (π k⁻¹ v) = v := by
-    rw [← urep_mul_apply hπ, mul_inv_cancel, hπ.1, ContinuousLinearMap.one_apply]
+    rw [← urep_mul_apply hπ, mul_inv_cancel, hπ.1, one_apply_eq_self]
   calc ⟪π k u, v⟫_ℂ = ⟪π k u, π k (π k⁻¹ v)⟫_ℂ := by rw [h1]
     _ = ⟪u, π k⁻¹ v⟫_ℂ := urep_inner hπ k u _
 
@@ -192,7 +192,7 @@ theorem sand : Defs.SandStep := by
     rw [← hBA]
     exact hΨ.integral_comp hΨe B
   show ⟪x, T (π a (T y))⟫_ℂ = ⟪x, (m a • T) y⟫_ℂ
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, hT x (π a (T y)), hT x y]
+  rw [smul_apply, inner_smul_right, hT x (π a (T y)), hT x y]
   simp_rw [step1]
   rw [e1, e2, integral_prod_symm B hB, ← integral_const_mul]
   refine integral_congr_ae (Filter.Eventually.of_forall fun h => ?_)

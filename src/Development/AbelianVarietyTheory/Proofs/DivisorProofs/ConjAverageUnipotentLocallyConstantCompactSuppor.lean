@@ -170,16 +170,16 @@ theorem cavg_blk_locConst_compactSupport : ∀ (E : Type) [Field E] [NumberField
   let U : AddSubgroup (Matrix (Fin a) (Fin b) (w.adicCompletion E)) :=
     { carrier := {y | blk h w 1 y ∈ core (GlobalTheory.LFun.KGL w (n := n)) K'}
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, blk_one_zero]
+        simp only [Set.mem_ofPred_eq, blk_one_zero]
         exact Subgroup.one_mem _
       add_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [blk_add]
         exact Subgroup.mul_mem _ hx hy
       neg_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [← blk_one_neg]
         exact Subgroup.inv_mem _ hx }
   refine ⟨⟨U, hCo.preimage (continuous_blk_one h w), fun x y hy => ?_⟩, ?_⟩

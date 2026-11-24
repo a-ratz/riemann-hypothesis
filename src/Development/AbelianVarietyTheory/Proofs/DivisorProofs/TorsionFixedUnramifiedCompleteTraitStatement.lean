@@ -411,7 +411,7 @@ namespace GlobalTheory.Mum.TorsFixed
 
 theorem fixed_of_classes_fixed : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → Unif (maximalIdeal R) D A G → ∀ (V : Type) [CommRing V] [IsDomain V] (φ : R →+* V) [Algebra (FractionRing R) (AlgebraicClosure (FractionRing V))], (∀ r, algebraMap (FractionRing R) (AlgebraicClosure (FractionRing V)) (algebraMap R _ r) = algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V)) (algebraMap V _ (φ r))) → ∀ k : ℕ, 1 ≤ k → ∀ σ : (AlgebraicClosure (FractionRing V)) ≃+* (AlgebraicClosure (FractionRing V)), (∀ v : V, σ (algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V)) (algebraMap V _ v)) = algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V)) (algebraMap V _ v)) → (∀ p q : QkPt D.toPre (AlgebraicClosure (FractionRing V)) k, QkExt σ.toRingHom p q → QkPt.Equiv D.toPre (AlgebraicClosure (FractionRing V)) p q) → ∀ x : TF (R := V) (AlgebraicClosure (FractionRing V)) ⟶ (Over.pullback (spMap φ)).obj G, x ^ k = 1 → spMap σ.toRingHom ≫ x.left = x.left := by
   intro R _ _ _ hB D A G _ _ hG U V _ _ φ _ hc k hk σ hσ hQ x hx
-  haveI : CharZero R := hB.2
+  have : CharZero R := hB.2
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
 
   have sq : (jFK (R := V) (AlgebraicClosure (FractionRing V)) ≫ jK V) ≫ spMap φ =
@@ -584,14 +584,14 @@ theorem exists_rootsOfUnity {F : Type} [Field F] [IsAlgClosed F] (T : Subring F)
   have hkΩ : ((k : ℕ) : AlgebraicClosure (ResidueField T)) ≠ 0 := by
     simpa [ρ] using (hk.map ρ).ne_zero
   have hk0 : 0 < k := Nat.pos_of_ne_zero (by rintro rfl; simp at hkΩ)
-  haveI : NeZero ((k : ℕ) : AlgebraicClosure (ResidueField T)) := ⟨hkΩ⟩
-  obtain ⟨ub, hub⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (AlgebraicClosure (ResidueField T)) k
+  have : NeZero ((k : ℕ) : AlgebraicClosure (ResidueField T)) := ⟨hkΩ⟩
+  obtain ⟨ub, hub⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (AlgebraicClosure (ResidueField T)) k
   obtain ⟨T', hT', y, hyT, hy, hyn⟩ := exists_root_step T hk 1 ub (by simp [hub.pow_eq_one])
   have hy1 : y ^ k = 1 := by simpa using hy
   have hprim : IsPrimitiveRoot y k := IsPrimitiveRoot.mk_of_lt y hk0 hy1
     fun l hl hlk => hyn l (hub.pow_ne_one_of_pos_of_lt hl.ne' hlk)
   refine ⟨T', hT', fun z hz => ?_⟩
-  haveI : NeZero k := ⟨hk0.ne'⟩
+  have : NeZero k := ⟨hk0.ne'⟩
   obtain ⟨i, -, rfl⟩ := hprim.eq_pow_of_pow_eq_one hz
   exact pow_mem hyT i
 
@@ -612,7 +612,7 @@ theorem exists_unramSub_of_pow_eq_units : ∀ (F : Type) [Field F] [IsAlgClosed 
   | empty => exact ⟨T₁, h₁, le_rfl, by simp⟩
   | @insert a s _ _ ih =>
     obtain ⟨T', hT', hle, hmem⟩ := ih
-    haveI := hT'.isDVR
+    have := hT'.isDVR
     have hTT' : T ≤ T' := fun z hz => hT'.mem ⟨z, hz⟩
     let ι : T →+* T' := Subring.inclusion hTT'
     have hk' : IsUnit (k : T') := by simpa [ι] using hk.map ι
@@ -857,15 +857,15 @@ namespace GlobalTheory.Mum
 
 theorem qkPt_finite_reps : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (hB : D.TauBimult) (F : Type) [Field F] [Algebra (FractionRing R) F] (k : ℕ), k ≠ 0 → Finite {x : TF (R := R) F ⟶ D.P.A // x ^ k = 1} → ∃ Rep : Set (QkPt D F k), Rep.Finite ∧ ∀ p : QkPt D F k, ∃ p' ∈ Rep, ∃ (z : D.X) (t : GtPtF D F), t.b = 1 ∧ (letI := GlobalTheory.TorusExt.gtGroup D F; k • t = 0 ∧ p.g = p'.g + GlobalTheory.TorusExt.iota hB F z + t) := by
   intro R _ _ D hB F _ _ k hk hfin
-  letI := GlobalTheory.TorusExt.gtGroup D F
+  let := GlobalTheory.TorusExt.gtGroup D F
   classical
   by_cases hne : Nonempty (QkPt D F k)
   swap
   · exact ⟨∅, Set.finite_empty, fun p => (hne ⟨p⟩).elim⟩
   let K : AddSubgroup D.X := (nsmulAddMonoidHom (α := D.X) k).range
-  haveI : K.FiniteIndex := ⟨by
+  have : K.FiniteIndex := ⟨by
     simp only [K, AddSubgroup.index_range_nsmul]; exact pow_ne_zero _ hk⟩
-  haveI : Finite (D.X ⧸ K) := AddSubgroup.finite_quotient_of_finiteIndex
+  have : Finite (D.X ⧸ K) := AddSubgroup.finite_quotient_of_finiteIndex
   let Q : QkPt D F k → D.X ⧸ K := fun p => (p.y : D.X ⧸ K)
   let bp : D.X ⧸ K → QkPt D F k := Function.invFun Q
   have hbp : ∀ p, Q (bp (Q p)) = Q p := fun p => Function.invFun_eq ⟨p, rfl⟩
@@ -1061,7 +1061,7 @@ attribute [local instance] GlobalTheory.TorusExt.gtGroup
 open ReciprocityTheory.ChartRestriction.G.DVR in
 theorem tor_charVal_pow : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (F : Type) [Field F] [Algebra (FractionRing R) F] (t : GtPtF D F) (k : ℕ), t.b = 1 → (letI := GlobalTheory.TorusExt.gtGroup D F; k • t = 0) → ∀ (J : ((TF (R := R) F).left ⟶ D.P.A.left) → D.P.L.ι), Good D.P.L (Z := (TF (R := R) F).left) (closedPoint F) J → ∀ χ, (GlobalTheory.BXOf.sig F (GlobalTheory.TorusExt.charVal t χ (closedPoint F) J) : F) ^ k = 1 := by
   intro R _ _ D F _ _ t k h1 hk J hJ χ
-  letI := GlobalTheory.TorusExt.gtGroup D F
+  let := GlobalTheory.TorusExt.gtGroup D F
   have C : IsCub (th D (T := TF (R := R) F) (closedPoint F) J) := isCub_cubV D.cub hJ
   have key : ∀ i : ℕ, GlobalTheory.TorusExt.charVal (i • t) χ (closedPoint F) J = GlobalTheory.TorusExt.charVal t χ (closedPoint F) J ^ i := by
     intro i
@@ -1078,9 +1078,9 @@ theorem tor_charVal_pow : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R
 theorem qk_fixed_of_unram : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (W : (Sp R).Opens), (∀ y, PsiUnitOn D.toPre y W) → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (φ : R →+* V), GlobalTheory.LN.CDvr V → Function.Injective φ → spMap φ (closedPoint V) ∈ W → ∀ [Algebra (FractionRing R) (AlgebraicClosure (FractionRing V))], (∀ r, algebraMap (FractionRing R) (AlgebraicClosure (FractionRing V)) (algebraMap R _ r) = algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V)) (algebraMap V _ (φ r))) → ∀ k : ℕ, IsUnit (k : V) → ∀ T₁ : Subring (AlgebraicClosure (FractionRing V)), GlobalTheory.UnramSub ((algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).comp (algebraMap V (FractionRing V))) T₁ → (∀ p : QkPt D.toPre (AlgebraicClosure (FractionRing V)) k, ∃ b : Sp T₁ ⟶ D.toPre.P.A.left, spMap T₁.subtype ≫ b = p.g.b.left) → ∃ T' : Subring (AlgebraicClosure (FractionRing V)), GlobalTheory.UnramSub T₁.subtype T' ∧ ∀ σ : (AlgebraicClosure (FractionRing V)) ≃+* (AlgebraicClosure (FractionRing V)), (∀ z ∈ T', σ z = z) → ∀ p q : QkPt D.toPre (AlgebraicClosure (FractionRing V)) k, QkExt σ.toRingHom p q → QkPt.Equiv D.toPre (AlgebraicClosure (FractionRing V)) p q := by
   intro R _ _ _ _ D W hW V _ _ _ φ hV _ hcl _ hc k hk T₁ hT₁ hbs
   have hB := D.tau_bimult
-  haveI : IsDiscreteValuationRing V := hV.1
+  have : IsDiscreteValuationRing V := hV.1
   obtain ⟨hdvr, f, hf, hirr⟩ := id hT₁
-  haveI := hdvr
+  have := hdvr
   let φ₁ : R →+* T₁ := f.comp φ
   have hφ₁ : ∀ r, (φ₁ r : AlgebraicClosure (FractionRing V)) =
       algebraMap (FractionRing R) (AlgebraicClosure (FractionRing V)) (algebraMap R _ r) := fun r =>
@@ -1210,7 +1210,7 @@ namespace GlobalTheory.UnramTorsPull
 theorem torsion_fixed_unramified : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → Unif (maximalIdeal R) D A G → ∀ W : (Sp R).Opens, (∀ y, PsiUnitOn D.toPre y W) → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (φ : R →+* V), GlobalTheory.LN.CDvr V → Function.Injective φ → spMap φ (closedPoint V) ∈ W → ∀ n : ℕ, 2 ≤ n → IsUnit (n : V) → ∀ j : ℕ, ∃ (T' : Subring (AlgebraicClosure (FractionRing V))) (_ : IsDiscreteValuationRing T') (f : V →+* T'), (∀ v : V, (f v : AlgebraicClosure (FractionRing V)) = algebraMap (FractionRing V) _ (algebraMap V _ v)) ∧ (∀ π, Irreducible π → Irreducible (f π)) ∧ ∀ σ : AlgebraicClosure (FractionRing V) ≃+* AlgebraicClosure (FractionRing V), (∀ z ∈ T', σ z = z) → ∀ x : TF (R := V) (AlgebraicClosure (FractionRing V)) ⟶ (Over.pullback (spMap φ)).obj G, x ^ (n ^ j) = 1 → spMap σ.toRingHom ≫ x.left = x.left := by
   intro R _ _ _ hR D A G _ _ hG U W hW V _ _ _ φ hV hφ hcl n hn hnu j
   obtain ⟨hdvr, -, -⟩ := (GlobalTheory.LN.cDvr_iff V).1 hV
-  letI : Algebra (FractionRing R) (AlgebraicClosure (FractionRing V)) :=
+  let : Algebra (FractionRing R) (AlgebraicClosure (FractionRing V)) :=
     ((algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).comp
       (IsLocalization.map (FractionRing V) φ (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective φ hφ) :
         FractionRing R →+* FractionRing V)).toAlgebra

@@ -70,7 +70,7 @@ theorem norm_scalarBy_eq_nabs_rpow : ∀ (k : Type) [Field k] [ValuativeRel k] [
   obtain ⟨v, hv⟩ : ∃ v : x.2.rep.V, v ≠ 0 := by
     by_contra hcon
     push_neg at hcon
-    haveI : Subsingleton x.2.rep.V := ⟨fun a b => by rw [hcon a, hcon b]⟩
+    have : Subsingleton x.2.rep.V := ⟨fun a b => by rw [hcon a, hcon b]⟩
     obtain ⟨a, b, hab⟩ := exists_pair_ne (Subrepresentation x.rep)
     exact hab (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
   have huniq : ∀ (t : kˣ) (c c' : ℂ), Zl.ScalarBy x t c → Zl.ScalarBy x t c' → c = c' := by
@@ -91,7 +91,7 @@ theorem norm_scalarBy_eq_nabs_rpow : ∀ (k : Type) [Field k] [ValuativeRel k] [
     have hset : (χ.ker : Set kˣ) = (Matrix.GeneralLinearGroup.scalar (Fin x.1) : kˣ →* GL (Fin x.1) k) ⁻¹'
         {g | x.rep g v = v} := by
       ext t
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_ofPred_eq]
       rw [hf t v]
       constructor
       · intro h

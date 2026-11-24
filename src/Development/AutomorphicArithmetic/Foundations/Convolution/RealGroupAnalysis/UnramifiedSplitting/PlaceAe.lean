@@ -60,7 +60,7 @@ namespace UpperTheory.ConvolutionTheory.R2.H.nearSquareValuations
 private theorem sq_of_near {K : Type} [Field K] [NumberField K] (v : P K) (δ c : Kv v)
     (h2 : Valued.v (2 : Kv v) = 1) (hc : Valued.v c = 1) (hd : Valued.v (δ - c ^ 2) < 1) :
     IsSquare δ := by
-  haveI := GlobalTheory.HenselSquare.isAdicComplete_integers K v
+  have := GlobalTheory.HenselSquare.isAdicComplete_integers K v
   have h20 : (2 : Kv v) ≠ 0 := fun h => by simp [h] at h2
   have hc0 : c ≠ 0 := fun h => by simp [h] at hc
   set z : Kv v := (δ - c ^ 2) / (4 * c ^ 2) with hz
@@ -155,7 +155,7 @@ private theorem val_coord (he : w.asIdeal.ramificationIdx (𝓞 F) = 1) (h2 : Va
   have ht' : Valued.v t ≠ 0 := (Valuation.ne_zero_iff _).2 ht
   by_cases hut : Valued.v u ≤ Valued.v t
   · have h1 : Valued.v (u / t) ≤ 1 := by
-      rw [map_div₀]; exact div_le_one_of_le₀ hut zero_le'
+      rw [map_div₀]; exact div_le_one_of_le₀ hut zero_le
     have h3 := val_c_add D v w he h2 hθ hu (u / t) h1
     have h4 : ι u + ι t * θw = ι t * (ι (u / t) + θw) := by
       rw [mul_add, ← map_mul, show t * (u / t) = u by field_simp]
@@ -166,7 +166,7 @@ private theorem val_coord (he : w.asIdeal.ramificationIdx (𝓞 F) = 1) (h2 : Va
       simp at hlt
     have h1 : Valued.v (t / u) < 1 := by
       rw [map_div₀]
-      exact (div_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hu0))).2 hlt
+      exact (div_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hu0))).2 hlt
     have h4 : ι u + ι t * θw = ι u * (1 + ι (t / u) * θw) := by
       rw [mul_add, mul_one, ← mul_assoc, ← map_mul, show u * (t / u) = t by field_simp]
     have h5 : Valued.v (ι (t / u) * θw) < Valued.v (1 : Kv w) := by
@@ -216,7 +216,7 @@ private theorem inert_of (he : w.asIdeal.ramificationIdx (𝓞 F) = 1) (h2 : Val
   have hval := val_coord D v w he h2 hθ hu
   have hr : Module.finrank (Kv v) (Kv w) = 2 := by
     rw [finrank_eq_ramificationIdx_mul_inertiaDeg, he, hf, one_mul]
-  haveI : Module.Finite (Kv v) (Kv w) := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite (Kv v) (Kv w) := Module.finite_of_finrank_pos (by omega)
   let L : (Kv v × Kv v) →ₗ[Kv v] Kv w :=
     { toFun := fun p => ι p.1 + ι p.2 * θw
       map_add' := fun p q => by simp only [Prod.fst_add, Prod.snd_add, map_add (f := _)]; ring
@@ -228,8 +228,8 @@ private theorem inert_of (he : w.asIdeal.ramificationIdx (𝓞 F) = 1) (h2 : Val
     refine (injective_iff_map_eq_zero L).2 fun p hp => ?_
     have h := hval p.1 p.2
     rw [show ι p.1 + ι p.2 * θw = 0 from hp, map_zero] at h
-    have h1 : Valued.v p.1 = 0 := le_antisymm (h ▸ le_max_left _ _) zero_le'
-    have h3 : Valued.v p.2 = 0 := le_antisymm (h ▸ le_max_right _ _) zero_le'
+    have h1 : Valued.v p.1 = 0 := le_antisymm (h ▸ le_max_left _ _) zero_le
+    have h3 : Valued.v p.2 = 0 := le_antisymm (h ▸ le_max_right _ _) zero_le
     exact Prod.ext ((Valuation.zero_iff _).1 h1) ((Valuation.zero_iff _).1 h3)
   have hsurj : Function.Surjective L :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (by
@@ -267,7 +267,7 @@ private theorem split_of (he : w.asIdeal.ramificationIdx (𝓞 F) = 1)
   have hr : Module.finrank (Kv v) (Kv w) = 1 := by
     rw [finrank_eq_ramificationIdx_mul_inertiaDeg, he, hf, one_mul]
   have hs : Function.Surjective ι := fun y => by
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (1 : Kv w) one_ne_zero).1 hr y
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : Kv w) one_ne_zero).1 hr y
     exact ⟨c, by rw [← hc, Algebra.smul_def, mul_one]; rfl⟩
   refine ⟨by rw [normV_eq v w, hf, pow_one], RingEquiv.ofBijective ι ⟨(completionMap v w).injective, hs⟩,
     continuous_completionMap v w, fun x => ?_, fun x => val_iota v w he x⟩
@@ -287,14 +287,14 @@ private theorem ev_val (x : E) (hx : x ≠ 0) : ∀ᶠ w : P E in cofinite, w.va
   have a2 : (w.valuation E x)⁻¹ ≤ 1 := by
     rw [← map_inv₀]; exact not_lt.1 hw'
   have h0 : w.valuation E x ≠ 0 := (Valuation.ne_zero_iff _).2 hx
-  exact le_antisymm a1 ((inv_le_one₀ (zero_lt_iff.2 h0)).1 a2)
+  exact le_antisymm a1 ((inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 a2)
 
 variable (F E) in
 private theorem ev_unram : ∀ᶠ w : P E in cofinite, w.asIdeal.ramificationIdx (𝓞 F) = 1 := by
   have h1 : differentIdeal (𝓞 F) (𝓞 E) ≠ ⊥ := differentIdeal_ne_bot
   have h3 := Ideal.finite_factors h1
   filter_upwards [h3.compl_mem_cofinite] with w hw
-  haveI : Algebra.IsUnramifiedAt (𝓞 F) w.asIdeal := not_dvd_differentIdeal_iff.1 hw
+  have : Algebra.IsUnramifiedAt (𝓞 F) w.asIdeal := not_dvd_differentIdeal_iff.1 hw
   exact Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
 
 end Final
@@ -308,7 +308,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.placeAe :
   have hθ0 : D.θ ≠ 0 := by
     rw [← D.b1]; exact D.b.ne_zero 1
   filter_upwards [ev_unram F E, ev_val (2 : E) two_ne_zero, ev_val D.θ hθ0] with w he h2 hθ v hb
-  haveI hl : w.asIdeal.LiesOver v.asIdeal := ⟨hb⟩
+  have hl : w.asIdeal.LiesOver v.asIdeal := ⟨hb⟩
   have hθ' : Valued.v (algebraMap E (Kv w) D.θ) = 1 := by
     rw [valued_algebraMap_field]; exact hθ
   have h2' : Valued.v (2 : Kv v) = 1 := by

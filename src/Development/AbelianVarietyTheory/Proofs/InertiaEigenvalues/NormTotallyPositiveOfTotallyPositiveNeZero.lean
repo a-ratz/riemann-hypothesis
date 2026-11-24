@@ -60,7 +60,7 @@ namespace GlobalTheory
 theorem norm_pos_of_totallyPositive (E E' : Type) [Field E] [NumberField E] [Field E']
     [NumberField E'] [Algebra E E'] (a : E') (ha : a ≠ 0) (hpos : ∀ φ : E' →+* ℝ, 0 < φ a)
     (φ : E →+* ℝ) : 0 < φ (Algebra.norm E a) := by
-  letI : Algebra E ℂ := (Complex.ofRealHom.comp φ).toAlgebra
+  let : Algebra E ℂ := (Complex.ofRealHom.comp φ).toAlgebra
   have hmap : ∀ x, algebraMap E ℂ x = ((φ x : ℝ) : ℂ) := fun x => rfl
   have key := Algebra.norm_eq_prod_embeddings E ℂ a
   let g : (E' →ₐ[E] ℂ) → (E' →ₐ[E] ℂ) := fun σ =>

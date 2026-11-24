@@ -71,8 +71,8 @@ private theorem hom_ext_of_isPowGrp_pr {S : Scheme.{0}} {G' G : Over S} [GrpObj 
 theorem exists_pow_oAct : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDomain R] (j : ℕ) (D D' : DegPre R) (pD : IsPowDeg D' D j) (O : Type) [CommRing O] [StarRing O] [Module O D.X] [Module O D'.X], (∀ (a : O) (x : D'.X), pD.xe (a • x) = a • pD.xe x) → ∀ oa : D.OAct O, ∃ oa' : D'.OAct O, ∀ a i, oa'.onB.act a ≫ pD.pw.pr i = pD.pw.pr i ≫ oa.onB.act a := by
   intro hG R _ _ j D D' pD O _ _ _ _ hxe oa
   obtain ⟨⟨oB, hros⟩, hc, htau⟩ := oa
-  letI := D.P.isAb.comm
-  letI := D'.P.isAb.comm
+  let := D.P.isAb.comm
+  let := D'.P.isAb.comm
   obtain ⟨r', hr'⟩ := (GlobalTheory.exists_powAct _ D'.P.A D.P.A j pD.pw).1 O oB
   have hros' : ∀ a : O, RosatiAdj D'.P.A D'.P.L (r'.act a) (r'.act (star a)) := fun a =>
     GlobalTheory.rosatiAdj_pow _ D'.P.A D.P.A j pD.pw D.P.L D'.P.L D.P.isLB D'.P.isLB ⟨pD.w, pD.w_gen⟩
@@ -84,10 +84,10 @@ theorem exists_pow_oAct : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDomain 
     rw [pD.c_pr, Category.assoc, hr' a i, ← Category.assoc, pD.c_pr, hxe, Pi.smul_apply, hc]
   have htau' : ∀ a : O, D'.TauBal (r'.act a) (r'.act (star a)) (fun y => a • y) fun y => star a • y := by
     intro a
-    haveI := oB.hom a
-    haveI := oB.hom (star a)
-    haveI := r'.hom a
-    haveI := r'.hom (star a)
+    have := oB.hom a
+    have := oB.hom (star a)
+    have := r'.hom a
+    have := r'.hom (star a)
     exact tauBal_pow hG R j D D' pD (oB.act a) (oB.act (star a)) (r'.act a) (r'.act (star a))
       inferInstance inferInstance inferInstance inferInstance (hr' a) (hr' (star a)) (hros a)
       (fun y => a • y) (fun y => star a • y) (fun y => a • y) (fun y => star a • y)

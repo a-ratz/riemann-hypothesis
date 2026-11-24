@@ -250,7 +250,7 @@ theorem degPush_of (hEq : NumEq) (hPF : GeoPF) (hFib : FibNum) (hTr : TrdegU) (h
   have hr' : Top.testDeg (Fin (Fintype.card (CMType H))) (D.p + D.q) D.p = Top.testDeg (CMType H) (D.p + D.q) D.p := by
     rw [hr]
   simp only [hr']
-  rw [if_neg (div_ne_zero htd.ne' hU0)]
+  rw [ite_eq_right (div_ne_zero htd.ne' hU0)]
   field_simp
   linear_combination -key
 
@@ -334,7 +334,7 @@ theorem chartVal : ChartVal := by
   have h0 : y ⟨k, ch k⟩ ≠ 0 := Finset.prod_ne_zero_iff.1 hc.1 k (Finset.mem_univ _)
   have h1 := hD.1 _ (hc.2 (Function.update ch k j))
   rw [seg_ratio y ch hc.1, ← O.valuation_le_one_iff, map_div₀, map_div₀,
-    div_le_one₀ (zero_lt_iff.2 (by simpa using h0))] at h1
+    div_le_one₀ (pos_iff_ne_zero.2 (by simpa using h0))] at h1
   exact h1
 
 theorem dom_of_point {X : Scheme.{0}} {Ω Ω₃ : Type} [Field Ω] [Field Ω₃] (O : ValuationSubring Ω₃) (i : Ω →+* Ω₃)
@@ -401,7 +401,7 @@ theorem exists_dom {X : Scheme.{0}} {Ω Ω₃ : Type} [Field Ω] [Field Ω₃] (
     exact ⟨j, fun j' => hj j' (Finset.mem_univ _)⟩
   choose ch hch using hm
   have hp : ∀ k, 0 < O.valuation (i (y ⟨k, ch k⟩)) := fun k =>
-    lt_of_lt_of_le (zero_lt_iff.2 (by simpa using Finset.prod_ne_zero_iff.1 hc₀ k (Finset.mem_univ _))) (hch k (c₀ k))
+    lt_of_lt_of_le (pos_iff_ne_zero.2 (by simpa using Finset.prod_ne_zero_iff.1 hc₀ k (Finset.mem_univ _))) (hch k (c₀ k))
   have h0 : ∀ k, y ⟨k, ch k⟩ ≠ 0 := fun k h => by simpa [h] using hp k
   obtain ⟨z, hz⟩ := exists_point O i ξ _ ht ch (Finset.prod_ne_zero_iff.2 fun k _ => h0 k) fun j => by
     rw [← Finset.prod_div_distrib, map_prod]
@@ -457,9 +457,9 @@ namespace Join
 
 theorem tower {P Ω : Type} [Field P] [Field Ω] (φ : P →+* Ω) (K₀ : Subfield P) :
     Module.finrank (K₀.map φ) Ω = Module.finrank K₀ P * Module.finrank φ.fieldRange Ω := by
-  letI : Algebra P Ω := φ.toAlgebra
-  letI : Algebra K₀ Ω := (φ.comp K₀.subtype).toAlgebra
-  haveI : IsScalarTower K₀ P Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra P Ω := φ.toAlgebra
+  let : Algebra K₀ Ω := (φ.comp K₀.subtype).toAlgebra
+  have : IsScalarTower K₀ P Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have h1 : Module.finrank P Ω = Module.finrank φ.fieldRange Ω :=
     Algebra.finrank_eq_of_equiv_equiv φ.rangeRestrictFieldEquiv (RingEquiv.refl Ω) (RingHom.ext fun _ => rfl)
   have h2 : Module.finrank K₀ Ω = Module.finrank (K₀.map φ) Ω :=
@@ -485,13 +485,13 @@ theorem core (F A B : Type) [Field F] [Field A] [Field B] [Algebra F A] [Algebra
       i.comp (algebraMap F B) = (algebraMap A Ω).comp (algebraMap F A) ∧ AlgebraicIndependent A (fun q => i (w q)) ∧ 0 < d ∧
       Module.finrank (IntermediateField.adjoin A (Set.range fun q => i (w q))) Ω = d ∧
       Module.finrank i.fieldRange Ω = n ∧ 0 < n ∧ n * d₂ = d * e := by
-  haveI : FiniteDimensional F A := Module.finite_of_finrank_pos (hA ▸ he)
+  have : FiniteDimensional F A := Module.finite_of_finrank_pos (hA ▸ he)
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (B ⊗[F] A)
-  letI : Field ((B ⊗[F] A) ⧸ m) := Ideal.Quotient.field m
+  let : Field ((B ⊗[F] A) ⧸ m) := Ideal.Quotient.field m
   let j : A →ₐ[F] ((B ⊗[F] A) ⧸ m) := (Ideal.Quotient.mkₐ F m).comp Algebra.TensorProduct.includeRight
-  letI : Algebra A ((B ⊗[F] A) ⧸ m) := j.toRingHom.toAlgebra
-  haveI : IsScalarTower F A ((B ⊗[F] A) ⧸ m) := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI : Module.Finite B ((B ⊗[F] A) ⧸ m) :=
+  let : Algebra A ((B ⊗[F] A) ⧸ m) := j.toRingHom.toAlgebra
+  have : IsScalarTower F A ((B ⊗[F] A) ⧸ m) := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have : Module.Finite B ((B ⊗[F] A) ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ B m).toLinearMap (Ideal.Quotient.mkₐ_surjective B m)
   let Ω := ((B ⊗[F] A) ⧸ m)
   let i : B →+* Ω := algebraMap B Ω
@@ -506,7 +506,7 @@ theorem core (F A B : Type) [Field F] [Field A] [Field B] [Algebra F A] [Algebra
   rw [finrank_congr (map_adjoin i hi w)] at t1
   let P := FractionRing (MvPolynomial I A)
   let φ : P →+* Ω := (IntermediateField.adjoin A (Set.range fun q => i (w q))).val.toRingHom.comp hx.aevalEquivField.toRingEquiv.toRingHom
-  letI : Algebra F P := ((algebraMap A P).comp (algebraMap F A)).toAlgebra
+  let : Algebra F P := ((algebraMap A P).comp (algebraMap F A)).toAlgebra
   have hφA : ∀ a, φ (algebraMap A P a) = algebraMap A Ω a := fun a => congrArg Subtype.val (hx.aevalEquivField.commutes a)
   have hφ : φ.comp (algebraMap F P) = algebraMap F Ω := RingHom.ext fun a =>
     (hφA _).trans (IsScalarTower.algebraMap_apply F A Ω a).symm
@@ -601,8 +601,8 @@ theorem cst_eq (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (hd : GlobalTheory.
     have h4 := Spec.map_injective h3
     have h5 := congrArg CommRingCat.Hom.hom h4
     simpa using h5
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
   exact (IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 c.F)) h2).symm
 
 theorem lat_core (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (j : Li₀ →+ 𝔐.Li) (hg : IsCptGen ξ₀)
@@ -614,8 +614,8 @@ theorem lat_core (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (j : Li₀ →+ �
       ∀ q : Cpt 𝔐.ξ, (∀ p : ℕ, p.Prime → ¬ InFibre 𝔐.ξ p q) → ∀ s, 𝔐.V s q = Submodule.span (regAt 𝔐.ξ q)
         {w | ∃ a ∈ coordSet M₀ ρ₀ cst₀ b s (𝔐.f q.1), w = ∑ m, ψ (a m) • j (b s m)} := by
   have hcst : ψ.comp cst₀ = 𝔐.cst := cst_eq (cst₀ := cst₀) 𝔐 ψ hd hs
-  haveI : CharZero Ω₀ := (RingHom.charZero_iff cst₀.injective).mp inferInstance
-  haveI : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).mp inferInstance
+  have : CharZero Ω₀ := (RingHom.charZero_iff cst₀.injective).mp inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).mp inferInstance
   have hsemi : ∀ (a : Ω₀) (e : Li₀), j (a • e) = ψ a • j e := LiePull.semilin 𝔐.m.cart hj
   refine ⟨fun s => ?_, fun q hq s => ?_⟩
   · have hsm : Smooth Y.t.G.hom := Y.t.semi.smooth
@@ -631,9 +631,9 @@ theorem lat_core (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (j : Li₀ →+ �
       have h1 := map_mem_eigSp 𝔐.m hact 𝔐.act hj hsemi _ hm
       rw [← RingHom.comp_assoc, hcst] at h1
       exact h1
-    haveI : Module.Finite Ω₀ Li₀ := (LieProj.lie_finite_projective_baseChange _ _ _ _ _ M₀).1
-    haveI : Module.Finite Ω 𝔐.Li := (LieProj.lie_finite_projective_baseChange _ _ _ _ _ 𝔐.M).1
-    letI : Algebra Ω₀ Ω := ψ.toAlgebra
+    have : Module.Finite Ω₀ Li₀ := (LieProj.lie_finite_projective_baseChange _ _ _ _ _ M₀).1
+    have : Module.Finite Ω 𝔐.Li := (LieProj.lie_finite_projective_baseChange _ _ _ _ _ 𝔐.M).1
+    let : Algebra Ω₀ Ω := ψ.toAlgebra
     have hsemi' : ∀ (a : Ω₀) (e : Li₀), j (a • e) = (algebraMap Ω₀ Ω) a • j e := hsemi
     let B := Module.finBasis Ω₀ Li₀
     have hBspan : Submodule.span Ω (Set.range fun k => j (B k)) = ⊤ := by
@@ -657,13 +657,13 @@ theorem lat_core (𝔐 : HodgeCpt Y S y) (ψ : Ω₀ →+* Ω) (j : Li₀ →+ �
     rfl
   · have hnot : ¬ ∃ p ∈ S, InFibre 𝔐.ξ p q := fun ⟨p, hp, hf⟩ => hq p (𝔐.S_prime p hp) hf
     have hV : 𝔐.V s q = 𝔐.M.eigLat 𝔐.ρ ((ψ.comp cst₀).comp (labelEmb c s)) q := by
-      simp only [HodgeCpt.V, Lat.patch, if_neg hnot, HodgeCpt.dR, HodgeCpt.emb, hcst]
+      simp only [HodgeCpt.V, Lat.patch, ite_eq_right hnot, HodgeCpt.dR, HodgeCpt.emb, hcst]
     rw [hV, eigLat_eq_pull c 𝔐.m cst₀ hg 𝔐.tie.gen hd hact 𝔐.act (isIntegrallyClosed_regAt Y.normal hg)
       (isIntegrallyClosed_regAt 𝔐.normal 𝔐.tie.gen) hj s q hq]
     simp only [Lat.pull]
     congr 1
     ext w
-    simp only [Set.mem_setOf_eq, coordSet]
+    simp only [Set.mem_ofPred_eq, coordSet]
     constructor
     · rintro ⟨h, e, he, rfl⟩
       have he' : e ∈ eigSp ρ₀ (cst₀.comp (labelEmb c s)) := by
@@ -686,14 +686,14 @@ private theorem coordLat_lemma {S : Scheme} {R : Type} [CommRing R] {G : Over S}
     {O : Type} [CommRing O] (act : OAct O G) : ∃ ρ : O →+* Module.End R V, M.IsActOf act.act ρ := by
   have htan : ∀ (a : O) (e : V), IsTanAt G x (M.pt e ≫ act.act a) := by
     intro a e
-    haveI := act.hom a
+    have := act.hom a
     have h1 := M.tan e
     simp only [IsTanAt] at h1 ⊢
     rw [Over.comp_left, ← Category.assoc, h1, ← Over.comp_left, MonObj.one_comp]
   choose F hF using fun a e => M.onto _ (htan a e)
   have hadd : ∀ a e e', F a (e + e') = F a e + F a e' := by
     intro a e e'
-    haveI := act.hom a
+    have := act.hom a
     apply M.inj
     rw [hF, M.add, M.add, hF, hF, MonObj.mul_comp]
   have hsmul : ∀ a (r : R) e, F a (r • e) = r • F a e := by
@@ -747,9 +747,9 @@ private theorem coordLat_lemma_2 {E : Type} [Field E] [NumberField E] [IsCMField
 
 theorem coordLat : CoordLat := by
   intro E _ _ _ H D l Xo c Y S' Ω' _ K' _ J' _ y' 𝔐' Fl b hb
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
-  haveI : CharZero 𝔐'.Ω₀ := (RingHom.charZero_iff 𝔐'.fn.injective).mpr
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
+  have : CharZero 𝔐'.Ω₀ := (RingHom.charZero_iff 𝔐'.fn.injective).mpr
     ((RingHom.charZero_iff 𝔐'.cst.injective).mp inferInstance)
   obtain ⟨ρ₀, hact⟩ := coordLat_lemma Fl.M₀ Y.t.act
   have hβ : Function.Injective (algebraMap (𝓞 c.F) c.F) := IsFractionRing.injective _ _
@@ -859,7 +859,7 @@ theorem relIndex_span_le {I : Submodule ℤ (Fin 2 → ℤ)} (hI : IsIsoSub symp
     (hvI : v ∈ I) (hv : v ≠ 0) :
     (Submodule.span ℤ {v}).toAddSubgroup.relIndex I.toAddSubgroup ≠ 0 ∧
       (Submodule.span ℤ {v}).toAddSubgroup.relIndex I.toAddSubgroup ≤ sqLen v := by
-  haveI : NeZero (sqLen v) := ⟨sqLen_ne_zero hv⟩
+  have : NeZero (sqLen v) := ⟨sqLen_ne_zero hv⟩
   let f : I.toAddSubgroup →+ ZMod (sqLen v) :=
     { toFun := fun w => (((w : Fin 2 → ℤ) 0 * v 0 + (w : Fin 2 → ℤ) 1 * v 1 : ℤ) : ZMod (sqLen v))
       map_zero' := by simp
@@ -1332,7 +1332,7 @@ theorem mu_side {V : Type} [AddCommGroup V] [Module Ω V] (L : Lat ξ V) {r r' :
   set Pm : Matrix (Fin r) (Fin r) Ω := (Matrix.of P).transpose with hPm
   have hd : Pm.det ≠ 0 := by
     rw [hPm, Matrix.det_transpose]
-    exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hPi)).ne_zero
+    exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_row_iff_isUnit.1 hPi)).ne_zero
   refine ⟨Pm.det, hd, fun q O i Ω₀ ψ B hD hq => ?_⟩
   obtain ⟨U, hU, b, hb, hf⟩ := hL q trivial
   have hf := hf q trivial hU
@@ -1435,7 +1435,7 @@ theorem mu_rootLat (τ : CMType H) (m : Fin D.q) : Fl.rootLat (τ, muRev D.p D.q
     rw [dite_eq_right h0]
     congr 1
     exact Fin.ext (by simp only [muRev]; omega)
-  have h2 : HodgeCpt.rootSgn D (τ, muRev D.p D.q m) = -1 := if_neg h0
+  have h2 : HodgeCpt.rootSgn D (τ, muRev D.p D.q m) = -1 := ite_eq_right h0
   unfold HodgeCpt.Flag.rootLat
   rw [h1, h2]
 

@@ -115,7 +115,7 @@ theorem pow_mul_detIdeal_le {n : ℕ} (𝔞 : Ideal (𝓞 K)) (E : Submodule (�
   have h1 : 𝔞 ^ n = Ideal.span (∏ _i : Fin n, (𝔞 : Set (𝓞 K))) := by
     rw [← Ideal.prod_span]
     simp
-  rw [h1, detIdeal, Ideal.span_mul_span', Ideal.span_le]
+  rw [h1, detIdeal, Ideal.span_mul_span, Ideal.span_le]
   rintro _ ⟨a, ha, d, ⟨v, hv, rfl⟩, rfl⟩
   obtain ⟨g, hg, rfl⟩ := (Set.mem_fintype_prod _ _).1 ha
   have h := det_mem_detIdeal (𝔞 • E) (fun i => g i • v i) fun i => Submodule.smul_mem_smul (hg i) (hv i)

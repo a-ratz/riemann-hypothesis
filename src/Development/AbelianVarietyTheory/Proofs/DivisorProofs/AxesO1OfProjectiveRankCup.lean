@@ -63,10 +63,10 @@ theorem injective_of_section {R M Q : Type} [CommRing R] [AddCommGroup M] [Modul
     (hr : ∀ p, Module.rankAtStalk (R := R) M p = Module.rankAtStalk (R := R) Q p) : Function.Injective N := by
   obtain ⟨e, -, -⟩ := ((LinearMap.exact_subtype_ker_map N).splitSurjectiveEquiv
     (LinearMap.ker N).injective_subtype ⟨P, hNP⟩)
-  haveI : Module.Projective R (LinearMap.ker N × Q) := Module.Projective.of_equiv e
-  haveI : Module.Projective R (LinearMap.ker N) :=
+  have : Module.Projective R (LinearMap.ker N × Q) := Module.Projective.of_equiv e
+  have : Module.Projective R (LinearMap.ker N) :=
     Module.Projective.of_split (LinearMap.inl R _ Q) (LinearMap.fst R _ Q) (by ext x <;> simp)
-  haveI : Module.Finite R (LinearMap.ker N) :=
+  have : Module.Finite R (LinearMap.ker N) :=
     Module.Finite.of_surjective ((LinearMap.fst R _ Q) ∘ₗ e.toLinearMap)
       (fun x ↦ ⟨e.symm (x, 0), by simp⟩)
   have h1 := Module.rankAtStalk_eq_of_equiv e
@@ -77,7 +77,7 @@ theorem injective_of_section {R M Q : Type} [CommRing R] [AddCommGroup M] [Modul
     simp only [Pi.add_apply] at this
     rw [hr p] at this
     simpa using this
-  haveI := Module.rankAtStalk_eq_zero_iff_subsingleton.1 h0
+  have := Module.rankAtStalk_eq_zero_iff_subsingleton.1 h0
   rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
   intro x hx
   exact congrArg Subtype.val (Subsingleton.elim (⟨x, hx⟩ : LinearMap.ker N) 0)

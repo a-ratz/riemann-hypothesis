@@ -241,7 +241,7 @@ theorem stepP_of [CharZero K] (v : AddValuation K (WithTop ℚ)) (p : ℕ) (C0 :
     (hP : PROJ K v p C0) : StepP K v p C0 := by
   intro hD D hV
   obtain ⟨hr, hJ, hc, hch, hnest, hthl, hga⟩ := hV
-  haveI : NeZero D.r := ⟨hr.ne'⟩
+  have : NeZero D.r := ⟨hr.ne'⟩
   have hp0 : 0 < p := hD.prime.pos
   have hp2 : 2 ≤ p := by have := hD.five_le; omega
 

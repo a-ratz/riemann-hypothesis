@@ -152,7 +152,7 @@ theorem bK_left : (bK X).left = spMap (dualMap (algebraMap (𝓞 X.K) X.K)) := r
 def wB (b : Bool) (a : PureType.lat hP (sgnRt H b)) : epsAt (pK X) ⟶ X.B.t.G := bK X ≫ (X.C b).v ≫ X.ψ b a
 
 theorem wB_tan (b : Bool) (a : PureType.lat hP (sgnRt H b)) : IsTanAt X.B.t.G (pK X) (wB X b a) := by
-  haveI := ((X.fam b).1 a).isMonHom
+  have := ((X.fam b).1 a).isMonHom
   unfold IsTanAt wB
   have hv := (X.C b).basis.1 0
   simp only [Matrix.cons_val_zero] at hv
@@ -270,7 +270,7 @@ theorem act2 (s : 𝓞 E) (e : Fin g → X.K) : ((integralLieModel X).pt (ρm X 
 
 theorem lamAdd : LamAdd X := by
   intro b a a'
-  haveI := ((X.fam b).1 a).isMonHom
+  have := ((X.fam b).1 a).isMonHom
   apply (integralLieModel X).inj
   rw [(integralLieModel X).add, lam_spec, lam_spec, lam_spec]
   unfold wB

@@ -63,7 +63,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
   have := T.L.free
   have : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
   obtain ⟨hs, hk, -⟩ := GlobalTheory.ArtinSchreierWitt.main l
-  haveI : Module.Flat ℤ_[l] ↥(OL LL) := Module.Flat.of_free
+  have : Module.Flat ℤ_[l] ↥(OL LL) := Module.Flat.of_free
   obtain ⟨-, -, h3⟩ := GlobalTheory.WittTensorFixed.baseChange_flat (O := ↥(OL LL)) (frobW l) hs hk
     (GlobalTheory.WittTensorFixed.algebraMap_WCb_injective l)
   have : Nontrivial (OW l ↥(OL LL)) := h3.nontrivial

@@ -222,7 +222,7 @@ theorem exists_act_of_hom {b : Base} {L : b.Fun} (q : b.Rˣ) (hq : (q : b.R) - 1
         have e : Units.map (Ideal.Quotient.mk T.J).toMonoidHom (hw T c' k).unit =
             Units.map (Ideal.Quotient.mk T.J).toMonoidHom (hw T c k).unit := by
           apply Units.ext
-          simp only [Units.coe_map, IsUnit.unit_spec, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, hcl]
+          simp only [Units.coe_map, IsUnit.unit_spec, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, hcl]
         rw [e, mul_inv_cancel]⟩
     refine ⟨a, ?_, ?_⟩
     · apply hu
@@ -545,7 +545,7 @@ namespace GlobalTheory.CompanionTheory.QPd
 
 theorem exists_sub_one_pow {p : ℕ} (hp : p.Prime) {B : Type} [CommRing B] (x : B) :
     ∃ z : B, (x - 1) ^ (p - 1) = (∑ i ∈ Finset.range p, x ^ i) - (p : B) * z := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hmod : ((X - 1 : (ZMod p)[X]) ^ (p - 1) - ∑ i ∈ Finset.range p, (X : (ZMod p)[X]) ^ i) = 0 := by
     have h1 : (X - 1 : (ZMod p)[X]) ^ p = X ^ p - 1 := by
       simpa using sub_pow_char (X : (ZMod p)[X]) 1
@@ -576,7 +576,7 @@ theorem exists_sub_one_pow {p : ℕ} (hp : p.Prime) {B : Type} [CommRing B] (x :
 
 theorem not_dvd_choose {p : ℕ} (hp : p.Prime) (a c : ℕ) (hc : c < p) :
     ¬ p ∣ (a * p + c).choose c := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h := Choose.choose_modEq_choose_mod_mul_choose_div_nat (p := p) (n := a * p + c) (k := c)
   have h1 : (a * p + c) % p = c := by
     rw [Nat.mul_add_mod_of_lt hc] <;> simp
@@ -1253,7 +1253,7 @@ theorem preimage_open_top_of_jacobson_surjection (U : X.Opens) (B B' : CommRingC
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal (p : PrimeSpectrum B).asIdeal (p : PrimeSpectrum B).isPrime.ne_top
   let m : PrimeSpectrum B := ⟨M, hM.isPrime⟩
   have hker : RingHom.ker φ.hom ≤ M := hk.trans (sInf_le ⟨bot_le, hM⟩)
-  haveI := hM.isPrime
+  have := hM.isPrime
   let m' : PrimeSpectrum B' := ⟨M.map φ.hom, Ideal.map_isPrime_of_surjective hs hker⟩
   have hm' : PrimeSpectrum.comap φ.hom m' = m := by
     refine PrimeSpectrum.ext ?_
@@ -1276,8 +1276,8 @@ theorem mem_biInf_of_finite {A : Type} [Finite A] (S : Set A) (U : A → X.Opens
 theorem exists_atlas {O : Type} [CommRing O] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O))
     [Smooth q] [IsSeparated q] [QuasiCompact q] : ∃ d, Nonempty ((schFn q).Atlas d) := by
   classical
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace q
-  haveI : X.IsSeparated := by
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace q
+  have : X.IsSeparated := by
     rw [Scheme.isSeparated_iff, ← Limits.terminal.comp_from q]
     infer_instance
   choose U hU hx n T et using exists_unit_chart q

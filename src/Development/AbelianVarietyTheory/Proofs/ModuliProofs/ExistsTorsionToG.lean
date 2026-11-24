@@ -79,7 +79,7 @@ theorem exists_torsion_toG : AllFlat fun {E} _ _ _ {H} {R} _ _ _ {t} P {W} ψW k
       (MorphismProperty.of_isPullback (P := @IsFinite) Q h₁') (MorphismProperty.of_isPullback (P := @Flat) Q h₂')
   obtain ⟨hf, hl⟩ := hfin
   have hs := (GlobalTheory.UnitRigidity.smooth_geometricallyConnected_of_isGt _ _ hH).1
-  haveI : CharZero (FractionRing R) := (RingHom.charZero_iff (IsFractionRing.injective R _)).1 inferInstance
+  have : CharZero (FractionRing R) := (RingHom.charZero_iff (IsFractionRing.injective R _)).1 inferInstance
   have hu : IsUnit (k : Γ(Sp (FractionRing R), ⊤)) :=
     MulEtaleDvr.isUnit_natCast_sections (Nat.cast_ne_zero.mpr (by omega)).isUnit
   have het : Etale (pullback.snd (torsion Gt k).hom (jK R)) := GlobalTheory.LamF.etale_pullback_torsion (jK R) Gt hu

@@ -90,7 +90,7 @@ open GlobalTheory.FieldBaseChange
 
 theorem exists_algebraMap_eq_of_fixed {K F : Type} [Field K] [CharZero K] [Field F] [Algebra K F] [IsAlgClosure K F]
     (x : F) (h : ∀ σ : F →ₐ[K] F, σ x = x) : ∃ k : K, algebraMap K F k = x := by
-  haveI := IsAlgClosure.isGalois K F
+  have := IsAlgClosure.isGalois K F
   have hx : x ∈ IntermediateField.fixedField (⊥ : IntermediateField K F).fixingSubgroup := by
     rw [IntermediateField.mem_fixedField_iff]
     intro σ _
@@ -199,15 +199,15 @@ open GlobalTheory.FieldBaseChange GlobalTheory.Mum.GalDesc
 
 theorem exists_common_scale_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (A : PolAV (Sp (FractionRing R))) (N : ℕ) (Ix : Type) (T : Ix → SecK A.L (snd (TFK (R := R) (Kb R)) A.A).left N) (a : (Kb R →ₐ[FractionRing R] Kb R) → (Kb R)ˣ), (∀ σ i, ∃ t', SecTw σ (T i) t' ∧ ∀ j, t'.f j = liftFun A.A _ (fnF (Kb R) (a σ).val) * (T i).f j) → ∃ c : (Kb R)ˣ, ∀ i, ∃ Φ : H0 A.L N, ∀ t'' : SecK A.L (snd (TFK (R := R) (Kb R)) A.A).left N, (∀ j, t''.f j = liftFun A.A _ (fnF (Kb R) c.val) * (T i).f j) → Agree A.L t'' Φ := by
   intro R _ _ _ hB A N Ix T a hT
-  haveI : CharZero R := hB.2
-  haveI : CharZero (FractionRing R) :=
+  have : CharZero R := hB.2
+  have : CharZero (FractionRing R) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
   let π : A.A.left ⟶ Spec (CommRingCat.of (FractionRing R)) := A.A.hom
   let π' := (fst (TFK (R := R) (Kb R)) A.A).left
   let p := (snd (TFK (R := R) (Kb R)) A.A).left
   have H : IsPullback p π' π (Spec.map (CommRingCat.ofHom (algebraMap (FractionRing R) (Kb R)))) :=
     (IsPullback.of_hasPullback _ _).flip
-  haveI : TopologicalSpace.NoetherianSpace A.A.left := by
+  have : TopologicalSpace.NoetherianSpace A.A.left := by
     have := A.isAb.proper
     have : IsLocallyNoetherian A.A.left := LocallyOfFiniteType.isLocallyNoetherian A.A.hom
     have : CompactSpace A.A.left := QuasiCompact.compactSpace_of_compactSpace A.A.hom

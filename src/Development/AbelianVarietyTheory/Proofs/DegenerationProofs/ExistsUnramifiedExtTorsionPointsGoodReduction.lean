@@ -107,7 +107,7 @@ theorem exists_local_of_etale {T W Ω F : Type} [CommRing T] [IsDomain T] [IsDis
   obtain ⟨_, _⟩ := exists_isDiscreteValuationRing_of_unramified T B
   have halg := isAlgebraic_of_flat_of_formallyUnramified T B
   have hff := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := T) (B := B)
-  letI := j.toAlgebra
+  let := j.toAlgebra
   have : Module.IsTorsionFree T F := Module.isTorsionFree_iff_algebraMap_injective.2 hj
   let j' : B →ₐ[T] F := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -119,7 +119,7 @@ theorem exists_local_of_etale {T W Ω F : Type} [CommRing T] [IsDomain T] [IsDis
     intro b hb
     by_contra hb0
     have hne : (RingHom.ker j').comap (algebraMap T B) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_algebraic_mem hb0 hb (halg.1 b)
+      Ideal.under_ne_bot_of_algebraic_mem hb0 hb (halg.1 b)
     refine hne (eq_bot_iff.2 fun t ht => ?_)
     have h : j' (algebraMap T B t) = 0 := ht
     rw [j'.commutes] at h
@@ -166,8 +166,8 @@ theorem exists_lift_one {X S : Scheme.{0}} (f : X ⟶ S) [Etale f] {T Ω F : Typ
     ← Spec.map_comp_assoc, cancel_mono, Spec.map_inj] at w
   have het := f.etale_appLE hU hV hVU
   algebraize [(f.appLE U V hVU).hom]
-  letI : Algebra Γ(S, U) T := α.hom.toAlgebra
-  letI : Algebra Γ(S, U) Ω := (ρ.comp α.hom).toAlgebra
+  let : Algebra Γ(S, U) T := α.hom.toAlgebra
+  let : Algebra Γ(S, U) Ω := (ρ.comp α.hom).toAlgebra
   let ε : T ⊗[Γ(S, U)] Γ(X, V) →ₐ[Γ(S, U)] Ω :=
     Algebra.TensorProduct.productMap ⟨ρ, fun _ => rfl⟩ ⟨φ.hom, fun r ↦ congr($w r)⟩
   have hε₁ : ε.toRingHom.comp (algebraMap T _) = ρ := by
@@ -240,7 +240,7 @@ theorem exists_subalgebra_of_card {T Ω F : Type} [CommRing T] [IsDomain T]
       (spMap j') congr(($hab).left)
     exact Over.OverMorphism.ext ((hl a).symm.trans (e ▸ hl b))
   have hΦ' := (hΦ.bijective_of_nat_card_le hc).2
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   let j₁ : T₁ →ₐ[T] F := ⟨j', fun t => congr($h4 t)⟩
   let e : T₁ ≃ₐ[T] j₁.range := AlgEquiv.ofInjective j₁ h3
   refine ⟨j₁.range, IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing e,

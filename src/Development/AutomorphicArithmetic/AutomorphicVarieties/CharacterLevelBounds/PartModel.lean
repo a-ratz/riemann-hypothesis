@@ -77,18 +77,18 @@ private theorem UpperTheory.V.LDataCardLeFinrank.transport_mem_NS
     (hS' : S' = Above F' l) : NS Ω' S' ≤ (NS Ω S).comap φ := by
   have hN : (NS Ω S).Normal := Subgroup.is_normal_topologicalClosure _
   have hclosed : IsClosed ((NS Ω S).comap φ : Set (G F' Ω')) := (isClosed_NS Ω S).preimage h1
-  haveI : ((NS Ω S).comap φ).Normal := hN.comap φ
+  have : ((NS Ω S).comap φ).Normal := hN.comap φ
   apply Subgroup.topologicalClosure_minimal _ _ hclosed
   apply Subgroup.normalClosure_le_normal
   intro g hg
-  simp only [Set.mem_iUnion, Set.mem_compl_iff, Set.mem_setOf_eq] at hg
+  simp only [Set.mem_iUnion, Set.mem_compl_iff, Set.mem_ofPred_eq] at hg
   obtain ⟨v', hv', A', hA', hgA⟩ := hg
   obtain ⟨v, A, hA, habove, -, -, hine⟩ := placeTransport F Ω F' Ω' f σ hσ φ h2 v' A' hA'
   have hgi : φ g ∈ Ine A := (hine g).2 hgA
   show φ g ∈ NS Ω S
   apply Subgroup.le_topologicalClosure
   apply Subgroup.subset_normalClosure
-  simp only [Set.mem_iUnion, Set.mem_compl_iff, Set.mem_setOf_eq]
+  simp only [Set.mem_iUnion, Set.mem_compl_iff, Set.mem_ofPred_eq]
   refine ⟨v, ?_, A, hA, hgi⟩
   rw [hS]
   rw [hS'] at hv'
@@ -123,9 +123,9 @@ theorem UpperTheory.V.LDataCardLeFinrank.gsTransport :
     rw [hφ'act, RingEquiv.symm_apply_apply, RingEquiv.symm_apply_apply]
   let Φ : G F' Ω' ≃* G F Ω :=
     { toFun := φ, invFun := φ', left_inv := hleft, right_inv := hright, map_mul' := φ.map_mul }
-  haveI : (NS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F')))).Normal :=
+  have : (NS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F')))).Normal :=
     Subgroup.is_normal_topologicalClosure _
-  haveI : (NS Ω (D.S : Set (HeightOneSpectrum (𝓞 F)))).Normal :=
+  have : (NS Ω (D.S : Set (HeightOneSpectrum (𝓞 F)))).Normal :=
     Subgroup.is_normal_topologicalClosure _
   have hmap : (NS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F')))).map (Φ : G F' Ω' →* G F Ω) =
       NS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))) := by
@@ -235,20 +235,20 @@ theorem UpperTheory.V.LDataCardLeFinrank.H1_transport_field_iso :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (F' Ω' : Type) [Field F'] [NumberField F'] [Field Ω'] [Algebra F' Ω'] [IsAlgClosure F' Ω'] (l : ℕ) [Fact l.Prime] (D : LData F Ω l) (D' : LData F' Ω' l) (f : F ≃+* F') (e : ℤ), ∃ Φ : H1 (qzTw D e) ≃ₗ[ℤ_[l]] H1 (qzTw D' e),
       (Sha D e).map Φ.toLinearMap = Sha D' e ∧ ∀ (τ : F ≃+* F) (τ' : F' ≃+* F'), (∀ x, f (τ x) = τ' (f x)) → ∀ x, Φ (UpperTheory.V.galoisActionOnCohomology D e τ x) = UpperTheory.V.galoisActionOnCohomology D' e τ' (Φ x) := by
   intro F Ω _ _ _ _ _ F' Ω' _ _ _ _ _ l _ D D' f e
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : IsAlgClosed Ω' := IsAlgClosure.isAlgClosed F'
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap F' Ω').injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω' := IsAlgClosure.isAlgClosed F'
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap F' Ω').injective
   let σ : Ω ≃+* Ω' := IsAlgClosure.equivOfEquiv Ω Ω' f
   have hσ : ∀ x, σ (algebraMap F Ω x) = algebraMap F' Ω' (f x) :=
     fun x => IsAlgClosure.equivOfEquiv_algebraMap Ω Ω' f x
   obtain ⟨φ, ψ, -, -, hψ, hψs, hφ, hc, hchi⟩ := gsTransport F Ω F' Ω' l D D' f σ hσ
   have hq : ∀ g m, (LinearMap.id : QZ l →ₗ[ℤ_[l]] QZ l) (qzTw D e ((ψ : GS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F'))) →* GS Ω (D.S : Set (HeightOneSpectrum (𝓞 F)))) g) m) = qzTw D' e g (LinearMap.id (R := ℤ_[l]) m) := by
     intro g m
-    simp only [LinearMap.id_apply, UpperTheory.V.qzTw_apply, MonoidHom.coe_coe, hchi]
+    simp only [LinearMap.id_apply, UpperTheory.V.qzTw_apply, MonoidHom.coe_ofClass, hchi]
   have hq' : ∀ g m, (LinearMap.id : QZ l →ₗ[ℤ_[l]] QZ l) (qzTw D' e ((ψ.symm : GS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))) →* GS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F')))) g) m) = qzTw D e g (LinearMap.id (R := ℤ_[l]) m) := by
     intro g m
-    simp only [LinearMap.id_apply, UpperTheory.V.qzTw_apply, MonoidHom.coe_coe, ← hchi, MulEquiv.apply_symm_apply]
+    simp only [LinearMap.id_apply, UpperTheory.V.qzTw_apply, MonoidHom.coe_ofClass, ← hchi, MulEquiv.apply_symm_apply]
   let Φ := pairH1DecompositionMap (qzTw D e) (qzTw D' e) (ψ : GS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F'))) →* GS Ω (D.S : Set (HeightOneSpectrum (𝓞 F)))) hψ LinearMap.id continuous_id hq
   let Ψ := pairH1DecompositionMap (qzTw D' e) (qzTw D e) (ψ.symm : GS Ω (D.S : Set (HeightOneSpectrum (𝓞 F))) →* GS Ω' (D'.S : Set (HeightOneSpectrum (𝓞 F')))) hψs LinearMap.id continuous_id hq'
   have hΦΨ : Φ.comp Ψ = LinearMap.id := by
@@ -398,17 +398,17 @@ theorem UpperTheory.V.Chr.partModel :
           plusLen D e * eO l O = Module.length O (Module.End.eigenspace (shaRep (twist₂ l (chiO ℚ Ω l O ^ (-(e : ℤ)))) l (levH ℚ Ω H) c) ((-1 : O) ^ e)) ∧
           minusLen D e * eO l O = Module.length O (Module.End.eigenspace (shaRep (twist₂ l (chiO ℚ Ω l O ^ (-(e : ℤ)))) l (levH ℚ Ω H) c) ((-1 : O) ^ (e + 1))) := by
   intro E _ _ _ N _ H hH l _ O _ _ _ _ _ Ω' _ _ _ D Ω _ _ _ e
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let j : E →ₐ[ℚ] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra E Ω := j.toRingHom.toAlgebra
-  haveI : Algebra.IsAlgebraic E Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) E
-  haveI : IsAlgClosure E Ω := ⟨inferInstance, inferInstance⟩
-  haveI hab := (levGal E N H hH).1
+  let : Algebra E Ω := j.toRingHom.toAlgebra
+  have : Algebra.IsAlgebraic E Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) E
+  have : IsAlgClosure E Ω := ⟨inferInstance, inferInstance⟩
+  have hab := (levGal E N H hH).1
   have hU := ((levGal E N H hH).2.2 Ω).1
   refine (ldata_nonempty (F := E) (Ω := Ω) l).elim fun D' => ?_
   refine (exists_isConjOm (E := E) (Ω := Ω)).elim fun σ hσ => ?_

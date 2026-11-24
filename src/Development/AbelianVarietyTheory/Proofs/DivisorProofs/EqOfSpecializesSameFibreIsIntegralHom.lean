@@ -92,11 +92,11 @@ theorem eq_of_specializes_of_isIntegralHom : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y
     exact (img P).trans ((congrArg f eP).trans (hf.trans ((congrArg f eP').symm.trans (img P').symm)))
   have hc' : P.asIdeal.comap (f.app V).hom = P'.asIdeal.comap (f.app V).hom :=
     congrArg PrimeSpectrum.asIdeal hc
-  letI : Algebra Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := (f.app V).hom.toAlgebra
-  haveI : Algebra.IsIntegral Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := ⟨f.isIntegral_app V hV⟩
+  let : Algebra Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := (f.app V).hom.toAlgebra
+  have : Algebra.IsIntegral Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := ⟨f.isIntegral_app V hV⟩
   have heq : P.asIdeal = P'.asIdeal := by
     by_contra hne
-    have hlt := Ideal.IsIntegral.comap_lt_comap (R := Γ(Y, V)) (lt_of_le_of_ne hle hne)
+    have hlt := Ideal.IsIntegral.under_lt_under (R := Γ(Y, V)) (lt_of_le_of_ne hle hne)
     exact (ne_of_lt hlt) hc'
   have : P = P' := PrimeSpectrum.ext heq
   rw [← eP, ← eP', this]

@@ -56,8 +56,8 @@ namespace UpperTheory.V.Z.Gam
 private theorem count_one {A : Type} [CommGroup A] (U : Subgroup A) (l : ℕ) (hl : l.Prime) (η θ : A →* ℂˣ)
     (hη : ∀ x, η x ^ l = 1) (hθ : ∀ x ∈ U, η x = 1 → θ x = 1) (u : A) (hu : u ∈ U) (h1 : η u ≠ 1) :
     ((Finset.range l).filter fun j => ∀ x ∈ U, θ x * η x ^ j = 1).card = 1 := by
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : Fact l.Prime := ⟨hl⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   have hp : IsPrimitiveRoot (η u) l := by
     rw [← orderOf_eq_prime (hη u) h1]
     exact IsPrimitiveRoot.orderOf _
@@ -112,7 +112,7 @@ private theorem unr_nm (w : PlacesOver L v) (θ : (v.adicCompletion K)ˣ →* �
 private theorem sum_ef (v : HeightOneSpectrum (𝓞 K)) :
     ∑ w : PlacesOver L v, w.1.asIdeal.ramificationIdx (𝓞 K) * fdeg w = Module.finrank K L := by
   have := v.isMaximal
-  rw [Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 K) K (𝓞 L) L,
+  rw [IsFractionRing.finrank_eq (𝓞 K) K (𝓞 L) L,
     ← Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 L)]
   exact Fintype.sum_equiv (placesOverEquiv L v) _ _ fun w => by rw [fdeg_eq]; rfl
 
@@ -154,11 +154,11 @@ private theorem exists_eta [IsGalois K L] (hl : (Module.finrank K L).Prime) :
     ∃ η : HChar K, ∀ v : HeightOneSpectrum (𝓞 K), (∀ x, η.loc v x ^ Module.finrank K L = 1) ∧
       ∀ w : PlacesOver L v, (η.loc v).ker = (nm w).range ∧
         (unitFiltrationUnits (v.adicCompletion K) 0 ≤ (nm w).range ↔ w.1.asIdeal.ramificationIdx (𝓞 K) = 1) := by
-  haveI : Fact (Module.finrank K L).Prime := ⟨hl⟩
-  haveI : NeZero (Module.finrank K L) := ⟨hl.ne_zero⟩
+  have : Fact (Module.finrank K L).Prime := ⟨hl⟩
+  have : NeZero (Module.finrank K L) := ⟨hl.ne_zero⟩
   have hc : Nat.card (L ≃ₐ[K] L) = Module.finrank K L := IsGalois.card_aut_eq_finrank K L
-  haveI : IsCyclic (L ≃ₐ[K] L) := isCyclic_of_prime_card hc
-  haveI : IsMulCommutative (L ≃ₐ[K] L) := inferInstance
+  have : IsCyclic (L ≃ₐ[K] L) := isCyclic_of_prime_card hc
+  have : IsMulCommutative (L ≃ₐ[K] L) := inferInstance
   let ι : (L ≃ₐ[K] L) →* ℂˣ := (rootsOfUnity (Module.finrank K L) ℂ).subtype.comp
     (mulEquivOfPrimeCardEq hc (Complex.card_rootsOfUnity _)).toMonoidHom
   have hι : Function.Injective ι := Subtype.val_injective.comp (MulEquiv.injective _)
@@ -227,7 +227,7 @@ theorem UpperTheory.V.Z.Gam.normCnt :
     intro j _ x hx
     have h2 := (hw w).2.2 hr hx
     rw [h1 x hx h2, show η.loc v x = 1 from (hw w).1.ge h2, one_pow, one_mul]
-  · obtain ⟨u, hu, hu'⟩ := SetLike.not_le_iff_exists.1 (mt (hw w).2.1 hr)
+  · obtain ⟨u, hu, hu'⟩ := IsConcreteLE.not_le_iff_exists.1 (mt (hw w).2.1 hr)
     rw [← (hw w).1] at hu' h1
     rw [← hs] at hl
     have h3 := ((Nat.prime_mul_iff.1 hl).resolve_right fun h => hr h.2).2

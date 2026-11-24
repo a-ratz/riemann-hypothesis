@@ -156,7 +156,7 @@ private theorem norm_inf (σ : K ≃+* K) (u : InfinitePlace K) (y : (u.comap σ
 
 private theorem mem_int (v : HeightOneSpectrum (𝓞 K)) (y : v.adicCompletion K) :
     y ∈ (ValuativeRel.valuation (v.adicCompletion K)).integer ↔ Valued.v y ≤ 1 := by
-  haveI : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   rw [Valuation.mem_integer_iff, (ValuativeRel.isEquiv (ValuativeRel.valuation (v.adicCompletion K))
     (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ)))).le_one_iff_le_one]

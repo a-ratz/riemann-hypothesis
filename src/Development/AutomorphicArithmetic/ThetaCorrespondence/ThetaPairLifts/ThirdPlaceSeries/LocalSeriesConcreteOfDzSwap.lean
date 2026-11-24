@@ -377,7 +377,7 @@ theorem eSerC_mul_zIdem {r : ℕ} (ρ : FDRep ℂ (GL (Fin r) (ZMod g))) (hρ : 
       rw [← h, GlobalTheory.SerOSys.eSerO_eq_sum, Finset.mul_sum]
       refine Finset.sum_eq_zero fun z hz => ?_
       have hz' := (GlobalTheory.SerOSys.Zl_finite O r f).mem_toFinset.1 hz
-      rw [GlobalTheory.SerOSys.mul_of_mem ⟨ρ, hρ, rfl⟩ (GlobalTheory.SerOSys.Zl_sub O r f hz'), if_neg]
+      rw [GlobalTheory.SerOSys.mul_of_mem ⟨ρ, hρ, rfl⟩ (GlobalTheory.SerOSys.Zl_sub O r f hz'), ite_eq_right]
       rintro e
       exact hm (e ▸ hz')
     rw [h0, mul_zero]
@@ -580,7 +580,7 @@ theorem inePol_eq_liftPoly_of_cuspidal {n : ℕ} (hn : 0 < n) (hbig : n = 1 ∨ 
   obtain ⟨τ, φ, hs, hinj, heq, he⟩ := TameGen.exists_simple_of_has (sysOf L h5 hA) ρ.2.ρ f hf
   have hφ : (fixK1 ρ.2.ρ).subtype ∘ₗ φ ≠ 0 := fun e => by
     have h0 : ∀ u : τ, u = 0 := fun u => hinj (Subtype.ext (by simpa using LinearMap.congr_fun e u))
-    exact CategoryTheory.id_nonzero τ (by ext u; exact (h0 _).trans (h0 _).symm)
+    exact CategoryTheory.id_ne_zero τ (by ext u; exact (h0 _).trans (h0 _).symm)
   have hfix : fixK1 ρ.2.ρ ≠ ⊥ := fun e => hφ (LinearMap.ext fun u => (Submodule.eq_bot_iff _).1 e _ (φ u).2)
   have hτ : FiniteGL.IsCuspidal τ.ρ := fun b hb hb' u hu => hinj (by
     rw [map_zero]
@@ -671,8 +671,8 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 open GlobalTheory.WeilDeligne in
 theorem regLoc_of_greenLab : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → _root_.DiscreteGroups.sglob.DzType.DepthZeroInertiaBigAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (Γ : GrpSide D), GreenLab Γ → _root_.GlobalTheory.PendOf.RegularLocalCondition hL D := by
   intro hP hDZ hL D Γ hG k v π ρ f hρ hsq ⟨x, hx, hnk⟩
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   obtain ⟨I⟩ := GlobalTheory.TypeRec.Model.nonempty_ident D
   have hrc := _root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hL (D.nd.plOm.2 (D.naut.plGw k v))
   have hw := D.naut.plGw_over k v
@@ -853,7 +853,7 @@ theorem unit_completion_approx_integer : ∀ {E' : Type} [Field E'] [NumberField
     exact h1.preimage (continuous_id.sub continuous_const)
   obtain ⟨k, hk⟩ := (denseRange_algebraMap (R := 𝓞 E') (K := E') w').exists_mem_open hopen
     ⟨x, by simp⟩
-  simp only [Set.mem_setOf_eq] at hk
+  simp only [Set.mem_ofPred_eq] at hk
   have hk1 : Valued.v (algebraMap E' (w'.adicCompletion E') k) ≤ 1 := by
     have : algebraMap E' (w'.adicCompletion E') k =
         (algebraMap E' (w'.adicCompletion E') k - x) + x := by ring
@@ -926,11 +926,11 @@ theorem exists_regularChar :
         ∏ j ∈ Finset.range n, (X - C ((θ (u ^ g ^ j) : ℂˣ) : ℂ)) = GlobalTheory.SerSys.TameGen.liftPoly L.teich P := by
   intro g _ L n hn P hP K _ _ hK ι
   classical
-  haveI := Fintype.ofFinite K
+  have := Fintype.ofFinite K
   have hg1 : 1 < g := (Fact.out : g.Prime).one_lt
   have hq : 1 < g ^ n := Nat.one_lt_pow hn.ne' hg1
   have hq1 : 0 < g ^ n - 1 := by omega
-  haveI : NeZero (g ^ n - 1) := ⟨hq1.ne'⟩
+  have : NeZero (g ^ n - 1) := ⟨hq1.ne'⟩
   have hdegP : P.natDegree = n := hP.2.2.2
   obtain ⟨x, hx⟩ := IsAlgClosed.exists_aeval_eq_zero (Formalism.CyclotomicNorms.Fbar g) P (degree_pos_of_irreducible hP.2.1).ne'
   have hxmem : x ∈ Formalism.CyclotomicNorms.rootsBar P := by
@@ -1072,7 +1072,7 @@ theorem kummer_char_eq_of_toAb_eq : ∀ (E' Ω : Type) [Field E'] [NumberField E
     rintro rfl
     rw [zero_pow hm.ne'] at hy
     exact hc' hy.symm
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   have hζ' : IsPrimitiveRoot (algebraMap E' Ω ζ) m := hζ.map_of_injective (algebraMap E' Ω).injective
   have key : ∀ ρ : G E' Ω, ∃ e : E', ρ y = algebraMap E' Ω e * y := by
     intro ρ
@@ -1090,7 +1090,7 @@ theorem kummer_char_eq_of_toAb_eq : ∀ (E' Ω : Type) [Field E'] [NumberField E
     field_simp)
   have hφ : ∀ ρ, (φ ρ : Ω) = ρ y / y := fun ρ => rfl
   have hint : IsIntegral E' y := Algebra.IsIntegral.isIntegral y
-  haveI : FiniteDimensional E' (IntermediateField.adjoin E' {y}) := IntermediateField.adjoin.finiteDimensional hint
+  have : FiniteDimensional E' (IntermediateField.adjoin E' {y}) := IntermediateField.adjoin.finiteDimensional hint
   have hopen : IsOpen (φ.ker : Set (G E' Ω)) := by
     refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin E' {y}).fixingSubgroup) ?_ (IntermediateField.fixingSubgroup_isOpen _)
     intro ρ hρ
@@ -1101,7 +1101,7 @@ theorem kummer_char_eq_of_toAb_eq : ∀ (E' Ω : Type) [Field E'] [NumberField E
     rw [hφ, this, div_self hy0, Units.val_one]
   have hclosed : IsClosed (φ.ker : Set (G E' Ω)) := Subgroup.isClosed_of_isOpen _ hopen
   have hle : (commutator (G E' Ω)).topologicalClosure ≤ φ.ker :=
-    Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker φ) hclosed
+    Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker φ) hclosed
   have hmem : σ⁻¹ * τ ∈ (commutator (G E' Ω)).topologicalClosure := QuotientGroup.eq.mp he
   have h2 := hle hmem
   rw [MonoidHom.mem_ker, map_mul, map_inv, inv_mul_eq_one] at h2
@@ -1151,7 +1151,7 @@ theorem depthZeroInertiaBig_of_narrowBig_m_alt : _root_.DiscreteGroups.sglob.DzT
   set u := a' (ineIncl h' ⟨t', ht'⟩) with hu_def
   have hu : IsUnitAt w' u := _root_.GlobalTheory.ArtinInertia.isUnitAt_artin_ine h' a' ha' ⟨t', ht'⟩
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.unit_completion_approx_integer w' u hu
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hg2 : 2 ≤ g := (Fact.out : g.Prime).two_le
   have hq : 0 < g ^ n - 1 := by
     have : 2 ≤ g ^ n := le_trans hg2 (Nat.le_self_pow hn.ne' g)
@@ -1173,15 +1173,15 @@ theorem depthZeroInertiaBig_of_narrowBig_m_alt : _root_.DiscreteGroups.sglob.DzT
     have e : t y / y = σ' y / y := by rw [hkum]; rfl
     rw [e]
     exact (redThrough_eq_of_val_sub_lt_one A κ (tameQuot_mem A σ' hq hgΩ hy) hσ'v).symm
-  haveI := w'.isMaximal
-  letI : Field (𝓞 E' ⧸ w'.asIdeal) := Ideal.Quotient.field _
+  have := w'.isMaximal
+  let : Field (𝓞 E' ⧸ w'.asIdeal) := Ideal.Quotient.field _
   have hgK : (((g : ℕ) : 𝓞 E' ⧸ w'.asIdeal)) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk w'.asIdeal), Ideal.Quotient.eq_zero_iff_mem]; exact hg0
-  haveI : CharP (𝓞 E' ⧸ w'.asIdeal) g := (CharP.charP_iff_prime_eq_zero (Fact.out : g.Prime)).mpr hgK
-  letI : Algebra (ZMod g) (𝓞 E' ⧸ w'.asIdeal) := ZMod.algebra _ g
+  have : CharP (𝓞 E' ⧸ w'.asIdeal) g := (CharP.charP_iff_prime_eq_zero (Fact.out : g.Prime)).mpr hgK
+  let : Algebra (ZMod g) (𝓞 E' ⧸ w'.asIdeal) := ZMod.algebra _ g
   obtain ⟨ι, hι⟩ := _root_.GlobalTheory.residue_ringOfIntegers_to_place E' Ω g A w' h' κ
   have hcard : Nat.card (𝓞 E' ⧸ w'.asIdeal) = g ^ n := hN
-  haveI : Finite (𝓞 E' ⧸ w'.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
+  have : Finite (𝓞 E' ⧸ w'.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
   obtain ⟨θ, hreg, ⟨x0, hx0, hθ⟩, hprod⟩ := _root_.GlobalTheory.RegLabelChar.exists_regularChar g L n hn P hP.1 _ hcard ι
   have hιz : ι (Ideal.Quotient.mk _ x) = L.gen n := by rw [hι]; exact h2
   have hgen0 : L.gen n ≠ 0 := by
@@ -1444,10 +1444,10 @@ namespace DiscreteGroups.sglob.DzType.Rt
 open NumberField IsDedekindDomain GlobalTheory.SerSys.TameGen GlobalTheory.Published.DepthZeroModel GlobalTheory.TameCharLabel
 theorem label_reduction_alt : _root_.DiscreteGroups.sglob.DzType.DepthZeroInertiaBigAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : Formalism.BasicNotions.D7) (Γ : GlobalTheory.HeightCounting.GrpSide D) (k : Fin 2) (v : D.nd.PlG k) (χ : ((D.naut.plGw k v).adicCompletion D.host.E)ˣ →* ℂˣ) (hχ : IsSmoothChar χ) (u : ZMod (D.host.g k)), IsTame χ → _root_.GlobalTheory.PendOf.localLabelPolynomial hL D k v (Irr.ofDet 1 χ hχ) = Polynomial.X - Polynomial.C u → haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩; resCard ((D.naut.plGw k v).adicCompletion D.host.E) = D.host.g k ∧ ∀ L : GlobalTheory.GLq.LabelDatum (D.host.g k), L.teich = D.ntypes.teichC k → L.gen = Γ.ζ k → ∃ θ : (ZMod (D.host.g k))ˣ →* ℂˣ, CharLift θ χ ∧ GlobalTheory.GLp.IsCharLab L θ u := by
   intro H hL D Γ k v χ hχ u htame hlab
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   have hp : resCard ((D.naut.plGw k v).adicCompletion D.host.E) = D.host.g k := by
-    haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+    have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
     obtain ⟨h1, -, -⟩ := GlobalTheory.Mem.Chr.splitsC_place (D.host.g_prime k) (D.nd.g_split k) _ (D.naut.plGw_over k v)
     apply (GlobalTheory.LocLanglands.resCard_eq_normV _).trans
     simpa [Formalism.ConjugateSelfDual.normV, Ideal.absNorm_apply, Submodule.cardQuot_apply] using h1
@@ -1536,7 +1536,7 @@ theorem character_inertia_eq_of_congruent_generator [_root_.NumberField.IsTotall
     (hgen : algebraMap (ZMod g) (Formalism.CyclotomicNorms.Fbar g) (n : ZMod g) = L.gen 1) (x : (w.adicCompletion E)ˣ)
     (hx : valuation (w.adicCompletion E) ((x : w.adicCompletion E) - (n : w.adicCompletion E)) < 1) :
     μ (a (ineIncl h ⟨t, ht⟩)) = μ x := by
-  haveI : IsLocalHom (PadicInt.toZMod (p := g)) := IsLocalHom.of_surjective _ (ZMod.ringHom_surjective _)
+  have : IsLocalHom (PadicInt.toZMod (p := g)) := IsLocalHom.of_surjective _ (ZMod.ringHom_surjective _)
   let u₀ : (ZMod g)ˣ := ZMod.unitOfCoprime n hn
   have hu₀ : IsUnit ((n : ℕ) : ℤ_[g]) := isUnit_of_map_unit (PadicInt.toZMod (p := g)) _ (by
     rw [map_natCast]; exact u₀.isUnit)
@@ -1651,8 +1651,8 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 open GlobalTheory.WeilDeligne in
 theorem lab_eq_of_tameRep_alt : _root_.DiscreteGroups.sglob.DzType.DepthZeroInertiaBigAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (Γ : GrpSide D) (k : Fin 2) (v : D.nd.PlG k) (μ : ((D.naut.plGw k v).adicCompletion D.host.E)ˣ →* ℂˣ) (hμ : GlobalTheory.SmGL.IsSmoothChar μ), GlobalTheory.SplitWeil.IsTame μ → ∀ (u : 𝓞 D.host.E) (hu : (u : D.host.E) ≠ 0), (∃ (ϖ : 𝓞 D.host.E) (π : D.nd.Om), ϖ ∈ (D.naut.plGw k v).asIdeal ∧ ϖ ∉ (D.naut.plGw k v).asIdeal ^ 2 ∧ π ^ (normV (D.naut.plGw k v) - 1) = algebraMap D.host.E D.nd.Om (ϖ : D.host.E) ∧ (D.nd.plOm.1 (D.naut.plGw k v)).valuation (D.ntypes.tg k v π / π - algebraMap D.host.E D.nd.Om (u : D.host.E)) < 1) → ∀ c : ZMod (D.host.g k), D.ntypes.teichC k (algebraMap (ZMod (D.host.g k)) (Formalism.CyclotomicNorms.Fbar (D.host.g k)) c) = ((μ (Units.map (algebraMap D.host.E ((D.naut.plGw k v).adicCompletion D.host.E)).toMonoidHom (Units.mk0 (u : D.host.E) hu)) : ℂˣ) : ℂ) → _root_.GlobalTheory.PendOf.localLabelPolynomial hL D k v (Irr.ofDet 1 μ hμ) = X - C c := by
   intro hDZ hL D Γ k v μ hμ hT u hu hex c hc
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   first | (have hOpn := UpperTheory.One.M.opn _ (_root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hL (D.nd.plOm.2 (D.naut.plGw k v))); obtain ⟨a, ha, ε, hl⟩ := hOpn) | obtain ⟨a, ha, ε, hε, hl⟩ := _root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hL (D.nd.plOm.2 (D.naut.plGw k v))
   have hSet : GlobalTheory.WeilDeligne.TeichmullerInertiaLabelCondition (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v) (D.ntypes.teichC k)
       (D.ntypes.tg k v) :=

@@ -77,7 +77,7 @@ theorem ode_zero {U : Type*} [AddCommGroup U] [Module ℂ U] [FiniteDimensional 
     simp [L, this]
   have hz := ODE_solution_unique_univ (v := fun _ x => L x) (s := fun _ => Set.univ) (K := ‖L‖₊)
     (t₀ := 0) (f := fun s i => G s (b i)) (g := fun _ => 0)
-    (fun _ => L.lipschitz.lipschitzOnWith) (fun t => ⟨hg t, trivial⟩)
+    (fun _ => L.lipschitzWith.lipschitzOnWith) (fun t => ⟨hg t, trivial⟩)
     (fun t => ⟨by simpa using hasDerivAt_const t (0 : Fin (Module.finrank ℂ U) → ℂ), trivial⟩)
     (by funext i; simp [h0])
   exact b.ext fun i => congrFun (congrFun hz s) i

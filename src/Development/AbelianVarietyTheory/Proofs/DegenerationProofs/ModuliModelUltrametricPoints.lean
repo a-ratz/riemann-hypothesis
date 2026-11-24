@@ -79,7 +79,7 @@ theorem exists_finset_factor {R Ω : Type} [CommRing R] [Field Ω] (g : ℚ →+
     ∃ s : Finset Ω, ∀ (k : Type) [Field k] (β : k →+* Ω), (↑s : Set Ω) ⊆ Set.range β →
       ∃ ψ : R →+* k, β.comp ψ = φ := by
   classical
-  letI : Algebra ℚ R := g.toAlgebra
+  let : Algebra ℚ R := g.toAlgebra
   have hft : Algebra.FiniteType ℚ R := hg
   obtain ⟨t, ht⟩ := hft.out
   refine ⟨t.image φ, fun k _ β hs => ?_⟩

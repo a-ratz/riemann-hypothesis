@@ -94,7 +94,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
 
 theorem schDom_spec_map {A B : Type} [CommRing A] [CommRing B] [IsReduced A] (φ : A →+* B)
     (hφ : Function.Injective φ) : IsSchemeTheoreticallyDominant (Spec.map (CommRingCat.ofHom φ)) := by
-  haveI : IsDominant (Spec.map (CommRingCat.ofHom φ)) :=
+  have : IsDominant (Spec.map (CommRingCat.ofHom φ)) :=
     ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical (f := φ)).mpr (by
       rw [(RingHom.injective_iff_ker_eq_bot φ).mp hφ]; exact bot_le)⟩
   exact IsSchemeTheoreticallyDominant.of_isDominant _

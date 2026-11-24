@@ -562,7 +562,7 @@ private theorem div_mem_of_valuation_le {K : Type} [Field K] (A : ValuationSubri
     (h : A.valuation a ≤ A.valuation b) : a / b ∈ A := by
   rw [← A.valuation_le_one_iff, map_div₀]
   have hb' : A.valuation b ≠ 0 := (Valuation.ne_zero_iff _).2 hb
-  exact div_le_one_of_le₀ h zero_le'
+  exact div_le_one_of_le₀ h zero_le
 
 theorem surjective_of_dominates (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (κ : Type)
     [Finite κ] (x : κ → Ω) (X' : Scheme.{0}) (Ω' : Type) [Field Ω'] (ξ' : Spec (CommRingCat.of Ω') ⟶ X')
@@ -587,7 +587,7 @@ theorem surjective_of_dominates (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp
   have hxc : x c ≠ 0 := by
     intro h0
     have h1 := hcmax c₁
-    simp only [h0, map_zero, le_zero_iff, Valuation.zero_iff] at h1
+    simp only [h0, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at h1
     exact hc₁.1 ((map_eq_zero i).1 h1)
   have hA : ∀ c', i (x c' / x c) ∈ A := fun c' => by
     rw [map_div₀]
@@ -633,7 +633,7 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagBundle : ∀ (X : Scheme.{0})
   have hB : ∀ s, ∃ B : Matrix (Fin (r s)) (Fin (n s)) Ω, B * Matrix.of (fun j l => φ s j (c s l)) = 1 :=
     fun s => _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.exists_leftInverse_flagForms X Ω ξ E κ x (L s) (r s) (V s) (m s) (n s) (φ s) (c s) hx (hL s) (hφ s) (hc s).1 (hc s).2
   obtain ⟨J₀, hJ₀, hfrac⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.CoordGen.flagCoord_generate Ω E S r n κ x φ c c₀ hc₀.1 (_root_.GlobalTheory.CompanionTheory.Ar.FlagBun.FracChart.exists_eq_div_adjoin X Ω ξ κ x c₀ hx hc₀.1) hB
-  haveI : Finite (FlagIx κ n r) := by unfold FlagIx; infer_instance
+  have : Finite (FlagIx κ n r) := by unfold FlagIx; infer_instance
   obtain ⟨X', ξ', s', hx', hirr', -, hprop, -⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.exists_cl_scheme (GenField Ω r) ℤ (FlagIx κ n r) (flagCoord κ x φ c) J₀ hJ₀ hfrac
   obtain ⟨f, hdom, hch⟩ := _root_.GlobalTheory.CompanionTheory.Ar.CoordMap.exists_dominating_map X Ω ξ ℤ κ x X' (GenField Ω r) ξ' (algebraMap Ω (GenField Ω r)) hx hx'.gen
@@ -766,7 +766,7 @@ theorem adjoin_inv_isLocalization_away (Ω : Type) [Field Ω] [CharZero Ω] (A S
     (G : Set Ω) (hA : A = Algebra.adjoin ℚ G) (g : A) (hg : g ≠ 0)
     (hS : S' = Algebra.adjoin ℚ (insert (g : Ω)⁻¹ G)) (hle : A ≤ S') :
     @IsLocalization.Away A _ g S' _ (Subalgebra.inclusion hle).toRingHom.toAlgebra := by
-  letI : Algebra A S' := (Subalgebra.inclusion hle).toRingHom.toAlgebra
+  let : Algebra A S' := (Subalgebra.inclusion hle).toRingHom.toAlgebra
   have hg0 : (g : Ω) ≠ 0 := fun h => hg (Subtype.ext h)
   have hinv : (g : Ω)⁻¹ ∈ S' := by
     rw [hS]; exact Algebra.subset_adjoin (Set.mem_insert _ _)
@@ -1004,20 +1004,20 @@ theorem exists_away_basis (S T K L : Type) [CommRing S] [CommRing T] [Field K] [
         (∀ i, z' (Fin.castAdd r i) = algebraMap T T' (algebraMap S T (z i))) ∧
         LinearIndependent T' (fun i => KaehlerDifferential.D ℚ T' (z' i)) ∧
         Submodule.span T' (Set.range fun i => KaehlerDifferential.D ℚ T' (z' i)) = ⊤ := by
-  haveI : Algebra.IsSmoothAt S P := inferInstance
+  have : Algebra.IsSmoothAt S P := inferInstance
   obtain ⟨g, hg, hstd⟩ := Algebra.IsSmoothAt.exists_notMem_isStandardSmooth S P
   refine ⟨g, hg, ?_⟩
   intro T' _ _ _ _ _ _ _
-  letI : Algebra S T' := ((algebraMap T T').comp (algebraMap S T)).toAlgebra
-  haveI : IsScalarTower S T T' := .of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℚ S T' := .of_algebraMap_eq fun x =>
+  let : Algebra S T' := ((algebraMap T T').comp (algebraMap S T)).toAlgebra
+  have : IsScalarTower S T T' := .of_algebraMap_eq' rfl
+  have : IsScalarTower ℚ S T' := .of_algebraMap_eq fun x =>
     DFunLike.congr_fun (Subsingleton.elim (algebraMap ℚ T') ((algebraMap S T').comp (algebraMap ℚ S))) x
-  haveI : IsScalarTower S T' L := .of_algebraMap_eq fun x => by
+  have : IsScalarTower S T' L := .of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply S T L, IsScalarTower.algebraMap_apply S T T',
       ← IsScalarTower.algebraMap_apply T T' L]
   let f : Localization.Away g ≃ₐ[T] T' := IsLocalization.algEquiv (Submonoid.powers g) _ _
-  haveI : Algebra.IsStandardSmooth S T' := Algebra.IsStandardSmooth.of_algEquiv (f.restrictScalars S)
-  haveI : Algebra.Smooth S T' := inferInstance
+  have : Algebra.IsStandardSmooth S T' := Algebra.IsStandardSmooth.of_algEquiv (f.restrictScalars S)
+  have : Algebra.Smooth S T' := inferInstance
   have hsm : Algebra.Smooth ℚ T' := Algebra.Smooth.comp ℚ S T'
   refine ⟨hsm, ?_⟩
   obtain ⟨m, w, hli', hsp'⟩ : ∃ (m : ℕ) (w : Fin m → T'),
@@ -1025,7 +1025,7 @@ theorem exists_away_basis (S T K L : Type) [CommRing S] [CommRing T] [Field K] [
       Submodule.span T' (Set.range fun i => KaehlerDifferential.D S T' (w i)) = ⊤ := by
     obtain ⟨-, I, b, hb⟩ := (Algebra.IsStandardSmooth.iff_exists_basis_kaehlerDifferential
       (R := S) (S := T')).1 inferInstance
-    haveI : Finite I := Module.Finite.finite_basis b
+    have : Finite I := Module.Finite.finite_basis b
     cases nonempty_fintype I
     let b' := b.reindex (Fintype.equivFin I)
     have hb' : ∀ i, ∃ x, KaehlerDifferential.D S T' x = b' i := fun i => by
@@ -1035,8 +1035,8 @@ theorem exists_away_basis (S T K L : Type) [CommRing S] [CommRing T] [Field K] [
     refine ⟨_, w, ?_, ?_⟩
     · simpa only [hw] using b'.linearIndependent
     · simpa only [hw] using b'.span_eq
-  haveI : IsDomain T := (IsFractionRing.injective T L).isDomain (algebraMap T L)
-  haveI : IsFractionRing T' L :=
+  have : IsDomain T := (IsFractionRing.injective T L).isDomain (algebraMap T L)
+  have : IsFractionRing T' L :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers g) T' L
   have hm : Module.finrank L (KaehlerDifferential K L) = m := _root_.GlobalTheory.CompanionTheory.Ggeo.finrank_kaehler_fractionRing_eq_of_basis S T' K L m w hli' hsp'
   obtain rfl : r = m := hr.symm.trans hm
@@ -1067,16 +1067,16 @@ theorem local_step : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω
             ∃ i : Fin (e + r), (i : ℕ) < n' ∧ z' i ∈ q) := by
   intro Ω₀ Ω _ _ _ _ _ σ σ' _ r₀ r₁ v hv e r bd hr h hh S T hS hT ψ hψ hsm hfS hfT hsS z n hn hli hsp hq
     P hP h₁ hh₁ hh₁P
-  letI : Algebra S T := ψ.toAlgebra
-  haveI : Algebra.Smooth S T := hsm
-  haveI : IsScalarTower S T Ω := .of_algebraMap_eq fun s => (hψ s).symm
-  haveI : IsScalarTower S Ω₀ Ω := .of_algebraMap_eq fun s => rfl
+  let : Algebra S T := ψ.toAlgebra
+  have : Algebra.Smooth S T := hsm
+  have : IsScalarTower S T Ω := .of_algebraMap_eq fun s => (hψ s).symm
+  have : IsScalarTower S Ω₀ Ω := .of_algebraMap_eq fun s => rfl
   have hr₁T : ∀ p, r₁ p ∈ T := fun p => by
     rw [hT]; exact Algebra.subset_adjoin (Set.mem_insert_of_mem _ ⟨p, rfl⟩)
   have hle₁ : Algebra.adjoin ℚ (Set.range r₁) ≤ T := Algebra.adjoin_le (by rintro _ ⟨p, rfl⟩; exact hr₁T p)
-  letI : Algebra (Algebra.adjoin ℚ (Set.range r₁)) T := (Subalgebra.inclusion hle₁).toRingHom.toAlgebra
+  let : Algebra (Algebra.adjoin ℚ (Set.range r₁)) T := (Subalgebra.inclusion hle₁).toRingHom.toAlgebra
   have hne₁ : h₁ ≠ 0 := fun h0 => hh₁P (h0 ▸ P.zero_mem)
-  haveI : IsLocalization.Away h₁ T :=
+  have : IsLocalization.Away h₁ T :=
     _root_.GlobalTheory.CompanionTheory.Ggeo.adjoin_inv_isLocalization_away Ω _ T (Set.range r₁) rfl h₁ hne₁ (by rw [hT, hh₁]) hle₁
   have hdisj : Disjoint ((Submonoid.powers h₁ : Submonoid (Algebra.adjoin ℚ (Set.range r₁))) :
       Set (Algebra.adjoin ℚ (Set.range r₁))) (↑P : Set (Algebra.adjoin ℚ (Set.range r₁))) := by
@@ -1134,9 +1134,9 @@ theorem local_step : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω
         rw [← hk', mul_assoc, ← pow_succ, mul_inv, mul_assoc, inv_mul_cancel₀ (pow_ne_zero _ hHΩ), mul_one]
       rw [SetLike.mem_coe, this]
       exact S'.mul_mem htS' (S'.pow_mem (hle' h₁.2) _)
-  letI : Algebra T S' := (Subalgebra.inclusion hTS').toRingHom.toAlgebra
-  haveI : IsLocalization.Away g S' := _root_.GlobalTheory.CompanionTheory.Ggeo.adjoin_inv_isLocalization_away Ω T S' (T : Set Ω) (Algebra.adjoin_eq T).symm g hg0 hEq hTS'
-  haveI : IsScalarTower T S' Ω := .of_algebraMap_eq fun _ => rfl
+  let : Algebra T S' := (Subalgebra.inclusion hTS').toRingHom.toAlgebra
+  have : IsLocalization.Away g S' := _root_.GlobalTheory.CompanionTheory.Ggeo.adjoin_inv_isLocalization_away Ω T S' (T : Set Ω) (Algebra.adjoin_eq T).symm g hg0 hEq hTS'
+  have : IsScalarTower T S' Ω := .of_algebraMap_eq fun _ => rfl
   obtain ⟨hsm', z', hz', hli', hsp'⟩ := Hg S'
   refine ⟨hsm', z', n, by omega, hli', hsp', ?_⟩
   intro q hq'
@@ -1173,7 +1173,7 @@ theorem finrank_kaehlerDifferential_of_adjoin_eq_top (K L : Type) [Field K] [Fie
     (hadj : IntermediateField.adjoin K (Set.range u) = ⊤) :
     Module.finrank L (KaehlerDifferential K L) = Fintype.card I := by
   classical
-  letI : Algebra (MvPolynomial I K) L := (MvPolynomial.aeval u).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial I K) L := (MvPolynomial.aeval u).toRingHom.toAlgebra
   have hmap : ∀ q : MvPolynomial I K, algebraMap (MvPolynomial I K) L q = MvPolynomial.aeval u q :=
     fun _ => rfl
   have : IsScalarTower K (MvPolynomial I K) L :=
@@ -1339,11 +1339,11 @@ theorem GlobalTheory.CompanionTheory.Ar.LocalisedSmooth.smooth_localised
     hT ▸ Algebra.subset_adjoin (Set.mem_insert_of_mem _ a.2)
   let ι₀ : A₀ →+* S := (A₀.val : A₀ →+* Ω₀).codRestrict S.toSubsemiring hAS
   let ι₁ : A₁ →+* T := (A₁.val : A₁ →+* Ω).codRestrict T.toSubsemiring hAT
-  letI : Algebra A₀ S := ι₀.toAlgebra
-  letI : Algebra A₁ T := ι₁.toAlgebra
-  haveI L₀ : IsLocalization (denomMonoid c₀) S :=
+  let : Algebra A₀ S := ι₀.toAlgebra
+  let : Algebra A₁ T := ι₁.toAlgebra
+  have L₀ : IsLocalization (denomMonoid c₀) S :=
     isLocalization_adjoin A₀ S (fun _ => rfl) c₀ N hN h h0 hc₀ hS
-  haveI L₁ : IsLocalization (denomMonoid (φ c₀)) T :=
+  have L₁ : IsLocalization (denomMonoid (φ c₀)) T :=
     isLocalization_adjoin A₁ T (fun _ => rfl) (φ c₀) N hN (algebraMap Ω₀ Ω h)
       ((map_ne_zero _).2 h0) hc₁ hT
   have hle : denomMonoid c₀ ≤ (denomMonoid (φ c₀)).comap φ := by
@@ -1360,16 +1360,16 @@ theorem GlobalTheory.CompanionTheory.Ar.LocalisedSmooth.smooth_localised
       rw [hψ]
       exact hφ a
     exact fun s => RingHom.congr_fun this s
-  · letI : Algebra S T := ψ.toAlgebra
-    letI : Algebra A₀ A₁ := φ.toAlgebra
-    letI : Algebra A₀ T := ((algebraMap A₁ T).comp φ).toAlgebra
-    haveI : IsScalarTower A₀ A₁ T := .of_algebraMap_eq' rfl
-    haveI : IsScalarTower A₀ S T := .of_algebraMap_eq fun a => (hψ a).symm
+  · let : Algebra S T := ψ.toAlgebra
+    let : Algebra A₀ A₁ := φ.toAlgebra
+    let : Algebra A₀ T := ((algebraMap A₁ T).comp φ).toAlgebra
+    have : IsScalarTower A₀ A₁ T := .of_algebraMap_eq' rfl
+    have : IsScalarTower A₀ S T := .of_algebraMap_eq fun a => (hψ a).symm
     have hsub : Algebra.algebraMapSubmonoid A₁ (denomMonoid c₀) = denomMonoid (φ c₀) :=
       map_denomMonoid φ c₀
-    haveI : IsLocalization (Algebra.algebraMapSubmonoid A₁ (denomMonoid c₀)) T := by
+    have : IsLocalization (Algebra.algebraMapSubmonoid A₁ (denomMonoid c₀)) T := by
       rw [hsub]; exact L₁
-    haveI P : Algebra.IsPushout A₀ A₁ S T :=
+    have P : Algebra.IsPushout A₀ A₁ S T :=
       Algebra.isPushout_of_isLocalization (denomMonoid c₀) S A₁ T
     exact RingHom.Smooth.isStableUnderBaseChange A₀ A₁ S T hsm
 end -- clump:auto
@@ -1602,11 +1602,11 @@ open GlobalTheory.CompanionTheory.Ar.FlagStep in
 theorem GlobalTheory.CompanionTheory.Ar.exists_flagStep : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Ω₀ : Type) [Field Ω₀] [CharZero Ω₀] (ξ₀ : Spec (CommRingCat.of Ω₀) ⟶ Y.X) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω₀) (X : Scheme.{0}) (ξ : Spec (CommRingCat.of Ω₀) ⟶ X) (f : X ⟶ Y.X) (cst : c.F →+* Ω₀) (t : SAB H X) (m : SABMap t Y.t f) (Li : Type) [AddCommGroup Li] [Module Ω₀ Li] (M : LieModel t.G ξ Li) (ρ : 𝓞 E →+* Module.End Ω₀ Li) (L : CMType H ⊕ CMType H → Lat ξ Li) (bd : Ideal (MRing J)), IsCptGen ξ₀ → (∀ q : X, genPt ξ ⤳ q) → CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) → ξ ≫ f = ξ₀ → ξ ≫ f ≫ Y.s = spMap (cst.comp (algebraMap (𝓞 c.F) c.F)) → M.IsActOf t.act.act ρ → (∀ s, (L s).IsVB (labelRk D s) (eigSp ρ (cst.comp (labelEmb c s)))) → (∀ s (q : Cpt ξ), (∀ r : ℕ, r.Prime → ¬ InFibre ξ r q) → L s q = M.eigLat ρ (cst.comp (labelEmb c s)) q) → Cmp.IsSncModel y D.dim bd → (∀ (z : Spec (CommRingCat.of ℂ) ⟶ X) w, CoordsAt ξ y z w → (w ∈ mcPts bd ↔ f (centre z) ∉ abLocus Y.t.G)) → ∃ (Ω : Type) (_ : Field Ω) (_ : CharZero Ω) (_ : Algebra Ω₀ Ω) (K : Type) (_ : Fintype K) (J : K → Type) (_ : ∀ k, Fintype (J k)) (y : (Σ k, J k) → Ω) (X : Scheme.{0}) (ξ : Spec (CommRingCat.of Ω) ⟶ X) (f : X ⟶ Y.X) (cst : c.F →+* Ω) (t : SAB H X) (m : SABMap t Y.t f) (Li : Type) (_ : AddCommGroup Li) (_ : Module Ω Li) (M : LieModel t.G ξ Li) (ρ : 𝓞 E →+* Module.End Ω Li) (Li₀ : Type) (_ : AddCommGroup Li₀) (_ : Module Ω₀ Li₀) (M₀ : LieModel Y.t.G ξ₀ Li₀) (j : Li₀ →+ Li) (V₀ : CMType H ⊕ CMType H → Submodule Ω₀ Li₀) (b : ∀ s, Fin (labelRk D s) → Li) (bd : Ideal (MRing J)), (∀ q : X, genPt ξ ⤳ q) ∧ CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) ∧ (∀ q : Cpt ξ, (∀ r : ℕ, r.Prime → ¬ InFibre ξ r q) → IsIntegrallyClosed (regAt ξ q)) ∧ GlobalTheory.CompanionTheory.Ar.Dominates ξ ξ₀ f (algebraMap Ω₀ Ω) ∧ ξ ≫ f ≫ Y.s = spMap (cst.comp (algebraMap (𝓞 c.F) c.F)) ∧ M.IsActOf t.act.act ρ ∧ (∀ e, (M.pt (j e)).left ≫ m.φ = spMap (dualMap (algebraMap Ω₀ Ω)) ≫ (M₀.pt e).left) ∧ (∀ s e, e ∈ V₀ s ↔ j e ∈ eigSp ρ (cst.comp (labelEmb c s))) ∧ IsGenericFlag (Ω' := Ω) j V₀ b 1 ∧ (∀ s, (M.eigLat ρ (cst.comp (labelEmb c s))).IsFlagVBOn {q | ∀ r : ℕ, r.Prime → ¬ InFibre ξ r q} (b s)) ∧ Cmp.IsSncModel y (Top.dimFl (CMType H) (D.p + D.q)) bd ∧ ∀ (z : Spec (CommRingCat.of ℂ) ⟶ X) w, CoordsAt ξ y z w → (w ∈ mcPts bd ↔ f (centre z) ∉ abLocus Y.t.G) := by
   classical
   intro E _ _ _ H D l Xo c Y Ω₀ _ _ ξ₀ K _ J _ y X ξ f cst t m Li _ _ M ρ L bd hgen hall htie hξ hcst hact hvb hLeq hsnc hbd
-  haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  have : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   obtain ⟨X', Ω', _, _, ξ', f', N, x', b₁, htie', hall', hdom, hsm, -, hgf, hfl⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.exists_flagBundle X Ω₀ ξ Li ((k : K) → J k) (fun c' => ∏ k, y ⟨k, c' k⟩) (CMType H ⊕ CMType H) (labelRk D)
       (fun s => eigSp ρ (cst.comp (labelEmb c s))) L htie hall hvb
-  haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω₀ Ω').injective
+  have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω₀ Ω').injective
   have hg : IsCptGen ξ := htie.gen
   have hg' : IsCptGen ξ' := htie'.gen
   obtain ⟨t', ⟨m₁⟩⟩ : ∃ t' : SAB H X', Nonempty (SABMap t' t f') := by

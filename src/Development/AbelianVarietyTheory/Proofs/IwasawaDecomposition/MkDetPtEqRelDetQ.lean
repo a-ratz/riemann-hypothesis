@@ -65,7 +65,7 @@ theorem ordSub_conj {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsLattice 
   have hfr (w : HeightOneSpectrum (𝓞 E)) : IsFr w N (latFr w N) := by
     first | exact isFr_latFr w ⟨hN, hu⟩ | exact isFr_latFr w hN
   have hfull : Submodule.IsFullLattice E N := by
-    letI : Submodule.IsLattice E N := hN
+    let : Submodule.IsLattice E N := hN
     refine ⟨?_⟩
     apply top_unique
     rw [← ((Pi.basisFun E (Fin n)).map (latFr P N)).span_eq]
@@ -90,7 +90,7 @@ theorem ordSub_conj {N : Submodule (𝓞 E) (Sp E n)} (hN : Submodule.IsLattice 
 
 theorem ordSub_std (w : HeightOneSpectrum (𝓞 E)) : ordSub w (detSub (stdLat E n)) = 0 := by
   have hfull : Submodule.IsFullLattice E (stdLat E n) := by
-    letI : Submodule.IsLattice E (stdLat E n) := stdLat_lattice
+    let : Submodule.IsLattice E (stdLat E n) := stdLat_lattice
     refine ⟨?_⟩
     apply top_unique
     rw [← ((Pi.basisFun E (Fin n)).map ((1 : Sp E n ≃ₗ[E] Sp E n))).span_eq]
@@ -117,7 +117,7 @@ theorem ordI_detIdl (SB : Finset (HeightOneSpectrum (𝓞 E))) {N : Submodule (�
     ordI w (detIdl SB N fr) =
       if w ∈ SB then ordSub w (detSub N) else if conjPrime₂ w ∈ SB then 0 else ((ordSub w (detSub N)).toNat : ℤ) := by
   have hfull : Submodule.IsFullLattice E N := by
-    letI : Submodule.IsLattice E N := hN
+    let : Submodule.IsLattice E N := hN
     refine ⟨?_⟩
     apply top_unique
     rw [← ((Pi.basisFun E (Fin n)).map (fr w)).span_eq]
@@ -180,12 +180,12 @@ theorem mk_detPt_eq_relDetQ : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R
     CharValCompare.conjP_conjP, ordSub_std, ordSub_std, ordSub_conj hN p.deco.2.uni]
   have hs := hL.split w
   by_cases h1 : w ∈ uSG SG SQ
-  · rw [if_pos h1, if_neg (hs h1), if_pos h1]
+  · rw [ite_eq_left h1, ite_eq_right (hs h1), ite_eq_left h1]
     omega
   · by_cases h2 : conjPrime₂ w ∈ uSG SG SQ
-    · rw [if_neg h1, if_pos h2, if_pos h2]
+    · rw [ite_eq_right h1, ite_eq_left h2, ite_eq_left h2]
       omega
-    · rw [if_neg h1, if_neg h2, if_neg h2, if_neg h1]
+    · rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h2, ite_eq_right h1]
       omega
 
 end GlobalTheory.Mem.Col2

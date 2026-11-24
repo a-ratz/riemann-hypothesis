@@ -298,7 +298,7 @@ theorem exists_central_scalar_ne_cell : ∀ (k : Type) [Field k] [ValuativeRel k
       by_cases hi : i = 0
       · subst hi; simpa using hu
       · rw [Pi.mulSingle_eq_of_ne hi]; exact one_mem _
-    haveI : Subsingleton (Jacquet (piTensor fun i => (σ i).π) (relUnip k f)) :=
+    have : Subsingleton (Jacquet (piTensor fun i => (σ i).π) (relUnip k f)) :=
       Submodule.Quotient.subsingleton_iff.2 hT
     apply Subtype.ext
     apply Subtype.ext
@@ -634,7 +634,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem isIrreducible_of_comp {G H V : Type} [Group G] [Group H] [AddCommGroup V] [Module ℂ V]
     {ρ : Representation ℂ H V} (φ : G →* H) (h : Representation.IsIrreducible (ρ.comp φ)) :
     ρ.IsIrreducible := by
-  haveI : Nontrivial V := Model.nontrivial_of_isIrreducible h
+  have : Nontrivial V := Model.nontrivial_of_isIrreducible h
   refine { exists_pair_ne := ⟨⊥, ⊤, fun e => ?_⟩, eq_bot_or_eq_top := fun S => ?_ }
   · obtain ⟨v, hv⟩ := exists_ne (0 : V)
     have h1 : v ∈ (⊤ : Subrepresentation ρ).toSubmodule := Submodule.mem_top

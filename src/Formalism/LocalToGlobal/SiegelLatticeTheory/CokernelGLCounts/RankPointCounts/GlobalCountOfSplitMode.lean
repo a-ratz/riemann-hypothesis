@@ -169,7 +169,7 @@ theorem locCntUL_of
       have hb : f₂' b ∈ MMo H ⟨⊥, f₂, f₂', t₁.T, t₁.T'⟩ :=
         Submodule.subset_span ⟨Sum.inr b, by simp only [HermSp.MMfam, hs, Sum.elim_inr]⟩
       exact hm _ hb _ ha
-    haveI hne : IsEmpty {ψ : M.Cok Y₁ ≃ₗ[M.R] M.Cok Y₂ //
+    have hne : IsEmpty {ψ : M.Cok Y₁ ≃ₗ[M.R] M.Cok Y₂ //
         ψ (Submodule.Quotient.mk be₁) = Submodule.Quotient.mk be₂ ∧
           ∀ v, M.linQ Y₂ al₂ (ψ v) = M.linQ Y₁ al₁ v} := by
       refine ⟨fun ψ => hint ?_⟩
@@ -244,7 +244,7 @@ theorem decompU (f f' : Fin (r + 1) → V) (T T' : F) (hF : Formalism.MainNotion
       h_omP_f H f f' hD]
     by_cases ha : a = Fin.last r
     · subst ha
-      simp only [and_self, if_true]
+      simp only [and_self, ite_true]
       ring
     · obtain ⟨a', rfl⟩ := Fin.exists_castSucc_eq.2 ha
       simp [ha, hX' a']
@@ -337,7 +337,7 @@ theorem relSub_eqU {r : ℕ} {t : Term V M r} (hg : GoodU H t) :
       (algebraMap F E t.T') := by
   ext y
   simp only [relSub, relC, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-    Set.mem_setOf_eq]
+    Set.mem_ofPred_eq]
   rw [← gramH_eqU H hg]
   rfl
 
@@ -757,7 +757,7 @@ theorem coordU_holds : CoordU := by
         simp }
   refine Nat.card_congr (Equiv.subtypeEquiv eqv ?_)
   intro θ
-  simp only [Theta, ThetaC, Set.mem_setOf_eq]
+  simp only [Theta, ThetaC, Set.mem_ofPred_eq]
   rw [isomD_iffU H hg₁ hg₂ θ]
   have key := image_prod_map_eq_iff_image_transport_eq (Gam H t₁) (Gam H t₂) (PsiU H hg₁) (PsiU H hg₁).symm
     (PsiU H hg₁).symm_apply_apply (PsiU H hg₂) (PsiU H hg₂).injective (PcU H hg₁) (PcU H hg₂) θ φ
@@ -1300,7 +1300,7 @@ theorem thetaP_mem (ht : cj (t : E) = t) (ht' : cj (t' : E) = t')
       (form_pair O cj hcj hO t t' ht ht' hu₁ hu₂ hκ₁ hκ₂ hG₁ hG₂ p Y W)
   · apply Set.Subset.antisymm
     · rintro _ ⟨_, ⟨Y, hY0, rfl⟩, rfl⟩
-      simp only [GamC, Set.mem_setOf_eq]
+      simp only [GamC, Set.mem_ofPred_eq]
       refine ⟨Sum.elim (Y (Sum.inl (Fin.last r)) • Pi.single (Fin.last r) 1)
         (liftOf O p.1.2.toLinearMap fun j => Y (Sum.inr j)), fun a => ?_, ?_⟩
       · simp [Pi.single_apply, Fin.castSucc_ne_last]
@@ -1318,7 +1318,7 @@ theorem thetaP_mem (ht : cj (t : E) = t) (ht' : cj (t' : E) = t')
             (liftOf O p.1.2.symm.toLinearMap fun j => Y₂ (Sum.inr j)) : Ix r → O) (Sum.inl (Fin.last r)) : O) : E),
           lamStarC cj (Z₁.map O.subtype) fun b => (((Sum.elim (Y₂ (Sum.inl (Fin.last r)) • Pi.single (Fin.last r) 1)
             (liftOf O p.1.2.symm.toLinearMap fun j => Y₂ (Sum.inr j)) : Ix r → O) (Sum.inr b) : O) : E)), ?_, ?_⟩
-      · simp only [GamC, Set.mem_setOf_eq]
+      · simp only [GamC, Set.mem_ofPred_eq]
         refine ⟨_, fun a => ?_, rfl⟩
         simp [Pi.single_apply, Fin.castSucc_ne_last]
       · have hY₂ : Y₂ = Sum.elim (Y₂ (Sum.inl (Fin.last r)) • Pi.single (Fin.last r) 1) (fun j => Y₂ (Sum.inr j)) := by
@@ -1334,7 +1334,7 @@ theorem thetaP_mem (ht : cj (t : E) = t) (ht' : cj (t' : E) = t')
         · exact (p.2.2.1 _ _ (hr _)).symm
   · apply Set.Subset.antisymm
     · rintro _ ⟨_, ⟨Y, hY0, rfl⟩, rfl⟩
-      simp only [GamC', Set.mem_setOf_eq]
+      simp only [GamC', Set.mem_ofPred_eq]
       refine ⟨Sum.elim (liftOf O p.1.1.toLinearMap fun j => Y (Sum.inl j))
         (Y (Sum.inr (Fin.last r)) • Pi.single (Fin.last r) 1), fun a => ?_, ?_⟩
       · simp [Pi.single_apply, Fin.castSucc_ne_last]
@@ -1353,7 +1353,7 @@ theorem thetaP_mem (ht : cj (t : E) = t) (ht' : cj (t' : E) = t')
           (((Sum.elim (liftOf O p.1.1.symm.toLinearMap fun j => Y₂ (Sum.inl j))
             (Y₂ (Sum.inr (Fin.last r)) • Pi.single (Fin.last r) 1) : Ix r → O) (Sum.inr (Fin.last r)) : O) : E)),
           ?_, ?_⟩
-      · simp only [GamC', Set.mem_setOf_eq]
+      · simp only [GamC', Set.mem_ofPred_eq]
         refine ⟨_, fun a => ?_, rfl⟩
         simp [Pi.single_apply, Fin.castSucc_ne_last]
       · have hY₂ : Y₂ = Sum.elim (fun j => Y₂ (Sum.inl j)) (Y₂ (Sum.inr (Fin.last r)) • Pi.single (Fin.last r) 1) := by

@@ -71,7 +71,7 @@ theorem twRes_ext : ∀ (q : ℕ) [NeZero q] (i : ℤ), IsTwRes q i (res _ (tw q
   intro q _ i
   obtain ⟨hKI, hInj, hGE, hQI, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)
   refine ⟨⟨hGE, resAug _, hQI, fun _ _ => rfl⟩, fun t => ?_, ?_⟩
-  · haveI := hInj t
+  · have := hInj t
     exact (GlobalTheory.T.flat_sections_of_injective_zmodEtaleSheaf q ((res _ (tw q i)).X t)).2
   intro T e ⟨_, ε, hε, he⟩
   have hext := GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective (ZMod q) (tw q i) T (res _ (tw q i)) ε

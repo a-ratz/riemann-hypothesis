@@ -301,7 +301,7 @@ open Classical in
 theorem NPDesc_of (c : LatCmp D) {L : SizeData₂ D} (hT : GatTies D) (X : Inst D L) (Y : LatInst D) (K : Consts)
     (hv : c.VramDef Y) (hy : YvRat c) : c.NPDesc X Y K := by
   intro u w hg _
-  haveI := LatCmp.frac_of_ties hT u w hg
+  have := LatCmp.frac_of_ties hT u w hg
   choose yL hyL using hy u w hg
   have hpow : ∀ (k : ℕ) (x : ((D.fm u).lat 0).V),
       c.cmp u w hg (((D.what₂.places.resChar w : D.what₂.LL) ^ k) • x) =

@@ -586,7 +586,7 @@ theorem fg_of_nsmul_le {P L : Submodule (𝓞 D.host.E) (VS D).V} (hL : L.FG) (N
   exact Submodule.fg_of_fg_map_injective f hf (h2 ▸ h1.map _)
 
 theorem base_isFullLattice (X : HidaSetting D) : Submodule.IsFullLattice D.host.E (VS D).L0 := by
-  letI := (VS D).standardTuple_isLattice
+  let := (VS D).standardTuple_isLattice
   refine ⟨?_⟩
   apply top_unique
   intro y _
@@ -627,7 +627,7 @@ theorem latOf_isLattice (h : Hfin X u) (Λ : Submodule (𝓞 D.host.E) (VS D).V)
   exact (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem latOf_isFullLattice (h : Hfin X u) (Λ : Submodule (𝓞 D.host.E) (VS D).V)
     (hΛ : (Λ : Set (VS D).V) = latOf X u h) : Submodule.IsFullLattice D.host.E Λ := by
-  letI := latOf_isLattice X u h Λ hΛ
+  let := latOf_isLattice X u h Λ hΛ
   obtain ⟨N, hN, hNL⟩ := PIW.AdelClassFin.DictGen.exists_denominator_fmat X.B.I PIW.AdelClassFin.lattice_denominator ((h : X.B.I.Gf) * X.xu u)
   have h2 : ∀ y ∈ (VS D).L0, N • y ∈ Λ := by
     intro y hy
@@ -965,7 +965,7 @@ theorem hT_hyp (α β α' β' : Fin D.R.rS → D.host.E) (p p' : (VS D).V)
   simp only [map_add (f := _), map_sum, LinearMap.add_apply, LinearMap.sum_apply, LinearMap.map_smulₛₗ,
   LinearMap.smul_apply, smul_eq_mul, hee, heg, hgg, hT_g_e hee hgg heg, (hp' _).1, (hp' _).2, hpe, hpg,
   mul_zero, Finset.sum_const_zero, add_zero, zero_add, mul_ite, mul_one,
-  Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, starRingEnd_apply]
+  Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, starRingEnd_apply]
   rw [Finset.sum_add_distrib]
   simp only [RingHom.id_apply]
   rw [add_comm (∑ x, α' x * star (β x))]
@@ -1324,7 +1324,7 @@ theorem lattice_surjective_of_orbit (hZ : LatDictZ.ZOrbit) : LatSurj X u := by
       have := H (δ.symm w') ((hmem2 _).2 (by rw [δ.apply_symm_apply]; exact hw'))
       rwa [← hδ.1 (δ.symm w') y, δ.apply_symm_apply] at this
   have hfull2 : Submodule.IsFullLattice D.host.E Λ2 := by
-    letI := hlat
+    let := hlat
     refine ⟨?_⟩
     apply top_unique
     intro y _
@@ -1343,9 +1343,9 @@ theorem lattice_surjective_of_orbit (hZ : LatDictZ.ZOrbit) : LatSurj X u := by
       | add a b _ _ ha hb => rw [map_add]; exact add_mem ha hb
       | smul c v _ hv => rw [map_smul]; exact Submodule.smul_mem _ _ hv
     simpa using key _ hy
-  haveI := base_isFullLattice X
+  have := base_isFullLattice X
   obtain ⟨c1, hc1, hc1m⟩ := uniform_mul (B := (VS D).L0) hlat.fg
-  haveI := hfull2
+  have := hfull2
   obtain ⟨c2, hc2, hc2m⟩ := uniform_mul (B := Λ2) (VS D).standardTuple_isLattice.fg
   let M : Submodule (𝓞 X.B.I.E) (Fin X.B.I.n → X.B.I.E) :=
     { carrier := {v | toV X v ∈ Λ2}

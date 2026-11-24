@@ -94,13 +94,13 @@ theorem trM_pt {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ} {l
 
 theorem cmbEll_of (hT : CmbTest) (hS : SeenFam) (hSl : PositionTest) (hL : LefL) (hF : FfAlg) : CmbEll := by
   intro E _ _ _ hU a b l₁ l₂ D A μ₁ μ₂ h₁ h₂
-  haveI := GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hU
-  haveI := A.ha
-  haveI := A.hb
-  haveI : BorelSpace (G a) := ⟨rfl⟩
-  haveI : BorelSpace (G b) := ⟨rfl⟩
-  haveI : BorelSpace (GA E a) := ⟨rfl⟩
-  haveI : BorelSpace (GA E b) := ⟨rfl⟩
+  have := GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hU
+  have := A.ha
+  have := A.hb
+  have : BorelSpace (G a) := ⟨rfl⟩
+  have : BorelSpace (G b) := ⟨rfl⟩
+  have : BorelSpace (GA E a) := ⟨rfl⟩
+  have : BorelSpace (GA E b) := ⟨rfl⟩
   obtain ⟨c, hc, h4⟩ := global_character_holds E hU a b μ₁ μ₂ A.μa A.μb
   by_cases hv : A.blk.vol = 0
   · exact ⟨1, one_ne_zero, fun S _ _ hS' => absurd hv (hF E a b l₁ l₂ D A S hS').1⟩
@@ -114,7 +114,7 @@ theorem cmbEll_of (hT : CmbTest) (hS : SeenFam) (hSl : PositionTest) (hL : LefL)
   obtain ⟨hln, -, hsl⟩ := hSl E a b S Z L hZ
   have h3 := G3.g3 E hU a b S hSec l₁ l₂ _ htest (by
     obtain ⟨w, hw, hw'⟩ := hreg
-    exact ⟨w, (hZ w hw).1, by rw [fam, if_pos hw]; exact hw'⟩)
+    exact ⟨w, (hZ w hw).1, by rw [fam, ite_eq_left hw]; exact hw'⟩)
   have one : ∀ j ∈ C.s, ellSum2 μ₁ μ₂ (trM (C.t j).Φ A.tw) =
       A.blk.vol⁻¹ * c * 2 ^ ((a + b) * Fintype.card (InfinitePlace E)) * (C.t j).val (chi l₁) (chi l₂) *
         geomSt2 S l₁ l₂ (fam Z T φ e₁ e₂ k) := fun j hj => by

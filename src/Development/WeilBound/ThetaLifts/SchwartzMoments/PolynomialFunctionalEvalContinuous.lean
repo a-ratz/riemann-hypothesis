@@ -226,7 +226,7 @@ theorem char_zero (h : NADual V χ μ) (y : V) : χ 0 y = 1 := by
 theorem char_locConst (h : NADual V χ μ) (y : V) : IsLocallyConstant (fun u => χ u y) := by
   have h0 := char_zero h
   obtain ⟨hTG, -, -, -, -, -, -, hcover, -, hsymm, -, hadd, hperp⟩ := h
-  haveI := hTG
+  have := hTG
   obtain ⟨L, hLc, hLo, hy⟩ := hcover y
   obtain ⟨-, hPo, -, -⟩ := hperp L hLc hLo
   have h0P : (0 : V) ∈ perp χ L := fun x _ => by rw [hsymm]; exact h0 x
@@ -245,7 +245,7 @@ theorem apply_eq_zero (h : NADual V χ μ) {T : (V → ℂ) → (V → ℂ)}
     {φ : V → ℂ} (hφ : SB φ) {x : V} (hx : φ x = 0) : T φ x = 0 := by
   have hcomm : ∀ y, Comm T (fun u => χ u y) := fun y => ⟨char_locConst h y, fun φ hφ => hchar y φ hφ⟩
   obtain ⟨hTG, -, -, -, -, -, hsmall, -, -, hsymm, hnorm, hχadd, hperp⟩ := h
-  haveI := hTG
+  have := hTG
   have hS : IsCompact (tsupport φ) := hφ.2
   have hxS : x ∉ tsupport φ := by
     rw [notMem_tsupport_iff_eventuallyEq]
@@ -271,7 +271,7 @@ theorem apply_eq_zero (h : NADual V χ μ) {T : (V → ℂ) → (V → ℂ)}
       have hsL : s - x ∉ (L : Set V) := by
         intro hmem
         have := hLU hmem
-        simp only [Set.mem_setOf_eq, Set.mem_compl_iff, add_sub_cancel] at this
+        simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, add_sub_cancel] at this
         exact this hs
       have hz : ∃ z ∈ perp χ L, χ z (s - x) ≠ 1 := by
         by_contra hcon
@@ -323,8 +323,8 @@ theorem schur_translations_characters (V : Type) [AddCommGroup V] [TopologicalSp
   have hloc := fun {φ : V → ℂ} (hφ : SB φ) {x : V} (hx : φ x = 0) =>
     apply_eq_zero h hadd hsmul hchar hφ hx
   obtain ⟨hTG, hT2, -, -, -, -, -, hcover, -⟩ := h
-  haveI := hTG
-  haveI := hT2
+  have := hTG
+  have := hT2
   obtain ⟨L, hLc, hLo, -⟩ := hcover 0
   classical
   set φ₀ : V → ℂ := (L : Set V).indicator (fun _ => 1) with hφ₀
@@ -390,7 +390,7 @@ def dop (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) : 𝓢(V, ℂ) :=
 theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
     dop a L f x = fderiv ℝ f x a + (-(2 * Real.pi * Complex.I) * (L x : ℂ)) * f x := by
   have hT := L.hasTemperateGrowth
-  simp only [dop, SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
+  simp only [dop, add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   simp only [Complex.real_smul, smul_eq_mul]
   ring
@@ -398,7 +398,7 @@ theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
 theorem dop_add (a b : V) (L M : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     dop (a + b) (L + M) f = dop a L f + dop b M f := by
   ext x
-  simp only [SchwartzMap.add_apply, dop_apply, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [add_apply, dop_apply, map_add (f := _), add_apply]
   push_cast
   ring
 
@@ -541,7 +541,7 @@ theorem aOf_add (M : Model σ X W) (u v : Matrix (Fin n) (Fin d) (AE F E)) :
 theorem lOf_add (M : Model σ X W) (u v : Matrix (Fin n) (Fin d) (AE F E)) :
     lOf M (u + v) = lOf M u + lOf M v := by
   ext y
-  simp only [lOf, ContinuousLinearMap.add_apply, linForm_apply, ← map_add (f := _), ← Finset.sum_add_distrib]
+  simp only [lOf, add_apply, linForm_apply, ← map_add (f := _), ← Finset.sum_add_distrib]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   simp [map_add (f := _), evI_add, mul_add]
@@ -712,7 +712,7 @@ theorem hl_line_deriv (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
   obtain ⟨g₀, -, hg₀⟩ := exists_dual_vector ℝ a hna
   set lam : V →L[ℝ] ℝ := ‖a‖⁻¹ • g₀ with hlam
   have hla : lam a = 1 := by
-    simp only [hlam, ContinuousLinearMap.smul_apply, hg₀, smul_eq_mul]
+    simp only [hlam, smul_apply, hg₀, smul_eq_mul]
     simpa using inv_mul_cancel₀ hna
   set q : V → ℝ := fun x => lam x * L x + (-(L a / 2)) * (lam x * lam x) with hq
   have hqt : q.HasTemperateGrowth :=
@@ -993,8 +993,8 @@ theorem psF_std {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) : IsStdChar F (psF ψ
 theorem exists_nadual {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (κ : Type) [Fintype κ] [DecidableEq κ] :
     ∃ (_ : MeasurableSpace (κ → Af F)) (μ : Measure (κ → Af F)),
       NADual (κ → Af F) (fun x y => psF ψ (x ⬝ᵥ y)) μ := by
-  letI : MeasurableSpace (A F) := borel _
-  haveI : BorelSpace (A F) := ⟨rfl⟩
+  let : MeasurableSpace (A F) := borel _
+  have : BorelSpace (A F) := ⟨rfl⟩
   obtain ⟨hlc, hsc, ht2, hc, ho, -⟩ := GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have hne : (interior (Oh F)).Nonempty := by
     rw [ho.interior_eq]

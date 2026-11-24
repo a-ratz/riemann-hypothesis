@@ -183,7 +183,7 @@ theorem isom_ext {ι : Type*} [Fintype ι] [DecidableEq ι] (u u' : ι → S.V) 
     ∃ g : S.V ≃ₗ[E] S.V, (∀ x y, S.hT (g x) (g y) = S.hT x y) ∧ (∀ i, g (u i) = u' i) ∧
       (∀ w, (∀ k, S.hT (u k) w = 0) → g w = w) ∧
       ∀ v, g v = v + ∑ k, S.hT (u k) v • ∑ m, (gram S u u)⁻¹ m k • (u' m - u m) := by
-  haveI := S.fd
+  have := S.fd
   have hinj : Function.Injective (isoG u u') := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro x hx

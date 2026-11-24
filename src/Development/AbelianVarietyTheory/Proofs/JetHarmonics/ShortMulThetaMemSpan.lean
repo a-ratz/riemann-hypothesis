@@ -191,15 +191,15 @@ theorem coeff_more_columns : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     intro h
     rw [h, Ideal.mul_bot, eq_comm, Ideal.span_singleton_eq_bot] at hIJ
     exact hpd.ne' (by exact_mod_cast hIJ)
-  haveI : Finite (𝓞 E ⧸ d.I.map (H.bar : 𝓞 E →+* 𝓞 E)) := Ideal.finiteQuotientOfFreeOfNeBot _ hJ0
-  haveI : Finite (𝓞 E ⧸ d.I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI0
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have : Finite (𝓞 E ⧸ d.I.map (H.bar : 𝓞 E →+* 𝓞 E)) := Ideal.finiteQuotientOfFreeOfNeBot _ hJ0
+  have : Finite (𝓞 E ⧸ d.I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI0
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨e⟩ := HalfPairing.nonempty_equiv_quot (N := Dw.La) (d.I.map (H.bar : 𝓞 E →+* 𝓞 E)) _ Dw.rank
   obtain ⟨e'⟩ := HalfPairing.nonempty_equiv_quot (N := Dw.La) d.I _ Dw.rank
-  haveI : Finite (LaJ Xo c d) := Finite.of_equiv _ e.toEquiv.symm
-  haveI : Finite (LaI Xo c d) := Finite.of_equiv _ e'.toEquiv.symm
-  haveI : Finite (LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d) :=
+  have : Finite (LaJ Xo c d) := Finite.of_equiv _ e.toEquiv.symm
+  have : Finite (LaI Xo c d) := Finite.of_equiv _ e'.toEquiv.symm
+  have : Finite (LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d) :=
     Finite.of_injective (fun k : LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d => (k : LaI Xo c d → LaI Xo c d))
       DFunLike.coe_injective
   have hcard : Nat.card (LaJ Xo c d) = Nat.card (LaI Xo c d) := by
@@ -255,7 +255,7 @@ theorem coeff_more_columns : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       IsPrimitiveRoot.of_map_of_injective (f := algebraMap d.c₂.F ℂ) h0 (algebraMap d.c₂.F ℂ).injective
     exact h3.pow h2 (Nat.div_mul_cancel h1).symm
   have hz0 : z ≠ 0 := hz.ne_zero hpd.ne'
-  haveI := Fintype.ofFinite (LaJ Xo c d)
+  have := Fintype.ofFinite (LaJ Xo c d)
   have h1 : d.eF (φ' q) = ∑ᶠ x : Fin (n + m) → LaJ Xo c d, d.eF (ph' x) *
       z ^ (∑ b, Dw.EF (qRep (x b)) (cHalf H d.I • levRep (q b))) := hφ' q
   apply d.eF.injective
@@ -525,7 +525,7 @@ theorem rowShift_rename_col (g : Fin n → Fin m) (σ : T) (i i' : Fin (r σ)) (
     obtain ⟨rfl, hb⟩ := hb
     simp only [heq_eq_eq, Prod.mk.injEq] at hb
     obtain ⟨rfl, rfl⟩ := hb
-    rw [if_pos ⟨g x, rfl⟩, if_pos ⟨x, rfl⟩]
+    rw [ite_eq_left ⟨g x, rfl⟩, ite_eq_left ⟨x, rfl⟩]
     simp [col]
   · have h' : ¬ ∃ b, (⟨τ, (j, g x)⟩ : Formalism.L2.Pj.Letter T r m) = ⟨σ, (i, b)⟩ := by
       rintro ⟨b, hb⟩
@@ -533,7 +533,7 @@ theorem rowShift_rename_col (g : Fin n → Fin m) (σ : T) (i i' : Fin (r σ)) (
       obtain ⟨rfl, hb⟩ := hb
       simp only [heq_eq_eq, Prod.mk.injEq] at hb
       exact h ⟨x, by rw [hb.1]⟩
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
     simp [col]
 
 variable {n₁ n₂ : ℕ}
@@ -671,7 +671,7 @@ theorem pairing_mul {σ₁ σ₂ σ S : Type} [CommRing S] [Algebra k S] (f₁ :
   · intro m₁ a
     refine MvPolynomial.induction_on' P₂ ?_ ?_
     · intro m₂ b
-      rw [rename_monomial, rename_monomial, monomial_mul, pairing_monomial, pairing_monomial,
+      rw [rename_monomial, rename_monomial, monomial_mul_monomial, pairing_monomial, pairing_monomial,
         pairing_monomial, hG, map_mul]
       ring
     · intro p q hp hq
@@ -978,7 +978,7 @@ theorem finsum_block {K S Q J J₁ J₂ : Type} [Field K] [CommRing S] [Algebra 
           ∑ i, A₁ (fun i => q (Fin.castAdd n₂ i)) (e i).1 * A₂ (fun j => q (Fin.natAdd n₁ j)) (e i).2 =
       (∑ᶠ q, algebraMap K S (w₁ q) * ∑ i, A₁ q i) * ∑ᶠ q, algebraMap K S (w₂ q) * ∑ i, A₂ q i := by
   classical
-  haveI : Fintype Q := Fintype.ofFinite Q
+  have : Fintype Q := Fintype.ofFinite Q
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
     Finset.sum_mul_sum, ← Fintype.sum_prod_type']
   let eq : (Fin (n₁ + n₂) → Q) ≃ (Fin n₁ → Q) × (Fin n₂ → Q) :=
@@ -1109,14 +1109,14 @@ private theorem exists_faithfullyFlat_refinement {S S₁ S₂ : Type} [CommRing 
   let ψ₁ : S₁ →ₐ[c.F] TensorProduct S S₁ S₂ :=
     { Algebra.TensorProduct.includeLeftRingHom with
       commutes' := fun r => by
-        simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe, MonoidHom.coe_coe,
+        simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe, MonoidHom.coe_ofClass,
           Algebra.TensorProduct.includeLeftRingHom_apply]
         rw [← φ₁.commutes r, hl]
         rfl }
   let ψ₂ : S₂ →ₐ[c.F] TensorProduct S S₁ S₂ :=
     { (Algebra.TensorProduct.includeRight : S₂ →ₐ[S] TensorProduct S S₁ S₂).toRingHom with
       commutes' := fun r => by
-        simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe, MonoidHom.coe_coe,
+        simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe, MonoidHom.coe_ofClass,
           AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.includeRight_apply]
         rw [← φ₂.commutes r, hr]
         rfl }
@@ -1410,7 +1410,7 @@ theorem pow_eq_one_of_inZh {m N : ℕ} {T : Over Xo.X} {z : Fin m → (T ⟶ Xo.
   have h := hz.2 1 (fun v hv => by rwa [Matrix.one_mulVec]) (fun i j => if i = j then (N : 𝓞 E) else 0)
     (fun i j => by by_cases e : i = j <;> simp [Matrix.one_apply, e]) b
   rw [List.prod_ofFn, Finset.prod_eq_single b (fun j _ hj => by
-    rw [if_neg hj.symm, ← Nat.cast_zero, comp_act_natCast, pow_zero]) (by simp), if_pos rfl, comp_act_natCast] at h
+    rw [ite_eq_right hj.symm, ← Nat.cast_zero, comp_act_natCast, pow_zero]) (by simp), ite_eq_left rfl, comp_act_natCast] at h
   exact h
 
 section Cover
@@ -1572,7 +1572,7 @@ theorem GlobalTheory.shortValAt_std_cover_eq_thValAt : Formalism.MainNotions.Mod
   have e₄ := GlobalTheory.thetaValue_natural hL hCI E H Dw l Xo c nab hn k Ω ψ y u hu a m x P hP v' w hv' hw
   apply ψ.toRingHom.injective
   change χ (φ₁ v) = ψ v'
-  rw [e₄, e₁, finsum_eq_single _ q₀ (fun q hq => by rw [if_neg hq, map_zero, zero_mul]), if_pos rfl, map_mul,
+  rw [e₄, e₁, finsum_eq_single _ q₀ (fun q hq => by rw [ite_eq_right hq, map_zero, zero_mul]), ite_eq_left rfl, map_mul,
     map_mul χ, e₂, χ.commutes, χ.commutes,
     Finset.sum_congr rfl fun i _ => e₃ (z i) (F q₀ i) (GlobalTheory.StdCover.pow_eq_one_of_inZh (hz i)) (hF q₀ i),
     Finset.sum_const, Finset.card_univ, Fintype.card_fin]
@@ -1615,9 +1615,9 @@ abbrev ConjQ (Dw : Datum H) (l : Level H) : Type := Dw.La ⧸ (Mfr l • ⊤ : S
 
 theorem card_quot (Dw : Datum H) {I : Ideal (𝓞 E)} (hI : I ≠ ⊥) :
     Nat.card (Dw.La ⧸ (I • ⊤ : Submodule (𝓞 E) Dw.La)) = Ideal.absNorm I ^ (Dw.p + Dw.q) := by
-  haveI := Dw.fin
-  haveI := Dw.proj
-  haveI : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
+  have := Dw.fin
+  have := Dw.proj
+  have : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
   rw [natCard_quot_smul_top_of_projective, Dw.rank, Ideal.absNorm_apply, Submodule.cardQuot_apply]
 
 theorem mb_ne_bot (l : Level H) : l.Mb ≠ ⊥ ∧ Mfr l ≠ ⊥ := by
@@ -1723,7 +1723,7 @@ theorem weighted_sum {K S ι Q : Type} [Field K] [CommRing S] [Algebra K S] [Fin
     (w : ι → Q → K) (w₀ : Q → K) (t : K) (hw : ∀ q, ∑ i, cf i * w i q = t * w₀ q) (A : S) (B : Q → S) :
     ∑ i, algebraMap K S (cf i) * (A * ∑ᶠ q, algebraMap K S (w i q) * B q) =
       algebraMap K S t * (A * ∑ᶠ q, algebraMap K S (w₀ q) * B q) := by
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   simp only [finsum_eq_sum_of_fintype, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun q _ => ?_
@@ -1740,7 +1740,7 @@ theorem shortVal_sum (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
     (y : FrPt Xo c S) (v : S) (u : ι → S) (hv : ShortValAt Xo c nab w₀ Λ β N P y v)
     (hu : ∀ i, ShortValAt Xo c nab (w i) Λ β N P y (u i)) :
     ∑ i, algebraMap c.F S (cf i) * u i = algebraMap c.F S t * v := by
-  haveI := ShortValue.finite_levelQuotient Dw l
+  have := ShortValue.finite_levelQuotient Dw l
   obtain ⟨S', _, _, φ, y', z, tp, F, h1, h2, h3, h4, h5, h6, h7⟩ := hv
   have hinj : Function.Injective φ := h1.injective
   apply hinj
@@ -1835,8 +1835,8 @@ theorem mul_mem_span (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
     (a a' : (E →+* ℂ) × ℕ → ℕ) (hT : ShortValTot Xo c nab bad nV (a + a') (n + m) (withCoeff d φ'))
     {g f : Rul Xo c} (hg : g ∈ shortGen Xo c nab bad nV a n d) (hf : f ∈ thGen Xo c nab a' m) :
     g * f ∈ Submodule.span (𝓞 c.F) (shortGen Xo c nab bad nV (a + a') (n + m) (withCoeff d φ')) := by
-  haveI := finite_conjQ Dw l
-  haveI := Fintype.ofFinite (ConjQ Dw l)
+  have := finite_conjQ Dw l
+  have := Fintype.ofFinite (ConjQ Dw l)
   have hLaws := GlobalTheory.abelianSchemeLaws_all.1
   have hM : 0 < l.M := by have := l.three_le; omega
   have hfs := GlobalTheory.thetaRule_mem_sec hLaws hC E H Dw l Xo c nab hn a' m f hf
@@ -1869,7 +1869,7 @@ theorem mul_mem_span (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
   have main : g * f = ∑ x', (ζ' * ζ⁻¹ * cf x') • F x' := by
     refine ClassSumUnique.sec_eq_of_geometric (sec_mul Xo c a a' n m hgs hfs)
       (Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (hFs i)) fun k _ _ _ y => ?_
-    letI iA : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+    let iA : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
     have hk : ∀ t : c.F, algebraMap d.c₂.F k (d.eF t) = algebraMap c.F k t := fun t => by
       show algebraMap c.F k (d.eF.symm (d.eF t)) = _
       rw [AlgEquiv.symm_apply_apply]
@@ -1972,7 +1972,7 @@ theorem short_mul_theta_mem_span : Formalism.MainNotions.ModuliIntegralCharts.H1
   rw [e] at h2 h3 ⊢
   rw [wtA_wadd] at h3 ⊢
   obtain ⟨ph', ψ', x₀', -, hp', ht'⟩ := h2
-  letI : Algebra (T.dδ j w.n).c₂.F k :=
+  let : Algebra (T.dδ j w.n).c₂.F k :=
     ((algebraMap T.Q.c.F k).comp ((T.dδ j w.n).eF.symm : (T.dδ j w.n).c₂.F →+* T.Q.c.F)).toAlgebra
   obtain ⟨y₂, -⟩ := hd.2.2.2.2.2.2.1 k (fun t => by
     show algebraMap T.Q.c.F k ((T.dδ j w.n).eF.symm ((T.dδ j w.n).eF t)) = _

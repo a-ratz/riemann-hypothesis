@@ -66,7 +66,7 @@ theorem sec_eq_zero_of_generic_values :
   have hfield : ∀ (L : Type) [Field L] [Algebra c.F L] (w : FrPt Xo c L), evR Xo c g w = 0 := by
     intro L _ _ w
     obtain ⟨C, ψ, z, t', hz, hb⟩ := hA L w
-    letI : Algebra c.F C.R := C.R.algebra
+    let : Algebra c.F C.R := C.R.algebra
     obtain ⟨q, χ, y₀, hy₀⟩ := hL.test C.R C.y
     have h1 : evR Xo c g C.yg = 0 := by
       rw [hL.wt a n g hg _ C.t _ _ (hL.test _ _) (hL.test _ _) C.bor]

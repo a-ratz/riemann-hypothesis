@@ -719,7 +719,7 @@ theorem ct_main (hI : IsSplit P I) (σ : E →+* ℂ) (q c : ℕ)
   set c0 : ℂ := -(2 * Real.pi * q : ℂ) * Complex.I with hc0
   set ℓL : Vsp X.dim →L[ℂ] ℂ := c0 • innerSL ℂ ua with hℓ
   have hℓv : ∀ v, ℓL v = c0 * Hf v ua := by
-    intro v; rw [hℓ, ContinuousLinearMap.smul_apply, innerSL_apply_apply, Col.Hf_eq_inner, smul_eq_mul]
+    intro v; rw [hℓ, smul_apply, innerSL_apply_apply, Col.Hf_eq_inner, smul_eq_mul]
   have hf1 : (fun v => cexp (c0 * Hf v ua) * Col.F0 I q βt v) =
       fun v => cexp (ℓL v) * Col.F0 I q βt v := by funext v; rw [hℓv]
   rw [hf1]
@@ -828,7 +828,7 @@ theorem ct_base_num (q c : ℕ) (hq : 1 ≤ q) {t0 : ℝ}
   have key : Real.log (6.5 * Real.exp 1.07 * Real.sqrt (q * (c + 1))) ≤
       0.56 * (7 + Real.log (q * c)) := by
     rw [hlogB]; linarith
-  rw [← Real.exp_log hB, ← Real.exp_nat_mul]
+  rw [← Real.exp_log hB, ← exp_natCast_mul]
   apply Real.exp_le_exp.mpr
   have := mul_le_mul_of_nonneg_left key hc0
   linarith
@@ -852,8 +852,8 @@ theorem ct_B_num (gA gB dK dst : ℕ) {t0 Bsq : ℝ} (hBsq0 : 0 ≤ Bsq) (hBsq :
       linarith
     have hg0 : (0 : ℝ) ≤ gA := Nat.cast_nonneg gA
     have hm := mul_le_mul_of_nonneg_left hl hg0
-    rw [← Real.exp_log (show (0 : ℝ) < 2.263 by norm_num), ← Real.exp_nat_mul,
-      ← Real.exp_log (show (0 : ℝ) < 2 by norm_num), ← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_log (show (0 : ℝ) < 2.263 by norm_num), ← exp_natCast_mul,
+      ← Real.exp_log (show (0 : ℝ) < 2 by norm_num), ← exp_natCast_mul, ← Real.exp_add]
     apply Real.exp_le_exp.mpr
     linarith
   have h4 : (3 : ℝ) ^ dK ≤ 4.3 ^ dst :=
@@ -878,7 +878,7 @@ theorem jet_product_le (q c dK gA dst : ℕ) (hq : 1 ≤ q) {n U t0 Bsq : ℝ} (
       (6.5 * Real.exp 1.07 * Real.sqrt (q * (c + 1))) ^ c * Real.exp (-(1.07 * c)) * n ^ c := by
     have e : (6.5 * Real.exp 1.07 * Real.sqrt (q * (c + 1))) ^ c * Real.exp (-(1.07 * c)) =
         (6.5 * Real.sqrt (q * (c + 1))) ^ c := by
-      rw [mul_comm (6.5 : ℝ) (Real.exp 1.07), mul_assoc, mul_pow, ← Real.exp_nat_mul, mul_comm,
+      rw [mul_comm (6.5 : ℝ) (Real.exp 1.07), mul_assoc, mul_pow, ← exp_natCast_mul, mul_comm,
         ← mul_assoc, ← Real.exp_add]
       ring_nf
       simp
@@ -1215,7 +1215,7 @@ theorem ct_core (hP : Ext.PackingCount) (hGT : Ext.GaussianTailBound) (hA : Prop
       unfold ctS
       rw [l2_smul X q, l2_U_eq_l2 hcol]
     have hCn : ‖(ctC I q a)⁻¹‖ ^ 2 = Real.exp (2 * Real.pi * ‖u‖ ^ 2 / q) := by
-      rw [norm_inv, ct_norm_C hI, Real.exp_neg, inv_inv, ← Real.exp_nat_mul]
+      rw [norm_inv, ct_norm_C hI, Real.exp_neg, inv_inv, ← Real.exp_natCast_mul]
       congr 1
       have hua : Col.uc (IR I) a = (1 / (q : ℝ)) • u := by rw [ha, ct_uc_A, hu']
       rw [hua, norm_smul, Real.norm_eq_abs, abs_of_pos (by positivity)]
@@ -1258,8 +1258,8 @@ theorem epsilon_le_half {E : Type} [Field E] [NumberField E] {X : PT E} {DF : �
   have hrest : 0 ≤ ((DF : ℝ) + 1) * (X.r * Real.log X.r + 3 * X.r + 3) :=
     mul_nonneg (by positivity) (by linarith)
   have e1 := Real.exp_one_gt_d9
-  have e2 : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
-  have e3 : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_nat_mul]; norm_num
+  have e2 : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_natCast_mul]; norm_num
+  have e3 : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_natCast_mul]; norm_num
   have p2 : (2.7:ℝ) ^ 2 ≤ Real.exp 1 ^ 2 := by gcongr; linarith
   have p3 : (2.7:ℝ) ^ 3 ≤ Real.exp 1 ^ 3 := by gcongr; linarith
   have hl43 : Real.log 4.3 ≤ 2 := by
@@ -1275,7 +1275,7 @@ theorem epsilon_le_half {E : Type} [Field E] [NumberField E] {X : PT E} {DF : �
     linarith
   have key : (7:ℝ) * 2 ^ X.gA * (4.3:ℝ) ^ dstar (E := E) P.m =
       Real.exp (Real.log 7 + X.gA * Real.log 2 + dstar (E := E) P.m * Real.log 4.3) := by
-    rw [Real.exp_add, Real.exp_add, Real.exp_log (by norm_num), Real.exp_nat_mul, Real.exp_nat_mul,
+    rw [Real.exp_add, Real.exp_add, Real.exp_log (by norm_num), Real.exp_natCast_mul, Real.exp_natCast_mul,
       Real.exp_log (by norm_num), Real.exp_log (by norm_num)]
   unfold Par.eps1
   rw [key, ← Real.exp_add]

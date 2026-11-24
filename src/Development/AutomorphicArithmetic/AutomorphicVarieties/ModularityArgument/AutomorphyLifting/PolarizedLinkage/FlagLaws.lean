@@ -207,7 +207,7 @@ private theorem pow_down {r : G K Ω →* GL (Fin n) (Qbar l)} {A B : ValuationS
 private theorem exists_exp (K L Ω : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Field Ω] [Algebra K Ω]
     [Algebra K L] [Algebra L Ω] [IsScalarTower K L Ω] :
     ∃ N : ℕ, 1 ≤ N ∧ ∀ s : G K Ω, ∃ u : G L Ω, rs K L Ω u = s ^ N := by
-  haveI : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  have : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
   let R : Subgroup (G K Ω) := (rs K L Ω).range
   let e : G K Ω → (L →ₐ[K] Ω) := fun σ => (σ : Ω →ₐ[K] Ω).comp (IsScalarTower.toAlgHom K L Ω)
   have hinj : Function.Injective fun q : G K Ω ⧸ R => e q.out := by
@@ -219,8 +219,8 @@ private theorem exists_exp (K L Ω : Type) [Field K] [NumberField K] [Field L] [
       rw [AlgEquiv.mul_apply, ← e1]
       exact q.out.symm_apply_apply _
     exact ⟨{ (q.out⁻¹ * q'.out).toRingEquiv with commutes' := hfix }, by ext x; rfl⟩
-  haveI : Finite (G K Ω ⧸ R) := Finite.of_injective _ hinj
-  haveI : R.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (G K Ω ⧸ R) := Finite.of_injective _ hinj
+  have : R.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   refine ⟨R.normalCore.index, Nat.one_le_iff_ne_zero.2 Subgroup.FiniteIndex.index_ne_zero, fun s => ?_⟩
   exact Subgroup.normalCore_le R (R.normalCore.pow_index_mem s)
 
@@ -245,7 +245,7 @@ private theorem charpoly_conj' {k : Type} [Field k] {n : ℕ} (y x : GL (Fin n) 
 
 private theorem charpoly_scale {k : Type} [Field k] [CharZero k] {n : ℕ} (M : Matrix (Fin n) (Fin n) k) {c : k} (hc : c ≠ 0)
     (a : Fin n → k) (h : M.charpoly = ∏ i, (X - C (a i))) : (c • M).charpoly = ∏ i, (X - C (c * a i)) := by
-  haveI : Infinite k := Infinite.of_injective (Nat.cast : ℕ → k) Nat.cast_injective
+  have : Infinite k := Infinite.of_injective (Nat.cast : ℕ → k) Nat.cast_injective
   refine Polynomial.funext fun x => ?_
   obtain ⟨y, rfl⟩ : ∃ y, x = c * y := ⟨c⁻¹ * x, by rw [← mul_assoc, mul_inv_cancel₀ hc, one_mul]⟩
   have e1 : eval (c * y) (c • M).charpoly = c ^ n * eval y M.charpoly := by
@@ -294,7 +294,7 @@ private theorem ineAb_tw {r : G K Ω →* GL (Fin n) (Qbar l)} {μ : G K Ω →*
   intro v hv A hA
   obtain ⟨κ, hc, hp⟩ := H v hv A hA
   refine ⟨fun i => κ i * μ.comp (Dec (F := K) A).subtype,
-    fun i => (hc i).mul (hμ.comp continuous_subtype_val), fun g hg => ?_⟩
+    fun i => (hc i).mul (hμ.comp continuous_subtypeVal), fun g hg => ?_⟩
   rw [tw_val, charpoly_scale _ (Units.ne_zero _) _ (hp g hg)]
   refine Finset.prod_congr rfl fun i _ => ?_
   simp [mul_comm]
@@ -358,13 +358,13 @@ private theorem ineAb_level [IsAlgClosure K Ω] {r : G K Ω →* GL (Fin n) (Qba
   obtain ⟨A₀, hA₀, χ, h1, g, hg⟩ := H.away v hv
   obtain ⟨γ, hγ⟩ := exists_smul_eq_of_isPlaceOver hA₀ hA
   refine ⟨fun i => (χ i).comp (Dec (F := K) A).subtype,
-    fun i => (cont_kills hM (h1 i)).comp continuous_subtype_val, fun s hs => ?_⟩
+    fun i => (cont_kills hM (h1 i)).comp continuous_subtypeVal, fun s hs => ?_⟩
   have ht : γ⁻¹ * (s : G K Ω) * γ ∈ Ine (F := K) A₀ :=
     (UpperTheory.V.Two.ineConj K Ω γ).1 A₀ s (hγ.symm ▸ hs)
   have e1 : (r s : Matrix (Fin n) (Fin n) (Qbar l)).charpoly =
       ((g * r (γ⁻¹ * (s : G K Ω) * γ) * g⁻¹ : GL (Fin n) (Qbar l)) : Matrix (Fin n) (Fin n) (Qbar l)).charpoly := by
     rw [charpoly_conj', conj_eq r γ s, charpoly_conj']
-  rw [e1, hg _ ht, Matrix.charpoly_of_upperTriangular _ (fun i j hij => Matrix.diagonal_apply_ne _ (by rintro rfl; exact lt_irrefl _ hij))]
+  rw [e1, hg _ ht, Matrix.charpoly_of_isUpperTriangular _ (fun i j hij => Matrix.diagonal_apply_ne _ (by rintro rfl; exact lt_irrefl _ hij))]
   refine Finset.prod_congr rfl fun i _ => ?_
   have e2 : χ i (γ⁻¹ * (s : G K Ω) * γ) = χ i s := by
     rw [map_mul, map_mul, map_inv, mul_comm (χ i γ)⁻¹, mul_assoc, mul_comm _ (χ i γ)]
@@ -383,7 +383,7 @@ private theorem mem_under {w : HeightOneSpectrum (𝓞 L)} (h : ((l : ℕ) : �
     ((l : ℕ) : 𝓞 K) ∈ (w.under (𝓞 K)).asIdeal := Ideal.mem_comap.2 (by simpa using h)
 
 private theorem continuous_resD (A : ValuationSubring Ω) : Continuous (resD K L A) :=
-  Continuous.subtype_mk ((continuous_restrictScalarsHom K L Ω).comp continuous_subtype_val) _
+  Continuous.subtype_mk ((continuous_restrictScalarsHom K L Ω).comp continuous_subtypeVal) _
 
 private theorem flag_resD {r : G K Ω →* GL (Fin n) (Qbar l)} {A : ValuationSubring Ω}
     {κ : Fin n → ↥(Dec (F := K) A) →* (Qbar l)ˣ} (hκ : IsFlagOn r (Dec (F := K) A) κ) :
@@ -413,7 +413,7 @@ private theorem pot_up {r : G K Ω →* GL (Fin n) (Qbar l)} {w : HeightOneSpect
 private theorem pot_down [IsAlgClosure K Ω] {r : G K Ω →* GL (Fin n) (Qbar l)} {w : HeightOneSpectrum (𝓞 L)}
     (hw : ((l : ℕ) : 𝓞 L) ∈ w.asIdeal) (hF : Flagged r) (H : PotUnl (r.comp (rs K L Ω)) w) : PotUnl r (w.under (𝓞 K)) := by
   intro A hA
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) L⟩
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) L⟩
   obtain ⟨B, hB⟩ := exists_isPlaceOver Ω w
   obtain ⟨γ, hγ⟩ := exists_smul_eq_of_isPlaceOver hA (isPlaceOver_under' (K := K) hB)
   obtain ⟨κ, hκ⟩ := hF _ (mem_under hw) A hA
@@ -423,7 +423,7 @@ private theorem pot_down [IsAlgClosure K Ω] {r : G K Ω →* GL (Fin n) (Qbar l
 private theorem unl_down [IsAlgClosure K Ω] {r : G K Ω →* GL (Fin n) (Qbar l)} {w : HeightOneSpectrum (𝓞 L)}
     (hw : ((l : ℕ) : 𝓞 L) ∈ w.asIdeal) (hF : Flagged r) (H : Unl1 (r.comp (rs K L Ω)) w) : Unl1 r (w.under (𝓞 K)) := by
   intro A hA
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) L⟩
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) L⟩
   obtain ⟨B, hB⟩ := exists_isPlaceOver Ω w
   obtain ⟨γ, hγ⟩ := exists_smul_eq_of_isPlaceOver hA (isPlaceOver_under' (K := K) hB)
   obtain ⟨κ, hκ⟩ := hF _ (mem_under hw) A hA

@@ -102,9 +102,9 @@ theorem densCos_of_filt (hP1 : HenselCount) (hP2 : CosDens) {V X Y : Type} [AddC
   have hΦm : Measurable (fun Z : V => G (y + Z)) := hΦ.measurable
   have hΛ0m : MeasurableSet (Λ 0 : Set V) := (hΛo 0).measurableSet
   set m : Measure X := (μ.restrict (Λ 0 : Set V)).map (fun Z : V => G (y + Z)) with hm
-  haveI : IsFiniteMeasure (μ.restrict (Λ 0 : Set V)) :=
+  have : IsFiniteMeasure (μ.restrict (Λ 0 : Set V)) :=
     isFiniteMeasure_restrict.mpr (hΛc 0).measure_lt_top.ne
-  haveI : IsFiniteMeasure m := by rw [hm]; infer_instance
+  have : IsFiniteMeasure m := by rw [hm]; infer_instance
   have hmT : ∀ T : Set X, MeasurableSet T → m T = μ {Z | Z ∈ Λ 0 ∧ G (y + Z) ∈ T} := by
     intro T hT
     rw [hm, Measure.map_apply hΦm hT, Measure.restrict_apply' hΛ0m]
@@ -151,7 +151,7 @@ theorem densCos_of_filt (hP1 : HenselCount) (hP2 : CosDens) {V X Y : Type} [AddC
   refine ⟨C.indicator (fun _ => κ.toReal), ?_, ?_⟩
   · refine continuous_indicator ?_ continuousOn_const
     intro a ha
-    rw [hCc.frontier_eq, hCo.interior_eq, Set.diff_self] at ha
+    rw [hCc.frontier_eq, hCo.interior_eq, Set.sdiff_self] at ha
     simp at ha
   · intro S hS
     have hSm : MeasurableSet S := hS.isClosed.measurableSet
@@ -247,14 +247,14 @@ theorem measure_thick_eq (m1 m2 : Measure X) (Λ : AddSubgroup X) (hΛ : IsOpen 
       · obtain ⟨s, hs, hss⟩ := hex
         have hsub : {z : X | z - s0 ∈ Λ} ⊆ ⋃ s ∈ t, {z | z - s ∈ Λ} := by
           intro z hz
-          simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+          simp only [Set.mem_iUnion, mem_ofPred_eq]
           exact ⟨s, hs, by simpa [sub_add_sub_cancel] using Λ.add_mem hz hss⟩
         rw [Set.union_eq_right.2 hsub, ih]
       · push_neg at hex
         have hdisj : Disjoint {z : X | z - s0 ∈ Λ} (⋃ s ∈ t, {z | z - s ∈ Λ}) := by
           rw [Set.disjoint_left]
           intro z hz hz'
-          simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hz'
+          simp only [Set.mem_iUnion, mem_ofPred_eq] at hz'
           obtain ⟨s, hs, hzs⟩ := hz'
           apply hex s hs
           simpa [sub_sub_sub_cancel_left] using Λ.sub_mem hzs hz
@@ -265,7 +265,7 @@ theorem measure_thick_eq (m1 m2 : Measure X) (Λ : AddSubgroup X) (hΛ : IsOpen 
     (fun x _ => (hC x).mem_nhds (by simp [Λ.zero_mem]))
   have heq : thick S Λ = ⋃ s ∈ t, {z : X | z - s ∈ Λ} := by
     ext x
-    simp only [thick, Set.mem_setOf_eq, Set.mem_iUnion]
+    simp only [thick, mem_ofPred_eq, Set.mem_iUnion]
     constructor
     · rintro ⟨s, hs, hxs⟩
       obtain ⟨u, hu, hsu⟩ := Set.mem_iUnion₂.1 (hcov hs)
@@ -280,7 +280,7 @@ omit [MeasurableSpace X] [OpensMeasurableSpace X] in
 theorem iInter_thick (S : Set X) (hSc : IsClosed S) (Λ : ℕ → AddSubgroup X)
     (hb : ∀ N ∈ 𝓝 (0 : X), ∃ n, (Λ n : Set X) ⊆ N) : ⋂ n, thick S (Λ n) = S := by
   ext x
-  simp only [Set.mem_iInter, thick, Set.mem_setOf_eq]
+  simp only [Set.mem_iInter, thick, mem_ofPred_eq]
   constructor
   · intro hx
     by_contra hxS
@@ -328,9 +328,9 @@ theorem cosDens_holds : CosDens := by
     simpa [sub_sub_sub_cancel_left] using (H 0).sub_mem hz0 hz'
   have key := measure_eq_of_cos m (κ • ν.restrict {z : X | z - c0 ∈ H 0}) H hHo hanti hb ?_
     S hS hS.isClosed
-  · rw [key, Measure.smul_apply, Measure.restrict_apply' hC0, smul_eq_mul]
+  · rw [key, smul_apply, Measure.restrict_apply' hC0, smul_eq_mul]
   · intro n y
-    rw [Measure.smul_apply, Measure.restrict_apply' hC0, smul_eq_mul]
+    rw [smul_apply, Measure.restrict_apply' hC0, smul_eq_mul]
     by_cases hy : y - c0 ∈ H 0
     · have hsub : {z : X | z - y ∈ H n} ⊆ {z : X | z - c0 ∈ H 0} := by
         intro z hz
@@ -340,7 +340,7 @@ theorem cosDens_holds : CosDens := by
       exact hcos n y hy
     · have hdisj : {z : X | z - y ∈ H n} ∩ {z : X | z - c0 ∈ H 0} = ∅ := by
         ext z
-        simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false,
+        simp only [Set.mem_inter_iff, mem_ofPred_eq, Set.mem_empty_iff_false, iff_false,
           not_and]
         exact hback n y z hy
       rw [hdisj, measure_empty, mul_zero]
@@ -389,7 +389,7 @@ theorem densAll_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
   have : LocallyCompactSpace (HermR (Fv F v) σ a) :=
     t4.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have hNA : HasCOSub (Fin a → Fin n → Fv F v ⊗[F] E) := by
     obtain ⟨π, h0, hπ⟩ := exists_pow_tendsto_zero_Fv v
     exact hasCOSub_of_lat (latSub (Module.finBasis F E) v a n)

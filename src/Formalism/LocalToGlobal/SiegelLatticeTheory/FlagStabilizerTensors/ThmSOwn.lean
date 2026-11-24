@@ -165,7 +165,7 @@ theorem conjE_id (I : SIso s s') (u : Word) :
 
 theorem hsNormSq_conjE (I : SIso s s') (u u' : Word) (A : s.Cu u' →L[ℂ] s.Cu u) :
     hsNormSq (conjE I u u' A) = hsNormSq A := by
-  have := FiniteDimensional.complete ℂ (s'.Cu u)
+  have := FiniteDimensional.completeSpace ℂ (s'.Cu u)
   exact Formalism.L2.SG.Pf.hsNormSq_of_iso A (conjE I u u' A) (I.eCu u') (I.eCu u) (fun y => (I.eCu u).norm_map y)
     (conjE_apply I u u' A)
 
@@ -207,7 +207,7 @@ theorem kof_sOf (hA : (Y.tO u u').AbsConv) (S : Set (TT Y u u')) (Φ' : Set (RT 
   have h3 : HasSum (fun t : RT Y u u' => Φ'.indicator (aR hF u u') t)
       (tr (hF.shBij u) (hF.shBij u') (∑' s, S.indicator (aM Y u u') s)) := by
     refine h2.sigma fun t => ?_
-    letI : Fintype {x : TT Y u u' // x.toTerm = t} := hF.fibFT t
+    let : Fintype {x : TT Y u u' // x.toTerm = t} := hF.fibFT t
     by_cases ht : t ∈ Φ'
     · rw [Set.indicator_of_mem ht]
       have hc : ∀ c : {x : TT Y u u' // x.toTerm = t}, (f ∘ e) ⟨t, c⟩ = aT hF u u' c.1 := fun c => by
@@ -248,7 +248,7 @@ include hF in
 theorem hsNormSq_tr [FiniteDimensional ℂ (ColT (hF.shInj u'))] (A : CM (Y.cs u') →L[ℂ] CM (Y.cs u)) :
     hsNormSq (tr (hF.shBij u) (hF.shBij u') A) = ‖Formalism.L2.SG.PackageTie.hsEmb A‖ ^ 2 := by
   have := finiteDimensional_colT (hF.shBij u)
-  have := FiniteDimensional.complete ℂ (ColT (hF.shInj u))
+  have := FiniteDimensional.completeSpace ℂ (ColT (hF.shInj u))
   rw [Formalism.L2.SG.PackageTie.norm_hsEmb_sq]
   exact (Formalism.L2.SG.Pf.hsNormSq_of_semi (tr (hF.shBij u) (hF.shBij u') A) A (Formalism.L2.SG.Pf.shTAdd (hF.shInj u'))
     (fun c x => shT_smul _ c x) (fun x y => (inner_colT _ y x).symm) (hF.shBij u').2
@@ -324,7 +324,7 @@ include hI in
 theorem kpp_zero {u u' : D.what₂.Word} (hZ : Formalism.L2.SG.RowsOther.KppTermZero (Y.tO u u')) : AdmissibleBoundsFromSource.Kpp D u u' = 0 := by
   have h0 : ∀ t ∈ PhiC (hF := hF) u u', aR hF u u' t = 0 := by
     intro t ht
-    letI := hF.fibFT t
+    let := hF.fibFT t
     unfold aR
     refine Finset.sum_eq_zero fun c _ => ?_
     have hm : c.1 ∈ (Y.tO u u').degSet := (mem_degSet_iff c.1).2 (c.2 ▸ ht)
@@ -743,7 +743,7 @@ theorem splitsCompl_of_equiv {E E' : Type} [Field E] [NumberField E] [Field E'] 
     {p : ℕ} (h : Formalism.MainNotions.S.SplitsCompl E' p) : Formalism.MainNotions.S.SplitsCompl E p := by
   intro P hP hpP
   let ψ : 𝓞 E ≃+* 𝓞 E' := RingOfIntegers.mapRingEquiv φ
-  have hP' : (P.map ψ).IsMaximal := by haveI := hP; exact Ideal.map_isMaximal_of_equiv ψ
+  have hP' : (P.map ψ).IsMaximal := by have := hP; exact Ideal.map_isMaximal_of_equiv ψ
   have hp' : (p : 𝓞 E') ∈ P.map ψ := by
     have := Ideal.mem_map_of_mem ψ hpP
     rwa [map_natCast] at this

@@ -127,14 +127,14 @@ theorem UpperTheory.HF.frob_h_order :
       2 ^ (φ.e + 2) ≤ (p + 1) * orderOf (φ.hH (H.frobG p).2) ∧
       (φ.hH (H.frobG p).2 = 1 ↔ ((p : ZMod (2 ^ (φ.e + 2))) = 1 ∨ (p : ZMod (2 ^ (φ.e + 2))) = -1)) := by
   intro φ H p hp hpN
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨-, -, -, -, -, v, hv, hx⟩ := frobG_spec φ H p hpN
   rw [hx]
   set x := hcl φ.e v with hxdef
   have hp2 : p ≠ 2 := by
     rintro rfl
     exact hpN (HostRaw.two_dvd_condN _)
-  have hodd : Odd (p : ℤ) := (Int.odd_coe_nat p).2 (hp.odd_of_ne_two hp2)
+  have hodd : Odd (p : ℤ) := (Int.odd_natCast p).2 (hp.odd_of_ne_two hp2)
   have key : ∀ k : ℕ, x ^ k = 1 ↔
       ((2:ℤ) ^ (φ.e + 2) ∣ (p : ℤ) ^ k - 1 ∨ (2:ℤ) ^ (φ.e + 2) ∣ (p : ℤ) ^ k + 1) := by
     intro k
@@ -166,7 +166,7 @@ theorem UpperTheory.HF.frob_h_order :
         Nat.pow_le_pow_iff_right (by norm_num)]
     · have h0 : φ.e + 2 - j = 0 := by omega
       rw [h0, hord]
-      haveI : Subsingleton (ZMod (2 ^ 0)) := ZMod.subsingleton_iff.2 (by norm_num)
+      have : Subsingleton (ZMod (2 ^ 0)) := ZMod.subsingleton_iff.2 (by norm_num)
       constructor
       · intro _
         exact Or.inl (Subsingleton.elim _ _)
@@ -216,8 +216,8 @@ theorem UpperTheory.two_pow_dvd_sub_or_add_one_of_odd_addOrderOf_hP :
   intro D p hp hc ho
   have hcl : primeClass D.host.toHostRaw p = PrimeClass.inertClass := hc
   obtain ⟨hN, -, -⟩ := (primeClass_eq_inert_iff_symbols hp).1 hcl
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : (Ideal.span {(p : ℤ)}).IsPrime :=
+  have : Fact p.Prime := ⟨hp⟩
+  have : (Ideal.span {(p : ℤ)}).IsPrime :=
     (Ideal.span_singleton_prime (by exact_mod_cast hp.ne_zero)).2 (Nat.prime_iff_prime_int.1 hp)
   obtain ⟨⟨P, hP1, hP2⟩⟩ := (Ideal.span {(p : ℤ)}).nonempty_primesOver (S := 𝓞 D.host.E)
   obtain ⟨σ, hσ⟩ : ∃ σ, D.host.galE σ = D.host.toHostAx.frobG p :=

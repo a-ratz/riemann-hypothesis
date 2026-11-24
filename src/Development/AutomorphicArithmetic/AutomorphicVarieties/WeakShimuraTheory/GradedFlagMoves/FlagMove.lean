@@ -67,7 +67,7 @@ private theorem up_mul {k : Type} [Field k] {A B : M4 k} (hA : IsUp A) (hB : IsU
 
 private theorem up_inv {k : Type} [Field k] {A B : M4 k} (hA : IsUp A) (h : A * B = 1) : IsUp B := by
   have hA' : Matrix.BlockTriangular A id := fun i j hij => hA i j hij
-  haveI : Invertible A := invertibleOfRightInverse A B h
+  have : Invertible A := invertibleOfRightInverse A B h
   have h1 := Matrix.blockTriangular_inv_of_blockTriangular hA'
   rw [Matrix.inv_eq_right_inv h] at h1
   exact fun i j hij => h1 hij

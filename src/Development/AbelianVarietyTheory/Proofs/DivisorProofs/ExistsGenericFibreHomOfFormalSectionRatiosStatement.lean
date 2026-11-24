@@ -449,8 +449,8 @@ theorem exists_monHom_extension_of_field : ∀ (K : Type) [Field K] (H G V : Ove
   let g : V ⊗ V ⟶ G := (fst V V ≫ f) * (snd V V ≫ f)
   have hPg : (Over.pullback (bc K)).map g = (Over.pullback (bc K)).map m ≫ Fb := by
     simp only [m, g, map_mul', Functor.map_comp, MonObj.mul_comp, Category.assoc, hjF]
-  haveI := hj
-  haveI := hV
+  have := hj
+  have := hV
   obtain ⟨_, hs, _, _, _⟩ := id hH
   have : IsLocallyNoetherian H.left := LocallyOfFiniteType.isLocallyNoetherian H.hom
   have hflat : Flat m.left := flat_mul H V j
@@ -647,7 +647,7 @@ theorem ratMap_key {A X Z : Scheme.{0}} {L : LB X} (hL : L.IsLB) (π : A ⟶ X) 
 
 theorem exists_morphism_of_secRatio : ∀ (K : Type) [Field K] (A : Over (Sp K)) [IsIntegral A.left] (X : Scheme.{0}) (L : LB X), L.IsLB → ∀ (π : A.left ⟶ X) (k k' m : ℕ) (σ : Fin (m + 1) → H0 L k), VeryAmpleAlong A.hom π L σ → ∀ (s₀ : H0 L k) (t₀ : H0 L k') (t : Fin (m + 1) → H0 L k'), (∃ a : A.left, π a ∈ nonzeroLocus t₀) → ∀ (Y : Over (Sp K)) (x y : Y ⟶ A), IsDominant x.left → (∀ i, SecRatioEq L (y.left ≫ π) (x.left ≫ π) (σ i) s₀ (t i) t₀) → ∃ (V : Over (Sp K)) (j f : V ⟶ A), IsOpenImmersion j.left ∧ Nonempty V.left ∧ ∀ (Z : Over (Sp K)) (u : Z ⟶ V) (z : Z ⟶ A), (∀ i, SecRatioEq L (z.left ≫ π) ((u ≫ j).left ≫ π) (σ i) s₀ (t i) t₀) → u ≫ f = z := by
   intro K _ A _ X L hL π k k' m σ hva s₀ t₀ t ⟨a, ha⟩ Y x y hdom hrat
-  haveI := hdom
+  have := hdom
   obtain ⟨hcov, hloc⟩ := hva
   obtain ⟨q, hq⟩ := x.left.denseRange.exists_mem_open (π ⁻¹ᵁ nonzeroLocus t₀).isOpen ⟨a, ha⟩
   obtain ⟨i₀, hi₀⟩ := TopologicalSpace.Opens.mem_iSup.1

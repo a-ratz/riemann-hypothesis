@@ -101,7 +101,7 @@ theorem UpperTheory.V.Z.Sym.Sig.normalG :
   · have ha0 : (a : k) ≠ 0 := a.ne_zero
     have hgt : 1 < valuation k ((a⁻¹ : kˣ) : k) := by
       rw [Units.val_inv_eq_inv_val, map_inv₀]
-      exact (one_lt_inv₀ (zero_lt_iff.2 ((valuation k).ne_zero_iff.2 ha0))).2 ha
+      exact (one_lt_inv₀ (pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 ha0))).2 ha
     have h1 : (a : k) ≠ 1 := fun h => by rw [h, map_one] at ha; exact lt_irrefl _ ha
     have h2 : ((a⁻¹ : kˣ) : k) ≠ 1 := fun h => by rw [h, map_one] at hgt; exact lt_irrefl _ hgt
     have h3 : (a : k) ≠ ((a⁻¹ : kˣ) : k) := fun h => by

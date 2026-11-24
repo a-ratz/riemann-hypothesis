@@ -130,7 +130,7 @@ private theorem dli_comm {A B F : Type} [CommRing A] [IsLocalRing A] [IsAdicComp
     (hx : IsIdempotentElem (φ x)) (hy : ∀ M : Ideal B, M.IsMaximal → x - x ^ 2 ∈ M) :
     ∃ e : B, IsIdempotentElem e ∧ φ e = φ x := by
   set K : Ideal B := (maximalIdeal A).map (algebraMap A B) with hK
-  haveI : IsAdicComplete K B := GlobalTheory.isAdicComplete_map_of_finite _ B
+  have : IsAdicComplete K B := GlobalTheory.isAdicComplete_map_of_finite _ B
   have hrad : x - x ^ 2 ∈ K.radical := by
     rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
     rintro P ⟨hKP, hP⟩
@@ -175,7 +175,7 @@ variable {A E F : Type} [CommRing A] [IsLocalRing A] [IsAdicComplete (maximalIde
 
 private theorem dli_one (hk : ∀ x, π x = 0 → x ∈ Ring.jacobson E) (x : E) (hx : IsIdempotentElem (π x)) :
     ∃ e ∈ Algebra.adjoin A {x}, IsIdempotentElem e ∧ π e = π x := by
-  haveI : Module.Finite A (Algebra.adjoin A {x}) :=
+  have : Module.Finite A (Algebra.adjoin A {x}) :=
     Module.Finite.iff_fg.2 (Algebra.IsIntegral.isIntegral (R := A) x).fg_adjoin_singleton
   obtain ⟨e, he, he'⟩ := dli_comm (A := A) (B := Algebra.adjoin A {x})
     (π.comp (Algebra.adjoin A {x}).val).toRingHom ⟨x, Algebra.self_mem_adjoin_singleton A x⟩ hx

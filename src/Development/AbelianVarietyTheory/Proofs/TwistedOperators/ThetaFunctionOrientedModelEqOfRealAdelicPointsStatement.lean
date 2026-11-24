@@ -91,7 +91,7 @@ theorem alg_smul_tmul_one (w : D.host.F) (e : D.host.E) :
 theorem denseRange_rat_add_real : DenseRange (fun p : D.host.E × D.host.E =>
     (incA D p.1 + pairA D.host.F 1 0 ⊗ₜ[D.host.F] p.2 : AE D)) := by
   classical
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   set b := Module.finBasis D.host.F D.host.E
   set Bt := Algebra.TensorProduct.basis (AF D.host.F) b
   let Φ : (Fin (Module.finrank D.host.F D.host.E) → AF D.host.F) → AE D := fun α => ∑ k, α k • Bt k

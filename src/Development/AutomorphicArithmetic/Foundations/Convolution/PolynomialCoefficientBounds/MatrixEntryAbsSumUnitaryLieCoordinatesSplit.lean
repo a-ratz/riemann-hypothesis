@@ -86,7 +86,7 @@ private theorem intMvPolynomialCoeffAbsSum_mul_le {ι : Type} (p q : MvPolynomia
   have h : p * q = ∑ a ∈ p.support, ∑ b ∈ q.support,
       (monomial (a + b) (p.coeff a * q.coeff b) : MvPolynomial ι ℂ) := by
     conv_lhs => rw [p.as_sum, q.as_sum, Finset.sum_mul_sum]
-    simp only [monomial_mul]
+    simp only [monomial_mul_monomial]
   rw [h]
   refine (intMvPolynomialCoeffAbsSum_sum_le _ _).trans ?_
   conv_rhs => rw [l1, l1, Finset.sum_mul_sum]

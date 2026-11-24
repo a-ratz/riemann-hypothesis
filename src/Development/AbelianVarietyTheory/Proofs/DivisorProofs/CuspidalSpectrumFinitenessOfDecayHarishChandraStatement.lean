@@ -72,7 +72,7 @@ variable {H X : Type} [Group H] [TopologicalSpace H] [AddCommGroup X] [Module �
 
 theorem simple_asSubmodule {ρ : Representation ℂ H X} (U : Subrepresentation ρ) (hU : U.toRepresentation.IsIrreducible) :
     IsSimpleModule (MonoidAlgebra ℂ H) U.asSubmodule := by
-  haveI : IsSimpleModule (MonoidAlgebra ℂ H) U.toRepresentation.asModule :=
+  have : IsSimpleModule (MonoidAlgebra ℂ H) U.toRepresentation.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule _).1 hU
   exact IsSimpleModule.congr (GlobalTheory.RepCount.subEquiv U).symm
 
@@ -102,7 +102,7 @@ theorem rank_homInto_lt {W : Type} [AddCommGroup W] [Module ℂ W] (σ : Represe
       rw [map_zero]
       exact congrArg Subtype.val hf
     exact hx0 (hi h0)
-  haveI := FiniteDimensional.of_injective ev hinj
+  have := FiniteDimensional.of_injective ev hinj
   exact Module.rank_lt_aleph0 ℂ _
 
 theorem finite_classes (ρ : Representation ℂ H X) (C : Submodule ℂ X) (K : Subgroup H)
@@ -147,8 +147,8 @@ theorem finite_classes (ρ : Representation ℂ H X) (C : Submodule ℂ X) (K : 
         (j : Submodule (MonoidAlgebra ℂ H) ρ.asModule) ≤ _) (hsm j (g j))
     rw [(hT i.2).eq_bot, Submodule.mem_bot, LinearEquiv.map_eq_zero_iff, Submodule.coe_eq_zero, smul_eq_zero] at hx
     exact hx.resolve_right (hy0 i)
-  haveI : Finite T := hli.finite
-  haveI := Fintype.ofFinite T
+  have : Finite T := hli.finite
+  have := Fintype.ofFinite T
   let e := Fintype.equivFin T
   have hrep : ∀ c : T, ∃ U ∈ S, comp U = c := fun c => c.2
   choose U hUS hUc using hrep
@@ -161,7 +161,7 @@ theorem finite_classes (ρ : Representation ℂ H X) (C : Submodule ℂ X) (K : 
   · rintro W _ _ σ h1 h2 hne ⟨x, hx0, hx⟩
     obtain ⟨f, hf, hf0⟩ := (Submodule.ne_bot_iff _).1 hne
     obtain ⟨V, hV, hi, ev, hev, heq⟩ := exists_sub_equiv h1 hf.2 hf0
-    haveI : IsSimpleModule (MonoidAlgebra ℂ H) σ.asModule :=
+    have : IsSimpleModule (MonoidAlgebra ℂ H) σ.asModule :=
       (Representation.irreducible_iff_isSimpleModule_asModule _).1 h1
     let ψ : σ.asModule ≃ₗ[MonoidAlgebra ℂ H] V.toRepresentation.asModule :=
       LinearEquiv.ofBijective (GlobalTheory.RepCount.modMap ev.toLinearMap heq) ev.bijective
@@ -180,8 +180,8 @@ theorem finite_classes (ρ : Representation ℂ H X) (C : Submodule ℂ X) (K : 
     show Nonempty (σ.Equiv (U (e.symm (e ⟨comp V, V, hVS, rfl⟩))).toRepresentation)
     generalize hc : e.symm (e ⟨comp V, V, hVS, rfl⟩) = c
     rw [Equiv.symm_apply_apply] at hc
-    haveI := simple_asSubmodule V hVirr
-    haveI := simple_asSubmodule (U c) (hUS c).2.1
+    have := simple_asSubmodule V hVirr
+    have := simple_asSubmodule (U c) (hUS c).2.1
     have hle : (U c).asSubmodule ≤ comp V :=
       ((U c).asSubmodule.le_isotypicComponent).trans_eq ((hUc c).trans (congrArg Subtype.val hc).symm)
     obtain ⟨χ⟩ := isIsotypicOfType_submodule_iff.mp
@@ -199,7 +199,7 @@ theorem specFin : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Publish
       mCuspDS μ σ M = Module.rank ℂ (homInto σ (finRep M) (allMaps θ M)) := fun W _ _ σ h =>
     (GlobalTheory.T.cuspidalMultiplicity_eq_discreteSeriesModel_maps hQ hP hDM D θ hθ V S M μ W σ h.1).symm
   refine ⟨fun W _ _ σ h1 h2 => ?_, fun K hK => ?_⟩
-  · haveI := GlobalTheory.CuspFactor.nontrivial_of_irr σ h1
+  · have := GlobalTheory.CuspFactor.nontrivial_of_irr σ h1
     obtain ⟨x, hx0⟩ := exists_ne (0 : W)
     let St : Subgroup (GfC V) :=
       { carrier := {g | σ g x = x}

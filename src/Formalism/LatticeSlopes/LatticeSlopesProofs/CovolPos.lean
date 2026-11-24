@@ -62,7 +62,7 @@ theorem linearIndependent_coe_basis {E : Type*} [NormedAddCommGroup E] [InnerPro
 
 theorem covol_pos' : CovolPos := by
   intro E _ _ _ L hL
-  haveI := hL
+  have := hL
   rw [covol_eq_gram E L (Fin (Module.finrank ℤ L)) (Module.finBasis ℤ L)]
   apply Real.sqrt_pos.2
   exact (Matrix.posDef_gram_of_linearIndependent (linearIndependent_coe_basis L _)).det_pos
@@ -93,11 +93,11 @@ theorem discreteTopology_span_singleton {E : Type*} [NormedAddCommGroup E]
 theorem covol_basic_properties : CovolBasic := by
   intro E _ _ _
   refine ⟨?_, ?_⟩
-  · haveI : DiscreteTopology (⊥ : Submodule ℤ E) := inferInstance
+  · have : DiscreteTopology (⊥ : Submodule ℤ E) := inferInstance
     rw [covol_eq_gram E ⊥ (Fin 0) (Module.Basis.empty _)]
     simp [Matrix.det_isEmpty]
   · intro v hv
-    haveI := discreteTopology_span_singleton hv
+    have := discreteTopology_span_singleton hv
     have hli : LinearIndependent ℤ (fun _ : Unit => v) := by
       have hR : LinearIndependent ℝ (fun _ : Unit => v) := by
         rw [linearIndependent_unique_iff]

@@ -117,13 +117,13 @@ theorem PsiAll_surjective {F E : Type} [Field F] [NumberField F] [Field E] [Numb
 
 theorem PsiAll_bijective : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (r : ℕ) (P : PPol σ r) (w : InfinitePlace F) (τ : EmbOver E w), Function.Bijective (PsiAll P τ) := by
   intro F E _ _ _ _ _ σ hCM r P w τ
-  haveI : IsTotallyReal F := hCM.1
-  haveI : IsTotallyComplex E := hCM.2.1
+  have : IsTotallyReal F := hCM.1
+  have : IsTotallyComplex E := hCM.2.1
   have h2 : Module.finrank F E = 2 := hCM.2.2.1
   have hw : w.IsReal := IsTotallyReal.isReal w
   have hs := PsiAll_surjective P hw τ
   refine ⟨?_, hs⟩
-  letI : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
+  let : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
   let f : w.Completion ⊗[F] Fld P →ₗ[w.Completion] (Fin r → ℂ) :=
     { toFun := PsiAll P τ
       map_add' := map_add _
@@ -137,10 +137,10 @@ theorem PsiAll_bijective : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       Complex.finrank_real_complex]
     ext x
     exact InfinitePlace.Completion.extensionEmbeddingOfIsReal_apply hw x
-  haveI : Module.Finite w.Completion ℂ := Module.finite_of_finrank_pos (by omega)
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
-  haveI : Module.Finite E (Fld P) := (AdjoinRoot.powerBasis P.2.2.1.ne_zero).finite
-  haveI : Module.Finite F (Fld P) := Module.Finite.trans E (Fld P)
+  have : Module.Finite w.Completion ℂ := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite E (Fld P) := (AdjoinRoot.powerBasis P.2.2.1.ne_zero).finite
+  have : Module.Finite F (Fld P) := Module.Finite.trans E (Fld P)
   have hd : Module.finrank w.Completion (w.Completion ⊗[F] Fld P) = Module.finrank w.Completion (Fin r → ℂ) := by
     rw [Module.finrank_baseChange, ← Module.finrank_mul_finrank F E (Fld P), h2, finrank_Fld,
       Module.finrank_pi_fintype]
@@ -194,7 +194,7 @@ end GlobalTheory.TrEll.RealTorus
 open GlobalTheory.TrEll.RealTorus in
 theorem GlobalTheory.TrEll.realTorus_norm_cxRoots : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (r : ℕ) (P : PPol σ r) (w : InfinitePlace F) (τ : EmbOver E w), Function.Bijective (PsiAll P τ) → CompactSpace (Tor P w.Completion) → ∀ i, ‖cxRoots τ.1 P i‖ = 1 := by
   intro F E _ _ _ _ _ σ hCM r P w τ hB hK i
-  have hw : w.IsReal := by haveI := hCM.1; exact IsTotallyReal.isReal w
+  have hw : w.IsReal := by have := hCM.1; exact IsTotallyReal.isReal w
   obtain ⟨π, hπ⟩ : ∃ π : Fin r → Fin r, ∀ m, cxRoots τ.1 P (π m) = (conj (cxRoots τ.1 P m))⁻¹ :=
     ⟨fun m => (exists_conjInv_root P τ hCM m).choose, fun m => (exists_conjInv_root P τ hCM m).choose_spec⟩
   have hinv : ∀ m, π (π m) = m := fun m =>
@@ -232,10 +232,10 @@ theorem GlobalTheory.TrEll.realTorus_norm_cxRoots : ∀ (F E : Type) [Field F] [
   by_contra hji
 
   have hcont : Continuous (fun g : Tor P w.Completion => ‖Psi P τ i (g.1.1 0 0)‖) := by
-    letI : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
-    haveI : ContinuousSMul w.Completion ℂ :=
+    let : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
+    have : ContinuousSMul w.Completion ℂ :=
       continuousSMul_of_algebraMap _ _ (InfinitePlace.Completion.isometry_extensionEmbedding w).continuous
-    haveI : IsModuleTopology w.Completion (w.Completion ⊗[F] Fld P) := ⟨rfl⟩
+    have : IsModuleTopology w.Completion (w.Completion ⊗[F] Fld P) := ⟨rfl⟩
     let L : w.Completion ⊗[F] Fld P →ₗ[w.Completion] ℂ :=
       { toFun := Psi P τ i
         map_add' := map_add _
@@ -246,7 +246,7 @@ theorem GlobalTheory.TrEll.realTorus_norm_cxRoots : ∀ (F E : Type) [Field F] [
           rw [this, map_mul, Psi_tmul, map_one, mul_one]; rfl }
     have hL : Continuous L := IsModuleTopology.continuous_of_linearMap L
     have hv : Continuous (fun g : Tor P w.Completion => (g.1.1 : Matrix (Fin 1) (Fin 1) (w.Completion ⊗[F] Fld P))) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     exact continuous_norm.comp (hL.comp (hv.matrix_elem 0 0))
   obtain ⟨M, hM⟩ := (isCompact_range hcont).bddAbove
   obtain ⟨j, hj⟩ : ∃ j, π i = j := ⟨_, rfl⟩
@@ -308,8 +308,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   (P : PPol σ r) {w : InfinitePlace F} (τ : EmbOver E w)
 
 theorem trace_eq_sum (y : Fld P) : τ.1 (Algebra.trace E (Fld P) y) = ∑ i, psiL P τ i y := by
-  letI : Algebra E ℂ := τ.1.toAlgebra
-  haveI : Algebra.IsSeparable E (Fld P) := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  let : Algebra E ℂ := τ.1.toAlgebra
+  have : Algebra.IsSeparable E (Fld P) := Algebra.IsAlgebraic.isSeparable_of_perfectField
 
   let emb : Fin r → (Fld P →ₐ[E] ℂ) := fun i =>
     { psiL P τ i with commutes' := fun e => psiL_algebraMap P τ i e }

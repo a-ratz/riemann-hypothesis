@@ -72,7 +72,7 @@ theorem isThetaPt_of_over (P : PolAV S) [Subsingleton T.left] {k : ℕ} {I : Typ
   refine ⟨ho, hu, fun p => ⟨⊤, trivial, ?_⟩⟩
   obtain ⟨h, hh⟩ := exists_section (T := T) (V := ⊤) (p := p) trivial
   have hi : overResι (T := T) ⊤ ≫ h = 𝟙 _ := by
-    haveI : Mono (overResι (T := T) ⊤) := Over.mono_of_mono_left _ (hk := inferInstanceAs (Mono (⊤ : T.left.Opens).ι))
+    have : Mono (overResι (T := T) ⊤) := Over.mono_of_mono_left _ (hk := inferInstanceAs (Mono (⊤ : T.left.Opens).ι))
     rw [← cancel_mono (overResι (T := T) ⊤), Category.assoc, hh, Category.comp_id, Category.id_comp]
   exact isThetaPtOver_pull P H _ h hi
 
@@ -111,8 +111,8 @@ theorem isThetaPt_down : Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : 
     (x : Ix → (baseOver (Sp K) ⟶ P.A)) (v : Ix → Γ((baseOver (Sp K)).left, ⊤)),
     (∀ i, (x i ^ n) ^ m ^ 2 = 1) → IsThetaPt P (n * m) x v → IsThetaPt P m (fun i => x i ^ n) v := by
   intro hL K _ _ P n m Ix x v hx H
-  haveI : Subsingleton (baseOver (Sp K)).left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
-  haveI : Nonempty (baseOver (Sp K)).left := inferInstanceAs (Nonempty (PrimeSpectrum K))
+  have : Subsingleton (baseOver (Sp K)).left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Nonempty (baseOver (Sp K)).left := inferInstanceAs (Nonempty (PrimeSpectrum K))
   have ho : Odd m := (Nat.odd_mul.1 H.1).2
   have hu : IsUnit (m : Γ((baseOver (Sp K)).left, ⊤)) :=
     isUnit_of_mul_isUnit_right (by rw [← Nat.cast_mul]; exact H.2.1)

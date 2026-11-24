@@ -105,7 +105,7 @@ private theorem fin_expU {F : Type} [Field F] [NumberField F] [IsTotallyReal F] 
   have e1 : expU z = expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]
@@ -399,7 +399,7 @@ end UpperTheory.HilbertEisensteinWeightOne.KFinitenessEisenstein
 open UpperTheory.HilbertEisensteinWeightOne.KFinitenessEisenstein in
 theorem UpperTheory.HilbertEisensteinWeightOne.K_finiteness_holds : SPois → SInt → SSmooth → SKfin := by
   intro _ _ _ F _ _ _ ω c _ hs
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ
+  have : FiniteDimensional ℂ (Submodule.span ℂ
       (Set.range fun ε : InfinitePlace F → Bool => Eis ω (PhiE c ε))) :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   have hle : (Submodule.span ℂ (Set.range fun k => UpperTheory.V.TR.cptRep F 2 k ⟨Eis ω (Phi c), hs⟩)).map
@@ -413,7 +413,7 @@ theorem UpperTheory.HilbertEisensteinWeightOne.K_finiteness_holds : SPois → SI
       funext fun g => by rw [Pi.smul_apply, smul_eq_mul]; exact cpt_eq ω c hs k g
     rw [SetLike.mem_coe, e]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨eps k, rfl⟩)
-  haveI := Submodule.finiteDimensional_of_le hle
+  have := Submodule.finiteDimensional_of_le hle
   exact LinearEquiv.finiteDimensional
     (Submodule.equivMapOfInjective _ (Submodule.injective_subtype _) _).symm
 end -- clump:auto
@@ -821,7 +821,7 @@ theorem continuous_gP : Continuous fun p : ℝ × ℝ => gP p.1 p.2 := by
   fun_prop
 
 theorem continuous_charR (a : ℝ) : Continuous fun t : ℝ => ((𝐞 (-(t * a)) : Circle) : ℂ) :=
-  continuous_subtype_val.comp (Real.continuous_fourierChar.comp (by fun_prop))
+  continuous_subtypeVal.comp (Real.continuous_fourierChar.comp (by fun_prop))
 
 theorem integrable_charR_mul {f : ℝ → ℂ} (hf : Integrable f) (a : ℝ) :
     Integrable (fun t : ℝ => ((𝐞 (-(t * a)) : Circle) : ℂ) * f t) := by
@@ -874,7 +874,7 @@ theorem isEmpty_complexPlaces [IsTotallyReal F] : IsEmpty {w : InfinitePlace F /
 
 theorem isProbabilityMeasure_complexPart [IsTotallyReal F] :
     IsProbabilityMeasure (volume : Measure ({w : InfinitePlace F // IsComplex w} → ℂ)) := by
-  haveI := isEmpty_complexPlaces F
+  have := isEmpty_complexPlaces F
   have h : (volume : Measure ({w : InfinitePlace F // IsComplex w} → ℂ)) =
       Measure.dirac isEmptyElim := by
     rw [volume_pi, Measure.pi_of_empty]
@@ -886,7 +886,7 @@ def proj2 (x : Fin 2 → mixedSpace F) : {w : InfinitePlace F // IsReal w} → �
 
 theorem measurePreserving_proj2 [IsTotallyReal F] :
     MeasurePreserving (proj2 F) (GroundTheory.Automorphic.Adele2.mixedMeasure2 F) volume := by
-  haveI := isProbabilityMeasure_complexPart F
+  have := isProbabilityMeasure_complexPart F
   have h1 := measurePreserving_finTwoArrow (volume : Measure (mixedSpace F))
   have hf : MeasurePreserving (Prod.fst : mixedSpace F → ({w : InfinitePlace F // IsReal w} → ℝ))
       volume volume := by
@@ -912,7 +912,7 @@ theorem char_pairing_eq_prod [IsTotallyReal F] (x y : Fin 2 → mixedSpace F) :
     ((𝐞 (-GroundTheory.Automorphic.Adele2.mixedPairing2 F x y) : Circle) : ℂ) =
       ∏ w : {w : InfinitePlace F // IsReal w},
         ((𝐞 (-((x 0).1 w * (y 0).1 w + (x 1).1 w * (y 1).1 w)) : Circle) : ℂ) := by
-  haveI := isEmpty_complexPlaces F
+  have := isEmpty_complexPlaces F
   rw [GroundTheory.Automorphic.Adele2.mixedPairing2, Fin.sum_univ_two, mixedTraceForm_apply',
     mixedTraceForm_apply']
   simp only [Finset.univ_eq_empty, Finset.sum_empty, add_zero]
@@ -934,7 +934,7 @@ theorem mixedFourier2_arch [IsTotallyReal F] (y : Fin 2 → mixedSpace F) :
     refine continuous_finsetProd _ fun w _ => ?_
     simp only [hfdef]
     refine Continuous.mul ?_ (continuous_gP.comp (continuous_apply w))
-    exact continuous_subtype_val.comp (Real.continuous_fourierChar.comp (by fun_prop))
+    exact continuous_subtypeVal.comp (Real.continuous_fourierChar.comp (by fun_prop))
   rw [GroundTheory.Automorphic.Adele2.mixedFourier2]
   simp_rw [hpt]
   rw [← integral_map (measurePreserving_proj2 F).aemeasurable hcont.aestronglyMeasurable,
@@ -1093,7 +1093,7 @@ theorem count_nId {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}
 
 theorem count_different (w : HeightOneSpectrum (𝓞 F)) :
     FractionalIdeal.count F w ((differentIdeal ℤ (𝓞 F) : Ideal (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) = dd w := by
-  rw [FractionalIdeal.count_coe F w differentIdeal_ne_bot]
+  rw [FractionalIdeal.count_coeIdeal F w differentIdeal_ne_bot]
   rfl
 
 theorem mem_nId_iff {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}.Finite) (a : Af F) :
@@ -1138,10 +1138,10 @@ theorem phi_eq {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}.Fi
   have h1 := mem_nId_iff hc (pFin F (x 1) - 1)
   simp only [map_sub, map_one] at h1
   by_cases a : (x 0).2 ∈ idealFiniteAdeles (nId c) <;> by_cases b : (x 1).2 - 1 ∈ idealFiniteAdeles (nId c)
-  · rw [if_pos fun w => ⟨h0.2 a w, h1.2 b w⟩, if_pos a, if_pos b, mul_one]
-  · rw [if_neg (fun h => b (h1.1 fun w => (h w).2)), if_neg b, mul_zero]
-  · rw [if_neg (fun h => a (h0.1 fun w => (h w).1)), if_neg a, zero_mul]
-  · rw [if_neg (fun h => a (h0.1 fun w => (h w).1)), if_neg a, zero_mul]
+  · rw [ite_eq_left fun w => ⟨h0.2 a w, h1.2 b w⟩, ite_eq_left a, ite_eq_left b, mul_one]
+  · rw [ite_eq_right (fun h => b (h1.1 fun w => (h w).2)), ite_eq_right b, mul_zero]
+  · rw [ite_eq_right (fun h => a (h0.1 fun w => (h w).1)), ite_eq_right a, zero_mul]
+  · rw [ite_eq_right (fun h => a (h0.1 fun w => (h w).1)), ite_eq_right a, zero_mul]
 
 def cst (c : HeightOneSpectrum (𝓞 F) → ℕ) : ℂ :=
   (-Complex.I) ^ Fintype.card (InfinitePlace F) *
@@ -1169,17 +1169,17 @@ theorem fourier_phi {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 
   rw [show pFin F (y 1) = (y 1).2 from rfl]
   by_cases a : (y 0).2 ∈ idealFiniteAdeles (traceDualIdeal F (nId c)) <;>
     by_cases b : (y 1).2 ∈ idealFiniteAdeles (traceDualIdeal F (nId c))
-  · rw [if_pos fun w => ⟨h0.2 a w, h1.2 b w⟩]
-    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, if_true, Pi.one_apply]
+  · rw [ite_eq_left fun w => ⟨h0.2 a w, h1.2 b w⟩]
+    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, ite_true, Pi.one_apply]
     ring
-  · rw [if_neg (fun h => b (h1.1 fun w => (h w).2))]
-    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, if_true, if_false, Pi.one_apply]
+  · rw [ite_eq_right (fun h => b (h1.1 fun w => (h w).2))]
+    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, ite_true, ite_false, Pi.one_apply]
     ring
-  · rw [if_neg (fun h => a (h0.1 fun w => (h w).1))]
-    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, if_true, if_false, Pi.one_apply]
+  · rw [ite_eq_right (fun h => a (h0.1 fun w => (h w).1))]
+    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, ite_true, ite_false, Pi.one_apply]
     ring
-  · rw [if_neg (fun h => a (h0.1 fun w => (h w).1))]
-    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, if_true, if_false, Pi.one_apply]
+  · rw [ite_eq_right (fun h => a (h0.1 fun w => (h w).1))]
+    simp only [Set.indicator_apply, SetLike.mem_coe, a, b, ite_true, ite_false, Pi.one_apply]
     ring
 
 theorem rowA_zero : rowA (0 : Fin 2 → F) = 0 := by

@@ -67,8 +67,8 @@ theorem cptCoef_apx {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
     [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     {F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)} {χ : ℝ → ℝ} (hχ : C6.IsCut0 χ) (hF : B.CkOn ⊤ (B.GV P.k P.r) F) {ε : ℝ}
     (hε : 0 < ε) (n : ℕ) : KB.CptCoef Bs (apx (D.cutF Bs χ F ε) n) := by
-  letI : NormedAddCommGroup (B.Mat P.k P.r) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (B.Mat P.k P.r) := Matrix.normedSpace
+  let : NormedAddCommGroup (B.Mat P.k P.r) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (B.Mat P.k P.r) := Matrix.normedSpace
   obtain ⟨hχs, ⟨δ, hδ, hχ0⟩, -⟩ := hχ
   refine ⟨?_, ⟨2 * ((n : ℝ) + 1), ?_⟩, ⟨δ * ε, mul_pos hδ hε, ?_⟩⟩
   · intro g₀ hg₀
@@ -186,7 +186,7 @@ theorem corS_of_apx (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (G : B.Mat P.k P.r �
     refine ((List.finite_length_le (↥A) N).image (fun l => l.map Subtype.val)).subset ?_
     rintro _ ⟨n, rfl⟩
     refine ⟨(w n).pmap Subtype.mk (hmem n), ?_, ?_⟩
-    · simp only [Set.mem_setOf_eq, List.length_pmap]
+    · simp only [Set.mem_ofPred_eq, List.length_pmap]
       exact (hw n).2.1
     · simp [List.map_pmap]
   obtain ⟨w0, hw0⟩ : ∃ w0, ∃ᶠ n in atTop, w n = w0 := by

@@ -195,7 +195,7 @@ theorem exists_finset_keeps : ∀ {F E : Type} [Field F] [NumberField F] [Field 
   intro F E _ _ _ _ _ σ n X hL g
   have h := (eventually_mulVec_mem X hL (mat g)).and (eventually_mulVec_mem X hL (mat g⁻¹))
   refine ⟨(eventually_cofinite.1 h).toFinset, fun w hw z hz => ?_⟩
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hw
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hw
   exact ⟨hw.1 z hz, hw.2 z hz⟩
 
 end GlobalTheory.LatAlmostAll

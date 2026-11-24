@@ -238,8 +238,8 @@ section Final
 theorem adicComplete_intO (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] :
     IsAdicComplete (IsLocalRing.maximalIdeal (intO k)) (intO k) := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
   exact inferInstance
 
 theorem exists_integral_norm_of_unit_norm_surjective : D0a → IntegralBasisUnramified → TraceOneIntegralElement → N3 → N4 := by
@@ -249,13 +249,13 @@ theorem exists_integral_norm_of_unit_norm_surjective : D0a → IntegralBasisUnra
   obtain ⟨hval, hint, -, -, -, -⟩ := h0a k E hun σ hgen
   obtain ⟨⟨b, hb, hb'⟩, -, -⟩ := h0b k E hun σ hgen
   obtain ⟨-, x, y, hxy, hdual⟩ := h0c k E hun σ hgen
-  haveI := adicComplete_intO k
-  haveI : Finite (IsLocalRing.ResidueField (intO k)) :=
+  have := adicComplete_intO k
+  have : Finite (IsLocalRing.ResidueField (intO k)) :=
     inferInstanceAs (Finite (IsLocalRing.ResidueField (Valuation.integer (ValuativeRel.valuation k))))
   let f : intO k →+* intO E := ((algebraMap k E).comp (intO k).subtype).codRestrict (intO E)
     (fun a => (hint a).2 a.2)
-  letI : Algebra (intO k) (intO E) := f.toAlgebra
-  haveI : IsScalarTower (intO k) (intO E) E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra (intO k) (intO E) := f.toAlgebra
+  have : IsScalarTower (intO k) (intO E) E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let e : intO E ≃ₗ[intO k] (Fin (Module.finrank k E) → intO k) :=
     { toFun := fun z i => ⟨b.repr z.1 i, (hb' z.1).1 z.2 i⟩
       invFun := fun v => ⟨∑ i, (v i : k) • b i, (hb' _).2 (fun i => by
@@ -277,8 +277,8 @@ theorem exists_integral_norm_of_unit_norm_surjective : D0a → IntegralBasisUnra
         show b.repr (algebraMap k E a.1 * z.1) i = a.1 * b.repr z.1 i
         rw [← Algebra.smul_def]
         simp }
-  haveI : Module.Finite (intO k) (intO E) := Module.Finite.equiv e.symm
-  haveI : Module.Free (intO k) (intO E) := Module.Free.of_equiv e.symm
+  have : Module.Finite (intO k) (intO E) := Module.Finite.equiv e.symm
+  have : Module.Free (intO k) (intO E) := Module.Free.of_equiv e.symm
   have hmem : ∀ (ρ : E ≃ₐ[k] E) (z : E), z ∈ intO E → ρ z ∈ intO E := fun ρ z hz => by
     have h := hval ρ z
     rw [Valuation.mem_integer_iff] at *
@@ -339,7 +339,7 @@ theorem exists_integral_norm_of_unit_norm_surjective : D0a → IntegralBasisUnra
     show ValuativeRel.valuation k ((P.coeff 0 : intO k) : k) = 1
     rw [hcoef]
     exact hγ.2
-  haveI : Module.Finite (intO k) (AdjoinRoot P) := hPm.finite_adjoinRoot
+  have : Module.Finite (intO k) (AdjoinRoot P) := hPm.finite_adjoinRoot
   obtain ⟨s, hs⟩ := h3 (intO k) (intO E) (AdjoinRoot P) (Module.finrank k E) τ hpos hτℓ hfixed
     hdual' (isUnit_root P h0).unit
   exact exists_norm_eval j σ τ hτ (intO E) (fun z => z.2) γ P hP s hs

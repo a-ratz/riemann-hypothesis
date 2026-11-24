@@ -72,7 +72,7 @@ open PositivityTheory.RgUd.T PositivityTheory.RgUd.T.Desc.SLF PositivityTheory.R
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {N : ℕ}
 
 theorem tdM : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) := by
-  haveI := (tdk : TotallyDisconnectedSpace k)
+  have := (tdk : TotallyDisconnectedSpace k)
   exact (inferInstance : TotallyDisconnectedSpace (Fin N → Fin N → k))
 
 theorem comm_span_iff {r : ℕ} {S : Subalgebra k (Matrix (Fin N) (Fin N) k)} {b : Fin r → Matrix (Fin N) (Fin N) k}
@@ -139,8 +139,8 @@ theorem span_top_of {r : ℕ} {S : Subalgebra k (Matrix (Fin N) (Fin N) k)} {b :
 theorem isClosed_orb (hO : OrbClosed k) {r : ℕ} {S : Subalgebra k (Matrix (Fin N) (Fin N) k)} (hS : CR S)
     {b : Fin r → Matrix (Fin N) (Fin N) k} (hb : S.toSubmodule = Submodule.span k (Set.range b)) :
     IsClosed (Orb b) := by
-  letI : CommRing S := cr_commRing hS
-  haveI : IsReduced S := hS.2
+  let : CommRing S := cr_commRing hS
+  have : IsReduced S := hS.2
   exact hO N r S hS.2 _ (span_top_of hb) S.val
 
 def actO {r : ℕ} (b : Fin r → Matrix (Fin N) (Fin N) k) : MulAction (GL (Fin N) k) (Orb b) where
@@ -150,20 +150,20 @@ def actO {r : ℕ} (b : Fin r → Matrix (Fin N) (Fin N) k) : MulAction (GL (Fin
 
 theorem continuousSMul_actO {r : ℕ} (b : Fin r → Matrix (Fin N) (Fin N) k) :
     @ContinuousSMul (GL (Fin N) k) (Orb b) (actO b).toSMul _ _ := by
-  letI := actO b
+  let := actO b
   refine ⟨?_⟩
   show Continuous (fun p : GL (Fin N) k × Orb b => (⟨fun i => cj p.1 (p.2.1 i), cj_mem_orb p.2.2 p.1⟩ : Orb b))
   have hc : ∀ i : Fin r, Continuous (fun p : GL (Fin N) k × Orb b => cj p.1 (p.2.1 i)) := by
     intro i
     have h1 : Continuous (fun p : GL (Fin N) k × Orb b => p.2.1 i) :=
-      (continuous_apply i).comp (continuous_subtype_val.comp continuous_snd)
+      (continuous_apply i).comp (continuous_subtypeVal.comp continuous_snd)
     have h2 : Continuous (fun p : GL (Fin N) k × Orb b => (p.1, p.2.1 i)) := continuous_fst.prodMk h1
     exact (continuous_cj (n := N)).comp h2
   exact Continuous.subtype_mk (continuous_pi hc) _
 
 theorem isPretransitive_actO {r : ℕ} (b : Fin r → Matrix (Fin N) (Fin N) k) :
     @MulAction.IsPretransitive (GL (Fin N) k) (Orb b) (actO b).toSMul := by
-  letI := actO b
+  let := actO b
   refine ⟨fun x y => ?_⟩
   obtain ⟨g, hg⟩ := x.2
   obtain ⟨h, hh⟩ := y.2
@@ -175,10 +175,10 @@ theorem exists_orb_homeo (hO : OrbClosed k) {r : ℕ} {S : Subalgebra k (Matrix 
     {b : Fin r → Matrix (Fin N) (Fin N) k} (hb : S.toSubmodule = Submodule.span k (Set.range b)) :
     ∃ e : GL (Fin N) k ⧸ GzS S ≃ₜ Orb b, ∀ g : GL (Fin N) k, ((e g : Orb b) : Fin r → Matrix (Fin N) (Fin N) k) =
       fun i => cj g (b i) := by
-  letI := actO b
-  haveI := continuousSMul_actO b
-  haveI := isPretransitive_actO b
-  haveI : LocallyCompactSpace (Orb b) := (isClosed_orb hO hS hb).locallyCompactSpace
+  let := actO b
+  have := continuousSMul_actO b
+  have := isPretransitive_actO b
+  have : LocallyCompactSpace (Orb b) := (isClosed_orb hO hS hb).locallyCompactSpace
   obtain ⟨e, he⟩ := exists_quotient_homeo (G := GL (Fin N) k) (⟨b, self_mem_orb b⟩ : Orb b)
   have hst : MulAction.stabilizer (GL (Fin N) k) (⟨b, self_mem_orb b⟩ : Orb b) = GzS S := by
     ext g

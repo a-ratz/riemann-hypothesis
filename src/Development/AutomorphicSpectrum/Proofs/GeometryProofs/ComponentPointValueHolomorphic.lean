@@ -194,14 +194,14 @@ private theorem exists_isActOf_lemma {S : Scheme} {R : Type} [CommRing R]
     exact (mul_left_cancel h).symm
   have htan : ∀ (a : O) (e : V), GlobalTheory.CompanionTheory.Ar.IsTanAt G x (M.pt e ≫ act.act a) := by
     intro a e
-    haveI := act.hom a
+    have := act.hom a
     have h1 := M.tan e
     unfold GlobalTheory.CompanionTheory.Ar.IsTanAt at h1 ⊢
     rw [Over.comp_left, ← Category.assoc, h1, ← Over.comp_left, MonObj.one_comp]
   choose f hf using fun (a : O) (e : V) => M.onto _ (htan a e)
   have hadd : ∀ (a : O) (e e' : V), f a (e + e') = f a e + f a e' := by
     intro a e e'
-    haveI := act.hom a
+    have := act.hom a
     apply M.inj
     rw [hf, M.add, M.add, hf, hf, MonObj.mul_comp]
   have hsmul : ∀ (a : O) (r : R) (e : V), f a (r • e) = r • f a e := by
@@ -239,7 +239,7 @@ private theorem exists_isActOf_lemma {S : Scheme} {R : Type} [CommRing R]
 
 theorem exists_lieModel_tied_isEigFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (y : Sp ℂ ⟶ Xo.XF c), ∃ (EC : Type) (_ : AddCommGroup EC) (_ : Module ℂ EC) (N : LieModel Y.t.G (y ≫ Y.j) EC) (ρ : 𝓞 E →+* Module.End ℂ EC), N.IsActOf Y.t.act.act ρ ∧ ∀ (ch : 𝓞 E →+* ℂ) (n : ℕ) (v : Vecs y n) (w : Fin n → EC), LieMult Xo.univ.t.act (under y) ch n → (∀ i, SameVec Y y (v i) (N.pt (w i))) → LinearIndependent ℂ w → (∀ i, w i ∈ eigSp ρ ch) → IsEigFrame Xo.univ.t.act (under y) ch v := by
   intro E _ _ _ H D l Xo c O _ β Y y
-  haveI := Xo.univ.t.comm
+  have := Xo.univ.t.comm
   obtain ⟨V, i1, i2, ⟨M₀⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists _ Xo.univ.t.G ℂ (under y)
   obtain ⟨ρ, hρ⟩ := exists_isActOf_lemma M₀ Xo.univ.t.act
   obtain ⟨M', hM'⟩ :=
@@ -274,7 +274,7 @@ theorem exists_lieModel_tied_isEigFrame : ∀ (E : Type) [Field E] [NumberField 
   have hv₀' : v₀ = fun k => M₀.pt (u k) := funext fun k => (hu k).symm
   rw [hv₀'] at hfr₀
   obtain ⟨hu_li, hu_span⟩ := (hI.2 n u).1 hfr₀
-  haveI : FiniteDimensional ℂ (eigSp ρ ch) := by
+  have : FiniteDimensional ℂ (eigSp ρ ch) := by
     rw [← hu_span]
     exact FiniteDimensional.span_of_finite ℂ (Set.finite_range u)
   have hspan : Submodule.span ℂ (Set.range w) = eigSp ρ ch := by
@@ -343,7 +343,7 @@ theorem isEigFrame_of_values {Y : Model Xo c β} {U : Set (Xo.XF c)} (Z : CptOve
     (hf : (Z.eig τ).IsFrameAt e ⟨centre (y ≫ Y.j), h⟩)
     (hval : ∀ i, Z.M.ValAt (y ≫ Y.j) (e i) (v' i)) (hsame : ∀ i, SameVec Y y (v i) (v' i)) :
     IsEigFrame Xo.univ.t.act (under y) (σ.comp (tauIn c τ)) v := by
-  haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
+  have : Smooth Y.t.G.hom := Y.t.semi.smooth
   obtain ⟨EC, _, _, N, ρ, hρ, hD⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_lieModel_tied_isEigFrame E H D l Xo c O β Y y
   have hex : ∀ i, ∃ w, N.pt w = v' i := fun i => N.onto _ (hval i).isTanAt
   choose w hw using hex
@@ -406,7 +406,7 @@ theorem lieMult_at (y : Sp ℂ ⟶ Xo.XF c) (σ : c.F →+* ℂ) (τ : E →+* �
 theorem exists_local_eigenframes : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (y₀ : Sp ℂ ⟶ Xo.XF c), (Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) → τ (H.rt : E) = H.rt0 → y₀ ≫ pullback.snd _ _ = spMap σ → Set.range y₀ ⊆ U → ∃ (V₀ : (Xo.XF c).Opens) (hV₀ : IsAffineOpen V₀) (c₁ : Fin D.p → Z.V) (c₂ : Fin D.q → Z.V) (vR : Fin D.p → (epsAt (under hV₀.fromSpec) ⟶ Xo.univ.t.G)) (wR : Fin D.q → (epsAt (under hV₀.fromSpec) ⟶ Xo.univ.t.G)), ⊤ ≤ y₀ ⁻¹ᵁ V₀ ∧ LinearIndependent Z.Ω c₁ ∧ Submodule.span Z.Ω (Set.range c₁) = eigSp Z.ρ (Z.inc.comp (tauIn c τ)) ∧ LinearIndependent Z.Ω c₂ ∧ Submodule.span Z.Ω (Set.range c₂) = eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ))) ∧ ∀ (χ : Γ(Xo.XF c, V₀) →+* ℂ) (v : Vecs (spMap χ ≫ hV₀.fromSpec) D.p) (w : Vecs (spMap χ ≫ hV₀.fromSpec) D.q), (spMap χ ≫ hV₀.fromSpec) ≫ pullback.snd _ _ = spMap σ → Set.range (spMap χ ≫ hV₀.fromSpec) ⊆ U → (∀ a, (v a).left = spMap (dualMap χ) ≫ (vR a).left) → (∀ j, (w j).left = spMap (dualMap χ) ≫ (wR j).left) → IsFramed U τ σ (spMap χ ≫ hV₀.fromSpec) v w ∧ (∀ i, ∃ v', Z.M.ValAt ((spMap χ ≫ hV₀.fromSpec) ≫ Y.j) (c₁ i) v' ∧ SameVec Y (spMap χ ≫ hV₀.fromSpec) (v i) v') ∧ ∀ j, ∃ w', Z.M.ValAt ((spMap χ ≫ hV₀.fromSpec) ≫ Y.j) (c₂ j) w' ∧ SameVec Y (spMap χ ≫ hV₀.fromSpec) (w j) w' := by
   intro E _ _ _ H D l Xo c O _ β Y U Z τ σ y₀ hO hτ hy₀ hr₀
   obtain ⟨hv1, hv2, h3, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c O β Y U Z τ hO hτ
-  haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
+  have : Smooth Y.t.G.hom := Y.t.semi.smooth
   have hsp : ∀ y : Sp ℂ ⟶ Xo.XF c, Set.range y ⊆ U → genPt (Z.ξ₀ ≫ Y.j) ⤳ centre (y ≫ Y.j) := fun y hy => by
     have h1 : genPt Z.ξ₀ ⤳ y (IsLocalRing.closedPoint ℂ) := (Z.closure _).1 (hy ⟨_, rfl⟩)
     have h2 := h1.map Y.j.continuous

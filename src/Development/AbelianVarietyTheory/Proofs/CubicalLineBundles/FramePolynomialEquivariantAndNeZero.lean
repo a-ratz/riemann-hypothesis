@@ -100,7 +100,7 @@ theorem isFrPoly_equiv_and_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [I
   refine ⟨fun σ X b t hX ht htri => ?_, fun σ σ₁ w hw hne hG0 => hne ?_⟩
   · have hred : IsReduced (CAt (σ.comp (algebraMap c.F K))) := inferInstanceAs (IsReduced ℂ)
     have hdiag : ∀ i, t i i ≠ 0 := by
-      rw [Matrix.det_of_upperTriangular htri] at ht
+      rw [Matrix.det_of_isUpperTriangular htri] at ht
       exact fun i => Finset.prod_ne_zero_iff.1 ht i (Finset.mem_univ i)
     let T : ∀ τ : E →+* ℂ, Matrix (Fin (Dw.mult τ)) (Fin (Dw.mult τ)) ℂ := Function.update (fun _ => 1) b t
     have hT : ∀ b', IsUnit (T b').det := by

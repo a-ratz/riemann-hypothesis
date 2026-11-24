@@ -881,7 +881,7 @@ theorem petE_rdU_ne_top (hμ : μ Set.univ ≤ 1) {la : ∀ k, FD.Wt (U.X k).Ψ 
     apply eLpNorm'_mono_ae (by norm_num)
     filter_upwards [hb] with q hq
     simpa [Real.norm_of_nonneg ENNReal.toReal_nonneg] using hq
-  rw [eLpNorm'_const _ (by norm_num), Real.enorm_eq_ofReal ENNReal.toReal_nonneg] at hle
+  rw [eLpNorm'_const _ (by norm_num), Real.eNorm_eq_ofReal ENNReal.toReal_nonneg] at hle
   exact ne_top_of_le_ne_top (ENNReal.mul_ne_top ENNReal.ofReal_ne_top
     (ENNReal.rpow_ne_top_of_nonneg (by positivity) (ne_top_of_le_ne_top ENNReal.one_ne_top hμ))) hle
 
@@ -891,7 +891,7 @@ theorem eLpNorm_homN_ne_top (hμ : μ Set.univ ≤ 1) {G : WTZ E} {f : Rul Xo c}
   have : (fun q : AutQ V => AllWt.homN U x G f (dict (Quotient.out q))) =
       AllWt.lieFacZ Dw x G • fun q : AutQ V => AllWt.ptN (AllWt.modelWt U G) (rdU U f) (dict (Quotient.out q)) := rfl
   rw [this, eLpNorm'_const_smul _ (by norm_num)]
-  exact ENNReal.mul_ne_top enorm_ne_top (petE_rdU_ne_top U V dict μ hμ hf)
+  exact ENNReal.mul_ne_top eNorm_ne_top (petE_rdU_ne_top U V dict μ hμ hf)
 
 theorem homN_le_of_berg (hμ : μ Set.univ ≤ 1) (y : FPt U.X) {B : ℝ} (hB0 : 0 ≤ B) {G : WTZ E}
     (hB : AllWt.bergE V dict μ (AllWt.modelWt U G) y ≤ ENNReal.ofReal B) {f : Rul Xo c}
@@ -951,7 +951,7 @@ theorem petOn_mul_le : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : �
       (w.1 * f.1) (Y.dict σ' (Quotient.out q))) 2 μ ≤
       ENNReal.ofReal (Real.sqrt β * Pa) * eLpNorm' (fun q : AutQ (D.sp.W j) => AllWt.homN (Y.U σ') (xiR D)
         (AllWt.wtOf (T.Q.Dw j) b 0) f.1 (Y.dict σ' (Quotient.out q))) 2 μ := by
-    rw [← Real.enorm_eq_ofReal (mul_nonneg (Real.sqrt_nonneg _) hPa0), ← eLpNorm'_const_smul _ (by norm_num)]
+    rw [← Real.eNorm_eq_ofReal (mul_nonneg (Real.sqrt_nonneg _) hPa0), ← eLpNorm'_const_smul _ (by norm_num)]
     apply eLpNorm'_mono_ae (by norm_num)
     filter_upwards [] with q
     simp only [Pi.smul_apply, smul_eq_mul]
@@ -967,7 +967,7 @@ theorem petOn_mul_le : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : �
           fun q : AutQ (D.sp.W j) => AllWt.ptN (AllWt.modelWt (Y.U σ') (AllWt.wtOf (T.Q.Dw j) b 0))
             (rdU (Y.U σ') f.1) (Y.dict σ' (Quotient.out q)) := rfl
     rw [heq, eLpNorm'_const_smul _ (by norm_num)]
-    exact ENNReal.mul_ne_top enorm_ne_top (NormProd.petE_rdU_ne_top (Y.U σ') (D.sp.W j) (Y.dict σ') μ hμ hfH)
+    exact ENNReal.mul_ne_top eNorm_ne_top (NormProd.petE_rdU_ne_top (Y.U σ') (D.sp.W j) (Y.dict σ') μ hμ hfH)
   have k2 := ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hfin) key
   rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal (mul_nonneg (Real.sqrt_nonneg _) hPa0)] at k2
   show AllWt.petAt (Y.U σ') (xiR D) (D.sp.W j) (Y.dict σ') μ _ (w.1 * f.1) ≤

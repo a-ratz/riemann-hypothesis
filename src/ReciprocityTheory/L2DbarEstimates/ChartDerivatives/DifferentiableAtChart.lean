@@ -56,8 +56,8 @@ noncomputable section
 theorem wd_mul' (n : ℕ) (j : Fin n) (g h : V n → ℂ) (y : V n) (hg : DifferentiableAt ℝ g y)
     (hh : DifferentiableAt ℝ h y) :
     wd n j (fun w => g w * h w) y = wd n j g y * h y + g y * wd n j h y := by
-  simp only [wd, fderiv_fun_mul hg hh, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [wd, fderiv_fun_mul hg hh, add_apply,
+    smul_apply, smul_eq_mul]
   ring
 
 theorem fderiv_conj' (n : ℕ) (g : V n → ℂ) (y : V n) (v : V n) :

@@ -322,7 +322,7 @@ theorem stage_unique_of_archimedean_triple (hH : GlobalTheory.Published.HoweDual
   have hT' : ∀ x, EB.symm (EA x) = c • x := fun x => by
     have := LinearMap.congr_fun hc x
     simpa using this
-  haveI : Nontrivial Pi₀ := hm₀.irred.1
+  have : Nontrivial Pi₀ := hm₀.irred.1
   have hc0 : c ≠ 0 := by
     rintro rfl
     obtain ⟨x, hx⟩ := exists_ne (0 : Pi₀)

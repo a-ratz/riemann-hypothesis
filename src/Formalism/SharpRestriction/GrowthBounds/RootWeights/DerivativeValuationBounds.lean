@@ -195,7 +195,7 @@ theorem flt_hom_monomial {B₀ B' : Type*} [CommRing B₀] [CommRing B'] {σ : T
     exact Fl'.one_mem
   next a k f _ _ ih =>
     have e1 : monomial (Finsupp.single a k + f) (1 : B₀) = X a ^ k * monomial f 1 := by
-      rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul, one_mul]
+      rw [MvPolynomial.X_pow_eq_monomial, monomial_mul_monomial, one_mul]
     have e2 : wt (Finsupp.single a k) = (k : ℤ) * wt (Finsupp.single a 1) := by
       rw [← nsmul_eq_mul, ← _root_.map_nsmul, Finsupp.smul_single, smul_eq_mul, mul_one]
     rw [e1, _root_.map_mul, _root_.map_pow, _root_.map_add (f := _), e2]
@@ -418,15 +418,15 @@ theorem flt_twistX_mem {R : Type*} [CommRing R] {ι : Type*} {n : ℕ} (LL : Let
     exact flt_monomial_mem (by rw [AddMonoidHom.zero_apply, sub_zero]; exact ha)
   simp only [twistSub, eval₂Hom_X', AddMonoidHom.neg_apply, flt_cost_single]
   by_cases hS : v.1 ∈ S
-  · rw [if_pos hS]
+  · rw [ite_eq_left hS]
     cases hv : LL.vec v.1
-    · rw [if_neg Bool.false_ne_true]
+    · rw [ite_eq_right Bool.false_ne_true]
       refine AddSubgroup.sum_mem _ fun b _ => hmon _ _ _ (flt_twistMat_mem R n j (-1) e _ ?_ ?_ _ _)
       all_goals rcases h with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;> simp [hS]
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
       refine AddSubgroup.sum_mem _ fun b _ => hmon _ _ _ (flt_twistMat_mem R n j 1 e _ ?_ ?_ _ _)
       all_goals rcases h with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;> simp [hS]
-  · rw [if_neg hS, if_neg (fun h' => hS h'.1), neg_zero]
+  · rw [ite_eq_right hS, ite_eq_right (fun h' => hS h'.1), neg_zero]
     simpa using hmon v 1 0 (flt_L _ e).one_mem
 
 theorem flt_twist_monomial_mem {R : Type*} [CommRing R] {ι : Type*} {n : ℕ} (LL : Letters ι) (S : Set ι) (j : Fin n)
@@ -484,10 +484,10 @@ theorem flt_g_pascal (R : Type*) [CommRing R] {σ : Type*} (m be : σ →₀ ℕ
   classical
   simp only [flt_g]
   have hX : ∀ (s : σ →₀ ℕ) (c : R), monomial s c * X a = monomial (s + Finsupp.single a 1) c := fun s c => by
-    rw [← pow_one (X a), MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul, mul_one]
+    rw [← pow_one (X a), MvPolynomial.X_pow_eq_monomial, monomial_mul_monomial, mul_one]
   rw [hX]
   by_cases h : a ∈ be.support
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have hba : be a ≠ 0 := Finsupp.mem_support_iff.1 h
     obtain ⟨b, hb⟩ : ∃ b, be a = b + 1 := ⟨be a - 1, by omega⟩
     obtain ⟨Q, hQ⟩ : ∃ Q, Q = ∏ k ∈ be.support.erase a, (m k).choose (be k) := ⟨_, rfl⟩
@@ -563,7 +563,7 @@ theorem flt_g_pascal (R : Type*) [CommRing R] {σ : Type*} (m be : σ →₀ ℕ
       rw [hx1, hx2, ← _root_.map_add (monomial (m - be + Finsupp.single a 1)), ← Nat.cast_add]
       congr 2
       ring
-  · rw [if_neg h, add_zero]
+  · rw [ite_eq_right h, add_zero]
     have hba : be a = 0 := by
       by_contra h0
       exact h (Finsupp.mem_support_iff.2 h0)
@@ -630,7 +630,7 @@ theorem flt_tay_monomial (R : Type*) [CommRing R] {σ : Type*} (m : σ →₀ �
       omega
     have e1 : monomial (m - Finsupp.single a 1 + Finsupp.single a 1) (1 : R) =
         monomial (m - Finsupp.single a 1) 1 * X a := by
-      rw [← pow_one (X a), MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul, one_mul]
+      rw [← pow_one (X a), MvPolynomial.X_pow_eq_monomial, monomial_mul_monomial, one_mul]
     have e2 : flt_tay R σ (X a) = C (X a) + X a := by
       simp only [flt_tay, eval₂Hom_X']
     rw [← hm', e1, _root_.map_mul, flt_g_pascal, e2, mul_add, MvPolynomial.coeff_add,
@@ -761,17 +761,17 @@ theorem flt_Th_mem {R : Type*} [CommRing R] {ι : Type*} {n : ℕ} (LL : Letters
       rwa [← MvPolynomial.C_mul_X_eq_monomial, _root_.map_one, one_mul] at h1
     refine AddSubgroup.add_mem _ (flt_C_mem hX1) ?_
     by_cases hS : w.1 ∈ S
-    · rw [if_pos hS]
+    · rw [ite_eq_left hS]
       cases hv : LL.vec w.1
-      · rw [if_neg Bool.false_ne_true]
+      · rw [ite_eq_right Bool.false_ne_true]
         refine AddSubgroup.sum_mem _ fun c _ => hmon2 _ _ (flt_twistMat_mem R n j 1 e _ ?_ ?_ _ _)
         all_goals rw [flt_cost_single]; rcases h with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;> simp [hS, hv]
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
         refine AddSubgroup.sum_mem _ fun c _ => hmon2 _ _ (flt_twistMat_mem R n j (-1) e _ ?_ ?_ _ _)
         all_goals rw [flt_cost_single]; rcases h with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;> simp [hS, hv]
-    · rw [if_neg hS]
+    · rw [ite_eq_right hS]
       have h1 : (1 : GLLaurent R n) ∈ (flt_L (GLCoord R n) e).F (0 - flt_cost LL S (!bm) (Finsupp.single w 1)) := by
-        rw [flt_cost_single, if_neg (fun h' => hS h'.1), sub_zero]
+        rw [flt_cost_single, ite_eq_right (fun h' => hS h'.1), sub_zero]
         exact (flt_L _ e).one_mem
       simpa using hmon2 w 1 h1
 

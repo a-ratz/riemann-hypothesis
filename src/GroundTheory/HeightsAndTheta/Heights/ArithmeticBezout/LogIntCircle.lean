@@ -78,7 +78,7 @@ theorem lintegral_abs_log_circle_le (P : Polynomial ℂ) (D d0 : ℕ) (M : ℝ)
   have hii : IntervalIntegrable G volume 0 (2 * Real.pi) := Polynomial.intervalIntegrable_mahlerMeasure P
   have hint : IntegrableOn G (Ioc 0 (2 * Real.pi)) :=
     (intervalIntegrable_iff_integrableOn_Ioc_of_le h2pi).mp hii
-  rw [← ofReal_integral_norm_eq_lintegral_enorm hint]
+  rw [← ofReal_integral_norm_eq_lintegral_eNorm hint]
   apply ENNReal.ofReal_le_ofReal
   set L := Real.log (max M 1) with hL
   have hpos : ∀ θ, G θ ≤ L := by
@@ -217,7 +217,7 @@ theorem circle_lemma {V : Type*} [MeasurableSpace V] (μ : Measure V) [SFinite �
       rw [e, ← hPcoeff u]
       exact this
     have hrot := setLIntegral_rot μ S hS R hR hpres hinv (fun u => ‖Real.log ‖F u‖‖ₑ)
-      (hFm.enorm)
+      (hFm.eNorm)
     have hKint : Integrable (fun u => K + 2 * Real.pi * |Real.log ‖c d0 u‖|) (μ.restrict S) := by
       have : IsFiniteMeasure (μ.restrict S) := isFiniteMeasure_restrict.mpr hSfin
       exact (integrable_const K).add (hint.abs.const_mul _)

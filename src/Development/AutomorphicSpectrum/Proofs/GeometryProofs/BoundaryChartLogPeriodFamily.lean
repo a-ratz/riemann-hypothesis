@@ -155,7 +155,7 @@ theorem isDiff_conj (h : IsGrpPullback A' A cj ψ) (u : HolUnif A M g) (u' : Hol
     (hex : ∀ z, u'.ex z = cjPt h (u.ex (star z))) {t : epsR ℂ ⟶ A} {t' : epsR ℂ ⟶ A'}
     (e : t'.left ≫ ψ = spMap (dualMap (starRingEnd ℂ)) ≫ t.left) {w : Fin g → ℂ} (hd : u.IsDiff w t) :
     u'.IsDiff (star w) t' := by
-  haveI := isIso_of_cj h
+  have := isIso_of_cj h
   intro U hU f
   have e2 : t'.left = spMap (dualMap (starRingEnd ℂ)) ≫ (show Sp (DualNumber ℂ) ⟶ _ from t.left) ≫ inv ψ := by
     rw [← Category.assoc]
@@ -202,7 +202,7 @@ theorem exists_conjUnif (h : IsGrpPullback A' A cj ψ) (hM : M.IsLB) (u : HolUni
 theorem isHodgeGram_conj : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (L : LB G.left) (x x' : Spec (CommRingCat.of ℂ) ⟶ S) (n : ℕ) (v : Fin n → (epsAt x ⟶ G)) (v' : Fin n → (epsAt x' ⟶ G)) (Γ : Matrix (Fin n) (Fin n) ℂ), x' = spMap (starRingEnd ℂ) ≫ x → (∀ i, (v' i).left = spMap (dualMap (starRingEnd ℂ)) ≫ (v i).left) → Fl.IsHodgeGram G L x v Γ → Fl.IsHodgeGram G L x' v' (Γ.map (starRingEnd ℂ)) := by
   rintro S G _ L x x' n v v' Γ rfl hv' ⟨Q, ψ, vo, u, Hm, χ, W, hP, hLB, hAH, hvo, hΓ⟩
   have hc := isGrpPullback_pullback Q.A cj
-  haveI := (Out.TLinPf.isAb_pullback cj Q.A Q.isAb).comm
+  have := (Out.TLinPf.isAb_pullback cj Q.A Q.isAb).comm
   obtain ⟨u', χ', hAH', hex⟩ := exists_conjUnif hc Q.isLB u hAH
   have sq : ∀ i, (spMap (dualMap (starRingEnd ℂ)) ≫ (vo i).left) ≫ Q.A.hom = (epsR ℂ).hom ≫ cj := fun i => by
     rw [Category.assoc, Over.w]
@@ -264,7 +264,7 @@ theorem expCover_add_single (h : a ≤ n) (w : Fin n → ℂ) (i : Fin a) :
   by_cases hk : k = Fin.castLE h i
   · subst hk
     have hi : (Fin.castLE h i).val < a := i.2
-    simp only [expCover, Pi.add_apply, Pi.single_eq_same, if_pos hi, Complex.exp_add,
+    simp only [expCover, Pi.add_apply, Pi.single_eq_same, ite_eq_left hi, Complex.exp_add,
       Complex.exp_two_pi_mul_I]
     exact mul_one _
   · simp [expCover, Pi.single_apply, hk]
@@ -272,7 +272,7 @@ theorem expCover_add_single (h : a ≤ n) (w : Fin n → ℂ) (i : Fin a) :
 theorem exists_mem_logCover (h : a ≤ n) : ∃ w : Fin n → ℂ, w ∈ logCover h := by
   refine ⟨fun k => if k.val < a then -1 else 0, fun i => ?_, fun k hk => ?_⟩
   · have hi : (Fin.castLE h i).val < a := i.2
-    simp only [if_pos hi]
+    simp only [ite_eq_left hi]
     simp
   · simp [not_lt.2 hk]
 
@@ -284,7 +284,7 @@ theorem monodromy_preserves_form (L : Flat.LogPeriods n a g Λ) (i : Fin a) (x y
   exact_mod_cast h1
 
 theorem T_bijective (L : Flat.LogPeriods n a g Λ) (i : Fin a) : Function.Bijective (L.T i) := by
-  haveI := L.fin
+  have := L.fin
   let e : Λ ≃ₗ[ℤ] Module.Dual ℤ Λ := LinearEquiv.ofBijective L.E L.unimod
   let S : Λ →ₗ[ℤ] Λ := e.symm.toLinearMap ∘ₗ (L.T i).dualMap ∘ₗ e.toLinearMap
   have hE : ∀ x y, L.E (S x) y = L.E x (L.T i y) := by

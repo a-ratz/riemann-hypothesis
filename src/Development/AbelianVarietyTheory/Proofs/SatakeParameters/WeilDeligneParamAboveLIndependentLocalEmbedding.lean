@@ -310,8 +310,8 @@ theorem wdPst_eq_of_map {L₁ L₂ : FinExt l}
     (hN : ∀ x, T (monD P ρ₁ x) = (Submodule.smul (p := Dpst P ρ₂)).smul a (monD P ρ₂ (T x)))
     (hsp : ∀ y, wdMk P ι ρ₂ y ∈ Submodule.span ℂ (Set.range fun x => wdMk P ι ρ₂ (T x))) :
     wdPst P ι B h hj ρ₁ = wdPst P ι B' h hj' ρ₂ := by
-  letI := algC ι L₁
-  letI := algC ι L₂
+  let := algC ι L₁
+  let := algC ι L₂
   let Φ : WDSpace P ι ρ₁ →ₗ[ℂ] WDSpace P ι ρ₂ :=
     EnlargeCoeff.chg (mulD P ρ₁) (mulD P ρ₂) ℂ (urC ι) s (fun a => congrArg ι (hs a)) T hT hm
   have hΦ : ∀ x, Φ (wdMk P ι ρ₁ x) = wdMk P ι ρ₂ (T x) := fun x => EnlargeCoeff.chg_mk _ _ _ _ _ _ _ _ _ _
@@ -380,8 +380,8 @@ theorem wdPst_enlarge {m : ℕ} {L₁ L₂ : FinExt l} (hL : L₁.1 ≤ L₂.1) 
     wdPst P ι B h hj (B.repE L₁ r₁) =
       wdPst P ι B h hj (B.repE L₂ (mapRep (IntermediateField.inclusion hL).toRingHom r₁)) := by
   have hV₂ := GlobalTheory.PstExt.isPst_enlarge P B hL r₁ hV₁
-  haveI := hV₁.finite
-  haveI := hV₂.finite
+  have := hV₁.finite
+  have := hV₂.finite
   obtain ⟨n, b, π, hπ, hsum⟩ := exists_decomp hL (m := m)
   have hf : ∀ g v, incV hL m (B.repE L₁ r₁ g v) =
       B.repE L₂ (mapRep (IntermediateField.inclusion hL).toRingHom r₁) g (incV hL m v) :=
@@ -442,8 +442,8 @@ theorem wdPst_conj {L : FinExt l} {V : Type} [AddCommGroup V] [Module ↥L.1 V] 
     (hg : ∀ x, g (B.j x) = B'.j x) (hK : ∀ x, x ∈ B.Kw.1 ↔ g x ∈ B'.Kw.1)
     (hρ : ∀ (k : ↥(GK B.Kw)) (k' : ↥(GK B'.Kw)), (k' : GQ l) = g * k * g⁻¹ → ρ' k' = ρ k)
     (hV : IsPst P ρ) (hV' : IsPst P ρ') : wdPst P ι B h hj ρ = wdPst P ι B' h hj' ρ' := by
-  haveI := hV.finite
-  haveI := hV'.finite
+  have := hV.finite
+  have := hV'.finite
   obtain ⟨S, a, ha, hs, h1, h2, h3⟩ := exists_map_conj P B B' h hg hK hρ
   refine wdPst_eq_of_map P ι B B' h hj hj' hV hV' rfl (RingHom.id _) (fun _ => rfl) S.toAddMonoidHom
     (fun a x => S.map_smul a x) h1 h2 a ha h3 fun y => ?_

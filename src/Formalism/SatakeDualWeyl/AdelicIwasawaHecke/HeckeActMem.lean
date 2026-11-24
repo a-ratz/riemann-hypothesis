@@ -84,8 +84,8 @@ theorem finite_supp {k : Type} [CommRing k] (K : Subgroup G) (hK : IsCommensurat
   have hfin : ∀ s : G, (Set.range fun k : K => ((↑k * s : G) : G ⧸ K)).Finite := by
     intro s
     let H : Subgroup K := (Subgroup.map (MulAut.conj s).toMonoidHom K).subgroupOf K
-    haveI : H.FiniteIndex := ⟨hK s⟩
-    haveI : Finite (K ⧸ H) := inferInstance
+    have : H.FiniteIndex := ⟨hK s⟩
+    have : Finite (K ⧸ H) := inferInstance
     let φ : K ⧸ H → G ⧸ K := Quotient.lift (fun k : K => ((↑k * s : G) : G ⧸ K)) (by
       intro a b hab
       have hab' : a⁻¹ * b ∈ H := QuotientGroup.leftRel_apply.1 hab

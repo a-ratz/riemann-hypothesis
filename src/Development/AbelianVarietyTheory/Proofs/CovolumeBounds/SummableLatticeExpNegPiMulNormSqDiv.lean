@@ -151,7 +151,7 @@ theorem integrable_of_lattice_translate_dominated {f : E → V} (hc : Continuous
   obtain ⟨R, hR⟩ := (isBounded_latticeCell L).exists_norm_le
   obtain ⟨g, hg, h⟩ := hdom R
   refine ⟨hc.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm,
+  rw [hasFiniteIntegral_iff_eNorm,
     (isAddFundamentalDomain_latticeCell L volume).lintegral_eq_tsum'']
   calc ∑' x : L, ∫⁻ u in latticeCell L, ‖f (x +ᵥ u)‖ₑ
       ≤ ∑' x : L, ENNReal.ofReal (g x) * volume (latticeCell L) := by
@@ -285,7 +285,7 @@ theorem poisson_cexp_gaussian_lattice {b : ℂ} (hb : 0 < b.re) (w u : E) :
       (ZLattice.covolume L : ℂ)⁻¹ * b ^ (-(finrank ℝ E / 2 : ℂ)) *
         ∑' y : dualLattice L, Complex.exp (-π * ‖(y : E) - w‖ ^ 2 / b) *
           Complex.exp (2 * π * Complex.I * ⟪(y : E), u⟫) := by
-  letI : IsZLattice ℝ (dualLattice L) := by
+  let : IsZLattice ℝ (dualLattice L) := by
     classical
     constructor
     rw [dualLattice_eq_span L (Free.chooseBasis ℤ L)]

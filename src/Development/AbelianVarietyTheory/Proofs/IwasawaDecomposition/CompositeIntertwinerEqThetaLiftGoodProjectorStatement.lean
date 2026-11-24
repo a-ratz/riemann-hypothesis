@@ -211,10 +211,10 @@ theorem stepLev_change : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T
       have e : D.R.m - 1 = k + 1 := by omega
       rw [e] at h3
       exact ⟨h3.1.1, h3.2⟩
-  haveI := Formalism.IndefR.Eqv.measurableMul_GA D (Yc D (k + 1))
-  haveI := Formalism.IndefR.Eqv.gQ_countable D (Yc D (k + 1))
-  haveI := hHF.1
-  haveI : (R.νY t (k + 1)).IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds _ _ hHF.1
+  have := Formalism.IndefR.Eqv.measurableMul_GA D (Yc D (k + 1))
+  have := Formalism.IndefR.Eqv.gQ_countable D (Yc D (k + 1))
+  have := hHF.1
+  have : (R.νY t (k + 1)).IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds _ _ hHF.1
   set Ψ : GA D (Yc D (k + 1)) → ℂ := fun h => thetaKO (R.ωY t k) g h (R.toRealDat.ptY t k φ) * y.1 w h with hΨ
   have hRI := Formalism.IndefR.Eqv.rightInv_holds (GA D (Yc D (k + 1))) (GQ (Yc D (k + 1))) (R.νY t (k + 1))
     (R.fdY t (k + 1)) hHF.2 Ψ (fun γ hγ h => by simp only [hΨ, hθ2 γ hγ h, hleft w γ hγ h]) κ'⁻¹
@@ -369,8 +369,8 @@ theorem stepLev_holds : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalTh
     obtain ⟨ℓ₁, s₁, e₁⟩ := hT τ v' (z * κ)
     obtain ⟨ℓ₂, s₂, e₂⟩ := hT τ v' z
     refine ⟨ℓ₁ + (-c0) • ℓ₂, GlobalTheory.MultMem.sobCont_add s₁ (GlobalTheory.MultMem.sobCont_smul _ s₂), fun w => ?_⟩
-    simp only [u, LinearMap.add_apply, LinearMap.smul_apply, e₁, e₂, MultilinearMap.sub_apply,
-      MultilinearMap.smul_apply, LinearMap.compMultilinearMap_apply, Pi.sub_apply, Pi.smul_apply,
+    simp only [u, LinearMap.add_apply, LinearMap.smul_apply, e₁, e₂, sub_apply,
+      smul_apply, LinearMap.compMultilinearMap_apply, Pi.sub_apply, Pi.smul_apply,
       LinearMap.funLeft_apply, smul_eq_mul]
     ring
   have hz : ∀ φ w, PiTensorProduct.lift u (R.ItY k φ w) = 0 := by
@@ -388,8 +388,8 @@ theorem stepLev_holds : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalTh
     ring
   have h0 := GlobalTheory.Mem.R3.StepUniq.eq_zero_of_vanish_it hC.1 hC.2.1 D G Pl0 I0 T A3 Ks R F cG hP hH t k hk u hu hz
   have h1 := congrFun (congrArg (fun U : MMap (R.MY k) => U v) h0) g
-  simp only [u, MultilinearMap.sub_apply, MultilinearMap.smul_apply, LinearMap.compMultilinearMap_apply, Pi.sub_apply,
-    Pi.smul_apply, LinearMap.funLeft_apply, smul_eq_mul, MultilinearMap.zero_apply, Pi.zero_apply] at h1
+  simp only [u, sub_apply, smul_apply, LinearMap.compMultilinearMap_apply, Pi.sub_apply,
+    Pi.smul_apply, LinearMap.funLeft_apply, smul_eq_mul, zero_apply, Pi.zero_apply] at h1
   linear_combination h1
 
 end GlobalTheory.Mem.R3.DTheta
@@ -527,7 +527,7 @@ def adj [Finite Q] (a : MonoidAlgebra ℂ Q) : MonoidAlgebra ℂ Q :=
 theorem adj_coeff [Finite Q] (a : MonoidAlgebra ℂ Q) (q : Q) : (adj a).coeff q = star (a.coeff q⁻¹) := rfl
 
 theorem adj_mul [Finite Q] (a b : MonoidAlgebra ℂ Q) : adj (a * b) = adj b * adj a := by
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   ext q
   rw [adj_coeff, coeff_mul_eq_sum, coeff_mul_eq_sum, star_sum]
   refine Fintype.sum_equiv (Equiv.mulLeft q) _ _ fun x => ?_
@@ -555,7 +555,7 @@ theorem coeff_mul_adj_one [Fintype Q] (a : MonoidAlgebra ℂ Q) :
   simp only [adj_coeff, mul_one, inv_inv]
 
 theorem eq_zero_of_coeff_mul_adj [Finite Q] (a : MonoidAlgebra ℂ Q) (h : (a * adj a).coeff 1 = 0) : a = 0 := by
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   rw [coeff_mul_adj_one] at h
   ext q
   have := (Finset.sum_eq_zero_iff_of_nonneg fun x _ => mul_star_self_nonneg (a.coeff x)).1 h q (Finset.mem_univ _)
@@ -643,7 +643,7 @@ theorem integral_act (hμ : μ.IsHaarMeasure) (h𝓕 : IsFundamentalDomain (GQ V
     rw [h1, levChi_inv hκ, mul_inv_cancel_right, actG0, dite_eq_left hk, star_mul']
     ring
   · have hk' : ¬ ∃ κ, IsLevelLift V β L g⁻¹ κ := fun ⟨κ, h⟩ => hk ⟨κ⁻¹, by simpa using isLiftFlagGroup_inv h⟩
-    simp [actG0, dif_neg hk, dif_neg hk']
+    simp [actG0, dite_eq_right hk, dite_eq_right hk']
 
 theorem ipM_gaL (hP : GlobalTheory.Published.CuspRapidDecay) (hθ : IsInfFam θ) (hμ : μ.IsHaarMeasure) (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 μ)
     (eG : G ≃* G0 L.Pg L.r) (c : G → ℂ) (hc : ∀ g, c g⁻¹ = star (c g)) {X Y : MMap M}

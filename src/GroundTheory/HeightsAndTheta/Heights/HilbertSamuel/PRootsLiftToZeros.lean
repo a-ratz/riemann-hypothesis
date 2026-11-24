@@ -65,7 +65,7 @@ theorem RootsLiftToZeros.proof : RootsLiftToZeros.Statement := by
   let A := MvPolynomial σ ℚ ⧸ P
   let α : Polynomial (MvPolynomial (Fin e) ℚ) →+* A :=
     (Ideal.Quotient.mk P).comp (Polynomial.eval₂RingHom (aeval ℓ).toRingHom u)
-  letI : Algebra (Polynomial (MvPolynomial (Fin e) ℚ)) A := α.toAlgebra
+  let : Algebra (Polynomial (MvPolynomial (Fin e) ℚ)) A := α.toAlgebra
   have hα : ∀ Q, algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) A Q =
       Ideal.Quotient.mk P (Q.eval₂ (aeval ℓ).toRingHom u) := fun _ => rfl
   have _ : Algebra.IsIntegral (Polynomial (MvPolynomial (Fin e) ℚ)) A := by

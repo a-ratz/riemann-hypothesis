@@ -70,7 +70,7 @@ variable {R : Type*} [CommRing R] [IsDedekindDomain R] {K : Type*} [Field K] [Al
 theorem wz_lt_one_iff (γ : ℤᵐ⁰) : γ < 1 ↔ γ ≤ exp (-1 : ℤ) := by
   rcases eq_or_ne γ 0 with rfl | hγ
   · first
-    | exact iff_of_true zero_lt_one zero_le'
+    | exact iff_of_true zero_lt_one zero_le
   · first
     | (rw [← WithZero.exp_log hγ, ← WithZero.exp_zero, WithZero.exp_lt_exp, WithZero.exp_le_exp]; omega)
     | (obtain ⟨a, rfl⟩ := WithZero.ne_zero_iff_exists.mp hγ
@@ -158,7 +158,7 @@ theorem adicCompl_isClosed_le (r : ℤᵐ⁰) : IsClosed {x : Kv | Valued.v x �
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro x hx
   have hx' : r < Valued.v x := not_le.mp hx
-  have hx0 : Valued.v x ≠ 0 := (lt_of_le_of_lt zero_le' hx').ne'
+  have hx0 : Valued.v x ≠ 0 := (lt_of_le_of_lt zero_le hx').ne'
   have hmem : {y : Kv | Valued.v y = Valued.v x} ∈ 𝓝 x := by
     first
     | exact Valuation.loc_const hx0
@@ -433,7 +433,7 @@ theorem adel_local (v : HeightOneSpectrum (𝓞 H.F)) :
       (((H.d : ℤ) : 𝓞 H.F) ∉ v.asIdeal →
         S ∈ v.adicCompletionIntegers H.F ∧ T ∈ v.adicCompletionIntegers H.F) ∧
       S * S + S * T + ((adelNd H : ℤ) : v.adicCompletion H.F) * (T * T) = -1 := by
-  haveI : Finite (𝓞 H.F ⧸ v.asIdeal) := by
+  have : Finite (𝓞 H.F ⧸ v.asIdeal) := by
     first
     | exact Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
     | infer_instance
@@ -497,7 +497,7 @@ theorem adel_finite_d :
   refine (Ideal.finite_factors (I := Ideal.span {((H.d : ℤ) : 𝓞 H.F)}) ?_).subset ?_
   · rwa [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   · intro v hv
-    rw [Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact hv
 
 def adelSv (v : HeightOneSpectrum (𝓞 H.F)) : v.adicCompletion H.F := (adel_local H v).choose

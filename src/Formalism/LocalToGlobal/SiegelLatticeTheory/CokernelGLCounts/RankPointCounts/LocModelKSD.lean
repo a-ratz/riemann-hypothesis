@@ -103,7 +103,7 @@ theorem modK_inv_unit {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologica
 theorem modK_twist {δ : ∀ p : PlF D, (D.s.atP p).Fp} {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep}
     (hA : ∀ p, Agree δ M p) (p : PlF D) (s : ℕ) : A5.modK (M p).R (twist p s (1 : (D.s.atP p).Ep)) = 1 := by
   have hOK := (hA p).1
-  haveI := Formalism.MainNotions.LocalModelPeriodLattices.top_of_OK (M p) hOK
+  have := Formalism.MainNotions.LocalModelPeriodLattices.top_of_OK (M p) hOK
   have hd := Formalism.MainNotions.LocalModelPeriodLattices.datum_of_OK (M p) hOK
   have h1 : A5.modK (M p).R 1 = 1 := by
     simp only [A5.modK, A5.mulR]
@@ -243,7 +243,7 @@ theorem modK_tMod {δ : ∀ p : PlF D, (D.s.atP p).Fp} {M : ∀ p : PlF D, Loc.M
         A5.modK (M p).R ((D.s.atP p).ιE t) *
         (A5.modK (M p).R ((D.s.atP p).ιE ((Lat.gS D : ℕ) : D.host.E)))⁻¹ := by
   have hOK := (hA p).1
-  haveI := Formalism.MainNotions.LocalModelPeriodLattices.top_of_OK (M p) hOK
+  have := Formalism.MainNotions.LocalModelPeriodLattices.top_of_OK (M p) hOK
   have hd := Formalism.MainNotions.LocalModelPeriodLattices.datum_of_OK (M p) hOK
   have hm : ∀ x y : (D.s.atP p).Ep, IsUnit x → IsUnit y →
       A5.modK (M p).R (x * y) = A5.modK (M p).R x * A5.modK (M p).R y :=

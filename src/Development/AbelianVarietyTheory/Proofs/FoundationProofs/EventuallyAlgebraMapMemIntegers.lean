@@ -169,7 +169,7 @@ theorem eventually_latLoc_eq (L L' : Submodule (𝓞 E) (Fin n → E)) [hL : Sub
 
 
 theorem isLattice_stdLattice : Submodule.IsFullLattice E (stdLattice E n) := by
-  haveI : Submodule.IsLattice E (stdLattice E n) := Submodule.IsLattice.of_fg E (by
+  have : Submodule.IsLattice E (stdLattice E n) := Submodule.IsLattice.of_fg E (by
     refine Submodule.fg_pi fun _ => ?_
     rw [LinearMap.range_eq_map]
     exact Module.Finite.fg_top.map _)

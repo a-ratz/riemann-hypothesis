@@ -113,7 +113,7 @@ theorem continuous_rhoDual (ε : Fin n → Bool) :
     Continuous (fun k : KG ε => ((rhoDual ε k : unitary (Matrix (Fin n) (Fin n) ℂ)) :
       Matrix (Fin n) (Fin n) ℂ)) := by
   have hK : Continuous (fun k : KG ε => toMK k) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   exact (continuous_id.matrix_map continuous_star).comp hK
 
 section Deriv
@@ -159,13 +159,13 @@ theorem kRel_dualM (ε : Fin n → Bool) : Formalism.REAL.KRel ε (dualM n) := b
   intro a b c d _ _
   simp only [dualM, neg_mul_neg]
   rcases eq_or_ne a d with rfl | hda <;> rcases eq_or_ne c b with rfl | hcb
-  · simp only [Matrix.single_mul_single_same, mul_one, if_true]
+  · simp only [Matrix.single_mul_single_same, mul_one, ite_true]
     abel
   · simp [hcb.symm]
     exact Matrix.single_mul_single_of_ne (h := hcb) ..
   · simp [hda.symm]
     exact Matrix.single_mul_single_of_ne (h := hda) ..
-  · simp only [hda.symm, hcb.symm, if_false, sub_zero]
+  · simp only [hda.symm, hcb.symm, ite_false, sub_zero]
     rw [Matrix.single_mul_single_of_ne (h := hda) .., Matrix.single_mul_single_of_ne (h := hcb) .., sub_zero]
 
 theorem dualM_diag (a : Fin n) :

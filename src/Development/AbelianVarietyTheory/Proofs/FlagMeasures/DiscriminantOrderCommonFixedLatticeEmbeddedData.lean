@@ -71,7 +71,7 @@ variable {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V]
 
 theorem lattice_of_idx {A B : Submodule (𝓞 K) V} (hA : Submodule.IsFullLattice K A) (hle : B ≤ A)
     (h : idxN A B ≠ 0) : Submodule.IsFullLattice K B := by
-  haveI : Submodule.IsLattice K B := Submodule.IsLattice.of_fg K (hA.fg.of_le hle)
+  have : Submodule.IsLattice K B := Submodule.IsLattice.of_fg K (hA.fg.of_le hle)
   refine ⟨?_⟩
   rw [eq_top_iff, ← hA.span_eq_top, Submodule.span_le]
   intro x hx
@@ -86,7 +86,7 @@ theorem lattice_of_idx {A B : Submodule (𝓞 K) V} (hA : Submodule.IsFullLattic
 theorem lattice_map {W : Type} [AddCommGroup W] [Module K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W]
     {A : Submodule (𝓞 K) V} (hA : Submodule.IsFullLattice K A) (f : V →ₗ[K] W) (hf : Function.Surjective f) :
     Submodule.IsFullLattice K (A.map (f.restrictScalars (𝓞 K))) := by
-  haveI : Submodule.IsLattice K (A.map (f.restrictScalars (𝓞 K))) :=
+  have : Submodule.IsLattice K (A.map (f.restrictScalars (𝓞 K))) :=
     Submodule.IsLattice.of_fg K (hA.fg.map _)
   refine ⟨?_⟩
   change Submodule.span K (f '' (A : Set V)) = ⊤
@@ -126,7 +126,7 @@ theorem exists_rat_basis [Module ℚ V] [IsScalarTower ℚ K V] [Module.Finite �
     | zero => exact zero_mem _
     | add y z _ _ hy hz => exact add_mem hy hz
     | smul a y _ hy => exact hsmul a hy
-  haveI : (A.restrictScalars ℤ).IsFullLattice ℚ := ⟨hspan⟩
+  have : (A.restrictScalars ℤ).IsFullLattice ℚ := ⟨hspan⟩
   have : Module.Finite ℤ (A.restrictScalars ℤ) := Submodule.IsLattice.finite ℚ _
   have : Module.Free ℤ (A.restrictScalars ℤ) := Submodule.IsLattice.free ℚ _
   have hr := Submodule.IsFullLattice.finrank_eq ℚ (A.restrictScalars ℤ)

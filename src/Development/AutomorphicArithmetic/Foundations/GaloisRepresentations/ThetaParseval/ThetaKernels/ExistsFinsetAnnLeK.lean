@@ -68,11 +68,11 @@ theorem exists_finset_ann_le_k : ∀ (F E : Type) [Field F] [NumberField F] [Fie
             (∀ g ∈ G, B.ψ (symplOHF σ JS JT ξ₀ g y - symplOHF σ JS JT ξ₀ y g) = 1) → y ∈ U := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hσξ e he U hU
   classical
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨eh⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : T2Space (AEF F E) := eh.isEmbedding.t2Space
+  have : T2Space (AEF F E) := eh.isEmbedding.t2Space
   have hψ : Continuous B.ψ := hB.std.1
   obtain ⟨he1, he2, v, ε, hpl, hsum⟩ := id he
   obtain ⟨N, Φ, hΦc, hΦi, hΦr⟩ := GlobalTheory.PlaceCoordsF.coords_at_place F E v ε hpl nS nT
@@ -81,7 +81,7 @@ theorem exists_finset_ann_le_k : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   obtain ⟨K, hK, hK0, hKn⟩ := GlobalTheory.NonarchShell.exists_compact_shell_nsmul F v N _ hV
   let Y : Set (WOF F E nS nT) := {y | ∀ i j, cAF σ e * y i j = y i j}
   have hYc : IsClosed Y := by
-    simp only [Y, Set.setOf_forall]
+    simp only [Y, Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_eq (continuous_const.mul ((continuous_apply j).comp (continuous_apply i)))
         ((continuous_apply j).comp (continuous_apply i))

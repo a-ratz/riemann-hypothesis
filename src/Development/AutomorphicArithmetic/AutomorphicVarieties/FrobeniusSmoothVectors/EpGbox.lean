@@ -70,12 +70,12 @@ theorem UpperTheory.V.Fr.ep_upt :
     intro i j hm hji
     have e := congrFun (congrFun hc i) j
     simp only [Matrix.mul_apply] at e
-    have hji' := Fin.lt_iff_val_lt_val.mp hji
+    have hji' := Fin.lt_def.mp hji
     have L : ∑ k, h i k * T k j = h i j * T j j := by
       rw [Finset.sum_eq_single j]
       · intro k _ hkj
         rcases lt_or_gt_of_ne hkj with hk | hk
-        · have hk' := Fin.lt_iff_val_lt_val.mp hk
+        · have hk' := Fin.lt_def.mp hk
           rw [ih (k.val + (n - i.val)) (by omega) i k rfl (hk.trans hji), zero_mul]
         · rw [hT k j hk, mul_zero]
       · intro hn
@@ -85,7 +85,7 @@ theorem UpperTheory.V.Fr.ep_upt :
       · intro k _ hki
         rcases lt_or_gt_of_ne hki with hk | hk
         · rw [hT' i k hk, zero_mul]
-        · have hk' := Fin.lt_iff_val_lt_val.mp hk
+        · have hk' := Fin.lt_def.mp hk
           have hkn := k.isLt
           rw [ih (j.val + (n - k.val)) (by omega) k j rfl (hji.trans hk), mul_zero]
       · intro hn
@@ -206,7 +206,7 @@ theorem UpperTheory.V.Fr.ep_gflag :
     rw [hY, Matrix.add_apply, Matrix.one_apply_ne (ne_of_gt hij'), hDdef, Matrix.mul_diagonal,
       hUh i j hij', zero_mul, add_zero]
   have hYdet : IsUnit Y.det := by
-    rw [Matrix.det_of_upperTriangular hYU, Fin.prod_univ_three]
+    rw [det_of_isUpperTriangular hYU, Fin.prod_univ_three]
     have hu : ∀ i, IsUnit (Y i i) := by
       intro i
       rw [hY, Matrix.add_apply, Matrix.one_apply_eq, hDdef, Matrix.mul_diagonal, mul_comm]
@@ -218,7 +218,7 @@ theorem UpperTheory.V.Fr.ep_gflag :
   have hYYi : Y * Yi = 1 := hYu.mul_val_inv
   have hYiY : Yi * Y = 1 := hYu.val_inv_mul
   have hUYi : UpT Yi := by
-    haveI : Invertible Y := ⟨Yi, hYiY, hYYi⟩
+    have : Invertible Y := ⟨Yi, hYiY, hYYi⟩
     have := Matrix.blockTriangular_inv_of_blockTriangular hYU
     rw [Matrix.inv_eq_left_inv hYiY] at this
     exact fun i j hij => this hij
@@ -257,7 +257,7 @@ private theorem upT_mul' {K : Type} [CommRing K] {n : ℕ} {A B : Matrix (Fin n)
 
 private theorem upT_inv {K : Type} [CommRing K] {n : ℕ} {u : GL (Fin n) K} (h : UpT (u : Matrix (Fin n) (Fin n) K)) :
     UpT ((u⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) := by
-  letI := u.invertible
+  let := u.invertible
   rw [Matrix.coe_units_inv]
   exact upT_bt.2 (Matrix.blockTriangular_inv_of_blockTriangular (upT_bt.1 h))
 

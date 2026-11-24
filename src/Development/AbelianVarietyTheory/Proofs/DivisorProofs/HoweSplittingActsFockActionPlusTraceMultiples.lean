@@ -119,11 +119,11 @@ theorem schur : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ
       ∀ φ ∈ schA F κ, ∫⁻ x, ‖M φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
     ∃ z : ℂ, ∀ φ ∈ schA F κ, M φ = z • φ := by
   intro F _ _ κ _ ψ hψ M hpres hcomm hiso
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   let μ : Measure (κ → AF F) := Measure.addHaar
-  haveI hμH : μ.IsAddHaarMeasure := by dsimp [μ]; infer_instance
+  have hμH : μ.IsAddHaarMeasure := by dsimp [μ]; infer_instance
   have hL2 : ∀ φ ∈ schA F κ, MemLp φ 2 μ := fun φ hφ =>
     GlobalTheory.WeilM.schA_memLp_two F κ μ hμH φ hφ
   have hint : ∀ φ ∈ schA F κ, Integrable (fun x => ‖φ x‖ ^ 2) μ := fun φ hφ =>
@@ -135,7 +135,7 @@ theorem schur : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ
       rw [ofReal_integral_eq_lintegral_ofReal (hint g hg) (Filter.Eventually.of_forall fun x => by positivity)]
       congr 1
       funext x
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rw [e _ (hpres φ hφ), e φ hφ] at h
     exact (ENNReal.ofReal_eq_ofReal_iff (integral_nonneg fun x => by positivity)
       (integral_nonneg fun x => by positivity)).1 h
@@ -552,7 +552,7 @@ theorem exists_compD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     intro g w; simp only [hk, ← Matrix.mul_assoc, hA', Matrix.one_mul]
   refine ⟨k, ?_, fun g w => (hCk g w).symm, fun g w => ?_, fun w X X' h => ?_⟩
   · have h1 : Continuous (fun g : UG (cA σ) J => ((g.1 : Matrix β β (AE F E)))) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     refine continuous_pi fun w => ?_
     exact (continuous_const.matrix_mul (h1.matrix_map (GlobalTheory.ContMapReal.continuous_piInf (τ w)))).matrix_mul
       continuous_const
@@ -912,8 +912,8 @@ theorem exists_sp_rightActD : ∀ (ι l : Type) [Fintype ι] [DecidableEq ι] [F
         rw [this, ih]
         congr 1; funext w
         rw [pow_succ, Matrix.transpose_mul, Matrix.mul_assoc]
-    letI : NormedRing (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℝ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedAlgebra
+    let : NormedRing (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℝ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedAlgebra
     have h1 : HasSum (fun n : ℕ => (((n.factorial : ℝ)⁻¹) • (t • Z) ^ n) *ᵥ φ c)
         (NormedSpace.exp (t • Z) *ᵥ φ c) :=
       (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) (t • Z)).map
@@ -921,8 +921,8 @@ theorem exists_sp_rightActD : ∀ (ι l : Type) [Fintype ι] [DecidableEq ι] [F
     have hw : ∀ w, HasSum (fun n : ℕ => c w * (((n.factorial : ℝ)⁻¹ • (t • Y w) ^ n))ᵀ)
         (c w * (NormedSpace.exp (t • Y w))ᵀ) := by
       intro w
-      letI : NormedRing (Mat (R w) (S w)) := Matrix.linftyOpNormedRing
-      letI : NormedAlgebra ℝ (Mat (R w) (S w)) := Matrix.linftyOpNormedAlgebra
+      let : NormedRing (Mat (R w) (S w)) := Matrix.linftyOpNormedRing
+      let : NormedAlgebra ℝ (Mat (R w) (S w)) := Matrix.linftyOpNormedAlgebra
       have := (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) (t • Y w)).matrix_transpose
       exact this.map (AddMonoidHom.mk' (fun M => c w * M) fun _ _ => Matrix.mul_add _ _ _)
         (continuous_const.matrix_mul continuous_id)
@@ -1006,7 +1006,7 @@ theorem decomp (c : ∀ w, MD P Q R S w) :
   rw [Finset.sum_eq_single w]
   · simp only [eS_same]
     rw [Finset.sum_eq_single a, Finset.sum_eq_single b]
-    · simp only [Matrix.single_apply, and_self, if_true, Complex.real_smul, mul_one]
+    · simp only [Matrix.single_apply, and_self, ite_true, Complex.real_smul, mul_one]
       exact (Complex.re_add_im _).symm
     · intro y _ hy; simp [Matrix.single_apply, hy, Ne.symm hy]
     · simp
@@ -1044,7 +1044,7 @@ theorem dual {l : Type} [Fintype l] (φ : (∀ w, MD P Q R S w) ≃ₗ[ℝ] (l �
   congr 1
   conv_rhs => rw [decomp c]
   rw [sum_idx]
-  simp only [cu, cv, if_true, Bool.false_eq_true, if_false, hφ, sum_eS]
+  simp only [cu, cv, ite_true, Bool.false_eq_true, ite_false, hφ, sum_eS]
   refine Finset.sum_congr rfl fun w _ => Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   rw [smul_smul, smul_smul, lineSign_eq_sgn]
   have h2 := sgn_mul_self a b
@@ -1067,7 +1067,7 @@ theorem cu_true_mul (Y : ∀ w, Mat (R w) (S w)) (w : ι) (a : Ix (P w) (Q w)) (
       (Pi.single w ((sgn a b / 2) • (Matrix.single a b (1 : ℂ) * (Y w)ᵀ)) : ∀ w', MD P Q R S w') w' := by
   by_cases h : w' = w
   · subst h
-    simp only [cu, eS, if_true, Pi.smul_apply, Pi.single_eq_same, Matrix.smul_mul]
+    simp only [cu, eS, ite_true, Pi.smul_apply, Pi.single_eq_same, Matrix.smul_mul]
   · simp [cu, eS, h]
 
 theorem cu_false_mul (Y : ∀ w, Mat (R w) (S w)) (w : ι) (a : Ix (P w) (Q w)) (b : Ix (R w) (S w)) (w' : ι) :
@@ -1075,7 +1075,7 @@ theorem cu_false_mul (Y : ∀ w, Mat (R w) (S w)) (w : ι) (a : Ix (P w) (Q w)) 
       (Pi.single w ((-(sgn a b / 2)) • (Matrix.single a b Complex.I * (Y w)ᵀ)) : ∀ w', MD P Q R S w') w' := by
   by_cases h : w' = w
   · subst h
-    simp only [cu, eS, Bool.false_eq_true, if_false, Pi.smul_apply, Pi.single_eq_same, Matrix.smul_mul]
+    simp only [cu, eS, Bool.false_eq_true, ite_false, Pi.smul_apply, Pi.single_eq_same, Matrix.smul_mul]
   · simp [cu, eS, h]
 
 theorem cv_true (w : ι) (a : Ix (P w) (Q w)) (b : Ix (R w) (S w)) :
@@ -1130,8 +1130,8 @@ theorem quad_fockD : ∀ (ι l : Type) [Fintype ι] [DecidableEq ι] [Fintype l]
   rw [hop, hq]
   clear hq hop hφ hY
 
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_sum', Finset.sum_apply,
-  ContinuousLinearMap.add_apply, ContinuousLinearMap.mul_apply, LinearMap.smul_apply, LinearMap.sum_apply,
+  simp only [smul_apply, FunLike.coe_sum, Finset.sum_apply,
+  add_apply, mul_apply_eq_comp, LinearMap.smul_apply, LinearMap.sum_apply,
   LinearMap.add_apply, Module.End.mul_apply, map_smul, map_sum, map_add, hΨ, hZ]
 
 end GlobalTheory.HoweD
@@ -1176,7 +1176,7 @@ theorem archRepD :
   intro F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
   obtain ⟨n, θ, φ, φ₀, hp, hq, hφ, hφu⟩ := _root_.GlobalTheory.ArchCoordsD.exists_coords F E σ α β κ P Q R S τ JA JB d a b A C hCM hFr
   obtain ⟨k, hkc, hkC, hkJ, hcan⟩ := _root_.GlobalTheory.RealLiftCompD.exists_compD F E σ β R S τ JB b C hCM hFr.2.2
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨ω, hωc, hωi⟩ := _root_.GlobalTheory.HoweD.exists_osc _ _ P Q R S φ hφ (_root_.GlobalTheory.RealWeil.continuous_rho _) (UG (cA σ) JB) k hkc hkJ
   obtain ⟨s, hsc, hsφ⟩ := _root_.GlobalTheory.ColActionD.exists_symplectic_hom_of_unitary_dep _ _ P Q R S φ hφ (UG (cA σ) JB) k hkc hkJ
   obtain ⟨ρ, η, hη1, hη2, hη3, hρi, hρu, hρc, hρd⟩ :=
@@ -1199,7 +1199,7 @@ theorem archRepD :
         rw [map_one]
         exact hVE f
       map_mul' := fun g h => ContinuousLinearMap.ext fun f => by
-        simp only [map_mul, ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, hEV] }
+        simp only [map_mul, mul_apply_eq_comp, ContinuousLinearMap.comp_apply, hEV] }
   have hρ' : ∀ g f, ρ' g f = toV (ρ g (toE f)) := fun _ _ => rfl
   clear_value ρ'
   refine ⟨ρ', fun w => kk w / 2, fun g _ => ⟨fun u hu f f₁ hf h => ?_, fun ν hν f₁ f₂ => ?_⟩, fun L f => ?_,
@@ -1232,10 +1232,10 @@ theorem archRepD :
     have e3 := hρi g _ _ _ e2
     rw [hsφ, hφu _ _ hu' hc'] at e3
     rw [_root_.GlobalTheory.ArchRhoPure.rho_pureA_schrF F E σ α β κ ψ JA JB d hψ _ hu', hρ', hρ', htoV, htoV, hS, e3]
-  · haveI : BorelSpace ({w : InfinitePlace F // w.IsReal} → ℝ) := Pi.borelSpace
-    haveI : BorelSpace ({w : InfinitePlace F // w.IsComplex} → ℂ) := Pi.borelSpace
-    haveI : BorelSpace (mixedEmbedding.mixedSpace F) := Prod.borelSpace
-    haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  · have : BorelSpace ({w : InfinitePlace F // w.IsReal} → ℝ) := Pi.borelSpace
+    have : BorelSpace ({w : InfinitePlace F // w.IsComplex} → ℂ) := Pi.borelSpace
+    have : BorelSpace (mixedEmbedding.mixedSpace F) := Prod.borelSpace
+    have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
     obtain ⟨r, hr⟩ := haar_coords ν θ
     rw [hr, hr]
     congr 1

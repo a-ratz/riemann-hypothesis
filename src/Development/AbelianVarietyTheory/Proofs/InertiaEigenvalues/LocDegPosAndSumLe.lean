@@ -53,10 +53,10 @@ namespace GlobalTheory.Proof.LocDegPos
 theorem locDeg_pos_and_sum_le : ∀ (E : Type) [Field E] [NumberField E] (l : ℕ), l.Prime → (∀ v : HeightOneSpectrum (𝓞 E), 0 < Formalism.MainNotions.N.locDeg E v) ∧ ∀ s : Finset (HeightOneSpectrum (𝓞 E)), (∀ v ∈ s, v ∈ placesOver E l) → ∑ v ∈ s, Formalism.MainNotions.N.locDeg E v ≤ Module.finrank ℚ E := by
   intro E _ _ l hl
   refine ⟨fun v => ?_, fun s hs => ?_⟩
-  · haveI := v.isPrime
+  · have := v.isPrime
     exact Nat.mul_pos (Ideal.ramificationIdx_pos (R := ℤ) v.asIdeal) (Ideal.inertiaDeg_pos v.asIdeal ℤ)
   · classical
-    haveI : Fact l.Prime := ⟨hl⟩
+    have : Fact l.Prime := ⟨hl⟩
     have hfin : Set.Finite {v : HeightOneSpectrum (𝓞 E) | ((l : ℕ) : 𝓞 E) ∈ v.asIdeal} := by
       have hf : ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E)).Finite :=
         IsDedekindDomain.primesOver_finite _ _
@@ -66,7 +66,7 @@ theorem locDeg_pos_and_sum_le : ∀ (E : Type) [Field E] [NumberField E] (l : �
       refine ⟨v.isPrime, ?_⟩
       rw [Ideal.liesOver_span_iff v.isPrime.ne_top (Nat.prime_iff_prime_int.1 hl)]
       simpa using hv
-    letI : Fintype {v : HeightOneSpectrum (𝓞 E) // ((l : ℕ) : 𝓞 E) ∈ v.asIdeal} := hfin.fintype
+    let : Fintype {v : HeightOneSpectrum (𝓞 E) // ((l : ℕ) : 𝓞 E) ∈ v.asIdeal} := hfin.fintype
     have hsum := GlobalTheory.Proof.LocalDegreeSum.sum_locDeg E l
     rw [← hsum, ← Finset.sum_subtype_of_mem (fun v => Formalism.MainNotions.N.locDeg E v) (p := fun v : HeightOneSpectrum (𝓞 E) => ((l : ℕ) : 𝓞 E) ∈ v.asIdeal) (fun v hv => hs v hv)]
     exact Finset.sum_le_sum_of_subset (Finset.subset_univ _)

@@ -197,7 +197,7 @@ theorem anti_ded {B : Type} [CommRing B] [IsDedekindDomain B] (σ : B ≃+* B) (
   refine ⟨x, hxI, fun P hPmax hpP => hx P ?_⟩
   have hPbot : P ≠ ⊥ := fun h => hp (by rw [h] at hpP; exact Ideal.mem_bot.mp hpP)
   refine Finset.mem_image.mpr ⟨⟨P, hPmax.isPrime, hPbot⟩, ?_, rfl⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   exact hpP
 
 theorem bar_bar {E : Type} [Field E] [NumberField E] [IsCMField E] (bar : 𝓞 E ≃+* 𝓞 E)

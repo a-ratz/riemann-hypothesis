@@ -68,7 +68,7 @@ theorem isLocallyConstant_red {p : ℕ} [Fact p.Prime] (r n : ℕ) :
 
 theorem continuous_zc {p : ℕ} [Fact p.Prime] : Continuous (JMB.zc : ℤ_[p] → ℂ_[p]) := by
   unfold JMB.zc
-  exact (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtype_val
+  exact (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtypeVal
 
 theorem continuous_pairD {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (Ω : ℂ_[p]) {g : ℕ} (d : ℕ)
     (Hm : Matrix (Fin g) (Fin g) ℂ) {r : ℕ} (b : Fin r → Fin g → ℂ) (y : Fin g → ℂ) :

@@ -93,8 +93,8 @@ theorem LeafTwSec_of (h : LeafTwLB) : LateralTheory.E.LeafTwistPf.LeafTwSec := b
   intro q _ B _ ζ i j
   let K := (Over.forget (Spec (CommRingCat.of B))).pushforwardContinuousSheafificationCompatibility
     (ModuleCat.{1} (ULift.{1} (ZMod q))) (Scheme.etaleTopology.over (Spec (CommRingCat.of B))) Scheme.etaleTopology
-  haveI := h q B ζ i
-  haveI := h q B ζ j
+  have := h q B ζ i
+  have := h q B ζ j
   let Φ := (K.app (Scheme.Γ ⋙ twF q i)).symm ≪≫ (asIso ((presheafToSheaf _ _).map (cmap ζ i))).symm ≪≫
     asIso ((presheafToSheaf _ _).map (cmap ζ j)) ≪≫ K.app (Scheme.Γ ⋙ twF q j)
   let Ψ := (sheafToPresheaf _ _).mapIso Φ
@@ -111,8 +111,8 @@ def LeafTwInj : Prop := ∀ (q : ℕ) [NeZero q] (B : Type) [CommRing B] (ζ : P
 
 theorem LeafTwLB_of (hI : LeafTwInj) (hS : LeafTwSurj) : LeafTwLB := by
   intro q _ B _ ζ k
-  haveI := hI q B ζ k
-  haveI := hS q B ζ k
+  have := hI q B ζ k
+  have := hS q B ζ k
   exact (GrothendieckTopology.W_iff _ _).1 (GrothendieckTopology.W_of_isLocallyBijective _ _)
 
 theorem LeafTwSec_of' (hI : LeafTwInj) (hS : LeafTwSurj) : LateralTheory.E.LeafTwistPf.LeafTwSec :=

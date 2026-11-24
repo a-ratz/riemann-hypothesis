@@ -160,7 +160,7 @@ theorem latAd_mul_ratA : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
   unfold latAd
   congr 1
   ext x
-  rw [Set.mem_setOf_eq, Set.mem_setOf_eq, _root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec, ← map_inv, key]
+  rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq, _root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec, ← map_inv, key]
 
 end GlobalTheory.TwV
 end -- clump:auto
@@ -198,7 +198,7 @@ namespace GlobalTheory.CompanFG
 
 theorem fg_of_le_fg {R M : Type*} [CommRing R] [IsNoetherianRing R] [AddCommGroup M] [Module R M]
     {P Q : Submodule R M} (hQ : Q.FG) (hPQ : P ≤ Q) : P.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian Q hQ
+  have := isNoetherian_of_fg_of_noetherian Q hQ
   have h1 : (P.comap Q.subtype).FG := IsNoetherian.noetherian _
   have h2 := h1.map Q.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hPQ] at h2
@@ -292,7 +292,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem full_span {n : ℕ} (M : Submodule (𝓞 E) (Fin n → E))
     (hM : Submodule.IsFullLattice E M) : Submodule.span E (M : Set (Fin n → E)) = ⊤ := by
-  letI := hM
+  let := hM
   exact Submodule.IsFullLattice.span_eq_top
 
 theorem dualL_fg {n : ℕ} (τ : E →+* E) (J : Matrix (Fin n) (Fin n) E) (hJ : IsUnit J.det)
@@ -340,7 +340,7 @@ theorem dualL_fg {n : ℕ} (τ : E →+* E) (J : Matrix (Fin n) (Fin n) E) (hJ :
     show (LinearMap.range _).FG
     rw [← Submodule.map_top]
     exact Module.Finite.fg_top.map _
-  haveI := isNoetherian_of_fg_of_noetherian _ hP
+  have := isNoetherian_of_fg_of_noetherian _ hP
   refine Submodule.fg_of_fg_map_injective Θ hΘ (Submodule.FG.of_le_of_isNoetherian (T := P) ?_)
   rintro _ ⟨y, hy, rfl⟩
   have hy' := (GlobalTheory.LevelHecke.DualConj.mem_dualL τ J M y).1 hy
@@ -1001,7 +1001,7 @@ theorem intAtA_of_val {ι : AfE F E ≃+* FiniteAdeleRing (𝓞 E) E} (hι : IsA
       intro h0
       apply hQ'
       rw [HeightOneSpectrum.mem_adicCompletionIntegers, h0]
-      exact zero_le'
+      exact zero_le
     have h1 : Valued.v ((algebraMap E (Q.adicCompletion E) (algebraMap (𝓞 E) E s))) ≤ WithZero.exp (-((e Q : ℕ) : ℤ)) := by
       show Valued.v (((algebraMap (𝓞 E) E s : E)) : Q.adicCompletion E) ≤ _
       rw [HeightOneSpectrum.valuedAdicCompletion_eq_valuation', HeightOneSpectrum.valuation_of_algebraMap]
@@ -1018,7 +1018,7 @@ theorem intAtA_of_val {ι : AfE F E ≃+* FiniteAdeleRing (𝓞 E) E} (hι : IsA
   have hsP : s ∉ P.asIdeal := by
     intro hm
     have h1 := hs P (Finset.mem_insert_self _ _)
-    simp only [if_true, pow_one] at h1
+    simp only [ite_true, pow_one] at h1
     apply P.isPrime.ne_top
     rw [Ideal.eq_top_iff_one]
     have := P.asIdeal.sub_mem hm h1
@@ -1412,8 +1412,8 @@ theorem ratPt : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀
     rw [hx, hmv, mul_assoc (ratA D.host.F (seamGL t.seam g.1))]
     by_cases hPg : P.1 ∈ t.Pr.vGs
     · have hD : (t.cst μ).D P = 1 := (t.idx_ok μ).depthG P hPg
-      have e0 : frsF t.sel (t.tup μ) p P = p.deco.1.liftFr ⟨P.1, hPg⟩ := dif_pos hPg
-      have e1 : frsF (R := D.R) t.sel (t.tup μ) (a' • p) P = ((g, (1 : GLG (E := t.X.E) (n := D.R.N i) (SG := t.Pr.vGs))) • p.deco).1.liftFr ⟨P.1, hPg⟩ := dif_pos hPg
+      have e0 : frsF t.sel (t.tup μ) p P = p.deco.1.liftFr ⟨P.1, hPg⟩ := dite_eq_left hPg
+      have e1 : frsF (R := D.R) t.sel (t.tup μ) (a' • p) P = ((g, (1 : GLG (E := t.X.E) (n := D.R.N i) (SG := t.Pr.vGs))) • p.deco).1.liftFr ⟨P.1, hPg⟩ := dite_eq_left hPg
       rw [hD, e0] at hb
       rw [hD, e1]
       exact _root_.GlobalTheory.FrameRat.nearAt_liftFr_smul t.seam p.deco ⟨P.1, hPg⟩ g (mq_rowSG_unif (t.tup μ) hP.fields.ok t.pr_ok hP.sel P) _ hb

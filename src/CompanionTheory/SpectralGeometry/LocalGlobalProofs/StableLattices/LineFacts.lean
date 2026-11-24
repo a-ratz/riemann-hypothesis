@@ -240,7 +240,7 @@ theorem detOn_eT (h3 : A * A * A = A) (t : ℝ) : detOn (eT A t) (Vm A) = Real.e
     rfl
   unfold detOn
   rw [dite_eq_left hk, hr, LinearMap.det_smul, LinearMap.det_id, mul_one, norm_pow, Complex.norm_real,
-    Real.norm_of_nonneg (Real.exp_pos _).le, ← Real.exp_nat_mul]
+    Real.norm_of_nonneg (Real.exp_pos _).le, ← Real.exp_natCast_mul]
   congr 1
   simp only [rk]
   ring
@@ -296,7 +296,7 @@ theorem modA_line (hG : IsGrad ε A) {m : Formalism.REAL.UJ ε} (hm : m ∈ flag
     field_simp
   have hexp : Real.exp t ^ (2 * rk A * (n - 2 * rk A)) * (Real.exp t ^ 2) ^ (rk A ^ 2) =
       Real.exp (2 * rhoA A * t) := by
-    rw [← pow_mul, ← pow_add, ← Real.exp_nat_mul, hρ]
+    rw [← pow_mul, ← pow_add, ← Real.exp_natCast_mul, hρ]
     congr 1
     push_cast [Nat.cast_sub h2]
     ring
@@ -311,7 +311,7 @@ def tau (A : Matrix (Fin n) (Fin n) ℂ) (g : Formalism.REAL.UJ ε) : ℝ :=
 
 theorem measurable_tau : Measurable (tau A : Formalism.REAL.UJ ε → ℝ) := by
   have hf : Continuous fun g : Formalism.REAL.UJ ε => uMat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   exact measurable_const.mul (Real.measurable_log.comp (measurable_detOn_comp _ hf _))
 
 theorem detOn_ne_zero {m : Formalism.REAL.UJ ε} (hm : m ∈ flagM ε (W A)) : detOn (uMat m) (Vm A) ≠ 0 := by

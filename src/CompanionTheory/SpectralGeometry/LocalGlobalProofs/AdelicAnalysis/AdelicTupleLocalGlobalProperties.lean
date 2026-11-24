@@ -240,9 +240,9 @@ theorem isCompact_glue (Cinf : Set (Fin n → Fin M → Ainf F ⊗[F] E))
     (hlat : ∀ᶠ v in Filter.cofinite, Cv v ⊆ latV b v) :
     IsCompact {X : Fin n → Fin M → AF F ⊗[F] E |
       projInf X ∈ Cinf ∧ ∀ v, projV v (projFin X) ∈ Cv v} := by
-  haveI : T2Space (Ainf F) := inferInstanceAs (T2Space ((w : InfinitePlace F) → w.Completion))
-  haveI : T2Space (Ainf F ⊗[F] E) := (coH (Ainf F) b).isEmbedding.t2Space
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), T2Space (Fv F v ⊗[F] E) := fun v =>
+  have : T2Space (Ainf F) := inferInstanceAs (T2Space ((w : InfinitePlace F) → w.Completion))
+  have : T2Space (Ainf F ⊗[F] E) := (coH (Ainf F) b).isEmbedding.t2Space
+  have : ∀ v : HeightOneSpectrum (𝓞 F), T2Space (Fv F v ⊗[F] E) := fun v =>
     (coH (Fv F v) b).isEmbedding.t2Space
 
   let DI : Fin n → Fin M → Fin d → Set (Ainf F) := fun a i k =>

@@ -104,7 +104,7 @@ private theorem conjTranspose_exp_mul_mul_exp_eq_of_skew {N : ℕ} (H X : Matrix
   let _ : NormedRing (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedRing
   let _ : NormedAlgebra ℚ (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedAlgebra
   let _ : NormedAlgebra ℂ (Matrix (Fin N) (Fin N) ℂ) := Matrix.linftyOpNormedAlgebra
-  have _ : CompleteSpace (Matrix (Fin N) (Fin N) ℂ) := FiniteDimensional.complete ℂ _
+  have _ : CompleteSpace (Matrix (Fin N) (Fin N) ℂ) := FiniteDimensional.completeSpace ℂ _
   have := hs.exp_neg_mul_mul_exp_eq_self
   rw [neg_neg] at this
   rw [hc]

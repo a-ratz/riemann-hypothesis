@@ -376,7 +376,7 @@ private theorem sqIdeal_eq_span_of_pow_p_eq_smul {p : ℕ} [Fact p.Prime] {C : T
 theorem u3 : PrimeHopfOrderStatement := by
   intro p hpf C _ _ _ v R _ _ hv hpv AA
   have hprime : p.Prime := hpf.out
-  haveI : NeZero p := ⟨hprime.ne_zero⟩
+  have : NeZero p := ⟨hprime.ne_zero⟩
   obtain ⟨ω, hωpow, hωcong, hω0, hω1, hωmul, hωsep⟩ := exists_teichChar hv hpv
   have hT : IsTeich v ω := ⟨hωpow, hωcong, hω0, hω1, hωmul, hωsep⟩
   obtain ⟨ζ, hζ⟩ : ∃ ζ : C, IsPrimitiveRoot ζ p := exists_primRoot
@@ -397,8 +397,8 @@ theorem u3 : PrimeHopfOrderStatement := by
       by_cases ha : a = 0
       · subst ha
         simp [hω0]
-      · rw [if_neg ha, sub_zero]
-        simp only [u0, if_neg ha, sub_zero]
+      · rw [ite_eq_right ha, sub_zero]
+        simp only [u0, ite_eq_right ha, sub_zero]
         exact pow_two_mul_p_sub_three_mul_self_eq_one hωpow hω1 hωmul a ha
     rw [Finset.sum_congr rfl (fun a _ => hterm a)]
     simp [Finset.sum_sub_distrib, Finset.card_univ, ZMod.card]

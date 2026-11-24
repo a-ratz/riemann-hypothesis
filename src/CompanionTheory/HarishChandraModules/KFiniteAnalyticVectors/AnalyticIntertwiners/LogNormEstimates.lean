@@ -208,7 +208,7 @@ def ellD (μ : Ix p q → ℚ) : ℚ := ∑ a, cwD a * μ a
 
 theorem ellD_shD (μ : Ix p q → ℚ) (a b : Ix p q) : ellD (shD μ a b) = ellD μ + cwD a - cwD b := by
   simp only [ellD, shD, Pi.add_apply, Pi.sub_apply, mul_add, mul_sub, Finset.sum_add_distrib, Finset.sum_sub_distrib,
-    Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem exists_hwD (hn : Nontrivial M.V) : ∃ μ, ∃ y ∈ hwSub M.act μ, y ≠ 0 := by
   classical
@@ -259,12 +259,12 @@ theorem form_propD (ι₁ : M.V →ₗ[ℂ] H₁) (ι₂ : M.V →ₗ[ℂ] H₂)
   obtain ⟨μ, v, hvY, hv0⟩ := exists_hwD hI.1
 
   set Y := hwSub M.act μ
-  haveI : FiniteDimensional ℂ Y := hA μ
+  have : FiniteDimensional ℂ Y := hA μ
   set Y₁ : Submodule ℂ H₁ := Y.map ι₁
   let e₁ : Y ≃ₗ[ℂ] Y₁ := Submodule.equivMapOfInjective ι₁ h₁ Y
   have he₁ : ∀ y : Y, ((e₁ y : Y₁) : H₁) = ι₁ y := fun y => rfl
-  haveI : FiniteDimensional ℂ Y₁ := LinearEquiv.finiteDimensional e₁
-  haveI : Nontrivial Y₁ := ⟨⟨e₁ ⟨v, hvY⟩, 0, fun h => hv0 (by
+  have : FiniteDimensional ℂ Y₁ := LinearEquiv.finiteDimensional e₁
+  have : Nontrivial Y₁ := ⟨⟨e₁ ⟨v, hvY⟩, 0, fun h => hv0 (by
     have := congrArg Subtype.val (e₁.injective (h.trans e₁.map_zero.symm)); exact this)⟩⟩
   let β : Y₁ → Y₁ → ℂ := fun x x' => ⟪ι₂ (e₁.symm x), ι₂ (e₁.symm x')⟫_ℂ
   let f : Y₁ → (Y₁ →L[ℂ] ℂ) := fun x => LinearMap.toContinuousLinearMap
@@ -339,9 +339,9 @@ theorem form_propD (ι₁ : M.V →ₗ[ℂ] H₁) (ι₂ : M.V →ₗ[ℂ] H₂)
     obtain ⟨W, hWf, hwW, hWs⟩ := M.kfin w
     let Rsp : Submodule ℂ M.V := Submodule.span ℂ {x | ∃ a b, posC a b ∧ ∃ u ∈ W, x = M.act (Eab b a) u}
     let Lw : Submodule ℂ M.V := W ⊓ wtSub M.act μ ⊓ Rsp
-    haveI : FiniteDimensional ℂ Lw := Submodule.finiteDimensional_of_le (inf_le_left.trans inf_le_left)
+    have : FiniteDimensional ℂ Lw := Submodule.finiteDimensional_of_le (inf_le_left.trans inf_le_left)
     set L₁ : Submodule ℂ H₁ := Lw.map ι₁
-    haveI : FiniteDimensional ℂ L₁ := Module.Finite.map _ _
+    have : FiniteDimensional ℂ L₁ := Module.Finite.map _ _
     have hP : L₁.starProjection (ι₁ w) ∈ L₁ := (L₁.orthogonalProjectionOnto (ι₁ w)).2
     obtain ⟨l, hl, hlP⟩ := Submodule.mem_map.1 hP
     have hperp : ∀ x ∈ Lw, ⟪ι₁ (w - l), ι₁ x⟫_ℂ = 0 := fun x hx => by
@@ -384,9 +384,9 @@ theorem form_propD (ι₁ : M.V →ₗ[ℂ] H₁) (ι₂ : M.V →ₗ[ℂ] H₂)
 
   let R : Submodule ℂ M.V :=
     { carrier := {x | ∀ w, ⟪ι₂ x, ι₂ w⟫_ℂ = (lam : ℂ) * ⟪ι₁ x, ι₁ w⟫_ℂ}
-      add_mem' := fun {a b} ha hb w => by simp only [Set.mem_setOf_eq, map_add (f := _), inner_add_left, ha w, hb w]; ring
+      add_mem' := fun {a b} ha hb w => by simp only [Set.mem_ofPred_eq, map_add (f := _), inner_add_left, ha w, hb w]; ring
       zero_mem' := fun w => by simp
-      smul_mem' := fun c a ha w => by simp only [Set.mem_setOf_eq, map_smul, inner_smul_left, ha w]; ring }
+      smul_mem' := fun c a ha w => by simp only [Set.mem_ofPred_eq, map_smul, inner_smul_left, ha w]; ring }
   have hRst : ∀ Z, ∀ y ∈ R, M.act Z y ∈ R := fun Z y hy w => by
     rw [adj_ruleD s₂, hy, adj_ruleD s₁]
   have hv₀R : (v₀ : M.V) ∈ R := fun w => by

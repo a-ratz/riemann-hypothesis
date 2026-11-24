@@ -158,8 +158,8 @@ private theorem clopen_pre {S : Scheme.{0}} {X Y : Over S} (e : X ⟶ Y) (U : Y.
 theorem UpperTheory.clopenCond_of_isClosed_subgroupLocus :
     ∀ {S : Scheme.{0}} (G X : Over S) [GrpObj G] [IsFinite G.hom] [Etale G.hom] (U : (X ⊗ G).left.Opens), IsClosed (U : Set (X ⊗ G).left) → GlobalTheory.LevCover.ClopenCond X (fun T h => ∀ (T' : Over S) (t : T' ⟶ T), Set.range (lift (t ≫ h) (1 : T' ⟶ G)).left ⊆ U ∧ ∀ a b : T' ⟶ G, Set.range (lift (t ≫ h) a).left ⊆ U → Set.range (lift (t ≫ h) b).left ⊆ U → Set.range (lift (t ≫ h) (a * b⁻¹)).left ⊆ U) := by
   intro S G X _ _ _ U hU
-  haveI := (GlobalTheory.LevCover.finiteEtale_tensor G G).1
-  haveI := (GlobalTheory.LevCover.finiteEtale_tensor G G).2
+  have := (GlobalTheory.LevCover.finiteEtale_tensor G G).1
+  have := (GlobalTheory.LevCover.finiteEtale_tensor G G).2
   have hUo : IsOpen (U : Set (X ⊗ G).left) := U.isOpen
   let m1 : X ⊗ (G ⊗ G) ⟶ X ⊗ G := lift (fst _ _) (snd _ _ ≫ fst G G)
   let m2 : X ⊗ (G ⊗ G) ⟶ X ⊗ G := lift (fst _ _) (snd _ _ ≫ snd G G)
@@ -680,8 +680,8 @@ theorem UpperTheory.exists_clopRep_of_disjoint_open_cover :
     intro T
     rw [UpperTheory.ClopSum.range_wl, UpperTheory.ClopSum.range_wl, hr]
     rfl
-  haveI := o1 (Y₁ ⊗ Y₂)
-  haveI := o2 (Y₁ ⊗ Y₂)
+  have := o1 (Y₁ ⊗ Y₂)
+  have := o2 (Y₁ ⊗ Y₂)
   obtain ⟨U, hUc, hU1, hU2⟩ := UpperTheory.ClopSum.glue ((Y₁ ⊗ Y₂) ◁ i₁).left ((Y₁ ⊗ Y₂) ◁ i₂).left
     (rr _) ((fst Y₁ Y₂ ▷ G₁).left ⁻¹ᵁ U₁) ((snd Y₁ Y₂ ▷ G₂).left ⁻¹ᵁ U₂)
     (hU₁.1.preimage (Scheme.Hom.continuous _)) (hU₂.1.preimage (Scheme.Hom.continuous _))
@@ -1173,7 +1173,7 @@ private lemma piece_glue {T Z : Over S} (W : ℕ → T.left.Opens) (hc : ∀ t, 
     intro r s
     by_cases hrs : r = s
     · subst hrs
-      haveI : Mono (𝒰.f r) := inferInstanceAs (Mono (W r).ι)
+      have : Mono (𝒰.f r) := inferInstanceAs (Mono (W r).ι)
       have e : Limits.pullback.fst (𝒰.f r) (𝒰.f r) = Limits.pullback.snd (𝒰.f r) (𝒰.f r) := by
         rw [← cancel_mono (𝒰.f r)]
         exact Limits.pullback.condition
@@ -1378,14 +1378,14 @@ private theorem core {S : Scheme.{0}} [IsLocallyNoetherian S] (A G : Over S) [Gr
     (htor : ∀ (T' : Over S) (a : T' ⟶ A), a ^ k = 1 → ∃ b : T' ⟶ G, b ≫ inc = a)
     (hk : ∀ (T' : Over S) (b : T' ⟶ G), (b ≫ inc) ^ k = 1) :
     ∃ (Y : Over S), IsFinite Y.hom ∧ Etale Y.hom ∧ ∀ (A₀ : Over Y.left) [GrpObj A₀] [IsCommMonObj A₀] (φ₀ : A₀.left ⟶ A.left), IsGrpPullback A₀ A Y.hom φ₀ → ∃ (H : Over Y.left) (_ : GrpObj H) (i : H ⟶ A₀), IsMonHom i ∧ Mono i ∧ IsFinite H.hom ∧ Etale H.hom ∧ i ^ k = 1 ∧ ∀ (T : Scheme.{0}) (x : T ⟶ S) (A₁ : Over T) [GrpObj A₁] [IsCommMonObj A₁] (φ₁ : A₁.left ⟶ A.left) (B₁ : Over T) [GrpObj B₁] (f : A₁ ⟶ B₁), IsGrpPullback A₁ A x φ₁ → IsAbelianScheme B₁ → IsMonHom f → (∀ (T' : Over T) (g : T' ⟶ A₁), g ≫ f = 1 → g ^ k = 1) → ∃! y : T ⟶ Y.left, y ≫ Y.hom = x ∧ ∀ (T' : Over T) (g : T' ⟶ A₁), g ≫ f = 1 ↔ ∃ h : T'.left ⟶ H.left, h ≫ H.hom = T'.hom ≫ y ∧ h ≫ i.left ≫ φ₀ = g.left ≫ φ₁ := by
-  haveI := hm
-  haveI := hh
+  have := hm
+  have := hh
   obtain ⟨Y₀, U, hY₀f, hY₀e, hU, hrep⟩ := UpperTheory.Cb.exists_finite_etale_representing_clopen_subschemes S G inferInstance inferInstance
   obtain ⟨U₁, hU₁, hP⟩ := UpperTheory.clopenCond_of_isClosed_subgroupLocus G Y₀ U hU
-  haveI := hY₀f
-  haveI := hY₀e
+  have := hY₀f
+  have := hY₀e
   obtain ⟨Y, i₀, hYf, hYe, hi₀, hsub⟩ := GlobalTheory.LevCover.exists_sub U₁ hU₁
-  haveI := hi₀
+  have := hi₀
   obtain ⟨U₂, hU₂def⟩ : ∃ U₂ : (Y ⊗ G).left.Opens, U₂ = (i₀ ▷ G).left ⁻¹ᵁ U := ⟨_, rfl⟩
   have hU₂ : IsClosed (U₂ : Set (Y ⊗ G).left) := by
     rw [hU₂def]
@@ -1442,7 +1442,7 @@ private theorem core {S : Scheme.{0}} [IsLocallyNoetherian S] (A G : Over S) [Gr
     rw [hk]
     exact e2.symm
   · intro T x A₁ _ _ φ₁ B₁ _ f hpb1 hB hf hker
-    haveI := hf
+    have := hf
     have huT : IsUnit ((k : ℕ) : Γ(T, ⊤)) := by
       have h2 := hu.map (Scheme.Hom.appTop x).hom
       rwa [map_natCast] at h2
@@ -1569,8 +1569,8 @@ theorem UpperTheory.Cb.exists_finite_etale_trivializing_torsion_abelianScheme :
     refine (GlobalTheory.LatticeTorsion.existsUnique_torsion A k _ ?_).exists
     rw [← Hom.inv_def, inv_pow, GlobalTheory.LatticeTorsion.torsionι_pow_eq_one, inv_one]
   obtain ⟨inst, hmon⟩ := GlobalTheory.T.exists_grpObj_isMonHom_of_mono_factor S A (torsion A k) (torsion.ι A k) hmono hmul hone hinv
-  haveI := hfin
-  haveI := het
+  have := hfin
+  have := het
   exact UpperTheory.SubRep.core A (torsion A k) (torsion.ι A k) hmono hmon k hu
     (fun T' a ha => (GlobalTheory.LatticeTorsion.existsUnique_torsion A k a ha).exists)
     (fun T' b => hpow T' b)
@@ -1762,7 +1762,7 @@ theorem isogeny_rep : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A : Over S) 
   obtain ⟨Y, hYf, hYe, hY⟩ := _root_.UpperTheory.Cb.exists_finite_etale_trivializing_torsion_abelianScheme S A k hA hk0 hk
   refine ⟨Y, hYf, hYe, ?_⟩
   intro A₀ _ _ φ₀ h₀
-  haveI : IsLocallyNoetherian Y.left := LocallyOfFiniteType.isLocallyNoetherian Y.hom
+  have : IsLocallyNoetherian Y.left := LocallyOfFiniteType.isLocallyNoetherian Y.hom
   obtain ⟨H, _, i, hi, hm, hHf, hHe, hik, hH⟩ := hY A₀ φ₀ h₀
   have hA₀ : IsAbelianScheme A₀ := by
     exact { comm := inferInstance
@@ -1793,14 +1793,14 @@ theorem isogeny_rep : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A : Over S) 
   obtain ⟨B₂, _, _, θ₂, ψ₂, ψ₂', hB₂, hθ₂, hq₂, hc₂, -⟩ :=
     GlobalTheory.UPel.HT.ES.pullQuasiInv T Y.left y A₀ B k ψ ψ' A₁ θ hB hq hθ
   obtain ⟨hψ₂f, hψ₂e, hψ₂s⟩ := GlobalTheory.UPel.HT.ES.isFinite_etale_surjective_of_isQuasiInv T A₁ B₂ k ψ₂ ψ₂' hA₁ hB₂ hkT hq₂
-  haveI := hψ₂f
-  haveI := hψ₂e
+  have := hψ₂f
+  have := hψ₂e
   have hk₂ := ker_iff_of_pullbacks h₀.1 hker hθs hθ₂ hc₂
   obtain ⟨β, hβi, hβm, hβ⟩ := GlobalTheory.SameKer.exists_iso_of_sameKer T A₁ B₂ B₁ ψ₂ ψ₁' ψ₁ k hB₁ hkT hq₂.1
     hψ₁'m hψ₁m inferInstance hψ₂s inferInstance e₂ (fun T' g => by rw [hyker, hk₂, hθφ])
   refine ⟨y, ⟨hyx, θ, β.left ≫ θ₂, hθφ, hθ, ?_, ?_⟩, ?_⟩
-  · haveI := hβi
-    haveI : IsMonHom (asIso β).hom := hβm
+  · have := hβi
+    have : IsMonHom (asIso β).hom := hβm
     exact ((isGrpPullback_of_iso (asIso β)).comp hθ₂).congr (Category.id_comp _) rfl
   · rw [hc₂, ← hβ, Over.comp_left, Category.assoc]
   · rintro y' ⟨hy'x, θ', θ'', hθ'φ, hθ', hθ'', hc'⟩

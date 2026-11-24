@@ -138,7 +138,7 @@ theorem isOpen_ballR {r : 𝓞 F} (hr : r ≠ 0) (v : HeightOneSpectrum (𝓞 F)
       (fun x => x / c) ⁻¹' (v.adicCompletionIntegers F : Set (v.adicCompletion F)) := by
     ext x
     change Valued.v x ≤ v.intValuation r ↔ Valued.v (x / c) ≤ 1
-    rw [map_div₀, ← hcv, div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hc))]
+    rw [map_div₀, ← hcv, div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hc))]
   rw [e]
   exact (Valued.isOpen_valuationSubring _).preimage (continuous_id.div_const c)
 
@@ -152,7 +152,7 @@ theorem eventually_ballR_eq {r : 𝓞 F} (hr : r ≠ 0) :
   have h : (Ideal.span {r} : Ideal (𝓞 F)) ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hr
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors h).subset fun v hv => ?_)
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [← HeightOneSpectrum.intValuation_lt_one_iff_dvd]
   refine lt_of_le_of_ne (v.intValuation_le_one r) fun h1 => hv ?_
   ext x
@@ -381,7 +381,7 @@ theorem isOpen_lev (d : 𝓞 F) (a : κ → FiniteAdeleRing (𝓞 F) F) :
       algebraMap F (FiniteAdeleRing (𝓞 F) F) ((d : F)⁻¹) * (z i - a i)) ⁻¹'
         (GroundTheory.Global.integralFiniteAdeles (𝓞 F) F : Set _) := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, Lev, Pi.sub_apply, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, Lev, Pi.sub_apply, SetLike.mem_coe]
   rw [e]
   exact isOpen_iInter_of_finite fun i => (GroundTheory.Global.isOpen_integralFiniteAdeles (R := 𝓞 F) (K := F)).preimage
     (continuous_const.mul ((continuous_apply i).sub continuous_const))
@@ -520,7 +520,7 @@ theorem loc_chars : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintyp
   set C := T ∩ {z | Lev d (z - yf)}ᶜ with hCdef
   have hC : IsCompact C := hT.inter_right (isOpen_lev d yf).isClosed_compl
   obtain ⟨t, htC, hcov⟩ := hC.elim_nhds_subcover (fun a => {z | Lev d (z - a)})
-    (fun a _ => (isOpen_lev d a).mem_nhds (by simp only [Set.mem_setOf_eq, sub_self]; exact lev_zero d))
+    (fun a _ => (isOpen_lev d a).mem_nhds (by simp only [Set.mem_ofPred_eq, sub_self]; exact lev_zero d))
   have hsep : ∀ a ∈ C, ∃ q ∈ (Q0 : Set (κ → AF F)), ψ (vecFin (a - yf) ⬝ᵥ q) ≠ 1 ∧
       ∀ u, Lev d u → ψ (vecFin u ⬝ᵥ q) = 1 := fun a ha => exists_sep ψ hψ d (a - yf) ha.2
   choose! q hq0 hq1 hq2 using hsep

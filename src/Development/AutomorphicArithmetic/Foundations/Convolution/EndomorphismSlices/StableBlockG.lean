@@ -125,7 +125,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ}
 private theorem position_sph (Z T : Finset (Pl E)) (L : Lv a b Z) (e : Pl E → Ex (Fin (a + 1) × Fin (b + 1)))
     (w : Pl E) (hw : w ∉ Z) : IsHecke (K2 a b w) (intersection_update_fsHerm_neg_one Z T L.ln e w) := by
   unfold intersection_update_fsHerm_neg_one
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
   split_ifs
   · exact UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.exHecke2 E a b w (e w)
   · exact UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.exHecke2 E a b w .one
@@ -133,7 +133,7 @@ private theorem position_sph (Z T : Finset (Pl E)) (L : Lv a b Z) (e : Pl E → 
 private theorem position_Z (Z T : Finset (Pl E)) (L : Lv a b Z) (e : Pl E → Ex (Fin (a + 1) × Fin (b + 1)))
     (w : Pl E) (hw : w ∈ Z) : intersection_update_fsHerm_neg_one Z T L.ln e w = L.ln w := by
   unfold intersection_update_fsHerm_neg_one
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 private theorem position_comm (Z T T' : Finset (Pl E)) (L : Lv a b Z) (e e' : Pl E → Ex (Fin (a + 1) × Fin (b + 1))) (w : Pl E) :
     PositivityTheory.Rg.BcN.F2.mconv (intersection_update_fsHerm_neg_one Z T L.ln e w) (intersection_update_fsHerm_neg_one Z T' L.ln e' w) =
@@ -240,7 +240,7 @@ theorem genSt : GenSt := by
     have hop := BlockFiniteConvolution.blkOp₀ E A.blk _ _ hy hy
     rw [ContinuousLinearMap.star_eq_adjoint, ← hop.2.2.2.2.2.1]
     exact BlockFiniteConvolution.blkComm₀ E A.blk _ _ hx hop.2.2.2.2.1 (hComm T' T'' e e' f f').2
-  · haveI : Countable (Pl E) := Small.countable_pl E
+  · have : Countable (Pl E) := Small.countable_pl E
     infer_instance
 
 end UpperTheory.Zero.ConvolutionTheory.EB
@@ -320,12 +320,12 @@ theorem UpperTheory.Zero.ConvolutionTheory.EB.algEx :
   have hcs : ∀ a ∈ s, ∀ b ∈ s, a * star b = star b * a := by
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩
     exact Prod.ext (hs x y).eq (mul_comm _ _)
-  letI : IsMulCommutative (StarAlgebra.adjoin ℂ s) :=
+  let : IsMulCommutative (StarAlgebra.adjoin ℂ s) :=
     StarAlgebra.isMulCommutative_adjoin ℂ
       (fun x hx => ⟨(hcs x hx x hx).symm⟩)
       (fun x hx y hy _ => hcomm x hx y hy)
       (fun x hx y hy _ => hcs x hx y hy)
-  letI : CommRing (StarAlgebra.adjoin ℂ s) := { (inferInstance : Ring _) with
+  let : CommRing (StarAlgebra.adjoin ℂ s) := { (inferInstance : Ring _) with
     mul_comm := fun a b => mul_comm' a b }
   have keep : ∀ y : StarAlgebra.adjoin ℂ s, (∀ f ∈ Q, y.1.1 f ∈ Q) ∧ ∀ f ∈ Q, (star y.1.1) f ∈ Q :=
     fun y => UpperTheory.Zero.ConvolutionTheory.EB.keepQ hQ y.2
@@ -456,7 +456,7 @@ private lemma exists_sep {K : Set X} (hK : IsCompact K)
     have hopen : IsOpen {y : X | ‖Φ (b : B) χ‖ ^ 2 / 2 < (Φ ((star b * b : A) : B) y).re} :=
       isOpen_lt continuous_const (Complex.continuous_re.comp (map_continuous _))
     have hmem : χ ∈ {y : X | ‖Φ (b : B) χ‖ ^ 2 / 2 < (Φ ((star b * b : A) : B) y).re} := by
-      rw [Set.mem_setOf_eq, sq_apply, Complex.ofReal_re]
+      rw [Set.mem_ofPred_eq, sq_apply, Complex.ofReal_re]
       linarith
     exact ⟨_, mem_nhdsWithin_of_mem_nhds (hopen.mem_nhds hmem), star b * b, nn_sq Φ A p hb,
       _, hpos, fun y hy => le_of_lt hy⟩
@@ -465,7 +465,7 @@ private lemma exists_gap (x : B) {ρ : ℝ} (hρ : 0 < ρ)
     (h : ∀ χ, (∀ a : A, Φ (a : B) χ = p a) → ‖Φ x χ‖ < ρ) :
     ∃ ρ' : ℝ, 0 < ρ' ∧ ρ' < ρ ∧ ∀ χ, (∀ a : A, Φ (a : B) χ = p a) → ‖Φ x χ‖ < ρ' := by
   have hcl : IsClosed {χ : X | ∀ a : A, Φ (a : B) χ = p a} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun a => isClosed_eq (map_continuous _) continuous_const
   rcases Set.eq_empty_or_nonempty {χ : X | ∀ a : A, Φ (a : B) χ = p a} with he | hne
   · refine ⟨ρ / 2, by positivity, by linarith, fun χ hχ => ?_⟩
@@ -497,9 +497,9 @@ private theorem exists_rep {B : Type} [CommRing B] [StarRing B] [Algebra ℂ B] 
     rw [← map_mul, ← map_mul, mul_comm]
   let C := S.topologicalClosure
   have hmc : ∀ u v : C, u * v = v * u := (S.commRingTopologicalClosure hcomm).mul_comm
-  haveI hcl : IsClosed (C : Set (H →L[ℂ] H)) := S.isClosed_topologicalClosure
-  letI : CStarAlgebra C := inferInstance
-  letI : CommCStarAlgebra C := { mul_comm := hmc }
+  have hcl : IsClosed (C : Set (H →L[ℂ] H)) := S.isClosed_topologicalClosure
+  let : CStarAlgebra C := inferInstance
+  let : CommCStarAlgebra C := { mul_comm := hmc }
   let G : C →⋆ₐ[ℂ] C(WeakDual.characterSpace ℂ C, ℂ) := (gelfandStarTransform C).toStarAlgHom
   have hmem : ∀ y, R y ∈ C := fun y => S.le_topologicalClosure ⟨y, rfl⟩
   let ι : B →⋆ₐ[ℂ] C := R.codRestrict C hmem
@@ -1060,9 +1060,9 @@ attribute [local instance] borelG borelF borelA borelH
 theorem UpperTheory.Zero.ConvolutionTheory.EB.rStable :
     UpperTheory.Zero.ConvolutionTheory.EB.RStable := by
   intro hFin hAdm hG hPi P hSp E _ _ _ hE n hn π hreg hdual
-  haveI : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
-  haveI : BorelSpace (GA E n) := ⟨rfl⟩
-  haveI : BorelSpace (GA E 0) := ⟨rfl⟩
+  have : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
+  have : BorelSpace (GA E n) := ⟨rfl⟩
+  have : BorelSpace (GA E 0) := ⟨rfl⟩
   have hθ : ThetaFix π := DiscreteGroups.T1.G.thetaFixOf E n hn π hdual
   obtain ⟨l₁, -, hl⟩ := hPi E hE n hn π hreg hdual
   refine ⟨l₁, fun l₂ S hS Z hZ B τ hB hτ => ?_⟩
@@ -1081,7 +1081,7 @@ theorem UpperTheory.Zero.ConvolutionTheory.EB.rStable :
   obtain ⟨k3, -, -⟩ := kgFacts E 0 S Z L.L₂ hS hZ (fun w => ⟨L.open₂ w, L.le₂ w⟩) (fun w hw => (L.off w hw).2)
   have hT := fun W hW => testsEx hAdm E n hn l₁ l₂ D A π hθ (Kg S L.L₁) W k1 k2 hW
   obtain ⟨kp, ko, -⟩ := hT ⊥ inferInstance
-  haveI : CompleteSpace ((piSp D π A.blk.I)ᗮ : Submodule ℂ A.blk.Hb) := (Submodule.isClosed_orthogonal _).completeSpace_coe
+  have : CompleteSpace ((piSp D π A.blk.I)ᗮ : Submodule ℂ A.blk.Hb) := (Submodule.isClosed_orthogonal _).completeSpace_coe
   obtain ⟨J, hJ, D₁, D₂, B₁, B₂, a1, a2, a3⟩ := hSp E n 0 l₁ l₂ D A S Z L hS hZ {π} Set.subsingleton_singleton
     (fun π' h => by rw [Set.mem_singleton_iff.1 h]; exact hθ.1) (piSp D π A.blk.I)ᗮ ko (fun W hW => (hT W hW).2.2)
   refine ⟨J, hJ, D₁, B₁, fun j => ⟨(a1 j).1 π rfl, fun w hw => ((a1 j).2 w hw).1⟩, fun j => (a2 j).1,
@@ -1165,7 +1165,7 @@ private theorem isTestH_trM {a b : ℕ} {E : Type} [Field E] [NumberField E] [Is
 private theorem lef_zero (lam : Fin 0 → ℤ) (μ : Measure (G 0)) [μ.IsHaarMeasure] (k : Mat 0 → ((lefE 0 lam).V →L[ℂ] (lefE 0 lam).V))
     (val : Inf 0 → ℂ) (T : ℝ) (hm : IsMult μ (lefE 0 lam) k val T) :
     (μ.real Set.univ : ℂ) * phiOf (lefE 0 lam) (lefT 0 lam) k 1 = val (infOf lam) := by
-  haveI : BorelSpace (G 0) := ⟨rfl⟩
+  have : BorelSpace (G 0) := ⟨rfl⟩
   have h := ((lefModel 0 lam (fun i => i.elim0)).2.2.2 μ k val T hm).2 1 (fun i => i.elim0)
     (Subsingleton.elim _ _) (fun a => a.elim0) (Function.injective_of_subsingleton _)
   have e : (fun x : G 0 => phiOf (lefE 0 lam) (lefT 0 lam) k (PositivityTheory.RgTw.tw x 1)) =
@@ -1186,8 +1186,8 @@ theorem cmbPi : PiTerm → TwTrSum → CmbPi := by
   obtain ⟨l, hl, hP⟩ := hPi E hU n hn π hreg hdual
   refine ⟨l, hl, ?_⟩
   intro l₂ D A S hS Z hZ B τ hB hτ u₁ u₂ hu₁
-  haveI := A.ha
-  haveI := A.hb
+  have := A.ha
+  have := A.hb
   have hμ : D.μ.IsHaarMeasure := by
     obtain ⟨h1, -, h3, h4⟩ := D.haar
     exact { }
@@ -1206,7 +1206,7 @@ theorem cmbPi : PiTerm → TwTrSum → CmbPi := by
     intro w hw
     have h := ((locAlg E n 0 Z L w).2.2.2.1 (φ w) (hφ w hw)).1
     funext g
-    simp only [seen, if_pos (hZ w hw).2]
+    simp only [seen, ite_eq_left (hZ w hw).2]
     exact congrFun h (g, 1)
   have hX : (∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) fun g => seen φ L.ln w (g, 1)) =
       ∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) fun g => φ w (g, 1) :=

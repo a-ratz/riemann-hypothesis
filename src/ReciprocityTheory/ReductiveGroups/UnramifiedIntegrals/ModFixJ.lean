@@ -110,7 +110,7 @@ theorem fixJStab_normal {E Ω : Type*} [Field E] [Field Ω] [Algebra E Ω] {P : 
 theorem fixJStab_isOpen {E Ω : Type*} [Field E] [Field Ω] [Algebra E Ω] [Algebra.IsAlgebraic E Ω]
     {P : Polynomial ℤ} : IsOpen (fixJStab E Ω P : Set (Ω ≃ₐ[E] Ω)) := by
   let K : IntermediateField E Ω := IntermediateField.adjoin E ((fixJRoots (Ω := Ω) P : Finset Ω) : Set Ω)
-  haveI : FiniteDimensional E K := IntermediateField.finiteDimensional_adjoin
+  have : FiniteDimensional E K := IntermediateField.finiteDimensional_adjoin
     (fun x _ => (Algebra.IsAlgebraic.isAlgebraic (R := E) x).isIntegral)
   refine Subgroup.isOpen_mono (H₁ := K.fixingSubgroup) ?_ (IntermediateField.fixingSubgroup_isOpen K)
   intro g hg

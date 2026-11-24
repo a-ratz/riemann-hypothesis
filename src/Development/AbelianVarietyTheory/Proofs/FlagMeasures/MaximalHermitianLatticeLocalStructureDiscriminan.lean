@@ -168,7 +168,7 @@ omit [IsDedekindDomain R] in
 theorem mem_of_int (hσ : ∀ r, algebraMap R K (σ r) = star (algebraMap R K r)) (hs : h.IsSymm)
     (hM : IsMaxLat h M) {y : V} (hy : y ∈ dual h M) (hyy : h y y ∈ (1 : Submodule R K)) : y ∈ M := by
   have hN : IsIntLat h (M ⊔ Submodule.span R {y}) := by
-    letI : Submodule.IsFullLattice K M := hM.1.1
+    let : Submodule.IsFullLattice K M := hM.1.1
     refine ⟨Submodule.IsFullLattice.of_le_of_fg K le_sup_left
       (hM.1.1.fg.sup (Submodule.fg_span_singleton y)), ?_⟩
     intro u hu v hv
@@ -585,7 +585,7 @@ theorem inert_facts {K : Type} [Field K] [NumberField K] [StarRing K] (hK : IsCM
   have hσσ : ∀ r, σ (σ r) = r := fun r => hinj (by rw [hσ, hσ, star_star])
   have hP0 : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField K)
   have : Finite (𝓞 K ⧸ P) := P.finiteQuotientOfFreeOfNeBot hP0
-  letI : Field (𝓞 K ⧸ P) := Ideal.Quotient.field P
+  let : Field (𝓞 K ⧸ P) := Ideal.Quotient.field P
   let τ : 𝓞 K ⧸ P →+* 𝓞 K ⧸ P := Ideal.quotientMap P σ fun r hr => (hin r).2 hr
   have hτ : ∀ r, τ (Ideal.Quotient.mk P r) = Ideal.Quotient.mk P (σ r) := fun r => rfl
   obtain ⟨θ, t, ht, hθ⟩ := hK.2.2 P hP

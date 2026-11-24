@@ -166,12 +166,12 @@ theorem UpperTheory.V.Af.Cq.exQuad :
           Module.finrank ℚ K = 2 ∧ Nonempty (K →+* ℚ_[l]) ∧ ∃ (v : HeightOneSpectrum (𝓞 ℚ)) (A : ValuationSubring Ω), S v ∧ IsPlaceOver A v ∧
             ∃ s ∈ Ine (F := ℚ) A, s ∉ (AlgEquiv.restrictScalarsHom ℚ : G K Ω →* G ℚ Ω).range := by
   intro Ω _ instA _ l hl hl2 S hS
-  haveI hc : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have hc : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have e : instA = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   subst e
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   let P : Set ℕ := {p | p.Prime ∧ 4 * l ∣ p + 1}
-  haveI hl0 : NeZero (4 * l) := ⟨by have := hl.out.pos; omega⟩
+  have hl0 : NeZero (4 * l) := ⟨by have := hl.out.pos; omega⟩
   have hPinf : P.Infinite := by
     refine Set.infinite_of_forall_exists_gt fun n => ?_
     obtain ⟨p, hpn, hp, hpm⟩ :=
@@ -181,7 +181,7 @@ theorem UpperTheory.V.Af.Cq.exQuad :
     push_cast
     rw [hpm]
     ring
-  haveI : Infinite P := hPinf.to_subtype
+  have : Infinite P := hPinf.to_subtype
   have hA : ∀ p : P, ∃ A : ValuationSubring Ω, A.valuation ((p : ℕ) : Ω) < 1 :=
     fun p => exists_valuationSubring_valuation_prime_lt_one Ω p p.2.1
   choose Af hAf using hA
@@ -217,15 +217,15 @@ theorem UpperTheory.V.Af.Cq.exQuad :
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI alg : Algebra (Kstar p) Ω := φ.toRingHom.toAlgebra
-  haveI tower : IsScalarTower ℚ (Kstar p) Ω :=
+  let alg : Algebra (Kstar p) Ω := φ.toRingHom.toAlgebra
+  have tower : IsScalarTower ℚ (Kstar p) Ω :=
     IsScalarTower.of_algebraMap_eq (fun x => (φ.commutes x).symm)
-  haveI : Algebra.IsAlgebraic (Kstar p) Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) (Kstar p)
-  haveI hac : IsAlgClosure (Kstar p) Ω := ⟨inferInstance, inferInstance⟩
-  haveI := htc
-  haveI : Algebra.IsQuadraticExtension ℚ (Kstar p) := ⟨hfr⟩
+  have : Algebra.IsAlgebraic (Kstar p) Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) (Kstar p)
+  have hac : IsAlgClosure (Kstar p) Ω := ⟨inferInstance, inferInstance⟩
+  have := htc
+  have : Algebra.IsQuadraticExtension ℚ (Kstar p) := ⟨hfr⟩
   have hram := HV.kstarRam p hp hp4 Ω (Af p) (hAf p)
-  obtain ⟨σ, hσI, hσG⟩ := SetLike.not_le_iff_exists.mp hram
+  obtain ⟨σ, hσI, hσG⟩ := IsConcreteLE.not_le_iff_exists.mp hram
   refine ⟨Kstar p, inferInstance, inferInstance, IsCMField.ofCMExtension ℚ (Kstar p), alg, tower, hac,
     hfr, ⟨ι⟩, vf p, Af p, hSv, hvf1 p, σ, hσI, ?_⟩
   rintro ⟨τ, rfl⟩

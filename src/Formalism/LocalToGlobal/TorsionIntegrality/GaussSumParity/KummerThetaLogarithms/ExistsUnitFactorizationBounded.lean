@@ -400,7 +400,7 @@ theorem KurUnram_of : KurIntegers → KurUnram := by
 theorem unramified_completion_roots : KurRoots := by
   intro l hl n hn hln
   have : NeZero (n : ℂ_[l]) := ⟨Nat.cast_ne_zero.2 hn.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot ℂ_[l] n
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot ℂ_[l] n
   have hmem : z ∈ MaximalUnramifiedExtension l :=
     Subfield.le_topologicalClosure _ (Subfield.subset_closure ⟨n, hn, hln, hz.pow_eq_one⟩)
   refine ⟨⟨z, hmem⟩, ?_⟩

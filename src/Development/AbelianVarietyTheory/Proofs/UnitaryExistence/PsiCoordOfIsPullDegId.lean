@@ -196,7 +196,7 @@ theorem exists_move (hU : UnifBaseChangeSt) (h5 : Laws5) {R : Type} [CommRing R]
 
 theorem exists_equiv_psiCoord : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CharZero R] (t t' : SAB H (Sp R)) (_ : SABMap t' t (𝟙 _)) (U : PELUnif (maximalIdeal R) t) (U' : PELUnif (maximalIdeal R) t'), IsNoetherianRing R → IsIntegrallyClosed R → IsAdicComplete (maximalIdeal R) R → ∃ e : U.D.toPre.X ≃ₗ[𝓞 E] U'.D.toPre.X, ∀ χ r, PsiCoord U.D.toPre χ r → ∃ u : Rˣ, PsiCoord U'.D.toPre (e χ) (u * r) := by
   intro E _ _ _ H R _ _ _ _ t t' m U U' hN hC hA
-  letI := H.starRing
+  let := H.starRing
   have hR : AdmBase R (maximalIdeal R) := ⟨hN, inferInstance, hC, hA⟩
   obtain ⟨-, -, -, h4, h5, h6⟩ := GlobalTheory.allSixLaws
   obtain ⟨P, hD₁, xl₁⟩ := exists_move h4.unifBaseChange h5 hR m U

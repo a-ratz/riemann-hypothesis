@@ -440,7 +440,7 @@ theorem GlobalTheory.CovTop.ne_bot_of_isLattice_coords {O K V : Type} [CommRing 
     exact LinearMap.ker_eq_bot.2 hinj
   have h := Submodule.IsFullLattice.span_eq_top (self := hM)
   rw [h0] at h
-  haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
   simp at h
 end -- clump:auto
 end -- clump:auto

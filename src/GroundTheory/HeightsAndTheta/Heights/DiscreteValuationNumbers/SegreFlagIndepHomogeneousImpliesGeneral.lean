@@ -175,7 +175,7 @@ theorem polyNum_mul_monomial {N r : ℕ} (d : Fin N → K → ℤ) (Y : Fin r �
 
   rw [map_sum, Finset.sum_mul, ← polyNumHom_apply, map_sum]
   refine Finset.sum_congr rfl fun α _ => ?_
-  rw [rename_monomial, rename_monomial, monomial_mul, polyNumHom_apply, polyNum_monomial,
+  rw [rename_monomial, rename_monomial, monomial_mul_monomial, polyNumHom_apply, polyNum_monomial,
     monoList_append, mul_one]
 
 theorem polyNum_mul_eq_sum {N r : ℕ} (d : Fin N → K → ℤ) (Y : Fin r → K → ℤ)

@@ -97,7 +97,7 @@ variable {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAl
   {w : Plc L} {A : ValuationSubring Ω} {h : IsPlaceOver A w} {a : Weil h →* (w.adicCompletion L)ˣ}
 private theorem algPow_add (d e : (L →+* Qbar l) → ℤ) (x : (w.adicCompletion L)ˣ) :
     algPow w (d + e) (x : w.adicCompletion L) = algPow w d (x : w.adicCompletion L) * algPow w e (x : w.adicCompletion L) := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
   unfold algPow
   rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
   exact finprod_congr fun j => by rw [Pi.add_apply, zpow_add₀ ((map_ne_zero j.1).2 x.ne_zero)]
@@ -105,8 +105,8 @@ private theorem sum_zero [Fintype (W.Emb l w)] (ha : IsLocalArtin h a) (d : (L �
     (χ : Dec (F := L) A →* (Qbar l)ˣ) (hχ : Continuous χ)
     (hv : ∀ s : Weil h, (χ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = algPow w d (a s : w.adicCompletion L)) :
     ∑ j : W.Emb l w, d (j.1.comp (algebraMap L _)) = 0 := by
-  haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hl : (l : Qbar l) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
   obtain ⟨s, hs⟩ := ha.surj (Units.mk0 (l : w.adicCompletion L) (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero))
   have h1 := norm_one χ (Units.continuous_val.comp hχ) (Subgroup.inclusion (Weil_le_Dec h) s)
@@ -122,20 +122,20 @@ private theorem not_linked (H : GlobalTheory.Published.GlobalArtinReciprocity) (
     (hO : ∀ j, OrdChar ι a (ω j) (hh j) (ψ j))
     (hne : ∀ i j, ψ i ≠ ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype) (i j : Fin n) (hij : i ≠ j) :
     ω i ≠ ω j ∧ ω i ≠ ω j * absPow (w.adicCompletion L) 1 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   let inc := Subgroup.inclusion (Weil_le_Dec h)
   let ε := (cycBar L Ω l).comp (Dec (F := L) A).subtype
   have hεc : Continuous ε := ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ L Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ L Ω l)).comp continuous_subtypeVal
   have hε : ∀ s : Weil h, (ε (inc s) : Qbar l) = ((normV w : ℕ) : Qbar l) ^ deg s * algPow w 1 (a s : w.adicCompletion L) :=
     UpperTheory.V.Loc.epsArt H h hw a ha
   have hv : ∀ k (s : Weil h), (ψ k (inc s) : Qbar l) = ι.symm (ω k (a s)) * algPow w (-hh k) (a s : w.adicCompletion L) :=
     fun k s => (hO k).val s _ rfl (Set.mem_univ _)
   have hN : Nonempty (W.Emb l w) := by
     by_contra hE
-    haveI : IsEmpty (W.Emb l w) := not_nonempty_iff.1 hE
-    haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+    have : IsEmpty (W.Emb l w) := not_nonempty_iff.1 hE
+    have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
     have h1 := norm_one ε (Units.continuous_val.comp hεc) (inc (frob h))
     rw [hε, deg_frob, zpow_one, algPow, finprod_of_isEmpty, mul_one, GlobalTheory.Pst.normV_eq_pow (l := l) hw, Nat.cast_pow, norm_pow] at h1
     have h2 := (pow_eq_one_iff_of_nonneg (norm_nonneg _) (fun h0 => by
@@ -196,7 +196,7 @@ private theorem dual_of_weights {n : ℕ} (μ ν : DomWeight n)
     add_lt_add_of_le_of_lt (μ.anti (Fin.rev_le_rev.2 hij.le)) (by exact_mod_cast hij)
   have m2 : StrictMono fun j : Fin n => -ν.w j + (j : ℕ) := fun i j hij =>
     add_lt_add_of_le_of_lt (neg_le_neg (ν.anti hij.le)) (by exact_mod_cast hij)
-  have h2 := (m1.range_inj m2).1 (Set.ext fun z => by simpa using (congrArg (z ∈ ·) h1).to_iff)
+  have h2 := (m1.range_inj_of_wellFoundedLT m2).1 (Set.ext fun z => by simpa using (congrArg (z ∈ ·) h1).to_iff)
   obtain ⟨u, hu⟩ := ν
   have h3 : u = μ.dual.w := funext fun j => by
     have := congrFun h2 j
@@ -245,7 +245,7 @@ private theorem above [IsCMField L] (P : _root_.UpperTheory.V.Af.Hypotheses') (h
   have ha : IsLocalArtin h (artOf h) := by
     obtain ⟨a, ha, -⟩ := hrc
     exact Classical.epsilon_spec ⟨a, ha⟩
-  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtype_val
+  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtypeVal
   choose ω hω using fun i => (Loc.ordCharIff P.litN.aut.art h ι _ ha (htW lam i) (ψ i)).1.2 ⟨flag_cont hc hf i, hψ i⟩
   have hD : DRat ι h (ρ.comp (Dec (F := L) A).subtype) HT fun s => (rc (algNorm τ)).charPol s := fun O _ _ _ Bw hj =>
     have h1 := HG A h O Bw hj
@@ -288,7 +288,7 @@ private theorem chi_comap {n : ℕ} {A Γ H : Type} [CommRing A] [Group Γ] [Gro
 private theorem ker_le {n : ℕ} {k Γ H : Type} [Field k] [CharZero k] [Group Γ] [Group H] {D : W.GDet n k Γ} {φ : H →* Γ}
     {ρ : H →* GL (Fin n) k} (hn : 1 ≤ n) (e : D.comap φ = W.GDet.ofRep (W.mat ρ)) (hs : Formalism.MainNotions.N.IsSSRep ρ) {g : H}
     (hg : φ g = 1) : ρ g = 1 := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   refine UpperTheory.eq_one_of_trace_translation_invariant_semisimple H k n ρ hs g fun y => ?_
   have h1 : ∀ z, (ρ z : Matrix (Fin n) (Fin n) k).charpoly = D.chi (MonoidAlgebra.single (φ z) 1) := fun z =>
     ((AlgebraTools.Det.repApi (W.mat ρ)).2.1 z).symm.trans (by rw [← e, chi_comap])

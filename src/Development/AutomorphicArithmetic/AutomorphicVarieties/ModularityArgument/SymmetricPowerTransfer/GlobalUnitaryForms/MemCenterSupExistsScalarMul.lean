@@ -91,7 +91,7 @@ theorem conj_sup {J : Subgroup (DX Δ)} {f : DX Δ → ℂ} (h : ∀ u ∈ J, �
   rw [mul_assoc, ← scal_comm hz, inv_mul_cancel_left]
 
 theorem mem_center_sup_exists_scalar_mul {J : Subgroup (DX Δ)} {u : DX Δ} (hu : u ∈ ZD Δ ⊔ J) : ∃ z s, ∃ k ∈ J, IsScal z s ∧ u = s * k := by
-  haveI : (ZD Δ).Normal := ⟨fun s hs g => by
+  have : (ZD Δ).Normal := ⟨fun s hs g => by
     obtain ⟨z, hz⟩ := zd_scal hs
     rwa [← scal_comm hz, mul_inv_cancel_right]⟩
   obtain ⟨s, hs, k, hk, e⟩ := Subgroup.mem_sup_of_normal_left.1 hu

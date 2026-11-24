@@ -97,7 +97,7 @@ theorem setIntegral_comp_addEquiv_of_fundamentalDomain (Γ : AddSubgroup G) [Cou
     exact T.injective.mem_set_image
   have h1 : (c : ENNReal) * μ 𝓕 = 1 * μ 𝓕 := by
     have h2 : (μ.map T) (T '' 𝓕) = μ 𝓕 := by rw [hmapE, e.map_apply, hpre]
-    rw [hcμ, Measure.smul_apply, ← hm, ENNReal.smul_def, smul_eq_mul] at h2
+    rw [hcμ, smul_apply, ← hm, ENNReal.smul_def, smul_eq_mul] at h2
     rw [h2, one_mul]
   have hc1 : c = 1 := by
     have h3 : (c : ENNReal) = 1 := (ENNReal.mul_left_inj hne hfin.ne).1 h1
@@ -129,14 +129,14 @@ theorem nilM_injective : Function.Injective (nilM : (BlockIx a r → R) → Matr
   intro x y h
   funext p
   have := congrFun (congrFun h p.1.1) p.1.2
-  simpa only [nilM, Matrix.of_apply, dif_pos p.2] using this
+  simpa only [nilM, Matrix.of_apply, dite_eq_left p.2] using this
 
 theorem nil_matrix_conj_block {B C : Matrix (Fin a) (Fin a) R} (hB : BlockDiag r B) (hC : BlockDiag r C)
     (x : BlockIx a r → R) : nilM (upperRightBlockConj B C x) = B * nilM x * C := by
   ext i j
   by_cases h : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-  · simp only [nilM, Matrix.of_apply, dif_pos h, upperRightBlockConj]
-  · rw [nilM, Matrix.of_apply, dif_neg h, Matrix.mul_apply]
+  · simp only [nilM, Matrix.of_apply, dite_eq_left h, upperRightBlockConj]
+  · rw [nilM, Matrix.of_apply, dite_eq_right h, Matrix.mul_apply]
     refine (Finset.sum_eq_zero fun l _ => ?_).symm
     rw [Matrix.mul_apply, Finset.sum_mul]
     refine Finset.sum_eq_zero fun k _ => ?_
@@ -144,7 +144,7 @@ theorem nil_matrix_conj_block {B C : Matrix (Fin a) (Fin a) R} (hB : BlockDiag r
     · by_cases hik : (i : ℕ) < r
       · rw [hC l j (by omega), mul_zero]
       · rw [hB i k (by omega), zero_mul, zero_mul]
-    · simp [nilM, dif_neg hk]
+    · simp [nilM, dite_eq_right hk]
 
 theorem conj_block_add (B C : Matrix (Fin a) (Fin a) R) (x y : BlockIx a r → R) :
     upperRightBlockConj B C (x + y) = upperRightBlockConj B C x + upperRightBlockConj B C y := by
@@ -174,8 +174,8 @@ theorem continuous_nilM {S : Type} [CommRing S] [TopologicalSpace S] :
     Continuous (nilM : (BlockIx a r → S) → Matrix (Fin a) (Fin a) S) := by
   refine continuous_matrix fun i j => ?_
   by_cases h : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-  · simpa only [nilM, Matrix.of_apply, dif_pos h] using continuous_apply _
-  · simpa only [nilM, Matrix.of_apply, dif_neg h] using continuous_const
+  · simpa only [nilM, Matrix.of_apply, dite_eq_left h] using continuous_apply _
+  · simpa only [nilM, Matrix.of_apply, dite_eq_right h] using continuous_const
 
 theorem continuous_conj_block {S : Type} [CommRing S] [TopologicalSpace S] [IsTopologicalRing S]
     (B C : Matrix (Fin a) (Fin a) S) : Continuous (upperRightBlockConj B C : (BlockIx a r → S) → _) :=
@@ -262,12 +262,12 @@ end Main
 
 theorem integral_unip_lev_mul : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (r s : ℕ) (φ : Sm E (r + s)), (∀ (γ : GL (Fin (r + s)) E) (g : GA E (r + s)), φ.1 (ratGL E (r + s) γ * g) = φ.1 g) → IsOpen {k | finRep E (r + s) k φ = φ} → ∀ [MeasurableSpace (BlockIx (r + s) r → Ad E)] [BorelSpace (BlockIx (r + s) r → Ad E)] (μ : Measure (BlockIx (r + s) r → Ad E)) (𝓕 : Set (BlockIx (r + s) r → Ad E)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratN E (r + s) r) 𝓕 μ → ∀ (γ : GL (Fin r) E × GL (Fin s) E) (g : GA E (r + s)), ∫ x in 𝓕, φ.1 (unip x * (lev (Ad E) r s (ratGL E r γ.1, ratGL E s γ.2) * g)) ∂μ = ∫ x in 𝓕, φ.1 (unip x * g) ∂μ := by
   intro E _ _ _ r s φ hl _ _ _ μ 𝓕 hμ h𝓕 γ g
-  haveI := hμ
+  have := hμ
   obtain ⟨t2, lc, sc⟩ := Formalism.IndefR.Eqv.G5.af_facts E
-  haveI : T2Space (Ad E) := t2
-  haveI : LocallyCompactSpace (Ad E) := lc
-  haveI : SecondCountableTopology (Ad E) := sc
-  haveI := countable_ratN (E := E) (a := r + s) r
+  have : T2Space (Ad E) := t2
+  have : LocallyCompactSpace (Ad E) := lc
+  have : SecondCountableTopology (Ad E) := sc
+  have := countable_ratN (E := E) (a := r + s) r
   have hfin := covol_lt_top μ 𝓕 h𝓕
   set ℓ := lev E r s γ with hℓ
   set m := lev (Ad E) r s (ratGL E r γ.1, ratGL E s γ.2) with hmdef

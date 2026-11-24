@@ -58,7 +58,7 @@ theorem UpperTheory.Reformulated.B.Qi6.det_ne_zero :
   intro F _ _ m t ht E hE hdet
   obtain ⟨v, hv, hMv⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hdet
   obtain ⟨i, hi⟩ := Function.ne_iff.mp hv
-  haveI : Nonempty (Fin m) := ⟨i⟩
+  have : Nonempty (Fin m) := ⟨i⟩
   obtain ⟨a, ha⟩ := Finite.exists_max (fun j => ‖v j‖)
   have hpos : 0 < ‖v a‖ := lt_of_lt_of_le (norm_pos_iff.mpr hi) (ha i)
   have hrow : t * v a = -∑ b, E a b * v b := by

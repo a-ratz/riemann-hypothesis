@@ -117,11 +117,11 @@ theorem exists_map_to_model {V F : Type} [CommRing V] [IsDomain V] [IsDiscreteVa
     n₁.cart.1.hom_ext (by rw [Category.assoc, Category.assoc, n₁.act, ha', m₁.act, ← Category.assoc, ha'])
       (by rw [Category.assoc, Category.assoc, Over.w, Over.w, Over.w, Over.w])
   have c₂ : ∀ b, (G'.act.act b).left ≫ e.hom.left = e.hom.left ≫ (G.act.act b).left := fun b => by
-    haveI := G.semi.separated
-    haveI := G'.semi.smooth
-    haveI : IsSchemeTheoreticallyDominant (spMap (algebraMap V F)) :=
+    have := G.semi.separated
+    have := G'.semi.smooth
+    have : IsSchemeTheoreticallyDominant (spMap (algebraMap V F)) :=
       schDom_spec_map _ (IsFractionRing.injective V F)
-    haveI : IsSchemeTheoreticallyDominant m₂.φ := .of_isPullback m₂.cart.1.flip
+    have : IsSchemeTheoreticallyDominant m₂.φ := .of_isPullback m₂.cart.1.flip
     refine ext_of_schDom G.G.hom (by rw [Category.assoc, Category.assoc, Over.w, Over.w, Over.w, Over.w]) m₂.φ ?_
     rw [← Category.assoc, ← m₂.act, Category.assoc, he', ← Category.assoc, c₁, ← Category.assoc m₂.φ, he',
       Category.assoc, Category.assoc, n₂.act]
@@ -144,30 +144,30 @@ theorem dualMap_alg {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') :
 
 theorem ext_generic {y y' : specO O (DualNumber O) ⟶ P.G}
     (h : spMap (dualMap (algebraMap O C)) ≫ y.left = spMap (dualMap (algebraMap O C)) ≫ y'.left) : y = y' := by
-  haveI : IsSchemeTheoreticallyDominant (spMap (dualMap (algebraMap O C))) :=
+  have : IsSchemeTheoreticallyDominant (spMap (dualMap (algebraMap O C))) :=
     (schemeDominant_specMap_iff _).2 fun a b hab => TrivSqZeroExt.ext
       (P.integers.hom_inj (by simpa [dualMap] using congrArg TrivSqZeroExt.fst hab))
       (P.integers.hom_inj (by simpa [dualMap, Algebra.algebraMap_eq_smul_one] using congrArg TrivSqZeroExt.snd hab))
-  haveI := P.semi.separated
+  have := P.semi.separated
   exact Over.OverMorphism.ext (ext_of_schDom P.G.hom ((Over.w y).trans (Over.w y').symm) _ h)
 
 theorem span_bLie_eq_wRec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C ℝ≥0) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] [Algebra ℤ_[p] C] [IsScalarTower ℤ_[p] O C] [Algebra c.F C] [StarRing (𝓞 E)] (T : CDVR) (io : c.F →+* T.Fr) (y₀ : IntFr Xo c T io) (k : letI := io.toAlgebra; T.Fr →ₐ[c.F] C) (kO : T.V →+* O) (P : Point p v O (𝓞 E)) (ψ : P.A.A.left ⟶ Xo.univ.t.G.left) (z : FrPt Xo c C), (letI := io.toAlgebra; PointOver P y₀.1.x k.toRingHom kO ψ) → (letI := io.toAlgebra; FrMap k y₀.1 z) → ∀ (τ : E →+* ℂ) (x : Fin (Dw.mult τ) → LieG P.Gt), (∀ j, LieTie P ψ (x j) (z.u τ j)) → Submodule.span O (Set.range fun j => P.bLie (x j)) = P.wRec (embInt c P.integers τ) := by
   intro E _ _ _ H Dw l Xo c p _ C _ _ _ v O _ _ _ _ _ _ _ _ _ T io y₀ k kO P ψ z hP hz τ x hx
-  letI := io.toAlgebra
+  let := io.toAlgebra
   refine le_antisymm (Submodule.span_le.2 ?_) ?_
   · rintro _ ⟨j, rfl⟩
     exact ⟨⟨x j, (hx j).isEig hP (z.eig τ j)⟩, rfl⟩
   rintro _ ⟨⟨w, hw⟩, rfl⟩
   obtain ⟨G, t, n₁, n₂, ⟨ub, u₁, u₂, u₃, u₄⟩, -⟩ := y₀.2.2
   obtain ⟨π, φ, h1, h2, h3, h4, h5⟩ := exists_map_to_model hP n₁ n₂
-  letI := kO.toAlgebra
-  haveI : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
+  let := kO.toAlgebra
+  have : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
   have inj : Function.Injective (algebraMap T.V O) := fun a b h => IsFractionRing.injective T.V T.Fr
     (k.toRingHom.injective ((hP.1 a).symm.trans ((congrArg _ h).trans (hP.1 b))))
-  haveI : FaithfulSMul T.V O := (faithfulSMul_iff_algebraMap_injective _ _).2 inj
-  haveI : Module.Flat T.V O := inferInstance
-  haveI := G.semi.smooth
-  haveI := G.act.hom
+  have : FaithfulSMul T.V O := (faithfulSMul_iff_algebraMap_injective _ _).2 inj
+  have : Module.Flat T.V O := inferInstance
+  have := G.semi.smooth
+  have := G.act.hom
   choose χ hχ using fun a => int_val c T io τ a
   have hχ' : ∀ a, algebraMap T.V O (χ a) = embInt c P.integers τ a := fun a => P.integers.hom_inj (by
     rw [algebraMap_embInt, ← k.commutes]
@@ -196,8 +196,8 @@ theorem span_bLie_eq_wRec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       RingHom.ext fun a => (hP.1 a).symm
     rw [← s₃, Category.assoc, ← h4, ← Category.assoc, e₁, Category.assoc, r₂, Category.assoc, v₁, ← Category.assoc,
       ← Category.assoc, spMap_spMap, spMap_spMap, dualMap_comp, dualMap_comp, e₃]
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp₀ : ¬ IsUnit (p : O) := Fact.out
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => hp₀ (by simpa using h.map (TrivSqZeroExt.fstHom O O O))
   have mem_pow : ∀ {R : Type} [CommRing R] (a : R) (n : ℕ) (x : R),

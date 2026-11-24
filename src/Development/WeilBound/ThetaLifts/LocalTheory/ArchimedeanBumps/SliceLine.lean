@@ -152,7 +152,7 @@ theorem exists_dual (hB : B.IsGood σ) (I : Set (Matrix (Fin n) (Fin d) (AE F E)
       Dual σ X W I u z ∧ (∀ a, ∑ j, Y j a • inclR (F := F) (AF F) (b j) = a) ∧
       ∀ a, lin u (fun j => Y j a) = a • Matrix.vecMulVec (incV F x) (incV F y) := by
   classical
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   set t : E := -(form σ X.J x' x * form σ W.J y' y) with ht
   have t0 : t ≠ 0 := neg_ne_zero.2 h0
   let b' := Module.finBasis F E
@@ -266,14 +266,14 @@ theorem line_ex (hS : Slice) (hH : ArchHeis) (hU : ArchUniq) (hc : Cfg B M M₁ 
   have hYc : Continuous fun c j => Y j (lift c) :=
     continuous_pi fun j => (IsModuleTopology.continuous_of_linearMap (Y j)).comp hlc
   refine ⟨fun c => ∑ i, (φ₁ i a / ψ₁ a) • A i fun j => Y j (lift c), fun f => ?_, fun c f => ?_, fun q N hq => ?_⟩
-  · simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply]
+  · simp only [sum_apply, smul_apply]
     exact continuous_finsetSum _ fun i _ => ((hcont i f).comp hYc).const_smul (φ₁ i a / ψ₁ a)
   · have h1 := hid (fun j => Y j (lift c)) f
     rw [hlin, ev_op hH hU hB hl hψ hc.good hp hp₁ (at_smul (hL.supp c) _)] at h1
     refine SchwartzMap.ext fun y => ?_
     have h2 := congrFun h1 (ptA y a)
     simp only [Finset.sum_apply, pureA_ptA] at h2
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, SchwartzMap.sum_apply, SchwartzMap.smul_apply,
+    simp only [sum_apply, smul_apply, sum_apply, smul_apply,
       smul_eq_mul]
     rw [eq_div_of_mul_eq ha h2, Finset.sum_div]
     exact Finset.sum_congr rfl fun i _ => by ring
@@ -301,7 +301,7 @@ theorem line_ex (hS : Slice) (hH : ArchHeis) (hU : ArchUniq) (hc : Cfg B M M₁ 
     have hw : (1 + ‖c‖) ^ N ≤ K ^ N * (1 + Sg) ^ N := by
       rw [← mul_pow]; gcongr; nlinarith
     have hs : q ((∑ i, (φ₁ i a / ψ₁ a) • A i fun j => Y j (lift c)) f) ≤ ∑ i, ‖φ₁ i a / ψ₁ a‖ * q (A i (fun j => Y j (lift c)) f) := by
-      simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply]
+      simp only [sum_apply, smul_apply]
       refine (Finset.le_sum_of_subadditive q (map_zero q).le (map_add_le_add q) _ _).trans (le_of_eq ?_)
       simp only [map_smul_eq_mul]
     change _ ≤ (∑ i, ‖φ₁ i a / ψ₁ a‖) * K ^ N * p f

@@ -75,7 +75,7 @@ lemma map_smul_volume {m n : ℕ} (ζ : ℂ) (hζ : ‖ζ‖ = 1) :
     rw [LinearMap.det_restrictScalars, LinearMap.det_smul, LinearMap.det_id, mul_one,
       Algebra.norm_complex_apply, map_pow, Complex.normSq_eq_norm_sq, hζ]
     simp
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have := Measure.map_linearMap_addHaar_eq_smul_addHaar (μ := (volume : Measure (Fin m → Fin n → ℂ)))
     (f := L) (by rw [hdet]; exact one_ne_zero)
   rw [hdet] at this
@@ -110,7 +110,7 @@ lemma gramX_smul {m n : ℕ} (ε : Fin m → Bool) (ζ : ℂ) (hζ : ‖ζ‖ = 
 
   simp only [gramX, evX, Qp, Qb, map_sub, map_sum, map_mul, MvPolynomial.eval_X]
   congr 1 <;> refine Finset.sum_congr rfl fun a _ => ?_ <;>
-    simp only [Pi.smul_apply, smul_eq_mul, Bool.false_eq_true, if_true, if_false] <;>
+    simp only [Pi.smul_apply, smul_eq_mul, Bool.false_eq_true, ite_true, ite_false] <;>
     exact key _ _
 
 lemma continuous_gramX {m n : ℕ} (ε : Fin m → Bool) : Continuous fun x : Fin m → Fin n → ℂ => gramX ε x :=
@@ -131,7 +131,7 @@ theorem rot : Rot := by
   set ζ : ℂ := Complex.exp (((Real.pi / N : ℝ) : ℂ) * Complex.I) with hζdef
   have hζ : ‖ζ‖ = 1 := by rw [hζdef, Complex.norm_exp_ofReal_mul_I]
   have hζN : ζ ^ N = -1 := by
-    rw [hζdef, ← Complex.exp_nat_mul]
+    rw [hζdef, ← Complex.exp_natCast_mul]
     have : (N : ℂ) * (((Real.pi / N : ℝ) : ℂ) * Complex.I) = Real.pi * Complex.I := by
       push_cast
       field_simp

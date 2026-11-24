@@ -227,15 +227,15 @@ theorem UpperTheory.V.Ws.Gys.extRep :
     linear_combination -this
   have hY : (⋃ j, Set.range (y j)).Finite := Set.finite_iUnion fun j => (hy j).lc.range_finite
   let A : Subring k := a.range
-  haveI : Finite A := Set.Finite.to_subtype (s := (a.range : Set k)) (by rw [RingHom.coe_range]; exact ha)
+  have : Finite A := Set.Finite.to_subtype (s := (a.range : Set k)) (by rw [RingHom.coe_range]; exact ha)
   let V : Submodule A k := Submodule.span A (⋃ j, Set.range (y j))
-  haveI : Module.Finite A V := Module.Finite.span_of_finite A hY
-  haveI : Finite V := Module.finite_of_finite A
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Module.Finite A V := Module.Finite.span_of_finite A hY
+  have : Finite V := Module.finite_of_finite A
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hchar : ∀ x : k, (l ^ 1) • x = 0 := by
     intro x
     rw [nsmul_eq_mul, hlp, CharP.cast_eq_zero, zero_mul]
-  letI iM : Module (ZMod (l ^ 1)) (A × (J → V)) := AddCommGroup.zmodModule (fun x => by
+  let iM : Module (ZMod (l ^ 1)) (A × (J → V)) := AddCommGroup.zmodModule (fun x => by
     refine Prod.ext ?_ ?_
     · apply Subtype.ext
       change (((l ^ 1) • x.1 : A) : k) = 0
@@ -246,8 +246,8 @@ theorem UpperTheory.V.Ws.Gys.extRep :
       change (((l ^ 1) • x.2 j : V) : k) = 0
       rw [AddSubmonoidClass.coe_nsmul]
       exact hchar _)
-  letI : TopologicalSpace (A × (J → V)) := ⊥
-  haveI : DiscreteTopology (A × (J → V)) := ⟨rfl⟩
+  let : TopologicalSpace (A × (J → V)) := ⊥
+  have : DiscreteTopology (A × (J → V)) := ⟨rfl⟩
   let rr : Γ → A := fun g => ⟨a ↑(Φ.rt w g), a.mem_range_self _⟩
   let tt : Γ → A := fun g => ⟨a ↑(Φ.rt (w + w') g), a.mem_range_self _⟩
   let YY : Γ → J → V := fun g j => ⟨y j g, Submodule.subset_span (Set.mem_iUnion.2 ⟨j, g, rfl⟩)⟩
@@ -522,7 +522,7 @@ theorem UpperTheory.V.Ws.Gys.ccEx :
       intro a
       have h := ComplexEmbedding.isReal_iff.1 (InfinitePlace.isReal_iff.1 hw)
       exact RingHom.congr_fun h a
-    letI : Algebra F ℂ := w.embedding.toAlgebra
+    let : Algebra F ℂ := w.embedding.toAlgebra
     let e : Ω ≃ₐ[F] algebraicClosure F ℂ := IsAlgClosure.equiv F Ω (algebraicClosure F ℂ)
     let κ : ℂ →ₐ[F] ℂ :=
       { (starRingEnd ℂ) with commutes' := fun a => hφ a }
@@ -544,7 +544,7 @@ theorem UpperTheory.V.Ws.Gys.ccEx :
         exact j.commutes a
       rw [hj, InfinitePlace.mk_embedding]
   refine ⟨fun w => if hw : w.IsReal then (key w hw).choose else 1, fun w hw => ?_⟩
-  simp only [dif_pos hw]
+  simp only [dite_eq_left hw]
   exact (key w hw).choose_spec
 end -- clump:auto
 end -- clump:auto
@@ -567,9 +567,9 @@ theorem UpperTheory.V.Ws.Gys.gwLower :
   obtain ⟨μ, hμ⟩ := GlobalTheory.Published.PoitouTate.exists_lift_cycMod (F := F) (Ω := Ω) (l := l) (r := 1) (S := S) hS
   obtain ⟨c, hc⟩ := UpperTheory.V.Ws.Gys.ccEx F Ω
   have e := hGW F Ω l 1 M S ρ one_pos hl hS hρ μ hμ Av hA c hc L
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI hfd : Finite (TDual (ZMod (l ^ 1)) M) := DFunLike.finite _
-  haveI hf1 : Finite (H1 ρ) := (hGF F Ω l 1 M S ρ one_pos hS hρ).2.1
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have hfd : Finite (TDual (ZMod (l ^ 1)) M) := DFunLike.finite _
+  have hf1 : Finite (H1 ρ) := (hGF F Ω l 1 M S ρ one_pos hS hρ).2.1
   have hM : 0 < Nat.card M := Nat.card_pos
   have p1 : 0 < Nat.card (Sel ρ (locFam S Av) (continuous_locFam S Av) L) := Nat.card_pos
   have p2 : 0 < Nat.card (H0 (twDual μ ρ)) := Nat.card_pos
@@ -628,9 +628,9 @@ theorem UpperTheory.V.Ws.Gys.locNe :
     rw [htop, Nat.card_congr Submodule.topEquiv.toEquiv, Nat.card_zmod, pow_one]
   by_contra hne
   push_neg at hne
-  haveI hz : Subsingleton ↥(ReciprocityTheory.Gal.Z1 ρ) :=
+  have hz : Subsingleton ↥(ReciprocityTheory.Gal.Z1 ρ) :=
     ⟨fun a b => Subtype.ext ((hne a a.2).trans (hne b b.2).symm)⟩
-  haveI hs : Subsingleton (ReciprocityTheory.Gal.H1 ρ) :=
+  have hs : Subsingleton (ReciprocityTheory.Gal.H1 ρ) :=
     (Submodule.Quotient.mk_surjective _).subsingleton
   have h1 : Nat.card (ReciprocityTheory.Gal.H1 ρ) = 1 := Nat.card_eq_one_iff_unique.mpr ⟨hs, ⟨0⟩⟩
   rw [h1, h0] at hE'
@@ -647,7 +647,7 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal IsLocalRing UpperTheory.V.HV UpperTheory.V.GradeZeroInterpolatingElement UpperTheory.V.Ws
 
 private theorem rescale {l : ℕ} [Fact l.Prime] (a : ZMod (l ^ 1)) (ha : a ≠ 0) : ∃ b : ZMod (l ^ 1), b * a = 1 := by
-  haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
+  have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
   exact ⟨a⁻¹, inv_mul_cancel₀ ha⟩
 
 theorem UpperTheory.V.Ws.Gys.locHoms :
@@ -656,7 +656,7 @@ theorem UpperTheory.V.Ws.Gys.locHoms :
         (∀ g : Dec (F := F) A, g.1 ∈ Ine (F := F) A → φ₁ g = 0) ∧ (∃ g, φ₁ g = 1) ∧ ∃ g : Dec (F := F) A, g.1 ∈ Ine (F := F) A ∧ φ₂ g = 1 := by
   intro hT hE hU F Ω _ _ _ _ _ l _ A v hA hl hμ
   obtain ⟨f, hf, hf0⟩ := UpperTheory.V.Ws.Gys.locNe hT hE F Ω l A v hA hl hμ
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   let ρ : Representation (ZMod (l ^ 1)) (Dec (F := F) A) (ZMod (l ^ 1)) := Representation.trivial _ _ _
   let χ := (cycMod F Ω l 1).comp (Dec (F := F) A).subtype
   have hχ : ∀ g, χ g = 1 := fun g => hμ g.1 g.2
@@ -800,9 +800,9 @@ theorem UpperTheory.V.Ws.Gys.selBig :
   have hloc : ∀ v : S, (if v.1 ∈ S₀ then 1 else 2 * Nat.card M) ≤ Nat.card (gysL S₀ S ρ Av m0 v) := by
     intro v
     by_cases hv : v.1 ∈ S₀
-    · rw [if_pos hv, show gysL S₀ S ρ Av m0 v = ⊥ from if_pos hv]
+    · rw [ite_eq_left hv, show gysL S₀ S ρ Av m0 v = ⊥ from ite_eq_left hv]
       exact Nat.card_pos
-    · rw [if_neg hv, show gysL S₀ S ρ Av m0 v = _ from if_neg hv]
+    · rw [ite_eq_right hv, show gysL S₀ S ρ Av m0 v = _ from ite_eq_right hv]
       have ht := htr v.1 v.2 hv (Av v) (hA v)
       obtain ⟨φ₁, h1, φ₂, h2, a1, a2, g, a3, a4⟩ := locHoms P.loc.lt P.loc.le P.uo F Ω l (Av v) v.1 (hA v)
         (fun h => hv (hS₀ _ h)) (fun g hg => (ht g hg).2)
@@ -810,7 +810,7 @@ theorem UpperTheory.V.Ws.Gys.selBig :
       obtain ⟨-, f1, -, -⟩ := P.loc.lf F Ω l 1 M (Av v) _ v.1 one_pos (hA v) hc
       exact ramCard _ _ M _ _ m0 (fun g => (ht g.1 g.2).1) hm0 f1 φ₁ h1 φ₂ h2 a1 a2 ⟨g, a3, a4⟩
   have h1 : (2 * Nat.card M) ^ (S.card - S₀.card) ≤ ∏ v : S, Nat.card (gysL S₀ S ρ Av m0 v) := by
-    refine le_trans (le_of_eq ?_) (Finset.prod_le_prod' fun v _ => hloc v)
+    refine le_trans (le_of_eq ?_) (Finset.prod_le_prod fun v _ => hloc v)
     rw [Finset.prod_coe_sort S (fun v => if v ∈ S₀ then 1 else 2 * Nat.card M), Finset.prod_ite, Finset.prod_const_one, one_mul,
       Finset.prod_const, ← Finset.sdiff_eq_filter, Finset.card_sdiff_of_subset hSS]
   have hpos : 0 < Nat.card M ^ (S.card - S₀.card) := pow_pos Nat.card_pos _
@@ -860,13 +860,13 @@ theorem UpperTheory.V.Ws.Gys.selMem :
     show f.1 (toGS Ω _ g) = 0
     rw [h2, h1]
   · have h := hloc ⟨v, hS hv⟩
-    rw [show gysL S₀ S ρ Av m0 ⟨v, hS hv⟩ = ⊥ from if_pos hv, Submodule.mem_bot] at h
+    rw [show gysL S₀ S ρ Av m0 ⟨v, hS hv⟩ = ⊥ from ite_eq_left hv, Submodule.mem_bot] at h
     obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.mk_eq_zero _).1 h)
     exact (UpperTheory.V.Ws.Gys.cocConj F Ω R M (ρ.comp (toGS Ω _)) _ hZ v (Av ⟨v, hS hv⟩) A (hA ⟨v, hS hv⟩) hAv).1
       ⟨m, fun g hg => hm ⟨g, hg⟩⟩
   · have h := hloc v
     rw [show gysL S₀ S ρ Av m0 v = ramLine (ρ.comp (locFam S Av v)) ((Ine (F := F) (Av v)).subgroupOf (Dec (F := F) (Av v))) m0
-      from if_neg hv, mem_ramLine] at h
+      from ite_eq_right hv, mem_ramLine] at h
     obtain ⟨f', h1, h2⟩ := h
     obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.eq _).1 h2)
     have hd : g ∈ Dec (F := F) (Av v) := Ine_le_Dec _ hg
@@ -925,19 +925,19 @@ private theorem killSub_closed (ρ : Representation R Γ M) (hρ : ContAction ρ
     IsClosed (killSub ρ hc : Set Γ) := by
   have e : (killSub ρ hc : Set Γ) = (⋂ m : M, {g | ρ g m = m}) ∩ {g | c g = 0} := by
     ext g
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     exact and_congr_left' LinearMap.ext_iff
   rw [e]
   refine IsClosed.inter (isClosed_iInter fun m => isClosed_eq ?_ continuous_const) (isClosed_eq hc.1 continuous_const)
   exact Continuous.comp (g := fun p : Γ × M => ρ p.1 p.2) hρ (continuous_id.prodMk continuous_const)
 
 private theorem module_finite_z1_padicInt [Finite M] (ρ : Representation R Γ M) [Finite (H1 ρ)] : Finite (Z1 ρ) := by
-  haveI : Finite (B1 ρ) := (Set.finite_range (d0 ρ)).to_subtype
-  haveI : Finite ((B1 ρ).comap (Z1 ρ).subtype) :=
+  have : Finite (B1 ρ) := (Set.finite_range (d0 ρ)).to_subtype
+  have : Finite ((B1 ρ).comap (Z1 ρ).subtype) :=
     Finite.of_injective (fun x => (⟨x.1.1, x.2⟩ : B1 ρ)) fun x y h =>
       Subtype.ext (Subtype.ext (congrArg (fun z : B1 ρ => z.1) h))
-  haveI : Finite ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup := this
-  haveI : Finite (Z1 ρ ⧸ ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup) := ‹Finite (H1 ρ)›
+  have : Finite ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup := this
+  have : Finite (Z1 ρ ⧸ ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup) := ‹Finite (H1 ρ)›
   exact Finite.of_addSubgroup_quotient ((B1 ρ).comap (Z1 ρ).subtype).toAddSubgroup
 
 end
@@ -947,11 +947,11 @@ theorem UpperTheory.V.Ws.Gys.zunrFin :
   intro hGF F Ω _ _ _ _ _ l _ M _ _ _ _ _ ρ S hS hρ hU
   obtain ⟨ρS, hcomp, hρS⟩ := UpperTheory.V.Ws.Gys.descend F Ω _ M ρ S hρ hU
   obtain ⟨-, f1, -⟩ := hGF F Ω l 1 M S ρS one_pos hS hρS
-  haveI := f1
-  haveI := module_finite_z1_padicInt ρS
+  have := f1
+  have := module_finite_z1_padicInt ρS
   refine (Set.finite_range fun c : Z1 ρS => c.1 ∘ toGS Ω (S : Set (HeightOneSpectrum (𝓞 F)))).subset ?_
   rintro c ⟨hc, hI⟩
-  haveI := killSub_normal ρ hc
+  have := killSub_normal ρ hc
   have hle : NS Ω (S : Set (HeightOneSpectrum (𝓞 F))) ≤ killSub ρ hc := by
     refine Subgroup.topologicalClosure_minimal _ (Subgroup.normalClosure_le_normal fun g hg => ?_) (killSub_closed ρ hρ hc)
     simp only [Set.mem_iUnion] at hg
@@ -989,7 +989,7 @@ theorem UpperTheory.V.Ws.Gys.gysCore :
   have hfin : Finite (Zunr ρ S₀) := UpperTheory.V.Ws.Gys.zunrFin hP.gf F Ω l M ρ S₀ hS₀ hρ hu
   obtain ⟨C, hC⟩ : ∃ C, C = Nat.card (TDual (ZMod (l ^ 1)) M) * Nat.card M ^ (Module.finrank ℚ F + S₀.card) := ⟨_, rfl⟩
   obtain ⟨N, hN⟩ : ∃ N, N = Nat.card (Zunr ρ S₀) := ⟨_, rfl⟩
-  obtain ⟨S₁, hS₁, hcard⟩ := (hQ.diff S₀.finite_toSet).exists_subset_card_eq (N * C)
+  obtain ⟨S₁, hS₁, hcard⟩ := (hQ.sdiff S₀.finite_toSet).exists_subset_card_eq (N * C)
   have hdisj : Disjoint S₀ S₁ := Finset.disjoint_left.2 fun v h0 h1 => (hS₁ (Finset.mem_coe.2 h1)).2 (Finset.mem_coe.2 h0)
   obtain ⟨S, hS⟩ : ∃ S, S = S₀ ∪ S₁ := ⟨_, rfl⟩
   have hsub : S₀ ⊆ S := hS ▸ Finset.subset_union_left
@@ -1077,7 +1077,7 @@ theorem UpperTheory.V.Ws.Gys.splitPrimes :
   intro Ω _ _ _ H hH
   obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hH H.one_mem
   set U : Subgroup (G ℚ Ω) := N.toOpenSubgroup.toSubgroup with hUdef
-  haveI : U.Normal := N.isNormal'
+  have : U.Normal := N.isNormal'
   have hUo : IsOpen (U : Set (G ℚ Ω)) := N.isOpen'
   have hUH : U ≤ H := fun x hx => hN hx
   intro hfin
@@ -1117,7 +1117,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem ex_place (K : Type) [Field K] [NumberField K] {w : ℕ} (hw : w.Prime) :
     ∃ v : HeightOneSpectrum (𝓞 K), (w : 𝓞 K) ∈ v.asIdeal := by
   have hwZ : Prime (w : ℤ) := Nat.prime_iff_prime_int.mp hw
-  haveI hPm : (Ideal.span {(w : ℤ)}).IsMaximal :=
+  have hPm : (Ideal.span {(w : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible hwZ.irreducible
   obtain ⟨Q, hQm, hQ⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 K)
     (Ideal.span {(w : ℤ)}) (by
@@ -1174,7 +1174,7 @@ theorem UpperTheory.V.Ws.Gys.placesQ :
   let f : ℕ → HeightOneSpectrum (𝓞 T.F) := fun w => if hw : w.Prime then (ex_place T.F hw).choose else v0
   have hf : ∀ w (hw : w.Prime), (w : 𝓞 T.F) ∈ (f w).asIdeal := by
     intro w hw
-    simp only [f, dif_pos hw]
+    simp only [f, dite_eq_left hw]
     exact (ex_place T.F hw).choose_spec
   have himg := hinf.image (f := f) (by
     intro a ha b hb hab

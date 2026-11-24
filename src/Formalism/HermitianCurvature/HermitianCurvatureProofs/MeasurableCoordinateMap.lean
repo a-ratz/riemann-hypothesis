@@ -140,7 +140,7 @@ theorem measM_rhoX {X : Type*} [MeasurableSpace X] {x : X → C2.Lstidx w → �
     have h2 : IsClosed ((fun ρ : B.Mat k r => γ⁻¹ * ρ * γ) ⁻¹' Nset k r) := hN.preimage hc
     have h3 : C6.Rset γ = Nset k r ∩ ((fun ρ : B.Mat k r => γ⁻¹ * ρ * γ) ⁻¹' Nset k r) := by
       ext ρ
-      simp only [C6.Rset, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage]
+      simp only [C6.Rset, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage]
     rw [h3]
     exact hN.inter h2
   set R' : Set (Mt k r) := {y | Matrix.of y ∈ C6.Rset γ} with hR'def
@@ -174,7 +174,7 @@ theorem measM_rhoX {X : Type*} [MeasurableSpace X] {x : X → C2.Lstidx w → �
       constructor
       · intro hx
         refine ⟨Matrix.of.symm (rhoX S γ w x), ⟨hx, ?_⟩, ?_⟩
-        · simpa only [hR'def, Set.mem_setOf_eq, Equiv.apply_symm_apply] using (hs x).1
+        · simpa only [hR'def, Set.mem_ofPred_eq, Equiv.apply_symm_apply] using (hs x).1
         · simp only [hFdef, hHdef, Equiv.apply_symm_apply, (hs x).2]
       · rintro ⟨y, ⟨hyB, hyR⟩, hFy⟩
         have hyR2 : Matrix.of y ∈ C6.Rset γ := hyR
@@ -257,12 +257,12 @@ include hγ hd hZw hpos he hμ0 hμ0' in
 theorem mp_Tx (x : C2.Lstidx w → ℂ) : MeasurePreserving (Tx S γ w e x) (nuR S w μ0 μ0') (nuR S w μ0 μ0') := by
   have sf : ∀ {U : Set (B.Mat k r)} {μ : Measure (Mt k r)}, B.IsHaarOn U μ → SigmaFinite μ := by
     intro U μ h
-    haveI : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
+    have : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
     infer_instance
-  haveI := sf hμ0
-  haveI := sf hμ0'
-  haveI := sf S.haarW
-  haveI := sf S.haarW'
+  have := sf hμ0
+  have := sf hμ0'
+  have := sf S.haarW
+  have := sf S.haarW'
   have hL : MeasurePreserving
       (fun p : (C2.LPidx w → ℂ) × Mt k r => (id p.1, lmulM (m0L S γ w e x p.1) p.2))
       ((volume : Measure (C2.LPidx w → ℂ)).prod μ0) ((volume : Measure (C2.LPidx w → ℂ)).prod μ0) := by
@@ -299,13 +299,13 @@ theorem mp_Tt : MeasurePreserving (Tt S γ w e) ((volume : Measure (C2.Lstidx w 
     ((volume : Measure (C2.Lstidx w → ℂ)).prod (nuR S w μ0 μ0')) := by
   have sf : ∀ {U : Set (B.Mat k r)} {μ : Measure (Mt k r)}, B.IsHaarOn U μ → SigmaFinite μ := by
     intro U μ h
-    haveI : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
+    have : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
     infer_instance
-  haveI := sf hμ0
-  haveI := sf hμ0'
-  haveI := sf S.haarW
-  haveI := sf S.haarW'
-  haveI : SFinite (nuR S w μ0 μ0') := by
+  have := sf hμ0
+  have := sf hμ0'
+  have := sf S.haarW
+  have := sf S.haarW'
+  have : SFinite (nuR S w μ0 μ0') := by
     unfold nuR
     infer_instance
   have h := MeasurePreserving.skew_product (μc := nuR S w μ0 μ0') (μd := nuR S w μ0 μ0')
@@ -323,7 +323,7 @@ theorem inj_Tt : Function.Injective (Tt S γ w e) := by
   have hcu : IsUnit (C2.uMap k r S.z' (rhoP S γ w x)) := by
     rw [Matrix.isUnit_iff_isUnit_det]
     have hdet : (C2.uMap k r S.z' (rhoP S γ w x)).det = 1 := by
-      rw [Matrix.det_of_upperTriangular (fun i j hij => hc.1 i j hij)]
+      rw [det_of_isUpperTriangular (fun i j hij => hc.1 i j hij)]
       simp [hc.2]
     rw [hdet]
     exact isUnit_one
@@ -359,12 +359,12 @@ theorem emb_Tt : MeasurableEmbedding (Tt S γ w e) := set_option maxHeartbeats 8
     unfold Tt
     exact measurable_fst.prodMk (meas_Tx S hγ hd hZw hpos e)
   have hi : Function.Injective (Tt S γ w e) := inj_Tt S hγ hd hZw hpos e he
-  haveI i1 : StandardBorelSpace (C2.Lstidx w → ℂ) := inferInstance
-  haveI i2 : StandardBorelSpace (Mt k r) := inferInstance
-  haveI i3 : StandardBorelSpace (G.UT (r + 1) → ℂ) := inferInstance
-  haveI i4 : StandardBorelSpace (C2.LPidx w → ℂ) := inferInstance
-  haveI i5 : StandardBorelSpace (RR k r w) := inferInstance
-  haveI i6 : StandardBorelSpace ((C2.Lstidx w → ℂ) × RR k r w) := inferInstance
+  have i1 : StandardBorelSpace (C2.Lstidx w → ℂ) := inferInstance
+  have i2 : StandardBorelSpace (Mt k r) := inferInstance
+  have i3 : StandardBorelSpace (G.UT (r + 1) → ℂ) := inferInstance
+  have i4 : StandardBorelSpace (C2.LPidx w → ℂ) := inferInstance
+  have i5 : StandardBorelSpace (RR k r w) := inferInstance
+  have i6 : StandardBorelSpace ((C2.Lstidx w → ℂ) × RR k r w) := inferInstance
   exact hm.measurableEmbedding hi
 
 end main
@@ -416,12 +416,12 @@ theorem muSS_eq (S : B.RealPlaceData k r Wp Wq) (w : Equiv.Perm (Fin (r + 1)))
       (fun p => OD.Xi S w e p.1 p.2) := by
   have sf : ∀ {V : Set (B.Mat k r)} {μ : Measure (Mt k r)}, B.IsHaarOn V μ → SigmaFinite μ := by
     intro V μ h
-    haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+    have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
     infer_instance
-  haveI := sf S.haarW
-  haveI := sf S.haarW'
-  haveI := sf hμ0
-  haveI := sf hμ0'
+  have := sf S.haarW
+  have := sf S.haarW'
+  have := sf hμ0
+  have := sf hμ0'
   have m1 : Measurable (fun p : (G.UT (r + 1) → ℂ) × Mt k r =>
       Matrix.of.symm (C2.tauM k r S.z (G.upper p.1) * Matrix.of p.2)) := (HC.cont_Phi S.z).measurable
   have m2 : Measurable (fun p : (G.UT (r + 1) → ℂ) × Mt k r =>
@@ -512,14 +512,14 @@ variable {μ0 μ0' : Measure (Mt k r)} (hμ0 : B.IsHaarOn (C2.N0set k r S.z) μ0
 include hμ0 hμ0' in
 theorem ae_good : ∀ᵐ q ∂(nuR S w μ0 μ0'), Matrix.of q.1.1 ∈ UWset k r S.z ∧ Matrix.of q.1.2.2 ∈ C2.N0set k r S.z ∧
     Matrix.of q.2.1 ∈ UWset k r S.z' ∧ Matrix.of q.2.2.2 ∈ C2.N0set k r S.z' := by
-  haveI : IsFiniteMeasureOnCompacts S.μW := ⟨fun K hK => S.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts S.μW' := ⟨fun K hK => S.haarW'.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts μ0' := ⟨fun K hK => hμ0'.finite_compact K hK⟩
-  haveI t1 : SFinite S.μW := inferInstance
-  haveI t2 : SFinite μ0 := inferInstance
-  haveI t5 : SFinite S.μW' := inferInstance
-  haveI t6 : SFinite μ0' := inferInstance
+  have : IsFiniteMeasureOnCompacts S.μW := ⟨fun K hK => S.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts S.μW' := ⟨fun K hK => S.haarW'.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ0' := ⟨fun K hK => hμ0'.finite_compact K hK⟩
+  have t1 : SFinite S.μW := inferInstance
+  have t2 : SFinite μ0 := inferInstance
+  have t5 : SFinite S.μW' := inferInstance
+  have t6 : SFinite μ0' := inferInstance
   have hW : ∀ᵐ a ∂S.μW, Matrix.of a ∈ UWset k r S.z :=
     ae_iff.2 S.haarW.conc
   have hW' : ∀ᵐ a ∂S.μW', Matrix.of a ∈ UWset k r S.z' :=
@@ -564,7 +564,7 @@ end meas
 
 theorem nn_smul {α : Type*} [MeasurableSpace α] (c : NNReal) (μ : Measure α) : c • μ = ((c : ENNReal) • μ) := by
   ext s _
-  rw [Measure.smul_apply, Measure.smul_apply]
+  rw [smul_apply, smul_apply]
   rfl
 
 theorem meas_actR (γ : B.Mat k r) (p : B.SS k r) :
@@ -684,15 +684,15 @@ theorem orb_int [CompleteSpace Wp] {c1 c2 : NNReal} (hc1 : 0 < c1) (hc2 : 0 < c2
     Integrable (fun q => D.orbIntegrand S γ F (Xi0 S w q)) (nuR S w μ0 μ0') ∧
       ∫ p, θ p • D.orbIntegrand S γ F p ∂S.μSS =
         ((c1 * c2 : NNReal) : ℝ) • ∫ q, D.orbIntegrand S γ F (Xi0 S w q) ∂(nuR S w μ0 μ0') := by
-  haveI : IsFiniteMeasureOnCompacts S.μW := ⟨fun K hK => S.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts S.μW' := ⟨fun K hK => S.haarW'.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts μ0' := ⟨fun K hK => hμ0'.finite_compact K hK⟩
-  haveI t1 : SFinite S.μW := inferInstance
-  haveI t2 : SFinite μ0 := inferInstance
-  haveI t5 : SFinite S.μW' := inferInstance
-  haveI t6 : SFinite μ0' := inferInstance
-  haveI t7 : SFinite (nuR S w μ0 μ0') := by unfold nuR; infer_instance
+  have : IsFiniteMeasureOnCompacts S.μW := ⟨fun K hK => S.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts S.μW' := ⟨fun K hK => S.haarW'.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ0' := ⟨fun K hK => hμ0'.finite_compact K hK⟩
+  have t1 : SFinite S.μW := inferInstance
+  have t2 : SFinite μ0 := inferInstance
+  have t5 : SFinite S.μW' := inferInstance
+  have t6 : SFinite μ0' := inferInstance
+  have t7 : SFinite (nuR S w μ0 μ0') := by unfold nuR; infer_instance
   have hz : C2.StdZ k r S.z := ⟨S.z_mem, S.T_pos⟩
   have hz' : C2.StdZ k r S.z' := ⟨S.z'_mem, S.T'_pos⟩
 

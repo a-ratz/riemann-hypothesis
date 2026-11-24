@@ -87,14 +87,14 @@ theorem encard_le_of_param {R D β : Type} [CommRing R] [AddCommGroup D] [Module
     (m j : ℕ) (Φ : (Fin m → D) → β) (T : Set β)
     (hT : ∀ t ∈ T, ∃ I : Submodule R D, Nat.card I = j ∧ ∃ x : Fin m → D, (∀ i, x i ∈ I) ∧ Φ x = t) :
     T.encard ≤ ((Nat.card (Submodule R D) * j ^ m : ℕ) : ℕ∞) := by
-  haveI : Finite (Submodule R D) := Finite.of_injective _ (SetLike.coe_injective (A := Submodule R D))
+  have : Finite (Submodule R D) := Finite.of_injective _ (SetLike.coe_injective (A := Submodule R D))
   let A := Σ I : {I : Submodule R D // Nat.card I = j}, (Fin m → I.1)
   let Ψ : A → β := fun a => Φ fun i => (a.2 i : D)
   have hsub : T ⊆ Ψ '' Set.univ := by
     intro t ht
     obtain ⟨I, hI, x, hx, rfl⟩ := hT t ht
     exact ⟨⟨⟨I, hI⟩, fun i => ⟨x i, hx i⟩⟩, trivial, rfl⟩
-  haveI : Fintype {I : Submodule R D // Nat.card I = j} := Fintype.ofFinite _
+  have : Fintype {I : Submodule R D // Nat.card I = j} := Fintype.ofFinite _
   have hA : Nat.card A ≤ Nat.card (Submodule R D) * j ^ m := by
     have h1 : Nat.card A = ∑ I : {I : Submodule R D // Nat.card I = j}, j ^ m := by
       rw [Nat.card_sigma]
@@ -115,9 +115,9 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 theorem sat_gens (d : S.Datum) (Λ : Submodule L.O S.V) (hΛ : S.IsTerm d Λ) :
     ∃ b : Fin ((r + 1) + (r + 1)) → S.V, S.sat Λ = Submodule.span L.O (Set.range b) := by
   obtain ⟨hSD, hW, -, h1, h2, hli, -⟩ := GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hΛ
-  haveI : IsPrincipalIdealRing L.O := (GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr).2.2.2.1
+  have : IsPrincipalIdealRing L.O := (GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr).2.2.2.1
   have hfg : (S.sat Λ).FG := by
-    haveI : IsNoetherian L.O Λ := isNoetherian_of_fg_of_noetherian Λ hSD.1.1
+    have : IsNoetherian L.O Λ := isNoetherian_of_fg_of_noetherian Λ hSD.1.1
     exact (isNoetherian_submodule.1 this) _ inf_le_left
   have hsp := (_root_.GlobalTheory.FrameGram.main L r k S _ hW.2.2.1 _ hW.2.2.2.1).2.2
   set y := Sum.elim (S.fr d Λ) (S.fr' d Λ) with hy
@@ -166,7 +166,7 @@ theorem encard_kernels_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologic
   have hcard : Nat.card (Mh ⧸ M₀) = S.q ^ i₀ := by
     rw [← hbe, Frames.be, hM₀]
     rfl
-  haveI : Finite (Mh ⧸ M₀) := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
+  have : Finite (Mh ⧸ M₀) := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
   obtain ⟨g, hg⟩ := sat_gens S d Λ₀ h₀
   rw [hM₀] at hg
   have hgm : ∀ i, g i ∈ Mh := fun i => by rw [hg]; exact Submodule.subset_span ⟨i, rfl⟩
@@ -828,7 +828,7 @@ theorem mass_le (S : Frames L r k) (d : S.Datum) (j : ℕ) :
     omega
   · have : (S.mass d fun Λ => S.cardI d Λ = j) = 0 := by
       unfold Frames.mass
-      refine ENNReal.tsum_eq_zero.2 fun o => if_neg fun h => hex ⟨_, h.1⟩
+      refine ENNReal.tsum_eq_zero.2 fun o => ite_eq_right fun h => hex ⟨_, h.1⟩
     rw [this]
     exact zero_le
 
@@ -847,7 +847,7 @@ theorem finite_fibre (S : Frames L r k) (d : S.Datum) (C : Set S.FrP) :
   rintro Λ ⟨hT, hC⟩
   obtain ⟨i, hi, hb⟩ := (_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).2.2.2.2.2.1
   have h2 := (_root_.GlobalTheory.HL.SmallImage.small_image L r k S d Λ hT).2.1
-  simp only [Set.mem_iUnion, Set.mem_Iic, Set.mem_setOf_eq]
+  simp only [Set.mem_iUnion, Set.mem_Iic, Set.mem_ofPred_eq]
   exact ⟨i, by omega, S.cardI d Λ, hb ▸ h2, hT, rfl, hC⟩
 
 theorem finite_cls (S : Frames L r k) (h : ∃ d Λ, S.IsTerm d Λ) :
@@ -856,7 +856,7 @@ theorem finite_cls (S : Frames L r k) (h : ∃ d Λ, S.IsTerm d Λ) :
   unfold Frames.sumCls at h1
   refine (ENNReal.finite_const_le_of_tsum_ne_top h1 (ε := 1) one_ne_zero).subset fun o ho => ?_
   have ho' : S.IsIntCls o.out := ho
-  simp only [Set.mem_setOf_eq, if_pos ho', mul_one]
+  simp only [Set.mem_ofPred_eq, ite_eq_left ho', mul_one]
   exact ENNReal.one_le_ofReal.2 ((_root_.GlobalTheory.HL.volSt L r k S).2 _ ho'.1).2.2.1
 
 theorem finite_orbits (S : Frames L r k) (d : S.Datum) :
@@ -873,7 +873,7 @@ theorem finite_orbits (S : Frames L r k) (d : S.Datum) :
     have hA := _root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms L r k S d _ hT h.1 h.2
     have hF : S.Fr d (h.1 • o.out) = o'.out := hA.2.2.2.2.1.trans hh
     refine ⟨h.1 • o.out, ?_, ?_⟩
-    · simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+    · simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
       exact ⟨o', hF ▸ (GlobalTheory.HL.TermBasic.term_basic L r k S d _ hA.1).2.2.2.2.2.2.1, hA.1, hF⟩
     · refine Eq.trans ?_ (Quotient.out_eq o)
       exact Quotient.sound (MulAction.orbitRel_apply.2 ⟨h, rfl⟩)

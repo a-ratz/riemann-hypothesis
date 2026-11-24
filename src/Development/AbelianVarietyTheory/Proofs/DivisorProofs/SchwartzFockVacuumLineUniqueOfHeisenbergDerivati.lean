@@ -74,7 +74,7 @@ theorem vacLine_of_derEx (hD : DerEx) : VacLine := by
     obtain ⟨u, u', u₁, c, hu, hu', -, hc, hc', -, h0, h', -⟩ := hy y
     have key := hyp u u' hu hu' c hc hc' (D u f₀) (D u' f₀) (hDu u hu f₀).1 (hDu u' hu' f₀).1
     have := congrArg (fun g : SInf F κ => g x) key
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     rw [hDx u hu, hDx u' hu'] at this
     rw [← h', ← h0]
     exact this
@@ -88,7 +88,7 @@ theorem vacLine_of_derEx (hD : DerEx) : VacLine := by
     have e1 := _root_.GlobalTheory.SDUnique.sd_unique (hDu u₁ hu₁ g₀).1 (hΦ.2 u₁ hu₁ _ hc₁ _)
     rw [_root_.GlobalTheory.FockVac.sumPl_heisOp_vacuum, map_smul, ← e0] at e1
     have := congrArg (fun g : SInf F κ => g x) e1
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     rw [hDx u hu, hDx u₁ hu₁] at this
     rw [← h1, ← h0]
     exact this

@@ -253,7 +253,7 @@ theorem tsum_enorm_inner_le {ι : Type*} (b : HilbertBasis ι ℂ H) (T U W : H 
         ((‖U‖ * ‖W‖ : ℝ) : ℂ) * ⟪U₀ (b i), T (W₀ (b i))⟫_ℂ := by
       rw [hUx, hWx, map_smul, inner_smul_left, inner_smul_right, Complex.conj_ofReal,
         Complex.ofReal_mul, mul_assoc]
-    rw [h, enorm_mul]
+    rw [h, eNorm_mul]
     congr 1
     rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (by positivity),
       ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm, ofReal_norm]
@@ -275,7 +275,7 @@ theorem traceNorm_add_le (S T : H →L[ℂ] H) : traceNorm (S + T) ≤ traceNorm
           ‖⟪V (b i), T (ContinuousLinearMap.id ℂ H (b i))⟫_ℂ‖ₑ) := by
         refine ENNReal.tsum_le_tsum fun i => ?_
         rw [add_apply, inner_add_right, id_apply]
-        exact enorm_add_le _ _
+        exact eNorm_add_le _ _
     _ = _ := ENNReal.tsum_add
     _ ≤ ‖V‖ₑ * ‖ContinuousLinearMap.id ℂ H‖ₑ * traceNorm S +
           ‖V‖ₑ * ‖ContinuousLinearMap.id ℂ H‖ₑ * traceNorm T :=

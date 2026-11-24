@@ -59,10 +59,10 @@ open Formalism.ZeroFreeDirichlet
 variable {M : ℕ} [NeZero M]
 
 theorem exLF_of_ne {χ : DirichletCharacter ℂ M} (h : χ ≠ 1) : exLF χ = DirichletCharacter.LFunction χ := by
-  unfold exLF; rw [if_neg h]
+  unfold exLF; rw [ite_eq_right h]
 
 theorem exLF_one_char : exLF (1 : DirichletCharacter ℂ M) = DirichletCharacter.LFunctionTrivChar₁ M := by
-  unfold exLF; rw [if_pos rfl]
+  unfold exLF; rw [ite_eq_left rfl]
 
 theorem exLF_one_char_apply {s : ℂ} (hs : s ≠ 1) :
     exLF (1 : DirichletCharacter ℂ M) s = (s - 1) * DirichletCharacter.LFunction (1 : DirichletCharacter ℂ M) s := by
@@ -109,12 +109,12 @@ theorem negLD_eq_exLF (χ : DirichletCharacter ℂ M) {s : ℂ} (hs : s ≠ 1) (
     have hL : DirichletCharacter.LFunction (1 : DirichletCharacter ℂ M) s ≠ 0 :=
       fun hz => h0 ((exLF_eq_zero_iff _ hs).2 hz)
     have hs1 : s - 1 ≠ 0 := sub_ne_zero_of_ne hs
-    rw [if_pos rfl, exLF_one_char_apply hs, exLF_one_char,
+    rw [ite_eq_left rfl, exLF_one_char_apply hs, exLF_one_char,
       DirichletCharacter.deriv_LFunctionTrivChar₁_apply_of_ne_one M hs]
     simp only [DirichletCharacter.LFunctionTrivChar]
     field_simp
     ring
-  · rw [if_neg h, exLF_of_ne h, zero_sub]
+  · rw [ite_eq_right h, exLF_of_ne h, zero_sub]
 
 theorem exLF_deriv_ne_zero (χ : DirichletCharacter ℂ M) {ρ : ℂ} (hρ : exLF χ ρ = 0)
     (hd : deriv (DirichletCharacter.LFunction χ) ρ ≠ 0) : deriv (exLF χ) ρ ≠ 0 := by

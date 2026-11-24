@@ -95,7 +95,7 @@ theorem fl_step {F E : Type*} [Field F] [Field E] [Algebra F E] (p : ℕ) [hp : 
   have hxp : x ^ p ∈ L := ha ▸ L.algebraMap_mem a
   set b : L := ⟨x ^ p, hxp⟩ with hb
   have hirr : Irreducible (X ^ p - C b) := by
-    apply X_pow_sub_C_irreducible_of_prime hp.out
+    apply irreducible_X_pow_sub_C_of_prime hp.out
     intro y hy
     apply hx
     have h1 : (y : E) ^ p = x ^ p := by
@@ -121,7 +121,7 @@ theorem fl_greedy {F E : Type*} [Field F] [Field E] [Algebra F E] [FiniteDimensi
   by_cases hT : L = ⊤
   · subst hT
     exact ⟨0, by simp [relfinrank_self], Fin.elim0, top_sup_eq _⟩
-  obtain ⟨x, -, hx⟩ := SetLike.exists_of_lt (lt_top_iff_ne_top.2 hT)
+  obtain ⟨x, -, hx⟩ := IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.2 hT)
   set L' : IntermediateField F E := (adjoin L ({x} : Set E)).restrictScalars F with hL'
   have hsup : L' = L ⊔ adjoin F ({x} : Set E) := by rw [hL', restrictScalars_adjoin_eq_sup]
   have hle : L ≤ L' := hsup ▸ le_sup_left
@@ -225,7 +225,7 @@ theorem fl_frob (c : ℕ) (hc : 0 < c) (hfin : (Pj E p c).relfinrank ⊤ ≠ 0) 
     intro h0
     apply hfin
     rw [relfinrank_Pj, h0, zero_pow hc.ne']
-  haveI : FiniteDimensional (Pj E p 1) E :=
+  have : FiniteDimensional (Pj E p 1) E :=
     Module.finite_of_finrank_pos (by rw [← Subfield.relfinrank_top_right]; exact Nat.pos_of_ne_zero h1)
   obtain ⟨n, hn, α, hα⟩ := fl_main (F := Pj E p 1) (E := E) p
     (fun x => ⟨⟨x ^ p, (mem_Pj p).2 ⟨x, by rw [pow_one]⟩⟩, rfl⟩)
@@ -431,16 +431,16 @@ theorem sectionEx {k R : Type*} [Field k] [CommRing R] [Algebra k R] [FiniteDime
   · refine ⟨⊤, fun s _ hs => by simpa using hnil s hs, fun r => ⟨r, Algebra.mem_top, by simp⟩⟩
   have hq2 : 2 ≤ p ^ c := le_trans (Fact.out : p.Prime).two_le (Nat.le_self_pow hc.ne' p)
   have hq0 : 0 < p ^ c := by omega
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite k R
-  haveI : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
+  have : IsArtinianRing R := IsArtinianRing.of_finite k R
+  have : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
   let N := nilradical R
   let f : R →ₐ[k] R ⧸ N := Ideal.Quotient.mkₐ k N
   have hf : ∀ r, f r = Ideal.Quotient.mk N r := fun r => rfl
   have hfN : ∀ r, f r = 0 ↔ IsNilpotent r := fun r => by
     rw [hf, Ideal.Quotient.eq_zero_iff_mem]; exact mem_nilradical
-  haveI : IsReduced (R ⧸ N) :=
+  have : IsReduced (R ⧸ N) :=
     (Ideal.isRadical_iff_quotient_reduced N).mp (Ideal.radical_isRadical _)
-  haveI : FiniteDimensional k (R ⧸ N) :=
+  have : FiniteDimensional k (R ⧸ N) :=
     Module.Finite.of_surjective f.toLinearMap Ideal.Quotient.mk_surjective
   have hrootbar : ∀ a : k, ∃ w : R ⧸ N, w ^ (p ^ c) = algebraMap k (R ⧸ N) a := fun a => by
     obtain ⟨w, hw⟩ := hroot a
@@ -452,9 +452,9 @@ theorem sectionEx {k R : Type*} [Field k] [CommRing R] [Algebra k R] [FiniteDime
   have hα : ∀ I : MaximalSpectrum R, ∃ α : Fin n → R ⧸ I.asIdeal,
       Algebra.adjoin k (Set.range (fun b : R ⧸ I.asIdeal => b ^ (p ^ c)) ∪ Set.range α) = ⊤ := by
     intro I
-    haveI := I.isMaximal
-    letI : Field (R ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-    haveI : FiniteDimensional k (R ⧸ I.asIdeal) :=
+    have := I.isMaximal
+    let : Field (R ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+    have : FiniteDimensional k (R ⧸ I.asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ k I.asIdeal).toLinearMap
         Ideal.Quotient.mk_surjective
     obtain ⟨n', hn', α, hα⟩ := fieldGen (k := k) (E := R ⧸ I.asIdeal) p c (fun a => by
@@ -601,7 +601,7 @@ theorem idem {k S : Type*} [Field k] [CommRing S] [Algebra k S] [FiniteDimension
       (∀ t t', t ≠ t' → e t * e t' = 0) ∧ ∀ t s, s * e t = 0 ∨ ∃ w, s * e t * w = e t := by
   classical
   have : IsArtinianRing S := IsArtinianRing.of_finite k S
-  haveI : Fintype (MaximalSpectrum S) := Fintype.ofFinite _
+  have : Fintype (MaximalSpectrum S) := Fintype.ofFinite _
   set φ := IsArtinianRing.equivPi S with hφ
   let σ := (Fintype.equivFin (MaximalSpectrum S)).symm
   refine ⟨Fintype.card (MaximalSpectrum S), fun t => φ.symm (Pi.single (σ t) 1), ?_, ?_, ?_, ?_⟩
@@ -854,7 +854,7 @@ theorem rq_pir [FiniteDimensional k A] [IsReduced A] (χ : k[X]) (q : ℕ) :
   have hPI : IsPrincipalIdealRing ((I : MaximalSpectrum A) → (A ⧸ I.asIdeal)[X]) :=
     isPrincipalIdealRing_pi _ (fun I => by
       have := I.isMaximal
-      letI : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field _
+      let : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field _
       exact EuclideanDomain.instIsPrincipalIdealRing)
   have hPI' : IsPrincipalIdealRing ((∀ I : MaximalSpectrum A, A ⧸ I.asIdeal)[X]) :=
     IsPrincipalIdealRing.of_surjective (Polynomial.piEquiv (fun I : MaximalSpectrum A => A ⧸ I.asIdeal)).symm
@@ -952,16 +952,16 @@ open PositivityTheory.RgUd.T PositivityTheory.RgUd.TP PositivityTheory.RgUd.TP.D
 open ValuativeRel in
 theorem twFin (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (p c : ℕ) [Fact p.Prime] [CharP k p] : FiniteDimensional k (Tw k p c) := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
+  let := IsTopologicalAddGroup.rightUniformSpace k
   have := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let : (Valued.v (R := k)).RankOne :=
     { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   have hc : CompleteSpace k := inferInstance
-  letI : NontriviallyNormedField k := Valued.toNontriviallyNormedField k (ValueGroupWithZero k)
+  let : NontriviallyNormedField k := Valued.toNontriviallyNormedField k (ValueGroupWithZero k)
   have : CompleteSpace k := hc
-  letI : TopologicalSpace (Tw k p c) := inferInstanceAs (TopologicalSpace k)
+  let : TopologicalSpace (Tw k p c) := inferInstanceAs (TopologicalSpace k)
   have : IsTopologicalAddGroup (Tw k p c) := inferInstanceAs (IsTopologicalAddGroup k)
   have : T2Space (Tw k p c) := inferInstanceAs (T2Space k)
   have : LocallyCompactSpace (Tw k p c) := inferInstanceAs (LocallyCompactSpace k)
@@ -975,21 +975,21 @@ theorem pad {M : Type*} [AddCommMonoid M] {q d : ℕ} (hqd : q ≤ d) (f : Fin q
     ∑ l : Fin q, f l = ∑ l : Fin d, if h : (l : ℕ) < q then f ⟨l, h⟩ else 0 := by
   rw [Fin.sum_univ_eq_sum_range (fun n => if h : n < q then f ⟨n, h⟩ else 0) d]
   rw [← Finset.sum_subset (Finset.range_subset_range.2 hqd) (fun n _ hn => by
-    rw [Finset.mem_range] at hn; rw [dif_neg hn])]
+    rw [Finset.mem_range] at hn; rw [dite_eq_right hn])]
   rw [← Fin.sum_univ_eq_sum_range (fun n => if h : n < q then f ⟨n, h⟩ else 0) q]
-  exact Finset.sum_congr rfl fun l _ => by rw [dif_pos l.2]
+  exact Finset.sum_congr rfl fun l _ => by rw [dite_eq_left l.2]
 
 theorem sect (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] :
     Sect k := by
   intro p _ _ N q Z hZ hqc hroots hnilb χ hχm hχd
   obtain ⟨c, rfl⟩ := hqc
-  haveI := twFin k p c
-  letI : CommRing Z := { (inferInstance : Ring Z) with
+  have := twFin k p c
+  let : CommRing Z := { (inferInstance : Ring Z) with
     mul_comm := fun a b => Subtype.ext (hZ.1 _ a.2 _ b.2) }
-  haveI : IsReduced Z := hZ.2
-  haveI : FiniteDimensional k Z := inferInstance
-  haveI := rq_fin (A := Z) χ hχm (p ^ c)
-  haveI := rq_pir (A := Z) χ (p ^ c)
+  have : IsReduced Z := hZ.2
+  have : FiniteDimensional k Z := inferInstance
+  have := rq_fin (A := Z) χ hχm (p ^ c)
+  have := rq_pir (A := Z) χ (p ^ c)
   have hnilR : ∀ r : Rq Z χ (p ^ c), IsNilpotent r → r ^ (p ^ c) = 0 := rq_nil χ (p ^ c)
   have hrootR : ∀ a : k, ∃ w : Rq Z χ (p ^ c), w ^ (p ^ c) = algebraMap k _ a := by
     intro a
@@ -1080,12 +1080,12 @@ theorem sect (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonar
       refine Finset.sum_congr rfl fun l _ => ?_
       by_cases h : (l : ℕ) < p ^ c
       · set_option synthInstance.maxHeartbeats 100000 in
-          rw [dif_pos h, map_sum]
+          rw [dite_eq_left h, map_sum]
         refine Finset.sum_congr rfl fun j _ => ?_
-        simp only [ext, dif_pos h, map_smul, map_mul, map_pow]
-      · rw [dif_neg h]
+        simp only [ext, dite_eq_left h, map_smul, map_mul, map_pow]
+      · rw [dite_eq_right h]
         refine Finset.sum_eq_zero fun j _ => ?_
-        simp only [ext, dif_neg h, zero_smul]
+        simp only [ext, dite_eq_right h, zero_smul]
     have nilmul : ∀ a b : Matrix (Fin N) (Fin N) k, Commute a b → IsNilpotent a → IsNilpotent (a * b) :=
       fun a b h ⟨n, hn⟩ => ⟨n, by rw [h.mul_pow, hn, zero_mul]⟩
     have hcomm : ∀ a b : Rq Z χ (p ^ c), Commute (ρ a) (ρ b) := fun a b => (Commute.all a b).map ρ

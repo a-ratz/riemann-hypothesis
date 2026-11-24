@@ -68,7 +68,7 @@ theorem exists_upper_mul_inc : ∀ (g : ℕ) [Fact g.Prime] (n : ℕ) (h : GL (F
             rw [Matrix.mul_assoc, Matrix.mul_assoc, Matrix.mul_nonsing_inv U hUdet, Matrix.mul_one]
         _ = U⁻¹ := by rw [← hA, Units.mul_inv, Matrix.one_mul]
     rw [e1]
-    haveI := Matrix.invertibleOfIsUnitDet U hUdet
+    have := Matrix.invertibleOfIsUnitDet U hUdet
     exact Matrix.blockTriangular_inv_of_blockTriangular hU hij
   · rw [map_inv, mul_inv_cancel_right]
 

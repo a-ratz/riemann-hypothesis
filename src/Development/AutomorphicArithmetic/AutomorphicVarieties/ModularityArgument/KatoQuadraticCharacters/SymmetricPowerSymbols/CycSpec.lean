@@ -54,7 +54,7 @@ private theorem pow_mod_eq_pow_of_pow_eq_one' {F : Type} [Field F] {z : F} {m : 
 
 private theorem rt_add {F : Type} [Field F] {ζ : F} {m : ℕ} (hm : 0 < m) (h : IsPrimitiveRoot ζ m) (i j : ZMod m) :
     ζ ^ (i + j).val = ζ ^ i.val * ζ ^ j.val := by
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   rw [ZMod.val_add, pow_mod_eq_pow_of_pow_eq_one' h.pow_eq_one, pow_add]
 
 private theorem rt_mul {F : Type} [Field F] {z : F} {m : ℕ} (h : z ^ m = 1) (i j : ZMod m) :
@@ -63,12 +63,12 @@ private theorem rt_mul {F : Type} [Field F] {z : F} {m : ℕ} (h : z ^ m = 1) (i
 
 private theorem rt_inj {F : Type} [Field F] {ζ : F} {m : ℕ} (hm : 0 < m) (h : IsPrimitiveRoot ζ m) {i j : ZMod m}
     (e : ζ ^ i.val = ζ ^ j.val) : i = j := by
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   exact ZMod.val_injective m (h.pow_inj (ZMod.val_lt i) (ZMod.val_lt j) e)
 
 private theorem rt_ex {F : Type} [Field F] {ζ : F} {m : ℕ} (hm : 0 < m) (h : IsPrimitiveRoot ζ m) {z : F}
     (hz : z ^ m = 1) : ∃ i : ZMod m, z = ζ ^ i.val := by
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   obtain ⟨k, hk, hk'⟩ := h.eq_pow_of_pow_eq_one hz
   refine ⟨(k : ZMod m), ?_⟩
   rw [ZMod.val_natCast, Nat.mod_eq_of_lt hk, hk']
@@ -87,7 +87,7 @@ private theorem cyc_spec {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ζ : Ω} {m : 
 theorem UpperTheory.V.Z.Kato.Sym.lgB :
     UpperTheory.V.Z.Kato.Sym.LgB := by
   intro Ω _ _ _ ε X m hm
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hζΩ : IsPrimitiveRoot (eOm ε (1 / (m : ℚ))) m := isPrimitiveRoot_eOm ε hm.ne'
   have hz : IsPrimitiveRoot (zt X m) m :=
     hζΩ.map_of_injective (f := (io X).comp (algebraMap Ω X.K)) (RingHom.injective _)

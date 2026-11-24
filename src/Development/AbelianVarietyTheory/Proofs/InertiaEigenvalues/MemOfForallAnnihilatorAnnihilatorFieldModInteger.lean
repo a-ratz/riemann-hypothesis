@@ -165,7 +165,7 @@ theorem mem_of_forall_annihilator_annihilator :
   classical
   obtain ⟨-, hRc, -, hAd⟩ := _root_.GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO
   obtain ⟨⟨hD, hDVR, hFr⟩, -, -, hTR, hOpen⟩ := hO
-  haveI := hD; haveI := hDVR; haveI := hFr; haveI := hTR
+  have := hD; have := hDVR; have := hFr; have := hTR
   have hinj : Function.Injective (algebraMap O LL) := IsFractionRing.injective O LL
   set ℓ : O := ((l : ℕ) : O) with hℓ_def
   have hℓLL : algebraMap O LL ℓ ≠ 0 := by
@@ -208,7 +208,7 @@ theorem mem_of_forall_annihilator_annihilator :
   have hTcl : ∀ s, IsClosed (T s) := fun s => hRcl.preimage (hLc s.1)
   have hempty : (K \ U) ∩ ⋂ s, T s = ∅ := by
     ext x
-    simp only [Set.mem_inter_iff, Set.mem_diff, Set.mem_iInter, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_iInter, Set.mem_empty_iff_false, iff_false]
     rintro ⟨⟨hK, hU⟩, hT⟩
     have hK' : ∀ i, ∃ a : O, algebraMap O LL a = x i := fun i => hK i (Set.mem_univ i)
     choose a ha using hK'

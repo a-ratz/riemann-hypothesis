@@ -93,7 +93,7 @@ theorem le_one_of_map_le_one (i : K →+* K') (hi : Continuous i) {y : K} (h : v
   have h2 := lt_one_of_continuous i hi h1
   rw [map_inv₀, map_inv₀] at h2
   have h0 : (0 : ValueGroupWithZero K') < valuation K' (i y) := by
-    rw [zero_lt_iff, Valuation.ne_zero_iff]
+    rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
     exact (map_ne_zero i).2 hy
   exact absurd h (not_le.2 ((inv_lt_one₀ h0).1 h2))
 
@@ -116,7 +116,7 @@ theorem map_le_one (i : K →+* K') (hi : Continuous i) {y : K} (h : valuation K
     exact lt_of_le_of_lt (mul_le_of_le_one_right' (pow_le_one' h n)) hx1
   have h2 := lt_one_of_continuous i hi hxy
   rw [map_mul, map_pow, map_mul, map_pow] at h2
-  simp only [Set.mem_setOf_eq, map_pow, map_inv₀] at hn
+  simp only [Set.mem_ofPred_eq, map_pow, map_inv₀] at hn
   have hpn : (0 : ValueGroupWithZero K') < valuation K' (i y) ^ n := pow_pos hpos n
   rw [inv_pow] at hn
   have := (inv_lt_iff_one_lt_mul₀ hpn).1 hn

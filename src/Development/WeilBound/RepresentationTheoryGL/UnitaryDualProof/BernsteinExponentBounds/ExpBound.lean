@@ -1022,7 +1022,7 @@ theorem exists_conductor_step : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     rw [map_eq_zero] at h0
     exact hc (by rw [h0, AddChar.map_zero_eq_one])
   obtain ⟨m, hm⟩ := exists_pow_lt₀ ha (Units.mk0 (γ / valuation k c) (div_ne_zero hγ hc0))
-  rw [Units.val_mk0, lt_div_iff₀ (zero_lt_iff.mpr hc0)] at hm
+  rw [Units.val_mk0, lt_div_iff₀ (pos_iff_ne_zero.mpr hc0)] at hm
   have hex : ∃ r : ℕ, ∀ μ ∈ 𝒪[k], ψ (μ * a ^ r * c) = 1 := by
     refine ⟨m, fun μ hμ => hball _ ?_⟩
     have hμ1 : valuation k μ ≤ 1 := (Valuation.mem_integer_iff _ _).mp hμ
@@ -1430,7 +1430,7 @@ theorem scalAt_eq (m N : ℕ) (h : m ≤ N) (z : kˣ) : scalAt k m N h z = aDiag
   rw [diagonal_apply]
   by_cases hi : (i : ℕ) < m
   · by_cases hj : (j : ℕ) < m
-    · simp only [hi, hj, dite_true, if_true, Units.coe_map]
+    · simp only [hi, hj, dite_true, ite_true, Units.coe_map]
       show (algebraMap k (Matrix (Fin m) (Fin m) k) (z : k)) ⟨i, hi⟩ ⟨j, hj⟩ = _
       rw [algebraMap_matrix_apply]
       simp [Fin.ext_iff]
@@ -1526,7 +1526,7 @@ theorem unipB_le_derUnip_one (N : ℕ) : unipB k (Fin N) ≤ derUnip k N 1 := by
   simp only [Pi.single_apply]
   by_cases e : r = c
   · subst e; simp [h2]
-  · rw [if_neg e]
+  · rw [ite_eq_right e]
     exact h1 r c (Fin.lt_def.2 (by have := Fin.val_ne_of_ne e; omega))
 
 

@@ -116,7 +116,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.jEx :
         funext fun x => hent x i k
       rw [he]
       have hx : Continuous fun x : Matrix.SpecialLinearGroup (Fin 2) (Kv v) => x i k :=
-        continuous_subtype_val.matrix_elem i k
+        continuous_subtypeVal.matrix_elem i k
       exact continuous_const.add (hcsg.comp (hx.sub continuous_const))
     exact Continuous.subtype_mk hv fun x => (j x).2
   · intro x

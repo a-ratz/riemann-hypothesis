@@ -70,7 +70,7 @@ theorem asAlgebraHom_surjective_of_finrank_intertwiningMap_eq_one :
     rw [← (Representation.IntertwiningMap.equivAlgEnd τ).toLinearEquiv.finrank_eq]
     exact h
   have hscalar : ∀ φ : Module.End K[G] τ.asModule, ∃ c : K, c • (1 : Module.End K[G] τ.asModule) = φ :=
-    (finrank_eq_one_iff_of_nonzero' _ one_ne_zero).mp hE
+    (finrank_eq_one_iff_of_ne_zero' _ one_ne_zero).mp hE
   have : IsScalarTower K (Module.End K[G] τ.asModule) τ.asModule := ⟨fun _ _ _ => rfl⟩
   have : Module.Finite (Module.End K[G] τ.asModule) τ.asModule :=
     Module.Finite.of_restrictScalars_finite K _ _

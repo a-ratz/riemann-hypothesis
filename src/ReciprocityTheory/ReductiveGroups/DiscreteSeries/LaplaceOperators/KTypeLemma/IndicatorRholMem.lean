@@ -241,7 +241,7 @@ theorem k2vM (lam : Fin n → ℝ) (μ : Fin n → ℤ) (hμ : IsMu lam μ) :
       fun a b v hv => Submodule.mem_sInf.2 fun T hT => hT.2 a b v (Submodule.mem_sInf.1 hv T hT)
     have key : mmSub μ ≤ (genSub (eMM μ) (Submodule.span ℂ {phiMM μ})).map (mmSub μ).subtype := by
       apply sInf_le
-      refine Set.mem_setOf.2 ⟨?_, ?_⟩
+      refine Set.mem_ofPred.2 ⟨?_, ?_⟩
       · rw [Submodule.span_le, Set.singleton_subset_iff]
         exact Submodule.mem_map.2 ⟨phiMM μ, hGS (Submodule.subset_span (Set.mem_singleton _)), rfl⟩
       · rintro a b _ ⟨y, hy, rfl⟩

@@ -77,7 +77,7 @@ theorem continuous_piMat_inv [TopologicalSpace R] [IsTopologicalRing (R ⊗[F] E
     Continuous fun g : HA R σ J => piMat (P := P) (T := T) g⁻¹ := by
   have hm : Continuous fun g : HA R σ J =>
       (((HA.mat R σ J g)⁻¹ : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   simp only [piMat_eq, mat_inv]
   exact continuous_const.add ((continuous_const.matrix_mul hm).matrix_mul continuous_const)
 
@@ -85,7 +85,7 @@ theorem continuous_piMat [TopologicalSpace R] [IsTopologicalRing (R ⊗[F] E)] :
     Continuous fun g : HA R σ J => piMat (P := P) (T := T) g := by
   have hm : Continuous fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   simp only [piMat_eq]
   exact continuous_const.add ((continuous_const.matrix_mul hm).matrix_mul continuous_const)
 
@@ -95,8 +95,8 @@ theorem continuous_piG [TopologicalSpace R] [IsTopologicalRing (R ⊗[F] E)] :
     Continuous fun s : S0 R σ J P => piG hσσ hJ hP (s : HA R σ J) s.2 := by
   apply Continuous.subtype_mk
   rw [Units.continuous_iff]
-  exact ⟨(continuous_piMat (P := P) (T := T)).comp continuous_subtype_val,
-    (continuous_piMat_inv (P := P) (T := T)).comp continuous_subtype_val⟩
+  exact ⟨(continuous_piMat (P := P) (T := T)).comp continuous_subtypeVal,
+    (continuous_piMat_inv (P := P) (T := T)).comp continuous_subtypeVal⟩
 
 end Cont
 

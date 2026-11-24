@@ -126,11 +126,11 @@ theorem taylor_expansion_at_origin {n a : ℕ} (G : V n → ℂ) (U : Set (V n))
     rw [hp, M.iteratedFDeriv_comp_diagonal]
     have hs : ∀ σ : Equiv.Perm (Fin a), M (fun i => v (σ i)) = M v := by
       intro σ
-      simp only [hM, ContinuousMultilinearMap.smul_apply]
+      simp only [hM, smul_apply]
       congr 1
       exact zd_iteratedFDeriv_comp_perm hU hc a 0 h0 σ v
     rw [Finset.sum_congr rfl (fun σ _ => hs σ), Finset.sum_const, Finset.card_univ,
-      Fintype.card_perm, Fintype.card_fin, hM, ContinuousMultilinearMap.smul_apply, nsmul_eq_mul,
+      Fintype.card_perm, Fintype.card_fin, hM, smul_apply, nsmul_eq_mul,
       smul_eq_mul, ← mul_assoc, mul_inv_cancel₀ (by exact_mod_cast (Nat.factorial_pos a).ne'), one_mul]
   have hzero : ∀ k < a + 1, iteratedFDeriv ℂ k H 0 = 0 := by
     intro k hk
@@ -160,7 +160,7 @@ theorem taylor_expansion_local_coordinates {n a : ℕ} (g : V n → ℂ) (ζ : V
   set ψ := hCA.localInverse hf' one_ne_zero with hψ
   have hψ0 : ψ 0 = x := by rw [← hζ0]; exact hCA.localInverse_apply_image hf' one_ne_zero
   have hψC : ContDiffAt ℂ 1 ψ 0 := by rw [← hζ0]; exact hCA.to_localInverse hf' one_ne_zero
-  have hleft : ∀ᶠ v in 𝓝 x, ψ (ζ v) = v := (hCA.hasStrictFDerivAt' hf' one_ne_zero).eventually_left_inverse
+  have hleft : ∀ᶠ v in 𝓝 x, ψ (ζ v) = v := (hCA.hasStrictFDerivAt hf' one_ne_zero).eventually_left_inverse
   have hψt : Tendsto ψ (𝓝 0) (𝓝 x) := by
     have := hψC.continuousAt.tendsto; rwa [hψ0] at this
   have hSn : {u | DifferentiableAt ℂ ψ u ∧ ψ u ∈ U} ∈ 𝓝 (0 : V n) :=

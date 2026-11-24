@@ -67,7 +67,7 @@ theorem UpperTheory.V.Ws.sum_local_degree_above_l_le_finrank :
   have hpb : p ≠ ⊥ := by
     rw [hpdef, Ne, Ideal.span_singleton_eq_bot]
     exact hl0
-  haveI hpm : p.IsMaximal := hpp.isMaximal hpb
+  have hpm : p.IsMaximal := hpp.isMaximal hpb
   have key := Ideal.sum_ramification_inertia_eq_finrank p (𝓞 F)
   rw [NumberField.RingOfIntegers.rank] at key
   rw [← key, ← Finset.sum_filter]

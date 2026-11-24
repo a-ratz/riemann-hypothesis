@@ -225,7 +225,7 @@ theorem colK_of_minPar {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] {M : Mat
   ext i j
   simp only [colK, Matrix.submatrix_apply, id, Matrix.mul_apply]
   exact sum_castLE hk _ fun l hl => by
-    have hz : B l (Fin.castLE hk j) = 0 := hB (by have := j.2; rw [Fin.lt_iff_val_lt_val]; simp; omega)
+    have hz : B l (Fin.castLE hk j) = 0 := hB (by have := j.2; rw [Fin.lt_def]; simp; omega)
     rw [hz, mul_zero]
 
 theorem exists_omega (h : IsCMExt F E σ) : ∃ ω : E, ω ≠ 0 ∧ σ ω = -ω := by
@@ -251,9 +251,9 @@ theorem minPar_of_eich {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] (A : Mat
     exact this
   refine ⟨1 - Matrix.of fun l m => if hl : l.val < k then C ⟨l.val, hl⟩ m else 0, fun l m hlm => ?_, ?_⟩
   · have hne : l ≠ m := fun e => (lt_irrefl _ (e ▸ hlm))
-    simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.of_apply, if_neg hne]
+    simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.of_apply, ite_eq_right hne]
     split_ifs with hl
-    · have hm : m.val < k := lt_trans (Fin.lt_iff_val_lt_val.1 hlm) hl
+    · have hm : m.val < k := lt_trans (Fin.lt_def.1 hlm) hl
       have := hC ⟨l.val, hl⟩ ⟨m.val, hm⟩
       rw [show Fin.castLE hk ⟨m.val, hm⟩ = m from Fin.ext rfl] at this
       rw [this, sub_zero]
@@ -411,7 +411,7 @@ theorem char_k (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J 
   have key' := congrArg (fun x : ℝ≥0 => (x : ℝ)) key
   simp only [NNReal.coe_mul, NNReal.coe_pow] at key'
   rw [hA] at key'
-  rw [← Real.exp_nat_mul, ← Real.exp_nat_mul] at key'
+  rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul] at key'
   have e2 : (mulEquivHaarChar (conjC b) : ℝ) = Real.exp (((n * k : ℕ) : ℝ) * (2 * Module.finrank ℚ F * c)) /
       Real.exp (((k * k : ℕ) : ℝ) * (2 * Module.finrank ℚ F * c)) := by
     rw [← key']
@@ -513,7 +513,7 @@ theorem map_mul_torus_of (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittF
   have hr : rho2 n (-s) = -rho2 n s := by simp [rho2, Finset.sum_neg_distrib]
   rw [hr] at hc
   ext t ht
-  simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def]
+  simp only [smul_apply, smul_eq_mul, ENNReal.smul_def]
   congr 1
   rw [← ENNReal.ofReal_coe_nnreal, NNReal.coe_inv, hc, ← Real.exp_neg]
   congr 2

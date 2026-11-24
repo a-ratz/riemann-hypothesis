@@ -98,7 +98,7 @@ theorem pow_three_mul_exp_le (c s : ℝ) (hc : 0 < c) (hs : 0 ≤ s) :
   have hEA : Real.exp (c * s / 8) * Real.exp (-(c / 8) * s) = 1 := by
     rw [← Real.exp_add, show c * s / 8 + -(c / 8) * s = 0 by ring, Real.exp_zero]
   have hsq : Real.exp (-(c * s / 4)) = Real.exp (-(c / 8) * s) ^ 2 := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -134,7 +134,7 @@ theorem log_exp_add_two_bounds (c s : ℝ) (hc : 0 < c) (hs : 8 / c ≤ s) :
     linarith
   · rw [Real.log_le_iff_le_exp (by positivity)]
     have e : Real.exp (c * s / 2) = Real.exp (c * s / 4) ^ 2 := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       ring

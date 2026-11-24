@@ -120,7 +120,7 @@ theorem diag_commute (hg : Formalism.REAL.GlRel G) (i j : Fin n) : Commute (G i 
   · subst hij
     exact Commute.refl _
   · have h' : ¬ j = i := fun h => hij h.symm
-    rw [if_neg hij, if_neg h', sub_zero] at h
+    rw [ite_eq_right hij, ite_eq_right h', sub_zero] at h
     exact sub_eq_zero.1 h
 
 theorem diagOn_commute (hg : Formalism.REAL.GlRel G) (hst : ∀ a b, ∀ w ∈ N, G a b w ∈ N) (i j : Fin n) :
@@ -138,7 +138,7 @@ theorem wts_nonempty (hg : Formalism.REAL.GlRel G) (hs : ∀ a b (x y : H), ⟪G
     (hN : N ≠ ⊥) (hst : ∀ a b, ∀ w ∈ N, G a b w ∈ N) : (wts G N).Nonempty := by
   have htop := LinearMap.IsSymmetric.iSup_iInf_eq_top_of_commute (fun c => diagOn_symm hs hst c)
     (fun i j _ => diagOn_commute hg hst i j)
-  haveI : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 hN
+  have : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 hN
   obtain ⟨χ, hχ⟩ : ∃ χ : Fin n → ℂ, (⨅ c, Module.End.eigenspace (diagOn G N hst c) (χ c)) ≠ ⊥ := by
     by_contra hcon
     push_neg at hcon

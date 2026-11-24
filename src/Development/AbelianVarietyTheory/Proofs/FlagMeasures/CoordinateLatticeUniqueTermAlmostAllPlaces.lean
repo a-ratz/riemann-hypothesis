@@ -324,7 +324,7 @@ end
 
 theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), Good S → ∃ d₀, S.IsTermW d₀ (coordLat S) 1 1 := by
   intro F _ _ _ _ _ E _ _ _ L r k S hG
-  haveI := nontrivial L
+  have := nontrivial L
   have hsd := isSD_coordLat S hG
   have hmem : ∀ v : S.V, v ∈ coordLat S ↔ ∀ i, v i ∈ L.O := fun v => mem_stdLat L v
   have h1 : ∀ a, S.f a ∈ coordLat S := fun a => (hmem _).2 (hG.f_int a)
@@ -346,7 +346,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
   have hP : IsIntM L P := fun i j => by
     rw [← hPdef, Matrix.smul_apply, smul_eq_mul]
     exact mul_mem hu (adjugate_int L _ hZ i j)
-  haveI : IsNoetherianRing L.O := by
+  have : IsNoetherianRing L.O := by
     obtain ⟨-, -, -, hpid, -⟩ := GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr
     infer_instance
   have hfg : (coordLat S).FG := hsd.1.1
@@ -497,7 +497,7 @@ theorem TT_eq : algebraMap (A.loc p).Fp (A.loc p).Ep (((G.S p).T : (A.loc p).Fp)
     (A.loc p).ιE G.TT := by
   have h1 := (G.S p).gram (Fin.last r) (Fin.last r)
   have h2 := (G.S p).gram' (Fin.last r) (Fin.last r)
-  simp only [and_self, if_true] at h1 h2
+  simp only [and_self, ite_true] at h1 h2
   rw [f_scale, Fin.val_last, sc_last, one_smul, herm_bc] at h1
   rw [f'_scale, Fin.val_last, sc_last, one_smul, herm_bc] at h2
   rw [map_mul, GFrames.TT, map_mul, h1, h2]
@@ -511,7 +511,7 @@ theorem G_scale : (G.S p).G = (∏ i ∈ Finset.range r, sc G p i) ^ 4 * (A.loc 
     exact Finset.prod_congr rfl fun i _ => cj_sc G p i
   unfold Frames.G
   rw [D_scale, D_scale, TT_eq]
-  simp only [Fin.val_last, Fin.coe_castSucc, hP, map_mul, map_pow, hcj, cj_ι, GFrames.Gr, map_sub]
+  simp only [Fin.val_last, Fin.val_castSucc, hP, map_mul, map_pow, hcj, cj_ι, GFrames.Gr, map_sub]
   ring
 
 end GlobalTheory.HL.GoodAlmostAll
@@ -529,7 +529,7 @@ def Ok (A : Places F E sig) (p : HeightOneSpectrum (𝓞 F)) (x : E) : Prop :=
 theorem ok_fin (A : Places F E sig) (x : E) : {p | ¬ Ok A p x}.Finite := by
   refine (((PlacesInt.integers_local A).2.1 x).union ((PlacesInt.integers_local A).2.1 x⁻¹)).subset ?_
   intro p hp
-  simp only [Ok, not_and_or, Set.mem_setOf_eq] at hp
+  simp only [Ok, not_and_or, Set.mem_ofPred_eq] at hp
   exact hp
 
 theorem unitIn_ok {A : Places F E sig} {p : HeightOneSpectrum (𝓞 F)} {x : E} (h : Ok A p x) (hx : x ≠ 0) :
@@ -549,7 +549,7 @@ theorem good_of (hgg : (G.S p).gg = false) (u : (𝒪[(A.loc p).Fp])ˣ)
     (hf : ∀ a i, Ok A p (G.f a i)) (hf' : ∀ a i, Ok A p (G.f' a i))
     (hes : ∀ a i, Ok A p (G.es a i)) (hes' : ∀ a i, Ok A p (G.es' a i))
     (hD : ∀ l, Ok A p (G.D l)) (hGr : Ok A p G.Gr) : Good (G.S p) := by
-  haveI := PlacesInt.nontrivial_Ep (A.loc p)
+  have := PlacesInt.nontrivial_Ep (A.loc p)
   have hc : UnitIn (A.L p).O (algebraMap (A.loc p).Fp (A.loc p).Ep (G.c p)) := hu ▸ unitIn_alg (A.L p) u
   have hP : ∀ n, UnitIn (A.L p).O (∏ i ∈ Finset.range n, sc G p i) := fun n =>
     unitIn_prod _ _ _ fun i _ => unitIn_sc G p u hu i
@@ -614,7 +614,7 @@ theorem GlobalTheory.HL.StdPlace.good_almost_all : ∀ {F E : Type} [Field F] [N
   refine H.subset fun p hp => ?_
   by_contra hB
   apply hp
-  simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq, not_or, not_exists, not_not,
+  simp only [Set.mem_union, Set.mem_iUnion, Set.mem_ofPred_eq, not_or, not_exists, not_not,
     Bool.not_eq_true] at hB
   obtain ⟨⟨⟨⟨⟨⟨⟨⟨⟨hgg, hu⟩, hHm⟩, hdet⟩, hf⟩, hf'⟩, hes⟩, hes'⟩, hD⟩, hGr⟩ := hB
   obtain ⟨u, hu⟩ := not_forall_not.mp hu
@@ -709,7 +709,7 @@ theorem eq_zero_of_forall_hf (L : LocE F E) {n : ℕ} {Hm : Matrix (Fin n) (Fin 
     funext j
     have := hz (Pi.single j 1)
     simp only [hf, Pi.single_apply, apply_ite (⇑L.cj), map_one, map_zero, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+      mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     simpa [Matrix.vecMul, dotProduct] using this
   have := congrArg (fun u => Matrix.vecMul u Hm⁻¹) h1
   simpa [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv _ hd] using this
@@ -839,7 +839,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
       rw [FrameBasic.hf_conj L S.herm.1 m y, hyW m (hMME m hm), map_zero]
     have e2 : ∑ i, o i • b i = ∑ i, (o i : E) • b i := rfl
     rw [hf_add_left, e1, zero_add, e2, UnimodTerm.hf_sum_left S]
-    simp only [hyb, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hyb, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     exact (o j).2
   obtain ⟨Q, hQ⟩ := (Submodule.mem_span_range_iff_exists_fun L.O).1 ((hspan y hyW).1 hyΛ)
   have hQ' : ∑ i, (Q i : E) • b i = y := hQ
@@ -1127,7 +1127,7 @@ theorem good_place {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
       intro g gs hd
       have : ∀ j, S.coef g gs 1 j = 0 := fun j => by
         have := hd j.succ j
-        rw [if_neg (by simp [Fin.ext_iff])] at this
+        rw [ite_eq_right (by simp [Fin.ext_iff])] at this
         exact this
       simp [Frames.psiOf, this]
     have e1 : S.psi 1 = 1 := h1 _ _ S.dual
@@ -1171,8 +1171,8 @@ theorem good_place {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
 theorem coordinate_lattice_standard : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (r k : ℕ) (G : GFrames A r k), 4 * r + 7 ≤ k → {p | ¬ ((G.S p).gg = false ∧ (G.S p).Hp = 1 ∧ (G.S p).St ⊓ MulAction.stabilizer (G.S p).GLV (Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V))) = (G.S p).K0 ∧ ∃ d₀, (G.S p).IsTermW d₀ (Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V))) 1 1 ∧ (G.S p).om d₀ (Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V))) = 1 ∧ (G.S p).H0 ⊓ MulAction.stabilizer (G.S p).GLV d₀ = (G.S p).complementReferenceCompactSubgroup ∧ (∀ Λ, (G.S p).IsTerm d₀ Λ → ∃ h ∈ (G.S p).St, Λ = h • (Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V)))) ∧ (∀ Λ, (G.S p).IsTerm d₀ Λ → (G.S p).Fr d₀ Λ = (G.S p).frameCls (G.S p).f (G.S p).f' → Λ = (Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : (G.S p).V)))) ∧ ∀ d Λ, (G.S p).IsTerm d Λ → ∃ h ∈ (G.S p).H0, d = h • d₀)}.Finite := by
   intro F E _ _ _ _ _ sig A r k G hk
   refine (_root_.GlobalTheory.HL.StdPlace.good_almost_all A r k G).subset fun p hp hg => hp ?_
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   exact ⟨hg.gg, good_place (A.L p) r k (G.S p) hk hg⟩
 
 end GlobalTheory.HL.StdPlace

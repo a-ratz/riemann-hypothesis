@@ -306,7 +306,7 @@ theorem exists_simpMod (Gm : Type) [AddCommGroup Gm] [Module X.A Gm] [IsSimpleMo
     ∃ μ : SimpIx X ϖ, Nonempty (Gm ≃ₗ[X.A] SimpMod X ϖ μ) := by
   obtain ⟨E, ψ, hψ⟩ := h
   let e := ψ.quotKerEquivOfSurjective hψ
-  haveI : IsSimpleModule X.A (E ⧸ LinearMap.ker ψ) := IsSimpleModule.congr e
+  have : IsSimpleModule X.A (E ⧸ LinearMap.ker ψ) := IsSimpleModule.congr e
   exact ⟨⟨E, LinearMap.ker ψ, inferInstance⟩, ⟨e.symm⟩⟩
 
 end Sub
@@ -674,12 +674,12 @@ theorem exists_algEquiv_lift_residue (l : ℕ) [Fact l.Prime] (L : IntermediateF
     ∃ g : PadicAlgCl l ≃ₐ[L] PadicAlgCl l, ∀ x y : OO l,
       residue (OO l) y = φ (residue (OO l) x) → ‖g (x : PadicAlgCl l) - y‖ < 1 := by
   classical
-  haveI : IsAlgClosure L (PadicAlgCl l) :=
+  have : IsAlgClosure L (PadicAlgCl l) :=
     ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) L⟩
-  haveI : IsGalois L (PadicAlgCl l) := {}
+  have : IsGalois L (PadicAlgCl l) := {}
   have hmem : ∀ (g : PadicAlgCl l ≃ₐ[L] PadicAlgCl l) {x : PadicAlgCl l}, x ∈ OO l → g x ∈ OO l :=
     fun g _ hx => algEquiv_mem_OO (g.restrictScalars ℚ_[l]) hx
-  letI : MulSemiringAction (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) (OO l) :=
+  let : MulSemiringAction (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) (OO l) :=
     { smul := fun g x => ⟨g x, hmem g x.2⟩
       one_smul := fun _ => Subtype.ext rfl
       mul_smul := fun _ _ _ => Subtype.ext rfl
@@ -691,15 +691,15 @@ theorem exists_algEquiv_lift_residue (l : ℕ) [Fact l.Prime] (L : IntermediateF
       ((g • x : OO l) : PadicAlgCl l) = g x := fun _ _ => rfl
   let A : Subring (OO l) := L.toSubalgebra.toSubring.comap (OO l).subtype
   have hA : ∀ a : A, (((a : OO l) : PadicAlgCl l)) ∈ L := fun a => a.2
-  haveI : SMulCommClass (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) A (OO l) := ⟨fun g a b => by
+  have : SMulCommClass (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) A (OO l) := ⟨fun g a b => by
     apply Subtype.ext
     change g (((a : OO l) : PadicAlgCl l) * b) = ((a : OO l) : PadicAlgCl l) * g b
     rw [map_mul]
     congr 1
     exact g.commutes (⟨_, hA a⟩ : L)⟩
-  letI : TopologicalSpace (OO l) := ⊥
-  haveI : DiscreteTopology (OO l) := ⟨rfl⟩
-  haveI : ContinuousSMul (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) (OO l) := by
+  let : TopologicalSpace (OO l) := ⊥
+  have : DiscreteTopology (OO l) := ⟨rfl⟩
+  have : ContinuousSMul (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) (OO l) := by
     rw [continuousSMul_iff_stabilizer_isOpen]
     intro x
     have := stabilizer_isOpen_of_isIntegral (K := L) (x : PadicAlgCl l)
@@ -707,7 +707,7 @@ theorem exists_algEquiv_lift_residue (l : ℕ) [Fact l.Prime] (L : IntermediateF
     ext g
     simp only [SetLike.mem_coe, MulAction.mem_stabilizer_iff]
     exact Subtype.ext_iff
-  haveI : Algebra.IsInvariant A (OO l) (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) := by
+  have : Algebra.IsInvariant A (OO l) (PadicAlgCl l ≃ₐ[L] PadicAlgCl l) := by
     constructor
     intro b hb
     obtain ⟨k, hk⟩ := (InfiniteGalois.mem_range_algebraMap_iff_fixed (k := L) (b : PadicAlgCl l)).2
@@ -790,15 +790,15 @@ theorem exists_ringEquiv_extending_of_ker_le :
     have : ψ s ^ n = 1 := by rw [← map_pow, hsn', map_one]
     rw [hs, zero_pow (by omega)] at this
     exact zero_ne_one this
-  letI : Algebra S (FieldCopy k) := ψ.toAlgebra
-  haveI : Module.IsTorsionFree S (FieldCopy k) := by
+  let : Algebra S (FieldCopy k) := ψ.toAlgebra
+  have : Module.IsTorsionFree S (FieldCopy k) := by
     refine Module.IsTorsionFree.of_smul_eq_zero fun r m h => ?_
     rw [Algebra.smul_def, mul_eq_zero] at h
     rcases h with h | h
     · left
       exact hψinj (h.trans (map_zero ψ).symm)
     · exact Or.inr h
-  haveI : Algebra.IsIntegral S k := by
+  have : Algebra.IsIntegral S k := by
     constructor
     intro x
     by_cases hx : x = 0
@@ -892,7 +892,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (L : IntermediateField ℚ_[l] (Padi
     refine (hab _ fun n => ?_).1 hp
     rw [MvPolynomial.coeff_map]
     exact ⟨(AddMonoidAlgebra.coeff q n).2, (GlobalTheory.ZH.mem_OO_iff _).1 (((AddMonoidAlgebra.coeff q n : As) : O).2)⟩
-  haveI := GlobalTheory.ZJ.isAlgClosed_kb (p := l)
+  have := GlobalTheory.ZJ.isAlgClosed_kb (p := l)
   obtain ⟨φ, hφR, hφ⟩ := _root_.GlobalTheory.exists_ringEquiv_extending_of_ker_le _ GlobalTheory.ZJ.exists_pow_eq_one_kb R J _ _ hII
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.ZJ.exists_algEquiv_lift_residue l L φ fun x hx => hφR _ ⟨⟨x, hx⟩, rfl⟩
   exact ⟨g, fun j => hg (a' j) (b' j) (hφ j).symm⟩
@@ -1020,7 +1020,7 @@ theorem capDet_dualWeyl_domain (O : Type) [CommRing O] [IsDomain O] [CharZero O]
     (fun a b => Formalism.GradedWeylDivisibility.rowDivL K a b 1) (fun i j x => (Formalism.GradedWeylDivisibility.lclosedeq_rowDiv_map φ i j 1 x).symm) u f
   apply MvPolynomial.map_injective φ hφ
   have h3 := h2.trans h1
-  simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe] at h3
+  simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass] at h3
   rw [h3, Int.cast_smul_eq_zsmul K, Int.cast_smul_eq_zsmul O, map_zsmul]
 
 theorem eval_capPoly (O : Type) [CommRing O] (N : ℕ) {M : Type} [AddCommGroup M] [Module O M]
@@ -1074,7 +1074,7 @@ theorem coeff_eq_of_int (P : Type) [CommRing P] [IsDomain P] [CharZero P] (L : �
     refine Set.Infinite.mono ?_ (Set.infinite_range_of_injective (Int.cast_injective (α := P)))
     rintro _ ⟨v, rfl⟩
     have hv := h v
-    simp only [Set.mem_setOf_eq, IsRoot, Q, eval_finsetSum, eval_monomial]
+    simp only [Set.mem_ofPred_eq, IsRoot, Q, eval_finsetSum, eval_monomial]
     rw [← sub_eq_zero, ← Finset.sum_sub_distrib] at hv
     rw [← hv]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -1082,7 +1082,7 @@ theorem coeff_eq_of_int (P : Type) [CommRing P] [IsDomain P] [CharZero P] (L : �
   have := congrArg (fun q : Polynomial P => q.coeff i) hQ
   simp only [Q, finsetSum_coeff, coeff_monomial, coeff_zero] at this
   simp only [Finsupp.single_apply] at this
-  rw [Finset.sum_eq_single i (fun j _ hj => if_neg hj) (fun h' => absurd (Finset.mem_range.2 hi) h'), if_pos rfl] at this
+  rw [Finset.sum_eq_single i (fun j _ hj => ite_eq_right hj) (fun h' => absurd (Finset.mem_range.2 hi) h'), ite_eq_left rfl] at this
   exact sub_eq_zero.1 this
 
 end GlobalTheory.CapelliCoeffs
@@ -1204,8 +1204,8 @@ theorem comp_of_rowZ {O : Type} [CommRing O] {N : ℕ} (H : Fin N → ℤ) (h : 
         rw [GlobalTheory.LvT.KerLat.weight_rowZ] at this
         exact_mod_cast this.symm
     by_cases hw : (fun c => (w c : ℤ)) = H
-    · rw [if_pos (key.mpr hw), if_pos hw]
-    · rw [if_neg (mt key.mp hw), if_neg hw, AddMonoidAlgebra.coeff_zero] <;> rfl
+    · rw [ite_eq_left (key.mpr hw), ite_eq_left hw]
+    · rw [ite_eq_right (mt key.mp hw), ite_eq_right hw, AddMonoidAlgebra.coeff_zero] <;> rfl
 
 theorem eq_zero_of_rowZ_neg {O : Type} [CommRing O] {N : ℕ} (H : Fin N → ℤ) (h : MvPolynomial (Fin N × Fin N) O)
     (hh : IsWeightedHomogeneous (GlobalTheory.LvT.KerLat.rowZ N N) h H) (c : Fin N) (hc : H c < 0) : h = 0 := by
@@ -1260,7 +1260,7 @@ theorem comp_rowAct_transvection {O : Type} [CommRing O] {N : ℕ} (a b : Fin N)
     by_cases hk1 : k = 1
     · subst hk1
       by_cases hb : 1 ≤ w b
-      · rw [if_pos, if_pos rfl]
+      · rw [ite_eq_left, ite_eq_left rfl]
         funext c
         simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.single_apply]
         by_cases hca : c = a
@@ -1271,12 +1271,12 @@ theorem comp_rowAct_transvection {O : Type} [CommRing O] {N : ℕ} (a b : Fin N)
       · have h0 : rowDiv O a b 1 h = 0 :=
           eq_zero_of_rowZ_neg _ _ hs b (by simp [Pi.single_apply, Ne.symm hab]; omega)
         simp [h0]
-    · rw [if_neg hk1, if_neg]
+    · rw [ite_eq_right hk1, ite_eq_right]
       intro he
       have := congrFun he a
       simp [Pi.single_apply, hab] at this
       omega
-  rw [Finset.sum_congr rfl hk, Finset.sum_ite_eq', if_pos (by simp)]
+  rw [Finset.sum_congr rfl hk, Finset.sum_ite_eq', ite_eq_left (by simp)]
 
 end GlobalTheory.PolarFormula
 
@@ -1684,7 +1684,7 @@ theorem winputs_frame : ∀ (E Ω : Type) [Field E] [NumberField E] [IsCMField E
     obtain ⟨e', z, hp, hz⟩ := (hmu τ).2.2.2
     have hee : e τ (res P.Nr (mu τ)) = e' := Subtype.ext (hu0 τ _ _ hp).symm
     exact ⟨z, hee ▸ hz⟩
-  haveI := hm.isPrime
+  have := hm.isPrime
   exact winputs_of_simple P (reFr W fr cjj) (F.setting W.lam jK m) l ϖ n₀ e hfin hlϖ
     ⟨GlobalTheory.ExpFrame.alg_chainB_stable F.O P.Nr ι W.lam, fun τ w => he0 τ w⟩
     (_root_.GlobalTheory.ExpFrame.heckeStable_heckeNat_of_isHecke l ι P.Nr F W.lam jK (NablaT F.O P.Nr W.lam) hH hH).1

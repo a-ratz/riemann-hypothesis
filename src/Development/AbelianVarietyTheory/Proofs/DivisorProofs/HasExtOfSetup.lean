@@ -130,12 +130,12 @@ namespace GlobalTheory.Desc.UnionFib
 theorem exists_ringHom_extend {A R Ω : Type} [CommRing A] [IsLocalRing A] [CommRing R] [IsLocalRing R] [Field Ω]
     [IsAlgClosed Ω] (φ : A →+* R) [IsLocalHom φ] (hφ : ((residue R).comp φ).Finite) (ψ : A →+* Ω) [IsLocalHom ψ] :
     ∃ u : R →+* Ω, u.comp φ = ψ := by
-  letI : Algebra (ResidueField A) (ResidueField R) := (ResidueField.map φ).toAlgebra
-  letI : Algebra (ResidueField A) Ω := (ResidueField.lift ψ).toAlgebra
+  let : Algebra (ResidueField A) (ResidueField R) := (ResidueField.map φ).toAlgebra
+  let : Algebra (ResidueField A) Ω := (ResidueField.lift ψ).toAlgebra
   have hf : (ResidueField.map φ).Finite := by
     rw [← ResidueField.map_comp_residue] at hφ
     exact RingHom.Finite.of_comp_finite hφ
-  haveI : Module.Finite (ResidueField A) (ResidueField R) := hf
+  have : Module.Finite (ResidueField A) (ResidueField R) := hf
   let l : ResidueField R →ₐ[ResidueField A] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -299,7 +299,7 @@ theorem Emb.hasExt_of_locGrp : ∀ (σ : Setup) (E : Emb σ), σ.Common → (∀
       exact ⟨x, y, hy⟩)
   have hs : ∀ x, Set.range (h x) ⊆ Set.range U.ι := fun x => by rw [hι, hr]; exact Set.inter_subset_left
   let H' : ∀ i : 𝒰.I₀, Over (𝒰.X i) := H
-  letI iH' : ∀ i : 𝒰.I₀, GrpObj (H' i) := iH
+  let iH' : ∀ i : 𝒰.I₀, GrpObj (H' i) := iH
   let ψ : ∀ i : 𝒰.I₀, (H' i).left ⟶ G.left := fun x => IsOpenImmersion.lift U.ι (h x) (hs x)
   have hψι : ∀ x : Sp σ.R, ψ x ≫ U.ι = h x := fun x => IsOpenImmersion.lift_fac _ _ _
   have hψ : ∀ i, IsPullback (ψ i) (H' i).hom G.hom (𝒰.f i) := fun (x : Sp σ.R) => by
@@ -1140,7 +1140,7 @@ theorem exists_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field F] (c�
       (ψ : P.functionField →+* F) (Dp : ℕ → F → P.Opens), IsModel c₀ N p ψ Dp := by
   intro R F _ _ _ c₀ N hN h
   obtain ⟨k₀, hk₀, b₀, hb₀, h₀⟩ := h
-  haveI := GrSpec.isIntegral hN hk₀ hb₀ h₀
+  have := GrSpec.isIntegral hN hk₀ hb₀ h₀
   refine ⟨Proj (GrSpec.piece hN), inferInstance, GrSpec.pstr hN, GrSpec.psi hN, GrSpec.Dp hN, ?_⟩
   exact
     { sep := GrSpec.sep hN
@@ -1205,7 +1205,7 @@ theorem exists_glue : ∀ (Y P : Scheme.{0}) [IsIntegral Y] [P.IsSeparated] (U :
     let V := U y ⊓ U y'
     have hV : genericPoint Y ∈ V := ⟨hgen _ y (hU y), hgen _ y' (hU y')⟩
     obtain ⟨l, hl⟩ := hlift V hV
-    haveI := hdom V l hl
+    have := hdom V l hl
     refine ⟨V, V.2.dense ⟨_, hV⟩, inf_le_left, inf_le_right, ?_⟩
     rw [Scheme.PartialMap.restrict_hom, Scheme.PartialMap.restrict_hom]
     refine ext_of_isDominant l ?_
@@ -1231,7 +1231,7 @@ theorem exists_glue : ∀ (Y P : Scheme.{0}) [IsIntegral Y] [P.IsSeparated] (U :
     exact (congrArg (l ≫ ·) (g y0).toPartialMap_toRationalMap_restrict).trans (hw y0 l hl)
   refine ⟨k ≫ F.toPartialMap.hom, fun y => ?_, hgpm⟩
   obtain ⟨l, hl⟩ := hlift (U y) (hgen _ y (hU y))
-  haveI := hdom _ l hl
+  have := hdom _ l hl
   refine ext_of_isDominant l ?_
   rw [reassoc_of% hl, hgpm, hw y l hl]
 
@@ -1539,8 +1539,8 @@ theorem pow_mem {R F : Type} [CommRing R] [Field F] {c₀ : R →+* F} {N : ℕ 
 
 theorem exists_map_to_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field F] (c₀ : R →+* F) (N : ℕ → Set F), GradedFam c₀ N → ∀ (P : Scheme.{0}) [IsIntegral P] (p : P ⟶ Sp R) (ψ : P.functionField →+* F) (Dp : ℕ → F → P.Opens), IsModel c₀ N p ψ Dp → ∀ (R₁ : Type) [CommRing R₁] (ρ : R →+* R₁) (Y : Scheme.{0}) [IsIntegral Y] (q : Y ⟶ Sp R₁) (θ : F →+* Y.functionField) (D₁ : CartierDiv Y), θ.comp c₀ = (GlobalTheory.Desc.cst q).comp ρ → (∀ k, ∀ a ∈ N k, θ a ∈ Sec D₁ k) → (∀ y : Y, ∃ k, 1 ≤ k ∧ ∃ b ∈ N k, y ∈ locus D₁ k (θ b)) → ∃ m : Y ⟶ P, m ≫ p = q ≫ spMap ρ ∧ PFF (𝟙 _) m (θ.comp ψ) ∧ ∀ k, 1 ≤ k → ∀ b ∈ N k, ∀ y, m y ∈ Dp k b ↔ y ∈ locus D₁ k (θ b) := by
   intro R F _ _ _ c₀ N hN P _ p ψ Dp hM R₁ _ ρ Y _ q θ D₁ hc hsec hcov
-  haveI : IsSeparated p := hM.sep
-  haveI : P.IsSeparated := sep R P p
+  have : IsSeparated p := hM.sep
+  have : P.IsSeparated := sep R P p
   choose k hk b hb hy using hcov
   have hb0 : ∀ y, b y ≠ 0 := fun y h => (hy y).ne_zero (by rw [h, map_zero])
   let U : Y → Y.Opens := fun y => ⟨locus D₁ (k y) (θ (b y)), locus_open Y D₁ _ _⟩
@@ -1558,7 +1558,7 @@ theorem exists_map_to_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field 
     (θ.comp ψ) (hreg y)
   obtain ⟨m, hmU, hmg⟩ := _root_.GlobalTheory.Desc.GenGlue.exists_glue Y P U hyU f (spMap (θ.comp ψ) ≫ gp P) hf
   refine ⟨m, ?_, ⟨gp Y, Category.comp_id _, hmg⟩, ?_⟩
-  · haveI := gp_dom Y
+  · have := gp_dom Y
     refine ext_of_isDominant (gp Y) ?_
     rw [reassoc_of% hmg, _root_.GlobalTheory.Desc.gp_comp_eq_spMap_cst P R p, ← Category.assoc, _root_.GlobalTheory.Desc.gp_comp_eq_spMap_cst Y R₁ q, ← Spec.map_comp, ← Spec.map_comp]
     congr 1
@@ -1634,7 +1634,7 @@ theorem cst_inj {X : Scheme.{0}} [IsIntegral X] {R : Type} [CommRing R] [IsDomai
   exact FaithfulSMul.algebraMap_injective R X.functionField
 
 theorem baseIndexConstant_injective (σ : Setup) : Function.Injective σ.c₀ := by
-  haveI := σ.ab.smooth
+  have := σ.ab.smooth
   exact cst_inj _
 
 theorem abelianSchemeDescent_chart_baseConstants_comp (σ : Setup) (x : Sp σ.R) : (σ.θ x).comp σ.c₀ = (Desc.cst (σ.C x).G.hom).comp (σ.ρ x) := by
@@ -1646,7 +1646,7 @@ theorem abelianSchemeDescent_chart_baseConstants_comp (σ : Setup) (x : Sp σ.R)
   exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
 
 theorem linDisj_A (σ : Setup) : LinDisj σ.c₀ (Desc.cst σ.A.hom) (RingHom.id _) := by
-  haveI := σ.ab.proper
+  have := σ.ab.proper
   have hfl : (algebraMap σ.R (Localization.Away σ.f)).Flat := by
     rw [RingHom.flat_algebraMap_iff]; infer_instance
   refine (_root_.GlobalTheory.SecFlatBC.sections_linDisj_flatBaseChange σ.R _ _ hfl σ.A.left σ.A.left σ.A.left (σ.A.hom ≫ awayMap σ.f) σ.A.hom (𝟙 _) (𝟙 _)
@@ -1659,39 +1659,39 @@ theorem linDisj_A (σ : Setup) : LinDisj σ.c₀ (Desc.cst σ.A.hom) (RingHom.id
     exact h
 
 theorem linDisj_C (σ : Setup) (x : Sp σ.R) : LinDisj σ.c₀ (Desc.cst (σ.C x).G.hom) (σ.θ x) := by
-  haveI := σ.ab.proper
+  have := σ.ab.proper
   exact (_root_.GlobalTheory.SecFlatBC.sections_linDisj_flatBaseChange σ.R _ _ (σ.flat x) σ.A.left (σ.C x).G.left (σ.V x).toScheme (σ.A.hom ≫ awayMap σ.f) (σ.C x).G.hom
     (σ.V x).ι (σ.φ x) (σ.θ x) inferInstance inferInstance (σ.cart x) (σ.hθ x) σ.D (σ.D₁ x) (σ.pull x)).1
 
 theorem compact_A (σ : Setup) : CompactSpace σ.A.left := by
-  haveI := σ.ab.proper
+  have := σ.ab.proper
   exact QuasiCompact.compactSpace_of_compactSpace σ.A.hom
 
 theorem qsep_A (σ : Setup) : QuasiSeparatedSpace σ.A.left := by
-  haveI := σ.ab.proper
+  have := σ.ab.proper
   exact quasiSeparatedSpace_of_quasiSeparated σ.A.hom
 
 theorem compact_C (σ : Setup) (x : Sp σ.R) : CompactSpace (σ.C x).G.left := by
-  haveI := (σ.C x).semi.quasiCompact
+  have := (σ.C x).semi.quasiCompact
   exact QuasiCompact.compactSpace_of_compactSpace (σ.C x).G.hom
 
 theorem qsep_C (σ : Setup) (x : Sp σ.R) : QuasiSeparatedSpace (σ.C x).G.left := by
-  haveI := (σ.C x).semi.separated
+  have := (σ.C x).semi.separated
   exact quasiSeparatedSpace_of_quasiSeparated (σ.C x).G.hom
 
 theorem cartA_of_openIn (σ : Setup) (P : Scheme.{0}) [IsIntegral P] (p : P ⟶ Sp σ.R) (hp : IsSeparated p)
     (i : σ.A.left ⟶ P) (h : OpenIn i σ.A.hom p (awayMap σ.f)) : IsPullback i σ.A.hom p (awayMap σ.f) := by
   obtain ⟨w, ho⟩ := h
-  haveI := σ.ab.proper
+  have := σ.ab.proper
   set g := pullback.lift i σ.A.hom w with hg
   have hsnd : g ≫ pullback.snd p (awayMap σ.f) = σ.A.hom := pullback.lift_snd _ _ _
-  haveI : IsProper (g ≫ pullback.snd p (awayMap σ.f)) := by rw [hsnd]; infer_instance
-  haveI : IsProper g := IsProper.of_comp g (pullback.snd p (awayMap σ.f))
-  haveI : Nonempty (pullback p (awayMap σ.f) : Scheme.{0}) := ⟨g (genericPoint σ.A.left)⟩
-  haveI : IsIntegral (pullback p (awayMap σ.f)) := isIntegral_of_isOpenImmersion (pullback.fst p (awayMap σ.f))
+  have : IsProper (g ≫ pullback.snd p (awayMap σ.f)) := by rw [hsnd]; infer_instance
+  have : IsProper g := IsProper.of_comp g (pullback.snd p (awayMap σ.f))
+  have : Nonempty (pullback p (awayMap σ.f) : Scheme.{0}) := ⟨g (genericPoint σ.A.left)⟩
+  have : IsIntegral (pullback p (awayMap σ.f)) := isIntegral_of_isOpenImmersion (pullback.fst p (awayMap σ.f))
   have hclo : IsClopen (Set.range g) := ⟨g.isClosedMap.isClosed_range, g.isOpenEmbedding.isOpen_range⟩
   have hs : Surjective g := ⟨Set.range_eq_univ.1 (hclo.eq_univ (Set.range_nonempty _))⟩
-  haveI : IsIso g := (isIso_iff_isOpenImmersion_and_surjective g).2 ⟨ho, hs⟩
+  have : IsIso g := (isIso_iff_isOpenImmersion_and_surjective g).2 ⟨ho, hs⟩
   exact IsPullback.of_iso_pullback ⟨w⟩ (asIso g) (pullback.lift_fst _ _ _) (pullback.lift_snd _ _ _)
 
 theorem onV_of (σ : Setup) (x : Sp σ.R) (P : Scheme.{0}) [IsIntegral P] (p : P ⟶ Sp σ.R) (hp : IsSeparated p)
@@ -1703,7 +1703,7 @@ theorem onV_of (σ : Setup) (x : Sp σ.R) (P : Scheme.{0}) [IsIntegral P] (p : P
   obtain ⟨b, hb, hb'⟩ := hf
   rw [Category.comp_id] at ha hb
   subst ha hb
-  haveI : IsDominant (l ≫ (σ.V x).ι) := by
+  have : IsDominant (l ≫ (σ.V x).ι) := by
     rw [hl]
     refine ⟨?_⟩
     have hm : genericPoint (σ.C x).G.left ∈ Set.range (gp (σ.C x).G.left) :=
@@ -1711,7 +1711,7 @@ theorem onV_of (σ : Setup) (x : Sp σ.R) (P : Scheme.{0}) [IsIntegral P] (p : P
     have hd : Dense {genericPoint (σ.C x).G.left} := by
       rw [dense_iff_closure_eq]; exact (genericPoint_spec _).def.trans rfl
     exact hd.mono (Set.singleton_subset_iff.2 hm)
-  haveI : IsDominant l := IsDominant.of_comp_of_isOpenImmersion l (σ.V x).ι
+  have : IsDominant l := IsDominant.of_comp_of_isOpenImmersion l (σ.V x).ι
   refine ext_of_isDominant_of_isSeparated p ?_ l ?_
   · rw [Category.assoc, Category.assoc, hi, he, (σ.cart x).w, Category.assoc]
   · rw [← Category.assoc, hl', ← Category.assoc, hl, hb', Category.assoc, ha', spMap_comp', Category.assoc]
@@ -1728,7 +1728,7 @@ theorem nonempty_emb : ∀ σ : Setup, σ.Common → Nonempty (Emb σ) := by
   obtain ⟨P, hPi, p, ψ, Dp, hM⟩ := _root_.GlobalTheory.Desc.exists_model σ.R _ σ.c₀ σ.N hG ⟨k₀, hk₀, b₀, hb₀, hb₀0⟩
   have hinj := baseIndexConstant_injective σ
 
-  haveI : IsDomain (Localization.Away σ.f) :=
+  have : IsDomain (Localization.Away σ.f) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors σ.hf)
   have hcA : (RingHom.id _).comp σ.c₀ = (cst σ.A.hom).comp (algebraMap σ.R (Localization.Away σ.f)) := by
     rw [RingHom.id_comp]; exact cst_comp σ.A.hom _
@@ -1738,8 +1738,8 @@ theorem nonempty_emb : ∀ σ : Setup, σ.Common → Nonempty (Emb σ) := by
   have hcovA := _root_.GlobalTheory.Desc.exists_locus_of_span _ _ σ.A.left σ.A.hom (RingHom.id _) σ.N σ.D σ.amp hspA
   obtain ⟨m, hm, hmf, hml⟩ := _root_.GlobalTheory.Desc.ToModel.exists_map_to_model σ.R _ σ.c₀ σ.N hG P p ψ Dp hM (Localization.Away σ.f)
     (algebraMap σ.R (Localization.Away σ.f)) σ.A.left σ.A.hom (RingHom.id _) σ.D hcA hsecA hcovA
-  haveI := compact_A σ
-  haveI := qsep_A σ
+  have := compact_A σ
+  have := qsep_A σ
   have hflA : (algebraMap σ.R (Localization.Away σ.f)).Flat := by
     rw [RingHom.flat_algebraMap_iff]; infer_instance
   have hoA := _root_.GlobalTheory.Desc.openIn_model σ.R _ σ.c₀ σ.N hG P p ψ Dp hM (Localization.Away σ.f)
@@ -1756,8 +1756,8 @@ theorem nonempty_emb : ∀ σ : Setup, σ.Common → Nonempty (Emb σ) := by
     have hcov := _root_.GlobalTheory.Desc.exists_locus_of_span _ _ (σ.C x).G.left (σ.C x).G.hom (σ.θ x) σ.N (σ.D₁ x) (σ.amp₁ x) hsp
     obtain ⟨e, he, hef, hel⟩ := _root_.GlobalTheory.Desc.ToModel.exists_map_to_model σ.R _ σ.c₀ σ.N hG P p ψ Dp hM (σ.C x).R (σ.ρ x) (σ.C x).G.left
       (σ.C x).G.hom (σ.θ x) (σ.D₁ x) (abelianSchemeDescent_chart_baseConstants_comp σ x) hsec hcov
-    haveI := compact_C σ x
-    haveI := qsep_C σ x
+    have := compact_C σ x
+    have := qsep_C σ x
     exact ⟨e, he, hef, _root_.GlobalTheory.Desc.openIn_model σ.R _ σ.c₀ σ.N hG P p ψ Dp hM (σ.C x).R (σ.ρ x) (σ.flat x) hinj (σ.C x).G.left
       (σ.C x).G.hom (σ.θ x) (σ.D₁ x) (abelianSchemeDescent_chart_baseConstants_comp σ x) (linDisj_C σ x) (σ.amp₁ x) hsp e he hef hel⟩
   choose e he hef heo using hC

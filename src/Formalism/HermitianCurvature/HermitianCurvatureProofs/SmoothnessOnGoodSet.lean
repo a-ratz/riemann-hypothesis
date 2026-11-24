@@ -178,11 +178,11 @@ lemma good_set (D : RealPlaceData k r Wp Wq) {m : ℕ} {F : Mat k r → (Wq →L
     (b : SS k r → ℝ)
     (hb : ∀ uv ∈ WS, ∀ g ∈ K, ∀ᵐ p ∂D.μSS, ‖rho D p (dLR (uv.1.map (AdL p)) (uv.2.map (AdR p)) F) g‖ ≤ b p) :
     ∀ᵐ p ∂D.μSS, D.inSS p ∧ ∀ uv ∈ WS, ∀ g ∈ K, ‖dLR uv.1 uv.2 (rho D p F) g‖ ≤ b p := by
-  haveI : TopologicalSpace.PseudoMetrizableSpace (Mat k r) :=
+  have : TopologicalSpace.PseudoMetrizableSpace (Mat k r) :=
     inferInstanceAs (TopologicalSpace.PseudoMetrizableSpace (Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → ℂ))
   obtain ⟨S, hSK, hSc, hKS⟩ := hK.isSeparable.exists_countable_dense_subset
-  haveI := hWS.to_subtype
-  haveI := hSc.to_subtype
+  have := hWS.to_subtype
+  have := hSc.to_subtype
   have hall : ∀ᵐ p ∂D.μSS, ∀ i : WS × S,
       ‖rho D p (dLR (i.1.1.1.map (AdL p)) (i.1.1.2.map (AdR p)) F) i.2.1‖ ≤ b p :=
     ae_all_iff.2 fun i => hb i.1.1 i.1.2 i.2.1 (hSK i.2.2)

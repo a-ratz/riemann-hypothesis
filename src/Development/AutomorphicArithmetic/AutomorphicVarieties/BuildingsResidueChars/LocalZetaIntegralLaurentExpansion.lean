@@ -109,7 +109,7 @@ theorem UpperTheory.local_zeta_integral_laurent_expansion :
             rw [ordDet_centralUnif_zpow_mul, hg', Int.emod_def]
             ring
           have htile : centralUnif F m ^ (-(k / (m : ℤ))) * g ∈ tile F m 0 := by
-            simp only [tile, Set.mem_setOf_eq, zero_mul, zero_add]
+            simp only [tile, Set.mem_ofPred_eq, zero_mul, zero_add]
             rw [hordh]
             exact ⟨Int.emod_nonneg _ hm.ne', Int.emod_lt_of_pos _ hm⟩
           have hch : c (centralUnif F m ^ (-(k / (m : ℤ))) * g) ≠ 0 := by

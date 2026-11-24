@@ -536,7 +536,7 @@ theorem exists_bound_of_fundamentalDomain {A : HSp D} {m : Measure (GA D A)} [m.
     have hcov := hX.ae_covers
     rw [ae_iff] at hcov
     refine measure_mono_null (fun x hx => ?_) hcov
-    simp only [Set.mem_setOf_eq, not_exists]
+    simp only [Set.mem_ofPred_eq, not_exists]
     intro γ hγ
     have h1 := hC _ (hXK hγ)
     rw [Subgroup.smul_def, smul_eq_mul, hi _ γ.2] at h1
@@ -561,7 +561,7 @@ theorem kills_of_noLift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A W : H
     IsWeilDatumO ψ (dblSp A) W 1 χW omh → ∀ m : Measure (GA D A), m.IsHaarMeasure → ∀ u : GA D A → ℂ, Continuous u →
     (∀ γ ∈ GQ A, ∀ g, u (γ * g) = u g) → NoLift ψ om m u → Kills ψ χW omh m u := by
   intro D ψ A W χA χW om omh hsig hpos hom homh m hm u hu hui hno φ hφ h
-  haveI := hm
+  have := hm
   obtain ⟨-, X, K, hXm, hX, hK, hXK⟩ := GlobalTheory.T.definite_unitary_quotient_compact_fundamentalDomain D A hsig hpos m hm
   have hTC := GlobalTheory.T.doublingMap_thetaIdentity_any_weilData D ψ A W χA χW om omh hom homh
   obtain ⟨C, hC⟩ := exists_bound_of_fundamentalDomain hX hK hXK hu hui
@@ -583,7 +583,7 @@ theorem kills_of_noLift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A W : H
   have hconv := (Eis.dblConv_iff hFi hFc.measurable hX).2 hFint
   show Eis.dblInt A χW⁻¹ m (fun g => thetaKO omh g h φ) (fun g => conj (u g)) (fun g => conj (u g)) = 0
   rw [(hconv.dblInt_eq hX).2, ← Measure.prod_restrict]
-  haveI : IsFiniteMeasure (m.restrict X) :=
+  have : IsFiniteMeasure (m.restrict X) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact (measure_mono hXK).trans_lt hK.measure_lt_top⟩
 
   set μ : Measure (GA D A × GA D A) := (m.restrict X).prod (m.restrict X) with hμ
@@ -599,7 +599,7 @@ theorem kills_of_noLift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A W : H
   simp_rw [hFeq]
   have hcc : Continuous c :=
     ((hu.comp continuous_fst).mul (Complex.continuous_conj.comp (hu.comp continuous_snd))).mul
-      (continuous_subtype_val.comp (hχ.1.comp (Eis.continuous_detA.comp continuous_snd)))
+      (continuous_subtypeVal.comp (hχ.1.comp (Eis.continuous_detA.comp continuous_snd)))
   have hcb : ∀ g, ‖c g‖ ≤ C * C := fun g => by
     simp only [hc, norm_mul, Complex.norm_conj, Circle.norm_coe, mul_one]
     exact mul_le_mul (hC _) (hC _) (norm_nonneg _) ((norm_nonneg _).trans (hC g.1))

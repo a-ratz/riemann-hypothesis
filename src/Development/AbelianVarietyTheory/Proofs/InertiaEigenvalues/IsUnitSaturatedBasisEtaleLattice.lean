@@ -98,14 +98,14 @@ theorem isUnit_saturated_basis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
   intro l hl K bk τ hτ d N ρ hρ Y1 δ A1 hdet hδ hφ hg m P Y' hP hPdet hY' hlat hsat
   obtain ⟨-, -, h3, -, -, h6, h7⟩ := _root_.GlobalTheory.OEDvr.main l K bk
   obtain ⟨ht1, -, -, ht4⟩ := _root_.GlobalTheory.BSP.isUnit_inclW_of_isPer l K bk τ hτ
-  haveI : PerfectRing (Cb l) l := by
+  have : PerfectRing (Cb l) l := by
     refine PerfectRing.ofSurjective _ l fun x => ?_
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := OCb l) x
     obtain ⟨a', rfl⟩ := surjective_frobenius (OCb l) l a
     obtain ⟨b', rfl⟩ := surjective_frobenius (OCb l) l b
     exact ⟨algebraMap (OCb l) (Cb l) a' / algebraMap (OCb l) (Cb l) b', by
       simp [frobenius_def, div_pow, map_pow]⟩
-  have hl0 : (l : WCb l) ≠ 0 := WittVector.p_nonzero l (Cb l)
+  have hl0 : (l : WCb l) ≠ 0 := WittVector.p_ne_zero l (Cb l)
   have hlu : ¬ IsUnit (l : bk.S) := fun h => by
     have := h.map bk.evW
     rw [map_natCast] at this

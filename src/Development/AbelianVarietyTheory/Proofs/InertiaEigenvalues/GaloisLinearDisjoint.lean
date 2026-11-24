@@ -121,7 +121,7 @@ theorem _root_.GlobalTheory.GalDisj.galois_linearDisjoint : ∀ (k Ω D : Type) 
   intro k Ω D _ _ _ _ _ o F hF m x hx b hb hsum
   classical
   set M := IntermediateField.adjoin k (Set.range x)
-  haveI : FiniteDimensional k M :=
+  have : FiniteDimensional k M :=
     IntermediateField.finiteDimensional_adjoin fun y _ => Algebra.IsIntegral.isIntegral y
   obtain ⟨α', hα'⟩ := Field.exists_primitive_element k M
   set α : Ω := (α' : Ω) with hαdef

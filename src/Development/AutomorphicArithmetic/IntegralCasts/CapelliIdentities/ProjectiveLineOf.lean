@@ -169,7 +169,7 @@ private theorem exists_compact_krylov {k : Type} [NontriviallyNormedField k] {n 
   have hval : ∀ δ : S, (Φ δ : Matrix (Fin n) (Fin n) k) =
       krylov (δ.1 : Matrix (Fin n) (Fin n) k) v := fun δ => rfl
   have hc : Continuous fun δ : S => krylov (δ.1 : Matrix (Fin n) (Fin n) k) v :=
-    (continuous_krylov v).comp continuous_subtype_val
+    (continuous_krylov v).comp continuous_subtypeVal
   have hΦ : Continuous Φ := by
     rw [Units.continuous_iff]
     refine ⟨hc, ?_⟩
@@ -184,7 +184,7 @@ private theorem isClosed_charpoly_eq {k : Type} [NontriviallyNormedField k] [Cha
       ⋂ r : k, {δ : GL (Fin n) k |
         (Matrix.scalar (Fin n) r - (δ : Matrix (Fin n) (Fin n) k)).det = χ.eval r} := by
     ext δ
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, ← Matrix.eval_charpoly]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, ← Matrix.eval_charpoly]
     exact ⟨fun h r => by rw [h], Polynomial.funext⟩
   rw [h]
   exact isClosed_iInter fun r =>

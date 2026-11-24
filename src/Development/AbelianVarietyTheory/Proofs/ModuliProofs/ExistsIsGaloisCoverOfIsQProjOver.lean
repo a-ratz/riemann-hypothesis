@@ -73,7 +73,7 @@ theorem _root_.GlobalTheory.ZM.isSeparated_finiteType_of_isQProjOver {R : Type} 
     {f : X ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp R} (h : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsQProjOver f) :
     IsSeparated f ∧ LocallyOfFiniteType f ∧ QuasiCompact f := by
   obtain ⟨N, i, hi, hqc, rfl⟩ := h
-  haveI := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
+  have := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
   exact ⟨inferInstance, inferInstance, inferInstance⟩
 
 
@@ -105,15 +105,15 @@ theorem _root_.GlobalTheory.ZM.exists_isGaloisCover_of_isQProjOver :
       have key : y ≫ ρ (b * g) = y := by
         rw [hm, ← Category.assoc, hb, ← hg, hτg, Category.assoc, ← hm, inv_mul_cancel, h1, Category.comp_id]
       exact eq_inv_of_mul_eq_one_left (hfree k y _ key)
-  · haveI : IsSeparated (π ≫ sY) := by
+  · have : IsSeparated (π ≫ sY) := by
       rw [hπs]; exact hsep
     exact hQ.isSeparated sY
-  · haveI : LocallyOfFiniteType (π ≫ sY) := by
+  · have : LocallyOfFiniteType (π ≫ sY) := by
       rw [hπs]; exact hlft
-    haveI : IsLocallyNoetherian (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp K) :=
+    have : IsLocallyNoetherian (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp K) :=
       inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of K)))
     exact hQ.locallyOfFiniteType sY
-  · haveI : QuasiCompact (π ≫ sY) := by
+  · have : QuasiCompact (π ≫ sY) := by
       rw [hπs]; exact hqc
     exact hQ.quasiCompact sY
 

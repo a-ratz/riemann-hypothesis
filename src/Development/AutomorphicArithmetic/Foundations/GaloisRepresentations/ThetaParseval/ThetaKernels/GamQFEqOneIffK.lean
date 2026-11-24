@@ -160,8 +160,8 @@ theorem sig_sig_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) (x : E) : σ (σ x) 
   exact τ.injective (by rw [hB.cm.2.2.2, hB.cm.2.2.2, star_star])
 theorem gamQF_eq_one_iff'_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) (x y : Matrix (Fin nT) (Fin nS) E) :
     gamQF σ JS JT ξ₀ B.ψ x y = 1 ↔ ∃ n : ℤ, Algebra.trace ℚ E (ξ₀ * hRatF σ JS JT x y) = n := by
-  haveI : IsTotallyReal F := C.good.cm.1
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTotallyReal F := C.good.cm.1
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have h1 : gamQF σ JS JT ξ₀ B.ψ x y =
       B.ψ (pairA F 0 (algebraMap F (Af F) (Algebra.trace F E (ξ₀ * hRatF σ JS JT x y)))) := by
     have := LatC.sympl_ft (σ := σ) (JS := JS) (JT := JT) (ξ₀ := ξ₀) (_root_.PositivityTheory.ThKW.TauSpanIdentities.sig_sig_k C.good) 1 1 x y
@@ -203,7 +203,7 @@ theorem gamQF_eq_one_iff'_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT �
 section Span
 theorem span_tau_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) :
     Submodule.span ℝ (Set.range fun e : E => fun w : InfinitePlace F => (B.emb w).1 e) = ⊤ := by
-  haveI : IsTotallyComplex E := hB.cm.2.1
+  have : IsTotallyComplex E := hB.cm.2.1
   have hall : ∀ z ∈ Submodule.span ℝ (Set.range (mixedEmbedding E)),
       Lm B z ∈ Submodule.span ℝ (Set.range fun e : E => fun w : InfinitePlace F => (B.emb w).1 e) := by
     intro z hz
@@ -248,8 +248,8 @@ theorem span_infRatF_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) :
       funext p
       show (B.emb p.2).1 (if (p.1.1, p.1.2) = q then e else 0) = if p.1 = q then (B.emb p.2).1 e else 0
       by_cases h : p.1 = q
-      · rw [if_pos h, if_pos (by rw [← h])]
-      · rw [if_neg h, if_neg (by intro h'; exact h (by rw [← h'])), map_zero]
+      · rw [ite_eq_left h, ite_eq_left (by rw [← h])]
+      · rw [ite_eq_right h, ite_eq_right (by intro h'; exact h (by rw [← h'])), map_zero]
     | zero =>
       convert V.zero_mem using 1
       funext p
@@ -266,7 +266,7 @@ theorem span_infRatF_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) :
   rintro v -
   have hv : v = ∑ q : Fin nT × Fin nS, (fun p : IxF F nS nT => if p.1 = q then v (q, p.2) else 0) := by
     funext p
-    rw [Finset.sum_apply, Finset.sum_ite_eq, if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_apply, Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _)]
   rw [hv]
   exact V.sum_mem fun q _ => key q (fun w => v (q, w))
 end Span

@@ -91,7 +91,7 @@ theorem unramified_of_isCMUnram (hc : Formalism.HermitianLatticesTheory.IsCMUnra
 theorem exists_isometry (hc : Formalism.HermitianLatticesTheory.IsCMUnram E) (W : Formalism.BasicNotions.HSpace E) (hs : W.SigOK)
     (hp : ∀ τ : E →+* ℂ, W.sig τ = (W.rank, 0)) :
     ∃ e : W.V ≃ₗ[E] (Fin W.rank → E), ∀ x y, stdForm E W.rank (e x) (e y) = W.hT x y := by
-  haveI := unramified_of_isCMUnram hc
+  have := unramified_of_isCMUnram hc
   have hG : ∀ a b, cc (W.gramᵀ a b) = W.gramᵀ b a := fun a b => W.herm.eq (W.frame b) (W.frame a)
   have hd : W.gramᵀ.det ≠ 0 := by
     rw [Matrix.det_transpose]; exact (GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.gram_det_isUnit W).ne_zero
@@ -173,7 +173,7 @@ theorem loc_le_of_nsmul {V : Type} [AddCommGroup V] [Module (𝓞 E) V] {p : ℕ
 theorem sameGenus_stdLat (hc : Formalism.HermitianLatticesTheory.IsCMUnram E) {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E))
     (hL : Submodule.IsLattice E L) (hsd : ∀ x, x ∈ L ↔ ∀ y ∈ L, ∃ a : 𝓞 E, (a : E) = stdForm E n y x) :
     Formalism.HermitianLatticesTheory.SameGenus (stdForm E n) (stdLat E n) L := by
-  haveI := unramified_of_isCMUnram hc
+  have := unramified_of_isCMUnram hc
   have hf : ∀ x y : Fin n → E, GlobalTheory.IndefiniteRowSideFullHecke.AdmissibleHarmonicLattice.stdForm x y = stdForm E n y x := fun x y =>
     Finset.sum_congr rfl fun i _ => mul_comm _ _
   have hspan : Submodule.span E (L : Set (Fin n → E)) = ⊤ := by
@@ -225,9 +225,9 @@ theorem sameGenus_stdLat (hc : Formalism.HermitianLatticesTheory.IsCMUnram E) {n
   have hgen := GlobalTheory.GenusSelfDual.inGenus_of_selfDual (Λ := ⟨L, hL.fg, hspan⟩) fun x => by
     simpa only [hf] using hsd x
   intro P hP
-  haveI : P.IsPrime := hP.isPrime
+  have : P.IsPrime := hP.isPrime
   obtain ⟨p, hp, hpP⟩ : ∃ p : ℕ, p.Prime ∧ (p : 𝓞 E) ∈ P := by
-    haveI : Finite (𝓞 E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P
+    have : Finite (𝓞 E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P
       (Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E))
     obtain ⟨p, hp⟩ := CharP.exists (𝓞 E ⧸ P)
     refine ⟨p, (CharP.char_is_prime_or_zero (𝓞 E ⧸ P) p).resolve_right (CharP.char_ne_zero_of_finite (𝓞 E ⧸ P) p), ?_⟩

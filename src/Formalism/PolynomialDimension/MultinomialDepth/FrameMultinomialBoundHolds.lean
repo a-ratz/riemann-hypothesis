@@ -69,14 +69,14 @@ theorem gram_weylDim_cons (n : ℕ) (A : ℤ) (μ : Fin n → ℤ) :
   rw [Fin.prod_univ_succ]
   congr 1
   · rw [Fin.prod_univ_succ]
-    simp only [Fin.cons_zero, Fin.cons_succ, lt_self_iff_false, if_false, one_mul, Fin.succ_pos, if_true,
+    simp only [Fin.cons_zero, Fin.cons_succ, lt_self_iff_false, ite_false, one_mul, Fin.succ_pos, ite_true,
       Fin.val_succ, Fin.val_zero]
     refine Finset.prod_congr rfl (fun j _ => ?_)
     push_cast
     ring
   · refine Finset.prod_congr rfl (fun i _ => ?_)
     rw [Fin.prod_univ_succ]
-    simp only [Fin.cons_succ, Fin.cons_zero, Fin.not_lt_zero, if_false, one_mul, Fin.succ_lt_succ_iff,
+    simp only [Fin.cons_succ, Fin.cons_zero, Fin.not_lt_zero, ite_false, one_mul, Fin.succ_lt_succ_iff,
       Fin.val_succ]
     refine Finset.prod_congr rfl (fun j _ => ?_)
     split_ifs
@@ -116,7 +116,7 @@ theorem gram_key (n : ℕ) (x y : ℝ) (hx : 0 ≤ x) (hy : (n : ℝ) * x ≤ y)
   · rw [not_le] at h
     have e1 : 1 - y ≤ Real.exp (-y) := by linarith [Real.add_one_le_exp (-y)]
     have e2 : (1 + x) ^ n ≤ Real.exp (n * x) := by
-      rw [Real.exp_nat_mul]
+      rw [exp_natCast_mul]
       exact pow_le_pow_left₀ (by linarith) (by linarith [Real.add_one_le_exp x]) n
     calc (1 - y) * (1 + x) ^ n ≤ Real.exp (-y) * Real.exp (n * x) :=
           mul_le_mul e1 e2 hp (Real.exp_pos _).le

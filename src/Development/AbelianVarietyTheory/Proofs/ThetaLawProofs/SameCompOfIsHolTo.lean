@@ -62,32 +62,32 @@ theorem sameComp_of_isHolTo : ∀ (K : Type) [Field K] (σ : K →+* ℂ) (X : S
   have hs' : ∀ w ∈ B, y w ≫ s = 𝟙 _ ≫ spMap σ := fun w hw => by rw [Category.id_comp]; exact hs w hw
   let c : (Fin m → ℂ) → (Sp ℂ ⟶ pullback s (spMap σ)) := fun w =>
     if h : w ∈ B then pullback.lift (y w) (𝟙 _) (hs' w h) else pullback.lift (y b) (𝟙 _) (hs' b hb)
-  have hcw : ∀ w (h : w ∈ B), c w = pullback.lift (y w) (𝟙 _) (hs' w h) := fun w h => dif_pos h
+  have hcw : ∀ w (h : w ∈ B), c w = pullback.lift (y w) (𝟙 _) (hs' w h) := fun w h => dite_eq_left h
   have h1 : ∀ w ∈ B, c w ≫ pullback.fst s (spMap σ) = y w := fun w h => by rw [hcw w h, pullback.lift_fst]
   have h2 : ∀ w, c w ≫ pullback.snd s (spMap σ) = 𝟙 _ := fun w => by
     by_cases h : w ∈ B
     · rw [hcw w h, pullback.lift_snd]
-    · rw [show c w = pullback.lift (y b) (𝟙 _) (hs' b hb) from dif_neg h, pullback.lift_snd]
+    · rw [show c w = pullback.lift (y b) (𝟙 _) (hs' b hb) from dite_eq_right h, pullback.lift_snd]
   have hopen : ∀ U : (pullback s (spMap σ)).Opens, IsOpen {w | w ∈ B ∧ ⊤ ≤ c w ⁻¹ᵁ U} := fun U => by
     refine (GlobalTheory.holFamily_of_isPullback GlobalTheory.valAt'_rules B (IsPullback.of_hasPullback s (spMap σ)) c
       (fun U f => ?_) (fun U f => ?_) U 0).1
     · have e : {w | w ∈ B ∧ ⊤ ≤ (c w ≫ pullback.fst s (spMap σ)) ⁻¹ᵁ U} = {w | w ∈ B ∧ ⊤ ≤ y w ⁻¹ᵁ U} := by
         ext w
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         exact and_congr_right fun h => by rw [h1 w h]
       rw [e]
       exact ⟨(hy U f).1, (hy U f).2.congr fun w hw => by rw [h1 w hw.1]⟩
     · simp only [h2]
       refine ⟨?_, differentiableOn_const _⟩
       by_cases h : ⊤ ≤ (𝟙 (Sp ℂ)) ⁻¹ᵁ U
-      · simpa only [h, and_true, Set.setOf_mem_eq] using hB
-      · simp only [h, and_false, Set.setOf_false, isOpen_empty]
+      · simpa only [h, and_true, Set.ofPred_mem_eq] using hB
+      · simp only [h, and_false, Set.ofPred_false, isOpen_empty]
   have hcont : ContinuousOn (fun w => c w (default : PrimeSpectrum ℂ)) B := by
     rw [continuousOn_open_iff hB]
     intro t ht
     convert hopen ⟨t, ht⟩ using 1
     ext w
-    simp only [Set.mem_setOf_eq, GlobalTheory.top_le_preimage_iff_mem]
+    simp only [Set.mem_ofPred_eq, GlobalTheory.top_le_preimage_iff_mem]
     rfl
   refine ⟨hs' b hb, hs' b' hb', fun z => ?_⟩
   obtain rfl : z = (default : PrimeSpectrum ℂ) := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _

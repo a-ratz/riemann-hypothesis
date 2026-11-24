@@ -200,7 +200,7 @@ theorem core {K W K' : Type} [Field K] [CommRing W] [Field K'] [Algebra W K'] [A
   have hfr : Module.finrank K (SecOnR fA H ⊤) = N + 1 := by
     rw [← Module.finrank_baseChange (R := K') (S := K), Module.finrank_eq_card_basis (tY.map bcA.symm),
       Fintype.card_fin]
-  haveI : Module.Finite K (SecOnR fA H ⊤) := Module.finite_of_finrank_eq_succ hfr
+  have : Module.Finite K (SecOnR fA H ⊤) := Module.finite_of_finrank_eq_succ hfr
   let bs := Module.finBasisOfFinrankEq K _ hfr
   let s : Fin (N + 1) → H.Sec := fun k => SecOnR.topEquiv fA H (bs k)
   let bV := (bs.baseChange K').map bcA
@@ -238,7 +238,7 @@ theorem core {K W K' : Type} [Field K] [CommRing W] [Field K'] [Algebra W K'] [A
       ext j k
       rfl
     rw [this, Matrix.det_transpose]
-    letI := bV.invertibleToMatrix tY
+    let := bV.invertibleToMatrix tY
     exact Matrix.isUnit_det_of_invertible _
   · rw [hsum, bV.sum_repr (tY j), htY]
     exact secMaps_congr hLy hHy w hw _
@@ -253,11 +253,11 @@ end GlobalTheory.BasisMatch
 open GlobalTheory.AbLaw GlobalTheory.Cartier in
 theorem GlobalTheory.BasisMatch.exists_basis_match : ∀ (K W K' : Type) [Field K] [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [Field K'] [Algebra W K'] [IsFractionRing W K'] [Algebra K K'], ∀ (A : Over (Sp K)) [GrpObj A], IsAbelianScheme A → ∀ (G : Over (Sp W)) [GrpObj G], IsAbelianScheme G → ∀ e : (Over.pullback (spMap (algebraMap W K'))).obj G ≅ (Over.pullback (spMap (algebraMap K K'))).obj A, ∀ (H : LB A.left) (m : ℕ) (s₁ : Fin (m + 1) → H.Sec) (M : LB G.left) (w : LB.Iso (M.pull (pullback.fst G.hom (spMap (algebraMap W K')))) (H.pull (e.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K'))))) (N : ℕ) (t : Fin (N + 1) → M.Sec), H.IsLB → GlobalTheory.AbLaw.VeryAmpleBy A.hom H s₁ → M.IsLB → w.IsGen → (∀ u : M.Sec, ∃! c : Fin (N + 1) → W, u = ∑ j, GlobalTheory.AbLaw.cst G.hom ⊤ (c j) • t j) → ∃ (s : Fin (N + 1) → H.Sec) (g : Matrix (Fin (N + 1)) (Fin (N + 1)) K'), GlobalTheory.AbLaw.VeryAmpleBy A.hom H s ∧ IsUnit g.det ∧ (∀ j, GlobalTheory.Cartier.SecMaps w (GlobalTheory.Cartier.secPull (t j) (pullback.fst G.hom (spMap (algebraMap W K')))) (∑ k, GlobalTheory.AbLaw.cst (pullback.snd G.hom (spMap (algebraMap W K'))) ⊤ (g j k) • GlobalTheory.Cartier.secPull (s k) (e.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K'))))) ∧ ∀ c c' : Fin (N + 1) → K', ∑ k, GlobalTheory.AbLaw.cst (pullback.snd G.hom (spMap (algebraMap W K'))) ⊤ (c k) • GlobalTheory.Cartier.secPull (s k) (e.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K'))) = ∑ k, GlobalTheory.AbLaw.cst (pullback.snd G.hom (spMap (algebraMap W K'))) ⊤ (c' k) • GlobalTheory.Cartier.secPull (s k) (e.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K'))) → c = c' := by
   intro K W K' _ _ _ _ _ _ _ _ A _ hA G _ hG e H m s₁ M w N t hH hs₁ hM hw ht
-  haveI := hA.proper
-  haveI := hG.proper
-  haveI : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
-  haveI : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
-  haveI : Module.Flat W K' := IsLocalization.flat K' (nonZeroDivisors W)
+  have := hA.proper
+  have := hG.proper
+  have : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
+  have : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
+  have : Module.Flat W K' := IsLocalization.flat K' (nonZeroDivisors W)
   have PG : IsPullback (pullback.fst G.hom (spMap (algebraMap W K'))) (pullback.snd G.hom (spMap (algebraMap W K')))
       G.hom (spMap (algebraMap W K')) := IsPullback.of_hasPullback _ _
   have PA : IsPullback (e.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K')))
@@ -683,7 +683,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.exists_veryAmpleBy_basis_of_dvr : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] (G : Over (Sp W)) [GrpObj G], IsAbelianScheme G → ∀ (M : LB G.left) (m : ℕ) (t₀ : Fin (m + 1) → M.Sec), M.IsLB → GlobalTheory.AbLaw.VeryAmpleBy G.hom M t₀ → ∃ (N : ℕ) (t : Fin (N + 1) → M.Sec), GlobalTheory.AbLaw.VeryAmpleBy G.hom M t ∧ ∀ u : M.Sec, ∃! c : Fin (N + 1) → W, u = ∑ j, GlobalTheory.AbLaw.cst G.hom ⊤ (c j) • t j := by
   intro W _ _ _ G _ hG M m t₀ hM hv
   have hflat : Flat G.hom := by
-    haveI := hG.smooth
+    have := hG.smooth
     infer_instance
   obtain ⟨n, t, ht⟩ := GlobalTheory.T.exists_basis_lineBundleSections_projective_over_dvr W G.left G.hom M hflat ⟨M, hM, m, t₀, hv⟩ hM
   have hne : Nonempty G.left := by
@@ -939,14 +939,14 @@ namespace GlobalTheory.SemilinearModel
 
 theorem unit_section_semilinear : ∀ (W K' : Type) [CommRing W] [IsDomain W] [Field K'] [Algebra W K'] [IsFractionRing W K'] (G : Over (Sp W)) [GrpObj G], IsAbelianScheme G → ∀ (σ : K' →+* K') (τ : W →+* W) (φ : G.left ⟶ G.left) (ρ : pullback G.hom (spMap (algebraMap W K')) ⟶ pullback G.hom (spMap (algebraMap W K'))), (∀ x : W, σ (algebraMap W K' x) = algebraMap W K' (τ x)) → φ ≫ G.hom = G.hom ≫ spMap τ → pullback.fst G.hom (spMap (algebraMap W K')) ≫ φ = ρ ≫ pullback.fst G.hom (spMap (algebraMap W K')) → ∀ (e₀ : Sp W ⟶ G.left), e₀ ≫ G.hom = 𝟙 _ → ∀ x : Sp K' ⟶ pullback G.hom (spMap (algebraMap W K')), x ≫ pullback.fst G.hom (spMap (algebraMap W K')) = spMap (algebraMap W K') ≫ e₀ → x ≫ ρ = spMap σ ≫ x → e₀ ≫ φ = spMap τ ≫ e₀ := by
   intro W K' _ _ _ _ _ G _ hG σ τ φ ρ hστ hφ hρ e₀ he x hx hxρ
-  haveI := hG.proper
+  have := hG.proper
   have hj : spMap σ ≫ spMap (algebraMap W K') = spMap (algebraMap W K') ≫ spMap τ := by
     unfold spMap
     rw [← Spec.map_comp, ← Spec.map_comp]
     congr 1
     ext y
     simp [hστ]
-  haveI : IsDominant (spMap (algebraMap W K')) := by
+  have : IsDominant (spMap (algebraMap W K')) := by
     refine ⟨?_⟩
     have := (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical (algebraMap W K')).2 (by
       rw [(RingHom.injective_iff_ker_eq_bot _).1 (IsFractionRing.injective W K')]; exact bot_le)

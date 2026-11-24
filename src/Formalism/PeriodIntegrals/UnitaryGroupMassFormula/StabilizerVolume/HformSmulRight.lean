@@ -211,7 +211,7 @@ theorem sigma_invol_cm {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
 theorem witt_holds : Witt := by
   unfold Witt InCtx
   intro F E _ _ _ _ _ σ hCM M J hJ _ _ a _ _ X0 _ hdet X hX
-  letI : StarRing E := starOfInv (σ : E →+* E) (sigma_invol_cm σ hCM)
+  let : StarRing E := starOfInv (σ : E →+* E) (sigma_invol_cm σ hCM)
   have hs : starRingEnd E = (σ : E →+* E) := RingHom.ext fun _ => rfl
   have hJ' : ∀ i j, starRingEnd E (J j i) = J i j := by
     rw [hs]; exact hJ.1

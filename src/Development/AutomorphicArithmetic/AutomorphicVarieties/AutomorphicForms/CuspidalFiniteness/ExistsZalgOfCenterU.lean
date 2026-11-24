@@ -420,8 +420,8 @@ theorem UpperTheory.map_center_envelopingProductGL_mem_capelliAlgebra :
     ∀ (𝔤 : Type) [LieRing 𝔤] [LieAlgebra ℝ 𝔤] (ι : Type) [Fintype ι] (n : ℕ) (b : Module.Basis (ι × Fin n × Fin n) ℝ 𝔤), (∀ v i j k l, ⁅b (v, i, j), b (v, k, l)⁆ = (if j = k then b (v, i, l) else 0) - (if l = i then b (v, k, j) else 0)) → (∀ v v', v ≠ v' → ∀ i j k l, ⁅b (v, i, j), b (v', k, l)⁆ = 0) → ∀ (A : Type) [Ring A] [Algebra ℂ A] [Algebra ℝ A] [IsScalarTower ℝ ℂ A] (ψ : UniversalEnvelopingAlgebra ℝ 𝔤 →ₐ[ℝ] A), ∀ z ∈ Subalgebra.center ℝ (UniversalEnvelopingAlgebra ℝ 𝔤), ψ z ∈ UpperTheory.V.Af.CuspFin.capAlg fun v i j => ψ (UniversalEnvelopingAlgebra.ι ℝ (b (v, i, j))) := by
   intro 𝔤 _ _ ι _ n b h1 h2 A _ _ _ _ ψ z hz
   obtain ⟨T, _, _, E, hE⟩ := hasUniv_of_sum (UpperTheory.glRelations_hasUniversalProperty n) (UpperTheory.capelliAlgebra_map_of_glRelations n) ι
-  letI : Algebra ℝ T := Algebra.compHom T (algebraMap ℝ ℂ)
-  haveI : IsScalarTower ℝ ℂ T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra ℝ T := Algebra.compHom T (algebraMap ℝ ℂ)
+  have : IsScalarTower ℝ ℂ T := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let l : 𝔤 →ₗ[ℝ] T := b.constr ℝ fun p => E p.1 p.2.1 p.2.2
   have hl : ∀ v i j, l (b (v, i, j)) = E v i j := fun v i j => b.constr_basis ℝ _ _
   have hlie : ∀ x y, l ⁅x, y⁆ = l x * l y - l y * l x := by
@@ -563,7 +563,7 @@ theorem exists_Zalg_of_centerU {z : UEnv F a} (hz : z ∈ (isExpLieAlgebra F a).
       simp only [Module.Basis.map_apply, ← Fb.lieEq_lie, hm, map_sub, and_true]
       congr 1 <;> split_ifs <;> first | rfl | exact map_zero _)
     (fun v v' hv i j k l => by
-      simp only [Module.Basis.map_apply, ← Fb.lieEq_lie, hm, hv, hv.symm, and_false, if_false, sub_self, map_zero])
+      simp only [Module.Basis.map_apply, ← Fb.lieEq_lie, hm, hv, hv.symm, and_false, ite_false, sub_self, map_zero])
     _ (uAction (K := F) (n := a)) z hz
   let S : Subalgebra ℂ (Module.End ℂ (archSmooth F a) × Module.End ℂ (TR.Sm F a)) :=
     { carrier := {p | ∀ φ, p.1 (toArch F a φ) = toArch F a (p.2 φ)}
@@ -623,7 +623,7 @@ theorem eigenFinite_of (hc : ∀ φ : TR.Sm F a, TR.IsCuspForm φ → φ.1 ∈ c
       ⨅ u : L, LinearMap.ker (finRepCusp F a u.1 - 1)
   have hS : FiniteDimensional ℂ S :=
     UnitaryAdmissible.finiteDimensional_of_eigen (b.map (Fb.lieEq F a)) P hP hd ((e : ℂ) * c)
-      (L.subgroupOf (AdelicGLn.integralFiniteGL F a)) (hL.preimage continuous_subtype_val) S
+      (L.subgroupOf (AdelicGLn.integralFiniteGL F a)) (hL.preimage continuous_subtypeVal) S
       fun φ hφ => ⟨hφ.1.1, sub_eq_zero.1 hφ.1.2, fun u hu =>
         sub_eq_zero.1 ((Submodule.mem_iInf _).1 hφ.2 ⟨u.1, hu⟩)⟩
   let incl : cuspForms F a →ₗ[ℂ] archSmooth F a :=

@@ -104,13 +104,13 @@ theorem exists_invariant_posDef_hermitian {n : ℕ} (H : Subgroup (GL (Fin n) �
     ∃ P : Matrix (Fin n) (Fin n) ℂ, P.IsHermitian ∧ (∀ x : Fin n → ℂ, x ≠ 0 → 0 < (star x ⬝ᵥ P *ᵥ x).re) ∧
       ∀ g ∈ H, (g : Matrix (Fin n) (Fin n) ℂ)ᴴ * P * g = P := by
   classical
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hH
-  letI : MeasurableSpace H := borel H
-  haveI : BorelSpace H := ⟨rfl⟩
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hH
+  let : MeasurableSpace H := borel H
+  have : BorelSpace H := ⟨rfl⟩
   let μ : Measure H := Measure.haarMeasure ⊤
-  haveI : μ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
+  have : μ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
   let m : H → Matrix (Fin n) (Fin n) ℂ := fun g => (((g⁻¹ : H) : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ)
-  have hm : Continuous m := Units.continuous_val.comp (continuous_subtype_val.comp continuous_inv)
+  have hm : Continuous m := Units.continuous_val.comp (continuous_subtypeVal.comp continuous_inv)
 
   let f : H → (Fin n → Fin n → ℂ) := fun g => ((m g)ᴴ * m g : Matrix (Fin n) (Fin n) ℂ)
   have hf : Continuous f := hm.matrix_conjTranspose.matrix_mul hm
@@ -697,7 +697,7 @@ theorem schur_complement_step_cpx : ∀ (n r : ℕ) (J θ : Matrix (Fin n) (Fin 
     ext a c
     rw [Matrix.mul_apply, Fin.sum_univ_add]
     simp only [K, Fin.addCases_left, Fin.addCases_right, Matrix.add_apply, Matrix.one_apply,
-      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true,
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true,
       Matrix.mul_apply]
     rw [add_comm]
     rfl
@@ -746,7 +746,7 @@ theorem schur_complement_step_cpx : ∀ (n r : ℕ) (J θ : Matrix (Fin n) (Fin 
       ext i j
       have := j.isLt
       simp only [Matrix.submatrix_apply, Matrix.one_apply, Fin.ext_iff, Matrix.zero_apply]
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     rw [Matrix.mul_add, e1, ← Matrix.mul_assoc, e2, Matrix.zero_mul, add_zero]
   have hinj : Function.Injective (Xb + X₁ * A).mulVec := by
     intro v w hvw
@@ -1141,7 +1141,7 @@ theorem exists_unip_conj_unitary : ∀ (n r : ℕ) (J : Matrix (Fin n) (Fin n) �
     gram_sub_eq J X Y _ _ 1 (fun i j => by rw [hXY]; simp [Matrix.one_apply, Fin.ext_iff])
   have v1b : X₁.conjTranspose * J * Yb = 0 :=
     gram_sub_eq J X Y _ _ 0 (fun i j => by
-      rw [hXY, Matrix.one_apply, if_neg]
+      rw [hXY, Matrix.one_apply, ite_eq_right]
       · rfl
       · simp only [Fin.ext_iff]; omega)
   have ybb : Yb.conjTranspose * J * Yb = 0 := gram_sub_eq J Y Y _ _ 0 (fun i j => by rw [hYY]; rfl)
@@ -1524,7 +1524,7 @@ theorem goodPos : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
   obtain ⟨u, hu, hui, y, hy⟩ := exists_conj_mem_majCpt_frame F E σ hCM n J hJ r Xf Yf hW c hc S l d h ι hι hd h1 h2 h3
   refine ⟨u, hu, hui, y, (u * ι (GlobalTheory.CuspRep.infGL E d y))⁻¹ * g, by group, fun k => hK2K ?_⟩
   refine ⟨_, hy k, ?_⟩
-  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply, inv_inv, _root_.mul_inv_rev]
+  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply, inv_inv, _root_.mul_inv_rev]
   group
 
 end GlobalTheory.CompanionTheory.GoodPos

@@ -105,7 +105,7 @@ theorem isIso_stalkMap_genericPoint_of_lift {S T : Scheme.{0}} (f : S ⟶ T) [Is
   have h2 : IsIso (Scheme.stalkClosedPointTo z) := by
     rw [ConcreteCategory.isIso_iff_bijective]
     constructor
-    · letI := hF.toField
+    · let := hF.toField
       exact (Scheme.stalkClosedPointTo z).hom.injective
     · intro y
       obtain ⟨x, hx⟩ := (@ConcreteCategory.bijective_of_isIso _ _ _ _ _ _ _ _ _ h1).2 y

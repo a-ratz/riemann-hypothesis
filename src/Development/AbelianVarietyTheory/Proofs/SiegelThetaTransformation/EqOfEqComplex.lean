@@ -64,16 +64,16 @@ namespace GlobalTheory.NaturalValues
 
 theorem eq_of_points {K R Ω : Type} [Field K] [CommRing R] [Algebra K R] [IsReduced R] [Algebra.FiniteType K R]
     [Field Ω] [IsAlgClosed Ω] [Algebra K Ω] {x y : R} (h : ∀ φ : R →ₐ[K] Ω, φ x = φ y) : x = y := by
-  haveI : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := K)
+  have : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := K)
   rw [← sub_eq_zero]
   have hb : (⊥ : Ideal R).jacobson = ⊥ :=
     IsJacobsonRing.out inferInstance ((Ideal.isRadical_iff_quotient_reduced _).2
       (isReduced_of_injective (RingEquiv.quotientBot R) (RingEquiv.quotientBot R).injective))
   rw [← Ideal.mem_bot, ← hb]
   refine Ideal.mem_sInf.2 fun {m} hm => ?_
-  haveI := hm.2
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite K (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (R ⧸ m)
+  have := hm.2
+  let := Ideal.Quotient.field m
+  have : Module.Finite K (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (R ⧸ m)
   let ψ : (R ⧸ m) →ₐ[K] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -86,7 +86,7 @@ theorem eq_of_points {K R Ω : Type} [Field K] [CommRing R] [Algebra K R] [IsRed
 theorem eq_of_eq_complex : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (s : c.F →+* ℂ) (u u' : ∀ (S : Type) [CommRing S] [Algebra c.F S], FrPt Xo c S → S), (∀ (S T : Type) [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T] (φ : S →ₐ[c.F] T) (y : FrPt Xo c S) (z : FrPt Xo c T), FrMap φ y z → φ (u S y) = u T z) → (∀ (S T : Type) [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T] (φ : S →ₐ[c.F] T) (y : FrPt Xo c S) (z : FrPt Xo c T), FrMap φ y z → φ (u' S y) = u' T z) → (∀ y : @FrPt E _ _ _ H Dw l Xo c ℂ _ s.toAlgebra, @u ℂ _ s.toAlgebra y = @u' ℂ _ s.toAlgebra y) → ∀ (S : Type) [CommRing S] [Algebra c.F S] (y : FrPt Xo c S), u S y = u' S y := by
   intro E _ _ _ H Dw l Xo c s u u' hu hu' hc S _ _ y
   have hF := GlobalTheory.RepCompare.frameLaws Xo c
-  letI := s.toAlgebra
+  let := s.toAlgebra
   refine eq_of_locM (K := c.F) fun m hm => ?_
   obtain ⟨A, v, cw, -, -, -, ⟨wm, h1, h2⟩, -⟩ := hF.cover S y y rfl m
   have e : u A.R v = u' A.R v := by

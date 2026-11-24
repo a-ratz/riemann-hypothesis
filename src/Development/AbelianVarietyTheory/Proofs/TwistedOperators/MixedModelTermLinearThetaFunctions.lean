@@ -78,7 +78,7 @@ theorem integrableOn_heisO (V W : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin
   obtain ⟨c, hc⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hG
   have hcont : Continuous (fun z => heisO ψ V W u G (isoPart V W C z + a)) :=
     (GlobalTheory.HeisOrtho.continuous_heisO hψ.1 hG.cont u).comp ((continuous_isoPart V W C).add continuous_const)
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
   have hfin : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hvol]; exact ENNReal.one_lt_top⟩
   refine Integrable.of_bound hcont.aestronglyMeasurable c (Filter.Eventually.of_forall fun z => ?_)
   rw [GlobalTheory.HeisOrtho.norm_heisO hψ.1]

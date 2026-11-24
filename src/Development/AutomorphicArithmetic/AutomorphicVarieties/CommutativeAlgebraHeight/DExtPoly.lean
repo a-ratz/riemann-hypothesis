@@ -120,7 +120,7 @@ private theorem d_ext_poly {n : ℕ} {A E : Type} [CommRing A] [Ring E] [Algebra
   let y : R[X] ⊗[A] E := (X : R[X]) ⊗ₜ 1 + ∑ a, C (MvPolynomial.X a) ⊗ₜ x a
   have hinj : Function.Injective (algebraMap R[X] L) :=
     IsLocalization.injective L (M := Submonoid.powers (X : R[X]))
-      ((Submonoid.powers_le).2 X_mem_nonzeroDivisors)
+      ((Submonoid.powers_le).2 X_mem_nonZeroDivisors)
   have h1 : D.D R[X] y = D'.D R[X] y := by
     apply hinj
     let f : R[X] →ₐ[A] L := IsScalarTower.toAlgHom A R[X] L

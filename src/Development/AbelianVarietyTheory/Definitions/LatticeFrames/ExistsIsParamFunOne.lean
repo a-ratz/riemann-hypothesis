@@ -87,7 +87,7 @@ theorem gramAt_unit (V : HSp D) (τ : D.what₂.Tau) : IsUnit (gramAt D V τ).de
 
 theorem isSplit_two (v : FinPl D) (h2 : (2 : 𝓞 D.host.F) ∈ v.asIdeal) : Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v := by
   have hun : Formalism.MainNotions.SchurIrreducible.IsUnram (E := D.host.E) v := fun P _ => by
-    haveI := GlobalTheory.BaseChangeExistsCompare.unram_of_cm D D.sp.cm P
+    have := GlobalTheory.BaseChangeExistsCompare.unram_of_cm D D.sp.cm P
     exact Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
   rcases (LFun.exists_isInertChart _ (isCMExt_host D) v).1 hun with hs | ⟨w, hw⟩
   · exact hs

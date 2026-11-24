@@ -137,9 +137,9 @@ private theorem fx_odd [IsAlgClosed Ω] [CharZero Ω] (h : ∀ ζ : Ω, ζ ^ M =
         exact Nat.odd_iff.mpr hn2
       have hk2 : k % 2 = 1 := Nat.odd_iff.mp (Nat.odd_mul.mp hodd).2
       obtain ⟨a', ha'4, ha'abs, ha'⟩ := ih k hkn hk2 ((Dvd.intro_left p hk.symm).trans hnM)
-      haveI : Fact p.Prime := ⟨hp⟩
-      haveI : NeZero (p : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
-      obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω p
+      have : Fact p.Prime := ⟨hp⟩
+      have : NeZero (p : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
+      obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω p
       obtain ⟨⟨x, hx⟩, hall⟩ := CF.gauss Ω p ζ hp2 hζ
       have hpM : p ∣ M := (Dvd.intro k hk.symm).trans hnM
       have hsz : s ζ = ζ ^ 1 := by
@@ -214,8 +214,8 @@ private theorem sub_smul_mul_sub_smul_eq_zero_of_quadratic {K : Type} [Field K] 
     (discr K % 4 = 0 ∨ discr K % 4 = 1) ∧ ∃ δ : K, δ ^ 2 = (discr K : K) ∧
       ∀ x : K, ∃ a b : ℚ, 2 * x * δ = (a : K) * δ + (b : K) := by
   classical
-  haveI : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := hK }
-  haveI : IsGalois ℚ K := inferInstance
+  have : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := hK }
+  have : IsGalois ℚ K := inferInstance
   have hcard : Fintype.card (K ≃ₐ[ℚ] K) = 2 := by
     rw [← Nat.card_eq_fintype_card]
     exact (IsGalois.card_aut_eq_finrank ℚ K).trans hK
@@ -355,7 +355,7 @@ theorem UpperTheory.V.U3.eta_killsMu :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {K : Type} [Field K] [NumberField K] [Algebra K Ω]
       {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N] {e : ℕ} {ψ : DirichletCharacter c.O N} (D : Dat Ω K c e ψ), Af.KillsMu (discr K).natAbs D.η ∧ 1 ≤ (discr K).natAbs ∧ Af.KillsMu N (Chr.dirG ℚ Ω ψ) ∧ Af.KillsMu N (Chr.dirG ℚ Ω (comp l ψ)) := by
   intro Ω _ _ _ K _ _ _ l _ c N _ e ψ D
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hK := D.gd.quad
   obtain ⟨hd4, δ, hδ, hspan⟩ := sub_smul_mul_sub_smul_eq_zero_of_quadratic hK
   have hd0 : discr K ≠ 0 := discr_ne_zero K

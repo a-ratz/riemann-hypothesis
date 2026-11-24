@@ -72,17 +72,17 @@ namespace GlobalTheory.HaarCoords
 theorem transl_nB_preserves : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (μ : Measure (UX D ρ)) (lB : Measure (Mx D ρ S₀.rank)) (lC : Measure (skewA D ρ)), μ.IsHaarMeasure → lB.IsAddHaarMeasure → lC.IsAddHaarMeasure → SFinite μ → SFinite lB → SFinite lC → ∀ b' : Mx D ρ S₀.rank, ∃ T : UX D ρ × (Mx D ρ S₀.rank × skewA D ρ) → UX D ρ × (Mx D ρ S₀.rank × skewA D ρ), MeasurePreserving T (μ.prod (lB.prod lC)) (μ.prod (lB.prod lC)) ∧ ∀ p, d.levi (T p).1.1 * (d.nB (T p).2.1 * d.nC (T p).2.2) = d.nB b' * (d.levi p.1.1 * (d.nB p.2.1 * d.nC p.2.2)) := by
   intro D S S₀ ρ d μ lB lC hμ hB hC _ _ _ b'
   obtain ⟨hTR, _, _, hSC, hBor⟩ := Formalism.IndefR.Eqv.ae_facts D
-  haveI := hμ; haveI := hB; haveI := hC; haveI := hTR; haveI := hSC; haveI := hBor
-  haveI hMxB : ∀ m n : ℕ, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
-  haveI hMxS : ∀ m n : ℕ, SecondCountableTopology (Mx D m n) := fun m n =>
+  have := hμ; have := hB; have := hC; have := hTR; have := hSC; have := hBor
+  have hMxB : ∀ m n : ℕ, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
+  have hMxS : ∀ m n : ℕ, SecondCountableTopology (Mx D m n) := fun m n =>
     inferInstanceAs (SecondCountableTopology (Fin m → Fin n → AE D))
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
 
   let v : UX D ρ → Mx D ρ S₀.rank := fun u => ((u.1)⁻¹ : GL (Fin ρ) (AE D)).1 ⬝ b'
   refine ⟨fun p => (p.1, (v p.1 + p.2.1, cComm S₀ (v p.1) p.2.1 + p.2.2)), ?_, ?_⟩
   · have hvm : Measurable v := by
       have hinv : Continuous fun u : UX D ρ => (((u.1)⁻¹ : GL (Fin ρ) (AE D)) : Matrix (Fin ρ) (Fin ρ) (AE D)) :=
-        Units.continuous_coe_inv.comp continuous_subtype_val
+        Units.continuous_coe_inv.comp continuous_subtypeVal
       exact (hinv.matrix_mul continuous_const).measurable
 
     have hplus : Continuous fun b : Mx D ρ S₀.rank => plus S₀ b := by
@@ -104,7 +104,7 @@ theorem transl_nB_preserves : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypD
           ((cComm S₀ (v p.1) p.2.1 : skewA D ρ) : Mx D ρ ρ) + (p.2.2 : Mx D ρ ρ))
         (h := fun p => (cComm S₀ (v p.1) p.2.1 + p.2.2).2)
         ((hΦ.comp ((hvm.comp measurable_fst).prodMk (measurable_fst.comp measurable_snd))).add
-          (measurable_subtype_coe.comp (measurable_snd.comp measurable_snd)))
+          (measurable_subtypeVal.comp (measurable_snd.comp measurable_snd)))
     have hfib : ∀ u : UX D ρ, Measure.map (fun q : Mx D ρ S₀.rank × skewA D ρ =>
         ((v u + q.1, cComm S₀ (v u) q.1 + q.2) : Mx D ρ S₀.rank × skewA D ρ)) (lB.prod lC) = lB.prod lC := by
       intro u
@@ -112,7 +112,7 @@ theorem transl_nB_preserves : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypD
         Measurable.subtype_mk (f := fun q : Mx D ρ S₀.rank × skewA D ρ =>
             ((cComm S₀ (v u) q.1 : skewA D ρ) : Mx D ρ ρ) + (q.2 : Mx D ρ ρ))
           (h := fun q => (cComm S₀ (v u) q.1 + q.2).2)
-          ((hΦ.comp (measurable_const.prodMk measurable_fst)).add (measurable_subtype_coe.comp measurable_snd))
+          ((hΦ.comp (measurable_const.prodMk measurable_fst)).add (measurable_subtypeVal.comp measurable_snd))
       exact ((measurePreserving_add_left lB (v u)).skew_product (g := fun b (c : skewA D ρ) => cComm S₀ (v u) b + c) hk
         (Filter.Eventually.of_forall fun b => map_add_left_eq_self lC _)).map_eq
     exact (MeasurePreserving.id μ).skew_product
@@ -148,17 +148,17 @@ namespace GlobalTheory.HaarCoords
 
 theorem transl_nC : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (μ : Measure (UX D ρ)) (lB : Measure (Mx D ρ S₀.rank)) (lC : Measure (skewA D ρ)), μ.IsHaarMeasure → lB.IsAddHaarMeasure → lC.IsAddHaarMeasure → SFinite μ → SFinite lB → SFinite lC → ∀ c' : skewA D ρ, ∃ T : UX D ρ × (Mx D ρ S₀.rank × skewA D ρ) → UX D ρ × (Mx D ρ S₀.rank × skewA D ρ), MeasurePreserving T (μ.prod (lB.prod lC)) (μ.prod (lB.prod lC)) ∧ ∀ p, d.levi (T p).1.1 * (d.nB (T p).2.1 * d.nC (T p).2.2) = d.nC c' * (d.levi p.1.1 * (d.nB p.2.1 * d.nC p.2.2)) := by
   intro D S S₀ ρ d μ lB lC _ _ hC _ _ _ c'
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ S₀.rank) := ⟨rfl⟩
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ S₀.rank) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
   obtain ⟨i1, -, i3, -⟩ := lattice_Mx D ρ ρ
-  haveI : SecondCountableTopology (Mx D ρ ρ) := i3
-  haveI : BorelSpace (skewA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (skewA D ρ) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : MeasurableAdd₂ (skewA D ρ) := inferInstance
-  haveI : MeasurableAdd (skewA D ρ) := inferInstance
+  have : SecondCountableTopology (Mx D ρ ρ) := i3
+  have : BorelSpace (skewA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (skewA D ρ) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : MeasurableAdd₂ (skewA D ρ) := inferInstance
+  have : MeasurableAdd (skewA D ρ) := inferInstance
   let s : UX D ρ → skewA D ρ := fun u => skewConj (u⁻¹).1.1 c'
-  have hinv : Continuous fun u : UX D ρ => (u⁻¹).1.1 := Units.continuous_coe_inv.comp continuous_subtype_val
+  have hinv : Continuous fun u : UX D ρ => (u⁻¹).1.1 := Units.continuous_coe_inv.comp continuous_subtypeVal
   have hs : Continuous s := by
     refine Continuous.subtype_mk ?_ _
     exact (hinv.matrix_mul continuous_const).matrix_mul (continuous_adj.comp hinv)
@@ -205,13 +205,13 @@ theorem haar_coords : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S�
   obtain ⟨-, familyMassSecondLine, iM3, iM4, -⟩ := lattice_Mx D ρ S₀.rank
   obtain ⟨-, indexCSecond, iC3, iC4, -⟩ := lattice_Mx D ρ ρ
   obtain ⟨iN1, iN2, iN3, -⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag S (isIsoSub_e d)
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ S₀.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ S₀.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
   have hcl : IsClosed ((skewA D ρ : Set (Mx D ρ ρ))) := isClosed_eq continuous_adj continuous_neg
-  haveI : LocallyCompactSpace (skewA D ρ) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (skewA D ρ) := hcl.isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
-  haveI : T2Space (skewA D ρ) := inferInstance
+  have : LocallyCompactSpace (skewA D ρ) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (skewA D ρ) := hcl.isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
+  have : T2Space (skewA D ρ) := inferInstance
   let μ : Measure (UX D ρ) := Measure.haar
   let lB : Measure (Mx D ρ S₀.rank) := Measure.addHaar
   let lC : Measure (skewA D ρ) := Measure.addHaar
@@ -220,10 +220,10 @@ theorem haar_coords : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S�
       Subtype.val ∘ e := funext fun p => (he p).symm
   have hem : Measurable e := e.continuous.measurable
   refine ⟨μ, lB, lC, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, ?_, ?_⟩
-  · rw [hΦ]; exact (continuous_subtype_val.comp e.continuous).measurable
+  · rw [hΦ]; exact (continuous_subtypeVal.comp e.continuous).measurable
   refine ⟨(μ.prod (lB.prod lC)).map e, ?_, ?_⟩
-  · haveI := Measure.IsFiniteMeasureOnCompacts.map (μ.prod (lB.prod lC)) e
-    haveI : ((μ.prod (lB.prod lC)).map e).IsOpenPosMeasure := e.continuous.isOpenPosMeasure_map e.surjective
+  · have := Measure.IsFiniteMeasureOnCompacts.map (μ.prod (lB.prod lC)) e
+    have : ((μ.prod (lB.prod lC)).map e).IsOpenPosMeasure := e.continuous.isOpenPosMeasure_map e.surjective
     suffices h : ((μ.prod (lB.prod lC)).map e).IsMulLeftInvariant from ⟨⟩
     refine ⟨fun g => ?_⟩
     obtain ⟨p₀, hp₀⟩ := e.surjective g
@@ -248,7 +248,7 @@ theorem haar_coords : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S�
       rw [h3, hTb', hTc', hg]
       simp only [mul_assoc]
     rw [Measure.map_map (measurable_const_mul g) hem, key, ← Measure.map_map hem hT.measurable, hT.map_eq]
-  · rw [Measure.map_map continuous_subtype_val.measurable hem, hΦ]
+  · rw [Measure.map_map continuous_subtypeVal.measurable hem, hΦ]
 
 end GlobalTheory.HaarCoords
 
@@ -343,14 +343,14 @@ theorem map_conj_smallerUnitary_flagUnipotent_haar : ∀ (D : D7) (S S₀ : HSp 
     ν.IsHaarMeasure → ∀ h : GA D S₀,
       ν.map (fun n : flagN d => d.emb0 h * n.1 * (d.emb0 h)⁻¹) = ν.map Subtype.val := by
   intro D S S₀ ρ d ν hν h
-  haveI : BorelSpace (GA D S) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ S₀.rank) := ⟨rfl⟩
+  have : BorelSpace (GA D S) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ S₀.rank) := ⟨rfl⟩
   obtain ⟨hlc, hsc, -, -⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag S (isIsoSub_e d)
   obtain ⟨μ, lB, lC, hμ, hB, hC, sμ, sB, sC, hΦ, ν₀, hν₀, hmap⟩ := GlobalTheory.HaarCoords.haar_coords D S S₀ ρ d
   have hk : ν = Measure.haarScalarFactor ν ν₀ • ν₀ := Measure.isMulLeftInvariant_eq_smul ν ν₀
   have hconj : Measurable (fun g : GA D S => d.emb0 h * g * (d.emb0 h)⁻¹) :=
     ((continuous_const.mul continuous_id).mul continuous_const).measurable
-  have hval : Measurable (Subtype.val : flagN d → GA D S) := measurable_subtype_coe
+  have hval : Measurable (Subtype.val : flagN d → GA D S) := measurable_subtypeVal
   have hf : Measurable (fun b : Mx D ρ S₀.rank => b ⬝ mt S₀ h⁻¹) :=
     (continuous_id.matrix_mul continuous_const).measurable
   have hT : Measurable (Prod.map (id : UX D ρ → UX D ρ)

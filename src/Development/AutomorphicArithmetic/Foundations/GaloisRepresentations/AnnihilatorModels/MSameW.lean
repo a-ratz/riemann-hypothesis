@@ -73,15 +73,15 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.sameW_of :
   have hp : Nat.Prime p := Fact.out
   obtain ⟨-, hm1, hact1, -, -, ψ₁', hψ₁', h11, h12⟩ := h1
   obtain ⟨-, hm3, hact3, -, -, χ', hχ', h31, h32⟩ := h3
-  haveI := hm1
-  haveI := hm3
-  haveI := hψ₁'
-  haveI := hχ'
-  haveI := hψ₂
-  haveI hpow : IsMonHom ((𝟙 o.A) ^ p ^ (e + 1)) := isMonHom_pow o.A _
+  have := hm1
+  have := hm3
+  have := hψ₁'
+  have := hχ'
+  have := hψ₂
+  have hpow : IsMonHom ((𝟙 o.A) ^ p ^ (e + 1)) := isMonHom_pow o.A _
   have hactP : ∀ a : D.O, o.act.act a ≫ ((𝟙 o.A) ^ p ^ (e + 1)) = ((𝟙 o.A) ^ p ^ (e + 1)) ≫ o.act.act a := by
     intro a
-    haveI := o.act.hom a
+    have := o.act.hom a
     exact pow_hom_comm (o.act.act a) _
   have kP := hKU p D R b N r w hw hu (Sp κ) (spMap β) o o ((𝟙 o.A) ^ p ^ (e + 1)) (𝟙 o.A) (e + 1)
     hpow inferInstance hactP (by simp) (by simp)

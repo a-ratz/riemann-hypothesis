@@ -75,7 +75,7 @@ theorem phase_root (H : Sesq V) (Λ : AddSubgroup V) (hΛ : Λ ≤ dualLat H Λ)
   obtain ⟨m, hm⟩ := (show ∀ y ∈ Λ, ∃ m : ℤ, altE H ((N : ℂ) • s) y = (m : ℝ) from hΛ hs) x hx
   rw [altE_natCast_smul_left] at hm
   have hm' : (N : ℂ) * (altE H s x : ℂ) = (m : ℂ) := by exact_mod_cast hm
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have h2 : ((2 * N : ℕ) : ℂ) * (-(Real.pi : ℂ) * Complex.I * (altE H s x : ℂ)) =
       ((-m : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
     push_cast

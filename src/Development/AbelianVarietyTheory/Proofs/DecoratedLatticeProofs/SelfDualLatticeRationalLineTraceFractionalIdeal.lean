@@ -134,7 +134,7 @@ theorem line_trace : ∀ (D : D7) (S : HSp D) (L : Lat S) (x : Fin S.rank → D.
   set 𝔠 : FI D := FractionalIdeal.spanFinset (𝓞 D.host.E) Finset.univ c with h𝔠def
   have hmem : ∀ y, y ∈ 𝔠 ↔ y ∈ Submodule.span (𝓞 D.host.E) (Set.range c) := by
     intro y
-    rw [← FractionalIdeal.mem_coe, h𝔠def, FractionalIdeal.spanFinset_coe, Finset.coe_univ, Set.image_univ]
+    rw [← FractionalIdeal.mem_coeToSubmodule, h𝔠def, FractionalIdeal.coeToSubmodule_spanFinset, Finset.coe_univ, Set.image_univ]
   have h𝔠 : 𝔠 ≠ 0 := by
     intro h0
     apply hx
@@ -150,12 +150,12 @@ theorem line_trace : ∀ (D : D7) (S : HSp D) (L : Lat S) (x : Fin S.rank → D.
     constructor
     · intro ht y hy
       rw [hmem] at hy
-      rw [← FractionalIdeal.mem_coe]
+      rw [← FractionalIdeal.mem_coeToSubmodule]
       induction hy using Submodule.span_induction with
       | mem y hy =>
         obtain ⟨l, rfl⟩ := hy
         obtain ⟨o, ho⟩ := (hL.2 _).1 ht (s' l) (hs' l)
-        rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_one_iff]
+        rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_one_iff]
         refine ⟨o, ho.trans ?_⟩
         rw [Finset.sum_comm]
         simp only [hc, GlobalTheory.FinPl.FrameLat.row, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, Finset.sum_mul]
@@ -187,7 +187,7 @@ theorem line_trace : ∀ (D : D7) (S : HSp D) (L : Lat S) (x : Fin S.rank → D.
   | add y z _ _ hy hz => rw [map_add (f := _), add_mul]; exact intAt_add hy hz
   | smul o y hy' hy =>
     have h1 := GlobalTheory.IdVGen.gen_mem_intAt (v := v) (GlobalTheory.FinPlLoc.ePl_int (· = v))
-      (fun w hw => by rw [GlobalTheory.FinPlLoc.evalV_ePl, if_neg hw]) o
+      (fun w hw => by rw [GlobalTheory.FinPlLoc.evalV_ePl, ite_eq_right hw]) o
     have e := incA_mul_tmul (D := D) (algebraMap (𝓞 D.host.E) D.host.E o) (pairA D.host.F 0 (GlobalTheory.FinPlLoc.ePl D (· = v))) 1
     rw [mul_one] at e
     have h2 := intAt_mul h1 hy

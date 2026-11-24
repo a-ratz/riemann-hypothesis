@@ -339,8 +339,8 @@ theorem exists_lattice_basis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk :
     X * X' = ((l : bk.S) ^ c * bk.E ^ n) • (1 : Matrix (Fin d) (Fin d) (bk.S)) ∧ X = Y * Q + bk.E ^ n • R ∧
       (l : bk.S) ^ c • Y = X * Q' := by
   intro l _ K bk d m n Y
-  haveI := isDomain_loc bk
-  haveI := _root_.GlobalTheory.BSP.isPrincipalIdealRing_away_l l K bk
+  have := isDomain_loc bk
+  have := _root_.GlobalTheory.BSP.isPrincipalIdealRing_away_l l K bk
   set φ := algebraMap bk.S (Localization.Away (l : bk.S)) with hφ
   have hE : φ (bk.E ^ n) ≠ 0 := by
     rw [map_ne_zero_iff _ (inj_loc bk)]; exact pow_ne_zero _ bk.E_ne_zero

@@ -60,17 +60,17 @@ def uniOnX (d : HypDec S S₀ ρ) : Set (GA D S) :=
   {g | mt S g ⬝ d.jX = d.jX ⬝ blockX d g ∧ (∀ i j : Fin ρ, j < i → blockX d g i j = 0) ∧ ∀ i, blockX d g i i = 1}
 
 theorem t2Space_cm_host_adeles : T2Space (AE D) := by
-  haveI : T2Space (Mx D 1 1) := (lattice_Mx D 1 1).2.2.2.1
+  have : T2Space (Mx D 1 1) := (lattice_Mx D 1 1).2.2.2.1
   exact @T2Space.of_injective_continuous _ _ _ _ this (fun a : AE D => (Matrix.of fun _ _ => a : Mx D 1 1))
     (fun a b h => congrFun (congrFun h 0) 0) (continuous_pi fun _ => continuous_pi fun _ => continuous_id)
 
 theorem isClosed_uniOnX (d : HypDec S S₀ ρ) : IsClosed (uniOnX d) := by
-  haveI : T2Space (AE D) := t2Space_cm_host_adeles
+  have : T2Space (AE D) := t2Space_cm_host_adeles
   have hm := GlobalTheory.MixModel.continuous_mt (D := D) S
   have hb : Continuous fun g : GA D S => blockX d g := continuous_const.matrix_mul (hm.matrix_mul continuous_const)
   have e1 : {g : GA D S | ∀ i j : Fin ρ, j < i → blockX d g i j = 0} =
-      ⋂ i : Fin ρ, ⋂ j : Fin ρ, ⋂ (_ : j < i), {g | blockX d g i j = 0} := by ext; simp only [Set.mem_setOf_eq, Set.mem_iInter]
-  have e2 : {g : GA D S | ∀ i : Fin ρ, blockX d g i i = 1} = ⋂ i : Fin ρ, {g | blockX d g i i = 1} := by ext; simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      ⋂ i : Fin ρ, ⋂ j : Fin ρ, ⋂ (_ : j < i), {g | blockX d g i j = 0} := by ext; simp only [Set.mem_ofPred_eq, Set.mem_iInter]
+  have e2 : {g : GA D S | ∀ i : Fin ρ, blockX d g i i = 1} = ⋂ i : Fin ρ, {g | blockX d g i i = 1} := by ext; simp only [Set.mem_ofPred_eq, Set.mem_iInter]
   have c1 : IsClosed {g : GA D S | ∀ i j : Fin ρ, j < i → blockX d g i j = 0} := by
     rw [e1]
     exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>

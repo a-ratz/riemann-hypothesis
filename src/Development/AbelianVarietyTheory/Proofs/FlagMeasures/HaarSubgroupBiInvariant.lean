@@ -84,7 +84,7 @@ theorem map_right_eq (ρ : Measure H) [ρ.IsHaarMeasure] (g : H) :
 theorem modular_aut (φ : H ≃ₜ* H) (g : H) : modularCharacterFun (φ g) = modularCharacterFun g := by
   let ρ : Measure H := Measure.haar
   have hφ : Measurable φ := φ.continuous.measurable
-  haveI : (ρ.map φ).IsHaarMeasure := φ.toMulEquiv.isHaarMeasure_map ρ φ.continuous φ.symm.continuous
+  have : (ρ.map φ).IsHaarMeasure := φ.toMulEquiv.isHaarMeasure_map ρ φ.continuous φ.symm.continuous
   apply smul_haar_cancel (ρ.map φ)
   rw [← map_right_eq, ← Measure.map_smul, ← map_right_eq, map_map (measurable_mul_const _) hφ,
     map_map hφ (measurable_mul_const _)]
@@ -97,7 +97,7 @@ theorem continuous_modular : Continuous fun g : H => (modularCharacterFun g : �
   let ρ : Measure H := Measure.haar
   obtain ⟨f, hfc, hf0, hf1⟩ := exists_continuous_nonneg_pos (1 : H)
   have hI : ∫ x, f x ∂ρ ≠ 0 :=
-    ne_of_gt (f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hfc hf0 hf1)
+    ne_of_gt (f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfc hf0 hf1)
   have hc : Continuous fun x : H => ∫ y, f (y⁻¹ * x) ∂ρ.inv :=
     continuous_integral_apply_inv_mul f.continuous hfc
   have he : ∀ g : H, (modularCharacterFun g : ℝ) = (∫ y, f (y⁻¹ * g) ∂ρ.inv) / ∫ x, f x ∂ρ := by
@@ -150,26 +150,26 @@ theorem unimodular_of_contracted {G : Type} [Group G] [TopologicalSpace G] [IsTo
     (h3 : ∀ m ∈ N, Tendsto (fun s : ℝ => a s * m * (a s)⁻¹) atBot (nhds (1 : G))) :
     (∀ m ∈ N, ν.map (fun x : G => x * m) = ν) ∧ ν.map (fun x : G => x⁻¹) = ν := by
   obtain ⟨hne, hfin, hcar, hleft⟩ := hν
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  have hE : MeasurableEmbedding (Subtype.val : N → G) := MeasurableEmbedding.subtype_coe hN.measurableSet
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have hE : MeasurableEmbedding (Subtype.val : N → G) := MeasurableEmbedding.subtypeVal hN.measurableSet
   have hv : Measurable (Subtype.val : N → G) := hE.measurable
   let μ : Measure N := ν.comap Subtype.val
   have hμ : μ.map Subtype.val = ν := by
     rw [hE.map_comap, Subtype.range_coe_subtype]
     exact Measure.restrict_eq_self_of_ae_mem hcar
-  haveI : μ.IsMulLeftInvariant := ⟨fun g => by
+  have : μ.IsMulLeftInvariant := ⟨fun g => by
     apply hE.map_injective
     change (μ.map (g * ·)).map Subtype.val = μ.map Subtype.val
     have : (Subtype.val : N → G) ∘ (g * ·) = (fun x : G => (g : G) * x) ∘ Subtype.val := rfl
     rw [map_map hv (measurable_const_mul g), this, ← map_map (measurable_const_mul _) hv, hμ, hleft g g.2]⟩
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => by
     rw [hE.comap_apply]
-    exact (hK.image continuous_subtype_val).measure_lt_top⟩
-  haveI : NeZero μ := ⟨fun h => hne (by rw [← hμ, h, Measure.map_zero])⟩
-  haveI : TopologicalSpace.PseudoMetrizableSpace N := inferInstance
-  haveI : μ.Regular := inferInstance
-  haveI : μ.IsHaarMeasure := {}
+    exact (hK.image continuous_subtypeVal).measure_lt_top⟩
+  have : NeZero μ := ⟨fun h => hne (by rw [← hμ, h, Measure.map_zero])⟩
+  have : TopologicalSpace.PseudoMetrizableSpace N := inferInstance
+  have : μ.Regular := inferInstance
+  have : μ.IsHaarMeasure := {}
   have hmod : ∀ g : N, modularCharacterFun g = 1 := by
     intro g
     have t1 : Tendsto (fun s : ℝ => conjAut N (a s) (h1 s) (h2 s) g) atBot (nhds (1 : N)) :=
@@ -178,7 +178,7 @@ theorem unimodular_of_contracted {G : Type} [Group G] [TopologicalSpace G] [IsTo
     simp only [Function.comp_def, modular_aut, modularCharacterFun_map_one] at t2
     exact_mod_cast tendsto_const_nhds_iff.1 t2
   have hr : ∀ g : N, μ.map (· * g) = μ := fun g => by rw [map_right_eq, hmod, one_smul]
-  haveI : μ.IsMulRightInvariant := ⟨hr⟩
+  have : μ.IsMulRightInvariant := ⟨hr⟩
   refine ⟨fun m hm => ?_, ?_⟩
   · have : (fun x : G => x * m) ∘ (Subtype.val : N → G) = Subtype.val ∘ (· * (⟨m, hm⟩ : N)) := rfl
     conv_lhs => rw [← hμ]

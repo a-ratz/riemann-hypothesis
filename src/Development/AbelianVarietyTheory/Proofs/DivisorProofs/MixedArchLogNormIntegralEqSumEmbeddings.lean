@@ -96,7 +96,7 @@ theorem intg_logSec_of_arithVar : GlobalTheory.Published.Principalisation → �
   have := hX.isDomain
   have := hX.finite
   have hσ : Function.Injective σ := by
-    have hk : RingHom.ker σ = ⊥ := Ideal.eq_bot_of_comap_eq_bot (R := ℤ) (by
+    have hk : RingHom.ker σ = ⊥ := Ideal.eq_bot_of_under_eq_bot (R := ℤ) (by
       ext n
       simp [Ideal.mem_comap, RingHom.mem_ker])
     exact (RingHom.injective_iff_ker_eq_bot σ).2 hk
@@ -313,7 +313,7 @@ namespace GlobalTheory.MixPolar
 
 theorem injective_emb {k : Type} [CommRing k] [IsDomain k] [Module.Finite ℤ k] (σ : k →+* ℂ) :
     Function.Injective σ := by
-  refine (RingHom.injective_iff_ker_eq_bot σ).2 (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_)
+  refine (RingHom.injective_iff_ker_eq_bot σ).2 (Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_)
   change Ideal.comap (algebraMap ℤ k) (RingHom.ker σ) = ⊥
   rw [RingHom.comap_ker, (RingHom.ext_int _ (Int.castRingHom ℂ) : σ.comp (algebraMap ℤ k) = _)]
   exact (RingHom.injective_iff_ker_eq_bot _).1 Int.cast_injective
@@ -348,7 +348,7 @@ theorem pol_int (hP : GlobalTheory.Published.Principalisation) (h : IsArithVar p
     (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (σ : k →+* ℂ) :
     FibreProj.pol (fun n => Mix.int (fun _ : Fin D => MLine.ofHerm (ArInt.comb L n) σ) ((MLine.ofHerm M σ).logSec s)) =
       D.factorial * Mix.int (fun i => MLine.ofHerm (L i) σ) ((MLine.ofHerm M σ).logSec s) := by
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ h.isProjOver
+  have := CxPts.secondCountableTopology_of_isProjOver σ h.isProjOver
   have e : ∀ F : (Fin D → ℤ) → ℝ,
       ∑ S : Finset (Fin D), (-1 : ℝ) ^ S.card * F (fun i => if i ∈ S then -1 else 0) = FibreProj.pol F := fun F => by
     unfold FibreProj.pol
@@ -379,7 +379,7 @@ open GlobalTheory.MixPolar in
 theorem GlobalTheory.MixPolar.mixArch_eq_sum : GlobalTheory.Published.Principalisation → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (L : Fin D → HermLB p) (M : HermLB p) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s), MixHt.mixArch L M (isRatSec_ratOfSec s hs) = ∑ᶠ σ : k →+* ℂ, Mix.int (fun i => MLine.ofHerm (L i) σ) ((MLine.ofHerm M σ).logSec s) := by
   intro hP k _ X _ _ p D h L M s hs
   have := h.finite_emb
-  haveI := Fintype.ofFinite (k →+* ℂ)
+  have := Fintype.ofFinite (k →+* ℂ)
   simp only [MixHt.mixArch, HermLB.archInt, finsum_eq_sum_of_fintype, chernInt_eq h]
   rw [FibreProj.pol_sum]
   simp only [pol_int hP h L M s hs]

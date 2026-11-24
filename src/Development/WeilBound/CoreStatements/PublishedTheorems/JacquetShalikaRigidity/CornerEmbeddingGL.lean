@@ -66,7 +66,7 @@ theorem embM_apply (A : Matrix (Fin k) (Fin k) R) (i c : Fin m) :
 
 theorem embM_castLE (h : k ≤ m) (A : Matrix (Fin k) (Fin k) R) (i c : Fin k) :
     embM m A (Fin.castLE h i) (Fin.castLE h c) = A i c := by
-  rw [embM_apply, dif_pos ⟨i.2, c.2⟩]; rfl
+  rw [embM_apply, dite_eq_left ⟨i.2, c.2⟩]; rfl
 
 theorem embM_out (A : Matrix (Fin k) (Fin k) R) (i c : Fin m) (h : ¬ ((i : ℕ) < k ∧ (c : ℕ) < k)) :
     embM m A i c = (1 : Matrix (Fin m) (Fin m) R) i c := by
@@ -96,7 +96,7 @@ theorem embM_eq (h : k ≤ m) (A : Matrix (Fin k) (Fin k) R) :
   obtain ⟨y, rfl⟩ := (eqv h).surjective c
   rw [Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_apply_apply, Equiv.symm_apply_apply]
   rcases x with x | x <;> rcases y with y | y
-  · rw [embM_apply, dif_pos (by rw [eqv_inl, eqv_inl]; exact ⟨x.2, y.2⟩), Matrix.fromBlocks_apply₁₁]
+  · rw [embM_apply, dite_eq_left (by rw [eqv_inl, eqv_inl]; exact ⟨x.2, y.2⟩), Matrix.fromBlocks_apply₁₁]
     congr 1
   · rw [embM_out _ _ _ (by rw [eqv_inl, eqv_inr]; omega), Matrix.fromBlocks_apply₁₂, Matrix.one_apply_ne]
     · rfl
@@ -254,7 +254,7 @@ theorem closedEmb_emb (h : k ≤ m) (hι : IsEmb ι) : IsClosedEmbedding ι := b
   have e : Set.range ι = ⋂ i : Fin m, ⋂ c : Fin m,
       {x : GL (Fin m) R | (k ≤ (i : ℕ) ∨ k ≤ (c : ℕ)) → x.val i c = (1 : Matrix (Fin m) (Fin m) R) i c} := by
     ext x
-    simp only [Set.mem_range, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_range, Set.mem_iInter, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨g, rfl⟩ i c hic
       exact blk_emb hι g i c hic
@@ -266,7 +266,7 @@ theorem closedEmb_emb (h : k ≤ m) (hι : IsEmb ι) : IsClosedEmbedding ι := b
   by_cases hp : (k ≤ (i : ℕ) ∨ k ≤ (c : ℕ))
   · simp only [hp, true_implies]
     exact isClosed_eq ((Units.continuous_val (M := Matrix (Fin m) (Fin m) R)).matrix_elem i c) continuous_const
-  · simp only [hp, false_implies, Set.setOf_true]
+  · simp only [hp, false_implies, Set.ofPred_true]
     exact isClosed_univ
 
 end Top
@@ -322,7 +322,7 @@ theorem torus_emb (hι : IsEmb ι) (l : Fin k → ℤ) :
   ext i c
   rw [embM_apply]
   split_ifs with h
-  · simp only [Matrix.diagonal_apply, Fin.ext_iff, pad, dif_pos h.1]
+  · simp only [Matrix.diagonal_apply, Fin.ext_iff, pad, dite_eq_left h.1]
   · rw [Matrix.diagonal_apply, Matrix.one_apply]
     split_ifs with hic
     · subst hic
@@ -372,7 +372,7 @@ theorem psN_emb (h : k ≤ m) (hι : IsEmb ι) (ψ : AddChar (Ad E) ℂ) (n : GA
         exact hx ⟨(⟨i, hi⟩, ⟨c, hc⟩), rfl⟩
     · rfl
   · rintro ⟨i, c⟩
-    simp only [Prod.map, Fin.coe_castLE]
+    simp only [Prod.map, Fin.val_castLE]
     rw [hι, embM_castLE]
 
 end Ad

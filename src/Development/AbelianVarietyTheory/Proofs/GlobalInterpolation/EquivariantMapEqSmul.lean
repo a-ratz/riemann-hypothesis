@@ -59,7 +59,7 @@ theorem equivariant_map_eq_smul : ∀ (n N : ℕ) (h : n + 1 = N) (lam : DomWeig
     apply hf0
     have := congrArg (fun F => ((F.toLinearMap ⟨f, hf⟩ : nablaSq ℂ n sg) : MvPolynomial (Fin n × Fin n) ℂ)) e
     exact this
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hz).1 h1 (mk φ (Or.inl rfl))
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hz).1 h1 (mk φ (Or.inl rfl))
   refine ⟨c, fun f hf => ?_⟩
   have := congrArg (fun F => ((F.toLinearMap ⟨f, hf⟩ : nablaSq ℂ n sg) : MvPolynomial (Fin n × Fin n) ℂ)) hc
   exact this.symm

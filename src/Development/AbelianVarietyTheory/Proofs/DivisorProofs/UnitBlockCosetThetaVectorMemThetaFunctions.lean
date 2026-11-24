@@ -73,7 +73,7 @@ theorem exists_nat_mul_mem_one (𝔪 : Ideal (𝓞 D.host.E)) : ∃ M : ℕ, 0 <
   · refine ⟨1, one_pos, fun y hy => ?_⟩
     have h0 : ((𝔫 : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) = 0 := by
       rw [h]; exact FractionalIdeal.coeIdeal_bot
-    rw [h0, div_zero, FractionalIdeal.coe_zero, Submodule.mem_bot] at hy
+    rw [h0, div_zero, FractionalIdeal.coeToSubmodule_zero, Submodule.mem_bot] at hy
     rw [hy, mul_zero]; exact Submodule.zero_mem _
   · refine ⟨Ideal.absNorm 𝔫, Nat.pos_of_ne_zero (by rwa [Ne, Ideal.absNorm_eq_zero_iff]), fun y hy => ?_⟩
     have hM : ((Ideal.absNorm 𝔫 : ℕ) : D.host.E) ∈ ((𝔫 : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) := by
@@ -183,8 +183,8 @@ theorem iop_mem_TT {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) {a
   by_cases hn : (A.addSubgroupOf B).index = 0
   · have h0 : Iop D T A B F = 0 := by funext z; simp [Iop, hn]
     rw [h0]; exact (GlobalTheory.FinWeil.TTs D T a d).zero_mem
-  · haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero hn
-    letI : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
+  · have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero hn
+    let : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
     have hI : Iop D T A B F = ((Real.sqrt ((A.addSubgroupOf B).index : ℝ))⁻¹ : ℂ) •
         ∑ q : B ⧸ A.addSubgroupOf B, (al D T ((Quotient.out q : B) : VC D a d) *
           (wdPh D T ((Quotient.out q : B) : VC D a d))⁻¹) • Wd D T ((Quotient.out q : B) : VC D a d) F := by

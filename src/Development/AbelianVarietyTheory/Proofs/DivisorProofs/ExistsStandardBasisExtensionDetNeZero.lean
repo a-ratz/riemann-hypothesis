@@ -68,8 +68,8 @@ theorem extend_linearIndependent_rows_by_standard_basis
   set W : Submodule K (Fin n → K) := span K (Set.range v) with hWdef
   obtain ⟨κ, a, ha, hspan, hli⟩ := exists_linearIndependent' K (W.mkQ ∘ std)
   classical
-  haveI : Finite κ := Finite.of_injective a ha
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  have : Fintype κ := Fintype.ofFinite κ
   have hW : finrank K W = Fintype.card J := finrank_span_eq_card hv
   have hQ := Submodule.finrank_quotient_add_finrank W
   have hfin : finrank K (Fin n → K) = n := Module.finrank_fin_fun K
@@ -120,7 +120,7 @@ theorem extend_linearIndependent_rows_by_standard_basis
     rw [linearIndependent_iff_card_eq_finrank_span, Set.finrank, hspanf, finrank_top, hfin,
       Fintype.card_fin]
   have hunit : IsUnit (Matrix.of f) := by
-    rw [← Matrix.linearIndependent_rows_iff_isUnit]
+    rw [← Matrix.linearIndependent_row_iff_isUnit]
     exact hlin
   exact (Matrix.isUnit_iff_isUnit_det _).mp hunit |>.ne_zero
 

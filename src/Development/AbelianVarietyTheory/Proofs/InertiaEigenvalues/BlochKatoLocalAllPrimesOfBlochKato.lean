@@ -296,23 +296,23 @@ theorem lattice_basis (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Algebra �
       (∀ i, ((algebraMap ℚ_[l] LL).comp (algebraMap ℤ_[l] ℚ_[l])).IsIntegralElem (b i)) ∧
       ∀ x : LL, ((algebraMap ℚ_[l] LL).comp (algebraMap ℤ_[l] ℚ_[l])).IsIntegralElem x →
         ∀ i, ∃ z : ℤ_[l], b.repr x i = (z : ℚ_[l]) := by
-  letI : Algebra ℤ_[l] LL := ((algebraMap ℚ_[l] LL).comp (algebraMap ℤ_[l] ℚ_[l])).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] LL := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra ℤ_[l] LL := ((algebraMap ℚ_[l] LL).comp (algebraMap ℤ_[l] ℚ_[l])).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] LL := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let S := integralClosure ℤ_[l] LL
-  haveI : IsIntegralClosure S ℤ_[l] LL := integralClosure.isIntegralClosure _ _
-  haveI : Module.Finite ℤ_[l] S := IsIntegralClosure.finite ℤ_[l] ℚ_[l] LL S
+  have : IsIntegralClosure S ℤ_[l] LL := integralClosure.isIntegralClosure _ _
+  have : Module.Finite ℤ_[l] S := IsIntegralClosure.finite ℤ_[l] ℚ_[l] LL S
   have hinj : Function.Injective (algebraMap ℤ_[l] LL) := by
     intro a c h
     exact IsFractionRing.injective ℤ_[l] ℚ_[l] ((algebraMap ℚ_[l] LL).injective h)
-  haveI : Module.IsTorsionFree ℤ_[l] S := ⟨fun r hr a c hac => by
+  have : Module.IsTorsionFree ℤ_[l] S := ⟨fun r hr a c hac => by
     have hr0 : algebraMap ℤ_[l] LL r ≠ 0 := by
       intro h0; exact hr.ne_zero (hinj (h0.trans (map_zero _).symm))
     apply Subtype.ext
     have h1 := congrArg (fun s : S => (s : LL)) hac
     simp only [Subalgebra.coe_smul, Algebra.smul_def] at h1
     exact mul_left_cancel₀ hr0 h1⟩
-  haveI : Module.Free ℤ_[l] S := Module.free_of_finite_type_torsion_free'
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid S (nonZeroDivisors ℤ_[l])) LL :=
+  have : Module.Free ℤ_[l] S := Module.free_of_finite_type_torsion_free'
+  have : IsLocalization (Algebra.algebraMapSubmonoid S (nonZeroDivisors ℤ_[l])) LL :=
     IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] LL S
   let bO := (Module.Free.chooseBasis ℤ_[l] S).reindex (Fintype.equivFin _)
   let b := bO.localizationLocalization ℚ_[l] (nonZeroDivisors ℤ_[l]) LL
@@ -331,10 +331,10 @@ theorem intDual_coef : ∀ (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Alge
   intro l _ LL _ _ _ O _ _ hO
   have H := _root_.GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO
   obtain ⟨⟨hdom, hdvr, hfrac⟩, hfd, -, -, -⟩ := hO
-  haveI := hdom
-  haveI := hdvr
-  haveI := hfrac
-  haveI := hfd
+  have := hdom
+  have := hdvr
+  have := hfrac
+  have := hfd
   have hmem := H.1
   obtain ⟨n, b, hbint, hcoord⟩ := lattice_basis l LL
   let ι := algebraMap O LL
@@ -561,7 +561,7 @@ theorem modTop_trans {F LL : Type} [Field F] [Field LL] [Algebra F LL] [Topologi
     [TopologicalSpace LL] [IsTopologicalRing LL] [IsModuleTopology F LL] (V : Type)
     [AddCommGroup V] [Module LL V] [Module F V] [IsScalarTower F LL V] [FiniteDimensional LL V]
     [TopologicalSpace V] [IsModuleTopology LL V] : IsModuleTopology F V := by
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
   let e := (Module.finBasis LL V).equivFun
   let e' : (Fin (finrank LL V) → LL) ≃L[F] V :=
     { e.symm.restrictScalars F with
@@ -804,19 +804,19 @@ theorem bkBCore_of_integralDuality : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime 
     GlobalTheory.Published.BlochKato.IntegralDuality (P.PD K) → bkBCore (P.PD K) := by
   intro l _ P K hI LL _ _ _ O _ _ hO L1 hL1 A A' LA LA' Pr hdR hP
   obtain ⟨lam, n, e, f, hZ, hlam, hrec⟩ := coef_data LL O hO
-  haveI : FiniteDimensional ℚ_[l] LL := hO.2.1
-  haveI : IsModuleTopology ℚ_[l] LL := hO.2.2.1
-  haveI : IsTopologicalRing LL := hO.2.2.2.1
-  letI : Module ℤ_[l] A.V := Module.compHom A.V (algebraMap ℤ_[l] ℚ_[l])
-  letI : Module ℤ_[l] A'.V := Module.compHom A'.V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] A.V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] A'.V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : FiniteDimensional ℚ_[l] A.V := Module.Finite.trans LL A.V
-  haveI : FiniteDimensional ℚ_[l] A'.V := Module.Finite.trans LL A'.V
-  haveI : IsModuleTopology ℚ_[l] A.V := modTop_trans (LL := LL) A.V
-  haveI : IsModuleTopology ℚ_[l] A'.V := modTop_trans (LL := LL) A'.V
-  haveI : ContinuousConstSMul ℚ_[l] A.V := csmul_trans (LL := LL)
-  haveI : ContinuousConstSMul ℚ_[l] A'.V := csmul_trans (LL := LL)
+  have : FiniteDimensional ℚ_[l] LL := hO.2.1
+  have : IsModuleTopology ℚ_[l] LL := hO.2.2.1
+  have : IsTopologicalRing LL := hO.2.2.2.1
+  let : Module ℤ_[l] A.V := Module.compHom A.V (algebraMap ℤ_[l] ℚ_[l])
+  let : Module ℤ_[l] A'.V := Module.compHom A'.V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] A.V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ℤ_[l] ℚ_[l] A'.V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : FiniteDimensional ℚ_[l] A.V := Module.Finite.trans LL A.V
+  have : FiniteDimensional ℚ_[l] A'.V := Module.Finite.trans LL A'.V
+  have : IsModuleTopology ℚ_[l] A.V := modTop_trans (LL := LL) A.V
+  have : IsModuleTopology ℚ_[l] A'.V := modTop_trans (LL := LL) A'.V
+  have : ContinuousConstSMul ℚ_[l] A.V := csmul_trans (LL := LL)
+  have : ContinuousConstSMul ℚ_[l] A'.V := csmul_trans (LL := LL)
   obtain ⟨LZ, hLZ⟩ := exists_latZ K lam n e f hZ hlam hrec A.ρ LA
   obtain ⟨LZ', hLZ'⟩ := exists_latZ K lam n e f hZ hlam hrec A'.ρ LA'
   obtain ⟨L1Z, hL1Z⟩ := GlobalTheory.Published.BlochKato.exists_cyclotomicLattice l P K
@@ -921,8 +921,8 @@ theorem cyclotomicTwist_differential_apply {LL : Type} [Field LL] [Algebra ℚ_[
 theorem cobL_iff_trace {LL : Type} [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL]
     [FiniteDimensional ℚ_[l] LL] [IsModuleTopology ℚ_[l] LL] (z : G × G → LL) :
     CobL PD z ↔ ∀ c : LL, CobL PD (fun x => Algebra.trace ℚ_[l] LL (c * z x)) := by
-  haveI : ContinuousAdd LL := IsModuleTopology.toContinuousAdd ℚ_[l] LL
-  haveI : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
+  have : ContinuousAdd LL := IsModuleTopology.toContinuousAdd ℚ_[l] LL
+  have : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
   constructor
   · rintro ⟨f, hf, rfl⟩ c
     refine ⟨fun g => Algebra.trace ℚ_[l] LL (c * f g), ?_, ?_⟩
@@ -1009,17 +1009,17 @@ theorem bkACore_of_rationalDuality (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K 
     (h : GlobalTheory.Published.BlochKato.RationalDuality (P.PD K)) : bkACore (P.PD K) := by
   intro LL _ _ _ O _ _ hO A A' Pr hdR hP
   obtain ⟨-, hfin, hmt, htr, -⟩ := hO
-  haveI := hfin
-  haveI := hmt
-  haveI := htr
-  haveI : FiniteDimensional ℚ_[l] A.V := Module.Finite.trans LL A.V
-  haveI : FiniteDimensional ℚ_[l] A'.V := Module.Finite.trans LL A'.V
-  haveI : IsModuleTopology ℚ_[l] A.V := isModuleTopology_of_tower ℚ_[l] LL A.V
-  haveI : IsModuleTopology ℚ_[l] A'.V := isModuleTopology_of_tower ℚ_[l] LL A'.V
-  haveI : ContinuousConstSMul ℚ_[l] A.V := ⟨fun c => by
+  have := hfin
+  have := hmt
+  have := htr
+  have : FiniteDimensional ℚ_[l] A.V := Module.Finite.trans LL A.V
+  have : FiniteDimensional ℚ_[l] A'.V := Module.Finite.trans LL A'.V
+  have : IsModuleTopology ℚ_[l] A.V := isModuleTopology_of_tower ℚ_[l] LL A.V
+  have : IsModuleTopology ℚ_[l] A'.V := isModuleTopology_of_tower ℚ_[l] LL A'.V
+  have : ContinuousConstSMul ℚ_[l] A.V := ⟨fun c => by
     have hc : Continuous fun x : A.V => algebraMap ℚ_[l] LL c • x := continuous_const_smul _
     simpa only [algebraMap_smul] using hc⟩
-  haveI : ContinuousConstSMul ℚ_[l] A'.V := ⟨fun c => by
+  have : ContinuousConstSMul ℚ_[l] A'.V := ⟨fun c => by
     have hc : Continuous fun x : A'.V => algebraMap ℚ_[l] LL c • x := continuous_const_smul _
     simpa only [algebraMap_smul] using hc⟩
   have key := h A.V A'.V (resQ A.ρ) (resQ A'.ρ) (trPair Pr) A.cont A'.cont
@@ -1096,7 +1096,7 @@ theorem hfQ_of_ioL_mem_HfD : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : 
   obtain ⟨π, hπdef⟩ : ∃ π : LL, π = algebraMap O LL ϖ := ⟨_, rfl⟩
   have hπ : π ≠ 0 := by
     obtain ⟨⟨hDom, hDVR, hFr⟩, -, -, -, -⟩ := hO
-    haveI := hDom; haveI := hDVR; haveI := hFr
+    have := hDom; have := hDVR; have := hFr
     intro h
     exact hϖ.ne_zero (IsFractionRing.injective O LL (by rw [← hπdef, h, map_zero]))
   clear hO
@@ -1221,7 +1221,7 @@ theorem cupQ_cobO_of_bkA : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : Fi
   intro l _ P K hA LL _ _ _ O _ _ hO L1 hL1 A A' LA LA' m hDR hd ϖ r hI hI' c hc c' hc'
   have hA' := hA LL O hO
   obtain ⟨⟨hDom, hDVR, hFr⟩, hfd, hmt, htr, hopen⟩ := hO
-  haveI := hDom; haveI := hDVR; haveI := hFr; haveI := htr
+  have := hDom; have := hDVR; have := hFr; have := htr
   obtain ⟨a, ha, hag⟩ := hfQ_lift (P.PD K) LA _ hI c hc
   obtain ⟨b, hb, hbg⟩ := hfQ_lift (P.PD K) LA' _ hI' c' hc'
   obtain ⟨f, hf, hfd1⟩ := ((hA' A A' m hDR hd.1).1 a ha.1).1 ha b hb
@@ -1572,7 +1572,7 @@ end Cob
 theorem cobO_cupQ_iff : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ L1 : Lattice (O := O) (charRep (cycLL (P.PD K) LL)), L1.T = LinearMap.range (Algebra.linearMap O LL) → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (LA' : Lattice (O := O) A'.ρ) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDualLat1 (P.PD K) LA LA' m → ∀ (ϖ : O) (r : ℕ) (hI : StableSub LA (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥LA.T)), ∀ s ∈ quotientCocycles LA _ hI, ∀ d : ↥(latticeCocycles LA'), CobO (P.PD K) L1 (GlobalTheory.BKFinLevel.cupQ LA LA' m ϖ r s (redT LA' _ d)) ↔ CobO (P.PD K) L1 (cupLD LA m.flip (d : ↥(GK K) → A'.V) (fun g => GlobalTheory.BKFinLevel.ioL LA ϖ r (s g))) := by
   intro l _ P K LL _ _ _ O _ _ hO L1 hL1 A A' LA LA' m hm ϖ r hI s hs d
   obtain ⟨-, -, -, htr, hopen⟩ := hO
-  haveI := htr
+  have := htr
   exact cobO_swap (P.PD K) hopen L1 hL1 LA LA' m hm ϖ r hI s hs d
 
 end GlobalTheory.BKSwapCup
@@ -1593,8 +1593,8 @@ namespace GlobalTheory.BDLocConst
 theorem lattice_divisible_coboundaries_le_locConst_cocycles : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ), BD LA ≤ divisibleCocycles LA := by
   intro l _ P K LL _ _ _ O _ _ hO A LA c hc
   obtain ⟨⟨hDom, hDVR, hFr⟩, hfd, hmt, htr, hopen⟩ := hO
-  haveI := hDom; haveI := hDVR; haveI := hFr; haveI := htr
-  haveI : IsTopologicalAddGroup A.V := IsModuleTopology.topologicalAddGroup LL A.V
+  have := hDom; have := hDVR; have := hFr; have := htr
+  have : IsTopologicalAddGroup A.V := IsModuleTopology.isTopologicalAddGroup LL A.V
   obtain ⟨y, rfl⟩ := hc
   induction y using Submodule.Quotient.induction_on with
   | H x =>
@@ -1691,10 +1691,10 @@ theorem integral_pairing : Formalism.GaloisCohomology.LocalTateDualityK → ∀ 
   intro hT l _ P K LL _ _ _ O _ _ hG L1 hL1 A A' LA LA' m hd
   obtain ⟨e⟩ := _root_.GlobalTheory.TateTop.tateH2_of_duality_loc hT l P K LL O hG L1 hL1
   obtain ⟨⟨hO, hDVR, hFr⟩, -, -, htr, hopen⟩ := hG
-  haveI := hO
-  haveI := hDVR
-  haveI := hFr
-  haveI := htr
+  have := hO
+  have := hDVR
+  have := hFr
+  have := htr
   obtain ⟨pr, hpr⟩ := exists_pr (P.PD K) hopen hd L1 hL1
   refine ⟨(pr.compr₂ e.toLinearMap).flip ∘ₗ Submodule.mkQ _, ?_, ?_, ?_⟩
   · intro d c
@@ -1732,7 +1732,7 @@ namespace GlobalTheory
 theorem tate_double_annihilator : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l), ∀ (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ L1 : Lattice (O := O) (charRep (cycLL (P.PD K) LL)), L1.T = LinearMap.range (Algebra.linearMap O LL) → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (LA' : Lattice (O := O) A'.ρ) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDualLat1 (P.PD K) LA LA' m → ∀ S : Submodule O (↥(GK K) → A'.V ⧸ LA'.T), BD LA' ≤ S → S ≤ divisibleCocycles LA' → ∀ c ∈ divisibleCocycles LA', (∀ d ∈ latticeCocycles LA, (∀ s ∈ S, CobO (P.PD K) L1 (cupLD LA' m d s)) → CobO (P.PD K) L1 (cupLD LA' m d c)) → c ∈ S := by
   intro hT l _ P K LL _ _ _ O _ _ hO L1 hL1 A A' LA LA' m hdual S hBS hSZ c hc hann
   obtain ⟨β, hβ0, hβB, -⟩ := _root_.GlobalTheory.TatePair.integral_pairing hT l P K LL O hO L1 hL1 A A' LA LA' m hdual
-  haveI : Module.Finite O (LatticeCohomology LA) := _root_.GlobalTheory.TateFiniteH1.tate_finH1 hT l P K LL O hO A LA
+  have : Module.Finite O (LatticeCohomology LA) := _root_.GlobalTheory.TateFiniteH1.tate_finH1 hT l P K LL O hO A LA
   let e : (LL ⧸ L1.T) ≃ₗ[O] (LL ⧸ LinearMap.range (Algebra.linearMap O LL)) :=
     Submodule.quotEquivOfEq _ _ hL1
   let β₁ : ↥(latticeCocycles LA) →ₗ[O] ↥(divisibleCocycles LA') →ₗ[O] (LL ⧸ LinearMap.range (Algebra.linearMap O LL)) :=

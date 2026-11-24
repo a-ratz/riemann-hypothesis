@@ -225,7 +225,7 @@ theorem exact_term_after_torsion : LL → TwistBCSpanStatement → TWM.VRatioGtS
       Spec.map (CommRingCat.ofHom (residue (Ov v))) ≫ x.left = x₀.left :=
     exists_torsion_lift (Ov v) D.toPre.P.A n (TO hϖ hv).hom x₀ hx₀
   have ex' : ρ ≫ x = x₀ := Over.OverMorphism.ext ex
-  letI := TorusExt.gtGroup D.toPre F
+  let := TorusExt.gtGroup D.toPre F
   obtain ⟨h, hh₁, hh₂⟩ := TorusExt.exists_nsmul_eq_of_pow_eq (n := n) (by omega) (0 : GtPtF D.toPre F)
     (b := ιS hϖ hv ≫ x) (by rw [← MonObj.comp_pow, hx, MonObj.comp_one, TorusExt.zero_b])
   refine ⟨h, 0, g + h, (TorusExt.isZero_iff_eq _).2 rfl, (TorusExt.isNsmul_iff_eq _ _ _).2 hh₂.symm,

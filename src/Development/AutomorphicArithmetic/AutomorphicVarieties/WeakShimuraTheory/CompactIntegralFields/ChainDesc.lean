@@ -267,7 +267,7 @@ theorem UpperTheory.V.Ws.chainDesc :
       Φ.IsRes (𝔞.red c) s → Φ.Chain (𝔞.red c) s t → ∃ c₁ : Coef l, ∀ (c' : Coef l) (h : c.O ≤ c'.O), c₁.O ≤ c'.O →
         ∃ s' t' : PD Φ.ι Γ (ResidueField c'.O), s'.map (𝔞.j c') = s ∧ t'.map (𝔞.j c') = t ∧ Φ.IsRes ((residue c'.O).comp (inc h)) s' ∧ Φ.Chain ((residue c'.O).comp (inc h)) s' t' := by
   intro l _ 𝔞 c Γ _ _ _ Φ s t hs hst
-  haveI := Φ.fin
+  have := Φ.fin
   obtain ⟨hg, hrt⟩ := hst
   suffices key : ∀ t, Relation.ReflTransGen (fun x y => Φ.Good (𝔞.red c) y ∧ Φ.Linked (𝔞.red c) x y) s t →
       Ev (fun c' : Coef l => ∀ h : c.O ≤ c'.O, ∃ s' t' : PD Φ.ι Γ (ResidueField c'.O), s'.map (𝔞.j c') = s ∧

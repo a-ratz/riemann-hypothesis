@@ -383,7 +383,7 @@ theorem haarChart_unique {E' : Type} [Field E'] [NumberField E'] [IsCMField E'] 
 
 theorem countable_image (X : Data E r) {Λ : Subgroup (RealGrp X)}
     (hΛ : ∀ s, s ∈ Λ ↔ ∃ γ ∈ X.Γ, lact γ (baseFr X) = frameOf X s) : Countable Λ := by
-  haveI := FundSetPf.countable_GL (E := E) (r := r)
+  have := FundSetPf.countable_GL (E := E) (r := r)
   choose f hf using fun s : Λ => (hΛ s.1).1 s.2
   refine Function.Injective.countable (f := f) fun s t h => Subtype.ext ?_
   apply GlobalTheory.PeterssonCompare.frameOf_injective X
@@ -396,7 +396,7 @@ theorem quotInt_eq_of_haarChart (X : Data E r) {c : ℝ≥0∞} (hc : HaarChart 
     quotInt X Φ = c * ∫⁻ z in FF, Φ (cpt X x0 z) ∂(muF X x0) := by
   classical
   obtain ⟨Λ, hΛ, -⟩ := GlobalTheory.ArithImage.exists_discrete_image E r X
-  haveI := countable_image X hΛ
+  have := countable_image X hΛ
   set S := GlobalTheory.Unfold.satFrames X x0 FF
   have hS : MeasurableSet S := GlobalTheory.Unfold.measurableSet_satFrames X ho hF.1 hF.2.1
   rw [GlobalTheory.PeterssonCompare.quotInt_eq X hΛ (isFundamentalDomain_sat X hc ho hF Λ hΛ) hΓ]

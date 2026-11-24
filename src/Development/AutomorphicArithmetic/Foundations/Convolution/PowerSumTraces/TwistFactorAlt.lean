@@ -508,7 +508,7 @@ theorem UpperTheory.trace_restrict_eq_of_hasFinTrace :
     ∀ (S : Type) [AddCommGroup S] [Module ℂ S] (Q Q' : Submodule ℂ S) [FiniteDimensional ℂ Q'] (g : S →ₗ[ℂ] S) (t : ℂ) (m : Module.End ℂ Q') (e : Q' →ₗ[ℂ] S), Q ≤ Q' → HasFinTrace g t → (∀ x, g x ∈ Q) → (∀ x : Q', ((m x : Q') : S) = g (e x)) → (∀ x : Q', (x : S) ∈ Q → e x = x) → LinearMap.trace ℂ Q' m = t := by
   intro S _ _ Q Q' _ g t m e hQ hg hgQ hm he
   obtain ⟨hfd, hr⟩ := hg
-  haveI := hfd
+  have := hfd
   have hWQ : LinearMap.range g ≤ Q := by
     rintro _ ⟨x, rfl⟩
     exact hgQ x
@@ -568,12 +568,12 @@ theorem UpperTheory.isotypic_intersection_product_eq :
     obtain ⟨h1, h2⟩ := Submodule.mem_inf.1 hv
     exact Submodule.mem_inf.2 ⟨h1, (Submodule.mem_iInf _).2 fun j u hu =>
       (Submodule.mem_iInf _).1 h2 j u (hKL j hu)⟩
-  haveI hfdX : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (K i)) := hadm K hK
-  haveI hfdL : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (L i)) := hadm L hL
+  have hfdX : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (K i)) := hadm K hK
+  have hfdL : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (L i)) := hadm L hL
   have hneX : (Z ⊓ ⨅ i, fixU (π i) (K i)) ≠ ⊥ := fun e => hne (le_bot_iff.1 (e ▸ hXX))
   obtain ⟨h1, c, hcc, hcf, hsp⟩ := UpperTheory.isotypic_component_product_of_smooth_reps r G H S π τ V Z hsm hirr hcm hZc hZV hZi hV K hK hfdX hneX
   obtain ⟨h1L, -⟩ := UpperTheory.isotypic_component_product_of_smooth_reps r G H S π τ V Z hsm hirr hcm hZc hZV hZi hV L hL hfdL hne
-  haveI : ∀ i, FiniteDimensional ℂ (fixedVectors (τ i) (K i)) := fun i => (h1 i).1
+  have : ∀ i, FiniteDimensional ℂ (fixedVectors (τ i) (K i)) := fun i => (h1 i).1
   have hLK : ∀ i, fixedVectors (τ i) (L i) ≤ fixedVectors (τ i) (K i) := fun i x hx =>
     mem_fixedVectors.2 fun k hk => mem_fixedVectors.1 hx k (hKL i hk)
   have hIm : ∀ i, ∀ x ∈ fixedVectors (τ i) (L i), I i x ∈ fixedVectors (τ i) (K i) := fun i x hx =>
@@ -649,8 +649,8 @@ open GroundTheory.Automorphic.CuspidalSpectrum GlobalTheory.IndefiniteRowSideFul
 theorem UpperTheory.finiteDimensional_fixedVectors_isotypic_of_irreducible :
     ∀ (G H S : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [T2Space G] [TotallyDisconnectedSpace G] [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] [AddCommGroup S] [Module ℂ S] (τ : Representation ℂ G S) (_ : GroundTheory.Automorphic.IsSmooth τ) (_ : τ.IsIrreducible) (π : UnitaryRep G H) (K : Subgroup G), IsCompact (K : Set G) → IsOpen (K : Set G) → FiniteDimensional ℂ (fixedVectors τ K) → fixedVectors τ K ≠ ⊥ → ∀ t : Module.End ℂ (fixedVectors τ K), ∃ (T : H →L[ℂ] H) (A : S →ₗ[ℂ] S), ((∀ v, T v ∈ fixU π K) ∧ (∀ x, A x ∈ fixedVectors τ K) ∧ (∀ D : Submodule ℂ H, IsClosed (D : Set H) → π.IsInvariant D → ∀ v ∈ D, T v ∈ D) ∧ (∀ (G' : Type) [Group G'] [TopologicalSpace G'] (π' : UnitaryRep G' H), (∀ g h v, π g (π' h v) = π' h (π g v)) → ∀ h v, T (π' h v) = π' h (T v)) ∧ (∀ f, Eqv τ π ⊤ f → ∀ x, T (f x) = f (A x))) ∧ ∀ x : fixedVectors τ K, A x = t x := by
   intro G H S _ _ _ _ _ _ _ _ _ _ _ τ hτ hirr π K hKc hKo hfd hne t
-  haveI := hfd
-  haveI : Nontrivial (fixedVectors τ K) := Submodule.nontrivial_iff_ne_bot.2 hne
+  have := hfd
+  have : Nontrivial (fixedVectors τ K) := Submodule.nontrivial_iff_ne_bot.2 hne
   obtain ⟨p1, -, p3, -⟩ := UpperTheory.fixedProjection_invariant_and_commuting_reps G G H π π K K
   let e : S →ₗ[ℂ] fixedVectors τ K := fixedProj τ hτ hKc hKo
   let b : G → Module.End ℂ (fixedVectors τ K) := fun g => e ∘ₗ τ g ∘ₗ (fixedVectors τ K).subtype
@@ -838,10 +838,10 @@ theorem UpperTheory.twisted_intertwiner_fixedVectors_of_irreducible :
       exact (e _).2
     · intro x hx
       exact ⟨x, hB x hx⟩
-  haveI hfdR : FiniteDimensional ℂ (LinearMap.range B) := by
+  have hfdR : FiniteDimensional ℂ (LinearMap.range B) := by
     rw [hR]
     exact hfd K hKc hKo
-  haveI : Nontrivial (LinearMap.range B) := by
+  have : Nontrivial (LinearMap.range B) := by
     rw [hR]
     exact Submodule.nontrivial_iff_ne_bot.2 hne
   have hrest : (B.restrict (p := LinearMap.range B) (q := LinearMap.range B)
@@ -880,7 +880,7 @@ theorem UpperTheory.isotypic_multiplicity_tensor_product :
   by_cases hZ : Z = ⊥
   · refine ⟨0, fun U T A t hU _ _ _ _ _ _ => ?_⟩
     have hb : (Z ⊓ ⨅ i, fixU (π i) (U i)) = ⊥ := by rw [hZ, bot_inf_eq]
-    haveI := hadm U hU
+    have := hadm U hU
     rw [zero_mul, (UpperTheory.trOn_restrict_and_eq_of_maps_into H (Z ⊓ ⨅ i, fixU (π i) (U i)) (Z ⊓ ⨅ i, fixU (π i) (U i))
       ((List.ofFn T).prod ∘L R)).1 0 ?_, map_zero]
     intro v
@@ -911,7 +911,7 @@ theorem UpperTheory.isotypic_multiplicity_tensor_product :
       · rw [Function.update_of_ne e]
         exact hU₀ j) i
     rwa [Function.update_self] at h
-  haveI hfd0 : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (U₀ i)) := hadm U₀ hU₀
+  have hfd0 : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (U₀ i)) := hadm U₀ hU₀
   obtain ⟨h1, -⟩ := UpperTheory.isotypic_component_product_of_smooth_reps r G H S π τ V Z hsm hirr hcm hZc hZV hZi hV U₀ hU₀ hfd0 h0
   have hex := fun i => UpperTheory.twisted_intertwiner_fixedVectors_of_irreducible (G i) H (S i) (τ i) (hsm i) (hirr i) (π i) (s i) (I i) (hI i)
     (hSK i) (U₀ i) (hU₀ i).1 (hU₀ i).2 (h1 i).2
@@ -930,8 +930,8 @@ theorem UpperTheory.isotypic_multiplicity_tensor_product :
   have hle0 := hmono (fun i => U i ⊓ U₀ i) U₀ fun i => inf_le_right
   have hleU := hmono (fun i => U i ⊓ U₀ i) U fun i => inf_le_left
   have hneL : (Z ⊓ ⨅ i, fixU (π i) (U i ⊓ U₀ i)) ≠ ⊥ := fun e => h0 (le_bot_iff.1 (e ▸ hle0))
-  haveI hfdL : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (U i ⊓ U₀ i)) := hadm _ hL
-  haveI hfdU : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (U i)) := hadm U hU
+  have hfdL : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (U i ⊓ U₀ i)) := hadm _ hL
+  have hfdU : FiniteDimensional ℂ ↥(Z ⊓ ⨅ i, fixU (π i) (U i)) := hadm U hU
   obtain ⟨κ, hκ⟩ := UpperTheory.isotypic_intersection_product_eq r G H S π τ V Z hsm hirr hcm hZc hZV hZi hV hadm s I R hRZ hRs hI
     (fun i => U i ⊓ U₀ i) hL hneL
   have e1 := hκ T₀ A₀ t₀ (fun i v => hmF i _ _ inf_le_right _ (a1 i v)) a3 a4 a5

@@ -138,7 +138,7 @@ theorem finrank_quotient_torsion [Finite S] :
 
 theorem dvd_natCard_torsion (n : ℕ) [NeZero n] [HasEnoughRootsOfUnity K n] :
     n ∣ Nat.card (CommGroup.torsion (S.unit K)) := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   set u : Kˣ := (hζ.isUnit (NeZero.ne n)).unit
   have hu : IsPrimitiveRoot u n := IsPrimitiveRoot.coe_units_iff.1 hζ
   have hfin : IsOfFinOrder u := by

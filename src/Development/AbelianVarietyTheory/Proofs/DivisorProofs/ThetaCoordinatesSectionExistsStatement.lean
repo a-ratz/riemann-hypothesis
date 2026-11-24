@@ -215,17 +215,17 @@ theorem GlobalTheory.ZH.RatModel.exists_isAffineOpen_noetherian_integrallyClosed
       RingHom.FiniteType.of_surjective _
         (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.symm.surjective
     have h4 := h1.comp h2
-    letI := ((M.s.appLE ⊤ W le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).toAlgebra
-    haveI : Algebra.FiniteType k Γ(M.Z, W) := h4
-    haveI : IsNoetherianRing Γ(M.Z, W) := Algebra.FiniteType.isNoetherianRing k _
+    let := ((M.s.appLE ⊤ W le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).toAlgebra
+    have : Algebra.FiniteType k Γ(M.Z, W) := h4
+    have : IsNoetherianRing Γ(M.Z, W) := Algebra.FiniteType.isNoetherianRing k _
     exact isNoetherianRing_of_ringEquiv _ (M.sectionsEquiv W hne)
-  · haveI := GlobalTheory.ZH.RatModel.isFractionRing_ringOn hW hne
+  · have := GlobalTheory.ZH.RatModel.isFractionRing_ringOn hW hne
     refine (isIntegrallyClosed_iff Ω).2 fun {x} hx => ?_
     have hmem : x ∈ M.ringOn W := GlobalTheory.ZH.RatModel.mem_ringOn.2 fun z' hz' => by
-      haveI := GlobalTheory.ZH.RatModel.isIntegrallyClosed_O hn z'
+      have := GlobalTheory.ZH.RatModel.isIntegrallyClosed_O hn z'
       have hle := GlobalTheory.ZH.RatModel.ringOn_le_O (M := M) hz'
-      letI : Algebra (M.ringOn W) (M.O z') := (Subalgebra.inclusion hle).toRingHom.toAlgebra
-      haveI : IsScalarTower (M.ringOn W) (M.O z') Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+      let : Algebra (M.ringOn W) (M.O z') := (Subalgebra.inclusion hle).toRingHom.toAlgebra
+      have : IsScalarTower (M.ringOn W) (M.O z') Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
       have hx' : IsIntegral (M.O z') x := hx.tower_top
       obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hx'
       rw [← hy]
@@ -419,7 +419,7 @@ theorem exists_openImm_spec_ringOn (k Ω : Type) [CommRing k] [Field Ω] [Algebr
     ∃ (χ : Sp (M.ringOn W) ⟶ M.Z) (_ : IsOpenImmersion χ), χ.opensRange = W ∧
       spMap (algebraMap (M.ringOn W) Ω) ≫ χ = M.pt := by
   let φ : Γ(M.Z, W) ⟶ CommRingCat.of (M.ringOn W) := (M.sectionsEquiv W hne).toCommRingCatIso.hom
-  haveI : IsIso φ := inferInstanceAs (IsIso (M.sectionsEquiv W hne).toCommRingCatIso.hom)
+  have : IsIso φ := inferInstanceAs (IsIso (M.sectionsEquiv W hne).toCommRingCatIso.hom)
   refine ⟨Spec.map φ ≫ hW.fromSpec, inferInstance, ?_, ?_⟩
   · rw [Scheme.Hom.opensRange_comp_of_isIso, hW.opensRange_fromSpec]
   · have hp := M.top_le_preimage_pt hne
@@ -1080,7 +1080,7 @@ theorem om_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Hos
   obtain ⟨p, hps⟩ : ∃ p : PrimeSpectrum R, (p : Sp R) = s := ⟨s, rfl⟩
   have hinjp : Function.Injective (algebraMap R (Localization.AtPrime p.asIdeal)) :=
     IsLocalization.injective _ p.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : CharZero (Localization.AtPrime p.asIdeal) := charZero_of_injective_algebraMap hinjp
+  have : CharZero (Localization.AtPrime p.asIdeal) := charZero_of_injective_algebraMap hinjp
   obtain ⟨V, _, _, _, φ₀, hV, hinj, hloc⟩ := GlobalTheory.DvrDom.exists_cdvr_dominating (Localization.AtPrime p.asIdeal)
   obtain ⟨φ, hφdef⟩ : ∃ φ : R →+* V, φ = φ₀.comp (algebraMap R (Localization.AtPrime p.asIdeal)) := ⟨_, rfl⟩
   have hφ : Function.Injective φ := by
@@ -1091,7 +1091,7 @@ theorem om_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Hos
     rw [← Category.assoc, ← Category.assoc, ← spMap_comp, ← spMap_comp, hc]
   obtain ⟨σV, hσV, z, hz₁, hz₂⟩ := key V hV φ φK h hc
   have hθ : SecAt.pull t.G t.PP.L σ (algebraMap R (FractionRing R)) = θ := secAt_ext t.G t.PP.L hσ
-  have hFl : Flat t.G.hom := by haveI := t.semi.smooth; infer_instance
+  have hFl : Flat t.G.hom := by have := t.semi.smooth; infer_instance
   have e₁ := pull_pull_cast t.G t.PP.L χ σ φ (algebraMap R (FractionRing R)) (algebraMap V (FractionRing V)) φK h hc
   rw [hθ] at e₁
   have heq : SecAt.pull t.G t.PP.L σ φ = σV :=
@@ -1288,7 +1288,7 @@ theorem exists_locSec_of_openImmersion (E : Type) [Field E] [NumberField E] [IsC
     ∃ s : LocSec t.G t.PP.L χ.opensRange, IsLocSec s ∧ GenIs ξ s (SecM.ofSec t.G θ) ∧ FibNz s χ.opensRange := by
   subst e
   have hlft : LocallyOfFiniteType t.G.hom := by
-    haveI := t.semi.smooth
+    have := t.semi.smooth
     infer_instance
   obtain ⟨σ, hσ, hσnz⟩ := GlobalTheory.T.extend_regularThetaSection_any_fractionField E H S t g m N R K χ θ pt c hodd hm3 hm hpol hth hu
   obtain ⟨s, hs, hsgen, hsfib⟩ := GlobalTheory.T.exists_localSection_of_openImmersion_spec S t.G t.PP.L R χ σ hlft hσnz
@@ -1310,7 +1310,7 @@ theorem exists_locSec_theta_chart : ∀ (E : Type) [Field E] [NumberField E] [Is
   obtain ⟨W, hWa, hzW, hWV, hnoeth, hic⟩ := GlobalTheory.T.exists_affine_nbhd_noetherian_integrallyClosed k Ω M hN (h ⁻¹ᵁ chart k n a) z hz
   have hne : (W : Set M.Z).Nonempty := ⟨z, hzW⟩
   obtain ⟨χ, hoi, hrange, hgenpt⟩ := GlobalTheory.T.exists_openImmersion_spec_ringOn_affine k Ω M W hWa hne
-  haveI := M.isFractionRing_ringOn hWa hne
+  have := M.isFractionRing_ringOn hWa hne
   let c'' : Fin (n + 1) → M.ringOn W := fun b =>
     ⟨c b / c a, RatModel.mem_ringOn.2 fun z' hz' => hdiv z' (hWV hz') b⟩
   let θ' : SecAt t.G t.PP.L M.pt :=

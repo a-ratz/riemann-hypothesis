@@ -132,7 +132,7 @@ theorem G2.proof (hK : KodairaSection.Statement) (hS : SectionProduct.Statement)
     (HermLine.zcomb M (fsH ι) k (-1)) M n (p * n) (q * n) s e hdeg hmet hs hB
   refine ⟨hmem, fun c hc => ?_⟩
   have h := hbd c (Real.exp C) hc heb
-  rwa [← Real.exp_nat_mul] at h
+  rwa [← Real.exp_natCast_mul] at h
 
 end
 

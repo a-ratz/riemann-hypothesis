@@ -93,7 +93,7 @@ theorem share_le {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
       have : ({Λ | S.IsTerm o.out Λ ∧ S.be o.out Λ = β ∧ S.Fr o.out Λ = C} :
           Set (Submodule L.O S.V)) = ∅ := by
         ext Λ
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         rintro ⟨h1, -, h3⟩
         exact h ⟨_, _, h1, h3⟩
       simp [Frames.nT, this]

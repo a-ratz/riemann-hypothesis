@@ -247,7 +247,7 @@ theorem scaleFn_coe {R : Type} [CommRing R] [IsDomain R] {O : Type} [CommRing O]
         ∏ j, algebraMap R (FractionRing R) (u j : R) ^ ((M : ℤ) * ε j y (w0 • y)) := by
   simp only [scaleFn, Fin.prod_univ_add, Units.val_mul, Units.coe_prod, Units.val_zpow_eq_zpow_val, coordsK, forms,
     finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_natAdd, Sum.elim_inl, Sum.elim_inr, unitK,
-    Units.val_mk0, LinearMap.smul_apply, smul_eq_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    Units.val_mk0, LinearMap.smul_apply, smul_eq_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
 
 end GlobalTheory.UTautData
 
@@ -344,7 +344,7 @@ theorem main (W R : Type) [CommRing W] [IsDomain W] [CommRing R] [IsDomain R] [I
   have hG : GlobalFnsSt := hL.globalFns
   obtain ⟨D', hD, -, -⟩ := GlobalTheory.StrictPull.exists_isPullDeg_strict hL W R ρ D₀ ⊤
     (GlobalTheory.ArcPull.nonempty_psiOn_top D₀ hU) trivial
-  letI iM : Module O D'.X := modOf hD.xe
+  let iM : Module O D'.X := modOf hD.xe
   have hx : ∀ (a : O) y, hD.xe (a • y) = a • hD.xe y := fun a y => hD.xe.apply_symm_apply _
   let e : D'.X ≃ₗ[O] D₀.X := { hD.xe with map_smul' := hx }
   obtain ⟨oa', ho⟩ := GlobalTheory.ArcPull.exists_oAct hD hG hρ oa hx

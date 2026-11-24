@@ -104,7 +104,7 @@ theorem UpperTheory.V.Chr.abLevel :
     rw [ZMod.natCast_zmod_val]
     exact ⟨fun hu => ⟨u, hu, rfl⟩, fun ⟨v, hv, e⟩ => Units.ext e ▸ hv⟩
   · rintro A e q d E _ _ ⟨M, _, j, ζ, a1, a2, a3, a4, hζ, hj⟩ N _ b1 b2 b3 b4
-    haveI : NeZero (Nat.gcd M N) := ⟨(Nat.gcd_pos_of_pos_left _ (NeZero.pos M)).ne'⟩
+    have : NeZero (Nat.gcd M N) := ⟨(Nat.gcd_pos_of_pos_left _ (NeZero.pos M)).ne'⟩
     let P : ℕ → Prop := fun a => (a ≡ 1 [MOD 2 ^ (e + 2)] ∨ a + 1 ≡ 0 [MOD 2 ^ (e + 2)]) ∧ A.ker a ∧
       jacobiSym (a : ℤ) q = 1 ∧ jacobiSym (a : ℤ) d = 1
     have hP : ∀ a b, a ≡ b [MOD Nat.gcd M N] → (P a ↔ P b) := fun a b h => by

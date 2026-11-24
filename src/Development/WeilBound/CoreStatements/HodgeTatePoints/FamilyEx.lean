@@ -78,7 +78,7 @@ namespace PositivityTheory.HtPt.Cc
 
 theorem mulVec_injective_map_iff {k k₂ m n : Type} [Field k] [Field k₂] [Fintype m] [Fintype n] (f : k →+* k₂)
     (M : Matrix m n k) : Function.Injective (M.map f).mulVec ↔ Function.Injective M.mulVec := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   rw [Matrix.mulVec_injective_iff, Matrix.mulVec_injective_iff]
   exact linearIndependent_algebraMap_comp_iff (R := k) (S := k₂) (v := M.col)
 

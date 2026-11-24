@@ -56,10 +56,10 @@ theorem exists_basis_of_fullLattice {R F M V ι : Type} [CommRing R] [IsDomain R
     (b0 : Module.Basis ι R M) :
     ∃ b : Module.Basis ι F V, (∀ j, b j = f (b0 j)) ∧
       ∀ m i, b.repr (f m) i = algebraMap R F (b0.repr m i) := by
-  letI : Module R V := Module.compHom V (algebraMap R F)
-  haveI : IsScalarTower R F V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module R V := Module.compHom V (algebraMap R F)
+  have : IsScalarTower R F V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let g : M →ₗ[R] V := { toFun := f, map_add' := map_add f, map_smul' := hs }
-  haveI : IsLocalizedModule (nonZeroDivisors R) g :=
+  have : IsLocalizedModule (nonZeroDivisors R) g :=
     { map_units := fun s => by
         have h0 : algebraMap R F s ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
         rw [Module.End.isUnit_iff]
@@ -85,7 +85,7 @@ theorem exists_basis_of_locLat {R G F LL O ι : Type} [CommRing R] [IsDomain R] 
       (∀ (a : O) j i, b.repr (algebraMap O LL a • b j) i =
         algebraMap R F (b0.repr ⟨_, T.L.T.smul_mem a (b0 j).2⟩ i)) ∧
       ∀ v : T.V, (∀ i, ∃ c : R, b.repr v i = algebraMap R F c) → v ∈ T.L.T := by
-  letI : Module R ↥T.L.T := Module.compHom ↥T.L.T (algebraMap R O)
+  let : Module R ↥T.L.T := Module.compHom ↥T.L.T (algebraMap R O)
   intro b0
   have key : ∀ (c : R) (w : T.V), algebraMap R F c • w = algebraMap R O c • w := by
     intro c w
@@ -131,7 +131,7 @@ theorem exists_basis_of_locLat {R G F LL O ι : Type} [CommRing R] [IsDomain R] 
 
 theorem exists_ratBasis_of_isMat : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (d : ℕ) (M : GQ l → Matrix (Fin d) (Fin d) (PadicComplex l)) (A : ↥(OL LL) → Matrix (Fin d) (Fin d) (PadicComplex l)), IsMat K LL T M A → ∃ b : Module.Basis (Fin d) ℚ_[l] T.V, (∀ (g : ↥(GK K)) (i j : Fin d), M (g : GQ l) i j = algebraMap ℚ_[l] (PadicComplex l) (b.repr (T.ρ g (b j)) i)) ∧ (∀ (a : ↥(OL LL)) (i j : Fin d), A a i j = algebraMap ℚ_[l] (PadicComplex l) (b.repr ((a : ↥LL.1) • b j) i)) ∧ ∀ v : T.V, v ∈ T.L.T ↔ ∀ i, ‖b.repr v i‖ ≤ 1 := by
   intro l _ K LL T d M A h
-  letI := zlMod LL T
+  let := zlMod LL T
   obtain ⟨b0, hM, hA⟩ := h
   obtain ⟨b, hb, hr, ha, hv⟩ := exists_basis_of_locLat (R := ℤ_[l]) T (fun _ => rfl) (fun a => by
     have ha : IsAlgebraic ℤ_[l] a :=

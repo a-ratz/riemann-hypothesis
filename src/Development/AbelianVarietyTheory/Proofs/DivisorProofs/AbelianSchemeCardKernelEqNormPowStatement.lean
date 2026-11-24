@@ -179,19 +179,19 @@ theorem formallyUnramified_of_dual_const_field {K A B : Type} [Field K] [IsAlgCl
     obtain ⟨x, rfl⟩ := m.bijective_algebraMap_quotient_residueField.surjective y
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact ⟨b, rfl⟩
-  haveI : Algebra.FiniteType K m.ResidueField :=
+  have : Algebra.FiniteType K m.ResidueField :=
     Algebra.FiniteType.of_surjective (IsScalarTower.toAlgHom K B m.ResidueField) hsurj
-  haveI : Module.Finite K m.ResidueField := finite_of_finite_type_of_isJacobsonRing K _
+  have : Module.Finite K m.ResidueField := finite_of_finite_type_of_isJacobsonRing K _
   let ev : m.ResidueField →ₐ[K] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra m.ResidueField K := ev.toRingHom.toAlgebra
-  letI : Algebra B K := (ev.toRingHom.comp (algebraMap B m.ResidueField)).toAlgebra
-  haveI : IsScalarTower B m.ResidueField K := .of_algebraMap_eq fun _ => rfl
-  letI : Algebra A K := ((algebraMap B K).comp (algebraMap A B)).toAlgebra
-  haveI : IsScalarTower A B K := .of_algebraMap_eq fun _ => rfl
+  let : Algebra m.ResidueField K := ev.toRingHom.toAlgebra
+  let : Algebra B K := (ev.toRingHom.comp (algebraMap B m.ResidueField)).toAlgebra
+  have : IsScalarTower B m.ResidueField K := .of_algebraMap_eq fun _ => rfl
+  let : Algebra A K := ((algebraMap B K).comp (algebraMap A B)).toAlgebra
+  have : IsScalarTower A B K := .of_algebraMap_eq fun _ => rfl
   have key : Function.Injective ((0 : Ω[B⁄A] →ₗ[B] PUnit.{1}).lTensor m.ResidueField) :=
     lTensor_injective_of_extend (k := K) _ fun χ => by
       refine ⟨0, ?_⟩
@@ -237,7 +237,7 @@ namespace GlobalTheory.FinUnram
 
 theorem formallyUnramified_of_dual_const : ∀ (K : Type) [Field K] [IsAlgClosed K] (R : Type) [CommRing R] [Algebra K R] [Module.Finite K R], (∀ (φ : R →ₐ[K] DualNumber K) (r : R), (φ r).snd = 0) → Algebra.FormallyUnramified K R := by
   intro K _ _ R _ _ _ H
-  haveI : Algebra.FiniteType K R := inferInstance
+  have : Algebra.FiniteType K R := inferInstance
   refine GlobalTheory.TangentCrit.formallyUnramified_of_dual_const_field (K := K) (A := K) (B := R)
     (fun φ hK _ b => ?_)
   exact H { φ with commutes' := hK } b
@@ -535,7 +535,7 @@ theorem deg_eq_card_ker_of_unram : ∀ (K : Type) [Field K] (A B : AbVar K) (f :
     congr 1
     exact Subsingleton.elim _ _
   rw [horig] at hcard
-  rw [deg, if_pos hiso, ← hcard]
+  rw [deg, ite_eq_left hiso, ← hcard]
   symm
   refine Nat.card_congr ?_
   exact

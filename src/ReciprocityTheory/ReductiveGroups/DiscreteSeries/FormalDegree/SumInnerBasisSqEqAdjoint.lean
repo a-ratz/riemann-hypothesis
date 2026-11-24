@@ -81,8 +81,8 @@ theorem op_op_inv {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (
   have h : (T.τ k) * (T.τ k⁻¹) = 1 := by rw [← map_mul, mul_inv_cancel, map_one]
   have h2 := congrArg (fun u : unitary (T.V →L[ℂ] T.V) => (u : T.V →L[ℂ] T.V) v) h
   first
-  | (rw [Submonoid.coe_mul, ContinuousLinearMap.mul_apply, OneMemClass.coe_one,
-      ContinuousLinearMap.one_apply] at h2; exact h2)
+  | (rw [Submonoid.coe_mul, mul_apply_eq_comp, OneMemClass.coe_one,
+      one_apply_eq_self] at h2; exact h2)
   | exact h2
   | (simp only [Submonoid.coe_mul, ContinuousLinearMap.mul_apply, OneMemClass.coe_one,
       ContinuousLinearMap.one_apply] at h2; exact h2)

@@ -120,9 +120,9 @@ theorem isLocONB_of_orthonormal (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[
   refine ⟨b, 1, hb, ?_, ?_, ?_, ?_⟩
   · intro i j
     by_cases h : i = j
-    · rw [Matrix.one_apply, if_pos h]
+    · rw [Matrix.one_apply, ite_eq_left h]
       refine ⟨by simp [IsIntP], subset_closure ⟨1, lamC_phi_K_one lam⟩⟩
-    · rw [Matrix.one_apply, if_neg h]
+    · rw [Matrix.one_apply, ite_eq_right h]
       refine ⟨by simp [IsIntP], subset_closure ⟨0, lamC_phi_K_zero lam⟩⟩
   · rw [Matrix.det_one, norm_one]
   · intro i j
@@ -138,8 +138,8 @@ theorem isLocONB_of_orthonormal (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[
     rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ i)]
     · rw [Matrix.one_apply_eq, one_mul, ho i j]
       by_cases h : i = j
-      · rw [if_pos h, if_pos h, lamC_phi_K_one]
-      · rw [if_neg h, if_neg h, lamC_phi_K_zero]
+      · rw [ite_eq_left h, ite_eq_left h, lamC_phi_K_one]
+      · rw [ite_eq_right h, ite_eq_right h, lamC_phi_K_zero]
     · intro m _ hm
       rw [Matrix.one_apply_ne (Ne.symm hm), zero_mul]
   · intro i k
@@ -310,12 +310,12 @@ theorem orth_bq {m : ℕ} (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n dn 
     · subst hkl
       have hq : ((((n i * dn i : ℕ) : ℤ) : ℚ) * 1 / ((n i : ℚ) * (n i : ℚ)) * ((n i : ℚ) / (dn i : ℚ))) = 1 := by
         push_cast; field_simp
-      rw [if_pos rfl, if_pos rfl, hq, Rat.cast_one]
+      rw [ite_eq_left rfl, ite_eq_left rfl, hq, Rat.cast_one]
     · have hne : (i, k) ≠ (i, l) := fun h => hkl (congrArg Prod.snd h)
-      rw [if_neg hkl, if_neg hne]
+      rw [ite_eq_right hkl, ite_eq_right hne]
       simp
   · have hne : (i, k) ≠ (i', l) := fun h => hi (congrArg Prod.fst h)
-    rw [horth i i' hi, mul_zero, if_neg hne]
+    rw [horth i i' hi, mul_zero, ite_eq_right hne]
 
 theorem smul_bq {m : ℕ} (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n : Fin m → ℕ)
     (Q : Fin m → Matrix (Fin 4) (Fin 4) ℤ) (hn0 : ∀ i, n i ≠ 0) (ik : Fin m × Fin 4) (s : ℕ) :
@@ -323,12 +323,12 @@ theorem smul_bq {m : ℕ} (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n : F
   have hn : (n ik.1 : D.host.E) ≠ 0 := by exact_mod_cast hn0 ik.1
   refine Matrix.ext fun a c => ?_
   rw [Matrix.sum_apply, Finset.sum_eq_single (pos (a, c))]
-  · simp only [bq, plc, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul, if_pos rfl,
-      zsmul_eq_mul, ite_true, if_true]
+  · simp only [bq, plc, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul, ite_eq_left rfl,
+      zsmul_eq_mul, ite_true, ite_true]
     rw [Nat.cast_mul]
     field_simp
   · intro j _ hj
-    simp only [plc, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply, Matrix.smul_apply, if_neg (Ne.symm hj), smul_zero]
+    simp only [plc, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply, Matrix.smul_apply, ite_eq_right (Ne.symm hj), smul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem mem_bq {m : ℕ} (p : ℕ) (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n : Fin m → ℕ)
@@ -356,7 +356,7 @@ theorem col_sum {F : Type*} [Field F] (Q : Matrix (Fin 4) (Fin 4) ℤ) (N : ℤ)
   rw [Finset.sum_congr rfl (fun pc _ => h pc)]
   simp_rw [hQ]
   push_cast
-  simp only [EmbeddingLike.apply_eq_iff_eq, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [EmbeddingLike.apply_eq_iff_eq, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem span_bq {m : ℕ} (p : ℕ) (e : Fin m → Matrix (Fin 1) (Fin 1) D.host.E) (n dn : Fin m → ℕ)
@@ -871,7 +871,7 @@ theorem tr_pos (D : D7) (x : D.host.E) (hx : x ≠ 0) :
     refine Finset.sum_congr rfl fun τ _ => ?_
     rw [map_mul, CU.emb_conj, Complex.mul_conj]
   have hpos : 0 < ∑ τ : D.what₂.Tau, Complex.normSq (embT D τ x) := by
-    haveI := G0.tau_nonempty D
+    have := G0.tau_nonempty D
     exact Finset.sum_pos (fun τ _ => Complex.normSq_pos.2 ((map_ne_zero _).2 hx)) Finset.univ_nonempty
   obtain ⟨p, q, e⟩ := CS.K_repr D _ (G0.hK D x x).2
   have hs := IO.sqrt_d_pos D

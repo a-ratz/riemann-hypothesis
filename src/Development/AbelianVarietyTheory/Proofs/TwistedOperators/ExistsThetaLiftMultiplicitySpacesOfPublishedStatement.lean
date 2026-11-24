@@ -320,8 +320,8 @@ theorem exists_embedding_skew_of_rapid : GlobalTheory.Published.CuspRapidDecay �
   intro hP D θ V μ 𝓕 hθ hμ h𝓕
   obtain ⟨-, -, -, _, _, -, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   have hfin := (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol V μ 𝓕 hμ h𝓕).ne
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin
-  haveI := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ hμ).1
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin
+  have := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ hμ).1
   obtain ⟨E, hE⟩ := exists_toLp_ext (μ.restrict 𝓕)
   have mem : ∀ φ, IsCuspGrow θ V φ → MemLp φ 2 (μ.restrict 𝓕) := fun φ h => by
     obtain ⟨B, hB⟩ := bounded_of_rapid hP hθ h

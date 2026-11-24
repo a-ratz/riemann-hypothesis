@@ -62,7 +62,7 @@ namespace LevelTowerAlt
 theorem exists_isOFamily {E L V : Type} [Field E] [NumberField E] [Field L] [CharZero L] [AddCommGroup V] [Module L V]
     (ρ : 𝓞 E →+* Module.End L V) (I : AddSubgroup V) (hst : ∀ a, ∀ x ∈ I, ρ a x ∈ I) {n : ℕ} (e : Fin n → V)
     (he : AddSubgroup.closure (Set.range e) = I) : ∃ (r : ℕ) (v : Fin r → V), IsOFamily ρ I v := by
-  letI : Module (𝓞 E) V := Module.compHom V ρ
+  let : Module (𝓞 E) V := Module.compHom V ρ
   have hρ : ∀ (a : 𝓞 E) (x : V), a • x = ρ a x := fun _ _ => rfl
   let N : Submodule (𝓞 E) V := Submodule.span (𝓞 E) (Set.range e)
   let N' : Submodule (𝓞 E) V := { I.toAddSubmonoid with smul_mem' := fun a x hx => hst a x hx }
@@ -75,7 +75,7 @@ theorem exists_isOFamily {E L V : Type} [Field E] [NumberField E] [Field L] [Cha
       exact this hx
     · rw [← he, AddSubgroup.closure_le]
       exact Submodule.subset_span
-  haveI : Module.Finite (𝓞 E) N := Module.Finite.span_of_finite _ (Set.finite_range e)
+  have : Module.Finite (𝓞 E) N := Module.Finite.span_of_finite _ (Set.finite_range e)
   obtain ⟨y, hy⟩ := exists_linearIndependent_fin (K := E) (E := N)
   have hfin := finite_quotient_span hy (Fintype.card_fin _)
   refine ⟨_, fun i => (y i : V), fun i => ?_, fun a ha => ?_, ?_⟩
@@ -101,7 +101,7 @@ theorem exists_append {L V : Type} [Field L] [AddCommGroup V] [Module L V] [Modu
       S ⊆ Submodule.span L (Set.range (Fin.append w q)) := by
   set W := Submodule.span L (Set.range w) with hW
   obtain ⟨κ, a, -, hsp, hli⟩ := exists_linearIndependent' L (fun x : S => W.mkQ (x : V))
-  haveI : Finite κ := hli.finite
+  have : Finite κ := hli.finite
   obtain ⟨k, ⟨e⟩⟩ := Finite.exists_equiv_fin κ
   refine ⟨k, fun c => (a (e.symm c) : V), fun c => (a _).2, ?_, fun x hx => ?_⟩
   · have h1 : LinearIndependent L fun i => (⟨w i, Submodule.subset_span ⟨i, rfl⟩⟩ : W) :=
@@ -129,7 +129,7 @@ theorem orthogonal_family_adapted_basis : ∀ (E L Ψ : Type) [Field E] [NumberF
   refine ⟨?_, fun r v hv s => ?_⟩
   · obtain ⟨n, e, -, he⟩ := A.I_basis
     exact exists_isOFamily A.ρ A.I A.I_stable e he
-  haveI : Module.Finite L V := by
+  have : Module.Finite L V := by
     obtain ⟨S, hS⟩ := A.fg
     refine ⟨S, ?_⟩
     rw [← A.span, ← hS, Submodule.span_span_of_tower]

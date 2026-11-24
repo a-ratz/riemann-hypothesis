@@ -70,8 +70,8 @@ theorem GlobalTheory.Poinc.finite_stalk_quot_integral : ∀ (X Y : Scheme.{0}) (
   obtain ⟨U, hU', hyU, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (U := ⊤) (x := p y) trivial
   have hV : IsAffineOpen (p ⁻¹ᵁ U) := hU'.preimage p
   have hyV : y ∈ p ⁻¹ᵁ U := hyU
-  letI : Algebra Γ(Y, p ⁻¹ᵁ U) (Y.presheaf.stalk y) := Y.presheaf.algebra_section_stalk ⟨y, hyV⟩
-  haveI := hV.isLocalization_stalk ⟨y, hyV⟩
+  let : Algebra Γ(Y, p ⁻¹ᵁ U) (Y.presheaf.stalk y) := Y.presheaf.algebra_section_stalk ⟨y, hyV⟩
+  have := hV.isLocalization_stalk ⟨y, hyV⟩
   obtain ⟨⟨c, t⟩, hct⟩ := IsLocalization.mk'_surjective (hV.primeIdealOf ⟨y, hyV⟩).asIdeal.primeCompl a
   have hfin : (p.app U).hom.Finite := p.finite_app U hU'
   have hint := hfin.to_isIntegral

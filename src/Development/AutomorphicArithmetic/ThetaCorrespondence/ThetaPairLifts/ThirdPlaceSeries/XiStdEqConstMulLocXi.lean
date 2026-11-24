@@ -89,7 +89,7 @@ theorem valuation_frs_sub_kronecker_lt_one (hW : _root_.GlobalTheory.Fam.AllFami
     (hP : P.1 ∈ (B.primes X).vGs) {j : ℕ} (hj : j + 1 = B.R.m) (β : J.Ch₀ j) (r c) :
     HeightOneSpectrum.valuation B.fields.E P.1
       (Formalism.L2.Col.frsF I.sel (I.tup (W.P.I.tup t)) (J.A.p0 j β).1.1 P (Pi.single c 1) r - if r.val = c.val then 1 else 0) < 1 := by
-  letI := GlobalTheory.Mem.Col2.starE B
+  let := GlobalTheory.Mem.Col2.starE B
   have hm : j ≤ B.R.m := by omega
   obtain ⟨k₀, h, -, h1, h2, h3, -⟩ := hJ.pen j hj β
   have h4 : ¬ ∃ i, (J.G i).q.v = P.1.under (𝓞 B.host.F) := by
@@ -113,7 +113,7 @@ theorem valuation_frs_sub_kronecker_lt_one (hW : _root_.GlobalTheory.Fam.AllFami
       exact (congrArg₂ (fun x y : Matrix (Fin (B.R.N j)) (Fin (B.R.N j))
         (B.host.E ⊗[B.host.F] (P.1.under (𝓞 B.host.F)).adicCompletion B.host.F) => x * y) h6' h5).trans (one_mul _)
     exact h8
-  have e : Formalism.L2.Col.frsF I.sel (I.tup (W.P.I.tup t)) (J.A.p0 j β).1.1 P = (J.A.p0 j β).1.1.deco.1.liftFr ⟨P.1, hP⟩ := dif_pos hP
+  have e : Formalism.L2.Col.frsF I.sel (I.tup (W.P.I.tup t)) (J.A.p0 j β).1.1 P = (J.A.p0 j β).1.1.deco.1.liftFr ⟨P.1, hP⟩ := dite_eq_left hP
   have h9 := (hJ.is.base j hm β).1
   rw [e]
   exact GlobalTheory.SeeSaw.BaseFrame.lift_near_one (y := 1) (by rw [one_mul]; exact h9) (by rw [one_mul]; exact h9) h9 (hJ.is.base j hm β).2
@@ -122,7 +122,7 @@ theorem valuation_frs_sub_kronecker_lt_one (hW : _root_.GlobalTheory.Fam.AllFami
 theorem fm_beta_eq {a : _root_.GlobalTheory.Fam.GeometricFamily W u} (hIs : a.Is) (hTr : a.True) (hA : ∀ r s, (a.g.oT B.R.m rfl).iA r s = if r.val = s.val then 1 else 0)
     (n : Fin a.n) (r) : (∀ c, (a.G n).FM.β r (Sum.inl c) = if r.val = GlobalTheory.SymBridge.zPos c then 1 else 0) ∧
       (a.G n).FM.β r (Sum.inr ()) = _root_.GlobalTheory.Fam.TopLoc.embeddingAtLocalFactor a n (if r.val + 1 = B.R.N B.R.m then ((X.piT u : 𝓞 B.host.E) : B.host.E) else 0) := by
-  letI := a.fld; letI := a.val; letI := a.top; letI := a.loc
+  let := a.fld; let := a.val; let := a.top; let := a.loc
   have hA' : ∀ j (h : j = (I.rec7 l Z).R.m) r s, (a.g.oT j h).iA r s = if r.val = s.val then 1 else 0 := by
     rintro _ rfl
     exact hA
@@ -181,7 +181,7 @@ theorem xiStd_eq_const_mul_locXi_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX
         ((Formalism.L2.Col.frsF I.sel (I.tup (W.P.I.tup t)) (J.A.p0 ((a.G n).s + 1) (J.ι _ α)).1.1 P).symm
           (Formalism.L2.Col.repY (J.A.p0 ((a.G n).s + 1) (J.ι _ α)).1.2)) := by
     unfold locXi
-    rw [dite_eq_right (by omega), dite_eq_right (by omega), dif_pos hs]
+    rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left hs]
     rfl
   rw [hx]
   clear hx
@@ -233,14 +233,14 @@ theorem xiStd_eq_const_mul_locXi_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX
         rw [← hs]
         omega
       by_cases hr : r.val + 1 = B.R.N B.R.m
-      · rw [if_pos (show (finCongr (rankN (I.rec7 l Z) _ hj) r).val = B.R.N B.R.m - 1 from Nat.eq_sub_of_add_eq hr)] at h3
-        rw [if_pos hr]
+      · rw [ite_eq_left (show (finCongr (rankN (I.rec7 l Z) _ hj) r).val = B.R.N B.R.m - 1 from Nat.eq_sub_of_add_eq hr)] at h3
+        rw [ite_eq_left hr]
         have h7 := Valuation.map_sub_lt _ h3 h4
         rwa [sub_sub_sub_cancel_right] at h7
-      · rw [if_neg (show ¬ (finCongr (rankN (I.rec7 l Z) _ hj) r).val = B.R.N B.R.m - 1 from fun h => hr (by
+      · rw [ite_eq_right (show ¬ (finCongr (rankN (I.rec7 l Z) _ hj) r).val = B.R.N B.R.m - 1 from fun h => hr (by
           have h8 : r.val = B.R.N B.R.m - 1 := h
           omega))] at h3
-        rw [if_neg hr, map_zero]
+        rw [ite_eq_right hr, map_zero]
         exact h3
 end GlobalTheory.Fam.TopFrames
 end World

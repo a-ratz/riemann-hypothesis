@@ -207,7 +207,7 @@ private theorem nt_free {p : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (hd : ¬ (p : �
     rw [← WithZero.exp_log ha0, ← WithZero.exp_log hb0, WithZero.exp_le_exp]
     push_cast at h2
     omega
-  haveI : IsLocalRing 𝒪[w.adicCompletion L] := (inferInstance : IsDiscreteValuationRing 𝒪[w.adicCompletion L]).toIsLocalRing
+  have : IsLocalRing 𝒪[w.adicCompletion L] := (inferInstance : IsDiscreteValuationRing 𝒪[w.adicCompletion L]).toIsLocalRing
   have hI := Valuation.integer.integers (valuation (w.adicCompletion L))
   have hlt : ∀ y : w.adicCompletion L, valuation _ y < 1 ↔ Valued.v y < 1 := fun y => by
     have := nt_le w 1 y
@@ -253,9 +253,9 @@ private theorem nt_free {p : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (hd : ¬ (p : �
 
 private theorem nt_pow (w : Plc L) (K : Subgroup (GLw n w)) (hK : IsCompact (K : Set (GLw n w))) (g : GLw n w) (hg : g ∈ K) :
     ∃ m, 0 < m ∧ g ^ m ∈ KO (w.adicCompletion L) (Fin n) := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI := Subgroup.quotient_finite_of_isOpen ((KO (w.adicCompletion L) (Fin n)).subgroupOf K)
-    (GlobalTheory.SplitFlip.isOpen_KO.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have := Subgroup.quotient_finite_of_isOpen ((KO (w.adicCompletion L) (Fin n)).subgroupOf K)
+    (GlobalTheory.SplitFlip.isOpen_KO.preimage continuous_subtypeVal)
   obtain ⟨m, hm, -, h⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (Subgroup.finiteIndex_of_finite_quotient (H := (KO (w.adicCompletion L) (Fin n)).subgroupOf K)).index_ne_zero ⟨g, hg⟩
   exact ⟨m, hm, h⟩
@@ -291,7 +291,7 @@ private theorem nt_int (T : Plc (Lp L) → Plc L) (hT : ∀ v, (T v).under (𝓞
     intro y hy hv
     let y' : Lp L := ⟨y, (IsCMField.complexConj_eq_self_iff L y).1 hy⟩
     obtain ⟨z, hz⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one (R := 𝓞 (Lp L)) (Lp L) y' fun v => by
-      haveI : (T v).asIdeal.LiesOver v.asIdeal := ⟨(congrArg HeightOneSpectrum.asIdeal (hT v)).symm⟩
+      have : (T v).asIdeal.LiesOver v.asIdeal := ⟨(congrArg HeightOneSpectrum.asIdeal (hT v)).symm⟩
       have e := HeightOneSpectrum.valuation_liesOver L v (T v) y'
       have h0 : v.asIdeal.ramificationIdx' (T v).asIdeal ≠ 0 :=
         Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver _ v.ne_bot
@@ -487,8 +487,8 @@ theorem UpperTheory.V.Hi.neatU :
     fun w hw h => hw (Or.inl ((nt_nat l w).2 h))
   have hp0 : ((s.p : ℕ) : 𝓞 L) ∈ (s.w s.v0).asIdeal := by
     rw [← nt_nat, nt_under, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ← s.norm_v0_eq_one, normV]
-    haveI : Finite (𝓞 (Lp L) ⧸ s.v0.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v0.ne_bot
-    haveI := Fintype.ofFinite (𝓞 (Lp L) ⧸ s.v0.asIdeal)
+    have : Finite (𝓞 (Lp L) ⧸ s.v0.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v0.ne_bot
+    have := Fintype.ofFinite (𝓞 (Lp L) ⧸ s.v0.asIdeal)
     rw [Nat.card_eq_fintype_card]
     exact Nat.cast_card_eq_zero _
   have hl0 : ((l : ℕ) : 𝓞 L) ∉ (s.w s.v0).asIdeal := fun h => by

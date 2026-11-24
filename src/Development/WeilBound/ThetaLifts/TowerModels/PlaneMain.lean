@@ -159,7 +159,7 @@ theorem exists_max_val {V : Type} [AddCommGroup V] [Module E V] [Module (𝓞 E)
   choose c hcL hc using h1
   have hc0 : ∀ w : HeightOneSpectrum (𝓞 E), 0 < w.valuation E (f (c w)) := fun w => by
     obtain ⟨z, hz, hz0⟩ := hf
-    exact lt_of_lt_of_le (zero_lt_iff.2 ((map_ne_zero _).2 hz0)) (hc w z hz)
+    exact lt_of_lt_of_le (pos_iff_ne_zero.2 ((map_ne_zero _).2 hz0)) (hc w z hz)
   have h2 : ∀ w w' : HeightOneSpectrum (𝓞 E), ∃ p : 𝓞 E, p ∉ w.asIdeal ∧ (w' ≠ w → p ∈ w'.asIdeal) := fun w w' => by
     by_cases e : w' = w
     · exact ⟨1, (Ideal.ne_top_iff_one _).1 w.isPrime.ne_top, fun h => absurd e h⟩
@@ -405,7 +405,7 @@ theorem exists_plane {B : Base F E} (hB : B.IsGood σ) {ε : E} (hε : ε = 1 �
     rw [Matrix.det_smul, show (Y.J.map (B.emb w).1).det = (B.emb w).1 Y.J.det from (RingHom.map_det _ _).symm, h0,
       map_zero, mul_zero]
   obtain ⟨θ₀, hθ₀⟩ : ∃ θ : 𝓞 E, (θ : E) + σ θ = 1 := by
-    haveI : Algebra.Unramified (𝓞 F) (𝓞 E) := hB.unram
+    have : Algebra.Unramified (𝓞 F) (𝓞 E) := hB.unram
     exact GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hB.cm inferInstance
   have hFull : Y.L.IsFullLattice E := hY.lat
   obtain ⟨x₀, hx₀, hx₀x₀⟩ := exists_isotropic hcm B.emb (by omega) hr hs hdet hε hY.herm hκ0 hκ hY.sig
@@ -471,15 +471,15 @@ theorem exists_plane {B : Base F E} (hB : B.IsGood σ) {ε : E} (hε : ε = 1 �
       rw [hz', form_add_right, form_add_right, form_smul_right, form_smul_right, (horth u).1,
         (horth u).2, mul_zero, mul_zero, zero_add, add_zero, ← hform₁]
       exact H u' hu'
-  haveI hfull₁ : L₁.IsFullLattice E := full_of_self_dual J₁ L₁ hcm hεε D hherm₁ hlat₁ hdual₁
+  have hfull₁ : L₁.IsFullLattice E := full_of_self_dual J₁ L₁ hcm hεε D hherm₁ hlat₁ hdual₁
   have hb₁ : ∀ v : B.P, ∃ β, IsSplitBasis (B.τ v) L₁ β := fun v => exists_isSplitBasis (B.τ v) L₁ hcm
   choose β₁ hβ₁ using hb₁
   let bas₁ : ∀ v : Pl F, GL (Fin n₁) (Fv F v) := fun v => if h : v ∈ B.P then β₁ ⟨v, h⟩ else 1
-  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dif_pos v.2]
+  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dite_eq_left v.2]
   choose β hβ using fun v : B.P => exists_basis (B.τ v) n n₁ Y.L x y ι (β₁ v) i₀ i₁ hn h01 h1n hFull hsplit
     (hP v).1 (hP v).2 (hβ₁ v)
   let bas : ∀ v : Pl F, GL (Fin n) (Fv F v) := fun v => if h : v ∈ B.P then β ⟨v, h⟩ else Y.bas v
-  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dif_pos v.2]
+  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dite_eq_left v.2]
   let Y₁ : Spc F E n₁ := ⟨J₁, L₁, θ₁, bas₁⟩
   let Y' : Spc F E n := ⟨Y.J, Y.L, θ, bas⟩
   refine ⟨Y', Y₁, ⟨x, y, ι, 𝔟⟩, ?_, ?_, ?_⟩

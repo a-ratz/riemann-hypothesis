@@ -175,7 +175,7 @@ theorem UpperTheory.V.Th.core_of :
   have hc : Continuous fun g : V.frame.G₀ => W.mat ρ g := Units.continuous_val.comp hN.cont
   refine (hO l L Ω s V c n r B ι x h ρ P hV h2 h4 h0 hh hD hN.cont hN.aut hfull hP hN.unr0 hno hdet
     (fun g => z g - Pa.dY V.frame (W.mat ρ) X₀ g) ⟨?_, fun g g' => ?_, hpol, fun u g hg => ?_, fun v => ?_⟩).elim hext
-  · exact cont_sub hc (hz.1.comp continuous_subtype_val) X₀
+  · exact cont_sub hc (hz.1.comp continuous_subtypeVal) X₀
   · have e1 : z ((g * g' : V.frame.G₀) : V.frame.Γ) = z g + W.mat ρ g * z g' * W.mat ρ g⁻¹ := by
       rw [← ad_eq, ← hR.ad]
       exact hz.2 _ _
@@ -268,9 +268,9 @@ private theorem re_art {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
     {a : Weil h →* (w.adicCompletion E)ˣ} (ha : IsLocalArtin h a) {M : Type} [CommGroup M]
     (ψ : Dec (F := E) A →* M) (hψ : IsOpen (ψ.ker : Set (Dec (F := E) A))) {x y : Weil h} (hxy : a x = a y) :
     ψ (Subgroup.inclusion (Weil_le_Dec h) x) = ψ (Subgroup.inclusion (Weil_le_Dec h) y) := by
-  haveI : CompactSpace (Dec (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : Finite (Dec (F := E) A ⧸ ψ.ker) := ψ.ker.quotient_finite_of_isOpen hψ
-  haveI : Finite ψ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ψ).toEquiv
+  have : CompactSpace (Dec (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : Finite (Dec (F := E) A ⧸ ψ.ker) := ψ.ker.quotient_finite_of_isOpen hψ
+  have : Finite ψ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ψ).toEquiv
   let ι := Subgroup.inclusion (Weil_le_Dec h)
   by_contra hne
   have h1 : ψ.rangeRestrict (ι (x * y⁻¹)) ≠ 1 := fun h1 => hne (by
@@ -290,14 +290,14 @@ private theorem re_art {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
 private theorem re_eps {l : ℕ} [Fact l.Prime] (c : Coef l) {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
     (ε : H →* ℤ_[l]ˣ) (hε : Continuous ε) :
     IsOpen (((Units.map ((algebraMap c.O (ResidueField c.O)).comp (algebraMap ℤ_[l] c.O)).toMonoidHom).comp ε).ker : Set H) := by
-  haveI : FaithfulSMul ℤ_[l] c.O := by
+  have : FaithfulSMul ℤ_[l] c.O := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro x y hxy
     have h1 : algebraMap ℤ_[l] (PadicAlgCl l) x = algebraMap ℤ_[l] (PadicAlgCl l) y := congrArg Subtype.val hxy
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l], IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] _ y] at h1
     exact Subtype.ext ((algebraMap ℚ_[l] (PadicAlgCl l)).injective h1)
-  haveI : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite _ _
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := Algebra.IsIntegral.isLocalHom _ _
+  have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite _ _
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := Algebra.IsIntegral.isLocalHom _ _
   have hc : Continuous fun g => ‖((ε g : ℤ_[l]ˣ) : ℤ_[l]) - 1‖ := by fun_prop
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
     (Filter.mem_of_superset ((isOpen_lt hc continuous_const (g := fun _ => 1)).mem_nhds (by simp)) fun g hg => ?_)
@@ -362,7 +362,7 @@ theorem UpperTheory.V.Hi.resEx :
     have e1 := re_art ha (r.psib v i) (r.psib_open v i) (hx.trans hy.symm)
     have e2 := re_art ha ((hset Q τ₀).epsV (ResidueField c.O) v)
       (re_eps c ((cycZ L Ω l).comp (Dec (F := L) (s.A v.1)).subtype)
-        ((continuous_cycZ L Ω l).comp continuous_subtype_val)) (hx.trans hy.symm)
+        ((continuous_cycZ L Ω l).comp continuous_subtypeVal)) (hx.trans hy.symm)
     exact congrArg₂ (fun u t : (ResidueField c.O)ˣ => u * t ^ (i : ℕ)) e1 e2
   choose b1 hb1 using H1
   choose b2 hb2 using H2
@@ -391,8 +391,8 @@ private theorem th_Uc {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     (hW.preimage Matrix.GeneralLinearGroup.continuous_det)
   refine ⟨c, fun d hd => ?_⟩
   rintro _ ⟨u, hu, rfl⟩
-  haveI : IsDiscreteValuationRing 𝒪[k] := inferInstance
-  haveI : IsLocalRing 𝒪[k] := IsDiscreteValuationRing.toIsLocalRing
+  have : IsDiscreteValuationRing 𝒪[k] := inferInstance
+  have : IsLocalRing 𝒪[k] := IsDiscreteValuationRing.toIsLocalRing
   have h1 : (u : 𝒪[k]) - 1 ∈ maximalIdeal 𝒪[k] ^ c :=
     Ideal.pow_le_pow_right hd (Ideal.Quotient.eq.1 (congrArg Units.val hu))
   have h2 := hc (x := Matrix.GeneralLinearGroup.map (algebraMap 𝒪[k] k) (diagT 𝒪[k] (Fin 1) fun _ => u))
@@ -423,11 +423,11 @@ private theorem th_char (ha : IsLocalArtin h a) {R : Type} [CommRing R] [IsCNL R
       ∀ N, ∃ c, ∀ d, c ≤ d → ∀ y ∈ Uc _ d, (χ y : R) - 1 ∈ maximalIdeal R ^ N := by
   let f := ψ.comp (Subgroup.inclusion (Weil_le_Dec h))
   have key : ∀ N, ∃ c, ∀ d, c ≤ d → ∀ σ, a σ ∈ Uc _ d → (f σ : R) - 1 ∈ maximalIdeal R ^ N := fun N => by
-    haveI : Finite (R ⧸ maximalIdeal R) := IsCNL.finite
-    haveI : Finite (R ⧸ maximalIdeal R ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
+    have : Finite (R ⧸ maximalIdeal R) := IsCNL.finite
+    have : Finite (R ⧸ maximalIdeal R ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
     obtain ⟨c, hc⟩ := th_fin ha ((Units.map (Ideal.Quotient.mk (maximalIdeal R ^ N)).toMonoidHom).comp f) (by
       have := ((hψ N).comp_continuous (f := fun σ : Ine (F := F) A => Subgroup.inclusion (Weil_le_Dec h) (ineIncl h σ))
-        (continuous_subtype_val.subtype_mk _)) {1}
+        (continuous_subtypeVal.subtype_mk _)) {1}
       exact (congrArg IsOpen (Set.ext fun σ => Units.ext_iff)).mpr this)
     exact ⟨c, fun d hd σ hσ => Ideal.Quotient.eq.1 (congrArg Units.val (hc d hd σ hσ))⟩
   have hk : a.ker ≤ f.ker := fun σ hσ => by
@@ -544,9 +544,9 @@ theorem UpperTheory.V.Hi.thetaEx :
     GlobalTheory.Mem.LiteralAutomorphy.LitN → ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (n : ℕ), 1 ≤ n →
     ∀ (V : s.Lev) (Q : QData V) (c : Coef l), ∀ (m : ℕ) (τ₀ : KT n (wt s) →* GL (Fin m) c.O), ∀ (r : Resid V.frame c.O n) (Λ : LamObj r), ∃ θ : (hset Q τ₀).X.I.T →* Λ.Λˣ, IsTheta Q τ₀ Λ θ ∧ (hset Q τ₀).IsWt θ := by
   intro H l _ L Ω _ _ _ _ _ _ s n hn V Q c m τ₀ r Λ
-  haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (abelian₂.dvr_finite l c.O).2.2.2.2.2
-  haveI : IsCNL Λ.Λ := IsCNL.ofCO c.O Λ.Λ
+  have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (abelian₂.dvr_finite l c.O).2.2.2.2.2
+  have : IsCNL Λ.Λ := IsCNL.ofCO c.O Λ.Λ
   choose ψ hψ hκ using Λ.inert
   have ha : ∀ v : V.frame.Vl, IsLocalArtin (s.hw v.1) (artOf (s.hw v.1)) := fun v =>
     Classical.epsilon_spec (Loc.localArtinReciprocity H (s.hw v.1))
@@ -554,7 +554,7 @@ theorem UpperTheory.V.Hi.thetaEx :
     th_char' (ha v) (ψ v i) ((hset Q τ₀).epsV Λ.Λ v) (hψ v i).cont
       (th_eps ((algebraMap c.O Λ.Λ).comp (algebraMap ℤ_[l] c.O))
         (e := fun g : Dec (F := L) (s.A v.1) => (cycZ L Ω l g : ℤ_[l]))
-        (Units.continuous_val.comp ((continuous_cycZ L Ω l).comp continuous_subtype_val))) i
+        (Units.continuous_val.comp ((continuous_cycZ L Ω l).comp continuous_subtypeVal))) i
   obtain ⟨θ, h1, h2⟩ := th_torus n (fun v : V.frame.Vl => s.w v.1) χ hc
   refine ⟨θ, fun v i x g hg y e1 e2 => ?_, h2, fun K => th_free _ _ _ (neatU l L Ω s n hn V Q c m τ₀ K)⟩
   have e3 := hχ v i x g e1
@@ -689,8 +689,8 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.sphRed :
     ∀ t ∈ Algebra.adjoin c.O (Set.range fun p : H.Wp × Fin n => H.gen θ a K (.inl p)), ∀ k : ℕ,
     (∀ y : H.MK θ a K, ((t ^ k : H.TK θ a K) : Module.End A (H.MK θ a K)) y ∈ (RingHom.ker x • ⊤ : Submodule A (H.MK θ a K))) → ∀ y : H.MK θ a K, (t : Module.End A (H.MK θ a K)) y ∈ (RingHom.ker x • ⊤ : Submodule A (H.MK θ a K)) := by
   intro L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι P hP x lam hlam har a K _ t ht k h y
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨h0, hfin, hfree, -⟩ := hiComm L Ω l n c H hH A θ hθ K
   obtain ⟨e, -, hi, hY, -⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locIdem A _ _ _ (H.op A) (fun i => algebraMap c.O A (a i)) h0
   obtain ⟨d, ξ, c0, sp, hsp⟩ := spec L Ω l n c H hH A θ hθ ι x lam har
@@ -720,7 +720,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem lam_map {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (D : W.GDet n A G) (f : A →+* B)
     (g : G) (i : ℕ) : (D.map f).lam i (MonoidAlgebra.single g 1) = f (D.lam i (MonoidAlgebra.single g 1)) := by
   have h0 : (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-    letI : Algebra A (Polynomial B) := ((algebraMap B (Polynomial B)).comp f).toAlgebra
+    let : Algebra A (Polynomial B) := ((algebraMap B (Polynomial B)).comp f).toAlgebra
     let φ : Polynomial A →ₐ[A] Polynomial B :=
       { Polynomial.mapRingHom f with commutes' := fun a => Polynomial.map_C f }
     have h := D.nat (Polynomial A) (Polynomial B) φ
@@ -778,7 +778,7 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.ctrlMu :
   · have : μ t y = 0 := Subtype.ext ((Submodule.mem_bot A).1 (h0 ▸ (μ t y).2))
     rw [this]
     exact zero_mem _
-  haveI := c.dvr
+  have := c.dvr
   have hker : RingHom.ker ((Algebra.ofId c.O (Qbar l)).comp x) = RingHom.ker x := by
     ext b
     rw [RingHom.mem_ker, RingHom.mem_ker]
@@ -1066,12 +1066,12 @@ private theorem emb_ne (H : GlobalTheory.Published.GlobalArtinReciprocity) {L Ω
   let inc := Subgroup.inclusion (Weil_le_Dec h)
   let ε := (cycBar L Ω l).comp (Dec (F := L) A).subtype
   have hεc : Continuous ε := ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ L Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ L Ω l)).comp continuous_subtypeVal
   have hε : ∀ s : Weil h, (ε (inc s) : Qbar l) = ((normV w : ℕ) : Qbar l) ^ deg s * Hi.algPow w 1 (a s : w.adicCompletion L) :=
     UpperTheory.V.Loc.epsArt H h hw a ha
   by_contra hE
-  haveI : IsEmpty (Emb l w) := not_nonempty_iff.1 hE
-  haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : IsEmpty (Emb l w) := not_nonempty_iff.1 hE
+  have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   have h1 := norm_one ε (Units.continuous_val.comp hεc) (inc (frob h))
   rw [hε, deg_frob, zpow_one, Hi.algPow, finprod_of_isEmpty, mul_one, GlobalTheory.Pst.normV_eq_pow (l := l) hw, Nat.cast_pow, norm_pow] at h1
   have h2 := (pow_eq_one_iff_of_nonneg (norm_nonneg _) (fun h0 => by
@@ -1087,20 +1087,20 @@ private theorem main (H : GlobalTheory.Published.GlobalArtinReciprocity) {F Ω :
     {a : Weil h →* (w.adicCompletion F)ˣ} (hw : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) (ha : IsLocalArtin h a) {n : ℕ}
     (wt : Fin n → Emb l w → ℤ) (hm : ∀ τ, StrictMono fun j => wt j τ) (ψ : Fin n → Dec (F := F) A →* (Qbar l)ˣ)
     (hψ : ∀ j, IsLocAlg h (ψ j) (wt j)) : ∃ g, Function.Injective fun i => ψ i g := by
-  haveI := emb_ne H hw ha
-  haveI : Finite (Emb l w) := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (Emb l w)
-  haveI : CompactSpace (Ine (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Ine A).isCompact
+  have := emb_ne H hw ha
+  have : Finite (Emb l w) := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (Emb l w)
+  have : CompactSpace (Ine (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Ine A).isCompact
   choose ph hph using hψ
   let U : Subgroup (Ine (F := F) A) := ⨅ j, (ph j).ker
   have hU : IsOpen (U : Set (Ine (F := F) A)) := by
     simp only [U, Subgroup.coe_iInf]
     exact isOpen_iInter_of_finite fun j => (hph j).1
-  haveI : Finite (Ine (F := F) A ⧸ U) := U.quotient_finite_of_isOpen hU
+  have : Finite (Ine (F := F) A ⧸ U) := U.quotient_finite_of_isOpen hU
   have hN : U.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hl : ValuativeRel.valuation (w.adicCompletion F) (l : w.adicCompletion F) < 1 := by
     have e : (ValuativeRel.valuation (w.adicCompletion F)).IsEquiv (Valued.v : Valuation (w.adicCompletion F) _) := by
-      haveI := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion F) _)
+      have := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion F) _)
       exact ValuativeRel.isEquiv _ _
     rw [e.lt_one_iff_lt_one, ← map_natCast (algebraMap (𝓞 F) (w.adicCompletion F)),
       IsScalarTower.algebraMap_apply (𝓞 F) F (w.adicCompletion F)]
@@ -1118,7 +1118,7 @@ private theorem main (H : GlobalTheory.Published.GlobalArtinReciprocity) {F Ω :
     omega
   have hI : (s : G F Ω) ∈ Ine (F := F) A := actsAs_zero_iff.1 (actsAs_of_deg (a := 0) (b := 0) (by simpa using hd))
   let σ : Ine (F := F) A := ⟨s, hI⟩
-  haveI : U.Normal := Subgroup.normal_iInf_normal fun j => inferInstance
+  have : U.Normal := Subgroup.normal_iInf_normal fun j => inferInstance
   have hmem : σ ^ U.index ∈ U := U.pow_index_mem σ
   have e : ((a (ineIncl h (σ ^ U.index)) : (w.adicCompletion F)ˣ) : w.adicCompletion F) = (1 + l) ^ U.index := by
     rw [map_pow, map_pow, show ineIncl h σ = s from rfl, hs]
@@ -1309,8 +1309,8 @@ private theorem nmAbs {l : ℕ} [Fact l.Prime] {n : ℕ} (F : GFrame l) (c : Coe
   obtain ⟨c', y, z₀, a, al, hle, hM, ha, hz₀, hO, hal'⟩ := hm
   obtain ⟨ρ₀, ψ₀, e1, e2, m1, m2, m3, hal⟩ := modelG F r.Ip c' y _ _ _ hM sg al hal'
   obtain ⟨r', hr', hIp, hV0⟩ := residPush F c c' (hc₂.trans hle) r
-  haveI := (abelian₂.dvr_finite l c'.O).1
-  haveI : IsCO c'.O (DualNumber c'.O) := co_sqz c'.O c'.O c'.O fun _ => rfl
+  have := (abelian₂.dvr_finite l c'.O).1
+  have : IsCO c'.O (DualNumber c'.O) := co_sqz c'.O c'.O c'.O fun _ => rfl
   obtain ⟨hred, hpsi⟩ := redOf F c c' _ r r' B.B B.u x ρ₀ ψ₀ hr' (fun b => hle (hx₂ b))
     (hD'.trans (congrArg (fun t => GDet.ofRep (mat t)) m1.symm)) fun v i => (m3 v i).trans (hψ v i)
   obtain ⟨p, hp1, hp2, hp3⟩ := pairF F c' r' r.Ip (funext hIp).symm y z₀ ρ₀ ψ₀ e1 e2 hn hO hred hpsi

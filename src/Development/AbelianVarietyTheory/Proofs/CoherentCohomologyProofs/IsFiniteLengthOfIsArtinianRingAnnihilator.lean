@@ -156,7 +156,7 @@ theorem coh.subsingleton_of_support_subset {ι : Type} [Fintype ι] {U : ι → 
       rw [cechOpen_of_nonempty (fun _ => le_top) hs]
       rw [Finset.map_eq_image, Finset.iInf_finset_image]
       exact hU t (Finset.map_nonempty.1 hs)
-  letI : LinearOrder (Option ι) := LinearOrder.lift' _ (Fintype.equivFin _).injective
+  let : LinearOrder (Option ι) := LinearOrder.lift' _ (Fintype.equivFin _).injective
   have h₀ : IsZero ((cech ℤ F ⊤ U').X n) := by
     rw [cech_X, ModuleCat.isZero_iff_subsingleton]
     refine @Pi.instSubsingleton _ _ fun s => ?_
@@ -164,7 +164,7 @@ theorem coh.subsingleton_of_support_subset {ι : Type} [Fintype ι] {U : ι → 
       (subsingleton_sections_of_notMem_support (hW s.1 ?_))
     by_contra h
     have := Finset.card_le_univ s.1.eraseNone
-    rw [Finset.card_eraseNone_of_not_mem h, s.2] at this
+    rw [Finset.card_eraseNone_of_notMem h, s.2] at this
     omega
   have h₁ : IsZero (cechH ℤ F ⊤ U' n) :=
     ((cech ℤ F ⊤ U').exactAt_iff_isZero_homology n).1 (ShortComplex.exact_of_isZero_X₂ _ h₀)
@@ -271,8 +271,8 @@ theorem isFiniteLength_of_isArtinianRing_annihilator {A M : Type*} [CommRing A]
     [IsArtinianRing (A ⧸ Module.annihilator A M)] : IsFiniteLength A M := by
   have h : Module.IsTorsionBySet A M (Module.annihilator A M) := fun m a =>
     Module.mem_annihilator.1 a.2 m
-  letI := h.module
-  haveI : Module.Finite (A ⧸ Module.annihilator A M) M := .of_restrictScalars_finite A _ _
+  let := h.module
+  have : Module.Finite (A ⧸ Module.annihilator A M) M := .of_restrictScalars_finite A _ _
   exact isFiniteLength_iff_isNoetherian_isArtinian.2 ⟨inferInstance,
     isArtinian_of_surjective_algebraMap (R := A ⧸ Module.annihilator A M)
       Ideal.Quotient.mk_surjective⟩
@@ -368,7 +368,7 @@ theorem QCoh.germ_support_bijective (hf : (support F).Finite)
     Function.Bijective fun (s : Γ(F, ⊤)) (x : support F) =>
       (F.presheaf.germ ⊤ x.1 (Opens.mem_top _) s : (F.presheaf.stalk x.1 :)) := by
   classical
-  letI := hf.fintype
+  let := hf.fintype
   refine ⟨fun s t e => sub_eq_zero.1 (section_eq_zero_of_germ _ fun x hx => ?_), fun t => ?_⟩
   · by_cases h : x ∈ support F
     · rw [map_sub, sub_eq_zero]
@@ -379,7 +379,7 @@ theorem QCoh.germ_support_bijective (hf : (support F).Finite)
     obtain ⟨V, hx, u, hu⟩ := F.presheaf.exists_germ_eq (t x)
     have hC : IsClosed (support F \ {x.1}) := by
       rw [← Set.biUnion_of_singleton (support F \ {x.1})]
-      exact (hf.subset Set.diff_subset).isClosed_biUnion fun y hy => hc y hy.1
+      exact (hf.subset Set.sdiff_subset).isClosed_biUnion fun y hy => hc y hy.1
     let U : X.Opens := V ⊓ ⟨_, hC.isOpen_compl⟩
     let W : X.Opens := ⟨_, (hc x x.2).isOpen_compl⟩
     have hxU : x.1 ∈ U := ⟨hx, fun h => h.2 rfl⟩
@@ -459,8 +459,8 @@ theorem length_coh_zero_eq_sum [CompactSpace X] (h : suppDim F ≤ 0) :
       Module.length (X.presheaf.stalk x) (F.presheaf.stalk x :) *
         (letI := residueFieldAlgebraOver R x; Module.length R (X.residueField x)) := by
   have hf := finite_support_of_suppDim_le_zero h
-  letI := hf.fintype
-  letI (x : X) := baseModuleStalk F (algebraMap R Γ(X, ⊤)) x
+  let := hf.fintype
+  let (x : X) := baseModuleStalk F (algebraMap R Γ(X, ⊤)) x
   let l : sectionsOn F ⊤ →ₗ[R] ∀ x : support F, (F.presheaf.stalk x.1 :) :=
     { toFun := fun s x => F.presheaf.germ ⊤ x.1 (Opens.mem_top _) (sectionsOn.toΓ F ⊤ s)
       map_add' := fun s t => funext fun x => by rw [map_add (f := _), map_add (f := _)]; rfl
@@ -471,9 +471,9 @@ theorem length_coh_zero_eq_sum [CompactSpace X] (h : suppDim F ≤ 0) :
   rw [((cohOn.zeroEquiv R F ⊤).trans (LinearEquiv.ofBijective l hl)).length_eq,
     Module.length_pi_of_fintype, Finset.sum_subtype (p := (· ∈ support F)) _ fun _ => hf.mem_toFinset]
   refine Finset.sum_congr rfl fun x _ => ?_
-  letI : Algebra R (X.presheaf.stalk x.1) :=
+  let : Algebra R (X.presheaf.stalk x.1) :=
     ((X.presheaf.germ ⊤ x.1 trivial).hom.comp (algebraMap R Γ(X, ⊤))).toAlgebra
-  haveI : IsScalarTower R (X.presheaf.stalk x.1) (F.presheaf.stalk x.1 :) :=
+  have : IsScalarTower R (X.presheaf.stalk x.1) (F.presheaf.stalk x.1 :) :=
     .of_algebraMap_smul fun _ _ => rfl
   exact length_eq_mul_length_residueField R (isFiniteLength_stalk h x.1)
 
@@ -484,7 +484,7 @@ variable {X : Scheme.{0}} {F : X.Modules} [AlgebraicGeometry.IsNoetherian X] [Is
 theorem subsingleton_coh_of_suppDim_le_zero (h : suppDim F ≤ 0) {n : ℕ} (hn : 0 < n) :
     Subsingleton (coh F n) := by
   have := isArtinianScheme_annihilatorSheaf h
-  haveI := cohOn.subsingleton_of_isAffineOpen (onAnnihilator F) (isAffineOpen_top _) hn
+  have := cohOn.subsingleton_of_isAffineOpen (onAnnihilator F) (isAffineOpen_top _) hn
   exact ((cohOn.mapIso ℤ ⊤ n (isoPushforwardOnAnnihilator F)).trans
     (coh.pushforwardEquiv ℤ (fun r => (map_intCast _ r).trans (eq_intCast _ r).symm)
       (onAnnihilator F) n)).toEquiv.subsingleton
@@ -516,9 +516,9 @@ theorem residueDegree_eq_finrank (x : X) :
       letI := algebraΓOfHom f
       letI := residueFieldAlgebraOver k x
       Module.finrank k (X.residueField x) := by
-  letI := algebraΓOfHom f
-  letI := residueFieldAlgebraOver k x
-  letI := (f.residueFieldMap x).hom.toAlgebra
+  let := algebraΓOfHom f
+  let := residueFieldAlgebraOver k x
+  let := (f.residueFieldMap x).hom.toAlgebra
   let φ : k →+* (Sp k).residueField (f x) :=
     ((Scheme.ΓSpecIso (.of k)).inv ≫ (Sp k).Γevaluation (f x)).hom
   have hφ : Function.Surjective φ := by
@@ -552,11 +552,11 @@ theorem isFinite_annihilatorSheaf (h : suppDim F ≤ 0) :
 theorem finiteCohTwists_of_suppDim_le_zero (h : suppDim F ≤ 0) :
     letI := algebraΓOfHom f
     FiniteCohTwists k F := by
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have := isNoetherian_of_locallyOfFiniteType_field f
   have := isArtinianScheme_annihilatorSheaf h
   have := isFinite_annihilatorSheaf f h
-  letI := algebraΓOfHom ((annihilatorSheaf F).subschemeι ≫ f)
+  let := algebraΓOfHom ((annihilatorSheaf F).subschemeι ≫ f)
   have : Module.Finite k Γ((annihilatorSheaf F).subscheme, ⊤) :=
     (((annihilatorSheaf F).subschemeι ≫ f).finite_appTop).comp (RingHom.Finite.of_surjective _
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (.of k)).inv).2)
@@ -567,8 +567,8 @@ theorem finite_residueField_of_suppDim_le_zero (h : suppDim F ≤ 0) {x : X} (hx
     letI := algebraΓOfHom f
     letI := residueFieldAlgebraOver k x
     Module.Finite k (X.residueField x) := by
-  letI := algebraΓOfHom f
-  letI := residueFieldAlgebraOver k x
+  let := algebraΓOfHom f
+  let := residueFieldAlgebraOver k x
   have := isNoetherian_of_locallyOfFiniteType_field f
   have := (finiteCohTwists_of_suppDim_le_zero f h).finiteCoh.finite 0
   have h₀ : Module.length k (coh F 0) ≠ ⊤ := Module.length_ne_top
@@ -584,13 +584,13 @@ theorem hdim_zero_eq_sum (h : suppDim F ≤ 0) {S : Finset X} (hS : support F �
     letI := algebraΓOfHom f
     (hdim k F 0 : ℕ∞) = ∑ x ∈ S,
       Module.length (X.presheaf.stalk x) (F.presheaf.stalk x :) * f.residueDegree x := by
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have := isNoetherian_of_locallyOfFiniteType_field f
   have := (finiteCohTwists_of_suppDim_le_zero f h).finiteCoh.finite 0
   rw [hdim_def, ← Module.length_eq_finrank, length_coh_zero_eq_sum k h,
     ← Finset.sum_subset ((finite_support_of_suppDim_le_zero h).toFinset_subset.2 hS)]
   · refine Finset.sum_congr rfl fun x hx => ?_
-    letI := residueFieldAlgebraOver k x
+    let := residueFieldAlgebraOver k x
     have := finite_residueField_of_suppDim_le_zero f h ((Set.Finite.mem_toFinset _).1 hx)
     rw [residueDegree_eq_finrank, Module.length_eq_finrank]
   · intro x _ hx
@@ -605,7 +605,7 @@ theorem hdim_zero_eq_sum_toNat (h : suppDim F ≤ 0) {S : Finset X} (hS : suppor
   refine Nat.cast_injective (R := ℕ∞) ((hdim_zero_eq_sum f h hS).trans ?_)
   rw [Nat.cast_sum]
   refine Finset.sum_congr rfl fun x _ => ?_
-  rw [Nat.cast_mul, ENat.coe_toNat (Module.length_ne_top_iff.2 (isFiniteLength_stalk h x))]
+  rw [Nat.cast_mul, ENat.natCast_toNat (Module.length_ne_top_iff.2 (isFiniteLength_stalk h x))]
 
 end Field
 

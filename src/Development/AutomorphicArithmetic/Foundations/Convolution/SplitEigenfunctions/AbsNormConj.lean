@@ -265,7 +265,7 @@ private theorem cD_mem {F : Type} [Field F] [NumberField F] (t : Fˣ) {x : G1 F}
 theorem UpperTheory.ConvolutionTheory.R2.M.dConj :
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (u : G1 F → ℂ), (∀ γ g, u (ratS F γ * g) = u g) → ∀ t : Fˣ, (IntegrableOn (fun g => u (cD (IdeleGroup.diagonal F t) g)) M₀.D M₀.μ ↔ IntegrableOn u M₀.D M₀.μ) ∧ ∫ g in M₀.D, u (cD (IdeleGroup.diagonal F t) g) ∂M₀.μ = ∫ g in M₀.D, u g ∂M₀.μ := by
   intro F _ _ M₀ u hu t
-  haveI := M₀.haar
+  have := M₀.haar
   set T : (A F)ˣ := IdeleGroup.diagonal F t with hT
   have hTi : T⁻¹ = IdeleGroup.diagonal F t⁻¹ := by rw [hT, map_inv]
   let e : G1 F ≃ₜ G1 F :=
@@ -471,7 +471,7 @@ private theorem Bt_cont (M : Meas ℚ) {Φ : GL (Fin 2) (A E) → ℂ} (hc : Con
   refine continuous_of_dominated (bound := fun _ => C) (fun t => ?_) (fun t => ?_) ?_ ?_
   · exact (hcc.comp (continuous_const.prodMk continuous_id)).aestronglyMeasurable
   · exact ae_of_all _ fun g => hb _
-  · haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using hv⟩
+  · have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using hv⟩
     exact integrable_const _
   · exact ae_of_all _ fun g => hc.comp (continuous_em.comp (continuous_const.mul continuous_dM))
 
@@ -534,7 +534,7 @@ private theorem per_zero (D : Dat ℚ E) (M : Meas ℚ) (U : UMeas) {ω ε : HCh
     (hA : admitted D ω Φ) (hω : Unit1 ω) (hε : Unit1 ε) (hεN : ∀ z, ε.1 (ideleNorm ℚ E z) = 1)
     (hU : ∀ t, UPer D M (fun x => Φ (x * em E (dM t))) = 0) : Per M U (ω⁻¹ * ε) Φ = 0 := by
   obtain ⟨C, hC⟩ := hA.bdd
-  haveI := U.prob
+  have := U.prob
   have hBc := Bt_cont M hA.cont hC
   have hBb := Bt_bdd M hC
   have hdiag : ∀ (χ : HChar ℚ) (r : ℚˣ), χ.1 (IdeleGroup.diagonal ℚ r) = 1 := fun χ r => χ.2.2 r
@@ -545,12 +545,12 @@ private theorem per_zero (D : Dat ℚ E) (M : Meas ℚ) (U : UMeas) {ω ε : HCh
     simp only [hc, hcm, Units.val_mul, Units.val_inv_eq_inv_val, norm_mul, norm_inv]
     rw [hω t, hε t]; simp
   set N : IdeleGroup.normOneSubgroup E → IdeleGroup ℚ := fun z => ideleNorm ℚ E (z : IdeleGroup E) with hNdef
-  have hN : Continuous N := continuous_ideleNorm.comp continuous_subtype_val
+  have hN : Continuous N := continuous_ideleNorm.comp continuous_subtypeVal
   set e : IdeleGroup.normOneSubgroup E → ℂ := fun z => ((ω.1 (N z) : ℂˣ) : ℂ) with he
   have hec : Continuous e := Units.continuous_val.comp (ω.2.1.comp hN)
   let f : IdeleGroup ℚ → IdeleGroup.normOneSubgroup E → ℂ := fun t z => c t * (e z * Bt M Φ ((N z)⁻¹ * t))
   let ν := (normOneMeasure E).restrict (normOneFundamentalDomain E)
-  haveI : IsFiniteMeasure ν := ⟨by simpa [ν] using normOneMeasure_normOneFundamentalDomain_lt_top E⟩
+  have : IsFiniteMeasure ν := ⟨by simpa [ν] using normOneMeasure_normOneFundamentalDomain_lt_top E⟩
   have hfc : Continuous (Function.uncurry f) :=
     (hcc.comp continuous_fst).mul ((hec.comp continuous_snd).mul
       (hBc.comp ((hN.comp continuous_snd).inv.mul continuous_fst)))
@@ -739,8 +739,8 @@ private theorem char_integral_ne (μ : Measure G) [μ.IsHaarMeasure] (N : Subgro
   classical
   by_contra hcon
   push_neg at hcon
-  haveI hcl : IsClosed (N : Set G) := Subgroup.isClosed_of_discrete
-  haveI : CompactSpace (G ⧸ N) := ⟨by
+  have hcl : IsClosed (N : Set G) := Subgroup.isClosed_of_discreteTopology
+  have : CompactSpace (G ⧸ N) := ⟨by
     have : (Set.univ : Set (G ⧸ N)) = QuotientGroup.mk '' closure F := by
       symm
       refine Set.eq_univ_of_forall fun q => ?_
@@ -811,7 +811,7 @@ private theorem char_integral_ne (μ : Measure G) [μ.IsHaarMeasure] (N : Subgro
     rw [← Measure.restrict_apply hT.measurableSet]
     refine measure_mono_null ?_ (ae_iff.1 h4)
     intro x hx
-    simp only [Set.mem_setOf_eq, Pi.zero_apply] at hx ⊢
+    simp only [Set.mem_ofPred_eq, Pi.zero_apply] at hx ⊢
     simpa using hx
   have hinv : ∀ g : N.op, g • {x | b x ≠ 0} = {x | b x ≠ 0} := by
     rintro ⟨g, hg⟩
@@ -819,7 +819,7 @@ private theorem char_integral_ne (μ : Measure G) [μ.IsHaarMeasure] (N : Subgro
     rw [Set.mem_smul_set_iff_inv_smul_mem]
     have hg' : g.unop ∈ N := Subgroup.mem_op.1 hg
     have : ((⟨g, hg⟩ : N.op)⁻¹ • x) = x * g.unop⁻¹ := rfl
-    simp only [Set.mem_setOf_eq, this]
+    simp only [Set.mem_ofPred_eq, this]
     rw [hi _ (N.inv_mem hg')]
   have hz := hF.measure_zero_of_invariant _ hinv hTF
   exact (hT.measure_pos μ ⟨x₀, h0⟩).ne' hz
@@ -858,7 +858,7 @@ private theorem char_sel (μ : Measure G) [μ.IsHaarMeasure] (N : Subgroup G) [C
     have := hB _ (subset_closure hx)
     rwa [hβi k hk] at this
   have hfin : μ F < ⊤ := (measure_mono subset_closure).trans_lt hc.measure_lt_top
-  haveI : IsFiniteMeasure (μ.restrict F) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure (μ.restrict F) := ⟨by simpa using hfin⟩
   let b : G → ℂ := fun t => ∫ z in F, β (t * c z) ∂μ
   have hbc : Continuous b := by
     refine continuous_of_dominated (bound := fun _ => B) (fun t => ?_)
@@ -880,7 +880,7 @@ private theorem char_sel (μ : Measure G) [μ.IsHaarMeasure] (N : Subgroup G) [C
     rw [map_mul, mul_assoc, mul_comm (c w)]
   have hb1 : b 1 ≠ 0 := by simpa [b] using h
   obtain ⟨χ, hχN, hχ⟩ := char_integral_ne μ N F hF hc hs b hbc hbN 1 hb1
-  have hχc : Continuous fun x => (χ x : ℂ) := continuous_subtype_val.comp χ.continuous
+  have hχc : Continuous fun x => (χ x : ℂ) := continuous_subtypeVal.comp χ.continuous
   have hχw : ∀ z, χ (c z) = 1 := by
     intro w
     have h1 := transl μ N F hF (fun t => (χ t : ℂ) * b t) (fun k hk x => by
@@ -967,9 +967,9 @@ private theorem ext_char (χ₁ : IdeleGroup.normOneSubgroup E →ₜ* Circle)
   have hfv : ∀ x, ((f x : ℂˣ) : ℂ) = (χ₁ (proj E x) : ℂ) := fun x => rfl
   have hc : Continuous f := by
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
-    · exact continuous_subtype_val.comp (χ₁.continuous.comp (continuous_proj E))
+    · exact continuous_subtypeVal.comp (χ₁.continuous.comp (continuous_proj E))
     · have h1 : Continuous fun x => (((χ₁ (proj E x))⁻¹ : Circle) : ℂ) :=
-        continuous_subtype_val.comp (χ₁.continuous.comp (continuous_proj E)).inv
+        continuous_subtypeVal.comp (χ₁.continuous.comp (continuous_proj E)).inv
       exact h1
   have hd : ∀ k : Eˣ, f (IdeleGroup.diagonal E k) = 1 := by
     intro k
@@ -1029,7 +1029,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.charSel :
   have hcv : ∀ z, ((c z : IdeleGroup.normOneSubgroup E) : IdeleGroup E) =
       (z : IdeleGroup E) * (D.σ • (z : IdeleGroup E))⁻¹ := fun z => rfl
   have hcc : Continuous c :=
-    (continuous_subtype_val.mul ((continuous_const_smul D.σ).comp continuous_subtype_val).inv).subtype_mk _
+    (continuous_subtypeVal.mul ((continuous_const_smul D.σ).comp continuous_subtypeVal).inv).subtype_mk _
   have hcN : ∀ k ∈ diagonalNormOne E, c k ∈ diagonalNormOne E := by
     intro k hk
     obtain ⟨e, he⟩ := Subgroup.mem_subgroupOf.1 hk
@@ -1039,7 +1039,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.charSel :
     intro u
     obtain ⟨e, he, -⟩ := existsUnique_mul_mem_normOneFundamentalDomain E u
     exact ⟨_, ⟨e, rfl⟩, he⟩
-  have hβc : Continuous fun z : IdeleGroup.normOneSubgroup E => β (z : IdeleGroup E) := hc.comp continuous_subtype_val
+  have hβc : Continuous fun z : IdeleGroup.normOneSubgroup E => β (z : IdeleGroup E) := hc.comp continuous_subtypeVal
   have hβi : ∀ k ∈ diagonalNormOne E, ∀ x : IdeleGroup.normOneSubgroup E,
       β ((x * k : IdeleGroup.normOneSubgroup E) : IdeleGroup E) = β (x : IdeleGroup E) := by
     intro k hk x
@@ -1276,8 +1276,8 @@ open scoped Pointwise in
 private theorem absNorm_conj {M : Type} [Field M] [NumberField M] (h2 : Module.finrank ℚ M = 2)
     {w w' : HeightOneSpectrum (𝓞 M)} (h : w'.under (𝓞 ℚ) = w.under (𝓞 ℚ)) :
     Ideal.absNorm w'.asIdeal = Ideal.absNorm w.asIdeal := by
-  haveI : Algebra.IsQuadraticExtension ℚ M := { finrank_eq_two' := h2 }
-  haveI : IsGalois ℚ M := inferInstance
+  have : Algebra.IsQuadraticExtension ℚ M := { finrank_eq_two' := h2 }
+  have : IsGalois ℚ M := inferInstance
   obtain ⟨g, hg⟩ := Algebra.IsInvariant.exists_smul_of_under_eq (𝓞 ℚ) (𝓞 M) (M ≃ₐ[ℚ] M) w.asIdeal w'.asIdeal
     (congrArg HeightOneSpectrum.asIdeal h.symm)
   rw [hg, Ideal.absNorm_apply, Ideal.absNorm_apply, Submodule.cardQuot_apply, Submodule.cardQuot_apply]
@@ -1286,7 +1286,7 @@ private theorem absNorm_conj {M : Type} [Field M] [NumberField M] (h2 : Module.f
 theorem UpperTheory.ConvolutionTheory.RankTwoDescent.descS :
     UpperTheory.V.Z.Bc.DescS := by
   intro M _ _ h2 hM sat' inf' hc _ _ hi
-  haveI := hM
+  have := hM
   rcases hc with ⟨_, P, rfl, rfl⟩ | ⟨hR, -⟩
   swap
   · exfalso

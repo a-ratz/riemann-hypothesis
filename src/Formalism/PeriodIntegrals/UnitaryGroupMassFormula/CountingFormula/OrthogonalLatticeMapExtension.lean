@@ -76,13 +76,13 @@ def split (h1 : V1 →ₗ⋆[K] V1 →ₗ[K] K) (z : V1) (hz0 : h1 z z ≠ 0) : 
 variable {h1 : V1 →ₗ⋆[K] V1 →ₗ[K] K} {z : V1}
 
 theorem mul_mem_hz {σ τ : V1 ≃ₗ[K] V1} (hσ : σ ∈ hz h1 z) (hτ : τ ∈ hz h1 z) : σ * τ ∈ hz h1 z := by
-  simp only [hz, Set.mem_setOf_eq] at *
+  simp only [hz, Set.mem_ofPred_eq] at *
   refine ⟨mul_mem hσ.1 hτ.1, ?_⟩
   show σ (τ z) = z
   rw [hτ.2, hσ.2]
 
 theorem inv_mem_hz {σ : V1 ≃ₗ[K] V1} (hσ : σ ∈ hz h1 z) : σ⁻¹ ∈ hz h1 z := by
-  simp only [hz, Set.mem_setOf_eq] at *
+  simp only [hz, Set.mem_ofPred_eq] at *
   refine ⟨inv_mem hσ.1, ?_⟩
   show σ.symm z = z
   rw [LinearEquiv.symm_apply_eq, hσ.2]

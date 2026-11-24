@@ -76,20 +76,20 @@ def ratEquiv (D : D7) (m n : ℕ) : Matrix (Fin m) (Fin n) D.host.E ≃ GlobalTh
 
 theorem countable_ratMx (D : D7) (m n : ℕ) : Countable (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D m n) := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : DiscreteTopology (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D m n) := i5
+  have : DiscreteTopology (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D m n) := i5
   exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
 
 theorem countable_mat (D : D7) (m n : ℕ) : Countable (Matrix (Fin m) (Fin n) D.host.E) := by
-  haveI := countable_ratMx D m n
+  have := countable_ratMx D m n
   exact (ratEquiv D m n).injective.countable
 
 theorem lintegral_unfold {D : D7} {m n : ℕ} {μ : Measure (Mx D m n)} {𝓨 : Set (Mx D m n)}
     (hcov : IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D m n) μ 𝓨) (φ : Mx D m n → ℝ≥0∞) :
     ∫⁻ u, φ u ∂μ = ∑' ξ : Matrix (Fin m) (Fin n) D.host.E, ∫⁻ t in 𝓨, φ (ξ.map (incA D) + t) ∂μ := by
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI := countable_ratMx D m n
-  haveI := hcov.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have := countable_ratMx D m n
+  have := hcov.1
   rw [hcov.2.1.lintegral_eq_tsum'' φ, ← (ratEquiv D m n).tsum_eq]
   rfl
 
@@ -97,9 +97,9 @@ theorem integral_unfold {D : D7} {m n : ℕ} {μ : Measure (Mx D m n)} {𝓨 : S
     (hcov : IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D m n) μ 𝓨) (φ : Mx D m n → ℂ) (hφ : Integrable φ μ) :
     ∫ u, φ u ∂μ = ∑' ξ : Matrix (Fin m) (Fin n) D.host.E, ∫ t in 𝓨, φ (ξ.map (incA D) + t) ∂μ := by
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI := countable_ratMx D m n
-  haveI := hcov.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have := countable_ratMx D m n
+  have := hcov.1
   rw [hcov.2.1.integral_eq_tsum'' φ hφ, ← (ratEquiv D m n).tsum_eq]
   rfl
 
@@ -112,10 +112,10 @@ theorem unfold : ∀ (D : D7) (m n : ℕ) (X : Type) [TopologicalSpace X] [Measu
       ∫ t in 𝓨, (∫ x, ∑' ξ : Matrix (Fin m) (Fin n) D.host.E, h x (ξ.map (incA D) + t) ∂ν) ∂μ := by
   intro D m n X _ _ _ _ ν _ μ 𝓨 hcov h hc M hM
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI := countable_mat D m n
-  haveI := hcov.1
-  haveI : FirstCountableTopology (Mx D m n) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have := countable_mat D m n
+  have := hcov.1
+  have : FirstCountableTopology (Mx D m n) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
   have hr0 : (0 : Matrix (Fin m) (Fin n) D.host.E).map (incA D) = 0 := Matrix.map_zero _ (map_zero (incA D))
 
   have hb : ∀ x u, ‖h x u‖ ≤ M := fun x u => by
@@ -127,11 +127,11 @@ theorem unfold : ∀ (D : D7) (m n : ℕ) (X : Type) [TopologicalSpace X] [Measu
   have hmeas : Measurable (Function.uncurry h) := hc.measurable
 
   have hmx : ∀ x (ξ : Matrix (Fin m) (Fin n) D.host.E), Measurable fun t => ‖h x (ξ.map (incA D) + t)‖ₑ :=
-    fun x ξ => ((hcx x).comp ((continuous_const.add continuous_id))).measurable.enorm
+    fun x ξ => ((hcx x).comp ((continuous_const.add continuous_id))).measurable.eNorm
   have hmu : ∀ t (ξ : Matrix (Fin m) (Fin n) D.host.E), Measurable fun x => ‖h x (ξ.map (incA D) + t)‖ₑ :=
-    fun t ξ => (hcu (ξ.map (incA D) + t)).measurable.enorm
+    fun t ξ => (hcu (ξ.map (incA D) + t)).measurable.eNorm
   have hsum : ∀ x t, ∑' ξ : Matrix (Fin m) (Fin n) D.host.E, ‖h x (ξ.map (incA D) + t)‖ₑ ≤ ENNReal.ofReal M := fun x t => by
-    simp_rw [← ofReal_norm_eq_enorm]
+    simp_rw [← ofReal_norm]
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hM x t).1]
     exact ENNReal.ofReal_le_ofReal (hM x t).2
   have hlx : ∀ x, ∫⁻ u, ‖h x u‖ₑ ∂μ ≤ ENNReal.ofReal M := fun x => by
@@ -150,9 +150,9 @@ theorem unfold : ∀ (D : D7) (m n : ℕ) (X : Type) [TopologicalSpace X] [Measu
   have hGi : Integrable (fun u => ∫ x, h x u ∂ν) μ := by
     refine ⟨hGc.aestronglyMeasurable, ?_⟩
     have h1 : ∫⁻ u, ‖∫ x, h x u ∂ν‖ₑ ∂μ ≤ ∫⁻ u, ∫⁻ x, ‖h x u‖ₑ ∂ν ∂μ :=
-      lintegral_mono fun u => enorm_integral_le_lintegral_enorm _
+      lintegral_mono fun u => eNorm_integral_le_lintegral_eNorm _
     have h2 : ∫⁻ u, ∫⁻ x, ‖h x u‖ₑ ∂ν ∂μ = ∫⁻ x, ∫⁻ u, ‖h x u‖ₑ ∂μ ∂ν :=
-      lintegral_lintegral_swap (hmeas.enorm.comp measurable_swap).aemeasurable
+      lintegral_lintegral_swap (hmeas.eNorm.comp measurable_swap).aemeasurable
     have h3 : ∫⁻ x, ∫⁻ u, ‖h x u‖ₑ ∂μ ∂ν ≤ ENNReal.ofReal M * ν Set.univ := by
       rw [← lintegral_const]; exact lintegral_mono fun x => hlx x
     exact lt_of_le_of_lt (h1.trans (h2.le.trans h3)) (ENNReal.mul_lt_top ENNReal.ofReal_lt_top (measure_lt_top _ _))
@@ -438,7 +438,7 @@ theorem continuous_bounded_setIntegral {X Y : Type} [TopologicalSpace X] [FirstC
     [MeasurableSpace Y] [OpensMeasurableSpace Y] (μ : Measure Y) (s : Set Y) (hs : μ s < ⊤) (F : X → Y → ℂ)
     (hc : Continuous fun q : X × Y => F q.1 q.2) (K : ℝ) (hb : ∀ x y, ‖F x y‖ ≤ K) :
     Continuous (fun x => ∫ y in s, F x y ∂μ) ∧ ∀ x, ‖∫ y in s, F x y ∂μ‖ ≤ K * (μ.restrict s).real Set.univ := by
-  haveI : IsFiniteMeasure (μ.restrict s) := isFiniteMeasure_restrict.2 hs.ne
+  have : IsFiniteMeasure (μ.restrict s) := isFiniteMeasure_restrict.2 hs.ne
   refine ⟨?_, fun x => norm_integral_le_of_norm_le_const (.of_forall fun y => hb x y)⟩
   refine continuous_of_dominated (bound := fun _ => K) (fun x => ?_) (fun x => .of_forall fun y => hb x y)
     (integrable_const K) (.of_forall fun y => ?_)
@@ -456,13 +456,13 @@ theorem res_heisO_continuous_bounded : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (
   obtain ⟨K, hK⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hf
   have hn : ∀ z, ‖ψ z‖ = 1 := hψ.1.2.1
   have hfin : μ 𝓨 < ⊤ := by rw [h𝓨.2.2]; exact ENNReal.one_lt_top
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (μ.restrict 𝓨) := isFiniteMeasure_restrict.2 hfin.ne
   obtain ⟨-, -, i3, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank r
   obtain ⟨-, -, j3, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V'.rank
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : OpensMeasurableSpace (Mx D W.rank r) := BorelSpace.opensMeasurable
-  haveI : SecondCountableTopology (WO V' W × Mx D W.rank r) := @TopologicalSpace.instSecondCountableTopologyProd _ _ _ _ j3 i3
-  haveI : FirstCountableTopology (WO V' W × Mx D W.rank r) :=
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : OpensMeasurableSpace (Mx D W.rank r) := BorelSpace.opensMeasurable
+  have : SecondCountableTopology (WO V' W × Mx D W.rank r) := @TopologicalSpace.instSecondCountableTopologyProd _ _ _ _ j3 i3
+  have : FirstCountableTopology (WO V' W × Mx D W.rank r) :=
     TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   have hiso : ∀ (C₀ : Matrix (Fin V.rank) (Fin r) D.host.E),
       Continuous (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.isoPart V W C₀) := fun C₀ =>
@@ -526,10 +526,10 @@ theorem parseval : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.ra
   intro D V V' W r C B hs C' h1 h2 h3 ψ hψ μ 𝓨 hμ μ₀ 𝓕₀ hμ₀ μ' 𝓕' hμ' f₁ f₂ hf₁ hf₂
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank r
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V'.rank
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (WO V' W) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (μ'.restrict 𝓕') := ⟨by rw [Measure.restrict_apply_univ, hμ'.2.2]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (WO V' W) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (μ'.restrict 𝓕') := ⟨by rw [Measure.restrict_apply_univ, hμ'.2.2]; exact ENNReal.one_lt_top⟩
   let R : (WO V W → ℂ) → WO V' W → Mx D W.rank r → ℂ := fun f x u =>
     GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 (heisO ψ V W (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.isoPart V W C' u) f) x
   let h : WO V' W → Mx D W.rank r → ℂ := fun x u => R f₁ x u * starRingEnd ℂ (R f₂ x u)
@@ -601,7 +601,7 @@ theorem parseval : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.ra
   have a1 : ∀ x, Continuous (h x) := fun x => hhc.uncurry_left x
   have a2 : ∀ u, Continuous (fun x => h x u) := fun u => hhc.uncurry_right u
   have a3 : ∀ u, AEStronglyMeasurable (fun x => h x u) (μ'.restrict 𝓕') := fun u => (a2 u).aestronglyMeasurable
-  haveI : FirstCountableTopology (Mx D W.rank r) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
+  have : FirstCountableTopology (Mx D W.rank r) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
   have hG : Continuous (fun u => ∫ x, h x u ∂(μ'.restrict 𝓕')) :=
     continuous_of_dominated (bound := fun _ => M₁ * M₂) a3
       (fun u => .of_forall fun x => hhb x u) (integrable_const _) (.of_forall a1)
@@ -643,8 +643,8 @@ theorem parseval : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.ra
         ((continuous_snd).matrix_mul continuous_const))
     exact Integrable.of_bound hcont.aestronglyMeasurable b (.of_forall fun p => hb' _)
   show ∫ y, ∫ x, H _ ∂(μ'.restrict 𝓕') ∂(μ.restrict 𝓨) = _
-  haveI : SFinite (μ'.restrict 𝓕') := instSFiniteOfSigmaFinite
-  haveI : SFinite (μ.restrict 𝓨) := instSFiniteOfSigmaFinite
+  have : SFinite (μ'.restrict 𝓕') := instSFiniteOfSigmaFinite
+  have : SFinite (μ.restrict 𝓨) := instSFiniteOfSigmaFinite
   rw [integral_integral_swap hInt]
   refine integral_congr_ae (.of_forall fun x => ?_)
   have hp := (GlobalTheory.T.parseval_mixedModel_isotropic_thetaProduct D V V' W r C B hs C' h1 h2 h3 ψ hψ μ 𝓨 hμ f₁ f₂ hf₁ hf₂ x t).2

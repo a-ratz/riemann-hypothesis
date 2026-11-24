@@ -853,12 +853,12 @@ theorem log_l_value_field_bound : LogLFunctionEulerBound := by
   have maximal_ideal_ne_bot (P : Ideal (𝓞 K)) (hP : P.IsMaximal) : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (NumberField.RingOfIntegers.not_isField K)
 
   have residue_characteristic_prime (P : Ideal (𝓞 K)) (hP : P.IsMaximal) : (residueCharacteristic P).Prime := by
-    haveI : P.IsMaximal := hP
-    haveI : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (by
+    have : P.IsMaximal := hP
+    have : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (by
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
       exact maximal_ideal_ne_bot P hP)
-    letI : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
-    letI := Ideal.Quotient.field P
+    let : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
+    let := Ideal.Quotient.field P
     unfold residueCharacteristic
     exact (CharP.char_is_prime_or_zero (𝓞 K ⧸ P) (ringChar (𝓞 K ⧸ P))).resolve_right
       (CharP.char_ne_zero_of_finite (𝓞 K ⧸ P) (ringChar (𝓞 K ⧸ P)))
@@ -889,13 +889,13 @@ theorem log_l_value_field_bound : LogLFunctionEulerBound := by
 
   have abs_norm_eq_prime_pow (P : Ideal (𝓞 K)) (hP : P.IsMaximal) :
       ∃ k, 1 ≤ k ∧ Ideal.absNorm P = residueCharacteristic P ^ k := by
-    haveI : P.IsMaximal := hP
-    letI := Ideal.Quotient.field P
-    haveI : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (by
+    have : P.IsMaximal := hP
+    let := Ideal.Quotient.field P
+    have : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (by
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
       exact maximal_ideal_ne_bot P hP)
-    letI : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
-    haveI : CharP (𝓞 K ⧸ P) (residueCharacteristic P) := ringChar.charP _
+    let : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
+    have : CharP (𝓞 K ⧸ P) (residueCharacteristic P) := ringChar.charP _
     obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 K ⧸ P) (residueCharacteristic P)
     refine ⟨n, n.one_le, ?_⟩
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card, hn]
@@ -909,13 +909,13 @@ theorem log_l_value_field_bound : LogLFunctionEulerBound := by
     obtain ⟨k, hk1, hk⟩ := abs_norm_eq_prime_pow P hM
     rw [hN] at hk
     have hpr : residueCharacteristic P = p := ((Nat.Prime.pow_eq_iff hp).mp hk.symm).1
-    haveI : CharP (𝓞 K ⧸ P) p := by rw [← hpr]; exact ringChar.charP _
-    haveI : Fact p.Prime := ⟨hp⟩
-    letI := Ideal.Quotient.field P
-    haveI : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (by
+    have : CharP (𝓞 K ⧸ P) p := by rw [← hpr]; exact ringChar.charP _
+    have : Fact p.Prime := ⟨hp⟩
+    let := Ideal.Quotient.field P
+    have : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (by
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
       exact hne)
-    letI : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
+    let : Fintype (𝓞 K ⧸ P) := Fintype.ofFinite _
     have hinj : Function.Injective (ZMod.castHom (dvd_refl p) (𝓞 K ⧸ P)) :=
       (ZMod.castHom (dvd_refl p) (𝓞 K ⧸ P)).injective
     have hcard : Nat.card (𝓞 K ⧸ P) ≤ Nat.card (ZMod p) := by
@@ -1161,7 +1161,7 @@ theorem log_l_value_field_bound : LogLFunctionEulerBound := by
         (Formalism.HermitianLatticesTheory.fDeg K : ℝ) * Real.log (zetaR M) := by
     classical
     have hn : (Formalism.HermitianLatticesTheory.fDeg K : ℝ) = (Module.finrank ℚ K : ℝ) / 2 := by
-      haveI := hK.1
+      have := hK.1
       have h1 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank K
       have h2 := NumberField.InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces K
       have h3 := NumberField.IsTotallyComplex.nrRealPlaces_eq_zero K

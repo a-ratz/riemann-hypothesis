@@ -117,7 +117,7 @@ theorem baseChangeAlgebraRepresentationAction_injective {C V : Type} [Ring C] [A
 theorem actOn_rep_afP_injective : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G),
     Function.Injective (actOn L.rep (AfP p)) := by
   intro p _ D G L
-  haveI := D.finLa
+  have := D.finLa
   exact baseChangeAlgebraRepresentationAction_injective L.rep L.rep_inj (AfP p)
 
 end GlobalTheory.LKGeo
@@ -227,7 +227,7 @@ theorem nondeg_afP : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (z : AfP p ⊗[�
     (∀ v, (D.EF.baseChange ℚ).baseChange (AfP p) v z = 0) → z = 0 := by
   intro p _ D z hz
   classical
-  haveI := D.freeLa; haveI := D.finLa
+  have := D.freeLa; have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   let bQ := Algebra.TensorProduct.basis ℚ b
   let bA := Algebra.TensorProduct.basis (AfP p) bQ
@@ -301,7 +301,7 @@ theorem exists_limit_compact (p : ℕ) (O : Type) [CommRing O] [TopologicalSpace
     (hc : ∀ n m : ℕ, 0 < n → 0 < m → Nat.Coprime (n * m) p → ∃ z : ℤ, c (n * m) = c n + n * z) :
     ∃ a : O, ∀ n : ℕ, 0 < n → Nat.Coprime n p → ∃ b : O, a = (c n : O) + n * b := by
   let I := {n : ℕ // 0 < n ∧ Nat.Coprime n p}
-  haveI : Nonempty I := ⟨⟨1, one_pos, Nat.coprime_one_left p⟩⟩
+  have : Nonempty I := ⟨⟨1, one_pos, Nat.coprime_one_left p⟩⟩
   let S : I → Set O := fun n => Set.range fun b : O => (c n.1 : O) + (n.1 : O) * b
   have hcomp : ∀ n, IsCompact (S n) := fun n => isCompact_range (by fun_prop)
   have hsub : ∀ (n k : I) (m : ℕ), 0 < m → k.1 = n.1 * m → S k ⊆ S n := by
@@ -384,8 +384,8 @@ theorem exists_adelic_limit (g : ℕ → D.La →+ D.La)
     ∃ h₀ : Module.End (AfP p) (AfP p ⊗[ℚ] VQ D), (∀ v ∈ LaHat D, h₀ v ∈ LaHat D) ∧
       ∀ n : ℕ, 0 < n → Nat.Coprime n p → ∀ x : D.La, ∃ w ∈ LaHat D, h₀ (inAf D x) = inAf D (g n x) + n • w := by
   classical
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   let B := Algebra.TensorProduct.basis (AfP p) (Algebra.TensorProduct.basis ℚ b)
   have hB : ∀ i, B i = inAf D (b i) := fun i => by
@@ -527,7 +527,7 @@ theorem exists_nsmul_of_basis {M κ : Type} [AddCommGroup M] (b : Module.Basis �
 
 theorem invSys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (g : ℕ → D.La →+ D.La), (∀ n m : ℕ, 0 < n → 0 < m → (n * m).Coprime p → ∀ x, ∃ z, g (n * m) x = g n x + n • z) → (∀ n, 0 < n → n.Coprime p → ∀ x, ∃ y z, g n y = x + n • z) → (∀ n, 0 < n → n.Coprime p → ∀ x z, g n x = n • z → ∃ w, x = n • w) → ∃ g' : ℕ → D.La →+ D.La, (∀ n m : ℕ, 0 < n → 0 < m → (n * m).Coprime p → ∀ x, ∃ z, g' (n * m) x = g' n x + n • z) ∧ (∀ n, 0 < n → n.Coprime p → ∀ x, ∃ z, g n (g' n x) = x + n • z) ∧ (∀ n, 0 < n → n.Coprime p → ∀ x, ∃ z, g' n (g n x) = x + n • z) := by
   intro p _ D g htow hsurj hinj
-  haveI := D.freeLa
+  have := D.freeLa
   let b := Module.Free.chooseBasis ℤ D.La
   choose y z hyz using hsurj
   let g' : ℕ → D.La →+ D.La := fun n =>
@@ -535,7 +535,7 @@ theorem invSys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (g : ℕ → D.La �
   have sec : ∀ n, 0 < n → n.Coprime p → ∀ x, ∃ z, g n (g' n x) = x + n • z := by
     intro n hn hc x
     have hg' : g' n = (b.constr ℤ (fun i => y n hn hc (b i))).toAddMonoidHom := by
-      simp only [g', dif_pos (And.intro hn hc)]
+      simp only [g', dite_eq_left (And.intro hn hc)]
     obtain ⟨w, hw⟩ := exists_nsmul_of_basis b
       ((g n).toIntLinearMap ∘ₗ b.constr ℤ (fun i => y n hn hc (b i)) - LinearMap.id) n
       (fun i => ⟨z n hn hc (b i), by simp [Module.Basis.constr_basis, hyz]⟩) x
@@ -671,7 +671,7 @@ theorem exists_actOn_eq_of_commute : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) 
     (∀ b : D.O, A * (actQ D b).baseChange (AfP p) = (actQ D b).baseChange (AfP p) * A) →
     ∃ y, actOn L.rep (AfP p) y = A := by
   intro p _ D G L A hA
-  haveI := D.finLa
+  have := D.finLa
   exact exists_actOn_eq L.rep (actQ D) (fun B hB => (L.rep_range B).mpr hB) (AfP p) A hA
 
 end GlobalTheory.LKGeo.CommBC
@@ -798,7 +798,7 @@ theorem exists_integer_lim (p : ℕ) [hp : Fact p.Prime] (a : ℕ → ℤ)
     (ha : ∀ n m : ℕ, 0 < n → 0 < m → (n * m).Coprime p → (n : ℤ) ∣ a (n * m) - a n) (v : AwayP p) :
     ∃ x : v.1.adicCompletionIntegers ℚ, ∀ n : ℕ, 0 < n → n.Coprime p →
       ∃ b : v.1.adicCompletionIntegers ℚ, x = (a n : v.1.adicCompletionIntegers ℚ) + (n : v.1.adicCompletionIntegers ℚ) * b := by
-  haveI : Fact (primesEquiv v.1 : ℕ).Prime := ⟨(primesEquiv v.1).2⟩
+  have : Fact (primesEquiv v.1 : ℕ).Prime := ⟨(primesEquiv v.1).2⟩
   obtain ⟨L, hL⟩ := exists_padicInt_lim p (primesEquiv v.1 : ℕ) hp.out (natGenerator_ne p v) a ha
   let e := (RingEquivClass.toRingEquiv (adicCompletionIntegers.padicIntEquiv (R := ℤ) v.1)).symm
   refine ⟨e L, fun n hn hnp => ?_⟩

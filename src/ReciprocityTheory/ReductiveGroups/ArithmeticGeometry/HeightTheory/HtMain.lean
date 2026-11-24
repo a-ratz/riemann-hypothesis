@@ -169,7 +169,7 @@ theorem h_six (hd : d.AxH 𝒜) (h : d.S1) (hF1d : d.TrivialPlaceHyp) (x : Fin (
     have m3 := d.pow_mem_ne hd het 1
     have m23 : ∀ c, (d.ta1 ^ (a + 1) * d.et ^ (1 + 1)) c ∈ 𝒜 c ((a + 1) • ((2 : ℕ) • d.G1) + (1 + 1) • (d.n1 • d.wde)) ∧
         (d.ta1 ^ (a + 1) * d.et ^ (1 + 1)) c ≠ 0 := fun c => by
-      haveI := hd.graded c
+      have := hd.graded c
       exact ⟨SetLike.mul_mem_graded (m2 c).1 (m3 c).1, hd.mul_ne_zero c (m2 c).1 (m3 c).1 (m2 c).2 (m3 c).2⟩
     have m1' : ∀ c, (sb ^ (2 * a + 1 + 1)) c ∈ 𝒜 c ((a + 1) • ((2 : ℕ) • d.G1) + (1 + 1) • (d.n1 • d.wde)) ∧
         (sb ^ (2 * a + 1 + 1)) c ≠ 0 := fun c => by rw [← hW]; exact m1 c
@@ -184,7 +184,7 @@ theorem h_six (hd : d.AxH 𝒜) (h : d.S1) (hF1d : d.TrivialPlaceHyp) (x : Fin (
       unfold G2; rw [add_sub_cancel]
     have m1 := d.pow_mem_ne hd hsb (d.D + 3)
     have m23 : ∀ c, (ta' * d.ta2) c ∈ 𝒜 c (d.wF + d.G2) ∧ (ta' * d.ta2) c ≠ 0 := fun c => by
-      haveI := hd.graded c
+      have := hd.graded c
       exact ⟨SetLike.mul_mem_graded (hta' c).1 (hta2 c).1,
         hd.mul_ne_zero c (hta' c).1 (hta2 c).1 (hta' c).2 (hta2 c).2⟩
     have m1' : ∀ c, (sb ^ (d.D + 3 + 1)) c ∈ 𝒜 c (d.wF + d.G2) ∧ (sb ^ (d.D + 3 + 1)) c ≠ 0 :=
@@ -318,11 +318,11 @@ theorem sphereMean_substituted_eq_integral (x : Fin (d.N + 1) → K) (F : KTp K 
       ∫ z, g (Fin.tail z) ∂(Measure.pi fun _ : Fin (d.D + 1) => sphereProb (d.N + 1)) =
         ∫ w, g w ∂(Measure.pi fun _ : Fin d.D => sphereProb (d.N + 1)) := by
     intro g
-    haveI hpr : IsProbabilityMeasure (sphereProb (d.N + 1)) :=
+    have hpr : IsProbabilityMeasure (sphereProb (d.N + 1)) :=
       ReciprocityTheory.MultiplicativeHeights.isProbabilityMeasure_sphereProb (Nat.succ_pos _)
-    haveI hfin : IsFiniteMeasure (sphereProb (d.N + 1)) :=
+    have hfin : IsFiniteMeasure (sphereProb (d.N + 1)) :=
       ⟨by rw [MeasureTheory.measure_univ]; exact ENNReal.one_lt_top⟩
-    haveI hsf : SigmaFinite (sphereProb (d.N + 1)) :=
+    have hsf : SigmaFinite (sphereProb (d.N + 1)) :=
       @MeasureTheory.IsFiniteMeasure.toSigmaFinite _ _ _ hfin
     haveI hsf' : ∀ i : Fin (d.D + 1), SigmaFinite ((fun _ : Fin (d.D + 1) => sphereProb (d.N + 1)) i) :=
       fun _ => hsf
@@ -349,8 +349,8 @@ theorem sphereMean_fubini {F : MvPolynomial (Fin (d.D + 1) × Fin (d.N + 1)) ℂ
       ∫ z, (∫ s, Real.log ‖MvPolynomial.eval (hintPt (spherePoint s) z) F‖ ∂(sphereProb (d.N + 1)))
         ∂(blockSphereProb d.D (d.N + 1)) := by
   have hn : 0 < d.N + 1 := Nat.succ_pos _
-  haveI := sphereMeasure_isProbability hn
-  haveI := blockSphereMeasure_isProbability (B := d.D) hn
+  have := sphereMeasure_isProbability hn
+  have := blockSphereMeasure_isProbability (B := d.D) hn
   set G : UnitSphereC (d.N + 1) × BlockSphere d.D (d.N + 1) → ℝ :=
     fun p => Real.log ‖MvPolynomial.eval (hintPt (spherePoint p.1) p.2) F‖ with hG
   have hmp := hint_mpSplit d.D (d.N + 1) hn
@@ -406,11 +406,11 @@ theorem archimedean_local_height_term (hd : d.AxH 𝒜) (h : d.S1) (x : Fin (d.N
       blockSphereMean (d.D + 1) (d.N + 1) (MvPolynomial.map sg F) -
         blockSphereMean (d.D + 1) (d.N + 1) (MvPolynomial.map sg (d.translatedForm x F)) +
         Real.log ‖sg κ‖ + d.delc c * (harmonic d.N : ℝ) / 2 := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
   have hn : 0 < d.N + 1 := Nat.succ_pos _
-  haveI := sphereMeasure_isProbability hn
-  haveI := blockSphereMeasure_isProbability (B := d.D) hn
+  have := sphereMeasure_isProbability hn
+  have := blockSphereMeasure_isProbability (B := d.D) hn
   have hinj := IsFractionRing.injective (KTp K d.D d.N) (KTf K d.D d.N)
   set ra := ratio (Ω := Ω c) (d.wx x c) (d.w (d.jc c) c) with hra
   have hmem := d.linearCombination_mem_section hd x c
@@ -911,14 +911,14 @@ private lemma ratio_eq_of_eq_smul' {Ω' V : Type*} [Field Ω'] [AddCommGroup V] 
 theorem ratio_linearCombination_expand (hd : d.AxH 𝒜) (x : Fin (d.N + 1) → K) (c : ι) :
     ratio (Ω := Ω c) (d.wx x c) (d.w (d.jc c) c) =
       ∑ j, algebraMap K (Ω c) (x j) * ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c) := by
-  haveI := hd.tower c
+  have := hd.tower c
   have hg : d.w (d.jc c) c ≠ 0 := hd.w_base c
   have hspan : ∀ f ∈ 𝒜 c d.wL, ∃ a : Ω c, f = a • d.w (d.jc c) c := by
     intro f hf
     have hne : (⟨d.w (d.jc c) c, hd.w_mem _ c⟩ : 𝒜 c d.wL) ≠ 0 := by
       intro h0
       exact hg (congrArg Subtype.val h0)
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hne).mp (hd.finrank_one c d.wL) ⟨f, hf⟩
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne).mp (hd.finrank_one c d.wL) ⟨f, hf⟩
     exact ⟨a, (congrArg Subtype.val ha).symm⟩
   choose r hr using fun j => hspan (d.w j c) (hd.w_mem j c)
   have hrat : ∀ j, ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c) = r j := fun j => ratio_eq_of_eq_smul' hg (hr j)
@@ -1234,10 +1234,10 @@ theorem HtGenericPt {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι
     intro c hc
     apply hφ c
     have := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single (d.jc c) 1)) hc
-    simpa [P, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X',
+    simpa [P, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X,
       Finsupp.single_eq_single_iff] using this
   have hprod : (∏ c, P c) ≠ 0 := Finset.prod_ne_zero_iff.mpr (fun c _ => hP c)
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   by_contra hne
   push_neg at hne
   apply hprod
@@ -1454,7 +1454,7 @@ theorem heights (hd : d.AxH 𝒜) (h : d.S1) (hH1 : d.FinitePlaceHyp) (hF1d : d.
     rfl
   have eN : ∀ la, (d.htOf hd h).Net la = d.Nl h la := by
     intro la
-    haveI : ∀ c, Fintype {w // w ∈ d.PlOver la c} := fun c => (hplf la c).fintype
+    have : ∀ c, Fintype {w // w ∈ d.PlOver la c} := fun c => (hplf la c).fintype
     show (∑ᶠ ζ : (Σ c, {w // w ∈ d.PlOver la c}), ((1 : ℕ) : ℝ) * (d.fze h ζ.1 ζ.2.1 : ℝ) *
       (d.ord ζ.1 (d.Wres ζ.1 ζ.2.1) (d.n1 • d.wde) (d.et ζ.1) : ℝ)) = _
     rw [finsum_eq_sum_of_fintype, Fintype.sum_sigma]

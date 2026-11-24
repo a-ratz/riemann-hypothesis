@@ -58,9 +58,9 @@ def OsConcrete (D : D7) : Prop :=
 
 theorem OsRingOfIntegers_of_concrete (D : D7) (h : OsConcrete D) : OsRingOfIntegers D := by
   obtain ⟨hinj, K, hK⟩ := h
-  letI : NumberField D.what₂.LL := D.nfLL
-  haveI : FiniteDimensional ℚ K := inferInstance
-  haveI : NumberField K := { to_charZero := inferInstance, to_finiteDimensional := inferInstance }
+  let : NumberField D.what₂.LL := D.nfLL
+  have : FiniteDimensional ℚ K := inferInstance
+  have : NumberField K := { to_charZero := inferInstance, to_finiteDimensional := inferInstance }
   let g : 𝓞 K →+* D.what₂.LL := (algebraMap K D.what₂.LL).comp (algebraMap (𝓞 K) K)
   have hg : Function.Injective g :=
     (algebraMap K D.what₂.LL).injective.comp (IsFractionRing.injective (𝓞 K) K)
@@ -70,14 +70,14 @@ theorem OsRingOfIntegers_of_concrete (D : D7) (h : OsConcrete D) : OsRingOfInteg
     constructor
     · rintro ⟨a, rfl⟩
       have hy : g a ∈ Set.range D.what₂.OtoLL := by
-        rw [hK, Set.mem_setOf_eq]
+        rw [hK, Set.mem_ofPred_eq]
         exact ⟨(algebraMap (𝓞 K) K a).2,
           IsIntegral.algebraMap (R := ℤ) (A := K) (B := D.what₂.LL)
             ((IsIntegralClosure.isIntegral_iff (A := 𝓞 K) (R := ℤ) (B := K)).mpr ⟨a, rfl⟩)⟩
       exact hy
     · rintro ⟨x, rfl⟩
       have hx : D.what₂.OtoLL x ∈ Set.range D.what₂.OtoLL := ⟨x, rfl⟩
-      rw [hK, Set.mem_setOf_eq] at hx
+      rw [hK, Set.mem_ofPred_eq] at hx
       obtain ⟨hxK, hxI⟩ := hx
       have hz : IsIntegral ℤ (⟨D.what₂.OtoLL x, hxK⟩ : K) :=
         (isIntegral_algebraMap_iff ).mp hxI

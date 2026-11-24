@@ -263,11 +263,11 @@ theorem relIndex_ne_zero_of_nsmul_mem {W : Type*} [AddCommGroup W] (L G : AddSub
     refine (injective_iff_map_eq_zero f).2 fun a ha => ?_
     have : D • (a : W) = 0 := congrArg Subtype.val ha
     exact Subtype.ext (hinj _ this)
-  haveI : Module.Finite ℤ L := Module.Finite.iff_addGroup_fg.2 inferInstance
-  haveI : Module.Finite ℤ G := Module.Finite.of_injective f.toIntLinearMap hf
-  haveI : AddGroup.FG G := Module.Finite.iff_addGroup_fg.1 inferInstance
-  haveI : Finite (G ⧸ L.addSubgroupOf G) := by
-    refine AddCommGroup.finite_of_fg_torsion _ ?_
+  have : Module.Finite ℤ L := Module.Finite.iff_addGroup_fg.2 inferInstance
+  have : Module.Finite ℤ G := Module.Finite.of_injective f.toIntLinearMap hf
+  have : AddGroup.FG G := Module.Finite.iff_addGroup_fg.1 inferInstance
+  have : Finite (G ⧸ L.addSubgroupOf G) := by
+    refine AddCommGroup.finite_of_fg_isAddTorsion _ ?_
     intro q
     induction q using QuotientAddGroup.induction_on with
     | H y =>
@@ -334,8 +334,8 @@ theorem latEmb_relIndex_dual_ne_zero : ∀ (E : Type) [Field E] [NumberField E] 
       exact (mul_eq_zero.1 h2).resolve_left (Nat.cast_ne_zero.2 hk)
     have h2 := hnd _ h1
     exact ⟨-z, by rw [map_neg]; exact (eq_neg_of_add_eq_zero_left h2).symm⟩
-  haveI : AddGroup.FG e.range := by
-    haveI : Module.Finite ℤ e.range :=
+  have : AddGroup.FG e.range := by
+    have : Module.Finite ℤ e.range :=
       Module.Finite.of_surjective e.rangeRestrict.toIntLinearMap e.rangeRestrict_surjective
     exact Module.Finite.iff_addGroup_fg.1 inferInstance
   refine relIndex_ne_zero_of_nsmul_mem _ _ (D := m * H.d) (mul_ne_zero hm H.d_prime.ne_zero) ?_ hDy

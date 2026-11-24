@@ -192,8 +192,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {a : ℕ}
 
 theorem conjAd_eq (x : Ad E) :
     conjAd E x = GlobalTheory.UnitaryHeckeBaseChange.adeleConj (maximalRealSubfield E) E x := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
   have key : ∀ k : E, conjAd E (algebraMap E _ k) =
       GlobalTheory.UnitaryHeckeBaseChange.adeleConj (maximalRealSubfield E) E (algebraMap E _ k) := fun k => by
     rw [conjAd_algebraMap, GlobalTheory.UnitaryHeckeBaseChange.adeleConj_algebraMap]

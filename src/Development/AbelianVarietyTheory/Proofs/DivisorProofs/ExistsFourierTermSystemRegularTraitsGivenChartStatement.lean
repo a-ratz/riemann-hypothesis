@@ -360,7 +360,7 @@ theorem exists_refined_ext_lift : ∀ g n : ℕ, ∀ (F : SFam g n (zetaAway n))
   obtain ⟨G', _, _, A', U', y₀, α, α₂, -, hy₀, -⟩ := hU.2 V₀ ρ₀ hCN₀ hinj₀ hfin₀ D₀ e₀ hRef₀
   obtain ⟨L, _, _, _, yL, hyL⟩ := GlobalTheory.T.exists_lift_fieldPoint_finite_surjective_after_extension (FractionRing V₀) F.X Y y₀ q hq hs
   obtain ⟨V₁, _, _, _, ρ, σ, hCN₁, hinj, hfin, hloc, hσ⟩ := GlobalTheory.T.exists_finite_local_extension_with_embedded_field_extension V₀ hCN₀ L
-  haveI : IsNoetherianRing V₀ := hCN₀.1
+  have : IsNoetherianRing V₀ := hCN₀.1
   have hR : AdmBase V₀ (maximalIdeal V₀) := ⟨hCN₀.1, inferInstance, hCN₀.2.1, hCN₀.2.2.1⟩
   obtain ⟨Wo, hWo, hψ⟩ := GlobalTheory.psiOnExists V₀ _ hR D₀
   have hgen : (specOf ρ).base (genericPoint (Spec (CommRingCat.of V₁))) ∈ Wo := by
@@ -469,7 +469,7 @@ theorem exists_map_model : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o 
   have hW : IsAffineOpen (π ⁻¹ᵁ V) := hV.preimage π
   have hne : ((π ⁻¹ᵁ V : M.Z.Opens) : Set M.Z).Nonempty :=
     ⟨M.pt (IsLocalRing.closedPoint Ω), hpV (x := IsLocalRing.closedPoint Ω) trivial⟩
-  haveI : IsFractionRing R Ω := IsFractionRing.of_field _ _ fun z => by
+  have : IsFractionRing R Ω := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨a, ha, c, hc, h⟩ := hR z
     exact ⟨⟨a, ha⟩, ⟨c, hc⟩, h⟩
   have hα := isIntegral_valMap hV f hg
@@ -593,7 +593,7 @@ theorem exists_chart_at : ∀ (n N : ℕ) (X Y Z : Scheme.{0}) (sX : X ⟶ Sp (c
   have hχ : spMap χ ≫ hU.fromSpec = y' := by
     have : spMap χ = IsOpenImmersion.lift hU.fromSpec y' hrange := Spec.map_preimage _
     rw [this, IsOpenImmersion.lift_fac]
-  haveI : (RingHom.ker χ).IsPrime := RingHom.ker_isPrime χ
+  have : (RingHom.ker χ).IsPrime := RingHom.ker_isPrime χ
   obtain ⟨P₀, hP₀, hPχ⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal Γ(Y, U))) (J := RingHom.ker χ) bot_le
   obtain ⟨P, rfl⟩ : ∃ P : PrimeSpectrum Γ(Y, U), P.asIdeal = P₀ := ⟨⟨P₀, hP₀.1.1⟩, rfl⟩
   have hmax := forall_specializes_fromSpec hU P hP₀
@@ -613,9 +613,9 @@ theorem exists_chart_at : ∀ (n N : ℕ) (X Y Z : Scheme.{0}) (sX : X ⟶ Sp (c
     have h1 : spMap ψ P = sY (hU.fromSpec P) := by rw [hψ]; rfl
     change (spMap ψ P).asIdeal = ⊥
     rw [h1]; exact hgen
-  letI : Algebra (cycAway N) Γ(Y, U) := ψ.toAlgebra
-  haveI : Algebra.Smooth (cycAway N) Γ(Y, U) := hsm
-  haveI : IsDedekindDomain (cycAway N) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway N
+  let : Algebra (cycAway N) Γ(Y, U) := ψ.toAlgebra
+  have : Algebra.Smooth (cycAway N) Γ(Y, U) := hsm
+  have : IsDedekindDomain (cycAway N) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway N
   have hic : IsIntegrallyClosed (Γ(Y, U) ⧸ P.asIdeal) := isIntegrallyClosed_quotient_of_mem_minimalPrimes
     (fun m _ => isDomain_and_isIntegrallyClosed_atPrime_of_smooth (cycAway N) m _) hP₀
   let Ω := FractionRing (Γ(Y, U) ⧸ P.asIdeal)
@@ -623,15 +623,15 @@ theorem exists_chart_at : ∀ (n N : ℕ) (X Y Z : Scheme.{0}) (sX : X ⟶ Sp (c
   have hφker : ∀ a, φ a = 0 ↔ a ∈ P.asIdeal := fun a => by
     simp only [φ, RingHom.comp_apply]
     rw [(IsFractionRing.injective (Γ(Y, U) ⧸ P.asIdeal) Ω).eq_iff' (map_zero _), Ideal.Quotient.eq_zero_iff_mem]
-  letI : Algebra (cycAway N) Ω := (φ.comp ψ).toAlgebra
+  let : Algebra (cycAway N) Ω := (φ.comp ψ).toAlgebra
   let f : Γ(Y, U) →ₐ[cycAway N] Ω := { φ with commutes' := fun _ => rfl }
   have hinj : Function.Injective (algebraMap (cycAway N) Ω) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     have : x ∈ Ideal.comap ψ P.asIdeal := (hφker (ψ x)).1 hx
     rwa [hker, Ideal.mem_bot] at this
-  haveI : CharZero Ω := charZero_of_injective_algebraMap hinj
-  haveI : ArithBase (cycAway N) Ω :=
+  have : CharZero Ω := charZero_of_injective_algebraMap hinj
+  have : ArithBase (cycAway N) Ω :=
     ⟨GlobalTheory.CycAwayReg.isDedekindDomain_cycAway N, finiteType_cycAway N, inferInstance, hinj⟩
   have hsurj : Function.Surjective f.rangeRestrict.toRingHom := f.rangeRestrict_surjective
   have hkerR : RingHom.ker f.rangeRestrict.toRingHom = P.asIdeal := by
@@ -646,7 +646,7 @@ theorem exists_chart_at : ∀ (n N : ℕ) (X Y Z : Scheme.{0}) (sX : X ⟶ Sp (c
     spMap χR, i ''ᵁ V₀, spMap f.rangeRestrict.toRingHom ≫ hU.isoSpec.inv ≫ (q ∣_ V₀) ≫ (i.isoImage V₀).hom,
     ?_, ?_, ?_, ?_, ?_, ?_, ?_, hV₀.image_of_isOpenImmersion i, inferInstance, ?_⟩
   · rw [← Algebra.map_top]
-    haveI : Algebra.FiniteType (cycAway N) Γ(Y, U) := hft
+    have : Algebra.FiniteType (cycAway N) Γ(Y, U) := hft
     exact Algebra.FiniteType.out.map f
   · intro z
     obtain ⟨x, s, -, rfl⟩ := IsFractionRing.div_surjective (A := Γ(Y, U) ⧸ P.asIdeal) z
@@ -774,10 +774,10 @@ theorem exists_setup_cov : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
   obtain ⟨a, w, w', hw, hw', hs⟩ := EighthPowerFactor.exists_matrices hW.2
   obtain ⟨b, t', hp', hsh'⟩ := exists_sharpOver_cover g n _ F F' κ q (by omega) hk3 hko hζ hqs hq W _ a w w' bas
     hW hbas hw hw' hs
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
-  haveI := F'.smooth
-  haveI : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have := F'.smooth
+  have : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
   obtain ⟨Ω, _, _, _, R, x, yR, V, f, hRfg, hfrac, hRic, hxs, hyR, hgen, hst, hV, hf, hfV⟩ :=
     chartAt n (n * (l ^ (2 * (j₀ + j₁ + k))) ^ 2) F.X F'.X Z F.s F'.s q i inferInstance (by omega)
       (Nat.mul_pos (by omega) (pow_pos (pow_pos hl.pos _) _)) inferInstance inferInstance hqfin hqet hqsurj K y'
@@ -790,7 +790,7 @@ theorem exists_setup_cov : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
   have hS : ZH.HypS t.A t.L := ⟨t.act w, t.act w', t.hom w, t.hom w', hp.1, hp.2.2, hp.2.1⟩
   have hu : IsUnit (l : cycAway (n * (l ^ (2 * (j₀ + j₁ + k))) ^ 2)) := isUnit_of_dvd_unit (Nat.cast_dvd_cast
     ((dvd_pow_self l (by omega : 2 * (j₀ + j₁ + k) ≠ 0)).trans (dvd_pow_self _ two_ne_zero))) b.unit
-  haveI : NeZero ((l ^ (2 * (j₀ + j₁ + k))) ^ 2) := ⟨by have := hl.pos; positivity⟩
+  have : NeZero ((l ^ (2 * (j₀ + j₁ + k))) ^ 2) := ⟨by have := hl.pos; positivity⟩
   obtain ⟨lev₀, -⟩ := GlobalTheory.ThetaSysOfObj.exists_level R t
   have e : (l ^ (2 * (j₀ + j₁ + k))) ^ 2 = (l ^ (2 * (j₀ + j₁)) * (l ^ k) ^ 2) ^ 2 := by ring
   obtain ⟨lev, -⟩ : ∃ lev : Out.Level t.pol ((l ^ (2 * (j₀ + j₁)) * (l ^ k) ^ 2) ^ 2)
@@ -799,8 +799,8 @@ theorem exists_setup_cov : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
   obtain ⟨S, ρ, hR, φ, hreg, -, hNS, hrS, hgS, hpb, hL, -⟩ :=
     GlobalTheory.T.exists_thetaSystem_realisation_regular_at_prime _ Ω R hRfg hfrac (yR (IsLocalRing.closedPoint K)).asIdeal (yR (IsLocalRing.closedPoint K)).isPrime t.pol l k (2 * (j₀ + j₁))
       b.ζ hl hlo hk (by omega) hu hS lev
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
-  haveI : IsProper z := ((isProjOver_iff_isProper_and_exists_isAmpleLB z).1 hproj).1
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
+  have : IsProper z := ((isProjOver_iff_isProper_and_exists_isAmpleLB z).1 hproj).1
   have hbase : spMap R.val.toRingHom ≫ x ≫ q ≫ F.s = spMap ((algebraMap _ Ω).comp κ) := by
     rw [hqs, ← Category.assoc x, hxs]
     simp only [spMap, ← Spec.map_comp]
@@ -932,7 +932,7 @@ theorem yK_ne_zero {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8) (
     {ev : X₁.M.Z.presheaf.stalk z₁ →+* V} {X : Type} [AddCommGroup X] {m : ℕ} {t : Fin m → V}
     {δ : Fin m → LinearMap.BilinForm ℤ X} (𝔪 : UMem X₁ z₁ act V ev X t δ) :
     𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩ ≠ 0 := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   obtain ⟨a, ha⟩ := GlobalTheory.ThetaGeneric.exists_th_ne_zero hL.1 hL.2.1 _ _ X₁.S X₁.ρ (FractionRing V) 𝔪.yK
   intro h0
@@ -952,7 +952,7 @@ theorem yK_ne_zero {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8) (
 theorem isThetaTerms₀_of_terms : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (z₁ : X₁.M.Z) (act : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (m : ℕ) (t : Fin m → V) (δ : Fin m → LinearMap.BilinForm ℤ X) (𝔪 : UMem X₁ z₁ act V ev X t δ) (C : Type) (lab : C → X₁.S.Gam), Set.range lab = X₁.S.HH X₁.M z₁ → ∀ T : (Fin 8 → X) → C → V, 𝔪.Terms x₀ lab T → IsThetaTerms₀ 𝔪.D.toPre (X₁.S.r * X₁.S.N) 𝔪.e₈ T := by
   intro g n F W Z i X₁ z₁ act x₀ hd V _ _ _ ev X _ m t δ 𝔪 C lab hlab T hT
   obtain ⟨x, fr, th, w₀, s, g', w, hx, hfr, -, hw₀, -, hg, hT⟩ := hT
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hk : 1 ≤ X₁.S.r * X₁.S.N := by
@@ -977,7 +977,7 @@ theorem isThetaTerms₀_of_terms : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (
     (g' a) (w a) (x (lab a)) (fr (lab a)) (hg a).2.1 (hfr _).1 (hg a).2.2 c hc
   have htors : ∀ a, (g' a).b ^ (X₁.S.r * X₁.S.N) = 1 := fun a => by
     obtain ⟨o, h₁, h₂⟩ := (hg a).1
-    letI := GlobalTheory.TorusExt.gtGroup 𝔪.D.toPre (FractionRing V)
+    let := GlobalTheory.TorusExt.gtGroup 𝔪.D.toPre (FractionRing V)
     have e := congrArg (GlobalTheory.TorusExt.gtProj 𝔪.D.toPre (FractionRing V)) ((GlobalTheory.TorusExt.isNsmul_iff_eq _ _ _).1 h₁)
     rw [map_nsmul] at e
     exact (congrArg Additive.toMul e).symm.trans ((isZero_iff o).1 h₂).1
@@ -1093,7 +1093,7 @@ theorem _root_.GlobalTheory.Poinc.Sep.nonempty_uMem_trait {g n : ℕ} {F : SFam 
     (T : Trait F) (ev : X₁.M.Z.presheaf.stalk z₁ →+* T.V) (h₁ : IsLocalHom ev) (h₂ : RegAt X₁ z₁ ev)
     (h₃ : jK T.V ≫ spMap ev ≫ X₁.M.Z.fromSpecStalk z₁ ≫ X₁.π = T.y ≫ i) :
     Nonempty (UMem X₁ z₁ act T.V ev T.D.toPre.X ![T.ϖ] ![T.β]) := by
-  haveI := X₁.imm
+  have := X₁.imm
   obtain ⟨hτ, h0, -, -⟩ := GlobalTheory.T.siegelModuliTrait_periods_monomial_posDef g n _ _ F T
   have hcn : IsCN T.V := ⟨inferInstance, inferInstance, T.complete, inferInstance⟩
   obtain ⟨𝔪, -⟩ := GlobalTheory.T.exists_uniformised_member_of_refined_uniformisation g X₁.one_le n X₁.three_le X₁.odd F Z X₁.z i X₁.proj hZ X₁.thetaSetup_structureMap_comp X₁.dense W X₁.e8
@@ -1120,26 +1120,26 @@ theorem _root_.GlobalTheory.Poinc.Sep.exists_vPre_traits_chart : ∀ g : ℕ, 1 
     rw [← cycBase_ζ (show n ≠ 0 by omega)]
     exact Units.isUnit _
   have hρ : IsLocalHom ρ := by
-    letI := ρ.toAlgebra
-    haveI : Module.Finite V V₁ := hfin
-    haveI : FaithfulSMul V V₁ := (faithfulSMul_iff_algebraMap_injective V V₁).2 hinj
+    let := ρ.toAlgebra
+    have : Module.Finite V V₁ := hfin
+    have : FaithfulSMul V V₁ := (faithfulSMul_iff_algebraMap_injective V V₁).2 hinj
     exact (inferInstance : IsLocalHom (algebraMap V V₁))
   let Tr : Type 1 := Σ T : Trait F, {e : X₁.M.Z.presheaf.stalk z₁ →+* T.V // IsLocalHom e ∧ RegAt X₁ z₁ e ∧
     jK T.V ≫ spMap e ≫ X₁.M.Z.fromSpecStalk z₁ ≫ X₁.π = T.y ≫ i}
   let VV : Option Tr → Type := fun y => match y with | none => V₁ | some T => T.1.V
-  letI iR : ∀ y, CommRing (VV y) := fun y => match y with
+  let iR : ∀ y, CommRing (VV y) := fun y => match y with
     | none => inferInstanceAs (CommRing V₁) | some T => inferInstanceAs (CommRing T.1.V)
-  haveI iD : ∀ y, IsDomain (VV y) := fun y => match y with
+  have iD : ∀ y, IsDomain (VV y) := fun y => match y with
     | none => inferInstanceAs (IsDomain V₁) | some T => inferInstanceAs (IsDomain T.1.V)
-  haveI iL : ∀ y, IsLocalRing (VV y) := fun y => match y with
+  have iL : ∀ y, IsLocalRing (VV y) := fun y => match y with
     | none => inferInstanceAs (IsLocalRing V₁) | some T => inferInstanceAs (IsLocalRing T.1.V)
   let EV : ∀ y, X₁.M.Z.presheaf.stalk z₁ →+* VV y := fun y => match y with | none => ev | some T => T.2.1
   let XX : Option Tr → Type := fun y => match y with | none => Q.X | some T => T.1.D.toPre.X
-  letI iA : ∀ y, AddCommGroup (XX y) := fun y => match y with
+  let iA : ∀ y, AddCommGroup (XX y) := fun y => match y with
     | none => inferInstanceAs (AddCommGroup Q.X) | some T => inferInstanceAs (AddCommGroup T.1.D.toPre.X)
-  haveI iF : ∀ y, Module.Free ℤ (XX y) := fun y => match y with
+  have iF : ∀ y, Module.Free ℤ (XX y) := fun y => match y with
     | none => inferInstanceAs (Module.Free ℤ Q.X) | some T => inferInstanceAs (Module.Free ℤ T.1.D.toPre.X)
-  haveI iG : ∀ y, Module.Finite ℤ (XX y) := fun y => match y with
+  have iG : ∀ y, Module.Finite ℤ (XX y) := fun y => match y with
     | none => inferInstanceAs (Module.Finite ℤ Q.X) | some T => inferInstanceAs (Module.Finite ℤ T.1.D.toPre.X)
   let MM : Option Tr → ℕ := fun y => match y with | none => m | some _ => 1
   let tt : ∀ y, Fin (MM y) → VV y := fun y => match y with | none => fun k => ρ (t k) | some T => ![T.1.ϖ]

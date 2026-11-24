@@ -195,7 +195,7 @@ theorem exists_fixedVectors_mk_eq_of_fixed (hρ : IsSmooth ρ) (hKc : IsCompact 
   have hfin : Finite (K ⧸ S.subgroupOf K) := by
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
-    exact hSo.preimage continuous_subtype_val
+    exact hSo.preimage continuous_subtypeVal
   have := Fintype.ofFinite (K ⧸ S.subgroupOf K)
   set n : ℂ := (Fintype.card (K ⧸ S.subgroupOf K) : ℂ)
   have hn : n ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero

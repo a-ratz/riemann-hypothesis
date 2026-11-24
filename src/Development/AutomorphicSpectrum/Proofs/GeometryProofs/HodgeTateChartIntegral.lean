@@ -103,15 +103,15 @@ theorem test_field : ∀ (A : Type) [CommRing A] [IsDomain A] [IsNoetherianRing 
   let K := FractionRing R
   have hAR : Function.Injective (algebraMap A R) :=
     IsLocalization.injective R q.primeCompl_le_nonZeroDivisors
-  haveI : CharZero R := charZero_of_injective_algebraMap hAR
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
+  have : CharZero R := charZero_of_injective_algebraMap hAR
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
   have hpR : (p : R) ∈ IsLocalRing.maximalIdeal R := by
     have := (IsLocalization.AtPrime.to_map_mem_maximal_iff R q (p : A)).2 hpq
     rwa [map_natCast] at this
   obtain ⟨C, _, _, _, _, _, _, hC⟩ :=
     GlobalTheory.exists_complete_isAlgClosed_padic_of_isDiscreteValuationRing R K p hpR
   obtain ⟨φ, hφ, hφ'⟩ := GlobalTheory.exists_isLocalHom_normIntegers hC
-  haveI : CharZero C := charZero_of_injective_algebraMap (algebraMap K C).injective
+  have : CharZero C := charZero_of_injective_algebraMap (algebraMap K C).injective
   have hO := GlobalTheory.normIntegers_integers C
   have key : ∀ a : A, a ∈ q ↔
       NormedField.valuation (K := C) (algebraMap (GlobalTheory.normIntegers C) C (φ (algebraMap A R a))) < 1 := by
@@ -205,7 +205,7 @@ theorem finrank_eq_rankAtStalk {A Q : Type} [CommRing A] [IsDomain A] [AddCommGr
     [Module.Finite A Q] [Module.Projective A Q] (P : PrimeSpectrum A) :
     Module.finrank A Q = Module.rankAtStalk Q P := by
   have hbc := TensorProduct.isBaseChange A Q (FractionRing A)
-  haveI := Module.finitePresentation_of_projective A Q
+  have := Module.finitePresentation_of_projective A Q
   rw [LieRank.finrank_eq_of_isBaseChange_fractionRing _ hbc,
     LieRank.finrank_of_isBaseChange _ hbc (IsLocalRing.closedPoint (FractionRing A))]
   exact (Module.isLocallyConstant_rankAtStalk (R := A) (M := Q)).apply_eq_of_preconnectedSpace _ _
@@ -216,8 +216,8 @@ theorem finrank_lie_eq (S : Scheme.{0}) (G : Over S) [GrpObj G] [Smooth G.hom]
     (M : LieModel G x L) (M' : LieModel G (spMap (algebraMap R O) ≫ x) L') :
     Module.finrank O L' = Module.finrank R L := by
   obtain ⟨hf, hp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective S G R x L M
-  letI : Module R L' := Module.compHom L' (algebraMap R O)
-  haveI : IsScalarTower R O L' := ⟨fun a b c => by
+  let : Module R L' := Module.compHom L' (algebraMap R O)
+  have : IsScalarTower R O L' := ⟨fun a b c => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   obtain ⟨j, hj⟩ := LieRank.exists_lift G x M M'
@@ -270,10 +270,10 @@ open GlobalTheory.CompanionTheory.Ar.HT.TestPts in
 theorem hasTestPoints_of_tate : PointHT → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (p : ℕ) [Fact p.Prime] (R K : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] [CharZero R] [Field K] [Algebra R K] [IsFractionRing R K] (n : ℕ) (Ω : Type) [AddCommGroup Ω] [Module K Ω] [Module R Ω] [IsScalarTower R K Ω] (Dc : HTChart R K (IsCMField.complexConj E).toRingEquiv p n (D.p + D.q) Ω) (u : Fin (D.p + D.q) → D.La) (hu : IsPolLattice (IsCMField.complexConj E).toRingEquiv p D.EF u) (S : Scheme.{0}) [IsLocallyNoetherian S] (t : SAB H S) (x : Sp R ⟶ S) (Γ₀ : QFGroup R (LevGrp D.La p n)) (i : Γ₀.G.left ⟶ t.G.left) (hi : Γ₀.IsTorsionAlong t.G x (p ^ n) i) (L : Type) [AddCommGroup L] [Module R L] (M : LieModel t.G x L) (ρ : 𝓞 E →+* Module.End R L) (hρ : M.IsActOf t.act.act ρ) (j : Module.Dual R L →ₗ[R] Ω) (hj : IsBaseChange K j) (π : Multiplicative (Fin (D.p + D.q) → 𝓞 E) →* LevGrp D.La p n) (ζ₀ : Rˣ) (κ : R), IsHTChartOf Dc Γ₀ i M ρ j π ζ₀ → (∀ z, π (Multiplicative.ofAdd z) = lev p n (∑ k, z k • u k)) → (∀ z z', Dc.e z z' = ((D.EF (∑ k, z k • u k) (∑ k, z' k • u k) : ℤ) : ZMod (p ^ n))) → 2 * Module.finrank R L = Module.finrank ℤ D.La → IsProper (Limits.pullback.snd t.G.hom ((BT.genPt R).hom ≫ x)) → (∀ (k : Type) [Field k] [IsAlgClosed k] (f : FractionRing R →+* k), ∃ I : TateIso D k (Over.mk (spMap f ≫ (BT.genPt R).hom ≫ x) ⟶ t.G) (fun a g => g ≫ t.act.act a) (fun n g g' c => Out.WeilIs t.G t.PP.L n g g' (unitOn c)), (I.ζ (p ^ n) : k) = f (algebraMap R _ (ζ₀ : R)) ∧ ∀ a, (I.ev (p ^ n) a).left = spMap f ≫ (Γ₀.pt (lev p n a)).left ≫ i) → (if p = 2 then κ = 4 else ∃ ζ : R, IsPrimitiveRoot ζ p ∧ κ = ζ - 1) → Dc.HasTestPoints κ := by
   intro hPt E _ _ _ H D p _ R K _ _ _ _ _ _ _ _ n Ω _ _ _ _ Dc u hu S _ t x Γ₀ i hi L _ _ M ρ hρ j hj π ζ₀ κ hc hπ he hrank hprop hTate hκ 𝔮 hq hh hpq
   obtain ⟨C, O, iF, iAC, iCZ, iR, iD, iAl, v, φ, hv, hp, hO, hinj, hcent⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.exists_complete_algClosed_center_of_height_one R p 𝔮 hq hh hpq
-  letI : Algebra R O := φ.toAlgebra
+  let : Algebra R O := φ.toAlgebra
   obtain ⟨-, -, hIC, -, hAC, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.padicComplete_integers_structure p C v O hv hp hO
-  haveI := hAC
-  haveI := hIC
+  have := hAC
+  have := hIC
   have hgk : Function.Injective ((algebraMap O (FractionRing O)).comp φ) :=
     (IsFractionRing.injective O _).comp hinj
   let f : FractionRing R →+* FractionRing O := IsFractionRing.lift hgk

@@ -123,11 +123,11 @@ theorem exists_sumI_of_coeff {R : Type} [CommRing R] (I : Ideal R) [IsAdicComple
   classical
   have hmono : Monotone (fun n => (h n).toFinset) := by
     intro m n hmn i hi
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hi ⊢
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hi ⊢
     exact fun hk => hi fun k => Ideal.pow_le_pow_right hmn (hk k)
   have hS : ∀ k n i, i ∉ (h n).toFinset → c i k ∈ I ^ n := by
     intro k n i hi
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hi
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hi
     exact hi k
   choose a ha using fun k =>
     exists_adic_sum_of_finsets I (fun i => c i k) (fun n => (h n).toFinset) hmono (hS k)
@@ -145,7 +145,7 @@ theorem exists_sumI_of_coeff {R : Type} [CommRing R] (I : Ideal R) [IsAdicComple
 
 theorem exists_sumF_of_coeff : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R], IsAdicComplete (maximalIdeal R) R → ∀ (F : Type) [Field F] [Algebra (FractionRing R) F] (Jx : Type) [Fintype Jx] (g : Jx → F) (Ix : Type) (c : Ix → Jx → R), (∀ n : ℕ, {i | ¬ ∀ k, c i k ∈ maximalIdeal R ^ n}.Finite) → ∃ s : F, GlobalTheory.UT.SumF (maximalIdeal R) F (fun i => ∑ k, algebraMap (FractionRing R) F (algebraMap R _ (c i k)) * g k) s := by
   intro R _ _ _ _ hc F _ _ Jx _ g Ix c h
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   obtain ⟨s, hs⟩ := exists_sumI_of_coeff (maximalIdeal R) g c h
   refine ⟨s, ?_⟩
   have e : (fun i => ∑ k, algebraMap (FractionRing R) F (algebraMap R _ (c i k)) * g k)
@@ -214,7 +214,7 @@ theorem sF_scal {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) {F : Type} [
     refine valF_resTop_scal D.P.A.hom ((algebraMap (FractionRing R) F).comp (algebraMap R _)) y.left ?_ _ h r
     rw [Over.w y, GlobalTheory.Ex.spMap_comp']
     rfl
-  · simp only [valF, dif_neg h, mul_zero]
+  · simp only [valF, dite_eq_right h, mul_zero]
 
 end GlobalTheory.Mum.Rescale
 
@@ -305,7 +305,7 @@ theorem adic_coeffs_tendsto_zero :
     refine ⟨a, ?_, ha⟩
     rw [← hsum, Finsupp.sum_fintype]
     intro j; simp
-  haveI : Module.Finite R M := ⟨by rw [← hs]; exact Submodule.fg_span (Set.finite_range s)⟩
+  have : Module.Finite R M := ⟨by rw [← hs]; exact Submodule.fg_span (Set.finite_range s)⟩
   have krull : (⨅ i : ℕ, m ^ i • ⊤ : Submodule R M) = ⊥ :=
     Ideal.iInf_pow_smul_eq_bot_of_isLocalRing _ (maximalIdeal.isMaximal R).ne_top
   have anti : ∀ {a b : ℕ}, a ≤ b → (m ^ b • ⊤ : Submodule R M) ≤ m ^ a • ⊤ :=
@@ -364,9 +364,9 @@ namespace GlobalTheory.Mum
 theorem finpt_factor : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (Z : Scheme.{0}) (π : Z ⟶ Sp R) [IsFinite π] (k : Sp (Kb R) ⟶ Z), k ≫ π = (TF (R := R) (Kb R)).hom → ∃ S : Subalgebra R (Kb R), Module.Finite R S ∧ IsLocalRing S ∧ ∃ k₀ : Sp S ⟶ Z, k₀ ≫ π = spMap (algebraMap R S) ∧ spMap (S.val : S →+* Kb R) ≫ k₀ = k := by
   intro R _ _ _ hR Z π _ k hk
   obtain ⟨⟨hN, -, -, hC⟩, -⟩ := hR
-  haveI := hN
-  haveI := hC
-  haveI : IsAffine Z := isAffine_of_isAffineHom π
+  have := hN
+  have := hC
+  have : IsAffine Z := isAffine_of_isAffineHom π
   let i : Spec Γ(Z, ⊤) ≅ Z := Z.isoSpec.symm
   obtain ⟨θ, hθ⟩ := Spec.map_surjective (i.hom ≫ π)
   have h₁ : θ.hom.Finite := by
@@ -463,8 +463,8 @@ theorem vF_sF_mem {F : Type} [Field F] {A : Type} [CommRing A] (f : A →+* F) {
 theorem ext_unique {R : Type} [CommRing R] [IsDomain R] (D : DegPre R) {F : Type} [Field F] {A : Type} [CommRing A]
     [IsDomain A] (f : A →+* F) (hf : Function.Injective f) (x y : Sp A ⟶ D.P.A.left)
     (h : spMap f ≫ x = spMap f ≫ y) : x = y := by
-  haveI := D.P.isAb.proper
-  haveI : IsDominant (spMap f) := by
+  have := D.P.isAb.proper
+  have : IsDominant (spMap f) := by
     constructor
     show DenseRange (PrimeSpectrum.comap f)
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical]
@@ -500,14 +500,14 @@ theorem exists_gauge_local {F : Type} [Field F] {A : Type} [CommRing A] [IsLocal
 
 theorem top_of_finite_local {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (S : Subalgebra R (Kb R))
     [Module.Finite R S] [IsLocalRing S] (U : (Sp R).Opens) (h : ⊤ ≤ spMap (algebraMap R S) ⁻¹ᵁ U) : ⊤ ≤ U := by
-  haveI : FaithfulSMul R S := by
+  have : FaithfulSMul R S := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro a b e
     have e' := congrArg (fun s : S => (s : Kb R)) e
     simp only [Subalgebra.coe_algebraMap] at e'
     rw [IsScalarTower.algebraMap_apply R (FractionRing R) (Kb R), IsScalarTower.algebraMap_apply R (FractionRing R) (Kb R) b] at e'
     exact IsFractionRing.injective R (FractionRing R) ((algebraMap (FractionRing R) (Kb R)).injective e')
-  haveI := Algebra.IsIntegral.isLocalHom R S
+  have := Algebra.IsIntegral.isLocalHom R S
   have hc : (spMap (algebraMap R S)).base (IsLocalRing.closedPoint S) = IsLocalRing.closedPoint R := by
     show PrimeSpectrum.comap (algebraMap R S) _ = _
     exact IsLocalRing.comap_closedPoint _
@@ -548,13 +548,13 @@ theorem exists_finite_ext (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (
     (x : TF (R := R) (Kb R) ⟶ D.P.A) (m : ℕ) (hm : IsUnit (m : R)) (z : 𝟙_ (Over (Sp R)) ⟶ D.P.A)
     (hx : x ^ m = toUnit _ ≫ z) : ∃ S : Subalgebra R (Kb R), Module.Finite R S ∧ IsLocalRing S ∧
       ∃ x₀ : Sp S ⟶ D.P.A.left, x₀ ≫ D.P.A.hom = spMap (algebraMap R S) ∧ spMap (S.val : S →+* Kb R) ≫ x₀ = x.left := by
-  haveI : IsNoetherianRing R := hR.1.1
+  have : IsNoetherianRing R := hR.1.1
   have hm1 : 1 ≤ m := by
     rcases Nat.eq_zero_or_pos m with h | h
     · subst h
       simp at hm
     · exact h
-  haveI : IsFinite (mulA D.P.A m).left := (GlobalTheory.firstFiveLaws.1.mulN (Sp R) D.P m hm1).1
+  have : IsFinite (mulA D.P.A m).left := (GlobalTheory.firstFiveLaws.1.mulN (Sp R) D.P m hm1).1
   have hxm : x.left ≫ (mulA D.P.A m).left = (TF (R := R) (Kb R)).hom ≫ z.left := by
     have h1 : (toUnit (TF (R := R) (Kb R))).left = (TF (R := R) (Kb R)).hom := by
       simpa using Over.w (toUnit (TF (R := R) (Kb R)))
@@ -679,7 +679,7 @@ theorem gauge : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R
   · intro n
     refine ((D.psi_tendsto n).preimage ν'.eX.injective.injOn).subset ?_
     intro χ hχ
-    simp only [Set.mem_setOf_eq, Set.mem_preimage] at hχ ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage] at hχ ⊢
     intro hI
     apply hχ
     obtain ⟨a, ha, he⟩ := hψ χ _ hI
@@ -893,7 +893,7 @@ theorem core {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianR
     · change m • (mu χ + (m • rh χ + y) - (m • rh χ + y)) + rh χ = χ
       rw [add_sub_cancel_right]; exact (hχ χ).symm
   obtain ⟨c, hc, hcn⟩ := _root_.GlobalTheory.adic_coeffs_tendsto_zero R S r s hs N.X zS hzn
-  haveI : Fintype (Set.range rh) := hrf.fintype
+  have : Fintype (Set.range rh) := hrf.fintype
   refine ⟨Fin r × Set.range rh, inferInstance, fun k => K k.2 * (s k.1 : Kb R),
     fun χ k => if (⟨rh χ, Set.mem_range_self χ⟩ : Set.range rh) = k.2 then c χ k.1 else 0, fun χ => ?_, fun n => ?_⟩
   · rw [key, Fintype.sum_prod_type]
@@ -902,7 +902,7 @@ theorem core {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianR
       simpa [zS, Algebra.smul_def] using this
     rw [hz, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
-    simp only [apply_ite, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [apply_ite, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [← IsScalarTower.algebraMap_apply]
     ring
   · refine (hcn n).subset fun χ hχ hall => hχ fun k => ?_
@@ -913,9 +913,9 @@ theorem core {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianR
 
 theorem terms : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (N : GlobalTheory.Ex.NumD (Kb R)) (ν : GlobalTheory.Ex.NumOf D.toPre (Kb R) N) (m : ℕ), Odd m → IsUnit (m : R) → ∀ (p : QkPt D.toPre (Kb R) (m ^ 2)) (q : N.QT (m ^ 2)), ν.QPt p q → ∃ (Jx : Type) (_ : Fintype Jx) (g : Jx → Kb R) (c : N.X → Jx → R), (∀ χ, N.txT m q χ = ∑ k, algebraMap (FractionRing R) (Kb R) (algebraMap R _ (c χ k)) * g k) ∧ ∀ n : ℕ, {χ | ¬ ∀ k, c χ k ∈ maximalIdeal R ^ n}.Finite := by
   intro R _ _ _ hB D N ν m hm hmu p q hq
-  haveI : IsNoetherianRing R := hB.1.1
+  have : IsNoetherianRing R := hB.1.1
   obtain ⟨N', ν', q', S, hth, hq', hfin, hθ, hσ, hthS, hψS, hψn⟩ := GlobalTheory.T.exists_integral_gauge_finite_extension R hB D N ν m hm hmu p
-  haveI := hfin
+  have := hfin
   obtain ⟨I, hl, -, hI⟩ := GlobalTheory.GaugeHom.exists_hom R D.toPre (Kb R) (Kb R) (RingHom.id _) (RingHom.id_comp _) N N' ν ν' hth
   obtain ⟨e1, e2⟩ := hI (m ^ 2) p p q q' (GlobalTheory.SeriesCompare.qkExt_id p) hq hq'
   have htx : ∀ χ, N.txT m q χ = N'.txT m q' (I.e χ) := fun χ => by
@@ -964,8 +964,8 @@ theorem hasSum_map_of_sumF {R : Type} [CommRing R] [IsDomain R] [IsNoetherianRin
     [Algebra (FractionRing R) F] [NormedField C] [IsUltrametricDist C] [Algebra (FractionRing R) C]
     (hC : GlobalTheory.Ex.CExt R I C) (em : F →ₐ[FractionRing R] C) {Ix : Type} {x : Ix → F} {s : F}
     (h : GlobalTheory.UT.SumF I F x s) : HasSum (fun i => em (x i)) (em s) := by
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
-  letI : Module R C := Module.compHom C (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R C := Module.compHom C (algebraMap R (FractionRing R))
   let f : F →ₗ[R] C :=
     { toFun := em
       map_add' := em.map_add
@@ -985,7 +985,7 @@ theorem hasSum_map_of_sumF {R : Type} [CommRing R] [IsDomain R] [IsNoetherianRin
 theorem theta_series_algebraic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (m : ℕ), Odd m → IsUnit (m : R) → ∀ (Ix : Type) (p : Ix → QkPt D.toPre (Kb R) (m ^ 2)), ∃ v : Ix → Kb R, ∀ (C : Type) [NontriviallyNormedField C] [IsUltrametricDist C] [CompleteSpace C] [IsAlgClosed C] [Algebra (FractionRing R) C], GlobalTheory.Ex.CExt R (maximalIdeal R) C → ∀ (em : Kb R →ₐ[FractionRing R] C) (N : GlobalTheory.Ex.NumD C) (nu : GlobalTheory.Ex.NumOf D.toPre C N) (p₁ : Ix → QkPt D.toPre C (m ^ 2)) (q : Ix → N.QT (m ^ 2)), (∀ i, QkExt em.toRingHom (p i) (p₁ i)) → (∀ i, nu.QPt (p₁ i) (q i)) → ∃ s : Cˣ, ∀ i, em (v i) = s * N.tx m (q i) := by
   intro R _ _ _ hB D m hm hu Ix p
   obtain ⟨⟨hN, -, -, hAC⟩, -⟩ := id hB
-  haveI := hN
+  have := hN
   have hL : Laws := GlobalTheory.lawsAndExpansions.1.1
   obtain ⟨N₀, ν₀, -⟩ := GlobalTheory.ValuesExist.exists_integral_values hL R D.toPre D.psi_even D.tau_bimult (Kb R) ⊤
     (fun _ => trivial)

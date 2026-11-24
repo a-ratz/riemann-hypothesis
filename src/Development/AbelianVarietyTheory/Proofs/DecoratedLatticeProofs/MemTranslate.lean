@@ -131,10 +131,10 @@ theorem smooth (Q : QStep S) : IsSmoothRep (rep Q) := by
     { carrier := {g | rep Q g v = v}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hle : U ≤ H := fun u hu => Subtype.ext (hfU u hu)

@@ -88,11 +88,11 @@ theorem exists_unique_shift_mem {𝔠 𝔟 : Ideal (𝓞 F)} (hb : 𝔟 ≠ ⊥)
     (hx : x ∈ 𝔟) (hv : v ∈ 𝔟) (hv' : v ∉ 𝔠 * 𝔟) :
     ∃ e₀ < Ideal.absNorm 𝔠, ∀ e < Ideal.absNorm 𝔠, (x + (e : 𝓞 F) * v ∈ 𝔠 * 𝔟 ↔ e = e₀) := by
   classical
-  haveI : Fact (Ideal.absNorm 𝔠).Prime := ⟨hl⟩
+  have : Fact (Ideal.absNorm 𝔠).Prime := ⟨hl⟩
   let B := 𝔟.toAddSubgroup
   let H : AddSubgroup B := (𝔠 * 𝔟).toAddSubgroup.addSubgroupOf B
   have hcard : Nat.card (B ⧸ H) = Ideal.absNorm 𝔠 := relIndex_mul_eq_absNorm 𝔠 𝔟 hb
-  haveI : Finite (B ⧸ H) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hl.ne_zero)
+  have : Finite (B ⧸ H) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hl.ne_zero)
   let X : B := ⟨x, hx⟩
   let V : B := ⟨v, hv⟩
   have hz : ∀ z : B, (z : B ⧸ H) = 0 ↔ (z : 𝓞 F) ∈ 𝔠 * 𝔟 := fun z => by
@@ -210,7 +210,7 @@ theorem classTwist_entire : AbelContinuation → ∀ (F : Type) [Field F] [Numbe
       ∀ k : ℕ, 1 ≤ k → ∃ q : ℚ, T (1 - (k : ℂ)) = (q : ℂ) := by
   intro AC F _ _ _ 𝔣 𝔞 𝔟 𝔠 J _ r y v hP hc hl hv'
   obtain ⟨hb, hy, hv, hr, e, he⟩ := hP
-  haveI : Fintype (F →+* ℝ) := Fintype.ofEquiv _ (realEmbeddingsEquiv F).symm
+  have : Fintype (F →+* ℝ) := Fintype.ofEquiv _ (realEmbeddingsEquiv F).symm
   have hcard : Fintype.card (F →+* ℝ) = Module.finrank ℚ F := by
     rw [Fintype.card_congr (realEmbeddingsEquiv F), Embeddings.card]
   have key := fun j => AC (F →+* ℝ) (r j) (Ideal.absNorm 𝔠) (fun σ i => σ (v j i : F)) (fun σ => σ (y j : F))
@@ -229,8 +229,8 @@ theorem classTwist_entire : AbelContinuation → ∀ (F : Type) [Field F] [Numbe
       have hI : (e p).1 ≤ 𝔠 ↔ conePt (y p.1) (v p.1) p.2 ∈ 𝔠 * 𝔟 := le_iff_mem_mul_of_span hb (he p)
       simp only [classWeight, coneWeight]
       by_cases h : (e p).1 ≤ 𝔠
-      · rw [if_pos h, if_pos (hI.1 h)]
-      · rw [if_neg h, if_neg fun h' => h (hI.2 h')]
+      · rw [ite_eq_left h, ite_eq_left (hI.1 h)]
+      · rw [ite_eq_right h, ite_eq_right fun h' => h (hI.2 h')]
     have h2 := he p
     have h3 : Ideal.absNorm (Ideal.span {conePt (y p.1) (v p.1) p.2}) = Ideal.absNorm (e p).1 * Ideal.absNorm 𝔟 := by
       rw [← map_mul, h2, conePt]

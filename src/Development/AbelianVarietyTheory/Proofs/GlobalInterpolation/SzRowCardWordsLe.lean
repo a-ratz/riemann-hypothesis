@@ -96,8 +96,8 @@ theorem words_real_bound {x e G F m n : ℝ} {k : ℕ} (hx : 1 < x) (he : 0 < e)
     have := mul_le_mul_of_nonneg_left hK (by linarith : (0 : ℝ) ≤ y)
     nlinarith
   have hR : (2 : ℝ) ^ (k - 3) = Real.exp (((k - 3 : ℕ) : ℝ) * Real.log 2) := by
-    rw [Real.exp_nat_mul, Real.exp_log (by norm_num)]
-  rw [hR, Real.rpow_def_of_pos hx0 F, ← Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul, Real.exp_log (by norm_num)]
+  rw [hR, Real.rpow_def_of_pos hx0 F, ← Real.exp_natCast_mul]
   calc 3 * Real.exp (((2 : ℕ) : ℝ) * (G * m ^ 5 * (2 * n) * x ^ e)) * Real.exp (Real.log x * F)
       ≤ Real.exp 2 * Real.exp (((2 : ℕ) : ℝ) * (G * m ^ 5 * (2 * n) * x ^ e)) * Real.exp (Real.log x * F) := by
         gcongr

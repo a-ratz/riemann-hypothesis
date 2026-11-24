@@ -196,9 +196,9 @@ theorem odd_absNorm_of_two_notMem (P : HeightOneSpectrum (𝓞 F)) (h : (2 : �
     Odd (Ideal.absNorm P.asIdeal) := by
   rw [← Nat.not_even_iff_odd, even_iff_two_dvd]
   intro h2
-  haveI := P.isPrime
-  haveI : Finite (𝓞 F ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have := P.isPrime
+  have : Finite (𝓞 F ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at h2
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 F ⧸ P.asIdeal) 2 h2
   have h0 : x ≠ 0 := by
@@ -251,7 +251,7 @@ theorem field_data : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   have hval : ∀ a : E, Valued.v (algebraMap E L a) = w.valuation E a := fun a =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
 
-  obtain ⟨s, hs, hs2⟩ := SetLike.not_le_iff_exists.1 (mt Ideal.map_le_iff_le_comap.2 (not_map_le_sq hw))
+  obtain ⟨s, hs, hs2⟩ := IsConcreteLE.not_le_iff_exists.1 (mt Ideal.map_le_iff_le_comap.2 (not_map_le_sq hw))
   have hs1 : algebraMap (𝓞 F) (𝓞 E) s ∈ w.asIdeal := hw ▸ Ideal.mem_map_of_mem _ hs
   set ϖv : Fv F v := algebraMap F (Fv F v) (s : F) with hϖv
   set ϖ : L := complMap h ϖv with hϖ
@@ -315,7 +315,7 @@ theorem field_data : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       exact WithZero.exp_ne_zero h2.symm
     have hnot : ϖv⁻¹ ∉ v.adicCompletionIntegers F := fun hm => by
       have h1 : Valued.v ϖv⁻¹ ≤ 1 := hm
-      rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 hne)] at h1
+      rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 hne)] at h1
       exact absurd hlt (not_lt.2 h1)
     obtain ⟨y, hyO, hyψ⟩ : ∃ y ∈ v.adicCompletionIntegers F, psiLoc B.ψ v (ϖv⁻¹ * y) ≠ 1 := by
       by_contra hcon

@@ -61,7 +61,7 @@ def idIso (L : LB X) : LB.Iso L L := ⟨fun p => L.g p.1 p.2⟩
 private theorem res_res_lemma {X : Scheme.{0}} {U V W : X.Opens} (h₁ : V ≤ U) (h₂ : W ≤ V) (x : Γ(X, U)ˣ) :
     res h₂ (res h₁ x) = res (h₂.trans h₁) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -134,9 +134,9 @@ private theorem gm_pullU_eq_gm_comp {X Y Z : Scheme.{0}} (φ : Y ⟶ X) (r : Z �
     gm r z (φ ⁻¹ᵁ U) (pullU φ U x) = gm (r ≫ φ) z U x := by
   have h₁ : r z ∈ φ ⁻¹ᵁ U := h
   have h₂ : (r ≫ φ) z ∈ U := h
-  simp only [gm, dif_pos h₁, dif_pos h₂, MonoidHom.comp_apply]
+  simp only [gm, dite_eq_left h₁, dite_eq_left h₂, MonoidHom.comp_apply]
   ext
-  simp only [Units.coe_map, pullU, MonoidHom.coe_coe]
+  simp only [Units.coe_map, pullU, MonoidHom.coe_ofClass]
   first
     | rfl
     | (rw [Scheme.comp_app]; rfl)
@@ -174,7 +174,7 @@ private theorem res_eq_mul_res_of_gm_id_eq_mul {Y : Scheme.{0}} {V U₁ U₃ : Y
   have key := H y hy
   rw [← gm_res (𝟙 Y) y h₁ hy a, ← gm_res (𝟙 Y) y h₃ hy c, ← map_mul] at key
   have hy' : (𝟙 Y) y ∈ V := hy
-  simp only [gm, dif_pos hy', MonoidHom.comp_apply] at key
+  simp only [gm, dite_eq_left hy', MonoidHom.comp_apply] at key
   have key2 := congrArg Units.val key
   exact key2
 
@@ -241,7 +241,7 @@ theorem res_eq_of_gm {Y : Scheme.{0}} {V U₁ U₂ U₃ U₄ : Y.Opens} {h₁ : 
   rw [← gm_res (𝟙 Y) y h₁ hy a, ← gm_res (𝟙 Y) y h₂ hy b, ← gm_res (𝟙 Y) y h₃ hy c, ← gm_res (𝟙 Y) y h₄ hy d,
     ← map_mul, ← map_mul] at key
   have hy' : (𝟙 Y) y ∈ V := hy
-  simp only [gm, dif_pos hy', MonoidHom.comp_apply] at key
+  simp only [gm, dite_eq_left hy', MonoidHom.comp_apply] at key
   have key2 := congrArg Units.val key
   exact key2
 

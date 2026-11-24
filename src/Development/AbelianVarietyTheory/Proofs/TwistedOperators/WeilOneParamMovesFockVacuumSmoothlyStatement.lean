@@ -346,7 +346,7 @@ theorem dHeis_schwartz {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fi
   have hL : Function.HasTemperateGrowth (fun x : V => (L x : ℂ)) := L.hasTemperateGrowth
   refine ⟨∂_{w.1} f - (2 * Real.pi * Complex.I) • SchwartzMap.smulLeftCLM ℂ (fun x : V => (L x : ℂ)) f, ?_⟩
   intro x
-  rw [SchwartzMap.sub_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hL,
+  rw [sub_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hL,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   simp [GlobalTheory.GaussLine.dHeis, L, smul_eq_mul]
   ring
@@ -467,7 +467,7 @@ theorem fderiv_eq_of_dHeis {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     fderiv ℝ g x y = 2 * fockForm β J x y * g x := by
   have h := heq (0, Ring.inverse (blockB J) y) x
   have h1 : (J (0, Ring.inverse (blockB J) y)).1 = y := by
-    rw [← blockB_apply, ← ContinuousLinearMap.mul_apply, Ring.mul_inverse_cancel _ hB]; rfl
+    rw [← blockB_apply, ← mul_apply_eq_comp, Ring.mul_inverse_cancel _ hB]; rfl
   have h2 : (J (0, Ring.inverse (blockB J) y)).2 = blockD J (Ring.inverse (blockB J) y) := rfl
   simp only [GlobalTheory.GaussLine.dHeis, h1, h2, map_zero, zero_sub] at h
   rw [fockForm_apply]
@@ -767,7 +767,7 @@ theorem quadForm_eventually_unif_negDef {V : Type} [NormedAddCommGroup V] [Norme
       intro u hu
       have hlt : (M t₀ u u).re < -(-(M t₀ u₀ u₀).re / 2) := by
         have := hmax hu
-        simp only [Set.mem_setOf_eq] at this
+        simp only [Set.mem_ofPred_eq] at this
         linarith
       exact hF.continuousAt.eventually_lt continuousAt_const hlt
     exact hev.mono fun t ht => key _ t ht
@@ -1132,7 +1132,7 @@ theorem derS_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
     derS a L f x = fderiv ℝ f x a - 2 * Real.pi * Complex.I * ((L x : ℝ) : ℂ) * f x := by
   have hL : Function.HasTemperateGrowth (fun x => ((L x : ℝ) : ℂ)) :=
     (Complex.ofRealCLM.comp L).hasTemperateGrowth
-  rw [derS, SchwartzMap.sub_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hL,
+  rw [derS, sub_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hL,
     LineDeriv.lineDerivOpCLM_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv, smul_eq_mul, smul_eq_mul]
   ring
 
@@ -1219,7 +1219,7 @@ theorem map_dHeis_of_isometry : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpa
     ∀ f g : SchwartzMap V ℂ, (∀ x, g x = GlobalTheory.GaussLine.dHeis β w ⇑f x) →
     ∀ x, T g x = GlobalTheory.GaussLine.dHeis β w' ⇑(T f) x := by
   intro V _ _ _ _ _ μ _ β T hT w w' hw f g hg x
-  haveI : μ.HasTemperateGrowth := MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
+  have : μ.HasTemperateGrowth := MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
   let Lf : V × V → (V →L[ℝ] ℝ) := fun p => LinearMap.toContinuousLinearMap (β.flip p.2)
   have hLf : ∀ p y, Lf p y = β y p.2 := fun p y => rfl
   have hheis : ∀ (p : V × V) (F : 𝓢(V, ℂ)) (t : ℝ),
@@ -1390,8 +1390,8 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
   · subst hz
     have hT0 : ∀ t, T t 0 = 0 := fun t => map_zero _
     refine ⟨?_, 0, Fin.elim0, Fin.elim0, Fin.elim0, 0, fun x => ?_⟩
-    · simp only [hT0, SchwartzMap.zero_apply]; exact contDiff_const
-    · simp only [hT0, SchwartzMap.zero_apply, Finset.univ_eq_empty, Finset.sum_empty, zero_mul, add_zero]
+    · simp only [hT0, zero_apply]; exact contDiff_const
+    · simp only [hT0, zero_apply, Finset.univ_eq_empty, Finset.sum_empty, zero_mul, add_zero]
       exact hasDerivAt_const _ _
   have hAsm := _root_.GlobalTheory.contDiff_toCLM_of_continuous_oneParameter A hAc hAadd hA0
   have hinv : ∀ t w, A t (A (-t) w) = w := by
@@ -1423,7 +1423,7 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
     obtain ⟨g1, hg1⟩ := _root_.GlobalTheory.dHeis_schwartz β (J₀ u) f₀
     obtain ⟨g2, hg2⟩ := _root_.GlobalTheory.dHeis_schwartz β u f₀
     have hg12 : g1 = Complex.I • g2 := by
-      ext y; rw [SchwartzMap.smul_apply, hg1, hg2, hf₀, smul_eq_mul]
+      ext y; rw [smul_apply, hg1, hg2, hf₀, smul_eq_mul]
     have hI : ∀ w₁ : V × V, ∀ (s : ℝ) (f g : SchwartzMap V ℂ),
         ⇑g = GlobalTheory.GaussLine.heisFun β (s • w₁).1 (s • w₁).2 ⇑f →
         ⇑(T t g) = GlobalTheory.GaussLine.heisFun β (s • A t w₁).1 (s • A t w₁).2 ⇑(T t f) := by
@@ -1434,7 +1434,7 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
     have h2 := _root_.GlobalTheory.HeisenbergL2.map_dHeis_of_isometry μ β (T t) (hunit t) u (A t u) (hI _) f₀ g2 hg2 x
     have hu : A t u = w := hinv t w
     rw [hu] at h2
-    rw [hJapp, ← h1, ← h2, hg12, map_smul, SchwartzMap.smul_apply, smul_eq_mul]
+    rw [hJapp, ← h1, ← h2, hg12, map_smul, smul_apply, smul_eq_mul]
   have hne : ∀ t, T t f₀ ≠ 0 := by
     intro t h
     apply hz
@@ -1464,7 +1464,7 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
     rw [← hexp, ← hexp, this, h0]
   have hc0 : cc 0 ≠ 0 := by
     intro h; apply hz; ext x
-    rw [← h0 f₀, hrep, h, zero_mul, SchwartzMap.zero_apply]
+    rw [← h0 f₀, hrep, h, zero_mul, zero_apply]
   have hcs : ∀ s, cc s ≠ 0 := by
     intro s h
     have := eq2 s
@@ -1473,7 +1473,7 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
   have hKc : Continuous fun p : ℝ × ℝ => K p.1 p.2 := hK.continuous
   set U : Set (ℝ × ℝ) := {p | K (p.1 + p.2) p.1 ≠ 0} with hUdef
   have hUo : IsOpen U := isOpen_ne_fun (hKc.comp ((continuous_fst.add continuous_snd).prodMk continuous_fst)) continuous_const
-  have hU0 : ∀ s, (s, 0) ∈ U := by intro s; simp only [hUdef, Set.mem_setOf_eq, add_zero]; exact hKne s
+  have hU0 : ∀ s, (s, 0) ∈ U := by intro s; simp only [hUdef, Set.mem_ofPred_eq, add_zero]; exact hKne s
   set E : ℝ → ℝ → ℂ := fun s t => K s s * K t 0 / (cc 0 * K 0 0 * K (s + t) s) with hEdef
   have hEsm : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun p : ℝ × ℝ => E p.1 p.2) U := by
     have k1 : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun p : ℝ × ℝ => K p.1 p.1) := hK.comp (contDiff_fst.prodMk contDiff_fst)
@@ -1486,7 +1486,7 @@ theorem GlobalTheory.WeilVacuum.smooth_flow : ∀ {V : Type} [NormedAddCommGroup
     simpa only [hEdef, div_eq_mul_inv] using this
   have hfe : ∀ p ∈ U, cc (p.1 + p.2) = cc p.1 * cc p.2 * E p.1 p.2 := by
     rintro ⟨s, t⟩ hp
-    simp only [hUdef, Set.mem_setOf_eq] at hp
+    simp only [hUdef, Set.mem_ofPred_eq] at hp
     simp only [hEdef]
     have hd : starRingEnd ℂ (cc 0) ≠ 0 := (map_ne_zero _).2 hc0
     rw [mul_div_assoc', eq_div_iff (mul_ne_zero (mul_ne_zero hc0 (hKne 0)) hp)]

@@ -170,8 +170,8 @@ theorem extW {ι κ : Type} {a b : Matrix ι κ (AE F E)} (h1 : a.map (piE h) = 
     a = b := extM v (Matrix.ext fun i j => (toCompl_bijective hw h).1 (congrFun (congrFun h1 i) j)) h2
 
 theorem continuous_tensAt : Continuous (tensAt E v : Ev E v → AE F E) := by
-  haveI : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
   let b := Algebra.TensorProduct.basis (Fv F v) (Module.finBasis F E)
   have e : (tensAt E v : Ev E v → AE F E) = fun y => ∑ i, atPlace v (b.coord i y) • tensAt E v (b i) := by
     funext y
@@ -183,9 +183,9 @@ theorem continuous_tensAt : Continuous (tensAt E v : Ev E v → AE F E) := by
     (IsModuleTopology.continuous_of_linearMap (b.coord i))).smul continuous_const
 
 theorem continuous_up : Continuous (up hw h β) := by
-  haveI : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
-  haveI : IsTopologicalAddGroup (Ev E v) := IsModuleTopology.topologicalAddGroup (Fv F v) _
+  have : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsTopologicalAddGroup (Ev E v) := IsModuleTopology.isTopologicalAddGroup (Fv F v) _
   have c1 : Continuous (liftM E v β) :=
     continuous_const.add ((continuous_id.sub continuous_const).matrix_map continuous_tensAt)
   exact c1.comp (continuous_id.matrix_map (continuous_complEquiv hw h).2)
@@ -222,12 +222,12 @@ def downW : UG (cA σ) J →* UJ c H :=
 
 theorem continuous_liftW : Continuous (liftW hw hc h1 h2 hH) :=
   ((Units.continuous_map ((continuous_up hw h).comp ((continuous_const.matrix_mul continuous_id).matrix_mul
-    continuous_const))).comp continuous_subtype_val).subtype_mk _
+    continuous_const))).comp continuous_subtypeVal).subtype_mk _
 
 include hw in
 theorem continuous_downW : Continuous (downW hc h1 h2 hH) :=
   ((Units.continuous_map ((continuous_const.matrix_mul (continuous_id.matrix_map (continuous_piE hw h))).matrix_mul
-    continuous_const)).comp continuous_subtype_val).subtype_mk _
+    continuous_const)).comp continuous_subtypeVal).subtype_mk _
 
 theorem down_lift (x : UJ c H) : downW hc h1 h2 hH (liftW hw hc h1 h2 hH x) = x := Subtype.ext (Units.ext (by
   change A' * (up hw h β (A * x.1.1 * A')).map (piE h) * A = x.1.1

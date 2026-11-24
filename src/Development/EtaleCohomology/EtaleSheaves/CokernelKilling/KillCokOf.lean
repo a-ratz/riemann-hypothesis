@@ -50,8 +50,8 @@ namespace LateralTheory.E.KillCokPf.Glue
 
 theorem et_pi {D : CommRingCat.{0}} {ι : Type} [Finite ι] (D₁ : ι → CommRingCat.{0}) (e : ∀ k, D ⟶ D₁ k)
     (he : ∀ k, Et (e k)) : Et (piMap D₁ e) := by
-  letI : ∀ k, Algebra D (D₁ k) := fun k => (e k).hom.toAlgebra
-  haveI : ∀ k, Algebra.Etale D (D₁ k) := he
+  let : ∀ k, Algebra D (D₁ k) := fun k => (e k).hom.toAlgebra
+  have : ∀ k, Algebra.Etale D (D₁ k) := he
   have h : Algebra.Etale D (∀ k, D₁ k) := inferInstance
   exact h
 

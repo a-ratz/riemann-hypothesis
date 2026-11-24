@@ -93,8 +93,8 @@ theorem eq_zero_of_pure_eq_zero {F : Type} [Field F] [NumberField F] {κ : Type}
     refine finprod_ne_zero' fun v => ?_
     rw [hF v]
     by_cases hv : v ∈ S
-    · simp only [hv, if_true]; exact hpt v
-    · simp only [hv, if_false]
+    · simp only [hv, ite_true]; exact hpt v
+    · simp only [hv, ite_false]
       have : φ v = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1 := by
         by_contra hc'; exact hv (hS.mem_toFinset.2 hc')
       rw [this, Set.indicator_of_mem (by intro i; exact zero_mem _)]

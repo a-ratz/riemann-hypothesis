@@ -82,7 +82,7 @@ theorem exists_approx_finite_places (F : Type) [Field F] [NumberField F]
       algebraMap (𝓞 F) F (x - n v) / algebraMap (𝓞 F) F d := by
     rw [map_sub, hn v hv]; field_simp
   rw [key, map_div₀, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap,
-    div_le_iff₀ (zero_lt_iff.2 (h0 v))]
+    div_le_iff₀ (pos_iff_ne_zero.2 (h0 v))]
   refine ((v.intValuation_le_pow_iff_mem _ _).2 hxv).trans ?_
   have hle : (v.intValuation d).log ≤ 0 := by
     have := v.intValuation_le_one d

@@ -366,7 +366,7 @@ theorem lie_weight_at_most_holds : KLAtMost := by
     induction hv using Submodule.iSup_induction' with
     | mem σ w hw => simpa using hcon σ w hw
     | zero => simp
-    | add a b _ _ ha hb => simp only [map_add (f := _), ContinuousLinearMap.zero_apply] at ha hb ⊢; rw [ha, hb, add_zero]
+    | add a b _ _ ha hb => simp only [map_add (f := _), zero_apply] at ha hb ⊢; rw [ha, hb, add_zero]
   have hx0 : ∀ Y, M.xC (P1 P) σ0 Y = M.xC P ρ Y := by
     by_contra h
     push Not at h
@@ -394,7 +394,7 @@ theorem lie_weight_at_most_holds : KLAtMost := by
       have := hrep'.2 _ hc _ hh0
       rw [e1, hrep'.2 _ hh0 _ hh'] at this
       have e2 := congrArg (fun L : Wq →L[ℂ] Wq => L u) this
-      simp only [ContinuousLinearMap.coe_comp', Function.comp_apply] at e2
+      simp only [ContinuousLinearMap.coe_comp, Function.comp_apply] at e2
       exact e2
     refine KLAM.eig_mem S' htop' (fun Y => qdet (Qr.EB π' (fun a => h0 *ᵥ Fr a)) (Y + ((P.k : ℂ) - 2) / 2))
       (fun τ => M.xC (P1 P) τ) (fun τ Y w hw => ?_) σ (fun τ h => sep1 τ σ h) (fun Y => ?_)
@@ -492,7 +492,7 @@ theorem lie_weight_at_most_holds : KLAtMost := by
     · have hd : ∃ Y, M.xC (P1 P) σ Y ≠ M.xC P ρ Y := by
         obtain ⟨Y, hY⟩ := sep1 σ σ0 hσ
         exact ⟨Y, by rw [← hx0 Y]; exact hY⟩
-      rw [ContinuousLinearMap.smul_apply, hkill Z hZe σ hd w hw, hkill E hEe σ hd w hw, smul_zero]
+      rw [smul_apply, hkill Z hZe σ hd w hw, hkill E hEe σ hd w hw, smul_zero]
   | zero => simp
   | add a b _ _ ha hb => rw [map_add (f := _), map_add (f := _), ha, hb]
 

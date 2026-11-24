@@ -116,7 +116,7 @@ theorem vcKer_of (hKC : KerComm) (hKN : KerNId) (hNA : NAvg) (hTZ : TrZero) (hLg
       (h.car _ _ (hHh 1 one_mem_GLs) (hHh 1 one_mem_GLs)) hanti (h.Tε _)
   have hcont : Continuous fun u : N => k ((u : G n).val * d.val) := by
     refine hks.continuousOn.comp_continuous ?_ fun u => ?_
-    · exact (Units.continuous_val.comp continuous_subtype_val).matrix_mul continuous_const
+    · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_mul continuous_const
     · exact mem_GLs ((u : G n) * d)
   have hNc : IsClosed (N : Set (G n)) := (hNU n W₁ W₂ hW N hN).1
   have hK : IsCompact ((fun u : N => (u : G n)) ⁻¹' ((fun y : G n => y * d) ⁻¹' {y : G n | lg y.val ≤ R})) := by

@@ -291,7 +291,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     GlobalTheory.Parabolic.isIrreducible_of_equiv
       (p.trans (multiProdEquiv (stdBlocks (fun i => (x i).1) hd)
         fun i => equivRep (IrrRep.det (Fin 1) (ω i) (hω i)))).symm hP
-  haveI := nontrivial_of_irreducible hM
+  have := nontrivial_of_irreducible hM
   haveI : Nontrivial (IndSp _ _) := by
     obtain ⟨S, f, hf⟩ := GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries e₀ ω
     have := hf.nontrivial
@@ -302,7 +302,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap
@@ -339,7 +339,7 @@ private theorem exists_char {z : WD h} (hz : IsIrrWD z) {n : ℕ} (η : Fin n �
     rcases hirr.eq_bot_or_eq_top ⟨S, fun g v hv => hS g v hv⟩ with h | h
     · exact Or.inl (congrArg Subrepresentation.toSubmodule h)
     · exact Or.inr (congrArg Subrepresentation.toSubmodule h)
-  haveI : Nontrivial (Fin m → ℂ) := nontrivial_of_irreducible hirr
+  have : Nontrivial (Fin m → ℂ) := nontrivial_of_irreducible hirr
   have hsc : ∀ g, ∃ c : ℂ, ∀ v, b.ρ g v = c • v := fun g => by
     obtain ⟨c, hcv⟩ := Module.End.exists_eigenvalue (b.ρ g)
     refine ⟨c, fun v => ?_⟩
@@ -449,7 +449,7 @@ theorem nonempty_equiv_principal_series_of_char_poly_of_generic (Lc : _root_.Glo
     (hm : ∃ b : WDRep h (Fin n → ℂ), WD.mk b = rc (algNorm σ) ∧ b.N = 0)
     (hg : ∃ ψ : AddChar (w.adicCompletion E) Circle, Continuous ψ ∧ ψ ≠ 1 ∧ GlobalTheory.Whittaker.IsGeneric ψ σ.ρ) :
     Nonempty (σ.ρ.Equiv (PS ω)) := by
-  haveI : CharZero (w.adicCompletion E) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion E) := algebraRat.charZero _
   obtain ⟨b, hb, hN⟩ := hm
   obtain ⟨ψ, hc, h1, hgen⟩ := hg
   obtain ⟨c, Δ, x, hd, hun, hL, ⟨φ⟩⟩ := Lc.gen _ n _ σ.ρ σ.smooth σ.irred

@@ -846,17 +846,17 @@ theorem schur_eq {n s : E} {P X L U : Matrix (Fin (m + 1)) (Fin (m + 1)) E} (hL 
     rw [key, h1, one_mul]
 
   have hdetL : L.det = 1 := by
-    rw [det_of_lowerTriangular L (fun i j hij => hL.2 i j (OrderDual.toDual_lt_toDual.mp hij))]
+    rw [det_of_isLowerTriangular L (fun i j hij => hL.2 i j (OrderDual.toDual_lt_toDual.mp hij))]
     simp [hL.1]
   have hdetU : U.det = 1 := by
-    rw [det_of_upperTriangular (fun i j hij => hU.2 j i hij)]
+    rw [det_of_isUpperTriangular (fun i j hij => hU.2 j i hij)]
     simp [hU.1]
   have hdetLh : (hd L).det = 1 := by
-    rw [det_of_lowerTriangular (hd L) (fun i j hij =>
+    rw [det_of_isLowerTriangular (hd L) (fun i j hij =>
       hL.2 _ _ (Fin.castSucc_lt_castSucc_iff.mpr (OrderDual.toDual_lt_toDual.mp hij)))]
     simp [hd, hL.1]
   have hdetUh : (hd U).det = 1 := by
-    rw [det_of_upperTriangular (M := hd U) (fun i j hij =>
+    rw [det_of_isUpperTriangular (M := hd U) (fun i j hij =>
       hU.2 _ _ (Fin.castSucc_lt_castSucc_iff.mpr hij))]
     simp [hd, hU.1]
 

@@ -80,7 +80,7 @@ theorem relIndex_ne_zero_of_reps {J K : Subgroup (GAf L n)} (hJ : IsBounded J) (
     intro t
     rcases Set.eq_empty_or_nonempty {γ : GQ L n | (γ : GAf L n) * t ∈ J} with h | ⟨γ₀, h₀⟩
     · rw [h]; exact Set.finite_empty
-    · haveI := GlobalTheory.StabFin.finite_conj_mem L n J hJ 1
+    · have := GlobalTheory.StabFin.finite_conj_mem L n J hJ 1
       refine Set.Finite.subset (Set.finite_range fun δ : {γ : GQ L n // (1 : GAf L n)⁻¹ * (γ : GAf L n) * 1 ∈ J} => δ.1 * γ₀) ?_
       intro γ hγ
       refine ⟨⟨γ * γ₀⁻¹, ?_⟩, by simp⟩

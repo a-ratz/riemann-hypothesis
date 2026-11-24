@@ -190,8 +190,8 @@ theorem exists_level_multiple {U : AddSubgroup (WO S T)} (hU : IsOpen (U : Set (
   refine ⟨m * d, by positivity, ?_, fun u hu hinf => ?_⟩
   · rw [finprod_mul_distrib f2 f1] at hdc
     have h1 : (d : ℝ≥0) ≤ heightGL D.host.F (Formalism.L2.Theta.matHom T h⁻¹) * heightGL D.host.F (Formalism.L2.Theta.matHom S g) :=
-      hdc.trans (mul_le_mul' (le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => one_le_htOf _ _))
-        (le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => one_le_htOf _ _)))
+      hdc.trans (mul_le_mul' (le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => one_le_htOf _ _))
+        (le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => one_le_htOf _ _)))
     have h2 : (d : ℝ) ≤ height T h⁻¹ * height S g := by unfold GlobalTheory.Grow.height; exact_mod_cast h1
     rw [GlobalTheory.Grow.height_inv, mul_comm] at h2
     rw [Nat.cast_mul]
@@ -282,13 +282,13 @@ theorem sobO_dvL_le (hc : Chart θ σ) (hψ : IsStdChar D ψ (-1)) (p : ℕ) {ρ
     (fun x y => sobO_add_le hψ hc.inf x.2 y.2 p) _ _).trans ((Finset.sum_le_card_nsmul _ _
       (ρ * sobO ψ θ μ 𝓕 (p + 1) m.1) fun a _ => ?_).trans_eq ?_)
   · have := sobO_smul (ψ := ψ) (θ := θ) (μ := μ) (𝓕 := 𝓕) (f := 0) p 0
-    rw [zero_smul, enorm_zero, zero_mul] at this
+    rw [zero_smul, eNorm_zero, zero_mul] at this
     exact this.le
   · rw [map_smul, LinearMap.smul_apply]
     change sobO ψ θ μ 𝓕 p ((c a : ℂ) • dv θ σ S T (letter a) m.1) ≤ _
     rw [sobO_smul, dv_letter hc hψ]
     refine mul_le_mul' ?_ (sobO_heisDer_le p a)
-    rw [enorm_eq_nnnorm, ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm, Complex.norm_real]
+    rw [eNorm_eq_nnNorm, ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnNorm, Complex.norm_real]
     exact (h1 a).trans hz
   · rw [nsmul_eq_mul, Finset.card_univ, ENNReal.coe_mul, ENNReal.coe_natCast, mul_assoc]
 
@@ -375,8 +375,8 @@ theorem cube_dilate_bound (hψ : IsStdChar D ψ (-1)) (hc : Chart θ σ) {N : �
     rw [zero_add, Module.Basis.equivFun_symm_apply, ← map_nsmul, Finset.smul_sum, map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [smul_comm]
   have en : ∀ z : ℂ, ENNReal.ofReal (‖z‖ ^ 2) = ‖z‖ₑ ^ 2 := fun z => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
-  have hmeas : Measurable fun w : WA T S => ‖φ (e w)‖ₑ ^ 2 := (hφ.cont.comp e.continuous).measurable.enorm.pow_const 2
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
+  have hmeas : Measurable fun w : WA T S => ‖φ (e w)‖ₑ ^ 2 := (hφ.cont.comp e.continuous).measurable.eNorm.pow_const 2
   have a1 := hreal _ hmeas fun w hw => by
     have hinf : (w - ι (π w)).map (infPart D) = 0 := by
       have hp : piW θ T S (w - ι (π w)) = 0 := by rw [hιπ, AddMonoidHom.map_sub, hc.pi_iota, sub_self]
@@ -450,7 +450,7 @@ theorem kernelBound (S T : HSp D) :
   have key := sobolev_iter N 0 (fun i r => iotaW σ T S (r • n • b i)) A (c * ((Q * X ^ 2) ^ N * s : ℝ≥0) ^ 2) 0
     (fun i => (hc.continuous_iota T S).comp (continuous_id.smul continuous_const))
     (fun p q hpq F ⟨l, h1, h2⟩ => ⟨l, h1.trans hpq, h2⟩) ?_ ?_ (om (g, h) f) ⟨[], le_rfl, by simp, rfl⟩
-  · rw [hs, hX, ← NNReal.coe_pow, ENNReal.ofReal_coe_nnreal, ← ENNReal.coe_mul, ← ENNReal.coe_mul, enorm_eq_nnnorm,
+  · rw [hs, hX, ← NNReal.coe_pow, ENNReal.ofReal_coe_nnreal, ← ENNReal.coe_mul, ← ENNReal.coe_mul, eNorm_eq_nnNorm,
       ENNReal.coe_le_coe, ← pow_le_pow_iff_left₀ zero_le zero_le two_ne_zero]
     have e : ∀ Q : ℝ≥0, (NNReal.sqrt (4 ^ N * c) * Q ^ N * s * X ^ (2 * N)) ^ 2 = 4 ^ N * (c * ((Q * X ^ 2) ^ N * s) ^ 2) := by
       intro Q

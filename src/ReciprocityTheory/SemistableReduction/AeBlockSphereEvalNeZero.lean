@@ -224,16 +224,16 @@ theorem ae_toSphere (B n : ℕ) (a : Fin B → ℕ) (F : MvPolynomial (Fin B × 
     rw [hcoord, hsc, hx', mul_zero]
   have hmap : ∀ _ : Fin B, ((volume : Measure E).comap (Subtype.val : ({0}ᶜ : Set E) → E)).map
       Subtype.val = (volume : Measure E).restrict {0}ᶜ :=
-    fun _ => map_comap_subtype_coe (measurableSet_singleton 0).compl _
+    fun _ => map_comap_subtypeVal (measurableSet_singleton 0).compl _
   have hmSF : ∀ i : Fin B, SigmaFinite
       (((volume : Measure E).comap (Subtype.val : ({0}ᶜ : Set E) → E)).map Subtype.val) := by
     intro i; rw [hmap i]; infer_instance
   have hG : (Measure.pi fun _ : Fin B =>
       (volume : Measure E).comap (Subtype.val : ({0}ᶜ : Set E) → E)).map G =
       Measure.pi fun _ : Fin B => (volume : Measure E).restrict {0}ᶜ := by
-    rw [Measure.pi_map_pi (hμ := hmSF) (fun _ => measurable_subtype_coe.aemeasurable)]
+    rw [Measure.pi_map_pi (hμ := hmSF) (fun _ => measurable_subtypeVal.aemeasurable)]
     exact congrArg _ (funext hmap)
-  have hGm : Measurable G := Measurable.of_eval fun b => measurable_subtype_coe.comp
+  have hGm : Measurable G := Measurable.of_eval fun b => measurable_subtypeVal.comp
     (measurable_pi_apply b)
   have hzero : (Measure.pi fun _ : Fin B =>
       (volume : Measure E).comap (Subtype.val : ({0}ᶜ : Set E) → E))
@@ -267,7 +267,7 @@ theorem blockSphereMeasure_eq (B n : ℕ) :
       Measure.pi fun _ : Fin B => (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere := by
   unfold blockSphereProb
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul]
   simp only [sphereProb, ProbabilityTheory.cond_apply MeasurableSet.univ, Set.univ_inter,
     Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 

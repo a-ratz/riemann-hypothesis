@@ -78,7 +78,7 @@ private theorem sqInt_fin (ha : 1 ≤ a) {r : ℝ} {φ : Sm E a} (h : IsSq r φ)
   obtain ⟨χ, hχ⟩ := twEx E a ha r
   obtain ⟨s, hs⟩ := hχ.1
   let μ : Measure (GA E a) := Measure.haar
-  haveI : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   obtain ⟨h1, h2⟩ := sqMem E a ha μ r χ hχ φ (Submodule.subset_span h)
   have h3 := (sqUniq E a ha r χ hχ φ h.one (h.sq [])).1
   have hc : Continuous (mulChi a χ φ).1 := ContAut.continuous_of_isOpen_stab E a _ h1
@@ -131,7 +131,7 @@ theorem UpperTheory.V.Cj.H.petInv :
   refine ⟨isSq_fin ha, ?_⟩
   obtain ⟨χ, hχ⟩ := twEx E a ha r
   let μ : Measure (GA E a) := Measure.haar
-  haveI : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   have hs := sqMem E a ha μ r χ hχ
   have hm : ∀ φ ∈ (sqSub E a r).map (mulChi a χ).toLinearMap, GlobalTheory.AutomorphicL2Unitary.MemL2Quotient (latticeGL E a) μ φ.1 := by
     rintro _ ⟨φ, hφ, rfl⟩

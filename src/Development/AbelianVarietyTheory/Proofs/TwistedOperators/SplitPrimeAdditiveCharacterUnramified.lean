@@ -136,7 +136,7 @@ theorem count_codiff_eq_zero (v : HeightOneSpectrum (𝓞 F)) (h : ¬ v.asIdeal 
   have hD : ((differentIdeal ℤ (𝓞 F) : Ideal (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) = (codiff F)⁻¹ :=
     coeIdeal_differentIdeal ℤ ℚ F (𝓞 F)
   have h0 : differentIdeal ℤ (𝓞 F) ≠ 0 := differentIdeal_ne_bot
-  have h1 := FractionalIdeal.count_coe F v h0
+  have h1 := FractionalIdeal.count_coeIdeal F v h0
   rw [hD, FractionalIdeal.count_inv,
     not_not.1 (mt (Associates.count_ne_zero_iff_dvd h0 v.irreducible).1 h)] at h1
   simpa using h1

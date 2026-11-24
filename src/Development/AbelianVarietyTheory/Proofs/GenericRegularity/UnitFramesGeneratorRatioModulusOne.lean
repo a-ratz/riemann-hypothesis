@@ -71,7 +71,7 @@ theorem eq_of_norm_periodic {g : ℕ} (Λ : AddSubgroup (Fin g → ℂ))
     (hp : ∀ a ∈ Λ, ∀ z, ‖ρ (z + a)‖ = ‖ρ z‖) (z w : Fin g → ℂ) : ρ z = ρ w := by
   let b := Module.Basis.ofSpan hΛ.ge
   have hb : Set.range b ⊆ Λ := Module.Basis.ofSpan_subset _
-  haveI := FiniteDimensional.fintypeBasisIndex b
+  have := FiniteDimensional.fintypeBasisIndex b
   have hs : Submodule.span ℤ (Set.range b) ≤ Λ.toIntSubmodule := Submodule.span_le.2 hb
   obtain ⟨C, hC⟩ := (isCompact_closedBall (0 : Fin g → ℂ) (∑ i, ‖b i‖)).exists_bound_of_continuousOn
     hρ.continuous.continuousOn
@@ -138,7 +138,7 @@ theorem mean_comp_eq {g : ℕ} (Λ Λ' : AddSubgroup (Fin g → ℂ)) [Countable
     (hF : IsAddFundamentalDomain Λ Fd volume) (hF' : IsAddFundamentalDomain Λ' Fd' volume)
     (f : (Fin g → ℂ) → ℝ) (hf : ∀ a ∈ Λ, ∀ z, f (h *ᵥ (z + a)) = f (h *ᵥ z)) :
     (∫ z in Fd, f (h *ᵥ z)) / (volume Fd).toReal = (∫ z in Fd', f z) / (volume Fd').toReal := by
-  haveI := Matrix.invertibleOfIsUnitDet h hdet
+  have := Matrix.invertibleOfIsUnitDet h hdet
   let L : (Fin g → ℂ) ≃ₗ[ℝ] (Fin g → ℂ) := (Matrix.toLinearEquiv' h inferInstance).restrictScalars ℝ
   have hL : ∀ z, L z = h *ᵥ z := fun z => rfl
   let e : (Fin g → ℂ) ≃ᵐ (Fin g → ℂ) := L.toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv
@@ -167,7 +167,7 @@ theorem mean_comp_eq {g : ℕ} (Λ Λ' : AddSubgroup (Fin g → ℂ)) [Countable
     rw [hmap, Measure.restrict_smul, integral_smul_measure, ENNReal.toReal_ofReal hc.le, smul_eq_mul] at this
     exact this.symm
   have i3 : (volume Fd).toReal = c * (volume Fd').toReal := by
-    rw [hF.measure_eq hF2, ← e.map_apply, hmap, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
+    rw [hF.measure_eq hF2, ← e.map_apply, hmap, smul_apply, smul_eq_mul, ENNReal.toReal_mul,
       ENNReal.toReal_ofReal hc.le]
   rw [i1, i2, i3, mul_div_mul_left _ _ hc.ne']
 
@@ -224,7 +224,7 @@ theorem normSq_periodic {g : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} (hH : Hm.IsH
   have e1 : ‖θ'‖ = ‖θ‖ * Real.exp (Real.pi * (hermForm Hm z a).re + Real.pi / 2 * (hermForm Hm a a).re) := by
     apply mul_right_cancel₀ (norm_ne_zero_iff.2 hv)
     rw [← norm_mul, e, norm_mul, h, mul_assoc]
-  rw [e1, mul_pow, mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [e1, mul_pow, mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   simp only [hermForm_add_left, hermForm_add_right, Complex.add_re, hermForm_swap_re hH z a]
   push_cast; ring
@@ -269,7 +269,7 @@ theorem cabs_gen_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hfr : ∀ j z, ⊤ ≤ (F.ex i P z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j → fr' j (h *ᵥ z) = fr j z :=
     frames_eq P.range hspan (fun j => {z | ⊤ ≤ (F.ex i P z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j})
       (fun j => GlobalTheory.FamilyUnif_isOpen_ex F i P hp _) hcov
-      (fun j a ha z hz => by rw [Set.mem_setOf_eq, hexp a ha]; exact hz)
+      (fun j a ha z hz => by rw [Set.mem_ofPred_eq, hexp a ha]; exact hz)
       fr (fun j z => fr' j (h *ᵥ z))
       (fun j j' z => valAt' (F.ex i P z).left (Xo.univ.t.PP.L.U j ⊓ Xo.univ.t.PP.L.U j')
         (Xo.univ.t.PP.L.g j j').val)
@@ -315,8 +315,8 @@ theorem cabs_gen_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have v1 := hv j z _ e1 e2 hj
     have v2 := hv j (z + a) _ (by rw [hexp a ha]; exact e1) e2 hj'
     exact normSq_periodic hH _ _ _ _ z a (hn j _ hj') (v2.symm.trans v1) (hm j a ha z hj)
-  haveI : Countable P.range := by
-    haveI := hp.2.2.1
+  have : Countable P.range := by
+    have := hp.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hinj : Function.Injective (fun z : Fin g → ℂ => h *ᵥ z) :=
     Matrix.mulVec_injective_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det h).2 hdet)

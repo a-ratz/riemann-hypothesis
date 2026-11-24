@@ -135,7 +135,7 @@ theorem ahMean_eq_of_secBC : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hfr : ∀ j z, ⊤ ≤ (F.ex i P z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j → fr' j (h *ᵥ z) = fr j z :=
     frames_eq P.range hspan (fun j => {z | ⊤ ≤ (F.ex i P z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j})
       (fun j => GlobalTheory.FamilyUnif_isOpen_ex F i P hp _) hcov
-      (fun j a ha z hz => by rw [Set.mem_setOf_eq, hexp a ha]; exact hz)
+      (fun j a ha z hz => by rw [Set.mem_ofPred_eq, hexp a ha]; exact hz)
       fr (fun j z => fr' j (h *ᵥ z))
       (fun j j' z => valAt' (F.ex i P z).left (Xo.univ.t.PP.L.U j ⊓ Xo.univ.t.PP.L.U j')
         (Xo.univ.t.PP.L.g j j').val)
@@ -180,8 +180,8 @@ theorem ahMean_eq_of_secBC : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     rw [hfr j _ hj] at v1
     rw [hfr j _ hj'] at v2
     exact normSq_periodic hH _ _ _ _ z b (hn j _ hj') (v2.symm.trans v1) (hm j b hb z hj)
-  haveI : Countable P.range := by
-    haveI := hp.2.2.1
+  have : Countable P.range := by
+    have := hp.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hinj : Function.Injective (fun z : Fin g → ℂ => h *ᵥ z) :=
     Matrix.mulVec_injective_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det h).2 hdet)
@@ -222,8 +222,8 @@ lemma det_eq_prod_diag {n α : Type*} [Fintype n] [DecidableEq n] [Fintype α] (
     have h' := toLex.injective hkl
     rw [Prod.mk.injEq] at h'
     exact hinj _ _ ((Fintype.equivFin α).injective h'.1) h'.2
-  letI : LinearOrder n := LinearOrder.lift' _ hi
-  refine Matrix.det_of_upperTriangular fun k l hkl => ?_
+  let : LinearOrder n := LinearOrder.lift' _ hi
+  refine Matrix.det_of_isUpperTriangular fun k l hkl => ?_
   by_contra hne
   obtain ⟨h1, h2⟩ := hs k l hne
   have hkl' : toLex (Fintype.equivFin α (t l), w l) < toLex (Fintype.equivFin α (t k), w k) := hkl
@@ -244,7 +244,7 @@ lemma det_minor {n α : Type*} [Fintype n] [DecidableEq n] [Fintype α] (t : n �
     ext a a'
     simp only [Matrix.submatrix_apply, Matrix.mul_apply, Matrix.transpose_apply, hT,
       Matrix.diagonal_apply, Matrix.map_apply, ite_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [← Finset.sum_subtype (Finset.univ.filter p) (by simp)
       (fun c => S c a * ((d c : ℂ) * (starRingEnd ℂ) (S c a')))]
     symm
@@ -459,7 +459,7 @@ theorem continuousOn_form {V : Type} [TopologicalSpace V] {g : ℕ} {B : Set V} 
     (hp : ∀ b ∈ B, ((τ b).map Complex.im).PosDef) :
     ContinuousOn (fun b => ((τ b).map Complex.im).det) B ∧ ∀ i j, ContinuousOn (fun b =>
       ((h b)ᵀ * (((τ b).map Complex.im)⁻¹).map (fun x : ℝ => (x : ℂ)) * (h b).map (starRingEnd ℂ)) i j) B := by
-  simp only [continuousOn_iff_continuous_restrict] at hh hτ ⊢
+  simp only [continuousOn_iff_continuous_domRestrict] at hh hτ ⊢
   have h1 : Continuous fun b : B => h b := continuous_matrix hh
   have h2 : Continuous fun b : B => (τ b).map Complex.im :=
     (continuous_matrix hτ : Continuous fun b : B => τ b).matrix_map Complex.continuous_im
@@ -603,7 +603,7 @@ theorem fn_continuousOn_good {E : Type} [Field E] [NumberField E] [IsCMField E] 
     else φ x₀
   have hψ' : ∀ b ∈ B, ∀ a, Formalism.L2.PjFree.toC (ψ' b a) = ψ b a := by
     intro b hb a
-    simp only [ψ', dif_pos hb]
+    simp only [ψ', dite_eq_left hb]
     rfl
   choose z hz using fun b => GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c A (CAt σ) (ψ' b) yA
   have hcont := _root_.GlobalTheory.FrameNorm.fn_continuousOn_hol E H Dw l Xo c r U hU xR fn hx hfn σ hσ A yA m B ψ' z hB
@@ -642,7 +642,7 @@ theorem fn_continuousOn_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   · have hσ' : Formalism.L2.PjFree.GoodEmb c ((starRingEnd ℂ).comp σ) := by
       have := Formalism.L2.PjFree.goodEmb_goodOf c σ
       unfold Formalism.L2.PjFree.goodOf at this
-      rwa [if_neg hσ] at this
+      rwa [ite_eq_right hσ] at this
     choose z hz using fun x => GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c (CAt σ)
       (CAt ((starRingEnd ℂ).comp σ)) (conjAlg σ) (y x)
     have h := fn_continuousOn_good U hU xR fn hx hfn _ hσ' A yA X W (fun x => (conjAlg σ).comp (φ x)) z

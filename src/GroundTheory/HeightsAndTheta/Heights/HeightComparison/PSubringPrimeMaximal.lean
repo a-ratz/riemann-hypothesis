@@ -63,7 +63,7 @@ theorem SubringPrimeMaximal.proof : SubringPrimeMaximal.Statement := by
   obtain ⟨b, hbq, hb0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq0
   set J : Ideal ℤ := q.comap (algebraMap ℤ O) with hJ
   have hJ0 : J ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_algebraic_mem hb0 hbq (subalgebra_isAlgebraic_int O b)
+    Ideal.under_ne_bot_of_algebraic_mem hb0 hbq (subalgebra_isAlgebraic_int O b)
   have hJp : J.IsPrime := Ideal.comap_isPrime _ _
   have hJm : J.IsMaximal := hJp.isMaximal hJ0
   let _ : Field (ℤ ⧸ J) := Ideal.Quotient.field J

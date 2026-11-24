@@ -60,7 +60,7 @@ private theorem star_eq {l : ℕ} [Fact l.Prime] (F : GFrame l) (O O' : Type) [C
     (n : ℕ) (y : MonoidAlgebra B F.G₀) : F.star O B n y = F.star O' B n y := by
   have he : F.eps O B = F.eps O' B := by
     ext g
-    simp only [GFrame.eps, pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe,
+    simp only [GFrame.eps, pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass,
       RingHom.coe_comp, Function.comp_apply]
     exact h _
   have hop : F.starOp O B n = F.starOp O' B n := by
@@ -93,9 +93,9 @@ theorem UpperTheory.V.Pa.BC.resid_bc :
     fun χ => push_ker φ hφ χ
   have hpolar : F.IsPolar O' (GDet.ofRep (diagRep fun i => pushCh φ (r.chib i))) := by
     intro B _ _ _ _ y
-    letI : Algebra (ResidueField O) B := ((algebraMap (ResidueField O') B).comp φ).toAlgebra
-    letI : Algebra O B := ((algebraMap O' B).comp (algebraMap O O')).toAlgebra
-    haveI : IsScalarTower O (ResidueField O) B := IsScalarTower.of_algebraMap_eq (fun a => by
+    let : Algebra (ResidueField O) B := ((algebraMap (ResidueField O') B).comp φ).toAlgebra
+    let : Algebra O B := ((algebraMap O' B).comp (algebraMap O O')).toAlgebra
+    have : IsScalarTower O (ResidueField O) B := IsScalarTower.of_algebraMap_eq (fun a => by
       show algebraMap O' B (algebraMap O O' a) = algebraMap (ResidueField O') B (φ (algebraMap O (ResidueField O) a))
       rw [ResidueField.algebraMap_eq, ResidueField.map_residue, ← ResidueField.algebraMap_eq,
         ← IsScalarTower.algebraMap_apply O' (ResidueField O') B])

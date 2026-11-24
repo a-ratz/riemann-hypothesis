@@ -50,8 +50,8 @@ private theorem det_lattice_restrict_eq_det {E : Type} [NormedAddCommGroup E] [N
     [FiniteDimensional ℝ E] (Lz : Submodule ℤ E) [DiscreteTopology Lz] [IsZLattice ℝ Lz]
     (f : E →ₗ[ℝ] E) (fL : Lz →ₗ[ℤ] Lz) (hfL : ∀ x, (fL x : E) = f x) :
     ((LinearMap.det fL : ℤ) : ℝ) = LinearMap.det f := by
-  haveI := ZLattice.module_free ℝ Lz
-  haveI := ZLattice.module_finite ℝ Lz
+  have := ZLattice.module_free ℝ Lz
+  have := ZLattice.module_finite ℝ Lz
   let b := Module.Free.chooseBasis ℤ Lz
   let bR := Module.Basis.ofZLatticeBasis ℝ Lz b
   rw [← LinearMap.det_toMatrix b, ← LinearMap.det_toMatrix bR, ← eq_intCast (Int.castRingHom ℝ),
@@ -70,10 +70,10 @@ private theorem exists_lattice_reps {E : Type} [NormedAddCommGroup E] [NormedSpa
       (Fz.card : ℝ) = |LinearMap.det f| := by
   classical
   let Lz : Submodule ℤ E := AddSubgroup.toIntSubmodule L
-  haveI : DiscreteTopology Lz := hd
-  haveI : IsZLattice ℝ Lz := ⟨hs⟩
-  haveI := ZLattice.module_free ℝ Lz
-  haveI := ZLattice.module_finite ℝ Lz
+  have : DiscreteTopology Lz := hd
+  have : IsZLattice ℝ Lz := ⟨hs⟩
+  have := ZLattice.module_free ℝ Lz
+  have := ZLattice.module_finite ℝ Lz
   let fL : Lz →ₗ[ℤ] Lz :=
     { toFun := fun x => ⟨f x, hf x x.2⟩
       map_add' := by intro x y; ext; simp
@@ -92,9 +92,9 @@ private theorem exists_lattice_reps {E : Type} [NormedAddCommGroup E] [NormedSpa
   have hcard := Submodule.natAbs_det_equiv N e
   have hcomp : N.subtype ∘ₗ (e : Lz →+ N).toIntLinearMap = fL := by ext x; rfl
   rw [hcomp] at hcard
-  haveI : Finite (Lz ⧸ N) :=
+  have : Finite (Lz ⧸ N) :=
     Nat.finite_of_card_ne_zero (by rw [← hcard]; exact Int.natAbs_ne_zero.mpr hdetL)
-  letI := Fintype.ofFinite (Lz ⧸ N)
+  let := Fintype.ofFinite (Lz ⧸ N)
   let s : (Lz ⧸ N) → E := fun q => fe.symm ((Quotient.out q : Lz) : E)
   have hs_f : ∀ q, f (s q) = ((Quotient.out q : Lz) : E) := fun q => by
     rw [← hfe]; exact fe.apply_symm_apply _

@@ -365,12 +365,12 @@ theorem adMaj (θ : InfFam D) (hθ : IsInfFam θ) {m n : ℕ} (K : Set (Mx D m n
     rintro v ⟨u, hu, x, rfl⟩ z
     by_cases hz : z = rc x
     · subst hz
-      simp only [if_true]
+      simp only [ite_true]
       calc (1 + ‖rc x‖) ^ N * ‖u x‖ ≤ (1 + GlobalTheory.Unf.realSize θ x) ^ N * ‖u x‖ :=
             mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (by positivity) (by linarith [hrc x]) N) (norm_nonneg _)
         _ = ‖u x‖ * (1 + GlobalTheory.Unf.realSize θ x) ^ N := mul_comm _ _
         _ ≤ max B 0 := (hB u hu x).trans (le_max_left _ _)
-    · simp only [hz, if_false, norm_zero, mul_zero]
+    · simp only [hz, ite_false, norm_zero, mul_zero]
       exact le_max_right _ _
   obtain ⟨F, hF⟩ := schDom S' hS'
 
@@ -382,7 +382,7 @@ theorem adMaj (θ : InfFam D) (hθ : IsInfFam θ) {m n : ℕ} (K : Set (Mx D m n
   let _ : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
   have : ContinuousAdd (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.toContinuousAdd (Af D.host.F) _
   have : IsTopologicalAddGroup (Af D.host.F ⊗[D.host.F] D.host.E) :=
-    IsModuleTopology.topologicalAddGroup (Af D.host.F) _
+    IsModuleTopology.isTopologicalAddGroup (Af D.host.F) _
   let W := fp '' K + U₀
   have hWc : IsCompact W := (hK.image hfp).add hU₀c
   have hWo : IsOpen W := IsOpen.add_left hU₀.isOpen
@@ -413,7 +413,7 @@ theorem adMaj (θ : InfFam D) (hθ : IsInfFam θ) {m n : ℕ} (K : Set (Mx D m n
   · rw [hx, norm_zero]; exact norm_nonneg _
   · have hW : fp x ∈ W := hKW x (hsupp u hu x hx)
     have h1 := hF _ ⟨u, hu, x, rfl⟩ (rc x)
-    simp only [if_true] at h1
+    simp only [ite_true] at h1
     simp only [g, Set.indicator_of_mem hW, Pi.one_apply, mul_one]
     exact h1
 
@@ -457,12 +457,12 @@ theorem supK_add (f f' : WO S T → ℂ) : supK om K (f + f') ≤ supK om K f + 
   unfold supK
   refine iSup₂_le fun x hx => iSup_le fun w => ?_
   rw [map_add (f := _), Pi.add_apply]
-  refine (enorm_add_le _ _).trans (add_le_add ?_ ?_)
+  refine (eNorm_add_le _ _).trans (add_le_add ?_ ?_)
   · exact le_iSup₂_of_le (f := fun x _ => ⨆ w, ‖om x f w‖ₑ) x hx (le_iSup (fun w => ‖om x f w‖ₑ) w)
   · exact le_iSup₂_of_le (f := fun x _ => ⨆ w, ‖om x f' w‖ₑ) x hx (le_iSup (fun w => ‖om x f' w‖ₑ) w)
 
 theorem supK_smul (c : ℂ) (f : WO S T → ℂ) : supK om K (c • f) = ‖c‖ₑ * supK om K f := by
-  simp only [supK, map_smul, Pi.smul_apply, smul_eq_mul, enorm_mul, ENNReal.mul_iSup]
+  simp only [supK, map_smul, Pi.smul_apply, smul_eq_mul, eNorm_mul, ENNReal.mul_iSup]
 
 end Sup
 
@@ -508,7 +508,7 @@ theorem sobK_sum_le {ι : Type} (s : Finset ι) {g : ι → WO S T → ℂ} (hg 
   refine Finset.le_sum_of_subadditive_on_pred (wordSum (heisDer ψ θ) (supK om K) d) (IsThetaFunO ψ S T) ?_
     (fun _ _ a b => sobK_add_le hψ hθ K a b d) (fun _ _ => theta_add) g hg
   have := sobK_smul (ψ := ψ) (θ := θ) (om := om) K d 0 (0 : WO S T → ℂ)
-  rw [zero_smul, enorm_zero, zero_mul] at this
+  rw [zero_smul, eNorm_zero, zero_mul] at this
   exact this.le
 
 theorem sobK_dRho_le {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) (τ : D.what₂.Tau)

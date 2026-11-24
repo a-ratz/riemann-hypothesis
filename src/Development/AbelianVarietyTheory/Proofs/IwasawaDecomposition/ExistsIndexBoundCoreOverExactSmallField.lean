@@ -611,7 +611,7 @@ theorem exists_core_exact : ∀ (X : Stages) (f : Fr X.B.toPre), Fld.charField f
   obtain ⟨J, hJ, hC, hCan, hp, hpq, -⟩ := GlobalTheory.FinalJoin2.exists_coreJ_of_chiOK_noVol X.toD7 (hermitianCodeWordStages_ringOfIntegers_full X)
     (hermitianCodeWordStages_has_rootOfUnity X) f.P.pb f.P.pb_over _ (GlobalTheory.FinalJoin.chiOK_one X.toD7)
   have hP : J.Q.PinField := hJ.pins.2.2.1
-  letI := Formalism.IndefR.FWT.algTop J hP
+  let := Formalism.IndefR.FWT.algTop J hP
   have ha : Formalism.IndefR.FWT.AlgTie J := Formalism.IndefR.FWT.algTie_algTop J hP
 
   have hemb : ∀ y : J.Q.c.F, X.toD7.what₂.embLL (algebraMap J.Q.c.F X.toD7.what₂.LL y) = (y : ℂ) := by

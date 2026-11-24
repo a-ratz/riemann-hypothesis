@@ -57,7 +57,7 @@ theorem eisensteinTameWeightSecond_eq_character_sum :
     ∀ (N : ℕ) (s : ℂ), 0 < N → ∀ B : ℤ,
       tw2 N s B = ((N.totient : ℂ))⁻¹ * ∑ ν : DirichletCharacter ℂ N, (1 - s * ν (-1)) * ch ν B := by
   intro N s hN B
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hφ : ((N.totient : ℂ)) ≠ 0 := by exact_mod_cast (Nat.totient_pos.mpr hN).ne'
   have h1 := DirichletCharacter.sum_characters_eq ℂ (B : ZMod N)
   have h2 := DirichletCharacter.sum_characters_eq ℂ (-(B : ZMod N))

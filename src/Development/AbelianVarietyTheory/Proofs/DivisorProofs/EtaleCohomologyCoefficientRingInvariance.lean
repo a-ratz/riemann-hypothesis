@@ -101,9 +101,9 @@ theorem restrRes_comparison : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R
   intro R S _ _ φ F
   obtain ⟨_, hinjS, hgeS, hqS, hιS, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic S F
   obtain ⟨hKR, -, hgeR, -, hιR, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R ((restr φ).obj F)
-  haveI := hgeS; haveI := hqS; haveI := hKR; haveI := hgeR
-  haveI : ((rcx φ).obj (res S F)).IsStrictlyGE 0 := restrRes_strictlyGE φ (res S F)
-  haveI : QuasiIso (rAug φ (resAug F)) := rAug_quasiIso φ (resAug F)
+  have := hgeS; have := hqS; have := hKR; have := hgeR
+  have : ((rcx φ).obj (res S F)).IsStrictlyGE 0 := restrRes_strictlyGE φ (res S F)
+  have : QuasiIso (rAug φ (resAug F)) := rAug_quasiIso φ (resAug F)
   obtain ⟨u, hu⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective R ((restr φ).obj F) ((rcx φ).obj (res S F)) (res R ((restr φ).obj F))
     (rAug φ (resAug F))).1 (resAug _)
   refine ⟨semiOfRestr φ (res S F) u, ?_, ?_⟩
@@ -125,7 +125,7 @@ theorem restrRes_comparison : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R
       (fun U s => Function.bijective_id) E n
     have hpush := _root_.GlobalTheory.EtC.acycRes_computes R ((restr φ).obj F) ((rcx φ).obj (res S F)) (rAug φ (resAug F)) u hu
       (fun t P m hm => by
-        haveI := hinjS t
+        have := hinjS t
         exact _root_.GlobalTheory.EtC.restr_injective_acyclic R S φ ((res S F).X t) P m hm) E n
     have heq : (semiOfRestr φ (res S F) u).op.app E n =
         fun x => cpush _ u n ((idSemi φ (res S F)).op.app E n x) := funext (hc.1 E n)
@@ -186,9 +186,9 @@ theorem cpush_toZ_eq_zero_of_kill (S : Type) [CommRing S] (F : Shv S) (R : Type)
   obtain ⟨-, hinjG, hgeG, hqG, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R G
   let G' := (restr (Int.castRingHom R)).obj G
   obtain ⟨hKI', -, hGE', -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic ℤ G'
-  haveI := hqF; haveI := hqG; haveI := hgeG; haveI := hKI'; haveI := hGE'
-  haveI : QuasiIso (rAug (Int.castRingHom S) (resAug F)) := rAug_quasiIso _ _
-  haveI : QuasiIso (rAug (Int.castRingHom R) (resAug G)) := rAug_quasiIso _ _
+  have := hqF; have := hqG; have := hgeG; have := hKI'; have := hGE'
+  have : QuasiIso (rAug (Int.castRingHom S) (resAug F)) := rAug_quasiIso _ _
+  have : QuasiIso (rAug (Int.castRingHom R) (resAug G)) := rAug_quasiIso _ _
   obtain ⟨v, hv⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective ℤ G' ((rcx (Int.castRingHom R)).obj (res R G)) (res ℤ G')
     (rAug (Int.castRingHom R) (resAug G))).1 (resAug G')
   have hacyc : ∀ (t : ℤ) (P : PSh) (m : ℤ), 0 < m →

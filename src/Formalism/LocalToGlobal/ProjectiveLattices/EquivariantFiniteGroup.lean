@@ -203,11 +203,11 @@ theorem L2Norm_le_sup_norm {X : Comp → Data E r} (la : ∀ c, Wt (X c).Ψ r) (
     (dict : GA D V → Σ c, Frame (X c).Ψ r) (mu : GA D V → ℂ) (h : JMemL2 V σ rd dict mu)
     (hd : ∀ g, (dict g).2 ∈ (X (dict g).1).dom) (hm : MuUnit V dict mu) (f : C)
     (hfin : supE X la (rd f) ≠ ⊤) : l2NormAlt V σ rd dict mu h f ≤ supN X la (rd f) := by
-  haveI : IsProbabilityMeasure (muQ1 V) := by
+  have : IsProbabilityMeasure (muQ1 V) := by
     unfold muQ1
     split_ifs with hh
     · constructor
-      rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hh.1 hh.2]
+      rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hh.1 hh.2]
     · infer_instance
   have hC : 0 ≤ supN X la (rd f) := supN_nonneg X la (rd f)
   have hb : ∀ᵐ q ∂(muQ1 V), ‖(uniformisationL2 V σ rd dict mu h f : AutQ V → ℂ) q‖ ≤ supN X la (rd f) := by

@@ -92,7 +92,7 @@ theorem eq_ratio_smul_on_line {hd : d.AxH 𝒜} {c : ι} {G : WT} {f g : A c} (h
     (hg0 : g ≠ 0) : f = ratio (Ω := Ω c) f g • g := by
   have h1 := hd.finrank_one c G
   have hg' : (⟨g, hg⟩ : 𝒜 c G) ≠ 0 := fun h => hg0 (by simpa using congrArg Subtype.val h)
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hg').1 h1 ⟨f, hf⟩
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hg').1 h1 ⟨f, hf⟩
   have hfa : f = a • g := by
     have := congrArg Subtype.val ha
     simpa using this.symm
@@ -129,14 +129,14 @@ theorem lineRatio_ne_zero (hd : d.AxH 𝒜) (c : ι) : d.rationalBaseRow c ≠ 0
     rw [Fin.sum_univ_succAbove _ (d.jc c)]
 
     simp only [MvPolynomial.aeval_X, sImg, Fin.succAbove_cases_eq_insertNth, Fin.insertNth_apply_same,
-    Fin.insertNth_apply_succAbove, if_true, hr1, map_one, mul_one, map_add, map_sum, map_mul]
+    Fin.insertNth_apply_succAbove, ite_true, hr1, map_one, mul_one, map_add, map_sum, map_mul]
     congr 1
   rw [e]
   intro h0
   have hinj := IsFractionRing.injective (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N)
   rw [← map_zero (algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N))] at h0
   have h1 := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single (Sum.inl ()) 1)) (hinj h0)
-  simp [MvPolynomial.coeff_X', MvPolynomial.coeff_sum, MvPolynomial.coeff_X_mul', Finsupp.single_eq_single_iff] at h1
+  simp [MvPolynomial.coeff_X, MvPolynomial.coeff_sum, MvPolynomial.coeff_X_mul', Finsupp.single_eq_single_iff] at h1
 
 end Data
 
@@ -197,7 +197,7 @@ theorem good_valuation_balance (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (p : Ideal 
     exact_mod_cast h1
   have hinf : (⨅ j : {j // d.w j c ≠ 0}, d.ord c (d.Wres c w) d.wL (d.w j c)) =
       d.ord c (d.Wres c w) d.wL (d.w j0 c) := by
-    haveI : Nonempty {j // d.w j c ≠ 0} := ⟨(⟨j0, hj0⟩ : {j // d.w j c ≠ 0})⟩
+    have : Nonempty {j // d.w j c ≠ 0} := ⟨(⟨j0, hj0⟩ : {j // d.w j c ≠ 0})⟩
     apply le_antisymm
     · exact ciInf_le (Set.finite_range _).bddBelow (⟨j0, hj0⟩ : {j // d.w j c ≠ 0})
     · exact le_ciInf fun j => hge j.1 j.2
@@ -285,8 +285,8 @@ theorem componentForm_poly (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
     have hOf := (hfin p hp)
     have hGsub : d.GoodP c p ⊆ d.OverP c p := fun w hw => hw.1
     have hGf : (d.GoodP c p).Finite := hOf.subset hGsub
-    have hRf : (d.OverP c p \ d.GoodP c p).Finite := hOf.diff
-    rw [he1, ← Set.union_diff_cancel hGsub, finsum_mem_union Set.disjoint_sdiff_right hGf hRf]
+    have hRf : (d.OverP c p \ d.GoodP c p).Finite := hOf.sdiff
+    rw [he1, ← Set.union_sdiff_cancel hGsub, finsum_mem_union Set.disjoint_sdiff_right hGf hRf]
     unfold nPMM
     rw [add_right_comm, ← finsum_mem_add_distrib hGf]
     have hG0 : ∑ᶠ (w : AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ)) (_ : w ∈ d.GoodP c p),

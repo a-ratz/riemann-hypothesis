@@ -71,8 +71,8 @@ theorem field_norm_onto {L : Type*} [Field L] [Finite L] (ρ : RingAut L) (e : �
     exact ⟨h1, fun m hm hm0 => hne m hm0 hm⟩
   have hfin : IsOfFinOrder ρ := isOfFinOrder_iff_pow_eq_one.2 ⟨e, he, h1⟩
   let G := Subgroup.zpowers ρ
-  haveI : Finite G := Finite.of_equiv _ (finEquivZPowers hfin)
-  haveI := Fintype.ofFinite G
+  have : Finite G := Finite.of_equiv _ (finEquivZPowers hfin)
+  have := Fintype.ofFinite G
   let K := FixedPoints.subfield G L
   have haK : a ∈ K := by
     intro g
@@ -169,8 +169,8 @@ theorem local_step [Finite B] (T : RingAut B) (ℓ : ℕ) (hℓ : 0 < ℓ) (hT :
       (∀ i, ¬ Function.minimalPeriod (pull T) m ∣ i → c - 1 ∈ (pull T)^[i] m) →
       ∏ i ∈ range ℓ, (T ^ i) c - a ∈ m := by
   classical
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
-  haveI : Finite (B ⧸ m) := Finite.of_surjective _ (Ideal.Quotient.mk_surjective (I := m))
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
+  have : Finite (B ⧸ m) := Finite.of_surjective _ (Ideal.Quotient.mk_surjective (I := m))
   set d := Function.minimalPeriod (pull T) m with hd
   have hper : Function.IsPeriodicPt (pull T) ℓ m := pull_iter_period T ℓ hT m
   have hdpos : 0 < d := Function.minimalPeriod_pos_of_mem_periodicPts ⟨ℓ, hℓ, hper⟩
@@ -212,9 +212,9 @@ theorem local_step [Finite B] (T : RingAut B) (ℓ : ℕ) (hℓ : 0 < ℓ) (hT :
     intro j hj0 hje h1
     have hlt : d * j < ℓ := by rw [he]; exact Nat.mul_lt_mul_of_pos_left hje hdpos
     have h0 := hxy (d * j) hlt
-    rw [if_neg (Nat.mul_ne_zero hdpos.ne' hj0.ne')] at h0
+    rw [ite_eq_right (Nat.mul_ne_zero hdpos.ne' hj0.ne')] at h0
     have h1' := hxy 0 hℓ
-    rw [if_pos rfl] at h1'
+    rw [ite_eq_left rfl] at h1'
     have hy : ∀ b, Ideal.Quotient.mk m ((T ^ (d * j)) b) = Ideal.Quotient.mk m b := by
       intro b
       rw [← hρ, h1]
@@ -309,7 +309,7 @@ theorem norm_mod_max [Finite B] (T : RingAut B) (ℓ : ℕ) (hℓ : 0 < ℓ) (hT
     local_step T ℓ hℓ hT n x y hxy a ha hfix m.1 m.2
   choose w hw hwc using hloc
   let W : {I : Ideal B // I.IsMaximal} → B := fun I => if rep I.1 = I.1 then w I else 1
-  haveI : Finite (Ideal B) :=
+  have : Finite (Ideal B) :=
     Finite.of_injective (fun I : Ideal B => (I : Set B)) SetLike.coe_injective
   have hco : Pairwise (Function.onFun IsCoprime fun I : {I : Ideal B // I.IsMaximal} => I.1) := by
     intro I J hIJ
@@ -401,7 +401,7 @@ theorem norm_onto : PositivityTheory.Rg.Tf.Loc.N1 := by
   obtain ⟨x, y, hxy⟩ := hdual
   classical
   by_cases hκ' : Subsingleton κ'
-  · haveI : Subsingleton (κ' ⊗[κ] A) := by
+  · have : Subsingleton (κ' ⊗[κ] A) := by
       refine ⟨fun p q => ?_⟩
       have hz : ∀ s : κ' ⊗[κ] A, s = 0 := by
         intro s
@@ -410,9 +410,9 @@ theorem norm_onto : PositivityTheory.Rg.Tf.Loc.N1 := by
         | add u v hu hv => rw [hu, hv, add_zero]
       rw [hz p, hz q]
     exact ⟨1, Subsingleton.elim _ _⟩
-  haveI : Nontrivial κ' := not_subsingleton_iff_nontrivial.1 hκ'
-  haveI : Finite κ' := Module.finite_of_finite κ
-  haveI : Finite (κ' ⊗[κ] A) := Module.finite_of_finite κ
+  have : Nontrivial κ' := not_subsingleton_iff_nontrivial.1 hκ'
+  have : Finite κ' := Module.finite_of_finite κ
+  have : Finite (κ' ⊗[κ] A) := Module.finite_of_finite κ
   let T : RingAut (κ' ⊗[κ] A) :=
     (Algebra.TensorProduct.congr τ (AlgEquiv.refl : A ≃ₐ[κ] A)).toRingEquiv
   have hT1 : ∀ (z : κ') (b : A), T (z ⊗ₜ[κ] b) = τ z ⊗ₜ[κ] b := fun z b => rfl

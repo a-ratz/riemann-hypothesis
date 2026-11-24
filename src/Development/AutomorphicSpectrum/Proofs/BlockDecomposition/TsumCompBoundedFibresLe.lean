@@ -70,7 +70,7 @@ theorem summable_comp_of_bounded_fibres :
       _ ≤ ({a | π a = b} : Set A).ncard := by
           apply Set.ncard_le_ncard _ hf
           intro a ha
-          simp only [Finset.coe_filter, Set.mem_setOf_eq] at ha
+          simp only [Finset.coe_filter, Set.mem_ofPred_eq] at ha
           exact ha.2
       _ = Nat.card {a // π a = b} := (Nat.card_coe_set_eq _).symm
       _ ≤ k := (h b).2

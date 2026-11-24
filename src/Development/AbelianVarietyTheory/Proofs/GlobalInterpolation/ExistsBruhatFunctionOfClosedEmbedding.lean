@@ -69,14 +69,14 @@ theorem exists_bruhat_function_closedEmbedding
       funext x
       exact MonoidHom.apply_ofInjective_symm hj.injective x
     rw [Function.comp_def, this]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   have : (Measure.map e m').IsHaarMeasure := e.isHaarMeasure_map m' he hes
   obtain ⟨φ, hφ, hint, -⟩ := exists_bruhat_function_closed_subgroup T H hH (Measure.map e m')
   refine ⟨fun x => φ x⁻¹, hφ.comp measurable_inv, fun t => ?_⟩
   show ∫⁻ s, φ (j s * t)⁻¹ ∂m' = 1
   have h1 := hint t⁻¹
   have hm : Measurable (fun h : H => φ (t⁻¹ * (h : T))) :=
-    hφ.comp (continuous_const.mul continuous_subtype_val).measurable
+    hφ.comp (continuous_const.mul continuous_subtypeVal).measurable
   rw [lintegral_map hm he.measurable] at h1
   have h2 : ∀ s : T', ((e s : H) : T) = j s := fun s => rfl
   simp only [h2] at h1

@@ -104,7 +104,7 @@ theorem PullConeNullModP.proof : PullConeNullModP.Statement := by
       have hrad : φ (∏ k, (X ⟨k, c k⟩ : MRing ι)) ∈ (I.map φ).radical := by
         rw [← IsJacobsonRing.out inferInstance (Ideal.radical_isRadical (I.map φ)), Ideal.jacobson, Submodule.mem_sInf]
         rintro m ⟨hJm, hm⟩
-        letI := Ideal.Quotient.field m
+        let := Ideal.Quotient.field m
         have := finite_of_finite_type_of_isJacobsonRing (ZMod p) (MvPolynomial (Σ k, ι k) (ZMod p) ⧸ m)
         let ψ := IsAlgClosed.lift (R := ZMod p) (M := AlgebraicClosure (ZMod p))
           (S := MvPolynomial (Σ k, ι k) (ZMod p) ⧸ m)

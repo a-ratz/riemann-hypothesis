@@ -118,7 +118,7 @@ lemma integral_preimage_nonneg [IsLocallyFiniteMeasure ν] [IsLocallyFiniteMeasu
     lintegral_preimage hι hf hg h hS hSB (hc.measurable.ennreal_ofReal)]
   congr 1
   refine lintegral_congr fun b => ?_
-  haveI := hfin b
+  have := hfin b
   exact (ofReal_integral_eq_lintegral_ofReal (hc.integrable_of_hasCompactSupport hs)
     (Filter.Eventually.of_forall h0)).symm
 
@@ -159,7 +159,7 @@ lemma integral_preimage_real [IsLocallyFiniteMeasure ν] [IsLocallyFiniteMeasure
   have hGq : IntegrableOn (fun b => ∫ v, q v ∂(fib b)) S ν :=
     ((h.2.2 q hqc hqK hqt).2.mono hSB).integrableOn_compact hS
   have hb : ∀ b, ∫ v, u v ∂(fib b) = ∫ v, p v ∂(fib b) - ∫ v, q v ∂(fib b) := fun b => by
-    haveI := hfin b
+    have := hfin b
     simp_rw [hsplit]
     exact integral_sub (hpc.integrable_of_hasCompactSupport hpK)
       (hqc.integrable_of_hasCompactSupport hqK)
@@ -171,7 +171,7 @@ lemma integral_fib_eq (hfin : ∀ b, IsLocallyFiniteMeasure (fib b)) {ψ : V →
     (hc : Continuous ψ) (hs : HasCompactSupport ψ) (b : X) :
     ∫ v, ψ v ∂(fib b) = ((∫ v, (ψ v).re ∂(fib b) : ℝ) : ℂ)
       + ((∫ v, (ψ v).im ∂(fib b) : ℝ) : ℂ) * Complex.I := by
-  haveI := hfin b
+  have := hfin b
   exact (integral_re_add_im (𝕜 := ℂ) (hc.integrable_of_hasCompactSupport hs)).symm
 
 lemma re_facts {ψ : V → ℂ} (hc : Continuous ψ) (hs : HasCompactSupport ψ)
@@ -220,10 +220,10 @@ lemma integral_preimage_complex [IsLocallyFiniteMeasure ν] [IsLocallyFiniteMeas
   have hIb : IntegrableOn (fun b => ∫ v, ψ v ∂(fib b)) S ν :=
     ((continuousOn_fib hfin h hc hs hsupp).mono hSB).integrableOn_compact hS
   have hfre : ∀ b, ∫ v, (ψ v).re ∂(fib b) = (∫ v, ψ v ∂(fib b)).re := fun b => by
-    haveI := hfin b
+    have := hfin b
     exact integral_re (𝕜 := ℂ) (hc.integrable_of_hasCompactSupport hs)
   have hfim : ∀ b, ∫ v, (ψ v).im ∂(fib b) = (∫ v, ψ v ∂(fib b)).im := fun b => by
-    haveI := hfin b
+    have := hfin b
     exact integral_im (𝕜 := ℂ) (hc.integrable_of_hasCompactSupport hs)
   apply Complex.ext
   · have e1 : ∫ v in g ⁻¹' S, (ψ v).re ∂μ = (∫ v in g ⁻¹' S, ψ v ∂μ).re :=
@@ -303,7 +303,7 @@ theorem isContDensityOn_fibreIntegral : ∀ (V X Y : Type) [TopologicalSpace V]
           integral_preimage_complex hfin hι hf hg h hS hSB c1 c2 c3
       _ = ∫ b in S, ∫ v, φ v ∂(fib b) ∂ν :=
           setIntegral_congr_fun hSm (fun b hb => hcongr c4 b hb)
-  · haveI := hfin b
+  · have := hfin b
     exact hc.integrable_of_hasCompactSupport hs
 
 end GlobalTheory.CompanionTheory.SW.FibreDensity

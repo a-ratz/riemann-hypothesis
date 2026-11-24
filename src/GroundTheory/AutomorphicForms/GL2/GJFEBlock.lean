@@ -106,7 +106,7 @@ theorem integrable_fourier_kernel {ψ : AddChar F Circle} (hψ : Continuous ψ)
       ((matrixMeasure (n := Fin m) μ₁).prod (matrixMeasure μ₁)) := by
   have hprod := (hΦ.integrable_matrix μ₁).mul_prod hbi
   refine hprod.mono ?_ (Filter.Eventually.of_forall fun p => ?_)
-  · exact (((hΦ.1.continuous.comp continuous_fst).mul ((continuous_subtype_val.comp hψ).comp
+  · exact (((hΦ.1.continuous.comp continuous_fst).mul ((continuous_subtypeVal.comp hψ).comp
       (Continuous.matrix_trace ((ha.comp continuous_fst).matrix_mul continuous_snd)))).mul
       ((hΨ.1.continuous.comp hb).comp continuous_snd)).aestronglyMeasurable
   · simp only [norm_mul, Circle.norm_coe, mul_one]
@@ -199,7 +199,7 @@ theorem lintegral_comp_linearEquiv {ι : Type*} [Fintype ι] (μ₀ : Measure (�
   let e : (ι → F) ≃ₜ (ι → F) := ⟨L.toEquiv, hLc, hLic⟩
   have hmap : Measure.map L μ₀ = ((distribHaarChar (ι → F) L)⁻¹ : ℝ≥0) • μ₀ := by
     ext S hS
-    rw [Measure.map_apply hLc.measurable hS, Measure.smul_apply]
+    rw [Measure.map_apply hLc.measurable hS, smul_apply]
     have h := distribHaarChar_mul μ₀ L⁻¹ S
     have hpre : (L : (ι → F) → (ι → F)) ⁻¹' S = L⁻¹ • S := by
       ext x
@@ -297,7 +297,7 @@ theorem exists_bound_kernel₁ {Φ' Ψ : Matrix (Fin m) (Fin m) F → ℂ} (hΦ'
   ·
     have hz : ∀ X, ‖Φ' X * Ψ (X * (y : Matrix (Fin m) (Fin m) F))‖ₑ = 0 := by
       intro X
-      rw [enorm_eq_zero]
+      rw [eNorm_eq_zero]
       by_contra hne
       have hΨne : Ψ (X * (y : Matrix (Fin m) (Fin m) F)) ≠ 0 := right_ne_zero_of_mul hne
       have hΦne : Φ' X ≠ 0 := left_ne_zero_of_mul hne
@@ -316,7 +316,7 @@ theorem exists_bound_kernel₁ {Φ' Ψ : Matrix (Fin m) (Fin m) F → ℂ} (hΦ'
         ≤ ∫⁻ X, ENNReal.ofReal BΦ * ‖Ψ (X * (y : Matrix (Fin m) (Fin m) F))‖ₑ
             ∂matrixMeasure (n := Fin m) μ₁ := by
           refine lintegral_mono fun X => ?_
-          rw [enorm_mul, ← ofReal_norm]
+          rw [eNorm_mul, ← ofReal_norm]
           gcongr
           exact hBΦ X
       _ = C₁ * ENNReal.ofReal ((q ^ m) ^ ordDet y) := by
@@ -357,7 +357,7 @@ theorem exists_bound_kernel₂ {Φ Ψ' : Matrix (Fin m) (Fin m) F → ℂ} (hΦ 
     calc _ ≤ ∫⁻ X, ENNReal.ofReal BΨ * ‖Φ ((y : Matrix (Fin m) (Fin m) F) * X)‖ₑ
             ∂matrixMeasure (n := Fin m) μ₁ := by
           refine lintegral_mono fun X => ?_
-          rw [enorm_mul, ← ofReal_norm (Ψ' X), mul_comm]
+          rw [eNorm_mul, ← ofReal_norm (Ψ' X), mul_comm]
           gcongr
           exact hBΨ X
       _ = _ := by
@@ -369,7 +369,7 @@ theorem exists_bound_kernel₂ {Φ Ψ' : Matrix (Fin m) (Fin m) F → ℂ} (hΦ 
       C₃ := by
     calc _ ≤ ∫⁻ X, ENNReal.ofReal BΦ * ‖Ψ' X‖ₑ ∂matrixMeasure (n := Fin m) μ₁ := by
           refine lintegral_mono fun X => ?_
-          rw [enorm_mul, ← ofReal_norm (Φ _)]
+          rw [eNorm_mul, ← ofReal_norm (Φ _)]
           gcongr
           exact hBΦ _
       _ = C₃ := lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
@@ -460,7 +460,7 @@ theorem integral_kernel_left (hc : IsCentralCoeff m α c) (μ : Measure (GL (Fin
       (((continuous_detPow _).comp continuous_snd).mul (hc.continuous.comp continuous_snd))
   obtain ⟨B₁, hB₁, hbound⟩ := exists_bound_kernel₁ hΦh hΨ hΨK (LocalField.selfDualMeasure ψ)
   have hlint : ∫⁻ p, ‖(F₁ ∘ shearLeft (GL (Fin m) F)) p‖ₑ ∂(μ.prod μ) < ∞ := by
-    rw [lintegral_prod_symm _ hcontT.enorm.measurable.aemeasurable]
+    rw [lintegral_prod_symm _ hcontT.eNorm.measurable.aemeasurable]
     have hin : ∀ y : GL (Fin m) F, ∫⁻ h, ‖(F₁ ∘ shearLeft (GL (Fin m) F)) (h, y)‖ₑ ∂μ =
         ‖c y * detPow y s‖ₑ * (κ * ∫⁻ X, ‖Φh X * Ψ (X * (y : Matrix (Fin m) (Fin m) F))‖ₑ ∂M) := by
       intro y
@@ -468,11 +468,11 @@ theorem integral_kernel_left (hc : IsCentralCoeff m α c) (μ : Measure (GL (Fin
           ‖Φh (h : Matrix (Fin m) (Fin m) F) * Ψ ((h : Matrix (Fin m) (Fin m) F) *
             (y : Matrix (Fin m) (Fin m) F))‖ₑ * (detModulusPow h : ℝ≥0∞) *
             ‖c y * detPow y s‖ₑ := fun h => by
-        rw [Function.comp_apply, hF₁T, enorm_mul, enorm_mul, enorm_detPow_natCast, mul_comm (detPow y s)]
+        rw [Function.comp_apply, hF₁T, eNorm_mul, eNorm_mul, enorm_detPow_natCast, mul_comm (detPow y s)]
       simp only [e1]
-      rw [lintegral_mul_const' _ _ enorm_ne_top,
+      rw [lintegral_mul_const' _ _ eNorm_ne_top,
         hκlint (fun X => ‖Φh X * Ψ (X * (y : Matrix (Fin m) (Fin m) F))‖ₑ)
-        ((hΦh.1.continuous.mul (hΨ.1.continuous.comp (continuous_id.mul continuous_const))).enorm.measurable)]
+        ((hΦh.1.continuous.mul (hΨ.1.continuous.comp (continuous_id.mul continuous_const))).eNorm.measurable)]
       ring
     simp only [hin]
     exact hc.lintegral_weight_lt_top μ (J := fun y => κ * ∫⁻ X, ‖Φh X *
@@ -551,7 +551,7 @@ theorem integral_kernel_right (hc : IsCentralCoeff m α c) (μ : Measure (GL (Fi
       (((continuous_detPow _).comp continuous_fst).mul (hc.continuous.comp continuous_fst))
   obtain ⟨B₂, hB₂, hbound⟩ := exists_bound_kernel₂ hΦ hΨh (LocalField.selfDualMeasure ψ)
   have hlint : ∫⁻ p, ‖(F₂ ∘ shearRight (GL (Fin m) F)) p‖ₑ ∂(μ.prod μ) < ∞ := by
-    rw [lintegral_prod _ hcontT.enorm.measurable.aemeasurable]
+    rw [lintegral_prod _ hcontT.eNorm.measurable.aemeasurable]
     have hin : ∀ y : GL (Fin m) F, ∫⁻ h, ‖(F₂ ∘ shearRight (GL (Fin m) F)) (y, h)‖ₑ ∂μ =
         ‖c y * detPow y s‖ₑ * (κ * ∫⁻ X, ‖Φ ((y : Matrix (Fin m) (Fin m) F) * X) * Ψh X‖ₑ ∂M) := by
       intro y
@@ -559,13 +559,13 @@ theorem integral_kernel_right (hc : IsCentralCoeff m α c) (μ : Measure (GL (Fi
           ‖Φ ((y : Matrix (Fin m) (Fin m) F) * (h : Matrix (Fin m) (Fin m) F)) *
             Ψh (h : Matrix (Fin m) (Fin m) F)‖ₑ * (detModulusPow h : ℝ≥0∞) *
             ‖c y * detPow y s‖ₑ := fun h => by
-        rw [Function.comp_apply, hF₂T, enorm_mul, enorm_mul, enorm_detPow_natCast,
+        rw [Function.comp_apply, hF₂T, eNorm_mul, eNorm_mul, enorm_detPow_natCast,
           mul_comm (detPow y s)]
       simp only [e1]
-      rw [lintegral_mul_const' _ _ enorm_ne_top,
+      rw [lintegral_mul_const' _ _ eNorm_ne_top,
         hκlint (fun X => ‖Φ ((y : Matrix (Fin m) (Fin m) F) * X) * Ψh X‖ₑ)
         (((hΦ.1.continuous.comp (continuous_const.mul continuous_id)).mul
-          hΨh.1.continuous).enorm.measurable)]
+          hΨh.1.continuous).eNorm.measurable)]
       ring
     simp only [hin]
     exact hc.lintegral_weight_lt_top μ (J := fun y => κ * ∫⁻ X, ‖Φ ((y : Matrix (Fin m) (Fin m) F) *
@@ -824,7 +824,7 @@ theorem isSchwartzBruhat_indGL {S : Set (GL (Fin m) F)} (hSc : IsCompact S) (hSo
         rw [this]; exact isOpen_empty
   · refine HasCompactSupport.intro hcpt fun X hX => ?_
     simp only [indGL, Set.indicator_apply]
-    rw [if_neg hX]
+    rw [ite_eq_right hX]
 
 theorem indGL_support {S : Set (GL (Fin m) F)} (hSc : IsCompact S) :
     ∃ K : Set (GL (Fin m) F), IsCompact K ∧
@@ -835,7 +835,7 @@ theorem indGL_support {S : Set (GL (Fin m) F)} (hSc : IsCompact S) :
   push Not at h
   apply hX
   simp only [indGL, Set.indicator_apply]
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨g, hg, rfl⟩
   exact h g hg rfl
 

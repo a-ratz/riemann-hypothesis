@@ -62,7 +62,7 @@ theorem mem_fixed_iff (ρ : Representation ℂ G V) (H : Subgroup G) (v : V) :
 theorem finite_out_support [TopologicalSpace G] [IsTopologicalGroup G] {K' : Subgroup G}
     (hK' : IsOpen (K' : Set G)) {f : G → ℂ} (hf : HasCompactSupport f) :
     {q : G ⧸ K' | f q.out ≠ 0}.Finite := by
-  haveI : DiscreteTopology (G ⧸ K') := QuotientGroup.discreteTopology hK'
+  have : DiscreteTopology (G ⧸ K') := QuotientGroup.discreteTopology hK'
   have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ K') '' tsupport f) :=
     hf.image QuotientGroup.continuous_mk
   refine hc.finite_of_discrete.subset ?_
@@ -151,7 +151,7 @@ variable {G : Type} [Group G] {V : Type} [AddCommGroup V] [Module ℂ V]
 
 theorem twTr_eq (ρ : Representation ℂ G V) (K K' : Subgroup G) (f : G → ℂ) (A : V →ₗ[ℂ] V)
     (h : ∀ v ∈ fixed ρ K', levOp ρ K K' f A v ∈ fixed ρ K') :
-    twTr ρ K K' f A = LinearMap.trace ℂ (fixed ρ K') ((levOp ρ K K' f A).restrict h) := dif_pos h
+    twTr ρ K K' f A = LinearMap.trace ℂ (fixed ρ K') ((levOp ρ K K' f A).restrict h) := dite_eq_left h
 
 theorem trace_restrict_congr {W : Submodule ℂ V} {L L' : V →ₗ[ℂ] V} (e : L = L') (h : ∀ v ∈ W, L v ∈ W)
     (h' : ∀ v ∈ W, L' v ∈ W) : LinearMap.trace ℂ W (L.restrict h) = LinearMap.trace ℂ W (L'.restrict h') := by
@@ -178,9 +178,9 @@ theorem trace_id_eq_finrank (W : Type) [AddCommGroup W] [Module ℂ W] :
 
 theorem relIndex_ne_zero_of_isOpen [TopologicalSpace G] [IsTopologicalGroup G] {K K' : Subgroup G}
     (hKc : IsCompact (K : Set G)) (hK'o : IsOpen (K' : Set G)) : K'.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
-  haveI : Finite (K ⧸ K'.subgroupOf K) :=
-    Subgroup.quotient_finite_of_isOpen _ (hK'o.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : Finite (K ⧸ K'.subgroupOf K) :=
+    Subgroup.quotient_finite_of_isOpen _ (hK'o.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 theorem levOp_unit (ρ : Representation ℂ G V) (K K' : Subgroup G) :
@@ -234,7 +234,7 @@ theorem twTr_linear : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologic
   · intro h0 f
     unfold twTr
     split_ifs with h
-    · haveI : Subsingleton (fixed ρ K') := by
+    · have : Subsingleton (fixed ρ K') := by
         have key : ∀ v : V, v ∈ fixed ρ K' → v = 0 := fun v hv => by
           rw [h0] at hv
           exact (Submodule.mem_bot ℂ).1 hv

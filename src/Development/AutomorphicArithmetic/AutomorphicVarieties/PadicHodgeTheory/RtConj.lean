@@ -421,7 +421,7 @@ private theorem exists_conjLift {O : Type} [CommRing O] [IsLocalRing O] {Γ : Ty
 
 private theorem eta_lc {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O]
     (D : Dat3 l O) : IsLocallyConstant D.η := by
-  haveI := D.Kv.2
+  have := D.Kv.2
   have ho : IsOpen (GK D.Kv : Set (GQ l)) := IntermediateField.fixingSubgroup_isOpen D.Kv.1
   rw [IsLocallyConstant.iff_exists_open]
   intro x
@@ -472,12 +472,12 @@ theorem GlobalTheory.OrdLoc.rtConj :
   have hmin : GlobalTheory.OrdLoc.It D U ∈ (GlobalTheory.OrdLoc.Icr D U).minimalPrimes := by
     have : GlobalTheory.OrdLoc.It D U ∈ GlobalTheory.OrdLoc.primesAt0 D U := by rw [hpr]; rfl
     exact this.1
-  haveI := hprime
+  have := hprime
   let q : U.R →ₐ[O] GlobalTheory.OrdLoc.Rt D U := Ideal.Quotient.mkₐ O (GlobalTheory.OrdLoc.It D U)
-  haveI : IsCO O (GlobalTheory.OrdLoc.Rt D U) := co_quot O U.R _ q (Ideal.Quotient.mkₐ_surjective O _)
+  have : IsCO O (GlobalTheory.OrdLoc.Rt D U) := co_quot O U.R _ q (Ideal.Quotient.mkₐ_surjective O _)
   let S := MvPowerSeries (Fin 3 × Fin 3) (GlobalTheory.OrdLoc.Rt D U)
-  haveI : IsCO O S := co_mvps O _ _
-  haveI : IsDomain S := NoZeroDivisors.to_isDomain S
+  have : IsCO O S := co_mvps O _ _
+  have : IsDomain S := NoZeroDivisors.to_isDomain S
   let i : U.R →ₐ[O] S := (IsScalarTower.toAlgHom O (GlobalTheory.OrdLoc.Rt D U) S).comp q
   have hi : ∀ a, i a = MvPowerSeries.C (q a) := fun a => rfl
   have hiI : ∀ a ∈ GlobalTheory.OrdLoc.It D U, i a = 0 := fun a ha => by

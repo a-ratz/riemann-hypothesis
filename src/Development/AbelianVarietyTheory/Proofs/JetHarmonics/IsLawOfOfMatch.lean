@@ -128,7 +128,7 @@ theorem isLawOf_of_match {G : Over (Sp V)} [GrpObj G] {d : ℕ} (F : Fin d → P
       (e : Chart.JetR V (Fin d) m →ₐ[V] Jet V (Fin 1 × Fin d) m))) (Chart.zR m j) =
       JetSer.toJet m ((![a, b] : Fin 2 → Pt V n d) i j) := by
     intro i j
-    rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_algHom, he1, jetCopy, jetMap_coord]
+    rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, he1, jetCopy, jetMap_coord]
     exact hΦ (i, j)
   have ea : ψa = Φ.comp ((jetCopy d m 0).comp
       (e : Chart.JetR V (Fin d) m →ₐ[V] Jet V (Fin 1 × Fin d) m)) :=
@@ -138,7 +138,7 @@ theorem isLawOf_of_match {G : Over (Sp V)} [GrpObj G] {d : ℕ} (F : Fin d → P
     Chart.jet_ext fun j => (hb1 j).trans (key 1 j).symm
   refine ⟨Φ.comp ((jetSubstP m fun p : Fin 1 × Fin d => psTrunc m (F p.2)).comp
     (e : Chart.JetR V (Fin d) m →ₐ[V] Jet V (Fin 1 × Fin d) m)), fun j => ?_, ?_⟩
-  · rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_algHom, he1,
+  · rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, he1,
       jetSubstP_coord m (fun p : Fin 1 × Fin d => F p.2) _ (hF _)]
     exact hsub _
   · show y m * z m = _
@@ -163,7 +163,7 @@ theorem isMapOf_of_match {G : Over (Sp V)} {d : ℕ} (φ : Pt V 1 d)
   have key : ∀ j, (Φ.comp ((AlgHom.id V _).comp
       (e : Chart.JetR V (Fin d) m →ₐ[V] Jet V (Fin 1 × Fin d) m))) (Chart.zR m j) = JetSer.toJet m (a j) := by
     intro j
-    rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_algHom, he1, AlgHom.id_apply]
+    rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, he1, AlgHom.id_apply]
     exact hΦ (0, j)
   have ea : ψa = Φ.comp ((AlgHom.id V _).comp
       (e : Chart.JetR V (Fin d) m →ₐ[V] Jet V (Fin 1 × Fin d) m)) :=
@@ -173,7 +173,7 @@ theorem isMapOf_of_match {G : Over (Sp V)} {d : ℕ} (φ : Pt V 1 d)
     exact Spec.map_id _
   refine ⟨Φ.comp ((jetSubstP m fun p : Fin 1 × Fin d => psTrunc m (φ p.2)).comp
     (e : Chart.JetR V (Fin d) m →ₐ[V] Jet V (Fin 1 × Fin d) m)), fun j => ?_, ?_⟩
-  · rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_algHom, he1,
+  · rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, he1,
       jetSubstP_coord m (fun p : Fin 1 × Fin d => φ p.2) _ (hφ _)]
     exact hsub _
   · show y m ≫ f = _
@@ -183,7 +183,7 @@ theorem isMapOf_of_match {G : Over (Sp V)} {d : ℕ} (φ : Pt V 1 d)
 
 theorem linkLaw : LinkLawSt := by
   intro E _ _ _ H V _ t d BT tg xT eT wPT hC _ _ x _ hM
-  letI := H.starRing
+  let := H.starRing
   exact ⟨isLawOf_of_match BT.G.F BT.G.const xT hC.law x hM,
     fun α => isMapOf_of_match (BT.A.act α) (BT.A.const α) xT _ (fun m => hC.act m α) x hM⟩
 

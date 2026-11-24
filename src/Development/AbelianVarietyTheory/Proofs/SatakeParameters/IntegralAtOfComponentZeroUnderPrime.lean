@@ -60,7 +60,7 @@ theorem exists_away {F : Type} [Field F] [NumberField F] (p : Ideal (𝓞 F)) [h
     rw [Ideal.isUnit_iff]; exact hp.ne_top
   obtain ⟨b, hb, hnd⟩ := (FiniteMultiplicity.of_not_isUnit hpu hI).exists_eq_pow_mul_and_not_dvd
   have hbp : ¬ b ≤ p := fun h => hnd (Ideal.dvd_iff_le.2 h)
-  obtain ⟨t, htb, htp⟩ := SetLike.not_le_iff_exists.1 hbp
+  obtain ⟨t, htb, htp⟩ := IsConcreteLE.not_le_iff_exists.1 hbp
   refine ⟨t, htp, fun w hw => ?_⟩
   have hpw : ¬ p ^ multiplicity p (Ideal.span {N}) ≤ w.asIdeal := by
     intro h
@@ -78,7 +78,7 @@ theorem exists_away {F : Type} [Field F] [NumberField F] (p : Ideal (𝓞 F)) [h
           _ = ⊥ := h'
       have hmax : p.IsMaximal := hp.isMaximal hpb
       exact hw (hmax.eq_of_le w.isPrime.ne_top hle).symm
-  obtain ⟨y, hy, hyw⟩ := SetLike.not_le_iff_exists.1 hpw
+  obtain ⟨y, hy, hyw⟩ := IsConcreteLE.not_le_iff_exists.1 hpw
   have hyt : y * t ∈ Ideal.span {N} := by
     rw [hb]; exact Ideal.mul_mem_mul hy htb
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 hyt
@@ -89,7 +89,7 @@ theorem intAtA_of_prV_eq_zero : ∀ {F E : Type} [Field F] [NumberField F] [Fiel
     (∀ v : HeightOneSpectrum (𝓞 F), IsOver v P → prV (E := E) v z = 0) → IntAtA (F := F) P z := by
   intro F E _ _ _ _ _ P z hz
   obtain ⟨m, hm, hmz⟩ := GlobalTheory.St.G.IntAd.exists_nat_denom (F := F) (E := E) z
-  haveI : (P.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E))).IsPrime := Ideal.comap_isPrime _ _
+  have : (P.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E))).IsPrime := Ideal.comap_isPrime _ _
   have hm0 : (m : 𝓞 F) ≠ 0 := Nat.cast_ne_zero.2 hm.ne'
   obtain ⟨t, htp, ht⟩ := exists_away (P.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E))) (m : 𝓞 F) hm0
   refine ⟨algebraMap (𝓞 F) (𝓞 E) t, htp, ?_⟩

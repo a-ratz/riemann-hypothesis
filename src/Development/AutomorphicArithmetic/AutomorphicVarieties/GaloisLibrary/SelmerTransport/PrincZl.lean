@@ -100,7 +100,7 @@ theorem UpperTheory.V.Base.princZl :
   have hker : L.ker = CommGroup.torsion ℤ_[l]ˣ := GroundTheory.Global.Cyclotomic.ker_padicUnitsLog l
   let f : H → ℤ_[l] := fun h => Multiplicative.toAdd (L h)
   have hfc : Continuous f :=
-    (GroundTheory.Global.Cyclotomic.continuous_padicUnitsLog l).comp continuous_subtype_val
+    (GroundTheory.Global.Cyclotomic.continuous_padicUnitsLog l).comp continuous_subtypeVal
   have hmul : ∀ a b : H, f (a * b) = f a + f b := by
     intro a b
     simp [f, L]
@@ -116,7 +116,7 @@ theorem UpperTheory.V.Base.princZl :
     rw [hker, CommGroup.mem_torsion] at hk
     have := tors _ (H.mul_mem a.2 (H.inv_mem b.2)) hk
     exact Subtype.ext (mul_inv_eq_one.1 this)
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hHc.isCompact
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hHc.isCompact
   have hcl : IsClosed (Set.range f) := (isCompact_range hfc).isClosed
   let I : Ideal ℤ_[l] :=
     { carrier := Set.range f

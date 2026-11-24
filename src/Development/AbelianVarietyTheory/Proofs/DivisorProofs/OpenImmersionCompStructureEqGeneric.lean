@@ -198,22 +198,22 @@ theorem _root_.GlobalTheory.HeightOneCompletion.exists_cdvr_of_height_eq_one :
   intro A _ _ _ _ _ 𝔭 h
   obtain ⟨hdom, hic⟩ :=
     _root_.GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_isDomain 𝔭.asIdeal (Localization.AtPrime 𝔭.asIdeal)
-  haveI := hdom
-  haveI := hic
-  haveI : IsNoetherianRing (Localization.AtPrime 𝔭.asIdeal) :=
+  have := hdom
+  have := hic
+  have : IsNoetherianRing (Localization.AtPrime 𝔭.asIdeal) :=
     IsLocalization.isNoetherianRing 𝔭.asIdeal.primeCompl _ inferInstance
   have hdim : ringKrullDim (Localization.AtPrime 𝔭.asIdeal) = 1 := by
     rw [IsLocalization.AtPrime.ringKrullDim_eq_height 𝔭.asIdeal (Localization.AtPrime 𝔭.asIdeal), h]
     rfl
-  haveI := _root_.GlobalTheory.CdvrExt.isDVR_of_ringKrullDim_eq_one hdim
+  have := _root_.GlobalTheory.CdvrExt.isDVR_of_ringKrullDim_eq_one hdim
   have hinj : Function.Injective (algebraMap A (Localization.AtPrime 𝔭.asIdeal)) :=
     IsLocalization.injective _ (Ideal.primeCompl_le_nonZeroDivisors 𝔭.asIdeal)
   obtain ⟨O, _, _, _, j, r, hc, hj, hl, -, -, -⟩ :=
     _root_.GlobalTheory.exists_complete_discreteValuationRing_with_residues (Localization.AtPrime 𝔭.asIdeal)
       (ResidueField (Localization.AtPrime 𝔭.asIdeal)) (residue _) ∅ (ker_residue)
-  haveI : CharZero (Localization.AtPrime 𝔭.asIdeal) := ⟨fun m n hmn =>
+  have : CharZero (Localization.AtPrime 𝔭.asIdeal) := ⟨fun m n hmn =>
     Nat.cast_injective (R := A) (hinj (by rw [map_natCast, map_natCast]; exact hmn))⟩
-  haveI : CharZero O := ⟨fun m n hmn =>
+  have : CharZero O := ⟨fun m n hmn =>
     Nat.cast_injective (R := Localization.AtPrime 𝔭.asIdeal)
       (hj (by rw [map_natCast, map_natCast]; exact hmn))⟩
   exact ⟨@_root_.Formalism.L2.Pj.CDVR.mk O _ _ _ hc _, j, hj, hl⟩
@@ -347,8 +347,8 @@ theorem exists_nat_mul_mem : ∀ (A : Type) [CommRing A] [IsDomain A] [IsIntegra
       algebraMap A (Localization.AtPrime p.asIdeal) y ∣ algebraMap A (Localization.AtPrime p.asIdeal) (n * x) := by
     intro p hp
     let L := Localization.AtPrime p.asIdeal
-    haveI : IsDomain L := IsLocalization.isDomain_localization p.asIdeal.primeCompl_le_nonZeroDivisors
-    haveI : IsDiscreteValuationRing L := isDiscreteValuationRing_of_height_eq_one p.asIdeal hp _
+    have : IsDomain L := IsLocalization.isDomain_localization p.asIdeal.primeCompl_le_nonZeroDivisors
+    have : IsDiscreteValuationRing L := isDiscreteValuationRing_of_height_eq_one p.asIdeal hp _
     have hinj : Function.Injective (algebraMap A L) :=
       IsLocalization.injective L p.asIdeal.primeCompl_le_nonZeroDivisors
     have hyL : algebraMap A L y ≠ 0 := (map_ne_zero_iff _ hinj).2 hy0
@@ -512,7 +512,7 @@ theorem exists_change {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
     have h2 := comb_vecMul hbt hq3 (hz' ▸ (comb_push Y.m hq2 (a i) (hw1' i)).1 h1)
     exact (he.2 k _ _ (tan_of_comb hbt h2)).unique (hw3' i) h2
   refine ⟨Matrix.of a, ha, hM, ?_⟩
-  haveI : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
+  have : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
   have hδ : ((discr E : ℤ) : k) ≠ 0 := Int.cast_ne_zero.2 (discr_ne_zero E)
   have e1 : C.map ι * M.map ι = U.map (ι.toRingHom.comp φ) := by
     rw [← Matrix.map_mul (f := ι), h.2.1, Matrix.map_map]; rfl
@@ -1004,7 +1004,7 @@ theorem exists_intFr_lift (T : CDVR) (io : c.F →+* T.Fr) (yt : Sp T.V ⟶ Y.X)
     (z : letI := io.toAlgebra; FrPt Xo c T.Fr) (hz : yy ≫ Y.j = spMap (algebraMap T.V T.Fr) ≫ yt)
     (hzr : letI := io.toAlgebra; yy ≫ r = GlobalTheory.AllWt.ptF z) :
     ∃ y₀ : IntFr Xo c T io, (letI := io.toAlgebra; GlobalTheory.AllWt.ptF y₀.1 = GlobalTheory.AllWt.ptF z) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, ⟨m⟩⟩ : ∃ G : SAB H (Sp T.V), Nonempty (SABMap G Y.t yt) := by
     obtain ⟨PP', cub, sym, adj, prim, m, -⟩ := sabPull ReciprocityTheory.ChartRestriction.G.Out.CubePf.cubePull yt Y.t
     exact ⟨_, ⟨m⟩⟩
@@ -1073,7 +1073,7 @@ theorem exists_change {R : Type} [CommRing R] {ξ : Sp R ⟶ Y.X} {g : ℕ}
     have h2 := comb_vecMul hbt hq3 (hz' ▸ (comb_push Y.m hq2 (a i) (hw1' i)).1 h1)
     exact (he.2 k _ _ (tan_of_comb hbt h2)).unique (hw3' i) h2
   refine ⟨Matrix.of a, ha, hM, ?_⟩
-  haveI : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
+  have : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
   have hδ : ((discr E : ℤ) : k) ≠ 0 := Int.cast_ne_zero.2 (discr_ne_zero E)
   have e1 : C.map ι * M.map ι = U.map (ι.toRingHom.comp φ) := by
     rw [← Matrix.map_mul (f := ι), h.2.1, Matrix.map_map]; rfl
@@ -1236,7 +1236,7 @@ theorem coord_integral {R : Type} [CommRing R] {ξ : Sp R ⟶ Y.X} {g : ℕ}
     (h : letI := io.toAlgebra; IsCoord Y r ν ξ e U ((algebraMap T.V T.Fr).comp φ) yy y₀.1 σ M C) :
     ∃ (M₀ : Matrix (Fin (Dw.mult σ)) (Fin g) T.V) (C₀ : Matrix (Fin g) (Fin (Dw.mult σ)) T.V),
       M₀.map (algebraMap T.V T.Fr) = M ∧ C₀.map (algebraMap T.V T.Fr) = C := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hinj := IsFractionRing.injective T.V T.Fr
   have hy1 : yy ≫ Y.j = spMap (algebraMap T.V T.Fr) ≫ spMap φ ≫ ξ := by rw [hy, sp_sp]
   have hy' : yy ≫ Y.jQ ≫ pullback.fst _ _ = spMap ((algebraMap T.V T.Fr).comp φ) ≫ ξ := hy
@@ -1279,7 +1279,7 @@ theorem coord_integral {R : Type} [CommRing R] {ξ : Sp R ⟶ Y.X} {g : ℕ}
   choose C₀ hC₀ using hC
   refine ⟨Matrix.of M₀, Matrix.of C₀, hM, ?_⟩
   have hδ : ((discr E : ℤ) : T.Fr) ≠ 0 := by
-    haveI : CharZero T.Fr := charZero_of_injective_algebraMap hinj
+    have : CharZero T.Fr := charZero_of_injective_algebraMap hinj
     exact Int.cast_ne_zero.2 (discr_ne_zero E)
   have e0 : Matrix.of C₀ * Matrix.of M₀ = U.map φ := by
     ext i j
@@ -1404,7 +1404,7 @@ theorem chart_bound {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pullback
   obtain ⟨hbinj, hq⟩ : Function.Injective b ∧
       ∃ q, r q ∈ (Z : Set (Xo.XF c)) ∧ Y.j q = ξ (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum R) := by
     obtain ⟨T, io, y₀, φ, yy₀, h1, h1', h2⟩ := hex
-    letI := io.toAlgebra
+    let := io.toAlgebra
     obtain ⟨io', hc, -⟩ := comp_eq_of_lift Y r hr hb h1 h1'
     refine ⟨Function.Injective.of_comp (f := (algebraMap T.V T.Fr).comp φ) ?_, ?_⟩
     · rw [← RingHom.coe_comp, hc]
@@ -1416,7 +1416,7 @@ theorem chart_bound {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pullback
         exact hyZ s₀
       rw [← Scheme.Hom.comp_apply, hy]
       exact bot_map (IsLocalization.injective _ 𝔮.primeCompl_le_nonZeroDivisors) ξ
-  haveI : CharZero R := charZero_of_injective_ringHom hbinj
+  have : CharZero R := charZero_of_injective_ringHom hbinj
   let F := FractionRing R
   obtain ⟨algF, halgF⟩ := exists_algebra (K := c.F) ((algebraMap R F).comp (b.comp (inclO hle))) fun a ha =>
     Ne.isUnit ((map_ne_zero_iff _ (IsFractionRing.injective R F)).2 ((map_ne_zero_iff _ hbinj).2 (inclO_ne_zero hle ha)))
@@ -1445,7 +1445,7 @@ theorem chart_bound {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pullback
       ∃ (M₀ : Matrix (Fin (Dw.mult σ)) (Fin g) T.V) (C₀ : Matrix (Fin g) (Fin (Dw.mult σ)) T.V),
         (letI := io.toAlgebra; IsCoord Y r ν ξ e (U σ) ((algebraMap T.V T.Fr).comp φ) yy y₀.1 σ
           (M₀.map (algebraMap T.V T.Fr)) (C₀.map (algebraMap T.V T.Fr))) := fun T io y₀ φ yy h h' σ => by
-    letI := io.toAlgebra
+    let := io.toAlgebra
     obtain ⟨M, C, hMC⟩ := hcrd T.Fr _ yy y₀.1 h h' σ
     obtain ⟨M₀, C₀, rfl, rfl⟩ := coord_integral Y r ν he σ (hU σ) T io y₀ φ yy h h'
       (hcompat T.Fr _ yy y₀.1 h h' σ) M C hMC
@@ -1457,7 +1457,7 @@ theorem chart_bound {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pullback
     intro p
     refine exists_nat_mul_mem R _ fun T α ι hα hι hn => ?_
     let io : c.F →+* T.Fr := ι.comp (algebraMap c.F F)
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have hio : ∀ a, io (algebraMap (𝓞 c.F) c.F a) = algebraMap T.V T.Fr (α (b (inclO hle a))) := fun a =>
       (congrArg ι (DFunLike.congr_fun halgF a)).trans (hι _)
     obtain ⟨zz, z, hz, hzr, hzZ⟩ := hgen T.Fr ((algebraMap T.V T.Fr).comp α)
@@ -1478,7 +1478,7 @@ theorem chart_bound {hle : c.F ≤ c'.F} (hr : r ≫ pullback.snd _ _ = pullback
   have hd0 : (discr E).natAbs ≠ 0 := Int.natAbs_ne_zero.2 (discr_ne_zero E)
   refine ⟨(∏ p, m p) * (discr E).natAbs ^ (Dw.mult σ₁ + Dw.mult σ₂),
     Nat.mul_pos (Finset.prod_pos fun p _ => hm p) (Nat.pos_of_ne_zero (pow_ne_zero _ hd0)), fun T io y₀ φ yy₀ h1 h1' h2 => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hinj := IsFractionRing.injective T.V T.Fr
   obtain ⟨M₁, C₁, h₁⟩ := hint T io y₀ φ yy₀ h1 h1' σ₁
   obtain ⟨M₂, C₂, h₂⟩ := hint T io y₀ φ yy₀ h1 h1' σ₂
@@ -1544,7 +1544,7 @@ theorem exists_denom (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A = 1) (Z : Comp Xo c)
     ∃ m : ℕ, 0 < m ∧ ∀ la, ∀ v ∈ valOn Z la, 0 ≤ v ((m : c.F) • f) := by
   classical
   obtain ⟨l', hd, hA', hg⟩ := GlobalTheory.GoodMultipleLevel.exists_good_multiple E H l
-  haveI := c.fin
+  have := c.fin
   obtain ⟨c', hle⟩ := GlobalTheory.TupleCover.exists_coeff_ge l' c.F
   let X : ∀ l : Level H, Moduli Dw l := fun l₁ => Classical.choice (GlobalTheory.Moduli.moduli_scheme_exists E H Dw l₁ hpq)
   obtain ⟨Y₀, -, h6⟩ := GlobalTheory.partI_closed.2 E H Dw hpq X
@@ -1580,24 +1580,24 @@ theorem exists_denom (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A = 1) (Z : Comp Xo c)
   refine ⟨∏ x ∈ S, m x, Finset.prod_pos fun x _ => hm x, fun la v hv => ?_⟩
   obtain ⟨⟨_, T, io, e₀, ho, y₀, hy, η, -, rfl⟩, rfl⟩ := hv
 
-  letI : Algebra c.F c'.F := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by simp
-  haveI := c'.fin
-  haveI : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
+  let : Algebra c.F c'.F := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by simp
+  have := c'.fin
+  have : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
   obtain ⟨L₀, _, _, _, io', hio'⟩ := GlobalTheory.LevelLift.exists_field_over c.F c'.F T.Fr io
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have cond : (spMap (algebraMap T.Fr L₀) ≫ GlobalTheory.AllWt.ptF y₀.1) ≫ pullback.snd _ _ =
       spMap io' ≫ spMap (IntermediateField.inclusion hle).toRingHom := by
     rw [Category.assoc, GlobalTheory.AllWt.ptF, pullback.lift_snd, spMap_comp_eq, spMap_comp_eq]
     exact congrArg spMap hio'.symm
   obtain ⟨L, _, _, _, x', hx'⟩ := GlobalTheory.LevelLift.exists_point_finite_surjective _ hfin hsurj L₀ (pullback.lift _ _ cond)
-  letI : Algebra T.Fr L := ((algebraMap L₀ L).comp (algebraMap T.Fr L₀)).toAlgebra
-  haveI : IsScalarTower T.Fr L₀ L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FiniteDimensional T.Fr L := Module.Finite.trans L₀ L
+  let : Algebra T.Fr L := ((algebraMap L₀ L).comp (algebraMap T.Fr L₀)).toAlgebra
+  have : IsScalarTower T.Fr L₀ L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional T.Fr L := Module.Finite.trans L₀ L
   obtain ⟨T', iT, e', ψ, φ, he', hv, hψ, hφ, -⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T L
   obtain ⟨y₁, ι, hι, hm₁⟩ := GlobalTheory.IntFrBaseChange.exists_intFr_baseChange E H Dw l Xo c T T' io y₀ iT e' he'
     fun a _ => hv a
-  letI := (iT.comp io).toAlgebra
+  let := (iT.comp io).toAlgebra
   have hx1 : x' ≫ r = spMap (algebraMap T.Fr L) ≫ GlobalTheory.AllWt.ptF y₀.1 := by
     have h := congrArg (· ≫ pullback.fst _ _) hx'
     simp only [Category.assoc, pullback.lift_fst] at h

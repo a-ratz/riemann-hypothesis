@@ -77,7 +77,7 @@ theorem basePt_eq_zero_of_stepVar (y : Matrix n n' k) {r : n ⊕ Fin c} {s : n' 
   rcases r with r | r <;> rcases s with s | s <;> simp only [Free, Kept, or_false, false_or] at h <;>
     simp only [basePt, fromBlocks_apply₁₁, fromBlocks_apply₁₂, fromBlocks_apply₂₁, fromBlocks_apply₂₂,
       Matrix.zero_apply, of_apply]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 
 omit [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] in
@@ -88,7 +88,7 @@ theorem stepVar_fixed_of_ordL_lt (y : Matrix n n' k) {r t : n ⊕ Fin c} {s : n'
     simp only [Free, Kept, GlobalTheory.DiagVol.ordL, Sum.elim_inl, Sum.elim_inr, basePt, fromBlocks_apply₁₁,
       fromBlocks_apply₁₂, fromBlocks_apply₂₁, fromBlocks_apply₂₂, Matrix.zero_apply, of_apply, not_or,
       Nat.even_iff, Nat.odd_iff, not_and, true_and, and_true, not_false_eq_true, not_true_eq_false] at hv hlt ⊢
-  all_goals first | omega | (refine ⟨⟨by omega, by omega⟩, ?_⟩; rw [if_neg (by omega)]) | (refine ⟨by omega, ?_⟩; rw [if_neg (by omega)]) | skip
+  all_goals first | omega | (refine ⟨⟨by omega, by omega⟩, ?_⟩; rw [if_neg (by omega)]) | (refine ⟨by omega, ?_⟩; rw [ite_eq_right (by omega)]) | skip
 
 end Shape
 
@@ -141,15 +141,15 @@ theorem inv_mul_stepPt_shape : ∀ {k : Type} [Field k] {n n' : Type} [Fintype n
     rw [_root_.mul_inv_rev, map_inv, Units.val_mul]
   have hu : v⁻¹ ∈ GlobalTheory.DiagVol.unipSub (GlobalTheory.DiagVol.ordL c) := GlobalTheory.DiagVol.symN_le_unipSub (inv_mem hv)
   have hM : ∀ r s, ¬ (Free (c / 2 + 1) (r, s) ∨ Kept (r, s)) → stepPt x₀ e r s = basePt c x₀ r s :=
-    fun r s h => by rw [stepPt, Matrix.add_apply, of_apply, dif_neg h, add_zero]
+    fun r s h => by rw [stepPt, Matrix.add_apply, of_apply, dite_eq_right h, add_zero]
   have hA := embX_mul_fixed κ⁻¹ x₀ _ (unipSub_mul_fixed hu x₀ _ hM)
   have hR : ∀ (y : Matrix n n' k) (e' : StepVar n c n' → k) r s, stepPt y e' r s =
       basePt c y r s + (if h : Free (c / 2 + 1) (r, s) ∨ Kept (r, s) then e' ⟨(r, s), h⟩ else 0) :=
     fun _ _ _ _ => rfl
   ext r s
   by_cases h : Free (c / 2 + 1) (r, s) ∨ Kept (r, s)
-  · conv_rhs => rw [hR, dif_pos h, basePt_eq_zero_of_stepVar _ h, zero_add]
-  · conv_rhs => rw [hR, dif_neg h, add_zero]
+  · conv_rhs => rw [hR, dite_eq_left h, basePt_eq_zero_of_stepVar _ h, zero_add]
+  · conv_rhs => rw [hR, dite_eq_right h, add_zero]
     rw [hg, Matrix.mul_assoc, hA r s h]
 
 end GlobalTheory.StepLeft
@@ -354,7 +354,7 @@ theorem mp_affine {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [Is
     [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure] {ι : Type} [Fintype ι] [DecidableEq ι]
     (M : Matrix ι ι k) (hM : valuation k M.det = 1) (b : ι → k) :
     MeasurePreserving (fun e => M.mulVec e + b) (Measure.pi fun _ : ι => ν) (Measure.pi fun _ : ι => ν) := by
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.secondCountable k
   have hU : IsUnit M.det := isUnit_iff_ne_zero.2 fun h => by rw [h, map_zero] at hM; exact zero_ne_one hM
   have h1 := GlobalTheory.WeilM.smul_map_mulVec_pi ν M hU.unit hU.unit_spec
   have h2 : distribHaarChar k hU.unit = 1 := by
@@ -374,7 +374,7 @@ theorem left_change : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
       ∃ φ : (StepVar n c n' → k) ≃ᵐ (StepVar n c n' → k), MeasurePreserving φ (stepVol ν n c n') (stepVol ν n c n') ∧
         ∀ e, ((v * embX c κ)⁻¹).val * stepPt x₀ e = stepPt ((κ⁻¹).val * x₀) (φ e) := by
   intro k _ _ _ _ _ _ n n' _ _ _ _ c ν _ v hv κ hκ x₀
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.secondCountable k
   set g := ((v * embX c κ)⁻¹).val with hgdef
   set M := stepLin n' g with hMdef
   set b : StepVar n c n' → k := fun a =>

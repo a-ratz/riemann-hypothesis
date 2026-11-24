@@ -77,8 +77,8 @@ theorem omega_sub {R : Type} [CommRing R] {X : Scheme.{0}} (s : X ⟶ Sp R) [IsI
   refine KaehlerDifferential.subsingleton_of_surjective R _ ?_
   have : IsIso (secMap s ⊤) := by
     unfold secMap
-    haveI h1 : IsIso s.appTop := inferInstanceAs (IsIso (s.app ⊤))
-    haveI h2 : IsIso (X.presheaf.map (homOfLE (le_top : (⊤ : X.Opens) ≤ ⊤)).op) := by
+    have h1 : IsIso s.appTop := inferInstanceAs (IsIso (s.app ⊤))
+    have h2 : IsIso (X.presheaf.map (homOfLE (le_top : (⊤ : X.Opens) ≤ ⊤)).op) := by
       rw [show (homOfLE (le_top : (⊤ : X.Opens) ≤ ⊤)).op = 𝟙 _ from rfl]
       infer_instance
     exact IsIso.comp_isIso' (f := (Scheme.ΓSpecIso (CommRingCat.of R)).inv) inferInstance

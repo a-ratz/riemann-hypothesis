@@ -87,7 +87,7 @@ theorem exists_mem_cell : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   have hcT : c.val.BlockTriangular id := by
     have : c.val = b.val⁻¹ := by rw [hc, Matrix.coe_units_inv]
     rw [this]; exact Matrix.blockTriangular_inv_of_blockTriangular hb
-  have hdet : c.val.det = ∏ i, c.val i i := Matrix.det_of_upperTriangular hcT
+  have hdet : c.val.det = ∏ i, c.val i i := det_of_isUpperTriangular hcT
   have hd : ∀ i, c.val i i ≠ 0 := fun i h => by
     have := Matrix.GeneralLinearGroup.det_ne_zero c
     rw [hdet] at this
@@ -315,7 +315,7 @@ theorem exists_of_finset (S : Finset (HeightOneSpectrum (𝓞 E))) (ϖ : ∀ v :
       obtain ⟨l', hl'S, u', hu', k, hk, e'⟩ := ih _ hg'
       refine ⟨Finsupp.single v a + l', fun w hw => ?_, (tl n ϖ (Finsupp.single v a + l'))⁻¹ * x *
         tl n ϖ (Finsupp.single v a + l') * u', mul_mem (tl_inv_conj_mem ϖ _ (finGL_locGL_mem_NA v hu)) hu', k, hk, ?_⟩
-      · rw [Finsupp.add_apply, hl'S w hw, Finsupp.single_apply, if_neg (fun (h : v = w) => hvS (h ▸ hw)), add_zero]
+      · rw [Finsupp.add_apply, hl'S w hw, Finsupp.single_apply, ite_eq_right (fun (h : v = w) => hvS (h ▸ hw)), add_zero]
       · have hg2 : g = x * t * (tl n ϖ l' * (u' * k)) := by
           rw [← e', mul_inv_cancel_left, mul_inv_cancel_left]
         rw [hg2, tl_add, ← ht]

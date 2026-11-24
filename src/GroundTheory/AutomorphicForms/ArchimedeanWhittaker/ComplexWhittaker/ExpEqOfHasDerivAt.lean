@@ -101,12 +101,12 @@ theorem coe_kC_inv (k : U2) :
 
 theorem continuous_kC : Continuous kC := by
   have hval : Continuous fun k : U2 => ((kC k : GL (Fin 2) ℂ)) := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have e : (fun k : U2 => ((((kC k : GL2C) : GL (Fin 2) ℂ)⁻¹ : GL (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ)) =
         fun k : U2 => star (k : Matrix (Fin 2) (Fin 2) ℂ) := by
       funext k; exact coe_kC_inv k
     rw [e]
-    exact continuous_star.comp continuous_subtype_val
+    exact continuous_star.comp continuous_subtypeVal
   exact continuous_induced_rng.2 hval
 
 noncomputable def tC (a b : ℝ) : U2 :=

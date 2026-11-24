@@ -157,8 +157,8 @@ theorem xtLocal {q : ℕ} (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : 
     have hl := fun j => ((hsplit _).1 (hall j)).2
     have hpr := fun j => ((hsplit _).1 (hall j)).1
     have hres := fun j => (H j).2 (hall j)
-    rw [if_pos (show ∀ i : Fin n', IntAt P ((lastN ∘ₗ zA) (Pi.single i 1)) from fun i => hl i),
-      if_pos (show ∀ i : Fin n', IntAt P (ηB (Pi.single i 1)) from fun i => (hB i).2)]
+    rw [ite_eq_left (show ∀ i : Fin n', IntAt P ((lastN ∘ₗ zA) (Pi.single i 1)) from fun i => hl i),
+      ite_eq_left (show ∀ i : Fin n', IntAt P (ηB (Pi.single i 1)) from fun i => (hB i).2)]
     have hΦ : Φ (prX ∘ₗ zA ∘ₗ LinearMap.funLeft E E (Fin.castAdd 0)) =
         Φ (zB ∘ₗ LinearMap.funLeft E E (Fin.castAdd 0)) := by
       apply hcongr
@@ -218,7 +218,7 @@ theorem xtLocal {q : ℕ} (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : 
           rw [eX p.1 j.1 (by omega) j.2] at h3
           exact hp h3
         rw [h0, zero_mul]
-      · rw [if_neg (fun h => hl (h j)), mul_zero]
+      · rw [ite_eq_right (fun h => hl (h j)), mul_zero]
     have R0 : Φ (zB ∘ₗ LinearMap.funLeft E E (Fin.castAdd 0)) *
         (if ∀ i : Fin n', IntAt P (ηB (Pi.single i 1)) then ψ ((ε : E) * ηB y') else 0) = 0 := by
       by_cases hl : IntAt P (ηB (Pi.single j 1))
@@ -231,7 +231,7 @@ theorem xtLocal {q : ℕ} (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : 
           rw [eY p.1 j.1 (by omega) j.2] at h3
           exact hp h3
         rw [h0, zero_mul]
-      · rw [if_neg (fun h => hl (h j)), mul_zero]
+      · rw [ite_eq_right (fun h => hl (h j)), mul_zero]
     rw [L0, R0]
 
 end Loc1

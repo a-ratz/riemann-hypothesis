@@ -167,8 +167,8 @@ theorem fromT_res (hle : c.F ≤ c'.F) (p : TRing c'.F) [Algebra c.F p.R]
 
 theorem rulBC_natural (hle : c.F ≤ c'.F) {f : Rul Xo c} (hf : Natural c f) : Natural c' (rulBC hle f) := by
   intro p q φ y z h
-  letI := resAlg hle p.R
-  letI := resAlg hle q.R
+  let := resAlg hle p.R
+  let := resAlg hle q.R
   exact evR_map (wd c) hf (fromT_res hle p (fun _ => rfl) y)
     ((GlobalTheory.SecFieldCompare.frMap_res_iff hle (fun _ => rfl) (fun _ => rfl) φ y z).2 h)
 
@@ -177,7 +177,7 @@ theorem evR_rulBC (hle : c.F ≤ c'.F) {f : Rul Xo c} (hf : Natural c f) {S : Ty
     evR Xo c' (rulBC hle f) y = evR Xo c f (y.res hle h) := by
   by_cases hy : FromT y
   · obtain ⟨q, φ, y₀, h₀, e⟩ := evR_spec hy
-    letI := resAlg hle q.R
+    let := resAlg hle q.R
     rw [e, evR_map (wd c) hf (fromT_res hle q (fun _ => rfl) y₀)
       ((GlobalTheory.SecFieldCompare.frMap_res_iff hle (fun _ => rfl) h φ y₀ y).2 h₀)]
     rfl
@@ -191,7 +191,7 @@ theorem isBC_rulBC (hle : c.F ≤ c'.F) {f : Rul Xo c} (hf : Natural c f) : IsBC
 theorem rulBC_mem_sec (hle : c.F ≤ c'.F) {a} {n : ℕ} {f : Rul Xo c} (hf : f ∈ sec Xo c a n) :
     rulBC hle f ∈ sec Xo c' a n := by
   refine ⟨rulBC_natural hle hf.1, fun p t y y' h => ?_⟩
-  letI := resAlg hle p.R
+  let := resAlg hle p.R
   exact wtAll_of_borChart (borChartF_of_cover (GlobalTheory.Frames.chartCoverF_of_secBaseChange
     GlobalTheory.abelianSchemeLaws_all.1.secBaseChange E H Dw l Xo c)) (ex Dw a n) hf.1 hf.2 _ _ _ _
     (fromT_res hle p (fun _ => rfl) y) (fromT_res hle p (fun _ => rfl) y') h
@@ -200,14 +200,14 @@ theorem isLev_ddBC (hle : c.F ≤ c'.F) {n : ℕ} (d : DeltaDat Xo c n) (hd : d.
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩ := hd
   refine ⟨h1, h2, h3, h4, h5, h6, ?_, rulBC_mem_sec (le_covCoeff hle d) h8, ?_⟩
   · intro k _ _ i i₂ hi y
-    letI i₂' : Algebra (covCoeff hle d).F k := i₂
-    letI := resAlg hle k
-    letI := resAlg (le_covCoeff hle d) k
+    let i₂' : Algebra (covCoeff hle d).F k := i₂
+    let := resAlg hle k
+    let := resAlg (le_covCoeff hle d) k
     obtain ⟨y₂, hy₂⟩ := h7 k (fun a => hi (incF c c' hle a)) (y.res hle fun _ => rfl)
     exact ⟨y₂.ext (le_covCoeff hle d) (fun _ => rfl), hy₂⟩
   · intro k _ _ i₂ y₂
-    letI i₂' : Algebra (covCoeff hle d).F k := i₂
-    letI := resAlg (le_covCoeff hle d) k
+    let i₂' : Algebra (covCoeff hle d).F k := i₂
+    let := resAlg (le_covCoeff hle d) k
     have e := evR_rulBC (le_covCoeff hle d) h8.1 (S := k) (fun _ => rfl) y₂
     exact fun h0 => h9 k _ (e.symm.trans h0)
 
@@ -253,7 +253,7 @@ theorem exists_over (hle : c.F ≤ c'.F) {n : ℕ} {Ix : Type} [Fintype Ix] (lam
 theorem isNab_nabBC [StarRing (𝓞 E)] (hle : c.F ≤ c'.F) (nab : NabV Xo c) (h : IsNab Xo c nab) :
     IsNab Xo c' (nabBC hle nab) := by
   refine ⟨h.1, fun S _ _ _ y => ?_⟩
-  letI := resAlg hle S
+  let := resAlg hle S
   obtain ⟨C, h1, h2⟩ := h.2 S (y.res hle fun _ => rfl)
   exact ⟨⟨C.d, C.B, C.uvec, C.x, C.e, C.wP, C.h,
     ⟨C.chart.1, C.chart.2, C.chart.3, C.chart.4, C.chart.5, C.chart.6⟩,

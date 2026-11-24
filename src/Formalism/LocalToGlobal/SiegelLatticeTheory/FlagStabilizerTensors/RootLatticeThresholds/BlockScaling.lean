@@ -711,7 +711,7 @@ theorem isUnit_low (y : Formalism.FourierDecayAlt.C2.Lstidx w → ℂ) : IsUnit 
   exact isUnit_one
 
 theorem M_upper (y : Formalism.FourierDecayAlt.C2.Lstidx w → ℂ) (i j : Fin m) (h : i < j) : M w y i j = 0 := by
-  haveI := Matrix.invertibleOfIsUnitDet (low w y) (isUnit_low w y)
+  have := Matrix.invertibleOfIsUnitDet (low w y) (isUnit_low w y)
   exact Matrix.blockTriangular_inv_of_blockTriangular (low_bt w y) h
 
 theorem mul_M (y : Formalism.FourierDecayAlt.C2.Lstidx w → ℂ) : low w y * M w y = 1 :=
@@ -906,10 +906,10 @@ theorem mp_model {k0 : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProduct
     simp only [Formalism.FourierDecayAlt.C2.monoP, Matrix.of_apply, hd'def]
     by_cases hai : a = W i
     · have hia : i = W a := by rw [hai, wPt_invol]
-      rw [if_pos hai, if_pos hia]
+      rw [ite_eq_left hai, ite_eq_left hia]
       all_goals (try (rw [hai, wPt_invol]))
     · have hia : ¬ i = W a := fun h => hai (by rw [h, wPt_invol])
-      rw [if_neg hai, if_neg hia, star_zero]
+      rw [ite_eq_right hai, ite_eq_right hia, star_zero]
   have hG' := good_of Ds' hδi hd' hZ'
 
   set φ : Mt (k0 + 1) r → Formalism.FourierDecayAlt.C2.Lstidx W → ℂ := phi0 Ds W with hφ
@@ -1089,11 +1089,11 @@ theorem Qi_spanLt (a : ℕ) (x : Fin X.B.I.n → ℂ) (hx : x ∈ spanLt (eV (X 
   induction hx using Submodule.span_induction with
   | mem x hx' =>
     obtain ⟨b, hb, rfl⟩ := hx'
-    rw [Qi_e v hl hT, Pi.smul_apply, Pi.single_apply, if_neg, smul_zero]
+    rw [Qi_e v hl hT, Pi.smul_apply, Pi.single_apply, ite_eq_right, smul_zero]
     intro h
     have := congrArg Fin.val h
     simp only [Formalism.QuantumDeterminants.eI] at this
-    simp only [Set.mem_setOf_eq] at hb
+    simp only [Set.mem_ofPred_eq] at hb
     omega
   | zero => simp
   | add x y _ _ hx hy => rw [Matrix.mulVec_add, Pi.add_apply, hx, hy, add_zero]
@@ -1114,7 +1114,7 @@ theorem Q_spanLt (a : ℕ) (ha : a ≤ D.R.rS) (w : Fin (2 * D.R.rS + D.R.k + 1)
     have e : i = Formalism.QuantumDeterminants.eI D.R.k D.R.rS ⟨i.val, hir⟩ := Fin.ext rfl
     rw [Matrix.mulVec_smul, e, Q_e v hT]
     refine Submodule.smul_mem _ _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨i.val, hir⟩, ?_, rfl⟩))
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     omega
 
 include hT hl in
@@ -1166,7 +1166,7 @@ theorem inN_iff (z : Fin X.B.I.n → ℂ) (hz : Formalism.QuantumDeterminants.in
       rw [hcol (Qi * g * Q) i j]
       have horth : ∀ b : Fin D.R.rS, hJ (X.B.I.ε v) (eV v b) (Q *ᵥ Pi.single j 1) = 0 := by
         intro b
-        rw [hJ_e v hl hT, Matrix.mulVec_mulVec, hQiQ, Matrix.one_mulVec, Pi.single_apply, if_neg, mul_zero]
+        rw [hJ_e v hl hT, Matrix.mulVec_mulVec, hQiQ, Matrix.one_mulVec, Pi.single_apply, ite_eq_right, mul_zero]
         intro h
         have := congrArg Fin.val h
         simp only [Formalism.QuantumDeterminants.esI] at this
@@ -1296,7 +1296,7 @@ theorem fam_eq (hl : lam ≠ 0) (b : Fin (D.R.rS + 1)) :
   · rw [Fin.snoc_castSucc]
     have h1 := (hT.2.2.2 c c rfl).1
     unfold Formalism.QuantumDeterminants.fvec Formalism.QuantumDeterminants.bvec
-    simp only [Fin.coe_castSucc, Fin.is_lt, dif_pos, Fin.eta]
+    simp only [Fin.val_castSucc, Fin.is_lt, dite_eq_left, Fin.eta]
     rw [h1, smul_smul, inv_mul_cancel₀ (pow_ne_zero _ hl), one_smul]
 
 
@@ -1656,7 +1656,7 @@ theorem measPinAt_of (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X
   have hΦ2 : Measurable (fun s : Formalism.REAL.UJ (X.B.I.ε v) => Matrix.of.symm (trG ((PP).Q v) ((PP).Qi v) s)) := by
     refine Continuous.measurable ?_
     unfold trG
-    exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul continuous_const
   have hconc : ((μRv.map (fun s => (h v)⁻¹ * s * h v)).map
       (fun s => Matrix.of.symm (trG ((PP).Q v) ((PP).Qi v) s))) {x | Matrix.of x ∉ Formalism.FourierDecayAlt.C6.Rset
         (trG ((PP).Q v) ((PP).Qi v) ((h v)⁻¹ * (gamW X u u' w) v * h' v))} = 0 := by

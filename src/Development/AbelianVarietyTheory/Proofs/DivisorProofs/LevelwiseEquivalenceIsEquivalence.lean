@@ -184,7 +184,7 @@ theorem GlobalTheory.EtC.levelwise_eqv : GlobalTheory.EtC.A3 := by
   obtain ⟨hle, hnat, -⟩ := GlobalTheory.T.chains_map_and_d_eq_sum_neg_one_pow_smul_delta R
   obtain ⟨e, -, he⟩ := GlobalTheory.T.exists_natural_homotopyEquiv_chains_constant_presheaf R
   obtain ⟨-, hinj, hge, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R F
-  haveI := hle E; haveI := hle E'; haveI := hge
+  have := hle E; have := hle E'; have := hge
   intro n
   refine GlobalTheory.T.hypercohomologyPullback_bijective_of_termwise_bijective R (res R F) hinj ((chains R).map f) ?_ n
   intro p k
@@ -208,7 +208,7 @@ theorem GlobalTheory.EtC.levelwise_eqv : GlobalTheory.EtC.A3 := by
     exact (cpull_bij_of_iso _ _ k).comp (hfree.comp (cpull_bij_of_iso _ _ k))
   · have h1 : IsZero (((chains R).obj E).X p) := CochainComplex.isZero_of_isStrictlyLE _ 0 p hp
     have h2 : IsZero (((chains R).obj E').X p) := CochainComplex.isZero_of_isStrictlyLE _ 0 p hp
-    haveI : IsIso (((chains R).map f).f p) := ⟨⟨0, h1.eq_of_src _ _, h2.eq_of_src _ _⟩⟩
+    have : IsIso (((chains R).map f).f p) := ⟨⟨0, h1.eq_of_src _ _, h2.eq_of_src _ _⟩⟩
     exact cpull_bij_of_iso _ _ k
 end -- clump:auto
 end -- clump:auto

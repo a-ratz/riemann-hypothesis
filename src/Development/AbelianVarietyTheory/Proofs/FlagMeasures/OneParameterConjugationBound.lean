@@ -137,7 +137,7 @@ lemma torus_lipschitz_l2_bound {G ι : Type} [Fintype ι] [TopologicalSpace G] [
     intro u hu
     rw [abs_mul, abs_of_nonneg hu.1]
     nlinarith [abs_nonneg s, hu.2, hu.1]
-  haveI : IsFiniteMeasure (MeasureTheory.volume.restrict (Set.uIoc (0:ℝ) 1)) :=
+  have : IsFiniteMeasure (MeasureTheory.volume.restrict (Set.uIoc (0:ℝ) 1)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact measure_Ioc_lt_top⟩
   have hmem : ∀ᵐ u ∂(MeasureTheory.volume.restrict (Set.uIoc (0:ℝ) 1)), u ∈ Set.Icc (0:ℝ) 1 := by
     filter_upwards [ae_restrict_mem measurableSet_uIoc] with u hu
@@ -229,7 +229,7 @@ lemma inner_move {ρ : G → (H →L[ℂ] H)} (hρ : IsURep ρ) (x g : G) (v u :
     exact L.inner_map_map a b
   have h1 : ρ x (ρ x⁻¹ v) = v := by
     have := congrArg (fun T : H →L[ℂ] H => T v) (hρ.2.1 x x⁻¹)
-    simp only [mul_inv_cancel, hρ.1, ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at this
+    simp only [mul_inv_cancel, hρ.1, ContinuousLinearMap.comp_apply, one_apply_eq_self] at this
     exact this.symm
   have h2 : ρ x (ρ g u) = ρ (x * g) u := by
     rw [hρ.2.1]; rfl
@@ -331,7 +331,7 @@ lemma ftc {ρ : G → (H →L[ℂ] H)} (hρ : IsURep ρ) {δ : G → ℝ} (hδ :
         apply Real.exp_le_exp.mpr
         nlinarith
       _ = C * Real.exp (c * (δ g + K)) * Real.exp (-(c * δ m)) := by rw [Real.exp_add]; ring
-  haveI : IsFiniteMeasure (MeasureTheory.volume.restrict (Set.uIoc (0:ℝ) s)) :=
+  have : IsFiniteMeasure (MeasureTheory.volume.restrict (Set.uIoc (0:ℝ) s)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact measure_Ioc_lt_top⟩
   have hprod : Integrable (Function.uncurry fun t m => ⟪v, ρ (m * (g * b t)) u⟫_ℂ)
       ((MeasureTheory.volume.restrict (Set.uIoc (0:ℝ) s)).prod ν) := by
@@ -376,7 +376,7 @@ lemma isURep_umat {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     IsURep fun g : UJ ε => σ (umat g) := by
   have hm : ∀ g : UJ ε, umat g ∈ UJset ε := fun g => g.2
   refine ⟨hσ.1.1, fun a b => hσ.1.2 _ (hm a) _ (hm b), fun g v => hσ.2.1 _ (hm g) v, fun v => ?_⟩
-  exact (hσ.2.2 v).comp_continuous (Units.continuous_val.comp continuous_subtype_val) hm
+  exact (hσ.2.2 v).comp_continuous (Units.continuous_val.comp continuous_subtypeVal) hm
 
 lemma onePar {a : ℝ → UJ ε} {X : Matrix (Fin n) (Fin n) ℂ}
     (ha : ∀ s : ℝ, umat (a s) = NormedSpace.exp ((s : ℂ) • X)) :
@@ -396,10 +396,10 @@ lemma onePar {a : ℝ → UJ ε} {X : Matrix (Fin n) (Fin n) ℂ}
     inv_eq_of_mul_eq_one_right (by rw [← hadd, add_neg_cancel, h0])
   have hsm : Continuous fun s : ℝ => (s : ℂ) • X := Complex.continuous_ofReal.smul continuous_const
   have hc : Continuous fun s : ℝ => NormedSpace.exp ((s : ℂ) • X) := by
-    letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-    letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-    haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℂ _
+    let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+    let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+    have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℂ _
     exact NormedSpace.exp_continuous.comp hsm
   refine ⟨?_, h0, hadd, hinv⟩
   refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
@@ -560,7 +560,7 @@ theorem torus_lipschitz : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule ℂ
   have hc0 : 0 ≤ c := by nlinarith
   have hνint : Integrable (fun m : UJ ε => Real.exp (-(c * dOp (umat m)))) ν :=
     (_root_.GlobalTheory.RadVol.radical_volume_growth n ε W ν hW hν).2 c (by nlinarith)
-  haveI : SigmaFinite ν := by
+  have : SigmaFinite ν := by
     obtain ⟨C, hC⟩ := (_root_.GlobalTheory.RadVol.radical_volume_growth n ε W ν hW hν).1
     exact ({ set := fun k : ℕ => {m : UJ ε | dOp (umat m) ≤ k}
              set_mem := fun _ => Set.mem_univ _

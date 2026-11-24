@@ -98,7 +98,7 @@ theorem isMeasLev_unique {K : Subgroup (GL (Fin V.rank) (Lev.EAf D))} {μ μ' : 
     have := (hm ρ).1
     exact (B ρ).isCompact.measure_lt_top.ne
   have e : μ' = ((Measure.haarScalarFactor μ' μ : NNReal) : ENNReal) • μ := Measure.isMulLeftInvariant_eq_smul μ' μ
-  rw [e, Measure.smul_apply, e1, smul_eq_mul] at e2
+  rw [e, smul_apply, e1, smul_eq_mul] at e2
   have hc : ((Measure.haarScalarFactor μ' μ : NNReal) : ENNReal) = 1 :=
     (ENNReal.mul_left_inj h0 ht).1 (e2.trans (one_mul _).symm)
   rw [e, hc, one_smul]
@@ -138,7 +138,7 @@ theorem ip_sum (M : DSModel V S) {μ : Measure (GA D V)} {𝓕 : Set (GA D V)} {
 theorem levelGroupAction_apply_of_exists_lift {β : GL (Fin V.rank) (Lev.EAf D)} {L : LevDat D.host.E ℂ V.rank} {g : G0 L.Pg L.r}
     (hk : ∃ κ, IsLevelLift V β L g κ) (f : GA D V → ℂ) (h : GA D V) :
     actG0 V β L g f h = (levChi V β (flagL L) hk.choose)⁻¹ * f (h * hk.choose) := by
-  rw [actG0, dif_pos hk]
+  rw [actG0, dite_eq_left hk]
 
 theorem levelGroupActionOnAdelicFunctions_eq_zero_of_no_lift {β : GL (Fin V.rank) (Lev.EAf D)} {L : LevDat D.host.E ℂ V.rank} {g : G0 L.Pg L.r}
     (hk : ¬ ∃ κ, IsLevelLift V β L g κ) (f : GA D V → ℂ) : actG0 V β L g f = 0 := by
@@ -207,9 +207,9 @@ theorem sum_gE (hE : R.models_HE) (hg : R.models_gE) (x : R.HE.H) :
   refine hE.1 (MultilinearMap.ext fun v => ?_)
   have h := ((mem_goodPart R.θ (R.MY 0) _ _ R.e0 _).1 (e_mem_EE hE x)).2 v
 
-  rw [← h, goodRowsProjector_apply_eq_sum, map_sum, MultilinearMap.sum_apply]
+  rw [← h, goodRowsProjector_apply_eq_sum, map_sum, sum_apply]
   refine Finset.sum_congr rfl fun g _ => ?_
-  rw [map_smul, MultilinearMap.smul_apply, e_gE hg]
+  rw [map_smul, smul_apply, e_gE hg]
 
 theorem gE_gE_inv (g : G) (x : R.HE.H) : R.gE g (R.gE g⁻¹ x) = x := by
   rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
@@ -254,9 +254,9 @@ theorem schurConstant_goodRow_projector_invariant (hM : R.IsModels) (hS : Global
     refine ip_sum _ _ _ hb fun v v' h => ?_
     conv_lhs => rw [← sum_adjoint_eq R.gE (norm_gE hM) _ (sum_gE hM.HE hM.gE) x]
 
-    rw [map_sum, MultilinearMap.sum_apply, Finset.sum_apply, star_sum, Finset.sum_mul]
+    rw [map_sum, sum_apply, Finset.sum_apply, star_sum, Finset.sum_mul]
     refine Finset.sum_congr rfl fun g _ => ?_
-    rw [map_smul, MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, star_mul', star_star, mul_assoc]
+    rw [map_smul, smul_apply, Pi.smul_apply, smul_eq_mul, star_mul', star_star, mul_assoc]
   rw [ip_unique _ ha h1]
   refine ip_sum _ _ _ hb' fun v v' h => ?_
   rw [postOn_apply, goodRowsProjector_apply_eq_sum, Finset.sum_apply, Finset.mul_sum]
@@ -411,17 +411,17 @@ theorem bForm : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A 
     obtain ⟨B, hB, hL⟩ := hz ⟨j, hj'⟩
     obtain ⟨l, hl, hs⟩ := (hall B hB).1 j (by omega)
     rw [hl.unique hL] at hs
-    simpa only [Λ, dif_pos hj'] using hs
+    simpa only [Λ, dite_eq_left hj'] using hs
   have hΛ' : GlobalTheory.IndefiniteRowSideFullHecke.LabelSettingScalars.TopScalar R t c (Λ (D.R.m - 1)) := by
     have hj' : D.R.m - 1 < D.R.m := by omega
     obtain ⟨B, hB, hL⟩ := hz ⟨_, hj'⟩
     obtain ⟨l, hl, hs⟩ := (hall B hB).2
     simp only [hm] at hL
     rw [hl.unique hL] at hs
-    simpa only [Λ, dif_pos hj', hm] using hs
+    simpa only [Λ, dite_eq_left hj', hm] using hs
   have hp : ∏ j ∈ Finset.range (D.R.m - 1 + 1), Λ j = (∏ i : Fin D.R.m, κ ((i : ℕ) + 1)) * ∏ i, z i := by
     rw [hm, ← Fin.prod_univ_eq_prod_range, ← Finset.prod_mul_distrib]
-    exact Finset.prod_congr rfl fun i _ => dif_pos i.2
+    exact Finset.prod_congr rfl fun i _ => dite_eq_left i.2
   refine eq_smul_of_inner (R.Th t) _ _ (fun u₁ h₁ u₂ h₂ z₁ z₂ => ?_) hx' hx0 (hK t c x hx')
   exact (inner_adjoint (R := R) hM hC.chain.Th hS t c Λ hΛ hΛ' h₁ h₂ z₁ z₂).trans (by rw [hp])
 

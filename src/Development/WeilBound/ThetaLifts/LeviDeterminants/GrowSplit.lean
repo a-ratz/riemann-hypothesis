@@ -111,7 +111,7 @@ theorem continuous_comp_splitE [Fintype κ] (Φ : (κ → AdeleRing (𝓞 F) F) 
   | smul a x _ hx => exact hx.const_smul a
 
 theorem volume_isAddHaar [Fintype κ] : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := by
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
   exact Measure.pi.isAddHaarMeasure _
 
 end PositivityTheory.ThKF0.Split

@@ -76,7 +76,7 @@ theorem dxOpen_of (h : SecGram) : DxOpen := by
   have : IsReduced (Fv F v ⊗[F] E) := isReduced_tens_field F E (Fv F v)
   have hss : IsSemisimpleRing (Fv F v ⊗[F] E) := IsArtinianRing.isSemisimpleRing_of_isReduced _
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   obtain ⟨q, hq⟩ := h F E σ hσ M J hJ hdet (Fv F v) hss a x hx
   set T : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E) → (Fin a → Fin M → Fv F v ⊗[F] E) :=
     fun S j k => ∑ i', (algebraMap F (Fv F v ⊗[F] E) (1 / 2) * S i' j) * q k i' with hT
@@ -110,7 +110,7 @@ theorem dxOpen_of (h : SecGram) : DxOpen := by
   rintro _ ⟨l, hl, rfl⟩
   have hU : IsOpen {S : HermR (Fv F v) σ a | T ((S - Dx l : HermR (Fv F v) σ a) :
       Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ L} :=
-    hLo.preimage (hTc.comp (continuous_subtype_val.comp (continuous_id.sub continuous_const)))
+    hLo.preimage (hTc.comp (continuous_subtypeVal.comp (continuous_id.sub continuous_const)))
   refine Filter.mem_of_superset (hU.mem_nhds ?_) ?_
   · show T ((Dx l - Dx l : HermR (Fv F v) σ a) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ L
     rw [sub_self, AddSubgroup.coe_zero, hT0]

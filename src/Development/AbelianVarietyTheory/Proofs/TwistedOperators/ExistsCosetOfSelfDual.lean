@@ -175,7 +175,7 @@ variable {D : D7}
 theorem le_unif {x : WithZero (Multiplicative ℤ)} (h : x < 1) :
     x ≤ ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
   rcases eq_or_ne x 0 with rfl | hx
-  · exact zero_le'
+  · exact zero_le
   obtain ⟨u, rfl⟩ := WithZero.ne_zero_iff_exists.1 hx
   rw [← WithZero.coe_one, WithZero.coe_lt_coe] at h
   rw [WithZero.coe_le_coe]
@@ -205,11 +205,11 @@ theorem ratio_int {P : HeightOneSpectrum (𝓞 D.host.E)} {e : Formalism.L2.Thet
     have hn := (he.2 y hy0).1 hy
     rw [map_mul, h4] at hn
     change ¬ Valued.v (φ ((y : D.host.E)⁻¹)) ≤ 1 at hn
-    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ((map_ne_zero φ).2 fun h0 => hy0 (RingOfIntegers.coe_eq_zero_iff.1 h0))))] at hn
+    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ((map_ne_zero φ).2 fun h0 => hy0 (RingOfIntegers.coe_eq_zero_iff.1 h0))))] at hn
     have hϖv : Valued.v (φ ϖ) = _ := hu
     have h6 := le_unif hn
     rw [← hϖv] at h6
-    rw [div_le_one₀ (by rw [hϖv]; exact zero_lt_iff.2 WithZero.coe_ne_zero)]
+    rw [div_le_one₀ (by rw [hϖv]; exact pos_iff_ne_zero.2 WithZero.coe_ne_zero)]
     exact h6
   · have hee : finPart D e * finPart D e = finPart D e := by rw [← map_mul, he.1.1]
     have hq : q * (ϖ : D.host.E) = y := div_mul_cancel₀ _ hϖ0
@@ -624,7 +624,7 @@ theorem exists_local_matrix : ∀ (D : D7) (P : Formalism.L2.DIV.Pl D.host.E) (e
         exact fun h => hx (Subtype.ext h)
       rw [he.2 x hx, map_mul, h4]
       show ¬ Valued.v (φ (x : D.host.E)⁻¹) ≤ 1 ↔ _
-      rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+      rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
   have hq : Nat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers D.host.F)) = Ideal.absNorm P.asIdeal :=
     GlobalTheory.SplitUnif.card_residueField v φ P h5 hP
   have hfvΛ : ∀ x ∈ Λ, ∀ i, ((t • T.1) *ᵥ fun j => π ((GlobalTheory.AdLat.fv D.host.F x : Fin n → GlobalTheory.SplitPlace.RF D) j)) i ∈
@@ -800,7 +800,7 @@ theorem smul_mem_hat (D : D7) {n : ℕ} (L : Submodule (𝓞 D.host.E) (Fin n �
       apply AddSubgroup.subset_closure
       refine ⟨b * c, fun v => ?_, x • w, L.smul_mem x hw, ?_⟩
       · have hbv := hb v
-        simp only [Formalism.MainNotions.StandardLattice.intAf, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV, Set.mem_setOf_eq] at hbv
+        simp only [Formalism.MainNotions.StandardLattice.intAf, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV, Set.mem_ofPred_eq] at hbv
         exact mul_mem hbv (hc v)
       · funext i
         simp only [Pi.smul_apply, smul_eq_mul, Algebra.TensorProduct.tmul_mul_tmul]
@@ -930,8 +930,8 @@ theorem exists_chart : ∀ (D : D7) (e : AE D) (v : HeightOneSpectrum (𝓞 D.ho
     split_ifs
     · rw [← Algebra.TensorProduct.one_def, map_one]
     · rw [TensorProduct.tmul_zero, map_zero]
-  haveI : Submodule.IsLattice (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) N := Submodule.IsLattice.of_fg _ hfin
-  haveI : Submodule.IsFullLattice (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) N := ⟨htop⟩
+  have : Submodule.IsLattice (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) N := Submodule.IsLattice.of_fg _ hfin
+  have : Submodule.IsFullLattice (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v) N := ⟨htop⟩
   obtain ⟨B, hB⟩ := GlobalTheory.SplitLatBasis.exists_matrix_of_isLattice (R := O) N
   refine ⟨B, fun y => (hiff y).trans ((hB _).trans (forall_congr' fun i => ?_))⟩
   constructor
@@ -1025,7 +1025,7 @@ theorem exists_local_gen {E F : Type} [Field E] [NumberField E] [Field F] [Numbe
   classical
   obtain ⟨S, hS⟩ := FractionalIdeal.fg_of_isNoetherianRing le_rfl I
   have hSI : ∀ a ∈ S, a ∈ I := fun a ha => by
-    rw [← FractionalIdeal.mem_coe, ← hS]; exact Submodule.subset_span ha
+    rw [← FractionalIdeal.mem_coeToSubmodule, ← hS]; exact Submodule.subset_span ha
   have hne : S.Nonempty := by
     rw [Finset.nonempty_iff_ne_empty]
     rintro rfl
@@ -1036,17 +1036,17 @@ theorem exists_local_gen {E F : Type} [Field E] [NumberField E] [Field F] [Numbe
   have hα0 : α ≠ 0 := by
     rintro rfl
     apply hI
-    rw [← FractionalIdeal.coeToSubmodule_inj, ← hS, FractionalIdeal.coe_zero, eq_bot_iff, Submodule.span_le]
+    rw [← FractionalIdeal.coeToSubmodule_inj, ← hS, FractionalIdeal.coeToSubmodule_zero, eq_bot_iff, Submodule.span_le]
     intro a ha
     have h1 := hmax a ha
-    rw [map_zero, Valuation.map_zero, le_zero_iff, Valuation.zero_iff, map_eq_zero_iff φ φ.injective] at h1
+    rw [map_zero, Valuation.map_zero, nonpos_iff_eq_zero, Valuation.zero_iff, map_eq_zero_iff φ φ.injective] at h1
     simp [h1]
   refine ⟨α, hSI α hαS, hα0, fun a ha => ?_⟩
-  rw [← FractionalIdeal.mem_coe, ← hS] at ha
+  rw [← FractionalIdeal.mem_coeToSubmodule, ← hS] at ha
   induction ha using Submodule.span_induction with
   | mem a ha =>
     rw [mem_Ov_iff, Valuation.map_mul, map_inv₀]
-    exact mul_inv_le_one_of_le₀ (hmax a ha) zero_le'
+    exact mul_inv_le_one_of_le₀ (hmax a ha) zero_le
   | zero => rw [map_zero, zero_mul]; exact zero_mem _
   | add a b _ _ h h' => rw [map_add (f := _), add_mul]; exact add_mem h h'
   | smul o a _ h =>

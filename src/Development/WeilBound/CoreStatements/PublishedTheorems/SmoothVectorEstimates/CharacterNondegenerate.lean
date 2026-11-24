@@ -138,8 +138,8 @@ theorem whittaker_nondegenerate_character : S7 → MirabolicColumnBlock → G0 �
         refine (hmem _).2 ?_
         have hy' := (hmem y).1 hy
         change Rt E a (fl a w u) (Rt E a (infGL E a g) y) = Rt E a (infGL E a g) y
-        rw [← ContinuousLinearMap.mul_apply, ← map_mul, hcomm _ (hcIf w u), map_mul,
-          ContinuousLinearMap.mul_apply, hy'])
+        rw [← mul_apply_eq_comp, ← map_mul, hcomm _ (hcIf w u), map_mul,
+          mul_apply_eq_comp, hy'])
       (LinearMap.mem_ker.2 ((hmem x).2 hu'))
     rw [LinearMap.mem_ker] at hk
     exact (hmem x').1 hk

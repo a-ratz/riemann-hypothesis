@@ -111,7 +111,7 @@ theorem Sz.list_prod {l : List ℂ} (h : ∀ z ∈ l, Sz ι τ z 1) : Sz ι τ l
     simpa using (h a List.mem_cons_self).mul (ih fun z hz => h z (List.mem_cons_of_mem _ hz))
 
 theorem Sz.rat (q : ℚ) : Sz ι τ (q : ℂ) |(q : ℝ)| := by
-  haveI : CharZero K := ι.charZero
+  have : CharZero K := ι.charZero
   refine ⟨(q : K), map_ratCast _ _, ?_⟩
   rw [map_ratCast, ← Complex.ofReal_ratCast, Complex.norm_real, Real.norm_eq_abs]
 
@@ -148,7 +148,7 @@ section Local
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem sz_apow_half (u : kˣ) (h : apow u (1 / 2) ∈ Set.range ι) : Sz ι τ (apow u (1 / 2)) (Real.sqrt (nabs k u)) := by
-  haveI : CharZero K := ι.charZero
+  have : CharZero K := ι.charZero
   obtain ⟨y, hy⟩ := h
   obtain ⟨r, hr⟩ : ∃ r : ℚ, (r : ℝ) = nabs k u := ⟨(resCard k : ℚ) ^ (-SmGL.ord k u), by
     rw [GlobalTheory.LGrp.nabs_eq_zpow]; push_cast; rfl⟩

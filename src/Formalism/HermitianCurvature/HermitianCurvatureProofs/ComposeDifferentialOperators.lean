@@ -99,7 +99,7 @@ private lemma rw_congr_on_domL {O : Set (Mat k r)} (hO : IsOpen O) {H H' : Mat k
     apply Filter.EventuallyEq.deriv_eq
     filter_upwards [crv_ev (x := (false, X)) hO hgO] with t ht
     have hm := crv_mem (x := (false, X)) hX hg t
-    simp only [crv, Bool.false_eq_true, if_false] at ht hm
+    simp only [crv, Bool.false_eq_true, ite_false] at ht hm
     exact ih' _ hm ht
 
 lemma opApply_congr (Θ : DiffOp k r Wp Wq) {O : Set (Mat k r)} (hO : IsOpen O) {H H' : Mat k r → (Wq →L[ℂ] Wp)}
@@ -146,7 +146,7 @@ lemma opOrder_le_of (Θ : DiffOp k r Wp Wq) {n : ℕ} (h : ∀ T ∈ Θ, T.word.
     exact max_le (h T (by simp)) (ih fun T' hT' => h T' (by simp [hT']))
 
 lemma one_uw (z : Fin (2 * r + k + 1) → ℂ) : (1 : Mat k r) ∈ UWset k r z := by
-  simp only [UWset, Set.mem_setOf_eq, Matrix.one_mulVec, and_self, implies_true, and_true]
+  simp only [UWset, mem_ofPred_eq, Matrix.one_mulVec, and_self, implies_true, and_true]
   simp [UH]
 
 end Formalism.FourierDecayAlt.P.MinorPolynomials

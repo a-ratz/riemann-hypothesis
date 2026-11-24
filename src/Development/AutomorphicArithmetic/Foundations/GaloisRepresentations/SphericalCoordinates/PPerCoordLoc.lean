@@ -121,7 +121,7 @@ theorem perCoordLoc_of : PerCoordLoc := by
     obtain ⟨y, hy⟩ := hCmem
     have hcy : co (gL ((A b)⁻¹ * Bm b)) = (A b)⁻¹ * Bm b := by
       rw [← hy, ← LinearMap.comp_apply gL co, hgL, LinearMap.id_apply]
-    letI := Matrix.invertibleOfIsUnitDet (A b) hdetb
+    let := Matrix.invertibleOfIsUnitDet (A b) hdetb
     refine ⟨Matrix.toLinearEquiv' (A b) this, fun x => ?_⟩
     simp only [hcy, perC_apply]
     rw [hrep b hb.1 x, realMap_apply]

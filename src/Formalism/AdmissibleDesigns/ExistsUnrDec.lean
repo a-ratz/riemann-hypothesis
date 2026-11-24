@@ -110,7 +110,7 @@ theorem unrHom (l : K.Col i dc) : KFin.UnrHom i dc l := by
       rw [KHf.eK_apply, Br.toLLK_alg]
       rfl
     simp only [e1]
-    exact continuous_subtype_val.comp ((D.nbr i _ hn).eO_cont.comp (hf.comp (Br.iota_cont D.nbr i _ hn)))
+    exact continuous_subtypeVal.comp ((D.nbr i _ hn).eO_cont.comp (hf.comp (Br.iota_cont D.nbr i _ hn)))
   · show algebraMap ℤ_[D.nd.l i] (D.nd.O i) (χ g1) = 1
     rw [h1, map_one]
 

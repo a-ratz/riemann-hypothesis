@@ -59,9 +59,9 @@ namespace GlobalTheory.TateIsoFieldExt
 theorem exists_unit_of_pow_eq_one {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed K] [CharZero K]
     (i : K →+* Ω) (n : ℕ) (hn : 0 < n) (z : Ωˣ) (hz : z ^ n = 1) :
     ∃ u : Kˣ, Units.map i.toMonoidHom u = z := by
-  haveI : NeZero n := ⟨hn.ne'⟩
-  haveI : NeZero (n : K) := ⟨Nat.cast_ne_zero.mpr hn.ne'⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  have : NeZero n := ⟨hn.ne'⟩
+  have : NeZero (n : K) := ⟨Nat.cast_ne_zero.mpr hn.ne'⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   have h2 : IsPrimitiveRoot (i ξ) n := hξ.map_of_injective i.injective
   have hz' : (z : Ω) ^ n = 1 := by rw [← Units.val_pow_eq_pow_val, hz, Units.val_one]
   obtain ⟨j, -, hj⟩ := h2.eq_pow_of_pow_eq_one hz'
@@ -167,7 +167,7 @@ theorem tateIso_fieldExt : Out.Laws → ∀ (E : Type) [Field E] [NumberField E]
       (fun n y y' c => _root_.GlobalTheory.weilIs_fieldExt_iff S P.A K Ω i x P.L n y y' c P.isAb P.isLB) I,
     fun I' hm => down D i (precomp g P.A) hinj honto' (fun c y => (Category.assoc g y (act c)).symm)
       (fun c => ?_) (fun n y y' c => _root_.GlobalTheory.weilIs_fieldExt_iff S P.A K Ω i x P.L n y y' c P.isAb P.isLB) I'⟩
-  haveI := hm c
+  have := hm c
   exact MonObj.one_comp (act c)
 
 end GlobalTheory.TateIsoFieldExt

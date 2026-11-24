@@ -54,7 +54,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem finite_quot {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [Finite (ResidueField O)] (b : O) (hb : b ≠ 0) : Finite (O ⧸ Ideal.span {b}) := by
   have hfl := isFiniteLength_quotient_span_singleton O (mem_nonZeroDivisors_of_ne_zero hb)
-  haveI : IsArtinianRing (O ⧸ Ideal.span {b}) :=
+  have : IsArtinianRing (O ⧸ Ideal.span {b}) :=
     isArtinian_of_tower O (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).2
   exact IsLocalRing.finite_quotient_iff.mpr
     (IsLocalRing.exists_maximalIdeal_pow_le_of_isArtinianRing_quotient _)
@@ -63,11 +63,11 @@ theorem UpperTheory.V.X.So.levFacts :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] (a : O), a ≠ 0 → ∀ (M : Type) [AddCommGroup M] [Module O M], Nonempty (M ≃ₗ[O] (O ⧸ Ideal.span {a})) → Finite M ∧ (∃ r : ℕ, 0 < r ∧ ∀ m : M, (l ^ r) • m = 0) ∧ ∀ d : O, d ≠ 0 → Nat.card {m : M // d • m = 0} ≤ Nat.card (O ⧸ Ideal.span {d}) := by
   intro l _ O _ _ _ _ _ a ha M _ _ hne
   obtain ⟨e⟩ := hne
-  haveI : CharZero O := charZero_of_injective_algebraMap (UpperTheory.V.Base.dvrFacts l O).1
+  have : CharZero O := charZero_of_injective_algebraMap (UpperTheory.V.Base.dvrFacts l O).1
   obtain ⟨-, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l O
-  haveI := hfin
-  haveI hQa : Finite (O ⧸ Ideal.span {a}) := finite_quot a ha
-  haveI : Finite M := Finite.of_equiv _ e.symm.toEquiv
+  have := hfin
+  have hQa : Finite (O ⧸ Ideal.span {a}) := finite_quot a ha
+  have : Finite M := Finite.of_equiv _ e.symm.toEquiv
   have hkill : ∀ c : O, c ∈ Ideal.span {a} → ∀ z : O ⧸ Ideal.span {a}, c • z = 0 := by
     intro c hc z
     obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective z
@@ -88,7 +88,7 @@ theorem UpperTheory.V.X.So.levFacts :
     rw [map_nsmul, map_zero, ← Nat.cast_smul_eq_nsmul O, Nat.cast_pow]
     exact hkill _ hmem _
   · intro d hd
-    haveI : Finite (O ⧸ Ideal.span {d}) := finite_quot d hd
+    have : Finite (O ⧸ Ideal.span {d}) := finite_quot d hd
     let φ : M →ₗ[O] M := LinearMap.lsmul O M d
     have hker : Nat.card {m : M // d • m = 0} = Nat.card (LinearMap.ker φ) :=
       Nat.card_congr (Equiv.subtypeEquivRight (fun m => by simp [φ]))

@@ -138,7 +138,7 @@ theorem card_sq {l : ℕ} [Fact l.Prime] (hl : l % 4 = 3) {F : Type} [Field F] [
 theorem evenSq_card {q d : ℕ} [Fact d.Prime] (h : HostHyp q d) {F : Type} [Field F] [Fintype F]
     {a b : F} (ha : a ^ 2 = -(q : F)) (hb : b ^ 2 = -(d : F)) : EvenSq d (Fintype.card F) := by
   obtain ⟨hq, hd, hq8, hd16, hj⟩ := h
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   obtain ⟨f, hp, hf⟩ := FiniteField.card F (ringChar F)
   by_cases h2 : ringChar F = 2
   · refine ⟨0, Fintype.card F, by simp, ?_⟩
@@ -187,10 +187,10 @@ theorem evenSq_absNorm {q d : ℕ} [Fact d.Prime] (h : HostHyp q d) {E : Type} [
   | h₃ I P hI hP ih =>
     rw [map_mul]
     refine EvenSq.mul ?_ (ih hI)
-    haveI : P.IsMaximal := (Ideal.isPrime_of_prime hP).isMaximal hP.ne_zero
-    letI : Field (𝓞 E ⧸ P) := Ideal.Quotient.field P
-    haveI : Finite (𝓞 E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP.ne_zero
-    letI : Fintype (𝓞 E ⧸ P) := Fintype.ofFinite _
+    have : P.IsMaximal := (Ideal.isPrime_of_prime hP).isMaximal hP.ne_zero
+    let : Field (𝓞 E ⧸ P) := Ideal.Quotient.field P
+    have : Finite (𝓞 E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP.ne_zero
+    let : Fintype (𝓞 E ⧸ P) := Fintype.ofFinite _
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
     refine evenSq_card h (a := Ideal.Quotient.mk P a') (b := Ideal.Quotient.mk P b') ?_ ?_
     · rw [← map_pow, ha']; simp
@@ -251,7 +251,7 @@ theorem part_neg {R : Ranks} (H : Host R) {t : H.E} (ht : H.conj t = t) (u v : �
 
 theorem exists_rat {R : Ranks} (H : Host R) {x : H.E} (hx : ∀ g, H.sigmaOf g x = x) :
     ∃ r : ℚ, (r : H.E) = x := by
-  haveI := H.hostE_isGalois
+  have := H.hostE_isGalois
   obtain ⟨r, hr⟩ := (IsGalois.mem_range_algebraMap_iff_fixed (F := ℚ) x).2 fun f => by
     have := hx (H.gal f)
     rwa [Host.sigmaOf, MulEquiv.symm_apply_apply] at this
@@ -291,7 +291,7 @@ theorem prod_embT (D : D7) (t : D.host.E) :
 
 theorem norm_eq {R : Ranks} (H : Host R) {t : H.E} (ht : H.conj t = t) :
     ((Algebra.norm ℚ t : ℚ) : H.E) = (part H t (1, 1) * part H t (-1, 1)) ^ 2 := by
-  haveI := H.hostE_isGalois
+  have := H.hostE_isGalois
   have h := Algebra.norm_eq_prod_automorphisms ℚ t
   rw [← Fintype.prod_equiv (H.gal).symm.toEquiv (fun g => H.sigmaOf g t) _ (fun _ => rfl),
     Fintype.prod_prod_type, Fintype.prod_prod_type, prod_units, prod_units, prod_units] at h
@@ -303,7 +303,7 @@ theorem norm_eq {R : Ranks} (H : Host R) {t : H.E} (ht : H.conj t = t) :
 theorem part_pos {R : Ranks} (H : Host R) (t : 𝓞 H.E) (B : Ideal (𝓞 H.E)) (ht0 : t ≠ 0)
     (ht : H.conj (t : H.E) = t) (hB : Ideal.span {t} = B * (H.conj • B)) :
     0 < (H.φ₀ (part H (t : H.E) (1, 1) * part H (t : H.E) (-1, 1))).re := by
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
   have ha : H.sqq ^ 2 = -(H.q : H.E) := H.sqq_sq
   have hb : H.sqd ^ 2 = -(H.d : H.E) := H.sqd_sq
   have hB0 : B ≠ ⊥ := by

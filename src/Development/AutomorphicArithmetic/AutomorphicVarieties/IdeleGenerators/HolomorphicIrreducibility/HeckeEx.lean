@@ -119,7 +119,7 @@ private lemma matV_det (p : ℕ) [NeZero p] : (matV p).det.val = p := by
 
 private lemma smul_slash_pos (k : ℤ) (g : GL (Fin 2) ℝ) (hg : 0 < g.det.val) (f : ℍ → ℂ) (c : ℂ) :
     (c • f) ∣[k] g = c • f ∣[k] g := by
-  rw [ModularForm.smul_slash, σ, if_pos hg]
+  rw [ModularForm.smul_slash, σ, ite_eq_left hg]
   rfl
 
 private lemma slash_factor {N k : ℕ} {χ : DirichletCharacter ℂ N} {f : ℍ → ℂ}
@@ -341,7 +341,7 @@ private lemma slash_U_apply (k : ℤ) (p : ℕ) [NeZero p] (j : ℤ) (f : ℍ �
     (f ∣[k] matU p j) τ = (p : ℂ)⁻¹ * f (matU p j • τ) := by
   have hp : (p : ℂ) ≠ 0 := by exact_mod_cast NeZero.ne p
   have hd : denom (matU p j) τ = p := by simp [denom, matU_val]
-  rw [ModularForm.slash_apply, σ, if_pos (by rw [matU_det]; exact_mod_cast NeZero.pos p),
+  rw [ModularForm.slash_apply, σ, ite_eq_left (by rw [matU_det]; exact_mod_cast NeZero.pos p),
     matU_det, hd, Nat.abs_cast, Complex.ofReal_natCast, mul_assoc, ← zpow_add₀ hp,
     show k - 1 + -k = -1 by ring]
   simp [mul_comm]
@@ -349,7 +349,7 @@ private lemma slash_U_apply (k : ℤ) (p : ℕ) [NeZero p] (j : ℤ) (f : ℍ �
 private lemma slash_V_apply (k : ℤ) (p : ℕ) [NeZero p] (f : ℍ → ℂ) (τ : ℍ) :
     (f ∣[k] matV p) τ = (p : ℂ) ^ (k - 1) * f (matV p • τ) := by
   have hd : denom (matV p) τ = 1 := by simp [denom, matV_val]
-  rw [ModularForm.slash_apply, σ, if_pos (by rw [matV_det]; exact_mod_cast NeZero.pos p),
+  rw [ModularForm.slash_apply, σ, ite_eq_left (by rw [matV_det]; exact_mod_cast NeZero.pos p),
     matV_det, hd, Nat.abs_cast, Complex.ofReal_natCast]
   simp [mul_comm]
 
@@ -371,12 +371,12 @@ private lemma hasSum_V (p : ℕ) [NeZero p] {f : ℍ → ℂ} {a : ℕ → ℂ}
   rw [← hinj.hasSum_iff]
   · convert hf (matV p • τ) using 2 with m
     have : qParam 1 ((matV p • τ : ℍ) : ℂ) = qParam 1 τ ^ p := by
-      rw [coe_V_smul, qParam, qParam, ← Complex.exp_nat_mul]
+      rw [coe_V_smul, qParam, qParam, ← Complex.exp_natCast_mul]
       congr 1
       ring
     simp [this, pow_mul, Nat.mul_div_cancel_left _ (NeZero.pos p)]
   · intro n hn
-    rw [if_neg, zero_mul]
+    rw [ite_eq_right, zero_mul]
     rintro ⟨m, rfl⟩
     exact hn ⟨m, rfl⟩
 
@@ -397,8 +397,8 @@ private lemma hasSum_U (p : ℕ) [NeZero p] {f : ℍ → ℂ} {a : ℕ → ℂ}
         qParam 1 (τ / p) ^ m * ZMod.stdAddChar (i * (-(m : ZMod p))) := by
       intro i
       have : i * (-(m : ZMod p)) = ((-(i.val * m) : ℤ) : ZMod p) := by simp
-      rw [this, ZMod.stdAddChar_coe, coe_U_smul, qParam, qParam, ← Complex.exp_nat_mul,
-        ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [this, ZMod.stdAddChar_coe, coe_U_smul, qParam, qParam, ← Complex.exp_natCast_mul,
+        ← Complex.exp_natCast_mul, ← Complex.exp_add]
       congr 1
       push_cast
       ring
@@ -411,12 +411,12 @@ private lemma hasSum_U (p : ℕ) [NeZero p] {f : ℍ → ℂ} {a : ℕ → ℂ}
   simp only [key] at h1
   rw [← hinj.hasSum_iff] at h1
   · have : qParam 1 ((τ : ℂ) / p) ^ p = qParam 1 τ := by
-      rw [qParam, qParam, ← Complex.exp_nat_mul]
+      rw [qParam, qParam, ← Complex.exp_natCast_mul]
       congr 1
       field_simp
-    simpa only [Function.comp_def, dvd_mul_right, if_true, pow_mul, this] using h1
+    simpa only [Function.comp_def, dvd_mul_right, ite_true, pow_mul, this] using h1
   · intro n hn
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨m, rfl⟩
     exact hn ⟨m, rfl⟩
 
@@ -426,7 +426,7 @@ open UpperHalfPlane Matrix.SpecialLinearGroup OnePoint in
 theorem UpperTheory.Reformulated.B.hecke_existence.heckeEx :
     UpperTheory.Reformulated.B.hecke_existence.HeckeEx := by
   intro N k _ hk χ f hf p hp
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hchar := sum_hasChar (p := p) hf
   have hper : (1 : ℝ) ∈ (Subgroup.map (mapGL ℝ) (CongruenceSubgroup.Gamma1 N)).strictPeriods := by
     simp
@@ -434,7 +434,7 @@ theorem UpperTheory.Reformulated.B.hecke_existence.heckeEx :
     { toFun := ∑ x, term k p χ f x
       slash_action_eq' := by
         rintro - ⟨γ, hγ, rfl⟩
-        have := hchar γ (CongruenceSubgroup.Gamma1_in_Gamma0 N hγ)
+        have := hchar γ (CongruenceSubgroup.Gamma1_le_Gamma0 N hγ)
         rw [((CongruenceSubgroup.Gamma1_mem N γ).mp hγ).2.1, map_one, one_smul] at this
         exact this
       holo' := by
@@ -451,7 +451,7 @@ theorem UpperTheory.Reformulated.B.hecke_existence.heckeEx :
             (IsZeroAt.smul_iff.mp (CuspFormClass.zero_at_cusps f (isCusp_V hc p))) _
         | coe i => exact IsZeroAt.smul_iff.mp (CuspFormClass.zero_at_cusps f (isCusp_U hc p _)) }
   refine ⟨g, hchar, fun n _ ↦ ?_⟩
-  haveI : Fact (IsCusp ∞ (Subgroup.map (mapGL ℝ) (CongruenceSubgroup.Gamma1 N))) :=
+  have : Fact (IsCusp ∞ (Subgroup.map (mapGL ℝ) (CongruenceSubgroup.Gamma1 N))) :=
     ⟨Subgroup.isCusp_of_mem_strictPeriods one_pos hper⟩
   have hs : ∀ τ : ℍ, HasSum (fun m ↦ coef f m * Function.Periodic.qParam 1 τ ^ m) (f τ) :=
     fun τ ↦ ModularForm.hasSum_qExpansion f one_pos hper τ

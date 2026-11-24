@@ -93,13 +93,13 @@ theorem continuous_linkKappa {D : D7} {ρ : ℕ} {B : BesLev D ρ} {L' : HSp D} 
 theorem integrable_restrict_of_bdd {X : Type} [TopologicalSpace X] [MeasurableSpace X] [OpensMeasurableSpace X]
     (μ : Measure X) (s : Set X) (hs : μ s = 1) (f : X → ℂ) (hf : Continuous f) (C : ℝ) (hC : ∀ x, ‖f x‖ ≤ C) :
     Integrable f (μ.restrict s) := by
-  haveI : IsFiniteMeasure (μ.restrict s) := ⟨by rw [Measure.restrict_apply_univ, hs]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (μ.restrict s) := ⟨by rw [Measure.restrict_apply_univ, hs]; exact ENNReal.one_lt_top⟩
   exact (integrable_const C).mono' hf.aestronglyMeasurable (ae_of_all _ fun x => by simpa using hC x)
 
 theorem contr_isTheta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (B : BesLev D (σ + 1)) (J : JacLev D (σ + 1)) (B' : BesLev D σ) (s₁ : StepBF ψ B J) (s₂ : StepFB ψ J B') (l : Link B B'.L B'.ζ) (vL : VolM D B'.L.rank J.W₀.rank) (χA χA' χz : ((AE D)ˣ →* Circle)) (oma : Om B.A J.W₀) (omz : Om B.L J.W₀) (omb : Om J.W₀ B'.A) (omz' : Om J.W₀ B'.L), s₁.χV = χA * χz → s₂.χW = χA' * χz → IsWeilDatumO ψ B.A J.W₀ χA s₁.χW oma → IsWeilDatumO ψ B.L J.W₀ χz s₁.χW omz → IsWeilDatumO ψ J.W₀ B'.A s₂.χV χA' omb → IsWeilDatumO ψ J.W₀ B'.L s₂.χV χz omz' → ∀ (Ξ₁ : WO B.V₀ J.W₀ → ℂ) (Ξ₂ : WO J.W₀ B'.V₀ → ℂ), IsThetaFunO ψ B.V₀ J.W₀ Ξ₁ → IsThetaFunO ψ J.W₀ B'.V₀ Ξ₂ → (∀ v, IsThetaFunO ψ B.A J.W₀ fun u => contr l J.W₀ vL Ξ₁ Ξ₂ u v) ∧ ∀ p, (IsThetaFunO ψ J.W₀ B'.A fun v => oma p (fun u => contr l J.W₀ vL Ξ₁ Ξ₂ u v) 0) ∧ ∀ v, oma p (fun u => contr l J.W₀ vL Ξ₁ Ξ₂ u v) 0 = ∫ w in vL.𝓕, Ξ₂ ((B'.o.resT J.W₀).symm (v, w)) * oma p (fun u => Ξ₁ ((B.o.resS J.W₀).symm (u, l.κ J.W₀ w))) 0 ∂vL.μ := by
   intro D ψ σ B J B' s₁ s₂ l vL χA χA' χz oma omz omb omz' _ _ hoa _ _ _ Ξ₁ Ξ₂ hΞ₁ hΞ₂
   have hstd : IsStdChar D ψ (-1) := hoa.std
-  haveI hbor : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
+  have hbor : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
   have hκ : Continuous (l.κ J.W₀) := continuous_linkKappa l J.W₀
   have hκm : Measurable (l.κ J.W₀) := hκ.measurable
   have hvol : vL.μ vL.𝓕 = 1 := vL.covol.2.2
@@ -265,7 +265,7 @@ theorem weil_comm_sliceSum_target : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
   have h1 := GlobalTheory.T.weil_operator_target_summand_preserves_theta_functions D ψ T A B S o F hF χ χ' om hW p
   refine ⟨h1, fun u₀ => ?_⟩
   obtain ⟨-, -, iB3, -⟩ := lattice_Mx D B.rank S.rank
-  haveI : BorelSpace (WO S B) := ⟨rfl⟩
+  have : BorelSpace (WO S B) := ⟨rfl⟩
 
   set Fs : WO S B → WO S A → ℂ := fun y u => F ((o.resT S).symm (u, y)) with hFs
   set G : WO S T → ℂ := fun x => om p (fun u => F ((o.resT S).symm (u, (o.resT S x).2))) (o.resT S x).1 with hG
@@ -320,7 +320,7 @@ theorem weil_comm_sliceSum_target : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
     intro b hbm hb0 hbi
     refine ⟨hbi.ofReal, ?_⟩
     let ν : Measure (WO S B) := (μ.withDensity fun w => ((Real.toNNReal (b w) : NNReal) : ENNReal)).map k
-    haveI : IsFiniteMeasure (μ.withDensity fun w => ((Real.toNNReal (b w) : NNReal) : ENNReal)) :=
+    have : IsFiniteMeasure (μ.withDensity fun w => ((Real.toNNReal (b w) : NNReal) : ENNReal)) :=
       isFiniteMeasure_withDensity_ofReal hbi.2
     have tr : ∀ φ : WO S B → ℂ, Continuous φ → ∫ y, φ y ∂ν = ∫ w, (b w : ℂ) * φ (k w) ∂μ := by
       intro φ hφ
@@ -429,7 +429,7 @@ theorem continuous_kappa {ρ : ℕ} {B : BesLev D ρ} {L' : HSp D} {ζ' : Fin L'
 
 theorem integrable_of_cont_bdd {m n : ℕ} (μ : Measure (Mx D m n)) [IsFiniteMeasure μ] (f : Mx D m n → ℂ)
     (hc : Continuous f) (hb : ∃ C : ℝ, ∀ x, ‖f x‖ ≤ C) : Integrable f μ := by
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   obtain ⟨C, hC⟩ := hb
   exact Integrable.of_bound hc.aestronglyMeasurable C (Filter.Eventually.of_forall hC)
 
@@ -448,10 +448,10 @@ theorem kernel_doubleStep : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : 
   have TT := GlobalTheory.T.thetaTensorRule_targetOrthogonalSum D ψ hstd B'.V₀ B'.A B'.L B'.o J.W₀
   have hw₁ : IsWeilDatumO ψ B.V₀ J.W₀ (χA * χz) s₁.χW s₁.om₀ := hV ▸ s₁.weil₀
   have hw₂ : IsWeilDatumO ψ J.W₀ B'.V₀ s₂.χV (χA' * χz) s₂.om₀ := hW ▸ s₂.weil₀
-  haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
+  have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, vL.covol.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : BorelSpace (WO J.W₀ B'.L) := ⟨rfl⟩
-  haveI : BorelSpace (WO B.L J.W₀) := ⟨rfl⟩
+  have : BorelSpace (WO J.W₀ B'.L) := ⟨rfl⟩
+  have : BorelSpace (WO B.L J.W₀) := ⟨rfl⟩
 
   have hS₁ : ∀ u, IsThetaFunO ψ B.L J.W₀ fun z => Ξ₁ ((B.o.resS J.W₀).symm (u, z)) := (TS.slice_theta Ξ₁ hΞ₁).2
   have hS₂ : ∀ v, IsThetaFunO ψ J.W₀ B'.L fun w => Ξ₂ ((B'.o.resT J.W₀).symm (v, w)) := (TT.slice_theta Ξ₂ hΞ₂).2
@@ -658,16 +658,16 @@ theorem exchange {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {B : BesLev D (σ +
       ∫ h₀ in B.vA.𝓕, φ h₀ * ∫ w in vL.𝓕, s₂.om₀ (h₁, B'.o.emb (h₂, 1)) Ξ₂ ((B'.o.resT J.W₀).symm (0, w)) *
         s₁.om₀ (B.o.emb (h₀, 1), h₁) Ξ₁ ((B.o.resS J.W₀).symm (0, l.κ J.W₀ w)) ∂vL.μ ∂B.vA.μ := by
   obtain ⟨-, hsc, -, hbor, htg, -, hcount⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.A
-  haveI := hsc; haveI := hbor; haveI := htg; haveI := hcount
-  haveI : BorelSpace (WO J.W₀ B'.L) := ⟨rfl⟩
-  haveI := B.vA.haar
+  have := hsc; have := hbor; have := htg; have := hcount
+  have : BorelSpace (WO J.W₀ B'.L) := ⟨rfl⟩
+  have := B.vA.haar
   have hfinA : B.vA.μ B.vA.𝓕 < ⊤ := by
     obtain ⟨K, hK, hc⟩ := B.cpt
     refine GlobalTheory.BesselConvDefinite.measure_fundamentalDomain_lt_top (GQ B.A) hK (fun g => ?_) B.vA.μ B.vA.fund
     obtain ⟨γ, hγ, hk⟩ := hc g
     exact ⟨γ⁻¹, inv_mem hγ, γ * g, hk, by rw [← mul_assoc, inv_mul_cancel, one_mul]⟩
-  haveI : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfinA⟩
-  haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
+  have : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfinA⟩
+  have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, vL.covol.2.2]; exact ENNReal.one_lt_top⟩
   have hΨ₂ : IsThetaFunO ψ J.W₀ B'.V₀ (s₂.om₀ (h₁, B'.o.emb (h₂, 1)) Ξ₂) := s₂.weil₀.om_pres _ _ hΞ₂
   obtain ⟨C₂, hC₂⟩ := GlobalTheory.OrientedHeis.theta_bounded s₂.weil₀.std hΨ₂

@@ -75,7 +75,7 @@ theorem minimumSq_two_sided_bounds {x y : Frame X.Ψ r} (hx : x ∈ X.dom) (hy :
   have e : ∀ g' : (Fin r → E) → ℝ, (¬ ∃ v ∈ X.Λ, v ≠ 0) → {t | ∃ v ∈ X.Λ, v ≠ 0 ∧ t = g' v} = ∅ := by
     intro g' hne
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     rintro ⟨v, hv, hv', _⟩
     exact hne ⟨v, hv, hv'⟩
   have key1 : ∀ (g h : (Fin r → E) → ℝ) (a : ℝ), 0 ≤ a → (∀ v, 0 ≤ g v) → (∀ v, a * g v ≤ h v) →

@@ -157,7 +157,7 @@ variable {D : D7} (X : HidaSetting D)
 theorem inv_mul_of_unitri {X0 : Matrix (Fin D.R.rS) (Fin D.R.rS) D.host.E}
     (h0 : ∀ b a : Fin D.R.rS, a < b → X0 b a = 0) (h1 : ∀ a, X0 a a = 1) : X0⁻¹ * X0 = 1 := by
   have hdet : X0.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => h0 i j hij)]
+    rw [det_of_isUpperTriangular (fun i j hij => h0 i j hij)]
     simp [h1]
   exact Matrix.nonsing_inv_mul X0 (by rw [hdet]; exact isUnit_one)
 
@@ -203,10 +203,10 @@ theorem dictEx_holds : DictEx := by
           have : (i : ℕ) < j + 1 := hi
           exact Fin.le_def.2 (by omega)
         rcases hbi.lt_or_eq with hlt | heq
-        · rw [h0 b i hlt, if_neg (ne_of_gt hlt), sub_zero, zero_smul]
+        · rw [h0 b i hlt, ite_eq_right (ne_of_gt hlt), sub_zero, zero_smul]
           exact Submodule.zero_mem _
         · subst heq
-          rw [h1, if_pos rfl, sub_self, zero_smul]
+          rw [h1, ite_eq_left rfl, sub_self, zero_smul]
           exact Submodule.zero_mem _
     · simp
     · intro a b _ _ ha hb
@@ -391,7 +391,7 @@ theorem inv_up (X0 : Matrix (Fin D.R.rS) (Fin D.R.rS) D.host.E) (hup : ∀ b a, 
   have hXY : X0 * X0⁻¹ = 1 := Matrix.mul_nonsing_inv _ hU
   have hYup : ∀ b a, a < b → X0⁻¹ b a = 0 := by
     have hbt : X0.BlockTriangular id := fun i j hij => hup i j hij
-    haveI : Invertible X0 := Matrix.invertibleOfIsUnitDet X0 hU
+    have : Invertible X0 := Matrix.invertibleOfIsUnitDet X0 hU
     exact fun b a h => Matrix.blockTriangular_inv_of_blockTriangular hbt h
   refine ⟨hYup, fun a => ?_⟩
   have h := congrFun (congrFun hXY a) a

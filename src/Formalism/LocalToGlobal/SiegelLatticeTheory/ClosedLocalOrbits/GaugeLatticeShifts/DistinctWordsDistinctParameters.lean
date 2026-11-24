@@ -400,7 +400,7 @@ theorem cdom_antisymm {k : ℕ} {μ Λ : Fin k → ℝ} (h1 : CDom (allPos k) μ
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun b _ => ?_
     simp only [Pi.single_apply, mul_sub, mul_ite, mul_one, mul_zero, Finset.sum_sub_distrib,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
   have hneg : ∀ d : Fin k → Fin k → ℕ, (∀ a b, d a b ≠ 0 → a < b ∧ allPos k a = allPos k b) →
       ∀ a b, (d a b : ℝ) * (((a : ℕ) : ℝ) - ((b : ℕ) : ℝ)) ≤ 0 := by
@@ -524,8 +524,8 @@ theorem hcType_inequiv {u u' : Fin k → ℝ} {σ : Matrix (Fin k) (Fin k) ℂ �
     N = 0 := by
   by_contra hN0
   have h1 := cdom_of_intertwiner hσ hσ' N hN hN0
-  haveI : FiniteDimensional ℂ V := hσ.2.1
-  haveI : FiniteDimensional ℂ V' := hσ'.2.1
+  have : FiniteDimensional ℂ V := hσ.2.1
+  have : FiniteDimensional ℂ V' := hσ'.2.1
   have hN'int : ∀ g ∈ Formalism.REAL.Kset (allPos k), ∀ x, LinearMap.adjoint N (σ g x) = σ' g (LinearMap.adjoint N x) := by
     intro g hg x
     apply ext_inner_left ℂ
@@ -733,7 +733,7 @@ theorem piIrr : Formalism.L2.SG.TermOp.IdBlocks.PiIrr X u := by
   · intro s hs
     refine ⟨s⁻¹, (Hinf X u).inv_mem hs, fun w => ?_⟩
     show X.piU u s⁻¹ (X.piU u s w) = w
-    rw [← ContinuousLinearMap.mul_apply, ← hrep.2.1 _ (hinf_le_sinf X u _ ((Hinf X u).inv_mem hs)) _
+    rw [← mul_apply_eq_comp, ← hrep.2.1 _ (hinf_le_sinf X u _ ((Hinf X u).inv_mem hs)) _
       (hinf_le_sinf X u s hs), inv_mul_cancel, hrep.1]
     rfl
   · rintro v a ⟨g, hg, rfl⟩ p q

@@ -86,7 +86,7 @@ theorem lift_red (π : Representation ℂ (GL (Fin n) ℚ_[g]) V) {v : V} (hv : 
 theorem isIrrRep_iff {G : Type} [Group G] (π : Representation ℂ G V) : IsIrrRep π ↔ π.IsIrreducible := by
   constructor
   · rintro ⟨hn, h⟩
-    haveI : Nontrivial (Subrepresentation π) := ⟨⊥, ⊤, fun e => by
+    have : Nontrivial (Subrepresentation π) := ⟨⊥, ⊤, fun e => by
       have : (⊥ : Submodule ℂ V) = ⊤ := congrArg Subrepresentation.toSubmodule e
       exact bot_ne_top this⟩
     refine ⟨fun W => ?_⟩
@@ -141,7 +141,7 @@ theorem exists_gen (L : LabelDatum g) : ∃ u : (ZMod g)ˣ, algebraMap (ZMod g) 
 theorem isCharLab_exists (L : LabelDatum g) (χ : (ZMod g)ˣ →* ℂˣ) : ∃ c, IsCharLab L χ c := by
   obtain ⟨u, hu, ho⟩ := exists_gen L
   have hpos : 0 < g - 1 := by have := (Fact.out : g.Prime).two_le; omega
-  haveI : NeZero (g - 1) := ⟨hpos.ne'⟩
+  have : NeZero (g - 1) := ⟨hpos.ne'⟩
   let T : (ZMod g)ˣ →* ℂ := L.teich.comp ((algebraMap (ZMod g) (Formalism.CyclotomicNorms.Fbar g)).toMonoidHom.comp (Units.coeHom _))
   have hT : Function.Injective T := fun a b e => Units.ext <| (algebraMap (ZMod g) (Formalism.CyclotomicNorms.Fbar g)).injective
     (L.teich_inj _ _ (by simp) (by simp) e)

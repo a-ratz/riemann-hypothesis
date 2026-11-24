@@ -60,9 +60,9 @@ theorem nonempty_ext (v : HeightOneSpectrum (𝓞 F)) : Nonempty (Ext v) := by
   have h1 : ‖FinitePlace.embedding v (algebraMap (𝓞 F) F a)‖ < 1 := (FinitePlace.norm_lt_one_iff_mem F v a).2 ha
   have h0 : FinitePlace.embedding v (algebraMap (𝓞 F) F a) ≠ 0 := by
     simpa using ha0
-  letI : NontriviallyNormedField K := NontriviallyNormedField.ofNormNeOne ⟨_, h0, h1.ne⟩
+  let : NontriviallyNormedField K := NontriviallyNormedField.ofNormNeOne ⟨_, h0, h1.ne⟩
   let L := AlgebraicClosure K
-  letI : Algebra F L := ((algebraMap K L).comp (FinitePlace.embedding v)).toAlgebra
+  let : Algebra F L := ((algebraMap K L).comp (FinitePlace.embedding v)).toAlgebra
   let j : AlgebraicClosure F →ₐ[F] L := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -78,7 +78,7 @@ theorem nonempty_ext (v : HeightOneSpectrum (𝓞 F)) : Nonempty (Ext v) := by
   · rw [hw, j.commutes, ← FinitePlace.norm_embedding]
     exact spectralNorm_extends _
   · intro x y hx hy
-    simp only [Set.mem_setOf_eq, map_mul] at *
+    simp only [Set.mem_ofPred_eq, map_mul] at *
     exact mul_le_one₀ hx (w.nonneg _) hy
   · intro x y hx hy
     exact (hn x y).trans (max_le hx hy)
@@ -167,8 +167,8 @@ theorem closed_point_geometric_fibres_finite {k K : Type} [Field k] [Field K] [A
   have hfin : IsFinite (Spec.map φ) := by
     rw [hφ]
     exact isFinite_iff_locallyOfFiniteType_of_jacobsonSpace.2 inferInstance
-  letI : Algebra k (X.residueField x) := φ.hom.toAlgebra
-  haveI : Module.Finite k (X.residueField x) := (IsFinite.SpecMap_iff φ).1 hfin
+  let : Algebra k (X.residueField x) := φ.hom.toAlgebra
+  have : Module.Finite k (X.residueField x) := (IsFinite.SpecMap_iff φ).1 hfin
   have hP (ψ : X.residueField x →ₐ[k] K) :
       (Spec.map (CommRingCat.ofHom ψ.toRingHom) ≫ X.fromSpecResidueField x) ≫ s = spMap (algebraMap k K) := by
     have h : φ ≫ CommRingCat.ofHom ψ.toRingHom = CommRingCat.ofHom (algebraMap k K) :=

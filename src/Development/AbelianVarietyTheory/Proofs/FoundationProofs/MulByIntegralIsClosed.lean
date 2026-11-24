@@ -90,7 +90,7 @@ theorem mulBy_integral_isClosed : ∀ (p : ℕ) [Fact p.Prime] (g : GL3Theta.G1 
       ⋂ e : Unit →₀ ℕ, {c : ℂ_[p] |
         ‖MvPowerSeries.coeff e (g.mulBy c (GL3Theta.Xv ()) : MvPowerSeries Unit ℂ_[p])‖ ≤ 1} := by
     ext c
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     rfl
   rw [hset]
   refine isClosed_iInter fun e => ?_

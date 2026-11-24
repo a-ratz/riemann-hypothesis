@@ -376,9 +376,9 @@ theorem eq_zero_of_forall_integral_coeff : ∀
           0) →
       g = 0 := by
   intro g hg h
-  haveI : CompactSpace U2 := aux5
-  haveI : BorelSpace U2 := aux4
-  haveI : μK.IsHaarMeasure :=
+  have : CompactSpace U2 := aux5
+  have : BorelSpace U2 := aux4
+  have : μK.IsHaarMeasure :=
     MeasureTheory.Measure.isHaarMeasure_haarMeasure _
   exact main μK hg h
 

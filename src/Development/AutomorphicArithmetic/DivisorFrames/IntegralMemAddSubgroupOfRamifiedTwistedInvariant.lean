@@ -134,7 +134,7 @@ theorem integrable_volGL_of_lintegral {k : Type} [Field k] [ValuativeRel k] [Top
       rw [hIdef, Set.indicator_of_mem hg, dite_eq_right h0, hu, ← ha, ENNReal.ofReal_rpow_of_pos hp]
       have hFg : F g = a ^ σ := by
         rw [hF]; simp only [Set.indicator_of_mem hg, one_mul]; rfl
-      rw [hFg, Real.enorm_of_nonneg (Real.rpow_nonneg hp.le _),
+      rw [hFg, Real.eNorm_of_nonneg (Real.rpow_nonneg hp.le _),
         ← ENNReal.ofReal_mul (Real.rpow_nonneg hp.le _), ← Real.rpow_add hp, Fintype.card_fin]
       refine ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow_of_exponent_ge hp hle ?_)
       linarith
@@ -142,7 +142,7 @@ theorem integrable_volGL_of_lintegral {k : Type} [Field k] [ValuativeRel k] [Top
         rw [hF]; simp only [Set.indicator_of_notMem hg, zero_mul]
       rw [hFg]; simp
   unfold HasFiniteIntegral volGL
-  erw [lintegral_withDensity_eq_lintegral_mul _ hd.measurable hFc.enorm.measurable]
+  erw [lintegral_withDensity_eq_lintegral_mul _ hd.measurable hFc.eNorm.measurable]
   calc _ ≤ ∫⁻ g : GL (Fin n) k, I g.val ∂((volM μ (Fin n) (Fin n)).comap fun g : GL (Fin n) k => g.val) :=
         lintegral_mono fun g => hpt g
     _ = ∫⁻ X, I X ∂(((volM μ (Fin n) (Fin n)).comap fun g : GL (Fin n) k => g.val).map
@@ -522,7 +522,7 @@ theorem det_blk {k : Type} [Field k] {n : ℕ} (x : k) (u v : Fin n → k) (M : 
 theorem mem_intM_blk {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (x : k) (u v : Fin n → k) (M : Matrix (Fin n) (Fin n) k) :
     Matrix.of (Fin.cons (Fin.cons x u : Fin (n + 1) → k) (fun i => (Fin.cons (v i) (M i) : Fin (n + 1) → k))) ∈ intM k (Fin (n + 1)) (Fin (n + 1)) ↔
       x ∈ 𝒪[k] ∧ (∀ j, u j ∈ 𝒪[k]) ∧ (∀ i, v i ∈ 𝒪[k]) ∧ M ∈ intM k (Fin n) (Fin n) := by
-  simp only [intM, Set.mem_setOf_eq, Fin.forall_fin_succ, Matrix.of_apply, Fin.cons_zero, Fin.cons_succ, forall_and]
+  simp only [intM, Set.mem_ofPred_eq, Fin.forall_fin_succ, Matrix.of_apply, Fin.cons_zero, Fin.cons_succ, forall_and]
   tauto
 
 theorem det_mem_int {k : Type} [Field k] [ValuativeRel k] {n : ℕ} {X : Matrix (Fin n) (Fin n) k}
@@ -671,7 +671,7 @@ theorem exists_unit_bound {m : ℕ} {K : Set (Matrix (Fin m) (Fin m) k)} (hK : I
   obtain ⟨y, hy⟩ := hK.elim_directed_cover
     (fun y : kˣ => {X : Matrix (Fin m) (Fin m) k | ∀ i j, X i j ∈ cball y})
     (fun y => by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         (isOpen_cball y).preimage (show Continuous (fun X : Matrix (Fin m) (Fin m) k => X i j) from
           (continuous_apply j).comp (continuous_apply i)))
@@ -971,7 +971,7 @@ theorem exists_integrable {a : ℕ} {ν : kˣ →* ℂˣ} (hν : IsSmU ν) {φ :
     funext g
     simp [GlobalTheory.InertSupp.zetaIntegrand, GlobalTheory.SmGL.val_absPow, apow]
   rw [hfun] at h1
-  haveI := isHaarMeasure_volGL (k := k) (n := Fin a) Measure.addHaar
+  have := isHaarMeasure_volGL (k := k) (n := Fin a) Measure.addHaar
   rw [Measure.isMulLeftInvariant_eq_smul (haarVol (KO k (Fin a))) (volGL Measure.addHaar (Fin a))]
   exact h1.smul_measure_nnreal
 
@@ -1006,7 +1006,7 @@ theorem integral_eq_shellSum (hϖ : IsUnif ϖ) (hram : ¬ IsUnram ν) (hcond : C
     Set.eq_univ_of_forall fun g => Set.mem_iUnion.2 (exists_unique_shell hϖ g).exists
   have hd : Pairwise (Function.onFun Disjoint S) := fun m m' hne =>
     Set.disjoint_left.2 fun g h1 h2 => hne ((exists_unique_shell hϖ g).unique h1 h2)
-  haveI : BorelSpace (GL (Fin a) k) := borel_GL
+  have : BorelSpace (GL (Fin a) k) := borel_GL
   have hm : ∀ m, MeasurableSet (S m) := fun m => (isOpen_shellSet ϖ m.1).measurableSet
   calc _ = ∫ g in ⋃ m, S m, φ g.val * (ν (gdet g) : ℂ) * apow (gdet g) w ∂(haarVol (KO k (Fin a))) := by
         rw [hU, Measure.restrict_univ]
@@ -1021,7 +1021,7 @@ theorem shell_eq_mul [BorelSpace k] {a : ℕ} (μ : Measure (GL (Fin a) k)) (φ 
       apow (gdet (diagGL fun i => ϖ ^ m i)) w := by
   unfold shell
   rw [← integral_mul_const]
-  haveI : BorelSpace (GL (Fin a) k) := borel_GL
+  have : BorelSpace (GL (Fin a) k) := borel_GL
   exact setIntegral_congr_fun (isOpen_shellSet ϖ m).measurableSet fun g hg => by
     simp only [apow_of_mem_shellSet hg]
 
@@ -1096,7 +1096,7 @@ theorem shellSum_eqv (hϖ : IsUnif ϖ) (hν : IsSmU ν) (hram : ¬ IsUnram ν) (
 theorem exists_ne_zero (hϖ : IsUnif ϖ) (hcond : CondLE ϖ e ν) {a : ℕ} (z : ℂ) :
     ∃ φ ∈ SB (Matrix (Fin a) (Fin a) k), shellSum (haarVol (KO k (Fin a))) ϖ ν z φ ≠ 0 := by
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := k)
-  haveI : BorelSpace (GL (Fin a) k) := borel_GL
+  have : BorelSpace (GL (Fin a) k) := borel_GL
   set D := detCong (ϖ ^ e) (Fin a) with hDdef
   have hDo : IsOpen (D : Set (GL (Fin a) k)) := isOpen_detCong _ _
   have hDc : IsClosed (D : Set (GL (Fin a) k)) := D.isClosed_of_isOpen hDo
@@ -1106,7 +1106,7 @@ theorem exists_ne_zero (hϖ : IsUnif ϖ) (hcond : CondLE ϖ e ν) {a : ℕ} (z :
     refine ⟨isEmbedding_val_GL, ?_⟩
     have : Set.range (fun g : GL (Fin a) k => g.val) = {x : Matrix (Fin a) (Fin a) k | x.det ≠ 0} := by
       ext x
-      simp only [Set.mem_range, Set.mem_setOf_eq]
+      simp only [Set.mem_range, Set.mem_ofPred_eq]
       rw [← isUnit_iff_ne_zero, ← Matrix.isUnit_iff_isUnit_det]
       rfl
     rw [this]
@@ -1308,8 +1308,8 @@ theorem UpperTheory.integral_mem_addSubgroup_of_ramified_twisted_invariant :
   · rw [integral_undef hint]; exact M.zero_mem
   have hφ := mem_SB_of_periodic ϖ _ φ hS hP
   obtain ⟨-, h2, h3, h4⟩ := _root_.GlobalTheory.ShellVan.shell_lemma k ϖ hϖ ν e hram hcond n μ φ hφ
-  haveI : BorelSpace (GL (Fin n) k) := borel_GL
-  haveI : μ.IsMulRightInvariant := isMulRightInvariant_of_haar μ
+  have : BorelSpace (GL (Fin n) k) := borel_GL
+  have : μ.IsMulRightInvariant := isMulRightInvariant_of_haar μ
   have hsh : ∀ m : Fin n → ℤ, shell μ ϖ ν z φ m ∈ M := by
     intro m
     by_cases hm : ∀ i, -(a : ℤ) ≤ m i ∧ m i < 0

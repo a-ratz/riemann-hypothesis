@@ -680,7 +680,7 @@ theorem integral_levelGroupAction_pairing_invariant {V : HSp D} (β : GL (Fin V.
   have key : (fun g => star (actG0 V β L g0 F g) * actG0 V β L g0 S g) =
       fun g => star (F (g * hk.choose)) * S (g * hk.choose) := by
     funext g
-    simp only [actG0, dif_pos hk]
+    simp only [actG0, dite_eq_left hk]
     rw [star_mul', ← ha_def]
     linear_combination (star (F (g * hk.choose)) * S (g * hk.choose)) * haa
   rw [key]
@@ -697,7 +697,7 @@ theorem integral_eWf_move : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
   intro D G _ _ Pl0 T0 A Ks _ _ _ R F hC hX i σ v Φ hΦ hi y
   obtain ⟨hinj, hrange, hip⟩ := hC.models.HW i σ
   obtain ⟨h1, h2⟩ := hC.models.νW i
-  haveI := h1.1
+  have := h1.1
   have hgW := hC.models.gW
   have hL : ∀ z : (R.HW i σ).H, ∀ γ ∈ GQ (Wc D i), ∀ g,
       (R.HW i σ).e z (fun ρ => v ρ) (γ * g) = (R.HW i σ).e z (fun ρ => v ρ) g := fun z =>
@@ -721,7 +721,7 @@ theorem integral_eWf_move : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
       exact integral_levelGroupAction_pairing_invariant _ _ _ _ _ h2 hk Φ _ hΦ (hL _) (hi _)
     · have h0 : ∀ z : (R.HW i σ).H, (R.HW i σ).e z (fun ρ => v ρ) = 0 := fun z => by
         rw [hS g z]
-        simp only [actG0, dif_neg hk]
+        simp only [actG0, dite_eq_right hk]
       constructor
       · simp only [h0, Pi.zero_apply, mul_zero]
         exact integrableOn_zero
@@ -740,7 +740,7 @@ theorem integral_eWf_move : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
     intro h
 
     simp only [GlobalTheory.LiftLower.projH, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul,
-    MultilinearMap.sum_apply, MultilinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
+    sum_apply, smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
     refine Finset.sum_congr rfl fun g _ => ?_
     ring
   simp only [eL, eR]

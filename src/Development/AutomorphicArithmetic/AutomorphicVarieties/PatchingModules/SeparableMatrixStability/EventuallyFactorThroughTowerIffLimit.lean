@@ -113,14 +113,14 @@ theorem UpperTheory.V.Pa.eventually_factor_through_tower_iff_limit :
   intro l _ L G0 T Λ Z c hc
   set K0 : Subgroup Λ.Ph := (Λ.G.η.comp Λ.πo).ker with hK0def
   have hK0 : IsOpen (K0 : Set Λ.Ph) := Λ.Ph0_open
-  haveI : CompactSpace Λ.Ph0 := isCompact_iff_compactSpace.mp (K0.isClosed_of_isOpen hK0).isCompact
+  have : CompactSpace Λ.Ph0 := isCompact_iff_compactSpace.mp (K0.isClosed_of_isOpen hK0).isCompact
   have hS : IsOpen (stabR c : Set Λ.Ph0) := stabR_open c hc
   have hO : IsOpen (((stabR c).map K0.subtype : Subgroup Λ.Ph) : Set Λ.Ph) := by
     rw [Subgroup.coe_map]
-    exact hK0.isOpenMap_subtype_val _ hS
+    exact hK0.isOpenMap_subtypeVal _ hS
   let O : OpenSubgroup Λ.Ph := ⟨(stabR c).map K0.subtype, hO⟩
-  haveI : Finite (Λ.Ph ⧸ O.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ hO
-  haveI : O.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Λ.Ph ⧸ O.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ hO
+  have : O.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   let V : OpenNormalSubgroup Λ.Ph :=
     { toSubgroup := O.toSubgroup.normalCore
       isOpen' := Subgroup.isOpen_of_isClosed_of_finiteIndex _ (O.toSubgroup.normalCore_isClosed O.isClosed) }

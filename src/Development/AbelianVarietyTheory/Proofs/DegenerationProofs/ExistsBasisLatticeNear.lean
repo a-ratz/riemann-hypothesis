@@ -90,8 +90,8 @@ theorem avg_mul_avg [DecidableEq (G →+ B)] (ψ : AddChar B o) (hψ : ∀ a, ψ
   rw [smul_mul_smul_comm, h1, sum_char_comp ψ hψ, smul_smul]
   by_cases h : c = c'
   · subst h
-    rw [if_pos (sub_self c), if_pos rfl, _root_.mul_assoc, hu, _root_.mul_one]
-  · rw [if_neg (fun h0 => h (sub_eq_zero.1 h0).symm), if_neg h, mul_zero, zero_smul]
+    rw [ite_eq_left (sub_self c), ite_eq_left rfl, _root_.mul_assoc, hu, _root_.mul_one]
+  · rw [ite_eq_right (fun h0 => h (sub_eq_zero.1 h0).symm), ite_eq_right h, mul_zero, zero_smul]
 
 theorem sum_avg [Fintype (G →+ B)] (ψ : AddChar B o) (hψ : ∀ a, ψ a = 1 → a = 0) (ρ : G → A)
     (hρ : ∀ t, (∀ c : G →+ B, c t = 0) → ρ t = 1) (u : o) (hu : u * (Fintype.card G : o) = 1) :
@@ -101,7 +101,7 @@ theorem sum_avg [Fintype (G →+ B)] (ψ : AddChar B o) (hψ : ∀ a, ψ a = 1 �
     by_cases h : ∀ c : G →+ B, c t = 0
     · rw [hρ t h]
     · have h2 := sum_char_comp ψ hψ (-(AddMonoidHom.eval (M := G) (N := B) t))
-      rw [if_neg (fun h0 => h fun c => by simpa using DFunLike.congr_fun h0 c)] at h2
+      rw [ite_eq_right (fun h0 => h fun c => by simpa using DFunLike.congr_fun h0 c)] at h2
       simp only [AddMonoidHom.neg_apply, AddMonoidHom.eval_apply_apply] at h2
       rw [h2, zero_smul, zero_smul]
   have h3 : ∀ c : G →+ B, ∑ t, ψ (-(c t)) = if c = 0 then (Fintype.card G : o) else 0 := by
@@ -110,7 +110,7 @@ theorem sum_avg [Fintype (G →+ B)] (ψ : AddChar B o) (hψ : ∀ a, ψ a = 1 �
   rw [← Finset.smul_sum, Finset.sum_comm]
   simp only [← Finset.sum_smul, h1]
   rw [Finset.sum_comm]
-  simp only [h3, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [h3, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [smul_smul, hu, one_smul]
 
 end Abstract
@@ -134,7 +134,7 @@ theorem proj_orthogonal [IsDomain o] (T : AddSubgroup S.Gam) (hT : S.IsoFree T) 
     [DecidableEq (T →+ ZMod S.N)] :
     (∀ c c', S.proj T c * S.proj T c' = if c = c' then S.proj T c else 0) ∧ ∑ c, S.proj T c = 1 := by
   obtain ⟨hiso, d, ⟨φ⟩⟩ := hT
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   have hprim := isPrimitiveRoot_ζN S
   let ψ : AddChar (ZMod S.N) o := AddChar.zmodChar S.N hprim.pow_eq_one
   have hψ : ∀ a, ψ a = 1 → a = 0 := fun a ha => by
@@ -199,10 +199,10 @@ open FreeNear in
 theorem exists_basis_lattice_near :
     ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (M : RatModel o Ω) (U₀ : M.Z.Opens), S.admitted M U₀ → ((∀ ξ : M.Z, S.IsoFree (S.TT M ξ) ∧ S.perp (S.TT M ξ) = S.HH M ξ) ∧ (∀ ξ z : M.Z, ξ ⤳ z → S.supI M z ⊆ S.supI M ξ) ∧ (∀ ξ ∈ U₀, S.TT M ξ = ⊥) ∧ (∀ (ξ : M.Z) (W : M.Z.Opens), ξ ∈ W → ∃ x ∈ W, IsClosed ({x} : Set M.Z) ∧ ξ ⤳ x ∧ S.supI M x = S.supI M ξ)) → (∀ (ξ : M.Z) (c : S.TT M ξ →+ ZMod S.N), S.FF (S.TT M ξ) c ≠ 0) → (∀ z : M.Z, ∃ (b : Matrix S.J S.J Ω) (W : M.Z.Opens), z ∈ W ∧ b.det ≠ 0 ∧ ∀ x ∈ W, Submodule.span (M.O x) {v | ∃ (c : S.TT M z →+ ZMod S.N) (k : _) (x₀ : S.Gam) (i : S.J), M.Div (S.FF (S.TT M z) c) k z ∧ x₀ ∈ S.supI M z ∧ v = fun j => S.th x₀ / S.FF _ c k * algebraMap o Ω (S.proj _ c j i)} = Submodule.span (M.O x) (Set.range b)) := by
   intro o Ω _ _ _ hA S M U₀ hAdm h0 hne z
-  haveI : IsDomain o := hA.inj.isDomain
+  have : IsDomain o := hA.inj.isDomain
   have hT := (h0.1 z).1
-  haveI := FreeNear.finite_char S (S.TT M z)
-  haveI := Fintype.ofFinite (S.TT M z →+ ZMod S.N)
+  have := FreeNear.finite_char S (S.TT M z)
+  have := Fintype.ofFinite (S.TT M z →+ ZMod S.N)
   obtain ⟨hmul, hsum⟩ := FreeNear.proj_orthogonal S _ hT
   obtain ⟨x₁, hx₁⟩ := hAdm.1.div z
   choose k₁ hk₁ using fun c => hAdm.2 _ c hT (hne z c) z

@@ -159,14 +159,14 @@ theorem exists_lift : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Al
     have hw : A.valuation (w : Ω) ≤ 1 := (A.valuation_le_one_iff _).2 (intCast_mem A w)
     have h1 : A.valuation ((u : Ω) * (m : Ω)) < 1 := by
       rw [Valuation.map_mul]
-      exact lt_of_le_of_lt (mul_le_of_le_one_left zero_le' hu) hlt
+      exact lt_of_le_of_lt (mul_le_of_le_one_left zero_le hu) hlt
     have h2 : A.valuation ((w : Ω) * (g : Ω)) < 1 := by
       rw [Valuation.map_mul]
-      exact lt_of_le_of_lt (mul_le_of_le_one_left zero_le' hw) hvg
+      exact lt_of_le_of_lt (mul_le_of_le_one_left zero_le hw) hvg
     have h3 := Valuation.map_add_lt A.valuation h1 h2
     rw [e, Valuation.map_one] at h3
     exact lt_irrefl _ h3
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   have hζA : ζ ∈ A := mem_of_pow_eq_one A hm hζ.pow_eq_one
   have hr : IsPrimitiveRoot (redThrough A κ ζ) m := by
     refine IsPrimitiveRoot.mk_of_lt _ hm ?_ ?_
@@ -211,7 +211,7 @@ theorem sub_one_lt_one_of_pow {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {
     exact absurd h (not_le.2 (one_lt_pow' hc (pow_ne_zero _ hg.out.ne_zero)))
   have hzA : z ∈ A := (A.valuation_le_one_iff z).1 hz1
   let zA : A := ⟨z, hzA⟩
-  haveI : CharP (IsLocalRing.ResidueField A) g := by
+  have : CharP (IsLocalRing.ResidueField A) g := by
     rw [CharP.charP_iff_prime_eq_zero hg.out, ← map_natCast (IsLocalRing.residue A),
       IsLocalRing.residue_eq_zero_iff, A.valuation_lt_one_iff]
     simpa using hvg
@@ -396,9 +396,9 @@ noncomputable section
 open GlobalTheory.TameCoupledEx in
 theorem GlobalTheory.TameCoupledEx.exists_coupled_of (hK : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 E)), IsPlaceOver (F := E) A v → ∀ (g : ℕ) [Fact g.Prime], ((g : ℕ) : 𝓞 E) ∈ v.asIdeal → Nonempty (IsLocalRing.ResidueField A ≃+* Formalism.CyclotomicNorms.Fbar g)) (hL : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 E)), IsPlaceOver (F := E) A v → ∀ (g : ℕ) [Fact g.Prime], ((g : ℕ) : 𝓞 E) ∈ v.asIdeal → ∀ (κ : IsLocalRing.ResidueField A ≃+* Formalism.CyclotomicNorms.Fbar g) (m : ℕ), 0 < m → ¬ g ∣ m → ∀ c : Formalism.CyclotomicNorms.Fbar g, c ^ m = 1 → ∃ μ : Ω, μ ^ m = 1 ∧ redThrough A κ μ = c) (hS : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 E)), IsPlaceOver (F := E) A v → ∀ (g : ℕ) [Fact g.Prime], ((g : ℕ) : 𝓞 E) ∈ v.asIdeal → ((g : ℕ) : 𝓞 E) ∉ v.asIdeal ^ 2 → ∀ (m : ℕ), 0 < m → ¬ g ∣ m → ∀ Y μ : Ω, Y ^ m = ((g : ℕ) : Ω) → μ ^ m = 1 → ∃ σ ∈ Ine (F := E) A, σ Y = μ * Y) (hW : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 E)), IsPlaceOver (F := E) A v → ∀ (g : ℕ) [Fact g.Prime], ((g : ℕ) : 𝓞 E) ∈ v.asIdeal → ∀ τ ∈ Ine (F := E) A, (∀ d, 0 < d → ∃ y : Ω, y ^ (g ^ d - 1) = ((g : ℕ) : Ω) ∧ A.valuation (τ y / y - 1) < 1) → ∀ y : Ω, y ≠ 0 → A.valuation (τ y / y - 1) < 1) : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 E)), IsPlaceOver (F := E) A v → ∀ (g : ℕ) [Fact g.Prime], ((g : ℕ) : 𝓞 E) ∈ v.asIdeal → ((g : ℕ) : 𝓞 E) ∉ v.asIdeal ^ 2 → ∀ ζ : ℕ → Formalism.CyclotomicNorms.Fbar g, IsGenSys ζ → ∃ κ : IsLocalRing.ResidueField A ≃+* Formalism.CyclotomicNorms.Fbar g, ∃ σ ∈ Ine (F := E) A, TameGenAt A σ ∧ TameCoupled A κ σ ζ := by
   intro E Ω _ _ _ _ _ A v hA g _ hg hg2 ζ hζ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsGalois E Ω := {}
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsGalois E Ω := {}
   have hgp : g.Prime := Fact.out
   have hgv : A.valuation ((g : ℕ) : Ω) < 1 := val_g_lt A v hA hg
   have hg0 : ((g : ℕ) : Ω) ≠ 0 := Nat.cast_ne_zero.2 hgp.ne_zero
@@ -462,7 +462,7 @@ theorem GlobalTheory.TameCoupledEx.exists_coupled_of (hK : ∀ (E Ω : Type) [Fi
           redThrough_pow A κ (hmem τ (hNpos _ (hDpos _)) (hr (n + 1))), hx']
       · intro n
         have hN := hNpos _ (hDpos n)
-        haveI : NeZero (g ^ D n - 1) := ⟨hN.ne'⟩
+        have : NeZero (g ^ D n - 1) := ⟨hN.ne'⟩
         have hprim : IsPrimitiveRoot (ζ (D n)) (g ^ D n - 1) := (hζ _ (hDpos n)).1 ▸ IsPrimitiveRoot.orderOf _
         have hc : (redThrough A κ (τ (r n) / r n)) ^ (g ^ D n - 1) = 1 := by
           rw [← redThrough_pow A κ (hmem τ hN (hr n)), tameQuot_pow τ hg0 (hr n), redThrough_one]
@@ -657,9 +657,9 @@ theorem map_zero_eq_zero (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
 theorem exists_coprime_pow_eq_one {x : Formalism.CyclotomicNorms.Fbar g} (hx : x ≠ 0) :
     ∃ m : ℕ, g.Coprime m ∧ x ^ m = 1 := by
   let K := IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))
-  haveI : FiniteDimensional (ZMod g) K :=
+  have : FiniteDimensional (ZMod g) K :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral x)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
+  have : Finite K := Module.finite_of_finite (ZMod g)
   have hxK : (⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩ : K) ≠ 0 := by
     intro h; apply hx; simpa using congrArg Subtype.val h
   let u := Units.mk0 _ hxK
@@ -708,8 +708,8 @@ theorem lift_eq_zero_of_lift_eq_zero (t t' : Formalism.CyclotomicNorms.Fbar g �
     rintro rfl
     exact (Fact.out : g.Prime).ne_one (Nat.coprime_zero_right _ |>.1 hmc)
   have hm : 0 < m := Nat.pos_of_ne_zero hm0
-  haveI : NeZero m := ⟨hm0⟩
-  haveI : NeZero (m : Formalism.CyclotomicNorms.Fbar g) := ⟨by
+  have : NeZero m := ⟨hm0⟩
+  have : NeZero (m : Formalism.CyclotomicNorms.Fbar g) := ⟨by
     rw [Ne, CharP.cast_eq_zero_iff (Formalism.CyclotomicNorms.Fbar g) g]
     exact (Nat.Prime.coprime_iff_not_dvd Fact.out).1 hmc⟩
   obtain ⟨u, hu⟩ := IsAlgClosed.exists_root (cyclotomic m (Formalism.CyclotomicNorms.Fbar g))
@@ -748,7 +748,7 @@ theorem exists_ringEquiv_comp_eq : ∀ (g : ℕ) [Fact g.Prime] (t t' : Formalis
     lift_eq_zero_of_lift_eq_zero t t' ht ht' f hf
   have hker' : RingHom.ker β ≤ RingHom.ker α := fun f hf =>
     lift_eq_zero_of_lift_eq_zero t' t ht' ht f hf
-  haveI : (RingHom.ker α).IsPrime := RingHom.ker_isPrime α
+  have : (RingHom.ker α).IsPrime := RingHom.ker_isPrime α
   let Q := MonoidAlgebra ℤ (Formalism.CyclotomicNorms.Fbar g) ⧸ RingHom.ker α
   let α' : Q →+* ℂ := RingHom.kerLift α
   let β' : Q →+* ℂ := Ideal.Quotient.lift (RingHom.ker α) β hker
@@ -759,10 +759,10 @@ theorem exists_ringEquiv_comp_eq : ∀ (g : ℕ) [Fact g.Prime] (t t' : Formalis
     obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective q
     have : β f = 0 := hq
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hker' this)
-  haveI : Countable (MonoidAlgebra ℤ (Formalism.CyclotomicNorms.Fbar g)) :=
+  have : Countable (MonoidAlgebra ℤ (Formalism.CyclotomicNorms.Fbar g)) :=
     Function.Injective.countable (f := MonoidAlgebra.coeff) (fun a b h => by ext x; rw [h])
-  haveI : Countable Q := Function.Surjective.countable Ideal.Quotient.mk_surjective
-  haveI : Countable (FractionRing Q) :=
+  have : Countable Q := Function.Surjective.countable Ideal.Quotient.mk_surjective
+  have : Countable (FractionRing Q) :=
     Function.Surjective.countable (IsLocalization.mk'_surjective (nonZeroDivisors Q) (S := FractionRing Q))
   let a : FractionRing Q →+* ℂ := IsFractionRing.lift hα'
   let b : FractionRing Q →+* ℂ := IsFractionRing.lift hβ'
@@ -851,7 +851,7 @@ theorem galAlgClosure_exists_pos_pow_apply_eq :
     have h := Polynomial.aeval_algHom_apply ((σ ^ i : Ω ≃ₐ[E] Ω) : Ω →ₐ[E] Ω) t (minpoly E t)
     rw [minpoly.aeval, map_zero] at h
     exact h
-  haveI : Finite ((minpoly E t).rootSet Ω) := ((minpoly E t).rootSet_finite Ω).to_subtype
+  have : Finite ((minpoly E t).rootSet Ω) := ((minpoly E t).rootSet_finite Ω).to_subtype
   obtain ⟨i, j, hij, heq⟩ := Finite.exists_ne_map_eq_of_infinite
     (fun i : ℕ => (⟨(σ ^ i) t, hmem i⟩ : (minpoly E t).rootSet Ω))
   have heq' : (σ ^ i) t = (σ ^ j) t := congrArg Subtype.val heq
@@ -1004,7 +1004,7 @@ theorem exists_roots_fixed_of_mem_Ine (E Ω : Type) [Field E] [NumberField E] [F
     (hf : f.Monic) (hfm : f.natDegree = m) (hb : Polynomial.aeval b f = 0) :
     ∃ ys : Multiset Ω, Multiset.card ys = m ∧ (∀ y ∈ ys, IsIntegral ℤ y ∧ σ y = y) ∧
       e * (b ^ m - 1) = (ys.map (fun y => b - y)).prod := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hm0 : m ≠ 0 := by
     rintro rfl
     simp at hm
@@ -1015,7 +1015,7 @@ theorem exists_roots_fixed_of_mem_Ine (E Ω : Type) [Field E] [NumberField E] [F
       Polynomial.degree_X_pow_sub_C (Nat.pos_of_ne_zero hm0) 1
     have h3 : f.degree = m := by rw [Polynomial.degree_eq_natDegree hf.ne_zero, hfm]
     rw [← h2]
-    exact Polynomial.degree_sub_lt (h2.trans h3.symm) h1.ne_zero
+    exact degree_sub_lt_left (h2.trans h3.symm) h1.ne_zero
       (by rw [h1.leadingCoeff, hf.leadingCoeff])
   let R := integralClosure ℤ Ω
   let e0 : R := ⟨e, he⟩
@@ -1159,7 +1159,7 @@ theorem exists_pow_lt_valuation : ∀ (E Ω : Type) [Field E] [NumberField E] [F
   have hcA : c ∈ A := ReciprocityTheory.Gal.mem_of_isIntegral_int A hc
 
   have hstep2 : ∃ s : ℕ, A.valuation x ^ s ≤ A.valuation (p : Ω) := by
-    haveI : Fact (1 < p) := ⟨by omega⟩
+    have : Fact (1 < p) := ⟨by omega⟩
     let f := minpoly ℤ x
     have hfm : f.Monic := minpoly.monic hx
     let fb := f.map (Int.castRingHom (ZMod p))
@@ -1242,10 +1242,10 @@ theorem exists_pow_lt_valuation : ∀ (E Ω : Type) [Field E] [NumberField E] [F
   obtain ⟨t, ht⟩ := hstep3
   refine ⟨s * (t + 1), ?_⟩
   calc A.valuation x ^ (s * (t + 1)) = (A.valuation x ^ s) ^ (t + 1) := pow_mul _ _ _
-    _ ≤ A.valuation (p : Ω) ^ (t + 1) := pow_le_pow_left₀ zero_le' hs _
+    _ ≤ A.valuation (p : Ω) ^ (t + 1) := pow_le_pow_left₀ zero_le hs _
     _ = A.valuation (p : Ω) ^ t * A.valuation (p : Ω) := pow_succ _ _
     _ < A.valuation (p : Ω) ^ t * 1 :=
-        mul_lt_mul_of_pos_left hvp (zero_lt_iff.mpr (pow_ne_zero _ hvp0))
+        mul_lt_mul_of_pos_left hvp (pos_iff_ne_zero.mpr (pow_ne_zero _ hvp0))
     _ = A.valuation (p : Ω) ^ t := mul_one _
     _ ≤ A.valuation c := ht
 
@@ -1271,10 +1271,10 @@ theorem exists_deep_one_sub :
   intro E Ω _ _ _ _ _ A A' P hA hA' hne c hc hc0
   have hQ : (primeBelow (F := E) A).under (𝓞 E) = P.asIdeal := under_primeBelow hA
   have hQ' : (primeBelow (F := E) A').under (𝓞 E) = P.asIdeal := under_primeBelow hA'
-  haveI : (primeBelow (F := E) A).IsMaximal :=
+  have : (primeBelow (F := E) A).IsMaximal :=
     Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 E) _
       (by change (Ideal.under (𝓞 E) (primeBelow (F := E) A)).IsMaximal; rw [hQ]; exact P.isMaximal)
-  haveI : (primeBelow (F := E) A').IsMaximal :=
+  have : (primeBelow (F := E) A').IsMaximal :=
     Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 E) _
       (by change (Ideal.under (𝓞 E) (primeBelow (F := E) A')).IsMaximal; rw [hQ']; exact P.isMaximal)
   have hQne : primeBelow (F := E) A ≠ primeBelow (F := E) A' := by
@@ -1286,7 +1286,7 @@ theorem exists_deep_one_sub :
     simpa [mem_primeBelow] using this
   have hnle : ¬ primeBelow (F := E) A ≤ primeBelow (F := E) A' := fun h =>
     hQne (Ideal.IsMaximal.eq_of_le inferInstance (Ideal.IsPrime.ne_top inferInstance) h)
-  obtain ⟨x, hxQ, hxQ'⟩ := SetLike.not_le_iff_exists.mp hnle
+  obtain ⟨x, hxQ, hxQ'⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
   rw [mem_primeBelow] at hxQ
   obtain ⟨k, hk⟩ := _root_.GlobalTheory.MaxIdealPow.exists_pow_lt_valuation E Ω A P hA (x : Ω) c (isIntegral_int_of_isIntegral x.2) hc hc0 hxQ
   have hxk : x ^ k ∉ primeBelow (F := E) A' := fun h => hxQ' (Ideal.IsPrime.mem_of_pow_mem inferInstance k h)
@@ -1377,7 +1377,7 @@ theorem eq_of_mem_Ine_of_mem_Ine : ∀ (E Ω : Type) [Field E] [NumberField E] [
     (A.valuation_le_one_iff _).mpr (ReciprocityTheory.Gal.mem_of_isIntegral_int A ((hb.pow m).sub isIntegral_one))
   have h1 : A.valuation (e * (b ^ m - 1)) < A.valuation (σ b - b) ^ m := by
     rw [Valuation.map_mul, ← Valuation.map_pow]
-    calc A.valuation e * A.valuation (b ^ m - 1) ≤ A.valuation e * 1 := mul_le_mul_of_nonneg_left hbm zero_le'
+    calc A.valuation e * A.valuation (b ^ m - 1) ≤ A.valuation e * 1 := mul_le_mul_of_nonneg_left hbm zero_le
       _ = A.valuation e := mul_one _
       _ < _ := heA
   have h2 : A.valuation (σ b - b) ^ m ≤ A.valuation ((ys.map (fun y => b - y)).prod) := by
@@ -1516,7 +1516,7 @@ theorem prod_rootsBar_X_sub_one_pow {g : ℕ} [Fact g.Prime] (t : Formalism.Cycl
 
 theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.GreenCuspidal → GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (hE : IsEmpty D.nd.Loc) (cf : CharFrame D), (∀ j g, ∃ z : ℤ, eExp D j g = z) → GlobalTheory.Mem.Top.TypesTrue D.ntypes cf.P cf.W → ∃ (L : Lay0 D) (hZ : L.ZOk) (hη : L.EtaOk), IsEmpty L.nd.Loc ∧ GlobalTheory.Mem.Top.TypesTrue L.ntypes cf.P cf.W ∧ L.nd.PlG = D.nd.PlG ∧ HEq L.naut.plGw D.naut.plGw ∧ HEq L.ntypes.cenAmb D.ntypes.cenAmb ∧ HEq L.ntypes.cenMt D.ntypes.cenMt ∧ (∃ Gs : GrpSide (setK D L hZ hη), ∀ k, haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩; Gs.ζ k = (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen) ∧ ChiTOk (setK D L hZ hη) (cfK L hZ hη cf) ∧ L.loc = D.loc ∧ HEq (@NData.Om _ _ _ L.nd) (@NData.Om _ _ _ D.nd) ∧ HEq (@NData.instOm _ _ _ L.nd) (@NData.instOm _ _ _ D.nd) ∧ HEq (@NData.algOm _ _ _ L.nd) (@NData.algOm _ _ _ D.nd) ∧ HEq (@NData.plOm _ _ _ L.nd) (@NData.plOm _ _ _ D.nd) := by
   intro hG _ D hE cf _ hT
-  haveI : IsEmpty D.nd.Loc := hE
+  have : IsEmpty D.nd.Loc := hE
 
   have htame : ∀ k (v : D.nd.PlG k), haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
       ∃ κ : IsLocalRing.ResidueField (D.nd.plOm.1 (D.naut.plGw k v)) ≃+* Formalism.CyclotomicNorms.Fbar (D.host.g k),
@@ -1524,8 +1524,8 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
           TameGenAt (D.nd.plOm.1 (D.naut.plGw k v)) σ ∧
             TameCoupled (D.nd.plOm.1 (D.naut.plGw k v)) κ σ (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen := by
     intro k v
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-    haveI := D.nd.acOm
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have := D.nd.acOm
     exact _root_.GlobalTheory.TameCoupledEx.exists_coupled_tame_generator D.host.E D.nd.Om (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v) (D.nd.plOm.2 _)
       (D.host.g k) (D.naut.plGw_over k v)
       (Formalism.MainNotions.Gaps.LevGap.natCast_notMem_sq_of_split _ (D.host.g_prime k) (D.nd.g_split k) _ (D.naut.plGw_over k v))
@@ -1533,7 +1533,7 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
   choose kv tg tg_mem tg_gen tg_coup using htame
 
   let N1 := ndLab D.nd D.nd.lab D.nd.lab_monic
-  haveI : IsEmpty N1.Loc := hE
+  have : IsEmpty N1.Loc := hE
   let A : NAut N1 := GlobalTheory.Mem.GaloisStage.nAut N1 D.naut.plGw D.naut.plGw_over D.naut.plGw_inj D.naut.plGw_nconj
   obtain ⟨C⟩ := GlobalTheory.MemN.nonempty_nbc_of_isEmpty_loc _ _ _ N1 A hE
   have hl1 : ∀ k v (L : A.LP (A.plGw k v)), (A.items₂ k (A.plGw k v) L).natDegree = A.lpDim L →
@@ -1567,7 +1567,7 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
           Formalism.IrreducibleCountingLemmas.TYPES.LabelMapEquivariant O ∧ LabTwLawO O ∧
             ∀ f, D.ntypes.eSer k f = eSerO O D.R.r f := by
       intro k
-      haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+      have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
       obtain ⟨O, hO1, hO2, hO3⟩ := _root_.GlobalTheory.CuspTwist.exists_labelMap_twist_cuspLabel (ZMod (D.host.g k)) _
         (_root_.GlobalTheory.GreenParam.cuspParam_of_green hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
           (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen (isGenSys_gen _))
@@ -1580,8 +1580,8 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
              ζ_gen := fun k => haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩; isGenSys_gen _
              O := O, eSer_def := hOs, kv := kv, tg_tame := tg_coup, O_equiv := hOe, O_tw := hOt }, fun _ => rfl⟩
   · intro k v j u hu hrep
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-    haveI := D.nd.acOm
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have := D.nd.acOm
     have hP := D.nd.plOm.2 (D.naut.plGw k v)
     obtain ⟨a, ha, hua, hga⟩ := _root_.GlobalTheory.tameRep_residue D.host.E D.nd.Om (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v)
       (D.host.g k) hP (GlobalTheory.TameLabels.normV_eq_of_split (D.host.g_prime k) (D.nd.g_split k) (D.naut.plGw_over k v))

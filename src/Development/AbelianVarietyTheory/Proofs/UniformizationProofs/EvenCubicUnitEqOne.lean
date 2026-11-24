@@ -133,11 +133,11 @@ open CubicUnit
 theorem even_cubic_unit_eq_one :
     (GlobalFnsSt → ∀ (S : Scheme.{0}) [ConnectedSpace S] (X : Type) [AddCommGroup X] [Module.Free ℤ X] (G : Over S) [GrpObj G] [IsCommMonObj G] [ConnectedSpace G.left] (_ : TQ G X) (u : Γ(G.left, ⊤)ˣ), (∀ (T : Over S) (U : (T ⟶ G) → Γ(T.left, ⊤)), (∀ x, U x = x.left.appTop.hom u.val) → U 1 = 1 ∧ (∀ x, U x⁻¹ = U x) ∧ ∀ x y v, U (x * y * v) * U x * U y * U v = U (x * y) * U (x * v) * U (y * v)) → u = 1) := by
   intro hG S _ X _ _ G _ _ _ Q u hU
-  haveI := Q.i_hom
-  haveI := Q.q_hom
-  haveI := Q.q_flat
-  haveI := Q.q_surj
-  haveI := Q.q_affine
+  have := Q.i_hom
+  have := Q.q_hom
+  have := Q.q_flat
+  have := Q.q_surj
+  have := Q.q_affine
 
   have hval : ∀ T : Over S, ∀ x : T ⟶ G, (fun x : T ⟶ G => (ev x u).val) x = x.left.appTop.hom u.val :=
     fun T x => ev_val x u

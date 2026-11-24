@@ -119,7 +119,7 @@ private theorem kg_of_inv [IsFractionRing O K] {g : GL (Fin 2) K} (h : Ent O g) 
 private theorem zk_iff {g : GL (Fin 2) K} : g ∈ ZK O K ↔ ∃ s : Kˣ, ∃ k ∈ KG O K, g = sc s * k := by
   constructor
   · intro h
-    haveI : (GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range.Normal := ⟨by
+    have : (GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range.Normal := ⟨by
       rintro _ ⟨s, rfl⟩ g
       exact ⟨s, by rw [← sc_comm s g, mul_inv_cancel_right]⟩⟩
     have h' : g ∈ ((ZK O K : Subgroup _) : Set (GL (Fin 2) K)) := h
@@ -193,7 +193,7 @@ private theorem lat_mul (t : (Etau K τ)ˣ) (g : GL (Fin 2) K) :
     LL O τ (jU (j0 τ) t * g) = ((t : Etau K τ) * ·) '' LL O τ g := by
   have h : ∀ x, x ∈ LL O τ (jU (j0 τ) t * g) ↔ ((t⁻¹ : (Etau K τ)ˣ) : Etau K τ) * x ∈ LL O τ g := by
     intro x
-    simp only [LL, Set.mem_setOf_eq]
+    simp only [LL, Set.mem_ofPred_eq]
     rw [_root_.mul_inv_rev, ← map_inv, Units.val_mul, ← mulVec_mulVec, ← Algebra.leftMulMatrix_mulVec_repr]
     rfl
   ext x
@@ -254,11 +254,11 @@ private theorem isLat_lat [IsDomain O] [IsDiscreteValuationRing O] [IsFractionRi
   have hfg : M.FG := by
     rw [hM]
     exact Submodule.fg_span s.finite_toSet
-  letI : Submodule.IsLattice K M := Submodule.IsLattice.of_fg K hfg
-  haveI : Submodule.IsFullLattice K M := ⟨hsp⟩
+  let : Submodule.IsLattice K M := Submodule.IsLattice.of_fg K hfg
+  have : Submodule.IsFullLattice K M := ⟨hsp⟩
   have hr : Module.finrank O M = 2 := by
     apply Module.finrank_eq_of_rank_eq
-    rw [Submodule.IsLattice.rank' K M, ← Module.finrank_eq_rank, QuadraticAlgebra.finrank_eq_two]
+    rw [Submodule.IsFullLattice.rank_eq K M, ← Module.finrank_eq_rank, QuadraticAlgebra.finrank_eq_two]
   let b := Module.finBasisOfFinrankEq O M hr
   let B := b.extendOfIsLattice K
   refine ⟨⟨(b0 τ).toMatrix B, B.toMatrix (b0 τ), by simp, by simp⟩, ?_⟩
@@ -331,7 +331,7 @@ private theorem val_eq [IsDomain O] [IsDiscreteValuationRing O] {Δ : K} (hL : I
     (u : (Etau K τ)ˣ) (s : Kˣ) (ε : Oˣ) (hu : QuadraticAlgebra.norm (u : Etau K τ) = algebraMap O K ε) (g : GL (Fin 2) K) :
     fZK O χ (g⁻¹ * jU (j0 τ) (su τ s * u) * g) = (((χ s)⁻¹ : ℂˣ) : ℂ) *
       if ∃ S, IsLat O τ S ∧ (∀ y ∈ S, (u : Etau K τ) * y ∈ S) ∧ cls τ (LL O τ g) = cls τ S then 1 else 0 := by
-  haveI := hL.frac
+  have := hL.frac
   obtain ⟨h0, h1⟩ := fzkLaw O K Δ hL χ hχ
   have e : g⁻¹ * jU (j0 τ) (su τ s * u) * g = sc s * (g⁻¹ * (jU (j0 τ) u * g)) := by
     rw [map_mul, jU_su, ← mul_assoc, ← sc_comm]
@@ -375,7 +375,7 @@ theorem UpperTheory.V.Z.Sym.Loc.gLat :
     UpperTheory.V.Z.Sym.Loc.GLat := by
   classical
   intro O K _ _ _ _ _ Δ τ hL hτ j χ hj hχ z s ε hz
-  haveI := hL.frac
+  have := hL.frac
   rw [(gConj O K Δ τ hL hτ j (j0 τ) hj leftMulMatrixEmbedding_omega_trace).2 χ hχ z]
   obtain ⟨u, rfl⟩ : ∃ u, z = su τ s * u := ⟨(su τ s)⁻¹ * z, by simp⟩
   have hx : ((s⁻¹ : Kˣ) : K) • ((su τ s * u : (Etau K τ)ˣ) : Etau K τ) = u := by
@@ -385,8 +385,8 @@ theorem UpperTheory.V.Z.Sym.Loc.gLat :
     exact mul_right_cancel₀ (pow_ne_zero 2 s.ne_zero) hz
   rw [hx]
   unfold gOrb orb vcount
-  letI := mulAct (K := K) τ
-  letI : MulAction (Etau K τ)ˣ (GL (Fin 2) K ⧸ ZK O K) := MulAction.compHom _ (jU (j0 τ))
+  let := mulAct (K := K) τ
+  let : MulAction (Etau K τ)ˣ (GL (Fin 2) K ⧸ ZK O K) := MulAction.compHom _ (jU (j0 τ))
   rw [wcount_mul]
   have hmk : ∀ g : GL (Fin 2) K, cls τ (LL O τ (QuotientGroup.mk g : GL (Fin 2) K ⧸ ZK O K).out) = cls τ (LL O τ g) :=
     fun g => cls_lat.2 (QuotientGroup.eq.1 (QuotientGroup.out_eq' _))
@@ -419,7 +419,7 @@ theorem UpperTheory.V.Z.Sym.Loc.gLat :
   · intro X hX
     have h : ∃ S, IsLat O τ S ∧ (∀ y ∈ S, (u : Etau K τ) * y ∈ S) ∧ X = cls τ S := by
       by_contra h
-      exact hX (by rw [if_neg h, mul_zero])
+      exact hX (by rw [ite_eq_right h, mul_zero])
     obtain ⟨S, hS, -, rfl⟩ := h
     obtain ⟨g, rfl⟩ := isLat_lat hS
     refine ⟨QuotientGroup.mk g, (hmk g).symm, fun y hy => ?_⟩

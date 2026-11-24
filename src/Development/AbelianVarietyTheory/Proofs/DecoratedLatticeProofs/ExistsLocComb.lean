@@ -79,7 +79,7 @@ theorem exists_fold (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (P : GlobalTh
     refine ⟨Finsupp.single 0 1, fun w hw => ?_, fun f => ?_⟩
     · obtain rfl := Finset.mem_singleton.1 (Finsupp.support_single_subset hw)
       exact fun i j => zero_mem _
-    · rw [comb, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul,
+    · rw [comb, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul,
         GlobalTheory.MixPer.heisO_zero]
       rfl
   | cons i l ih =>

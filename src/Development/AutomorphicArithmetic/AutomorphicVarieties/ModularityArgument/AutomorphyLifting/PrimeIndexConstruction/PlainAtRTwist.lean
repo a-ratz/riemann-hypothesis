@@ -177,8 +177,8 @@ theorem good_of_isCuspFormR (a : ℕ) (ψ : AddChar (Ad F) ℂ) (φ : TR.Sm F a)
     have hfun : (fun x => φ.1 (blkU (blkIxHomeo r x) * g)) = fun x => φ.1 (unip x * g) :=
       funext fun x => by rw [← blkU_comp_equiv]; rfl
     rw [hfun] at hper2 ⊢
-    letI : MeasurableSpace (BlockIx a r → Ad F) := borel _
-    haveI : BorelSpace (BlockIx a r → Ad F) := ⟨rfl⟩
+    let : MeasurableSpace (BlockIx a r → Ad F) := borel _
+    have : BorelSpace (BlockIx a r → Ad F) := ⟨rfl⟩
     obtain ⟨μ, 𝓕, hμ, hF, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one _ (ratN F a r) (isCoLat_ratV F (BlockIx a r))
     obtain ⟨-, -, -, hint⟩ := _root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg _ _ (isCoLat_ratV F (BlockIx a r)) μ 𝓕 hμ hF _ hper2
     have hc := h.2 r hr hra' μ 𝓕 hμ hF g
@@ -603,7 +603,7 @@ theorem UpperTheory.V.Z.Win.Birth.prTw :
     classical
     refine ⟨∑ φ : F →+* ℂ, if InfinitePlace.mk φ = v then a φ else 0, TR.expo_eq_of_exp χ v _ fun t => ?_⟩
     rw [chiInf_pos _ fun w => Real.exp_pos _]
-    simp only [TR.expU_val, Complex.ofReal_exp, ← Complex.exp_int_mul]
+    simp only [TR.expU_val, Complex.ofReal_exp, ← Complex.exp_intCast_mul]
     rw [← Complex.exp_sum, Int.cast_sum, Finset.sum_mul]
     refine congrArg _ (Finset.sum_congr rfl fun φ _ => ?_)
     split_ifs with e

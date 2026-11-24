@@ -125,7 +125,7 @@ theorem le_span_fixIn (hΦ : ∀ r x, Φ (r • x) = φ r • Φ x) (hs : ∀ y,
     (hinj : ∀ x, (∀ i, f i x = 0) → x = 0)
     (U : Submodule R M) (hU : ∀ x ∈ U, Φ x ∈ U) : U ≤ Submodule.span R (fixIn Φ U) := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have key : ∀ s : Finset ι, ∀ U : Submodule R M, (∀ x ∈ U, Φ x ∈ U) →
       (∀ x ∈ U, ∀ i ∉ s, f i x = 0) → U ≤ Submodule.span R (fixIn Φ U) := by
     intro s
@@ -275,9 +275,9 @@ theorem mem_of_mem_span_image {E R D M : Type} [CommRing E] [CommRing R] [Algebr
     (N : Submodule E D) (x : D) (hx : j x ∈ Submodule.span R (j '' (N : Set D))) : x ∈ N := by
   classical
   rcases subsingleton_or_nontrivial E with hE | hE
-  · haveI := Module.subsingleton E D
+  · have := Module.subsingleton E D
     rw [Subsingleton.elim x 0]; exact N.zero_mem
-  haveI : Nontrivial R := (FaithfulSMul.algebraMap_injective E R).nontrivial
+  have : Nontrivial R := (FaithfulSMul.algebraMap_injective E R).nontrivial
   let b := Module.Free.chooseBasis E D
   have hsp : ⊤ ≤ Submodule.span R (Set.range fun i => j (b i)) := by
     rw [← hspan, Submodule.span_le]
@@ -444,8 +444,8 @@ theorem exists_subLat [IsDomain O] [IsPrincipalIdealRing O] (T : LocLat G Qp LL 
     (S : Submodule O ↥T.L.T) (hS : ∀ g, ∀ x ∈ S, T.actT g x ∈ S) :
     ∃ (T' : LocLat G Qp LL O) (ι : LatHom T'.L T.L), Function.Injective ι.f ∧
       LinearMap.range (latMap ι) = S := by
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
   let S₁ : Submodule O T.V := S.map T.L.T.subtype
   have hle : S₁ ≤ T.L.T := Submodule.map_subtype_le _ _
   let V' : Submodule LL T.V := Submodule.span LL (S₁ : Set T.V)
@@ -467,11 +467,11 @@ theorem exists_subLat [IsDomain O] [IsPrincipalIdealRing O] (T : LocLat G Qp LL 
       map_smul' := fun _ _ => rfl
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-  letI : TopologicalSpace V' := moduleTopology LL V'
-  haveI : IsModuleTopology LL V' := ⟨rfl⟩
-  haveI : ContinuousAdd V' := IsModuleTopology.toContinuousAdd LL V'
-  haveI : ContinuousSMul LL V' := IsModuleTopology.toContinuousSMul LL V'
-  haveI : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
+  let : TopologicalSpace V' := moduleTopology LL V'
+  have : IsModuleTopology LL V' := ⟨rfl⟩
+  have : ContinuousAdd V' := IsModuleTopology.toContinuousAdd LL V'
+  have : ContinuousSMul LL V' := IsModuleTopology.toContinuousSMul LL V'
+  have : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
   obtain ⟨r, hr⟩ := V'.subtype.exists_leftInverse_of_injective V'.ker_subtype
   have hrc : Continuous r := IsModuleTopology.continuous_of_linearMap r
   let T' : LocLat G Qp LL O :=
@@ -523,15 +523,15 @@ theorem faithfullyFlat_of_tie [IsDomain O] [IsDiscreteValuationRing O] (hp0 : (P
     letI := E.ioE.toRingHom.toAlgebra
     Module.FaithfullyFlat W.EE RW := by
   classical
-  letI := E.ioE.toRingHom.toAlgebra
-  haveI := PD.finK₀
-  haveI : NeZero n := ⟨by rw [W.n_eq]; exact Module.finrank_pos.ne'⟩
-  haveI := W.EE_complete
+  let := E.ioE.toRingHom.toAlgebra
+  have := PD.finK₀
+  have : NeZero n := ⟨by rw [W.n_eq]; exact Module.finrank_pos.ne'⟩
+  have := W.EE_complete
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hϖp : ϖ ∣ (PD.p : O) := by
     rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq]
     exact hp1
-  haveI : Module.Flat W.EE RW := by
+  have : Module.Flat W.EE RW := by
     refine flat_of_letters (fun i : ZMod n => algebraMap (LetA O n) W.EE (letE i)) ?_ ?_
       (algebraMap (LetA O n) W.EE fun _ => PowerSeries.C ϖ)
       (letter_cases hϖ n PD.p hp0 hp1 _ W.EE_π fun x => by simpa using W.EE_dense x 1) ?_
@@ -576,11 +576,11 @@ theorem mem_of_jD_mem_span
     (hff : letI := E.ioE.toRingHom.toAlgebra; Module.FaithfullyFlat W.EE RW)
     (T : LocLat G Qp LL O) (N : Submodule W.EE (W.DD T)) (x : W.DD T)
     (hx : E.jD T x ∈ Submodule.span RW (E.jD T '' (N : Set (W.DD T)))) : x ∈ N := by
-  letI := E.ioE.toRingHom.toAlgebra
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := T.L.free
-  haveI := (W.DD_free T).1
-  haveI := finite_DD E T
+  let := E.ioE.toRingHom.toAlgebra
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := T.L.free
+  have := (W.DD_free T).1
+  have := finite_DD E T
   refine mem_of_mem_span_image (R := RW) (E.jD T).toAddMonoidHom (E.jD_smul T)
     (fun _ => ?_) (E.jD_span T) N x hx
   rw [(W.DD_free T).2, Module.finrank_baseChange]
@@ -611,8 +611,8 @@ theorem exists_sub_of_tie [IsDomain O] [IsPrincipalIdealRing O]
     (hγ : ∀ g, ∀ x ∈ D', W.γD T g x ∈ D') :
     ∃ (T' : LocLat G Qp LL O) (ι : LatHom T'.L T.L), Function.Injective ι.f ∧
       LinearMap.range (W.map ι) = D' := by
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
   set U := Submodule.span RW (E.jD T '' (D' : Set (W.DD T))) with hU
   have hUφ : ∀ x ∈ U, TWmap φR T x ∈ U := map_mem_span φR _ _ (by
     rintro _ ⟨x, hx, rfl⟩
@@ -660,10 +660,10 @@ variable {l : ℕ} [Fact l.Prime]
 theorem ideal_WCb (I : Ideal (WCb l)) : I ≤ Ideal.span {x | x ∈ I ∧ frobW l x = x} := by
   rcases eq_or_ne I ⊥ with rfl | hI
   · exact bot_le
-  haveI : PerfectRing (Cb l) l := by
-    haveI := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).1
+  have : PerfectRing (Cb l) l := by
+    have := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).1
     infer_instance
-  haveI : IsDiscreteValuationRing (WCb l) := WittVector.isDiscreteValuationRing (k := Cb l)
+  have : IsDiscreteValuationRing (WCb l) := WittVector.isDiscreteValuationRing (k := Cb l)
   obtain ⟨k, hk⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hI
     (WittVector.irreducible l (k := Cb l))
   refine hk.le.trans (Ideal.span_mono ?_)
@@ -678,7 +678,7 @@ theorem ideal_RW (LL : FinExt l) (I : Ideal (RW LL)) (hI : ∀ x ∈ I, φRW LL 
 
 theorem torsionFree_RW (LL : FinExt l) (x : RW LL) (hx : (l : RW LL) * x = 0) : x = 0 := by
   classical
-  haveI := free_OL LL
+  have := free_OL LL
   let e := TensorProduct.equivFinsuppOfBasisLeft (N := WCb l)
     (Module.Free.chooseBasis ℤ_[l] ↥(OL LL))
   apply e.injective
@@ -712,11 +712,11 @@ theorem exists_sublattice : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : 
 private theorem flat_of_inj {R A : Type} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
     [CommRing A] [IsDomain A] [Algebra R A] (h : Function.Injective (algebraMap R A)) :
     Module.Flat R A := by
-  haveI : FaithfulSMul R A := (faithfulSMul_iff_algebraMap_injective _ _).2 h
+  have : FaithfulSMul R A := (faithfulSMul_iff_algebraMap_injective _ _).2 h
   infer_instance
 
 theorem flat_RW {l : ℕ} [Fact l.Prime] (LL : FinExt l) : Module.Flat ↥(OL LL) (RW LL) := by
-  haveI : Module.Flat ℤ_[l] (WCb l) :=
+  have : Module.Flat ℤ_[l] (WCb l) :=
     flat_of_inj (GlobalTheory.WittTensorFixed.algebraMap_WCb_injective l)
   exact Module.Flat.baseChange ℤ_[l] ↥(OL LL) (WCb l)
 
@@ -810,8 +810,8 @@ theorem exists_lattice_of_pow_mem : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.
   obtain ⟨T', ι, hι, hr⟩ := exists_sublattice (D.locA l) (HW l) (F l) K 1 LL hA.2.2 T D' hφ hγ
   obtain ⟨a, ha⟩ := hpow
   refine ⟨T', ι, ⟨hι, ?_⟩, hr⟩
-  haveI := flat_RW LL
-  haveI : CharZero ↥LL.1 := charZero_of_injective_algebraMap (algebraMap ℚ_[l] ↥LL.1).injective
+  have := flat_RW LL
+  have : CharZero ↥LL.1 := charZero_of_injective_algebraMap (algebraMap ℚ_[l] ↥LL.1).injective
   have hp : (((D.loc l).PD K).p : ℕ) = l := (D.loc l).PD_p K
   refine surjective_of_tie ((F l).E K 1 LL hA.2.2).tie (flat_RW LL)
     (fun b hb => ((GlobalTheory.WittTensorFixed.main l K LL T').2.1 b).1 hb)

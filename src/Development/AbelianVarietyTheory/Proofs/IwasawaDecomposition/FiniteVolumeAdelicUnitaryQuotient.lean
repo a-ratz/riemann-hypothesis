@@ -194,7 +194,7 @@ theorem exists_equiv [TopologicalSpace S] (he : ∀ x i, e x i = θ i x) (hc : C
     refine continuous_pi fun a => continuous_pi fun b => ?_
     refine hc'.comp (continuous_pi fun i => ?_)
     have : Continuous fun g : H => (g.1 i).1 :=
-      Units.continuous_val.comp ((continuous_apply i).comp continuous_subtype_val)
+      Units.continuous_val.comp ((continuous_apply i).comp continuous_subtypeVal)
     exact this.matrix_elem a b
   let bw : H → Formalism.UG.UJ s J := fun g =>
     ⟨⟨L g, L g⁻¹, by rw [hLmul, mul_inv_cancel, hL1], by rw [hLmul, inv_mul_cancel, hL1]⟩, hLu g⟩
@@ -210,8 +210,8 @@ theorem exists_equiv [TopologicalSpace S] (he : ∀ x i, e x i = θ i x) (hc : C
   · exact Subtype.ext (funext fun i => Units.ext (hL g i))
   · exact Subtype.ext (funext fun i => map_mul (Formalism.UG.bc (θ i)) h.1 h'.1)
   · refine Continuous.subtype_mk (continuous_pi fun i => Units.continuous_iff.2 ⟨?_, ?_⟩) _
-    · exact (Units.continuous_val.comp continuous_subtype_val).matrix_map (hθ i)
-    · exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_map (hθ i)
+    · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_map (hθ i)
+    · exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_map (hθ i)
   · exact Continuous.subtype_mk (Units.continuous_iff.2 ⟨hLc, hLc.comp continuous_inv⟩) _
 
 end General
@@ -234,10 +234,10 @@ theorem isCMFam_val {E : Type} [Field E] (Ψ : Finset (E →+* ℂ))
 
 theorem finite_covolume_real_points : (∀ (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (r : ℕ) (G : Matrix (Fin r) (Fin r) E) (Λ : Submodule (𝓞 E) (Fin r → E)), (∀ a b, ReciprocityTheory.ChartRestriction.G.FD.cc (G a b) = G b a) → G.det ≠ 0 → Λ.FG → Submodule.span E (Λ : Set (Fin r → E)) = ⊤ → ∃ Ψ : Finset (E →+* ℂ), (∀ τ : E →+* ℂ, τ ∈ Ψ ↔ NumberField.ComplexEmbedding.conjugate τ ∉ Ψ) ∧ ∀ (H : Subgroup (Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ ∀ τ : Ψ, ∀ u w : Fin r → ℂ, ReciprocityTheory.ChartRestriction.G.FD.hermC τ.1 G (Matrix.mulVec (g τ : Matrix (Fin r) (Fin r) ℂ) u) (Matrix.mulVec (g τ : Matrix (Fin r) (Fin r) ℂ) w) = ReciprocityTheory.ChartRestriction.G.FD.hermC τ.1 G u w) → ∀ [MeasurableSpace H] [BorelSpace H] (ν : MeasureTheory.Measure H) [ν.IsHaarMeasure], ∃ Ω : Set H, MeasurableSet Ω ∧ ν Ω < ⊤ ∧ ∀ g : H, ∃ γ : GL (Fin r) E, ReciprocityTheory.ChartRestriction.G.FD.IsUStab G Λ γ ∧ ∃ w ∈ Ω, ∀ τ : Ψ, (((g : Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) = (γ : Matrix (Fin r) (Fin r) E).map τ.1 * (((w : Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ)) → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (L : Submodule (𝓞 E) (Fin M → E)), L.FG → Submodule.span E (L : Set (Fin M → E)) = ⊤ → ∀ ν : Measure (HA (Ainf F) σ J), ν.IsHaarMeasure → ∃ Ω : Set (HA (Ainf F) σ J), MeasurableSet Ω ∧ ν Ω < ⊤ ∧ ∀ g : HA (Ainf F) σ J, ∃ γ ∈ Formalism.UG.UJ (σ : E →+* E) J, (∀ x, x ∈ L ↔ (γ : Matrix (Fin M) (Fin M) E).mulVec x ∈ L) ∧ ∃ w ∈ Ω, HA.mat (Ainf F) σ J g = Formalism.UG.bc (inclR (F := F) (Ainf F)) γ * HA.mat (Ainf F) σ J w := by
   intro hyp F E _ _ _ _ _ σ hcm M J hJ L hL hsp ν hν
-  haveI := hcm.1
-  haveI := hcm.2.1
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have := hcm.1
+  have := hcm.2.1
+  have : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
+  have : IsCMField E := IsCMField.ofCMExtension F E
   have hcc : ∀ x : E, ReciprocityTheory.ChartRestriction.G.FD.cc x = σ x := fun x => by
     obtain ⟨φ⟩ : Nonempty (E →+* ℂ) := inferInstance
     apply φ.injective
@@ -261,10 +261,10 @@ theorem finite_covolume_real_points : (∀ (E : Type) [Field E] [NumberField E] 
       fun g => by
         simp only [H, Subgroup.mem_pi, Set.mem_univ, forall_const, JR, hincl]
   borelize ↥H
-  haveI : BorelSpace (HA (Ainf F) σ J) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (HA (Ainf F) σ J) :=
-    f.toHomeomorph.isInducing.topologicalGroup f
-  haveI : (ν.map f).IsHaarMeasure := f.isHaarMeasure_map ν
+  have : BorelSpace (HA (Ainf F) σ J) := ⟨rfl⟩
+  have : IsTopologicalGroup (HA (Ainf F) σ J) :=
+    f.toHomeomorph.isInducing.isTopologicalGroup f
+  have : (ν.map f).IsHaarMeasure := f.isHaarMeasure_map ν
   obtain ⟨Ω, hΩm, hΩf, hΩ⟩ := hcov H (fun g => by
     simp only [H, Subgroup.mem_pi, Set.mem_univ, forall_const]
     exact forall_congr' fun τ => (isometry_iff (starRingEnd ℂ) (J.map τ.1) (g τ).1).symm) (ν.map f)
@@ -461,7 +461,7 @@ theorem measure_lt_top_of_cover {G A B : Type} [Group G] [TopologicalSpace G] [I
     exact ⟨γ, Set.mem_biUnion hs h⟩
   refine hle.trans_lt ((measure_biUnion_finset_le _ _).trans_lt (ENNReal.sum_lt_top.2 fun s _ => ?_))
   refine (Measure.le_map_apply (map_continuous e).measurable.aemeasurable _).trans_lt ?_
-  rw [h2, Measure.smul_apply, Measure.prod_prod]
+  rw [h2, smul_apply, Measure.prod_prod]
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top (ENNReal.mul_lt_top (hΩ s) (hK.smul s).measure_lt_top)
 
 section Rat
@@ -488,14 +488,14 @@ noncomputable def ratPt (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] 
 theorem topGroup_HA [FiniteDimensional F E] (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R]
     [IsTopologicalRing R] (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) :
     IsTopologicalGroup (HA R σ J) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   exact inferInstanceAs (IsTopologicalGroup (HR R σ J))
 
 theorem countable_HFinIn [Countable E] (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] E) {M : ℕ}
     (J : Matrix (Fin M) (Fin M) E) : Countable (HFinIn R σ J) := by
-  haveI : Countable (Matrix (Fin M) (Fin M) E) := inferInstanceAs (Countable (Fin M → Fin M → E))
-  haveI : Countable (GL (Fin M) E) := Units.val_injective.countable
+  have : Countable (Matrix (Fin M) (Fin M) E) := inferInstanceAs (Countable (Fin M → Fin M → E))
+  have : Countable (GL (Fin M) E) := Units.val_injective.countable
   refine Function.Surjective.countable
     (f := fun γ : Formalism.UG.UJ (σ : E →+* E) J => (⟨ratPt R σ J γ, γ.1, γ.2, rfl⟩ : HFinIn R σ J)) ?_
   rintro ⟨g, γ, hγ, h⟩
@@ -549,22 +549,22 @@ end Rat
 theorem finVol : FiniteVolume₂ := by
   intro F E _ _ _ _ _ σ hCM M J hJ μ hμ 𝓕 h𝓕
   classical
-  haveI := topGroup_HA (AF F) σ J
-  haveI := topGroup_HA (Ainf F) σ J
-  haveI := topGroup_HA (Af F) σ J
-  haveI : BorelSpace (HA (AF F) σ J) := ⟨rfl⟩
-  haveI : BorelSpace (HA (Ainf F) σ J) := ⟨rfl⟩
-  haveI : BorelSpace (HA (Af F) σ J) := ⟨rfl⟩
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_infiniteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field F
+  have := topGroup_HA (AF F) σ J
+  have := topGroup_HA (Ainf F) σ J
+  have := topGroup_HA (Af F) σ J
+  have : BorelSpace (HA (AF F) σ J) := ⟨rfl⟩
+  have : BorelSpace (HA (Ainf F) σ J) := ⟨rfl⟩
+  have : BorelSpace (HA (Af F) σ J) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_infiniteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field F
   obtain ⟨_, _, -⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_HA (Ainf F) σ M J
   obtain ⟨_, _, -⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_HA (Af F) σ M J
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
   let Γ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J
-  haveI : Countable Γ := countable_HFinIn (AF F) σ J
+  have : Countable Γ := countable_HFinIn (AF F) σ J
   obtain ⟨e, he⟩ := GlobalTheory.Mem.VolSplit.exists_adelic_split F E σ M J
   have herat : ∀ γ, e (ratPt (AF F) σ J γ) = (ratPt (Ainf F) σ J γ, ratPt (Af F) σ J γ) := by
     intro γ

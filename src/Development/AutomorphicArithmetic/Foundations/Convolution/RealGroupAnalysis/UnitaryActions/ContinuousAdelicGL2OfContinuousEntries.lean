@@ -141,7 +141,7 @@ theorem cD_sq (t : (A F)ˣ) (g : G1 F) : cD (t ^ 2) g = (mD t)⁻¹ * g * mD t :
   rw [gl_cD, h, gl_mul, gl_mul, gl_inv, mul_assoc (gl (mD t))⁻¹, scalar_comm]; group
 
 theorem continuous_entry (i j : Fin 2) : Continuous fun g : G1 F => g i j :=
-  (continuous_apply j).comp ((continuous_apply i).comp continuous_subtype_val)
+  (continuous_apply j).comp ((continuous_apply i).comp continuous_subtypeVal)
 theorem continuous_adelicSL2_of_continuous_entries {X : Type*} [TopologicalSpace X] {f : X → G1 F} (h : ∀ i j, Continuous fun x => f x i j) : Continuous f :=
   continuous_induced_rng.2 (continuous_matrix h)
 theorem continuous_adelicGL2_of_continuous_entries {X : Type*} [TopologicalSpace X] {f : X → GL (Fin 2) (A F)} (h : ∀ i j, Continuous fun x => (f x).val i j)
@@ -182,7 +182,7 @@ theorem ab_pow (a : (A F)ˣ) (n : ℕ) : ab (a ^ n) = ab a ^ n := by
   | succ n ih => rw [pow_succ, pow_succ, ab_mul, ih]
 theorem ab_diagonal (c : Fˣ) : ab (IdeleGroup.diagonal F c) = 1 := congrArg Subtype.val (IdeleGroup.ideleModule_diagonal c)
 theorem coe_diagonal (c : Fˣ) : ((IdeleGroup.diagonal F c : (A F)ˣ) : A F) = rt (c : F) := rfl
-theorem continuous_ab : Continuous (ab (F := F)) := continuous_subtype_val.comp IdeleGroup.continuous_ideleModule
+theorem continuous_ab : Continuous (ab (F := F)) := continuous_subtypeVal.comp IdeleGroup.continuous_ideleModule
 
 @[simp] theorem ψ_zero : ψ (0 : A F) = 1 := by simp [ψ]
 theorem ψ_add (x y : A F) : ψ (x + y) = ψ x * ψ y := by simp [ψ, AddChar.map_add_eq_mul]
@@ -190,7 +190,7 @@ theorem ψ_add (x y : A F) : ψ (x + y) = ψ x * ψ y := by simp [ψ, AddChar.ma
 theorem ψ_ne_zero (x : A F) : ψ x ≠ 0 := Circle.coe_ne_zero _
 theorem ψ_neg (x : A F) : ψ (-x) = (ψ x)⁻¹ := eq_inv_of_mul_eq_one_left (by rw [← ψ_add]; simp)
 @[simp] theorem ψ_rt (c : F) : ψ (rt c) = 1 := by simp [ψ, adelicChar_algebraMap]
-theorem continuous_ψ : Continuous (ψ (F := F)) := continuous_subtype_val.comp continuous_adelicChar
+theorem continuous_ψ : Continuous (ψ (F := F)) := continuous_subtypeVal.comp continuous_adelicChar
 
 theorem ratS_apply (γ : Matrix.SpecialLinearGroup (Fin 2) F) (i j : Fin 2) : ratS F γ i j = rt (γ i j) := rfl
 theorem ratGL_apply (n : ℕ) (γ : GL (Fin n) F) (i j : Fin n) : (ratGL F n γ).val i j = rt (γ.val i j) := rfl
@@ -208,7 +208,7 @@ theorem mem_Gam_iff (g : G1 F) : g ∈ Gam F ↔ ∀ i j, ∃ c : F, g i j = rt 
   refine ⟨by rintro ⟨γ, rfl⟩ i j; exact ⟨γ i j, rfl⟩, fun h => ?_⟩
   choose c hc using h
   refine ⟨⟨Matrix.of c, ?_⟩, by ext i j; exact (hc i j).symm⟩
-  haveI := AdeleBaseChange.nontrivial_adeleRing F
+  have := AdeleBaseChange.nontrivial_adeleRing F
   apply (algebraMap F (A F)).injective
   have := specialLinear_det_entries g
   simp only [hc] at this

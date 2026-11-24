@@ -72,7 +72,7 @@ theorem mem_integer_of_mem_chartRingZ {F : Type} [Field F] [NumberField F] (v : 
     rw [Valuation.mem_integer_iff, map_div₀]
     rcases eq_or_ne (v.valuation F (z ⟨p.1, c p.1⟩)) 0 with h0 | h0
     · simp [h0]
-    · exact (div_le_one₀ (zero_lt_iff.mpr h0)).mpr (hc p)
+    · exact (div_le_one₀ (pos_iff_ne_zero.mpr h0)).mpr (hc p)
   | algebraMap r => rw [eq_intCast]; exact intCast_mem _ r
   | add x w _ _ hx hw => exact add_mem hx hw
   | mul x w _ _ hx hw => exact mul_mem hx hw

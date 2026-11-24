@@ -88,7 +88,7 @@ namespace GlobalTheory.CompanionTheory.MPDict.DimClosure
 private theorem exists_ringKrullDim_le_add_of_finiteType {R A : Type*} [CommRing R] [CommRing A]
     [IsNoetherianRing R] (f : R →+* A) (hf : f.FiniteType) :
     ∃ N : ℕ, ringKrullDim A ≤ ringKrullDim R + N := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨k, g, hg⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp hf
   refine ⟨k, ?_⟩
   calc ringKrullDim A ≤ ringKrullDim (MvPolynomial (Fin k) R) :=
@@ -98,21 +98,21 @@ private theorem exists_ringKrullDim_le_add_of_finiteType {R A : Type*} [CommRing
 
 private theorem exists_open_nhd_topologicalKrullDim_MP_le {m : ℕ} {n : Fin (m + 1) → ℕ} (y : MP ℤ m n) :
     ∃ U : (MP ℤ m n).Opens, y ∈ U ∧ ∃ N : ℕ, topologicalKrullDim (U : Set (MP ℤ m n)) ≤ N := by
-  haveI : AlgebraicGeometry.IsProper (mpStr ℤ m n) := isProper_mpStr ℤ m n
+  have : AlgebraicGeometry.IsProper (mpStr ℤ m n) := isProper_mpStr ℤ m n
   obtain ⟨U, hU, hyU, -⟩ :=
     AlgebraicGeometry.exists_isAffineOpen_mem_and_subset (U := (⊤ : (MP ℤ m n).Opens)) (x := y) (by simp)
   refine ⟨U, hyU, ?_⟩
   have hZ := AlgebraicGeometry.isAffineOpen_top (Spec (CommRingCat.of ℤ))
   have hft := AlgebraicGeometry.Scheme.Hom.finiteType_appLE (mpStr ℤ m n) hZ hU
     (by simp)
-  haveI : IsNoetherianRing ((Spec (CommRingCat.of ℤ)).presheaf.obj (Opposite.op ⊤)) :=
+  have : IsNoetherianRing ((Spec (CommRingCat.of ℤ)).presheaf.obj (Opposite.op ⊤)) :=
     isNoetherianRing_of_ringEquiv ℤ (Scheme.ΓSpecIso (CommRingCat.of ℤ)).symm.commRingCatIsoToRingEquiv
   obtain ⟨N, hN⟩ := exists_ringKrullDim_le_add_of_finiteType _ hft
   have hZdim : ringKrullDim ((Spec (CommRingCat.of ℤ)).presheaf.obj (Opposite.op ⊤)) ≤ 1 := by
     rw [ringKrullDim_eq_of_ringEquiv (Scheme.ΓSpecIso (CommRingCat.of ℤ)).commRingCatIsoToRingEquiv]
     have h1 := Ring.krullDimLE_iff.mp (IsPrincipalIdealRing.krullDimLE_one ℤ)
     exact_mod_cast h1
-  haveI := hU.isOpenImmersion_fromSpec
+  have := hU.isOpenImmersion_fromSpec
   have htop : topologicalKrullDim (U : Set (MP ℤ m n)) =
       ringKrullDim ((MP ℤ m n).presheaf.obj (Opposite.op U)) := by
     rw [GlobalTheory.topologicalKrullDim_eq_of_isEmbedding hU.fromSpec.isOpenEmbedding.isEmbedding hU.range_fromSpec]
@@ -126,8 +126,8 @@ private theorem exists_open_nhd_topologicalKrullDim_MP_le {m : ℕ} {n : Fin (m 
 
 private theorem exists_topologicalKrullDim_MP_le {m : ℕ} {n : Fin (m + 1) → ℕ} :
     ∃ d : ℕ, topologicalKrullDim (MP ℤ m n) ≤ d := by
-  haveI : AlgebraicGeometry.IsProper (mpStr ℤ m n) := isProper_mpStr ℤ m n
-  haveI : CompactSpace (MP ℤ m n) :=
+  have : AlgebraicGeometry.IsProper (mpStr ℤ m n) := isProper_mpStr ℤ m n
+  have : CompactSpace (MP ℤ m n) :=
     AlgebraicGeometry.QuasiCompact.compactSpace_of_compactSpace (mpStr ℤ m n)
   choose U hyU N hN using fun y : MP ℤ m n => exists_open_nhd_topologicalKrullDim_MP_le y
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover (fun y => (U y : Set (MP ℤ m n)))
@@ -143,7 +143,7 @@ theorem exists_dim_closure_eq {m : ℕ} {n : Fin (m + 1) → ℕ} (x : MP ℤ m 
   have hle : topologicalKrullDim (closure ({x} : Set (MP ℤ m n))) ≤ d :=
     (topologicalKrullDim_subspace_le _ _).trans hd
   have hnn : 0 ≤ topologicalKrullDim (closure ({x} : Set (MP ℤ m n))) := by
-    haveI : Nonempty (IrreducibleCloseds (closure ({x} : Set (MP ℤ m n)))) :=
+    have : Nonempty (IrreducibleCloseds (closure ({x} : Set (MP ℤ m n)))) :=
       ⟨⟨closure {(⟨x, subset_closure (Set.mem_singleton x)⟩ : closure ({x} : Set (MP ℤ m n)))},
         isIrreducible_singleton.closure, isClosed_closure⟩⟩
     unfold topologicalKrullDim
@@ -277,12 +277,12 @@ theorem charZero_residueField_iff {Z : Scheme.{0}} [IsIntegral Z] (j : Z ⟶ MP 
     CharZero ((MP ℤ m n).residueField (j (genericPoint Z))) ↔ CharZero Γ(Z, ⊤) := by
   constructor
   · intro h
-    haveI : CharZero (Z.residueField (genericPoint Z)) :=
+    have : CharZero (Z.residueField (genericPoint Z)) :=
       charZero_of_injective_ringHom (f := (Scheme.Hom.residueFieldMap j (genericPoint Z)).hom)
         (RingHom.injective _)
     exact RingHom.charZero (Z.evaluation ⊤ (genericPoint Z) (Opens.mem_top _)).hom
   · intro h
-    haveI : CharZero (Z.residueField (genericPoint Z)) :=
+    have : CharZero (Z.residueField (genericPoint Z)) :=
       charZero_of_injective_ringHom (evaluation_generic_injective Z)
     exact RingHom.charZero (Scheme.Hom.residueFieldMap j (genericPoint Z)).hom
 
@@ -318,7 +318,7 @@ open GlobalTheory.CompanionTheory.MixZ.PtDictProof in
 theorem ptDict : PtDict := by
   intro m n Z _ j _ d hd
   have hP := isMultiProjPrime_ptIdeal m n (j (genericPoint Z))
-  haveI : (ptIdeal (j (genericPoint Z))).IsPrime := hP.1
+  have : (ptIdeal (j (genericPoint Z))).IsPrime := hP.1
   have hH : IsHorizontal (ptIdeal (j (genericPoint Z))) ↔ CharZero Γ(Z, ⊤) :=
     (ptIdeal_isHorizontal_iff m n _).trans (charZero_residueField_iff j)
   refine ⟨hP, hH, fun h => ?_, fun h => ⟨charOf_prime h, charOf_cast_eq_zero j⟩⟩

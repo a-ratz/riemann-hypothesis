@@ -259,7 +259,7 @@ theorem ofReal_norm_sq {E : Type} [NormedAddCommGroup E] (v : E) :
     ENNReal.ofReal (‖v‖ ^ 2) = (‖v‖₊ : ℝ≥0∞) ^ 2 := by
   rw [ENNReal.ofReal_pow (norm_nonneg v)]
   congr 1
-  rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm]
+  rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm]
 
 instance countable_O (L : Type) [Field L] [NumberField L] : Countable (𝓞 L) :=
   (RingOfIntegers.basis L).equivFun.toEquiv.injective.countable
@@ -291,7 +291,7 @@ private theorem integral_abs_intS_actL_le_mul_sqrt_integral (hS : SimpBd) (hU : 
   have hKP : Kset (fun j => actL (h j)) B ⊆ Pos L N := kset_sub h hBP
   have hKc : IsCompact (Kset (fun j => actL (h j)) B) := isCompact_kset _ hB
   obtain ⟨C₂, K', hC₂, hK'c, hC₂b⟩ := hU L N (k + 1) hN d μ _ hKc hKP
-  haveI := d.haar
+  have := d.haar
   obtain ⟨M, hM⟩ := hO (Sp L N) (latS L N) d.μ d.D d.fund (hDi L N) K' hK'c
   refine ⟨max C₁ 0 * C₂.toReal * M * ((d.μ d.D) ^ (1 / 2 : ℝ)).toReal, ?_⟩
   intro ω hωc hΓ hsc hint
@@ -301,7 +301,7 @@ private theorem integral_abs_intS_actL_le_mul_sqrt_integral (hS : SimpBd) (hU : 
   simp only [actEq_apply] at hbd
   have hfc : Continuous fun x : Sp L N => fr ω (ofS L N x) := (cont_fr ω hωc).comp cont_ofS
   set f : Sp L N → ℝ≥0∞ := fun x => (‖fr ω (ofS L N x)‖₊ : ℝ≥0∞) with hf
-  have hfm : Measurable f := (ENNReal.continuous_coe.comp hfc.nnnorm).measurable
+  have hfm : Measurable f := (ENNReal.continuous_coe.comp hfc.nnNorm).measurable
   have hfinv : ∀ γ ∈ latS L N, ∀ x : Sp L N, f (γ * x) = f x := by
     intro γ hγ x
     obtain ⟨A, hA⟩ := ofS_lat hγ
@@ -351,7 +351,7 @@ theorem sLoc_of_parts (hA : AvgS) (hS : SimpBd) (hU : Unfold) (hDi : Discr) (hO 
   set μ : Measure (HS L N) := Measure.addHaar with hμ
   have hμB0 : μ B ≠ 0 := (Metric.measure_closedBall_pos μ _ hr).ne'
   have hμBt : μ B ≠ ⊤ := hB.measure_lt_top.ne
-  haveI hP : IsProbabilityMeasure (nrm μ B) :=
+  have hP : IsProbabilityMeasure (nrm μ B) :=
     ⟨by simp [nrm, ENNReal.inv_mul_cancel hμB0 hμBt]⟩
   have h1B : ((one L N : HS L N)) ∈ B := Metric.mem_closedBall_self hr.le
   let e : HS L N → ↑(Pos L N) := fun x => if hx : x ∈ Pos L N then ⟨x, hx⟩ else one L N
@@ -390,7 +390,7 @@ theorem sLoc_of_parts (hA : AvgS) (hS : SimpBd) (hU : Unfold) (hDi : Discr) (hO 
     rw [actEq_apply]
     show _ = actL (h j) ((if b j = true then e (x j) else one L N : ↑(Pos L N)) : HS L N)
     by_cases hb : b j = true
-    · simp only [hb, if_true, hcoe _ (hrP (hx j))]
+    · simp only [hb, ite_true, hcoe _ (hrP (hx j))]
     · simp only [hb]
       rfl
   have hev := hA (Gm L N) (Gp L N) ↑(Pos L N) (HS L N) (emb L N) k (intP ω) (nrm μ B) e
@@ -730,7 +730,7 @@ lemma mem_KS {q : ℕ} (A : Fin (q + 1) → V →L[ℝ] V) (B : Set V) {t : Fin 
 lemma isCompact_KS {q : ℕ} (A : Fin (q + 1) → V →L[ℝ] V) {B : Set V} (hB : IsCompact B) :
     IsCompact (KS A B) := by
   have hSc : IsClosed {τ : Fin (q + 1) → ℝ | (∀ j, 0 ≤ τ j) ∧ ∑ j, τ j = 1} := by
-    simp only [Set.setOf_and, Set.setOf_forall]
+    simp only [ofPred_and, ofPred_forall]
     exact (isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)).inter
       (isClosed_eq (by fun_prop) continuous_const)
   have hS : IsCompact {τ : Fin (q + 1) → ℝ | (∀ j, 0 ≤ τ j) ∧ ∑ j, τ j = 1} := by
@@ -753,11 +753,11 @@ lemma isCompact_KS {q : ℕ} (A : Fin (q + 1) → V →L[ℝ] V) {B : Set V} (hB
 
 lemma isClosed_Sx (q : ℕ) : IsClosed (Sx q) := by
   have h1 : IsClosed {t : Fin q → ℝ | ∀ j, 0 ≤ t j} := by
-    simp only [Set.setOf_forall]
+    simp only [ofPred_forall]
     exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
   have h2 : IsClosed {t : Fin q → ℝ | ∑ j, t j ≤ 1} :=
     isClosed_le (by fun_prop) continuous_const
-  simp only [Sx, Set.setOf_and]
+  simp only [Sx, ofPred_and]
   exact h1.inter h2
 
 lemma isCompact_Sx (q : ℕ) : IsCompact (Sx q) := by
@@ -784,11 +784,11 @@ def iS {q : ℕ} (ω : V → V [⋀^Fin q]→L[ℝ] ℝ) (y : Fin (q + 1) → V)
   ∫ t in Sx q, ω (y 0 + ∑ j, t j • (y j.succ - y 0)) fun j => y j.succ - y 0
 
 lemma nm_prob (μ : Measure V) (B : Set V) (h0 : μ B ≠ 0) (ht : μ B ≠ ⊤) : IsProbabilityMeasure (nm μ B) :=
-  ⟨by simp [nm, Measure.smul_apply, ENNReal.inv_mul_cancel h0 ht]⟩
+  ⟨by simp [nm, smul_apply, ENNReal.inv_mul_cancel h0 ht]⟩
 
 lemma nm_fin (μ : Measure V) (B : Set V) (ht : μ B ≠ ⊤) : IsFiniteMeasure (nm μ B) := by
   constructor
-  simp only [nm, Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
+  simp only [nm, smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
   by_cases h0 : μ B = 0
   · simp [h0]
   · rw [ENNReal.inv_mul_cancel h0 ht]
@@ -796,7 +796,7 @@ lemma nm_fin (μ : Measure V) (B : Set V) (ht : μ B ≠ ⊤) : IsFiniteMeasure 
 
 lemma ae_mem_pi (μ : Measure V) {B : Set V} (hB : MeasurableSet B) (hBt : μ B ≠ ⊤) (q : ℕ) :
     ∀ᵐ y ∂(Measure.pi fun _ : Fin (q + 1) => nm μ B), y ∈ Set.univ.pi fun _ => B := by
-  haveI := nm_fin μ B hBt
+  have := nm_fin μ B hBt
   have h : ∀ᵐ x ∂(nm μ B), x ∈ B := Measure.ae_smul_measure (ae_restrict_mem hB) _
   simp only [Set.mem_univ_pi]
   exact ae_all_iff.2 fun i => Measure.tendsto_eval_ae_ae.eventually h
@@ -849,7 +849,7 @@ lemma integ_iS {q : ℕ} (μ : Measure V) [IsFiniteMeasureOnCompacts μ] (A : Fi
     (hwB : ∀ y ∈ Set.univ.pi (fun _ : Fin (q + 1) => B), w y ∈ Set.univ.pi fun _ => B) :
     Integrable (fun y => iS ω fun j => A j (w y j)) (Measure.pi fun _ : Fin (q + 1) => nm μ B) := by
   have hBt : μ B ≠ ⊤ := hB.measure_lt_top.ne
-  haveI := nm_fin μ B hBt
+  have := nm_fin μ B hBt
   obtain ⟨hc, M, hM⟩ := cont_iS A hB ω hω
   have hs : MeasurableSet (Set.univ.pi fun _ : Fin (q + 1) => B) :=
     MeasurableSet.univ_pi fun _ => hB.isClosed.measurableSet
@@ -872,7 +872,7 @@ lemma coord_step {q : ℕ} (μ : Measure V) [μ.IsAddHaarMeasure] (A : Fin (q + 
     ∫⁻ y, G (∑ j, τ j • A j (y j)) ∂(Measure.pi fun _ : Fin (q + 1) => nm μ B) ≤
       (μ B)⁻¹ * ENNReal.ofReal (((q : ℝ) + 1) ^ Module.finrank ℝ V *
         |(LinearMap.det ((A i : V →L[ℝ] V) : V →ₗ[ℝ] V))⁻¹|) * ∫⁻ x, G x ∂μ := by
-  haveI := nm_prob μ B h0 ht
+  have := nm_prob μ B h0 ht
   set ν := nm μ B with hν
   set Ai : V →ₗ[ℝ] V := ((A i : V →L[ℝ] V) : V →ₗ[ℝ] V) with hAi
   have hq : (0:ℝ) < (q:ℝ) + 1 := by positivity
@@ -946,7 +946,7 @@ private theorem exists_ne_zero_smul_mem_of_mem_span' (μ : Measure V) [μ.IsAddH
   have hw : Continuous fun y : Fin (q + 1) → V => fun j => if b j then y j else y₀ := by
     refine continuous_pi fun j => ?_
     by_cases h : b j = true
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       exact continuous_apply j
     · simp only [h]
       exact continuous_const
@@ -954,7 +954,7 @@ private theorem exists_ne_zero_smul_mem_of_mem_span' (μ : Measure V) [μ.IsAddH
       (fun j => if b j then y j else y₀) ∈ Set.univ.pi fun _ : Fin (q + 1) => B := by
     intro y hy j _
     by_cases h : b j = true
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       exact hy j (Set.mem_univ j)
     · simp only [h]
       exact hy₀
@@ -966,11 +966,11 @@ private theorem main_lemma_2 {q : ℕ} (f : V [⋀^Fin q]→L[ℝ] ℝ) (m : Fin
     calc ‖f m‖ ≤ ‖f‖ * ∏ j, ‖m j‖ := f.le_opNorm m
       _ ≤ ‖f‖ * K := mul_le_mul_of_nonneg_left hm (norm_nonneg _)
       _ = K * ‖f‖ := mul_comm _ _
-  rw [← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm]
   refine (ENNReal.ofReal_le_ofReal h1).trans (le_of_eq ?_)
   rw [ENNReal.ofReal_mul hK0]
   congr 1
-  rw [ofReal_norm_eq_enorm]
+  rw [ofReal_norm]
   rfl
 
 theorem main (μ : Measure V) [μ.IsAddHaarMeasure] (q : ℕ) (A : Fin (q + 1) → V ≃L[ℝ] V) (B : Set V)
@@ -984,7 +984,7 @@ theorem main (μ : Measure V) [μ.IsAddHaarMeasure] (q : ℕ) (A : Fin (q + 1) �
   classical
   have hBm : MeasurableSet B := hB.isClosed.measurableSet
   have hBt : μ B ≠ ⊤ := hB.measure_lt_top.ne
-  haveI := nm_fin μ B hBt
+  have := nm_fin μ B hBt
   obtain ⟨r, hr⟩ := hB.isBounded.exists_norm_le
   obtain ⟨a, ha⟩ : ∃ a : ℝ, a = ∑ j, ‖(A j : V →L[ℝ] V)‖ := ⟨_, rfl⟩
   have ha0 : 0 ≤ a := ha ▸ Finset.sum_nonneg fun j _ => norm_nonneg _
@@ -1019,7 +1019,7 @@ theorem main (μ : Measure V) [μ.IsAddHaarMeasure] (q : ℕ) (A : Fin (q + 1) �
       exact Finset.prod_eq_zero (Finset.mem_univ 0) (by simp)
     rw [hP, integral_zero_measure]
     simp
-  haveI := nm_prob μ B h0 hBt
+  have := nm_prob μ B h0 hBt
   obtain ⟨S, hS⟩ : ∃ S : ℝ≥0∞, S = ∑ i, ENNReal.ofReal (((q : ℝ) + 1) ^ Module.finrank ℝ V *
       |(LinearMap.det ((A i : V →L[ℝ] V) : V →ₗ[ℝ] V))⁻¹|) := ⟨_, rfl⟩
   have hSt : S ≠ ⊤ := hS ▸ ENNReal.sum_ne_top.2 fun _ _ => ENNReal.ofReal_ne_top
@@ -1035,7 +1035,7 @@ theorem main (μ : Measure V) [μ.IsAddHaarMeasure] (q : ℕ) (A : Fin (q + 1) �
   have hGm : Measurable G := by
     rw [hGdef, ← Set.piecewise_eq_indicator]
     exact ContinuousOn.measurable_piecewise
-      ((ENNReal.continuous_coe.comp continuous_nnnorm).comp_continuousOn hω) continuousOn_const hKSm
+      ((ENNReal.continuous_coe.comp continuous_nnNorm).comp_continuousOn hω) continuousOn_const hKSm
   have hGint : ∫⁻ x, G x ∂μ = ∫⁻ p in KS (fun j => (A j : V →L[ℝ] V)) B, ‖ω p‖₊ ∂μ := by
     rw [hGdef]
     exact lintegral_indicator hKSm _
@@ -1044,9 +1044,9 @@ theorem main (μ : Measure V) [μ.IsAddHaarMeasure] (q : ℕ) (A : Fin (q + 1) �
         ∫⁻ t in Sx q, ENNReal.ofReal K * G (A 0 (y 0) + ∑ j, t j • (A j.succ (y j.succ) - A 0 (y 0))) := by
     intro y hy
     have hy' : ∀ j, y j ∈ B := fun j => hy j (Set.mem_univ j)
-    rw [← Real.enorm_eq_ofReal_abs]
+    rw [← Real.eNorm_eq_ofReal_abs]
     simp only [iS]
-    refine (enorm_integral_le_lintegral_enorm _).trans ?_
+    refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
     refine setLIntegral_mono ?_ ?_
     · exact measurable_const.mul (hGm.comp (continuous_const.add
         (by fun_prop)).measurable)
@@ -1058,11 +1058,11 @@ theorem main (μ : Measure V) [μ.IsAddHaarMeasure] (q : ℕ) (A : Fin (q + 1) �
   have h1 : ENNReal.ofReal (∫ y, |iS ω fun j => A j (y j)| ∂(Measure.pi fun _ => nm μ B)) ≤
       ∫⁻ y, ENNReal.ofReal |iS ω fun j => A j (y j)| ∂(Measure.pi fun _ => nm μ B) := by
     refine (ENNReal.ofReal_le_ofReal (le_abs_self _)).trans ?_
-    rw [← Real.enorm_eq_ofReal_abs]
-    refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+    rw [← Real.eNorm_eq_ofReal_abs]
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
     congr 1
     ext y
-    rw [Real.enorm_eq_ofReal_abs, abs_abs]
+    rw [Real.eNorm_eq_ofReal_abs, abs_abs]
   have h2 := lintegral_mono_ae ((ae_mem_pi μ hBm hBt q).mono fun y hy => hpt y hy)
   have hmeas : Measurable (Function.uncurry fun (y : Fin (q + 1) → V) (t : Fin q → ℝ) =>
       ENNReal.ofReal K * G (A 0 (y 0) + ∑ j, t j • (A j.succ (y j.succ) - A 0 (y 0)))) := by
@@ -1336,9 +1336,9 @@ theorem cont_act : Continuous (fun p : Sp L N × HS L N => actL (ofS L N p.1) p.
   refine continuous_pi fun w => ?_
   have h1 : Continuous fun p : Sp L N × HS L N =>
       (((p.1 w)⁻¹ : SpecialLinearGroup (Fin N) ℂ) : Matrix (Fin N) (Fin N) ℂ) :=
-    continuous_subtype_val.comp ((continuous_inv.comp (continuous_apply w)).comp continuous_fst)
+    continuous_subtypeVal.comp ((continuous_inv.comp (continuous_apply w)).comp continuous_fst)
   have h2 : Continuous fun p : Sp L N × HS L N => mat p.2 w :=
-    (continuous_apply w).comp (continuous_subtype_val.comp continuous_snd)
+    (continuous_apply w).comp (continuous_subtypeVal.comp continuous_snd)
   exact (h1.matrix_conjTranspose.matrix_mul h2).matrix_mul h1
 
 def actE (g : Gp L N) : HS L N ≃L[ℝ] HS L N :=
@@ -1452,7 +1452,7 @@ theorem cont_entry (w : InfinitePlace L) (i j : Fin N) :
     ((SpecialLinearGroup.isClosedEmbedding_val (n := Fin N) (R := ℂ)).continuous.comp (continuous_apply w)))
 
 theorem cont_mat (w : InfinitePlace L) : Continuous fun q : HS L N => mat q w :=
-  (continuous_apply w).comp continuous_subtype_val
+  (continuous_apply w).comp continuous_subtypeVal
 
 theorem contOn_inv : ContinuousOn (fun q : HS L N => fun w i j => (mat q w)⁻¹ i j) (Pos L N) := by
   intro q hq
@@ -1556,8 +1556,8 @@ theorem right_trans_le {G : Type} [Group G] [MeasurableSpace G] [MeasurableMul G
 
 theorem unfold_holds : Unfold := by
   intro L _ _ N q hN d μ _ K hK hKP
-  haveI := d.haar
-  haveI := d.right
+  have := d.haar
+  have := d.right
   set W := Wn L N with hWdef
   have hWk : IsCompact W := isCompact_Wn
   have hWm : MeasurableSet W := isClosed_Wn.measurableSet
@@ -1622,8 +1622,8 @@ theorem unfold_holds : Unfold := by
       ∫⁻ s in W, ∫⁻ p in K1, G (actL (ofS L N s) p) ∂μ ∂d.μ := by
     rw [← setLIntegral_const]
     exact setLIntegral_mono' hWm st1
-  haveI : IsFiniteMeasure (d.μ.restrict W) := isFiniteMeasure_restrict.2 hWT
-  haveI : IsFiniteMeasure (μ.restrict K1) := isFiniteMeasure_restrict.2 hK1T
+  have : IsFiniteMeasure (d.μ.restrict W) := isFiniteMeasure_restrict.2 hWT
+  have : IsFiniteMeasure (μ.restrict K1) := isFiniteMeasure_restrict.2 hK1T
   have hmeas : AEMeasurable (Function.uncurry fun (s : Sp L N) (p : HS L N) => G (actL (ofS L N s) p))
       ((d.μ.restrict W).prod (μ.restrict K1)) := by
     have e1 : d.μ.restrict W = (d.μ.restrict W).restrict W := by
@@ -1634,7 +1634,7 @@ theorem unfold_holds : Unfold := by
     refine ContinuousOn.aemeasurable ?_ (hWm.prod hK1m)
     have hc : ContinuousOn (fun p : Sp L N × HS L N => ω (actL (ofS L N p.1) p.2)) (W ×ˢ K1) :=
       hω.comp cont_act.continuousOn fun p hp => actL_pos _ (hK1P hp.2)
-    exact (ENNReal.continuous_coe.comp continuous_nnnorm).comp_continuousOn hc
+    exact (ENNReal.continuous_coe.comp continuous_nnNorm).comp_continuousOn hc
   have st3 := lintegral_lintegral_swap hmeas
   have st4 : ∀ p ∈ K1, ∫⁻ s in W, G (actL (ofS L N s) p) ∂d.μ ≤ Bd * ∫⁻ x in K', Fr x ∂d.μ := by
     intro p hp
@@ -1649,7 +1649,7 @@ theorem unfold_holds : Unfold := by
       have h := point_bd hsc c t s R' hR'0 hX
       rw [hct] at h
       simp only [hGdef, hFrdef, hBddef, ENNReal.ofReal, ← ENNReal.coe_mul, ENNReal.coe_le_coe]
-      rw [← NNReal.coe_le_coe, NNReal.coe_mul, Real.coe_toNNReal _ hB00, coe_nnnorm, coe_nnnorm, mul_comm]
+      rw [← NNReal.coe_le_coe, NNReal.coe_mul, Real.coe_toNNReal _ hB00, coe_nnNorm, coe_nnNorm, mul_comm]
       exact h
     have hts : ∀ x, x * t⁻¹ ∈ W → x ∈ K' := by
       intro x hx

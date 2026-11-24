@@ -114,7 +114,7 @@ theorem fderiv_fderiv_radial (h h' h'' : ℝ → ℝ) (z : Fin 1 → ℂ)
   have hc : HasFDerivAt (fun y => h' (q y)) (h'' (q z) • B z) z :=
     hd2.comp_hasFDerivAt z (hq z)
   rw [HasFDerivAt.fderiv (f := fun y => h' (q y) • B y) (hc.smul B.hasFDerivAt)]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.smulRight_apply, smul_eq_mul, hB, real_inner_self_eq_norm_sq]
   simp only [hqdef]
   ring

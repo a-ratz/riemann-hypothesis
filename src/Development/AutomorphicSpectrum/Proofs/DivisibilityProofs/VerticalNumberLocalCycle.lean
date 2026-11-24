@@ -66,7 +66,7 @@ variable {K : Type} {ι : K → Type}
 
 theorem nonempty_residue_equiv (p : Nat.Primes) [Fact (p : ℕ).Prime] :
     Nonempty (ZMod (p : ℕ) ≃+* IsLocalRing.ResidueField (ZP p)) := by
-  haveI hmax : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal :=
+  have hmax : (Ideal.span {((p : ℕ) : ℤ)}).IsMaximal :=
     Ideal.IsPrime.isMaximal inferInstance
       (by rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast p.2.ne_zero)
   exact ⟨(Int.quotientSpanNatEquivZMod (p : ℕ)).symm.trans
@@ -132,7 +132,7 @@ theorem finsum_eq_mem {α : Type*} (g : α → ℤ) (t : Set α) (h : Function.s
 
 theorem extTo_comap (p : Nat.Primes) (W' : Ideal (MRing ι (ZP p))) :
     extTo (ZP p) (W'.comap (MvPolynomial.map (Int.castRingHom (ZP p)))) = W' := by
-  haveI := ZpModel.isLocalization_consts ι p
+  have := ZpModel.isLocalization_consts ι p
   rw [ZpModel.extTo_eq, ← ZpModel.algebraMap_eq]
   exact IsLocalization.map_under (ZpModel.consts ι p) (MRing ι (ZP p)) W'
 
@@ -146,7 +146,7 @@ theorem bijOn_comap [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] (p : Nat
       (C ((p : ℕ) : ZP p) : MRing ι (ZP p)) := by
     rw [map_C]
     simp
-  haveI := ZpModel.isLocalization_consts ι p
+  have := ZpModel.isLocalization_consts ι p
   refine ⟨?_, ?_, ?_⟩
   · rintro W' ⟨hW', hp⟩
     refine ⟨?_, ?_⟩
@@ -183,7 +183,7 @@ open GlobalTheory.CompanionTheory.Ar.Num.ZpVert in
 theorem GlobalTheory.CompanionTheory.Ar.Num.vertAt_eq_cycList : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (P : Ideal (MRing ι ℤ)) (D : ℕ), IsArithVar P (D + 1) → ∀ (p : Nat.Primes) (a : K → ℕ) (f : MRing ι ℤ), IsMultiHomog f a → f ∉ P → ∀ l : List (K → ℤ), l.length = D → vertAt p P f l = cycList (divCycle (extTo (ZP p) P) (MvPolynomial.map (Int.castRingHom (ZP p)) f)) l := by
   intro K _ _ ι _ P D hP p a f hf hfP l hl
   classical
-  haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
+  have : Fact (p : ℕ).Prime := ⟨p.2⟩
   obtain ⟨hirr, hmodel, -⟩ := zp_model K ι P D hP p
   have hfP' : MvPolynomial.map (Int.castRingHom (ZP p)) f ∉ extTo (ZP p) P :=
     fun h => hfP (ZpModel.mem_of_map_mem p hP.2.1.1 hP.2.2.1 h)
@@ -205,7 +205,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.vertAt_eq_cycList : ∀ (K : Type) [
       simpa using hp
     rw [divCycle_extTo p P f W' hWp]
     beta_reduce
-    rw [if_pos hQp]
+    rw [ite_eq_left hQp]
     congr 1
     have h := vNumL_extTo p (W'.comap (MvPolynomial.map (Int.castRingHom (ZP p)))) l
     rw [extTo_comap] at h
@@ -220,4 +220,4 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.vertAt_eq_cycList : ∀ (K : Type) [
     have h1 := left_ne_zero_of_mul hW
     refine ⟨h1, ?_⟩
     by_contra hp
-    exact right_ne_zero_of_mul hW (if_neg hp)
+    exact right_ne_zero_of_mul hW (ite_eq_right hp)

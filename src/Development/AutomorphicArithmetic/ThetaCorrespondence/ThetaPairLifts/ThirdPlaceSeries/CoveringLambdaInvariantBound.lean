@@ -118,8 +118,8 @@ theorem rk_deg_image (T : V →+ V) {A B : Submodule R V} (hA : Formalism.HN.IsL
       obtain ⟨x, hx, rfl⟩ := (hAB m).1 hm
       exact ⟨⟨x, hx⟩, e⟩, fun ⟨m, e⟩ => ⟨T m.1, (hAB _).2 ⟨m.1, m.2, rfl⟩, e⟩⟩
   have hn' : ∀ m, ‖f m‖ = ‖g m‖ := fun m => (hn m.1 m.2).symm
-  haveI := hA.2
-  haveI := hB.2
+  have := hA.2
+  have := hB.2
   refine ⟨?_, ?_⟩
   · have hf : Function.Injective f := fun x y h => Subtype.ext (hA.1 x.2 y.2 h)
     have hg : Function.Injective g := fun x y h =>
@@ -140,21 +140,21 @@ variable (K K' : Type) [Field K] [NumberField K] [Field K'] [NumberField K'] [Al
 
 theorem span_gal [IsGalois K K'] :
     Submodule.span K' (Set.range fun g : K' ≃ₐ[K] K' => (g.toLinearMap : K' →ₗ[K] K')) = ⊤ := by
-  haveI : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+  have : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
   have h1 : LinearIndependent K' fun g : K' ≃ₐ[K] K' => (g.toLinearMap : K' →ₗ[K] K') :=
     (linearIndependent_toLinearMap K K' K').comp (fun g : K' ≃ₐ[K] K' => (g : K' →ₐ[K] K'))
-      AlgEquiv.coe_algHom_injective
+      AlgEquiv.coe_toAlgHom_injective
   refine h1.span_eq_top_of_card_eq_finrank' ?_
   rw [← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, Module.finrank_linearMap_self]
 
 theorem exists_dual : ∃ (n : ℕ) (a : Fin n → 𝓞 K') (f : Fin n → K' →ₗ[K] K),
     (∀ i (r : 𝓞 K'), ∃ s : 𝓞 K, f i r = s) ∧ ∀ r : 𝓞 K', ∑ i, (a i : K') * algebraMap K K' (f i r) = r := by
-  haveI : Module.FinitePresentation (𝓞 K) (𝓞 K') := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 K) (𝓞 K') := Module.Flat.projective_of_finitePresentation
+  have : Module.FinitePresentation (𝓞 K) (𝓞 K') := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 K) (𝓞 K') := Module.Flat.projective_of_finitePresentation
   obtain ⟨n, p, s, -, -, hps⟩ := Module.Finite.exists_comp_eq_id_of_projective (𝓞 K) (𝓞 K')
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 K)) (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K') K').toLinearMap :=
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 K)) (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K') K').toLinearMap :=
     by
-      haveI : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+      have : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
       exact isLocalizedModule_iff_isLocalization.2 (IsIntegralClosure.isLocalization (𝓞 K) K K' (𝓞 K'))
   let f : Fin n → K' →ₗ[K] K := fun i => IsLocalizedModule.mapExtendScalars (nonZeroDivisors (𝓞 K))
     (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K') K').toLinearMap (Algebra.linearMap (𝓞 K) K) K (LinearMap.proj i ∘ₗ s)
@@ -426,12 +426,12 @@ theorem slope_sq_span_le {K K' V V' : Type} [Field K] [NumberField K] [_root_.Nu
       slope_sq N' (Submodule.span (𝓞 K') (ι '' (L : Set V))) ≤ slope_sq N L := by
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := hg
   obtain ⟨⟨n', ⟨b', X'⟩, hG'⟩⟩ := hg'
-  letI : StarRing K := starRingOfComm
-  letI : StarRing K' := starRingOfComm
-  haveI : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
-  haveI : Module.Finite K V := Module.Finite.of_basis b
-  letI : Module (𝓞 K) V' := Module.compHom V' (algebraMap (𝓞 K) (𝓞 K'))
-  haveI : IsScalarTower (𝓞 K) (𝓞 K') V' := ⟨fun a s x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  let : StarRing K := starRingOfComm
+  let : StarRing K' := starRingOfComm
+  have : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
+  have : Module.Finite K V := Module.Finite.of_basis b
+  let : Module (𝓞 K) V' := Module.compHom V' (algebraMap (𝓞 K) (𝓞 K'))
+  have : IsScalarTower (𝓞 K) (𝓞 K') V' := ⟨fun a s x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
   let l : L →ₗ[𝓞 K] V' :=
     { toFun := fun x => ι x
       map_add' := fun x y => by simp
@@ -443,7 +443,7 @@ theorem slope_sq_span_le {K K' V V' : Type} [Field K] [NumberField K] [_root_.Nu
     ext y; simp [l]
   set L' := Submodule.span (𝓞 K') (ι '' (L : Set V)) with hL'
   have hL'fg : L'.FG := by
-    haveI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.2 hL
+    have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.2 hL
     obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := 𝓞 K) (M := L)
     refine ⟨(s.finite_toSet.image l).toFinset, ?_⟩
     rw [Set.Finite.coe_toFinset, ← Submodule.span_span_of_tower (𝓞 K), ← Submodule.map_span, hs,
@@ -482,7 +482,7 @@ theorem slope_sq_span_le {K K' V V' : Type} [Field K] [NumberField K] [_root_.Nu
       Nat.card (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := by
     rw [AddSubgroup.relIndex, hsub]; rfl
   rw [hidx] at i1 m1
-  haveI : Finite (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := Nat.finite_of_card_ne_zero i1
+  have : Finite (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := Nat.finite_of_card_ne_zero i1
   have hidx' := relIndex_span (S := 𝓞 K') l eL (he'.restrict_scalars' (𝓞 K'))
     (Nat.card (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) : 𝓞 K)
     (fun x hx => by
@@ -518,8 +518,8 @@ theorem slopeMax_sq_span_le : ∀ (K K' V V' : Type) [Field K] [NumberField K] [
   have hL' := (slope_sq_span_le ι L hg hg' hc hli hL h0 hN).1
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := id hg
   obtain ⟨⟨n', ⟨b', X'⟩, hG'⟩⟩ := id hg'
-  letI : StarRing K := starRingOfComm
-  letI : StarRing K' := starRingOfComm
+  let : StarRing K := starRingOfComm
+  let : StarRing K' := starRingOfComm
   change IsGram b X N at hG
   change IsGram b' X' N' at hG'
   obtain ⟨c, hcc⟩ := exists_coord b ι (hli n b b.linearIndependent)
@@ -531,7 +531,7 @@ theorem slopeMax_sq_span_le : ∀ (K K' V V' : Type) [Field K] [NumberField K] [
   have hX' : ∀ v, IsUnit (X' v).det := fun v => (hG' v).1
   have hlat := (Formalism.HN.plLat K' V' _ b' X' hX' L' hL').1
   have hfg : ∀ M, M ≤ L' → M.FG := fun M hM => by
-    haveI : IsNoetherian (𝓞 K') L' := isNoetherian_of_fg_of_noetherian L' hL'
+    have : IsNoetherian (𝓞 K') L' := isNoetherian_of_fg_of_noetherian L' hL'
     exact isNoetherian_submodule.1 inferInstance M hM
   obtain ⟨hsub, hmono, -, hrk, -⟩ := Formalism.HN.satBasic _ _ _ _ L' hlat
   obtain ⟨M, hM, hM0, hMd, hMt⟩ := exists_top_step _ hlat h0'
@@ -564,7 +564,7 @@ theorem slopeMax_sq_span_le : ∀ (K K' V V' : Type) [Field K] [NumberField K] [
   rw [hL'def, inf_eq_span hcc hW L] at hMW
   set M₀ : Submodule (𝓞 K) V := L ⊓ (W.comap ι).restrictScalars (𝓞 K) with hM₀
   have hM₀fg : M₀.FG := by
-    haveI : IsNoetherian (𝓞 K) L := isNoetherian_of_fg_of_noetherian L hL
+    have : IsNoetherian (𝓞 K) L := isNoetherian_of_fg_of_noetherian L hL
     exact isNoetherian_submodule.1 inferInstance M₀ inf_le_left
   have hM₀0 : M₀ ≠ ⊥ := fun h => hM0 (by rw [← hMW, h]; simp)
   have h1 := (slope_sq_span_le ι M₀ hg hg' hc hli hM₀fg hM₀0 hN).2
@@ -608,12 +608,12 @@ variable {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V] [M
 
 omit [Module K V] [IsScalarTower (𝓞 K) K V] in
 theorem fg_of_le (hL : L.FG) {M : Submodule (𝓞 K) V} (hM : M ≤ L) : M.FG := by
-  haveI : IsNoetherian (𝓞 K) L := isNoetherian_of_fg_of_noetherian L hL
+  have : IsNoetherian (𝓞 K) L := isNoetherian_of_fg_of_noetherian L hL
   exact isNoetherian_submodule.1 inferInstance M hM
 
 theorem exists_slope_eq (hN : HasGram N) (hL : L.FG) (h0 : L ≠ ⊥) :
     ∃ M : Submodule (𝓞 K) V, M ≤ L ∧ M ≠ ⊥ ∧ slope_sq N M = slopeMax_sq N L := by
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := hN
   obtain ⟨hLat, -, -⟩ := Formalism.HN.plLat K V _ b X (fun v => (hG v).1) L hL
   obtain ⟨-, -, ⟨M, hM, hM0, hMs⟩, -, -⟩ := Formalism.HN.muChar _ _ _ _ L hLat h0
@@ -623,7 +623,7 @@ theorem exists_slope_eq (hN : HasGram N) (hL : L.FG) (h0 : L ≠ ⊥) :
 
 theorem slope_le_slopeMax (hN : HasGram N) (hL : L.FG) {M : Submodule (𝓞 K) V} (hM : M ≤ L) (hM0 : M ≠ ⊥) :
     slope_sq N M ≤ slopeMax_sq N L := by
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   have h0 : L ≠ ⊥ := fun h => hM0 (eq_bot_iff.2 (h ▸ hM))
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := hN
   have l1 := (Formalism.HN.plLat K V _ b X (fun v => (hG v).1) M (fg_of_le hL hM)).1
@@ -729,17 +729,17 @@ theorem coordExt_li {K V : Type} (F : Type) [Field K] [Field F] [Algebra K F] [A
 
 theorem slopeMax_sq_span_le : ∀ (K K' V V' : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [Field K'] [NumberField K'] [Algebra K K'] [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [AddCommGroup V'] [Module K' V'] [Module (𝓞 K') V'] [IsScalarTower (𝓞 K') K' V'] (N : (K →+* ℂ) → V → ℝ) (N' : (K' →+* ℂ) → V' → ℝ) (ι : V →ₛₗ[algebraMap K K'] V') (L : Submodule (𝓞 K) V) (c : (K' →+* ℂ) → ℝ) (B : ℝ), HasGram N → HasGram N' → (∀ σ x, N ((starRingEnd ℂ).comp σ) x = N σ x) → (∀ (n : ℕ) (b : Fin n → V), LinearIndependent K b → LinearIndependent K' (fun k => ι (b k))) → L.FG → L ≠ ⊥ → (∀ σ', 0 < c σ' ∧ |Real.log (c σ')| ≤ B) → (∀ σ' x, N' σ' (ι x) = c σ' * N (σ'.comp (algebraMap K K')) x) → slopeMax_sq N' (Submodule.span (𝓞 K') (ι '' (L : Set V))) ≤ slopeMax_sq N L + 2 * B := by
   intro K K' V V' _ _ _ _ _ _ _ _ _ _ _ _ _ _ N N' ι L c B hN hN' hc hli hL h0 hcB hι
-  haveI : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
-  haveI : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
-  haveI : IsAlgClosure K (AlgebraicClosure K') := ⟨inferInstance, Algebra.IsAlgebraic.trans K K' _⟩
+  have : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
+  have : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+  have : IsAlgClosure K (AlgebraicClosure K') := ⟨inferInstance, Algebra.IsAlgebraic.trans K K' _⟩
   let F : Type := IntermediateField.normalClosure K K' (AlgebraicClosure K')
-  haveI : IsGalois K F := inferInstance
-  haveI : NumberField F := NumberField.of_module_finite K F
+  have : IsGalois K F := inferInstance
+  have : NumberField F := NumberField.of_module_finite K F
   have hL' := fg_span_image ι hL
   obtain ⟨M, hM, hM0, hMs⟩ := exists_slope_eq hN' hL' (span_image_ne_bot ι hli h0)
   have hMfg := fg_of_le hL' hM
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := hN'
-  letI : StarRing K' := starRingOfComm
+  let : StarRing K' := starRingOfComm
   let N₁ : (K' →+* ℂ) → V' → ℝ := fun σ x => N' (InfinitePlace.mk σ).embedding x
   have hG₁ : IsGram b X N₁ := fun v => ⟨(hG v).1, fun x => by
     simp only [N₁, InfinitePlace.mk_embedding]; exact (hG v).2 x⟩
@@ -836,7 +836,7 @@ theorem nrmK_conj (σ : p.T.Q.c.F →+* ℂ) (x : VK p.fw i) :
 theorem slopeMax_all_le (Cm : ℝ) (hG : GramAt p i) (hM : MeasAt p i Cm) :
     slopeMax_sq (nrmR p.R.toRealDat i) (latAll p.R.toRealDat i) ≤
       slopeMax_sq (nrmK p.fw i) (latW (p.T.U ((i : ℕ) + 1)) (Gk p i)) + 2 * (Cm * unitE p) := by
-  haveI := totallyComplex_core p
+  have := totallyComplex_core p
   obtain ⟨ι, h1, h2, h3⟩ := _root_.GlobalTheory.CovTop.SupImage.exists_emb_image_latW D _ _ _ _ p.T p.R.toRealDat p.κ p.v₀ p.fw i
   choose c hc0 hcB hcE using hM
   have hAll : latAll p.R.toRealDat i =

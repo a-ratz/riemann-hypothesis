@@ -224,8 +224,8 @@ def rvU (he : ∀ a, ε' a = ε a.rev) : Formalism.REAL.UJ ε' ≃* Formalism.RE
 theorem rvU_cont (he : ∀ a, ε' a = ε a.rev) : Continuous (rvU he) := by
   refine continuous_induced_rng.2 ?_
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · exact rv_cont.comp (Units.continuous_val.comp continuous_subtype_val)
-  · exact rv_cont.comp (Units.continuous_coe_inv.comp continuous_subtype_val)
+  · exact rv_cont.comp (Units.continuous_val.comp continuous_subtypeVal)
+  · exact rv_cont.comp (Units.continuous_coe_inv.comp continuous_subtypeVal)
 
 theorem memLp_rev (he : ∀ a, ε' a = ε a.rev) {F : Formalism.REAL.UJ ε → ℂ} (hF : MemLp F 2 (Formalism.REAL.muG ε)) :
     MemLp (F ∘ rvU he) 2 (Formalism.REAL.muG ε') := by

@@ -220,7 +220,7 @@ theorem nrm_pos (k : I → ℕ) (z : X I) : 0 < nrm k z :=
 theorem nrm_cont (k : I → ℕ) : Continuous (nrm k : X I → ℝ) := by
   unfold nrm
   refine continuous_finsetProd _ fun v _ => ?_
-  exact (continuous_abs.comp (Complex.continuous_im.comp (continuous_subtype_val.comp (continuous_apply v)))).rpow_const
+  exact (continuous_abs.comp (Complex.continuous_im.comp (continuous_subtypeVal.comp (continuous_apply v)))).rpow_const
     fun _ => Or.inr (by positivity)
 
 theorem Kap_nonneg (hC : B1c) (k : I → ℕ) (z w : X I) : 0 ≤ Kap k z w :=
@@ -380,7 +380,7 @@ theorem hol_tsum {ι : Type} (f : ι → P → ℂ) (hf : ∀ i, Hol1 (f i))
   obtain ⟨U, hU, hmem, u, hu, hb⟩ := hloc ⟨t₀, ht₀'⟩
   have hPo : IsOpen {t : ℂ | t.im ≠ 0} := isOpen_ne_fun Complex.continuous_im continuous_const
   set V : Set ℂ := (fun s : P => s.1) '' U with hVdef
-  have hV : IsOpen V := hPo.isOpenMap_subtype_val U hU
+  have hV : IsOpen V := hPo.isOpenMap_subtypeVal U hU
   have hVsub : V ⊆ {t : ℂ | t.im ≠ 0} := by
     rintro _ ⟨s, -, rfl⟩
     exact s.2

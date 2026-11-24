@@ -81,7 +81,7 @@ theorem relAlg (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (π : Fin (r + 1) �
       U k k.succ * Z (π k.castSucc) k.castSucc := by
     intro k
     rw [hA, Finset.sum_eq_single k]
-    · rw [if_pos (Fin.castSucc_lt_succ : k.castSucc < k.succ)]
+    · rw [ite_eq_left (Fin.castSucc_lt_succ : k.castSucc < k.succ)]
     · intro c _ hck
       split_ifs
       · rw [hZ0 _ _ (fun e => hck (Fin.castSucc_injective r (hπinj e).symm)), mul_zero]
@@ -94,7 +94,7 @@ theorem relAlg (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (π : Fin (r + 1) �
       conj (m j j.succ) * Z j.castSucc (π j.castSucc) := by
     intro j
     rw [← hA, Finset.sum_eq_single j]
-    · rw [if_pos (Fin.castSucc_lt_succ : j.castSucc < j.succ)]
+    · rw [ite_eq_left (Fin.castSucc_lt_succ : j.castSucc < j.succ)]
     · intro c _ hcj
       split_ifs
       · rw [hZ0 _ _ (by rw [hπ]; exact fun e => hcj (Fin.castSucc_injective r e)), mul_zero]
@@ -108,14 +108,14 @@ theorem relAlg (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (π : Fin (r + 1) �
       have hψk : ψ k = j := by
         rw [hψdef, dite_eq_left h]
         exact Fin.ext hjv.symm
-      have hjc : j.castSucc = π k.succ := Fin.ext (by rw [Fin.coe_castSucc, hjv])
+      have hjc : j.castSucc = π k.succ := Fin.ext (by rw [Fin.val_castSucc, hjv])
       have hjs : j.succ = π k.castSucc := Fin.ext (by rw [Fin.val_succ, hjv]; exact h)
       have h' : (π j.succ).val + 1 = (π j.castSucc).val := by
-        rw [hjs, hjc, hπ, hπ, Fin.coe_castSucc, Fin.val_succ]
+        rw [hjs, hjc, hπ, hπ, Fin.val_castSucc, Fin.val_succ]
       rw [hψk, hψdef, dite_eq_left h']
       apply Fin.ext
       show (π j.succ).val = k.val
-      rw [hjs, hπ, Fin.coe_castSucc]
+      rw [hjs, hπ, Fin.val_castSucc]
     · have hψk : ψ k = k := by rw [hψdef, dite_eq_right h]
       rw [hψk, hψk]
   have hterm : ∀ k : Fin r, (U k k.succ).re = -(m (ψ k) (ψ k).succ).re := by
@@ -125,18 +125,18 @@ theorem relAlg (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (π : Fin (r + 1) �
       have hψk : ψ k = j := by
         rw [hψdef, dite_eq_left h]
         exact Fin.ext hjv.symm
-      have hjc : j.castSucc = π k.succ := Fin.ext (by rw [Fin.coe_castSucc, hjv])
+      have hjc : j.castSucc = π k.succ := Fin.ext (by rw [Fin.val_castSucc, hjv])
       have hjs : j.succ = π k.castSucc := Fin.ext (by rw [Fin.val_succ, hjv]; exact h)
       have hz : Z (π k.succ) k.succ = - Z (π k.castSucc) k.castSucc := by
         rcases hP2 k with ⟨_, hz⟩ | hlt
         · exact hz
         · omega
-      have hlt1 : π k.succ < π k.castSucc := Fin.lt_iff_val_lt_val.2 (by omega)
+      have hlt1 : π k.succ < π k.castSucc := Fin.lt_def.2 (by omega)
       have eL : (∑ c : Fin r, if c.castSucc < π k.castSucc then
           conj (m c (π k.castSucc)) * Z c.castSucc k.succ else 0) =
           conj (m j j.succ) * Z (π k.succ) k.succ := by
         rw [Finset.sum_eq_single j]
-        · rw [hjs, hjc, if_pos hlt1]
+        · rw [hjs, hjc, ite_eq_left hlt1]
         · intro c _ hcj
           split_ifs
           · rw [hZ0 _ _ (fun e => hcj (Fin.castSucc_injective r (e.trans hjc.symm))), mul_zero]
@@ -159,7 +159,7 @@ theorem relAlg (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (π : Fin (r + 1) �
           conj (m c (π k.castSucc)) * Z c.castSucc k.succ else 0) = 0 :=
         Finset.sum_eq_zero fun c _ => by
           split_ifs with hc
-          · rw [hZ0 _ _ (fun e => by rw [e, Fin.lt_iff_val_lt_val] at hc; omega), mul_zero]
+          · rw [hZ0 _ _ (fun e => by rw [e, Fin.lt_def] at hc; omega), mul_zero]
           · rfl
       have hU : U k k.succ = 0 := by
         have key := eL.symm.trans (hR1 k)
@@ -171,7 +171,7 @@ theorem relAlg (Z : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (π : Fin (r + 1) �
           · rw [hZ0 _ _ (fun e => by
                 have e2 := congrArg π e
                 rw [hπ] at e2
-                rw [← e2, Fin.lt_iff_val_lt_val] at hc
+                rw [← e2, Fin.lt_def] at hc
                 omega), mul_zero]
           · rfl
       have hm : conj (m k k.succ) = 0 := by
@@ -385,7 +385,7 @@ theorem flag_expand (e f : Fin r → Fin n → ℂ) (z : Fin n → ℂ)
       rw [fam_last]
       exact hfz c
     | cast b =>
-      rw [fam_castSucc, hfe, if_neg]
+      rw [fam_castSucc, hfe, ite_eq_right]
       intro hbc
       subst hbc
       exact lt_irrefl _ hc
@@ -399,13 +399,13 @@ theorem flag_expand (e f : Fin r → Fin n → ℂ) (z : Fin n → ℂ)
     refine Finset.sum_congr rfl fun c _ => ?_
     by_cases hc : c.castSucc < a
     · have hc' : c.val < a.val := by
-        rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc] at hc
+        rw [Fin.lt_def, Fin.val_castSucc] at hc
         exact hc
-      rw [if_pos hc', if_pos hc, hsubJ, hzero c hc, sub_zero]
+      rw [ite_eq_left hc', ite_eq_left hc, hsubJ, hzero c hc, sub_zero]
     · have hc' : ¬ c.val < a.val := by
-        rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc] at hc
+        rw [Fin.lt_def, Fin.val_castSucc] at hc
         exact hc
-      rw [if_neg hc', if_neg hc]
+      rw [ite_eq_right hc', ite_eq_right hc]
   rw [← hS, ← hexp]
   abel
 

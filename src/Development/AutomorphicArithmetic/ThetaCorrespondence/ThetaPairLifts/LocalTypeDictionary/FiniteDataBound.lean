@@ -716,8 +716,8 @@ theorem UpperTheory.fourierSum_block_transpose_inv_eq :
   rw [fourierSum_apply, fourierSum_apply]
   by_cases hc : ∀ i, ∀ j ∈ Assignment.one.block D₁ D₂, ((ϖ ^ e : kˣ) : k) * Y i j ∈ 𝒪[k]
   swap
-  · rw [if_neg hc, if_neg (mt hcond.2 hc)]
-  rw [if_pos hc, if_pos (hcond.1 hc)]
+  · rw [ite_eq_right hc, ite_eq_right (mt hcond.2 hc)]
+  rw [ite_eq_left hc, ite_eq_left (hcond.1 hc)]
   have hc' := hcond.1 hc
   congr 1
   have hψ1 : ∀ y : k, y ∈ 𝒪[k] → ψ y = 1 := by
@@ -823,7 +823,7 @@ theorem UpperTheory.haarVol_self_eq_one_of_openSubgroup_le_KO :
   have hec : Continuous e := hc
   have hes : Continuous e.symm := hc
   have hem : Measurable e := hec.measurable
-  haveI : (Measure.map e (Measure.haar : Measure (GL n k))).IsHaarMeasure :=
+  have : (Measure.map e (Measure.haar : Measure (GL n k))).IsHaarMeasure :=
     MulEquiv.isHaarMeasure_map _ e hec hes
   have hKOpre : e ⁻¹' (KO k n : Set (GL n k)) = KO k n := by
     ext g
@@ -851,19 +851,19 @@ theorem UpperTheory.haarVol_self_eq_one_of_openSubgroup_le_KO :
     rw [Measure.map_apply hem isOpen_KO.measurableSet, hKOpre]
   have hinv0 : A⁻¹ ≠ 0 := ENNReal.inv_ne_zero.mpr hAt
   have hinvt : A⁻¹ ≠ ⊤ := ENNReal.inv_ne_top.mpr hA0
-  haveI : (A⁻¹ • Measure.map e (Measure.haar : Measure (GL n k))).IsHaarMeasure :=
+  have : (A⁻¹ • Measure.map e (Measure.haar : Measure (GL n k))).IsHaarMeasure :=
     Measure.IsHaarMeasure.smul (μ := _) hinv0 hinvt
-  haveI : (A⁻¹ • (Measure.haar : Measure (GL n k))).IsHaarMeasure :=
+  have : (A⁻¹ • (Measure.haar : Measure (GL n k))).IsHaarMeasure :=
     Measure.IsHaarMeasure.smul (μ := _) hinv0 hinvt
   have h1 := eq_haarVol (A⁻¹ • Measure.map e (Measure.haar : Measure (GL n k))) (isOpen_KO (k := k) (n := n)) le_rfl
-    (by rw [Measure.smul_apply, hmapKO, smul_eq_mul, ENNReal.inv_mul_cancel hA0 hAt])
+    (by rw [smul_apply, hmapKO, smul_eq_mul, ENNReal.inv_mul_cancel hA0 hAt])
   have h2 := eq_haarVol (A⁻¹ • (Measure.haar : Measure (GL n k))) (isOpen_KO (k := k) (n := n)) le_rfl
-    (by rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hA0 hAt])
+    (by rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hA0 hAt])
   have hmap : Measure.map e (Measure.haar : Measure (GL n k)) = Measure.haar := by
     have h3 := h1.trans h2.symm
     ext s hs
     have h4 := congrArg (fun μ : Measure (GL n k) => A • μ s) h3
-    simp only [Measure.smul_apply, smul_eq_mul, ← mul_assoc, ENNReal.mul_inv_cancel hA0 hAt, one_mul] at h4
+    simp only [smul_apply, smul_eq_mul, ← mul_assoc, ENNReal.mul_inv_cancel hA0 hAt, one_mul] at h4
     exact h4
   have hJ' := (isOpen_map_invT hJ hJK).1
   have heq : (Measure.haar : Measure (GL n k)) ((J.map invT : Subgroup (GL n k)) : Set (GL n k)) =
@@ -872,7 +872,7 @@ theorem UpperTheory.haarVol_self_eq_one_of_openSubgroup_le_KO :
     rw [hmap]
   obtain ⟨hJ0, hJt⟩ := haar_ne_zero_ne_top (Measure.haar : Measure (GL n k)) hJ hJK
   unfold haarVol
-  rw [Measure.smul_apply, smul_eq_mul, heq, ENNReal.inv_mul_cancel hJ0 hJt]
+  rw [smul_apply, smul_eq_mul, heq, ENNReal.inv_mul_cancel hJ0 hJt]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.DivisorFrames.HaarVolSelfEqOneOfOpenSubgroupLeKO =====
@@ -1099,7 +1099,7 @@ theorem smallF_mem {A D : Type} [Fintype A] [DecidableEq A] {n : ℕ} [Fintype D
   have hent : ∀ (g : Matrix (Fin n) (Fin n) k) i j, (g * (Y0 k σ * (u * diagGL fun j => (c' j)⁻¹).val)) i j =
       (g * Y0 k σ * u.val) i j * (((c' j)⁻¹ : kˣ) : k) := fun g i j => by
     rw [Units.val_mul, diagGL_val, ← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_diagonal]
-  have hv0 : ∀ x : kˣ, 0 < valuation k (x : k) := fun x => zero_lt_iff.2 (by simp)
+  have hv0 : ∀ x : kˣ, 0 < valuation k (x : k) := fun x => pos_iff_ne_zero.2 (by simp)
   refine UpperTheory.integral_mem_addSubgroup_of_ramified_twisted_invariant μ J hJo hJK hμ ϖ ν e hϖ hram hν _
     (fun g => Ψ (g * (Y0 k σ * (u * diagGL fun j => (c' j)⁻¹).val))) e ?_ ?_ ?_ _ ?_
   · intro g hg
@@ -1206,7 +1206,7 @@ theorem flip_mem {G : Grid k} {ψ : AddChar k Circle} {ϖ : kˣ} {e : ℕ} (hϖ 
     (hK : St.level (i, j) ≤ KO k _) (hT : St.IsAdmissible .one ϖ e) (hTa : ∀ x, St.tensor x ∈ Lo (resCard k) a)
     (x : G.Args) : G.flipTensor .one ψ ϖ e i j St.level St.tensor x ∈ Lo (resCard k) (a + e * N * (3 * B + 8 * N)) := by
   have hJ' := isOpen_map_invT hJ hK
-  haveI := isHaarMeasure_haarVol hJ'.1 hJ'.2
+  have := isHaarMeasure_haarVol hJ'.1 hJ'.2
   have hsub := hp.subset
   have hN := GlobalTheory.FunObj.isNatDatum_sliceB hT.tensor (hsub (by simp)) (hsub (by simp)) x (i := i) (j := j)
   obtain ⟨c1, c2⟩ := chiZ_unif hϖ hq (Fintype.card (G.Cols i j)) h1 h2
@@ -1586,7 +1586,7 @@ theorem vw_ge {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 
   have h0 : 0 ≤ vw w ((q : K) ^ n * y) := by
     obtain ⟨a, ha⟩ : ∃ a : 𝓞 K, algebraMap (𝓞 K) K a = (q : K) ^ n * y := ⟨⟨_, h⟩, rfl⟩
     rw [← ha, vw, ← FractionalIdeal.coeIdeal_span_singleton]
-    exact FractionalIdeal.count_coe_nonneg K w _
+    exact FractionalIdeal.count_coeIdeal_nonneg K w _
   rw [vw, ← FractionalIdeal.spanSingleton_mul_spanSingleton, ← FractionalIdeal.spanSingleton_pow,
     FractionalIdeal.count_mul K w (pow_ne_zero _ (FractionalIdeal.spanSingleton_ne_zero_iff.2 hq'))
       (FractionalIdeal.spanSingleton_ne_zero_iff.2 hy), FractionalIdeal.count_pow] at h0
@@ -1595,15 +1595,15 @@ theorem vw_ge {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 
 
 theorem vw_nat_nonneg {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) (q : ℕ) : 0 ≤ vw w (q : K) := by
   rw [← map_natCast (algebraMap (𝓞 K) K), vw, ← FractionalIdeal.coeIdeal_span_singleton]
-  exact FractionalIdeal.count_coe_nonneg K w _
+  exact FractionalIdeal.count_coeIdeal_nonneg K w _
 
 theorem vw_absNorm {K E : Type} [Field K] [NumberField K] [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 K))
     (P : HeightOneSpectrum (𝓞 E)) (h : ((Formalism.EigenvalueLevelCeiling.plc P : ℕ) : 𝓞 K) ∉ w.asIdeal) :
     vw w ((Ideal.absNorm P.asIdeal : ℕ) : K) = 0 := by
   have hfin : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   have hmax := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  let := Ideal.Quotient.field P.asIdeal
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
   obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 E ⧸ P.asIdeal) (ringChar (𝓞 E ⧸ P.asIdeal))
   have h1 : Ideal.absNorm P.asIdeal = Formalism.EigenvalueLevelCeiling.plc P ^ (n : ℕ) := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card, hn]; rfl
@@ -1611,7 +1611,7 @@ theorem vw_absNorm {K E : Type} [Field K] [NumberField K] [Field E] [NumberField
     rw [h1, Nat.cast_pow]; exact fun h' => h (w.isPrime.mem_of_pow_mem _ h')
   have h3 : ((Ideal.absNorm P.asIdeal : ℕ) : 𝓞 K) ≠ 0 := fun h' => h2 (h' ▸ zero_mem _)
   rw [← map_natCast (algebraMap (𝓞 K) K), vw, ← FractionalIdeal.coeIdeal_span_singleton,
-    FractionalIdeal.count_coe K w (by simpa using h3)]
+    FractionalIdeal.count_coeIdeal K w (by simpa using h3)]
   by_contra h4
   refine h2 ((Ideal.dvd_span_singleton).1 ?_)
   exact (Associates.count_ne_zero_iff_dvd (by simpa using h3) w.irreducible).1 (by exact_mod_cast h4)
@@ -1660,7 +1660,7 @@ open ValuativeRel UpperTheory.FlipInt UpperTheory.FlipVal
 
 private theorem psi_int {D : D7} {w : Pl D.host.E} {ψ : AddChar (Kw w) Circle} (hc : HasConductor ψ 1) (n : ℕ) (x : Kw w)
     (hx : valuation (Kw w) ((((unifAt w) ^ n : (Kw w)ˣ) : Kw w) * x) ≤ 1) : IsIntegral ℤ (ψ x : ℂ) := by
-  haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have e := ValuativeRel.isEquiv (valuation (Kw w)) (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ)))
   set q := Ideal.absNorm w.asIdeal
   have hq0 : q ≠ 0 := Ideal.absNorm_eq_zero_iff.not.2 w.ne_bot
@@ -1681,7 +1681,7 @@ private theorem psi_int {D : D7} {w : Pl D.host.E} {ψ : AddChar (Kw w) Circle} 
     refine le_trans ?_ hx'
     rw [map_mul, map_mul, Units.val_pow_eq_pow_val, map_pow, Nat.cast_pow, map_pow, hu]
     gcongr
-    exact zero_le'
+    exact zero_le
   have hNx2 : valuation (Kw w) (((q ^ n : ℕ) : Kw w) * x) ≤ valuation (Kw w) 1 :=
     (e (((q ^ n : ℕ) : Kw w) * x) 1).2 (by rw [map_one]; exact hNx)
   have h1 : ψ ((q ^ n) • x) = 1 := by
@@ -1712,7 +1712,7 @@ private theorem nu_int {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : Gr
   have h12 := (GlobalTheory.SizesOfRows.sizes_of_sizeRows large₂ hS).2.2.2.2.2.2.2
   have e1 : (((locGrid G t w).nu i j (unifAt w) : ℂˣ) : ℂ) =
       ((L.C.mu0 ⟨j, hj⟩).val w : ℂ) * ((L.xiH t).val w : ℂ) * (((G.ch.chiH (D.R.m - i)).val w : ℂ))⁻¹ := by
-    simp only [Grid.nu, locGrid, muBase, dif_pos hj, MonoidHom.div_apply, Units.val_div_eq_div_val, div_eq_mul_inv]
+    simp only [Grid.nu, locGrid, muBase, dite_eq_left hj, MonoidHom.div_apply, Units.val_div_eq_div_val, div_eq_mul_inv]
     rw [MonoidHom.mul_apply, MonoidHom.inv_apply, Units.val_mul, Units.val_inv_eq_inv_val]
     rfl
   have hμ := L.C.isMu0 ⟨j, hj⟩
@@ -1831,7 +1831,7 @@ theorem _root_.GlobalTheory.T.flips_loss_bounded_at_exceptional_places : ∃ CF0
   by_cases hW : w ∈ ch.G.pl.W0
   · have hd : depthAt ch.G w = cosExp ch.G w := by
       rw [depthAt, max_eq_left]
-      rw [cosExp, if_pos hW]
+      rw [cosExp, ite_eq_left hW]
       exact ch.G.pl.depth_pos _ _
     obtain ⟨s1, -, s2, -, -, -, -, s3⟩ := GlobalTheory.SizesOfRows.sizes_of_sizeRows large₂ hS.size
     have s2' : (1 : ℝ) ≤ bigN D := by exact_mod_cast s2

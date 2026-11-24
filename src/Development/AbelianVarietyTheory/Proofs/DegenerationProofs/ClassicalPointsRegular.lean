@@ -55,8 +55,8 @@ variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω
 
 theorem locallyOfFiniteType_int [Algebra.FiniteType ℤ o] :
     LocallyOfFiniteType (M.s ≫ spMap (algebraMap ℤ o)) := by
-  haveI := M.lft
-  haveI : LocallyOfFiniteType (spMap (algebraMap ℤ o)) :=
+  have := M.lft
+  have : LocallyOfFiniteType (spMap (algebraMap ℤ o)) :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).2 (RingHom.finiteType_algebraMap.2 inferInstance)
   infer_instance
 

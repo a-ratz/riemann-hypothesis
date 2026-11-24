@@ -300,7 +300,7 @@ include hs hR ht hfix hθ hsθ h2 in
 theorem exists_value_unit [Nonempty ι] [Finite (MaximalSpectrum R)] {S : Matrix ι ι A}
     (hS : cT s S = S) (hdet : IsUnit S.det) : ∃ (x : ι → A) (r : Rˣ), bf s S x x = algebraMap R A r := by
   classical
-  haveI := Fintype.ofFinite (MaximalSpectrum R)
+  have := Fintype.ofFinite (MaximalSpectrum R)
   choose xm hxm using exists_value_notMem hs t ht hfix hθ hsθ h2 hS hdet
   choose c hc using fun k : MaximalSpectrum R =>
     exists_crt (B := R) fun m => if m = k then 1 else 0
@@ -486,7 +486,7 @@ theorem exists_diagonal_congr : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have h2 : Module.finrank F E = 2 := h.2.2.1
   have h' : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsCMExt F E σ := h
   have hσ := GlobalTheory.GaussMean.OneVec.sigma_sigma h'
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   have hs : ∀ z : R ⊗[F] E, sigR R σ (sigR R σ z) = z := fun z => by
     induction z using TensorProduct.induction_on with
     | zero => simp
@@ -534,8 +534,8 @@ theorem exists_diagonal_congr : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have h2u : IsUnit (2 : R ⊗[F] E) := by
     have := (IsUnit.mk0 (2 : F) two_ne_zero).map (algebraMap F (R ⊗[F] E))
     rwa [map_ofNat] at this
-  haveI : Module.Finite R (R ⊗[F] E) := Module.Finite.base_change F R E
-  haveI : IsArtinianRing (R ⊗[F] E) := IsArtinianRing.of_finite R _
+  have : Module.Finite R (R ⊗[F] E) := Module.Finite.base_change F R E
+  have : IsArtinianRing (R ⊗[F] E) := IsArtinianRing.of_finite R _
   obtain ⟨g, D, hg, hgS⟩ := HermDiagonal.diagProp_fin hs hR t ht hfix hθ hsθ h2u n S hS hdet
   exact ⟨Matrix.GeneralLinearGroup.mk'' g hg, D, hgS⟩
 
@@ -564,7 +564,7 @@ theorem unitChoice_of_isArtinianRing_isReduced :
     intro I
     by_contra h
     simp only [not_exists, ne_eq, not_not] at h
-    haveI : I.asIdeal.IsMaximal := I.isMaximal
+    have : I.asIdeal.IsMaximal := I.isMaximal
     let ψ : R →+* R ⧸ I.asIdeal :=
       (Pi.evalRingHom (fun J : MaximalSpectrum R => R ⧸ J.asIdeal) I).comp φ.toRingHom
     have hle : Ideal.span (Set.range f) ≤ RingHom.ker ψ := by
@@ -602,8 +602,8 @@ theorem unitChoice_of_isArtinianRing_isReduced :
       simp only [map_mul, AlgEquiv.apply_symm_apply, Finset.sum_apply, Pi.mul_apply, E, ite_mul,
         one_mul, zero_mul, Fintype.sum_ite_eq]
     rw [hcomp]
-    haveI : I.asIdeal.IsMaximal := I.isMaximal
-    letI := Ideal.Quotient.field I.asIdeal
+    have : I.asIdeal.IsMaximal := I.isMaximal
+    let := Ideal.Quotient.field I.asIdeal
     exact isUnit_iff_ne_zero.2 (hc I)
 
 end GlobalTheory.CompanionTheory.SW

@@ -111,7 +111,7 @@ private theorem key (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (ρ : M
 theorem UpperTheory.ConvolutionTheory.R2.M.unfC :
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (σ) (u : G1 F → ℂ), M.RowSec (F := F) σ → Measurable u → (∀ (ξ : F) g, u (nU (rt ξ) * g) = u g) → (M.J0 M₀ fun g => ∫⁻ b in fundamentalSet F, ‖u (nU b * g)‖ₑ ∂(adeleMeasure F)) ≠ ⊤ → (∀ᵐ g ∂(M₀.μ.restrict M₀.D), Summable fun r => ‖u (ratS F (σ r) * g)‖) ∧ IntegrableOn (fun g => ∑' r, u (ratS F (σ r) * g)) M₀.D M₀.μ ∧ Integrable (iw fun g => ∫ b in fundamentalSet F, u (nU b * g) ∂(adeleMeasure F)) M₀.ν ∧ ∫ g in M₀.D, ∑' r, u (ratS F (σ r) * g) ∂M₀.μ = M₀.I0 fun g => ∫ b in fundamentalSet F, u (nU b * g) ∂(adeleMeasure F) := by
   intro F _ _ M₀ σ u hσ hu hinv hfin
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
   obtain ⟨ρ, hρs, hρ1, hρ2⟩ := M.iwDens F M₀
   have hk := key F M₀ ρ hρ1
   obtain ⟨h1, h2, h3, h4⟩ := absUnf (M₀.μ.restrict M₀.D) (fun (r : {r : Fin 2 → F // r ≠ 0}) g => ratS F (σ r) * g)
@@ -119,5 +119,5 @@ theorem UpperTheory.ConvolutionTheory.R2.M.unfC :
     (fun q => nU q.2 * (mD q.1.1 * q.1.2)) (meas_q F) u hu
     (fun φ hφ => (M.unfL F M₀ σ (fun g => φ (u g)) hσ (hφ.comp hu)
         (fun ξ g => by simp only [hinv])).trans (hk _ (hφ.comp hu)).symm)
-    (by rw [hk (fun g => ‖u g‖ₑ) hu.enorm]; exact hfin)
+    (by rw [hk (fun g => ‖u g‖ₑ) hu.eNorm]; exact hfin)
   refine ⟨h1, h2, ((hρ2 _).1).1 h3, h4.trans ((hρ2 _).2)⟩

@@ -100,7 +100,7 @@ theorem perfectField_residueField_maximalIdeal (R : Type) [CommRing R] [IsLocalR
   have hb := Ideal.bijective_algebraMap_quotient_residueField (IsLocalRing.maximalIdeal R)
   let e : IsLocalRing.ResidueField R ≃+* (IsLocalRing.maximalIdeal R).ResidueField :=
     RingEquiv.ofBijective _ hb
-  letI : Algebra (IsLocalRing.ResidueField R) (IsLocalRing.maximalIdeal R).ResidueField :=
+  let : Algebra (IsLocalRing.ResidueField R) (IsLocalRing.maximalIdeal R).ResidueField :=
     e.toRingHom.toAlgebra
   have : Algebra.IsIntegral (IsLocalRing.ResidueField R) (IsLocalRing.maximalIdeal R).ResidueField :=
     ⟨fun x => by obtain ⟨y, rfl⟩ := e.surjective x; exact isIntegral_algebraMap⟩
@@ -152,46 +152,46 @@ theorem valuation_le_exp_neg_card_inertia (R K L : Type) [CommRing R] [IsDomain 
   classical
   let H : Subgroup (L ≃ₐ[K] L) := P.asIdeal.inertia (L ≃ₐ[K] L)
   let E : IntermediateField K L := FixedPoints.intermediateField H
-  haveI : IsGaloisGroup H E L := IsGaloisGroup.subgroup (L ≃ₐ[K] L) K L H
-  haveI : IsScalarTower R E L := IsScalarTower.of_algebraMap_eq fun r => by
+  have : IsGaloisGroup H E L := IsGaloisGroup.subgroup (L ≃ₐ[K] L) K L H
+  have : IsScalarTower R E L := IsScalarTower.of_algebraMap_eq fun r => by
     rw [IsScalarTower.algebraMap_apply R K L, IsScalarTower.algebraMap_apply R K E]; rfl
   let OE := integralClosure R E
-  haveI : IsFractionRing OE E := integralClosure.isFractionRing_of_finite_extension K E
-  haveI : IsDedekindDomain OE := integralClosure.isDedekindDomain R K E
+  have : IsFractionRing OE E := integralClosure.isFractionRing_of_finite_extension K E
+  have : IsDedekindDomain OE := integralClosure.isDedekindDomain R K E
   let f : OE →ₐ[R] integralClosure R L := ((IsScalarTower.toAlgHom R E L).comp OE.val).codRestrict _
     (fun x => x.2.map (IsScalarTower.toAlgHom R E L))
-  letI : Algebra OE (integralClosure R L) := f.toRingHom.toAlgebra
-  haveI : IsScalarTower OE (integralClosure R L) L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R OE (integralClosure R L) := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
-  haveI : Algebra.IsIntegral OE (integralClosure R L) := Algebra.IsIntegral.tower_top R
-  haveI : FaithfulSMul OE (integralClosure R L) := by
+  let : Algebra OE (integralClosure R L) := f.toRingHom.toAlgebra
+  have : IsScalarTower OE (integralClosure R L) L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R OE (integralClosure R L) := IsScalarTower.of_algebraMap_eq fun r => (f.commutes r).symm
+  have : Algebra.IsIntegral OE (integralClosure R L) := Algebra.IsIntegral.tower_top R
+  have : FaithfulSMul OE (integralClosure R L) := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro a b hab
     have := congrArg (fun x : integralClosure R L => (x : L)) hab
     exact Subtype.ext (FaithfulSMul.algebraMap_injective E L this)
-  haveI : Module.IsTorsionFree OE (integralClosure R L) := Module.isTorsionFree_iff_faithfulSMul.mpr inferInstance
-  haveI : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R K L (integralClosure R L)
-  haveI : Module.Finite OE (integralClosure R L) := Module.Finite.of_restrictScalars_finite R OE _
-  haveI : Module.Flat OE (integralClosure R L) := inferInstance
-  haveI : SMulDistribClass H (integralClosure R L) L := inferInstance
-  haveI : IsGaloisGroup H OE (integralClosure R L) := IsGaloisGroup.of_isFractionRing H OE (integralClosure R L) E L
+  have : Module.IsTorsionFree OE (integralClosure R L) := Module.isTorsionFree_iff_faithfulSMul.mpr inferInstance
+  have : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R K L (integralClosure R L)
+  have : Module.Finite OE (integralClosure R L) := Module.Finite.of_restrictScalars_finite R OE _
+  have : Module.Flat OE (integralClosure R L) := inferInstance
+  have : SMulDistribClass H (integralClosure R L) L := inferInstance
+  have : IsGaloisGroup H OE (integralClosure R L) := IsGaloisGroup.of_isFractionRing H OE (integralClosure R L) E L
 
   let Q : Ideal OE := P.asIdeal.under OE
   have hPne : P.asIdeal ≠ ⊥ := P.ne_bot
   have hQne : Q ≠ ⊥ := by
     exact Ideal.under_ne_bot OE hPne
-  haveI hQmax : Q.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hQne
+  have hQmax : Q.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hQne
   have hQR : (Q.under R).IsMaximal := Ideal.IsMaximal.under R Q
-  haveI : Q.LiesOver (IsLocalRing.maximalIdeal R) := ⟨(IsLocalRing.eq_maximalIdeal hQR).symm⟩
-  letI : Field (OE ⧸ Q) := Ideal.Quotient.field Q
-  letI : Field (R ⧸ IsLocalRing.maximalIdeal R) := Ideal.Quotient.field _
-  haveI : Algebra.IsIntegral R OE := ⟨fun x => integralClosure.isIntegral x⟩
-  haveI : Algebra.IsIntegral (R ⧸ IsLocalRing.maximalIdeal R) (OE ⧸ Q) := inferInstance
-  haveI : Algebra.IsAlgebraic (R ⧸ IsLocalRing.maximalIdeal R) (OE ⧸ Q) := Algebra.IsIntegral.isAlgebraic
-  haveI : PerfectField (OE ⧸ Q) := by
-    haveI : PerfectField (R ⧸ IsLocalRing.maximalIdeal R) := ‹PerfectField (IsLocalRing.ResidueField R)›
+  have : Q.LiesOver (IsLocalRing.maximalIdeal R) := ⟨(IsLocalRing.eq_maximalIdeal hQR).symm⟩
+  let : Field (OE ⧸ Q) := Ideal.Quotient.field Q
+  let : Field (R ⧸ IsLocalRing.maximalIdeal R) := Ideal.Quotient.field _
+  have : Algebra.IsIntegral R OE := ⟨fun x => integralClosure.isIntegral x⟩
+  have : Algebra.IsIntegral (R ⧸ IsLocalRing.maximalIdeal R) (OE ⧸ Q) := inferInstance
+  have : Algebra.IsAlgebraic (R ⧸ IsLocalRing.maximalIdeal R) (OE ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : PerfectField (OE ⧸ Q) := by
+    have : PerfectField (R ⧸ IsLocalRing.maximalIdeal R) := ‹PerfectField (IsLocalRing.ResidueField R)›
     exact Algebra.IsAlgebraic.perfectField (R ⧸ IsLocalRing.maximalIdeal R)
-  haveI : PerfectField Q.ResidueField :=
+  have : PerfectField Q.ResidueField :=
     PerfectField.of_ringEquiv (RingEquiv.ofBijective _ (Ideal.bijective_algebraMap_quotient_residueField Q))
   have htop : P.asIdeal.inertia H = ⊤ := by
     rw [Subgroup.eq_top_iff']
@@ -205,7 +205,7 @@ theorem valuation_le_exp_neg_card_inertia (R K L : Type) [CommRing R] [IsDomain 
   have hyE : y ∈ E := fun σ => hy σ σ.2
   let z : E := ⟨y, hyE⟩
   let w : HeightOneSpectrum OE := ⟨Q, inferInstance, hQne⟩
-  haveI : P.asIdeal.LiesOver w.asIdeal := inferInstance
+  have : P.asIdeal.LiesOver w.asIdeal := inferInstance
   have hval := HeightOneSpectrum.valuation_liesOver L w P z
   rw [← hcard] at hval
   change w.valuation E z ^ Nat.card H = P.valuation L y at hval
@@ -298,9 +298,9 @@ theorem valuationSubring_valuation_lt_one_iff {L : Type} [Field L] {Γ : Type} [
     constructor
     · rintro (h | h)
       · exact absurd h hx
-      · exact (one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx))).1 h
+      · exact (one_lt_inv₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx))).1 h
     · intro h
-      exact Or.inr ((one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx))).2 h)
+      exact Or.inr ((one_lt_inv₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx))).2 h)
 
 theorem mem_iff_valuation_le_one (L S : Type) [Field L] [CommRing S] [IsDomain S] [IsDedekindDomain S]
     [Algebra S L] [IsFractionRing S L] (W : ValuationSubring L) (hS : ∀ s : S, algebraMap S L s ∈ W)
@@ -398,13 +398,13 @@ theorem div_uniformiser_mem : ∀ (R K L : Type) [CommRing R] [IsDomain R] [IsDi
     ∀ π : R, Irreducible π → ∀ y : L, (∀ τ ∈ inertia K W, τ y = y) → y ∈ W.nonunits →
     y / algebraMap K L (algebraMap R K π) ∈ W := by
   intro R K L _ _ _ _ _ _ _ _ _ _ _ W hW π hπ y hy hyW
-  letI : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI hc : SMulCommClass (L ≃ₐ[K] L) R L := ⟨fun g r x => by
+  let : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have hc : SMulCommClass (L ≃ₐ[K] L) R L := ⟨fun g r x => by
     rw [← IsScalarTower.algebraMap_smul K r x, ← IsScalarTower.algebraMap_smul K r (g • x)]
     exact map_smul g _ _⟩
-  haveI : IsDedekindDomain (integralClosure R L) := integralClosure.isDedekindDomain R K L
-  haveI : IsFractionRing (integralClosure R L) L := integralClosure.isFractionRing_of_finite_extension K L
+  have : IsDedekindDomain (integralClosure R L) := integralClosure.isDedekindDomain R K L
+  have : IsFractionRing (integralClosure R L) L := integralClosure.isFractionRing_of_finite_extension K L
   have hR : ∀ r : R, algebraMap R L r ∈ W := by
     intro r
     have : algebraMap R K r ∈ W.toSubring.comap (algebraMap K L) := by rw [hW]; exact ⟨r, rfl⟩
@@ -456,7 +456,7 @@ theorem div_uniformiser_mem : ∀ (R K L : Type) [CommRing R] [IsDomain R] [IsDi
   have key := valuation_le_of_fixed R K L P π hπ y (fun σ hσ => hy σ (hI σ hσ)) hlt
   rw [hWv, map_div₀]
   have hv0 : P.valuation L c ≠ 0 := (Valuation.ne_zero_iff _).2 hc0
-  rw [div_le_one₀ (zero_lt_iff.2 hv0)]
+  rw [div_le_one₀ (pos_iff_ne_zero.2 hv0)]
   exact key
 
 end GlobalTheory.InertiaUnram

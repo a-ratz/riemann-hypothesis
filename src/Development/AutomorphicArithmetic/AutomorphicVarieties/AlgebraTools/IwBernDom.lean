@@ -161,7 +161,7 @@ private theorem levi_mem {α : Type} {m : α → Type} [Fintype α] [LinearOrder
       split_ifs
       · exact h2 a c h
       · simp
-    · rw [levi_entry, if_pos rfl]
+    · rw [levi_entry, ite_eq_left rfl]
       exact h3 a
   refine mem_of_good (key p hp) ?_
   rw [← map_inv, ← map_inv]
@@ -213,7 +213,7 @@ private theorem conj_mem (S : Subgroup (GL (Fin n) k)) (σ : Equiv.Perm (Fin n))
 omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 private theorem val_le {x z : kˣ} (h : valuation k (x : k) ≤ valuation k (z : k)) (y : k) :
     valuation k ((x : k) * y * (z : k)⁻¹) ≤ valuation k y := by
-  have hz : 0 < valuation k (z : k) := zero_lt_iff.2 (by simp)
+  have hz : 0 < valuation k (z : k) := pos_iff_ne_zero.2 (by simp)
   rw [map_mul, map_mul, map_inv₀, mul_inv_le_iff₀ hz, mul_comm]
   exact mul_le_mul_right h _
 
@@ -341,7 +341,7 @@ private theorem pos_mono (h : (j : ℕ) = i + 1) (σ : Equiv.Perm (Fin n)) (hσ 
     (hb : ∀ a, bl i j (σ a) = bl i j a) (t : Fin n → kˣ) (ht : Dom t) :
     (FF C h).Pos (pm k n σ * diagT k (Fin n) t) := by
   refine ⟨(mem_Mf C h _).2 fun a c hac => ?_, ?_, ?_⟩
-  · rw [Units.val_mul, val_diagT, mul_diagonal, pm_apply, if_neg, zero_mul]
+  · rw [Units.val_mul, val_diagT, mul_diagonal, pm_apply, ite_eq_right, zero_mul]
     rintro rfl
     exact hac (hb c)
   · refine conj_mem _ σ (fun a => t (σ a)) (fun g hg a c hac => ?_) (by rw [pm_diag, hσ])
@@ -359,7 +359,7 @@ private theorem pos_mono (h : (j : ℕ) = i + 1) (σ : Equiv.Perm (Fin n)) (hσ 
       rw [hb, hb] at hlt
       have h2 : valuation k ((t⁻¹ a : kˣ) : k) ≤ valuation k ((t⁻¹ c : kˣ) : k) := by
         simp only [Pi.inv_apply, Units.val_inv_eq_inv_val, map_inv₀]
-        exact inv_anti₀ (zero_lt_iff.2 (by simp)) (ht _ _ (lt_of_block_lt h hlt).le)
+        exact inv_anti₀ (pos_iff_ne_zero.2 (by simp)) (ht _ _ (lt_of_block_lt h hlt).le)
       have h3 := (val_le h2 (g.val (σ a) (σ c))).trans_lt h1
       exact ⟨h3.le, fun _ => h3⟩
     · rw [mem_unipRad' (e := opp (ee i j)) hg.1 _ _ hlt, one_apply_ne (σ.injective.ne hac)]
@@ -387,7 +387,7 @@ private theorem conj_swap (h : (j : ℕ) = i + 1) {x : kˣ} (hx : IsUnif x) (s :
       (diagT k (Fin n) s * pm k n (Equiv.swap i j))⁻¹ ∈ iwC k n C := by
   have hij : i < j := by rw [Fin.lt_def]; omega
   obtain ⟨hx1, hx2⟩ := unif_val hx
-  have hx0 : 0 < valuation k (x : k) := zero_lt_iff.2 (by simp)
+  have hx0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 (by simp)
   refine conj_mem _ (Equiv.swap i j) s (fun g hg a c hac => ?_) (by simp)
   obtain ⟨g1, g2, -⟩ := good_of_mem hg.2
   by_cases h2 : a = i ∧ c = j

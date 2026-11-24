@@ -104,7 +104,7 @@ theorem hasSum_one {ι : Type} (N : ι → ℕ) (c : ι → ℂ) (hN : ∀ i, 2 
   obtain ⟨i, k⟩ := p
   have hne : ((N i : ℕ) : ℂ) ≠ 0 := by exact_mod_cast (hpos i).ne'
   simp only
-  rw [mul_pow, Complex.cpow_def_of_ne_zero hne, ← Complex.exp_nat_mul, ← Complex.natCast_log]
+  rw [mul_pow, Complex.cpow_def_of_ne_zero hne, ← exp_natCast_mul, ← Complex.natCast_log]
   push_cast
   rw [show ((k : ℂ) + 1) * (Complex.log (N i) * -s) = -(((k : ℂ) + 1) * Complex.log (N i)) * s by ring]
   ring

@@ -282,7 +282,7 @@ theorem GlobalTheory.locU_equiv_GL : ∀ (E : Type) [Field E] [NumberField E] [I
             continuous_invFun := ?_ }, fun x => rfl⟩
   · exact (Continuous.units_map _ (continuous_id.matrix_map
       ((RestrictedProduct.continuous_eval w).comp continuous_snd))).comp
-      (continuous_subtype_val.comp continuous_subtype_val)
+      (continuous_subtypeVal.comp continuous_subtypeVal)
   · refine Continuous.subtype_mk (Continuous.subtype_mk (hfin.comp ?_) _) _
     exact (CuspSub.continuous_locGL w).mul ((CuspSub.continuous_locGL _).comp ((continuous_invT _).comp
       (Continuous.units_map _ (continuous_id.matrix_map (psi_spec w).1))))

@@ -148,7 +148,7 @@ theorem det_lsmul (E : Type) [Field E] [NumberField E] (Λ : Type) [AddCommGroup
     [Module (𝓞 E) Λ] [Module.Free ℤ Λ] [Module.Finite ℤ Λ] (a : 𝓞 E) :
     LinearMap.det ((LinearMap.lsmul (𝓞 E) Λ a).restrictScalars ℤ) =
       Algebra.norm ℤ a ^ finrank (𝓞 E) Λ := by
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) Λ
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) Λ
   obtain ⟨v, hv⟩ := exists_linearIndependent_of_le_finrank (R := 𝓞 E) (M := Λ)
     (le_refl (finrank (𝓞 E) Λ))
   let L : (Fin (finrank (𝓞 E) Λ) → 𝓞 E) →ₗ[𝓞 E] Λ := Fintype.linearCombination (𝓞 E) v
@@ -169,7 +169,7 @@ theorem det_lsmul (E : Type) [Field E] [NumberField E] (Λ : Type) [AddCommGroup
     intro x
     obtain ⟨b, hb, hbx⟩ := htors x
     obtain ⟨y, hy⟩ := LinearMap.mem_range.mp hbx
-    obtain ⟨r, hr, c, hc⟩ := IsAlgebraic.exists_nonzero_dvd
+    obtain ⟨r, hr, c, hc⟩ := IsAlgebraic.exists_ne_zero_dvd
       (Algebra.IsIntegral.isIntegral (R := ℤ) b).isAlgebraic (mem_nonZeroDivisors_of_ne_zero hb)
     refine ⟨r, hr, LinearMap.mem_range.mpr ⟨c • y, ?_⟩⟩
     show L (c • y) = r • x
@@ -271,7 +271,7 @@ theorem corank_le {M : Type} [AddCommGroup M] [Module.Free ℤ M] [Module.Finite
     · have := hQ.map (algebraMap ℤ k)
       rw [RingHom.map_det] at this
       exact this
-  haveI : Module.Finite k (TensorProduct ℤ k M) :=
+  have : Module.Finite k (TensorProduct ℤ k M) :=
     Module.Finite.of_basis (Algebra.TensorProduct.basis k t)
   have hsum := LinearMap.finrank_range_add_finrank_ker (LinearMap.baseChange k f)
   rw [Module.finrank_eq_card_basis (Algebra.TensorProduct.basis k t)] at hsum
@@ -392,7 +392,7 @@ theorem exists_dual_lift {Y Z : Scheme.{0}} (f : Y ⟶ Z) [Smooth f] {k : Type} 
     ∃ v : Sp (DualNumber k) ⟶ Y, spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ v = y ∧ v ≫ f = w := by
   let fs : DualNumber k →+* k := (TrivSqZeroExt.fstHom k k k).toRingHom
   have hfs : Function.Surjective fs := fun c => ⟨TrivSqZeroExt.inl c, rfl⟩
-  haveI : IsLocalHom fs := ⟨fun a ha => TrivSqZeroExt.isUnit_iff_isUnit_fst.2 ha⟩
+  have : IsLocalHom fs := ⟨fun a ha => TrivSqZeroExt.isUnit_iff_isUnit_fst.2 ha⟩
   let c : Sp k := IsLocalRing.closedPoint k
   let yp : Y := y c
   have hpt : (spMap fs) c = IsLocalRing.closedPoint (DualNumber k) :=
@@ -411,8 +411,8 @@ theorem exists_dual_lift {Y Z : Scheme.{0}} (f : Y ⟶ Z) [Smooth f] {k : Type} 
       Scheme.SpecMap_stalkMap_fromSpecStalk, ← Category.assoc, hβy]
     exact h
   algebraize [(f.stalkMap yp).hom]
-  letI : Algebra (Z.presheaf.stalk (f yp)) k := ((βy.hom).comp (f.stalkMap yp).hom).toAlgebra
-  letI : Algebra (Z.presheaf.stalk (f yp)) (DualNumber k) := (βw.hom).toAlgebra
+  let : Algebra (Z.presheaf.stalk (f yp)) k := ((βy.hom).comp (f.stalkMap yp).hom).toAlgebra
+  let : Algebra (Z.presheaf.stalk (f yp)) (DualNumber k) := (βw.hom).toAlgebra
   have e1 : ∀ b, fs (βw.hom b) = βy.hom ((f.stalkMap yp).hom b) := fun b =>
     congrArg (fun φ => φ.hom b) hcomp
   let F : Y.presheaf.stalk yp →ₐ[Z.presheaf.stalk (f yp)] k :=
@@ -596,13 +596,13 @@ theorem exists_charAct [TwoUniqueSums Ch] (i : splitTorus (Sp k) Ch ⟶ G) (q : 
     fun e => ker.hom_ext e (toUnit_unique _ _)
   have ex : ∀ a, ∃ u : Ch →+ Ch, diagMap (Sp k) u ≫ i = i ≫ act a := by
     intro a
-    haveI := hm a
-    haveI := hmB a
+    have := hm a
+    have := hmB a
     have e : (i ≫ act a) ≫ q = toUnit _ ≫ η := by
       rw [Category.assoc, hq, ← Category.assoc, ker.w, Category.assoc, IsMonHom.one_hom]
     let t := ker.lift (i ≫ act a) (toUnit _) (by rw [e])
     have ht : t ≫ i = i ≫ act a := ker.lift_fst _ _ _
-    haveI : IsMonHom t := isMonHom_of_comp i hinj t (i ≫ act a) ht
+    have : IsMonHom t := isMonHom_of_comp i hinj t (i ≫ act a) ht
     obtain ⟨u, hu⟩ := exists_diagMap t
     exact ⟨u, by rw [← hu, ht]⟩
   choose A hA using ex
@@ -619,7 +619,7 @@ theorem exists_charAct [TwoUniqueSums Ch] (i : splitTorus (Sp k) Ch ⟶ G) (q : 
     intro a b
     apply diagMap_injective (k := k)
     apply hinj
-    haveI : ∀ a, IsMonHom (act a) := hm
+    have : ∀ a, IsMonHom (act a) := hm
     rw [hA, diagMap_add, MonObj.mul_comp, hA, hA, hadd, MonObj.comp_mul]
   exact ⟨RingHom.mk' ⟨⟨A, one⟩, mul⟩ add, hA⟩
 
@@ -777,8 +777,8 @@ end Fin
 
 theorem lie_seq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X : Scheme.{0}) (t : SAB H X) (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X) (Q : AbQuot t x) (d d' : ℕ) (g : GermAt t x d) (gB : GermAt Q.tB (𝟙 (Sp k)) d'), ∃ (Λ : Type) (_ : AddCommGroup Λ) (_ : Module (𝓞 E) Λ) (_ : Module.Free ℤ Λ) (_ : Module.Finite ℤ Λ) (P : Matrix (Fin d') (Fin d) k) (j : TensorProduct ℤ k Λ →ₗ[k] (Fin d → k)), Q.IsDiff g gB P ∧ Function.Surjective P.mulVec ∧ Function.Injective j ∧ (∀ u, P.mulVec u = 0 ↔ u ∈ LinearMap.range j) ∧ (∀ a, P * rho g.B a = rho gB.B a * P) ∧ ∀ a v, j (LinearMap.baseChange k ((LinearMap.lsmul (𝓞 E) Λ a).restrictScalars ℤ) v) = (rho g.B a).mulVec (j v) := by
   intro E _ _ _ H _ hstar X t k _ _ p _ _ x Q d d' g gB
-  haveI := Q.q_hom
-  haveI := Q.i_hom
+  have := Q.q_hom
+  have := Q.i_hom
   let Gk := (Over.pullback x).obj t.G
   let actk : 𝓞 E → (Gk ⟶ Gk) := fun a => (Over.pullback x).map (t.act.act a)
   obtain ⟨LG, _, _, ⟨Mk⟩⟩ := lieModel_exists (Sp k) Gk k (𝟙 _)
@@ -811,7 +811,7 @@ theorem lie_seq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
     rw [hdq, hMk, Category.assoc, Q.act_q, ← Category.assoc, ← hdq]
     exact (hrB a (dq e)).symm
   obtain ⟨h, hh⟩ := exists_charAct Q.i Q.q Q.isKernel actk Q.tB.act.act
-    (fun a => by haveI := t.act.hom a; infer_instance) Q.tB.act.hom
+    (fun a => by have := t.act.hom a; infer_instance) Q.tB.act.hom
     (by simp only [actk, t.act.one]; exact (Over.pullback x).map_id _)
     (fun a b => by simp only [actk, t.act.mul]; exact (Over.pullback x).map_comp _ _)
     (fun a b => by simp only [actk, t.act.add]; exact Functor.map_mul (Over.pullback x) _ _)
@@ -827,7 +827,7 @@ theorem lie_seq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
   let P : Matrix (Fin d') (Fin d) k := LinearMap.toMatrix' f
   have hP : ∀ u, P.mulVec u = f u := fun u => LinearMap.toMatrix'_mulVec f u
   let j : TensorProduct ℤ k (abelian₂ Q.Ch) →ₗ[k] (Fin d → k) := eG.toLinearMap ∘ₗ di ∘ₗ tenMap k
-  letI modL : Module (𝓞 E) (abelian₂ Q.Ch) := Module.compHom _ (lamEnd h)
+  let modL : Module (𝓞 E) (abelian₂ Q.Ch) := Module.compHom _ (lamEnd h)
   refine ⟨abelian₂ Q.Ch, inferInstance, modL, inferInstance, inferInstance, P, j, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro l v hv1 hv2
     have hv : v = (Mk.pt (eG.symm (Pi.single l 1))).left := by
@@ -931,7 +931,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem exists_desc {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExtension G)
     {Y : Over (Sp k)} [GrpObj Y] (f : G ⟶ Y) [IsMonHom f] (hf : T.i ≫ f = 1) :
     ∃ f' : T.B ⟶ Y, T.q ≫ f' = f := by
-  letI := T.grpB
+  let := T.grpB
   have := T.q_hom
   have := T.q_flat
   have := T.q_surjective
@@ -947,7 +947,7 @@ theorem exists_desc {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : Torus
 
 theorem i_comp_eq_one {k : Type} [Field k] [IsAlgClosed k] {G : Over (Sp k)} [GrpObj G] (T : TorusExtension G)
     {B : Over (Sp k)} [GrpObj B] (hB : IsAbelianScheme B) (f : G ⟶ B) [IsMonHom f] : T.i ≫ f = 1 := by
-  letI := T.addCommGroup
+  let := T.addCommGroup
   have := T.free
   have := T.finite
   have := T.i_hom
@@ -965,7 +965,7 @@ theorem exists_act {k : Type} [Field k] [IsAlgClosed k] {G : Over (Sp k)} [GrpOb
     (a : OAct O G) (T : TorusExtension G) :
     letI := T.grpB
     ∃ b : OAct O T.B, ∀ r, a.act r ≫ T.q = T.q ≫ b.act r := by
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
   have := T.q_hom
   have := T.q_flat
@@ -993,9 +993,9 @@ theorem adj_quot {k : Type} [Field k] [IsAlgClosed k] {H : Host E} (tK : SAB H (
     ∀ (act : OAct (𝓞 E) T.B), (∀ r, tK.act.act r ≫ T.q = T.q ≫ act.act r) → ∀ a,
       LBIso (cubeLB T.B ![fst T.B T.B ≫ act.act a, snd T.B T.B] M)
         (cubeLB T.B ![fst T.B T.B, snd T.B T.B ≫ act.act (H.bar a)] M) := by
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
-  haveI := hB.comm
+  have := hB.comm
   have := T.q_hom
   intro act hact a
   have := act.hom a
@@ -1085,9 +1085,9 @@ theorem exists_abQuot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hiso : LBIso PP'.L (t.PP.L.pull (pullback.fst t.G.hom x)) := by
     rw [← hm]
     exact ⟨w, hw⟩
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
-  haveI := hB.comm
+  have := hB.comm
   have hq := T.q_hom
   have hP₀ := pull_isLB t.PP.isLB (pullback.fst t.G.hom x)
   have hqL := pull_isLB hM T.q.left

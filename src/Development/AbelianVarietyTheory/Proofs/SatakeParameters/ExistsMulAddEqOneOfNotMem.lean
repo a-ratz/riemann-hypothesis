@@ -66,9 +66,9 @@ theorem exists_coprime_mem (p : ℕ) (S : Finset (HeightOneSpectrum (𝓞 E)))
   classical
   have h1 : ∀ Q : S, ∃ a : ℕ, a.Coprime p ∧ ((a : ℕ) : 𝓞 E) ∈ Q.1.asIdeal := by
     intro Q
-    haveI := Q.1.isMaximal
-    haveI : Finite (𝓞 E ⧸ Q.1.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ Q.1.ne_bot
-    letI := Ideal.Quotient.field Q.1.asIdeal
+    have := Q.1.isMaximal
+    have : Finite (𝓞 E ⧸ Q.1.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ Q.1.ne_bot
+    let := Ideal.Quotient.field Q.1.asIdeal
     have hp : (ringChar (𝓞 E ⧸ Q.1.asIdeal)).Prime := CharP.prime_ringChar _
     refine ⟨_, (Nat.Prime.coprime_iff_not_dvd hp).2 fun h => hS Q.1 Q.2 ?_, ?_⟩
     · rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -156,8 +156,8 @@ theorem use₃ (lam : X.Tau → DomWeight n) (hT : ∀ Q ∈ ST, ((p : ℕ) : �
     localization₂ w.asIdeal (nabAtr X.emb lam d.1.Lsh) = localization₂ w.asIdeal (nabAtr X.emb lam d.1.N) ∧
       localization₂ w.asIdeal (delAtr X.emb lam d.1.Lsh) = localization₂ w.asIdeal (delAtr X.emb lam d.1.N) := by
   obtain ⟨a, hap, ha⟩ := exists_coprime_mem p ST hT
-  letI : Submodule.IsFullLattice X.E d.1.N := Formalism.L2.Ker.full_of_sd ⟨d.2.lat, d.2.uni⟩
-  letI := d.2.Lsh_lattice
+  let : Submodule.IsFullLattice X.E d.1.N := Formalism.L2.Ker.full_of_sd ⟨d.2.lat, d.2.uni⟩
+  let := d.2.Lsh_lattice
   have hLsh : Submodule.IsFullLattice X.E d.1.Lsh := Submodule.IsFullLattice.of_le X.E d.2.N_le_Lsh
   refine localization_nabAtr_delAtr_congr X.emb lam hLsh inferInstance (a := a) (fun x hx => ?_)
     (fun x hx => Submodule.smul_of_tower_mem _ a (d.2.N_le_Lsh hx)) w (natCast_notMem_of_coprime hap w hw)

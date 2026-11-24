@@ -213,18 +213,18 @@ theorem pc_sub : PcBound → ∀ (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : 
     pc M m ψ b₀ (F - F') (M.sh y * g) = pc M m ψ b₀ F (M.sh y * g) - pc M m ψ b₀ F' (M.sh y * g) := by
   intro hP D n ρ p hn M m ψ hψ b₀ F F' hF hFi hF' hFi' y g
   obtain ⟨C, hC, hCm, -⟩ := (hP D n ρ p hn M m ψ hψ b₀).2 (g)
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (Mx D ρ p) := (GlobalTheory.MixModel.lattice_Mx D ρ p).2.2.1
-  haveI : FirstCountableTopology (Mx D ρ p) := firstCountable_of_second _
-  haveI h1 : IsFiniteMeasure (m.lz.restrict m.𝓖) :=
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (Mx D ρ p) := (GlobalTheory.MixModel.lattice_Mx D ρ p).2.2.1
+  have : FirstCountableTopology (Mx D ρ p) := firstCountable_of_second _
+  have h1 : IsFiniteMeasure (m.lz.restrict m.𝓖) :=
     ⟨by rw [Measure.restrict_apply_univ, m.hz.2.2]; exact ENNReal.one_lt_top⟩
-  haveI h2 : IsFiniteMeasure (m.μ.restrict m.𝓕) :=
+  have h2 : IsFiniteMeasure (m.μ.restrict m.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, m.hμ.2.2]; exact ENNReal.one_lt_top⟩
   have hchz : Continuous fun z : hermA D ρ => conj (chz ψ b₀ z) :=
     Complex.continuous_conj.comp
-      (hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr b₀.1).comp continuous_subtype_val))
+      (hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr b₀.1).comp continuous_subtypeVal))
   have hnorm : ∀ z, ‖conj (chz ψ b₀ z)‖ = 1 := fun z => by
     rw [RCLike.norm_conj]
     exact hψ.2.1 _
@@ -292,7 +292,7 @@ namespace GlobalTheory.CompanionTheory.FJLim
 
 theorem fj_tendsto : PcBound → ∀ (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : Maps D hn) (m : Meas D ρ p) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ (b₀ : HermE D ρ) {ι : Type} (l : Filter ι) (Fs : ι → G D n → ℂ) (A : G D n → ℂ), Continuous A → LeftInv (GF D n) A → (∀ᶠ i in l, Continuous (Fs i) ∧ LeftInv (GF D n) (Fs i)) → (∀ C : Set (G D n), IsCompact C → ∀ ε : ℝ, 0 < ε → ∀ᶠ i in l, ∀ c ∈ C, ‖Fs i c - A c‖ ≤ ε) → (∀ᶠ i in l, ∀ (y : Mx D ρ p) (g : G D n), pc M m ψ b₀ (Fs i - A) (M.sh y * g) = pc M m ψ b₀ (Fs i) (M.sh y * g) - pc M m ψ b₀ A (M.sh y * g)) → ∀ (g : G D n) (φ : Mx D ρ p → ℂ), Integrable φ m.μ → Tendsto (fun i => FJ M m ψ b₀ (Fs i) g φ) l (𝓝 (FJ M m ψ b₀ A g φ)) := by
   intro hPc D n ρ p hn M m ψ hψ b₀ ι l Fs A hAc hAinv hFs hunif hadd g φ hφ
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
   obtain ⟨hcont, hbd⟩ := hPc D n ρ p hn M m ψ hψ b₀
   obtain ⟨C, hC, -, hCb⟩ := hbd g
   have hφc : Integrable (fun y => conj (φ y)) m.μ := Complex.conjCLE.toContinuousLinearMap.integrable_comp hφ
@@ -581,7 +581,7 @@ theorem eis_pole_free (hRS : RSec) (hEH : EisHol) (hp : 2 ≤ p) {p' : ℕ} (hn 
     have : 1 ≤ p' := by omega
     exact_mod_cast this
   have hmem : ((((p : ℝ) / 2 : ℝ)) : ℂ) ∈ {z : ℂ | (((1 : ℕ) : ℝ) - p') / 2 < z.re ∧ (p' : ℝ) / 2 < z.re} := by
-    simp only [mem_setOf_eq, Complex.ofReal_re, hpp, Nat.cast_one]
+    simp only [mem_ofPred_eq, Complex.ofReal_re, hpp, Nat.cast_one]
     constructor <;> linarith
   have hcont := (hd.differentiableAt (hopen.mem_nhds hmem)).continuousAt
   have h1 := (hcont.tendsto.comp (Complex.continuous_ofReal.continuousAt (x := (p : ℝ) / 2))).mono_left

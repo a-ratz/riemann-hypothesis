@@ -81,7 +81,7 @@ theorem det_glEmbMat (n : ℕ) (A : Matrix (Fin n) (Fin n) k) : (glEmbMat k n A)
   simp only [hrow, hcorner, hminor, hsign, mul_zero, zero_mul, Finset.sum_const_zero, zero_add, one_mul]
 
 theorem det_one_add_colMat (n : ℕ) (v : Fin n → k) : (1 + colMat k n v).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · apply Finset.prod_eq_one
     intro i _
     by_cases hi : i = Fin.last n

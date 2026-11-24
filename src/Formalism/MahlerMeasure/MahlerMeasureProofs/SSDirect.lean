@@ -106,7 +106,7 @@ lemma Good.mul {f g : MvPolynomial σ K} {a b : ι → ℕ} {s s' : σ →₀ �
       monomial s 1 * (g - monomial s' 1) + (f - monomial s 1) * monomial s' 1 +
         (f - monomial s 1) * (g - monomial s' 1) := by
     have : (monomial (s + s') (1 : K)) = monomial s 1 * monomial s' 1 := by
-      rw [monomial_mul, mul_one]
+      rw [monomial_mul_monomial, mul_one]
     rw [this]; ring
   rw [hid] at hm
   rcases mem_support_add hm with hm | hm
@@ -490,13 +490,13 @@ lemma good_tie (i : Fin (t + 1)) (e : MvPolynomial (BVar N r t) ℚ_[p]) (he : S
   refine ⟨?_, ?_⟩
   · funext k
     simp only [sd, Finsupp.add_apply, Finsupp.single_apply]
-    rw [if_neg (scalZ_ne_scalS i k)]
+    rw [ite_eq_right (scalZ_ne_scalS i k)]
     by_cases h : i = k
     · subst h; simp
-    · rw [if_neg (fun h' => h (scalS_inj h')), Pi.single_apply, if_neg (Ne.symm h)]; rfl
+    · rw [ite_eq_right (fun h' => h (scalS_inj h')), Pi.single_apply, ite_eq_right (Ne.symm h)]; rfl
   · have : X (scalZ N r t i) * X (scalS N r t i) + e -
         monomial (Finsupp.single (scalZ N r t i) 1 + Finsupp.single (scalS N r t i) 1) (1 : ℚ_[p]) = e := by
-      rw [X, X, monomial_mul, mul_one, add_sub_cancel_left]
+      rw [X, X, monomial_mul_monomial, mul_one, add_sub_cancel_left]
     rw [this]
     intro m hm
     rw [he m hm]
@@ -590,7 +590,7 @@ lemma zmon_eq : ((∏ i, X (scalZ N r D.T.t (Fin.castSucc i)) ^ D.T.z i) *
     X (scalZ N r D.T.t (Fin.last D.T.t)) ^ D.zPlus : MvPolynomial (BVar N r D.T.t) ℚ_[p]) =
       monomial (zmS D) 1 := by
   simp only [X_pow_eq_monomial]
-  rw [zmS, ← monomial_sum_one, monomial_mul, mul_one]
+  rw [zmS, ← monomial_sum_one, monomial_mul_monomial, mul_one]
 
 noncomputable def pre (j : Fin D.T.t → ℕ) (jp : ℕ) : MvPolynomial (BVar N r D.T.t) ℚ_[p] :=
   (∏ i, D.Ehat p (r := r) i ^ j i) * D.Eplus p (r := r) ^ jp

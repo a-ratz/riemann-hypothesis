@@ -89,6 +89,6 @@ theorem N_le (N : NumDatum) {j : ℕ} (hj : j ≤ N.R.m) : (N.R.N j : ℝ) ≤ N
 theorem log_le_mul (s : Scale) {y : ℝ} (hy : 0 ≤ y) (k : ℕ) (h : y ≤ s.b ^ k) : Real.log y ≤ k * s.L := by
   have := one_le_L s
   refine log_le_of_le_exp hy (by positivity) ?_
-  rw [Real.exp_nat_mul]; exact h
+  rw [Real.exp_natCast_mul]; exact h
 
 end GlobalTheory.ColNorms.NumMean

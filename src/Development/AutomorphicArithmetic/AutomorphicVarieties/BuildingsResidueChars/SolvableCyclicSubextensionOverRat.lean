@@ -48,14 +48,14 @@ theorem UpperTheory.solvable_cyclic_subextension_over_rat :
   intro N
   obtain ⟨p, hpge, hp⟩ := Nat.exists_infinite_primes (N + 3)
   obtain ⟨q, hq, -, hqp⟩ := Nat.exists_prime_gt_modEq_one 0 hp.ne_zero
-  haveI := Fact.mk hq
+  have := Fact.mk hq
   have hpdvd : p ∣ q - 1 := (Nat.modEq_iff_dvd' hq.one_le).mp hqp.symm
-  haveI : IsAbelianGalois ℚ (CyclotomicField q ℚ) :=
+  have : IsAbelianGalois ℚ (CyclotomicField q ℚ) :=
     IsCyclotomicExtension.isAbelianGalois {q} ℚ (CyclotomicField q ℚ)
   have hcardG : Nat.card Gal(CyclotomicField q ℚ/ℚ) = q - 1 := by
     rw [IsGalois.card_aut_eq_finrank, IsCyclotomicExtension.Rat.finrank q (CyclotomicField q ℚ),
       Nat.totient_prime hq]
-  haveI : IsCyclic Gal(CyclotomicField q ℚ/ℚ) :=
+  have : IsCyclic Gal(CyclotomicField q ℚ/ℚ) :=
     isCyclic_of_surjective (IsCyclotomicExtension.autEquivPow (CyclotomicField q ℚ)
       (Polynomial.cyclotomic.irreducible_rat hq.pos)).symm (MulEquiv.surjective _)
   obtain ⟨g, hg⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := Gal(CyclotomicField q ℚ/ℚ))
@@ -73,7 +73,7 @@ theorem UpperTheory.solvable_cyclic_subextension_over_rat :
       · exact h
     rw [hm, Nat.mul_div_cancel_left m hp.pos] at h1
     exact Nat.eq_of_mul_eq_mul_right hmpos h1
-  haveI : IsAbelianGalois ℚ (IntermediateField.fixedField (Subgroup.zpowers (g ^ p))) :=
+  have : IsAbelianGalois ℚ (IntermediateField.fixedField (Subgroup.zpowers (g ^ p))) :=
     IsAbelianGalois.tower_bot ℚ _ (CyclotomicField q ℚ)
   refine ⟨IntermediateField.fixedField (Subgroup.zpowers (g ^ p)), inferInstance, inferInstance,
     inferInstance, ?_, ?_, ?_⟩

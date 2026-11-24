@@ -78,7 +78,7 @@ theorem summable_sb_mul_decay : ∀ (F : Type) [Field F] [NumberField F] (κ : T
   have hK : IsCompact ((fun z => z - a) '' tsupport g) :=
     hg.2.isCompact.image (continuous_id.sub continuous_const)
   obtain ⟨N, hN, hKN⟩ := exists_nat_mul_integral_of_isCompact F hK
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   refine ⟨Module.finrank ℤ (denomLattice F κ N) + 1, fun c => ?_⟩
   set M := Module.finrank ℤ (denomLattice F κ N) + 1
   let S : Set (κ → F) := {ξ | (fun i => mixedEmbedding F (ξ i)) ∈ denomLattice F κ N}

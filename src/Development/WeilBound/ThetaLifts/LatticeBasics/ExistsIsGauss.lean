@@ -357,7 +357,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem trace_evI (hF : IsTotallyReal F) (a : AF F) : Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F a) =
     ∑ w : InfinitePlace F, (InfinitePlace.Completion.extensionEmbedding w (a.1 w)).re := by
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (IsTotallyReal.isReal w.1)⟩
   rw [Algebra.trace_prod_apply, Subsingleton.elim (evI F a).2 0, map_zero, add_zero,
     Algebra.trace_eq_matrix_trace (Pi.basisFun ℝ _), Matrix.trace]
@@ -485,7 +485,7 @@ theorem exists_isGauss {B : Base F E} (M : Model σ X W) {r s r' s' : ℕ} (hB :
     simp [cs]
   rw [actsD_unique M hB.std hu hg, actsD_unique M hB.std hu' hg']
   ext x
-  rw [SchwartzMap.smul_apply, dOp_apply, dOp_apply, e2, (sev _).1, (sev _).2]
+  rw [smul_apply, dOp_apply, dOp_apply, e2, (sev _).1, (sev _).2]
   exact hv p x
 
 theorem pol_dense {B : Base F E} (M : Model σ X W) {r s r' s' : ℕ} (hB : B.IsGood σ) (hX : X.IsHerm σ B r s)

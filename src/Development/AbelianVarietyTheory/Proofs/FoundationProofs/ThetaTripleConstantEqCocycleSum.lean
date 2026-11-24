@@ -135,8 +135,8 @@ theorem coef_eq_zero : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A : AddSubgroup (V
     rw [Finset.sum_mul]
     refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hz : z i ∈ A
-    · rw [if_pos hz, if_pos ((kap_eq_one_iff hA _).2 hz), hfix _ hz]
-    · rw [if_neg hz, if_neg (fun h => hz ((kap_eq_one_iff hA _).1 h)), zero_mul]
+    · rw [ite_eq_left hz, ite_eq_left ((kap_eq_one_iff hA _).2 hz), hfix _ hz]
+    · rw [ite_eq_right hz, ite_eq_right (fun h => hz ((kap_eq_one_iff hA _).1 h)), zero_mul]
   exact (mul_eq_zero.1 h3).resolve_right hv
 
 end GlobalTheory.ThetaTranslateCoef
@@ -168,9 +168,9 @@ theorem out_mem_iff {V : Type} [AddCommGroup V] (A B : AddSubgroup V) (q : B ⧸
 theorem mu_form : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : AddSubgroup (VC D N N')) (e : VC D N N' → ℂ) (μ : ℂ), Trip D T A₁ A₂ A₃ e μ → ∃ r : ℝ, 0 < r ∧ μ * (r : ℂ) = ∑ᶠ p : (A₃ ⧸ A₂.addSubgroupOf A₃) × (A₂ ⧸ A₁.addSubgroupOf A₂), (if ((Quotient.out p.1 : A₃) : VC D N N') + ((Quotient.out p.2 : A₂) : VC D N N') ∈ A₁ then bc D T ((Quotient.out p.1 : A₃) : VC D N N') ((Quotient.out p.2 : A₂) : VC D N N') else 0) := by
   intro D T N N' A₁ A₂ A₃ e μ h
   obtain ⟨h1, h2, h3, n12, n23, n13, he, he0, -, hI⟩ := h
-  haveI f12 : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := AddSubgroup.fintypeOfIndexNeZero n12
-  haveI f23 : Fintype (A₃ ⧸ A₂.addSubgroupOf A₃) := AddSubgroup.fintypeOfIndexNeZero n23
-  haveI f13 : Fintype (A₃ ⧸ A₁.addSubgroupOf A₃) := AddSubgroup.fintypeOfIndexNeZero n13
+  have f12 : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := AddSubgroup.fintypeOfIndexNeZero n12
+  have f23 : Fintype (A₃ ⧸ A₂.addSubgroupOf A₃) := AddSubgroup.fintypeOfIndexNeZero n23
+  have f13 : Fintype (A₃ ⧸ A₁.addSubgroupOf A₃) := AddSubgroup.fintypeOfIndexNeZero n13
   rw [h3.Iop_eq A₂, h2.Iop_eq A₁, h3.Iop_eq A₁] at hI
   simp only [finsum_eq_sum_of_fintype] at hI ⊢
   have p12 : 0 < Real.sqrt ((A₁.addSubgroupOf A₂).index : ℝ) :=
@@ -197,7 +197,7 @@ theorem mu_form : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : AddSub
         Finset.sum_neg_distrib, mul_assoc]
       rw [hv]; ring)
   simp only [Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, out_mem_iff, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at key
+    Finset.mem_univ, ite_true] at key
   refine ⟨s23 * s12 / s13, by positivity, ?_⟩
   have q12 : (s12 : ℂ) ≠ 0 := by exact_mod_cast p12.ne'
   have q23 : (s23 : ℂ) ≠ 0 := by exact_mod_cast p23.ne'
@@ -209,9 +209,9 @@ theorem mu_form : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A₁ A₂ A₃ : AddSub
   rw [this, ← k2]
   refine Finset.sum_congr rfl fun p _ => ?_
   by_cases hp : ((Quotient.out p.1 : A₃) : VC D N N') + ((Quotient.out p.2 : A₂) : VC D N N') ∈ A₁
-  · simp only [hp, if_true]
+  · simp only [hp, ite_true]
     field_simp
-  · simp only [hp, if_false, mul_zero]
+  · simp only [hp, ite_false, mul_zero]
 
 end GlobalTheory.TripleConstant
 end -- clump:auto

@@ -72,7 +72,7 @@ theorem surjective_eval₂Hom_of_isPushout {A B C P : CommRingCat.{0}} {α : A �
     {d' : C ⟶ P} (h : IsPushout α β c' d') (hβ : Function.Surjective β) (hJ : IsNilpotent (RingHom.ker β.hom))
     {σ : Type} (r : σ → B) (hr : Function.Surjective (MvPolynomial.eval₂Hom d'.hom fun j => c'.hom (r j))) :
     Function.Surjective (MvPolynomial.eval₂Hom α.hom r) := by
-  letI : Algebra A B := α.hom.toAlgebra
+  let : Algebra A B := α.hom.toAlgebra
   have hN : Subalgebra.toSubmodule (MvPolynomial.aeval (R := A) r).range = ⊤ := by
     refine submodule_eq_top_of_sup_smul_of_isNilpotent hJ fun b _ => ?_
     obtain ⟨p, hp⟩ := hr (c'.hom b)

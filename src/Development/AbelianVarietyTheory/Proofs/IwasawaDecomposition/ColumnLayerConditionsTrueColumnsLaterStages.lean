@@ -211,7 +211,7 @@ def errOfTies (D : D7) (H : Formalism.L2.Herm.ColsHermS D) : ErrX D where
 theorem seenDef (D : D7) (H : Formalism.L2.Herm.ColsHermS D) : SeenDef D (errOfTies D H) := by
   intro u w hw
   obtain ⟨v⟩ : Nonempty (D.mem u).A.vT := by
-    letI := (D.mem u).A.vTFin
+    let := (D.mem u).A.vTFin
     rw [← Fintype.card_pos_iff, (D.mem u).A.card_vT]
     unfold Ranks.f Ranks.n
     exact Nat.mul_pos (by decide) D.R.toFrame.ord_pos
@@ -224,11 +224,11 @@ theorem seenDef (D : D7) (H : Formalism.L2.Herm.ColsHermS D) : SeenDef D (errOfT
   simp only [hτ]
   constructor
   · intro hs _
-    rw [if_pos hs] at key
+    rw [ite_eq_left hs] at key
     exact key.2 ((H.atT u).Pv_pi v)
   · intro h
     by_contra hs
-    rw [if_neg hs, Formalism.L2.Col.mem_conjIdeal] at key
+    rw [ite_eq_right hs, Formalism.L2.Col.mem_conjIdeal] at key
     refine not_both_mem D.host (D.mem u).A.T_prime (H.atT u).piU _ (H.atT u).piU_K ?_
       (H.atT u).piU_norm _ ?_ (H.atT u).piU_cong _ ((H.atT u).Pv_max v).ne_top
       ((H.atT u).Pv_pi v) (key.1 (h ((D.fm u).tauOf w v)))
@@ -357,7 +357,7 @@ theorem DGam_dvd_of_minkMult : ∀ {X : Fields} (R : Ranks), X.Ok →
     rw [← Module.finrank_mul_finrank ℚ X.F X.E, hX.rankE, Fields.f, hX.card_Tau, mul_comm]
   refine DGam_dvd (posStar_of_ok hX) R fun a ha => ?_
   obtain ⟨n, hn, N, hN, hUni, rfl⟩ := Set.mem_iUnion₂.1 ha
-  haveI := autO_finite (posStar_of_ok hX) (hcnt_isFullLattice_of_unimodular hN hUni)
+  have := autO_finite (posStar_of_ok hX) (hcnt_isFullLattice_of_unimodular hN hUni)
   refine GlobalTheory.DGamOnRecord.card_dvd_of_minkMult hM ?_ _
   rw [hE]
   exact Nat.mul_le_mul_left _ (le_N_of_mem_gamRanks R hn)

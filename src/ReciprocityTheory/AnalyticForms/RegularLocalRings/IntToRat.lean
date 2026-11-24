@@ -126,14 +126,14 @@ private lemma isJacobsonRing_int_regular_local_rings : IsJacobsonRing ℤ := by
 private lemma not_isMaximal_of_chZero (Q : Ideal (MvPolynomial σ ℤ)) (hQ : ChZero Q) :
     ¬ Q.IsMaximal := by
   intro hmax
-  haveI := hmax
-  haveI := isJacobsonRing_int_regular_local_rings
-  letI : Field (MvPolynomial σ ℤ ⧸ Q) := Ideal.Quotient.field Q
+  have := hmax
+  have := isJacobsonRing_int_regular_local_rings
+  let : Field (MvPolynomial σ ℤ ⧸ Q) := Ideal.Quotient.field Q
   have hint := MvPolynomial.comp_C_integral_of_surjective_of_isJacobsonRing
     (Ideal.Quotient.mk Q) Ideal.Quotient.mk_surjective
   have hfe : (Ideal.Quotient.mk Q).comp (MvPolynomial.C) =
       algebraMap ℤ (MvPolynomial σ ℤ ⧸ Q) := RingHom.ext_int _ _
-  haveI : Algebra.IsIntegral ℤ (MvPolynomial σ ℤ ⧸ Q) := by
+  have : Algebra.IsIntegral ℤ (MvPolynomial σ ℤ ⧸ Q) := by
     constructor
     intro x
     have hx := hint x
@@ -193,14 +193,14 @@ lemma coheight_eQ_add_one_le (P : PrimeSpectrum (MvPolynomial σ ℤ)) (hP : ChZ
       by_contra hne
       have h1 := key (Order.coheight P).toNat (by rw [h]; exact le_top)
       have h2 : (((Order.coheight P).toNat + 1 : ℕ) : ℕ∞) ≤ ((Order.coheight P).toNat : ℕ∞) := by
-        rw [ENat.coe_toNat hne]
+        rw [ENat.natCast_toNat hne]
         exact h1
       have h3 := (Nat.cast_le (α := ℕ∞)).mp h2
       omega
     rw [htop]
     exact le_top
-  · have h1 := key (Order.coheight (eQ P hP)).toNat (by rw [ENat.coe_toNat h])
-    rw [← ENat.coe_toNat h]
+  · have h1 := key (Order.coheight (eQ P hP)).toNat (by rw [ENat.natCast_toNat h])
+    rw [← ENat.natCast_toNat h]
     exact_mod_cast h1
 
 end ReciprocityTheory.AnForm.R.IntegerToRational
@@ -227,7 +227,7 @@ theorem extQ_spec (P : Ideal (MvPolynomial σ ℤ)) [P.IsPrime]
     (extQ P).IsPrime ∧ (extQ P).comap (MvPolynomial.map (Int.castRingHom ℚ)) = P ∧
       ringKrullDim (MvPolynomial σ ℚ ⧸ extQ P) + 1 = ringKrullDim (MvPolynomial σ ℤ ⧸ P) := by
   have hP' : ChZero P := hP
-  haveI hI : (extQ P).IsPrime := map_isPrime P hP'
+  have hI : (extQ P).IsPrime := map_isPrime P hP'
   refine ⟨hI, comap_map_eq P hP', ?_⟩
   have h1 := coheight_eQ_add_one_le (⟨P, inferInstance⟩ : PrimeSpectrum (MvPolynomial σ ℤ)) hP'
   have h2 : Order.coheight (⟨P, inferInstance⟩ : PrimeSpectrum (MvPolynomial σ ℤ)) ≤

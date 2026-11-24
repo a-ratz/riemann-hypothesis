@@ -86,7 +86,7 @@ theorem omegaDensity_smul {P Q : ℕ} {μ : Measure (UpqT P Q)} {c : ENNReal}
   refine ⟨l, hl, ?_⟩
   have h2 := ENNReal.Tendsto.const_mul (a := (a : ENNReal)) ht (Or.inr ENNReal.coe_ne_top)
   refine h2.congr fun r => ?_
-  rw [Measure.smul_apply, smul_eq_mul, mul_div_assoc]
+  rw [smul_apply, smul_eq_mul, mul_div_assoc]
 
 theorem omegaDensity_unique_and_smul : ∀ (P Q : ℕ) (μ : Measure (UpqT P Q)) (c : ENNReal),
     OmegaDensity μ c → (∀ c', OmegaDensity μ c' → c' = c) ∧

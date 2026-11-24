@@ -72,7 +72,7 @@ theorem ab_one : ab (1 : (A F)ˣ) = 1 := by simp [ab]
 theorem ab_inv (a : (A F)ˣ) : ab a⁻¹ = (ab a)⁻¹ :=
   eq_inv_of_mul_eq_one_left (by rw [← ab_mul, inv_mul_cancel, ab_one])
 theorem continuous_ab : Continuous (ab : (A F)ˣ → ℝ) :=
-  continuous_subtype_val.comp (IdeleGroup.continuous_ideleModule (K := F))
+  continuous_subtypeVal.comp (IdeleGroup.continuous_ideleModule (K := F))
 
 theorem val_mul (g h : G1 F) : (g * h).1 = g.1 * h.1 := rfl
 theorem val_gl (g : G1 F) : (gl g).val = g.1 := rfl
@@ -124,7 +124,7 @@ theorem continuous_mD : Continuous (mD : (A F)ˣ → G1 F) :=
     fin_cases i <;> fin_cases j <;> simp only [Fin.zero_eta, Fin.mk_one, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one] <;>
       first | exact continuous_const | exact Units.continuous_val | exact Units.continuous_coe_inv) _
 theorem continuous_entry (i j : Fin 2) : Continuous fun g : G1 F => g i j :=
-  (continuous_subtype_val (p := fun M : Matrix (Fin 2) (Fin 2) (A F) => M.det = 1)).matrix_elem i j
+  (continuous_subtypeVal (p := fun M : Matrix (Fin 2) (Fin 2) (A F) => M.det = 1)).matrix_elem i j
 theorem continuous_cD (t : (A F)ˣ) : Continuous (cD t : G1 F → G1 F) :=
   Continuous.subtype_mk (continuous_matrix fun i j => by
     fin_cases i <;> fin_cases j <;> simp only [Fin.zero_eta, Fin.mk_one, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one] <;>

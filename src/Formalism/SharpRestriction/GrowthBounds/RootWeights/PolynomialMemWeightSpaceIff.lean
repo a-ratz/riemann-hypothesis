@@ -117,7 +117,7 @@ theorem polynomial_isGLRep (LL : Letters ι) (S : Set ι) : IsGLRep (glOps K n L
   classical
   refine ⟨polynomial_gl_commutation LL S, ?_, ?_⟩
   · intro x
-    haveI : ∀ m : x.support, FiniteDimensional K (Pol K n (fun i => multideg (m : ι × Fin n →₀ ℕ) i)) :=
+    have : ∀ m : x.support, FiniteDimensional K (Pol K n (fun i => multideg (m : ι × Fin n →₀ ℕ) i)) :=
       fun m => homogeneous_multidegree_findim _
     refine ⟨⨆ m : x.support, Pol K n (fun i => multideg (m : ι × Fin n →₀ ℕ) i), inferInstance, ?_, ?_⟩
     · have key : ∑ m ∈ x.support, monomial m (AddMonoidAlgebra.coeff x m) ∈

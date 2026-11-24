@@ -134,14 +134,14 @@ theorem UpperTheory.V.Kum.levCompact :
       exact memL m x
     rw [e]
     exact hU.inter ((princ_isClosed l m).preimage (continuous_cycZ F Ω l))
-  haveI : CompactSpace (levU l U n) := isCompact_iff_compactSpace.mp (closedL n).isCompact
+  have : CompactSpace (levU l U n) := isCompact_iff_compactSpace.mp (closedL n).isCompact
   let K : Set (T × levU l U n) := {p | ψ p ≠ 0}
   have hKc : IsClosed K := by
     have ho : IsOpen (ψ ⁻¹' {0}) := hψ.isOpen_fiber 0
     exact ho.isClosed_compl
   let t : ℕ → Set (T × levU l U n) := fun m => {p | (p.2 : G F Ω) ∈ levU l U m}
   have htc : ∀ m, IsClosed (t m) := fun m =>
-    (closedL m).preimage (continuous_subtype_val.comp continuous_snd)
+    (closedL m).preimage (continuous_subtypeVal.comp continuous_snd)
   have hst : K ∩ ⋂ m, t m = ∅ := by
     ext p
     simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_empty_iff_false, iff_false, not_and]
@@ -230,7 +230,7 @@ private theorem fix_lemma_5 (F Ω : Type) [Field F] [NumberField F] [Field Ω] [
       ψ₀ ⟨c t u, hcU t u u.2⟩ = A t (ψ₀ u) := by
   have h1 : IsLocallyConstant fun p : T × levU l U n => ψ₀ ⟨c p.1 p.2, hcU p.1 p.2 p.2.2⟩ :=
     hψ₀.comp_continuous (Continuous.subtype_mk
-      (hc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))) _)
+      (hc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))) _)
   have h2 : IsLocallyConstant fun p : T × levU l U n => ψ₀ p.2 := hψ₀.comp_continuous continuous_snd
   have hloc : IsLocallyConstant fun p : T × levU l U n =>
       ψ₀ ⟨c p.1 p.2, hcU p.1 p.2 p.2.2⟩ - A p.1 (ψ₀ p.2) := by
@@ -289,7 +289,7 @@ private theorem eqHom_cycU_exists_lift_levU (F Ω : Type) [Field F] [NumberField
     have hu' : (u' : G F Ω) = g * u * g⁻¹ := by
       ext x
       have e := hrel (g⁻¹ x)
-      simp only [AlgEquiv.coe_ringEquiv] at e
+      simp only [AlgEquiv.coe_toRingEquiv] at e
       simp only [AlgEquiv.mul_apply, ← e]
       simp
     have e := hm g (Subgroup.inclusion (levU_antitone l U hnm) u) u.2
@@ -497,8 +497,8 @@ theorem PositivityTheory.QuaternionShaBounds.LayEx_holds : PositivityTheory.Quat
   have hl : l.Prime := Fact.out
   obtain ⟨hc1, hc2, ⟨z, hz⟩, hnz⟩ := hT
   obtain ⟨k, rfl⟩ : ∃ k, ν = k + c := ⟨ν - c, by omega⟩
-  haveI : NeZero l := ⟨hl.ne_zero⟩
-  haveI : NeZero (l ^ (k + c)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero (l ^ (k + c)) := ⟨pow_ne_zero _ hl.ne_zero⟩
 
   obtain ⟨hM1, -, hM3, -⟩ := UpperTheory.V.Tower.muQ L Ω l
   have hc0 : UpperTheory.V.Tower.cZero l L = c := by
@@ -523,10 +523,10 @@ theorem PositivityTheory.QuaternionShaBounds.LayEx_holds : PositivityTheory.Quat
     simp
 
   set F := Kum.Fn L Ω l (k + c)
-  haveI hcyc : IsCyclotomicExtension {l ^ (k + c)} L F := (Kum.fnCyc L Ω l (k + c)).1
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have hcyc : IsCyclotomicExtension {l ^ (k + c)} L F := (Kum.fnCyc L Ω l (k + c)).1
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have hgal : IsGalois L F := IsCyclotomicExtension.isGalois {l ^ (k + c)} L F
   let γ : F ≃ₐ[L] F := AlgEquiv.restrictNormalHom F g
   have hlift : IsLift γ.toRingEquiv g.toRingEquiv := (UpperTheory.V.Base.galQuot L F Ω).2.2 g
@@ -755,7 +755,7 @@ theorem procyc_of_top (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebr
   · refine hM.2.2.2.2.2 (Or.inr (hM.2.2.1.2 ?_))
     have hc : c ≤ Tower.cZero l L := (hM.1 c).1 h.2.2.1
     have hq : qExp l ≤ c := by
-      unfold qExp; rw [if_pos h2]; exact h.2.1 h2
+      unfold qExp; rw [ite_eq_left h2]; exact h.2.1 h2
     omega
   · exact Or.inl h2
 

@@ -75,8 +75,8 @@ theorem endU_genMap {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] {D : De
 theorem exists_ext : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonObj H], IsSemiAbelian H → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A G) (ξ : Sp V ⟶ B) (gm : A.A.left ⟶ H.left), IsGrpPullback A.A H (jK V ≫ ξ) gm → ∃ β : G.left ⟶ H.left, IsGrpPullback G H ξ β ∧ genMap U ≫ β = gm ∧ ∀ (E : EndU U.toUnifPre) (Fm : H ⟶ H), E.aA.left ≫ gm = gm ≫ Fm.left → E.aG.left ≫ β = β ≫ Fm.left := by
   intro B H _ _ hH V _ _ _ hV G _ _ hG D A U ξ gm hgm
   obtain ⟨⟨hN, -, hIC, -⟩, -⟩ := hV
-  haveI := hN
-  haveI := hIC
+  have := hN
+  have := hIC
   have gpA : IsGrpPullback A.A G (jK V) (genMap U) := by
     have := U.gen_hom
     have : IsMonHom U.gen.symm.hom := by show IsMonHom U.gen.inv; infer_instance
@@ -92,7 +92,7 @@ theorem exists_ext : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonObj 
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian G hG
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian H hH
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.spec_fractionRing V (FractionRing V)
-  haveI : IsSchemeTheoreticallyDominant (genMap U) := .of_isPullback gpA.1.flip
+  have : IsSchemeTheoreticallyDominant (genMap U) := .of_isPullback gpA.1.flip
   have key := endU_genMap U E
   refine GlobalTheory.ExtUnique.hom_ext_of_dominant H.hom ?_ (genMap U) ?_
   · rw [Category.assoc, Category.assoc, Over.w Fm, hβ.1.w, ← Category.assoc, Over.w E.aG]

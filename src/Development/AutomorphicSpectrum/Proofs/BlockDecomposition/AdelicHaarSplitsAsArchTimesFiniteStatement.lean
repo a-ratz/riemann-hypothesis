@@ -105,11 +105,11 @@ theorem map_split_eq_smul_prod : ∀ (F : Type) [Field F] [NumberField F] (ι : 
       m.map (fun y : ι → AF F => ((fun i => (y i).1, fun i => (y i).2) : (ι → Ainf F) × (ι → Af F))) =
         c • μ₁.prod μ₂ := by
   intro F _ _ ι _ m μ₁ μ₂ hm h₁ h₂
-  haveI : SecondCountableTopology (Af F) := Formalism.IndefR.Eqv.G5.af_secondCountable
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) :=
+  have : SecondCountableTopology (Af F) := Formalism.IndefR.Eqv.G5.af_secondCountable
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) :=
     inferInstanceAs (SecondCountableTopology (Ainf F × Af F))
   have hH : (m.map (splitVec F ι)).IsAddHaarMeasure :=
     ContinuousAddEquiv.isAddHaarMeasure_map m (splitVec F ι)
@@ -219,17 +219,17 @@ theorem map_tuple : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     dx.map (fun X => (projInf X, projFin X)) = c • μ₁.prod μ₂ := by
   intro F E _ _ _ _ _ σ hCM M n dx hdx
   have h2 := hCM.2.2.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   let b := Module.finBasis F E
   obtain ⟨tA, -, sA, -, -, -, -, hBA, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
   obtain ⟨tI, -, sI, -, -, -, -, hBI, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
   obtain ⟨tF, -, sF, -, -, -, -, hBF, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)
-  haveI := hBA n M
-  haveI := hBI n M
-  haveI := hBF n M
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have := hBA n M
+  have := hBI n M
+  have := hBF n M
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
   let ι := Fin n × Fin M × Fin (Module.finrank F E)
   let e := tupCrd (AF F) b n M
   let eI := tupCrd (Ainf F) b n M
@@ -239,10 +239,10 @@ theorem map_tuple : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     AddEquiv.isAddHaarMeasure_map dx eA e.continuous e.symm.continuous
   let m₁ : Measure (ι → Ainf F) := Measure.addHaar
   let m₂ : Measure (ι → Af F) := Measure.addHaar
-  haveI : m₁.IsAddHaarMeasure := by dsimp only [m₁]; infer_instance
-  haveI : m₂.IsAddHaarMeasure := by dsimp only [m₂]; infer_instance
-  haveI : SFinite m₁ := by dsimp only [m₁]; infer_instance
-  haveI : SFinite m₂ := by dsimp only [m₂]; infer_instance
+  have : m₁.IsAddHaarMeasure := by dsimp only [m₁]; infer_instance
+  have : m₂.IsAddHaarMeasure := by dsimp only [m₂]; infer_instance
+  have : SFinite m₁ := by dsimp only [m₁]; infer_instance
+  have : SFinite m₂ := by dsimp only [m₂]; infer_instance
   obtain ⟨c, -, hcT, hc⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.ProdM.map_split_eq_smul_prod F ι (dx.map e) m₁ m₂ hm inferInstance inferInstance
   let S := splitHomeo F ι
   let H : (Fin n → Fin M → AF F ⊗[F] E) ≃ₜ

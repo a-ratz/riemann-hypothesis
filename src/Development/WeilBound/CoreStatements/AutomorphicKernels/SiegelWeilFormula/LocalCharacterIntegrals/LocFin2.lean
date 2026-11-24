@@ -274,10 +274,10 @@ theorem scH_val (σ : E →ₐ[F] E) {t : Fv F v} (ht : t ≠ 0) (b : HermR (Fv 
     (scH σ n ht b).1 = t • b.1 := rfl
 
 theorem continuous_scH (σ : E →ₐ[F] E) {t : Fv F v} (ht : t ≠ 0) : Continuous (scH σ n ht) :=
-  Continuous.subtype_mk (continuous_subtype_val.const_smul t) _
+  Continuous.subtype_mk (continuous_subtypeVal.const_smul t) _
 
 theorem continuous_scH_symm (σ : E →ₐ[F] E) {t : Fv F v} (ht : t ≠ 0) : Continuous (scH σ n ht).symm :=
-  Continuous.subtype_mk (continuous_subtype_val.const_smul t⁻¹) _
+  Continuous.subtype_mk (continuous_subtypeVal.const_smul t⁻¹) _
 
 instance secondCountable_HermCv (σ : E →ₐ[F] E) (n : ℕ) : SecondCountableTopology (HermR (Fv F v) σ n) :=
   haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
@@ -287,12 +287,12 @@ instance secondCountable_HermCv (σ : E →ₐ[F] E) (n : ℕ) : SecondCountable
 theorem exists_scale (σ : E →ₐ[F] E) (n : ℕ) (ν : Measure (HermR (Fv F v) σ n)) [ν.IsAddHaarMeasure]
     {t : Fv F v} (ht : t ≠ 0) :
     ∃ k : ℝ≥0, ∀ A, MeasurableSet A → ν ((scH σ n ht) ⁻¹' A) = k * ν A := by
-  haveI : (ν.map (scH σ n ht)).IsAddHaarMeasure :=
+  have : (ν.map (scH σ n ht)).IsAddHaarMeasure :=
     (scH σ n ht).isAddHaarMeasure_map ν (continuous_scH σ ht) (continuous_scH_symm σ ht)
   refine ⟨Measure.addHaarScalarFactor (ν.map (scH σ n ht)) ν, fun A hA => ?_⟩
   have hk := Measure.isAddLeftInvariant_eq_smul (ν.map (scH σ n ht)) ν
   have := congrArg (fun μ : Measure (HermR (Fv F v) σ n) => μ A) hk
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at this
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at this
   rw [← Measure.map_apply (continuous_scH σ ht).measurable hA]
   exact this
 
@@ -306,8 +306,8 @@ open scoped TensorProduct Matrix ENNReal NNReal
 
 theorem convP : ConvP := by
   intro F E _ _ _ _ _ σ M J n ψ v μv νv lam L₁ L₂ Φv g T h
-  haveI : lam.IsAddHaarMeasure := h.haar
-  haveI : νv.IsAddHaarMeasure := h.sdH.1
+  have : lam.IsAddHaarMeasure := h.haar
+  have : νv.IsAddHaarMeasure := h.sdH.1
   obtain ⟨ϖ, hϖ0, hϖ1⟩ := exists_norm_lt_one (F := F) v
   have hϖne : ϖ ≠ 0 := norm_pos_iff.1 hϖ0
   obtain ⟨R₀, hR₀, hKL⟩ := exists_lattice_norm_ge_pow hϖ0 hϖ1 lam h.co₁ h.co₂
@@ -354,7 +354,7 @@ theorem convP : ConvP := by
   set A : ℕ → Set (HermR (Fv F v) σ n) :=
     fun j => {b | R₀ * q ^ j ≤ nM v b.1 ∧ nM v b.1 ≤ R₀ * q ^ (j + 1)} with hA
   have hm : Measurable fun b : HermR (Fv F v) σ n => nM v b.1 :=
-    (show Continuous fun b : HermR (Fv F v) σ n => nM v b.1 from continuous_nM.comp continuous_subtype_val).measurable
+    (show Continuous fun b : HermR (Fv F v) σ n => nM v b.1 from continuous_nM.comp continuous_subtypeVal).measurable
   have hAm : ∀ j, MeasurableSet (A j) := fun j =>
     (measurableSet_le measurable_const hm).inter (measurableSet_le hm measurable_const)
   have hHA : ∀ j, ∀ b ∈ A j, H b ≤ r ^ j := by
@@ -461,7 +461,7 @@ theorem differentiable_setIntegral_fz {ν : Measure H} {r : H → ℝ} {u : H �
     (hS : MeasurableSet S) (hSf : ν S < ⊤) {Rm : ℝ} (hRm : ∀ b ∈ S, r b ≤ Rm) :
     Differentiable ℂ (fun z => ∫ b in S, fz r u s₀ z b ∂ν) := by
   intro z₀
-  haveI : IsFiniteMeasure (ν.restrict S) := isFiniteMeasure_restrict.mpr hSf.ne
+  have : IsFiniteMeasure (ν.restrict S) := isFiniteMeasure_restrict.mpr hSf.ne
   have hofr : Measurable fun b => (r b : ℂ) := Complex.measurable_ofReal.comp hrm
   have hmeas : ∀ z : ℂ, Measurable fun b => (r b : ℂ) ^ (-(z - s₀)) := fun z => hofr.pow_const _
   set R' := max Rm 1 with hR'
@@ -529,8 +529,8 @@ theorem core (ν : Measure H) (r : H → ℝ) (u : H → ℂ) (s₀ w₀ : ℂ) 
     | succ j ih =>
       rw [← ih]
       have hsub : B j ⊆ B (j + 1) := hmono (Nat.le_succ j)
-      rw [← Set.union_diff_cancel hsub, setIntegral_union Set.disjoint_sdiff_right
-        ((hBm _).diff (hBm _)) (hon z j) ((hon z (j + 1)).mono_set diff_subset), hshell, add_zero]
+      rw [← union_sdiff_cancel hsub, setIntegral_union Set.disjoint_sdiff_right
+        ((hBm _).diff (hBm _)) (hon z j) ((hon z (j + 1)).mono_set sdiff_subset), hshell, add_zero]
   obtain ⟨R0, hR0⟩ := hrb 0
   refine ⟨fun z => ∫ b in B 0, PositivityTheory.SiegelWeilFormula.SwLocFin.fz r u s₀ z b ∂ν,
     PositivityTheory.SiegelWeilFormula.SwLocFin.differentiable_setIntegral_fz hr1 hrm hum hC (hBm 0) (hfin 0) hR0, ?_, ?_⟩
@@ -582,7 +582,7 @@ theorem whI_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] 
 theorem locFinX_of (hS : ShellP) (hC : ConvP) (hD : DualP) : LocFinX := by
   intro F E _ _ _ _ _ σ hcm M J hJ n ψ hψ v μv νv lam L₁ L₂ hμ hν hlam h₁ h₂ Φv hΦ g hg T hT
   have h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T := ⟨hcm, hJ, hψ, hμ, hν, hlam, h₁, h₂, hΦ, hg, hT⟩
-  haveI : νv.IsAddHaarMeasure := hν.1
+  have : νv.IsAddHaarMeasure := hν.1
   obtain ⟨R₀, hR₀⟩ := hS F E σ M J n ψ v μv νv lam L₁ L₂ Φv g T h 2 one_lt_two
   set R₁ : ℝ := max R₀ 1 with hR₁
   have hR₁pos : 0 < R₁ := lt_of_lt_of_le zero_lt_one (le_max_right _ _)
@@ -595,13 +595,13 @@ theorem locFinX_of (hS : ShellP) (hC : ConvP) (hD : DualP) : LocFinX := by
     (fun j => measurableSet_ballH _)
     (fun i j hij => by
       intro b hb
-      simp only [hB, Set.mem_setOf_eq] at hb ⊢
+      simp only [hB, Set.mem_ofPred_eq] at hb ⊢
       exact hb.trans (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ one_le_two hij) hR₁pos.le))
     (by
       refine Set.eq_univ_of_forall fun b => ?_
       obtain ⟨j, hj⟩ := pow_unbounded_of_one_lt (nM v b.1 / R₁) one_lt_two
       refine Set.mem_iUnion.2 ⟨j, ?_⟩
-      simp only [hB, Set.mem_setOf_eq]
+      simp only [hB, Set.mem_ofPred_eq]
       rw [div_lt_iff₀ hR₁pos] at hj
       linarith)
     (fun j => (isCompact_ballH _).measure_lt_top)
@@ -616,7 +616,7 @@ theorem locFinX_of (hS : ShellP) (hC : ConvP) (hD : DualP) : LocFinX := by
     (fun z j => by
       have hset : B (j + 1) \ B j = {b : HermR (Fv F v) σ n | R₁ * 2 ^ j < nM v b.1 ∧ nM v b.1 ≤ 2 * (R₁ * 2 ^ j)} := by
         ext b
-        simp only [hB, Set.mem_diff, Set.mem_setOf_eq, not_le, pow_succ]
+        simp only [hB, Set.mem_sdiff, Set.mem_ofPred_eq, not_le, pow_succ]
         constructor
         · rintro ⟨h1, h2⟩; exact ⟨h2, by linarith⟩
         · rintro ⟨h1, h2⟩; exact ⟨by linarith, h1⟩
@@ -669,9 +669,9 @@ theorem setIntegral_char_subgroup {G : Type*} [AddCommGroup G] [MeasurableSpace 
       simp only [Set.indicator]
       by_cases hx : x ∈ Λ
       · have : x + x0 ∈ Λ := Λ.add_mem hx hx0
-        simp only [SetLike.mem_coe, hx, this, if_true, hχ, mul_comm]
+        simp only [SetLike.mem_coe, hx, this, ite_true, hχ, mul_comm]
       · have : x + x0 ∉ Λ := fun h' => hx (by simpa using Λ.sub_mem h' hx0)
-        simp only [SetLike.mem_coe, hx, this, if_false, mul_zero]
+        simp only [SetLike.mem_coe, hx, this, ite_false, mul_zero]
     have key : ∫ x in (Λ : Set G), χ x ∂ν = χ x0 * ∫ x in (Λ : Set G), χ x ∂ν := by
       calc ∫ x in (Λ : Set G), χ x ∂ν = ∫ x, (Λ : Set G).indicator χ x ∂ν := (integral_indicator hΛ).symm
         _ = ∫ x, (Λ : Set G).indicator χ (x + x0) ∂ν := (integral_add_right_eq_self _ x0).symm
@@ -856,7 +856,7 @@ theorem isCompact_ballH (σ : E →ₐ[F] E) (n : ℕ) (R : ℝ) (hR : 0 ≤ R) 
 theorem isOpen_ballH (σ : E →ₐ[F] E) (n : ℕ) (R : ℝ) (hR : 0 < R) :
     IsOpen (ballH v σ n R hR.le : Set (HermR (Fv F v) σ n)) := by
   rw [coe_ballH]
-  exact IsOpen.preimage (X := HermR (Fv F v) σ n) continuous_subtype_val (isOpen_ballM (v := v) (p := n) (q := n) hR)
+  exact IsOpen.preimage (X := HermR (Fv F v) σ n) continuous_subtypeVal (isOpen_ballM (v := v) (p := n) (q := n) hR)
 
 theorem perp_bound (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F ψ) (n : ℕ) :
     ∃ C₀ : ℝ, 0 ≤ C₀ ∧ ∀ R : ℝ, 0 < R → ∀ D : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E), D ∈ HermR (Fv F v) σ n →
@@ -957,7 +957,7 @@ theorem isOpen_unitHerm' (σ : E →ₐ[F] E) (n : ℕ) :
     have : {x : Fv F v ⊗[F] E | IsUnit x} = (fun x => Algebra.norm (Fv F v) x) ⁻¹' {r | r ≠ 0} := by
       ext x; simp [isUnit_iff_algNorm]
     rw [this]; exact isOpen_ne.preimage continuous_algNorm
-  exact (hU.preimage continuous_id.matrix_det).preimage continuous_subtype_val
+  exact (hU.preimage continuous_id.matrix_det).preimage continuous_subtypeVal
 
 theorem exists_ballH_sub {σ : E →ₐ[F] E} {n : ℕ} {T : HermR (Fv F v) σ n} {U : Set (HermR (Fv F v) σ n)}
     (hU : U ∈ 𝓝 T) : ∃ r > 0, ∀ S : HermR (Fv F v) σ n, nM v (S.1 - T.1) ≤ r → S ∈ U := by
@@ -1060,14 +1060,14 @@ theorem setIntegral_uu (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (R 
   have hΛc : IsCompact (Λ : Set (HermR (Fv F v) σ n)) := isCompact_ballH v σ n R hR.le
   have hΛm : MeasurableSet (Λ : Set (HermR (Fv F v) σ n)) := hΛc.isClosed.measurableSet
   have hfin : νv (Λ : Set (HermR (Fv F v) σ n)) < ⊤ := hΛc.measure_lt_top
-  haveI : IsFiniteMeasure (νv.restrict (Λ : Set (HermR (Fv F v) σ n))) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (νv.restrict (Λ : Set (HermR (Fv F v) σ n))) := isFiniteMeasure_restrict.2 hfin.ne
   let f : HermR (Fv F v) σ n → (Fin n → Fin M → Fv F v ⊗[F] E) → ℂ :=
     fun b Y => Φv Y * psiV F ψ v (trPair (Fv F v) b.1 (gramR (Fv F v) σ J Y - T.1))
   have hΦc : Continuous Φv := h.sb.1.continuous
   have hΦi : Integrable Φv μv := hΦc.integrable_of_hasCompactSupport h.sb.2
   have hψc := continuous_psiV (v := v) h.chr
   have hfc : Continuous (Function.uncurry f) :=
-    (hΦc.comp continuous_snd).mul (hψc.comp (continuous_trPair (continuous_subtype_val.comp continuous_fst)
+    (hΦc.comp continuous_snd).mul (hψc.comp (continuous_trPair (continuous_subtypeVal.comp continuous_fst)
       (((continuous_gramR' σ J).comp continuous_snd).sub continuous_const)))
   have hint : Integrable (Function.uncurry f) ((νv.restrict (Λ : Set (HermR (Fv F v) σ n))).prod μv) := by
     refine Integrable.mono' ((integrable_const (1 : ℂ)).mul_prod hΦi).norm hfc.aestronglyMeasurable ?_
@@ -1087,10 +1087,10 @@ theorem setIntegral_uu (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (R 
           (fun b => psiV F ψ v (trPair (Fv F v) b.1 (gramR (Fv F v) σ J Y - T.1)))
           (fun b b' => psiV_trPair_add_left ψ _ b b')]
         by_cases hP : ∀ b ∈ Λ, psiV F ψ v (trPair (Fv F v) b.1 (gramR (Fv F v) σ J Y - T.1)) = 1
-        · rw [if_pos hP, Set.indicator_of_mem (show Y ∈ setP σ J ψ v (Λ : Set (HermR (Fv F v) σ n)) T from
+        · rw [ite_eq_left hP, Set.indicator_of_mem (show Y ∈ setP σ J ψ v (Λ : Set (HermR (Fv F v) σ n)) T from
             fun b hb => hP b hb)]
           ring
-        · rw [if_neg hP, Set.indicator_of_notMem (show Y ∉ setP σ J ψ v (Λ : Set (HermR (Fv F v) σ n)) T from
+        · rw [ite_eq_right hP, Set.indicator_of_notMem (show Y ∉ setP σ J ψ v (Λ : Set (HermR (Fv F v) σ n)) T from
             fun h' => hP fun b hb => h' b hb)]
           ring
     _ = ((νv.real (Λ : Set (HermR (Fv F v) σ n)) : ℝ) : ℂ) *
@@ -1106,7 +1106,7 @@ theorem isClosed_perpH (hψ : IsCharAF F ψ) (Λ : Set (HermR (Fv F v) σ n)) : 
     ext D; simp [perpH]
   rw [this]
   exact isClosed_biInter fun b _ => isClosed_eq ((continuous_psiV hψ).comp
-    (continuous_trPair continuous_const continuous_subtype_val)) continuous_const
+    (continuous_trPair continuous_const continuous_subtypeVal)) continuous_const
 
 theorem perpH_subset {C₀ : ℝ} (hC₀ : 0 ≤ C₀)
     (hperp : ∀ R : ℝ, 0 < R → ∀ D : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E), D ∈ HermR (Fv F v) σ n →
@@ -1152,9 +1152,9 @@ theorem vol_mul_vol_perp (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (
     rw [e1, setIntegral_char_subgroup νv Λ hΛm (fun x => psiV F ψ v (trPair (Fv F v) x.1 y.1))
       (fun b b' => psiV_trPair_add_left ψ y.1 b b')]
     by_cases hy : ∀ x ∈ Λ, psiV F ψ v (trPair (Fv F v) x.1 y.1) = 1
-    · rw [if_pos hy, Set.indicator_of_mem (show y ∈ perpH σ ψ v (Λ : Set (HermR (Fv F v) σ n)) from
+    · rw [ite_eq_left hy, Set.indicator_of_mem (show y ∈ perpH σ ψ v (Λ : Set (HermR (Fv F v) σ n)) from
         fun b hb => hy b hb)]
-    · rw [if_neg hy, Set.indicator_of_notMem (show y ∉ perpH σ ψ v (Λ : Set (HermR (Fv F v) σ n)) from
+    · rw [ite_eq_right hy, Set.indicator_of_notMem (show y ∉ perpH σ ψ v (Λ : Set (HermR (Fv F v) σ n)) from
         fun h' => hy fun b hb => h' b hb)]
   have hint : Integrable (fun y => ∫ x, Φ0 x * psiV F ψ v (pairHerm (Fv F v) σ n x y) ∂νv) νv := by
     rw [hhat]

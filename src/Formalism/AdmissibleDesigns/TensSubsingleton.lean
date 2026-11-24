@@ -89,10 +89,10 @@ theorem fildR_anti (τ : K →ₐ[Qp] LL) (a : ℤ) : FildR PD ρ τ (a + 1) ≤
 theorem fildR_le (τ : K →ₐ[Qp] LL) (a : ℤ) : FildR PD ρ τ a ≤ DdR PD ρ := inf_le_left.trans inf_le_left
 
 theorem fd_DdR [FiniteDimensional LL V] (h : IsDR PD ρ) : FiniteDimensional LL ↥(DdR PD ρ) := by
-  haveI := PD.finK
+  have := PD.finK
   by_cases hV : Module.finrank LL V = 0
-  · haveI : Subsingleton V := Module.finrank_zero_iff.mp hV
-    haveI : Subsingleton (V ⊗[Qp] BdR) := ⟨fun x y => by rw [tens_subsingleton x, tens_subsingleton y]⟩
+  · have : Subsingleton V := Module.finrank_zero_iff.mp hV
+    have : Subsingleton (V ⊗[Qp] BdR) := ⟨fun x y => by rw [tens_subsingleton x, tens_subsingleton y]⟩
     infer_instance
   · apply Module.finite_of_finrank_pos
     rw [h]
@@ -109,13 +109,13 @@ variable [FiniteDimensional LL ↥(DdR PD ρ)]
 theorem fd_fildR (τ : K →ₐ[Qp] LL) (a : ℤ) : FiniteDimensional LL ↥(FildR PD ρ τ a) := Submodule.finiteDimensional_of_le (fildR_le PD ρ τ a)
 
 theorem mult_nonneg (τ : K →ₐ[Qp] LL) (a : ℤ) : 0 ≤ multV PD ρ τ a := by
-  haveI := fd_fildR PD ρ τ a
+  have := fd_fildR PD ρ τ a
   have h1 := Submodule.finrank_mono (fildR_anti PD ρ τ a)
   unfold multV
   omega
 
 theorem mult_pos (τ : K →ₐ[Qp] LL) (a : ℤ) (h : IsJumpV PD ρ τ a) : 0 < multV PD ρ τ a := by
-  haveI := fd_fildR PD ρ τ a
+  have := fd_fildR PD ρ τ a
   have h1 : FildR PD ρ τ (a + 1) < FildR PD ρ τ a := lt_of_le_of_ne (fildR_anti PD ρ τ a) h
   have h2 := Submodule.finrank_lt_finrank_of_lt h1
   unfold multV
@@ -249,7 +249,7 @@ variable {ι : Type} {k : ℕ} (Ms : ι → G →* Matrix (Fin k) (Fin k) LL)
 
 include hF in
 theorem fd_of_crys (A : GRep G Qp LL O) (h : IsCrys PD A.ρ) : FiniteDimensional LL ↥(DdR PD A.ρ) := by
-  haveI := A.fd
+  have := A.fd
   exact fd_DdR PD A.ρ (hF.2.2.2 A h)
 
 variable (hMc : ∀ x, Continuous (Ms x)) (hMs : ∀ x, IsCrys PD (matRep (Ms x)))
@@ -261,9 +261,9 @@ theorem crys_sum : ∀ (m : ℕ) (xs : Fin m → ι), IsCrys PD (sumRep Ms xs) �
   induction m with
   | zero =>
     intro xs
-    haveI hsub1 : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] BdR) :=
+    have hsub1 : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] BdR) :=
       ⟨fun x y => by rw [tens_subsingleton x, tens_subsingleton y]⟩
-    haveI hsub2 : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] B) :=
+    have hsub2 : Subsingleton ((Fin 0 → Fin k → LL) ⊗[Qp] B) :=
       ⟨fun x y => by rw [tens_subsingleton x, tens_subsingleton y]⟩
     refine ⟨?_, fun τ a hj => absurd (Subsingleton.elim _ _) hj⟩
     unfold IsCrys
@@ -305,7 +305,7 @@ theorem crys_sum : ∀ (m : ℕ) (xs : Fin m → ι), IsCrys PD (sumRep Ms xs) �
     have hcrys : IsCrys PD (sumRep Ms xs) := hF2 hsplit ht1 (hMs (xs 0))
     refine ⟨hcrys, fun τ a hj => ?_⟩
     obtain ⟨_, _, hmult⟩ := hF1 hcrys
-    haveI : FiniteDimensional LL ↥(DdR PD (sumRep Ms xs)) := fd_of_crys PD hF (sumG (Qp := Qp) (O := O) Ms hMc xs) hcrys
+    have : FiniteDimensional LL ↥(DdR PD (sumRep Ms xs)) := fd_of_crys PD hF (sumG (Qp := Qp) (O := O) Ms hMc xs) hcrys
     have hpos := mult_pos PD (sumRep Ms xs) τ a hj
     have hm : multV PD (sumRep Ms xs) τ a =
         multV PD (sumRep Ms (fun a : Fin m => xs a.succ)) τ a + multV PD (matRep (Ms (xs 0))) τ a := hmult τ a
@@ -332,8 +332,8 @@ theorem crys_of_inj (A : GRep G Qp LL O) {m : ℕ} (xs : Fin m → ι) (φ : A.V
   obtain ⟨hs1, hs2⟩ := crys_sum PD Ms hF hMc hMs m xs
   obtain ⟨hA, hA2, hmult⟩ := hF1 hs1
   refine ⟨hA, fun τ a hj => ?_⟩
-  haveI : FiniteDimensional LL ↥(DdR PD A.ρ) := fd_of_crys PD hF A hA
-  haveI : FiniteDimensional LL ↥(DdR PD (quotG (sumG (Qp := Qp) (O := O) Ms hMc xs) (LinearMap.range φ) hU).ρ) :=
+  have : FiniteDimensional LL ↥(DdR PD A.ρ) := fd_of_crys PD hF A hA
+  have : FiniteDimensional LL ↥(DdR PD (quotG (sumG (Qp := Qp) (O := O) Ms hMc xs) (LinearMap.range φ) hU).ρ) :=
     fd_of_crys PD hF _ hA2
   have hp := mult_pos PD A.ρ τ a hj
   have hn := mult_nonneg PD (quotG (sumG (Qp := Qp) (O := O) Ms hMc xs) (LinearMap.range φ) hU).ρ τ a

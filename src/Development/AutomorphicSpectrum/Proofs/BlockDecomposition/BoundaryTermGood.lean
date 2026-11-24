@@ -246,10 +246,10 @@ theorem differentiableOn_integral {T E : Type} [TopologicalSpace T] [CompactSpac
 
 theorem bGood : BGood := by
   intro G _ _ _ _ _ W _ _ _ K ρ hK hρ _ _ μ hH hP ζ hζ
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
-  haveI : ProperSpace (W →L[ℂ] W) := FiniteDimensional.proper ℂ _
-  haveI : IsProbabilityMeasure μ := hP
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
+  have : ProperSpace (W →L[ℂ] W) := FiniteDimensional.proper ℂ _
+  have : IsProbabilityMeasure μ := hP
   obtain ⟨R, hR⟩ := (isCompact_univ (X := K)).exists_bound_of_continuousOn hρ.continuousOn
   refine leftGood_of (A := fun z => avg μ ρ (ζ z)) (differentiableOn_integral μ hρ hζ) ?_
   intro b c hc

@@ -70,7 +70,7 @@ theorem qth_intAt_iff (a : E) : IntAt P a ↔ P.valuation E a ≤ 1 := by
 
 theorem qth_exists_bound (x : E) : ∃ k : ℕ, P.valuation E x ≤ WithZero.exp (k : ℤ) := by
   by_cases hx : P.valuation E x = 0
-  · exact ⟨0, by rw [hx]; exact zero_le'⟩
+  · exact ⟨0, by rw [hx]; exact zero_le⟩
   · refine ⟨(WithZero.log (P.valuation E x)).toNat, ?_⟩
     conv_lhs => rw [← WithZero.exp_log hx]
     exact WithZero.exp_le_exp.2 (Int.self_le_toNat _)

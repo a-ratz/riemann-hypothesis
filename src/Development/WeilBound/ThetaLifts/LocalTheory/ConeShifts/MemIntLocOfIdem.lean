@@ -138,7 +138,7 @@ theorem fr_smul (a : GL (Fin n) (Fv F v ⊗[F] E)) (z : AE F E) (M) : fr v a (z 
 
 theorem exists_fr (X : Spc F E n) (hL : Submodule.IsFullLattice E X.L) : ∃ a : GL (Fin n) (Fv F v ⊗[F] E),
     ∀ M, M ∈ Pres v X ↔ ∃ N : Matrix (Fin n) (Fin n) (intLoc F E v), (intLoc F E v).subtype.mapMatrix N = fr v a M := by
-  letI := hL
+  let := hL
   obtain ⟨P, h1, h2⟩ := Frames.exists_rational_frame X.L v
   have ha := Frames.frame_of_rational P h1 h2
   set a : GL (Fin n) (Fv F v ⊗[F] E) := bc (inclR (F := F) (Fv F v)) P
@@ -284,7 +284,7 @@ theorem comp_alg_mem {a : AF F} (ha : evFin F v a ∈ v.adicCompletionIntegers F
 theorem exists_eta (hσ : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) :
     ∃ η : AE F E, At (evFin F v) η ∧ η * η = η ∧ η + cA σ η = eps v := by
   have hs := sigma_sigma hσ
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
   have sm : ∀ (a : F) (z : E), σ (a • z) = a • σ z := fun a z => by
     rw [Algebra.smul_def, Algebra.smul_def, map_mul σ, σ.commutes]
   obtain ⟨x, hx⟩ : ∃ x, σ x ≠ x := by
@@ -386,7 +386,7 @@ theorem exists_beta {B : Base F E} (hB : B.IsGood σ) {X : Spc F E n} (hL : Subm
     obtain ⟨a, ha⟩ := exists_fr (v := v) X hL
     obtain ⟨N, hN⟩ := (ha _).1 h1
     obtain ⟨N', hN'⟩ := (ha _).1 h2
-    haveI : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) := Formalism.UG.P.tjcosets_finite w
+    have : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) := Formalism.UG.P.tjcosets_finite w
     let ρ : intLoc F E v →+* w.adicCompletionIntegers E :=
       ((toCompl hu).comp (intLoc F E v).subtype).codRestrict (w.adicCompletionIntegers E).toSubring fun z => toCompl_mem hu z.2
     let r := (IsLocalRing.residue (w.adicCompletionIntegers E)).comp ρ

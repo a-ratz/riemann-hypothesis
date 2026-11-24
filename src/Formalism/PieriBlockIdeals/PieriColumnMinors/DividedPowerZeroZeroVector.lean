@@ -163,7 +163,7 @@ theorem dnDvd : DnDvd := by
       exact one_dvd _
     · have h := muRange p w i q m lam2 _ hb hmu
       have hk : k ∈ Finset.Ico (m + 1) (w + q) := Finset.mem_Ico.mpr (by omega)
-      rw [if_pos hk]
+      rw [ite_eq_left hk]
       have he : ((w : ℤ) - ((k : ℤ) - (q : ℤ))) = ((w + q - k : ℕ) : ℤ) := by omega
       rw [he, Nat.cast_pow]
       exact pow_dvd_pow _ (muLe p w i q lam2 _)
@@ -195,7 +195,7 @@ theorem dnVal : DnVal := by
     rcases (padicValInt_dvd_iff _ _).mp h1 with h | h
     · exact absurd h hF
     · exact h
-  rw [padicValInt.of_nat, padicValNat.pow] at h2
+  rw [padicValInt.of_nat, Nat.multiplicity_pow] at h2
   have h3 := Nat.Prime.sub_one_mul_multiplicity_factorial (n := w + q - m - 1) hl
   calc (l - 1) * padicValInt l (Dn p w i lam2)
       ≤ (l - 1) * (p * multiplicity l (w + q - m - 1).factorial) := Nat.mul_le_mul_left _ h2

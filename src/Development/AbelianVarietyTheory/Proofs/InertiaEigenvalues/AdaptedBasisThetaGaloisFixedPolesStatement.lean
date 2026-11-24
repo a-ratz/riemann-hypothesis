@@ -173,7 +173,7 @@ namespace GlobalTheory.LiftMatK
 variable {l : ℕ} [Fact l.Prime]
 
 theorem pow_mul_mem_integers (K : FinExt l) (a : ↥K.1) : ∃ k : ℕ, (l : ↥K.1) ^ k * a ∈ OL K := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have h1 : IsAlgebraic ℚ_[l] a := Algebra.IsAlgebraic.isAlgebraic a
   have h2 : IsAlgebraic ℤ_[l] a := (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥K.1).2 h1
   obtain ⟨y, hy, hi⟩ := h2.exists_integral_multiple
@@ -530,7 +530,7 @@ theorem GlobalTheory.BKLim.invMatrix_ratio : ∀ (l : ℕ) [Fact l.Prime] (K : F
     exact congrFun (congrFun this i) j
   choose x hxK hx using fun i j => hI K (c₀ i j) (fun g hg => fix0 g hg i j)
   choose x' hxK' hx' using fun i j => hI K (c₀' i j) (fun g hg => fix0' g hg i j)
-  haveI : Nontrivial (Per.BdR l) := hF.nontrivial
+  have : Nontrivial (Per.BdR l) := hF.nontrivial
   have hoinj : Function.Injective C.oD := C.oD.injective
   have hm : (Matrix.of x).map C.oD = c₀ := by ext i j; simp [hx]
   have hm' : (Matrix.of x').map C.oD = c₀' := by ext i j; simp [hx']
@@ -646,8 +646,8 @@ theorem GlobalTheory.BKLim.theta_gal_fixed_of_congr : ∀ (l : ℕ) [Fact l.Prim
   obtain ⟨C⟩ := GlobalTheory.MemLoc.nonempty_core l
   obtain ⟨hfil, -⟩ := GlobalTheory.MemLoc.seed_fil l C (bk.ev bk.E) bk.span_ev
   obtain ⟨-, hker, -, hth, -⟩ := GlobalTheory.MemLoc.thetaD_props l
-  haveI : IsDomain (Per.BdRp l) := (GlobalTheory.MemLoc.BdRField.bdR_isField l).1
-  haveI : IsDomain (Ainf l) := inclW_injective.isDomain (inclW l)
+  have : IsDomain (Per.BdRp l) := (GlobalTheory.MemLoc.BdRField.bdR_isField l).1
+  have : IsDomain (Ainf l) := inclW_injective.isDomain (inclW l)
   set ξ := aDp l (bk.ev bk.E) with hξ
 
   have hξ0 : ξ ≠ 0 := by
@@ -770,7 +770,7 @@ open GlobalTheory.MapSmul in
 theorem GlobalTheory.BKLim.adaptedBasis_theta_and_poles : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ainf l), bk.IsPer τ → ∀ (C : Core l), C.InvdR → ∀ (N d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) (ℤ_[l])) (F : Frame bk N d ρ) (Y : Matrix (Fin d) (Fin d) (Ainf l)), F.IsDR → Y.map (inclW l) = inclW l τ ^ N • F.T → ∀ H : Hodge C (bk.ev bk.E) (fun g => (ρ g).map (zOm l)) K, (∀ (g : ↥(GK K)) (z : ℂ_[l]), IsZ bk g z → ∃ u : Matrix (Fin d) (Fin d) (ℂ_[l]), u * Y.map ((Per.θD l).comp (aDp l)) = Y.map ((Per.θD l).comp (aDp l)) * (F.ε g).map ((Per.θD l).comp (aDp l)) ∧ u * H.V.map (Per.θD l) = H.V.map (Per.θD l) * Matrix.diagonal fun i => z ^ ((H.p i : ℤ) - H.q)) ∧ ∀ N₀ : ℕ, N₀ ≤ N → (∀ i, |(H.p i : ℤ) - H.q| ≤ N₀) → (∀ i j, bk.E ^ (N - N₀) ∣ F.A i j) ∧ ∀ i j, bk.E ^ (N - N₀) ∣ F.A' i j := by
   intro l _ K bk τ hτ C hC N d ρ F Y hDR hY H
   have hdom := GlobalTheory.MemLoc.BdRField.bdR_isField l
-  haveI : IsDomain (Per.BdRp l) := hdom.1
+  have : IsDomain (Per.BdRp l) := hdom.1
   have hι : Function.Injective (algebraMap (Per.BdRp l) (Per.BdR l)) := hdom.2.1
   obtain ⟨B, Q, hBu, hQu, hBl, hQ, hQi⟩ := _root_.GlobalTheory.BKLim.InvBasis.exists_invariant_basis l K bk τ hτ C N d ρ F Y hDR hY
   obtain ⟨Y₁, Y', hY₁, hYY'⟩ := _root_.GlobalTheory.BKLim.pre_bounded_poles l K bk τ hτ N d ρ F.toPre

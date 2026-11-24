@@ -113,7 +113,7 @@ theorem mem_range_of_roots {K : Type} [Field K] {O : Type} [CommRing O] [IsDomai
     have hd : df a ∣ c := Finset.dvd_prod_of_mem _ (Multiset.mem_toFinset.2 ha)
     obtain ⟨e, he⟩ := hd
     have h1 : IsIntegral ℤ ((df a : ℂ) * a) := by
-      simp only [df, dif_pos hroot]
+      simp only [df, dite_eq_left hroot]
       exact (hr a hroot).choose_spec.2
     have : (c : ℂ) * a = (e : ℂ) * ((df a : ℂ) * a) := by
       rw [show c = df a * e from he]; push_cast; ring
@@ -241,7 +241,7 @@ namespace GlobalTheory.HeckeStdBase
 
 theorem finite_MtL {R : Ranks} (what₂ : Rows.Data R) (μ : what₂.Tup) (j : ℕ) : Module.Finite what₂.LL (what₂.MtL μ j) := by
   have h := (what₂.jMt_basis μ j (Module.Free.chooseBasis what₂.LL _)).1
-  haveI : Finite (Module.Free.ChooseBasisIndex what₂.LL (what₂.MtL μ j)) := h.finite
+  have : Finite (Module.Free.ChooseBasisIndex what₂.LL (what₂.MtL μ j)) := h.finite
   exact Module.Finite.of_basis (Module.Free.chooseBasis what₂.LL _)
 
 variable {D : D7}
@@ -256,7 +256,7 @@ theorem root_int (M : MtFam D) (C : NChoice D) (hR : HeckeLift0 (mt0 M) C.Q) (hP
     (hρ : (@LinearMap.charpoly D.what₂.LL _ _ _ _ (Module.Free.of_divisionRing _ _) (finite_MtL D.what₂ _ j)
       (hLC (mt0 M) C.Q hR j w v k)).map D.what₂.embLL |>.IsRoot ρ) :
     ∃ d : ℕ, ¬ D.what₂.places.resChar w ∣ d ∧ IsIntegral ℤ ((d : ℂ) * ρ) := by
-  haveI := finite_MtL D.what₂ (D.what₂.muTw w) j
+  have := finite_MtL D.what₂ (D.what₂.muTw w) j
   obtain ⟨s, ϖ, hcj, hu⟩ := hsp v hg.1
   obtain ⟨Bs, hOut, hB⟩ := hG w j h1 h2
   have hsB : s.v ∉ Bs := hB v k s hg hcj
@@ -327,7 +327,7 @@ theorem heckeStd0_base : ∀ (D : D7) (M : MtFam D) (C : NChoice D) (hR : HeckeL
       ← Module.End.mul_apply, ← Module.End.mul_apply]
     exact congrArg (fun f : Module.End D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) =>
       (base M C hR X hS).iV j w (f ((Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)) a))) (hc j w v k v' k').eq
-  haveI := finite_MtL D.what₂ (D.what₂.muTw w) j
+  have := finite_MtL D.what₂ (D.what₂.muTw w) j
   have hroot := isRoot_of_eig (base M C hR X hS) j w v k μ hμ
   have hu : ∀ d : ℕ, ¬ D.what₂.places.resChar w ∣ d → IsUnit (d : OcC X j w) := by
     intro d hd

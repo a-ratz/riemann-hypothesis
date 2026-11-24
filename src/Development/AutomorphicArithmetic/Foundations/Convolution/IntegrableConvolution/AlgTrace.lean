@@ -82,7 +82,7 @@ private theorem UpperTheory.ConvolutionTheory.L1.simple_of_prime (R : Type) [Rin
         · exact absurd h1 hne
         · exact h1
     exact key n hn
-  haveI : IsSemisimpleRing R := IsArtinianRing.isSemisimpleRing_iff_jacobson.mpr hJ
+  have : IsSemisimpleRing R := IsArtinianRing.isSemisimpleRing_iff_jacobson.mpr hJ
   refine IsSimpleRing.of_eq_bot_or_eq_top fun I => ?_
   obtain ⟨e, he, hI⟩ := IsSemisimpleRing.ideal_eq_span_idempotent I.asIdeal
   rcases h I.asIdeal inferInstance (1 - e) (fun x hx => by
@@ -103,10 +103,10 @@ private theorem UpperTheory.ConvolutionTheory.L1.simple_of_prime (R : Type) [Rin
 theorem UpperTheory.ConvolutionTheory.L1.matImage :
     UpperTheory.ConvolutionTheory.L1.MatImage := by
   intro A W _ _ _ _ _ _ ρ B hB hirr
-  haveI : FiniteDimensional ℂ ρ.range :=
+  have : FiniteDimensional ℂ ρ.range :=
     FiniteDimensional.of_injective ρ.range.val.toLinearMap Subtype.val_injective
-  haveI : IsArtinianRing ρ.range := IsArtinianRing.of_finite ℂ _
-  haveI : IsSimpleRing ρ.range := by
+  have : IsArtinianRing ρ.range := IsArtinianRing.of_finite ℂ _
+  have : IsSimpleRing ρ.range := by
     refine UpperTheory.ConvolutionTheory.L1.simple_of_prime _ fun I hI r hr => ?_
     let P : Submodule ℂ W :=
       { carrier := {w | ∀ x ∈ I, (x : Module.End ℂ W) w = 0}
@@ -375,7 +375,7 @@ private theorem tr_fib [FiniteDimensional ℂ W] (i₀ : Fin (m + 1)) (S : Modul
     funext j
     by_cases h : j = i₀
     · subst h; simp
-    · simp only [Pi.mul_apply, h, if_false]
+    · simp only [Pi.mul_apply, h, ite_false]
       rw [uu_same, uu_same]
   have h3 : Commute S X := by
     have : X ∈ Submonoid.centralizer ({S} : Set (Module.End ℂ W)) := by
@@ -431,7 +431,7 @@ private theorem exists_scalar [FiniteDimensional ℂ W] [Nontrivial W] (o : Fin 
     rintro _ ⟨y, rfl⟩
     refine ⟨Ue y, ?_⟩
     exact (LinearMap.congr_fun hcomm y).symm
-  haveI : Nontrivial (LinearMap.range f) :=
+  have : Nontrivial (LinearMap.range f) :=
     (Submodule.nontrivial_iff_ne_bot).2 (fun h => hf0 (LinearMap.range_eq_bot.1 h))
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue (Ue.restrict hinv)
   obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector

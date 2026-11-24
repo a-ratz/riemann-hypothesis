@@ -111,12 +111,12 @@ theorem lieBC {S : Scheme.{0}} {G : Over S} [GrpObj G] {A B : Type} [CommRing A]
       (∀ (a : A) e, j (a • e) = c a • j e) ∧ Submodule.span B (Set.range j) = ⊤ ∧
       ∀ l : Module.Dual A E, ∃ l' : Module.Dual B E', ∀ e, l' (j e) = c (l e) := by
   subst hy
-  letI : Algebra A B := c.toAlgebra
-  letI : Module A E' := Module.compHom E' c
-  haveI : IsScalarTower A B E' := ⟨fun a b e => by
+  let : Algebra A B := c.toAlgebra
+  let : Module A E' := Module.compHom E' c
+  have : IsScalarTower A B E' := ⟨fun a b e => by
     show (c a * b) • e = c a • b • e
     rw [mul_smul]⟩
-  haveI : Smooth G.hom := hsm
+  have : Smooth G.hom := hsm
   obtain ⟨j, h1, h2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A B x E E' M M'
   let β : E →ₗ[A] E' := { toFun := j, map_add' := map_add j, map_smul' := fun a e => h2 a e }
   have hbc : IsBaseChange B β := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G A x E M).2.2 B E' M' β h1
@@ -201,8 +201,8 @@ theorem step {R B Ω : Type} [CommRing R] [IsDomain R] [CommRing B] [IsDomain B]
         Γ.IsHT i M N χ w → ∃ w' : Module.Dual B L', (∀ e, W (jj e) = k' (w' e)) ∧
           Γ'.IsHT i' M' N ((Units.map (φ : R →* B)).comp χ) w' := by
   subst hx
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup R T Γ
-  letI : Algebra R B := φ.toAlgebra
+  have := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup R T Γ
+  let : Algebra R B := φ.toAlgebra
   obtain ⟨Γ', F, hF⟩ := PositivityTheory.UnitarySelfGeneration.bt_exists_bc R T Γ B φ hφ
   have tor := _root_.GlobalTheory.CompanionTheory.Ar.TorBC.isTorsionAlong_baseChange R T Γ X G x N i hi B φ Γ' F hF
   obtain ⟨β, hβ, -, hsp, hext⟩ := lieBC φ x _ rfl hsm M M'
@@ -272,10 +272,10 @@ open PositivityTheory.Xgn.SequenceFamilyOverlap in
 theorem PositivityTheory.Xgn.sequence_family_overlap : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → 0 < D.p + D.q → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], ∀ (G : GenTors 𝔐 p) (c₁ c₂ : ∀ k, J k), mseg y c₁ ≠ 0 → mseg y c₂ ≠ 0 → ∀ (P₁ : ChartPack G O c₁) (P₂ : ChartPack G O c₂) (x : Fin (D.p + D.q) → 𝓞 E), ∃ n : ℕ, ∃ u ∈ P₂.Dh.om, (mseg y c₁ / mseg y c₂) ^ n • (P₁.Dh.h x - P₂.Dh.h x) = (p ^ 𝔐.R p) • u := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hV _ p hp hpS A _ _ _ m _ hpm O _ _ _ _ _ _ _ G c₁ c₂
     hc₁ hc₂ P₁ P₂ x
-  haveI : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
   have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-  haveI := 𝔐.t.semi.comm
-  haveI := P₂.fin
+  have := 𝔐.t.semi.comm
+  have := P₂.fin
   have hgen : ∀ c' j, mseg y j / mseg y c' ∈ CR O y c' := fun c' j => Algebra.subset_adjoin ⟨j, rfl⟩
   let B : Subalgebra O Ω := awaySub (CR O y c₂) (mseg y c₁ / mseg y c₂) (hgen c₂ c₁)
   have h₂ : CR O y c₂ ≤ B := fun z hz => ⟨0, by simpa using hz⟩
@@ -327,7 +327,7 @@ theorem PositivityTheory.Xgn.sequence_family_overlap : ∀ (E : Type) [Field E] 
     have e' := congrArg (algebraMap B Ω) e
     rw [map_natCast, map_zero] at e'
     exact (Nat.cast_ne_zero.2 (pow_ne_zero _ hp.out.ne_zero)) e'
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup B _ Γ₂
+  have := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup B _ Γ₂
   obtain ⟨u', hu'⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.BT.HT.isHT_iff B _ Γ₂ 𝔐.X 𝔐.t.G _ _ i₂ t₂ hsm hN L' M' _ w₂' w₁' H₂').1 H₁''
   obtain ⟨U, hU⟩ := hjext u'
   have hdiff : P₁.Dh.h x - P₂.Dh.h x = (p ^ 𝔐.R p) • U := by
@@ -422,7 +422,7 @@ private theorem key1 {S : Type} [CommRing S] [IsDomain S] [CharZero S] {ι : Typ
       (∑ k, ((e (Pi.single i (b k)) (Pi.single j 1)).val : S) * w k) = (p : S) * z) :
     ∃ x' : Fin N → S, x = p • x' := by
   classical
-  haveI : NeZero (p ^ R) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (p ^ R) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have star : ∀ (i j : Fin N) (a : S), (d : ZMod (p ^ R)) * e (Pi.single i a) (Pi.single j 1) =
       ((T (a * ∑ k, ((e (Pi.single i (b k)) (Pi.single j 1)).val : S) * w k) : ℤ) : ZMod (p ^ R)) := by
     intro i j a
@@ -676,7 +676,7 @@ theorem UpperTheory.Reformulated.B.DualIntegralLattice.main :
   let W : Matrix (Fin N) (Fin N) (NumberField.RingOfIntegers E) := Matrix.of fun i j =>
     ∑ k, ((e (Pi.single i (NumberField.RingOfIntegers.basis E k)) (Pi.single j 1)).val :
       NumberField.RingOfIntegers E) * w k
-  haveI : Finite (NumberField.RingOfIntegers E ⧸
+  have : Finite (NumberField.RingOfIntegers E ⧸
       Ideal.span {((p : ℕ) : NumberField.RingOfIntegers E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simp [hp.ne_zero])
   have hkey := key2 (p := p) W (fun x hx =>
@@ -973,7 +973,7 @@ theorem emb_injective {E : Type} [Field E] [NumberField E] {Ω : Type} [Field Ω
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro a ha
   have hk : RingHom.ker g = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [eq_bot_iff]
     intro n hn
     have h1 : g (algebraMap ℤ (𝓞 E) n) = 0 := hn
@@ -997,7 +997,7 @@ theorem seqfam_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → �
 
   have hw0 : algebraMap O Ω w ≠ 0 := by
     have h := hCp
-    simp only [HT.IsCp, if_neg hp2] at h
+    simp only [HT.IsCp, ite_eq_right hp2] at h
     obtain ⟨ζ, hζ, he⟩ := h
     rw [he]
     exact sub_ne_zero.2 (hζ.ne_one hp.one_lt)
@@ -1031,7 +1031,7 @@ theorem seqfam_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → �
     have h2 : a = 0 := IsIntegralClosure.algebraMap_injective A ℤ Ω
       (by rw [← h1, map_zero])
     rw [h2, IsLocalization.mk'_zero]
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
 
   have hinj := emb_injective (𝔐.emb (e τ))
   let σE : E →+* Ω := IsFractionRing.lift (A := 𝓞 E) hinj

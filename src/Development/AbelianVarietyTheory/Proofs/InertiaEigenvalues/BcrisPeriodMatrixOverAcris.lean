@@ -80,7 +80,7 @@ theorem map_smul_ring {R S : Type} [CommRing R] [CommRing S] {n : Type} (f : R �
 theorem exists_lift (C : Core l) (hA : C.AwayT) {d : ℕ} (U : Matrix (Fin d) (Fin d) (Per.Bcris l)) :
     ∃ N₀ : ℕ, ∀ N : ℕ, N₀ ≤ N → ∃ Z : Matrix (Fin d) (Fin d) (Per.Acris l),
       Z.map (algebraMap (Per.Acris l) (Per.Bcris l)) = algebraMap (Per.Acris l) (Per.Bcris l) C.t ^ N • U := by
-  haveI : IsLocalization.Away C.t (Per.Bcris l) := hA
+  have : IsLocalization.Away C.t (Per.Bcris l) := hA
   have h : ∀ i j, ∃ k : ℕ, ∃ a : Per.Acris l,
       U i j * algebraMap (Per.Acris l) (Per.Bcris l) C.t ^ k = algebraMap (Per.Acris l) (Per.Bcris l) a := by
     intro i j

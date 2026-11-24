@@ -78,7 +78,7 @@ theorem UpperTheory.V.Z.Sym.Ga.trSym4 :
   have hD : ((ρ s : GL (Fin 2) k) : Matrix (Fin 2) (Fin 2) k).det ≠ 0 :=
     ((ρ s).isUnit.map Matrix.detMonoidHom).ne_zero
   simp only [Ga.tr, Ga.uf, Ga.sym4, UpperTheory.V.Af.tw_val, Matrix.trace_smul, Units.coe_map,
-    MonoidHom.coe_comp, Function.comp_apply, MonoidHom.coe_coe, trace_sym4M]
+    MonoidHom.coe_comp, Function.comp_apply, MonoidHom.coe_ofClass, trace_sym4M]
   simp only [MonoidHom.pow_apply, MonoidHom.inv_apply, MonoidHom.comp_apply,
     Matrix.GeneralLinearGroup.val_det_apply, Units.val_pow_eq_pow_val, Units.val_inv_eq_inv_val,
     smul_eq_mul]

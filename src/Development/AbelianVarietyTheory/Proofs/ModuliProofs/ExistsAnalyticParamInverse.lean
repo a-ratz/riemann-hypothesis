@@ -126,7 +126,7 @@ theorem eventually_eq_zero_of_slices {W : Type*} [NormedAddCommGroup W] [NormedS
 theorem analyticAt_param_doublingLog {ε : B × V → V} {b₀ : B} (ha : AnalyticAt ℂ ε (b₀, 0))
     (h : ∀ᶠ b in 𝓝 b₀, (fun x => ε (b, x) - (2 : ℂ)⁻¹ • x) =O[𝓝 0] fun x => ‖x‖ ^ 2) :
     AnalyticAt ℂ (fun q : B × V => doublingLog (fun x => ε (q.1, x)) q.2) (b₀, 0) := by
-  have : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   set K : ℝ := ‖ε (b₀, 0)‖ + 1 with hK
   have hK0 : 0 < K := by positivity
   obtain ⟨s, hs, hsa⟩ := Metric.eventually_nhds_iff_ball.mp
@@ -207,7 +207,7 @@ theorem exists_param_exp_log {b₀ : B} {M : B × V × V → V} (hM : AnalyticAt
       (∀ᶠ q : B × V in 𝓝 (b₀, 0), L (q.1, E q) = q.2 ∧ E (q.1, L q) = q.2) ∧
       ∀ᶠ q : B × V × V in 𝓝 (b₀, 0, 0),
         E (q.1, q.2.1 + q.2.2) = M (q.1, E (q.1, q.2.1), E (q.1, q.2.2)) := by
-  have : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   have hlaw : ∀ᶠ b in 𝓝 b₀, IsLocalCommGroupLaw fun p : V × V => M (b, p) := by
     filter_upwards [hM.eventually_analyticAt.curry_nhds, hu.curry_nhds, hc.curry_nhds,
       hs.curry_nhds] with b h1 h2 h3 h4

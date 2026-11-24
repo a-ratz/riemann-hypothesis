@@ -70,7 +70,7 @@ variable {E : Type} [Field E] [NumberField E] {K : Type} [Field K] [CharZero K]
 theorem sum_emb [Fintype (E →+* K)] (h : Nat.card (E →+* K) = Module.finrank ℚ E) (x : E) :
     ∑ s : E →+* K, s x = algebraMap ℚ K (Algebra.trace ℚ E x) := by
   classical
-  letI : CharZero (AlgebraicClosure K) :=
+  let : CharZero (AlgebraicClosure K) :=
     charZero_of_injective_algebraMap (algebraMap K (AlgebraicClosure K)).injective
   let f : (E →+* K) → (E →ₐ[ℚ] AlgebraicClosure K) := fun s =>
     ((algebraMap K (AlgebraicClosure K)).comp s).toRatAlgHom

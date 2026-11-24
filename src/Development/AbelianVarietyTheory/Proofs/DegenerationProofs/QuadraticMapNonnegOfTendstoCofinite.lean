@@ -167,7 +167,7 @@ theorem coord_regular_and_unit : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Alge
     refine ⟨fun v hv => ?_, ?_⟩
     · let V : M.Z.Opens := ⟨⋂ j, {a | v j ∈ M.O a}, isOpen_iInter_of_finite fun j => M.isOpen_setOf_mem_O _⟩
       have hV : (V : Set M.Z).Nonempty := ⟨genericPoint M.Z, Set.mem_iInter.2 fun j => by
-        simp only [Set.mem_setOf_eq, M.O_genericPoint]; trivial⟩
+        simp only [Set.mem_ofPred_eq, M.O_genericPoint]; trivial⟩
       have hvV : ∀ j, v j ∈ M.ringOn ((U₀ ⊓ V : M.Z.Opens) : Set M.Z) := fun j =>
         RatModel.mem_ringOn.2 fun a ha => Set.mem_iInter.1 ha.2 j
       refine (hLL.1 (U₀ ⊓ V) inf_le_left (M.nonempty_inf hO.ne hV) z hz).2 _ ?_ ?_

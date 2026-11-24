@@ -135,14 +135,14 @@ end GlobalTheory.SS.SemiDivisible
 open GlobalTheory.SS.SemiDivisible in
 theorem GlobalTheory.SS.torusExtension_points_divisible : ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G], Nonempty (TorusExtension G) → ∀ (n : ℕ), 1 ≤ n → ∀ y : (𝟙_ (Over (Sp k)) ⟶ G), ∃ x : (𝟙_ (Over (Sp k)) ⟶ G), x ^ n = y := by
   rintro k _ _ G _ _ ⟨E⟩ n hn
-  letI := E.addCommGroup
-  letI := E.free
-  letI := E.grpB
-  haveI := E.q_hom
-  haveI := E.i_hom
-  haveI := E.q_surjective
-  haveI := E.q_quasiCompact
-  haveI := (GlobalTheory.torusExtension_smooth_geometricallyConnected G E).1
+  let := E.addCommGroup
+  let := E.free
+  let := E.grpB
+  have := E.q_hom
+  have := E.i_hom
+  have := E.q_surjective
+  have := E.q_quasiCompact
+  have := (GlobalTheory.torusExtension_smooth_geometricallyConnected G E).1
   have hk := E.isKernel
   refine pow_surj_of_extension (IsMonHom.monoidHom E.i (𝟙_ (Over (Sp k))))
     (IsMonHom.monoidHom E.q (𝟙_ (Over (Sp k)))) (fun b => exists_lift_point E.q b) ?_ n ?_

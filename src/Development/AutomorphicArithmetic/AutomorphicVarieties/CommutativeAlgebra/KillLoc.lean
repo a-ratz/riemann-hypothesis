@@ -114,9 +114,9 @@ private theorem ker_inf {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRin
     rw [← Ideal.mem_bot, ← hK]
     exact Ideal.mul_mem_mul ha hk
   have hart : IsArtinian R K := by
-    letI : Module (ResidueField R) K := htor.module
-    haveI : IsScalarTower R (ResidueField R) K := htor.isScalarTower
-    haveI : Module.Finite (ResidueField R) K := Module.Finite.of_restrictScalars_finite R _ _
+    let : Module (ResidueField R) K := htor.module
+    have : IsScalarTower R (ResidueField R) K := htor.isScalarTower
+    have : Module.Finite (ResidueField R) K := Module.Finite.of_restrictScalars_finite R _ _
     exact isArtinian_of_surjective_algebraMap (R := ResidueField R) (S := R) (M := K) residue_surjective
   obtain ⟨N, hN⟩ := IsArtinian.monotone_stabilizes (R := R) (M := K)
     ⟨fun n => OrderDual.toDual (Submodule.comap K.subtype (maximalIdeal R ^ n)),
@@ -143,9 +143,9 @@ private theorem ker_coord (O : Type) [CommRing O] [IsLocalRing O] {R : Type} [Co
     show a * k = 0
     rw [← Ideal.mem_bot, ← hK]
     exact Ideal.mul_mem_mul ha hk
-  letI : Module (ResidueField R) K := htor.module
-  haveI : IsScalarTower R (ResidueField R) K := htor.isScalarTower
-  haveI : Module.Finite (ResidueField R) K := Module.Finite.of_restrictScalars_finite R _ _
+  let : Module (ResidueField R) K := htor.module
+  have : IsScalarTower R (ResidueField R) K := htor.isScalarTower
+  have : Module.Finite (ResidueField R) K := Module.Finite.of_restrictScalars_finite R _ _
   let e : ResidueField O ≃+* ResidueField R := RingEquiv.ofBijective _ (resMap_bijective O R)
   have he : ∀ x, e (res O R x) = residue R x := fun x => e.apply_symm_apply _
   let b := (Module.finBasis (ResidueField R) K).equivFun
@@ -261,19 +261,19 @@ private theorem mask_mem (Φ : FormData O w) (j : X) {Y : Matrix ι ι k} (hY : 
   · rw [← h0]
     congr 1 <;> refine Finset.sum_congr rfl fun c _ => ?_
     · by_cases h : w c + w b = Φ.c
-      · rw [e1 c h, if_pos hj]
+      · rw [e1 c h, ite_eq_left hj]
       · simp [hJ c b h]
     · by_cases h : w a + w c = Φ.c
-      · rw [e2 c h, if_pos hj]
+      · rw [e2 c h, ite_eq_left hj]
       · simp [hJ a c h]
   · rw [Finset.sum_eq_zero, Finset.sum_eq_zero, add_zero]
     · intro c _
       by_cases h : w a + w c = Φ.c
-      · rw [e2 c h, if_neg hj, mul_zero]
+      · rw [e2 c h, ite_eq_right hj, mul_zero]
       · simp [hJ a c h]
     · intro c _
       by_cases h : w c + w b = Φ.c
-      · rw [e1 c h, if_neg hj, zero_mul]
+      · rw [e1 c h, ite_eq_right hj, zero_mul]
       · simp [hJ c b h]
 
 omit [Fintype ι] [DecidableEq ι] in
@@ -283,7 +283,7 @@ private theorem sum_mask (S : Finset X) (hS : ∀ a b, w a - w b ∈ S) (Y : Mat
   ext a b
   rw [Matrix.sum_apply]
   simp only [mask_apply]
-  convert (Finset.sum_ite_eq S (w a - w b) fun _ => Y a b).trans (if_pos (hS a b))
+  convert (Finset.sum_ite_eq S (w a - w b) fun _ => Y a b).trans (ite_eq_left (hS a b))
 
 private theorem cob_all (Φ : FormData O w) {Γ : Type} [Group Γ] [TopologicalSpace Γ] {ρ : Γ →* Matrix ι ι k}
     (hρ : Φ.Normalises ρ) (N : Subgroup Γ)

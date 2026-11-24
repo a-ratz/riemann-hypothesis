@@ -222,7 +222,7 @@ theorem farRight {χ : (AE D)ˣ →* Circle} {H : G D n → ℝ≥0} (hH : IsHt 
         · refine Continuous.aestronglyMeasurable ?_
           simp only [cutR]
           exact continuous_finsetSum _ fun x _ => continuous_const.mul
-            (hz'.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const))
+            (hz'.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const))
     _ = ∑' q : Cosets (P D n) (GF D n), c z * fam H φ s₀ z (((q.out : GF D n) : G D n) * g) := by
         congr 1; funext q; exact hrel z _
     _ = c z * eisS (fam H φ s₀ z) g := by
@@ -265,7 +265,7 @@ theorem cut_cont {H : G D n → ℝ≥0} {φ : G D n → ℂ} {s₀ : ℂ} {U : 
       (U ×ˢ univ) := by
     intro x
     have hc : Continuous (fun p : ℂ × KAt D n v => (p.1, g * ↑p.2 * nb x)) :=
-      continuous_fst.prodMk ((continuous_const.mul (continuous_subtype_val.comp continuous_snd)).mul
+      continuous_fst.prodMk ((continuous_const.mul (continuous_subtypeVal.comp continuous_snd)).mul
         continuous_const)
     exact hE.cont.comp hc.continuousOn (fun p hp => ⟨hp.1, Set.mem_univ _⟩)
   show ContinuousOn (fun p : ℂ × KAt D n v => ∑ x ∈ C.s, C.co x * E p.1 (g * ↑p.2 * nb x)) (U ×ˢ univ)
@@ -311,7 +311,7 @@ end LCfRel
 open LCfRel Set Metric in
 theorem cfRel : HtExist → CfRel := by
   intro _ D n χ _ H hH s₀ φ hφc hφl U d E σ hE ε hrad nb _ v C c hc νv hν hrel k hk hvan g
-  haveI : IsProbabilityMeasure νv := hν
+  have : IsProbabilityMeasure νv := hν
   obtain ⟨hε, hball, hne⟩ := hrad
   have hsph : Metric.sphere s₀ ε ⊆ U := fun z hz => hball (Metric.sphere_subset_closedBall hz)
   have hdne : ∀ z ∈ Metric.sphere s₀ ε, Polynomial.eval z d ≠ 0 := by

@@ -58,8 +58,8 @@ private theorem padicInt_ringHom_finite_field_eq {p : ℕ} [Fact p.Prime] {K : T
     have hne : RingHom.ker χ ≠ ⊥ := by
       intro h
       have hinj : Function.Injective χ := (RingHom.injective_iff_ker_eq_bot χ).mpr h
-      haveI : Finite ℤ_[p] := Finite.of_injective χ hinj
-      haveI : Infinite ℤ_[p] := Infinite.of_injective (Nat.cast : ℕ → ℤ_[p]) Nat.cast_injective
+      have : Finite ℤ_[p] := Finite.of_injective χ hinj
+      have : Infinite ℤ_[p] := Infinite.of_injective (Nat.cast : ℕ → ℤ_[p]) Nat.cast_injective
       exact not_finite ℤ_[p]
     have hmax : (RingHom.ker χ).IsMaximal := (RingHom.ker_isPrime χ).isMaximal hne
     exact (IsLocalRing.eq_maximalIdeal hmax).ge

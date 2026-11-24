@@ -62,7 +62,7 @@ private theorem exists_den {x : E} (hx : w.valuation E x ≤ 1) :
   obtain ⟨n, d, hd, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 E) x
   have hd0 : d ≠ 0 := nonZeroDivisors.ne_zero hd
   have hd1 : algebraMap (𝓞 E) E d ≠ 0 := by simpa using hd0
-  rw [map_div₀, div_le_one₀ (zero_lt_iff.2 (by simpa using hd1)), HeightOneSpectrum.valuation_of_algebraMap,
+  rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 (by simpa using hd1)), HeightOneSpectrum.valuation_of_algebraMap,
     HeightOneSpectrum.valuation_of_algebraMap] at hx
   set k := (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {d})).factors with hk
   have hv : w.intValuation d = WithZero.exp (-(k : ℤ)) := w.intValuation_if_neg hd0
@@ -79,7 +79,7 @@ private theorem exists_den {x : E} (hx : w.valuation E x ≤ 1) :
     rw [hJ] at this
     rw [pow_succ]
     exact Ideal.mul_mono_right h this
-  obtain ⟨b, hbJ, hb⟩ := SetLike.not_le_iff_exists.1 h4
+  obtain ⟨b, hbJ, hb⟩ := IsConcreteLE.not_le_iff_exists.1 h4
   have h5 : n * b ∈ Ideal.span {d} := hJ ▸ Ideal.mul_mem_mul h2 hbJ
   obtain ⟨a, ha⟩ := Ideal.mem_span_singleton'.1 h5
   refine ⟨a, b, hb, ?_⟩
@@ -133,7 +133,7 @@ private theorem le_one_of_mem (hA : IsPlaceOver A w) {x : E} (hx : algebraMap E 
     rintro rfl
     simp at h0
   have h4 : A.valuation (algebraMap E Ω x) ≠ 0 := by simpa using hx0
-  rw [map_inv₀, map_inv₀, inv_lt_one₀ (zero_lt_iff.2 h4)] at h3
+  rw [map_inv₀, map_inv₀, inv_lt_one₀ (pos_iff_ne_zero.2 h4)] at h3
   exact absurd ((A.valuation_le_one_iff _).2 hx) (not_le.2 h3)
 
 end Place
@@ -169,7 +169,7 @@ private theorem isUnit_OK_iff {l : ℕ} [Fact l.Prime] {K : IntermediateField �
 
 theorem intMap : IntMap := by
   intro E Ω _ _ _ _ _ l _ w A hA O _ _ _ Bw hj
-  haveI : IsDiscreteValuationRing (Ow w) := (w.valuation E).valuationSubring_isDiscreteValuationRing
+  have : IsDiscreteValuationRing (Ow w) := (w.valuation E).valuationSubring_isDiscreteValuationRing
   have hmem : ∀ x : Ow w, algebraMap E Ω (algebraMap (Ow w) E x) ∈ A := fun x =>
     mem_of_le_one hA ((Valuation.mem_valuationSubring_iff _ _).1 x.2)
   have hφ : ∀ x : Ow w, ((kOf Bw).comp (algebraMap (Ow w) E)) x ∈ OK l Bw.Kw.1 := fun x =>

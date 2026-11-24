@@ -83,7 +83,7 @@ theorem rho_hom :
   · rw [htr, htr, map_smul, hs, map_mul, hh.o]
   · rw [← hh.red, hz, map_smulₛₗ, hh.r, map_pow, map_natCast, hh.ℓ]
   · intro m bs'
-    haveI := hC.fin j
+    have := hC.fin j
     have bs := Module.finBasis K (C.V j)
     have hE := congrArg (h.fW j) (hW bs)
 

@@ -59,8 +59,8 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
     [IsModuleTopology ℚ_[l] V] (ρ : Representation ℚ_[l] G V) (hρ : ∀ x, Continuous fun g => ρ g x) :
     ∃ (n : ℕ) (e : Basis (Fin n) ℚ_[l] V), ∀ g i j, ‖e.repr (ρ g (e j)) i‖ ≤ 1 := by
   classical
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let e₀ := Module.finBasis ℚ_[l] V
   let Λ : Submodule ℤ_[l] V := Submodule.span ℤ_[l] (Set.range fun p : G × Fin (finrank ℚ_[l] V) => ρ p.1 (e₀ p.2))
   have hc : Continuous fun g : G => (fun i j => e₀.repr (ρ g (e₀ j)) i) :=
@@ -87,16 +87,16 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
       rw [smul_smul, div_mul_cancel₀ _ hc0]
     rw [h2]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : Submodule.IsLattice ℚ_[l] Λ :=
+  have : Submodule.IsLattice ℚ_[l] Λ :=
     Submodule.IsLattice.of_fg ℚ_[l] ((Submodule.fg_span (Set.finite_range _)).of_le hle)
-  haveI : Submodule.IsFullLattice ℚ_[l] Λ :=
+  have : Submodule.IsFullLattice ℚ_[l] Λ :=
     { span_eq_top := by
         rw [eq_top_iff, ← e₀.span_eq]
         refine Submodule.span_mono ?_
         rintro _ ⟨i, rfl⟩
         exact Submodule.subset_span ⟨(1, i), by simp⟩ }
-  haveI : Module.Free ℤ_[l] Λ := Submodule.IsLattice.free ℚ_[l] Λ
-  haveI : Module.Finite ℤ_[l] Λ := Submodule.IsLattice.finite ℚ_[l] Λ
+  have : Module.Free ℤ_[l] Λ := Submodule.IsLattice.free ℚ_[l] Λ
+  have : Module.Finite ℤ_[l] Λ := Submodule.IsLattice.finite ℚ_[l] Λ
   let b := Module.finBasis ℤ_[l] Λ
   have hst : ∀ g, ∀ x ∈ Λ, ρ g x ∈ Λ := by
     intro g x hx
@@ -141,7 +141,7 @@ private theorem isCrys_of_inertia {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI 
   obtain ⟨n, e, hint⟩ := exists_int_basis ρ' hcont
   obtain ⟨M, hM⟩ := exists_matrixHom ρ' e hint
   obtain ⟨W, hW, hWg⟩ := exists_witt_matrix (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)) M
     (continuous_pi fun i => continuous_pi fun j => continuous_induced_rng.2 (by
       have h := (IsModuleTopology.continuous_of_linearMap (e.coord i)).comp (hcont (e j))
@@ -198,8 +198,8 @@ theorem UpperTheory.V.Loc.crUnr :
     refine isCrys_of_inertia (PP l) (AIP l) T K ?_ _ (fun x => ?_) w fun g hg x => ?_
     · simp only [hχ]
       have h0 : Continuous fun g : ↥(GK K) => ((cyc l l g : ℤ_[l]ˣ) : ℤ_[l]) :=
-        Units.continuous_val.comp (hc.comp continuous_subtype_val)
-      exact continuous_subtype_val.comp h0
+        Units.continuous_val.comp (hc.comp continuous_subtypeVal)
+      exact continuous_subtypeVal.comp h0
     · exact hρ.comp (he.prodMk continuous_const)
     · change ρ (e.symm g) x = _
       rw [hI _ (by rw [hφ']; exact (memIK K g).1 hg), hφ']

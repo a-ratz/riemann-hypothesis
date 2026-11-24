@@ -149,7 +149,7 @@ theorem exists_isSocle_of_forall_isAtom (e : (Σ a, m a) ≃ n) {ρ : Representa
     (hone : ∀ T : Subrepresentation π, IsAtom T → 1 ≤ jhMult ρ (jac e T.toRepresentation))
     (hjm : jhMult ρ (jac e π) ≤ 1) : ∃ τ : IrrRep (GL n k), IsSocle τ.ρ π := by
   obtain ⟨hGT, hLT⟩ := (hasFiniteLength_iff_wellFounded _).1 hfl
-  haveI : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
+  have : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
   have hnt : (⊤ : Subrepresentation π) ≠ ⊥ := fun hb => by
     obtain ⟨u, hu⟩ := exists_ne (0 : V)
     have h1 : u ∈ (⊥ : Subrepresentation π) := hb ▸ trivial
@@ -197,7 +197,7 @@ theorem exists_isSocle_of_forall_isAtom (e : (Σ a, m a) ≃ n) {ρ : Representa
 
 theorem nontrivial_indSp (e : (Σ a, m a) ≃ n) {ρ : Representation ℂ (Levi k m) X}
     (hρ : ρ.IsIrreducible) (hsρ : IsSmooth ρ) : Nontrivial (IndSp e ρ) := by
-  haveI : Nontrivial X := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hρ
+  have : Nontrivial X := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hρ
   obtain ⟨u, hu⟩ := exists_ne (0 : X)
   obtain ⟨f, hf, -⟩ := GlobalTheory.SmGL.ProdIrr.exists_indSp_apply_one e ρ hsρ u
   exact ⟨f, 0, fun h => hu (by rw [← hf, h]; rfl)⟩
@@ -220,7 +220,7 @@ theorem exists_isSocle_of_jm_le_one : ∀ {k : Type} [Field k] [ValuativeRel k] 
   intro k _ _ _ _ hA h N x hd hjm
   have hρ := isIrreducible_piTensor hA x
   have hsρ : IsSmooth (piTensor fun a => (x a).rep) := isSmooth_piTensor fun a => (x a).2.rep.smooth
-  haveI := nontrivial_indSp (stdBlocks (fun a => (x a).1) hd) hρ hsρ
+  have := nontrivial_indSp (stdBlocks (fun a => (x a).1) hd) hρ hsρ
   exact exists_isSocle_of_forall_isAtom (stdBlocks (fun a => (x a).1) hd) hρ
     (isSmooth_parInd _ _)
     (GlobalTheory.CompanionTheory.BZInd.inductionFiniteLength k _ _ _ _ _ _ hsρ (hasFiniteLength_of_isIrreducible hρ))

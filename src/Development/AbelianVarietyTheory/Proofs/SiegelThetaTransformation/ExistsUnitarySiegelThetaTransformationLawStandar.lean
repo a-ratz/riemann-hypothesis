@@ -498,7 +498,7 @@ theorem orth_one {R : ℕ} (hR : 0 < R) (a b : Fin (R * R)) :
   · simp [h, ech_zero, sq]
   · set t : ℚ := (((a : ℕ) : ℚ) - (b : ℕ)) / (R * R) with ht
     have hpow : ∀ n : ℕ, ech (t * n) = ech t ^ n := by
-      intro n; simp only [ech, ← Complex.exp_nat_mul]; push_cast; ring_nf
+      intro n; simp only [ech, ← exp_natCast_mul]; push_cast; ring_nf
     have h1 : ∀ n : Fin (R * R), ech ((((a : ℕ) : ℚ) / R - ((b : ℕ) : ℚ) / R) *
         (((n : ℕ) : ℚ) / R)) = ech t ^ (n : ℕ) := by
       intro n; rw [← hpow, ht]; congr 1; field_simp
@@ -541,7 +541,7 @@ theorem sum_ech_rep : ∀ (κ ι : Type) [Fintype κ] [Fintype ι] [DecidableEq 
   · obtain ⟨k, hk⟩ := Function.ne_iff.1 hab
     obtain ⟨i, hi⟩ := Function.ne_iff.1 hk
     exact Finset.prod_eq_zero (Finset.mem_univ k)
-      (Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi))
+      (Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi))
 
 variable {κ ι : Type} [Fintype κ] [Fintype ι]
 
@@ -695,7 +695,7 @@ theorem plancherel {R : ℕ} (hR : 0 < R) {φ ψ : Matrix κ ι ℚ → ℂ} (h 
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Finset.sum_comm]
   simp only [← Finset.mul_sum, sum_ech_rep κ ι R hR, ← hV, mul_ite, mul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   field_simp
 
 theorem thS_eq [DecidableEq ι] (φ : Matrix κ ι ℚ → ℂ) (τ : Matrix ι ι ℂ) (ζ : κ → ι → ℂ) :

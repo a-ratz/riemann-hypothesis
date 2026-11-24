@@ -153,7 +153,7 @@ theorem conjSub_isLattice {Λ : Submodule (𝓞 E) (Fin n → E)} (h : Λ.IsLatt
 
 theorem conjSub_isFullLattice {Λ : Submodule (𝓞 E) (Fin n → E)} (h : Λ.IsFullLattice E) :
     (conjSub Λ).IsFullLattice E := by
-  haveI : (conjSub Λ).IsLattice E := conjSub_isLattice h.toIsLattice
+  have : (conjSub Λ).IsLattice E := conjSub_isLattice h.toIsLattice
   refine ⟨?_⟩
   apply eq_top_iff.mpr
   intro y _
@@ -196,9 +196,9 @@ theorem isHerm_spaceW : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
   intro D T L sc G μ₀ hL W i j B τf hemb
   have hX : (Node.grid ((i : ℕ) + 1) ((j : ℕ) + 1)).InRange D.R.m := ⟨i.2, j.2⟩
   have hV := node_isV G hL hX
-  haveI hlat : (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))).IsLattice D.host.E :=
+  have hlat : (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))).IsLattice D.host.E :=
     GlobalTheory.TripleSpaceW.conjSub_isLattice hV.sd.1
-  haveI := GlobalTheory.TripleSpaceW.conjSub_isFullLattice (selfDual_isFullLattice _ _ hV.sd)
+  have := GlobalTheory.TripleSpaceW.conjSub_isFullLattice (selfDual_isFullLattice _ _ hV.sd)
   have hex : ∀ v : B.P, ∃ bas : GL (Fin (spW G i j).rank) (Fv D.host.F v.1),
       GlobalTheory.AdelicU.IsSplitBasis (B.τ v) (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1)))) bas := fun v =>
     GlobalTheory.AdelicU.exists_isSplitBasis (B.τ v) (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid ((i : ℕ) + 1) ((j : ℕ) + 1))))

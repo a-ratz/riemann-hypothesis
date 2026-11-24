@@ -139,7 +139,7 @@ theorem GlobalTheory.CompanionTheory.Mass.MeanV.exists_common_denominator :
   by_cases hw : w ∈ T
   · rw [← Finset.mul_prod_erase T (fun v => (p v : F) ^ m v) hw, map_mul, map_prod]
     have hrest : ∏ v ∈ T.erase w, w.valuation F ((p v : F) ^ m v) ≤ 1 :=
-      Finset.prod_le_one' fun v _ => hpl w (p v) (m v)
+      Finset.prod_le_one fun v _ => hpl w (p v) (m v)
     have hmain : w.valuation F ((p w : F) ^ m w) * w.valuation F x ≤ 1 := by
       have h := hm w hw _ (hxK w hw)
       rw [← map_pow, ← map_mul, h3, map_mul] at h
@@ -155,6 +155,6 @@ theorem GlobalTheory.CompanionTheory.Mass.MeanV.exists_common_denominator :
       rwa [h3] at h
     have hN : w.valuation F (∏ v ∈ T, (p v : F) ^ m v) ≤ 1 := by
       rw [map_prod]
-      exact Finset.prod_le_one' fun v _ => hpl w (p v) (m v)
+      exact Finset.prod_le_one fun v _ => hpl w (p v) (m v)
     calc w.valuation F (∏ v ∈ T, (p v : F) ^ m v) * w.valuation F x ≤ 1 * 1 := mul_le_mul' hN hxw
       _ = 1 := one_mul 1

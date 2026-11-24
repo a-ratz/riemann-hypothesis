@@ -98,7 +98,7 @@ theorem sq_two_pow {d : ℤ} (hd : d % 8 = 7) (k : ℕ) : ∃ s : ℤ, (2 : ℤ)
 
 theorem sq_odd_pow {d : ℤ} {l : ℕ} (hl : l.Prime) (hl2 : l ≠ 2) (hj : jacobiSym (-d) l = 1) (k : ℕ) :
     ∃ s : ℤ, (l : ℤ) ^ (k + 1) ∣ s ^ 2 + d := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hl2' : (2 : ZMod l) ≠ 0 := by
     intro h
     have h' : ((2 : ℤ) : ZMod l) = 0 := by exact_mod_cast h
@@ -190,7 +190,7 @@ theorem exists_prime_liesOver {M : Type} [Field M] [NumberField M] (P : Ideal (�
     ∃ p : ℕ, p.Prime ∧ P.LiesOver (span {(p : ℤ)}) := by
   have hne : Ideal.comap (algebraMap ℤ (𝓞 M)) P ≠ ⊥ := by
     obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h0
-    exact Ideal.comap_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
+    exact under_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
   obtain ⟨g, hg⟩ : ∃ g : ℤ, Ideal.comap (algebraMap ℤ (𝓞 M)) P = Ideal.span {g} :=
     (Submodule.IsPrincipal.principal (Ideal.comap (algebraMap ℤ (𝓞 M)) P))
   have hg0 : g ≠ 0 := by
@@ -237,7 +237,7 @@ theorem ordCompl_d : ordCompl[H.d] H.condN = H.QS * H.q := by
 
 theorem ps_congr (u w : (ZMod H.condN)ˣ) (h : ZMod.unitsMap (QSq_dvd H) u = ZMod.unitsMap (QSq_dvd H) w) :
     (H.art u).1.1 = (H.art w).1.1 := by
-  haveI : NeZero H.condN := ⟨Nat.pos_iff_ne_zero.mp
+  have : NeZero H.condN := ⟨Nat.pos_iff_ne_zero.mp
     (Nat.mul_pos (Nat.mul_pos H.QS_pos H.hyp.1.pos) H.hyp.2.1.pos)⟩
   have h1 : ZMod.unitsMap (QSq_dvd H) (u * w⁻¹) = 1 := by
     rw [map_mul, map_inv, h, mul_inv_cancel]
@@ -250,7 +250,7 @@ theorem ps_congr (u w : (ZMod H.condN)ˣ) (h : ZMod.unitsMap (QSq_dvd H) u = ZMo
 theorem ps_d : ∀ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ H.d [MOD H.QS * H.q] → (H.art u).1.1 = -1 := by
   intro u hu
   have hM0 : H.QS * H.q ≠ 0 := Nat.mul_ne_zero H.QS_pos.ne' H.hyp.1.ne_zero
-  haveI : NeZero (H.QS * H.q) := ⟨hM0⟩
+  have : NeZero (H.QS * H.q) := ⟨hM0⟩
   have hd8 : (H.d : ℤ) % 8 = 7 := by have := H.hyp.2.2.2.1; omega
   obtain ⟨s, hs⟩ := sq_mod hd8 (H.QS * H.q) hM0 (split_QSq H)
   have hs' : ((s : ZMod (H.QS * H.q))) ^ 2 = -((H.d : ℕ) : ZMod (H.QS * H.q)) := by
@@ -302,7 +302,7 @@ private theorem jac_lemma {p d : ℕ} (hp : p % 2 = 1) (hd : d % 4 = 3) :
 
 private theorem art_snd_lemma (u : (ZMod H.condN)ˣ) :
     (((H.art u).1.2 : ℤˣ) : ℤ) = jacobiSym (((u : ZMod H.condN).val : ℕ) : ℤ) H.d := by
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
   have hd4 : H.d % 4 = 3 := by have := H.hyp.2.2.2.1; omega
   have hz := Cond.z_spec H.condN
   have hx : IsPrimitiveRoot (Cond.z H.condN ^ (H.QS * H.q)) H.d :=
@@ -354,7 +354,7 @@ theorem frob : ∀ (p : ℕ) [Fact p.Prime], ¬ p ∣ H.condN →
   have hcop : Nat.Coprime p H.condN := (Nat.Prime.coprime_iff_not_dvd hp).mpr hpN
   have hfact : ordCompl[p] H.condN = H.condN := by
     rw [Nat.factorization_eq_zero_of_not_dvd hpN, pow_zero, Nat.div_one]
-  haveI := cyc_isGalois H.condN
+  have := cyc_isGalois H.condN
   obtain ⟨Q, hQ, hQl, hI, hF⟩ := exists_over (emb H) p P
   have hval : ∀ u : (ZMod H.condN)ˣ, (u : ZMod H.condN) = p →
       (u : ZMod H.condN).val ≡ p [MOD ordCompl[p] H.condN] := by
@@ -424,7 +424,7 @@ theorem frob : ∀ (p : ℕ) [Fact p.Prime], ¬ p ∣ H.condN →
     exact ((Nat.mod_modEq p H.condN).of_dvd h2).symm
 
 theorem exists_art_iod : ∃ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ 1 [MOD H.QS * H.q] ∧ H.art u = φ.iod := by
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
   have hd4 : H.d % 4 = 3 := by have := H.hyp.2.2.2.1; omega
   have hd1 : 1 ≤ H.d := H.hyp.2.1.one_lt.le
   have hcop : Nat.Coprime (H.d - 1) H.d :=
@@ -456,8 +456,8 @@ theorem exists_art_iod : ∃ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ 1 
 theorem inertia_d : ∀ (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (span {(H.d : ℤ)})] (σ : H.E ≃ₐ[ℚ] H.E),
     (∀ x : 𝓞 H.E, σ • x - x ∈ P) ↔ (H.gal σ = 1 ∨ H.gal σ = φ.iod) := by
   intro P _ _ σ
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
-  haveI := cyc_isGalois H.condN
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have := cyc_isGalois H.condN
   obtain ⟨Q, hQ, hQl, hI, -⟩ := exists_over (emb H) H.d P
   constructor
   · intro h
@@ -594,9 +594,9 @@ theorem decompConj : ∀ (l : ℕ), l.Prime → l ∣ H.condN →
     rcases (Nat.Prime.dvd_mul hl).mp hlN with h | h
     · exact absurd h hlq
     · exact (Nat.prime_dvd_prime_iff_eq hl H.hyp.2.1).mp h
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
-  haveI hPd : P.LiesOver (span {(H.d : ℤ)}) := by rw [← hld]; infer_instance
-  haveI := cyc_isGalois H.condN
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have hPd : P.LiesOver (span {(H.d : ℤ)}) := by rw [← hld]; infer_instance
+  have := cyc_isGalois H.condN
   obtain ⟨Q, hQ, hQl, -, hF⟩ := exists_over (emb H) H.d P
   have hcd : Nat.Coprime H.d (H.QS * H.q) := (cop_QSq_d H).symm
   obtain ⟨uF, huF1, -⟩ := exists_unit_crt (cop_QSq_d H) H.d 1 hcd (Nat.coprime_one_left _)
@@ -661,20 +661,20 @@ theorem decompConj : ∀ (l : ℕ), l.Prime → l ∣ H.condN →
 theorem unramEF : ∀ (P : Ideal (𝓞 H.E)), P.IsPrime → P ≠ ⊥ → ¬ ∀ x : 𝓞 H.E, H.conj • x - x ∈ P := by
   intro P hP hP0 h
   obtain ⟨p, hp, hpl⟩ := exists_prime_liesOver P hP0
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h2 : H.gal H.conj = φ.cc := MulEquiv.apply_symm_apply _ _
   have hcs : H.conj H.sqd = -H.sqd := by
     rw [H.gal_sqd H.conj, h2]
     simp [Frame.cc, c0]
   by_cases hpd : p = H.d
-  · haveI : P.LiesOver (span {(H.d : ℤ)}) := by rw [← hpd]; exact hpl
+  · have : P.LiesOver (span {(H.d : ℤ)}) := by rw [← hpd]; exact hpl
     have h3 := (inertia_d H P H.conj).mp h
     rw [h2] at h3
     rcases h3 with h3 | h3
     · exact cc_ne_one h3
     · have h4 := congrArg (fun g : φ.GG => ((g.1.1 : ℤˣ) : ℤ)) h3
       simp [Frame.cc, Frame.iod, c0] at h4
-  · haveI := hpl
+  · have := hpl
     have hd4 : H.d % 4 = 3 := by have := H.hyp.2.2.2.1; omega
     exact Formalism.FrobeniusOrbits.Inertia.sqrt_fixed H.hyp.2.1 hd4 hp hpd P H.conj H.sqd_sq hcs h
 

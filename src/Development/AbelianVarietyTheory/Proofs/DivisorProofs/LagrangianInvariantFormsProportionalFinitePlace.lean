@@ -164,7 +164,7 @@ private theorem lc_lemma {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
     induction n with
     | zero =>
       rw [zero_smul, map_zero]
-      exact zero_lt_iff.mpr γ.ne_zero
+      exact pos_iff_ne_zero.mpr γ.ne_zero
     | succ n ih =>
       rw [succ_nsmul]
       exact (ValuativeRel.valuation k).map_add_lt ih hz
@@ -242,8 +242,8 @@ theorem proportional (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
     (h₂ : ∀ w ∈ Λ, ∀ φ ∈ SB (κ → k), l₂ (schr ψ w φ) = l₂ φ)
     (hne : ∃ φ ∈ SB (κ → k), l₂ φ ≠ 0) : ∃ c : ℂ, ∀ φ ∈ SB (κ → k), l₁ φ = c * l₂ φ := by
   classical
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   obtain ⟨n, m, e, s, hs, hb⟩ := exists_coord Λ hiso hdim
   have hlc : IsLocallyConstant ψ := lc_lemma ψ hψ
   have hn1 : ∀ t, ‖ψ t‖ = 1 := GlobalTheory.norm_addChar_nonarch ψ hψ
@@ -392,8 +392,8 @@ theorem proportional_at_place : ∀ (F : Type) [Field F] [NumberField F] (v : Pl
     (∀ w ∈ Λ, ∀ φ ∈ SB (κ → Fv F v), l₂ (schr ψv w φ) = l₂ φ) →
     (∃ φ ∈ SB (κ → Fv F v), l₂ φ ≠ 0) → ∃ c : ℂ, ∀ φ ∈ SB (κ → Fv F v), l₁ φ = c * l₂ φ := by
   intro F _ _ v ψv hc hne κ _ Λ hiso hdim l₁ l₂ h₁ h₂ hne'
-  letI : ValuativeRel (Fv F v) := GlobalTheory.LocalData.complRel v
-  haveI : IsNonarchimedeanLocalField (Fv F v) := GlobalTheory.LocalData.isLocalField v
+  let : ValuativeRel (Fv F v) := GlobalTheory.LocalData.complRel v
+  have : IsNonarchimedeanLocalField (Fv F v) := GlobalTheory.LocalData.isLocalField v
   exact proportional (Fv F v) ψv hc hne κ Λ hiso hdim l₁ l₂ h₁ h₂ hne'
 
 end GlobalTheory.LagrInvForm

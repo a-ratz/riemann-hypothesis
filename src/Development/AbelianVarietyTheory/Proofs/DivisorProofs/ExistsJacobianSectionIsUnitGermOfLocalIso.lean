@@ -84,17 +84,17 @@ variable {k A B : Type*} [CommRing k] [CommRing A] [CommRing B] {α : k →+* A}
 theorem isFreeGen_formMap {ρ : A →+* B} (hρ : letI := ρ.toAlgebra; Algebra.FormallyEtale A B)
     (h : ρ.comp α = β) {ω : Forms α D} (hω : IsFreeGen A ω) :
     IsFreeGen B (TopForm.formMap D ρ h ω) := by
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
-  haveI : Algebra.FormallyEtale A B := hρ
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
+  have : Algebra.FormallyEtale A B := hρ
   exact hω.of_isBaseChange (isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale k A B) D)
 
 theorem formallyEtale_of_bijective {ρ : A →+* B} (hρ : Function.Bijective ρ) :
     letI := ρ.toAlgebra; Algebra.FormallyEtale A B := by
-  letI := ρ.toAlgebra
+  let := ρ.toAlgebra
   exact Algebra.FormallyEtale.of_equiv (AlgEquiv.ofBijective (Algebra.ofId A B) hρ)
 
 end Ring
@@ -102,8 +102,8 @@ end Ring
 theorem formallyEtale_germ {Y : Scheme.{0}} {T : Y.Opens} (hT : IsAffineOpen T) (y : Y)
     (hy : y ∈ T) : letI := (Y.presheaf.germ T y hy).hom.toAlgebra;
       Algebra.FormallyEtale Γ(Y, T) (Y.presheaf.stalk y) := by
-  letI := (Y.presheaf.germ T y hy).hom.toAlgebra
-  haveI := hT.isLocalization_stalk ⟨y, hy⟩
+  let := (Y.presheaf.germ T y hy).hom.toAlgebra
+  have := hT.isLocalization_stalk ⟨y, hy⟩
   exact Algebra.FormallyEtale.of_isLocalization (hT.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl
 
 end MorJac
@@ -249,9 +249,9 @@ theorem isUnit_ger_jacLoc (x : X) (hx : Function.Bijective (σ.stalkMap x).hom)
     have e := DFunLike.congr_fun (appLE_comp_algX (comp_eq p σ) hWT) c
     simp only [RingHom.comp_apply, RingHom.id_apply] at e ⊢
     rw [← e, ger_appLE σ hWT x hxW]
-  letI : RingHomCompTriple (σ.appLE T W hWT).hom (ger x hxW)
+  let : RingHomCompTriple (σ.appLE T W hWT).hom (ger x hxW)
       ((ger x hxW).comp (σ.appLE T W hWT).hom) := ⟨rfl⟩
-  letI : RingHomCompTriple (ger (σ x) hyT) (σ.stalkMap x).hom
+  let : RingHomCompTriple (ger (σ x) hyT) (σ.stalkMap x).hom
       ((ger x hxW).comp (σ.appLE T W hWT).hom) :=
     ⟨RingHom.ext fun c => (ger_appLE σ hWT x hxW c).symm⟩
   have key := LinearMap.congr_fun (forms_ext

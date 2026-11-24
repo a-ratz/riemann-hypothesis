@@ -64,7 +64,7 @@ theorem _root_.GlobalTheory.PeriodFamily.taylor_add_of_analyticAt (f g : (I → 
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [← add_smul, show (fun z ↦ f z + g z) = f + g from rfl,
-    iteratedFDeriv_add_apply hf.contDiffAt hg.contDiffAt, ContinuousMultilinearMap.add_apply, mul_add]
+    iteratedFDeriv_add_apply hf.contDiffAt hg.contDiffAt, add_apply, mul_add]
 
 set_option autoImplicit false in
 open Filter Topology in
@@ -117,7 +117,7 @@ theorem _root_.GlobalTheory.PeriodFamily.taylor_formal_properties : ∀ {I : Typ
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun s _ => ?_
     rw [show (fun z ↦ c * f z) = fun z ↦ c • f z from rfl,
-      iteratedFDeriv_const_smul_apply' hf.contDiffAt, ContinuousMultilinearMap.smul_apply,
+      iteratedFDeriv_const_smul_apply' hf.contDiffAt, smul_apply,
       smul_eq_mul, smul_smul, mul_left_comm]
   · unfold _root_.GlobalTheory.PeriodFamily.taylor
 

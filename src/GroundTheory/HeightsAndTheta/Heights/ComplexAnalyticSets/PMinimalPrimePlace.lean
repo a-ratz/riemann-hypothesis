@@ -91,7 +91,7 @@ theorem exists_separating [IsNoetherianRing A] {p : Ideal A} (hp : p ∈ minimal
     rintro ⟨q, hq, hqp⟩
     rw [Finset.mem_erase, Set.Finite.mem_toFinset] at hq
     exact hq.1 (eq_of_le_of_mem_minimalPrimes hq.2 hp hqp)
-  obtain ⟨s, hsF, hsp⟩ := SetLike.not_le_iff_exists.1 hF
+  obtain ⟨s, hsF, hsp⟩ := IsConcreteLE.not_le_iff_exists.1 hF
   have hsq : ∀ q ∈ minimalPrimes A, q ≠ p → s ∈ q := fun q hq hqp ↦
     Finset.inf_le (f := id) (Finset.mem_erase.2 ⟨hqp, hfin.mem_toFinset.2 hq⟩) hsF
   have hU : ¬ ((p : Set A) ⊆ ⋃ q ∈ minimalPrimes A \ {p}, ((fun q : Ideal A ↦ q) q : Set A)) := by

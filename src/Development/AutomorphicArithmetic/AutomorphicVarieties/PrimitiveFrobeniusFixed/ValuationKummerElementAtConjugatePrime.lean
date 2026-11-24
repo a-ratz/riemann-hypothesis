@@ -111,7 +111,7 @@ private theorem count_fam {E ι : Type} [Field E] [NumberField E] [Fintype ι]
 theorem UpperTheory.valuation_kummerElement_at_conjugate_prime :
     ∀ (M : ℕ) [NeZero M] (K : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] (b r : ℕ) (v w : HeightOneSpectrum (𝓞 K)) (X : K) (t : (ZMod M)ˣ), r.Prime → r ≡ 1 [MOD M] → IsX M K b v.asIdeal X → (r : 𝓞 K) ∈ v.asIdeal → w.asIdeal = conjI M K v.asIdeal t → w.valuation K X = w.valuation K (r : K) ^ th M b t := by
   intro M _ K _ _ _ b r v w X t hr hr1 hX hrv hw
-  haveI : Fact r.Prime := ⟨hr⟩
+  have : Fact r.Prime := ⟨hr⟩
   have hndvd : ¬ r ∣ M := by
     intro hd
     have h1 : M ∣ r - 1 := (Nat.modEq_iff_dvd' hr.one_le).mp hr1.symm
@@ -121,7 +121,7 @@ theorem UpperTheory.valuation_kummerElement_at_conjugate_prime :
     have := hr.two_le
     omega
   have hcop : r.Coprime M := (Nat.Prime.coprime_iff_not_dvd hr).mpr hndvd
-  haveI hlies : v.asIdeal.LiesOver (Ideal.span {(r : ℤ)}) := by
+  have hlies : v.asIdeal.LiesOver (Ideal.span {(r : ℤ)}) := by
     constructor
     have hmax : (Ideal.span {(r : ℤ)}).IsMaximal :=
       ((Ideal.span_singleton_prime (by exact_mod_cast hr.ne_zero)).mpr

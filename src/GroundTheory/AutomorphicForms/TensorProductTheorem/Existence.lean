@@ -404,8 +404,8 @@ theorem nonempty_equiv_of_coeff (hρirr : ρ.IsIrreducible) (hπ : ∀ v, IsAdmi
     (hcoef : ∀ g : Πʳ v, [G v, K v], Λ (ρ g x) = ∏ᶠ v, l v (π v (g v) (ξ v)))
     (hne : Λ x ≠ 0) :
     Nonempty (ρ.Equiv (restrictedTensorRep π ξ hξ)) := by
-  haveI := hρirr
-  haveI := isIrreducible_restrictedTensorRep hπ hirr hξ hξ0 hgel
+  have := hρirr
+  have := isIrreducible_restrictedTensorRep hπ hirr hξ hξ0 hgel
   refine nonempty_equiv_of_matrixCoeff_eq (v := x) (l := Λ)
     (w := ⟨tprod ℂ ξ, tprod_mem_restrictedTensor (isRestricted_self ξ)⟩)
     (m := evalForm ξ l hl ∘ₗ (restrictedTensor ξ).subtype) (fun g => ?_) ⟨1, by rwa [map_one]⟩
@@ -447,7 +447,7 @@ theorem exists_equiv_restrictedTensorRep (hρ : IsAdmissible ρ) (hirr : ρ.IsIr
   classical
   have hρs := hρ.1
   have hKcs : ∀ v, IsCompact (K v : Set (G v)) := fun v => isCompact_iff_compactSpace.2 (hKc v)
-  haveI := hirr
+  have := hirr
 
   have hVnt := nontrivial_of_isIrreducible hirr
   obtain ⟨x₀, hx₀⟩ := exists_ne (0 : V)
@@ -633,7 +633,7 @@ theorem exists_equiv_restrictedTensorRep (hρ : IsAdmissible ρ) (hirr : ρ.IsIr
   set S : Finset ι := (Filter.eventually_cofinite.1 (hK'e.and hgel)).toFinset
   have hS : ∀ v ∉ S, K' v = K v ∧ Module.finrank ℂ (fixedVectors (π v) (K v)) ≤ 1 := by
     intro v hv
-    simp only [S, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+    simp only [S, Set.Finite.mem_toFinset, mem_ofPred_eq, not_not] at hv
     exact ⟨hv.1, hv.2 _ (π v) (hπadm v) (hπirr v)⟩
   have hline : ∀ {E : Type u} [AddCommGroup E] [Module ℂ E] (F : Submodule ℂ E)
       [FiniteDimensional ℂ F], Module.finrank ℂ F ≤ 1 → ∀ e ∈ F, e ≠ 0 → ∀ y ∈ F, ∃ d : ℂ,

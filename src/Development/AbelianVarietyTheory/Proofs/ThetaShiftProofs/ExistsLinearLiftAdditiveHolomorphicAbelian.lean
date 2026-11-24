@@ -83,7 +83,7 @@ theorem _root_.GlobalTheory.AbelianLetters.exists_linear_lift_of_isGrpPullback :
   have hlift := _root_.GlobalTheory.existsUnique_linear_lift_of_isHolTo P'.A P'.isAb P'.L P'.g g u h1 h2
   have hpb : IsPullback φ P'.A.hom P.A.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (RingHom.id ℂ)) := hφ.1
   rw [_root_.GlobalTheory.Cris.spMap_id] at hpb
-  haveI : IsIso φ := hpb.isIso_fst_of_isIso
+  have : IsIso φ := hpb.isIso_fst_of_isIso
   obtain ⟨e, he⟩ := _root_.GlobalTheory.LiePull.exists_pushEquiv hφ (𝟙_ (Over (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp ℂ))) _ rfl
   let j : Over.mk ((𝟙_ (Over (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp ℂ))).hom ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (RingHom.id ℂ)) ⟶ T :=
     Over.homMk i (by simp [hi, _root_.GlobalTheory.Cris.spMap_id, Over.tensorUnit_hom])

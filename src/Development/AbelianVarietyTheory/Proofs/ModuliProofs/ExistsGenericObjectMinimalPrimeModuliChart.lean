@@ -94,7 +94,7 @@ namespace GlobalTheory
 theorem exists_hom_of_ker_eq {P L M : Type} [CommRing P] [Field L] [Field M]
     (Φ : P →+* L) (Ψ : P →+* M) (h : RingHom.ker Φ = RingHom.ker Ψ) :
     ∃ (S : Subfield L) (e : S →+* M), ∃ hS : ∀ p, Φ p ∈ S, ∀ p, e ⟨Φ p, hS p⟩ = Ψ p := by
-  haveI : (RingHom.ker Φ).IsPrime := RingHom.ker_isPrime Φ
+  have : (RingHom.ker Φ).IsPrime := RingHom.ker_isPrime Φ
   let Q := P ⧸ RingHom.ker Φ
   let f1 : Q →+* L := RingHom.kerLift Φ
   have hf1 : Function.Injective f1 := RingHom.kerLift_injective Φ
@@ -382,7 +382,7 @@ theorem exists_generic_object : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Ty
     omega
   have hN3 : 3 ≤ n ^ j := le_trans hn3 (Nat.le_self_pow (by omega) n)
   have hNodd : Odd (n ^ j) := hodd.pow
-  haveI hqp : q.IsPrime := hq.1.1
+  have hqp : q.IsPrime := hq.1.1
   let K := FractionRing (R ⧸ q)
   let y : R →+* K := (algebraMap (R ⧸ q) K).comp (Ideal.Quotient.mk q)
   have hy0 : ∀ r, y r = 0 ↔ r ∈ q := fun r => by

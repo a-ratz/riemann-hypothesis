@@ -402,7 +402,7 @@ theorem htSmallTo_inv {B : K⟦X⟧} (hB : CoefLe 1 B) (h0 : constantCoeff B = 1
 theorem htform_coeff_vpow_eq_zero {v : K⟦X⟧} (h0 : constantCoeff v = 0) {n d : ℕ} (h : n < d) :
     coeff n (v ^ d) = 0 := by
   obtain ⟨w, rfl⟩ := X_dvd_iff.mpr h0
-  rw [mul_pow, coeff_X_pow_mul', if_neg (by omega)]
+  rw [mul_pow, coeff_X_pow_mul', ite_eq_right (by omega)]
 
 theorem htform_coeff_subst (A v : K⟦X⟧) (h0 : constantCoeff v = 0) (n : ℕ) :
     coeff n (A.subst v) = ∑ d ∈ Finset.range (n + 1), coeff d A * coeff n (v ^ d) := by
@@ -475,7 +475,7 @@ theorem htform_unit_coeff_le : ∀ (K : Type) [NormedField K] [IsUltrametricDist
     rw [← Finset.add_sum_erase _ _ hmem] at hc
     have hself : Dp.coeff (M - k) * (if 2 * (M - (M - k)) ≤ 2 * k then coeff (2 * k - 2 * (M - (M - k))) (A ^ (M - k)) else 0)
         = Dp.coeff (M - k) := by
-      rw [if_pos (by omega), show 2 * k - 2 * (M - (M - k)) = 0 by omega, coeff_zero_eq_constantCoeff_apply,
+      rw [ite_eq_left (by omega), show 2 * k - 2 * (M - (M - k)) = 0 by omega, coeff_zero_eq_constantCoeff_apply,
         map_pow, hA0, one_pow, mul_one]
     rw [hself] at hc
     have hrest : ‖∑ i ∈ (Finset.range (M + 1)).erase (M - k),
@@ -1024,7 +1024,7 @@ lemma sigma_id (L : PeriodPair) (n m : ℕ) (hnC : (n : ℂ) = 2 * m + 1) (S : F
     have hE : Complex.exp ((Real.pi : ℂ) * herm L z (2 * t)) ^ (S.card + 1)
         = Complex.exp ((Real.pi : ℂ) * herm L (n * z) (m * (2 * t))) ^ 2
           * Complex.exp ((Real.pi : ℂ) * herm L (n * z) (2 * t)) := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add]
       congr 1
       push_cast
       rw [hcard, hnC]
@@ -1826,7 +1826,7 @@ theorem cm3 : CM3 := by
   intro d L hsq hd hCM l _ hl5 hld hinert ι g2 g3 hG
   have hG' := hG
   obtain ⟨hg2K, hg3K, hg2n, hg3n, hdisc, lam, hlam0, hg2, hg3⟩ := hG
-  haveI : CompleteSpace (MaximalUnramifiedExtension l) := Formalism.L2.Th1.D.kurComplete l
+  have : CompleteSpace (MaximalUnramifiedExtension l) := Formalism.L2.Th1.D.kurComplete l
   have hl2 : 2 < l := by omega
   obtain ⟨σ, hσ, -⟩ := Formalism.L2.Th1.D.kurFrob l hl2
   obtain ⟨hRes, hUnr⟩ := _root_.GlobalTheory.Honda.kur_resAlg_unr l hl2

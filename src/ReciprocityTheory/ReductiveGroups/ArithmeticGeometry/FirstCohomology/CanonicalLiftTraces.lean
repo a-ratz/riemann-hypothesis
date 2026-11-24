@@ -86,7 +86,7 @@ theorem zF_tr_pr (b : TF (R := V) F ⟶ D.toPre.P.A) :
   simp [DegPre.trPt, DegPre.zF, DegPre.prB, padd, ← Hom.mul_def, ← Hom.one_def, comp_mul]
 
 theorem zF_aF (oa : D.toPre.OAct O) (a : O) : DegPre.zF D.toPre F ≫ aF D F oa a = DegPre.zF D.toPre F := by
-  haveI := oa.onB.hom a
+  have := oa.onB.hom a
   apply CartesianMonoidalCategory.hom_ext <;>
     simp [aF, DegPre.zF, DegPre.prB, IsMonHom.one_hom]
 

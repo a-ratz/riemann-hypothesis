@@ -70,7 +70,7 @@ theorem entry_mul_le (v : Valuation k Γ) {r s : Γ} (hs : s ≤ 1)
 theorem inv_entry_le_one (v : Valuation k Γ) {r : Γ} (hr : r < 1)
     {A B : Matrix n n k} (hBA : B * (1 + A) = 1) (hA : ∀ i j, v (A i j) ≤ r) (i j : n) :
     v (B i j) ≤ 1 := by
-  haveI : Nonempty (n × n) := ⟨(i, j)⟩
+  have : Nonempty (n × n) := ⟨(i, j)⟩
   obtain ⟨⟨a, b⟩, hmax⟩ := Finite.exists_max (fun p : n × n => v (B p.1 p.2))
   have hM : ∀ i j, v (B i j) ≤ v (B a b) := fun i j => hmax (i, j)
   refine (hM i j).trans ?_

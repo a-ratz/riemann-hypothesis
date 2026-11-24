@@ -149,9 +149,9 @@ theorem nuLocC_le {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
     (∀ a : 𝓞 E, star a = H.bar a) →
     ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C C' : IntegralChartA3 Xo c T io y) (e k : ℕ)
       (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), nuLocC C e k a n ≤ nuLocC C' e k a n := by
-  letI := H.starRing
+  let := H.starRing
   intro hs T io y C C' e k a n
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨BT, hF, hA, hP1, hP2, hSy, hAd, hK⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y C
   obtain ⟨BT', hF', hA', hP1', hP2', hSy', hAd', hK'⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y C'
   obtain ⟨hFK, hActK, hG, hGc⟩ := hK T.Fr

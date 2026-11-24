@@ -567,7 +567,7 @@ theorem exists_sig_of_row (D : D7) (cf : CharFrame D) (Rw : RowSide D) (low : Fi
   have hfix : MonoidAlgebra.lift (FractionRing (D.ntw.O i)) (Module.End (FractionRing (D.ntw.O i)) (D.nexp.Fm i j b))
       (G0g D.nd) (LinearEquiv.automorphismGroup.toLinearMapMonoidHom.comp (D.nexp.actG i j b)) (D.nexp.eAlg i b)
       (e.symm (Φ x)) = e.symm (Φ x) := by
-    letI : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
+    let : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
     have hx1 := Module.End.mem_eigenspace_iff.1 (Submodule.mem_inf.1 hxg).1
     rw [one_smul, finsum_eq_sum_of_fintype, LinearMap.sum_apply] at hx1
     apply e.injective

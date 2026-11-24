@@ -204,7 +204,7 @@ theorem exists_continuous_section (N : Subgroup G) [N.Normal] (hN : IsClosed (N 
     obtain ⟨x, rfl⟩ := QuotientGroup.mk_surjective c
     obtain ⟨t, ht, htx⟩ := hex x
     exact ⟨⟨t, ht⟩, htx⟩
-  let e : T ≃ₜ G ⧸ N := (QuotientGroup.continuous_mk.comp continuous_subtype_val :
+  let e : T ≃ₜ G ⧸ N := (QuotientGroup.continuous_mk.comp continuous_subtypeVal :
     Continuous f).homeoOfEquivCompactToT2 (f := Equiv.ofBijective f hf)
   let s₀ : G ⧸ N → G := fun c => (e.symm c : G)
   have hs₀ : ∀ c, (s₀ c : G ⧸ N) = c := fun c => e.apply_symm_apply c
@@ -213,7 +213,7 @@ theorem exists_continuous_section (N : Subgroup G) [N.Normal] (hN : IsClosed (N 
     rw [← QuotientGroup.mk_one, QuotientGroup.eq] at this
     simpa using this
   refine ⟨fun c => s₀ c * (s₀ 1)⁻¹,
-    (continuous_subtype_val.comp e.symm.continuous).mul continuous_const, fun c => ?_, ?_⟩
+    (continuous_subtypeVal.comp e.symm.continuous).mul continuous_const, fun c => ?_, ?_⟩
   · calc ((s₀ c * (s₀ 1)⁻¹ : G) : G ⧸ N) = (s₀ c : G ⧸ N) :=
           QuotientGroup.eq.mpr (by convert h1 using 1; group)
       _ = c := hs₀ c

@@ -69,7 +69,7 @@ theorem cob_of_vanish {G : Type} [Group G] (H : Subgroup G) [H.FiniteIndex] {L M
     (hc : ∀ g h, c (g * h) = c g + a g (c h)) (h0 : ∀ h ∈ H, c h = 0) :
     ∃ y, ∀ g, c g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   have hq : ∀ g : G, c (Quotient.out (g : G ⧸ H)) = c g := by
     intro g
     obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul H g
@@ -178,13 +178,13 @@ theorem split_of_crys [FiniteDimensional LL V] (ρ : Representation LL G V) (f :
     (hf : ∀ g h, f (g * h) = f g + ρ g (f h)) (h0 : IsCrys PD ρ) (h1 : IsCrys PD (extRep ρ f hf))
     (h2 : IsCrys PD (Representation.trivial LL G LL)) :
     ∃ y : V ⊗[Qp] B, ∀ g, f g ⊗ₜ[Qp] (1 : B) = actVB PD ρ g y - y := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   have hn : 0 < finrank Qp K₀ := Module.finrank_pos
   unfold IsCrys at h0 h1 h2
   rw [Module.finrank_prod, Module.finrank_self] at h1
   rw [Module.finrank_self] at h2
-  haveI : Module.Finite LL ↥(Dcris PD (extRep ρ f hf)) := Module.finite_of_finrank_pos (by rw [h1]; positivity)
-  haveI : Module.Finite LL ↥(Dcris PD (Representation.trivial LL G LL)) :=
+  have : Module.Finite LL ↥(Dcris PD (extRep ρ f hf)) := Module.finite_of_finrank_pos (by rw [h1]; positivity)
+  have : Module.Finite LL ↥(Dcris PD (Representation.trivial LL G LL)) :=
     Module.finite_of_finrank_pos (by rw [h2]; positivity)
   have ei : ∀ g x, LinearMap.inl LL V LL (ρ g x) = extRep ρ f hf g (LinearMap.inl LL V LL x) := by
     intro g x; simp [extRep_apply]
@@ -311,7 +311,7 @@ theorem cocycle_of_inj (A W : GRep G Qp LL O) (j : W.V →ₗ[LL] A.V) (hj : Fun
       rw [← sub_eq_add_neg, ← hf]
       exact (LinearMap.congr_fun hr (f g)).symm
     rw [this]
-    haveI : ContinuousSMul LL W.V := IsModuleTopology.toContinuousSMul LL _
+    have : ContinuousSMul LL W.V := IsModuleTopology.toContinuousSMul LL _
     exact (IsModuleTopology.continuous_of_linearMap r).comp ((A.cont x).add continuous_const)
   · rw [map_add (f := _), he, hf, hf, hf, map_mul, map_sub, Module.End.mul_apply]
     abel
@@ -411,7 +411,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' LL : FinExt l
     intro g z
     exact actVB_congr (P.PD K') (P.PD K) ρ' W.ρ g _ rfl
       (fun b => (P.PD_actB K' g b).trans (P.PD_actB K (Subgroup.inclusion (GK_le h) g) b).symm) z
-  haveI : CharZero ↥LL.1 := algebraRat.charZero _
+  have : CharZero ↥LL.1 := algebraRat.charZero _
   exact descend (P.PD K) (GKin h) W.ρ f hZ.2 y' fun g hg => (hy ⟨g.1, hg⟩).trans (congrArg (· - y') (hact ⟨g.1, hg⟩ y'))
 
 end GlobalTheory.Pass.FinDesc

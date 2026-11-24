@@ -155,7 +155,7 @@ theorem map_pi_eq (e : A ≃+* (P → ℝ)) (he : Continuous e) (he' : Continuou
     rw [hpre, Measure.pi_pi]
     have hi : ∀ i, k (eqv e he he' ⁻¹' Set.pi Set.univ fun w => s (i, w)) =
         c₀ * ∏ w, volume (s (i, w)) := fun i => by
-      rw [← Measure.map_apply hem (MeasurableSet.univ_pi fun w => hs _), hm, Measure.smul_apply,
+      rw [← Measure.map_apply hem (MeasurableSet.univ_pi fun w => hs _), hm, smul_apply,
         smul_eq_mul, volume_pi_pi]
     simp only [hi]
     rw [Finset.prod_mul_distrib, Fintype.prod_prod_type]
@@ -163,7 +163,7 @@ theorem map_pi_eq (e : A ≃+* (P → ℝ)) (he : Continuous e) (he' : Continuou
       c⁻¹ • (Measure.pi fun _ : ι => k).map (eqvPi e he he' ι) := by
     rw [volume_pi]
     refine Measure.pi_eq fun s hs => ?_
-    rw [Measure.smul_apply, smul_eq_mul, hrect s hs, ← mul_assoc, ENNReal.inv_mul_cancel hc0 hct,
+    rw [smul_apply, smul_eq_mul, hrect s hs, ← mul_assoc, ENNReal.inv_mul_cancel hc0 hct,
       one_mul]
   rw [hv, smul_smul, ENNReal.mul_inv_cancel hc0 hct, one_smul]
 
@@ -172,7 +172,7 @@ theorem selfDual_pi_of_form [LocallyCompactSpace A] (e : A ≃+* (P → ℝ)) (h
     (hχ : ∀ x, χ x = Complex.exp (2 * Real.pi * Complex.I * ((∑ w, a w * e x w : ℝ) : ℂ)))
     (k : Measure A) (hk : SelfDual k fun s t => χ (s * t)) (ι : Type) [Fintype ι] :
     SelfDual (Measure.pi fun _ : ι => k) (fun x y => χ (x ⬝ᵥ y)) := by
-  haveI := hk.1
+  have := hk.1
   have h1 : SelfDual (k.map (eqv e he he')) (fun u v : P → ℝ =>
       Complex.exp (2 * Real.pi * Complex.I * ((∑ w, a w * (u w * v w) : ℝ) : ℂ))) := by
     refine (selfDual_transport A (P → ℝ) (eqv e he he') k _).1 ?_
@@ -216,9 +216,9 @@ end GlobalTheory.CompanionTheory.SW.SdPi
 open GlobalTheory.CompanionTheory.SW.SdPi GlobalTheory.CompanionTheory.SW.RealCoord in
 theorem GlobalTheory.CompanionTheory.SW.selfDual_pi_inf : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ k : Measure (Ainf F), SelfDual k (fun s t => psiInf F ψ (s * t)) → ∀ (ι : Type) [Fintype ι], SelfDual (Measure.pi fun _ : ι => k) (fun x y => psiInf F ψ (x ⬝ᵥ y)) := by
   intro F _ _ hF ψ hψ k hk ι _
-  haveI := hF
+  have := hF
   obtain ⟨h1, h2, h3, h4, -⟩ := isLocR_Ainf F hF
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have he : Continuous (GlobalTheory.CompanionTheory.SW.RealCoord.coord F) :=
     (GlobalTheory.CompanionTheory.SW.RealCoord.isHomeomorph_coord F).continuous
   have he' : Continuous (GlobalTheory.CompanionTheory.SW.RealCoord.coord F).symm :=

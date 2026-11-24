@@ -550,7 +550,7 @@ theorem growth_decay : TStatement → ∀ (E : Type) [Field E] [NumberField E] [
       (by positivity) hS hla0 hth (by positivity) (by positivity) hB0 hfR ht
       (fun h => by
         have eph : P.ph = c / X.la1 x ^ 2 := by
-          simp only [Par.ph, PT.ph, hq, hR, hla, if_pos h, hc]
+          simp only [Par.ph, PT.ph, hq, hR, hla, ite_eq_left h, hc]
           field_simp
         have hK' : K = (25 : ℝ) ^ (2 * (Module.finrank ℚ E * A.T.r) * A.T.r) := by rw [hAr]
         rw [hK']
@@ -568,7 +568,7 @@ theorem growth_decay : TStatement → ∀ (E : Type) [Field E] [NumberField E] [
         rwa [h5, Nat.cast_ofNat] at this)
       (fun h => by
         have eph : P.ph = 0 := by
-          simp only [Par.ph, PT.ph, hq, hR, hla, if_neg (not_lt.2 h)]
+          simp only [Par.ph, PT.ph, hq, hR, hla, ite_eq_right (not_lt.2 h)]
         have hK' : K = (25 : ℝ) ^ (2 * (Module.finrank ℚ E * A.T.r) * A.T.r) := by rw [hAr]
         rw [hK']
         refine finsum_le A.T {a | (∀ j, a j ∈ ZSpan.fundamentalDomain A.T.b) ∧
@@ -1016,7 +1016,7 @@ theorem thR_pos_of_rank {D : D7} {j : ℕ} (w : WeightFamilies.Wt D j) (hr : 0 <
 theorem sq_le_of_mul_le_exp {a b i p q : ℝ} (ha : 0 < a) (hb : 0 ≤ b) (h : a * b ≤ Real.exp (-i * (p - q))) :
     b ^ 2 ≤ Real.exp (2 * (i * q)) / a ^ 2 * Real.exp (-(2 * i * p)) := by
   have h2 := pow_le_pow_left₀ (mul_nonneg ha.le hb) h 2
-  rw [← Real.exp_nat_mul] at h2
+  rw [← Real.exp_natCast_mul] at h2
   rw [div_mul_eq_mul_div, le_div_iff₀ (by positivity), ← Real.exp_add, ← mul_pow, mul_comm b]
   refine h2.trans (le_of_eq ?_)
   congr 1

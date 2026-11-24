@@ -79,7 +79,7 @@ theorem UpperTheory.V.Lit.Bor.sqMem :
     refine ⟨?_, fun _ _ _ => rfl, MeasureTheory.MemLp.zero⟩
     convert isOpen_univ using 1
     ext k
-    simp only [Set.mem_setOf_eq, map_zero, Set.mem_univ]
+    simp only [Set.mem_ofPred_eq, map_zero, Set.mem_univ]
   | add φ ψ _ _ h h' =>
     rw [map_add (f := _)]
     refine ⟨open_fix (finRep E a) _ (h.1.inter h'.1) ⟨by simp, by simp⟩ ?_,

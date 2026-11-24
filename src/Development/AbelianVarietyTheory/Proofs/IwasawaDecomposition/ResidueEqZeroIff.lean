@@ -62,7 +62,7 @@ theorem adAt_eps (P : HeightOneSpectrum (𝓞 E)) : adAt F P (afsplitEps E (P.un
   have h1 : ∀ n : ℕ, Valued.v (afIso F E (1 ⊗ₜ[F] afsplitI (P.under (𝓞 F)) 1) P - algebraMap E _ (algebraMap F E 1)) ≤
       WithZero.exp (-(n : ℤ)) :=
     fun n => (GlobalTheory.AdeleBaseChange.exists_finiteAdele_baseChange_equiv F E).choose_spec.2.2.2 _ 1 P n
-      (by rw [afsplitI_self, map_one, sub_self, map_zero]; exact zero_le')
+      (by rw [afsplitI_self, map_one, sub_self, map_zero]; exact zero_le)
   rw [map_one (algebraMap F E), map_one (algebraMap E (P.adicCompletion E))] at h1
   change afIso F E (1 ⊗ₜ[F] afsplitI (P.under (𝓞 F)) 1) P = 1
   by_contra hne
@@ -434,12 +434,12 @@ theorem exists_pt [NeZero n] (hQ : ∀ P, P ∉ Q) {g : GL (Fin n) (AfE F E)} (h
     replace hv : v ∈ Formalism.UG.CS.globLat g (Formalism.L2.Col.stdLat E n) := hv
     show HasRes _ _ ((decoRaw ST SG g).f P v)
     simp only [decoRaw]
-    rw [if_pos (le_locP _ _ hv), e]
+    rw [ite_eq_left (le_locP _ _ hv), e]
     exact PtExist.hasRes_redA _ ((mem_globLat g v).1 hv i)
   · replace hv : v ∈ Formalism.UG.CS.globLat g (Formalism.L2.Col.stdLat E n) := hv
     show HasRes _ _ ((decoRaw ST SG g).be P v i)
     simp only [decoRaw]
-    rw [if_pos (le_locP _ _ hv)]
+    rw [ite_eq_left (le_locP _ _ hv)]
     exact PtExist.hasRes_redA _ ((mem_globLat g v).1 hv i)
 
 theorem isPtOf_mul (hQ : ∀ P, P ∉ Q) {g m : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (hg : IsPtOf hc g p)

@@ -73,7 +73,7 @@ def mulMap (S K : Subgroup G) (p : S × K) : G := (p.1 : G) * (p.2 : G)
 variable {S K : Subgroup G}
 
 theorem continuous_mulMap : Continuous (mulMap S K) :=
-  (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+  (continuous_subtypeVal.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
 
 section Topology
 
@@ -166,7 +166,7 @@ variable [LocallyCompactSpace S] [CompactSpace (inter S K)]
 
 theorem integrable_mul_inter [IsFiniteMeasure mL] {v : S → ℝ} (hv : Continuous v) (s : S) :
     Integrable (fun m : inter S K => v (s * m)) mL :=
-  (hv.comp (continuous_const.mul continuous_subtype_val)).integrable_of_hasCompactSupport
+  (hv.comp (continuous_const.mul continuous_subtypeVal)).integrable_of_hasCompactSupport
     (isCompact_univ.of_isClosed_subset (isClosed_tsupport _) (subset_univ _))
 
 theorem continuous_flat [IsFiniteMeasure mL] {v : S → ℝ} (hv : Continuous v) :
@@ -175,7 +175,7 @@ theorem continuous_flat [IsFiniteMeasure mL] {v : S → ℝ} (hv : Continuous v)
   show Continuous fun s : S => ∫ m, v (s * m) ∂mL
   have := continuous_parametric_integral_of_continuous (μ := mL)
     (f := fun (s : S) (m : inter S K) => v (s * m))
-    (hv.comp (continuous_fst.mul (continuous_subtype_val.comp continuous_snd))) isCompact_univ
+    (hv.comp (continuous_fst.mul (continuous_subtypeVal.comp continuous_snd))) isCompact_univ
   simpa [flat] using this
 
 theorem hasCompactSupport_flat {v : S → ℝ} (hv : HasCompactSupport v) :
@@ -340,7 +340,7 @@ theorem exists_eq_smul_map_mulMap [MeasurableSpace G] [BorelSpace G] [T2Space G]
     have hφKc : Continuous φK := by
       have := continuous_parametric_integral_of_continuous (μ := μK)
         (f := fun (g : G) (k : K) => φ (g * k))
-        (φ.continuous.comp (continuous_fst.mul (continuous_subtype_val.comp continuous_snd)))
+        (φ.continuous.comp (continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)))
         isCompact_univ
       simpa using this
     have hφKinv : ∀ g (k : K), φK (g * k) = φK g := by
@@ -359,7 +359,7 @@ theorem exists_eq_smul_map_mulMap [MeasurableSpace G] [BorelSpace G] [T2Space G]
 
     have hint : ∫ g, φK g ∂μ = (μK univ).toReal * ∫ g, φ g ∂μ := by
       have hF : Integrable (fun q : G × K => φ (q.1 * q.2)) (μ.prod μK) := by
-        refine (φ.continuous.comp (continuous_fst.mul (continuous_subtype_val.comp
+        refine (φ.continuous.comp (continuous_fst.mul (continuous_subtypeVal.comp
           continuous_snd))).integrable_of_hasCompactSupport ?_
         refine HasCompactSupport.intro (((IsCompact.prod φ.hasCompactSupport hK).image
           (f := fun q : G × G => q.1 * q.2⁻¹) (by fun_prop)).prod (isCompact_univ (X := K))) ?_
@@ -375,7 +375,7 @@ theorem exists_eq_smul_map_mulMap [MeasurableSpace G] [BorelSpace G] [T2Space G]
       simpa using hφKinv (s : G) ⟨(m : G), (mem_inter_iff).1 hm⟩
     set uCc : CompactlySupportedContinuousMap S ℝ :=
       { toFun := fun s => φK s
-        continuous_toFun := hφKc.comp continuous_subtype_val
+        continuous_toFun := hφKc.comp continuous_subtypeVal
         hasCompactSupport' := hφKcs.comp_isClosedEmbedding hS.isClosedEmbedding_subtypeVal }
     have hflat : flat mL uCc = fun s : S => φK (s : G) := flat_eq_self (u := fun s : S => φK (s : G)) hu
     have hlift : lift hSK (flat mL uCc) = φK := by

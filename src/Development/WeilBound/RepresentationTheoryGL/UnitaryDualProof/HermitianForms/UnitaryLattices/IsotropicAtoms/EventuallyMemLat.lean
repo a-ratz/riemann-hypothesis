@@ -132,7 +132,7 @@ theorem wirtinger_sub {A : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A) (v w 
 theorem P_mono {A A' : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A) (hA' : IsLat A') (hAA' : A ≤ A') (v : V) :
     P A' (P A v) = P A' v := by
   have := avg_avg h π 1 continuous_one_char hπ 0 0 hA hA' hAA' v
-  rw [this, if_pos (fun _ _ => rfl)]
+  rw [this, ite_eq_left (fun _ _ => rfl)]
 
 theorem P_idem {A : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A) (v : V) : P A (P A v) = P A v :=
   P_mono hπ hA hA le_rfl v
@@ -367,7 +367,7 @@ include hψ hπ hpsd hB
 
 theorem avg_sq {ξ : Fin (m + 1) → k} {A : AddSubgroup (Fin (m + 1) → k)} (hA : IsLat A) (v : V) :
     B (avg ψ h π ξ A v) (avg ψ h π ξ A v) = B (avg ψ h π ξ A v) v := by
-  rw [← form_avg h π ψ hψ hπ B (colInv hB) ξ hA, avg_avg h π ψ hψ hπ ξ ξ hA hA le_rfl v, if_pos (fun _ _ => rfl)]
+  rw [← form_avg h π ψ hψ hπ B (colInv hB) ξ hA, avg_avg h π ψ hψ hπ ξ ξ hA hA le_rfl v, ite_eq_left (fun _ _ => rfl)]
 
 theorem split_c (hψ1 : ψ ≠ 1) {B₀ B' : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ} {A₀ : AddSubgroup (Fin (m + 1) → k)}
     (hat : IsAtom h π B B₀) (hd : IsDens ψ h π A₀ B B') (c : ℂ) (hc : ∀ v w, B₀ v w = c * B v w) (v : V)
@@ -385,7 +385,7 @@ theorem split_c (hψ1 : ψ ≠ 1) {B₀ B' : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ}
   have h0 : B₀ (avg ψ h π (xi0 k m) (A₁ ⊔ A₂) v) (avg ψ h π (xi0 k m) (A₁ ⊔ A₂) v) = 0 := by
     refine tendsto_nhds_unique (hat _ _) (tendsto_const_nhds.congr' ?_)
     filter_upwards [eventually_ge_lat m (A₁ ⊔ A₂) hA] with A' hA'
-    rw [← avg_zero_char h π ψ 0 rfl A'.1, avg_avg h π ψ hψ hπ (xi0 k m) 0 hA A'.2 hA' v, if_neg, map_zero,
+    rw [← avg_zero_char h π ψ 0 rfl A'.1, avg_avg h π ψ hψ hπ (xi0 k m) 0 hA A'.2 hA' v, ite_eq_right, map_zero,
       LinearMap.zero_apply]
     intro hall
     have := hall _ (le_sup_right (a := A₁) hx2)
@@ -491,12 +491,12 @@ theorem decomp (Ξ : AddSubgroup (Fin (m + 1) → k)) (hΞ : IsLat Ξ) (y : V)
     intro t htT
     rw [← Finset.sum_smul]
     by_cases ht : t ∈ L
-    · rw [if_pos ht, hy t ht]
+    · rw [ite_eq_left ht, hy t ht]
       have : ∀ ξ ∈ R, starRingEnd ℂ ((ψ (ξ ⬝ᵥ t) : Circle) : ℂ) = 1 := fun ξ hξ => by
         rw [show ψ (ξ ⬝ᵥ t) = 1 from ht ξ (hR ξ hξ)]
         simp
       rw [Finset.sum_congr rfl this, Finset.sum_const, nsmul_eq_mul, mul_one]
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       obtain ⟨ξ₁, hξ₁, hne⟩ : ∃ ξ ∈ Ξ, ψ (ξ ⬝ᵥ t) ≠ 1 := by
         by_contra hc
         push Not at hc
@@ -575,7 +575,7 @@ theorem annulus_null {A₀ : AddSubgroup (Fin (m + 1) → k)} {B' : V →ₗ[ℂ
   have hle : As i.1 ≤ A ⊔ F.sup (fun η => As η.1) :=
     le_sup_of_le_right (Finset.le_sup (f := fun η => As η.1) hiF)
   have e := avg_avg h π ψ hψ hπ i.1 η (hAsL i.1) hA'' hle v
-  rw [if_pos (fun a ha => ?_)] at e
+  rw [ite_eq_left (fun a ha => ?_)] at e
   · rw [← e]
     exact avg_ker hψ hπ hpsd hB η hA'' (hAsN i.1 hi0 (As i.1) (hAsL i.1) le_rfl)
   · have := hi a ha

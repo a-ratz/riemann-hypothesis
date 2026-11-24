@@ -89,7 +89,7 @@ theorem v_map_unif {v : HeightOneSpectrum (𝓞 K)} {w : HeightOneSpectrum (𝓞
     have h4 := (GlobalTheory.TypeBlockFix.v_map_le_one_iff v w i hi _).2 h3
     rw [map_div₀, map_div₀, RingEquiv.apply_symm_apply] at h4
     have hip : 0 < Valued.v (i p) := by
-      rw [zero_lt_iff]; simpa using hp0
+      rw [pos_iff_ne_zero]; simpa using hp0
     exact (div_le_one₀ hip).1 h4
   obtain ⟨q, hq⟩ := w.valuation_exists_uniformizer M
   have hq' : Valued.v ((q : M) : w.adicCompletion M) = WithZero.exp (-1) := by

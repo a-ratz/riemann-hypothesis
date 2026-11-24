@@ -911,7 +911,7 @@ theorem linIndep_of_mutual_span_of_indep :
         (∀ k, ∃ d : ι → R, b k = ∑ i, act (d i) (f i)) →
         ∀ d : ι → R, ∑ i, act (d i) (f i) = 0 → ∀ i, d i = 0 := by
   intro R W _ _ act hmul hone ι _ _ b f hb hf hbf d hd
-  letI : Module R W :=
+  let : Module R W :=
     { smul := fun r w => act r w
       one_smul := hone
       mul_smul := fun r s w => hmul r s w
@@ -938,7 +938,7 @@ theorem linIndep_of_mutual_span_of_indep :
     have h0 : ∑ k'', ((Matrix.vecMul (Q k) (Matrix.of P)) k'' - (1 : Matrix ι ι R) k k'') • b k''
         = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, ← expand, ← hQ, Matrix.one_apply,
-        ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+        ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
     have := hb _ h0 k'
     rw [sub_eq_zero] at this
     rw [← this, Matrix.mul_apply]

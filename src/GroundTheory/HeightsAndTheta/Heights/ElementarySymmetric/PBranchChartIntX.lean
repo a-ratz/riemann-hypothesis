@@ -227,7 +227,7 @@ theorem BranchChartInt.proof (hA : HolomorphicFibreSumInt.Statement) (hS : Branc
   have hae : ∀ᵐ t ∂(volume.restrict Δ), (g ∘ γ.toFun) t * ReciprocityTheory.AnForm.maDens (fun k => φ k ∘ γ.toFun) t =
       Complex.normSq (jacC τ t).det * H t := by
     filter_upwards [hS n d J A p γ hJ hdim hfin, ae_restrict_mem measurableSet_ball] with t hts htΔ
-    simp only [hH, dif_pos hts, Function.comp_apply]
+    simp only [hH, dite_eq_left hts, Function.comp_apply]
     rw [maDens_branch_eq γ hφ htΔ hts.choose_spec]
     ring
   have hint : IntegrableOn (fun t => Complex.normSq (jacC τ t).det * H t) Δ :=
@@ -448,7 +448,7 @@ theorem WeightedAreaFormula.proof : WeightedAreaFormula.Statement := by
       simp only [r, ContinuousLinearMap.inverse_equiv]
     rw [hr]
     have hpos : 0 < ‖(e.symm : E →L[ℝ] E)‖₊ := by
-      rw [pos_iff_ne_zero, ne_eq, nnnorm_eq_zero]
+      rw [pos_iff_ne_zero, ne_eq, nnNorm_eq_zero]
       intro h0
       obtain ⟨z, hz⟩ := exists_ne (0 : E)
       apply hz
@@ -477,18 +477,18 @@ theorem WeightedAreaFormula.proof : WeightedAreaFormula.Statement := by
   have hFlint : ∀ n, ∫⁻ y, ‖F n y‖ₑ ∂μ = ∫⁻ x in P n, ‖|(fderiv ℝ f x).det| * H x‖ₑ ∂μ :=
     fun n => by
     calc ∫⁻ y, ‖F n y‖ₑ ∂μ = ∫⁻ y, (f '' P n).indicator (fun z => ‖g n z‖ₑ) y ∂μ :=
-          lintegral_congr fun y => enorm_indicator_eq_indicator_enorm (g n) y
+          lintegral_congr fun y => eNorm_indicator_eq_indicator_eNorm (g n) y
       _ = ∫⁻ y in f '' P n, ‖g n y‖ₑ ∂μ := lintegral_indicator (himg n) _
       _ = ∫⁻ x in P n, ENNReal.ofReal |(fderiv ℝ f x).det| * ‖g n (f x)‖ₑ ∂μ :=
         lintegral_image_eq_lintegral_abs_det_fderiv_mul μ (hPm n) (hderP n) (hinj n)
           (fun z => ‖g n z‖ₑ)
       _ = ∫⁻ x in P n, ‖|(fderiv ℝ f x).det| * H x‖ₑ ∂μ := by
         refine setLIntegral_congr_fun (hPm n) fun x hx => ?_
-        simp only [hgP n x hx, enorm_mul, Real.enorm_eq_ofReal_abs, abs_abs]
+        simp only [hgP n x hx, eNorm_mul, Real.eNorm_eq_ofReal_abs, abs_abs]
   have hsumlint : ∑' n, ∫⁻ y, ‖F n y‖ₑ ∂μ ≠ ∞ := by
     simp_rw [hFlint]
     rw [← lintegral_iUnion hPm hPd, ← hBU]
-    exact (lt_of_le_of_lt (lintegral_mono_set hBA) (hasFiniteIntegral_iff_enorm.1 hint.2)).ne
+    exact (lt_of_le_of_lt (lintegral_mono_set hBA) (hasFiniteIntegral_iff_eNorm.1 hint.2)).ne
 
   have hinjT : ∀ y, InjOn (fun n => invFunOn f (P n) y) {n | y ∈ f '' P n} := by
     intro y m hm n hn hmn
@@ -530,12 +530,12 @@ theorem WeightedAreaFormula.proof : WeightedAreaFormula.Statement := by
       (fun N => (integrable_finsetSum (Finset.range N) fun n _ => hFint n).1)
       (ae_of_all _ fun y => (hsum y).summable.hasSum.tendsto_sum_nat)
   have hGfin : HasFiniteIntegral (fun y => ∑' n, F n y) μ := by
-    rw [hasFiniteIntegral_iff_enorm]
+    rw [hasFiniteIntegral_iff_eNorm]
     calc ∫⁻ y, ‖∑' n, F n y‖ₑ ∂μ ≤ ∫⁻ y, ∑' n, ‖F n y‖ₑ ∂μ := by
           refine lintegral_mono fun y => ?_
           rw [(hsum y).tsum_eq]
-          exact (enorm_sum_le _ _).trans (ENNReal.sum_le_tsum _)
-      _ = ∑' n, ∫⁻ y, ‖F n y‖ₑ ∂μ := lintegral_tsum fun n => (hFint n).1.enorm
+          exact (eNorm_sum_le _ _).trans (ENNReal.sum_le_tsum _)
+      _ = ∑' n, ∫⁻ y, ‖F n y‖ₑ ∂μ := lintegral_tsum fun n => (hFint n).1.eNorm
       _ < ∞ := hsumlint.lt_top
 
   have hIA : ∫ x in A, |(fderiv ℝ f x).det| * H x ∂μ =

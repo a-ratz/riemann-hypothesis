@@ -247,7 +247,7 @@ theorem oddTheta_add (τ : UpperHalfPlane) (z : ℂ) (m k : ℤ) :
   ring
 
 theorem exp_pi_I_int (j : ℤ) : cexp ((Real.pi : ℂ) * I * j) = if Even j then 1 else -1 := by
-  rw [mul_comm, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [mul_comm, exp_intCast_mul, Complex.exp_pi_mul_I]
   split_ifs with h
   · exact h.neg_one_zpow
   · exact (Int.not_even_iff_odd.1 h).neg_one_zpow
@@ -276,8 +276,8 @@ theorem semiChar_periodPairOfTau (τ : UpperHalfPlane) (m k : ℤ) :
       exact ⟨p, q, by push_cast; ring⟩
   rw [exp_pi_I_int, semiChar]
   by_cases h : Even m ∧ Even k
-  · rw [if_pos (hmem.2 h), if_pos (hpar.2 h)]
-  · rw [if_neg (fun h' => h (hmem.1 h')), if_neg (fun h' => h (hpar.1 h'))]
+  · rw [ite_eq_left (hmem.2 h), ite_eq_left (hpar.2 h)]
+  · rw [ite_eq_right (fun h' => h (hmem.1 h')), ite_eq_right (fun h' => h (hpar.1 h'))]
 
 def expOddTheta (τ : UpperHalfPlane) (z : ℂ) : ℂ :=
   cexp ((Real.pi : ℂ) * z ^ 2 / (2 * ((τ.im : ℝ) : ℂ))) * GlobalTheory.ThetaWeberRoad.oddTheta τ z
@@ -496,7 +496,7 @@ theorem oddTheta_addition (hSA : Formalism.L2.Th1.F.SgStarAdd) (τ : UpperHalfPl
   refine g_add_mul_g_sub_of_addition_laws (fun u => Complex.exp ((Real.pi : ℂ) * u ^ 2 / (2 * ((τ.im : ℝ) : ℂ))))
     (oddTheta τ) (Formalism.L2.Th1.F.sgStar (GlobalTheory.periodPairOfTau τ)) _ _ z w ?_ (Complex.exp_ne_zero _)
     (Complex.exp_ne_zero _) hI hσ
-  simp only [← Complex.exp_add, ← Complex.exp_nat_mul]
+  simp only [← Complex.exp_add, ← exp_natCast_mul]
   congr 1
   push_cast
   ring
@@ -547,7 +547,7 @@ theorem halfPeriodDiff_of : Formalism.L2.Th1.F.SgStarAdd →
     rw [hd, hJ']
     ring
   have hc4 : cexp (-((π : ℂ) * I * (τ : ℂ) / 4)) ^ 4 = cexp (-((π : ℂ) * I * (τ : ℂ))) := by
-    rw [← Complex.exp_nat_mul]
+    rw [← exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -601,7 +601,7 @@ open UpperHalfPlane hiding I in
 open scoped Real in
 private lemma cexp_eq_cexp_pi_mul_I_mul_pow_of_eq (τ : ℍ) (k : ℕ) (w : ℂ) (hw : w = ↑Real.pi * I * k * τ) :
     cexp w = cexp (↑Real.pi * I * τ) ^ k := by
-  rw [← Complex.exp_nat_mul, hw]; ring_nf
+  rw [← exp_natCast_mul, hw]; ring_nf
 
 open Complex in
 open UpperHalfPlane hiding I in
@@ -727,7 +727,7 @@ private lemma thetaConst_zero_zero_eq_eta_mul_weberF_sq (hTP : _root_.GlobalTheo
       Complex.exp_add, Complex.exp_pi_mul_I]; ring
   have hexp : cexp (-(↑Real.pi * I / 24)) ^ 2 * cexp (2 * ↑Real.pi * I * (((τ : ℂ) + 1) / 2) / 24) ^ 2 =
       cexp (2 * ↑Real.pi * I * τ / 24) := by
-    rw [← mul_pow, ← Complex.exp_add, ← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← mul_pow, ← Complex.exp_add, ← exp_natCast_mul]; congr 1; push_cast; ring
   simp only [_root_.GlobalTheory.IndefiniteRowSideFullHecke.ThetaConstantWeber.weberF]
   rw [eta_eq_cexp_mul_tprod_one_sub_nome_sq_pow, eta_eq_cexp_div_twentyFour_mul_tprod_one_sub_pow (((τ : ℂ) + 1) / 2), e₂, ← hqdef]
   refine mul_inv_mul_mul_inv_eq_mul_inv_mul_mul_inv (tprod_one_sub_nome_sq_pow_succ_ne_zero τ) (Complex.exp_ne_zero _) ?_
@@ -767,7 +767,7 @@ private lemma thetaConst_zero_one_eq_eta_mul_weberF₁_sq (hTP : _root_.GlobalTh
     rw [hqdef]; congr 1; ring
   have hexp : cexp (2 * ↑Real.pi * I * ((τ : ℂ) / 2) / 24) ^ 2 =
       cexp (2 * ↑Real.pi * I * τ / 24) := by
-    rw [← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← exp_natCast_mul]; congr 1; push_cast; ring
   simp only [_root_.GlobalTheory.IndefiniteRowSideFullHecke.ThetaConstantWeber.weberF₁]
   rw [eta_eq_cexp_mul_tprod_one_sub_nome_sq_pow, eta_eq_cexp_div_twentyFour_mul_tprod_one_sub_pow ((τ : ℂ) / 2), e₂, ← hqdef]
   refine eq_mul_div_sq_of_mul_mul_eq_sq_mul_sq (tprod_one_sub_nome_sq_pow_succ_ne_zero τ) (Complex.exp_ne_zero _) ?_
@@ -815,7 +815,7 @@ private lemma thetaConst_one_zero_eq_eta_mul_weberF₂_sq (hTP : _root_.GlobalTh
     rw [← Complex.ofReal_pow, Real.sq_sqrt (by norm_num)]; norm_num
   have hx : cexp (2 * ↑Real.pi * I * (2 * (τ : ℂ)) / 24) ^ 2 =
       cexp (↑Real.pi * I * τ / 4) * cexp (2 * ↑Real.pi * I * τ / 24) := by
-    rw [← Complex.exp_nat_mul, ← Complex.exp_add]; congr 1; push_cast; ring
+    rw [← exp_natCast_mul, ← Complex.exp_add]; congr 1; push_cast; ring
   have e₄ : cexp (2 * ↑Real.pi * I * (2 * (τ : ℂ))) = q ^ 4 :=
     cexp_eq_cexp_pi_mul_I_mul_pow_of_eq τ 4 _ (by push_cast; ring)
   simp only [_root_.GlobalTheory.IndefiniteRowSideFullHecke.ThetaConstantWeber.weberF₂]
@@ -919,13 +919,13 @@ theorem eta_relation (τ : ℍ) :
   have q2 : Function.Periodic.qParam 1 ((τ : ℂ) / 2) = t := by
     rw [Function.Periodic.qParam, ht_def]; congr 1; push_cast; ring
   have q3 : Function.Periodic.qParam 1 (2 * (τ : ℂ)) = t ^ 4 := by
-    rw [Function.Periodic.qParam, ht_def, ← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [Function.Periodic.qParam, ht_def, ← exp_natCast_mul]; congr 1; push_cast; ring
   have q4 : Function.Periodic.qParam 1 (τ : ℂ) = t ^ 2 := by
-    rw [Function.Periodic.qParam, ht_def, ← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [Function.Periodic.qParam, ht_def, ← exp_natCast_mul]; congr 1; push_cast; ring
   have hq : cexp (-(π * I / 24)) * Function.Periodic.qParam 24 (((τ : ℂ) + 1) / 2) *
       Function.Periodic.qParam 24 ((τ : ℂ) / 2) * Function.Periodic.qParam 24 (2 * (τ : ℂ)) =
       Function.Periodic.qParam 24 (τ : ℂ) ^ 3 := by
-    simp only [Function.Periodic.qParam, ← Complex.exp_add, ← Complex.exp_nat_mul]
+    simp only [Function.Periodic.qParam, ← Complex.exp_add, ← exp_natCast_mul]
     congr 1; push_cast; ring
   rw [eta_eq, eta_eq, eta_eq, eta_eq, q1, q2, q3, q4]
   have key := eulerProd_identity ht

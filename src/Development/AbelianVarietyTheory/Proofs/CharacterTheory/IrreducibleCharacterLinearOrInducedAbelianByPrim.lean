@@ -202,7 +202,7 @@ theorem exists_weight_idempotent (L : Type) [Field L] [CharZero L] (G : Type) [G
     ∃ e : Module.End L V, e ≠ 0 ∧ e * e = e ∧ (∀ b : B, ρ b * e = (lam b : L) • e) ∧
       (∀ t ∈ T, ρ t * e = e * ρ t) ∧ ∀ g ∉ T, e * ρ g * e = 0 := by
   classical
-  letI : Fintype B := Fintype.ofFinite B
+  let : Fintype B := Fintype.ofFinite B
   have hc : (Fintype.card B : L) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
   set s : Module.End L V := ∑ b : B, (((lam b)⁻¹ : Lˣ) : L) • ρ b with hs
   set e : Module.End L V := (Fintype.card B : L)⁻¹ • s with he
@@ -371,7 +371,7 @@ theorem nontrivial_of_isIrreducible {L G V : Type} [Field L] [Group G] [AddCommG
 theorem irrChar_linear_or_induced : ∀ (L : Type) [Field L] [CharZero L] [IsAlgClosed L] (G : Type) [Group G] [Finite G] (χ : G → L), AbByP G → IsIrrChar L L χ → (∃ lam : G →* Lˣ, ∀ g, χ g = (lam g : L)) ∨ ∃ T : Subgroup G, T ≠ ⊤ ∧ ∃ ψ : T → L, IsChar L L ψ ∧ χ = ind T ψ := by
   intro L _ _ _ G _ _ χ hG ⟨n, ρ, hρ, hχ⟩
   have hχ' : ∀ g, χ g = ρ.character g := fun g => by simpa using hχ g
-  haveI := nontrivial_of_isIrreducible ρ hρ
+  have := nontrivial_of_isIrreducible ρ hρ
   by_cases hR : ∃ T : Subgroup G, T ≠ ⊤ ∧ ∃ ψ : T → L, IsChar L L ψ ∧ χ = ind T ψ
   · exact Or.inr hR
   left

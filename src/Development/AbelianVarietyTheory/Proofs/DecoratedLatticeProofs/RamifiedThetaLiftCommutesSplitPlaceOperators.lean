@@ -120,7 +120,7 @@ theorem om_mul (g a : GA D S) (h b : GA D T) (f : WO S T → ℂ) : om (g, h) (o
 theorem setIntegral_mul_right (hS : CoCpt S) (v : Vol S) (G : GA D S → ℂ) (hG : ∀ γ ∈ GQ S, ∀ h, G (γ * h) = G h)
     (a : GA D S) : ∫ h in v.𝓕, G (h * a) ∂v.μ = ∫ h in v.𝓕, G h ∂v.μ := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S
-  haveI := v.haar
+  have := v.haar
   obtain ⟨K, hK, hcov⟩ := hS
   have hmap : ∀ b : GA D S, v.μ.map (· * b) = v.μ := fun b =>
     Formalism.L2.SG.CovariantRepresentation.haar_map_mul_right_of_lattice v.μ (GQ S) hK hcov b
@@ -253,7 +253,7 @@ theorem lift_sOp_comm : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topo
   obtain ⟨φ, ⟨hφE, hφM, hφC⟩, rfl⟩ := hφ₀
   let φ' : EqForm (repAut α) := ⟨toAut hφC, fun g P₁ => Subtype.ext (hφE g P₁)⟩
   have hφ'M : φ'.1 ∈ Mram k n' (contAutSub S) := by
-    letI := Fintype.ofFinite 𝓀[k]ˣ
+    let := Fintype.ofFinite 𝓀[k]ˣ
     refine (mem_Mram _).2 fun P₁ => Subtype.ext ?_
     have := (mem_Mram _).1 hφM P₁
     simpa [φ', toAut, Submodule.coe_sum] using this

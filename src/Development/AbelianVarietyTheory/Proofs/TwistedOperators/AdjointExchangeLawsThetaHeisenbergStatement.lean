@@ -130,8 +130,8 @@ theorem covol_exch {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) 
   obtain ⟨hμ, h𝓕, h1⟩ := hX
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.MixModel.lattice_Mx D B.rank A.rank
   obtain ⟨j1, j2, j3, j4, -⟩ := GlobalTheory.MixModel.lattice_Mx D A.rank B.rank
-  haveI : BorelSpace (WO A B) := ⟨rfl⟩
-  haveI : BorelSpace (WO B A) := ⟨rfl⟩
+  have : BorelSpace (WO A B) := ⟨rfl⟩
+  have : BorelSpace (WO B A) := ⟨rfl⟩
   let eA : WO A B ≃+ WO B A :=
     { toFun := adjO B A
       invFun := adjO A B

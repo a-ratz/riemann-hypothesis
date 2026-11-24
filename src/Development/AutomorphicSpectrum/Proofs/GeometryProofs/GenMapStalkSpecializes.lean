@@ -83,7 +83,7 @@ theorem regAt_mono :
       X.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ p.1) isOpen_univ
     have hU : IsAffineOpen U := hU
     have hq : q.1 ∈ U := h.mem_open U.2 hp
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨q.1, hq⟩ : U)
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨q.1, hq⟩ : U)
     have hloc := hU.isLocalization_stalk ⟨q.1, hq⟩
     obtain ⟨⟨r, t⟩, e⟩ := IsLocalization.surj (hU.primeIdealOf ⟨q.1, hq⟩).asIdeal.primeCompl
       (S := X.presheaf.stalk q.1) x

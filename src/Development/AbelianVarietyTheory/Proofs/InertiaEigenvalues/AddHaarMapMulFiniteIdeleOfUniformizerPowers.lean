@@ -108,7 +108,7 @@ theorem GlobalTheory.AdeleScale.map_mul_finId_adl : ∀ (E : Type) [Field E] [Nu
     (continuous_const.mul continuous_id).measurable
   have hchar : distribHaarChar (AdeleRing (𝓞 E) E) a • μR.map (fun x => (a : AdeleRing (𝓞 E) E) * x) = μR := by
     ext S hS
-    rw [Measure.smul_apply, Measure.map_apply hm hS]
+    rw [smul_apply, Measure.map_apply hm hS]
     have h1 := distribHaarChar_mul μR a ((fun x : AdeleRing (𝓞 E) E => (a : AdeleRing (𝓞 E) E) * x) ⁻¹' S)
     have e : a • ((fun x : AdeleRing (𝓞 E) E => (a : AdeleRing (𝓞 E) E) * x) ⁻¹' S) = S := by
       ext y

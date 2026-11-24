@@ -96,7 +96,7 @@ theorem UpperTheory.V.Fr.det_mem :
         MvPolynomial.monomial d 1 := by
       refine Finset.prod_induction _ (fun p => ∃ d, p = MvPolynomial.monomial d 1) ?_ ?_ ?_
       · rintro a b ⟨d₁, rfl⟩ ⟨d₂, rfl⟩
-        exact ⟨d₁ + d₂, by rw [MvPolynomial.monomial_mul, mul_one]⟩
+        exact ⟨d₁ + d₂, by rw [MvPolynomial.monomial_mul_monomial, mul_one]⟩
       · exact ⟨0, by rw [MvPolynomial.monomial_zero', MvPolynomial.C_1]⟩
       · intro i _
         exact ⟨Finsupp.single (f i) 1, rfl⟩
@@ -320,7 +320,7 @@ end Mon
 theorem UpperTheory.V.Fr.B_gen :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (φ : C →ₐ[O] S.R), (∀ g, (S.ρ.r g).trace ∈ φ.range) → (∀ v i g, (S.ρ.ψ v i g : S.R) ∈ φ.range) → S.B ≤ φ.range := by
   intro l _ O _ _ _ _ F C₀ n hF hn S C _ _ _ φ ht hψ
-  haveI : IsCO O φ.range := co_quot O C φ.range φ.rangeRestrict φ.rangeRestrict_surjective
+  have : IsCO O φ.range := co_quot O C φ.range φ.rangeRestrict φ.rangeRestrict_surjective
   generalize φ.range = A at *
   obtain ⟨-, -, hΨ, -, -⟩ := UpperTheory.V.Fr.star hF
   obtain ⟨-, -, -, -, w5, i₀, h0⟩ := w_facts hn
@@ -407,7 +407,7 @@ private theorem px_chi (ρ : G →* Matrix (Fin n) (Fin n) A) (y : MonoidAlgebra
 
 private theorem px_tr (hn : n ≠ 0) (ρ : G →* Matrix (Fin n) (Fin n) A) (y : MonoidAlgebra A G) :
     (W.GDet.ofRep ρ).tr y = (MonoidAlgebra.lift A _ G ρ y).trace := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero hn⟩⟩
   rw [W.GDet.tr, W.GDet.lam, px_chi, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
   simp
 
@@ -438,7 +438,7 @@ private theorem px_comm [TopologicalSpace G] [IsTopologicalGroup G] [IsLocalRing
   have h1 : (ψ g : A) - 1 ∈ ⨅ N : ℕ, maximalIdeal A ^ N := Ideal.mem_iInf.2 fun N => by
     have h2 := (h N).isClopen_fiber (Ideal.Quotient.mk _ 1)
     refine Ideal.Quotient.eq.1 (closure_minimal (fun s hs => ?_) h2.isClosed hg)
-    have h3 : ψ s = 1 := Abelianization.commutator_subset_ker ψ hs
+    have h3 : ψ s = 1 := Group.Abelianization.commutator_le_ker ψ hs
     simp [h3]
   rwa [Ideal.iInf_pow_eq_bot_of_isLocalRing _ (maximalIdeal.isMaximal A).ne_top, Ideal.mem_bot, sub_eq_zero] at h1
 
@@ -607,7 +607,7 @@ end Tw
 theorem UpperTheory.V.Pr.phiEx :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (n : ℕ) (T : UpperTheory.V.Pr.Setup F n), T.PhiEx := by
   intro l _ O _ _ _ _ _ F n T
-  haveI : IsNoetherianRing O := PrincipalIdealRing.isNoetherianRing
+  have : IsNoetherianRing O := PrincipalIdealRing.isNoetherianRing
   have hn : n ≠ 0 := by have := T.n23; omega
   obtain ⟨f, hf, -⟩ := T.B.univ T.S.R (px_pair T.K hn T.S.lift)
   replace hf : T.B.u.Maps (f : T.B.B →+* T.S.R) (W.GDet.ofRep (T.K.tw T.S.ρ)) (T.K.twψ T.S.ρ) := hf

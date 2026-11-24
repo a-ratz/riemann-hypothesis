@@ -124,7 +124,7 @@ theorem exists_lift_end {C' : Cpt c' t₀' β'} {C : Cpt c t₀ β} {b : O →+*
 
 theorem hom_ext_j (C : Cpt c t₀ β) (hD : IsDedFrac β) {f g : C.X ⟶ C.X} (h : C.j ≫ f = C.j ≫ g) : f = g := by
   obtain ⟨⟨_, _⟩, -, hfr⟩ := hD
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨-, -, hS, -, -, h3, -⟩ :=
     GlobalTheory.genericPart_dense_proOpen O F C.X U C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
   have : ∀ x : C.X, _root_.IsReduced (C.X.presheaf.stalk x) := fun x ↦
@@ -373,7 +373,7 @@ theorem map_nsmul_eq_pow {A Q : Type*} [AddMonoid A] [Group Q] (f : A → Q) (hf
 
 theorem mono_spMap_of_isDedFrac {O F : Type} [CommRing O] [Field F] {β : O →+* F} (h : IsDedFrac β) :
     Mono (spMap β) := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have := h.2.2
   have : IsPreimmersion (spMap β) := IsPreimmersion.of_isLocalization (nonZeroDivisors O) (S := F)
   infer_instance

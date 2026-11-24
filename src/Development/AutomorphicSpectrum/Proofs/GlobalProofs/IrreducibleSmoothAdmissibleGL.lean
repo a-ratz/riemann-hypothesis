@@ -92,11 +92,11 @@ theorem irreducibleAdmissible :
     have hs : (↑(GroundTheory.Automorphic.stabilizerOf π' v) : Set (GL (Fin (Fintype.card n)) k)) =
         ψ ⁻¹' {g | π g v = v} := by
       ext g
-      simp only [SetLike.mem_coe, GroundTheory.Automorphic.mem_stabilizerOf, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, GroundTheory.Automorphic.mem_stabilizerOf, Set.mem_preimage, Set.mem_ofPred_eq]
       exact Iff.rfl
     rw [hs]
     exact (hsm v).preimage hψ
-  haveI : IsSimpleOrder (Subrepresentation π) := hirr
+  have : IsSimpleOrder (Subrepresentation π) := hirr
   let f : Subrepresentation π' ≃o Subrepresentation π :=
     { toFun := fun W => ⟨W.toSubmodule, fun g v hv => by
           have h := W.apply_mem_toSubmodule (ψ.symm g) hv
@@ -105,7 +105,7 @@ theorem irreducibleAdmissible :
       left_inv := fun W => rfl
       right_inv := fun W => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : π'.IsIrreducible := f.isSimpleOrder
+  have : π'.IsIrreducible := f.isSimpleOrder
   have had := GroundTheory.Automorphic.Parabolic.isAdmissible_of_isIrreducible hsm'
   refine ⟨hsm, fun K hKo hKc => ?_⟩
   let K' : Subgroup (GL (Fin (Fintype.card n)) k) := K.comap ψ.toMonoidHom

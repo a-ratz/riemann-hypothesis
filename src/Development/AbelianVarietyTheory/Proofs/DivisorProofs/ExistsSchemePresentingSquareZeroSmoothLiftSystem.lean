@@ -100,8 +100,8 @@ theorem isLocalization_away_of_flat_lift (R B B' B₀ B₀' : Type) [CommRing R]
     (hker' : ∀ b, p' b = 0 ↔ b ∈ I.map (algebraMap R B'))
     (hcomm : ∀ b, p' (algebraMap B B' b) = algebraMap B₀ B₀' (p b)) (a : B)
     (hloc : IsLocalization.Away (p a) B₀') : IsLocalization.Away a B' := by
-  haveI := hloc
-  haveI := hflat
+  have := hloc
+  have := hflat
   set φ := algebraMap B B' with hφ
   have hφs : ∀ (r : R) (b : B), φ (r • b) = r • φ b := fun r b => by
     rw [Algebra.smul_def, Algebra.smul_def, map_mul, hφ, ← IsScalarTower.algebraMap_apply]
@@ -439,11 +439,11 @@ theorem loc_open (S : Sys I π s₀) (hI : I ^ 2 = 0) (V W : X₀.affineOpens) (
     (mp S.F (homOfLE hle).op : S.F.obj (Opposite.op V) →+* S.F.obj (Opposite.op ⟨_, hW'⟩)).toAlgebra
   haveI : IsScalarTower R (S.F.obj (Opposite.op V)) (S.F.obj (Opposite.op ⟨_, hW'⟩)) :=
     IsScalarTower.of_algebraMap_eq fun r ↦ ((mp S.F (homOfLE hle).op).commutes r).symm
-  letI : Algebra (Sec s₀ V.1) (Sec s₀ (X₀.basicOpen (S.p (Opposite.op V) a))) :=
+  let : Algebra (Sec s₀ V.1) (Sec s₀ (X₀.basicOpen (S.p (Opposite.op V) a))) :=
     (Sec.res s₀ (X₀.basicOpen_le (S.p (Opposite.op V) a)) : Sec s₀ V.1 →+* _).toAlgebra
   have hloc : IsLocalization.Away (S.p (Opposite.op V) a) (Sec s₀ (X₀.basicOpen (S.p (Opposite.op V) a))) :=
     hV.isLocalization_basicOpen (S.p (Opposite.op V) a)
-  haveI := S.smooth (Opposite.op ⟨_, hW'⟩)
+  have := S.smooth (Opposite.op ⟨_, hW'⟩)
   haveI : IsLocalization.Away a (S.F.obj (Opposite.op ⟨_, hW'⟩)) :=
     GlobalTheory.LiftAway.isLocalization_away_of_flat_lift R _ _ (Sec s₀ V.1) (Sec s₀ (X₀.basicOpen (S.p (Opposite.op V) a))) I hI inferInstance
       (S.p _) (S.p _) (S.surj _) (S.surj _) (S.ker _) (S.ker _) (fun b ↦ S.nat (homOfLE hle).op b) a hloc
@@ -452,8 +452,8 @@ theorem loc_open (S : Sys I π s₀) (hI : I ^ 2 = 0) (V W : X₀.affineOpens) (
 theorem diag_open (S : Sys I π s₀) (hI : I ^ 2 = 0) {U V : X₀.affineOpens} (hle : U.1 ≤ V.1) :
     IsOpenImmersion ((diag S).map (homOfLE (show U ≤ V from hle))) := by
   have hV : IsAffineOpen V.1 := V.2
-  haveI := emb_surj S hI U
-  haveI := emb_closed S V
+  have := emb_surj S hI U
+  have := emb_closed S V
   apply IsOpenImmersion.of_forall_source_exists
   · intro x y hxy
     obtain ⟨x, rfl⟩ := (emb S U).surjective x

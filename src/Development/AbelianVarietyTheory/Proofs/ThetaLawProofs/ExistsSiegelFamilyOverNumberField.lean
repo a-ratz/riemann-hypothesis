@@ -79,7 +79,7 @@ theorem _root_.GlobalTheory.SiegelFamilyNumberField.nonempty_baseChange {h k : �
     rfl pullback.condition
   obtain ⟨U, hU⟩ := hex F.univ
   have hsmooth : SmoothOfRelativeDimension (h * (h + 1) / 2) (pullback.snd F.s (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap j)) := by
-    haveI := smoothOfRelativeDimension_isStableUnderBaseChange (h * (h + 1) / 2)
+    have := smoothOfRelativeDimension_isStableUnderBaseChange (h * (h + 1) / 2)
     exact MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension (h * (h + 1) / 2))
       (IsPullback.of_hasPullback F.s (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap j)) F.3
   refine ⟨⟨pullback F.s (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap j), pullback.snd F.s (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap j), hsmooth,
@@ -107,7 +107,7 @@ private theorem isPrimitiveRoot_map_localization_away (k : ℕ) (hk : 0 < k) (K 
     (IsLocalization.Away.algebraMap_isUnit (k : 𝓞 K)).map β
   have hkL : ((k : ℕ) : L) ≠ 0 := by
     simpa using hunit.ne_zero
-  haveI : NeZero ((k : ℕ) : L) := ⟨hkL⟩
+  have : NeZero ((k : ℕ) : L) := ⟨hkL⟩
   set g : 𝓞 K →+* L := β.comp (algebraMap (𝓞 K) (Localization.Away (k : 𝓞 K)))
   have hroot : IsRoot (cyclotomic k (𝓞 K)) ζ := hζO.isRoot_cyclotomic hk
   have : IsRoot (cyclotomic k L) (g ζ) := by
@@ -125,9 +125,9 @@ theorem _root_.GlobalTheory.SiegelFamilyNumberField.exists_sFam_numberField : _r
   obtain ⟨j₀, hj₀⟩ := _root_.GlobalTheory.ZM.SiegelArithFamily.nonempty_sFam hL hL2
     _root_.GlobalTheory.Moduli.cube_of_isLB hT h 3 hh Nat.prime_three ⟨1, rfl⟩
   have hkpos : 0 < (3 ^ max j₀ 1) ^ 2 := by positivity
-  haveI : NeZero ((3 ^ max j₀ 1) ^ 2) := ⟨hkpos.ne'⟩
-  haveI := _root_.GlobalTheory.ZM.CycBase.cyc (k := (3 ^ max j₀ 1) ^ 2)
-  haveI : NumberField ↥(_root_.GlobalTheory.ZM.CycBase.CF ((3 ^ max j₀ 1) ^ 2)) :=
+  have : NeZero ((3 ^ max j₀ 1) ^ 2) := ⟨hkpos.ne'⟩
+  have := _root_.GlobalTheory.ZM.CycBase.cyc (k := (3 ^ max j₀ 1) ^ 2)
+  have : NumberField ↥(_root_.GlobalTheory.ZM.CycBase.CF ((3 ^ max j₀ 1) ^ 2)) :=
     IsCyclotomicExtension.numberField {(3 ^ max j₀ 1) ^ 2} ℚ _
   have hprim : IsPrimitiveRoot (_root_.GlobalTheory.ZM.CycBase.zF ((3 ^ max j₀ 1) ^ 2)) ((3 ^ max j₀ 1) ^ 2) :=
     _root_.GlobalTheory.ZM.CycBase.zF_prim hkpos.ne'

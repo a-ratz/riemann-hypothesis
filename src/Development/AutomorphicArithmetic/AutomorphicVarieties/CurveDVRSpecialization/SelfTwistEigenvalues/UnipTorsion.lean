@@ -59,12 +59,12 @@ open Polynomial Matrix
 private theorem UpperTheory.V.Pr.T.unipTorsion_unit {A : Type} [CommRing A] [IsLocalRing A] (χ : A[X]) (n m : ℕ)
     (hχ : χ.Monic) (hr : χ.map (IsLocalRing.residue A) = (X - 1) ^ n) (hm : IsUnit (m : A)) :
     IsUnit (AdjoinRoot.mk χ (∑ i ∈ Finset.range m, X ^ i)) := by
-  haveI : Module.Finite A (AdjoinRoot χ) := (AdjoinRoot.powerBasis' hχ).finite
-  haveI : Algebra.IsIntegral A (AdjoinRoot χ) := Algebra.IsIntegral.of_finite A _
+  have : Module.Finite A (AdjoinRoot χ) := (AdjoinRoot.powerBasis' hχ).finite
+  have : Algebra.IsIntegral A (AdjoinRoot χ) := Algebra.IsIntegral.of_finite A _
   by_contra hnu
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ (mt Ideal.span_singleton_eq_top.mp hnu)
   have hmem : AdjoinRoot.mk χ (∑ i ∈ Finset.range m, X ^ i) ∈ M := hle (Ideal.mem_span_singleton_self _)
-  letI : Field (AdjoinRoot χ ⧸ M) := Ideal.Quotient.field M
+  let : Field (AdjoinRoot χ ⧸ M) := Ideal.Quotient.field M
   set π : AdjoinRoot χ →+* AdjoinRoot χ ⧸ M := Ideal.Quotient.mk M with hπdef
   set φ : A →+* AdjoinRoot χ ⧸ M := π.comp (algebraMap A (AdjoinRoot χ)) with hφdef
   have hcomap : Ideal.comap (algebraMap A (AdjoinRoot χ)) M = IsLocalRing.maximalIdeal A :=

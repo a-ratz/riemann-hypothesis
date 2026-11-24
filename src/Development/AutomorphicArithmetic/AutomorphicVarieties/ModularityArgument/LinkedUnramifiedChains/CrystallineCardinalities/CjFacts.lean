@@ -197,7 +197,7 @@ theorem UpperTheory.V.Z.J.cjFacts :
     fun s => (t s).inv_mul
   have hB : ∀ s, UpT (((t s)⁻¹ : GL (Fin 3) O) : Matrix (Fin 3) (Fin 3) O) := by
     intro s
-    letI := (t s).invertible
+    let := (t s).invertible
     have h1 : Matrix.BlockTriangular (t s : Matrix (Fin 3) (Fin 3) O) id :=
       fun i j hij => hT s i j hij
     have h2 := Matrix.blockTriangular_inv_of_blockTriangular h1
@@ -232,7 +232,7 @@ theorem UpperTheory.V.Z.J.cjFacts :
     have h1U : (1 : D) ∈ U := by simp [U]
     have hUK : U ⊆ (ρ.ker : Set D) := by
       intro g hg
-      simp only [U, Set.mem_iInter, Set.mem_setOf_eq] at hg
+      simp only [U, Set.mem_iInter, Set.mem_ofPred_eq] at hg
       have hT1 : (t g : Matrix (Fin 3) (Fin 3) O).map mk = (t 1 : Matrix (Fin 3) (Fin 3) O).map mk := by
         ext i j
         exact Ideal.Quotient.eq.mpr (hN (Ideal.Quotient.eq.mp (hg i j)))

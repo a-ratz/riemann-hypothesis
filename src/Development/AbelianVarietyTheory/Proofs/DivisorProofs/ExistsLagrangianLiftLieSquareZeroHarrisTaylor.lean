@@ -435,7 +435,7 @@ theorem GlobalTheory.lie_idempotents : ∀ (R C K : Type) [CommRing R] [CommRing
       Finset.sum_congr rfl fun _ _ => mul_comm _ _
     rw [hsum, hSC j i]
     by_cases hij : i = j
-    · subst hij; rw [if_pos rfl, if_pos rfl, hnN, one_smul]; exact hΦ.symm
+    · subst hij; rw [ite_eq_left rfl, ite_eq_left rfl, hnN, one_smul]; exact hΦ.symm
     · simp [hij, Ne.symm hij]
   · intro g hg i
     simp only [mul_smul_comm, smul_mul_assoc, Finset.mul_sum, Finset.sum_mul, hg]
@@ -542,7 +542,7 @@ lemma det_smul_eq' (u : A) : (gram b).det • u = ∑ l, trL (b l * u) • dualD
   intro k
 
   simp only [mul_sub, Finset.mul_sum, mul_smul_comm, map_sub, map_sum, map_zsmul, smul_eq_mul,
-  trL_basis_mul_dualD, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  trL_basis_mul_dualD, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   ring
 
 lemma det_ne_zero : (gram b).det ≠ 0 := by
@@ -574,7 +574,7 @@ lemma sum_mul_dualD : ∑ k, b k * dualD b k = ((gram b).det : A) := by
 
 lemma balanced (c : A) :
     ∑ k, (c * b k) ⊗ₜ[ℤ] dualD b k = ∑ k, b k ⊗ₜ[ℤ] (dualD b k * c) := by
-  haveI : Module.Free ℤ (A ⊗[ℤ] A) := Module.Free.of_basis (b.tensorProduct b)
+  have : Module.Free ℤ (A ⊗[ℤ] A) := Module.Free.of_basis (b.tensorProduct b)
   apply smul_right_injective (A ⊗[ℤ] A) (det_ne_zero b hnd)
   dsimp only
   simp only [Finset.smul_sum]
@@ -744,8 +744,8 @@ theorem inj_tmul (p : ℕ) [Fact p.Prime] (O : Type) [Ring O] [Module.Free ℤ O
 theorem trace_order_nondeg : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (x : D.O),
     (∀ y : D.O, LinearMap.trace ℤ D.O (LinearMap.mulLeft ℤ (x * y)) = 0) → x = 0 := by
   intro p _ D x hx
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeO
+  have := D.finO
   obtain ⟨φ⟩ := D.splitP
   set A' := ℤ_[p] ⊗[ℤ] 𝓞 D.F
   let Φ : (ℤ_[p] ⊗[ℤ] D.O) ≃+* Matrix (Fin D.m) (Fin D.m) A' :=
@@ -877,7 +877,7 @@ theorem liftSummand_residueCharZero : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTh
     · exact_mod_cast hunitN n (by rintro rfl; simp at hN)
     · push_cast; exact (hunitN n (by rintro rfl; simp at hN)).neg
   obtain ⟨NF, kF, u, v, hNF, huv, hcomF⟩ := _root_.GlobalTheory.exists_separability_element_of_trace_nondegenerate (𝓞 D.F) (GlobalTheory.T.ringOfIntegers_eq_zero_of_trace_mulLeft_eq_zero D.F)
-  haveI := D.freeO; haveI := D.finO
+  have := D.freeO; have := D.finO
   obtain ⟨NO, kO, x, y, hNO, hxy, hcomO⟩ := _root_.GlobalTheory.exists_separability_element_of_trace_nondegenerate D.O (_root_.GlobalTheory.HTOrderTrace.trace_order_nondeg p D)
   obtain ⟨φ, hφc, hφφ, hφcomm, hφF, hφmod⟩ := _root_.GlobalTheory.lie_idempotents R C (𝓞 D.F) tR D.a b.t b.comax NF kF u v huv hcomF
     (hunitZ NF hNF) H (ρ.comp (algebraMap (𝓞 D.F) D.O))
@@ -1050,7 +1050,7 @@ theorem lagrangian_of_idempotent_split_univ :
     have h1 : e.rangeRestrict g ∈ G.comap S.subtype := by
       show e g ∈ G; rw [hG g hg]; exact hg
     simp only [P, LinearMap.coe_comp, Function.comp_apply]
-    have h2 := Submodule.linearProjOfIsCompl_apply_right hc ⟨_, h1⟩
+    have h2 := projectionOnto_apply_right hc ⟨_, h1⟩
     erw [h2]
     simp
   have hPM : ∀ m ∈ M, P m = m := by
@@ -1058,7 +1058,7 @@ theorem lagrangian_of_idempotent_split_univ :
     have h1 : e.rangeRestrict m ∈ M.comap S.subtype := by
       show e m ∈ M; rw [hM m hm]; exact hm
     simp only [P, LinearMap.coe_comp, Function.comp_apply]
-    have h2 := Submodule.linearProjOfIsCompl_apply_left hc ⟨_, h1⟩
+    have h2 := projectionOnto_apply_left hc ⟨_, h1⟩
     erw [h2]
     simp [hM m hm]
 
@@ -1218,7 +1218,7 @@ theorem lagrangian_completion_sup_smul_eq : ∀ (C : Type) [CommRing C] (I : Ide
     have h1 : e.rangeRestrict g ∈ G.comap S.subtype := by
       show e g ∈ G; rw [hG g hg]; exact hg
     simp only [P, LinearMap.coe_comp, Function.comp_apply]
-    have h2 := Submodule.linearProjOfIsCompl_apply_left hc ⟨_, h1⟩
+    have h2 := projectionOnto_apply_left hc ⟨_, h1⟩
     erw [h2]
     simp [hG g hg]
 

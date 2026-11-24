@@ -88,7 +88,7 @@ theorem monomial_factorization_lower : MonoFactLow := by
       rw [hk, Nat.factorial_zero])]
     rw [Fintype.prod_prod_type, Finset.prod_comm]
   rw [h1, ← Finset.prod_pow_eq_pow_sum, ← Finset.prod_mul_distrib]
-  refine Finset.prod_le_prod' fun s _ => ?_
+  refine prod_le_prod fun s _ => ?_
   have := col_fact_le (fun a => m (a, s))
   rwa [hm s] at this
 

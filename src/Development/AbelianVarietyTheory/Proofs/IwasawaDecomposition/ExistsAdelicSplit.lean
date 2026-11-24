@@ -122,7 +122,7 @@ theorem exists_adelic_split : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     { χ with invFun := ω, left_inv := l1, right_inv := l2 }
   have hp1 : Continuous pInf := (continuous_fst.comp hc).congr fun z => (he z).1
   have hp2 : Continuous pFin := (continuous_snd.comp hc).congr fun z => (he z).2
-  have hv : Continuous fun h : HA (AF F) σ J => HA.mat _ _ _ h := continuous_subtype_val
+  have hv : Continuous fun h : HA (AF F) σ J => HA.mat _ _ _ h := continuous_subtypeVal
   have c1 : Continuous ψ := by
     refine Continuous.prodMk (Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _)
       (Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _)
@@ -133,11 +133,11 @@ theorem exists_adelic_split : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have c2 : Continuous ψ.symm := by
     refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
     · refine continuous_matrix fun i j => hc'.comp (Continuous.prodMk ?_ ?_)
-      · exact (Units.continuous_val.comp (continuous_subtype_val.comp continuous_fst)).matrix_elem i j
-      · exact (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)).matrix_elem i j
+      · exact (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_fst)).matrix_elem i j
+      · exact (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)).matrix_elem i j
     · refine continuous_matrix fun i j => hc'.comp (Continuous.prodMk ?_ ?_)
-      · exact (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_fst)).matrix_elem i j
-      · exact (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_snd)).matrix_elem i j
+      · exact (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_fst)).matrix_elem i j
+      · exact (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_snd)).matrix_elem i j
   exact ⟨{ ψ with continuous_toFun := c1, continuous_invFun := c2 }, fun h => ⟨rfl, rfl⟩⟩
 
 end GlobalTheory.Mem.VolSplit

@@ -322,7 +322,7 @@ theorem baseFr_of {V W : HSp D} (hV : V = W) {S : D.what₂.Tau → SPar} (M : D
   have central : ∀ ρ m, (archM V (θ ρ) (β * g))⁻¹ * m * archM V (θ ρ) (β * g) = m := by
     classical
     intro ρ
-    have : Countable D.host.E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+    have : Countable D.host.E := Countable.of_moduleFinite (R := ℚ)
     refine conj_eq (S := Set.range (tauE D ρ)) (hH ρ).1 (hH ρ).2 (archM_det V (θ ρ) (γ * h)) (archM_det V _ _)
       (Set.countable_range _) fun u hu => ?_
     have hu' : (Pi.mulSingle ρ u : D.what₂.Tau → Mt V.rank) ∈ UG (gramAt D V) := fun ρ' => by

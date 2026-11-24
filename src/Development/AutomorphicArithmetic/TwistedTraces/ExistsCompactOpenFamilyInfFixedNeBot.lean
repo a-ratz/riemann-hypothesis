@@ -76,7 +76,7 @@ private theorem oneStep {G H : Type} [Group G] [TopologicalSpace G] [IsTopologic
     simpa using hr0
   obtain ⟨K, hKc, hKU⟩ := exists_openSubgroup_isCompact_subset hnhds
   refine ⟨(K : Subgroup G), hKc, K.isOpen, ?_⟩
-  letI := InnerProductSpace.rclikeToReal ℂ H
+  let := InnerProductSpace.rclikeToReal ℂ H
   obtain ⟨C, hC⟩ : ∃ C : Set H, C = (Y : Set H) ∩ ⋂ u ∈ (K : Subgroup G), Metric.closedBall (π u v) r :=
     ⟨_, rfl⟩
   have hmem : ∀ x, x ∈ C ↔ x ∈ Y ∧ ∀ u ∈ (K : Subgroup G), ‖x - π u v‖ ≤ r := by

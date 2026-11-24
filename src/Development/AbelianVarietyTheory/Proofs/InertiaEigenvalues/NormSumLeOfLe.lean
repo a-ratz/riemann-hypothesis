@@ -133,8 +133,8 @@ theorem exists_basis_of_loc (K : Type) [Field K] [NumberField K] (P : HeightOneS
   have hle : P.asIdeal.primeCompl ≤ nonZeroDivisors (𝓞 K) := fun t ht =>
     mem_nonZeroDivisors_of_ne_zero fun h => ht (h ▸ P.asIdeal.zero_mem)
   let R := Localization.subalgebra.ofField K P.asIdeal.primeCompl hle
-  haveI : IsLocalization.AtPrime R P.asIdeal := (inferInstance : IsLocalization P.asIdeal.primeCompl R)
-  haveI : IsDiscreteValuationRing R :=
+  have : IsLocalization.AtPrime R P.asIdeal := (inferInstance : IsLocalization P.asIdeal.primeCompl R)
+  have : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 K) P.ne_bot R
   have mk'_coe : ∀ (x : 𝓞 K) (t : P.asIdeal.primeCompl),
       ((IsLocalization.mk' R x t : R) : K) = (x : K) / ((t : 𝓞 K) : K) := by
@@ -179,16 +179,16 @@ theorem exists_basis_of_loc (K : Type) [Field K] [NumberField K] (P : HeightOneS
     obtain ⟨r, hr⟩ := inR (c k) t ht
     rw [← hr, ← smul_def]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
-  haveI : Module.Finite R L := Module.Finite.span_of_finite R (Set.finite_range g)
-  haveI : NoZeroSMulDivisors R V := ⟨fun {r f} h => by
+  have : Module.Finite R L := Module.Finite.span_of_finite R (Set.finite_range g)
+  have : NoZeroSMulDivisors R V := ⟨fun {r f} h => by
     rw [smul_def] at h
     rcases smul_eq_zero.1 h with h | h
     · exact Or.inl (Subtype.ext h)
     · exact Or.inr h⟩
-  haveI : NoZeroSMulDivisors R L := ⟨fun {r x} h =>
+  have : NoZeroSMulDivisors R L := ⟨fun {r x} h =>
     (smul_eq_zero.1 (congrArg Subtype.val h : r • (x : V) = 0)).imp id fun h' => Subtype.ext h'⟩
-  haveI : Module.IsTorsionFree R L := inferInstance
-  haveI : Module.Free R L := Module.free_of_finite_type_torsion_free'
+  have : Module.IsTorsionFree R L := inferInstance
+  have : Module.Free R L := Module.free_of_finite_type_torsion_free'
   obtain ⟨n, B'⟩ := Submodule.basisOfPidOfLE hNL (Module.Free.chooseBasis R L)
   let v : Fin n → V := fun s => ((B' s : NR) : V)
   have hliR : LinearIndependent R v :=
@@ -466,14 +466,14 @@ theorem finite_roots {N : ℕ} (hN : 0 < N) : {x : PAt φ | x ^ N = 1}.Finite :=
   simpa [Polynomial.mem_nthRoots hN] using hx
 
 theorem finiteDimensional_adjRoots {N : ℕ} (hN : 0 < N) : FiniteDimensional F (adjRoots φ N) := by
-  haveI := (finite_roots φ hN).to_subtype
+  have := (finite_roots φ hN).to_subtype
   refine IntermediateField.finiteDimensional_adjoin fun x hx => ?_
   have h : x ^ N = 1 := hx
   exact IsIntegral.of_pow hN (by rw [h]; exact isIntegral_one)
 
 theorem numberField_adjRoots [NumberField F] {N : ℕ} (hN : 0 < N) : NumberField (adjRoots φ N) := by
-  haveI := finiteDimensional_adjRoots φ hN
-  haveI : FiniteDimensional ℚ (adjRoots φ N) := Module.Finite.trans F (adjRoots φ N)
+  have := finiteDimensional_adjRoots φ hN
+  have : FiniteDimensional ℚ (adjRoots φ N) := Module.Finite.trans F (adjRoots φ N)
   constructor
 
 theorem adjRoots_mono {N M : ℕ} (h : N ∣ M) : adjRoots φ N ≤ adjRoots φ M := by
@@ -551,7 +551,7 @@ theorem kur_approx : ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [NumberFi
     obtain ⟨s, _, hs⟩ := ((Fact.out : p.Prime).prime.dvd_finsetProd_iff _).1 h
     exact hpN s hs
   let K := adjRoots φ M
-  haveI : NumberField K := numberField_adjRoots φ hM0
+  have : NumberField K := numberField_adjRoots φ hM0
   let φ' : K →+* ℂ_[p] := (toCp φ).comp (algebraMap K (PAt φ))
   have hcomp : ∀ a, φ' (algebraMap F K a) = φ a := fun a => rfl
   have hk : ∀ x : K, φ' x ∈ kurC φ := fun x => adjRoots_le_kurC φ hM0 hpM x x.2
@@ -583,7 +583,7 @@ variable {p : ℕ} [Fact p.Prime] {F : Type} [Field F] [NumberField F] (φ : F �
 
 theorem le_exp_neg_one_of_lt_one {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
   by_cases h0 : x = 0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   · rw [← WithZero.exp_log h0] at hx ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
     rw [WithZero.exp_le_exp]
@@ -634,7 +634,7 @@ theorem exists_unif_norm_gap : ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F]
     exact absurd hc (not_lt.2 this)
   have hq : v (c / ϖ) ≤ 1 := by
     rw [map_div₀, hϖ]
-    exact div_le_one_of_le₀ (le_exp_neg_one_of_lt_one hvc) zero_le'
+    exact div_le_one_of_le₀ (le_exp_neg_one_of_lt_one hvc) zero_le
   have h1 := GlobalTheory.ReadingOver.norm_le_one_of_valuation_le_one φ hq
   rw [map_div₀, norm_div] at h1
   have hpos : 0 < ‖φ ϖ‖ := norm_pos_iff.2 ((map_ne_zero φ).2 hϖ0)
@@ -781,8 +781,8 @@ theorem ball_descent : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 I0 
         k' (i (evI y (cuspOf YS fw j g : T0.R ((j : ℕ) + 1)))) = valC z'.1 (cuspOf YS fw j g : T0.R ((j : ℕ) + 1)) := by
       intro g
       have h5 : i (evI y (cuspOf YS fw j g : T0.R ((j : ℕ) + 1))) = evI y₁ (cuspOf YS fw j g : T0.R ((j : ℕ) + 1)) := by
-        letI := io.toAlgebra
-        letI := (i.comp io).toAlgebra
+        let := io.toAlgebra
+        let := (i.comp io).toAlgebra
         exact (DFunLike.congr_fun hψ _).symm.trans (GlobalTheory.FlagTan.evR_frMap (hmem g).1 hmap).symm
       rw [h5, hz' _ _ _ (hmem g)]
     refine (hk'.int _).1 ?_
@@ -1126,7 +1126,7 @@ theorem mem_span_locBall
 
     simp only [map_sum, Finset.sum_apply', Module.Basis.baseChange_repr_tmul,
     Module.Basis.repr_self, Finsupp.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at hco
+    Finset.mem_univ, ite_true] at hco
     have h1 : ‖φ' (a' s0 * (algebraMap S.Ks F' ϖ)⁻¹)‖ ≤ 1 := by
 
       rw [hco, map_sum]

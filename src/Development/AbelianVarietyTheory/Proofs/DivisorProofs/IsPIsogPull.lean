@@ -58,8 +58,8 @@ open GlobalTheory.DrinLev.HT.HeckePt GlobalTheory.CechPic in
 theorem isPIsog_pull : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N c : ℕ) (S S' : Scheme.{0}) (σ : S ⟶ Sp R) (σ' : S' ⟶ Sp R) (f : S' ⟶ S) (o o' : Obj b N σ) (o₁ o₁' : Obj b N σ') (m : ObjMap o₁ o f) (m' : ObjMap o₁' o' f) (ψ : o.A ⟶ o'.A), IsPIsog c o o' ψ → ∃ ψ₁ : o₁.A ⟶ o₁'.A, IsPIsog c o₁ o₁' ψ₁ ∧ m.φ ≫ ψ.left = ψ₁.left ≫ m'.φ := by
   intro p _ D R _ b N c S S' σ σ' f o o' o₁ o₁' m m' ψ hψ
   obtain ⟨hk, hmon, hlin, heta, ⟨hP⟩, ψ', hmon', h₁, h₂⟩ := hψ
-  haveI := hmon
-  haveI := hmon'
+  have := hmon
+  have := hmon'
   have e : m.φ ≫ ψ.left = (pullMor m.cart m'.cart ψ).left ≫ m'.φ := (pullMor_left m.cart m'.cart ψ).symm
   refine ⟨pullMor m.cart m'.cart ψ, ⟨hk, isMonHom_pullMor _ _ _, fun a => ?_, fun y => ?_, ⟨?_⟩,
     pullMor m'.cart m.cart ψ', isMonHom_pullMor _ _ _, pullMor_comp_eq_pow m.cart m'.cart ψ ψ' c h₁,
@@ -111,7 +111,7 @@ theorem of_ext (hext : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Co
     ⟨GlobalTheory.UPel.HT.ObjMapComp.comp n₀' mt₀⟩⟩
   have e3 : spMap eK ≫ (spMap (algebraMap V K) ≫ z) = spMap eK ≫ (x ≫ t₀) := by
     rw [← Category.assoc, ← hk, e1, ← e2, Category.assoc]
-  haveI : IsIso (spMap eK) := by
+  have : IsIso (spMap eK) := by
     let e := (IsLocalization.algEquiv (nonZeroDivisors V) K (FractionRing V)).toRingEquiv
     have h1 : IsIso (CommRingCat.ofHom eK) := (RingEquiv.toCommRingCatIso e).isIso_hom
     exact inferInstanceAs (IsIso (Spec.map (CommRingCat.ofHom eK)))

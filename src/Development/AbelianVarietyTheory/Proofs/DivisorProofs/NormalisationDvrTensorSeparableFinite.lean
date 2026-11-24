@@ -74,15 +74,15 @@ theorem finite_integralClosure_of_formallyUnramified (R K C : Type) [CommRing R]
     [CommRing C] [Algebra K C] [Algebra R C] [IsScalarTower R K C] [FiniteDimensional K C]
     [Algebra.FormallyUnramified K C] : Module.Finite R (integralClosure R C) := by
   classical
-  haveI : IsArtinianRing C := IsArtinianRing.of_finite K C
-  haveI : IsReduced C := Algebra.FormallyUnramified.isReduced_of_field K C
-  haveI := Fintype.ofFinite (MaximalSpectrum C)
-  haveI : ∀ m : MaximalSpectrum C, Module.Finite R (integralClosure R (C ⧸ m.asIdeal)) := fun m => by
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
-    haveI : Algebra.FormallyUnramified K (C ⧸ m.asIdeal) :=
+  have : IsArtinianRing C := IsArtinianRing.of_finite K C
+  have : IsReduced C := Algebra.FormallyUnramified.isReduced_of_field K C
+  have := Fintype.ofFinite (MaximalSpectrum C)
+  have : ∀ m : MaximalSpectrum C, Module.Finite R (integralClosure R (C ⧸ m.asIdeal)) := fun m => by
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
+    have : Algebra.FormallyUnramified K (C ⧸ m.asIdeal) :=
       Algebra.FormallyUnramified.of_surjective (Ideal.Quotient.mkₐ K m.asIdeal) Ideal.Quotient.mk_surjective
-    haveI : Algebra.IsSeparable K (C ⧸ m.asIdeal) := Algebra.FormallyUnramified.isSeparable K _
+    have : Algebra.IsSeparable K (C ⧸ m.asIdeal) := Algebra.FormallyUnramified.isSeparable K _
     exact IsIntegralClosure.finite R K (C ⧸ m.asIdeal) _
   let red : ∀ m : MaximalSpectrum C, integralClosure R C →ₗ[R] integralClosure R (C ⧸ m.asIdeal) := fun m =>
     (((Ideal.Quotient.mkₐ R m.asIdeal).comp (integralClosure R C).val).codRestrict
@@ -123,23 +123,23 @@ theorem main : ∀ (S K L D : Type) [CommRing S] [IsDomain S] [IsDiscreteValuati
   intro S K L D _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
   classical
   let K' := FractionRing D
-  haveI : IsScalarTower S D K' := inferInstance
+  have : IsScalarTower S D K' := inferInstance
   have hSK' : Function.Injective (algebraMap S K') :=
     by
       rw [IsScalarTower.algebraMap_eq S D K']
       exact (IsFractionRing.injective D K').comp (FaithfulSMul.algebraMap_injective S D)
-  letI : Algebra K K' := (IsFractionRing.lift hSK' : K →+* K').toAlgebra
-  haveI : IsScalarTower S K K' :=
+  let : Algebra K K' := (IsFractionRing.lift hSK' : K →+* K').toAlgebra
+  have : IsScalarTower S K K' :=
     IsScalarTower.of_algebraMap_eq (fun x => (IsFractionRing.lift_algebraMap hSK' x).symm)
-  haveI : SMulCommClass K D K' := ⟨fun a b c => by simp only [Algebra.smul_def]; ring⟩
-  haveI : Algebra.FormallyUnramified K L := Algebra.FormallyUnramified.of_isSeparable K L
-  haveI : Algebra.FormallyUnramified K' (K' ⊗[K] L) := inferInstance
-  haveI : FiniteDimensional K' (K' ⊗[K] L) := inferInstance
-  haveI : IsScalarTower D K' (K' ⊗[K] L) := inferInstance
+  have : SMulCommClass K D K' := ⟨fun a b c => by simp only [Algebra.smul_def]; ring⟩
+  have : Algebra.FormallyUnramified K L := Algebra.FormallyUnramified.of_isSeparable K L
+  have : Algebra.FormallyUnramified K' (K' ⊗[K] L) := inferInstance
+  have : FiniteDimensional K' (K' ⊗[K] L) := inferInstance
+  have : IsScalarTower D K' (K' ⊗[K] L) := inferInstance
   have hfinC : Module.Finite D (integralClosure D (K' ⊗[K] L)) :=
     GlobalTheory.AbhFin.finite_integralClosure_of_formallyUnramified D K' (K' ⊗[K] L)
-  haveI : Module.Flat S K := IsLocalization.flat K (nonZeroDivisors S)
-  haveI : Module.Flat S L := Module.Flat.trans S K L
+  have : Module.Flat S K := IsLocalization.flat K (nonZeroDivisors S)
+  have : Module.Flat S L := Module.Flat.trans S K L
   let f : D →ₐ[S] K' := IsScalarTower.toAlgHom S D K'
   let Φ : D ⊗[S] L →ₐ[S] K' ⊗[S] L := Algebra.TensorProduct.map f (AlgHom.id S L)
   have hΦ : Function.Injective Φ := by

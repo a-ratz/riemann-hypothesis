@@ -108,7 +108,7 @@ theorem isCompact_unitary_GL (n : ℕ) : IsCompact {k : GL (Fin n) ℂ | k.val �
   let φ : unitaryGroup (Fin n) ℂ → GL (Fin n) ℂ := fun u =>
     ⟨u.1, star u.1, Unitary.mul_star_self_of_mem u.2, Unitary.star_mul_self_of_mem u.2⟩
   have hφ : Continuous φ :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_star.comp continuous_subtype_val⟩
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_star.comp continuous_subtypeVal⟩
   have hr : Set.range φ = {k : GL (Fin n) ℂ | k.val ∈ unitaryGroup (Fin n) ℂ} := by
     ext k
     constructor
@@ -164,8 +164,8 @@ theorem isMulRightInvariant_of_center {G : Type} [Group G] [TopologicalSpace G] 
 
 theorem isMulRightInvariant_GL (n : ℕ) [MeasurableSpace (GL (Fin n) ℂ)] [BorelSpace (GL (Fin n) ℂ)]
     (μ : Measure (GL (Fin n) ℂ)) [μ.IsHaarMeasure] : μ.IsMulRightInvariant := by
-  haveI := GlobalTheory.CompanionTheory.LocVan.locallyCompact_GL n
-  haveI := GlobalTheory.CompanionTheory.LocVan.secondCountable_GL n
+  have := GlobalTheory.CompanionTheory.LocVan.locallyCompact_GL n
+  have := GlobalTheory.CompanionTheory.LocVan.secondCountable_GL n
   exact isMulRightInvariant_of_center (fun Δ hc g => GlobalTheory.SplitFlip.hom_eq_one_of_center Δ hc g) μ
 
 def uK (n : ℕ) : Subgroup (GL (Fin n) ℂ) := MonoidHom.eqLocus (thetaR (starRingEnd ℂ) n) (MonoidHom.id _)
@@ -179,7 +179,7 @@ theorem isCompact_uK (n : ℕ) : IsCompact (uK n : Set (GL (Fin n) ℂ)) := by
   have h := GlobalTheory.Tw.isCompact_unitary_GL n
   convert h using 1
   ext k
-  simp only [SetLike.mem_coe, Set.mem_setOf_eq, Matrix.mem_unitaryGroup_iff]
+  simp only [SetLike.mem_coe, Set.mem_ofPred_eq, Matrix.mem_unitaryGroup_iff]
   change thetaR (starRingEnd ℂ) n k = k ↔ k.val * star k.val = 1
   constructor
   · intro hk

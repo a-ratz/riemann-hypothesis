@@ -118,7 +118,7 @@ theorem lintegral_mul_fibre_symm
     (dg : Measure G) [dg.IsHaarMeasure] (ν : Measure H) [ν.IsHaarMeasure]
     {f f' : G → ℝ≥0∞} (hf : Measurable f) (hf' : Measurable f') :
     ∫⁻ g, f g * ∫⁻ h : H, f' (g * h) ∂ν ∂dg = ∫⁻ g, (∫⁻ h : H, f (g * h) ∂ν) * f' g ∂dg := by
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
   have e1 : ∀ g, f g * ∫⁻ h : H, f' (g * h) ∂ν = ∫⁻ h : H, f g * f' (g * h) ∂ν := fun g =>
     (lintegral_const_mul _ (by fun_prop)).symm
   have e2 : ∀ g, (∫⁻ h : H, f (g * h) ∂ν) * f' g =
@@ -188,7 +188,7 @@ theorem exists_isInvariantRadon (hH : IsClosed (H : Set G))
   · intro h0
     have h1 := map_withDensity_apply H dg hφ MeasurableSet.univ
     rw [h0] at h1
-    simp only [Measure.coe_zero, Pi.zero_apply, Set.indicator_univ, Pi.one_apply, one_mul] at h1
+    simp only [FunLike.coe_zero, Pi.zero_apply, Set.indicator_univ, Pi.one_apply, one_mul] at h1
     have h2 : φ =ᵐ[dg] 0 := (lintegral_eq_zero_iff hφ).mp h1.symm
     have h3 := lintegral_mul_fibre_symm H hΔ dg ν (f := fun _ => 1) measurable_const hφ
     simp_rw [hφ1] at h3
@@ -203,7 +203,7 @@ theorem exists_isInvariantRadon (hH : IsClosed (H : Set G))
     obtain ⟨K', C, hK', hC, hb⟩ := hφK K₀ hK₀
     have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ H) '' K₀) :=
       hK₀.image QuotientGroup.continuous_mk
-    haveI : IsClosed (H : Set G) := hH
+    have : IsClosed (H : Set G) := hH
     refine ⟨(QuotientGroup.mk : G → G ⧸ H) '' K₀,
       mem_nhdsWithin_of_mem_nhds (QuotientGroup.isOpenMap_coe.image_mem_nhds hg), ?_⟩
     rw [map_withDensity_apply H dg hφ hc.measurableSet]
@@ -249,7 +249,7 @@ theorem isInvariantRadon_unique (hH : IsClosed (H : Set G)) (μ μ' : Measure (G
   have h1 := (hq _ hm).2
   have h2 := (hq' _ hm).2
   rw [hfib, lintegral_indicator_one hA] at h1 h2
-  rw [Measure.smul_apply, ← h1, ← h2]
+  rw [smul_apply, ← h1, ← h2]
   conv_lhs => rw [isMulLeftInvariant_eq_smul dg' dg]
   rw [lintegral_smul_measure]
 

@@ -114,7 +114,7 @@ theorem inN_gr {F : FlagD H r} {n : V ≃ₗ[K] V} (h : F.InN (n : V →ₗ[K] V
     rw [Fin.val_last]
     exact h.2.2.2 _ F.zperp
   | cast b =>
-    rw [Fin.coe_castSucc]
+    rw [Fin.val_castSucc]
     exact h.2.2.1 b
 
 theorem gr_comp {G G' M : FlagD H r} {n : V ≃ₗ[K] V} (h : ∀ a : Fin (r + 1), n (G.e a) - G'.e a ∈ G'.Xa a.val)

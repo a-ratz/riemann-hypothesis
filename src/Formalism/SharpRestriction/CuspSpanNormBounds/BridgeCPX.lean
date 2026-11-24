@@ -518,7 +518,7 @@ theorem kavg_integrable {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (h
     {e : KG ε → ℂ} (he : Continuous e) (v : H) :
     Integrable (fun k : KG ε => e k • σ (toMK k) v) (muK ε) := by
   apply Continuous.integrable_of_hasCompactSupport
-  · exact he.smul ((cont_orbit hσ v).comp continuous_subtype_val)
+  · exact he.smul ((cont_orbit hσ v).comp continuous_subtypeVal)
   · exact HasCompactSupport.of_compactSpace _
 
 def kavg {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : IsURepOn (UJset ε) σ)
@@ -636,7 +636,7 @@ theorem Vsub_ne_bot {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ :
     simp [Φ]
   rw [hz, inner_zero_right] at e1
   have hpos : 0 < ∫ y : UJ ε, χ (umat y) * (⟪w, σ (umat y) w⟫_ℂ).re ∂(muG ε) := by
-    apply Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := (1 : UJ ε))
+    apply Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := (1 : UJ ε))
     · exact (χ.continuous.comp continuous_umat).mul hc
     · have : HasCompactSupport (fun y : UJ ε => χ (umat y)) :=
         χ.hasCompactSupport.comp_isClosedEmbedding (isClosedEmbeddingMatrix n ε).1
@@ -687,7 +687,7 @@ theorem kfin_mem_Vsub {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ
     rintro _ ⟨v, _, rfl⟩
     exact hrange v
   have : FiniteDimensional ℂ T₀ := Submodule.finiteDimensional_of_le hle
-  have hcl : IsClosed (T₀ : Set H) := Submodule.closed_of_finiteDimensional T₀
+  have hcl : IsClosed (T₀ : Set H) := Submodule.isClosed_of_finiteDimensional T₀
   have hxc : x ∈ closure (Vsub ε hσ w : Set H) := by
     have := Vsub_dense hσ hirr hw
     have h2 : x ∈ (Vsub ε hσ w).topologicalClosure := by rw [this]; trivial
@@ -910,7 +910,7 @@ theorem compactProj : CompactProj := by
       push Not at hcon
       obtain ⟨a0, ha0⟩ := hcon
       have hpos : 0 < ∫ a, ‖f a‖ ^ 2 ∂μ := by
-        apply Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := a0)
+        apply Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := a0)
         · exact hfc.norm.pow 2
         · exact HasCompactSupport.of_compactSpace _
         · intro a; positivity
@@ -1012,7 +1012,7 @@ theorem HCAdm_of (h : HCMult) (hc : CompactProj) : HCAdm := by
   obtain ⟨e, he, hfix, hrange⟩ := hc (KG ε) (muK ε) H (fun k : KG ε => σ (toMK k)) hσ.1.1
     (fun a b => hσ.1.2 _ (umat_mem (a : UJ ε)) _ (umat_mem (b : UJ ε)))
     (fun a v => hσ.2.1 _ (umat_mem (a : UJ ε)) v)
-    (fun v => (cont_orbit hσ v).comp continuous_subtype_val) S hfd (fun a v hv => hst _ a.2 v hv)
+    (fun v => (cont_orbit hσ v).comp continuous_subtypeVal) S hfd (fun a v hv => hst _ a.2 v hv)
   exact ⟨e, _, he, h n ε H σ hσ hirr S hfd hst, hrange, hfix x hxS⟩
 
 def HCMultDS : Prop :=
@@ -1028,7 +1028,7 @@ theorem HCAdmDS_of (h : HCMultDS) (hc : CompactProj) : HCAdmDS := by
   obtain ⟨e, he, hfix, hrange⟩ := hc (KG ε) (muK ε) H (fun k : KG ε => σ (toMK k)) hσ.1.1
     (fun a b => hσ.1.2 _ (umat_mem (a : UJ ε)) _ (umat_mem (b : UJ ε)))
     (fun a v => hσ.2.1 _ (umat_mem (a : UJ ε)) v)
-    (fun v => (cont_orbit hσ v).comp continuous_subtype_val) S hfd (fun a v hv => hst _ a.2 v hv)
+    (fun v => (cont_orbit hσ v).comp continuous_subtypeVal) S hfd (fun a v hv => hst _ a.2 v hv)
   exact ⟨e, _, he, h n ε lam H σ hDS S hfd hst, hrange, hfix x hxS⟩
 
 end HC

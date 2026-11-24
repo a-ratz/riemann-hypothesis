@@ -61,7 +61,7 @@ theorem eqv_basic : ∀ (R : Type) [CommRing R] (F : Shv R), (∀ (E E' : Spc) (
     exact pull_id R E F n x
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro E E' f hf n
-    haveI := hf
+    have := hf
     have h1 : Function.LeftInverse (pull R (inv f) F n) (pull R f F n) := by
       intro x
       have := congrFun (hc (inv f) f n) x
@@ -91,10 +91,10 @@ theorem eqv_basic : ∀ (R : Type) [CommRing R] (F : Shv R), (∀ (E E' : Spc) (
   · intro E E' f hf
     constructor
     · intro h n hn
-      haveI := h n hn
+      have := h n hn
       exact (hf n).1.subsingleton
     · intro h n hn
-      haveI := h n hn
+      have := h n hn
       exact (Equiv.ofBijective _ (hf n)).symm.subsingleton
 
 end GlobalTheory.EtC

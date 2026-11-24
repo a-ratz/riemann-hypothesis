@@ -142,10 +142,10 @@ theorem longElt_conj_apply {R : Type} [CommRing R] {n : ℕ} (A : Matrix (Fin n)
     ((longElt n R : Matrix (Fin n) (Fin n) R) * A * (longElt n R : Matrix (Fin n) (Fin n) R)) i j
       = A i.rev j.rev := by
   simp only [Matrix.mul_apply, longElt, Matrix.of_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero]
-  simp only [Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [Finset.sum_eq_single j.rev]
   · simp
-  · intro b _ hb; rw [if_neg]; intro e; exact hb (by rw [e, Fin.rev_rev])
+  · intro b _ hb; rw [ite_eq_right]; intro e; exact hb (by rw [e, Fin.rev_rev])
   · simp
 
 theorem inv_apply_succ {R : Type} [CommRing R] {n : ℕ} {u : GL (Fin n) R} (hu : u ∈ unipB R (Fin n))
@@ -199,8 +199,8 @@ theorem longElt_invT_conj_unipB : ∀ (R : Type) [CommRing R] (n : ℕ) (u : GL 
     have hiff : ((q.rev : Fin n) : ℕ) = (p.rev : ℕ) + 1 ↔ (p : ℕ) = q + 1 := by
       simp only [Fin.val_rev]; have := p.isLt; have := q.isLt; omega
     by_cases h : (p : ℕ) = q + 1
-    · rw [if_pos h, if_pos (hiff.2 h), inv_apply_succ hu p.rev q.rev (hiff.2 h)]
-    · rw [if_neg h, if_neg (mt hiff.1 h), neg_zero]
+    · rw [ite_eq_left h, ite_eq_left (hiff.2 h), inv_apply_succ hu p.rev q.rev (hiff.2 h)]
+    · rw [ite_eq_right h, ite_eq_right (mt hiff.1 h), neg_zero]
 
 end GlobalTheory.UnipFlip
 end -- clump:auto
@@ -463,7 +463,7 @@ theorem isOpen_setOf_valuation_lt_of_ne_zero {k : Type} [Field k] [ValuativeRel 
   intro x hx
   rw [IsValuativeTopology.mem_nhds_iff']
   refine ⟨Units.mk0 γ hγ, fun y hy => ?_⟩
-  simp only [Set.mem_setOf_eq, Units.val_mk0] at hx hy ⊢
+  simp only [Set.mem_ofPred_eq, Units.val_mk0] at hx hy ⊢
   have h := (valuation k).map_add (y - x) x
   rw [sub_add_cancel] at h
   exact h.trans_lt (max_lt hy hx)
@@ -648,7 +648,7 @@ theorem GlobalTheory.whittaker_torus_twKer_rootBound : ∀ (k : Type) [Field k] 
         lt_of_not_ge fun hle => hψ1 (hs _ hle)
       rw [map_mul] at hlt
       have hpos : 0 < valuation k ((u : Matrix (Fin n) (Fin n) k) i j) := by
-        simp [zero_lt_iff, hu0]
+        simp [pos_iff_ne_zero, hu0]
       rw [Units.val_mul, Units.val_inv_eq_inv_val, Units.val_mk0, map_mul, map_inv₀]
       exact ((mul_inv_lt_iff₀ hpos).2 hlt).le
   | zero => exact ⟨1, fun t ht => absurd (by simp) ht⟩
@@ -808,7 +808,7 @@ theorem GlobalTheory.SmGL.parab_obl_3 :
   intro R _ α n m _ _ _ e x hx
   show ((x⁻¹ : GL n R) : Matrix n n R).BlockTriangular _
   rw [Matrix.coe_units_inv]
-  haveI : Invertible (x : Matrix n n R) := x.invertible
+  have : Invertible (x : Matrix n n R) := x.invertible
   exact Matrix.blockTriangular_inv_of_blockTriangular hx
 
 noncomputable def GlobalTheory.SmGL.parab :

@@ -51,7 +51,7 @@ theorem _root_.GlobalTheory.LogDR.spanForms_eq_bot_of_lt_card : ∀ (K : Type) [
   intro K _ n x M H a hx hlt
   obtain ⟨hli, hsp⟩ := hx
   let b := Module.Basis.mk hli hsp.ge
-  haveI : FiniteDimensional K Ω[K⁄ℤ] := Module.Finite.of_basis b
+  have : FiniteDimensional K Ω[K⁄ℤ] := Module.Finite.of_basis b
   have hr : Module.finrank K Ω[K⁄ℤ] = n := by
     rw [Module.finrank_eq_card_basis b, Fintype.card_fin]
   unfold _root_.GlobalTheory.LogDR.spanForms

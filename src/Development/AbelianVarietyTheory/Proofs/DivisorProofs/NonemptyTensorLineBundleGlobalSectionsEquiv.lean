@@ -176,8 +176,8 @@ def chartEquivTop (L : LB T) (hL : L.IsLB) (r : Γ(T, ⊤)) (i : L.ι) (h : T.ba
 
 theorem isLocalizedModule_chartLoc [IsAffine T] (L : LB T) (hL : L.IsLB) (r : Γ(T, ⊤)) (i : L.ι)
     (h : T.basicOpen r ≤ L.U i) : IsLocalizedModule.Away r (chartLoc L r i h) := by
-  haveI := AbLaw.SecOn.isLocalizedModule_resBasicOpen hL (isAffineOpen_top T) r
-  haveI := IsLocalizedModule.of_linearEquiv (S := .powers r) (f := AbLaw.SecOn.resBasicOpen L r)
+  have := AbLaw.SecOn.isLocalizedModule_resBasicOpen hL (isAffineOpen_top T) r
+  have := IsLocalizedModule.of_linearEquiv (S := .powers r) (f := AbLaw.SecOn.resBasicOpen L r)
     (chartEquivTop L hL r i h)
   let toTop : LB.Sec L →ₗ[Γ(T, ⊤)] AbLaw.SecOn L ⊤ :=
     { toFun := fun s => ofSec s ⊤
@@ -188,7 +188,7 @@ theorem isLocalizedModule_chartLoc [IsAffine T] (L : LB T) (hL : L.IsLB) (r : Γ
         change coord (ofSec (a • s) ⊤) i = coord (a • ofSec s ⊤) i
         simp only [coord_ofSec, coord_smul, smul_f, map_mul, resG_resG]) }
   let topEquiv := LinearEquiv.ofBijective toTop (AbLaw.SecOn.ofSec_bijective (M := L) rfl)
-  haveI := IsLocalizedModule.of_linearEquiv_right (S := .powers r)
+  have := IsLocalizedModule.of_linearEquiv_right (S := .powers r)
     (f := (chartEquivTop L hL r i h).toLinearMap ∘ₗ AbLaw.SecOn.resBasicOpen L r)
     topEquiv
   have e : chartLoc L r i h = ((chartEquivTop L hL r i h).toLinearMap ∘ₗ

@@ -253,7 +253,7 @@ private theorem etale_eval2Hom_basicOpen {k : Type} [CommRing k] {X : Scheme.{0}
       (Int.castRingHom (X.presheaf.obj (Opposite.op (X.basicOpen (N : X.presheaf.obj (Opposite.op U))))))
       (fun a => algebraMap (X.presheaf.obj (Opposite.op U))
         (X.presheaf.obj (Opposite.op (X.basicOpen (N : X.presheaf.obj (Opposite.op U))))) (x a))).Etale := by
-  haveI := hU.isLocalization_basicOpen (N : X.presheaf.obj (Opposite.op U))
+  have := hU.isLocalization_basicOpen (N : X.presheaf.obj (Opposite.op U))
   have hres : (algebraMap (X.presheaf.obj (Opposite.op U))
       (X.presheaf.obj (Opposite.op (X.basicOpen (N : X.presheaf.obj (Opposite.op U)))))).Etale :=
     RingHom.etale_algebraMap.mpr (Algebra.Etale.of_isLocalizationAway (N : X.presheaf.obj (Opposite.op U)))
@@ -276,7 +276,7 @@ theorem algChart_toZ (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.F
   classical
   obtain ⟨N, hN0, hNet⟩ := _root_.GlobalTheory.CompanionTheory.CommAlg.OrderEtale.exists_etale_away k
   obtain ⟨hemb, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ σ
-  haveI : Nonempty (GlobalTheory.CxPts p σ) := ⟨c.e.symm (0 : EuclideanSpace ℂ (Fin D))⟩
+  have : Nonempty (GlobalTheory.CxPts p σ) := ⟨c.e.symm (0 : EuclideanSpace ℂ (Fin D))⟩
   obtain ⟨E, hE, hEs, hEt⟩ : ∃ E : OpenPartialHomeomorph (GlobalTheory.CxPts p σ) (GlobalTheory.CxPts t τ),
       ⇑E = sheet t τ ∧ E.source = Set.univ ∧ E.target = Set.range (sheet t τ) :=
     ⟨_, Topology.IsOpenEmbedding.toOpenPartialHomeomorph_apply _ hemb,
@@ -350,18 +350,18 @@ theorem GlobalTheory.CompanionTheory.Ar.BaseZ.chernPart_sheet : ∀ (k : Type) [
   have hSC : ∀ σ' : k →+* ℂ, SecondCountableTopology (CxPts p σ') := by
     obtain ⟨N, i, hi, hpe⟩ := hp
     intro σ'
-    haveI := hi
+    have := hi
     subst hpe
     exact GlobalTheory.CxPts.secondCountableTopology _ σ'
-  haveI hscp : SecondCountableTopology (CxPts p σ) := hSC σ
-  haveI hsct : SecondCountableTopology (CxPts t τ) := by
-    haveI : Finite (k →+* ℂ) := Sheet.finite_ringHom k
+  have hscp : SecondCountableTopology (CxPts p σ) := hSC σ
+  have hsct : SecondCountableTopology (CxPts t τ) := by
+    have : Finite (k →+* ℂ) := Sheet.finite_ringHom k
     have hopen : ∀ σ' : k →+* ℂ, IsOpen (Set.range (sheet t τ : CxPts p σ' → CxPts t τ)) :=
       fun σ' => (_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ σ').1.isOpen_range
-    haveI : ∀ σ' : k →+* ℂ,
+    have : ∀ σ' : k →+* ℂ,
         SecondCountableTopology (Set.range (sheet t τ : CxPts p σ' → CxPts t τ)) := by
       intro σ'
-      haveI := hSC σ'
+      have := hSC σ'
       exact (_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ σ').1.isEmbedding.toHomeomorph.symm.isEmbedding.secondCountableTopology
     refine TopologicalSpace.secondCountableTopology_of_countable_cover hopen ?_
     exact Set.eq_univ_of_forall fun y => Set.mem_iUnion.2 ⟨emb p y, unsheet p y, sheet_unsheet p y⟩
@@ -420,7 +420,7 @@ theorem GlobalTheory.CompanionTheory.Ar.BaseZ.chernPart_sheet : ∀ (k : Type) [
     have hU' : (⋃ c : AlgChart p σ D, c.e.source) = ⋃ c : T, (c : AlgChart p σ D).e.source := by
       rw [Set.iUnion_subtype]
       exact hTU.symm
-    haveI : Countable T := hTc.to_subtype
+    have : Countable T := hTc.to_subtype
     rw [hU', Measure.restrict_iUnion_congr]
     intro c
     ext A hA
@@ -461,7 +461,7 @@ theorem measure_eq_sum_map_of_embeddings {α : Type} [Fintype α] {Y : Type} [Me
     (hν : ∀ a (S : Set (Z a)), MeasurableSet S → ν (s a '' S) = μ a S) :
     ν = ∑ a, Measure.map (s a) (μ a) := by
   ext T hT
-  rw [Measure.finsetSum_apply]
+  rw [sum_apply]
   have hcover : T = ⋃ a, T ∩ Set.range (s a) := by
     ext y
     simp only [Set.mem_iUnion, Set.mem_inter_iff]
@@ -494,11 +494,11 @@ theorem integrableOn_and_setIntegral_of_embeddings :
       (IntegrableOn f S ν →
         ∫ y in S, f y ∂ν = ∑ᶠ a, ∫ z in s a ⁻¹' S, f (s a z) ∂(μ a)) := by
   intro α _ Y _ Z _ s hs hu ν μ hν S hS f
-  haveI := Fintype.ofFinite α
+  have := Fintype.ofFinite α
   have hνeq := measure_eq_sum_map_of_embeddings hs hu hν
   have hres : ν.restrict S = ∑ a, (Measure.map (s a) (μ a)).restrict S := by
     ext T hT
-    rw [hνeq, Measure.restrict_apply hT, Measure.finsetSum_apply, Measure.finsetSum_apply]
+    rw [hνeq, Measure.restrict_apply hT, sum_apply, sum_apply]
     simp only [Measure.restrict_apply hT]
   have hint : IntegrableOn f S ν ↔ ∀ a, IntegrableOn (fun z => f (s a z)) (s a ⁻¹' S) (μ a) := by
     rw [IntegrableOn, hres, integrable_finsetSum_measure]
@@ -585,9 +585,9 @@ theorem archInt_over_int : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInteg
   intro k _ X _ p t τ D hX N M ψ ν hψN hνM hψ e r hr
   by_cases hσ : Nonempty (k →+* ℂ)
   · obtain ⟨σ₀⟩ := hσ
-    haveI : CharZero k := σ₀.charZero
-    haveI := hX.isDomain
-    haveI := hX.finite
+    have : CharZero k := σ₀.charZero
+    have := hX.isDomain
+    have := hX.finite
     have hS : MeasurableSet (offSupp t τ (M.div hr)) := (GlobalTheory.CxPts.isOpen_ptsIn _).measurableSet
     obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Metric.chernInt_eq_finsum_sheets k X p t τ hX.isProjOver e N.B N.φ ψ hψN N.cInf hψ _ hS (logNorm ν r)
     have hmeas : ∀ σ : k →+* ℂ, MeasurableSet (offSupp p σ (M.div hr)) :=
@@ -604,7 +604,7 @@ theorem archInt_over_int : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInteg
     unfold GlobalTheory.HermLB.archInt
     exact finsum_congr fun σ => (chernIntegrableOn_and_chernInt_congr (N.φ σ) e (hmeas σ) (hEq σ)).2
   · have hE : IsEmpty (k →+* ℂ) := not_nonempty_iff.mp hσ
-    haveI : IsEmpty (GlobalTheory.CxPts t τ) := ⟨fun y => hE.false (Spec.preimage (Subtype.val y ≫ p)).hom⟩
+    have : IsEmpty (GlobalTheory.CxPts t τ) := ⟨fun y => hE.false (Spec.preimage (Subtype.val y ≫ p)).hom⟩
     have hS0 : offSupp t τ (M.div hr) = ∅ := Set.eq_empty_of_isEmpty _
     have hA : N.ArchIntegrable M e hr := by
       unfold GlobalTheory.HermLB.ArchIntegrable

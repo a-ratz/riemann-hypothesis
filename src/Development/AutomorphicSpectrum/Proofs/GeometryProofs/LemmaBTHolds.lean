@@ -86,8 +86,8 @@ variable {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup T]
 theorem stalk_spec_normal [IsIntegrallyClosed R] (y : Spec (CommRingCat.of R)) :
     IsDomain ((Spec (CommRingCat.of R)).presheaf.stalk y) ∧
       IsIntegrallyClosed ((Spec (CommRingCat.of R)).presheaf.stalk y) := by
-  haveI : y.asIdeal.IsPrime := PrimeSpectrum.isPrime (R := R) y
-  letI : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk y) := StructureSheaf.stalkAlgebra R y
+  have : y.asIdeal.IsPrime := PrimeSpectrum.isPrime (R := R) y
+  let : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk y) := StructureSheaf.stalkAlgebra R y
   have : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk y) y.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk R y
   exact GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_isDomain y.asIdeal _
@@ -160,7 +160,7 @@ theorem regularAt_const [Finite T] [IsIntegrallyClosed R] (Γ : QFGroup R T) (hE
   let U : Γ.G.left.Opens := ⟨Zᶜ, hZ.isOpen_compl⟩
   have hgU : g ∈ U := by
     show g ∉ Z
-    simp only [Z, Set.mem_iUnion, Set.mem_setOf_eq, not_exists]
+    simp only [Z, Set.mem_iUnion, Set.mem_ofPred_eq, not_exists]
     intro t ht hg
     exact ht (specializes_iff_mem_closure.2 hg)
   have hPU : ∀ t, P t ∈ U → P t ⤳ g := by

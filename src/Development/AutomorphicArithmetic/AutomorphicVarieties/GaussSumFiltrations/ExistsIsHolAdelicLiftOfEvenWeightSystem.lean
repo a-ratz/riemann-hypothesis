@@ -364,9 +364,9 @@ theorem lift_cpt_finite : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
     rw [ite_apply] at h
     exact h
   have h1 : ∀ v, x.val 0 0 v ^ 2 + x.val 0 1 v ^ 2 = 1 := fun v => by
-    have := hr v 0 0; simp only [if_true] at this; linear_combination this
+    have := hr v 0 0; simp only [ite_true] at this; linear_combination this
   have h2 : ∀ v, x.val 1 0 v ^ 2 + x.val 1 1 v ^ 2 = 1 := fun v => by
-    have := hr v 1 1; simp only [if_true] at this; linear_combination this
+    have := hr v 1 1; simp only [ite_true] at this; linear_combination this
   have h3 : ∀ v, x.val 0 0 v * x.val 1 0 v + x.val 0 1 v * x.val 1 1 v = 0 := fun v => by simpa using hr v 0 1
   change TR.cptRep F 2 r φ ∈ _
   rw [e]
@@ -377,10 +377,10 @@ theorem lift_cpt_finite : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
     fin_cases i <;> fin_cases j <;> simp [epsG, Matrix.mul_apply, Fin.sum_univ_two]
   have hs : ∀ v, x.val 1 0 v = -(sg s v * x.val 0 1 v) ∧ x.val 1 1 v = sg s v * x.val 0 0 v := fun v => by
     by_cases h : x.val 1 0 v = -x.val 0 1 v ∧ x.val 1 1 v = x.val 0 0 v
-    · have : sg s v = 1 := by simp only [sg, s, decide_eq_true_eq]; exact if_pos h
+    · have : sg s v = 1 := by simp only [sg, s, decide_eq_true_eq]; exact ite_eq_left h
       rw [this, one_mul, one_mul]
       exact h
-    · have : sg s v = -1 := by simp only [sg, s, decide_eq_true_eq]; exact if_neg h
+    · have : sg s v = -1 := by simp only [sg, s, decide_eq_true_eq]; exact ite_eq_right h
       rw [this]
       have := (orth_cases (h1 v) (h2 v) (h3 v)).resolve_left h
       exact ⟨by linear_combination this.1, by linear_combination this.2⟩
@@ -477,7 +477,7 @@ theorem im_pos' {a b c d : ℝ} (h : 0 < a * d - b * c) :
   positivity
 
 theorem isOpen_up {ι : Type} [Fintype ι] : IsOpen {z : ι → ℂ | ∀ v, 0 < (z v).im} := by
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun v => isOpen_lt continuous_const (by fun_prop)
 
 theorem arch_smooth {ι : Type} [Fintype ι] (k : ℕ) (g : (ι → ℂ) → ℂ)
@@ -850,10 +850,10 @@ theorem lift_isHol : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] 
       { carrier := {u | TR.finRep F 2 u φ = φ}
         one_mem' := by simp
         mul_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq] at ha hb ⊢
           rw [map_mul, Module.End.mul_apply, hb, ha]
         inv_mem' := fun {a} ha => by
-          simp only [Set.mem_setOf_eq] at ha ⊢
+          simp only [Set.mem_ofPred_eq] at ha ⊢
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
     exact Subgroup.isOpen_mono (H₁ := KLev F 2 1) (H₂ := H) hfix (isOpen_KLev (F := F) (n := 2) (M := 1) le_rfl)

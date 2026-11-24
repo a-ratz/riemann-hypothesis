@@ -231,7 +231,7 @@ private theorem bar_mul {l L N p D : ℕ} [NeZero (N * l ^ L)] (hp : Nat.Coprime
 
 private theorem rows_l {l L N p : ℕ} [Fact l.Prime] [NeZero N] (x : ZMod N) (hL : 1 ≤ L) (hp : Nat.Coprime p (N * l ^ L)) :
     (rU l L N p x 0 : ZMod l) = N ∧ (rV l L N p 1 : ZMod l) = N ∧ rU l L N p x 1 = 0 := by
-  haveI : NeZero (N * l ^ L) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
+  have : NeZero (N * l ^ L) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
   have hb : (bar l L N p : ZMod l) * p = 1 := bar_mul hp (Dvd.dvd.mul_left (dvd_pow_self l (by omega)) N)
   have h0 : (l : ZMod l) ^ L = 0 := by rw [ZMod.natCast_self, zero_pow (by omega)]
   refine ⟨?_, ?_, rfl⟩
@@ -304,8 +304,8 @@ private theorem rows_succ {l L N p k : ℕ} [Fact l.Prime] [NeZero N] (x : ZMod 
     (hp : Nat.Coprime p (N * l ^ (L + 1))) (k1 : (k : ZMod (N * l ^ L)) = 1) (k2 : (k : ZMod p) = l) :
     rw0 (N * l ^ L * p) (rU l (L + 1) N p x) = (k : ZMod (N * l ^ L * p)) • rw0 (N * l ^ L * p) (rU l L N p x) ∧
     rw0 (N * l ^ L * p) (rV l (L + 1) N p) = (k : ZMod (N * l ^ L * p)) • rw0 (N * l ^ L * p) (rV l L N p) := by
-  haveI : NeZero (N * l ^ (L + 1)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
-  haveI : NeZero (N * l ^ L) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
+  have : NeZero (N * l ^ (L + 1)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
+  have : NeZero (N * l ^ L) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
   have hdv : N * l ^ L ∣ N * l ^ (L + 1) := Nat.mul_dvd_mul_left N (pow_dvd_pow l (Nat.le_succ L))
   have hp0 : Nat.Coprime p (N * l ^ L) := Nat.Coprime.coprime_dvd_right hdv hp
   have hb1 := bar_mul (D := N * l ^ L) hp hdv
@@ -351,7 +351,7 @@ private theorem down (hA : SApi) (hC : SCohApi) (hM : SXiMul) (hX : SXiCoh) (hD 
       (fun s t => Xi X l (n + 1) N (l * M₀) M' w g x' y'
         (fun z => π (Units.map (ZMod.castHom h (ZMod M)).toMonoidHom z) = t) (ws (n + 1) (l * M₀) s))
       (fun s t => Xi X l n N M₀ M w g x y (fun z => π z = t * π ν ^ 2) (ws n M₀ s)) := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hN : 0 < N := Nat.pos_of_ne_zero (NeZero.ne N)
   have hCA := hC Ω ε X l N w n hN A (fun s => (π (cycM M s))⁻¹)
   have hE := hCA.1
@@ -446,7 +446,7 @@ private theorem rdH_comp (l n r N p : ℕ) (h : lvT l n r N p ∣ lvT l (n + 1) 
   have q2 : p ∣ lvT l n r N p := Dvd.intro_left _ rfl
   have q3 : p ∣ lvT l (n + 1) r N p := Dvd.intro_left _ rfl
   apply Prod.ext <;> apply Units.ext <;>
-    simp only [rdH, MonoidHom.prod_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    simp only [rdH, MonoidHom.prod_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   · exact e1 h q2 q3 _
   · erw [Units.coe_map, Units.coe_map, Units.coe_map]
     exact e1 h d2 d3 _
@@ -471,7 +471,7 @@ private theorem main (hA : SApi) (hC : SCohApi) (hM : SXiMul) (hX : SXiCoh) (hD 
     exact hCA.2.2.2.2.2.1 _ _
   have hE := hCA.1
   have lp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨lp.ne_zero⟩
+  have : NeZero l := ⟨lp.ne_zero⟩
   have hl0 : l ≠ 0 := lp.ne_zero
   have hpl : Nat.Coprime p l := Nat.Coprime.coprime_dvd_right
     (dvd_mul_of_dvd_left (dvd_mul_of_dvd_left (dvd_mul_right l N) c) d) hcop
@@ -501,10 +501,10 @@ private theorem main (hA : SApi) (hC : SCohApi) (hM : SXiMul) (hX : SXiCoh) (hD 
     ⟨by simp only [lvT]; ring, dvd_mul_of_dvd_right (Dvd.dvd.mul_right (dvd_mul_right N _) p) l,
      by rw [pow_succ']; exact Nat.mul_dvd_mul_left l dl0, by omega, hyp.cop, hyp.g0⟩
   have e1 : lvT l (n + 1) r N p = N * (l * (N * l ^ (r + n) * p)) := by simp only [lvT]; ring
-  haveI i0 : NeZero (N * l ^ (r + n) * p) := ⟨(pos0 _).ne'⟩
-  haveI i1 : NeZero (l * (N * l ^ (r + n) * p)) := ⟨(Nat.mul_pos lp.pos (pos0 _)).ne'⟩
-  haveI i2 : NeZero (lvT l n r N p) := ⟨by rw [lev0.eq]; exact mul_ne_zero (NeZero.ne N) (pos0 _).ne'⟩
-  haveI i3 : NeZero (lvT l (n + 1) r N p) := ⟨by rw [e1]; exact mul_ne_zero (NeZero.ne N) (NeZero.ne _)⟩
+  have i0 : NeZero (N * l ^ (r + n) * p) := ⟨(pos0 _).ne'⟩
+  have i1 : NeZero (l * (N * l ^ (r + n) * p)) := ⟨(Nat.mul_pos lp.pos (pos0 _)).ne'⟩
+  have i2 : NeZero (lvT l n r N p) := ⟨by rw [lev0.eq]; exact mul_ne_zero (NeZero.ne N) (pos0 _).ne'⟩
+  have i3 : NeZero (lvT l (n + 1) r N p) := ⟨by rw [e1]; exact mul_ne_zero (NeZero.ne N) (NeZero.ne _)⟩
   have hNl : (N : ZMod l) ≠ 0 := by
     intro h0
     exact (Nat.Prime.coprime_iff_not_dvd lp).mp hyp.cop ((ZMod.natCast_eq_zero_iff N l).mp h0)
@@ -591,7 +591,7 @@ private theorem main (hA : SApi) (hC : SCohApi) (hM : SXiMul) (hX : SXiCoh) (hD 
   simp only [rdH_comp] at TC
   have hlu : IsUnit (l : ZMod p) := (ZMod.isUnit_iff_coprime l p).mpr hpl.symm
   have hinv : ((inv1 p l : (ZMod p)ˣ) : ZMod p) * l = 1 := by
-    simp only [inv1, dif_pos hlu]
+    simp only [inv1, dite_eq_left hlu]
     exact hlu.val_inv_mul
   have hν1 : (((rdH l n r N p (ZMod.unitOfCoprime k kcM)).1 : (ZMod p)ˣ) : ZMod p) = l := by
     show ZMod.castHom (Dvd.intro_left _ rfl : p ∣ lvT l n r N p) (ZMod p) (k : ZMod (lvT l n r N p)) = _
@@ -705,7 +705,7 @@ private theorem bar_mul {l L N p D : ℕ} [NeZero (N * l ^ L)] (hp : Nat.Coprime
 
 private theorem rows_l {l L N p : ℕ} [Fact l.Prime] [NeZero N] (x : ZMod N) (hL : 1 ≤ L) (hp : Nat.Coprime p (N * l ^ L)) :
     (rU l L N p x 0 : ZMod l) = N ∧ (rV l L N p 1 : ZMod l) = N ∧ rU l L N p x 1 = 0 := by
-  haveI : NeZero (N * l ^ L) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
+  have : NeZero (N * l ^ L) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
   have hb : (bar l L N p : ZMod l) * p = 1 := bar_mul hp (Dvd.dvd.mul_left (dvd_pow_self l (by omega)) N)
   have h0 : (l : ZMod l) ^ L = 0 := by rw [ZMod.natCast_self, zero_pow (by omega)]
   refine ⟨?_, ?_, rfl⟩
@@ -749,8 +749,8 @@ private theorem rows_succ {l L N p k : ℕ} [Fact l.Prime] [NeZero N] (x : ZMod 
   have hdv : N * l ^ L ∣ N * l ^ (L + 1) := Nat.mul_dvd_mul_left N (pow_dvd_pow l (Nat.le_succ L))
   have hp' : Nat.Coprime p (N * l ^ L) := Nat.Coprime.coprime_dvd_right hdv hp
   have hc : Nat.Coprime (N * l ^ L) p := hp'.symm
-  haveI : NeZero (N * l ^ L) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hpr.ne_zero)⟩
-  haveI : NeZero (N * l ^ (L + 1)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hpr.ne_zero)⟩
+  have : NeZero (N * l ^ L) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hpr.ne_zero)⟩
+  have : NeZero (N * l ^ (L + 1)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hpr.ne_zero)⟩
   have e1 := bar_mul (l := l) (L := L + 1) (N := N) (p := p) (D := N * l ^ L) hp hdv
   have e2 := bar_mul (l := l) (L := L) (N := N) (p := p) (D := N * l ^ L) hp' dvd_rfl
   have e3 := topT_succ (l := l) (L := L) (N := N) h
@@ -815,7 +815,7 @@ private theorem down (hA : SApi) (hC : SCohApi) (hX : SXiCoh) (hD : SXiDist) (hS
         (fun z => π (Units.map (ZMod.castHom h (ZMod M)).toMonoidHom z) = t) (ws n (l * M₀) s))
       (fun s t => Xi X l n N M₀ M w g x y (fun z => π z = t * π ν ^ 2) (ws n M₀ s)) := by
   have hpr : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hpr.ne_zero⟩
+  have : NeZero l := ⟨hpr.ne_zero⟩
   have EF := (hA Ω ε X l n).1
   have hC' := hC Ω ε X l N w n (Nat.pos_of_ne_zero (NeZero.ne N)) A (fun s => (π (cycM M s))⁻¹)
   have EC := hC'.1
@@ -950,7 +950,7 @@ private theorem main (hA : SApi) (hC : SCohApi) (hX : SXiCoh) (hD : SXiDist) (hS
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
     exact C.2.2.2.2.2.1 _ _
-  haveI : NeZero l := ⟨hpr.ne_zero⟩
+  have : NeZero l := ⟨hpr.ne_zero⟩
   have hl2 : l ≠ 2 := hyp.odd
   have hlN : l.Coprime N := hyp.cop
   have hpl : Nat.Coprime p l := Nat.Coprime.coprime_dvd_right ⟨N * c * d, by ring⟩ hcop
@@ -962,13 +962,13 @@ private theorem main (hA : SApi) (hC : SCohApi) (hX : SXiCoh) (hD : SXiDist) (hS
     intro h0
     have h1 : l ∣ N := (CharP.cast_eq_zero_iff (ZMod l) l N).1 h0
     exact hpr.one_lt.ne' (Nat.Coprime.eq_one_of_dvd hlN h1)
-  haveI i1 : NeZero (N * l ^ (r + n) * p) :=
+  have i1 : NeZero (N * l ^ (r + n) * p) :=
     ⟨mul_ne_zero (mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hpr.ne_zero)) (NeZero.ne p)⟩
-  haveI i2 : NeZero (l * (N * l ^ (r + n) * p)) := ⟨mul_ne_zero hpr.ne_zero i1.out⟩
-  haveI i3 : NeZero (lvT l n r N p) := ⟨by
+  have i2 : NeZero (l * (N * l ^ (r + n) * p)) := ⟨mul_ne_zero hpr.ne_zero i1.out⟩
+  have i3 : NeZero (lvT l n r N p) := ⟨by
     simp only [lvT]
     exact mul_ne_zero (mul_ne_zero (pow_ne_zero _ hpr.ne_zero) (mul_ne_zero (NeZero.ne N) (NeZero.ne N))) (NeZero.ne p)⟩
-  haveI i4 : NeZero (lvT l n (r + 1) N p) := ⟨by
+  have i4 : NeZero (lvT l n (r + 1) N p) := ⟨by
     simp only [lvT]
     exact mul_ne_zero (mul_ne_zero (pow_ne_zero _ hpr.ne_zero) (mul_ne_zero (NeZero.ne N) (NeZero.ne N))) (NeZero.ne p)⟩
   have eMr : lvT l n r N p = N * (N * l ^ (r + n) * p) := by simp only [lvT]; ring
@@ -1257,9 +1257,9 @@ private theorem exF {Γ A C : Type} [Group Γ] [CommGroup A] [CommGroup C] (c : 
 
 private theorem exC (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (M : ℕ) [NeZero M] :
     ∃ c : (Ω ≃ₐ[ℚ] Ω) →* (ZMod M)ˣ, ∀ s, cycM M s = c s ∧ ∀ z : Ω, z ^ M = 1 → s z = z ^ (c s : ZMod M).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   refine ⟨hζ.autToPow ℚ, fun s => ?_⟩
   have hs : ∀ z : Ω, z ^ M = 1 → s z = z ^ (hζ.autToPow ℚ s : ZMod M).val := fun w hw => by
     obtain ⟨i, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hw
@@ -1395,12 +1395,12 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped Matrix MatrixGroups Topology
 
 private theorem UpperTheory.Kd.K4.mlT_cpt {l : ℕ} [Fact l.Prime] (c : Coef l) : IsCompact (c.O : Set (Qbar l)) := by
-  haveI : ContinuousSMul ℤ_[l] (PadicAlgCl l) := by
+  have : ContinuousSMul ℤ_[l] (PadicAlgCl l) := by
     refine ⟨?_⟩
     have : (fun q : ℤ_[l] × PadicAlgCl l => q.1 • q.2) = fun q => (q.1 : ℚ_[l]) • q.2 := by
       funext q; rfl
     rw [this]
-    exact (continuous_subtype_val.comp continuous_fst).smul continuous_snd
+    exact (continuous_subtypeVal.comp continuous_fst).smul continuous_snd
   have hfg : (Subalgebra.toSubmodule c.O).FG := Module.Finite.iff_fg.1 c.fin
   exact Submodule.isCompact_of_fg hfg
 
@@ -1463,7 +1463,7 @@ private theorem UpperTheory.Kd.K4.mlT_pushSum {Γ : Type} [Group Γ] {B A M ι :
 
 private theorem UpperTheory.Kd.K4.mlT_lsq (l p : ℕ) (hp : p.Prime) (h : Nat.Coprime p l) (k : ℕ) :
     lsqInv l p k = inv1 p l ^ (2 * k) := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hu : IsUnit (l : ZMod p) := (ZMod.isUnit_iff_coprime l p).2 h.symm
   have hu2 : IsUnit ((l : ZMod p) ^ (2 * k)) := hu.pow _
   unfold lsqInv inv1
@@ -1686,7 +1686,7 @@ theorem UpperTheory.V.Z.Kato.Nb.kato_tame_relation_projected :
   refine ⟨Finset.univ.sup m + c₁, S', fun w hw => hNf.unr w (fun h => hw (hSS' h)), ?_⟩
   intro n hn w hw hdiv ψw hK hsurj
   obtain ⟨hpP, hpcop, a, δ, ha, hδ, hhec, hfrob⟩ := hS' w hw
-  haveI : NeZero (normV w) := ⟨hpP.ne_zero⟩
+  have : NeZero (normV w) := ⟨hpP.ne_zero⟩
   have hpl : (normV w).Coprime l := Nat.Coprime.coprime_dvd_right ⟨N * c * d, by ring⟩ hpcop
   have hplN : (normV w).Coprime (l * N) := Nat.Coprime.coprime_dvd_right ⟨c * d, by ring⟩ hpcop
   have hY' := fun x : {x // cw x ≠ 0} => hc₁ (c₀ + c₁) (by omega) ι gN A W pr x.1 c d gm ψ cf (hadm3 x.1 x.2)

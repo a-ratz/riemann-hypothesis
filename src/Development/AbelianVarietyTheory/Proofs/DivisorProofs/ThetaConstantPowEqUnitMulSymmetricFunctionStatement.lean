@@ -98,7 +98,7 @@ theorem level_odd {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : Thet
 
 theorem exists_scale : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (m N : ℕ) (e : Fin N → Ω), Odd m → 3 ≤ m → IsUnit (m : o) → N = m ^ (4 * S.g) → SymE ρ m e → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ (emb : Ω →+* FractionRing V), (∀ a : o, emb (algebraMap o Ω a) ∈ Set.range (algebraMap V (FractionRing V))) → ∃ (K : Type) (_ : Field K) (io : FractionRing V →+* K) (N' : ℕ) (c : Fin N → K) (c' : Fin N' → K) (a : K), a ≠ 0 ∧ Prim (io.comp (algebraMap V (FractionRing V))) (fun b => c b / a) ∧ Prim (io.comp (algebraMap V (FractionRing V))) (fun b => c' b / a) ∧ (∀ j, io (emb (e j)) = symTup c j) ∧ (∀ x, ∃ b, c' x ^ ((S.r * S.N) ^ 2) = io (emb (S.th b)) ^ ((S.r * S.N) ^ 2)) ∧ ∀ b, ∃ x, c' x ^ ((S.r * S.N) ^ 2) = io (emb (S.th b)) ^ ((S.r * S.N) ^ 2) := by
   intro o Ω _ _ _ _ S ρ m N e hm hm3 hmu hN hE V _ _ _ hV emb hemb
-  letI := ρ.P.isAb.comm
+  let := ρ.P.isAb.comm
   let K := AlgebraicClosure (FractionRing V)
   let io : FractionRing V →+* K := algebraMap _ _
   let i : S.R →+* K := (io.comp emb).comp S.R.val.toRingHom
@@ -123,7 +123,7 @@ theorem exists_scale : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] 
       HasTh₂ ρ.P.A ρ.P.L ρ.rig m (S.r * S.N) (spMap i ≫ 𝟙 (Sp S.R)) c c')
   obtain ⟨P, α, -, hα, hiso⟩ := GlobalTheory.UMin.FibExist.polFib_of_point _ ρ.P (FractionRing V) y
   have hS : (letI := P.isAb.comm; HypS P.A P.L) := by
-    letI := P.isAb.comm
+    let := P.isAb.comm
     exact GlobalTheory.SymBaseChange.hypS_baseChange _ _ ρ.P.A P.A y α ρ.P.L P.L ρ.P.isLB P.isLB hα hiso ρ.hypS
   obtain ⟨a, ha, h₁, h₂⟩ := GlobalTheory.T.thetaConstants_two_levels_primitive_at_trait _ ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen V hV y P α hα hiso hS K io m (S.r * S.N)
     _ _ c c' hm hm3 hmV hko hk3 hkV H2
@@ -180,7 +180,7 @@ namespace GlobalTheory.SiegRev
 
 theorem isIntegralElem_of_forall {V K : Type} [CommRing V] [Field K] (i : V →+* K) {x : K}
     (h : ∀ W : ValuationSubring K, (∀ v, i v ∈ W) → x ∈ W) : i.IsIntegralElem x := by
-  letI : Algebra V K := i.toAlgebra
+  let : Algebra V K := i.toAlgebra
   have hic : IsIntegrallyClosedIn (integralClosure V K).toSubring K :=
     inferInstanceAs (IsIntegrallyClosedIn (integralClosure V K) K)
   have h1 : x ∈ (integralClosure V K).toSubring := by
@@ -259,13 +259,13 @@ theorem GlobalTheory.SiegTh.sameScale_theta_symE : ∀ (g n : ℕ), 1 ≤ g → 
   intro g n hg hn hno F W hW P rig m N f hTh o Ω _ _ _ _ β S ρ u hSys M e hNorm hDiv hSym z i hi
   obtain ⟨-, -, -, hmo, hm3, hmu, hN, -, -⟩ := hTh
   obtain ⟨-, -, hSg, -, -⟩ := hSys
-  haveI : IsNoetherianRing o := by
-    haveI := ArithBase.ded (o := o) (Ω := Ω)
+  have : IsNoetherianRing o := by
+    have := ArithBase.ded (o := o) (Ω := Ω)
     infer_instance
-  haveI : CharZero Ω := ArithBase.char (o := o)
-  haveI : IsNoetherianRing (M.O z) := RatModel.isNoetherianRing_O M z
-  haveI : IsIntegrallyClosed (M.O z) := RatModel.isIntegrallyClosed_O hNorm z
-  haveI : CharZero (M.O z) := ⟨fun a b h => by
+  have : CharZero Ω := ArithBase.char (o := o)
+  have : IsNoetherianRing (M.O z) := RatModel.isNoetherianRing_O M z
+  have : IsIntegrallyClosed (M.O z) := RatModel.isIntegrallyClosed_O hNorm z
+  have : CharZero (M.O z) := ⟨fun a b h => by
     have := congrArg Subtype.val h
     simpa using this⟩
   have hmo' : IsUnit (m : o) := by simpa using hmu.map β
@@ -280,7 +280,7 @@ theorem GlobalTheory.SiegTh.sameScale_theta_symE : ∀ (g n : ℕ), 1 ≤ g → 
           (∀ j, algebraMap V (FractionRing V) (e' j) = emb (e j / S.th i ^ (N + 1).factorial)) ∧
           ∃ j, IsUnit (e' j) := by
     intro V _ _ _ hV φ hφ
-    haveI : IsDiscreteValuationRing V := hV.1
+    have : IsDiscreteValuationRing V := hV.1
     have hg : Function.Injective ((algebraMap V (FractionRing V)).comp φ) :=
       (IsFractionRing.injective V (FractionRing V)).comp hφ
     let emb : Ω →+* FractionRing V := IsFractionRing.lift (A := M.O z) hg
@@ -316,7 +316,7 @@ theorem GlobalTheory.SiegTh.sameScale_theta_symE : ∀ (g n : ℕ), 1 ≤ g → 
     rw [← hx, hc, map_mul, mul_div_cancel_left₀ _ hs1]
     exact c.2
   obtain ⟨V, _, _, _, φ, hV, hφ, hloc⟩ := GlobalTheory.DvrDom.exists_cdvr_dominating (M.O z)
-  haveI := hloc
+  have := hloc
   obtain ⟨emb, hemb, e', he', j, hj⟩ := key V hV φ hφ
   have hj' : e' j = φ ⟨_, hmem j⟩ := IsFractionRing.injective V (FractionRing V) (by rw [he', ← hemb]; rfl)
   have hu : IsUnit (⟨e j / S.th i ^ (N + 1).factorial, hmem j⟩ : M.O z) := isUnit_of_map_unit φ _ (hj' ▸ hj)

@@ -94,7 +94,7 @@ theorem exists_integral_eq_sum {G : Type} [Group G] [TopologicalSpace G] [Contin
   have hfib : ∀ q : G ⧸ K, {g : G | (QuotientGroup.mk g : G ⧸ K) = q} =
       (fun x => (Quotient.out q)⁻¹ * x) ⁻¹' (K : Set G) := fun q => by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
     rw [← QuotientGroup.out_eq' q, eq_comm, QuotientGroup.eq]
     simp
   have hmeas : ∀ q : G ⧸ K, MeasurableSet {g : G | (QuotientGroup.mk g : G ⧸ K) = q} := fun q => by
@@ -114,7 +114,7 @@ theorem exists_integral_eq_sum {G : Type} [Group G] [TopologicalSpace G] [Contin
   have hsum : ∀ g, F g = ∑ q ∈ Q,
       ({g : G | (QuotientGroup.mk g : G ⧸ K) = q}).indicator (fun _ => F (Quotient.out q)) g := by
     intro g
-    simp only [Set.indicator_apply, Set.mem_setOf_eq]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq]
     rw [Finset.sum_ite_eq]
     split_ifs with hq
     · exact hval g

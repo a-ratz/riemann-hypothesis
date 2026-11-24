@@ -64,7 +64,7 @@ theorem IsFrame.isLocalization_away {p : ℕ} {B O Q : Type} [CommRing B] [CommR
 
 theorem frame_fraction_map : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing B] [CommRing Q] [CommRing O] [Algebra B Q] (θ : B →+* O), IsFrame p Q θ → ∀ (C : Type) [CommRing C] [Algebra O C], IsFrame p C (RingHom.id O) → ∃ Θ : Q →+* C, ∀ b, Θ (algebraMap B Q b) = algebraMap O C (θ b) := by
   intro p _ B O Q _ _ _ _ θ hQ C _ _ hC
-  haveI := hQ.isLocalization_away
+  have := hQ.isLocalization_away
   refine ⟨IsLocalization.Away.lift (p : B) (g := (algebraMap O C).comp θ) ?_, fun b => ?_⟩
   · simpa [map_natCast] using hC.unit_p
   · exact IsLocalization.Away.lift_eq (p : B) _ b

@@ -71,7 +71,7 @@ section Cartan
 
 variable {n : ℕ} {ε : Fin n → Bool}
 
-theorem continuous_ujMat : Continuous (ujMat ε) := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_ujMat : Continuous (ujMat ε) := Units.continuous_val.comp continuous_subtypeVal
 
 def IsCartanSub (T : Subgroup (UJ ε)) : Prop := ∃ s, IsRegSS (ujMat ε s) ∧ T = cent s
 
@@ -154,7 +154,7 @@ theorem dsChar_eq (ε : Fin n → Bool) {lam : Fin n → ℝ} {m : Fin n → ℤ
   congr 2
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [mul_assoc, wtVal, wtVal, ← Complex.exp_add, ← add_mul, ← Complex.ofReal_add, ← Finset.sum_add_distrib]
-  simp only [← add_mul, Function.comp, hm, ← Complex.exp_int_mul, ← Complex.exp_sum, Complex.ofReal_sum,
+  simp only [← add_mul, Function.comp, hm, ← Complex.exp_intCast_mul, ← Complex.exp_sum, Complex.ofReal_sum,
     Finset.sum_mul]
   simp [mul_assoc]
 

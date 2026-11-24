@@ -149,12 +149,12 @@ theorem isFinite_and_flat_of_quasiInverse : ∀ (S : Scheme.{0}) [IsLocallyNoeth
   have := hA.smooth
   have := hA'.proper
   have := hA'.smooth
-  haveI : IsSeparated (ψ'.left ≫ A.hom) := by rw [Over.w]; infer_instance
-  haveI : IsSeparated ψ'.left := IsSeparated.of_comp _ A.hom
-  haveI : IsSeparated (ψ.left ≫ A'.hom) := by rw [Over.w]; infer_instance
-  haveI : IsSeparated ψ.left := IsSeparated.of_comp _ A'.hom
-  haveI : IsFinite (ψ.left ≫ ψ'.left) := by rw [← Over.comp_left, h1]; exact hfA
-  haveI : IsFinite (ψ'.left ≫ ψ.left) := by rw [← Over.comp_left, h2]; exact hfA'
+  have : IsSeparated (ψ'.left ≫ A.hom) := by rw [Over.w]; infer_instance
+  have : IsSeparated ψ'.left := IsSeparated.of_comp _ A.hom
+  have : IsSeparated (ψ.left ≫ A'.hom) := by rw [Over.w]; infer_instance
+  have : IsSeparated ψ.left := IsSeparated.of_comp _ A'.hom
+  have : IsFinite (ψ.left ≫ ψ'.left) := by rw [← Over.comp_left, h1]; exact hfA
+  have : IsFinite (ψ'.left ≫ ψ.left) := by rw [← Over.comp_left, h2]; exact hfA'
   have hf : IsFinite ψ.left := IsFinite.of_comp _ ψ'.left
   have hf' : IsFinite ψ'.left := IsFinite.of_comp _ ψ.left
   refine ⟨hf, GlobalTheory.flat_of_isFinite_of_flat_geometric_fibres S A A' ψ inferInstance inferInstance hf
@@ -171,9 +171,9 @@ theorem isFinite_and_flat_of_quasiInverse : ∀ (S : Scheme.{0}) [IsLocallyNoeth
     GeometricallyIntegral.isIntegral_of_subsingleton ((Over.pullback t).obj A).hom
   have : IsIntegral ((Over.pullback t).obj A').left :=
     GeometricallyIntegral.isIntegral_of_subsingleton ((Over.pullback t).obj A').hom
-  haveI : IsFinite ((Over.pullback t).map ψ).left :=
+  have : IsFinite ((Over.pullback t).map ψ).left :=
     MorphismProperty.of_isPullback (P := @IsFinite) (GlobalTheory.AbLaw.MulN.isPullback_baseChange t ψ) hf
-  haveI : IsFinite ((Over.pullback t).map ψ').left :=
+  have : IsFinite ((Over.pullback t).map ψ').left :=
     MorphismProperty.of_isPullback (P := @IsFinite) (GlobalTheory.AbLaw.MulN.isPullback_baseChange t ψ') hf'
   exact flat_of_isFinite_grpHom K _ _ ((Over.pullback t).map ψ) ((Over.pullback t).map ψ')
 

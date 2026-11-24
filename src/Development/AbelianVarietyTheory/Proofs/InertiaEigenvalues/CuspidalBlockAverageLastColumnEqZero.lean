@@ -63,12 +63,12 @@ theorem posM_apply_of_blkIx {R : Type} [CommRing R] {a r m : ℕ} (x : Unipotent
   · rw [Finset.sum_eq_single ⟨(i, j), h⟩]
     · simp [Matrix.single_apply]
     · intro t _ ht
-      rw [Matrix.single_apply, if_neg]
+      rw [Matrix.single_apply, ite_eq_right]
       rintro ⟨h1, h2⟩
       exact ht (Subtype.ext (Prod.ext h1 h2))
     · simp
   · refine Finset.sum_eq_zero fun t _ => ?_
-    rw [Matrix.single_apply, if_neg]
+    rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨h1, h2⟩
     have := t.2
     rw [h1, h2] at this
@@ -95,10 +95,10 @@ theorem avg_blk_last_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [_root_.
         (fun x => F ((GlobalTheory.CuspGeneric.blkU x : GA E a) * g)) = 0 := by
   intro E _ _ _ a F _ _ hF r hr0 hr g
   have hra : r < a := by omega
-  letI : MeasurableSpace (UnipotentBlockColumnIndex a r (a - 1) → Ad E) := borel _
-  haveI : BorelSpace (UnipotentBlockColumnIndex a r (a - 1) → Ad E) := ⟨rfl⟩
-  letI : MeasurableSpace (BlockIx a r → Ad E) := borel _
-  haveI : BorelSpace (BlockIx a r → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (UnipotentBlockColumnIndex a r (a - 1) → Ad E) := borel _
+  have : BorelSpace (UnipotentBlockColumnIndex a r (a - 1) → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (BlockIx a r → Ad E) := borel _
+  have : BorelSpace (BlockIx a r → Ad E) := ⟨rfl⟩
   simp only [avg]
   split_ifs with h
   swap

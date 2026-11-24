@@ -87,13 +87,13 @@ theorem UpperTheory.V.CF.grMaxOf :
   classical
   have hcomap : M.comap (algebraMap R (MonoidAlgebra R G)) = IsLocalRing.maximalIdeal R :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal M)
-  letI : Field (MonoidAlgebra R G ⧸ M) := Ideal.Quotient.field M
+  let : Field (MonoidAlgebra R G ⧸ M) := Ideal.Quotient.field M
   have hpQ : ((p : ℕ) : MonoidAlgebra R G ⧸ M) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk M), Ideal.Quotient.eq_zero_iff_mem]
     have h0 : (p : R) ∈ M.comap (algebraMap R (MonoidAlgebra R G)) := by
       rw [hcomap]; exact hpm
     simpa using h0
-  haveI : CharP (MonoidAlgebra R G ⧸ M) p := by
+  have : CharP (MonoidAlgebra R G ⧸ M) p := by
     have h := CharP.ringChar_of_prime_eq_zero (Fact.out : p.Prime) hpQ
     exact h ▸ ringChar.charP _
   have hg : ∀ g : G, Ideal.Quotient.mk M (MonoidAlgebra.single g 1) = 1 := by
@@ -118,7 +118,7 @@ theorem UpperTheory.V.CF.grMaxOf :
     have h2 : aug R G x ∈ M.comap (algebraMap R (MonoidAlgebra R G)) := by
       rw [hcomap]; exact hx
     exact h2
-  haveI : ((IsLocalRing.maximalIdeal R).comap (aug R G)).IsMaximal :=
+  have : ((IsLocalRing.maximalIdeal R).comap (aug R G)).IsMaximal :=
     Ideal.comap_isMaximal_of_surjective (aug R G) (fun r => ⟨MonoidAlgebra.single 1 r, aug_single R G 1 r⟩)
   exact (Ideal.IsMaximal.eq_of_le this hM.ne_top hle).symm
 end -- clump:auto
@@ -141,7 +141,7 @@ theorem UpperTheory.V.CF.grLocal :
     Ideal.comap_isMaximal_of_surjective (aug R G) (UpperTheory.V.CF.augKer R G).2
   have huniq : ∃! I : Ideal (MonoidAlgebra R G), I.IsMaximal :=
     ⟨J, hJ, fun M hM => UpperTheory.V.CF.grMaxOf p R G hpm hG M hM⟩
-  letI hloc : IsLocalRing (MonoidAlgebra R G) := IsLocalRing.of_unique_max_ideal huniq
+  let hloc : IsLocalRing (MonoidAlgebra R G) := IsLocalRing.of_unique_max_ideal huniq
   have hmax : IsLocalRing.maximalIdeal (MonoidAlgebra R G) = J :=
     (IsLocalRing.eq_maximalIdeal hJ).symm
   have hsec : ∀ r : R, aug R G (algebraMap R (MonoidAlgebra R G) r) = r := fun r => (aug R G).commutes r
@@ -214,17 +214,17 @@ theorem UpperTheory.V.AlgebraTools.exists_groupRing_surj :
         (Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ Λ))).map φ =
           RingHom.ker (MonoidAlgebra.lift Λ Λ (∀ s, Multiplicative (ZMod (l ^ e s))) 1) := by
   intro Λ _ _ _ _ l hl hlm σ _ _ e
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI hNZ : ∀ s, NeZero (l ^ e s) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Fact l.Prime := ⟨hl⟩
+  have hNZ : ∀ s, NeZero (l ^ e s) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
   have hpg : IsPGroup l (∀ s, Multiplicative (ZMod (l ^ e s))) := by
     apply IsPGroup.of_card (n := ∑ s, e s)
     rw [Nat.card_pi, ← Finset.prod_pow_eq_pow_sum]
     refine Finset.prod_congr rfl fun s _ => ?_
     rw [Nat.card_congr Multiplicative.toAdd, Nat.card_zmod]
   obtain ⟨hloc, hmax, -, -⟩ := UpperTheory.V.CF.grLocal l Λ (∀ s, Multiplicative (ZMod (l ^ e s))) hlm hpg
-  haveI := hloc
-  haveI hCOΛ : UpperTheory.V.Alg.IsCO Λ Λ := inferInstance
-  haveI hCO : UpperTheory.V.Alg.IsCO Λ (MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s)))) := by
+  have := hloc
+  have hCOΛ : UpperTheory.V.Alg.IsCO Λ Λ := inferInstance
+  have hCO : UpperTheory.V.Alg.IsCO Λ (MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s)))) := by
     apply UpperTheory.V.Alg.co_finite Λ Λ
     intro x
     refine ⟨UpperTheory.V.CF.aug Λ _ x, ?_⟩
@@ -254,10 +254,10 @@ theorem UpperTheory.V.AlgebraTools.exists_groupRing_surj :
       { carrier := {g | MonoidAlgebra.of Λ _ g ∈ φ.range}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul] at *
+          simp only [Set.mem_ofPred_eq, map_mul] at *
           exact Subalgebra.mul_mem _ ha hb
         one_mem' := by
-          simp only [Set.mem_setOf_eq, map_one]
+          simp only [Set.mem_ofPred_eq, map_one]
           exact Subalgebra.one_mem _ }
     exact grEx_gen (fun s => l ^ e s) S (fun s => ⟨1 + MvPowerSeries.X s, hφ1 s⟩) g
   have hsurj : Function.Surjective φ := by
@@ -283,13 +283,13 @@ theorem UpperTheory.V.AlgebraTools.exists_groupRing_surj :
       { carrier := {g | MonoidAlgebra.of Λ _ g - 1 ∈ J}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul] at *
+          simp only [Set.mem_ofPred_eq, map_mul] at *
           have : MonoidAlgebra.of Λ _ a * MonoidAlgebra.of Λ _ b - 1 =
               (MonoidAlgebra.of Λ _ a - 1) * MonoidAlgebra.of Λ _ b + (MonoidAlgebra.of Λ _ b - 1) := by ring
           rw [this]
           exact J.add_mem (J.mul_mem_right _ ha) hb
         one_mem' := by
-          simp only [Set.mem_setOf_eq, map_one, sub_self]
+          simp only [Set.mem_ofPred_eq, map_one, sub_self]
           exact J.zero_mem }
     refine grEx_gen (fun s => l ^ e s) S (fun s => ?_) g
     show gen s - 1 ∈ J
@@ -333,9 +333,9 @@ private theorem grSpan_mem {Λ : Type} [CommRing Λ] {σ : Type} (d : σ → ℕ
       rw [map_add (f := _), MvPowerSeries.X_pow_eq, MvPowerSeries.coeff_monomial_mul, hg', hh]
       by_cases hn : d t ≤ n t
       · have hle : Finsupp.single t (d t) ≤ n := Finsupp.single_le_iff.2 hn
-        rw [if_pos hle, if_neg (by omega), one_mul, tsub_add_cancel_of_le hle, add_zero]
+        rw [ite_eq_left hle, ite_eq_right (by omega), one_mul, tsub_add_cancel_of_le hle, add_zero]
       · have hle : ¬ Finsupp.single t (d t) ≤ n := fun h' => hn (Finsupp.single_le_iff.1 h')
-        rw [if_neg hle, if_pos (by omega), zero_add]
+        rw [ite_eq_right hle, ite_eq_left (by omega), zero_add]
     rw [hsplit]
     refine J.add_mem (J.mul_mem_right _ (hJ t)) (ih g' fun n hn => ?_)
     rw [hg']
@@ -368,7 +368,7 @@ private theorem grSpan_small {Λ : Type} [CommRing Λ] {σ : Type} [Fintype σ] 
   rw [Finset.sum_eq_single (fun s => ⟨n s, hn s⟩ : ∀ s, Fin (d s))]
   · simp [Finsupp.equivFunOnFinite_symm_coe]
   · intro β _ hβ
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hβ
     funext s
@@ -399,9 +399,9 @@ theorem UpperTheory.V.AlgebraTools.mvPowerSeries_span_monomials :
       exact (IsLocalRing.maximalIdeal.isMaximal Λ).ne_top ((Ideal.eq_top_iff_one _).2 h3)
     rw [MvPowerSeries.isUnit_iff_constantCoeff]
     simpa [MvPowerSeries.algebraMap_apply] using key _
-  haveI hQA : IsHausdorff (m.map (algebraMap Λ (MvPowerSeries σ Λ)))
+  have hQA : IsHausdorff (m.map (algebraMap Λ (MvPowerSeries σ Λ)))
       (MvPowerSeries σ Λ ⧸ Ideal.span (Set.range w)) := IsHausdorff.of_le_jacobson _ _ hjac
-  haveI : IsHausdorff m (MvPowerSeries σ Λ ⧸ Ideal.span (Set.range w)) :=
+  have : IsHausdorff m (MvPowerSeries σ Λ ⧸ Ideal.span (Set.range w)) :=
     IsHausdorff.of_map (S := MvPowerSeries σ Λ)
       (J := m.map (algebraMap Λ (MvPowerSeries σ Λ))) (hIJ := le_rfl)
   obtain ⟨hnak, -⟩ := UpperTheory.V.abelian₂.nakayama Λ m (MvPowerSeries σ Λ ⧸ Ideal.span (Set.range w))
@@ -475,7 +475,7 @@ theorem UpperTheory.V.AlgebraTools.groupRing_ker :
     ∀ (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (IsLocalRing.maximalIdeal Λ) Λ] (l : ℕ), l.Prime → (l : Λ) ∈ IsLocalRing.maximalIdeal Λ → ∀ (σ : Type) [Fintype σ] [DecidableEq σ] (e : σ → ℕ) (φ : MvPowerSeries σ Λ →ₐ[Λ] MonoidAlgebra Λ (∀ s, Multiplicative (ZMod (l ^ e s)))), (∀ s : σ, φ (1 + MvPowerSeries.X s) = MonoidAlgebra.of Λ (∀ s, Multiplicative (ZMod (l ^ e s))) (Pi.mulSingle s (Multiplicative.ofAdd (1 : ZMod (l ^ e s))))) → Function.Surjective φ →
       RingHom.ker φ = Ideal.span (Set.range fun s => (1 + MvPowerSeries.X s : MvPowerSeries σ Λ) ^ l ^ e s - 1) := by
   intro Λ _ _ _ _ l hl hlm σ _ _ e φ hφ hsurj
-  haveI : ∀ s, NeZero (l ^ e s) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : ∀ s, NeZero (l ^ e s) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
   set w : σ → MvPowerSeries σ Λ := fun s => (1 + MvPowerSeries.X s) ^ l ^ e s - 1 with hw
   set I : Ideal (MvPowerSeries σ Λ) := Ideal.span (Set.range w) with hI
   have hle : I ≤ RingHom.ker φ := by
@@ -584,13 +584,13 @@ private theorem fs_abs {Λ R M P : Type} [CommRing Λ] [CommRing R] [IsLocalRing
         (show E (E.symm z) ∈ C by simpa using hz), ?_⟩
       apply E.injective
       rw [map_add (f := _), E.apply_symm_apply, E.apply_symm_apply, hyz]
-  haveI : Module.Projective R P' :=
+  have : Module.Projective R P' :=
     Module.Projective.of_split P'.subtype (Submodule.linearProjOfIsCompl P' Q' hc)
-      (Submodule.linearProjOfIsCompl_comp_subtype hc)
-  haveI : Module.Finite R P' :=
+      (Submodule.projectionOnto_comp_subtype hc)
+  have : Module.Finite R P' :=
     Module.Finite.of_surjective (Submodule.linearProjOfIsCompl P' Q' hc)
-      (Submodule.linearProjOfIsCompl_surjective hc)
-  haveI : Module.Free R P' := Module.free_of_flat_of_isLocalRing
+      (Submodule.projectionOnto_surjective hc)
+  have : Module.Free R P' := Module.free_of_flat_of_isLocalRing
   let b := Module.finBasis R P'
   let f : N ≃+ P' :=
     { toFun := fun m => ⟨E.symm m, (show E (E.symm m) ∈ N by simp)⟩
@@ -635,7 +635,7 @@ theorem UpperTheory.V.Pa.Lev.freeSummand :
   intro Λ _ _ _ _ l q n a M _ _ _ ρ N C hl hlm hproj hNC hN hC act hact
   obtain ⟨φ, hφX, hφs, hloc, -⟩ := exists_groupRing_surj Λ l hl hlm (Fin q × Fin n) (fun p => a p.1)
   have hker : RingHom.ker φ = delIdeal l Λ n a := groupRing_ker Λ l hl hlm (Fin q × Fin n) (fun p => a p.1) φ hφX hφs
-  haveI := hloc
+  have := hloc
   have hθN : ∀ r, ∀ m ∈ N, ρ.asAlgebraHom r m ∈ N := by
     intro r
     induction r using MonoidAlgebra.induction_on with
@@ -648,8 +648,8 @@ theorem UpperTheory.V.Pa.Lev.freeSummand :
     | of g => intro m hm; rw [Representation.asAlgebraHom_of]; exact hC g m hm
     | add x y hx hy => intro m hm; rw [map_add (f := _), LinearMap.add_apply]; exact C.add_mem (hx m hm) (hy m hm)
     | smul c x hx => intro m hm; rw [map_smul, LinearMap.smul_apply]; exact C.smul_mem c (hx m hm)
-  haveI : Module.Finite Λ ρ.asModule := Module.Finite.equiv ρ.asModuleEquiv.symm
-  haveI : Module.Finite (MonoidAlgebra Λ (Del l n a)) ρ.asModule :=
+  have : Module.Finite Λ ρ.asModule := Module.Finite.equiv ρ.asModuleEquiv.symm
+  have : Module.Finite (MonoidAlgebra Λ (Del l n a)) ρ.asModule :=
     Module.Finite.of_restrictScalars_finite Λ _ _
   obtain ⟨rk, e0, he0⟩ := fs_abs ρ.asAlgebraHom ρ.asModuleEquiv.toAddEquiv
     (fun r x => ρ.asModuleEquiv_map_smul r x) N C hθN hθC hNC
@@ -660,7 +660,7 @@ theorem UpperTheory.V.Pa.Lev.freeSummand :
     rw [hφX p, Representation.asAlgebraHom_of]
     exact hact p m
   have hgrp : ∀ g : Del l n a, ∃ w ∈ A, φ w = MonoidAlgebra.of Λ (Del l n a) g := by
-    haveI : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun p => ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun p => ⟨pow_ne_zero _ hl.ne_zero⟩
     let T : Submonoid (Del l n a) :=
       { carrier := {g | ∃ w ∈ A, φ w = MonoidAlgebra.of Λ (Del l n a) g}
         mul_mem' := fun {x y} hx hy => by

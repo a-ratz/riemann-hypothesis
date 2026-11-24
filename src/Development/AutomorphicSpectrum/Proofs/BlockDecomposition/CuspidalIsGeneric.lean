@@ -59,7 +59,7 @@ theorem isSmooth_resM {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     {N : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin (N + 1)) k) V)
     (hπ : IsSmooth π) : IsSmooth (resM k π).ρ := by
   intro v
-  exact (hπ v).preimage continuous_subtype_val
+  exact (hπ v).preimage continuous_subtypeVal
 
 theorem isGenericFor_of_isCuspidal_of
     (hNZ : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]

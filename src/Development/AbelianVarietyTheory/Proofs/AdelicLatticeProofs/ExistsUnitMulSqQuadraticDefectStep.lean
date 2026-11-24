@@ -70,7 +70,7 @@ theorem exists_unit_mul_sq_sub_one_lt :
       rw [e, Valuation.map_sub_eq_of_lt_left _ (by rwa [hinv]), hinv]
     refine ⟨y, le_antisymm hy1 (not_lt.mp fun hlt => ?_), ?_⟩
     · rw [map_pow] at hy2
-      exact (pow_lt_one₀ zero_le' hlt two_ne_zero).ne hy2
+      exact (pow_lt_one₀ zero_le hlt two_ne_zero).ne hy2
     · have e : δ * y ^ 2 - 1 = -(δ * (δ⁻¹ - y ^ 2)) := by
         rw [mul_sub, mul_inv_cancel₀ hδ0]
         ring
@@ -80,7 +80,7 @@ theorem exists_unit_mul_sq_sub_one_lt :
 
     set t := π ^ k with ht
     set g := w (δ - 1) with hg
-    have hgpos : 0 < g := lt_of_le_of_lt zero_le' h4
+    have hgpos : 0 < g := lt_of_le_of_lt zero_le h4
     have htt : w t * w t = g := by
       show w t * w t = g
       rw [hk, ht, map_pow, hπ, ← pow_add, ← WithZero.exp_nsmul]
@@ -89,11 +89,11 @@ theorem exists_unit_mul_sq_sub_one_lt :
       push_cast
       ring
     have hwt0 : w t ≠ 0 := fun h => hgpos.ne (by simpa [h] using htt)
-    have hwtpos : 0 < w t := zero_lt_iff.mpr hwt0
+    have hwtpos : 0 < w t := pos_iff_ne_zero.mpr hwt0
     have ht0 : t ≠ 0 := fun h => hwt0 (by rw [h, map_zero])
     have ht1 : w t < 1 := by
       rw [ht, map_pow, hπ]
-      refine pow_lt_one₀ zero_le' ?_ hkpos.ne'
+      refine pow_lt_one₀ zero_le ?_ hkpos.ne'
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp]
       norm_num
     have hg1 : g < 1 := by
@@ -138,7 +138,7 @@ theorem exists_unit_mul_sq_sub_one_lt :
           apply Valuation.map_add_lt
           · exact hB.trans hg1
           · rw [map_mul, map_pow w t, map_pow w y, sq (w t), htt]
-            calc g * w y ^ 2 ≤ g * 1 := mul_le_mul' le_rfl (pow_le_one₀ zero_le' hy1)
+            calc g * w y ^ 2 ≤ g * 1 := mul_le_mul' le_rfl (pow_le_one₀ zero_le hy1)
               _ = g := mul_one g
               _ < 1 := hg1
         rw [map_mul, ← hg]

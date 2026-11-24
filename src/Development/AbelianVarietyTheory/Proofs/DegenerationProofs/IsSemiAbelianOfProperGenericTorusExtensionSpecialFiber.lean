@@ -69,10 +69,10 @@ theorem nonempty_torusExtension_pullback {k Ω : Type} [Field k] [Field Ω] (f :
     (G : Over (Sp k)) [GrpObj G] (h : Nonempty (TorusExtension G)) :
     Nonempty (TorusExtension ((Over.pullback f).obj G)) := by
   obtain ⟨T⟩ := h
-  letI := T.grpB
-  letI := T.addCommGroup
-  haveI := T.q_hom
-  haveI := T.i_hom
+  let := T.grpB
+  let := T.addCommGroup
+  have := T.q_hom
+  have := T.i_hom
   obtain ⟨e, he, -⟩ := GlobalTheory.splitTorus_baseChange (Sp k) (Sp Ω) f T.X
   have hq := isPullback_overPullback_map_left f T.q
   refine ⟨{ X := T.X
@@ -105,10 +105,10 @@ theorem exists_ringHom_comp_eq_of_isIntegral {W k Ω : Type} [CommRing W] [IsLoc
     Ideal.Quotient.lift (IsLocalRing.maximalIdeal W) ρ fun a ha => (RingHom.mem_ker).1 (hρ ▸ ha)
   let φ' : IsLocalRing.ResidueField W →+* Ω :=
     Ideal.Quotient.lift (IsLocalRing.maximalIdeal W) φ fun a ha => (RingHom.mem_ker).1 (hφ ▸ ha)
-  letI := ρ'.toAlgebra
-  letI := φ'.toAlgebra
+  let := ρ'.toAlgebra
+  let := φ'.toAlgebra
   have hi' : ρ'.IsIntegral := RingHom.IsIntegral.tower_top (IsLocalRing.residue W) ρ' hi
-  haveI : Algebra.IsIntegral (IsLocalRing.ResidueField W) k := ⟨hi'⟩
+  have : Algebra.IsIntegral (IsLocalRing.ResidueField W) k := ⟨hi'⟩
   let ψ : k →ₐ[IsLocalRing.ResidueField W] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

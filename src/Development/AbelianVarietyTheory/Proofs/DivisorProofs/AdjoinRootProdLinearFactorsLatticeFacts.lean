@@ -70,8 +70,8 @@ theorem GlobalTheory.herbrand_lattice_facts : ∀ (C : Type) [Field C] (v : AddV
     rw [this, add_sub_cancel_right]
   have htf : ∀ (c : Int0 v) (x : Fin N → RS a), c ≠ 0 → c • x = 0 → x = 0 := by
     intro c x hc hx
-    haveI := hfree
-    haveI : Module.IsTorsionFree (Int0 v) (Fin N → RS a) :=
+    have := hfree
+    have : Module.IsTorsionFree (Int0 v) (Fin N → RS a) :=
       (Module.Free.chooseBasis (Int0 v) (Fin N → RS a)).isTorsionFree
     exact (smul_eq_zero_iff_right hc).mp hx
   have hcomp0 : ∀ x : Fin N → RS a, comp a N τ x = 0 ↔ ∀ i, ev a τ (x i) = 0 := by

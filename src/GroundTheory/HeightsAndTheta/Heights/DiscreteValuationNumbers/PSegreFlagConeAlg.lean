@@ -201,7 +201,7 @@ theorem SegreFlagConeAlg.proof : SegreFlagConeAlg.Statement := by
     exact Finset.prod_ne_zero_iff.2 fun k' _ => zpow_ne_zero _ (hc k')
   obtain ⟨s', hs'⟩ := exists_coords hkN w u hhi hTdet (flagCoord w e t k) (fun j hj => by
     simp only [flagCoord]
-    rw [if_neg (not_lt.2 hj)])
+    rw [ite_eq_right (not_lt.2 hj)])
   set Y : Ω := ∏ k, y ⟨k, c k⟩ ^ a₀ k with hYdef
   set Y' : Ω := ∏ k, y ⟨k, c k⟩ ^ a₀' k with hY'def
   have hY : Y ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (hc k)
@@ -209,7 +209,7 @@ theorem SegreFlagConeAlg.proof : SegreFlagConeAlg.Statement := by
 
   let Rows : Matrix (Fin k) (Fin k) Ω := Matrix.of fun i j : Fin k => φ (l i) (w (Fin.castLE hkN j))
   have hRows : Rows.det ≠ 0 := by
-    have hu : IsUnit Rows := Matrix.linearIndependent_rows_iff_isUnit.1 hl
+    have hu : IsUnit Rows := Matrix.linearIndependent_row_iff_isUnit.1 hl
     exact ((Matrix.isUnit_iff_isUnit_det Rows).1 hu).ne_zero
   let Gm : Matrix (Fin k) (Fin k) Ω := fun i q => φ (l i) (u q) / Y
   have hGm : Gm = Y⁻¹ • (Rows * T.transpose) := by

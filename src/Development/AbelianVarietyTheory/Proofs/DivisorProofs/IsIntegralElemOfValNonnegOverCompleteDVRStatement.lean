@@ -73,14 +73,14 @@ theorem isIntegralElem_of_val_nonneg : ∀ (V : Type) [CommRing V] [IsDomain V] 
   intro V _ _ _ hV ϖ hϖ F _ _ _ v hv z hz
   obtain ⟨hdvr, hcomp, hchar⟩ := hV
   let K := FractionRing V
-  letI : Algebra V F := ((algebraMap K F).comp (algebraMap V K)).toAlgebra
-  haveI : IsScalarTower V K F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : FaithfulSMul V F := (faithfulSMul_iff_algebraMap_injective V F).mpr
+  let : Algebra V F := ((algebraMap K F).comp (algebraMap V K)).toAlgebra
+  have : IsScalarTower V K F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : FaithfulSMul V F := (faithfulSMul_iff_algebraMap_injective V F).mpr
     ((algebraMap K F).injective.comp (IsFractionRing.injective V K))
-  haveI : Algebra.IsAlgebraic V F :=
+  have : Algebra.IsAlgebraic V F :=
     (IsFractionRing.comap_isAlgebraic_iff (A := V) (K := K) (C := F)).mpr inferInstance
   obtain ⟨W, hW, -, -, hfin, -, hloc, hs, -⟩ := GlobalTheory.exists_complete_dvr_finite_subalgebra V F {z}
-  haveI := hfin
+  have := hfin
 
   have hVnn : ∀ r : V, 0 ≤ v (algebraMap V F r) := fun r =>
     GlobalTheory.FiniteDVRValuation.val_nonneg hϖ hv r

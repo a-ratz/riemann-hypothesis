@@ -77,10 +77,10 @@ theorem endo_root {k : Type} [CommRing k] [IsDomain k] (p : ℕ) [hp : Fact p.Pr
     refine ⟨hne, ?_⟩
     have := (hF y).1 hy
     simp [this]
-  haveI : Finite F := hfin
-  letI : Field F := (Finite.isField_of_domain F).toField
-  haveI : CharP F p := F.subtype.charP F.subtype_injective p
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
+  have : Finite F := hfin
+  let : Field F := (Finite.isField_of_domain F).toField
+  have : CharP F p := F.subtype.charP F.subtype_injective p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
   let ψ : F →+* F := (φ.comp F.subtype).codRestrict F fun y => by
     rw [hF]
     show φ y ^ _ = φ y
@@ -165,8 +165,8 @@ theorem res_inj {a b : OO l} {m : ℕ} (hm : 0 < m) (hlm : ¬ l ∣ m) (ha : a ^
 
 theorem gal_root (h : GQ l) {m : ℕ} (hm : 0 < m) (hlm : ¬ l ∣ m) :
     ∃ n : ℕ, ∀ ζ : Om l, ζ ^ m = 1 → h ζ = ζ ^ (l ^ n) := by
-  haveI : NeZero m := ⟨hm.ne'⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) m
+  have : NeZero m := ⟨hm.ne'⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) m
   let a : OO l := ⟨ξ, (norm_root hm hξ.pow_eq_one).le⟩
   have ha : a ^ m = 1 := Subtype.ext hξ.pow_eq_one
   obtain ⟨n, hn⟩ := endo_root l (galK h) (a := res a) hm hlm (by rw [← map_pow, ha, map_one])
@@ -189,8 +189,8 @@ theorem exists_root (x : Om l) (hx : ‖x‖ = 1) :
   rw [ExpChar.pow_prime_pow_mul_eq_one_iff] at h1
   have h2 : ‖x ^ m - 1‖ < 1 := by
     rw [← map_pow, ← map_one (res (l := l)), res_eq_iff] at h1; exact h1
-  haveI : NeZero m := ⟨hm.ne'⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) m
+  have : NeZero m := ⟨hm.ne'⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) m
   have e := congrArg (eval x) (X_pow_sub_one_eq_prod hm hξ)
   simp only [eval_sub, eval_pow, eval_X, eval_one, eval_prod, eval_C] at e
   rw [e, norm_prod] at h2

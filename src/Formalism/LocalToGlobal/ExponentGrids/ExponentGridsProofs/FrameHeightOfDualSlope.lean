@@ -215,7 +215,7 @@ theorem lattice_fg_ne_bot {K : Type} [Field K] [NumberField K] [StarRing K] [_ro
     R.FG ∧ R ≠ ⊥ := by
   refine ⟨hR.toIsLattice.fg, ?_⟩
   rintro rfl
-  haveI : Nonempty (Fin D) := ⟨⟨0, hD⟩⟩
+  have : Nonempty (Fin D) := ⟨⟨0, hD⟩⟩
   have h := hR.span_eq_top
   rw [Submodule.bot_coe, Submodule.span_zero_singleton] at h
   exact bot_ne_top h
@@ -372,10 +372,10 @@ theorem j3Wt : NormalisedPrimeUnitWeight := by
     exact_mod_cast this
   unfold Formalism.PairingDivisionLocalBalance.wt
   by_cases h : ell w ∈ S
-  · rw [if_pos h, Finset.sum_eq_single_of_mem (ell w) h]
+  · rw [ite_eq_left h, Finset.sum_eq_single_of_mem (ell w) h]
     intro l hl hne
     rw [hz l hl hne, mul_zero]
-  · rw [if_neg h, zero_mul]
+  · rw [ite_eq_right h, zero_mul]
     apply Finset.sum_eq_zero
     intro l hl
     rw [hz l hl (fun e => h (e ▸ hl)), mul_zero]

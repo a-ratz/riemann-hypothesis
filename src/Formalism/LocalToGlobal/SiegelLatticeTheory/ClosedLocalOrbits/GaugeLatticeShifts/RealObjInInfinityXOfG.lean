@@ -192,7 +192,7 @@ theorem Fk_enorm_le {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w : HH)
     (z z' : G) {q : G} (hq : q ∈ S) :
     ‖Fk σ w W z z' q‖ₑ ≤ ‖⟪σ z w, σ q (σ z' w)⟫_ℂ‖ₑ * ‖W z‖ₑ * ‖W z'‖ₑ := by
   unfold Fk
-  rw [hWeq q hq z', hσ.2.1 q z', ContinuousLinearMap.mul_apply]
+  rw [hWeq q hq z', hσ.2.1 q z', mul_apply_eq_comp]
   have hn : ‖τ q (W z')‖ = ‖W z'‖ := by
     have h := hτu q hq (W z') (W z')
     rw [inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K] at h
@@ -201,10 +201,10 @@ theorem Fk_enorm_le {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w : HH)
   have hA : ‖⟪τ q (W z'), W z⟫_ℂ‖ ≤ ‖W z‖ * ‖W z'‖ :=
     (norm_inner_le_norm _ _).trans (by rw [hn, mul_comm])
   have hAe : ‖⟪τ q (W z'), W z⟫_ℂ‖ₑ ≤ ‖W z‖ₑ * ‖W z'‖ₑ := by
-    rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm,
+    rw [← ofReal_norm, ← ofReal_norm, ← ofReal_norm,
       ← ENNReal.ofReal_mul (norm_nonneg _)]
     exact ENNReal.ofReal_le_ofReal hA
-  rw [enorm_mul]
+  rw [eNorm_mul]
   calc ‖⟪τ q (W z'), W z⟫_ℂ‖ₑ * ‖⟪σ z w, σ q (σ z' w)⟫_ℂ‖ₑ
       ≤ (‖W z‖ₑ * ‖W z'‖ₑ) * ‖⟪σ z w, σ q (σ z' w)⟫_ℂ‖ₑ := by gcongr
     _ = ‖⟪σ z w, σ q (σ z' w)⟫_ℂ‖ₑ * ‖W z‖ₑ * ‖W z'‖ₑ := by ring
@@ -245,7 +245,7 @@ theorem Fk_integrable {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w : H
     Integrable (fun x : G × G × G => Fk σ w W x.1 x.2.1 x.2.2) (ν.prod (ν.prod μS)) := by
   have hcont := continuous_Fk_uncurry hσ w hWc
   exact ⟨hcont.aestronglyMeasurable,
-    lintegral_enorm_Fk_lt_infty hσ w hS0 hWeq hτu (continuous_enorm.measurable.comp hcont.measurable) hconv⟩
+    lintegral_enorm_Fk_lt_infty hσ w hS0 hWeq hτu (continuous_eNorm.measurable.comp hcont.measurable) hconv⟩
 
 theorem integral_norm_sq_eq_one {ν : Measure G} {W : G → V} (hWc : Continuous W) (h2 : ∫⁻ x, ‖W x‖ₑ ^ 2 ∂ν = 1) :
     ∫ z, ‖W z‖ ^ 2 ∂ν = 1 := by
@@ -253,7 +253,7 @@ theorem integral_norm_sq_eq_one {ν : Measure G} {W : G → V} (hWc : Continuous
     ((hWc.norm.pow 2).aestronglyMeasurable)]
   have h : (fun x => ENNReal.ofReal (‖W x‖ ^ 2)) = fun x => ‖W x‖ₑ ^ 2 := by
     funext x
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   rw [h, h2]
   simp
 
@@ -267,7 +267,7 @@ theorem integral_inner_mul_inner_eq_norm_sq_div {μ : Measure G} [μ.IsMulLeftIn
   have hpt : ∀ y, ⟪W (z * y), W z⟫_ℂ * ⟪σ z w, σ (z * y) w⟫_ℂ =
       conj (((1 / d : ℝ) : ℂ) * ⟪W z, ((d : ℂ) * conj ⟪w, σ y w⟫_ℂ) • W (z * y)⟫_ℂ) := by
     intro y
-    rw [hσ.2.1 z y, ContinuousLinearMap.mul_apply, hσ.2.2.1, inner_smul_right]
+    rw [hσ.2.1 z y, mul_apply_eq_comp, hσ.2.2.1, inner_smul_right]
     simp only [map_mul, Complex.conj_conj, Complex.conj_ofReal, inner_conj_symm]
     push_cast
     first | (field_simp; ring) | field_simp | ring
@@ -348,8 +348,8 @@ theorem sumsq_eq {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) {w : HH} (h
       ∫ z, ∫ z', ∫ q, (cnt μS Ω q).toReal • Fk σ w W z z' q ∂μS ∂ν ∂ν := by
   have hS' := hS
   obtain ⟨-, -, hSmul, hSinv, hSig, -, -, -, -, -, -⟩ := hS'
-  haveI : SigmaFinite μS := hSig
-  haveI : IsFiniteMeasure (μS.restrict Ω) := isFiniteMeasure_restrict.mpr hfin.ne
+  have : SigmaFinite μS := hSig
+  have : IsFiniteMeasure (μS.restrict Ω) := isFiniteMeasure_restrict.mpr hfin.ne
   have hleft : ∀ (μ : Measure G) (f : G → PiLp 2 (fun _ : Fin (Module.finrank ℂ V) => HH)),
       Integrable f μ → ∀ c, ⟪∫ x, f x ∂μ, c⟫_ℂ = ∫ x, ⟪f x, c⟫_ℂ ∂μ := by
     intro μ f hf c
@@ -1150,10 +1150,10 @@ open Formalism.L2.SG.Pf.EnergyAbs
 theorem energyAbs_holds : EnergyAbs := by
   intro G _ _ _ _ _ _ _ _ μ _ _ HH _ _ _ σ d w V V' _ _ _ _ _ _ S S' μS μS' ν ν' τ τ' W W' C _ m h
     hσ hSch hw hS hS' hF hF' hν hν' hq hq' hW hW' hD hhm hOOi hB hC hC'
-  haveI := hν
-  haveI := hν'
-  haveI : SigmaFinite μS := hS.2.2.2.2.1
-  haveI : SigmaFinite μS' := hS'.2.2.2.2.1
+  have := hν
+  have := hν'
+  have : SigmaFinite μS := hS.2.2.2.2.1
+  have : SigmaFinite μS' := hS'.2.2.2.2.1
   obtain ⟨Ω, hΩ, hΩF⟩ := folner_seq hS hF
   obtain ⟨Ω', hΩ', hΩF'⟩ := folner_seq hS' hF'
   have hlim := folner_limit hσ hSch hw hS hν hq hW hC Ω hΩ hΩF
@@ -1309,33 +1309,33 @@ theorem frm2 (F0 : Frm ε e f z w T) (hT : 0 < T) (hT' : 0 < T') (hsc : 0 < sc) 
     simp only [p2, z2, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_add_right, UnitaryIsometries.hJ_smul_right, F0.ez, F0.ew, mul_zero,
       add_zero]
   · simp only [z2, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_add_right, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_smul_right, F0.zz,
-      F0.zw, hwz, F0.ww, if_true, mul_zero, add_zero, zero_add, mul_one, hcb]
+      F0.zw, hwz, F0.ww, ite_true, mul_zero, add_zero, zero_add, mul_one, hcb]
     linear_combination (norm := skip) (-(T : ℂ)) * hα + hβ
     push_cast
     field_simp
     ring
   · intro a j
     by_cases hj : j = i0
-    · simp only [e2, w2, if_pos hj, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_right, F0.pz, F0.pw,
+    · simp only [e2, w2, ite_eq_left hj, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_right, F0.pz, F0.pw,
         mul_zero, add_zero]
-    · simp only [e2, w2, if_neg hj, UnitaryIsometries.hJ_smul_left, F0.pw, mul_zero]
+    · simp only [e2, w2, ite_eq_right hj, UnitaryIsometries.hJ_smul_left, F0.pw, mul_zero]
   · intro a j
     by_cases hj : j = i0
-    · simp only [p2, w2, if_pos hj, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_right, F0.ez, F0.ew,
+    · simp only [p2, w2, ite_eq_left hj, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_right, F0.ez, F0.ew,
         mul_zero, add_zero]
-    · simp only [p2, w2, if_neg hj, UnitaryIsometries.hJ_smul_left, F0.ew, mul_zero]
+    · simp only [p2, w2, ite_eq_right hj, UnitaryIsometries.hJ_smul_left, F0.ew, mul_zero]
   · intro j
     by_cases hj : j = i0
-    · simp only [z2, w2, if_pos hj, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_add_right,
-        UnitaryIsometries.hJ_smul_left, F0.zz, F0.zw, hwz, F0.ww, if_true, mul_zero, add_zero, zero_add, mul_one, hcb]
+    · simp only [z2, w2, ite_eq_left hj, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_add_right,
+        UnitaryIsometries.hJ_smul_left, F0.zz, F0.zw, hwz, F0.ww, ite_true, mul_zero, add_zero, zero_add, mul_one, hcb]
       ring
     · have hne : i0 ≠ j := fun h => hj h.symm
-      simp only [z2, w2, if_neg hj, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_smul_left, F0.zw, F0.ww, if_neg hne, mul_zero,
+      simp only [z2, w2, ite_eq_right hj, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_smul_left, F0.zw, F0.ww, ite_eq_right hne, mul_zero,
         add_zero]
   · intro i j
     by_cases hi : i = i0 <;> by_cases hj : j = i0
     · subst hi; subst hj
-      simp only [w2, if_true, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_add_right, UnitaryIsometries.hJ_smul_left,
+      simp only [w2, ite_true, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_left, UnitaryIsometries.hJ_add_right, UnitaryIsometries.hJ_smul_left,
         F0.zz, F0.zw, hwz, F0.ww, mul_zero, add_zero, zero_add, mul_one, hcb, map_mul, Complex.conj_conj,
         Complex.conj_ofReal]
       linear_combination (norm := skip) ((T : ℂ) ^ 2 * (conj (alv T c) * alv T c) - (T : ℂ) * (bev T T' c * bev T T' c)) * hs +
@@ -1345,13 +1345,13 @@ theorem frm2 (F0 : Frm ε e f z w T) (hT : 0 < T) (hT' : 0 < T') (hsc : 0 < sc) 
       ring
     · subst hi
       have hne : i ≠ j := fun h => hj h.symm
-      simp only [w2, if_true, if_neg hj, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_add_left, F0.zw, F0.ww, if_neg hne,
+      simp only [w2, ite_true, ite_eq_right hj, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_add_left, F0.zw, F0.ww, ite_eq_right hne,
         mul_zero, add_zero]
     · subst hj
       have hne : i ≠ j := hi
-      simp only [w2, if_true, if_neg hi, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_right, hwz, F0.ww, if_neg hne,
+      simp only [w2, ite_true, ite_eq_right hi, UnitaryIsometries.hJ_smul_right, UnitaryIsometries.hJ_add_right, hwz, F0.ww, ite_eq_right hne,
         mul_zero, add_zero]
-    · simp only [w2, if_neg hi, if_neg hj]
+    · simp only [w2, ite_eq_right hi, ite_eq_right hj]
       exact F0.ww i j
 
 end Frame
@@ -1480,7 +1480,7 @@ def Mv (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ) (z z' : Fin n → �
 
 theorem famSc_castSucc (sc : ℝ) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) (b : Fin r) :
     famSc sc e z (Fin.castSucc b) = sfv sc b • e b := by
-  simp only [famSc, fam, Fin.snoc_castSucc, Fin.coe_castSucc, sfv]
+  simp only [famSc, fam, Fin.snoc_castSucc, Fin.val_castSucc, sfv]
 
 theorem famSc_last (sc : ℝ) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) : famSc sc e z (Fin.last r) = z := by
   simp only [famSc, fam, Fin.snoc_last, Fin.val_last, Nat.sub_self, pow_zero, inv_one, one_smul]
@@ -1519,10 +1519,10 @@ theorem zhat_Mv (F0 : Frm ε e f z w T) (F1 : Frm ε e f z' w' T') (hsc : 0 < sc
       simp only [e2, UnitaryIsometries.hJ_smul_left, UnitaryIsometries.hJ_smul_right, hfe, conj_sfv]
       by_cases h : a = b
       · subst h
-        rw [diagonal_apply_eq, if_pos rfl, lamv]
+        rw [diagonal_apply_eq, ite_eq_left rfl, lamv]
         have hs : sfv sc a ≠ 0 := sfv_ne hsc a
         field_simp
-      · rw [if_neg h, diagonal_apply_ne _ (fun h' => h (Fin.castSucc_injective _ h'))]
+      · rw [ite_eq_right h, diagonal_apply_ne _ (fun h' => h (Fin.castSucc_injective _ h'))]
         ring
 
 theorem measurable_Mv (i0 : Fin k) :
@@ -1549,10 +1549,10 @@ theorem measurable_Mv (i0 : Fin k) :
     exact measurable_const.mul ((hal.mul measurable_const).add (hbe.mul measurable_const))
   · simp only [w2]
     by_cases hl : l = i0
-    · simp only [if_pos hl, Pi.smul_apply, Pi.add_apply, smul_eq_mul]
+    · simp only [ite_eq_left hl, Pi.smul_apply, Pi.add_apply, smul_eq_mul]
       exact measurable_const.mul (measurable_const.mul ((hbe.mul measurable_const).add
         ((hcal.mul measurable_const).mul measurable_const)))
-    · simp only [if_neg hl]
+    · simp only [ite_eq_right hl]
       exact measurable_const
 
 instance matrix_borel (m : ℕ) : BorelSpace (Matrix (Fin m) (Fin m) ℂ) :=
@@ -1588,7 +1588,7 @@ theorem measurable_secV (F0 : Frm ε e f z w T) (F1 : Frm ε e f z' w' T') (hdim
     exact uMat_secV F0 F1 hdim hT hT' hsc i0 c
   rw [he]
   have hm1 : MeasurableSet {c : Fin (r + 1) → ℂ | ∀ l, c l ≠ 0} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact MeasurableSet.iInter fun l => (measurableSet_singleton 0).compl.preimage (measurable_pi_apply l)
   have hm2 : MeasurableSet {c : Fin (r + 1) → ℂ | 0 < ‖c (Fin.last r)‖ ^ 2 - T * T'} :=
     measurableSet_lt measurable_const ((((measurable_pi_apply _).norm.pow_const 2)).sub_const _)
@@ -1601,7 +1601,7 @@ theorem zhat_secV (F0 : Frm ε e f z w T) (F1 : Frm ε e f z' w' T') (hdim : n =
     (hg : 0 < ‖c (Fin.last r)‖ ^ 2 - T * T') :
     Zhat ε (famSc sc e z) (famSc sc e z') (Formalism.MainNotions.S.uMat (secV F0 F1 hdim hT hT' hsc i0 c)) =
       Matrix.diagonal c := by
-  rw [uMat_secV, if_pos ⟨hc, hg⟩]
+  rw [uMat_secV, ite_eq_left ⟨hc, hg⟩]
   exact zhat_Mv F0 F1 hsc i0
 
 end Formalism.L2.S.Pv.SecW
@@ -1716,11 +1716,11 @@ theorem stepEnergyAt_of_inst (D : D7) (hE : EnergyAbs) (hS : StepSchurG) (hG : S
   have hOfD : ∀ c ∈ Good X u u', HasDiag X u u' sc c (hOf X u u' sc c) := by
     intro c hc
     have hex : ∃ γ, HasDiag X u u' sc c γ := ⟨hh c, hhd c hc⟩
-    have e : hOf X u u' sc c = hex.choose := dif_pos hex
+    have e : hOf X u u' sc c = hex.choose := dite_eq_left hex
     rw [e]
     exact hex.choose_spec
   have hD : Disint X u u' sc (DisintegrationConstant X u u' sc) := by
-    have e : DisintegrationConstant X u u' sc = h27.choose := dif_pos h27
+    have e : DisintegrationConstant X u u' sc = h27.choose := dite_eq_left h27
     rw [e]
     exact h27.choose_spec.2
   have hm : Measurable fun c => ENNReal.ofReal (DisintegrationConstant X u u' sc * wt X u u' c) :=
@@ -1768,7 +1768,7 @@ theorem inInfinityXAt (hI : StepIntAt D) (hC : StepConvAt D) (u u' : D.what₂.W
     refine ⟨hR, fun c hc => ?_⟩
     have hex := hR c hc
     refine hI X u u' sc hsc c hc _ ?_
-    have e : hOf X u u' sc c = hex.choose := dif_pos hex
+    have e : hOf X u u' sc c = hex.choose := dite_eq_left hex
     rw [e]
     exact hex.choose_spec
   exact ⟨h27, hco, stepEnergyAt_of_inst D S.Pv.EnergyAbs.energyAbs_holds S.Pv.SchurTens.stepSchurG_holds

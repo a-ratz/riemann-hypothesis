@@ -864,7 +864,7 @@ theorem exists_local_dictionary : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   have h := under_eq_of_isInertAt hw
   have hc : IsConjAt σ h (conjW σ hw) := isConjAt_conjW σ hw
   have hσ : ∀ x, σ (σ x) = x := InertChart.conj_conj hB.cm
-  haveI : IsLocalRing (Formalism.UG.Ov E w) := inferInstanceAs (IsLocalRing (w.adicCompletionIntegers E))
+  have : IsLocalRing (Formalism.UG.Ov E w) := inferInstanceAs (IsLocalRing (w.adicCompletionIntegers E))
   let c : Formalism.UG.Ov E w →+* Formalism.UG.Ov E w :=
     ((conjW σ hw).comp (Formalism.UG.Ov E w).subtype).codRestrict (Formalism.UG.Ov E w)
       (fun x => InertChart.conj_mem hw hc x.2)
@@ -876,7 +876,7 @@ theorem exists_local_dictionary : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   have hι : ∀ x, ι x = iotaW hw (x : w.adicCompletion E) := fun _ => rfl
   have hι1 : ι 1 = iotaW hw 1 := rfl
   have hcv : ∀ x, ((c x : Formalism.UG.Ov E w) : w.adicCompletion E) = conjW σ hw x := fun _ => rfl
-  obtain ⟨a, ha⟩ := InertChart.exists_isFrameAt (L := X.L) hw hX.lat.fg (Submodule.IsLattice.span_eq_top (self := hX.lat))
+  obtain ⟨a, ha⟩ := InertChart.exists_isFrameAt (L := X.L) hw hX.lat.fg (Submodule.IsFullLattice.span_eq_top (self := hX.lat))
   have hJ : (X.Jᵀ).det ≠ 0 := by
     rw [Matrix.det_transpose]; exact GlobalTheory.HermSelfDualLoc.det_ne_zero_of_isHerm σ B hX
   obtain ⟨Bm, ⟨k, hk⟩, eB⟩ := InertChart.exists_gram hw hc hJ
@@ -1134,7 +1134,7 @@ theorem exists_transversal : (∀ (O : Type) [CommRing O] [IsLocalRing O] (c : O
   intro core F E _ _ _ _ _ σ B n r s X hB hX v w hw g hg
   obtain ⟨O, _, c, ι, P, Q, JL, hloc, hcc, h2, hcx, hinj, hAt, hsupp, hcι, hPQ, hQP, hP, hQ, hJh, hJu, hJ, hlat⟩ :=
     _root_.GlobalTheory.InertLocDict.exists_local_dictionary F E σ B n r s X hB hX v w hw
-  haveI := hloc
+  have := hloc
   obtain ⟨hg1, hg2⟩ := hg
   have hinv : GlobalTheory.DblVac.matD g * GlobalTheory.DblVac.matD g⁻¹ = 1 := by
     simp [GlobalTheory.DblVac.matD]
@@ -1511,7 +1511,7 @@ theorem exists_isotropic_graph_isUnit_lowerRow : ∀ (O : Type) [CommRing O] [Is
 
   intro O _ _ c hc h2 hx0 n J hJ hJdet g hg hgu
   obtain ⟨x, hx⟩ := hx0
-  haveI : IsLocalHom c := ⟨fun a ha => by simpa [hc] using ha.map c⟩
+  have : IsLocalHom c := ⟨fun a ha => by simpa [hc] using ha.map c⟩
   set π := IsLocalRing.residue O with hπ
   set σ : IsLocalRing.ResidueField O →+* IsLocalRing.ResidueField O := IsLocalRing.ResidueField.map c with hσ
   have hσπ : ∀ a, σ (π a) = π (c a) := fun a => IsLocalRing.ResidueField.map_residue c a
@@ -1616,7 +1616,7 @@ theorem unip_mem : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     ∃ u ∈ GlobalTheory.DblVac.KD σ W v, u ∈ GlobalTheory.DblVac.PDiag σ W ∧
       GlobalTheory.DblVac.matD u = 1 + (⅟(2 : AF F)) • ((diagCols (Fin d) : Matrix (Fin d ⊕ Fin d) (Fin d) (AE F E)) * Z * (GlobalTheory.DblVac.antiCols (F := F) (E := E) d)ᵀ) := by
   intro F E _ _ _ _ _ σ d W v h2 Z hZat hZlat hZskew
-  letI : Invertible (2 : AE F E) := invTwoE
+  let : Invertible (2 : AE F E) := invTwoE
   set f : AE F E →+* AE F E := ((cA σ : AE F E →ₐ[AF F] AE F E) : AE F E →+* AE F E) with hf
   set J : Matrix (Fin d) (Fin d) (AE F E) := incM F W.J with hJ
   have h1 : (1 : Matrix (Fin d) (Fin d) (AE F E)).map f = 1 := Matrix.map_one f (map_zero f) (map_one f)
@@ -1844,10 +1844,10 @@ theorem eigen_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     { carrier := {g | omd g S = S}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hD : ∀ p ∈ GlobalTheory.DblVac.KD σ G.V v, p ∈ GlobalTheory.DblVac.PDiag σ G.V → p ∈ H := fun p hp hpd => by

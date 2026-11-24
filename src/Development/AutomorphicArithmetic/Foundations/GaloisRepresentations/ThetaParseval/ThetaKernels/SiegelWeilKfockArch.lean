@@ -64,8 +64,8 @@ theorem detIm_ne_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (w : 
     ((d.B.emb w).1 (d.bs 0)).im * ((d.B.emb w).1 (d.bs 1)).re -
       ((d.B.emb w).1 (d.bs 0)).re * ((d.B.emb w).1 (d.bs 1)).im ≠ 0 := by
   have hcm : IsCMExt F E σ := d.ok.good.cm
-  haveI : IsTotallyReal F := hcm.1
-  haveI : IsTotallyComplex E := hcm.2.1
+  have : IsTotallyReal F := hcm.1
+  have : IsTotallyComplex E := hcm.2.1
   set τ : E →+* ℂ := (d.B.emb w).1 with hτ
   have hw : w.IsReal := IsTotallyReal.isReal w
   have hreal : ∀ f : F, (τ (algebraMap F E f)).im = 0 := by
@@ -162,7 +162,7 @@ theorem archEquiv_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R :
       ∀ (c : Fin d.m × Fin d.n × Fin 2 → AF F) (w : InfinitePlace F),
         L (fun k => InfiniteAdeleRing.ringEquiv_mixedSpace F (c k).1) w = R.loc w (d.cmb c) := by
   have hcm : IsCMExt F E σ := d.ok.good.cm
-  haveI : IsTotallyReal F := hcm.1
+  have : IsTotallyReal F := hcm.1
   have hr : ∀ w : InfinitePlace F, w.IsReal := fun w => IsTotallyReal.isReal w
   have hdim : Module.finrank ℝ (Fin d.m × Fin d.n × Fin 2 → mixedEmbedding.mixedSpace F) =
       Module.finrank ℝ (InfinitePlace F → Fin d.m → Fin d.n → ℂ) := by

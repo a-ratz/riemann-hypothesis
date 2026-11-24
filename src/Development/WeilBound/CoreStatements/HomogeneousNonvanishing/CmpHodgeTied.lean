@@ -114,7 +114,7 @@ theorem lift_transfer {X X' W W' V : Scheme.{0}} {Ω : Type} [Field Ω] {R : Typ
     (hu : ∃ u' : Spec (X'.presheaf.stalk p) ⟶ V, u' ≫ j' = X'.fromSpecStalk p ≫ f') :
     ∃ u : Spec (X.presheaf.stalk (e.hom p)) ⟶ V, u ≫ j = X.fromSpecStalk (e.hom p) ≫ f := by
   obtain ⟨u', hu'⟩ := hu
-  haveI := hdom p
+  have := hdom p
   have h' : ξ' (IsLocalRing.closedPoint Ω) ⤳ p := hall p
   let φ : X'.presheaf.stalk p ⟶ CommRingCat.of Ω := X'.presheaf.stalkSpecializes h' ≫ Scheme.stalkClosedPointTo ξ'
   let ξp : Sp Ω ⟶ Spec (X'.presheaf.stalk p) := Spec.map φ
@@ -130,7 +130,7 @@ theorem lift_transfer {X X' W W' V : Scheme.{0}} {Ω : Type} [Field Ω] {R : Typ
     have h1 : ξp ≫ u' ≫ Ψ.inv ≫ j = x ≫ j := by rw [reassoc_of% hxu, reassoc_of% hx]
     have h2 : ξp ≫ X'.fromSpecStalk p ≫ e.hom ≫ f = x ≫ j := by rw [reassoc_of% hξp, reassoc_of% hξ, hf]
     rw [h1, h2]
-  haveI : IsIso (e.hom.stalkMap p) := inferInstance
+  have : IsIso (e.hom.stalkMap p) := inferInstance
   refine ⟨inv (Spec.map (e.hom.stalkMap p)) ≫ u' ≫ Ψ.inv, ?_⟩
   rw [Category.assoc, Category.assoc, heq, ← Scheme.SpecMap_stalkMap_fromSpecStalk_assoc, IsIso.inv_hom_id_assoc]
 
@@ -378,7 +378,7 @@ theorem gramAt_move : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     ∀ (z : Sp ℂ ⟶ X') (r : ℕ) (b : Fin r → V) (Γ : Matrix (Fin r) (Fin r) ℂ),
       M'.GramAt t'.PP.L z b Γ ↔ M.GramAt t.PP.L (z ≫ e.hom) b Γ := by
   intro E _ _ _ H X X' e Ω _ ξ ξ' t t' k V _ _ M M' hξ hpt z r b Γ
-  haveI : IsIso k.φ := k.cart.1.isIso_fst_of_isIso
+  have : IsIso k.φ := k.cart.1.isIso_fst_of_isIso
   let φ : t'.G.left ≅ t.G.left := asIso k.φ
   have hw : φ.hom ≫ t.G.hom = t'.G.hom ≫ e.hom := k.cart.1.w
   have hη : η[t'.G].left ≫ φ.hom = e.hom ≫ η[t.G].left := eta_comp e.hom k.φ k.cart
@@ -567,7 +567,7 @@ theorem patch_coe_eq (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Hos
     rw [span_coe_congr _ _ hR]
     congr 2
     ext e
-    simp only [Set.mem_setOf_eq, hD]
+    simp only [Set.mem_ofPred_eq, hD]
   have hE : (M'.eigLat ρ (σ s) q' : Set V) = M.eigLat ρ (σ s) q := by
     simp only [LieModel.eigLat, Lat.inter, Submodule.coe_inf, Submodule.coe_restrictScalars, hlat]
   have hH : ∀ p, (htLabel M' L' (n p) ρ σ s q' : Set V) = htLabel M L (n p) ρ σ s q := by
@@ -577,9 +577,9 @@ theorem patch_coe_eq (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Hos
   have hIF : ∀ p, InFibre ξ' p q' = InFibre ξ p q := fun p => by simp only [InFibre, unitAt, hR]
   simp only [Lat.patch]
   by_cases hF : ∃ p ∈ S, InFibre ξ p q
-  · rw [if_pos (by simpa only [hIF] using hF), if_pos hF]
+  · rw [ite_eq_left (by simpa only [hIF] using hF), ite_eq_left hF]
     simp only [Submodule.coe_iInf, hH, hIF]
-  · rw [if_neg (by simpa only [hIF] using hF), if_neg hF]
+  · rw [ite_eq_right (by simpa only [hIF] using hF), ite_eq_right hF]
     exact hE
 
 theorem comap_span_equiv {Ω : Type} [Field Ω] {F F' : Type} [AddCommGroup F] [Module Ω F] [AddCommGroup F']
@@ -661,7 +661,7 @@ theorem patch_comap_equiv (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       rw [comap_span_equiv]
       congr 1
       ext w'
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, hHT]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, hHT]
     rw [h]; rfl
   have hdual : ∀ N (σ₀ : 𝓞 E →+* Ω) p e, e ∈ M₂.htDual L N ρ σ₀ p ↔ φ e ∈ M.htDual L N ρ' σ₀ p := by
     intro N σ₀ p e
@@ -682,7 +682,7 @@ theorem patch_comap_equiv (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     rw [comap_span_equiv]
     congr 1
     ext e
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, heig, hdual, map_smul]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, heig, hdual, map_smul]
   have hD : ∀ N (σ₀ : 𝓞 E →+* Ω) p,
       M₂.htDual L N ρ σ₀ p = (M.htDual L N ρ' σ₀ p).comap (φ.toLinearMap.restrictScalars (regAt ξ p)) := by
     intro N σ₀ p
@@ -769,15 +769,15 @@ theorem bund : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   have hside : s.isLeft = s'.isLeft :=
     labels_side E H l c Ω A.cst g s s' (by have h := hss'; unfold HodgeCpt.emb at h; rwa [← hc] at h)
 
-  haveI : IsLocallyNoetherian A'.X := by
+  have : IsLocallyNoetherian A'.X := by
     have := (_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie A'.X Ω A'.ξ ℤ ((k : K) → J k) (fun c' => ∏ k, y ⟨k, c' k⟩) A'.tie).2 A'.all
-    haveI := this.1
+    have := this.1
     infer_instance
   let M₂ : LieModel A'.t.G A'.ξ A.Li := Flat.lieModelOfEquiv A'.M φ
   have hlat : M₁.lat = M₂.lat :=
     GlobalTheory.CompanionTheory.Ar.LieStalk.lat_eq_of_normal A'.X Ω A'.ξ A'.tie.gen t.G A'.t.G tΩ.G m.φ mA'.φ t.semi A'.t.semi m.cart mA'.cart A.Li M₁ M₂
       htie inferInstance A'.normal
-  haveI : CharZero Ω := (RingHom.charZero_iff A.cst.injective).1 inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff A.cst.injective).1 inferInstance
   have heig : (eigSp A'.ρ (A'.emb s')).comap φ.toLinearMap = eigSp A.ρ (A.emb s) := by
     rw [← eigSp_comp_ringEquiv Ω A.Li (𝓞 E) A.ρ g.s (A.emb s), ← hss']
     ext v

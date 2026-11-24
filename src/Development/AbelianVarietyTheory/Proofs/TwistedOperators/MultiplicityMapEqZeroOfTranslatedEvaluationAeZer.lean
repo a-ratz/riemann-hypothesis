@@ -107,10 +107,10 @@ open Formalism.MainNotions.S
 
 theorem gfset_countable (I : AutInst) : I.GFset.Countable := by
   classical
-  haveI : Countable I.E := (Module.finBasis ℚ I.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin I.n) (Fin I.n) I.E) :=
+  have : Countable I.E := (Module.finBasis ℚ I.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin I.n) (Fin I.n) I.E) :=
     inferInstanceAs (Countable (Fin I.n → Fin I.n → I.E))
-  haveI : Countable (GL (Fin I.n) I.E) :=
+  have : Countable (GL (Fin I.n) I.E) :=
     Function.Injective.countable (f := (Units.val : GL (Fin I.n) I.E → Matrix (Fin I.n) (Fin I.n) I.E)) fun _ _ h => Units.ext h
 
   let W : GL (Fin I.n) I.E → Set I.GA := fun γ =>
@@ -198,7 +198,7 @@ theorem eq_zero_of_value {T : MMap M} (hT : IsMultMap θ M J χ T) (v₀ : M.Vec
       simpa using h0
     · intro a s ha ih w
       have hne : ((if a ∈ s then w a else v₀ a : M.sm a) : M.H a) ≠ 0 := by
-        simp only [ha, if_false]
+        simp only [ha, ite_false]
         exact hv₀ a
       have h3 := step _ a (ih w) hne (w a)
       convert h3 using 2

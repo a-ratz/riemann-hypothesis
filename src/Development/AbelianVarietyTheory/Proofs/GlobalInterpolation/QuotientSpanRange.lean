@@ -71,8 +71,8 @@ theorem _root_.GlobalTheory.RegularQuotient.quot_regular (Λ : Type) [CommRing �
     rw [Ideal.span_le, ← hs]
     exact (Set.subset_union_right).trans Ideal.subset_span
   have hItop : I ≠ ⊤ := ne_top_of_le_ne_top (maximalIdeal.isMaximal Λ).ne_top hIm
-  haveI : Nontrivial (Λ ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hItop
-  haveI : IsLocalRing (Λ ⧸ I) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
+  have : Nontrivial (Λ ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hItop
+  have : IsLocalRing (Λ ⧸ I) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
   have hmap : Ideal.map (Ideal.Quotient.mk I) (maximalIdeal Λ) = maximalIdeal (Λ ⧸ I) := by
     have hc : Ideal.comap (Ideal.Quotient.mk I) (maximalIdeal (Λ ⧸ I)) = maximalIdeal Λ :=
       IsLocalRing.eq_maximalIdeal
@@ -109,7 +109,7 @@ theorem _root_.GlobalTheory.RegularQuotient.quot_regular (Λ : Type) [CommRing �
     | bot => simp at h1
     | coe e =>
       induction e using ENat.recTopCoe with
-      | top => exact absurd hle (by exact_mod_cast (not_le.mpr (ENat.coe_lt_top _)))
+      | top => exact absurd hle (by exact_mod_cast (not_le.mpr (ENat.natCast_lt_top _)))
       | coe n =>
         norm_cast at h1 hle ⊢
         omega

@@ -203,8 +203,8 @@ theorem exists_num {X : Scheme.{0}} (F : X.Opensᵒᵖ ⥤ CommRingCat) (α : X.
     ∃ (a : F.obj (op U)) (n : ℕ), z * ((α.app (op (X.basicOpen h))).hom
       (X.presheaf.map (homOfLE (X.basicOpen_le h)).op h)) ^ n =
         (F.map (homOfLE (X.basicOpen_le h)).op).hom a := by
-  letI := (F.map (homOfLE (X.basicOpen_le h)).op).hom.toAlgebra
-  haveI := isLocalizationAway F α hα hU h
+  let := (F.map (homOfLE (X.basicOpen_le h)).op).hom.toAlgebra
+  have := isLocalizationAway F α hα hU h
   obtain ⟨n, a, e⟩ := IsLocalization.Away.surj ((α.app (op U)).hom h) z
   refine ⟨a, n, ?_⟩
   have nat := congr($(α.naturality (homOfLE (X.basicOpen_le h)).op).hom h)
@@ -241,7 +241,7 @@ theorem GlobalTheory.sub_choose_finite : ∀ (X : Scheme.{0}), IsNoetherian X �
     obtain ⟨r, hr⟩ := hs1 i j h hh
     rw [hr]
     exact X.basicOpen_le r
-  haveI : ∀ i, Finite (S i) := fun i => (hS i).to_subtype
+  have : ∀ i, Finite (S i) := fun i => (hS i).to_subtype
   choose a n ha using fun (j : ι) (p : Σ i, (S i) × (s i j)) =>
     GlobalTheory.SubChoose.exists_num F α hα (hV j) p.2.2.1
       ((F.map (homOfLE (hDi p.1 j p.2.2.1 p.2.2.2)).op).hom p.2.1.1)
@@ -389,8 +389,8 @@ theorem subMap_finite (X : Scheme.{0}) (_hX : IsNoetherian X) (F : X.Opensᵒᵖ
     {ι : Type} (V : ι → X.Opens) (_hV : ∀ j, IsAffineOpen (V j)) (hcov : ∀ x : X, ∃ j, x ∈ V j)
     (T : ∀ j, Set (F.obj (op (V j)))) (hT : ∀ j, (T j).Finite) (W : X.Opens)
     (hW : IsAffineOpen W) : (subMap F α V T W).Finite := by
-  haveI : IsNoetherianRing Γ(X, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
-  letI alg : Algebra Γ(X, W) (F.obj (op W)) := (α.app (op W)).hom.toAlgebra
+  have : IsNoetherianRing Γ(X, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
+  let alg : Algebra Γ(X, W) (F.obj (op W)) := (α.app (op W)).hom.toAlgebra
   let S : Subalgebra Γ(X, W) (F.obj (op W)) :=
     { sub F α V T W with algebraMap_mem' := algebraMap_mem_sub F α V T W }
   let s : Set Γ(X, W) := {g | ∃ j, X.basicOpen g ≤ V j}
@@ -404,24 +404,24 @@ theorem subMap_finite (X : Scheme.{0}) (_hX : IsNoetherian X) (F : X.Opensᵒᵖ
       algebraMap Γ(X, W) (F.obj (op W)) g ^ m * b ∈ Submodule.span Γ(X, W) (E : Set _) := by
     rintro g ⟨j, hj⟩
     have hD : IsAffineOpen (X.basicOpen g) := hW.basicOpen g
-    letI a1 : Algebra Γ(X, W) Γ(X, X.basicOpen g) :=
+    let a1 : Algebra Γ(X, W) Γ(X, X.basicOpen g) :=
       (X.presheaf.map (homOfLE (X.basicOpen_le g)).op).hom.toAlgebra
-    letI a2 : Algebra Γ(X, X.basicOpen g) (F.obj (op (X.basicOpen g))) :=
+    let a2 : Algebra Γ(X, X.basicOpen g) (F.obj (op (X.basicOpen g))) :=
       (α.app (op (X.basicOpen g))).hom.toAlgebra
-    letI a3 : Algebra (F.obj (op W)) (F.obj (op (X.basicOpen g))) :=
+    let a3 : Algebra (F.obj (op W)) (F.obj (op (X.basicOpen g))) :=
       (F.map (homOfLE (X.basicOpen_le g)).op).hom.toAlgebra
-    letI a4 : Algebra Γ(X, W) (F.obj (op (X.basicOpen g))) :=
+    let a4 : Algebra Γ(X, W) (F.obj (op (X.basicOpen g))) :=
       ((α.app (op (X.basicOpen g))).hom.comp
         (X.presheaf.map (homOfLE (X.basicOpen_le g)).op).hom).toAlgebra
-    haveI : IsScalarTower Γ(X, W) (F.obj (op W)) (F.obj (op (X.basicOpen g))) :=
+    have : IsScalarTower Γ(X, W) (F.obj (op W)) (F.obj (op (X.basicOpen g))) :=
       IsScalarTower.of_algebraMap_eq fun r ↦ by
         have := congr($(α.naturality (homOfLE (X.basicOpen_le g)).op).hom r)
         simp only [CommRingCat.comp_apply] at this
         exact this
-    haveI : IsScalarTower Γ(X, W) Γ(X, X.basicOpen g) (F.obj (op (X.basicOpen g))) :=
+    have : IsScalarTower Γ(X, W) Γ(X, X.basicOpen g) (F.obj (op (X.basicOpen g))) :=
       IsScalarTower.of_algebraMap_eq fun r ↦ rfl
-    haveI : IsLocalization.Away g Γ(X, X.basicOpen g) := hW.isLocalization_basicOpen g
-    haveI : IsLocalization.Away (algebraMap Γ(X, W) (F.obj (op W)) g)
+    have : IsLocalization.Away g Γ(X, X.basicOpen g) := hW.isLocalization_basicOpen g
+    have : IsLocalization.Away (algebraMap Γ(X, W) (F.obj (op W)) g)
         (F.obj (op (X.basicOpen g))) := isLocalizationAway F α hα hW g
     let N : Submodule Γ(X, X.basicOpen g) (F.obj (op (X.basicOpen g))) :=
       (Algebra.adjoin Γ(X, X.basicOpen g) ((F.map (homOfLE hj).op).hom '' T j)).toSubmodule
@@ -433,7 +433,7 @@ theorem subMap_finite (X : Scheme.{0}) (_hX : IsNoetherian X) (F : X.Opensᵒᵖ
     rw [gen_eq_adjoin] at this
     exact this
   have hfg : S.toSubmodule.FG := _root_.GlobalTheory.submodule_fg_of_locally_le_fg S.toSubmodule s hs hloc
-  letI := (subMap F α V T W).toAlgebra
+  let := (subMap F α V T W).toAlgebra
   have hfin : Module.Finite Γ(X, W) S.toSubmodule := Module.Finite.iff_fg.mpr hfg
   let e : S.toSubmodule ≃ₗ[Γ(X, W)] sub F α V T W :=
     { toFun := fun x ↦ ⟨x.1, x.2⟩
@@ -474,24 +474,24 @@ theorem res_pow_mul_mem_gen
   have hD'f : X.basicOpen fD ≤ X.basicOpen f := hbo.le.trans inf_le_right
   have hD'V : X.basicOpen fD ≤ V := hD'D.trans hDV
   have hD' : IsAffineOpen (X.basicOpen fD) := hD.basicOpen fD
-  letI iRA : Algebra Γ(X, D) (F.obj (op D)) := (α.app (op D)).hom.toAlgebra
-  letI iRR' : Algebra Γ(X, D) Γ(X, X.basicOpen fD) :=
+  let iRA : Algebra Γ(X, D) (F.obj (op D)) := (α.app (op D)).hom.toAlgebra
+  let iRR' : Algebra Γ(X, D) Γ(X, X.basicOpen fD) :=
     (X.presheaf.map (homOfLE hD'D).op).hom.toAlgebra
-  letI iR'A' : Algebra Γ(X, X.basicOpen fD) (F.obj (op (X.basicOpen fD))) :=
+  let iR'A' : Algebra Γ(X, X.basicOpen fD) (F.obj (op (X.basicOpen fD))) :=
     (α.app (op (X.basicOpen fD))).hom.toAlgebra
-  letI iAA' : Algebra (F.obj (op D)) (F.obj (op (X.basicOpen fD))) :=
+  let iAA' : Algebra (F.obj (op D)) (F.obj (op (X.basicOpen fD))) :=
     (F.map (homOfLE hD'D).op).hom.toAlgebra
-  letI iRA' : Algebra Γ(X, D) (F.obj (op (X.basicOpen fD))) :=
+  let iRA' : Algebra Γ(X, D) (F.obj (op (X.basicOpen fD))) :=
     ((F.map (homOfLE hD'D).op).hom.comp (α.app (op D)).hom).toAlgebra
-  haveI : IsScalarTower Γ(X, D) (F.obj (op D)) (F.obj (op (X.basicOpen fD))) :=
+  have : IsScalarTower Γ(X, D) (F.obj (op D)) (F.obj (op (X.basicOpen fD))) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower Γ(X, D) Γ(X, X.basicOpen fD) (F.obj (op (X.basicOpen fD))) := by
+  have : IsScalarTower Γ(X, D) Γ(X, X.basicOpen fD) (F.obj (op (X.basicOpen fD))) := by
     refine IsScalarTower.of_algebraMap_eq (fun r => ?_)
     have := congr($(α.naturality (homOfLE hD'D).op).hom r)
     simp only [CommRingCat.comp_apply] at this
     exact this.symm
-  haveI : IsLocalization.Away fD Γ(X, X.basicOpen fD) := hD.isLocalization_basicOpen fD
-  haveI : IsLocalization.Away (algebraMap Γ(X, D) (F.obj (op D)) fD)
+  have : IsLocalization.Away fD Γ(X, X.basicOpen fD) := hD.isLocalization_basicOpen fD
+  have : IsLocalization.Away (algebraMap Γ(X, D) (F.obj (op D)) fD)
       (F.obj (op (X.basicOpen fD))) := isLocalizationAway F α hα hD fD
   have hres : ∀ {U₁ U₂ U₃ : X.Opens} (h₁ : U₂ ≤ U₁) (h₂ : U₃ ≤ U₂) (y : F.obj (op U₁)),
       (F.map (homOfLE h₂).op).hom ((F.map (homOfLE h₁).op).hom y) =
@@ -524,7 +524,7 @@ end GlobalTheory.QcSub.PowerMultiple
 theorem GlobalTheory.QcSub.pow_mul_mem_sub_of_res_basicOpen : ∀ (X : Scheme.{0}), IsNoetherian X → ∀ (F : X.Opensᵒᵖ ⥤ CommRingCat) (α : X.presheaf ⟶ F), ((Scheme.AffineZariskiSite.toOpensFunctor X).op.whiskerLeft α).Coequifibered → ∀ {ι : Type} [Finite ι] (V : ι → X.Opens), (∀ j, IsAffineOpen (V j)) → ∀ (T : ∀ j, Set (F.obj (op (V j)))) (W : X.Opens), IsAffineOpen W → ∀ (f : Γ(X, W)) (a : F.obj (op W)), (F.map (homOfLE (X.basicOpen_le f)).op).hom a ∈ sub F α V T (X.basicOpen f) → ∃ m : ℕ, (α.app (op W)).hom f ^ m * a ∈ sub F α V T W := by
   intro X hX F α hα ι _ V hV T W hW f a ha
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   rw [mem_sub] at ha
   choose s hs1 hs2 using fun j => _root_.GlobalTheory.affine_inter_finite_basicOpen_cover X hX W (V j) hW (hV j)
   have hle : ∀ j, ∀ h ∈ s j, X.basicOpen h ≤ V j := by
@@ -708,7 +708,7 @@ theorem normalization_basicOpen_cover (U X : Scheme.{0}) (f : U ⟶ X) [IsSepara
       letI := (f.normalizationDiagramMap.app (Opposite.op V.1)).hom.toAlgebra
       Algebra.FiniteType Γ(X, V.1) (Localization.Away b) := by
     intro b hb
-    letI := (f.normalizationDiagramMap.app (Opposite.op V.1)).hom.toAlgebra
+    let := (f.normalizationDiagramMap.app (Opposite.op V.1)).hom.toAlgebra
     let g : Spec (.of (Localization.Away b)) ⟶ Spec B :=
       Spec.map (CommRingCat.ofHom (algebraMap B (Localization.Away b)))
     have hg : Set.range (g ≫ ι) ⊆ Set.range j := by
@@ -719,17 +719,17 @@ theorem normalization_basicOpen_cover (U X : Scheme.{0}) (f : U ⟶ X) [IsSepara
       exact this
     let h := IsOpenImmersion.lift j (g ≫ ι) hg
     have hh : h ≫ j = g ≫ ι := IsOpenImmersion.lift_fac _ _ _
-    haveI : LocallyOfFiniteType (h ≫ j) := by rw [hh]; infer_instance
-    haveI : LocallyOfFiniteType h := locallyOfFiniteType_of_comp h j
+    have : LocallyOfFiniteType (h ≫ j) := by rw [hh]; infer_instance
+    have : LocallyOfFiniteType h := locallyOfFiniteType_of_comp h j
     have e : h ≫ f = Spec.map (CommRingCat.ofHom (algebraMap Γ(X, V.1) (Localization.Away b))) ≫
         V.2.fromSpec := by
       rw [← f.toNormalization_fromNormalization, reassoc_of% hh, hι, f.ι_fromNormalization,
         ← Spec.map_comp_assoc]
       congr 2
-    haveI : LocallyOfFiniteType (Spec.map (CommRingCat.ofHom
+    have : LocallyOfFiniteType (Spec.map (CommRingCat.ofHom
         (algebraMap Γ(X, V.1) (Localization.Away b))) ≫ V.2.fromSpec) := by
       rw [← e]; infer_instance
-    haveI := locallyOfFiniteType_of_comp (Spec.map (CommRingCat.ofHom
+    have := locallyOfFiniteType_of_comp (Spec.map (CommRingCat.ofHom
         (algebraMap Γ(X, V.1) (Localization.Away b)))) V.2.fromSpec
     have := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).mp this
     exact RingHom.finiteType_algebraMap.mp this
@@ -833,12 +833,12 @@ theorem isIso_specMap_restrict_basicOpen_of_bijective {R S : CommRingCat.{0}} (f
 set_option backward.isDefEq.respectTransparency false in
 theorem relSpec_map_isIso_over_basicOpen : ∀ (X : Scheme.{0}) (F F' : X.AffineZariskiSiteᵒᵖ ⥤ CommRingCat) (α : (toOpensFunctor X).op ⋙ X.presheaf ⟶ F) (α' : (toOpensFunctor X).op ⋙ X.presheaf ⟶ F') (hα : α.Coequifibered) (hα' : α'.Coequifibered) (ι : F' ⟶ F), α' ≫ ι = α → ∀ (g : (relativeGluingData hα).glued ⟶ (relativeGluingData hα').glued), g ≫ (relativeGluingData hα').toBase = (relativeGluingData hα).toBase → (∀ V, (relativeGluingData hα).cover.f V ≫ g = Spec.map (ι.app (Opposite.op V)) ≫ (relativeGluingData hα').cover.f V) → ∀ (V : X.AffineZariskiSite) (b : F'.obj (Opposite.op V)), Function.Bijective (Localization.awayMap (ι.app (Opposite.op V)).hom b) → ∀ (W : (relativeGluingData hα').glued.Opens), (W : Set (relativeGluingData hα').glued) = (relativeGluingData hα').cover.f V '' (PrimeSpectrum.basicOpen b : Set (PrimeSpectrum (F'.obj (Opposite.op V)))) → IsIso (g ∣_ W) ∧ ((g ⁻¹ᵁ W : (relativeGluingData hα).glued.Opens) : Set (relativeGluingData hα).glued) = (relativeGluingData hα).cover.f V '' (PrimeSpectrum.basicOpen ((ι.app (Opposite.op V)).hom b) : Set (PrimeSpectrum (F.obj (Opposite.op V)))) := by
   intro X F F' α α' hα hα' ι hαι g hg hg' V b hb W hW
-  haveI : ((relativeGluingData hα).functor ⋙ Scheme.forget).IsLocallyDirected :=
+  have : ((relativeGluingData hα).functor ⋙ Scheme.forget).IsLocallyDirected :=
     Scheme.Cover.RelativeGluingData.instIsLocallyDirectedI₀CompFunctorForgetOfIsThin ..
-  haveI : ((relativeGluingData hα').functor ⋙ Scheme.forget).IsLocallyDirected :=
+  have : ((relativeGluingData hα').functor ⋙ Scheme.forget).IsLocallyDirected :=
     Scheme.Cover.RelativeGluingData.instIsLocallyDirectedI₀CompFunctorForgetOfIsThin ..
-  haveI := (relativeGluingData hα).cover.map_prop V
-  haveI := (relativeGluingData hα').cover.map_prop V
+  have := (relativeGluingData hα).cover.map_prop V
+  have := (relativeGluingData hα').cover.map_prop V
   set φ := Spec.map (ι.app (Opposite.op V)) with hφ
   have hnat : (relativeGluingData hα).natTrans.app V =
       φ ≫ (relativeGluingData hα').natTrans.app V := by
@@ -860,7 +860,7 @@ theorem relSpec_map_isIso_over_basicOpen : ∀ (X : Scheme.{0}) (F F' : X.Affine
   · set D' : (Spec (F'.obj (Opposite.op V))).Opens := PrimeSpectrum.basicOpen b with hD'
     have H₂ := (isPullback_morphismRestrict φ D').paste_vert H
     haveI : IsIso (φ ∣_ D') := isIso_specMap_restrict_basicOpen_of_bijective _ b hb
-    haveI : IsIso (pullback.snd g (D'.ι ≫ (relativeGluingData hα').cover.f V)) := by
+    have : IsIso (pullback.snd g (D'.ι ≫ (relativeGluingData hα').cover.f V)) := by
       rw [← H₂.flip.isoPullback_inv_snd]
       infer_instance
     have hr : (D'.ι ≫ (relativeGluingData hα').cover.f V).opensRange =
@@ -898,9 +898,9 @@ theorem exists_glued_map (X : Scheme.{0}) (F F' : X.AffineZariskiSiteᵒᵖ ⥤ 
       g ≫ (relativeGluingData hα').toBase = (relativeGluingData hα).toBase ∧
       ∀ V, (relativeGluingData hα).cover.f V ≫ g =
         Spec.map (ι.app (Opposite.op V)) ≫ (relativeGluingData hα').cover.f V := by
-  haveI : ((relativeGluingData hα).functor ⋙ Scheme.forget).IsLocallyDirected :=
+  have : ((relativeGluingData hα).functor ⋙ Scheme.forget).IsLocallyDirected :=
     Scheme.Cover.RelativeGluingData.instIsLocallyDirectedI₀CompFunctorForgetOfIsThin ..
-  haveI : ((relativeGluingData hα').functor ⋙ Scheme.forget).IsLocallyDirected :=
+  have : ((relativeGluingData hα').functor ⋙ Scheme.forget).IsLocallyDirected :=
     Scheme.Cover.RelativeGluingData.instIsLocallyDirectedI₀CompFunctorForgetOfIsThin ..
   let η : (relativeGluingData hα).functor ⟶ (relativeGluingData hα').functor :=
     { app V := Spec.map (ι.app (Opposite.op V))
@@ -943,19 +943,19 @@ theorem toBase_of_Spec (X : Scheme.{0}) (F' : X.AffineZariskiSiteᵒᵖ ⥤ Comm
     (α' : (toOpensFunctor X).op ⋙ X.presheaf ⟶ F') (h : α'.Coequifibered)
     (P : MorphismProperty Scheme.{0}) [IsZariskiLocalAtTarget P]
     (hP : ∀ V, P (Spec.map (α'.app V))) : P (relativeGluingData h).toBase := by
-  haveI : ((relativeGluingData h).functor ⋙ Scheme.forget).IsLocallyDirected :=
+  have : ((relativeGluingData h).functor ⋙ Scheme.forget).IsLocallyDirected :=
     Scheme.Cover.RelativeGluingData.instIsLocallyDirectedI₀CompFunctorForgetOfIsThin ..
   rw [IsZariskiLocalAtTarget.iff_of_iSup_eq_top (P := P) _ (iSup_affineOpens_eq_top _)]
   intro U
   let V0 : X.AffineZariskiSite := ⟨U.1, U.2⟩
-  haveI : IsOpenImmersion ((relativeGluingData h).cover.f V0) := (relativeGluingData h).cover.map_prop V0
+  have : IsOpenImmersion ((relativeGluingData h).cover.f V0) := (relativeGluingData h).cover.map_prop V0
   have hpre : (relativeGluingData h).toBase ⁻¹ᵁ U.1 =
       ((relativeGluingData h).cover.f V0).opensRange := by
     simpa using! (relativeGluingData h).toBase_preimage_eq_opensRange_ι V0
   let e := IsOpenImmersion.isoOfRangeEq ((relativeGluingData h).toBase ⁻¹ᵁ U.1).ι
     ((relativeGluingData h).cover.f V0) (by rw [Scheme.Opens.range_ι, ← Scheme.Hom.coe_opensRange, ← hpre])
   have hU : IsAffineOpen U.1 := U.2
-  haveI : Mono hU.fromSpec := inferInstance
+  have : Mono hU.fromSpec := inferInstance
   have key : e.inv ≫ ((relativeGluingData h).toBase ∣_ U.1) ≫ hU.isoSpec.hom =
       Spec.map (α'.app (Opposite.op V0)) := by
     apply (cancel_mono hU.fromSpec).mp
@@ -1040,13 +1040,13 @@ theorem exists_finite_openImmersion : ∀ (U X : Scheme.{0}) (f : U ⟶ X), IsNo
         (s : Set (f.normalizationDiagram.obj (Opposite.op (V k).1))) ⊆ (C : Set _) → ∀ b ∈ G k, ∀ hb : b ∈ C,
           Function.Bijective (Localization.awayMap C.val.toRingHom (⟨b, hb⟩ : C)) := by
     intro k
-    letI := (f.normalizationDiagramMap.app (Opposite.op (V k).1)).hom.toAlgebra
+    let := (f.normalizationDiagramMap.app (Opposite.op (V k).1)).hom.toAlgebra
     exact _root_.GlobalTheory.exists_finset_awayMap_subalgebra_bijective _ _ (G k) (hGfin k)
   choose s hGs hsC using hs
   have hint : ∀ W : X.Opens, IsAffineOpen W →
       (f.normalizationDiagramMap.app (Opposite.op W)).hom.IsIntegral := by
     intro W _
-    letI := (f.app W).hom.toAlgebra
+    let := (f.app W).hom.toAlgebra
     change (algebraMap Γ(X, W) (integralClosure Γ(X, W) Γ(U, f ⁻¹ᵁ W))).IsIntegral
     exact algebraMap_isIntegral_iff.mpr inferInstance
   obtain ⟨F', α', ι, hα', hι, hιinj, hfin, hιS⟩ := _root_.GlobalTheory.QcSub.exists_finite_coequifibered_subalgebra X hX f.normalizationDiagram
@@ -1057,14 +1057,14 @@ theorem exists_finite_openImmersion : ∀ (U X : Scheme.{0}) (f : U ⟶ X), IsNo
   rotate_left
   · rw [Category.assoc, hg₁]; exact f.toNormalization_fromNormalization
   choose b' hb' using fun (k : Fin n) (b : G k) ↦ hιS k b.1 (hGs k b.2)
-  haveI : ∀ k, IsOpenImmersion ((relativeGluingData hα').cover.f (V k)) :=
+  have : ∀ k, IsOpenImmersion ((relativeGluingData hα').cover.f (V k)) :=
     fun k ↦ (relativeGluingData hα').cover.map_prop _
   let Wp : (Σ k, G k) → (relativeGluingData hα').glued.Opens := fun p ↦
     (relativeGluingData hα').cover.f (V p.1) ''ᵁ PrimeSpectrum.basicOpen (b' p.1 p.2)
   have hbij : ∀ p : Σ k, G k, Function.Bijective
       (Localization.awayMap (ι.app (Opposite.op (V p.1))).hom (b' p.1 p.2)) := by
     rintro ⟨k, b⟩
-    letI := (f.normalizationDiagramMap.app (Opposite.op (V k).1)).hom.toAlgebra
+    let := (f.normalizationDiagramMap.app (Opposite.op (V k).1)).hom.toAlgebra
     let C : Subalgebra Γ(X, (V k).1) (f.normalizationDiagram.obj (Opposite.op (V k).1)) :=
       { (ι.app (Opposite.op (V k))).hom.range with
         algebraMap_mem' := fun r ↦ ⟨(α'.app (Opposite.op (V k))).hom r, by

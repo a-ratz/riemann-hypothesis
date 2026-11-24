@@ -140,7 +140,7 @@ theorem _root_.GlobalTheory.SiegelNormalForm.isUnit_of_lagrangian (P Hm : Matrix
   have h := congrArg Complex.im (hsum (Hm *ᵥ star (f j)))
   rw [hPx, zero_dotProduct, Complex.zero_im, Complex.im_sum] at h
   simp only [hxc, Complex.im_ofReal_mul, hf, mul_ite, mul_neg, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
   simpa using h.symm
 
 
@@ -191,7 +191,7 @@ theorem _root_.GlobalTheory.SiegelNormalForm.siegel_of_relations (Y : Matrix (Fi
     intro i j
     have := e2 i j
     simp only [hrow, mul_ite, mul_one, mul_zero, Finset.sum_add_distrib, Finset.sum_neg_distrib,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, hsecond] at this
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, hsecond] at this
     linarith
   have him : ∀ i j, (τ j i).im = (τ i j).im := by
     intro i j
@@ -231,7 +231,7 @@ open scoped BigOperators Real in
 variable {g : ℕ} in
 theorem _root_.GlobalTheory.SiegelNormalForm.exists_normal_form : (∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)), DiscreteTopology Λ → Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤ → ∀ (Hm : Matrix (Fin g) (Fin g) ℂ) (χ : Λ → ℂ) (Ef : LinearMap.BilinForm ℤ Λ), Hm.IsHermitian → (∀ z : Fin g → ℂ, z ≠ 0 → 0 < (z ⬝ᵥ Hm.mulVec (star z)).re) → (∀ l, ‖χ l‖ = 1) → (∀ l m : Λ, (Ef l m : ℝ) = ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (m : Fin g → ℂ))).im) → Function.Bijective Ef → ∃ (φ : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g → ℂ)) (τ : Matrix (Fin g) (Fin g) ℂ) (Q : (Fin g → ℂ) → ℂ) (b : Fin g → ℂ), τ.IsSymm ∧ (τ.map Complex.im).PosDef ∧ (∀ z, φ z ∈ Λ ↔ ∃ m n : Fin g → ℤ, z = (fun i => (m i : ℂ)) + τ.mulVec (fun i => (n i : ℂ))) ∧ Differentiable ℂ Q ∧ Q 0 = 0 ∧ (∀ j, b j ≠ 0) ∧ (∀ (i : Fin g) (l : Λ) z, (l : Fin g → ℂ) = φ (Pi.single i 1) → (χ l * cexp (Real.pi * (φ z ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))) + Real.pi / 2 * ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))))) = cexp (Q (z + Pi.single i 1) - Q z)) ∧ (∀ (j : Fin g) (l : Λ) z, (l : Fin g → ℂ) = φ (τ.mulVec (Pi.single j 1)) → (χ l * cexp (Real.pi * (φ z ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))) + Real.pi / 2 * ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))))) = b j * cexp (-(2 * Real.pi * I) * z j) * cexp (Q (z + τ.mulVec (Pi.single j 1)) - Q z))) := by
   intro g Λ hdisc hspan Hm χ Ef hH hpos hχ hEf hbij
-  haveI : IsZLattice ℝ Λ := ⟨hspan⟩
+  have : IsZLattice ℝ Λ := ⟨hspan⟩
   have hrank : Module.finrank ℤ Λ = 2 * g := by
     rw [ZLattice.rank ℝ Λ, Module.finrank_pi_fintype]
     simp [Complex.finrank_real_complex]

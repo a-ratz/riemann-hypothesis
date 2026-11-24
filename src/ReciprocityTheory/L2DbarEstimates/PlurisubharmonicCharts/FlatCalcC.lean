@@ -94,7 +94,7 @@ theorem fc_rho_continuous {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y
       fun x : A.Mset w0 s De => Real.exp (A.ph A.kap (A.pick x0) x) /
         ‖(fderiv ℂ (A.zLoc w0 s (A.pick x0)) (A.chart (A.pick x0) x)).det‖ ^ 2 := by
     have hU : ∀ᶠ x : A.Mset w0 s De in 𝓝 x0, (x : Y) ∈ (A.chart (A.pick x0)).source :=
-      continuous_subtype_val.continuousAt.preimage_mem_nhds
+      continuous_subtypeVal.continuousAt.preimage_mem_nhds
         ((A.chart (A.pick x0)).open_source.mem_nhds hi0)
     filter_upwards [hU] with x hx
     exact fc_rho_eq A hD x.2 (A.pick x0) hx
@@ -121,7 +121,7 @@ theorem fc_rho_continuous {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y
       ‖(fderiv ℂ (A.zLoc w0 s i) (A.chart i y)).det‖ ^ 2) (x0 : Y) :=
     (Real.continuous_exp.continuousAt.comp hph).div ((continuous_norm.continuousAt.comp hdetc).pow 2)
       (pow_ne_zero 2 (norm_ne_zero_iff.mpr hne))
-  exact hFc.comp continuous_subtype_val.continuousAt
+  exact hFc.comp continuous_subtypeVal.continuousAt
 
 theorem fc_mu_piece {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [SecondCountableTopology Y] [MeasurableSpace Y] [BorelSpace Y] {ι : Type*} {La : Type*} [AddCommGroup La] (A : WeightedAtlas n Y ι La) {L : La} {N : ℕ} {w : Fin N → ι → Y → ℂ} {w0 : ι → Y → ℂ} {s : Fin n → ι → Y → ℂ} {De : MvPolynomial (Fin n) ℂ} (hD : A.D0 L w w0 s)
     (hF : A.Flat w0 s De) (e : OpenPartialHomeomorph (A.Mset w0 s De) (V n))
@@ -130,7 +130,7 @@ theorem fc_mu_piece {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [Sec
     A.mu.comap Subtype.val B =
       ∫⁻ m in B, ENNReal.ofReal ((fun x : A.Mset w0 s De => Real.exp (A.ph A.kap (A.pick x) x) / ‖(fderiv ℂ (A.zLoc w0 s (A.pick x)) (A.chart (A.pick x) x)).det‖ ^ 2) m) ∂vol n (flatStein A hD hF).z := by
   have hMm : MeasurableSet (A.Mset w0 s De) := (isOpen_Mset A hD).measurableSet
-  have hemb := MeasurableEmbedding.subtype_coe hMm
+  have hemb := MeasurableEmbedding.subtypeVal hMm
   have hz := (flatStein A hD hF).isLocalHomeomorph
   have hρ : Measurable fun m => ENNReal.ofReal ((fun x : A.Mset w0 s De => Real.exp (A.ph A.kap (A.pick x) x) / ‖(fderiv ℂ (A.zLoc w0 s (A.pick x)) (A.chart (A.pick x) x)).det‖ ^ 2) m) :=
     ENNReal.measurable_ofReal.comp (fc_rho_continuous A hD hF).measurable

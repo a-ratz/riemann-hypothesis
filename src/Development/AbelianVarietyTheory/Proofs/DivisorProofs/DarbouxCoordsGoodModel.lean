@@ -101,12 +101,12 @@ theorem exists_meas : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
           (∫ z, g z ∂(measI F κ)) * ∏ᶠ v, ∫ z, φ v z ∂(Measure.pi fun _ : κ => measV ψ v) := by
   intro F _ _ ψ hψ hunr hne κ _
   classical
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI hB : ∀ v : Pl (F := F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI hSC : ∀ v : Pl (F := F), SecondCountableTopology (Fv F v) := fun v => GlobalTheory.SplitWeil.secondCountable _
-  haveI hH : ∀ v : Pl (F := F), (measV ψ v).IsAddHaarMeasure := fun v => (isSelfDualFor_measV ψ hψ.1 v (hne v)).1
-  haveI : (measI F κ).IsAddHaarMeasure := measI_isAddHaar F κ
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have hB : ∀ v : Pl (F := F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hSC : ∀ v : Pl (F := F), SecondCountableTopology (Fv F v) := fun v => GlobalTheory.SplitWeil.secondCountable _
+  have hH : ∀ v : Pl (F := F), (measV ψ v).IsAddHaarMeasure := fun v => (isSelfDualFor_measV ψ hψ.1 v (hne v)).1
+  have : (measI F κ).IsAddHaarMeasure := measI_isAddHaar F κ
   have hOint : ∀ v : Pl (F := F), (v.adicCompletionIntegers F : Set (Fv F v)) =
       ((ValuativeRel.valuation (Fv F v)).integer : Set (Fv F v)) := fun v => by
     ext x; exact (GlobalTheory.WeylFour.IndOSelf.mem_int_iff x).symm
@@ -135,11 +135,11 @@ theorem exists_meas : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
     rw [← hOint v] at h1
     rw [hcpi v, h1, Finset.prod_const_one]
   set μv : ∀ v : Pl (F := F), Measure (κ → Fv F v) := fun v => (c v)⁻¹ • Measure.pi fun _ : κ => measV ψ v with hμvdef
-  haveI hμvH : ∀ v, (μv v).IsAddHaarMeasure := fun v =>
+  have hμvH : ∀ v, (μv v).IsAddHaarMeasure := fun v =>
     Measure.IsAddHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 (hct v)) (ENNReal.inv_ne_top.2 (hc0 v))
   have hμv1 : ∀ v, μv v {x | ∀ i, x i ∈ v.adicCompletionIntegers F} = 1 := fun v => by
     simp only [μv]
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     exact ENNReal.inv_mul_cancel (hc0 v) (hct v)
   have hpi : ∀ v, (Measure.pi fun _ : κ => measV ψ v) = c v • μv v := fun v => by
     simp only [μv, smul_smul, ENNReal.mul_inv_cancel (hc0 v) (hct v), one_smul]
@@ -156,7 +156,7 @@ theorem exists_meas : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
   have hf₀cs : HasCompactSupport (fun z => ((b z : ℝ) : ℂ)) := hbcs.comp_left (g := fun r : ℝ => (r : ℂ)) (by simp)
   have hf₀i : Integrable (fun z => ((b z : ℝ) : ℂ)) (measI F κ) := hf₀c.integrable_of_hasCompactSupport hf₀cs
   have hBpos : 0 < ∫ z, b z ∂(measI F κ) :=
-    b.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := measI F κ) (x := 0) hbcs (fun z => b.nonneg)
+    b.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := measI F κ) (x := 0) hbcs (fun z => b.nonneg)
       (by rw [b.one_of_mem_closedBall (Metric.mem_closedBall_self zero_le_one)]; exact one_ne_zero)
   have hfam0 : GlobalTheory.RatWeilOp.IsFam (fun v : Pl F => GlobalTheory.RatWeilOp.ind κ v) :=
     ⟨fun v => GlobalTheory.WeylFour.IndOSelf.indO_mem_SB v κ, Filter.Eventually.of_forall fun v => rfl⟩
@@ -324,11 +324,11 @@ theorem fourV_fourV : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
     ∀ (κ : Type) [Fintype κ], ∀ φ ∈ SB (κ → Fv F v), fourV ψ v (fourV ψ v φ) = fun x => φ (-x) := by
   intro F _ _ ψ hψ v hne κ _ φ hφ
   classical
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨hn, c, hcond, hself⟩ := measV_selfDual ψ hψ v hne
-  haveI := hself.1
-  haveI := GlobalTheory.SplitWeil.secondCountable (Fv F v)
-  haveI := GlobalTheory.SplitWeil.t2Space (Fv F v)
+  have := hself.1
+  have := GlobalTheory.SplitWeil.secondCountable (Fv F v)
+  have := GlobalTheory.SplitWeil.t2Space (Fv F v)
   funext z
   have hinner : ∀ y, fourV ψ v φ y * GlobalTheory.LatVac.psiAt ψ v (y ⬝ᵥ z) =
       ∫ x, φ (x - z) * ((toCirc _ hn (x ⬝ᵥ y) : Circle) : ℂ) ∂(Measure.pi fun _ : κ => measV ψ v) := by
@@ -374,26 +374,26 @@ theorem schr_fourV_loc : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar 
     (w : (κ → Fv F v) × (κ → Fv F v)) (φ : (κ → Fv F v) → ℂ),
     fourV ψ v (schr (GlobalTheory.LatVac.psiAt ψ v) w φ) = schr (GlobalTheory.LatVac.psiAt ψ v) (w.2, -w.1) (fourV ψ v φ) := by
   intro F _ _ ψ _ v κ _ w φ
-  haveI hOc : CompactSpace (v.adicCompletionIntegers F) :=
+  have hOc : CompactSpace (v.adicCompletionIntegers F) :=
     GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
-  haveI : LocallyCompactSpace (Fv F v) :=
+  have : LocallyCompactSpace (Fv F v) :=
     (isCompact_iff_compactSpace.2 hOc).locallyCompactSpace_of_mem_nhds_of_addGroup
       ((Valued.isOpen_valuationSubring _).mem_nhds (zero_mem (v.adicCompletionIntegers F)))
-  haveI : SecondCountableTopology (Fv F v) := by
+  have : SecondCountableTopology (Fv F v) := by
     have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
     have : TopologicalSpace.SeparableSpace (Fv F v) :=
       ⟨⟨Set.range (algebraMap F (Fv F v)), Set.countable_range _,
         IsDedekindDomain.HeightOneSpectrum.denseRange_algebraMap F v⟩⟩
     exact UniformSpace.secondCountable_of_separable (Fv F v)
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hinv : (measV ψ v).IsAddLeftInvariant ∧ SigmaFinite (measV ψ v) := by
     unfold measV
     split_ifs with h
-    · haveI := h.choose_spec.1
+    · have := h.choose_spec.1
       exact ⟨inferInstance, inferInstance⟩
     · exact ⟨⟨fun g => by simp⟩, inferInstance⟩
-  haveI := hinv.1
-  haveI := hinv.2
+  have := hinv.1
+  have := hinv.2
   have h2 : (⅟2 : Fv F v) + ⅟2 = 1 := by rw [← two_mul, mul_invOf_self]
   funext y
   simp only [fourV, schr]
@@ -532,7 +532,7 @@ theorem GlobalTheory.WeylFour.weyl_hasOp : ∀ (F : Type) [Field F] [NumberField
     (SB (κ → Fv F v)).subtype ∘ₗ Submodule.linearProjOfIsCompl _ (C v) (hC v)
   have hPmem : ∀ v φ, P v φ ∈ SB (κ → Fv F v) := fun v φ => (Submodule.linearProjOfIsCompl _ (C v) (hC v) φ).2
   have hPid : ∀ v, ∀ φ ∈ SB (κ → Fv F v), P v φ = φ := fun v φ hφ =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left (hC v) ⟨φ, hφ⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left (hC v) ⟨φ, hφ⟩)
   let ev : ∀ v : Pl (F := F), ((κ → Fv F v) → ℂ) →ₗ[ℂ] ((κ → Fv F v) → ℂ) := fun v =>
     { toFun := fun φ => fourV ψ v (P v φ)
       map_add' := fun φ χ => by
@@ -566,8 +566,8 @@ theorem GlobalTheory.WeylFour.weyl_hasOp : ∀ (F : Type) [Field F] [NumberField
 
   obtain ⟨ei, hsurj, hei, hcont⟩ := _root_.GlobalTheory.WeylFour.exists_fourier_measI F κ
   obtain ⟨μ, hμ, hprod⟩ := _root_.GlobalTheory.WeylMeas.exists_meas F ψ hψ hunr hnt κ
-  haveI := hμ
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have := hμ
+  have : BorelSpace (AF F) := ⟨rfl⟩
   have hspan := _root_.GlobalTheory.WeylSpan.schA_eq_span_pure F κ
   let fA : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ := fun Φ y => ∫ x, Φ x * ψ (x ⬝ᵥ y) ∂μ
   have hpure : ∀ (f : SInf F κ) (φ : ∀ v : Pl (F := F), (κ → Fv F v) → ℂ), (∀ v, φ v ∈ SB _) →
@@ -646,7 +646,7 @@ theorem GlobalTheory.WeylFour.weyl_hasOp : ∀ (F : Type) [Field F] [NumberField
   let Q : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ) := (schA F κ).subtype ∘ₗ Submodule.linearProjOfIsCompl _ D hD
   have hQmem : ∀ Φ, Q Φ ∈ schA F κ := fun Φ => (Submodule.linearProjOfIsCompl _ D hD Φ).2
   have hQid : ∀ Φ ∈ schA F κ, Q Φ = Φ := fun Φ hΦ =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hD ⟨Φ, hΦ⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hD ⟨Φ, hΦ⟩)
   let e : ((κ → AF F) → ℂ) →ₗ[ℂ] (κ → AF F) → ℂ :=
     { toFun := fun Φ => fA (Q Φ)
       map_add' := fun Φ Ψ => by rw [map_add (f := _)]; exact hadd _ (hQmem Φ) _ (hQmem Ψ)

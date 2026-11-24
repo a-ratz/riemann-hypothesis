@@ -157,7 +157,7 @@ theorem continuous_levK : Continuous (levK E r s) := by
     rfl
   change Continuous (fun k : Kinf E r => ((lev (Cinf E) r s (Unitary.toUnits k, 1) : GL _ _) : Matrix (Fin (r + s)) (Fin (r + s)) (Cinf E)))
   rw [e]
-  exact (continuous_subtype_val.matrix_fromBlocks continuous_const continuous_const continuous_const).matrix_reindex _ _
+  exact (continuous_subtypeVal.matrix_fromBlocks continuous_const continuous_const continuous_const).matrix_reindex _ _
 
 
 variable (s) in
@@ -254,7 +254,7 @@ theorem zfin_of_cofin {J : Set (Module.End ℂ (Sm E a))} (hJ : Cofin J) {φ : S
     refine ⟨v, hv, ?_⟩
     change ev v = ev z
     rw [← hvw, map_add (f := _), hw0 w hw, add_zero]
-  haveI := hV
+  have := hV
   exact Submodule.finiteDimensional_of_le hle
 
 theorem fd_span_of_forall_mem {K X : Type} (C : Submodule ℂ (K → ℂ)) [FiniteDimensional ℂ C] (f : K → X → ℂ)
@@ -274,19 +274,19 @@ theorem fd_span_of_forall_mem {K X : Type} (C : Submodule ℂ (K → ℂ)) [Fini
     rintro _ ⟨k, rfl⟩
     rw [hA k]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range A)) := FiniteDimensional.span_of_finite ℂ (Set.finite_range A)
+  have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range A)) := FiniteDimensional.span_of_finite ℂ (Set.finite_range A)
   exact Submodule.finiteDimensional_of_le hle
 
 theorem kfin_of_coeff {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (ρ : Representation ℂ (Kinf E a) W)
     (φ : Sm E a) (h : ∀ g : GA E a, (fun k : Kinf E a => (cptRep E a k φ).1 g) ∈ GlobalTheory.Published.AutFin.coeffSpan ρ) :
     FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => cptRep E a k φ)) := by
-  haveI := GlobalTheory.CompanionTheory.CTFin.UniSol.finiteDimensional_coeffSpan ρ
-  haveI := fd_span_of_forall_mem _ (fun k => (cptRep E a k φ).1) h
+  have := GlobalTheory.CompanionTheory.CTFin.UniSol.finiteDimensional_coeffSpan ρ
+  have := fd_span_of_forall_mem _ (fun k => (cptRep E a k φ).1) h
   let S := Submodule.span ℂ (Set.range fun k => cptRep E a k φ)
   have e : S.map (Sm E a).subtype = Submodule.span ℂ (Set.range fun k => (cptRep E a k φ).1) := by
     rw [Submodule.map_span, ← Set.range_comp]
     rfl
-  haveI : FiniteDimensional ℂ (S.map (Sm E a).subtype) := by rw [e]; infer_instance
+  have : FiniteDimensional ℂ (S.map (Sm E a).subtype) := by rw [e]; infer_instance
   exact (Submodule.equivMapOfInjective _ (Submodule.injective_subtype _) S).symm.finiteDimensional
 
 theorem coeff_comp {K K' W : Type} [Group K] [Group K'] [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ K' W)

@@ -88,7 +88,7 @@ theorem fractionRing_frobenius_pow {n : ℕ} (hn : n ≠ 0) :
       refine ⟨WittVector.frobenius y, fun i => ?_, ?_⟩
       · rw [WittVector.coeff_frobenius_charP, hy, ← pow_mul, pow_succ]
       · rw [pow_succ', RingAut.mul_apply, h, fractionRing_frobenius_algebraMap]
-  letI := Fintype.ofFinite (GaloisField p n)
+  let := Fintype.ofFinite (GaloisField p n)
   have hc : Fintype.card (GaloisField p n) = p ^ n := by
     rw [← Nat.card_eq_fintype_card, GaloisField.card p _ hn]
   refine RingEquiv.toRingHom_injective (IsLocalization.ringHom_ext

@@ -74,8 +74,8 @@ namespace GlobalTheory.CoverDegProj
 
 theorem etale_morphismRestrict {X Y : Scheme.{0}} (π : Y ⟶ X) (U : X.Opens) (hU : IsAffineOpen U)
     (hπU : IsAffineOpen (π ⁻¹ᵁ U)) (hét : (π.app U).hom.Etale) : Etale (π ∣_ U) := by
-  haveI : IsAffine U := hU
-  haveI : IsAffine (π ⁻¹ᵁ U) := hπU
+  have : IsAffine U := hU
+  have : IsAffine (π ⁻¹ᵁ U) := hπU
   rw [HasRingHomProperty.iff_of_isAffine (P := @Etale), Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE,
     morphismRestrict_appLE]
   refine (Scheme.Hom.appLE_congr π _ (Scheme.Opens.ι_image_top U) (V' := π ⁻¹ᵁ U) ?_
@@ -129,7 +129,7 @@ theorem etale_pullback_coords_of_etale {k : Type} [CommRing k] {X Y : Scheme.{0}
 
 theorem exists_open_covering_charts : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (p : X ⟶ Sp F) (q : Y ⟶ Sp F) (σ : F →+* ℂ) (D : ℕ), IsProjOver p → IsProjOver q → ∀ (π : Y ⟶ X) (hπ : π ≫ p = q), π (genericPoint Y) = genericPoint X → π.residueDegree (genericPoint Y) ≠ 0 → ∃ U : X.Opens, genericPoint X ∈ U ∧ (∀ y ∈ ptsIn p σ U, (ptMap π hπ σ ⁻¹' {y}).encard = (π.residueDegree (genericPoint Y) : ℕ∞)) ∧ (∀ z : CxPts q σ, ptMap π hπ σ z ∈ ptsIn p σ U → ∀ c : AlgChart p σ D, ptMap π hπ σ z ∈ c.e.source → ∃ c' : AlgChart q σ D, z ∈ c'.e.source ∧ ∀ w ∈ c'.e.source, ptMap π hπ σ w ∈ c.e.source ∧ c'.e w = c.e (ptMap π hπ σ w)) := by
   intro k _ X Y _ _ p q σ D hpP hqP π hπ hη hδ
-  haveI : CharZero k := RingHom.charZero σ
+  have : CharZero k := RingHom.charZero σ
   obtain ⟨U, hU, hxU, hV, he, hf, hr⟩ :=
     GlobalTheory.GenFinEtField.exists_affine_finite_etale_free k X Y p q hpP hqP π hπ hη hδ
   refine ⟨U, hxU, fun y hy => ?_, fun z hz c hc => ?_⟩
@@ -185,11 +185,11 @@ noncomputable section
 
 theorem GlobalTheory.Mix.map_part_pull_of_genFinite : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (p : X ⟶ Sp F) (q : Y ⟶ Sp F) (σ : F →+* ℂ) (D : ℕ), IsProjOver p → topologicalKrullDim X = (D : ℕ) → IsProjOver q → ∀ (π : Y ⟶ X) (hπ : π ≫ p = q), π (genericPoint Y) = genericPoint X → π.residueDegree (genericPoint Y) ≠ 0 → ∀ (L : Fin D → MLine p σ) (ε : ℤˣ), Measure.map (ptMap π hπ σ) (part (fun i => (L i).pull π hπ) ε) = (π.residueDegree (genericPoint Y) : ENNReal) • part L ε := by
   intro F _ X Y _ _ p q σ D hp hD hq π hπ hgen hdeg L ε
-  haveI := CxPts.t2Space_cxPts_of_isProjOver σ hp
-  haveI := CxPts.t2Space_cxPts_of_isProjOver σ hq
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ hp
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ hq
-  haveI : IsLocallyNoetherian X := by
+  have := CxPts.t2Space_cxPts_of_isProjOver σ hp
+  have := CxPts.t2Space_cxPts_of_isProjOver σ hq
+  have := CxPts.secondCountableTopology_of_isProjOver σ hp
+  have := CxPts.secondCountableTopology_of_isProjOver σ hq
+  have : IsLocallyNoetherian X := by
     obtain ⟨N, i, _, rfl⟩ := hp
     have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str F N
     exact LocallyOfFiniteType.isLocallyNoetherian (i ≫ PSpace.str F N)
@@ -202,12 +202,12 @@ theorem GlobalTheory.Mix.map_part_pull_of_genFinite : ∀ (F : Type) [Field F] (
   set T : Set (CxPts p σ) := (ptsIn p σ (U ⊓ U'))ᶜ with hT_def
   have hTset : T = {y : CxPts p σ | y.1 (IsLocalRing.closedPoint ℂ) ∈ Z} := by
     ext y
-    simp only [hT_def, hZ_def, mem_compl_iff, mem_setOf_eq, mem_ptsIn]
+    simp only [hT_def, hZ_def, mem_compl_iff, mem_ofPred_eq, mem_ptsIn]
     rfl
   have hmT : m ⁻¹' T = {z : CxPts q σ | z.1 (IsLocalRing.closedPoint ℂ) ∈ π ⁻¹' Z} := by
     rw [hTset]
     ext z
-    simp only [mem_preimage, mem_setOf_eq, hm_def, ptMap, PtsOver.map_val]
+    simp only [mem_preimage, mem_ofPred_eq, hm_def, ptMap, PtsOver.map_val]
     rfl
   have hZ' : IsClosed (π ⁻¹' Z : Set Y) := hZ.preimage π.continuous
   have hgZ' : genericPoint Y ∉ (π ⁻¹' Z : Set Y) := by

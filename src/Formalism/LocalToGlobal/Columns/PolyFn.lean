@@ -187,7 +187,7 @@ theorem circle_infinite : {z : ℂ | star z * z = 1}.Infinite := by
   refine ((Set.Icc_infinite (by norm_num : (-1 : ℝ) < 1)).image hinj).mono ?_
   rintro _ ⟨t, ⟨ht1, ht2⟩, rfl⟩
   have hs : Real.sqrt (1 - t ^ 2) ^ 2 = 1 - t ^ 2 := Real.sq_sqrt (by nlinarith)
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   apply Complex.ext <;> simp [Complex.mul_re, Complex.mul_im] <;> nlinarith [hs]
 
 theorem unitary_udv (u v : Matrix (Fin n) (Fin n) ℂ) (d : Fin n → ℂ) (hu : uᴴ * u = 1) (hv : vᴴ * v = 1)

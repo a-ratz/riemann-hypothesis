@@ -57,7 +57,7 @@ namespace GlobalTheory.GoodEtaleSection
 theorem faithfullyFlat_adicCompletion_span (R : Type) [CommRing R] [IsNoetherianRing R] [IsLocalRing R]
     (t : R) (ht : t ∈ maximalIdeal R) :
     Module.FaithfullyFlat R (AdicCompletion (Ideal.span {t}) R) := by
-  haveI : Module.Flat R (AdicCompletion (Ideal.span {t}) R) := AdicCompletion.flat_of_isNoetherian _
+  have : Module.Flat R (AdicCompletion (Ideal.span {t}) R) := AdicCompletion.flat_of_isNoetherian _
   refine ⟨fun m hm => ?_⟩
   rw [IsLocalRing.eq_maximalIdeal hm]
   have hle : Ideal.span {t} ≤ maximalIdeal R := (Ideal.span_singleton_le_iff_mem _).2 ht

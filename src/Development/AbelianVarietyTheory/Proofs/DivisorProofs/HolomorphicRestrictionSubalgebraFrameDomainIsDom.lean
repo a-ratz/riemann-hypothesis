@@ -52,10 +52,10 @@ theorem holAlg_isDomain : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     X.dom.Nonempty → IsDomain (GlobalTheory.FlatPair.holAlg X) := by
   intro E _ _ _ r X hne
   obtain ⟨y0, hy0⟩ := hne
-  haveI : Nontrivial (holAlg X) := ⟨⟨0, 1, fun h => by
+  have : Nontrivial (holAlg X) := ⟨⟨0, 1, fun h => by
     have := congrFun (congrArg Subtype.val h) ⟨y0, hy0⟩
     simp at this⟩⟩
-  haveI : NoZeroDivisors (holAlg X) := ⟨fun {a b} hab => by
+  have : NoZeroDivisors (holAlg X) := ⟨fun {a b} hab => by
     by_contra hcon
     push_neg at hcon
     obtain ⟨ha, hb⟩ := hcon

@@ -76,7 +76,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.eUnit :
   intro O K _ _ _ _ _ Δ τ L hU u hε0
   obtain ⟨U, hU⟩ := hU
   obtain ⟨ε, hε⟩ := hε0
-  haveI := L.frac
+  have := L.frac
   let D : K := τ ^ 2 - 4
   have L' : IsLoc O D := ⟨L.frac, L.compl, L.fin, L.two, ⟨U, 1, one_ne_zero, by simp [D, hU]⟩⟩
   have hw : ((2 : K) • (ω : Etau K τ) - algebraMap K _ τ) * ((2 : K) • ω - algebraMap K _ τ)
@@ -164,7 +164,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.uniq :
     (∃ u : Oˣ, algebraMap O K u = τ ^ 2 - 4) → ∀ (c : K) (d m : EL Δ τ), IsDat c d m → ∀ S₀ S₁ : Set (Sp Δ τ), IsFix O c d m S₀ → IsFix O c d m S₁ →
     ∃ z : (Etau K τ)ˣ, ∀ x, x ∈ S₀ ↔ tor Δ z x ∈ S₁ := by
   intro O K _ _ _ _ _ Δ τ hl hu c d m hd
-  haveI := hl.frac
+  have := hl.frac
   obtain ⟨hτ, h2, -, hint⟩ := One.intE O K Δ τ hl hu
   obtain ⟨ε, s₀, hs₀, hΔ⟩ := hl.even
   obtain ⟨y₀, hy⟩ := One.snd O K Δ τ hl hu c d m hd s₀⁻¹ ε (by rw [hΔ]; field_simp)

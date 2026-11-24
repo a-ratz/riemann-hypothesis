@@ -107,13 +107,13 @@ theorem map_eq_of_one {G H : Type} [Group G] [TopologicalSpace G] [IsTopological
     [MeasurableSpace H] [BorelSpace H]
     (e : H ≃ₜ* G) (ν : Measure G) [ν.IsHaarMeasure] (μ : Measure H) [μ.IsHaarMeasure] (S : Set G)
     (hS : ν S = 1) (hS' : μ (e ⁻¹' S) = 1) : ν = μ.map e := by
-  haveI : (μ.map e).IsHaarMeasure := e.isHaarMeasure_map μ
+  have : (μ.map e).IsHaarMeasure := e.isHaarMeasure_map μ
   have hc := Measure.isMulLeftInvariant_eq_smul ν (μ.map e)
   have h1 : (μ.map e) S = 1 := by
     rw [show (μ.map e) = μ.map e.toHomeomorph.toMeasurableEquiv from rfl, MeasurableEquiv.map_apply]
     exact hS'
   have h2 := congrArg (fun m : Measure G => m S) hc
-  simp only [Measure.smul_apply, h1, hS, smul_eq_mul, mul_one] at h2
+  simp only [smul_apply, h1, hS, smul_eq_mul, mul_one] at h2
   have h3 : Measure.haarScalarFactor ν (μ.map e) = 1 := by
     have : ((Measure.haarScalarFactor ν (μ.map e) : NNReal) : ENNReal) = 1 := by
       rw [ENNReal.smul_def] at h2; simpa using h2.symm
@@ -241,14 +241,14 @@ theorem vol_rankZero : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G 
   have hneg : Node.neg D.R.m (.grid D.R.m (j + 1)) = 0 := by
     show (D.R.m - (j + 1)) / 2 = 0
     omega
-  rw [Vol.IsAt, if_pos hneg] at hg0
-  rw [Vol.IsAt, if_pos (show Node.neg D.R.m (.top (j + 1)) = 0 from rfl)] at ht0
+  rw [Vol.IsAt, ite_eq_left hneg] at hg0
+  rw [Vol.IsAt, ite_eq_left (show Node.neg D.R.m (.top (j + 1)) = 0 from rfl)] at ht0
   obtain ⟨hgm, hgf⟩ := hg0
   obtain ⟨htm, htf⟩ := ht0
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (G.V (.grid D.R.m (j + 1)))
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (G.V (.top (j + 1)))
-  haveI := hgm.1
-  haveI := htm.1
+  have := hgm.1
+  have := htm.1
   let d := rowJac G (j + 1) hj 0 (by omega)
   have hi : ∀ y ∈ G.Λ (.top (j + 1)), d.i₀ *ᵥ y ∈ G.Λ (.grid D.R.m (j + 1)) := by
     intro y hy
@@ -260,7 +260,7 @@ theorem vol_rankZero : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G 
     change x ∈ (G.node (.grid D.R.m (j + 1))).lat at hx
     rw [show (G.node (.grid D.R.m (j + 1))).lat = _ from G.sp.rowLat j hj] at hx
     obtain ⟨y, hy, u, -, rfl⟩ := hx
-    haveI : IsEmpty (Fin (D.R.m - 1 - (j + 1))) := by
+    have : IsEmpty (Fin (D.R.m - 1 - (j + 1))) := by
       rw [show D.R.m - 1 - (j + 1) = 0 by omega]; infer_instance
     rw [Subsingleton.elim u 0, Matrix.mulVec_zero, add_zero]
     change d.q0 *ᵥ (d.i₀ *ᵥ y) ∈ _

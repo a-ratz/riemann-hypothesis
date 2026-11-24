@@ -60,8 +60,8 @@ theorem cuspWeight_descends :
         ∀ z ∈ mcPts (mCoordIdeal D.y), X.M.proj z ∈ X.S.R.Yo → X.Cd.cuspWeight z = G (X.M.proj z) := by
   intro II Ψ _ _ K _ ι _ Ω _ _ E _ _ D O Lt _ _ _ X
   obtain ⟨C, C', hC⟩ := CuspWeightIntegrable.uFn_bound X
-  letI : MeasurableSpace X.M.Xc := borel X.M.Xc
-  haveI : BorelSpace X.M.Xc := ⟨rfl⟩
+  let : MeasurableSpace X.M.Xc := borel X.M.Xc
+  have : BorelSpace X.M.Xc := ⟨rfl⟩
   refine ⟨fun x => 2 * CuspWeightIntegrable.uFn X x, 2 * max C C', ?_, ?_, ?_⟩
   · exact ((CuspWeightIntegrable.measurable_uFn X).const_mul 2).indicator X.S.R.isOpen_Yo.measurableSet
   · intro x hx

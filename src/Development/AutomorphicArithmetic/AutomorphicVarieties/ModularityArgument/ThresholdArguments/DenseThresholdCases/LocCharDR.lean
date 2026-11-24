@@ -90,7 +90,7 @@ theorem UpperTheory.V.Loc.hecke_char_de_rham_of_local_artin_above_l :
         ι.symm (ω (a s)) * algPow w (-hh) (a s : w.adicCompletion F) := ho.val s _ rfl (Set.mem_univ _)
     have h1 : algPow w (-hh) (a s : w.adicCompletion F) * ∏ᶠ τ : Emb l w, τ.1 (a s : w.adicCompletion F) ^
         hh (τ.1.comp (algebraMap F (w.adicCompletion F))) = 1 := by
-      haveI := finite_contEmb (l := l) w
+      have := finite_contEmb (l := l) w
       unfold algPow
       rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
       refine finprod_eq_one_of_forall_eq_one fun j => ?_

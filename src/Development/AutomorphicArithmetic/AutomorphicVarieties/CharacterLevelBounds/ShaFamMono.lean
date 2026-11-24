@@ -83,7 +83,7 @@ def eigL (e : ℕ) (U : Subgroup (G k Ω)) [U.Normal] (ψ : G k Ω →* Oˣ) : �
 omit [Fact l.Prime] in
 theorem shaFam_mono {m n : ℕ} (h : m ∣ n) : shaFam k Ω m ⊆ shaFam k Ω n := by
   intro U hU
-  simp only [shaFam, Set.mem_setOf_eq] at hU ⊢
+  simp only [shaFam, Set.mem_ofPred_eq] at hU ⊢
   rcases hU with ⟨A, hA, rfl⟩ | ⟨A, rfl⟩
   · left
     refine ⟨A, ?_, rfl⟩

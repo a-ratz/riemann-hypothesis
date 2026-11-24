@@ -533,11 +533,11 @@ theorem seamEx_coords {K V E ι : Type} [Field K] [AddCommGroup V] [Module K V] 
     rw [← LinearMap.range_eq_top, eq_top_iff, ← hb.2, Submodule.span_le]
     rintro _ ⟨i, rfl⟩
     exact ⟨cpt σ (e.symm (b i)), by rw [hf]; simp⟩
-  haveI : Module.Finite K V := Module.Finite.equiv e
-  haveI : Finite ι := Module.Finite.finite_basis b
-  haveI : Fintype ι := Fintype.ofFinite ι
+  have : Module.Finite K V := Module.Finite.equiv e
+  have : Finite ι := Module.Finite.finite_basis b
+  have : Fintype ι := Fintype.ofFinite ι
   let B : Module.Basis ι ℂ E := Module.Basis.mk hb.1 hb.2.ge
-  haveI : Module.Finite ℂ E := Module.Finite.of_basis B
+  have : Module.Finite ℂ E := Module.Finite.of_basis B
   have hr : Module.finrank ℂ (Fin n → ℂ) = Module.finrank ℂ E := by
     rw [Module.finrank_eq_card_basis B, ← Module.finrank_eq_card_basis b, ← e.finrank_eq]
     simp

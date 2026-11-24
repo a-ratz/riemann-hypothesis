@@ -94,24 +94,24 @@ private lemma hermC_emb_emb_eq_herm {n : ℕ} (τ : E →+* ℂ) (G : Matrix (Fi
     simp only [hermC, herm, Data.emb, map_sum, map_mul, cc, IsCMField.complexEmbedding_complexConj]
 
 lemma lineV_mem_Iperp (hξ : herm X.Gm ξ ξ = 0) (s : X.Ψ → ℂ) : X.lineV ξ s ∈ X.Iperp ξ := by
-  simp only [Data.Iperp, Set.mem_setOf_eq]
+  simp only [Data.Iperp, Set.mem_ofPred_eq]
   intro τ
   simp only [Data.lineV, hermC_smul_left_dim, hermC_emb_emb_eq_herm, hξ, map_zero, mul_zero]
 
 lemma Iperp_sub {u w : X.Ψ → Fin r → ℂ} (hu : u ∈ X.Iperp ξ) (hw : w ∈ X.Iperp ξ) :
     u - w ∈ X.Iperp ξ := by
-  simp only [Data.Iperp, Set.mem_setOf_eq] at hu hw ⊢
+  simp only [Data.Iperp, Set.mem_ofPred_eq] at hu hw ⊢
   intro τ
   rw [Pi.sub_apply, hermC_sub_left_dim, hu τ, hw τ, sub_zero]
 
 lemma Iperp_smul (c : ℂ) {u : X.Ψ → Fin r → ℂ} (hu : u ∈ X.Iperp ξ) : c • u ∈ X.Iperp ξ := by
-  simp only [Data.Iperp, Set.mem_setOf_eq] at hu ⊢
+  simp only [Data.Iperp, Set.mem_ofPred_eq] at hu ⊢
   intro τ
   rw [Pi.smul_apply, hermC_smul_left_dim, hu τ, mul_zero]
 
 lemma aproj_eq_zero_of_Uz {x : Frame X.Ψ r} {u : X.Ψ → Fin r → ℂ} (hu : u ∈ X.Uz x ξ) :
     X.aproj x ξ u = 0 := by
-  simp only [Data.Uz, Data.Iperp, Set.mem_setOf_eq] at hu
+  simp only [Data.Uz, Data.Iperp, Set.mem_ofPred_eq] at hu
   obtain ⟨-, h2⟩ := hu
   funext τ
   have hH : X.Hf x τ (u τ) (Data.emb τ.1 ξ) = 0 := by
@@ -151,7 +151,7 @@ lemma split_key {r : ℕ} {X : DataX E r} {ξ : Fin r → E} (hξ : herm X.Gm ξ
   have hwI : X.ucomp z1 ξ v ∈ X.Iperp ξ :=
     AffineProjectionSplitting.Iperp_sub X.toData ξ hv (AffineProjectionSplitting.lineV_mem_Iperp X.toData ξ hξ _)
   have hUz : X.ucomp z1 ξ v ∈ X.Uz z1 ξ := by
-    simp only [Data.Uz, Set.mem_setOf_eq]
+    simp only [Data.Uz, Set.mem_ofPred_eq]
     refine ⟨hwI, ?_⟩
     rw [h1]
     exact AffineProjectionSplitting.Iperp_smul X.toData ξ c hwI
@@ -180,7 +180,7 @@ theorem sSplit : SSplit E := by
   unfold SplitData at hsd ⊢
   obtain ⟨hA, hB, hC, hD, hF, hG⟩ := hsd
   have hv : ∀ j, X.embV (lam j) ∈ X.Iperp ξ := fun j => by
-    simp only [Data.Iperp, Set.mem_setOf_eq]
+    simp only [Data.Iperp, Set.mem_ofPred_eq]
     intro τ
     simp only [Data.embV, AffineProjectionSplitting.hermC_emb_emb_eq_herm, (hA j).2, map_zero]
   refine ⟨hA, hB, hC, fun j hj => ⟨(hD j hj).1, ?_⟩, fun j hj => ⟨(hF j hj).1, ?_⟩, hG⟩

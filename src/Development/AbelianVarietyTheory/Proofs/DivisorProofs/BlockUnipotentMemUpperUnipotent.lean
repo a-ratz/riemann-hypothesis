@@ -67,7 +67,7 @@ theorem mul_apply_succ {n : ℕ} {X Y : GL (Fin n) R} (hX : X ∈ unipB R (Fin n
     have h2 := Fin.val_injective.ne hc.2
     by_cases hca : c < a
     · rw [hX.1 a c hca, zero_mul]
-    · have : a' < c := by rw [Fin.lt_iff_val_lt_val] at hca ⊢; omega
+    · have : a' < c := by rw [Fin.lt_def] at hca ⊢; omega
       rw [hY.1 c a' this, mul_zero]
 
 end GlobalTheory.GamMul.UnipPlaced

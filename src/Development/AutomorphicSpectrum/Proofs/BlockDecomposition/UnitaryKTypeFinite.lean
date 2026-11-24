@@ -310,7 +310,7 @@ def Gp.m (g : Gp G) : Matrix (Fin n) (Fin n) ℂ := g.1
 
 theorem Gp.ext {a b : Gp G} (h : a.m = b.m) : a = b := Subtype.ext h
 
-theorem continuous_m : Continuous (Gp.m : Gp G → Matrix (Fin n) (Fin n) ℂ) := continuous_subtype_val
+theorem continuous_m : Continuous (Gp.m : Gp G → Matrix (Fin n) (Fin n) ℂ) := continuous_subtypeVal
 
 theorem isEmbedding_m : Topology.IsEmbedding (Gp.m : Gp G → Matrix (Fin n) (Fin n) ℂ) :=
   Topology.IsEmbedding.subtypeVal
@@ -418,7 +418,7 @@ def stdG (G : Set (Matrix (Fin n) (Fin n) ℂ)) [hG : Fact (GlobalTheory.LinRed.
 omit hG in
 theorem admissible_of_polynomial_identity (h1 : FinOfPI) (h2 : GoodPI) (h3 : Transfer) (h4 : ExistsAvg)
     (hLR : GlobalTheory.LinRed.IsLinRed G) (h5 : PositivityTheory.Tls2.Iua.IwaOn G) : PositivityTheory.Tls2.Iua.AdmG G := by
-  haveI : Fact (GlobalTheory.LinRed.IsLinRed G) := ⟨hLR⟩
+  have : Fact (GlobalTheory.LinRed.IsLinRed G) := ⟨hLR⟩
   intro H _ _ _ σ hσ hirr S _ hS v hv
   obtain ⟨U, hU, hiwa⟩ := h5
   let μ : Measure (Kc G) := (Measure.haar : Measure (Kc G)).inv
@@ -428,7 +428,7 @@ theorem admissible_of_polynomial_identity (h1 : FinOfPI) (h2 : GoodPI) (h3 : Tra
   have hc : ∀ u, Continuous fun g => homG hσ g u := fun u =>
     (hσ.2.2 u).comp_continuous continuous_m fun g => g.2
   obtain ⟨e, E, he, hfin, hE, hEv⟩ := h4 (Kc G) μ H ((homG hσ).comp (Kc G).subtype) (fun k u => hiso k u)
-    (fun u => (hc u).comp continuous_subtype_val) S (fun k u hu => hS _ ⟨k.1.2, mem_Kc.1 k.2⟩ u hu) v hv
+    (fun u => (hc u).comp continuous_subtypeVal) S (fun k u hu => hS _ ⟨k.1.2, mem_Kc.1 k.2⟩ u hu) v hv
   let st : Gp G → Gp G := fun g => ⟨g.mᴴ, hLR.star_mem _ g.2⟩
   let Tr : Set (Gp G) := {s | (stdG G hU s).BlockTriangular id}
   have hgood : IsGood st Tr (stdG G hU) := by
@@ -462,7 +462,7 @@ theorem admissible_of_polynomial_identity (h1 : FinOfPI) (h2 : GoodPI) (h3 : Tra
   · refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
     show e k • σ k.1.1 (T u) = T (e k • σ k.1.1 u)
     rw [map_smul, hT _ ⟨k.1.2, mem_Kc.1 k.2⟩ u]
-  · exact (he.smul ((hc u).comp continuous_subtype_val)).integrable_of_hasCompactSupport
+  · exact (he.smul ((hc u).comp continuous_subtypeVal)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
 
 theorem RamifiedPrimeLengthBound {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)} (hLR : GlobalTheory.LinRed.IsLinRed G)
@@ -494,10 +494,10 @@ theorem isAdmissible_of_unitary_irreducible : ∀ {n : ℕ} {G : Set (Matrix (Fi
   intro n G hG hA H _ _ _ σ hσ hirr
   refine ⟨hσ.1, hσ.2.2, fun k hk v => hσ.2.1 k hk.1 v, ?_⟩
   intro S hfd hS _
-  haveI := hfd
+  have := hfd
   let b := Module.finBasis ℂ S
   choose Y hYfd _ hvY hY using fun i => hA H σ hσ hirr S hS (b i) (b i).2
-  haveI : ∀ i, FiniteDimensional ℂ (Y i) := hYfd
+  have : ∀ i, FiniteDimensional ℂ (Y i) := hYfd
   have hsup : FiniteDimensional ℂ (⨆ i, Y i : Submodule ℂ H) := Submodule.finiteDimensional_iSup Y
   refine Submodule.finiteDimensional_of_le (S₂ := ⨆ i, Y i) (sSup_le ?_)
   rintro _ ⟨Θ, rfl, hΘ⟩
@@ -757,10 +757,10 @@ theorem skew_add_upper {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) �
     have hji' : j < i := hji
     have hle : h i ≤ h j := hanti hji'.le
     have h1 : P i j = 0 := by
-      rw [P_ent, if_neg (not_lt.2 hle)]
+      rw [P_ent, ite_eq_right (not_lt.2 hle)]
     have h2 : Y i j = 0 := Y_diag hji'.ne'
     have h3 : Mᴴ i j = 0 := by
-      rw [Matrix.conjTranspose_apply, M_ent, if_neg (not_lt.2 hle)]; simp
+      rw [Matrix.conjTranspose_apply, M_ent, ite_eq_right (not_lt.2 hle)]; simp
     simp only [Matrix.add_apply, h1, h2, h3, add_zero]
 
 end GlobalTheory.CompanionTheory.IwasawaGen
@@ -821,7 +821,7 @@ theorem tri_mul {U s t : Matrix (Fin n) (Fin n) ℂ}
 
 theorem isClosed_tri (U : Matrix (Fin n) (Fin n) ℂ) :
     IsClosed {s : Matrix (Fin n) (Fin n) ℂ | (Uᴴ * s * U).BlockTriangular id} := by
-  simp only [Matrix.BlockTriangular, Set.setOf_forall]
+  simp only [Matrix.BlockTriangular, Set.ofPred_forall]
   refine isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => ?_
   exact isClosed_eq
     (((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const).matrix_elem i j)
@@ -873,11 +873,11 @@ theorem isClosed_factor {G : Set (Matrix (Fin n) (Fin n) ℂ)} (hG : IsLinRed G)
     (U : Matrix (Fin n) (Fin n) ℂ) :
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ |
       ∃ k ∈ maxCpt G, (Uᴴ * (kᴴ * g) * U).BlockTriangular id} := by
-  haveI : CompactSpace (maxCpt G) := isCompact_iff_compactSpace.1 (isCompact_maxCpt hG)
+  have : CompactSpace (maxCpt G) := isCompact_iff_compactSpace.1 (isCompact_maxCpt hG)
   have hC : IsClosed {p : maxCpt G × Matrix (Fin n) (Fin n) ℂ |
       (Uᴴ * ((p.1 : Matrix (Fin n) (Fin n) ℂ)ᴴ * p.2) * U).BlockTriangular id} :=
     (isClosed_tri U).preimage
-      ((continuous_subtype_val.comp continuous_fst).matrix_conjTranspose.matrix_mul continuous_snd)
+      ((continuous_subtypeVal.comp continuous_fst).matrix_conjTranspose.matrix_mul continuous_snd)
   have := isClosedMap_snd_of_compactSpace _ hC
   convert this using 1
   ext g
@@ -904,18 +904,18 @@ theorem factor_of_local : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)}, 
       ∃ k ∈ GlobalTheory.LinRed.maxCpt G, ∃ s ∈ G, g = k * s ∧ (Uᴴ * s * U).BlockTriangular id) →
     ∀ g ∈ G, ∃ k ∈ GlobalTheory.LinRed.maxCpt G, ∃ s ∈ G, g = k * s ∧ (Uᴴ * s * U).BlockTriangular id := by
   intro n G hG U hU h g hg
-  haveI : PreconnectedSpace G := isPreconnected_iff_preconnectedSpace.1 hG.connected
+  have : PreconnectedSpace G := isPreconnected_iff_preconnectedSpace.1 hG.connected
   have hclosed : IsClosed {x : G | Good G U x.1} := by
     have e : {x : G | Good G U x.1} = Subtype.val ⁻¹' {g : Matrix (Fin n) (Fin n) ℂ |
         ∃ k ∈ maxCpt G, (Uᴴ * (kᴴ * g) * U).BlockTriangular id} := by
       ext x
       exact good_iff hG x.2
     rw [e]
-    exact (isClosed_factor hG U).preimage continuous_subtype_val
+    exact (isClosed_factor hG U).preimage continuous_subtypeVal
   have hopen : IsOpen {x : G | Good G U x.1} := by
     rw [isOpen_iff_eventually]
     intro x hx
-    have := (continuous_subtype_val.tendsto x).eventually (good_nhds hG hU h hx)
+    have := (continuous_subtypeVal.tendsto x).eventually (good_nhds hG hU h hx)
     filter_upwards [this] with y hy using hy y.2
   have hone : Good G U 1 := by
     refine ⟨1, ⟨hG.one_mem, one_mem _⟩, 1, hG.one_mem, by simp, ?_⟩
@@ -1279,8 +1279,8 @@ theorem eventually_exp_mul_exp {G : Set A} (hmul : ∀ g ∈ G, ∀ h ∈ G, g *
     {V : Set A} (hV : V ∈ 𝓝 (0 : A)) (hVG : ∀ X ∈ V, NormedSpace.exp X ∈ G → X ∈ 𝔤)
     (hk : 𝔨 ≤ 𝔤) (hb : 𝔟 ≤ 𝔤) (hg : 𝔤 ≤ 𝔨 ⊔ 𝔟) :
     ∀ᶠ g in 𝓝 (1 : A), g ∈ G → ∃ X ∈ 𝔨, ∃ Y ∈ 𝔟, g = NormedSpace.exp X * NormedSpace.exp Y := by
-  haveI : CompleteSpace A := FiniteDimensional.complete ℝ A
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   obtain ⟨p₀, q₀, hpk, hqb, hr0⟩ := exists_proj_sup 𝔨 𝔟
   let p : A →L[ℝ] A := LinearMap.toContinuousLinearMap p₀
   let q : A →L[ℝ] A := LinearMap.toContinuousLinearMap q₀
@@ -1341,10 +1341,10 @@ theorem eventually_exp_mul_exp_of_isLinRed {n : ℕ} {G : Set (Matrix (Fin n) (F
     ∀ᶠ g in 𝓝 (1 : Matrix (Fin n) (Fin n) ℂ), g ∈ G →
       ∃ X ∈ 𝔨, ∃ Y ∈ 𝔟, g = NormedSpace.exp X * NormedSpace.exp Y := by
   obtain ⟨V, hV, hVG⟩ := hV
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.instL2OpNormedRing
-  letI : NormedSpace ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.instL2OpNormedSpace
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.instL2OpNormedAlgebra
-  letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) :=
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.instL2OpNormedRing
+  let : NormedSpace ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.instL2OpNormedSpace
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.instL2OpNormedAlgebra
+  let : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) :=
     { (inferInstance : Algebra ℝ (Matrix (Fin n) (Fin n) ℂ)) with
       norm_smul_le := fun t X => by
         have : t • X = (t : ℂ) • X := by ext a b; simp
@@ -1476,11 +1476,11 @@ theorem iwaOn_of_isLinRed : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)}
   let 𝔨 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ) := 𝔤 ⊓
     { carrier := {X | Xᴴ = -X}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Matrix.conjTranspose_add, ha, hb, neg_add]
       zero_mem' := by simp
       smul_mem' := fun r a ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         ext i j
         have := congrFun (congrFun ha i) j
         simp only [Matrix.conjTranspose_apply, Matrix.neg_apply] at this
@@ -1488,12 +1488,12 @@ theorem iwaOn_of_isLinRed : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)}
   let 𝔟 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ) := 𝔤 ⊓
     { carrier := {X | (Uᴴ * X * U).BlockTriangular id}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Matrix.mul_add, Matrix.add_mul]
         exact ha.add hb
       zero_mem' := by simp [Matrix.BlockTriangular]
       smul_mem' := fun r a ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         intro i j hij
         have := ha hij
         have e : Uᴴ * (r • a) * U = r • (Uᴴ * a * U) := by simp
@@ -1557,7 +1557,7 @@ theorem exists_gl_of_mem (e : Fin a × ι ≃ Fin n) {g : Matrix (Fin n) (Fin n)
 
 theorem continuousOn_toGL_unblk (e : Fin a × ι ≃ Fin n) :
     ContinuousOn (fun g => toGL (unblk e g) : Matrix (Fin n) (Fin n) ℂ → GL (Fin a) (ι → ℂ)) (blkG e) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hval : ∀ g : blkG e, ((toGL (unblk e g.1) : GL (Fin a) (ι → ℂ)) : Matrix (Fin a) (Fin a) (ι → ℂ)) = unblk e g.1 := by
     rintro ⟨_, M, hM, rfl⟩
     rw [unblk_blk]
@@ -1572,9 +1572,9 @@ theorem continuousOn_toGL_unblk (e : Fin a × ι ≃ Fin n) :
   have hdet : ∀ g : blkG e, g.1.det ≠ 0 := fun g =>
     ((Matrix.isUnit_iff_isUnit_det _).1 ((mem_blkG_iff e).1 g.2).1).ne_zero
   have hc : Continuous fun g : blkG e => g.1.det⁻¹ • g.1.adjugate :=
-    (Continuous.inv₀ continuous_subtype_val.matrix_det hdet).smul continuous_subtype_val.matrix_adjugate
+    (Continuous.inv₀ continuous_subtypeVal.matrix_det hdet).smul continuous_subtypeVal.matrix_adjugate
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · exact ((continuous_unblk e).comp continuous_subtype_val).congr fun g => (hval g).symm
+  · exact ((continuous_unblk e).comp continuous_subtypeVal).congr fun g => (hval g).symm
   · exact ((continuous_unblk e).comp hc).congr fun g => (hinv g).symm
 
 theorem isURepOn_blkRep (e : Fin a × ι ≃ Fin n) {σ : GL (Fin a) (ι → ℂ) →* (H →L[ℂ] H)} (hσ : IsUnitaryRep σ) :

@@ -69,7 +69,7 @@ theorem cup_supp_chainsMap_mono (R : Type) [CommRing R] {U E : Spc} (f : U ⟶ E
         ((chains R).map f).f (-(N : ℤ)) ≫ (chainsXIso R E N).hom ≫ (chainsXIso R E N).inv := by simp
     rw [this, ← Category.assoc, hnat, Category.assoc]
     infer_instance
-  · haveI := (GlobalTheory.EtC.chains_basic R).1 U
+  · have := (GlobalTheory.EtC.chains_basic R).1 U
     exact IsZero.mono (isZero_of_isStrictlyLE _ 0 p hp) _
 
 theorem cup_supp_extend (R : Type) [CommRing R] {I : Cx R} (hI : ∀ s, Injective (I.X s)) {U E : Spc} (f : U ⟶ E) [Mono f]
@@ -80,8 +80,8 @@ theorem cup_supp_extend (R : Type) [CommRing R] {I : Cx R} (hI : ∀ s, Injectiv
     haveI := hI q
     exact Injective.factorThru (β.v p q h) (((chains R).map f).f p), ?_⟩
   refine Cochain.ext _ _ fun p q h => ?_
-  haveI := cup_supp_chainsMap_mono R f p
-  haveI := hI q
+  have := cup_supp_chainsMap_mono R f p
+  have := hI q
   rw [Cochain.comp_v _ _ (zero_add n) p p q (add_zero p) h, Cochain.ofHom_v, Cochain.mk_v]
   exact Injective.comp_factorThru (J := I.X q) (β.v p q h) (((chains R).map f).f p)
 
@@ -99,7 +99,7 @@ theorem cup_supp_vanish (R : Type) [CommRing R] {K : Cx R} {U V E : Spc} (f : U 
       Cochain.zero_v] at hf' hg'
     have nf := (GlobalTheory.EtC.chains_basic R).2.1 f N
     have ng := (GlobalTheory.EtC.chains_basic R).2.1 g N
-    haveI := hc.2.2 (op (SimplexCategory.mk N))
+    have := hc.2.2 (op (SimplexCategory.mk N))
     have key : biprod.desc ((free R).map (f.app (op (SimplexCategory.mk N))))
         ((free R).map (g.app (op (SimplexCategory.mk N)))) ≫ ((chainsXIso R E N).inv ≫ γ.v (-(N : ℤ)) q h) = 0 := by
       apply biprod.hom_ext'
@@ -118,7 +118,7 @@ theorem cup_supp_vanish (R : Type) [CommRing R] {K : Cx R} {U V E : Spc} (f : U 
         ((free R).map (g.app (op (SimplexCategory.mk N))))), key, comp_zero]
     have : γ.v (-(N : ℤ)) q h = (chainsXIso R E N).hom ≫ ((chainsXIso R E N).inv ≫ γ.v (-(N : ℤ)) q h) := by simp
     rw [this, h0, comp_zero]
-  · haveI := (GlobalTheory.EtC.chains_basic R).1 E
+  · have := (GlobalTheory.EtC.chains_basic R).1 E
     exact (isZero_of_isStrictlyLE _ 0 p hp).eq_of_src _ _
 
 theorem cup_supp_rep (R : Type) [CommRing R] {I : Cx R} (hI : ∀ s, Injective (I.X s)) {U E : Spc} (f : U ⟶ E) [Mono f]
@@ -142,8 +142,8 @@ theorem cup_supp (R : Type) [CommRing R] {I J K : Cx R} (μ : Pair I J K) (hI : 
     (hJ : ∀ s, Injective (J.X s)) {U V E : Spc} (f : U ⟶ E) (g : V ⟶ E) (hc : Cover2 R f g) {n m k : ℤ}
     (hk : n + m = k) (a : CohomologyClass ((chains R).obj E) I n) (b : CohomologyClass ((chains R).obj E) J m)
     (ha : cpull ((chains R).map f) I n a = 0) (hb : cpull ((chains R).map g) J m b = 0) : μ.cup E hk a b = 0 := by
-  haveI := hc.1
-  haveI := hc.2.1
+  have := hc.1
+  have := hc.2.1
   obtain ⟨α, rfl, hα⟩ := cup_supp_rep R hI f a ha
   obtain ⟨β, rfl, hβ⟩ := cup_supp_rep R hJ g b hb
   obtain ⟨γ, hγ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ hk).1 α β

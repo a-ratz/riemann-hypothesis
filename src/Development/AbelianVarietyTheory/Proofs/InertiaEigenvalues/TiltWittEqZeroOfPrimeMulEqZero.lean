@@ -146,7 +146,7 @@ theorem inclW_injective : Function.Injective (inclW l) := by
   exact WittVector.map_injective _ (IsFractionRing.injective (OCb l) (Cb l))
 
 theorem tiltWitt_eq_zero_of_prime_mul_eq_zero (x : WCb l) (h : ((l : ℕ) : WCb l) * x = 0) : x = 0 := by
-  haveI : CharP (Cb l) l :=
+  have : CharP (Cb l) l :=
     charP_of_injective_algebraMap (IsFractionRing.injective (OCb l) (Cb l)) l
   ext n
   have h1 := WittVector.mul_charP_coeff_succ (p := l) x n
@@ -156,7 +156,7 @@ theorem tiltWitt_eq_zero_of_prime_mul_eq_zero (x : WCb l) (h : ((l : ℕ) : WCb 
 
 theorem ainf_saturated_in_tiltWitt_prime (a : Loc.Ainf l) (w : WCb l) (h : inclW l a = ((l : ℕ) : WCb l) * w) :
     ∃ a', inclW l a' = w := by
-  haveI : CharP (Cb l) l :=
+  have : CharP (Cb l) l :=
     charP_of_injective_algebraMap (IsFractionRing.injective (OCb l) (Cb l)) l
   refine ⟨WittVector.mk l fun n => (frobeniusEquiv (OCb l) l).symm (a.coeff (n + 1)), ?_⟩
   ext n
@@ -192,16 +192,16 @@ private theorem tensor_eq_of_crd_eq {Z O I W : Type} [CommRing Z] [CommRing O] [
 
 private theorem exists_basis_padicInt_OL (l : ℕ) [Fact l.Prime] (LL : FinExt l) :
     ∃ (I : Type) (_ : Fintype I), Nonempty (Module.Basis I ℤ_[l] ↥(OL LL)) := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : IsIntegralClosure ↥(OL LL) ℤ_[l] ↥LL.1 := integralClosure.isIntegralClosure _ _
-  haveI : Module.Finite ℤ_[l] ↥(OL LL) := IsIntegralClosure.finite ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
-  haveI : Module.IsTorsionFree ℤ_[l] ↥LL.1 := .of_smul_eq_zero fun r x h => by
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : IsIntegralClosure ↥(OL LL) ℤ_[l] ↥LL.1 := integralClosure.isIntegralClosure _ _
+  have : Module.Finite ℤ_[l] ↥(OL LL) := IsIntegralClosure.finite ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
+  have : Module.IsTorsionFree ℤ_[l] ↥LL.1 := .of_smul_eq_zero fun r x h => by
     rw [Algebra.smul_def, mul_eq_zero] at h
     refine h.imp (fun h => ?_) id
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] ↥LL.1, RingHom.comp_apply,
       map_eq_zero_iff _ (algebraMap ℚ_[l] ↥LL.1).injective] at h
     exact (map_eq_zero_iff _ (IsFractionRing.injective ℤ_[l] ℚ_[l])).1 h
-  haveI : Module.Free ℤ_[l] ↥(OL LL) := IsIntegralClosure.module_free ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
+  have : Module.Free ℤ_[l] ↥(OL LL) := IsIntegralClosure.module_free ℤ_[l] ℚ_[l] ↥LL.1 ↥(OL LL)
   exact ⟨_, inferInstance, ⟨Module.Free.chooseBasis ℤ_[l] ↥(OL LL)⟩⟩
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l),
@@ -213,7 +213,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l),
         (RA LL) := by
   intro l _ LL
   obtain ⟨I, _, ⟨b⟩⟩ := exists_basis_padicInt_OL l LL
-  haveI : CharP (Cb l) l :=
+  have : CharP (Cb l) l :=
     charP_of_injective_algebraMap (IsFractionRing.injective (OCb l) (Cb l)) l
   have hl : ((l : ℕ) : RW LL) = (1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] ((l : ℕ) : WCb l) := by
     rw [← Algebra.TensorProduct.includeRight_apply, map_natCast]
@@ -225,7 +225,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l),
     crd_tensorProduct_map_eq b (inclWA l) i y
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · rw [hl]
-    haveI : IsAdicComplete (Ideal.span {((l : ℕ) : WCb l)}) (WCb l) :=
+    have : IsAdicComplete (Ideal.span {((l : ℕ) : WCb l)}) (WCb l) :=
       (GlobalTheory.Per.AinfComplete.witt_complete (p := l) (R := Cb l) ((l : ℕ) : WCb l)
         (fun c => ⟨c, fun n => by simp⟩)
         (fun x hx => by simpa using hx 1)).2
@@ -244,7 +244,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l),
     refine ⟨∑ i, b i ⊗ₜ[ℤ_[l]] a' i, tensor_eq_of_crd_eq b fun i => ?_⟩
     exact (hinc _ i).trans ((congrArg (inclW l) (crd_sum_lemma_4 b i a')).trans (ha' i))
   · intro e he
-    haveI : IsAdicComplete (Ideal.span {(WittVector.teichmuller l e - 1 : Ainf l)}) (Ainf l) :=
+    have : IsAdicComplete (Ideal.span {(WittVector.teichmuller l e - 1 : Ainf l)}) (Ainf l) :=
       (GlobalTheory.Per.AinfComplete.main l _ (not_isUnit_teich e he)).2
     exact complete_tensor b _
 

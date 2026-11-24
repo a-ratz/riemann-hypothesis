@@ -233,7 +233,7 @@ theorem size_ineq {c Y Λ : ℝ} (hc0 : 0 < c) (hY0 : 0 < Y) (h80 : 80 * Λ ≤ 
     rw [Real.exp_log (div_pos (by norm_num) hc0), div_le_iff₀ hc0] at h
     linarith
   have hL : Real.exp Λ ^ 2 ≤ Real.exp (Y / 40) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     exact Real.exp_le_exp.mpr (by push_cast; linarith)
   have hexpY : Real.exp Y = Real.exp (Y * (9 / 10)) * Real.exp (Y / 20) * Real.exp (Y / 40) * Real.exp (Y / 40) := by
     rw [← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
@@ -402,7 +402,7 @@ theorem count_a (hP : PNTAPRelW) (hE : Formalism.ZeroFreeDirichlet.ExcBound) (ε
   refine ⟨Real.exp (320 + 4 * |C₀| * (5 + ε / 5) + |4 * Real.log (4 * (|A₀| + 1)) / c₃|
     + |4 * Real.log (4 * (|A₀| + 1)) ^ 2 / c₃| + |Real.log (320 / min c0 1)|), ?_⟩
   intro x X m₀ a₀ hx hm0 h8 hcop h1 h6 h3
-  haveI : NeZero m₀ := ⟨hm0.ne'⟩
+  have : NeZero m₀ := ⟨hm0.ne'⟩
   have hxpos : 0 < x := lt_of_lt_of_le (Real.exp_pos _) hx
   have hlx : 320 + 4 * |C₀| * (5 + ε / 5) + |4 * Real.log (4 * (|A₀| + 1)) / c₃|
       + |4 * Real.log (4 * (|A₀| + 1)) ^ 2 / c₃| + |Real.log (320 / min c0 1)| ≤ Real.log x := by

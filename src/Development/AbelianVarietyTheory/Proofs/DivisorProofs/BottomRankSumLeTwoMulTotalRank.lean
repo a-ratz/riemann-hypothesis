@@ -61,7 +61,7 @@ theorem eq_of_dvd_absNorm {K : Type} [Field K] [NumberField K] (v : HeightOneSpe
     (hℓ : ℓ.Prime) (hp : p.Prime) (hv : ((ℓ : ℕ) : 𝓞 K) ∈ v.asIdeal) (h : p ∣ Ideal.absNorm v.asIdeal) : p = ℓ := by
   have hmax : (Ideal.span {((ℓ : ℕ) : ℤ)} : Ideal ℤ).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hℓ).irreducible
-  haveI hl : v.asIdeal.LiesOver (Ideal.span {((ℓ : ℕ) : ℤ)}) := by
+  have hl : v.asIdeal.LiesOver (Ideal.span {((ℓ : ℕ) : ℤ)}) := by
     refine ⟨hmax.eq_of_le ?_ ?_⟩
     · exact (v.isPrime.comap (algebraMap ℤ (𝓞 K))).ne_top
     · rw [Ideal.span_le, Set.singleton_subset_iff]

@@ -67,7 +67,7 @@ theorem charZero_wittVector (p : ℕ) [hp : Fact p.Prime] (k : Type) [Field k] [
   rcases CharP.char_is_prime_or_zero (WittVector p k) q with h | h
   · have h3 : p = q := (Nat.prime_dvd_prime_iff_eq hp.out h).1 h2
     subst h3
-    exact absurd (CharP.cast_eq_zero (WittVector p k) p) (WittVector.p_nonzero p k)
+    exact absurd (CharP.cast_eq_zero (WittVector p k) p) (WittVector.p_ne_zero p k)
   · subst h
     exact CharP.charP_to_charZero _
 

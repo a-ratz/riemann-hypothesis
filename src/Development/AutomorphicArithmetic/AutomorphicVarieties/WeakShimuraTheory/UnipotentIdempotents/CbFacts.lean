@@ -63,7 +63,7 @@ theorem UpperTheory.V.Ws.Lk.cbFacts :
   obtain ⟨hop, -, hun⟩ := Lk.barFacts hD
   refine ⟨fun i => ?_, fun i A hA g hg => ?_, fun σ hσ g g' hgg i => ?_⟩
   · have hq : Continuous (resQ T.L) := UpperTheory.V.Af.continuous_restrictScalarsHom ℚ T.L Ω
-    haveI := (P1.coefRes c).2.2.1 c' h
+    have := (P1.coefRes c).2.2.1 c' h
     have h1 : IsOpen {g : G T.L Ω | Ideal.Quotient.mk (maximalIdeal c'.O ^ 1) (X.κ g : c'.O) = 1} :=
       (X.κ_cont 1).isOpen_fiber 1
     have h2 := (hop (lab T.pr i)).preimage hq

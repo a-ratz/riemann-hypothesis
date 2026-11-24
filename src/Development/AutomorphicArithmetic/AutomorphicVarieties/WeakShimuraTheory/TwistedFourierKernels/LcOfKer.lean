@@ -95,7 +95,7 @@ private theorem pow_pow_sub_one_mem {R : Type} [CommRing R] (I : Ideal R) (l : �
 theorem UpperTheory.V.Ws.H5.finQuot :
     ∀ {l : ℕ} [Fact l.Prime] (F : GFrame l) {R : Type} [CommRing R] [IsLocalRing R], ((l : ℕ) : R) ∈ maximalIdeal R → ∀ γ : F.G₀ →* Rˣ, TwCh F γ → ∀ N : ℕ, ∃ (Q : Type) (_ : CommGroup Q) (_ : Finite Q) (q : F.G₀ →* Q) (j : Q →* (R ⧸ maximalIdeal R ^ N)ˣ), IsPGroup l Q ∧ IsOpen (q.ker : Set F.G₀) ∧ Anti F q ∧ j.comp q = pushCh (Ideal.Quotient.mk (maximalIdeal R ^ N)) γ := by
   intro l _ F R _ _ hl γ hγ N
-  haveI : CompactSpace F.G₀ := isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
+  have : CompactSpace F.G₀ := isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   set χ := pushCh (Ideal.Quotient.mk (maximalIdeal R ^ N)) γ with hχ
   have hval : ∀ g, (χ g : R ⧸ maximalIdeal R ^ N) = Ideal.Quotient.mk (maximalIdeal R ^ N) (γ g : R) := fun g => rfl
   have hlc : IsLocallyConstant fun g => (χ g : R ⧸ maximalIdeal R ^ N) := hγ.cont N
@@ -272,7 +272,7 @@ theorem UpperTheory.V.Ws.H5.levelJ :
         exact he2 _
     exact hx'J hb
   have := congrArg (fun y => y.coeff z) hzero
-  simp only [MonoidAlgebra.mapRingHom_apply] at this
+  simp only [MonoidAlgebra.coeff_mapRingHom] at this
   exact this
 end -- clump:auto
 end -- clump:auto
@@ -294,7 +294,7 @@ private theorem single_sub_mem {l : ℕ} (hl : l.Prime) {B Q : Type} [CommRing B
     [CommGroup Q] [Finite Q] (hB : ((l : ℕ) : B) ∈ maximalIdeal B) (hQ : IsPGroup l Q)
     (M : Ideal (MonoidAlgebra B Q)) [hM : M.IsMaximal] (z : Q) :
     (MonoidAlgebra.single z 1 - 1 : MonoidAlgebra B Q) ∈ M := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨k, hk⟩ := hQ z
   have hlM : ((l : ℕ) : MonoidAlgebra B Q) ∈ M := by
     have h1 : ((l : ℕ) : B) ∈ M.comap (algebraMap B (MonoidAlgebra B Q)) := by
@@ -302,11 +302,11 @@ private theorem single_sub_mem {l : ℕ} (hl : l.Prime) {B Q : Type} [CommRing B
       exact hB
     rw [Ideal.mem_comap, map_natCast] at h1
     exact h1
-  letI : Field (MonoidAlgebra B Q ⧸ M) := Ideal.Quotient.field M
+  let : Field (MonoidAlgebra B Q ⧸ M) := Ideal.Quotient.field M
   have hlK : ((l : ℕ) : MonoidAlgebra B Q ⧸ M) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk M), Ideal.Quotient.eq_zero_iff_mem]
     exact hlM
-  haveI : CharP (MonoidAlgebra B Q ⧸ M) l := by
+  have : CharP (MonoidAlgebra B Q ⧸ M) l := by
     rcases hl.eq_one_or_self_of_dvd _ (ringChar.dvd hlK) with h1 | h1
     · exact absurd h1 (CharP.ringChar_ne_one)
     · rw [← h1]
@@ -359,7 +359,7 @@ theorem UpperTheory.V.Ws.H5.grpCO :
     have h3 : x - algebraMap B _ (aug x) ∈ M := sub_aug_mem M (single_sub_mem hl hB hQ M) x
     have := M.add_mem h3 h2
     rwa [sub_add_cancel] at this
-  haveI : IsLocalRing (MonoidAlgebra B Q) := by
+  have : IsLocalRing (MonoidAlgebra B Q) := by
     apply IsLocalRing.of_unique_max_ideal
     refine ⟨RingHom.ker φ, hM0, fun M hM => ?_⟩
     exact (hM0.eq_of_le hM.ne_top (hle M hM)).symm
@@ -420,9 +420,9 @@ theorem UpperTheory.V.Ws.H5.twJN :
       fun g => hz (q g)⟩
   obtain ⟨tw, htw⟩ := twMapEx B (IsScalarTower.toAlgHom c.O B.B (MonoidAlgebra B.B Q)) _ hΓ
   have hJ := levelJ B J hD hT Q hQ q hq hA tw htw b hb
-  haveI : Nontrivial (B.B ⧸ maximalIdeal B.B ^ (N + 1)) := Ideal.Quotient.nontrivial_iff.2 fun h =>
+  have : Nontrivial (B.B ⧸ maximalIdeal B.B ^ (N + 1)) := Ideal.Quotient.nontrivial_iff.2 fun h =>
     (maximalIdeal.isMaximal B.B).ne_top (top_le_iff.1 (h ▸ Ideal.pow_le_self (Nat.succ_ne_zero N)))
-  haveI : IsCO c.O (B.B ⧸ maximalIdeal B.B ^ (N + 1)) :=
+  have : IsCO c.O (B.B ⧸ maximalIdeal B.B ^ (N + 1)) :=
     co_quot c.O B.B _ (Ideal.Quotient.mkₐ c.O (maximalIdeal B.B ^ (N + 1))) (Ideal.Quotient.mkₐ_surjective c.O (maximalIdeal B.B ^ (N + 1)))
   let e : MonoidAlgebra B.B Q →ₐ[B.B] B.B ⧸ maximalIdeal B.B ^ (N + 1) :=
     MonoidAlgebra.lift B.B (B.B ⧸ maximalIdeal B.B ^ (N + 1)) Q ((Units.coeHom _).comp j)

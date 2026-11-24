@@ -197,7 +197,7 @@ variable {F : Type} [Field F] [NumberField F] {v : HeightOneSpectrum (𝓞 F)} {
 
 theorem le_exp_neg_one_of_lt_one {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
   by_cases h0 : x = 0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   · rw [← WithZero.exp_log h0] at hx ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
     rw [WithZero.exp_le_exp]
@@ -257,10 +257,10 @@ theorem int_of_double_coset (ϖ : v.adicCompletion F) (k : ℕ) (hϖ : Valued.v 
 
 theorem exists_char (v : HeightOneSpectrum (𝓞 F)) :
     ∃ p : ℕ, p.Prime ∧ ((p : 𝓞 F) ∈ v.asIdeal) ∧ ∃ a : ℕ, Nat.card (𝓞 F ⧸ v.asIdeal) = p ^ a := by
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
-  letI := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  let := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
   obtain ⟨a, hp, hcard⟩ := FiniteField.card (𝓞 F ⧸ v.asIdeal) (ringChar (𝓞 F ⧸ v.asIdeal))
   refine ⟨ringChar (𝓞 F ⧸ v.asIdeal), hp, ?_, a, by rw [Nat.card_eq_fintype_card, hcard]⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -336,7 +336,7 @@ theorem tSet_denom (s : SplitPlace L) (ϖ : s.v.adicCompletion L⁺) (k : ℕ) (
     rw [e, adic_valued_algebraMap]
     exact (s.v.valuation_lt_one_iff_mem (K := L⁺) _).2 hp
   have ht : Valued.v ((p : s.v.adicCompletion L⁺) / ϖ) ≤ 1 := by
-    rw [map_div₀, hunif]; exact div_le_one_of_le₀ hpv zero_le'
+    rw [map_div₀, hunif]; exact div_le_one_of_le₀ hpv zero_le
   have hpe : (p : s.v.adicCompletion L⁺) = (p : s.v.adicCompletion L⁺) / ϖ * ϖ := (div_mul_cancel₀ _ hϖ0).symm
   have hc1 : Valued.v (p : s.v.adicCompletion L⁺) ≤ 1 := GlobalTheory.TSetFinCong.natCast_le_one s.v p
   have A1 : ∀ i j, Valued.v ((p : s.v.adicCompletion L⁺) *
@@ -570,7 +570,7 @@ theorem swap_toGf {V : HSp D} (P : principalLevelFrame.RowPsi V V.rank) (hU : Un
 
 theorem hLat_full (V : HSp D) (hV : Seed.FrmC.StdLat V) (h : Bridge.Gf V) :
     Submodule.IsFullLattice D.host.E (Bridge.hLat V h) := by
-  letI := (GlobalTheory.HLatStd.hLat_props D V hV).1 h
+  let := (GlobalTheory.HLatStd.hLat_props D V hV).1 h
   obtain ⟨N, hN, hNm⟩ := GlobalTheory.PlaceDatum.exists_den_matrix
     (GlobalTheory.StdFrameExist.SI D) GlobalTheory.PlaceDatum.exists_den_adele
     (GlobalTheory.HLatStd.invM h)

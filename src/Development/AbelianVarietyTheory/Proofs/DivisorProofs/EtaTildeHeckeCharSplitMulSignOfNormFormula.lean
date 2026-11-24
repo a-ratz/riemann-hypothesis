@@ -215,10 +215,10 @@ theorem proj_norm {A : Type} [CommRing A] (c : A →+* A) {e : A} (he : e * e = 
 
 theorem mem_of_dvd_absNorm {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum (𝓞 E)) {q : ℕ} (hq : q.Prime)
     (h : q ∣ Ideal.absNorm P.asIdeal) : (q : 𝓞 E) ∈ P.asIdeal := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 E ⧸ P.asIdeal)
   obtain ⟨n, hpp, hn⟩ := FiniteField.card (𝓞 E ⧸ P.asIdeal) p
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card, hn] at h
@@ -258,7 +258,7 @@ theorem cA_incA (x : D.host.E) : cA D (incA D x) = incA D (D.host.conj x) := by
     apply D.host.φ₀.injective
     have h1 : D.host.φ₀ (D.host.conj x) = starRingEnd ℂ (D.host.φ₀ x) := Formalism.HC.HostAx.conjE_apply _ _ _
     rw [h1]
-    haveI := D.host.isCMField_hostE
+    have := D.host.isCMField_hostE
     exact NumberField.IsCMField.complexEmbedding_complexConj D.host.E D.host.φ₀ x
   rw [← this]
   rfl
@@ -333,7 +333,7 @@ theorem eta_inf {η : (AE D)ˣ →* Circle} (hη : ∀ τ, HasInfExp D η τ (1 
   have e : n = 1 := by
     have : (n : ℚ) = 1 := by rw [hn]; norm_num
     exact_mod_cast this
-  rw [h θ hθ (z τ) (hz1 τ) (fun τ' h' => by rw [hz2, if_neg h']), hz2, if_pos rfl, e, zpow_one]
+  rw [h θ hθ (z τ) (hz1 τ) (fun τ' h' => by rw [hz2, ite_eq_right h']), hz2, ite_eq_left rfl, e, zpow_one]
 
 theorem eta_norm {η : (AE D)ˣ →* Circle} (hη : ResEta D η 1) (y : (AE D)ˣ) :
     η (y * Units.map (cA D).toMonoidHom y) = 1 := by

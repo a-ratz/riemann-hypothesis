@@ -171,16 +171,16 @@ theorem conj_aDiag (z : kˣ) :
     rw [he, levZ_apply]
     by_cases hij : i' = j'
     · subst hij
-      rw [if_pos rfl, if_pos rfl]
+      rw [ite_eq_left rfl, ite_eq_left rfl]
       have h01 : a = 0 ∨ a = 1 := by fin_cases a <;> simp
       rcases h01 with rfl | rfl
-      · rw [if_neg (fun h => absurd (key.1 h) (by decide)), if_pos rfl]
-      · rw [if_pos (key.2 rfl), if_neg (by decide)]
-    · rw [if_neg (fun h => hij (by simpa using (w2 r m).symm.injective h)), if_neg hij]
+      · rw [ite_eq_right (fun h => absurd (key.1 h) (by decide)), ite_eq_left rfl]
+      · rw [ite_eq_left (key.2 rfl), ite_eq_right (by decide)]
+    · rw [ite_eq_right (fun h => hij (by simpa using (w2 r m).symm.injective h)), ite_eq_right hij]
   · have he : ((leviEmb k (stdBlocks (dd r m) (hdd r m)) (levZ k r m z) : GL (Fin (r + m)) k) : Matrix _ _ k)
         ((stdBlocks (dd r m) (hdd r m)) ⟨a, i'⟩) ((stdBlocks (dd r m) (hdd r m)) ⟨b, j'⟩) = 0 := by
       simp [leviEmb, Matrix.blockDiagonal'_apply, hab]
-    rw [he, if_neg]
+    rw [he, ite_eq_right]
     intro h
     have := (stdBlocks (dd r m) (hdd r m)).injective ((w2 r m).symm.injective h)
     exact hab (congrArg Sigma.fst this)
@@ -211,10 +211,10 @@ theorem aDiag_conj_apply_unipB (N n : ℕ) (z : kˣ) {u : GL (Fin N) k} (hu : u 
   rw [aDiag_conj_apply]
   have hz : (z : k) * ((z⁻¹ : kˣ) : k) = 1 := Units.mul_inv z
   by_cases hi : (i : ℕ) < n <;> by_cases hj : (j : ℕ) < n
-  · simp only [hi, hj, if_true, not_true, and_false, if_false, one_mul]
+  · simp only [hi, hj, ite_true, not_true, and_false, ite_false, one_mul]
     rw [mul_comm, ← mul_assoc, mul_comm _ (z : k), hz, one_mul]
   · simp [hi, hj]
-  · have hji : j < i := by rw [Fin.lt_iff_val_lt_val]; omega
+  · have hji : j < i := by rw [Fin.lt_def]; omega
     rw [((mem_unipB k).1 hu).1 i j hji]
     simp
   · simp [hi, hj]

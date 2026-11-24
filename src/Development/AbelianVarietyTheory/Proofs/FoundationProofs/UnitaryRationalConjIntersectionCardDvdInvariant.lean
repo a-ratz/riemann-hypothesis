@@ -66,7 +66,7 @@ theorem loc_int : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) E
 theorem exists_int_smul_mem (L : Submodule (𝓞 E) (Fin N → E))
     (hs : Submodule.span E (L : Set (Fin N → E)) = ⊤) (x : Fin N → E) :
     ∃ n : ℤ, n ≠ 0 ∧ n • x ∈ L := by
-  haveI := loc_int (E := E)
+  have := loc_int (E := E)
   obtain ⟨t, ht⟩ := multiple_mem_span_of_mem_localization_span
     (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) E (L : Set (Fin N → E)) x (hs ▸ Submodule.mem_top)
   obtain ⟨t, n, hn, rfl⟩ := t
@@ -76,7 +76,7 @@ theorem exists_int_smul_mem (L : Submodule (𝓞 E) (Fin N → E))
 
 theorem exists_int_denominator (L : Submodule (𝓞 E) (Fin N → E)) (hf : L.FG) :
     ∃ n : ℤ, n ≠ 0 ∧ ∀ x ∈ L, ∀ i, IsIntegral ℤ ((n : E) * x i) := by
-  haveI := loc_int (E := E)
+  have := loc_int (E := E)
   obtain ⟨s, rfl⟩ := hf
   obtain ⟨⟨t, n, hn, rfl⟩, ht⟩ := IsLocalization.exist_integer_multiples_of_finite
     (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) (fun p : s × Fin N => (p.1 : Fin N → E) p.2)
@@ -140,11 +140,11 @@ theorem exists_faithful (L : Submodule (𝓞 E) (Fin N → E)) (hf : L.FG)
     ∃ ψ : H →* GL (Fin (Module.finrank ℚ E * N)) ℤ, Function.Injective ψ := by
   let L' : Submodule ℤ (Fin N → E) := L.restrictScalars ℤ
   have hf' : L'.FG := by
-    haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.mpr hf
-    haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
+    have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.mpr hf
+    have : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
     exact Module.Finite.iff_fg.mp (inferInstanceAs (Module.Finite ℤ L))
-  haveI : Submodule.IsLattice ℚ L' := Submodule.IsLattice.of_fg ℚ hf'
-  haveI hlat : Submodule.IsFullLattice ℚ L' := by
+  have : Submodule.IsLattice ℚ L' := Submodule.IsLattice.of_fg ℚ hf'
+  have hlat : Submodule.IsFullLattice ℚ L' := by
     refine ⟨?_⟩
     rw [eq_top_iff]
     intro x _
@@ -153,11 +153,11 @@ theorem exists_faithful (L : Submodule (𝓞 E) (Fin N → E)) (hf : L.FG)
       rw [← Int.cast_smul_eq_zsmul ℚ, smul_smul, inv_mul_cancel₀ (by exact_mod_cast hn), one_smul]
     rw [this]
     exact Submodule.smul_mem _ _ (Submodule.subset_span hx)
-  haveI : Module.Finite ℤ L' := Module.Finite.iff_fg.mpr hf'
+  have : Module.Finite ℤ L' := Module.Finite.iff_fg.mpr hf'
   have hr : Module.finrank ℤ L' = Module.finrank ℚ E * N := by
     have h1 : Module.finrank ℤ L' = Module.finrank ℚ (Fin N → E) := by
       unfold Module.finrank
-      rw [Submodule.IsLattice.rank' ℚ L']
+      rw [Submodule.IsFullLattice.rank_eq ℚ L']
     rw [h1, Module.finrank_pi_fintype]
     simp [mul_comm]
   let b := Module.finBasisOfFinrankEq ℤ L' hr

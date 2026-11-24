@@ -66,7 +66,7 @@ theorem integralClosure_tensor_localization_injective : ∀ (S K L : Type) [Comm
         _ _ (Localization.AtPrime.algebraOfLiesOver (Q.under (integralClosure S L)) Q)) := by
   intro S K L _ _ _ _ _ _ _ _ _ _ _ _ π e D _ _ _ _ _ _ _ Q _
   set P := Q.under (integralClosure S L) with hP
-  letI := Localization.AtPrime.algebraOfLiesOver P Q
+  let := Localization.AtPrime.algebraOfLiesOver P Q
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro z hz
   obtain ⟨⟨x, s⟩, rfl⟩ := IsLocalization.mk'_surjective P.primeCompl z

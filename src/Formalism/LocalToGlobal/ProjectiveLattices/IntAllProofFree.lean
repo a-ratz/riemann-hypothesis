@@ -130,9 +130,9 @@ private lemma vV_alg_nonneg_lemma {V K' : Type} [CommRing V] [IsDomain V] [IsDis
 
 theorem intAll_of (hE : IntFrExt Xo c) (hB : FrBaseChg Xo c) (hR : ReFrame Xo c) : IntAll Xo c := by
   intro la T io e hO hFin y
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨T', i, r, hr, hv, hF', y0, hy0⟩ := hE T io hFin y.x y.x_over
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   let φ : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
   obtain ⟨z, hz⟩ := hB T.Fr T'.Fr φ y
   obtain ⟨t, y', hy'⟩ := hR T' (i.comp io) y0 z (hz.1.trans hy0.symm)

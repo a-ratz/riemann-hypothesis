@@ -78,7 +78,7 @@ theorem mem_range_constFn (F : Type) [Field F] (Y : Scheme.{0}) [IsIntegral Y] (
     [GeometricallyIntegral p] (b : Y.functionField)
     (hb : ∃ P : Polynomial F, P ≠ 0 ∧ P.eval₂ (GlobalTheory.Cartier.constFn p) b = 0) :
     b ∈ (GlobalTheory.Cartier.constFn p).range := by
-  letI : Algebra F Y.functionField := (GlobalTheory.Cartier.constFn p).toAlgebra
+  let : Algebra F Y.functionField := (GlobalTheory.Cartier.constFn p).toAlgebra
   obtain ⟨P, hP, hPb⟩ := hb
   have hint : IsIntegral F b := (show IsAlgebraic F b from ⟨P, hP, hPb⟩).isIntegral
   obtain ⟨V, hV, s₀, hs₀⟩ := Y.presheaf.exists_germ_eq b
@@ -87,14 +87,14 @@ theorem mem_range_constFn (F : Type) [Field F] (Y : Scheme.{0}) [IsIntegral Y] (
   let s : Γ(Y, U) := resG Y hUV s₀
   have hs : GlobalTheory.Cartier.fnOf U hxU s = b := by
     rw [GlobalTheory.Cartier.fnOf_resG]; exact hs₀
-  letI : Algebra F Γ(Y, U) := (algX p U).toAlgebra
+  let : Algebra F Γ(Y, U) := (algX p U).toAlgebra
   have e : (GlobalTheory.Cartier.fnOf U hxU).comp (algebraMap F Γ(Y, U)) = algebraMap F Y.functionField :=
     GlobalTheory.Cartier.fnOf_comp_algX p U hxU
   have hm : Polynomial.aeval s (minpoly F b) = 0 := by
     apply GlobalTheory.Cartier.fnOf_injective U hxU
     rw [map_zero, Polynomial.aeval_def, Polynomial.hom_eval₂, e, hs, ← Polynomial.aeval_def,
       minpoly.aeval]
-  haveI : Fact (Irreducible (minpoly F b)) := ⟨minpoly.irreducible hint⟩
+  have : Fact (Irreducible (minpoly F b)) := ⟨minpoly.irreducible hint⟩
   let φ : AdjoinRoot (minpoly F b) →ₐ[F] Γ(Y, U) := AdjoinRoot.liftAlgHom (minpoly F b) (Algebra.ofId F Γ(Y, U)) s
     (by rw [Polynomial.aeval_def] at hm; exact hm)
   have hφ : Function.Injective φ := φ.toRingHom.injective
@@ -113,7 +113,7 @@ theorem mem_range_constFn (F : Type) [Field F] (Y : Scheme.{0}) [IsIntegral Y] (
     have hz : z ∈ Set.range (pullback.fst hU.fromSpec (pullback.fst p g)) := by
       rw [Scheme.Pullback.range_fst]; exact (pullback.fst p g).surjective _
     exact ⟨hz.choose⟩
-  haveI := hU.isOpenImmersion_fromSpec
+  have := hU.isOpenImmersion_fromSpec
   have : IsIntegral (pullback hU.fromSpec (pullback.fst p g)) :=
     isIntegral_of_isOpenImmersion (pullback.snd hU.fromSpec (pullback.fst p g))
   have : IsIntegral (pullback (hU.fromSpec ≫ p) g) :=

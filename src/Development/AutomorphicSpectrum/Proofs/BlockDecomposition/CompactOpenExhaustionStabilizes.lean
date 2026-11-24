@@ -100,11 +100,11 @@ theorem baire_double_coset : ∀ {G : Type} [Group G] [TopologicalSpace G] [IsTo
       (L (max i j)).mul_mem (hL (le_max_left i j) hn) (hL (le_max_right i j) hm),
       by simp only [mul_assoc]⟩
   by_cases hne : (S ∩ C).Nonempty
-  · haveI : Nonempty ↥(S ∩ C) := hne.to_subtype
-    haveI : LocallyCompactSpace ↥(S ∩ C) := hT.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  · have : Nonempty ↥(S ∩ C) := hne.to_subtype
+    have : LocallyCompactSpace ↥(S ∩ C) := hT.isClosedEmbedding_subtypeVal.locallyCompactSpace
     obtain ⟨j0, y, hy⟩ := nonempty_interior_of_iUnion_of_closed
       (f := fun j => ((↑) : ↥(S ∩ C) → G) ⁻¹' A j)
-      (fun j => (hAclosed j).preimage continuous_subtype_val)
+      (fun j => (hAclosed j).preimage continuous_subtypeVal)
       (by
         refine Set.eq_univ_of_forall fun t => ?_
         obtain ⟨j, hj⟩ := hCA t t.2.2

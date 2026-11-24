@@ -359,10 +359,10 @@ theorem continuousOn_lam (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
       by rw [← chi_mul e he _ _ (comm_inv (hH _ t.2)), inv_mul_cancel, chi_one]⟩
   have hψ : Continuous ψ := by
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
-    · exact (continuous_chi e).comp continuous_subtype_val
-    · exact (continuous_chi e).comp (continuous_inv.comp continuous_subtype_val)
+    · exact (continuous_chi e).comp continuous_subtypeVal
+    · exact (continuous_chi e).comp (continuous_inv.comp continuous_subtypeVal)
   have hm : Continuous fun t => (GroundTheory.Global.IdeleGroup.ideleModule E (ψ t) : ℝ) :=
-    continuous_subtype_val.comp (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp hψ)
+    continuous_subtypeVal.comp (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp hψ)
   have heq : (H : Set (GA E n)).domRestrict (lam e) =
       fun t : ↥(H : Set (GA E n)) => Real.log (GroundTheory.Global.IdeleGroup.ideleModule E (ψ t) : ℝ) := by
     funext t
@@ -1180,11 +1180,11 @@ theorem exists_prim_cover (K : Type) [Field K] (n : ℕ) (γ : Matrix (Fin n) (F
     let I : Ideal K[X] :=
       { carrier := {f | x ᵥ* aeval γ f = 0}
         add_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq] at ha hb ⊢
           rw [map_add (f := _), Matrix.vecMul_add, ha, hb, add_zero]
         zero_mem' := by simp
         smul_mem' := fun c f hf => by
-          simp only [Set.mem_setOf_eq] at hf ⊢
+          simp only [Set.mem_ofPred_eq] at hf ⊢
           rw [smul_eq_mul, mul_comm, map_mul, ← Matrix.vecMul_vecMul, hf, Matrix.zero_vecMul] }
     have hmem : ∀ f, f ∈ I ↔ x ᵥ* aeval γ f = 0 := fun f => Iff.rfl
     set a := Submodule.IsPrincipal.generator I with ha
@@ -1247,7 +1247,7 @@ theorem sLe_of_sMeet {m : ℕ} {e e' : Fin m → SignType} (h : sMeet e e' = e) 
   unfold sMeet at h1
   by_cases h2 : e i = e' i
   · exact h2.symm
-  · rw [if_neg h2] at h1
+  · rw [ite_eq_right h2] at h1
     exact absurd h1.symm hi
 
 theorem eq_neg_one_of {x : SignType} : x ≠ 0 → x ≠ 1 → x = -1 := by
@@ -1403,7 +1403,7 @@ theorem isotropicIdempotent_signs : ∀ (R : Type) [Ring R], (∀ x y : R, x * y
     (∀ e e', P (sMeet e e') = P e * P e') → (∀ e e', SLe e e' → P e * P e' = P e) →
     (∀ e, P e = ∑ j, P (Pi.single j (e j))) ∧ ∀ j, P (Pi.single j (-1)) = σ (P (Pi.single j 1)) := by
   intro R _ hc σ hσ m P hP2 hiso hsurj hinj hP0 hmeet hle
-  letI : CommRing R := { (inferInstance : Ring R) with mul_comm := hc }
+  let : CommRing R := { (inferInstance : Ring R) with mul_comm := hc }
   exact ⟨fun e => Signs.additive σ P hP2 hiso hsurj hinj hP0 hmeet hle e,
     fun j => Signs.conj_single σ P hσ hP2 hiso hsurj hinj hP0 hle j⟩
 

@@ -146,7 +146,7 @@ omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem vecMul_diagGL_mem (a b c : D → kˣ) (h : ∀ j, b j = a j * c j) (x : D → k) :
     x ᵥ* (diagGL c).val ∈ diagLat b ↔ x ∈ diagLat a := by
   refine forall_congr' fun j => ?_
-  have h0 : 0 < valuation k (c j : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (c j : k) := pos_iff_ne_zero.2 (by simp)
   rw [diagGL_val, vecMul_diagonal, map_mul, h, Units.val_mul, map_mul]
   exact mul_le_mul_iff_left₀ h0
 

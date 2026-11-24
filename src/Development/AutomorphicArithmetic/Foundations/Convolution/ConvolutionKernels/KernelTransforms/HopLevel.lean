@@ -211,7 +211,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.hopLevel :
   refine ⟨hcommU _ hrho, ?_⟩
   classical
   obtain ⟨e0, he0, hO⟩ := UpperTheory.ConvolutionTheory.Tf.prjFix K n μ m U hUo hUc
-  haveI : Fintype {c : GL (Fin n) (w.adicCompletion K) ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * x)} := hfin.fintype
+  have : Fintype {c : GL (Fin n) (w.adicCompletion K) ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * x)} := hfin.fintype
   obtain ⟨y, hy⟩ : ∃ y : {c : GL (Fin n) (w.adicCompletion K) ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * x)} → GL (Fin n) (w.adicCompletion K),
       ∀ i, (QuotientGroup.mk (y i) : GL (Fin n) (w.adicCompletion K) ⧸ J) = i :=
     ⟨fun c => (c : GL (Fin n) (w.adicCompletion K) ⧸ J).out, fun c => QuotientGroup.out_eq' _⟩
@@ -240,7 +240,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.hopLevel :
     refine ContinuousLinearMap.ext fun v => ?_
     have hv : prj (fixF μ U) v ∈ fixL μ w J :=
       (hmemJ _).2 fun u hu => (hmemU _).1 (hPU v) u (hJU hu)
-    rw [ContinuousLinearMap.comp_apply, hsum _ y inj rng _ hv, ContinuousLinearMap.sum_apply]
+    rw [ContinuousLinearMap.comp_apply, hsum _ y inj rng _ hv, sum_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [ofin_leftT, hO]
     rfl

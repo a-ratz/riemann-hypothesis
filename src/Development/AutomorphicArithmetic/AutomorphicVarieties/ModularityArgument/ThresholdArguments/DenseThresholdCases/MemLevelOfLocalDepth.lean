@@ -122,19 +122,19 @@ open Polynomial UpperTheory.V.Z.Sym.Wt
 private theorem cont_m {K T : Type} [Fintype K] [TopologicalSpace T] {d : ℕ} (n : K → ℕ) (γ : T → K → GL (Fin d) ℂ)
     (hγ : ∀ k i j, Continuous fun t => (γ t k : Matrix (Fin d) (Fin d) ℂ) i j) (x : MH d n) (f : MH d n →ₗ[ℂ] ℂ) :
     Continuous fun t => f (mRep d n (γ t) x) := by
-  haveI : FiniteDimensional ℂ (MH d n) := finMH K d n
+  have : FiniteDimensional ℂ (MH d n) := finMH K d n
   let W : Submodule ℂ (Module.Dual ℂ (MH d n)) :=
     { carrier := {φ | Continuous fun t => φ (mRep d n (γ t) x)}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, LinearMap.add_apply] at *
+        simp only [Set.mem_ofPred_eq, LinearMap.add_apply] at *
         exact ha.add hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, LinearMap.zero_apply]
+        simp only [Set.mem_ofPred_eq, LinearMap.zero_apply]
         exact continuous_const
       smul_mem' := by
         intro c a ha
-        simp only [Set.mem_setOf_eq, LinearMap.smul_apply, smul_eq_mul] at *
+        simp only [Set.mem_ofPred_eq, LinearMap.smul_apply, smul_eq_mul] at *
         exact continuous_const.mul ha }
   have hev : ∀ y : K × Fin d → ℂ,
       (MvPolynomial.aeval y : MvPolynomial (K × Fin d) ℂ →ₐ[ℂ] ℂ).toLinearMap.comp (MH d n).subtype ∈ W := by
@@ -195,9 +195,9 @@ theorem UpperTheory.V.Z.Sym.Wt.contRep :
         split_ifs <;> rfl
       rw [hfun]
       by_cases hk : k.2 = true
-      · simp only [hk, if_true]
+      · simp only [hk, ite_true]
         exact entci 3 k.1 i' i
-      · simp only [if_neg hk]
+      · simp only [ite_eq_right hk]
         exact entc 3 k.1 i i'
     exact cont_m (fun k : I × Bool => dg j S k.1) (fun g : I → GL (Fin 3) ℂ => dbl 3 g) hent (x S)
       (f ∘ₗ LinearMap.single ℂ (fun S => ↥(Bi 3 (dg j S))) S)
@@ -272,11 +272,11 @@ theorem UpperTheory.V.Z.Sym.Al.eigTS :
   intro L _ _ _ V _ _ φ w W ψ h t ht
   have hd : Sig.SDom ![t, t⁻¹] := by
     intro i j hij
-    haveI : Nontrivial (ValueGroupWithZero (Kw w)) :=
+    have : Nontrivial (ValueGroupWithZero (Kw w)) :=
       (inferInstance : LinearOrderedCommGroupWithZero (ValueGroupWithZero (Kw w))).toNontrivial
     have h0 : valuation (Kw w) (t : Kw w) ≠ 0 := (Valuation.ne_zero_iff _).2 t.ne_zero
     fin_cases i <;> fin_cases j <;> simp at hij ⊢
-    exact ht.trans ((one_lt_inv₀ (zero_lt_iff.2 h0)).2 ht)
+    exact ht.trans ((one_lt_inv₀ (pos_iff_ne_zero.2 h0)).2 ht)
   have e : Dict.expo ![ψ 0 / ψ 1, 1] ![t, t⁻¹] = Dict.expo ψ ![t, t⁻¹] := by
     simp [Dict.expo, torusChar, Fin.prod_univ_two, div_eq_mul_inv]
   rw [e]; exact h _ hd
@@ -322,7 +322,7 @@ private theorem rho_sdom {m : ℤ} (hm : 0 < m) : Sig.SDom (rho n k m) := by
 private theorem sdom_mul {d d' : Fin n → kˣ} (h : Sig.SDom d) (h' : Sig.SDom d') : Sig.SDom (d * d') := by
   intro i j hij
   simp only [Pi.mul_apply, Units.val_mul, map_mul]
-  exact mul_lt_mul'' (h i j hij) (h' i j hij) zero_le' zero_le'
+  exact mul_lt_mul'' (h i j hij) (h' i j hij) zero_le zero_le
 
 private theorem sdom_mul_unit {d u : Fin n → kˣ} (h : Sig.SDom d) (hu : ∀ i, u i ∈ UpperTheory.V.Hi.Uo k) : Sig.SDom (d * u) := by
   intro i j hij
@@ -478,9 +478,9 @@ private theorem sec_mem_lev {U : Subgroup (UA L n)} {S : Finset (Plc L)} (hP : P
 
 private theorem op_inSpan {w : Plc L} (hw : IsSplitAt w) (d : Fin n → (Kw w)ˣ) (φ : UA L n → V) :
     InSpan w φ (op w (iw w) d φ) := by
-  haveI : Finite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n)) :=
+  have : Finite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n)) :=
     finOrb w _
-  haveI := Fintype.ofFinite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n))
+  have := Fintype.ofFinite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n))
   simp only [InSpan, op, UpperTheory.V.Hi.dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply]
   exact Submodule.sum_mem _ fun q _ => Submodule.subset_span
     ⟨secW n w (q : GL (Fin n) (Kw w) ⧸ (iw w).J n).out, (secSpec L n w hw).1 _, rfl⟩
@@ -529,12 +529,12 @@ private theorem op_keep {R : Representation ℂ (InfinitePlace L → GL (Fin n) 
 private theorem op_comm {w w' : Plc L} (hw : IsSplitAt w) (hw' : IsSplitAt w')
     (hne : w'.under (𝓞 (Lp L)) ≠ w.under (𝓞 (Lp L))) (d : Fin n → (Kw w)ˣ) (d' : Fin n → (Kw w')ˣ) :
     Commute (op (V := V) w (iw w) d) (op (V := V) w' (iw w') d') := by
-  haveI : Finite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n)) :=
+  have : Finite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n)) :=
     finOrb w _
-  haveI := Fintype.ofFinite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n))
-  haveI : Finite (MulAction.orbit ((iw w').J n) ((Sig.dg d' : GL (Fin n) (Kw w')) : GL (Fin n) (Kw w') ⧸ (iw w').J n)) :=
+  have := Fintype.ofFinite (MulAction.orbit ((iw w).J n) ((Sig.dg d : GL (Fin n) (Kw w)) : GL (Fin n) (Kw w) ⧸ (iw w).J n))
+  have : Finite (MulAction.orbit ((iw w').J n) ((Sig.dg d' : GL (Fin n) (Kw w')) : GL (Fin n) (Kw w') ⧸ (iw w').J n)) :=
     finOrb w' _
-  haveI := Fintype.ofFinite (MulAction.orbit ((iw w').J n) ((Sig.dg d' : GL (Fin n) (Kw w')) : GL (Fin n) (Kw w') ⧸ (iw w').J n))
+  have := Fintype.ofFinite (MulAction.orbit ((iw w').J n) ((Sig.dg d' : GL (Fin n) (Kw w')) : GL (Fin n) (Kw w') ⧸ (iw w').J n))
   simp only [op, UpperTheory.V.Hi.dc, finsum_eq_sum_of_fintype]
   refine Commute.sum_left _ _ _ fun q _ => Commute.sum_right _ _ _ fun q' _ => ?_
   have hc := (factor L n w).1 _ ((secSpec L n w hw).1 (q : GL (Fin n) (Kw w) ⧸ (iw w).J n).out) _
@@ -582,7 +582,7 @@ theorem UpperTheory.V.Z.Sym.Al.afOps :
   have hu : ∀ w, w ∈ S → ∀ d (φ : AF R (lev U S iw)),
       ((u w d φ : AF R (lev U S iw)) : UA L n → V) = op w (iw w) d φ := by
     intro w hw d φ
-    simp only [u, dif_pos hw]
+    simp only [u, dite_eq_left hw]
     rfl
   refine ⟨u, fun w hw d _ φ => hu w hw d φ, fun w hw d d' hd hd' => ?_, fun w hw d hd => ?_,
     fun w hw w' hw' hne d d' _ _ => ?_⟩
@@ -627,7 +627,7 @@ theorem UpperTheory.Reformulated.B.ComplexCommonEigenvectorOfFinrankEq.common_ei
   · obtain ⟨v, hv, hv0⟩ := (Submodule.ne_bot_iff W).1 hW
     exact ⟨v, hv, hv0, fun i => (h i).imp fun c hc' => hc' v hv⟩
   · obtain ⟨i, hi⟩ := not_forall.1 h
-    haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.2 hW
+    have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.2 hW
     obtain ⟨c, hce⟩ := Module.End.exists_eigenvalue
       ((f i).restrict (p := W) (q := W) (hinv i) : Module.End ℂ W)
     obtain ⟨w, hw⟩ := hce.exists_hasEigenvector
@@ -673,11 +673,11 @@ private theorem common_eig {ι M : Type} [AddCommGroup M] [Module ℂ M] [Finite
 private theorem sdom_pair {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (t : kˣ) (ht : valuation k (t : k) < 1) : Sig.SDom ![t, t⁻¹] := by
   intro i j hij
-  haveI : Nontrivial (ValueGroupWithZero k) :=
+  have : Nontrivial (ValueGroupWithZero k) :=
     (inferInstance : LinearOrderedCommGroupWithZero (ValueGroupWithZero k)).toNontrivial
   have h0 : valuation k (t : k) ≠ 0 := (Valuation.ne_zero_iff _).2 t.ne_zero
   have h1 : valuation k (t : k) < (valuation k (t : k))⁻¹ :=
-    ht.trans (one_lt_inv₀ (zero_lt_iff.2 h0) |>.2 ht)
+    ht.trans (one_lt_inv₀ (pos_iff_ne_zero.2 h0) |>.2 ht)
   fin_cases i <;> fin_cases j <;> first | exact absurd hij (by decide) | simpa using h1
 
 private theorem dom_of_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -703,7 +703,7 @@ private theorem loc_char {k M : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     ∃ ψ : Fin 2 → kˣ →* ℂˣ, (∀ i, ∀ x ∈ Hi.Uo k, ψ i x = 1) ∧ ψ 0 / ψ 1 = b ∧
       ∀ d, Sig.SDom d → u d v = expo ψ d • v := by
   classical
-  haveI : Nontrivial (ValueGroupWithZero k) :=
+  have : Nontrivial (ValueGroupWithZero k) :=
     (inferInstance : LinearOrderedCommGroupWithZero (ValueGroupWithZero k)).toNontrivial
   choose! χ hχ using heig
   have uniq : ∀ c c' : ℂ, c • v = c' • v → c = c' := fun c c' h => smul_left_injective ℂ hv h
@@ -736,7 +736,7 @@ private theorem loc_char {k M : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     have ht : valuation k (t : k) < 1 := by
       have h1 : valuation k (d 1 : k) ≠ 0 := (Valuation.ne_zero_iff _).2 (d 1).ne_zero
       simp only [t, Units.val_div_eq_div_val, map_div₀]
-      exact (div_lt_one₀ (zero_lt_iff.2 h1)).2 hlt
+      exact (div_lt_one₀ (pos_iff_ne_zero.2 h1)).2 hlt
     have hdd : d * d = z * ![t, t⁻¹] := by
       have e0 : d 0 * d 0 = d 0 * d 1 * (d 0 / d 1) := by rw [mul_assoc, mul_div_cancel]
       have e1 : d 1 * d 1 = d 0 * d 1 * (d 0 / d 1)⁻¹ := by
@@ -768,7 +768,7 @@ theorem UpperTheory.V.Z.Sym.Al.refine :
   intro L _ _ _ V _ _ _ R U hU S hS hloc b φ hφ hAF hE
   classical
   obtain ⟨u, hu_op, hu_mul, hu_one, hu_comm⟩ := afOps L 2 V R U hU.1 S hS hloc
-  haveI : FiniteDimensional ℂ (AF R (lev U S iw)) :=
+  have : FiniteDimensional ℂ (AF R (lev U S iw)) :=
     afFin L 2 V R (lev U S iw) ((cof L 2).2.2.1 U hU S iw)
   have hdomU : ∀ (w : Plc L) (d : Fin 2 → (Kw w)ˣ), (∀ i, d i ∈ Hi.Uo (Kw w)) → AlgebraTools.Dom d := by
     intro w d hd i j _
@@ -903,7 +903,7 @@ private theorem exists_nil {ρ : Representation ℂ G V} (hl : HasFiniteLength �
     (hxc : ∀ t, ∃ m : ℕ, ((ρ t - algebraMap ℂ (Module.End ℂ V) (c t)) ^ m) x = 0) :
     ∃ N : Subrepresentation ρ, N ≠ ⊤ ∧
       ∀ t, ∃ m : ℕ, ∀ v, ((ρ t - algebraMap ℂ (Module.End ℂ V) (c t)) ^ m) v ∈ N.toSubmodule := by
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨N, hN, hmax⟩ := (wellFounded_gt (α := Subrepresentation ρ)).has_min {N | x ∉ N.toSubmodule}
     ⟨⊥, fun h => hx ((Submodule.mem_bot ℂ).1 h)⟩
   refine ⟨N, fun h => hN (by rw [h]; trivial), fun t => ?_⟩
@@ -944,7 +944,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
     (hxc : ∀ t, ∃ m : ℕ, ((ρ t - algebraMap ℂ (Module.End ℂ V) (χ t : ℂ)) ^ m) x = 0) :
     IsSmoothChar χ ∧ ∃ l : V →ₗ[ℂ] ℂ, l ≠ 0 ∧ ∀ g v, l (ρ g v) = (χ g : ℂ) * l v := by
   obtain ⟨T, hT, hnil⟩ := exists_nil hl hx hxc
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, hTM⟩ := (eq_top_or_exists_le_coatom T).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=
@@ -1005,7 +1005,7 @@ private theorem sdom_of_step {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (s 
   have hj := j.2
   have hij' : (i : ℕ) < j := hij
   have e : n - (i : ℕ) = 1 + ((n - j) + (j - i - 1)) := by omega
-  have hc0 : 0 < valuation k (c : k) := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 c.ne_zero)
+  have hc0 : 0 < valuation k (c : k) := pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 c.ne_zero)
   beta_reduce
   rw [e]
   simp only [Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow, pow_add, pow_one]
@@ -1044,7 +1044,7 @@ private theorem exists_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
       rw [← map_mul, ← Units.val_mul]
       congr 2
       simp
-    have hj0 : 0 < valuation k (t j : k) := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 (t j).ne_zero)
+    have hj0 : 0 < valuation k (t j : k) := pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 (t j).ne_zero)
     rw [Units.val_mul, map_mul, ← mul_assoc]
     calc valuation k (t i : k) * valuation k (c₀ : k) * valuation k (x : k)
         ≤ valuation k (t j : k) * valuation k (x : k) := mul_le_mul_left hle _
@@ -1123,8 +1123,8 @@ private theorem reps (d : Fin n → kˣ) : ∃ s : Finset (GL (Fin n) k), (∀ u
     ∀ (M : Type) [AddCommGroup M] [Module ℂ M] (ρ : Representation ℂ (GL (Fin n) k) M) (v : M),
       (glIwa k n).uOp ρ (Sig.dg d) v = ∑ u ∈ s, ρ u (ρ (Sig.dg d) v) := by
   classical
-  haveI := quot_finite d
-  letI : Fintype ((glIwa k n).N ⧸ ((glIwa k n).Nconj (Sig.dg d)).subgroupOf (glIwa k n).N) := Fintype.ofFinite _
+  have := quot_finite d
+  let : Fintype ((glIwa k n).N ⧸ ((glIwa k n).Nconj (Sig.dg d)).subgroupOf (glIwa k n).N) := Fintype.ofFinite _
   have hinj : Function.Injective fun q : (glIwa k n).N ⧸ ((glIwa k n).Nconj (Sig.dg d)).subgroupOf (glIwa k n).N =>
       ((q.out : (glIwa k n).N) : GL (Fin n) k) := fun q q' h => by
     have h1 : q.out = q'.out := Subtype.ext h
@@ -1274,7 +1274,7 @@ theorem UpperTheory.V.Z.Sym.W.local_sub_d_statement :
   have hl : HasFiniteLength (jacB τ) :=
     (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).2
       ((H.loc.bz k).2.1 _ _ _ (points (Fin n)) _ τ hs (hasFiniteLength_of_isIrreducible hi))
-  haveI := GlobalTheory.TorusEigenform.secondCountableTopology_units k
+  have := GlobalTheory.TorusEigenform.secondCountableTopology_units k
   obtain ⟨-, l, hl0, hle⟩ := exists_form (χ := torusChar ψ) (isSmooth_jacB hs) hl hx fun t =>
     ⟨1, by rw [pow_one, LinearMap.sub_apply, Module.algebraMap_end_apply, ht t, sub_self]⟩
   exact GlobalTheory.SatakeExists.isSubquotient_of_eigenform hs hi (torusChar ψ) l hl0 hle
@@ -1411,7 +1411,7 @@ private theorem pigeon {X I : Type} (A : Set X) (hA : A.Finite) (P : X → I →
   by_contra hn
   push Not at hn
   choose f hf using fun x : A => hn x.1 x.2
-  haveI := hA.fintype
+  have := hA.fintype
   obtain ⟨x, hx, h1⟩ := h (Finset.univ.image f)
   exact hf ⟨x, hx⟩ (h1 _ (Finset.mem_image_of_mem f (Finset.mem_univ _)))
 theorem UpperTheory.V.Z.Sym.W.adjoint_lift_w_of_literal_automorphy_spec_out : _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis → UpperTheory.V.Z.Sym.W.SpecOutS → UpperTheory.V.Z.Sym.W.AdLiftW := by
@@ -1446,8 +1446,8 @@ theorem UpperTheory.V.Z.Sym.W.adjoint_lift_w_of_literal_automorphy_spec_out : _r
       have hsub : ((S₀ : Set (Plc L)) ∪ S₁) ⊆ (S₀ : Set (Plc L)) ∪ P := Set.union_subset_union_right _ fun w hw => (h1 w hw).1
       have hp1 : Places (S₁ : Set (Plc L)) := mono fun w hw => Or.inr (h1 w hw).1
       let W : ∀ w : Plc L, Sig.Lev (Kw w) := fun w => if w ∈ S₀ then deep c w else iw w
-      have W0 : ∀ w ∈ S₀, W w = deep c w := fun w hw => if_pos hw
-      have W1 : ∀ w ∈ S₁, W w = iw w := fun w hw => if_neg (hn w hw)
+      have W0 : ∀ w ∈ S₀, W w = deep c w := fun w hw => ite_eq_left hw
+      have W1 : ∀ w ∈ S₁, W w = iw w := fun w hw => ite_eq_right (hn w hw)
       obtain ⟨e, φ, h0, hAF, hE⟩ := _root_.UpperTheory.V.Z.Sym.Al.inVec_alt H L π hπ j hwt (S₀ ∪ S₁) (by rw [Finset.coe_union]; exact mono hsub)
         (fun w hw => hunr w fun w' hw' => hw w' (Finset.mem_union_left _ hw')) W ψ fun w hw => by
           rcases Finset.mem_union.1 hw with hw | hw

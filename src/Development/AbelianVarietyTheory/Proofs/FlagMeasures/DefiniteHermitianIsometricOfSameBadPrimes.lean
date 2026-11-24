@@ -247,7 +247,7 @@ theorem exists_intLat [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower
   let b' := b.unitsSMul fun _ => Units.mk0 _ N0
   have hb' : ∀ i, b' i = algebraMap (𝓞 K) K N • b i := fun i => by
     simp [b', Module.Basis.unitsSMul_apply, Units.smul_def]
-  letI : Submodule.IsLattice K (Submodule.span (𝓞 K) (Set.range b')) :=
+  let : Submodule.IsLattice K (Submodule.span (𝓞 K) (Set.range b')) :=
     ⟨Submodule.fg_span (Set.finite_range _), fun _ _ hs =>
       (LinearIndependent.iff_fractionRing (𝓞 K) K).mp hs⟩
   refine ⟨Submodule.span (𝓞 K) (Set.range b'), ⟨?_⟩, ?_⟩

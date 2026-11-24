@@ -54,7 +54,7 @@ theorem discreteTopology_of_isOpen_of_forall_mem {G : Type*} [AddGroup G] [Topol
     [IsTopologicalAddGroup G] (H : AddSubgroup G) (U : Set G) (hU : IsOpen U) (h0 : (0 : G) ∈ U)
     (hH : ∀ x ∈ H, x ∈ U → x = 0) : DiscreteTopology H := by
   rw [discreteTopology_iff_isOpen_singleton_zero]
-  convert hU.preimage continuous_subtype_val
+  convert hU.preimage continuous_subtypeVal
   ext ⟨x, hx⟩
   simp only [Set.mem_singleton_iff, Set.mem_preimage]
   constructor

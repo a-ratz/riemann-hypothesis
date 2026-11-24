@@ -168,7 +168,7 @@ theorem fund_image_of (μ : Measure (GA D (D.sp.Y 0)))
     have h2 : (ENNReal.ofReal c • μ) (ι ⁻¹' A) = 0 := by
       rw [← hmap]
       exact h1.trans hA
-    rw [Measure.smul_apply, smul_eq_mul, mul_eq_zero] at h2
+    rw [smul_apply, smul_eq_mul, mul_eq_zero] at h2
     rcases h2 with h | h
     · exact absurd h (by simpa using hc)
     · exact h

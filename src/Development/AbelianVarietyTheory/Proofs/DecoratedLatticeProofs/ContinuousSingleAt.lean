@@ -90,8 +90,8 @@ def sec (D : D7) (v : Pl D) (e : AE D) : Fv D.host.F v →+ AE D :=
 theorem sec_apply (a : Fv D.host.F v) : sec D v e a = fj D (singleV D.host.F v a) * e := rfl
 
 theorem continuous_sec : Continuous (sec D v e) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   have h1 : Continuous fun x : Fv D.host.F v => pairA D.host.F 0 (singleV D.host.F v x) :=
     Continuous.prodMk continuous_const (continuous_single_at _ v)
   have h2 : Continuous (algebraMap (AF D.host.F) (AE D)) :=
@@ -99,7 +99,7 @@ theorem continuous_sec : Continuous (sec D v e) := by
   exact (h2.comp h1).mul continuous_const
 
 theorem continuous_comp (he : SplitAt D v e) : Continuous (comp he) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   let σ : AF D.host.F →+* Fv D.host.F v := ((evalV D.host.F v).comp (sndA D.host.F)).toRingHom
   have hσ : Continuous σ := (continuous_eval_at _ v).comp continuous_snd
   let L : AE D →ₛₗ[σ] Fv D.host.F v :=

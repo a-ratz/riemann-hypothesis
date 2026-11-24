@@ -76,7 +76,7 @@ def chartOpen (P : S.Presents s i) (T : AffOp X₀) : X.Opens :=
   (P.y T).opensRange
 
 theorem preimage_chartOpen (P : S.Presents s i) (T : AffOp X₀) : P.y T ⁻¹ᵁ chartOpen P T = ⊤ := by
-  haveI := P.isOpen T
+  have := P.isOpen T
   exact Scheme.Hom.preimage_opensRange _
 
 def chartSec (P : S.Presents s i) (T : AffOp X₀) : Γ(X, chartOpen P T) ⟶ CommRingCat.of (S.F.obj T) :=
@@ -92,8 +92,8 @@ instance isIso_chartSec (P : S.Presents s i) (T : AffOp X₀) : IsIso (chartSec 
   infer_instance
 
 theorem chartOpen_le (P : S.Presents s i) ⦃T T' : AffOp X₀⦄ (a : T ⟶ T') : chartOpen P T' ≤ chartOpen P T := by
-  haveI := P.isOpen T
-  haveI := P.isOpen T'
+  have := P.isOpen T
+  have := P.isOpen T'
   intro x hx
   change x ∈ ((P.y T').opensRange : Set X) at hx
   change x ∈ ((P.y T).opensRange : Set X)
@@ -118,7 +118,7 @@ theorem res_chartSec (P : S.Presents s i) ⦃T T' : AffOp X₀⦄ (a : T ⟶ T')
 theorem injective_of_isPullback {R R₀ : Type} [CommRing R] [CommRing R₀] {π : R →+* R₀}
     (hπ : Function.Surjective π) {s₀ : X₀ ⟶ Sp R₀} {s : X ⟶ Sp R} {i : X₀ ⟶ X}
     (h : IsPullback i s₀ s (spMap π)) : Function.Injective i := by
-  haveI : IsClosedImmersion i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip
+  have : IsClosedImmersion i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip
     (IsClosedImmersion.spec_of_surjective _ hπ)
   exact i.isClosedEmbedding.injective
 
@@ -135,7 +135,7 @@ theorem range_affPt (T : AffOp X₀) : Set.range (affPt s₀ T.unop) = T.unop.1 
 
 theorem exists_of_mem_chartOpen (hI : I ^ 2 = 0) (P : S.Presents s i) (T : AffOp X₀) (x : X)
     (hx : x ∈ chartOpen P T) : ∃ x₀ ∈ T.unop.1, i x₀ = x := by
-  haveI := P.isOpen T
+  have := P.isOpen T
   change x ∈ ((P.y T).opensRange : Set X) at hx
   rw [Scheme.Hom.coe_opensRange] at hx
   obtain ⟨q, rfl⟩ := hx
@@ -148,7 +148,7 @@ theorem exists_of_mem_chartOpen (hI : I ^ 2 = 0) (P : S.Presents s i) (T : AffOp
 
 theorem le_preimage_chartOpen (P : S.Presents s i) (T : AffOp X₀) :
     T.unop.1 ≤ i ⁻¹ᵁ chartOpen P T := by
-  haveI := P.isOpen T
+  have := P.isOpen T
   intro x₀ hx₀
   have hx' : x₀ ∈ Set.range (affPt s₀ T.unop) := by rw [range_affPt]; exact hx₀
   obtain ⟨q, rfl⟩ := hx'

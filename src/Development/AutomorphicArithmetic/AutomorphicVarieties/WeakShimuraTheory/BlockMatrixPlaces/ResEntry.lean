@@ -86,7 +86,7 @@ theorem UpperTheory.V.Ws.Bl.adBij :
     ∀ (R Γ : Type) [CommRing R] [IsLocalRing R] [Group Γ] (r : Γ →* M4 R) (h : BG r) (s : Γ), Sep (r s) → Function.Bijective fun Y => adU h s Y - Y := by
   intro R Γ _ _ _ r h s hs
   obtain ⟨hfin, -, hmem⟩ := uMFacts R
-  haveI := hfin
+  have := hfin
   let φ : uM R →ₗ[R] uM R := adU h s - LinearMap.id
   have hinv : r s⁻¹ * r s = 1 := by
     rw [← map_mul, inv_mul_cancel, map_one]
@@ -120,11 +120,11 @@ theorem UpperTheory.V.Ws.Bl.adBij :
     rw [Submodule.mkQ_apply, Submodule.mapQ_apply, Submodule.Quotient.mk_eq_zero] at hq
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact hkey Y hq
-  letI : Module (ResidueField R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))) :=
+  let : Module (ResidueField R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))) :=
     inferInstanceAs (Module (R ⧸ maximalIdeal R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))))
-  letI : IsScalarTower R (ResidueField R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))) :=
+  let : IsScalarTower R (ResidueField R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))) :=
     inferInstanceAs (IsScalarTower R (R ⧸ maximalIdeal R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))))
-  haveI : Module.Finite (ResidueField R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))) :=
+  have : Module.Finite (ResidueField R) (uM R ⧸ (maximalIdeal R • ⊤ : Submodule R (uM R))) :=
     Module.Finite.of_restrictScalars_finite R _ _
   have hsurjA : Function.Surjective (algebraMap R (ResidueField R)) := Ideal.Quotient.mk_surjective
   let ψk := LinearMap.extendScalarsOfSurjective hsurjA ψ

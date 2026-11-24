@@ -59,11 +59,11 @@ open NumberField IsDedekindDomain ReciprocityTheory.Gal Formalism.ConjugateSelfD
 theorem UpperTheory.V.LDataCardLeFinrank.classFix :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (N : ℕ) [NeZero N] (K : Type) [Field K] [NumberField K] [IsCyclotomicExtension {N} ℚ K] (φ : F →ₐ[ℚ] K) (g : Ω ≃+* Ω) (h : (ZMod N)ˣ), (∀ ζ : Ω, ζ ^ N = 1 → g ζ = ζ ^ (h : ZMod N).val) → ((∀ x : F, g (algebraMap F Ω x) = algebraMap F Ω x) ↔ h ∈ KStar.TotallyRealRoots.fieldSubgroup N K φ.fieldRange) := by
   intro F Ω _ _ _ _ _ N _ K _ _ _ φ g h hg
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap F Ω).injective).mp inferInstance
-  letI : Algebra F K := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ F K := inferInstance
-  haveI : Algebra.IsAlgebraic F K := Algebra.IsAlgebraic.tower_top (K := ℚ) F
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap F Ω).injective).mp inferInstance
+  let : Algebra F K := φ.toRingHom.toAlgebra
+  have : IsScalarTower ℚ F K := inferInstance
+  have : Algebra.IsAlgebraic F K := Algebra.IsAlgebraic.tower_top (K := ℚ) F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   let ι : K →ₐ[F] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -84,7 +84,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.classFix :
       rw [Set.mem_singleton_iff] at hn
       subst hn
       simp only [AlgHom.coe_comp, Function.comp_apply, RingHom.toRatAlgHom_apply,
-        AlgEquiv.coe_algHom]
+        AlgEquiv.coe_toAlgHom]
       rw [hσζ b hb, map_pow]
       apply hg
       rw [← map_pow, hb, map_one]

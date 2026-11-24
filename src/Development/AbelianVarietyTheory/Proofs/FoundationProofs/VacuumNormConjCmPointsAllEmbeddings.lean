@@ -206,7 +206,7 @@ theorem exists_aut (D : D7) (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] 
 theorem exists_ext (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) :
     ∃ (M' : IntermediateField ℚ ℂ) (ρ' : M' →ₐ[ℚ] ℂ), M ≤ M' ∧ Qbar ≤ M' ∧
       ∀ x ∈ M, ρ' (TaylorLogMetric.liftM M' x) = ρ (TaylorLogMetric.liftM M x) := by
-  obtain ⟨φ, hφ⟩ := IsAlgClosed.surjective_restrictDomain_of_isAlgebraic
+  obtain ⟨φ, hφ⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic
     (K := ℚ) (L := M) (M := ℂ) (E := algebraicClosure M ℂ) ρ
   have hle : M ≤ (algebraicClosure M ℂ).restrictScalars ℚ := fun x hx =>
     (algebraicClosure M ℂ).algebraMap_mem ⟨x, hx⟩
@@ -214,7 +214,7 @@ theorem exists_ext (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) :
   · rw [IntermediateField.mem_restrictScalars, mem_algebraicClosure_iff]
     exact (mem_algebraicClosure_iff.1 hx).extendScalars (algebraMap ℚ M).injective
   · rw [← hφ]
-    simp only [TaylorLogMetric.liftM, dif_pos hx, dif_pos (hle hx)]
+    simp only [TaylorLogMetric.liftM, dite_eq_left hx, dite_eq_left (hle hx)]
     rfl
 
 theorem norm_fix (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hc : Crv D cc δ) (t0 : ℂ)

@@ -113,7 +113,7 @@ theorem prod_iSup_mono {ι : Type} (s : Finset ι) (f : ι → ℕ → ℝ≥0�
   | insert a s ha ih =>
     simp only [Finset.prod_insert ha]
     rw [ih, iSup_mul_iSup_mono (hf a)
-      (fun k l hkl => Finset.prod_le_prod' fun i _ => hf i hkl)]
+      (fun k l hkl => Finset.prod_le_prod fun i _ => hf i hkl)]
 
 theorem exists_approx {α : Type*} [MeasurableSpace α] (μ : Measure α) [SigmaFinite μ] (f : α → ℝ≥0∞)
     (hf : Measurable f) :
@@ -253,7 +253,7 @@ theorem finite_case (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M d : ℕ} (J :
       ((∫⁻ y, Ψinf y ∂minf) * ∏ v ∈ S, ∫⁻ y, Ψ v y ∂(m v)) *
         ENNReal.ofReal (∏' v : {v // v ∉ S}, (m v.1 (primV σ J b v.1)).toReal) := by
   classical
-  haveI := GlobalTheory.CompanionTheory.SW.EulerZero.countable_places F
+  have := GlobalTheory.CompanionTheory.SW.EulerZero.countable_places F
   obtain ⟨u, hu, hut⟩ :=
     exists_seq_monotone_tendsto_atTop_atTop (Finset (HeightOneSpectrum (𝓞 F)))
   let T : ℕ → Finset (HeightOneSpectrum (𝓞 F)) := fun k => S ∪ u k
@@ -371,7 +371,7 @@ theorem prim_formula : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.PrimMeas.measurable_purePr F E σ hσ M J hJ d b S _ _ (gim k) (fun v => gm v k)
   have hpm : ∀ (a : Fin 1 → Fin (M + 2) → AF F ⊗[F] E), Monotone fun k =>
       ∏ v ∈ S, g v k (projV v (projFin a)) := fun a k l hkl =>
-    Finset.prod_le_prod' fun v _ => gmono v _ hkl
+    Finset.prod_le_prod fun v _ => gmono v _ hkl
   have hGmono : Monotone G := by
     intro k l hkl y
     exact Set.indicator_le_indicator (mul_le_mul' (gimono _ hkl) (hpm y hkl))
@@ -410,7 +410,7 @@ theorem prim_formula : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
         (ENNReal.iSup_mul ..).symm
     _ = _ := by
         rw [← iSup_mul_iSup_mono hmi
-          (fun k l hkl => Finset.prod_le_prod' fun v _ => hmv v hkl),
+          (fun k l hkl => Finset.prod_le_prod fun v _ => hmv v hkl),
           ← prod_iSup_mono S _ hmv, hIinf]
         simp only [hIv]
 
@@ -733,7 +733,7 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.HypStep.ScaleNonUnit
 theorem lam_map_mul {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v))
     [lam.IsAddHaarMeasure] (x : Fv F v) (hx : x ≠ 0) :
     lam.map (fun y => x * y) = (‖x‖₊)⁻¹ • lam := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have hu : IsUnit x := hx.isUnit
   have hc : ((distribHaarChar (Fv F v) hu.unit : ℝ≥0) : ℝ) = ‖x‖ := by
@@ -750,7 +750,7 @@ theorem lam_map_mul {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum 
     rw [hc]
   have hm : Measurable fun y : Fv F v => x * y := (continuous_const.mul continuous_id).measurable
   ext B hB
-  rw [Measure.map_apply hm hB, Measure.smul_apply]
+  rw [Measure.map_apply hm hB, smul_apply]
   open scoped Pointwise in
   have e : (fun y => x * y) ⁻¹' B = hu.unit⁻¹ • B := by
     ext y
@@ -786,20 +786,20 @@ theorem fibre_zero_image_mul (F E : Type) [Field F] [NumberField F] [Field E] [N
       ((‖Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E)‖₊ ^ (N - 1) : ℝ≥0) : ℝ≥0∞) * m 0 B := by
   have hloc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨i1, i2, i3, i4, -⟩ := id hloc
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : lam.IsAddHaarMeasure := hlam.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : lam.IsAddHaarMeasure := hlam.1
   obtain ⟨j1, j2, j3, j4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hK, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam ‹_›
-  haveI := hK
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
+  have := hK
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
   set s : Fv F v := Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E) with hs
   have hsu : IsUnit s := u.isUnit.map (Algebra.norm (Fv F v))
   have hs0 : s ≠ 0 := hsu.ne_zero
   have hN' : algebraMap (Fv F v) (Fv F v ⊗[F] E) s = (u : Fv F v ⊗[F] E) * sigR (Fv F v) σ u :=
     GlobalTheory.Doubling.algebraMap_norm_eq hσ _
   set q : ℝ≥0 := ‖s‖₊ with hq
-  have hq0 : q ≠ 0 := by rw [hq]; exact nnnorm_ne_zero_iff.2 hs0
+  have hq0 : q ≠ 0 := by rw [hq]; exact nnNorm_ne_zero_iff.2 hs0
   have hsigs : sigR (Fv F v) σ (algebraMap (Fv F v) (Fv F v ⊗[F] E) s) = algebraMap (Fv F v) (Fv F v ⊗[F] E) s := by
     simp [sigR, Algebra.TensorProduct.algebraMap_apply]
   let g : Matrix (Fin 1) (Fin 1) (Fv F v ⊗[F] E) := Matrix.of fun _ _ => (u : Fv F v ⊗[F] E)
@@ -845,13 +845,13 @@ theorem fibre_zero_image_mul (F E : Type) [Field F] [NumberField F] [Field E] [N
     have h1 : Algebra.norm (Fv F v) ((u⁻¹ : (Fv F v ⊗[F] E)ˣ) : Fv F v ⊗[F] E) * s = 1 := by
       rw [hs, ← map_mul, Units.inv_mul, map_one]
     have h2 := congrArg (fun x : Fv F v => ‖x‖₊) h1
-    simp only [nnnorm_mul, nnnorm_one] at h2
+    simp only [nnNorm_mul, nnNorm_one] at h2
     exact eq_inv_of_mul_eq_one_left h2
   have hmu : (coordW (Fv F v) b lam 1 N).map (fun X => rmul (Fv F v) X g) =
       (q⁻¹ ^ N) • coordW (Fv F v) b lam 1 N := by
     rw [hrm]
     ext C hC
-    rw [Measure.map_apply hTm hC, himg', Measure.smul_apply]
+    rw [Measure.map_apply hTm hC, himg', smul_apply]
     have := GlobalTheory.CompanionTheory.SW.coordW_image_unit_mul F E σ hσ N d b v lam hlam u⁻¹ C hC
     rw [show (Ti '' C) = ((fun (X : Fin 1 → Fin N → Fv F v ⊗[F] E) (p : Fin 1) (k : Fin N) =>
       ((u⁻¹ : (Fv F v ⊗[F] E)ˣ) : Fv F v ⊗[F] E) * X p k) '' C) from rfl, this, hnorm_inv, ENNReal.smul_def, smul_eq_mul, ENNReal.coe_pow]
@@ -865,11 +865,11 @@ theorem fibre_zero_image_mul (F E : Type) [Field F] [NumberField F] [Field E] [N
       algebraMap (Fv F v) (Fv F v ⊗[F] E) s * (S : Matrix (Fin 1) (Fin 1) (Fv F v ⊗[F] E)) i j := fun _ _ _ => rfl
   have hτm : Measurable τ := by
     obtain ⟨-, -, -, hBH, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ (Fv F v) 1
-    haveI := hBH
+    have := hBH
     refine Continuous.measurable ?_
     refine Continuous.subtype_mk ?_ _
     refine continuous_matrix fun i j => ?_
-    exact continuous_const.mul ((continuous_apply_apply i j).comp continuous_subtype_val)
+    exact continuous_const.mul ((continuous_apply_apply i j).comp continuous_subtypeVal)
   have hτ : ∀ S, (τ S : Matrix (Fin 1) (Fin 1) (Fv F v ⊗[F] E)) = cT (sigR (Fv F v) σ) g * S * g := by
     intro S
     ext i j
@@ -891,7 +891,7 @@ theorem fibre_zero_image_mul (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hTB : MeasurableSet (T '' B) := by
     rw [himg]; exact hTim hB
   have key2 := congrArg (fun μ' : Measure (Fin 1 → Fin N → Fv F v ⊗[F] E) => μ' (T '' B)) key
-  simp only [Measure.smul_apply, Measure.map_apply hTm hTB] at key2
+  simp only [smul_apply, Measure.map_apply hTm hTB] at key2
   have hpre : T ⁻¹' (T '' B) = B := by
     rw [himg, ← Set.preimage_comp]
     have : Ti ∘ T = id := funext hTiT
@@ -925,7 +925,7 @@ theorem val_eq_one_eventually {F : Type} [Field F] [NumberField F] (a : F) (ha :
   have hne : v.valuation F a ≠ 0 := (Valuation.ne_zero_iff _).2 ha
   rw [not_lt] at hc1 hc2
   rw [map_inv₀] at hc2
-  exact le_antisymm hc1 ((inv_le_one₀ (zero_lt_iff.2 hne)).1 hc2)
+  exact le_antisymm hc1 ((inv_le_one₀ (pos_iff_ne_zero.2 hne)).1 hc2)
 
 theorem norm_le_of_nonunit (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (d : ℕ) (b : Module.Basis (Fin d) F E) :
@@ -933,7 +933,7 @@ theorem norm_le_of_nonunit (F E : Type) [Field F] [NumberField F] [Field E] [Num
       (∀ y, y ∈ O ↔ ∀ k, (Algebra.TensorProduct.basis (Fv F v) b).repr y k ∈ v.adicCompletionIntegers F) →
       ∀ c : O, ¬ IsUnit c → IsUnit (c : Fv F v ⊗[F] E) →
         ‖Algebra.norm (Fv F v) (c : Fv F v ⊗[F] E)‖ ≤ 1 / (Ideal.absNorm v.asIdeal : ℝ) := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
   have hb1 : b.repr 1 ≠ 0 := by
     intro h
     exact one_ne_zero (b.repr.map_eq_zero_iff.1 h)

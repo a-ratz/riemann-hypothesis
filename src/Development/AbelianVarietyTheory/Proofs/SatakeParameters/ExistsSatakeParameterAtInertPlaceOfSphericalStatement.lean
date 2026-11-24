@@ -227,18 +227,18 @@ theorem heckeFunI_mem : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     · rw [Finset.sum_apply]
       refine Finset.sum_congr rfl fun c _ => ?_
       by_cases hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = c ∧ TrivOutside {v} x
-      · simp only [dif_pos hc]
+      · simp only [dite_eq_left hc]
         rfl
-      · simp only [dif_neg hc, zero_smul]
+      · simp only [dite_eq_right hc, zero_smul]
         rfl
     · intro c hc0
       rw [Function.mem_support] at hc0
       by_cases hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = c ∧ TrivOutside {v} x
-      · rw [dif_pos hc] at hc0
+      · rw [dite_eq_left hc] at hc0
         rw [Set.Finite.coe_toFinset]
         refine ⟨hc.choose, hc.choose_spec.1, hc.choose_spec.2, fun h0 => hc0 ?_⟩
         rw [h0, zero_smul]
-      · exact absurd (dif_neg hc) hc0
+      · exact absurd (dite_eq_right hc) hc0
   rw [key]
   exact Submodule.sum_mem _ fun c _ => Submodule.smul_mem _ _ (hS _ f hf)
 
@@ -547,14 +547,14 @@ theorem exists_satAt : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
       zero_mem' := ⟨π.S.zero_mem, fun κ _ => map_zero _⟩
       add_mem' := fun ha hb => ⟨π.S.add_mem ha.1 hb.1, fun κ hκ => by rw [map_add (f := _), ha.2 κ hκ, hb.2 κ hκ]⟩
       smul_mem' := fun c f hf => ⟨π.S.smul_mem c hf.1, fun κ hκ => by rw [map_smul, hf.2 κ hκ]⟩ }
-  haveI : FiniteDimensional ℂ π.W := π.alg.1
-  haveI : FiniteDimensional ℂ V := by
+  have : FiniteDimensional ℂ π.W := π.alg.1
+  have : FiniteDimensional ℂ V := by
     have := GlobalTheory.AlgFormsFin.fixedForms_finite L n π.ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hN
     refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n π.ρ N) ?_
     rintro f ⟨hfS, hfU⟩
     exact ⟨(π.irrS.1.le hfS).1, fun κ hκ g => congrFun (hfU κ (hCU κ hκ)) g⟩
   have hf₀V : f₀ ∈ V := ⟨hf₀S, hf₀U⟩
-  haveI : Nontrivial V := ⟨⟨⟨f₀, hf₀V⟩, 0, fun e => hf₀0 (congrArg Subtype.val e)⟩⟩
+  have : Nontrivial V := ⟨⟨⟨f₀, hf₀V⟩, 0, fun e => hf₀0 (congrArg Subtype.val e)⟩⟩
   let T : Hecke ℂ (KU Dv.σw n) → Module.End ℂ V := fun h =>
     { toFun := fun f => ⟨heckeFunI L n U Dv h.1 f.1,
         GlobalTheory.T.inertHeckeOperator_preserves_rightTranslationStable L n v w Dv U hUv π.W π.S π.irrS.1.stable h.1 h.2 f.1 f.2.1,

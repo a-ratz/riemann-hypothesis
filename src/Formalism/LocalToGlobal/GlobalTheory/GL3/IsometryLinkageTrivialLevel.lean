@@ -191,7 +191,7 @@ theorem herm : FS.Herm4 (cK D) (hK D) := by
       refine Finset.sum_congr rfl fun τ _ => ?_
       rw [map_mul, CU.emb_conj, Complex.mul_conj]
     have hpos : 0 < ∑ τ : D.what₂.Tau, Complex.normSq (embT D τ x) := by
-      haveI := tau_nonempty D
+      have := tau_nonempty D
       exact Finset.sum_pos (fun τ _ => Complex.normSq_pos.2 ((map_ne_zero _).2 hx)) Finset.univ_nonempty
     obtain ⟨p, q, e⟩ := CS.K_repr D _ (hK D x x).2
     have hs := IO.sqrt_d_pos D
@@ -219,7 +219,7 @@ theorem herm : FS.Herm4 (cK D) (hK D) := by
     rw [hKp, h4]; push_cast; ring
 
 theorem card_eq : Fintype.card D.what₂.Tau = Module.finrank D.host.K D.host.E := by
-  letI := FL.algKC D
+  let := FL.algKC D
   rw [← AlgHom.card D.host.K D.host.E ℂ]
   exact Fintype.card_of_bijective (FL.embA_bij D)
 

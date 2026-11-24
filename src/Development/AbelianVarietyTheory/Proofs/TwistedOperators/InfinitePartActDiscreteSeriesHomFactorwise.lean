@@ -83,7 +83,7 @@ theorem partAt_insert {D : D7} (V : HSp D) (g : GA D V) {s : Finset D.what₂.Ta
       have h2 : placeOf D τ ∉ s.image (placeOf D) := fun h => by
         obtain ⟨ρ, hρ, e⟩ := Finset.mem_image.1 h
         exact hτ ((placeOf_bijective D).1 e ▸ hρ)
-      rw [if_pos h1, if_neg h2, mul_one]
+      rw [ite_eq_left h1, ite_eq_right h2, mul_one]
       exact (projArch_embArch_self _ _ _ _).symm
     · rw [projArch_embArch_ne _ _ hw, one_mul]
       congr 1
@@ -94,7 +94,7 @@ theorem partAt_univ {D : D7} (V : HSp D) (g : GA D V) [Fintype D.what₂.Tau] :
     partAt V g Finset.univ = (toInf V g : GA D V) := by
   classical
   refine GAd_ext D.sp.cm.sig V.gram (fun w => ?_) (fun v => ?_)
-  · rw [projArch_partAt, if_pos]
+  · rw [projArch_partAt, ite_eq_left]
     · show _ = projArch D.sp.cm.sig V.gram w (ofInf D.sp.cm.sig V.gram (projInf D.sp.cm.sig V.gram g))
       rw [projArch_ofInf, projInfArch_projInf]
     · obtain ⟨τ, rfl⟩ := (placeOf_bijective D).2 w
@@ -110,8 +110,8 @@ open GlobalTheory.TrAct in
 theorem GlobalTheory.TrAct.toInf_apply_homDS : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (ρ : GA D V →* (H →L[ℂ] H)) (U : Submodule ℂ H), ∀ Φ ∈ homDS M ρ U, ∀ (g : GA D V) y, ρ (toInf V g : GA D V) (Φ y) = Φ fun τ => dsRep M τ (projArch D.sp.cm.sig V.gram (placeOf D τ) g) (y τ) := by
   intro D V S M H _ _ _ ρ U Φ hΦ g y
   classical
-  haveI : Finite D.what₂.Tau := Finite.of_injective _ (placeOf_bijective D).1
-  haveI : Fintype D.what₂.Tau := Fintype.ofFinite _
+  have : Finite D.what₂.Tau := Finite.of_injective _ (placeOf_bijective D).1
+  have : Fintype D.what₂.Tau := Fintype.ofFinite _
   have key : ∀ s : Finset D.what₂.Tau, ρ (partAt V g s) (Φ y) = Φ fun τ =>
       if τ ∈ s then dsRep M τ (projArch D.sp.cm.sig V.gram (placeOf D τ) g) (y τ) else y τ := by
     intro s
@@ -125,7 +125,7 @@ theorem GlobalTheory.TrAct.toInf_apply_homDS : ∀ (D : D7) (V : HSp D) (S : D.w
         rw [this, map_one, map_one]
       simp [this]
     | insert τ s hτ ih =>
-      rw [partAt_insert V g hτ, map_mul, ContinuousLinearMap.mul_apply, ih, ← (mem_homPi.1 hΦ).2 τ]
+      rw [partAt_insert V g hτ, map_mul, mul_apply_eq_comp, ih, ← (mem_homPi.1 hΦ).2 τ]
       congr 1
       funext τ'
       by_cases e : τ' = τ

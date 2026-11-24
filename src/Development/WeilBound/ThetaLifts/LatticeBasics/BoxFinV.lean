@@ -105,12 +105,12 @@ theorem opp {f g : 𝓢(V, ℂ)} {m n : V →ₗ[ℝ] V →ₗ[ℝ] ℂ} (hf : G
     (h1 : dop b L' f = I • dop a L f) (h2 : dop (-b) (-L') g = I • dop a L g) : a = 0 ∧ L = 0 := by
   have e1 : ∀ y, m b y - 2 * Real.pi * I * L' y = I * (m a y - 2 * Real.pi * I * L y) := fun y => by
     have := congrArg (fun h : 𝓢(V, ℂ) => h y) h1
-    simp only [SchwartzMap.smul_apply, dop_apply, hf.der, smul_eq_mul] at this
+    simp only [smul_apply, dop_apply, hf.der, smul_eq_mul] at this
     exact mul_right_cancel₀ (hf.ne y) (by linear_combination this)
   have e2 : ∀ y, -n b y + 2 * Real.pi * I * L' y = I * (n a y - 2 * Real.pi * I * L y) := fun y => by
     have := congrArg (fun h : 𝓢(V, ℂ) => h y) h2
-    simp only [SchwartzMap.smul_apply, dop_apply, hg.der, smul_eq_mul, map_neg, LinearMap.neg_apply,
-      ContinuousLinearMap.neg_apply, ofReal_neg] at this
+    simp only [smul_apply, dop_apply, hg.der, smul_eq_mul, map_neg, LinearMap.neg_apply,
+      neg_apply, ofReal_neg] at this
     exact mul_right_cancel₀ (hg.ne y) (by linear_combination this)
   have r1 := fun y => congrArg re (e1 y)
   have i1 := fun y => congrArg im (e1 y)
@@ -287,7 +287,7 @@ theorem Gs.gau (h : IsCMExt F E σ) (hf : Gs e τ ε θ θ' f) (h0 : f ≠ 0) : 
     have := congrArg (fun g : SInf F κ => g y) (hf (S p) (S (J p)) (sAt _) (sAt _) fun w => sJ p w)
     have e1 : ∀ q, nf (e (S q)).1 = q.1 := fun q => (sev q).1
     have e2 : ∀ q, nf (e (S q)).2 = q.2 := fun q => (sev q).2
-    simp only [dd0, SchwartzMap.smul_apply, smul_eq_mul, dop_apply, e1, e2] at this
+    simp only [dd0, smul_apply, smul_eq_mul, dop_apply, e1, e2] at this
     exact this
   exact ⟨k, gau_of h0 hk⟩
 
@@ -315,7 +315,7 @@ theorem Gs.same (h : IsCMExt F E σ) (hf : Gs e τ ε θ θ' f) (hf' : Gs e τ �
     map_neg (InfiniteAdeleRing.ringEquiv_mixedSpace F) (z i).1
   have el : ∀ b : κ → mixedEmbedding.mixedSpace F, linForm (-b) = -linForm b := fun b => by
     exact ContinuousLinearMap.ext fun y => by
-      simp only [linForm_apply, Pi.neg_apply, mul_neg, Finset.sum_neg_distrib, map_neg, ContinuousLinearMap.neg_apply]
+      simp only [linForm_apply, Pi.neg_apply, mul_neg, Finset.sum_neg_distrib, map_neg, neg_apply]
   rw [map_neg, dd0, Prod.fst_neg, Prod.snd_neg, en, en, el] at h2
   obtain ⟨a0, l0⟩ := opp g g' (hf _ _ hv hv' hs) h2
   rw [← hf' u u'' hu hu'' hr', ← sub_add_cancel u' u'', map_add (f := _), dd0, Prod.fst_add, Prod.snd_add, nf_add, nf_add,

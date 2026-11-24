@@ -160,19 +160,19 @@ theorem integral_split (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb �
     Integrable (fun q : G a × RA E a b v => Q (ιA v q.1 * σA v q.2)) (μa.prod (restA μa μb ν v)) ∧
       ∫ g, Q g ∂D.μ = ∫ t, ∫ r, Q (ιA v t * σA v r) ∂restA μa μb ν v ∂μa := by
   set_option synthInstance.maxHeartbeats 800000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
+    have : SigmaFinite μa := inferInstance
+    have : SigmaFinite μb := inferInstance
+    have : SigmaFinite ν := inferInstance
     haveI : SigmaFinite (Measure.pi fun _ : InfinitePlace E => μa) := inferInstance
     haveI : SigmaFinite (Measure.pi fun _ : InfinitePlace E => μb) := inferInstance
     haveI : SigmaFinite (Measure.pi fun _ : {w : InfinitePlace E // w ≠ v} => μa) := inferInstance
     haveI : SigmaFinite ((Measure.pi fun _ : InfinitePlace E => μb).prod ν) := inferInstance
-    haveI : SigmaFinite (restA μa μb ν v) := by unfold restA; infer_instance
+    have : SigmaFinite (restA μa μb ν v) := by unfold restA; infer_instance
     haveI : IsFiniteMeasureOnCompacts (Measure.pi fun _ : InfinitePlace E => μa) := inferInstance
     haveI : IsFiniteMeasureOnCompacts (Measure.pi fun _ : InfinitePlace E => μb) := inferInstance
     haveI : IsFiniteMeasureOnCompacts ((Measure.pi fun _ : InfinitePlace E => μb).prod ν) := inferInstance
     set M := (Measure.pi fun _ : InfinitePlace E => μa).prod ((Measure.pi fun _ : InfinitePlace E => μb).prod ν) with hM
-    haveI : IsFiniteMeasureOnCompacts M := by rw [hM]; infer_instance
+    have : IsFiniteMeasureOnCompacts M := by rw [hM]; infer_instance
     have hmp := measurePreserving_eqA (b := b) μa μb ν v
     have hQ' : Continuous (fun z => Q (splitH a b z)) := hQ.comp (splitH a b).continuous
     have hQs' : HasCompactSupport (fun z => Q (splitH a b z)) := hQs.comp_homeomorph (splitH a b).toHomeomorph
@@ -203,8 +203,8 @@ theorem tens_ισ (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ : Matr
   simp only [tens, entA, gInf_splitH₁, gInf_splitH₂, hFin_splitH, cA]
   rw [Fintype.prod_eq_mul_prod_subtype_ne _ v]
   have e : ∀ w : {w : InfinitePlace E // w ≠ v},
-      (if h : (w : InfinitePlace E) = v then t else r.1 ⟨w, h⟩) = r.1 w := fun w => by rw [dif_neg w.2]
-  simp only [dif_pos, e]
+      (if h : (w : InfinitePlace E) = v then t else r.1 ⟨w, h⟩) = r.1 w := fun w => by rw [dite_eq_right w.2]
+  simp only [dite_eq_left, e]
   ring
 
 theorem conv_slice (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : InfinitePlace E) (ka : Kers Ma)
@@ -213,10 +213,10 @@ theorem conv_slice (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (
     conv D.μ (tens ka kb ψ) f i p =
       ∫ t, ⟪eb Ma v (i.1.1 v), ka v t.val (Rv v μa μb ν ka kb ψ f i (p * ιA v t))⟫_ℂ ∂μa := by
   set_option synthInstance.maxHeartbeats 800000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
-    haveI : SigmaFinite (restA μa μb ν v) := by unfold restA; infer_instance
+    have : SigmaFinite μa := inferInstance
+    have : SigmaFinite μb := inferInstance
+    have : SigmaFinite ν := inferInstance
+    have : SigmaFinite (restA μa μb ν v) := by unfold restA; infer_instance
     have hQ : ∀ j, Continuous (fun g => tens ka kb ψ i j g * f j (p * g)) ∧
         HasCompactSupport (fun g => tens ka kb ψ i j g * f j (p * g)) := fun j =>
       ⟨(hT i j).1.mul ((hf j).comp (continuous_const.mul continuous_id)), (hT i j).2.mul_right⟩
@@ -273,8 +273,8 @@ omit [BorelSpace (G a)] [BorelSpace (G b)] [BorelSpace (Hf E a b)] in
 theorem continuous_σA (v : InfinitePlace E) : Continuous (σA (a := a) (b := b) v) := by
   refine (splitH a b).continuous.comp (Continuous.prodMk (continuous_pi fun w => ?_) continuous_snd)
   by_cases h : w = v
-  · simp only [h, dif_pos]; exact continuous_const
-  · simp only [h, dif_neg, not_false_eq_true]; exact (continuous_apply _).comp continuous_fst
+  · simp only [h, dite_eq_left]; exact continuous_const
+  · simp only [h, dite_eq_right, not_false_eq_true]; exact (continuous_apply _).comp continuous_fst
 
 theorem ιA_mul (v : InfinitePlace E) (s t : G a) : ιA (b := b) v (s * t) = ιA v s * ιA v t := by
   rw [ιA, ιA, ιA, ← map_mul, Pi.mulSingle_mul]
@@ -318,10 +318,10 @@ theorem continuous_Rv_comp (v : InfinitePlace E) {ka : Kers Ma} {kb : Kers Mb} {
     [LocallyCompactSpace X] {φ : X → H E a b} (hφ : Continuous φ) :
     Continuous fun z : X => Rv v μa μb ν ka kb ψ f i (φ z) := by
   set_option synthInstance.maxHeartbeats 800000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
-    haveI : IsLocallyFiniteMeasure (restA μa μb ν v) := by unfold restA; infer_instance
+    have : SigmaFinite μa := inferInstance
+    have : SigmaFinite μb := inferInstance
+    have : SigmaFinite ν := inferInstance
+    have : IsLocallyFiniteMeasure (restA μa μb ν v) := by unfold restA; infer_instance
     have hcont : ∀ j, Continuous (fun z : X =>
         ∫ r, cA v ka kb ψ i j r * f j (φ z * σA v r) ∂restA μa μb ν v) := by
       intro j
@@ -362,13 +362,13 @@ theorem along_conv (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (
     have hxt : x * t.val ∈ GLs a := GlobalTheory.CompanionTheory.WaveAll.mul_mem_GLs hx (val_mem_GLs t)
     have hm : GeneralLinearGroup.mkOfDetNeZero (x * t.val) hxt = GeneralLinearGroup.mkOfDetNeZero x hx * t :=
       Units.ext rfl
-    simp only [FA, dif_pos hxt, hm, ιA_mul, hp0, mul_assoc]
+    simp only [FA, dite_eq_left hxt, hm, ιA_mul, hp0, mul_assoc]
   have hc : Continuous fun t : G a => ka v t.val (FA v μa μb ν ka kb ψ f i y m₂ (x * t.val)) := by
     simp only [hFA]
     exact (hka v).1.clm_apply (continuous_Rv v hf hka hkb hψ i p0)
   have hcs : HasCompactSupport fun t : G a => ka v t.val (FA v μa μb ν ka kb ψ f i y m₂ (x * t.val)) :=
     HasCompactSupport.intro (hka v).2 fun t ht => by
-      rw [image_eq_zero_of_notMem_tsupport ht, ContinuousLinearMap.zero_apply]
+      rw [image_eq_zero_of_notMem_tsupport ht, zero_apply]
   show _ = ⟪eb Ma v (i.1.1 v), ∫ t : G a, ka v t.val (FA v μa μb ν ka kb ψ f i y m₂ (x * t.val)) ∂μa⟫_ℂ
   rw [← integral_inner (hc.integrable_of_hasCompactSupport hcs)]
   refine integral_congr_ae (ae_of_all _ fun t => ?_)
@@ -402,23 +402,23 @@ theorem continuousOn_FA (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ 
     (hkb : ∀ w, Continuous (fun t : G b => kb w t.val) ∧ HasCompactSupport (fun t : G b => kb w t.val))
     (hψ : IsFinM ψ) (i : Io Ma Mb κ) (y : GA E a) (m₂ : GA E b) :
     ContinuousOn (FA v μa μb ν ka kb ψ f i y m₂) (GLs a) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hinv : ContinuousOn (fun x : Mat a => x⁻¹) (GLs a) := by
     have e : (fun x : Mat a => x⁻¹) = fun x => (x.det)⁻¹ • x.adjugate := by
       funext x; rw [Matrix.inv_def, Ring.inverse_eq_inv']
     rw [e]
     exact ((continuous_id.matrix_det).continuousOn.inv₀ fun x hx => hx).smul (continuous_id.matrix_adjugate).continuousOn
   have hm : Continuous fun x : GLs a => GeneralLinearGroup.mkOfDetNeZero x.1 x.2 := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have e : (fun x : GLs a => ((GeneralLinearGroup.mkOfDetNeZero x.1 x.2)⁻¹ : G a).val) = fun x => x.1⁻¹ :=
       funext fun x => Matrix.coe_units_inv _
     rw [e]
-    exact hinv.comp_continuous continuous_subtype_val fun x => x.2
+    exact hinv.comp_continuous continuous_subtypeVal fun x => x.2
   show Continuous (fun x : GLs a => FA v μa μb ν ka kb ψ f i y m₂ x.1)
   have e : (fun x : GLs a => FA v μa μb ν ka kb ψ f i y m₂ x.1) =
       fun x : GLs a => Rv v μa μb ν ka kb ψ f i ((y, m₂) * ιA v (GeneralLinearGroup.mkOfDetNeZero x.1 x.2)) := by
     funext x
-    simp only [FA, dif_pos x.2]
+    simp only [FA, dite_eq_left x.2]
   rw [e]
   exact (continuous_Rv v hf hka hkb hψ i (y, m₂)).comp hm
 

@@ -191,8 +191,8 @@ theorem interNum_nonneg_of_ample_tens_nef : ∀ (k : Type) [Field k] [Infinite k
   intro k _ _ d H X _ hX E _ hE P hP
   refine SheafCycle.interNum_nonneg_of_interNumRed_nonneg k X hX d E hE P (fun i => (hP i).isLB) ?_
   intro Z hZirr hZdim
-  haveI := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
-  letI : Algebra k Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) :=
+  have := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
+  let : Algebra k Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) :=
     ((redι Z).appTop.hom.comp (algebraMap k Γ(X, ⊤))).toAlgebra
   have hcompat : ∀ r : k, (redι Z).appTop.hom (algebraMap k Γ(X, ⊤) r) =
       algebraMap k Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) r := fun r => rfl

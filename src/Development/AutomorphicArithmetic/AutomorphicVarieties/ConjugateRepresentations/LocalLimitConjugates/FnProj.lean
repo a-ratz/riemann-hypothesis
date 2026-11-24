@@ -124,20 +124,20 @@ theorem UpperTheory.V.Cj.H.absDense :
     (LinearIsometry.mk (R g).toLinearMap (hR g)).inner_map_map x y
   have hinv : ∀ (g : G) (y : H), R g (R g⁻¹ y) = y := by
     intro g y
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   let W : Submodule ℂ H :=
     { carrier := {x | ∀ v : D, inner ℂ x (u v) = 0}
       add_mem' := by
         intro a b ha hb v
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [inner_add_left, ha v, hb v, add_zero]
       zero_mem' := by
         intro v
-        simp only [Set.mem_setOf_eq, inner_zero_left]
+        simp only [Set.mem_ofPred_eq, inner_zero_left]
       smul_mem' := by
         intro c a ha v
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [inner_smul_left, ha v, mul_zero] }
   have hW : GlobalTheory.AutomorphicL2Unitary.IsSubrep R W := by
     refine ⟨?_, ?_⟩
@@ -246,8 +246,8 @@ theorem UpperTheory.V.Cj.H.absInv :
       intro v
       exact (Submodule.mem_orthogonal' R w).1 hw _ (LinearMap.mem_range_self L v)
     rw [hb, Submodule.bot_orthogonal_eq_top]
-  have hdr : DenseRange (R.subtypeL : R → H) := hdense.denseRange_val
-  have hui : IsUniformInducing (R.subtypeL : R → H) := isUniformEmbedding_subtype_val.isUniformInducing
+  have hdr : DenseRange (R.subtypeL : R → H) := hdense.denseRange_subtypeVal
+  have hui : IsUniformInducing (R.subtypeL : R → H) := isUniformEmbedding_subtypeVal.isUniformInducing
   refine ⟨gc.extend R.subtypeL, ?_, ?_⟩
   · intro v
     have h1 := ContinuousLinearMap.extend_eq gc hdr hui ⟨L v, LinearMap.mem_range_self L v⟩
@@ -439,7 +439,7 @@ theorem UpperTheory.V.Cj.H.absProj :
       have h1 : (R g) (↑(A v) + (Complex.I * ↑(s k)) • ↑v)
           = ↑(A ⟨(R g) ↑v, hv⟩) + (Complex.I * ↑(s k)) • ↑(⟨(R g) ↑v, hv⟩ : ↥D) := by
         rw [map_add (f := _), map_smul, hAR g v]
-      simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply]
+      simp only [sub_apply, ContinuousLinearMap.comp_apply]
       rw [h1, hTinv k ⟨(R g) ↑v, hv⟩, hTinv k v]
       simp
   set K : Submodule ℂ H := (D.subtype ∘ₗ A).range.topologicalClosure with hKdef
@@ -448,11 +448,11 @@ theorem UpperTheory.V.Cj.H.absProj :
     intro w v
     have hAv : (↑(A v) : H) ∈ K :=
       Submodule.le_topologicalClosure _ (LinearMap.mem_range_self (D.subtype ∘ₗ A) v)
-    simp only [hPdef, ContinuousLinearMap.sub_apply, ContinuousLinearMap.id_apply]
+    simp only [hPdef, sub_apply, ContinuousLinearMap.id_apply]
     exact Submodule.inner_left_of_mem_orthogonal hAv (K.sub_starProjection_mem_orthogonal w)
   have hclose : ∀ w : H, w - P w ∈ (D.subtype ∘ₗ A).range.topologicalClosure := by
     intro w
-    simp only [hPdef, ContinuousLinearMap.sub_apply, ContinuousLinearMap.id_apply, sub_sub_cancel]
+    simp only [hPdef, sub_apply, ContinuousLinearMap.id_apply, sub_sub_cancel]
     exact K.starProjection_apply_mem w
   have hlim := absLim H D A hsym s hs0 (fun k ↦ hdense (s k) (hs k)) hdense' T hTinv hTbd P
     hPperp hclose
@@ -464,16 +464,16 @@ theorem UpperTheory.V.Cj.H.absProj :
       simp [Function.comp_apply, map_smul, hTR k g w]
     exact tendsto_nhds_unique (hlim (R g w)) h2
   · intro k g w
-    simp [ContinuousLinearMap.smul_apply, map_smul, hTR k g w]
+    simp [smul_apply, map_smul, hTR k g w]
   · intro k g w
     exact hTR k g w
   · intro k v
     have h := hTinv k v
     rw [map_add (f := _), map_smul] at h
-    rw [ContinuousLinearMap.smul_apply]
+    rw [smul_apply]
     exact (eq_sub_of_add_eq h).symm
   · intro w
-    simpa only [ContinuousLinearMap.smul_apply] using hlim w
+    simpa only [smul_apply] using hlim w
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.LocalLimitConjugates.AbsProj =====
@@ -499,7 +499,7 @@ theorem UpperTheory.V.Cj.H.approx :
       apply (isOpen_lt (continuous_norm.comp (hcont.sub continuous_const))
         continuous_const).mem_nhds
       show ‖GlobalTheory.AutomorphicL2Unitary.R Γ μ 1 F - F‖ < ‖F‖ / 2
-      rw [map_one, ContinuousLinearMap.one_apply, sub_self, norm_zero]
+      rw [map_one, one_apply_eq_self, sub_self, norm_zero]
       positivity)
   have hfre : ∀ y, f y = ((f y).re : ℂ) := by
     intro y
@@ -547,7 +547,7 @@ theorem UpperTheory.V.Cj.H.approx :
       rw [h0]
       simp
   have hpos2 : 0 < ∫ g, (f g).re ∂μ :=
-    Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+    Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
       (Complex.continuous_re.comp hfc) (hfs.comp_left Complex.zero_re) (fun y => hfnn y)
       (by
         intro h
@@ -1125,10 +1125,10 @@ private theorem lev_mulChi {E : Type} [Field E] [NumberField E] [_root_.NumberFi
     { carrier := {k | finRep E a k (mulChi a χ φ) = mulChi a χ φ}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   change IsOpen (S : Set (GL (Fin a) (Af E)))
@@ -1361,8 +1361,8 @@ theorem UpperTheory.V.Cj.H.fnProj :
     UpperTheory.V.Cj.H.FnProj := by
   intro E _ _ _ a ha r n e he c
   let μ : Measure (GA E a) := Measure.haar
-  haveI : μ.IsHaarMeasure := inferInstanceAs (Measure.haar : Measure (GA E a)).IsHaarMeasure
-  haveI : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have : μ.IsHaarMeasure := inferInstanceAs (Measure.haar : Measure (GA E a)).IsHaarMeasure
+  have : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   obtain ⟨χ, hχ⟩ := UpperTheory.V.Lit.Bor.twEx E a ha r
   obtain ⟨P, Q, S, h⟩ := fnProj0 E a ha μ n e he c
   obtain ⟨P', Q', S', h'⟩ := twRes E a r χ hχ (gard μ) n e c P Q S h

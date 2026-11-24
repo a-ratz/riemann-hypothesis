@@ -80,7 +80,7 @@ theorem constantCoeff_flog' (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ
     PowerSeries.constantCoeff (flog W wq) = 0 := by
   rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply]
   unfold PI.AddIntG.flog
-  rw [PowerSeries.coeff_mk, if_pos rfl]
+  rw [PowerSeries.coeff_mk, ite_eq_left rfl]
 
 theorem constantCoeff_Fch (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
     MvPowerSeries.constantCoeff (Fch W wq) = 0 := by

@@ -272,9 +272,9 @@ theorem blockBound_of (hF : FockJet) (hI : BlockIntegral) : BlockBound := by
     rw [hint, norm_smul, norm_pow, Complex.norm_real, Real.norm_of_nonneg Real.pi_pos.le,
       mul_div_cancel_left₀ _ hpi.ne'] at hB
     simpa only [hνn] using hB
-  have e1 : Real.exp (1 / 2) ^ 2 = Real.exp 1 := by rw [← Real.exp_nat_mul]; norm_num
+  have e1 : Real.exp (1 / 2) ^ 2 = Real.exp 1 := by rw [← Real.exp_natCast_mul]; norm_num
   have e2 : ∀ x : ℝ, Real.exp (x / 2) ^ 2 = Real.exp x := fun x => by
-    rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
   have hY : ∀ τ, (Real.exp (1 / 2) * (2 * (n τ : ℝ) + 2) ^ Fintype.card ι *
       Real.exp ((∑ i, ph (ν τ i)) / 2)) ^ 2 = Real.exp 1 * (2 * (n τ : ℝ) + 2) ^ (2 * Fintype.card ι) *
       Real.exp (∑ i, ph (ν τ i)) := fun τ => by

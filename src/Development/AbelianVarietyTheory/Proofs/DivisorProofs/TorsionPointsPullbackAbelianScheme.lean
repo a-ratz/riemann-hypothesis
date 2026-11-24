@@ -126,7 +126,7 @@ theorem finite_etale_ker {S : Scheme.{0}} (A : Over S) [GrpObj A] (k : ℕ)
     MorphismProperty.of_isPullback (P := @Etale) h h₁'
   rw [← Over.w (pullback.snd (GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureForms.mulBy A k) η[A])]
   exact ⟨MorphismProperty.comp_mem @IsFinite _ _ h₂ (inferInstanceAs (IsFinite (𝟙 S))),
-    by haveI := h₂'; haveI : Etale (𝟙_ (Over S)).hom := inferInstanceAs (Etale (𝟙 S)); infer_instance⟩
+    by have := h₂'; haveI : Etale (𝟙_ (Over S)).hom := inferInstanceAs (Etale (𝟙 S)); infer_instance⟩
 
 end GlobalTheory.KerConst
 
@@ -149,11 +149,11 @@ theorem isPullback_const_ker (Ω : Type) [Field Ω] [IsAlgClosed Ω]
     (GlobalTheory.GrpTangent.etale_id_pow G hu)
   refine (isKer_iff (A := G) (k := n) (fun x : {x : 𝟙_ (Over (Spec (CommRingCat.of Ω))) ⟶ G // x ^ n = 1} => x.1)
     (fun x => x.2)).2 ?_
-  haveI := formallyUnramified_ker G hu
-  haveI := locallyOfFiniteType_ker G n
+  have := formallyUnramified_ker G hu
+  have := locallyOfFiniteType_ker G n
   apply isIso_desc_of_lists
   intro K _ _ s u
-  letI : Algebra Ω K := (Spec.preimage s).hom.toAlgebra
+  let : Algebra Ω K := (Spec.preimage s).hom.toAlgebra
   have hs : s = spMap (algebraMap Ω K) := (Spec.map_preimage s).symm
   have hts : ∀ (T : Over (Spec (CommRingCat.of Ω))), (toUnit T).left = T.hom := fun T => by
     simpa using Over.w (toUnit T)
@@ -177,7 +177,7 @@ theorem isPullback_const_ker (Ω : Type) [Field Ω] [IsAlgClosed Ω]
     simp only [Category.assoc, kerPt_fst] at h1
     have h2 := congrArg CommaMorphism.left h1
     simp only [Over.comp_left, hts] at h2
-    haveI : Epi s := hs ▸ GlobalTheory.FinEtPoints.epi_spMap_field Ω K (algebraMap Ω K)
+    have : Epi s := hs ▸ GlobalTheory.FinEtPoints.epi_spMap_field Ω K (algebraMap Ω K)
     exact Subtype.ext (Over.OverMorphism.ext ((cancel_epi s).mp h2))
 
 end GlobalTheory.KerConst

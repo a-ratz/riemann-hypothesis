@@ -111,7 +111,7 @@ theorem finCoef_lift {θ : InfFam D} {V : HSp D} {S : D.what₂.Tau → SPar} (M
     have e3 : T f (x * atTau θ V τ g) = ℓ (M.rep τ g (f τ)) := by
       rw [hℓ ⟨M.rep τ g (f τ), GlobalTheory.ConjMult.rep_mem_sm M τ hg (f τ).2⟩]
       exact e1.symm
-    rw [Fin.sum_univ_one, map_smul, PiTensorProduct.lift.tprod, Pi.smul_apply, ContinuousLinearMap.smul_apply,
+    rw [Fin.sum_univ_one, map_smul, PiTensorProduct.lift.tprod, Pi.smul_apply, smul_apply,
       smul_eq_mul, smul_eq_mul, e3, LinearMap.coe_toContinuousLinearMap']
     rfl
   | add a b ha hb =>
@@ -141,7 +141,7 @@ theorem finCoef_multT {θ : InfFam D} {V : HSp D} {S : D.what₂.Tau → SPar} (
 
 theorem isTypeAt_sum (θ : InfFam D) (N : Node D) (hs : N.V.SigOK) (hd : N.V.IsDefinite) (τ : D.what₂.Tau) {n : ℕ}
     (F : Fin n → N.Cusp θ) (z : Fin n → SmT N.M) : IsTypeAt θ N.V τ (N.S τ) (∑ i, (F i).1 (z i)) := by
-  haveI := GlobalTheory.DefiniteEnd.finiteDimensional_model hs hd N.M τ
+  have := GlobalTheory.DefiniteEnd.finiteDimensional_model hs hd N.M τ
   exact GlobalTheory.EndCusp.isTypeAt_of_finSum θ N.V τ (N.M.enum τ) (N.M.ds τ) (N.M.fr_unit τ) (N.M.fr_gram τ) _
     (FinCoef.sum fun i => finCoef_multT N.M τ (F i) (z i))
 

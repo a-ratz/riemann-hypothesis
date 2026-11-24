@@ -250,7 +250,7 @@ theorem exists_nat_step (S : Subgroup (LevelAut Dw l)) (v w : Rul Xo c) {W : Com
   let T : Comp Xo c → Finset ℕ := fun Z => (Finset.range (Nat.card S ^ 2 + 1)).filter fun n =>
     genVal Z (levDet Xo c S (v + (n : c.F) • w)) = 0
   have hT : ∀ Z, (T Z).card ≤ Nat.card S := fun Z => by
-    haveI : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
+    have : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
     rw [Nat.card_eq_fintype_card]
     refine card_le_of_det_eq_zero _ _ (hev Z a ▸ h Z) _ fun n hn => ?_
     have := (Finset.mem_filter.1 hn).2
@@ -316,7 +316,7 @@ theorem petAt_mul_le (V : HSp D) (dict : GA D V → Σ k, Frame (U.X k).Ψ r) (h
     have : (fun q : AutQ V => homN U x G f (dict q.out)) =
       lieFacZ Dw x G • fun q : AutQ V => ptN (modelWt U G) (rdU U f) (dict q.out) := rfl
     rw [this, eLpNorm'_const_smul _ (by norm_num)]
-    exact ENNReal.mul_ne_top enorm_ne_top
+    exact ENNReal.mul_ne_top eNorm_ne_top
       (petE_ne_top V dict _ (muPart_univ V dict ▸ muPart_univ_le V dict Set.univ) hd hf)
   rw [petAt_eq, petAt_eq, ← ENNReal.toReal_ofReal hB, ← ENNReal.toReal_mul]
   apply ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hfin)

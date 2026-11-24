@@ -202,11 +202,11 @@ theorem bb_eq_sum (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 
   have hψ : ∀ x ∈ M.R, M.psiR x = 1 := fun r hr => by
     simpa using (Formalism.MainNotions.LocalModelPeriodLattices.selfDual_of_core M hOK 1).2 M.R.one_mem r hr
   have hD := Formalism.MainNotions.LocalModelPeriodLattices.datum_of_OK M hOK
-  haveI := hD.t2
-  haveI := hi1
-  haveI := hi2
-  haveI := hs1
-  haveI := hs2
+  have := hD.t2
+  have := hi1
+  have := hi2
+  have := hs1
+  have := hs2
   have hcs := Formalism.DoubleCosetMeasures.Final.suppCompact E M.R hD.isOpen hD.isCompact (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1
     (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 M.psiR (M.Cok (Quotient.out c)) (M.eCls (Quotient.out c))
     (Formalism.MainNotions.LocalOrbitGerms.Cls.lamK M (Quotient.out c))
@@ -276,7 +276,7 @@ theorem orbFin_of (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 
       push Not at hno
       apply hw
       rw [(hW O hO).2]
-      exact finsum_eq_zero_of_forall_eq_zero fun q => if_neg (hno q)
+      exact finsum_eq_zero_of_forall_eq_zero fun q => ite_eq_right (hno q)
     have hxyO := isZO_eq M hO hxy
     have hv := hV q xy (int_of_bb M a c xy hF) (hxyO ▸ hq)
     apply hOS
@@ -297,7 +297,7 @@ theorem orbFin_of (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 
         obtain ⟨q0, hq0, hOe⟩ := Finset.mem_image.1 hO
         have hZO : IsZO M a O := hOe ▸ hR q0 (int_of_valQ M a c q0 ((memT q0).1 hq0))
         rw [Finset.sum_eq_single O]
-        · rw [if_pos hqO, mul_one]
+        · rw [ite_eq_left hqO, mul_one]
           have hgO := hg O hO
           refine (hV q (g O) (isZO_int M hZO hgO) ?_).symm
           rw [isZO_eq M hZO hgO]
@@ -305,13 +305,13 @@ theorem orbFin_of (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 
         · intro O' hO' hne
           obtain ⟨q1, hq1, hOe'⟩ := Finset.mem_image.1 hO'
           have hZO' : IsZO M a O' := hOe' ▸ hR q1 (int_of_valQ M a c q1 ((memT q1).1 hq1))
-          rw [if_neg, mul_zero]
+          rw [ite_eq_right, mul_zero]
           intro hqO'
           exact hne ((isZO_eq M hZO' hqO').symm.trans (isZO_eq M hZO hqO))
         · intro h
           exact absurd hO h
       · push Not at hex
-        rw [Finset.sum_eq_zero fun O hO => by rw [if_neg (hex O hO), mul_zero]]
+        rw [Finset.sum_eq_zero fun O hO => by rw [ite_eq_right (hex O hO), mul_zero]]
         by_contra hne
         exact hex _ (Finset.mem_image.2 ⟨q, (memT q).2 (Ne.symm hne), rfl⟩) (mem_orbR M _)
     · intro O hO
@@ -378,9 +378,9 @@ theorem isCompact_intLocus (K : Type) [CommRing K] [TopologicalSpace K] [IsTopol
     {p | Formalism.DoubleCosetMeasures.IsInt R (((p.1 : GL (Fin s.sum) K) : Matrix (Fin s.sum) (Fin s.sum) K) * Formalism.DoubleCosetMeasures.pt s t *
       ((p.2 : GL (Fin s.sum) K) : Matrix (Fin s.sum) (Fin s.sum) K))}
   have hScl : IsClosed S :=
-    hMc.isClosed.preimage (((Units.continuous_val.comp (continuous_subtype_val.comp
+    hMc.isClosed.preimage (((Units.continuous_val.comp (continuous_subtypeVal.comp
       continuous_fst)).mul continuous_const).mul
-      (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)))
+      (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)))
   have hSsub : S ⊆ ι ⁻¹' (Φ '' Mset) := by
     intro p hp
     refine ⟨_, hp, ?_⟩
@@ -412,7 +412,7 @@ theorem isClosed_intLow [T2Space E] (M : Loc.Model F E) (hRcl : IsClosed (M.R : 
     by_cases hab : a < b
     · simp only [hab, true_implies]
       exact isClosed_eq (continuous_id.matrix_elem a b) continuous_const
-    · simp only [hab, false_implies, Set.setOf_true]
+    · simp only [hab, false_implies, Set.ofPred_true]
       exact isClosed_univ
   rw [e]
   exact ((isClosed_iInter fun a => isClosed_eq (continuous_id.matrix_elem a a) continuous_const).inter
@@ -430,7 +430,7 @@ theorem isClosed_intUp [T2Space E] (M : Loc.Model F E) (hRcl : IsClosed (M.R : S
     by_cases hab : b < a
     · simp only [hab, true_implies]
       exact isClosed_eq (continuous_id.matrix_elem a b) continuous_const
-    · simp only [hab, false_implies, Set.setOf_true]
+    · simp only [hab, false_implies, Set.ofPred_true]
       exact isClosed_univ
   rw [e]
   exact ((isClosed_iInter fun a => isClosed_eq (continuous_id.matrix_elem a a) continuous_const).inter
@@ -508,13 +508,13 @@ theorem wt_gen (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 1))
   set O := orbR M Z0 with hOdef
   obtain ⟨μ₁, μ₂, hi1, hi2, hs1, hs2, hv1, hv2, hint⟩ := Formalism.MainNotions.LocalOrbitGerms.ctAll F E M hOK (m + 1) a
   have hD := Formalism.MainNotions.LocalModelPeriodLattices.datum_of_OK M hOK
-  haveI := hD.t2
-  haveI := hi1
-  haveI := hi2
-  haveI := hs1
-  haveI := hs2
-  haveI := hOK.borel
-  haveI := Formalism.MainNotions.LocalOrbitGerms.secondCountable_of_OK M hOK
+  have := hD.t2
+  have := hi1
+  have := hi2
+  have := hs1
+  have := hs2
+  have := hOK.borel
+  have := Formalism.MainNotions.LocalOrbitGerms.secondCountable_of_OK M hOK
   let e := finCongr (Formalism.MainNotions.LocalModelPeriodLattices.tr_sum a).symm
   let f : Formalism.DoubleCosetMeasures.lowW E (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2 ×
       Formalism.DoubleCosetMeasures.upUniG E (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum → ℂ :=
@@ -534,7 +534,7 @@ theorem wt_gen (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc.Pt E (m + 1))
     obtain ⟨hK, hKc⟩ := isCompact_intLocus E M.R hD.isCompact (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1 (Formalism.MainNotions.LocalModelPeriodLattices.tr a).2
     refine HasCompactSupport.intro' hK hKc fun p hp => ?_
     simp only [f]
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hpO
     apply hp
     intro i j

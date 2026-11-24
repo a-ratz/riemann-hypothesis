@@ -212,7 +212,7 @@ theorem main : ∀ {O X : Type} [CommRing O] [IsDomain O] [Finite X]
     exact hi (by simpa using this)
   let φ : T →+* (Y × Equiv.Perm (Fin t) → O) :=
     Pi.ringHom fun x' => (Pi.evalRingHom (fun _ : Y => O) x'.1).comp T.val.toRingHom
-  letI : Algebra T (Y × Equiv.Perm (Fin t) → O) := φ.toAlgebra
+  let : Algebra T (Y × Equiv.Perm (Fin t) → O) := φ.toAlgebra
   have hl : (∏ c, (X - C (y c))) ∈
       Polynomial.lifts (algebraMap T (Y × Equiv.Perm (Fin t) → O)) := by
     rw [lifts_iff_coeff_lifts]

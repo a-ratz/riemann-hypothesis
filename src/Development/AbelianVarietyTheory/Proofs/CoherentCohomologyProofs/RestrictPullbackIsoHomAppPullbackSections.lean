@@ -187,10 +187,10 @@ instance isQuasicoherent_pushforward [QuasiCompact f] [QuasiSeparated f] [F.IsQu
 theorem finite_sections_pushforward [IsFinite f] {V : Y.Opens} (hV : IsAffineOpen V)
     [hF : Module.Finite Γ(X, f ⁻¹ᵁ V) Γ(F, f ⁻¹ᵁ V)] :
     Module.Finite Γ(Y, V) Γ((Scheme.Modules.pushforward f).obj F, V) := by
-  letI := (f.app V).hom.toAlgebra
-  haveI : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := f.finite_app V hV
-  letI : Module Γ(Y, V) Γ(F, f ⁻¹ᵁ V) := Module.compHom _ (f.app V).hom
-  haveI : IsScalarTower Γ(Y, V) Γ(X, f ⁻¹ᵁ V) Γ(F, f ⁻¹ᵁ V) := .of_algebraMap_smul fun _ _ ↦ rfl
+  let := (f.app V).hom.toAlgebra
+  have : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := f.finite_app V hV
+  let : Module Γ(Y, V) Γ(F, f ⁻¹ᵁ V) := Module.compHom _ (f.app V).hom
+  have : IsScalarTower Γ(Y, V) Γ(X, f ⁻¹ᵁ V) Γ(F, f ⁻¹ᵁ V) := .of_algebraMap_smul fun _ _ ↦ rfl
   exact Module.Finite.trans (R := Γ(Y, V)) Γ(X, f ⁻¹ᵁ V) Γ(F, f ⁻¹ᵁ V)
 
 end Push
@@ -363,7 +363,7 @@ theorem exists_equiv_pullback_Spec (M : (Spec R).Modules) [M.IsQuasicoherent] :
      ∃ e : S ⊗[R] Γ(M, ⊤) ≃ₗ[S] Γ((Scheme.Modules.pullback (Spec.map φ)).obj M, ⊤),
        ∀ m, e (1 ⊗ₜ m) =
          ((Scheme.Modules.pullbackPushforwardAdjunction (Spec.map φ)).unit.app M).app ⊤ m) := by
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   refine ⟨(tilde.isoTop ((ModuleCat.extendScalars φ.hom).obj (moduleSpecΓFunctor.obj M)) ≪≫
     moduleSpecΓFunctor.mapIso (tildeIsoPullback φ M)).toLinearEquiv, fun m ↦ ?_⟩
   have h₁ := tildePullbackIso_hom_app_toOpen φ (moduleSpecΓFunctor.obj M) m
@@ -475,9 +475,9 @@ theorem isBaseChange_pullbackSections (hU : IsAffineOpen U) (hV : IsAffineOpen V
      letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
      haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
      IsBaseChange Γ(X, U) (pullbackSections f G e)) := by
-  letI := appLEAlgebra f e
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
-  haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
+  let := appLEAlgebra f e
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G) e
+  have := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
   obtain ⟨a, ha⟩ := exists_equiv_pullback_Spec (f.appLE V U e) (G.restrict hV.fromSpec)
   have w := IsAffineOpen.SpecMap_appLE_fromSpec f hV hU e
   let κ : Γ((Scheme.Modules.pullback (Spec.map (f.appLE V U e))).obj (G.restrict hV.fromSpec), ⊤)
@@ -503,7 +503,7 @@ theorem isBaseChange_of_eq_pullbackSections (hU : IsAffineOpen U) (hV : IsAffine
   obtain rfl : mod = appLEModule f _ e := Module.ext' _ _ fun r s ↦ by
     rw [appLEModule_smul, ← halg, algebraMap_smul]
   obtain rfl : alg = appLEAlgebra f e := Algebra.algebra_ext _ _ halg
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G) e
   obtain rfl : l = pullbackSections f G e := LinearMap.ext hl
   exact isBaseChange_pullbackSections f G hU hV e
 
@@ -597,12 +597,12 @@ theorem mono_pullback_map [Flat f] {G G' : Y.Modules} (φ : G ⟶ G') [Mono φ] 
   refine mono_of_locally_app_injective _ fun W x hx ↦ ?_
   obtain ⟨U, V, hU, hV, hxU, hle, e⟩ := exists_affine_pair f x hx
   refine ⟨U, hxU, hle, ?_⟩
-  letI := appLEAlgebra f e
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
-  haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G') e
-  haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G') e
-  haveI : Module.Flat Γ(Y, V) Γ(X, U) := f.flat_appLE hV hU e
+  let := appLEAlgebra f e
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G) e
+  have := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G') e
+  have := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G') e
+  have : Module.Flat Γ(Y, V) Γ(X, U) := f.flat_appLE hV hU e
   exact injective_of_isBaseChange_of_flat (isBaseChange_pullbackSections f G hU hV e)
     (isBaseChange_pullbackSections f G' hU hV e) (homAppLinear φ V)
     (homAppLinear ((Scheme.Modules.pullback f).map φ) U)

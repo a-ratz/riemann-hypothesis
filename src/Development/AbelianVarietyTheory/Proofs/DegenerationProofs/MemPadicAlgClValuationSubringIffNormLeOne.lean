@@ -151,9 +151,9 @@ theorem padicAlgCl_integral_points :
               spMap j ≫ y₀ = y) := by
   refine ⟨fun X _ π _ _ z hz U hU => ?_, fun X π _ p _ y => ?_⟩
   · obtain ⟨p, hp, hpz⟩ := exists_prime_residueField_eq_zero π hz
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     obtain ⟨K, hK, y, hy, hyU, -⟩ := exists_padic_point_scheme π hz hpz U hU
-    haveI := isLocalHom_integralClosureToPadicAlgClIntegers K
+    have := isLocalHom_integralClosureToPadicAlgClIntegers K
     refine ⟨p, inferInstance, spMap (integralClosureToPadicAlgClIntegers K) ≫ y, ?_, ?_⟩
     · refine (Scheme.Hom.comp_apply _ _ _).trans ((congrArg y ?_).trans hy)
       exact IsLocalRing.comap_closedPoint (integralClosureToPadicAlgClIntegers K)
@@ -166,14 +166,14 @@ theorem padicAlgCl_integral_points :
         apply le_antisymm _ bot_le
         intro a ha
         have ha' : ((a : K) : PadicAlgCl p) ∈ (x : PrimeSpectrum (PadicAlgCl p)).asIdeal := ha
-        haveI := (x : PrimeSpectrum (PadicAlgCl p)).isPrime
+        have := (x : PrimeSpectrum (PadicAlgCl p)).isPrime
         rw [Ideal.eq_bot_of_prime (x : PrimeSpectrum (PadicAlgCl p)).asIdeal,
           Ideal.mem_bot] at ha'
         exact Subtype.ext (Subtype.ext ha')
       rw [Scheme.Hom.comp_apply, key]
       exact hyU
   · obtain ⟨V, hV, φ, rfl⟩ := exists_affineOpen_factor_of_isLocalRing y
-    haveI := finiteType_int_sections π hV
+    have := finiteType_int_sections π hV
     obtain ⟨K₀, hK₀, H⟩ := exists_factor_integralClosure_of_finiteType φ.hom
     refine ⟨K₀, hK₀, fun K hK => ?_⟩
     obtain ⟨ψ, hψ⟩ := H K hK

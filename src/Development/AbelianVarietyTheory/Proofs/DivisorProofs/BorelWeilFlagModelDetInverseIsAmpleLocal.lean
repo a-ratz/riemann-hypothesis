@@ -316,7 +316,7 @@ theorem initSpan_min {S N : Type} [CommRing S] [AddCommGroup N] [Module S N] {d 
   unfold initSpan
   congr 2
   ext j
-  simp only [Set.mem_setOf_eq, lt_min_iff, j.2, and_true]
+  simp only [Set.mem_ofPred_eq, lt_min_iff, j.2, and_true]
 
 theorem initSpan_cols_eq {K : Type} [Field K] {n d : ℕ} (P P' : Matrix (Fin n) (Fin d) K)
     (hP : LinearIndependent K (fun j r => P r j))
@@ -467,9 +467,9 @@ theorem det_submatrix_mul_tri {R : Type} [CommRing R] {n p m : ℕ} (A : Matrix 
     symm
     refine Fintype.sum_of_injective (Fin.castLE h) (Fin.castLE_injective h) _ _ (fun b hb => ?_) (fun _ => rfl)
     have : ¬ (b : ℕ) < m + 1 := fun hb' => hb ⟨⟨b, hb'⟩, rfl⟩
-    have h0 : B b (Fin.castLE h l) = 0 := hB (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le l.2 (not_lt.1 this)))
+    have h0 : B b (Fin.castLE h l) = 0 := hB (Fin.lt_def.2 (lt_of_lt_of_le l.2 (not_lt.1 this)))
     rw [h0, mul_zero]
-  rw [e, Matrix.det_mul, Matrix.det_of_upperTriangular (M := B.submatrix (Fin.castLE h) (Fin.castLE h))]
+  rw [e, Matrix.det_mul, Matrix.det_of_isUpperTriangular (M := B.submatrix (Fin.castLE h) (Fin.castLE h))]
   · rfl
   · intro i l hil
     exact hB (show Fin.castLE h l < Fin.castLE h i from hil)
@@ -524,7 +524,7 @@ theorem prod_zpow_neg_ind {G : Type} [CommGroup G] (σ : E →+* ℂ) (m : Fin (
     · simp [ind]
     · have : ind σ m (some ⟨τ, j⟩) = 0 := by
         simp only [ind, Option.elim]
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, hj⟩
         exact hb ⟨⟨j, Nat.lt_succ_of_le hj⟩, rfl⟩
       rw [this, zpow_zero]
@@ -834,8 +834,8 @@ theorem isAmpleLB_LL_flagModel : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
     obtain ⟨_, ⟨V, hV, rfl⟩, hzV, hVc⟩ := Y.X.isBasis_affineOpens.exists_subset_of_mem_open
       (show z ∈ (Set.range X.π.base)ᶜ from hz) hcl.isOpen_compl
     refine ⟨V, hzV, hV, ?_⟩
-    haveI : IsEmpty (X.π ⁻¹ᵁ V).toScheme := ⟨fun p => hVc p.2 ⟨p.1, rfl⟩⟩
-    haveI : IsAffine (X.π ⁻¹ᵁ V).toScheme := isAffine_of_isEmpty
+    have : IsEmpty (X.π ⁻¹ᵁ V).toScheme := ⟨fun p => hVc p.2 ⟨p.1, rfl⟩⟩
+    have : IsAffine (X.π ⁻¹ᵁ V).toScheme := isAffine_of_isEmpty
     exact isAmpleLB_of_isAffine (LB.isLB_pull (X.F.isLB_LL _) _)
 
 end GlobalTheory.FlagPlucker

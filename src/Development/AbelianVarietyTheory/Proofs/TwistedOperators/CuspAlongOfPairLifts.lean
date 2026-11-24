@@ -1008,7 +1008,7 @@ theorem uh_inv (τ : D.what₂.Tau) {g : Matrix (Fin V.rank) (Fin V.rank) ℂ} (
 theorem smooth_facts (τ : D.what₂.Tau) {Y : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hY : Y ∈ lieAt V τ) {a : M.H τ}
     (ha : a ∈ M.sm τ) : dRep (M.rep τ) Y a ∈ M.sm τ ∧
       HasDerivAt (fun t : ℝ => M.rep τ (NormedSpace.exp (t • Y)) a) (dRep (M.rep τ) Y a) 0 := by
-  haveI := (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  have := (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
   have hsv := GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (GlobalTheory.SmoothAutCheck.gramAt_herm V τ)
     (GlobalTheory.SmoothAutCheck.gramAt_unit V τ).ne_zero (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.1
   have h := (hsv.2 a (hsv.1 a ha)).2.1 Y hY
@@ -1191,14 +1191,14 @@ theorem clause_bdd (hI : GlobalTheory.Grid.IsIntw θ M' M ω' pt It) (hA : AdjRe
     obtain ⟨c, hc⟩ := hI.bdd φ x
     refine ⟨|c|, fun u => ?_⟩
     have h1 := hc u
-    rw [ContinuousMultilinearMap.smul_apply, smul_eq_mul, norm_mul, Complex.norm_real, norm_inv, hT, RCLike.norm_conj,
+    rw [smul_apply, smul_eq_mul, norm_mul, Complex.norm_real, norm_inv, hT, RCLike.norm_conj,
       Real.norm_of_nonneg (hN0 u)]
     rcases (hN0 u).eq_or_lt with e | e
     · rw [← e]; simp
     · calc _ ≤ (∏ ρ, ‖(u ρ : M.H ρ)‖)⁻¹ * (c * ∏ ρ, ‖(u ρ : M.H ρ)‖) := by gcongr
         _ = c := by field_simp
         _ ≤ |c| := le_abs_self c
-  haveI : ∀ τ, CompleteSpace (M'.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D W S' M' τ).1
+  have : ∀ τ, CompleteSpace (M'.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D W S' M' τ).1
   obtain ⟨C, hC0, hC⟩ := multi_uniform _ hb
   have hb2 : ∀ (u : M.Vec) (v : M'.Vec), ‖ellT M (fun τ => u τ) (inclT M (Tp φ (PiTensorProduct.tprod ℂ v)))‖ ≤
       (C * ∏ τ, ‖(v τ : M'.H τ)‖) * ∏ τ, ‖(u τ : M.H τ)‖ := by
@@ -1212,7 +1212,7 @@ theorem clause_bdd (hI : GlobalTheory.Grid.IsIntw θ M' M ω' pt It) (hA : AdjRe
       simp only [map_zero, norm_zero]
       positivity
     · have h1 := hC u fun τ => (v τ : M'.H τ)
-      rw [ContinuousMultilinearMap.smul_apply, smul_eq_mul, norm_mul, Complex.norm_real, norm_inv, hT, RCLike.norm_conj,
+      rw [smul_apply, smul_eq_mul, norm_mul, Complex.norm_real, norm_inv, hT, RCLike.norm_conj,
         Real.norm_of_nonneg (hN0 u)] at h1
       set N := ∏ ρ, ‖(u ρ : M.H ρ)‖
       calc _ = N * (N⁻¹ * ‖ellT M' (fun τ => v τ) (inclT M' (It φ (PiTensorProduct.tprod ℂ u)))‖) := by field_simp

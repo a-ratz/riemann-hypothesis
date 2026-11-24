@@ -125,7 +125,7 @@ theorem trISem_eq : R.TrISem F = (@RealDat3.TrISem (@Late.D B C b) G ‹Group G�
 variable {R F}
 
 theorem isInert_tr (h : R.IsInert) : letI := alg b iK; (real3 b R).IsInert := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case tie =>
     constructor
@@ -137,7 +137,7 @@ theorem isInert_tr (h : R.IsInert) : letI := alg b iK; (real3 b R).IsInert := by
   case SF => exact (by with_unfolding_all exact (h.SF :))
 
 theorem isTup_tr (h : R.IsTup) : letI := alg b iK; (real3 b R).IsTup := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case mu_off => exact (by with_unfolding_all exact (h.mu_off :))
   case mu_used => exact (by with_unfolding_all exact (h.mu_used :))
@@ -146,7 +146,7 @@ theorem isTup_tr (h : R.IsTup) : letI := alg b iK; (real3 b R).IsTup := by
   case mu_on => exact (by with_unfolding_all exact (h.mu_on :))
 
 theorem isScal_tr (h : R.IsScal F) : letI := alg b iK; (real3 b R).IsScal (face3 b F) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case lam0 => exact (by exact ((Eq.mp (congrArg (fun W : type_of% R.Wp3 => ∀ i t p (l : ℝ), W i p ≠ ⊥ →
       (∀ x ∈ W i p, R.thG i t (LinearMap.adjoint (R.thG i t) x) = (l : ℂ) • x) → R.lam3 i t p A.A.v0 = l) (wp3_apply_eq_sq_mul_sub_sq_mul b R)) h.lam0) :))
@@ -167,7 +167,7 @@ theorem isScal_tr (h : R.IsScal F) : letI := alg b iK; (real3 b R).IsScal (face3
 
 theorem primRows3_tr (h : PrimRows3 R F) : letI := alg b iK; PrimRows3 (real3 b R) (face3 b F) := by
   set_option maxHeartbeats 16000000 in
-   letI := alg b iK
+   let := alg b iK
    constructor
    case heckeR => exact (by with_unfolding_all exact (h.heckeR :))
    case heckeL => exact (by with_unfolding_all exact (h.heckeL :))
@@ -201,7 +201,7 @@ theorem primRows3_tr (h : PrimRows3 R F) : letI := alg b iK; PrimRows3 (real3 b 
    case dimParts => exact (by with_unfolding_all exact ((Eq.mp (congrArg (fun X : Cx.CxData A.fam3.amb3 => X.DimParts false) (toCx3_eq b R F)) h.dimParts) :))
 
 theorem realAdelicInertTransport_furtherRows (h : UnusedChoiceStatements R F) : letI := alg b iK; UnusedChoiceStatements (real3 b R) (face3 b F) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case ex => exact (by with_unfolding_all exact ((exAt_tr b h.ex) :))
   case conj => exact (by with_unfolding_all exact (h.conj :))

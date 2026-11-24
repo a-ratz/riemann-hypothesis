@@ -72,7 +72,7 @@ theorem _root_.GlobalTheory.exists_sum_smul_separating_inertia :
         (g ∉ q.inertia Γ → (∑ j, d j * g • c j) ∈ q) := by
   intro Γ _ _ B _ _ q hq
   classical
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   have hmem : ∀ g : Γ, g ∈ q.inertia Γ ↔ ∀ x, g • x - x ∈ q := fun g => Iff.rfl
   have factor : ∀ h : Γ, ∃ x y : B, x + y ∉ q ∧ (h ∉ q.inertia Γ → h • x + y ∈ q) := by
     intro h

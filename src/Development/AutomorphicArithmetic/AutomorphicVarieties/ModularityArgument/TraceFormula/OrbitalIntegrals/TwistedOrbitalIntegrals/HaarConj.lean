@@ -62,4 +62,4 @@ theorem UpperTheory.V.Z.Tf.Orb.haarConj :
       continuous_invFun := by fun_prop }
   refine ⟨μ.map e, e.isHaarMeasure_map μ, ?_⟩
   have he : Measurable (e : H → H') := (map_continuous e).measurable
-  exact (Measure.map_map (g := fun x : H' => (x : G)) measurable_subtype_coe he).symm
+  exact (Measure.map_map (g := fun x : H' => (x : G)) measurable_subtypeVal he).symm

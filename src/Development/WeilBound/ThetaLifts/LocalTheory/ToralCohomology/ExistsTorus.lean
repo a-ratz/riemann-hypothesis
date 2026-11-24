@@ -150,8 +150,8 @@ theorem exists_torus (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver
     rw [hχ _ (ht s), absE_inf h τ (ht s), Finset.mul_sum, Complex.exp_sum,
       ← Real.finsetProd_rpow _ _ fun _ _ => by positivity, Complex.ofReal_prod, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun w _ => ?_
-    rw [ht', Complex.norm_exp, ← Real.exp_nat_mul, ← Real.exp_mul, Complex.ofReal_exp, Complex.ofReal_exp, ← Complex.exp_sub,
-      ← Complex.exp_int_mul, ← Complex.exp_add]
+    rw [ht', Complex.norm_exp, ← Real.exp_natCast_mul, ← Real.exp_mul, Complex.ofReal_exp, Complex.ofReal_exp, ← Complex.exp_sub,
+      ← Complex.exp_intCast_mul, ← Complex.exp_add]
     congr 1
     simp only [Complex.re_ofReal_mul]
     push_cast; ring

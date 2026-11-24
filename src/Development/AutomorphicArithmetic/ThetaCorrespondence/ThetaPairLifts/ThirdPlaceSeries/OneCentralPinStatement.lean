@@ -224,7 +224,7 @@ theorem commute_of_skew {R : Type} [CommRing R] (ψ : E →+* R) (σ : E →+* E
     by_contra h
     push_neg at h
     have hfin : {x : E | A.charpoly.IsRoot x}.Finite :=
-      Polynomial.finite_setOf_isRoot A.charpoly_monic.ne_zero
+      Polynomial.finite_setOfPred_isRoot A.charpoly_monic.ne_zero
     have hsub : Set.range (fun k : ℕ => (((k + 1 : ℕ) : E))) ⊆ {x | A.charpoly.IsRoot x} := by
       rintro _ ⟨k, rfl⟩; exact h k
     have hinj : Function.Injective (fun k : ℕ => (((k + 1 : ℕ) : E))) := fun a b hab => by
@@ -624,7 +624,7 @@ theorem chg_lt (q : SplitPt D k) (q' : SplitPt D k') (h : q.e = q'.e) (x : k') (
   have h3 : chg q q' h x * chg q q' h x⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel₀ h0, map_one]
   have h4 : valuation k (chg q q' h x * chg q q' h x⁻¹) < 1 := by
     rw [map_mul]
-    exact (mul_le_mul_of_nonneg_left h2 zero_le').trans_lt (by rwa [mul_one])
+    exact (mul_le_mul_of_nonneg_left h2 zero_le).trans_lt (by rwa [mul_one])
   rw [h3, map_one] at h4
   exact lt_irrefl _ h4
 
@@ -649,7 +649,7 @@ theorem unif_ratio (q : SplitPt D k) (q' : SplitPt D k') {PP : Formalism.L2.DIV.
       rw [chg_pr, q.pr_sec]
     have h1 := (hu' _).1 (chg_lt q q' h (chg q' q h.symm (ϖ : k)) (by rw [e1]; exact hϖ))
     rw [← e1, ha, ← map_mul, chg_le, map_mul, Units.val_inv_eq_inv_val, map_inv₀]
-    exact mul_inv_le_one_of_le₀ h1 zero_le'
+    exact mul_inv_le_one_of_le₀ h1 zero_le
   set d : k := a - ((ϖ⁻¹ : kˣ) : k) with hd
   have hdϖ : (ϖ : k) * d = (ϖ : k) * a - 1 := by rw [hd, mul_sub, Units.mul_inv]
   have hdint : valuation k ((ϖ : k) * d) ≤ 1 := by
@@ -664,7 +664,7 @@ theorem unif_ratio (q : SplitPt D k) (q' : SplitPt D k') {PP : Formalism.L2.DIV.
     have h3 : ψ (d * (y - q.pr (incA D (z : D.host.E)))) = 1 := by
       refine hone _ ?_
       rw [map_mul]
-      refine le_trans (mul_le_mul_of_nonneg_left ((hu _).1 hz1) zero_le') ?_
+      refine le_trans (mul_le_mul_of_nonneg_left ((hu _).1 hz1) zero_le) ?_
       rw [← map_mul, mul_comm]; exact hdint
     rw [show d * y = d * q.pr (incA D (z : D.host.E)) + d * (y - q.pr (incA D (z : D.host.E))) by ring,
       AddChar.map_add_eq_mul, h1, h3, mul_one]
@@ -675,10 +675,10 @@ theorem unif_ratio (q : SplitPt D k) (q' : SplitPt D k') {PP : Formalism.L2.DIV.
       rw [show y = d * (y * d⁻¹) by field_simp]
       refine hkill _ ?_
       rw [map_mul, map_inv₀]
-      exact mul_inv_le_one_of_le₀ hy zero_le'
+      exact mul_inv_le_one_of_le₀ hy zero_le
     simpa using this
   rw [← hdϖ, map_mul]
-  exact (mul_le_mul_of_nonneg_left hd1 zero_le').trans_lt (by rwa [mul_one])
+  exact (mul_le_mul_of_nonneg_left hd1 zero_le).trans_lt (by rwa [mul_one])
 
 theorem exists_theta (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (he : Formalism.L2.NTheta.IsIdemAt q.e PP) (t : k)
     (ht : valuation k (t - 1) < 1) :
@@ -711,7 +711,7 @@ theorem pow_sub_one_lt {t : k} (ht : valuation k (t - 1) < 1) (n : ℕ) : valuat
     rw [show t ^ (n + 1) - 1 = t * (t ^ n - 1) + (t - 1) by ring]
     refine Valuation.map_add_lt _ ?_ ht
     rw [map_mul]
-    exact (mul_le_mul_of_nonneg_right h1 zero_le').trans_lt (by rwa [one_mul])
+    exact (mul_le_mul_of_nonneg_right h1 zero_le).trans_lt (by rwa [one_mul])
 
 theorem e_mul_of_prF (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (he : Formalism.L2.NTheta.IsIdemAt q.e PP)
     (x y : Formalism.IndefR.Datum.EAf D) (s : k) (h : q.prF he x = s * q.prF he y) : toEAf D q.e * x = toEAf D (q.sec s) * y := by
@@ -743,9 +743,9 @@ theorem edgeSum_elem {K : Type} [CommRing K] {r κ : ℕ} (a b : Fin r) (h : a �
     change (if _ then transvection a b y i j else 0) = _
     by_cases hE : GlobalTheory.chainEdge κ i j
     · have hij : i ≠ j := fun e => by have := hE.1; omega
-      rw [if_pos hE, transvection, Matrix.add_apply, one_apply_ne hij, zero_add, single_apply]
+      rw [ite_eq_left hE, transvection, Matrix.add_apply, one_apply_ne hij, zero_add, single_apply]
       simp only [eq_comm]
-    · rw [if_neg hE, if_neg]
+    · rw [ite_eq_right hE, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact hE hab
   unfold Formalism.L2.DIV.edgeSum
@@ -757,7 +757,7 @@ theorem isPat_elem {K : Type} [CommRing K] {r ρ κ : ℕ} (a b : Fin r) (h : a 
     (y : K) : GlobalTheory.SymRes.IsPat ρ κ (elem a b h y) := by
   intro i j hij
   change transvection a b y i j = _
-  rw [transvection, Matrix.add_apply, single_apply, if_neg, add_zero]
+  rw [transvection, Matrix.add_apply, single_apply, ite_eq_right, add_zero]
   rintro ⟨rfl, rfl⟩
   exact hij hab
 
@@ -860,9 +860,9 @@ theorem addChar_uniformizer_eq_chi_of_gRead (W : _root_.GlobalTheory.MiS.RealPac
       (ofSplit (G j).q).pr ((if pl j = PP then z else 0 : 𝓞 D.host.E) : D.host.E)) := fun j =>
     GlobalTheory.LevZero.lam_eq_of_red (G j) (pl j).1 (hG.idem j).1 (x j) _ (hx j) _
       (edgeSum_elem a b hab ⟨rfl, by simp only [a]; omega⟩ _).symm
-  simp only [dif_pos hmem]
-  rw [hchi, Units.coe_prod, Finset.prod_eq_single i (fun j _ hj => ?_) (by simp), hlam, if_pos hi]
-  rw [hlam, if_neg (fun e => hj (pl.injective (e.trans hi.symm)))]
+  simp only [dite_eq_left hmem]
+  rw [hchi, Units.coe_prod, Finset.prod_eq_single i (fun j _ hj => ?_) (by simp), hlam, ite_eq_left hi]
+  rw [hlam, ite_eq_right (fun e => hj (pl.injective (e.trans hi.symm)))]
   simp [Place.pr]
 
 theorem base_inv_alt_alt (W : _root_.GlobalTheory.MiS.RealPackAlt ex) {u : D.what₂.Word} (f : _root_.GlobalTheory.Fam.FamilyCharacter W u) (B : SBes W.S.X W.Q.instEq u W.Q.Rl.ψ (D.sp.X 0))

@@ -78,8 +78,8 @@ theorem real_case {Y : Type} [MeasurableSpace Y] (m : Measure Y) (G : Y → ℝ)
     (s : Set E) (hs : MeasurableSet s) : ∫ y in p ⁻¹' s, G y ∂m = 0 := by
   let P := m.withDensity fun y => ENNReal.ofReal (G y)
   let P' := m.withDensity fun y => ENNReal.ofReal (-G y)
-  haveI : IsFiniteMeasure P := isFiniteMeasure_withDensity_ofReal hG.2
-  haveI : IsFiniteMeasure P' := isFiniteMeasure_withDensity_ofReal hG.neg.2
+  have : IsFiniteMeasure P := isFiniteMeasure_withDensity_ofReal hG.2
+  have : IsFiniteMeasure P' := isFiniteMeasure_withDensity_ofReal hG.neg.2
   have hcont : ∀ l : E →L[ℝ] ℝ, Continuous fun x : E => Complex.exp ((l x : ℂ) * Complex.I) :=
     fun l => by fun_prop
   have hbd : ∀ (l : E →L[ℝ] ℝ) (y : Y), ‖Complex.exp ((l (p y) : ℂ) * Complex.I)‖ ≤ 1 :=

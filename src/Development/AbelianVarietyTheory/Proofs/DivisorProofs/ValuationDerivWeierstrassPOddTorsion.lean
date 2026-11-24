@@ -61,7 +61,7 @@ theorem finset_prod_eq_one_of_le_one_eq_one {Γ : Type*} [LinearOrderedCommGroup
   refine le_antisymm (hle i hi) ?_
   rw [← Finset.mul_prod_erase s f hi] at hprod
   have h2 : ∏ j ∈ s.erase i, f j ≤ 1 :=
-    Finset.prod_le_one' (fun j hj => hle j (Finset.mem_of_mem_erase hj))
+    Finset.prod_le_one (fun j hj => hle j (Finset.mem_of_mem_erase hj))
   calc (1 : Γ) = f i * ∏ j ∈ s.erase i, f j := hprod.symm
     _ ≤ f i := mul_le_of_le_one_right' h2
 

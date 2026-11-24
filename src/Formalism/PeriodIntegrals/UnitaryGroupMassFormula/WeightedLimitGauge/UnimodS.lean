@@ -163,7 +163,7 @@ theorem scale_mul_one (ν : Measure (Mt k r)) (p p' : Mat k r) (hpp : p * p' = 1
           rw [Measure.map_map (rmulM_meas p') (rmulM_meas p), rmulM_comp]
       _ = (c * c') • ν := by rw [hc, Measure.map_smul _ (rmulM_meas p').aemeasurable, hc', smul_smul]
   have e2 := congrArg (fun m : Measure (Mt k r) => m s) e
-  simp only [Measure.smul_apply, smul_eq_mul] at e2
+  simp only [smul_apply, smul_eq_mul] at e2
   exact (ENNReal.mul_left_inj h0 ht).1 (show (c * c') * ν s = 1 * ν s by rw [one_mul]; exact e2.symm)
 
 theorem unitInv_of (hB : BallConj) : UnitInv := by

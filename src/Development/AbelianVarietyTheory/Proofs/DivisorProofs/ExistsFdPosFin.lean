@@ -71,7 +71,7 @@ theorem _root_.GlobalTheory.ThetaSchurUnitF.exists_fd_pos_fin {F E : Type} [Fiel
       IsAddFundamentalDomain (_root_.Formalism.IndefR.DatumF.ratLF F E nS nT) 𝓕 μ ∧
       (∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) ≠ 0 ∧ (∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) ≠ ⊤ := by
   obtain ⟨h1, h2, h3, h4, h5, K, hK, hcov⟩ := _root_.GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI : BorelSpace (_root_.Formalism.IndefR.DatumF.WOF F E nS nT) := ⟨rfl⟩
+  have : BorelSpace (_root_.Formalism.IndefR.DatumF.WOF F E nS nT) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ, h𝓕, -⟩, hN⟩ :=
     _root_.GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact _ (_root_.Formalism.IndefR.DatumF.ratLF F E nS nT) K hK hcov
   have hper : ∀ γ ∈ _root_.Formalism.IndefR.DatumF.ratLF F E nS nT, ∀ w, ‖f (γ + w)‖ = ‖f w‖ := by
@@ -82,7 +82,7 @@ theorem _root_.GlobalTheory.ThetaSchurUnitF.exists_fd_pos_fin {F E : Type} [Fiel
     exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 h'
   obtain ⟨N, hN⟩ := hN f hf.cont hper
   obtain ⟨-, htop, hl, -⟩ := hN μ 𝓕 hμ h𝓕
-  haveI : Countable (_root_.Formalism.IndefR.DatumF.ratLF F E nS nT) :=
+  have : Countable (_root_.Formalism.IndefR.DatumF.ratLF F E nS nT) :=
     (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
   refine ⟨μ, 𝓕, hμ, h𝓕, ?_, ?_⟩
   · intro hz
@@ -91,10 +91,10 @@ theorem _root_.GlobalTheory.ThetaSchurUnitF.exists_fd_pos_fin {F E : Type} [Fiel
       refine ENNReal.tsum_eq_zero.2 fun γ => ?_
       rw [← hz]
       refine lintegral_congr fun w => ?_
-      rw [AddSubgroup.vadd_def, vadd_eq_add, ← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm,
+      rw [AddSubgroup.vadd_def, vadd_eq_add, ← ofReal_norm, ← ofReal_norm,
         hper _ (-γ).2 w]
     have hcont : Continuous fun w => ‖f w‖ₑ ^ 2 :=
-      (ENNReal.continuous_pow 2).comp (continuous_enorm.comp hf.cont)
+      (ENNReal.continuous_pow 2).comp (continuous_eNorm.comp hf.cont)
     have hae := (lintegral_eq_zero_iff hcont.measurable).1 hall
     have heq := (Continuous.ae_eq_iff_eq μ hcont continuous_const).1 hae
     have hfy := congrFun heq y

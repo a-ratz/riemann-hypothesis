@@ -89,7 +89,7 @@ theorem eq_of_isDiff {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} (u
 theorem det_ne_zero_of_normalAt {x : KeyIn ℂ} {τ M : Matrix (Fin x.P.g) (Fin x.P.g) ℂ} {a b : Fin x.P.g → ℂ} {c : ℂ}
     (h : NormalAt x τ M a b c) : M.det ≠ 0 := by
   obtain ⟨u, -, -, -, -, -, h⟩ := h
-  haveI := x.P.isAb.comm
+  have := x.P.isAb.comm
   obtain ⟨ex, tan, -⟩ := GlobalTheory.LieComb.lieComb_algebra ℂ x.P.A x.P.g x.v x.basis.1
   have hi : Function.Injective M.vecMul := fun c c' e => by
     obtain ⟨w, hw⟩ := (ex c).exists
@@ -148,10 +148,10 @@ theorem exists_unit_dvr (hF : FieldClause κ) (hU : UnitClause κ) (R : Type) [C
   · exact hp ▸ valueAt_bot hF hK hu
   intro K _ _ f x hf hx
   subst hf
-  haveI := RingHom.ker_isPrime f
-  haveI : (RingHom.ker f).IsMaximal := Ring.DimensionLEOne.maximalOfPrime hp inferInstance
-  letI := Ideal.Quotient.field (RingHom.ker f)
-  haveI : CharZero (R ⧸ RingHom.ker f) := (RingHom.kerLift f).charZero
+  have := RingHom.ker_isPrime f
+  have : (RingHom.ker f).IsMaximal := Ring.DimensionLEOne.maximalOfPrime hp inferInstance
+  let := Ideal.Quotient.field (RingHom.ker f)
+  have : CharZero (R ⧸ RingHom.ker f) := (RingHom.kerLift f).charZero
   obtain ⟨xk, hk⟩ := exists_keyPB_ring y (Ideal.Quotient.mk (RingHom.ker f))
   have e : (RingHom.kerLift f).comp (Ideal.Quotient.mk (RingHom.ker f)) = f :=
     RingHom.ext fun a => RingHom.kerLift_mk f a
@@ -220,12 +220,12 @@ theorem valueAt_maximalIdeal (hF : FieldClause κ) (hU : UnitClause κ) (n : ℕ
   intro R _ _ y u hn h
   by_cases hsq : IsLocalRing.maximalIdeal R ≤ IsLocalRing.maximalIdeal R ^ 2
   · rwa [ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.maximalIdeal_eq_bot_of_le_sq R hsq]
-  obtain ⟨π, hπ, hπ2⟩ := SetLike.not_le_iff_exists.1 hsq
-  haveI := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain R
-  haveI := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.quotient_span_singleton hπ hπ2
-  haveI := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain (R ⧸ Ideal.span {π})
-  haveI : (Ideal.span {π}).IsPrime := (Ideal.Quotient.isDomain_iff_prime _).1 inferInstance
-  haveI := isDiscreteValuationRing_atPrime_span (π := π) (fun h0 => hπ2 (h0 ▸ Ideal.zero_mem _))
+  obtain ⟨π, hπ, hπ2⟩ := IsConcreteLE.not_le_iff_exists.1 hsq
+  have := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain R
+  have := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.quotient_span_singleton hπ hπ2
+  have := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain (R ⧸ Ideal.span {π})
+  have : (Ideal.span {π}).IsPrime := (Ideal.Quotient.isDomain_iff_prime _).1 inferInstance
+  have := isDiscreteValuationRing_atPrime_span (π := π) (fun h0 => hπ2 (h0 ▸ Ideal.zero_mem _))
   have hd := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.ringKrullDim_quotient_span_singleton_add_one hπ hπ2
   rw [← IsRegularLocalRing.spanFinrank_maximalIdeal, ← IsRegularLocalRing.spanFinrank_maximalIdeal, hn] at hd
   have hd' : (IsLocalRing.maximalIdeal (R ⧸ Ideal.span {π})).spanFinrank + 1 = n := by exact_mod_cast hd
@@ -256,7 +256,7 @@ theorem exists_unit_normal (hF : FieldClause κ) (hU : UnitClause κ) (S : Type)
     intro p _ hp
     obtain ⟨-, _, -⟩ := h₁ p hp
     obtain ⟨y', hy⟩ := exists_keyPB_ring y (algebraMap S (primeLocalSubalgebra K p))
-    haveI : CharZero (primeLocalSubalgebra K p) := (primeLocalSubalgebra K p).val.toRingHom.charZero
+    have : CharZero (primeLocalSubalgebra K p) := (primeLocalSubalgebra K p).val.toRingHom.charZero
     obtain ⟨u, hu⟩ := exists_unit_dvr hF hU _ y'
     have e := hu _ K (primeLocalSubalgebra K p).val.toRingHom xK rfl
       (GlobalTheory.KeyCancel.keyPB_cancel _ _ _ y y' xK _ _ hy hK)
@@ -273,8 +273,8 @@ theorem exists_unit_regular (hF : FieldClause κ) (hU : UnitClause κ) (S : Type
     ∃ u : Sˣ, ∀ (K : Type) [Field K] [CharZero K] (f : S →+* K) (x : KeyIn K), KeyPB x y f → (κ K x : K) = f u := by
   obtain ⟨u, hu⟩ := exists_unit_normal hF hU S y
   refine ⟨u, fun K _ _ f x hx => ?_⟩
-  haveI := RingHom.ker_isPrime f
-  haveI := isRegularRing_iff.mp ‹IsRegularRing S› (RingHom.ker f)
+  have := RingHom.ker_isPrime f
+  have := isRegularRing_iff.mp ‹IsRegularRing S› (RingHom.ker f)
   exact valueAt_of_localization (RingHom.ker f) (fun _ y' hy => valueAt_maximalIdeal hF hU _ _ y' _ rfl
     (hu.map_bot _ (ker_algebraMap_atPrime _) hy)) K f x rfl hx
 
@@ -282,9 +282,9 @@ end Rule
 
 theorem exists_unit_of_smooth : ThetaUnifAV → Out.PolBaseChangeSt → ∀ N : ℕ → ℕ, KeyRule N 1 charHalf → ∀ (k S : Type) [Field k] [CharZero k] [CommRing S] [IsDomain S] [Algebra k S] [Algebra.Smooth k S] (y : KeyIn S), ∃ κ : Sˣ, ∀ (s : S →+* ℂ) (x : KeyIn ℂ) (t : ℂ), KeyPB x y s → (∃ (τ M : Matrix (Fin x.P.g) (Fin x.P.g) ℂ) (a b : Fin x.P.g → ℂ) (c : ℂ), charHalf _ a b ∧ c ≠ 0 ∧ NormalAt x τ M a b c ∧ t = M.det ^ 4 / c ^ 8) → t ^ N y.P.g = s κ := by
   rintro - - N ⟨κ, hH, hF, hU, hN⟩ k S _ _ _ _ _ _ y
-  haveI : CharZero S := charZero_of_injective_algebraMap (algebraMap k S).injective
-  haveI : IsRegularRing S := GlobalTheory.isRegularRing_of_smooth k S
-  haveI : IsIntegrallyClosed S := IsIntegrallyClosed.of_localization_maximal fun p _ hp =>
+  have : CharZero S := charZero_of_injective_algebraMap (algebraMap k S).injective
+  have : IsRegularRing S := GlobalTheory.isRegularRing_of_smooth k S
+  have : IsIntegrallyClosed S := IsIntegrallyClosed.of_localization_maximal fun p _ hp =>
     (GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_smooth k p (Localization.AtPrime p)).2
   obtain ⟨u, hu⟩ := exists_unit_regular (κ := κ) (fun K K' _ _ _ _ f x x' => hF K K' f x x' x.g_pos)
     (fun R K _ _ _ _ _ _ _ x xK => hU R K x xK x.g_pos) S y

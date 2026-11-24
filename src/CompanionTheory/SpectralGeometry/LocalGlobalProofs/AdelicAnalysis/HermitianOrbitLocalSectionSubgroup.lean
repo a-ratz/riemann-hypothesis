@@ -353,11 +353,11 @@ theorem oH_isOpenEmbedding {lev : K → R} (hι : Continuous ι) (hτ : Continuo
     IsOpenEmbedding (oH ι τ hττ hτι n) := by
   induction n with
   | zero =>
-    haveI : IsEmpty (Up 0) := ⟨fun p => (p.1.1).elim0⟩
-    haveI : Unique ((Fin 0 → Rˣ) × (Up 0 → K)) :=
+    have : IsEmpty (Up 0) := ⟨fun p => (p.1.1).elim0⟩
+    have : Unique ((Fin 0 → Rˣ) × (Up 0 → K)) :=
       ⟨⟨(fun i => i.elim0, fun p => isEmptyElim p)⟩, fun x =>
         Prod.ext (funext fun i => i.elim0) (funext fun p => isEmptyElim p)⟩
-    haveI : Unique (Hm τ 0) :=
+    have : Unique (Hm τ 0) :=
       ⟨⟨⟨0, fun a => a.elim0⟩⟩, fun S => Subtype.ext (Subsingleton.elim _ _)⟩
     have h : oH ι τ hττ hτι 0 = Homeomorph.homeomorphOfUnique _ _ := Subsingleton.elim _ _
     rw [h]
@@ -381,17 +381,17 @@ end Abstract
 theorem ldl_isOpenEmbedding : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ n : ℕ, ∃ o : (Fin n → Rˣ) × ({p : Fin n × Fin n // p.1 < p.2} → R ⊗[F] E) → HermR R σ n, IsOpenEmbedding o ∧ ∀ d u, ∀ N : Matrix (Fin n) (Fin n) (R ⊗[F] E), (N = Matrix.of fun i j => if i = j then 1 else if h : i < j then u ⟨(i, j), h⟩ else 0) → (o (d, u) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) = cT (sigR R σ) N * Matrix.diagonal (fun i => ((d i : R) ⊗ₜ[F] (1 : E) : R ⊗[F] E)) * N := by
   intro F E _ _ _ _ _ σ hcm R _ _ _ _ _ hloc n
   obtain ⟨hTR, hLC, hSC, hT2, hAr, hRed, hU, -⟩ := hloc
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
-  haveI := hAr
-  haveI := hRed
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
+  have := hAr
+  have := hRed
   obtain ⟨-, -, -, hinv, -, hfix, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.KAlg.algebra_tensor_invol F E σ hcm R
   obtain ⟨hKT, -, -, -, hsc, htr, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI := hKT
+  have := hKT
   have hfr : Module.finrank F E = 2 := hcm.2.2.1
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   have hιt : ∀ r : R, algebraMap R (R ⊗[F] E) r = r ⊗ₜ[F] (1 : E) := fun r => by
     simp [Algebra.TensorProduct.algebraMap_apply]
   have hι : Continuous (algebraMap R (R ⊗[F] E)) := by
@@ -444,8 +444,8 @@ namespace GlobalTheory.CompanionTheory.SW
 theorem hermR_unit_diagonalisable : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (R : Type) [CommRing R] [Algebra F R] [IsArtinianRing R] [IsReduced R] (n : ℕ) (S : HermR R σ n), IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det → ∃ (g : Matrix (Fin n) (Fin n) (R ⊗[F] E)) (d : Fin n → Rˣ), IsUnit g.det ∧ (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) = cT (sigR R σ) g * Matrix.diagonal (fun i => ((d i : R) ⊗ₜ[F] (1 : E) : R ⊗[F] E)) * g := by
   intro F E _ _ _ _ _ σ hσ R _ _ _ _ n S hS
   obtain ⟨hart, -, h2, hinv, hδ, hfix, hunit⟩ := _root_.GlobalTheory.CompanionTheory.SW.KAlg.algebra_tensor_invol F E σ hσ R
-  haveI : IsArtinianRing (R ⊗[F] E) := hart
-  haveI : Finite (MaximalSpectrum (R ⊗[F] E)) := inferInstance
+  have : IsArtinianRing (R ⊗[F] E) := hart
+  have : Finite (MaximalSpectrum (R ⊗[F] E)) := inferInstance
   have hrep := _root_.GlobalTheory.CompanionTheory.SW.UnitRep.exists_isUnit_hform (R ⊗[F] E) (sigR R σ) hinv h2 hδ
   obtain ⟨g, d, hg, hd, hgd⟩ :=
     _root_.GlobalTheory.CompanionTheory.SW.RingDiag.diagonalise (R ⊗[F] E) (sigR R σ) hinv hrep n (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) S.2 hS
@@ -607,7 +607,7 @@ theorem aGL_coords (ι : R →+* K) {U : Subgroup Rˣ} (x : triSub ι U n) :
   show aMat ι (uOf ι x) (mOf ι x) i j = _
   rw [aMat_apply]
   rcases lt_trichotomy i j with h | h | h
-  · simp only [nMat, Matrix.of_apply, h.ne, if_false, h, dif_pos, mOf]
+  · simp only [nMat, Matrix.of_apply, h.ne, ite_false, h, dite_eq_left, mOf]
     exact unit_cancel' ι _ _
   · subst h
     simp [nMat, uOf_spec]
@@ -634,7 +634,7 @@ theorem coords_aGL (ι : R →+* K) (hι : Function.Injective ι) {U : Subgroup 
   simp only [mOf, h1]
   show _ * aMat ι u m i j = _
   rw [aMat_apply]
-  simp only [nMat, Matrix.of_apply, h'.ne, if_false, h', dif_pos]
+  simp only [nMat, Matrix.of_apply, h'.ne, ite_false, h', dite_eq_left]
   exact unit_cancel ι _ _
 
 theorem aMat_gram (ι : R →+* K) (sig : K →+* K) (hs : ∀ r, sig (ι r) = ι r) {U : Subgroup Rˣ}
@@ -673,7 +673,7 @@ theorem aMat_cont (ι : R →+* K) (hι : Continuous ι) (U : Subgroup Rˣ) :
     Continuous fun p : (Fin n → U) × ({p : Fin n × Fin n // p.1 < p.2} → K) => aMat ι p.1 p.2 := by
   refine Continuous.matrix_mul (Continuous.matrix_diagonal ?_) (nMat_cont.comp continuous_snd)
   refine continuous_pi fun i => hι.comp (Units.continuous_val.comp ?_)
-  exact continuous_subtype_val.comp ((continuous_apply i).comp continuous_fst)
+  exact continuous_subtypeVal.comp ((continuous_apply i).comp continuous_fst)
 
 theorem aGL_cont (ι : R →+* K) (hι : Continuous ι) (U : Subgroup Rˣ) :
     Continuous fun p : (Fin n → U) × ({p : Fin n × Fin n // p.1 < p.2} → K) => aGL ι p.1 p.2 := by
@@ -681,12 +681,12 @@ theorem aGL_cont (ι : R →+* K) (hι : Continuous ι) (U : Subgroup Rˣ) :
   have hc : Continuous fun p : (Fin n → U) × ({p : Fin n × Fin n // p.1 < p.2} → K) => cInv ι p.1 := by
     refine hι.comp (Units.continuous_val.comp (Continuous.inv ?_))
     refine continuous_finsetProd _ fun i _ => ?_
-    exact continuous_subtype_val.comp ((continuous_apply i).comp continuous_fst)
+    exact continuous_subtypeVal.comp ((continuous_apply i).comp continuous_fst)
   exact hc.smul (aMat_cont ι hι U).matrix_adjugate
 
 theorem entry_cont (ι : R →+* K) (U : Subgroup Rˣ) (i j : Fin n) :
     Continuous fun x : triSub ι U n => ((x : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) i j :=
-  (continuous_id.matrix_elem i j).comp (Units.continuous_val.comp continuous_subtype_val)
+  (continuous_id.matrix_elem i j).comp (Units.continuous_val.comp continuous_subtypeVal)
 
 theorem uOf_cont (ι : R →+* K) (π : K → R) (hπ : Continuous π) (hπι : ∀ r, π (ι r) = r)
     (hv : IsInducing (Units.val : Rˣ → R)) (U : Subgroup Rˣ) (i : Fin n) :
@@ -752,9 +752,9 @@ theorem conj_case (sig : K →+* K) (Hm : AddSubgroup (Matrix (Fin n) (Fin n) K)
       left_inv := fun S => Subtype.ext (hcT g g' h1 _)
       right_inv := fun S => Subtype.ext (hcT g' g h2 _)
       continuous_toFun := Continuous.subtype_mk
-        ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+        ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
       continuous_invFun := Continuous.subtype_mk
-        ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _ }
+        ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _ }
   refine ⟨Q, e, fun y => T (o₀ (e y)), T.isOpenEmbedding.comp (ho₀.comp e.isOpenEmbedding), ?_⟩
   intro y
   set Y : Matrix (Fin n) (Fin n) K := ((y : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) with hY
@@ -780,7 +780,7 @@ open GlobalTheory.CompanionTheory.SW.Tri
 theorem half_trace_tmul {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
     (h2 : Module.finrank F E = 2) (R : Type) [CommRing R] [Algebra F R] (r : R) :
     algebraMap F R (1 / 2) * Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] (1 : E)) = r := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hb := Algebra.TensorProduct.basis R (Module.finBasis F E)
   have h1 : (r ⊗ₜ[F] (1 : E) : R ⊗[F] E) = algebraMap R (R ⊗[F] E) r := by
     simp [Algebra.TensorProduct.algebraMap_apply]
@@ -797,17 +797,17 @@ theorem tri_slice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   intro F E _ _ _ _ _ σ hCM R _ _ _ _ _ hR n S hS
   have hR' := hR
   obtain ⟨i1, i2, i3, i4, i5, i6, hval, U, -, hU⟩ := hR'
-  haveI := i1
-  haveI := i2
-  haveI := i3
-  haveI := i4
-  haveI := i5
-  haveI := i6
+  have := i1
+  have := i2
+  have := i3
+  have := i4
+  have := i5
+  have := i6
   obtain ⟨k1, k2, k3, k4, -, htr, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := k1
-  haveI := k2
-  haveI := k3
-  haveI := k4
+  have := k1
+  have := k2
+  have := k3
+  have := k4
   obtain ⟨o, ho, hof⟩ := _root_.GlobalTheory.CompanionTheory.SW.LDL.ldl_isOpenEmbedding F E σ hCM R hR n
   obtain ⟨g, d, hg, hSg⟩ := _root_.GlobalTheory.CompanionTheory.SW.hermR_unit_diagonalisable F E σ hCM R n S hS
   have hH : ∀ S' ∈ HermR R σ n, ∀ g' : Matrix (Fin n) (Fin n) (R ⊗[F] E),
@@ -815,8 +815,8 @@ theorem tri_slice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     (_root_.GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hCM 0 0 ⟨fun i => i.elim0, by simp⟩ R n).2.2.2.1 ⟨S', hS'⟩ g'
   let ι : R →+* R ⊗[F] E := Algebra.TensorProduct.includeLeftRingHom
   have hιa : ∀ r, ι r = r ⊗ₜ[F] (1 : E) := fun r => rfl
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R (R ⊗[F] E)
   have hι : Continuous ι := by
     have : (ι : R → R ⊗[F] E) = fun r => r • (1 : R ⊗[F] E) := by
       funext r
@@ -832,8 +832,8 @@ theorem tri_slice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   let Φ : triSub ι U n → (Fin n → Rˣ) × ({p : Fin n × Fin n // p.1 < p.2} → R ⊗[F] E) :=
     fun x => (fun i => (uOf ι x i : Rˣ) ^ 2 * d i, mOf ι x)
   have hΦ : IsOpenEmbedding Φ := hP.comp Ψ.symm.isOpenEmbedding
-  haveI : LocallyCompactSpace Rˣ := hval.locallyCompactSpace
-  haveI : SecondCountableTopology Rˣ := hval.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace Rˣ := hval.locallyCompactSpace
+  have : SecondCountableTopology Rˣ := hval.isEmbedding.secondCountableTopology
   have lc₀ : LocallyCompactSpace (triSub ι U n) := hΦ.locallyCompactSpace
   have sc₀ : SecondCountableTopology (triSub ι U n) := hΦ.isEmbedding.secondCountableTopology
   let D : Matrix (Fin n) (Fin n) (R ⊗[F] E) :=

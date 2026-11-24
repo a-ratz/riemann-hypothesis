@@ -87,7 +87,7 @@ theorem _root_.GlobalTheory.exists_linearIndependent_D_iff_trdeg_adjoin_eq {K Ω
           IntermediateField.subset_adjoin K _ ⟨i, rfl⟩, rfl⟩
       obtain ⟨m, hm, hmz⟩ := hle z.2
       rwa [show m = z from Subtype.ext hmz] at hm
-    haveI : Algebra.IsAlgebraic (Algebra.adjoin K s) L := ⟨fun z => by
+    have : Algebra.IsAlgebraic (Algebra.adjoin K s) L := ⟨fun z => by
       have hz := isAlgebraic_algebraMap (R := IntermediateField.adjoin K s) (A := L) ⟨z, hmem z⟩
       exact IntermediateField.isAlgebraic_adjoin_iff.mp hz⟩
     obtain ⟨t, hts, ht⟩ := exists_isTranscendenceBasis_subset (R := K) (A := L) s
@@ -95,13 +95,13 @@ theorem _root_.GlobalTheory.exists_linearIndependent_D_iff_trdeg_adjoin_eq {K Ω
     obtain ⟨e⟩ := Cardinal.mk_eq_nat_iff.mp hcard
     let v : t → Ω := fun z => ((z : L) : Ω)
     have hv : AlgebraicIndependent K v := ht.1.map' (f := L.val) Subtype.val_injective
-    haveI : Finite t := Finite.of_equiv _ e.symm
+    have : Finite t := Finite.of_equiv _ e.symm
     have hvb : IsTranscendenceBasis K v := by
       refine hv.isTranscendenceBasis_of_lift_trdeg_le ?_ ?_
       · rw [hD]; exact Cardinal.natCast_lt_aleph0
       · rw [hD, hcard]
-    haveI := hvb.isAlgebraic_field
-    haveI : Algebra.IsSeparable (IntermediateField.adjoin K (Set.range v)) Ω :=
+    have := hvb.isAlgebraic_field
+    have : Algebra.IsSeparable (IntermediateField.adjoin K (Set.range v)) Ω :=
       Algebra.IsAlgebraic.isSeparable_of_perfectField
     obtain ⟨b, hb⟩ := _root_.GlobalTheory.exists_basis_kaehler_of_algebraicIndependent hv
     have hex : ∀ k : Fin D, ∃ i, x i = (((e.symm k : t) : L) : Ω) := fun k => hts (e.symm k).2

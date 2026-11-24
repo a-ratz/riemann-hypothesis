@@ -669,8 +669,8 @@ end Lemmas
 
 theorem lpow_galDiff_eq_jB_toOB : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e), l ≠ 2 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (η H : ℕ) (D : BKDat O K l e a ι η H) (T : LocLat (Gl l) ℚ_[l] K O) (R : GalDat t ϖ (sQ l) D T) (σ : D.MMl) (c : ℕ), (l : K) ^ c • D.conn σ.1 ∈ D.MM → ∀ g : Gl l, sQ l g ∈ GK (ϖ.field a) → ∃ z : ι → OCr l O, (l : O) ^ c • (actB (sQ l) T g (R.jB (toBcris t ϖ D.toPhiMod σ)) - R.jB (toBcris t ϖ D.toPhiMod σ)) = R.jB fun i => toOB l O (z i) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ _ ι _ _ η H D T R σ c hc g hg
-  haveI : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (K := K) (l := l) (e := e) (a := a)
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (K := K) (l := l) (e := e) (a := a)
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
   let g' : ↥(GK (ϖ.field a)) := ⟨sQ l g, hg⟩
   have hxi := (_root_.GlobalTheory.BK.xi_trivialises_invL_S O K l e a ι D.toPhiMod).2
   have nsm : ∀ (n : ℕ) (v : Vec K a ι), (l : K) ^ n • v = (l ^ n) • v := fun n v => by
@@ -952,7 +952,7 @@ theorem step_mul {a e : ℕ} [NeZero a] [NeZero e] [TameDescentExponentData K l 
 theorem cob_of (T : LocLat (Gl l) ℚ_[l] K O) (b : TW (OB l O) T) (c : ℕ) (X : Gl l → ↥T.L.T)
     (hX : ∀ g, (l : O) ^ c • (actB (sQ l) T g b - b) = (1 : OB l O) ⊗ₜ[O] X g) :
     IsCobOf (sQ l) T b (fun g => ((l : K) ^ c)⁻¹ • (X g : T.V)) := by
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hne : (l : K) ^ c ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hl.out.ne_zero)
   intro g n x hx
   apply smul_cancel T c
@@ -975,7 +975,7 @@ theorem exists_cob {a e : ℕ} [NeZero a] [NeZero e] [TameDescentExponentData K 
     obtain ⟨h, k, hg, hh, hk⟩ := hdec g
     exact step_mul t ϖ hF hl2 D T R hηH hlH y hy hM c hc b hb g h k hg hh hk
   choose X hX using hX
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hne : (l : K) ^ c ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hl.out.ne_zero)
   refine ⟨_, cob_of T b c X hX, fun g => ?_⟩
   rw [smul_smul, mul_inv_cancel₀ hne, one_smul]
@@ -1119,7 +1119,7 @@ end Helpers
 
 theorem lpow_Epow_twistedMon_decomp : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K] [Algebra O K] [IsUnitBall O K] (l e a : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] [Fact l.Prime] [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a] (η H : ℕ) (D : BKDat O K l e a ι η H) (c : ℕ), 1 ≤ η → η < H → 14 * H < l → 10 * H + 2 ≤ l → ∀ y' ∈ D.Y', ∀ m ∈ D.Minv, (l : K) ^ c • D.zeta (D.phi m) ∈ D.MM → ∃ p ∈ D.L, ∃ f ∈ D.FilMM (10 * H), Ezpow K l e (-(2 * H : ℤ)) • f ∈ D.Man ∧ (l : K) ^ c • (E K l e ^ (2 * H) • (E K l e • D.zeta (y' + D.phi m) - D.EN (y' + D.phi m))) = p + ((l : K) ^ (3 * H))⁻¹ • f := by
   intro O K _ _ _ _ _ _ l e a ι _ _ _ _ _ _ _ η H D c h1 h2 h3 h4 y' hy' m hm hc
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hr : ((l : K) ^ (3 * H)) ≠ 0 :=
     pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
   have IC := _root_.GlobalTheory.IntegralityComp.integralityComputation O K l e a ι η H D h2 h4
@@ -1296,9 +1296,9 @@ namespace GlobalTheory.ZetaDenominator
 
 theorem zetaBound : GlobalTheory.IndefiniteRowSideFullHecke.AdmissibleSignatures.ZetaBound := by
   intro O K _ _ _ _ _ l e a ι _ _ _ _ _ _ _ N η H Sig U hA D hT y' hy' m hm hMon
-  haveI : CompleteSpace K := by
-    haveI := TameDescentExponentData.finite (K := K) (l := l) (e := e) (a := a)
-    exact FiniteDimensional.complete ℚ_[l] K
+  have : CompleteSpace K := by
+    have := TameDescentExponentData.finite (K := K) (l := l) (e := e) (a := a)
+    exact FiniteDimensional.completeSpace ℚ_[l] K
   have hl : l.Prime := Fact.out
   have ha : 1 ≤ a := NeZero.one_le
   obtain ⟨hr1, hrN, hrper⟩ := _root_.GlobalTheory.BK.maxPeriod_bounds l e a hl ha (TameDescentExponentData.succ_eq (K := K)) Sig N

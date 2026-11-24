@@ -92,7 +92,7 @@ theorem pi_field (hA : CR A) {e : Matrix (Fin N) (Fin N) k}
     (he : e ∈ primIdem A) {a : Matrix (Fin N) (Fin N) k} (ha : a ∈ A) : e * a = 0 ∨ ∃ b ∈ A, e * a * b = e := by
   obtain ⟨heA, hei, -, hep⟩ := he
   have hrA : e * a ∈ A := A.mul_mem heA ha
-  letI iC : CommRing A := { (inferInstance : Ring A) with mul_comm := fun x y => Subtype.ext (hA.1 _ x.2 _ y.2) }
+  let iC : CommRing A := { (inferInstance : Ring A) with mul_comm := fun x y => Subtype.ext (hA.1 _ x.2 _ y.2) }
   have : IsArtinianRing A := IsArtinianRing.of_finite k A
   obtain ⟨n, z, hz⟩ := IsArtinian.exists_pow_succ_smul_dvd (⟨e * a, hrA⟩ : A) (1 : A)
   simp only [smul_eq_mul, mul_one] at hz

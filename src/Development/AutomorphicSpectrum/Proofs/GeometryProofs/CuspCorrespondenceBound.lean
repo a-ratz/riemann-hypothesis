@@ -88,7 +88,7 @@ theorem valAt_unique {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (CommRin
 theorem injective_of_charZero {A : Type} [CommRing A] [IsDomain A] [Algebra.IsIntegral ℤ A] {L : Type} [Field L]
     [CharZero L] (t : A →+* L) : Function.Injective t := by
   have hk : RingHom.ker t = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     ext n
     simp [Ideal.mem_comap, RingHom.mem_ker]
   exact (RingHom.injective_iff_ker_eq_bot t).2 hk
@@ -105,7 +105,7 @@ theorem card_hom_le (E : Type) [Field E] [NumberField E] (L : Type) [Field L] [C
     simpa [f] using this
   have hc : Nat.card (E →ₐ[ℚ] AlgebraicClosure L) = Module.finrank ℚ E := by
     rw [Nat.card_eq_fintype_card, AlgHom.card]
-  haveI : Finite (𝓞 E →+* L) := Finite.of_injective f hf
+  have : Finite (𝓞 E →+* L) := Finite.of_injective f hf
   exact ⟨inferInstance, (Nat.card_le_card_of_injective f hf).trans hc.le⟩
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
@@ -148,13 +148,13 @@ theorem isCMFam_of_bijective {A : Type} [Fintype A] (f g : A → (𝓞 E →+* �
 
 theorem exists_labVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (L : Type) [Field L] [CharZero L] (z : Sp L ⟶ 𝔐.X), ∃ σ : CMType H ⊕ CMType H → (𝓞 E →+* L), 𝔐.LabVal z id σ ∧ (∀ σ', 𝔐.LabVal z id σ' → σ' = σ) ∧ Function.Bijective σ ∧ (∀ s, Function.Injective (σ s)) ∧ 2 * Fintype.card (CMType H) = Module.finrank ℚ E ∧ ∀ e : L →+* ℂ, IsCMFam (fun τ => e.comp (σ (.inl τ))) ∧ IsCMFam (fun τ => e.comp (σ (.inr τ))) ∧ ∀ τ, e.comp (σ (.inr τ)) = (starRingEnd ℂ).comp (e.comp (σ (.inl τ))) := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 L _ _ z
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { }
   obtain ⟨ρ, hρ⟩ : ∃ ρ : 𝓞 c.F →+* L, spMap ρ = z ≫ 𝔐.f ≫ Y.s :=
     ⟨(Spec.preimage (z ≫ 𝔐.f ≫ Y.s)).hom, by simp [spMap]⟩
   let κ : c.F →+* L := IsFractionRing.lift (injective_of_charZero ρ)
   have hκ : ∀ o, κ (algebraMap (𝓞 c.F) c.F o) = ρ o := fun o => IsFractionRing.lift_algebraMap _ o
-  letI : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
+  let : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
   have hsp : genPt 𝔐.ξ ⤳ centre z := 𝔐.all _
   have hval : ∀ (s : CMType H ⊕ CMType H) (a : 𝓞 E), ValAt 𝔐.ξ z (𝔐.emb s a) (κ (labelEmb c s a)) := by
     intro s a

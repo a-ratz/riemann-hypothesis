@@ -198,7 +198,7 @@ theorem ColimHens_of : LateralTheory.E.HensCut.ColimHens := by
     · rw [not_nontrivial_iff_subsingleton] at hnt
       exact ⟨a₀, Subsingleton.elim _ _, by rw [sub_self]; exact zero_mem _⟩
     obtain ⟨j1, hj1⟩ := poly_lift hc g
-    haveI : Nontrivial (((Functor.const J).obj c.pt).obj j1) := hnt
+    have : Nontrivial (((Functor.const J).obj c.pt).obj j1) := hnt
     obtain ⟨p, hp, -, hpm⟩ := Polynomial.lifts_and_degree_eq_and_monic hj1 hg
     obtain ⟨w, hw⟩ := hder.exists_right_inv
     obtain ⟨u, rfl⟩ := Ideal.Quotient.mk_surjective w

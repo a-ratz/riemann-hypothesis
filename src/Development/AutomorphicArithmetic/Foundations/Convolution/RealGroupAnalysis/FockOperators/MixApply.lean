@@ -78,7 +78,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.proj :
   · change Continuous fun g : G1 F => mix 1 g
     refine Continuous.subtype_mk (continuous_matrix fun i j => ?_) _
     have h : Continuous fun g : G1 F => g i j :=
-      (continuous_apply_apply i j).comp continuous_subtype_val
+      (continuous_apply_apply i j).comp continuous_subtypeVal
     exact continuous_const.prodMk (continuous_snd.comp h)
   · change mix g 1 * mix 1 g = g
     rw [← mix_mul, one_mul, mul_one]

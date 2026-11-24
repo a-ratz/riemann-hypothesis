@@ -99,7 +99,7 @@ theorem HasRationalTorsion.variableChange (h : HasRationalTorsion W L n) (C : Va
   rw [map_nsmul, map_zero, variableChangePoint_some] at h1
   obtain ⟨⟨a, ha⟩, ⟨b, hb⟩⟩ := h _ _ _ h1
   have hu : algebraMap K L C.u ≠ 0 := by simp
-  simp only [VariableChange.map, Units.coe_map, MonoidHom.coe_coe] at ha hb
+  simp only [VariableChange.map, Units.coe_map, MonoidHom.coe_ofClass] at ha hb
   have hx : algebraMap K L ((a - C.r) / C.u ^ 2) = x := by
     simp only [map_div₀, map_sub, map_pow, ha]
     field_simp

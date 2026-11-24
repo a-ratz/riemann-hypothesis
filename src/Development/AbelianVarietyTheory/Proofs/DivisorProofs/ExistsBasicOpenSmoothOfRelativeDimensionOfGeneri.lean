@@ -81,7 +81,7 @@ theorem smoothOfRelativeDimension_of_generic (R : Type) [CommRing R] [IsDomain R
 
 theorem exists_basicOpen : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] (X : Over (Sp R)), Smooth X.hom → QuasiCompact X.hom → ∀ (K : Type) [Field K] (e : R →+* K), Function.Injective e → ∀ g : ℕ, SmoothOfRelativeDimension g (pullback.snd X.hom (spMap e)) → ∃ f : R, e f ≠ 0 ∧ ∀ (F : Type) [Field F] (ψ : R →+* F), IsUnit (ψ f) → SmoothOfRelativeDimension g (pullback.snd X.hom (spMap ψ)) := by
   intro R _ _ _ X hX _ K _ e he g hg
-  haveI := hX
+  have := hX
   refine ⟨1, by simp, fun F _ ψ _ => ?_⟩
   exact (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback (IsPullback.of_hasPullback _ _)
     (smoothOfRelativeDimension_of_generic R X K e he g hg)

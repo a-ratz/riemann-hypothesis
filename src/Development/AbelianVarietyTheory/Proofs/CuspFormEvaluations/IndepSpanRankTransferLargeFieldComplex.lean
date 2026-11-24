@@ -68,8 +68,8 @@ namespace GlobalTheory
 theorem linearIndependent_ringHom_comp_iff {A F : Type} [CommRing A] [Field F] (φ : A →+* F)
     (hφ : Function.Injective φ) {ι μ : Type} [Finite μ] (c : ι → μ → A) :
     LinearIndependent F (fun i m => φ (c i m)) ↔ LinearIndependent A c := by
-  letI : Algebra A F := φ.toAlgebra
-  haveI : FaithfulSMul A F := (faithfulSMul_iff_algebraMap_injective A F).2 hφ
+  let : Algebra A F := φ.toAlgebra
+  have : FaithfulSMul A F := (faithfulSMul_iff_algebraMap_injective A F).2 hφ
   exact linearIndependent_algebraMap_comp_iff (R := A) (S := F) (v := c)
 
 theorem finrank_span_ringHom_comp_le {A F F' : Type} [CommRing A] [Field F] [Field F']
@@ -78,8 +78,8 @@ theorem finrank_span_ringHom_comp_le {A F F' : Type} [CommRing A] [Field F] [Fie
     Module.finrank F (Submodule.span F (Set.range fun i m => φ (c i m))) ≤
       Module.finrank F' (Submodule.span F' (Set.range fun i m => ψ (c i m))) := by
   obtain ⟨κ, a, ha, hs, hl⟩ := exists_linearIndependent' F (fun i m => φ (c i m))
-  haveI : Finite κ := Finite.of_injective a ha
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  let : Fintype κ := Fintype.ofFinite κ
   have h1 : LinearIndependent A (fun k => c (a k)) :=
     (linearIndependent_ringHom_comp_iff φ hφ (fun k => c (a k))).1 hl
   have h2 : LinearIndependent F' (fun k m => ψ (c (a k) m)) :=
@@ -254,7 +254,7 @@ theorem eval_injective (X : PJ D B P j) (la : HeightOneSpectrum (𝓞 B.KO)) (N 
         (Formalism.MainNotions.Gaps.EtaleWeightGaps.gI X la N).primeCompl_le_nonZeroDivisors)
   have hOl : AlgebraicIndependent (X.Ol la) (f ∘ Tv X la N) :=
     algebraicIndependent_iff_injective_aeval.2 fun Q₁ Q₂ h => hinj (by simpa only [key] using h)
-  haveI : Algebra.IsAlgebraic (X.Ol la) (X.Kl la) :=
+  have : Algebra.IsAlgebraic (X.Ol la) (X.Kl la) :=
     IsLocalization.isAlgebraic (S := X.Kl la) (M := nonZeroDivisors (X.Ol la))
   have hKl := algebraicIndependent_iff_injective_aeval.1 (hOl.extendScalars (X.Kl la))
   have hmap : Function.Injective (MvPolynomial.map (σ := Idx D j N) (algebraMap B.KO (X.Kl la))) :=

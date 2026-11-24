@@ -117,7 +117,7 @@ theorem rhGrad_main (hf : 0 < f) (hm : 0 < min p q) (v0 : V (nD f p q)) (hv0 : v
   have hm0 : ((min p q : ℕ) : ℝ) ≠ 0 := hmR.ne'
   have hC_eq : (((f * min p q : ℕ)) : ℝ) = (f : ℝ) * ((min p q : ℕ) : ℝ) := by push_cast; ring
   have hCpos : (0 : ℝ) < ((f * min p q : ℕ) : ℝ) := by rw [hC_eq]; positivity
-  haveI : Nonempty (Fin f) := ⟨⟨0, hf⟩⟩
+  have : Nonempty (Fin f) := ⟨⟨0, hf⟩⟩
   choose Q hQc hQL hQ0 hQle using fun k : Fin f => RgD.block hm hv0 k
   have hdk : ∀ v ∈ Dset f p q, ∀ k, 0 < dk v k := by
     intro v hv k
@@ -237,7 +237,7 @@ theorem RhGradStatement_holds : RhGradStatement := by
         rcases Nat.min_eq_zero_iff.mp (Nat.eq_zero_of_not_pos hm) with hp | hq
         · simp [hp]
         · simp [hq]
-    haveI : IsEmpty (Fin (nD f p q)) := by rw [hn]; infer_instance
+    have : IsEmpty (Fin (nD f p q)) := by rw [hn]; infer_instance
     simp [leviV]
 
 end ReciprocityTheory.ChartRestriction.G.AR.Up

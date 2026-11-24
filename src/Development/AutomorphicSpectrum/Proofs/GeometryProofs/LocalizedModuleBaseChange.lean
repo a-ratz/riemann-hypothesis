@@ -169,7 +169,7 @@ theorem isLocalizedModule_compRight_away :
     conv_rhs => rw [← hexp p]
 
     simp [assemble, evalAt, coord, s₀, map_sum, map_away_smul σ, mul_comm]
-  haveI : IsLocalizedModule (Submonoid.powers t)
+  have : IsLocalizedModule (Submonoid.powers t)
       (LinearMap.pi fun k : Fin n => c.toLinearMap ∘ₗ LinearMap.proj k) :=
     IsLocalizedModule.pi (Submonoid.powers t) (fun _ : Fin n => c.toLinearMap)
   refine isLocalizedModule_of_retract (Submonoid.powers t) _

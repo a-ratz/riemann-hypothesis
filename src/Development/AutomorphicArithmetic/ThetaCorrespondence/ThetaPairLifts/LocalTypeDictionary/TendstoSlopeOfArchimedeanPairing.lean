@@ -223,9 +223,9 @@ theorem continuous_amap (M : Model σ X W) (v) : Continuous fun p : UA σ X.J ×
   have he : Continuous fun u : Matrix (Fin n) (Fin d) (AE F E) => M.co.e u :=
     IsModuleTopology.continuous_of_linearMap M.co.e.toLinearMap
   have hg : Continuous fun p : UA σ X.J × UA σ W.J => ((p.1 : GL (Fin n) (AE F E)) : Matrix (Fin n) (Fin n) (AE F E)) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_fst)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_fst)
   have hh : Continuous fun p : UA σ X.J × UA σ W.J => ((p.2 : GL (Fin d) (AE F E)) : Matrix (Fin d) (Fin d) (AE F E)) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)
   have hact : Continuous fun p : UA σ X.J × UA σ W.J => actAB (cA σ) p (GlobalTheory.ArchFam.wv M v) :=
     (hg.matrix_mul continuous_const).matrix_mul hh.matrix_transpose
   simp only [amap, LinearMap.coe_mk, AddHom.coe_mk, Coord.coordI]
@@ -365,7 +365,7 @@ theorem exists_orbit_pair_archimedean_line (hP : _root_.GlobalTheory.FunPr.Theta
       map_smul' := fun c f => hinj _ _ (by rw [← key, tsmul, map_smul, key, RingHom.id_apply, tsmul]) }
   have hT : ∀ t f, T t f = S t f := fun t f => rfl
   have hT0 : ∀ f, T 0 f = f := fun f => hinj _ _ (by rw [hT, ← key, hδ0, map_one, Module.End.one_apply])
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := inferInstance
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := inferInstance
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.ArchLinePair.tendsto_slope_of_archimedean_pairing hP (trP F (Fin n × Fin d)) (Coord.isPairing_trP _)
     (fun t => amap M (δ t)) T (fun v => (continuous_amap M v).comp hδc)
     (fun v => by

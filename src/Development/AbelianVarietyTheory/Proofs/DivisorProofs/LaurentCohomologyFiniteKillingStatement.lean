@@ -316,8 +316,8 @@ theorem isLocalRing_integralClosure (O Ω : Type) [CommRing O] [HenselianLocalRi
     IsLocalRing (integralClosure O Ω) := by
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x => ?_
   let S := Algebra.adjoin O {(x : Ω)}
-  haveI : Module.Finite O S := Module.Finite.iff_fg.2 (IsIntegral.fg_adjoin_singleton x.2)
-  haveI : IsLocalRing S := by
+  have : Module.Finite O S := Module.Finite.iff_fg.2 (IsIntegral.fg_adjoin_singleton x.2)
+  have : IsLocalRing S := by
     obtain ⟨q, hq⟩ := Ideal.exists_maximal S
     have e : S ≃+* Localization.AtPrime q := RingEquiv.ofBijective (algebraMap _ _)
       ⟨IsLocalization.injective _ q.primeCompl_le_nonZeroDivisors,
@@ -885,8 +885,8 @@ theorem isIntegral_pi {O : Type} [CommRing O] {ι : Type} [Finite ι] {R : ι �
 
 theorem isLocalRing_closure (A : Type) [CommRing A] [HenselianLocalRing A] (P : Ideal A) [P.IsPrime] :
     IsLocalRing (integralClosure (A ⧸ P) (AlgebraicClosure (FractionRing (A ⧸ P)))) := by
-  haveI : IsLocalRing (A ⧸ P) := IsLocalRing.of_surjective' (Ideal.Quotient.mk P) Ideal.Quotient.mk_surjective
-  haveI : HenselianLocalRing (A ⧸ P) := GlobalTheory.henselianLocalRing_of_finite A (A ⧸ P)
+  have : IsLocalRing (A ⧸ P) := IsLocalRing.of_surjective' (Ideal.Quotient.mk P) Ideal.Quotient.mk_surjective
+  have : HenselianLocalRing (A ⧸ P) := GlobalTheory.henselianLocalRing_of_finite A (A ⧸ P)
   exact GlobalTheory.EtC.Psi.isLocalRing_integralClosure _ _
 
 theorem main : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) →
@@ -897,28 +897,28 @@ theorem main : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A] [IsNoetherianRin
   intro q _ A _ _ hA hq n i hn x
   obtain ⟨hHens, -⟩ := hA
   let ι := {p : Ideal A // p ∈ minimalPrimes A}
-  haveI : Finite ι := (minimalPrimes.finite_of_isNoetherianRing A).to_subtype
-  letI : Fintype ι := Fintype.ofFinite ι
+  have : Finite ι := (minimalPrimes.finite_of_isNoetherianRing A).to_subtype
+  let : Fintype ι := Fintype.ofFinite ι
   let σ : Fin (Fintype.card ι) ≃ ι := (Fintype.equivFin ι).symm
   let P : Fin (Fintype.card ι) → Ideal A := fun k => (σ k).1
-  haveI hP : ∀ k, (P k).IsPrime := fun k => (σ k).2.1.1
+  have hP : ∀ k, (P k).IsPrime := fun k => (σ k).2.1.1
   let T : Fin (Fintype.card ι) → Type := fun k =>
     integralClosure (A ⧸ P k) (AlgebraicClosure (FractionRing (A ⧸ P k)))
-  letI : ∀ k, Algebra A (T k) := fun k => ((algebraMap (A ⧸ P k) (T k)).comp (Ideal.Quotient.mk (P k))).toAlgebra
+  let : ∀ k, Algebra A (T k) := fun k => ((algebraMap (A ⧸ P k) (T k)).comp (Ideal.Quotient.mk (P k))).toAlgebra
   have hint : ∀ k (s : T k), IsIntegral A s := by
     intro k s
     have h : ((algebraMap (A ⧸ P k) (T k)).comp (Ideal.Quotient.mk (P k))).IsIntegral :=
       RingHom.IsIntegral.trans _ _ (RingHom.isIntegral_of_surjective _ Ideal.Quotient.mk_surjective)
         (fun s => Algebra.IsIntegral.isIntegral s)
     exact h s
-  haveI : Algebra.IsIntegral A (∀ k, T k) := ⟨fun s => isIntegral_pi s (fun k => hint k (s k))⟩
+  have : Algebra.IsIntegral A (∀ k, T k) := ⟨fun s => isIntegral_pi s (fun k => hint k (s k))⟩
   have hS : Subsingleton (Ht q (sp (LaurentPolynomial (∀ k, T k))) n i) := by
     have hT : ∀ k, Subsingleton (Ht q (sp (LaurentPolynomial (T k))) n i) := by
       intro k
-      haveI := isLocalRing_closure A (P k)
+      have := isLocalRing_closure A (P k)
       have hqk : IsUnit (q : T k) := by simpa using hq.map (algebraMap A (T k))
       exact (GlobalTheory.T.tateTwistCohomology_laurent_absIntClosedLocalDomain q (T k) (GlobalTheory.aic_integralClosure_algebraicClosure (A ⧸ P k)) hqk n i).1 hn
-    haveI := subsingleton_pi q n i _ (fun k => LaurentPolynomial (T k)) hT
+    have := subsingleton_pi q n i _ (fun k => LaurentPolynomial (T k)) hT
     exact subsingleton_of_ringEquiv q n i (RingEquiv.ofBijective _ (GlobalTheory.T.laurent_pi_bijective _ T)).symm
   have hx0 : pull _ (spMap (laurentMap (algebraMap A (∀ k, T k)))) _ _ x = 0 := Subsingleton.elim _ _
   obtain ⟨t, ht⟩ := GlobalTheory.T.laurent_class_vanishes_finitely_generated_subalgebra q A (∀ k, T k) hq n i x hx0

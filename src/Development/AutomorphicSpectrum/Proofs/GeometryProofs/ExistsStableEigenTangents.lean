@@ -94,16 +94,16 @@ theorem exists_bases [DecidableEq ι] [IsLocalRing R] [Module.Finite R N] [Modul
     {ρ : O →+* Module.End R N} {τ : ι → O →+* R} (h : Splits ρ τ) :
     ∃ r : ι → ℕ, Nonempty (∀ s, Module.Basis (Fin (r s)) R (eigSp ρ (τ s))) := by
   let e := LinearEquiv.ofBijective (sumMap ρ τ) (sumMap_bij h)
-  haveI hP : Module.Projective R (∀ s, eigSp ρ (τ s)) := Module.Projective.of_equiv e.symm
+  have hP : Module.Projective R (∀ s, eigSp ρ (τ s)) := Module.Projective.of_equiv e.symm
   have key : ∀ s, Module.Free R (eigSp ρ (τ s)) ∧ Module.Finite R (eigSp ρ (τ s)) := fun s => by
-    haveI : Module.Finite R (∀ s, eigSp ρ (τ s)) := Module.Finite.equiv e.symm
-    haveI : Module.Finite R (eigSp ρ (τ s)) :=
+    have : Module.Finite R (∀ s, eigSp ρ (τ s)) := Module.Finite.equiv e.symm
+    have : Module.Finite R (eigSp ρ (τ s)) :=
       Module.Finite.of_surjective (LinearMap.proj s : (∀ s, eigSp ρ (τ s)) →ₗ[R] eigSp ρ (τ s))
         (fun y => ⟨Pi.single s y, by simp⟩)
-    haveI : Module.Projective R (eigSp ρ (τ s)) :=
+    have : Module.Projective R (eigSp ρ (τ s)) :=
       Module.Projective.of_split (LinearMap.single R (fun s => eigSp ρ (τ s)) s) (LinearMap.proj s)
         (LinearMap.ext fun y => by simp)
-    haveI : Module.FinitePresentation R (eigSp ρ (τ s)) := Module.finitePresentation_of_projective _ _
+    have : Module.FinitePresentation R (eigSp ρ (τ s)) := Module.finitePresentation_of_projective _ _
     exact ⟨Module.free_of_flat_of_isLocalRing, inferInstance⟩
   refine ⟨fun s => Module.finrank R (eigSp ρ (τ s)), ⟨fun s => ?_⟩⟩
   haveI := (key s).1
@@ -173,13 +173,13 @@ open GlobalTheory.CompanionTheory.Ar.LieVB
 theorem splits_of {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {l : Level H} (c : Coeff l)
     {S : Type} [CommRing S] (κ : c.F →+* S) {N : Type} [AddCommGroup N] [Module S N]
     (ρ : 𝓞 E →+* Module.End S N) : Splits ρ (fun s : E →+* ℂ => κ.comp (tauIn c s)) := by
-  letI : Algebra c.F S := κ.toAlgebra
+  let : Algebra c.F S := κ.toAlgebra
   exact fun m => _root_.GlobalTheory.Frames.existsUnique_eigen_sum E H l c S N ρ m
 
 theorem exists_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (l : Level H) (c : Coeff l) (X : Scheme.{0}) (t : SAB H X) (A : Type) [CommRing A] [IsLocalRing A] (x : Sp A ⟶ X) (κ : c.F →+* A) (σ : E →+* ℂ), ∃ (r : ℕ) (e : Fin r → (epsAt x ⟶ t.G)), StableEig t x κ σ e := by
   classical
   intro E _ _ _ H l c X t A _ _ x κ σ
-  haveI hsm : Smooth t.G.hom := t.semi.smooth
+  have hsm : Smooth t.G.hom := t.semi.smooth
   obtain ⟨N, _, _, ⟨M⟩⟩ := lieModel_exists X t.G A x
   obtain ⟨ρ, hρ, -⟩ := lieModel_exists_unique_act X t.G A x N M (𝓞 E) t.act.act t.act.hom t.act.one t.act.mul
     t.act.add

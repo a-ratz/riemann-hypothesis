@@ -259,7 +259,7 @@ theorem xlam_le (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {T T' : E} (F : LFlag S 
     XLam Λ F ≤ Ideal.span {(g : 𝓞 E)} • Λ ⊔ XLam Λ F' := by
   intro x hx
   refine mem_of_forall_locP (fun P => ?_)
-  haveI := P.isPrime
+  have := P.isPrime
   by_cases hgP : (g : 𝓞 E) ∈ P.asIdeal
   · obtain ⟨ξ, hlow, hdiag, hmod⟩ := hadm
     obtain ⟨c, -, hc1, hloc⟩ := hF.1 P
@@ -296,7 +296,7 @@ theorem xlam_le (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {T T' : E} (F : LFlag S 
           rw [heq]
           refine Submodule.sum_mem _ (fun i _ => ?_)
           rcases lt_trichotomy i (Fin.castSucc a) with hi | hi | hi
-          · rw [if_neg hi.ne, sub_zero]
+          · rw [ite_eq_right hi.ne, sub_zero]
             have hir : i.val < r := lt_trans hi a.castSucc_lt_last
             have hi' : Fin.castSucc (⟨i.val, hir⟩ : Fin r) = i := Fin.ext rfl
             rw [← hi', hfr, coe_smul_eq]
@@ -305,9 +305,9 @@ theorem xlam_le (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {T T' : E} (F : LFlag S 
             simp only
             omega
           · subst hi
-            rw [if_pos rfl, hdiag]
+            rw [ite_eq_left rfl, hdiag]
             simp
-          · rw [hlow _ _ hi, if_neg hi.ne']
+          · rw [hlow _ _ hi, ite_eq_right hi.ne']
             simp
         have hb := hmod' (Fin.castSucc a)
         have hrw : F.fl.e a = F'.fl.e a - (frame F' (Fin.castSucc a) - frameAct (frame F) ξ (Fin.castSucc a)) -
@@ -520,8 +520,8 @@ theorem posW_holds (D : D7) : PosW D := by
     intro τ
     by_contra hle'
     have hle : (τ t).re ≤ 0 := not_lt.1 hle'
-    letI : Algebra D.host.E ℂ := τ.toAlgebra
-    haveI : FaithfulSMul D.host.E ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 τ.injective
+    let : Algebra D.host.E ℂ := τ.toAlgebra
+    have : FaithfulSMul D.host.E ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 τ.injective
     let c : Fin (D.R.rS + 2) → Fin (VS D).rank → ℂ :=
       fun l => algebraMap D.host.E ℂ ∘ ((VS D).frame.equivFun (m l))
     have hc : LinearIndependent ℂ c := by

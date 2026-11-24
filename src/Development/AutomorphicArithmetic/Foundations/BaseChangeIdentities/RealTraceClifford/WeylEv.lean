@@ -93,7 +93,7 @@ private theorem first' {n : ℕ} (lam : Fin n → ℤ) (θ : Wt n) (z : Fin n �
     congr 1
     ext a b
     simp only [Matrix.of_apply, hz a, rhoV, c]
-    rw [← Complex.exp_nat_mul, ← Complex.exp_add, hcast b]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_add, hcast b]
     congr 1
     push_cast
     ring
@@ -103,7 +103,7 @@ private theorem first' {n : ℕ} (lam : Fin n → ℤ) (θ : Wt n) (z : Fin n �
     congr 1
     ext a b
     simp only [Matrix.of_apply, hz a, rhoV, c, Pi.add_apply]
-    rw [← Complex.exp_int_mul, ← Complex.exp_add]
+    rw [← Complex.exp_intCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     rw [hcast b]
@@ -122,7 +122,7 @@ theorem UpperTheory.RealTr.weylEv :
   refine ⟨first' lam θ z hz, ?_, ?_, ?_⟩
   · intro hinj2
     have h := first' lam ((2 : ℝ) • θ) (fun a => z a ^ 2) (fun a => by
-      rw [hz a, ← Complex.exp_nat_mul]
+      rw [hz a, ← Complex.exp_natCast_mul]
       congr 1
       simp only [Pi.smul_apply, smul_eq_mul]
       push_cast
@@ -152,7 +152,7 @@ theorem UpperTheory.RealTr.weylEv :
     congr 1
     simp only [rt, Pi.sub_apply, Complex.ofReal_sub, mul_sub, Finset.sum_sub_distrib, Pi.single_apply,
       apply_ite (fun r : ℝ => (r : ℂ)), Complex.ofReal_one, Complex.ofReal_zero, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   · intro y
     simp only [weylChar, map_div₀, RingHom.map_det, RingHom.mapMatrix_apply]
     congr 1 <;> congr 1 <;> ext i j <;> simp [map_zpow₀]

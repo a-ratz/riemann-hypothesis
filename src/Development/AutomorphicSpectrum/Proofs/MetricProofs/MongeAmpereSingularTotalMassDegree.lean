@@ -80,8 +80,8 @@ theorem AnSys.mIntegrable_potH_and_mInt_eq_degNum :
       MIntegrable S.A (fun i => S.potH (w i)) (fun _ => 1) ∧
         mInt S.A (fun i => S.potH (w i)) (fun _ => 1) = S.degNum w := by
   intro hC e σ S w
-  letI : MeasurableSpace S.X := borel S.X
-  haveI : BorelSpace S.X := ⟨rfl⟩
+  let : MeasurableSpace S.X := borel S.X
+  have : BorelSpace S.X := ⟨rfl⟩
   have hlim := hC S.A S.Θ S.L S.s S.m S.W S.potΘ S.posΘ S.potL S.sec S.snc S.norm_le
     (fun i => S.th (w i)) (fun i => S.ph (w i)) (fun i => S.phT (w i)) S.C₅ S.C S.t₀
     (fun i => S.sing (w i)) (fun i => S.reg (w i)) (fun i => S.c2 (w i))

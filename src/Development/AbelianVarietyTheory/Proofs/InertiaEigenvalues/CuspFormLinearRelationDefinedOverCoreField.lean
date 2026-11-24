@@ -56,7 +56,7 @@ theorem relation_conj {K C X : Type} [Field K] [AddCommGroup C] [Module K C] (σ
     (τ : ℂ ≃+* ℂ) (hτ : ∀ x, τ (σ x) = σ x) {n : ℕ} (a : Fin n → ℂ) (f : Fin n → C)
     (h : ∀ g, (0 : ℂ) = ∑ k, a k * Φ (f k) g) (g : X) : (0 : ℂ) = ∑ k, τ (a k) * Φ (f k) g := by
   let S := Submodule.span K (Set.range f)
-  haveI : FiniteDimensional K S := FiniteDimensional.span_of_finite K (Set.finite_range f)
+  have : FiniteDimensional K S := FiniteDimensional.span_of_finite K (Set.finite_range f)
   let b := Module.finBasis K S
   have hb := hΦ _ (fun l => (b l : C)) (b.linearIndependent.map' S.subtype (Submodule.ker_subtype _))
   let c : Fin n → Fin (Module.finrank K S) → K := fun k l => b.repr ⟨f k, Submodule.subset_span ⟨k, rfl⟩⟩ l

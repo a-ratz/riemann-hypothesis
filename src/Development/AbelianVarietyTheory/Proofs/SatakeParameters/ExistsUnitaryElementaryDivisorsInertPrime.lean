@@ -114,9 +114,9 @@ theorem selfDual_antiJ (n : ℕ) (x : Fin n → E) :
     convert this using 1
     simp [ReciprocityTheory.ChartRestriction.G.FD.herm, Formalism.UG.antiJ, Pi.single_apply, ReciprocityTheory.ChartRestriction.G.FD.cc]
     rw [Finset.sum_eq_single i]
-    · rw [if_pos (by have := i.2; omega)]
+    · rw [ite_eq_left (by have := i.2; omega)]
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hc; apply hb; ext; have := i.2; have := b.2; omega
     · intro h; exact absurd (Finset.mem_univ i) h
 
@@ -223,11 +223,11 @@ theorem exists_std [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E)]
     by_cases hij : i.val + j.val + 1 = n
     · have hj : j = i.rev := Fin.ext (by rw [Fin.val_rev]; omega)
       subst hj
-      simp only [Formalism.UG.antiJ, if_pos hij, map_one, mul_one]
+      simp only [Formalism.UG.antiJ, ite_eq_left hij, map_one, mul_one]
       show sigR (Fv (maximalRealSubfield E) v) hc.sig (inclR (Fv (maximalRealSubfield E) v) (ϖ ^ d i.1)) *
         inclR (Fv (maximalRealSubfield E) v) (ϖ ^ d i.rev.1) = 1
       rw [hσι, map_zpow₀, hσ, hd, ← map_mul, ← zpow_add₀ h0, add_neg_cancel, zpow_zero, map_one]
-    · simp only [Formalism.UG.antiJ, if_neg hij, map_zero, mul_zero, zero_mul]
+    · simp only [Formalism.UG.antiJ, ite_eq_right hij, map_zero, mul_zero, zero_mul]
   have hu := conj_mem_UJ _ hh hT
   have hTv : ∀ w, T.1 *ᵥ w = t * w := fun w => funext fun k => by
     show (Matrix.diagonal t *ᵥ w) k = t k * w k
@@ -249,8 +249,8 @@ open GlobalTheory.PlaceComp
 
 theorem exists_suppF_divAt : ∀ {D : D7} (V : HSp D) (P : HeightOneSpectrum (𝓞 D.host.E)) (e : Formalism.L2.Theta.AE D) (x : 𝓞 D.host.F) (ϖ : 𝓞 D.host.E) (d : List ℤ), IsPrimeIdem P e e → (ϖ : D.host.E) = algebraMap D.host.F D.host.E (x : D.host.F) → ϖ ∈ P.asIdeal → ϖ ∉ P.asIdeal ^ 2 → d.length = V.rank → dualLab d = d → ∃ g : GA D V, SuppF V e g ∧ DivAt V e (ϖ : D.host.E) d g := by
   intro D V P e x ϖ d hP hx h1 h2 hlen hdual
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
   obtain ⟨v, hf, hef⟩ : ∃ v, GlobalTheory.PlaceComp.IsIdemOf D.host.E v e ∧ e * e = e := by
     rcases id hP with ⟨⟨⟨a1, a2, v, ε, ⟨a, rfl, b1, b2⟩, a3⟩, -⟩, he⟩ | ⟨-, ⟨v, ε, ⟨a, rfl, b1, b2⟩, a3⟩, -⟩
     · rw [← he] at a3

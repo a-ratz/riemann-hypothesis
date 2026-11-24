@@ -187,12 +187,12 @@ theorem exists_length_quotient_span_le (hL : QuotLocalStatement) {R F : Type} [C
     rw [ordAt_zpow, hπ1, mul_one]
   have hnn := ord_nonneg v _ hdF0
   have htop : Module.length (Rv F v) (Q ⧸ Submodule.span (Rv F v) (Set.range th)) ≠ ⊤ :=
-    ne_top_of_le_ne_top (ENat.coe_ne_top _) hlen
+    ne_top_of_le_ne_top (ENat.natCast_ne_top _) hlen
   refine ⟨(Module.length (Rv F v) (Q ⧸ Submodule.span (Rv F v) (Set.range th))).toNat,
-    (ENat.coe_toNat htop).symm, ?_⟩
+    (ENat.natCast_toNat htop).symm, ?_⟩
   have hle : (Module.length (Rv F v) (Q ⧸ Submodule.span (Rv F v) (Set.range th))).toNat ≤
       (ordAt v (((Matrix.of fun i j => c' i (th j)).det : Rv F v) : F)).toNat := by
-    rw [← ENat.coe_toNat htop] at hlen
+    rw [← ENat.natCast_toNat htop] at hlen
     exact_mod_cast hlen
   have hle' : ((Module.length (Rv F v) (Q ⧸ Submodule.span (Rv F v) (Set.range th))).toNat : ℝ) ≤
       (ordAt v (((Matrix.of fun i j => c' i (th j)).det : Rv F v) : F) : ℝ) := by
@@ -277,8 +277,8 @@ theorem local_len (hL : QuotLocalStatement) (P : Submodule K₁ U) (Mw : Submodu
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective N q
     exact (Submodule.Quotient.mk_eq_zero N (x := y)).mpr
       ((hmemN y).mpr ((Submodule.Quotient.mk_eq_zero P (x := (y : U))).mp hq))
-  haveI : Module.Finite (Rv K₁ w) Mw := Module.Finite.iff_fg.mpr hMw
-  haveI : NoZeroSMulDivisors (Rv K₁ w) (Mw ⧸ N) := by
+  have : Module.Finite (Rv K₁ w) Mw := Module.Finite.iff_fg.mpr hMw
+  have : NoZeroSMulDivisors (Rv K₁ w) (Mw ⧸ N) := by
     refine ⟨fun {r q} hrq => ?_⟩
     by_cases hr : r = 0
     · exact Or.inl hr
@@ -291,7 +291,7 @@ theorem local_len (hL : QuotLocalStatement) (P : Submodule K₁ U) (Mw : Submodu
       exact fun h => hr (Subtype.ext h)
     have h2 : (r • (1 : K₁)) • ι q = 0 := by rw [smul_one_smul]; exact h1
     exact (smul_eq_zero.mp h2).resolve_left hr'
-  haveI : Module.Free (Rv K₁ w) (Mw ⧸ N) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free (Rv K₁ w) (Mw ⧸ N) := Module.free_of_finite_type_torsion_free'
 
   have hthli : LinearIndependent (Rv K₁ w) th := by
     apply LinearIndependent.of_comp (LinearMap.pi fun i => cQ i)

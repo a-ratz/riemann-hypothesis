@@ -306,7 +306,7 @@ theorem exists_low : ∀ (D : D7), ∃ c0 : Big D, ∀ (l : ℕ) [Fact l.Prime] 
       have hmem : w ∈ (placesOver_finite' D.host.E l (Fact.out : l.Prime).ne_zero).toFinset := by simpa using hw
       exact le_iSup₂ (f := fun w (_ : w ∈ (placesOver_finite' D.host.E l (Fact.out : l.Prime).ne_zero).toFinset) =>
         (bridgeLow D l w).1) w hmem
-    have e : bridgeLow D l w = (Classical.choose_spec hex).choose := dif_pos hw
+    have e : bridgeLow D l w = (Classical.choose_spec hex).choose := dite_eq_left hw
     have hL' : (Classical.choose_spec hex).choose.1 ≤ K0.1 := e ▸ hL
     obtain ⟨Bw, hBj, -⟩ := hspec.2 K0 hL'
     exact ⟨Bw, fun x => by rw [hBj]; exact hspec.1 x⟩
@@ -517,11 +517,11 @@ theorem clC_mono (l : ℕ) [Fact l.Prime] {F F' : IntermediateField ℚ_[l] (Pad
 
 theorem exists_prime_mem (K : Type) [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) :
     ∃ l : ℕ, l.Prime ∧ ((l : ℕ) : 𝓞 K) ∈ w.asIdeal := by
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  letI : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  let : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 K ⧸ w.asIdeal)
-  haveI := hp
+  have := hp
   exact ⟨p, CharP.char_is_prime (𝓞 K ⧸ w.asIdeal) p,
     Ideal.Quotient.eq_zero_iff_mem.1 (by rw [map_natCast]; exact CharP.cast_eq_zero _ p)⟩
 
@@ -653,7 +653,7 @@ theorem read_of_isGal {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebr
     Formalism.L2.NC.Read pl r (algebraMap O (FractionRing O)) eL embC χH w := by
   have hall := hχ.and ((unr_ae χ).and (away_ae (E := E) l (Fact.out : l.Prime).ne_zero))
   refine ⟨(Filter.eventually_cofinite.1 hall).toFinset, fun P hP => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hP
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hP
   obtain ⟨⟨hAt, y, hy⟩, hu, hl⟩ := hP
   refine ⟨_, hAt, y, ?_, fun σ hσ => frob_read ha h eL embC hL (Or.inl hl) hu (hpl P) hσ hy⟩
   have h0 : (Real.sqrt (normV P) : ℂ) ≠ 0 := by
@@ -681,21 +681,21 @@ theorem exists_ringSpec (hA : GlobalTheory.Published.GlobalArtinReciprocity) : �
   obtain ⟨c0, hc0⟩ := exists_padicBaseField_integral_places D
   refine ⟨c0, fun b0 b1 Sx hb => ?_⟩
   choose lw hlw using fun w : HeightOneSpectrum (𝓞 ↥D.LL0) => exists_prime_mem ↥D.LL0 w
-  haveI hF : ∀ w, Fact (lw w).Prime := fun w => ⟨(hlw w).1⟩
+  have hF : ∀ w, Fact (lw w).Prime := fun w => ⟨(hlw w).1⟩
   set j0 : ∀ w, ↥D.LL0 →+* PadicAlgCl (lw w) := fun w => J (lw w) w (hlw w).2 with hj0
   set K0 : ∀ w, Loc.FinExt (lw w) := fun w => b0 (lw w) (j0 w) with hK0
   set Lw : ∀ w, Loc.FinExt (lw w) := fun w => b1 (lw w) (j0 w) with hLw
   have hco := fun w => GlobalTheory.CoefInt.integers_laws (lw w) (K0 w)
-  haveI hdvr0 : ∀ w, IsDiscreteValuationRing ↥(Loc.OL (K0 w)) := fun w => (hco w).fst
-  haveI hfin0 : ∀ w, Module.Finite ℤ_[lw w] ↥(Loc.OL (K0 w)) := fun w => (hco w).snd.1
-  haveI hfr0 : ∀ w, IsFractionRing ↥(Loc.OL (K0 w)) ↥(K0 w).1 := fun w => (hco w).snd.2.2.2.2
+  have hdvr0 : ∀ w, IsDiscreteValuationRing ↥(Loc.OL (K0 w)) := fun w => (hco w).fst
+  have hfin0 : ∀ w, Module.Finite ℤ_[lw w] ↥(Loc.OL (K0 w)) := fun w => (hco w).snd.1
+  have hfr0 : ∀ w, IsFractionRing ↥(Loc.OL (K0 w)) ↥(K0 w).1 := fun w => (hco w).snd.2.2.2.2
   have hclc := fun w k => _root_.GlobalTheory.CycClosure.exists_cyclotomic_integers (lw w) (K0 w) (Lw w) k
   have hmu0 : ∀ w, muK (lw w) 0 = ⊥ := fun w => (hclc w 0).snd.2.2.2.2.1
   have hkt : ∀ w, Kt (lw w) (K0 w) (Lw w) ⊔ muK (lw w) 0 = Kt (lw w) (K0 w) (Lw w) := fun w => by
     rw [hmu0 w, sup_bot_eq]
   have hclc0 := fun w => hkt w ▸ hclc w 0
-  haveI hdvrO : ∀ w, IsDiscreteValuationRing ↥(clC (lw w) (Kt (lw w) (K0 w) (Lw w))) := fun w => (hclc0 w).fst
-  haveI hdvrOk : ∀ w k, IsDiscreteValuationRing ↥(clC (lw w) (Kt (lw w) (K0 w) (Lw w) ⊔ muK (lw w) k)) :=
+  have hdvrO : ∀ w, IsDiscreteValuationRing ↥(clC (lw w) (Kt (lw w) (K0 w) (Lw w))) := fun w => (hclc0 w).fst
+  have hdvrOk : ∀ w k, IsDiscreteValuationRing ↥(clC (lw w) (Kt (lw w) (K0 w) (Lw w) ⊔ muK (lw w) k)) :=
     fun w k => (hclc w k).fst
   choose toO htoO using fun w => exists_toClC (lw w) (K0 w) (Lw w)
   choose cc hcc using GlobalTheory.MemN.exists_isCMConjOm_nData D.R D.host D.what₂ D.nd
@@ -965,7 +965,7 @@ theorem exists_ringSpec (hA : GlobalTheory.Published.GlobalArtinReciprocity) : �
         intro x
         cases b
         · rw [sideIso_false]
-          simp only [Bool.false_eq_true, if_false]
+          simp only [Bool.false_eq_true, ite_false]
           rw [hf', Complex.conj_conj]
         · exact hf s x
       ringSpec_sidedEmbedding_fixedField := fun s b x y h => by

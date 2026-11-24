@@ -176,7 +176,7 @@ lemma exists_quot (h0 : constantCoeff ℓ = 0) (h1 : coeff 1 ℓ ≠ 0) {f D N :
         rw [hcc] at this
         simpa [h0] using this
       obtain ⟨s, hs⟩ := hg
-      refine ih (dslope g 0) ⟨_, hs.has_fpower_series_dslope_fslope⟩ ?_
+      refine ih (dslope g 0) ⟨_, hs.dslope_fslope⟩ ?_
       filter_upwards [hge, self_mem_nhdsWithin] with z a hz
       have hz' : z ≠ 0 := hz
       rw [dslope_of_ne _ hz', slope_def_field, hg0, a]

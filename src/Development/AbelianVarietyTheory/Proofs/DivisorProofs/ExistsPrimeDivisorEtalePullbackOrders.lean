@@ -125,11 +125,11 @@ theorem log_ordFrac_map {K L : Type} [Field K] [Field L] (V : ValuationSubring K
 theorem isFreeGen_formMap {k A B : Type*} [CommRing k] [CommRing A] [CommRing B] {α : k →+* A}
     {β : k →+* B} {ρ : A →+* B} (hρ : ρ.FormallyEtale) (h : ρ.comp α = β) {D : ℕ}
     {ω : Forms α D} (hω : IsFreeGen A ω) : IsFreeGen B (TopForm.formMap D ρ h ω) := by
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
-  haveI : Algebra.FormallyEtale A B := hρ
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' h.symm
+  have : Algebra.FormallyEtale A B := hρ
   exact hω.of_isBaseChange (isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale k A B) D)
 
@@ -159,20 +159,20 @@ theorem exists_isAt_ord_formOrd : ∀ (M W : Scheme.{0}) [IsIntegral M] [IsInteg
       (∀ g : W.functionFieldˣ, E'.ord (Units.map (functionFieldMap f).toMonoidHom g) = E.ord g) ∧
       ∀ η : RatForms p n, η ≠ 0 → (fun ω => @dite ℤ (∃ a, E'.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (GlobalTheory.EtaleKlt.ratPull p f n η) = (fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) η := by
   intro M W _ _ _ _ p f _ n _ _ U hU z hz E' hE'
-  haveI := hU
+  have := hU
   obtain ⟨w, rfl⟩ : ∃ w : U.toScheme, U.ι w = z := ⟨⟨z, hz⟩, rfl⟩
-  haveI := SmoothOfRelativeDimension.smooth n p
-  haveI := SmoothOfRelativeDimension.smooth n (f ≫ p)
-  haveI : GlobalTheory.IsNormalScheme W := GlobalTheory.ModifSections.isNormalScheme_of_smooth p
-  haveI : LocallyOfFiniteType f := locallyOfFiniteType_of_comp f p
-  haveI hB : IsDiscreteValuationRing (M.presheaf.stalk (U.ι w)) :=
+  have := SmoothOfRelativeDimension.smooth n p
+  have := SmoothOfRelativeDimension.smooth n (f ≫ p)
+  have : GlobalTheory.IsNormalScheme W := GlobalTheory.ModifSections.isNormalScheme_of_smooth p
+  have : LocallyOfFiniteType f := locallyOfFiniteType_of_comp f p
+  have hB : IsDiscreteValuationRing (M.presheaf.stalk (U.ι w)) :=
     IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing hE'.equiv.symm
   have hφ := formallyEtale_stalkMap f U w
   have hmax := map_maximalIdeal_stalk f (U.ι w) hφ
   have hc := coheight_apply_eq_one f U w hE'.coheight_eq_one
     (IsDiscreteValuationRing.not_a_field _)
   obtain ⟨E, hE⟩ := DivOver.exists_isAt_of_coheight_eq_one (p := p) hc
-  haveI hA : IsDiscreteValuationRing (W.presheaf.stalk (f (U.ι w))) :=
+  have hA : IsDiscreteValuationRing (W.presheaf.stalk (f (U.ι w))) :=
     GlobalTheory.IsNormalScheme.isDiscreteValuationRing_stalk hc
   let ψ : E.ring →+* E'.ring :=
     hE'.equiv.toRingHom.comp ((f.stalkMap (U.ι w)).hom.comp hE.equiv.symm.toRingHom)

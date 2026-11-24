@@ -190,11 +190,11 @@ theorem prodMeas : ProdMeas := by
   obtain ⟨a1, a2, a3, a4, -⟩ := lattice_Mx D r p
   obtain ⟨b1, b2, b3, b4, -⟩ := lattice_Mx D s p
   obtain ⟨c1, c2, c3, c4, -⟩ := lattice_Mx D (r + s) p
-  haveI : BorelSpace (Mx D r p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D s p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D (r + s) p) := ⟨rfl⟩
-  haveI := hr.1
-  haveI := hs.1
+  have : BorelSpace (Mx D r p) := ⟨rfl⟩
+  have : BorelSpace (Mx D s p) := ⟨rfl⟩
+  have : BorelSpace (Mx D (r + s) p) := ⟨rfl⟩
+  have := hr.1
+  have := hs.1
   let J : Mx D r p × Mx D s p ≃ᵐ Mx D (r + s) p := (rowH (D := D) (r := r) (s := s) (p := p)).toMeasurableEquiv
   have hJ : ∀ a b, J (a + b) = J a + J b := fun a b => rowJ_add a.1 b.1 a.2 b.2
   have hJf : (J : Mx D r p × Mx D s p → Mx D (r + s) p) = fun z => rowJ z.1 z.2 := rfl

@@ -73,7 +73,7 @@ theorem borel_diag_ne_zero {Ψ : Finset (E →+* ℂ)} {r : ℕ} {b : Frame Ψ r
     (τ : Ψ) (i : Fin r) : b τ i i ≠ 0 := by
   have hdet := (hb τ).1
   have htri : (mat b τ).BlockTriangular id := fun a c h => (hb τ).2 a c h
-  rw [Matrix.det_of_upperTriangular htri] at hdet
+  rw [Matrix.det_of_isUpperTriangular htri] at hdet
   exact (Finset.prod_ne_zero_iff.1 hdet) i (Finset.mem_univ i)
 
 

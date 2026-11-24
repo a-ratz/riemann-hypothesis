@@ -108,17 +108,17 @@ private theorem position_left {Z : Finset (Pl E)} (T : Finset (Pl E)) (L : Lv a 
   intro k hk y
   unfold intersection_update_fsHerm_neg_one
   by_cases h1 : w ∈ Z
-  · simp only [if_pos h1]
+  · simp only [ite_eq_left h1]
     exact ((hφ w h1).2 k hk y).1
-  · simp only [if_neg h1]
+  · simp only [ite_eq_right h1]
     have hk' : k ∈ K2 a b w := by
       have ho := L.off w h1
       rw [ho.1, ho.2] at hk
       exact hk
     by_cases h2 : w ∈ T
-    · simp only [if_pos h2]
+    · simp only [ite_eq_left h2]
       exact ((UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.exHecke2 E a b w (e w)).2 k hk' y).1
-    · simp only [if_neg h2]
+    · simp only [ite_eq_right h2]
       have hc : k * y ∈ (K2 a b w : Set (GLw a w × GLw b w)) ↔ y ∈ (K2 a b w : Set (GLw a w × GLw b w)) :=
         (K2 a b w).mul_mem_cancel_left hk'
       by_cases hy : y ∈ (K2 a b w : Set (GLw a w × GLw b w))
@@ -134,10 +134,10 @@ private theorem relIndex_ne {Z : Finset (Pl E)} (L : Lv a b Z) (w : Pl E) :
   have ho : IsOpen (((L.L₁ w).prod (L.L₂ w) : Subgroup _) : Set (GLw a w × GLw b w)) := by
     rw [Subgroup.coe_prod]
     exact (L.open₁ w).prod (L.open₂ w)
-  haveI : CompactSpace (K2 a b w) := isCompact_iff_compactSpace.1 hc
+  have : CompactSpace (K2 a b w) := isCompact_iff_compactSpace.1 hc
   have ho' : IsOpen ((((L.L₁ w).prod (L.L₂ w)).subgroupOf (K2 a b w) : Subgroup (K2 a b w)) : Set (K2 a b w)) :=
-    ho.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho'
+    ho.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ ho'
   exact Subgroup.index_ne_zero_of_finite
 
 private theorem ln_one_ne {Z : Finset (Pl E)} (L : Lv a b Z) (w : Pl E) : L.ln w 1 ≠ 0 := by
@@ -171,7 +171,7 @@ theorem idmAct : IdmAct := by
     show A.blk.vol⁻¹ * finFn S _ _ _ = A.blk.vol⁻¹ * finFn S _ _ _
     rw [finFn_left L (fun w => position_left T L hφ e₁ w) (fun w => position_left T L hfixln e₂ w) hu₁ hu₂]
   · intro f hf
-    haveI : BorelSpace (Hf E a b) := ⟨rfl⟩
+    have : BorelSpace (Hf E a b) := ⟨rfl⟩
     set K : Subgroup (Hf E a b) := (Kg S L.L₁).prod (Kg S L.L₂) with hKdef
     have hKo : IsOpen (K : Set (Hf E a b)) := by
       rw [hKdef, Subgroup.coe_prod]

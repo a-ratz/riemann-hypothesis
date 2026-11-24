@@ -60,7 +60,7 @@ open AlgebraicGeometry.Scheme.Hom in
 theorem closedAt_preimage {Z S : Scheme.{0}} (g : Z ⟶ S) [QuasiCompact g] [QuasiSeparated g]
     (U : S.Opens) (hU : IsAffineOpen U) : ClosedAt g.toNormalization (g.fromNormalization ⁻¹ᵁ U) := by
   intro b hb
-  letI := (g.app U).hom.toAlgebra
+  let := (g.app U).hom.toAlgebra
   have hle : g ⁻¹ᵁ U ≤ g.toNormalization ⁻¹ᵁ g.fromNormalization ⁻¹ᵁ U := by
     simp [← Scheme.Hom.comp_preimage]
   have hle' : g.toNormalization ⁻¹ᵁ g.fromNormalization ⁻¹ᵁ U ≤ g ⁻¹ᵁ U := by

@@ -64,4 +64,4 @@ theorem UpperTheory.V.Z.Sym.Al.secSpec :
   refine ⟨h1.1, h1.2, fun x hx => ?_, ?_⟩
   · rw [h2, ← he ⟨x, hx⟩, e.symm_apply_apply]
   · rw [show (secW n w : _ → _) = fun g => (e.symm g : UA L n) from funext h2]
-    exact continuous_subtype_val.comp e.symm.continuous
+    exact continuous_subtypeVal.comp e.symm.continuous

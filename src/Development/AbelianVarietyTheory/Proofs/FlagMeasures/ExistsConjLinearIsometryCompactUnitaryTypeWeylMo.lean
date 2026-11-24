@@ -489,7 +489,7 @@ theorem exists_conj_weyl : ∀ (k n : ℕ) (h : k = n) (lam : DomWeight n) (u : 
       rw [map_smul e, h1, inv_smul_smul₀ hd]
     rcases hirr _ hle hst with h0 | h0
     · exfalso
-      haveI : Nontrivial H := hπ0.1
+      have : Nontrivial H := hπ0.1
       obtain ⟨x, hx⟩ := exists_ne (0 : H)
       have hex : e x ∈ LinearMap.range e := ⟨x, rfl⟩
       rw [h0, Submodule.mem_bot] at hex
@@ -503,7 +503,7 @@ theorem exists_conj_weyl : ∀ (k n : ℕ) (h : k = n) (lam : DomWeight n) (u : 
       (fun x y y' => by simp only [map_add (f := _), normFock_add_left'])
       (fun c x y => by simp only [map_smul, normFock_smul_left', RingHom.id_apply, smul_eq_mul]),
       fun _ _ => rfl⟩
-  haveI : FiniteDimensional ℂ W := hfd
+  have : FiniteDimensional ℂ W := hfd
   have hE := fockF_ext_real lam
   have hEim : (Formalism.REAL.fockF (extremal ℂ k lam) (extremal ℂ k lam)).im = 0 :=
     (Formalism.GradedWeylDivisibility.fockPos _ _ (extremal_ne_zero' lam)).2

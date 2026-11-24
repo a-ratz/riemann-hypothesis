@@ -204,9 +204,9 @@ theorem exists_local_period_matrix : Out.Laws → ThetaUnifAV → ∀ (K : Type)
   intro hL hT K _ σ X s Q g k m l B y b₀ P₀ φ₀ τ₀ lev₀ hft hk hl0 hB hb₀ hyσ hy ⟨hφ₀, hg₀, hL₀⟩
     ⟨hg, _, hp₀, u, hΛ, w₀, hlev₀⟩ hlev
   subst hg
-  haveI : CharZero K := σ.charZero
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
-  haveI := Q.isAb.proper
+  have : CharZero K := σ.charZero
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have := Q.isAb.proper
   obtain ⟨Φ₀, hΦ₀, hΦW₀⟩ := exists_push_iff Q P₀ hφ₀ hL₀
   have he₀ : IsExp (y b₀) fun z => Φ₀ (u.ex z) := by
     obtain ⟨rig, hrig⟩ := P₀.rigid
@@ -389,7 +389,7 @@ theorem exists_separating_pairs {R S : Type} [CommRing R] [CommRing S] (φ : R �
   refine ⟨s, ?_, fun e e' hee hne => ?_⟩
 
   · simpa [map_sum] using h1
-  · letI : Algebra R ℂ := (e.comp φ).toAlgebra
+  · let : Algebra R ℂ := (e.comp φ).toAlgebra
     let a : S →ₐ[R] ℂ := { e with commutes' := fun _ => rfl }
     let a' : S →ₐ[R] ℂ := { e' with commutes' := fun r => (RingHom.congr_fun hee r).symm }
     let F := Algebra.TensorProduct.lift a a' (fun _ _ => Commute.all _ _)
@@ -703,7 +703,7 @@ theorem exists_etale_sqrt (hL : Out.Laws) {K : Type} [Field K] {ζ : K} (σ : K 
   let f : Sp Γ(F.X, U) ⟶ F.X := hU.fromSpec
   have : IsOpenImmersion f := inferInstanceAs (IsOpenImmersion hU.fromSpec)
   obtain ⟨β, -⟩ := Spec.map_surjective (f ≫ F.s)
-  letI : Algebra ℚ Γ(F.X, U) := (β.hom.comp (algebraMap ℚ K)).toAlgebra
+  let : Algebra ℚ Γ(F.X, U) := (β.hom.comp (algebraMap ℚ K)).toAlgebra
   obtain ⟨R, _, _, Q, φ, ⟨h₁, h₂, h₃⟩, hQ, hT⟩ := GlobalTheory.T.exists_symmetric_sqrt_principal_siegel_finite_etale hL h k K ζ Γ(F.X, U) F.X F.s F.univ f hk hζ F.princ
   have : IsFinite (spMap (algebraMap Γ(F.X, U) R)) :=
     (IsFinite.SpecMap_iff _).2 (RingHom.finite_algebraMap.2 h₁)

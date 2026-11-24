@@ -110,7 +110,7 @@ theorem rbP_map_zeta (Bs : B.RealPlaceData k r Wp Wq) :
     rw [ae_iff]
     refine measure_mono_null (t := ((UWset k r Bs.z)ᶜ ×ˢ Set.univ) ∪ (Set.univ ×ˢ (UWset k r Bs.z')ᶜ)) ?_ ?_
     · intro p hp
-      simp only [Set.mem_setOf_eq, not_and_or] at hp
+      simp only [Set.mem_ofPred_eq, not_and_or] at hp
       rcases hp with h | h
       · exact Or.inl ⟨h, trivial⟩
       · exact Or.inr ⟨trivial, h⟩
@@ -174,13 +174,13 @@ theorem weight_annulus (k : ℕ) {T T' : ℝ} (hTT : 0 ≤ T * T') :
       _ ≤ ∫⁻ ζ in A', rbW k T T' ζ := by
         refine setLIntegral_mono (measurable_radial_weight k _ _) fun ζ hζ => ?_
         unfold rbW B2.zWeight
-        rw [if_pos (by linarith [hζ.1])]
+        rw [ite_eq_left (by linarith [hζ.1])]
         exact ENNReal.ofReal_le_ofReal (pow_le_pow_left₀ (by norm_num) (by linarith [hζ.1]) _)
       _ ≤ ∫⁻ ζ in A, rbW k T T' ζ := lintegral_mono_set hA'A
   · calc ∫⁻ ζ in A, rbW k T T' ζ ≤ ∫⁻ _ in A, (1 : ℝ≥0∞) := by
           refine setLIntegral_mono measurable_const fun ζ hζ => ?_
           unfold rbW B2.zWeight
-          rw [if_pos hζ.1.le]
+          rw [ite_eq_left hζ.1.le]
           rw [ENNReal.ofReal_le_one]
           exact pow_le_one₀ (by linarith [hζ.1]) (by linarith [hζ.2])
       _ = volume A := by rw [setLIntegral_const, one_mul]
@@ -207,7 +207,7 @@ theorem const_one (Bs : B.RealPlaceData k r Wp Wq) (μ : Measure (Mt k r)) (C : 
   set A : Set ℂ := {ζ | Tz k r Bs.z * Tz k r Bs.z' < Complex.normSq ζ ∧
     Complex.normSq ζ < Tz k r Bs.z * Tz k r Bs.z' + 1}
   have h3 := congrArg (fun ν : Measure ℂ => ν A) h2
-  simp only [Measure.smul_apply, smul_eq_mul] at h3
+  simp only [smul_apply, smul_eq_mul] at h3
   have := (ENNReal.mul_eq_right hp.ne' hf.ne).1 h3.symm
   exact this
 
@@ -254,7 +254,7 @@ section exist
 theorem haar_smul {k r : ℕ} {U : Set (B.Mat k r)} {μ : Measure (Mt k r)} (h : B.IsHaarOn U μ) {c : ℝ≥0∞}
     (hc0 : c ≠ 0) (hcT : c ≠ ∞) : B.IsHaarOn U (c • μ) := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · rw [Measure.smul_apply, h.conc, smul_zero]
+  · rw [smul_apply, h.conc, smul_zero]
   · intro a ha
     have hcont : Continuous (lmulM a : Mt k r → Mt k r) := by
       unfold lmulM
@@ -266,7 +266,7 @@ theorem haar_smul {k r : ℕ} {U : Set (B.Mat k r)} {μ : Measure (Mt k r)} (h :
       exact (continuous_id (X := B.Mat k r)).matrix_mul continuous_const
     rw [Measure.map_smul c hcont.measurable.aemeasurable, h.right a ha]
   · intro K hK
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top (lt_top_iff_ne_top.2 hcT) (h.finite_compact K hK)
   · intro h0
     apply h.ne_zero

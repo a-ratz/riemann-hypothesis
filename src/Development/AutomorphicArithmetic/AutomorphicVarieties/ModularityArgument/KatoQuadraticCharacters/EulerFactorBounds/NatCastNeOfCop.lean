@@ -67,7 +67,7 @@ theorem rz_toQ (M : ℕ) [NeZero M] (a : Fin 2 → ℤ) (i : Fin 2) :
   have hv : (((a i : ZMod M).val : ℤ)) = a i % M := ZMod.val_intCast (a i)
   have k : a i % M + M * (a i / M) = a i := by rw [Int.emod_def]; ring
   simp only [toQ, rz]
-  rw [div_add' _ _ _ hM, div_left_inj' hM]
+  rw [div_add' _ _ _ hM, div_left_inj₀ hM]
   have e : (((a i : ZMod M).val : ℕ) : ℚ) = ((a i % M : ℤ) : ℚ) := by exact_mod_cast hv
   rw [e]
   have k' : ((a i % M + M * (a i / M) : ℤ) : ℚ) = ((a i : ℤ) : ℚ) := by exact_mod_cast k
@@ -96,7 +96,7 @@ theorem up_rz (k M : ℕ) [NeZero M] (a : Fin 2 → ℤ) : up k M (rz M a) = rz 
 
 theorem two_smul_rz_ne {M l : ℕ} (hl : l.Prime) (h2 : l ≠ 2) (h : l ∣ M) (a : Fin 2 → ℤ) (i : Fin 2)
     (ha : ((a i : ℤ) : ZMod l) ≠ 0) : (2 : ZMod M) • rz M a ≠ 0 := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   intro hz
   have h' := congrFun hz i
   simp only [Pi.smul_apply, Pi.zero_apply, smul_eq_mul, rz] at h'
@@ -118,7 +118,7 @@ theorem bar_mul {l N p : ℕ} (L : ℕ) (hl : l ≠ 0) (hN : N ≠ 0) (hp : Nat.
   have h1 : Nat.Coprime p l := Nat.Coprime.coprime_dvd_right (dvd_mul_right l N) hp
   have h2 : Nat.Coprime p N := Nat.Coprime.coprime_dvd_right (dvd_mul_left N l) hp
   have hcop : Nat.Coprime p (N * l ^ L) := Nat.Coprime.mul_right h2 (Nat.Coprime.pow_right L h1)
-  haveI : NeZero (N * l ^ L) := ⟨mul_ne_zero hN (pow_ne_zero _ hl)⟩
+  have : NeZero (N * l ^ L) := ⟨mul_ne_zero hN (pow_ne_zero _ hl)⟩
   apply (ZMod.intCast_eq_intCast_iff_dvd_sub 1 _ _).1
   unfold bar
   push_cast

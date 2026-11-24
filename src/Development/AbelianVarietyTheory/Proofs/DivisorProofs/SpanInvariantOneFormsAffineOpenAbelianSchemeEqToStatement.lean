@@ -71,8 +71,8 @@ variable {R : Type} [CommRing R]
 
 theorem dVal_smul {B D : Type} [CommRing B] [Algebra R B] [CommRing D] [Algebra R D]
     (φ : B →ₐ[R] DualNumber D) (b : B) (m : Ω[B⁄R]) : dVal φ (b • m) = redHom φ b * dVal φ m := by
-  letI : Algebra B D := (redHom φ).toAlgebra
-  haveI : IsScalarTower R B D := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
+  let : Algebra B D := (redHom φ).toAlgebra
+  have : IsScalarTower R B D := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
   exact (map_smul (Derivation.liftKaehlerDifferential _) b m).trans (Algebra.smul_def _ _)
 
 variable {A : Over (Sp R)} [GrpObj A] {W : Type} [AddCommGroup W] [Module R W]
@@ -90,8 +90,8 @@ theorem exists_tangent (T : TanRep A W) (U : A.left.affineOpens) {D : Type} [Com
       tau A D D (spMap (redHom φ) ≫ affPt A.hom U) z =
         spMap (φ : Sec A.hom U.1 →+* DualNumber D) ≫ affPt A.hom U ∧
       ∀ w, T.Φ z w = dVal φ (eU T (tr A) U w) := by
-  letI := opMod (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R]
-  haveI : IsCentralScalar (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R] := ⟨fun _ _ ↦ rfl⟩
+  let := opMod (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R]
+  have : IsCentralScalar (Sec A.hom U.1) Ω[Sec A.hom U.1⁄R] := ⟨fun _ _ ↦ rfl⟩
   obtain ⟨hz0, hτz0⟩ := back_spec (τ := tr A) U tr_bij (pt A U (KaehlerDifferential.D R (Sec A.hom U.1)))
     (pt_lifts A U _)
   let α : Sec A.hom U.1 →ₐ[R] D := { redHom φ with commutes' := redHom_algebraMap φ }

@@ -103,7 +103,7 @@ private lemma mul_self_eq_one_of_quadratic {F E : Type} [Field F] [NumberField F
     intro i j hij
     fin_cases i <;> fin_cases j <;> simp [f] at hij ⊢
     all_goals have hx := fun x => DFunLike.congr_fun hij x
-    all_goals simp only [AlgHom.coe_id, id_eq, AlgEquiv.coe_algHom, AlgEquiv.mul_apply] at hx
+    all_goals simp only [AlgHom.coe_id, id_eq, AlgEquiv.coe_toAlgHom, AlgEquiv.mul_apply] at hx
     all_goals first
       | exact hc (AlgEquiv.ext fun x => (hx x).symm)
       | exact hc (AlgEquiv.ext fun x => hx x)
@@ -127,7 +127,7 @@ private lemma sg_sg_of_quadratic {F E : Type} [Field F] [NumberField F] [Field E
   | zero => simp
   | tmul a x =>
     simp only [_root_.GlobalTheory.AdLat.sg, Algebra.TensorProduct.map_tmul, AlgHom.id_apply,
-      AlgEquiv.coe_algHom]
+      AlgEquiv.coe_toAlgHom]
     rw [← AlgEquiv.mul_apply, hcc, AlgEquiv.one_apply]
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
 
@@ -424,7 +424,7 @@ theorem _root_.GlobalTheory.AdLat.exists_integral_unit_root : ∀ (F E : Type) [
 
     simp only [map_sum, map_mul]
     simp only [hevv, hev, hdv, ite_mul, one_mul, zero_mul, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     exact inv_mul_cancel₀ (hne v)
   refine ⟨∑ q, (e q ⊗ₜ[F] (1 : E)) * m q.1, ?_, ⟨(d ⊗ₜ[F] (1 : E)) *
     ∑ q, (e q ⊗ₜ[F] (1 : E)) * σ (m q.2), ?_, ?_⟩, ?_⟩

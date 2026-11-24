@@ -140,9 +140,9 @@ def lmulL : Mat n →L[ℝ] Mat n →L[ℝ] Mat n :=
       map_smul' := fun c M => by ext x : 1; simp [Matrix.smul_mul] }
 
 theorem secondCountable_G : SecondCountableTopology (G n) := by
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) ℂ)).symm.isEmbedding.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
@@ -159,9 +159,9 @@ theorem nAvg_of (hIS : IntSmooth) (hLg : LgCpt) (hNU : NilUni) : NAvg := by
   intro n _ _ E W₁ W₂ hW N hN ν _ φ hφ hφR
   obtain ⟨R, hR⟩ := hφR
   obtain ⟨hNc, hinv⟩ := hNU n W₁ W₂ hW N hN
-  haveI := hinv ν
-  haveI : SecondCountableTopology (G n) := secondCountable_G
-  haveI : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have := hinv ν
+  have : SecondCountableTopology (G n) := secondCountable_G
+  have : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
   obtain ⟨hφs, hφk⟩ := hφ
   have hφc : ContinuousOn φ (GLs n) := hφs.continuousOn
   have hmem : ∀ u : N, ∀ x ∈ GLs n, ((u : G n) : Mat n) * x ∈ GLs n :=

@@ -202,9 +202,9 @@ theorem highest_weight_shift_eq_det_mul (R : Type) [CommRing R] {r : ℕ} (ν : 
       intro i
       have hs : (Fin.castSucc i).val + 1 < r + 1 := by
         have := i.isLt
-        simp only [Fin.coe_castSucc]
+        simp only [Fin.val_castSucc]
         omega
-      simp only [nuNext, dif_pos hs]
+      simp only [nuNext, dite_eq_left hs]
       omega
     have hL : ∀ (h1 : (Fin.last r).val + 1 ≤ r + 1) (h2 : (Fin.last r).val + 1 ≤ r + 1),
         lpMinor R ((Fin.last r).val + 1) h1 h2 = genericDet R (r + 1) :=
@@ -375,7 +375,7 @@ theorem weighted_homogeneous_cancel {σ : Type} {n : ℕ} (w : σ → Fin n → 
   · exact hD0 h0
   · apply hd
     have h4 := congrArg (AddMonoidAlgebra.coeff · d) h0
-    simp only [coeff_weightedHomogeneousComponent, if_pos rfl, AddMonoidAlgebra.coeff_zero,
+    simp only [coeff_weightedHomogeneousComponent, ite_eq_left rfl, AddMonoidAlgebra.coeff_zero,
       Pi.zero_apply] at h4
     exact h4
 

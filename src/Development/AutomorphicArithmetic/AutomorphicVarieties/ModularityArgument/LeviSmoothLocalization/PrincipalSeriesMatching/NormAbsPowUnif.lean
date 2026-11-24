@@ -314,7 +314,7 @@ theorem UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.winOf :
   have hU : (π.twist χ).IsUnitary := (CG.isUnitary_mk _).1 (hiso ▸ hu)
   obtain ⟨a, ha⟩ := charAbs K χ
   refine ⟨-a, fun v hT hL => ⟨hT, fun s hs ξ hξ => ?_⟩⟩
-  haveI : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+  have : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
   have hq1 : (1 : ℝ) < (Ideal.absNorm v.asIdeal : ℝ) := by
     exact_mod_cast NumberField.HeightOneSpectrum.one_lt_absNorm v
   have hres := GlobalTheory.LFun.SatBoundGL.resCard_completion v

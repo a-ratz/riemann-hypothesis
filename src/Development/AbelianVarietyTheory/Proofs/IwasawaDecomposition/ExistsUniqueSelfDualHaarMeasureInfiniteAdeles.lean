@@ -261,7 +261,7 @@ private lemma UpperTheory.Reformulated.B.Yzb9.exists_strictHenselian_absolutely_
     (hadd : ∀ u u' v, p (u + u') v = p u v + p u' v) (hsym : ∀ u v, p u v = p v u)
     (hcont : ∀ v, Continuous fun u => p u v) (hnd : ∀ u, (∀ v, p u v = 0) → u = 0) :
     ∃ T : E ≃L[ℝ] E, ∀ u v, p u v = ⟪u, T v⟫ := by
-  haveI := FiniteDimensional.complete ℝ E
+  have := FiniteDimensional.completeSpace ℝ E
   let A : E → (E →L[ℝ] ℝ) := fun v =>
     AddMonoidHom.toRealLinearMap (AddMonoidHom.mk' (fun u => p u v) (fun a b => hadd a b v)) (hcont v)
   have hA : ∀ v u, A v u = p u v := fun v u => rfl

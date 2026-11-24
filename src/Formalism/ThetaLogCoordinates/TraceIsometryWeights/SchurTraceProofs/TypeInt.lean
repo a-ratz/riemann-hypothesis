@@ -114,7 +114,7 @@ theorem comp_comm2 (G₁ : GlW K U n) (G₂ : GlW K V n) (θ : U →ₗ[K] V)
   rw [map_sum, map_sum, Finset.sum_eq_single μ]
   · exact (hw μ).symm
   · intro ν _ hne
-    rw [← hw ν, G₂.idem, if_neg (Ne.symm hne)]
+    rw [← hw ν, G₂.idem, ite_eq_right (Ne.symm hne)]
   · intro h
     exact absurd (Finset.mem_insert_self μ S) h
 

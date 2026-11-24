@@ -202,7 +202,7 @@ theorem opE_self (D : DSRep T) (v : D.HK.V) (hi : Integrable (eFun D v) T.haar) 
 theorem opE_selfAdjoint (D : DSRep T) (v : D.HK.V) (hi : Integrable (eFun D v) T.haar) (πU : URep T)
     (x y : πU.H) :
     inner ℂ (opE T πU.π (eFun D v) x) y = inner ℂ x (opE T πU.π (eFun D v) y) := by
-  haveI := (GlobalTheory.HolDS.haar_unimodular p q T).2
+  have := (GlobalTheory.HolDS.haar_unimodular p q T).2
   rw [← inner_conj_symm, inner_opE πU hi (continuous_eFun D v), inner_opE πU hi (continuous_eFun D v),
     ← integral_conj, ← integral_inv_eq_self]
   refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)

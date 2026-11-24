@@ -133,16 +133,16 @@ theorem qkPt_rational_of_pull : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁
   intro R₂ _ _ _ i₁₂ e hfin _ he D₂ ⟨hD⟩ p
   have hB₂ := D₂.tau_bimult
   have hi : Function.Injective i₁₂ := hfin.2.1
-  letI : Algebra (FractionRing R₁) (FractionRing R₂) := (fracMap hi).toAlgebra
+  let : Algebra (FractionRing R₁) (FractionRing R₂) := (fracMap hi).toAlgebra
   have he' : e.comp (algebraMap (FractionRing R₁) M) = algebraMap (FractionRing R₁) (FractionRing R₂) :=
     IsLocalization.ringHom_ext (nonZeroDivisors R₁) (RingHom.ext fun r => (he r).trans (fracMap_algebraMap hi r).symm)
-  letI : Algebra (FractionRing R₁) (Kb R₂) := ((algebraMap (FractionRing R₂) (Kb R₂)).comp (fracMap hi)).toAlgebra
+  let : Algebra (FractionRing R₁) (Kb R₂) := ((algebraMap (FractionRing R₂) (Kb R₂)).comp (fracMap hi)).toAlgebra
   have cK : Compat i₁₂ (Kb R₂) := fun r => congrArg (algebraMap (FractionRing R₂) (Kb R₂)) (fracMap_algebraMap hi r)
   have cF : Compat i₁₂ (FractionRing R₂) := fracMap_algebraMap hi
-  letI : Algebra M (Kb R₂) := ((algebraMap (FractionRing R₂) (Kb R₂)).comp e).toAlgebra
-  haveI : Module.IsTorsionFree M (Kb R₂) := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : Module.IsTorsionFree M (Kb R₁) := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : Algebra.IsAlgebraic M (Kb R₁) := Algebra.IsAlgebraic.tower_top (K := FractionRing R₁) M
+  let : Algebra M (Kb R₂) := ((algebraMap (FractionRing R₂) (Kb R₂)).comp e).toAlgebra
+  have : Module.IsTorsionFree M (Kb R₂) := DivisionSemiring.to_moduleIsTorsionFree
+  have : Module.IsTorsionFree M (Kb R₁) := DivisionSemiring.to_moduleIsTorsionFree
+  have : Algebra.IsAlgebraic M (Kb R₁) := Algebra.IsAlgebraic.tower_top (K := FractionRing R₁) M
   let σ' : Kb R₁ →ₐ[M] Kb R₂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -231,8 +231,8 @@ theorem exists_finite_field_of_points (K : Type) [Field K] (C : Type) [CommRing 
         RingHom.comp ψ φ = RingHom.comp j (RingHom.comp e (algebraMap K ↥E)) →
         ∃ (ψ₀ : C →+* K₂), RingHom.comp j ψ₀ = ψ := by
   classical
-  letI : Algebra K C := φ.toAlgebra
-  haveI : Module.Finite K C := hφ
+  let : Algebra K C := φ.toAlgebra
+  have : Module.Finite K C := hφ
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := K) (M := C)
   have hint : ∀ c : C, IsIntegral K c := fun c => Algebra.IsIntegral.isIntegral c
   choose p hpm hpe using hint
@@ -316,9 +316,9 @@ theorem exists_finite_tors (K : Type) [Field K] (A : PolAV (Sp K)) (n : ℕ) (hn
   haveI : IsAffine ((𝟙_ (Over (Sp K))).left) := (inferInstance : IsAffine (Sp K))
   let f := (mulA A.A n).left
   let g := (η[A.A]).left
-  haveI : IsFinite f := hF
-  haveI hY : IsFinite (pullback.snd f g) := inferInstance
-  haveI : IsAffine (pullback f g) := isAffine_of_isAffineHom (pullback.snd f g)
+  have : IsFinite f := hF
+  have hY : IsFinite (pullback.snd f g) := inferInstance
+  have : IsAffine (pullback f g) := isAffine_of_isAffineHom (pullback.snd f g)
   let Y := pullback f g
   let q : Sp Γ(Y, ⊤) ⟶ Sp K := Y.isoSpec.inv ≫ pullback.snd f g
   let φ₀ := Spec.preimage q
@@ -452,21 +452,21 @@ namespace GlobalTheory.GalClosure
 theorem exists_finExt_realising : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsLocalRing R₁] (ρ : R →+* R₁), FinExt ρ → ∀ (E : IntermediateField (FractionRing R₁) (Kb R₁)), FiniteDimensional (FractionRing R₁) E → ∃ (R₂ : Type) (_ : CommRing R₂) (_ : IsDomain R₂) (_ : IsLocalRing R₂) (i₁₂ : R₁ →+* R₂) (e : E →+* FractionRing R₂), FinExt i₁₂ ∧ FinExt (i₁₂.comp ρ) ∧ IsLocalHom i₁₂ ∧ ∀ r : R₁, e (algebraMap (FractionRing R₁) E (algebraMap R₁ (FractionRing R₁) r)) = algebraMap R₂ (FractionRing R₂) (i₁₂ r) := by
   intro R _ _ _ hR R₁ _ _ _ ρ hρ E hE
   obtain ⟨hadm, hinj, hfin⟩ := hρ
-  haveI : CharZero R := hR.2
-  haveI : CharZero R₁ := charZero_of_injective_ringHom hinj
+  have : CharZero R := hR.2
+  have : CharZero R₁ := charZero_of_injective_ringHom hinj
   have hR₁ : Base R₁ := ⟨hadm, inferInstance⟩
   let E' := IntermediateField.normalClosure (FractionRing R₁) E (Kb R₁)
-  haveI : IsGalois (FractionRing R₁) E' := inferInstance
-  haveI : FiniteDimensional (FractionRing R₁) E' := inferInstance
+  have : IsGalois (FractionRing R₁) E' := inferInstance
+  have : FiniteDimensional (FractionRing R₁) E' := inferInstance
   obtain ⟨hloc, hfe⟩ := finExt_integralClosure (E := E') hR₁
-  letI : Algebra R₁ E' := (baseMap R₁ E').toAlgebra
-  haveI : IsScalarTower R₁ (FractionRing R₁) E' := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra R₁ E' := (baseMap R₁ E').toAlgebra
+  have : IsScalarTower R₁ (FractionRing R₁) E' := IsScalarTower.of_algebraMap_eq' rfl
   set R₂ := integralClosure R₁ E'
-  haveI : IsFractionRing R₂ E' := integralClosure.isFractionRing_of_finite_extension (FractionRing R₁) E'
+  have : IsFractionRing R₂ E' := integralClosure.isFractionRing_of_finite_extension (FractionRing R₁) E'
   let incl : E →ₐ[FractionRing R₁] E' := IntermediateField.inclusion (IntermediateField.le_normalClosure E)
   let eqv : E' ≃ₐ[R₂] FractionRing R₂ := (FractionRing.algEquiv R₂ E').symm
   have hloc' : IsLocalHom (algebraMap R₁ R₂) := by
-    haveI : Module.Finite R₁ R₂ := RingHom.finite_algebraMap.1 hfe.2.2
+    have : Module.Finite R₁ R₂ := RingHom.finite_algebraMap.1 hfe.2.2
     have : (Ideal.comap (algebraMap R₁ R₂) (maximalIdeal R₂)).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal (maximalIdeal R₂)
     exact ((local_hom_tfae (algebraMap R₁ R₂)).out 1 5).mpr (IsLocalRing.eq_maximalIdeal this)
@@ -559,7 +559,7 @@ theorem uniTrait_of_finExt : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [
   have e : (σ.comp k).comp ga₂ = (σ.comp i).comp ga := RingHom.ext fun x =>
     congrArg σ (Subtype.ext (DFunLike.congr_fun hj₁ x))
   obtain ⟨d, -, hd⟩ := Fib.cancel (σ.comp k) (⟨g₂, l₂⟩ : Fib A₂ A ga₂ a₂) f₁ e
-  haveI := hio.1.2.2.1
+  have := hio.1.2.2.1
   obtain ⟨φ₂, hφ₂, hcomp, hinj, hl⟩ := exists_restrict hfin (io.comp φ) (σ.comp k) fun r => by
     have e₁ : k (algebraMap R₂ _ (i₁₂ r)) = i (algebraMap W _ (φ r)) := Subtype.ext (hjρ r)
     exact (congrArg σ e₁).trans (DFunLike.congr_fun hσ (φ r))
@@ -610,11 +610,11 @@ namespace GlobalTheory.Mum.Enlarge
 theorem exists_rational_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsLocalRing R₁] (ρ : R →+* R₁) (D₁ : DegData R₁ (maximalIdeal R₁)) (A : PolAV (Sp (FractionRing R₁))), FinExt ρ → Nonempty (IsPullDeg ρ D.toPre D₁.toPre) → (letI := A.isAb.comm; GlobalTheory.ZH.HypS A.A A.L) → UniTrait D₁.toPre A → ∃ (R₂ : Type) (_ : CommRing R₂) (_ : IsDomain R₂) (_ : IsLocalRing R₂) (ρ₂ : R →+* R₂) (D₂ : DegData R₂ (maximalIdeal R₂)) (A₂ : PolAV (Sp (FractionRing R₂))), FinExt ρ₂ ∧ Nonempty (IsPullDeg ρ₂ D.toPre D₂.toPre) ∧ (letI := A₂.isAb.comm; GlobalTheory.ZH.HypS A₂.A A₂.L) ∧ UniTrait D₂.toPre A₂ ∧ ∀ σ : Kb R₂ →ₐ[FractionRing R₂] Kb R₂, (∀ p p' : QkPt D₂.toPre (Kb R₂) n, QkExt σ.toRingHom p p' → QkPt.Equiv D₂.toPre (Kb R₂) p p') ∧ ∀ x : TFK (R := R₂) (Kb R₂) ⟶ A₂.A, x ^ n = 1 → spMap σ.toRingHom ≫ x.left = x.left := by
   intro R _ _ _ hR D n hn hodd hnu R₁ _ _ _ ρ D₁ A hρ hP hS hU
   have hn1 : 1 ≤ n := hn.one_lt.le
-  have hR₁ : Base R₁ := ⟨hρ.1, by haveI := hR.2; exact charZero_of_injective_ringHom hρ.2.1⟩
+  have hR₁ : Base R₁ := ⟨hρ.1, by have := hR.2; exact charZero_of_injective_ringHom hρ.2.1⟩
   obtain ⟨EQ, fQ, hQ⟩ := GlobalTheory.T.degenerationQuotientPoints_rational_finiteExtension R₁ hR₁ D₁ n hn1
   obtain ⟨EA, fA, hA⟩ := GlobalTheory.T.exists_finite_extension_fraction_field_uniform R₁ hR₁ A n hn1
-  haveI := fQ
-  haveI := fA
+  have := fQ
+  have := fA
   obtain ⟨R₂, _, _, _, i₁₂, e, hi₁₂, hi₁₂ρ, hloc, he⟩ := GlobalTheory.T.exists_finiteExtension_realising_subextension R hR R₁ ρ hρ (EQ ⊔ EA) inferInstance
   obtain ⟨D₂, hD₂⟩ := GlobalTheory.MumPull.exists_pull R₁ R₂ i₁₂ hi₁₂.2.1 hloc D₁
   have hP₂ := nonempty_isPullDeg_comp_of_injective R R₁ R₂ ρ i₁₂ D.toPre D₁.toPre D₂.toPre hi₁₂.2.1 hP hD₂
@@ -629,8 +629,8 @@ theorem exists_rational_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   have hlb : LBIso A₂.L (A.L.pull g) := LBIso.symm ⟨t, ht⟩
   have hfib : IsFib i₁₂ A A₂ g := ⟨ga, fun r => IsLocalization.map_eq hle r, gp, hlb⟩
   have hS₂ : (letI := A₂.isAb.comm; GlobalTheory.ZH.HypS A₂.A A₂.L) := by
-    letI := A.isAb.comm
-    letI := A₂.isAb.comm
+    let := A.isAb.comm
+    let := A₂.isAb.comm
     exact GlobalTheory.SymBaseChange.hypS_baseChange _ _ A.A A₂.A (spMap ga) g A.L A₂.L A.isLB A₂.isLB gp hlb hS
   let eQ : EQ →+* FractionRing R₂ := e.comp (IntermediateField.inclusion (le_sup_left : EQ ≤ EQ ⊔ EA)).toRingHom
   let eA : EA →+* FractionRing R₂ := e.comp (IntermediateField.inclusion (le_sup_right : EA ≤ EQ ⊔ EA)).toRingHom
@@ -795,8 +795,8 @@ namespace GlobalTheory.Mum
 open GalConjLabels in
 theorem labTors_galConj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (σ : Kb R →ₐ[FractionRing R] Kb R) (k : ℕ), 1 ≤ k → ∀ (x x' : QkPt D.toPre (Kb R) k → (TFK (R := R) (Kb R) ⟶ A.A)), LabTors D.toPre A k x → (∀ p p', QkExt σ.toRingHom p p' → (x' p').left = spMap σ.toRingHom ≫ (x p).left) → LabTors D.toPre A k x' := by
   intro R _ _ _ hR D A σ k hk x x' hx hxx'
-  haveI : CharZero R := hR.2
-  haveI : IsNoetherianRing R := hR.1.1
+  have : CharZero R := hR.2
+  have : IsNoetherianRing R := hR.1.1
   have hB := D.tau_bimult
   have hL := GlobalTheory.allSixLaws
   have hG : GlobalFnsSt := hL.1.globalFns
@@ -809,7 +809,7 @@ theorem labTors_galConj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
     σ.comp_algebraMap
   have hfρ : ρ.toRingHom.comp (algebraMap (FractionRing R) (Kb R)) = algebraMap (FractionRing R) (Kb R) :=
     ρ.comp_algebraMap
-  haveI : CharZero (Kb R) :=
+  have : CharZero (Kb R) :=
     (RingHom.charZero_iff (algebraMap (FractionRing R) (Kb R)).injective).1 inferInstance
   have hk0 : (k : Kb R) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   have rev : ∀ {p p' : QkPt D.toPre (Kb R) k}, QkExt σ.toRingHom p p' → QkExt ρ.toRingHom p' p := by
@@ -1037,7 +1037,7 @@ theorem eq_of_isAlgClosed {K : Type} [Field K] [IsAlgClosed K] [CharZero K] (P :
   have hK : ((m ^ 2 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 hm0
   have : NeZero (m ^ 2) := ⟨hm0⟩
   have : NeZero ((m ^ 2 : ℕ) : K) := ⟨hK⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K (m ^ 2)
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K (m ^ 2)
   have hζ := hz.isUnit_unit (NeZero.ne _)
   generalize (hz.isUnit (NeZero.ne _)).unit = ζ at hζ
   obtain ⟨lev⟩ := GlobalTheory.nonempty_level_of_isAlgClosed K P (m ^ 2) ζ hK hζ
@@ -1247,7 +1247,7 @@ theorem GlobalTheory.Mum.lab_level_mul : ∀ (R : Type) [CommRing R] [IsDomain R
   intro R _ _ _ _ D A lab hO k d hk hd p q hy hg
   obtain ⟨W, _, _, _, φ, G', _, _, D', A', U', hD, a, _, em, hW, -, -, hG', ⟨ga, hga, hcart, -⟩, hc, hind⟩ := hO
   have := hW.1
-  haveI : CharZero W := hW.2.2
+  have : CharZero W := hW.2.2
   have hW' : AdmBase W (maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   have hB := D.tau_bimult
   have hB' := D'.tau_bimult
@@ -1451,13 +1451,13 @@ theorem GlobalTheory.Mum.values_galois_scalar : ∀ (R : Type) [CommRing R] [IsD
   obtain ⟨C, _, _, _, _, _, _, hC⟩ := GlobalTheory.Ex.StepInh.exists_cExt W hW
   have hg : Function.Injective ((algebraMap (FractionRing W) C).comp ((algebraMap W (FractionRing W)).comp φ)) :=
     (algebraMap (FractionRing W) C).injective.comp ((IsFractionRing.injective W (FractionRing W)).comp hφ)
-  letI : Algebra (FractionRing R) C := (IsFractionRing.lift hg).toAlgebra
+  let : Algebra (FractionRing R) C := (IsFractionRing.lift hg).toAlgebra
   have hA : ∀ r : R, algebraMap (FractionRing R) C (algebraMap R _ r) =
       algebraMap (FractionRing W) C (algebraMap W _ (φ r)) := fun r => IsFractionRing.lift_algebraMap hg r
-  haveI := hloc
+  have := hloc
   have hCR : GlobalTheory.Ex.CExt R (maximalIdeal R) C :=
     ⟨fun r => by rw [hA]; exact hC.1 _, fun r hr => by rw [hA]; exact hC.2 _ (map_nonunit φ r hr)⟩
-  haveI : IsNoetherianRing R := hR.1.1
+  have : IsNoetherianRing R := hR.1.1
   obtain ⟨N, nu, -⟩ := GlobalTheory.ValuesExist.exists_integral_values GlobalTheory.firstFiveLaws.1 R D.toPre D.psi_even D.tau_bimult C ⊤
     (fun _ => trivial)
   have hB := D.tau_bimult
@@ -1583,7 +1583,7 @@ theorem lab_level {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (D : DegD
     (hg : GtPtF.IsNsmul l q.g p.g) : (lab k p).left = ((lab N q) ^ l).left := by
   obtain ⟨W, _, _, _, φ, G', _, _, D', A', U', hD, a, _, em, hW, -, -, hG', ⟨ga, hga, hcart, -⟩, hc, hind⟩ := hO
   have := hW.1
-  haveI : CharZero W := hW.2.2
+  have : CharZero W := hW.2.2
   have hW' : AdmBase W (maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   have hB := D.tau_bimult
   have hB' := D'.tau_bimult
@@ -1639,7 +1639,7 @@ theorem GlobalTheory.Mum.galEqN_of_squares : ∀ (R : Type) [CommRing R] [IsDoma
       ∀ (σ : Kb R →ₐ[FractionRing R] Kb R) (p p' : QkPt D.toPre (Kb R) ((n ^ i) ^ 2)), QkExt σ.toRingHom p p' →
         (lab ((n ^ i) ^ 2) p').left = spMap σ.toRingHom ≫ (lab ((n ^ i) ^ 2) p).left) → GalEqN n lab := by
   intro R _ _ _ hR n hn _ _ D A lab hO ⟨i₀, H⟩ σ j p p' hpp'
-  letI := GlobalTheory.TorusExt.gtGroup D.toPre (Kb R)
+  let := GlobalTheory.TorusExt.gtGroup D.toPre (Kb R)
   have hi : i₀ ≤ max i₀ j := le_max_left _ _
   have hj : j ≤ max i₀ j := le_max_right _ _
   have hN : (n ^ max i₀ j) ^ 2 = n ^ j * n ^ (2 * max i₀ j - j) := by

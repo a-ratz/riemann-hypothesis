@@ -99,7 +99,7 @@ theorem exists_pos_le_bot_top : (∀ (r : ℕ) (X : Data E r) (d : Frame X.Ψ r 
   have hsp : Submodule.span E (Set.range w) = ⊤ := by
     rw [(finCongr hr).surjective.range_comp]; exact hsp0
   have hdet : (Matrix.of w).det ≠ 0 := by
-    have : IsUnit (Matrix.of w) := Matrix.linearIndependent_rows_iff_isUnit.1 hw
+    have : IsUnit (Matrix.of w) := Matrix.linearIndependent_row_iff_isUnit.1 hw
     exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
   have hind := GlobalTheory.SpanIndex.relIndex_span_ne_zero r X (Fin r) w hw hΛ
   set n : ℕ := (Submodule.span (𝓞 E) (Set.range w)).toAddSubgroup.relIndex (X.Λ.toAddSubgroup ⊓ (Submodule.span E (Set.range w)).toAddSubgroup) with hn

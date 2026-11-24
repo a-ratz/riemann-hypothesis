@@ -80,7 +80,7 @@ theorem rank_eq {r : ℕ} (h : HasSig I r 0) : r = I.n := by
   simpa [allPos] using hp.symm
 
 theorem card_places : Fintype.card (InfinitePlace I.F) = I.f := by
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   have h2 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank I.F
   rw [NumberField.IsTotallyReal.nrComplexPlaces_eq_zero] at h2
   rw [NumberField.InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces,
@@ -120,7 +120,7 @@ theorem pos_all {r : ℕ} (h : HasSig I r 0) (φ : I.E →+* ℂ) (y : Fin I.n �
   have hstar : star (star y ⬝ᵥ (I.J *ᵥ y)) = star y ⬝ᵥ (I.J *ᵥ y) := by
     rw [← star_dotProduct_star, star_star, star_mulVec, ← dotProduct_mulVec, hJ]
   obtain ⟨b, hb⟩ := (I.cm.fixed _).1 hstar
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   have hreal : (InfinitePlace.mk (φ.comp (algebraMap I.F I.E))).IsReal :=
     NumberField.IsTotallyReal.isReal _
   have hemb := NumberField.InfinitePlace.embedding_mk_eq_of_isReal
@@ -220,7 +220,7 @@ theorem covol_le {r : ℕ} (h : HasSig I r 0) (μf : Measure I.Gf) [SigmaFinite 
     intro z _
     have hq : ∃ x, Quot.mk (Isom I.E I.n) (latOf I h x) = Quot.mk (Isom I.E I.n) (latOf I h z) :=
       ⟨z, rfl⟩
-    have hpt : pt (Quot.mk (Isom I.E I.n) (latOf I h z)) = hq.choose := dif_pos hq
+    have hpt : pt (Quot.mk (Isom I.E I.n) (latOf I h z)) = hq.choose := dite_eq_left hq
     have e : Isom I.E I.n (latOf I h z) (latOf I h hq.choose) :=
       (isom_equivalence I.E I.n).symm
         ((Equivalence.eqvGen_iff (isom_equivalence I.E I.n)).1 (Quot.eqvGen_exact hq.choose_spec))
@@ -278,7 +278,7 @@ theorem gaugeVol_le : ∀ (I : AutInst) (r : ℕ), HasSig I r 0 → ∀ (c : Inf
       Finset.prod_congr rfl (fun v _ => (hloc v).2), Finset.prod_const, Finset.card_univ, card_places,
       ENNReal.ofReal_pow (volU_pos _).le]
   by_cases hfin : Finite (Quot (Isom I.E I.n))
-  · haveI := Fintype.ofFinite (Quot (Isom I.E I.n))
+  · have := Fintype.ofFinite (Quot (Isom I.E I.n))
     have hcv := covol_le I h μf
     unfold gaugeVol
     calc ENNReal.ofReal (∏ v, c v) * covol I.GFset (I.muA μf) Set.univ / μf I.Kset
@@ -289,7 +289,7 @@ theorem gaugeVol_le : ∀ (I : AutInst) (r : ℕ), HasSig I r 0 → ∀ (c : Inf
           rw [← mul_assoc, hprod, ← mul_assoc, ENNReal.mul_div_cancel_right hKpos hKtop]
       _ = ENNReal.ofReal (volU I.n ^ I.f) * ((defClassNum I.E I.n : ENat) : ENNReal) := by
           rw [defClassNum, ENat.card_eq_coe_fintype_card, ENat.toENNReal_coe]
-  · haveI := not_finite_iff_infinite.1 hfin
+  · have := not_finite_iff_infinite.1 hfin
     rw [defClassNum, ENat.card_eq_top_of_infinite, ENat.toENNReal_top, ENNReal.mul_top hV]
     exact le_top
 

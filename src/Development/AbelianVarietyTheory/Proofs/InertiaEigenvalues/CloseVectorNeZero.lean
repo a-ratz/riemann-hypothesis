@@ -201,8 +201,8 @@ theorem _root_.GlobalTheory.PhiGam.Close.key {l : ℕ} (hl : 0 < l)
   have hf' : ∀ (a : k⸨X⸩) (y : V), f (a • y) = R.φ a • f y := hf
   have smul_eq : ∀ (p : k⟦X⟧) (y : V), p • y = HahnSeries.ofPowerSeries ℤ k p • y := fun p y => by
     rw [← LaurentSeries.coe_algebraMap, algebraMap_smul]
-  haveI : Module.Finite k⟦X⟧ N := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.IsTorsionFree k⟦X⟧ N := ⟨fun p hp y z hyz => by
+  have : Module.Finite k⟦X⟧ N := Module.Finite.iff_fg.mpr hfg
+  have : Module.IsTorsionFree k⟦X⟧ N := ⟨fun p hp y z hyz => by
     have hp0 : HahnSeries.ofPowerSeries ℤ k p ≠ 0 := fun h0 =>
       hp.ne_zero ((HahnSeries.ofPowerSeries_injective :
         Function.Injective (HahnSeries.ofPowerSeries ℤ k)) (h0.trans (map_zero _).symm))
@@ -210,7 +210,7 @@ theorem _root_.GlobalTheory.PhiGam.Close.key {l : ℕ} (hl : 0 < l)
     simp only [Submodule.coe_smul] at h1
     rw [smul_eq, smul_eq] at h1
     exact Subtype.ext (smul_right_injective V hp0 h1)⟩
-  haveI : Module.Free k⟦X⟧ N := Module.free_of_finite_type_torsion_free'
+  have : Module.Free k⟦X⟧ N := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis k⟦X⟧ N
   let e : Module.Free.ChooseBasisIndex k⟦X⟧ N → V := fun i => (b i : V)
   have mem_N : ∀ y ∈ N, ∃ g : Module.Free.ChooseBasisIndex k⟦X⟧ N → k⟦X⟧,

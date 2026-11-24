@@ -75,7 +75,7 @@ lemma isDomain [Nontrivial S] (Si : ι → Subalgebra R S) (hmono : Monotone Si)
     obtain ⟨i, hi⟩ := exists_mem_of_finset Si hmono hcov {x, y}
     have hx : x ∈ Si i := hi x (by simp)
     have hy : y ∈ Si i := hi y (by simp)
-    haveI := hdom i
+    have := hdom i
     have h0 : (⟨x, hx⟩ : Si i) * ⟨y, hy⟩ = 0 := Subtype.ext (by simpa using hxy)
     rcases mul_eq_zero.mp h0 with h | h
     · exact Or.inl (congrArg Subtype.val h)
@@ -91,8 +91,8 @@ lemma isIntegrallyClosed [IsDomain S] (Si : ι → Subalgebra R S) (hmono : Mono
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := S) x
   obtain ⟨p, hpm, hp⟩ := hx
   obtain ⟨i, hi⟩ := exists_mem_of_finset Si hmono hcov (insert a (insert b p.coeffs))
-  haveI := (hic i).1
-  haveI := (hic i).2
+  have := (hic i).1
+  have := (hic i).2
   have ha : a ∈ Si i := hi a (by simp)
   have hb' : b ∈ Si i := hi b (by simp)
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
@@ -144,7 +144,7 @@ theorem indEtale_isDomain_isIntegrallyClosed :
     obtain ⟨h1, h2⟩ := etale_localization_atPrime_isDomain_isIntegrallyClosed R A q
     exact ⟨MulEquiv.isDomain (Localization.AtPrime q) e.symm.toMulEquiv,
       IsIntegrallyClosed.of_equiv e.toRingEquiv⟩
-  haveI := IndEtaleNormal.isDomain Si hmono hcov (fun i => (hic i).1)
+  have := IndEtaleNormal.isDomain Si hmono hcov (fun i => (hic i).1)
   exact ⟨inferInstance, IndEtaleNormal.isIntegrallyClosed Si hmono hcov hic⟩
 
 end GlobalTheory

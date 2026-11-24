@@ -85,7 +85,7 @@ open scoped Matrix in
 theorem _root_.GlobalTheory.trace_xi_mul_conj_int_iff_mem :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : _root_.ReciprocityTheory.ChartRestriction.G.FD.DataX E r) (𝔄 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E), 0 < r → 𝔄 ≠ 0 → X.Λ = Submodule.span (𝓞 E) {v | ∃ a ∈ 𝔄, ∃ u ∈ X.L', v = a • u} → ∀ x : E, (∀ y ∈ 𝔄, ∃ n : ℤ, Algebra.trace ℚ E (X.ξ0 * x * _root_.ReciprocityTheory.ChartRestriction.G.FD.cc y) = n) ↔ x ∈ 𝔄 := by
   intro E _ _ _ r X 𝔄 hr h𝔄 hΛ x
-  haveI : NeZero r := ⟨hr.ne'⟩
+  have : NeZero r := ⟨hr.ne'⟩
   have hξ : X.ξ0 ≠ 0 := X.ξ0_ne
   have hlat : _root_.ReciprocityTheory.MultiplicativeHeights.IsLattice X.Λ := ⟨X.Λ_fg, X.Λ_span⟩
   have hself : _root_.GlobalTheory.traceFormDual X.ξ0 X.Gm X.Λ = X.Λ :=

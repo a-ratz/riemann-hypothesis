@@ -103,7 +103,7 @@ theorem UpperTheory.ConvolutionTheory.BW.resTyp :
   let j : KA E r × KA E s →* KA E (r + s) :=
     ((lev (Ad E) r s).comp ((KA E r).subtype.prodMap (KA E s).subtype)).codRestrict _ fun k => key k.1 k.2
   have hj : Continuous j := Continuous.subtype_mk ((Slice1.continuous_lev (Ad E)).comp
-    (continuous_subtype_val.prodMap continuous_subtype_val)) _
+    (continuous_subtypeVal.prodMap continuous_subtypeVal)) _
   refine ⟨⟨ρ.ρ.comp (j.comp (MonoidHom.inl _ _)), ρ.cont.comp (hj.comp (continuous_id.prodMk continuous_const)), ?_⟩,
     ⟨ρ.ρ.comp (j.comp (MonoidHom.inr _ _)), ρ.cont.comp (hj.comp (continuous_const.prodMk continuous_id)), ?_⟩, key⟩
   · funext k

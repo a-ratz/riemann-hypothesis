@@ -73,7 +73,7 @@ theorem exists_reps {G : Type} [Group G] {Γ K : Subgroup G} (h : FiniteClasses 
       (∀ i j (γ γ' : Γ) (k k' : K), (γ : G) * g i * k = (γ' : G) * g j * k' → i = j) ∧
       (∀ i, (Unfold.stab Γ K (g i)).Finite) ∧
       ∑ i, ((Nat.card (Unfold.stab Γ K (g i)) : ℝ))⁻¹ = classMass Γ K := by
-  haveI := h.1
+  have := h.1
   obtain ⟨n, ⟨φ⟩⟩ := Finite.exists_equiv_fin (Formalism.UG.ClassSet Γ K)
   have e : ∀ g, Unfold.stab Γ K g = Formalism.UG.stabAt Γ K g := fun g => by
     ext γ; simp only [Unfold.stab, Formalism.UG.stabAt, mul_assoc]
@@ -175,7 +175,7 @@ theorem mass_coord (hc : CMData F E) (W : HSpace E) (hW : W.SigOK) (hs : ∀ τ,
   obtain ⟨h1, h2, -⟩ := Formalism.HermitianLatticesTheory.massBasic _ _ W.hT W.herm
     (GlobalTheory.IndefiniteRowSideFullHecke.MassFormulaPositivity.trace_pos hc.cmUnram.2.1 W hW hs) W.L0
     (by
-      letI := W.standardTuple_isLattice
+      let := W.standardTuple_isLattice
       exact { span_eq_top := standardLattice_span_eq_top W })
   have h3 := mass_transport (Formalism.L2.Herm.crd W).symm (isoSymm _ he) (tMap (Formalism.L2.Herm.crd W) W.L0)
     (by rwa [tMap_symm]) (by rwa [tMap_symm])
@@ -221,7 +221,7 @@ theorem defClassDecomp : ∀ D : D7, DefClassDecomp D := by
     rw [hs] at this
     exact GlobalTheory.DefiniteQuotient.posDef_of_signature this
   obtain ⟨h1, h2⟩ := finite_and_mass D.sp.cm W hW hs (GlobalTheory.DefiniteQuotient.gram_hermND W) hd
-  haveI := Unfold.borelHA D.sp.cm.sig W.gram
+  have := Unfold.borelHA D.sp.cm.sig W.gram
   refine ⟨(GlobalTheory.DecompCompare.isOpen_levelW D W).measurableSet, ?_⟩
   rw [← h2]
   exact exists_reps h1

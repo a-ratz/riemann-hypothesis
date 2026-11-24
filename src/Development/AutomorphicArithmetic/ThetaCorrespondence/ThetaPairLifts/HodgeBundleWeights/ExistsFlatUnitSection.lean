@@ -362,7 +362,7 @@ namespace GlobalTheory.FlatCore
 theorem exists_ringHom_ne_zero_of_not_isNilpotent {K R : Type} [Field K] [CommRing R] [Algebra K R]
     [Algebra.FiniteType K R] (σ : K →+* ℂ) {b : R} (hb : ¬ IsNilpotent b) :
     ∃ φ : R →+* ℂ, φ.comp (algebraMap K R) = σ ∧ φ b ≠ 0 := by
-  haveI hJ : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := K)
+  have hJ : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := K)
   have hrad : b ∉ (⊥ : Ideal R).jacobson := by
     rw [← Ideal.radical_eq_jacobson]
     intro h
@@ -371,12 +371,12 @@ theorem exists_ringHom_ne_zero_of_not_isNilpotent {K R : Type} [Field K] [CommRi
   rw [Ideal.jacobson, Submodule.mem_sInf] at hrad
   push_neg at hrad
   obtain ⟨m, ⟨-, hm⟩, hbm⟩ := hrad
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType K (R ⧸ m) :=
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType K (R ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ K m) (Ideal.Quotient.mkₐ_surjective _ _)
-  haveI : Module.Finite K (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (R ⧸ m)
-  haveI : Algebra.IsAlgebraic K (R ⧸ m) := Algebra.IsAlgebraic.of_finite K (R ⧸ m)
-  letI : Algebra K ℂ := σ.toAlgebra
+  have : Module.Finite K (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (R ⧸ m)
+  have : Algebra.IsAlgebraic K (R ⧸ m) := Algebra.IsAlgebraic.of_finite K (R ⧸ m)
+  let : Algebra K ℂ := σ.toAlgebra
   let ψ : (R ⧸ m) →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -614,14 +614,14 @@ set_option synthInstance.maxHeartbeats 400000 in
 theorem cuspOn_fd_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r), NeatUnf U → ∀ (Z : Comp Xo c) (σ : c.F →+* ℂ), GoodEmb c σ → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), Dom a n → (∀ τ i, i < Dw.mult τ → 1 ≤ a (τ, i)) → 4 * (finrank ℚ E * r) + 4 ≤ n → SumDvd U a n → FiniteDimensional c.F (cuspOn U Z (wtZ a n)) ∧ ∀ P ∈ holSub (U σ).X (modelWt (U σ) (wtZ a n)), (∀ k y, (⟨k, y⟩ : Σ k, Frame ((U σ).X k).Ψ r) ∉ framesOn (U σ) Z → P k y = 0) → P ∈ Submodule.span ℂ (rdU (U σ) '' (cuspOn U Z (wtZ a n) : Set (Rul Xo c))) := by
   intro E _ _ _ H Dw l Xo c r U h Z σ hσ a n hD hpos hn hdv
   refine ⟨?_, fun P hP hoffZ => ?_⟩
-  · haveI := GlobalTheory.cuspForms_finiteDimensional_of_goodEmb E H Dw l Xo c r U σ hσ (h.unf σ hσ) a n hD
+  · have := GlobalTheory.cuspForms_finiteDimensional_of_goodEmb E H Dw l Xo c r U σ hσ (h.unf σ hσ) a n hD
     have hle : cuspOn U Z (wtZ a n) ≤ cusp Xo c U a n := by
       rw [← cuspW_wtZ]; exact cuspOn_le U Z (wtZ a n)
     exact Submodule.finiteDimensional_of_le hle
   · have htest : ∀ z ∈ framesOn (U σ) Z, ∀ hz : z.2 ∈ ((U σ).X z.1).dom, Tested ((U σ).un z.1 ⟨z.2, hz⟩) :=
       fun z _ hz => by
         obtain ⟨⟨-, -, -, -, hA, -⟩, -⟩ := GlobalTheory.Exist.frame_laws_of_moduli E H Dw l Xo c
-        haveI : _root_.IsReduced (CAt σ) := inferInstanceAs (_root_.IsReduced ℂ)
+        have : _root_.IsReduced (CAt σ) := inferInstanceAs (_root_.IsReduced ℂ)
         exact hA _ _
     have hoff : P ∈ offZero (U σ).X := fun k y hy => hoffZ k y fun hz => hy hz.1
     have hP0 : P ∈ holSub0 (U σ).X (laU (U σ) a n) := ⟨by rwa [← modelWt_wtZ], hoff⟩
@@ -632,7 +632,7 @@ theorem cuspOn_fd_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       by_cases hz : (⟨k, y⟩ : Σ k, Frame ((U σ).X k).Ψ r) ∈ framesOn (U σ) Z
       · obtain ⟨hd, hl⟩ := hz
         have h1 : rdU (U σ) (idem Z) k y = 1 := by
-          simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hd, dif_pos]
+          simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hd, dite_eq_left]
           rw [evR_idem hl (htest _ ⟨hd, hl⟩ hd)]
           rfl
         rw [h1, one_mul]
@@ -669,7 +669,7 @@ theorem horizGen_mul_mem_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     · subst hkk
       have hd : y ∉ ((U σ).X k).dom := fun hd => hy (by rw [hk]; exact ⟨rfl, hd⟩)
       have h0 : rdU (U σ) f k y = 0 := by
-        simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hd, dif_neg, not_false_eq_true]
+        simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hd, dite_eq_right, not_false_eq_true]
       rw [mulAt_same]
       simp only [h0, mul_zero]
     · rw [mulAt_ne _ _ _ _ hkk]
@@ -708,7 +708,7 @@ theorem exists_model_cusp {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} (hL : Neat
     have hp : ((U σ).X k).p0 = 0 ∨ ((U σ).X k).p0 = r := by omega
     refine ⟨n, hn, he, _, GlobalTheory.BoundedCusp.mem_SS_of_definite _ _ τ0 hp _
       ⟨hs, GlobalTheory.ScalarCusp.bdd_of_definite _ hp _ _ hs⟩, y, hy, ?_⟩
-    have e : rdU (U σ) f k y = toC (evR Xo c f ((U σ).un k ⟨y, hy⟩)) := dif_pos hy
+    have e : rdU (U σ) f k y = toC (evR Xo c f ((U σ).un k ⟨y, hy⟩)) := dite_eq_left hy
     rw [e]
     exact hne
   · have hla : ∀ n : ℕ, laU (U σ) 0 n k = fun (τ : ((U σ).X k).Ψ) (j : Fin r) =>
@@ -807,7 +807,7 @@ theorem exists_cuspOn_two {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} (hL : Neat
   refine ⟨fun _ => 2, n, ⟨fun _ => antitone_const, hnev⟩, fun _ _ _ => le_rfl, hnb, hdv, g, g.2, ?_⟩
   intro h0
   have e : rdU (U σ) (g : Rul Xo c) k y = rdU (U σ) f k y := by
-    simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos hy']
+    simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left hy']
     rw [hg _ _ hlies]
   rw [h0, map_zero] at e
   exact hfy e.symm
@@ -892,9 +892,9 @@ theorem exists_flat_pair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
         (by rw [hw, neg_one_smul, add_neg_cancel_right]) f hf
       convert this using 1 <;> first | rfl | (funext y; simp [resRd_apply])
   obtain ⟨σ0, hσ0⟩ : ∃ σ, GoodEmb c σ := ⟨_, goodEmb_goodOf c c.F.val.toRingHom⟩
-  haveI : FiniteDimensional c.F (cuspOn U Z (wtZ a n)) :=
+  have : FiniteDimensional c.F (cuspOn U Z (wtZ a n)) :=
     (cuspOn_fd_span E H Dw l Xo c r U hL Z σ0 hσ0 a n hD h1 hn hdv).1
-  haveI : FiniteDimensional c.F (cuspOn U Z (wtZ a' n)) :=
+  have : FiniteDimensional c.F (cuspOn U Z (wtZ a' n)) :=
     (cuspOn_fd_span E H Dw l Xo c r U hL Z σ0 hσ0 a' n hD' h1' hn hdv').1
   have hprod : ∀ f ∈ cuspOn U Z (wtZ a n), ∀ g ∈ cuspOn U Z (wtZ a' n),
       f * g ∈ sec Xo c (a + a') (n + n) ⊓ suppOn Z := by
@@ -924,7 +924,7 @@ theorem exists_flat_pair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   refine ⟨wtZ a n, f0, T ⟨f0, hf0⟩, hEv, hf0, hVV' ▸ (T ⟨f0, hf0⟩).2, hf0ne, fun σ hσ => ?_⟩
   obtain ⟨k1, hτ, hk, hA, hA'⟩ := pk σ hσ
   obtain ⟨y0, -⟩ := (res_ind hL Z σ hσ k1 hk a n).2 f0 (hsec a hf0) (hsupp _ hf0) hf0ne
-  haveI := GlobalTheory.FlatPair.holAlg_isDomain E r ((U σ).X k1) ⟨y0.1, y0.2⟩
+  have := GlobalTheory.FlatPair.holAlg_isDomain E r ((U σ).X k1) ⟨y0.1, y0.2⟩
   obtain ⟨hh, hh', hne⟩ := horizGen_mem ((U σ).X k1) ⟨_, hτ⟩
   obtain ⟨α, hα, hαT⟩ := GlobalTheory.commuting_multiplier_eq_const_smul_generator c.F (Rul Xo c) (↥((U σ).X k1).dom → ℂ) σ (resRd (U σ) hT k1)
     (resRd_smul _ _ _) (holAlg ((U σ).X k1)) (cuspOn U Z (wtZ a n)) (cuspOn U Z (wtZ a' n))
@@ -1226,7 +1226,7 @@ theorem GlobalTheory.FlatAnyLevel.exists_flat_unit_bounded_any_level : _root_.Gl
   obtain ⟨A⟩ := GlobalTheory.FlatAnyLevel.archEx (GlobalTheory.FlatAnyLevel.neatUnf_of_good D T j Y e o hG) (xiR D) Z τ
   simp only [Nat.cast_one, one_smul]
   refine ⟨A.sig, A.inv, A.sig_mem, A.inv_mem, A.idem_sig, A.idem_inv, A.mul_inv, fun σ hσ => ?_⟩
-  have hg : goodOf Y.d.c₂ σ = σ := if_pos hσ
+  have hg : goodOf Y.d.c₂ σ = σ := ite_eq_left hσ
   have hn := A.norm_inf σ
   rw [hg] at hn
   refine ⟨max (A.cInf σ) (A.cInf σ)⁻¹, fun z hz => ?_⟩
@@ -1312,8 +1312,8 @@ theorem exists_flat_unit_section : _root_.GlobalTheory.CovTop.PublishedHodgeBund
     rw [hsum]
     exact h
   choose s t hst using hZ
-  haveI := CompFin.finite_comp Y.d.Xo₂ Y.d.c₂
-  haveI := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
+  have := CompFin.finite_comp Y.d.Xo₂ Y.d.c₂
+  have := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
   choose m hm hv using fun Z => (hst Z).2
   have hsZ : ∀ Z, s Z ∈ GlobalTheory.AllWt.suppOn Z := fun Z => by
     rw [← (hst Z).1.2.2.1, mul_comm]; exact GlobalTheory.AllWt.mul_mem_suppOn _ (idem_mem_suppOn Z)

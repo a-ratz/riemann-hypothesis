@@ -88,7 +88,7 @@ theorem two_pow_card_le_index_iInf :
       exact hx j ((Subgroup.mul_mem_cancel_right _ h2).1 hm)
     · intro hj
       exact Subgroup.prod_mem _ fun i hi => hx' i j (fun e => hj (e ▸ hi))
-  haveI : Finite (G ⧸ ⨅ i, K i) := Nat.finite_of_card_ne_zero hidx
+  have : Finite (G ⧸ ⨅ i, K i) := Nat.finite_of_card_ne_zero hidx
   have inj : Function.Injective
       (fun A : Finset ι => ((∏ i ∈ A, x i : G) : G ⧸ ⨅ i, K i)) := by
     intro A B hAB
@@ -155,8 +155,8 @@ theorem two_pow_le_index_locNorm :
   set B : Set (F →+* ℝ) := {σ | σ δ < 0} with hB
   have hAf : A.Finite := S.finite_toSet.subset fun v hv => hv.1
   have hBf : B.Finite := Set.toFinite _
-  letI : Fintype A := hAf.fintype
-  letI : Fintype B := hBf.fintype
+  let : Fintype A := hAf.fintype
+  let : Fintype B := hBf.fintype
   let K : A ⊕ B → Subgroup Fˣ := Sum.elim
     (fun v => normSub (algebraMap F (v.1.adicCompletion F)) δ) (fun σ => normSub σ.1 δ)
   have hle : locNorm F δ S ≤ ⨅ i, K i := by
@@ -199,7 +199,7 @@ theorem two_pow_le_index_locNorm :
     · rintro ⟨a, b, hab⟩
       have h1 := hxσ σ.1
       have h2 : σ.1 δ < 0 := σ.2
-      simp only [if_true] at h1
+      simp only [ite_true] at h1
       have h3 : σ.1 x = a ^ 2 - σ.1 δ * b ^ 2 := hab
       nlinarith [sq_nonneg a, mul_nonneg (neg_nonneg.2 h2.le) (sq_nonneg b)]
     · rintro (w | τ) hj

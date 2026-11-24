@@ -128,7 +128,7 @@ theorem exists_grpObj (j : U ⟶ Z) [Flat j] [Surjective j] [GrpObj A] (h : IsPu
   have hM := fun {T : Over U} => pushPt_mul h.w (fun φ₂ h₂ => by rw [eq_sq h.w h₂, hm]) (T := T)
   have hI := fun {T : Over U} => pushPt_inv h.w hi (T := T)
   have hE := pushPt_one h.w he
-  letI : MonObj G :=
+  let : MonObj G :=
     { one := e
       mul := m
       one_mul := hom_ext_of_points j fun T t => by
@@ -149,7 +149,7 @@ theorem exists_grpObj (j : U ⟶ Z) [Flat j] [Surjective j] [GrpObj A] (h : IsPu
           ext <;> simp [hx, hy, hz]
         rw [lift_whiskerRight_assoc, lift_lift_associator_hom_assoc, lift_whiskerLeft_assoc, hM, hM, hM, hM,
           _root_.mul_assoc] }
-  letI : GrpObj G :=
+  let : GrpObj G :=
     { inv := i
       left_inv := hom_ext_of_points j fun T t => by
         obtain ⟨x, rfl⟩ := pushPt_surjective h T t
@@ -166,7 +166,7 @@ theorem exists_grpObj (j : U ⟶ Z) [Flat j] [Surjective j] [GrpObj A] (h : IsPu
 
 theorem flat_spMap {k K : Type} [Field k] [Field K] (β : k →+* K) : Flat (spMap β) := by
   rw [Flat.SpecMap_iff]
-  letI := β.toAlgebra
+  let := β.toAlgebra
   exact (inferInstance : Module.Flat k K)
 
 theorem surjective_spMap {k K : Type} [Field k] [Field K] (β : k →+* K) : Surjective (spMap β) :=

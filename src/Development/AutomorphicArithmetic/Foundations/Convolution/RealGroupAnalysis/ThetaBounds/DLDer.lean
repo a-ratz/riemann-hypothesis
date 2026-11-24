@@ -357,7 +357,7 @@ private theorem pl_fiber (D : Dat F E) {τ τ' : E →+* ℂ} (h : pl (F := F) �
   · exact Or.inr (emb_ext D (h1.trans (conj_comp τ).symm) (h3.trans (conj_θ D τ).symm))
 
 private theorem pl_surj (D : Dat F E) (w : InfinitePlace F) : ∃ τ : E →+* ℂ, pl (F := F) τ = w := by
-  haveI : Module.Finite F E := Module.Finite.of_basis D.b
+  have : Module.Finite F E := Module.Finite.of_basis D.b
   obtain ⟨w', hw'⟩ := InfinitePlace.comap_surjective (k := F) (K := E) w
   refine ⟨w'.embedding, ?_⟩
   unfold pl
@@ -426,7 +426,7 @@ private theorem term (Y : Lie E 2) (hY : (Matrix.of Y).trace = 0) (ψ' : S4 F) (
     have : Y 0 0 + Y 1 1 = 0 := hY
     rw [this, map_zero]
   simp only [dE_apply, T, Fin.sum_univ_two, Matrix.mul_apply, Matrix.map_apply, Matrix.of_apply]
-  simp only [Fin.isValue, zero_ne_one, one_ne_zero, if_true, if_false]
+  simp only [Fin.isValue, zero_ne_one, one_ne_zero, ite_true, ite_false]
   linear_combination (-(ψ'.1 v)) * tr
 
 end UpperTheory.ConvolutionTheory.R2.Ff.VectorFieldOperators

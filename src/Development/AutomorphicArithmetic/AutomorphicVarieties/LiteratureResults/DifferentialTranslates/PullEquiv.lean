@@ -57,11 +57,11 @@ theorem pullEquiv : PullEquiv := by
   intro Γ V S _ _ _ d G _ l hl q η hη γ s p hp
   have hAp : (G.ρ γ⁻¹) p ∈ G.Y := G.maps γ⁻¹ p hp
   have hBA : ∀ x, (G.ρ γ) ((G.ρ γ⁻¹) x) = x := fun x => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   have hAB : ∀ x, (G.ρ γ⁻¹) ((G.ρ γ) x) = x := fun x => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one,
+      one_apply_eq_self]
   have hss : (G.σ γ) ((G.σ γ⁻¹) s) = s := by
     rw [← Equiv.Perm.mul_apply, ← map_mul, mul_inv_cancel, map_one, Equiv.Perm.one_apply]
   have hlinv : ∀ x ∈ G.Y, l s x = l ((G.σ γ⁻¹) s) ((G.ρ γ⁻¹) x) := fun x hx => by

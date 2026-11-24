@@ -440,7 +440,7 @@ variable {S}
 theorem cellMon_mono {J I : ∀ k, Finset (ι k)} (h : ∀ k, J k ⊆ I k) : KH.cellMon S J ≤ KH.cellMon S I :=
   Submonoid.closure_mono (by
     rintro f ⟨k, j, hj, rfl⟩
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact ⟨k, j, h k hj, rfl⟩)
 
 theorem cellRes_of_le {M : Type} [AddCommGroup M] [Module (MRingOver S ι) M] {J I : ∀ k, Finset (ι k)}
@@ -587,7 +587,7 @@ theorem secCoch_mem {s : Ω} {a : K → ℤ} (hs : s ∈ chartLat y a 1) :
     refine cechD_zero_eq_zero _ I fun J J' hJ hJ' => ?_
     by_cases hz : ∃ k, ∃ i ∈ I.1 k, y ⟨k, i⟩ = 0
     · obtain ⟨k, i, hi, h0⟩ := hz
-      haveI := subsingleton_loc (S := S) hi h0
+      have := subsingleton_loc (S := S) hi h0
       exact Subsingleton.elim _ _
     · push_neg at hz
       have hJc : ∀ k, y ⟨k, cellChart J k⟩ ≠ 0 := fun k => hz k _ (hJ k (cellChart_mem J k))
@@ -602,7 +602,7 @@ theorem generatedV_idealOver {a : K → ℤ} {n : ℕ} {w : Fin n → Ω} (hw : 
   intro I
   by_cases hz : ∃ k, y ⟨k, cellChart I k⟩ = 0
   · obtain ⟨k, h0⟩ := hz
-    haveI := subsingleton_loc (S := S) (cellChart_mem I k) h0
+    have := subsingleton_loc (S := S) (cellChart_mem I k) h0
     exact ⟨0, Fin.elim0, Fin.elim0, fun j => j.elim0, fun j => j.elim0, Subsingleton.elim _ _⟩
   · push_neg at hz
     obtain ⟨u, hu, hsum⟩ := hg (cellChart I) hz

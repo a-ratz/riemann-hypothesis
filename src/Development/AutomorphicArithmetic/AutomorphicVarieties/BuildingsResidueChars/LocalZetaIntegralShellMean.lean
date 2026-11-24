@@ -146,7 +146,7 @@ private theorem dual_eq_zero_or_smul_of_irreducible_of_conj_invariant {F : Type*
     have hle : Submodule.span ℂ P ≤ (Submodule.span ℂ P).comap (σ p) :=
       Submodule.span_le.2 (fun y hy => Submodule.mem_comap.2 (Submodule.subset_span (hinv p y hy)))
     exact hle hx⟩
-  haveI := hirr
+  have := hirr
   rcases eq_bot_or_eq_top V with hV | hV
   · right
     intro h hh w
@@ -178,7 +178,7 @@ private theorem val_lemma_7 {F : Type*} [Field F] [ValuativeRel F] [TopologicalS
     intro e he
     obtain ⟨n, rfl⟩ := Int.eq_ofNat_of_zero_le he.le
     rw [zpow_natCast]
-    exact pow_lt_one₀ zero_le' h1 (by omega)
+    exact pow_lt_one₀ zero_le h1 (by omega)
   have prod : ∀ e : ℤ, ValuativeRel.valuation F (uniformizer F : F) ^ e *
       ValuativeRel.valuation F (uniformizer F : F) ^ (-e) = 1 := by
     intro e
@@ -287,7 +287,7 @@ private theorem integrableOn_of_continuous_of_support_inter_subset_compact {X : 
     [OpensMeasurableSpace X] [T2Space X] (μ : Measure X) [IsFiniteMeasureOnCompacts μ]
     (φ : X → ℂ) (hφ : Continuous φ) (S T : Set X) (hS : MeasurableSet S) (hT : IsCompact T)
     (h : ∀ x ∈ S, φ x ≠ 0 → x ∈ T) : IntegrableOn φ S μ :=
-  (ContinuousOn.integrableOn_compact hT hφ.continuousOn).of_forall_diff_eq_zero hS
+  (ContinuousOn.integrableOn_compact hT hφ.continuousOn).of_forall_sdiff_eq_zero hS
     (fun x hx => by
       by_contra hne
       exact hx.2 (h x hx.1 hne))
@@ -374,7 +374,7 @@ theorem UpperTheory.local_zeta_integral_shell_mean :
         ((integralGL F m : Subgroup _) : Set (GL (Fin m) F)) := by
       ext x
       exact Subgroup.mul_mem_cancel_right _ hg
-    rw [Measure.map_apply (measurable_mul_const g) hK, hpre, Measure.smul_apply,
+    rw [Measure.map_apply (measurable_mul_const g) hK, hpre, smul_apply,
       ENNReal.smul_def, smul_eq_mul] at e1
     have h0 : μ ((integralGL F m : Subgroup _) : Set (GL (Fin m) F)) ≠ 0 :=
       (isOpen_integralGL F m).measure_ne_zero μ ⟨1, (integralGL F m).one_mem⟩

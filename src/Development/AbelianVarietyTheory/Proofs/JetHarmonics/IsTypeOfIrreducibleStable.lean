@@ -66,7 +66,7 @@ theorem isType_of_irreducible_stable : ∀ (Y : Type) [NormedAddCommGroup Y] [In
   let πS : Mx k r → (S →L[ℂ] S) := fun h => (S.orthogonalProjection).comp ((π h).comp S.subtypeL)
   have hcoe : ∀ h ∈ UWset k r z, ∀ y : S, ((πS h y : S) : Y) = π h y := by
     intro h hh y
-    have := Submodule.orthogonalProjection_mem_subspace_eq_self (K := S) ⟨π h y, hst h hh y y.2⟩
+    have := Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (K := S) ⟨π h y, hst h hh y y.2⟩
     exact congrArg Subtype.val this
   have hrep : IsRepW k r z πS := by
     refine ⟨⟨?_, fun a _ b hb => ?_⟩, ?_⟩

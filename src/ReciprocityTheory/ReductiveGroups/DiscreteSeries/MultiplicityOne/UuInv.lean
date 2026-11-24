@@ -242,7 +242,7 @@ lemma E_equiv (D : RealPlaceData k r Wp Wq) (hCI : ConjInv D) {a b : Mat k r} (h
   filter_upwards [ae_in D] with p hp
   have h := norm_Lab D ha hb (rho D p F (a⁻¹ * g * b))
   rw [Lab_apply] at h
-  rw [rho_Sab D ha hb hp, enorm_eq_nnnorm, enorm_eq_nnnorm,
+  rw [rho_Sab D ha hb hp, eNorm_eq_nnNorm, eNorm_eq_nnNorm,
     show ‖(D.π a).comp ((rho D p F (a⁻¹ * g * b)).comp (D.π' b⁻¹))‖₊ = ‖rho D p F (a⁻¹ * g * b)‖₊ from NNReal.eq h]
 
 end ReciprocityTheory.ChartRestriction.DS.Mult1.SymB
@@ -573,7 +573,7 @@ private theorem hpk_sq_lemma : Hpk k r * Hpk k r = 1 := by
 
 lemma uu_inv {z : Fin (2 * r + k + 1) → ℂ} {γ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} {u : Mat k r}
     (hu : u ∈ UUset k r z γ) : u⁻¹ ∈ UUset k r z γ := by
-  simp only [UUset, UWset, UH, Set.mem_setOf_eq] at hu ⊢
+  simp only [UUset, UWset, UH, Set.mem_ofPred_eq] at hu ⊢
   obtain ⟨⟨hH, hb, hz⟩, hw⟩ := hu
   have hdH : (Hpk k r).det ≠ 0 := by
     have h := congrArg Matrix.det (hpk_sq_lemma (k := k) (r := r))
@@ -633,12 +633,12 @@ theorem core (D : RealPlaceData k r Wp Wp) (hD : IsDiag D) (hCI : ConjInv D) (hc
       hm ((aesm_comp h hC.2).congr (hPC.mono fun p hp => hp.2.1.symm))
     rw [hB, hB', integral_non_aestronglyMeasurable hm, integral_non_aestronglyMeasurable hm']
   have hPhiI : Integrable (Phi D f g0) D.μSS := by
-    refine ⟨hm, hasFiniteIntegral_iff_enorm.2 ?_⟩
+    refine ⟨hm, hasFiniteIntegral_iff_eNorm.2 ?_⟩
     have e : ∀ p, ‖Phi D f g0 p‖ₑ = ‖rho D p (scalF Wp f) g0‖ₑ := fun p => by
       have h1 : ‖ph D p‖ₑ = 1 := by
-        rw [enorm_eq_nnnorm, show ‖ph D p‖₊ = 1 from NNReal.eq (by rw [coe_nnnorm, NNReal.coe_one]; exact norm_ph D p),
+        rw [eNorm_eq_nnNorm, show ‖ph D p‖₊ = 1 from NNReal.eq (by rw [coe_nnNorm, NNReal.coe_one]; exact norm_ph D p),
           ENNReal.coe_one]
-      rw [show Phi D f g0 p = ph D p • rho D p (scalF Wp f) g0 by rw [rho_scalF, hπ]; rfl, enorm_smul, h1, one_mul]
+      rw [show Phi D f g0 p = ph D p • rho D p (scalF Wp f) g0 by rw [rho_scalF, hπ]; rfl, eNorm_smul, h1, one_mul]
     calc ∫⁻ p, ‖Phi D f g0 p‖ₑ ∂D.μSS = ∫⁻ p, ‖rho D p (scalF Wp f) g0‖ₑ ∂D.μSS := lintegral_congr e
       _ < ∞ := hEf.lt_top
   have hPsiM : AEStronglyMeasurable (Psi D γ f g0) D.μSS :=

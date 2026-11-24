@@ -262,7 +262,7 @@ theorem exists_isMarked_inRCone (E : Type) [Field E] [NumberField E] [IsCMField 
     (hlab : lab.evalZ β = ((i + 1 : ℕ) : ℝ)) :
     ∃ β₀ : LinearMap.BilinForm ℤ X, IsMarked H.bar ψ lab i X β₀ ∧ InRCone v β₀ := by
   classical
-  haveI : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
+  have : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
   have hD := hDom X
   have hβ0 : β ≠ 0 := by
     rintro rfl

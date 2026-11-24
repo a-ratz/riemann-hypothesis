@@ -64,7 +64,7 @@ theorem mem_skew {X : 𝔸} : X ∈ skew σ ↔ σ X = -X := by
   simp [skew, add_eq_zero_iff_eq_neg]
 
 theorem mul_adj {a : 𝔸} (h : σ a * a = 1) : a * σ a = 1 := by
-  haveI : IsArtinianRing 𝔸 := IsArtinianRing.of_finite ℝ 𝔸
+  have : IsArtinianRing 𝔸 := IsArtinianRing.of_finite ℝ 𝔸
   exact mul_eq_one_comm.1 h
 
 def unit (anti : ∀ a b, σ (a * b) = σ b * σ a) (one : σ 1 = 1) (invol : ∀ a, σ (σ a) = a) : Subgroup 𝔸ˣ where
@@ -138,7 +138,7 @@ theorem chain (T : Set (skew σ)) (hT : Submodule.span ℝ T = ⊤) (f : 𝔸 �
       (∀ X, σ X = -X → deriv (fun t : ℝ => f (γ x * exp (t • X))) 0 = D X) ∧
       ∀ v, σ (σ (γ x) * fderiv ℝ γ x v) = -(σ (γ x) * fderiv ℝ γ x v) ∧
         fderiv ℝ (fun y => f (γ y)) x v = D (σ (γ x) * fderiv ℝ γ x v) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have h0 := hu.self_of_nhds
   obtain ⟨F, F1, F2⟩ := exists_ext anti one invol T hT f hf h0
   have e : (fun y => f (γ y)) =ᶠ[𝓝 x] fun y => F (γ y) := by
@@ -192,7 +192,7 @@ instance : FiniteDimensional ℝ (Alg n ι) := inferInstanceAs (FiniteDimensiona
 
 omit [DecidableEq ι] in
 theorem exp_alg (X : Alg n ι) (τ : ι) : (exp X : Alg n ι) τ = exp (X τ : Mt n) :=
-  @Pi.coe_exp ι (fun _ => Mt n) _ _ _ (fun _ => FiniteDimensional.complete ℝ _) X τ
+  @Pi.coe_exp ι (fun _ => Mt n) _ _ _ (fun _ => FiniteDimensional.completeSpace ℝ _) X τ
 
 end Inst
 

@@ -96,7 +96,7 @@ theorem exists_finset_of_isOpen (L : Set (GL (Fin n) (Af E))) (hL : IsOpen L) (h
   by_contra h
   push Not at h
   choose k hk1 hk2 hk3 using h
-  haveI : T2Space (FiniteAdeleRing (𝓞 E) E) :=
+  have : T2Space (FiniteAdeleRing (𝓞 E) E) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 E) => v.adicCompletion E)
       (fun v => (v.adicCompletionIntegers E : Set (v.adicCompletion E))) Filter.cofinite))
   have hU : IsCompact (GlobalTheory.GLIntegral.glSub (ι := Fin n) (GlobalTheory.GLIntegral.intSubring E) : Set (GL (Fin n) (Af E))) :=
@@ -185,7 +185,7 @@ theorem isOpen_adLevel {Kf : ∀ w : HeightOneSpectrum (𝓞 E), Subgroup (GL (F
         ⋂ w ∈ hB.toFinset, (GeneralLinearGroup.map (pLoc E w) : GL (Fin N) (Af E) → _) ⁻¹' (Kf w : Set _) := by
     ext k
     simp only [SetLike.mem_coe, mem_adLevel, Set.mem_inter_iff, Set.mem_iInter, mem_glSub_iff, Set.mem_preimage,
-      Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     refine ⟨fun h => ⟨fun v => (h v).1, fun w _ => (h w).2⟩, fun h v => ⟨h.1 v, ?_⟩⟩
     by_cases hv : GlobalTheory.LFun.KGL v (n := N) ≤ Kf v
     · exact hv (h.1 v)
@@ -435,14 +435,14 @@ theorem isLocCompGL_of_equiv {E : Type} [Field E] [NumberField E] [IsCMField E] 
 theorem finDiscN : PositivityTheory.Rg.BcB.F.F5.FinDiscN := by
   intro E _ _ _ N Kf W m hK hW
   classical
-  haveI := hW
+  have := hW
   let Y : Submodule ℂ (Kinf E N → ℂ) := Submodule.span ℂ
     {f | ∃ φ : Sm E N, TypeW W φ ∧ ∃ g : GA E N, f = fun k => φ.1 (g * infGL E N (Unitary.toUnits k))}
   have hYW : Y ≤ W := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨φ, hφ, g, rfl⟩
     exact hφ g
-  haveI : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le hYW
+  have : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le hYW
   have hYl : ∀ f ∈ Y, ∀ k, (fun x => f (k * x)) ∈ Y := by
     intro f hf k
     induction hf using Submodule.span_induction with
@@ -463,7 +463,7 @@ theorem finDiscN : PositivityTheory.Rg.BcB.F.F5.FinDiscN := by
     | add x y _ _ hx hy => exact hx.add hy
     | smul r x _ hx => exact hx.const_smul r
   let c : (E →+* ℂ) → ℂ → ℂ := fun τ u => ((m τ).map (u + ·)).prod
-  haveI hF := PositivityTheory.Rg.HF.GL.automorphicFormsFiniteGL E N (adLevel Kf) (isOpen_adLevel hK) (Module.Dual ℂ Y)
+  have hF := PositivityTheory.Rg.HF.GL.automorphicFormsFiniteGL E N (adLevel Kf) (isOpen_adLevel hK) (Module.Dual ℂ Y)
     (dualRep Y hYl) (isContRep_dualRep Y hYl hYc) c
   let Sys := ∀ w : HeightOneSpectrum (𝓞 E), GlobalTheory.LocGL.IrrGL (k := w.adicCompletion E)
   let cls : (∀ w : HeightOneSpectrum (𝓞 E), SmIrr (GL (Fin N) (w.adicCompletion E))) → Sys := fun σ' w =>
@@ -488,7 +488,7 @@ theorem finDiscN : PositivityTheory.Rg.BcB.F.F5.FinDiscN := by
       fun τ u => ((hg s).2.2.1 τ).2 u _ (hψV s)⟩
   have hli' : LinearIndependent ℂ (fun s => (⟨ψ s, hψF s⟩ : F)) :=
     LinearIndependent.of_comp F.subtype hli
-  haveI : Finite S := hli'.finite_of_isNoetherian
+  have : Finite S := hli'.finite_of_isNoetherian
   obtain ⟨k, ⟨e⟩⟩ := Finite.exists_equiv_fin S
   refine ⟨k, fun j => σs (e.symm j), fun V σ' h1 h2 h3 h4 h5 => ?_⟩
   have hs : cls σ' ∈ S := ⟨V, σ', ⟨h1, h2, h3, h4, h5⟩, rfl⟩

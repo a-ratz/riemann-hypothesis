@@ -85,7 +85,7 @@ theorem conj_ne_one : conj F E ≠ 1 := by
 
 include hU in
 theorem isGalois : IsGalois F E := by
-  haveI := findim (F := F) (E := E)
+  have := findim (F := F) (E := E)
   apply IsGalois.of_card_aut_eq_finrank
   rw [hU.finrank_eq]
   apply le_antisymm
@@ -100,8 +100,8 @@ theorem isGalois : IsGalois F E := by
 
 theorem trace_eq (y : E) : algebraMap F E (Algebra.trace F E y) = y + star y := by
   classical
-  haveI := findim (F := F) (E := E)
-  haveI := isGalois (F := F) (E := E)
+  have := findim (F := F) (E := E)
+  have := isGalois (F := F) (E := E)
   rw [trace_eq_sum_automorphisms]
   have hc : Fintype.card (E ≃ₐ[F] E) = 2 := by
     rw [← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, hU.finrank_eq]
@@ -136,7 +136,7 @@ theorem exists_sq_close [ProperSpace K] (h2 : ‖(2 : K)‖ < 1) (n : K) (hn : �
   let S := closeSetoid K
   have hfin : Finite (Quotient S) := by
     obtain ⟨t, htB, htf, hcov⟩ := (isCompact_closedBall (0 : K) 1).finite_cover_balls (e := 1) one_pos
-    haveI : Finite t := htf.to_subtype
+    have : Finite t := htf.to_subtype
     refine Finite.of_surjective (fun i : t => (Quotient.mk S ⟨i.1, htB i.2⟩ : Quotient S)) ?_
     intro q
     induction q using Quotient.inductionOn with
@@ -197,7 +197,7 @@ section Main
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [hU : Unram F E]
 
 theorem fixed_eq {z : E} (hz : star z = z) : algebraMap F E (Algebra.trace F E z / 2) = z := by
-  haveI := hU.charZero
+  have := hU.charZero
   have h := trace_eq (F := F) z
   rw [hz] at h
   have h2E : (2 : E) ≠ 0 := by
@@ -210,10 +210,10 @@ theorem exists_far : ∃ w : E, ‖w‖ = 1 ∧ ∀ c : F, 1 ≤ ‖w - algebraM
   apply GlobalTheory.NormUnits.exists_far_unit <;> assumption
 
 theorem exists_diff_one (h2 : ‖(2 : F)‖ < 1) : ∃ w : E, ‖w‖ ≤ 1 ∧ ‖w - star w‖ = 1 := by
-  haveI := hU.ultraE
-  haveI := hU.ultraF
-  haveI := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have := hU.ultraE
+  have := hU.ultraF
+  have := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨w, hw, hfar⟩ := exists_far (F := F) (E := E)
   refine ⟨w, hw.le, le_antisymm ?_ ?_⟩
   · exact (um_sub _ _).trans (by rw [hU.norm_star, hw, max_self])
@@ -251,8 +251,8 @@ theorem exists_diff_one (h2 : ‖(2 : F)‖ < 1) : ∃ w : E, ‖w‖ ≤ 1 ∧ 
 
 theorem exists_half (F : Type) {E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [hU : Unram F E] : ∃ e : E, ‖e‖ ≤ 1 ∧ e + star e = 1 := by
-  haveI := hU.ultraF
-  haveI := hU.charZero
+  have := hU.ultraF
+  have := hU.charZero
   by_cases h2 : ‖(2 : F)‖ = 1
   · refine ⟨algebraMap F E (1 / 2), ?_, ?_⟩
     · rw [norm_algebraMap', norm_div, h2, norm_one]; norm_num
@@ -272,7 +272,7 @@ theorem exists_half (F : Type) {E : Type} [NontriviallyNormedField F] [Nontrivia
       rw [this, div_neg, ← sub_eq_add_neg, ← sub_div, div_self hd0]
 
 theorem small_of_trace_small (y : E) (h : ∀ e : E, ‖e‖ ≤ 1 → ‖Algebra.trace F E (e * y)‖ < 1) : ‖y‖ < 1 := by
-  haveI := hU.charZero
+  have := hU.charZero
   by_contra hy
   push_neg at hy
   have hy0 : y ≠ 0 := by intro h0; rw [h0, norm_zero] at hy; linarith

@@ -68,7 +68,7 @@ private theorem wd_wdb_ofReal_comp_of_differentiableAt {n : ℕ} {φ : ℝ → �
     Complex.ofRealCLM.hasFDerivAt.comp y hu.hasFDerivAt
   constructor <;>
     simp only [wd, wdb, h1.fderiv, h2.fderiv, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.smul_apply, smul_eq_mul, Complex.ofRealCLM_apply, Complex.ofReal_mul] <;> ring
+      smul_apply, smul_eq_mul, Complex.ofRealCLM_apply, Complex.ofReal_mul] <;> ring
 
 private theorem wdb_ofReal_eq_conj_wd_ofReal {n : ℕ} {u : V n → ℝ} {y : V n} (hu : DifferentiableAt ℝ u y) (j : Fin n) :
     wdb n j (fun w => (u w : ℂ)) y = (starRingEnd ℂ) (wd n j (fun w => (u w : ℂ)) y) := by
@@ -83,7 +83,7 @@ private theorem wd_mul_apply {n : ℕ} {p q : V n → ℂ} {y : V n} (hp : Diffe
     wd n j (fun w => p w * q w) y = wd n j p y * q y + p y * wd n j q y := by
   have hF : fderiv ℝ (fun w => p w * q w) y = p y • fderiv ℝ q y + q y • fderiv ℝ p y :=
     (hp.hasFDerivAt.mul hq.hasFDerivAt).fderiv
-  simp only [wd, hF, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [wd, hF, add_apply, smul_apply, smul_eq_mul]
   ring
 
 private theorem differentiableAt_wdb_of_contDiffAt_two {n : ℕ} {g : V n → ℂ} {y : V n} (hg : ContDiffAt ℝ 2 g y) (k : Fin n) :

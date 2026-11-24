@@ -62,7 +62,7 @@ theorem exists_isChart : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G], 
   let x0 : (Sp k) := IsLocalRing.closedPoint k
   obtain ⟨R, i, hi, hx, -⟩ := Scheme.exists_affine_mem_range_and_range_subset (X := G.left) (x := e.left x0) (U := ⊤) trivial
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (i ≫ G.hom : Spec R ⟶ Spec (CommRingCat.of k))
-  letI : Algebra k R := φ.hom.toAlgebra
+  let : Algebra k R := φ.hom.toAlgebra
   have hft : Algebra.FiniteType k R := by
     have h1 : LocallyOfFiniteType (Spec.map φ) := by rw [hφ]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 h1

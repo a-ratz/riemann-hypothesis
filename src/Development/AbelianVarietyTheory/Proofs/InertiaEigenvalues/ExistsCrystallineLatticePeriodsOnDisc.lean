@@ -88,13 +88,13 @@ theorem crys_filtered : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocA
   intro l _ P AI TT K V _ _ _ ρ hC a y hy
   let LL : FinExt l := ⟨⊥, inferInstance⟩
   let e : ↥LL.1 ≃ₐ[ℚ_[l]] ℚ_[l] := IntermediateField.botEquiv ℚ_[l] (Om l)
-  letI iM : Module ↥LL.1 V := Module.compHom V (e : ↥LL.1 →+* ℚ_[l])
-  haveI : IsScalarTower ℚ_[l] ↥LL.1 V := ⟨fun c x v => by
+  let iM : Module ↥LL.1 V := Module.compHom V (e : ↥LL.1 →+* ℚ_[l])
+  have : IsScalarTower ℚ_[l] ↥LL.1 V := ⟨fun c x v => by
     show e (c • x) • v = c • (e x • v)
     have h1 := e.toLinearEquiv.map_smul c x
     simp only [AlgEquiv.toLinearEquiv_apply] at h1
     rw [h1, smul_eq_mul, mul_smul]⟩
-  haveI : FiniteDimensional ↥LL.1 V := Module.Finite.of_restrictScalars_finite ℚ_[l] _ V
+  have : FiniteDimensional ↥LL.1 V := Module.Finite.of_restrictScalars_finite ℚ_[l] _ V
   let ρ' : Representation ↥LL.1 ↥(GK K) V :=
     { toFun := fun g =>
         { toFun := ρ g
@@ -317,12 +317,12 @@ theorem crisSpan_rat : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAi
   have hreg := (tied_regular_and_onto l P AI hT).1
   let LL : FinExt l := ⟨⊥, inferInstance⟩
   let e : (↥(LL.1)) ≃ₐ[ℚ_[l]] ℚ_[l] := IntermediateField.botEquiv ℚ_[l] (Om l)
-  letI iM : Module (↥(LL.1)) V := Module.compHom V e.toRingEquiv.toRingHom
-  haveI iT : IsScalarTower ℚ_[l] (↥(LL.1)) V :=
+  let iM : Module (↥(LL.1)) V := Module.compHom V e.toRingEquiv.toRingHom
+  have iT : IsScalarTower ℚ_[l] (↥(LL.1)) V :=
     ⟨fun q x v => by
       show e (q • x) • v = q • (e x • v)
       rw [show e (q • x) = q • e x from e.toLinearEquiv.map_smul q x, smul_eq_mul, mul_smul]⟩
-  haveI iF : FiniteDimensional (↥(LL.1)) V := Module.Finite.of_restrictScalars_finite ℚ_[l] (↥(LL.1)) V
+  have iF : FiniteDimensional (↥(LL.1)) V := Module.Finite.of_restrictScalars_finite ℚ_[l] (↥(LL.1)) V
   let ρ' : Representation (↥(LL.1)) (↥(GK K)) V :=
     { toFun := fun g =>
         { toFun := ρ g, map_add' := (ρ g).map_add, map_smul' := fun x v => (ρ g).map_smul (e x) v }
@@ -416,7 +416,7 @@ theorem crd_basis (bV : Module.Basis (Fin d) F V) (r j : Fin d) :
   rw [crd_tmul, Module.Basis.coord_apply, Module.Basis.repr_self]
   by_cases h : r = j
   · subst h; simp
-  · rw [Finsupp.single_apply, if_neg (Ne.symm h), if_neg h, zero_smul]
+  · rw [Finsupp.single_apply, ite_eq_right (Ne.symm h), ite_eq_right h, zero_smul]
 
 end GlobalTheory.CrisCoord
 
@@ -494,7 +494,7 @@ theorem lattice_basis_span_invariants : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt
     rw [toMatrix_lat, Algebra.smul_def, map_mul, PadicInt.algebraMap_apply, T.zB]
     congr 1
     simp only [LinearMap.restrictScalars_apply, AlgHom.toLinearMap_apply, AlgEquiv.coe_toAlgHom,
-      AlgHom.coe_coe]
+      AlgHom.coe_ofClass]
     rw [← T.actB]
     congr 1
     exact (P.PD_actB K g _).symm
@@ -588,7 +588,7 @@ theorem descend {K : FinExt l} (C : Core l) (hI : C.InvdR) {d : ℕ} (w : Fin d 
         algebraMap (Per.BdRp l) (Per.BdR l) (aDp l (Per.zA l y)) * w r := by
   have hx : ∀ r, ∃ x ∈ K.1, C.oD x = w r := fun r => hI K (w r) (fun g hg => hw ⟨g, hg⟩ r)
   choose x hxK hxw using hx
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   classical
   obtain ⟨y, hy0, hint⟩ := exists_integral_multiples ℤ_[l] ℚ_[l]
     (Finset.univ.image fun r => (⟨x r, hxK r⟩ : ↥K.1))
@@ -662,7 +662,7 @@ theorem exists_lattice_generators : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
         intro a
         show algebraMap (Per.BdRp l) (Per.BdR l) (aDp l (Per.zA l (y j' a))) * v j' a r *
           (if j' = j' then algebraMap (Per.BdRp l) (Per.BdR l) (inv ⟨j', a⟩) * c j' a else 0) = _
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         have hu : algebraMap (Per.BdRp l) (Per.BdR l) (aDp l (Per.zA l (y j' a))) *
             algebraMap (Per.BdRp l) (Per.BdR l) (inv ⟨j', a⟩) = 1 := by
           rw [← map_mul, show aDp l (Per.zA l (y j' a)) * inv ⟨j', a⟩ = 1 from
@@ -774,15 +774,15 @@ theorem exists_invertible_invariant : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
   intro l _ K P AI T d ρ hspan
   classical
   obtain ⟨-, hdom, -⟩ := GlobalTheory.Per.TiedField.tied_field l P AI T
-  haveI : IsDomain (Per.Bcris l) :=
+  have : IsDomain (Per.Bcris l) :=
     Function.Injective.isDomain (T.eB.symm : Per.Bcris l →+* P.R.B) T.eB.symm.injective
   choose m c v hv hsum using hspan
   let κ : ↥(K0 K) →+* Per.Bcris l := T.eB.toRingHom.comp (algebraMap ↥(K0 K) P.R.B)
-  letI : Algebra ↥(K0 K) (Per.Bcris l) := κ.toAlgebra
+  let : Algebra ↥(K0 K) (Per.Bcris l) := κ.toAlgebra
   let S : Set (Fin d → Per.Bcris l) := Set.range (fun q : (Σ j, Fin (m j)) => v q.1 q.2)
   obtain ⟨b, hbS, hspanb, hli⟩ := exists_linearIndependent (↥(K0 K)) S
   have hfin : b.Finite := (Set.finite_range _).subset hbS
-  haveI : Fintype b := hfin.fintype
+  have : Fintype b := hfin.fintype
   have hvb : ∀ (x : b) (g : ↥(GK K)), ((ρ g).map (Per.zB l)).mulVec (fun r => Per.σB (g : GQ l) ((x : Fin d → Per.Bcris l) r)) = x := by
     rintro ⟨x, hx⟩ g
     obtain ⟨⟨j, i⟩, rfl⟩ := hbS hx

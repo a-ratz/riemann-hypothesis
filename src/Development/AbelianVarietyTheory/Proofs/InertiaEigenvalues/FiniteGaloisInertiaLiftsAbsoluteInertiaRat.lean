@@ -160,7 +160,7 @@ theorem mem_Dec_of_lt {A : ValuationSubring Ω} {σ : G F Ω}
     intro y
     rcases eq_or_ne y 0 with rfl | hy
     · simp
-    · have h0 : 0 < A.valuation y := zero_lt_iff.mpr (by simpa using hy)
+    · have h0 : 0 < A.valuation y := pos_iff_ne_zero.mpr (by simpa using hy)
       rw [← A.valuation_le_one_iff, map_inv₀, inv_lt_one₀ h0, not_lt]
       simp [hy]
   show σ • A = A

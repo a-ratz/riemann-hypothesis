@@ -91,7 +91,7 @@ theorem PuncturedCoverCycles.proof (hCov : FibreSectionsCovering.Statement)
   let Ψ : Fin m → (Fin (e + 1) → ℂ) → Fin n → ℂ := fun b t =>
     if h : t ∈ Metric.ball c δ ∩ {t | t 0 ≠ 0} then (ψ b ⟨t, h⟩ : Fin n → ℂ) else 0
   have hΨ : ∀ b t (h : t ∈ Metric.ball c δ ∩ {t | t 0 ≠ 0}), Ψ b t = ψ b ⟨t, h⟩ :=
-    fun b t h => dif_pos h
+    fun b t h => dite_eq_left h
   have hAΨ : ∀ b t (h : t ∈ Metric.ball c δ ∩ {t | t 0 ≠ 0}),
       A *ᵥ Ψ b t = Function.update t 0 (t 0 ^ ord b) := by
     intro b t h
@@ -106,7 +106,7 @@ theorem PuncturedCoverCycles.proof (hCov : FibreSectionsCovering.Statement)
       have : (Metric.ball c δ ∩ {t | t 0 ≠ 0}).domRestrict (Ψ b) = fun s => (ψ b s : Fin n → ℂ) :=
         funext fun s => hΨ b s.1 s.2
       rw [this]
-      exact continuous_subtype_val.comp (hcont b)
+      exact continuous_subtypeVal.comp (hcont b)
     obtain ⟨O, V', g, hO, hAO, hV', hxV', hg, -, hAg, hXV'⟩ := hsec _ (ψ b ⟨t, ht⟩).2
     have hqt : Function.update t 0 (t 0 ^ ord b) ∈ O := by
       rw [← hAΨ b t ht, hΨ b t ht]

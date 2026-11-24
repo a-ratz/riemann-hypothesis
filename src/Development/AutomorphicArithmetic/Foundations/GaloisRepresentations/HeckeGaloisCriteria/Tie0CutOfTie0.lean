@@ -84,7 +84,7 @@ theorem setting_cut [Nonempty S] {t : ℕ} {Z : Finset X} {Z' : Finset S} (hZ : 
     {ρ : X → (Γ →* GL (Fin r) A)} {χ : ℕ → (Γ →* Aˣ)} (h : HidaSetting t T Z rep ρ χ) :
     HidaSetting t (cutT T S) Z' (fun y : S => rep y.1) (fun y => ρ y.1) χ := by
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩ := h
-  haveI := h1
+  have := h1
   refine ⟨cutT_local T S, fun x y hxy => ?_, fun x => h3 x.1, fun g d => mem_cutT S (h4 g d), fun x => h5 x.1,
     fun x y g => h6 x.1 y.1 g, fun x hx => h7 x.1 (hZ x hx), fun x hx => h8 x.1 (hZ x hx)⟩
   obtain ⟨f, hf, hne⟩ := h2 x.1 y.1 fun e => hxy (Subtype.ext e)
@@ -186,7 +186,7 @@ theorem res_eq {O X : Type} [CommRing O] [IsLocalRing O] (T : Subalgebra O (X �
 
 theorem hecke_res (D : D7) (i : D.nd.Loc) (x y : D.nd.X i) (w : PlE D.host) :
     (heckePol D.nd i x w).map (IsLocalRing.residue (D.nd.O i)) = (heckePol D.nd i y w).map (IsLocalRing.residue (D.nd.O i)) := by
-  haveI := D.nd.T_local i
+  have := D.nd.T_local i
   unfold heckePol
 
   simp only [Polynomial.map_add (f := _), Polynomial.map_sum, Polynomial.map_mul, Polynomial.map_C, map_mul, res_eq (D.nd.T i) _ x y]
@@ -257,12 +257,12 @@ theorem pointsAdmissible_restrictToPoints (hc : c.Good) (h : SumRepresentations.
   · have e : dM (cut D c).nd (cut D c).naut i = dM D.nd D.naut i.1 := by unfold dM; rw [goodPart_eq]; rfl
     rw [e, ← d]
     refine Finset.sum_of_injOn (fun x => x.1) (fun x _ y _ k => Subtype.ext k) (fun _ _ => Finset.mem_univ _)
-      (fun x _ hx => if_neg fun hz => hx ⟨⟨x, hc.good i.1 x ((D.Zgood_tie i.1 x).2 hz)⟩, Finset.mem_coe.2 (Finset.mem_univ _), rfl⟩)
+      (fun x _ hx => ite_eq_right fun hz => hx ⟨⟨x, hc.good i.1 x ((D.Zgood_tie i.1 x).2 hz)⟩, Finset.mem_coe.2 (Finset.mem_univ _), rfl⟩)
       fun x _ => ?_
     have m : (cut D c).nd.mult i x = D.nd.mult i.1 x.1 := Alg.mult_eq _ _ _ (D.nd.T_sep i.1) x
     by_cases hz : x.1 ∈ ZgoodN D.nd D.naut i.1
-    · rw [if_pos hz, if_pos ((zg_iff i x).2 hz), m]
-    · rw [if_neg hz, if_neg fun k => hz ((zg_iff i x).1 k)]
+    · rw [ite_eq_left hz, ite_eq_left ((zg_iff i x).2 hz), m]
+    · rw [ite_eq_right hz, ite_eq_right fun k => hz ((zg_iff i x).1 k)]
 
 theorem jointCondition_restrictToPoints (h : KillingConditions.LocalisationUniqueness D) : KillingConditions.LocalisationUniqueness (cut D c) :=
   fun i i' h1 h2 h3 σ hσ a b => Subtype.ext (h i.1 i'.1 h1 h2 h3 σ hσ ((atM_iff i σ).1 a) ((atM_iff i' σ).1 b))
@@ -274,7 +274,7 @@ theorem live_of {i : (cut D c).nd.Loc} (h : GlobalTheory.CoefDuty.Live (cut D c)
 theorem large_cut (h : GlobalTheory.CoefDuty.Large D) : GlobalTheory.CoefDuty.Large (cut D c) := by
   refine ⟨hypO_cut h.1, fun i x => h.2.1 i.1 x.1, fun i hl => ?_⟩
   obtain ⟨r, ρ, hr, A, i1, i2, i3, i4, i5, i6, i7, TA, repA, ρA, χA, hE, hS, hC⟩ := h.2.2 i.1 (live_of hl)
-  haveI : Nonempty (c.Xs i.1) := (c.ne i.1 i.2).to_subtype
+  have : Nonempty (c.Xs i.1) := (c.ne i.1 i.2).to_subtype
   refine ⟨fun x => r x.1, fun x => ρ x.1, fun x => hr x.1, A, i1, i2, i3, i4, i5, i6, i7, Alg.cutT TA (c.Xs i.1),
     fun x => repA x.1, fun x => ρA x.1, χA,
     ⟨hE.1, span_cut (O := D.nd.O i.1) (TO := D.nd.T i.1) (c.Xs i.1) hE.2.1, fun x => hE.2.2.1 x.1, fun x hx => hE.2.2.2.1 x.1 ((z_iff i x).1 hx), hE.2.2.2.2⟩,

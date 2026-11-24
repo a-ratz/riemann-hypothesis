@@ -442,7 +442,7 @@ theorem hasSum_evR_arc_natural : Out.Laws → Out.Laws2 → ∀ (E : Type) [Fiel
     congr 2
     exact RingHom.ext fun x => (hK (β x)).symm
   obtain ⟨p, j, y₀, hch, hmem⟩ := _root_.GlobalTheory.Frames.exists_openChart_testRing hL1.secBaseChange E H Dw l Xo c (pt (IsLocalRing.closedPoint ℂ⸨X⸩))
-  haveI := hch.1
+  have := hch.1
   obtain ⟨φ, hφ⟩ := GlobalTheory.ArcQ.exists_algHom_of_mem_range j hch.2.2 pt hpt3 hmem
   obtain ⟨y₁, hy₁⟩ := hL.bc _ _ φ y₀
   obtain ⟨G, s, hGs⟩ := (frChg_exists_unique_units E H Dw l Xo c _ (fun _ => 1) 1 y₁).2.2.2 y
@@ -523,8 +523,8 @@ theorem exists_arc_secZ' [Algebra c.F ℂ⸨X⸩]
         (U.X k).flow ξ' (fun τ => s τ + w * (d τ : ℂ)) x ∈ (U.X k).dom ∧ ∀ ex : Ix Dw → ℤ, ex none = 0 → ∀ F ∈ GlobalTheory.AllWt.secZ Xo c ex,
           HasSum (fun m : ℤ => (evR Xo c F y).coeff m * eTwoPi w ^ m)
             (Formalism.L2.PjFree.rdU U F k ((U.X k).flow ξ' (fun τ => s τ + w * (d τ : ℂ)) x)) := by
-  letI := FractionRing.liftAlgebra ℂ ℂ
-  haveI := FractionRing.isScalarTower_liftAlgebra ℂ ℂ
+  let := FractionRing.liftAlgebra ℂ ℂ
+  have := FractionRing.isScalarTower_liftAlgebra ℂ ℂ
   have hK := GlobalTheory.ArcCM.known_holds
   have h1 := hK.laws
   have h2 := hK.laws2
@@ -551,7 +551,7 @@ theorem exists_arc_secZ' [Algebra c.F ℂ⸨X⸩]
     rw [Category.assoc, hover, GlobalTheory.ArcId.sp_comp, GlobalTheory.ArcId.sp_comp, GlobalTheory.ArcId.sp_comp]
     congr 1
     exact RingHom.ext fun t => (halg _).symm
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   have hr : Set.range (pullback.lift _ _ hc : Sp ℂ⸨X⸩ ⟶ gen Y) ⊆ Set.range Y.jQ := by
     rintro _ ⟨q, rfl⟩
     rw [← Y.ab_gen, Set.mem_preimage, ← Scheme.Hom.comp_apply, pullback.lift_fst, Scheme.Hom.comp_apply, hab]
@@ -584,12 +584,12 @@ theorem exists_arc_secZ' [Algebra c.F ℂ⸨X⸩]
   obtain ⟨yw, hyw, -⟩ := GlobalTheory.ArcQ.AnFrEx.existsUnique_anFr h1 h2 E H Dw l Xo c σ r U Uw _ _ Y _ χ W Ha th Θ z hσ hz w
     hw.2.2
   obtain ⟨t, ht⟩ := GlobalTheory.ArcCoeff.frChg_of_anLie Uw.F Ha.i _ (Ha.period w hw.2.2) _ _ z hlie hyw.1
-  haveI : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
+  have : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
   have e1 := evR_frChg_one_secZ hex0 hF ht
   have := hT' w hw.2.1 yw hyw F hF.1
   rw [e1] at this
   convert this using 1
-  exact dif_pos hxw
+  exact dite_eq_left hxw
 
 end SecZ
 
@@ -642,7 +642,7 @@ theorem tendsto_dirichlet {ι : Type*} (A : ι → ℂ) (a : ι → ℝ) (F : �
       by_cases hz : a i = 0
       · simp [hz]
       have hp : 0 < a i := lt_of_le_of_ne (ha i hi) (Ne.symm hz)
-      rw [if_neg hz]
+      rw [ite_eq_right hz]
       have h1 : Tendsto (fun t : ℝ => Real.exp (-(a i * t))) atTop (𝓝 0) :=
         Real.tendsto_exp_neg_atTop_nhds_zero.comp (tendsto_id.const_mul_atTop hp)
       have h2 := ((Complex.continuous_ofReal.tendsto 0).comp h1).const_mul (A i)
@@ -673,7 +673,7 @@ theorem fj_zero_eq_zero_of_line : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     (fun t ht => by
       have h := (hw _ (him t ht)).2
       convert h using 3 with m
-      rw [ReciprocityTheory.ChartRestriction.G.Geo.Tor.eTwoPi, ← Complex.exp_int_mul]
+      rw [ReciprocityTheory.ChartRestriction.G.Geo.Tor.eTwoPi, ← exp_intCast_mul]
       push_cast
       congr 1
       linear_combination (-(2 * (Real.pi : ℂ) * m * t)) * Complex.I_mul_I)
@@ -801,7 +801,7 @@ theorem fjZero (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : ℕ) (o : ℝ
     ((Y.U σ).X k).fj (GlobalTheory.AllWt.modelWt (Y.U σ) (wtOf (T.Q.Dw j) la 0) k) ξ 0 (rdU (Y.U σ) f k) x = 0 := by
   have hf1 : 1 < Module.finrank ℚ D.host.E / 2 := by omega
   have hU := hG.unf σ hσ
-  letI : Algebra Y.d.c₂.F ℂ⸨X⸩ := (GlobalTheory.ArcId.cstL.comp σ).toAlgebra
+  let : Algebra Y.d.c₂.F ℂ⸨X⸩ := (GlobalTheory.ArcId.cstL.comp σ).toAlgebra
   have halg : ∀ x : Y.d.c₂.F, algebraMap Y.d.c₂.F ℂ⸨X⸩ x = HahnSeries.ofPowerSeries ℤ ℂ (PowerSeries.C (R := ℂ) (σ x)) :=
     fun _ => rfl
   obtain ⟨y, T₀, s', d, hbd, hd, hw⟩ :=

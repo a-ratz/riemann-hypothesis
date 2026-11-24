@@ -133,7 +133,7 @@ theorem UpperTheory.V.Af.Smo.centEq :
       rw [map_mul, map_mul, ← mul_assoc, ← mul_assoc, e, a, b, mul_assoc, hP]
       ring
   have h2 : ∀ x : GA E 1, f (g * sc n x) * f' g' = f g * f' (g' * sc n x) := by
-    refine isClosed_property (hD E 1 S).denseRange_val (isClosed_eq ?_ ?_) ?_
+    refine isClosed_property (hD E 1 S).denseRange_subtypeVal (isClosed_eq ?_ ?_) ?_
     · exact (hc.comp (continuous_const.mul (continuous_sc n))).mul continuous_const
     · exact continuous_const.mul (hc'.comp (continuous_const.mul (continuous_sc n)))
     · rintro ⟨_, γ, k, hk, rfl⟩

@@ -55,7 +55,7 @@ private theorem gen {Γ Γb M R κ : Type} [Group Γ] [TopologicalSpace Γ] [IsT
     have : (r.ker : Set Γ) = ⋂ k, ⋂ n : ℕ,
         {g | Ideal.Quotient.mk (I ^ n) (e k (r g)) = Ideal.Quotient.mk (I ^ n) (e k 1)} := by
       ext g
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
       refine ⟨fun h k n => by rw [h], fun h => he _ _ fun k => ?_⟩
       rw [← sub_eq_zero]
       refine IsHausdorff.haus (I := I) inferInstance _ fun n => ?_

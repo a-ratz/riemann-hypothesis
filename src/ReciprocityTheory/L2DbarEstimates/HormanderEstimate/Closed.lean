@@ -89,7 +89,7 @@ theorem enorm_integral_sub_mul_le (n : ℕ) {M : Type*} [MeasurableSpace M] (z :
       ENNReal.ofReal (‖g x‖ * Real.exp (ψ x / 2)) := by
     intro x
     rw [← ENNReal.ofReal_mul (by positivity : (0:ℝ) ≤ ‖F x - f x‖ * Real.exp (-ψ x / 2)),
-      ← ofReal_norm_eq_enorm, norm_mul, norm_sub_rev (f x) (F x)]
+      ← ofReal_norm, norm_mul, norm_sub_rev (f x) (F x)]
     congr 1
     have h1 : Real.exp (-ψ x / 2) * Real.exp (ψ x / 2) = 1 := by
       rw [← Real.exp_add, show -ψ x / 2 + ψ x / 2 = 0 by ring, Real.exp_zero]
@@ -111,7 +111,7 @@ theorem enorm_integral_sub_mul_le (n : ℕ) {M : Type*} [MeasurableSpace M] (z :
   calc ‖∫ x, (f x - F x) * g x ∂vol n z‖ₑ
       ≤ ∫⁻ x, ‖(f x - F x) * g x‖ₑ ∂vol n z := by
         first
-          | exact enorm_integral_le_lintegral_enorm _
+          | exact eNorm_integral_le_lintegral_eNorm _
           | exact ennnorm_integral_le_lintegral_ennnorm _
     _ = ∫⁻ x, ((fun x => ENNReal.ofReal (‖F x - f x‖ * Real.exp (-ψ x / 2))) *
           (fun x => ENNReal.ofReal (‖g x‖ * Real.exp (ψ x / 2)))) x ∂vol n z :=
@@ -129,7 +129,7 @@ theorem closedCore_of_regM (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M
     [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] (hReg : RegMStatement n M) :
     ClosedCoreStatement n M := by
   intro z hz ψ hψ F f hF hfm hlim
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   have hψm : Measurable ψ := hψ.measurable
   have hFc : ∀ k, Continuous (F k) := fun k => Smooth.continuous n z hz _ (Holo.smooth n z _ (hF k))
   obtain ⟨k₀, hk₀⟩ : ∃ k₀, ∀ k ≥ k₀, wint n z (fun x => F k x - f x) ψ < ⊤ := by
@@ -197,8 +197,8 @@ theorem closedCore_of_regM (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M
         (Or.inr (ENNReal.rpow_ne_top_of_nonneg (by norm_num : (0 : ℝ) ≤ 1 / 2) hB.ne))
       rwa [zero_mul] at h2
     have h0 : ‖∫ x, (f x - F k₀ x) * db n z j φ x ∂vol n z‖ₑ = 0 :=
-      le_antisymm (ge_of_tendsto' hlim2 hbound) (zero_le')
-    exact enorm_eq_zero.1 h0
+      le_antisymm (ge_of_tendsto' hlim2 hbound) (zero_le)
+    exact eNorm_eq_zero.1 h0
   obtain ⟨G, hG, hfG⟩ := hReg z hz _ hLoc hweak
   refine ⟨fun x => G x + F k₀ x, fun e he => (hG e he).add (hF k₀ e he), ?_⟩
   filter_upwards [hfG] with x hx
@@ -259,7 +259,7 @@ theorem evalPt (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     simp [Function.comp, e'.left_inv hy]
   set f : M → ℝ≥0∞ := K.indicator (fun x => ‖F x‖ₑ ^ 2) with hfdef
   have hfm : Measurable f :=
-    (hFc.measurable.enorm.pow_const 2).indicator hKc.isClosed.measurableSet
+    (hFc.measurable.eNorm.pow_const 2).indicator hKc.isClosed.measurableSet
   have hdiff : DifferentiableOn ℂ (F ∘ e.symm) (Metric.ball (e x0) (r / 2)) :=
     (hF e he).mono (Metric.ball_subset_closedBall.trans hcb)
   have h1 := hMV n (e x0) (r / 2) (F ∘ e.symm) (fun _ => 1) hdiff measurable_const
@@ -287,7 +287,7 @@ theorem evalPt (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
   have hfin : ‖F x0‖ₑ ^ 2 * Vb ≤ ENNReal.ofReal (max c 0) * wint n z F ψ := by
     have h6 := h1.trans (h2.trans (h3.le.trans (h4.le.trans h5)))
     rwa [one_mul] at h6
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm,
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm,
     ENNReal.ofReal_div_of_pos (ENNReal.toReal_pos hVpos.ne' hVfin), ENNReal.ofReal_toReal hVfin,
     div_eq_mul_inv, mul_right_comm, ← div_eq_mul_inv,
     ENNReal.le_div_iff_mul_le (Or.inl hVpos.ne') (Or.inl hVfin)]
@@ -322,7 +322,7 @@ private lemma lintegral_enorm_sq_wvol_eq_wint (n : ℕ) {M : Type*} [MeasurableS
   unfold wint
   refine lintegral_congr fun x => ?_
   have h2 : ‖u x‖ₑ ^ (2:ℝ) = ENNReal.ofReal (‖u x‖ ^ 2) := by
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) (by norm_num)]
+    rw [← ofReal_norm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) (by norm_num)]
     norm_num
   simp only [Pi.mul_apply]
   rw [h2, ← ENNReal.ofReal_mul (Real.exp_pos _).le, mul_comm]

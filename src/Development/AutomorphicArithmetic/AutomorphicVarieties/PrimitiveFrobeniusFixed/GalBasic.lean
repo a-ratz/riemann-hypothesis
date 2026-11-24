@@ -76,7 +76,7 @@ private theorem fix_cls {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
 
 private theorem cls_onto {Ω : Type} [Field Ω] [inst : Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (N : ℕ) [NeZero N] :
     Function.Surjective (Chr.cls ℚ Ω N) := by
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
   convert (Chr.clsOnto Ω N).1
   all_goals first
     | exact Subsingleton.elim (α := Algebra ℚ Ω) _ _
@@ -97,7 +97,7 @@ theorem UpperTheory.V.ML.galBasic :
     (∀ (M : ℕ), M ∣ N → fixMu ℚ Ω N ≤ fixMu ℚ Ω M) ∧
     ∀ (b c : (ZMod N)ˣ) (g h : G ℚ Ω), Lifts N b g → Lifts N c h → Lifts N (b * c) (g * h) ∧ Lifts N b⁻¹ g⁻¹ ∧ (b = c ↔ g⁻¹ * h ∈ fixMu ℚ Ω N) := by
   intro Ω _ _ _ N hN
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   have hnorm : (fixMu ℚ Ω N).Normal := by
     rw [fix_cls]
     infer_instance

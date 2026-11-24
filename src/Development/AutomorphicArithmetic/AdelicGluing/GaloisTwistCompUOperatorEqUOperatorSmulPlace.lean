@@ -318,7 +318,7 @@ private theorem cosets {G G' : Type} [Group G] [Group G'] (s : G ≃* G') (J : S
         {c | ∃ k ∈ J', c = QuotientGroup.mk (k * s x)} := by
   classical
   let S := {c : G ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * x)}
-  haveI : Fintype S := hS.fintype
+  have : Fintype S := hS.fintype
   have hout : ∀ c : S, (QuotientGroup.mk (c.1.out) : G ⧸ J) = c.1 := fun c => QuotientGroup.out_eq' c.1
   refine ⟨S, inferInstance, fun c => c.1.out, ?_, ?_, ?_, ?_⟩
   · intro a b h

@@ -344,7 +344,7 @@ theorem casimir_bound_of_inputs : SqId → Markov → PosNeg → Inv → Commuta
     have := hFd
     have hm : p1 y ∈ LinearMap.ker m1 := by
       rw [LinearMap.mem_ker, ← Submodule.coe_eq_zero, hm11, hp11]
-      rw [← ContinuousLinearMap.mul_apply, hmp, ContinuousLinearMap.zero_apply]
+      rw [← mul_apply_eq_comp, hmp, zero_apply]
     have hne : p1 y ≠ 0 := fun h => hpy (by rw [← hp11, Submodule.coe_eq_zero]; exact h)
     have hst : IsKStableSub ε (smE ε ρ) (F.map p1) := by
       intro a b hab v hv

@@ -424,7 +424,7 @@ theorem int_of_sc {r : Fv F v} (h : sc (E := E) v r ∈ OEv (E := E) v) : r ∈ 
   have hr0 : r ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hr
-    exact absurd hr (not_lt.2 zero_le')
+    exact absurd hr (not_lt.2 zero_le)
   have hv : Valued.v r⁻¹ < 1 := by
     rw [map_inv₀]
     exact inv_lt_one_of_one_lt₀ hr
@@ -538,9 +538,9 @@ theorem normOne_of (hRes : PI.OmLocU.Red.ResAlg σ J ψ v) : PI.OmLocU.Orb.NormO
     rw [← hU', ← hU, mul_comm]
     exact huu'
 
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
-  letI := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
   have hDk : redR v tO ^ 2 - 4 * redR v mO ≠ 0 := by
     intro h0
     apply hDv

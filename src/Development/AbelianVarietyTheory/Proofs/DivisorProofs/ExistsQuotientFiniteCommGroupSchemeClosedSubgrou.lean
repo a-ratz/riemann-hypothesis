@@ -199,7 +199,7 @@ theorem exists_quotient : ∀ (k : Type) [Field k] (A : Type) [CommRing A] [Hopf
       finrank_cartierDual] at hD
     have hC : Module.finrank k (A ⧸ RingHom.ker π) = Module.finrank k C :=
       (Ideal.quotientKerAlgEquivOfSurjective (f := (π : A →ₐ[k] C)) hπ).toLinearEquiv.finrank_eq
-    haveI : Nontrivial A := RingHom.domain_nontrivial (counitAlgHom k A : A →+* k)
+    have : Nontrivial A := RingHom.domain_nontrivial (counitAlgHom k A : A →+* k)
     have hpos : 0 < Module.finrank k A := Module.finrank_pos
     rw [hC]
     have hQ : 0 < Module.finrank k (CartierDual k A ⧸ kerIdeal (CartierDual.map π)) := by

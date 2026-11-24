@@ -195,19 +195,19 @@ namespace GlobalTheory.ConjSeq
 
 theorem sec_exists_pow_of_D_eq_zero : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [IsAlgClosed k] (hk : (p : k) = 0) (X : Scheme.{0}) [IsIntegral X] (s : X ⟶ Sp k) [Smooth s] (U : X.affineOpens) (u : GlobalTheory.CechDR.Sec s U.1), KaehlerDifferential.D k (GlobalTheory.CechDR.Sec s U.1) u = 0 → ∃ h : GlobalTheory.CechDR.Sec s U.1, h ^ p = u := by
   intro p _ k _ _ hk X _ s _ U u hu
-  haveI hsm : Algebra.Smooth k (GlobalTheory.CechDR.Sec s U.1) := by
-    haveI : IsOpenImmersion (GlobalTheory.CechDR.affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
+  have hsm : Algebra.Smooth k (GlobalTheory.CechDR.Sec s U.1) := by
+    have : IsOpenImmersion (GlobalTheory.CechDR.affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
     have h : Smooth (GlobalTheory.CechDR.affPt s U ≫ s) := inferInstance
     rw [GlobalTheory.CechDR.affPt_w] at h
     exact RingHom.smooth_algebraMap.1 ((HasRingHomProperty.Spec_iff (P := @Smooth)).1 h)
   by_cases hU : Nonempty U.1
-  · haveI : IsDomain (GlobalTheory.CechDR.Sec s U.1) := IsIntegral.component_integral (X := X) U.1
+  · have : IsDomain (GlobalTheory.CechDR.Sec s U.1) := IsIntegral.component_integral (X := X) U.1
     exact _root_.GlobalTheory.exists_pow_eq_of_kaehlerDifferential_eq_zero_of_smooth_domain p k hk _ u hu
   · have e : U.1 = ⊥ := by
       ext x
       exact ⟨fun hx ↦ hU ⟨⟨x, hx⟩⟩, fun hx ↦ hx.elim⟩
     have hs : Subsingleton Γ(X, U.1) := by rw [e]; infer_instance
-    haveI : Subsingleton (GlobalTheory.CechDR.Sec s U.1) := hs
+    have : Subsingleton (GlobalTheory.CechDR.Sec s U.1) := hs
     exact ⟨u, Subsingleton.elim _ _⟩
 
 end GlobalTheory.ConjSeq
@@ -241,7 +241,7 @@ theorem UpperTheory.Reformulated.B.NonvanishingPoint.exists_point_nonvanishing_r
     [inst_2 : CommRing B] [inst_3 : Algebra k B] [Algebra.FiniteType k B] [IsReduced B] {c : B},
     c ≠ (0 : B) → ∃ (x : B →ₐ[k] k), (x : B → k) c ≠ (0 : k) := by
   intro k _ _ B _ _ _ _ c hc
-  haveI : IsJacobsonRing B := isJacobsonRing_of_finiteType (A := k)
+  have : IsJacobsonRing B := isJacobsonRing_of_finiteType (A := k)
   have hrad : (⊥ : Ideal B).IsRadical := by
     intro x hx
     obtain ⟨n, hn⟩ := hx
@@ -253,8 +253,8 @@ theorem UpperTheory.Reformulated.B.NonvanishingPoint.exists_point_nonvanishing_r
   rw [Ideal.jacobson, Ideal.mem_sInf] at hcj
   push Not at hcj
   obtain ⟨m, ⟨-, hm⟩, hcm⟩ := hcj
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite k (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ m)
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite k (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ m)
   let f : (B ⧸ m) →ₐ[k] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -340,8 +340,8 @@ private lemma rootGlue_uniq {R : Type*} [CommRing R] [IsReduced R] {p : ℕ} (hp
     (h : (p : R) = 0) {a b : R} (hab : a ^ p = b ^ p) : a = b := by
   rcases subsingleton_or_nontrivial R with hR | hR
   · exact Subsingleton.elim a b
-  · haveI : CharP R p := (CharP.charP_iff_prime_eq_zero hp).mpr h
-    haveI : Fact p.Prime := ⟨hp⟩
+  · have : CharP R p := (CharP.charP_iff_prime_eq_zero hp).mpr h
+    have : Fact p.Prime := ⟨hp⟩
     apply frobenius_inj R p
     simpa [frobenius_def] using hab
 
@@ -457,13 +457,13 @@ theorem UpperTheory.Gal.Ord.dzero :
   refine rootGlue p X hp (ψ ⁻¹ᵁ U) (ψ.app U t) ?_
   intro V hV hA
   let V' : X.affineOpens := ⟨V, hA⟩
-  haveI hsm : Algebra.Smooth k (GlobalTheory.CechDR.Sec s V) := by
+  have hsm : Algebra.Smooth k (GlobalTheory.CechDR.Sec s V) := by
     have hi : Smooth hA.fromSpec := inferInstance
     have h0 : Smooth (hA.fromSpec ≫ s) := MorphismProperty.comp_mem _ _ _ hi ‹Smooth s›
     have h1 : Smooth (GlobalTheory.CechDR.affPt s V' ≫ s) := h0
     rw [GlobalTheory.CechDR.affPt_w] at h1
     exact RingHom.smooth_algebraMap.mp (HasRingHomProperty.Spec_iff.mp h1)
-  haveI : _root_.IsReduced (GlobalTheory.CechDR.Sec s V) := IsReduced.component_reduced V
+  have : _root_.IsReduced (GlobalTheory.CechDR.Sec s V) := IsReduced.component_reduced V
   have hD := dz1 k (GlobalTheory.CechDR.Sec s V) (X.presheaf.map (homOfLE hV).op (ψ.app U t)) ?_
   · exact GlobalTheory.T.exists_pow_eq_of_kaehlerD_eq_zero_smooth_affineOpen p k hk X s V' _ hD
   intro v
@@ -492,15 +492,15 @@ theorem UpperTheory.Gal.Ord.rootMor :
     ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [IsAlgClosed k] (hk : (p : k) = 0) (A : Over (Sp k)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ (σ σ' : k →+* k) (ψ ψ' : A.left ⟶ A.left), SMor A σ ψ → (∀ x, σ' x ^ p = σ x) →
       GlobalTheory.VB.frob A.left p (cast_left p k hk A) ≫ ψ' = ψ → SMor A σ' ψ' := by
   intro p _ k _ _ hk A _ _ hAb σ σ' ψ ψ' hS hpow hfr
-  haveI := hAb
-  haveI : Smooth A.hom := IsAbelianScheme.smooth
-  haveI : AlgebraicGeometry.IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
-  haveI hP : IsAbelianScheme (A ⊗ A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hAb hAb
-  haveI : Smooth (A ⊗ A).hom := IsAbelianScheme.smooth
-  haveI : AlgebraicGeometry.IsReduced (A ⊗ A).left :=
+  have := hAb
+  have : Smooth A.hom := IsAbelianScheme.smooth
+  have : AlgebraicGeometry.IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
+  have hP : IsAbelianScheme (A ⊗ A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hAb hAb
+  have : Smooth (A ⊗ A).hom := IsAbelianScheme.smooth
+  have : AlgebraicGeometry.IsReduced (A ⊗ A).left :=
     GlobalTheory.isReduced_of_smooth_of_isReduced (A ⊗ A).hom
-  haveI : Epi (GlobalTheory.VB.frob A.left p (cast_left p k hk A)) := (epi p A.left (cast_left p k hk A)).1
-  haveI : Epi (GlobalTheory.VB.frob (A ⊗ A).left p (cast_left p k hk (A ⊗ A))) :=
+  have : Epi (GlobalTheory.VB.frob A.left p (cast_left p k hk A)) := (epi p A.left (cast_left p k hk A)).1
+  have : Epi (GlobalTheory.VB.frob (A ⊗ A).left p (cast_left p k hk (A ⊗ A))) :=
     (epi p (A ⊗ A).left (cast_left p k hk (A ⊗ A))).1
   have hσ : spMap (frobR p k hk) ≫ spMap σ' = spMap σ := by
     rw [← Geo.Tor.spMap_comp]
@@ -649,10 +649,10 @@ theorem UpperTheory.Gal.Ord.root :
     ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [IsAlgClosed k] (hk : (p : k) = 0) (A : Over (Sp k)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ (σ : k →+* k), Function.Bijective σ → ∀ (ψ : A.left ⟶ A.left) (m : SMor A σ ψ), (∀ x ∈ PrimitiveSubmodule A, m.pull x = 0) →
       ∃ (σ' : k →+* k) (ψ' : A.left ⟶ A.left), Function.Bijective σ' ∧ SMor A σ' ψ' ∧ (∀ x, σ' x ^ p = σ x) ∧ GlobalTheory.VB.frob A.left p (cast_left p k hk A) ≫ ψ' = ψ := by
   intro p _ k _ _ hk A _ _ hab σ hσ ψ m hm
-  haveI : IsAbelianScheme A := hab
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).mpr hk
-  haveI : AlgebraicGeometry.IsIntegral A.left := GlobalTheory.isIntegral_left_of_isAbelianScheme_field A hab
-  haveI : Smooth A.hom := IsAbelianScheme.smooth
+  have : IsAbelianScheme A := hab
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).mpr hk
+  have : AlgebraicGeometry.IsIntegral A.left := GlobalTheory.isIntegral_left_of_isAbelianScheme_field A hab
+  have : Smooth A.hom := IsAbelianScheme.smooth
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim k A hab
   have hLie : LieExact A := (GlobalTheory.abelianDeRham.2.1 k A g hab hg).1
   have hT : ∀ v : epsR k ⟶ A, IsTangent v → IsConst (v.left ≫ ψ) := by

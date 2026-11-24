@@ -71,15 +71,15 @@ theorem affineOpen_ring_isDomain_noetherian_integrallyClosed (X : Scheme.{0}) (h
   have hne : Nonempty (U : X.Opens) := by
     obtain ⟨x, hx⟩ := (TopologicalSpace.Opens.ne_bot_iff_nonempty _).mp hU0
     exact ⟨⟨x, hx⟩⟩
-  haveI : IsDomain Γ(X, U) := IsIntegral.component_integral (U : X.Opens)
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian U
+  have : IsDomain Γ(X, U) := IsIntegral.component_integral (U : X.Opens)
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian U
   refine ⟨inferInstance, inferInstance, ?_⟩
   have hUa : IsAffineOpen (U : X.Opens) := U.2
   refine IsIntegrallyClosed.of_localization_maximal fun p _ hp => ?_
   have hy : hUa.fromSpec ⟨p, hp.isPrime⟩ ∈ (U : X.Opens) := hUa.range_fromSpec.le ⟨_, rfl⟩
-  letI := X.presheaf.algebra_section_stalk ⟨_, hy⟩
+  let := X.presheaf.algebra_section_stalk ⟨_, hy⟩
   have hl := hUa.isLocalization_stalk' ⟨p, hp.isPrime⟩ hy
-  haveI := (hN (hUa.fromSpec ⟨p, hp.isPrime⟩)).2
+  have := (hN (hUa.fromSpec ⟨p, hp.isPrime⟩)).2
   exact IsIntegrallyClosed.of_equiv
     (@IsLocalization.algEquiv _ _ p.primeCompl _ _
       (X.presheaf.algebra_section_stalk ⟨_, hy⟩) hl (Localization.AtPrime p) _ _ _).toRingEquiv

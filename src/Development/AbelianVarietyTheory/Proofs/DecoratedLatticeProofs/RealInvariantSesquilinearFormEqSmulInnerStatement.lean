@@ -103,7 +103,7 @@ theorem form_eq_smul_inner : ∀ (D : D7) (V : HSp D) (c : CoefA V), c.Is → �
     obtain ⟨a, ha, k, hk, rfl⟩ := (GlobalTheory.UnitarySplit.real_finite_split D V).1 h
     rw [map_mul, hc.1 k hk, mul_one]
     exact hU _ ⟨a, ha, rfl⟩
-  haveI := hc.2.2.2.1
+  have := hc.2.2.2.1
   have hcomm : ∀ a, (∃ u ∈ GinfC V, c.ρ u = a) → a * repOp B = repOp B * a := by
     rintro _ ⟨u, hu, rfl⟩
     apply LinearMap.ext

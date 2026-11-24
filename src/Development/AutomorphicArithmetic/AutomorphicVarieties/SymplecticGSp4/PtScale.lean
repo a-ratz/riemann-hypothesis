@@ -91,17 +91,17 @@ private theorem pts_abs {O S K : Type} [CommRing O] [IsDomain O] [IsDiscreteValu
 theorem UpperTheory.V.GradeZeroInterpolatingElement.ptScale :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ M : Model D, D.Fin0 → ∀ ξ : M.SS →ₐ[c.O] PadicAlgCl l, ∃ t r, D.EPt r ∧ ∀ g, r g = tconj t (M.rep ξ g) := by
   intro Ω _ _ _ l _ c D hD M hF ξ
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨hinj, -, -, hcomp, -⟩ := dvrFacts l c.O
-  haveI : Algebra.IsAlgebraic ℤ_[l] ℚ_[l] := IsLocalization.isAlgebraic ℚ_[l] (nonZeroDivisors ℤ_[l])
-  haveI : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) := Algebra.IsAlgebraic.trans ℤ_[l] ℚ_[l] (PadicAlgCl l)
-  haveI : Algebra.IsAlgebraic c.O (PadicAlgCl l) := Algebra.IsAlgebraic.extendScalars hinj
+  have : Algebra.IsAlgebraic ℤ_[l] ℚ_[l] := IsLocalization.isAlgebraic ℚ_[l] (nonZeroDivisors ℤ_[l])
+  have : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) := Algebra.IsAlgebraic.trans ℤ_[l] ℚ_[l] (PadicAlgCl l)
+  have : Algebra.IsAlgebraic c.O (PadicAlgCl l) := Algebra.IsAlgebraic.extendScalars hinj
   obtain ⟨-, -, WS, hWS, hz⟩ := sInternal D hD M
   have hpart : WS.part = M.sPart := funext hWS
   have hA : WS.A = M.SS := by
     simp only [WPres.A, Model.SS, hpart]
-  haveI hfin : Module.Finite c.O (Algebra.adjoin c.O (mono M.ru.hom 0)) := hF M.S M.ru M.pt
+  have hfin : Module.Finite c.O (Algebra.adjoin c.O (mono M.ru.hom 0)) := hF M.S M.ru M.pt
   have hB : WS.part 0 ≤ (Algebra.adjoin c.O (mono M.ru.hom 0)).toSubmodule := by
     rw [hWS, spanMono D hD M hF 0, Submodule.span_le]
     exact Algebra.subset_adjoin

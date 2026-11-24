@@ -113,14 +113,14 @@ theorem phiQ_rowEq (O : Subring F) (ϖ : F) (δ : Fˣ →* ℂˣ) (r t : ℕ) (x
       rw [hA, hD]
       obtain ⟨k, hk⟩ := h.1
       exact ⟨⟨k, k.2, hk⟩, h.2, hB, hC⟩
-    rw [if_pos hc, hA]
+    rw [ite_eq_left hc, hA]
     have hk := Classical.choose_spec h.1
     have e : chi0 δ (Matrix.toRows₁ x).det =
         ((δ (GeneralLinearGroup.det ((Classical.choose h.1 : GLint O r) : GL (Fin r) F)) : ℂˣ) : ℂ) := by
       rw [← unitCharExtendedByZero_det_eq_char_det, hk]
     rw [e]
     simp [Units.val_inv_eq_inv_val]
-  · rw [dite_eq_right h, if_neg]
+  · rw [dite_eq_right h, ite_eq_right]
     rintro ⟨h1, h2, -, -⟩
     rw [hA] at h1
     rw [hD] at h2
@@ -376,7 +376,7 @@ theorem vol_Jset (r : ℕ) [MeasurableSpace (P.adicCompletion L)] [BorelSpace (P
     (ν₁ : Measure (Matrix (Fin r) (Fin r) (P.adicCompletion L))) [ν₁.IsAddLeftInvariant]
     (h1 : ν₁ (intMat (OP P) r r) = 1) :
     (ν₁ (Jset (GLint (OP P) r))).toReal = Formalism.MainNotions.ZetaProductPairs.qE (qP P : ℝ) 1 r := by
-  haveI := isMaximal_span (piP_mem P) (_root_.GlobalTheory.Mem.HD.isLocalAt_adicCompletionIntegers_uniformizer L P)
+  have := isMaximal_span (piP_mem P) (_root_.GlobalTheory.Mem.HD.isLocalAt_adicCompletionIntegers_uniformizer L P)
   letI : Field (kF (OP P) _ (piP_mem P)) := Ideal.Quotient.field _
   letI : Fintype (kF (OP P) _ (piP_mem P)) := @Fintype.ofFinite _ (finite_kF P)
   have hc : Nat.card (kF (OP P) _ (piP_mem P)) = qP P := _root_.GlobalTheory.ResidueCardUnif.card_kF_piP L P (piP_mem P)
@@ -414,7 +414,7 @@ namespace GlobalTheory.Mem.SingleQ
 theorem parJ_zero {F : Type} [Field F] (O : Subring F) (ϖ : F) (r : ℕ) :
     parJ O ϖ r 0 = ((GLint O r : Subgroup (GL (Fin r) F)) : Set (GL (Fin r) F)) := by
   ext k
-  simp only [parJ, Set.mem_setOf_eq, SetLike.mem_coe]
+  simp only [parJ, Set.mem_ofPred_eq, SetLike.mem_coe]
   exact ⟨fun h => h.1, fun h => ⟨h, fun i => i.elim0⟩⟩
 
 theorem stepAt_one : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpectrum (𝓞 L)), Deg1 P →
@@ -422,8 +422,8 @@ theorem stepAt_one : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpec
     StepAt P δ (fun _ => ν) r t 0 (zVal1 (qP P) r t : ℂ) := by
   intro L _ _ P _ δ ν hδ hν r t _
   obtain ⟨nrm, hnrm⟩ := GlobalTheory.Mem.NrmCompl.exists_isNrm L P
-  letI : MeasurableSpace (P.adicCompletion L) := borel _
-  haveI : BorelSpace (P.adicCompletion L) := ⟨rfl⟩
+  let : MeasurableSpace (P.adicCompletion L) := borel _
+  have : BorelSpace (P.adicCompletion L) := ⟨rfl⟩
   refine ⟨nrm, hnrm, ?_⟩
   have hchar : ∀ k : GLint (OP P) r,
       (((ν * δ) (GeneralLinearGroup.det (k : GL (Fin r) (P.adicCompletion L))) : ℂˣ) : ℂ) *
@@ -440,17 +440,17 @@ theorem stepAt_one : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpec
   obtain ⟨μ, hμ, hμ1⟩ := _root_.GlobalTheory.haar_glInt_one L P r
   obtain ⟨ν₁, hν₁, hs₁, hν₁1⟩ := _root_.GlobalTheory.HaarMat.exists_haar_intMat L P r r
   obtain ⟨ν₂, hν₂, hs₂, hν₂1⟩ := _root_.GlobalTheory.HaarMat.exists_haar_intMat L P t r
-  haveI := hν₁
-  haveI := hν₂
-  haveI := hs₁
-  haveI := hs₂
-  haveI hA1 : MeasurableAdd (Matrix (Fin r) (Fin r) (P.adicCompletion L)) :=
+  have := hν₁
+  have := hν₂
+  have := hs₁
+  have := hs₂
+  have hA1 : MeasurableAdd (Matrix (Fin r) (Fin r) (P.adicCompletion L)) :=
     inferInstanceAs (MeasurableAdd (Fin r → Fin r → P.adicCompletion L))
-  haveI hA2 : MeasurableAdd (Matrix (Fin t) (Fin r) (P.adicCompletion L)) :=
+  have hA2 : MeasurableAdd (Matrix (Fin t) (Fin r) (P.adicCompletion L)) :=
     inferInstanceAs (MeasurableAdd (Fin t → Fin r → P.adicCompletion L))
-  haveI hA3 : MeasurableAdd (Matrix (Fin (r + t)) (Fin r) (P.adicCompletion L)) :=
+  have hA3 : MeasurableAdd (Matrix (Fin (r + t)) (Fin r) (P.adicCompletion L)) :=
     inferInstanceAs (MeasurableAdd (Fin (r + t) → Fin r → P.adicCompletion L))
-  haveI hA4 : MeasurableAdd (Matrix (Fin r) (Fin r) (P.adicCompletion L) × Matrix (Fin t) (Fin r) (P.adicCompletion L)) :=
+  have hA4 : MeasurableAdd (Matrix (Fin r) (Fin r) (P.adicCompletion L) × Matrix (Fin t) (Fin r) (P.adicCompletion L)) :=
     ⟨fun c => by
       first
       | exact ((measurable_const_add c.1).comp measurable_fst).prodMk ((measurable_const_add c.2).comp measurable_snd)

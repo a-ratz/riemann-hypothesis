@@ -127,8 +127,8 @@ namespace GlobalTheory
 
 theorem eigDec_of_isKFinCoefT_gap : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) → Bool) (mu : Fin (2 * r + k + 1) → ℝ) (h : ℝ) (R : Rep k r) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (f : B.Mat k r → (Wq →L[ℂ] Wp)), R.IsDS ε mu → Formalism.QuantumDeterminants.GapAtLeast ε mu h → GapOK k r h → (haveI := FiniteDimensional.complete ℂ Wp; PI.CapelliEig.IsKFinCoefT (k := k) (r := r) R.σ f) → EigDec f (aOf r h - 1) mu := by
   intro hH k r ε mu h R Wp Wq _ _ _ _ _ _ f hDS hgap hok hf
-  have := FiniteDimensional.complete ℂ Wp
-  have := FiniteDimensional.complete ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wq
   have hsm : PI.KFinSmooth := hH.1.1.2.2.1
   have hDG : R.IsDG ε mu := ⟨hDS.1, hDS.2, h, hgap, hok⟩
   obtain ⟨s, hs⟩ := (GlobalTheory.isCoef_of_translate_smul_exists hsm k r ε mu R Wp Wq (fun _ => 0) (fun _ => 0) hDS).1 f hf
@@ -167,7 +167,7 @@ theorem lintegral_comp_scale {r : ℕ} (s : Fin r → ℝ) (hs : ∀ a, 0 < s a)
       Complex.finrank_real_complex, mul_one]
   have hpos : 0 < ∏ a, s a ^ 2 := Finset.prod_pos fun a _ => pow_pos (hs a) 2
   have hne : LinearMap.det T ≠ 0 := hdet ▸ hpos.ne'
-  haveI : (volume : Measure ((Fin r → ℂ) × ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure ((Fin r → ℂ) × ℂ)).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
   have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure ((Fin r → ℂ) × ℂ)) hne
   let e : ((Fin r → ℂ) × ℂ) ≃ᵐ ((Fin r → ℂ) × ℂ) :=
@@ -324,7 +324,7 @@ theorem weightFrom_swap (k r : ℕ) (hk : 1 ≤ k) (T T' GG : ℝ) (bs : List (�
     rw [hrec]
     congr 1
     by_cases hc : s = 1 ∧ x + 1 = r + 1
-    · rw [if_pos hc, if_pos ⟨by omega, hc.1⟩]
+    · rw [ite_eq_left hc, ite_eq_left ⟨by omega, hc.1⟩]
       have hnil : bs = [] := by
         cases bs with
         | nil => rfl
@@ -335,7 +335,7 @@ theorem weightFrom_swap (k r : ℕ) (hk : 1 ≤ k) (T T' GG : ℝ) (bs : List (�
           omega
       subst hnil
       rw [h3 (t, s) rfl]
-    · rw [if_neg hc, if_neg (by omega), one_mul, ← zpow_natCast]
+    · rw [ite_eq_right hc, ite_eq_right (by omega), one_mul, ← zpow_natCast]
       congr 1
       unfold Ml C.Mlev
       have e1 : x + 1 + s - 1 = x + s := by omega
@@ -655,12 +655,12 @@ theorem measure_eq_smul_of_left_right {k r : ℕ} {U : Set (B.Mat k r)} {μ ν :
       have hpre : (fun x => (x, y)) ⁻¹' S = lmulM (Matrix.of y) ⁻¹' A := rfl
       rw [hpre, ← Measure.map_apply (measurable_lmulM_flag_measures _) hA, hl _ hy]
     rw [lintegral_congr_ae hslice, lintegral_const]
-  rw [Measure.smul_apply, smul_eq_mul, ← hx, hy, mul_comm]
+  rw [smul_apply, smul_eq_mul, ← hx, hy, mul_comm]
 
 theorem haarW_twoSided_of_left : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (μ : Measure (Mt k r)), inWb k r z → 0 < Tz k r z → Formalism.MainNotions.S.IsHaarOn (UWset k r z) μ → μ Set.univ = 1 → B.IsHaarOn (UWset k r z) μ := by
   intro k r z μ _ _ hH h1
   obtain ⟨_, hne, hconc, hleft⟩ := hH
-  haveI : IsProbabilityMeasure μ := ⟨h1⟩
+  have : IsProbabilityMeasure μ := ⟨h1⟩
   have hinvU : ∀ g ∈ UWset k r z, g⁻¹ ∈ UWset k r z ∧ g * g⁻¹ = 1 ∧ g⁻¹ * g = 1 :=
     fun g hg => Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.uw_inv hg
   have hUm : MeasurableSet {x : Mt k r | (Matrix.of x : B.Mat k r) ∈ UWset k r z} :=
@@ -672,7 +672,7 @@ theorem haarW_twoSided_of_left : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → �
   obtain ⟨ν, hνdef⟩ : ∃ ν : Measure (Mt k r), ν = μ.map (Formalism.FourierDecayAlt.P.HermitianFormFactor.invF (m := Fin (2 * r + k + 1))) := ⟨_, rfl⟩
   have hmass : ν Set.univ = 1 := by
     rw [hνdef, Measure.map_apply hinvm MeasurableSet.univ, Set.preimage_univ, h1]
-  haveI : IsFiniteMeasure ν := ⟨by rw [hmass]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure ν := ⟨by rw [hmass]; exact ENNReal.one_lt_top⟩
   have hνU : ∀ᵐ x ∂ν, (Matrix.of x : B.Mat k r) ∈ UWset k r z := by
     rw [hνdef]
     refine (ae_map_iff hinvm.aemeasurable hUm).2 ?_
@@ -922,7 +922,7 @@ theorem pointwiseBound_at_place_of_locBessel : ThmBpDS → ∀ Ch : ℝ, ∃ C�
   refine ⟨U, U', p, if ∀ i ∈ Finset.Icc 1 D.R.k, U i = U' i then 30 * (D.R.rS + 1) ^ 2 + 6 else 0, hstd,
     by split_ifs <;> omega, ?_⟩
   refine h Cg hCg ⟨D.R.k, D.R.rS, Tz D.R.k D.R.rS L.z, Tz D.R.k D.R.rS L.z', U, U'⟩ L.Wp L.Wq p lam0 L.lam ka b _ _
-    ⟨L.Hs, L.σ⟩ f ?_ hg ?_ ?_ (fun e => if_pos e) (fun e => if_neg e) ?_ ?_
+    ⟨L.Hs, L.σ⟩ f ?_ hg ?_ ?_ (fun e => ite_eq_left e) (fun e => ite_eq_right e) ?_ ?_
   · show StdHyp Ch Cg D.R.k D.R.rS _ lam0 (fun i : Fin D.R.k => U (i.val + 1))
       (fun i : Fin D.R.k => U' (i.val + 1)) _ _ ka b
     rw [hu, hu', ← he]

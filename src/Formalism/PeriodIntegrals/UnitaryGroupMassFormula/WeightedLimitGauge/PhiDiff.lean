@@ -147,7 +147,7 @@ lemma psiV_strict (T' : ℝ) : HasStrictFDerivAt (psiV k r T')
 lemma dpsi_apply (T' : ℝ) (q : TrE k) (i : Fin (2 * r + k + 1)) :
     ((mvL k r (opBase k r T')).comp ((1 : Mat k r →L[ℝ] Mat k r).comp (opGenL k r))) q i
       = (Real.sqrt T' : ℂ) * opGen k r q i (wI k r (Fin.last k)) := by
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply, opGenL_apply, mvL_apply]
+  simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self, opGenL_apply, mvL_apply]
   exact mulVec_base T' _ i
 
 def dgn (T' : ℝ) : Option (Fin k × Bool) → ℝ := fun o => match o with
@@ -232,7 +232,7 @@ theorem phiT_strict (T' : ℝ) (hT : 0 < T') : HasStrictFDerivAt (phiT k r T') (
     refine H.congr_fderiv (ContinuousLinearMap.ext fun q => ?_)
     have hsq : (Real.sqrt T' : ℂ) ≠ 0 := by rw [Complex.ofReal_ne_zero]; positivity
     simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_restrictScalars',
-      ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply, ContinuousLinearMap.proj_apply,
+      ContinuousLinearMap.smulRight_apply, one_apply_eq_self, ContinuousLinearMap.proj_apply,
       opGenL_apply, mvL_apply, mulVec_base, opGen_c, psiV_last_zero, Complex.imCLM_apply, PiLp.proj_apply,
       DL_apply, dgn, one_mul, smul_eq_mul]
     have : (Real.sqrt T' : ℂ) * ((q none : ℂ) * Complex.I) * (Real.sqrt T' : ℂ)⁻¹ = (q none : ℂ) * Complex.I := by

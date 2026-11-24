@@ -251,7 +251,7 @@ theorem ff_holds : FFStatement (E := E) := by
   have hPdm : Measurable Pd := PairUnfoldPf.meas_indC X hP.1.continuousOn
   set ψ : Frame X.Ψ r → ℝ≥0∞ := fun y => ‖Pd y‖ₑ ^ 2 * W y / ENNReal.ofReal (kaY X x0 bb y) with hψ
   have hψm : Measurable ψ :=
-    ((hPdm.enorm.pow_const 2).mul hW.1).div (meas_kaY X x0 bb).ennreal_ofReal
+    ((hPdm.eNorm.pow_const 2).mul hW.1).div (meas_kaY X x0 bb).ennreal_ofReal
   have hψB : ∀ y ∈ X.dom, ∀ b ∈ Bor X.Ψ r, ψ (rmul y b) = ψ y := by
     intro y hy b hb
     have hyb : rmul y b ∈ X.dom := rmulDom X hb hy
@@ -262,7 +262,7 @@ theorem ff_holds : FFStatement (E := E) := by
     have ht : ENNReal.ofReal (‖bchar la b‖ ^ 2) ≠ ⊤ := ENNReal.ofReal_ne_top
     have hc : ‖bchar la b‖ₑ ^ 2 = ENNReal.ofReal (‖bchar la b‖ ^ 2) := by
       rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
-    rw [enorm_mul, mul_pow, hc]
+    rw [eNorm_mul, mul_pow, hc]
     congr 1
     rw [ENNReal.div_eq_inv_mul]
     calc ENNReal.ofReal (‖bchar la b‖ ^ 2) * ‖P y‖ₑ ^ 2 * ((ENNReal.ofReal (‖bchar la b‖ ^ 2))⁻¹ * W y)

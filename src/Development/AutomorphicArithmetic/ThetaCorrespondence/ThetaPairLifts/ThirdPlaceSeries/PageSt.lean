@@ -113,7 +113,7 @@ theorem levelSq_yBound_atRec_alt :
   refine ⟨1, one_pos, fun _ _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, fun Fm _ _ _ =>
     ⟨0, fun c _ _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints.of_forall fun x hx i p _ _ r O hO => ?_⟩⟩⟩
   obtain ⟨st, td⟩ := hO.1.depth
-  letI := hostAlg (Fm.D x i)
+  let := hostAlg (Fm.D x i)
   have g1 : O.g1 = (Fm.D x i).host.g 0 := td.jets_eq_fact
   have g2 : O.g2 = (Fm.D x i).host.g 1 := td.g2_eq
   have f1 : O.f = ((Fm.D x i).R.f : ℝ) := td.f_eq
@@ -192,8 +192,8 @@ theorem pageSt_alt : _root_.GlobalTheory.BigOn.PageStatement := by
   have hE : ∀ C CH', ErrorConstantMatchesDefinition ((R2 p).num (F2 p) C CH') O C := fun C CH' => (GlobalTheory.BigOn.Check.twoRunDatum_boundUnit_at_indefinitePoint p (Fm.parT x hx i) r O hr C CH').1
   have hb : O.b = (Fm.L x i).sc.b := (GlobalTheory.BigOn.Check.twoRunDatum_boundUnit_at_indefinitePoint p (Fm.parT x hx i) r O hr 0 0).2
   obtain ⟨st, hd⟩ := hr.1.depth
-  letI := st
-  letI := hostAlg (Fm.D x i)
+  let := st
+  let := hostAlg (Fm.D x i)
   have hd' : GlobalTheory.RunDepth.RunTie p.T.toCore (Fm.ex x hx i).errX (Fm.parT x hx i) (Fm.ex x hx i).kap_def ({ O with de2 := (Fm.L x i).de2 } : Obj p c)
       (fun j : Fin (Fm.D x i).R.m => (j : ℕ) + 1) := { hd with }
   have hN : GlobalTheory.IndexAssembly.NumTie (Fm.parT x hx i) (Fm.ex x hx i).kap_def ({ O with de2 := (Fm.L x i).de2 } : Obj p c) :=

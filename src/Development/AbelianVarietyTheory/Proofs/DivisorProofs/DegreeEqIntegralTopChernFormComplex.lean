@@ -315,12 +315,12 @@ theorem exists_finite_topologicalKrullDim_diff_lt :
   have hfin : (irreducibleComponents Z).Finite := NoetherianSpace.finite_irreducibleComponents
   have hne : ∀ K : irreducibleComponents Z, ∃ x : Z, x ∈ (K : Set Z) := fun K => K.2.1.nonempty
   choose p hp using hne
-  haveI : Finite (irreducibleComponents Z) := hfin.to_subtype
+  have : Finite (irreducibleComponents Z) := hfin.to_subtype
   refine ⟨Set.range (fun K => (p K : T)), Set.finite_range _, fun U _ hSU d hd => ?_⟩
-  have hsub : (Z \ U : Set T) ⊆ Z := Set.diff_subset
+  have hsub : (Z \ U : Set T) ⊆ Z := sdiff_subset
   have hi : IsInducing (Set.inclusion hsub) := (IsEmbedding.inclusion hsub).isInducing
   have hcl : IsClosed {x : Z | (x : T) ∉ U} :=
-    (IsOpen.preimage continuous_subtype_val ‹IsOpen U›).isClosed_compl
+    (IsOpen.preimage continuous_subtypeVal ‹IsOpen U›).isClosed_compl
   refine Order.krullDim_lt_coe_iff.2 fun s => ?_
   have hm := IrreducibleCloseds.map_strictMono_of_isInducing hi
   let s' := s.map _ hm
@@ -366,7 +366,7 @@ theorem isEmpty_of_topologicalKrullDim_lt_zero (T : Type) [TopologicalSpace T]
   by_contra hT
   rw [not_isEmpty_iff] at hT
   obtain ⟨x⟩ := hT
-  haveI : Nonempty (IrreducibleCloseds T) :=
+  have : Nonempty (IrreducibleCloseds T) :=
     ⟨⟨closure {x}, isIrreducible_singleton.closure, isClosed_closure⟩⟩
   have h0 : (0 : WithBot ℕ∞) ≤ topologicalKrullDim T := Order.krullDim_nonneg
   exact absurd h (not_lt.mpr (by simpa using h0))
@@ -432,8 +432,8 @@ namespace GlobalTheory.FSMass
 theorem chern_mass_hermitian_O_one_projective : ∀ N : ℕ, ((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)).chernPart N 1 Set.univ = 1 ∧ ((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)).chernPart N (-1) Set.univ = 0 := by
   intro N
   have hproj : IsProjOver (PSpace.str ℂ N) := ProjSpace.isProjOver_str ℂ N
-  haveI : IsIntegral (PSpace ℂ N) := ProjSpace.isIntegral_of_isDomain ℂ N
-  haveI := CxPts.secondCountableTopology_of_isProjOver (σ := RingHom.id ℂ) hproj
+  have : IsIntegral (PSpace ℂ N) := ProjSpace.isIntegral_of_isDomain ℂ N
+  have := CxPts.secondCountableTopology_of_isProjOver (σ := RingHom.id ℂ) hproj
   have hC : ((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)).IsCInf := (ProjSpace.hermitianTwistingSheaf ℂ N).cInf _
   have hSP : ((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)).SemiPosReg N :=
     (HermLB.semiPos_fs _ _ _ _ _ _ : (ProjSpace.hermitianTwistingSheaf ℂ N).SemiPos N) _
@@ -643,8 +643,8 @@ namespace GlobalTheory.CoverDegField
 
 theorem exists_open_covering_charts : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (p : X ⟶ Sp k) (q : Y ⟶ Sp k) (σ : k →+* ℂ) (D : ℕ), IsProjOver p → IsProjOver q → SmoothOfRelativeDimension D p → ∀ (π : Y ⟶ X) (hπ : π ≫ p = q), π (genericPoint Y) = genericPoint X → π.residueDegree (genericPoint Y) ≠ 0 → ∃ U : X.Opens, genericPoint X ∈ U ∧ (∀ y ∈ ptsIn p σ U, (PtsOver.map π hπ (spMap σ) ⁻¹' {y}).encard = (π.residueDegree (genericPoint Y) : ℕ∞)) ∧ (∀ y ∈ ptsIn p σ U, ∃ c : AlgChart p σ D, y ∈ c.e.source) ∧ (∀ z : CxPts q σ, PtsOver.map π hπ (spMap σ) z ∈ ptsIn p σ U → ∀ c : AlgChart p σ D, PtsOver.map π hπ (spMap σ) z ∈ c.e.source → ∃ c' : AlgChart q σ D, z ∈ c'.e.source ∧ ∀ w ∈ c'.e.source, PtsOver.map π hπ (spMap σ) w ∈ c.e.source ∧ c'.e w = c.e (PtsOver.map π hπ (spMap σ) w)) := by
   intro k _ X Y _ _ p q σ D hpP hqP hsm π hπ hη hδ
-  haveI : SmoothOfRelativeDimension D p := hsm
-  haveI : CharZero k := RingHom.charZero σ
+  have : SmoothOfRelativeDimension D p := hsm
+  have : CharZero k := RingHom.charZero σ
   obtain ⟨U₁, t₁, hU₁, hx₁, ht⟩ := GlobalTheory.AlgChart.exists_etale_coords (p := p) (D := D) (genericPoint X)
   obtain ⟨U₂, hU₂, hx₂, hV₂, he₂, hf₂, hr₂⟩ := _root_.GlobalTheory.GenFinEtField.exists_affine_finite_etale_free k X Y p q hpP hqP π hπ hη hδ
   obtain ⟨U, hxU, hG⟩ := GlobalTheory.CoverDeg.exists_goodCover_of_coords_of_cover p π D _ _ U₁ U₂ hU₁ hx₁ ⟨t₁, ht⟩ hU₂ hx₂ hV₂ he₂ hf₂ hr₂
@@ -837,10 +837,10 @@ theorem topSelf_pull_eq_mul : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsInt
   obtain ⟨U, hU, hgU, hU', -, hfin, hfree, hrank⟩ :=
     _root_.GlobalTheory.GenFinEtField.exists_affine_finite_etale_free k X Y p q hp hq π hπ hgen hdeg
   subst hπ
-  letI := GlobalTheory.algebraΓOfHom p
-  letI := GlobalTheory.algebraΓOfHom (π ≫ p)
+  let := GlobalTheory.algebraΓOfHom p
+  let := GlobalTheory.algebraΓOfHom (π ≫ p)
   rw [topSelf_def, topSelf_def]
-  letI := (π.app U).hom.toAlgebra
+  let := (π.app U).hom.toAlgebra
   have hfin' : Module.Finite Γ(X, U) Γ(Y, π ⁻¹ᵁ U) := hfin
   exact GlobalTheory.FieldProj.interNum_pull_eq_mul k Y X p π hq hp U _ hgU hU hU'
     ⟨hfree, hfin', hrank⟩ D hD (fun _ => B) (fun _ => hB)
@@ -873,7 +873,7 @@ theorem fubiniStudy_pullback_chern_mass_eq_degree : ∀ (Y : Var ℂ) (π : Y.X 
       (fun _ => 1) = (topSelfIntersection ℂ ((ProjSpace.O1 ℂ Y.dim).pull π) Y.dim : ℝ) := by
   intro Y π hπ
   obtain ⟨hPI, hPdim, hPproj, hPsm⟩ := _root_.GlobalTheory.pspace_integral_dim_proj_smooth ℂ Y.dim
-  haveI := hPI
+  have := hPI
   by_cases hη : π (genericPoint Y.X) = genericPoint (PSpace ℂ Y.dim)
   · have hδ := _root_.GlobalTheory.DominantProjDegree.residueDegree_ne_zero_of_map_genericPoint ℂ (PSpace ℂ Y.dim) Y.X (PSpace.str ℂ Y.dim) Y.str Y.dim hPproj
       Y.isProjOver hPdim Y.topologicalKrullDim_eq π hπ hη

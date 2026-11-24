@@ -119,9 +119,9 @@ theorem ext_of_pts {L : Type} [Field L] {X Y T : Scheme.{0}} [IsReduced X] (i : 
     (H : ∀ k, a k ≫ f = a k ≫ g) : f = g := by
   have : IsDominant (Sigma.desc a) := ⟨hd.mono (Set.iUnion_subset fun k => by
     rintro _ ⟨w, rfl⟩
-    exact ⟨Sigma.ι (fun _ : A => Sp L) k w, by rw [← Scheme.Hom.comp_apply, Sigma.ι_desc]⟩)⟩
+    exact ⟨Sigma.ι (fun _ : A => Sp L) k w, by rw [← Scheme.Hom.comp_apply, Sigma.ι_comp_desc]⟩)⟩
   refine ext_of_isDominant_of_isSeparated i h (Sigma.desc a) (Sigma.hom_ext _ _ fun k => ?_)
-  rw [Sigma.ι_desc_assoc, Sigma.ι_desc_assoc, H]
+  rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc_assoc, H]
 
 noncomputable def comb {k : Type} [CommRing k] {X : Scheme.{0}} (p : X ⟶ Sp k) {H : LB X} {J : Type} [Fintype J]
     (s : J → H.Sec) (a : J → k) : H.Sec where
@@ -299,7 +299,7 @@ theorem crd_generic [ArithBase o Ω] (hL : GlobalTheory.UT.LL) (hb : t.b.det ≠
 theorem crd_special (hL : GlobalTheory.UT.LL) (hS : S.Big) (a : Sp (kb p) ⟶ t.u.G.left)
     (ha : a ≫ t.u.G.hom = spMap ((IsLocalRing.residue (OO p)).comp t.u.j)) :
     ∃ w, w ≠ 0 ∧ Crd (t.u.H S.N) t.σ a w := by
-  haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
+  have : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
   have pb : IsPullback t.mod.r t.mod.Φ.G.hom t.u.G.hom (rPt p ≫ spMap t.u.j) := t.mod.cart.1
   have hsq : a ≫ t.u.G.hom = 𝟙 _ ≫ rPt p ≫ spMap t.u.j :=
     (ha.trans (spMap_comp _ _)).trans (Category.id_comp _).symm
@@ -319,9 +319,9 @@ theorem smooth : Smooth t.u.G.hom :=
 
 theorem iSup_comb_eq_top [ArithBase o Ω] (hL : GlobalTheory.UT.LL) (hS : S.Big) (hb : t.b.det ≠ 0)
     {m : Matrix S.J S.J t.u.V} (hm : IsUnit m.det) : ⨆ i, nonzeroLocus (comb t.u.G.hom t.σ (m i)) = ⊤ := by
-  haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
-  haveI := smooth t
-  haveI := isLocalHom_j t.u
+  have : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
+  have := smooth t
+  have := isLocalHom_j t.u
   refine top_unique fun x _ => ?_
   by_cases hx : (t.u.G.hom x).asIdeal = ⊥
   · refine mem_iSup_comb hm _ (crd_generic t hL hb) ⟨IsLocalRing.closedPoint _, PrimeSpectrum.ext ?_⟩
@@ -403,7 +403,7 @@ theorem gPt_mem (w) : (gPt p ≫ y) w ∈ U₀ := by
   exact Subtype.prop _
 
 theorem le_preimage_yV {W : M.Z.Opens} (h : y (cPt p) ∈ W) : ⊤ ≤ c.yV ⁻¹ᵁ W := by
-  haveI := isLocalHom_j t.u
+  have := isLocalHom_j t.u
   refine (CrdCalc.top_le_iff _ _).2 ?_
   rw [← c.fac, Scheme.Hom.comp_apply] at h
   exact (IsLocalRing.comap_closedPoint t.u.j) ▸ h
@@ -483,7 +483,7 @@ theorem crd_match [ArithBase o Ω] (hL : GlobalTheory.UT.LL) (hE : S.IsEE M U₀
   exact CrdCalc.crd_smul e h3
 
 theorem dense_toG : Dense (⋃ a : t.u.PtC, Set.range (t.u.toG a)) := by
-  haveI := smooth t
+  have := smooth t
   refine (dense_pts t.u.G.hom _ (denseRange_spMap (injective_j t.u))).mono (Set.iUnion_subset fun a => ?_)
   obtain ⟨a', h⟩ := exists_ptC t.u a.1 (a.2.trans (spMap_comp _ _))
   exact h ▸ Set.subset_iUnion (fun a : t.u.PtC => Set.range (t.u.toG a)) a'
@@ -494,8 +494,8 @@ theorem nonempty_tMap : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [F
   intro hL o Ω _ _ _ _ S ρ M U₀ EE hB Q p _ y y₀ t c hS
   obtain ⟨l, hl⟩ := TopologicalSpace.Opens.mem_iSup.1 (Q.cover.ge (Set.mem_univ (y (cPt p))))
   obtain ⟨hb, m, hm, hme⟩ := exists_change c hB.ee hl
-  haveI := smooth t
-  haveI : IsReduced t.u.G.left := GlobalTheory.isReduced_of_smooth_of_isReduced t.u.G.hom
+  have := smooth t
+  have : IsReduced t.u.G.left := GlobalTheory.isReduced_of_smooth_of_isReduced t.u.G.hom
   obtain ⟨yW, hyW⟩ : ∃ yW : Sp t.u.V ⟶ (Q.W l).toScheme, yW ≫ (Q.W l).ι = c.yV :=
     ⟨IsOpenImmersion.lift _ _ (by
       rw [Scheme.Opens.range_ι]
@@ -525,8 +525,8 @@ theorem nonempty_tMap : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [F
     rw [← morphismRestrict_ι, ← Category.assoc, hf', Category.assoc, hyW]
   refine ⟨⟨l, hl, m, hm, hme, f, hover, genMap c, genMap_fst c, genMap_snd c, ?_,
     fun R _ _ ψ z w hz hw => hfc R z _ (crd_comb m hz hw)⟩⟩
-  haveI := Q.proper
-  haveI : IsReduced (pullback t.u.G.hom (jK t.u.V)) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.snd _ _)
+  have := Q.proper
+  have : IsReduced (pullback t.u.G.hom (jK t.u.V)) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.snd _ _)
   refine ext_of_pts Q.P.hom ?_ _ (dense_pts (pullback.snd t.u.G.hom (jK t.u.V)) _
     (denseRange_spMap (algebraMap _ (PadicAlgCl p)).injective)) fun a => ?_
   · rw [genMap_over, c.yK_fac, Category.assoc, Category.assoc, hover, pullback.condition_assoc]
@@ -577,8 +577,8 @@ theorem GlobalTheory.ZH.exists_geoTest_tMap_and_centre : GlobalTheory.UT.LL → 
     obtain ⟨t, ht⟩ := hgeo p y₀ hn Fs
     obtain ⟨c⟩ := hF t.u ht
     exact ⟨y₀, t, c, GlobalTheory.T.nonempty_testModel_to_closure hL o Ω S ρ M U₀ EE hB Q p y y₀ t c hbig⟩
-  · haveI := hA.ft
-    haveI := hA.char
+  · have := hA.ft
+    have := hA.char
     exact ((GlobalTheory.ZH.classical_points_and_local_regularity o Ω M U₀ hB.ov.normal).1 U₀ le_rfl hB.ov.ne z hz).1
 end -- clump:auto
 end -- clump:auto

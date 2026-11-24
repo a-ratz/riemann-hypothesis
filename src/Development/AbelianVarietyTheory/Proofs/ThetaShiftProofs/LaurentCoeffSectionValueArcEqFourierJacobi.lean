@@ -122,7 +122,7 @@ theorem coeff_eq_zero_of_hasSum_zero (d : ℤ → ℂ)
   have hpow : ∀ (k : ℤ) (t : ℝ), cexp (2 * Real.pi * I * t) ^ k * cexp (2 * Real.pi * I * t) ^ (-j)
       = cexp ((2 * Real.pi * I * ((k - j : ℤ) : ℂ)) * t) := by
     intro k t
-    rw [← Complex.exp_int_mul, ← Complex.exp_int_mul, ← Complex.exp_add]
+    rw [← exp_intCast_mul, ← exp_intCast_mul, ← Complex.exp_add]
     congr 1; push_cast; ring
   have hI := intervalIntegral.hasSum_integral_of_dominated_convergence (μ := MeasureTheory.volume)
     (a := 0) (b := 1) (f := fun _ : ℝ => (0 : ℂ))
@@ -225,7 +225,7 @@ theorem hasSum_fj_of_line (X : Data E r) {la : Wt X.Ψ r} {P : Frame X.Ψ r → 
       by_cases hν : X.fj la ξ ν P x = 0
       · simp [hν]
       · congr 2
-        rw [← Complex.exp_int_mul]
+        rw [← exp_intCast_mul]
         congr 1
         have h2 : ((n ν : ℤ) : ℂ) = 2 * ∑ τ, (ν τ : ℂ) * sb τ := by
           have := congrArg (fun z : ℝ => (z : ℂ)) (hnν ν hν)
@@ -315,8 +315,8 @@ theorem exists_idx (hσ : GoodEmb c σ) (X : Data E r) (hr : r = Dw.p + Dw.q) (h
   have hcc : ∀ τ : E →+* ℂ, ComplexEmbedding.conjugate (ComplexEmbedding.conjugate τ) = τ := fun τ =>
     ComplexEmbedding.involutive_conjugate E τ
   obtain ⟨f, hf⟩ := GlobalTheory.FrameUnif.exists_letter_equiv X.Ψ X.cmType Dw.p Dw.q r hr (relab c σ) hbij Dw.mult
-    (fun τ h => by unfold Datum.mult; rw [if_pos ((hrt τ).1 ((hty _).1 h))])
-    (fun τ h => by unfold Datum.mult; rw [if_neg (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_left ((hrt τ).1 ((hty _).1 h))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_right (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
   obtain ⟨idx, hi⟩ : ∃ idx : Fin g ≃ X.Ψ × Fin r, ∀ j,
       (relab c σ (e j).1 ∈ X.Ψ ∧ (idx j).1.1 = relab c σ (e j).1 ∧ ((idx j).2 : ℕ) = Dw.q + (e j).2) ∨
       (relab c σ (e j).1 ∉ X.Ψ ∧ (idx j).1.1 = ComplexEmbedding.conjugate (relab c σ (e j).1) ∧
@@ -331,10 +331,10 @@ theorem exists_idx (hσ : GoodEmb c σ) (X : Data E r) (hr : r = Dw.p + Dw.q) (h
     obtain ⟨⟨τ, hτ⟩, ⟨n, hn⟩⟩ := t
     dsimp only at h ⊢
     rcases h with ⟨a, rfl, rfl⟩ | ⟨a, rfl, rfl, d⟩
-    · rw [if_neg (by omega)]
+    · rw [ite_eq_right (by omega)]
       unfold perFr
       rw [dite_eq_left a, dite_eq_left hn]
-    · rw [if_pos (by omega)]
+    · rw [ite_eq_left (by omega)]
       unfold perFr
       rw [dite_eq_right a, dite_eq_left (show conjEmb (relab c σ (e j).1) ∈ X.Ψ from hτ), dite_eq_left hn]
       rfl
@@ -359,11 +359,11 @@ theorem exists_move (hσ : GoodEmb c σ) (U : Unf Xo c σ r) (k : U.Comp) (hr : 
     intro j j' hne
     obtain ⟨h1, h2⟩ := PerBor.moveMat_support _ idx hb j j' hne
     rcases hi j with ⟨a1, b1, c1⟩ | ⟨a1, b1, c1, d1⟩
-    · rw [if_neg (by omega)] at h2
+    · rw [ite_eq_right (by omega)] at h2
       rcases hi j' with ⟨a2, b2, c2⟩ | ⟨a2, b2, c2, d2⟩
       · exact ⟨hbij.1 (by rw [← b1, ← b2, h1]), by omega⟩
       · omega
-    · rw [if_pos a1] at h2
+    · rw [ite_eq_left a1] at h2
       rcases hi j' with ⟨a2, b2, c2⟩ | ⟨a2, b2, c2, d2⟩
       · omega
       · exact ⟨hbij.1 (by rw [← b1, ← b2, h1]), by omega⟩
@@ -388,10 +388,10 @@ theorem exists_move (hσ : GoodEmb c σ) (U : Unf Xo c σ r) (k : U.Comp) (hr : 
     have hinv := Function.leftInverse_invFun hbij.1 (e j).1
     unfold laU
     rcases hi j with ⟨a1, b1, c1⟩ | ⟨a1, b1, c1, d1⟩
-    · rw [if_neg (by omega), if_pos a1, b1, hinv,
+    · rw [ite_eq_right (by omega), ite_eq_left a1, b1, hinv,
         show ((idx j).2 : ℕ) - (U.X k).p0 = (e j).2 by omega, inv_inv, ← zpow_natCast]
       congr 1
-    · rw [if_pos a1, if_neg (by omega), b1, hinv,
+    · rw [ite_eq_left a1, ite_eq_right (by omega), b1, hinv,
         show (U.X k).p0 - 1 - ((idx j).2 : ℕ) = (e j).2 by omega, inv_pow, ← zpow_natCast, ← zpow_neg]
       congr 1
       push_cast
@@ -483,7 +483,7 @@ namespace GlobalTheory.ArcCoeff
 
 theorem norm_eTwoPi_zpow (w : ℂ) (m : ℤ) : ‖eTwoPi w ^ m‖ = Real.exp (-(2 * Real.pi * m) * w.im) := by
   unfold eTwoPi
-  rw [← Complex.exp_int_mul, Complex.norm_exp]
+  rw [← Complex.exp_intCast_mul, Complex.norm_exp]
   congr 1
   simp
   ring
@@ -505,7 +505,7 @@ theorem differentiableOn_of_hasSum (a : ℤ → ℂ) (T : ℝ) (f : ℂ → ℂ)
       ((hs y₁ (by linarith)).add (hs y₂ (by linarith))) (fun m => ?_) hO (fun m w hw => ?_)
     · have : (fun w => a m * eTwoPi w ^ m) = fun w => a m * Complex.exp (m * (2 * Real.pi * Complex.I * w)) := by
         funext w
-        rw [Complex.exp_int_mul]
+        rw [Complex.exp_intCast_mul]
         rfl
       rw [this]
       fun_prop
@@ -588,8 +588,8 @@ theorem evR_eq_and_norm (hL : Out.Laws) (hL2 : Out.Laws2) (U : Unf Xo c σ r) (U
     toC (evR Xo c F y) = toC s ^ n * rdU U F k x.1 ∧
       ‖toC (evR Xo c F y)‖ = v ^ ((n : ℝ) / 2) * ‖rdU U F k x.1‖ * (U.X k).nfac (laU U 0 n k) x.1 := by
   obtain ⟨hr, hty, -, -, hsec, -⟩ := hU
-  haveI : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
-  haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
+  have : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   obtain ⟨b, hb, h, hun⟩ := GlobalTheory.ValNorm.exists_unit (U.X k) x.2
   obtain ⟨t, G, hbor, hG, hw⟩ := GlobalTheory.ValNorm.exists_frBor hσ U Uw k hr (hty k).1 (hty k).2 x b hb h
   obtain ⟨G', a₀, -, hG'⟩ := (GlobalTheory.Frames.frChg_exists_unique E H Dw l Xo c (CAt σ) y (U.un k ⟨_, h⟩)).1
@@ -600,7 +600,7 @@ theorem evR_eq_and_norm (hL : Out.Laws) (hL2 : Out.Laws2) (U : Unf Xo c σ r) (U
   obtain ⟨hv0, hv1⟩ := _root_.GlobalTheory.GeneratorNorm.theta_l2_positive_and_scaling hL hL2 E H Dw l Xo c σ _ _ Uw.F _ _ _ _ y _ G' _ v 1 hPm
     (Uw.period k ⟨_, h⟩) hy (Uw.lie k ⟨_, h⟩).1 hG' hv (Uw.norm k ⟨_, h⟩ hun)
   obtain ⟨hB, hS⟩ := (_root_.GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hEv a n F hF (CAt σ)).2 inferInstance
-  have hrd : ∀ z : (U.X k).dom, rdU U F k z.1 = toC (evR Xo c F (U.un k z)) := fun z => dif_pos z.2
+  have hrd : ∀ z : (U.X k).dom, rdU U F k z.1 = toC (evR Xo c F (U.un k z)) := fun z => dite_eq_left z.2
   have e1 : toC (evR Xo c F y) = toC s ^ n * rdU U F k x.1 := by
     rw [hrd]; exact hS s _ _ hchg
   have e2 : toC (wchar (ex Dw a n) t) * rdU U F k x.1 = bchar (laU U a n k) b * rdU U F k x.1 := by

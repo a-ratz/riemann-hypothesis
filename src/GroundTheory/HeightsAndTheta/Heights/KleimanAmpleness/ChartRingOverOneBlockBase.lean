@@ -681,7 +681,7 @@ theorem frame_latOf (hy : IndefiniteRowSideFullHecke.Kleiman2.IsModelWithBase S 
   have hT : Ideal.span T = ⊤ := by
     by_contra hne
     obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hne
-    haveI := hm.isPrime
+    have := hm.isPrime
     obtain ⟨f, hf, d, hd, hdle⟩ := exists_basic hy hi m
     exact hf (hle (Ideal.subset_span ⟨d, hd, hdle⟩))
   have h1 : (1 : A) ∈ Ideal.span T := by rw [hT]; exact Submodule.mem_top

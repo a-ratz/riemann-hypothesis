@@ -114,10 +114,10 @@ theorem isDomain_ainf (hv : v.Integers O) : IsDomain (Ainf p O) := by
 
 theorem isLocalRing_preTilt (hv : v.Integers O) : IsLocalRing (PreTilt O p) := by
   have : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
-  haveI : IsLocalRing O := ReciprocityTheory.PGsh.Ainf.O_local O hv
-  haveI : Nontrivial (ModP O p) := ReciprocityTheory.PGsh.Ainf.quot_nontrivial _ (by
+  have : IsLocalRing O := ReciprocityTheory.PGsh.Ainf.O_local O hv
+  have : Nontrivial (ModP O p) := ReciprocityTheory.PGsh.Ainf.quot_nontrivial _ (by
     rw [Ne, Ideal.span_singleton_eq_top]; exact Fact.out)
-  haveI : IsLocalRing (ModP O p) :=
+  have : IsLocalRing (ModP O p) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   rcases IsLocalRing.isUnit_or_isUnit_one_sub_self (PreTilt.coeff 0 a) with h | h
@@ -125,8 +125,8 @@ theorem isLocalRing_preTilt (hv : v.Integers O) : IsLocalRing (PreTilt O p) := b
   · exact Or.inr (isUnit_of_coeff_zero (by rwa [map_sub, map_one]))
 
 theorem isLocalRing_ainf (hv : v.Integers O) : IsLocalRing (Ainf p O) := by
-  haveI := isDomain_ainf (p := p) hv
-  haveI := isLocalRing_preTilt (p := p) hv
+  have := isDomain_ainf (p := p) hv
+  have := isLocalRing_preTilt (p := p) hv
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   rcases IsLocalRing.isUnit_or_isUnit_one_sub_self (constantCoeff a) with h | h
   · exact Or.inl (witt_isUnit a h)
@@ -214,7 +214,7 @@ open ReciprocityTheory.PGsh.Up GlobalTheory.Sandwich Matrix
 
 theorem ainf_local_xi_order : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O], v.Integers O → ∀ ε : PreTilt O p, IsPrimitiveRoot (root ε).untilt p → IsDomain (Ainf p O) ∧ IsLocalRing (Ainf p O) ∧ RingHom.ker (WittVector.fontaineTheta O p) = Ideal.span {xi ε} ∧ Function.Surjective (WittVector.fontaineTheta O p) ∧ WittVector.fontaineTheta O p (nu ε) ≠ 0 ∧ xi ε ≠ 0 ∧ (∀ x : Ainf p O, x ≠ 0 → ∃ (N : ℕ) (y : Ainf p O), x = xi ε ^ N * y ∧ WittVector.fontaineTheta O p y ≠ 0) := by
   intro p _ C _ _ _ v O _ _ _ _ hv ε hε
-  haveI := isDomain_ainf (p := p) hv
+  have := isDomain_ainf (p := p) hv
   refine ⟨inferInstance, isLocalRing_ainf hv, ker_theta hv ε hε,
     ReciprocityTheory.PGsh.Ainf.theta_surj p O hv, ReciprocityTheory.PGsh.Ainf.theta_nu p O hv ε hε, fun h => ?_,
     fun x hx => exists_order hv ε hε x hx⟩

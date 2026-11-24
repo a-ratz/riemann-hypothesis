@@ -215,7 +215,7 @@ theorem entries_mem_of_finset : ∀ (l : ℕ) [Fact l.Prime] (E Ω : Type) [Fiel
   intro l _ E Ω _ _ _ _ _ a ρ hρ
   obtain ⟨L, -, hL⟩ := GlobalTheory.CompactRepField.exists_finExt_entries_mem l (Formalism.ConjugateSelfDual.G E Ω) a ρ hρ
     ⟨⊥, inferInstance⟩
-  haveI := L.2
+  have := L.2
   let B := Module.finBasis ℚ_[l] ↥L.1
   classical
   refine ⟨Finset.univ.image (fun i => ((B i : ↥L.1) : Qbar l)), fun K hK g s t => ?_⟩
@@ -344,8 +344,8 @@ theorem exists_integral_conj {l : ℕ} [Fact l.Prime] {O Γ : Type} [CommRing O]
         exact ⟨h2, by rwa [inv_inv]⟩ }
   have hUopen : IsOpen (U : Set Γ) :=
     (hIntOpen.preimage hc).inter (hIntOpen.preimage (hc.comp continuous_inv))
-  haveI : Finite (Γ ⧸ U) := Subgroup.quotient_finite_of_isOpen U hUopen
-  haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ U) := Subgroup.quotient_finite_of_isOpen U hUopen
+  have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hUint : ∀ h ∈ U, ∀ i j, ((ρK h : GL _ _) : Matrix (Fin a) (Fin a) K) i j ∈ (algebraMap O K).range := by
     intro h hh i j
     rw [GlobalTheory.Proof.SemisimpleRepresentationIntegralConjugate.mem_range_iff ι hι]
@@ -378,7 +378,7 @@ theorem exists_integral_conj {l : ℕ} [Fact l.Prime] {O Γ : Type} [CommRing O]
       ι.mapMatrix ((algebraMap O K).mapMatrix (Matrix.of (e g))) := by
     ext s t; rfl
   rw [this, hE, Units.val_mul, Units.val_mul, map_mul, map_mul, hρK]
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   rw [Units.coe_map_inv]
   rfl
 
@@ -450,7 +450,7 @@ theorem exists_bigOk (D : D7) (l : ℕ) [Fact l.Prime] (Q : Finset (PlE D.host))
   intro c hc K hK ρ hcont hss hchar
   refine hSc c K (fun z hz => hK z (Finset.mem_biUnion.2 ⟨c, hE.mem_toFinset.2 hc, hz⟩)) ρ hcont hss ?_
   intro σ hσ
-  simp only [p, dif_pos hσ]
+  simp only [p, dite_eq_left hσ]
   obtain ⟨hg, B, hB, hF⟩ := Classical.choose_spec hσ
   exact hchar _ hg B σ hB hF
 
@@ -472,7 +472,7 @@ theorem charpoly_pt : ∀ (D : D7) (i : D.nd.Loc) (x : D.nd.X i) (ρ : G D.host.
   refine Finset.sum_congr rfl fun k hk => ?_
   obtain ⟨hk1, hk2⟩ := Finset.mem_Icc.1 hk
   have hg : GenAt D (D.nd.l i) (D.nd.Q i) v k := ⟨hv.1, hv.2.1, hv.2.2.1, hv.2.2.2, hk1, hk2⟩
-  simp only [ptSys, if_pos hg, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X, map_mul,
+  simp only [ptSys, ite_eq_left hg, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X, map_mul,
     map_pow, map_neg, map_one, map_natCast, Polynomial.map_neg, Polynomial.map_one, Polynomial.map_natCast]
 
 theorem model_of_conj : ∀ {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N : NData R H what₂) (A : NAut N) (i : N.Loc)
@@ -623,7 +623,7 @@ theorem evO_hypO_alt : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D
   refine ⟨big, fun L hB => ?_⟩
   obtain ⟨Sp, ⟨Au⟩, hss⟩ := hB
   intro i x ρ hρ
-  haveI : Fact (L.X.nd.l i).Prime := L.X.nd.lPrime i
+  have : Fact (L.X.nd.l i).Prime := L.X.nd.lPrime i
   have hB' : _root_.GlobalTheory.CoefDuty.BuiltAlt A M C tp.tup big L := ⟨Sp, ⟨Au⟩, hss⟩
   obtain ⟨hfin, hpt⟩ := _root_.GlobalTheory.T.side_eigen_unitary_alt hstd D cf jE A low Pq S hL eig θ Bs M C tp hCh hMt hstar hexp hsplit hcheb big L hB' i x
   have hj := L.X.nd.j_range i
@@ -1217,7 +1217,7 @@ theorem etaJ_join : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
   have hj1 : 1 ≤ (i : ℕ) + 1 := Nat.le_add_left _ _
   have hj2 : (i : ℕ) + 1 ≤ D.R.m := Nat.lt_of_lt_of_le i.2 hm
   by_cases h : D.plEq w ∈ S0.Tw
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have hne : D.what₂.muAt w ≠ D.what₂.mu0 := by
       rw [hTup.muAt w, ← hTup.mu0]
       exact fun e => (hTw _).1 h (hTup.inj e)
@@ -1228,7 +1228,7 @@ theorem etaJ_join : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     rw [_root_.GlobalTheory.EtaJoinSum.sum_etaLoc_eq_etaRat D M Tn ((i : ℕ) + 1) w hj1 hj2 hne hH (hLat _ w hj1 hj2 hne) (htw ▸ hZ)
       (fun i' _ => hSpec i'), htw]
     exact hE w
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine etaJ_eq_zero_of_untwisted D _ w hj1 hj2 ?_
     rw [hTup.muAt w, ← hTup.mu0]
     congr 1
@@ -1492,7 +1492,7 @@ theorem latStable_of_latInt : ∀ (D : D7) (M : MtFam D) (B : NLocBase D M) (j :
   have hf : ∀ g ∈ (D.what₂.MtLat (D.what₂.muTw w) j).gen, D.what₂.jMt (D.what₂.muTw w) j (f g) = g := by
     intro g hg
     have h := hI.1 g hg
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     exact h.choose_spec
   have key : ∀ y ∈ genSet D (D.what₂.muTw w) j, B.hK j w v k (B.iV j w y) ∈ latLoc B j w := by
     intro y hy

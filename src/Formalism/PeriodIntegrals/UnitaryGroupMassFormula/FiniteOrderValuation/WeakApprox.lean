@@ -112,7 +112,7 @@ lemma exists_nat_small (T : Finset (HeightOneSpectrum (𝓞 L))) (δ : HeightOne
     if h : δ w ≠ 0 then Classical.choose (exists_pow_lt h) else 0
   refine ⟨M ^ (∑ w ∈ T, n w), pow_pos hM0 _, fun w hw => ?_⟩
   have hn : exp (-((n w : ℕ) : ℤ)) < δ w := by
-    simp only [n, dif_pos (hδ w hw)]
+    simp only [n, dite_eq_left (hδ w hw)]
     exact Classical.choose_spec (exists_pow_lt (hδ w hw))
   have hle : n w ≤ ∑ u ∈ T, n u := Finset.single_le_sum (fun _ _ => Nat.zero_le _) hw
   calc w.valuation L ((M ^ (∑ u ∈ T, n u) : ℕ) : L)
@@ -165,7 +165,7 @@ theorem weakApprox (T : Finset (HeightOneSpectrum (𝓞 L)))
     if h : w ∈ T then Classical.choose (exists_pow_lt (mul_ne_zero (hγ w h) (hvd w))) else 0
   have he : ∀ w (h : w ∈ T), exp (-((e w : ℕ) : ℤ)) < γ w * w.valuation L dL := by
     intro w h
-    simp only [e, dif_pos h]
+    simp only [e, dite_eq_left h]
     exact Classical.choose_spec (exists_pow_lt (mul_ne_zero (hγ w h) (hvd w)))
   obtain ⟨y, hy⟩ := IsDedekindDomain.exists_forall_sub_mem_ideal (s := T)
     (fun w : HeightOneSpectrum (𝓞 L) => w.asIdeal) e
@@ -186,7 +186,7 @@ theorem weakApprox (T : Finset (HeightOneSpectrum (𝓞 L)))
     have h1 : w.valuation L (a0 - b ⟨w, hw⟩) < γ w := by
       by_contra hle
       push_neg at hle
-      exact absurd (lt_of_le_of_lt hval (he w hw)) (not_lt.mpr (mul_le_mul_of_nonneg_right hle zero_le'))
+      exact absurd (lt_of_le_of_lt hval (he w hw)) (not_lt.mpr (mul_le_mul_of_nonneg_right hle zero_le))
     have hsplit : algebraMap L (w.adicCompletion L) a0 - x w =
         algebraMap L (w.adicCompletion L) (a0 - b ⟨w, hw⟩) +
           (algebraMap L (w.adicCompletion L) (b ⟨w, hw⟩) - x w) := by
@@ -194,7 +194,7 @@ theorem weakApprox (T : Finset (HeightOneSpectrum (𝓞 L)))
     rw [hsplit]
     exact Valuation.map_add_lt _ (by rw [val_alg]; exact h1) (hb ⟨w, hw⟩)
   obtain ⟨N, hN, hNs⟩ := exists_nat_small T γ hγ
-  haveI : Finite (L →+* ℝ) := Finite.of_injective (fun σ : L →+* ℝ => Complex.ofRealHom.comp σ)
+  have : Finite (L →+* ℝ) := Finite.of_injective (fun σ : L →+* ℝ => Complex.ofRealHom.comp σ)
     (fun σ τ h => RingHom.ext fun z => Complex.ofReal_injective (RingHom.congr_fun h z))
   obtain ⟨B, hB⟩ := (Set.finite_range (fun σ : L →+* ℝ => |σ a0|)).bddAbove
   obtain ⟨t, ht⟩ := exists_nat_gt B
@@ -210,7 +210,7 @@ theorem weakApprox (T : Finset (HeightOneSpectrum (𝓞 L)))
       refine Valuation.map_add_lt _ (hclose w hw) ?_
       rw [val_alg, Valuation.map_mul]
       calc w.valuation L (N : L) * w.valuation L (s : L) ≤ w.valuation L (N : L) * 1 :=
-            mul_le_mul_of_nonneg_left (val_nat_le_one w s) zero_le'
+            mul_le_mul_of_nonneg_left (val_nat_le_one w s) zero_le
         _ = w.valuation L (N : L) := mul_one _
         _ < γ w := hNs w hw
     · have h1 : |σ a0| ≤ B := hB ⟨σ, rfl⟩
@@ -247,7 +247,7 @@ theorem weakApprox_units (T : Finset (HeightOneSpectrum (𝓞 L)))
   rw [Units.val_mk0, key, Valuation.map_mul]
   by_contra hle
   push_neg at hle
-  have h2 := mul_le_mul_of_nonneg_right hle (zero_le' : 0 ≤ Valued.v (x w : w.adicCompletion L))
+  have h2 := mul_le_mul_of_nonneg_right hle (zero_le : 0 ≤ Valued.v (x w : w.adicCompletion L))
   rw [mul_assoc, hinv, mul_one] at h2
   exact absurd h (not_lt.mpr h2)
 

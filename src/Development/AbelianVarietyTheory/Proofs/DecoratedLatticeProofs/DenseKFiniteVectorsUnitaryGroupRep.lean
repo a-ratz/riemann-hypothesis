@@ -79,8 +79,8 @@ theorem dense_finite_vectors (K : Type) [Group K] [TopologicalSpace K] [IsTopolo
     (LinearIsometry.mk (π k).toLinearMap (hiso k)).inner_map_map a b
   have hinv : ∀ k a, π k (π k⁻¹ a) = a := by
     intro k a
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   have hOst : ∀ k, ∀ w ∈ Nᗮ, π k w ∈ Nᗮ := by
     intro k w hw
     rw [Submodule.mem_orthogonal] at hw ⊢
@@ -89,7 +89,7 @@ theorem dense_finite_vectors (K : Type) [Group K] [TopologicalSpace K] [IsTopolo
     exact hw _ (hNst _ a ha)
   have hbot : Nᗮ = ⊥ := by
     by_contra hne
-    haveI : Nontrivial Nᗮ := Submodule.nontrivial_iff_ne_bot.2 hne
+    have : Nontrivial Nᗮ := Submodule.nontrivial_iff_ne_bot.2 hne
     let ρ : K →* (Nᗮ →L[ℂ] Nᗮ) :=
       { toFun := fun k => ((π k).comp Nᗮ.subtypeL).codRestrict Nᗮ (fun w => hOst k w w.2)
         map_one' := by
@@ -99,7 +99,7 @@ theorem dense_finite_vectors (K : Type) [Group K] [TopologicalSpace K] [IsTopolo
           intro k l
           ext w
           show π (k * l) w = π k (π l w)
-          rw [map_mul, ContinuousLinearMap.mul_apply] }
+          rw [map_mul, mul_apply_eq_comp] }
     have hρ : ∀ k (w : Nᗮ), ((ρ k w : Nᗮ) : H) = π k w := fun k w => rfl
     obtain ⟨S, hS0, hSf, hSs⟩ := exists_finiteDimensional_invariant K Nᗮ ρ
       (fun k w => hiso k w) (fun w => (hcont w).subtype_mk _)
@@ -121,9 +121,9 @@ theorem dense_isKFin (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGr
   obtain ⟨⟨h1, hmul⟩, hiso, hcont⟩ := hσ
   have hemb : Topology.IsEmbedding (fun k : Formalism.REAL.KG ε => Formalism.REAL.toMK k) :=
     (Formalism.REAL.isClosedEmbeddingMatrix n ε).1.isEmbedding.comp Topology.IsEmbedding.subtypeVal
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Formalism.REAL.KG ε) := hemb.secondCountableTopology
+  have : SecondCountableTopology (Formalism.REAL.KG ε) := hemb.secondCountableTopology
   have hU : ∀ k : Formalism.REAL.KG ε, Formalism.REAL.toMK k ∈ Formalism.MainNotions.S.UJset ε := fun k => k.1.2
   let π : Formalism.REAL.KG ε →* (H →L[ℂ] H) :=
     { toFun := fun k => σ (Formalism.REAL.toMK k)

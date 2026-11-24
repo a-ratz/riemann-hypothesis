@@ -110,11 +110,11 @@ theorem exists_dual_family [NumberField K] [NumberField K'] (φ : K →+* K') :
     ∃ (m : ℕ) (b : Fin m → 𝓞 K') (F : Fin m → K' →+ K), (∀ i a x, F i (φ a * x) = a * F i x) ∧
       (∀ i (a : 𝓞 K'), ∃ r : 𝓞 K, F i (algebraMap (𝓞 K') K' a) = algebraMap (𝓞 K) K r) ∧
       ∀ x, x = ∑ i, algebraMap (𝓞 K') K' (b i) * φ (F i x) := by
-  letI : Algebra K K' := φ.toAlgebra
-  haveI : Module.FinitePresentation (𝓞 K) (𝓞 K') := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 K) (𝓞 K') := Module.Flat.projective_of_finitePresentation
+  let : Algebra K K' := φ.toAlgebra
+  have : Module.FinitePresentation (𝓞 K) (𝓞 K') := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 K) (𝓞 K') := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, f, g, -, -, hfg⟩ := Module.Finite.exists_comp_eq_id_of_projective (𝓞 K) (𝓞 K')
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K') (nonZeroDivisors (𝓞 K))) K' :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K') (nonZeroDivisors (𝓞 K))) K' :=
     IsIntegralClosure.isLocalization (𝓞 K) K K' (𝓞 K')
   have hbc : IsBaseChange K (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K') K').toLinearMap :=
     IsLocalizedModule.isBaseChange (nonZeroDivisors (𝓞 K)) K _

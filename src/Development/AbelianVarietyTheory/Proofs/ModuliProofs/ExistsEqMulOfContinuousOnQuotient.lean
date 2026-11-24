@@ -186,7 +186,7 @@ theorem exists_prime_of_not_dvd {A : Type*} [CommRing A] [IsDomain A] [IsNoether
 private theorem valAt'_ne_zero_iff_top_le_preimage_basicOpen {X : Scheme.{0}} (x : Sp ℂ ⟶ X) {U : X.Opens}
     (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) : valAt' x U f ≠ 0 ↔ ⊤ ≤ x ⁻¹ᵁ X.basicOpen f := by
   have hv : valAt' x U f = (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom ((x.appLE U ⊤ h).hom f) := by
-    simp only [valAt', dif_pos h, valAt]
+    simp only [valAt', dite_eq_left h, valAt]
   have hb : x ⁻¹ᵁ X.basicOpen f = (Sp ℂ).basicOpen ((x.appLE U ⊤ h).hom f) := by
     rw [Scheme.preimage_basicOpen]
     have := (Sp ℂ).basicOpen_res (x.app U f) (homOfLE h).op
@@ -210,7 +210,7 @@ private theorem valAt'_ne_zero_iff_top_le_preimage_basicOpen {X : Scheme.{0}} (x
 
 private theorem valAt'_mul_of_top_le_preimage_open {X : Scheme.{0}} (x : Sp ℂ ⟶ X) {U : X.Opens}
     (h : ⊤ ≤ x ⁻¹ᵁ U) (f f' : Γ(X, U)) : valAt' x U (f * f') = valAt' x U f * valAt' x U f' := by
-  simp only [valAt', dif_pos h, valAt, map_mul]
+  simp only [valAt', dite_eq_left h, valAt, map_mul]
 
 theorem exists_point_of_prime (X : Over (Sp ℂ)) [LocallyOfFiniteType X.hom] {U : X.left.Opens}
     (hU : IsAffineOpen U) (p : Ideal Γ(X.left, U)) [p.IsPrime] {s : Γ(X.left, U)} (hs : s ∉ p) :
@@ -224,7 +224,7 @@ theorem exists_point_of_prime (X : Over (Sp ℂ)) [LocallyOfFiniteType X.hom] {U
     refine RingHom.FiniteType.comp (X.hom.finiteType_appLE (isAffineOpen_top _) hU hle) ?_
     exact RingHom.FiniteType.of_surjective _
       (fun x => ⟨(Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom x, by simp⟩)
-  letI : Algebra ℂ Γ(X.left, U) := φ.toAlgebra
+  let : Algebra ℂ Γ(X.left, U) := φ.toAlgebra
   have : Algebra.FiniteType ℂ Γ(X.left, U) := hft
   have : IsJacobsonRing Γ(X.left, U) := isJacobsonRing_of_finiteType (A := ℂ)
 
@@ -235,7 +235,7 @@ theorem exists_point_of_prime (X : Over (Sp ℂ)) [LocallyOfFiniteType X.hom] {U
     apply hs
     rw [← hjac, Ideal.jacobson, Ideal.mem_sInf]
     exact fun J hJ => hno J hJ
-  letI : Field (Γ(X.left, U) ⧸ m) := Ideal.Quotient.field m
+  let : Field (Γ(X.left, U) ⧸ m) := Ideal.Quotient.field m
   have : Algebra.FiniteType ℂ (Γ(X.left, U) ⧸ m) :=
     Algebra.FiniteType.trans (S := Γ(X.left, U)) inferInstance inferInstance
   have : Module.Finite ℂ (Γ(X.left, U) ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ _
@@ -377,7 +377,7 @@ theorem exists_eq_mul_of_continuousOn_quotient :
     let y : PrimeSpectrum Γ(P.A.left, U) := ⟨q, hqm.isPrime⟩
     have hy : hU.fromSpec y ∈ U := by
       rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact ⟨y, rfl⟩
-    letI := TopCat.Presheaf.algebra_section_stalk P.A.left.presheaf ⟨hU.fromSpec y, hy⟩
+    let := TopCat.Presheaf.algebra_section_stalk P.A.left.presheaf ⟨hU.fromSpec y, hy⟩
     have : IsLocalization.AtPrime (P.A.left.presheaf.stalk (hU.fromSpec y)) q :=
       hU.isLocalization_stalk' y hy
     obtain ⟨_, hic⟩ := hnorm (hU.fromSpec y)

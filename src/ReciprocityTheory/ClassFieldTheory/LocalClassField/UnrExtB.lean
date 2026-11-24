@@ -156,7 +156,7 @@ theorem exists_lifts {L : IntermediateField ℚ_[p] (PadicAlgCl p)}
       LinearIndependent (resK p K) (fun i => IsLocalRing.residue (Obar p) (ω i)) := by
   have hfL : Finite (resK p L) := finite_resK L hL
   have hfW : Finite (resMod hKL) := hfL
-  letI : Module.Finite (resK p K) (resMod hKL) := Module.Finite.of_finite
+  let : Module.Finite (resK p K) (resMod hKL) := Module.Finite.of_finite
   have hcard : Nat.card (resMod hKL) = Nat.card (resK p K) ^ Module.finrank (resK p K) (resMod hKL) :=
     Module.natCard_eq_pow_finrank
   have hnt : Nontrivial (resMod hKL) :=

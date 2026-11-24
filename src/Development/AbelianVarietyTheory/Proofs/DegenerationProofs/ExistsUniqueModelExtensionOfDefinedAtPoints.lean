@@ -154,12 +154,12 @@ private lemma eq_of_openImmersion_of_eq_on_genericFibre [IsDomain R] [IsFraction
     (hb : b ≫ N.Y.hom = i ≫ M.Y.hom)
     (h : pullback.snd M.j i ≫ a = pullback.snd M.j i ≫ b) :
     a = b := by
-  haveI := M.smooth
-  haveI := N.sep
-  haveI := _root_.GlobalTheory.schemeTheoreticallyDominant_fractionField R K
+  have := M.smooth
+  have := N.sep
+  have := _root_.GlobalTheory.schemeTheoreticallyDominant_fractionField R K
   have hP := ((IsPullback.of_hasPullback M.j i).flip.paste_vert
     (isPullback_model_j_spMap_algebraMap M)).flip
-  haveI := IsSchemeTheoreticallyDominant.of_isPullback hP
+  have := IsSchemeTheoreticallyDominant.of_isPullback hP
   have := _root_.GlobalTheory.over_ext_of_schemeTheoreticallyDominant (Y := Over.mk (i ≫ M.Y.hom))
     (X := N.Y) (pullback.snd M.j i)
     (a := Over.homMk a ha) (b := Over.homMk b hb) h
@@ -220,10 +220,10 @@ theorem _root_.GlobalTheory.SS.existsUnique_extension_of_forall_defAt :
     refine 𝒰.hom_ext _ _ fun y => ?_
     change (U y).ι ≫ G ≫ N.Y.hom = (U y).ι ≫ M.Y.hom
     exact (Category.assoc _ _ _).symm.trans ((hG y =≫ _).trans (hg y).1)
-  haveI := M.smooth
-  haveI := N.sep
-  haveI := _root_.GlobalTheory.schemeTheoreticallyDominant_fractionField R K
-  haveI := IsSchemeTheoreticallyDominant.of_isPullback (isPullback_model_j_spMap_algebraMap M).flip
+  have := M.smooth
+  have := N.sep
+  have := _root_.GlobalTheory.schemeTheoreticallyDominant_fractionField R K
+  have := IsSchemeTheoreticallyDominant.of_isPullback (isPullback_model_j_spMap_algebraMap M).flip
   have hex : M.j ≫ G = f.left ≫ N.j := by
     have hcovA : TopologicalSpace.IsOpenCover (fun y => M.j ⁻¹ᵁ U y) := by
       rw [TopologicalSpace.IsOpenCover, eq_top_iff]

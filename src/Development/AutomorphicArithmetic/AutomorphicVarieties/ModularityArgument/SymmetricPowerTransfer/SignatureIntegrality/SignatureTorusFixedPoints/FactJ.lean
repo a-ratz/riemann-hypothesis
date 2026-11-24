@@ -73,7 +73,7 @@ theorem UpperTheory.V.Z.Sym.Sig.factJ : UpperTheory.V.Z.Sym.Sig.FactJ := by
         inv_mem' := by
           rintro _ ⟨x, hx, t, ht, y, hy, rfl⟩
           have := hm (h3 _ (inv_mem hy)) (hm (h2 _ (inv_mem ht)) (h1 _ (inv_mem hx)))
-          simpa only [_root_.mul_inv_rev, Set.mem_setOf_eq] using this }
+          simpa only [_root_.mul_inv_rev, Set.mem_ofPred_eq] using this }
     exact fun g hg => (show V.J n ≤ K from sup_le (sup_le h1 h2) h3) hg
   · rintro m a ha a' ha' _ ⟨s, hs, rfl⟩ _ ⟨s', hs', rfl⟩ b hb b' hb' h
     have hT : ∀ s : Fin n → kˣ, (∀ i, s i ∈ V.H) → dg s ∈ KO k (Fin n) := fun s h => V.J_le_KO (V.dg_mem h)

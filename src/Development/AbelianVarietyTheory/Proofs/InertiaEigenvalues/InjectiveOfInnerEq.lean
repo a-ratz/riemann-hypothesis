@@ -96,7 +96,7 @@ theorem levW_le_GfC (R : RealDat D A Ks) (i : Fin D.R.m) {k : GA D (Wc D i)} (hk
 theorem mem_locK_iff (R : RealDat D A Ks) (i : Fin D.R.m) (v : HeightOneSpectrum (𝓞 D.host.F)) (g : GfC (Wc D i)) :
     (g : GA D (Wc D i)) ∈ {k | k ∈ levW R i ∧ SuppF (Wc D i) (GlobalTheory.LevelProduct.fE D v) k} ↔
       g ∈ KR R i ∧ cf (Wc D i) v g = g := by
-  simp only [Set.mem_setOf_eq, KR, Subgroup.mem_subgroupOf, cf_eq_self_iff]
+  simp only [Set.mem_ofPred_eq, KR, Subgroup.mem_subgroupOf, cf_eq_self_iff]
 
 theorem dcRep_exists (R : RealDat D A Ks) (i : Fin D.R.m) (hT : TransLaws R i)
     (v : HeightOneSpectrum (𝓞 D.host.F)) (α : GfC (Wc D i)) (hα : cf (Wc D i) v α = α) :
@@ -179,14 +179,14 @@ theorem heckeReps : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
   have key : ∀ (γ : GfC (Wc D i)) y y', (∀ γ ∈ GfC (Wc D i), ∀ x, trPair R i γ x y' =
       ∑ δ ∈ C.map (Function.Embedding.subtype _), trPair R i (γ * δ) x y) →
       B γ y' = (∑ δ ∈ C, B (γ * δ)) y := fun γ y y' h => ext_inner_left ℂ fun x => by
-    rw [← hB, h γ γ.2 x, Finset.sum_map, ContinuousLinearMap.sum_apply, inner_sum]
+    rw [← hB, h γ γ.2 x, Finset.sum_map, sum_apply, inner_sum]
     refine Finset.sum_congr rfl fun δ _ => ?_
     rw [← hB]; rfl
   ext y
   obtain ⟨y', -, hy'⟩ := hT.2.1 v _ (isFinIdem_fE v) α ((cf_eq_self_iff _ v α).1 hα) _ hs hr y
   have e1 := key 1 y y' hy'
   simp only [one_mul, hB1] at e1
-  rw [ContinuousLinearMap.mul_apply, ← e1, key γ y y' hy']
+  rw [mul_apply_eq_comp, ← e1, key γ y y' hy']
 
 end GlobalTheory.UpInj
 
@@ -226,7 +226,7 @@ namespace GlobalTheory
 theorem hasSum_inner_quotient_eulerProduct_injective : ∀ (Γ : Type) [Group Γ] (K : Subgroup Γ) (ι : Type) [DecidableEq ι] (c : ι → Γ →* Γ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ H] (a : Γ → ℂ) (B : Γ → (H →L[ℂ] H)) (s : ι → ℝ) (e : Γ ⧸ K ≃ {f : ∀ v, Γ ⧸ K.comap (c v) // {w | f w ≠ (QuotientGroup.mk 1 : Γ ⧸ K.comap (c w))}.Finite}), (∀ (g : Γ) v, (e (QuotientGroup.mk g)).1 v = (QuotientGroup.mk g : Γ ⧸ K.comap (c v))) → (∀ g, g ∈ K ↔ ∀ v, c v g ∈ K) → (∀ v g, c v (c v g) = c v g) → (∀ v w g, v ≠ w → c w (c v g) = 1) → (∀ g k, k ∈ K → a (g * k) = a g) → a 1 = 1 → (∀ g, a g = ∏ᶠ v, a (c v g)) → (∀ g, ‖B g‖ ≤ 1) → B 1 = 1 → (∀ g k, k ∈ K → B (g * k) = B g) → Summable s → (∀ v, s v < 1) → (∀ v (C : Finset Γ), (∀ g ∈ C, c v g = g ∧ g ∉ K) → (∀ g ∈ C, ∀ g' ∈ C, g⁻¹ * g' ∈ K → g = g') → ∑ g ∈ C, ‖a g‖ ≤ s v) → (∀ v γ, HasSum (fun x : Γ ⧸ K.comap (c v) => a (c v (Quotient.out x)) • B (γ * c v (Quotient.out x))) (B γ * ∑' x : Γ ⧸ K.comap (c v), a (c v (Quotient.out x)) • B (c v (Quotient.out x)))) → ∃ W : H →L[ℂ] H, Function.Injective W ∧ ∀ x y, HasSum (fun q : Γ ⧸ K => a (Quotient.out q) * ⟪x, B (Quotient.out q) y⟫_ℂ) ⟪x, W y⟫_ℂ := by
   intro Γ _ K ι _ c H _ _ _ a B s e he hK hidem horth haK ha1 hfac hB hB1 hBK hs hs1 hloc hstep
   classical
-  haveI : CompleteSpace H := FiniteDimensional.complete ℂ H
+  have : CompleteSpace H := FiniteDimensional.completeSpace ℂ H
 
   have aK : ∀ g : Γ, a ((QuotientGroup.mk g : Γ ⧸ K).out) = a g := by
     intro g
@@ -254,7 +254,7 @@ theorem hasSum_inner_quotient_eulerProduct_injective : ∀ (Γ : Type) [Group Γ
     intro f g hf
     have hfeq : f = (e (QuotientGroup.mk g)).1 := funext fun w => (hf w).trans (he g w).symm
     subst hfeq
-    simp only [B', dif_pos (e (QuotientGroup.mk g)).2, Subtype.coe_eta, Equiv.symm_apply_apply]
+    simp only [B', dite_eq_left (e (QuotientGroup.mk g)).2, Subtype.coe_eta, Equiv.symm_apply_apply]
     exact BK g
   have h1 : ∀ v, a' v (x0 v) = 1 := by
     intro v
@@ -449,7 +449,7 @@ theorem GlobalTheory.UpInj.localSum_hasSum : ∀ (Γ : Type) [Group Γ] (K : Sub
     by_cases hb : ∃ x0, q x0 = b
     swap
     · push_neg at hb
-      haveI : IsEmpty {x // q x = b} := ⟨fun y => hb y.1 y.2⟩
+      have : IsEmpty {x // q x = b} := ⟨fun y => hb y.1 y.2⟩
       simp [tsum_empty]
     obtain ⟨x0, rfl⟩ := hb
     obtain ⟨C, hC⟩ := hex (r x0) (hr_fix x0)
@@ -546,7 +546,7 @@ theorem quotient_equiv_restrictedFamilies : ∀ (Γ : Type) [Group Γ] (K : Subg
       {v | c v g ∉ K} := by
     intro g
     ext w
-    simp only [Set.mem_setOf_eq, hF, ne_eq, hmk, mul_one, map_inv, inv_mem_iff]
+    simp only [Set.mem_ofPred_eq, hF, ne_eq, hmk, mul_one, map_inv, inv_mem_iff]
   let G : Γ ⧸ K → {f : ∀ v, Γ ⧸ K.comap (c v) //
       {w | f w ≠ (QuotientGroup.mk 1 : Γ ⧸ K.comap (c w))}.Finite} := fun q =>
     ⟨F q, by
@@ -593,10 +593,10 @@ theorem quotient_equiv_restrictedFamilies : ∀ (Γ : Type) [Group Γ] (K : Subg
     show F (QuotientGroup.mk _) w = f w
     rw [hF, ← hcw w, hlist x hf.toFinset.toList (Finset.nodup_toList _) w]
     by_cases hw : w ∈ hf.toFinset.toList
-    · rw [if_pos hw, hcw]
+    · rw [ite_eq_left hw, hcw]
       exact Quotient.out_eq (f w)
-    · rw [if_neg hw]
-      rw [Finset.mem_toList, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hw
+    · rw [ite_eq_right hw]
+      rw [Finset.mem_toList, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hw
       exact hw.symm
   exact ⟨Equiv.ofBijective G ⟨hinj, hsurj⟩, fun g v => rfl⟩
 
@@ -649,7 +649,7 @@ theorem finprod_components_of_rightInvariant_mul :
         rw [hg', map_mul, map_inv, horth v w g (Ne.symm hw), inv_one, mul_one]
       have hsupp : {w | c w g' ∉ K} ⊆ (s : Set ι) := by
         intro w hw
-        simp only [Set.mem_setOf_eq] at hw
+        simp only [Set.mem_ofPred_eq] at hw
         by_cases hwv : w = v
         · subst hwv
           exact absurd (hcv ▸ K.one_mem) hw
@@ -671,7 +671,7 @@ theorem finprod_components_of_rightInvariant_mul :
   intro g
   have hsub : Function.mulSupport (fun v => a (c v g)) ⊆ ((hfin g).toFinset : Set ι) := by
     intro w hw
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro hwK
     exact hw (haK _ hwK)
   rw [finprod_eq_prod_of_mulSupport_subset _ hsub]
@@ -703,7 +703,7 @@ theorem ops_exist : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
   choose B hBn hBp using fun γ : GfC (Wc D i) => hTL.2.2.1 γ γ.2
   refine ⟨B, fun γ x y => hBp γ x y, hBn, ?_, ?_⟩
   · refine ContinuousLinearMap.ext fun y => ext_inner_left ℂ fun x => ?_
-    rw [← hBp 1 x y, ContinuousLinearMap.one_apply]
+    rw [← hBp 1 x y, one_apply_eq_self]
     exact hTL.2.2.2.2.2 x y
   · intro γ k hk
     refine ContinuousLinearMap.ext fun y => ext_inner_left ℂ fun x => ?_

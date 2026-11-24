@@ -472,7 +472,7 @@ end Place
 theorem mem_Umax_of_isLift : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (s : ReciprocityTheory.Aut.SplitPlace L) (g : ℕ), g.Prime → ((g : 𝓞 L) ∈ s.w.asIdeal) → ∀ (x : Formalism.AUTREP.GAf L n) (γ : GL (Fin n) (ZMod g)), GlobalTheory.LabPin.IsLift s x γ → x ∈ ReciprocityTheory.Aut.Umax L n := by
   intro L _ _ _ n s g hp hg x γ hx
   obtain ⟨htriv, hred⟩ := hx
-  haveI : Fact g.Prime := ⟨hp⟩
+  have : Fact g.Prime := ⟨hp⟩
   set A : Matrix (Fin n) (Fin n) (s.v.adicCompletion (maximalRealSubfield L)) :=
     ((s.loc n x : GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) :
       Matrix (Fin n) (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) with hAdef
@@ -777,7 +777,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
           ∀ kv' : Σ k : Fin 2, D.nd.PlG k, kv' ≠ kv →
             (fr kv'.1 kv'.2).ActsAs (Formalism.IndefR.RationalEmbedding.iota D (MulAut.conj t (PY.ψ (c * x * c⁻¹)))).2 1 := by
   classical
-  letI : Submodule.IsLattice (Formalism.L2.SG.InstExistsPf.instOf D).E (Formalism.L2.SG.InstExistsPf.instOf D).L :=
+  let : Submodule.IsLattice (Formalism.L2.SG.InstExistsPf.instOf D).E (Formalism.L2.SG.InstExistsPf.instOf D).L :=
     Submodule.IsLattice.of_fg _ (Formalism.L2.SG.InstExistsPf.instOf D).L_fg
   obtain ⟨β₀, hβ₀⟩ := Formalism.L2.DIV.frame_exists_alt (Formalism.L2.SG.InstExistsPf.instOf D).F (Formalism.L2.SG.InstExistsPf.instOf D).E (Formalism.L2.SG.InstExistsPf.instOf D).n (Formalism.L2.SG.InstExistsPf.instOf D).L ⟨(Formalism.L2.SG.InstExistsPf.instOf D).L_span⟩
   obtain ⟨U, U', hUU, hUU', hFM⟩ := GlobalTheory.T.exists_rectangular_conj_instanceMatrix_standardPsi D hF PY t hStd
@@ -971,7 +971,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
       · rw [hij', Matrix.one_apply_eq]; exact one_mem _
       · rw [Matrix.one_apply_ne hij']; exact zero_mem _
     refine (res_eq_of_off _ _ _ he hres0 _ _ hij hd h4).trans ?_
-    haveI : Fact (1 < D.host.g kv'.1) := ⟨(D.host.g_prime kv'.1).one_lt⟩
+    have : Fact (1 < D.host.g kv'.1) := ⟨(D.host.g_prime kv'.1).one_lt⟩
     exact res_one_apply _ _ _ _ hd i j (Fin.cast_injective hn.symm).eq_iff
 
 theorem core (D : D7) (I : Formalism.MainNotions.S.AutInst) (h : I = Formalism.L2.SG.InstExistsPf.instOf D) (ιE : I.E ≃+* D.host.E)
@@ -1339,7 +1339,7 @@ open Formalism.L2.SG.Pf.RowDictPf Formalism.L2.SG.Pf.RedBasicsPf PIW.AdelClassFi
 theorem redMat0_of_actsAs : ∀ (I : AutInst) (N p : ℕ) (w : IsDedekindDomain.HeightOneSpectrum (𝓞 I.E)) (fr : GlobalTheory.RowLev.PlFrame I N p w) (x : I.Gf), x ∈ I.Kset → ∀ M : Matrix (Fin N) (Fin N) (ZMod p), fr.ActsAs x M → Formalism.L2.SG.Pf.RowDictPf.RedMat0 I w p x M := by
   intro I N p w fr x hx M hM
   have hp : p.Prime := fr.prime
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   have hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p :=
     (Nat.card_congr fr.residueEquiv.toEquiv).trans (Nat.card_zmod p)
   have h1 : ∀ u ∈ lamAf (F := I.F) (wLat0 I w), u ∈ extId I w.asIdeal • I.Lf := by

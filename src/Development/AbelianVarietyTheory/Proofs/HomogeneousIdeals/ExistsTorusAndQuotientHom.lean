@@ -173,11 +173,11 @@ theorem eq_const {z : AddMonoidAlgebra R ℤ} {p q : PowerSeries R}
     z = algebraMap R _ (PowerSeries.constantCoeff p) := by
   ext n
   rcases lt_trichotomy n 0 with h | rfl | h
-  · rw [← coeff_atZero, hp, PowerSeries.coeff_coe, if_pos h]
+  · rw [← coeff_atZero, hp, PowerSeries.coeff_coe, ite_eq_left h]
     simp [Finsupp.single_apply, h.ne]
   · rw [← coeff_atZero, hp, PowerSeries.coeff_coe]
     simp
-  · rw [← coeff_atInf, hq, PowerSeries.coeff_coe, if_pos (by omega)]
+  · rw [← coeff_atInf, hq, PowerSeries.coeff_coe, ite_eq_left (by omega)]
     simp [Finsupp.single_apply, h.ne']
 
 variable (r : L →+* R) (t : Rˣ)
@@ -802,7 +802,7 @@ theorem exists_torus_and_quotient_hom {G H : Over (Spec (.of K))} [GrpObj G] [Gr
     (∃! α : splitTorus (Spec (.of K)) D.X ⟶ splitTorus (Spec (.of K)) E.X,
       IsMonHom α ∧ α ≫ E.i = D.i ≫ φ) ∧
     (∃! β : D.B ⟶ E.B, IsMonHom β ∧ D.q ≫ β = φ ≫ E.q) := by
-  letI := D.addCommGroup; letI := E.addCommGroup; letI := D.grpB; letI := E.grpB
+  let := D.addCommGroup; let := E.addCommGroup; let := D.grpB; let := E.grpB
   have := D.free
   have := D.finite
   have := D.i_hom

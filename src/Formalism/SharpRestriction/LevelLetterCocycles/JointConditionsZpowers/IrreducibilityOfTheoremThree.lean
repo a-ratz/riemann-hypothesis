@@ -63,7 +63,7 @@ theorem nV_pos (D : D7) : 1 ≤ D.R.nV := by
 
 theorem hypCM_of (D : D7) (hc : GlobalDatumCompatibility D) : Formalism.MainNotions.SphericalInertData.HypCM D := by
   refine ⟨?_, hc.2.1⟩
-  letI := D.host.cmStar
+  let := D.host.cmStar
   exact D.sp.cm.cmUnram
 
 theorem base_change_automorphic_of (D : D7) (h45 : Formalism.MainNotions.SphericalInertData.Conclusion1 D) (hc : GlobalDatumCompatibility D) :

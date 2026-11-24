@@ -108,11 +108,11 @@ theorem forms_baseChange : ∀ (k K L : Type) [Field k] [CharZero k] [Field K] [
         ∑ j, b j • mapDR k K L (ω j) = 0 → ∀ j, ω j = 0 := by
   intro k K L _ _ _ _ _ _ _ _ _
   classical
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap k K).injective
-  haveI : Algebra.IsSeparable K L := Algebra.IsAlgebraic.isSeparable_of_perfectField
-  haveI : Algebra.FormallyEtale K L := Algebra.FormallyEtale.of_isSeparable K L
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap k K).injective
+  have : Algebra.IsSeparable K L := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : Algebra.FormallyEtale K L := Algebra.FormallyEtale.of_isSeparable K L
   let I := Module.Basis.ofVectorSpaceIndex K Ω[K⁄k]
-  letI : LinearOrder I := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder I := linearOrderOfSTO WellOrderingRel
   let bK : Module.Basis I K Ω[K⁄k] := Module.Basis.ofVectorSpace K Ω[K⁄k]
   let bL : Module.Basis I L Ω[L⁄k] := (bK.baseChange L).map (tensorKaehlerEquivOfFormallyEtale k K L)
   have h : ∀ i, bL i = KaehlerDifferential.map k k K L (bK i) := fun i => by

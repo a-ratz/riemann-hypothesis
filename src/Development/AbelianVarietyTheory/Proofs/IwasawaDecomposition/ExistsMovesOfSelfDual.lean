@@ -135,7 +135,7 @@ theorem exists_triv (hur : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
 end General
 
 theorem repExS (D : D7) : GL3Theta.repExS D := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro n hn N L L₀
   have hur := Formalism.L2.Pj.unramBridge D.host.E (Formalism.L2.Pj.cmUnram_conj D)
   have hst : ∀ x : D.host.E, star x = IsCMField.complexConj D.host.E x := fun _ => rfl
@@ -194,7 +194,7 @@ namespace GlobalTheory.TrueTheta
 theorem exists_rat {D : D7} {n : ℕ} : letI := D.host.cmStar
     ∀ γ : Matrix.unitaryGroup (Fin n) D.host.E, ∃ γA : GA D n,
       IsRat D (γA : GL (Fin n) (AE D)) (γ : Matrix (Fin n) (Fin n) D.host.E) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ
   refine (mem_ratG_intG D n).2.2.1 _ ?_
   have := Matrix.mem_unitaryGroup_iff.1 γ.2
@@ -232,7 +232,7 @@ theorem approxU (D : D7) (u : (AE D)ˣ) (y : AE D) {m : ℕ} (hm : 0 < m) :
 
 theorem exists_moves_of_selfDual : ∀ (D : D7) (N : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)), SD D L → ∃ g : GA D N, Moves D (g : GL (Fin N) (AE D)) L := by
   intro D N L hL
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨m, hm2, hm⟩ : ∃ m : ℕ, 2 ≤ m ∧ ∀ x ∈ L, ∀ i, (m : AE D) * inc D (x i) ∈ OhE D := by
     obtain ⟨S, hS⟩ := hL.1
     obtain ⟨m, h0, hm⟩ := fin_denom D (fun p : S × Fin N => inc D ((p.1 : Fin N → D.host.E) p.2))
@@ -562,11 +562,11 @@ theorem mem_detId_iff : ∀ (D : D7) (N : ℕ) (g₁ g₂ : GL (Fin N) (AE D)) (
 
 theorem exists_field (S : Set Qbar) (hS : S.Finite) : ∃ M : IntermediateField ℚ ℂ, FiniteDimensional ℚ M ∧
     ∀ x : Qbar, (∀ σ : Qbar ≃ₐ[ℚ] Qbar, (∀ s ∈ S, σ s = s) → σ x = x) → (x : ℂ) ∈ M := by
-  haveI : Algebra.IsAlgebraic ℚ Qbar := algebraicClosure.isAlgebraic ℚ ℂ
-  haveI : IsAlgClosure ℚ Qbar := algebraicClosure.isAlgClosure ℚ ℂ
-  haveI : IsGalois ℚ Qbar := IsAlgClosure.isGalois ℚ Qbar
-  haveI := hS.to_subtype
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) :=
+  have : Algebra.IsAlgebraic ℚ Qbar := algebraicClosure.isAlgebraic ℚ ℂ
+  have : IsAlgClosure ℚ Qbar := algebraicClosure.isAlgClosure ℚ ℂ
+  have : IsGalois ℚ Qbar := IsAlgClosure.isGalois ℚ Qbar
+  have := hS.to_subtype
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
   refine ⟨(IntermediateField.adjoin ℚ S).map Qbar.val,
     (IntermediateField.equivMap _ Qbar.val).toLinearEquiv.finiteDimensional, fun x hx => ⟨x, ?_, rfl⟩⟩
@@ -703,7 +703,7 @@ theorem exists_base (D : D7) : ∃ κ : (AE D)ˣ →* ℂˣ, (∀ u, IntU D u �
             cont := ⟨1, one_pos, fun u hu _ => hint' k u hu⟩
             aut := fun a => ?_
             norm := fun x => ?_
-            par := fun _ => (even_two_mul k).sub ((Int.even_coe_nat N).2 hN)
+            par := fun _ => (even_two_mul k).sub ((Int.even_natCast N).2 hN)
             unr := fun u hu _ => hint' k u hu }, fun _ => rfl, fun _ => rfl⟩⟩
   · show ‖((κ (ratio D x) ^ k : ℂˣ) : ℂ)‖ = 1
     rw [Units.val_zpow_eq_zpow_val, norm_zpow, hnorm, one_zpow]
@@ -826,12 +826,12 @@ theorem exists_chi (D : D7) (κ : (AE D)ˣ →* ℂˣ) (h1 : ∀ u, IntU D u →
     have h : ∃ u : (AE D)ˣ, ∀ a, a ∈ 𝔞 ↔ ((u⁻¹ : (AE D)ˣ) : AE D) * inc D a ∈ OhE D := ⟨u, hu⟩
     have := h1 _ (i2 h.choose u fun a => (h.choose_spec a).symm.trans (hu a))
     rw [map_mul, map_inv, mul_inv_eq_one] at this
-    simp only [χ, dif_pos h, this]
+    simp only [χ, dite_eq_left h, this]
   refine ⟨χ, ⟨fun 𝔞 𝔟 ha hb => ?_, fun z => ?_⟩, fun n g₁ g₂ L₁ L₂ m₁ m₂ => hχ _ _ (mem_detId_iff D n _ _ L₁ L₂ m₁ m₂)⟩
   · obtain ⟨u, hu⟩ := i3 𝔞 ha
     obtain ⟨v, hv⟩ := i3 𝔟 hb
     rw [hχ _ _ (i1 u v 𝔞 𝔟 hu hv), hχ _ _ hu, hχ _ _ hv, map_mul, Units.val_mul]
-  · letI := D.host.cmStar
+  · let := D.host.cmStar
     have hz : (z : D.host.E) * D.host.conj z = 1 := by
       rw [← AdLattice.star_eq_conj]; exact z.2.2
     have hz0 : (z : D.host.E) ≠ 0 := left_ne_zero_of_mul_eq_one hz

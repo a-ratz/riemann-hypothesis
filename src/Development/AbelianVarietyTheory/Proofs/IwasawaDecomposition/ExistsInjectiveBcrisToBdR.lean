@@ -104,7 +104,7 @@ theorem exists_iota_cris_dR : ∀ (l : ℕ) [Fact l.Prime], ∀ j : Per.Acris l 
   intro l _ j hj
   obtain ⟨-, hi, hK, -⟩ := _root_.GlobalTheory.MemLoc.BdRField.bdR_isField l
   obtain ⟨e, he, hne⟩ := GlobalTheory.CrisLoc.exists_root_ne_one l
-  haveI := GlobalTheory.CrisLoc.bcris_away l e he hne
+  have := GlobalTheory.CrisLoc.bcris_away l e he hne
   refine exists_injective_lift_field
     (Submonoid.powers (algebraMap (Per.Ainf l) (Per.Acris l) (Per.tm e - 1))) hK
     ((algebraMap (Per.BdRp l) (Per.BdR l)).comp j) (hi.comp (_root_.GlobalTheory.MemLoc.crisP_injective l j hj)) ?_

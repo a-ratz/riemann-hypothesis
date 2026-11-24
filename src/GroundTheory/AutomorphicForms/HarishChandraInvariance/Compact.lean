@@ -169,7 +169,7 @@ theorem IsExpLieAlgebra.isClosed (h : IsExpLieAlgebra G 𝔤) : IsClosed (G : Se
     rw [this]
     exact huG
   have hLy : L y ∈ 𝔤 :=
-    (Submodule.closed_of_finiteDimensional 𝔤).closure_subset_iff.2 himg (mem_closure_image hL hyc')
+    (Submodule.isClosed_of_finiteDimensional 𝔤).closure_subset_iff.2 himg (mem_closure_image hL hyc')
   have hyG : y ∈ G := by
     have : expUnit ℝ 𝔸 (L y) = y := Units.ext (h.exp_symm hyW)
     rw [← this]

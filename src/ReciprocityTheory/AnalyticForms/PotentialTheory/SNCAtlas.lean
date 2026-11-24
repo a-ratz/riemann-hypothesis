@@ -312,7 +312,7 @@ theorem sncInducedAtlas : SNCInducedAtlasStatement := by
     rw [Equiv.symm_apply_apply]
     exact hyx
   · unfold HoloMap
-    refine ⟨continuous_subtype_val, fun j k' => ?_⟩
+    refine ⟨continuous_subtypeVal, fun j k' => ?_⟩
     exact slice_holo A (W k) (hS (t.equivFin.symm j).1) (t.equivFin.symm j).1
       (hψ (t.equivFin.symm j).1.1).1 k'
 

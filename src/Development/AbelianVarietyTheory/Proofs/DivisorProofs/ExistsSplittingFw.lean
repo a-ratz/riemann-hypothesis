@@ -79,11 +79,11 @@ variable {p : ℕ} [Fact p.Prime] (D : Datum p)
 
 theorem Datum.finrank_VF : Module.finrank D.F D.VF = D.m * D.n := by
   have h1 : Module.finrank ℚ D.VF = D.m * D.n * Module.finrank ℚ D.F := by
-    haveI := D.freeLa; haveI := D.finLa
+    have := D.freeLa; have := D.finLa
     show Module.finrank ℚ (ℚ ⊗[ℤ] D.La) = _
     rw [Module.finrank_baseChange, D.rankLa]
-  haveI : FiniteDimensional ℚ D.VF := D.finVQ
-  haveI : FiniteDimensional D.F D.VF := Module.Finite.of_restrictScalars_finite ℚ D.F D.VF
+  have : FiniteDimensional ℚ D.VF := D.finVQ
+  have : FiniteDimensional D.F D.VF := Module.Finite.of_restrictScalars_finite ℚ D.F D.VF
   rw [← Module.finrank_mul_finrank ℚ D.F D.VF, mul_comm] at h1
   exact Nat.eq_of_mul_eq_mul_right Module.finrank_pos h1
 

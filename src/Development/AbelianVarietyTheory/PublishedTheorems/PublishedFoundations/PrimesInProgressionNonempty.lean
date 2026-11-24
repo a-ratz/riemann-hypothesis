@@ -55,7 +55,7 @@ def Linnik : Prop :=
 
 private theorem exists_prime_modEq_of_coprime (a q : ℕ) (hq : 1 ≤ q) (h : a.Coprime q) :
     ∃ p : ℕ, p.Prime ∧ p ≡ a [MOD q] := by
-  haveI : NeZero q := ⟨by omega⟩
+  have : NeZero q := ⟨by omega⟩
   have hu : IsUnit (a : ZMod q) := (ZMod.isUnit_iff_coprime a q).2 h
   obtain ⟨p, -, hp, hpa⟩ := Nat.forall_exists_prime_gt_and_eq_mod hu 0
   exact ⟨p, hp, (ZMod.natCast_eq_natCast_iff p a q).1 hpa⟩

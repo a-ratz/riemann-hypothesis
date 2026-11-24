@@ -106,7 +106,7 @@ theorem smapInv_cont (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf
   unfold smapInv ujOf'
   apply Continuous.subtype_mk
   have hx : Continuous fun x : Set.range (Smap C τ γ) => (Matrix.of (x : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · dsimp only [Function.comp_def]
     fun_prop
@@ -116,7 +116,7 @@ theorem smapInv_cont (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf
 theorem smap_measEmb (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) : MeasurableEmbedding (Smap C τ γ) := by
   have hu : Continuous fun z : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => umat (γ⁻¹ * z) := by
     unfold umat
-    exact Units.continuous_val.comp (continuous_subtype_val.comp (continuous_const.mul continuous_id))
+    exact Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_const.mul continuous_id))
   have hc : Continuous (Smap C τ γ) := by
     have h2 : Continuous fun z : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => C.Qi τ * umat (γ⁻¹ * z) * C.Q τ * (C.y τ)⁻¹ :=
       ((continuous_const.matrix_mul hu).matrix_mul continuous_const).matrix_mul continuous_const

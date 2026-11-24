@@ -99,7 +99,7 @@ theorem unit_mul (H : IsLieData σ j s) {a b : 𝔸} (ha : σ a * a = 1) (hb : �
 
 theorem expMap_add (H : IsLieData σ j s) (X : L) (t u : ℝ) :
     expMap j s ((t + u) • X) = expMap j s (t • X) * expMap j s (u • X) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   unfold expMap
   rw [← H.mul _ _ (exp_unitary H _) (exp_unitary H _), add_smul, map_add (f := _), NormedSpace.exp_add_of_commute]
@@ -114,7 +114,7 @@ theorem exists_coord (H : IsLieData σ j s) (J : L →L[ℝ] 𝔸) (hJ : ∀ X, 
       HasFDerivAt c (J ∘L ∑ i ∈ S, (l i).smulRight (b i)) 0 ∧
       HasFDerivAt (fun p => φ (g * s (c p))) (∑ i ∈ S, (l i).smulRight (φ' i g)) 0 := by
   classical
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   induction S using Finset.induction_on with
   | empty =>
     refine ⟨fun _ => 1, contDiff_const, fun _ => by simp [H.one], rfl, ?_, ?_⟩
@@ -154,9 +154,9 @@ theorem hasFDerivAt_expMap (H : IsLieData σ j s) (hl : HasLog σ j) {ι : Type}
     (hd : ∀ i g, HasDerivAt (fun t : ℝ => φ (g * expMap j s (t • b i))) (φ' i g) 0) (g : G)
     (hc : ∀ i, ContinuousOn (fun u => φ' i (g * s u)) {u | σ u * u = 1}) :
     HasFDerivAt (fun X => φ (g * expMap j s X)) (∑ i, (l i).smulRight (φ' i g)) 0 := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have : FiniteDimensional ℝ L := FiniteDimensional.of_injective j H.inj
-  have : CompleteSpace L := FiniteDimensional.complete ℝ L
+  have : CompleteSpace L := FiniteDimensional.completeSpace ℝ L
   let J : L →L[ℝ] 𝔸 := LinearMap.toContinuousLinearMap j
   obtain ⟨c, h1, h2, h4, h5, h6⟩ := exists_coord H J (fun _ => rfl) l b hd g hc Finset.univ
   rw [hb, ContinuousLinearMap.comp_id] at h5
@@ -174,7 +174,7 @@ theorem hasFDerivAt_expMap (H : IsLieData σ j s) (hl : HasLog σ j) {ι : Type}
     have := HasFDerivAt.comp (g := Λ) (g' := fderiv ℝ Λ 1) _ (by rwa [h4]) h5
     rwa [l5] at this
   have h0 : (Λ ∘ c) 0 = 0 := by simp [h4, hΛ]
-  have hs := hΦ.hasStrictFDerivAt' hΦ' (by simp)
+  have hs := hΦ.hasStrictFDerivAt hΦ' (by simp)
   have p1 := hs.to_localInverse.hasFDerivAt
   have p2 := hs.localInverse_apply_image
   have p3 := hs.eventually_right_inverse
@@ -194,7 +194,7 @@ theorem sm_of_closed (H : IsLieData σ j s) (hl : HasLog σ j) (T : Set L) (hT :
     (𝒮 : Set (G → ℂ)) (hc : ∀ φ ∈ 𝒮, ∀ g, ContinuousOn (fun u => φ (g * s u)) {u | σ u * u = 1})
     (hd : ∀ φ ∈ 𝒮, ∀ X ∈ T, ∃ φ' ∈ 𝒮, ∀ g, HasDerivAt (fun t : ℝ => φ (g * expMap j s (t • X))) (φ' g) 0) :
     ∀ φ ∈ 𝒮, Sm (expMap j s) φ := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have : FiniteDimensional ℝ L := FiniteDimensional.of_injective j H.inj
   let J : L →L[ℝ] 𝔸 := LinearMap.toContinuousLinearMap j
   let b₀ := Module.Basis.ofSpan hT.ge
@@ -221,7 +221,7 @@ theorem sm_of_closed (H : IsLieData σ j s) (hl : HasLog σ j) (T : Set L) (hT :
       have der : ∀ p₀, HasFDerivAt (fun p => φ (g * s (c p))) ((∑ i, (l i).smulRight (φ' i (g * s (c p₀)))) ∘L
           (fderiv ℝ Λ 1 ∘L (σ (c p₀) • fderiv ℝ c p₀))) p₀ := fun p₀ => by
         have hr : c p₀ * σ (c p₀) = 1 := by
-          haveI : IsArtinianRing 𝔸 := IsArtinianRing.of_finite ℝ 𝔸
+          have : IsArtinianRing 𝔸 := IsArtinianRing.of_finite ℝ 𝔸
           exact mul_eq_one_comm.1 (hu p₀)
         have hd : HasFDerivAt (fun p => σ (c p₀) * c p) (σ (c p₀) • fderiv ℝ c p₀) p₀ :=
           (hE.differentiable (by simp) p₀).hasFDerivAt.const_mul _
@@ -242,7 +242,7 @@ theorem sm_of_closed (H : IsLieData σ j s) (hl : HasLog σ j) (T : Set L) (hT :
       rw [Nat.cast_succ, contDiff_succ_iff_fderiv_apply]
       refine ⟨fun p => (der p).differentiableAt, by simp, fun y => ?_⟩
       simp only [(der _).fderiv, ContinuousLinearMap.comp_apply, _root_.sum_apply, ContinuousLinearMap.smulRight_apply,
-        ContinuousLinearMap.smul_apply]
+        smul_apply]
       refine ContDiff.sum fun i _ => ContDiff.smul (𝕜' := ℝ) ?_ (ih _ (m1 i) g)
       have k : ContDiff ℝ ∞ fun p => fderiv ℝ c p y :=
         (hE.fderiv_right (m := ∞) (by simp)).clm_apply contDiff_const
@@ -267,7 +267,7 @@ theorem continuousOn_secInf {D : D7} {θ : InfF D} (hθ : IsInfFam θ) (V : HSp 
   refine ContinuousOn.congr (h.mono fun u hu => (unit_iff R u).1 hu) fun u hu => ?_
   refine R.2.2.1 _ (secInf_spec R hu).1 _ (GlobalTheory.RealLift.prodAt_mem θ V _ u) fun τ => ?_
   rw [(secInf_spec R hu).2, GlobalTheory.RealLift.infMat_prodAt hθ V ((unit_iff R u).1 hu) τ _ (Finset.nodup_toList _),
-    if_pos (Finset.mem_toList.2 (Finset.mem_univ _))]
+    ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))]
 
 theorem mem_smFun_of_closed : ∀ (D : D7) (θ : InfF D), IsInfFam θ → ∀ (V : HSp D), ∀ 𝒮 : Set (GA D V → ℂ), (∀ φ ∈ 𝒮, Continuous φ) → (∀ φ ∈ 𝒮, ∀ τ, ∀ X ∈ lieAt V τ, ∃ φ' ∈ 𝒮, ∀ g, HasDerivAt (fun t : ℝ => φ (g * oneP θ V τ X t)) (φ' g) 0) → ∀ φ ∈ 𝒮, φ ∈ SmFun θ V := by
   intro D θ hθ V 𝒮 hc hd φ hφ

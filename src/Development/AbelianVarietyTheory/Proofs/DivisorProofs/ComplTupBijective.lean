@@ -80,7 +80,7 @@ theorem range_complSub {a a' d : ℕ} (h : a + a' = d) (s : {s : Fin a → Fin d
 theorem complSub_complSub {a a' d : ℕ} (h : a + a' = d) (h' : a' + a = d) (s : {s : Fin a → Fin d // StrictMono s}) :
     complSub h' (complSub h s) = s := by
   apply Subtype.ext
-  apply (StrictMono.range_inj (complSub h' (complSub h s)).2 s.2).1
+  apply (StrictMono.range_inj_of_wellFoundedLT (complSub h' (complSub h s)).2 s.2).1
   rw [range_complSub, range_complSub, compl_compl]
 
 def complTup (D : D7) {a a' d : ℕ} {n : D.what₂.Tau → ℕ} (h : a + a' = d) (T : Tup D a d n) : Tup D a' d n :=

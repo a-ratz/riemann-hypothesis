@@ -66,7 +66,7 @@ theorem flatAt_om_continuous : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V 
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
 
   have hval : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hup : Continuous fun T : Mx D ρ ρ => upSum T := by
     unfold upSum
     refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
@@ -100,13 +100,13 @@ theorem flatAt_om_continuous : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V 
     have h2 := hmix.comp hf
     simp only [Function.comp_def] at h2
     exact h2
-  haveI : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
-  haveI : ∀ m n : ℕ, SecondCountableTopology (Mx D m n) := fun m n =>
+  have : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
+  have : ∀ m n : ℕ, SecondCountableTopology (Mx D m n) := fun m n =>
     inferInstanceAs (SecondCountableTopology (Fin m → Fin n → AE D))
-  haveI : ∀ m n : ℕ, FirstCountableTopology (Mx D m n) := fun m n =>
+  have : ∀ m n : ℕ, FirstCountableTopology (Mx D m n) := fun m n =>
     TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
-  haveI : ∀ S : HSp D, SecondCountableTopology (GA D S) := fun S => (Formalism.IndefR.Eqv.ga_facts D S).2.2.2.1
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : ∀ S : HSp D, SecondCountableTopology (GA D S) := fun S => (Formalism.IndefR.Eqv.ga_facts D S).2.2.2.1
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
   rw [continuous_iff_continuousAt]
   intro q₀
   obtain ⟨K, hK, hKn⟩ := exists_compact_mem_nhds q₀.1

@@ -87,8 +87,8 @@ theorem x_add (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (x : X�
 
 theorem eq_yK_zeta_pow (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (u : FractionRing V)
     (hu : u ^ ((X₁.S.r * X₁.S.N) ^ 2) = 1) : ∃ e : ℕ, u = 𝔪.yK (algebraMap X₁.o₁ X₁.S.R (X₁.S.ζ ^ e)) := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  haveI : CharZero (FractionRing V) := IsFractionRing.charZero V
+  have : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero (FractionRing V) := IsFractionRing.charZero V
   set k := (X₁.S.r * X₁.S.N) ^ 2 with hk
   have hkpos : 0 < k := by
     have h1 := X₁.S.r_pos; have h2 := X₁.S.N_ge
@@ -102,7 +102,7 @@ theorem eq_yK_zeta_pow (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ)
   have hroot : (Polynomial.cyclotomic k (FractionRing V)).IsRoot (𝔪.yK (algebraMap X₁.o₁ X₁.S.R X₁.S.ζ)) := by
     have h := (hR.isRoot_cyclotomic hkpos).map (f := 𝔪.yK)
     rwa [Polynomial.map_cyclotomic] at h
-  haveI : NeZero (k : FractionRing V) := ⟨by exact_mod_cast hkpos.ne'⟩
+  have : NeZero (k : FractionRing V) := ⟨by exact_mod_cast hkpos.ne'⟩
   have hK : IsPrimitiveRoot (𝔪.yK (algebraMap X₁.o₁ X₁.S.R X₁.S.ζ)) k :=
     (Polynomial.isRoot_cyclotomic_iff).1 hroot
   obtain ⟨e, -, he⟩ := hK.eq_pow_of_pow_eq_one hu
@@ -145,7 +145,7 @@ theorem over_translate (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ)
   obtain ⟨o, ho, _⟩ := hg₁
   subst hp
   have hB : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
-  haveI := 𝔪.cn.2.2.2
+  have := 𝔪.cn.2.2.2
   have hn : 1 ≤ X₁.S.r * X₁.S.N := Nat.mul_pos X₁.S.r_pos (lt_of_lt_of_le two_pos X₁.S.N_ge)
   obtain ⟨w, hw, vw⟩ := exists_gen 𝔪.D.toPre.P.isLB (φ' := DegPre.lineφ 𝔪.D.toPre _ g₂.b) (ε' := DegPre.lineε 1)
     (fun U _ h => by rw [(ThetaAverage.val_translate ht hadd).1]) w₁ hw₁

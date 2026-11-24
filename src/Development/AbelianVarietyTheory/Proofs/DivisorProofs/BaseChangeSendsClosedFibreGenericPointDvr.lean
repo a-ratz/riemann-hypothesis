@@ -88,10 +88,10 @@ theorem apply_genericPoint_ne_closedPoint {R : Type} [CommRing R] [IsDomain R] [
 
 theorem apply_eq_of_closedFibre_dim_one : ∀ (T D : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [CommRing D] [IsDomain D] [IsDiscreteValuationRing D] (a : T →+* D), a.Flat → (maximalIdeal T).map a = maximalIdeal D → ∀ (H : Over (Sp T)) [GrpObj H] [IsIntegral H.left] (H' : Over (Sp D)) [GrpObj H'] [IsIntegral H'.left] (π : H'.left ⟶ H.left) (θ : H.left.functionField →+* H'.left.functionField), IsSemiAbelian H → IsPullback π H'.hom H.hom (spMap a) → PFF (𝟙 _) π θ → ∀ (y : H.left) (y' : H'.left), H.hom y = closedPoint T → H'.hom y' = closedPoint D → ringKrullDim (H.left.presheaf.stalk y) = 1 → ringKrullDim (H'.left.presheaf.stalk y') = 1 → π y' = y := by
   intro T D _ _ _ _ _ _ a ha hm H _ _ H' _ _ π θ hG hpb _ y y' hy hy' hdy hdy'
-  haveI : Smooth H.hom := hG.smooth
-  haveI : Flat H'.hom := MorphismProperty.of_isPullback hpb (inferInstanceAs (Flat H.hom))
-  haveI : Flat (spMap a) := (HasRingHomProperty.Spec_iff (P := @Flat)).mpr ha
-  haveI : Flat π := MorphismProperty.of_isPullback hpb.flip (inferInstanceAs (Flat (spMap a)))
+  have : Smooth H.hom := hG.smooth
+  have : Flat H'.hom := MorphismProperty.of_isPullback hpb (inferInstanceAs (Flat H.hom))
+  have : Flat (spMap a) := (HasRingHomProperty.Spec_iff (P := @Flat)).mpr ha
+  have : Flat π := MorphismProperty.of_isPullback hpb.flip (inferInstanceAs (Flat (spMap a)))
   have hsq : ∀ z, H.hom (π z) = spMap a (H'.hom z) := fun z => by
     have := congrArg (fun f => f.base z) hpb.w
     simpa using this
@@ -114,8 +114,8 @@ theorem apply_eq_of_closedFibre_dim_one : ∀ (T D : Type) [CommRing T] [IsDomai
   set F : Set H.left := H.hom ⁻¹' {closedPoint T} with hFdef
   have hFc : IsClosed F := (isClosed_singleton_closedPoint T).preimage H.hom.continuous
   have hFi : IsIrreducible F := by
-    haveI := GlobalTheory.SemiAbFibre.irreducibleSpace_fibre _ H hG _ ((Sp T).fromSpecResidueField (closedPoint T))
-    haveI : IrreducibleSpace (H.hom.fiber (closedPoint T)) := this
+    have := GlobalTheory.SemiAbFibre.irreducibleSpace_fibre _ H hG _ ((Sp T).fromSpecResidueField (closedPoint T))
+    have : IrreducibleSpace (H.hom.fiber (closedPoint T)) := this
     have hr := (IrreducibleSpace.isIrreducible_univ (H.hom.fiber (closedPoint T))).image _
       (Scheme.Hom.fiberι H.hom (closedPoint T)).continuous.continuousOn
     rw [Set.image_univ] at hr

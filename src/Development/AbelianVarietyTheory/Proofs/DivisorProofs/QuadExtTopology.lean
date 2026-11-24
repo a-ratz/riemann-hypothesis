@@ -60,9 +60,9 @@ namespace GlobalTheory
 theorem quadExt_topology : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : IsQuad c δ), FiniteDimensional F E ∧ IsTopologicalRing E ∧ ContinuousInv₀ E ∧ T2Space E ∧ Continuous c ∧ Continuous (Algebra.norm F : E → F) ∧ Continuous (Algebra.trace F E) ∧ ∀ (α ν : Type) [Fintype α] [Fintype ν], IsModuleTopology F (Matrix α ν E) ∧ Good (Matrix α ν E) := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE
   obtain ⟨b, -, -⟩ := hE.basis
-  haveI hfd : FiniteDimensional F E := Module.Finite.of_basis b
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing F E
-  haveI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have hfd : FiniteDimensional F E := Module.Finite.of_basis b
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing F E
+  have : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   have hc : Continuous c := IsModuleTopology.continuous_of_linearMap c.toLinearMap
   have htr : Continuous (Algebra.trace F E) := IsModuleTopology.continuous_of_linearMap (Algebra.trace F E)
   have hN : ∀ z : E, Algebra.norm F z = (2 : F)⁻¹ * Algebra.trace F E (z * c z) := by
@@ -90,7 +90,7 @@ theorem quadExt_topology : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F
     have hn : Algebra.norm F z ≠ 0 := (Algebra.norm_ne_zero_iff).mpr hz
     exact ((continuousAt_inv₀ hn).comp hNc.continuousAt).smul hc.continuousAt
   refine ⟨hfd, inferInstance, hI, hT2, hc, hNc, htr, fun α ν _ _ => ?_⟩
-  haveI hM : IsModuleTopology F (Matrix α ν E) := inferInstanceAs (IsModuleTopology F (α → ν → E))
+  have hM : IsModuleTopology F (Matrix α ν E) := inferInstanceAs (IsModuleTopology F (α → ν → E))
   exact ⟨hM, _root_.GlobalTheory.KSp.good_of_finiteDimensional F (Matrix α ν E)⟩
 
 end GlobalTheory

@@ -143,8 +143,8 @@ private theorem exists_global_cechPrimitive_of_zero_section_lemma
       have hsum := (hA.comp w hin).sub (hA'.comp w hin)
       refine (hsum.congr_of_eventuallyEq heq.symm).congr_fderiv ?_
       ext v
-      simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
-        ContinuousLinearMap.prod_apply, ContinuousLinearMap.zero_apply,
+      simp only [sub_apply, ContinuousLinearMap.comp_apply,
+        ContinuousLinearMap.prod_apply, zero_apply,
         ContinuousLinearMap.id_apply]
       rw [hfib q hq k _ hk ⟨hz, hw.1⟩, hfib q' hq' k _ hk ⟨hz', hw.2⟩, sub_self]
     have hconst : φ x.2 = φ 0 := by
@@ -190,7 +190,7 @@ private theorem exists_global_cechPrimitive_of_zero_section_lemma
     rw [← hfun] at h3
     rw [(hloc k x hxk hxV).fderiv_eq, h3.fderiv]
     have hL0 : L ((0 : P), (Pi.single a (1 : ℂ) : Fin g → ℂ)) = 0 := by simp [hL]
-    rw [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply, hL0, map_zero, sub_zero,
+    rw [sub_apply, ContinuousLinearMap.comp_apply, hL0, map_zero, sub_zero,
       hGd k a x hxk ⟨hxZ, hxC⟩]
   · intro k l x hxk hxl hxV
     obtain ⟨-, hxZ, -, -, -, -, hxC, -, -, hGc⟩ := hG x hxV
@@ -269,7 +269,7 @@ theorem _root_.GlobalTheory.AnPer.Charts.exists_primitive_of_rich {I : Type} [Fi
     intro k₁ k₂ k e₁ e₂ p hp
     have h₁ := hsub e₁ p hp
     have h₂ := hsub e₂ p hp
-    simp only [c, dif_pos (And.intro h₁ h₂)]
+    simp only [c, dite_eq_left (And.intro h₁ h₂)]
     obtain ⟨hpm, em₁, em₂⟩ := hμ k₁ k₂ p h₁ h₂
     set k' := μ k (μ k₁ k₂ p) p with hk'
     obtain ⟨hpk', f₁, f₂⟩ := hμ k (μ k₁ k₂ p) p hp hpm
@@ -310,7 +310,7 @@ theorem _root_.GlobalTheory.AnPer.Charts.exists_primitive_of_rich {I : Type} [Fi
       have d₂ := ((a k₂ _ e₂).analytic p hpk).differentiableAt
       have hfd := (d₂.hasFDerivAt.sub d₁.hasFDerivAt).fderiv
       rw [← hev.fderiv_eq]
-      rw [hfd, ContinuousLinearMap.sub_apply, ← hdw i _ p hpk,
+      rw [hfd, sub_apply, ← hdw i _ p hpk,
         ← hdw i _ p hpk, ← hd k₂ _ e₂ i, ← hd k₁ _ e₁ i, hol_sub_fn _ _ hpk,
         hol_sub_fn _ _ hpk, hsh e₂ _ p hpk, hsh e₁ _ p hpk]
       ring)

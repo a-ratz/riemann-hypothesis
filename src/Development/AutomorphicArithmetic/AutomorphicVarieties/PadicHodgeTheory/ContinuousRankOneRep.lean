@@ -330,7 +330,7 @@ private theorem exists_rat_monic_close_sign_changing_at_integers (l : ℕ) [Fact
   set t : ℚ := L / (L + 1) with ht
   have ht0 : t ≠ 0 := by positivity
   have hdiff : (M - g₁).degree < g₁.degree := by
-    have := degree_sub_lt (p := M) (q := g₁)
+    have := degree_sub_lt_left (p := M) (q := g₁)
       (by rw [degree_eq_natDegree hMm.ne_zero, degree_eq_natDegree hmon.ne_zero, hMd, hdeg])
       hMm.ne_zero (by rw [hMm.leadingCoeff, hmon.leadingCoeff])
     rwa [degree_eq_natDegree hMm.ne_zero, hMd, ← hdeg, ← degree_eq_natDegree hmon.ne_zero] at this
@@ -401,7 +401,7 @@ theorem UpperTheory.exists_real_split_primitive_element_padic_finite_ext :
     ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l), ∃ (β : Om l) (g : Polynomial ℚ), g.Monic ∧ (g.map (algebraMap ℚ ℝ)).Splits ∧ Polynomial.aeval β g = 0 ∧ IntermediateField.adjoin ℚ_[l] {β} = K.1 := by
   classical
   intro l _ K
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
   obtain ⟨α₀, hα₀⟩ := Field.exists_primitive_element ℚ_[l] K.1
   set α : Om l := (α₀ : Om l) with hαdef
   have hαK : α ∈ K.1 := α₀.2
@@ -452,7 +452,7 @@ theorem UpperTheory.exists_real_split_primitive_element_padic_finite_ext :
       exact ⟨fun h => hne h.symm, hconj.aeval_eq_zero⟩
     exact lt_of_lt_of_le hαβ (hδR x' hx')
   refine ⟨β, g, hgm, splits_real_of_sign_changing_at_integers g n hgm hgd halt, hβ, ?_⟩
-  haveI : FiniteDimensional ℚ_[l] (ℚ_[l]⟮β⟯) := IntermediateField.adjoin.finiteDimensional hβint
+  have : FiniteDimensional ℚ_[l] (ℚ_[l]⟮β⟯) := IntermediateField.adjoin.finiteDimensional hβint
   symm
   apply IntermediateField.eq_of_le_of_finrank_le
   · rw [← hKeq]; exact IntermediateField.adjoin_simple_le_iff.mpr hαβK
@@ -532,7 +532,7 @@ theorem UpperTheory.Reformulated.B.Qh8.isCM_of_conj :
     ring
   have hfin : Module.finrank (NumberField.maximalRealSubfield K) K = 2 := by
     rw [Module.finrank_eq_card_basis (Module.Basis.mk hli hsp), Fintype.card_fin]
-  haveI : Algebra.IsQuadraticExtension (NumberField.maximalRealSubfield K) K :=
+  have : Algebra.IsQuadraticExtension (NumberField.maximalRealSubfield K) K :=
     { finrank_eq_two' := hfin }
   exact ⟨⟩
 end -- clump:auto
@@ -788,7 +788,7 @@ private theorem exists_transfer {F K Ω : Type} [Field F] [NumberField F] [Field
   refine ⟨⟨L, r'', hm', hV'⟩, ?_⟩
   rw [wdAt_of_model _ ι Bw h hj _ L r' hm hV, wdAt_of_model _ ι Bw' h' hj' _ L r'' hm' hV', hrep]
   generalize Bw.repE L r' = ρ at hV ⊢
-  haveI := hV.finite
+  have := hV.finite
   rw [wdPst_of_isPst ι Bw h hj hV, wdPst_of_isPst ι Bw' h' hj' hV]
   refine wdRel_of_frobSS _ (BridgeParam.isFrobSS_wdRep (Loc.PP l) ι Bw h hj ρ)
     (BridgeParam.isFrobSS_wdRep (Loc.PP l) ι Bw' h' hj' ρ) fun σ σ' hσ => ?_
@@ -834,8 +834,8 @@ private theorem hasLT_transfer {F K Ω : Type} [Field F] [NumberField F] [Field 
 private theorem cont_symm {F K : Type} [Field F] [NumberField F] [Field K] [NumberField K]
     {v : HeightOneSpectrum (𝓞 F)} {w : HeightOneSpectrum (𝓞 K)} (i : v.adicCompletion F ≃+* w.adicCompletion K)
     (hi : Continuous i) : Continuous i.symm := by
-  haveI : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
-  haveI : CharZero (w.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+  have : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : CharZero (w.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
   exact (GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation _ _ i hi).1
 
 end SlopeTestRemainingChoices
@@ -948,15 +948,15 @@ theorem UpperTheory.hasLocalLanglands_of_isLocalArtin_of_CMDatum :
         Matrix (Fin 1) (Fin 1) (Om l)) := by
     refine continuous_matrix fun i j => ?_
     fin_cases i; fin_cases j
-    have := Units.continuous_val.comp (hμc.comp (continuous_subtype_val (p := fun x => x ∈ Dec (F := M) A)))
+    have := Units.continuous_val.comp (hμc.comp (continuous_subtypeVal (p := fun x => x ∈ Dec (F := M) A)))
     simpa [GlobalTheory.TripleGal.rk1, Function.comp_def] using this
   have hcp := GlobalTheory.Published.ParamAboveModel.isComp_loc (w := u) χ
-  refine ⟨μ.comp (Dec (F := M) A).subtype, (χ.loc u).comp a, hμc.comp continuous_subtype_val, ha.smooth hcp.1,
+  refine ⟨μ.comp (Dec (F := M) A).subtype, (χ.loc u).comp a, hμc.comp continuous_subtypeVal, ha.smooth hcp.1,
     ?_, fun σ => ?_, fun σ => ?_⟩
   · rw [hrk]
     exact hD.isPstAt T Bw _ hcμ (hR M Ω l _ _ ⟨T⟩ ι art hart χ n μ hχ hμc hL u A h O Bw hj).1
   · have h1 := hL.loc (a σ) _ (ha.glob art hart σ)
-    haveI := finite_contEmb (l := l) u
+    have := finite_contEmb (l := l) u
     have h2 : locPow ι n u (a σ) * ∏ᶠ τ : Emb l u, τ.1 (a σ : u.adicCompletion M) ^ wt τ = 1 := by
       unfold locPow
       rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
@@ -996,7 +996,7 @@ theorem UpperTheory.Reformulated.B.Qh44.ex_comp :
       rintro _ ⟨i, rfl⟩
       exact ⟨_, rfl⟩
   rw [h]
-  haveI : Finite (Set.range (fun i => g (b i))) := Set.finite_range _
+  have : Finite (Set.range (fun i => g (b i))) := Set.finite_range _
   exact IntermediateField.finiteDimensional_adjoin
     (fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral)
 end -- clump:auto
@@ -1063,19 +1063,19 @@ private theorem ex_comp {F M Ω : Type} [Field F] [NumberField F] [Field M] [Num
 theorem UpperTheory.V.Loc.ltAll :
     GlobalArtinReciprocity → HeckeLAdicCharacter → HeckeLAdicCharacterDeRham → AlgebraicCharacterWD → DeRhamPotSemistable → ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} (h : IsPlaceOver A w) {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l F Ω (Dec (F := F) A) O) (hj : GlobalTheory.Pst.Induces Bw) (ι : Qbar l ≃+* ℂ) (wt : Emb l w → ℤ) (a : Weil h →* (w.adicCompletion F)ˣ), IsLocalArtin h a → UpperTheory.V.Loc.HasLT h Bw hj ι wt a := by
   intro hG hH hD hW hP F Ω _ _ _ _ _ l _ A w h O _ _ _ Bw hj ι wt a ha
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   obtain ⟨M, _, _, _, f, hf, δ, d, hδ, hd, hc⟩ := UpperTheory.exists_totally_imaginary_generator_of_isCMField l Bw.Kw
   obtain ⟨g, hg⟩ := ex_lift Bw.j f
   let K := IntermediateField.adjoin F (Set.range g)
-  haveI : FiniteDimensional F K := ex_comp g
-  haveI : NumberField K := NumberField.of_module_finite F K
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
-  letI : Algebra M Ω := g.toAlgebra
-  letI : Algebra M K := (g.codRestrict K fun x => IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩).toAlgebra
-  haveI : IsScalarTower M K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsAlgClosure M Ω := ⟨inferInstance,
+  have : FiniteDimensional F K := ex_comp g
+  have : NumberField K := NumberField.of_module_finite F K
+  have : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
+  let : Algebra M Ω := g.toAlgebra
+  let : Algebra M K := (g.codRestrict K fun x => IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩).toAlgebra
+  have : IsScalarTower M K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsAlgClosure M Ω := ⟨inferInstance,
     haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
     Algebra.IsAlgebraic.tower_top (K := ℚ) M⟩
   have hK : ∀ x : K, Bw.j (algebraMap K Ω x) ∈ Bw.Kw.1 := fun x => by
@@ -1143,7 +1143,7 @@ theorem UpperTheory.V.Loc.laWD :
     hP.isPstAt T Bw _ (continuous_rank_one_rep ν hν) (UpperTheory.V.Loc.laDeRham hG hH hD hP h ν hν wt H O Bw hj).1
   have pκ := pst κ hκ wt hwt
   obtain ⟨ph, hph, eph⟩ := hwt
-  haveI : Finite (Emb l w) := finite_contEmb w
+  have : Finite (Emb l w) := finite_contEmb w
   have hψ : Continuous (κ * μ⁻¹ : ↥(Dec (F := F) A) →* (Qbar l)ˣ) := hκ.mul hμ.inv
   obtain ⟨ψ, hψe⟩ : ∃ ψ, ψ = κ * μ⁻¹ := ⟨_, rfl⟩
   rw [← hψe] at hψ

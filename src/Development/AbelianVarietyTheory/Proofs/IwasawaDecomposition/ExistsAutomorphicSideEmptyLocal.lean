@@ -215,7 +215,7 @@ theorem alg_conj (e : W ≃ₗ[ℂ] W') {ρ : Representation ℂ (GQ L n) W} (h 
 
 theorem exists_autRepM (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (π : NG.AutRep L n) :
     ∃ m : GlobalTheory.AutQuot.AutRepM L n, π.Iso m.toAutRep := by
-  haveI : FiniteDimensional ℂ π.W := π.alg.1
+  have : FiniteDimensional ℂ π.W := π.alg.1
   let e : π.W ≃ₗ[ℂ] (Fin (Module.finrank ℂ π.W) → ℂ) := (Module.finBasis ℂ π.W).equivFun
   let m : GlobalTheory.AutQuot.AutRepM L n :=
     { d := Module.finrank ℂ π.W
@@ -287,7 +287,7 @@ theorem isAlgWeight_conjRep {W W' : Type} [AddCommGroup W] [Module ℂ W] [AddCo
 theorem exists_model : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (a : NG.AlgWt L n),
     ∃ m : GlobalTheory.AutQuot.AlgWtM L n, a.Iso m.toAlgWt := by
   intro L _ _ _ n a
-  haveI : FiniteDimensional ℂ a.W := a.alg.1
+  have : FiniteDimensional ℂ a.W := a.alg.1
   let e : a.W ≃ₗ[ℂ] (Fin (Module.finrank ℂ a.W) → ℂ) := (Module.finBasis ℂ a.W).equivFun
   refine ⟨⟨Module.finrank ℂ a.W, conjRep e a.ρ, isAlgWeight_conjRep e a.ρ a.alg,
     isIrreducible_of_linearEquiv e (fun γ x => by simp [conjRep_apply]) a.irr⟩, e, fun γ x => ?_⟩

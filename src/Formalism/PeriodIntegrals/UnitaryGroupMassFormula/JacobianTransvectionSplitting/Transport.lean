@@ -53,14 +53,14 @@ namespace PI.NglqJacSplitW
 
 theorem linModulusV_of (h : LinModulus) : LinModulusV := by
   intro F _ _ _ _ _ _ V _ _ _ _ _ ι _ _ ⟨e⟩ f hf ν hν S hS
-  haveI := hν
-  letI : MeasurableSpace (ι → F) := borel (ι → F)
-  haveI : BorelSpace (ι → F) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup V :=
-    Topology.IsInducing.topologicalAddGroup e e.toHomeomorph.isInducing
+  have := hν
+  let : MeasurableSpace (ι → F) := borel (ι → F)
+  have : BorelSpace (ι → F) := ⟨rfl⟩
+  have : IsTopologicalAddGroup V :=
+    Topology.IsInducing.isTopologicalAddGroup e e.toHomeomorph.isInducing
   let E : V ≃ᵐ (ι → F) := e.toHomeomorph.toMeasurableEquiv
   have hE : ∀ x, E x = e x := fun x => rfl
-  haveI : (ν.map E).IsAddHaarMeasure :=
+  have : (ν.map E).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map ν e.toLinearEquiv.toAddEquiv e.continuous e.symm.continuous
   let g : (ι → F) →ₗ[F] (ι → F) :=
     (e.toLinearEquiv : V →ₗ[F] (ι → F)) ∘ₗ f ∘ₗ (e.toLinearEquiv.symm : (ι → F) →ₗ[F] V)

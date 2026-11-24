@@ -63,13 +63,13 @@ variable {D : D7} (Z : LocDat D) (p : PlF D) (g : Formalism.MainNotions.S.Loc.Sp
 theorem det_upper {X : Formalism.L2.SG.LsDatumB.MatP D p} (h1 : ∀ a b, b < a → X a b = 0) (h2 : ∀ a, X a a = 1) :
     X.det = 1 := by
   have hb : X.BlockTriangular id := fun i j hij => h1 i j hij
-  rw [Matrix.det_of_upperTriangular hb]
+  rw [Matrix.det_of_isUpperTriangular hb]
   simp [h2]
 
 theorem det_lower {X : Formalism.L2.SG.LsDatumB.MatP D p} (h1 : ∀ a b, a < b → X a b = 0) (h2 : ∀ a, X a a = 1) :
     X.det = 1 := by
   have hb : X.BlockTriangular OrderDual.toDual := fun i j hij => h1 i j hij
-  rw [Matrix.det_of_lowerTriangular X hb]
+  rw [Matrix.det_of_isLowerTriangular X hb]
   simp [h2]
 
 theorem lmat_mem_R (hs : (Z.M p).split = some g) {x y : (D.s.atP p).Ep} (hx : x ∈ (Z.M p).L.O)

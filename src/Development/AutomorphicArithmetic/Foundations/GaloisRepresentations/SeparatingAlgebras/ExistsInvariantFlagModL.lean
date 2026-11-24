@@ -57,7 +57,7 @@ private theorem exists_invariant_flag_mod_l (hF : FixVec) (l : ℕ) [Fact l.Prim
     ∃ v : Fin m → V, LinearIndependent (ZMod l) v ∧
       ∀ h j, ρ h (v j) - v j ∈ Submodule.span (ZMod l) (v '' {i | i < j}) := by
   classical
-  haveI : Module.Finite (ZMod l) V := Module.Finite.of_finite
+  have : Module.Finite (ZMod l) V := Module.Finite.of_finite
   induction m with
   | zero =>
     exact ⟨Fin.elim0, linearIndependent_empty_type, fun _ j => j.elim0⟩
@@ -108,7 +108,7 @@ private theorem exists_invariant_flag_mod_l (hF : FixVec) (l : ℕ) [Fact l.Prim
 theorem flag_pf : FixVec → Flag := by
   intro hF l _ H _ hH V _ _ _ ρ
   classical
-  haveI : Module.Finite (ZMod l) V := Module.Finite.of_finite
+  have : Module.Finite (ZMod l) V := Module.Finite.of_finite
   obtain ⟨v, hv, hs⟩ := exists_invariant_flag_mod_l hF l H hH V ρ _ le_rfl
   have hsp : ⊤ ≤ Submodule.span (ZMod l) (Set.range v) :=
     (hv.span_eq_top_of_card_eq_finrank' (by simp)).ge

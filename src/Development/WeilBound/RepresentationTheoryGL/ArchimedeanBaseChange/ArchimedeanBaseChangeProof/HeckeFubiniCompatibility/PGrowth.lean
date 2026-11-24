@@ -290,7 +290,7 @@ theorem bx_count : ∃ C : ℝ, 0 ≤ C ∧ ∀ R : ℝ, 0 ≤ R → (Bx E R).Fi
     rw [← Set.ncard_eq_toFinset_card _ hZf]; exact hZc
   have hM : (M : ℝ) ≤ Real.exp R := Nat.floor_le (Real.exp_pos _).le
   have h4 : (1 + Real.exp (2 * R)) ^ d ≤ 2 ^ d * Real.exp (d * (2 * R)) := by
-    rw [Real.exp_nat_mul, ← mul_pow]
+    rw [Real.exp_natCast_mul, ← mul_pow]
     exact pow_le_pow_left₀ (by positivity) (by linarith [Real.one_le_exp (by linarith : (0:ℝ) ≤ 2 * R)]) _
   have e : Real.exp ((2 * d + 1) * R) = Real.exp R * Real.exp (d * (2 * R)) := by
     rw [← Real.exp_add]; ring_nf
@@ -332,7 +332,7 @@ theorem gl_count (n : ℕ) : ∃ C K : ℝ, 0 ≤ C ∧ 0 ≤ K ∧ ∀ R : ℝ,
     _ = (F.card : ℝ) ^ (n * n) := by push_cast; rw [← pow_mul]
     _ ≤ (C * Real.exp ((2 * d + 1) * R)) ^ (n * n) := pow_le_pow_left₀ (Nat.cast_nonneg _) hF _
     _ = C ^ (n * n) * Real.exp ((2 * d + 1) * ((n * n : ℕ) : ℝ) * R) := by
-        rw [mul_pow, ← Real.exp_nat_mul]; congr 2; ring
+        rw [mul_pow, ← Real.exp_natCast_mul]; congr 2; ring
 
 section Pair
 
@@ -345,13 +345,13 @@ theorem countable_E : Countable E :=
   (Module.finBasis ℚ E).equivFun.injective.countable
 
 theorem countable_GL (n : ℕ) : Countable (GL (Fin n) E) := by
-  haveI := countable_E (E := E)
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have := countable_E (E := E)
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
   exact Function.Injective.countable (f := (Units.val : GL (Fin n) E → Matrix (Fin n) (Fin n) E)) fun _ _ h => Units.ext h
 
 theorem countable_ratH (a b : ℕ) : Countable (ratH E a b) := by
-  haveI := countable_GL (E := E) a
-  haveI := countable_GL (E := E) b
+  have := countable_GL (E := E) a
+  have := countable_GL (E := E) b
   exact ((ratGL E a).prodMap (ratGL E b)).rangeRestrict_surjective.countable
 
 theorem measurableMul_H (a b : ℕ) : MeasurableMul (H E a b) :=
@@ -365,13 +365,13 @@ theorem mem_ratH {a b : ℕ} (δ : ratH E a b) :
 
 theorem fold {a b : ℕ} (D : Dom E a b) (g : H E a b → ℝ≥0∞) (hg : Measurable g) :
     ∫⁻ y, g y ∂D.μ = ∫⁻ y, ∑' γ : ratH E a b, g ((γ : H E a b) * y) ∂D.ν := by
-  haveI : BorelSpace (H E a b) := ⟨rfl⟩
-  haveI := measurableMul_H (E := E) a b
-  haveI := D.haar.1
-  haveI := countable_ratH (E := E) a b
-  haveI : MeasurableConstSMul (ratH E a b) (H E a b) :=
+  have : BorelSpace (H E a b) := ⟨rfl⟩
+  have := measurableMul_H (E := E) a b
+  have := D.haar.1
+  have := countable_ratH (E := E) a b
+  have : MeasurableConstSMul (ratH E a b) (H E a b) :=
     ⟨fun γ => (continuous_const.mul continuous_id).measurable⟩
-  haveI : SMulInvariantMeasure (ratH E a b) (H E a b) D.μ :=
+  have : SMulInvariantMeasure (ratH E a b) (H E a b) D.μ :=
     ⟨fun γ s _ => measure_preimage_mul D.μ (γ : H E a b) s⟩
   rw [D.fd.lintegral_eq_tsum'' g, Dom.ν, lintegral_tsum]
   · rfl
@@ -520,11 +520,11 @@ theorem growth_main (hS : SizeBasic) (a b : ℕ) (D : Dom E a b) (ι : Type) [Fi
     (hconv : PositivityTheory.Rg.BcB.E.conv D.μ Φ f = c • f) :
     ∃ C N : ℝ, ∀ i x, ‖f i x‖ ≤ C * Real.exp (N * (logSize x.1 + logSize x.2)) := by
   classical
-  haveI : BorelSpace (H E a b) := ⟨rfl⟩
-  haveI := measurableMul_H (E := E) a b
-  haveI := D.haar.1
-  haveI := D.haar.2.2.2
-  haveI := countable_ratH (E := E) a b
+  have : BorelSpace (H E a b) := ⟨rfl⟩
+  have := measurableMul_H (E := E) a b
+  have := D.haar.1
+  have := D.haar.2.2.2
+  have := countable_ratH (E := E) a b
   obtain ⟨hc1, hn1, -, c1, hm1⟩ := hS E a
   obtain ⟨hc2, hn2, -, c2, hm2⟩ := hS E b
 
@@ -572,7 +572,7 @@ theorem growth_main (hS : SizeBasic) (a b : ℕ) (D : Dom E a b) (ι : Type) [Fi
   set Kex : ℝ := k₀ + 2 * M
   have hmi : ∀ x : H E a b, Measurable fun y : H E a b => S.indicator (1 : H E a b → ℝ≥0∞) (x⁻¹ * y) :=
     fun x => ((measurable_const (a := (1 : ℝ≥0∞))).indicator hSm).comp (measurable_const_mul x⁻¹)
-  have hfm : ∀ j, Measurable fun y => ‖f j y‖ₑ := fun j => (hf j).measurable.enorm
+  have hfm : ∀ j, Measurable fun y => ‖f j y‖ₑ := fun j => (hf j).measurable.eNorm
   have key : ∀ i j x, ∫⁻ y, ENNReal.ofReal ‖Φ i j y * f j (x * y)‖ ∂D.μ ≤
       ENNReal.ofReal (Kst * Real.exp (Kex * (logSize x.1 + logSize x.2))) := by
     intro i j x
@@ -588,7 +588,7 @@ theorem growth_main (hS : SizeBasic) (a b : ℕ) (D : Dom E a b) (ι : Type) [Fi
         ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
       refine lintegral_mono fun y => ?_
       simp only [inv_mul_cancel_left]
-      rw [norm_mul, ENNReal.ofReal_mul (norm_nonneg _), ← mul_assoc, ofReal_norm_eq_enorm (f j (x * y))]
+      rw [norm_mul, ENNReal.ofReal_mul (norm_nonneg _), ← mul_assoc, ofReal_norm (f j (x * y))]
       exact mul_le_mul' (hΦS i j y) le_rfl
     have s2 : ∫⁻ y, S.indicator 1 (x⁻¹ * y) * ‖f j y‖ₑ ∂D.μ = ∫⁻ y, P y * ‖f j y‖ₑ ∂D.ν := by
       rw [fold D (fun y => S.indicator (1 : H E a b → ℝ≥0∞) (x⁻¹ * y) * ‖f j y‖ₑ) ((hmi x).mul (hfm j))]
@@ -688,7 +688,7 @@ theorem growth_main (hS : SizeBasic) (a b : ℕ) (D : Dom E a b) (ι : Type) [Fi
       calc (1 + Lx + w0) ^ (2 * M) ≤ (Real.exp (Lx + w0)) ^ (2 * M) :=
             pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp (Lx + w0)]) _
         _ = _ := by
-            rw [← Real.exp_nat_mul, ← Real.exp_add]
+            rw [← Real.exp_natCast_mul, ← Real.exp_add]
             congr 1
             push_cast
             ring

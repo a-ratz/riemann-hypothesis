@@ -69,13 +69,13 @@ theorem integral_coset_singular_eq_zero : ∀ {k : Type} [Field k] [ValuativeRel
   obtain ⟨w0, hw0, hw0x⟩ := (Matrix.exists_vecMul_eq_zero_iff (M := x)).2 hx
   obtain ⟨j, hj⟩ : ∃ j, w0 j ≠ 0 := by
     by_contra h; push_neg at h; exact hw0 (funext h)
-  haveI : Nonempty A' := ⟨j⟩
+  have : Nonempty A' := ⟨j⟩
   obtain ⟨i₀, hi₀⟩ := Finite.exists_max (fun i => valuation k (w0 i))
   have hwi₀ : w0 i₀ ≠ 0 := by
     intro h0
     have := hi₀ j
     rw [h0, map_zero] at this
-    exact hj ((valuation k).zero_iff.1 (le_antisymm this zero_le'))
+    exact hj ((valuation k).zero_iff.1 (le_antisymm this zero_le))
   set w : A' → k := (w0 i₀)⁻¹ • w0 with hwdef
   have hwi : w i₀ = 1 := by simp [w, hwi₀]
   have hwint : ∀ i, valuation k (w i) ≤ 1 := by
@@ -121,7 +121,7 @@ theorem integral_coset_singular_eq_zero : ∀ {k : Type} [Field k] [ValuativeRel
   have hkey : ∀ g : GL A' k, (m * g ∈ {g : GL A' k | ∀ i j, valuation k (g.val i j - x i j) ≤ valuation k (c : k)}) ↔
       g ∈ {g : GL A' k | ∀ i j, valuation k (g.val i j - x i j) ≤ valuation k (c : k)} := by
     intro g
-    simp only [Set.mem_setOf_eq, Units.val_mul, hmval, hMG]
+    simp only [Set.mem_ofPred_eq, Units.val_mul, hmval, hMG]
     constructor
     · intro h i j
       set s := ∑ l, w l * (g.val l j) with hs

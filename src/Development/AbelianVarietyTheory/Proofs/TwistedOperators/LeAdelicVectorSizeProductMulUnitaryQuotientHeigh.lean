@@ -114,7 +114,7 @@ namespace GlobalTheory.NormInf
 theorem infPlace_norm_le {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (w : InfinitePlace F) (y : E) (c : ℝ≥0) (h : ∀ τ : GlobalTheory.AdelicU.EmbOver E w, ‖τ.1 y‖₊ ≤ c) :
     w (Algebra.norm F y) ≤ (c : ℝ) ^ Module.finrank F E := by
-  letI : Algebra F ℂ := w.embedding.toAlgebra
+  let : Algebra F ℂ := w.embedding.toAlgebra
   rw [← InfinitePlace.norm_embedding_eq]
   have e : w.embedding (Algebra.norm F y) = ∏ σ : E →ₐ[F] ℂ, σ y := Algebra.norm_eq_prod_embeddings F ℂ y
   rw [e, norm_prod, ← AlgHom.card F E ℂ]
@@ -189,7 +189,7 @@ theorem mulVec_apply' {n : ℕ} (M : Matrix (Fin n) (Fin n) (AE D)) (x : Fin n �
 
 theorem entry_le_opNorm {n : ℕ} (y : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) : ‖y i j‖₊ ≤ opNorm y := by
   have h1 := (Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℂ) y).le_opNNNorm (EuclideanSpace.single j 1)
-  have h2 := PiLp.nnnorm_apply_le (Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℂ) y (EuclideanSpace.single j 1)) i
+  have h2 := PiLp.nnNorm_apply_le (Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℂ) y (EuclideanSpace.single j 1)) i
   have h3 : Matrix.toEuclideanCLM (n := Fin n) (𝕜 := ℂ) y (EuclideanSpace.single j 1) i = y i j := by
     change ∑ k, y i k * (EuclideanSpace.single j (1 : ℂ)) k = _
     simp [Pi.single_apply]
@@ -220,7 +220,7 @@ theorem le_vInf (w : InfinitePlace D.host.F) {n : ℕ} (x : Fin n → AE D) (τ 
     ‖infEmb p.1 (compInf D.host.F D.host.E w (x p.2))‖₊) (Finset.mem_univ (τ, j))
 
 theorem nnnorm_mul_le_of_le {a b : ℂ} {c d : ℝ≥0} (ha : ‖a‖₊ ≤ c) (hb : ‖b‖₊ ≤ d) : ‖a * b‖₊ ≤ c * d := by
-  rw [nnnorm_mul]; exact mul_le_mul' ha hb
+  rw [nnNorm_mul]; exact mul_le_mul' ha hb
 
 theorem vInf_mulVec_le (V : HSp D) (g : GA D V) (w : InfinitePlace D.host.F) (x : Fin V.rank → AE D) :
     vInf w (Formalism.L2.Theta.mt V g *ᵥ x) ≤
@@ -238,7 +238,7 @@ theorem vInf_mulVec_le (V : HSp D) (g : GA D V) (w : InfinitePlace D.host.F) (x 
     ((infEmb τ).comp (compInf D.host.F D.host.E w)).map_mul a b
 
   rw [mulVec_apply', map_sum, map_sum]
-  refine (nnnorm_sum_le _ _).trans ?_
+  refine (nnNorm_sum_le _ _).trans ?_
   calc ∑ j, ‖infEmb τ (compInf D.host.F D.host.E w (Formalism.L2.Theta.mt V g i j * x j))‖₊
       ≤ ∑ _j : Fin V.rank, htInf D.host.F w (Formalism.UG.bc (compInf D.host.F D.host.E w) (matHom V g)) * vInf w x :=
         Finset.sum_le_sum fun j _ => by
@@ -273,7 +273,7 @@ theorem finite_of_norm {x : D.host.F} (hx : x ≠ 0) :
 
 theorem rat_size {n : ℕ} (ξ : Fin n → D.host.E) (hξ : ξ ≠ 0) :
     (Function.mulSupport fun v => vFin v (fun i => incA D (ξ i))).Finite ∧ 1 ≤ vsize (fun i => incA D (ξ i)) := by
-  haveI : IsTotallyReal D.host.F := D.sp.cm.totReal
+  have : IsTotallyReal D.host.F := D.sp.cm.totReal
   obtain ⟨i, hi⟩ := Function.ne_iff.1 hξ
   have hx : Algebra.norm D.host.F (ξ i) ≠ 0 := Algebra.norm_ne_zero_iff.2 hi
   have hd : Module.finrank D.host.F D.host.E ≠ 0 := Module.finrank_pos.ne'
@@ -292,7 +292,7 @@ theorem rat_size {n : ℕ} (ξ : Fin n → D.host.E) (hξ : ξ ≠ 0) :
       exact this.mono fun v hv => Finset.sup_le fun j _ => hv j
     refine ((Filter.eventually_cofinite.1 h1).union (finite_of_norm hx)).subset fun v hv => ?_
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not, Function.mem_mulSupport, not_le] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not, Function.mem_mulSupport, not_le] at hc
     apply hv
     refine le_antisymm (not_lt.1 hc.1) ?_
     by_contra hlt
@@ -314,7 +314,7 @@ theorem rat_size {n : ℕ} (ξ : Fin n → D.host.E) (hξ : ξ ≠ 0) :
         ∏ᶠ v, ((‖algebraMap D.host.F (Fv D.host.F v) (Algebra.norm D.host.F (ξ i))‖₊ : ℝ≥0) : ℝ) :=
       MonoidHom.map_finprod_of_injective NNReal.toRealHom.toMonoidHom NNReal.coe_injective _
     rw [NNReal.coe_mul, NNReal.coe_prod, e]
-    simp only [coe_nnnorm, InfinitePlace.norm_embedding_eq, NNReal.coe_one]
+    simp only [coe_nnNorm, InfinitePlace.norm_embedding_eq, NNReal.coe_one]
     exact hP
   have hfa : (Function.mulSupport fun v =>
       vFin v (fun i => incA D (ξ i)) ^ Module.finrank D.host.F D.host.E).Finite :=
@@ -322,8 +322,8 @@ theorem rat_size {n : ℕ} (ξ : Fin n → D.host.E) (hξ : ξ ≠ 0) :
   have hle : (1 : ℝ≥0) ≤ ((∏ w, vInf w (fun i => incA D (ξ i))) * ∏ᶠ v, vFin v (fun i => incA D (ξ i))) ^
       Module.finrank D.host.F D.host.E := by
     rw [← hQ, mul_pow, ← Finset.prod_pow, finprod_pow hfin]
-    refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_) (finprod_le_finprod' (finite_of_norm hx) hfa ha)
-    rw [← NNReal.coe_le_coe, coe_nnnorm, InfinitePlace.norm_embedding_eq, NNReal.coe_pow]
+    refine mul_le_mul' (Finset.prod_le_prod fun w _ => ?_) (finprod_le_finprod (finite_of_norm hx) hfa ha)
+    rw [← NNReal.coe_le_coe, coe_nnNorm, InfinitePlace.norm_embedding_eq, NNReal.coe_pow]
     exact hA w
   have h1 : (1 : ℝ≥0) ≤ (∏ w, vInf w (fun i => incA D (ξ i))) * ∏ᶠ v, vFin v (fun i => incA D (ξ i)) := by
     by_contra hlt
@@ -358,13 +358,13 @@ theorem vsize_rat_le (V : HSp D) (g : GA D V) (ξ : Fin V.rank → D.host.E) (h�
   have hI : ∏ w, vInf w y ≤ ((V.rank : ℝ≥0) + 1) ^ Fintype.card (InfinitePlace D.host.F) *
       (∏ w, htInf D.host.F w (Formalism.UG.bc (compInf D.host.F D.host.E w) (matHom V g))) * ∏ w, vInf w x := by
     rw [← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-    refine Finset.prod_le_prod' fun w _ => ?_
+    refine Finset.prod_le_prod fun w _ => ?_
     have := vInf_mulVec_le V g w x
     rwa [e1] at this
   have hF : ∏ᶠ v, vFin v y ≤ (∏ᶠ v, htFin D.host.F v (Formalism.UG.bc (compFin D.host.F D.host.E v) (matHom V g))) *
       ∏ᶠ v, vFin v x := by
     rw [← finprod_mul_distrib hH hX]
-    refine finprod_le_finprod' hA ((hH.union hX).subset (Function.mulSupport_mul _ _)) fun v => ?_
+    refine finprod_le_finprod hA ((hH.union hX).subset (Function.mulSupport_mul _ _)) fun v => ?_
     have := vFin_mulVec_le V g v x
     rwa [e1] at this
   have key := mul_le_mul' hI hF

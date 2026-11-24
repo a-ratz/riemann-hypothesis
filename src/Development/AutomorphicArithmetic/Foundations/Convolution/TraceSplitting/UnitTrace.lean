@@ -147,8 +147,8 @@ private theorem trace_ne [MeasurableSpace G] [BorelSpace G] (m : Measure G) [m.I
     refine LinearMap.ext fun y => Subtype.ext ?_
     obtain ⟨z, hz⟩ := y.2
     exact hfix y.1 (hz ▸ hran z)
-  haveI : FiniteDimensional ℂ (LinearMap.range A) := hfd
-  haveI : Nontrivial (LinearMap.range A) :=
+  have : FiniteDimensional ℂ (LinearMap.range A) := hfd
+  have : Nontrivial (LinearMap.range A) :=
     ⟨⟨⟨x, hxr⟩, 0, fun e => hx0 (congrArg Subtype.val e)⟩⟩
   rw [hres, map_smul, LinearMap.trace_id, smul_eq_mul]
   exact mul_ne_zero hc (Nat.cast_ne_zero.2 Module.finrank_pos.ne')
@@ -158,7 +158,7 @@ end Abs
 theorem UpperTheory.ConvolutionTheory.T.unitTrace :
     UpperTheory.ConvolutionTheory.T.UnitTrace := by
   intro K _ _ n μ _ V hV w _ _ m hm τ J hocc hJ hne
-  haveI := hm
+  have := hm
   have hcl : IsClosed (J : Set (Gw n w)) := J.isClosed_of_isOpen hJ.2
   have hind : ∀ u ∈ J, ∀ g, (J : Set (Gw n w)).indicator (1 : Gw n w → ℂ) (u * g) = (J : Set (Gw n w)).indicator 1 g ∧
       (J : Set (Gw n w)).indicator (1 : Gw n w → ℂ) (g * u) = (J : Set (Gw n w)).indicator 1 g := by

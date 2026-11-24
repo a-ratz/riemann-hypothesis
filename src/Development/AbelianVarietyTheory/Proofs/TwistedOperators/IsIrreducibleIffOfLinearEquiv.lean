@@ -209,9 +209,9 @@ theorem exists_tensor {P : Subgroup H} (ρ : Representation F P W) {K : Set H} (
     filter_upwards [this.eventually hs] with y hy
     simpa using hy x
   have hfin : (f '' K).Finite := by
-    haveI := isCompact_iff_compactSpace.1 hK
+    have := isCompact_iff_compactSpace.1 hK
     rw [Set.image_eq_range]
-    exact (hlc.comp_continuous continuous_subtype_val).range_finite
+    exact (hlc.comp_continuous continuous_subtypeVal).range_finite
   choose s h1 h2 using exists_sum_coord (W := W) b
   let S := hfin.toFinset.biUnion s
   let c : ∀ i, smoothPart (ind P ρ) := fun i => ⟨⟨fun x => coord (b.coord i) W (f x), fun p x => by
@@ -519,8 +519,8 @@ theorem multiProd_succ_equiv (e : (Σ i, m i) ≃ n) {X : Fin (s + 1) → Type} 
 theorem isIrreducible_multiProd_zero {m : Fin 0 → Type} [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)]
     (e : (Σ i, m i) ≃ n) {X : Fin 0 → Type} [∀ i, AddCommGroup (X i)] [∀ i, Module ℂ (X i)]
     (σ : ∀ i, Representation ℂ (GL (m i) k) (X i)) : (multiProd e σ).IsIrreducible := by
-  haveI : IsEmpty n := ⟨fun x => (e.symm x).1.elim0⟩
-  haveI : Subsingleton (GL n k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
+  have : IsEmpty n := ⟨fun x => (e.symm x).1.elim0⟩
+  have : Subsingleton (GL n k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
   let κ : IndSp e (piTensor σ) ≃ₗ[ℂ] ⨂[ℂ] i, X i := LinearEquiv.ofBijective (ev _ 1) ⟨fun f g h =>
     Subtype.ext (Subtype.ext (funext fun x => by rw [Subsingleton.elim x 1]; exact h)), fun v =>
     ⟨⟨⟨fun _ => v, fun p _ => by rw [Subsingleton.elim p 1, map_one]; rfl⟩,

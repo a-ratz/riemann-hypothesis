@@ -69,7 +69,7 @@ namespace CxPts
 
 theorem continuous_of_comp (hm : ∀ z, (m z).1 = z.1 ≫ f) : Continuous m :=
   continuous_induced_rng.2
-    (((Points.continuous_comp f).comp continuous_subtype_val).congr fun z => (hm z).symm)
+    (((Points.continuous_comp f).comp continuous_subtypeVal).congr fun z => (hm z).symm)
 
 theorem mem_ptsIn_preimage (hm : ∀ z, (m z).1 = z.1 ≫ f) {U : Y.Opens} {z : CxPts p' σ'} :
     z ∈ ptsIn p' σ' (f ⁻¹ᵁ U) ↔ m z ∈ ptsIn p σ U := by

@@ -109,7 +109,7 @@ theorem map_swap_volume (ι κ : Type) [Fintype ι] [Fintype κ] :
     rw [Measure.map_apply hs.measurable hB, hpre, vB']
   have hc1 : c = 1 := by
     rw [hc] at h1
-    simp only [Measure.smul_apply, vB] at h1
+    simp only [smul_apply, vB] at h1
     simpa using h1
   rw [hc1, one_smul] at hc
   exact hc
@@ -121,7 +121,7 @@ theorem pi_smul_const {ι α : Type} [Fintype ι] [MeasurableSpace α] (ν : Mea
   have : SigmaFinite ((c : ℝ≥0∞) • ν) := by
     rw [← ENNReal.smul_def]; infer_instance
   refine Measure.pi_eq fun s hs => ?_
-  simp only [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, Finset.prod_mul_distrib,
+  simp only [smul_apply, Measure.pi_pi, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ]
 
 theorem map_coord_pi {ι κ A : Type} [Fintype ι] [Fintype κ] [MeasurableSpace A]
@@ -152,11 +152,11 @@ theorem GlobalTheory.CompanionTheory.SW.BB.infPush : ∀ (F E : Type) [Field F] 
   intro F E _ _ _ _ _ σ hσ M d b e he laminf hH hmap
   have hloc := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   obtain ⟨h1, h2, h3, h4, -⟩ := hloc
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨-, hemb, hcoord⟩ := _root_.GlobalTheory.CompanionTheory.SW.BB.coordMap_one F E σ hσ (Ainf F) d b laminf hH M
   have hem : Measurable (fun x : Ainf F => (e x : InfinitePlace F → ℝ)) := he.continuous.measurable
   have hΦ : Measurable (fun (y : Fin M × Fin d → Ainf F) (w : InfinitePlace F) (p : Fin M × Fin d) => e (y p) w) :=

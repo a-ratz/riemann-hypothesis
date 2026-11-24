@@ -280,28 +280,28 @@ theorem onto_of (hPoin : PoinStatement (E := E)) (hExtF : ExtFStatement (E := E)
     refine LinearMap.mem_range.2 ⟨⟨h, (hD2i h).2 ⟨hhD, hmh⟩⟩, ?_⟩
     rw [hΦ]
     exact MemLp.toLp_congr _ _ hae2
-  haveI hfS : FiniteDimensional ℂ (Submodule.span ℂ (Set.range g)) := by
+  have hfS : FiniteDimensional ℂ (Submodule.span ℂ (Set.range g)) := by
     first
       | exact FiniteDimensional.span_of_finite ℂ (Set.finite_range g)
   have hD2le : D2 ≤ Submodule.span ℂ (Set.range g) := by
     intro h hh
     exact ((hD2i h).1 hh).1
-  haveI hfD2 : FiniteDimensional ℂ D2 := by
+  have hfD2 : FiniteDimensional ℂ D2 := by
     first
       | exact Submodule.finiteDimensional_of_le hD2le
       | exact Module.Finite.of_injective (Submodule.inclusion hD2le)
           (Submodule.inclusion_injective hD2le)
-  haveI hfR : FiniteDimensional ℂ (LinearMap.range Φ) := by
+  have hfR : FiniteDimensional ℂ (LinearMap.range Φ) := by
     first
       | exact LinearMap.finiteDimensional_range Φ
-  haveI hfM : FiniteDimensional ℂ M := by
+  have hfM : FiniteDimensional ℂ M := by
     first
       | exact Submodule.finiteDimensional_of_le hMle
       | exact Module.Finite.of_injective (Submodule.inclusion hMle)
           (Submodule.inclusion_injective hMle)
-  haveI : CompleteSpace M := by
+  have : CompleteSpace M := by
     first
-      | exact FiniteDimensional.complete ℂ M
+      | exact FiniteDimensional.completeSpace ℂ M
 
   obtain ⟨y, hyM, w, hw, hvyw⟩ : ∃ y ∈ M, ∃ w ∈ M.orthogonal,
       hmemf.toLp _ = y + w := by

@@ -240,14 +240,14 @@ theorem exists_isIso_restrict {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] (
   have hFY : IsField (Y.presheaf.stalk (genericPoint Y)) := Field.toIsField Y.functionField
   have hrX : Function.Bijective (X.residue (π (genericPoint Y))).hom := by
     refine ⟨?_, IsLocalRing.residue_surjective⟩
-    letI := hFX.toField
+    let := hFX.toField
     exact RingHom.injective _
   have hrY : Function.Bijective (Y.residue (genericPoint Y)).hom := by
     refine ⟨?_, IsLocalRing.residue_surjective⟩
-    letI := hFY.toField
+    let := hFY.toField
     exact RingHom.injective _
   have hκ : Function.Bijective (π.residueFieldMap (genericPoint Y)).hom := by
-    letI := (π.residueFieldMap (genericPoint Y)).hom.toAlgebra
+    let := (π.residueFieldMap (genericPoint Y)).hom.toAlgebra
     have h1 : Module.finrank (X.residueField (π (genericPoint Y))) (Y.residueField (genericPoint Y)) = 1 := hd
     refine ⟨RingHom.injective _, fun y => ?_⟩
     have htop := Subalgebra.bot_eq_top_iff_finrank_eq_one.2 h1
@@ -380,8 +380,8 @@ namespace GlobalTheory.HSAmp
 theorem exists_volDens : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ),
     IsArithVar p D → GenSmooth p D → ∀ σ : k →+* ℂ, Nonempty (VolDens p σ D) := by
   intro k _ X _ p D hX hS σ
-  haveI := hX.compactSpace σ
-  haveI := CxPts.t2Space_cxPts_of_isProjOver σ hX.isProjOver
+  have := hX.compactSpace σ
+  have := CxPts.t2Space_cxPts_of_isProjOver σ hX.isProjOver
   obtain ⟨R⟩ := hS σ
   obtain ⟨s, hs⟩ := R.exists_finite
   obtain ⟨f, hf⟩ := PartitionOfUnity.exists_isSubordinate (X := CxPts p σ) (ι := s) isClosed_univ
@@ -494,7 +494,7 @@ theorem quad_vec (M : Matrix ι ι ℂ) (x : ι → ℂ) :
 theorem exp_neg_bound_mul_l2_le_l2_twist (h : IsFam μ v) (hw : ∀ σ, Measurable (w σ)) (hC : ∀ σ y, |w σ y| ≤ C) (c : ι → ℂ) :
     Real.exp (-C) * l2 μ v c ≤ l2 μ (twist v w) c := by
   have hS := h.finite
-  haveI := Fintype.ofFinite S
+  have := Fintype.ofFinite S
   obtain ⟨-, hc⟩ := _root_.GlobalTheory.HSAmp.gram_isHermitian_and_l2_eq_quadratic_form S Y ι μ v h
   rw [l2_twist_eq_finsum_integral_mul_exp_neg]
   simp only [l2, finsum_eq_sum_of_fintype, Finset.mul_sum]
@@ -526,7 +526,7 @@ theorem jensen (hS : Finite S) (f : ∀ σ, Y σ → ℝ) (hf0 : ∀ σ y, 0 ≤
     (hfi : ∀ σ, Integrable (f σ) (μ σ)) (hf1 : ∑ᶠ σ, ∫ y, f σ y ∂μ σ = 1) (hw : ∀ σ, Measurable (w σ))
     (hC : ∀ σ y, |w σ y| ≤ C) :
     Real.exp (-(∑ᶠ σ, ∫ y, w σ y * f σ y ∂μ σ)) ≤ ∑ᶠ σ, ∫ y, f σ y * Real.exp (-(w σ y)) ∂μ σ := by
-  haveI := Fintype.ofFinite S
+  have := Fintype.ofFinite S
   simp only [finsum_eq_sum_of_fintype] at hf1 ⊢
   obtain ⟨m, hm⟩ : ∃ m, m = ∑ σ, ∫ y, w σ y * f σ y ∂μ σ := ⟨_, rfl⟩
   rw [← hm]
@@ -589,7 +589,7 @@ theorem jensen_gram (h : IsFam μ v) (hG : (gram μ v).PosDef) (hw : ∀ σ, Mea
   have hG' := posDef_twist h hG hw hC
   refine ⟨hF, hG', ?_⟩
   have hS := h.finite
-  haveI := Fintype.ofFinite S
+  have := Fintype.ofFinite S
   obtain ⟨T, d, -, hT, hT'⟩ := _root_.GlobalTheory.HSAmp.simultaneous_diagonalisation ι _ _ hG hG'.1
   obtain ⟨-, hl⟩ := _root_.GlobalTheory.HSAmp.gram_isHermitian_and_l2_eq_quadratic_form S Y ι μ v h
   obtain ⟨-, hl'⟩ := _root_.GlobalTheory.HSAmp.gram_isHermitian_and_l2_eq_quadratic_form S Y ι μ _ hF
@@ -666,7 +666,7 @@ theorem abs_integral_weight_sub_le_one {Y : Type} [MeasurableSpace Y] (μ : Meas
 theorem abs_finsum_integral_weight_sub_le :
     ∀ (S : Type) [Finite S] (Y : S → Type) [∀ σ, MeasurableSpace (Y σ)] (μ : ∀ σ, Measure (Y σ)) (B β w : ∀ σ, Y σ → ℝ) (C : ℝ), (∀ σ, Integrable (B σ) (μ σ)) → (∀ σ, Integrable (β σ) (μ σ)) → (∀ σ y, B σ y ≤ β σ y) → (∀ σ, Measurable (w σ)) → 0 ≤ C → (∀ σ y, |w σ y| ≤ C) → |∑ᶠ σ, ∫ y, w σ y * B σ y ∂μ σ - ∑ᶠ σ, ∫ y, w σ y * β σ y ∂μ σ| ≤ C * (∑ᶠ σ, ∫ y, β σ y ∂μ σ - ∑ᶠ σ, ∫ y, B σ y ∂μ σ) := by
   intro S _ Y _ μ B β w C hB hβ hle hw _ hC
-  haveI := Fintype.ofFinite S
+  have := Fintype.ofFinite S
   simp only [finsum_eq_sum_of_fintype]
   rw [← Finset.sum_sub_distrib, ← Finset.sum_sub_distrib, Finset.mul_sum]
   refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun σ _ => ?_)
@@ -722,8 +722,8 @@ theorem GlobalTheory.HSAmp.berg_mass_extremal : ∀ (S : Type) (Y : S → Type) 
   have hint : ∀ σ, Integrable (fun y => ∑ i, ∑ j, (gram μ v)⁻¹ j i * (v σ y i * (starRingEnd ℂ) (v σ y j))) (μ σ) :=
     fun σ => integrable_finsetSum _ fun i _ => integrable_finsetSum _ fun j _ => (hF.integrable σ i j).const_mul _
   refine ⟨fun σ => (hint σ).re, ?_, hpos, ?_⟩
-  · haveI : Finite S := hF.finite
-    haveI := Fintype.ofFinite S
+  · have : Finite S := hF.finite
+    have := Fintype.ofFinite S
     have hσ : ∀ σ, ∫ y, bergmanDensity μ v σ y ∂μ σ =
         (∑ i, ∑ j, (gram μ v)⁻¹ j i * ∫ y, v σ y i * (starRingEnd ℂ) (v σ y j) ∂μ σ).re := fun σ => by
       have e1 : ∫ y, bergmanDensity μ v σ y ∂μ σ =
@@ -825,17 +825,17 @@ namespace GlobalTheory.HSAmp
 theorem tendsto_finsum_integral_berg : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → GenSmooth p D → ∀ (P : Pair p), P.L.SemiPos D → ∀ (ω : ∀ σ, VolDens p σ D) (r : ℕ → ℕ) (f : ∀ m, Fin (r m) → X.functionField), (∀ (m : ℕ) i, f m i ∈ P.H m 1) → (∀ m, LinearIndependent ℤ (f m)) → Tendsto (fun m : ℕ => (r m : ℝ) / (m : ℝ) ^ D) atTop (𝓝 (gdeg P.L D / D.factorial)) → ∀ w : ∀ σ, CxPts p σ → ℝ, (∀ σ, Continuous (w σ)) → Tendsto (fun m : ℕ => (∑ᶠ σ, ∫ y, w σ y * bergmanDensity (fun σ => (ω σ).meas) (vals P m 1 (f m)) σ y ∂(ω σ).meas) / (m : ℝ) ^ D) atTop (𝓝 (chInt P.L D w / D.factorial)) := by
   intro k _ X _ p D hX hG P hpos ω r f hf hli hr w hw
   classical
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
-  letI := Fintype.ofFinite (k →+* ℂ)
+  have : Finite (k →+* ℂ) := hX.finite_emb
+  let := Fintype.ofFinite (k →+* ℂ)
   have hcpt : ∀ σ, CompactSpace (CxPts p σ) := hX.compactSpace
   have hfm : ∀ σ, IsFiniteMeasure (ω σ).meas := fun σ => (_root_.GlobalTheory.HSAmp.volDens_meas_finite_openPos k X p D hX hG σ (ω σ)).1
   choose ρ hρR hρ0 hρint using fun σ => _root_.GlobalTheory.HSAmp.exists_isRatio_chernInt k X p D hX hG P.L hpos σ (ω σ)
   have hbd : ∀ σ (g : CxPts p σ → ℝ), Continuous g → ∃ C, ∀ y, |g y| ≤ C := fun σ g hg => by
-    haveI := hcpt σ
+    have := hcpt σ
     obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hg.continuousOn
     exact ⟨C, fun y => by simpa [Real.norm_eq_abs] using hC y (Set.mem_univ y)⟩
   have hint : ∀ σ (g : CxPts p σ → ℝ), Continuous g → Integrable g (ω σ).meas := fun σ g hg => by
-    haveI := hfm σ
+    have := hfm σ
     obtain ⟨C, hC⟩ := hbd σ g hg
     exact Integrable.of_bound hg.aestronglyMeasurable C
       (Eventually.of_forall fun y => by simpa [Real.norm_eq_abs] using hC y)
@@ -871,7 +871,7 @@ theorem tendsto_finsum_integral_berg : ∀ (k : Type) [CommRing k] (X : Scheme.{
     fun σ y => hBx σ y _ (mul_nonneg (add_nonneg (div_nonneg (hρ0 σ y) hDf.le) hε.le) hM.le)
       fun c => hmo (Fin (r m)) (f m) (hf m) c σ y
   have hβi : ∀ σ, Integrable (fun y => (ρ σ y / D.factorial + ε) * M) (ω σ).meas := fun σ => by
-    haveI := hfm σ
+    have := hfm σ
     exact (((hint σ _ (hρR σ).1).div_const _).add (integrable_const ε)).mul_const M
   have hl1 := abs_finsum_integral_weight_sub_le (k →+* ℂ) (fun σ => CxPts p σ) (fun σ => (ω σ).meas)
     (bergmanDensity (fun σ => (ω σ).meas) (vals P m 1 (f m))) (fun σ y => (ρ σ y / D.factorial + ε) * M) w C hBi hβi hle
@@ -884,7 +884,7 @@ theorem tendsto_finsum_integral_berg : ∀ (k : Type) [CommRing k] (X : Scheme.{
     congr 1; funext y; ring
   have e2 : ∀ σ, ∫ y, (ρ σ y / D.factorial + ε) * M ∂(ω σ).meas =
       M / D.factorial * ∫ y, ρ σ y ∂(ω σ).meas + M * ε * ∫ _y, (1 : ℝ) ∂(ω σ).meas := fun σ => by
-    haveI := hfm σ
+    have := hfm σ
     rw [← integral_const_mul, ← integral_const_mul,
       ← integral_add ((hint σ _ (hρR σ).1).const_mul _) ((integrable_const (1 : ℝ)).const_mul _)]
     congr 1; funext y; ring
@@ -935,8 +935,8 @@ theorem gram_det_up_le : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegra
     hT (Iio_mem_nhds (by linarith))
   filter_upwards [hev, eventually_ge_atTop 1] with m hm hm1
   obtain ⟨hF, hPD, -⟩ := _root_.GlobalTheory.HSAmp.gram_posDef_and_l2_le_sup_bound k X p D hX hG P ω m 1 (Fin (r m)) (f m) (hf m) (hli m)
-  haveI : Finite (k →+* ℂ) := hF.finite
-  haveI : Fintype (k →+* ℂ) := Fintype.ofFinite _
+  have : Finite (k →+* ℂ) := hF.finite
+  have : Fintype (k →+* ℂ) := Fintype.ofFinite _
   have hB : ∀ σ, ∃ C : ℝ, ∀ y, |u.u σ y| ≤ C := fun σ => by
     obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn (hcont σ).continuousOn
     exact ⟨C, fun y => by simpa [Real.norm_eq_abs] using hC y (Set.mem_univ y)⟩
@@ -1450,8 +1450,8 @@ namespace GlobalTheory.HSAmp
 theorem exists_intBasis {K : Type} [Field K] [CharZero K] (Λ : AddSubgroup K) (hΛ : Λ.FG) :
     ∃ f : Fin (Module.finrank ℤ Λ) → K, LinearIndependent ℤ f ∧ AddSubgroup.closure (Set.range f) = Λ ∧
       ∀ i, f i ∈ Λ := by
-  haveI : Module.Finite ℤ Λ := Module.Finite.iff_addGroup_fg.2 ((AddGroup.fg_iff_addSubgroup_fg Λ).2 hΛ)
-  haveI : Module.Free ℤ Λ := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ Λ := Module.Finite.iff_addGroup_fg.2 ((AddGroup.fg_iff_addSubgroup_fg Λ).2 hΛ)
+  have : Module.Free ℤ Λ := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ Λ
   refine ⟨fun i => (b i : K), ?_, le_antisymm ?_ ?_, fun i => (b i).2⟩
   · exact b.linearIndependent.map' Λ.subtype.toIntLinearMap (LinearMap.ker_eq_bot.2 Subtype.val_injective)
@@ -1470,7 +1470,7 @@ theorem tendsto_logCount_sub_up : GlobalTheory.Published.ArCalc → ∀ (k : Typ
   refine ⟨Real.log C + 1, ?_⟩
   intro u B a' hB hu hup ha' t ht
   have := hX.charZero
-  haveI : CharZero X.functionField :=
+  have : CharZero X.functionField :=
     charZero_of_injective_ringHom (germ_injective_of_isIntegral X (U := ⊤) _ trivial)
   choose f hli hcl hmemΛ using fun m => exists_intBasis (Λ m) (hΛ.fg m)
   let ω : ∀ σ, VolDens p σ D := fun σ => Classical.choice (_root_.GlobalTheory.HSAmp.exists_volDens k X p D hX hS σ)
@@ -1492,7 +1492,7 @@ theorem tendsto_logCount_sub_up : GlobalTheory.Published.ArCalc → ∀ (k : Typ
     refine ⟨hx, fun σ y => ?_⟩
     rw [((_root_.GlobalTheory.HSAmp.upAtPrime_groups_values_norms k X p P u m 1).2.2 σ y x).2]
     have h0 : 0 ≤ P.nu m 1 σ y x := by rw [← norm_val]; exact norm_nonneg _
-    rw [mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, ← Real.exp_natCast_mul]
     refine mul_le_mul (hb σ y) (Real.exp_le_exp.2 ?_) (Real.exp_pos _).le (by positivity)
     have hu' := (abs_le.1 (hu σ y)).1
     have hm0 : (0 : ℝ) ≤ m := Nat.cast_nonneg m

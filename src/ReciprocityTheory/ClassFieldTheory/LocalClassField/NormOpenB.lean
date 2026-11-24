@@ -114,7 +114,7 @@ theorem isOpen_UKi (i : ℕ) : IsOpen (UKi p K i : Set Kˣ) := by
 
 theorem isOpen_range_pow' (hK : FiniteDimensional ℚ_[p] K) {n : ℕ} (hn : 0 < n) :
     IsOpen ((powMonoidHom n : Kˣ →* Kˣ).range : Set Kˣ) := by
-  have : CompleteSpace K := FiniteDimensional.complete ℚ_[p] K
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[p] K
   apply Subgroup.isOpen_of_mem_nhds (g := 1)
   have hd : HasStrictDerivAt (fun x : K => x ^ n) ((n : K) * 1 ^ (n - 1)) 1 := hasStrictDerivAt_pow n 1
   have hne : ((n : K) * 1 ^ (n - 1)) ≠ 0 := by

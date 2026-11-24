@@ -62,8 +62,8 @@ theorem finDim (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] 
 theorem finrank_AEF (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] :
     Module.Free (AF F) (AF F ⊗[F] E) ∧ Module.Finite (AF F) (AF F ⊗[F] E) ∧
     Module.finrank (AF F) (AF F ⊗[F] E) = Module.finrank F E := by
-  haveI := finDim F E
-  haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have := finDim F E
+  have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
   let bA := Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)
   exact ⟨Module.Free.of_basis bA, Module.Finite.of_basis bA, by
     rw [Module.finrank_eq_card_basis bA, Fintype.card_fin]⟩
@@ -72,7 +72,7 @@ theorem card_eq (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     (nS nT : ℕ) (κ : Type) [Fintype κ]
     (e : Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E) ≃ₗ[AF F] (κ → AF F) × (κ → AF F)) :
     2 * Fintype.card κ = nT * nS * Module.finrank F E := by
-  haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
   obtain ⟨h1, h2, hAE⟩ := finrank_AEF F E
   have h := e.finrank_eq
   have ha : Module.finrank (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) = nT * nS * Module.finrank F E := by
@@ -91,7 +91,7 @@ theorem onto (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [A
       e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) :
     ∀ p ∈ GlobalTheory.WeilUnitaryTransport.ratPair F κ, e.symm p ∈ ratLF F E nS nT := by
   have hκ := card_eq F E nS nT κ e
-  haveI := finDim F E
+  have := finDim F E
   let J1 : (κ → F) →ₗ[F] (κ → AF F) := LinearMap.compLeft (Algebra.linearMap F (AF F)) κ
   let J : ((κ → F) × (κ → F)) →ₗ[F] (κ → AF F) × (κ → AF F) := J1.prodMap J1
   let I : Matrix (Fin nT) (Fin nS) E →ₗ[F] Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E) :=
@@ -105,7 +105,7 @@ theorem onto (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [A
     · exact congrFun h.1 i
     · exact congrFun h.2 i
   have hLinj : Function.Injective L := by
-    haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+    have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
     have hr : Function.Injective (inclR (F := F) (E := E) (AF F)) := RingHom.injective _
     intro x x' h
     have := e.injective h
@@ -156,12 +156,12 @@ theorem haar_fundDomain_transfer : ∀ (F E : Type) [Field F] [NumberField F] [F
                 ∫⁻ w in 𝓕, ‖f (co.e w)‖ₑ ^ 2 ∂ν = ∫⁻ w in 𝓕', ‖f w‖ₑ ^ 2 ∂ν' := by
   intro F E _ _ _ _ _ σ B _ _ nS nT JS JT _ _ ξ₀ _ _ JA JB ξ _ _ κ _ co hrat ν 𝓕 hν h𝓕
   obtain ⟨hfr, hfin, -⟩ := finrank_AEF F E
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI hMT : IsModuleTopology (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) :=
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have hMT : IsModuleTopology (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin nT → Fin nS → AF F ⊗[F] E))
-  letI mP : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
-  haveI : BorelSpace ((κ → AF F) × (κ → AF F)) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  let mP : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
+  have : BorelSpace ((κ → AF F) × (κ → AF F)) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
   let ce : Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E) ≃L[AF F] (κ → AF F) × (κ → AF F) :=
     { co.e with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap

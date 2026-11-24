@@ -53,8 +53,8 @@ namespace GlobalTheory.HTW.RecS
 theorem exists_primitiveRoot_of_good {l : ℕ} [Fact l.Prime] {K LL : FinExt l} (hG : Good K 1 LL) :
     ∃ ζ : ↥LL.1, IsPrimitiveRoot ζ l := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l : Om l) := ⟨Nat.cast_ne_zero.2 hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  have : NeZero (l : Om l) := ⟨Nat.cast_ne_zero.2 hl.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hmem : ζ ∈ Ks K 1 := by
     refine (le_sup_right : _ ≤ Ks K 1) (IntermediateField.subset_adjoin _ _ ?_)
     simpa using hζ.pow_eq_one
@@ -92,19 +92,19 @@ theorem setCS_of_wordsAT {l : ℕ} [Fact l.Prime] {P : LocPrime l} {K LL : FinEx
     by_cases hpar : (a.val + d) % 2 = 1
     · have h0 : ¬ (a.val + d) % 2 = 0 := by omega
       have hu1 : Wd.up a = true := by simpa [hpar] using hua
-      simp only [hu1, if_true, Set.mem_setOf_eq, abs_le] at hw
-      simp only [h0, if_false, Set.mem_union, Set.mem_Icc]
+      simp only [hu1, ite_true, Set.mem_ofPred_eq, abs_le] at hw
+      simp only [h0, ite_false, Set.mem_union, Set.mem_Icc]
       push_cast
       omega
     · have h0 : (a.val + d) % 2 = 0 := by omega
       have hu1 : Wd.up a = false := by simpa [hpar] using hua
-      simp only [hu1, Bool.false_eq_true, if_false, Set.mem_setOf_eq, abs_le] at hw
-      simp only [h0, if_true, Set.mem_union, Set.mem_Icc]
+      simp only [hu1, Bool.false_eq_true, ite_false, Set.mem_ofPred_eq, abs_le] at hw
+      simp only [h0, ite_true, Set.mem_union, Set.mem_Icc]
       push_cast
       omega
   · intro a τ hτ
-    haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-    letI ft : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
+    have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+    let ft : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
     have h := hlow ft a
     unfold TruncatedSeriesCountingBounds.lowCount at h
     have hfil : (Finset.univ.filter (fun τ' => Formalism.MainNotions.LiftingTheory.Over Wc τ' a)) = {τ} := by

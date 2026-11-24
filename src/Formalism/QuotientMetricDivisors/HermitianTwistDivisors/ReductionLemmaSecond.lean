@@ -510,7 +510,7 @@ theorem lemmaRb_of (hPF : ProdFormula) (hCS : DetCS) (hLB : LcvBasis) (hIC : Idx
       simp [γ, Finset.sum_apply, Pi.single_apply]
     have hdet : γ.det ≠ 0 := by
       have hu : IsUnit (Matrix.of (e w)) :=
-        Matrix.linearIndependent_rows_iff_isUnit.mp (he w).1
+        Matrix.linearIndependent_row_iff_isUnit.mp (he w).1
       have : γ = (Matrix.of (e w))ᵀ := by ext k i; rfl
       rw [this, Matrix.det_transpose]
       exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero

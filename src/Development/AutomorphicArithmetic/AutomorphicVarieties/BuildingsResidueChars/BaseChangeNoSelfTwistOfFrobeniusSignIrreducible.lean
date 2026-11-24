@@ -73,8 +73,8 @@ theorem UpperTheory.baseChange_noSelfTwist_of_frobenius_sign_irreducible :
     UpperTheory.V.Af.IsoOfFrob → UpperTheory.V.Af.Bc.FrobTw → UpperTheory.V.Af.Bc.SignEx → UpperTheory.V.Af.Bc.SignFrob → UpperTheory.V.Af.Bc.SchurTw → UpperTheory.V.Af.Bc.IrrBasic → UpperTheory.V.Af.Bc.NoTwist := by
   intro hIso hTw hEx hFr hSch hIrr F E Ω _ _ _ _ _ _ _ _ _ _ _ l _ ι h2 n r π hc hatt hirr η hη hT
   obtain ⟨δ, hδc, hδ1, hδs, hδu⟩ := hEx F E Ω l h2
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, by
-    haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, by
+    have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
     exact Algebra.IsAlgebraic.trans F E Ω⟩
   refine hδ1 (hSch _ _ _ n r (res F Ω E) δ hirr ?_ ?_)
   · ext s

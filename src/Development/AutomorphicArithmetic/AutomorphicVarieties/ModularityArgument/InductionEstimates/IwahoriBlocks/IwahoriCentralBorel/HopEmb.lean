@@ -49,7 +49,7 @@ open scoped TensorProduct Classical
 
 private theorem cosets_finite {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {W : Subgroup G}
     (hW : CO W) (g : G) : {c : G ⧸ W | ∃ u ∈ W, c = QuotientGroup.mk (u * g)}.Finite := by
-  haveI : DiscreteTopology (G ⧸ W) := QuotientGroup.discreteTopology hW.2
+  have : DiscreteTopology (G ⧸ W) := QuotientGroup.discreteTopology hW.2
   have hc : Continuous fun u : G => (QuotientGroup.mk (u * g) : G ⧸ W) :=
     QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   refine ((hW.1.image hc).finite_of_discrete).subset ?_

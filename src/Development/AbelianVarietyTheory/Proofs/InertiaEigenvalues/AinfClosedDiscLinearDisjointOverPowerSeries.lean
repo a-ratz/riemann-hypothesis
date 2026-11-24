@@ -72,7 +72,7 @@ theorem linDisjoint_disc (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (A 
     ∃ δ a : bk.S, δ ≠ 0 ∧ sA δ * x = sA a * y := by
   obtain ⟨hρ0, hρ1⟩ := breuilKisinDatum_uniformizer_radius_pos_lt_one bk
   obtain ⟨cD, hc1, hc2, -⟩ := _root_.GlobalTheory.BSP.disc_coefficients l K bk A sA ι TB bk.ρ₀ hρ0 hρ1 j hj
-  haveI : IsAdicComplete bk.J bk.S := bk.complete
+  have : IsAdicComplete bk.J bk.S := bk.complete
   have hH : IsHausdorff bk.J bk.S := inferInstance
   obtain ⟨hz, -⟩ := GlobalTheory.BSP.TopBasis.basic_facts bk.S A sA bk.J ι TB hH
   have hinj : Function.Injective (toDisc l (X : bk.S) bk.ρ₀) :=

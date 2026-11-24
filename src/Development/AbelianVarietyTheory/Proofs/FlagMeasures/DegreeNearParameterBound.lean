@@ -93,7 +93,7 @@ theorem hsNormSq_smul {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerProductSpace
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (t : ℂ) (A : Wq →L[ℂ] Wp) :
     hsNormSq (t • A) = ‖t‖ ^ 2 * hsNormSq A := by
   have h : hsInner (t • A) (t • A) = ((‖t‖ ^ 2 : ℝ) : ℂ) * hsInner A A := by
-    simp only [hsInner, Finset.mul_sum, ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right]
+    simp only [hsInner, Finset.mul_sum, smul_apply, inner_smul_left, inner_smul_right]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← mul_assoc, Complex.mul_conj, Complex.normSq_eq_norm_sq]
   rw [hsNormSq, h, Complex.re_ofReal_mul, hsNormSq]
@@ -156,8 +156,8 @@ theorem norm_eq_const_div_deg : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT 
   swap
   · exact ⟨1, one_pos, fun lam' _ A hA => absurd ⟨lam', A, hA⟩ hex⟩
   obtain ⟨lam₀, A₀, hA₀⟩ := hex
-  haveI := FiniteDimensional.complete ℂ W.Wp
-  haveI := FiniteDimensional.complete ℂ W.Wq
+  have := FiniteDimensional.completeSpace ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wq
   have hθ : 0 < θ := lt_of_lt_of_le (Real.rpow_pos_of_pos (Real.exp_pos _) _) hθw.1
   have hv1 : 1 ≤ D.host.v := hZ.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hv : 0 < D.host.v := by linarith
@@ -172,8 +172,8 @@ theorem norm_eq_const_div_deg : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT 
   have hk : 2 ≤ D.R.k := by have := D.R.m_add_three_le_k; omega
   have hκN : kapN D θ ≠ 0 := (ENNReal.ofReal_pos.2 (by positivity)).ne'
   obtain ⟨-, -, -, o1, o2⟩ := GlobalTheory.T.local_data_both_amplitude_sides D τ w w' θ W lam₀ A₀ hθ hv hTT hW hA₀
-  have n1' : 0 < Module.finrank ℂ W.Wp := by haveI := o1.2.2.1; exact Module.finrank_pos
-  have n2' : 0 < Module.finrank ℂ W.Wq := by haveI := o2.2.2.1; exact Module.finrank_pos
+  have n1' : 0 < Module.finrank ℂ W.Wp := by have := o1.2.2.1; exact Module.finrank_pos
+  have n2' : 0 < Module.finrank ℂ W.Wq := by have := o2.2.2.1; exact Module.finrank_pos
   have hNH : IsHaarOn (Nset D.R.k D.R.rS) W.μN := o1.2.2.2.2.2.2.2.2.1
   obtain ⟨κ, hκ, hdeg⟩ := GlobalTheory.T.formal_degree_proportional hH D τ w w' θ W hcd hW
   obtain ⟨c, hc0, hnorm⟩ := _root_.GlobalTheory.AmpNorm.lintegral_hsNormSq_amp hH hKF hCC _ _ (toBessel D τ w w' θ W lam₀ A₀ hW hA₀ hT hT') W.μG μsec hk hc

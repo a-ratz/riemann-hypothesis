@@ -106,7 +106,7 @@ theorem exists_gen_away_of_closed : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) 
     · intro a
       obtain ⟨s, hs, -⟩ := hG V a 0 (Subsingleton.elim _ _)
       exact ⟨s, hs.1⟩
-  haveI : IsIso (p.app V) := (ConcreteCategory.isIso_iff_bijective (p.app V)).2 hbij
+  have : IsIso (p.app V) := (ConcreteCategory.isIso_iff_bijective (p.app V)).2 hbij
   haveI : IsIso (p ∣_ V) := (isIso_morphismRestrict_iff_isIso_app p hV).2 inferInstance
   have hg : ∀ y, (p ∣_ V ≫ V.ι) y = p ((p ⁻¹ᵁ V).ι y) := fun y => by rw [morphismRestrict_ι]; rfl
   obtain ⟨y, hy⟩ : ∃ y, (p ∣_ V ≫ V.ι) y = x := by
@@ -299,7 +299,7 @@ namespace GlobalTheory.PinchLift
 
 theorem near_matched : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) (i : Z ⟶ X) (i' : Z' ⟶ X') (p' : Z' ⟶ Z), IsPullback i' p' p i → IsAffineHom p → IsClosedImmersion i → GlobalTheory.PinchLift.Glues p i i' p' → ∀ (L' : LB X') (LZ : LB Z), L'.IsLB → LZ.IsLB → ∀ w : LB.Iso (L'.pull i') (LZ.pull p'), w.IsGen → ∀ z : Z, ∃ (W : X.Opens) (s' : ∀ k, Γ(X', L'.U k ⊓ p ⁻¹ᵁ W)ˣ) (sZ : ∀ j, Γ(Z, LZ.U j ⊓ i ⁻¹ᵁ W)ˣ), i z ∈ W ∧ GlobalTheory.PinchLift.GenOn L' (p ⁻¹ᵁ W) s' ∧ GlobalTheory.PinchLift.GenOn LZ (i ⁻¹ᵁ W) sZ ∧ GlobalTheory.PinchLift.Matched i' p' L' LZ w (p ⁻¹ᵁ W) (i ⁻¹ᵁ W) s' sZ := by
   intro X X' Z Z' p i i' p' hpb hp hi hg L' LZ hL' hLZ w hw z
-  haveI : IsClosedImmersion i' :=
+  have : IsClosedImmersion i' :=
     MorphismProperty.IsStableUnderBaseChange.of_isPullback (P := @IsClosedImmersion) hpb.flip hi
   have hc : ∀ z' : Z', p (i' z') = i (p' z') := fun z' => by
     have := congrArg (fun f : Z' ⟶ X => f z') hpb.w
@@ -898,29 +898,29 @@ theorem injective_exact_of_isBaseChange {R R' M₁ M₂ M₃ N₁ N₂ N₃ : Ty
 
 theorem exists_unique_of_flat_of_isPushout : ∀ {A B C D A' B' C' D' : CommRingCat.{0}} (fB : A ⟶ B) (fC : A ⟶ C) (u : B ⟶ D) (v : C ⟶ D) (e : A ⟶ A') (eB : B ⟶ B') (eC : C ⟶ C') (eD : D ⟶ D') (aB : A' ⟶ B') (aC : A' ⟶ C') (u' : B' ⟶ D') (v' : C' ⟶ D'), e.hom.Flat → IsPushout e fB aB eB → IsPushout e fC aC eC → IsPushout e (fB ≫ u) (aB ≫ u') eD → eB ≫ u' = u ≫ eD → eC ≫ v' = v ≫ eD → aB ≫ u' = aC ≫ v' → fB ≫ u = fC ≫ v → (∀ (b : B) (c : C), u.hom b = v.hom c → ∃! a : A, fB.hom a = b ∧ fC.hom a = c) → ∀ (b' : B') (c' : C'), u'.hom b' = v'.hom c' → ∃! a' : A', aB.hom a' = b' ∧ aC.hom a' = c' := by
   intro A B C D A' B' C' D' fB fC u v e eB eC eD aB aC u' v' hfl hB hC hD h1 h2 h3 h4 hfib
-  letI : Algebra A A' := e.hom.toAlgebra
-  letI : Algebra A B := fB.hom.toAlgebra
-  letI : Algebra A C := fC.hom.toAlgebra
-  letI : Algebra A D := (fB ≫ u).hom.toAlgebra
-  letI : Algebra A' B' := aB.hom.toAlgebra
-  letI : Algebra A' C' := aC.hom.toAlgebra
-  letI : Algebra A' D' := (aB ≫ u').hom.toAlgebra
-  letI : Algebra B B' := eB.hom.toAlgebra
-  letI : Algebra C C' := eC.hom.toAlgebra
-  letI : Algebra D D' := eD.hom.toAlgebra
-  letI : Algebra A B' := (e ≫ aB).hom.toAlgebra
-  letI : Algebra A C' := (e ≫ aC).hom.toAlgebra
-  letI : Algebra A D' := (e ≫ aB ≫ u').hom.toAlgebra
-  haveI : IsScalarTower A A' B' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower A A' C' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower A A' D' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower A B B' :=
+  let : Algebra A A' := e.hom.toAlgebra
+  let : Algebra A B := fB.hom.toAlgebra
+  let : Algebra A C := fC.hom.toAlgebra
+  let : Algebra A D := (fB ≫ u).hom.toAlgebra
+  let : Algebra A' B' := aB.hom.toAlgebra
+  let : Algebra A' C' := aC.hom.toAlgebra
+  let : Algebra A' D' := (aB ≫ u').hom.toAlgebra
+  let : Algebra B B' := eB.hom.toAlgebra
+  let : Algebra C C' := eC.hom.toAlgebra
+  let : Algebra D D' := eD.hom.toAlgebra
+  let : Algebra A B' := (e ≫ aB).hom.toAlgebra
+  let : Algebra A C' := (e ≫ aC).hom.toAlgebra
+  let : Algebra A D' := (e ≫ aB ≫ u').hom.toAlgebra
+  have : IsScalarTower A A' B' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower A A' C' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower A A' D' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower A B B' :=
     IsScalarTower.of_algebraMap_eq (fun x => congrArg (fun φ => φ.hom x) hB.w)
-  haveI : IsScalarTower A C C' :=
+  have : IsScalarTower A C C' :=
     IsScalarTower.of_algebraMap_eq (fun x => congrArg (fun φ => φ.hom x) hC.w)
-  haveI : IsScalarTower A D D' :=
+  have : IsScalarTower A D D' :=
     IsScalarTower.of_algebraMap_eq (fun x => congrArg (fun φ => φ.hom x) hD.w)
-  haveI : Module.Flat A A' := hfl
+  have : Module.Flat A A' := hfl
   have PB : Algebra.IsPushout A A' B B' := CommRingCat.isPushout_iff_isPushout.mp hB
   have PC : Algebra.IsPushout A A' C C' := CommRingCat.isPushout_iff_isPushout.mp hC
   have PD : Algebra.IsPushout A A' D D' := CommRingCat.isPushout_iff_isPushout.mp hD
@@ -1043,10 +1043,10 @@ theorem glues_affine_of_flat_baseChange : ∀ (S : Scheme.{0}) (E X X' Z Z' : Ov
       (E ◁ j).left ≫ (snd E Y).left = (snd E Y').left ≫ j.left := by
     intro Y Y' j
     rw [← Over.comp_left, ← Over.comp_left, whiskerLeft_snd]
-  haveI : IsAffineHom i.left := inferInstance
-  haveI : IsClosedImmersion i'.left := MorphismProperty.of_isPullback hpb.flip ‹_›
-  haveI : IsAffineHom p'.left := MorphismProperty.of_isPullback hpb ‹_›
-  haveI : Flat (snd E X).left := by
+  have : IsAffineHom i.left := inferInstance
+  have : IsClosedImmersion i'.left := MorphismProperty.of_isPullback hpb.flip ‹_›
+  have : IsAffineHom p'.left := MorphismProperty.of_isPullback hpb ‹_›
+  have : Flat (snd E X).left := by
     change Flat (pullback.snd E.hom X.hom); infer_instance
   have eV : p'.left ⁻¹ᵁ (i.left ⁻¹ᵁ V) = i'.left ⁻¹ᵁ (p.left ⁻¹ᵁ V) := by
     rw [← Scheme.Hom.comp_preimage, ← Scheme.Hom.comp_preimage, hcl]
@@ -1317,8 +1317,8 @@ namespace GlobalTheory.ArtinPatch
 
 theorem exists_lb_glue : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f₂ : P ⟶ R₂) (g₁ : R₁ ⟶ R₀) (g₂ : R₂ ⟶ R₀), IsPullback f₁ f₂ g₁ g₂ → IsLocalRing P → IsArtinianRing P → Function.Surjective g₁ → Function.Surjective g₂ → ∀ (X : Over (Spec P)) (X₁ : Over (Spec R₁)) (X₂ : Over (Spec R₂)) (X₀ : Over (Spec R₀)) (j₁ : X₁.left ⟶ X.left) (j₂ : X₂.left ⟶ X.left) (i₁ : X₀.left ⟶ X₁.left) (i₂ : X₀.left ⟶ X₂.left), Flat X.hom → IsPullback j₁ X₁.hom X.hom (Spec.map f₁) → IsPullback j₂ X₂.hom X.hom (Spec.map f₂) → IsPullback i₁ X₀.hom X₁.hom (Spec.map g₁) → i₁ ≫ j₁ = i₂ ≫ j₂ → i₂ ≫ X₂.hom = X₀.hom ≫ Spec.map g₂ → ∀ (L₁ : LB X₁.left) (L₂ : LB X₂.left), L₁.IsLB → L₂.IsLB → LBIso (L₁.pull i₁) (L₂.pull i₂) → ∃ L : LB X.left, L.IsLB ∧ LBIso L₁ (L.pull j₁) ∧ LBIso L₂ (L.pull j₂) := by
   intro P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hloc hart hg₁ hg₂ X X₁ X₂ X₀ j₁ j₂ i₁ i₂ hflat h₁ h₂ h₀ hc hc₂ L₁ L₂ hL₁ hL₂ hiso
-  haveI := hloc
-  haveI := hart
+  have := hloc
+  have := hart
   obtain ⟨-, hex⟩ := elem_of_isPullback hpb
   have hf₁ : Function.Surjective f₁.hom := fun r => by
     obtain ⟨r₂, hr₂⟩ := hg₂ (g₁.hom r)
@@ -1340,7 +1340,7 @@ theorem exists_lb_glue : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ 
     simpa [q, r, q', r'] using hw
   have hsq : IsPullback r'.left q'.left q.left r.left :=
     (isPullback_SpecMap_of_isPushout _ _ _ _ (isPushout_of_isPullback hpb hg₁).flip)
-  haveI hcl : IsClosedImmersion r.left := IsClosedImmersion.spec_of_surjective f₁ hf₁
+  have hcl : IsClosedImmersion r.left := IsClosedImmersion.spec_of_surjective f₁ hf₁
   have haff : IsAffineHom q.left := by
     change IsAffineHom (Spec.map f₂)
     infer_instance

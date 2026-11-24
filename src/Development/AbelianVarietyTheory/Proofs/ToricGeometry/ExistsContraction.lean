@@ -238,23 +238,23 @@ theorem exists_param {ι : Type} [Fintype ι] (R : ι → ι → Prop) (s : ι �
         simp only [Matrix.transpose_apply, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply]
         by_cases h1 : R i j ∧ s i
         · have h2 : ¬ (R j i ∧ s j) := fun h => (hs _ _ h1.1).mp h1.2 h.2
-          simp only [dif_pos h1, dif_neg h2]
+          simp only [dite_eq_left h1, dite_eq_right h2]
         · by_cases h2 : R j i ∧ s j
-          · simp only [dif_pos h2, dif_neg h1]
-          · simp only [dif_neg h1, dif_neg h2]
+          · simp only [dite_eq_left h2, dite_eq_right h1]
+          · simp only [dite_eq_right h1, dite_eq_right h2]
       · intro i j hij
         simp only [LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply]
-        rw [dif_neg (fun h : R i j ∧ s i => hij h.1), dif_neg (fun h : R j i ∧ s j => hij (hR _ _ h.1))]
+        rw [dite_eq_right (fun h : R i j ∧ s i => hij h.1), dite_eq_right (fun h : R j i ∧ s j => hij (hR _ _ h.1))]
     · rintro ⟨hW, hz⟩
       refine ⟨fun n => W (e.symm n).1.1 (e.symm n).1.2, ?_⟩
       ext i j
       simp only [LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply]
       by_cases h1 : R i j ∧ s i
-      · rw [dif_pos h1, Equiv.symm_apply_apply]
+      · rw [dite_eq_left h1, Equiv.symm_apply_apply]
       · by_cases h2 : R j i ∧ s j
-        · rw [dif_neg h1, dif_pos h2, Equiv.symm_apply_apply]
+        · rw [dite_eq_right h1, dite_eq_left h2, Equiv.symm_apply_apply]
           simpa using congrFun (congrFun hW i) j
-        · rw [dif_neg h1, dif_neg h2]
+        · rw [dite_eq_right h1, dite_eq_right h2]
           refine (hz i j fun hr => ?_).symm
           by_cases hsi : s i
           · exact h1 ⟨hr, hsi⟩
@@ -487,7 +487,7 @@ private theorem discrete_range_toIntLinearMap_of_discrete_range (P : M →+ (Fin
     obtain ⟨a, rfl⟩ := LinearMap.mem_range.mp hx
     exact AddMonoidHom.mem_range.mpr ⟨a, rfl⟩
   exact DiscreteTopology.of_continuous_injective
-    (f := fun x => (⟨x, hm x⟩ : P.range)) (continuous_subtype_val.subtype_mk _)
+    (f := fun x => (⟨x, hm x⟩ : P.range)) (continuous_subtypeVal.subtype_mk _)
     (fun x y hxy => Subtype.ext (congrArg Subtype.val hxy))
 
 theorem finrank_of_lattice (P : M →+ (Fin g → ℂ)) (hi : Function.Injective P)
@@ -549,7 +549,7 @@ theorem lattice_map (P P' : M →+ (Fin g → ℂ)) (hi : Function.Injective P)
       exact AddMonoidHom.mem_range.mpr ⟨a, by show P a = G (P' a); rw [h, hGT]⟩
     have := hd
     refine DiscreteTopology.of_continuous_injective
-      (f := fun x : P'.range => (⟨G x, hmem x⟩ : P.range)) ((hGc.comp continuous_subtype_val).subtype_mk _) ?_
+      (f := fun x : P'.range => (⟨G x, hmem x⟩ : P.range)) ((hGc.comp continuous_subtypeVal).subtype_mk _) ?_
     rintro ⟨x, hx⟩ ⟨y, hy⟩ hxy
     obtain ⟨a, rfl⟩ := AddMonoidHom.mem_range.mp hx
     obtain ⟨c, rfl⟩ := AddMonoidHom.mem_range.mp hy

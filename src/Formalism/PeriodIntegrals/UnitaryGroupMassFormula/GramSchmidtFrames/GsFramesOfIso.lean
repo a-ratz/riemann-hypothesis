@@ -65,10 +65,10 @@ lemma uw_inWb {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {α : B.Mat k 
     {u : Fin (2 * r + k + 1) → ℂ} (hu : inWb k r u) : inWb k r (α *ᵥ u) := by
   have hα' := hα
   unfold UWset at hα'
-  simp only [Set.mem_setOf_eq] at hα'
+  simp only [Set.mem_ofPred_eq] at hα'
   obtain ⟨hU, hfix, -⟩ := hα'
   unfold UH at hU
-  simp only [Set.mem_setOf_eq] at hU
+  simp only [Set.mem_ofPred_eq] at hU
   have key : ∀ x w : Fin (2 * r + k + 1) → ℂ,
       star (α *ᵥ w) ⬝ᵥ (Hpk k r *ᵥ (α *ᵥ x)) = star w ⬝ᵥ (Hpk k r *ᵥ x) := by
     intro x w
@@ -87,7 +87,7 @@ lemma uw_inWb {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {α : B.Mat k 
     have hi := i.isLt
     unfold Hpk bvec eI esI
     simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Fin.val_mk]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Fin.val_mk]
     split_ifs <;> first | rfl | omega | (simp only [Fin.ext_iff, Fin.val_mk] at *; omega)
   have hHe' : ∀ a : Fin r, Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) := by
     intro a
@@ -96,7 +96,7 @@ lemma uw_inWb {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {α : B.Mat k 
     have hi := i.isLt
     unfold Hpk bvec eI esI
     simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Fin.val_mk]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Fin.val_mk]
     split_ifs <;> first | rfl | omega | (simp only [Fin.ext_iff, Fin.val_mk] at *; omega)
   intro i hi
   have hsi : star ((α *ᵥ u) i) = 0 := by

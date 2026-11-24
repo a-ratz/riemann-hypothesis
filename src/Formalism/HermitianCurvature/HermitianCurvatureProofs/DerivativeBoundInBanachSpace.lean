@@ -128,7 +128,7 @@ theorem diagPt_norm_pos (s : ℕ) (a : ℂ) : 0 < ‖diagPt s a‖ := by
   have h1 : diagPt s a (Fin.last (s + 1)) (Fin.last (s + 1)) = 0 := by rw [h]; rfl
   have h2 : diagPt s a (Fin.last (s + 1)) (Fin.last (s + 1)) = 1 := by
     unfold diagPt
-    rw [Matrix.diagonal_apply_eq, if_neg (Fin.last_pos).ne']
+    rw [Matrix.diagonal_apply_eq, ite_eq_right (Fin.last_pos).ne']
   rw [h2] at h1
   exact one_ne_zero h1
 
@@ -247,7 +247,7 @@ theorem ns_mu_closedBall (β : ℂ) (R : ℝ) (hR : 0 ≤ R) :
   have hpi : (NNReal.pi : ENNReal) = ENNReal.ofReal Real.pi := by
     rw [← NNReal.coe_real_pi, ENNReal.ofReal_coe_nnreal]
   unfold mu
-  rw [Measure.smul_apply, Complex.volume_closedBall, ENNReal.smul_def, smul_eq_mul, hpi,
+  rw [smul_apply, Complex.volume_closedBall, ENNReal.smul_def, smul_eq_mul, hpi,
     ← ENNReal.ofReal_pow hR, ← ENNReal.ofReal_mul (by positivity)]
   change ENNReal.ofReal (‖β‖ / (2 * Real.pi)) * _ = _
   rw [← ENNReal.ofReal_mul (by positivity)]

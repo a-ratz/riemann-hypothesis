@@ -142,10 +142,10 @@ theorem stable_complement_of_kernel_exists
       ∀ a ∈ A, ∀ z : ℂ, pr (a c) = z • pr c → a c = z • c := by
   intro h hh
   set K : Submodule ℂ V := H0 ⊓ LinearMap.ker pr with hK
-  haveI : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le inf_le_left
   set K' : Submodule ℂ H := K.map ι with hK'
-  haveI : FiniteDimensional ℂ K' := inferInstance
-  haveI : CompleteSpace K' := FiniteDimensional.complete ℂ K'
+  have : FiniteDimensional ℂ K' := inferInstance
+  have : CompleteSpace K' := FiniteDimensional.completeSpace ℂ K'
   obtain ⟨y, hy, e, he, hsum⟩ := K'.exists_add_mem_mem_orthogonal (ι h)
   obtain ⟨k, hk, rfl⟩ := Submodule.mem_map.mp hy
   have hkH0 : k ∈ H0 := hk.1

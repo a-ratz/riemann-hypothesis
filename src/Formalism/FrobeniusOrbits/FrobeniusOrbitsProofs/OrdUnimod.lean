@@ -313,7 +313,7 @@ theorem hostOrdinary : HostOrdinary := by
   rw [key]
   by_cases hp2 : p = 2
   · subst hp2
-    haveI : P.LiesOver (span {(2 : ℤ)}) := by
+    have : P.LiesOver (span {(2 : ℤ)}) := by
       simpa using (inferInstance : P.LiesOver (span {((2 : ℕ) : ℤ)}))
     exact iff_of_true (fun τ hτ => ((hD τ).1 P).mp hτ) ((hS.1 2 Nat.prime_two).mpr (Or.inl rfl))
   by_cases hpq : p = q

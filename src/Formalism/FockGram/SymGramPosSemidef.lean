@@ -268,10 +268,10 @@ namespace Formalism.E
 theorem indexEqNormDet : SubIndexNorm := by
   intro S M ι _ _ _ _ _ _ _ b N bN
   classical
-  haveI : Module.Free S M := Module.Free.of_basis b
-  haveI : Module.Finite S M := Module.Finite.of_basis b
-  haveI : Module.Free ℤ M := Module.Free.of_basis ((Module.Free.chooseBasis ℤ S).smulTower b)
-  haveI : Module.Finite ℤ M := Module.Finite.of_basis ((Module.Free.chooseBasis ℤ S).smulTower b)
+  have : Module.Free S M := Module.Free.of_basis b
+  have : Module.Finite S M := Module.Finite.of_basis b
+  have : Module.Free ℤ M := Module.Free.of_basis ((Module.Free.chooseBasis ℤ S).smulTower b)
+  have : Module.Finite ℤ M := Module.Finite.of_basis ((Module.Free.chooseBasis ℤ S).smulTower b)
   let e0 : M ≃ₗ[S] N := b.equiv bN (Equiv.refl ι)
   let f : M →ₗ[S] M := N.subtype ∘ₗ e0.toLinearMap
   have hS : b.det (fun i => (bN i : M)) = LinearMap.det f := by

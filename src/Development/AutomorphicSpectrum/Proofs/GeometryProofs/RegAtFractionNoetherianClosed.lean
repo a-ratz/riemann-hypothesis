@@ -106,7 +106,7 @@ theorem regAt_ring : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Com
   intro X Ω _ ξ h p
   refine ⟨?_, fun _ => isNoetherianRing_of_ringEquiv _ (stalkEquiv h p),
     fun _ => IsIntegrallyClosed.of_equiv (stalkEquiv h p)⟩
-  haveI : FaithfulSMul (regAt ξ p) Ω :=
+  have : FaithfulSMul (regAt ξ p) Ω :=
     (faithfulSMul_iff_algebraMap_injective (regAt ξ p) Ω).2 Subtype.val_injective
   exact IsFractionRing.of_field (regAt ξ p) Ω fun z => exists_div h p z
 

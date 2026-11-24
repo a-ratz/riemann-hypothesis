@@ -142,7 +142,7 @@ variable [Module O V] [IsScalarTower O LL V] [IsDomain O] [IsFractionRing O LL]
 omit [TopologicalSpace G] in
 theorem invariants_stableLattice_mod_irreducible_eq_bot [IsDiscreteValuationRing O] (L : Lattice (O := O) ρ) {lam : O} (hlam : Irreducible lam)
     (h : (coefRep (latRep L) (O ⧸ Ideal.span {lam})).invariants = ⊥) : H0V ρ = ⊥ := by
-  haveI : Module.Finite O ↥L.T := Module.Finite.iff_fg.2 L.fg
+  have : Module.Finite O ↥L.T := Module.Finite.iff_fg.2 L.fg
   have hsm : ∀ (a : O) (x : V), a ≠ 0 → a • x = 0 → x = 0 := fun a x ha hx => by
     rw [← algebraMap_smul LL] at hx
     exact (smul_eq_zero.1 hx).resolve_left (by simpa using ha)

@@ -116,9 +116,9 @@ theorem exists_matrices {W : Matrix (Fin 8) (Fin 8) ℤ} (hW : IsE8 W) :
   refine ⟨Sum.elim (fun uv => Matrix.single uv.1 uv.2 1)
     (fun c => (W + W.transpose).adjugate * (if c then W else W.transpose)), .inr true, .inr false, ?_, ?_,
     fun u v => ⟨.inl (u, v), rfl⟩⟩
-  · simp only [Sum.elim_inr, if_true]
+  · simp only [Sum.elim_inr, ite_true]
     rw [← Matrix.mul_assoc, Matrix.mul_adjugate, hW.2, one_smul, Matrix.one_mul]
-  · simp only [Sum.elim_inr, Bool.false_eq_true, if_false]
+  · simp only [Sum.elim_inr, Bool.false_eq_true, ite_false]
     rw [← Matrix.mul_assoc, Matrix.mul_adjugate, hW.2, one_smul, Matrix.one_mul]
 
 theorem nonempty_sFam : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S) (M : LB P.A.left), M.IsLB → ∃ t : LB.Gen (Theta P.A M), t.IsGen) → ThetaUnifAV → ∀ (h n : ℕ), 1 ≤ h → n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ (o : Type) [CommRing o] (b : TBase o ((n ^ j) ^ 2)) (em : o →+* ℂ), ArBase em → Nonempty (SFam h ((n ^ j) ^ 2) (b.ζ : o)) := by
@@ -148,11 +148,11 @@ theorem nonempty_sFam : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Ou
   have hG := hj₁ j hj1 _ rfl o b em
   obtain ⟨F⟩ := hj₂ j hj2 o b em _ _ hem hG
   obtain ⟨hq, hflat, hred, hinj⟩ := GlobalTheory.T.thetaClosureOpenFamily_qproj_flat_reduced_ext L1 L2 o _ n _ _ b em _ Mat κ F hoN
-  haveI := hem.1
-  haveI : CharZero o := em.charZero
+  have := hem.1
+  have : CharZero o := em.charZero
   have hq : IsQProjOver (F.U.ι ≫ F.Y.s) := hq.resolve_right (not_not.2 inferInstance)
   have hft := locallyOfFiniteType_of_qproj hq
-  haveI : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
+  have : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
   obtain ⟨c, hc, hsc⟩ := _root_.GlobalTheory.SharpFamily.exists_isSharp_of_dense L1 L2 hT h _ W _ a bas hW hb hu _ o b em _ _ F.univ hok F.dense
 
   have pull : ∀ (S' : Scheme.{0}) (s' : S' ⟶ Sp o) (f : S' ⟶ F.U.toScheme), f ≫ F.U.ι ≫ F.Y.s = s' →
@@ -184,7 +184,7 @@ theorem nonempty_sFam : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Ou
     have hfrom : ∀ p : S, (s' p).asIdeal = ⊥ →
         FromC em (SharpClass (b := b) W a bas em) t (K := S.residueField p) (S.fromSpecResidueField p) := by
       intro p hp
-      haveI := charZero_residueField s' p hp
+      have := charZero_residueField s' p hp
       exact _root_.GlobalTheory.SharpFrom.fromC_sharpClass L1 L2 h _ W _ a w w' bas hW hb hw hw' hu _ o b em hem S s' t c' hc' ht _ _
     have hdense : Dense (fromSet em (SharpClass (b := b) W a bas em) t) :=
       hd.mono fun p hp => ⟨S.residueField p, inferInstance, S.fromSpecResidueField p,

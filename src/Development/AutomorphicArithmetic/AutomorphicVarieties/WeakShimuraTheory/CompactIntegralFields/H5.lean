@@ -52,7 +52,7 @@ theorem UpperTheory.V.Ws.h5 :
   intro _ Ω _ _ _ l _ c D T _ _ c' h K X B Λ ι J₀ hM φ hφ J hJ n φ' hφ'
   subst hJ
   have hl : ((l : ℕ) : B.B) ∈ maximalIdeal B.B := by
-    haveI := (UpperTheory.V.Base.dvrFacts l c'.O).2.2.1
+    have := (UpperTheory.V.Base.dvrFacts l c'.O).2.2.1
     have h1 : ((l : ℕ) : ℤ_[l]) ∈ maximalIdeal ℤ_[l] := by
       rw [PadicInt.maximalIdeal_eq_span_p]; exact Ideal.mem_span_singleton_self _
     have h2 := map_nonunit (algebraMap c'.O B.B) _ (map_nonunit (algebraMap ℤ_[l] c'.O) _ h1)

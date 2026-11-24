@@ -109,8 +109,8 @@ variable [FiniteDimensional LL V] [IsDomain B]
 theorem phi_bijOn (hc : Nat.card (K₀ →ₐ[Qp] LL) = finrank Qp K₀) (hV : IsCrys PD ρ)
     (τ τ' : K₀ →ₐ[Qp] LL) (h : ∀ c, τ' c = τ (PD.σ c)) :
     Set.BijOn (φVB PD (LL := LL) (V := V)) (DcrisL PD ρ τ') (DcrisL PD ρ τ) := by
-  haveI := GlobalTheory.Per.LetterDim.finite_Dcris PD ρ hV
-  haveI : ∀ τ, FiniteDimensional LL ↥(DcrisL PD ρ τ) := fun τ =>
+  have := GlobalTheory.Per.LetterDim.finite_Dcris PD ρ hV
+  have : ∀ τ, FiniteDimensional LL ↥(DcrisL PD ρ τ) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := Dcris PD ρ) inf_le_left
   refine ⟨phi_mem PD ρ τ τ' h, (phi_injective PD).injOn, fun y hy => ?_⟩
   have hi : Function.Injective ((φVB PD (LL := LL) (V := V)).restrict (phi_mem PD ρ τ τ' h)) :=
@@ -123,9 +123,9 @@ theorem phi_bijOn (hc : Nat.card (K₀ →ₐ[Qp] LL) = finrank Qp K₀) (hV : I
 theorem iSup_letter (hc : Nat.card (K₀ →ₐ[Qp] LL) = finrank Qp K₀) (hV : IsCrys PD ρ) :
     (⨆ τ : K₀ →ₐ[Qp] LL, DcrisL PD ρ τ) = Dcris PD ρ := by
   classical
-  haveI := PD.finK₀
-  haveI := GlobalTheory.Per.LetterDim.finite_Dcris PD ρ hV
-  haveI : ∀ τ, FiniteDimensional LL ↥(DcrisL PD ρ τ) := fun τ =>
+  have := PD.finK₀
+  have := GlobalTheory.Per.LetterDim.finite_Dcris PD ρ hV
+  have : ∀ τ, FiniteDimensional LL ↥(DcrisL PD ρ τ) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := Dcris PD ρ) inf_le_left
   refine Submodule.eq_of_le_of_finrank_eq (iSup_le fun τ => inf_le_left) ?_
   have hinj := (iSupIndep_letter PD ρ).dfinsupp_lsum_injective
@@ -140,7 +140,7 @@ end General
 
 theorem phi_letters : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; ∀ T : Lt K LL, IsCrys ((D.loc l).PD K) T.ρ → (∀ i : Let K, Set.BijOn (φVB ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V)) (Di (HW l) h T (i - 1)) (Di (HW l) h T i)) ∧ (⨆ i : Let K, Di (HW l) h T i) = Dcris ((D.loc l).PD K) T.ρ ∧ iSupIndep (fun i : Let K => Di (HW l) h T i) ∧ Function.Injective (ιV ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V)) := by
   intro D HW l _ K s LL h W T hV
-  haveI := GlobalTheory.RegularRing.isDomain_of_tied (D.locT l) K
+  have := GlobalTheory.RegularRing.isDomain_of_tied (D.locT l) K
   have hc : Nat.card (↥(K0 K) →ₐ[ℚ_[l]] ↥LL.1) = finrank ℚ_[l] ↥(K0 K) := by
     rw [← Nat.card_eq_of_bijective _ W.emb_bij, Nat.card_zmod]
   refine ⟨fun i => phi_bijOn _ T.ρ hc hV _ _ fun c => ?_, ?_,

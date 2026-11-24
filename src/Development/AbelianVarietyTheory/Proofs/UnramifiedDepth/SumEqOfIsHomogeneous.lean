@@ -275,9 +275,9 @@ private theorem pairing_monomial_eq_coeff_mul_prod_factorial_mul (F : MvPolynomi
   classical
   rw [pairing_eq_sum_of_support_subset F _ (insert A F.support)
       (Finset.subset_insert _ _), Finset.sum_eq_single A]
-  · rw [coeff_monomial, if_pos rfl]
+  · rw [coeff_monomial, ite_eq_left rfl]
   · intro B _ hB
-    rw [coeff_monomial, if_neg (Ne.symm hB)]; ring
+    rw [coeff_monomial, ite_eq_right (Ne.symm hB)]; ring
   · intro h; exact absurd (Finset.mem_insert_self _ _) h
 
 open MvPolynomial in
@@ -320,8 +320,8 @@ private theorem pairing_X_mul_eq_pairing_pderiv (x : κ) (F G : MvPolynomial κ 
       coeff_X_mul']
     by_cases hx : A x = 0
     · have : x ∉ A.support := by simpa using hx
-      rw [if_neg this, hx]; simp
-    · rw [if_pos (by simpa using hx)]
+      rw [ite_eq_right this, hx]; simp
+    · rw [ite_eq_left (by simpa using hx)]
       have hA : A = (A - Finsupp.single x 1) + Finsupp.single x 1 := by
         ext y
         by_cases hy : x = y
@@ -818,7 +818,7 @@ theorem form_eq_sum (φ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
 theorem form_mul_X (φ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) (i : σ) :
     form φ (P * MvPolynomial.X i) = form (fun A => φ (A + Finsupp.single i 1)) P := by
   induction P using MvPolynomial.induction_on' with
-  | monomial u a => rw [MvPolynomial.X, MvPolynomial.monomial_mul, form_monomial, form_monomial, mul_one]
+  | monomial u a => rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, form_monomial, form_monomial, mul_one]
   | add p q hp hq => rw [add_mul, map_add (f := _), map_add (f := _), hp, hq]
 
 theorem form_add (φ ψ : (σ →₀ ℕ) → C) (P : MvPolynomial σ C) :
@@ -931,7 +931,7 @@ theorem pair_rename_inl (F : MvPolynomial κ C) (g : MvPowerSeries (κ ⊕ κ') 
     ext x
     rcases x with x | x
     · rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]; simp
-    · rw [Finsupp.mapDomain_notin_range _ _ (by simp)]; simp
+    · rw [Finsupp.mapDomain_of_notMem_range _ _ (by simp)]; simp
   rw [coeff_slice, ← h, fact, fact, Finsupp.prod_mapDomain_index_inj Sum.inl_injective]
 
 def mixed (F : MvPolynomial κ C) (H : MvPolynomial (κ ⊕ κ') C) (g : MvPowerSeries (κ ⊕ κ') C) : C :=
@@ -1148,8 +1148,8 @@ theorem act_mul (g : MvPowerSeries (κ ⊕ κ') C) (R : MvPolynomial κ C)
       have h2 : (Finsupp.sumFinsuppEquivProdFinsupp (a.mapDomain Sum.inl + m)).2 =
           (Finsupp.sumFinsuppEquivProdFinsupp m).2 := by
         ext x
-        simp [Finsupp.mapDomain_notin_range]
-      rw [MvPolynomial.rename_monomial, MvPolynomial.monomial_mul, act_monomial, act_monomial,
+        simp [Finsupp.mapDomain_of_notMem_range]
+      rw [MvPolynomial.rename_monomial, MvPolynomial.monomial_mul_monomial, act_monomial, act_monomial,
         actMon, actMon, h1, h2, MvPolynomial.coe_monomial]
       have h3 : (MvPowerSeries.monomial a c : MvPowerSeries κ C) =
           c • MvPowerSeries.monomial a (1 : C) := by
@@ -1199,7 +1199,7 @@ theorem homPart_isHomogeneous (N : ℕ) (S : MvPowerSeries κ C) :
   rw [coeff_homPart] at hA
   rw [weight_one]
   by_contra h
-  exact hA (if_neg h)
+  exact hA (ite_eq_right h)
 
 theorem pair_mul {F R : MvPolynomial κ C} {d N : ℕ} (hF : F.IsHomogeneous (d + N))
     (hR : R.IsHomogeneous d) (S : MvPowerSeries κ C) :
@@ -1219,7 +1219,7 @@ theorem pair_mul {F R : MvPolynomial κ C} {d N : ℕ} (hF : F.IsHomogeneous (d 
     have h2 : x.1 + x.2 = A := by simpa using hx
     rw [← h2] at hA'
     simp only [Finsupp.add_apply, Finset.sum_add_distrib] at hA'
-    rw [coeff_homPart, if_pos (by omega)]
+    rw [coeff_homPart, ite_eq_left (by omega)]
 
 end General
 
@@ -1361,7 +1361,7 @@ theorem main :
         rw [e']; simpa using hg0
       simp only [actMon, e]
       simpa using e2
-    · rw [if_neg (Ne.symm hA), if_neg]
+    · rw [ite_eq_right (Ne.symm hA), ite_eq_right]
       intro h
       apply hA
       ext q
@@ -1785,7 +1785,7 @@ theorem val_coprime_le {l m : ℕ} (hv : v (l : C) = 1) (h : Nat.Coprime l m) : 
 theorem val_le_padicValNat {l N : ℕ} (hl : l.Prime) (hv : v (l : C) = 1) (hN : N ≠ 0) :
     v (N : C) ≤ ((padicValNat l N : ℝ) : WithTop ℝ) := by
   obtain ⟨e, m, hm, rfl⟩ := Nat.exists_eq_pow_mul_and_not_dvd hN l hl.ne_one
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hm0 : m ≠ 0 := by rintro rfl; exact hm (dvd_zero _)
   rw [(show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (pow_ne_zero _ hl.ne_zero) hm0, Nat.padicValNat_def, Nat.multiplicity_prime_pow, Nat.padicValNat_def,
     multiplicity_eq_zero_of_not_dvd hm, add_zero, Nat.cast_mul, Nat.cast_pow, v.map_mul, v.map_pow, hv]
@@ -1796,7 +1796,7 @@ theorem val_le_padicValNat {l N : ℕ} (hl : l.Prime) (hv : v (l : C) = 1) (hN :
 theorem val_factorial_le {l : ℕ} (hl : l.Prime) (hv : v (l : C) = 1) (N : ℕ) :
     v ((N.factorial : ℕ) : C) ≤ (((N : ℝ) / ((l : ℝ) - 1) : ℝ) : WithTop ℝ) := by
   refine (val_le_padicValNat v hl hv N.factorial_ne_zero).trans ?_
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have h := hl.sub_one_mul_multiplicity_factorial (n := N)
   have h2 : (l - 1) * padicValNat l N.factorial ≤ N := by
     rw [Nat.padicValNat_def, h]

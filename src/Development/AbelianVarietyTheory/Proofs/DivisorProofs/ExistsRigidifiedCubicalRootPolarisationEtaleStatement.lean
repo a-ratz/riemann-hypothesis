@@ -247,12 +247,12 @@ theorem isRegularLocalRing_atPrime_of_ringEquiv_isLocalization {B T T' : Type} [
     [IsRegularRing B] [CommRing T] [CommRing T'] [Algebra B T'] (M : Submonoid B)
     [IsLocalization M T'] (e : T ≃+* T') (𝔫 : Ideal T) [𝔫.IsPrime] :
     IsRegularLocalRing (Localization.AtPrime 𝔫) := by
-  letI : Algebra B T := ((e.symm : T' →+* T).comp (algebraMap B T')).toAlgebra
+  let : Algebra B T := ((e.symm : T' →+* T).comp (algebraMap B T')).toAlgebra
   let e' : T' ≃ₐ[B] T := AlgEquiv.ofRingEquiv (f := e.symm) (fun x => rfl)
-  haveI : IsLocalization M T := IsLocalization.isLocalization_of_algEquiv M e'
-  haveI : IsLocalization.AtPrime (Localization.AtPrime 𝔫) (𝔫.comap (algebraMap B T)) :=
+  have : IsLocalization M T := IsLocalization.isLocalization_of_algEquiv M e'
+  have : IsLocalization.AtPrime (Localization.AtPrime 𝔫) (𝔫.comap (algebraMap B T)) :=
     IsLocalization.isLocalization_isLocalization_atPrime_isLocalization M (Localization.AtPrime 𝔫) 𝔫
-  haveI : IsRegularLocalRing (Localization.AtPrime (𝔫.comap (algebraMap B T))) :=
+  have : IsRegularLocalRing (Localization.AtPrime (𝔫.comap (algebraMap B T))) :=
     IsRegularRing.isRegularLocalRing_localization _
   exact IsRegularLocalRing.of_ringEquiv
     (IsLocalization.algEquiv (𝔫.comap (algebraMap B T)).primeCompl
@@ -260,19 +260,19 @@ theorem isRegularLocalRing_atPrime_of_ringEquiv_isLocalization {B T T' : Type} [
 
 theorem isRegularLocalRing_atPrime_localization_tensor : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (r : ℕ) (𝔪 : Ideal (MvPolynomial (Fin r) k)) [𝔪.IsPrime] (𝔫 : Ideal (Localization.AtPrime 𝔪 ⊗[k] K)) [𝔫.IsPrime], IsRegularLocalRing (Localization.AtPrime 𝔫) := by
   intro k K _ _ _ r 𝔪 _ 𝔫 _
-  letI : Algebra (MvPolynomial (Fin r) k ⊗[k] K)
+  let : Algebra (MvPolynomial (Fin r) k ⊗[k] K)
       (Localization.AtPrime 𝔪 ⊗[MvPolynomial (Fin r) k] (MvPolynomial (Fin r) k ⊗[k] K)) :=
     Algebra.TensorProduct.rightAlgebra
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (MvPolynomial (Fin r) k ⊗[k] K) 𝔪.primeCompl)
+  have : IsLocalization (Algebra.algebraMapSubmonoid (MvPolynomial (Fin r) k ⊗[k] K) 𝔪.primeCompl)
       (Localization.AtPrime 𝔪 ⊗[MvPolynomial (Fin r) k] (MvPolynomial (Fin r) k ⊗[k] K)) :=
     IsLocalization.tensorRight (Localization.AtPrime 𝔪) 𝔪.primeCompl
   let h : (MvPolynomial (Fin r) k ⊗[k] K) ≃+* MvPolynomial (Fin r) K :=
     (Algebra.TensorProduct.comm k (MvPolynomial (Fin r) k) K).toRingEquiv.trans
       (MvPolynomial.algebraTensorAlgEquiv k K).toRingEquiv
-  haveI := IsLocalization.isLocalization_of_base_ringEquiv
+  have := IsLocalization.isLocalization_of_base_ringEquiv
     (Algebra.algebraMapSubmonoid (MvPolynomial (Fin r) k ⊗[k] K) 𝔪.primeCompl)
     (Localization.AtPrime 𝔪 ⊗[MvPolynomial (Fin r) k] (MvPolynomial (Fin r) k ⊗[k] K)) h
-  letI : Algebra (MvPolynomial (Fin r) K)
+  let : Algebra (MvPolynomial (Fin r) K)
       (Localization.AtPrime 𝔪 ⊗[MvPolynomial (Fin r) k] (MvPolynomial (Fin r) k ⊗[k] K)) :=
     ((algebraMap (MvPolynomial (Fin r) k ⊗[k] K) _).comp h.symm.toRingHom).toAlgebra
   exact isRegularLocalRing_atPrime_of_ringEquiv_isLocalization
@@ -313,13 +313,13 @@ theorem isDomain_tensor_of_reg (k K S : Type) [Field k] [Field K] [Algebra k K]
     exact zero_mem _
   obtain ⟨𝔫, h𝔫max, h𝔫⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := S ⊗[k] K)
     (maximalIdeal S) hker
-  haveI := h𝔫max.isPrime
+  have := h𝔫max.isPrime
   obtain ⟨S', _, e, -⟩ := GlobalTheory.CompletionFactor.exists_ringEquiv_completion_prod S (S ⊗[k] K)
     (Localization.AtPrime 𝔫) 𝔫 h𝔫
-  haveI : IsRegularLocalRing (Localization.AtPrime 𝔫) := hreg 𝔫
-  haveI : IsRegularLocalRing (AdicCompletion (maximalIdeal (Localization.AtPrime 𝔫))
+  have : IsRegularLocalRing (Localization.AtPrime 𝔫) := hreg 𝔫
+  have : IsRegularLocalRing (AdicCompletion (maximalIdeal (Localization.AtPrime 𝔫))
       (Localization.AtPrime 𝔫)) := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion _
-  haveI hdom : IsDomain (AdicCompletion (maximalIdeal (Localization.AtPrime 𝔫))
+  have hdom : IsDomain (AdicCompletion (maximalIdeal (Localization.AtPrime 𝔫))
       (Localization.AtPrime 𝔫)) := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
   let f : K ⊗[k] AdicCompletion (maximalIdeal S) S ≃+* _ :=
     (Algebra.TensorProduct.comm k K (AdicCompletion (maximalIdeal S) S)).toRingEquiv.trans
@@ -354,15 +354,15 @@ theorem exists_complete_local_geomDomain : ∀ (k k' : Type) [Field k] [CommRing
     Nonempty (k' →ₐ[k] ResidueField C) ∧ ∀ (K : Type) [Field K] [Algebra k K],
     FiniteDimensional k K → IsPurelyInseparable k K → IsDomain (K ⊗[k] C) := by
   intro k k' _ _ _ _ hfin
-  haveI : Algebra.FiniteType k k' := inferInstance
+  have : Algebra.FiniteType k k' := inferInstance
   obtain ⟨r, φ, hφ⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp this
   have hk' : IsField k' :=
     (Algebra.IsIntegral.isField_iff_isField (algebraMap k k').injective).mp (Field.toIsField k)
-  letI : Field k' := hk'.toField
+  let : Field k' := hk'.toField
   let 𝔪 : Ideal (MvPolynomial (Fin r) k) := RingHom.ker φ.toRingHom
-  haveI h𝔪 : 𝔪.IsMaximal := RingHom.ker_isMaximal_of_surjective φ.toRingHom hφ
+  have h𝔪 : 𝔪.IsMaximal := RingHom.ker_isMaximal_of_surjective φ.toRingHom hφ
   let S := Localization.AtPrime 𝔪
-  haveI : IsNoetherianRing S := IsLocalization.isNoetherianRing 𝔪.primeCompl S inferInstance
+  have : IsNoetherianRing S := IsLocalization.isNoetherianRing 𝔪.primeCompl S inferInstance
   refine ⟨AdicCompletion (maximalIdeal S) S, inferInstance, inferInstance,
     GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion S _, inferInstance, inferInstance, ?_, ?_⟩
   · let C := AdicCompletion (maximalIdeal S) S
@@ -460,7 +460,7 @@ theorem exists_finite_separable_point_of_separableClosure_point :
   let K : IntermediateField k (SeparableClosure k) :=
     IntermediateField.adjoin k (φ '' (t : Set B))
   have hfin : (φ '' (t : Set B)).Finite := t.finite_toSet.image φ
-  haveI : Finite (φ '' (t : Set B)) := hfin.to_subtype
+  have : Finite (φ '' (t : Set B)) := hfin.to_subtype
   have hfd : FiniteDimensional k K :=
     IntermediateField.finiteDimensional_adjoin
       (fun x _ => (Algebra.IsSeparable.isSeparable k x).isIntegral)
@@ -540,7 +540,7 @@ theorem exists_primitive_sep_certificate (k F : Type) [Field k] [Field F] [Algeb
           ∀ x ∈ T, (H : F) * x ∈
             Algebra.adjoin k (insert θ (Algebra.adjoin k (s : Set F) : Set F)) := by
   classical
-  haveI hIC := isIntegrallyClosed_adjoin k F s hs.1
+  have hIC := isIntegrallyClosed_adjoin k F s hs.1
   have hr : Set.range ((↑) : s → F) = (s : Set F) := Subtype.range_coe
   have halg : Algebra.IsAlgebraic (Algebra.adjoin k (s : Set F)) F := by
     have := hs.isAlgebraic
@@ -548,9 +548,9 @@ theorem exists_primitive_sep_certificate (k F : Type) [Field k] [Field F] [Algeb
     exact this
 
   let E := IntermediateField.adjoin (IntermediateField.adjoin k (s : Set F)) (T : Set F)
-  haveI : FiniteDimensional (IntermediateField.adjoin k (s : Set F)) E :=
+  have : FiniteDimensional (IntermediateField.adjoin k (s : Set F)) E :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsSeparable.isIntegral _ x
-  haveI : Algebra.IsSeparable (IntermediateField.adjoin k (s : Set F)) E :=
+  have : Algebra.IsSeparable (IntermediateField.adjoin k (s : Set F)) E :=
     Algebra.isSeparable_tower_bot_of_isSeparable _ E F
   obtain ⟨α, hα⟩ := Field.exists_primitive_element (IntermediateField.adjoin k (s : Set F)) E
   have hE : E = IntermediateField.adjoin (IntermediateField.adjoin k (s : Set F)) {(α : F)} := by
@@ -691,7 +691,7 @@ theorem linearIndepOn_pow_of_isDomain_tensor_purelyInseparable (k B : Type) [Fie
     (s : Finset (FractionRing B)) (hs : LinearIndepOn k _root_.id (s : Set (FractionRing B))) :
     LinearIndepOn k (· ^ p) (s : Set (FractionRing B)) := by
   classical
-  haveI : ExpChar k p := ExpChar.prime hp
+  have : ExpChar k p := ExpChar.prime hp
   obtain ⟨d, hd⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors B) s
   have hb : ∀ x : (s : Set (FractionRing B)), ∃ b : B,
       algebraMap B (FractionRing B) b = (d : B) • (x : FractionRing B) := fun x => hd x x.2
@@ -729,16 +729,16 @@ theorem linearIndepOn_pow_of_isDomain_tensor_purelyInseparable (k B : Type) [Fie
     fun j => IsAlgClosed.exists_pow_nat_eq _ hp.pos
   choose y hy using hroot
   let K := IntermediateField.adjoin k (Set.range y)
-  haveI hfin : FiniteDimensional k K :=
+  have hfin : FiniteDimensional k K :=
     IntermediateField.finiteDimensional_adjoin fun z _ => Algebra.IsIntegral.isIntegral z
   have hpi : IsPurelyInseparable k K := by
     refine (IntermediateField.isPurelyInseparable_adjoin_iff_pow_mem k (AlgebraicClosure k) p).2 ?_
     rintro z ⟨j, rfl⟩
     exact ⟨1, by rw [pow_one, hy]; exact ⟨c j, rfl⟩⟩
-  haveI := hdom K hfin hpi
-  haveI : CharP (K ⊗[k] B) p :=
+  have := hdom K hfin hpi
+  have : CharP (K ⊗[k] B) p :=
     charP_of_injective_algebraMap (algebraMap k (K ⊗[k] B)).injective p
-  haveI : ExpChar (K ⊗[k] B) p := ExpChar.prime hp
+  have : ExpChar (K ⊗[k] B) p := ExpChar.prime hp
   let y' := fun j => (⟨y j, IntermediateField.subset_adjoin _ _ ⟨j, rfl⟩⟩ : K)
   have hy' : ∀ j, y' j ^ p = algebraMap k K (c j) := by
     intro j; apply Subtype.ext; simp [y', hy]
@@ -779,13 +779,13 @@ theorem exists_sepBasis (k B : Type) [Field k] [CommRing B] [IsDomain B] [Algebr
     ∃ s : Finset (FractionRing B), IsTranscendenceBasis k ((↑) : s → FractionRing B) ∧
       Algebra.IsSeparable (IntermediateField.adjoin k (s : Set (FractionRing B)))
         (FractionRing B) := by
-  haveI : Algebra.EssFiniteType k B := inferInstance
-  haveI : Algebra.EssFiniteType B (FractionRing B) :=
+  have : Algebra.EssFiniteType k B := inferInstance
+  have : Algebra.EssFiniteType B (FractionRing B) :=
     Algebra.EssFiniteType.of_isLocalization _ (nonZeroDivisors B)
-  haveI : Algebra.EssFiniteType k (FractionRing B) := Algebra.EssFiniteType.comp k B _
+  have : Algebra.EssFiniteType k (FractionRing B) := Algebra.EssFiniteType.comp k B _
   obtain _ | ⟨p, hp, hpk⟩ := CharP.exists' k
   · exact exists_isTranscendenceBasis_and_isSeparable_of_perfectField k _
-  · haveI : ExpChar k p := .prime hp.out
+  · have : ExpChar k p := .prime hp.out
     exact exists_isTranscendenceBasis_and_isSeparable_of_linearIndepOn_pow_of_essFiniteType
       p hp.out (hH p hp.out hpk)
 
@@ -794,7 +794,7 @@ theorem core (k F : Type) [Field k] [Field F] [Algebra k F] (s : Finset F)
     (hsep : Algebra.IsSeparable (IntermediateField.adjoin k (s : Set F)) F)
     (B : Subalgebra k F) (hB : B.FG) : Nonempty (B →ₐ[k] SeparableClosure k) := by
   obtain ⟨T, rfl⟩ := hB
-  haveI : IsIntegrallyClosed (Algebra.adjoin k (s : Set F)) := isIntegrallyClosed_adjoin k F s hs.1
+  have : IsIntegrallyClosed (Algebra.adjoin k (s : Set F)) := isIntegrallyClosed_adjoin k F s hs.1
   obtain ⟨θ, hθ, H, hH0, U, V, hUV, hT⟩ := _root_.GlobalTheory.SepPoint.exists_primitive_sep_certificate k F s hs hsep T
   obtain ⟨ev, hev⟩ := exists_ev k F s hs.1 H hH0
   let R := Algebra.adjoin k (s : Set F)
@@ -826,8 +826,8 @@ theorem exists_sepPoint : ∀ (k B : Type) [Field k] [CommRing B] [Algebra k B],
     ∃ (k' : Type) (_ : Field k') (_ : Algebra k k'), FiniteDimensional k k' ∧
       Algebra.IsSeparable k k' ∧ Nonempty (B →ₐ[k] k') := by
   intro k B _ _ _ hB hK
-  haveI : IsDomain (k ⊗[k] B) := hK k inferInstance inferInstance
-  haveI : IsDomain B := (Algebra.TensorProduct.lid k B).symm.toMulEquiv.isDomain
+  have : IsDomain (k ⊗[k] B) := hK k inferInstance inferInstance
+  have : IsDomain B := (Algebra.TensorProduct.lid k B).symm.toMulEquiv.isDomain
   obtain ⟨s, hs, hsep⟩ := exists_sepBasis k B hB
     (fun p hp hpk => _root_.GlobalTheory.linearIndepOn_pow_of_isDomain_tensor_purelyInseparable k B p hp hpk hK)
   let g : B →ₐ[k] FractionRing B := IsScalarTower.toAlgHom k B (FractionRing B)
@@ -970,7 +970,7 @@ theorem GlobalTheory.RootFG.root_fg : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj 
   obtain ⟨R₁, M, ρ, hR₁, hM, hρ₁, hρ₂, HL⟩ := GlobalTheory.LBDescent.exists_fg_lb A₀.hom B'.hom φ' hB'₀.1 L hL
   obtain ⟨B₁, _, β₁, h₁⟩ := GlobalTheory.FlagTan.exists_isGrpPullback A₀ (spMap (algebraMap k R₁))
   have hB₁ : IsAbelianScheme B₁ := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hA₀ h₁
-  haveI : IsCommMonObj B₁ := hB₁.comm
+  have : IsCommMonObj B₁ := hB₁.comm
   let e₁ : B₁.left ⟶ pullback A₀.hom (spMap (algebraMap k R₁)) := h₁.1.isoPullback.hom
   let L₁ : LB B₁.left := M.pull e₁
   have hL₁ : L₁.IsLB := pull_isLB hM _
@@ -1016,7 +1016,7 @@ theorem GlobalTheory.RootFG.root_fg : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj 
     rw [spMap_comp_ring]; rfl
   obtain ⟨B₂, _, κ, hκ⟩ := GlobalTheory.FlagTan.exists_isGrpPullback B₁ τ
   have hB₂ : IsAbelianScheme B₂ := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hB₁ hκ
-  haveI : IsCommMonObj B₂ := hB₂.comm
+  have : IsCommMonObj B₂ := hB₂.comm
   refine ⟨R₂, hR₂, ?_⟩
   rw [← hτ, Category.assoc]
   let W := lift (pushPt hκ.1.w (fst B₂ B₂)) (pushPt hκ.1.w (snd B₂ B₂))
@@ -1174,8 +1174,8 @@ end GlobalTheory.TowerStep
 open GlobalTheory.TowerStep in
 theorem GlobalTheory.TowerStep.step : ∀ (R : Type) [CommRing R] [IsLocalRing R] (B : Over (Sp R)) [GrpObj B] [IsCommMonObj B], IsAbelianScheme B → ∀ (P : LB (G2 B).left), P.IsLB → (∃ u : (P.pull (lift (1 : B ⟶ B) (𝟙 B)).left).Gen, u.IsGen) → (∃ u : (P.pull (lift (𝟙 B) (1 : B ⟶ B)).left).Gen, u.IsGen) → ∀ (e : ℕ) (L : LB (thickObj R (maximalIdeal R) e B).left), L.IsLB → (∀ b₂ : (G2 (thickObj R (maximalIdeal R) e B)).left ⟶ (G2 B).left, IsSquare (pullback.fst B.hom (thick R (maximalIdeal R) e)) b₂ → LBIso (abelian₂ (thickObj R (maximalIdeal R) e B) L) (P.pull b₂)) → ∃ L' : LB (thickObj R (maximalIdeal R) (e + 1) B).left, L'.IsLB ∧ (∀ b₂ : (G2 (thickObj R (maximalIdeal R) (e + 1) B)).left ⟶ (G2 B).left, IsSquare (pullback.fst B.hom (thick R (maximalIdeal R) (e + 1))) b₂ → LBIso (abelian₂ (thickObj R (maximalIdeal R) (e + 1) B) L') (P.pull b₂)) ∧ LBIso (L'.pull (thickMap R (maximalIdeal R) e B)) L := by
   intro R _ _ B _ _ hB P hP h₁ h₂ e L hL hyp
-  haveI := GlobalTheory.WtTower.isLocalRing_quotient_pow R e
-  haveI := GlobalTheory.WtTower.isLocalRing_quotient_pow R (e + 1)
+  have := GlobalTheory.WtTower.isLocalRing_quotient_pow R e
+  have := GlobalTheory.WtTower.isLocalRing_quotient_pow R (e + 1)
   have hπ := Ideal.Quotient.factor_surjective (Ideal.pow_le_pow_right (Nat.le_succ (e + 1)) :
     maximalIdeal R ^ (e + 1 + 1) ≤ maximalIdeal R ^ (e + 1))
   have gp₁ := isGrpPullback_pullback B (thick R (maximalIdeal R) (e + 1))
@@ -1302,7 +1302,7 @@ theorem root_of_closedFibre (R : Type) [CommRing R] [IsLocalRing R] [IsNoetheria
     (fun e => (isGrpPullback_pullback B (thick R (maximalIdeal R) e)).1)
     (fun e => (pullback.lift_fst _ _ _).trans (Category.comp_id _)) (fun e => (N e).1) (fun e => (N e).2.1)
     (fun e => (hN e).symm)
-  haveI := GlobalTheory.WtTower.isLocalRing_quotient_pow R 0
+  have := GlobalTheory.WtTower.isLocalRing_quotient_pow R 0
   obtain ⟨b₂, hb₂⟩ := GlobalTheory.ZM.SiegPull.exists_isSquare (isGrpPullback_pullback B (thick R (maximalIdeal R) 0)).1.w
   exact ⟨M, hM, GlobalTheory.T.lineBundleIso_mumfordLambda_of_local_quotient R (R ⧸ maximalIdeal R ^ (0 + 1)) (Ideal.Quotient.mk _)
     Ideal.Quotient.mk_surjective B (thickObj R (maximalIdeal R) 0 B) (pullback.fst _ _) b₂ hB
@@ -1312,7 +1312,7 @@ theorem root_of_residue : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMo
   intro S A _ _ hA P hP h1 h2 hamp R _ _ _ hR t hroot
   obtain ⟨B, _, β, hβ⟩ := GlobalTheory.FlagTan.exists_isGrpPullback A t
   have hB : IsAbelianScheme B := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hA hβ
-  haveI : IsCommMonObj B := hB.comm
+  have : IsCommMonObj B := hB.comm
   obtain ⟨β₂, hsq⟩ := GlobalTheory.ZM.SiegPull.exists_isSquare hβ.1.w
   obtain ⟨g1, g2⟩ := GlobalTheory.T.axisTrivial_lineBundle_groupPullback S (Sp R) A P hP h1 h2 t B β β₂ hβ hsq
   have gamp := GlobalTheory.T.relAmple_diagonal_pullback_baseChange S (Sp R) A hA P hP hamp t B β β₂ hβ.1 hsq
@@ -1440,7 +1440,7 @@ theorem relAmple_of_lam_iso_univ : ∀ {o : Type} [CommRing o] {ζ : o} {g n : �
   obtain ⟨L₀, h₀, hlam₀, ha₀⟩ := PolBundleLoc.exists_ample_root c.A c.ab c.isLB c.rig₁ c.rig₂ c.symm hcp.1
   have hk₀ := KTrivOfLam.kTriv_of_lam_iso _ c.A c.ab c.P c.isLB hcp.2 L₀ h₀ hlam₀
   obtain ⟨e, he, heφ⟩ := grpPullback_iso hcpb hkU
-  haveI := he
+  have := he
   let ψ : c.A.left ⟶ B.left := e.hom.left ≫ pullback.fst B.hom y
   have hψ : IsGrpPullback c.A B y ψ := by
     have := (isGrpPullback_of_iso e).comp hk
@@ -1467,7 +1467,7 @@ theorem relAmple_of_lam_iso_univ : ∀ {o : Type} [CommRing o] {ζ : o} {g n : �
   obtain ⟨hampN, -⟩ := AmpleKerFibre.relAmple_kTriv_of_lam_eq K c.A c.ab L₀ h₀ ha₀ hk₀ (L.pull ψ) hN hlam
   have : IsProper c.A.hom := c.ab.proper
   have hAN := (relAmple_iff_isAmpleLB_of_isAffine c.A hN).1 hampN
-  haveI : IsIso e.inv.left := inferInstanceAs (IsIso ((Over.forget _).map e.inv))
+  have : IsIso e.inv.left := inferInstanceAs (IsIso ((Over.forget _).map e.inv))
   have h1 := hAN.pull_of_isAffineHom e.inv.left
   have h2 : LBIso ((L.pull ψ).pull e.inv.left) (L.pull (pullback.fst B.hom y)) := by
     have h3 := SiegPull.lbIso_pull_comp ((CechPic.cls_eq_iff hN hN).1 rfl) e.inv.left
@@ -1522,8 +1522,8 @@ open GlobalTheory.PolRoot GlobalTheory.PolBundleLoc
 theorem exists_rigLB_sFam_etale :
     ∀ {o : Type} [CommRing o] {ζ : o} {g n : ℕ} (F : SFam g n ζ) (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R], IsAdicComplete (maximalIdeal R) R → ∀ y : Sp R ⟶ F.X, ∃ (R' : Type) (_ : CommRing R') (_ : IsLocalRing R') (ρ : R →+* R'), IsAdicComplete (maximalIdeal R') R' ∧ IsLocalHom ρ ∧ Function.Injective ρ ∧ ρ.Finite ∧ ρ.Etale ∧ ∃ (B : Over (Sp R')) (_ : GrpObj B) (_ : IsCommMonObj B) (β : B.left ⟶ F.univ.A.left) (β₂ : (G2 B).left ⟶ (G2 F.univ.A).left) (M : RigLB B) (_ : CubicalStr B M), IsGrpPullback B F.univ.A (spMap ρ ≫ y) β ∧ IsSquare β β₂ ∧ RelAmple B M.L ∧ KTriv B M.L ∧ LBIso (abelian₂ B M.L) (F.univ.P.pull β₂) := by
   intro o _ ζ g n F R _ _ _ hR y
-  haveI : IsAdicComplete (maximalIdeal R) R := hR
-  haveI : HenselianLocalRing R :=
+  have : IsAdicComplete (maximalIdeal R) R := hR
+  have : HenselianLocalRing R :=
     { is_henselian := fun f hf a₀ h₁ h₂ =>
         HenselianRing.is_henselian (I := maximalIdeal R) f hf a₀ h₁ (h₂.map _) }
   have hAb := F.univ.ab
@@ -1535,9 +1535,9 @@ theorem exists_rigLB_sFam_etale :
     root_geom F (AlgebraicClosure k) _
 
   obtain ⟨B, hB, h₂⟩ := GlobalTheory.T.mumfordBundleRoot_exists_over_fg_subalgebra F.X F.univ.A hAb F.univ.P hP k t₀ (AlgebraicClosure k) h₁
-  haveI : Algebra.FiniteType k B := (Subalgebra.fg_iff_finiteType B).1 hB
-  haveI : Algebra.IsIntegral k B := ⟨fun b => (isIntegral_algHom_iff B.val Subtype.val_injective).1 (Algebra.IsIntegral.isIntegral (R := k) (b : AlgebraicClosure k))⟩
-  haveI : Module.Finite k B := Algebra.IsIntegral.finite
+  have : Algebra.FiniteType k B := (Subalgebra.fg_iff_finiteType B).1 hB
+  have : Algebra.IsIntegral k B := ⟨fun b => (isIntegral_algHom_iff B.val Subtype.val_injective).1 (Algebra.IsIntegral.isIntegral (R := k) (b : AlgebraicClosure k))⟩
+  have : Module.Finite k B := Algebra.IsIntegral.finite
 
   obtain ⟨C, _, _, _, _, hC, ⟨ιC⟩, hdom⟩ := _root_.GlobalTheory.SepRing.exists_complete_local_geomDomain k B inferInstance
   let tC : Sp C ⟶ F.X := spMap (algebraMap k C) ≫ t₀
@@ -1553,7 +1553,7 @@ theorem exists_rigLB_sFam_etale :
   have hdom' : ∀ (K : Type) [Field K] [Algebra k K], FiniteDimensional k K → IsPurelyInseparable k K →
       IsDomain (K ⊗[k] B') := by
     intro K _ _ h1 h2
-    haveI := hdom K h1 h2
+    have := hdom K h1 h2
     let m : K ⊗[k] B' →ₐ[K] K ⊗[k] C := Algebra.TensorProduct.map (AlgHom.id K K) B'.val
     have hm : Function.Injective m := by
       have := Module.Flat.lTensor_preserves_injective_linearMap (M := K) (B'.val.toLinearMap)
@@ -1567,17 +1567,17 @@ theorem exists_rigLB_sFam_etale :
     congr 2
     exact ψ.comp_algebraMap
 
-  haveI : Module.Finite (ResidueField R) k'' := hfin
-  haveI : Algebra.IsSeparable (ResidueField R) k'' := hsep
+  have : Module.Finite (ResidueField R) k'' := hfin
+  have : Algebra.IsSeparable (ResidueField R) k'' := hsep
   obtain ⟨R', _, _, hfinR, het, _, ⟨ε⟩⟩ := exists_etale_lift_of_isSeparable R k''
-  haveI : HenselianLocalRing R' := henselianLocalRing_of_finite R R'
-  haveI : IsLocalHom (algebraMap R R') :=
+  have : HenselianLocalRing R' := henselianLocalRing_of_finite R R'
+  have : IsLocalHom (algebraMap R R') :=
     ((local_hom_tfae (algebraMap R R')).out 1 5).mpr (comap_eq_maximalIdeal_of_finite _)
   have hm : (maximalIdeal R).map (algebraMap R R') = maximalIdeal R' := Algebra.FormallyUnramified.map_maximalIdeal
   have hcR' : IsAdicComplete (maximalIdeal R') R' := by
     have := isAdicComplete_map_of_finite (maximalIdeal R) R'
     rwa [hm] at this
-  haveI : IsNoetherianRing R' := isNoetherian_of_tower R inferInstance
+  have : IsNoetherianRing R' := isNoetherian_of_tower R inferInstance
   let ρ : R →+* R' := algebraMap R R'
   obtain ⟨φ, hφ⟩ := residue_lift R R' k'' ε
   let T : Sp R' ⟶ F.X := spMap ρ ≫ y
@@ -1597,8 +1597,8 @@ theorem exists_rigLB_sFam_etale :
   have hA := GlobalTheory.T.relAmple_of_mumfordBundle_iso_universal F R' T B₁ β β₂ hβ hsq L hL hΛ
   subst hM
   have hinj : Function.Injective ρ := by
-    letI : Algebra.Etale R R' := het
-    haveI : Module.FaithfullyFlat R R' := Module.FaithfullyFlat.of_flat_of_isLocalHom
+    let : Algebra.Etale R R' := het
+    have : Module.FaithfullyFlat R R' := Module.FaithfullyFlat.of_flat_of_isLocalHom
     exact FaithfulSMul.algebraMap_injective R R'
   exact ⟨R', inferInstance, inferInstance, ρ, hcR', inferInstance, hinj, RingHom.finite_algebraMap.mpr hfinR,
     RingHom.etale_algebraMap.mpr het, B₁, inferInstance, inferInstance, β, β₂, M, hcub,

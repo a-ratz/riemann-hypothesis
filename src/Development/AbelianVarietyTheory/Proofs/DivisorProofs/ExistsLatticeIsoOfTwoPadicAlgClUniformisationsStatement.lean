@@ -151,7 +151,7 @@ theorem exists_field (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRi
       x ∈ Set.range (algebraMap V (FractionRing V))) :
     ∃ K : IntermediateField ℚ_[p] (PadicAlgCl p), FiniteDimensional ℚ_[p] K ∧
       (K : Set (PadicAlgCl p)) = Set.range (algebraMap (FractionRing V) (PadicAlgCl p)) := by
-  haveI := hc
+  have := hc
   obtain ⟨K, hK, e⟩ := GlobalTheory.ZH.FieldOfTest.exists_finiteDimensional_of_isComplete p
     (algebraMap (FractionRing V) (PadicAlgCl p)).fieldRange
     (by rw [RingHom.coe_fieldRange]; exact GlobalTheory.ZH.FieldOfTest.isComplete_range_fractionRing V (PadicAlgCl p) hn)
@@ -439,9 +439,9 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing
 
   have hext := GlobalTheory.homExtDvr_and_laws.1
   have m₁ : IsMonHom (U.gen.hom ≫ U'.gen.inv) := by
-    haveI := U.gen_hom; haveI := U'.gen_hom; infer_instance
+    have := U.gen_hom; have := U'.gen_hom; infer_instance
   have m₂ : IsMonHom (U'.gen.hom ≫ U.gen.inv) := by
-    haveI := U.gen_hom; haveI := U'.gen_hom; infer_instance
+    have := U.gen_hom; have := U'.gen_hom; infer_instance
   obtain ⟨f, ⟨hfm, hfK⟩, -⟩ := hext V G G' hG hG' (U.gen.hom ≫ U'.gen.inv) m₁
   obtain ⟨g, ⟨hgm, hgK⟩, -⟩ := hext V G' G hG' hG (U'.gen.hom ≫ U.gen.inv) m₂
   have fg : f ≫ g = 𝟙 G := by
@@ -453,7 +453,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing
     refine u.unique ⟨inferInstance, ?_⟩ ⟨inferInstance, CategoryTheory.Functor.map_id _ _⟩
     rw [Functor.map_comp, hfK, hgK]; simp
   let ψ : G ≅ G' := ⟨f, g, fg, gf⟩
-  haveI : IsMonHom ψ.hom := hfm
+  have : IsMonHom ψ.hom := hfm
   have hψK : (Over.pullback (jK V)).map ψ.hom ≫ U'.gen.hom = U.gen.hom := by
     change (Over.pullback (jK V)).map f ≫ U'.gen.hom = U.gen.hom
     rw [hfK]; simp
@@ -513,7 +513,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing
   obtain ⟨wL₀, hwg₀, hwm₀⟩ := GlobalTheory.RigLBIso.exists_rig_iso_of_iso _ G U''.LG U.LG hLG
   obtain ⟨hD₀, hlev₀, -⟩ := hUq V (maximalIdeal V) aV D D'' A A G hG U U'' wL₀ hwg₀ hwm₀
   have hpb₀ : IsGrpPullback G G (spMap (RingHom.id V)) (Iso.refl G).hom.left := by
-    haveI : IsMonHom (Iso.refl G).hom := by show IsMonHom (𝟙 G); infer_instance
+    have : IsMonHom (Iso.refl G).hom := by show IsMonHom (𝟙 G); infer_instance
     rw [hid]; exact isGrpPullback_of_iso (Iso.refl G)
   obtain ⟨bc₀, mbc₀, hbc₀⟩ := grpPullback_iso hpb₀ (isGrpPullback_pullback G (spMap (RingHom.id V)))
   have hbc₀' : bc₀.hom.left ≫ pullback.fst G.hom (specOf (RingHom.id V)) = 𝟙 _ := hbc₀
@@ -591,11 +591,11 @@ theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A
 theorem model_descends : ∀ (k K : Type) [Field k] [Field K] (σ : k →+* K), (∀ z : K, ∃ f : Polynomial k, f ≠ 0 ∧ Polynomial.eval₂ σ z f = 0) → ∀ (B₁ B₂ : PolAV (Sp k)) (P₀ : PolAV (Sp K)) (c₁ : P₀.A.left ⟶ B₁.A.left) (c₂ : P₀.A.left ⟶ B₂.A.left), IsGrpPullback P₀.A B₁.A (spMap σ) c₁ → IsGrpPullback P₀.A B₂.A (spMap σ) c₂ → LBIso P₀.L (B₁.L.pull c₁) → LBIso P₀.L (B₂.L.pull c₂) → ∃ s : Finset K, ∀ (k₁ : Type) [Field k₁] (α : k →+* k₁) (β : k₁ →+* K), β.comp α = σ → (s : Set K) ⊆ Set.range β → ∀ (C : PolAV (Sp k₁)) (χ : C.A.left ⟶ B₁.A.left), IsGrpPullback C.A B₁.A (spMap α) χ → LBIso C.L (B₁.L.pull χ) → ∃ χ₂ : C.A.left ⟶ B₂.A.left, IsGrpPullback C.A B₂.A (spMap α) χ₂ ∧ LBIso C.L (B₂.L.pull χ₂) ∧ ∀ d : P₀.A.left ⟶ C.A.left, d ≫ χ = c₁ → d ≫ C.A.hom = P₀.A.hom ≫ spMap β → d ≫ χ₂ = c₂ := by
   classical
   intro k K _ _ σ hσ B₁ B₂ P₀ c₁ c₂ h₁ h₂ hL₁ hL₂
-  letI : Algebra k K := σ.toAlgebra
-  haveI := B₁.isAb.proper
-  haveI := B₂.isAb.proper
-  haveI := B₁.isAb.smooth
-  haveI := B₂.isAb.smooth
+  let : Algebra k K := σ.toAlgebra
+  have := B₁.isAb.proper
+  have := B₂.isAb.proper
+  have := B₁.isAb.smooth
+  have := B₂.isAb.smooth
   have g₁ : IsGrpPullback ((Over.pullback (spMap (algebraMap k K))).obj B₁.A) B₁.A (spMap σ) (pullback.fst _ _) :=
     isGrpPullback_pullback B₁.A (spMap σ)
   have g₂ : IsGrpPullback ((Over.pullback (spMap (algebraMap k K))).obj B₂.A) B₂.A (spMap σ) (pullback.fst _ _) :=
@@ -614,9 +614,9 @@ theorem model_descends : ∀ (k K : Type) [Field k] [Field K] (σ : k →+* K), 
   have gA := isGrpPullback_bcMap B₁.A L₁.val
   have gB := isGrpPullback_bcMap B₂.A L₁.val
   obtain ⟨hepi, hmon⟩ := FieldBaseChange.epi_and_isMonHom_iff L₁ K L₁.val.toRingHom
-  haveI := (hepi _ _ _ _ _ gA.1).1
-  haveI := (hepi _ _ _ _ _ gB.1).1
-  haveI mθ : IsMonHom θf := (hmon _ _ _ _ _ _ θf f gA gB hθf).1 mf
+  have := (hepi _ _ _ _ _ gA.1).1
+  have := (hepi _ _ _ _ _ gB.1).1
+  have mθ : IsMonHom θf := (hmon _ _ _ _ _ _ θf f gA gB hθf).1 mf
   have r1 : θf ≫ θr = 𝟙 _ := by
     have := comp_eq_pow_of_epi gA hθf hθr 1 (by rw [pow_one]; simp [f, r])
     rwa [pow_one] at this
@@ -625,8 +625,8 @@ theorem model_descends : ∀ (k K : Type) [Field k] [Field K] (σ : k →+* K), 
     rwa [pow_one] at this
   let θ : (Over.pullback (spMap (algebraMap k L₁))).obj B₁.A ≅ (Over.pullback (spMap (algebraMap k L₁))).obj B₂.A :=
     ⟨θf, θr, r1, r2⟩
-  haveI : IsMonHom θ.hom := mθ
-  haveI := m₁
+  have : IsMonHom θ.hom := mθ
+  have := m₁
   let φP : P₀.A.left ⟶ ((Over.pullback (spMap (algebraMap k L₁))).obj B₁.A).left :=
     e₁.hom.left ≫ bcMap B₁.A.hom L₁.val
   have hφP : IsGrpPullback P₀.A ((Over.pullback (spMap (algebraMap k L₁))).obj B₁.A) (spMap L₁.val.toRingHom) φP :=
@@ -911,7 +911,7 @@ theorem norm_unit {S C : Type} [CommRing S] [NormedField C] (f : S →+* C) (hf 
 
 theorem main : ∀ (p : ℕ) [Fact p.Prime] (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [Algebra (FractionRing W) (PadicAlgCl p)], (∀ x : FractionRing W, ‖algebraMap _ (PadicAlgCl p) x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap W (FractionRing W))) → ∀ (D : DegData W (maximalIdeal W)) (y : D.toPre.X), (∃ r, Formalism.L2.Pj.PsiCoord D.toPre y r) ∧ ∀ r, Formalism.L2.Pj.PsiCoord D.toPre y r → ∀ t : ℝ, (GlobalTheory.UnifTorsK.PsiNormAt p D.toPre y t ↔ ‖algebraMap (FractionRing W) (PadicAlgCl p) (algebraMap W _ r)‖ = t) := by
   intro p _ W _ _ _ _ hball D y
-  haveI : CharZero W :=
+  have : CharZero W :=
     ((algebraMap (FractionRing W) (PadicAlgCl p)).comp (algebraMap W (FractionRing W))).charZero
   have hf : ∀ a : W, ‖((algebraMap (FractionRing W) (PadicAlgCl p)).comp (algebraMap W (FractionRing W))) a‖ ≤ 1 :=
     fun a => (hball _).2 ⟨a, rfl⟩
@@ -1275,9 +1275,9 @@ theorem main : ∀ {o Ω o' Ω' : Type} [CommRing o] [Field Ω] [Algebra o Ω] [
   obtain ⟨D₂, hD₂, G₂, _, _, U₂, hG₂, htor₂⟩ :=
     GlobalTheory.T.uniformisation_moves_along_dvr_injection_given_fibre u'.V W u'.complete hWc (α₀.comp φ₀') (αK.comp φK₀') hcomm' hmax' u'.D u'.A u'.G u'.U C
       (χ₂ ≫ b₂) hψ₂ hLψ₂ hgC' (PadicAlgCl p) hF'
-  haveI : CharZero (PadicAlgCl p) :=
+  have : CharZero (PadicAlgCl p) :=
     charZero_of_injective_algebraMap (algebraMap ℚ_[p] (PadicAlgCl p)).injective
-  haveI : CharZero W :=
+  have : CharZero W :=
     RingHom.charZero ((algebraMap (FractionRing W) (PadicAlgCl p)).comp (algebraMap W (FractionRing W)))
 
   obtain ⟨ε, hεψ, hεt⟩ := GlobalTheory.TwoUnifTors.main W hWc C G₁ G₂ hG₁ hG₂ D₁ D₂ U₁ U₂

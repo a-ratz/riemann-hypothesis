@@ -138,7 +138,7 @@ theorem local_comparison_of_orbits : ∀ (O : Type) [CommRing O] [IsDomain O] [I
   intro O _ _ _ K _ _ ι _ Sg _ _ P d p hp φ r s lie om hrel k hk Q hQ τ
   obtain ⟨Sg', hfin, e, φ', ⟨t0, ht0⟩, hcomm, hR⟩ := hrel τ
   subst ht0
-  haveI : Fintype Sg' := Fintype.ofFinite Sg'
+  have : Fintype Sg' := Fintype.ofFinite Sg'
   obtain ⟨h, h1, h2⟩ := hR k hk Q hQ
   obtain ⟨La, hLa⟩ : ∃ La : Sg → ℝ, La = fun σ => ((laNum P (p : O) (lie σ).x k Q : ℤ) : ℝ) := ⟨_, rfl⟩
   have hLa' : ∀ σ, La σ = ((laNum P (p : O) (lie σ).x k Q : ℤ) : ℝ) := fun σ => by rw [hLa]
@@ -321,7 +321,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Num
 theorem divCycle_support_finite {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
     (P : Ideal (MRing ι O)) (f : MRing ι O) : (Function.support (divCycle P f)).Finite := by
-  haveI : IsNoetherianRing (MRing ι O) := by
+  have : IsNoetherianRing (MRing ι O) := by
     unfold MRing
     infer_instance
   refine (Ideal.finite_minimalPrimes_of_isNoetherianRing (MRing ι O) (P ⊔ Ideal.span {f})).subset ?_
@@ -646,10 +646,10 @@ theorem exists_dvr_in_finite_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscret
       (_ : Algebra O O') (_ : IsLocalHom (algebraMap O O')) (_ : Algebra.IsAlgebraic O O')
       (_ : Algebra O' L) (_ : IsScalarTower O O' L) (ζ : O'),
       Function.Injective (algebraMap O' L) ∧ IsPrimitiveRoot ζ n ∧ algebraMap O' L ζ = z := by
-  haveI : Algebra.IsSeparable K L := inferInstance
-  haveI : IsDedekindDomain (integralClosure O L) := integralClosure.isDedekindDomain O K L
-  haveI : IsFractionRing (integralClosure O L) L := integralClosure.isFractionRing_of_finite_extension K L
-  haveI : Algebra.IsIntegral O (integralClosure O L) := inferInstance
+  have : Algebra.IsSeparable K L := inferInstance
+  have : IsDedekindDomain (integralClosure O L) := integralClosure.isDedekindDomain O K L
+  have : IsFractionRing (integralClosure O L) L := integralClosure.isFractionRing_of_finite_extension K L
+  have : Algebra.IsIntegral O (integralClosure O L) := inferInstance
   have hinjOL : Function.Injective (algebraMap O L) := by
     rw [IsScalarTower.algebraMap_eq O K L]
     exact (algebraMap K L).injective.comp (IsFractionRing.injective O K)
@@ -671,8 +671,8 @@ theorem exists_dvr_in_finite_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     intro h
     rw [h, Ideal.mem_bot] at hϖP
     exact hϖ.ne_zero (hinjA (hϖP.trans (map_zero _).symm))
-  haveI := hPmax.isPrime
-  haveI hdvr : IsDiscreteValuationRing (Localization.AtPrime P) :=
+  have := hPmax.isPrime
+  have hdvr : IsDiscreteValuationRing (Localization.AtPrime P) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain _ hP0 _
   have hAW : Function.Injective (algebraMap (integralClosure O L) (Localization.AtPrime P)) :=
     IsLocalization.injective _ (Ideal.primeCompl_le_nonZeroDivisors P)
@@ -694,12 +694,12 @@ theorem exists_dvr_in_finite_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     have hs : algebraMap (integralClosure O L) (Localization.AtPrime P) s ≠ 0 :=
       (IsLocalization.map_units (Localization.AtPrime P) s).ne_zero
     exact (mul_eq_zero.1 h).resolve_right hs
-  letI algWL : Algebra (Localization.AtPrime P) L := f.toAlgebra
+  let algWL : Algebra (Localization.AtPrime P) L := f.toAlgebra
   have hOW : ∀ x : O, algebraMap O (Localization.AtPrime P) x =
       algebraMap (integralClosure O L) (Localization.AtPrime P) (algebraMap O (integralClosure O L) x) :=
     fun x => IsScalarTower.algebraMap_apply O (integralClosure O L) (Localization.AtPrime P) x
   have hWL : ∀ x, algebraMap (Localization.AtPrime P) L x = f x := fun _ => rfl
-  haveI tower : IsScalarTower O (Localization.AtPrime P) L :=
+  have tower : IsScalarTower O (Localization.AtPrime P) L :=
     IsScalarTower.of_algebraMap_eq (R := O) (S := Localization.AtPrime P) (A := L) fun x => by
       rw [hOW, hWL, hf]; rfl
   have hloc : IsLocalHom (algebraMap O (Localization.AtPrime P)) := ⟨fun x hx => by
@@ -710,7 +710,7 @@ theorem exists_dvr_in_finite_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     have hm := (IsLocalization.AtPrime.to_map_mem_maximal_iff (Localization.AtPrime P) P _).2 hxm
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hm
     exact hm (by rw [← hOW]; exact hx)⟩
-  haveI hOLalg : Algebra.IsAlgebraic O L :=
+  have hOLalg : Algebra.IsAlgebraic O L :=
     (IsFractionRing.comap_isAlgebraic_iff (A := O) (K := K) (C := L)).2 inferInstance
   have halg : Algebra.IsAlgebraic O (Localization.AtPrime P) :=
     ⟨fun x => (isAlgebraic_algebraMap_iff (A := L) hfinj).1 (Algebra.IsAlgebraic.isAlgebraic _)⟩
@@ -730,18 +730,18 @@ theorem exists_dvr_of_generator (O : Type) [CommRing O] [IsDomain O] [IsDiscrete
       (_ : Algebra O' Ω') (_ : IsScalarTower O O' Ω') (ζ : O'),
       Function.Injective (algebraMap O' Ω') ∧ IsPrimitiveRoot ζ n ∧
         Algebra.adjoin Ω {algebraMap O' Ω' ζ} = ⊤ := by
-  haveI : FaithfulSMul O Ω := (faithfulSMul_iff_algebraMap_injective O Ω).2 hinj
-  letI algKΩ : Algebra (FractionRing O) Ω := FractionRing.liftAlgebra O Ω
-  haveI towKΩ : IsScalarTower O (FractionRing O) Ω := FractionRing.isScalarTower_liftAlgebra O Ω
-  haveI : CharZero (FractionRing O) :=
+  have : FaithfulSMul O Ω := (faithfulSMul_iff_algebraMap_injective O Ω).2 hinj
+  let algKΩ : Algebra (FractionRing O) Ω := FractionRing.liftAlgebra O Ω
+  have towKΩ : IsScalarTower O (FractionRing O) Ω := FractionRing.isScalarTower_liftAlgebra O Ω
+  have : CharZero (FractionRing O) :=
     ((algebraMap (FractionRing O) Ω).charZero_iff (algebraMap (FractionRing O) Ω).injective).2 inferInstance
-  letI algKΩ' : Algebra (FractionRing O) Ω' :=
+  let algKΩ' : Algebra (FractionRing O) Ω' :=
     ((algebraMap Ω Ω').comp (algebraMap (FractionRing O) Ω)).toAlgebra
-  haveI towK : IsScalarTower O (FractionRing O) Ω' := IsScalarTower.of_algebraMap_eq fun x => by
+  have towK : IsScalarTower O (FractionRing O) Ω' := IsScalarTower.of_algebraMap_eq fun x => by
     change _ = algebraMap Ω Ω' (algebraMap (FractionRing O) Ω (algebraMap O (FractionRing O) x))
     rw [← IsScalarTower.algebraMap_apply O (FractionRing O) Ω, ← IsScalarTower.algebraMap_apply O Ω Ω']
   have hzi : _root_.IsIntegral (FractionRing O) z := IsIntegral.of_pow hn (hz.pow_eq_one ▸ isIntegral_one)
-  haveI : FiniteDimensional (FractionRing O) (IntermediateField.adjoin (FractionRing O) {z}) :=
+  have : FiniteDimensional (FractionRing O) (IntermediateField.adjoin (FractionRing O) {z}) :=
     IntermediateField.adjoin.finiteDimensional hzi
   have hgen : IsPrimitiveRoot (IntermediateField.AdjoinSimple.gen (FractionRing O) z) n :=
     IsPrimitiveRoot.of_map_of_injective (f := algebraMap (IntermediateField.adjoin (FractionRing O) {z}) Ω')
@@ -750,18 +750,18 @@ theorem exists_dvr_of_generator (O : Type) [CommRing O] [IsDomain O] [IsDiscrete
   obtain ⟨O', i1, i2, i3, i4, i5, i6, i7, i8, ζ, hinjL, hζ, hζz⟩ :=
     exists_dvr_in_finite_ext O (FractionRing O) (IntermediateField.adjoin (FractionRing O) {z})
       (IntermediateField.AdjoinSimple.gen (FractionRing O) z) n hn hgen
-  haveI towL : IsScalarTower O (IntermediateField.adjoin (FractionRing O) {z}) Ω' :=
+  have towL : IsScalarTower O (IntermediateField.adjoin (FractionRing O) {z}) Ω' :=
     IsScalarTower.of_algebraMap_eq fun x => by
       rw [IsScalarTower.algebraMap_apply O (FractionRing O) Ω',
         IsScalarTower.algebraMap_apply O (FractionRing O) (IntermediateField.adjoin (FractionRing O) {z}),
         ← IsScalarTower.algebraMap_apply (FractionRing O) (IntermediateField.adjoin (FractionRing O) {z}) Ω']
-  letI algO'Ω' : Algebra O' Ω' :=
+  let algO'Ω' : Algebra O' Ω' :=
     ((algebraMap (IntermediateField.adjoin (FractionRing O) {z}) Ω').comp
       (algebraMap O' (IntermediateField.adjoin (FractionRing O) {z}))).toAlgebra
   have hO'Ω' : ∀ x : O', algebraMap O' Ω' x =
       algebraMap (IntermediateField.adjoin (FractionRing O) {z}) Ω'
         (algebraMap O' (IntermediateField.adjoin (FractionRing O) {z}) x) := fun _ => rfl
-  haveI tow : IsScalarTower O O' Ω' := IsScalarTower.of_algebraMap_eq fun x => by
+  have tow : IsScalarTower O O' Ω' := IsScalarTower.of_algebraMap_eq fun x => by
     rw [hO'Ω', ← IsScalarTower.algebraMap_apply O O' (IntermediateField.adjoin (FractionRing O) {z}),
       ← IsScalarTower.algebraMap_apply O (IntermediateField.adjoin (FractionRing O) {z}) Ω']
   refine ⟨O', i1, i2, i3, i4, i5, i6, algO'Ω', tow, ζ, ?_, hζ, ?_⟩
@@ -779,8 +779,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Num
 
 theorem exists_ext_primitive_root : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (Ω : Type) [Field Ω] [CharZero Ω] [Algebra O Ω], Function.Injective (algebraMap O Ω) → ∀ n : ℕ, 0 < n → ∃ (O' : Type) (_ : CommRing O') (_ : IsDomain O') (_ : IsDiscreteValuationRing O') (_ : Algebra O O') (_ : IsLocalHom (algebraMap O O')) (_ : Algebra.IsAlgebraic O O') (Ω' : Type) (_ : Field Ω') (_ : Algebra Ω Ω') (_ : Algebra O' Ω') (_ : Algebra O Ω') (_ : IsScalarTower O O' Ω') (_ : IsScalarTower O Ω Ω') (ζ : O'), Function.Injective (algebraMap O' Ω') ∧ IsPrimitiveRoot ζ n ∧ Algebra.adjoin Ω {algebraMap O' Ω' ζ} = ⊤ := by
   intro O _ _ _ Ω _ _ _ hinj n hn
-  haveI : NeZero n := ⟨hn.ne'⟩
-  haveI : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.2 hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
+  have : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.2 hn.ne'⟩
   have hz := IsCyclotomicExtension.zeta_spec n Ω (CyclotomicField n Ω)
   obtain ⟨O', i1, i2, i3, i4, i5, i6, i7, i8, ζ, h1, h2, h3⟩ :=
     ExtExists.exists_dvr_of_generator O Ω hinj (CyclotomicField n Ω) _ n hn hz
@@ -816,7 +816,7 @@ theorem flag_b_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     (Fl : 𝔐.Flag) (t : CMType H ⊕ CMType H),
     LinearIndependent Ω (Fl.b t) ∧ Submodule.span Ω (Set.range (Fl.b t)) = 𝔐.Vgen t := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ J y 𝔐 Fl t
-  letI := 𝔐.fn.toAlgebra
+  let := 𝔐.fn.toAlgebra
   obtain ⟨cc, u, hc, _hj, _hjc, hb, _hu1, _hu0, hflag, _⟩ := Fl.generic
   refine ⟨hb t, ?_⟩
   have hle : Submodule.span Ω (Set.range (Fl.b t)) ≤ 𝔐.Vgen t := by
@@ -827,7 +827,7 @@ theorem flag_b_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   obtain ⟨U, hpU, b', hspan, hfr⟩ := 𝔐.vb t ⟨GlobalTheory.CompanionTheory.Ar.genPt 𝔐.ξ, 𝔐.all _⟩ trivial
   have hli' : LinearIndependent Ω b' := (hfr _ trivial hpU).1
   have hV : Submodule.span Ω (Set.range b') = 𝔐.Vgen t := hspan
-  haveI : FiniteDimensional Ω (𝔐.Vgen t) := by
+  have : FiniteDimensional Ω (𝔐.Vgen t) := by
     rw [← hV]; exact FiniteDimensional.span_of_finite Ω (Set.finite_range b')
   apply Submodule.eq_of_le_of_finrank_eq hle
   rw [← hV, finrank_span_eq_card (hb t), finrank_span_eq_card hli']
@@ -1109,7 +1109,7 @@ theorem latFlagPair_of_twoLevels : ∀ (E : Type) [Field E] [NumberField E] [IsC
       exact Sigma.ext rfl (heq_of_eq (Fin.ext rfl))
     have hsgn : HodgeCpt.rootSgn D (τ, Fin.castAdd D.q i) = 1 := by
       unfold HodgeCpt.rootSgn
-      rw [if_pos hlt]
+      rw [ite_eq_left hlt]
     have h0 := hR₀' (τ, Fin.castAdd D.q i)
     have h1 := hR' (τ, Fin.castAdd D.q i)
     rw [hidx, hsgn] at h0 h1
@@ -1181,12 +1181,12 @@ theorem ht_eq_dR_of_not_inFibre : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ J y 𝔐 p hp s q hq
   classical
   have hcst : Function.Injective 𝔐.cst := 𝔐.cst.injective
-  haveI hchar : CharZero Ω := charZero_of_injective_ringHom hcst
+  have hchar : CharZero Ω := charZero_of_injective_ringHom hcst
   have hinj : Function.Injective 𝔐.emb := by
     intro s s' h
     refine HodgeBasic.labelEmb_injective c (RingHom.ext fun a => hcst ?_)
     exact congrArg (fun m : 𝓞 E →+* Ω => m a) h
-  letI : Fintype (CMType H) := Fintype.ofFinite _
+  let : Fintype (CMType H) := Fintype.ofFinite _
   have hcard : Fintype.card (CMType H ⊕ CMType H) = Module.finrank ℚ E := by
     rw [Fintype.card_of_bijective (HodgeBasic.labelHom_bijective H), Embeddings.card]
   have hint := _root_.GlobalTheory.CompanionTheory.Ar.isInternal_eigSp Ω 𝔐.Li E 𝔐.ρ (CMType H ⊕ CMType H) 𝔐.emb hinj hcard
@@ -1280,7 +1280,7 @@ theorem exists_lift {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] {F : Ty
   have hQ1 : 1 < Fintype.card F := Fintype.one_lt_card
   obtain ⟨m, hm⟩ : ∃ m, Fintype.card F = m + 1 := ⟨Fintype.card F - 1, by omega⟩
   rw [hm, Nat.add_sub_cancel] at hζ
-  haveI : NeZero m := ⟨by omega⟩
+  have : NeZero m := ⟨by omega⟩
   have hQres := PositivityTheory.HtPt.Teich.card_eq_zero (O := O) σ
   have hfix : ∀ k : ℕ, (ζ ^ k) ^ Fintype.card F = ζ ^ k := by
     intro k
@@ -1598,7 +1598,7 @@ theorem not_unit_of_mem_maximalIdeal {O' C : Type} [CommRing O'] [IsDomain O'] [
       rw [← map_pow, ← map_pow, hrel, map_mul, map_mul, map_pow, map_natCast]
       calc _ ≤ 1 * v ((p : C) ^ f) := mul_le_mul_left (hmap _) _
         _ = _ := by rw [one_mul, map_pow]
-    have h4 : v (p : C) ^ f < 1 := pow_lt_one₀ zero_le' hp hf0
+    have h4 : v (p : C) ^ f < 1 := pow_lt_one₀ zero_le hp hf0
     exact absurd (h2.trans h3) (not_le.2 h4)
   intro hone
   have h1 : v u * v (algebraMap O' C m) = 1 := by rw [← map_mul, hone, map_one]
@@ -1654,13 +1654,13 @@ theorem test_bc [IsLocalRing O] [IsDomain O'] [IsDiscreteValuationRing O'] [IsLo
       (fun τ a => algebraMap O' Ω' (χ₀ τ a)) φ := by
   intro C _ _ _ _ RC hT
   obtain ⟨hcl, ⟨v, hv, hvp⟩, hadic, hmap⟩ := hT
-  letI aOC : Algebra O C := ((algebraMap O' C).comp (algebraMap O O')).toAlgebra
-  letI aΩC : Algebra Ω C := ((algebraMap Ω' C).comp (algebraMap Ω Ω')).toAlgebra
-  haveI t1 : IsScalarTower O O' C := IsScalarTower.of_algebraMap_eq' rfl
-  haveI t2 : IsScalarTower Ω Ω' C := IsScalarTower.of_algebraMap_eq' rfl
+  let aOC : Algebra O C := ((algebraMap O' C).comp (algebraMap O O')).toAlgebra
+  let aΩC : Algebra Ω C := ((algebraMap Ω' C).comp (algebraMap Ω Ω')).toAlgebra
+  have t1 : IsScalarTower O O' C := IsScalarTower.of_algebraMap_eq' rfl
+  have t2 : IsScalarTower Ω Ω' C := IsScalarTower.of_algebraMap_eq' rfl
   have hOC : ∀ o : O, algebraMap O C o = algebraMap Ω' C (algebraMap O' Ω' (algebraMap O O' o)) := fun o => by
     rw [← IsScalarTower.algebraMap_apply O' Ω' C]; rfl
-  haveI t3 : IsScalarTower O Ω C := IsScalarTower.of_algebraMap_eq fun o => by
+  have t3 : IsScalarTower O Ω C := IsScalarTower.of_algebraMap_eq fun o => by
     rw [hOC, ← IsScalarTower.algebraMap_apply O O' Ω', IsScalarTower.algebraMap_apply O Ω Ω']; rfl
   have hT0 : IsTestPt p R (RC.restrictScalars O) :=
     ⟨hcl, ⟨v, hv, hvp⟩, hadic, fun a ha => hmap _ (hR a ha)⟩
@@ -1750,7 +1750,7 @@ theorem model_on_hodge_of_family_pos : FamilyExistsPos → HodgeLatticeFlagBound
   intro hF E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hV _ _ Fl S₀ T hT p hpS hpS₀ hHT hp2 hdisc φ hφ A _ _ _
   intro m _ hm O _ _ _ _ _ _ _
   rcases Nat.eq_zero_or_pos (D.p + D.q) with h0 | hpos
-  · haveI : IsEmpty (Fin (D.p + D.q)) := by rw [h0]; exact Fin.isEmpty'
+  · have : IsEmpty (Fin (D.p + D.q)) := by rw [h0]; exact Fin.isEmpty'
     intro τ k _ Q _
     have h1 : ((T.map (Int.castRingHom O)).comp fun i : Fin (D.p + D.q) => (τ, i)).ck (pointIdeal O y) k Q = 0 := by
       simp [LocPair.ck, GroundTheory.Heights₂.Heights.NumbersDVR.pairNum]
@@ -1761,11 +1761,11 @@ theorem model_on_hodge_of_family_pos : FamilyExistsPos → HodgeLatticeFlagBound
     rw [h1, h2]
     simp [cycNum]
   have hpP : p.Prime := 𝔐.S_prime p hpS
-  haveI : Fact p.Prime := ⟨hpP⟩
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : Fact p.Prime := ⟨hpP⟩
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   obtain ⟨hAD, hAfin, hAinj, hAcst, hloc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.const_closure E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hV A
-  haveI := hAD
-  haveI := hAfin
+  have := hAD
+  have := hAfin
   obtain ⟨hOint, hOfn⟩ := hloc m O
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨-, hModel, hVert⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.pl_model K J Ω y A hAinj hAcst d hV m O
@@ -1787,8 +1787,8 @@ theorem model_on_hodge_of_family_pos : FamilyExistsPos → HodgeLatticeFlagBound
     hζ.pow hN0 (Nat.div_mul_cancel
       (Finset.dvd_prod_of_mem (fun t => Fintype.card (F t) - 1) (Finset.mem_univ t))).symm
   obtain ⟨ϖ', hϖ'⟩ := IsDiscreteValuationRing.exists_irreducible O'
-  haveI : CharZero Ω' := charZero_of_injective_ringHom (algebraMap Ω Ω').injective
-  haveI : CharZero O' := (algebraMap O' Ω').charZero
+  have : CharZero Ω' := charZero_of_injective_ringHom (algebraMap Ω Ω').injective
+  have : CharZero O' := (algebraMap O' Ω').charZero
   have hModel' := (_root_.GlobalTheory.CompanionTheory.Ar.Num.model_baseChange_algebraic O Ω K J y d hModel hOint O' Ω' hO'inj).2
   have hfn' := _root_.GlobalTheory.CompanionTheory.Ar.Num.HodgeModel.FnExt.fnField_top_of_adjoin_root O Ω K J y hOfn O' Ω' ζ hadj
   have hTwin : GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.NumbersDVR.Bundles.IsModelOver O'

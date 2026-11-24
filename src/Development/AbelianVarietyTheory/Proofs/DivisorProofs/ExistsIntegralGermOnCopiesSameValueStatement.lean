@@ -390,8 +390,8 @@ theorem inclSt_of_lim (hAct : LimActSt) (hPt : LimPtSt) (hFr : LimFrameSt) : Inc
   choose ε hε using fun τ : E →+* ℂ => hAct E H Dw l Xo c hstar T io y Ch p Y τ
   choose A hAapp hAlie using fun (b : Col cx) (j : Fin n) =>
     hε b.1.1.1 (B b.1.1 b.2 j) (fun N => x b.1 N b.2 j) (fun N => hxB b.1 N b.2 j)
-  letI := io.toAlgebra
-  letI : Algebra T.Fr Y.C := Y.ιF.toAlgebra
+  let := io.toAlgebra
+  let : Algebra T.Fr Y.C := Y.ιF.toAlgebra
   have hw : ∀ b : Col cx, IntLog (fglOf (isIntFB_chart Ch Y)) (lgPt (fgl Ch Y)
       fun e => (X ⟨b, e⟩ : MvPowerSeries (Σ _ : Col cx, Fin (chD Ch.ch)) Y.C)) :=
     fun b => intLog_lgPt_X (fgl Ch Y) (fun e => (⟨b, e⟩ : Σ _ : Col cx, Fin (chD Ch.ch)))
@@ -490,8 +490,8 @@ theorem retrSt_of : LimActSt → LimPtSt → InvSt → RetrSt := by
       ⟨z β' β N, by rw [← map_natCast φ p, ← hxz, hφ]; rfl⟩
     have hint : ∀ β, IntLog (fgl Ch X) (∑ β', mv (A β' β)
         (lgPt (fgl Ch X) fun e => (MvPowerSeries.X (r β', e) : PS X.C n (chD Ch.ch)))) := fun β => by
-      letI := io.toAlgebra
-      letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+      let := io.toAlgebra
+      let : Algebra T.Fr X.C := X.ιF.toAlgebra
       exact hPt X.C (vX_vp X) _ T.Fr (𝓞 E) Ch.ch.B (isIntFB_chart Ch X) _ (Fin (rk f.1)) _
         (fun β' => intLog_lgPt_X (fgl Ch X) fun e => (r β', e)) (fun β' => A β' β)
         (fun N β' => ε N * x β' β N) fun N β' => hA1 β' β N
@@ -522,13 +522,13 @@ theorem retrSt_of : LimActSt → LimPtSt → InvSt → RetrSt := by
       split_ifs <;> simp
     rw [Finset.sum_comm, Fintype.sum_sigma, Finset.sum_eq_single (⟨f, β⟩ : Col cx)]
     · refine Finset.sum_congr rfl fun a _ => ?_
-      rw [← Finset.sum_smul, hc, if_pos rfl]
+      rw [← Finset.sum_smul, hc, ite_eq_left rfl]
     · rintro ⟨f', b⟩ - hne
       refine Finset.sum_eq_zero fun a _ => ?_
       rw [← Finset.sum_smul]
       by_cases hf : f' = f
       · subst hf
-        rw [hc, if_neg fun h => hne (by rw [show b = β from h]), zero_smul]
+        rw [hc, ite_eq_right fun h => hne (by rw [show b = β from h]), zero_smul]
       · simp [hz f' hf]
     · exact fun h => absurd (Finset.mem_univ _) h
   choose ρf h1 h2 h3 using key
@@ -569,7 +569,7 @@ theorem mfact_add_single [Fintype σ] [DecidableEq σ] (α : σ →₀ ℕ) (l :
   have hrest : ∏ x ∈ Finset.univ.erase l, (((α + Finsupp.single l 1 : σ →₀ ℕ) x).factorial : K) =
       ∏ x ∈ Finset.univ.erase l, ((α x).factorial : K) := by
     refine Finset.prod_congr rfl fun x hx => ?_
-    rw [Finsupp.add_apply, Finsupp.single_apply, if_neg (Ne.symm (Finset.ne_of_mem_erase hx)), add_zero]
+    rw [Finsupp.add_apply, Finsupp.single_apply, ite_eq_right (Ne.symm (Finset.ne_of_mem_erase hx)), add_zero]
   rw [hrest, Finsupp.add_apply, Finsupp.single_eq_same, Nat.factorial_succ, Nat.cast_mul]
   push_cast
   ring
@@ -622,7 +622,7 @@ theorem derivAt0_mul_X [Fintype σ] (P : MvPolynomial σ K) (l : σ) (g : MvPowe
     rw [Finset.sum_mul]
     refine Finset.sum_congr rfl fun α _ => ?_
     rw [show (MvPolynomial.X l : MvPolynomial σ K) = MvPolynomial.monomial (Finsupp.single l 1) 1 from rfl,
-      MvPolynomial.monomial_mul, mul_one]
+      MvPolynomial.monomial_mul_monomial, mul_one]
   rw [hP, DepthAdd.derivAt0_sum]
   conv_rhs => unfold derivAt0
   refine Finset.sum_congr rfl fun α _ => ?_
@@ -751,10 +751,10 @@ theorem frame_exp_zero {C : Type} [CommRing C] [Algebra ℚ C] {σ : Type} :
   ext x
   by_cases hx : x = 0
   · subst hx
-    rw [MvPowerSeries.coeff_map, MvPowerSeries.coeff_C, if_pos rfl, MvPowerSeries.coeff_zero_eq_constantCoeff,
+    rw [MvPowerSeries.coeff_map, MvPowerSeries.coeff_C, ite_eq_left rfl, MvPowerSeries.coeff_zero_eq_constantCoeff,
       map_one]
     exact PowerSeries.constantCoeff_exp (A := C)
-  · rw [MvPowerSeries.coeff_map, MvPowerSeries.coeff_C, if_neg hx, MvPowerSeries.coeff_one, if_neg hx, map_zero]
+  · rw [MvPowerSeries.coeff_map, MvPowerSeries.coeff_C, ite_eq_right hx, MvPowerSeries.coeff_one, ite_eq_right hx, map_zero]
 
 theorem frameSt_of (hAct : ActSt) (hUnit : UnitSt) : FrameSt := by
   intro C _ _ v d R _ _ O _ _ B hB h hh w0 n
@@ -1434,9 +1434,9 @@ theorem sum_colCoef_smul {k : Type} [Field k] {n : ℕ} (B : ∀ f : Lt1 Dw, Fin
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Finset.sum_eq_single (⟨lam.1.1.1.1, Fin.castLE (rk_le _) lam.2, j⟩ : LtN Dw n)]
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
   · intro b _ hb
-    rw [if_neg hb, zero_smul]
+    rw [ite_eq_right hb, zero_smul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem polyP_eq_aeval {k : Type} [Field k] {n : ℕ} (B : ∀ f : Lt1 Dw, Fin (rk f) → Fin n → k) (cx : Lt1 Dw → ℕ) :
@@ -1776,8 +1776,8 @@ theorem exists_nabX_eq (hN : NabSt) (hI : InclSt) (hR : RetrSt) (hU : UnitSt) (h
   have he : HasSubst (expH Ch X cx) := hasSubst_of_constantCoeff_zero e0
   have hc : HasSubst (colPt Ch X cx B) := hasSubst_of_constantCoeff_zero c0
   have fr1 : constantCoeff (frameX Ch X n) = 1 := by
-    letI := io.toAlgebra
-    letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+    let := io.toAlgebra
+    let : Algebra T.Fr X.C := X.ιF.toAlgebra
     exact (hF X.C (vX_vp X) _ T.Fr (𝓞 E) Ch.ch.B (isIntFB_chart Ch X) _ (gauge_chart Ch X) H.w0 n).1
   have U1 : constantCoeff (subst ψ (frameX Ch X n) : MvPowerSeries (Σ _ : Col cx, Fin (chD Ch.ch)) X.C) = 1 := by
     have h := constantCoeff_subst_eq_zero hψ ψ0 (f := frameX Ch X n - 1) (by rw [map_sub, fr1, map_one, sub_self])
@@ -1808,7 +1808,7 @@ namespace GlobalTheory.ColumnGerm
 
 theorem exists_germ_on_copies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (la : PointsOfFlagModel.abelian₂ p c) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la.1 T.V io e → ∀ (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p) (cx : Lt1 Dw → ℕ) (n : ℕ) (B : ∀ f : Lt1 Dw, Fin (rk f) → Fin n → T.V), IsCols c T io p cx B → ∀ (N k : ℕ) (f : MvPowerSeries (Σ _ : GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.Col cx, Fin (chD Ch.ch)) X.C), MvIsInt (vX_vp X) f → ∃ g : PS X.C n (chD Ch.ch), MvIsInt (vX_vp X) g ∧ (((N : ℝ) : ℝ) : WithTop ℝ) ≤ vX_vp X (GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nabX Ch X cx B k g - derivAt0 (GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.polyH X.C cx) (MvPowerSeries.subst (GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.expH Ch X cx) f)) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ la T io e _ y Ch X cx n B hB N k f hf
   have hadd := _root_.GlobalTheory.IsoTriv.log_sum_additive_preserves_integrality
   have hact := _root_.GlobalTheory.IsoTriv.actSt

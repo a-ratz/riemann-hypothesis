@@ -122,7 +122,7 @@ theorem UpperTheory.V.AlgebraTools.Det.repApi :
   intro n A G _ _ ρ
   refine ⟨chi_eq ρ, chi_single ρ, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro hn y
-    haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+    have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     unfold GDet.tr GDet.lam
     rw [chi_eq, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
     ring

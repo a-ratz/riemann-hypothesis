@@ -75,7 +75,7 @@ theorem relIndex_ne_zero_of_subset_cpt {G : Type} [Group G] [TopologicalSpace G]
     rw [← hu', ← hu2']
     simp only [smul_eq_mul, _root_.mul_inv_rev, mul_assoc, inv_mul_cancel_left]
     exact U.mul_mem (U.inv_mem hu) hu2
-  haveI : Finite (P ⧸ U.subgroupOf P) := Finite.of_injective f hinj
+  have : Finite (P ⧸ U.subgroupOf P) := Finite.of_injective f hinj
   exact Subgroup.index_ne_zero_of_finite
 
 end GlobalTheory.LocFinU

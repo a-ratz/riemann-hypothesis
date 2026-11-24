@@ -130,11 +130,11 @@ omit [GrpObj A] in
 theorem good_iso_comp {g : ℕ} {X X' Y : Scheme.{0}} (e : X' ⟶ X) [IsIso e] {f : X ⟶ Y}
     (h : GlobalTheory.DualCon.Good g f) : GlobalTheory.DualCon.Good g (e ≫ f) := ⟨MorphismProperty.RespectsIso.precomp @IsProper e f h.proper,
   by
-    haveI := h.smooth
+    have := h.smooth
     have h0 : SmoothOfRelativeDimension (0 + g) (e ≫ f) := inferInstance
     rwa [zero_add] at h0,
   by
-    haveI := h.conn
+    have := h.conn
     have hsq : IsPullback e (e ≫ f) f (𝟙 Y) := IsPullback.of_horiz_isIso ⟨by simp⟩
     exact MorphismProperty.of_isPullback (P := @GeometricallyConnected) hsq h.conn⟩
 
@@ -161,7 +161,7 @@ theorem zariski_glue : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianSc
   have hR' := GlobalTheory.T.rep_ev_of_isPullback S A B (𝟙_ (Over S)) (Over.mk (V i).ι) (B ⊗ Over.mk (V i).ι) (toUnit B) P
     (toUnit _) (fst _ _) (snd _ _) hR hpb
   obtain ⟨e, he, -⟩ := GlobalTheory.T.representsAdditiveLineBundleFamilies_unique_iso S A _ _ _ (snd B (Over.mk (V i).ι)) _ (bi i) (Pi i) hR' (hRi i)
-  haveI : IsIso e.hom.left := Functor.map_isIso (Over.forget _) e.hom
+  have : IsIso e.hom.left := Functor.map_isIso (Over.forget _) e.hom
   have h2 := good_iso_comp e.hom.left (hGi i)
   rw [← Over.comp_left, he] at h2
   exact h2

@@ -69,7 +69,7 @@ theorem area_conj (Λ : AddSubgroup ℂ) : area (Λ.map (starRingEnd ℂ).toAddM
       |((starRingEnd ℂ) x * y).im| := by
     intro x y
     rw [← map_mul, Complex.conj_im, abs_neg]
-  simp only [Set.mem_setOf_eq, mem_conj]
+  simp only [Set.mem_ofPred_eq, mem_conj]
   constructor
   · rintro ⟨ha, x, hx, y, hy, rfl⟩
     exact ⟨ha, _, hx, _, hy, (e x y).symm⟩

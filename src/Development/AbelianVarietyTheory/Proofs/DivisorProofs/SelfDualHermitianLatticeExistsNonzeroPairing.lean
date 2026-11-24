@@ -59,8 +59,8 @@ theorem sesquilinearFormOfGram_eq_conj_swap : ∀ (F E : Type) [Field F] [Number
 theorem not_fg_top_ringOfIntegers (E : Type) [Field E] [NumberField E] :
     ¬ (⊤ : Submodule (𝓞 E) E).FG := by
   intro h
-  haveI : Module.Finite (𝓞 E) E := ⟨h⟩
-  haveI : Module.Finite ℤ E := Module.Finite.trans (𝓞 E) E
+  have : Module.Finite (𝓞 E) E := ⟨h⟩
+  have : Module.Finite ℤ E := Module.Finite.trans (𝓞 E) E
   have hi : IsIntegral ℤ (algebraMap ℚ E (2⁻¹ : ℚ)) := Algebra.IsIntegral.isIntegral _
   rw [isIntegral_algebraMap_iff ] at hi
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp hi

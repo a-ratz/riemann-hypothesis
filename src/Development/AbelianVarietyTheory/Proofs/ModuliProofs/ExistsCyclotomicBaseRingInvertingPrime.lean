@@ -79,7 +79,7 @@ open scoped CategoryTheory.Obj TensorProduct in
 lemma _root_.GlobalTheory.ZM.CycBase.cyc {k : ℕ} [NeZero k] :
     IsCyclotomicExtension {k} ℚ (_root_.GlobalTheory.ZM.CycBase.CF k) := by
   have hζ := zeta_isPrimitiveRoot' (NeZero.ne k)
-  haveI := hζ.adjoin_isCyclotomicExtension ℚ
+  have := hζ.adjoin_isCyclotomicExtension ℚ
   have h2 : (_root_.GlobalTheory.ZM.CycBase.CF k).toSubalgebra = Algebra.adjoin ℚ {_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta k} :=
     IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
       ((hζ.isIntegral (NeZero.pos k)).tower_top.isAlgebraic)
@@ -89,9 +89,9 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open scoped CategoryTheory.Obj TensorProduct in
 lemma _root_.GlobalTheory.ZM.CycBase.mem_ZP (p n e : ℕ) (hn : n.Prime) (a : 𝓞 (_root_.GlobalTheory.ZM.CycBase.CF (n ^ e))) :
     ((a : _root_.GlobalTheory.ZM.CycBase.CF (n ^ e)) : ℂ) ∈ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.ZP p (n ^ e) := by
-  haveI : Fact n.Prime := ⟨hn⟩
-  haveI : NeZero (n ^ e) := ⟨pow_ne_zero _ hn.ne_zero⟩
-  haveI := _root_.GlobalTheory.ZM.CycBase.cyc (k := n ^ e)
+  have : Fact n.Prime := ⟨hn⟩
+  have : NeZero (n ^ e) := ⟨pow_ne_zero _ hn.ne_zero⟩
+  have := _root_.GlobalTheory.ZM.CycBase.cyc (k := n ^ e)
   have hζ := _root_.GlobalTheory.ZM.CycBase.zF_prim (NeZero.ne (n ^ e))
   have hcl := IsCyclotomicExtension.Rat.isIntegralClosure_adjoin_singleton_of_prime_pow hζ
   obtain ⟨x, hx⟩ := hcl.isIntegral_iff.mp (RingOfIntegers.isIntegral_coe a)
@@ -218,9 +218,9 @@ theorem _root_.GlobalTheory.ZM.CycBase.exists_base : ∀ (n e p k : ℕ), n.Prim
   intro n e p k hn hp hnp _ hk
   subst hk
   have hN : n ^ e ≠ 0 := pow_ne_zero _ hn.ne_zero
-  haveI : NeZero (n ^ e) := ⟨hN⟩
-  haveI := _root_.GlobalTheory.ZM.CycBase.cyc (k := n ^ e)
-  haveI : NumberField (_root_.GlobalTheory.ZM.CycBase.CF (n ^ e)) :=
+  have : NeZero (n ^ e) := ⟨hN⟩
+  have := _root_.GlobalTheory.ZM.CycBase.cyc (k := n ^ e)
+  have : NumberField (_root_.GlobalTheory.ZM.CycBase.CF (n ^ e)) :=
     IsCyclotomicExtension.numberField {n ^ e} ℚ _
   have hcop : n.Coprime p := (Nat.coprime_primes hn hp).mpr hnp
   set F := _root_.GlobalTheory.ZM.CycBase.CF (n ^ e) with hF
@@ -240,7 +240,7 @@ theorem _root_.GlobalTheory.ZM.CycBase.exists_base : ∀ (n e p k : ℕ), n.Prim
     intro K _ β
     have hroot := (hζi.isRoot_cyclotomic hpos).map (f := β.comp (algebraMap (𝓞 F) _))
     rw [Polynomial.map_cyclotomic] at hroot
-    haveI : NeZero ((n ^ e : ℕ) : K) := ⟨by simpa using (hkunit.map β).ne_zero⟩
+    have : NeZero ((n ^ e : ℕ) : K) := ⟨by simpa using (hkunit.map β).ne_zero⟩
     exact Polynomial.isRoot_cyclotomic_iff.mp hroot
   let b : _root_.GlobalTheory.ZM.TBase (Localization.Away (n : 𝓞 F)) (n ^ e) := ⟨ζo, hkunit, hprim⟩
   have hcompx : ∀ a : 𝓞 F, em (algebraMap _ _ a) = ((a : F) : ℂ) := fun a =>

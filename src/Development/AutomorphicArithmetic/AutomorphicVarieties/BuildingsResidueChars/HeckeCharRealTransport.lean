@@ -79,7 +79,7 @@ private theorem idMap_infIdele {E L : Type} [Field E] [NumberField E] [Field L] 
 theorem UpperTheory.heckeChar_realTransport :
     UpperTheory.V.Af.Cr.RealTransport := by
   intro F K _ _ _ _ _ _ _ h2 χ
-  haveI : Algebra.IsQuadraticExtension F K := { finrank_eq_two' := h2 }
+  have : Algebra.IsQuadraticExtension F K := { finrank_eq_two' := h2 }
   let j : maximalRealSubfield K ≃+* F := (CMExtension.equivMaximalRealSubfield F K).symm
   refine ⟨CT.transport j χ, fun v' => ?_, fun w => ?_⟩
   · obtain ⟨v, rfl⟩ := comap_surj j v'

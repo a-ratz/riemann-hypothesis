@@ -67,7 +67,7 @@ theorem lineFin : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZero k] [Field
       fun i hi => ((_root_.GlobalTheory.Nef.finite_support_and_sum_ord_eq_zero k F hFF (w i) hi).1))
     refine hS.subset fun v hv => ?_
     by_contra hvS
-    simp only [S, Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_not, not_exists] at hvS
+    simp only [S, Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion, not_or, not_not, not_exists] at hvS
     obtain ⟨hu, hw1⟩ := hvS
     apply hv
     rw [(((_root_.GlobalTheory.Nef.ord_calculus k F v).2.2.2.2.2.2.2.2.1) n (g v) w hu)]

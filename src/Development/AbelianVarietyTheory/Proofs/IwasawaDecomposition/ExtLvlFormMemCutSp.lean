@@ -193,7 +193,7 @@ theorem cutAvgL_of_mem {F : G → W}
     congr 1
     have h1 : ((ch (tie.red_surj (p : G₀)).choose : ℂˣ) : ℂ) ≠ 0 := Units.ne_zero _
     have h2 : σ ((ψ p : Kˣ) : K) ≠ 0 := (map_ne_zero σ).2 (Units.ne_zero _)
-    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Units.val_mul, map_inv,
+    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Units.val_mul, map_inv,
       Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_natCast, RingHom.toMonoidHom_eq_coe]
     field_simp
   rw [Finset.sum_congr rfl fun p _ => key p, Finset.sum_const, Finset.card_univ, ← Nat.card_eq_fintype_card,
@@ -226,7 +226,7 @@ theorem ext_lvlForm_mem_cutSp (x : Fin (S.lvlDim act P ψ) → K) :
   have e3 := congrFun e1 h
   simp only [Pi.smul_apply, Bridge.g0Act] at e3
   have h1 : ((ch κ : ℂˣ) : ℂ) ≠ 0 := Units.ne_zero _
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Units.val_mul, RingHom.id_apply,
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Units.val_mul, RingHom.id_apply,
     RingHom.toMonoidHom_eq_coe]
   rw [mul_smul, e3, smul_smul, ← Units.val_mul, mul_inv_cancel, Units.val_one, one_smul]
 

@@ -133,7 +133,7 @@ theorem linearIndependent_of_tri {v v' : Fin m → N} (hv : LinearIndependent R 
     (hb : b.BlockTriangular id) (hu : ∀ i, IsUnit (b i i)) (e : ∀ i, v' i = ∑ j, b j i • v j) :
     LinearIndependent R v' := by
   have hd : IsUnit b.det := by
-    rw [Matrix.det_of_upperTriangular hb]
+    rw [Matrix.det_of_isUpperTriangular hb]
     exact IsUnit.prod_univ_iff.2 hu
   rw [Fintype.linearIndependent_iff] at hv ⊢
   intro a ha
@@ -405,7 +405,7 @@ variable (Dw) in
 def mu0 : Weight Dw := fun _ i => if (i : ℕ) < Dw.p then 1 else -1
 
 theorem unitaryWeightExponentVector_signatureWeightMuZero : exOf Dw (mu0 Dw) 0 = fun ix => ix.elim 0 fun _ => 1 :=
-  exOf_ext rfl (fun τ i _ => if_pos (i.2.trans_eq (mult_of_mem τ)))
+  exOf_ext rfl (fun τ i _ => ite_eq_left (i.2.trans_eq (mult_of_mem τ)))
     fun τ i _ => by simp [mu0]
 
 end Weights

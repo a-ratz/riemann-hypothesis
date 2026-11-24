@@ -84,7 +84,7 @@ theorem goodAt_rhoX (x : KSub X.B.I) : GoodAt X x (rhoX X x) := by
 theorem redMatB_one_of {I : AutInst} {m : ℕ} (R : RedB I m) {x : I.Gf}
     (h : ∀ i, I.fmat x *ᵥ iv I (R.b i) - iv I (R.b i) ∈ Lq I R.w) :
     RedMatB I R.w R.p R.b x (1 : Matrix (Fin m) (Fin m) (ZMod R.p)) := by
-  haveI : Fact (1 < R.p) := ⟨R.hp.one_lt⟩
+  have : Fact (1 < R.p) := ⟨R.hp.one_lt⟩
   intro i
   have hsum : ∑ j, ((((1 : Matrix (Fin m) (Fin m) (ZMod R.p)) j i).val : ℕ) : I.E ⊗[I.F] Af I.F) •
       iv I (R.b j) = iv I (R.b i) := by

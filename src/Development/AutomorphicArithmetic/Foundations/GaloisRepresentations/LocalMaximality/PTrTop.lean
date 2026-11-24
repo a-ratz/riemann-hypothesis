@@ -138,9 +138,9 @@ private theorem kahlerMap_volumeForm {F K K' : Type} [Field F] [Field K] [Field 
 theorem UpperTheory.Gal.productCup_of_system.trTop_of :
     TrTop := by
   intro F K K' _ _ _ _ _ _ _ _ _ _ _ _ _ d x j2 hY τ hτ ρ hρ
-  haveI : FiniteDimensional F K := hY.covZ.fin
-  haveI : FiniteDimensional F K' := hY.covY.fin
-  haveI : FiniteDimensional K K' := FiniteDimensional.right F K K'
+  have : FiniteDimensional F K := hY.covZ.fin
+  have : FiniteDimensional F K' := hY.covY.fin
+  have : FiniteDimensional K K' := FiniteDimensional.right F K K'
   have hTr := (GlobalTheory.T.deRhamFormTrace_exists_unique ℂ K K').1
   have second : ∀ h : K', trF ℂ τ ρ (trDR ℂ K K' (h • vol0 ℂ K' (xv x))) = ρ (Algebra.trace F K' h) := by
     intro h
@@ -159,7 +159,7 @@ theorem UpperTheory.Gal.productCup_of_system.trTop_of :
     by_cases hne : (Finset.univ.erase i : Finset (Fin (d + 1))).Nonempty
     · have hc : (((Finset.univ.erase i : Finset (Fin (d + 1))).card : ℕ) : ℤ) = ((d : ℤ) - 1) + 1 := by
         simp
-      rw [if_pos ⟨hne, hc⟩] at hm
+      rw [ite_eq_left ⟨hne, hc⟩] at hm
       have hle : omB ℂ K' (rB ℂ K' (xv x) (Finset.univ.erase i)) d ≤ (⋀[K']^d Ω[K'⁄ℂ]).restrictScalars ℂ := by
         refine Submodule.span_le.2 ?_
         rintro _ ⟨b, -, v, -, rfl⟩
@@ -171,7 +171,7 @@ theorem UpperTheory.Gal.productCup_of_system.trTop_of :
         (one_mem _)
       rw [mul_one] at h1
       exact GlobalTheory.T.residue_functional_vanishes_on_omega_forms ℂ F d (xv x) hY.covY.pd ρ hρ i _ hne (by simp) _ h1
-    · rw [if_neg (fun h => hne h.1)] at hm
+    · rw [ite_eq_right (fun h => hne h.1)] at hm
       rw [(Submodule.mem_bot ℂ).1 hm]
       simp
   change trF ℂ τ ρ (trDR ℂ K K' (∑ i ∈ Finset.univ, _ • y' (Finset.univ.erase i))) = 0

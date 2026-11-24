@@ -97,7 +97,7 @@ private lemma toE_iod' (φ : Frame) : Multiplicative.toAdd (toE φ φ.iod) = sgc
 private theorem hostFactsS_pf :
     ∀ (φ : Frame) (H : HostAx φ), HostFactsS (arith H.toHostRaw) (H.QS * H.q).primeFactors := by
   intro φ H
-  haveI : NeZero H.toHostRaw.condN := ⟨H.toHostRaw.condN_ne_zero⟩
+  have : NeZero H.toHostRaw.condN := ⟨H.toHostRaw.condN_ne_zero⟩
   have hQq0 : H.QS * H.q ≠ 0 := Nat.mul_ne_zero H.QS_ne_zero H.q_prime.ne_zero
   refine
     { d_prime := H.d_prime
@@ -158,7 +158,7 @@ private theorem hostFactsS_pf :
           exact hloc
         · have hcast : (((u : ZMod H.toHostRaw.condN).val : ℤ) : ZMod H.d) = ((-1 : ℤ) : ZMod H.d) := by
             have h3 := congrArg (fun v : (ZMod H.d)ˣ => (v : ZMod H.d)) hu2
-            simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, ZMod.castHom_apply,
+            simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, ZMod.castHom_apply,
               Units.val_neg, Units.val_one] at h3
             push_cast
             rw [ZMod.natCast_val]

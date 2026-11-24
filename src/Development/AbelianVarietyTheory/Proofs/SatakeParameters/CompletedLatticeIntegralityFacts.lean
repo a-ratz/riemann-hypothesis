@@ -59,7 +59,7 @@ theorem intValuation_uniformiser {R : Type} [CommRing R] [IsDedekindDomain R] (P
     (P.intValuation_le_pow_iff_mem ϖ 1).2 (by rw [pow_one]; exact h1)
   have a2 : ¬ P.intValuation ϖ ≤ WithZero.exp (-((2 : ℕ) : ℤ)) :=
     fun h => h2 ((P.intValuation_le_pow_iff_mem ϖ 2).1 h)
-  have a0 : P.intValuation ϖ ≠ 0 := fun h => a2 (h ▸ zero_le')
+  have a0 : P.intValuation ϖ ≠ 0 := fun h => a2 (h ▸ zero_le)
   rw [← WithZero.exp_log a0] at a1 a2 ⊢
   rw [WithZero.exp_le_exp] at a1 a2
   congr 1

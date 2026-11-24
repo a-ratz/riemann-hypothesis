@@ -222,7 +222,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.adm :
   intro K _ _ _ μ _ τ hτ U hU ⟨O, hO, hUO⟩ 𝒜 h𝒜 _
   have hK : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 2).1
   have hUo : IsOpen ((U.subgroupOf (KG K 2) : Subgroup (KG K 2)) : Set (KG K 2)) := by
-    convert hO.preimage (continuous_subtype_val : Continuous ((↑) : KG K 2 → G1 K 2)) using 1
+    convert hO.preimage (continuous_subtypeVal : Continuous ((↑) : KG K 2 → G1 K 2)) using 1
     ext g
     exact hUO g g.2
   have : Finite (KG K 2 ⧸ U.subgroupOf (KG K 2)) := Subgroup.quotient_finite_of_isOpen _ hUo

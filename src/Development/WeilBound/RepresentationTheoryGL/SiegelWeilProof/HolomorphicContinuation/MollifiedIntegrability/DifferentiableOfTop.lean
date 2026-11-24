@@ -98,7 +98,7 @@ theorem Dkl_sum {ι : Type} (s : Finset ι) (c : ι → ℂ) (F : ι → E n →
   have e : ∀ i ∈ s, fderiv ℝ (fun y => c i * F i y) y = c i • fderiv ℝ (F i) y :=
     fun i hi => fderiv_const_mul ((hF i hi) y) (c i)
   rw [Finset.sum_congr rfl e]
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply,
     smul_eq_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun i _ => by ring
 

@@ -70,10 +70,10 @@ theorem exists_numberField_factor (k : IntermediateField ℚ ℂ) [FiniteDimensi
     ∃ (K₁ : IntermediateField ℚ ℂ) (hk : k ≤ K₁) (ψ₁ : A →+* K₁), FiniteDimensional ℚ K₁ ∧
       ψ₁.comp α = (IntermediateField.inclusion hk).toRingHom.comp j ∧
       (algebraMap K₁ ℂ).comp ψ₁ = ψ := by
-  letI := α.toAlgebra
+  let := α.toAlgebra
   obtain ⟨t, ht⟩ := Algebra.FiniteType.out (self := hα)
-  haveI : Finite (ψ '' (t : Set A)) := (t.finite_toSet.image _).to_subtype
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (ψ '' (t : Set A))) := by
+  have : Finite (ψ '' (t : Set A)) := (t.finite_toSet.image _).to_subtype
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (ψ '' (t : Set A))) := by
     refine IntermediateField.finiteDimensional_adjoin ?_
     rintro _ ⟨x, -, rfl⟩
     exact ((halg x).restrictScalars ℚ).isIntegral
@@ -139,7 +139,7 @@ theorem exists_numberField_point_of_countable :
   have hU' : IsAffineOpen U := hU
   let A : Type := Γ(X, U)
   let i : Sp A ⟶ X := hU'.fromSpec
-  haveI : IsOpenImmersion i := hU'.isOpenImmersion_fromSpec
+  have : IsOpenImmersion i := hU'.isOpenImmersion_fromSpec
   have hsub' : Set.range (spMap (Subalgebra.inclusion hle).toRingHom ≫ y) ⊆ Set.range i :=
     hsub.trans hU'.range_fromSpec.ge
   obtain ⟨φ, hφ⟩ : ∃ φ : A →+* R', spMap φ ≫ i = spMap (Subalgebra.inclusion hle).toRingHom ≫ y := by

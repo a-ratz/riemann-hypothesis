@@ -70,13 +70,13 @@ theorem one_tmul_ne_zero_of_domain {A P k : Type} [CommRing A] [IsDomain A] [Add
     [Module A P] [Field k] [Algebra A k] (hinj : Function.Injective (algebraMap A k)) (y : P)
     (hy : ∀ a : A, a • y = 0 → a = 0) : (1 : k) ⊗ₜ[A] y ≠ 0 := by
   intro h1
-  letI : Algebra (FractionRing A) k := (IsFractionRing.lift hinj).toAlgebra
-  haveI : IsScalarTower A (FractionRing A) k :=
+  let : Algebra (FractionRing A) k := (IsFractionRing.lift hinj).toAlgebra
+  have : IsScalarTower A (FractionRing A) k :=
     IsScalarTower.of_algebraMap_eq (fun a => (IsFractionRing.lift_algebraMap hinj a).symm)
-  haveI : Module.Flat A (FractionRing A) := IsLocalization.flat _ (nonZeroDivisors A)
-  haveI : Module.Free (FractionRing A) k := Module.Free.of_divisionRing _ _
-  haveI : Module.Flat (FractionRing A) k := Module.Flat.of_free
-  haveI : Module.Flat A k := Module.Flat.trans _ (FractionRing A) _
+  have : Module.Flat A (FractionRing A) := IsLocalization.flat _ (nonZeroDivisors A)
+  have : Module.Free (FractionRing A) k := Module.Free.of_divisionRing _ _
+  have : Module.Flat (FractionRing A) k := Module.Flat.of_free
+  have : Module.Flat A k := Module.Flat.trans _ (FractionRing A) _
   have hi : Function.Injective (LinearMap.toSpanSingleton A P y) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     exact hy
@@ -94,12 +94,12 @@ theorem one_tmul_ne_zero {R₀ P k : Type} [CommRing R₀] [AddCommGroup P] [Mod
   intro h
   have hker : p = RingHom.ker (algebraMap R₀ k) := by
     ext a; simp [RingHom.mem_ker, hk]
-  haveI : p.IsPrime := hker ▸ RingHom.ker_isPrime _
-  letI : Module (R₀ ⧸ p) P := hP.module
-  haveI : IsScalarTower R₀ (R₀ ⧸ p) P := hP.isScalarTower
-  letI : Algebra (R₀ ⧸ p) k :=
+  have : p.IsPrime := hker ▸ RingHom.ker_isPrime _
+  let : Module (R₀ ⧸ p) P := hP.module
+  have : IsScalarTower R₀ (R₀ ⧸ p) P := hP.isScalarTower
+  let : Algebra (R₀ ⧸ p) k :=
     (Ideal.Quotient.lift p (algebraMap R₀ k) (fun a ha => (hk a).2 ha)).toAlgebra
-  haveI : IsScalarTower R₀ (R₀ ⧸ p) k := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower R₀ (R₀ ⧸ p) k := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hinj : Function.Injective (algebraMap (R₀ ⧸ p) k) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro a ha
@@ -167,7 +167,7 @@ theorem injective_baseChange :
   change Function.Injective (φ.lTensor R)
   rw [← LinearMap.ker_eq_bot]
   by_contra hne
-  haveI : Nontrivial (LinearMap.ker (φ.lTensor R)) := Submodule.nontrivial_iff_ne_bot.2 hne
+  have : Nontrivial (LinearMap.ker (φ.lTensor R)) := Submodule.nontrivial_iff_ne_bot.2 hne
   obtain ⟨p, hp⟩ := associatedPrimes.nonempty R₀ (LinearMap.ker (φ.lTensor R))
   rw [AssociatedPrimes.mem_iff, isAssociatedPrime_iff] at hp
   obtain ⟨hp, ⟨x, hx0⟩, hx⟩ := hp

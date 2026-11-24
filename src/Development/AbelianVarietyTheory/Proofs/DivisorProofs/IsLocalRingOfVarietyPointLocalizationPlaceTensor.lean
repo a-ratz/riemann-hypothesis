@@ -105,17 +105,17 @@ theorem isLocModel_locAt : ∀ {K κ' L : Type} [Field K] [Field κ'] [Field L] 
       exact IsScalarTower.algebraMap_apply ℂ (K ⊗[ℂ] κ') L a
     rw [e]
 
-    letI : Algebra ℂ O' := ((algebraMap ℂ κ').codRestrict O' hO'.const_mem).toAlgebra
-    haveI : IsScalarTower ℂ O' κ' := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : Algebra.EssFiniteType ℂ O' := hO'.essFiniteType
-    haveI : IsFractionRing O' κ' := IsFractionRing.of_field O' κ' fun f => by
+    let : Algebra ℂ O' := ((algebraMap ℂ κ').codRestrict O' hO'.const_mem).toAlgebra
+    have : IsScalarTower ℂ O' κ' := IsScalarTower.of_algebraMap_eq' rfl
+    have : Algebra.EssFiniteType ℂ O' := hO'.essFiniteType
+    have : IsFractionRing O' κ' := IsFractionRing.of_field O' κ' fun f => by
       obtain ⟨a, ha, b, hb, hb0, e⟩ := hO'.frac f
       exact ⟨⟨a, ha⟩, ⟨b, hb⟩, (eq_div_iff hb0).2 e⟩
-    haveI : Algebra.EssFiniteType O' κ' :=
+    have : Algebra.EssFiniteType O' κ' :=
       Algebra.EssFiniteType.of_isLocalization κ' (nonZeroDivisors O')
-    haveI : Algebra.EssFiniteType ℂ κ' := Algebra.EssFiniteType.comp ℂ O' κ'
+    have : Algebra.EssFiniteType ℂ κ' := Algebra.EssFiniteType.comp ℂ O' κ'
 
-    haveI : Algebra.EssFiniteType ℂ (placeAlg E) := by
+    have : Algebra.EssFiniteType ℂ (placeAlg E) := by
       let φ : E.ring →+* placeAlg E :=
         { toFun := fun x => ⟨x.1, x.2⟩
           map_one' := rfl
@@ -128,18 +128,18 @@ theorem isLocModel_locAt : ∀ {K κ' L : Type} [Field K] [Field κ'] [Field L] 
       have h := RingHom.EssFiniteType.comp E.essFiniteType hφ.essFiniteType
       rw [e] at h
       exact RingHom.essFiniteType_algebraMap.1 h
-    haveI : Algebra.EssFiniteType (placeAlg E) (placeAlg E ⊗[ℂ] κ') :=
+    have : Algebra.EssFiniteType (placeAlg E) (placeAlg E ⊗[ℂ] κ') :=
       Algebra.EssFiniteType.baseChange ℂ κ' (placeAlg E)
-    haveI : Algebra.EssFiniteType ℂ (placeAlg E ⊗[ℂ] κ') :=
+    have : Algebra.EssFiniteType ℂ (placeAlg E ⊗[ℂ] κ') :=
       Algebra.EssFiniteType.comp ℂ (placeAlg E) (placeAlg E ⊗[ℂ] κ')
-    haveI : Algebra.EssFiniteType ℂ (tens (κ' := κ') (placeAlg E)) :=
+    have : Algebra.EssFiniteType ℂ (tens (κ' := κ') (placeAlg E)) :=
       Algebra.EssFiniteType.of_surjective (tensEquiv (κ' := κ') (placeAlg E)).toAlgHom
         (tensEquiv (κ' := κ') (placeAlg E)).surjective
     have h1 : (algebraMap ℂ (tens (κ' := κ') (placeAlg E))).EssFiniteType :=
       RingHom.essFiniteType_algebraMap.2 inferInstance
 
-    letI : Algebra (tens (κ' := κ') (placeAlg E)) (locAt (L := L) 𝔭) := (toQ (L := L) 𝔭).toAlgebra
-    haveI : IsLocalization 𝔭.primeCompl (locAt (L := L) 𝔭) :=
+    let : Algebra (tens (κ' := κ') (placeAlg E)) (locAt (L := L) 𝔭) := (toQ (L := L) 𝔭).toAlgebra
+    have : IsLocalization 𝔭.primeCompl (locAt (L := L) 𝔭) :=
       { map_units := fun s => isUnit_toQ 𝔭 hinj s.2
         surj := fun x => by
           obtain ⟨a, s, hs, hx⟩ := exists_mul_toQ 𝔭 x
@@ -147,7 +147,7 @@ theorem isLocModel_locAt : ∀ {K κ' L : Type} [Field K] [Field κ'] [Field L] 
         exists_of_eq := fun {x y} h => ⟨1, by
           simp only [OneMemClass.coe_one, one_mul]
           exact Subtype.ext (hinj (congrArg Subtype.val h))⟩ }
-    haveI : Algebra.EssFiniteType (tens (κ' := κ') (placeAlg E)) (locAt (L := L) 𝔭) :=
+    have : Algebra.EssFiniteType (tens (κ' := κ') (placeAlg E)) (locAt (L := L) 𝔭) :=
       Algebra.EssFiniteType.of_isLocalization (locAt (L := L) 𝔭) 𝔭.primeCompl
     have h2 : (toQ (L := L) 𝔭).EssFiniteType := RingHom.essFiniteType_algebraMap.2 this
     exact RingHom.EssFiniteType.comp h1 h2

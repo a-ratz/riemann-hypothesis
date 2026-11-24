@@ -70,8 +70,8 @@ theorem exists_lift_of_isProper_of_isHom_id :
   obtain ⟨K', _, σ, y₁, hσ, hy₁⟩ := exists_finite_ext_point_lift_of_surjective_lft q inferInstance hsurj
     (PadicAlgCl p) (gPt p ≫ y)
   have hbij : Function.Bijective σ := by
-    letI := σ.toAlgebra
-    haveI : Module.Finite (PadicAlgCl p) K' := hσ
+    let := σ.toAlgebra
+    have : Module.Finite (PadicAlgCl p) K' := hσ
     exact IsAlgClosed.algebraMap_bijective_of_isIntegral (k := PadicAlgCl p) (K := K')
   let e := RingEquiv.ofBijective σ hbij
   have he : e.symm.toRingHom.comp σ = RingHom.id _ := RingHom.ext fun x => e.symm_apply_apply x

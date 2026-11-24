@@ -54,8 +54,8 @@ theorem mem_valO_of_below {K L : Type} [Field K] [NumberField K] [Field L] [Numb
     (W : HeightOneSpectrum (𝓞 L)) (Q : HeightOneSpectrum (𝓞 K))
     (h : ∀ r : 𝓞 K, r ∈ Q.asIdeal ↔ RingOfIntegers.mapRingHom j r ∈ W.asIdeal) (x : K) :
     j x ∈ valO W ↔ x ∈ valO Q := by
-  letI : Algebra K L := j.toAlgebra
-  haveI : W.asIdeal.LiesOver Q.asIdeal := ⟨Ideal.ext fun r => h r⟩
+  let : Algebra K L := j.toAlgebra
+  have : W.asIdeal.LiesOver Q.asIdeal := ⟨Ideal.ext fun r => h r⟩
   rw [mem_valO, mem_valO, show j x = algebraMap K L x from rfl,
     ← HeightOneSpectrum.valuation_liesOver L Q W x]
   exact pow_le_one_iff (Ideal.ramificationIdx_pos_of_isDedekindDomain' W.asIdeal Q.ne_bot).ne'

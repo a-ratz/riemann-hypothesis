@@ -71,7 +71,7 @@ namespace GlobalTheory.FNRoots
 
 theorem alg_mem_range (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ)
     (z : ℂ) (hz : IsAlgebraic ℚ z) : z ∈ ε.range := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hi : IsIntegral ℚ z := hz.isIntegral
   set p := minpoly ℚ z with hp
   have hm : p.Monic := minpoly.monic hi
@@ -89,7 +89,7 @@ theorem alg_mem_range (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
 
 theorem exp_isAlgebraic (x : ℚ) : IsAlgebraic ℚ (Complex.exp (2 * Real.pi * Complex.I * (x : ℂ))) := by
   have hpow : Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) ^ x.den = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have : (x.den : ℂ) * (2 * Real.pi * Complex.I * (x : ℂ)) = (x.num : ℂ) * (2 * Real.pi * Complex.I) := by
       have hx : (x : ℂ) = (x.num : ℂ) / (x.den : ℂ) := by
         exact_mod_cast (Rat.num_div_den x).symm

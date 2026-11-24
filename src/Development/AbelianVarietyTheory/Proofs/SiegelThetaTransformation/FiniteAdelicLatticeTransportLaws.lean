@@ -89,7 +89,7 @@ theorem map_mulVec_fv (P : Matrix (Fin n) (Fin n) E) (x : Fin n → E) :
 
 omit [NumberField E] in
 theorem fv_eq_zero {x : Fin n → E} (h : fv F x = 0) : x = 0 := by
-  haveI : Nontrivial (FiniteAdeleRing (𝓞 F) F) := by
+  have : Nontrivial (FiniteAdeleRing (𝓞 F) F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
     let v : HeightOneSpectrum (𝓞 F) :=
       ⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩

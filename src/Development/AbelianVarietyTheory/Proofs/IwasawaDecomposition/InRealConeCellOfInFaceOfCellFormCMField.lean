@@ -91,7 +91,7 @@ theorem apply_eq_zero_of_genRank_le {m m' : ℕ} {γ : Fin m → LinearMap.Bilin
   unfold genRank at hr
   set B := Submodule.span ℤ (Set.range γ) with hB
   set A := Submodule.span ℤ (Set.range fun j => γ (s j)) with hA
-  haveI : Module.Finite ℤ B := Module.Finite.span_of_finite ℤ (Set.finite_range γ)
+  have : Module.Finite ℤ B := Module.Finite.span_of_finite ℤ (Set.finite_range γ)
   have hAB : A ≤ B := Submodule.span_mono (by rintro _ ⟨j, rfl⟩; exact ⟨s j, rfl⟩)
   have hAk : A ≤ LinearMap.ker h := Submodule.span_le.2 (by rintro _ ⟨j, rfl⟩; exact h0 j)
   set K : Submodule ℤ B := LinearMap.ker (h.domRestrict B) with hK

@@ -258,7 +258,7 @@ theorem bottom_theta_norm_factorization : GlobalTheory.Published.HoweDualityReal
     have : (q'.quotKerEquivOfSurjective hq').symm (q' P') = Submodule.Quotient.mk P' := by
       rw [LinearEquiv.symm_apply_eq]; exact (LinearMap.quotKerEquivOfSurjective_apply_mk _ _ _).symm
     simp only [J, LinearMap.comp_apply, LinearEquiv.coe_coe, this, Submodule.liftQ_apply]; rfl
-  haveI := hnt μ₀
+  have := hnt μ₀
   obtain ⟨x, hx⟩ := exists_ne (0 : Pr)
   obtain ⟨P0, rfl⟩ := hq' x
   refine ⟨Pr, q, q', J, hq, ⟨P0, hx⟩, fun t => ?_, fun t => ?_, fun t P' => (hJ t P').symm⟩

@@ -168,16 +168,16 @@ theorem exists_trivOutside_loc_eq : ∀ (L : Type) [Field L] [NumberField L] [Is
     ext i j
     show compAt L v (T (Xv i j) + if i = j then 1 - E else 0) = Xv i j
     by_cases h : i = j
-    · rw [if_pos h, map_add (f := _), hTv, map_sub, map_one, hEv, sub_self, add_zero]
-    · rw [if_neg h, map_add (f := _), hTv, map_zero, add_zero]
+    · rw [ite_eq_left h, map_add (f := _), hTv, map_sub, map_one, hEv, sub_self, add_zero]
+    · rw [ite_eq_right h, map_add (f := _), hTv, map_zero, add_zero]
   have hAu : ∀ u, u ≠ v → A.map (compAt L u) = 1 := by
     intro u hu
     ext i j
     show compAt L u (T (Xv i j) + if i = j then 1 - E else 0) = (1 : Matrix (Fin n) (Fin n) _) i j
     rw [Matrix.one_apply]
     by_cases h : i = j
-    · rw [if_pos h, if_pos h, map_add (f := _), hTu _ u hu, map_sub, map_one, hEu u hu, zero_add, sub_zero]
-    · rw [if_neg h, if_neg h, map_add (f := _), hTu _ u hu, map_zero, add_zero]
+    · rw [ite_eq_left h, ite_eq_left h, map_add (f := _), hTu _ u hu, map_sub, map_one, hEu u hu, zero_add, sub_zero]
+    · rw [ite_eq_right h, ite_eq_right h, map_add (f := _), hTu _ u hu, map_zero, add_zero]
   have hmap : ∀ u, (A * conjT (conjAL L) A).map (compAt L u) =
       A.map (compAt L u) * conjT (Formalism.UG.sigR (IsCMField.complexConj L).toAlgHom
         (u.adicCompletion (maximalRealSubfield L))) (A.map (compAt L u)) := by

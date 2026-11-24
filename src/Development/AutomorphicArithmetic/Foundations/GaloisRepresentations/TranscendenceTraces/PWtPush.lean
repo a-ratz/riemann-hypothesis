@@ -56,7 +56,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtPush_of :
   let B : Sq (h ≫ p) :=
     ⟨A.U, pullback h A.v, A.u, pullback.fst h A.v, pullback.snd h A.v ≫ A.r,
       IsPullback.paste_vert (IsPullback.of_hasPullback h A.v) A.pb⟩
-  haveI : IsFinite A.r := Sq.finite A
+  have : IsFinite A.r := Sq.finite A
   have hφ' : IsLocallyConstant (φ ∘ (pullback.snd h A.v)) :=
     hφ.comp_continuous (Scheme.Hom.continuous _)
   obtain ⟨ψ, hψ, hψeq⟩ := hw B (φ ∘ (pullback.snd h A.v)) hφ'
@@ -86,5 +86,5 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtPush_of :
   apply finsum_mem_eq_of_bijOn (fun q => q ≫ pullback.fst h A.v)
     (fib_bijOn (IsPullback.of_hasPullback h A.v) y)
   intro q hq
-  simp only [fib, Set.mem_setOf_eq] at hq
+  simp only [fib, Set.mem_ofPred_eq] at hq
   rw [hq]

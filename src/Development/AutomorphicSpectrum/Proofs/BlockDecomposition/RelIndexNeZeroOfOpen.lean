@@ -254,33 +254,33 @@ theorem exists_local_levels_le_open : ∀ {ι Γ : Type} [Group Γ] {Hl : ι →
     intro x hxK hx
     by_contra hxU
     have hmem := hT ⟨hxK, hxU⟩
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hmem
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hmem
     obtain ⟨i, hi, hne⟩ := hmem
     exact hne (hx i hi)
   refine ⟨fun i => if i ∈ T then KH i ⊓ U.comap (e i) else KH i, ?_, ?_, ?_, ?_⟩
   · intro i
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact (hKo i).inter (hU.preimage (hec i))
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact hKo i
   · intro i
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact inf_le_left
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact le_rfl
   · have hfin : ∀ᶠ i in cofinite, i ∉ T := T.finite_toSet.compl_mem_cofinite
     filter_upwards [hfin] with i hi
-    simp only [hi, if_false]
+    simp only [hi, ite_false]
   · intro u hu
     have hle : ∀ i, p i u ∈ KH i := by
       intro i
       have := hu i
       by_cases hi : i ∈ T
-      · simp only [hi, if_true] at this
+      · simp only [hi, ite_true] at this
         exact this.1
-      · simpa only [hi, if_false] using this
+      · simpa only [hi, ite_false] using this
     have huK : u ∈ K := (hK u).mpr hle
     set v : Γ := (T.toList.map fun i => e i (p i u)).prod with hv
     have hpv : ∀ j, p j v = if j ∈ T then p j u else 1 := by
@@ -293,7 +293,7 @@ theorem exists_local_levels_le_open : ∀ {ι Γ : Type} [Group Γ] {Hl : ι →
       obtain ⟨i, hi, rfl⟩ := List.mem_map.mp hx
       have hiT : i ∈ T := Finset.mem_toList.mp hi
       have := hu i
-      simp only [hiT, if_true] at this
+      simp only [hiT, ite_true] at this
       exact this.2
     have hwK : v⁻¹ * u ∈ K := by
       refine (hK _).mpr fun j => ?_
@@ -472,7 +472,7 @@ theorem fac_finite {p : ∀ i, Γ →* Hl i} {V : ∀ i, Subgroup (Hl i)} (f : �
   refine ((Filter.eventually_cofinite.1 (hS x)).union (List.finite_toSet T)).subset ?_
   intro j hj
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   apply hj
   have hjT : j ∉ T := hc.2
   simp [fac, hjT, hc.1]
@@ -729,14 +729,14 @@ theorem relIndex_ne_of_out {G : Type} [Group G] (L K : Subgroup G) (hLK : L ≤ 
     refine QuotientGroup.eq.2 ?_
     rw [Subgroup.mem_subgroupOf]
     simpa using h2
-  haveI := h.to_subtype
-  haveI : Finite (K ⧸ L.subgroupOf K) := Finite.of_injective _ hinj
+  have := h.to_subtype
+  have : Finite (K ⧸ L.subgroupOf K) := Finite.of_injective _ hinj
   exact Subgroup.index_ne_zero_of_finite
 
 theorem out_finite_of_relIndex {H : Type} [Group H] (V K : Subgroup H) (hi : V.relIndex K ≠ 0) :
     {q : H ⧸ V | q.out ∈ K}.Finite := by
   have hm : Nat.card (K ⧸ V.subgroupOf K) ≠ 0 := hi
-  haveI : Finite (K ⧸ V.subgroupOf K) := Nat.finite_of_card_ne_zero hm
+  have : Finite (K ⧸ V.subgroupOf K) := Nat.finite_of_card_ne_zero hm
   have hinj : Function.Injective (fun q : {q : H ⧸ V | q.out ∈ K} =>
       (((⟨q.1.out, q.2⟩ : K)) : K ⧸ V.subgroupOf K)) := by
     intro a b hab
@@ -746,7 +746,7 @@ theorem out_finite_of_relIndex {H : Type} [Group H] (V K : Subgroup H) (hi : V.r
     apply Subtype.ext
     rw [← QuotientGroup.out_eq' a.1, ← QuotientGroup.out_eq' b.1]
     exact QuotientGroup.eq.2 h2
-  haveI : Finite {q : H ⧸ V | q.out ∈ K} := Finite.of_injective _ hinj
+  have : Finite {q : H ⧸ V | q.out ∈ K} := Finite.of_injective _ hinj
   exact Set.toFinite _
 
 theorem hint_prod_eq_foldr : ∀ {ι Γ : Type} [Group Γ] {Hl : ι → Type} [∀ i, Group (Hl i)] (p : ∀ i, Γ →* Hl i) (e : ∀ i, Hl i →* Γ) (K : Subgroup Γ) (KH V : ∀ i, Subgroup (Hl i))
@@ -1018,9 +1018,9 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ}
 
 theorem relIndex_ne_zero_of_open {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H] {V K : Subgroup H}
     (hV : IsOpen (V : Set H)) (hK : IsCompact (K : Set H)) : V.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : Finite (K ⧸ V.subgroupOf K) :=
-    Subgroup.quotient_finite_of_isOpen _ (hV.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : Finite (K ⧸ V.subgroupOf K) :=
+    Subgroup.quotient_finite_of_isOpen _ (hV.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 theorem finH_mul (x y : Hf E a b) : finH (x * y) = finH x * finH y :=
@@ -1047,9 +1047,9 @@ theorem actS_eq {S : Set (Pl E)} (φ₁ φ₂ : ∀ w : Pl E, LF a b w) (e : ∀
 
 theorem finActOf : FinActOf := by
   intro hInt hSl hConv _ E _ _ _ B S hS φ₁ φ₂ h₁ h₂ G hG l hl hfix x
-  haveI := B.hν
-  haveI := B.hν'
-  haveI : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
+  have := B.hν
+  have := B.hν'
+  have : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
   obtain ⟨hmul, hcont, hsep, -, hev, hmem, -⟩ := hSl E B.a B.b S hS
   obtain ⟨e, hec, hpe, hpe', he₁, he₂⟩ := _root_.GlobalTheory.CompanionTheory.FinActS.exists_factorEmb (E := E) B.a B.b hS
   obtain ⟨U₀, hU₀, hlev⟩ := hG

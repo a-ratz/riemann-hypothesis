@@ -265,7 +265,7 @@ theorem covBy_of_cyclic {A B : Submodule O (Fin n → K)} (hle : A ≤ B) (hne :
     (hx : ∀ x ∈ B, ∃ a : O, x - a • d ∈ A) (hd : d ∈ B)
     (hm : ∀ a ∈ IsLocalRing.maximalIdeal O, a • d ∈ A) : A ⋖ B := by
   refine ⟨lt_of_le_of_ne hle hne, fun C hAC hCB => ?_⟩
-  obtain ⟨x, hxC, hxA⟩ := SetLike.exists_of_lt hAC
+  obtain ⟨x, hxC, hxA⟩ := IsConcreteLE.exists_of_lt hAC
   obtain ⟨a, ha⟩ := hx x (hCB.le hxC)
   have hu : IsUnit a := by
     by_contra h
@@ -281,7 +281,7 @@ theorem bidual (B : LinearMap.BilinForm K (Fin n → K)) (hB : B.Nondegenerate)
     (u : Fin n → K)
     (hu : ∀ w, (∀ u' ∈ N, B u' w ∈ (1 : Submodule O K)) → B u w ∈ (1 : Submodule O K)) : u ∈ N := by
   classical
-  haveI : N.IsFullLattice K := { toIsLattice := Submodule.IsLattice.of_fg K hfg, span_eq_top := hsp }
+  have : N.IsFullLattice K := { toIsLattice := Submodule.IsLattice.of_fg K hfg, span_eq_top := hsp }
   have := Submodule.IsLattice.finite K N
   have := Submodule.IsLattice.free K N
   let b := Module.Free.chooseBasis O N
@@ -871,7 +871,7 @@ theorem exists_isUnit_sub (hσ : ∀ x, σ (σ x) = x)
     (hfix : ∀ x, σ x = x → x ∈ (algebraMap F E).range)
     (hun : ∀ P : Ideal (𝓞 E), P.IsMaximal → ∃ θ t : 𝓞 E, (t : E) = σ θ ∧ θ - t ∉ P) :
     ∃ ω : intV E v, IsUnit (ω - (sigR σ (v.adicCompletion F)).restrict _ _ (sigR_mem v σ) ω) := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨w, hw, hwv⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 E) v.asIdeal (by
     rw [(RingHom.injective_iff_ker_eq_bot (algebraMap (𝓞 F) (𝓞 E))).1
       (FaithfulSMul.algebraMap_injective _ _)]
@@ -899,9 +899,9 @@ theorem normal_form (hσ : ∀ x, σ (σ x) = x) (hfix : ∀ x, σ x = x → x �
     (hG : ∀ a b, (sigR σ (v.adicCompletion F)).restrict _ _ (sigR_mem v σ) (G a b) = G b a)
     (hd : IsUnit G.det) : ∃ P : Matrix (Fin n) (Fin n) (intV E v), IsUnit P.det ∧
       G = Pᵀ * P.map ((sigR σ (v.adicCompletion F)).restrict _ _ (sigR_mem v σ)) := by
-  haveI := SelfDualGenus.isAdicComplete_adicCompletionIntegers v
-  haveI := SelfDualGenus.finite_residueField_adicCompletionIntegers v
-  letI := (baseMap E v).toAlgebra
+  have := SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  let := (baseMap E v).toAlgebra
   have hc : ∀ x : intV E v, (sigR σ (v.adicCompletion F)).restrict _ _ (sigR_mem v σ)
       ((sigR σ (v.adicCompletion F)).restrict _ _ (sigR_mem v σ) x) = x :=
     fun x => Subtype.ext (sigR_sigR v σ hσ x)
@@ -1134,20 +1134,20 @@ theorem tlat_one_genus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hkU : ∀ v, k v ∈ UPts cm.sig J (v.adicCompletion F) := by
     intro v
     by_cases hv : loc v L = loc v M
-    · simp only [k, if_pos hv]; exact one_mem _
-    · simp only [k, if_neg hv]; exact hgU v
+    · simp only [k, ite_eq_left hv]; exact one_mem _
+    · simp only [k, ite_eq_right hv]; exact hgU v
   have hfin : {v | k v ≠ 1}.Finite := by
     refine (_root_.GlobalTheory.St.G.loc_eq_almost_all F E n L M hLat hMat).subset ?_
     intro v hv heq
-    exact hv (by simp only [k, if_pos heq])
+    exact hv (by simp only [k, ite_eq_left heq])
   obtain ⟨y, hyU, hy⟩ := _root_.GlobalTheory.St.G.exists_adelic_of_finite_support F E n cm.sig J k hkU hfin
   have hglob : ∀ x, x ∈ hat F L ↔ y.1 *ᵥ x ∈ hat F M := by
     rw [_root_.GlobalTheory.St.G.Carry.carry_iff F E n L M hLat hMat y]
     intro v x
     rw [hy v]
     by_cases hv : loc v L = loc v M
-    · simp only [k, if_pos hv, Units.val_one, Matrix.one_mulVec, hv]
-    · simp only [k, if_neg hv]; exact hg v x
+    · simp only [k, ite_eq_left hv, Units.val_one, Matrix.one_mulVec, hv]
+    · simp only [k, ite_eq_right hv]; exact hg v x
   refine ⟨⟨y, hyU⟩, fun x => ?_⟩
   rw [hglob, Matrix.mulVec_mulVec]
   have hinv : ((⟨y, hyU⟩ : UPts cm.sig J (Ad F))⁻¹).1 = y⁻¹ := rfl

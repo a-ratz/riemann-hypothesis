@@ -94,7 +94,7 @@ theorem analyticAt_of_comp_immersion {e : ℕ} {V : Type} [NormedAddCommGroup V]
   have hgc : ContDiffAt ℂ (⊤ : WithTop ℕ∞) (fun x => P (ψ x)) (F y₀) := hga.contDiffAt
   have hn : (⊤ : WithTop ℕ∞) ≠ 0 := by simp
   have hφa := (hgc.to_localInverse hgd hn).analyticAt
-  have hleft := (hgc.hasStrictFDerivAt' hgd hn).eventually_left_inverse
+  have hleft := (hgc.hasStrictFDerivAt hgd hn).eventually_left_inverse
   have hH0 : ψ (F y₀) = H y₀ := hEq.self_of_nhds
   have hev : (fun y => hgc.localInverse hgd hn (P (H y))) =ᶠ[nhds y₀] F := by
     filter_upwards [hF.tendsto.eventually hleft, hEq] with y h1 h2

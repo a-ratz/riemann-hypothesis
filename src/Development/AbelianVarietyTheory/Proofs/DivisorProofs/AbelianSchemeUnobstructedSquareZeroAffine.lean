@@ -142,8 +142,8 @@ variable {R C E : Type} [CommRing R] [CommRing C] [Algebra R C] [CommRing E] [Al
 
 theorem dVal_smul_left (φ : C →ₐ[R] DualNumber E) (c : C) (x : Ω[C⁄R]) :
     dVal φ (c • x) = (φ c).fst * dVal φ x := by
-  letI : Algebra C E := (redHom φ).toAlgebra
-  haveI : IsScalarTower R C E := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
+  let : Algebra C E := (redHom φ).toAlgebra
+  have : IsScalarTower R C E := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
   unfold dVal
   simp only [LinearMap.coe_restrictScalars]
   rw [LinearMap.map_smul]
@@ -292,8 +292,8 @@ theorem exists_pow_smul_eq_zero {R C B : Type} [CommRing R] [CommRing C] [CommRi
     (L : Ω[C⁄R] →ₗ[R] Ω[B⁄R]) (hD : ∀ c, L (D R C c) = D R B (g c))
     (hs : ∀ (c : C) (α : Ω[C⁄R]), L (c • α) = g c • L α)
     (α : Ω[C⁄R]) (h : L α = 0) : ∃ m : ℕ, f ^ m • α = 0 := by
-  letI : Algebra C B := g.toRingHom.toAlgebra
-  haveI : IsScalarTower R C B := IsScalarTower.of_algebraMap_eq (fun r => (g.commutes r).symm)
+  let : Algebra C B := g.toRingHom.toAlgebra
+  have : IsScalarTower R C B := IsScalarTower.of_algebraMap_eq (fun r => (g.commutes r).symm)
   have hL : ∀ β, L β = KaehlerDifferential.map R R C B β := by
     intro β
     have hβ : β ∈ Submodule.span C (Set.range (D R C)) := by
@@ -307,7 +307,7 @@ theorem exists_pow_smul_eq_zero {R C B : Type} [CommRing R] [CommRing C] [CommRi
     | smul c x _ hx =>
       rw [hs, hx, (KaehlerDifferential.map R R C B).map_smul]
       exact algebraMap_smul B c _
-  haveI := KaehlerDifferential.isLocalizedModule_map R C B (Submonoid.powers f)
+  have := KaehlerDifferential.isLocalizedModule_map R C B (Submonoid.powers f)
   have h' : KaehlerDifferential.map R R C B α = KaehlerDifferential.map R R C B 0 := by
     rw [← hL, h, map_zero]
   obtain ⟨⟨c, hc⟩, hc0⟩ := IsLocalizedModule.exists_of_eq (S := Submonoid.powers f) h'
@@ -476,19 +476,19 @@ open GlobalTheory.InvForm
 namespace GlobalTheory.InvFormRetract
 
 theorem dVal_smul {R B D : Type} [CommRing R] [CommRing B] [Algebra R B] [CommRing D] [Algebra R D] (φ : B →ₐ[R] DualNumber D) (b : B) (x : Ω[B⁄R]) : dVal φ (b • x) = redHom φ b * dVal φ x := by
-  letI : Algebra B D := (redHom φ).toAlgebra
-  haveI : IsScalarTower R B D := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
+  let : Algebra B D := (redHom φ).toAlgebra
+  have : IsScalarTower R B D := IsScalarTower.of_algebraMap_eq fun r ↦ (redHom_algebraMap φ r).symm
   unfold dVal
   simp only [LinearMap.restrictScalars_apply, LinearMap.map_smul]
   rfl
 
 theorem injective_baseChange {R : Type} [CommRing R] (A : Over (Sp R)) [GrpObj A] (hab : IsAbelianScheme A) (U : AffOp A.left) :
     Function.Injective (LinearMap.liftBaseChange (Sec A.hom U.unop.1) (evForm A.hom U ∘ₗ (InvForm A).subtype)) := by
-  haveI : Smooth A.hom := hab.smooth
-  haveI : IsProper A.hom := hab.proper
-  haveI : CompactSpace A.left := ⟨by simpa using QuasiCompact.isCompact_preimage (f := A.hom) Set.univ isOpen_univ isCompact_univ⟩
-  haveI : Algebra.Smooth R (Sec A.hom U.unop.1) := smooth_sec_affine A.hom U.unop
-  haveI : Module.Flat R (Sec A.hom U.unop.1) := Algebra.Smooth.flat R _
+  have : Smooth A.hom := hab.smooth
+  have : IsProper A.hom := hab.proper
+  have : CompactSpace A.left := ⟨by simpa using QuasiCompact.isCompact_preimage (f := A.hom) Set.univ isOpen_univ isCompact_univ⟩
+  have : Algebra.Smooth R (Sec A.hom U.unop.1) := smooth_sec_affine A.hom U.unop
+  have : Module.Flat R (Sec A.hom U.unop.1) := Algebra.Smooth.flat R _
   obtain ⟨n, V, hV⟩ := GlobalTheory.T.exists_finite_affineCover_globalForm_eq_zero_of_restrictions R A.left A.hom inferInstance
   let f : ∀ k, InvForm A →ₗ[R] Ω[Sec A.hom (V k).unop.1⁄R] := fun k => evForm A.hom (V k) ∘ₗ (InvForm A).subtype
   let F : InvForm A →ₗ[R] ((k : Fin n) → Ω[Sec A.hom (V k).unop.1⁄R]) := LinearMap.pi f
@@ -513,7 +513,7 @@ theorem injective_baseChange {R : Type} [CommRing R] (A : Over (Sp R)) [GrpObj A
   rw [map_zero]
   funext k
   rw [hk, Pi.zero_apply]
-  haveI : Algebra.Smooth R (Sec A.hom (V k).unop.1) := smooth_sec_affine A.hom (V k).unop
+  have : Algebra.Smooth R (Sec A.hom (V k).unop.1) := smooth_sec_affine A.hom (V k).unop
   refine GlobalTheory.T.eq_zero_of_liftBaseChange_derivations_eq_zero R (Sec A.hom U.unop.1) _ inferInstance _ (fun θ hθ => ?_)
   obtain ⟨ψ, hfst, hψ⟩ := GlobalTheory.T.exists_groupLawTranslate_derivation_invariantForms R A U (V k) θ hθ
   have key : ∀ y, LinearMap.liftBaseChange (Sec A.hom U.unop.1) θ (LinearMap.lTensor (Sec A.hom U.unop.1) (f k) y) =
@@ -599,30 +599,30 @@ theorem finite_projective_of_locally_projective (R M : Type) [CommRing R] [AddCo
     exact hr (hsm (Ideal.subset_span hP))
   have hg : ∀ g : s, g.1 ∈ s := fun g => g.2
   choose F iA iM iL iT iFin iProj ϕ hϕ using hg
-  letI := iA
-  letI := iM
-  letI := iL
-  haveI := iT
-  haveI := iFin
-  haveI := iProj
-  haveI (g : s) : IsLocalizedModule (Submonoid.powers g.1) (ϕ g) :=
+  let := iA
+  let := iM
+  let := iL
+  have := iT
+  have := iFin
+  have := iProj
+  have (g : s) : IsLocalizedModule (Submonoid.powers g.1) (ϕ g) :=
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers g.1) (Localization.Away g.1) (ϕ g)).2 (hϕ g)
-  haveI (g : s) : Module.Flat R (F g) := by
-    haveI : Module.Flat R (Localization.Away g.1) :=
+  have (g : s) : Module.Flat R (F g) := by
+    have : Module.Flat R (Localization.Away g.1) :=
       IsLocalization.flat _ (Submonoid.powers g.1)
     exact Module.Flat.trans R (Localization.Away g.1) (F g)
-  haveI hfp : Module.FinitePresentation R M :=
+  have hfp : Module.FinitePresentation R M :=
     Module.FinitePresentation.of_localizationSpan' s hs (Mₚ := F)
       (Rₚ := fun g : s => Localization.Away g.1) ϕ
       fun _ => Module.finitePresentation_of_projective _ _
-  haveI : Module.Flat R M :=
+  have : Module.Flat R M :=
     Module.flat_of_isLocalized_span R M s hs F ϕ fun _ => inferInstance
   exact ⟨inferInstance, Module.Flat.projective_of_finitePresentation⟩
 
 theorem finite_projective : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → (∀ U : AffOp A.left, IsBaseChange (Sec A.hom U.unop.1) (evForm A.hom U ∘ₗ (GlobalTheory.InvForm.InvForm A).subtype)) → Module.Finite R (GlobalTheory.InvForm.InvForm A) ∧ Module.Projective R (GlobalTheory.InvForm.InvForm A) := by
   intro R _ A _ g _ hsm hbc
-  haveI : SmoothOfRelativeDimension g A.hom := hsm
-  haveI : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
+  have : SmoothOfRelativeDimension g A.hom := hsm
+  have : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
   apply finite_projective_of_locally_projective
   intro q
   let e : Spec (CommRingCat.of R) ⟶ A.left := η[A].left
@@ -644,10 +644,10 @@ theorem finite_projective : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpOb
   have hs : y ≫ A.hom = spMap (algebraMap R (Localization.Away r)) := by
     simp only [y, Category.assoc, he, Category.comp_id]
   let φ := GlobalTheory.CechKS.FormLocal.valHom (s := A.hom) (U := V) y hy hs
-  letI : Algebra (Sec A.hom V) (Localization.Away r) := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower R (Sec A.hom V) (Localization.Away r) :=
+  let : Algebra (Sec A.hom V) (Localization.Away r) := φ.toRingHom.toAlgebra
+  have : IsScalarTower R (Sec A.hom V) (Localization.Away r) :=
     IsScalarTower.of_algebraMap_eq fun a => (φ.commutes a).symm
-  haveI : Algebra.Smooth R (Sec A.hom V) := smooth_sec_affine A.hom ⟨V, hV⟩
+  have : Algebra.Smooth R (Sec A.hom V) := smooth_sec_affine A.hom ⟨V, hV⟩
   have hb := hbc (Opposite.op ⟨V, hV⟩)
   exact ⟨Localization.Away r ⊗[Sec A.hom V] Ω[Sec A.hom V⁄R], inferInstance, inferInstance, inferInstance,
     inferInstance, inferInstance, inferInstance, _,

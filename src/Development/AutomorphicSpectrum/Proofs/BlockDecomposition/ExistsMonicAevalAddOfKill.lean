@@ -114,10 +114,10 @@ theorem exists_monic_aeval_add_of_kill {M : Type*} [AddCommGroup M] [Module ℂ 
     · exact hc'
     · exact hc'.symm
     · rfl
-  letI : IsMulCommutative (Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N))) :=
+  let : IsMulCommutative (Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N))) :=
     Algebra.isMulCommutative_adjoin ℂ (fun x hx y hy _ => hcomm x hx y hy)
   open scoped IsMulCommutative in
-  letI : CommRing (Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N))) := inferInstance
+  let : CommRing (Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N))) := inferInstance
   let a' : Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N)) :=
     ⟨A', Algebra.subset_adjoin (Set.mem_insert _ _)⟩
   let b' : Algebra.adjoin ℂ ({A', B'} : Set (Module.End ℂ N)) :=
@@ -192,7 +192,7 @@ theorem liB_mem_typeSub {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimens
     (hZ : Z ∈ archSkew E a) {φ : Sm E a} (hφ : φ ∈ typeSub ρ) : liB Z φ ∈ typeSub ρ := by
   intro g
   obtain ⟨κ, hκ⟩ := exists_K_curve Z hZ
-  haveI := GlobalTheory.AvgCoeff.coeffSpan_finiteDimensional ρ
+  have := GlobalTheory.AvgCoeff.coeffSpan_finiteDimensional ρ
   exact AutomorphicForm.mem_of_hasDerivAt (GlobalTheory.Published.AutFin.coeffSpan ρ)
     (c := fun t k => evK g φ (k * κ t))
     (fun t => GlobalTheory.AvgCoeff.coeffSpan_mulRight ρ (κ t) (hφ g)) (fun k => hκ φ g k)
@@ -252,7 +252,7 @@ theorem exists_monic_compact_part {W : Type} [AddCommGroup W] [Module ℂ W] [Fi
     refine Finset.sum_congr rfl fun i _ => ?_
     module
   have hfd : FiniteDimensional ℂ (evSpan ρ) := by
-    haveI := GlobalTheory.AvgCoeff.coeffSpan_finiteDimensional ρ
+    have := GlobalTheory.AvgCoeff.coeffSpan_finiteDimensional ρ
     refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.Published.AutFin.coeffSpan ρ) ?_
     refine Submodule.span_le.2 ?_
     rintro _ ⟨g, φ, hφ, rfl⟩
@@ -365,13 +365,13 @@ theorem unifAlpha : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   obtain ⟨P, hPm, hPd, hP⟩ := exists_monic_aeval_add_of_kill Ω (lapOp (⇑b) - Ω) hc q r hq hr
   have hsum : Ω + (lapOp (⇑b) - Ω) = lapOp (⇑b) := LinearMap.ext fun x => by simp
   rw [hsum] at hP
-  letI : MeasurableSpace (archGroup E a) := borel _
-  haveI : BorelSpace (archGroup E a) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (archGroup E a) := borel _
+  have : BorelSpace (archGroup E a) := ⟨rfl⟩
+  have := hμ
   let e := archHomeo E a
   let em : GL (Fin a) (Cinf E) ≃ᵐ archGroup E a := e.symm.toHomeomorph.toMeasurableEquiv
   let ν : Measure (archGroup E a) := μ.map em
-  haveI : ν.IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
+  have : ν.IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
   obtain ⟨κ, hκs, hκc, -, hκ⟩ := (isExpLieAlgebra E a).exists_kernel_eq_conv_of_aeval_laplacian ν b P
     hPm hPd Filter.univ_mem
   refine ⟨fun y => κ (e.symm y),

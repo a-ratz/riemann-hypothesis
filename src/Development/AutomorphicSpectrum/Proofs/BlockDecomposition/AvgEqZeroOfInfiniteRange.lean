@@ -74,7 +74,7 @@ theorem index_rStab_ne_zero {H : Type} [Group H] [TopologicalSpace H] [IsTopolog
     sub_eq_zero.1 (hAB (show (x, k) ∈ A ×ˢ B from ⟨hA (Set.mem_univ x), hk⟩))
   have hopen : IsOpen (rStab u : Set H) :=
     Subgroup.isOpen_of_mem_nhds _ (Filter.mem_of_superset (hB.mem_nhds (h1 rfl)) hsub)
-  haveI := Subgroup.quotient_finite_of_isOpen (rStab u) hopen
+  have := Subgroup.quotient_finite_of_isOpen (rStab u) hopen
   exact Subgroup.index_ne_zero_of_finite
 
 theorem avg_lin {H : Type} [Group H] (S : Subgroup H) (hS : S.index ≠ 0) {J : Type} [Fintype J] (a : J → ℂ)
@@ -82,9 +82,9 @@ theorem avg_lin {H : Type} [Group H] (S : Subgroup H) (hS : S.index ≠ 0) {J : 
     avg (fun h => ∑ j, a j * u j h) = ∑ j, a j * avg (u j) := by
   have hsum : S ≤ rStab (fun h => ∑ j, a j * u j h) := fun k hk => show ∀ x, _ from fun x =>
     Finset.sum_congr rfl fun j _ => by rw [(hu j hk : ∀ x, u j (x * k) = u j x) x]
-  haveI : S.FiniteIndex := ⟨hS⟩
-  haveI : Finite (H ⧸ S) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (H ⧸ S) := Fintype.ofFinite _
+  have : S.FiniteIndex := ⟨hS⟩
+  have : Finite (H ⧸ S) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (H ⧸ S) := Fintype.ofFinite _
   rw [avg_eq_of_le_rStab _ _ S hsum hS, finsum_eq_sum_of_fintype, Finset.sum_comm, Finset.mul_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [avg_eq_of_le_rStab _ _ S (hu j) hS, finsum_eq_sum_of_fintype, ← Finset.mul_sum]
@@ -96,14 +96,14 @@ theorem twOrb_lin {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
     (hfin : ∀ j, {q : DoubleCoset.Quotient (twCent θ y : Set G) (K : Set G) |
       ∃ k ∈ K, g j ((Quotient.out q * k)⁻¹ * y * θ (Quotient.out q * k)) ≠ 0}.Finite) :
     twOrb θ K y (fun z => ∑ j, a j * g j z) = ∑ j, a j * twOrb θ K y (g j) := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have hsupp : ∀ j, (Function.support fun q : DoubleCoset.Quotient (twCent θ y : Set G) (K : Set G) =>
       (((twCent θ y ⊓ K.map (MulAut.conj (Quotient.out q)).toMonoidHom).relIndex (cptPart (twCent θ y)) : ℕ) : ℂ) *
         avg fun k : K => g j ((Quotient.out q * k)⁻¹ * y * θ (Quotient.out q * k))).Finite := by
     intro j
     refine (hfin j).subset fun q hq => ?_
     by_contra hno
-    simp only [Set.mem_setOf_eq, not_exists, not_and, ne_eq, not_not] at hno
+    simp only [Set.mem_ofPred_eq, not_exists, not_and, ne_eq, not_not] at hno
     apply hq
     have h0 : (fun k : K => g j ((Quotient.out q * k)⁻¹ * y * θ (Quotient.out q * k))) = fun _ => 0 :=
       funext fun k => hno k k.2
@@ -119,7 +119,7 @@ theorem twOrb_lin {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
         avg fun k : K => g j ((Quotient.out q * k)⁻¹ * y * θ (Quotient.out q * k))) := by
     intro q
     have hc : Continuous fun k : K => (Quotient.out q * (k : G))⁻¹ * y * θ (Quotient.out q * (k : G)) := by
-      have h1 : Continuous fun k : K => Quotient.out q * (k : G) := continuous_const.mul continuous_subtype_val
+      have h1 : Continuous fun k : K => Quotient.out q * (k : G) := continuous_const.mul continuous_subtypeVal
       exact (h1.inv.mul continuous_const).mul (hθ.comp h1)
     have hi : ∀ j, (rStab fun k : K => g j ((Quotient.out q * k)⁻¹ * y * θ (Quotient.out q * k))).index ≠ 0 :=
       fun j => index_rStab_ne_zero _ ((hg j).comp_continuous hc)
@@ -141,16 +141,16 @@ theorem clSum_lin {G : Type} [Group G] [TopologicalSpace G] (θ : G →* G) (K :
   have hsupp : ∀ j, (Function.support fun c : TwCl θ => if c.rep ∈ S then wt c.rep * twOrb θ K c.rep (g j) else 0).Finite :=
     fun j => hS.subset fun c hc => by
       by_contra hn
-      exact hc (if_neg hn)
+      exact hc (ite_eq_right hn)
   unfold clSum
   have hterm : ∀ c : TwCl θ, (if c.rep ∈ S then wt c.rep * twOrb θ K c.rep (fun z => ∑ j, a j * g j z) else 0) =
       ∑ j, a j * (if c.rep ∈ S then wt c.rep * twOrb θ K c.rep (g j) else 0) := by
     intro c
     by_cases hc : c.rep ∈ S
-    · simp only [if_pos hc, h _ hc, Finset.mul_sum]
+    · simp only [ite_eq_left hc, h _ hc, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       ring
-    · simp only [if_neg hc, mul_zero, Finset.sum_const_zero]
+    · simp only [ite_eq_right hc, mul_zero, Finset.sum_const_zero]
   rw [finsum_congr hterm, finsum_sum_comm _ _ fun j _ => ?_]
   · refine Finset.sum_congr rfl fun j _ => ?_
     rw [mul_finsum]

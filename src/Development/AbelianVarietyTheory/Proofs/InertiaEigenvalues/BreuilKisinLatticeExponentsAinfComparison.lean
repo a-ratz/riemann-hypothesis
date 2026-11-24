@@ -224,7 +224,7 @@ theorem frob_rowv (k : κ) (i : ι) :
   change frobOW l O (crd b k (I.j _)) = _
   rw [← h]
   simp only [Matrix.vecMul, dotProduct, Matrix.mulVec, apply_ite (frobOW l O), map_one, map_zero,
-    mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   exact Finset.sum_congr rfl fun m _ => mul_comm _ _
 
 end Coord
@@ -262,7 +262,7 @@ theorem exponents : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero 
     rw [Matrix.mulVec_mulVec, frobMatInv_mul, Matrix.one_mulVec]
   have hc : ∀ x i, jA l O (muOf δ ^ β) * I.ofT x i ∈ (inclO l O).range := fun x =>
     col_mem hμ hφ β _ _ (hT x) hXi
-  haveI := T.L.free
+  have := T.L.free
   let b := Module.Free.chooseBasis O ↥T.L.T
   have hr : ∀ k i, jA l O (muOf δ ^ α) * rowv b I k i ∈ (inclO l O).range := fun k =>
     row_mem hμ hφ α _ _ (frob_rowv b I k) hX

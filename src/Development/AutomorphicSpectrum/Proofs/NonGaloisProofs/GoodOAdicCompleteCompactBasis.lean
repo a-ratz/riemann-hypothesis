@@ -127,7 +127,7 @@ theorem basis_nhds (hop : IsOpen (Set.range (algebraMap O LL)))
     obtain ⟨U, hUt, hU, h0⟩ := mem_nhds_iff.1 ht
     have hint : (Set.range (algebraMap O LL) \ U) ∩ ⋂ n, (ball ϖ n : Set LL) = ∅ := by
       ext x
-      simp only [Set.mem_inter_iff, Set.mem_diff, Set.mem_iInter, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_iInter, Set.mem_empty_iff_false, iff_false]
       rintro ⟨⟨-, hxU⟩, hx⟩
       obtain ⟨y, rfl⟩ := mem_ball_iff.1 (hx 0)
       have hy : ϖ ^ 0 * y = 0 := eq_zero_of_forall_dvd hϖ fun n => by
@@ -153,9 +153,9 @@ theorem sModEq_iff {ϖ : O} {n : ℕ} {x y : O} :
 theorem isAdicComplete (hc : IsCompact (Set.range (algebraMap O LL))) {ϖ : O} (hϖ : Irreducible ϖ) :
     IsAdicComplete (Ideal.span {ϖ}) O := by
   have hinj := IsFractionRing.injective O LL
-  haveI hH : IsHausdorff (Ideal.span {ϖ}) O := ⟨fun x hx =>
+  have hH : IsHausdorff (Ideal.span {ϖ}) O := ⟨fun x hx =>
     eq_zero_of_forall_dvd hϖ fun n => by simpa using sModEq_iff.1 (hx n)⟩
-  haveI hP : IsPrecomplete (Ideal.span {ϖ}) O := ⟨fun {f} hf => by
+  have hP : IsPrecomplete (Ideal.span {ϖ}) O := ⟨fun {f} hf => by
     let C : ℕ → Set LL := fun n => (fun x => algebraMap O LL (f n) + x) '' (ball ϖ n : Set LL)
     have hCc : ∀ n, IsCompact (C n) := fun n =>
       (isCompact_ball hc ϖ n).image (continuous_const.add continuous_id)
@@ -229,8 +229,8 @@ theorem t2_and_compact (h : GoodO (Qp := ℚ_[l]) LL O) :
   have hc2 : Continuous φ.symm :=
     IsModuleTopology.continuous_of_linearMap φ.symm.toLinearEquiv.toLinearMap
   refine ⟨T2Space.of_injective_continuous φ.injective hc1, ?_⟩
-  haveI : FiniteDimensional ℚ_[l] ↥L'.1 := L'.2
-  haveI : ProperSpace ↥L'.1 := FiniteDimensional.proper ℚ_[l] ↥L'.1
+  have : FiniteDimensional ℚ_[l] ↥L'.1 := L'.2
+  have : ProperSpace ↥L'.1 := FiniteDimensional.proper ℚ_[l] ↥L'.1
   have hball : IsCompact (Metric.closedBall (0 : ↥L'.1) 1) := isCompact_closedBall 0 1
   have heq : Set.range (algebraMap O LL) = φ.symm '' Metric.closedBall (0 : ↥L'.1) 1 := by
     ext x

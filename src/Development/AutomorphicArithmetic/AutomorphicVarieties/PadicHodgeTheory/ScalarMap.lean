@@ -119,7 +119,7 @@ private theorem cond_tri (Ψ : G →* Oˣ) (I : Subgroup G) {C : Type} [CommRing
     (ht : ∀ g a b, wt a b < 0 → (u g).mat a b = 0)
     (hd : ∀ s ∈ I, ∀ a, (u s).mat a a = algebraMap O C (UpperTheory.V.UnitaryThreeInertia.psi Ψ a s)) : Cond Ψ I u := by
   refine ⟨fun s hs => ?_, fun s hs => ?_⟩
-  · rw [Matrix.charpoly_of_upperTriangular]
+  · rw [Matrix.charpoly_of_isUpperTriangular]
     · simp only [hd s hs]
     · intro a b hab
       apply ht
@@ -174,14 +174,14 @@ private theorem frac_alg (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDom
     have hm : (Ideal.comap (algebraMap ℤ_[l] O) ⊥).IsMaximal := hp.isMaximal h
     have h2 : (⊥ : Ideal O).IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := ℤ_[l]) ⊥ hm
     exact IsDiscreteValuationRing.not_a_field O (IsLocalRing.eq_maximalIdeal h2).symm
-  haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+  have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have hi2 : Function.Injective (algebraMap ℤ_[l] (FractionRing O)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] O (FractionRing O)]
     exact (IsFractionRing.injective O _).comp hi
-  letI : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
+  let : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
     IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi2 x).symm
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
+  have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
   exact ⟨inferInstance, inferInstance,
     Module.Finite.of_isLocalization ℤ_[l] O (nonZeroDivisors ℤ_[l])⟩
 
@@ -223,7 +223,7 @@ theorem UpperTheory.V.Loc.lemma2a :
   refine Ideal.pow_le_pow_right n.le_succ ?_
   obtain ⟨π, hπ, hn, hfin⟩ := trunc_data (FractionRing O) n
   let B := MvPowerSeries (Fin 12) (FractionRing O) ⧸ maximalIdeal (MvPowerSeries (Fin 12) (FractionRing O)) ^ (n + 1)
-  haveI : Module.Finite ℚ_[l] B := Module.Finite.trans (FractionRing O) B
+  have : Module.Finite ℚ_[l] B := Module.Finite.trans (FractionRing O) B
   let g : U.R →ₐ[O] B := (Ideal.Quotient.mkₐ O _).comp φ
   have hon : D.On U (push g U.r.hom) := ⟨g, rfl, fun y hy => by
     rw [← hφ.ker, RingHom.mem_ker] at hy

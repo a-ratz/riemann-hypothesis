@@ -89,7 +89,7 @@ theorem exists_dilation (d : DeltaDat Xo c n) (hM : l.M ∣ d.l₂.M) (τ : ℂ 
   have h3' := d.l₂.three_le
   have h1 : a ≡ 1 [MOD l.M] := by
     obtain ⟨p, hp⟩ := hM
-    haveI : NeZero l.M := ⟨by omega⟩
+    have : NeZero l.M := ⟨by omega⟩
     have hζ : IsPrimitiveRoot (zeta d.l₂.M) d.l₂.M := Complex.isPrimitiveRoot_exp _ (by omega)
     have hζ0 : IsPrimitiveRoot (zeta l.M) l.M := Complex.isPrimitiveRoot_exp _ (by omega)
     have hζp : IsPrimitiveRoot (zeta d.l₂.M ^ p) l.M := hζ.pow (by omega) (hp.trans (mul_comm _ _))
@@ -213,7 +213,7 @@ theorem exists_idele_at {PP : Pl D.host.E} {e : AE D} (he : Formalism.L2.NTheta.
       ChrEq χ χH → IsRes χH PP ξ → ((χ s : Circle) : ℂ) = ((ξ v : ℂˣ) : ℂ) := by
   obtain ⟨⟨h1, h2, w, ε, hw, hs⟩, h3⟩ := he
   obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (v : kP PP)
-  haveI : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
+  have : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
   have hx0 : (x : D.host.E) ≠ 0 := by
     intro h0
     have : x = 0 := by exact_mod_cast h0

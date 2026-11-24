@@ -114,9 +114,9 @@ namespace GlobalTheory.PicLoc
 
 theorem exists_away_mapAlgebra_eq_one : ∀ (A : Type) [CommRing A] (c : CommRing.Pic A) (p : Ideal A) [p.IsPrime], ∃ f ∉ p, CommRing.Pic.mapAlgebra A (Localization.Away f) c = 1 := by
   intro A _ c p _
-  letI := @Module.addCommMonoidToAddCommGroup A
-  haveI : Module.FinitePresentation A c := Module.finitePresentation_of_projective A c
-  haveI : Module.Free (Localization.AtPrime p) (LocalizedModule p.primeCompl c) :=
+  let := @Module.addCommMonoidToAddCommGroup A
+  have : Module.FinitePresentation A c := Module.finitePresentation_of_projective A c
+  have : Module.Free (Localization.AtPrime p) (LocalizedModule p.primeCompl c) :=
     Module.free_of_flat_of_isLocalRing
   obtain ⟨f, hf, hfree, -⟩ := Module.FinitePresentation.exists_free_localizedModule_powers
     p.primeCompl (LocalizedModule.mkLinearMap p.primeCompl c) (Localization.AtPrime p)
@@ -135,7 +135,7 @@ theorem exists_etale_faithfullyFlat_mapAlgebra_eq_one : ∀ (A : Type) [CommRing
     exact hf (hle (Ideal.subset_span hf1))
   obtain ⟨s, hsT, hs⟩ := (Ideal.span_eq_top_iff_finite T).mp hT
   let R : s → Type := fun i => Localization.Away (i : A)
-  haveI : ∀ i, Algebra.Etale A (R i) := fun i => Algebra.Etale.of_isLocalizationAway (i : A)
+  have : ∀ i, Algebra.Etale A (R i) := fun i => Algebra.Etale.of_isLocalizationAway (i : A)
   have halg : ∀ i, (Pi.evalRingHom R i).comp (algebraMap A ((i : s) → R i)) = algebraMap A (R i) :=
     fun i => RingHom.ext fun _ => rfl
   refine ⟨(i : s) → R i, inferInstance, inferInstance, inferInstance, ?_, ?_⟩
@@ -357,12 +357,12 @@ def Rep (x : H ℤ (sp A) Gm 1) (c : CommRing.Pic A) : Prop :=
 
 theorem etale_tensor (B C : Type) [CommRing B] [CommRing C] [Algebra A B] [Algebra A C] [Algebra.Etale A B]
     [Algebra.Etale A C] : Algebra.Etale A (B ⊗[A] C) := by
-  haveI : Algebra.Etale B (B ⊗[A] C) := inferInstance
+  have : Algebra.Etale B (B ⊗[A] C) := inferInstance
   exact Algebra.Etale.comp A B _
 
 theorem ff_tensor (B C : Type) [CommRing B] [CommRing C] [Algebra A B] [Algebra A C] [Module.FaithfullyFlat A B]
     [Module.FaithfullyFlat A C] : Module.FaithfullyFlat A (B ⊗[A] C) := by
-  haveI : Module.FaithfullyFlat B (B ⊗[A] C) := inferInstance
+  have : Module.FaithfullyFlat B (B ⊗[A] C) := inferInstance
   exact Module.FaithfullyFlat.trans A B _
 
 theorem common {x y : H ℤ (sp A) Gm 1} {c d : CommRing.Pic A} (hx : Rep x c) (hy : Rep y d) :
@@ -371,8 +371,8 @@ theorem common {x y : H ℤ (sp A) Gm 1} {c d : CommRing.Pic A} (hx : Rep x c) (
       cg A C (zOf hw) = x ∧ cd A C w = c ∧ cg A C (zOf hv) = y ∧ cd A C v = d := by
   obtain ⟨B, _, _, _, _, w, hw, rfl, rfl⟩ := hx
   obtain ⟨B', _, _, _, _, v, hv, rfl, rfl⟩ := hy
-  haveI := etale_tensor (A := A) B B'
-  haveI := ff_tensor (A := A) B B'
+  have := etale_tensor (A := A) B B'
+  have := ff_tensor (A := A) B B'
   obtain ⟨w', hw', e1, f1⟩ := push (Algebra.TensorProduct.includeLeft : B →ₐ[A] B ⊗[A] B') hw
   obtain ⟨v', hv', e2, f2⟩ := push (Algebra.TensorProduct.includeRight : B' →ₐ[A] B ⊗[A] B') hv
   exact ⟨B ⊗[A] B', inferInstance, inferInstance, inferInstance, inferInstance, w', hw', v', hv', e1, f1, e2, f2⟩
@@ -394,9 +394,9 @@ theorem rep_add {x y : H ℤ (sp A) Gm 1} {c d : CommRing.Pic A} (hx : Rep x c) 
 theorem rep_exists (x : H ℤ (sp A) Gm 1) : ∃ c, Rep x c := by
   obtain ⟨Y, f, hf, hs, hx⟩ := _root_.GlobalTheory.EtC.classes_die_on_etale_cover ℤ (Spec (CommRingCat.of A)) Gm 1 one_pos x
   obtain ⟨B, g, h, hg, hh⟩ := GlobalTheory.T.exists_etaleFaithfullyFlat_refining_etale_surjection (CommRingCat.of A) Y f hf hs
-  letI : Algebra A B := g.hom.toAlgebra
-  haveI : Algebra.Etale A B := hg.1
-  haveI : Module.FaithfullyFlat A B := hg.2
+  let : Algebra A B := g.hom.toAlgebra
+  have : Algebra.Etale A B := hg.1
+  have : Module.FaithfullyFlat A B := hg.2
   have hx' : pull ℤ (spMap (algebraMap A B)) Gm 1 x = 0 := by
     change pull ℤ (sch.map (Spec.map g)) Gm 1 x = 0
     rw [← hh, Functor.map_comp, pull_comp, hx, map_zero]

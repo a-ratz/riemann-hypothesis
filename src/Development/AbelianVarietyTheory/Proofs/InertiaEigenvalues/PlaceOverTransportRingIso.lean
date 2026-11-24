@@ -127,7 +127,7 @@ theorem normV_le_of_isFrob : ∀ (E Ω : Type) [Field E] [NumberField E] [Field 
   classical
   set k := IsLocalRing.ResidueField A
   set P : k[X] := X ^ q - X with hP
-  have hP0 : P ≠ 0 := FiniteField.X_pow_card_sub_X_ne_zero hq
+  have hP0 : P ≠ 0 := X_pow_sub_X_ne_zero hq
   let f : 𝓞 E ⧸ w.asIdeal →+* k :=
     Ideal.Quotient.lift w.asIdeal (toResidue A) (fun x hx => (toResidue_eq_zero_iff A w hw x).mpr hx)
   have hf : Function.Injective f := by
@@ -189,13 +189,13 @@ theorem exists_notMem_mul_valuation_le_one_of_ne : ∀ {F : Type} [Field F] [Num
       (by simpa using hc)
   obtain ⟨J, hJ, hnd⟩ := hfin.exists_eq_pow_mul_and_not_dvd
   have hJp : ¬ J ≤ p.asIdeal := fun h => hnd (Ideal.dvd_iff_le.mpr h)
-  obtain ⟨s, hsJ, hsp⟩ := SetLike.not_le_iff_exists.mp hJp
+  obtain ⟨s, hsJ, hsp⟩ := IsConcreteLE.not_le_iff_exists.mp hJp
   refine ⟨s, hsp, fun q hq i => ?_⟩
   have hpow : ¬ p.asIdeal ^ multiplicity p.asIdeal (Ideal.span {(b : 𝓞 F)}) ≤ q.asIdeal := by
     intro h
     have h1 : p.asIdeal ≤ q.asIdeal := q.isPrime.le_of_pow_le h
     exact hq (HeightOneSpectrum.ext (p.isMaximal.eq_of_le q.isPrime.ne_top h1).symm)
-  obtain ⟨t, ht, htq⟩ := SetLike.not_le_iff_exists.mp hpow
+  obtain ⟨t, ht, htq⟩ := IsConcreteLE.not_le_iff_exists.mp hpow
   have hts : t * s ∈ Ideal.span {(b : 𝓞 F)} := by
     rw [hJ]; exact Ideal.mul_mem_mul ht hsJ
   obtain ⟨u, hu⟩ := Ideal.mem_span_singleton.mp hts
@@ -263,9 +263,9 @@ theorem valuationSubring_lt_one_of_placeOver {E' Ω' : Type} [Field E'] [NumberF
 theorem exists_int_valuationSubring_le {E' Ω' : Type} [Field E'] [NumberField E'] [Field Ω']
     [Algebra E' Ω'] [Algebra.IsAlgebraic E' Ω'] (A' : ValuationSubring Ω') {δ : Ω'} (hδ : δ ≠ 0) :
     ∃ n : ℤ, n ≠ 0 ∧ A'.valuation (algebraMap E' Ω' (n : E')) ≤ A'.valuation δ := by
-  haveI : Algebra.IsAlgebraic ℤ E' :=
+  have : Algebra.IsAlgebraic ℤ E' :=
     ⟨fun x => (IsFractionRing.isAlgebraic_iff ℤ ℚ E').mpr (Algebra.IsAlgebraic.isAlgebraic x)⟩
-  haveI : Algebra.IsAlgebraic ℤ Ω' := Algebra.IsAlgebraic.trans ℤ E' Ω'
+  have : Algebra.IsAlgebraic ℤ Ω' := Algebra.IsAlgebraic.trans ℤ E' Ω'
   obtain ⟨n, hn, hint⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) δ⁻¹).exists_integral_multiple
   refine ⟨n, hn, ?_⟩
   have hle := (A'.valuation_le_one_iff _).2 (mem_of_isIntegral_int A' hint)
@@ -313,7 +313,7 @@ theorem approx_of_completion_equiv : ∀ (E : Type) [Field E] [NumberField E] (w
   have e2 : algebraMap E' Ω' y - algebraMap E' Ω' (j x) = -(algebraMap E' Ω' ((j x - y) * c⁻¹) * algebraMap E' Ω' c) := by
     rw [← map_mul, ← map_sub, ← map_neg]; congr 1; field_simp; ring
   have hcpos : 0 < A'.valuation (algebraMap E' Ω' c) := by
-    rw [zero_lt_iff]; simpa using hc
+    rw [pos_iff_ne_zero]; simpa using hc
   rw [e2, Valuation.map_neg, map_mul]
   calc _ < A'.valuation (algebraMap E' Ω' c) := mul_lt_of_lt_one_left hcpos ht
     _ ≤ A'.valuation δ := hnδ
@@ -439,8 +439,8 @@ theorem conj_nhds : ∀ (E Ω : Type) [Field E] [Field Ω] [Algebra E Ω] [Algeb
   let b := Module.finBasis E' L'
   let S : Set Ω := Set.range fun i => φ.symm (b i : Ω')
   let L : IntermediateField E Ω := IntermediateField.adjoin E S
-  haveI : Finite S := (Set.finite_range _).to_subtype
-  haveI : FiniteDimensional E L := IntermediateField.finiteDimensional_adjoin
+  have : Finite S := (Set.finite_range _).to_subtype
+  have : FiniteDimensional E L := IntermediateField.finiteDimensional_adjoin
     (fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral)
   refine ⟨L.fixingSubgroup, L.fixingSubgroup_isOpen, L.fixingSubgroup.one_mem, ?_⟩
   intro σ hσ σ' hrel
@@ -531,20 +531,20 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 theorem smooth_comp (φ : Ω ≃+* Ω') (e : Weil h →* Weil h')
     (he : ∀ (σ : Weil h) z, φ ((σ : G E Ω) z) = (e σ : G E' Ω') (φ z)) (hdeg : ∀ σ, deg (e σ) = deg σ)
     {M : Type} [Monoid M] (f : Weil h' →* M) (hf : IsSmooth f) : IsSmooth (f.comp e) := by
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   obtain ⟨O', hO', hpre⟩ := isOpen_induced_iff.mp hf
   have h1 : (1 : G E' Ω') ∈ O' := by
     have : (1 : Ine (F := E') A') ∈ Subtype.val ⁻¹' O' := by rw [hpre]; simp
     exact this
   obtain ⟨U, hU, hU1, hUO⟩ := conj_nhds E Ω E' Ω' φ O' (hO'.mem_nhds h1)
-  refine IsSmooth.of_open (U := Subtype.val ⁻¹' U) (hU.preimage continuous_subtype_val) hU1 ?_
+  refine IsSmooth.of_open (U := Subtype.val ⁻¹' U) (hU.preimage continuous_subtypeVal) hU1 ?_
   intro τ hτ
   have hmem : ((e (ineIncl h τ) : Weil h') : G E' Ω') ∈ Ine (F := E') A' := by
     rw [← deg_eq_zero_iff, hdeg, deg_ineIncl]
   have hO : (⟨_, hmem⟩ : Ine (F := E') A') ∈ Subtype.val ⁻¹' O' := hUO τ hτ _ (he (ineIncl h τ))
   rw [hpre] at hO
   have e1 : ineIncl h' ⟨_, hmem⟩ = e (ineIncl h τ) := Subtype.ext rfl
-  rw [Set.mem_setOf_eq, e1] at hO
+  rw [Set.mem_ofPred_eq, e1] at hO
   exact hO
 
 end Smooth
@@ -552,14 +552,14 @@ end Smooth
 open GlobalTheory.LocLanglands in
 theorem weil_equiv : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (E' Ω' : Type) [Field E'] [NumberField E'] [Field Ω'] [Algebra E' Ω'] [IsAlgClosure E' Ω'] (A' : ValuationSubring Ω') (w' : HeightOneSpectrum (𝓞 E')) (h' : IsPlaceOver A' w') (φ : Ω ≃+* Ω') (j : E →+* E') (i : w.adicCompletion E ≃+* w'.adicCompletion E'), PlaceIso A w A' w' φ j i → ∃ c : Weil h ≃* Weil h', (∀ σ σ', WeilRel φ σ σ' ↔ c σ = σ') ∧ (∀ σ, deg (c σ) = deg σ) ∧ normV w' = normV w ∧ ∀ (M : Type) [Monoid M] (f : Weil h' →* M), GlobalTheory.WeilDeligne.IsSmooth f ↔ GlobalTheory.WeilDeligne.IsSmooth (f.comp c.toMonoidHom) := by
   intro E Ω _ _ _ _ _ A w h E' Ω' _ _ _ _ _ A' w' h' φ j i hP
-  haveI : CharZero Ω' := (RingHom.charZero_iff (algebraMap E' Ω').injective).mp inferInstance
-  haveI : Algebra.IsAlgebraic E' Ω' := IsAlgClosure.isAlgebraic
+  have : CharZero Ω' := (RingHom.charZero_iff (algebraMap E' Ω').injective).mp inferInstance
+  have : Algebra.IsAlgebraic E' Ω' := IsAlgClosure.isAlgebraic
   have fixE : ∀ σ : G E Ω, σ ∈ Dec (F := E) A →
       ∀ y : E', conj φ σ.toRingEquiv (algebraMap E' Ω' y) = algebraMap E' Ω' y := by
     intro σ hσ y
     refine GlobalTheory.T.fixed_algebraic_of_limit_of_fixed_elements Ω' A' (conj φ σ.toRingEquiv) ?_ _ ?_ ?_
     · intro z
-      rw [conj_apply, hP.mem, AlgEquiv.coe_ringEquiv, apply_mem_iff_of_mem_Dec hσ]
+      rw [conj_apply, hP.mem, AlgEquiv.coe_toRingEquiv, apply_mem_iff_of_mem_Dec hσ]
       conv_rhs => rw [← φ.apply_symm_apply z]
       rw [hP.mem]
     · exact (IsIntegral.map (algebraMap E' Ω').toRatAlgHom
@@ -567,11 +567,11 @@ theorem weil_equiv : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
     · intro δ hδ
       obtain ⟨x, hx⟩ := GlobalTheory.T.dense_numberField_of_continuous_completion_equiv E w E' Ω' A' w' h' j i hP.cont hP.loc y δ hδ
       refine ⟨algebraMap E' Ω' (j x), ?_, hx⟩
-      rw [conj_apply, ← hP.ext, RingEquiv.symm_apply_apply, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes]
+      rw [conj_apply, ← hP.ext, RingEquiv.symm_apply_apply, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes]
   have fixE' : ∀ σ' : G E' Ω', ∀ x : E,
       conj φ.symm σ'.toRingEquiv (algebraMap E Ω x) = algebraMap E Ω x := by
     intro σ' x
-    rw [conj_apply, RingEquiv.symm_symm, hP.ext, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes, ← hP.ext,
+    rw [conj_apply, RingEquiv.symm_symm, hP.ext, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes, ← hP.ext,
       RingEquiv.symm_apply_apply]
   have hrelC : ∀ (σ : G E Ω) (hσ : ∀ y : E', conj φ σ.toRingEquiv (algebraMap E' Ω' y) = algebraMap E' Ω' y) z,
       φ (σ z) = conjAlg φ σ hσ (φ z) := by

@@ -162,8 +162,8 @@ end
 theorem card_addChar (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (N : Type)
     [AddCommGroup N] [Fintype N] : Nat.card (AddChar N C) = Fintype.card N := by
   have hne : Monoid.exponent (Multiplicative N) ≠ 0 := Monoid.exponent_ne_zero_of_finite
-  haveI : NeZero (Monoid.exponent (Multiplicative N)) := ⟨hne⟩
-  haveI : NeZero (Monoid.exponent (Multiplicative N) : C) := ⟨Nat.cast_ne_zero.2 hne⟩
+  have : NeZero (Monoid.exponent (Multiplicative N)) := ⟨hne⟩
+  have : NeZero (Monoid.exponent (Multiplicative N) : C) := ⟨Nat.cast_ne_zero.2 hne⟩
   rw [Nat.card_congr (AddChar.toMonoidHomEquiv.trans MonoidHom.toHomUnitsMulEquiv.toEquiv),
     CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity, Nat.card_congr Multiplicative.toAdd,
     Nat.card_eq_fintype_card]
@@ -1072,9 +1072,9 @@ theorem good_of_killed (L : ∀ (N : Type) [AddCommGroup N], Submodule R (N → 
     (h₁ : Good p v (ZMod p) (L (ZMod p))) (h₀ : Good p v (Fin 0 → ZMod p) (L (Fin 0 → ZMod p)))
     (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N] (hN : ∀ x : N, p • x = 0) :
     Good p v N (L N) := by
-  letI : Module (ZMod p) N := AddCommGroup.zmodModule hN
-  haveI h₂ : Module.Finite (ZMod p) N := Module.Finite.of_finite
-  haveI h₃ : Module.Free (ZMod p) N := Module.Free.of_divisionRing _ _
+  let : Module (ZMod p) N := AddCommGroup.zmodModule hN
+  have h₂ : Module.Finite (ZMod p) N := Module.Finite.of_finite
+  have h₃ : Module.Free (ZMod p) N := Module.Free.of_divisionRing _ _
   have b : Module.Basis (Fin (Module.finrank (ZMod p) N)) (ZMod p) N :=
     @Module.finBasis (ZMod p) N _ _ _ h₃ _ h₂
   have e : (Fin (Module.finrank (ZMod p) N) → ZMod p) ≃+ N := b.equivFun.symm.toAddEquiv
@@ -1083,7 +1083,7 @@ theorem good_of_killed (L : ∀ (N : Type) [AddCommGroup N], Submodule R (N → 
 
 theorem main : HodgeTateDatumStatement → OrdinaryCurveStatement → ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → IsAdicComplete (Ideal.span {(p : R)}) R → ∀ (P : Out.PolAV (Spec (CommRingCat.of R))), ∀ (T : TorsRep P.A p) (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N] (pt : N → (sp (R₀ := R) R ⟶ P.A)), IsTorsPts P.A p pt → ∀ (Nm : Type) [AddCommGroup Nm] [Fintype Nm] [DecidableEq Nm], ∀ (Ne : Type) [AddCommGroup Ne] [Fintype Ne] [DecidableEq Ne], (∀ x : Nm, p • x = 0) → (∀ x : Ne, p • x = 0) → IsAbFactor p (tens (torsFun C T pt) (tens (Submodule.span R (Set.range fun (ψ : AddChar Nm C) (x : Nm) => ψ x)) (intFun (C := C) R Ne))) ∧ IsTight v p (tens (torsFun C T pt) (tens (Submodule.span R (Set.range fun (ψ : AddChar Nm C) (x : Nm) => ψ x)) (intFun (C := C) R Ne))) := by
   intro hHT hOC p _ C _ _ _ v R _ _ hv hp hc P T N _ _ _ pt hpt Nm _ _ _ Ne _ _ _ hNm hNe
-  haveI : IsCommMonObj P.A := P.isAb.comm
+  have : IsCommMonObj P.A := P.isAb.comm
   obtain ⟨⟨AA, hAA⟩, -, -, -, k⟩ := GlobalTheory.T.torsion_points_hopf_order p C v R hv hp P.A T N pt hpt
   have g₁ : Good p v N (torsFun C T pt) :=
     ⟨⟨AA, hAA⟩, isAbFactor_self P.grp P.L P.isAb P.isLB P.ample T hpt,

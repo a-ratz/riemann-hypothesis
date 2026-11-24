@@ -135,7 +135,7 @@ theorem exists_agree_of_generic {U S : Scheme.{0}} (j : U ⟶ S) [IsOpenImmersio
     (((isGrpPullback_pullback ((Over.pullback j).obj G) k).comp (isGrpPullback_pullback G j)).congr hk rfl)
   obtain ⟨b, hb, hb'⟩ := grpPullback_iso (isGrpPullback_pullback H (Out.jK R ≫ t))
     (((isGrpPullback_pullback ((Over.pullback j).obj H) k).comp (isGrpPullback_pullback H j)).congr hk rfl)
-  haveI := ha; haveI := hb; haveI := hf
+  have := ha; have := hb; have := hf
   have hfK : IsMonHom (a.hom ≫ (Over.pullback k).map f ≫ b.inv) := inferInstance
   have hρ : (a.hom.left ≫ pullback.fst ((Over.pullback j).obj G).hom k) ≫ pullback.fst G.hom j =
       pullback.fst G.hom (Out.jK R ≫ t) := (Category.assoc _ _ _).trans ha'
@@ -176,7 +176,7 @@ theorem exists_agree_of_generic {U S : Scheme.{0}} (j : U ⟶ S) [IsOpenImmersio
 
 theorem exists_agree_at_stalk : ∀ {U S : Scheme.{0}} (j : U ⟶ S) [IsOpenImmersion j] (G H : Over S) [GrpObj G] [GrpObj H], IsSemiAbelian G → IsSemiAbelian H → ∀ f : (Over.pullback j).obj G ⟶ (Over.pullback j).obj H, IsMonHom f → ∀ (s : S) [IsDomain (S.presheaf.stalk s)] [IsNoetherianRing (S.presheaf.stalk s)] [IsIntegrallyClosed (S.presheaf.stalk s)] (k : Sp (FractionRing (S.presheaf.stalk s)) ⟶ U), k ≫ j = ReciprocityTheory.ChartRestriction.G.Out.jK (S.presheaf.stalk s) ≫ S.fromSpecStalk s → ∃ g : pullback G.hom (S.fromSpecStalk s) ⟶ H.left, g ≫ H.hom = pullback.fst G.hom (S.fromSpecStalk s) ≫ G.hom ∧ GlobalTheory.DedekindExt.Agree (pullback.fst G.hom j) (f.left ≫ pullback.fst H.hom j) (pullback.fst G.hom (S.fromSpecStalk s)) g := by
   intro U S j _ G H _ _ hG hH f hf s i₁ i₂ i₃ k hk
-  haveI := i₁; haveI := i₂; haveI := i₃
+  have := i₁; have := i₂; have := i₃
   exact @exists_agree_of_generic U S j _ G H _ _ hG hH f hf (S.presheaf.stalk s) _ i₁ i₂ i₃ (S.fromSpecStalk s) _ k hk
 
 end GlobalTheory.StalkExt
@@ -295,11 +295,11 @@ theorem lbIso_extend {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing
     (m : ObjMap o₀ o i) (m' : ObjMap o₀' o' i) (ψ₀ : o₀.A ⟶ o₀'.A) (ψ : o.A ⟶ o'.A) [IsMonHom ψ]
     (e : m.φ ≫ ψ.left = ψ₀.left ≫ m'.φ) (c : ℕ) (h₀ : LBIso (Hecke.lbPow o₀.P c) (o₀'.P.pull (sq2 ψ₀))) :
     LBIso (Hecke.lbPow o.P c) (o'.P.pull (sq2 ψ)) := by
-  haveI := GlobalTheory.IsNormalScheme.of_pred hY
-  haveI := o.ab.smooth
-  haveI := o.ab.geomConnected
-  haveI := GlobalTheory.smooth_tensorObj_hom o.A o.A
-  haveI := GlobalTheory.geometricallyConnected_tensorObj_hom o.A o.A
+  have := GlobalTheory.IsNormalScheme.of_pred hY
+  have := o.ab.smooth
+  have := o.ab.geomConnected
+  have := GlobalTheory.smooth_tensorObj_hom o.A o.A
+  have := GlobalTheory.geometricallyConnected_tensorObj_hom o.A o.A
   have hpb : IsPullback m.φ₂ (G2 o₀.A).hom (G2 o.A).hom i := GlobalTheory.SiegDesc.isPullback_of_isSquare m.cart.1 m.sq
   have hL : (Hecke.lbPow o.P c).IsLB := LB.isLB_linComb o.isLB _ _
   have hM : (o'.P.pull (sq2 ψ)).IsLB := pull_isLB o'.isLB _
@@ -358,14 +358,14 @@ theorem exists_isPIsog_extend : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : 
     IsPIsog c o₀ o₀' ψ₀ → ∃ ψ : o.A ⟶ o'.A, IsPIsog c o o' ψ ∧ m.φ ≫ ψ.left = ψ₀.left ≫ m'.φ := by
   intro p _ D R _ b N _ _ j c _ Y₀ Y i σ₀ σ _ _ _ hic hdom o o' o₀ o₀' m m' ψ₀ hψ₀
   have hY : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Y := fun y => ⟨hdom y, hic y⟩
-  haveI := GlobalTheory.IsNormalScheme.of_pred hY
-  haveI : IsReduced Y := by
-    haveI := hdom
+  have := GlobalTheory.IsNormalScheme.of_pred hY
+  have : IsReduced Y := by
+    have := hdom
     exact isReduced_of_isReduced_stalk Y
   have hcpos : 0 < c := hψ₀.pos
   obtain ⟨hk, hmon₀, hlin₀, heta₀, ⟨hP₀⟩, ψ₀', hmon₀', h₁, h₂⟩ := hψ₀
-  haveI := hmon₀
-  haveI := hmon₀'
+  have := hmon₀
+  have := hmon₀'
   have hA := GlobalTheory.isSemiAbelian_of_isAbelianScheme o.A o.ab
   have hA' := GlobalTheory.isSemiAbelian_of_isAbelianScheme o'.A o'.ab
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.dense_openImmersion i
@@ -375,8 +375,8 @@ theorem exists_isPIsog_extend : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : 
     m.cart m'.cart ψ₀ hmon₀
   obtain ⟨ψ', hψ'⟩ := GlobalTheory.SemiAbDenseExt.exists_extension i i.denseRange o'.A o.A hA' hA o₀'.A o₀.A m'.φ m.φ
     m'.cart m.cart ψ₀' hmon₀'
-  haveI hψm : IsMonHom ψ := GlobalTheory.ExtUnique.isMonHom_of_isGrpPullback m.cart m'.cart ψ₀ ψ hψ
-  haveI hψm' : IsMonHom ψ' := GlobalTheory.ExtUnique.isMonHom_of_isGrpPullback m'.cart m.cart ψ₀' ψ' hψ'
+  have hψm : IsMonHom ψ := GlobalTheory.ExtUnique.isMonHom_of_isGrpPullback m.cart m'.cart ψ₀ ψ hψ
+  have hψm' : IsMonHom ψ' := GlobalTheory.ExtUnique.isMonHom_of_isGrpPullback m'.cart m.cart ψ₀' ψ' hψ'
   have e : m.φ ≫ ψ.left = ψ₀.left ≫ m'.φ := hψ.symm
   have e' : m'.φ ≫ ψ'.left = ψ₀'.left ≫ m.φ := hψ'.symm
   refine ⟨ψ, ⟨hk, hψm, fun c' => ?_, fun x => ?_, ⟨lbIso_extend hY i o o' o₀ o₀' m m' ψ₀ ψ e c hP₀⟩, ψ', hψm', ?_, ?_⟩, e⟩

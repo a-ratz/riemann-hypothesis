@@ -460,7 +460,7 @@ theorem isClosed_unipFlag : IsClosed (unipFlag σ J C d : Set (GAd σ J)) := by
   have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   have : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
-  have hm : Continuous fun g : GAd σ J => (matHom _ σ J g).1 := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun g : GAd σ J => (matHom _ σ J g).1 := Units.continuous_val.comp continuous_subtypeVal
   have e : (unipFlag σ J C d : Set (GAd σ J)) = ⋂ a, ⋂ b, ⋂ _ : wt d (M + 1) a ≤ wt d (M + 1) b + (0 : ℕ),
       {g | fam (adjA σ J) (idemA C L) a * ((matHom _ σ J g).1 - 1) * fam (adjA σ J) (idemA C L) b = 0} := by
     ext g

@@ -310,9 +310,9 @@ open GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition
 
 theorem continuous_res_left : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E) (ψ : AddChar (AF D.host.F) ℂ) (χS χT : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)), IsWeilDatumO ψ V W χS χT ω → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D W.rank r) μ 𝓨 → ∀ (f : WO V W → ℂ), IsThetaFunO ψ V W f → ∀ x, Continuous fun m : GA D V => GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 (ω (m, 1) f) x := by
   intro D V V' W r C B ψ χS χT ω hω μ 𝓨 h𝓨 f hf x
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI := (GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D V).1
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have := (GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D V).1
+  have : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, h𝓨.2.2]; exact ENNReal.one_lt_top⟩
   have hy : Continuous fun y : Mx D W.rank r => isoPart V W C y + midPart V V' W B x := by
     unfold isoPart
@@ -452,8 +452,8 @@ theorem phase_eq (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (W : HSp D) {r : ℕ}
 theorem eq_of_phase_integral_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (W : HSp D) (r : ℕ) (μ : Measure (Mx D W.rank r)), μ.IsAddHaarMeasure → ∀ N₁ N₂ : Mx D W.rank r → ℂ, Continuous N₁ → Continuous N₂ → Integrable N₁ μ → Integrable N₂ μ → (∀ y : Mx D W.rank r, ∫ u, GlobalTheory.LeviNorm.phase ψ W y u * N₁ u ∂μ = ∫ u, GlobalTheory.LeviNorm.phase ψ W y u * N₂ u ∂μ) → N₁ = N₂ := by
   intro D ψ hψ W r μ hμ N₁ N₂ hc₁ hc₂ hi₁ hi₂ h
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.TowerRestrict.lattice_Mx D W.rank r
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
   have hcont : ∀ y : Mx D r W.rank, Continuous fun u : Mx D W.rank r =>
       ψ (Algebra.trace (AF D.host.F) (AE D) (Matrix.trace (HMul.hMul (y : Matrix (Fin r) (Fin W.rank) (AE D)) (u : Matrix (Fin W.rank) (Fin r) (AE D))))) :=
@@ -504,18 +504,18 @@ namespace GlobalTheory.Twist.NormRed
 theorem sq_norm_two_haar : ∀ (D : D7) (V' W : HSp D) (μ' : Measure (WO V' W)) (𝓕' : Set (WO V' W)), μ'.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V') 𝓕' μ' → ∀ (μ'' : Measure (WO V' W)) (𝓕'' : Set (WO V' W)), IsCovolOne (ratL W V') μ'' 𝓕'' → ∃ c : ENNReal, ∀ g : WO V' W → ℂ, Continuous g → (∀ γ ∈ ratL W V', ∀ w, ‖g (γ + w)‖ = ‖g w‖) → ∫⁻ x in 𝓕', ‖g x‖ₑ ^ 2 ∂μ' = c * ∫⁻ x in 𝓕'', ‖g x‖ₑ ^ 2 ∂μ'' := by
   intro D V' W μ' 𝓕' hμ' hF' μ'' 𝓕'' h''
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V'.rank
-  haveI : BorelSpace (WO V' W) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (WO V' W) := i1
-  haveI : LocallyCompactSpace (WO V' W) := i2
-  haveI : SecondCountableTopology (WO V' W) := i3
-  haveI : T2Space (WO V' W) := i4
-  haveI : DiscreteTopology (ratL W V') := i5
-  haveI : TopologicalSpace.SeparableSpace (ratL W V') := inferInstance
-  haveI : Countable (ratL W V') := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : MeasurableConstVAdd (ratL W V') (WO V' W) :=
+  have : BorelSpace (WO V' W) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (WO V' W) := i1
+  have : LocallyCompactSpace (WO V' W) := i2
+  have : SecondCountableTopology (WO V' W) := i3
+  have : T2Space (WO V' W) := i4
+  have : DiscreteTopology (ratL W V') := i5
+  have : TopologicalSpace.SeparableSpace (ratL W V') := inferInstance
+  have : Countable (ratL W V') := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : MeasurableConstVAdd (ratL W V') (WO V' W) :=
     ⟨fun c => (continuous_const.add continuous_id).measurable⟩
   obtain ⟨hμ'', hF'', -⟩ := h''
-  haveI : VAddInvariantMeasure (ratL W V') (WO V' W) μ'' :=
+  have : VAddInvariantMeasure (ratL W V') (WO V' W) μ'' :=
     ⟨fun c s _ => measure_preimage_add μ'' (c : WO V' W) s⟩
   have e := Measure.isAddLeftInvariant_eq_smul μ' μ''
   set c := Measure.addHaarScalarFactor μ' μ''
@@ -528,7 +528,7 @@ theorem sq_norm_two_haar : ∀ (D : D7) (V' W : HSp D) (μ' : Measure (WO V' W))
     intro γ x
     rw [AddSubgroup.vadd_def, vadd_eq_add]
     have h1 : ‖g ((γ : WO V' W) + x)‖₊ = ‖g x‖₊ := NNReal.eq (hper γ γ.2 x)
-    simp only [enorm_eq_nnnorm, h1]
+    simp only [eNorm_eq_nnNorm, h1]
   rw [e, Measure.restrict_smul, lintegral_smul_measure, hF2.setLIntegral_eq hF'' _ hp]
   rfl
 
@@ -625,7 +625,7 @@ theorem absE_det_pow_ne {r : ℕ} (a : GL (Fin r) (AE D)) (k : ℕ) :
 
 theorem integral_phase_sandwich : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (W : HSp D) (r : ℕ) (μ : Measure (Mx D W.rank r)), μ.IsAddHaarMeasure → ∀ (h : GA D W), GlobalTheory.Doubling.absE D.host.F D.host.E (Matrix.GeneralLinearGroup.det (matHom W h)) = 1 → ∀ (a : GL (Fin r) (AE D)) (N : Mx D W.rank r → ℂ), Continuous N → Integrable N μ → Integrable (fun u : Mx D W.rank r => N (HMul.hMul (HMul.hMul (Formalism.L2.Theta.mt W h⁻¹) u) a.val)) μ ∧ ∀ y : Mx D W.rank r, ∫ u, GlobalTheory.LeviNorm.phase ψ W (HMul.hMul (HMul.hMul (Formalism.L2.Theta.mt W h⁻¹) y) (GlobalTheory.MixModel.adj (a⁻¹).val)) u * N u ∂μ = ((GlobalTheory.Doubling.absE D.host.F D.host.E (Matrix.GeneralLinearGroup.det a) : ℝ) : ℂ) ^ W.rank * ∫ u, GlobalTheory.LeviNorm.phase ψ W y u * N (HMul.hMul (HMul.hMul (Formalism.L2.Theta.mt W h⁻¹) u) a.val) ∂μ := by
   intro D ψ _ W r μ hμ h hh a N _ hNi
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
   have hmod := GlobalTheory.T.addHaar_leftRightMul_adelicMatrices_module D W.rank r μ hμ (Formalism.L2.Theta.matHom W h⁻¹) a
   have h1 := absE_det_matHom_inv h hh
   rw [h1, ENNReal.coe_one, one_pow, one_mul] at hmod
@@ -1129,7 +1129,7 @@ theorem enorm_inv_detPow_sq {t : ℕ} (a : GL (Fin t) (AE D)) (n : ℕ) :
     push_cast
     ring
   have hn : ‖((GlobalTheory.IndefiniteRowSideFullHecke.WittDecompositions.detPow a n : ℂ))⁻¹‖ₑ = ENNReal.ofReal (GlobalTheory.IndefiniteRowSideFullHecke.WittDecompositions.detPow a n)⁻¹ := by
-    rw [← ofReal_norm_eq_enorm, norm_inv, Complex.norm_real, Real.norm_of_nonneg hd.le]
+    rw [← ofReal_norm, norm_inv, Complex.norm_real, Real.norm_of_nonneg hd.le]
   rw [hn, ← ENNReal.ofReal_coe_nnreal, ← ENNReal.ofReal_pow (inv_nonneg.2 hd.le),
     ← ENNReal.ofReal_pow ht.le, ← ENNReal.ofReal_mul (pow_nonneg (inv_nonneg.2 hd.le) _), ← hsq, inv_pow,
     inv_mul_cancel₀ (pow_ne_zero _ hd.ne'), ENNReal.ofReal_one]
@@ -1150,7 +1150,7 @@ theorem eq_zero_of_lintegral {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D
   have h2 : ∫⁻ w in 𝓕, ENNReal.ofReal (‖f w‖ ^ 2) ∂μ = ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ := by
     congr 1
     funext w
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   rw [h2, h0, ENNReal.toReal_zero]
 
 theorem main : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.IsIsoSplit V V' C B → ∀ (ψ : AddChar (AF D.host.F) ℂ) (χS χT : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)), IsWeilDatumO ψ V W χS χT ω → ∀ (χS' χT' : (AE D)ˣ →* Circle) (ω' : GA D V' × GA D W →* Module.End ℂ (WO V' W → ℂ)), IsWeilDatumO ψ V' W χS' χT' ω' → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D W.rank r) μ 𝓨 → ∀ (a : GL (Fin r) (AE D)) (g' : GA D V') (m : GA D V), HMul.hMul (Formalism.L2.Theta.mt V m) (C.map (incA D)) = HMul.hMul (C.map (incA D)) a.val → HMul.hMul (Formalism.L2.Theta.mt V m) (B.map (incA D)) = HMul.hMul (B.map (incA D)) (Formalism.L2.Theta.mt V' g') → ∀ h : GA D W, ∃ c : Circle, ∀ f, IsThetaFunO ψ V W f → GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 (ω (m, h) f) = ((c : ℂ) * (GlobalTheory.IndefiniteRowSideFullHecke.WittDecompositions.detPow a W.rank : ℂ)) • ω' (g', h) (GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.res V V' W C B μ 𝓨 f) := by
@@ -1188,7 +1188,7 @@ theorem main : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) 
       (hres.1 _ (hω.om_pres (m, h) f f.2)).2.1
     have hsq := GlobalTheory.T.leviElement_scales_restrictionNormSq_absDet D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hcv μ' 𝓕' hcv'.1 hcv'.2.1 a g' m hC hB h f f.2
     rw [hf0] at hsq
-    simp only [Pi.zero_apply, enorm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+    simp only [Pi.zero_apply, eNorm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
       MeasureTheory.lintegral_const, zero_mul, mul_zero] at hsq
     exact eq_zero_of_lintegral hψ hcv' hθ hsq
 
@@ -1239,9 +1239,9 @@ theorem main : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) 
     have hpt : ∀ w, ‖(d⁻¹ • ω' (g'⁻¹, h⁻¹) (res V V' W C B μ 𝓨 (ω (m, h) f))) w‖ₑ ^ 2 =
         ‖d⁻¹‖ₑ ^ 2 * ‖ω' (g'⁻¹, h⁻¹) (res V V' W C B μ 𝓨 (ω (m, h) f)) w‖ₑ ^ 2 := by
       intro w
-      rw [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow]
+      rw [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow]
     simp only [hpt]
-    rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top enorm_ne_top),
+    rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top eNorm_ne_top),
       hω'.om_unit μ₀ 𝓕₀ hH hF _ _ (hθω f hf),
       GlobalTheory.T.leviElement_scales_restrictionNormSq_absDet D V V' W r C B hs ψ χS χT ω hω μ 𝓨 hcv μ₀ 𝓕₀ hH hF a g' m hC hB h f hf,
       ← mul_assoc, enorm_inv_detPow_sq, one_mul]

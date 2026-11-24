@@ -97,7 +97,7 @@ theorem minor_le {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) {a μ : 
       ∏ i : I, ϖ ^ a i := by
     have ht : (b.submatrix (fun i : I => (i : Fin n)) (fun i : I => (i : Fin n))).BlockTriangular id :=
       fun i j hij => hb (show (j : Fin n) < i from hij)
-    rw [Matrix.det_of_upperTriangular ht]
+    rw [Matrix.det_of_isUpperTriangular ht]
     simp [hd]
   have hexp : (A * B).det = ∑ f : I → Fin n, (∏ i, B (f i) i) * (A.submatrix id f).det := by
     simp only [Matrix.det_apply, Matrix.mul_apply, Finset.prod_univ_sum, Fintype.piFinset_univ,
@@ -132,7 +132,7 @@ theorem minor_le {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) {a μ : 
         obtain ⟨i, j, h, hne⟩ := hf
         exact ⟨i, j, h, hne⟩
       rw [Matrix.det_zero_of_column_eq hne (fun r => by simp [hij]), mul_zero, map_zero]
-      exact zero_le'
+      exact zero_le
   have hle : Valued.v (∏ i : I, ϖ ^ a i) ≤ WithZero.exp (-c) := by
     rw [← hdet, hM, hexp]
     exact Valuation.map_sum_le _ fun f _ => hterm f

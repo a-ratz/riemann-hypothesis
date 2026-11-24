@@ -147,7 +147,7 @@ theorem levi_stepPot_cell : ∀ (N j : ℕ), j ≤ N → ∀ (i : Fin N) (w : Pa
           (-1) * gramLog (sigForm N j) (N - j) (cellMat N z) := by
       funext z
       delta GlobalTheory.CompanionTheory.Ar.PB.stepPot
-      rw [if_pos hij]
+      rw [ite_eq_left hij]
       ring
     rw [hfun]
     refine ⟨(G _ h1).add (contDiffAt_const.mul (G _ h0)), ?_⟩
@@ -170,7 +170,7 @@ theorem levi_stepPot_cell : ∀ (N j : ℕ), j ≤ N → ∀ (i : Fin N) (w : Pa
           1 * gramLog (sigForm N j) ((i : ℕ) + 1 - j) (cellMat N z) := by
       funext z
       delta GlobalTheory.CompanionTheory.Ar.PB.stepPot
-      rw [if_neg hij]
+      rw [ite_eq_right hij]
       ring
     have GA : ContDiffAt ℝ 2 (fun z : Pairs N → ℂ => gramLog (sigForm N j) N (cellMat N z) +
         (-1) * gramLog (sigForm N j) (N - j) (cellMat N z)) 0 :=
@@ -325,12 +325,12 @@ theorem gramHead_det_ne_zero_of_triangular {N : ℕ} (hd : Fin N → ℝ) (hd0 :
     (gramHead hd k b).det ≠ 0 := by
   have hbd : ∀ i, b i i ≠ 0 := by
     have h := (isUnit_iff_ne_zero.1 hu)
-    rw [det_of_upperTriangular hb] at h
+    rw [det_of_isUpperTriangular hb] at h
     exact fun i => (Finset.prod_ne_zero_iff.1 h) i (Finset.mem_univ i)
   have hs : (b.submatrix (Subtype.val : {a : Fin N // (a : ℕ) < k} → Fin N) Subtype.val).det ≠ 0 := by
     have ht : (b.submatrix (Subtype.val : {a : Fin N // (a : ℕ) < k} → Fin N) Subtype.val).BlockTriangular id :=
       fun i j hij => hb hij
-    rw [det_of_upperTriangular ht]
+    rw [det_of_isUpperTriangular ht]
     exact Finset.prod_ne_zero_iff.2 fun i _ => hbd i.1
   rw [gramHead_of_triangular hd k b hb, det_mul, det_mul, det_conjTranspose, det_diagonal]
   refine mul_ne_zero (mul_ne_zero (star_ne_zero.2 hs) ?_) hs
@@ -527,7 +527,7 @@ theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Ma
     obtain ⟨ht, hdb, -⟩ := hev.self_of_nhds
     have hd0 : ∀ a, b z0 a a ≠ 0 := by
       intro a h
-      rw [Matrix.det_of_upperTriangular ht] at hdb
+      rw [det_of_isUpperTriangular ht] at hdb
       exact hdb.ne_zero (Finset.prod_eq_zero (Finset.mem_univ a) h)
     refine (plurRe_stepCorr (fun a => hb a a) hd0 j i).congr ?_
     filter_upwards [hev, hcell] with w ⟨h1, h2, h3⟩ hw

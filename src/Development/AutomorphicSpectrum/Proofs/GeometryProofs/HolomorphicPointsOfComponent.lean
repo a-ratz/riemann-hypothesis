@@ -88,8 +88,8 @@ theorem const_of_root {n : ℕ} (f : (Fin n → ℂ) → ℂ) (hf : Differentiab
     f b = f b' := by
   have hne : p.map (Int.castRingHom ℂ) ≠ 0 := (hp.map _).ne_zero
   have hfin : ((p.map (Int.castRingHom ℂ)).rootSet ℂ).Finite := Polynomial.rootSet_finite _ _
-  haveI : Finite ((p.map (Int.castRingHom ℂ)).rootSet ℂ) := hfin
-  haveI : DiscreteTopology ((p.map (Int.castRingHom ℂ)).rootSet ℂ) := inferInstance
+  have : Finite ((p.map (Int.castRingHom ℂ)).rootSet ℂ) := hfin
+  have : DiscreteTopology ((p.map (Int.castRingHom ℂ)).rootSet ℂ) := inferInstance
   refine IsPreconnected.constant_of_mapsTo (convex_ball _ _).isPreconnected
     (T := (p.map (Int.castRingHom ℂ)).rootSet ℂ) ⟨inferInstance⟩ hf.continuousOn (fun x hx => ?_) hb hb'
   rw [Polynomial.mem_rootSet]
@@ -110,7 +110,7 @@ theorem labVal_const_of_isHolPts : ∀ (E : Type) [Field E] [NumberField E] [IsC
   choose σ hσ hc1 hc2 using hB
   obtain ⟨ρ, hρ⟩ : ∃ ρ : 𝓞 c.F →+* R, spMap ρ = jj ≫ 𝔐.f ≫ Y.s :=
     ⟨(Spec.preimage (jj ≫ 𝔐.f ≫ Y.s)).hom, by simp [spMap]⟩
-  letI : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
+  let : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
   have key : ∀ (s : CMType H ⊕ CMType H) (a : 𝓞 E), ∃ r : R, ∀ b, σ b s a = ψ b r := by
     intro s a
     have hint : IsIntegral ℤ (labelEmb c s a) :=

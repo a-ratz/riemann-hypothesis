@@ -281,7 +281,7 @@ theorem hasCompactSupport_finiteTest_mul (g : v.adicCompletion K → ℂ) :
 theorem integrable_finiteTest_mul_localAdelicChar (b : v.adicCompletion K) :
     Integrable (fun y ↦ χ.finiteTest v y * (localAdelicChar K v (b * y) : ℂ))
       (haarIntegers (v.adicCompletion K)) :=
-  ((χ.continuous_finiteTest v).mul (continuous_subtype_val.comp
+  ((χ.continuous_finiteTest v).mul (continuous_subtypeVal.comp
     ((continuous_localAdelicChar v).comp (continuous_const_mul b)))).integrable_of_hasCompactSupport
     (χ.hasCompactSupport_finiteTest_mul v _)
 

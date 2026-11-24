@@ -216,7 +216,7 @@ theorem stdFst_fixed : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
           rw [e'] at h2
           exact h2.symm
         · unfold GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle.stdFst
-          rw [if_neg hx, if_neg hx']
+          rw [ite_eq_right hx, ite_eq_right hx']
 
 end GlobalTheory.StdFstFix
 end -- clump:auto
@@ -564,7 +564,7 @@ theorem ker_cont (hX : IsBottomTri W i j X) (t : T) (P : PolF D WW.rank A.rank) 
   have hF := theta hX t P
   simp_rw [ker_eq]
   exact (hW.om_cont _ hF 0).comp (((GlobalTheory.Grid.continuous_ofSgn_symm true A).comp
-    (continuous_const.mul continuous_subtype_val)).prodMk continuous_const)
+    (continuous_const.mul continuous_subtypeVal)).prodMk continuous_const)
 
 end GlobalTheory.RowTest.BottomClassSumNeg
 

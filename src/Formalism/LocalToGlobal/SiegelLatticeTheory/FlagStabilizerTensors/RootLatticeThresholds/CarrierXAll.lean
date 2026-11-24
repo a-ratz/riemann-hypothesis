@@ -144,7 +144,7 @@ theorem lZero_of (u u' : D.what₂.Word) (sc : ℝ) (i0 i0' : ∀ _ : InfinitePl
       rw [h0, zero_pow (by omega), zero_mul]
     rw [hn, Real.sqrt_zero, Complex.ofReal_zero, zero_smul]
   · have hV : unscaledOperatorAtPointRepresentative X u u' sc i0 i0' νq w = 0 := by
-      unfold unscaledOperatorAtPointRepresentative; rw [if_neg hrep]
+      unfold unscaledOperatorAtPointRepresentative; rw [ite_eq_right hrep]
     rw [hV, map_zero, smul_zero]
 
 theorem gX_nonneg {θ : ℝ} (C : Formalism.L2.SG.LocWSOf.Choice X θ) (u u' : D.what₂.Word) (γ : X.B.I.Ginf)

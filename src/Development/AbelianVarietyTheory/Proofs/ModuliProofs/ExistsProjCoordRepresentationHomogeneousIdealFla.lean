@@ -225,7 +225,7 @@ theorem chart_spec (i : σ) :
     letI := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
     ∃ r : σ → Γ((formIdeal (numbered e I)).subscheme, emb e I ⁻¹ᵁ chart R n (e i)), r i = 1 ∧ Function.Surjective (aeval (R := R) r) ∧
       ∀ t (F : MvPolynomial σ R), F.IsHomogeneous t → (aeval r F = 0 ↔ ∃ k, X i ^ k * F ∈ I) := by
-  letI := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
+  let := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
   have key : ∀ F : MvPolynomial σ R,
       aeval (fun j => pullRatio (emb e I) _ (e i) le_rfl (e j)) F =
         ((emb e I).app (chart R n (e i))).hom (aeval (ratio R n (e i)) (rename e F)) := fun F => by
@@ -308,10 +308,10 @@ theorem exists_projRep_flat : ∀ (R σ : Type) [CommRing R] [Finite σ] (I : Id
   refine ⟨_, _, _, _, fun _ => ⟨n, emb e I, inferInstance, rfl⟩, projRep_emb e I hI,
     fun h => of_baseRingHom (Q := RingHom.FinitePresentation) _ U (iSup_chart_emb e I) fun i => ?_,
     fun h => of_baseRingHom (Q := RingHom.Flat) _ U (iSup_chart_emb e I) fun i => ?_⟩
-  · letI := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
+  · let := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
     obtain ⟨r, hi, hr, H⟩ := chart_spec e I i
     exact finitePresentation_chart hi hr hI H h
-  · letI := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
+  · let := (baseRingHom (emb e I ≫ PSpace.str R n) (emb e I ⁻¹ᵁ chart R n (e i))).hom.toAlgebra
     obtain ⟨r, hi, hr, H⟩ := chart_spec e I i
     exact flat_chart hi hr H d h
 

@@ -100,12 +100,12 @@ theorem exists_basis_dFun {k : Type} [CommRing k] {Y : Scheme.{0}} (p : Y ⟶ Sp
   have h₂ : (algX p (Y.basicOpen (t : Γ(Y, V)))).IsStandardSmoothOfRelativeDimension D := by
     rw [← resG_comp_algX p (Y.basicOpen_le (t : Γ(Y, V)))]
     exact h₁
-  letI := (algX p (Y.basicOpen (t : Γ(Y, V)))).toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D k Γ(Y, Y.basicOpen (t : Γ(Y, V))) := h₂
+  let := (algX p (Y.basicOpen (t : Γ(Y, V)))).toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension D k Γ(Y, Y.basicOpen (t : Γ(Y, V))) := h₂
   obtain ⟨ι, σ, _, _, P, hP⟩ :=
     ‹Algebra.IsStandardSmoothOfRelativeDimension D k Γ(Y, Y.basicOpen (t : Γ(Y, V)))›.out
-  letI := Fintype.ofFinite ι
-  letI := Fintype.ofFinite σ
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite σ
   have hc : Fintype.card ((Set.range P.map)ᶜ : Set ι) = D := by
     rw [Fintype.card_compl_set, Set.card_range_of_injective P.map_inj, ← hP]
     simp [Algebra.Presentation.dimension]
@@ -148,25 +148,25 @@ theorem formallySmooth_residueField {k : Type} [Field k] [PerfectField k] {X : S
     (y : X) (hy : y ∈ U) [Algebra k (X.presheaf.stalk y)]
     (h : algebraMap k (X.presheaf.stalk y) = (X.presheaf.germ U y hy).hom.comp (algX p U)) :
     Algebra.FormallySmooth k (IsLocalRing.ResidueField (X.presheaf.stalk y)) := by
-  letI : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hy).hom.toAlgebra
-  letI : Algebra k Γ(X, U) := (algX p U).toAlgebra
-  haveI : IsScalarTower k Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' h
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth n p
+  let : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hy).hom.toAlgebra
+  let : Algebra k Γ(X, U) := (algX p U).toAlgebra
+  have : IsScalarTower k Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' h
+  have : Smooth p := SmoothOfRelativeDimension.smooth n p
   have hft : (algX p U).FiniteType := by
     have h₀ := HasRingHomProperty.appLE @LocallyOfFiniteType p inferInstance
       ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
     exact RingHom.FiniteType.comp h₀
       (RingHom.FiniteType.of_surjective _ (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.symm.surjective)
-  haveI : Algebra.FiniteType k Γ(X, U) := hft
-  haveI : IsLocalization.AtPrime (X.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
+  have : Algebra.FiniteType k Γ(X, U) := hft
+  have : IsLocalization.AtPrime (X.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
     hU.isLocalization_stalk ⟨y, hy⟩
-  haveI : Algebra.EssFiniteType Γ(X, U) (X.presheaf.stalk y) :=
+  have : Algebra.EssFiniteType Γ(X, U) (X.presheaf.stalk y) :=
     Algebra.EssFiniteType.of_isLocalization _ (hU.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl
-  haveI : Algebra.EssFiniteType k (X.presheaf.stalk y) :=
+  have : Algebra.EssFiniteType k (X.presheaf.stalk y) :=
     Algebra.EssFiniteType.comp k Γ(X, U) (X.presheaf.stalk y)
-  haveI : Algebra.EssFiniteType (X.presheaf.stalk y) (IsLocalRing.ResidueField (X.presheaf.stalk y)) :=
+  have : Algebra.EssFiniteType (X.presheaf.stalk y) (IsLocalRing.ResidueField (X.presheaf.stalk y)) :=
     inferInstance
-  haveI : Algebra.EssFiniteType k (IsLocalRing.ResidueField (X.presheaf.stalk y)) :=
+  have : Algebra.EssFiniteType k (IsLocalRing.ResidueField (X.presheaf.stalk y)) :=
     Algebra.EssFiniteType.comp k (X.presheaf.stalk y) _
   exact Algebra.FormallySmooth.of_perfectField
 
@@ -183,7 +183,7 @@ theorem exists_adapted_frame : ∀ {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {n : ℕ}
   classical
   intro X p n _ y J _ f hf hli
 
-  choose V hyV s hs using fun j => X.presheaf.germ_exist (x := y) (f j)
+  choose V hyV s hs using fun j => X.presheaf.exists_germ_eq (x := y) (f j)
   let O : X.Opens := ⟨⋂ j, (V j : Set X), isOpen_iInter_of_finite fun j => (V j).isOpen⟩
   have hyO : y ∈ O := Set.mem_iInter.2 hyV
   have hOV (j : J) : O ≤ V j := fun _ hx => Set.mem_iInter.1 hx j
@@ -198,12 +198,12 @@ theorem exists_adapted_frame : ∀ {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {n : ℕ}
     conv_lhs => rw [← b.sum_repr (dFun (algX p U) (z₀ j))]
     simp only [hb, a]
 
-  letI iΓ : Algebra ℂ Γ(X, U) := (algX p U).toAlgebra
-  letI iA : Algebra ℂ (X.presheaf.stalk y) :=
+  let iΓ : Algebra ℂ Γ(X, U) := (algX p U).toAlgebra
+  let iA : Algebra ℂ (X.presheaf.stalk y) :=
     ((X.presheaf.germ U y hyU).hom.comp (algX p U)).toAlgebra
-  letI iΓA : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hyU).hom.toAlgebra
-  haveI : IsScalarTower ℂ Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI := formallySmooth_residueField (n := n) p hU y hyU rfl
+  let iΓA : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hyU).hom.toAlgebra
+  have : IsScalarTower ℂ Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' rfl
+  have := formallySmooth_residueField (n := n) p hU y hyU rfl
   have hw := linearIndependent_tmul_D (k := ℂ) f hf hli
   let ρ : Γ(X, U) →+* IsLocalRing.ResidueField (X.presheaf.stalk y) :=
     (IsLocalRing.residue (X.presheaf.stalk y)).comp (X.presheaf.germ U y hyU).hom

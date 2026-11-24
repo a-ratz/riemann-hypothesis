@@ -214,7 +214,7 @@ theorem flagPerm_big {H : Host E} (Dw : Datum H) (w : ∀ τ, Equiv.Perm (Fin (D
   rw [e]
   unfold flagPerm
   rw [Equiv.permCongr_apply, finSumFinEquiv_symm_apply_castAdd, Equiv.sumCongr_apply, Sum.map_inl,
-    finSumFinEquiv_apply_left, Fin.coe_castAdd, Equiv.permCongr_apply]
+    finSumFinEquiv_apply_left, Fin.val_castAdd, Equiv.permCongr_apply]
   simp
 
 theorem flagPerm_small {H : Host E} (Dw : Datum H) (w : ∀ τ, Equiv.Perm (Fin (Dw.mult τ))) {σ : E →+* ℂ}
@@ -227,8 +227,8 @@ theorem flagPerm_small {H : Host E} (Dw : Datum H) (w : ∀ τ, Equiv.Perm (Fin 
   rw [e]
   unfold flagPerm
   rw [Equiv.permCongr_apply, finSumFinEquiv_symm_apply_natAdd, Equiv.sumCongr_apply, Sum.map_inr,
-    finSumFinEquiv_apply_right, Fin.coe_natAdd, Equiv.permCongr_apply, Equiv.permCongr_apply]
-  simp only [Fin.revPerm_symm, Fin.revPerm_apply, Fin.val_rev, finCongr_apply, finCongr_symm, Fin.coe_cast]
+    finSumFinEquiv_apply_right, Fin.val_natAdd, Equiv.permCongr_apply, Equiv.permCongr_apply]
+  simp only [Fin.revPerm_symm, Fin.revPerm_apply, Fin.val_rev, finCongr_apply, finCongr_symm, Fin.val_cast]
   have key : ∀ x : Fin (Dw.mult (conjEmb (conjEmb σ))), (x : ℕ) = (i : ℕ) →
       ((w (conjEmb (conjEmb σ)) x : Fin _) : ℕ) = ((w σ i : Fin (Dw.mult σ)) : ℕ) := by
     rintro ⟨x, hx⟩ hxi
@@ -255,10 +255,10 @@ theorem flagMap_rename {H : Host E} (Dw : Datum H) (w : ∀ τ, Equiv.Perm (Fin 
   simp only [AlgHom.comp_apply, rename_X, flagMap, aeval_X]
   obtain ⟨σ, i⟩ := x
   by_cases h : σ (H.rt : E) = H.rt0
-  · simp only [flagRoot, dif_pos h, rename_X]
+  · simp only [flagRoot, dite_eq_left h, rename_X]
     congr 2
     exact Fin.ext (flagPerm_big Dw w ⟨σ, h⟩ i _).symm
-  · simp only [flagRoot, dif_neg h, map_neg, rename_X]
+  · simp only [flagRoot, dite_eq_right h, map_neg, rename_X]
     congr 3
     exact Fin.ext (flagPerm_small Dw w h i _).symm
 

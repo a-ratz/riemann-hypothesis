@@ -165,7 +165,7 @@ private theorem absSpec2 {A O Ω : Type} [CommRing A] [IsCNL A] [CommRing O] [Is
     intro f K F hF hcF
     have h : ∃ F, ∃ K, F ∈ X.ClOrd W ((Matrix.GeneralLinearGroup.map (algebraMap A Ω)).comp τ) (U K) c
         ((Units.map (algebraMap O Ω : O →* Ω)).comp φ) ∧ X.ctrl m W F = X.mapFn (B := Ω) f := ⟨F, K, hF, hcF⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     obtain ⟨K2, hK2, hc2⟩ := h.choose_spec
     exact huniq K2 K _ F hK2 hF (hc2.trans hcF.symm)
   have hgood : ∀ K, ∀ f ∈ X.Ord τ θ (U K),
@@ -337,22 +337,22 @@ theorem UpperTheory.V.Z.Desc.V0.spec2 :
     Spec2 := by
   intro L Ω _ _ _ _ _ l _ n c H hAx A _ _ _ θ hWt ι x lam hAr
   classical
-  haveI : Finite (ResidueField c.O) := by
-    haveI : IsDiscreteValuationRing c.O := c.dvr
-    haveI : Module.Finite ℤ_[l] c.O := c.fin
+  have : Finite (ResidueField c.O) := by
+    have : IsDiscreteValuationRing c.O := c.dvr
+    have : Module.Finite ℤ_[l] c.O := c.fin
     exact (abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨⟨c1, hc1, hx1⟩, a0, ha0, ha0', hnorm⟩ := (GradeZeroInterpolatingElement.coPt c A).1 x
   obtain ⟨c', hc', R, halg, hχR⟩ := wtRep L l n H.V H.Sl ι lam c1
-  letI iOC : Algebra c'.O ℂ := (ι.toRingHom.comp (algebraMap c'.O (Qbar l))).toAlgebra
+  let iOC : Algebra c'.O ℂ := (ι.toRingHom.comp (algebraMap c'.O (Qbar l))).toAlgebra
   have hxO : ∀ a : A, x a ∈ c'.O := fun a => hc' (hx1 a)
   let xO : A →+* c'.O := x.toRingHom.codRestrict c'.O hxO
-  letI iAO : Algebra A c'.O := xO.toAlgebra
-  letI iAC : Algebra A ℂ := (ι.toRingHom.comp x.toRingHom).toAlgebra
-  haveI : IsScalarTower A c'.O ℂ := IsScalarTower.of_algebraMap_eq fun a => rfl
-  haveI hDVR : IsDiscreteValuationRing c'.O := c'.dvr
-  haveI : Module.Finite ℤ_[l] c'.O := c'.fin
-  haveI : Algebra.IsIntegral ℤ_[l] c'.O := Algebra.IsIntegral.of_finite ℤ_[l] c'.O
+  let iAO : Algebra A c'.O := xO.toAlgebra
+  let iAC : Algebra A ℂ := (ι.toRingHom.comp x.toRingHom).toAlgebra
+  have : IsScalarTower A c'.O ℂ := IsScalarTower.of_algebraMap_eq fun a => rfl
+  have hDVR : IsDiscreteValuationRing c'.O := c'.dvr
+  have : Module.Finite ℤ_[l] c'.O := c'.fin
+  have : Algebra.IsIntegral ℤ_[l] c'.O := Algebra.IsIntegral.of_finite ℤ_[l] c'.O
   have hpadic : ∀ z : Qbar l, IsIntegral ℤ_[l] z ↔ ‖z‖ ≤ 1 := by
     intro z
     have hi : IsIntegral ℚ_[l] z := Algebra.IsIntegral.isIntegral z
@@ -370,7 +370,7 @@ theorem UpperTheory.V.Z.Desc.V0.spec2 :
   have hle1 : ∀ y : c'.O, ‖(y : Qbar l)‖ ≤ 1 := by
     intro y
     exact (hpadic _).1 ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) y).map c'.O.val)
-  haveI : IsLocalHom (algebraMap A c'.O) := by
+  have : IsLocalHom (algebraMap A c'.O) := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have hm : a ∈ maximalIdeal A := (IsLocalRing.mem_maximalIdeal a).2 hna
@@ -389,7 +389,7 @@ theorem UpperTheory.V.Z.Desc.V0.spec2 :
       rw [← norm_mul, h3, norm_one]
     rw [pow_one] at h1
     nlinarith [norm_nonneg (x a), norm_nonneg ((((u⁻¹ : c'.Oˣ) : c'.O) : Qbar l))]
-  haveI : IsCNL c'.O := by
+  have : IsCNL c'.O := by
     obtain ⟨h1, h2, -⟩ := abelian₂.dvr_finite l c'.O
     exact ⟨h1, h2⟩
   have hinj : Function.Injective (algebraMap c'.O ℂ) := ι.injective.comp Subtype.val_injective

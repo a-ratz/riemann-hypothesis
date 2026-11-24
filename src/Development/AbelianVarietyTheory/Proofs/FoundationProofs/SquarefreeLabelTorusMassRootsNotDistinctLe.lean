@@ -77,11 +77,11 @@ namespace GlobalTheory.BadShare.TwoRoots
 
 theorem pow_card_pow_natDegree {g : ℕ} [Fact g.Prime] (x : AlgebraicClosure (ZMod g)) :
     x ^ (g ^ (minpoly (ZMod g) x).natDegree) = x := by
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
   have hi : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI := IntermediateField.adjoin.finiteDimensional hi
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
-  haveI : Fintype (IntermediateField.adjoin (ZMod g) {x}) := Fintype.ofFinite _
+  have := IntermediateField.adjoin.finiteDimensional hi
+  have : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
+  have : Fintype (IntermediateField.adjoin (ZMod g) {x}) := Fintype.ofFinite _
   let y : IntermediateField.adjoin (ZMod g) {x} := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
   have h := FiniteField.pow_card y
   rw [Module.card_eq_pow_finrank (K := ZMod g), IntermediateField.adjoin.finrank hi, ZMod.card] at h
@@ -90,7 +90,7 @@ theorem pow_card_pow_natDegree {g : ℕ} [Fact g.Prime] (x : AlgebraicClosure (Z
 theorem pow_eq_pow_padicVal {k : Type} [Field k] {n l a : ℕ} (hn : n ≠ 0) (hl : l.Prime) {x y : k}
     (hx : x ^ n = 1) (hy : y ^ n = 1) (h : x ^ (l ^ a) = y ^ (l ^ a)) :
     x ^ (l ^ padicValNat l n) = y ^ (l ^ padicValNat l n) := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hy0 : y ≠ 0 := by rintro rfl; simp [hn] at hy
   have h1 : (x / y) ^ n = 1 := by rw [div_pow, hx, hy, div_one]
   have h2 : (x / y) ^ (l ^ a) = 1 := by rw [div_pow, h, div_self (pow_ne_zero _ hy0)]
@@ -106,8 +106,8 @@ theorem exists_small_degree {g : ℕ} [Fact g.Prime] {x y : AlgebraicClosure (ZM
     ∃ e, 1 ≤ e ∧ e ≤ (minpoly (ZMod g) x).natDegree / 2 ∧ (x ^ L) ^ (g ^ e) = x ^ L := by
   have hi : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
   have hz : IsIntegral (ZMod g) (x ^ L) := Algebra.IsIntegral.isIntegral _
-  haveI := IntermediateField.adjoin.finiteDimensional hi
-  haveI := IntermediateField.adjoin.finiteDimensional hz
+  have := IntermediateField.adjoin.finiteDimensional hi
+  have := IntermediateField.adjoin.finiteDimensional hz
   refine ⟨(minpoly (ZMod g) (x ^ L)).natDegree, minpoly.natDegree_pos hz, ?_, pow_card_pow_natDegree _⟩
   have hle : IntermediateField.adjoin (ZMod g) {x ^ L} ≤ IntermediateField.adjoin (ZMod g) {x} := by
     rw [IntermediateField.adjoin_simple_le_iff]
@@ -121,7 +121,7 @@ theorem exists_small_degree {g : ℕ} [Fact g.Prime] {x y : AlgebraicClosure (ZM
     have hx : x ∈ IntermediateField.adjoin (ZMod g) {x ^ L} := heq ▸ IntermediateField.mem_adjoin_simple_self _ _
     have hfix : IntermediateField.adjoin (ZMod g) {x ^ L} ≤ IntermediateField.fixedField (Subgroup.zpowers σ) := by
       rw [IntermediateField.adjoin_simple_le_iff, ← IntermediateField.adjoin_simple_le_iff,
-        IntermediateField.le_iff_le, Subgroup.zpowers_le, IntermediateField.mem_fixingSubgroup_iff]
+        IntermediateField.le_fixedField_iff_le_fixingSubgroup, Subgroup.zpowers_le, IntermediateField.mem_fixingSubgroup_iff]
       intro t ht
       induction ht using IntermediateField.adjoin_induction with
       | mem t ht => rw [Set.mem_singleton_iff.1 ht, map_pow, hσ, h]
@@ -523,9 +523,9 @@ private theorem pow_card_pow_natDegree_minpoly_sub_one_eq_one {g : ℕ} [Fact g.
   let K := IntermediateField.adjoin (ZMod g) {x}
   have hfin : Module.finrank (ZMod g) K = (minpoly (ZMod g) x).natDegree :=
     IntermediateField.adjoin.finrank hint
-  haveI : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  letI : Fintype K := Fintype.ofFinite K
+  have : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  let : Fintype K := Fintype.ofFinite K
   have hcard : Fintype.card K = g ^ (minpoly (ZMod g) x).natDegree := by
     rw [← hfin, Module.card_eq_pow_finrank (K := ZMod g), ZMod.card]
   let x' : K := ⟨x, IntermediateField.mem_adjoin_simple_self _ _⟩
@@ -571,7 +571,7 @@ private theorem exists_root_pow_eq_pow_padicVal {g : ℕ} [Fact g.Prime] (l : �
     rw [Nat.factorization_def n hl] at this
     rw [← Nat.padicValNat_def] at this
     exact Nat.Coprime.pow_left _ this
-  haveI : NeZero m := ⟨hm0⟩
+  have : NeZero m := ⟨hm0⟩
   obtain ⟨t, ht⟩ : ∃ t, l ^ B * t ≡ 1 [MOD m] := by
     refine ⟨(((l ^ B : ℕ) : ZMod m)⁻¹).val, ?_⟩
     rw [← ZMod.natCast_eq_natCast_iff, Nat.cast_mul, ZMod.natCast_zmod_val, Nat.cast_one]
@@ -624,7 +624,7 @@ private theorem card_nthRoots_samePrimePower_le {g : ℕ} [Fact g.Prime] (l n : 
   rw [← Set.ncard_coe_finset]
   apply Set.ncard_le_ncard _ hfin
   intro x hx
-  simp only [Finset.coe_filter, Multiset.mem_toFinset, mem_nthRoots hn, Set.mem_setOf_eq] at hx ⊢
+  simp only [Finset.coe_filter, Multiset.mem_toFinset, mem_nthRoots hn, Set.mem_ofPred_eq] at hx ⊢
   exact hx
 
 open Polynomial Classical in

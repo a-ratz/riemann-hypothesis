@@ -89,7 +89,7 @@ private theorem tameEq_cochain {k Γ M : Type} [CommRing k] [Group Γ] [Topologi
   let f' : Γ → M := fun g => if h : ∃ j : J, j.1⁻¹ * g ∈ U then f h.choose else 0
   have hf' : ∀ (g : Γ) (j : J), j.1⁻¹ * g ∈ U → f' g = f j := fun g j hj => by
     have h : ∃ j : J, j.1⁻¹ * g ∈ U := ⟨j, hj⟩
-    have e : f' g = f h.choose := dif_pos h
+    have e : f' g = f h.choose := dite_eq_left h
     have h2 : (j⁻¹ * h.choose).1 ∈ U := by
       have := mul_mem hj (inv_mem h.choose_spec)
       simpa [mul_assoc] using this
@@ -171,21 +171,21 @@ theorem UpperTheory.V.GC.tameEq :
     ∀ (k : Type) [Field k] [Finite k] [CharP k l] (M : Type) [AddCommGroup M] [Module k M] [Module.Finite k M] [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k (G F Ω) M), ContAction ρ → (∀ g ∈ Ine (F := F) A ⊓ K, ρ g = 1) →
     Module.Finite k (eqHom ρ (Dec (F := F) A) (Ine (F := F) A ⊓ K)) ∧ finrank k (eqHom ρ (Dec (F := F) A) (Ine (F := F) A ⊓ K)) = finrank k (H2 (ρ.comp (Dec (F := F) A).subtype)) := by
   intro lf lt le F Ω _ _ _ _ _ l _ v A hA hl K _ hKo hKi k _ _ _ M _ _ _ _ _ ρ hρ hJ
-  haveI : IsGalois F Ω := {}
-  haveI : Finite M := Module.finite_of_finite k
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : IsGalois F Ω := {}
+  have : Finite M := Module.finite_of_finite k
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   let σ : Representation k (Dec (F := F) A) M := ρ.comp (Dec (F := F) A).subtype
-  have hσ : ContAction σ := hρ.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+  have hσ : ContAction σ := hρ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
   let I := (Ine (F := F) A).subgroupOf (Dec (F := F) A)
   let J := (Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)
-  haveI hIn : I.Normal := inferInstance
-  haveI hJn : J.Normal := ⟨fun n hn g => ⟨hIn.conj_mem n hn.1 g, ‹K.Normal›.conj_mem n.1 hn.2 g.1⟩⟩
+  have hIn : I.Normal := inferInstance
+  have hJn : J.Normal := ⟨fun n hn g => ⟨hIn.conj_mem n hn.1 g, ‹K.Normal›.conj_mem n.1 hn.2 g.1⟩⟩
   have hJI : J ≤ I := Subgroup.comap_mono inf_le_left
   have hidx : ¬ l ∣ J.relIndex I := by
     rw [Subgroup.relIndex_subgroupOf (Ine_le_Dec _), Subgroup.inf_relIndex_left]
     exact fun h => hKi (h.trans (Subgroup.relIndex_dvd_index_of_normal K _))
   have hJc : IsClosed (J : Set (Dec (F := F) A)) :=
-    ((isClosed_Ine A).inter (K.isClosed_of_isOpen hKo)).preimage continuous_subtype_val
+    ((isClosed_Ine A).inter (K.isClosed_of_isOpen hKo)).preimage continuous_subtypeVal
   have hJσ : ∀ j ∈ J, σ j = 1 := fun j hj => hJ j.1 hj
   obtain ⟨φ, -, h1, h2⟩ := decZhat F Ω v A hA
   obtain ⟨a1, -, -, a2, -⟩ := locEuler lf lt le F Ω l v A hA k M σ hσ
@@ -193,7 +193,7 @@ theorem UpperTheory.V.GC.tameEq :
   have hur : finrank k (H1ur σ J) = finrank k (H0 σ) := by
     rw [X.urIndex l σ hσ I J hJI hidx, X.urAbs σ hσ I φ h1 h2]
   let e : (Ine (F := F) A ⊓ K : Subgroup (G F Ω)) → Dec (F := F) A := fun j => ⟨j.1, Ine_le_Dec A j.2.1⟩
-  have he : Continuous e := continuous_subtype_val.subtype_mk _
+  have he : Continuous e := continuous_subtypeVal.subtype_mk _
   let p : Z1 σ →ₗ[k] eqHom ρ (Dec (F := F) A) (Ine (F := F) A ⊓ K) :=
     { toFun := fun z => ⟨fun j => z.1 (e j), (IsLocallyConstant.iff_continuous _).2 (z.2.1.comp he), fun a b => by
           have := z.2.2 (e a) (e b)
@@ -228,7 +228,7 @@ theorem UpperTheory.V.GC.tameEq :
   have hq : Function.Surjective q := by
     intro f
     let e' : J → (Ine (F := F) A ⊓ K : Subgroup (G F Ω)) := fun j => ⟨j.1.1, j.2⟩
-    have he' : Continuous e' := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+    have he' : Continuous e' := (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
     obtain ⟨x, hx⟩ := tameEq_ext σ hσ J hJσ (H2_unramified_inflation l _ k M σ hσ I J φ hJI hJc hidx hJσ h1 h2)
       (fun j => f.1 (e' j)) (f.2.1.comp_continuous he') (fun a b => f.2.2.1 (e' a) (e' b))
       (fun d j j' h => f.2.2.2 d.1 d.2 (e' j) (e' j') (congrArg Subtype.val h))

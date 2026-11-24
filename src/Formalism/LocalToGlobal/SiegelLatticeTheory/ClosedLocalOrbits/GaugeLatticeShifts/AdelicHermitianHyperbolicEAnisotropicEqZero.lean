@@ -359,7 +359,7 @@ theorem Bf'_mulVec_supp (S : Set (Fin D.R.rS)) {y : VA X.B.I}
     obtain ⟨b, hb, rfl⟩ := hx
     intro k hk
     show (Bf' X *ᵥ incl X.B.I (bv X (Sum.inl b))) k = 0
-    rw [Bf'_incl, Pi.single_apply, if_neg]
+    rw [Bf'_incl, Pi.single_apply, ite_eq_right]
     rintro rfl
     exact hk ⟨b, hb, rfl⟩
   | zero => intro k _; simp
@@ -423,7 +423,7 @@ theorem half_fin {y : X.B.I.Gf} (hy : y ∈ X.NfinU u) :
   rcases j with a | w | a
   · refine Bf'_mulVec_supp X {b | b.1 < a.1} (hy.1 a) i ?_
     rintro ⟨b, hb, rfl⟩
-    simp only [lvk, Sum.elim_inl, Set.mem_setOf_eq] at hij hb
+    simp only [lvk, Sum.elim_inl, Set.mem_ofPred_eq] at hij hb
     omega
   · have h := hy.2.2 _ fun a => hA_e_w X a w
     rw [← Set.image_univ] at h

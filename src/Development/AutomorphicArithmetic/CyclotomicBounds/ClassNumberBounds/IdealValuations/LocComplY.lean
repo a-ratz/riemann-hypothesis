@@ -273,7 +273,7 @@ theorem exists_completion_map (v : HeightOneSpectrum (𝓞 E)) (j : E →+* Padi
   obtain ⟨p, hpv, hp0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot v.ne_bot
   have hp0' : (p : E) ≠ 0 := by exact_mod_cast hp0
   have := finiteDimensional_complField j
-  have : CompleteSpace (complField j) := FiniteDimensional.complete ℚ_[l] _
+  have : CompleteSpace (complField j) := FiniteDimensional.completeSpace ℚ_[l] _
   let f : E →+* complField j :=
     j.codRestrict (complField j) fun x => IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩
   let : NormedField E := NormedField.induced E _ i i.injective
@@ -297,7 +297,7 @@ theorem exists_completion_map (v : HeightOneSpectrum (𝓞 E)) (j : E →+* Padi
   have hJi : ∀ x, J' (i x) = f x := fun x =>
     (hiso.isUniformInducing.isDenseInducing hd).extend_eq hf.uniformContinuous.continuous x
   let J : v.adicCompletion E →+* PadicAlgCl l := (complField j).subtype.comp J'
-  have hJ : IsUniformInducing J := isUniformEmbedding_subtype_val.isUniformInducing.comp hJ'
+  have hJ : IsUniformInducing J := isUniformEmbedding_subtypeVal.isUniformInducing.comp hJ'
   have hJj : ∀ x : E, J (algebraMap E _ x) = j x := fun x => congrArg Subtype.val (hJi x)
   refine ⟨J, hJ.uniformContinuous.continuous, hJj, le_antisymm ?_ ?_⟩
   · rintro _ ⟨x, rfl⟩

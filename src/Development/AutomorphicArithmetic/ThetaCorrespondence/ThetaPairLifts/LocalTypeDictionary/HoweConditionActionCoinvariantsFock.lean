@@ -472,7 +472,7 @@ theorem exists_darboux_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
   obtain ⟨μ, 𝓕, hμ, h𝓕⟩ := GlobalTheory.ConstRatio.exists_meas M
   obtain ⟨hμ', h𝓕'⟩ := GlobalTheory.ConjUTransport.map_isHaar_isFundamentalDomain M (J := Xs.J) _ hc rfl μ 𝓕 hμ h𝓕
   obtain ⟨o, ho⟩ := GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified D.host.F D.host.E D.sp.cm.sig hcm
-    (by haveI := GlobalTheory.InertOfConj.unram D; infer_instance)
+    (by have := GlobalTheory.InertOfConj.unram D; infer_instance)
   let Mo : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Model D.sp.cm.sig Xs Ws :=
     ⟨co, fun v => Set.indicator {x | ∀ k, x k ∈ v.adicCompletionIntegers D.host.F} 1,
       μ.map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU M (J := Xs.J) _ rfl), GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU M (J := Xs.J) _ rfl '' 𝓕⟩
@@ -1064,7 +1064,7 @@ theorem oneParam_stable {X Q : Type} [AddCommGroup Q] [Module ℂ Q] (ι : Q →
     refine h4.congr_of_eventuallyEq (Filter.Eventually.of_forall fun r => ?_)
     simp only [← h2, ← Module.End.mul_apply, ← hadd, sub_add_cancel]
   have hz := ODE_solution_unique_univ (v := fun _ => A) (s := fun _ => Set.univ) (K := ‖A‖₊) (t₀ := 0)
-    (f := fun s => π (g (ρ s (ι P)))) (g := fun _ => 0) (fun _ => A.lipschitz.lipschitzOnWith)
+    (f := fun s => π (g (ρ s (ι P)))) (g := fun _ => 0) (fun _ => A.lipschitzWith.lipschitzOnWith)
     (fun s => ⟨hw s, trivial⟩) (fun s => ⟨by simpa using hasDerivAt_const s (0 : Fin _ → ℂ), trivial⟩) (by
       simp only [h0, Module.End.one_apply, hg']
       rw [hπ' ⟨P, hPV⟩, map_eq_zero_iff _ e.injective]
@@ -1110,8 +1110,8 @@ theorem mem_closure_elt {V : HSp D} (B : Fr V) {a : GA D V} (ha : a ∈ GinfC V)
   have hu : ∀ s : Finset D.what₂.Tau, Eqv.IsUnitFam D V (fun τ => if τ ∈ s then gs τ else 1) := by
     intro s τ
     by_cases hτ : τ ∈ s
-    · simp only [hτ, if_true]; exact hgs τ
-    · simp only [hτ, if_false]; simp
+    · simp only [hτ, ite_true]; exact hgs τ
+    · simp only [hτ, ite_false]; simp
   have key : ∀ s : Finset D.what₂.Tau, Eqv.famH D V _ (hu s) ∈
       Submonoid.closure {x | ∃ τ, ∃ k ∈ Formalism.REAL.Kset (B.ε τ), x = B.elt (Eqv.thetaC D) τ k} := by
     intro s
@@ -1377,7 +1377,7 @@ theorem maximal_compact_stable_theta_subspace : _root_.GlobalTheory.FunPr.ThetaL
   obtain ⟨Q, hQ, e⟩ := key P hPN
   refine ⟨Q, hQ, (hcan f₁ Q ?_ ?_).symm⟩
   · rw [← hact r (hP P).1]
-    letI := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.invTwo (F := D.host.F)
+    let := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.invTwo (F := D.host.F)
     exact hW.1.1.pres _ _ (hP P).1.2
   · have h1 : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU M (GlobalTheory.RealDict.sgE (D := D) ε) hR.JX 1 = 1 :=
       Subtype.ext (by show GeneralLinearGroup.map (cA D) (Formalism.L2.Theta.matHom M 1) = 1; rw [map_one, map_one])

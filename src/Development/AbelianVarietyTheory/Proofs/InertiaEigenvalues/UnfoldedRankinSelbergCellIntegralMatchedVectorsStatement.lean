@@ -197,7 +197,7 @@ theorem exists_fourier_gauss_lattice : ∀ (E : Type) [Field E] [NumberField E] 
       exact ⟨by rw [Complex.ofReal_re]; exact (Real.exp_pos _).le, Complex.ofReal_im _⟩
     · rw [mul_zero]
       exact ⟨le_refl _, rfl⟩
-  · rw [hFG, hGv, hφ, if_pos (fun j v => by simp)]
+  · rw [hFG, hGv, hφ, ite_eq_left (fun j v => by simp)]
     rw [mul_one, Complex.ofReal_re]
     exact Real.exp_pos _
   · intro ϖ hϖ a ha y hy
@@ -236,7 +236,7 @@ theorem exists_fourier_gauss_lattice : ∀ (E : Type) [Field E] [NumberField E] 
           fun t ht => (Valuation.map_sub _ _ _).trans (max_le ht h1)
         exact iff_of_true (key _ (by rw [map_mul]; exact mul_le_one' h3 h2)) (key _ h2)
     · rintro ⟨w, hw⟩
-      rw [hFy, hGv, if_neg, mul_zero]
+      rw [hFy, hGv, ite_eq_right, mul_zero]
       intro hP
       have hwS : w ∉ S := fun h => by rw [ha w h] at hw; exact lt_irrefl _ hw
       obtain ⟨j, hj⟩ := (hy w hwS).2
@@ -412,7 +412,7 @@ theorem sphW_pad (q : ℕ) (hq : 0 < q) {j n : ℕ} (hj : j ≤ n) (α : Fin n �
       simp [padNat, hij]
     · intro i
       simp [padNat, hcast]
-  rw [sphW, if_pos hl, hc, Complex.ofReal_cpow hqR.le, GlobalTheory.ZEulLocal.wtS_eq_sum]
+  rw [sphW, ite_eq_left hl, hc, Complex.ofReal_cpow hqR.le, GlobalTheory.ZEulLocal.wtS_eq_sum]
   congr 2
   push_cast
   rw [Finset.mul_sum, ← Finset.sum_add_distrib]
@@ -438,7 +438,7 @@ theorem localTerm_mixed (q : ℕ) (hq : 0 < q) {j n : ℕ} (hj : j ≤ n) (α : 
     push_cast
     refine Finset.sum_congr rfl fun i _ => ?_
     exact_mod_cast (Int.toNat_of_nonneg (h0 i)).symm
-  rw [sphW_pad q hq hj α v h0 hv, hβ, rsTermNM, if_pos ⟨h0, hv⟩, ← key2, map_mul, Complex.conj_ofReal]
+  rw [sphW_pad q hq hj α v h0 hv, hβ, rsTermNM, ite_eq_left ⟨h0, hv⟩, ← key2, map_mul, Complex.conj_ofReal]
   set s : ℝ := ∑ i, (v i : ℝ)
   set A : ℝ := (q : ℝ) ^ (-((GlobalTheory.CellDec.wtS j v : ℝ) + ((n : ℝ) - j) * s) / 2) with hA
   set A' : ℝ := (q : ℝ) ^ (-((GlobalTheory.CellDec.wtS j v : ℝ) + ((j : ℝ) - j) * s) / 2) with hA'
@@ -478,9 +478,9 @@ theorem ennreal_collect {ι : Type} (s : Finset ι) (a e t : ι → ℝ) (p : ι
     rw [← ENNReal.ofReal_prod_of_nonneg (fun w hw => by rw [← ht w hw]; have := ha w; have := he w; positivity),
       ← Finset.prod_congr rfl ht, Finset.prod_mul_distrib, Finset.prod_mul_distrib, Finset.prod_pow, ← norm_prod,
       ENNReal.ofReal_mul (mul_nonneg (Finset.prod_nonneg fun w _ => ha w) (by positivity)),
-      ENNReal.ofReal_mul (Finset.prod_nonneg fun w _ => ha w), ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
-  have h2 : ‖c‖ₑ = 1 := by rw [← ofReal_norm_eq_enorm, hc, ENNReal.ofReal_one]
-  rw [h1, enorm_mul, enorm_mul, h2, ENNReal.ofReal_mul (Finset.prod_nonneg fun w _ => he w)]
+      ENNReal.ofReal_mul (Finset.prod_nonneg fun w _ => ha w), ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
+  have h2 : ‖c‖ₑ = 1 := by rw [← ofReal_norm, hc, ENNReal.ofReal_one]
+  rw [h1, eNorm_mul, eNorm_mul, h2, ENNReal.ofReal_mul (Finset.prod_nonneg fun w _ => he w)]
   ring
 
 end GlobalTheory.CellEvalNM
@@ -647,8 +647,8 @@ theorem GlobalTheory.CellEvalNM.uIntNM_cell_eval : ∀ (E : Type) [Field E] [Num
   · obtain ⟨w, hw⟩ := not_forall.1 hgood
     have hws : w ∈ l.1.support := by
       rw [Finsupp.mem_support_iff]; intro h0; rw [h0] at hw; exact hw ⟨fun _ => le_rfl, antitone_const⟩
-    rw [Finsupp.prod, Finsupp.prod, Finsupp.prod, Finset.prod_eq_zero hws (by rw [GlobalTheory.RSnmUnf.rsTermNM, if_neg hw]),
-      Finset.prod_eq_zero hws (if_neg hw), Finset.prod_eq_zero hws (if_neg hw), GlobalTheory.RSnmUnf.uIntNM]
+    rw [Finsupp.prod, Finsupp.prod, Finsupp.prod, Finset.prod_eq_zero hws (by rw [GlobalTheory.RSnmUnf.rsTermNM, ite_eq_right hw]),
+      Finset.prod_eq_zero hws (ite_eq_right hw), Finset.prod_eq_zero hws (ite_eq_right hw), GlobalTheory.RSnmUnf.uIntNM]
     by_cases ha : ∀ w, Antitone (l.1 w)
     · have h0 := hF2 ⟨w, not_le.1 fun h => hw ⟨fun i => le_trans h (ha w (Fin.le_last i)), ha w⟩⟩
       simp [h0]
@@ -701,11 +701,11 @@ theorem GlobalTheory.CellEvalNM.uIntNM_cell_eval : ∀ (E : Type) [Field E] [Num
         GroundTheory.Automorphic.GJMatrix.adelicFourierPi E F (GlobalTheory.ZEul.lastRow g) *
         ((GlobalTheory.RSnm.detAbs g ^ ((0 : ℝ) - (((m + r + 1 + 1 : ℕ) : ℝ) - ((m + 1 : ℕ) : ℝ)) / 2) : ℝ) : ℂ) *
         ((GlobalTheory.RSnm.detAbs g ^ x : ℝ) : ℂ)) * hcc
-  · rw [e1, e3, hdet, GlobalTheory.CellDec.dinv, Finsupp.prod, Finset.prod_congr rfl fun w _ => if_pos (hgood w)]
+  · rw [e1, e3, hdet, GlobalTheory.CellDec.dinv, Finsupp.prod, Finset.prod_congr rfl fun w _ => ite_eq_left (hgood w)]
     refine ennreal_collect _ _ _ _ _ (fun w => zpow_nonneg (Nat.cast_nonneg _) _)
       (fun w => Real.rpow_nonneg (Nat.cast_nonneg _) _) (fun w _ => ?_) c _ hc _ _
     exact localTerm_diag (qV E w) (hq w) hmn _ x _ (by push_cast; ring) (l.1 w) (hgood w).1 (hgood w).2
-  · rw [e2, e3, hdet, GlobalTheory.CellDec.dinv, Finsupp.prod, Finset.prod_congr rfl fun w _ => if_pos (hgood w)]
+  · rw [e2, e3, hdet, GlobalTheory.CellDec.dinv, Finsupp.prod, Finset.prod_congr rfl fun w _ => ite_eq_left (hgood w)]
     refine ennreal_collect _ _ _ _ _ (fun w => zpow_nonneg (Nat.cast_nonneg _) _)
       (fun w => Real.rpow_nonneg (Nat.cast_nonneg _) _) (fun w _ => ?_) c _ hc _ _
     have := localTerm_diag (qV E w) (hq w) le_rfl (fun i => (β w i : ℂ)) x x (by ring) (l.1 w) (hgood w).1 (hgood w).2
@@ -854,8 +854,8 @@ theorem integrableOn_cell_pos {E : Type} [Field E] [NumberField E] {n : ℕ} (μ
     (h1 : ∃ g ∈ GlobalTheory.CellDec.C0 E n S, B g ≠ 0) :
     IntegrableOn B (𝓕 ∩ GlobalTheory.CellDec.C0 E n S) μ ∧ 0 < ∫ g in 𝓕 ∩ GlobalTheory.CellDec.C0 E n S, B g ∂μ := by
   obtain ⟨D, hD, hDu⟩ := GlobalTheory.RSLocalPart.exists_isCompact_unip E n
-  haveI := GlobalTheory.ThetaUnfold.countable_range_ratGL (E := E) (a := n)
-  haveI : Countable (GlobalTheory.CellDec.NE E n) :=
+  have := GlobalTheory.ThetaUnfold.countable_range_ratGL (E := E) (a := n)
+  have : Countable (GlobalTheory.CellDec.NE E n) :=
     (Subgroup.inclusion_injective (Subgroup.map_le_range (ratGL E n) _)).countable
   obtain ⟨i1, -, i3⟩ := GlobalTheory.RSLocalPart.integral_family_pos μ (GlobalTheory.CellDec.NE E n) h𝓕 (GlobalTheory.CellDec.isOpen_adelicUnipotentTimesIntegralOutsideSet E n S)
     (hD.mul hK) (fun γ hγ g hg => GlobalTheory.CellDec.adelicUnitriangular_mul_mem_unipotentTimesIntegral (GlobalTheory.RSLocalPart.NE_le hγ) hg) (B := fun _ => B)
@@ -984,7 +984,7 @@ theorem exists_f_t_core : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
       ⟨h₀, h₀C, (mul_pos (mul_pos (pow_pos (norm_pos_iff.2 (hUW _ hU₀)) 2) (norm_pos_iff.2 hF0)) (hdp _ _)).ne'⟩
     refine ne_of_eq_of_ne (lintegral_congr fun g => ?_) (Integrable.lintegral_lt_top hI).ne
     rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-      ofReal_norm_eq_enorm, ofReal_norm_eq_enorm]
+      ofReal_norm, ofReal_norm]
 
 end GlobalTheory.RSnmFT
 
@@ -1008,8 +1008,8 @@ theorem lintegral_whit_sq_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.
     rw [GlobalTheory.JSW.word_nil] at h
     rw [← hφF]
     exact h
-  haveI : DiscreteTopology (ratMirU E (m + 1) m) := GlobalTheory.MirTower.discrete_of_le_range (Subgroup.map_le_range _ _)
-  haveI : DiscreteTopology (ratGL E (m + 1)).range := GlobalTheory.MirTower.discrete_of_le_range le_rfl
+  have : DiscreteTopology (ratMirU E (m + 1) m) := GlobalTheory.MirTower.discrete_of_le_range (Subgroup.map_le_range _ _)
+  have : DiscreteTopology (ratGL E (m + 1)).range := GlobalTheory.MirTower.discrete_of_le_range le_rfl
   obtain ⟨𝓕P, h𝓕P⟩ := GlobalTheory.FundDomDiscrete.exists_isFundamentalDomain (ratMirU E (m + 1) m) μ
   obtain ⟨𝓕, h𝓕⟩ := GlobalTheory.FundDomDiscrete.exists_isFundamentalDomain (ratGL E (m + 1)).range μ
   refine ⟨𝓕, h𝓕, fun x => ?_⟩
@@ -1025,7 +1025,7 @@ theorem lintegral_whit_sq_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.
     intro v
     have hv : Continuous fun g : GA E (m + 1) => Matrix.vecMul (fun i => algebraMap E (Ad E) (v i)) g.val :=
       continuous_const.matrix_vecMul Units.continuous_val
-    exact ((hB.cont.enorm.measurable.pow_const 2).mul (hG.comp hv).enorm.measurable).mul
+    exact ((hB.cont.eNorm.measurable.pow_const 2).mul (hG.comp hv).eNorm.measurable).mul
       (ENNReal.measurable_ofReal.comp hmd)
   have e1 := _root_.GlobalTheory.ThetaUnfold.lintegral_theta_unfold E (m + 1) (Nat.succ_pos m) μ 𝓕 𝓕P h𝓕 h𝓕P
     (fun g y => ‖F g‖ₑ ^ 2 * ‖G y‖ₑ * ENNReal.ofReal (GlobalTheory.RSnm.detAbs g ^ x))
@@ -1037,7 +1037,7 @@ theorem lintegral_whit_sq_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.
   set w : GA E (m + 1) → ℝ≥0 := fun g => ‖G (g.val (Fin.last m))‖₊ * Real.toNNReal (GlobalTheory.RSnm.detAbs g ^ x) with hw
   have hrow : Continuous fun g : GA E (m + 1) => g.val (Fin.last m) :=
     continuous_pi fun i => Units.continuous_val.matrix_elem (Fin.last m) i
-  have hwm : Measurable w := (hG.comp hrow).nnnorm.measurable.mul (measurable_real_toNNReal.comp hmd)
+  have hwm : Measurable w := (hG.comp hrow).nnNorm.measurable.mul (measurable_real_toNNReal.comp hmd)
   have hwl : ∀ γ ∈ mirU E (m + 1) (m + 1 - 1), ∀ g, w (ratGL E (m + 1) γ * g) = w g := by
     intro γ hγ g
     simp only [hw]
@@ -1213,7 +1213,7 @@ theorem term_le_locFac {m k : ℕ} (h : m + 1 ≤ k) (q : ℕ) (a : Fin k → �
       GlobalTheory.RSCell.locFac q a x (padInt h v) := by
   split_ifs with hv
   · have hv' := padInt_valid h hv
-    rw [GlobalTheory.RSCell.locFac, if_pos ⟨hv'.2, hv'.1⟩, toNat_padInt h v, sum_padNat h]
+    rw [GlobalTheory.RSCell.locFac, ite_eq_left ⟨hv'.2, hv'.1⟩, toNat_padInt h v, sum_padNat h]
   · exact bot_le
 
 theorem term_zero {m k : ℕ} (q : ℕ) (a : Fin k → ℂ) (x : ℝ) :
@@ -1221,7 +1221,7 @@ theorem term_zero {m k : ℕ} (q : ℕ) (a : Fin k → ℂ) (x : ℝ) :
           ENNReal.ofReal (‖GlobalTheory.JSW.schurAt (GlobalTheory.RSnmUnf.padNat (n := k) fun i => ((0 : Fin (m + 1) → ℤ) i).toNat) a‖ ^ 2 *
             (q : ℝ) ^ (-(((∑ i, ((0 : Fin (m + 1) → ℤ) i).toNat : ℕ) : ℝ) * x))) else 0) = 1 := by
   have h0 : (fun i : Fin (m + 1) => ((0 : Fin (m + 1) → ℤ) i).toNat) = 0 := funext fun _ => rfl
-  rw [if_pos ⟨fun _ => le_rfl, fun _ _ _ => le_rfl⟩, h0, padNat_zero]
+  rw [ite_eq_left ⟨fun _ => le_rfl, fun _ _ _ => le_rfl⟩, h0, padNat_zero]
   rw [show (0 : Fin k → ℕ) = fun _ => 0 from rfl, GlobalTheory.RSPole.EulerPole.schurAt_const_zero]
   simp
 
@@ -1229,7 +1229,7 @@ theorem tprod_le_of_one_le {I : Type} (f g : I → ℝ≥0∞) (hf : ∀ i, 1 �
     ∏' i, f i ≤ ∏' i, g i := by
   have hg : ∀ i, 1 ≤ g i := fun i => (hf i).trans (hfg i)
   rw [(GlobalTheory.RSPole.EulerPole.hasProd_of_one_le f hf).tprod_eq, (GlobalTheory.RSPole.EulerPole.hasProd_of_one_le g hg).tprod_eq]
-  exact iSup_mono fun s => Finset.prod_le_prod' fun i _ => hfg i
+  exact iSup_mono fun s => Finset.prod_le_prod fun i _ => hfg i
 
 theorem tsum_padTerm_ne_top : ∀ (E : Type) [Field E] [NumberField E] (m k : ℕ) (S : Finset (HeightOneSpectrum (𝓞 E))), m + 1 ≤ k →
     ∀ (α : HeightOneSpectrum (𝓞 E) → Fin k → ℂ) (x : ℝ),
@@ -1280,7 +1280,7 @@ theorem rsTermNM_zero (q : ℕ) {n m : ℕ} (α : Fin n → ℂ) (β : Fin m →
   have h1 : (GlobalTheory.RSnmUnf.padNat (n := n) fun i : Fin m => ((0 : Fin m → ℤ) i).toNat) = fun _ => 0 := by
     funext i; simp [GlobalTheory.RSnmUnf.padNat]
   have h2 : (fun i : Fin m => ((0 : Fin m → ℤ) i).toNat) = fun _ => 0 := by funext i; simp
-  rw [GlobalTheory.RSnmUnf.rsTermNM, if_pos ⟨fun i => le_rfl, antitone_const⟩, h1, h2]
+  rw [GlobalTheory.RSnmUnf.rsTermNM, ite_eq_left ⟨fun i => le_rfl, antitone_const⟩, h1, h2]
   simp [GlobalTheory.JSW.schurAt, GlobalTheory.JSW.schur_zero]
 
 set_option synthInstance.maxHeartbeats 400000 in
@@ -1384,7 +1384,7 @@ theorem unfolded_cells_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
         rw [map_sub, e1', Matrix.one_apply, Matrix.one_apply]
         split_ifs <;> simp
       rw [e2, map_zero]
-      exact zero_le'
+      exact zero_le
     have e : (fun z => Φ (z * finGL E a k)) = Φ := funext fun z => hVle (hJV hkJ) z
     rw [GlobalTheory.JSW.whit_mul_right, e]
   have hWK := hRI φ hU hK
@@ -1438,16 +1438,16 @@ theorem unfolded_cells_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
     simp_rw [this, ENNReal.tsum_mul_right]
     exact ENNReal.mul_ne_top hc hD
   have hen : ∀ {a b : ℂ}, ‖a‖ = ‖b‖ → ‖a‖ₑ = ‖b‖ₑ := fun h => by
-    rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, h]
+    rw [← ofReal_norm, ← ofReal_norm, h]
   have hmD : ∀ s : ℝ, Measurable fun g : GA E (m + 1) =>
       ‖GlobalTheory.JSW.whit φ (GroundTheory.Automorphic.FourierWhittaker.blockGL (by omega : m + 1 ≤ m + r + 1 + 1) g)‖ₑ ^ 2 *
         ‖GroundTheory.Automorphic.GJMatrix.adelicFourierPi E F (GlobalTheory.ZEul.lastRow g)‖ₑ * ENNReal.ofReal (GlobalTheory.RSnm.detAbs g ^ s) :=
-    fun s => ((hWbc.measurable.enorm.pow_const 2).mul hFlc.measurable.enorm).mul
+    fun s => ((hWbc.measurable.eNorm.pow_const 2).mul hFlc.measurable.eNorm).mul
       (ENNReal.measurable_ofReal.comp (GlobalTheory.RSnm.continuous_detAbs.measurable.pow_const s))
   have hmD' : ∀ s : ℝ, Measurable fun g : GA E (m + 1) =>
       ‖GlobalTheory.JSW.whit φ' g‖ₑ ^ 2 *
         ‖GroundTheory.Automorphic.GJMatrix.adelicFourierPi E F (GlobalTheory.ZEul.lastRow g)‖ₑ * ENNReal.ofReal (GlobalTheory.RSnm.detAbs g ^ s) :=
-    fun s => ((hWc'.measurable.enorm.pow_const 2).mul hFlc.measurable.enorm).mul
+    fun s => ((hWc'.measurable.eNorm.pow_const 2).mul hFlc.measurable.eNorm).mul
       (ENNReal.measurable_ofReal.comp (GlobalTheory.RSnm.continuous_detAbs.measurable.pow_const s))
   have LA := hlinD _ _ (hmD _) (fun u hu g => by
       obtain ⟨h1, -, h3, h4, -⟩ := hinv u hu g
@@ -1462,7 +1462,7 @@ theorem unfolded_cells_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
   have hDtr : ∀ (a b : ℂ) (s : ℝ) (g : GA E (m + 1)), (‖a‖ₑ ^ 2 * ‖b‖ₑ * ENNReal.ofReal (GlobalTheory.RSnm.detAbs g ^ s)).toReal =
       ‖a‖ ^ 2 * ‖b‖ * GlobalTheory.RSnm.detAbs g ^ s := by
     intro a b s g
-    rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_enorm, toReal_enorm,
+    rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_eNorm, toReal_eNorm,
       ENNReal.toReal_ofReal (Real.rpow_nonneg (GlobalTheory.RSnm.detAbs_pos g).le _)]
   have iA := integrable_toReal_of_lintegral_ne_top (hmD (x - ((r : ℝ) + 1))).aemeasurable LA
   have iB := integrable_toReal_of_lintegral_ne_top (hmD' x).aemeasurable LB

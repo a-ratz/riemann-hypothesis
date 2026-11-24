@@ -169,7 +169,7 @@ def multOrder (v : Valuation C NNReal) (hv : v.Integers R) (e : N ≃ AddChar N 
       exact Submodule.subset_span ⟨e.symm (negChar (e j)), by ext x; simp [negChar]⟩)
 
 theorem charTable_isUnit (e : N ≃ AddChar N C) : IsUnit (Matrix.of fun x j : N => e j x).det := by
-  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_cols_iff_isUnit]
+  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_col_iff_isUnit]
   have hinj : Function.Injective fun j : N => (e j).toMonoidHom := fun a b hab =>
     e.injective (DFunLike.ext _ _ fun x => DFunLike.congr_fun hab (Multiplicative.ofAdd x))
   exact (linearIndependent_monoidHom (Multiplicative N) C).comp _ hinj

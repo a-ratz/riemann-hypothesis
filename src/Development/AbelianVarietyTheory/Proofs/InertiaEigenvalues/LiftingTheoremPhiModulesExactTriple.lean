@@ -112,10 +112,10 @@ theorem eq_sum_of_vanish {K : Type} [CommRing K] {P : K⟦X⟧} {N : ℕ}
   by_cases hm : m < N
   · rw [Finset.sum_eq_single ⟨m, hm⟩]
     · simp
-    · intro b _ hb; rw [if_neg]; intro h; exact hb (Fin.ext h.symm)
+    · intro b _ hb; rw [ite_eq_right]; intro h; exact hb (Fin.ext h.symm)
     · simp
   · rw [hP m (by omega), Finset.sum_eq_zero]
-    intro b _; rw [if_neg]; omega
+    intro b _; rw [ite_eq_right]; omega
 
 variable {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K]
   [Algebra O K] [IsUnitBall O K] (l : ℕ) [Fact l.Prime] [NormedAlgebra ℚ_[l] K] (e : ℕ) [NeZero e]
@@ -145,7 +145,7 @@ theorem coeff_E_pow_vanish (n : ℕ) : ∀ k, e * n < k → coeff k (E K l e ^ n
     rw [pow_succ]
     refine coeff_vanish_mul ih (b := e) (fun j hj => ?_) k (by rw [Nat.mul_succ] at hk; exact hk)
     rw [E, map_add (f := _), coeff_X_pow, ← map_natCast (C : K →+* K⟦X⟧), coeff_C]
-    rw [if_neg (by omega), if_neg (by omega), add_zero]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), add_zero]
 
 theorem div_E_pow (n : ℕ) {f : K⟦X⟧} (hf : f ∈ A O K) : ∃ P g, P ∈ A O K ∧
     (∀ k, e * n ≤ k → coeff k P = 0) ∧ g ∈ A O K ∧ f = P + E K l e ^ n * g := by
@@ -195,17 +195,17 @@ theorem isDomain_isPrincipalIdealRing (O K : Type) [CommRing O] [NormedField K] 
   have hl0 : (l : K) ≠ 0 := by
     rw [← map_natCast (algebraMap ℚ_[l] K)]
     exact (map_ne_zero _).2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
-  letI : NontriviallyNormedField K :=
+  let : NontriviallyNormedField K :=
     { ‹NormedField K› with
       non_trivial := ⟨(l : K)⁻¹, by
         rw [norm_inv]; exact one_lt_inv₀ (norm_pos_iff.2 hl0) |>.2 hl⟩ }
-  haveI : ProperSpace K := FiniteDimensional.proper ℚ_[l] K
-  haveI : CompactSpace 𝒪[K] := by
+  have : ProperSpace K := FiniteDimensional.proper ℚ_[l] K
+  have : CompactSpace 𝒪[K] := by
     have h1 : ((𝒪[K] : Set K)) = Metric.closedBall 0 1 := by
       ext x; simp [Valued.integer.mem_iff]
     have h2 : IsCompact ((𝒪[K] : Set K)) := h1 ▸ isCompact_closedBall 0 1
     exact (isCompact_iff_compactSpace (s := (𝒪[K] : Set K))).1 h2
-  haveI : IsPrincipalIdealRing 𝒪[K] := Valued.integer.isPrincipalIdealRing_of_compactSpace
+  have : IsPrincipalIdealRing 𝒪[K] := Valued.integer.isPrincipalIdealRing_of_compactSpace
   let f : O →+* 𝒪[K] :=
     { toFun := fun x => ⟨algebraMap O K x, Valued.integer.mem_iff.2 ((IsUnitBall.mem_range_iff _).1 ⟨x, rfl⟩)⟩
       map_one' := by ext; simp
@@ -217,7 +217,7 @@ theorem isDomain_isPrincipalIdealRing (O K : Type) [CommRing O] [NormedField K] 
     obtain ⟨x, hx⟩ := (IsUnitBall.mem_range_iff (O := O) (y : K)).2 (Valued.integer.mem_iff.1 y.2)
     exact ⟨x, Subtype.ext hx⟩
   let g := RingEquiv.ofBijective f hf
-  haveI : IsDomain O := (IsUnitBall.inj (O := O) (K := K)).isDomain (algebraMap O K)
+  have : IsDomain O := (IsUnitBall.inj (O := O) (K := K)).isDomain (algebraMap O K)
   exact ⟨inferInstance, IsPrincipalIdealRing.of_surjective (g.symm : 𝒪[K] →+* O) g.symm.surjective⟩
 
 theorem exists_eq_add_E_pow_mul (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K]
@@ -256,10 +256,10 @@ theorem sum_gen_apply (η : ℕ) (c : ZMod a × ι × Fin (e * η) → O) (τ : 
       Ezpow K l e (-η) * ∑ k : Fin (e * η), C (algebraMap O K (c (τ, i, k))) * X ^ (k : ℕ) := by
   simp only [Finset.sum_apply, Pi.smul_apply, gen, Fintype.sum_prod_type, Finset.mul_sum]
   simp only [Pi.single_apply, ite_apply, Pi.zero_apply, smul_ite, smul_zero, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Fintype.sum_eq_single τ (fun x hx => by simp [Ne.symm hx]), Fintype.sum_eq_single i
     (fun x hx => by simp [Ne.symm hx])]
-  simp only [if_true]
+  simp only [ite_true]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [← algebraMap_smul K⟦X⟧ (c (τ, i, k)), algebraMap_eq_C, smul_eq_mul, mul_left_comm]
 
@@ -292,16 +292,16 @@ theorem finite_quot (P : PhiMod O K l e a ι) (η : ℕ) :
 variable [TameDescentExponentData K l e a]
 
 theorem finite_Z {η H : ℕ} (D : BKDat O K l e a ι η H) : Module.Finite O D.Z := by
-  haveI : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (l := l) (e := e) (a := a)
+  have : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (l := l) (e := e) (a := a)
   obtain ⟨_, _⟩ := isDomain_isPrincipalIdealRing O K l
-  haveI := finite_quot D.toPhiMod η
+  have := finite_quot D.toPhiMod η
   exact Module.Finite.equiv (D.desc.quotInvEquiv η)
 
 theorem free_Z {η H : ℕ} (D : BKDat O K l e a ι η H) : Module.Free O D.Z := by
-  haveI : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (l := l) (e := e) (a := a)
+  have : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (l := l) (e := e) (a := a)
   obtain ⟨_, _⟩ := isDomain_isPrincipalIdealRing O K l
-  haveI := finite_Z D
-  haveI : NoZeroSMulDivisors O D.Z := ⟨fun {c w} h => by
+  have := finite_Z D
+  have : NoZeroSMulDivisors O D.Z := ⟨fun {c w} h => by
     have h1 : c • (w : D.Pol) = 0 := congrArg Subtype.val h
     rw [← algebraMap_smul K c] at h1
     rcases smul_eq_zero.1 h1 with h2 | h2
@@ -733,7 +733,7 @@ theorem mem_Y'_iff_coeff {v : Vec K a ι} : v ∈ D.Y' ↔ E K l e ^ η • v �
     have h2 := (Descent.mem_invOf _).1 (Descent.Y'_le_Y _ η hv)
     refine ⟨mem_divE.1 h2.1, h2.2, fun τ i k hk => ?_⟩
     show coeff k ((X : K⟦X⟧) ^ e * y τ i) = 0
-    rw [coeff_X_pow_mul', if_neg (by omega)]
+    rw [coeff_X_pow_mul', ite_eq_right (by omega)]
   · rintro ⟨h1, h2, h3⟩
     have hd : ∀ τ i, (X : K⟦X⟧) ^ e ∣ v τ i := fun τ i => X_pow_dvd_iff.2 fun k hk => h3 τ i k hk
     choose y hy using hd
@@ -931,8 +931,8 @@ open PowerSeries GlobalTheory.BK
 
 theorem isHausdorff_Z_of_finiteFree : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K] [Algebra O K] [IsUnitBall O K] (l e a : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] [Fact l.Prime] [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a] (η H : ℕ) (D : BKDat O K l e a ι η H), GlobalTheory.IndefiniteRowSideFullHecke.ImagePolynomialAction.FiniteFree D → IsHausdorff (Ideal.span {(l : O)}) D.Z := by
   intro O K _ _ _ _ _ _ l e a ι _ _ _ _ _ _ _ η H D hD
-  haveI : Module.Free O D.Z := hD.1
-  haveI : IsHausdorff (Ideal.span {(l : O)}) O :=
+  have : Module.Free O D.Z := hD.1
+  have : IsHausdorff (Ideal.span {(l : O)}) O :=
     FreeHausdorff.isHausdorff_ring (K := K) (norm_l_lt_one (K := K) l)
   exact FreeHausdorff.isHausdorff_of_free _
 

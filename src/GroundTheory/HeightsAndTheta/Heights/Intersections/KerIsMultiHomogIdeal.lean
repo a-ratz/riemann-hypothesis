@@ -170,7 +170,7 @@ theorem RegularityValuationCentre.proof : RegularityValuationCentre.Statement :=
       have hle : v (r p) * v (s ⟨p.1, j p.1⟩) ≤ 1 * v (s ⟨p.1, j p.1⟩) := by
         rw [← map_mul, hrs, one_mul]
         exact hjmax p.1 p.2 hp
-      exact le_of_mul_le_mul_right hle (zero_lt_iff.mpr hvs)
+      exact le_of_mul_le_mul_right hle (pos_iff_ne_zero.mpr hvs)
 
   have hψle : ∀ g, chartHom r g ∈ v.integer := by
     intro g

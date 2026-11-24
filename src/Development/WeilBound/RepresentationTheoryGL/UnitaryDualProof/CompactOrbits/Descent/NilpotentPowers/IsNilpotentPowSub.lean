@@ -146,7 +146,7 @@ theorem continuous_pZ (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) : Continuous
   exact (continuous_const.matrix_mul (continuous_id.pow _)).matrix_trace
 
 theorem isClosed_Bz (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) : IsClosed (Bz Z) := by
-  haveI := t2 (k := k)
+  have := t2 (k := k)
   have : Bz Z = ⋂ a ∈ Z, {x : Matrix (Fin n) (Fin n) k | a * x = x * a} := by
     ext x; simp [Bz]
   rw [this]

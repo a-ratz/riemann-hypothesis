@@ -255,7 +255,7 @@ theorem exists_shape (hL : Out.Laws) {W : Matrix (Fin 8) (Fin 8) ℤ} (hW : IsE8
   obtain ⟨κ, hκ⟩ : ∃ κ : ℕ, ∀ j, κ₀ j ≤ κ := (Set.finite_range κ₀).bddAbove.imp fun κ hκ j => hκ ⟨j, rfl⟩
   refine ⟨fun j => Matrix.of fun i' i => bas.symm (fun u => ∑ v, a j u v • bas (Pi.single i 1) v) i', κ, ?_⟩
   rintro k hk o _ b S s c t hc ⟨pr, hpr, hprod, hiso, hact, hpt⟩ j
-  haveI : NeZero k := ⟨hk⟩
+  have : NeZero k := ⟨hk⟩
   refine ⟨fun i => ?_, ?_⟩
   · refine (label_iff c t pr hpr hprod (a j) _ (hact j) (fun i => bas (Pi.single i 1)) hpt i _).2 fun u => ?_
     set z := bas.symm (fun u => ∑ v, a j u v • bas (Pi.single i 1) v) with hz

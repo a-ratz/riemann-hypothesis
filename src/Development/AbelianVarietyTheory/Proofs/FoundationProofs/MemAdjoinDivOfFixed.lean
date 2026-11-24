@@ -61,7 +61,7 @@ theorem mem_adjoin_div_of_fixed : ∀ (R Ω : Type) [CommRing R] [Nontrivial R] 
   have hAF : ∀ y ∈ A, y ∈ F := fun y hy => Subfield.subset_closure hy
   let φ : R →+* F := (algebraMap R Ω).codRestrict F (fun r => hAF _ (A.algebraMap_mem r))
   have hφ : ∀ r, algebraMap F Ω (φ r) = algebraMap R Ω r := fun r => rfl
-  haveI : Algebra.IsAlgebraic F Ω := by
+  have : Algebra.IsAlgebraic F Ω := by
     constructor
     intro y
     obtain ⟨p, hp0, hp⟩ := Algebra.IsAlgebraic.isAlgebraic (R := R) y
@@ -78,9 +78,9 @@ theorem mem_adjoin_div_of_fixed : ∀ (R Ω : Type) [CommRing R] [Nontrivial R] 
       rw [Polynomial.aeval_def] at hp
       convert hp using 2
       exact RingHom.ext hφ
-  haveI : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
-  haveI : CharZero F := RingHom.charZero (algebraMap F Ω)
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
+  have : CharZero F := RingHom.charZero (algebraMap F Ω)
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
   have hfix : ∀ f : Ω ≃ₐ[F] Ω, f x = x := by
     intro f
     have hfF : ∀ y ∈ F, f y = y := fun y hy => f.commutes ⟨y, hy⟩

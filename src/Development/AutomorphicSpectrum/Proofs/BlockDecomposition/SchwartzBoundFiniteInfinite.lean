@@ -84,15 +84,15 @@ theorem schwartzA_continuous_and_dominated : ∀ (D : D7) (θ : InfFam D), IsInf
       · rw [Fin.append_right]; exact hg₂ i
     · rw [Fin.sum_univ_add]
       simp only [Fin.append_left, Fin.append_right]
-      exact (enorm_add_le _ _).trans (add_le_add (hb₁ x) (hb₂ x))
+      exact (eNorm_add_le _ _).trans (add_le_add (hb₁ x) (hb₂ x))
   | smul c Φ _ h =>
     obtain ⟨hc, k, f, g, hg, hb⟩ := h
     refine ⟨hc.const_smul c, k, fun i => c • f i, g, hg, fun x => ?_⟩
     have e : ∀ i, ‖(c • f i) (fun τ i' j => compAt θ τ x i' j) * g i (fun i' j => finPart D (x i' j))‖ₑ =
         ‖c‖ₑ * ‖f i (fun τ i' j => compAt θ τ x i' j) * g i (fun i' j => finPart D (x i' j))‖ₑ := fun i => by
-      rw [smul_apply, smul_eq_mul, mul_assoc, enorm_mul]
+      rw [smul_apply, smul_eq_mul, mul_assoc, eNorm_mul]
     simp only [e, Pi.smul_apply, smul_eq_mul]
-    rw [← Finset.mul_sum, enorm_mul]
+    rw [← Finset.mul_sum, eNorm_mul]
     gcongr
     exact hb x
 

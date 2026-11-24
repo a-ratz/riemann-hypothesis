@@ -141,7 +141,7 @@ theorem setIntegral_mul_right' (V : HSp D) (ν : Measure (GA D V)) [hH : ν.IsHa
     (hfd : IsFundamentalDomain (GQ V) fd ν) (F : GA D V → ℂ) (hF : ∀ γ ∈ GQ V, ∀ u, F (γ * u) = F u)
     (hint : IntegrableOn F fd ν) (k : GA D V) :
     IntegrableOn (fun u => F (u * k)) fd ν ∧ ∫ u in fd, F (u * k) ∂ν = ∫ u in fd, F u ∂ν := by
-  haveI := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V ν hH
+  have := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V ν hH
   have hmp : MeasurePreserving (fun x : GA D V => x * k⁻¹) ν ν := measurePreserving_mul_right ν k⁻¹
   have ht : IsFundamentalDomain (GQ V) ((fun x : GA D V => x * k⁻¹) ⁻¹' fd) ν :=
     hfd.preimage_of_equiv hmp.quasiMeasurePreserving (e := id) Function.bijective_id
@@ -165,7 +165,7 @@ theorem modInt_right {θ : InfFam D} {M X : HSp D} {ω : WRep M X} {ν : Measure
     (hν : IsHaarFD M ν 𝓕) {Φ : WO M X → ℂ} (hL : ∀ γ ∈ GQ M, ∀ g h, thetaKO ω (γ * g) h Φ = thetaKO ω g h Φ)
     (hΦ : ModInt θ ω ν 𝓕 Φ) (k : GA D M) :
     ModInt θ ω ν 𝓕 (ω (k, 1) Φ) ∧ thetaInt ω ν 𝓕 (ω (k, 1) Φ) = thetaInt ω ν 𝓕 Φ := by
-  haveI := hν.1
+  have := hν.1
   obtain ⟨N, C, hC⟩ := hΦ
   have key := fun h => setIntegral_mul_right' M ν 𝓕 hν.2 (fun g => thetaKO ω g h Φ)
     (fun γ hγ u => hL γ hγ u h) (hC h).1 k

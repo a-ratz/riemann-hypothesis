@@ -157,10 +157,10 @@ theorem schur_form {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] 
   classical
   let F := fixedVectors ρ K
   let U : Submodule ℂ H := F.map B
-  haveI : FiniteDimensional ℂ U := Module.Finite.map F B
-  haveI : CompleteSpace U := FiniteDimensional.complete ℂ U
+  have : FiniteDimensional ℂ U := Module.Finite.map F B
+  have : CompleteSpace U := FiniteDimensional.completeSpace ℂ U
   have hBmem : ∀ w ∈ F, B w ∈ U := fun w hw => Submodule.mem_map_of_mem hw
-  haveI : Nontrivial U := ⟨⟨⟨B ξ, hBmem ξ hξ⟩, 0, fun h => hξ0 (hB ξ (congrArg Subtype.val h))⟩⟩
+  have : Nontrivial U := ⟨⟨⟨B ξ, hBmem ξ hξ⟩, 0, fun h => hξ0 (hB ξ (congrArg Subtype.val h))⟩⟩
   let A : Module.End ℂ U := LinearMap.codRestrict U
     ((U.starProjection : H →L[ℂ] H).toLinearMap ∘ₗ R ∘ₗ U.subtype) (fun y => U.starProjection_apply_mem _)
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue A
@@ -286,7 +286,7 @@ theorem matrixCoeff_eq_inner {φ : cuspForms K n} (hφ : φ ∈ centralCuspForms
       fun q => cuspQuot φ.2.1.isLeftInvariant (rightMul (Reduction.rationalGLOne (K := K) (n := n)) (toOne g) q) := by
     rw [coe_cuspRep_apply]
     exact (coeFn_rightTranslate _ _ _ _).trans
-      (hmp.quasiMeasurePreserving.ae_eq (coeFn_cuspToL2 μ φ))
+      (hmp.quasiMeasurePreserving.ae_eq_comp (coeFn_cuspToL2 μ φ))
   rw [Submodule.coe_inner, MeasureTheory.L2.inner_def]
   refine Eq.trans ?_ (inner_ae _ _ _ _ (coeFn_cuspToL2 μ φ) hq).symm
   have hc : Continuous (cuspQuot φ.2.1.isLeftInvariant) := continuous_cuspQuot _ φ.2.1.continuous
@@ -725,10 +725,10 @@ theorem exists_pureTensor (P : CuspidalAutomorphicRepresentation K n) (D : Adeli
   refine ⟨a, fun v => if D.finite.ξ v ≠ 0 then D.finite.ξ v else w v, ?_, ha, fun v => ?_⟩
   · show ∀ᶠ v in cofinite, _ = _
     filter_upwards [D.finite.ne_zero] with v h
-    simp only [if_pos h]
+    simp only [ite_eq_left h]
   · by_cases h : D.finite.ξ v ≠ 0
-    · simp only [if_pos h]; exact h
-    · simp only [if_neg h]; exact hw v
+    · simp only [ite_eq_left h]; exact h
+    · simp only [ite_eq_right h]; exact hw v
 
 section Sph
 
@@ -753,7 +753,7 @@ theorem exists_pureTensor_spherical (P : CuspidalAutomorphicRepresentation K n) 
     ?_, ha, fun v => ?_, fun v hv => ?_⟩
   · show ∀ᶠ v in cofinite, _ = _
     filter_upwards [D.finite.ne_zero, D.finite.mem_fixedVectors] with v h1 h2
-    exact if_pos (And.intro h1 h2)
+    exact ite_eq_left (And.intro h1 h2)
   · dsimp only
     split_ifs with h
     · exact h.1

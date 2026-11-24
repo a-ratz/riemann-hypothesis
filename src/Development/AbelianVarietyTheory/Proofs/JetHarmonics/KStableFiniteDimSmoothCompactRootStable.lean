@@ -60,7 +60,7 @@ open PI.UpqRep
 
 theorem deriv_mem {H : Type} [NormedAddCommGroup H] [NormedSpace ℂ H] (S : Submodule ℂ H) [FiniteDimensional ℂ S]
     {f : ℝ → H} {f' : H} (hf : HasDerivAt f f' 0) (hS : ∀ t, f t ∈ S) : f' ∈ S := by
-  have hcl : IsClosed (S : Set H) := S.closed_of_finiteDimensional
+  have hcl : IsClosed (S : Set H) := S.isClosed_of_finiteDimensional
   have hsl := hasDerivAt_iff_tendsto_slope_zero.mp hf
   refine hcl.mem_of_tendsto hsl (Filter.Eventually.of_forall fun t => ?_)
   exact S.smul_of_tower_mem t⁻¹ (S.sub_mem (hS _) (hS _))

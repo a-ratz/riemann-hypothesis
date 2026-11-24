@@ -184,7 +184,7 @@ theorem exists_spec {R : Type} [CommRing R] (Z : Over (Sp R)) [IsFinite Z.hom] [
   have h₁ : φ.hom.Finite := by rw [← IsFinite.SpecMap_iff, hφ]; infer_instance
   have h₂ : φ.hom.Etale := by
     rw [← HasRingHomProperty.Spec_iff (P := @Etale), hφ]; infer_instance
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   exact ⟨Γ(Z.left, ⊤), inferInstance, inferInstance, Z.left.isoSpec.symm, h₁, h₂, hφ.symm⟩
 
 theorem good_push_iff {S' : Scheme.{0}} (P : Out.PolAV S) (g N' : ℕ) (c : Γ(S, ⊤)ˣ)

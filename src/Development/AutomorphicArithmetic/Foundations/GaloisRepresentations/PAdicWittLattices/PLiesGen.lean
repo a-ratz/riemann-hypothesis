@@ -49,8 +49,8 @@ universe u v
 private theorem fEt_comp_iso {Y X X' : Scheme.{0}} (f : Y ⟶ X) (i : X ⟶ X') [IsIso i] (d : ℕ) (hf : FEt f d) :
     FEt (f ≫ i) d := by
   obtain ⟨h1, h2, h3⟩ := hf
-  haveI := h1
-  haveI := h2
+  have := h1
+  have := h2
   refine ⟨inferInstance, inferInstance, fun K _ _ x => ?_⟩
   rw [← h3 K (x ≫ inv i)]
   apply Nat.card_congr
@@ -103,7 +103,7 @@ theorem UpperTheory.Gal.G3.pLiesGen :
       exact c1
     let j : pullback (piK C) (bcMap (gen O k) s rfl) ⟶ pullback C.π s :=
       pullback.lift _ _ w3
-    haveI : IsIso i := by
+    have : IsIso i := by
       refine ⟨⟨j, ?_, ?_⟩⟩
       · apply pullback.hom_ext
         · simp only [i, j, Category.assoc, Category.id_comp, pullback.lift_fst, pullback.lift_fst_assoc]

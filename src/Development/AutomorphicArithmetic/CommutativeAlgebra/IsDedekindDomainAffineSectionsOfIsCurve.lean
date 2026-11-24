@@ -60,13 +60,13 @@ private theorem not_isField_of_curve {k : Type} [Field k] {C : Scheme.{0}} (c : 
 
 private theorem stalk_isIntegrallyClosed {k : Type} [Field k] [IsAlgClosed k] {C : Scheme.{0}} (c : C ⟶ Sp k)
     (hc : IsCurve c) (y : C) : IsIntegrallyClosed (C.presheaf.stalk y) := by
-  haveI := hc.1
+  have := hc.1
   obtain ⟨U, hU, hyU, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := y) (by simp)
   have hne : (U : Set C).Nonempty := ⟨y, hyU⟩
-  haveI : Nonempty U := ⟨⟨y, hyU⟩⟩
-  haveI : IsIntegrallyClosed Γ(C, U) := CurveCut.CoverPf.leafNormal _ c hc U hU hne
-  letI : Algebra Γ(C, U) (C.presheaf.stalk y) := C.presheaf.algebra_section_stalk ⟨y, hyU⟩
-  haveI := hU.isLocalization_stalk ⟨y, hyU⟩
+  have : Nonempty U := ⟨⟨y, hyU⟩⟩
+  have : IsIntegrallyClosed Γ(C, U) := CurveCut.CoverPf.leafNormal _ c hc U hU hne
+  let : Algebra Γ(C, U) (C.presheaf.stalk y) := C.presheaf.algebra_section_stalk ⟨y, hyU⟩
+  have := hU.isLocalization_stalk ⟨y, hyU⟩
   exact isIntegrallyClosed_of_isLocalization _ (hU.primeIdealOf ⟨y, hyU⟩).asIdeal.primeCompl
     (Ideal.primeCompl_le_nonZeroDivisors _)
 

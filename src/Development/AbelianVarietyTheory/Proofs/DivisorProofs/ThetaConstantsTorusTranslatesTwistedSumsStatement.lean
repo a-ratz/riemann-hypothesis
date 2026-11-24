@@ -122,7 +122,7 @@ theorem torusChar_eq_weil : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Mat
   intro g n F W Z i X₁ z₁ act
   refine ⟨1, ?_⟩
   intro V _ _ _ ev X _ m t δ 𝔪 τ χ hχ hpt a mu hY
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hL : LL := GlobalTheory.firstFiveLaws
   have hG : GlobalFnsSt := hL.1.globalFns
@@ -166,7 +166,7 @@ theorem torusChar_eq_weil : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Mat
     have e := unitOn_injective (GlobalTheory.CommutatorPairing.weilIs_unique hG 𝔪.A.isAb 𝔪.A.isLB W₂ W₃)
     rw [hp'y] at e
     have e' := congrArg Units.val e
-    simp only [hχ₁, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    simp only [hχ₁, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
       RingHom.coe_comp, Function.comp_apply, Units.val_pow_eq_pow_val, c₀, IsUnit.unit_spec] at e'
     rw [Units.val_one, one_smul]
     refine (algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).injective ?_
@@ -785,7 +785,7 @@ theorem one_member {κ : X₁.S.Gam → X₁.S.Gam → X₁.S.Gam → X₁.S.R} 
       rw [hv' z J hJ, hv a z J hJ] at q'
       exact inv_injective (cstH_inj z ((Units.mul_left_inj _).1 q'))
     subst huu
-    haveI : IsIntegrallyClosed V := 𝔪.cn.2.1
+    have : IsIntegrallyClosed V := 𝔪.cn.2.1
     have hint : ∀ mu : Fin 8 → X, ∃ r : V, algebraMap V (FractionRing V) r =
         (u a)⁻¹ * ((χ (Multiplicative.ofAdd (𝔪.e₈ mu)) : (FractionRing V)ˣ) : FractionRing V) := fun mu => by
       refine IsIntegrallyClosed.isIntegral_iff.1 (IsIntegral.mul ?_ ?_)
@@ -828,12 +828,12 @@ theorem prim_ring : IsPrimitiveRoot (algebraMap X₁.o₁ X₁.S.R X₁.S.ζ) ((
 
 theorem prim_member (𝔪 : UMem X₁ z₁ act V ev X t δ) :
     IsPrimitiveRoot (𝔪.yK (algebraMap X₁.o₁ X₁.S.R X₁.S.ζ)) ((X₁.S.r * X₁.S.N) ^ 2) := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  haveI : CharZero (FractionRing V) := IsFractionRing.charZero V
+  have : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero (FractionRing V) := IsFractionRing.charZero V
   have hk : 0 < (X₁.S.r * X₁.S.N) ^ 2 := pow_pos (Nat.mul_pos X₁.S.r_pos (by have := X₁.S.N_ge; omega)) 2
   have h := ((prim_ring (X₁ := X₁)).isRoot_cyclotomic hk).map (f := 𝔪.yK)
   rw [Polynomial.map_cyclotomic] at h
-  haveI : NeZero ((((X₁.S.r * X₁.S.N) ^ 2 : ℕ)) : FractionRing V) := ⟨by exact_mod_cast hk.ne'⟩
+  have : NeZero ((((X₁.S.r * X₁.S.N) ^ 2 : ℕ)) : FractionRing V) := ⟨by exact_mod_cast hk.ne'⟩
   exact Polynomial.isRoot_cyclotomic_iff.1 h
 
 theorem exp_eq (𝔪 : UMem X₁ z₁ act V ev X t δ) {p q : ℕ}
@@ -850,7 +850,7 @@ theorem transExp_affine : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matri
   obtain ⟨κ, hκ1, hκ⟩ := GlobalTheory.T.exists_theta_frame_cube_constant_root_of_unity g n F W Z i X₁ z₁ act
   obtain ⟨e₁, h₁, c₁⟩ := one_member hdiv 𝔪1 (hκ V1 ev1 Y1 m1 t1 δ1 𝔪1) hτ
   obtain ⟨e₂, h₂, c₂⟩ := one_member hdiv 𝔪2 (hκ V2 ev2 Y2 m2 t2 δ2 𝔪2) hτ
-  haveI : NeZero ((X₁.S.r * X₁.S.N) ^ 2) :=
+  have : NeZero ((X₁.S.r * X₁.S.N) ^ 2) :=
     ⟨(pow_pos (Nat.mul_pos X₁.S.r_pos (by have := X₁.S.N_ge; omega)) 2).ne'⟩
   let d : X₁.S.HH X₁.M z₁ → ZMod ((X₁.S.r * X₁.S.N) ^ 2) := fun a => (e₁ a : ZMod _) - (e₂ a : ZMod _)
   have hd : ∀ a a', d (a + a') - d 0 = d a - d 0 + (d a' - d 0) := fun a a' => by
@@ -947,7 +947,7 @@ namespace GlobalTheory.Poinc.Sep
 theorem sumF_comp_equiv {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {K : Type} [Field K]
     [Algebra (FractionRing R) K] {Ix Jx : Type} {x : Ix → K} {s : K} (e : Jx ≃ Ix) (h : SumF I K x s) :
     SumF I K (fun j => x (e j)) s := by
-  letI : Module R K := Module.compHom K (algebraMap R (FractionRing R))
+  let : Module R K := Module.compHom K (algebraMap R (FractionRing R))
   obtain ⟨N, hN, hs, hx, hlim⟩ := h
   refine ⟨N, hN, hs, fun j => hx _, fun k => ?_⟩
   classical
@@ -1077,8 +1077,8 @@ private theorem sum_terms_universal_member {g n : ℕ} {F : SFam g n (zetaAway n
 
 theorem UMem.const_term_sub_mem : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (z₁ : X₁.M.Z) (act : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V1 : Type) [CommRing V1] [IsDomain V1] [IsLocalRing V1] (ev1 : X₁.M.Z.presheaf.stalk z₁ →+* V1) (Y1 : Type) [AddCommGroup Y1] (m1 : ℕ) (t1 : Fin m1 → V1) (δ1 : Fin m1 → LinearMap.BilinForm ℤ Y1) (𝔪1 : UMem X₁ z₁ act V1 ev1 Y1 t1 δ1) (C : Type) (lab : C → X₁.S.Gam), (∀ c, lab c ∈ X₁.S.HH X₁.M z₁) → ∀ T : (Fin 8 → Y1) → C → V1, 𝔪1.Terms x₀ lab T → ∀ (c : C) (r : X₁.M.Z.presheaf.stalk z₁), X₁.M.stalkHom z₁ r = X₁.S.th (lab c) / X₁.S.th x₀ → ev1 r - T 0 c ∈ maximalIdeal V1 := by
   intro g n F W Z i X₁ z₁ act x₀ hd V _ _ _ ev X _ m t δ 𝔪 C lab hlab T hT c r hr
-  haveI : IsNoetherianRing V := 𝔪.cn.1
-  haveI : IsLocalHom ev := 𝔪.loc
+  have : IsNoetherianRing V := 𝔪.cn.1
+  have : IsLocalHom ev := 𝔪.loc
   have hθ := UMem.yK_th_ne_zero g n F W Z i X₁ z₁ act V ev X m t δ 𝔪 x₀ hd
   have sp : ∀ w, X₁.M.Z.fromSpecStalk z₁ w ⤳ z₁ := fun w => by
     have : X₁.M.Z.fromSpecStalk z₁ w ∈ Set.range (X₁.M.Z.fromSpecStalk z₁) := ⟨w, rfl⟩
@@ -1163,8 +1163,8 @@ theorem twist_resid : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
     · subst h0
       have ha : a ∈ X₁.S.HH X₁.M z₁ := (GlobalTheory.T.dividingThetaConstants_generate_integral_torsion_labels g n F W Z i X₁ z₁ act x₀ hx₀ V ev Y m t δ 𝔪 a).2 h
       have h1 : eStd X₁.S.g _ τ a = 0 := hτ a ha
-      simp only [wt', if_pos rfl, h1, smul_zero]
-    · simp only [wt', if_neg h0]
+      simp only [wt', ite_eq_left rfl, h1, smul_zero]
+    · simp only [wt', ite_eq_right h0]
       exact hwt a mu h
   have hh : X₁.M.stalkHom z₁ (s * u * r) = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e) * X₁.S.th (lab c + τ) / X₁.S.th x₀ := by
     rw [map_mul, map_mul, hs, hu, hr]
@@ -1269,7 +1269,7 @@ theorem pow_eq_of_sub_mem (X₁ : Setup F W i) (z₁ : X₁.M.Z) {s₁ s₂ : X�
     (h₁ : X₁.M.stalkHom z₁ s₁ = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e₁))
     (h₂ : X₁.M.stalkHom z₁ s₂ = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e₂))
     (hm : s₁ - s₂ ∈ maximalIdeal (X₁.M.Z.presheaf.stalk z₁)) : X₁.S.ζ ^ e₁ = X₁.S.ζ ^ e₂ := by
-  haveI : IsDomain X₁.o₁ := by haveI := X₁.ar.ded; infer_instance
+  have : IsDomain X₁.o₁ := by have := X₁.ar.ded; infer_instance
   by_contra hne
   obtain ⟨M, hM⟩ : ∃ M, M = (X₁.S.r * X₁.S.N) ^ 2 := ⟨_, rfl⟩
   have hζ : IsPrimitiveRoot X₁.S.ζ M := hM ▸ X₁.S.prim
@@ -1401,7 +1401,7 @@ theorem twistSum_indep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix
   obtain ⟨s₀, hs₀⟩ := exists_stalk_zeta X₁ z₁ (X₁.S.ζ ^ ε₁ (lab₁ c₁) τ)
   have hA := hS₁ zt (s₁ * r) hzt (by rw [map_mul, hs₁, hr, mul_div_assoc]) wt hwt
   have hB := h1 C₁ lab₁ hlab₁ T₁ hT₁ c₁ τ hτ zt (s₀ * r) hzt (by rw [map_mul, hs₀, hr, mul_div_assoc]) wt hwt
-  haveI : IsNoetherianRing V₁ := 𝔪₁.cn.1
+  have : IsNoetherianRing V₁ := 𝔪₁.cn.1
   have unique_sum {R : Type} [CommRing R] [IsNoetherianRing R] {I : Ideal R}
       {E Ix : Type} [AddCommGroup E] [Module R E] (hI : I ≤ Ideal.jacobson ⊥)
       {x : Ix → E} {s s' : E} (h : SumI I x s) (h' : SumI I x s') : s = s' := by
@@ -1411,7 +1411,7 @@ theorem twistSum_indep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix
     obtain ⟨N', hN', hs', -, hconv'⟩ := h'
     set M := N ⊔ N' with hM
     have hMfg : M.FG := hN.sup hN'
-    haveI : Module.Finite R M := Module.Finite.iff_fg.mpr hMfg
+    have : Module.Finite R M := Module.Finite.iff_fg.mpr hMfg
     have hmem : s - s' ∈ M := M.sub_mem (Submodule.mem_sup_left hs) (Submodule.mem_sup_right hs')
     have hpow : ∀ n : ℕ, (⟨s - s', hmem⟩ : M) ∈ I ^ n • (⊤ : Submodule R M) := by
       intro n

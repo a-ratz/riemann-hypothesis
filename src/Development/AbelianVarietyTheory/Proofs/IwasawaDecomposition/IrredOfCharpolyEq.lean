@@ -82,7 +82,7 @@ theorem liftRep_surjective [IsAlgClosed k] (ρ : Γ →* GL (Fin a) k) (ha : 0 <
     (h : ∀ W : Submodule k (Fin a → k), (∀ g, ∀ x ∈ W, (ρ g : Matrix (Fin a) (Fin a) k) *ᵥ x ∈ W) →
       W = ⊥ ∨ W = ⊤) :
     Function.Surjective (liftRep ρ) := by
-  haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+  have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
   have hirr : IsIrrSub ρ ⊤ := ⟨top_ne_bot, fun g v _ => Submodule.mem_top,
     fun W' _ hinv => h W' hinv⟩
   have hs := GlobalTheory.BurnsideField.span_mat_eq_top_of_isIrrSub ρ hirr
@@ -114,7 +114,7 @@ theorem irred_of_charpoly_eq [IsAlgClosed k] (ρ ρ' : Γ →* GL (Fin a) k)
     rcases Nat.eq_zero_or_pos a with h | h
     · subst h; exact absurd (Subsingleton.elim w 0) hw0
     · exact h
-  haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+  have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
   have hsurj := liftRep_surjective ρ' ha h'
   let S : Set (Matrix (Fin a) (Fin a) k) :=
     {X | ∃ α, (∀ x ∈ W, liftRep ρ α *ᵥ x = 0) ∧ liftRep ρ' α = X}
@@ -161,7 +161,7 @@ theorem irred_of_charpoly_eq [IsAlgClosed k] (ρ ρ' : Γ →* GL (Fin a) k)
     have hrange : LinearMap.range (liftRep ρ').toLinearMap = ⊤ := LinearMap.range_eq_top.2 hsurj
     let q := (LinearMap.ker ψ).liftQ (liftRep ρ').toLinearMap hker
     have hq : LinearMap.range q = ⊤ := by rw [Submodule.range_liftQ, hrange]
-    haveI : FiniteDimensional k (MonoidAlgebra k Γ ⧸ LinearMap.ker ψ) :=
+    have : FiniteDimensional k (MonoidAlgebra k Γ ⧸ LinearMap.ker ψ) :=
       LinearEquiv.finiteDimensional (ψ.quotKerEquivRange).symm
     have h1 : Module.finrank k (Matrix (Fin a) (Fin a) k) ≤
         Module.finrank k (MonoidAlgebra k Γ ⧸ LinearMap.ker ψ) := by

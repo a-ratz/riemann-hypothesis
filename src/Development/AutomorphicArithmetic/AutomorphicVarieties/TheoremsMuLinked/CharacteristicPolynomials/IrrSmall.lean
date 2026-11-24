@@ -63,7 +63,7 @@ private theorem charpoly_flag {H k : Type} [Group H] [CommRing k] {n : ℕ} (r :
   have h1 := Matrix.charpoly_units_conj g (Pr.gm r s)
   have h2 : ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv] at h3
   rw [h3]
@@ -87,7 +87,7 @@ theorem UpperTheory.V.Th.Det.irrSmall :
   intro K k B G D _ _ _ _ _ _ _ _ _ n hn G' _ ρ j φ χ ι ψ ψb hirr hj hred hflag hlift hfree hne U hU
   classical
   have hfi : U.FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen U hU
+    have := Subgroup.quotient_finite_of_isOpen U hU
     exact Subgroup.finiteIndex_of_finite_quotient
   have hch : ∀ g, (Pr.gm ρ (ι g)).charpoly = Pr.chPoly ψ g := fun g => charpoly_flag _ _ hflag g
   have key := Pr.irrNormal G K k B n hn ρ hirr j φ χ hj hred D ι ψ hch (U.normalCore ⊓ G') (fun a b hab => ?_) ?_

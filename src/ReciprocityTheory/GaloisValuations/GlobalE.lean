@@ -201,7 +201,7 @@ theorem continuous_decRes [IsAlgClosure F Ω] : Continuous (decRes F L A) := by
     funext σ
     exact decRes_apply σ
   rw [e]
-  exact hc.comp continuous_subtype_val
+  exact hc.comp continuous_subtypeVal
 
 def decEquiv [IsAlgClosure F Ω] (h : Dec (F := F) A ≤ (resGal F L Ω).range) :
     Dec (F := L) A ≃ₜ* Dec (F := F) A where

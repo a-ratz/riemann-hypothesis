@@ -105,22 +105,22 @@ theorem fib_set_nonneg [IsFiniteMeasureOnCompacts ν]
     intro b
     have hae := ae_fib hfib hff' hι b
     by_cases hb : b ∈ S
-    · rw [Set.indicator_apply, if_pos hb]
+    · rw [Set.indicator_apply, ite_eq_left hb]
       refine lintegral_congr_ae ?_
       filter_upwards [hae] with v hv
       have hv' : v ∈ f' ⁻¹' S := by
         show f' v ∈ S
         rw [hv]
         exact hb
-      rw [Set.indicator_apply, if_pos hv']
-    · rw [Set.indicator_apply, if_neg hb]
+      rw [Set.indicator_apply, ite_eq_left hv']
+    · rw [Set.indicator_apply, ite_eq_right hb]
       refine (lintegral_congr_ae ?_).trans lintegral_zero
       filter_upwards [hae] with v hv
       have hv' : v ∉ f' ⁻¹' S := by
         show f' v ∉ S
         rw [hv]
         exact hb
-      rw [Set.indicator_apply, if_neg hv']
+      rw [Set.indicator_apply, ite_eq_right hv']
   have hG0 : ∀ b, 0 ≤ ∫ v, ρ v ∂(fib b) := fun b => integral_nonneg hρ0
   rw [integral_eq_lintegral_of_nonneg_ae (Filter.Eventually.of_forall hρ0) hρc.aestronglyMeasurable,
     integral_eq_lintegral_of_nonneg_ae (Filter.Eventually.of_forall hG0)
@@ -408,7 +408,7 @@ theorem isFibreFamily_smul {B : Set X} {c : ℝ≥0∞} (hc : c ≠ ⊤)
     IsFibreFamily (c • μ) f ι U ν B (fun b => c • fib b) := by
   obtain ⟨h1, h2, h3⟩ := hfib
   refine ⟨fun b => ?_, fun φ hφ => ?_, fun φ hφc hφs hφU => ?_⟩
-  · simp only [Measure.smul_apply, h1 b, smul_zero]
+  · simp only [smul_apply, h1 b, smul_zero]
   · rw [Measure.restrict_smul, lintegral_smul_measure, h2 φ hφ, smul_eq_mul, ← lintegral_const_mul' _ _ hc]
     simp only [lintegral_smul_measure, smul_eq_mul]
   · obtain ⟨hi, hcont⟩ := h3 φ hφc hφs hφU
@@ -435,7 +435,7 @@ theorem fib_reindex_eq (e : V ≃ₜ V) (h : X ≃ₜ X) {f' : V → X} (hf' : C
     (hfib : IsFibreFamily μ f ι U ν univ fib) (b : X) :
     (fib (h.symm b)).map e.toMeasurableEquiv = (cμ * cν) • fib b := by
   have hc : cμ * cν ≠ ⊤ := ENNReal.mul_ne_top hcμ hcν
-  haveI : IsFiniteMeasureOnCompacts ((cμ * cν) • μ) := IsFiniteMeasureOnCompacts.smul μ hc
+  have : IsFiniteMeasureOnCompacts ((cμ * cν) • μ) := IsFiniteMeasureOnCompacts.smul μ hc
   have := PI.DegenerateSiegelWeil.FibUniq.fib_eq (isFibreFamily_reindex e h hff' hι heh hU hμ hν hfib)
     (isFibreFamily_smul hc hfib) hf' hff' hι hUo
   exact congrFun this b

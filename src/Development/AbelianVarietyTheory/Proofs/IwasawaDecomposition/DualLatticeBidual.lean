@@ -100,7 +100,7 @@ theorem hform_smul_right (σ : E →+* E) (J : Matrix (Fin n) (Fin n) E) (a : E)
 theorem dual_lattice_bidual (σ : E →+* E) (hσ : ∀ x, σ (σ x) = x) (J : Matrix (Fin n) (Fin n) E)
     (hJ : IsUnit J.det) (hH : cT σ J = J) (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L) :
     Submodule.IsFullLattice E (dualL σ J L) ∧ dualL σ J (dualL σ J L) = L := by
-  letI : StarRing E := starOf σ hσ
+  let : StarRing E := starOf σ hσ
   let h : (Fin n → E) →ₗ⋆[E] (Fin n → E) →ₗ[E] E :=
     LinearMap.mk₂'ₛₗ (starRingEnd E) (RingHom.id E) (hform σ J)
       (fun x x' y => by simp only [hform, Pi.add_apply, map_add (f := _), add_mul, Finset.sum_add_distrib])
@@ -185,7 +185,7 @@ theorem mem_mulLat (γ : GL (Fin n) E) (L : Submodule (𝓞 E) (Fin n → E)) (y
 
 theorem mulLat_lattice (γ : GL (Fin n) E) (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L) :
     Submodule.IsFullLattice E (mulLat γ.1 L) := by
-  letI : Submodule.IsLattice E (mulLat γ.1 L) := Submodule.IsLattice.of_fg E (hL.fg.map _)
+  let : Submodule.IsLattice E (mulLat γ.1 L) := Submodule.IsLattice.of_fg E (hL.fg.map _)
   constructor
   change Submodule.span E ((L.map ((Matrix.mulVecLin γ.1).restrictScalars (𝓞 E)) :
     Submodule (𝓞 E) (Fin n → E)) : Set (Fin n → E)) = ⊤

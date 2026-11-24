@@ -208,9 +208,9 @@ structure CoefFrame where
 
 theorem CoefFrame.nonempty [NumberField K] [NumberField L] : Nonempty (CoefFrame ι) := by
   let _ : Algebra K L := ι.toAlgebra
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun q => by
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun q => by
     rw [RingHom.algebraMap_toAlgebra, eq_ratCast (algebraMap ℚ L) q, eq_ratCast (algebraMap ℚ K) q, map_ratCast]
-  haveI : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  have : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
   let b := Module.finBasis K L
   refine ⟨⟨Module.finrank K L, b, (b.equivFun.toLinearMap : L →ₗ[K] (Fin _ → K)).toAddMonoidHom, fun y => ?_,
     fun a y => ?_⟩⟩

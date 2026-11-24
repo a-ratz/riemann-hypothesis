@@ -73,10 +73,10 @@ theorem isOpen_integer : IsOpen ((𝒪[F] : Subring F) : Set F) :=
 
 theorem isOpen_O (L : Formalism.MainNotions.S.Loc.LocE F E) : IsOpen (L.O : Set E) := by
   classical
-  haveI := L.top
-  haveI := L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
-  haveI : ContinuousAdd E := by
+  have := L.top
+  have := L.free
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
+  have : ContinuousAdd E := by
     first
       | exact IsModuleTopology.toContinuousAdd F E
       | exact inferInstance
@@ -122,8 +122,8 @@ theorem isOpen_O (L : Formalism.MainNotions.S.Loc.LocE F E) : IsOpen (L.O : Set 
 
 theorem isOpen_R [MeasurableSpace E] (M : Formalism.MainNotions.S.Loc.Model F E) : IsOpen (M.R : Set E) := by
   classical
-  haveI := M.L.top
-  haveI : ContinuousAdd E := by
+  have := M.L.top
+  have : ContinuousAdd E := by
     first
       | exact IsModuleTopology.toContinuousAdd F E
       | exact inferInstance

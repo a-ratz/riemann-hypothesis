@@ -88,17 +88,17 @@ open scoped ENNReal NNReal
 
 theorem haar_eq_map_prod : ∀ (D : D7) (Y : HSp D) (ν : Measure (GA D Y)), ν.IsHaarMeasure → ∃ (m : Measure (GinfC Y)) (μ : Measure (GfC Y)), m.IsHaarMeasure ∧ μ.IsHaarMeasure ∧ SigmaFinite m ∧ SigmaFinite μ ∧ MeasurableEmbedding (fun q : GinfC Y × GfC Y => (q.1 : GA D Y) * q.2) ∧ ν = (m.prod μ).map (fun q : GinfC Y × GfC Y => (q.1 : GA D Y) * q.2) := by
   intro D Y ν hν
-  haveI : LocallyCompactSpace (GinfC Y) := (GlobalTheory.AdelicSplit.isClosed_GinfC' Y).locallyCompactSpace
-  haveI : LocallyCompactSpace (GfC Y) := (GlobalTheory.AdelicSplit.isClosed_GfC' Y).locallyCompactSpace
+  have : LocallyCompactSpace (GinfC Y) := (GlobalTheory.AdelicSplit.isClosed_GinfC' Y).locallyCompactSpace
+  have : LocallyCompactSpace (GfC Y) := (GlobalTheory.AdelicSplit.isClosed_GfC' Y).locallyCompactSpace
   set e := GlobalTheory.AdelicSplit.splitEquiv Y with he_def
   have he : (⇑e : GinfC Y × GfC Y → GA D Y) = fun q => (q.1 : GA D Y) * q.2 := rfl
   let m₀ : Measure (GinfC Y) := Measure.haar
   let μ : Measure (GfC Y) := Measure.haar
-  haveI hρ : ((m₀.prod μ).map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map _ e
+  have hρ : ((m₀.prod μ).map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map _ e
   set c := Measure.haarScalarFactor ν ((m₀.prod μ).map e) with hc_def
   have hc : ν = c • (m₀.prod μ).map e := Measure.isMulLeftInvariant_eq_smul _ _
   have hc0 : c ≠ 0 := (Measure.haarScalarFactor_pos_of_isHaarMeasure _ _).ne'
-  haveI hm : ((c : ℝ≥0∞) • m₀).IsHaarMeasure :=
+  have hm : ((c : ℝ≥0∞) • m₀).IsHaarMeasure :=
     Measure.IsHaarMeasure.smul _ (by simpa using hc0) ENNReal.coe_ne_top
   refine ⟨(c : ℝ≥0∞) • m₀, μ, hm, inferInstance, inferInstance, inferInstance, ?_, ?_⟩
   · rw [← he]; exact e.toHomeomorph.measurableEmbedding
@@ -153,12 +153,12 @@ variable {D : D7} {A B : HSp D} {c : ℕ} {ε : D.host.E}
 
 
 theorem isClosedEmbedding_unitaryEmbedding (d : HermitianOrthogonalExtensionData A B c ε) (hε : ε ≠ 0) : IsClosedEmbedding (stabilizerEmbedding d) := by
-  haveI : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (AF D.host.F) _
   set P' := (frameMat B A d.ι).map (incA D)
   set Q' := (GlobalTheory.UnitaryEmbeddingProperties.qM d).map (incA D)
-  have hv : Continuous fun g : GA D B => mt B g := Units.continuous_val.comp continuous_subtype_val
-  have hvi : Continuous fun g : GA D B => mt B g⁻¹ := Units.continuous_coe_inv.comp continuous_subtype_val
+  have hv : Continuous fun g : GA D B => mt B g := Units.continuous_val.comp continuous_subtypeVal
+  have hvi : Continuous fun g : GA D B => mt B g⁻¹ := Units.continuous_coe_inv.comp continuous_subtypeVal
   let Φ : GA D B → Matrix (Fin A.rank) (Fin A.rank) (AF D.host.F ⊗[D.host.F] D.host.E) ×
       (Matrix (Fin A.rank) (Fin A.rank) (AF D.host.F ⊗[D.host.F] D.host.E))ᵐᵒᵖ :=
     fun g => (Q' * mt B g * P', MulOpposite.op (Q' * mt B g⁻¹ * P'))
@@ -188,7 +188,7 @@ theorem isClosedEmbedding_unitaryEmbedding (d : HermitianOrthogonalExtensionData
       exact GlobalTheory.UnitaryEmbeddingGroup.mem_range_of_fix d hε g hg
   have hcl : IsClosed (Set.range (stabilizerEmbedding d)) := by
     rw [hrange]
-    haveI : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
+    have : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
     exact isClosed_eq (hv.matrix_mul continuous_const) continuous_const
   exact ⟨⟨hind, GlobalTheory.UnitaryEmbeddingGroup.unitaryEmbedding_injective d⟩, hcl⟩
 
@@ -207,7 +207,7 @@ theorem vol_pos_lt_top : ∀ (D : D7) (Y V : HSp D) (d : HermitianOrthogonalExte
   obtain ⟨hU, hK⟩ := congLev_open_compact V (Formalism.IndefR.Fin.PDA.selfDual_isFullLattice V Λ hΛ) h𝔪
   set S := {b : GfC Y | Lev.finE V (stabilizerEmbedding d (b : GA D Y)) ∈ congLev D.sp.cm V.gram Λ 𝔪}
   have hc : Continuous fun b : GfC Y => stabilizerEmbedding d (b : GA D Y) :=
-    (GlobalTheory.UnitaryEmbeddingProperties.continuous_unitaryEmbedding d).comp continuous_subtype_val
+    (GlobalTheory.UnitaryEmbeddingProperties.continuous_unitaryEmbedding d).comp continuous_subtypeVal
   have hS : S = (fun b : GfC Y => stabilizerEmbedding d (b : GA D Y)) ⁻¹'
       (((congLev D.sp.cm V.gram Λ 𝔪).comap (Lev.finE V) : Subgroup (GA D V)) : Set (GA D V)) := rfl
   have hopen : IsOpen S := by
@@ -341,7 +341,7 @@ theorem mem_smul_span (Λ : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (�
     have hv : (fun i => y i ⊗ₜ[F] (1 : Formalism.L2.Herm.Af F)) = 0 := by
       have := congrArg (fun w => (g⁻¹ : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)).1 *ᵥ w) h0
       simpa [Matrix.mulVec_mulVec] using this
-    haveI := nontrivial_af (F := F)
+    have := nontrivial_af (F := F)
     have hinj : Function.Injective (Algebra.TensorProduct.includeLeft : E →ₐ[F] E ⊗[F] Formalism.L2.Herm.Af F) :=
       Algebra.TensorProduct.includeLeft_injective (algebraMap F (Formalism.L2.Herm.Af F)).injective
     have hy0 : y = 0 := by
@@ -354,7 +354,7 @@ theorem mem_smul_span (Λ : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (�
       rwa [Ne, FractionalIdeal.coeIdeal_eq_zero]
     have h1 : (1 : E) ∈ ((𝔪 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) *
         (((𝔪 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E)⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) := by
-      rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hP]
+      rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hP]
       exact FractionalIdeal.one_mem_one _
     have key : ∀ c ∈ ((𝔪 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) *
         (((𝔪 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E)⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E),
@@ -435,7 +435,7 @@ variable {D : D7}
 theorem cmp_of_mem_GfC (θ : InfFam D) {V : HSp D} {b : GA D V} (hb : b ∈ GfC V) (τ : D.what₂.Tau) : cmp θ τ b = 1 := by
   have h1 : infHom V b = 1 := hb
   have h2 := congrArg Units.val h1
-  simp only [infHom, MonoidHom.comp_apply, Formalism.UG.bc, Units.coe_map, MonoidHom.coe_coe, RingHom.mapMatrix_apply, Units.val_one] at h2
+  simp only [infHom, MonoidHom.comp_apply, Formalism.UG.bc, Units.coe_map, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Units.val_one] at h2
   have h4 : (matHom V b).1.map (Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E)) = 1 := h2
   have h3 : cmp θ τ b = ((matHom V b).1.map (Algebra.TensorProduct.map (fstA D.host.F) (AlgHom.id D.host.F D.host.E))).map (θ τ) := rfl
   rw [h3, h4]
@@ -606,10 +606,10 @@ theorem one_clause (θ : InfFam D) {Y V : HSp D} (d : HermitianOrthogonalExtensi
     rw [coef_split θ d M K u 1 q.1 q.2, one_mul, one_mul, Set.indicator_apply]
     by_cases hq : q.2 ∈ K'
     · have hq' := (hK' q.2).1 hq
-      rw [if_pos hq', if_pos hq, ← mul_assoc x, hinv q.2 hq]
+      rw [ite_eq_left hq', ite_eq_left hq, ← mul_assoc x, hinv q.2 hq]
       ring
     · have hq' : Lev.finE V (stabilizerEmbedding d (q.2 : GA D Y)) ∉ K := fun h => hq ((hK' q.2).2 h)
-      rw [if_neg hq', if_neg hq]
+      rw [ite_eq_right hq', ite_eq_right hq]
       ring
   simp_rw [pw]
   rw [integral_prod_mul (fun a : GinfC Y => coefR θ M u u (stabilizerEmbedding d a) * φ (x * a)) (K'.indicator (fun _ => (1 : ℂ))), hrep,
@@ -761,8 +761,8 @@ namespace GlobalTheory.SepPer.AdelicFromReal
 theorem adelicAt_of_real : GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (Y V : HSp D) (d : HermitianOrthogonalExtensionData Y V 1 1) (S S' : D.what₂.Tau → SPar) (M₀ : DSModel Y S') (M : DSModel V S) (p : Pack M₀ M) (Q : ℝ), p.Is θ d Q → ∀ (Λ : Lat V) (𝔪 : Ideal (𝓞 D.host.E)), IsSelfDualC V Λ → 𝔪 ≠ ⊥ → zv d ∈ Λ → ∀ (J : Set (GA D Y)), (∀ k ∈ GfC Y, Lev.finE V (stabilizerEmbedding d k) ∈ congLev D.sp.cm V.gram Λ 𝔪 → k ∈ J) → ∀ t ∈ MultT θ M₀ J 1, ∀ ν : Measure (GA D Y), ν.IsHaarMeasure → ∃ c, p.AdelicAt θ d Q Λ 𝔪 ν (t (PiTensorProduct.tprod ℂ p.w)) c := by
   intro hP D θ hθ Y V d S S' M₀ M p Q hp Λ 𝔪 hΛ h𝔪 hz J hJ t ht ν hν
   obtain ⟨m, μ, hm, hμ, hmσ, hμσ, hemb, hνe⟩ := GlobalTheory.T.adelicUnitaryHaar_eq_map_prod_real_finite D Y ν hν
-  haveI := hmσ
-  haveI := hμσ
+  have := hmσ
+  have := hμσ
   obtain ⟨c₀, hc⟩ := hp.2 m hm
   obtain ⟨hK'm, hK'0, hK'top⟩ := GlobalTheory.T.congruence_preimage_volume_finite D Y V d Λ 𝔪 hΛ h𝔪 μ hμ
   have hκ := ENNReal.toReal_pos hK'0.ne' hK'top.ne

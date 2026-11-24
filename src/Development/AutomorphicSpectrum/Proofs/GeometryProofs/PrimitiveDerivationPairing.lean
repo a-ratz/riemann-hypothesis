@@ -91,13 +91,13 @@ theorem exists_algHom_ne_zero_of_not_isNilpotent
     {k : Type} [Field k] [IsAlgClosed k] {A : Type} [CommRing A] [Algebra k A]
     [Module.Finite k A] {f : A} (hf : ¬ IsNilpotent f) :
     ∃ x : A →ₐ[k] k, x f ≠ 0 := by
-  haveI : IsArtinianRing A := isArtinian_of_tower k inferInstance
+  have : IsArtinianRing A := isArtinian_of_tower k inferInstance
   rw [← mem_nilradical, nilradical_eq_sInf, Ideal.mem_sInf] at hf
   push_neg at hf
   obtain ⟨P, hP, hfP⟩ := hf
-  haveI : P.IsPrime := hP
-  haveI : P.IsMaximal := IsArtinianRing.isMaximal_of_isPrime P
-  letI : Field (A ⧸ P) := Ideal.Quotient.field P
+  have : P.IsPrime := hP
+  have : P.IsMaximal := IsArtinianRing.isMaximal_of_isPrime P
+  let : Field (A ⧸ P) := Ideal.Quotient.field P
   have hbij : Function.Bijective (algebraMap k (A ⧸ P)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : k ≃ₐ[k] (A ⧸ P) := AlgEquiv.ofBijective (Algebra.ofId k (A ⧸ P)) hbij
@@ -214,7 +214,7 @@ theorem exists_natCast_of_pow_eq (k : Type) [Field k] (p : ℕ) [hp : Fact p.Pri
   have hone : 1 < p := hp.out.one_lt
   have hP : (X ^ p - X : k[X]) ≠ 0 := Polynomial.X_pow_sub_X_ne_zero (R := k) hone
   have hdeg : (X ^ p - X : k[X]).natDegree = p := Polynomial.natDegree_X_pow_sub_X (R := k) hone
-  haveI : ExpChar k p := ExpChar.prime hp.out
+  have : ExpChar k p := ExpChar.prime hp.out
   set S : Finset k := (Finset.range p).image (fun i : ℕ => (i : k)) with hS
   have hcard : S.card = p := by
     rw [hS, Finset.card_image_of_injOn, Finset.card_range]
@@ -521,7 +521,7 @@ theorem exists_coeff (p : ℕ) [Fact p.Prime] [CharP k p] (D : Derivation k R R)
       have : ∑ i ∈ Finset.range j, (if i = j then e else c i) * z ^ i
           = ∑ i ∈ Finset.range j, c i * z ^ i := by
         refine Finset.sum_congr rfl fun i hi => ?_
-        rw [if_neg (Finset.mem_range.1 hi).ne]
+        rw [ite_eq_right (Finset.mem_range.1 hi).ne]
       rw [this, ← hac]
       simp
 
@@ -781,13 +781,13 @@ theorem exists_isUnit_mem_of_forall_point :
     ∀ (k : Type) [Field k] [IsAlgClosed k] (R : Type) [CommRing R] [Algebra k R] [Module.Finite k R]
     (U : Submodule k R), (∀ x : R →ₐ[k] k, ∃ t ∈ U, x t ≠ 0) → ∃ w ∈ U, IsUnit w := by
   intro k _ _ R _ _ _ U hU
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite k R
-  haveI : Infinite k := IsAlgClosed.instInfinite
+  have : IsArtinianRing R := IsArtinianRing.of_finite k R
+  have : Infinite k := IsAlgClosed.instInfinite
 
   have hpt : ∀ m : Ideal R, m.IsMaximal → ∃ x : R →ₐ[k] k, ∀ r ∈ m, x r = 0 := by
     intro m hm
-    letI : Field (R ⧸ m) := Ideal.Quotient.field m
-    haveI : Module.Finite k (R ⧸ m) :=
+    let : Field (R ⧸ m) := Ideal.Quotient.field m
+    have : Module.Finite k (R ⧸ m) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ k m).toLinearMap
         (Ideal.Quotient.mkₐ_surjective k m)
     let e : k ≃ₐ[k] (R ⧸ m) :=
@@ -951,7 +951,7 @@ theorem key (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime] [
         intro hz
         have := _root_.GlobalTheory.CompanionTheory.HopfPrim.powers_indep_of_primitive k p A f hf h0 (fun i => if i = 0 then 0 else 1) (by
           rw [Finset.range_eq_Ico, Finset.sum_eq_sum_Ico_succ_bot (by omega)]
-          simp only [if_true, zero_smul, zero_add]
+          simp only [ite_true, zero_smul, zero_add]
           rw [← hz]
           refine Finset.sum_congr rfl fun i hi => ?_
           have : i ≠ 0 := by have := (Finset.mem_Ico.1 hi).1; omega

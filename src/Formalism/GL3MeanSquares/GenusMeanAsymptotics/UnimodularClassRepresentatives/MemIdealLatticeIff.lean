@@ -94,7 +94,7 @@ theorem map_equivFun (μ : Measure E) [μ.IsAddHaarMeasure] (b : Basis ι ℤ L)
     have h1 : (μ.map e) (Set.univ.pi fun _ : ι => Set.Ico (0 : ℝ) 1) =
         (μ.map e) (TopologicalSpace.PositiveCompacts.piIcc01 ι) := by
       conv_lhs => rw [h]
-      rw [Measure.smul_apply, Real.volume_pi_Ico]
+      rw [smul_apply, Real.volume_pi_Ico]
       simp
     rw [← h1, Measure.map_apply e.continuous.measurable
       (MeasurableSet.univ_pi fun _ => measurableSet_Ico),
@@ -174,7 +174,7 @@ theorem tendsto_tsum_div_pow (μ : Measure E) [μ.IsAddHaarMeasure] {s : Set E} 
       have hfe : frontier (e '' s) = e '' frontier s := (e.toHomeomorph.image_frontier s).symm
       rw [hfe]
       exact Set.preimage_image_eq _ e.injective
-    rw [h3, hs₃, hmap, Measure.smul_apply, smul_eq_mul] at h2
+    rw [h3, hs₃, hmap, smul_apply, smul_eq_mul] at h2
     exact (mul_eq_zero.1 h2).resolve_left hne
   have hlim := tendsto_tsum_div_pow_atTop_integral (e '' s) (fun y => G (e.symm y))
     (hG.comp e.symm.continuous) (e.lipschitzWith.isBounded_image hs₁)

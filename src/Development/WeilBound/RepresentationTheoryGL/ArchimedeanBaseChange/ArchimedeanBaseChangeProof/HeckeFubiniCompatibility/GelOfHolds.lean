@@ -148,14 +148,14 @@ theorem continuous_St (v : InfinitePlace E) {ka : Kers Ma} {kb : Kers Mb} {ψ : 
     (hkb : ∀ w, Continuous (fun t : G b => kb w t.val) ∧ HasCompactSupport (fun t : G b => kb w t.val))
     (hψ : IsFinM ψ) (i : Io Ma Mb κ) (q : Ix (Ma v)) (p : H E a b) :
     Continuous fun z : G a => St v μa μb ν ka kb ψ f i q (p * ιA v z) := by
-  haveI : SigmaFinite μa := inferInstance
-  haveI : SigmaFinite μb := inferInstance
-  haveI : SigmaFinite ν := inferInstance
-  haveI : IsLocallyFiniteMeasure (restA μa μb ν v) := by unfold restA; infer_instance
-  haveI : SecondCountableTopology (RA E a b v) := inferInstance
-  haveI : LocallyCompactSpace (RA E a b v) := inferInstance
-  haveI : FirstCountableTopology (G a × RA E a b v) := inferInstance
-  haveI : LocallyCompactSpace (G a × RA E a b v) := inferInstance
+  have : SigmaFinite μa := inferInstance
+  have : SigmaFinite μb := inferInstance
+  have : SigmaFinite ν := inferInstance
+  have : IsLocallyFiniteMeasure (restA μa μb ν v) := by unfold restA; infer_instance
+  have : SecondCountableTopology (RA E a b v) := inferInstance
+  have : LocallyCompactSpace (RA E a b v) := inferInstance
+  have : FirstCountableTopology (G a × RA E a b v) := inferInstance
+  have : LocallyCompactSpace (G a × RA E a b v) := inferInstance
   unfold St
   refine continuous_finsetSum _ fun j _ => ?_
   obtain ⟨hc, hcs⟩ := cA_props v hka hkb hψ i j
@@ -182,16 +182,16 @@ theorem Rv_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : I
     (hψ : IsFinM ψ) {c : ℂ} (hc : c ≠ 0) (hrep : conv D.μ (tens ka kb ψ) f = c • f) (i : Io Ma Mb κ)
     (q0 : Ix (Ma v)) (p : H E a b) :
     Rv v μa μb ν ka kb ψ f i p = c⁻¹ • ∫ t, ka v t.val (St v μa μb ν ka kb ψ f i q0 (p * ιA v t)) ∂μa := by
-  haveI : SigmaFinite μa := inferInstance
-  haveI : SigmaFinite μb := inferInstance
-  haveI : SigmaFinite ν := inferInstance
-  haveI : SigmaFinite (restA μa μb ν v) := by unfold restA; infer_instance
-  haveI : IsFiniteMeasureOnCompacts (restA μa μb ν v) := by unfold restA; infer_instance
-  haveI : IsFiniteMeasureOnCompacts ((restA μa μb ν v).prod μa) := inferInstance
-  haveI : SecondCountableTopology (RA E a b v) := inferInstance
-  haveI : LocallyCompactSpace (RA E a b v) := inferInstance
-  haveI : FirstCountableTopology (RA E a b v × G a) := inferInstance
-  haveI : LocallyCompactSpace (RA E a b v × G a) := inferInstance
+  have : SigmaFinite μa := inferInstance
+  have : SigmaFinite μb := inferInstance
+  have : SigmaFinite ν := inferInstance
+  have : SigmaFinite (restA μa μb ν v) := by unfold restA; infer_instance
+  have : IsFiniteMeasureOnCompacts (restA μa μb ν v) := by unfold restA; infer_instance
+  have : IsFiniteMeasureOnCompacts ((restA μa μb ν v).prod μa) := inferInstance
+  have : SecondCountableTopology (RA E a b v) := inferInstance
+  have : LocallyCompactSpace (RA E a b v) := inferInstance
+  have : FirstCountableTopology (RA E a b v × G a) := inferInstance
+  have : LocallyCompactSpace (RA E a b v × G a) := inferInstance
   set K : G a → ((Ma v).V →L[ℂ] (Ma v).V) := fun t => ka v t.val with hK
   have hKc : Continuous K := (hka v).1
   have hKs : HasCompactSupport K := (hka v).2
@@ -217,7 +217,7 @@ theorem Rv_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : I
       simp only [Set.mem_prod, not_and_or] at hq
       rcases hq with hq | hq
       · simp only [image_eq_zero_of_notMem_tsupport hq, zero_mul]
-      · simp only [image_eq_zero_of_notMem_tsupport hq, ContinuousLinearMap.zero_apply, inner_zero_right,
+      · simp only [image_eq_zero_of_notMem_tsupport hq, zero_apply, inner_zero_right,
           mul_zero]
   have hI : ∀ j, ∫ r, cA v ka kb ψ i j r * f j (p * σA v r) ∂restA μa μb ν v =
       c⁻¹ * ∫ t, ∫ r, g j (r, t) ∂restA μa μb ν v ∂μa := by
@@ -234,7 +234,7 @@ theorem Rv_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : I
   have hWi : Integrable (fun t => K t (St v μa μb ν ka kb ψ f i q0 (p * ιA v t))) μa := by
     refine Continuous.integrable_of_hasCompactSupport (hKc.clm_apply (continuous_St v hf hka hkb hψ i q0 p)) ?_
     exact HasCompactSupport.intro hKs fun t ht => by
-      rw [image_eq_zero_of_notMem_tsupport ht, ContinuousLinearMap.zero_apply]
+      rw [image_eq_zero_of_notMem_tsupport ht, zero_apply]
   have hsum : ∀ q, ∑ j ∈ Finset.univ.filter (fun j : Io Ma Mb κ => j.1.1 v = q),
       ∫ r, cA v ka kb ψ i j r * f j (p * σA v r) ∂restA μa μb ν v =
       c⁻¹ * ⟪eb Ma v q, ∫ t, K t (St v μa μb ν ka kb ψ f i q0 (p * ιA v t)) ∂μa⟫_ℂ := by
@@ -275,14 +275,14 @@ theorem FA_eq_act (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v
     (hψ : IsFinM ψ) {c : ℂ} (hc : c ≠ 0) (hrep : conv D.μ (tens ka kb ψ) f = c • f) (i : Io Ma Mb κ)
     (q0 : Ix (Ma v)) (y : GA E a) (m₂ : GA E b) {x : Mat a} (hx : x ∈ GLs a) :
     FA v μa μb ν ka kb ψ f i y m₂ x = c⁻¹ • act μa (Ma v) (ka v) (FtA v μa μb ν ka kb ψ f i q0 y m₂) x := by
-  rw [FA, dif_pos hx, Rv_eq hF D hC v ka kb ψ f hT hf hka hkb hψ hc hrep i q0]
+  rw [FA, dite_eq_left hx, Rv_eq hF D hC v ka kb ψ f hT hf hka hkb hψ hc hrep i q0]
   congr 1
   show _ = ∫ t : G a, ka v t.val (FtA v μa μb ν ka kb ψ f i q0 y m₂ (x * t.val)) ∂μa
   refine integral_congr_ae (ae_of_all _ fun t => ?_)
   have hxt : x * t.val ∈ GLs a := GlobalTheory.CompanionTheory.WaveAll.mul_mem_GLs hx (val_mem_GLs t)
   have hm : GeneralLinearGroup.mkOfDetNeZero (x * t.val) hxt = GeneralLinearGroup.mkOfDetNeZero x hx * t :=
     Units.ext rfl
-  simp only [FtA, dif_pos hxt, hm, ιA_mul, mul_assoc]
+  simp only [FtA, dite_eq_left hxt, hm, ιA_mul, mul_assoc]
 
 theorem continuousOn_FtA (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ : Matrix κ κ (Hf E a b → ℂ))
     (f : Io Ma Mb κ → H E a b → ℂ) (hf : ∀ i, Continuous (f i))
@@ -290,23 +290,23 @@ theorem continuousOn_FtA (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ
     (hkb : ∀ w, Continuous (fun t : G b => kb w t.val) ∧ HasCompactSupport (fun t : G b => kb w t.val))
     (hψ : IsFinM ψ) (i : Io Ma Mb κ) (q : Ix (Ma v)) (y : GA E a) (m₂ : GA E b) :
     ContinuousOn (FtA v μa μb ν ka kb ψ f i q y m₂) (GLs a) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hinv : ContinuousOn (fun x : Mat a => x⁻¹) (GLs a) := by
     have e : (fun x : Mat a => x⁻¹) = fun x => (x.det)⁻¹ • x.adjugate := by
       funext x; rw [Matrix.inv_def, Ring.inverse_eq_inv']
     rw [e]
     exact ((continuous_id.matrix_det).continuousOn.inv₀ fun x hx => hx).smul (continuous_id.matrix_adjugate).continuousOn
   have hm : Continuous fun x : GLs a => GeneralLinearGroup.mkOfDetNeZero x.1 x.2 := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have e : (fun x : GLs a => ((GeneralLinearGroup.mkOfDetNeZero x.1 x.2)⁻¹ : G a).val) = fun x => x.1⁻¹ :=
       funext fun x => Matrix.coe_units_inv _
     rw [e]
-    exact hinv.comp_continuous continuous_subtype_val fun x => x.2
+    exact hinv.comp_continuous continuous_subtypeVal fun x => x.2
   show Continuous (fun x : GLs a => FtA v μa μb ν ka kb ψ f i q y m₂ x.1)
   have e : (fun x : GLs a => FtA v μa μb ν ka kb ψ f i q y m₂ x.1) =
       fun x : GLs a => St v μa μb ν ka kb ψ f i q ((y, m₂) * ιA v (GeneralLinearGroup.mkOfDetNeZero x.1 x.2)) := by
     funext x
-    simp only [FtA, dif_pos x.2]
+    simp only [FtA, dite_eq_left x.2]
   rw [e]
   exact (continuous_St v hf hka hkb hψ i q (y, m₂)).comp hm
 
@@ -320,8 +320,8 @@ theorem FA_mem_CE (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v
     FA v μa μb ν ka kb ψ f i y m₂ ∈ CE (Ma v) := by
   have hA := GelP.act_mem_CE_of_mult μa hkv
     (continuousOn_FtA (μa := μa) (μb := μb) (ν := ν) v ka kb ψ f hf hka hkb hψ i (i.1.1 v) y m₂)
-  letI : NormedAddCommGroup (Mat a) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Mat a) := Matrix.normedSpace
+  let : NormedAddCommGroup (Mat a) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Mat a) := Matrix.normedSpace
   refine ⟨(hA.1.const_smul c⁻¹).congr fun x hx =>
     FA_eq_act hF D hC v ka kb ψ f hT hf hka hkb hψ hc hrep i (i.1.1 v) y m₂ hx, ?_⟩
   intro g hg k
@@ -500,19 +500,19 @@ theorem integral_splitB (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb 
     Integrable (fun q : G b × RB E a b v => Q (ιB v q.1 * σB v q.2)) (μb.prod (restB μa μb ν v)) ∧
       ∫ g, Q g ∂D.μ = ∫ t, ∫ r, Q (ιB v t * σB v r) ∂restB μa μb ν v ∂μb := by
   set_option synthInstance.maxHeartbeats 400000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
+    have : SigmaFinite μa := inferInstance
+    have : SigmaFinite μb := inferInstance
+    have : SigmaFinite ν := inferInstance
     haveI : SigmaFinite (Measure.pi fun _ : InfinitePlace E => μa) := inferInstance
     haveI : SigmaFinite (Measure.pi fun _ : InfinitePlace E => μb) := inferInstance
     haveI : SigmaFinite (Measure.pi fun _ : {w : InfinitePlace E // w ≠ v} => μb) := inferInstance
     haveI : SigmaFinite ((Measure.pi fun _ : InfinitePlace E => μb).prod ν) := inferInstance
-    haveI : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
+    have : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
     haveI : IsFiniteMeasureOnCompacts (Measure.pi fun _ : InfinitePlace E => μa) := inferInstance
     haveI : IsFiniteMeasureOnCompacts (Measure.pi fun _ : InfinitePlace E => μb) := inferInstance
     haveI : IsFiniteMeasureOnCompacts ((Measure.pi fun _ : InfinitePlace E => μb).prod ν) := inferInstance
     set M := (Measure.pi fun _ : InfinitePlace E => μa).prod ((Measure.pi fun _ : InfinitePlace E => μb).prod ν) with hM
-    haveI : IsFiniteMeasureOnCompacts M := by rw [hM]; infer_instance
+    have : IsFiniteMeasureOnCompacts M := by rw [hM]; infer_instance
     have hmp := measurePreserving_eqB (a := a) μa μb ν v
     have hQ' : Continuous (fun z => Q (splitH a b z)) := hQ.comp (splitH a b).continuous
     have hQs' : HasCompactSupport (fun z => Q (splitH a b z)) := hQs.comp_homeomorph (splitH a b).toHomeomorph
@@ -540,10 +540,10 @@ theorem prod_split {X : Type} (v : InfinitePlace E) (F : InfinitePlace E → X �
     (r : {w : InfinitePlace E // w ≠ v} → X) :
     ∏ w, F w (if h : w = v then t else r ⟨w, h⟩) = F v t * ∏ w : {w : InfinitePlace E // w ≠ v}, F w (r w) := by
   rw [Fintype.prod_eq_mul_prod_subtype_ne _ v]
-  simp only [dif_pos]
+  simp only [dite_eq_left]
   congr 1
   refine Finset.prod_congr rfl fun w _ => ?_
-  rw [dif_neg w.2]
+  rw [dite_eq_right w.2]
 
 theorem tens_ισB (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ : Matrix κ κ (Hf E a b → ℂ))
     (i j : Io Ma Mb κ) (t : G b) (r : RB E a b v) :
@@ -560,10 +560,10 @@ theorem conv_sliceB (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) 
     conv D.μ (tens ka kb ψ) f i p =
       ∫ t, ⟪ebB Mb v (i.1.2 v), kb v t.val (RvB v μa μb ν ka kb ψ f i (p * ιB v t))⟫_ℂ ∂μb := by
   set_option synthInstance.maxHeartbeats 400000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
-    haveI : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
+    have : SigmaFinite μa := inferInstance
+    have : SigmaFinite μb := inferInstance
+    have : SigmaFinite ν := inferInstance
+    have : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
     have hQ : ∀ j, Continuous (fun g => tens ka kb ψ i j g * f j (p * g)) ∧
         HasCompactSupport (fun g => tens ka kb ψ i j g * f j (p * g)) := fun j =>
       ⟨(hT i j).1.mul ((hf j).comp (continuous_const.mul continuous_id)), (hT i j).2.mul_right⟩
@@ -621,8 +621,8 @@ theorem continuous_σB (v : InfinitePlace E) : Continuous (σB (a := a) (b := b)
   refine (splitH a b).continuous.comp (continuous_fst.prodMk (Continuous.prodMk (continuous_pi fun w => ?_)
     (continuous_snd.comp continuous_snd)))
   by_cases h : w = v
-  · simp only [h, dif_pos]; exact continuous_const
-  · simp only [h, dif_neg, not_false_eq_true]
+  · simp only [h, dite_eq_left]; exact continuous_const
+  · simp only [h, dite_eq_right, not_false_eq_true]
     exact (continuous_apply _).comp (continuous_fst.comp continuous_snd)
 
 theorem ιB_mul (v : InfinitePlace E) (s t : G b) : ιB (a := a) v (s * t) = ιB v s * ιB v t := by
@@ -668,10 +668,10 @@ theorem continuous_RvB_comp (v : InfinitePlace E) {ka : Kers Ma} {kb : Kers Mb} 
     [LocallyCompactSpace X] {φ : X → H E a b} (hφ : Continuous φ) :
     Continuous fun z : X => RvB v μa μb ν ka kb ψ f i (φ z) := by
   set_option synthInstance.maxHeartbeats 400000 in
-    haveI : SigmaFinite μa := inferInstance
-    haveI : SigmaFinite μb := inferInstance
-    haveI : SigmaFinite ν := inferInstance
-    haveI : IsLocallyFiniteMeasure (restB μa μb ν v) := by unfold restB; infer_instance
+    have : SigmaFinite μa := inferInstance
+    have : SigmaFinite μb := inferInstance
+    have : SigmaFinite ν := inferInstance
+    have : IsLocallyFiniteMeasure (restB μa μb ν v) := by unfold restB; infer_instance
     have hcont : ∀ j, Continuous (fun z : X =>
         ∫ r, cB v ka kb ψ i j r * f j (φ z * σB v r) ∂restB μa μb ν v) := by
       intro j
@@ -712,13 +712,13 @@ theorem along_convB (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) 
     have hxt : x * t.val ∈ GLs b := GlobalTheory.CompanionTheory.WaveAll.mul_mem_GLs hx (val_mem_GLs t)
     have hm : GeneralLinearGroup.mkOfDetNeZero (x * t.val) hxt = GeneralLinearGroup.mkOfDetNeZero x hx * t :=
       Units.ext rfl
-    simp only [FB, dif_pos hxt, hm, ιB_mul, hp0, mul_assoc]
+    simp only [FB, dite_eq_left hxt, hm, ιB_mul, hp0, mul_assoc]
   have hc : Continuous fun t : G b => kb v t.val (FB v μa μb ν ka kb ψ f i m₁ y (x * t.val)) := by
     simp only [hFB]
     exact (hkb v).1.clm_apply (continuous_RvB v hf hka hkb hψ i p0)
   have hcs : HasCompactSupport fun t : G b => kb v t.val (FB v μa μb ν ka kb ψ f i m₁ y (x * t.val)) :=
     HasCompactSupport.intro (hkb v).2 fun t ht => by
-      rw [image_eq_zero_of_notMem_tsupport ht, ContinuousLinearMap.zero_apply]
+      rw [image_eq_zero_of_notMem_tsupport ht, zero_apply]
   show _ = ⟪ebB Mb v (i.1.2 v), ∫ t : G b, kb v t.val (FB v μa μb ν ka kb ψ f i m₁ y (x * t.val)) ∂μb⟫_ℂ
   rw [← integral_inner (hc.integrable_of_hasCompactSupport hcs)]
   refine integral_congr_ae (ae_of_all _ fun t => ?_)
@@ -752,23 +752,23 @@ theorem continuousOn_FB (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ 
     (hkb : ∀ w, Continuous (fun t : G b => kb w t.val) ∧ HasCompactSupport (fun t : G b => kb w t.val))
     (hψ : IsFinM ψ) (i : Io Ma Mb κ) (m₁ : GA E a) (y : GA E b) :
     ContinuousOn (FB v μa μb ν ka kb ψ f i m₁ y) (GLs b) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hinv : ContinuousOn (fun x : Mat b => x⁻¹) (GLs b) := by
     have e : (fun x : Mat b => x⁻¹) = fun x => (x.det)⁻¹ • x.adjugate := by
       funext x; rw [Matrix.inv_def, Ring.inverse_eq_inv']
     rw [e]
     exact ((continuous_id.matrix_det).continuousOn.inv₀ fun x hx => hx).smul (continuous_id.matrix_adjugate).continuousOn
   have hm : Continuous fun x : GLs b => GeneralLinearGroup.mkOfDetNeZero x.1 x.2 := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have e : (fun x : GLs b => ((GeneralLinearGroup.mkOfDetNeZero x.1 x.2)⁻¹ : G b).val) = fun x => x.1⁻¹ :=
       funext fun x => Matrix.coe_units_inv _
     rw [e]
-    exact hinv.comp_continuous continuous_subtype_val fun x => x.2
+    exact hinv.comp_continuous continuous_subtypeVal fun x => x.2
   show Continuous (fun x : GLs b => FB v μa μb ν ka kb ψ f i m₁ y x.1)
   have e : (fun x : GLs b => FB v μa μb ν ka kb ψ f i m₁ y x.1) =
       fun x : GLs b => RvB v μa μb ν ka kb ψ f i ((m₁, y) * ιB v (GeneralLinearGroup.mkOfDetNeZero x.1 x.2)) := by
     funext x
-    simp only [FB, dif_pos x.2]
+    simp only [FB, dite_eq_left x.2]
   rw [e]
   exact (continuous_RvB v hf hka hkb hψ i (m₁, y)).comp hm
 
@@ -864,14 +864,14 @@ theorem continuous_StB (v : InfinitePlace E) {ka : Kers Ma} {kb : Kers Mb} {ψ :
     (hkb : ∀ w, Continuous (fun t : G b => kb w t.val) ∧ HasCompactSupport (fun t : G b => kb w t.val))
     (hψ : IsFinM ψ) (i : Io Ma Mb κ) (q : Ix (Mb v)) (p : H E a b) :
     Continuous fun z : G b => StB v μa μb ν ka kb ψ f i q (p * ιB v z) := by
-  haveI : SigmaFinite μa := inferInstance
-  haveI : SigmaFinite μb := inferInstance
-  haveI : SigmaFinite ν := inferInstance
-  haveI : IsLocallyFiniteMeasure (restB μa μb ν v) := by unfold restB; infer_instance
-  haveI : SecondCountableTopology (RB E a b v) := inferInstance
-  haveI : LocallyCompactSpace (RB E a b v) := inferInstance
-  haveI : FirstCountableTopology (G b × RB E a b v) := inferInstance
-  haveI : LocallyCompactSpace (G b × RB E a b v) := inferInstance
+  have : SigmaFinite μa := inferInstance
+  have : SigmaFinite μb := inferInstance
+  have : SigmaFinite ν := inferInstance
+  have : IsLocallyFiniteMeasure (restB μa μb ν v) := by unfold restB; infer_instance
+  have : SecondCountableTopology (RB E a b v) := inferInstance
+  have : LocallyCompactSpace (RB E a b v) := inferInstance
+  have : FirstCountableTopology (G b × RB E a b v) := inferInstance
+  have : LocallyCompactSpace (G b × RB E a b v) := inferInstance
   unfold StB
   refine continuous_finsetSum _ fun j _ => ?_
   obtain ⟨hc, hcs⟩ := cB_props v hka hkb hψ i j
@@ -898,16 +898,16 @@ theorem RvB_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : 
     (hψ : IsFinM ψ) {c : ℂ} (hc : c ≠ 0) (hrep : conv D.μ (tens ka kb ψ) f = c • f) (i : Io Ma Mb κ)
     (q0 : Ix (Mb v)) (p : H E a b) :
     RvB v μa μb ν ka kb ψ f i p = c⁻¹ • ∫ t, kb v t.val (StB v μa μb ν ka kb ψ f i q0 (p * ιB v t)) ∂μb := by
-  haveI : SigmaFinite μa := inferInstance
-  haveI : SigmaFinite μb := inferInstance
-  haveI : SigmaFinite ν := inferInstance
-  haveI : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
-  haveI : IsFiniteMeasureOnCompacts (restB μa μb ν v) := by unfold restB; infer_instance
-  haveI : IsFiniteMeasureOnCompacts ((restB μa μb ν v).prod μb) := inferInstance
-  haveI : SecondCountableTopology (RB E a b v) := inferInstance
-  haveI : LocallyCompactSpace (RB E a b v) := inferInstance
-  haveI : FirstCountableTopology (RB E a b v × G b) := inferInstance
-  haveI : LocallyCompactSpace (RB E a b v × G b) := inferInstance
+  have : SigmaFinite μa := inferInstance
+  have : SigmaFinite μb := inferInstance
+  have : SigmaFinite ν := inferInstance
+  have : SigmaFinite (restB μa μb ν v) := by unfold restB; infer_instance
+  have : IsFiniteMeasureOnCompacts (restB μa μb ν v) := by unfold restB; infer_instance
+  have : IsFiniteMeasureOnCompacts ((restB μa μb ν v).prod μb) := inferInstance
+  have : SecondCountableTopology (RB E a b v) := inferInstance
+  have : LocallyCompactSpace (RB E a b v) := inferInstance
+  have : FirstCountableTopology (RB E a b v × G b) := inferInstance
+  have : LocallyCompactSpace (RB E a b v × G b) := inferInstance
   set K : G b → ((Mb v).V →L[ℂ] (Mb v).V) := fun t => kb v t.val with hK
   have hKc : Continuous K := (hkb v).1
   have hKs : HasCompactSupport K := (hkb v).2
@@ -933,7 +933,7 @@ theorem RvB_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : 
       simp only [Set.mem_prod, not_and_or] at hq
       rcases hq with hq | hq
       · simp only [image_eq_zero_of_notMem_tsupport hq, zero_mul]
-      · simp only [image_eq_zero_of_notMem_tsupport hq, ContinuousLinearMap.zero_apply, inner_zero_right,
+      · simp only [image_eq_zero_of_notMem_tsupport hq, zero_apply, inner_zero_right,
           mul_zero]
   have hI : ∀ j, ∫ r, cB v ka kb ψ i j r * f j (p * σB v r) ∂restB μa μb ν v =
       c⁻¹ * ∫ t, ∫ r, g j (r, t) ∂restB μa μb ν v ∂μb := by
@@ -950,7 +950,7 @@ theorem RvB_eq (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v : 
   have hWi : Integrable (fun t => K t (StB v μa μb ν ka kb ψ f i q0 (p * ιB v t))) μb := by
     refine Continuous.integrable_of_hasCompactSupport (hKc.clm_apply (continuous_StB v hf hka hkb hψ i q0 p)) ?_
     exact HasCompactSupport.intro hKs fun t ht => by
-      rw [image_eq_zero_of_notMem_tsupport ht, ContinuousLinearMap.zero_apply]
+      rw [image_eq_zero_of_notMem_tsupport ht, zero_apply]
   have hsum : ∀ q, ∑ j ∈ Finset.univ.filter (fun j : Io Ma Mb κ => j.1.2 v = q),
       ∫ r, cB v ka kb ψ i j r * f j (p * σB v r) ∂restB μa μb ν v =
       c⁻¹ * ⟪ebB Mb v q, ∫ t, K t (StB v μa μb ν ka kb ψ f i q0 (p * ιB v t)) ∂μb⟫_ℂ := by
@@ -991,14 +991,14 @@ theorem FB_eq_act (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v
     (hψ : IsFinM ψ) {c : ℂ} (hc : c ≠ 0) (hrep : conv D.μ (tens ka kb ψ) f = c • f) (i : Io Ma Mb κ)
     (q0 : Ix (Mb v)) (m₁ : GA E a) (y : GA E b) {x : Mat b} (hx : x ∈ GLs b) :
     FB v μa μb ν ka kb ψ f i m₁ y x = c⁻¹ • act μb (Mb v) (kb v) (FtB v μa μb ν ka kb ψ f i q0 m₁ y) x := by
-  rw [FB, dif_pos hx, RvB_eq hF D hC v ka kb ψ f hT hf hka hkb hψ hc hrep i q0]
+  rw [FB, dite_eq_left hx, RvB_eq hF D hC v ka kb ψ f hT hf hka hkb hψ hc hrep i q0]
   congr 1
   show _ = ∫ t : G b, kb v t.val (FtB v μa μb ν ka kb ψ f i q0 m₁ y (x * t.val)) ∂μb
   refine integral_congr_ae (ae_of_all _ fun t => ?_)
   have hxt : x * t.val ∈ GLs b := GlobalTheory.CompanionTheory.WaveAll.mul_mem_GLs hx (val_mem_GLs t)
   have hm : GeneralLinearGroup.mkOfDetNeZero (x * t.val) hxt = GeneralLinearGroup.mkOfDetNeZero x hx * t :=
     Units.ext rfl
-  simp only [FtB, dif_pos hxt, hm, ιB_mul, mul_assoc]
+  simp only [FtB, dite_eq_left hxt, hm, ιB_mul, mul_assoc]
 
 theorem continuousOn_FtB (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ : Matrix κ κ (Hf E a b → ℂ))
     (f : Io Ma Mb κ → H E a b → ℂ) (hf : ∀ i, Continuous (f i))
@@ -1006,23 +1006,23 @@ theorem continuousOn_FtB (v : InfinitePlace E) (ka : Kers Ma) (kb : Kers Mb) (ψ
     (hkb : ∀ w, Continuous (fun t : G b => kb w t.val) ∧ HasCompactSupport (fun t : G b => kb w t.val))
     (hψ : IsFinM ψ) (i : Io Ma Mb κ) (q : Ix (Mb v)) (m₁ : GA E a) (y : GA E b) :
     ContinuousOn (FtB v μa μb ν ka kb ψ f i q m₁ y) (GLs b) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hinv : ContinuousOn (fun x : Mat b => x⁻¹) (GLs b) := by
     have e : (fun x : Mat b => x⁻¹) = fun x => (x.det)⁻¹ • x.adjugate := by
       funext x; rw [Matrix.inv_def, Ring.inverse_eq_inv']
     rw [e]
     exact ((continuous_id.matrix_det).continuousOn.inv₀ fun x hx => hx).smul (continuous_id.matrix_adjugate).continuousOn
   have hm : Continuous fun x : GLs b => GeneralLinearGroup.mkOfDetNeZero x.1 x.2 := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have e : (fun x : GLs b => ((GeneralLinearGroup.mkOfDetNeZero x.1 x.2)⁻¹ : G b).val) = fun x => x.1⁻¹ :=
       funext fun x => Matrix.coe_units_inv _
     rw [e]
-    exact hinv.comp_continuous continuous_subtype_val fun x => x.2
+    exact hinv.comp_continuous continuous_subtypeVal fun x => x.2
   show Continuous (fun x : GLs b => FtB v μa μb ν ka kb ψ f i q m₁ y x.1)
   have e : (fun x : GLs b => FtB v μa μb ν ka kb ψ f i q m₁ y x.1) =
       fun x : GLs b => StB v μa μb ν ka kb ψ f i q ((m₁, y) * ιB v (GeneralLinearGroup.mkOfDetNeZero x.1 x.2)) := by
     funext x
-    simp only [FtB, dif_pos x.2]
+    simp only [FtB, dite_eq_left x.2]
   rw [e]
   exact (continuous_StB v hf hka hkb hψ i q (m₁, y)).comp hm
 
@@ -1036,8 +1036,8 @@ theorem FB_mem_CE (hF : CompatFub) (D : Dom E a b) (hC : Compat D μa μb ν) (v
     FB v μa μb ν ka kb ψ f i m₁ y ∈ CE (Mb v) := by
   have hA := GelP.act_mem_CE_of_mult μb hkv
     (continuousOn_FtB (μa := μa) (μb := μb) (ν := ν) v ka kb ψ f hf hka hkb hψ i (i.1.2 v) m₁ y)
-  letI : NormedAddCommGroup (Mat b) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Mat b) := Matrix.normedSpace
+  let : NormedAddCommGroup (Mat b) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Mat b) := Matrix.normedSpace
   refine ⟨(hA.1.const_smul c⁻¹).congr fun x hx =>
     FB_eq_act hF D hC v ka kb ψ f hT hf hka hkb hψ hc hrep i (i.1.2 v) m₁ y hx, ?_⟩
   intro g hg k

@@ -79,7 +79,7 @@ theorem frac_ext_clo_inj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     refine ⟨⟨GlobalTheory.FN.cmp g a, (hm _).2 hc⟩, rfl, ?_⟩
     exact T.sl_io g a _ rfl
   · exact T.exp.toRingHom.injective
-  · haveI : Nontrivial Mero := (_root_.GlobalTheory.FN.germ_main).1
+  · have : Nontrivial Mero := (_root_.GlobalTheory.FN.germ_main).1
     exact T.an.injective
 
 end GlobalTheory.FN

@@ -120,10 +120,10 @@ theorem exists_dual_DeX_eq_minY : ∀ (D : D7) (k : Type) [Field k] [CharZero k]
       ∀ y : Bool × Formalism.MainNotions.G.HH D → Fin N → ℕ → k, ph (GL3Columns.DeX N nu y) = GL3Columns.minY N nu J y := by
   intro D k _ _ N nu J₀
   classical
-  haveI : Finite (KM.ColChoice N nu) := by
+  have : Finite (KM.ColChoice N nu) := by
     unfold KM.ColChoice
     infer_instance
-  letI : Fintype (KM.ColChoice N nu) := Fintype.ofFinite _
+  let : Fintype (KM.ColChoice N nu) := Fintype.ofFinite _
   obtain ⟨ψ, hψ⟩ := exists_dual_sum_smul_eq
     (fun J : KM.ColChoice N nu => MvPolynomial.map (Int.castRingHom ℚ) (KM.nablaX N nu J)) J₀
   obtain ⟨ph, hph⟩ := exists_dual_baseChange k ψ
@@ -281,7 +281,7 @@ theorem bidFns_eq_minors {K : Type} [CommRing K] {N : ℕ} (μ : YoungDiagram) (
       Y (I k p) (Fin.castLE (hsz k) q)) = 1 := by
     intro k hk0
     have h0 : sz k = 0 := by omega
-    haveI : IsEmpty (Fin (sz k)) := by rw [h0]; infer_instance
+    have : IsEmpty (Fin (sz k)) := by rw [h0]; infer_instance
     exact Matrix.det_isEmpty
   have hev : MvPolynomial.eval (fun v : Fin N × Fin N => Y v.1 v.2) (Formalism.GradedWeylDivisibility.bideterminant K sz hsz I) =
       ∏ k, Matrix.det (Matrix.of fun p q : Fin (sz k) => Y (I k p) (Fin.castLE (hsz k) q)) := by
@@ -371,7 +371,7 @@ private theorem prod_eval_mem_span_prod_of_mem_span {L : Type} [Field L] {ι : T
       · simp
       · apply Finset.prod_congr rfl
         intro τ hτ
-        rw [Function.update_apply, if_neg (Finset.ne_of_mem_erase hτ)]
+        rw [Function.update_apply, ite_eq_right (Finset.ne_of_mem_erase hτ)]
 
     have key : ∀ x ∈ Submodule.span L (A a), (fun y : ι → X => ∏ τ, Function.update h a x τ (y τ)) ∈
         Submodule.span L {F | ∃ g : ι → X → L, (∀ τ, g τ ∈ A τ) ∧ F = fun y => ∏ τ, g τ (y τ)} := by
@@ -381,13 +381,13 @@ private theorem prod_eval_mem_span_prod_of_mem_span {L : Type} [Field L] {ι : T
         apply ih
         · intro τ hτ
           have hne : τ ≠ a := fun e => ha (e ▸ hτ)
-          rw [Function.update_apply, if_neg hne]
+          rw [Function.update_apply, ite_eq_right hne]
           exact h1 τ (Finset.mem_insert_of_mem hτ)
         · intro τ hτ
           by_cases e : τ = a
           · subst e
             simpa using hx
-          · rw [Function.update_apply, if_neg e]
+          · rw [Function.update_apply, ite_eq_right e]
             exact h2 τ (by simp [e, hτ])
       | zero =>
         rw [hsplit]
@@ -526,7 +526,7 @@ namespace GlobalTheory.Mem.CanonicalSurjection
 
 theorem canOnto_all : ∀ (D : D7) (Pl : Examples₂.EntPl D), CanOnto Pl := by
   intro D Pl w N nu ν hfit Q hQ M
-  haveI : Infinite D.what₂.LL := Infinite.of_injective (Nat.cast : ℕ → D.what₂.LL) Nat.cast_injective
+  have : Infinite D.what₂.LL := Infinite.of_injective (Nat.cast : ℕ → D.what₂.LL) Nat.cast_injective
   have h := GlobalTheory.T.weightPolynomial_frames_mem_span_bideterminantProducts D.what₂.LL (Cw D w) (Pl.iL w) D.what₂.Tau N ν M Q hQ
   have e : atBas Pl w M Q = fun y : D.what₂.Tau → Matrix (Fin N) (Fin N) (Cw D w) =>
       MvPolynomial.eval (fun k : D.what₂.Tau × Fin N × Fin N => (M k.1 * y k.1) k.2.1 k.2.2)

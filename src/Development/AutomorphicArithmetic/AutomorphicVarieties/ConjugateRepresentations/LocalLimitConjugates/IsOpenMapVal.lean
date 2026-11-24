@@ -191,13 +191,13 @@ private theorem loc_chart {ψ : Sm E a} (hψ : HasLev ψ) (g : GA E a) {x : Lie 
 open scoped Matrix.Norms.Operator in
 omit [_root_.NumberField.IsTotallyComplex E] in
 private theorem isOpenMap_val : IsOpenMap fun u : GL (Fin a) (Cinf E) => toL u.val :=
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   (Units.isOpenEmbedding_val (R := Matrix (Fin a) (Fin a) (Cinf E))).isOpenMap
 
 open scoped Matrix.Norms.Operator in
 omit [_root_.NumberField.IsTotallyComplex E] in
 private theorem locCpt : LocallyCompactSpace (GL (Fin a) (Cinf E)) :=
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   haveI : ProperSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.proper ℝ _
   (Units.isOpenEmbedding_val (R := Matrix (Fin a) (Fin a) (Cinf E))).locallyCompactSpace
 
@@ -205,7 +205,7 @@ private theorem supp_chart {ψ : GA E a → ℂ} (hψ : HasCompactSupport ψ) (g
     ∃ C : Set (GA E a), IsCompact C ∧ ∀ᶠ x' in 𝓝 x, ∀ y ∉ C, chart ψ (y⁻¹ * g) x' = 0 := by
   obtain ⟨u, hu⟩ := hx
   obtain rfl : x = toL u.val := hu.symm
-  haveI := locCpt (E := E) (a := a)
+  have := locCpt (E := E) (a := a)
   obtain ⟨K, hKc, hK⟩ := exists_compact_mem_nhds u
   have hc : Continuous fun p : GL (Fin a) (Cinf E) × GA E a => g * infGL E a p.1 * p.2⁻¹ :=
     (continuous_const.mul ((GlobalTheory.CompanionTheory.LieSkew.continuous_infGL_map E a).comp continuous_fst)).mul continuous_snd.inv

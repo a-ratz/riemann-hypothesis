@@ -219,7 +219,7 @@ theorem semisimple_of_aeval {K V : Type} [Field K] [AddCommGroup V] [Module K V]
 
 theorem lc_semisimple : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K] [Algebra O K] [IsUnitBall O K] (l e a : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] [Fact l.Prime] [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a] (η H : ℕ) (D : BKDat O K l e a ι η H), ∀ U : Finset ℤ, D.jumps ⊆ U → GlobalTheory.IndefiniteRowSideFullHecke.ImagePolynomialAction.Semisimple D U := by
   intro O K _ _ _ _ _ _ l e a ι _ _ _ _ _ _ _ η H D U hU
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hl0 : (l : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : l.Prime).ne_zero
   have he0 : (e : ℤ) ≠ 0 := by exact_mod_cast (NeZero.ne e)
   set Lan := D.ext (Rpi O K l e) with hLan

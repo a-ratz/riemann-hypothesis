@@ -77,7 +77,7 @@ theorem holD_add {Φ Ψ : W → ℂ} (h : Differentiable ℝ Φ) (h' : Different
   funext z
   have hs : HasFDerivAt (fun y => Φ y + Ψ y) (fderiv ℝ Φ z + fderiv ℝ Ψ z) z :=
     (h z).hasFDerivAt.add (h' z).hasFDerivAt
-  simp only [holD, hs.fderiv, ContinuousLinearMap.add_apply]
+  simp only [holD, hs.fderiv, add_apply]
   ring
 
 theorem exists_clm_of_antilinear [FiniteDimensional ℂ W] {lam : W → ℂ}
@@ -98,7 +98,7 @@ theorem holD_mul (T : W →L[ℝ] ℂ) (h2 : ∀ a, T (I • a) = -I * T a) {Φ 
   funext z
   have hT : HasFDerivAt (fun y => T y * Φ y) (T z • fderiv ℝ Φ z + Φ z • T) z :=
     T.hasFDerivAt.mul (h z).hasFDerivAt
-  simp only [holD, hT.fderiv, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [holD, hT.fderiv, add_apply, smul_apply,
     smul_eq_mul, h2]
   linear_combination (1 / 2 : ℂ) * Φ z * T v * I_sq
 

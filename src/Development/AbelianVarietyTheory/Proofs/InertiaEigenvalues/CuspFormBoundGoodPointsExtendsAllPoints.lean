@@ -432,8 +432,8 @@ theorem point_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     ComplexEmbedding.involutive_conjugate E τ
   obtain ⟨f, hf⟩ := FrameUnif.exists_letter_equiv (U.X k).Ψ (U.X k).cmType Dw.p Dw.q r hr
     (Formalism.L2.PjFree.relab c σ) hbij Dw.mult
-    (fun τ h => by unfold Datum.mult; rw [if_pos ((hrt τ).1 ((hty _).1 h))])
-    (fun τ h => by unfold Datum.mult; rw [if_neg (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_left ((hrt τ).1 ((hty _).1 h))])
+    (fun τ h => by unfold Datum.mult; rw [ite_eq_right (fun h' => h ((hty _).2 ((hrt τ).2 h')))])
   obtain ⟨idx, hi⟩ : ∃ idx : Fin g ≃ (U.X k).Ψ × Fin r, ∀ j,
       (Formalism.L2.PjFree.relab c σ (e j).1 ∈ (U.X k).Ψ ∧ (idx j).1.1 = Formalism.L2.PjFree.relab c σ (e j).1 ∧
         ((idx j).2 : ℕ) = Dw.q + (e j).2) ∨
@@ -450,10 +450,10 @@ theorem point_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     obtain ⟨⟨τ, hτ⟩, ⟨n, hn⟩⟩ := t
     dsimp only at h ⊢
     rcases h with ⟨a, rfl, rfl⟩ | ⟨a, rfl, rfl, d⟩
-    · rw [if_neg (by omega)]
+    · rw [ite_eq_right (by omega)]
       unfold Formalism.L2.PjFree.perFr
       rw [dite_eq_left a, dite_eq_left hn]
-    · rw [if_pos (by omega)]
+    · rw [ite_eq_left (by omega)]
       unfold Formalism.L2.PjFree.perFr
       rw [dite_eq_right a, dite_eq_left (show conjEmb (Formalism.L2.PjFree.relab c σ (e j).1) ∈ (U.X k).Ψ from hτ), dite_eq_left hn]
       rfl
@@ -466,13 +466,13 @@ theorem point_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     intro b hb j j' hne
     obtain ⟨h1, h2⟩ := PerBor.moveMat_support _ idx hb j j' hne
     rcases hi j with ⟨a1, b1, c1⟩ | ⟨a1, b1, c1, d1⟩ <;> rcases hi j' with ⟨a2, b2, c2⟩ | ⟨a2, b2, c2, d2⟩
-    · rw [if_neg (by omega)] at h2
+    · rw [ite_eq_right (by omega)] at h2
       exact ⟨hbij.1 (by rw [← b1, ← b2, h1]), by simp only; omega⟩
-    · rw [if_neg (by omega)] at h2
+    · rw [ite_eq_right (by omega)] at h2
       omega
-    · rw [if_pos (by omega)] at h2
+    · rw [ite_eq_left (by omega)] at h2
       omega
-    · rw [if_pos (by omega)] at h2
+    · rw [ite_eq_left (by omega)] at h2
       exact ⟨hbij.1 (by rw [← hcc (Formalism.L2.PjFree.relab c σ (e j).1), ← b1, ← h1, b2, hcc]), by simp only; omega⟩
   obtain ⟨T, hT, hT1, hTf⟩ := exists_tri_unit (U.X k) idx hinj hs x.1 x.2 hx
   have hPv : ∀ a, P a = perVec (U.X k) idx x.1 (φ k a : Fin r → E) := fun a => funext fun j =>
@@ -591,7 +591,7 @@ theorem holSub_bdd {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} 
 
 theorem cusp_bounded_at_unitFr : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Formalism.L2.PjFree.Unf Xo c σ r) (σ : c.F →+* ℂ) (a' : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) (F : Rul Xo c), Formalism.L2.PjFree.GoodEmb c σ → F ∈ Formalism.L2.PjFree.cusp Xo c U a' n → ∃ M : ℝ, ∀ (k : (U σ).Comp) (x : ((U σ).X k).dom), GlobalTheory.FrameNorm.IsUnitFr ((U σ).X k) x.1 → ‖Formalism.L2.PjFree.toC (evR Xo c F ((U σ).un k x))‖ ≤ M := by
   intro E _ _ _ H Dw l Xo c r U σ a' n F hG hF
-  haveI := (U σ).fin
+  have := (U σ).fin
   have hF' : Formalism.L2.PjFree.rdU (U σ) F ∈ Formalism.L2.PjFree.holSub (U σ).X (Formalism.L2.PjFree.laU (U σ) a' n) := by
     unfold Formalism.L2.PjFree.cusp at hF
     rw [Submodule.mem_inf, Submodule.mem_iInf] at hF
@@ -619,8 +619,8 @@ theorem cusp_values_bounded_on_arc : ∀ (E : Type) [Field E] [NumberField E] [I
     have hbc : GlobalTheory.Reg.FrBC Xo c := fun S T _ _ _ _ φ y =>
       GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y
     exact ⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt, hbc⟩
-  haveI : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
-  haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
+  have : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   set B := max 1 (max B1 B2)
   refine ⟨max T1 T2, max M 0 * B ^ (∑ i, ex Dw a' n i), ?_⟩
   intro w hw yw hyw
@@ -693,7 +693,7 @@ theorem exists_gens {O : Type} [CommRing O] {X : Scheme.{0}} (s : X ⟶ Sp O) [L
   have hft : β.FiniteType := by
     have : LocallyOfFiniteType (spMap β) := by rw [hβ]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 this
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨t, ht⟩ := (show Algebra.FiniteType O C from hft).out
   let p₀ : Sp F := (⊥ : PrimeSpectrum F)
   have hp : spMap ψ p₀ ∈ w ⁻¹ᵁ ι.opensRange := by
@@ -781,13 +781,13 @@ theorem exists_invert {K Ω L V : Type} [Field K] [Field Ω] [Field L] [Algebra 
 set_option maxHeartbeats 800000 in
 theorem exists_refine_extIn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] [IsDomain O] [Algebra O c.F] [IsFractionRing O c.F] (Y : Model Xo c (algebraMap O c.F)) (S : Set Y.X) (P : PChart Xo c (algebraMap O c.F)) (T : CDVR) (io : c.F →+* T.Fr), IsOpen S → letI := io.toAlgebra; ∀ (e : P.Ω) (he : e ∈ P.es) (ψ : P.R e →ₐ[c.F] T.Fr) (z : FrPt Xo c T.Fr), (∀ g : P.R e, (g : P.Ω) ∈ P.gens → InV T (ψ g)) → FrMap ψ (P.y e he) z → ExtIn Y S T io z.x → ∃ (P' : PChart Xo c (algebraMap O c.F)) (e' : P'.Ω) (he' : e' ∈ P'.es) (ψ' : P'.R e' →ₐ[c.F] T.Fr), (∀ g : P'.R e', (g : P'.Ω) ∈ P'.gens → InV T (ψ' g)) ∧ FrMap ψ' (P'.y e' he') z ∧ ∀ (T₁ : CDVR) (io₁ : c.F →+* T₁.Fr), (∀ a : O, InV T₁ (io₁ (algebraMap O c.F a))) → letI := io₁.toAlgebra; ∀ (ψ₁ : P'.R e' →ₐ[c.F] T₁.Fr) (z₁ : FrPt Xo c T₁.Fr), (∀ g : P'.R e', (g : P'.Ω) ∈ P'.gens → InV T₁ (ψ₁ g)) → FrMap ψ₁ (P'.y e' he') z₁ → ExtIn Y S T₁ io₁ z₁.x := by
   intro E _ _ _ H Dw l Xo c O _ _ _ _ Y S P T io hS
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro e he ψ z hgen hz hext
   classical
   obtain ⟨y', z₀, hz1, hz2, hz3, hz4⟩ := hext
-  haveI : IsProper Y.s := by
+  have : IsProper Y.s := by
     obtain ⟨N, i, hi, hs⟩ := Y.proj
-    haveI := isProper_str O N
+    have := isProper_str O N
     rw [← hs]; infer_instance
   let zR : Sp (P.R e) ⟶ Xo.XF c := pullback.lift (P.y e he).x (spMap (algebraMap c.F (P.R e)))
     (by rw [(P.y e he).x_over, sp_comp]; rfl)
@@ -865,7 +865,7 @@ theorem exists_refine_extIn : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       letI := io₁.toAlgebra; ∀ (ψ₁ : R' →ₐ[c.F] T₁.Fr) (z₁ : FrPt Xo c T₁.Fr),
       (∀ g : R', (g : P.Ω) ∈ G → InV T₁ (ψ₁ g)) → FrMap ψ₁ y₁ z₁ → ExtIn Y S T₁ io₁ z₁.x := by
     intro T₁ io₁ hO
-    letI := io₁.toAlgebra
+    let := io₁.toAlgebra
     intro ψ₁ z₁ h2 hz₁
     have hz₁' := frMap_trans _ _ _ _ _ _ _ _ hy₁ hz₁
     obtain ⟨y₂, hy₂, hr₂⟩ := hcs2 T₁.V T₁.Fr (algebraMap T₁.V T₁.Fr) (IsFractionRing.injective _ _)
@@ -908,7 +908,7 @@ theorem exists_refine_extIn : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     exact frMap_cancel _ _ _ (Subalgebra.inclusion hle') _ (P.y e he) _ _ hy₁ (P.gen e he)
   · obtain rfl := hes e' he'
     intro T₁ io₁
-    letI := io₁.toAlgebra
+    let := io₁.toAlgebra
     intro ψ₁ h1 h2 z₁ hz₁
     refine P.int e he T₁ io₁ (ψ₁.comp (Subalgebra.inclusion hle')) h1 (fun g hg => ?_) z₁
       (frMap_trans _ _ _ _ _ _ _ _ hy₁ hz₁)

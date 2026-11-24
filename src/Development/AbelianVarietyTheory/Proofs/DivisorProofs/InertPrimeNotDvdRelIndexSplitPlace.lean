@@ -196,8 +196,8 @@ theorem split_mem {S T : HSp D} {e : AE D} (he : IsSplitIdem D e) {Λ : AddSubgr
 theorem not_dvd_of_saturated {M : Type} [AddCommGroup M] (Λ Λ' : AddSubgroup M) (h0 : Λ.relIndex Λ' ≠ 0)
     {q : ℕ} (hq : q.Prime) (h : ∀ x ∈ Λ', q • x ∈ Λ → x ∈ Λ) : ¬ q ∣ Λ.relIndex Λ' := by
   intro hdvd
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : Finite (Λ' ⧸ Λ.addSubgroupOf Λ') := Nat.finite_of_card_ne_zero h0
+  have : Fact q.Prime := ⟨hq⟩
+  have : Finite (Λ' ⧸ Λ.addSubgroupOf Λ') := Nat.finite_of_card_ne_zero h0
   obtain ⟨g, hg⟩ := exists_prime_addOrderOf_dvd_card' (G := Λ' ⧸ Λ.addSubgroupOf Λ') q hdvd
   obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective g
   have hqx : q • (x : M) ∈ Λ := by

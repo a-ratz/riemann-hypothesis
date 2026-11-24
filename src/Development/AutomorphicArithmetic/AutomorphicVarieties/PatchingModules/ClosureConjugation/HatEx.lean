@@ -156,24 +156,24 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.gens_kill :
     ∀ {l : ℕ} [Fact l.Prime] {L : Loc} {G G0 : Glob l L} {h : G.Hom G0} {n : ℕ} {x : NP G0.frame n} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] [Algebra O x.K] {r : Resid G.frame O n} {B : Type} [CommRing B] [Algebra O B] [IsCO O B] {u : Pair r B} (P : OoPt h x u), ∀ z ∈ P.gens, u.D.Kills z ∧ G.frame.star O B n z ∈ P.gens := by
   intro l _ L G G0 h n x O _ _ _ _ _ _ r B _ _ _ u P z hz
-  haveI := IsCoef.complete (l := l) (O := O)
-  haveI := IsCoef.finite (l := l) (O := O)
-  haveI := IsCoef.char (l := l) (O := O)
+  have := IsCoef.complete (l := l) (O := O)
+  have := IsCoef.finite (l := l) (O := O)
+  have := IsCoef.char (l := l) (O := O)
   have hn : 1 ≤ n := x.a_pos.trans x.a_le
   have hPhi : PhiCond G.frame.G₀ l := phi_fg G.frame P.fg
   obtain ⟨-, hks, -, hoEl, hIp⟩ := pair_kills r u hPhi hn
   obtain ⟨hfin, -, e, χ, hχ, hmf⟩ := pair_mf u hPhi
-  haveI := hfin
-  haveI := IsCO.complete (O := O) (R := B)
-  haveI : CompactSpace G.frame.G₀ := by
-    haveI := G.frame.cpt
+  have := hfin
+  have := IsCO.complete (O := O) (R := B)
+  have : CompactSpace G.frame.G₀ := by
+    have := G.frame.cpt
     show CompactSpace G.frame.η.ker
     exact isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ G.frame.η_open).isCompact
   obtain ⟨hss, -, -, -, h1, hsub, -⟩ := star_basic G.frame n O B
   have htr : ∀ y, u.D.Kills y ↔ ∀ g, u.D.tr (MonoidAlgebra.single g 1 * y) = 0 :=
     g_kills_tr u.D χ u.cont hχ hmf hn
   unfold OoPt.gens pairGens qGens at hz ⊢
-  simp only [Set.mem_union, Set.mem_setOf_eq] at hz ⊢
+  simp only [Set.mem_union, Set.mem_ofPred_eq] at hz ⊢
   rcases hz with ((⟨v, g, rfl | rfl⟩ | ⟨w, g, hg, rfl | rfl⟩) | (⟨j, rfl | rfl⟩ | ⟨j, i, rfl | rfl⟩))
   · exact ⟨hoEl v g, Or.inl (Or.inl ⟨v, g, Or.inr rfl⟩)⟩
   · refine ⟨hks _ (hoEl v g), Or.inl (Or.inl ⟨v, g, Or.inl ?_⟩)⟩
@@ -456,15 +456,15 @@ private theorem lift_eq' {n : ℕ} {B C G : Type} [CommRing B] [CommRing C] [Alg
 theorem UpperTheory.V.Pa.rep_quot :
     ∀ {l : ℕ} [Fact l.Prime] {L : Loc} {G G0 : Glob l L} {h : G.Hom G0} {n : ℕ} {x : NP G0.frame n} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] [Algebra O x.K] {r : Resid G.frame O n} {B : Type} [CommRing B] [Algebra O B] [IsCO O B] {u : Pair r B} (P : OoPt h x u), ∃ ρ : u.D.CHQuot P.gens →+* Matrix (Fin n) (Fin n) x.A, ∀ y, ρ (u.D.toQuot P.gens y) = P.rep y := by
   intro l _ L G G0 h n x O _ _ _ _ _ _ r B _ _ _ u P
-  letI : Algebra B x.A := P.f.toRingHom.toAlgebra
-  haveI : CompactSpace G.G₀ :=
+  let : Algebra B x.A := P.f.toRingHom.toAlgebra
+  have : CompactSpace G.G₀ :=
     isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ G.η_open).isCompact
-  have hp : Continuous h.p₀ := (h.cont.comp continuous_subtype_val).subtype_mk _
+  have hp : Continuous h.p₀ := (h.cont.comp continuous_subtypeVal).subtype_mk _
   have h1 : maximalIdeal B ≤ Ideal.comap (algebraMap B x.A) (maximalIdeal x.A) := by
     intro b hb
     rw [Ideal.mem_comap, mem_maximalIdeal, mem_nonunits_iff]
     intro hu
-    haveI := (f_surj P).2
+    have := (f_surj P).2
     exact (mem_maximalIdeal _).mp hb (isUnit_of_map_unit P.f.toRingHom b hu)
   have h2 : ∀ a b : Fin n, AdicCont (maximalIdeal x.A) fun g ↦ (mat (x.ρ.comp h.p₀)) g a b := by
     intro a b N
@@ -532,8 +532,8 @@ theorem UpperTheory.V.Pa.tens :
     exact (TwoSidedIdeal.mem_ker _).1 (hle hy)
   · rw [d_toDet_map, ← hD]
     refine Det.ext' fun S _ _ x => ?_
-    letI : Algebra B S := ((algebraMap C S).comp (algebraMap B C)).toAlgebra
-    haveI : IsScalarTower B C S := .of_algebraMap_eq fun _ => rfl
+    let : Algebra B S := ((algebraMap C S).comp (algebraMap B C)).toAlgebra
+    have : IsScalarTower B C S := .of_algebraMap_eq fun _ => rfl
     have h : Det.cancel B E C S (Algebra.TensorProduct.map (AlgHom.id S S) (m.comp (toT B G C)) x) =
         Algebra.TensorProduct.map (AlgHom.id S S) π (Det.cancel B (MonoidAlgebra B G) C S
           (Algebra.TensorProduct.map (AlgHom.id S S) (toT B G C) x)) := by
@@ -578,10 +578,10 @@ private theorem exists_unit_valuation_le_subset_nhds {l : ℕ} [Fact l.Prime] (F
     rfl
   let S0 : Subgroup F.G₀ := φ.ker ⊓ Subgroup.comap F.conj (H : Subgroup F.G₀)
   have hN : S0.Normal := by
-    haveI : (Subgroup.comap F.conj (H : Subgroup F.G₀)).Normal := Subgroup.Normal.comap H.isNormal' F.conj
+    have : (Subgroup.comap F.conj (H : Subgroup F.G₀)).Normal := Subgroup.Normal.comap H.isNormal' F.conj
     exact Subgroup.normal_inf_normal _ _
   have hcont : Continuous (fun g : F.G₀ => ((F.ε g : ℤ_[l]ˣ) : ℤ_[l])) :=
-    Units.continuous_val.comp (F.ε_cont.comp continuous_subtype_val)
+    Units.continuous_val.comp (F.ε_cont.comp continuous_subtypeVal)
   have hopen : IsOpen (S0 : Set F.G₀) := by
     apply Subgroup.isOpen_of_mem_nhds S0 (g := 1)
     apply Filter.inter_mem
@@ -698,18 +698,18 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.trinv :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] {r : Resid F O n} {B : Type} [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B), PhiCond F.G₀ l → 1 ≤ n → ∀ Z : Set (MonoidAlgebra B F.G₀), (∀ z ∈ Z, u.D.Kills z ∧ F.star O B n z ∈ Z) → ∃ (DE : Det n B (u.D.CHQuot Z)) (T : TrInv B (u.D.CHQuot Z)), DE.IsCH ∧ DE.pull (u.D.toQuot Z) = u.D.toDet ∧ (∀ y, T.st (u.D.toQuot Z y) = u.D.toQuot Z (F.star O B n y)) ∧ ∀ y, T.tr y = DE.tr y := by
   intro l _ F n O _ _ _ _ _ r B _ _ _ u hΦ hn Z hZ
-  letI := F.grp
-  letI := F.top
-  haveI := F.tgrp
-  haveI := F.cpt
-  haveI := F.tdisc
-  haveI : CompactSpace F.G₀ := by
+  let := F.grp
+  let := F.top
+  have := F.tgrp
+  have := F.cpt
+  have := F.tdisc
+  have : CompactSpace F.G₀ := by
     have hc : IsClosed (F.η.ker : Set F.Γ) := Subgroup.isClosed_of_isOpen _ F.η_open
     exact isCompact_iff_compactSpace.mp hc.isCompact
   obtain ⟨DE, hCH, hpull⟩ := d_quotDet u.D u.cont Z (fun z hz => (hZ z hz).1)
   have hl : ((l : ℕ) : B) ∈ maximalIdeal B := by
     have h1 : ((l : ℕ) : O) ∈ maximalIdeal O := by
-      haveI := (IsCoef.char (l := l) (O := O))
+      have := (IsCoef.char (l := l) (O := O))
       rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]
       exact CharP.cast_eq_zero _ l
     rw [← map_natCast (algebraMap O B), IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
@@ -807,8 +807,8 @@ open scoped TensorProduct
 private theorem lift_ex {B C E M : Type} [CommRing B] [CommRing C] [Algebra B C] [Ring E] [Algebra B E] [Ring M]
     [Algebra C M] (ρ : E →+* M) (hρ : ∀ b, ρ (algebraMap B E b) = algebraMap C M (algebraMap B C b)) :
     ∃ r : C ⊗[B] E →ₐ[C] M, ∀ y, r (1 ⊗ₜ y) = ρ y := by
-  letI : Algebra B M := Algebra.compHom M (algebraMap B C)
-  haveI : IsScalarTower B C M := .of_algebraMap_eq' rfl
+  let : Algebra B M := Algebra.compHom M (algebraMap B C)
+  have : IsScalarTower B C M := .of_algebraMap_eq' rfl
   let ρ' : E →ₐ[B] M := { ρ with commutes' := hρ }
   refine ⟨Algebra.TensorProduct.lift (Algebra.ofId C M) ρ' fun s _ => Algebra.commute_algebraMap_left s _, fun y => ?_⟩
   refine (Algebra.TensorProduct.lift_tmul _ _ _ _ _).trans ?_
@@ -844,12 +844,12 @@ theorem UpperTheory.V.Pa.hat_ex :
     rw [hrep, map_one, map_one, Matrix.smul_apply, Matrix.algebraMap_matrix_apply]
     by_cases hij : i = j
     · subst hij
-      rw [Matrix.one_apply_eq, if_pos rfl, hB, smul_eq_mul, mul_one]
-    · rw [Matrix.one_apply_ne hij, if_neg hij, smul_zero, map_zero]
+      rw [Matrix.one_apply_eq, ite_eq_left rfl, hB, smul_eq_mul, mul_one]
+    · rw [Matrix.one_apply_ne hij, ite_eq_right hij, smul_zero, map_zero]
   have hφ : PhiCond G.frame.G₀ l := phi_fg _ P.fg
   have hn : 1 ≤ n := le_trans x.a_pos x.a_le
-  haveI : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
-  haveI : CompactSpace G.frame.G₀ :=
+  have : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
+  have : CompactSpace G.frame.G₀ :=
     isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ G.frame.η_open).isCompact
   obtain ⟨DE, T, hCH, hpull, hst, htr⟩ := trinv u hφ hn P.gens (gens_kill P)
   obtain ⟨hres, -, hh, χ, hred, hmf⟩ := pair_mf u hφ
@@ -867,7 +867,7 @@ theorem UpperTheory.V.Pa.hat_ex :
     intro g
     have := hιmap (MonoidAlgebra.single g 1)
     rwa [MonoidAlgebra.mapRingHom_single, map_one] at this
-  haveI : Module.Finite B (u.D.CHQuot P.gens) := hfinB
+  have : Module.Finite B (u.D.CHQuot P.gens) := hfinB
   obtain ⟨T', hT'st, hT'tr⟩ := trinv_baseChange T Bh
   obtain ⟨ρ0, hρ0⟩ := rep_quot P
   have hρ : ∀ b : B, ((algebraMap x.A (FractionRing x.A)).mapMatrix.comp ρ0)

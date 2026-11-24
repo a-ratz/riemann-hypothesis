@@ -80,7 +80,7 @@ variable [TopologicalSpace G] [IsTopologicalGroup G]
 
 theorem finite_out_mem (K : Subgroup G) (hK : IsOpen (K : Set G)) {C : Set G} (hC : IsCompact C) :
     {q : G ⧸ K | q.out ∈ C}.Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' C) :=
     hC.image QuotientGroup.continuous_mk
   refine hc.finite_of_discrete.subset ?_

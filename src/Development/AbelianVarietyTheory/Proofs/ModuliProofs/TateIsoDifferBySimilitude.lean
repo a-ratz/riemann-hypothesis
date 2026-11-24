@@ -84,7 +84,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : _root_.Reciproc
 private lemma exists_linearMap_ev_eq_of_tateIso (I I' : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.TateIso D k Q act e) {n : ℕ} (hn : 0 < n) :
     ∃ f : D.La →ₗ[𝓞 E] D.La, ∀ a, I.ev n (f a) = I'.ev n a := by
   classical
-  haveI := D.proj
+  have := D.proj
   let N : Submodule (𝓞 E) D.La := LinearMap.range ((n : 𝓞 E) • LinearMap.id)
   have hN : ∀ x, x ∈ N ↔ D.ModN n x := by
     intro x
@@ -127,7 +127,7 @@ theorem _root_.GlobalTheory.tateIso_differ_by_similitude :
     intro n
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · exact ⟨0, fun h => absurd h (lt_irrefl 0)⟩
-    · haveI : NeZero n := ⟨hn.ne'⟩
+    · have : NeZero n := ⟨hn.ne'⟩
       have hprim : IsPrimitiveRoot ((I.ζ n : kˣ) : k) n :=
         IsPrimitiveRoot.coe_units_iff.mpr (I.ζ_prim n hn)
       have hpow : ((I'.ζ n : kˣ) : k) ^ n = 1 := by

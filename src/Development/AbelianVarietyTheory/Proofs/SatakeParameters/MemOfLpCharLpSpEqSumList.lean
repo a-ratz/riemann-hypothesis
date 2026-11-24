@@ -130,14 +130,14 @@ theorem shiftEnd_pow_single_zero (n j : ℕ) (hj : j < n) :
   split_ifs with hi
   · simp only [Pi.single_apply, Fin.ext_iff]
     split_ifs <;> first | rfl | (exfalso; omega)
-  · rw [Pi.single_apply, if_neg]
+  · rw [Pi.single_apply, ite_eq_right]
     intro e
     apply hi
     rw [e]
 
 theorem shiftEnd_pow_eq_zero {n j : ℕ} (hj : n ≤ j) : shiftEnd n ^ j = 0 :=
   LinearMap.ext fun y => funext fun i => by
-    rw [shiftEnd_pow_apply, if_neg (by omega)]
+    rw [shiftEnd_pow_apply, ite_eq_right (by omega)]
     rfl
 
 theorem shiftEnd_pow_self (k : ℕ) : shiftEnd (k + 1) ^ k =
@@ -172,7 +172,7 @@ variable {G V V' : Type} [Monoid G] [AddCommGroup V] [Module ℂ V] [AddCommGrou
 
 theorem stable_eq_bot_or_top {ρ : Representation ℂ G V} (hρ : ρ.IsIrreducible) (S : Submodule ℂ V)
     (hS : ∀ g v, v ∈ S → ρ g v ∈ S) : S = ⊥ ∨ S = ⊤ := by
-  haveI := hρ
+  have := hρ
   rcases IsSimpleOrder.eq_bot_or_eq_top (⟨S, fun g v hv => hS g v hv⟩ : Subrepresentation ρ) with h | h
   · exact Or.inl (congrArg Subrepresentation.toSubmodule h)
   · exact Or.inr (congrArg Subrepresentation.toSubmodule h)
@@ -180,7 +180,7 @@ theorem stable_eq_bot_or_top {ρ : Representation ℂ G V} (hρ : ρ.IsIrreducib
 theorem exists_ne_zero {ρ : Representation ℂ G V} (hρ : ρ.IsIrreducible) : ∃ v : V, v ≠ 0 := by
   by_contra hall
   push_neg at hall
-  haveI := hρ
+  have := hρ
   apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
   apply Subrepresentation.ext
   ext v

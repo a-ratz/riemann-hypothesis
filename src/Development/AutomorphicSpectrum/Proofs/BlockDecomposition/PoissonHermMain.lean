@@ -261,7 +261,7 @@ theorem integrable_uncurry_translate (lam : Measure A) [lam.IsAddHaarMeasure] [S
   have hcont : Continuous (Function.uncurry fun (u : ℝ) (b : A) => K * G (b + c u) * χ b) := by
     unfold Function.uncurry
     fun_prop
-  haveI : IsFiniteMeasure (volume.restrict (Set.uIoc (0 : ℝ) s)) := by
+  have : IsFiniteMeasure (volume.restrict (Set.uIoc (0 : ℝ) s)) := by
     unfold Set.uIoc
     infer_instance
   refine (integrable_prod_iff hcont.aestronglyMeasurable).2 ⟨ae_of_all _ fun u => ?_, ?_⟩
@@ -586,7 +586,7 @@ theorem exists_separating : ∀ (D : D7) (r : ℕ) (θ : InfFam D), IsInfFam θ 
       ← hx, inv_mul_cancel₀ hx0]
   simp only [h1, map_one, Complex.one_re, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
     mul_one] at hv
-  haveI := tau_nonempty D
+  have := tau_nonempty D
   have : (Fintype.card D.what₂.Tau : ℝ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
   exact this hv
@@ -987,7 +987,7 @@ theorem norm_chi {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (
 theorem continuous_chi {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (β : HermE D r) :
     Continuous (chi ψ β) := by
   have h0 : Continuous fun b : hermA D r => Matrix.trace (HMul.hMul (β.1.map (incA D)) b.1 : Mx D r r) :=
-    (continuous_const.matrix_mul continuous_subtype_val).matrix_trace
+    (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace
   exact hψ.1.comp (continuous_halfTr.comp h0).neg
 
 theorem norm_W_le {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (V : HSp D) (μ : Measure (Mx D V.rank r))
@@ -1027,7 +1027,7 @@ theorem hasDeriv_Jt {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ
     (b : hermA D r) (s : ℝ) :
     HasDerivAt (fun t : ℝ => Jt ψ V μ φ (b + c t))
       (2 * Real.pi * Complex.I * Jt ψ V μ (fun y => (M y : ℂ) * φ y) (b + c s)) s := by
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
   have hu : Continuous fun y => ψ (halfTr (tq V b.1 y)) :=
     hψ.1.comp (continuous_halfTr.comp (continuous_tq V b.1))
   have hn : ∀ y, ‖ψ (halfTr (tq V b.1 y))‖ = 1 := fun y => hψ.2.1 _
@@ -1121,20 +1121,20 @@ theorem W_mult {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {θ
     {φ : Mx D V.rank r → ℂ} (hφ : φ ∈ schwartzA θ V.rank r) (β : HermE D r) :
     W ψ V μ lam' (fun y => (multM θ α V a y : ℂ) * φ y) β = (pairF θ α a β : ℂ) * W ψ V μ lam' φ β := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D r r
-  haveI : IsTopologicalAddGroup (Mx D r r) := i1
-  haveI : LocallyCompactSpace (Mx D r r) := i2
-  haveI : SecondCountableTopology (Mx D r r) := i3
-  haveI : T2Space (Mx D r r) := i4
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
-  haveI : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : lam'.IsAddHaarMeasure := hlam.1
-  haveI : LocallyCompactSpace (hermA D r) := (GlobalTheory.CompanionTheory.HermVol.isClosed_hermA (D := D) (r := r)).locallyCompactSpace
-  haveI : SFinite lam' := by
-    haveI : SigmaFinite lam' := MeasureTheory.sigmaFinite_of_locallyFinite
+  have : IsTopologicalAddGroup (Mx D r r) := i1
+  have : LocallyCompactSpace (Mx D r r) := i2
+  have : SecondCountableTopology (Mx D r r) := i3
+  have : T2Space (Mx D r r) := i4
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : lam'.IsAddHaarMeasure := hlam.1
+  have : LocallyCompactSpace (hermA D r) := (GlobalTheory.CompanionTheory.HermVol.isClosed_hermA (D := D) (r := r)).locallyCompactSpace
+  have : SFinite lam' := by
+    have : SigmaFinite lam' := MeasureTheory.sigmaFinite_of_locallyFinite
     infer_instance
   obtain ⟨𝓕, hF⟩ := hμ
-  haveI : μ.IsAddHaarMeasure := hF.1
+  have : μ.IsAddHaarMeasure := hF.1
   have hμ' : ∃ 𝓕, IsCovolOne (ratMx D V.rank r) μ 𝓕 := ⟨𝓕, hF⟩
   have hMφ := hmem φ hφ
   have cont : ∀ φ ∈ schwartzA θ V.rank r, Continuous (Jt ψ V μ φ) :=
@@ -1162,9 +1162,9 @@ theorem W_int {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {θ 
       (N • ((GlobalTheory.CompanionTheory.HermPoisson.ofHermE a).1 - path hσ a 1)).1 (inner V y y) : Mx D r r))) = 1)
     (β : HermE D r) (hW : W ψ V μ lam' φ β ≠ 0) : ∃ n : ℤ, (N : ℝ) * pairF θ α a β = n := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D r r
-  haveI : IsTopologicalAddGroup (Mx D r r) := i1
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Mx D r r) := i3
+  have : IsTopologicalAddGroup (Mx D r r) := i1
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : SecondCountableTopology (Mx D r r) := i3
   set v : hermA D r := N • ((GlobalTheory.CompanionTheory.HermPoisson.ofHermE a).1 - path hσ a 1) with hv
   have hper : ∀ b, Jt ψ V μ φ (b + v) = Jt ψ V μ φ b := fun b => by
     rw [Jt_add]
@@ -1193,7 +1193,7 @@ theorem W_int {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {θ 
     rw [trace_rat, GlobalTheory.CompanionTheory.ThetaInv.halfTr_incA, ← map_neg]
     exact hψ.2.2.1 _
   have h4 : chi ψ β v = Complex.exp (((N : ℂ)) * (2 * Real.pi * Complex.I * (pairF θ α a β : ℂ))) := by
-    rw [hv, AddChar.map_nsmul_eq_pow, AddChar.map_sub_eq_div, h3, chi_path hσ hph, Complex.exp_nat_mul]
+    rw [hv, AddChar.map_nsmul_eq_pow, AddChar.map_sub_eq_div, h3, chi_path hσ hph, Complex.exp_natCast_mul]
     congr 1
     rw [one_div, ← Complex.exp_neg, neg_neg]
     congr 1
@@ -1218,7 +1218,7 @@ theorem GlobalTheory.CompanionTheory.WSum.summable_W_of_two_mul_lt_rank : ∀ (D
     2 * r < V.rank → IsCharAF D.host.F ψ → IsInfFam θ → (∃ 𝓕, IsCovolOne (ratMx D V.rank r) μ 𝓕) →
     IsCovolOneH lam 𝓖 → φ ∈ schwartzA θ V.rank r → Summable (fun β : HermE D r => W ψ V μ lam φ β) := by
   intro D r V ψ θ μ lam 𝓖 φ hm hψ hθ hμ hlam hφ
-  haveI : lam.IsAddHaarMeasure := hlam.1
+  have : lam.IsAddHaarMeasure := hlam.1
   obtain ⟨ψ₀, h₀, α, hα0, hα⟩ := GlobalTheory.ThetaAllChar.exists_std hψ
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   have hph := GlobalTheory.T.character_along_one_parameter_path D ψ ψ₀ h₀ α hα θ σ hσ

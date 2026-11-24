@@ -124,7 +124,7 @@ private theorem charpoly_dg {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
 theorem UpperTheory.V.Z.Sym.Sig.okG :
     UpperTheory.V.Z.Sym.Sig.OkG := by
   intro k _ _ _ _ O _ _ hO h2 Δ s hs hs0 V Ry hRy χ hχ t ht
-  simp only [Lev.data.eq_1, Set.mem_setOf_eq] at ht ⊢
+  simp only [Lev.data.eq_1, Set.mem_ofPred_eq] at ht ⊢
   obtain ⟨hbij, htheta, -, htau⟩ := eU_facts k O hO h2 Δ s hs hs0
   have hinv : ∀ (d : Fin 3 → kˣ) (u : GL (Fin 3) k), u ∈ V.J 3 →
       ∀ u' ∈ V.J 3, ∀ g, V.unitaryDoubleCosetIndicator d (u * g * th k 3 u') = V.unitaryDoubleCosetIndicator d g :=
@@ -163,7 +163,7 @@ theorem UpperTheory.V.Z.Sym.Sig.okG :
     have hx' : V.unitaryHeckeTestSum Ry t (eU hs (theta Δ (Quotient.out x))) ≠ 0 := hx
     rw [htheta, Lev.unitaryHeckeTestSum.eq_1] at hx'
     obtain ⟨y, hy, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero hx'
-    simp only [Set.mem_preimage, T, Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, T, Set.mem_iUnion, Set.mem_ofPred_eq]
     refine ⟨y, hy, ?_⟩
     obtain ⟨m, hm⟩ := QuotientGroup.mk_out_eq_mul (Subgroup.map (th k 3) (V.J 3))
       (th k 3 (eU hs (Quotient.out x)))
@@ -183,7 +183,7 @@ theorem UpperTheory.V.Z.Sym.Sig.okG :
       rw [GlAx.unif_spec]
       exact uniformizer_lt_one
     have hv0 : 0 < (valuation k) ((unif k : kˣ) : k) := by
-      rw [zero_lt_iff]
+      rw [pos_iff_ne_zero]
       exact (_root_.map_ne_zero _).2 (unif k).ne_zero
     obtain ⟨hy1, hy2⟩ := hRy.1 y hy
     have h01 : (valuation k) ((t * (unif k)⁻¹ : kˣ) : k) < (valuation k) (y : k) := by

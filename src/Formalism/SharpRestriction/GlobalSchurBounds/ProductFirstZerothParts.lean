@@ -366,7 +366,7 @@ lemma comap_sum {α : Type} (v : ι → (α →₀ ℕ)) (τ : ι) :
   rw [Finsupp.comapDomain_apply, Finsupp.finsetSum_apply, Finset.sum_eq_single τ]
   · exact Finsupp.mapDomain_apply_of_injective (Prod.mk_right_injective τ) _ a
   · intro b _ hb
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨y, hy⟩
     exact hb (congrArg Prod.fst hy)
   · intro h; exact absurd (Finset.mem_univ τ) h

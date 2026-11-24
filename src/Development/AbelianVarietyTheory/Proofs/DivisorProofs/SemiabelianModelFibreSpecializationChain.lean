@@ -70,7 +70,7 @@ theorem eqvGen_specializes {X : Type*} [TopologicalSpace X] [TopologicalSpace.No
   have hfin := TopologicalSpace.NoetherianSpace.finite_irreducibleComponents (α := X)
   have hC : C = ⋃ K ∈ {K ∈ irreducibleComponents X | (K ∩ C).Nonempty}, K := by
     ext v
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
     constructor
     · intro hv
       exact ⟨irreducibleComponent v, ⟨irreducibleComponent_mem_irreducibleComponents v,
@@ -79,7 +79,7 @@ theorem eqvGen_specializes {X : Type*} [TopologicalSpace X] [TopologicalSpace.No
       exact hsub K hK hne hvK
   have hCc : Cᶜ = ⋃ K ∈ {K ∈ irreducibleComponents X | ¬ (K ∩ C).Nonempty}, K := by
     ext v
-    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
     constructor
     · intro hv
       refine ⟨irreducibleComponent v, ⟨irreducibleComponent_mem_irreducibleComponents v, ?_⟩, mem_irreducibleComponent⟩
@@ -103,7 +103,7 @@ theorem quasiSober_of_generalization {X : Type*} [TopologicalSpace X] [QuasiSobe
     (hS : ∀ x s, s ∈ S → x ⤳ s → x ∈ closure S → x ∈ S) : QuasiSober S := by
   constructor
   intro T hT hTc
-  have hT' : IsIrreducible (((↑) : S → X) '' T) := hT.image _ continuous_subtype_val.continuousOn
+  have hT' : IsIrreducible (((↑) : S → X) '' T) := hT.image _ continuous_subtypeVal.continuousOn
   have hξ := hT'.isGenericPoint_genericPoint_closure
   obtain ⟨t, ht⟩ := hT.nonempty
   have hξt : hT'.genericPoint ⤳ (t : X) := hξ.specializes (subset_closure ⟨t, ht, rfl⟩)
@@ -119,14 +119,14 @@ theorem eqvGen_of_isPreconnected {X : Type*} [TopologicalSpace X] [TopologicalSp
     (S : Set X) (hc : IsPreconnected S) (hS : ∀ x s, s ∈ S → x ⤳ s → x ∈ closure S → x ∈ S) :
     ∀ a ∈ S, ∀ b ∈ S, Relation.EqvGen (fun u v : X => u ∈ S ∧ v ∈ S ∧ u ⤳ v) a b := by
   intro a ha b hb
-  haveI := quasiSober_of_generalization S hS
-  haveI : PreconnectedSpace S := Subtype.preconnectedSpace hc
+  have := quasiSober_of_generalization S hS
+  have : PreconnectedSpace S := Subtype.preconnectedSpace hc
   have h := eqvGen_specializes (⟨a, ha⟩ : S) ⟨b, hb⟩
   have key : ∀ u v : S, Relation.EqvGen (· ⤳ ·) u v →
       Relation.EqvGen (fun u v : X => u ∈ S ∧ v ∈ S ∧ u ⤳ v) u v := by
     intro u v huv
     induction huv with
-    | rel p q hpq => exact Relation.EqvGen.rel _ _ ⟨p.2, q.2, hpq.map continuous_subtype_val⟩
+    | rel p q hpq => exact Relation.EqvGen.rel _ _ ⟨p.2, q.2, hpq.map continuous_subtypeVal⟩
     | refl p => exact Relation.EqvGen.refl _
     | symm p q _ ih => exact Relation.EqvGen.symm _ _ ih
     | trans p q r _ _ ih1 ih2 => exact Relation.EqvGen.trans _ _ _ ih1 ih2
@@ -140,20 +140,20 @@ theorem fibre_chain : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
   intro g n F W Z i X₁ z₁ Y πY hZH y y' hy hy'
   obtain ⟨U₀, EE, -, -, -, hHom, hProp⟩ := hZH
   obtain ⟨U, hU, hiso⟩ := _root_.GlobalTheory.ZH.RatModel.exists_isIso_morphismRestrict_of_isHom_id X₁.o₁ X₁.Ω₁ Y X₁.M πY hHom
-  haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
-  haveI : IsLocallyNoetherian (Sp X₁.o₁) :=
+  have : IsDedekindDomain X₁.o₁ := X₁.ar.ded
+  have : IsLocallyNoetherian (Sp X₁.o₁) :=
     inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of X₁.o₁)))
-  haveI := X₁.M.lft
-  haveI := Y.lft
-  haveI := Y.qc
-  haveI : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
-  haveI : IsLocallyNoetherian Y.Z := LocallyOfFiniteType.isLocallyNoetherian Y.s
-  haveI : CompactSpace Y.Z := by
+  have := X₁.M.lft
+  have := Y.lft
+  have := Y.qc
+  have : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
+  have : IsLocallyNoetherian Y.Z := LocallyOfFiniteType.isLocallyNoetherian Y.s
+  have : CompactSpace Y.Z := by
     constructor
     have := QuasiCompact.isCompact_preimage (f := Y.s) (U := Set.univ) isOpen_univ isCompact_univ
     simpa using this
-  haveI : IsNoetherian Y.Z := {}
-  haveI : IsProper πY := hProp
+  have : IsNoetherian Y.Z := {}
+  have : IsProper πY := hProp
   have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X₁.M.Z := (GlobalTheory.isNormalScheme_iff_pred _).1 X₁.normal
   have hc := GlobalTheory.ZariskiConn.fibre_preconnected Y.Z X₁.M.Z πY hN U hU hiso z₁
   have hS : ∀ x s, s ∈ πY.base ⁻¹' {z₁} → x ⤳ s → x ∈ closure (πY.base ⁻¹' {z₁}) → x ∈ πY.base ⁻¹' {z₁} := by

@@ -259,7 +259,7 @@ theorem exists_norm_theta_le {j : ℕ} {α : A.X} {th : (Fin A.gB → ℂ) → �
     (by rw [hg]; fun_prop) fun z l hl => by
       have h2 := h.2 ⟨l, hl⟩ z
       simp only at h2
-      rw [h2, norm_mul, norm_mul, norm_pow, norm_ah, Complex.norm_exp, ← Real.exp_nat_mul, ← Real.exp_add,
+      rw [h2, norm_mul, norm_mul, norm_pow, norm_ah, Complex.norm_exp, ← Real.exp_natCast_mul, ← Real.exp_add,
         mul_comm _ ‖th z‖, mul_assoc, ← Real.exp_add]
       congr 2
       simp only [hg, H_add_self_re, A.H_add_right (A.ct α), Complex.add_re, Complex.re_ofReal_mul]
@@ -369,7 +369,7 @@ theorem exists_norm_term_le (hj : j ≠ 0) (h : th ∈ A.Theta j α) {T₁ : ℝ
   have i1 : (l (α + j • μ)).im = (l α).im + j * (l μ).im := by simp
   have i2 : (w * A.exponent j α μ).im = w.im * (j * A.be μ μ / 2 + A.be μ α) := by simp [hex]
   rw [term, norm_mul, norm_mul, norm_mul, norm_mul, norm_pow, norm_psi, norm_e, norm_e, norm_e, i1, i2,
-    ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add, mul_right_comm, ← Real.exp_add]
+    ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add, mul_right_comm, ← Real.exp_add]
   refine (mul_le_mul_of_nonneg_left (hth _) (Real.exp_pos _).le).trans ?_
   rw [mul_left_comm, ← Real.exp_add, mul_assoc M, ← Real.exp_add]
   refine mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 ?_) hM

@@ -553,10 +553,10 @@ theorem _root_.GlobalTheory.RegSS.quad_exists_basis [CharZero F]
     ∃ (b : Module.Basis (Fin 2) F E) (d : F), b 0 = 1 ∧ σ (b 1) = - b 1 ∧ d ≠ 0 ∧
       b 1 * b 1 = algebraMap F E d := by
   have hfr := h.finrank_eq
-  haveI : Nontrivial E := Module.nontrivial_of_finrank_pos (R := F) (by rw [hfr]; norm_num)
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hfr]; norm_num)
-  haveI := h.etale
-  haveI : IsReduced E := Algebra.FormallyUnramified.isReduced_of_field F E
+  have : Nontrivial E := Module.nontrivial_of_finrank_pos (R := F) (by rw [hfr]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hfr]; norm_num)
+  have := h.etale
+  have : IsReduced E := Algebra.FormallyUnramified.isReduced_of_field F E
   obtain ⟨e, he⟩ := h.ne_id
   set w := e - σ e with hw
   have hσw : σ w = -w := by simp [w, h.invol]
@@ -630,14 +630,14 @@ theorem _root_.GlobalTheory.RegSS.continuous_rTensor {B B' : Type} [CommRing B] 
     (f : B →ₗ[F] B') :
     @Continuous _ _ (_root_.Formalism.BasicNotions.tensTopL (F := F) (E := B) R) (_root_.Formalism.BasicNotions.tensTopL (F := F) (E := B') R)
       (LinearMap.rTensor R f) := by
-  letI := Algebra.TensorProduct.rightAlgebra (R := F) (A := B) (B := R)
-  letI := Algebra.TensorProduct.rightAlgebra (R := F) (A := B') (B := R)
-  letI : TopologicalSpace (B ⊗[F] R) := moduleTopology R (B ⊗[F] R)
-  letI : TopologicalSpace (B' ⊗[F] R) := moduleTopology R (B' ⊗[F] R)
-  haveI : IsModuleTopology R (B ⊗[F] R) := ⟨rfl⟩
-  haveI : IsModuleTopology R (B' ⊗[F] R) := ⟨rfl⟩
-  haveI : ContinuousAdd (B' ⊗[F] R) := IsModuleTopology.toContinuousAdd R _
-  haveI : ContinuousSMul R (B' ⊗[F] R) := IsModuleTopology.toContinuousSMul R _
+  let := Algebra.TensorProduct.rightAlgebra (R := F) (A := B) (B := R)
+  let := Algebra.TensorProduct.rightAlgebra (R := F) (A := B') (B := R)
+  let : TopologicalSpace (B ⊗[F] R) := moduleTopology R (B ⊗[F] R)
+  let : TopologicalSpace (B' ⊗[F] R) := moduleTopology R (B' ⊗[F] R)
+  have : IsModuleTopology R (B ⊗[F] R) := ⟨rfl⟩
+  have : IsModuleTopology R (B' ⊗[F] R) := ⟨rfl⟩
+  have : ContinuousAdd (B' ⊗[F] R) := IsModuleTopology.toContinuousAdd R _
+  have : ContinuousSMul R (B' ⊗[F] R) := IsModuleTopology.toContinuousSMul R _
   let g : B ⊗[F] R →ₗ[R] B' ⊗[F] R :=
     { toFun := LinearMap.rTensor R f
       map_add' := map_add _
@@ -677,7 +677,7 @@ theorem _root_.GlobalTheory.RegSS.etale_of_isReduced [CharZero F] (B : Type) [Co
     [Algebra F B] [Module.Finite F B] [IsReduced B] : Algebra.Etale F B := by
   have : IsArtinianRing B := IsArtinianRing.of_finite F B
   rw [Algebra.Etale.iff_exists_algEquiv_prod]
-  letI : ∀ I : MaximalSpectrum B, Field (B ⧸ I.asIdeal) := fun I =>
+  let : ∀ I : MaximalSpectrum B, Field (B ⧸ I.asIdeal) := fun I =>
     Ideal.Quotient.field I.asIdeal
   exact ⟨MaximalSpectrum B, inferInstance, fun I => B ⧸ I.asIdeal, inferInstance, inferInstance,
     (IsArtinianRing.equivPi B).restrictScalars F, fun I => ⟨inferInstance, inferInstance⟩⟩

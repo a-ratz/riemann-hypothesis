@@ -95,7 +95,7 @@ private theorem co_pow {O D R : Type} [CommRing O] [IsLocalRing O] [CommRing D] 
     ext a
     rw [RingHom.mem_ker, hy]
     exact res_eq_zero_iff O R (ι a)
-  haveI hymax : y.IsMaximal := hker ▸ RingHom.ker_isMaximal_of_surjective f hf
+  have hymax : y.IsMaximal := hker ▸ RingHom.ker_isMaximal_of_surjective f hf
   have hyN : y ^ N ≤ y := Ideal.pow_le_self hN
   let f' : D ⧸ y ^ N →+* ResidueField O := Ideal.Quotient.lift (y ^ N) f (fun a ha => by
     rw [← RingHom.mem_ker, hker]; exact hyN ha)
@@ -104,7 +104,7 @@ private theorem co_pow {O D R : Type} [CommRing O] [IsLocalRing O] [CommRing D] 
     intro z
     obtain ⟨d, rfl⟩ := hf z
     exact ⟨_, hf'mk d⟩
-  haveI hMmax : (RingHom.ker f').IsMaximal := RingHom.ker_isMaximal_of_surjective f' hf'
+  have hMmax : (RingHom.ker f').IsMaximal := RingHom.ker_isMaximal_of_surjective f' hf'
   have hMle : RingHom.ker f' ≤ y.map (Ideal.Quotient.mk (y ^ N)) := by
     intro z hz
     obtain ⟨d, rfl⟩ := Ideal.Quotient.mk_surjective z
@@ -114,8 +114,8 @@ private theorem co_pow {O D R : Type} [CommRing O] [IsLocalRing O] [CommRing D] 
     rw [eq_bot_iff]
     calc RingHom.ker f' ^ N ≤ (y.map (Ideal.Quotient.mk (y ^ N))) ^ N := Ideal.pow_right_mono hMle N
       _ = ⊥ := by rw [← Ideal.map_pow, Ideal.map_quotient_self]
-  haveI : IsAdicComplete (RingHom.ker f') (D ⧸ y ^ N) := cpl_of_nil _ N hMN
-  haveI hloc : IsLocalRing (D ⧸ y ^ N) := isLocalRing_of_isAdicComplete_maximal (RingHom.ker f')
+  have : IsAdicComplete (RingHom.ker f') (D ⧸ y ^ N) := cpl_of_nil _ N hMN
+  have hloc : IsLocalRing (D ⧸ y ^ N) := isLocalRing_of_isAdicComplete_maximal (RingHom.ker f')
   have hMeq : RingHom.ker f' = maximalIdeal (D ⧸ y ^ N) := IsLocalRing.eq_maximalIdeal hMmax
   have hmem : ∀ z, z ∈ maximalIdeal (D ⧸ y ^ N) ↔ f' z = 0 := by
     intro z; rw [← hMeq, RingHom.mem_ker]
@@ -134,7 +134,7 @@ private theorem co_pow {O D R : Type} [CommRing O] [IsLocalRing O] [CommRing D] 
         obtain ⟨a, ha⟩ := IsLocalRing.residue_surjective (f d)
         refine ⟨a, (hmem _).2 ?_⟩
         rw [map_sub, hfq, hf'mk, ha, sub_self] }
-  letI := hco
+  let := hco
   refine ⟨hco, ?_, fun d => ?_⟩
   · rw [← hMeq]; exact hMN
   · obtain ⟨a, ha⟩ := IsCO.res_surj (O := O) (ι d)
@@ -152,7 +152,7 @@ private theorem cpl_of_univ {O D R : Type} [CommRing O] [IsLocalRing O] [CommRin
     (univ : ∀ (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (f : D →ₐ[O] C),
       (∀ a, res O C (f a) = res O R (ι a)) → ∃! g : R →ₐ[O] C, ∀ a, g (ι a) = f a) :
     @UpperTheory.V.CA.IsCplAt _ _ ((maximalIdeal R).comap ι.toRingHom) R _ ι.toRingHom.toAlgebra _ := by
-  letI : Algebra D R := ι.toRingHom.toAlgebra
+  let : Algebra D R := ι.toRingHom.toAlgebra
   have hy : ∀ a, a ∈ (maximalIdeal R).comap ι.toRingHom ↔ ι a ∈ maximalIdeal R := fun a => Iff.rfl
   have hmg : ∀ {C : Type} [CommRing C] [Algebra O C] [IsCO O C] (g : R →ₐ[O] C),
       Ideal.map g (maximalIdeal R) ≤ maximalIdeal C := by
@@ -167,7 +167,7 @@ private theorem cpl_of_univ {O D R : Type} [CommRing O] [IsLocalRing O] [CommRin
   · rcases Nat.eq_zero_or_pos n with rfl | hn
     · simp
     obtain ⟨hco, hnil, hres⟩ := co_pow ι _ hy n hn.ne'
-    letI := hco
+    let := hco
     obtain ⟨g, hg, -⟩ := univ _ (Ideal.Quotient.mkₐ O _) (fun a => hres a)
     apply le_antisymm
     · intro a ha
@@ -182,12 +182,12 @@ private theorem cpl_of_univ {O D R : Type} [CommRing O] [IsLocalRing O] [CommRin
     · exact Ideal.le_comap_pow _ n
   · rcases Nat.eq_zero_or_pos n with rfl | hn
     · exact ⟨0, by simp⟩
-    haveI : Nontrivial (R ⧸ maximalIdeal R ^ n) := Ideal.Quotient.nontrivial_iff.2
+    have : Nontrivial (R ⧸ maximalIdeal R ^ n) := Ideal.Quotient.nontrivial_iff.2
       (ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal R).ne_top (Ideal.pow_le_self hn.ne'))
-    letI hcoR : IsCO O (R ⧸ maximalIdeal R ^ n) :=
+    let hcoR : IsCO O (R ⧸ maximalIdeal R ^ n) :=
       co_quot O R _ (Ideal.Quotient.mkₐ O _) (Ideal.Quotient.mkₐ_surjective O _)
     obtain ⟨hco, hnil, hres⟩ := co_pow ι _ hy n hn.ne'
-    letI := hco
+    let := hco
     obtain ⟨g, hg, -⟩ := univ _ (Ideal.Quotient.mkₐ O _) (fun a => hres a)
     have hker : ∀ a ∈ ((maximalIdeal R).comap ι.toRingHom) ^ n,
         ((Ideal.Quotient.mkₐ O (maximalIdeal R ^ n)).comp ι) a = 0 := by
@@ -213,13 +213,13 @@ theorem UpperTheory.V.Fr.loc_cpl :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (x : Ideal S.A) (L : S.Loc x), ∀ ι' : TensorProduct O L.O' S.A →ₐ[L.O'] L.R, (∀ a, ι' (1 ⊗ₜ a) = L.ι a) → @UpperTheory.V.CA.IsCplAt _ _ ((maximalIdeal L.R).comap ι'.toRingHom) L.R _ ι'.toRingHom.toAlgebra _ := by
   intro l _ O _ _ _ _ F C₀ n hF hn S x L ι' hι'
   obtain ⟨-, -, -, -, -, hnoeth, -⟩ := gr_A hF hn S
-  haveI : IsNoetherianRing (TensorProduct O S.A L.O') := IsNoetherianRing.of_finite S.A _
-  haveI : IsNoetherianRing (TensorProduct O L.O' S.A) :=
+  have : IsNoetherianRing (TensorProduct O S.A L.O') := IsNoetherianRing.of_finite S.A _
+  have : IsNoetherianRing (TensorProduct O L.O' S.A) :=
     isNoetherianRing_of_ringEquiv _ (Algebra.TensorProduct.comm O S.A L.O').toRingEquiv
   apply cpl_of_univ ι'
   intro C _ _ _ f hf
-  letI : Algebra O C := Algebra.compHom C (algebraMap O L.O')
-  haveI : IsScalarTower O L.O' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra O C := Algebra.compHom C (algebraMap O L.O')
+  have : IsScalarTower O L.O' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let f' : S.A →ₐ[O] C := (f.restrictScalars O).comp Algebra.TensorProduct.includeRight
   obtain ⟨g, hg, hu⟩ := L.univ C f' (fun a => by
     show res L.O' C (f (1 ⊗ₜ a)) = _

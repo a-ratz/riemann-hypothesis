@@ -170,7 +170,7 @@ theorem pushPt_redU_genEval {x y : gaussRing (gaussCurve W W)}
 theorem univAdd_reduceFF
     (Q : ((W'.baseChange K).baseChange (W.baseChange K).toAffine.FunctionField).toAffine.Point)
     (hQ : RespectsAdd (W.baseChange K) (W'.baseChange K) Q) : UnivAdd (reduceFF K W W' Q) := by
-  haveI : DecidableEq (ResidueField (gaussRing (gaussCurve W W))) := Classical.decEq _
+  have : DecidableEq (ResidueField (gaussRing (gaussCurve W W))) := Classical.decEq _
   obtain ⟨h₁, e₁⟩ := liftPt₁_eq K W
   obtain ⟨h₂, e₂⟩ := liftPt₂_eq K W
   obtain ⟨x₃, y₃, h₃, e₃⟩ := liftPt₁₂_eq K W

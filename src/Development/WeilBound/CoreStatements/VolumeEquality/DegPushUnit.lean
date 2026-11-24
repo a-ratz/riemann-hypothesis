@@ -76,7 +76,7 @@ private theorem isIntegral_of_mem_all_valuationSubrings {L : Type} [Field L] (A 
   obtain rfl | hx0 := eq_or_ne x 0
   · exact isIntegral_zero
   have hxi : x⁻¹ ≠ 0 := inv_ne_zero hx0
-  letI : Invertible x⁻¹ := invertibleOfNonzero hxi
+  let : Invertible x⁻¹ := invertibleOfNonzero hxi
   let B := Algebra.adjoin A {x⁻¹}
   let xinv : B.toSubring := ⟨x⁻¹, Algebra.subset_adjoin rfl⟩
   by_contra hni
@@ -439,7 +439,7 @@ theorem unitZero : PtDim → UnitZero := by
     intro W
     by_cases hW : W.IsPrime ∧ P ≤ W ∧ IsRelevant W
     · obtain ⟨hWp, hPW, hWr⟩ := hW
-      haveI := hWp
+      have := hWp
       have hk : ∀ s, s ∉ W → φ s ≠ 0 := fun s hs h0 => hs (hPW ((hφ0 s).1 h0))
       have hφf : φ f ≠ 0 := fun h0 => hfP ((hφ0 f).1 h0)
       have hφg : φ g ≠ 0 := fun h0 => hgP ((hφ0 g).1 h0)

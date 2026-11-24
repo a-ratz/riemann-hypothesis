@@ -72,7 +72,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensiona
 
 theorem exists_le_of_periodic {S : Set E} {R : ℝ} (hS : ∀ z, ∃ l ∈ S, ‖z + l‖ ≤ R) (φ : E → ℝ)
     (hφ : Continuous φ) (hp : ∀ l ∈ S, ∀ z, φ (z + l) = φ z) : ∃ C, ∀ z, φ z ≤ C := by
-  haveI := FiniteDimensional.proper ℂ E
+  have := FiniteDimensional.proper ℂ E
   obtain ⟨C, hC⟩ := ((isCompact_closedBall (0 : E) R).image hφ).bddAbove
   refine ⟨C, fun z => ?_⟩
   obtain ⟨l, hl, h⟩ := hS z
@@ -171,8 +171,8 @@ end Analysis
 variable {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} (u : HolUnif A L g)
 
 theorem exists_period_norm_le : ∃ R : ℝ, ∀ z : Fin g → ℂ, ∃ l ∈ u.Λ, ‖z + l‖ ≤ R := by
-  haveI := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
   let b := (Module.Free.chooseBasis ℤ u.Λ).ofZLatticeBasis ℝ u.Λ
   refine ⟨∑ i, ‖b i‖, fun z => ⟨-(ZSpan.floor b z : Fin g → ℂ), u.Λ.neg_mem ?_, ?_⟩⟩
   · exact ((Module.Free.chooseBasis ℤ u.Λ).ofZLatticeBasis_span ℝ u.Λ).le (ZSpan.floor b z).2
@@ -251,7 +251,7 @@ theorem gen_linComb_in_frame (hL : L.IsLB) {Hm : Matrix (Fin g) (Fin g) ℂ} {χ
       refine ⟨∏ k, χ ⟨lam k l, hΛ k⟩ ^ ε k, by simp [norm_prod, norm_zpow, hu.2.2.1], fun z => ?_⟩
       obtain ⟨j, hj⟩ := hcov z
       have hj' : z + l ∈ D j := by
-        simp only [D, Set.mem_setOf_eq, hl z]
+        simp only [D, Set.mem_ofPred_eq, hl z]
         exact hj
       have eT : T j (z + l) = T j z := by simp only [T, hl z]
       have c1 : F j z = (∏ k, χ ⟨lam k l, hΛ k⟩ ^ ε k) *
@@ -262,7 +262,7 @@ theorem gen_linComb_in_frame (hL : L.IsLB) {Hm : Matrix (Fin g) (Fin g) ℂ} {χ
           ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
         refine Finset.prod_congr rfl fun k _ => ?_
         rw [hu.2.2.2 ⟨lam k l, hΛ k⟩ (j k) (lam k z) ((hD j z).1 hj k), map_add (f := _), mul_zpow, mul_zpow,
-          ← Complex.exp_int_mul]
+          ← exp_intCast_mul]
         congr 3
         simp only [hermForm]
         ring

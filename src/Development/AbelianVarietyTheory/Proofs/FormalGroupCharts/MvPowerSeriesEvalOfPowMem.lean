@@ -104,12 +104,12 @@ theorem mvPowerSeries_eval_of_pow_mem : ∀ (A : Type) [CommRing A] (K : Ideal A
   have hmem : ∀ j, a j ∈ K ⊔ Ideal.span (Set.range a) := fun j =>
     Ideal.mem_sup_right (Ideal.subset_span ⟨j, rfl⟩)
   refine ⟨fun hK R _ _ => ?_, fun hK T _ ψ ψ' hC hψ hψ' => ?_⟩
-  · haveI : IsAdicComplete (K ⊔ Ideal.span (Set.range a)) A :=
+  · have : IsAdicComplete (K ⊔ Ideal.span (Set.range a)) A :=
       { toIsHausdorff := NilpotentEval.isHausdorff_of_pow_le hN
         toIsPrecomplete := NilpotentEval.isPrecomplete_of_pow_le hN le_sup_left }
     exact ⟨mvEvalAdic R _ a hmem, mvEvalAdic_X _ a hmem⟩
-  · haveI := NilpotentEval.isHausdorff_of_pow_le hN
-    letI : Algebra T A := (ψ.comp MvPowerSeries.C).toAlgebra
+  · have := NilpotentEval.isHausdorff_of_pow_le hN
+    let : Algebra T A := (ψ.comp MvPowerSeries.C).toAlgebra
     let φ : MvPowerSeries σ T →ₐ[T] A := { ψ with commutes' := fun _ => rfl }
     let φ' : MvPowerSeries σ T →ₐ[T] A := { ψ' with commutes' := fun t => (hC t).symm }
     have : φ = φ' := mvPowerSeries_algHom_ext_of_isHausdorff (K ⊔ Ideal.span (Set.range a))

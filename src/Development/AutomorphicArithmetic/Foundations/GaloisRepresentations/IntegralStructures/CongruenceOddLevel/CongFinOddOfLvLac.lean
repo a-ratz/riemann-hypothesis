@@ -186,7 +186,7 @@ theorem exists_fun_of_poly_smooth : ∀ (E : Type) [Field E] [NumberField E] [Is
     exact isOpen_iInter_of_finite hVo
   · choose N c d _ hcd using fun i => hco _ (hp i)
     let f : (Σ i, Fin (N i)) → UA E n → ℂ := fun s x => c s.1 s.2 (b x) * e s.1 (a x)
-    haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range f)) :=
+    have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range f)) :=
       FiniteDimensional.span_of_finite ℂ (Set.finite_range f)
     refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ (Set.range f)) (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩
@@ -226,10 +226,10 @@ theorem exists_conj_isAutFormU (E : Type) [Field E] [NumberField E] [IsCMField E
       { carrier := {k : finU (E := E) (n := n) | RU E n k (e i) = e i}
         one_mem' := by simp
         mul_mem' := fun {x y} hx hy => by
-          simp only [Set.mem_setOf_eq] at hx hy ⊢
+          simp only [Set.mem_ofPred_eq] at hx hy ⊢
           rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hy, hx]
         inv_mem' := fun {x} hx => by
-          simp only [Set.mem_setOf_eq] at hx ⊢
+          simp only [Set.mem_ofPred_eq] at hx ⊢
           conv_lhs => rw [← hx]
           rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }, ?_, ?_⟩
     · exact (hpe i).2.level
@@ -402,7 +402,7 @@ theorem conj_span_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     rw [hψ.2.1 k hk, mul_assoc, hψ.1 γ hγ]
     conv_lhs => rw [hab s]
     simp only [mul_assoc]
-  haveI := polys_fd (E := E) (n := n) N
+  have := polys_fd (E := E) (n := n) N
   let f : M →ₗ[ℂ] ((s : S') → polys E n N) :=
     { toFun := fun ψ s => ⟨fun x => ψ.1 (s.1 * x), ψ.2.2.2 s.1 s.2⟩
       map_add' := fun _ _ => rfl
@@ -438,7 +438,7 @@ theorem conj_span_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     have hq : (∑ i, σ (e i (a s₀)) • p' i) ∈ polys E n N :=
       Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (hp'm i)
     convert hq using 1
-    refine Continuous.ext_on hdk (hφ'.cont.comp (continuous_const.mul continuous_subtype_val))
+    refine Continuous.ext_on hdk (hφ'.cont.comp (continuous_const.mul continuous_subtypeVal))
       (hcont _ (polys_le_adjoin N hq)) ?_
     rintro k ⟨γ, hγ, hk⟩
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -560,16 +560,16 @@ theorem orbit_finite_mem_finite_ext : ∀ (l : ℕ) [Fact l.Prime] (ι : Qbar l 
   intro l _ ι J z hfin
   classical
   set O := Set.range fun σ : ℂ ≃+* ℂ => fun j => σ (z j) with hO
-  haveI : Finite O := hfin.to_subtype
+  have : Finite O := hfin.to_subtype
   set w : J → Qbar l := fun j => ι.symm (z j) with hw
   let K : Finset J → IntermediateField ℚ_[l] (Qbar l) := fun s =>
     IntermediateField.adjoin ℚ_[l] (w '' (s : Set J))
   have hKfin : ∀ s, FiniteDimensional ℚ_[l] (K s) := fun s => by
-    haveI : Finite (w '' (s : Set J)) := (s.finite_toSet.image w).to_subtype
+    have : Finite (w '' (s : Set J)) := (s.finite_toSet.image w).to_subtype
     exact IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   have hbound : ∀ s, Module.finrank ℚ_[l] (K s) ≤ Nat.card O := by
     intro s
-    haveI := hKfin s
+    have := hKfin s
     rw [← AlgHom.card ℚ_[l] (K s) (Qbar l), ← Nat.card_eq_fintype_card]
     let g : (K s →ₐ[ℚ_[l]] Qbar l) → O := fun φ =>
       ⟨fun j => ι (φ.liftNormal (Qbar l) (w j)),
@@ -588,11 +588,11 @@ theorem orbit_finite_mem_finite_ext : ∀ (l : ℕ) [Fact l.Prime] (ι : Qbar l 
   have hne : R.Nonempty := ⟨_, ∅, rfl⟩
   have hbdd : BddAbove R := ⟨Nat.card O, by rintro _ ⟨s, rfl⟩; exact hbound s⟩
   obtain ⟨s0, hs0⟩ := Nat.sSup_mem hne hbdd
-  haveI := hKfin s0
+  have := hKfin s0
   refine ⟨K s0, inferInstance, fun j => ?_⟩
   have hle : K s0 ≤ K (insert j s0) :=
     IntermediateField.adjoin.mono _ _ _ (Set.image_mono (by simp))
-  haveI := hKfin (insert j s0)
+  have := hKfin (insert j s0)
   have heq : K s0 = K (insert j s0) := by
     apply IntermediateField.eq_of_le_of_finrank_le hle
     rw [show Module.finrank ℚ_[l] (K s0) = sSup R from hs0]
@@ -818,9 +818,9 @@ theorem exists_congruence_surj : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
   intro E _ _ _ l _ a ha w hlw m N hNo h1N
   classical
   have hl : l.Prime := Fact.out
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
-  haveI : CharZero (w.adicCompletionIntegers E) :=
+  have : CharZero (w.adicCompletionIntegers E) :=
     (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E)).charZero
   have hlR : ¬ IsUnit (l : w.adicCompletionIntegers E) := by
     rw [HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one]
@@ -902,7 +902,7 @@ theorem exists_congruence_surj : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
     have hval : (lam₀.comp e.symm.toMonoidHom) (e ⟨h₀, hh₀⟩) = Multiplicative.ofAdd 1 := by
       rw [MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulEquiv.symm_apply_apply,
         hlam₀ ⟨h₀, hh₀⟩ x rfl, htr, hφ1]
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
     intro z
     refine ⟨(e ⟨h₀, hh₀⟩) ^ (Multiplicative.toAdd z).val, ?_⟩
     rw [map_pow, hval, ← ofAdd_nsmul, nsmul_one, ZMod.natCast_zmod_val, ofAdd_toAdd]
@@ -911,11 +911,11 @@ theorem exists_type_surj : ∀ (E : Type) [Field E] [NumberField E] (w : HeightO
   intro E _ _ w a l hl hlw ha2 N hN m₀
   have ha : 1 ≤ a := by omega
   classical
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
-  haveI : CharZero (w.adicCompletionIntegers E) :=
+  have : CharZero (w.adicCompletionIntegers E) :=
     (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E)).charZero
-  haveI : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) :=
+  have : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) :=
     Formalism.UG.P.glint_finite_residueField w
   have hlR : ¬ IsUnit (l : w.adicCompletionIntegers E) := by
     rw [HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one]
@@ -1009,14 +1009,14 @@ theorem exists_type_surj : ∀ (E : Type) [Field E] [NumberField E] (w : HeightO
     have hval : (lam₀.comp e.symm.toMonoidHom) (e ⟨h₀, hh₀⟩) = Multiplicative.ofAdd 1 := by
       rw [MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulEquiv.symm_apply_apply,
         hlam₀ ⟨h₀, hh₀⟩ x rfl, htr, hφ1]
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
     intro z
     refine ⟨(e ⟨h₀, hh₀⟩) ^ (Multiplicative.toAdd z).val, ?_⟩
     rw [map_pow, hval, ← ofAdd_nsmul, nsmul_one, ZMod.natCast_zmod_val, ofAdd_toAdd]
   ·
     intro ζ hζ hζ1 σ v hv hev
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-    haveI : Fact (1 < l ^ m) := ⟨Nat.one_lt_pow (by omega) hl.one_lt⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : Fact (1 < l ^ m) := ⟨Nat.one_lt_pow (by omega) hl.one_lt⟩
     refine ⟨σ.smooth, fun s d e' he => ?_⟩
     obtain ⟨W, hW0, hWT, hWcrit⟩ := _root_.GlobalTheory.UnipFlag.exists_sub (w.adicCompletion E) a s d e' he
     refine _root_.GlobalTheory.jacquet_subsingleton_of_char_nontrivial_on_conj (GL (Fin a) (w.adicCompletion E)) σ.V σ.ρ σ.irred
@@ -1151,7 +1151,7 @@ theorem exists_ellType (ha : 1 ≤ a) (w₀ : HeightOneSpectrum (𝓞 E)) (hl : 
       TypeExists.exists_type_surj E w₀ a l hlp hl ha2 N hN m₀
     refine ⟨m, J, lam, hmm, hJN, hJo, hJc,
       fun x hx k hk hxk => hJtf x hx (isOfFinOrder_iff_pow_eq_one.2 ⟨k, hk, hxk⟩), hsurj, fun χ hχ σ v hv0 hv => ?_⟩
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hlp.ne_zero⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hlp.ne_zero⟩
     refine hsc (χ (Multiplicative.ofAdd 1)) ?_ (fun h => hχ (MonoidHom.ext fun z => ?_)) σ v hv0 fun g => ?_
     · rw [← map_pow, ← ofAdd_nsmul, nsmul_one, ZMod.natCast_self, ofAdd_zero, map_one]
     · rw [hchar χ z, h, one_pow, MonoidHom.one_apply]

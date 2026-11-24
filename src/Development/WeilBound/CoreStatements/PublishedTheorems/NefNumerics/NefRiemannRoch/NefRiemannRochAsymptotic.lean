@@ -86,7 +86,7 @@ namespace GlobalTheory
 
 theorem hdim_twist_pushforward_lbPow_of_isClosedImmersion : ∀ (k : Type) [Field k] (X Z : Scheme.{0}) [Algebra k Γ(X, ⊤)] (g : Z ⟶ X) [IsClosedImmersion g] (L : LB X), L.IsLB → ∀ (G : Z.Modules) (m i : ℕ), letI := algebraΓAlong k g; hdim k (twist ((Scheme.Modules.pushforward g).obj G) (lbPow L m)) i = hdim k (twist G (lbPow (L.pull g) m)) i := by
   intro k _ X Z _ g _ L hL G m i
-  letI := algebraΓAlong k g
+  let := algebraΓAlong k g
   have hf : ∀ r : k, g.appTop (algebraMap k Γ(X, ⊤) r) = algebraMap k Γ(Z, ⊤) r := fun _ => rfl
   have hP : hdim k ((Scheme.Modules.pushforward g).obj (twist G ((lbPow L m).pull g))) i =
       hdim k (twist G ((lbPow L m).pull g)) i := by
@@ -175,7 +175,7 @@ theorem abs_chi_sub_hdim_zero_add_hdim_one_le : ∀ (k : Type) [Field k] [Infini
   choose C hC using fun i : ℕ => he (i + 2) (by omega)
   refine ⟨∑ i ∈ Finset.range n, C i, fun m => ?_⟩
   have hM : (lbPow L m).IsLB := isLB_lbPow hL m
-  haveI : IsFiniteQC (twist F (lbPow L m)) := isFiniteQC_twist hM
+  have : IsFiniteQC (twist F (lbPow L m)) := isFiniteQC_twist hM
   have hv : ∀ i, n + 2 ≤ i → Subsingleton (coh (twist F (lbPow L m)) i) := fun i hi =>
     subsingleton_coh_of_isProjOver hp _
       (((suppDim_twist hM).trans_le hF).trans_lt (by exact_mod_cast (by omega : n < i)))
@@ -330,9 +330,9 @@ namespace GlobalTheory.NefRR
 
 theorem hdim_twist_structureModule_le : ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) [IsIntegral X] [Algebra k Γ(X, ⊤)], IsProjOver (strHom k (X := X)) → ∀ (d : ℕ) (L : LB X), IsNef k L → topologicalKrullDim X ≤ (d + 1 : ℕ) → (∀ (E : X.Modules) [IsFiniteQC E], suppDim E ≤ (d : ℕ) → ∀ j, 0 < j → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist E (lbPow L m)) j ≤ C * (d * (m + 1) ^ (d - 1)))) → ∀ i, 0 < i → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist (GlobalTheory.structureModule X) (lbPow L m)) i ≤ C * ((d + 1) * (m + 1) ^ d)) := by
   intro k _ _ X _ _ hproj d L hL hkd hind i hi
-  haveI : IsLocallyNoetherian X := by
+  have : IsLocallyNoetherian X := by
     obtain ⟨N, f, hf, -⟩ := hproj
-    haveI := hf
+    have := hf
     exact LocallyOfFiniteType.isLocallyNoetherian (f ≫ PSpace.str k N)
   have hsupp : suppDim (GlobalTheory.structureModule X) ≤ ((d + 1 : ℕ) : WithBot ℕ∞) :=
     (suppDim_structureModule (X := X)).trans_le hkd
@@ -371,7 +371,7 @@ namespace GlobalTheory
 
 theorem higherCohomology_bound_twist_neg_of_regular_section : ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) [Algebra k Γ(X, ⊤)], IsProjOver (strHom k (X := X)) → ∀ (d : ℕ) (L : LB X), L.IsLB → (∀ (E : X.Modules) [IsFiniteQC E], suppDim E ≤ (d : ℕ) → ∀ j, 0 < j → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist E (lbPow L m)) j ≤ C * (d * (m + 1) ^ (d - 1)))) → ∀ (F : X.Modules) [IsFiniteQC F], suppDim F ≤ (d + 1 : ℕ) → ∀ (B : LB X) (hB : B.IsLB) (s : B.Sec), Mono (cutHom F hB s) → (∀ i, 0 < i → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist F (lbPow L m)) i ≤ C * ((d + 1) * (m + 1) ^ d))) → ∀ i, 0 < i → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist (twistZ F B (-1)) (lbPow L m)) i ≤ C * ((d + 1) * (m + 1) ^ d)) := by
   intro k _ _ X _ hX d L hL ih F _ hF B hB s hs hb i hi
-  haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hX
+  have : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hX
   have hcut : suppDim (cut F hB s) ≤ (d : ℕ) := suppDim_cut_le F hB s hF
   obtain ⟨j, rfl⟩ : ∃ j, i = j + 1 := ⟨i - 1, by omega⟩
   have h1 : ∃ C : ℕ, ∀ m : ℕ,
@@ -531,8 +531,8 @@ namespace GlobalTheory.RRPush
 
 theorem hdim_pushforward_le : ∀ (k : Type) [Field k] [Infinite k] (d : ℕ), (∀ (Y : Scheme.{0}) [Algebra k Γ(Y, ⊤)], IsProjOver (strHom k (X := Y)) → ∀ N : LB Y, IsNef k N → ∀ (E : Y.Modules) [IsFiniteQC E], suppDim E ≤ (d : ℕ) → ∀ j, 0 < j → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist E (lbPow N m)) j ≤ C * (d * (m + 1) ^ (d - 1)))) → ∀ (X : Scheme.{0}) [Algebra k Γ(X, ⊤)], IsProjOver (strHom k (X := X)) → ∀ L : LB X, IsNef k L → ∀ Z : Closeds X, IsIrreducible (Z : Set X) → topologicalKrullDim (Z : Set X) ≤ (d + 1 : ℕ) → ∀ (G : (Scheme.IdealSheafData.vanishingIdeal Z).subscheme.Modules) [IsFiniteQC G], ∀ i, 0 < i → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist ((Scheme.Modules.pushforward (redι Z)).obj G) (lbPow L m)) i ≤ C * ((d + 1) * (m + 1) ^ d)) := by
   intro k _ _ d hY X _ hp L hL Z hZ hd G _ i hi
-  haveI := isIntegral_red hZ
-  letI := algebraΓAlong k (redι Z)
+  have := isIntegral_red hZ
+  let := algebraΓAlong k (redι Z)
   have hk := appTop_algebraMap_along k (redι Z)
   have hp' : IsProjOver (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by
     obtain ⟨n, e, he, hs⟩ := hp
@@ -565,9 +565,9 @@ namespace GlobalTheory
 
 theorem nefTwist_hdim_bound_succ : ∀ (k : Type) [Field k] [Infinite k] (d : ℕ), (∀ (Y : Scheme.{0}) [Algebra k Γ(Y, ⊤)], IsProjOver (strHom k (X := Y)) → ∀ N : LB Y, IsNef k N → ∀ (E : Y.Modules) [IsFiniteQC E], suppDim E ≤ (d : ℕ) → ∀ j, 0 < j → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist E (lbPow N m)) j ≤ C * (d * (m + 1) ^ (d - 1)))) → (∀ (Y : Scheme.{0}) [Algebra k Γ(Y, ⊤)], IsProjOver (strHom k (X := Y)) → ∀ N : LB Y, IsNef k N → ∀ (E : Y.Modules) [IsFiniteQC E], suppDim E ≤ (d + 1 : ℕ) → ∀ j, 0 < j → (∃ C : ℕ, ∀ m : ℕ, hdim k (twist E (lbPow N m)) j ≤ C * ((d + 1) * (m + 1) ^ d))) := by
   intro k _ _ d hd Y _ hY N hN E _ hsupp j hj
-  haveI hnoeth : AlgebraicGeometry.IsNoetherian Y := isNoetherian_of_isProjOver hY
+  have hnoeth : AlgebraicGeometry.IsNoetherian Y := isNoetherian_of_isProjOver hY
   obtain ⟨hprop, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hY
-  haveI := hprop
+  have := hprop
   have hfin : ∀ (F : Y.Modules) [IsFiniteQC F] (m : ℕ), FiniteCoh k (twist F (lbPow N m)) :=
     fun F _ m => IsAmpleLB.finiteCohTwists (algebraMap_eq_strHom k Y) F hA _ (isLB_lbPow hN.isLB m)
   let P : Y.Modules → Prop := fun F => suppDim F ≤ ((d + 1 : ℕ) : WithBot ℕ∞) →
@@ -577,22 +577,22 @@ theorem nefTwist_hdim_bound_succ : ∀ (k : Type) [Field k] [Infinite k] (d : �
     · intro F hF _ j _
       refine ⟨0, fun m => ?_⟩
       have hz : IsZero (twist F (lbPow N m)) := (isZero_twist_iff (isLB_lbPow hN.isLB m)).2 hF
-      haveI : Subsingleton (coh (twist F (lbPow N m)) j) := by
+      have : Subsingleton (coh (twist F (lbPow N m)) j) := by
         have := cohOn.subsingleton_of_isZero hz ⊤ j
         exact this
       rw [hdim_eq_zero_of_subsingleton]
       exact Nat.zero_le _
     · intro S hS h1 h3 hP1 hP3 hs2 j hj
-      haveI := h1
-      haveI := h3
-      haveI := hS.mono_f
-      haveI := hS.epi_g
+      have := h1
+      have := h3
+      have := hS.mono_f
+      have := hS.epi_g
       obtain ⟨C1, hC1⟩ := hP1 ((suppDim_le_of_mono S.f).trans hs2) j hj
       obtain ⟨C3, hC3⟩ := hP3 ((suppDim_le_of_epi S.g).trans hs2) j hj
       refine ⟨C1 + C3, fun m => ?_⟩
       have hL := isLB_lbPow hN.isLB m
-      haveI := Twist.preservesFiniteLimits_twistFunctor hL
-      haveI := Twist.preservesColimits_twistFunctor hL
+      have := Twist.preservesFiniteLimits_twistFunctor hL
+      have := Twist.preservesColimits_twistFunctor hL
       have hS' := hS.map_of_exact (twistFunctor (lbPow N m))
       have h := hdim₂_le k hS' j ((hfin S.X₁ m).finite j) ((hfin S.X₃ m).finite j)
       have e1 := hC1 m
@@ -602,19 +602,19 @@ theorem nefTwist_hdim_bound_succ : ∀ (k : Type) [Field k] [Infinite k] (d : �
         _ ≤ C1 * ((d + 1) * (m + 1) ^ d) + C3 * ((d + 1) * (m + 1) ^ d) := Nat.add_le_add e1 e3
         _ = (C1 + C3) * ((d + 1) * (m + 1) ^ d) := by ring
     · intro Z hirr IH G hG hs j hj
-      haveI := hG
+      have := hG
       have hsub : support ((Scheme.Modules.pushforward (redι Z)).obj G) ⊆ (Z : Set Y) := by
         refine (support_pushforward_subset_image_of_isClosedImmersion _ G).trans ?_
         rintro _ ⟨x, -, rfl⟩
         rw [← range_redι Z]
         exact ⟨x, rfl⟩
-      haveI : IsFiniteQC ((Scheme.Modules.pushforward (redι Z)).obj G) :=
+      have : IsFiniteQC ((Scheme.Modules.pushforward (redι Z)).obj G) :=
         ProperFinite.isFiniteQC_pushforward (redι Z) (IsAmpleLB.pull_of_isClosedImmersion hA (redι Z)) G
       by_cases hstrict : support ((Scheme.Modules.pushforward (redι Z)).obj G) ⊂ (Z : Set Y)
       · exact IH _ inferInstance hstrict hs j hj
       · have heq : support ((Scheme.Modules.pushforward (redι Z)).obj G) = (Z : Set Y) := by
           by_contra hne
-          exact hstrict (HasSubset.Subset.ssubset_of_ne hsub hne)
+          exact hstrict (LE.le.ssubset_of_ne hsub hne)
         have hgen := hirr.isGenericPoint_genericPoint_closure
         rw [Z.isClosed.closure_eq] at hgen
         obtain ⟨w, hcl⟩ : ∃ w : Y, closure ({w} : Set Y) = (Z : Set Y) := ⟨_, hgen⟩
@@ -652,16 +652,16 @@ theorem hdim_twist_nef_pow_le_of_pos (k : Type) [Field k] [Infinite k] (d : ℕ)
   | zero =>
     intro Y _ hY N hN E _ hE j hj
     refine ⟨0, fun m => ?_⟩
-    haveI := isNoetherian_of_isProjOver hY
+    have := isNoetherian_of_isProjOver hY
     have hE0 : suppDim E ≤ 0 := by exact_mod_cast hE
-    haveI := subsingleton_coh_of_suppDim_le_zero hE0 hj
+    have := subsingleton_coh_of_suppDim_le_zero hE0 hj
     rw [hdim_twist_of_suppDim_le_zero k hE0 (isLB_lbPow hN.isLB m), hdim_eq_zero_of_subsingleton]
     exact Nat.zero_le _
   | succ d ih => exact nefTwist_hdim_bound_succ k d ih
 
 theorem abs_factorial_mul_sections_sub_top_le : ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) [Algebra k Γ(X, ⊤)], IsProjOver (strHom k (X := X)) → ∀ (d : ℕ), topologicalKrullDim X ≤ (d : ℕ) → ∀ L : LB X, IsNef k L → ∃ C : ℕ, ∀ m : ℕ, |(d.factorial : ℤ) * (lbH0 k (lbPow L m) : ℤ) - topSelfIntersection k L d * (m : ℤ) ^ d| ≤ C * ((d : ℤ) * ((m : ℤ) + 1) ^ (d - 1)) := by
   intro k _ _ X _ hX d hd L hL
-  haveI := isNoetherian_of_isProjOver hX
+  have := isNoetherian_of_isProjOver hX
   obtain ⟨_, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hX
   have hLB := hL.isLB
   have hO : suppDim (structureModule X) ≤ ((d : ℕ) : WithBot ℕ∞) := by
@@ -676,7 +676,7 @@ theorem abs_factorial_mul_sections_sub_top_le : ∀ (k : Type) [Field k] [Infini
   set D : ℕ := d.factorial with hD
   refine ⟨K + D * ∑ i ∈ Finset.range d, Cf (i + 1), fun m => ?_⟩
   have hLm := isLB_lbPow hLB m
-  haveI : IsFiniteQC (twist (structureModule X) (lbPow L m)) := isFiniteQC_twist hLm
+  have : IsFiniteQC (twist (structureModule X) (lbPow L m)) := isFiniteQC_twist hLm
   have hvan : ∀ n : ℕ, d + 1 ≤ n → Subsingleton (coh (twist (structureModule X) (lbPow L m)) n) := by
     intro n hn
     refine IsAmpleLB.subsingleton_coh_of_suppDim_lt hA _ ?_

@@ -70,7 +70,7 @@ theorem sphere_zero_null (hSJ : SJStatement) {n a : ℕ} (g : MvPolynomial (Fin 
     rcases Nat.eq_zero_or_pos n with rfl | h
     · simp [EuclideanSpace.norm_eq] at hu
     · exact h
-  haveI : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
+  have : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
     Module.nontrivial_of_finrank_pos (R := ℂ) (by simp [hn])
   have h0 : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ 0 := by
     rw [Measure.toSphere_apply_univ]
@@ -79,7 +79,7 @@ theorem sphere_zero_null (hSJ : SJStatement) {n a : ℕ} (g : MvPolynomial (Fin 
   have htop : (volume : Measure (EuclideanSpace ℂ (Fin n))).toSphere Set.univ ≠ ⊤ := by
     rw [Measure.toSphere_apply_univ]
     exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) measure_ball_lt_top.ne
-  haveI : IsProbabilityMeasure (sphereProb n) :=
+  have : IsProbabilityMeasure (sphereProb n) :=
     ProbabilityTheory.cond_isProbabilityMeasure_of_finite h0 htop
   set μ := sphereProb n with hμ
   set Z := {z : UnitSphereC n | MvPolynomial.eval (spherePoint z) g = 0} with hZdef

@@ -216,7 +216,7 @@ private theorem approx {G H : Type*} [Group G] [TopologicalSpace G] [IsTopologic
     (Set.disjoint_singleton_left.2 fun h => h h1U)
   have hnn : ∀ g, 0 ≤ h g := fun g => (hrange g).1
   obtain ⟨c, hc⟩ : ∃ c : ℝ, c = ∫ g, h g ∂μ := ⟨_, rfl⟩
-  have hcpos : 0 < c := hc ▸ h.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hcs hnn
+  have hcpos : 0 < c := hc ▸ h.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs hnn
     (by rw [h1 (Set.mem_singleton 1)]; exact one_ne_zero)
   have hint : Integrable (fun g => h g) μ := h.continuous.integrable_of_hasCompactSupport hcs
   let f : CompactlySupportedContinuousMap G ℂ := ⟨⟨fun g => ((c⁻¹ * h g : ℝ) : ℂ), by fun_prop⟩,
@@ -286,7 +286,7 @@ private theorem fix_gen {G : Type*} [Group G] [TopologicalSpace G] [IsTopologica
 private theorem fix_avg (D : TypeDat K n) {F : G1 K n → ℂ} (hF : Continuous F) :
     D.Fix fun x => ∫ k, D.e k * F (x * k) ∂D.ν := by
   intro x
-  haveI := D.prob
+  have := D.prob
   exact fix_gen (typeFin D).1 D.supp D.inv D.cont D.idem hF x
 
 
@@ -295,8 +295,8 @@ private theorem fixed_of (D : TypeDat K n) {κ : Measure (archCompact K n)} {e :
     (hT : IsTy D κ e U₀) (he : IdemA κ e) (hac : Continuous (arc1 : archCompact K n → G1 K n)) (hcomp : CompactSpace (archCompact K n))
     {v : L2 μ} (hp : pOp μ κ e v = v) (hv : v ∈ fixF μ U₀) :
     ∫ k, D.e k • rightRegularRep (Gam K n) μ k v ∂D.ν = v := by
-  haveI := D.prob
-  haveI := he.haar.prob
+  have := D.prob
+  have := he.haar.prob
   have hU : IsCompact (D.U : Set (G1 K n)) := (typeFin D).1
   have hintD : Integrable (fun k => D.e k • rightRegularRep (Gam K n) μ k v) D.ν :=
     integ_of hU D.supp (D.cont.smul ((rightRegularRep (Gam K n) μ).continuous_orbit v))
@@ -333,10 +333,10 @@ private theorem rep_in {τ : Submodule ℂ (L2 μ)} (hcl : IsClosed (τ : Set (L
     (E : Submodule ℂ (G1 K n → ℂ)) [FiniteDimensional ℂ E] (hE : ∀ φ ∈ E, ∃ v : L2 μ, IsContRep μ v φ)
     (hmem : ∀ F : G1 K n → ℂ, Continuous F → (∃ v ∈ τ, Reps μ v F) → D.Fix F → F ∈ E) {v : L2 μ} (hv : v ∈ τ)
     (hPv : ∫ k, D.e k • rightRegularRep (Gam K n) μ k v ∂D.ν = v) : ∃ F ∈ E, IsContRep μ v F := by
-  haveI := D.prob
+  have := D.prob
   have hU : IsCompact (D.U : Set (G1 K n)) := (typeFin D).1
   obtain ⟨L, hL⟩ := lin_of (μ := μ) E hE
-  have hclosed : IsClosed (LinearMap.range L : Set (L2 μ)) := Submodule.closed_of_finiteDimensional _
+  have hclosed : IsClosed (LinearMap.range L : Set (L2 μ)) := Submodule.isClosed_of_finiteDimensional _
   suffices hs : v ∈ LinearMap.range L by
     obtain ⟨φ, rfl⟩ := hs
     exact ⟨φ.1, φ.2, hL φ⟩
@@ -390,7 +390,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.exists_i
   have hll := levLaws (K := K) 2 S
   have hac : Continuous (arc1 : archCompact K 2 → G1 K 2) := hll.2.2.2.1
   have hcp : CompactSpace (archCompact K 2) := hll.2.2.2.2.1
-  haveI := hp.haar.prob
+  have := hp.haar.prob
   have hrep : ∀ φ ∈ Xs μ τ κ p S, ∃ v : L2 μ, IsContRep μ v φ := fun φ hφ => by
     obtain ⟨hc, ⟨v, -, hr⟩, -, -⟩ := (hmem φ).1 hφ
     exact ⟨v, rep_of hc hr⟩
@@ -432,12 +432,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.exists_i
     obtain ⟨-, hDK, 𝒜, hfd, h𝒜, hsl⟩ := typeFin D
     have hO : ∃ O : Set (G1 K 2), IsOpen O ∧ ∀ g ∈ KG K 2, g ∈ D.U ↔ g ∈ O := by
       obtain ⟨O, hO, hUO⟩ := D.isOpen
-      exact ⟨(fun g : G1 K 2 => (g : AdelicGLn.AdelicGL K 2)) ⁻¹' O, hO.preimage continuous_subtype_val,
+      exact ⟨(fun g : G1 K 2 => (g : AdelicGLn.AdelicGL K 2)) ⁻¹' O, hO.preimage continuous_subtypeVal,
         fun g hg => ⟨fun h => ((hUO g).1 h).1, fun h => (hUO g).2 ⟨h, hg⟩⟩⟩
     obtain ⟨E, hEf, hE1, hE2⟩ := adm μ τ hτ D.U hDK hO 𝒜 hfd h𝒜
     have hinE : ∀ F : G1 K 2 → ℂ, Continuous F → (∃ v ∈ τ, Reps μ v F) → D.Fix F → F ∈ E :=
       fun F hc hr hf => hE2 F hc hr (hsl F hc hf)
-    haveI := hEf
+    have := hEf
     refine ⟨fun v hv hvf => ?_, E, hEf, fun φ hφ hF => ?_⟩
     · have hErep : ∀ φ ∈ E, ∃ v : L2 μ, IsContRep μ v φ := fun φ hφ => by
         obtain ⟨v, -, hr⟩ := (hE1 φ hφ).rep

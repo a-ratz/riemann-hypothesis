@@ -70,10 +70,10 @@ theorem exists_map_mul_right_eq_smul (P : Subgroup G) (hP : MeasurableSet (P : S
     (T : Set G) (hT : MeasurableSet T) (hT0 : ρ T ≠ 0) (hT1 : ρ T ≠ ⊤) (l : G) (hl : l ∈ P) :
     ∃ D : ENNReal, D ≠ 0 ∧ D ≠ ⊤ ∧ ρ.map (fun g => g * l) = D • ρ := by
   classical
-  have e : MeasurableEmbedding (Subtype.val : P → G) := MeasurableEmbedding.subtype_coe hP
+  have e : MeasurableEmbedding (Subtype.val : P → G) := MeasurableEmbedding.subtypeVal hP
   have : MeasurableMul₂ P := ⟨e.measurable_comp_iff.1
-    ((measurable_subtype_coe.comp measurable_fst).mul (measurable_subtype_coe.comp measurable_snd))⟩
-  have : MeasurableInv P := ⟨e.measurable_comp_iff.1 measurable_subtype_coe.inv⟩
+    ((measurable_subtypeVal.comp measurable_fst).mul (measurable_subtypeVal.comp measurable_snd))⟩
+  have : MeasurableInv P := ⟨e.measurable_comp_iff.1 measurable_subtypeVal.inv⟩
   set ρ' : Measure P := ρ.comap Subtype.val with hρ'
   have hmap : ρ'.map Subtype.val = ρ := by
     rw [hρ', e.map_comap, Subtype.range_coe_subtype, Measure.restrict_eq_self_of_ae_mem]
@@ -81,11 +81,11 @@ theorem exists_map_mul_right_eq_smul (P : Subgroup G) (hP : MeasurableSet (P : S
   have inj : ∀ α β : Measure P, α.map Subtype.val = β.map Subtype.val → α = β := fun α β h => by
     rw [← e.comap_map α, ← e.comap_map β, h]
   have : SigmaFinite ρ' :=
-    SigmaFinite.of_map ρ' measurable_subtype_coe.aemeasurable (by rw [hmap]; infer_instance)
+    SigmaFinite.of_map ρ' measurable_subtypeVal.aemeasurable (by rw [hmap]; infer_instance)
   have : ρ'.IsMulLeftInvariant := ⟨fun s => inj _ _ (by
-    rw [Measure.map_map measurable_subtype_coe (measurable_const_mul s)]
+    rw [Measure.map_map measurable_subtypeVal (measurable_const_mul s)]
     have hc : (Subtype.val ∘ fun x : P => s * x) = (fun g : G => (s : G) * g) ∘ Subtype.val := rfl
-    rw [hc, ← Measure.map_map (measurable_const_mul _) measurable_subtype_coe, hmap, hinv s s.2])⟩
+    rw [hc, ← Measure.map_map (measurable_const_mul _) measurable_subtypeVal, hmap, hinv s s.2])⟩
   let l' : P := ⟨l, hl⟩
   set ν' : Measure P := ρ'.map (fun x => x * l') with hν'
   have : ν'.IsMulLeftInvariant := ⟨fun s => by
@@ -105,9 +105,9 @@ theorem exists_map_mul_right_eq_smul (P : Subgroup G) (hP : MeasurableSet (P : S
   set D := ν' (Subtype.val ⁻¹' T) / ρ' (Subtype.val ⁻¹' T) with hD
   have hmapD : ρ.map (fun g => g * l) = D • ρ := by
     conv_lhs => rw [← hmap]
-    rw [Measure.map_map (measurable_mul_const l) measurable_subtype_coe]
+    rw [Measure.map_map (measurable_mul_const l) measurable_subtypeVal]
     have hc : ((fun g : G => g * l) ∘ Subtype.val) = Subtype.val ∘ (fun x : P => x * l') := rfl
-    rw [hc, ← Measure.map_map measurable_subtype_coe (measurable_mul_const l'), ← hν', hEq,
+    rw [hc, ← Measure.map_map measurable_subtypeVal (measurable_mul_const l'), ← hν', hEq,
       Measure.map_smul D e.measurable.aemeasurable, hmap]
   have huniv : (ρ.map fun g => g * l) Set.univ ≠ 0 := by
     rw [Measure.map_apply (measurable_mul_const l) MeasurableSet.univ, Set.preimage_univ]
@@ -115,7 +115,7 @@ theorem exists_map_mul_right_eq_smul (P : Subgroup G) (hP : MeasurableSet (P : S
   have hD0 : D ≠ 0 := by
     intro h
     apply huniv
-    rw [hmapD, h, zero_smul, Measure.coe_zero, Pi.zero_apply]
+    rw [hmapD, h, zero_smul, FunLike.coe_zero, Pi.zero_apply]
   have hD1 : D ≠ ⊤ := by
     intro h
     have : SigmaFinite (ρ.map fun g => g * l) :=
@@ -131,7 +131,7 @@ theorem exists_map_mul_right_eq_smul (P : Subgroup G) (hP : MeasurableSet (P : S
       exact measure_iUnion_null hne
     have hlt := measure_spanningSets_lt_top (ρ.map fun g => g * l) n
     set Sn := spanningSets (ρ.map fun g => g * l) n
-    rw [hmapD, Measure.smul_apply, smul_eq_mul, h] at hn hlt
+    rw [hmapD, smul_apply, smul_eq_mul, h] at hn hlt
     rcases eq_or_ne (ρ Sn) 0 with h' | h'
     · exact hn (by rw [h', mul_zero])
     · rw [ENNReal.top_mul h'] at hlt

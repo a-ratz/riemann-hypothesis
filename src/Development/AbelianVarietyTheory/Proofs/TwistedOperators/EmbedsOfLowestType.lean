@@ -91,7 +91,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
 theorem exists_eig (T : Module.End ℂ V) (S : Submodule ℂ V) [FiniteDimensional ℂ S] (hS : S ≠ ⊥)
     (hT : ∀ x ∈ S, T x ∈ S) : ∃ c : ℂ, ∃ v ∈ S, v ≠ 0 ∧ T v = c • v := by
-  haveI : Nontrivial S := Submodule.nontrivial_iff_ne_bot.mpr hS
+  have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.mpr hS
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (T.restrict hT)
   obtain ⟨v, hv⟩ := hc.exists_hasEigenvector
   refine ⟨c, v, v.2, fun h => hv.2 (Subtype.ext h), ?_⟩
@@ -116,7 +116,7 @@ theorem joint {ι : Type} (f : ι → Module.End ℂ V) (hc : ∀ i j x, f i (f 
         refine lt_of_le_of_ne inf_le_left fun h => hx' ?_
         rw [← h] at hx
         exact Module.End.mem_eigenspace_iff.mp hx.2
-      haveI : FiniteDimensional ℂ ↥(S ⊓ (f i).eigenspace c) := Submodule.finiteDimensional_of_le hlt.le
+      have : FiniteDimensional ℂ ↥(S ⊓ (f i).eigenspace c) := Submodule.finiteDimensional_of_le hlt.le
       obtain ⟨w, hw, hw0, hw'⟩ := ih _ (hn ▸ Submodule.finrank_lt_finrank_of_lt hlt) (S ⊓ (f i).eigenspace c)
         inferInstance rfl
         (fun h => hv0 (by
@@ -173,7 +173,7 @@ theorem eig_bound {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (�
       refine lt_of_le_of_ne inf_le_left fun h => hvv ?_
       rw [← h] at hv
       exact ((hmem v).mp hv).2
-    haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hlt.le
+    have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hlt.le
     have hst' : ∀ x ∈ S', C x ∈ S' := by
       intro x hx
       rw [hmem] at hx ⊢
@@ -244,7 +244,7 @@ theorem Rep.diag (h : Rep E) (a c d : Ix p q) (x : V) :
     · simp [h1, Ne.symm h1]
 
 theorem exists_pr (S : Submodule ℂ V) [FiniteDimensional ℂ S] : ∃ π : Module.End ℂ V, IsPr π S := by
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   exact ⟨(S.starProjection : V →L[ℂ] V), fun x => S.starProjection_apply_mem x,
     fun x => S.sub_starProjection_mem_orthogonal x⟩
 
@@ -317,7 +317,7 @@ theorem exists_hw (h : Rep E) (S : Submodule ℂ V) [FiniteDimensional ℂ S] (h
     rw [Module.End.mem_eigenspace_iff]
     exact Subtype.ext hc
   obtain ⟨c, ⟨v, hv, hv0, hc⟩, hmax⟩ := Set.exists_max_image _ Complex.re hfin (exists_eig T S hS hTS)
-  haveI : FiniteDimensional ℂ ↥(S ⊓ T.eigenspace c) := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ ↥(S ⊓ T.eigenspace c) := Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨w, hw, hw0, hw'⟩ := joint (fun a => E a a)
     (fun i j x => by
       rw [h.diag]
@@ -363,7 +363,7 @@ theorem Rep.CK_comm (h : Rep E) {c d : Ix p q} (hcd : sameBlock c d) (x : V) :
     E c d (CK E x) = CK E (E c d x) := by
   have := cas_comm (E c d) (Kc E) c d (fun a b => by
     by_cases hab : sameBlock a b
-    · simp only [Kc, hab, if_true, h.1]
+    · simp only [Kc, hab, ite_true, h.1]
       congr 1
       · split_ifs with h1 h2
         · rfl
@@ -373,7 +373,7 @@ theorem Rep.CK_comm (h : Rep E) {c d : Ix p q} (hcd : sameBlock c d) (x : V) :
         · rfl
         · subst h1; exact absurd (sb_trans hab hcd) h2
         · rfl
-    · simp only [Kc, hab, if_false, mul_zero, zero_mul, sub_self]
+    · simp only [Kc, hab, ite_false, mul_zero, zero_mul, sub_self]
       have e1 : (if d = a then (if sameBlock c b then E c b else 0) else 0) = 0 := by
         split_ifs with h1 h2
         · subst h1; exact absurd (sb_trans (sb_symm hcd) h2) hab
@@ -403,7 +403,7 @@ theorem Rep.EN (h : Rep E) {a b : Ix p q} (hab : sameBlock a b) (c d : Ix p q) (
       · subst h1; simp [Nc, sb_trans hcd hab]
       · rfl
     rw [e1, e2]; simp [Nc, hcd]
-  · simp only [Nc, hcd, if_false]
+  · simp only [Nc, hcd, ite_false]
     rw [h.app]
     congr 2
     · split_ifs with h1 h2
@@ -417,7 +417,7 @@ theorem Rep.EN (h : Rep E) {a b : Ix p q} (hab : sameBlock a b) (c d : Ix p q) (
 
 theorem Rep.adjK (h : Rep E) (a b : Ix p q) (x y : V) : ⟪Kc E a b x, y⟫_ℂ = ⟪x, Kc E b a y⟫_ℂ := by
   by_cases hab : sameBlock a b
-  · simp only [Kc, hab, sb_symm hab, if_true]; exact h.2.1 a b hab x y
+  · simp only [Kc, hab, sb_symm hab, ite_true]; exact h.2.1 a b hab x y
   · have : ¬ sameBlock b a := fun h' => hab (sb_symm h')
     simp [Kc, hab, this]
 
@@ -425,7 +425,7 @@ theorem Rep.adjN (h : Rep E) (a b : Ix p q) (x y : V) : ⟪Nc E a b x, y⟫_ℂ 
   by_cases hab : sameBlock a b
   · simp [Nc, hab, sb_symm hab]
   · have : ¬ sameBlock b a := fun h' => hab (sb_symm h')
-    simp only [Nc, hab, this, if_false]; exact h.2.2 a b hab x y
+    simp only [Nc, hab, this, ite_false]; exact h.2.2 a b hab x y
 
 theorem KSt.Kc {S : Submodule ℂ V} (hS : KSt E S) (a b : Ix p q) {x : V} (hx : x ∈ S) :
     Kc E a b x ∈ S := by
@@ -449,11 +449,11 @@ theorem Hw.CK (h : Rep E) {ν : Ix p q → ℝ} {y : V} (hy : Hw E ν y) :
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   by_cases hab : a = b
   · subst hab
-    simp only [Kc, sb_refl, if_true, hy.1, map_smul, smul_smul, sq, Complex.ofReal_mul]
+    simp only [Kc, sb_refl, ite_true, hy.1, map_smul, smul_smul, sq, Complex.ofReal_mul]
   by_cases h2 : posC a b
-  · simp only [Kc, posC_sb h2, sb_symm (posC_sb h2), if_true, hab, h2, if_false]
+  · simp only [Kc, posC_sb h2, sb_symm (posC_sb h2), ite_true, hab, h2, ite_false]
     rw [hy.brk h, hy.2 a b h2]; simp
-  · simp only [hab, h2, if_false]
+  · simp only [hab, h2, ite_false]
     by_cases h3 : sameBlock b a
     · rcases sb_tri h3 with h4 | h4 | h4
       · exact absurd h4.symm hab
@@ -488,7 +488,7 @@ theorem crude (h : Rep E) {ν : Ix p q → ℝ} {y : V} (hy : Hw E ν y) (hy0 : 
     · have h2 : ¬ sameBlock b a := fun h' => h1.1 (sb_symm h')
       have k1 := e2 a b
       have k2 := e2 b a
-      simp only [Nc, h1.1, h2, if_false] at k1 k2 ⊢
+      simp only [Nc, h1.1, h2, ite_false] at k1 k2 ⊢
       rw [hy.brk h, inner_add_right, Complex.add_re, k1, re_smul] at k2
       nlinarith [sq_nonneg ‖E b a y‖]
     · simp
@@ -615,7 +615,7 @@ theorem NN_mem (h : Rep E) {S : Submodule ℂ V} (hS : KSt E S) (a b c d : Ix p 
   · simp [Nc, hab]
   by_cases hcd : sameBlock c d
   · simp [Nc, hcd]
-  simp only [Nc, hab, hcd, if_false]
+  simp only [Nc, hab, hcd, ite_false]
   rw [h.app, add_sub_cancel_left]
   refine S.sub_mem ?_ ?_
   · split_ifs with h1
@@ -719,7 +719,7 @@ theorem dd_eq (h : Rep E) (a b c d : Ix p q) (x : V) :
     Nc E c d (Kc E a b x) - Kc E a b (Nc E c d x) = if sameBlock a b then
       (if d = a then Nc E c b x else 0) - (if b = c then Nc E a d x else 0) else 0 := by
   by_cases hab : sameBlock a b
-  · simp only [Kc, hab, if_true]
+  · simp only [Kc, hab, ite_true]
     rw [h.EN hab]; abel
   · simp [Kc, hab]
 
@@ -740,12 +740,12 @@ theorem Aterm (h : Rep E) (y : V) :
     split_ifs with h1 h2 h3 h3
     · subst h2 h3; simp [Nc, sb_refl]
     all_goals simp
-  simp only [e, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [e, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have e1 : ∀ c d : Ix p q, (∑ a, ∑ b, if d = a then (if sameBlock a b then (1 : ℝ) else 0) *
       ‖π (Nc E c b y)‖ ^ 2 else 0) = ∑ b, (if sameBlock d b then (1 : ℝ) else 0) * ‖π (Nc E c b y)‖ ^ 2 := by
     intro c d
     rw [Finset.sum_comm]
-    simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   simp only [e1]
   have e2 : ∑ c, ∑ d, ∑ b, (if sameBlock d b then (1 : ℝ) else 0) * ‖π (Nc E c b y)‖ ^ 2 =
       ∑ c, ∑ b, (∑ d, if sameBlock d b then (1 : ℝ) else 0) * ‖π (Nc E c b y)‖ ^ 2 := by
@@ -776,7 +776,7 @@ theorem Ph_CK (h : Rep E) (hU : KSt E U) (hπ : IsPr π U) (k : ℕ) (x y : V) :
   simp only [CK, LinearMap.sum_apply, Module.End.mul_apply, map_sum, inner_sum]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   by_cases hab : sameBlock a b
-  · simp only [Kc, hab, sb_symm hab, if_true]
+  · simp only [Kc, hab, sb_symm hab, ite_true]
     rw [Ph_inv h hU hπ (sb_symm hab)]
   · have : ¬ sameBlock b a := fun h' => hab (sb_symm h')
     simp [Kc, hab, this]
@@ -819,7 +819,7 @@ theorem hw_shift (h : Rep E) (hU : KSt E U) (hπ : IsPr π U) {Λ : Ix p q → �
     refine ⟨fun a => ?_, fun a b hab => ?_⟩
     · rw [← hπ.comm h hU (sb_refl a), ← map_smul]
       congr 1
-      simp only [Nc, hns, if_false]
+      simp only [Nc, hns, ite_false]
       rw [h.diag, hy.1, map_smul, ← add_smul]
       congr 1
       split_ifs <;> push_cast <;> ring
@@ -849,23 +849,23 @@ theorem hw_shift (h : Rep E) (hU : KSt E U) (hπ : IsPr π U) {Λ : Ix p q → �
 theorem level_one (h : Rep E) (hU : KSt E U) [FiniteDimensional ℂ U] (hπ : IsPr π U) {m : ℝ}
     (hb : ∀ ν, ∀ y ∈ Fil E U 2, Hw E ν y → Ph E π 1 y ≠ 0 → m ≤ casK ν) (y : V) :
     m * ‖Ph E π 1 y‖ ^ 2 ≤ (⟪Ph E π 1 y, Ph E π 1 (CK E y)⟫_ℂ).re := by
-  haveI := Fil_fd (E := E) (U := U) 2
+  have := Fil_fd (E := E) (U := U) 2
   have hker : KSt E (LinearMap.ker (Ph E π 1)) := by
     intro a b hab x hx
     rw [LinearMap.mem_ker] at hx ⊢
     rw [← inner_self_eq_zero (𝕜 := ℂ), Ph_inv h hU hπ hab, hx, inner_zero_left]
   set R := Fil E U 2 ⊓ LinearMap.ker (Ph E π 1) with hR
   have hRK : KSt E R := (Fil_K h hU 2).inf hker
-  haveI : FiniteDimensional ℂ R := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ R := Submodule.finiteDimensional_of_le inf_le_left
   set S := Fil E U 2 ⊓ Rᗮ with hS
   have hSK : KSt E S := (Fil_K h hU 2).inf (hRK.orth h)
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le inf_le_left
   have hdef : ∀ x ∈ S, Ph E π 1 x = 0 → x = 0 := fun x hx h0 => by
     have := (Submodule.mem_orthogonal _ _).mp hx.2 x ⟨hx.1, h0⟩
     rwa [inner_self_eq_zero] at this
   have key := eig_bound (Ph E π 1) (CK E) m (Ph_CK_symm h hU hπ 1) _ S inferInstance rfl
     (fun x hx => hSK.CK hx) hdef (fun t v hv hv0 hCv => by
-      haveI : FiniteDimensional ℂ ↥(S ⊓ (CK E).eigenspace t) :=
+      have : FiniteDimensional ℂ ↥(S ⊓ (CK E).eigenspace t) :=
         Submodule.finiteDimensional_of_le inf_le_left
       obtain ⟨ν, z, hz, hz0, hzw⟩ := exists_hw h (S ⊓ (CK E).eigenspace t)
         (fun h => hv0 (by
@@ -978,7 +978,7 @@ theorem hw_mem (h : Rep E) (hU : KSt E U) [FiniteDimensional ℂ U] (hπ : IsPr 
     (hb : ∀ ν, ∀ y ∈ Fil E U 2, Hw E ν y → Ph E π 1 y ≠ 0 → c0 + ((p + q : ℕ) : ℝ) + 2 ≤ casK ν)
     {μ : Ix p q → ℝ} {k : ℕ} (hk : casK μ < c0 + 2 * k) {x : V} (hx : Hw E μ x) {j : ℕ}
     (hj : x ∈ Fil E U j) : x ∈ Fil E U k := by
-  haveI := Fil_fd (E := E) (U := U) k
+  have := Fil_fd (E := E) (U := U) k
   obtain ⟨ρ, hρ⟩ := exists_pr (Fil E U k)
   have hz : Hw E μ (x - ρ x) := hx.sub (hρ.hw h (Fil_K h hU k) hx)
   have h2 : ∀ i, x - ρ x ∈ (Fil E U (k + i))ᗮ := by
@@ -1095,7 +1095,7 @@ theorem casK_eq (ν : Ix p q → ℝ) : casK ν = ∑ a, ν a ^ 2 + ∑ a, ν a 
     by_cases hab : a = b
     · subst hab; simp
     · simp [hab]
-  simp only [e, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [e, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem posC_iff {lam : Ix p q → ℚ} (hl : IsParam lam) {a b : Ix p q} :
     posC a b ↔ sameBlock a b ∧ lam b < lam a := by
@@ -1136,13 +1136,13 @@ theorem numeric {lam : Ix p q → ℚ} (hl : IsParam lam)
   have s1 : ∀ f : Ix p q → ℝ, ∑ a, ν a * f a = ∑ a, L a * f a - f c + f d := by
     intro f
     simp only [hν, add_mul, sub_mul, Finset.sum_add_distrib, Finset.sum_sub_distrib, ite_mul, one_mul,
-      zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, hL]
+      zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, hL]
   have s2 : ∑ a, ν a ^ 2 = ∑ a, L a ^ 2 - 2 * L c + 2 * L d + 2 := by
     have t1 := s1 ν
     have t2 := s1 L
     have t3 := hν c
     have t4 := hν d
-    simp only [hne, hne.symm, if_true, if_false] at t3 t4
+    simp only [hne, hne.symm, ite_true, ite_false] at t3 t4
     simp only [sq]
     have t5 : ∑ a, L a * ν a = ∑ a, ν a * L a := Finset.sum_congr rfl fun a _ => mul_comm _ _
     simp only [hL] at *
@@ -1253,8 +1253,8 @@ theorem main_inner {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     refine ⟨fun a b c d => ?_, fun a b hab x y => ?_, fun a b hab x y => ?_⟩
     · simp only [hE]
       rw [← hlie, Eab_mul, Eab_mul, map_sub, apply_ite act, apply_ite act, map_zero]
-    · simp only [hE]; rw [hadj, adj_Eab, if_pos hab]
-    · simp only [hE]; rw [hadj, adj_Eab, if_neg hab]; simp
+    · simp only [hE]; rw [hadj, adj_Eab, ite_eq_left hab]
+    · simp only [hE]; rw [hadj, adj_Eab, ite_eq_right hab]; simp
   have toHw : ∀ (μ : Ix p q → ℚ) (x : V), x ∈ hwSub act μ → Hw E (fun a => (μ a : ℝ)) x := by
     intro μ x hx
     simp only [hwSub, wtSub, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker,
@@ -1263,9 +1263,9 @@ theorem main_inner {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
   have hu' := toHw _ u hu
   have hU := Low_K h hu'
   obtain ⟨W, hW, huW, hWK⟩ := hfin
-  haveI : FiniteDimensional ℂ (Low E u) := Submodule.finiteDimensional_of_le
+  have : FiniteDimensional ℂ (Low E u) := Submodule.finiteDimensional_of_le
     (Low_le_K huW fun a b hab x hx => hWK _ (fun i j hij => by
-      rw [Eab, Matrix.single_apply, if_neg]
+      rw [Eab, Matrix.single_apply, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact hij hab) x hx)
   obtain ⟨π, hπ⟩ := exists_pr (Low E u)
@@ -1306,15 +1306,15 @@ theorem main_inner {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     by_cases hab : sameBlock a b
     · exact Submodule.mem_iSup_of_mem j (Fil_K h hU j a b hab y hj)
     · have := Fil_N a b hj
-      simp only [Nc, hab, if_false] at this
+      simp only [Nc, hab, ite_false] at this
       exact Submodule.mem_iSup_of_mem (j + 1) this
   refine ⟨fun Q hQ hst huQ => ?_, fun μ => ?_⟩
   · have horth : u ∈ Qᗮ := by
       rw [Submodule.mem_orthogonal]
       intro y hy
       obtain ⟨j, hj⟩ := hgen y (hQ hy)
-      haveI := Fil_fd (E := E) (U := Low E u) j
-      haveI : FiniteDimensional ℂ ↥(Q ⊓ Fil E (Low E u) j) :=
+      have := Fil_fd (E := E) (U := Low E u) j
+      have : FiniteDimensional ℂ ↥(Q ⊓ Fil E (Low E u) j) :=
         Submodule.finiteDimensional_of_le inf_le_right
       have hK : KSt E (Q ⊓ Fil E (Low E u) j) :=
         KSt.inf (fun a b _ x hx => hst _ x hx) (Fil_K h hU j)
@@ -1361,8 +1361,8 @@ theorem main : ∀ {p q : ℕ} {V : Type} [inst : AddCommGroup V] [inst_1 : Modu
         have := pos x h0
         rw [show ip x x = 0 from hx] at this
         simp at this }
-  letI : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ) (cd := core)
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ) (cd := core)
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
   exact main_inner act hlie hadj hl g1 g2 u hfin hu hcas
 
 end GlobalTheory.FiltrationEquivalenceRelation

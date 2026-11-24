@@ -265,7 +265,7 @@ theorem exists_mulEquiv (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
   have : CharZero Ω := j.charZero
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
   have hζ' := hζ.map_of_injective j.injective
   have ha : (g : Ω ≃ₐ[F] Ω) ζ = ζ ^ ((cycMod F Ω l r (g : G F Ω) : ZMod (l ^ r))).val :=
     cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (Ω ≃ₐ[F] Ω) Ω (g : Ω ≃ₐ[F] Ω)) ζ
@@ -326,7 +326,7 @@ theorem tate_p (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlg
 theorem exists_prime_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) :
     ∃ p : ℕ, p.Prime ∧ ((p : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   have hmax := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
   have hfin : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 F ⧸ v.asIdeal)
   refine ⟨p, CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) p, ?_⟩
@@ -336,7 +336,7 @@ theorem exists_prime_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpec
 theorem localTateDuality : ReciprocityTheory.Gal.LocalTateDuality := by
   intro F Ω _ _ _ _ _ l _ r M _ _ _ _ _ A rho v hr hA hc
   obtain ⟨p, hp, hpv⟩ := exists_prime_mem v
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨K, hK, e, he, he', hcyc⟩ := exists_mulEquiv F Ω p l v A hpv hA
   have hc' : ContAction (rho.comp e.symm.toMonoidHom) := hc.comp' he'
   have hχ : ((cycMod F Ω l r).comp (Dec (F := F) A).subtype).comp e.symm.toMonoidHom = cycP p K l r := by

@@ -86,7 +86,7 @@ theorem exists_mul_pow_eq_incl {M M' : AddSubmonoid (Gam n d)} (h : M ≤ M') (c
 
 theorem isLocalization_away : ∀ {K : Type} [Field K] {n d : ℕ} {M M' : AddSubmonoid (Gam n d)} (h : M ≤ M') (c : Gam n d) (hc : c ∈ M), -c ∈ M' → (∀ g ∈ M', ∃ N : ℕ, g + N • c ∈ M) → letI := (incl (K := K) h).toRingHom.toAlgebra; IsLocalization.Away (mon K c hc) (Rg K M') := by
   intro K _ n d M M' h c hc hneg hg
-  letI := (incl (K := K) h).toRingHom.toAlgebra
+  let := (incl (K := K) h).toRingHom.toAlgebra
   have hal : ∀ x, algebraMap (Rg K M) (Rg K M') x = incl h x := fun _ => rfl
   have hu : IsUnit (incl h (mon K c hc)) := by
     rw [incl_mon]

@@ -158,7 +158,7 @@ variable (R : Type) [CommRing R] in
 variable {R} in
 theorem _root_.GlobalTheory.EtC.GmStep.laurentMap_isIntegral {A B : Type} [CommRing A] [CommRing B] (f : A →+* B)
     (hf : f.IsIntegral) : (_root_.GlobalTheory.EtC.GmStep.laurentMap f).IsIntegral := by
-  letI := (_root_.GlobalTheory.EtC.GmStep.laurentMap f).toAlgebra
+  let := (_root_.GlobalTheory.EtC.GmStep.laurentMap f).toAlgebra
   intro x
   change IsIntegral (LaurentPolynomial A) x
   refine LaurentPolynomial.induction_on' x (fun p q hp hq => hp.add hq) (fun n b => ?_)
@@ -200,10 +200,10 @@ theorem _root_.GlobalTheory.EtC.GmStep.spec_integral_surj {A B : Type} [CommRing
     (φ : A →+* B) (hi : φ.IsIntegral) (hk : RingHom.ker φ ≤ nilradical A) :
     IsIntegralHom (Spec.map (CommRingCat.ofHom φ)) ∧ Surjective (Spec.map (CommRingCat.ofHom φ)) := by
   refine ⟨IsIntegralHom.SpecMap_iff.mpr hi, ⟨?_⟩⟩
-  letI := φ.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hi⟩
+  let := φ.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hi⟩
   intro P
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨Q, -, hQ, hQP⟩ := Ideal.exists_ideal_over_prime_of_isIntegral P.asIdeal (⊥ : Ideal B)
     (fun a ha => nilradical_le_prime P.asIdeal
       (hk (RingHom.mem_ker.mpr (Ideal.mem_bot.mp (Ideal.mem_comap.mp ha)))))

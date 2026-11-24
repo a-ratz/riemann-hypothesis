@@ -185,7 +185,7 @@ theorem invSqrtPowLeExp : GainSqrt := by
       Real.exp_log hk4pos]
   have heq : Real.exp (-4 * ((k:ℝ) * f * Real.log k)) = (((k:ℝ) ^ 4)⁻¹) ^ (k * f) := by
     rw [show -4 * ((k:ℝ) * f * Real.log k) = ((k * f : ℕ) : ℝ) * (-(4 * Real.log k)) by
-      push_cast; try ring, Real.exp_nat_mul, Real.exp_neg, e4]
+      push_cast; try ring, Real.exp_natCast_mul, Real.exp_neg, e4]
   rw [heq]
   exact pow_le_pow_left₀ (by positivity) hinv _
 
@@ -1020,7 +1020,7 @@ theorem massRatioBound : XiBound := by
     exact h3.trans (pow_le_pow_left₀ (Finset.prod_nonneg (fun j hj => (hzpos j (hB3 j hj)).le))
       (prod_zetaSeries_le _ hB3) f)
   have hexp : Real.exp 0.356 ^ f * Real.exp 0.356 ^ f ≤ Real.exp (0.72 * f) := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
     exact Real.exp_le_exp.mpr (by have := (Nat.cast_nonneg f : (0:ℝ) ≤ f); nlinarith)
   have key : ∀ (M PA PB LA LB σ : ℝ) (a : ℕ), 0 < PB → 0 < LB → 0 < σ →
       M * (PA ^ f * σ⁻¹ ^ a * LA) / (PB ^ f * σ⁻¹ ^ (a + 2) * LB) =

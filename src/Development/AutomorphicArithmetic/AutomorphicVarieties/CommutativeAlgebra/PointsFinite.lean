@@ -112,7 +112,7 @@ private theorem pf_spectral {O F K : Type} [CommRing O] [NontriviallyNormedField
     [CompleteSpace F] [Algebra O F] [Field K] [Algebra O K] [Algebra F K] [IsScalarTower O F K]
     [Algebra.IsAlgebraic F K] (h1 : ∀ x : F, ‖x‖ ≤ 1 ↔ x ∈ (algebraMap O F).range) :
     ∃ w : AbsoluteValue K ℝ, ∀ x, w x ≤ 1 → IsIntegral O x := by
-  letI : NormedField K := spectralNorm.normedField F K
+  let : NormedField K := spectralNorm.normedField F K
   refine ⟨NormedField.toAbsoluteValue K, fun y hy => ?_⟩
   have hyK : IsIntegral F y := Algebra.IsIntegral.isIntegral y
   have h : spectralNorm F K y ≤ 1 := hy
@@ -133,18 +133,18 @@ private theorem pf_abs (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuati
   have hpm : p ∈ maximalIdeal O := hmax ▸ Ideal.mem_span_singleton_self p
   obtain ⟨w, hw, hw1, hwa⟩ := GlobalTheory.exists_absoluteValue_of_isDiscreteValuationRing O (FractionRing O)
     hp.ne_zero hpm (r := 1 / 2) (by norm_num) (by norm_num)
-  letI : NontriviallyNormedField (FractionRing O) :=
+  let : NontriviallyNormedField (FractionRing O) :=
     { w.toNormedField with
       non_trivial := ⟨(algebraMap O (FractionRing O) p)⁻¹, by
         change 1 < w (algebraMap O (FractionRing O) p)⁻¹
         rw [map_inv₀, hwa]
         norm_num⟩ }
-  haveI : IsUltrametricDist (FractionRing O) := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm hw
-  haveI : IsPrecomplete (Ideal.span {p}) O := hmax ▸ inferInstance
-  haveI : CompleteSpace (FractionRing O) := pf_complete p hw1 hwa
-  letI : Algebra (FractionRing O) K := FractionRing.liftAlgebra O K
-  haveI : IsScalarTower O (FractionRing O) K := FractionRing.isScalarTower_liftAlgebra O K
-  haveI : Algebra.IsAlgebraic (FractionRing O) K := Algebra.IsAlgebraic.extendScalars
+  have : IsUltrametricDist (FractionRing O) := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm hw
+  have : IsPrecomplete (Ideal.span {p}) O := hmax ▸ inferInstance
+  have : CompleteSpace (FractionRing O) := pf_complete p hw1 hwa
+  let : Algebra (FractionRing O) K := FractionRing.liftAlgebra O K
+  have : IsScalarTower O (FractionRing O) K := FractionRing.isScalarTower_liftAlgebra O K
+  have : Algebra.IsAlgebraic (FractionRing O) K := Algebra.IsAlgebraic.extendScalars
     (IsFractionRing.injective O (FractionRing O))
   exact pf_spectral (F := FractionRing O) hw1
 
@@ -158,7 +158,7 @@ private theorem pf_unit {O X σ : Type} [CommRing O] [AddCommGroup X] (wt : σ �
   · rw [← hG, coeff_mul, coeff_mul]
     refine Finset.sum_congr rfl fun q hq => ?_
     by_cases h1 : Finsupp.weight wt q.1 = 0
-    · rw [coeff_wcomp, if_pos]
+    · rw [coeff_wcomp, ite_eq_left]
       rwa [← Finset.HasAntidiagonal.mem_antidiagonal.1 hq, map_add, h1, zero_add] at hn
     · rw [hU _ h1, zero_mul, zero_mul]
   · rw [one_mem_wtPart O wt n hn]
@@ -228,12 +228,12 @@ private theorem pf_nonint (n : W.σ →₀ ℕ) (hn : n ≠ 0) (h0 : Finsupp.wei
     rw [map_finsuppProd]; simp only [map_pow]
   rw [hu] at ha hpa
   set u : W.A := n.prod fun s k => W.zA s ^ k with hudef
-  letI : Invertible (ξ u)⁻¹ := invertibleOfNonzero (inv_ne_zero ha)
+  let : Invertible (ξ u)⁻¹ := invertibleOfNonzero (inv_ne_zero ha)
   have h1 : Polynomial.aeval (ξ u) p.reverse = 0 := by
     have := (Polynomial.eval₂_reverse_eq_zero_iff (algebraMap O K) (ξ u)⁻¹ p).2 hpa
     rwa [invOf_eq_inv, inv_inv] at this
   have hU : (monomial n 1 : MvPowerSeries W.σ O) ∈ wtPart O W.wt 0 := fun d hd => by
-    rw [coeff_monomial, if_neg]
+    rw [coeff_monomial, ite_eq_right]
     rintro rfl
     exact hd h0
   have hU' : Polynomial.aeval (monomial n 1 : MvPowerSeries W.σ O) p.reverse ∈ wtPart O W.wt 0 := by
@@ -244,7 +244,7 @@ private theorem pf_nonint (n : W.σ →₀ ℕ) (hn : n ≠ 0) (h0 : Finsupp.wei
     rw [isUnit_iff_constantCoeff, Polynomial.map_aeval_eq_aeval_map (φ := RingHom.id O) (ψ := constantCoeff)
       (by ext a; simp [MvPowerSeries.algebraMap_apply])]
     have : constantCoeff (monomial n 1 : MvPowerSeries W.σ O) = 0 := by
-      rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg hn.symm]
+      rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right hn.symm]
     rw [this, Polynomial.map_id, ← Polynomial.coeff_zero_eq_aeval_zero, Polynomial.coeff_zero_reverse, hp.leadingCoeff]
     exact isUnit_one
   obtain ⟨G, hG, hG1⟩ := pf_unit W.wt hU' hunit
@@ -311,7 +311,7 @@ private theorem pf_agree (hι : Function.Injective ι)
       obtain ⟨c, hc, hc'⟩ := pf_step W ξ ι t g hg (J ^ N) J {n | Finsupp.weight W.wt n = 0 ∧ n ≠ 0} 0
         (fun n hn => hn.1) (fun n hn => by
           have := GlobalTheory.algHom_sub_constantCoeff_mem g hJ (monomial n 1)
-          rwa [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg hn.2.symm, map_zero,
+          rwa [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right hn.2.symm, map_zero,
             sub_zero] at this) ih
         (b - algebraMap O _ (constantCoeff b)) (fun n hn => by
           rw [map_sub, MvPowerSeries.algebraMap_apply, coeff_C]
@@ -354,7 +354,7 @@ private theorem pf_factor [DecidableEq X] (hι : Function.Injective ι)
     intro F
     have : (Ideal.quotientKerAlgEquivOfSurjective W.surj).symm (W.π F) = Ideal.Quotient.mk _ F := by
       rw [AlgEquiv.symm_apply_eq]; rfl
-    simp only [f, AlgHom.comp_apply, AlgEquiv.coe_algHom]
+    simp only [f, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
     erw [this]
     rfl
   refine ⟨f, AlgHom.ext fun x => ?_⟩
@@ -389,13 +389,13 @@ theorem UpperTheory.V.Alg.points_finite :
       rw [map_inv₀]
       exact inv_le_one_of_one_le₀ (not_lt.1 h)
   have hwp : w (algebraMap O K p) < 1 := hlt _ fun _ h => by
-    haveI : IsLocalHom (algebraMap O (integralClosure O K)) := inferInstance
+    have : IsLocalHom (algebraMap O (integralClosure O K)) := inferInstance
     refine hp.not_isUnit (IsLocalHom.map_nonunit (f := algebraMap O (integralClosure O K)) p
       (IsUnit.of_mul_eq_one (⟨_, h⟩ : integralClosure O K) (Subtype.ext ?_)))
     exact mul_inv_cancel₀ hp0
   obtain ⟨t, ht⟩ : ∃ t : Multiplicative X →* Kˣ,
       ∀ s, w ((t (Multiplicative.ofAdd (W.wt s)) : K) * ξ (W.zA s)) < 1 := by
-    letI : NormedField K := w.toNormedField
+    let : NormedField K := w.toNormedField
     exact carver W.σ X W.wt K (fun s => ξ (W.zA s)) ⟨_, hp0, hwp.ne⟩
       fun n hn h0 => hlt _ (pf_nonint W ξ n hn h0)
   set y : W.σ → K := fun s => (t (Multiplicative.ofAdd (W.wt s)) : K) * ξ (W.zA s) with hy
@@ -416,13 +416,13 @@ theorem UpperTheory.V.Alg.points_finite :
     · exact hw _ (ht s).le
     · exact he s
   let B : Subalgebra O K := Algebra.adjoin O G
-  haveI : Module.Finite O B := Algebra.finite_adjoin_of_finite_of_isIntegral hG hGi
-  haveI : IsNoetherianRing B := IsNoetherianRing.of_finite O B
-  haveI := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal O) B
+  have : Module.Finite O B := Algebra.finite_adjoin_of_finite_of_isIntegral hG hGi
+  have : IsNoetherianRing B := IsNoetherianRing.of_finite O B
+  have := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal O) B
   let J : Ideal B := ((maximalIdeal O).map (algebraMap O B)).radical
   obtain ⟨N, hN⟩ := Ideal.exists_radical_pow_le_of_fg ((maximalIdeal O).map (algebraMap O B))
     (IsNoetherian.noetherian _)
-  haveI : IsAdicComplete J B :=
+  have : IsAdicComplete J B :=
     { toIsHausdorff := GlobalTheory.NilpotentEval.isHausdorff_of_pow_le hN
       toIsPrecomplete := GlobalTheory.NilpotentEval.isPrecomplete_of_pow_le hN Ideal.le_radical }
   let yB : W.σ → B := fun s => ⟨y s, Algebra.subset_adjoin (Or.inl (Or.inr ⟨s, rfl⟩))⟩

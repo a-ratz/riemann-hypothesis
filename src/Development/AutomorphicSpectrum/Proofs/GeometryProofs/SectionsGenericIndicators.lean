@@ -161,7 +161,7 @@ theorem sections_generic_indicators : ∀ (E : Type) [Field E] [NumberField E] [
     refine sub_eq_zero.1 (secZ_eq_zero_of_generic h (Submodule.sub_mem _ hf hg) fun Z => ?_)
     rw [← evL_apply, map_sub, evL_apply, evL_apply, hv Z, sub_self]
   have hfin : Finite (Comp Xo c) := Formalism.L2.Pj.CompFin.finite_comp Xo c
-  letI := Fintype.ofFinite (Comp Xo c)
+  let := Fintype.ofFinite (Comp Xo c)
   classical
   refine ⟨fun a f hf h0 => secZ_eq_zero_of_generic h hf h0, fun a Z f hf h0 => ?_,
     fun a b f hf g hg => secZ_mul hf hg, fun Z => ?_, fun Z Z' hne => ?_, ?_⟩

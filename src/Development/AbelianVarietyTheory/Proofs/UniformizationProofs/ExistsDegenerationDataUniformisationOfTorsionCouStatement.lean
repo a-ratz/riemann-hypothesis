@@ -821,9 +821,9 @@ theorem map_base_eq_bot {R : Type} [CommRing R] (I : Ideal R) {Z : Scheme.{0}}
 
 theorem exists_order_translates : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], CDVR V → ∀ (D : DegPre V) (k : ℕ) (f₀ : SecBT D (𝟙_ _) k 0), (∃ j, f₀.f j ≠ 0) → ∃ m : ℕ, ∀ χ : D.X, ∃ (z : (𝟙_ _ ⊗ D.P.A).left) (J : _), Good D.P.L z J ∧ sval f₀ (lift (fst (𝟙_ _) D.P.A) (snd (𝟙_ _) D.P.A * cT D _ χ)).left z J ∉ (IsLocalRing.maximalIdeal V ^ (m + 1)).map (((𝟙_ _ ⊗ D.P.A).left.presheaf.germ ⊤ z trivial).hom.comp (((𝟙_ _ ⊗ D.P.A).hom.appTop.hom).comp (Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom)) := by
   intro V _ _ _ hV D k f₀ ⟨j, hj⟩
-  haveI := hV.1
-  haveI := D.P.isAb.smooth
-  haveI := D.P.isAb.geomConnected
+  have := hV.1
+  have := D.P.isAb.smooth
+  have := D.P.isAb.geomConnected
   haveI : IsAffine (𝟙_ (Over (Spec (CommRingCat.of V)))).left :=
     inferInstanceAs (IsAffine (Spec (CommRingCat.of V)))
   haveI : IsNoetherianRing Γ((𝟙_ (Over (Spec (CommRingCat.of V)))).left, ⊤) :=
@@ -961,7 +961,7 @@ namespace GlobalTheory
 
 theorem psi_tendsto_zero : (AllPre fun {V} _ _ _ {D} {A} {G} _ _ U => ∀ θ f, U.Theta θ f → (∃ j, (f 0).f j ≠ 0) → PsiRel D (𝟙_ _) f → ∀ n : ℕ, {χ : D.X | ¬ D.PsiIn χ (IsLocalRing.maximalIdeal V ^ n)}.Finite) := by
   intro V _ _ _ hV D A G _ _ U θ f hθ h0 hR n
-  haveI := hV.1
+  have := hV.1
   obtain ⟨ga, a, hS⟩ := exists_psiScal V D
   obtain ⟨m, hm⟩ := exists_order_translates V hV D 1 (f 0) h0
   obtain ⟨s, hs⟩ := LevelVanishing.main V hV D A G U 1 θ f hθ.1 (m + n)
@@ -979,8 +979,8 @@ theorem psi_tendsto_zero : (AllPre fun {V} _ _ _ {D} {A} {G} _ _ U => ∀ θ f, 
     · exact toUnit_unique _ _
     · simp
   have e₂ : toUnit (𝟙_ _ ⊗ D.P.A) = fst (𝟙_ _) D.P.A := toUnit_unique _ _
-  haveI : Flat D.P.A.hom := by
-    haveI := D.P.isAb.smooth
+  have : Flat D.P.A.hom := by
+    have := D.P.isAb.smooth
     infer_instance
   haveI : Flat (𝟙_ _ ⊗ D.P.A).hom := by
     have h : (𝟙_ _ ⊗ D.P.A).hom = (λ_ D.P.A).hom.left ≫ D.P.A.hom := (Over.w _).symm

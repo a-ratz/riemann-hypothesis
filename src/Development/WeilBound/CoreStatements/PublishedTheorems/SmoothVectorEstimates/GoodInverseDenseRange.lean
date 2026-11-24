@@ -63,7 +63,7 @@ theorem goodInv_field (K : Type) [Field K] [TopologicalSpace K] [ContinuousInv�
 theorem goodInv_pi {ι : Type} [Fintype ι] {K : ι → Type} [∀ i, CommRing (K i)] [∀ i, TopologicalSpace (K i)]
     (h : ∀ i, GoodInv (K i)) : GoodInv (∀ i, K i) := by
   have hU : {x : ∀ i, K i | IsUnit x} = ⋂ i, (fun x : ∀ i, K i => x i) ⁻¹' {y | IsUnit y} := by
-    ext x; simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]; exact Pi.isUnit_iff
+    ext x; simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]; exact Pi.isUnit_iff
   have hO : IsOpen {x : ∀ i, K i | IsUnit x} := by
     rw [hU]; exact isOpen_iInter_of_finite fun i => (h i).1.preimage (continuous_apply i)
   refine ⟨hO, fun x hx => ?_⟩

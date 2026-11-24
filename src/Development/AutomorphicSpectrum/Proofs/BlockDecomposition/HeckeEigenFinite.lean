@@ -55,7 +55,7 @@ theorem hkE_fin : HkEFin := by
   · rfl
   all_goals
     intro q hq
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h
     rw [Function.mem_support] at hq
     exact hq (by simp [h])

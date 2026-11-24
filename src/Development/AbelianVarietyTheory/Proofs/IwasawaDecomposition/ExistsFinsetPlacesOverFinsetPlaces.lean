@@ -63,7 +63,7 @@ theorem finite_fibre (E K : Type) [Field E] [NumberField E] [Field K] [NumberFie
     Ideal.map_ne_bot_of_ne_bot v.ne_bot
   refine (Ideal.finite_factors hne).subset ?_
   intro w hw
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, hw]
 
 theorem places_over_finset (E K : Type) [Field E] [NumberField E] [Field K] [NumberField K] [Algebra E K]

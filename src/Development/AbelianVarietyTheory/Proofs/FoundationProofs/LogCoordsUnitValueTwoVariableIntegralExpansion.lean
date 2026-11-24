@@ -202,20 +202,20 @@ end Coef
 
 theorem emb_int (L : ℕ) (ι : On p L →ₐ[O0 p] Ω) (z : On p L) : IsInt (p := p) (ι z) := by
   obtain ⟨b, -⟩ := GlobalTheory.K5.OnFree.on_free p L
-  haveI : Module.Finite (O0 p) (On p L) := Module.Finite.of_basis b
-  haveI : Algebra.IsIntegral (O0 p) (On p L) := Algebra.IsIntegral.of_finite _ _
+  have : Module.Finite (O0 p) (On p L) := Module.Finite.of_basis b
+  have : Algebra.IsIntegral (O0 p) (On p L) := Algebra.IsIntegral.of_finite _ _
   exact IsIntegral.map ι (Algebra.IsIntegral.isIntegral z)
 
 theorem isUnit_of_inv {L : ℕ} (ι : On p L →ₐ[O0 p] Ω) (hι : Function.Injective ι) (w : On p L) (h0 : ι w ≠ 0)
     (hi : IsInt (p := p) (ι w)⁻¹) : IsUnit w := by
-  letI : Algebra (On p L) Ω := ι.toRingHom.toAlgebra
-  haveI : IsScalarTower (O0 p) (On p L) Ω := IsScalarTower.of_algebraMap_eq fun x => (ι.commutes x).symm
+  let : Algebra (On p L) Ω := ι.toRingHom.toAlgebra
+  have : IsScalarTower (O0 p) (On p L) Ω := IsScalarTower.of_algebraMap_eq fun x => (ι.commutes x).symm
   have hi' : IsIntegral (On p L) (ι w)⁻¹ := IsIntegral.tower_top hi
-  haveI : FaithfulSMul (On p L) (integralClosure (On p L) Ω) :=
+  have : FaithfulSMul (On p L) (integralClosure (On p L) Ω) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 fun a b hab => hι (congrArg Subtype.val hab)
   have hu : IsUnit (algebraMap (On p L) (integralClosure (On p L) Ω) w) :=
     IsUnit.of_mul_eq_one ⟨_, hi'⟩ (Subtype.ext (mul_inv_cancel₀ h0))
-  haveI : IsLocalHom (algebraMap (On p L) (integralClosure (On p L) Ω)) :=
+  have : IsLocalHom (algebraMap (On p L) (integralClosure (On p L) Ω)) :=
     Algebra.IsIntegral.isLocalHom _ _
   exact isUnit_of_map_unit _ _ hu
 
@@ -244,11 +244,11 @@ theorem coeff_mul_finsum (C D : HahnSeries ℤ Ω) (r : ℤ) :
     (s := (Finset.addAntidiagonal C.isPWO_support D.isPWO_support r).image Prod.fst)]
   · rw [Finset.sum_image]
     · refine Finset.sum_congr rfl fun ij hij => ?_
-      replace hij := Finset.mem_addAntidiagonal.1 hij
+      replace hij := Finset.mem_antidiagonal.1 hij
       rw [← hij.2.2, add_sub_cancel_left]
     · intro a ha b hb hab
-      replace ha := Finset.mem_addAntidiagonal.1 (Finset.mem_coe.1 ha)
-      replace hb := Finset.mem_addAntidiagonal.1 (Finset.mem_coe.1 hb)
+      replace ha := Finset.mem_antidiagonal.1 (Finset.mem_coe.1 ha)
+      replace hb := Finset.mem_antidiagonal.1 (Finset.mem_coe.1 hb)
       refine Prod.ext hab ?_
       have := ha.2.2.trans hb.2.2.symm
       rw [hab] at this
@@ -256,7 +256,7 @@ theorem coeff_mul_finsum (C D : HahnSeries ℤ Ω) (r : ℤ) :
   · intro i hi
     rw [Function.mem_support] at hi
     rw [Finset.mem_coe, Finset.mem_image]
-    exact ⟨(i, r - i), Finset.mem_addAntidiagonal.2 ⟨left_ne_zero_of_mul hi, right_ne_zero_of_mul hi, by simp⟩, rfl⟩
+    exact ⟨(i, r - i), Finset.mem_antidiagonal.2 ⟨left_ne_zero_of_mul hi, right_ne_zero_of_mul hi, by simp⟩, rfl⟩
 
 def ofInt (f : ℤ → ℤ) (r0 : ℤ) (hf : ∀ r, r < r0 → f r = 0) : Lau p where
   coeff r := (f r : ℤ_[p])
@@ -315,7 +315,7 @@ theorem psi_part {T : GlobalTheory.K5.Tower p Ω} {n : ℕ} {ψ : O0 p →+* Ω}
     exact this
   have hpos : (0 : ℤ) < (p : ℤ) ^ n := pow_pos (by exact_mod_cast hp.out.pos) n
   have hs := hψ.sub (EvTwist.contr ((p : ℤ) ^ n) hpos B) B (fun _ => rfl) (fun r hr => by
-    rw [hBc, hc, EvTwist.part_coeff, if_neg]
+    rw [hBc, hc, EvTwist.part_coeff, ite_eq_right]
     intro h
     apply hr
     have := Int.emod_add_mul_ediv (r + i) ((p ^ n : ℕ) : ℤ)

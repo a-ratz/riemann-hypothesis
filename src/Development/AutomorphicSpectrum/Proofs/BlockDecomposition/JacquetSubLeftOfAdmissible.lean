@@ -310,7 +310,7 @@ theorem nontrivial_jacquet_top {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ
     rw [Subgroup.mem_bot] at hg
     subst hg
     simp
-  haveI : Nontrivial V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible hπ
+  have : Nontrivial V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible hπ
   rw [hbot]
   show Nontrivial (V ⧸ twKer π ⊥ 1)
   rw [hker]
@@ -358,7 +358,7 @@ theorem exists_quotient_jac₂ (hA : GlobalTheory.Published.IrreducibleAdmissibl
         exact (congrArg B e1).trans e2⟩
   have hφ : Function.Surjective φ :=
     B.toLinearEquiv.surjective.comp (E.toLinearEquiv.surjective.comp hq)
-  haveI : Nontrivial (s true).V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible (s true).irr
+  have : Nontrivial (s true).V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible (s true).irr
   exact ⟨a, b, h, s false, s true, ha,
     isCuspidal_of_jacquet_min_left π h hmin (s false).ρ (s true).ρ (s false).smooth φ hφ, φ, hφ⟩
 
@@ -387,8 +387,8 @@ theorem exists_embedding {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     ∃ (y : Fin 2 → IrrGL (k := k)) (hd : ∑ a, (y a).1 = n), (y 0).IsCusp ∧
       ∃ f : π.IntertwiningMap (prodIrr y hd), Function.Injective f := by
   obtain ⟨a, b, rfl, s, t, ha, hc, φ, hφ⟩ := exists_quotient_jac₂ hA π hs hi hn
-  haveI : Nontrivial s.V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible s.irr
-  haveI : Nontrivial t.V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible t.irr
+  have : Nontrivial s.V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible s.irr
+  have : Nontrivial t.V := GlobalTheory.JacFactor.nontrivial_of_isIrreducible t.irr
   have hφ0 : φ ≠ 0 := by
     rintro rfl
     obtain ⟨w, hw⟩ := exists_ne (0 : s.V)

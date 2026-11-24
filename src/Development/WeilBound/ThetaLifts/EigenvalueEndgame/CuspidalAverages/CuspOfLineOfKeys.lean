@@ -154,7 +154,7 @@ theorem Ctx.int_zero (C : Ctx σ W) {U : Submodule E (Fin d → E)} {f : UA σ W
     ∫ s in 𝓕, f (s.1 * x) ∂μ = 0 := by
   obtain ⟨a, b⟩ := (C.good U).fin μ 𝓕 h1 h2
   have := h ((μ 𝓕)⁻¹ • μ) 𝓕 (Measure.IsHaarMeasure.smul μ (ENNReal.inv_ne_zero.2 b.ne) (ENNReal.inv_ne_top.2 a))
-    (h2.mono Measure.smul_absolutelyContinuous) (by rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel a b.ne]) x
+    (h2.mono Measure.smul_absolutelyContinuous) (by rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel a b.ne]) x
   rw [Measure.restrict_smul, integral_smul_measure] at this
   exact (smul_eq_zero.1 this.symm).resolve_left (ENNReal.toReal_ne_zero.2 ⟨ENNReal.inv_ne_zero.2 b.ne, ENNReal.inv_ne_top.2 a⟩)
 
@@ -297,7 +297,7 @@ theorem isWh : IsWh W u (chi C ψ) (wh C h ct ψ) := by
   · rw [wh, H.add f f' a b]; exact congrFun (whit_add' hψ _ h0 (pre f a) (pre f' b)) 1
   · rw [wh, H.smul]; exact congrFun (whit_smul _ c _) 1
   · have hd : IsUnit g := (Matrix.isUnit_iff_isUnit_det g).2 (by
-      rw [Matrix.det_of_upperTriangular (fun a b q => g1 a b q), Finset.prod_eq_one fun a _ => g2 a]; exact isUnit_one)
+      rw [Matrix.det_of_isUpperTriangular (fun a b q => g1 a b q), Finset.prod_eq_one fun a _ => g2 a]; exact isUnit_one)
     let g' : GA E j := Matrix.GeneralLinearGroup.map C.ad.toRingHom hd.unit
     have e1 : th C j g' = hd.unit := Units.ext (Matrix.ext fun a b => C.ad.symm_apply_apply _)
     have n := par_mem h (g := hd.unit) e (mid_of_move h mv)
@@ -330,16 +330,16 @@ theorem wh_two {u u' : Matrix (Fin d) (Fin 2) E} (h : Fr (σ : E →+* E) W.J u 
     (K : ∀ x ∈ V, ∃ c : ℂ, ∀ i, wh C h ct ψ (fun z => f (z * (lev h (b i) * x))) = c * y i) : wh C h ct ψ (fun z => f (z * x₀)) = 0 := by
   obtain ⟨l1, l2, hC, -⟩ := ae_facts C.cm
   obtain ⟨s1, s2, s3⟩ := sl_facts (R := AE F E)
-  letI : MeasurableSpace SL(2, AE F E) := borel _
-  haveI : BorelSpace SL(2, AE F E) := ⟨rfl⟩
-  letI : MeasurableSpace (UnipotentBlockColumnIndex 2 1 1 → Ad E) := borel _
-  haveI : BorelSpace (UnipotentBlockColumnIndex 2 1 1 → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace SL(2, AE F E) := borel _
+  have : BorelSpace SL(2, AE F E) := ⟨rfl⟩
+  let : MeasurableSpace (UnipotentBlockColumnIndex 2 1 1 → Ad E) := borel _
+  have : BorelSpace (UnipotentBlockColumnIndex 2 1 1 → Ad E) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, m1, m2, m3⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one _ _ (isCoLat_ratV E (UnipotentBlockColumnIndex 2 1 1))
-  haveI : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by simpa using m3⟩
+  have : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by simpa using m3⟩
   have av : ∀ Φ, Per (ratV E (UnipotentBlockColumnIndex 2 1 1)) Φ → avg (ratV E (UnipotentBlockColumnIndex 2 1 1)) Φ = ∫ x, Φ x ∂μ.restrict 𝓕 := fun Φ hΦ => by
     rw [(_root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg _ _ (isCoLat_ratV E _) μ 𝓕 m1 m2 Φ hΦ).2.2.2, m3]; simp
   let t₀ : UnipotentBlockColumnIndex 2 1 1 := ⟨(0, 1), by simp⟩
-  haveI : Unique (UnipotentBlockColumnIndex 2 1 1) := ⟨⟨t₀⟩, by decide⟩
+  have : Unique (UnipotentBlockColumnIndex 2 1 1) := ⟨⟨t₀⟩, by decide⟩
   let n : (UnipotentBlockColumnIndex 2 1 1 → Ad E) → SL(2, AE F E) := fun x => uni (.ofAdd (C.ad.symm (x t₀)))
   have cn : Continuous n := continuous_uni.comp ((GlobalTheory.UnitaryHeckeBaseChange.continuous_adeleEquiv_symm C.cm).comp (continuous_apply _))
   let m : SL(2, AE F E) →* UA σ W.J := (lev h).comp Matrix.SpecialLinearGroup.toGL

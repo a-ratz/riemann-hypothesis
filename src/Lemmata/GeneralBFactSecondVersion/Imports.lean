@@ -84,7 +84,7 @@ theorem goal1 :
     ψ₀ ∘ₗ Submodule.linearProjOfIsCompl _ _ hC
   have hΨ : Ψ (φ 1) = s := by
     have h1 : Submodule.linearProjOfIsCompl _ _ hC (φ 1) = ⟨φ 1, LinearMap.mem_range_self φ 1⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hC ⟨φ 1, LinearMap.mem_range_self φ 1⟩
+      Submodule.projectionOnto_apply_left hC ⟨φ 1, LinearMap.mem_range_self φ 1⟩
     simp only [Ψ, ψ₀, LinearMap.comp_apply, h1, LinearEquiv.coe_toLinearMap,
       LinearMap.quotKerEquivRange_symm_apply_image, Submodule.mkQ_apply, Submodule.liftQ_apply]
     simp [σ]

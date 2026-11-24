@@ -195,7 +195,7 @@ theorem thL_uEl (ψ : AddChar k Circle) (s : kˣ) (c : Fin (i + 1) → k) (d : F
 theorem isOpen_ker_thL (ψ : AddChar k Circle) (hψ : Continuous ψ) (s : kˣ) :
     IsOpen ((thL (i := i) (t := t) ψ s).ker : Set (Lball k i t s)) :=
   (GlobalTheory.CompanionTheory.BZPhiPG.Grp.mirChar_ker_open ψ hψ ((i + 1) + t)).preimage
-    (show Continuous (Subgroup.inclusion (Lball_le (i := i) (t := t) s)) from continuous_subtype_val.subtype_mk _)
+    (show Continuous (Subgroup.inclusion (Lball_le (i := i) (t := t) s)) from continuous_subtypeVal.subtype_mk _)
 
 theorem iF_sub (ψ : AddChar k Circle) (hψ : Continuous ψ) (a b : XS τ σ) : iF ψ (a - b) = iF ψ a - iF ψ b :=
   (iL ψ hψ).map_sub a b
@@ -586,9 +586,9 @@ theorem T_smInt {t : ℕ} (ψ : AddChar k Circle) (hψ : Continuous ψ) (T : W �
     (l : IsLocallyConstant F) (c : HasCompactSupport F) :
     T (@GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k (t + 1)) (fun d => chi ψ d • F d)) =
       @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k (t + 1)) (fun d => chi ψ d • T (F d)) := by
-  letI : MeasurableSpace (Fin (t + 1) → k) := borel _
-  haveI : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
-  haveI : (muD k (t + 1)).IsAddHaarMeasure := by unfold muD; infer_instance
+  let : MeasurableSpace (Fin (t + 1) → k) := borel _
+  have : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
+  have : (muD k (t + 1)).IsAddHaarMeasure := by unfold muD; infer_instance
   rw [← GlobalTheory.CompanionTheory.Rodier.SmIntEl.smInt_linear (muD k (t + 1)) T (chi_smul_lc ψ hψ l) (chi_smul_cs ψ c)]
   congr 1
   funext d
@@ -599,9 +599,9 @@ theorem smInt_shift {t : ℕ} (ψ : AddChar k Circle) (hψ : Continuous ψ) {F :
     @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k (t + 1)) (fun d => chi ψ d • F (d + e)) =
       ((Circle.toUnits (ψ (e (Fin.last t))) : ℂˣ) : ℂ) •
         @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k (t + 1)) (fun d => chi ψ d • F d) := by
-  letI : MeasurableSpace (Fin (t + 1) → k) := borel _
-  haveI : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
-  haveI : (muD k (t + 1)).IsAddHaarMeasure := by unfold muD; infer_instance
+  let : MeasurableSpace (Fin (t + 1) → k) := borel _
+  have : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
+  have : (muD k (t + 1)).IsAddHaarMeasure := by unfold muD; infer_instance
   set θ : ℂ := ((Circle.toUnits (ψ (e (Fin.last t))) : ℂˣ) : ℂ) with hθ
   let T : W →ₗ[ℂ] W := θ • LinearMap.id
   have lΦ := chi_smul_lc ψ hψ l
@@ -898,12 +898,12 @@ theorem pgProj_fst (i t : ℕ) (c : Fin (i + 1) → k) :
   · simp only [colMat]
     by_cases hb : b = Fin.last (i + 1)
     · subst hb
-      rw [if_pos (ePG_false_last _ _), if_pos rfl]
+      rw [ite_eq_left (ePG_false_last _ _), ite_eq_left rfl]
       induction a using Fin.lastCases with
       | last => rw [ePG_false_last, Fin.lastCases_last, Fin.lastCases_last]
       | cast a =>
         rw [ePG_false_eq_castAdd, Fin.lastCases_castSucc, Fin.lastCases_castSucc, cVec, Fin.append_left]
-    · rw [if_neg (fun h => hb ((ePG_false_eq_last_iff _ _ _).1 h)), if_neg hb]
+    · rw [ite_eq_right (fun h => hb ((ePG_false_eq_last_iff _ _ _).1 h)), ite_eq_right hb]
 
 theorem pgProj_snd (i t : ℕ) (c : Fin (i + 1) → k) :
     (pgProj k (i + 1) (t + 1) ⟨uM k _ (cVec i t c), uM_mem_HPG i t c⟩).2 = 1 := by
@@ -914,7 +914,7 @@ theorem pgProj_snd (i t : ℕ) (c : Fin (i + 1) → k) :
   rw [unip_entry]
   have h0 : colMat k _ (cVec i t c) (ePG (i + 1) (t + 1) ⟨true, a⟩) (ePG (i + 1) (t + 1) ⟨true, b⟩) = 0 := by
     simp only [colMat]
-    rw [if_neg (ePG_true_ne_last _ _ _)]
+    rw [ite_eq_right (ePG_true_ne_last _ _ _)]
   rw [h0, add_zero]
   by_cases hab : a = b
   · subst hab; simp
@@ -934,7 +934,7 @@ theorem det_uM (n : ℕ) (s : ℝ) (w : Fin n → k) : dpowM n s (uM k n w) = 1 
         rw [h] at hab'
         exact absurd hab' (not_lt.2 (Fin.le_last a))
       simp [colMat, hb, Matrix.one_apply_ne hab'.ne']
-    rw [Matrix.det_of_upperTriangular hT]
+    rw [det_of_isUpperTriangular hT]
     refine Finset.prod_eq_one fun a _ => ?_
     induction a using Fin.lastCases with
     | last => simp [colMat]
@@ -1024,9 +1024,9 @@ theorem intO_translate {i t : ℕ} {τ : MRep k (i + 1)} {σ : GRep k (t + 1)} (
     (y : Mir k ((i + 1) + t + 1)) (T : τ.V ⊗[ℂ] σ.V →ₗ[ℂ] τ.V ⊗[ℂ] σ.V) (d' : Fin (t + 1) → k)
     (F : (Fin (t + 1) → k) → τ.V ⊗[ℂ] σ.V) (hF : ∀ d, F d = T (evX f (dEmb k i t (d + d') * y))) :
     @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k (t + 1)) F = T (intO f y) := by
-  letI : MeasurableSpace (Fin (t + 1) → k) := borel _
-  haveI : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
-  haveI : (muD k (t + 1)).IsAddHaarMeasure := by
+  let : MeasurableSpace (Fin (t + 1) → k) := borel _
+  have : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
+  have : (muD k (t + 1)).IsAddHaarMeasure := by
     unfold muD
     infer_instance
   obtain ⟨hl, hc⟩ := _root_.GlobalTheory.CompanionTheory.BZPhiPG.Fib.fibre_isLocallyConstant_hasCompactSupport k i t τ σ f y
@@ -1134,15 +1134,15 @@ theorem eq_zero_of_mem_twKer_of_eig (ρ : Representation ℂ G V) (hρ : IsSmoot
     (he : e ∈ twKer ρ L χ) (hev : ∀ l : L, ρ (l : G) e = ((χ l : ℂˣ) : ℂ) • e) : e = 0 := by
   classical
   obtain ⟨s, t, hst⟩ := exists_finite_support ρ L χ e he
-  haveI : CompactSpace L := isCompact_iff_compactSpace.1 hL
+  have : CompactSpace L := isCompact_iff_compactSpace.1 hL
   obtain ⟨M, hMo, hMχ, -, hMt⟩ := exists_open_fixing ρ ρ hρ hρ L χ.ker hχ e t
-  haveI : Finite (L ⧸ M) := Subgroup.quotient_finite_of_isOpen M hMo
-  haveI : M.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (L ⧸ M) := Subgroup.quotient_finite_of_isOpen M hMo
+  have : M.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   let C : Subgroup L := M.normalCore
-  haveI : C.Normal := Subgroup.normalCore_normal M
-  haveI : C.FiniteIndex := inferInstance
-  haveI : Finite (L ⧸ C) := inferInstance
-  letI := Fintype.ofFinite (L ⧸ C)
+  have : C.Normal := Subgroup.normalCore_normal M
+  have : C.FiniteIndex := inferInstance
+  have : Finite (L ⧸ C) := inferInstance
+  let := Fintype.ofFinite (L ⧸ C)
   have hCM : C ≤ M := Subgroup.normalCore_le M
   let τ : Representation ℂ L V := ρ.comp L.subtype
   have h0 : avg τ χ C e = 0 := by
@@ -1185,7 +1185,7 @@ theorem isOpen_ker_comp {U L : Subgroup G} (θ : U →* ℂˣ) (hθ : IsOpen (θ
     ext l
     simp [MonoidHom.mem_ker]
   rw [e]
-  exact hθ.preimage (Continuous.subtype_mk continuous_subtype_val _)
+  exact hθ.preimage (Continuous.subtype_mk continuous_subtypeVal _)
 
 end Eig
 

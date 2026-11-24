@@ -104,21 +104,21 @@ theorem finrank_baseChange_kaehler_of_formallyEtale {k B A K : Type} [Field k] [
 
 theorem finrank_residue_kaehler : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k) (d : ℕ) [SmoothOfRelativeDimension d f] (U : X.Opens) (x : X) (hxU : x ∈ U), IsAffineOpen U → letI : Algebra k Γ(X, U) := (cstOn f U).toAlgebra; letI : Algebra Γ(X, U) (IsLocalRing.ResidueField (X.presheaf.stalk x)) := ((IsLocalRing.residue (X.presheaf.stalk x)).comp (X.presheaf.germ U x hxU).hom).toAlgebra; Module.finrank (IsLocalRing.ResidueField (X.presheaf.stalk x)) (IsLocalRing.ResidueField (X.presheaf.stalk x) ⊗[Γ(X, U)] Ω[Γ(X, U)⁄k]) = d := by
   intro k _ X f d _ U x hxU hU
-  letI iB : Algebra k Γ(X, U) := (cstOn f U).toAlgebra
-  letI iBK : Algebra Γ(X, U) (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
+  let iB : Algebra k Γ(X, U) := (cstOn f U).toAlgebra
+  let iBK : Algebra Γ(X, U) (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
     ((IsLocalRing.residue (X.presheaf.stalk x)).comp (X.presheaf.germ U x hxU).hom).toAlgebra
-  letI iBA : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hxU).hom.toAlgebra
-  letI iA : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
+  let iBA : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hxU).hom.toAlgebra
+  let iA : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
   obtain ⟨-, hfree, hfin, hrank⟩ := GlobalTheory.SmoothStalk.smooth_stalk k X f d ⟨U, hU⟩ x hxU
-  haveI : Module.Free (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] := hfree
-  haveI : Module.Finite (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] := hfin
+  have : Module.Free (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] := hfree
+  have : Module.Finite (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] := hfin
   have hrank' : Module.finrank (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] = d := hrank
-  haveI : IsScalarTower k Γ(X, U) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower k Γ(X, U) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' rfl
   haveI hsc : @IsScalarTower Γ(X, U) (X.presheaf.stalk x) (IsLocalRing.ResidueField (X.presheaf.stalk x)) _ _
       iBK.toSMul := IsScalarTower.of_algebraMap_eq' rfl
-  haveI hloc : IsLocalization.AtPrime (X.presheaf.stalk x) (hU.primeIdealOf ⟨x, hxU⟩).asIdeal :=
+  have hloc : IsLocalization.AtPrime (X.presheaf.stalk x) (hU.primeIdealOf ⟨x, hxU⟩).asIdeal :=
     hU.isLocalization_stalk ⟨x, hxU⟩
-  haveI : Algebra.FormallyEtale Γ(X, U) (X.presheaf.stalk x) :=
+  have : Algebra.FormallyEtale Γ(X, U) (X.presheaf.stalk x) :=
     Algebra.FormallyEtale.of_isLocalization (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl
   rw [← hrank']
   exact @finrank_baseChange_kaehler_of_formallyEtale k Γ(X, U) (X.presheaf.stalk x)
@@ -258,7 +258,7 @@ namespace GlobalTheory.RegParams
 
 theorem exists_closed_specialization : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k) [LocallyOfFiniteType f] (x : X), ∃ y : X, IsClosed ({y} : Set X) ∧ ∀ U : X.Opens, y ∈ U → x ∈ U := by
   intro k _ X f _ x
-  haveI : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace f
+  have : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace f
   obtain ⟨y, hy, hyc⟩ := nonempty_inter_closedPoints (Set.singleton_nonempty x).closure isClosed_closure.isLocallyClosed
   exact ⟨y, hyc, fun U hU => (specializes_iff_mem_closure.2 hy).mem_open U.isOpen hU⟩
 
@@ -312,9 +312,9 @@ theorem linearIndependent_fibre_of_associated : ∀ (k A : Type) [Field k] [Comm
 
 theorem relSnc_of_regular_params : ∀ (k : Type) [Field k] [PerfectField k] (X : Scheme.{0}) (f : X ⟶ Sp k) (d : ℕ) [SmoothOfRelativeDimension d f] (s : ℕ) (L : Fin s → LB X) (σ : ∀ i, (L i).Sec), (∀ i, (L i).IsLB) → (∀ x : X, IsClosed ({x} : Set X) → ∃ (n : ℕ) (t : Fin n → X.presheaf.stalk x) (c : ∀ i, (L i).ι) (hc : ∀ i, x ∈ (L i).U (c i)) (e : Fin s → Option (Fin n)), ReciprocityTheory.AnForm.R.FinalTheorems.Rsp (X.presheaf.stalk x) n t ∧ (∀ i j a, e i = some a → e j = some a → i = j) ∧ ∀ i, Associated ((X.presheaf.germ _ x (hc i)).hom ((σ i).f (c i))) ((e i).elim 1 t)) → RelSnc f d L σ := by
   intro k _ _ X f d _ s L σ hL H
-  haveI : Smooth f := SmoothOfRelativeDimension.smooth d f
-  haveI : LocallyOfFiniteType f := inferInstance
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
+  have : Smooth f := SmoothOfRelativeDimension.smooth d f
+  have : LocallyOfFiniteType f := inferInstance
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   refine ⟨hL, fun x => ?_⟩
   suffices hcl : ∀ y : X, IsClosed ({y} : Set X) → ∃ C : SncChart f d L σ, y ∈ C.U by
     obtain ⟨y, hy, hxy⟩ := exists_closed_specialization k X f x
@@ -327,20 +327,20 @@ theorem relSnc_of_regular_params : ∀ (k : Type) [Field k] [PerfectField k] (X 
     obtain ⟨_, ⟨V, hV, rfl⟩, hxV, hVW⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open hxW
       (isOpen_iInter_of_finite fun i => ((L i).U (c i)).isOpen)
     exact ⟨V, hV, hxV, fun i y hy => Set.mem_iInter.1 (hVW hy) i⟩
-  letI iBK : Algebra Γ(X, U) (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
+  let iBK : Algebra Γ(X, U) (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
     ((IsLocalRing.residue (X.presheaf.stalk x)).comp (X.presheaf.germ U x hxU).hom).toAlgebra
   refine _root_.GlobalTheory.LogPair.ChartPt.exists_chart k X f d s L σ U c hUc x (IsLocalRing.ResidueField (X.presheaf.stalk x)) hUa hxU ?_ ?_
   · intro a
     rw [X.mem_basicOpen a x hxU]
     change ¬ IsLocalRing.residue _ ((X.presheaf.germ U x hxU).hom a) = 0 ↔ _
     rw [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not]
-  letI iB : Algebra k Γ(X, U) := (cstOn f U).toAlgebra
+  let iB : Algebra k Γ(X, U) := (cstOn f U).toAlgebra
   refine ⟨GlobalTheory.T.finrank_kaehler_residue_field k X f d U x hxU hUa, ?_⟩
-  letI iBA : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hxU).hom.toAlgebra
-  letI iA : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
-  haveI : IsScalarTower k Γ(X, U) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower Γ(X, U) (X.presheaf.stalk x) (IsLocalRing.ResidueField (X.presheaf.stalk x)) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI := GlobalTheory.T.residue_field_formally_smooth k X f U x hxU hx
+  let iBA : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hxU).hom.toAlgebra
+  let iA : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U x hxU).hom.comp (cstOn f U)).toAlgebra
+  have : IsScalarTower k Γ(X, U) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower Γ(X, U) (X.presheaf.stalk x) (IsLocalRing.ResidueField (X.presheaf.stalk x)) := IsScalarTower.of_algebraMap_eq' rfl
+  have := GlobalTheory.T.residue_field_formally_smooth k X f U x hxU hx
   have hli := _root_.GlobalTheory.linearIndependent_tmul_D_of_regular_system k (X.presheaf.stalk x) n t hrsp.1 hrsp.2
   have htm : ∀ a, t a ∈ IsLocalRing.maximalIdeal (X.presheaf.stalk x) := fun a => hrsp.1 ▸ Ideal.subset_span ⟨a, rfl⟩
   let g : Fin s → X.presheaf.stalk x := fun i => X.presheaf.germ U x hxU (resG X (hUc i) ((σ i).f (c i)))
@@ -464,7 +464,7 @@ theorem exists_local_data [GlobalTheory.IsNormalScheme Y] (B : Closeds Y)
       algebraMap (Y.presheaf.stalk x) Y.functionField ((e i).elim 1 t) = g := by
     intro i
     by_cases h : ∃ j, j ∈ J ∧ w i = w₀ j
-    · obtain ⟨j, hei, hwj⟩ : ∃ j, e i = some j ∧ w i = w₀ j := ⟨h.choose, dif_pos h, h.choose_spec.2⟩
+    · obtain ⟨j, hei, hwj⟩ : ∃ j, e i = some j ∧ w i = w₀ j := ⟨h.choose, dite_eq_left h, h.choose_spec.2⟩
       obtain ⟨hu1, -, -, -, hord, hoth⟩ := hu j
       refine ⟨u j, ?_, ?_⟩
       · refine (_root_.GlobalTheory.Cartier.MultEff.eff_supp_eq_of_mult Y (D i)).2.2.2 x (u j) fun z hz => ?_
@@ -479,7 +479,7 @@ theorem exists_local_data [GlobalTheory.IsNormalScheme Y] (B : Closeds Y)
           · exact Scheme.ord_eq_zero_of_coheight_neq_one hz1 _
       · rw [hei, hu1]
         exact algebraMap_germ hxU (f j)
-    · have hei : e i = none := dif_neg h
+    · have hei : e i = none := dite_eq_right h
       refine ⟨1, ?_, by rw [hei]; simp⟩
       refine (_root_.GlobalTheory.Cartier.MultEff.eff_supp_eq_of_mult Y (D i)).2.2.2 x 1 fun z hz => ?_
       rw [(hmult i).2 z ?_, Units.val_one, (unitAt_one z).ord_eq_zero]

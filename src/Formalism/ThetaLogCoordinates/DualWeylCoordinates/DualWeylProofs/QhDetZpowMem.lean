@@ -187,7 +187,7 @@ lemma qh_det_zpow_mem (z : ℤ) : (((qhDet R n) ^ z : (GLCoord R n)ˣ) : GLCoord
   have h2 : Units.map (evGLR (b * g) : GLCoord R n →+* R').toMonoidHom (qhDet R n) =
       (∏ a, u a) * Units.map (evGLR g : GLCoord R n →+* R').toMonoidHom (qhDet R n) := by
     ext
-    simp only [Units.coe_map, Units.val_mul, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [Units.coe_map, Units.val_mul, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     rw [qh_evGLR_det, qh_evGLR_det, Units.val_mul, Matrix.det_mul,
       Matrix.det_of_isLowerTriangular _ (fun i j hij => hb i j hij)]
     simp [hu]
@@ -231,7 +231,7 @@ lemma qh_N_mem (s : ℕ) (hs : s ≤ n) (J : Fin s → Fin n) :
   rw [Units.coe_prod]
   simp only [h3]
   rw [← qh_prod_castLE hs (fun a : Fin n => if a.val < s then (u a : R') else 1)
-    (fun a ha => if_neg (by omega))]
+    (fun a ha => ite_eq_right (by omega))]
   apply Finset.prod_congr rfl
   intro p _
   simp

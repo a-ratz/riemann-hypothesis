@@ -120,7 +120,7 @@ theorem rdU_eq_of_reads (U : Unf Xo c σ r) (h : GenFrEx Xo c) (k : U.Comp)
     (Z : Comp Xo c) (x : (U.X k).dom) (φ : Om Z →ₐ[c.F] CAt σ) (y' : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ)
     (hm : FrMap φ (genFr h Z) y') (hb : FrBor t (U.un k x) y') (u : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) :
     ∃ w : ℂ, w ≠ 0 ∧ ∀ f ∈ sec Xo c u n, w * rdU U f k x = toC (φ (evC h Z f)) := by
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨hL, -, -, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   have h3 : wchar (ex Dw u n) t ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (t i).ne_zero

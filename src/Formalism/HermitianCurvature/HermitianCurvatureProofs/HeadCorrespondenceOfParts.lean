@@ -68,7 +68,7 @@ private theorem det_ptMatN_append_eq_mul (h : C.LPt) (ζ : ℂ) :
     have e2 : (D.ptMatN (h ++ [(1, ζ)]) (D.ptSize h + 1)).submatrix (Fin.last _).succAbove
         (Fin.last _).succAbove = D.ptMatN h (D.ptSize h) := by
       ext a b
-      simp only [Matrix.submatrix_apply, Fin.succAbove_last, D.ptMatN, Fin.coe_castSucc]
+      simp only [Matrix.submatrix_apply, Fin.succAbove_last, D.ptMatN, Fin.val_castSucc]
       exact PBD.ptEntry_app_lt ζ h a b a.2 b.2
     have e4 : ((-1 : ℂ)) ^ ((Fin.last (D.ptSize h) : ℕ) + (Fin.last (D.ptSize h) : ℕ)) = 1 := by
       rw [Fin.val_last, ← two_mul, pow_mul]
@@ -212,11 +212,11 @@ theorem head_top_of_correspondence : PBI.HeadTopOfCorr := by
     have hm := Formalism.FourierDecayAlt.P.Topx1.act_mul ((Fr.ofWord L st (D.positionted w)).d L) (Fr.ofWord L st (D.positionted w)).F Φ
     rw [hm, ← hy, hd h hh y e, Formalism.FourierDecayAlt.P.Topx1.hsInner_sum_smul_left]
   unfold KB.Pl.RR D.RRplace
-  rw [dite_eq_left ⟨hp, hq⟩, dite_eq_right (by omega), if_pos rfl, hLHS]
+  rw [dite_eq_left ⟨hp, hq⟩, dite_eq_right (by omega), ite_eq_left rfl, hLHS]
   by_cases hw : w = []
   · subst hw
-    rw [if_pos rfl]
-    haveI : Subsingleton (Wd.Ix (Fin ([] : List C.Letter).length)) := ⟨fun a b => funext fun i => Fin.elim0 i⟩
+    rw [ite_eq_left rfl]
+    have : Subsingleton (Wd.Ix (Fin ([] : List C.Letter).length)) := ⟨fun a b => funext fun i => Fin.elim0 i⟩
     set e0 : Wd.Ix (Fin ([] : List C.Letter).length) := fun i => Fin.elim0 i
     rw [Finset.sum_eq_single e0 (fun b _ hb => absurd (Subsingleton.elim b e0) hb) (fun h => absurd (Finset.mem_univ e0) h)]
     have h1 := hVp e0
@@ -229,7 +229,7 @@ theorem head_top_of_correspondence : PBI.HeadTopOfCorr := by
       ((y' e0 : Q.Fn (JC.parLev P P.r).k (JC.parLev P P.r).r (Wq →L[ℂ] Wp)) x.1 x.2)
     simp only [one_smul, one_mul] at hs1
     rw [← hs1, hex y e0]
-  · rw [if_neg hw]
+  · rw [ite_eq_right hw]
     unfold Top.topOf
     refine Finset.sum_congr rfl fun e _ => Finset.sum_congr rfl fun ρ _ => ?_
     rw [hVp e, hVq e, hint, hint, hτ,

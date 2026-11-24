@@ -96,22 +96,22 @@ theorem pushHaar_inv (R Γ : Subgroup G) [Countable Γ] [DiscreteTopology Γ] (h
     ∃ ν : Measure G, SigmaFinite ν ∧ ν ≠ 0 ∧ ν (R : Set G)ᶜ = 0 ∧ (∀ K : Set G, IsCompact K → ν K < ⊤) ∧
       (∀ r ∈ R, ν.map (fun x => r * x) = ν) ∧ ν.map (fun x => x⁻¹) = ν := by
   have hce : IsClosedEmbedding (Subtype.val : R → G) := hR.isClosedEmbedding_subtypeVal
-  haveI : LocallyCompactSpace R := hce.locallyCompactSpace
-  haveI : BorelSpace R := Subtype.borelSpace _
-  haveI : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology (R : Set G)
+  have : LocallyCompactSpace R := hce.locallyCompactSpace
+  have : BorelSpace R := Subtype.borelSpace _
+  have : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology (R : Set G)
   let μ : Measure R := Measure.haar
-  haveI : SigmaFinite μ := sigmaFinite_of_locallyFinite
-  have hemb : MeasurableEmbedding (Subtype.val : R → G) := MeasurableEmbedding.subtype_coe hR.measurableSet
+  have : SigmaFinite μ := sigmaFinite_of_locallyFinite
+  have hemb : MeasurableEmbedding (Subtype.val : R → G) := MeasurableEmbedding.subtypeVal hR.measurableSet
   let Γ' : Subgroup R := Γ.subgroupOf R
   let ι : Γ' → Γ := fun x => ⟨x.1.1, Subgroup.mem_subgroupOf.1 x.2⟩
   have hι : Function.Injective ι := by
     intro a b e
     simp only [ι, Subtype.mk.injEq] at e
     exact Subtype.ext (Subtype.ext e)
-  haveI : Countable Γ' := hι.countable
-  haveI : DiscreteTopology Γ' :=
+  have : Countable Γ' := hι.countable
+  have : DiscreteTopology Γ' :=
     DiscreteTopology.of_continuous_injective
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) hι
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) hι
   obtain ⟨K, hK, hKc⟩ := hcov
   have hinv : μ.map (fun x => x⁻¹) = μ :=
     haar_map_inv_of_lattice μ Γ' (hce.isCompact_preimage hK) (fun x => by
@@ -183,10 +183,10 @@ theorem map_conj_of_bounded (R : Subgroup G) (hR : IsClosed (R : Set G)) (ν : M
     (hC : ∃ C : Set G, IsCompact C ∧ ∀ m : ℤ, k ^ m ∈ C) : ν.map (fun x => k⁻¹ * x * k) = ν := by
   obtain ⟨C, hCc, hCm⟩ := hC
   have hce : IsClosedEmbedding (Subtype.val : R → G) := hR.isClosedEmbedding_subtypeVal
-  haveI : LocallyCompactSpace R := hce.locallyCompactSpace
-  haveI : BorelSpace R := Subtype.borelSpace _
-  haveI : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology _
-  have hemb : MeasurableEmbedding (Subtype.val : R → G) := MeasurableEmbedding.subtype_coe hR.measurableSet
+  have : LocallyCompactSpace R := hce.locallyCompactSpace
+  have : BorelSpace R := Subtype.borelSpace _
+  have : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology _
+  have hemb : MeasurableEmbedding (Subtype.val : R → G) := MeasurableEmbedding.subtypeVal hR.measurableSet
   set μ : Measure R := ν.comap Subtype.val with hμ
   have hν : μ.map Subtype.val = ν := by
     rw [hemb.map_comap, Subtype.range_coe]
@@ -194,17 +194,17 @@ theorem map_conj_of_bounded (R : Subgroup G) (hR : IsClosed (R : Set G)) (ν : M
     rw [ae_iff]
     exact hc
   have hcm : ∀ μ' : Measure R, (μ'.map Subtype.val).comap Subtype.val = μ' := fun μ' => hemb.comap_map μ'
-  haveI : μ.IsMulLeftInvariant := ⟨fun r => by
+  have : μ.IsMulLeftInvariant := ⟨fun r => by
     have h1 : (μ.map (r * ·)).map Subtype.val = μ.map Subtype.val := by
       rw [map_map hemb.measurable (measurable_const_mul r)]
       have e : (Subtype.val ∘ (r * ·) : R → G) = (fun x : G => (r : G) * x) ∘ Subtype.val := rfl
       rw [e, ← map_map (measurable_const_mul (r : G)) hemb.measurable, hν, hl _ r.2]
     rw [← hcm (μ.map (r * ·)), h1, hcm]⟩
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hKc => by
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hKc => by
     rw [hμ, hemb.comap_apply]
-    exact hK _ (hKc.image continuous_subtype_val)⟩
-  haveI : NeZero μ := ⟨fun h => h0 (by rw [← hν, h, Measure.map_zero])⟩
-  haveI : IsOpenPosMeasure μ := by
+    exact hK _ (hKc.image continuous_subtypeVal)⟩
+  have : NeZero μ := ⟨fun h => h0 (by rw [← hν, h, Measure.map_zero])⟩
+  have : IsOpenPosMeasure μ := by
     obtain ⟨n, hn⟩ : ∃ n, μ (compactCovering R n) ≠ 0 := by
       by_contra hall
       push Not at hall
@@ -212,7 +212,7 @@ theorem map_conj_of_bounded (R : Subgroup G) (hR : IsClosed (R : Set G)) (ν : M
       rw [← Measure.measure_univ_eq_zero, ← iUnion_compactCovering]
       exact measure_iUnion_null hall
     exact isOpenPosMeasure_of_mulLeftInvariant_of_compact _ (isCompact_compactCovering R n) hn
-  haveI : IsHaarMeasure μ :=
+  have : IsHaarMeasure μ :=
     { toIsFiniteMeasureOnCompacts := inferInstance, toIsMulLeftInvariant := inferInstance,
       toIsOpenPosMeasure := inferInstance }
   let α : R ≃ₜ* R :=
@@ -221,8 +221,8 @@ theorem map_conj_of_bounded (R : Subgroup G) (hR : IsClosed (R : Set G)) (ν : M
       left_inv := fun r => Subtype.ext (by simp [mul_assoc])
       right_inv := fun r => Subtype.ext (by simp [mul_assoc])
       map_mul' := fun a b => Subtype.ext (by simp [mul_assoc])
-      continuous_toFun := ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
-      continuous_invFun := ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _ }
+      continuous_toFun := ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
+      continuous_invFun := ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _ }
   have hit : ∀ (n : ℕ) (x : R), (((⇑α)^[n] x : R) : G) = k ^ (-(n : ℤ)) * x * k ^ (n : ℤ) := by
     intro n
     induction n with
@@ -247,7 +247,7 @@ theorem map_conj_of_bounded (R : Subgroup G) (hR : IsClosed (R : Set G)) (ν : M
       group
   obtain ⟨V, hV, hV1⟩ := exists_compact_mem_nhds (1 : R)
   have hL : IsCompact (Subtype.val ⁻¹' (C * (Subtype.val '' V) * C) : Set R) :=
-    hce.isCompact_preimage ((hCc.mul (hV.image continuous_subtype_val)).mul hCc)
+    hce.isCompact_preimage ((hCc.mul (hV.image continuous_subtypeVal)).mul hCc)
   have hb : ∀ n : ℕ, (⇑α)^[n] '' V ⊆ Subtype.val ⁻¹' (C * (Subtype.val '' V) * C) ∧
       (⇑α.symm)^[n] '' V ⊆ Subtype.val ⁻¹' (C * (Subtype.val '' V) * C) := by
     intro n
@@ -355,8 +355,8 @@ theorem measure_SF_eq (Γ : Subgroup G) [Countable Γ] (ν : Measure G)
 theorem SF_mul_right {S : Set G} {Ω : Set G} (h : SF S Ω) (y : G) : SF S {r | r * y ∈ Ω} := by
   refine ⟨h.1.preimage (measurable_mul_const y), fun x => ?_, fun x hx s hs hsx => ?_⟩
   · obtain ⟨s, hs, hsx⟩ := h.2.1 (x * y)
-    exact ⟨s, hs, by simpa [Set.mem_setOf_eq, mul_assoc] using hsx⟩
-  · exact h.2.2 (x * y) hx s hs (by simpa [Set.mem_setOf_eq, mul_assoc] using hsx)
+    exact ⟨s, hs, by simpa [Set.mem_ofPred_eq, mul_assoc] using hsx⟩
+  · exact h.2.2 (x * y) hx s hs (by simpa [Set.mem_ofPred_eq, mul_assoc] using hsx)
 
 variable (h : G)
 
@@ -493,7 +493,7 @@ theorem int_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteS
   have hfB : IntegrableOn f B μ := by
     have hg : AEMeasurable (fun x => ‖f x‖ₑ) μ := by
       first
-      | exact hf.enorm
+      | exact hf.eNorm
     have e := lint_eq (μ := μ) ν hA hB c hcB hcA
       (fun x => ‖f x‖ₑ) hg (by filter_upwards [hinv] with r hr x; simp only [hr])
     have e' := ennreal_eq_of_mul_left_eq hc0 hct e
@@ -709,7 +709,7 @@ theorem coef_smat (G : Matrix (Fin k) (Fin k) ℂ) (y : Fin n → ℂ) :
     (fun d => hJ ε (wf d) (smat (Formalism.REAL.Jm ε) wf G *ᵥ y)) = G *ᵥ fun d => hJ ε (wf d) y := by
   funext d
   rw [smat_apply, hJ_add_right, hJ_sum_right]
-  simp only [hJ_smul_right, hon, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hJ_smul_right, hon, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [sub_mulVec, one_mulVec]
   simp only [Pi.sub_apply]
   ring
@@ -811,7 +811,7 @@ theorem continuous_smat_of {α : Type} [TopologicalSpace α] (J : Matrix (Fin n)
 
 theorem continuous_Phi : Continuous (Phi ε wt hon) := by
   refine continuous_pi fun v => ?_
-  have hG : Continuous fun M : UPi ι k => M.1 v := (continuous_apply v).comp continuous_subtype_val
+  have hG : Continuous fun M : UPi ι k => M.1 v := (continuous_apply v).comp continuous_subtypeVal
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
   · exact continuous_smat_of _ _ hG
   · exact (continuous_const.matrix_mul (continuous_smat_of _ _ hG).matrix_conjTranspose).matrix_mul continuous_const
@@ -909,8 +909,8 @@ theorem Xs_le_E : spanAt X v (lf D (X.Fu u)).fl.X ≤
 theorem hJ_F_E (a b : Fin D.R.rS) :
     hJ (X.B.I.ε v) (rvc X v (X.fY a)) (rvc X v (X.eX b)) = if b = a then 1 else 0 := by
   split_ifs with h
-  · exact hJ_rvc_one X v (by rw [Formalism.L2.SG.Pf.hT_f_e, if_pos h])
-  · exact hJ_rvc_zero X v (by rw [Formalism.L2.SG.Pf.hT_f_e, if_neg h])
+  · exact hJ_rvc_one X v (by rw [Formalism.L2.SG.Pf.hT_f_e, ite_eq_left h])
+  · exact hJ_rvc_zero X v (by rw [Formalism.L2.SG.Pf.hT_f_e, ite_eq_right h])
 
 theorem hJ_F_Z (a : Fin D.R.rS) : hJ (X.B.I.ε v) (rvc X v (X.fY a)) (rvc X v (X.zu u)) = 0 :=
   hJ_rvc_zero X v (X.zu_orth u a).2
@@ -987,7 +987,7 @@ theorem dec {wt : Fin D.R.k → Fin X.B.I.n → ℂ} (hwt : ∀ b, X.wfr u v b -
     ring
   have hF2 : ∀ a, hJ (X.B.I.ε v) (rvc X v (X.fY a)) w2 = 0 := fun a => by
     rw [hw2, hw1, hJ_sub_right, hJ_sub_right, hJ_sum_right, hJ_smul_right, hJ_F_Z]
-    simp only [hJ_smul_right, hJ_F_E, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, hα]
+    simp only [hJ_smul_right, hJ_F_E, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, hα]
     ring
   have hZ2 : hJ (X.B.I.ε v) (rvc X v (X.zu u)) w2 = 0 := by
     rw [hw2, hJ_sub_right, hJ_smul_right, hc, mul_assoc, inv_mul_cancel₀ (hJ_Z_Z X v), mul_one, sub_self]
@@ -1021,7 +1021,7 @@ theorem rad {wt : Fin D.R.k → Fin X.B.I.n → ℂ} (hwt : ∀ b, X.wfr u v b -
   have hsV : s ∈ spanAt X v (fixedSubspaceOfRepresentative X q) := span_le_span_fixedSubspace X q v hs
   have hd : ∀ b, hJ (X.B.I.ε v) (wt b) w = d b := fun b => by
     rw [hdec, hJ_add_right, hJ_add_right, hwtV b s hsV, hJ_smul_right, hwtV b _ hZV, hJ_sum_right]
-    simp only [hJ_smul_right, hon, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hJ_smul_right, hon, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring
   have hc : c = 0 := by
     have h0 := hw _ (Formalism.L2.SG.CovariantRepresentation.zu_mem_fixedSubspaceOfRepresentative q)
@@ -1059,7 +1059,7 @@ theorem hJ_sum_sum {n k : ℕ} (ε : Fin n → Bool) (wf : Fin k → Fin n → �
   rw [hJ_sum_left]
   refine Finset.sum_congr rfl fun c _ => ?_
   rw [hJ_smul_left, hJ_sum_right]
-  simp only [hJ_smul_right, hon, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hJ_smul_right, hon, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem smat_wt {n k : ℕ} (ε : Fin n → Bool) (wf : Fin k → Fin n → ℂ)
     (hon : ∀ a b, hJ ε (wf a) (wf b) = if a = b then 1 else 0) (G : Matrix (Fin k) (Fin k) ℂ) (b : Fin k) :
@@ -1072,7 +1072,7 @@ theorem smat_wt {n k : ℕ} (ε : Fin n → Bool) (wf : Fin k → Fin n → ℂ)
   show wf b + ∑ c, (G - 1) c b • wf c = ∑ c, G c b • wf c
   have e : ∑ c, (G - 1) c b • wf c = ∑ c, G c b • wf c - wf b := by
     simp only [Matrix.transpose_apply, Matrix.sub_apply, sub_smul, Finset.sum_sub_distrib, Matrix.one_apply,
-      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [e]; abel
 
 theorem fixedDecompositionZero_holds : FixedDecompositionZero := by
@@ -1275,8 +1275,8 @@ theorem rHaarRel0_holds (hN : NLamNinf) (hG : PsiInfChar) (h1 : RClosedC) (h2 : 
     have hs2 := hN D X u' t.lam' _ _ hl hn'
     rw [Prod.fst_mul, Prod.fst_mul, Prod.fst_inv, ← hzs] at hs2
     exact ⟨hzs ▸ hN D X u t.lam z n hz hn, hs2⟩
-  haveI := ROsub_countable X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin
-  haveI := h2 D X Y u u' t
+  have := ROsub_countable X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin
+  have := h2 D X Y u u' t
   obtain ⟨K, hK, hKc⟩ := h3 D X Y u u' t
   obtain ⟨ν, hs, h0, hc, hKf, hl, hi⟩ :=
     pushHaar_inv (Rsub hG t) (ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin) (h1 D X Y u u' t) hΓR
@@ -1305,8 +1305,8 @@ theorem covariantRepZero_of_lemmaV (hA : AvgCore) (hU : GinfUnimod) (hN : NLamNi
   have hS : ShiftCore := shiftCore
   have hFN : FixNormC := fixNormC
   intro D X Y u u' t hr hGt Ω hΩ hI h hh
-  have := FiniteDimensional.complete ℂ (X.Vpi u)
-  have := FiniteDimensional.complete ℂ (X.Vpi u')
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u')
   have := hU X.B.I
   have hfe : ∀ v a, uMat (h v) *ᵥ rv X.B.I v (X.eR a) = rv X.B.I v (X.eR a) :=
     fun v a => fix_rv hh (basis_mem_fixedSubspace t.rep a) v
@@ -1442,7 +1442,7 @@ theorem kppOffC_of_steps0 (hFold : FoldOKC) (hFE : FundExistsC) (hOI : OOIntAllC
     by_contra hne
     have h1 : (Y.tO u u').G t = 1 := by
       show Gt t = 1
-      unfold Gt; rw [if_neg hne]
+      unfold Gt; rw [ite_eq_right hne]
     rw [h1] at hG; exact one_ne_zero hG
   show op (Y.cs u) (Y.cs u') (Y.FN u) (Y.FN u') t = 0
   unfold op

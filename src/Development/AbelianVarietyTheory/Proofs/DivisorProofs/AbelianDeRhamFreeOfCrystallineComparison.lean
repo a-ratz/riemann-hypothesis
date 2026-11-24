@@ -79,8 +79,8 @@ theorem free_of (hC : GlobalTheory.Published.CrystallineSmoothLift) (hA : Global
     ∃ e : ⋀[R]^2 (FirstDeRham s) ≃ₗ[R] SecondDeRham s,
       ∀ a b, e (exteriorPower.ιMulti R 2 ![a, b]) = cup _ a b := by
   subst hs
-  haveI : Smooth A.hom := hab.smooth
-  haveI : IsProper A.hom := hab.proper
+  have : Smooth A.hom := hab.smooth
+  have : IsProper A.hom := hab.proper
   obtain ⟨⟨hfin, hproj, hrank⟩, ⟨eH, heH⟩, -⟩ := hA R A g hab hg
   obtain ⟨hbij, e2, he2⟩ := GlobalTheory.CechDR.cechDeRham_comparison_bijective_cup_smooth hC R A.left A.hom inferInstance inferInstance inferInstance
   let E1 : FirstDeRham A.hom ≃ₗ[R] HH1 A.hom := LinearEquiv.ofBijective (cmp1 A.hom) hbij

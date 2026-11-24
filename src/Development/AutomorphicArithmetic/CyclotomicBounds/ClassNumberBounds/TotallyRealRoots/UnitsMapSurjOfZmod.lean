@@ -55,7 +55,7 @@ private theorem units_map_surj_of_zmod (n : ℕ) (f : ℤ_[l] →+* ZMod n) :
   · subst hn
     intro y
     exact ⟨1, Subsingleton.elim _ _⟩
-  · haveI : Nontrivial (ZMod n) := ZMod.nontrivial_iff.mpr hn
+  · have : Nontrivial (ZMod n) := ZMod.nontrivial_iff.mpr hn
     have hf : Function.Surjective f := fun y =>
       ⟨((ZMod.cast y : ℤ) : ℤ_[l]), by rw [map_intCast, ZMod.intCast_zmod_cast]⟩
     exact IsLocalRing.surjective_units_map_of_local_ringHom f hf (IsLocalHom.of_surjective f hf)

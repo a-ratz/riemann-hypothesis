@@ -102,7 +102,7 @@ theorem fc_avg_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _r
     simp only [hUdef, hχ]
     rw [_root_.PositivityTheory.SiegelWeilFormula.KSing.chi_add_k d T β₀ l, _root_.PositivityTheory.SiegelWeilFormula.KSing.chi_per_k d T hl, mul_one, add_comm, _root_.PositivityTheory.SiegelWeilFormula.KSing.nb_add_k d hCD.1, mul_assoc, hinv _ (_root_.PositivityTheory.SiegelWeilFormula.KSing.nb_rat_k d hCD.1 hl)]
   obtain ⟨M, hM⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSing.bdd_of_per_k d hUc hUper ((hψs.isCompact).image hιr)
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) :=
+  have : IsFiniteMeasure (lam.restrict 𝓖) :=
     ⟨by rw [Measure.restrict_apply_univ, hCD.2.2.2]; exact ENNReal.one_lt_top⟩
   have e1 : ∀ β₀ x, f (R.ι w (nr x) * (nb β₀ * z)) * ψ₀ x * χ β₀ = U (β₀, R.ι w (nr x) * z) * ψ₀ x := by
     intro β₀ x
@@ -171,9 +171,9 @@ theorem fourierStep_k (hCE : _root_.PositivityTheory.SiegelWeilFormula.CoefEx_k)
     (nr : (Fin d.n → Fin d.n → ℝ) → GR d.n) (hnr : ∀ x, mR (nr x) = nU (herm x)) :
     ∀ z, ∫ x, f (R.ι w (nr x) * z) * ψ₀ x = 0 := by
   obtain ⟨-, -, hG, hLC, -, hSC⟩ := hAux F E σ d
-  haveI := hG
-  haveI := hLC
-  haveI := hSC
+  have := hG
+  have := hLC
+  have := hSC
   obtain ⟨nb, lam, 𝓖, hCD⟩ := hCE F E σ d
   obtain ⟨β, hβc, hβ⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSing.nbw_k d R w hCD.1 nr hnr
   have hnrc := cont_nr nr hnr

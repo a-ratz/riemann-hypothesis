@@ -58,7 +58,7 @@ theorem quadChar_finPartI_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsC
   intro E _ _ _ hU b hb
   have hs : ∀ v : HeightOneSpectrum (𝓞 (maximalRealSubfield E)), ∃ w : HeightOneSpectrum (𝓞 E),
       w.under (𝓞 (maximalRealSubfield E)) = v := fun v => by
-    haveI := v.isPrime
+    have := v.isPrime
     obtain ⟨⟨P, hP, hP'⟩⟩ := (inferInstance : Nonempty (v.asIdeal.primesOver (𝓞 E)))
     exact ⟨⟨P, hP, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P⟩, HeightOneSpectrum.ext hP'.over.symm⟩
   refine GlobalTheory.Mem.LocTriv.eq_one_of_local (maximalRealSubfield E) (GlobalTheory.GalOfCusp.quadChar E).1

@@ -173,7 +173,7 @@ theorem measurableEmbedding_orbitQuot {G V : Type} [Group G] [TopologicalSpace G
       rintro ⟨y, hy⟩
       obtain ⟨g, rfl⟩ := htr x₀ hx y hy
       exact ⟨g, rfl⟩
-    haveI : PolishSpace G := PI.AprimeInfA.polish_of_lcsc G
+    have : PolishSpace G := PI.AprimeInfA.polish_of_lcsc G
     have hb := hoc.map_eq_borel hos
     let T : Set Z := Subtype.val ⁻¹' (orbitQuot act h1 hm x₀ '' S)
     have hT : MeasurableSet T := by
@@ -198,7 +198,7 @@ theorem measurableEmbedding_orbitQuot {G V : Type} [Group G] [TopologicalSpace G
       rw [← range_orbitQuot act h1 hm x₀ Z hx hinv htr]
       exact ⟨y, rfl⟩
     rw [himg]
-    exact (MeasurableEmbedding.subtype_coe hZ.measurableSet).measurableSet_image.2 hT
+    exact (MeasurableEmbedding.subtypeVal hZ.measurableSet).measurableSet_image.2 hT
 
 theorem comap_orbitQuot_invariant {G V : Type} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G]
@@ -294,12 +294,12 @@ theorem invariant_measure_unique :
       exact measure_iUnion_null fun n => hno _ (isCompact_compactCovering V n)
     obtain ⟨K, hKc, hK0⟩ := hK
     have h := hKc.measure_lt_top (μ := μ)
-    rw [hμν, Measure.smul_apply, smul_eq_mul, ENNReal.top_mul hK0] at h
+    rw [hμν, smul_apply, smul_eq_mul, ENNReal.top_mul hK0] at h
     exact lt_irrefl _ h
   refine ⟨c.toNNReal, ?_⟩
   rw [hμν]
   ext s hs
-  simp [Measure.smul_apply, ENNReal.smul_def, ENNReal.coe_toNNReal hct]
+  simp [smul_apply, ENNReal.smul_def, ENNReal.coe_toNNReal hct]
 
 end GlobalTheory.CompanionTheory.SW.AbsUniq
 end -- clump:auto
@@ -360,8 +360,8 @@ theorem prod_factor
   by_cases hne : (Z₀ ×ˢ Set.univ.pi Z).Nonempty
   · obtain ⟨⟨x₀, x⟩, hx₀, hx⟩ := hne
     have hxi : ∀ i, x i ∈ Z i := fun i => hx i (Set.mem_univ i)
-    letI : MeasurableSpace (G₀ × ∀ i, G i) := borel _
-    haveI : BorelSpace (G₀ × ∀ i, G i) := ⟨rfl⟩
+    let : MeasurableSpace (G₀ × ∀ i, G i) := borel _
+    have : BorelSpace (G₀ × ∀ i, G i) := ⟨rfl⟩
     have hνinv : ∀ g : G₀ × ∀ i, G i,
         (m₀.prod (Measure.pi m)).map
           (fun x => (a₀ g.1 x.1, fun i => a i (g.2 i) (x.2 i))) = m₀.prod (Measure.pi m) := by
@@ -452,7 +452,7 @@ theorem exists_scale (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b : 
   classical
   obtain ⟨tr, lc, sc, t2, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have tk := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI := tk.1
+  have := tk.1
   obtain ⟨-, -, -, hlat, -, -, -, hglue, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b n M
   have hpt : ∀ Y : Fin n → Fin M → Fv F v ⊗[F] E, ∃ N : ℕ, 0 < N ∧
       (fun a i => (N : Fv F v ⊗[F] E) * Y a i) ∈ latV b v := by
@@ -596,15 +596,15 @@ theorem local_pack (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M : ℕ} (J : Ma
       ∀ Y ∈ {Y : Fin n → Fin M → R ⊗[F] E | gramR R σ J Y = T.map (inclR R)},
       ∃ h : HA R σ J, actW R σ J h X = Y) := by
   obtain ⟨tr, lc, sc, t2, art, red, -⟩ := id hR
-  haveI := tr
-  haveI := lc
-  haveI := sc
-  haveI := t2
-  haveI := art
-  haveI := red
+  have := tr
+  have := lc
+  have := sc
+  have := t2
+  have := art
+  have := red
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam hlam
-  haveI := hW n M
-  haveI := hH n
+  have := hW n M
+  have := hH n
   have hfin := _root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hσ M J hJ R hR n _ _ m (hW n M) (hH n) hm (hermOf R σ T hT)
   have hinv := _root_.GlobalTheory.CompanionTheory.SW.FibreInv.map_actW_fibre F E σ hσ M J hJ R hR n _ _ m (hW n M) (hH n) hm
   have hunit : ∀ X : Fin n → Fin M → R ⊗[F] E, gramR R σ J X = T.map (inclR R) →
@@ -635,45 +635,45 @@ theorem fact_S : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   have hRI := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   have hRv := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
   obtain ⟨trI, lcI, scI, t2I, -⟩ := id hRI
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hRv v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hRv v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hRv v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v) := fun v => (hRv v).2.2.2.1
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hRv v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hRv v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hRv v).2.2.1
+  have : ∀ v, T2Space (Fv F v) := fun v => (hRv v).2.2.2.1
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have kA := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
   have kI := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   have kV := fun v => _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI := kA.1
-  haveI := kA.2.1
-  haveI := kA.2.2.1
-  haveI := kA.2.2.2.1
-  haveI := kA.2.2.2.2.2.2.2.1 n M
-  haveI := kI.1
-  haveI := kI.2.1
-  haveI := kI.2.2.1
-  haveI := kI.2.2.2.1
-  haveI := kI.2.2.2.2.2.2.2.1 n M
-  haveI : ∀ v, IsTopologicalRing (Fv F v ⊗[F] E) := fun v => (kV v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v ⊗[F] E) := fun v => (kV v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v ⊗[F] E) := fun v => (kV v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.1
-  haveI : ∀ v, BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.2.2.2.2.1 n M
+  have := kA.1
+  have := kA.2.1
+  have := kA.2.2.1
+  have := kA.2.2.2.1
+  have := kA.2.2.2.2.2.2.2.1 n M
+  have := kI.1
+  have := kI.2.1
+  have := kI.2.2.1
+  have := kI.2.2.2.1
+  have := kI.2.2.2.2.2.2.2.1 n M
+  have : ∀ v, IsTopologicalRing (Fv F v ⊗[F] E) := fun v => (kV v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v ⊗[F] E) := fun v => (kV v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v ⊗[F] E) := fun v => (kV v).2.2.1
+  have : ∀ v, T2Space (Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.1
+  have : ∀ v, BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.2.2.2.2.1 n M
   have uA := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
   have uI := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (Ainf F)
   have uV := fun v => _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (Fv F v)
-  haveI := uI.1
-  haveI := uI.2.1
-  haveI := uI.2.2.1
-  haveI := uI.2.2.2.1
-  haveI : ∀ v, IsTopologicalGroup (HA (Fv F v) σ J) := fun v => (uV v).1
-  haveI : ∀ v, LocallyCompactSpace (HA (Fv F v) σ J) := fun v => (uV v).2.1
-  haveI : ∀ v, SecondCountableTopology (HA (Fv F v) σ J) := fun v => (uV v).2.2.1
-  haveI : ∀ v, T2Space (HA (Fv F v) σ J) := fun v => (uV v).2.2.2.1
+  have := uI.1
+  have := uI.2.1
+  have := uI.2.2.1
+  have := uI.2.2.2.1
+  have : ∀ v, IsTopologicalGroup (HA (Fv F v) σ J) := fun v => (uV v).1
+  have : ∀ v, LocallyCompactSpace (HA (Fv F v) σ J) := fun v => (uV v).2.1
+  have : ∀ v, SecondCountableTopology (HA (Fv F v) σ J) := fun v => (uV v).2.2.1
+  have : ∀ v, T2Space (HA (Fv F v) σ J) := fun v => (uV v).2.2.2.1
   have LI := local_pack σ hσ J hJ (Ainf F) hRI T hT hdet b laminf hinf.1 minf hminf
   have LV := fun v => local_pack σ hσ J hJ (Fv F v) (hRv v) T hT hdet b (lam v) (hlam v).1 (m v) (hm v)
-  haveI := LI.1
-  haveI : ∀ v : S, IsLocallyFiniteMeasure (m v.1 (hermOf (Fv F v.1) σ T hT)) := fun v => (LV v.1).1
+  have := LI.1
+  have : ∀ v : S, IsLocallyFiniteMeasure (m v.1 (hermOf (Fv F v.1) σ T hT)) := fun v => (LV v.1).1
   obtain ⟨cI, cF, cV, hlat, hint, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b n M
   have hprc : Continuous (pr S : (Fin n → Fin M → AF F ⊗[F] E) → _) :=
     cI.prodMk (continuous_pi fun v => (cV v.1).comp cF)
@@ -688,11 +688,11 @@ theorem fact_S : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   have cAV := fun v => ((uV v).2.2.2.2.2 n).1
   have cAA := (uA.2.2.2.2.2 n).1
   set P := (I.restrict (intOff b S)).map (pr S) with hPdef
-  haveI hPc : IsFiniteMeasureOnCompacts P := ⟨fun K hK => by
+  have hPc : IsFiniteMeasureOnCompacts P := ⟨fun K hK => by
     rw [hPdef, Measure.map_apply hprm hK.isClosed.measurableSet,
       Measure.restrict_apply (hprm hK.isClosed.measurableSet)]
     exact preimage_lt_top σ hσ b S I K hK⟩
-  haveI hPl : IsLocallyFiniteMeasure P := inferInstance
+  have hPl : IsLocallyFiniteMeasure P := inferInstance
   have hPinv : ∀ (g₀ : HA (Ainf F) σ J) (g : ∀ v : S, HA (Fv F v.1) σ J),
       P.map (fun x => (actW (Ainf F) σ J g₀ x.1, fun v => actW (Fv F v.1) σ J (g v) (x.2 v))) = P := by
     intro g₀ g

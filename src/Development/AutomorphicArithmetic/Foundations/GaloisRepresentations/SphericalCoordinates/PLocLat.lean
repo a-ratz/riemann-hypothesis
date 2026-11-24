@@ -78,7 +78,7 @@ private theorem exists_frame {K : Type*} [Field K] (f : K → ℝ) (h0 : f 0 = 0
     exact mul_left_cancel₀ hp.ne' (by rw [_root_.mul_one]; exact h.symm)
   obtain ⟨t, hts, hspan, hli⟩ := exists_linearIndependent K (s : Set (Fin n → K))
   have hfin : t.Finite := s.finite_toSet.subset hts
-  haveI := hfin.fintype
+  have := hfin.fintype
   have htop : ⊤ ≤ Submodule.span K (Set.range ((↑) : t → Fin n → K)) := by
     rw [Subtype.range_coe, hspan, hs]
   have hcard : Fintype.card t = n := by
@@ -166,7 +166,7 @@ private theorem exists_gl {K : Type} [Field K] (f : K → ℝ) (h0 : f 0 = 0)
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun i _ => ?_
       simp only [ite_smul, zero_smul]
-      rw [Finset.sum_ite_eq, if_pos (hbs i)]
+      rw [Finset.sum_ite_eq, ite_eq_left (hbs i)]
   · rintro ⟨a, ha1, rfl⟩ i
     choose! C hC1 hC2 using hcoord
     have hz : ∑ y ∈ s, a y • y = colM b *ᵥ ∑ y ∈ s, a y • C y := by

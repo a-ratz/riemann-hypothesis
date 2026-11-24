@@ -89,17 +89,17 @@ theorem minor_tri (A B Z : Matrix (Fin m) (Fin m) E) (hA : ∀ i j, i < j → A 
     · intro p
       rfl
   have hdA : (A.submatrix e e).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular (A.submatrix e e)
+    rw [Matrix.det_of_isLowerTriangular (A.submatrix e e)
       (fun i j hij => hA _ _ (by exact OrderDual.toDual_lt_toDual.1 hij))]
     simp [hA1]
   have hdB : (B.submatrix e e).det = 1 := by
-    rw [Matrix.det_of_upperTriangular
+    rw [Matrix.det_of_isUpperTriangular
       (show (B.submatrix e e).BlockTriangular id from fun i j hij => hB _ _ (by exact hij))]
     simp [hB1]
   rw [hsub (A * Z) B (fun i j p hp => by
-      rw [hB p (e j) (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le j.2 hp)), mul_zero]),
+      rw [hB p (e j) (Fin.lt_def.2 (lt_of_lt_of_le j.2 hp)), mul_zero]),
     hsub A Z (fun i j p hp => by
-      rw [hA (e i) p (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le i.2 hp)), zero_mul]),
+      rw [hA (e i) p (Fin.lt_def.2 (lt_of_lt_of_le i.2 hp)), zero_mul]),
     Matrix.det_mul, Matrix.det_mul, hdA, hdB, one_mul, mul_one]
 
 end Mat
@@ -212,7 +212,7 @@ theorem lset_of (f : Fin (r + 1) → V) (g : Fin (r + 1) → S.V) (gs : Fin r �
     exact TermBasic.inner_smul S hn (c.e x)
   ext w
   obtain ⟨x0, rfl⟩ := Submodule.mkQ_surjective _ w
-  simp only [HermSp.Lset, Set.mem_setOf_eq, SetLike.mem_coe]
+  simp only [HermSp.Lset, Set.mem_ofPred_eq, SetLike.mem_coe]
   constructor
   · intro hw
     obtain ⟨y, hy, hyp, hyx⟩ := (key x0).1 ((e_mem_inn_iff_exists_mkW_mem c f L x0).2 ⟨x0.2, hw⟩)
@@ -316,8 +316,8 @@ theorem term_over (hM : M.OK) (c : Coord P S) (hP : P.RelG (theta M)) (d : Datum
     (ht : IsTermOver P d t) :
     H.IsTerm t ∧ (d.L : Set (H.Wb P.A.f)) = H.Lset t.abelian₂ P.A.f ∧
       (d.L' : Set (H.Wb P.B.f)) = H.Lset t.abelian₂ P.B.f := by
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   unfold LocNG.FPair.RelG at hP
   obtain ⟨-, hD, hG, -, -, -, hN⟩ := hP
   unfold LocNG.FPair.NormsOK at hN
@@ -340,10 +340,10 @@ theorem term_over (hM : M.OK) (c : Coord P S) (hP : P.RelG (theta M)) (d : Datum
     rw [hLam', lat_img_eq_grp_smul_lat, trB.2.2.2 d.L']
   have hgA : ∀ a (j : Fin r), hf M.L S.Hm (S.f a) (S.f j.castSucc) = 0 := fun a j => by
     rw [S.gram]
-    exact if_neg fun h => (Fin.castSucc_lt_last j).ne h.2
+    exact ite_eq_right fun h => (Fin.castSucc_lt_last j).ne h.2
   have hgB : ∀ a (j : Fin r), hf M.L S.Hm (S.f' a) (S.f' j.castSucc) = 0 := fun a j => by
     rw [S.gram']
-    exact if_neg fun h => (Fin.castSucc_lt_last j).ne h.2
+    exact ite_eq_right fun h => (Fin.castSucc_lt_last j).ne h.2
   have hfrA : H.IsFrame t.abelian₂ r t.f t.T := by
     rw [hfA, hT]
     exact frame_of c P.A S.f c.f_eq hgA (by simpa using hli.comp Sum.inl Sum.inl_injective) n hnS t.abelian₂

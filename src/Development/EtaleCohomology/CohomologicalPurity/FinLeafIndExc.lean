@@ -499,7 +499,7 @@ theorem locT_zero [IsFiltered J] (hc : IsColimit (Cocone.mk _ t)) (j : J)
 theorem locT_isColimit [IsFiltered J] (hc : IsColimit (Cocone.mk _ t)) :
     Nonempty (IsColimit (Cocone.mk _ (locT f D s φ t he))) := by
   have hc' := isColimitOfPreserves (forget CommRingCat) hc
-  haveI : ReflectsColimitsOfShape J (forget CommRingCat.{0}) := reflectsColimitsOfShape_of_reflectsIsomorphisms
+  have : ReflectsColimitsOfShape J (forget CommRingCat.{0}) := reflectsColimitsOfShape_of_reflectsIsomorphisms
   refine ⟨isColimitOfReflects (forget CommRingCat) (Types.FilteredColimit.isColimitOf' _ _ ?_ ?_)⟩
   · intro (z : Localization.Away (φ f))
     obtain ⟨⟨x, ⟨_, n, rfl⟩⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers (φ f)) z
@@ -624,7 +624,7 @@ namespace LateralTheory.CohomologicalPurity
 
 theorem span_range_mul_span_singleton {A : Type} [CommRing A] {r : ℕ} (x : Fin r → A) (f : A) :
     Ideal.span (Set.range x) * Ideal.span {f} = Ideal.span (Set.range (fun k => x k * f)) := by
-  rw [Ideal.span_mul_span', Set.mul_singleton, ← Set.range_comp]
+  rw [Ideal.span_mul_span, Set.mul_singleton, ← Set.range_comp]
   rfl
 
 theorem OffContLoc_of : OffContLoc := by

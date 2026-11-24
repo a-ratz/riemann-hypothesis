@@ -79,8 +79,8 @@ theorem orbit_coset_finite (hK : IsCommensurated K) (s : G) :
     (MulAction.orbit K ((s : G ⧸ K))).Finite := by
   unfold IsCommensurated at hK
   let H := (K.map (MulAut.conj s).toMonoidHom).subgroupOf K
-  haveI : H.FiniteIndex := ⟨hK s⟩
-  haveI : Finite (K ⧸ MulAction.stabilizer K ((s : G ⧸ K))) := by
+  have : H.FiniteIndex := ⟨hK s⟩
+  have : Finite (K ⧸ MulAction.stabilizer K ((s : G ⧸ K))) := by
     rw [stabilizer_coset_eq K s]
     exact Subgroup.finite_quotient_of_finiteIndex
   exact Set.finite_coe_iff.mp ((MulAction.orbitEquivQuotientStabilizer K _).finite_iff.mpr this)

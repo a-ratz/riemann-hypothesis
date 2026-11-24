@@ -64,8 +64,8 @@ theorem exists_flat_lift (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O 
         y ≫ Y.q.left = p ≫ (DegPre.prB Q (FractionRing R)).left := by
   obtain ⟨hF, hS, -⟩ := GlobalTheory.Heat.Descend.q_props Y
   let p := pullback.fst (DegPre.prB Q (FractionRing R)).left Y.q.left
-  have hpF : Flat p := by haveI := hF; dsimp [p]; infer_instance
-  have hpS : Surjective p := by haveI := hS; dsimp [p]; infer_instance
+  have hpF : Flat p := by have := hF; dsimp [p]; infer_instance
+  have hpS : Surjective p := by have := hS; dsimp [p]; infer_instance
   obtain ⟨w, hw⟩ := p.surjective z
   refine ⟨_, p, w, pullback.snd _ _, hw, Flat.epi_of_flat_of_surjective p, ?_, pullback.condition.symm⟩
   let _ := (p.stalkMap w).hom.toAlgebra

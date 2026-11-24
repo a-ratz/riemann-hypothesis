@@ -170,7 +170,7 @@ theorem coe_eq_of_pow {𝔞 𝔟 : Submodule (𝓞 L) L} (hb : 𝔞 * 𝔟 = 1) 
     ⟨⟨_, FractionalIdeal.isFractional_of_fg (Submodule.fg_of_isUnit hun)⟩, rfl⟩
   have hJz : J ^ n = FractionalIdeal.spanSingleton (𝓞 L)⁰ z := by
     apply FractionalIdeal.coeToSubmodule_injective
-    simpa only [FractionalIdeal.coe_pow, FractionalIdeal.coe_spanSingleton] using h1
+    simpa only [FractionalIdeal.coeToSubmodule_pow, FractionalIdeal.coeToSubmodule_spanSingleton] using h1
   have hJ : J ≠ 0 := fun h0 => by
     rw [h0, zero_pow hn.ne', eq_comm, FractionalIdeal.spanSingleton_eq_zero_iff] at hJz
     exact hz hJz
@@ -247,7 +247,7 @@ theorem span_det_eq {M M' : Submodule (𝓞 L) (Fin N → L)} (h : M.FG)
   · rintro _ ⟨A, hA, rfl⟩
     obtain ⟨x, hx, e⟩ := exists_val_det_eq h hs w
     have h1 := val_det_le h' hs' w (x := fun i => A.mulVec (x i)) fun i => hA _ (hx i)
-    rw [det_of_mulVec', map_mul, e, ← le_div_iff₀ (zero_lt_iff.2 exp_ne_zero), ← exp_sub] at h1
+    rw [det_of_mulVec', map_mul, e, ← le_div_iff₀ (pos_iff_ne_zero.2 exp_ne_zero), ← exp_sub] at h1
     rw [hc]
     convert h1 using 2
     ring
@@ -449,7 +449,7 @@ theorem isConjPl_iff (w w' : HeightOneSpectrum (𝓞 H.E)) : IsConjPl H w w' ↔
   exact ⟨(existsUnique_conjPl H.conj.toRingEquiv w).choose_spec.2 w', fun h => h ▸ val_bar H w⟩
 
 theorem conj_conj (x : H.E) : H.conj (H.conj x) = x := by
-  letI := H.cmStar
+  let := H.cmStar
   have hs : ∀ x : H.E, star x = H.conj x := bridge_star_holds R H
   rw [← hs, ← hs, star_star]
 
@@ -465,7 +465,7 @@ theorem expo_finite (a : Ideles H.E) : {w | expo H a w ≠ 0}.Finite := by
   have h := finite_valAt_ne_one a
   refine (h.union (h.image (bar H))).subset fun w hw => ?_
   by_contra hn
-  simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at hn
+  simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at hn
   have h2 : valAt (bar H w) a = 1 := by
     by_contra h3
     exact hn.2 ⟨bar H w, h3, bar_bar H w⟩
@@ -560,7 +560,7 @@ theorem normOne_iff (𝔞 : Submodule (𝓞 H.E) H.E) :
     let J : FractionalIdeal (𝓞 H.E)⁰ H.E := ⟨𝔟, FractionalIdeal.isFractional_of_fg (Submodule.fg_of_isUnit hv)⟩
     have hIJ : I * J = 1 := by
       apply FractionalIdeal.coeToSubmodule_injective
-      simp only [FractionalIdeal.coe_mul, FractionalIdeal.coe_one]
+      simp only [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_one]
       exact h
     have hI := left_ne_zero_of_mul_eq_one hIJ
     have hJ := right_ne_zero_of_mul_eq_one hIJ
@@ -586,17 +586,17 @@ theorem normOne_iff (𝔞 : Submodule (𝓞 H.E) H.E) :
     rw [classIdeal_mk]
     have h0 := normIdeal_ne_zero H a
     refine ⟨((normIdeal H a)⁻¹ : FractionalIdeal (𝓞 H.E)⁰ H.E), fun x => ?_, ?_⟩
-    · rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_coe, GlobalTheory.Idele.mem_iff_valuation_le h0,
+    · rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_coeToSubmodule, GlobalTheory.Idele.mem_iff_valuation_le h0,
         GlobalTheory.Idele.mem_iff_valuation_le (inv_ne_zero h0)]
       simp only [FractionalIdeal.count_inv, count_normIdeal, val_conj]
       refine ⟨fun h w => ?_, fun h w => ?_⟩
       · simpa [expo_bar] using h (bar H w)
       · simpa [expo_bar, bar_bar] using h (bar H w)
-    · rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ h0, FractionalIdeal.coe_one]
+    · rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ h0, FractionalIdeal.coeToSubmodule_one]
 
 theorem classIdeal_e1T : letI := H.cmStar
     ∀ z : unitary H.E, classIdeal H (QuotientGroup.mk (e1T H z)) = FractionalIdeal.spanSingleton (𝓞 H.E)⁰ (z : H.E) := by
-  letI := H.cmStar
+  let := H.cmStar
   intro z
   obtain ⟨k, hk⟩ := GlobalTheory.Mem.Col2.exists_eq_div_conj H z
   have hz : (z : H.E) ≠ 0 := fun h => k.ne_zero (by rw [← hk, h, zero_mul])
@@ -612,7 +612,7 @@ theorem classIdeal_e1T : letI := H.cmStar
 
 theorem classIdeal_relDetT (N : ℕ) : letI := H.cmStar
     ∀ L L' : SDLat H.E N, classIdeal H (relDetT H N L.1 L'.1) = detFI L'.1 L'.2.1 * (detFI L.1 L.2.1)⁻¹ := by
-  letI := H.cmStar
+  let := H.cmStar
   intro L L'
   have hn := detFI_ne_zero L.2.1 L.2.2.1
   have hn' := detFI_ne_zero L'.2.1 L'.2.2.1
@@ -625,7 +625,7 @@ theorem classIdeal_relDetT (N : ℕ) : letI := H.cmStar
   · refine ((ordSub_detSub_lattice _ N L.1 L.2.1 L.2.2.1).1.union
       (ordSub_detSub_lattice _ N L'.1 L'.2.1 L'.2.2.1).1).subset fun v hv => ?_
     by_contra h
-    simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at h
+    simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at h
     exact hv (by simp [h.1, h.2])
   · intro v
     have h1 := ordSub_detSub_selfDual R H N L v _ ((isConjPl_iff H v _).2 rfl)
@@ -651,8 +651,8 @@ theorem pinned_of_equiv (D : D7) (e : DtT D.host ⧸ UOT D.host ≃* D.Dt ⧸ D.
   refine ⟨fun x y h => e.symm.injective (classIdeal_injective _ (FractionalIdeal.coeToSubmodule_injective h)),
     fun 𝔞 => (normOne_iff D.host 𝔞).trans ⟨fun ⟨x, hx⟩ => ⟨e x, by simpa using hx⟩, fun ⟨x, hx⟩ => ⟨_, hx⟩⟩,
     fun x y => ?_, fun z => ?_, fun N L L' => ?_⟩
-  · simp only [map_mul, FractionalIdeal.coe_mul]
-  · simp only [h1, e.symm_apply_apply, classIdeal_e1T D.host z, FractionalIdeal.coe_spanSingleton]
+  · simp only [map_mul, FractionalIdeal.coeToSubmodule_mul]
+  · simp only [h1, e.symm_apply_apply, classIdeal_e1T D.host z, FractionalIdeal.coeToSubmodule_spanSingleton]
   · simp only [h2, e.symm_apply_apply, classIdeal_relDetT D.host N L L', detId_eq]
 
 theorem relDet_eq_of_pinned (D : D7) (idl : D.Dt ⧸ D.UO → IdE D) (hp : RelDetPinned D idl)

@@ -243,15 +243,15 @@ theorem exists_discreteValuationSubring_of_subring (B : Subring L) [IsNoetherian
   have hspan : Ideal.span {y'} ≠ ⊤ := by
     rwa [Ne, Ideal.span_singleton_eq_top]
   obtain ⟨p, hp⟩ : Nonempty (Ideal.span {y'}).minimalPrimes := Ideal.nonempty_minimalPrimes hspan
-  haveI hpp : p.IsPrime := hp.1.1
+  have hpp : p.IsPrime := hp.1.1
   have hyp : y' ∈ p := hp.1.2 (Ideal.mem_span_singleton_self y')
   have hht : p.height ≤ 1 := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ p hp
   set A0 := (LocalSubring.ofPrime B p).toSubring with hA0
-  haveI : IsNoetherianRing A0 := IsLocalization.isNoetherianRing p.primeCompl A0 inferInstance
-  haveI : Ring.KrullDimLE 1 A0 := by
+  have : IsNoetherianRing A0 := IsLocalization.isNoetherianRing p.primeCompl A0 inferInstance
+  have : Ring.KrullDimLE 1 A0 := by
     rw [Ring.krullDimLE_iff, IsLocalization.AtPrime.ringKrullDim_eq_height p A0]
     exact_mod_cast hht
-  haveI : Ring.DimensionLEOne A0 := ⟨fun hq hq' => Ideal.IsPrime.isMaximal_of_ne_bot hq' hq⟩
+  have : Ring.DimensionLEOne A0 := ⟨fun hq hq' => Ideal.IsPrime.isMaximal_of_ne_bot hq' hq⟩
   set y'' : A0 := algebraMap B A0 y' with hy''
   have hy''m : y'' ∈ IsLocalRing.maximalIdeal A0 := by
     rw [← IsLocalization.AtPrime.map_eq_maximalIdeal p A0]
@@ -262,8 +262,8 @@ theorem exists_discreteValuationSubring_of_subring (B : Subring L) [IsNoetherian
   obtain ⟨V, hAV, hVy⟩ := Ideal.image_subset_nonunits_valuationSubring _ hspan2
   have hyV : y ∈ V.nonunits := hVy ⟨y'', Ideal.mem_span_singleton_self _, rfl⟩
   have hBV : B ≤ V.toSubring := (LocalSubring.le_ofPrime B p).trans hAV
-  letI : Algebra A0 V := (Subring.inclusion hAV).toAlgebra
-  haveI : FaithfulSMul A0 V := (faithfulSMul_iff_algebraMap_injective A0 V).mpr
+  let : Algebra A0 V := (Subring.inclusion hAV).toAlgebra
+  have : FaithfulSMul A0 V := (faithfulSMul_iff_algebraMap_injective A0 V).mpr
     fun a b h => Subtype.ext (show (a : L) = b from congrArg (fun v : V => (v : L)) h)
   have hbir : ∀ x : V, ∃ c : A0, c ≠ 0 ∧ ∃ b : A0, algebraMap A0 V c * x = algebraMap A0 V b := by
     intro x
@@ -271,8 +271,8 @@ theorem exists_discreteValuationSubring_of_subring (B : Subring L) [IsNoetherian
     refine ⟨⟨c, LocalSubring.le_ofPrime B p hc⟩, fun h => hc0 (congrArg Subtype.val h),
       ⟨c * x, LocalSubring.le_ofPrime B p hcx⟩, Subtype.ext rfl⟩
   have hKA := krullAkizuki_of_birational (A := A0) (B := V) hbir
-  haveI : IsNoetherianRing V := hKA.1
-  haveI : IsPrincipalIdealRing V := ((IsBezout.tfae (R := V)).out 1 2).mp hKA.1
+  have : IsNoetherianRing V := hKA.1
+  have : IsPrincipalIdealRing V := ((IsBezout.tfae (R := V)).out 1 2).mp hKA.1
   have hVy0 : y ∈ V := hBV hy
   have hne : IsLocalRing.maximalIdeal V ≠ ⊥ := by
     intro h
@@ -448,7 +448,7 @@ theorem exists_discreteValuationSubring_dominating_notMem [Algebra.EssFiniteType
   have hx0 : x ≠ 0 := by
     rintro rfl
     exact hx isIntegral_zero
-  letI := invertibleOfNonzero (inv_ne_zero hx0)
+  let := invertibleOfNonzero (inv_ne_zero hx0)
   let B := Algebra.adjoin R {x⁻¹}
   let xinv : B := ⟨x⁻¹, Algebra.subset_adjoin rfl⟩
   have hne : (maximalIdeal R).map (algebraMap R B) ⊔ Ideal.span {xinv} ≠ ⊤ := by
@@ -477,7 +477,7 @@ theorem integralClosure_eq_iInf_discreteValuationSubring [Algebra.EssFiniteType 
         LocalSubring.range (algebraMap R L) ≤ V.toLocalSubring}, V.1.toSubring := by
   refine le_antisymm (le_iInf fun V x hx => ?_) fun x hx => ?_
   · have h := ((localSubring_range_le_valuationSubring_iff _ _).mp V.2.2).1
-    letI : Algebra R V.1 := ((algebraMap R L).codRestrict V.1 h).toAlgebra
+    let : Algebra R V.1 := ((algebraMap R L).codRestrict V.1 h).toAlgebra
     have : IsScalarTower R V.1 L := .of_algebraMap_eq fun _ => rfl
     obtain ⟨y, rfl⟩ := (IsIntegrallyClosed.isIntegral_iff (R := V.1) (K := L)).mp
       (IsIntegral.tower_top (R := R) hx)
@@ -592,7 +592,7 @@ theorem krullAkizuki (B : Subalgebra A L) : IsNoetherianRing B ∧ Ring.Dimensio
     Algebra.finite_adjoin_of_finite_of_isIntegral s.finite_toSet fun x hx => (hsT hx).2
   have hCn : IsNoetherianRing C := IsNoetherianRing.of_finite A C
   have hCd : Ring.DimensionLEOne C := Ring.DimensionLEOne.of_isIntegral A C
-  letI : Algebra C B := (Subalgebra.inclusion hCB).toAlgebra
+  let : Algebra C B := (Subalgebra.inclusion hCB).toAlgebra
   have : FaithfulSMul C B := (faithfulSMul_iff_algebraMap_injective _ _).mpr
     (Subalgebra.inclusion_injective hCB)
   refine krullAkizuki_of_birational (A := C) (B := B) fun x => ?_

@@ -86,7 +86,7 @@ theorem _root_.GlobalTheory.evCot_of_univDer :
   unfold _root_.ReciprocityTheory.PGsh.Be2.EvCotStatement
   intro C _ _ hinj
   classical
-  letI inst : ∀ i, Algebra Tw.O.carrier (D.fin.AAx i).carrier := fun i =>
+  let inst : ∀ i, Algebra Tw.O.carrier (D.fin.AAx i).carrier := fun i =>
     ((D.fin.sO i).1 : Tw.O.carrier →+* (D.fin.AAx i).carrier).toAlgebra
   have hspec : ∀ t, (D.ptMap t).comp (D.fin.sO (D.ptIdx t)) = _root_.ReciprocityTheory.PGsh.LHom.id _ ∧
       B.map (D.ptMap t) (D.fin.y (D.ptIdx t)) = _root_.ReciprocityTheory.PGsh.Be2.ptOf B D.L.τ t := fun t => by

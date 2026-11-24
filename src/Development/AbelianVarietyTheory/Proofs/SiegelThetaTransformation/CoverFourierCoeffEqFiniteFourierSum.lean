@@ -289,7 +289,7 @@ theorem ex_congr {q q' : ℚ} (h : ∃ k : ℤ, q - q' = k) : ex q = ex q' := by
   rw [show q = q' + k by rw [← hk]; ring, ex_add, ex_int, _root_.mul_one]
 
 theorem ex_nsmul (m : ℕ) (q : ℚ) : ex (m • q) = ex q ^ m := by
-  rw [ex, ex, ← Complex.exp_nat_mul]; congr 1; simp; ring
+  rw [ex, ex, ← exp_natCast_mul]; congr 1; simp; ring
 
 theorem ex_sum (f : Fin n → ℚ) : ex (∑ b, f b) = ∏ b, ex (f b) := by
   simp only [ex, ← Complex.exp_sum]; congr 1; simp [Finset.mul_sum]

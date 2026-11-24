@@ -104,7 +104,7 @@ theorem norm_le_one_of_int (x : Qbar l) (hx : IsIntegral ℤ_[l] x) : ‖x‖ �
   | (intros; exact _root_.GlobalTheory.PadicIntegralNorm.norm_le_one_of_isIntegral_padicInt ..)
 
 theorem norm_le_one (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 := by
-  haveI := c.fin
+  have := c.fin
   have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
   exact norm_le_one_of_int x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
 
@@ -115,7 +115,7 @@ theorem eps_mem (c : Coef l) (s : G ℚ Ω) : eps l s ∈ c.O := by
 
 theorem eps_cont : Continuous fun s : G ℚ Ω => eps l s :=
   (continuous_algebraMap ℚ_[l] (Qbar l)).comp
-    (continuous_subtype_val.comp ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l)))
+    (continuous_subtypeVal.comp ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l)))
 
 theorem eps_mul (r s : G ℚ Ω) : eps l (r * s) = eps l r * eps l s := by
   simp [eps, map_mul]
@@ -171,7 +171,7 @@ theorem mulVec_mem (c : Coef l) {M : Matrix (Fin 2) (Fin 2) (Qbar l)} {v : Fin 2
 theorem psi_sm (n : ℕ) (ψ : G ℚ Ω →* Multiplicative (ZMod (l ^ n))) (r s : G ℚ Ω) :
     ‖(((ψ (r * s)).toAdd.val : ℕ) : Qbar l) - ((ψ r).toAdd.val : ℕ) - ((ψ s).toAdd.val : ℕ)‖ ≤
       ‖((l : ℕ) : Qbar l) ^ n‖ := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have e1 : (ψ (r * s)).toAdd = (ψ r).toAdd + (ψ s).toAdd := by rw [map_mul, toAdd_mul]
   rw [e1, ZMod.val_add]
   set m := (ψ r).toAdd.val + (ψ s).toAdd.val
@@ -380,12 +380,12 @@ theorem zeroSub_isClosed (V : GlobalTheory.Ord2.R2 Ω l) (H : Subgroup (G ℚ Ω
 
 theorem main : ∀ {Ω : Type} [inst : Field Ω] [inst_1 : Algebra ℚ Ω] {l : ℕ} [inst_2 : Fact (Nat.Prime l)] (S : Set GlobalTheory.Ord2.Pl) (V : GlobalTheory.Ord2.R2 Ω l) (H : Subgroup (Formalism.ConjugateSelfDual.G ℚ Ω)) (x : Formalism.ConjugateSelfDual.G ℚ Ω → Fin (2 : ℕ) → Formalism.ConjugateSelfDual.Qbar l), Subgroup.Normal H → IsClosed (↑H : Set (Formalism.ConjugateSelfDual.G ℚ Ω)) → (∀ a ∈ H, (V : Formalism.ConjugateSelfDual.G ℚ Ω → GL (Fin (2 : ℕ)) (Formalism.ConjugateSelfDual.Qbar l)) a = (1 : GL (Fin (2 : ℕ)) (Formalism.ConjugateSelfDual.Qbar l))) → x ∈ ReciprocityTheory.Gal.Z1 (UpperTheory.V.Loc.colRep V) → (∀ v ∉ S, ∀ (B : ValuationSubring Ω), Formalism.ConjugateSelfDual.IsPlaceOver B v → ∀ s ∈ ReciprocityTheory.Gal.Ine B, s ∈ H ∧ x s = (0 : Fin (2 : ℕ) → Formalism.ConjugateSelfDual.Qbar l)) → ∀ a ∈ ReciprocityTheory.Gal.NS Ω S, x a = (0 : Fin (2 : ℕ) → Formalism.ConjugateSelfDual.Qbar l) := by
   intro Ω _ _ l _ S V H x hH hHc hV hx hI a ha
-  haveI := zeroSub_normal V H x hH hV hx
+  have := zeroSub_normal V H x hH hV hx
   have hle : NS Ω S ≤ zeroSub V H x hV hx := by
     apply Subgroup.topologicalClosure_minimal _ _ (zeroSub_isClosed V H x hHc hV hx)
     apply Subgroup.normalClosure_le_normal
     intro s hs
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hs
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hs
     obtain ⟨v, hv, B, hB, hsB⟩ := hs
     exact hI v hv B hB s hsB
   exact (hle ha).2
@@ -419,8 +419,8 @@ theorem fix_root {l : ℕ} [Fact l.Prime] {s : G ℚ Ω} (hs : s ∈ (cycBar ℚ
       (algebraMap ℚ_[l] (Qbar l)).injective.comp Subtype.val_injective
     apply hinj
     simpa [cycBar] using h
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have h2 := cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) x hx
   have h3 : cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) = 1 := h1
   rw [h3] at h2
@@ -462,7 +462,7 @@ theorem comm_fix {l : ℕ} [Fact l.Prime] {n : ℕ} {a : Ω} (ha : ∀ g : G ℚ
 theorem isOpen_stab (x : Ω) : IsOpen {τ : G ℚ Ω | τ x = x} := by
   have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hx : IsIntegral ℚ x := (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {x}) := IntermediateField.adjoin.finiteDimensional hx
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {x}) := IntermediateField.adjoin.finiteDimensional hx
   have h := IntermediateField.fixingSubgroup_isOpen (IntermediateField.adjoin ℚ {x})
   have hle : (IntermediateField.adjoin ℚ {x}).fixingSubgroup ≤ MulAction.stabilizer (G ℚ Ω) x := fun g hg => by
     rw [MulAction.mem_stabilizer_iff, AlgEquiv.smul_def]
@@ -476,7 +476,7 @@ theorem root_mod {B : ValuationSubring Ω} {p m N : ℕ} (hp : p.Prime) (hpB : B
     {α : Ω} (hα : α ^ m = (N : Ω)) (hfr : B.valuation α ≤ 1 → B.valuation (α - α ^ p) < 1) :
     ∃ x : ZMod p, x ^ m = (N : ZMod p) := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hαle : B.valuation α ≤ 1 := by
     have h1 : B.valuation α ^ m ≤ 1 := by
       rw [← map_pow, hα]; exact (B.valuation_le_one_iff _).2 (natCast_mem B N)
@@ -488,7 +488,7 @@ theorem root_mod {B : ValuationSubring Ω} {p m N : ℕ} (hp : p.Prime) (hpB : B
   have hpk : ((p : ℕ) : IsLocalRing.ResidueField B) = 0 := by
     have := hmax (p : B) (by simpa using hpB)
     simpa using this
-  haveI : CharP (IsLocalRing.ResidueField B) p := (CharP.charP_iff_prime_eq_zero hp).2 hpk
+  have : CharP (IsLocalRing.ResidueField B) p := (CharP.charP_iff_prime_eq_zero hp).2 hpk
   let φ : ZMod p →+* IsLocalRing.ResidueField B := ZMod.castHom (dvd_refl p) _
   have hφ : Function.Injective φ := φ.injective
   have hr : IsLocalRing.residue B a ^ p = IsLocalRing.residue B a := by
@@ -570,11 +570,11 @@ theorem exists_odd_prime_gt_two_bounds : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type
       l ^ n ∣ normV w - 1 ∧ ∀ v ∈ S, ∃ x : ZMod (normV w), x ^ (l ^ n) = (normV v : ZMod (normV w)) := by
   intro l hl Ω _ _ _ n S S' U σ hU hσ
   classical
-  haveI hΩ : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have hΩ : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hm : 0 < l ^ n := pow_pos hl.out.pos n
   obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ (l ^ n) := by
-    haveI : NeZero ((l ^ n : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hm.ne'⟩
+    have : NeZero ((l ^ n : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hm.ne'⟩
     obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic (l ^ n) Ω)
       (Polynomial.degree_cyclotomic_pos _ Ω hm).ne'
     exact ⟨z, Polynomial.isRoot_cyclotomic_iff.1 hz⟩
@@ -598,7 +598,7 @@ theorem exists_odd_prime_gt_two_bounds : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type
     ((S.finite_toSet).union (S'.finite_toSet)).union (Ideal.finite_factors hl0)
   have hdense := GlobalTheory.Published.ChebotarevDegreeOne.dense (F := ℚ) (Ω := Ω) GlobalTheory.Published.chebotarevDegreeOne' hTfin
   obtain ⟨τ, hτO, w, hwT, -, B, hB, hτ⟩ := hdense.inter_open_nonempty O hO ⟨σ, hσO⟩
-  simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or] at hwT
+  simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or] at hwT
   obtain ⟨⟨hwS, hwS'⟩, hwl⟩ := hwT
   have hlw : ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal := fun h =>
     hwl (Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 h))
@@ -674,7 +674,7 @@ theorem inertia_fixes_root_of_unity {Ω : Type} [Field Ω] [Algebra ℚ Ω] (N :
   have hwζ : B.valuation ζ = 1 := by
     have hp : B.valuation ζ ^ N = 1 := by rw [← map_pow, hζ, map_one]
     rcases lt_trichotomy (B.valuation ζ) 1 with hlt | heq | hgt
-    · exact absurd hp (pow_lt_one₀ zero_le' hlt hN0).ne
+    · exact absurd hp (pow_lt_one₀ zero_le hlt hN0).ne
     · exact heq
     · exact absurd hp (one_lt_pow₀ hgt hN0).ne'
   have hI := (ReciprocityTheory.Gal.mem_Ine.mp hs).2 ζ hwζ.le
@@ -764,7 +764,7 @@ theorem eps_dec_cong : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Alge
   have hl2 := hl.two_le
   set p := normV w with hpdef
   have hp : p.Prime := GlobalTheory.Ord2.PrimeChar.normV_prime w
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hA : B.valuation (p : Ω) < 1 := GlobalTheory.Ord2.PrimeChar.val_normV_lt_one hB
   have hpl : p ≠ l := by
     intro e
@@ -781,10 +781,10 @@ theorem eps_dec_cong : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Alge
     rw [Nat.cast_sub h1, Nat.cast_one, sub_eq_zero] at this
     exact this
   have hIAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   have hN0 : l ^ n ≠ 0 := pow_ne_zero _ hl.ne_zero
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have hspec := cyclotomicCharacter.spec (L := Ω) l
     (MulSemiringAction.toRingAut (G ℚ Ω) Ω σ) ζ hζ.pow_eq_one
   set c : ℤ_[l] := ((cycZ ℚ Ω l σ : ℤ_[l]ˣ) : ℤ_[l]) with hc
@@ -911,7 +911,7 @@ theorem GlobalTheory.br_tame : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     rw [IsLocallyConstant.iff_exists_open]
     intro x
     have hc : Continuous (fun s : Ine (F := ℚ) B => u s) :=
-      (hucont.mono (fun s hs => hIneDec s hs)).comp_continuous continuous_subtype_val (fun s => s.2)
+      (hucont.mono (fun s hs => hIneDec s hs)).comp_continuous continuous_subtypeVal (fun s => s.2)
     refine ⟨(fun s : Ine (F := ℚ) B => u s) ⁻¹' Metric.ball (u x) ‖((l : ℕ) : Qbar l) ^ n‖,
       Metric.isOpen_ball.preimage hc, Metric.mem_ball_self hlpos, fun y hy => ?_⟩
     rw [hf, mem_ballSub]
@@ -1070,7 +1070,7 @@ theorem gen [IsAlgClosure ℚ Ω] {B : ValuationSubring Ω} {w : Pl} {τ : G ℚ
     (hI : ∀ a ∈ Ine (F := ℚ) B, Q a) (hτQ : Q τ)
     (hmul : ∀ s ∈ Dec (F := ℚ) B, ∀ t ∈ Dec (F := ℚ) B, Q s → Q t → Q (s * t))
     (hinv : ∀ s ∈ Dec (F := ℚ) B, Q s → Q s⁻¹) : ∀ s ∈ Dec (F := ℚ) B, Q s := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   set S : Subgroup (G ℚ Ω) := Subgroup.closure (insert τ (Ine (F := ℚ) B : Set (G ℚ Ω))) with hS
   have hSQ : ∀ s ∈ S, s ∈ Dec (F := ℚ) B ∧ Q s := by
     intro s hs
@@ -1587,7 +1587,7 @@ theorem htc_norm_le_one (c : Coef l) (x : Qbar l) (hx : x ∈ c.O) : ‖x‖ ≤
 
 theorem htc_continuous_cycBar : Continuous (cycBar ℚ Ω l) :=
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ ℚ Ω l)
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ ℚ Ω l)
 
 theorem htc_dual1_eq_one {W : R2 Ω l} {s : G ℚ Ω} (hs : s ∈ N0g W) : dual1 W s = 1 := by
   obtain ⟨hc, hw⟩ := Subgroup.mem_inf.1 hs
@@ -1607,7 +1607,7 @@ theorem htc_open_near (f : G ℚ Ω → Qbar l) (hf : Continuous f) (σ : G ℚ 
   have h1 : {a : G ℚ Ω | ‖f (σ * a) - f σ‖ < r} ∈ nhds (1 : G ℚ Ω) :=
     (isOpen_lt hc continuous_const).mem_nhds (by simp [hr])
   obtain ⟨E, hE, hsub⟩ := (krullTopology_mem_nhds_one_iff ℚ Ω _).1 h1
-  haveI := hE
+  have := hE
   exact ⟨E.fixingSubgroup, E.fixingSubgroup_isOpen, fun a ha => hsub ha⟩
 
 theorem htc_ker_toGS (S : Set Pl) : (toGS Ω S).ker = NS (F := ℚ) Ω S := by
@@ -1724,7 +1724,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
   have hψIne : ∀ v, v ≠ w → ∀ B' : ValuationSubring Ω, IsPlaceOver B' v → Ine (F := ℚ) B' ≤ ψ.ker :=
     fun v hv B' hB' s hs => hKill s (fun ζ hζ => htc_Ine_fix_mu (normV w) v B' hB' (hNwv v hv) s hs ζ hζ)
 
-  haveI hN0n : (N0g W).Normal := by unfold N0g; infer_instance
+  have hN0n : (N0g W).Normal := by unfold N0g; infer_instance
   have hN0c : IsClosed (N0g W : Set (G ℚ Ω)) := by
     unfold N0g
     rw [Subgroup.coe_inf, MonoidHom.coe_ker, MonoidHom.coe_ker]

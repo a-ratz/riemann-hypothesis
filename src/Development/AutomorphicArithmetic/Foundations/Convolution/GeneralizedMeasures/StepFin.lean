@@ -162,8 +162,8 @@ private theorem coset_sum {G : Type*} [Group G] (J : Subgroup G) (h : G → ℂ)
       rw [SetLike.mem_coe, ← QuotientGroup.eq, QuotientGroup.out_eq']
       exact eq_comm
     by_cases hh : (QuotientGroup.mk y : G ⧸ J) = c
-    · rw [if_pos hh, Set.indicator_of_mem (this.2 hh)]; rfl
-    · rw [if_neg hh, Set.indicator_of_notMem (fun q => hh (this.1 q))]
+    · rw [ite_eq_left hh, Set.indicator_of_mem (this.2 hh)]; rfl
+    · rw [ite_eq_right hh, Set.indicator_of_notMem (fun q => hh (this.1 q))]
   have hout : h (QuotientGroup.mk y : G ⧸ J).out = h y := by
     have hk : (QuotientGroup.mk y : G ⧸ J).out⁻¹ * y ∈ J := by
       rw [← QuotientGroup.eq, QuotientGroup.out_eq']
@@ -215,7 +215,7 @@ theorem UpperTheory.ConvolutionTheory.GM.stepFin :
     rw [hfs, he]
     rw [Ofin_sum]
     refine ContinuousLinearMap.ext fun v => ?_
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+    simp only [sum_apply, smul_apply, ContinuousLinearMap.comp_apply]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [← rhoF_comp_Ofin]
     rfl

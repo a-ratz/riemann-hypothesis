@@ -269,7 +269,7 @@ theorem gaussAbs_eq_iSup {κ : Type*} (G₀ : MvPolynomial κ (𝓞 K)) (h : G�
       (fun s => (w (algebraMap (𝓞 K) K (G₀.coeff s))).toNNReal)
     rw [heq, Real.coe_toNNReal _ (place_nonneg_lemma_3 w _)]
     exact le_ciSup hbdd ⟨i, hi⟩
-  · haveI : Nonempty G₀.support := ⟨⟨s0, hs0'⟩⟩
+  · have : Nonempty G₀.support := ⟨⟨s0, hs0'⟩⟩
     apply ciSup_le
     rintro ⟨i, hi⟩
     have hle := Finset.le_sup (f := fun s => (w (algebraMap (𝓞 K) K (G₀.coeff s))).toNNReal) hi
@@ -344,7 +344,7 @@ theorem relIndex_inv {κ : Type*} (G₀ : MvPolynomial κ (𝓞 K)) (h : G₀ �
     rw [inv_one] at h2
     have h3 : ((1 : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) ≤
         ((J⁻¹ : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) := h2
-    rwa [FractionalIdeal.coe_one] at h3
+    rwa [FractionalIdeal.coeToSubmodule_one] at h3
   have key := ReciprocityTheory.MultiplicativeHeights.SemiDegIdx.absNorm_mul_relIndex_one _ hfg h1
   have he : (⟨((J⁻¹ : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K),
       FractionalIdeal.isFractional_of_fg hfg⟩ : FractionalIdeal (𝓞 K)⁰ K) = J⁻¹ := rfl

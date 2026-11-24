@@ -164,7 +164,7 @@ theorem orbM_mem {D : D7} (X : HidaSetting D) (u' : D.what₂.Word)
 theorem measurableSet_FbI {D : D7} (X : HidaSetting D) (u' : D.what₂.Word)
     (hT : ∀ i j, X.B.I.cm.sig (gramE X.B.I.cm.sig X.B.I.J (tupH (frameOf X u')) j i) =
       gramE X.B.I.cm.sig X.B.I.J (tupH (frameOf X u')) i j) : MeasurableSet (FbI X u' hT) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   exact (isClosed_singleton.preimage (continuous_gramRP (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J)).measurableSet.inter
     (isOpen_IndI X).measurableSet
 

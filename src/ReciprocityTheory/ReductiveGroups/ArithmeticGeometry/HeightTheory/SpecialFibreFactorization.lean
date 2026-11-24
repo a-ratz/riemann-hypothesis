@@ -89,13 +89,13 @@ theorem basis_block0 (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
           (ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c))) =
         (M j).map fun q => algebraMap (KTp K d.D d.N) (KTf K d.D d.N) q /
           algebraMap (KTp K d.D d.N) (KTf K d.D d.N) Q0 := by
-  letI _inst : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let _inst : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
   obtain ⟨L, E, _, _, _, _, eL, eE, hcomp, hconst, hLc⟩ := d.decomp_block0 hd h c
-  letI iLY : Algebra (FractionRing (MvPolynomial (Fin (d.N + 1)) L))
+  let iLY : Algebra (FractionRing (MvPolynomial (Fin (d.N + 1)) L))
       (FractionRing (MvPolynomial (Fin (d.N + 1)) E)) :=
     (VariableBasisExtension.liftY (L := L) (E := E) (σ := Fin (d.N + 1))).toAlgebra
   obtain ⟨b', _, hb'2⟩ := VariableBasisExtension.basis_extend (σ := Fin (d.N + 1)) (Module.finBasis L E)
-  letI iFO : Algebra (FractionRing (MvPolynomial (Fin (d.N + 1)) L)) (OmS (Ω c) d.D d.N) :=
+  let iFO : Algebra (FractionRing (MvPolynomial (Fin (d.N + 1)) L)) (OmS (Ω c) d.D d.N) :=
     ((d.KTtoS h c).comp eL.symm.toRingHom).toAlgebra
   have hback : ∀ q : FractionRing (MvPolynomial (Fin (d.N + 1)) L),
       eE.symm (VariableBasisExtension.liftY q) = d.KTtoS h c (eL.symm q) := by
@@ -196,7 +196,7 @@ theorem hx4v2_eq_ratio_smul {Ω V : Type*} [Field Ω] [AddCommGroup V] [Module �
     (W : Submodule Ω V) (hW : Module.finrank Ω W = 1) {f g : V} (hf : f ∈ W) (hgW : g ∈ W)
     (hg : g ≠ 0) : f = ratio (Ω := Ω) f g • g := by
   have hg' : (⟨g, hgW⟩ : W) ≠ 0 := fun e => hg (congrArg Subtype.val e)
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨g, hgW⟩ : W) hg').mp hW ⟨f, hf⟩
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨g, hgW⟩ : W) hg').mp hW ⟨f, hf⟩
   have hex : ∃ a : Ω, f = a • g := ⟨a, (congrArg Subtype.val ha).symm⟩
   unfold ratio
   rw [dite_eq_left hex]

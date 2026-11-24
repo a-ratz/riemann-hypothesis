@@ -315,7 +315,7 @@ theorem _root_.GlobalTheory.WordGrowth.exists_average
     rintro _ ⟨g, hg, rfl⟩
     obtain ⟨j, hjF, hj⟩ := Set.mem_iUnion₂.1 (hF hg)
     refine ⟨j, hjF, ?_⟩
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hj
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hj
     show π j u = π g u
     calc π (j : G) u = π j (π ((j : G)⁻¹ * g) u) := by rw [hj]
       _ = π g u := by rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
@@ -388,8 +388,8 @@ private theorem abs_bound {G V : Type} [Group G] [TopologicalSpace G] [IsTopolog
         have := h2 x h
         have hx' : B x x = 0 := hx
         simp [hx'] at this }
-  letI : NormedAddCommGroup V := c.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
+  let : NormedAddCommGroup V := c.toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
   have hin : ∀ x y : V, inner ℂ x y = B y x := fun _ _ => rfl
   have := ha.2 K ho hc
   let ν := LinearMap.toContinuousLinearMap (μ ∘ₗ (fixed σ K).subtype)
@@ -650,7 +650,7 @@ private theorem exists_small : ∃ z : kˣ, Tendsto (fun i : ℕ => (z : k) ^ i)
   refine ⟨z, ?_, h2⟩
   have h3 : ValuativeRel.valuation k (z : k) < 1 :=
     lt_of_le_of_ne h1 fun h => h2.ne ((nabs_eq_one_iff z).2 h)
-  haveI : MulArchimedean (ValuativeRel.ValueGroupWithZero k) :=
+  have : MulArchimedean (ValuativeRel.ValueGroupWithZero k) :=
     ValuativeRel.isRankLeOne_iff_mulArchimedean.1 inferInstance
   refine (IsValuativeTopology.hasBasis_nhds_zero k).tendsto_right_iff.2 fun γ _ => ?_
   obtain ⟨n, hn⟩ := exists_pow_lt₀ h3 γ
@@ -716,7 +716,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   have hg : ∀ a ∈ L, x a = B (c0 + g a) := by
     intro a ha
     have ha' : P a := (Finset.mem_filter.mp ha).2
-    simp only [g, dif_pos ha']
+    simp only [g, dite_eq_left ha']
     exact ha'.choose_spec
   rw [← hxA] at hmem'
   obtain ⟨a₀, -, ha₀⟩ := Multiset.mem_map.mp hmem'
@@ -792,7 +792,7 @@ theorem UpperTheory.Lit.Mix.nolow :
   have hE : ∀ e, E (B e) = e := by
     intro e
     have hy : ∃ e' : ℝ, B e = B e' := ⟨e, rfl⟩
-    simp only [E, dif_pos hy]
+    simp only [E, dite_eq_left hy]
     exact (hB_inj hy.choose_spec).symm
   have hu_form : ∀ a, u a = B (E (u a)) := by
     intro a

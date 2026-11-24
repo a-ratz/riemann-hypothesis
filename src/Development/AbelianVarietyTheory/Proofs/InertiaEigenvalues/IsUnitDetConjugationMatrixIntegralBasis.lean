@@ -60,7 +60,7 @@ theorem conj_matrix_det_isUnit :
          ∃ u : K.O, IsUnit u ∧
            algebraMap K.O K.E u = (Matrix.of fun m l => w.repr (K'.c (w l)) m).det) := by
   intro K K' d φ hφ
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   intro w hw
   set C : Matrix (Fin d) (Fin d) K.E := Matrix.of fun m l => w.repr (K'.c (w l)) m with hC
   have hsm : ∀ (e : K.E) (x : K'.E), e • x = φ e * x := fun e x => rfl

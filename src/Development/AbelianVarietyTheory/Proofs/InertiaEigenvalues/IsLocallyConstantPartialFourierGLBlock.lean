@@ -73,7 +73,7 @@ theorem _root_.GlobalTheory.JR.fourG_isLocallyConstant_of_invariant :
       (∃ U ∈ 𝓝 (0 : _root_.GlobalTheory.JR.Gl r F), ∀ Y : _root_.GlobalTheory.JR.Gl r F, ∀ u ∈ U, f' (Y + u) = f' Y) →
       IsLocallyConstant (_root_.GlobalTheory.JR.fourG M ψ f') := by
   intro F E _ _ _ _ _ r M ψ hψ f hf ⟨U, hU, hUf⟩
-  haveI := _root_.GlobalTheory.JR.Unram.ultraF (F := F) E
+  have := _root_.GlobalTheory.JR.Unram.ultraF (F := F) E
   obtain ⟨C, hC⟩ := hf.2.isCompact.exists_bound_of_continuousOn
     (f := fun x : _root_.GlobalTheory.JR.Gl r F => (x.2.1, x.2.2.1))
     (continuous_snd.fst.prodMk continuous_snd.snd.fst).continuousOn

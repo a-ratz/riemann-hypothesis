@@ -91,10 +91,10 @@ private theorem lift_fix {F M Ω : Type} [Field F] [Field M] [Field Ω] [Algebra
 
 private theorem ex_conj (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] :
     ∃ c : G (maximalRealSubfield K) Ω, IsConjEl c := by
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   let φ : K →+* ℂ := Classical.choice inferInstance
-  letI : Algebra K ℂ := φ.toAlgebra
+  let : Algebra K ℂ := φ.toAlgebra
   let j : Ω →+* ℂ := (IsAlgClosed.lift (R := K) (S := Ω) (M := ℂ)).toRingHom
   obtain ⟨σ, hσ⟩ := ComplexEmbedding.exists_comp_symm_eq_of_comp_eq (k := maximalRealSubfield K) j
     (ComplexEmbedding.conjugate j) (RingHom.ext fun x =>
@@ -151,7 +151,7 @@ theorem UpperTheory.character_extends_to_galois_group :
       rw [AlgEquiv.mul_apply, conj_on hc, conj_on hd, IsCMField.complexConj_apply_apply]
     rwa [map_mul, h2, mul_one] at h4
   · let f : M →ₐ[maximalRealSubfield K] Ω := IsScalarTower.toAlgHom (maximalRealSubfield K) M Ω
-    haveI : FiniteDimensional (maximalRealSubfield K) f.fieldRange :=
+    have : FiniteDimensional (maximalRealSubfield K) f.fieldRange :=
       (AlgEquiv.ofInjectiveField f).toLinearEquiv.finiteDimensional
     refine Subgroup.isOpen_mono (fun g hg => ?_) (IntermediateField.fixingSubgroup_isOpen f.fieldRange)
     exact h3 g fun x => (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg _ ⟨x, rfl⟩

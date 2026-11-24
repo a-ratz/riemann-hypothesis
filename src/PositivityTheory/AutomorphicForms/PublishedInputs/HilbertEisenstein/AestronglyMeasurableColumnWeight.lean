@@ -100,7 +100,7 @@ theorem coe_scalar (a : Ideles F) :
 
 theorem continuous_av : Continuous (av (F := F)) :=
   ((continuous_moduleSection (w0 F)).comp continuous_fst).mul
-    (continuous_subtype_val.comp continuous_snd)
+    (continuous_subtypeVal.comp continuous_snd)
 
 theorem continuous_rowv (g : GA F 2) (ξ : Fin 2 → F) : Continuous fun a : Ideles F => rowv g a ξ := by
   unfold rowv Mrow
@@ -126,7 +126,7 @@ theorem measurable_finCol (c : HeightOneSpectrum (𝓞 F) → ℕ) {f : Pp F →
     Measurable fun p => finCol c (f p) := by
   unfold finCol
   refine Measurable.ite ((isClosed_col c).preimage hf).measurableSet ?_ measurable_const
-  exact (continuous_subtype_val.comp (continuous_finiteAdelicChar.comp
+  exact (continuous_subtypeVal.comp (continuous_finiteAdelicChar.comp
     (continuous_pFin.comp ((continuous_apply 1).comp hf)))).measurable
 
 theorem measurable_chi (χ : HChar F) : Measurable fun p : Pp F => ((χ.1 (av p) : ℂˣ) : ℂ)⁻¹ :=
@@ -136,13 +136,13 @@ theorem measurable_first_kernel (χ : HChar F) (c : HeightOneSpectrum (𝓞 F) �
     Measurable (kap1 χ c g) := by
   refine measurable_from_prod_countable_left fun ξ => ?_
   exact ((measurable_finRow c ((continuous_rowv g ξ.1).comp continuous_av)).mul (measurable_chi χ)).mul
-    (Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst)).measurable
+    (Complex.continuous_ofReal.comp (continuous_subtypeVal.comp continuous_fst)).measurable
 
 theorem measurable_second_kernel (χ : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) (g : GA F 2) :
     Measurable (kap2 χ c g) := by
   refine measurable_from_prod_countable_left fun ξ => ?_
   exact ((measurable_finCol c ((continuous_colv g ξ.1).comp continuous_av)).mul (measurable_chi χ)).mul
-    (Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst)).measurable.inv
+    (Complex.continuous_ofReal.comp (continuous_subtypeVal.comp continuous_fst)).measurable.inv
 
 theorem measurable_row_weight (g : GA F 2) : Measurable (w1 (F := F) g) :=
   measurable_from_prod_countable_left fun ξ =>

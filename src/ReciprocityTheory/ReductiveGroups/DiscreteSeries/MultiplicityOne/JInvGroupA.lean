@@ -84,7 +84,7 @@ theorem embWb_mulVec_eq_zero_on_isW (γ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ
   · have h0 : embWb k r γ i j = 0 := by
       unfold isW at hi hj
       simp only [embWb]
-      rw [dite_eq_right (fun h => hj h.2), if_neg (fun h => h.2 hi)]
+      rw [dite_eq_right (fun h => hj h.2), ite_eq_right (fun h => h.2 hi)]
     rw [h0, zero_mul]
 
 theorem measurable_invM : Measurable (invM : Mt k r → Mt k r) := by
@@ -288,7 +288,7 @@ theorem cc_embWb_bvec (j : Fin (k + 1)) :
 
 theorem gbar_mem_N (g : Mat k r) (hg : g ∈ Nset k r) : gbar k r γ g ∈ Nset k r := by
   have hE := hG.unit _ hEG
-  simp only [Nset, Set.mem_setOf_eq] at hg ⊢
+  simp only [Nset, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hg1, hg2, hg3⟩ := hg
   have key1 : ∀ (a : Fin r) (i : Fin (2 * r + k + 1)), a.val ≤ i.val →
       (g *ᵥ bvec (eI k r a)) i = bvec (eI k r a) i := by
@@ -302,12 +302,12 @@ theorem gbar_mem_N (g : Mat k r) (hg : g ∈ Nset k r) : gbar k r γ g ∈ Nset 
     rw [Finset.sum_eq_single i]
     · by_cases hiW : isW k r i
       · obtain ⟨h1, h2⟩ : r ≤ i.val ∧ i.val ≤ r + k := hiW
-        rw [hg3 i i h1 h2 hi, if_pos rfl, one_mul]
+        rw [hg3 i i h1 h2 hi, ite_eq_left rfl, one_mul]
       · rw [hy i hiW, mul_zero]
     · intro l _ hli
       by_cases hl : isW k r l
       · obtain ⟨h1, h2⟩ : r ≤ l.val ∧ l.val ≤ r + k := hl
-        rw [hg3 i l h1 h2 hi, if_neg (Ne.symm hli), zero_mul]
+        rw [hg3 i l h1 h2 hi, ite_eq_right (Ne.symm hli), zero_mul]
       · rw [hy l hl, mul_zero]
     · intro h; exact absurd (Finset.mem_univ i) h
   refine ⟨gbar_mem_GV hG hEG g hg1, ?_, ?_⟩
@@ -340,7 +340,7 @@ theorem gbar_mem_N (g : Mat k r) (hg : g ∈ Nset k r) : gbar k r γ g ∈ Nset 
 
 theorem gbar_mem_UW (z : Fin (2 * r + k + 1) → ℂ) (hz : cc γ z = z) (g : Mat k r) (hg : g ∈ UWset k r z) :
     gbar k r γ g ∈ UWset k r z := by
-  simp only [UWset, Set.mem_setOf_eq] at hg ⊢
+  simp only [UWset, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hg1, hg2, hg3⟩ := hg
   refine ⟨gbar_mem_GV hG hEG g hg1, fun a => ⟨?_, ?_⟩, gbar_fix hG hEG g z hz hg3⟩
   · exact gbar_fix hG hEG g _ (cc_bvec_offW hG hEG _ (not_isW_eI a)) (hg2 a).1
@@ -357,7 +357,7 @@ theorem frame_conjugation_fixes_point (z : Fin (2 * r + k + 1) → ℂ) (hT : 0 
 
 theorem gbar_mem_UU (z : Fin (2 * r + k + 1) → ℂ) (hz : cc γ z = z) (u : Mat k r) (hu : u ∈ UUset k r z γ) :
     gbar k r γ u ∈ UUset k r z γ := by
-  simp only [UUset, Set.mem_setOf_eq] at hu ⊢
+  simp only [UUset, Set.mem_ofPred_eq] at hu ⊢
   obtain ⟨hu1, hu2⟩ := hu
   have hw : cc γ (w1 k r γ) = w1 k r γ := by
     unfold w1; exact cc_embWb_bvec hG hEG 0

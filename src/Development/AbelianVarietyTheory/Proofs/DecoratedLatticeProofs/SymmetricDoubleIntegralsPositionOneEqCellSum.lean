@@ -113,13 +113,13 @@ theorem oneDbl_smul {n₀ n₁ n₂ : Type} [Fintype n₀] [DecidableEq n₀] [F
 theorem relIndex_mul_measure_KO {Y : Type} [Fintype Y] [DecidableEq Y] (G : Measure (GL Y k)) [G.IsHaarMeasure]
     (hK : G (KO k Y) = 1) (J : Subgroup (GL Y k)) (hJ : IsCO J) (hle : J ≤ KO k Y) :
     (J.relIndex (KO k Y) : ℝ≥0∞) * G J = 1 ∧ J.relIndex (KO k Y) ≠ 0 := by
-  haveI : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
   have hc : IsCompact (KO k Y : Set (GL Y k)) := GlobalTheory.SplitFlip.isCompact_KO
-  haveI : CompactSpace (KO k Y) := isCompact_iff_compactSpace.1 hc
+  have : CompactSpace (KO k Y) := isCompact_iff_compactSpace.1 hc
   have ho : IsOpen ((J.subgroupOf (KO k Y) : Subgroup (KO k Y)) : Set (KO k Y)) :=
-    hJ.1.preimage continuous_subtype_val
-  haveI : Finite (KO k Y ⧸ J.subgroupOf (KO k Y)) := Subgroup.quotient_finite_of_isOpen _ ho
-  haveI : (J.subgroupOf (KO k Y)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    hJ.1.preimage continuous_subtypeVal
+  have : Finite (KO k Y ⧸ J.subgroupOf (KO k Y)) := Subgroup.quotient_finite_of_isOpen _ ho
+  have : (J.subgroupOf (KO k Y)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   refine ⟨?_, Subgroup.FiniteIndex.index_ne_zero⟩
   rw [GlobalTheory.IndexVolume.relIndex_mul_measure_subgroup J (KO k Y) hle hJ.1.measurableSet G, hK]
 
@@ -162,10 +162,10 @@ theorem comb_eq_sum_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
         comb (e₂ β) fun b => app (app T (xi ψ ν μ₁ P₁.1 L₁.J 1 α γ)) (xi ψ ν μ₂ P₂.1 L₂.J 1 γ β) (τ b F)) := by
   intro k _ _ _ _ _ _ n₀ n₁ n₂ _ _ _ _ _ _ c ρ hcρ ψ hψ hcond ν hν μ₁ μ₂ ho₁ ho₂ m₁ G₁ m₂ G₂ hm₁ hG₁ hm₂ hG₂ hK₁ hK₂
     L₀ L₁ L₂ hco₁ hco₂ hle₁ hle₂ A _ _ τ hτ T hT F hF P₁ P₂ hty₁ hty₂ α A₁ A₂ hcov₁ hcov₂ e₀ he₀ e₂ he₂ z hz
-  haveI := hm₁
-  haveI := hG₁
-  haveI := hm₂
-  haveI := hG₂
+  have := hm₁
+  have := hG₁
+  have := hm₂
+  have := hG₂
   have hne : ψ ≠ 1 := hcond.ne_one
   have hsd : IsSelfDual ψ ν := ((GlobalTheory.SplitWeil.selfDual_measure k ψ hψ hne).2.1 hcond ν).1 hν
   obtain ⟨⟨ρ₀, hρ₀⟩, hsm⟩ := GlobalTheory.PosOne.isSrc_exists_isSmoothRep k (n₀ ⊕ Fin (c + 1 + 1)) (n₁ ⊕ Fin (c + 1)) μ₁ ho₁
@@ -203,13 +203,13 @@ theorem comb_eq_sum_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   obtain ⟨hi₂, hn₂⟩ := relIndex_mul_measure_KO G₂ hK₂ L₂.J hco₂ hle₂
   set r₁ : ℝ≥0∞ := (L₁.J.relIndex (KO k (n₁ ⊕ Fin (c + 1))) : ℝ≥0∞) with hr₁
   set r₂ : ℝ≥0∞ := (L₂.J.relIndex (KO k (n₂ ⊕ Fin c)) : ℝ≥0∞) with hr₂
-  haveI : (r₁ • G₁).IsHaarMeasure := Measure.IsHaarMeasure.smul G₁ (by simpa [hr₁] using hn₁) (by simp [hr₁])
-  haveI : (r₂ • G₂).IsHaarMeasure := Measure.IsHaarMeasure.smul G₂ (by simpa [hr₂] using hn₂) (by simp [hr₂])
+  have : (r₁ • G₁).IsHaarMeasure := Measure.IsHaarMeasure.smul G₁ (by simpa [hr₁] using hn₁) (by simp [hr₁])
+  have : (r₂ • G₂).IsHaarMeasure := Measure.IsHaarMeasure.smul G₂ (by simpa [hr₂] using hn₂) (by simp [hr₂])
   have h2 := oneDbl_smul r₁ r₂ h1
   have hc : 1 ≤ c := by omega
   rw [← rescale_one_eq (n := n₁) (c := c + 1) (by omega) hν m₁, ← rescale_one_eq (n := n₂) hc hν m₂] at h2
   have h3 := (GlobalTheory.PosOne.oneDbl_iff_sum k n₀ n₁ n₂ c ρ hcρ ψ hψ hcond ν hν μ₁ μ₂ ho₁ ho₂ m₁ (r₁ • G₁) m₂ (r₂ • G₂) L₁ L₂
-    hco₁ hco₂ (by rw [Measure.smul_apply, smul_eq_mul, hi₁]) (by rw [Measure.smul_apply, smul_eq_mul, hi₂]) 1 1 A τ hτ T hT F hF
+    hco₁ hco₂ (by rw [smul_apply, smul_eq_mul, hi₁]) (by rw [smul_apply, smul_eq_mul, hi₂]) 1 1 A τ hτ T hT F hF
     P₁ P₂ hty₁.2 hty₂ α A₁ A₂ hcov₁ hcov₂ _).1 h2
 
   have hex : ∀ γ ∈ A₁, ∀ β ∈ A₂, toOne ν τ ρ (fun v => app (app T (xi ψ ν μ₁ P₁.1 L₁.J 1 α γ)) (xi ψ ν μ₂ P₂.1 L₂.J 1 γ β) v)

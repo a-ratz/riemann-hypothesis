@@ -102,7 +102,7 @@ theorem IncIdealDim.proof (h₁ : IncidenceGeneric.Statement) (h₂ : GenericLin
       rw [C_neg, C_mul]
       ring
     rw [h2]
-    simp only [genSubst, c, if_pos rfl]
+    simp only [genSubst, c, ite_eq_left rfl]
     rw [Fin.sum_univ_succAbove _ j]
     linear_combination (-(X (i, j) : MvPolynomial (Fin k × Fin (n' + 1)) K)) * h1
   have hrange : Set.range (genSubst ξ c) = ψ '' G := by
@@ -147,7 +147,7 @@ theorem IncIdealDim.proof (h₁ : IncidenceGeneric.Statement) (h₂ : GenericLin
   have hφrange : φ.range = (Algebra.adjoin F G).map ψ := by
     show (aeval (genSubst ξ c)).range = _
     rw [aeval_range, hrange, Algebra.adjoin_image]
-  haveI : Algebra.FiniteType F φ.range :=
+  have : Algebra.FiniteType F φ.range :=
     Algebra.FiniteType.of_surjective φ.rangeRestrict φ.rangeRestrict_surjective
   have htr : Algebra.trdeg F φ.range = ((k * n' + min k d : ℕ) : Cardinal) := by
     rw [hφrange, ← AlgEquiv.trdeg_eq (A := ↥(Algebra.adjoin F G))

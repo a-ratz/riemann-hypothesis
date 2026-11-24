@@ -56,7 +56,7 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 theorem continuous_psiNeg :
     Continuous fun X : Pos a → Ad E => (GroundTheory.Global.adelicChar E (-supSum 0 X) : ℂ) :=
-  continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_supSum 0).neg)
+  continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_supSum 0).neg)
 
 theorem whit_eq (F : GA E a → ℂ) (g : GA E a) :
     GlobalTheory.JSW.whit F g = ∫ X in vecDomain E (Pos a),
@@ -84,12 +84,12 @@ theorem whit_kerInf {F : GA E a → ℂ} (hF : Continuous F)
     (hk : GlobalTheory.JSW.IsRapidInf ν k γ) (g : GA E a) :
     GlobalTheory.JSW.whit (GlobalTheory.JSW.kerInf ν k γ F) g = ∫ x, k x * GlobalTheory.JSW.whit F (g * infGL E a (γ x)) ∂ν := by
   set μ := (vecMeasure E (Pos a)).restrict (vecDomain E (Pos a)) with hμ
-  haveI : IsFiniteMeasure μ :=
+  have : IsFiniteMeasure μ :=
     ⟨by rw [hμ, Measure.restrict_apply_univ, vecMeasure_vecDomain]; exact ENNReal.one_lt_top⟩
   let ψ : (Pos a → Ad E) → ℂ := fun Y => (GroundTheory.Global.adelicChar E (-supSum 0 Y) : ℂ)
   let f : (Pos a → Ad E) → X → ℂ := fun Y x => k x * F (uGL Y * g * infGL E a (γ x)) * ψ Y
   have hmeas : Measurable (Function.uncurry f) := by
-    haveI : BorelSpace ((Pos a → Ad E) × Lie E a) := Prod.borelSpace
+    have : BorelSpace ((Pos a → Ad E) × Lie E a) := Prod.borelSpace
     have hc : ContinuousOn (fun p : (Pos a → Ad E) × Lie E a => chart F (uGL p.1 * g) p.2)
         (Set.univ ×ˢ invSet E a) :=
       (GlobalTheory.ConstTermSmooth.continuousOn_chart hF).comp
@@ -103,7 +103,7 @@ theorem whit_kerInf {F : GA E a → ℂ} (hF : Continuous F)
             fun p => (⟨(p.1, toL (γ p.2).val), Set.mem_univ _, val_mem_invSet _⟩ :
               (Set.univ ×ˢ invSet E a : Set ((Pos a → Ad E) × Lie E a))) := rfl
       rw [e]
-      exact hc.restrict.measurable.comp hφ.subtype_mk
+      exact hc.domRestrict.measurable.comp hφ.subtype_mk
     have e2 : Function.uncurry f = fun p => k p.2 * chart F (uGL p.1 * g) (toL (γ p.2).val) * ψ p.1 := by
       funext p
       exact congrArg (fun z => k p.2 * z * ψ p.1) (chart_val F _ _).symm

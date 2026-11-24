@@ -83,17 +83,17 @@ theorem relDim_le_of_surjective_away {R B A L : Type} [CommRing R] [CommRing B] 
     (hψ : Function.Surjective ψ) (g g' : ℕ) (hφ : RingHom.IsStandardSmoothOfRelativeDimension g φ)
     (hL : RingHom.IsStandardSmoothOfRelativeDimension g' ((algebraMap A L).comp (ψ.comp φ))) :
     g' ≤ g := by
-  letI : Algebra R B := φ.toAlgebra
-  letI : Algebra B A := ψ.toAlgebra
-  letI : Algebra B L := ((algebraMap A L).comp ψ).toAlgebra
-  letI : Algebra R L := ((algebraMap A L).comp (ψ.comp φ)).toAlgebra
-  haveI : IsScalarTower R B L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower B A L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FormallyUnramified B A := Algebra.FormallyUnramified.of_surjective (Algebra.ofId B A) hψ
-  haveI : Algebra.FormallyUnramified A L := Algebra.FormallyUnramified.of_isLocalization (Submonoid.powers t)
-  haveI : Algebra.FormallyUnramified B L := Algebra.FormallyUnramified.comp B A L
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension g R B := hφ
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension g' R L := hL
+  let : Algebra R B := φ.toAlgebra
+  let : Algebra B A := ψ.toAlgebra
+  let : Algebra B L := ((algebraMap A L).comp ψ).toAlgebra
+  let : Algebra R L := ((algebraMap A L).comp (ψ.comp φ)).toAlgebra
+  have : IsScalarTower R B L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower B A L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FormallyUnramified B A := Algebra.FormallyUnramified.of_surjective (Algebra.ofId B A) hψ
+  have : Algebra.FormallyUnramified A L := Algebra.FormallyUnramified.of_isLocalization (Submonoid.powers t)
+  have : Algebra.FormallyUnramified B L := Algebra.FormallyUnramified.comp B A L
+  have : Algebra.IsStandardSmoothOfRelativeDimension g R B := hφ
+  have : Algebra.IsStandardSmoothOfRelativeDimension g' R L := hL
   exact relDim_le_of_formallyUnramified R B L g g'
 
 end GlobalTheory

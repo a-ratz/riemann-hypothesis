@@ -122,7 +122,7 @@ theorem exists_injective_words : ∀ eps CG CF : ℝ, 0 < eps → eps < 1 / 52 �
           refine h1.trans ?_
           gcongr
       _ = ((2 ^ (R.k - 2) : ℕ) : ℝ) := by
-          rw [Real.exp_nat_mul, Real.exp_log (by norm_num)]; push_cast; rfl
+          rw [Real.exp_natCast_mul, Real.exp_log (by norm_num)]; push_cast; rfl
   have hle := Nat.ceil_le.2 hmain
   have hcard : Fintype.card (Fin ⌈3 * Real.exp (CG * (R.m : ℝ) ^ 5 * R.f * s.L) ^ 2 * s.x ^ CF⌉₊) ≤
       Fintype.card (Fin (R.k - 2) → Bool) := by

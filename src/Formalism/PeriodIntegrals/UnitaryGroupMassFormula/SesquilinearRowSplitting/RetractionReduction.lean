@@ -82,8 +82,8 @@ theorem projective_reduction : ProjStep := by
     obtain ⟨a, ha⟩ := (Submodule.mem_torsion_iff x).mp hx
     rw [Submonoid.smul_def, smul_eq_zero] at ha
     exact (Submodule.mem_bot R).mpr (ha.resolve_left (nonZeroDivisors.coe_ne_zero a))
-  haveI : Module.Flat R M := IsDedekindDomain.flat_iff_torsion_eq_bot.mpr htor
-  haveI : Module.FinitePresentation R M := Module.finitePresentation_of_finite R M
+  have : Module.Flat R M := IsDedekindDomain.flat_iff_torsion_eq_bot.mpr htor
+  have : Module.FinitePresentation R M := Module.finitePresentation_of_finite R M
   exact Module.Flat.projective_of_finitePresentation
 
 end PI.FGTFG
@@ -104,8 +104,8 @@ theorem retraction_reduction : RetrStep := by
   intro E V _ _ _ _ _ _ Λ N hNΛ hfg hsat
   let N' : Submodule (𝓞 E) Λ := N.comap Λ.subtype
   have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Finite (𝓞 E) (Λ ⧸ N') := inferInstance
-  haveI : NoZeroSMulDivisors (𝓞 E) (Λ ⧸ N') := by
+  have : Module.Finite (𝓞 E) (Λ ⧸ N') := inferInstance
+  have : NoZeroSMulDivisors (𝓞 E) (Λ ⧸ N') := by
     refine ⟨fun {o q} hq => ?_⟩
     by_cases ho : o = 0
     · exact Or.inl ho
@@ -114,7 +114,7 @@ theorem retraction_reduction : RetrStep := by
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hq
     rw [Submodule.Quotient.mk_eq_zero]
     exact hsat o x ho x.2 hq
-  haveI : Module.Projective (𝓞 E) (Λ ⧸ N') := PI.FGTFG.projective_reduction (𝓞 E) (Λ ⧸ N')
+  have : Module.Projective (𝓞 E) (Λ ⧸ N') := PI.FGTFG.projective_reduction (𝓞 E) (Λ ⧸ N')
   obtain ⟨s, hs⟩ := Module.projective_lifting_property N'.mkQ LinearMap.id (Submodule.mkQ_surjective N')
   let ρ' : Λ →ₗ[𝓞 E] Λ := LinearMap.id - s.comp N'.mkQ
   have hρ' : ∀ x : Λ, ρ' x ∈ N' := by

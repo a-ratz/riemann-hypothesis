@@ -179,10 +179,10 @@ theorem etale_of_formallyUnramified_of_smoothOfRelativeDimension {X Y Z : Scheme
       ⟨X.basicOpen r, hW.basicOpen r⟩ er
   refine ⟨⟨V, hV⟩, ⟨X.basicOpen r, hW.basicOpen r⟩, hxr, er, ?_⟩
   rw [← Scheme.Hom.appLE_comp_appLE f p U V _ e er, CommRingCat.hom_comp] at h2
-  letI := (p.appLE U V e).hom.toAlgebra
-  letI := (f.appLE V (X.basicOpen r) er).hom.toAlgebra
-  letI := ((f.appLE V (X.basicOpen r) er).hom.comp (p.appLE U V e).hom).toAlgebra
-  haveI : IsScalarTower Γ(Z, U) Γ(Y, V) Γ(X, X.basicOpen r) :=
+  let := (p.appLE U V e).hom.toAlgebra
+  let := (f.appLE V (X.basicOpen r) er).hom.toAlgebra
+  let := ((f.appLE V (X.basicOpen r) er).hom.comp (p.appLE U V e).hom).toAlgebra
+  have : IsScalarTower Γ(Z, U) Γ(Y, V) Γ(X, X.basicOpen r) :=
     IsScalarTower.of_algebraMap_eq' rfl
   exact GlobalTheory.T.etale_of_formallyUnramified_standardSmooth_same_relDim Γ(Z, U) Γ(Y, V) Γ(X, X.basicOpen r) g H h2 h3
 

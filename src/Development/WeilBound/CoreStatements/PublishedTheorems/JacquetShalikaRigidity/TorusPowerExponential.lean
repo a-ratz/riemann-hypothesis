@@ -92,7 +92,7 @@ variable {E : Type} [Field E] [NumberField E] {k : ℕ}
 
 theorem countable_pl : Countable (Pl E) := by
   classical
-  haveI : Countable (𝓞 E) := (RingOfIntegers.basis E).repr.toEquiv.injective.countable
+  have : Countable (𝓞 E) := (RingOfIntegers.basis E).repr.toEquiv.injective.countable
   let f : Pl E → Finset (𝓞 E) := fun v ↦ (IsNoetherian.noetherian v.asIdeal).choose
   refine Function.Injective.countable (f := f) fun v w h ↦ ?_
   have hv := (IsNoetherian.noetherian v.asIdeal).choose_spec
@@ -106,7 +106,7 @@ def A (S : Finset (Pl E)) (l : Off E S →₀ (Fin k → ℤ)) : Set (GA E k) :=
 
 theorem A_zero (S : Finset (Pl E)) : A (k := k) S 0 = G0 S := by
   ext g
-  simp only [A, G0, Set.mem_setOf_eq, Finsupp.coe_zero, Pi.zero_apply]
+  simp only [A, G0, Set.mem_ofPred_eq, Finsupp.coe_zero, Pi.zero_apply]
   exact ⟨fun h w hw => h ⟨w, hw⟩, fun h w => h w.1 w.2⟩
 
 theorem A_cover (S : Finset (Pl E))
@@ -137,14 +137,14 @@ theorem cLoc_unip (u : GA E k) (hu : UU 0 u) (w : Pl E) : cLoc w u ∈ Iwasawa.u
 theorem A_mul (S : Finset (Pl E)) (l : Off E S →₀ (Fin k → ℤ)) (u g : GA E k) (hu : UU 0 u) :
     u * g ∈ A S l ↔ g ∈ A S l := by
   have h := fun w : Pl E => Iwasawa.iwasawaExponent_mul_of_mem_unipotent _ k (cLoc_unip u hu w) (cLoc w g)
-  simp only [A, Set.mem_setOf_eq, map_mul, h]
+  simp only [A, Set.mem_ofPred_eq, map_mul, h]
 
 theorem A_tr (S : Finset (Pl E))
     (hloc : ∀ (w : Pl E) (u : GL (Fin k) (w.adicCompletion E)), cLoc w (fl k w u : GA E k) = u)
     (hoff : ∀ (w v : Pl E) (u : GL (Fin k) (w.adicCompletion E)), v ≠ w → cLoc v (fl k w u : GA E k) = 1)
     (l : Off E S →₀ (Fin k → ℤ)) (w : Off E S) (hw : l w = 0) (x : Fin k → ℤ) (g : GA E k) :
     fl k w.1 (Iwasawa.torusPow _ k x) * g ∈ A S (Finsupp.single w x + l) ↔ g ∈ A S l := by
-  simp only [A, Set.mem_setOf_eq, map_mul]
+  simp only [A, Set.mem_ofPred_eq, map_mul]
   have key : ∀ v : Off E S, (Iwasawa.iwasawaExponent _ k (cLoc v.1 (fl k w.1 (Iwasawa.torusPow _ k x)) *
       cLoc v.1 g) = (Finsupp.single w x + l) v ↔ Iwasawa.iwasawaExponent _ k (cLoc v.1 g) = l v) := by
     intro v
@@ -185,7 +185,7 @@ theorem torus_exponential_of_open : jumpWindows.G0 → C0 → C1 → C2 := by
   intro hG hC0 hC1 E _ _ _ k μ _ hk β hβ S Φ a hΦm hΦu hlaw ha0 hint
   obtain ⟨-, -, -, hloc, hoff, -, -, hcomm, -⟩ := hG E k
   obtain ⟨-, -, -, -, hfin, hcl, hdec⟩ := hC0 E k S
-  haveI := TorusPowerExponential.countable_pl (E := E)
+  have := TorusPowerExponential.countable_pl (E := E)
   have hmeas : ∀ l, MeasurableSet (TorusPowerExponential.A (k := k) S l) := fun l => (TorusPowerExponential.A_closed S hcl l).measurableSet
   let c : Off E S → (Fin k → ℤ) → ℂ := fun w x => (nq w : ℂ) ^ rhoPair x * a w x
   have hc0 : ∀ w, c w 0 = 1 := fun w => by simp [c, rhoPair, ha0]
@@ -227,7 +227,7 @@ theorem torus_exponential_of_open : jumpWindows.G0 → C0 → C1 → C2 := by
       change _ = Finsupp.prod f c * _ at ih
       have hdisj : Disjoint (Finsupp.single w x).support f.support := by
         refine Finset.disjoint_left.2 fun v hv hv' => hwf ?_
-        rw [Finsupp.support_single_ne_zero _ hx, Finset.mem_singleton] at hv
+        rw [Finsupp.support_single _ hx, Finset.mem_singleton] at hv
         exact hv ▸ hv'
       rw [Finsupp.prod_add_index_of_disjoint hdisj, Finsupp.prod_single_index (hc0 w), hstep f w x hfw, ih]
       simp only [c]

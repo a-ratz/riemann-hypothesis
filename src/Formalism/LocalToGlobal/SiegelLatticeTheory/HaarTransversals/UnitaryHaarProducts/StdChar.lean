@@ -220,7 +220,7 @@ theorem continuous_psiFin : Continuous (psiFin F) := by
     AddCircle.continuous_toCircle.comp hf.neg
   unfold psiFin
   first
-    | exact continuous_subtype_val.comp hc
+    | exact continuous_subtypeVal.comp hc
     | fun_prop
 
 def psiStd : AddChar (AF F) ℂ where
@@ -284,7 +284,7 @@ namespace Formalism.L2.SG.Pf
 
 theorem standard_character_exists : Formalism.L2.SG.Pf.MeasCore.StdCharExists := by
   intro F _ _ hF
-  haveI := hF
+  have := hF
   refine ⟨StdChar.psiStd F, StdChar.psiStd_isChar F, fun x => ?_⟩
   show StdChar.psiA F x * StdChar.psiFin F 0 = _
   rw [StdChar.psiFin_zero, mul_one]

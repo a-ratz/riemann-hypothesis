@@ -51,7 +51,7 @@ theorem GlobalTheory.logDom_chart_props : ∀ (n a : ℕ), IsOpen (GlobalTheory.
   intro n a
   have hEq : GlobalTheory.ShFam.Hor.logDom n a = ⋂ k : Fin n, (fun s : Fin n → ℂ => s k) ⁻¹' (if (k : ℕ) < a then {z : ℂ | z.re < 0} else Metric.ball (0 : ℂ) 1) := by
     ext s
-    simp only [GlobalTheory.ShFam.Hor.logDom, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [GlobalTheory.ShFam.Hor.logDom, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
     refine forall_congr' fun k => ?_
     split_ifs <;> simp [Metric.mem_ball, dist_zero_right]
   refine ⟨?_, ?_, ?_, ?_⟩

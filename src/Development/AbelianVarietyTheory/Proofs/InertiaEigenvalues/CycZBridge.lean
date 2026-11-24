@@ -130,11 +130,11 @@ theorem mem_GK (σ : GQ l) (h : ∀ x : E, σ (Bw.j (algebraMap E Ω x)) = Bw.j 
 theorem cycZ_bridge [IsAlgClosed Ω] (g : ↥Gw) :
     cycZ E Ω l (g : Ω ≃ₐ[E] Ω) = cycZ ℚ_[l] (Om l) l ((Bw.e g : ↥(GK Bw.Kw)) : GQ l) := by
   have hl : l.Prime := Fact.out
-  haveI : CharZero Ω := Bw.j.charZero
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : CharZero Ω := Bw.j.charZero
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   refine Units.ext (PadicInt.ext_of_toZModPow.1 fun m => ?_)
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
   have hζ' := hζ.map_of_injective Bw.j.injective
   have ha : (g : Ω ≃ₐ[E] Ω) ζ =
       ζ ^ (((cycZ E Ω l (g : Ω ≃ₐ[E] Ω) : ℤ_[l]ˣ) : ℤ_[l]).toZModPow m).val :=
@@ -152,7 +152,7 @@ theorem fix_roots {l : ℕ} [Fact l.Prime] (σ : GQ l) (s : ℕ) (z : ℤ_[l])
     (h : ((cycZ ℚ_[l] (Om l) l σ : ℤ_[l]ˣ) : ℤ_[l]) = 1 + (l : ℤ_[l]) ^ s * z) (y : Om l)
     (hy : y ^ l ^ s = 1) : σ y = y := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ s) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ s) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hb : σ y = y ^ (((cycZ ℚ_[l] (Om l) l σ : ℤ_[l]ˣ) : ℤ_[l]).toZModPow s).val :=
     cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (GQ l) (Om l) σ) _ hy
   have h0 : ((l : ZMod (l ^ s))) ^ s = 0 := by rw [← Nat.cast_pow, ZMod.natCast_self]
@@ -161,7 +161,7 @@ theorem fix_roots {l : ℕ} [Fact l.Prime] (σ : GQ l) (s : ℕ) (z : ℤ_[l])
 
 theorem epsAll : ∀ (D : D7) (i : D.nd.Loc), EpsAll D i := by
   intro D i w hw z
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   have hs : D.nd.s0 i ≠ 0 := by
     have := UpperTheory.KStar.S0.one_le_localLevel D.nd i
     omega
@@ -196,7 +196,7 @@ theorem epsAll : ∀ (D : D7) (i : D.nd.Loc), EpsAll D i := by
   have hj : 0 < ‖(D.nbr i w hw).j y‖ := norm_pos_iff.2 ((map_ne_zero _).2 hy)
   have h := D.nbr_ind i w hw y⁻¹
   rw [← ValuationSubring.valuation_le_one_iff, map_inv₀, map_inv₀, norm_inv, inv_le_one₀ hj,
-    inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 hy))] at h
+    inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 hy))] at h
   rw [← not_le, h, not_le]
   exact h1
 

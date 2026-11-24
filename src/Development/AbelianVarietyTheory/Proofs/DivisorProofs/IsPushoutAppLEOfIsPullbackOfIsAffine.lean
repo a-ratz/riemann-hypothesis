@@ -58,7 +58,7 @@ theorem isPushout_appLE_of_isPullback_of_isAffine :
       IsPushout (p.appLE ⊤ W (fun _ _ => trivial)) q.appTop (f.app W)
         (g.appLE ⊤ (f ⁻¹ᵁ W) (fun _ _ => trivial)) := by
   intro X X' S S' f g p q h hS hS' W hW
-  haveI : IsAffineHom q := inferInstance
+  have : IsAffineHom q := inferInstance
   have P := ReciprocityTheory.ChartRestriction.G.Out.GtBCPf.isPushout_appLE h.flip this (isAffineOpen_top S) hW
     (fun _ _ => trivial) (fun _ _ => trivial)
   exact P.flip

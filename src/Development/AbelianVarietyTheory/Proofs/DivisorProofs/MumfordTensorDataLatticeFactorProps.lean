@@ -77,7 +77,7 @@ theorem Tens.xe_xi (T : Tens D D' W) (i₀ : Fin r) (y : D.X) :
 theorem Tens.xe_smul_xi (T : Tens D D' W) (s : SymUnit r) (a : TensO s) (i₀ : Fin r) (y : D.X) (i : Fin r) :
     letI := T.mod s
     T.xe (a • T.xi i₀ y) i = TensO.mat s a i i₀ • y := by
-  letI := T.mod s
+  let := T.mod s
   rw [Tens.xe_smul]
   simp only [Tens.xe_xi]
   rw [Finset.sum_eq_single i₀]
@@ -117,7 +117,7 @@ theorem tens_factor_latt : ∀ (R : Type) [CommRing R] [IsDomain R] (D D' : DegP
     Function.Injective (fun y => star (TensO.idem s i₀) • TensO.binv s • T.xi i₀ y) ∧
     ∀ z, ∃ y, star (TensO.idem s i₀) • z = star (TensO.idem s i₀) • TensO.binv s • T.xi i₀ y := by
   intro R _ _ D D' r W T s i₀
-  letI := T.mod s
+  let := T.mod s
   have key : ∀ y i, T.xe (star (TensO.idem s i₀) • TensO.binv s • T.xi i₀ y) i =
       ((s.1⁻¹ : (Matrix (Fin r) (Fin r) ℤ)ˣ) : Matrix (Fin r) (Fin r) ℤ) i i₀ • y := by
     intro y i

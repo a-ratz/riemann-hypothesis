@@ -86,8 +86,8 @@ theorem abstract_zero (hB : BumpOn) (hV : Vanish) (hFD : FDRight)
     fun ⟨δ, k, hk, h⟩ => h ▸ mul_mem (mul_mem (inv_mem hk) hγ) hk
   let j : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ → Γ := fun δ => ⟨δ, hmem δ⟩
   have hj : Function.Injective j := fun a b h => Subtype.ext (congrArg (fun z : Γ => (z : G)) h)
-  haveI : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : Countable (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ) := hj.countable
+  have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ) := hj.countable
   let c : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ → G → ℂ := fun δ x => R (x⁻¹ * δ * x)
   let q : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ → G → H := fun δ x => π (x⁻¹ * δ * x)
   have hk : ∀ ψ : H → ℂ, ker c q ψ = GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.classKernel Γ γ fun g => R g * ψ (π g) := fun ψ => rfl
@@ -180,7 +180,7 @@ theorem integral_class_eq_zero (hB : BumpOn) (hW : Weight) (hV : Vanish) (hFD : 
   have hreg := isRegSS_projArch_ratEmb (σ := D.sp.cm.sig) (J := V.gram) hγ (placeOf D ρ)
   obtain ⟨B, hw⟩ := hW _ _ _ _ (hG D V _ τ) _ ((isRegSS_archMat_iff hcm τ).2 hreg)
     (isProperOrbit_GArch hcm (GlobalTheory.Orb.isHermND_gram V) hreg)
-  haveI := hU D V _ μw inferInstance
+  have := hU D V _ μw inferInstance
   have hm : ∀ φ ∈ CcMat (archMat D.sp.cm.sig V.gram τ), ∀ u,
       Function.update fa (placeOf D ρ) φ u ∈ CcArch D.sp.cm.sig V.gram u :=
     fun φ hφ => update_mem hfa _ (hcc ▸ hφ)

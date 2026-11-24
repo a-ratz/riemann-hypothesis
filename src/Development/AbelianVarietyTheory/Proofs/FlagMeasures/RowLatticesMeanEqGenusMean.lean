@@ -141,7 +141,7 @@ theorem card_fibre_orbit (p : A → B) (hp : ∀ (g : G) a, p (g • a) = g • 
   set H := MulAction.stabilizer G (p a₀) with hH
   have hS : {a | a ∈ MulAction.orbit G a₀ ∧ p a = p a₀} = MulAction.orbit H a₀ := by
     ext a
-    simp only [Set.mem_setOf_eq, MulAction.mem_orbit_iff]
+    simp only [Set.mem_ofPred_eq, MulAction.mem_orbit_iff]
     constructor
     · rintro ⟨⟨g, rfl⟩, hg⟩
       refine ⟨⟨g, ?_⟩, rfl⟩
@@ -237,7 +237,7 @@ theorem sum_over_fibres (p : A → B) (hp : ∀ (g : G) a, p (g • a) = g • p
     have hfin : ({a | a ∈ MulAction.orbit G (m i) ∧ p a = M} : Set A).Finite := hFfin.subset hsub
     have hmem : g⁻¹ • m i ∈ ({a | a ∈ MulAction.orbit G (m i) ∧ p a = M} : Set A) :=
       ⟨⟨g⁻¹, rfl⟩, hp0⟩
-    haveI := hfin.to_subtype
+    have := hfin.to_subtype
     have : Nonempty ({a | a ∈ MulAction.orbit G (m i) ∧ p a = M} : Set A) := ⟨⟨_, hmem⟩⟩
     exact Nat.card_pos.ne'
   have hB : ∑ i ∈ what₂.filter (fun i => Mof i = M),
@@ -926,8 +926,8 @@ theorem rows_sum (D : D7) (u : D.what₂.Word) (hp : (Tu D u).Prime) (h3 : 3 ≤
       (((Tu D u - 1) ^ D.R.f : ℕ) : ℝ≥0∞) *
         ∑ L' ∈ reps, ENNReal.ofReal ((Nat.card (Formalism.ThetaLiftIndependence.autL (D.sp.X 0).hT L') : ℝ))⁻¹ * N L' := by
   classical
-  letI iW : MulAction (Formalism.HermitianLatticesTheory.isom (D.sp.X 0).hT) (LatW D) := actW D
-  letI iWE : MulAction (Formalism.HermitianLatticesTheory.isom (D.sp.X 0).hT)
+  let iW : MulAction (Formalism.HermitianLatticesTheory.isom (D.sp.X 0).hT) (LatW D) := actW D
+  let iWE : MulAction (Formalism.HermitianLatticesTheory.isom (D.sp.X 0).hT)
       (Submodule (𝓞 D.host.E) ((D.sp.X 0).V × D.host.E)) := actWE D
   have hT0 : ((Tu D u : ℕ) : D.host.E) ≠ 0 := Nat.cast_ne_zero.mpr hp.ne_zero
   have hz' : F0.z = (D.cOf u)⁻¹ • D.sp.zm := hz.trans rfl

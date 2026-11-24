@@ -79,7 +79,7 @@ theorem cpush_homotopy (K : Cx R) {I J : Cx R} {f g : I ⟶ J} (h : Homotopy f g
 open DerivedCategory in
 theorem exists_quasiIso (M : Shv R) (C : Cx R) (ε : sgl M ⟶ C) [QuasiIso ε] [(res R M).IsKInjective] :
     ∃ u : C ⟶ res R M, QuasiIso u := by
-  letI := HasDerivedCategory.standard (Shv R)
+  let := HasDerivedCategory.standard (Shv R)
   have : QuasiIso (resAug M) := (inferInstance : QuasiIso (injectiveResolution M).ι')
   let e : Q.obj C ≅ Q.obj (res R M) := (asIso (Q.map ε)).symm ≪≫ asIso (Q.map (resAug M))
   obtain ⟨g, hg⟩ := (CochainComplex.IsKInjective.Qh_map_bijective ((HomotopyCategory.quotient _ _).obj C)
@@ -99,11 +99,11 @@ theorem hyper_iso_of_injective_resolution : ∀ (R : Type) [CommRing R] (M : Shv
     C.IsStrictlyGE 0 → (∀ t, Injective (C.X t)) → QuasiIso ε → ∀ (K : Cx R) (n : ℤ),
     Nonempty (HK R K M n ≃+ CohomologyClass K C n) := by
   intro R _ M C ε hC hI hε K n
-  haveI := hC
-  haveI : ∀ t, Injective (C.X t) := hI
-  haveI := hε
-  haveI : C.IsKInjective := isKInjective_of_injective C 0
-  haveI : (res R M).IsKInjective := (inferInstance : (injectiveResolution M).cochainComplex.IsKInjective)
+  have := hC
+  have : ∀ t, Injective (C.X t) := hI
+  have := hε
+  have : C.IsKInjective := isKInjective_of_injective C 0
+  have : (res R M).IsKInjective := (inferInstance : (injectiveResolution M).cochainComplex.IsKInjective)
   obtain ⟨u, hu⟩ := exists_quasiIso M C ε
   obtain ⟨e, -⟩ := (CochainComplex.IsKInjective.quasiIso_iff u).1 hu
   exact ⟨{ toFun := cpush K e.inv n

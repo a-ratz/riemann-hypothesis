@@ -107,7 +107,7 @@ theorem fam_eq_L_pf {d : SD σ} (R : RD d) {w : InfinitePlace F}
   rw [hn, ← hdet, div_self hunit.ne_zero, _root_.one_zpow, one_mul, hdet]
   simp only [fam, fP, evX, map_one, one_mul, gs]
   congr 1
-  · rw [← Complex.ofReal_pow, ← Real.exp_nat_mul, Complex.ofReal_exp]
+  · rw [← Complex.ofReal_pow, ← Real.exp_natCast_mul, Complex.ofReal_exp]
     congr 1
     push_cast
     rw [Finset.mul_sum, Finset.mul_sum]
@@ -123,7 +123,7 @@ theorem fam_eq_L_pf {d : SD σ} (R : RD d) {w : InfinitePlace F}
       rfl
     erw [he]
     rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, Complex.ofReal_mul, mul_pow,
-      Complex.ofReal_exp, ← Complex.exp_nat_mul, mul_comm]
+      Complex.ofReal_exp, ← Complex.exp_natCast_mul, mul_comm]
     congr 2
     push_cast
     ring
@@ -242,12 +242,12 @@ theorem kerFT_norm {m n : ℕ} (s : ℂ) (ξ v : Fin m → Fin n → ℂ) : ‖k
 theorem isAddHaarMeasure_vector_volume (n : ℕ) : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
 
 theorem isAddHaarMeasure_matrix_volume (m n : ℕ) : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := by
-  haveI := isAddHaarMeasure_vector_volume n
+  have := isAddHaarMeasure_vector_volume n
   exact Measure.pi.isAddHaarMeasure _
 
 theorem sw_cont_int {m n : ℕ} {f : (Fin m → Fin n → ℂ) → ℂ} (hf : IsSw f) : Continuous f ∧ Integrable f := by
   obtain ⟨φ, rfl⟩ := hf
-  haveI := isAddHaarMeasure_matrix_volume m n
+  have := isAddHaarMeasure_matrix_volume m n
   exact ⟨φ.continuous, φ.integrable⟩
 
 theorem gf_L {d : SD σ} (R : RD d) {w : InfinitePlace F}

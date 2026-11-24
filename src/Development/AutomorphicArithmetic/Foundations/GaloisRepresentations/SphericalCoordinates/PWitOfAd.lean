@@ -203,8 +203,8 @@ theorem UpperTheory.exists_lattice_lift_congr_mod_coprime :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (X : UpperTheory.Gal.W2.Wit.Sys D), ∃ f : ℕ → D.La →+ X.lat, ∀ n : ℕ, 0 < n → n.Coprime p → ∀ a : D.La, ∃ e ∈ LaHat D, X.r (f n a : VQ D) = inAf D a + n • e := by
   intro p _ D X
   classical
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   have key : ∀ n : ℕ, 0 < n → n.Coprime p → ∀ a : D.La,
       ∃ u ∈ X.lat, ∃ e ∈ LaHat D, X.r u = inAf D a + n • e :=
@@ -224,7 +224,7 @@ theorem UpperTheory.exists_lattice_lift_congr_mod_coprime :
     obtain ⟨e, he, heq⟩ := (key n hn hc (b i)).choose_spec.2
     refine AddSubgroup.mem_comap.mpr (AddSubgroup.mem_map.mpr ⟨e, he, ?_⟩)
     have hg : g n i = ⟨(key n hn hc (b i)).choose, (key n hn hc (b i)).choose_spec.1⟩ :=
-      dif_pos ⟨hn, hc⟩
+      dite_eq_left ⟨hn, hc⟩
     simp only [φ, AddMonoidHom.sub_apply, AddMonoidHom.comp_apply, LinearMap.toAddMonoidHom_coe,
       Module.Basis.constr_basis, hg, AddSubgroup.coe_subtype, nsmulAddMonoidHom_apply]
     rw [heq, ← AdelicSim.inAf_eq]
@@ -305,8 +305,8 @@ theorem UpperTheory.exists_prime_to_p_multiple_in_range_of_bilinForm :
   classical
   intro p hp D X E hE
   obtain ⟨hfin, hfree⟩ := UpperTheory.finite_free_of_bounded_denominators_lattice p D X (UpperTheory.exists_denominator_of_lattice p D X)
-  haveI := hfin
-  haveI := hfree
+  have := hfin
+  have := hfree
   let b := Module.Free.chooseBasis ℤ X.lat
   have hli : LinearIndependent ℚ (fun i => ((b i : X.lat) : VQ D)) := by
     have h0 : LinearIndependent ℤ (fun i => ((b i : X.lat) : VQ D)) :=
@@ -427,7 +427,7 @@ theorem UpperTheory.scaled_form_congr_mod_n_of_unit_congr :
   have hform : algebraMap ℚ (AfP p) (X.s * X.B u u') =
       (X.ε : AfP p) * MultScale.EFA D (X.r u) (X.r u') := X.form u u'
   generalize X.s * X.B u u' = q at hden hform ⊢
-  have hqz : ((q.num : ℤ) : ℚ) = q := Rat.coe_int_num_of_den_eq_one hden
+  have hqz : ((q.num : ℤ) : ℚ) = q := Rat.intCast_num_of_den_eq_one hden
   have ha := MultScale.inAf_mem D a
   have ha' := MultScale.inAf_mem D a'
   obtain ⟨y, hy, hexp⟩ : ∃ y : AfP p, IsIntAf y ∧

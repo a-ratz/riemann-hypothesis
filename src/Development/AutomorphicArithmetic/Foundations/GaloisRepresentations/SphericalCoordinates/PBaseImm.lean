@@ -93,7 +93,7 @@ end UpperTheory.Gal.W2
 theorem UpperTheory.Gal.W2.baseImm_of :
     UpperTheory.Gal.W2.PerNear → UpperTheory.Gal.W2.PerCoordLoc → UpperTheory.Gal.W2.BaseImm := by
   intro hNear hLoc O _ bar g ρ D X s A _ S d hsm P₀ M₀ hP hH co hco w hw
-  haveI := hsm
+  have := hsm
   set pt : (Fin d → ℂ) → (Sp ℂ ⟶ X) := fun b => S.u (perC P₀ (co b)) with hpt
   have hmemC : ∀ b, co b ∈ Csp bar ρ M₀ := fun b => by
     rw [← hco.2]

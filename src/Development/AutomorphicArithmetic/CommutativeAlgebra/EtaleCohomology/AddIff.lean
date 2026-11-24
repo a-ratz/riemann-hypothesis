@@ -123,12 +123,12 @@ open UpperTheory.Ru.crystallineComparison in
 theorem UpperTheory.Ru.crystallineComparison.emb :
     UpperTheory.Ru.crystallineComparison.Emb := by
   intro C _ Pa F hF
-  haveI := enough Pa
+  have := enough Pa
   let Fs : Sheaf (Jt Pa) AddCommGrpCat.{1} := ⟨unopUnop C ⋙ F, (add_iff Pa F).1 hF⟩
   let I := Injective.under Fs
   let G := (sheafToPresheaf (Jt Pa) AddCommGrpCat.{1}).obj I
   have hG : Presheaf.IsSheaf (Jt Pa) G := I.property
-  haveI inj : Injective G :=
+  have inj : Injective G :=
     Injective.injective_of_adjoint (sheafificationAdjunction (Jt Pa) AddCommGrpCat.{1}) I
   let m := (sheafToPresheaf (Jt Pa) AddCommGrpCat.{1}).map (Injective.ι Fs)
   have hm : Mono m := inferInstance

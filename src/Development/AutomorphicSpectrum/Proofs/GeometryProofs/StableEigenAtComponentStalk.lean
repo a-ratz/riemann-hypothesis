@@ -102,8 +102,8 @@ theorem frame_of_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     obtain ⟨v, hv⟩ := (Z.M.mem_lat_iff p e').1 hl
     obtain ⟨w, rfl⟩ := MA.onto v hv.1
     have hw : e' = j w := LieVB.pt_left_inj Z.M (hv.2.trans (hj w).symm)
-    letI : Algebra c.F (Y.X.presheaf.stalk p.1) := κ.toAlgebra
-    letI : Algebra c.F Z.Ω := Z.inc.toAlgebra
+    let : Algebra c.F (Y.X.presheaf.stalk p.1) := κ.toAlgebra
+    let : Algebra c.F Z.Ω := Z.inc.toAlgebra
     obtain ⟨ft, ⟨hft1, hft2⟩, -⟩ := GlobalTheory.Frames.existsUnique_eigen_sum E H l c (Y.X.presheaf.stalk p.1) F ρA w
     have hint : ∀ a y, Z.ρ a (j y) = j (ρA a y) := fun a y => LieVB.pt_left_inj Z.M (by
       have h2 := congrArg (fun q => q.left) (Z.act a (j y))
@@ -120,7 +120,7 @@ theorem frame_of_stableEig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     have e2 := huq (fun τ => if τ = σ then e' else 0) ⟨fun τ a => by
       by_cases h : τ = σ
       · subst h
-        simp only [if_true]
+        simp only [ite_true]
         exact (mem_eigSp_iff_forall _ _ _).1 hE a
       · simp [h], by simp⟩
     have e3 : j (ft σ) = e' := by simpa using congrFun (e1.trans e2.symm) σ

@@ -184,17 +184,17 @@ theorem finiteFreeHom_algebraMap_iff {A B : Type} [CommRing A] [CommRing B] [Alg
 theorem finiteFreeHom_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C]
     (f : A →+* B) (g : B →+* C) (hf : FiniteFreeHom f) (hg : FiniteFreeHom g) :
     FiniteFreeHom (g.comp f) := by
-  letI := f.toAlgebra
-  letI := g.toAlgebra
-  letI := (g.comp f).toAlgebra
-  haveI : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := f.toAlgebra
+  let := g.toAlgebra
+  let := (g.comp f).toAlgebra
+  have : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨hf₁, hf₂⟩ := hf
   obtain ⟨hg₁, hg₂⟩ := hg
   exact ⟨Module.Free.trans (S := B), Module.Finite.trans B C⟩
 
 theorem finiteFreeHom_ringEquiv {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) :
     FiniteFreeHom e.toRingHom := by
-  letI := e.toRingHom.toAlgebra
+  let := e.toRingHom.toAlgebra
   let l : A ≃ₗ[A] B := { e with map_smul' := fun a x => map_mul e a x }
   exact ⟨Module.Free.of_equiv l, Module.Finite.equiv l⟩
 
@@ -223,7 +223,7 @@ theorem finiteFreeHom_appTop_of_isPullback :
   intro P Q D W u v g h _ _ _ _ hpb hg
   have hbc := RingHom.IsStableUnderBaseChange.pullback_fst_appTop @GlobalTheory.CompanionTheory.FreeQuotProof.Nbhd.FiniteFreeHom
     GlobalTheory.CompanionTheory.FreeQuotProof.Nbhd.finiteFreeHom_isStableUnderBaseChange GlobalTheory.CompanionTheory.FreeQuotProof.Nbhd.finiteFreeHom_respectsIso h g hg
-  haveI : IsIso hpb.flip.isoPullback.hom.appTop := by
+  have : IsIso hpb.flip.isoPullback.hom.appTop := by
     rw [← Scheme.Γ_map_op]
     exact (Scheme.Γ.mapIso hpb.flip.isoPullback.op).isIso_hom
   rw [← hpb.flip.isoPullback_hom_fst, Scheme.Hom.comp_appTop, CommRingCat.hom_comp]
@@ -719,7 +719,7 @@ theorem isOpen_saturated (hG : IsFiniteLocallyFree G.hom) (O : X.left.Opens) :
     (snd G X).left.isClosedMap _ (O.isOpen.isClosed_compl.preimage (γ[G, X] : G ⊗ X ⟶ X).left.continuous)
   convert hc.isOpen_compl using 1
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_image, Set.mem_preimage, not_exists, not_and]
+  simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_image, Set.mem_preimage, not_exists, not_and]
   constructor
   · intro h z hz hy
     exact hz (h ((mem_orbit_iff G X).2 ⟨z, hy, rfl⟩))
@@ -738,7 +738,7 @@ theorem mem_basicOpen_appLE' {P Y : Scheme.{0}} (c : P ⟶ Y) (U : Y.Opens) (hc 
 theorem exists_norm {P D : Scheme.{0}} [IsAffine P] [IsAffine D] (v : P ⟶ D)
     (hv : FiniteFreeHom v.appTop.hom) (e : Γ(P, ⊤)) :
     ∃ N : Γ(D, ⊤), ∀ y : D, y ∈ D.basicOpen N ↔ ∀ z : P, v z = y → z ∈ P.basicOpen e := by
-  letI := v.appTop.hom.toAlgebra
+  let := v.appTop.hom.toAlgebra
   have h1 : Module.Free Γ(D, ⊤) Γ(P, ⊤) := hv.1
   have h2 : Module.Finite Γ(D, ⊤) Γ(P, ⊤) := hv.2
   refine ⟨Algebra.norm Γ(D, ⊤) e, GlobalTheory.T.basic_open_norm_fibre_iff v _ e fun p => ?_⟩
@@ -773,10 +773,10 @@ theorem exists_stable_affine_nbhd : ∀ {S : Scheme.{0}} (G X : Over S) [GrpObj 
     IsPullback.of_hasPullback G.hom X.hom
   obtain ⟨h, u, hpb⟩ := GlobalTheory.T.pullback_restrict_open hsq W D hDW
   have := isFinite_snd (X := X) hG
-  haveI : IsAffine D.toScheme := hD
-  haveI : IsAffine W.toScheme := hW
-  haveI : IsAffine (G.hom ⁻¹ᵁ W).toScheme := hW.preimage G.hom
-  haveI : IsAffine ((snd G X).left ⁻¹ᵁ D).toScheme := hD.preimage (snd G X).left
+  have : IsAffine D.toScheme := hD
+  have : IsAffine W.toScheme := hW
+  have : IsAffine (G.hom ⁻¹ᵁ W).toScheme := hW.preimage G.hom
+  have : IsAffine ((snd G X).left ⁻¹ᵁ D).toScheme := hD.preimage (snd G X).left
   have hfree' := GlobalTheory.T.finite_free_pullback_affine hpb hfree
   let P' : (G ⊗ X).left.Opens := (snd G X).left ⁻¹ᵁ D
   let c : P'.toScheme ⟶ X.left := P'.ι ≫ (γ[G, X] : G ⊗ X ⟶ X).left

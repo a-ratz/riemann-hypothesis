@@ -134,7 +134,7 @@ theorem finite_pos {N : Submodule (𝓞 E) (Sp E n)} (hN : IsSdLat N) :
       WithZero.log_lt_iff_lt_exp ((Valuation.ne_zero_iff _).2 (dt_ne _))] at hQ
     exact hQ
   show 1 < Q.valuation E (s • dt f)⁻¹
-  rw [map_inv₀, one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx0))]
+  rw [map_inv₀, one_lt_inv₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx0))]
   exact h1.trans_lt h2
 
 theorem ordDet_conj_finite : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (n : ℕ) (N : Submodule (𝓞 E) (Sp E n)), IsSdLat N → (∀ P : HeightOneSpectrum (𝓞 E), ordDet (conjPrime₂ P) N = -ordDet P N) ∧ {Q : HeightOneSpectrum (𝓞 E) | ordDet Q N ≠ 0}.Finite := by

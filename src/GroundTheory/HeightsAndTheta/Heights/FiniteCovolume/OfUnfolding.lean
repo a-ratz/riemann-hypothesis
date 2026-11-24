@@ -189,7 +189,7 @@ theorem CoordLatticeFullRank.proof (v : Basis ι E W) : CoordLatticeFullRank.Sta
   set f : W →ₗ[E] ι → E := (v.equivFun : W →ₗ[E] ι → E) with hf
   refine ⟨?_, ?_⟩
   · classical
-    letI := hL.fg
+    let := hL.fg
     infer_instance
   set S : Set (ι → E) := ((La.map f.toAddMonoidHom : AddSubgroup (ι → E)) : Set (ι → E)) with hS
   set T : Submodule ℚ (ι → E) := Submodule.span ℚ S with hT
@@ -349,7 +349,7 @@ theorem quasiMeasurePreserving_fst_comp (hV : IsOpen V) (hVc : IsCompact V) :
   refine ⟨(measurable_fst_comp Φ).aemeasurable, fun A hA => ?_⟩
   change sliceMeasure Φ μ V A = 0
   obtain ⟨c, hc⟩ := sliceMeasure_eq_smul_haar (Φ := Φ) (μ := μ) hV hVc
-  rw [hc, Measure.smul_apply, hA, smul_zero]
+  rw [hc, smul_apply, hA, smul_zero]
 
 theorem measure_preimage_prod_null (hV : IsOpen V) (hVc : IsCompact V) {N : Set G₁}
     (hN : (Measure.haar : Measure G₁) N = 0) : μ (Φ ⁻¹' (N ×ˢ V)) = 0 := by
@@ -367,7 +367,7 @@ theorem measure_preimage_prod_lt_top (hV : IsOpen V) (hVc : IsCompact V) {A : Se
     (hA : (Measure.haar : Measure G₁) A < ∞) : μ (Φ ⁻¹' (A ×ˢ V)) < ∞ := by
   refine (measure_preimage_prod_le hV A).trans_lt ?_
   obtain ⟨c, hc⟩ := sliceMeasure_eq_smul_haar (Φ := Φ) (μ := μ) hV hVc
-  rw [hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [hc, smul_apply, ENNReal.smul_def, smul_eq_mul]
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top hA
 
 end Setup
@@ -387,7 +387,7 @@ theorem DoubleCosetCovolume.proof (G G₁ G₂ : Type*) [Group G] [TopologicalSp
       Quotient.mk R (rep (Quotient.mk R t)) = Quotient.mk R t := by
     intro t ht
     have h : ∃ t' ∈ S, Quotient.mk R t' = Quotient.mk R t := ⟨t, ht, rfl⟩
-    simp only [rep, dif_pos h]
+    simp only [rep, dite_eq_left h]
     exact h.choose_spec
   let T : Finset (Quotient R) := S.image (Quotient.mk R)
   have hT : ∀ q ∈ T, rep q ∈ S ∧ Quotient.mk R (rep q) = q := by
@@ -400,7 +400,7 @@ theorem DoubleCosetCovolume.proof (G G₁ G₂ : Type*) [Group G] [TopologicalSp
   have hF : ∀ s ∈ S, IsFundamentalDomain (sliceGroup Φ Γ K s) (F s) Measure.haar ∧
       (Measure.haar : Measure G₁) (F s) < ∞ := by
     intro s hs
-    simp only [F, dif_pos hs]
+    simp only [F, dite_eq_left hs]
     exact (hFD s hs Measure.haar).choose_spec
   have hVo := isOpen_leftCosetSet hKo
   have hVc := isCompact_leftCosetSet hKc
@@ -632,7 +632,7 @@ theorem HaarParabolicCoordinates.proof (h : HermitianForm F E W) (v : Basis ι E
   refine ⟨(c : ℝ≥0∞) • ν, κ, τ, Measure.IsHaarMeasure.smul ν hc0 ENNReal.coe_ne_top, inferInstance,
     inferInstance, hτ, hτx, fun f hf => ?_⟩
   have hφ : Measurable fun g : archUnitary h v => ∫⁻ k : M.stab, f (g * k) ∂κ :=
-    (hf.comp (measurable_fst.mul (measurable_subtype_coe.comp measurable_snd))).lintegral_prod_right'
+    (hf.comp (measurable_fst.mul (measurable_subtypeVal.comp measurable_snd))).lintegral_prod_right'
   have hPφ := hP _ hφ
   rw [hc f hf, hPφ, ← lintegral_const_mul' _ _ ENNReal.coe_ne_top]
   refine lintegral_congr fun b => ?_
@@ -640,8 +640,8 @@ theorem HaarParabolicCoordinates.proof (h : HermitianForm F E W) (v : Basis ι E
       ∫⁻ k : M.stab, ∫⁻ x : vecFixGroup h v x₀, f ((x : archUnitary h v) * (τ b * k)) ∂ν ∂κ := by
     rw [lintegral_lintegral_swap]
     · simp only [mul_assoc]
-    · exact (hf.comp (((measurable_subtype_coe.comp measurable_fst).mul_const (τ b)).mul
-        (measurable_subtype_coe.comp measurable_snd))).aemeasurable
+    · exact (hf.comp (((measurable_subtypeVal.comp measurable_fst).mul_const (τ b)).mul
+        (measurable_subtypeVal.comp measurable_snd))).aemeasurable
   simp only [lintegral_smul_measure, smul_eq_mul]
   rw [lintegral_const_mul' _ _ ENNReal.coe_ne_top, hswap]
   ring
@@ -1191,14 +1191,14 @@ theorem StabilizerCovolumeFinite.proof [FiniteDimensional E W] (h : HermitianFor
   obtain ⟨C, hC, hcovN⟩ := h₅ D La x₀ hLa hx₀ hne hiso
   let j : unipRadical h v x₀ →* vecFixGroup h v x₀ :=
     Subgroup.inclusion (unipRadical_le_vecFixGroup h v x₀)
-  have hjc : Continuous j := (continuous_subtype_val.subtype_mk _)
+  have hjc : Continuous j := (continuous_subtypeVal.subtype_mk _)
   have hj : IsClosedEmbedding j := by
-    refine ⟨IsEmbedding.of_comp hjc continuous_subtype_val IsEmbedding.subtypeVal, ?_⟩
+    refine ⟨IsEmbedding.of_comp hjc continuous_subtypeVal IsEmbedding.subtypeVal, ?_⟩
     have : Set.range j = Subtype.val ⁻¹' (unipRadical h v x₀ : Set (archUnitary h v)) := by
       ext g
       exact ⟨by rintro ⟨n, rfl⟩; exact n.2, fun hg => ⟨⟨g, hg⟩, rfl⟩⟩
     rw [this]
-    exact (isClosed_unipRadical h v x₀).preimage continuous_subtype_val
+    exact (isClosed_unipRadical h v x₀).preimage continuous_subtypeVal
   have hjr : ∀ g, q g = 1 ↔ g ∈ j.range := fun g => (hker g).trans
     ⟨fun hg => ⟨⟨g, hg⟩, rfl⟩, by rintro ⟨n, rfl⟩; exact n.2⟩
   let μN : Measure (unipRadical h v x₀) := Measure.haar
@@ -1235,12 +1235,12 @@ theorem StabilizerCovolumeFinite.proof [FiniteDimensional E W] (h : HermitianFor
       rintro _ ⟨γ, -, rfl⟩
       exact ⟨(γ : h.unitaryGroup), γ.2, rfl⟩
     exact DiscreteTopology.of_continuous_injective (f := Subgroup.inclusion hle)
-      (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective hle)
+      (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective hle)
   have hdisc : DiscreteTopology Γ :=
     DiscreteTopology.of_continuous_injective
       (f := fun x : Γ => (⟨((x : vecFixGroup h v x₀) : archUnitary h v), x.2⟩ :
         vecStabGroup h v La x₀))
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
       (fun a b hab => Subtype.ext (Subtype.ext (by simpa using congrArg Subtype.val hab)))
   have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨FD, -, hFD⟩ := DiscreteFundamentalDomain.proof (vecFixGroup h v x₀) ν Γ hdisc

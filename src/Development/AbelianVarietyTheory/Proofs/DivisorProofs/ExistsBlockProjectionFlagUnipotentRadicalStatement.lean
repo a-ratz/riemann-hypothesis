@@ -166,7 +166,7 @@ theorem exists_blockProj : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hc : Continuous c := continuous_const.matrix_mul ((continuous_mat.sub continuous_const).matrix_mul continuous_const)
   refine ⟨fun a p => Φ (c a (e p.1.1) (e p.1.2)), ?_, fun a b => ?_, fun a x hx => ?_, fun a => ⟨fun h0 => ?_, fun ha => ?_⟩,
     fun a ha => ?_⟩
-  · exact continuous_pi fun p => hΦc.comp ((hc.comp continuous_subtype_val).matrix_elem _ _)
+  · exact continuous_pi fun p => hΦc.comp ((hc.comp continuous_subtypeVal).matrix_elem _ _)
   · funext p
     have h1 : c (a * b : unip σ J X (insert k S)) = c a + c b + c a * c b := by
       simp only [c]

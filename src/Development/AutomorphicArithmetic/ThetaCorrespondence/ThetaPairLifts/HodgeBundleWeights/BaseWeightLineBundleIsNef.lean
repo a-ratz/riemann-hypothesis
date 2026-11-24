@@ -189,8 +189,8 @@ theorem rep_locSec (M : MChart Y) (j : Fin M.n) {n : ℕ} (C : VB.Chart (GlobalT
   exact congrArg (((C.isFrame.basis h).repr w i) * ·) (congrFun (tanLin_res M hW hC h hM le_rfl C.e j) i).symm
 
 theorem exists_rep (M : MChart Y) (j : Fin M.n) : ∃ s : Γ(GlobalTheory.LieVB.Lie Y.t.G, M.U), Rep M j le_rfl s := by
-  haveI := Y.t.semi
-  haveI := Y.t.semi.smooth
+  have := Y.t.semi
+  have := Y.t.semi.smooth
   let V : (Σ n : ℕ, {C : VB.Chart (GlobalTheory.LieVB.omega Y.t.G) n // IsAffineOpen C.U ∧ C.U ≤ M.U}) → Y.X.Opens :=
     fun k => k.2.1.U
   have hV : ∀ k, V k ≤ M.U := fun k => k.2.2.2
@@ -207,8 +207,8 @@ theorem exists_rep (M : MChart Y) (j : Fin M.n) : ∃ s : Γ(GlobalTheory.LieVB.
 
 theorem isFrame_of_rep (M : MChart Y) (f : Fin M.n → Γ(GlobalTheory.LieVB.Lie Y.t.G, M.U)) (hf : ∀ j, Rep M j le_rfl (f j)) :
     VB.IsFrame f := by
-  haveI := Y.t.semi
-  haveI := Y.t.semi.smooth
+  have := Y.t.semi
+  have := Y.t.semi.smooth
   refine VB.isFrame_of_forall_exists fun V h p hp => ?_
   obtain ⟨U₀, n, e, hp₀, he⟩ := GlobalTheory.LieVB.exists_isFrame_omega Y.t.G p
   obtain ⟨W, hW, hpW, hWU⟩ := exists_isAffineOpen_mem_and_subset (x := p) (U := V ⊓ U₀) ⟨hp, hp₀⟩
@@ -641,7 +641,7 @@ theorem val_dual_LL_stepEx {j : ℕ} (hj : j ≤ Dw.mult σ) (k k' : F.J) :
       ((F.B k k' σ).submatrix (Fin.castLE hj) (Fin.castLE hj)).det := by
   have ht : ((F.B k k' σ).submatrix (Fin.castLE hj) (Fin.castLE hj)).BlockTriangular id := fun a b h =>
     F.B_tri k k' σ (show Fin.castLE hj b < Fin.castLE hj a from h)
-  rw [Matrix.det_of_upperTriangular ht]
+  rw [Matrix.det_of_isUpperTriangular ht]
   change ((∏ ix, F.T k k' ix ^ (-NefStep.stepEx σ j ix))⁻¹).val = _
   have e : (∏ ix, F.T k k' ix ^ (-NefStep.stepEx σ j ix))⁻¹ = ∏ i : Fin j, F.T k k' (some ⟨σ, Fin.castLE hj i⟩) := by
     rw [← Finset.prod_inv_distrib]
@@ -651,11 +651,11 @@ theorem val_dual_LL_stepEx {j : ℕ} (hj : j ≤ Dw.mult σ) (k k' : F.J) :
     · have : NefStep.stepEx σ j ix = 0 := by
         rcases ix with _ | ⟨σ', i⟩
         · rfl
-        · refine if_neg ?_
+        · refine ite_eq_right ?_
           rintro ⟨rfl, hi⟩
           exact h ⟨⟨i, hi⟩, Finset.mem_coe.2 (Finset.mem_univ _), rfl⟩
       rw [this, neg_zero, zpow_zero, inv_one]
-    · have : NefStep.stepEx σ j (some ⟨σ, Fin.castLE hj i⟩ : Ix Dw) = 1 := if_pos ⟨rfl, i.2⟩
+    · have : NefStep.stepEx σ j (some ⟨σ, Fin.castLE hj i⟩ : Ix Dw) = 1 := ite_eq_left ⟨rfl, i.2⟩
       rw [this, zpow_neg_one, inv_inv]
   rw [e, Units.coe_prod]
   rfl
@@ -1503,7 +1503,7 @@ theorem exists_step_sub {C : Scheme.{0}} [C.IsSeparated] [PreconnectedSpace C] (
       (B j j').det := by
     have ht : (B j j').BlockTriangular id := fun s s' h =>
       F.B_map_tri j.1.2 j'.1.2 σ (ev _ _ (hh j j')) (i := s.castLE hn) (j := s'.castLE hn) h
-    rw [Matrix.det_of_upperTriangular ht]
+    rw [Matrix.det_of_isUpperTriangular ht]
     simp only [B, Matrix.submatrix_apply, Matrix.map_apply, ← map_prod]
     rw [← LL_stepEx_g_inv F σ hn]
     refine left_inv_eq_right_inv (a := ev _ _ (hh j j') ((F.LL (stepEx σ n)).g j.1.2 j'.1.2).val) ?_
@@ -1561,7 +1561,7 @@ noncomputable section
 namespace GlobalTheory.NefStep
 theorem isNef_hodgeBundle_tailWeight : GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NefNumerics → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ (τ : Psi H) (k : ℕ), Dw.p ≤ k → k + 1 < Dw.p + Dw.q → letI := algebraΓOfHom (str₀ TF.X Z); IsNef c.F (L₀ TF.X Z (GlobalTheory.NefWt.tailWt τ k)) := by
   intro h _ hN E _ _ _ H Dw l Xo c TF Z _ τ k hk _
-  letI := algebraΓOfHom (str₀ TF.X Z)
+  let := algebraΓOfHom (str₀ TF.X Z)
   rw [L₀_tailWt TF.X Z τ k hk]
   have hq := FlagMod.mult_conj (Dw := Dw) τ
   exact isNef_pull_LL_stepEx TF.X.F h hN.1 c.F (inc₀ TF.X Z) _ (by omega)
@@ -1602,7 +1602,7 @@ noncomputable section
 namespace GlobalTheory.NefWt
 theorem weight_line_bundle_isNef : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NefNumerics → GlobalTheory.Published.SemiAbelianLieSeminegative → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ la : AllWt.Weight Dw, GapGe 0 la → letI := algebraΓOfHom (str₀ TF.X Z); IsNef c.F (L₀ TF.X Z la) := by
   intro hPr hNN hSA E _ _ _ H Dw l Xo c TF Z hF la hla
-  letI := algebraΓOfHom (str₀ TF.X Z)
+  let := algebraΓOfHom (str₀ TF.X Z)
   classical
   obtain ⟨-, hproj, -⟩ := _root_.GlobalTheory.VarFlag.isVariety₀_flag E H Dw l Xo c TF Z hF
   obtain ⟨A, hA⟩ := exists_isAmpleLB_of_isProjOver hproj

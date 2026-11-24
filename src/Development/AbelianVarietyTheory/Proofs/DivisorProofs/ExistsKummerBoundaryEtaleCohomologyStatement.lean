@@ -245,11 +245,11 @@ theorem cone_class_eq : ∀ (R : Type) [CommRing R] (S : ShortComplex (Shv R)), 
   intro R _ S hS hc e hh
   have hS' : (S.map (CochainComplex.singleFunctor (Shv R) 0)).ShortExact :=
     hS.map_of_exact (HomologicalComplex.single _ _ _)
-  haveI : QuasiIso (mappingCone.descShortComplex (S.map (CochainComplex.singleFunctor (Shv R) 0))) :=
+  have : QuasiIso (mappingCone.descShortComplex (S.map (CochainComplex.singleFunctor (Shv R) 0))) :=
     mappingCone.quasiIso_descShortComplex hS'
-  haveI : (res R S.X₃).IsKInjective := inferInstanceAs ((injectiveResolution S.X₃).cochainComplex.IsKInjective)
-  haveI : (res R S.X₃).IsStrictlyGE 0 := inferInstanceAs ((injectiveResolution S.X₃).cochainComplex.IsStrictlyGE 0)
-  haveI : Epi S.g := hS.epi_g
+  have : (res R S.X₃).IsKInjective := inferInstanceAs ((injectiveResolution S.X₃).cochainComplex.IsKInjective)
+  have : (res R S.X₃).IsStrictlyGE 0 := inferInstanceAs ((injectiveResolution S.X₃).cochainComplex.IsStrictlyGE 0)
+  have : Epi S.g := hS.epi_g
   have hbij := GlobalTheory.T.hypercohomologyPullback_bijective_of_quasiIso R (mappingCone.descShortComplex (S.map (CochainComplex.singleFunctor (Shv R) 0))) (res R S.X₃) 0
   obtain ⟨c, hc'⟩ := hbij.2 (CohomologyClass.mk (Cocycle.ofHom
     (mappingCone.map _ (resMap R S.f) (resAug S.X₁) (resAug S.X₂) hc ≫ e.hom)))
@@ -437,8 +437,8 @@ theorem exists_connecting_cocycle : ∀ (R : Type) [CommRing R] (S : ShortComple
   rw [one_smul]
   have hc := resAug_comm R S.f
   have hS' : (S.map (CochainComplex.singleFunctor (Shv R) 0)).ShortExact := hS.map_of_exact (HomologicalComplex.single _ _ _)
-  haveI := mappingCone.quasiIso_descShortComplex hS'
-  haveI : (res R S.X₁).IsKInjective := by unfold res; infer_instance
+  have := mappingCone.quasiIso_descShortComplex hS'
+  have : (res R S.X₁).IsKInjective := by unfold res; infer_instance
   apply (GlobalTheory.T.hypercohomologyPullback_bijective_of_quasiIso R (mappingCone.descShortComplex (S.map (CochainComplex.singleFunctor (Shv R) 0)))
     (res R S.X₁) 1).1
   exact assemble _ _ _ _ _ _ _ e.homotopyHomInvId (GlobalTheory.T.mappingCone_shortExact_augmentation_class_eq R S hS hc e h) (GlobalTheory.T.mappingCone_connecting_cocycle_shortComplex_degree_zero R S hc φ ψ hφ hψ w hw)
@@ -1122,7 +1122,7 @@ theorem kummer_boundary_picClass : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.ca
   obtain ⟨a, ha⟩ := GlobalTheory.T.exists_cocycle_lifting_lineBundle_transition_units q (cokernel κ) _ E L hE h5
   have hy' : y = CohomologyClass.mk (zcomp a (Cocycle.ofHom (resAug (cokernel κ))) (add_zero 1)) :=
     (GlobalTheory.T.etaleCohomology_bijective_of_support_bijective ℤ E _ (fun U hU => h5 U (hE U hU)) 1).1 (hy.trans (GlobalTheory.T.kummerLiftedCocycle_image_eq_picardClass _ _ E L a ha).symm)
-  haveI : Injective ((res ℤ (twZ q)).X 0) :=
+  have : Injective ((res ℤ (twZ q)).X 0) :=
     inferInstanceAs (Injective ((injectiveResolution (twZ q)).cochainComplex.X 0))
   let φ : Gm ⟶ (res ℤ (twZ q)).X 0 := Injective.factorThru (resι ℤ (twZ q)) κ
   have hφ : κ ≫ φ = resι ℤ (twZ q) := Injective.comp_factorThru _ _
@@ -1335,7 +1335,7 @@ theorem kummer_boundary : ∀ (q : ℕ) [NeZero q], ∃ κ : (restr (Int.castRin
     else 0
   have hbd : ∀ E (hE : Inv q E) n x, bd E n x = (Re E (n + 1)).symm (HK.ext ℤ _ z n (n + 1) rfl ((Pe E hE n).symm x)) := by
     intro E hE n x
-    simp only [bd, dif_pos hE]
+    simp only [bd, dite_eq_left hE]
     rfl
   refine ⟨bd, ?_, ?_, ?_, ?_⟩
   · intro E E' f hE' n x

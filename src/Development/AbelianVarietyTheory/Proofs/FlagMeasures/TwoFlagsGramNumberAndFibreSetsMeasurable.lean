@@ -57,7 +57,7 @@ theorem yv_measurable : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
   have hY : Measurable fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => Yv k r z z' γ (Matrix.of x.1) :=
     (measurable_gramProj k r r z z' γ _).div_const _
   have hc : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => (Matrix.of x.1 : Mat k r) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have h1 : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => Sg k r z' (Matrix.of x.1) :=
     (LenCont.lA_Sg_continuousOn k r z').2.comp_continuous hc fun x => x.2
   have h2 : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => Sg k r z (γ * Matrix.of x.1) :=

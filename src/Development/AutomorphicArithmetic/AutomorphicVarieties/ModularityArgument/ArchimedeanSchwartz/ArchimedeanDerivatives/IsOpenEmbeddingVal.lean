@@ -118,8 +118,8 @@ private theorem isOpenEmbedding_val :
     exact isOpen_invSet (E := K) (a := n)
 
 private theorem addHaar_vol : (volume : Measure (Lie K n)).IsAddHaarMeasure := by
-  haveI : (volume : Measure (Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin n → Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin n → Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   exact Measure.pi.isAddHaarMeasure _
 
 private theorem measurable_dens : Measurable fun x : Lie K n => ENNReal.ofReal ((nrm x)⁻¹ ^ n) :=
@@ -128,7 +128,7 @@ private theorem measurable_dens : Measurable fun x : Lie K n => ENNReal.ofReal (
 private theorem map_lm (y : Lie K n) (hy : y ∈ invSet K n) :
     Measure.map (lm y) ((volume : Measure (Lie K n)).withDensity fun x => ENNReal.ofReal ((nrm x)⁻¹ ^ n)) =
       (volume : Measure (Lie K n)).withDensity fun x => ENNReal.ofReal ((nrm x)⁻¹ ^ n) := by
-  haveI := addHaar_vol (K := K) (n := n)
+  have := addHaar_vol (K := K) (n := n)
   have hp := (nrm_pos_iff y).2 hy
   have hdet : LinearMap.det (lm y) ≠ 0 := by rw [det_lm]; positivity
   have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure (Lie K n)) hdet
@@ -143,7 +143,7 @@ open UpperTheory.V.Z.Inf in
 theorem UpperTheory.V.Z.Inf.haarL :
     UpperTheory.V.Z.Inf.HaarL := by
   intro K _ _ _ n _ _
-  haveI := addHaar_vol (K := K) (n := n)
+  have := addHaar_vol (K := K) (n := n)
   set w : Lie K n → ENNReal := fun x => ENNReal.ofReal ((nrm x)⁻¹ ^ n) with hw
   set μL : Measure (Lie K n) := (volume : Measure (Lie K n)).withDensity w with hμL
   set e : GL (Fin n) (Cinf K) → Lie K n := fun g => toL g.val with he

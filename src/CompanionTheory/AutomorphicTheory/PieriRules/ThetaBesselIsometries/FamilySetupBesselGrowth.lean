@@ -64,7 +64,7 @@ theorem integrand_eq {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ 
   have hn : ‖((Real.sqrt d : ℝ) : ℂ) • v‖ = Real.sqrt d * ‖v‖ := by
     rw [norm_smul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg d)]
   have hc : ((‖((Real.sqrt d : ℝ) : ℂ) • v‖₊ : ENNReal)) = ENNReal.ofReal (Real.sqrt d * ‖v‖) := by
-    rw [← hn, ← ENNReal.ofReal_coe_nnreal, coe_nnnorm]
+    rw [← hn, ← ENNReal.ofReal_coe_nnreal, coe_nnNorm]
   rw [hc, ← ENNReal.ofReal_pow (mul_nonneg (Real.sqrt_nonneg d) (norm_nonneg v)), mul_pow,
     Real.sq_sqrt hd, one_mul]
 

@@ -132,7 +132,7 @@ theorem UpperTheory.Gal.Wt.autCrit_of :
     rw [mul_inv_cancel_left] at this
     exact this.symm
   · refine GlobalTheory.CuspRep.isOpen_stab_of_mem_nhds ((RU E a).comp (finU (E := E) (n := a)).subtype) _ ?_
-    have ho : IsOpen ((Subtype.val : finU (E := E) (n := a) → UA E a) ⁻¹' Wn) := hWo.preimage continuous_subtype_val
+    have ho : IsOpen ((Subtype.val : finU (E := E) (n := a) → UA E a) ⁻¹' Wn) := hWo.preimage continuous_subtypeVal
     refine Filter.mem_of_superset (ho.mem_nhds hW1) fun k hk => ?_
     have hk' : (k : UA E a) ∈ C := by
       refine hNC ⟨?_, k.2⟩
@@ -140,7 +140,7 @@ theorem UpperTheory.Gal.Wt.autCrit_of :
       rwa [GlobalTheory.EllU.finPart_of_finU k.2] at this
     funext g
     exact hC _ hk' g
-  · haveI := hS
+  · have := hS
     refine Submodule.finiteDimensional_of_le (S₂ := S) (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩
     exact hSub k k.2
@@ -181,13 +181,13 @@ theorem UpperTheory.Gal.Wt.autMul_of :
       change RU E a k (fun g => φ g * ψ g) = fun g => φ g * ψ g
       rw [RU_mul', h1, h2]
       rfl
-  · haveI := hφ.kfin
-    haveI := hψ.kfin
+  · have := hφ.kfin
+    have := hψ.kfin
     have f1 : (Submodule.span ℂ (Set.range fun k : infU E a => RU E a k φ)).FG :=
       Submodule.fg_iff_finiteDimensional _ |>.2 inferInstance
     have f2 : (Submodule.span ℂ (Set.range fun k : infU E a => RU E a k ψ)).FG :=
       Submodule.fg_iff_finiteDimensional _ |>.2 inferInstance
-    haveI : FiniteDimensional ℂ ↥(Submodule.span ℂ (Set.range fun k : infU E a => RU E a k φ) *
+    have : FiniteDimensional ℂ ↥(Submodule.span ℂ (Set.range fun k : infU E a => RU E a k φ) *
         Submodule.span ℂ (Set.range fun k : infU E a => RU E a k ψ)) :=
       Submodule.fg_iff_finiteDimensional _ |>.1 (f1.mul f2)
     refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ (Set.range fun k : infU E a => RU E a k φ) *
@@ -533,7 +533,7 @@ private theorem chiZ_injective : Function.Injective chiZ := by
   have hk : m - n ≠ 0 := sub_ne_zero.mpr hmn
   set z : Circle := Circle.exp (Real.pi / (m - n : ℤ)) with hz
   have hpow : (z : ℂ) ^ (m - n) = -1 := by
-    rw [hz, Circle.coe_exp, ← Complex.exp_int_mul]
+    rw [hz, Circle.coe_exp, ← Complex.exp_intCast_mul]
     have : ((m - n : ℤ) : ℂ) * (((Real.pi / ((m - n : ℤ) : ℝ) : ℝ) : ℂ) * Complex.I) = Real.pi * Complex.I := by
       have hk' : ((m - n : ℤ) : ℂ) ≠ 0 := by exact_mod_cast hk
       push_cast
@@ -606,12 +606,12 @@ theorem UpperTheory.Gal.Wt.famEx_of : NeatLev → EllC → Twist → TwistBd →
   obtain ⟨ℓ, hℓ⟩ := hE E a C hC.fin hneat
   obtain ⟨R, hR0, hR⟩ := hTB E l ι a C hC ℓ hℓ W f X b hb
   obtain ⟨κ, hκr, hκi, hκ1, hκc, hκI⟩ := hK E l ι a v' τ hτ
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC.compact
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hC.compact
   let φ : C →* GL (Fin a) ℂ := κ.comp C.subtype
   have hφI : ∀ c : C, IntGL ι (φ c) := fun c => hκI _ (hint _ c.2)
-  obtain ⟨Q, _, c, P, hQ⟩ := hP l ι a C φ (fun i j => (hκc i j).comp continuous_subtype_val) hφI
+  obtain ⟨Q, _, c, P, hQ⟩ := hP l ι a C φ (fun i j => (hκc i j).comp continuous_subtypeVal) hφI
     ((Kv.comap (cLoc v')).subgroupOf C)
-    (hKo.preimage ((GlobalTheory.BCT.GlobLev.continuous_cLoc v').comp continuous_subtype_val))
+    (hKo.preimage ((GlobalTheory.BCT.GlobLev.continuous_cLoc v').comp continuous_subtypeVal))
     (fun x hx => by
       have h1 : cLoc v' x.1 = 1 := (hκ1 _).1 hx
       change cLoc v' x.1 ∈ Kv
@@ -648,7 +648,7 @@ theorem UpperTheory.Gal.Wt.famEx_of : NeatLev → EllC → Twist → TwistBd →
   rw [famOf_apply, hv, hnM]
   have e : (F q₀).1 (b g i) g - ∑ q, pev (P q) (φ (ℓ g)) * delta ν ((φ (c q))⁻¹ * φ (ℓ g)) * (F q).1 (b g i) g =
       ∑ q, ((if q = q₀ then 1 else 0) - pev (P q) (φ (ℓ g)) * delta ν (φ ((c q)⁻¹ * ℓ g))) * (F q).1 (b g i) g := by
-    simp only [sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, hδ]
+    simp only [sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, hδ]
 
   rw [e, map_sum]
   refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg hε.le fun q _ => ?_
@@ -658,14 +658,14 @@ theorem UpperTheory.Gal.Wt.famEx_of : NeatLev → EllC → Twist → TwistBd →
   by_cases hq : q = q₀
   · subst hq
     have hb3 := hb2 _ hε' h1
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have e2 : 1 - pev (P q) (φ (ℓ g)) * delta ν (φ ((c q)⁻¹ * ℓ g)) =
         -((pev (P q) (φ (ℓ g)) - 1) * delta ν (φ ((c q)⁻¹ * ℓ g)) + (delta ν (φ ((c q)⁻¹ * ℓ g)) - 1)) := by ring
     rw [e2, map_neg, norm_neg, map_add (f := _)]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ hb3)
     rw [map_mul, norm_mul]
     exact (mul_le_mul h2 hb1 (norm_nonneg _) hε').trans_eq (mul_one _)
-  · rw [if_neg hq, zero_sub, map_neg, norm_neg, map_mul, norm_mul]
+  · rw [ite_eq_right hq, zero_sub, map_neg, norm_neg, map_mul, norm_mul]
     exact (mul_le_mul (h3 q hq) hb1 (norm_nonneg _) hε').trans_eq (mul_one _)
 end -- clump:auto
 end -- clump:auto
@@ -880,7 +880,7 @@ theorem famProj_of : EvLem → SumRep → FamProj := by
   classical
   obtain ⟨S₀, hS₀, hBS₀⟩ := hB.fin
   let S := S₀ ⊓ autU E a
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le inf_le_left
   have hBS : ∀ y₁ y₂ v, B y₁ y₂ v ∈ S := fun y₁ y₂ v => ⟨hBS₀ y₁ y₂ v, hB.aut y₁ y₂ v⟩
   obtain ⟨t, ht, hind, hle⟩ := hSum E a S inferInstance fun φ hφ => hφ.2
   have hex : ∀ U : Submodule ℂ (UA E a → ℂ), ∃ p : (UA E a → ℂ) →ₗ[ℂ] (UA E a → ℂ), U ∈ t → (∀ φ, p φ ∈ U) ∧
@@ -1205,7 +1205,7 @@ theorem UpperTheory.Gal.Wt.nearSub_of :
         = ⋂ i, ⋂ j, (fun g => ι.symm (((φ g : GL (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ) i j)) ⁻¹'
             Metric.closedBall (ι.symm ((1 : Matrix (Fin a) (Fin a) ℂ) i j)) ε := by
       ext g
-      simp only [Set.mem_setOf_eq, NearOne, map_sub, Set.mem_iInter, Set.mem_preimage,
+      simp only [Set.mem_ofPred_eq, NearOne, map_sub, Set.mem_iInter, Set.mem_preimage,
         Metric.mem_closedBall, dist_eq_norm]
     show IsOpen ({g | NearOne ι ε (φ g)} : Set Γ)
     rw [hset]
@@ -1242,7 +1242,7 @@ theorem UpperTheory.Gal.Wt.nrmAut_of :
       rw [hn.inf x.1 x.2 g, mul_assoc]
     rw [he]
     exact hpc.comp (continuous_const.mul
-      (((GlobalTheory.AutRec.continuous_cEmb_emb τ).comp continuous_subtype_val).mul continuous_const))
+      (((GlobalTheory.AutRec.continuous_cEmb_emb τ).comp continuous_subtypeVal).mul continuous_const))
   · have he : RU E a x (fun g => p (n g * y)) = fun g => p (n g * (cEmb τ x * y)) := by
       funext g
       change p (n (g * x) * y) = _
@@ -1280,7 +1280,7 @@ private theorem tor_entry_mem_expLe_one_expGe_zero (h : ExpBasic) (a k : ℕ) (A
     by_cases hl : (l:ℕ) < k
     · convert (hmon ((A : Matrix (Fin a) (Fin a) ℂ) i l * (B : Matrix (Fin a) (Fin a) ℂ) l j) 1).1 using 1
       funext z
-      simp only [hl, if_true, zpow_one]
+      simp only [hl, ite_true, zpow_one]
       ring
     · convert (hmono 0 1 (by norm_num)).1
         (hconst ((A : Matrix (Fin a) (Fin a) ℂ) i l * (B : Matrix (Fin a) (Fin a) ℂ) l j)).1 using 1
@@ -1291,7 +1291,7 @@ private theorem tor_entry_mem_expLe_one_expGe_zero (h : ExpBasic) (a k : ℕ) (A
     · convert (hmono 0 1 (by norm_num)).2
         (hmon ((A : Matrix (Fin a) (Fin a) ℂ) i l * (B : Matrix (Fin a) (Fin a) ℂ) l j) 1).2 using 1
       funext z
-      simp only [hl, if_true, zpow_one]
+      simp only [hl, ite_true, zpow_one]
       ring
     · convert (hconst ((A : Matrix (Fin a) (Fin a) ℂ) i l * (B : Matrix (Fin a) (Fin a) ℂ) l j)).2 using 1
       funext z
@@ -1405,8 +1405,8 @@ theorem pieces_of (hS : SepPoly) (hN : NearSub) : Pieces := by
     intro i j
     rw [MonoidHom.mem_ker.mp hg]
     simpa using hε.le
-  haveI : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hKo
-  letI : Fintype (Γ ⧸ K) := Fintype.ofFinite _
+  have : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hKo
+  let : Fintype (Γ ⧸ K) := Fintype.ofFinite _
   let c : Γ ⧸ K → Γ := fun q => q.out
   let v : Γ → (Fin a × Fin a → Qbar l) := fun g p => ι.symm ((φ g : Matrix (Fin a) (Fin a) ℂ) p.1 p.2)
   have hv : Continuous v := continuous_pi fun p => hcont p.1 p.2
@@ -1543,7 +1543,7 @@ private theorem rFin_of_rep {a : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
   rfl
 
 private theorem rFin_delta {a : ℕ} (ν : DomWeight a) (X : GL (Fin a) ℂ) : RFin fun n => delta ν (X * n) := by
-  haveI : FiniteDimensional ℂ (nablaSq ℂ a ν) := inferInstance
+  have : FiniteDimensional ℂ (nablaSq ℂ a ν) := inferInstance
   exact rFin_of_rep (sqRep ℂ a ν) (ev1 ν) (top ν) X (GlobalTheory.BCT.TrKer.continuous_coef_sqRep a ν (top ν) (ev1 ν))
 
 theorem UpperTheory.Gal.Wt.rFinEx_of :
@@ -1647,7 +1647,7 @@ theorem UpperTheory.Gal.Wt.topUp_of :
   have hdiag : ∀ i, (b : Matrix (Fin a) (Fin a) ℂ) i i ≠ 0 := by
     have hdet : (b : Matrix (Fin a) (Fin a) ℂ).det ≠ 0 :=
       ((Matrix.isUnit_iff_isUnit_det _).mp b.isUnit).ne_zero
-    rw [Matrix.det_of_upperTriangular hbt] at hdet
+    rw [Matrix.det_of_isUpperTriangular hbt] at hdet
     exact fun i => (Finset.prod_ne_zero_iff.mp hdet) i (Finset.mem_univ i)
   let t : Fin a → ℂˣ := fun i => Units.mk0 _ (hdiag i)
   set D := diagGL ℂ a t with hD
@@ -1778,7 +1778,7 @@ private theorem isOpen_subgroupOf {E : Type} [Field E] [NumberField E] [IsCMFiel
   obtain ⟨N, hNo, h1N, hNC⟩ := hC₀.isOpen
   refine Subgroup.isOpen_of_mem_nhds (g := 1) _ ?_
   refine Filter.mem_of_superset
-    ((hNo.preimage continuous_subtype_val).mem_nhds (show ((1 : C) : UA E a) ∈ N from h1N)) ?_
+    ((hNo.preimage continuous_subtypeVal).mem_nhds (show ((1 : C) : UA E a) ∈ N from h1N)) ?_
   intro x hx
   exact Subgroup.mem_subgroupOf.2 (hNC ⟨hx, hC.fin x.2⟩)
 
@@ -1787,9 +1787,9 @@ theorem twistBd_of : Twist → TwistBd := by
   classical
   obtain ⟨C₀, hC₀, hf⟩ := UpperTheory.Gal.Gen.levelEx_holds E a W f
   have hHo := isOpen_subgroupOf hC hC₀
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC.compact
-  haveI : Finite (C ⧸ C₀.subgroupOf C) := Subgroup.quotient_finite_of_isOpen _ hHo
-  letI := Fintype.ofFinite (C ⧸ C₀.subgroupOf C)
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hC.compact
+  have : Finite (C ⧸ C₀.subgroupOf C) := Subgroup.quotient_finite_of_isOpen _ hHo
+  let := Fintype.ofFinite (C ⧸ C₀.subgroupOf C)
   have hq : ∀ q : C ⧸ C₀.subgroupOf C, ∃ R : ℝ, ∀ g i,
       ‖ι.symm (f.1 (b g i) (g * ((ℓ g)⁻¹ * q.out : C)))‖ ≤ R := by
     intro q
@@ -1868,7 +1868,7 @@ theorem UpperTheory.Gal.Wt.twist_of :
     have h : (fun x : infU E a => F v (g * x)) = fun x : infU E a => f.1 v (g * x * e g) :=
       funext fun x => hinf x x.2 v g
     rw [h]
-    exact (f.2.1 v).cont.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+    exact (f.2.1 v).cont.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
   exact ⟨⟨F, haut, heqv⟩, UpperTheory.Gal.Gen.mem_fixedBy.2 fun k hk v g => hlev k hk v g, fun _ _ => rfl⟩
 end -- clump:auto
 end -- clump:auto

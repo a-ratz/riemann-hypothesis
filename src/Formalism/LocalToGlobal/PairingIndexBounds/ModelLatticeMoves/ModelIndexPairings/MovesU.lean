@@ -65,7 +65,7 @@ theorem repsG_exist (M N : AddSubgroup G) (h : M.relIndex N ≠ 0) :
   classical
   have : (M.addSubgroupOf N).FiniteIndex := ⟨h⟩
   have : Finite (N ⧸ M.addSubgroupOf N) := AddSubgroup.finite_quotient_of_finiteIndex
-  letI := Fintype.ofFinite (N ⧸ M.addSubgroupOf N)
+  let := Fintype.ofFinite (N ⧸ M.addSubgroupOf N)
   let f : (N ⧸ M.addSubgroupOf N) → G := fun q => ((Quotient.out q : N) : G)
   have hf : Function.Injective f := by
     intro q q' hq

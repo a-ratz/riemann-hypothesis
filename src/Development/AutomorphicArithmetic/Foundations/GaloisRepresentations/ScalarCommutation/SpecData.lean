@@ -345,7 +345,7 @@ private theorem tyTop_of (hF : KNFact) (hG : CongGrpEx) (hC : CuspTh) : TyTop :=
     rw [e]
     exact hJc.image continuous_invT'
   · have hc : Continuous (fun y : Ty.J => (⟨invT n _ y.1, (hJ y.1).1 y.2⟩ : V.J)) :=
-      (continuous_invT'.comp continuous_subtype_val).subtype_mk _
+      (continuous_invT'.comp continuous_subtypeVal).subtype_mk _
     have e : (Ty.ψ.ker : Set Ty.J) =
         (fun y : Ty.J => (⟨invT n _ y.1, (hJ y.1).1 y.2⟩ : V.J)) ⁻¹' {k : V.J | V.χ k = 1} := by
       ext y
@@ -1544,7 +1544,7 @@ theorem module_props (R : Type*) [CommRing R] [TopologicalSpace R] [IsTopologica
     (M : Type*) [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M] [TopologicalSpace M]
     [IsModuleTopology R M] :
     LocallyCompactSpace M ∧ T2Space M ∧ TotallyDisconnectedSpace M ∧ SecondCountableTopology M := by
-  haveI : ContinuousAdd M := IsModuleTopology.toContinuousAdd R M
+  have : ContinuousAdd M := IsModuleTopology.toContinuousAdd R M
   let b := Module.Free.chooseBasis R M
   let e : M ≃ₜ (Module.Free.ChooseBasisIndex R M → R) :=
     { toEquiv := b.equivFun.toEquiv
@@ -1562,9 +1562,9 @@ theorem upts_props (R : Type) [CommRing R] [Algebra ℚ R] [TopologicalSpace R] 
     [LocallyCompactSpace R] [T2Space R] [TotallyDisconnectedSpace R] [SecondCountableTopology R] :
     LocallyCompactSpace (UPts star R) ∧ T2Space (UPts star R) ∧ TotallyDisconnectedSpace (UPts star R) ∧
       SecondCountableTopology (UPts star R) := by
-  letI : TopologicalSpace (R ⊗[ℚ] C) := moduleTopology R (R ⊗[ℚ] C)
-  haveI : IsModuleTopology R (R ⊗[ℚ] C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[ℚ] C) := IsModuleTopology.isTopologicalRing R (R ⊗[ℚ] C)
+  let : TopologicalSpace (R ⊗[ℚ] C) := moduleTopology R (R ⊗[ℚ] C)
+  have : IsModuleTopology R (R ⊗[ℚ] C) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[ℚ] C) := IsModuleTopology.isTopologicalRing R (R ⊗[ℚ] C)
   obtain ⟨m1, m2, m3, m4⟩ := module_props R (R ⊗[ℚ] C)
   obtain ⟨u1, u2, u3, u4⟩ := units_props (R ⊗[ℚ] C)
   obtain ⟨v1, v2, v3, v4⟩ := units_props R
@@ -1623,13 +1623,13 @@ theorem countable_awayP : Countable (AwayP p) := by
   exact hi.countable
 
 theorem compl_sc (v : HeightOneSpectrum ℤ) : SecondCountableTopology (v.adicCompletion ℚ) := by
-  haveI : Fact ((Rat.HeightOneSpectrum.primesEquiv v : Nat.Primes) : ℕ).Prime :=
+  have : Fact ((Rat.HeightOneSpectrum.primesEquiv v : Nat.Primes) : ℕ).Prime :=
     ⟨(Rat.HeightOneSpectrum.primesEquiv v).2⟩
   exact (Rat.HeightOneSpectrum.adicCompletion.padicEquiv v).toHomeomorph.isEmbedding.secondCountableTopology
 
 theorem finiteAdeleRingAway_secondCountableTopology : SecondCountableTopology (AfP p) := by
-  haveI := countable_awayP p
-  haveI : ∀ v : AwayP p, SecondCountableTopology (v.1.adicCompletion ℚ) := fun v => compl_sc v.1
+  have := countable_awayP p
+  have : ∀ v : AwayP p, SecondCountableTopology (v.1.adicCompletion ℚ) := fun v => compl_sc v.1
   have hAopen : ∀ v : AwayP p, IsOpen ((v.1.adicCompletionIntegers ℚ : Set (v.1.adicCompletion ℚ))) :=
     fun v => Valued.isOpen_valuationSubring _
   have hS : ∀ S : Finset (AwayP p), Filter.cofinite ≤ Filter.principal ((S : Set (AwayP p))ᶜ) := fun S =>
@@ -1691,20 +1691,20 @@ private def splitEquiv {X M : Type} [Group X] [Group M] (L : Loc X M) : X ≃* M
     simp [mul_assoc]
 
 private theorem t2Space_hTGroup_gAf {p : ℕ} [Fact p.Prime] (G : HTGroup p) : T2Space G.GAf := by
-  haveI := GlobalTheory.GfTop.t2Space_afP p
-  haveI := GlobalTheory.GfTop.finiteAdeleRingAway_locallyCompactSpace p
-  haveI := GlobalTheory.GfTop.finiteAdeleRingAway_totallyDisconnectedSpace p
-  haveI := GlobalTheory.GfTop.finiteAdeleRingAway_secondCountableTopology p
+  have := GlobalTheory.GfTop.t2Space_afP p
+  have := GlobalTheory.GfTop.finiteAdeleRingAway_locallyCompactSpace p
+  have := GlobalTheory.GfTop.finiteAdeleRingAway_totallyDisconnectedSpace p
+  have := GlobalTheory.GfTop.finiteAdeleRingAway_secondCountableTopology p
   exact (GlobalTheory.GfTop.upts_props G.star (AfP p)).2.1
 
 theorem splitC : SplitC := by
   intro p _ G Lv k _ _ _ _ P L hcont hat Kw hKo hKc hF
-  haveI := t2Space_hTGroup_gAf G
+  have := t2Space_hTGroup_gAf G
   have hker : IsClosed (L.pr.ker : Set G.GAf) := isClosed_singleton.preimage hcont
   refine ⟨inferInstance, inferInstance, inferInstance,
     ⟨splitEquiv L, fun g => (hat g).symm, Kw, (Lv.K : Subgroup G.GAf).subgroupOf L.pr.ker,
       hKo, hKc, ?_, ?_, ?_⟩, fun g h => rfl⟩
-  · exact Lv.K.isOpen.preimage continuous_subtype_val
+  · exact Lv.K.isOpen.preimage continuous_subtypeVal
   · exact hker.isClosedEmbedding_subtypeVal.isCompact_preimage Lv.compact
   · ext x
     constructor
@@ -1815,8 +1815,8 @@ theorem UpperTheory.Gal.Spc.specData :
     intro y
     obtain ⟨y', rfl⟩ := F.surj y
     rw [hP, hfac₀]
-  letI : MeasurableSpace (w₀.adicCompletion E) := borel _
-  haveI : BorelSpace (w₀.adicCompletion E) := ⟨rfl⟩
+  let : MeasurableSpace (w₀.adicCompletion E) := borel _
+  have : BorelSpace (w₀.adicCompletion E) := ⟨rfl⟩
   obtain ⟨τ, hτ, hτ2, Sp, hSp⟩ := UpperTheory.Gal.Spc.splitC p S.G Lv (w₀.adicCompletion E) P Ty.L hcont hat Kw hKwo hKwc
     (by rw [hLK]; exact hKwF)
   have hCe : Sp.Cusp (Ty.tf 1) := by

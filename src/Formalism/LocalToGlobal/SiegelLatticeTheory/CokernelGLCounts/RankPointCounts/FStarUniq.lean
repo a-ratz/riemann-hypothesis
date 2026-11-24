@@ -451,7 +451,7 @@ theorem uniqC_holds : UniqC Zd u u' F0 what₂ := by
       · simp only [k, LinearEquiv.trans_apply]
         rw [(LinearEquiv.symm_apply_eq _).2 hmn.2.symm, hmm.2]
     ext F'''
-    simp only [cls, Set.mem_setOf_eq]
+    simp only [cls, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨hE, hr⟩; exact ⟨hE, lattice_flag_relation_trans (lattice_flag_relation_symm hrel) hr⟩
     · rintro ⟨hE, hr⟩; exact ⟨hE, lattice_flag_relation_trans hrel hr⟩

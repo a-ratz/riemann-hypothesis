@@ -198,15 +198,15 @@ lemma loc_of_alg {U : Scheme.{0}} (P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop)
     nontrivial_of_ne 0 1 (fun h => y.2.ne_top ((Ideal.eq_top_iff_one _).2 (h ▸ y.asIdeal.zero_mem)))
   obtain ⟨B, _, _, hE, hS, hPB⟩ := h _ (U.affineOpenCover.f (U.affineOpenCover.idx x)) hA
   obtain ⟨z, hz⟩ := hS y
-  haveI : Etale (Spec.map (CommRingCat.ofHom (algebraMap (U.affineOpenCover.X (U.affineOpenCover.idx x)) B))) :=
+  have : Etale (Spec.map (CommRingCat.ofHom (algebraMap (U.affineOpenCover.X (U.affineOpenCover.idx x)) B))) :=
     HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr hE)
   refine ⟨_, _, inferInstance, inferInstance, ⟨z, ?_⟩, hPB⟩
   rw [specMap_algebraMap_comp_apply_primeSpectrum, hz, hy]
 
 lemma adjoinRoot_surj {A : Type} [CommRing A] [Nontrivial A] (f : A[X]) (hf : f.Monic) (hd : f.natDegree ≠ 0) :
     Function.Surjective (PrimeSpectrum.comap (algebraMap A (AdjoinRoot f))) := by
-  haveI : Module.Free A (AdjoinRoot f) := Module.Free.of_basis (AdjoinRoot.powerBasis' hf).basis
-  haveI : Nontrivial (AdjoinRoot f) := Ideal.Quotient.nontrivial_iff.mpr (by
+  have : Module.Free A (AdjoinRoot f) := Module.Free.of_basis (AdjoinRoot.powerBasis' hf).basis
+  have : Nontrivial (AdjoinRoot f) := Ideal.Quotient.nontrivial_iff.mpr (by
     rw [Ne, Ideal.span_singleton_eq_top]
     intro h
     exact hd (by rw [hf.isUnit_iff.1 h, natDegree_one]))

@@ -73,7 +73,7 @@ theorem etale_of_separable_charpoly_mulLeft (E A : Type) [Field E] [CommRing A] 
   have hsep : (minpoly E g).Separable := heq ▸ h
   have hdeg : (minpoly E g).natDegree = Module.finrank E A := by
     rw [heq, LinearMap.charpoly_natDegree]
-  haveI : Module.Finite E (AdjoinRoot (minpoly E g)) := hm.finite_adjoinRoot
+  have : Module.Finite E (AdjoinRoot (minpoly E g)) := hm.finite_adjoinRoot
   let φ : AdjoinRoot (minpoly E g) →ₐ[E] A := AdjoinRoot.liftAlgHom (minpoly E g) (Algebra.ofId E A) g (minpoly.aeval E g)
   have hli : LinearIndependent E fun i : Fin (minpoly E g).natDegree => g ^ (i : ℕ) :=
     linearIndependent_pow g

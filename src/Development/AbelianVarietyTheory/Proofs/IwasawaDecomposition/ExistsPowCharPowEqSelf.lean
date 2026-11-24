@@ -144,10 +144,10 @@ variable {E : Type} [Field E] [NumberField E] [Algebra E Ω]
 
 theorem exists_prime_pow_normV (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E))
     (h : IsPlaceOver A w) : ∃ p f : ℕ, p.Prime ∧ 0 < f ∧ normV w = p ^ f ∧ A.valuation (p : Ω) < 1 := by
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  letI : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  let : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+  let : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
   set p := ringChar (𝓞 E ⧸ w.asIdeal) with hp_def
   obtain ⟨n, hp, hn⟩ := FiniteField.card (𝓞 E ⧸ w.asIdeal) p
   have hpw : ((p : ℕ) : 𝓞 E) ∈ w.asIdeal := by
@@ -168,7 +168,7 @@ theorem exists_pow_char_pow_eq_self {k : Type} [Field k] (p : ℕ) [Fact p.Prime
     rw [Polynomial.eval_map, ← iterateFrobenius_def (R := k) p i,
       ← RingHom.ext_int ((iterateFrobenius k p i).comp (Int.castRingHom k)) (Int.castRingHom k),
       ← Polynomial.hom_eval₂, hy, map_zero]
-  obtain ⟨i, j, hij, heq⟩ := (Polynomial.finite_setOf_isRoot hP).exists_lt_map_eq_of_forall_mem hroot
+  obtain ⟨i, j, hij, heq⟩ := (Polynomial.finite_setOfPred_isRoot hP).exists_lt_map_eq_of_forall_mem hroot
   refine ⟨j - i, by omega, ?_⟩
   apply (iterateFrobenius k p i).injective
   rw [iterateFrobenius_def, iterateFrobenius_def, ← pow_mul, ← pow_add, Nat.sub_add_cancel hij.le]
@@ -186,10 +186,10 @@ theorem exists_pow_prime_pow_cong [CharZero Ω] (A : ValuationSubring Ω) {x : �
     have hc : (algebraMap ℤ Ω) P.content ≠ 0 := by
       rw [eq_intCast, Int.cast_ne_zero]; exact (Polynomial.content_eq_zero_iff.not).mpr hP0
     exact (mul_eq_zero.mp e.symm).resolve_left hc
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   set k := IsLocalRing.ResidueField A
   set y : A := ⟨x, (A.valuation_le_one_iff x).mp hx⟩ with hy_def
-  haveI : CharP k p := by
+  have : CharP k p := by
     refine (CharP.charP_iff_prime_eq_zero hp).2 ?_
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff,
       A.valuation_lt_one_iff]
@@ -226,9 +226,9 @@ theorem exists_pow_normV_pow_cong [IsAlgClosure E Ω] (A : ValuationSubring Ω) 
     (h : IsPlaceOver A w) {x : Ω} (hx : A.valuation x ≤ 1) :
     ∃ m : ℕ, 0 < m ∧ A.valuation (x ^ normV w ^ m - x) < 1 := by
   obtain ⟨p, f, hp, hf, hq, hpA⟩ := exists_prime_pow_normV A w h
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
   have halg : IsAlgebraic ℤ x :=
     (IsFractionRing.isAlgebraic_iff ℤ ℚ Ω).2 (Algebra.IsAlgebraic.isAlgebraic x)
   obtain ⟨r, hr, hxr⟩ := exists_pow_prime_pow_cong A halg hx hp hpA
@@ -249,7 +249,7 @@ end GlobalTheory.FrobTeich
 open GlobalTheory.FrobTeich in
 theorem GlobalTheory.FrobTeich.isFrob_iff_teichmuller : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (σ : G E Ω), IsFrob (F := E) A (normV w) σ ↔ σ ∈ Dec (F := E) A ∧ ∀ (ζ : Ω) (m : ℕ), 0 < m → ζ ^ normV w ^ m = ζ → σ ζ = ζ ^ normV w := by
   intro E Ω _ _ _ _ _ A w h σ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   obtain ⟨p, f, hp, hf, hq, hpA⟩ := exists_prime_pow_normV A w h
   set q := normV w with hq_def
   have hqA : A.valuation (q : Ω) < 1 := by

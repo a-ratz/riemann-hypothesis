@@ -145,7 +145,7 @@ theorem not_isSubquotient_dec (hA : GlobalTheory.Published.IrreducibleAdmissible
   obtain ⟨ω, -, hω⟩ := exists_smooth_hasCentralChar ρ.2.rep.smooth ρ.2.rep.irr
   have hc : ∀ s : ℂ, HasCentralChar (ρ.nu s).rep (ω * absPow k s ^ ρ.1) := fun s =>
     GlobalTheory.LocGL.UnitaryOrder.hasCentralChar_nu ρ hω s
-  haveI := Model.nontrivial_of_isIrreducible (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA (dec (seg2 ρ hρ)))
+  have := Model.nontrivial_of_isIrreducible (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA (dec (seg2 ρ hρ)))
   have key : ∀ z : kˣ, (absPow k 1 z : ℂˣ) ^ ρ.1 = 1 := fun z => by
     let w : Fin 2 → kˣ := ![z, 1]
     let g : ∀ _ : Fin 2, GL (Fin ρ.1) k := fun a => Matrix.GeneralLinearGroup.scalar _ (w a)
@@ -231,7 +231,7 @@ theorem jm_perm_prod (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
   have hinj := GlobalTheory.CompanionTheory.SegTerm.term_injective hA Δ
   have : {e : Fin Δ.len ≃ Fin Δ.len | ∀ a, Δ.term (σ a) = Δ.term (e a)} = {σ} := by
     ext e
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · exact fun h => (Equiv.ext fun a => hinj (h a)).symm
     · rintro rfl a
@@ -247,8 +247,8 @@ theorem sub_le_ker {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [Add
   by_cases hb : f.ker = ⊥
   · have hco : IsCoatom (⊥ : Subrepresentation P) := hb ▸ isCoatom_ker hi f hf
     exact hS (hco.2 S (bot_lt_iff_ne_bot.2 fun e => hn (e ▸ bot_le)))
-  · haveI : WellFoundedLT (Subrepresentation P) := ((hasFiniteLength_iff_wellFounded _).1 hfl).2
-    haveI : IsAtomic (Subrepresentation P) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
+  · have : WellFoundedLT (Subrepresentation P) := ((hasFiniteLength_iff_wellFounded _).1 hfl).2
+    have : IsAtomic (Subrepresentation P) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
     obtain ⟨A, hA', hAk⟩ := (eq_bot_or_exists_atom_le f.ker).resolve_left hb
     exact hn (hu A (GlobalTheory.CuspFactor.irr_of_atom _ A hA') ▸ hAk)
 

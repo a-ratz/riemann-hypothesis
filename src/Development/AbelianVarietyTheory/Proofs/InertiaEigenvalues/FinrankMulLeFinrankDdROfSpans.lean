@@ -87,7 +87,7 @@ theorem finrank_mul_le_finrank_DdR_of_spans {G : Type} [Group G] {Qp K₀ K : Ty
     (ρ : Representation LL G V) (hfin : FiniteDimensional LL ↥(DdR PD ρ)) (hs : Spans PD ρ) :
     Module.finrank Qp K * Module.finrank LL V ≤ Module.finrank LL ↥(DdR PD ρ) := by
   classical
-  haveI : Nontrivial F := by
+  have : Nontrivial F := by
     refine nontrivial_of_ne (PD.ι PD.t) 0 fun h0 => PD.not_mem_filtration_two ?_
     rw [h0]
     exact (PD.Fil 2).zero_mem
@@ -141,8 +141,8 @@ theorem finrank_mul_le_finrank_DdR_of_spans {G : Type} [Group G] {Qp K₀ K : Ty
     rw [hy']
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _
       (Submodule.subset_span (show e (d i) ∈ (D' : Set (F ⊗[Qp] V)) from ⟨d i, hd i, rfl⟩))
-  haveI : FiniteDimensional LL W := hfin
-  haveI : FiniteDimensional Qp W := Module.Finite.trans LL W
+  have : FiniteDimensional LL W := hfin
+  have : FiniteDimensional Qp W := Module.Finite.trans LL W
   let φ : W ≃ₗ[Qp] D' :=
     LinearEquiv.ofBijective
       ({ toFun := fun w => ⟨e (w : V ⊗[Qp] F), (w : V ⊗[Qp] F), w.2, rfl⟩
@@ -150,8 +150,8 @@ theorem finrank_mul_le_finrank_DdR_of_spans {G : Type} [Group G] {Qp K₀ K : Ty
          map_smul' := fun a x => Subtype.ext (map_smul e a (x : V ⊗[Qp] F)) } : W →ₗ[Qp] D')
       ⟨fun x y hxy => Subtype.ext (e.injective (congrArg Subtype.val hxy)),
         by rintro ⟨_, w, hw, rfl⟩; exact ⟨⟨w, hw⟩, rfl⟩⟩
-  haveI : FiniteDimensional Qp D' := Module.Finite.equiv φ
-  haveI : FiniteDimensional K D' := Module.Finite.of_restrictScalars_finite Qp K D'
+  have : FiniteDimensional Qp D' := Module.Finite.equiv φ
+  have : FiniteDimensional K D' := Module.Finite.of_restrictScalars_finite Qp K D'
   have h1 := finrank_le_of_span_subspace D' hspan
   rw [Module.finrank_baseChange] at h1
   have h2 : finrank Qp K * finrank K D' = finrank Qp LL * finrank LL W := by

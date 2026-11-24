@@ -199,7 +199,7 @@ theorem finite_aboveF (v : HeightOneSpectrum (𝓞 F)) :
     exact v.ne_bot
   refine (Ideal.finite_factors hne).subset ?_
   intro P hP
-  simp only [Set.mem_setOf_eq] at hP ⊢
+  simp only [Set.mem_ofPred_eq] at hP ⊢
   rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← hP,
     IsDedekindDomain.HeightOneSpectrum.under_asIdeal]
 

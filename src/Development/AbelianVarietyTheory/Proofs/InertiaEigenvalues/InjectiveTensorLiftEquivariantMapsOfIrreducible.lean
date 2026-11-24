@@ -95,7 +95,7 @@ private theorem eq_zero_of_sum_intertwining_apply_eq_zero {H X Y : Type} [Group 
       rintro g _ ⟨w, rfl⟩
       exact ⟨⟨fun i => ρ g ((w : Fin (m + 1) → Y) i), hSinv g w w.2⟩, rfl⟩⟩
     have hyS : y ∈ S := by rw [LinearMap.mem_ker, hΦ]; exact hy
-    haveI := hρ
+    have := hρ
     rcases IsSimpleOrder.eq_bot_or_eq_top R with hR | hR
     · have hrange : LinearMap.range p = ⊥ := congrArg Subrepresentation.toSubmodule hR
       have hpy : p ⟨y, hyS⟩ = 0 := by
@@ -145,7 +145,7 @@ theorem _root_.GlobalTheory.SmGL.EvalInj.lift_subtype_injective :
   obtain ⟨M', hfin, hsub⟩ :=
     TensorProduct.exists_finite_submodule_left_of_setFinite {t} (Set.finite_singleton t)
   obtain ⟨t₀, rfl⟩ := hsub (Set.mem_singleton t)
-  haveI := hfin
+  have := hfin
   let b := Module.finBasis ℂ M'
   set y : Fin (Module.finrank ℂ M') → Y := fun i => TensorProduct.equivFinsuppOfBasisLeft b t₀ i
     with hy

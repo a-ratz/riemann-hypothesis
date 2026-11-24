@@ -95,7 +95,7 @@ theorem exists_open_level : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
         rwa [hx] at h }
   refine ⟨S.subgroupOf (AdelicGLn.integralFiniteGL E a), ?_, ?_⟩
-  · exact hφ.level.preimage continuous_subtype_val
+  · exact hφ.level.preimage continuous_subtypeVal
   · intro g u
     have hu : finRep E a ((u : AdelicGLn.integralFiniteGL E a) : AdelicGLn.FiniteAdelicGL E a) φ = φ :=
       Subgroup.mem_subgroupOf.1 u.2

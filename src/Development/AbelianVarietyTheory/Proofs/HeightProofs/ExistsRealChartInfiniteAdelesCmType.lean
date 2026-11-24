@@ -82,7 +82,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem exists_real_chart : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → (Function.Bijective fun τ : D.what₂.Tau => NumberField.InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E))) → ∃ ρ : (D.what₂.Tau → ℝ) →+ Ainf D.host.F, Continuous ρ ∧ (∀ x τ, θ τ (ρ x ⊗ₜ[D.host.F] (1 : D.host.E)) = (x τ : ℂ)) ∧ ∀ a : Ainf D.host.F, (∀ τ, θ τ (a ⊗ₜ[D.host.F] (1 : D.host.E)) = 0) → a = 0 := by
   intro D θ hθ hb
-  haveI := D.sp.cm.totReal
+  have := D.sp.cm.totReal
   obtain ⟨ρ, h1, h2, h3⟩ := exists_real_chart_general (F := D.host.F)
     (fun τ : D.what₂.Tau => (tauE D τ).comp (algebraMap D.host.F D.host.E)) hb
   have key : ∀ τ (a : Ainf D.host.F), θ τ (a ⊗ₜ[D.host.F] (1 : D.host.E)) =

@@ -325,7 +325,7 @@ theorem crossTerm_empty (φ : Γ →* MulAut G) (a b : G → ℂ) (g : G) :
 theorem eq_one_of_smul_eq (hp : (Nat.card Γ).Prime) {S : Finset Γ} {w : Γ} (hw : w • S = S)
     (h0 : S ≠ ∅) (h1 : S ≠ Finset.univ) : w = 1 := by
   by_contra hne
-  haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
+  have : Fact (Nat.card Γ).Prime := ⟨hp⟩
   have htop : Subgroup.zpowers w = ⊤ := zpowers_eq_top_of_prime_card rfl hne
   have hst : MulAction.stabilizer Γ S = ⊤ := by
     rw [eq_top_iff, ← htop, Subgroup.zpowers_le]; exact hw
@@ -375,11 +375,11 @@ theorem sum_orbits (hp : (Nat.card Γ).Prime) (F : Finset Γ → ℂ) :
       obtain ⟨u, rfl⟩ := MulAction.mem_orbit_iff.1 hx
       exact ⟨u, rfl⟩
     · intro u
-      rw [if_pos ((smul_ne_empty_univ u).2 hP)]
+      rw [ite_eq_left ((smul_ne_empty_univ u).2 hP)]
   · refine Finset.sum_eq_zero fun y _ => ?_
     obtain ⟨y, hy⟩ := y
     obtain ⟨u, rfl⟩ := MulAction.mem_orbit_iff.1 hy
-    rw [if_neg]
+    rw [ite_eq_right]
     rwa [smul_ne_empty_univ u]
 
 end GlobalTheory.CrossOrbit
@@ -440,7 +440,7 @@ theorem ind_inl (φ : Γ →* MulAut G) [Fintype G] [Fintype Γ] (c : G → ℂ)
     (hc : ∀ g x : G, c (x⁻¹ * g * x) = c g) (g : G) :
     ind (inl : G →* G ⋊[φ] Γ).range (fun n => c ((inlEquiv φ).symm n)) (inl g) =
       ∑ u : Γ, c (φ u⁻¹ g) := by
-  letI : Fintype (G ⋊[φ] Γ) := Fintype.ofEquiv _ (sdEquiv φ).symm
+  let : Fintype (G ⋊[φ] Γ) := Fintype.ofEquiv _ (sdEquiv φ).symm
   unfold ind
   have hterm : ∀ x : G ⋊[φ] Γ, ext0 (inl : G →* G ⋊[φ] Γ).range (fun n => c ((inlEquiv φ).symm n))
       (x⁻¹ * inl g * x) = c (φ x.right⁻¹ g) := by
@@ -478,13 +478,13 @@ theorem virt_crossTerm {G Γ : Type} [Group G] [Group Γ] [Fintype Γ] [Finite G
   · exact isChar_mem_virt_complex (isChar_one ℂ ℂ G)
   · intro t _
     by_cases ht : t ∈ S
-    · simp only [ht, if_true]; exact hV.2.1 a ha G (φ t⁻¹).toMonoidHom
-    · simp only [ht, if_false]; exact hV.2.1 b hb G (φ t⁻¹).toMonoidHom
+    · simp only [ht, ite_true]; exact hV.2.1 a ha G (φ t⁻¹).toMonoidHom
+    · simp only [ht, ite_false]; exact hV.2.1 b hb G (φ t⁻¹).toMonoidHom
 
 theorem cross_terms_induced : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ a b : G → ℂ, a ∈ Virt ℂ ℂ G → b ∈ Virt ℂ ℂ G → ∃ Z ∈ Virt ℂ ℂ (G ⋊[φ] Γ), (∀ g, Z (inl g) = ∏ t : Γ, (a (φ t g) + b (φ t g)) - ∏ t : Γ, a (φ t g) - ∏ t : Γ, b (φ t g)) ∧ ∀ δ, Z (inl δ * inr s) = 0 := by
   intro G Γ _ _ _ _ φ s hp hs a b ha hb
-  letI : Fintype G := Fintype.ofFinite G
-  haveI : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ (sdEquiv φ).symm
+  let : Fintype G := Fintype.ofFinite G
+  have : Finite (G ⋊[φ] Γ) := Finite.of_equiv _ (sdEquiv φ).symm
   have hVG := virt_mul_comap_conj_ind_linear G
   have hVS := virt_mul_comap_conj_ind_linear (G ⋊[φ] Γ)
   refine ⟨∑ q : MulAction.orbitRel.Quotient Γ (Finset Γ),
@@ -561,7 +561,7 @@ namespace GlobalTheory.Shin
 theorem tensorInd_virt_prime : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ χ ∈ Virt ℂ ℂ G, ∃ X ∈ Virt ℂ ℂ (G ⋊[φ] Γ), (∀ g, X (inl g) = ∏ t : Γ, χ (φ t g)) ∧ ∀ δ, X (inl δ * inr s) = χ (nrmG φ s (Nat.card Γ) δ) := by
   intro G Γ _ _ _ _ φ s hp hs χ hχ
   have hgen : ∀ t : Γ, t ∈ Subgroup.zpowers s := by
-    haveI : Fact (Nat.card Γ).Prime := ⟨hp⟩
+    have : Fact (Nat.card Γ).Prime := ⟨hp⟩
     intro t
     exact mem_zpowers_of_prime_card rfl hs
   obtain ⟨a, b, ha, hb, rfl⟩ := (mem_virt_iff_sub ℂ ℂ G χ).1 hχ
@@ -652,18 +652,18 @@ theorem hat_ind : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite 
     ∀ X ∈ Virt ℂ ℂ (GHat F F' a), ∃ Z ∈ Virt ℂ ℂ (GHat F F' n), ∀ (t : F' ≃ₐ[F] F') (δ : GL (Fin n) F'),
       Z (inl δ * inr t) = hcTw (t : F' →+* F') a b (fun d => X (inl d * inr t)) (fun _ => 1) n δ := by
   intro F F' _ _ _ _ a b n hn X hX
-  haveI : Finite (F' ≃ₐ[F] F') := finite_gal F F'
-  haveI : Finite (GHat F F' n) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
-  haveI : Finite (GHat F F' a) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have : Finite (F' ≃ₐ[F] F') := finite_gal F F'
+  have : Finite (GHat F F' n) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have : Finite (GHat F F' a) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
   obtain ⟨hmul, hone, hinv, htl, -⟩ := par_facts (F' := F') a b n hn
   let P : Subgroup (GHat F F' n) :=
     { carrier := {x | InPar a x.left}
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, mul_left, galAct_apply] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq, mul_left, galAct_apply] at hx hy ⊢
         exact hmul _ _ hx ((inPar_gal _ a _).2 hy)
       one_mem' := by simpa using hone
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq, inv_left, galAct_apply] at hx ⊢
+        simp only [Set.mem_ofPred_eq, inv_left, galAct_apply] at hx ⊢
         exact (inPar_gal _ a _).2 (hinv _ hx) }
   have hP : ∀ x : GHat F F' n, x ∈ P ↔ InPar a x.left := fun _ => Iff.rfl
   let πh : P →* GHat F F' a := MonoidHom.mk' (fun p => (⟨tlG a p.1.left, p.1.right⟩ : GHat F F' a))
@@ -703,9 +703,9 @@ theorem hat_ind : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite 
     · have hw' : (inr u)⁻¹ * w * inr u ∉ P := by
         rw [hP, hl]; exact fun h => hw ((inPar_gal _ a _).1 h)
       rw [dite_eq_right hw', dite_eq_right (fun h => hw ((hP w).1 h))]
-  haveI : Fintype (GHat F F' n) := Fintype.ofFinite _
-  haveI : Fintype (GL (Fin n) F') := Fintype.ofFinite _
-  haveI : Fintype (F' ≃ₐ[F] F') := Fintype.ofFinite _
+  have : Fintype (GHat F F' n) := Fintype.ofFinite _
+  have : Fintype (GL (Fin n) F') := Fintype.ofFinite _
+  have : Fintype (F' ≃ₐ[F] F') := Fintype.ofFinite _
   set g : GHat F F' n := inl δ * inr t with hg
   have hval : ∀ y : GL (Fin n) F', ext0 P ψ ((inl y)⁻¹ * g * inl y) =
       if InPar a (y⁻¹ * δ * gal (t : F' →+* F') n y) then
@@ -716,7 +716,7 @@ theorem hat_ind : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite 
     have hr : ((inl y)⁻¹ * g * inl y).right = t := by simp [hg]
     unfold ext0
     by_cases hw : InPar a (y⁻¹ * δ * gal (t : F' →+* F') n y)
-    · rw [dite_eq_left (by rw [hP, hl]; exact hw), if_pos hw, mul_one]
+    · rw [dite_eq_left (by rw [hP, hl]; exact hw), ite_eq_left hw, mul_one]
       simp only [hψ]
       congr 1
       apply SemidirectProduct.ext
@@ -724,7 +724,7 @@ theorem hat_ind : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite 
         rw [hl]; simp
       · change ((inl y)⁻¹ * g * inl y).right = _
         rw [hr]; simp
-    · rw [dite_eq_right (by rw [hP, hl]; exact hw), if_neg hw]
+    · rw [dite_eq_right (by rw [hP, hl]; exact hw), ite_eq_right hw]
   have hz : ∀ (y : GL (Fin n) F') (u : F' ≃ₐ[F] F'),
       ((SemidirectProduct.equivProd (φ := galAct F F' n)).symm (y, u)) = inl y * inr u := by
     intro y u
@@ -856,12 +856,12 @@ theorem shLift_eq_of_exists {F F' : Type} [Field F] [Field F'] [Algebra F F'] (s
 
 theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (Module.finrank F F').Prime → s ≠ 1 → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ), (∀ x y : AlgebraicClosure F', x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ k n : ℕ, ∃ X ∈ Virt ℂ ℂ (GHat F F' n), (∀ g, X (inl g) = psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n g) ∧ ∀ δ, X (inl δ * inr s) = shLift s (psiG (rootSum (pullθ ι θ) k) n) δ := by
   intro F F' _ _ _ _ s hp hs ι θ hθ k
-  haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
-  haveI : FiniteDimensional F F' := Module.Finite.of_finite
+  have : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
+  have : FiniteDimensional F F' := Module.Finite.of_finite
   have hcard : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := by
     exact IsGalois.card_aut_eq_finrank F F'
   have hgen : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s := by
-    haveI : Fact (Module.finrank F F').Prime := ⟨hp⟩
+    have : Fact (Module.finrank F F').Prime := ⟨hp⟩
     rw [zpowers_eq_top_of_prime_card hcard hs]; intro t; trivial
   have hlift1 : ∀ (m : ℕ) (δ : GL (Fin m) F'), shLift s (fun _ : GL (Fin m) F => (1 : ℂ)) δ = 1 := by
     intro m δ

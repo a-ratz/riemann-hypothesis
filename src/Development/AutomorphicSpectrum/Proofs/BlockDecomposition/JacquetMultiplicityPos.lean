@@ -214,7 +214,7 @@ theorem frobMap_ne_zero (e : (Σ a, m a) ≃ n) {τ : Representation ℂ (GL n k
 
 theorem surjective_of_ne_zero {G : Type} [Group G] {ρ : Representation ℂ G V} {σ : Representation ℂ G W}
     (hσ : σ.IsIrreducible) (f : ρ.IntertwiningMap σ) (hf : ∃ y, f y ≠ 0) : Function.Surjective f := by
-  haveI := hσ
+  have := hσ
   rcases Representation.IsIrreducible.surjective_or_eq_zero f with hs | hz
   · exact hs
   · obtain ⟨y, hy⟩ := hf

@@ -65,7 +65,7 @@ theorem coe_colStdLat (n : ℕ) :
 theorem exists_nsmul_mem_stdHom (S T : HSp D) : ∃ K : ℕ, 0 < K ∧ ∀ t : WO S T, t.map (infPart D) = 0 →
     (∀ i j, toEAf D (t i j) ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) → K • t ∈ stdHom S T := by
   have hfull (n : ℕ) : Submodule.IsFullLattice D.host.E (Formalism.L2.Col.stdLat D.host.E n) := by
-    letI := Formalism.L2.Col.stdLat_lattice (E := D.host.E) (n := n)
+    let := Formalism.L2.Col.stdLat_lattice (E := D.host.E) (n := n)
     constructor
     apply eq_top_iff.mpr
     intro x _

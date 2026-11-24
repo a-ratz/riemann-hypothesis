@@ -169,7 +169,7 @@ theorem sum_eq_zero (a b : E →+* PadicAlgCl l) (h : ∀ x, ‖a x‖ < 1 ↔ �
     · have := (hcl a).compl.isClosed.union (hcl b).isClosed
       convert this using 1
       ext c
-      simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_compl_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_compl_iff]
       exact imp_iff_not_or
     · have e : ∀ f : E →+* PadicAlgCl l,
           ∑ k, (Pi.map (fun _ : Fin n => (Rat.cast : ℚ → ℚ_[l])) q) k • f (y k) =

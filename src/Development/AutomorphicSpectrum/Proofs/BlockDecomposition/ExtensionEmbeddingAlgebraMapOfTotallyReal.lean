@@ -101,7 +101,7 @@ namespace GlobalTheory.CompanionTheory.RgEisSo
 
 theorem bInf : BInf := by
   intro F E _ _ _ _ _ σ χ c hcm _ _ _
-  haveI : IsTotallyReal F := hcm.1
+  have : IsTotallyReal F := hcm.1
   refine ⟨fun w => ⟨w.comap (algebraMap F E), fun x => phi_nuCM σ χ hcm.1 w x⟩, fun v => ?_⟩
   obtain ⟨w, rfl⟩ := InfinitePlace.comap_surjective (k := F) (K := E) v
   exact ⟨w, fun x => phi_nuCM σ χ hcm.1 w x⟩

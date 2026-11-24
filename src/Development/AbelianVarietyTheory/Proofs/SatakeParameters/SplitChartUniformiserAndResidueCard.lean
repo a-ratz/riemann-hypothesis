@@ -197,7 +197,7 @@ theorem unif_chart : ∀ {D : D7} (e : AE D) (P : HeightOneSpectrum (𝓞 D.host
         exact fun h => hx (Subtype.ext h)
       rw [he.2 x hx, hc.2.2.2, isInt_Ov]
       show ¬ Valued.v (φ (x : D.host.E)⁻¹) ≤ 1 ↔ _
-      rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+      rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
   exact ⟨⟨⟨φ ϖ, map_mem v φ ϖ⟩, rfl, irreducible_of_valued v _ (valued_unif v φ P hφ hP ϖ h1 h2)⟩,
     card_residueField v φ P hφ hP⟩
 

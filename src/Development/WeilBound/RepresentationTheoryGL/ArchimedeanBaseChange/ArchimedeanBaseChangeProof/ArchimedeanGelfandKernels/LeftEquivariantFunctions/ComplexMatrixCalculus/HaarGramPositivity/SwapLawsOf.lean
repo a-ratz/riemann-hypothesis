@@ -155,12 +155,12 @@ theorem hasFDerivAt_inv_one :
   ext X i j
   have h0 := (hent i j).unique ((hasFDerivAt_const ((1 : Matrix ι ι ℂ) i j) (1 : Matrix ι ι ℂ)).congr_of_eventuallyEq (hev i j))
   have h0X := congrArg (fun T : Matrix ι ι ℂ →L[ℝ] ℂ => T X) h0
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
-    Pi.smul_apply, ContinuousLinearMap.coe_comp', Function.comp_apply, entL_apply, smul_eq_mul, inv_one,
-    ContinuousLinearMap.zero_apply, Finset.sum_add_distrib] at h0X
-  simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_ite, mul_one,
+  simp only [FunLike.coe_sum, Finset.sum_apply, add_apply, FunLike.coe_smul,
+    Pi.smul_apply, ContinuousLinearMap.coe_comp, Function.comp_apply, entL_apply, smul_eq_mul, inv_one,
+    zero_apply, Finset.sum_add_distrib] at h0X
+  simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, mul_ite, mul_one,
     mul_zero, Finset.sum_ite_eq'] at h0X
-  simp only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.id_apply, Matrix.neg_apply]
+  simp only [neg_apply, ContinuousLinearMap.id_apply, Matrix.neg_apply]
   linear_combination h0X
 
 end PositivityTheory.RgBcC.Cxe
@@ -319,8 +319,8 @@ theorem swap_cT (lam : Fin n → ℤ) : (swapJ lam)ᴴ = swapJ lam := by
   ext ⟨i, j⟩ ⟨k, l⟩
   simp only [Matrix.conjTranspose_apply, swapJ]
   by_cases h : k = j ∧ l = i
-  · rw [if_pos h, if_pos ⟨h.2.symm, h.1.symm⟩]; simp
-  · rw [if_neg h, if_neg fun h' => h ⟨h'.2.symm, h'.1.symm⟩]; simp
+  · rw [ite_eq_left h, ite_eq_left ⟨h.2.symm, h.1.symm⟩]; simp
+  · rw [ite_eq_right h, ite_eq_right fun h' => h ⟨h'.2.symm, h'.1.symm⟩]; simp
 
 theorem trace_kron_swap (lam : Fin n → ℤ) (A B : Matrix (Jd n lam) (Jd n lam) ℂ) :
     ((A ⊗ₖ B) * swapJ lam).trace = (A * B).trace := by
@@ -364,7 +364,7 @@ theorem swapLaws_of (hR : RmLaws) : SwapLaws := by
       exact swap_rhoW hR lam (mem_GLs.mp hx)
     have huniq := hF.unique (hG.congr_of_eventuallyEq hev)
     have hX := congrArg (fun T : Mat n →L[ℝ] Matrix (Jd n lam × Jd n lam) (Jd n lam × Jd n lam) ℂ => T X) huniq
-    simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, cTL_apply, ContinuousLinearMap.neg_apply,
+    simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, cTL_apply, neg_apply,
       ContinuousLinearMap.id_apply, mulLL_apply, mulRL_apply, map_neg] at hX
     rw [hXh0.eq] at hX
     rw [← hX, neg_neg]

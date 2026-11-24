@@ -108,7 +108,7 @@ theorem _root_.GlobalTheory.Phase.Calc.calculus : (∀ a b : ℂ, _root_.GlobalT
     refine ⟨k * m, Nat.mul_pos hk hm, ?_⟩
     rw [pow_mul, h, norm_pow, ofReal_pow, ← pow_mul]
   · refine ⟨2 * q.den, by positivity, ?_⟩
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨q.num, ?_⟩
     have hq : (q : ℂ) = q.num / q.den := by exact_mod_cast (Rat.num_div_den q).symm
     have hd : (q.den : ℂ) ≠ 0 := by exact_mod_cast q.den_nz

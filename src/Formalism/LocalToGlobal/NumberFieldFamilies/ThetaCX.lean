@@ -246,8 +246,8 @@ theorem dn_up (x : (AE D)ˣ) : B.dn (B.up x) = x := Units.ext (by simp [up, dn])
 theorem up_inc (k : D.host.Eˣ) : B.up (Units.map (incA D).toMonoidHom k) = diagUnits D.host.E k := Units.ext (by simp [up, B.inc]; rfl)
 
 theorem toUnits_cont : Continuous Circle.toUnits := by
-  refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-  exact continuous_subtype_val.comp (continuous_inv : Continuous fun z : Circle => z⁻¹)
+  refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
+  exact continuous_subtypeVal.comp (continuous_inv : Continuous fun z : Circle => z⁻¹)
 
 def toH : chrA D →* HChar D.host.E where
   toFun χ := ⟨(Circle.toUnits.comp χ.1).comp B.dn,

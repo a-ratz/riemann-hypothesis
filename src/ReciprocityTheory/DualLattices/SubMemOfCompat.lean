@@ -88,8 +88,8 @@ lemma hpR' (ε : PreTilt O p) (n : ℕ) : (p : R'n p O ε n) ^ (n + 1) = 0 := by
   exact Ideal.mem_span_singleton_self _
 
 lemma Rn_local (hv : v.Integers O) (n : ℕ) : IsLocalRing (Rn p O n) := by
-  haveI := O_local O hv
-  haveI : Nontrivial (Rn p O n) := by
+  have := O_local O hv
+  have : Nontrivial (Rn p O n) := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h1 : (1 : O) ∈ span {(p : O) ^ (n + 1)} := by
       rw [← Ideal.Quotient.eq_zero_iff_mem, map_one]; exact h.symm
@@ -164,8 +164,8 @@ lemma xi_sq' (n : ℕ) : xiR p O ε n * xiR p O ε n = 0 := by
   rw [h, map_zero]
 
 lemma R'n_local (n : ℕ) : IsLocalRing (R'n p O ε n) := by
-  haveI := Rn_local p O hv n
-  haveI : Nontrivial (R'n p O ε n) := (piRing p O hv ε hε n).domain_nontrivial
+  have := Rn_local p O hv n
+  have : Nontrivial (R'n p O ε n) := (piRing p O hv ε hε n).domain_nontrivial
   have key : ∀ a : R'n p O ε n, IsUnit (piRing p O hv ε hε n a) → IsUnit a := by
     intro a ha
     obtain ⟨u, hu⟩ := ha.exists_right_inv
@@ -188,7 +188,7 @@ lemma R'n_local (n : ℕ) : IsLocalRing (R'n p O ε n) := by
 
 lemma ann' (n : ℕ) (a : R'n p O ε n) (ha : a * xiR p O ε n = 0) :
     a ∈ span {xiR p O ε n} := by
-  haveI : IsDomain O := Function.Injective.isDomain (algebraMap O C) hv.hom_inj
+  have : IsDomain O := Function.Injective.isDomain (algebraMap O C) hv.hom_inj
   have hp0 : (p : O) ≠ 0 := by
     intro h
     have h' := congrArg (algebraMap O C) h

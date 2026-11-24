@@ -141,7 +141,7 @@ theorem form_rows (σ : E →ₐ[F] E) {n : ℕ} (J P Q : Matrix (Fin n) (Fin n)
 theorem exists_basis (n : ℕ) (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L) :
     ∃ (t : 𝓞 F), t ∉ v.asIdeal ∧ ∃ b : Fin n → Fin n → E, LinearIndependent E b ∧ (∀ i, b i ∈ L) ∧
       ∀ w ∈ L, (algebraMap (𝓞 F) (𝓞 E) t) • w ∈ Submodule.span (𝓞 E) (Set.range b) := by
-  letI := hL
+  let := hL
   obtain ⟨s, b, hb, hbL, hs⟩ := GlobalTheory.PlaceInt.LocBasis.exists_basis_up_to (A := locR F E v) (locS F E v) L (Submodule.IsLattice.fg E L)
     Submodule.IsFullLattice.span_eq_top
   obtain ⟨t, ht, hst⟩ := s.2
@@ -160,7 +160,7 @@ theorem GlobalTheory.HermLocDualBasis.exists_locDualBasis : ∀ (F E : Type) [Fi
   intro F E _ _ _ _ _ σ B n r s X hX v
   obtain ⟨t, ht, b, hb, hbL, hspan⟩ := exists_basis F E v n X.L hX.lat
   let Bm : Matrix (Fin n) (Fin n) E := Matrix.of b
-  have hBm : IsUnit Bm := Matrix.linearIndependent_rows_iff_isUnit.1 hb
+  have hBm : IsUnit Bm := Matrix.linearIndependent_row_iff_isUnit.1 hb
   let G : Matrix (Fin n) (Fin n) E := Bm * X.J * (Bm.map σ)ᵀ
   have hG : IsUnit G.det := by
     rw [isUnit_iff_ne_zero]
@@ -188,7 +188,7 @@ theorem GlobalTheory.HermLocDualBasis.exists_locDualBasis : ∀ (F E : Type) [Fi
     rw [← e1]
     exact hc
   rw [form_smul_left, ← AlgHom.commutes σ, ← form_smul_right, ← hc', form_sum_right]
-  simp only [hdual, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hdual, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   exact (c k).2.map (σ.toRingHom.toIntAlgHom)
 
 end
@@ -211,8 +211,8 @@ theorem exists_not_mem_mul_isIntegral : ∀ (F E : Type) [Field F] [NumberField 
     (∀ o : 𝓞 E, algebraMap F (Fv F v) (Algebra.trace F E ((o : E) * e)) ∈ v.adicCompletionIntegers F) →
     ∃ t : 𝓞 F, t ∉ v.asIdeal ∧ IsIntegral ℤ (algebraMap F E (t : F) * e) := by
   intro F E _ _ _ _ _ hU v e h
-  haveI : Algebra.Unramified (𝓞 F) (𝓞 E) := hU
-  haveI := v.isPrime
+  have : Algebra.Unramified (𝓞 F) (𝓞 E) := hU
+  have := v.isPrime
   let b := NumberField.RingOfIntegers.basis E
   have hloc : ∀ i, ∃ s : 𝓞 F, s ∉ v.asIdeal ∧ ∃ r : 𝓞 F,
       algebraMap (𝓞 F) F s * Algebra.trace F E ((b i : E) * e) = algebraMap (𝓞 F) F r := by
@@ -305,12 +305,12 @@ theorem exists_sub_mem (v : Pl (F := F)) (t : Fv F v) {k : F} (hk : k ≠ 0) :
     refine ho.mem_nhds ?_
     show Valued.v (t - t) < _
     rw [sub_self, map_zero]
-    exact zero_lt_iff.2 hkv
+    exact pos_iff_ne_zero.2 hkv
   obtain ⟨s, hs⟩ := hd.mem_nhds hN
   refine ⟨s, ?_⟩
   rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀]
   have hs' : Valued.v (t - algebraMap F (Fv F v) s) < Valued.v (algebraMap F (Fv F v) k) := hs
-  rw [inv_mul_le_iff₀ (zero_lt_iff.2 hkv), mul_one]
+  rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 hkv), mul_one]
   exact hs'.le
 
 theorem incM_single {n d : ℕ} (i : Fin n) (j : Fin d) (y : E) :
@@ -346,7 +346,7 @@ theorem core {n d : ℕ} (X : Spc F E n) (Y : Spc F E d) (hX : X.L.IsFullLattice
       simp only [Matrix.vecMulVec_apply, Pi.smul_apply, Pi.single_apply, Matrix.single_apply]
       by_cases h1 : a = i <;> by_cases h2 : b = j
       · subst h1 h2
-        simp only [if_true, and_self, smul_eq_mul, mul_one]
+        simp only [ite_true, and_self, smul_eq_mul, mul_one]
         rw [Algebra.smul_def (A := E) ((N * N' : ℤ) : F), map_intCast]
         simp only [algebraMap_int_eq, eq_intCast, zsmul_eq_mul, mul_one]; push_cast; ring
       all_goals simp [h1, h2, eq_comm (a := i), eq_comm (a := j)]
@@ -458,7 +458,7 @@ theorem GlobalTheory.SkewLocDual.exists_smul_mem_of_integral : ∀ (F E : Type) 
     ∃ t : 𝓞 F, t ∉ v.asIdeal ∧ algebraMap F E (t : F) • u ∈ Y.L := by
   intro F E _ _ _ _ _ σ B d r s Y hY v u hu
   classical
-  haveI := v.isPrime
+  have := v.isPrime
   obtain ⟨S, hS⟩ := hY.lat.fg
   have hgen : ∀ y ∈ S, y ∈ Y.L := fun y hy => hS ▸ Submodule.subset_span hy
   choose! T hT using fun y (hy : y ∈ S) => hu y (hgen y hy)
@@ -776,10 +776,10 @@ theorem exists_nhds_translate_eq {V : Type} [AddCommGroup V] [TopologicalSpace V
 theorem nhdsNE_neBot {F : Type} [Field F] [NumberField F] (v : Pl (F := F)) : (nhdsWithin (0 : Fv F v) {0}ᶜ).NeBot := by
   refine ⟨fun h => ?_⟩
   have hopen : IsOpen ({0} : Set (Fv F v)) := (isOpen_singleton_iff_punctured_nhds _).2 h
-  haveI := discreteTopology_of_isOpen_singleton_zero hopen
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := discreteTopology_of_isOpen_singleton_zero hopen
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   have hO : IsCompact ((v.adicCompletionIntegers F : Set (Fv F v))) := isCompact_iff_compactSpace.2 inferInstance
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
   have hinf : ((v.adicCompletionIntegers F : Set (Fv F v))).Infinite :=
     Set.infinite_of_injective_forall_mem (Nat.cast_injective (R := Fv F v)) fun n => natCast_mem _ n
   exact hinf (hO.finite_of_discrete)
@@ -801,7 +801,7 @@ theorem support_compact : ∀ {F : Type} [Field F] [NumberField F] (v : Pl (F :=
   obtain ⟨hgl, hgc⟩ := hg
   obtain ⟨Uφ, hUφ, hφU⟩ := exists_nhds_translate_eq hφl hφc
   obtain ⟨Ug, hUg, hgU⟩ := exists_nhds_translate_eq hgl hgc
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   have hO : IsCompact ((v.adicCompletionIntegers F : Set (Fv F v))) := isCompact_iff_compactSpace.2 inferInstance
   have hP : ∀ᶠ s in nhds (0 : Fv F v), ∀ y ∈ (v.adicCompletionIntegers F : Set (Fv F v)), ∀ i : κ,
       (Pi.single i (s * y) : κ → Fv F v) ∈ Uφ ∩ Ug := by
@@ -812,7 +812,7 @@ theorem support_compact : ∀ {F : Type} [Field F] [NumberField F] (v : Pl (F :=
     have hmem : Uφ ∩ Ug ∈ nhds ((fun p : Fv F v × Fv F v => (Pi.single i (p.1 * p.2) : κ → Fv F v)) (0, y)) := by
       simpa using Filter.inter_mem hUφ hUg
     exact hc.continuousAt.preimage_mem_nhds hmem
-  haveI := nhdsNE_neBot v
+  have := nhdsNE_neBot v
   obtain ⟨t, ht, ht0⟩ := ((hP.filter_mono (nhdsWithin_le_nhds (s := {0}ᶜ))).and
     (self_mem_nhdsWithin (s := ({0}ᶜ : Set (Fv F v))))).exists
   have ht0' : t ≠ 0 := ht0
@@ -920,8 +920,8 @@ theorem lagr_local_form : ∀ {F : Type} [Field F] [NumberField F] (v : Pl (F :=
     vac ∈ SB (κ → Fv F v) → vac ≠ 0 → (∀ γ ∈ Γ, ∃ c : ℂ, schr ψ₀ γ vac = c • vac) → (∀ γ ∈ Γ ⊓ Λ, schr ψ₀ γ vac = vac) →
     ∃ l : ((κ → Fv F v) → ℂ) →ₗ[ℂ] ℂ, (∀ w ∈ Λ, ∀ φ ∈ SB (κ → Fv F v), l (schr ψ₀ w φ) = l φ) ∧ l vac ≠ 0 := by
   intro F _ _ v ψ₀ κ _ Λ Γ vac hψ hcond hiso hΓo hΓc hdual hvSB hv0 heig hfix
-  letI : MeasurableSpace (κ → Fv F v) := borel _
-  haveI : BorelSpace (κ → Fv F v) := ⟨rfl⟩
+  let : MeasurableSpace (κ → Fv F v) := borel _
+  have : BorelSpace (κ → Fv F v) := ⟨rfl⟩
   let μ : Measure (κ → Fv F v) := Measure.addHaar
   let c : ((κ → Fv F v) → ℂ) → ((κ → Fv F v) × (κ → Fv F v)) → ℂ :=
     fun φ w => ∫ y, schr ψ₀ w φ y * conj (vac y) ∂μ

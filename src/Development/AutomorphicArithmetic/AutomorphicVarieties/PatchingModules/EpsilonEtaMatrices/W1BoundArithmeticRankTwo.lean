@@ -107,7 +107,7 @@ private theorem commuting_matrix_offdiag_zero {l : ℕ} [Fact l.Prime] {F : GFra
     show ∀ i' j' : Fin n, _
     intro i' j'
     refine ⟨fun _ => Submodule.mem_top, fun h => ?_⟩
-    rw [Submodule.mem_bot, Matrix.single_apply, if_neg]
+    rw [Submodule.mem_bot, Matrix.single_apply, ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact h Iff.rfl
   obtain ⟨s, hs⟩ := x.span _ hmem
@@ -259,7 +259,7 @@ theorem UpperTheory.V.Pa.h0G :
           fun j => (algebraMap x.A (x.Am m)) (y.ep' j), (algebraMap x.A (x.Am m)) y.eta⟩ : DD (x.Am m) k.g))
         = k.ρ1 (x.Am m) s :=
       fun s => rho1_map_ddMapRingHom_eq_rho1 k (x.Am m) s
-    simp only [Set.mem_setOf_eq, one_smul, forall_const, hred]
+    simp only [Set.mem_ofPred_eq, one_smul, forall_const, hred]
     exact Iff.rfl
   · rw [eq_bot_iff]
     intro Z hZ
@@ -381,7 +381,7 @@ theorem UpperTheory.V.Pa.homCount :
     ∀ (l : ℕ) [Fact l.Prime] (F : GFrame l) (n : ℕ) (x : NP F n) (D : Type) [Group D] [TopologicalSpace D] [IsTopologicalGroup D] (I : Subgroup D) (d m : ℕ), LocAb l D I d → {z : D → x.Am m | IsLocallyConstant z ∧ (∀ g h, z (g * h) = z g + z h) ∧ ∀ g ∈ muG l D, z g = 0}.Finite ∧ {z : D → x.Am m | IsLocallyConstant z ∧ (∀ g h, z (g * h) = z g + z h) ∧ ∀ g ∈ muG l D, z g = 0}.ncard ≤ Nat.card x.K ^ (m * (d + 1)) := by
   intro l _ F n x D _ _ _ I d m A
   obtain ⟨hfin, hcard, -, hl, -⟩ := finAm l F n x m 0
-  haveI := hfin
+  have := hfin
   have hs : ∀ i, A.a (Classical.choose (A.surj (Multiplicative.ofAdd ((Pi.single i 1, 0) : (Fin d → ℤ_[l]) × ℤ_[l])))) =
       Multiplicative.ofAdd ((Pi.single i 1, 0) : (Fin d → ℤ_[l]) × ℤ_[l]) :=
     fun i => Classical.choose_spec (A.surj _)
@@ -459,7 +459,7 @@ theorem UpperTheory.V.Pa.oneCount :
     ∀ (l : ℕ) [Fact l.Prime] (F : GFrame l) (n : ℕ) (x : NP F n) (D : Type) [Group D] [TopologicalSpace D] [IsTopologicalGroup D] (ε : D →* ℤ_[l]ˣ) (d : ℕ) (χ : D →* x.Aˣ), LocCount D ε d → AdicCont (IsLocalRing.maximalIdeal x.A) (fun g => (χ g : x.A)) → (∃ g, (χ g : x.A) ≠ algebraMap ℤ_[l] x.A (ε g : ℤ_[l])) → ∃ C : ℕ, ∀ m, {z : D → x.Am m | IsLocallyConstant z ∧ ∀ g h, z (g * h) = z g + (χ g : x.A) • z h}.Finite ∧ {z : D → x.Am m | IsLocallyConstant z ∧ ∀ g h, z (g * h) = z g + (χ g : x.A) • z h}.ncard ≤ Nat.card x.K ^ (m * (1 + d) + C) := by
   intro l _ F n x D _ _ _ ε d χ hL hχ ⟨g₀, hg₀⟩
   obtain ⟨C, hC⟩ := IsDiscreteValuationRing.associated_pow_irreducible (sub_ne_zero.2 hg₀)
-    (PowerSeries.X_irreducible (R := x.K))
+    (PowerSeries.irreducible_X (R := x.K))
   refine ⟨C, fun m => ?_⟩
   obtain ⟨hfin, hcard, -⟩ := finAm l F n x m 0
   obtain ⟨hfinC, hcardC, -⟩ := finAm l F n x C 0
@@ -513,7 +513,7 @@ private theorem filt_ht {Z Y ι : Type} [AddCommGroup Z] [AddCommGroup Y] [Finty
   let key : ι → Lex (ℕ × Fin (Fintype.card ι)) := fun i => toLex (ht i, σ i)
   have hkey : Function.Injective key := fun a b hab =>
     σ.injective (by simpa [key] using congrArg (fun p => (ofLex p).2) hab)
-  letI : LinearOrder ι := LinearOrder.lift' key hkey
+  let : LinearOrder ι := LinearOrder.lift' key hkey
   let e : Fin (Fintype.card ι) ≃o ι := Fintype.orderIsoFinOfCardEq ι rfl
   have hmono : ∀ a b : Fin (Fintype.card ι), ht (e a) < ht (e b) → a < b := by
     intro a b hab
@@ -797,7 +797,7 @@ theorem UpperTheory.V.Pa.locV :
     | .inl _ => m * (d' + 1)
     | .inr _ => m * (1 + d)
   calc ∏ t, (P t).ncard ≤ ∏ t, Nat.card x.K ^ (base t + Cof t) := by
-        refine Finset.prod_le_prod' fun t _ => ?_
+        refine Finset.prod_le_prod fun t _ => ?_
         rcases t with i | p | ⟨o, p⟩
         · simpa [base, Cof] using (homCount l F n x _ (F.Iv v) d' m hA).2
         · exact ((Classical.choose_spec (hpc p.1 p.2.1)) m).2
@@ -943,7 +943,7 @@ theorem UpperTheory.V.Pa.h0q :
   refine le_trans (le_of_eq ?_) ((hC m).trans (Nat.pow_le_pow_right Nat.card_pos ?_))
   · congr 1
     ext Y
-    simp only [red, one_smul, Set.mem_setOf_eq, forall_const, Bool.false_eq_true, IsEmpty.forall_iff, true_and]
+    simp only [red, one_smul, Set.mem_ofPred_eq, forall_const, Bool.false_eq_true, IsEmpty.forall_iff, true_and]
     rfl
   · refine Nat.add_le_add_right (Nat.mul_le_mul_left _ ?_) _
     refine finrank_centralizer_W1_le al _ hal hP (x.blk σ) (k.ρ1 x.A σ) (fun i j => ?_) _ (inf_le_left.trans inf_le_left) fun Z hZ => ?_
@@ -1039,7 +1039,7 @@ theorem UpperTheory.V.Pa.h0v0 :
   · refine le_of_eq_of_le ?_ h
     congr 1
     ext Y
-    simp only [Set.mem_setOf_eq, rho1_map_algebraMap_am_eq_rho1, Subtype.forall, epsD, algebraMap_smul, Bool.false_eq_true, false_imp_iff,
+    simp only [Set.mem_ofPred_eq, rho1_map_algebraMap_am_eq_rho1, Subtype.forall, epsD, algebraMap_smul, Bool.false_eq_true, false_imp_iff,
       true_and]
     rfl
   · rintro Z ⟨⟨h1, -⟩, h2⟩
@@ -1131,9 +1131,9 @@ theorem UpperTheory.V.Pa.W1_bound_arithmetic_rank_two :
     (fun g => k.ρ1 (x.Am m) ((T.h N).p₀ g)) (fun g => epsD k (x.Am m) ((T.h N).p g)) (k.EpsilonEtaTensorDual (x.Am m))
     (ok1 l L (T.GN N) G0 (T.h N) n x k (x.Am m) χ').2.1
   have hKpos : 0 < Nat.card x.K := by
-    haveI := x.fin
+    have := x.fin
     exact Nat.card_pos
-  haveI : Finite (DD (x.Am m) k.g) := (finAm l G0.frame n x m k.g).2.2.1
+  have : Finite (DD (x.Am m) k.g) := (finAm l G0.frame n x m k.g).2.2.1
   have hsum : ∑ v, A.dv v = d := by
     rw [← A.dv_eq N]
     exact (A.a N).sum_dv

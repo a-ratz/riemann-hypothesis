@@ -203,10 +203,10 @@ theorem finite_setOf_ringHom_comp_eq_of_finite : ∀ (A Ω K : Type) [CommRing A
     (φ : A →+* Ω) (ρ : A →+* K), φ.Finite → Set.Finite {τ : Ω →+* K | τ.comp φ = ρ} := by
   intro A Ω K _ _ _ φ ρ hφ
   classical
-  letI : Algebra A Ω := φ.toAlgebra
-  haveI : Module.Finite A Ω := hφ
+  let : Algebra A Ω := φ.toAlgebra
+  have : Module.Finite A Ω := hφ
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := A) (M := Ω)
-  haveI : Algebra.IsIntegral A Ω := Algebra.IsIntegral.of_finite A Ω
+  have : Algebra.IsIntegral A Ω := Algebra.IsIntegral.of_finite A Ω
   have hint : ∀ g : Ω, ∃ p : Polynomial A, p.Monic ∧ p.eval₂ φ g = 0 := fun g => by
     obtain ⟨q, hq, he⟩ := Algebra.IsIntegral.isIntegral (R := A) g
     exact ⟨q, hq, he⟩
@@ -466,12 +466,12 @@ theorem exists_sharp_cover (g n k : ℕ) (F : SFam g n (zetaAway n)) (F' : SFam 
   have hd : SmoothOfRelativeDimension g c.A.hom :=
     SiegSharpCover.smoothDim c (by omega) b.ζ.isUnit b.unit
   obtain ⟨L₁, L₂⟩ := abelianSchemeLaws_all
-  haveI : IsDedekindDomain (cycAway (n * k)) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
-  haveI : IsLocallyNoetherian (Sp (cycAway (n * k))) :=
+  have : IsDedekindDomain (cycAway (n * k)) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
+  have : IsLocallyNoetherian (Sp (cycAway (n * k))) :=
     inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of _)))
-  haveI := F'.smooth
-  haveI : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
-  haveI : IsLocallyNoetherian F'.X := LocallyOfFiniteType.isLocallyNoetherian F'.s
+  have := F'.smooth
+  have : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
+  have : IsLocallyNoetherian F'.X := LocallyOfFiniteType.isLocallyNoetherian F'.s
   obtain ⟨t, ht, hp⟩ := GlobalTheory.exists_isSharp_and_prim L₁ L₂ Moduli.cube_of_isLB g (8 * g) W J a w w' bas hW hb hw hw'
     hs k (cycAway (n * k)) b F'.X F'.s c (rootBase_pow hn.ne' hk) hko hc hd
   have h00 : SiegLev.SRel c F.univ 0 0 q := by
@@ -533,13 +533,13 @@ theorem exists_hasTh_shrink : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
 
 theorem exists_levModel : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) [IsIntegral F.X] (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (κ : cycAway n →+* o), κ.Finite → ∀ p : Sp Ω ⟶ F.X, p ≫ F.s = spMap ((algebraMap o Ω).comp κ) → (p.stalkMap (genericPoint (Sp Ω))).hom.Finite → (∀ w, p w = genericPoint F.X) → ∃ (Y : RatModel o Ω) (q : Y.Z ⟶ F.X), Geo.Tor.IsNormalScheme Y.Z ∧ IsFinite q ∧ Surjective q ∧ q ≫ F.s = Y.s ≫ spMap κ ∧ Y.pt ≫ q = p := by
   intro g n F _ o Ω _ _ _ _ κ hκ p hp hst hgen
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
-  haveI : IsSeparated F.s := F.isSeparated
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
+  have : IsSeparated F.s := F.isSeparated
   obtain ⟨N, j, -, hjq, hjs⟩ := F.qproj
-  haveI := isProper_str (cycAway n) N
-  haveI : QuasiCompact F.s := by rw [← hjs]; infer_instance
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have := isProper_str (cycAway n) N
+  have : QuasiCompact F.s := by rw [← hjs]; infer_instance
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
   obtain ⟨M, π, hMn, hπ, hcomp⟩ := GlobalTheory.Poinc.exists_ratModel_normalization (cycAway n) o Ω κ hκ F.X F.s
     inferInstance inferInstance inferInstance p hp hst
   refine ⟨M, π, hMn, hπ, ⟨fun x => ?_⟩, ?_, hcomp⟩
@@ -585,10 +585,10 @@ theorem exists_sys_levModel : ∀ (ℓ : ℕ), ℓ.Prime → Odd ℓ → ∀ j�
   obtain ⟨a, w, w', hw, hw', hs⟩ := EighthPowerFactor.exists_matrices hW.2
   obtain ⟨b, c, t', hsh, h00, hp', hsh'⟩ := exists_sharp_cover g n _ F F' κ q (by omega) hk3 hko hζ hqs hq W _ a w w'
     bas hW hbas hw hw' hs
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
-  haveI := F'.smooth
-  haveI : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have := F'.smooth
+  have : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
   obtain ⟨Ω, _, _, _, R, y, hRfg, hfrac, hys, hpt, hstalk⟩ :=
     _root_.GlobalTheory.Poinc.Chart.exists_chart n (n * (ℓ ^ j) ^ 2) F.X F'.X F.s F'.s q (by omega) (by positivity) inferInstance inferInstance
       hqfin hqet hqsurj (genericPoint F.X) (genericPoint_mem F.X)
@@ -608,7 +608,7 @@ theorem exists_sys_levModel : ∀ (ℓ : ℕ), ℓ.Prime → Odd ℓ → ∀ j�
     simp only [x']
     rw [← Category.assoc, ef1]
     exact hstalk
-  haveI : NeZero ((ℓ ^ j) ^ 2) := ⟨by positivity⟩
+  have : NeZero ((ℓ ^ j) ^ 2) := ⟨by positivity⟩
   have hfinv := finite_ratios_of_finite_fibres _ Ω R' F.X x' _ v hR'fg hfrac' hstalk' (fun K _ _ cc => by
     refine ((hj₁ j hjj₁ n (n * (ℓ ^ j) ^ 2) (by omega) (by positivity) F b F'.X F'.s q c _ a t' h00 hsh K).1 cc).subset ?_
     rintro Y ⟨σ, hσ, u, hu, hv⟩
@@ -638,7 +638,7 @@ theorem exists_sys_levModel : ∀ (ℓ : ℕ), ℓ.Prime → Odd ℓ → ∀ j�
     simp only [spMap, ← Spec.map_comp]
     rfl
   have hκ : κ.Finite := (IsFinite.SpecMap_iff _).1 hfin
-  haveI := hint
+  have := hint
   obtain ⟨Y, qY, hYn, hYfin, hYsurj, hYs, hYpt⟩ := exists_levModel g n F _ Ω κ hκ (spMap S.R.val.toRingHom ≫ u)
     (by rw [hpe]; simpa only [Category.assoc] using hbase) (by rw [hpe]; exact hstalk) (fun w => by rw [hpe]; exact hpt w)
   have hu : u ≫ F.s = spMap (algebraMap _ S.R) ≫ spMap κ := by

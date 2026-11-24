@@ -356,7 +356,7 @@ theorem exists_sq_law_zero : ∃ (k k' : Fin g → ℤ) (c : ℂ), c ^ 4 = 1 ∧
   have hexp : cexp (Real.pi / 2 * ((hMat X bas idx x *ᵥ z) ⬝ᵥ imInv X bas idx x *ᵥ (hMat X bas idx x *ᵥ z))) ^ 2 =
       cexp (Real.pi / 2 * ((hMat X bas' idx x *ᵥ z) ⬝ᵥ imInv X bas' idx x *ᵥ (hMat X bas' idx x *ᵥ z))) ^ 2 *
         eC (expArg (chgSp bas bas') (tauMat X bas idx x) (hMat X bas idx x *ᵥ z)) := by
-    rw [hq, eC, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    rw [hq, eC, ← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     ring

@@ -331,7 +331,7 @@ theorem Dual.eq_zero (h : Dual r e) (hD : IsAddFundamentalDomain r.range D μ) {
       refine lintegral_congr_ae (hae.mono fun u hu => ?_)
       simpa using hu
     simp [this]
-  rw [lintegral_eq_zero_iff hPc.enorm.measurable] at h0
+  rw [lintegral_eq_zero_iff hPc.eNorm.measurable] at h0
   refine (hPc.ae_eq_iff_eq μ continuous_zero).1 (h0.mono fun u hu => ?_)
   simpa using hu
 
@@ -422,7 +422,7 @@ theorem Dual.poisson_le [LocallyCompactSpace G] (h : Dual r e) (hD : IsAddFundam
     obtain ⟨b, hb1, hb2⟩ := hb K hK
     obtain ⟨ξ₀, hξ₀⟩ := hKc 0
     have hb0 : ∀ ξ, 0 ≤ b ξ := fun ξ => (norm_nonneg _).trans (hb2 ξ _ hξ₀)
-    rw [← lintegral_tsum fun ξ => (hT ξ).enorm.measurable.aemeasurable]
+    rw [← lintegral_tsum fun ξ => (hT ξ).eNorm.measurable.aemeasurable]
     refine ne_top_of_le_ne_top (b := ∫⁻ _ in D, ENNReal.ofReal (∑' ξ, b ξ) ∂μ) ?_ (lintegral_mono fun u => ?_)
     · rw [setLIntegral_const]
       exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hDf
@@ -453,8 +453,8 @@ theorem Dual.poisson_le [LocallyCompactSpace G] (h : Dual r e) (hD : IsAddFundam
   have h0 : ∑' ξ, H (r ξ) = ((μ.real D)⁻¹ : ℝ) * ∑' ξ, c ξ := by
     rw [← key, ← mul_assoc, ← Complex.ofReal_mul, inv_mul_cancel₀ hm.ne']
     simp [hP]
-  rw [h0, enorm_mul]
-  refine mul_le_mul' (le_of_eq ?_) (enorm_tsum_le_tsum_enorm)
+  rw [h0, eNorm_mul]
+  refine mul_le_mul' (le_of_eq ?_) (eNorm_tsum_le_tsum_eNorm)
   rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg (inv_pos.2 hm).le]
 
 end PositivityTheory.ThKEst.CS
@@ -559,7 +559,7 @@ open GroundTheory.Global in
 theorem exists_clopen_superset [Fintype κ] {S : Set (κ → FiniteAdeleRing (𝓞 F) F)} (hS : IsCompact S) :
     ∃ V, IsClopen V ∧ IsCompact V ∧ S ⊆ V := by
   classical
-  haveI := totallyDisconnectedSpace_finiteAdeleRing (F := F)
+  have := totallyDisconnectedSpace_finiteAdeleRing (F := F)
   have hB : TopologicalSpace.IsTopologicalBasis {s : Set (κ → FiniteAdeleRing (𝓞 F) F) | IsClopen s} :=
     loc_compact_Haus_tot_disc_of_zero_dim
   have hx : ∀ x ∈ S, ∃ C : Set (κ → FiniteAdeleRing (𝓞 F) F), IsClopen C ∧ IsCompact C ∧ x ∈ C := by
@@ -786,7 +786,7 @@ theorem discrete : DiscreteTopology (ratH F κ).range := by
       subst this
       exact Subtype.ext (map_zero _)
   rw [this]
-  exact (isOpen_set_pi Set.finite_univ fun _ _ => hVo).preimage continuous_subtype_val
+  exact (isOpen_set_pi Set.finite_univ fun _ _ => hVo).preimage continuous_subtypeVal
 
 theorem exists_dom {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G]
     [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (Γ : AddSubgroup G) [hd : DiscreteTopology Γ]

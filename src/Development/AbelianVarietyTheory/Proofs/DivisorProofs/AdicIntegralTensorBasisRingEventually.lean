@@ -58,7 +58,7 @@ theorem isIntB_one_mul_eventually : ∀ (A : Type) [Ring A] [Algebra ℚ A] [Fin
     ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S, IsIntB v b 1 ∧
       ∀ y z, IsIntB v b y → IsIntB v b z → IsIntB v b (y * z) := by
   intro A _ _ _ κ b
-  haveI : Fintype κ := FiniteDimensional.fintypeBasisIndex b
+  have : Fintype κ := FiniteDimensional.fintypeBasisIndex b
   have hc : ∀ᶠ v : HeightOneSpectrum ℤ in Filter.cofinite, ∀ t : κ × κ × κ,
       algebraMap ℚ (v.adicCompletion ℚ) (b.repr (b t.1 * b t.2.1) t.2.2) ∈ v.adicCompletionIntegers ℚ :=
     Filter.eventually_all.2 fun t => rat_mem_adicCompletionIntegers_eventually _
@@ -67,7 +67,7 @@ theorem isIntB_one_mul_eventually : ∀ (A : Type) [Ring A] [Algebra ℚ A] [Fin
     Filter.eventually_all.2 fun k => rat_mem_adicCompletionIntegers_eventually _
   have hfin := Filter.eventually_cofinite.1 (hc.and h1)
   refine ⟨hfin.toFinset, fun v hv => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
   obtain ⟨hcv, h1v⟩ := hv
   refine ⟨fun k => ?_, fun y z hy hz k => ?_⟩
   · rw [Algebra.TensorProduct.one_def, repr_tmul_apply, one_mul]

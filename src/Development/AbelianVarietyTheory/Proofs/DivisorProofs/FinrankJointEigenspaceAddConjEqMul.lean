@@ -183,16 +183,16 @@ theorem trace_lattice_eq : ∀ (F : Type) [Field F] [NumberField F] (O : Type) [
         · exact absurd h (Irreducible.natDegree_pos hfirr).ne'
         · exact h
       have : M'.trace = 0 := by
-        haveI : IsEmpty (Fin (Module.finrank ℤ La)) := by rw [← hn, h0]; infer_instance
+        have : IsEmpty (Fin (Module.finrank ℤ La)) := by rw [← hn, h0]; infer_instance
         simp [Matrix.trace]
       rw [this]
       have : (k * r : ℚ) = 0 := by exact_mod_cast hk0
       rw [this, zero_mul]
-    · haveI : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
+    · have : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
       rw [Matrix.trace_eq_neg_charpoly_coeff, hcp, Fintype.card_fin]
       have hnd : (f ^ (k * r)).natDegree = n := by rw [hfmon.natDegree_pow, hsize]; ring
       have hne : (f ^ (k * r)).nextCoeff = (f ^ (k * r)).coeff (n - 1) := by
-        rw [nextCoeff, hnd, if_neg hpos.ne']
+        rw [nextCoeff, hnd, ite_eq_right hpos.ne']
       rw [← hne, hfmon.nextCoeff_pow, nsmul_eq_mul]
       push_cast; ring
 
@@ -232,8 +232,8 @@ theorem finrank_eq_two_mul_of_period {La : Type} [AddCommGroup La] [Module.Free 
     (Q : La →+ (Fin g → ℂ)) (hinj : Function.Injective Q) (hdisc : DiscreteTopology Q.range)
     (hspan : Submodule.span ℝ (Set.range Q) = ⊤) : Module.finrank ℤ La = 2 * g := by
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Q.range
-  haveI : DiscreteTopology L := hdisc
-  haveI : IsZLattice ℝ L := ⟨by
+  have : DiscreteTopology L := hdisc
+  have : IsZLattice ℝ L := ⟨by
     have : (L : Set (Fin g → ℂ)) = Set.range Q := by ext x; simp [L]
     rw [this]; exact hspan⟩
   have h1 := ZLattice.rank ℝ L
@@ -260,8 +260,8 @@ theorem trace_int_eq_of_period {La : Type} [AddCommGroup La] [Module.Free ℤ La
     ((LinearMap.trace ℤ La A.toIntLinearMap : ℤ) : ℂ) = M.trace + (starRingEnd ℂ) M.trace := by
   classical
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Q.range
-  haveI : DiscreteTopology L := hdisc
-  haveI : IsZLattice ℝ L := ⟨by
+  have : DiscreteTopology L := hdisc
+  have : IsZLattice ℝ L := ⟨by
     have : (L : Set (Fin g → ℂ)) = Set.range Q := by ext x; simp [L]
     rw [this]; exact hspan⟩
   let e : La ≃ₗ[ℤ] L := LinearEquiv.ofInjective Q.toIntLinearMap hinj |>.trans

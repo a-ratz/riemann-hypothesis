@@ -75,7 +75,7 @@ theorem exists_ex_transport {E : Type} [Field E] [NumberField E] [IsCMField E] {
 
 theorem uw_anFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r), GoodEmb c σ → IsUnf U → 1 ≤ r → ∀ (W : UW U) (k : U.Comp) (bas : (Fin W.g ⊕ Fin W.g → ℤ) ≃ₗ[ℤ] (U.X k).Λ) (idx : Fin W.g ≃ (U.X k).Ψ × Fin r), IsSympl (U.X k) bas → (∀ x v j, pv (U.X k) idx x v j = perFr (U.X k) x v (relab c σ (W.e j).1) (W.e j).2) → (∀ j, rowType (U.X k) (idx j) = relab c σ (W.e j).1) → ∀ x : (U.X k).dom, IsUnitFr (U.X k) x.1 → letI : Algebra c.F ℂ := σ.toAlgebra; ∃ A : AnFib (U.X k) bas idx W.e x.1 (U.X k).Λ (unC U k x), A.Marked (W.mark k) ∧ ∃ θ, A.Reads 1 (unC U k x).s θ ∧ MeanOne (U.X k) bas idx x.1 (U.X k).Λ θ := by
   intro E _ _ _ H Dw l Xo c σ r U hσ hU hr W k bas idx hS hpv hrow x hxu
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨Pm, hPm, hPer, hux, hder, hfr⟩ := W.pt k x
   obtain ⟨Hm, χl, fr, θ, Fd, hHm, -, hIm, hfrhol, hfrne, hfrg, hfr0, hfrper, hread, hFd, hmean⟩ := hfr hxu
   obtain ⟨ex, hexl, hadd, honto, hker, hlin, hmark⟩ :=
@@ -147,7 +147,7 @@ theorem uw_anFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
               obtain ⟨a, rfl⟩ := hφs v hv
               obtain ⟨hn, hp⟩ := hfrper a j z
               try dsimp only
-              rw [← hPv, if_pos hn, ← hH, ← hH]
+              rw [← hPv, ite_eq_left hn, ← hH, ← hH]
               exact hp (by simpa only [hexl] using hz) }, ?_, θ, ?_, ?_⟩
   · intro a ha
     have hM : pv (U.X k) idx x.1 (((l.M : E)⁻¹) • W.mark k a) = (l.M : ℂ)⁻¹ • Pm (W.F.t (W.ik k) a) := by

@@ -121,7 +121,7 @@ theorem compFin_alg_cP (P : Pl D → Prop) (w : Pl D) (hw : P w) :
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.map_tmul,
       AlgHom.id_apply]
     rfl
-  rw [h, evalV_indP, if_pos hw]
+  rw [h, evalV_indP, ite_eq_left hw]
   exact Algebra.TensorProduct.one_def.symm
 
 
@@ -160,7 +160,7 @@ theorem smul_mem_latO (S T : HSp D) (LS : Set (Fin S.rank → D.host.E)) (LT : S
       · exact one_mem _
       · exact zero_mem _
     · intro v hv
-      rw [map_mul, evalV_indP, if_neg hv, zero_mul]
+      rw [map_mul, evalV_indP, ite_eq_right hv, zero_mul]
     · ext i j
       rw [Matrix.smul_apply, Matrix.of_apply, Matrix.of_apply, TensorProduct.smul_tmul', smul_eq_mul]
       congr 1

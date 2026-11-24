@@ -130,7 +130,7 @@ theorem isIntB_iff_eventually {M : Type} [Ring M] [Algebra ℚ M] {κ κ' : Type
     Filter.eventually_all.2 fun t => rat_mem_adicCompletionIntegers_eventually _
   have hfin := Filter.eventually_cofinite.1 (h1.and h2)
   refine ⟨hfin.toFinset, fun v hv y => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
   exact ⟨isIntB_of_isIntB_of_repr b' b v (fun k k' => hv.2 (k, k')) y,
     isIntB_of_isIntB_of_repr b b' v (fun k' k => hv.1 (k', k)) y⟩
 
@@ -153,9 +153,9 @@ theorem isIntB_sum_leftBasis_iff_eventually : ∀ (L : Type) [Field L] [NumberFi
       exact ⟨d, (hΦl d).trans hd.symm⟩
   let Φ := LinearEquiv.ofBijective Φl hbij
   let b' : Module.Basis (Σ _ : Fin r, κ) ℚ C := (Pi.basis fun _ : Fin r => ℓ).map Φ
-  haveI : Fintype κ := FiniteDimensional.fintypeBasisIndex ℓ
-  haveI : FiniteDimensional ℚ C := Module.Finite.of_basis b'
-  haveI : Fintype κ' := FiniteDimensional.fintypeBasisIndex b
+  have : Fintype κ := FiniteDimensional.fintypeBasisIndex ℓ
+  have : FiniteDimensional ℚ C := Module.Finite.of_basis b'
+  have : Fintype κ' := FiniteDimensional.fintypeBasisIndex b
   have hsingle : ∀ (j : Fin r) (l : L), Φ (Pi.single j l) = ι l * e j := by
     intro j l
     show Φl _ = _
@@ -369,7 +369,7 @@ variable (v : HeightOneSpectrum ℤ) {A : Type} [Ring A] [Algebra ℚ A] {κ : T
 
 theorem isIntB_mul [Finite κ] (hb : ∀ i j, IsIntB v b ((1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] (b i * b j)))
     {x y : v.adicCompletion ℚ ⊗[ℚ] A} (hx : IsIntB v b x) (hy : IsIntB v b y) : IsIntB v b (x * y) := by
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   rw [eq_sum_basis v b x, eq_sum_basis v b y, Finset.sum_mul]
   refine isIntB_sum v b _ _ fun i _ => ?_
   rw [Finset.mul_sum]
@@ -413,7 +413,7 @@ theorem mem_adjoin_of_centralizer (G : HTGroup p) (γ : G.C) (hdeg : (minpoly G.
     have hx := hBc x.2
     rw [Subalgebra.mem_centralizer_iff] at hx
     exact (hc x).1 (hx γ (Set.mem_singleton γ)).symm
-  haveI : NoZeroDivisors B := by
+  have : NoZeroDivisors B := by
     refine ⟨fun {x y} hxy => ?_⟩
     obtain ⟨wx, hwx⟩ := hof x
     obtain ⟨wy, hwy⟩ := hof y
@@ -422,7 +422,7 @@ theorem mem_adjoin_of_centralizer (G : HTGroup p) (γ : G.C) (hdeg : (minpoly G.
     rcases mul_eq_zero.1 (hι (h0.trans (map_zero ι).symm)) with h | h
     · left; apply Subtype.ext; rw [← hwx, h, map_zero]; rfl
     · right; apply Subtype.ext; rw [← hwy, h, map_zero]; rfl
-  haveI : IsDomain B := NoZeroDivisors.to_isDomain B
+  have : IsDomain B := NoZeroDivisors.to_isDomain B
   have hγB : γ ∈ B := Algebra.self_mem_adjoin_singleton G.F γ
   have hint : IsIntegral G.F (⟨γ, hγB⟩ : B) := Algebra.IsIntegral.isIntegral _
   have hirr : Irreducible (minpoly G.F γ) := by
@@ -457,9 +457,9 @@ theorem isIntB_conj_map_of_isIntB_conj : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
       ∀ ρ, IsIntB v ℓ ρ →
         IsIntB v b (↑X * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) ι ρ * ↑X⁻¹) := by
   intro p _ G γ hdeg L _ _ ι hι hc κ b κ' ℓ
-  haveI : Finite κ := Module.Finite.finite_basis b
-  haveI : Finite κ' := Module.Finite.finite_basis ℓ
-  haveI := Fintype.ofFinite κ'
+  have : Finite κ := Module.Finite.finite_basis b
+  have : Finite κ' := Module.Finite.finite_basis ℓ
+  have := Fintype.ofFinite κ'
   have hq : ∀ a, ∃ q : Polynomial G.F, Polynomial.aeval (γ : G.C) q = ι (ℓ a) := by
     intro a
     have h := mem_adjoin_of_centralizer G (γ : G.C) hdeg L ι.toRingHom hι hc (ℓ a)
@@ -477,7 +477,7 @@ theorem isIntB_conj_map_of_isIntB_conj : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
           eventually_isIntB_tmul b _))
   refine ⟨(Filter.eventually_cofinite.1 hev).toFinset, fun v hv X hX ρ hρ => ?_⟩
   have hP := hv
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hP
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hP
   obtain ⟨hb, h1, hcoef⟩ := hP
   set ιv := Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) ι
   have hmap : ∀ (r : v.adicCompletion ℚ) (m : L),
@@ -585,11 +585,11 @@ namespace GlobalTheory
 theorem exists_left_basis_through_algHom : ∀ (L : Type) [Field L] [NumberField L] (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ C]
     (ι : L →ₐ[ℚ] C), ∃ (r : ℕ) (e : Fin r → C), ∀ x : C, ∃! c : Fin r → L, x = ∑ i, ι (c i) * e i := by
   intro L _ _ C _ _ _ ι
-  letI : Module L C := Module.compHom C ι.toRingHom
+  let : Module L C := Module.compHom C ι.toRingHom
   have hsmul : ∀ (l : L) (x : C), l • x = ι l * x := fun _ _ => rfl
-  haveI : IsScalarTower ℚ L C := ⟨fun q l x => by
+  have : IsScalarTower ℚ L C := ⟨fun q l x => by
     rw [hsmul, hsmul, map_smul, smul_mul_assoc]⟩
-  haveI : Module.Finite L C := Module.Finite.of_restrictScalars_finite ℚ L C
+  have : Module.Finite L C := Module.Finite.of_restrictScalars_finite ℚ L C
   let b := Module.finBasis L C
   refine ⟨Module.finrank L C, b, fun x => ⟨b.repr x, ?_, ?_⟩⟩
   · simp only [← hsmul]
@@ -713,7 +713,7 @@ theorem exists_sum_mul_mul_eq_matrixUnit (n : ℕ) (hn : 0 < n) (hC : Module.fin
     refine ⟨fun a b h => hιinj (congrArg Subtype.val h), fun s => ?_⟩
     obtain ⟨w, hw⟩ := (memS s).1 s.2
     exact ⟨w, Subtype.ext hw⟩
-  haveI : IsSimpleRing S := IsSimpleRing.of_ringEquiv (RingEquiv.ofBijective j hj) inferInstance
+  have : IsSimpleRing S := IsSimpleRing.of_ringEquiv (RingEquiv.ofBijective j hj) inferInstance
   let Φ : S ⊗[F] Cᵐᵒᵖ →ₐ[F] Module.End F C :=
     (AlgHom.mulLeftRight F C).comp (Algebra.TensorProduct.map S.val (AlgHom.id F Cᵐᵒᵖ))
   have hΦ : ∀ (s : S) (b : Cᵐᵒᵖ) (x : C), Φ (s ⊗ₜ b) x = (s : C) * x * b.unop := by
@@ -737,12 +737,12 @@ theorem exists_sum_mul_mul_eq_matrixUnit (n : ℕ) (hn : 0 < n) (hC : Module.fin
     { carrier := {f | ∀ (s : S) (x : C), f ((s : C) * x) = (s : C) * f x}
       add_mem' := by
         intro a b ha hb s x
-        simp only [Set.mem_setOf_eq] at ha hb
+        simp only [Set.mem_ofPred_eq] at ha hb
         simp [ha s x, hb s x, mul_add]
       zero_mem' := by intro s x; simp
       smul_mem' := by
         intro c f hf s x
-        simp only [Set.mem_setOf_eq] at hf
+        simp only [Set.mem_ofPred_eq] at hf
         simp [hf s x, mul_smul_comm] }
   have hrange : LinearMap.range Φ.toLinearMap ≤ W := by
     rintro _ ⟨t, rfl⟩
@@ -809,7 +809,7 @@ theorem exists_sum_mul_mul_eq_matrixUnit (n : ℕ) (hn : 0 < n) (hC : Module.fin
 
     rw [hc, map_sum]
     have hfW := f.2
-    simp only [W, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq] at hfW
+    simp only [W, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq] at hfW
     simp only [ZeroMemClass.coe_zero, LinearMap.zero_apply]
     refine Finset.sum_eq_zero fun k _ => ?_
     rw [show ι (c k) = ((⟨ι (c k), hιS _⟩ : S) : C) from rfl, hfW, hfe, mul_zero]
@@ -1042,7 +1042,7 @@ theorem isIntB_one_tmul_iff_exists_isIntegral : ∀ (L : Type) [Field L] [Number
     ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S, ∀ z : L,
       IsIntB v ℓ ((1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] z) ↔ ∃ s : ℤ, s ∉ v.asIdeal ∧ IsIntegral ℤ ((s : L) * z) := by
   intro L _ _ κ ℓ
-  haveI : Fintype κ := FiniteDimensional.fintypeBasisIndex ℓ
+  have : Fintype κ := FiniteDimensional.fintypeBasisIndex ℓ
   set b := integralBasis L
   have h1 : ∀ᶠ v : HeightOneSpectrum ℤ in Filter.cofinite, ∀ t : κ × Module.Free.ChooseBasisIndex ℤ (𝓞 L),
       algebraMap ℚ (v.adicCompletion ℚ) (ℓ.repr (b t.2) t.1) ∈ v.adicCompletionIntegers ℚ :=
@@ -1052,7 +1052,7 @@ theorem isIntB_one_tmul_iff_exists_isIntegral : ∀ (L : Type) [Field L] [Number
     Filter.eventually_all.2 fun t => rat_mem_adicCompletionIntegers_eventually _
   have hfin := Filter.eventually_cofinite.1 (h1.and h2)
   refine ⟨hfin.toFinset, fun v hv z => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
   obtain ⟨h1v, h2v⟩ := hv
   simp only [rat_mem_adicInt_iff] at h1v h2v
   rw [isIntB_one_tmul_iff]
@@ -1137,7 +1137,7 @@ theorem exists_rat_sub_le (v : HeightOneSpectrum ℤ) (c d : v.adicCompletion �
     ∃ q : ℚ, Valued.v (c - algebraMap ℚ (v.adicCompletion ℚ) q) ≤ Valued.v d := by
   have hset : {y : v.adicCompletion ℚ | Valued.v y ≤ Valued.v d} =
       {y | Valued.v.restrict y ≤ Valued.v.restrict d} := by
-    ext y; simp only [Set.mem_setOf_eq, Valuation.restrict_le_iff]
+    ext y; simp only [Set.mem_ofPred_eq, Valuation.restrict_le_iff]
   have hball : IsOpen {y : v.adicCompletion ℚ | Valued.v y ≤ Valued.v d} := by
     rw [hset]; exact Valued.isOpen_closedBall _ (by simpa using hd)
   have ho : IsOpen {y : v.adicCompletion ℚ | Valued.v (c - y) ≤ Valued.v d} :=
@@ -1151,7 +1151,7 @@ theorem exists_tmul_add_mul_isIntB : ∀ (L : Type) [Field L] [NumberField L] (�
     ∃ (y : L) (ρ : v.adicCompletion ℚ ⊗[ℚ] L), IsIntB v ℓ ρ ∧
       x = (1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] y + (D : v.adicCompletion ℚ ⊗[ℚ] L) * ρ := by
   intro L _ _ κ ℓ v x D hD
-  haveI : Fintype κ := FiniteDimensional.fintypeBasisIndex ℓ
+  have : Fintype κ := FiniteDimensional.fintypeBasisIndex ℓ
   have hD' : (D : v.adicCompletion ℚ) ≠ 0 := by
     rw [← map_intCast (algebraMap ℚ (v.adicCompletion ℚ)) D]
     exact (map_ne_zero _).2 (Int.cast_ne_zero.2 hD)
@@ -1163,10 +1163,10 @@ theorem exists_tmul_add_mul_isIntB : ∀ (L : Type) [Field L] [NumberField L] (�
 
     rw [map_sum, Finsupp.finsetSum_apply]
     simp only [repr_tmul_apply ℓ v, ℓ.repr_self, Finsupp.single_apply, apply_ite (algebraMap ℚ (v.adicCompletion ℚ)),
-      map_one, map_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      map_one, map_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀]
     have h0 : (0 : WithZero (Multiplicative ℤ)) < Valued.v (D : v.adicCompletion ℚ) := by
-      rw [zero_lt_iff]; exact (map_ne_zero _).2 hD'
+      rw [pos_iff_ne_zero]; exact (map_ne_zero _).2 hD'
     exact (div_le_one₀ h0).2 (hq k)
   · conv_lhs => rw [eq_sum_tmul ℓ v x]
     rw [TensorProduct.tmul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]

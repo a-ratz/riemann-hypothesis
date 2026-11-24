@@ -121,12 +121,12 @@ theorem omA_diag_boxFn_succ :
     simp
   have hinv : ((GlobalTheory.SplitFlip.diagGL (Function.update (1 : A → kˣ) i₀ ϖ))⁻¹).val =
       diagonal fun i => (((Function.update (1 : A → kˣ) i₀ ϖ i)⁻¹ : kˣ) : k) := rfl
-  have h0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
   have key : ∀ X : Matrix A D k,
       (diagonal (fun i => (((Function.update (1 : A → kˣ) i₀ ϖ i)⁻¹ : kˣ) : k)) * X) ∈
         box ϖ C (Function.update (fun _ => m) i₀ n) ↔ X ∈ box ϖ C (Function.update (fun _ => m) i₀ (n + 1)) := by
     intro X
-    simp only [box, Set.mem_setOf_eq, diagonal_mul]
+    simp only [box, Set.mem_ofPred_eq, diagonal_mul]
     refine forall_congr' fun i => forall_congr' fun j => ?_
     by_cases hi : i = i₀
     · subst hi
@@ -168,7 +168,7 @@ theorem val_le_of_add_vecMul {r : ℕ} {u t : ValueGroupWithZero k} (hu : u < 1)
   push_neg at hlt
   obtain ⟨l₁, -, hl₁⟩ := Finset.exists_max_image Finset.univ (fun j => valuation k (s j)) ⟨l, Finset.mem_univ _⟩
   have hM : t < valuation k (s l₁) := hlt.trans_le (hl₁ l (Finset.mem_univ _))
-  have hM0 : 0 < valuation k (s l₁) := lt_of_le_of_lt zero_le' hM
+  have hM0 : 0 < valuation k (s l₁) := lt_of_le_of_lt zero_le hM
   have h1 : valuation k ((s ᵥ* E) l₁) ≤ valuation k (s l₁) * u := by
     simp only [Matrix.vecMul, dotProduct]
     refine Valuation.map_sum_le _ fun j _ => ?_
@@ -198,7 +198,7 @@ theorem mem_box_update {ϖ : kˣ} {C X : Matrix A D k} {i₀ : A} {m : ℕ} (hC 
     X ∈ box ϖ C (Function.update (fun _ => m) i₀ (m - 1)) ↔
       (∀ i, i ≠ i₀ → ∀ j, valuation k (X i j - C i j) ≤ valuation k (ϖ : k) ^ m) ∧
         ∀ j, valuation k (X i₀ j) ≤ valuation k (ϖ : k) ^ (m - 1) := by
-  simp only [box, Set.mem_setOf_eq, val_pow]
+  simp only [box, Set.mem_ofPred_eq, val_pow]
   constructor
   · intro h
     exact ⟨fun i hi j => by simpa [Function.update_of_ne hi] using h i j, fun j => by simpa [hC] using h i₀ j⟩
@@ -213,7 +213,7 @@ theorem mem_box_updateRow {ϖ : kˣ} {C X : Matrix A D k} {i₀ : A} {m : ℕ} (
     X ∈ box ϖ (C.updateRow i₀ R) (fun _ => m) ↔
       (∀ i, i ≠ i₀ → ∀ j, valuation k (X i j - C i j) ≤ valuation k (ϖ : k) ^ m) ∧
         ∀ j, valuation k (X i₀ j - R j) ≤ valuation k (ϖ : k) ^ m := by
-  simp only [box, Set.mem_setOf_eq, val_pow]
+  simp only [box, Set.mem_ofPred_eq, val_pow]
   constructor
   · intro h
     exact ⟨fun i hi j => by simpa [updateRow_ne hi] using h i j, fun j => by simpa using h i₀ j⟩
@@ -282,7 +282,7 @@ theorem shiftRow_unique {ϖ : kˣ} (hϖ : IsUnif ϖ) {r m : ℕ} (hm : 1 ≤ m) 
       rw [← pow_succ]; congr 1; omega
     simp only [δ, map_mul, map_pow] at h5
     rw [hm'] at h5
-    exact (mul_le_mul_iff_right₀ (zero_lt_iff.2 (pow_ne_zero _ hu0))).1 h5
+    exact (mul_le_mul_iff_right₀ (pos_iff_ne_zero.2 (pow_ne_zero _ hu0))).1 h5
   rw [← Ideal.Quotient.mk_out (b l), ← Ideal.Quotient.mk_out (b' l)]
   exact Ideal.Quotient.eq.2 ((mem_max_iff hϖ _).2 h4)
 
@@ -297,7 +297,7 @@ theorem shiftRow_exists {ϖ : kˣ} (hϖ : IsUnif ϖ) {r c m : ℕ} (hcm : c + 1 
   have hu : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
   have hu0 : valuation k (ϖ : k) ≠ 0 := by simp
   have hp0 : (ϖ : k) ^ (m - 1) ≠ 0 := pow_ne_zero _ ϖ.ne_zero
-  have hvp : 0 < valuation k (ϖ : k) ^ (m - 1) := zero_lt_iff.2 (pow_ne_zero _ hu0)
+  have hvp : 0 < valuation k (ϖ : k) ^ (m - 1) := pos_iff_ne_zero.2 (pow_ne_zero _ hu0)
   have hm' : valuation k (ϖ : k) ^ m = valuation k (ϖ : k) ^ (m - 1) * valuation k (ϖ : k) := by
     rw [← pow_succ]; congr 1; omega
   have htt : ∀ l, ((ϖ : k) ^ (m - 1))⁻¹ * s l ∈ 𝒪[k] := fun l => by
@@ -375,7 +375,7 @@ theorem boxFn_sub_sum_mem_lowRank : ∀ (k : Type) [Field k] [ValuativeRel k] [T
           rwa [hHXQ, Matrix.vecMul_add, Matrix.vecMul_one] at this
         funext l
         have := val_le_of_add_vecMul hu (s - s') E hE (t := 0) (fun l => by rw [h0]; simp) l
-        exact sub_eq_zero.1 ((Valuation.zero_iff _).1 (le_zero_iff.1 this))
+        exact sub_eq_zero.1 ((Valuation.zero_iff _).1 (nonpos_iff_eq_zero.1 this))
       obtain ⟨s, hs⟩ := _root_.GlobalTheory.rows_mem_span_of_isUnit_mul k A D r X H Q hXr hunit i₀
       have hsv : ∀ l, valuation k (s l) ≤ valuation k (ϖ : k) ^ (m - 1) := by
         refine val_le_of_add_vecMul hu s E hE fun l => ?_
@@ -519,7 +519,7 @@ theorem vecMul_bound {r : ℕ} (E : Matrix (Fin r) (Fin r) k) (δ b : ValueGroup
     rcases le_max_iff.1 hμ with h | h
     · exact h
     · by_cases h0 : valuation k (s l₀) = 0
-      · rw [h0]; exact zero_le'
+      · rw [h0]; exact zero_le
       · exfalso
         have h2 := mul_le_mul_left h (valuation k (s l₀))⁻¹
         rw [mul_inv_cancel₀ h0, mul_comm (valuation k (s l₀)) δ, mul_assoc, mul_inv_cancel₀ h0, mul_one] at h2
@@ -569,7 +569,7 @@ theorem GlobalTheory.RankCoinv.boxFn_mem_lowRank_sup_twistSpan_of_small_row : �
       rw [← hM, Matrix.sub_vecMul]; exact sub_eq_zero.2 haa
     funext l
     have h1 := GlobalTheory.RankCoinv.Recentre.vecMul_bound _ _ 0 hδ hE (a - a') 0 (fun _ => by simp) h0 l
-    have h2 : (a - a') l = 0 := (Valuation.zero_iff _).1 (le_antisymm h1 zero_le')
+    have h2 : (a - a') l = 0 := (Valuation.zero_iff _).1 (le_antisymm h1 zero_le)
     exact sub_eq_zero.1 h2
   obtain ⟨s, hs⟩ := _root_.GlobalTheory.rows_mem_span_of_isUnit_mul k A D r X₂ H Q hrk hunit i₀
   have hsw : s ᵥ* (1 + H * (X₂ - C) * Q) = X₂ i₀ ᵥ* Q := by
@@ -660,13 +660,13 @@ theorem frame_normalise_integral (k : Type) [Field k] [ValuativeRel k] [Topologi
     rw [Finset.prod_mul_distrib]; ring
   rw [hYQ, det_one] at key
   obtain ⟨p₀, -, hp₀⟩ := Finset.exists_ne_zero_of_sum_ne_zero (key ▸ one_ne_zero)
-  haveI : Nonempty (Fin s → D) := ⟨p₀⟩
+  have : Nonempty (Fin s → D) := ⟨p₀⟩
   obtain ⟨κ, hκ⟩ := Finite.exists_max (fun p : Fin s → D => valuation k (Y.submatrix id p).det)
   have hne : (Y.submatrix id κ).det ≠ 0 := by
     intro h0
     have := hκ p₀
     rw [h0, map_zero] at this
-    exact right_ne_zero_of_mul hp₀ ((valuation k).zero_iff.mp (le_antisymm this zero_le'))
+    exact right_ne_zero_of_mul hp₀ ((valuation k).zero_iff.mp (le_antisymm this zero_le))
   set h := (Y.submatrix id κ)⁻¹ with hh
   have hsub : ∀ p : Fin s → D, (h * Y).submatrix id p = h * Y.submatrix id p := by
     intro p; ext r c; simp [Matrix.mul_apply]
@@ -687,7 +687,7 @@ theorem frame_normalise_integral (k : Type) [Field k] [ValuativeRel k] [Topologi
     rw [Valuation.mem_integer_iff, e, hsub, det_mul, hh, det_nonsing_inv, Ring.inverse_eq_inv',
       map_mul, map_inv₀]
     have hpos : 0 < valuation k (Y.submatrix id κ).det :=
-      lt_of_le_of_ne zero_le' (Ne.symm ((valuation k).ne_zero_iff.mpr hne))
+      lt_of_le_of_ne zero_le (Ne.symm ((valuation k).ne_zero_iff.mpr hne))
     rw [mul_comm, ← div_eq_mul_inv, div_le_one₀ hpos]
     exact hκ _
   · intro i j
@@ -735,14 +735,14 @@ theorem exists_KO_row_zero_of_rank_lt (k : Type) [Field k] [ValuativeRel k] [Top
   have hc0 : c i₀ ≠ 0 := by
     intro h0
     have := hmax i₁ (Finset.mem_univ _)
-    rw [h0, map_zero, le_zero_iff, Valuation.zero_iff] at this
+    rw [h0, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at this
     exact hi₁ this
   set c' : A → k := fun i => c i / c i₀ with hc'
   have hc'int : ∀ i, c' i ∈ 𝒪[k] := by
     intro i
     rw [Valuation.mem_integer_iff, hc', map_div₀]
     have hpos : 0 < valuation k (c i₀) := by
-      rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).2 hc0
+      rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).2 hc0
     exact (div_le_one₀ hpos).2 (hmax i (Finset.mem_univ _))
   have hc'0 : c' i₀ = 1 := div_self hc0
 
@@ -821,7 +821,7 @@ theorem exists_le_inv_pow {ϖ : kˣ} (hϖ : GlobalTheory.SplitFlip.IsUnif ϖ) (x
   by_cases h : valuation k x ≤ 1
   · exact ⟨0, by simpa using h⟩
   · have hx : x ≠ 0 := by rintro rfl; simp at h
-    have h0 : 0 < valuation k x := zero_lt_iff.2 (by simpa using hx)
+    have h0 : 0 < valuation k x := pos_iff_ne_zero.2 (by simpa using hx)
     have hy : valuation k x⁻¹ ≤ 1 := by
       rw [map_inv₀]
       calc (valuation k x)⁻¹ = (valuation k x)⁻¹ * 1 := (mul_one _).symm
@@ -894,7 +894,7 @@ theorem inv_mul_mem_box_iff {g : GL A k} (hg : g ∈ KO k A) (ϖ : kˣ) (C X : M
   obtain ⟨h1, h2⟩ := (mem_KO_iff g).1 hg
   have h1' : ∀ i a, valuation k (g.val i a) ≤ 1 := fun i a => (Valuation.mem_integer_iff _ _).1 (h1 i a)
   have h2' : ∀ i a, valuation k ((g⁻¹).val i a) ≤ 1 := fun i a => (Valuation.mem_integer_iff _ _).1 (h2 i a)
-  simp only [box, Set.mem_setOf_eq]
+  simp only [box, Set.mem_ofPred_eq]
   constructor
   · intro hZ i j
     have e : X i j - (g.val * C) i j = (g.val * ((g⁻¹).val * X - C)) i j := by
@@ -1068,7 +1068,7 @@ theorem exists_sum_boxFn (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   have hrep : ∀ Y, box ϖ (rep (box ϖ Y (fun _ => m))) (fun _ => m) = box ϖ Y (fun _ => m) := by
     intro Y
     have h : ∃ Z, box ϖ Z (fun _ => m) = box ϖ Y (fun _ => m) := ⟨Y, rfl⟩
-    rw [show rep (box ϖ Y (fun _ => m)) = h.choose from dif_pos h]
+    rw [show rep (box ϖ Y (fun _ => m)) = h.choose from dite_eq_left h]
     exact h.choose_spec
   obtain ⟨s₀, hs₀⟩ := IsCompact.elim_finite_subcover hcs
     (fun Y : tsupport Φ => box ϖ (Y : Matrix A D k) (fun _ => m))
@@ -1153,11 +1153,11 @@ theorem mem_lowRank_succ_sup_twistSpan_of_mem_lowRank : ∀ (k : Type) [Field k]
   have hU : ∀ X ∈ {X : Matrix A D k | Φ X ≠ 0}, U X ∈ nhds X := by
     intro X _
     by_cases h : X.rank ≤ r
-    · simp only [U, h, if_true]
+    · simp only [U, h, ite_true]
       refine (isClopen_box ϖ X _).isOpen.mem_nhds ?_
       intro i j; simp
-    · simp only [U, h, if_false]
-      exact (_root_.GlobalTheory.isOpen_setOf_le_rank_localField k A D (r + 1)).mem_nhds (by simp only [Set.mem_setOf_eq]; omega)
+    · simp only [U, h, ite_false]
+      exact (_root_.GlobalTheory.isOpen_setOf_le_rank_localField k A D (r + 1)).mem_nhds (by simp only [Set.mem_ofPred_eq]; omega)
   obtain ⟨t, htS, hcover⟩ := hScpt.elim_nhds_subcover U hU
   obtain ⟨m₁, hm₁⟩ := _root_.GlobalTheory.RankCoinv.Decomp.exists_sum_boxFn k A D ϖ hϖ Φ ⟨hlc, hcs⟩
   obtain ⟨s, hdec, hconst⟩ := hm₁ (max m₁ (t.sup m₀)) (le_max_left _ _)
@@ -1176,14 +1176,14 @@ theorem mem_lowRank_succ_sup_twistSpan_of_mem_lowRank : ∀ (k : Type) [Field k]
     obtain ⟨x, hxt, hxU⟩ := Set.mem_iUnion₂.1 (hcover hX₂S)
     have hxS : Φ x ≠ 0 := htS x hxt
     by_cases hxr : x.rank ≤ r
-    · simp only [U, hxr, if_true] at hxU
+    · simp only [U, hxr, ite_true] at hxU
       have hxeq : x.rank = r := by
         by_contra hne
         exact hxS (hvan x (lt_of_le_of_ne hxr hne))
       have hmx : m₀ x ≤ m := le_trans (Finset.le_sup (f := m₀) hxt) (le_max_right _ _)
       rw [← boxFn_eq_of_mem hX₂]
       exact hm₀ x hxeq m hmx X₂ hxU
-    · simp only [U, hxr, if_false, Set.mem_setOf_eq] at hxU
+    · simp only [U, hxr, ite_false, Set.mem_ofPred_eq] at hxU
       omega
   · push_neg at hex
     refine Submodule.smul_mem _ _ (Submodule.mem_sup_left ?_)

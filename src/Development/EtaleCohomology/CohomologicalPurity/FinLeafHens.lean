@@ -721,14 +721,14 @@ theorem LeafRootStd_of : LeafRootStd := by
     obtain ⟨a', ha'⟩ := hall p
     exact ⟨a', Ideal.Quotient.eq.mp ha'.symm⟩
   · intro B _ χ₁ χ₂ h hb
-    letI : Algebra A B := (χ₁.comp φ).toAlgebra
+    let : Algebra A B := (χ₁.comp φ).toAlgebra
     let e₁ : P.Ring →ₐ[A] B := ⟨χ₁, fun _ => rfl⟩
     let e₂ : P.Ring →ₐ[A] B := ⟨χ₂, fun r => (congrArg (fun g : A →+* B => g r) h).symm⟩
     have := StandardEtalePair.hom_ext (f := e₁) (g := e₂) hb
     ext s
     exact congrArg (fun e : P.Ring →ₐ[A] B => e s) this
   · intro B _ ψ c hc h1 h2
-    letI : Algebra A B := ψ.toAlgebra
+    let : Algebra A B := ψ.toAlgebra
     have hm' : P.HasMap c := by
       refine ⟨?_, ?_⟩
       · change aeval c f = 0

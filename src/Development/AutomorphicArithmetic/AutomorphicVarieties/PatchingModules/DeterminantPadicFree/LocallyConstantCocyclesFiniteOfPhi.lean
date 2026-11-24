@@ -65,12 +65,12 @@ private theorem eq_zero_of_forall_hom_zmod_eq_zero_of_module_zmod {l : ℕ} [Fac
 theorem UpperTheory.V.Pa.Det.locallyConstant_cocycles_finite_of_phi :
     ∀ (l : ℕ) [Fact l.Prime] {G M : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] [AddCommGroup M] [Finite M] (ρ : G →* AddMonoid.End M), PhiCond G l → (∀ m : M, l • m = 0) → (∀ m, IsLocallyConstant fun g => ρ g m) → {z : G → M | IsLocallyConstant z ∧ ∀ g h, z (g * h) = z g + ρ g (z h)}.Finite := by
   intro l _ G M _ _ _ _ _ _ _ ρ hΦ hl hc
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   set S := {z : G → M | IsLocallyConstant z ∧ ∀ g h, z (g * h) = z g + ρ g (z h)} with hS
   have hker : IsOpen (ρ.ker : Set G) := by
     have he : (ρ.ker : Set G) = ⋂ m, {g | ρ g m = m} := by
       ext g
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
       constructor
       · intro h m
         rw [h]
@@ -80,9 +80,9 @@ theorem UpperTheory.V.Pa.Det.locallyConstant_cocycles_finite_of_phi :
         exact h m
     rw [he]
     exact isOpen_iInter_of_finite fun m => (hc m).isOpen_fiber m
-  haveI : Finite (G ⧸ ρ.ker) := Subgroup.quotient_finite_of_isOpen _ hker
-  haveI := hΦ ρ.ker hker
-  haveI : Finite (M →+ ZMod l) :=
+  have : Finite (G ⧸ ρ.ker) := Subgroup.quotient_finite_of_isOpen _ hker
+  have := hΦ ρ.ker hker
+  have : Finite (M →+ ZMod l) :=
     Finite.of_injective (fun f : M →+ ZMod l => (⇑f : M → ZMod l))
       (fun a b hab => AddMonoidHom.ext (congrFun hab))
   have h1 : ∀ z ∈ S, z 1 = 0 := by
@@ -103,7 +103,7 @@ theorem UpperTheory.V.Pa.Det.locallyConstant_cocycles_finite_of_phi :
        map_mul' := fun a b => by simp [hH z hz a b a.2, ofAdd_add] },
      by
        have hlc : IsLocallyConstant (fun h : ρ.ker => Multiplicative.ofAdd (f (z h))) :=
-         (hz.1.comp_continuous continuous_subtype_val).comp _
+         (hz.1.comp_continuous continuous_subtypeVal).comp _
        exact hlc.isOpen_fiber 1⟩
   let F : S → ((G ⧸ ρ.ker) → M) × ((M →+ ZMod l) →
       {φ : ρ.ker →* Multiplicative (ZMod l) // IsOpen (φ.ker : Set ρ.ker)}) :=

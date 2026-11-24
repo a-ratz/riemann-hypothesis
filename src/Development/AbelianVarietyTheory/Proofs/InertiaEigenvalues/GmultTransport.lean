@@ -186,7 +186,7 @@ theorem finite_quot (N : Submodule k⟦X⟧ V) (hN : N.FG) :
         abel
       rw [h5]
       exact Submodule.add_mem _ (Submodule.smul_mem _ _ h) (h4 ▸ h3)
-  haveI : FiniteDimensional k (Submodule.span k (s : Set V)) := FiniteDimensional.span_finset k s
+  have : FiniteDimensional k (Submodule.span k (s : Set V)) := FiniteDimensional.span_finset k s
   refine Module.Finite.of_surjective (Submodule.mkQ _ ∘ₗ Submodule.inclusion hle) fun w => ?_
   obtain ⟨⟨y, hy⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ w
   obtain ⟨z, hz, h⟩ := key y hy

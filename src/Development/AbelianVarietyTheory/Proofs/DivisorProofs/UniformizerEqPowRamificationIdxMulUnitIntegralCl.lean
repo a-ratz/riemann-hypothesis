@@ -62,7 +62,7 @@ theorem pi_eq_pow_ramificationIdx_mul_unit
       ∃ ϖ : Localization.AtPrime P, Irreducible ϖ ∧ ∃ u : (Localization.AtPrime P)ˣ,
         algebraMap S (Localization.AtPrime P) π = ϖ ^ P.ramificationIdx S * (u : Localization.AtPrime P) := by
   intro hπ hπP
-  haveI : IsDedekindDomain (integralClosure S L) := integralClosure.isDedekindDomain S K L
+  have : IsDedekindDomain (integralClosure S L) := integralClosure.isDedekindDomain S K L
   have hπ0 : π ≠ 0 := hπ.ne_zero
   have hO0 : algebraMap S (integralClosure S L) π ≠ 0 := by
     intro h
@@ -72,7 +72,7 @@ theorem pi_eq_pow_ramificationIdx_mul_unit
       map_eq_zero_iff _ (IsFractionRing.injective S K)] at h2
     exact hπ0 h2
   have hPbot : P ≠ ⊥ := fun h => hO0 (by rw [h] at hπP; simpa using hπP)
-  haveI hA : IsDiscreteValuationRing (Localization.AtPrime P) :=
+  have hA : IsDiscreteValuationRing (Localization.AtPrime P) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (integralClosure S L) hPbot (Localization.AtPrime P)
   have hinj : Function.Injective (algebraMap (integralClosure S L) (Localization.AtPrime P)) :=
     IsLocalization.injective (Localization.AtPrime P) P.primeCompl_le_nonZeroDivisors

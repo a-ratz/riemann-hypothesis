@@ -70,7 +70,7 @@ theorem hsNormSq_smul {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerProductSpace
     [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (c : ℂ) (A : Wq →L[ℂ] Wp) :
     hsNormSq (c • A) = Complex.normSq c * hsNormSq A := by
   unfold hsNormSq hsInner
-  simp only [ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right, ← mul_assoc]
+  simp only [smul_apply, inner_smul_left, inner_smul_right, ← mul_assoc]
   rw [← Finset.mul_sum]
   first
   | rw [Complex.mul_conj]

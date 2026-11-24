@@ -95,7 +95,7 @@ theorem _root_.GlobalTheory.PD.rA_isFractionRing_isNoetherianRing : ∀ (k : Typ
     have hfg : (_root_.GlobalTheory.PD.rA k x I).FG := by
       rw [hA, ← hfin.coe_toFinset]
       exact Subalgebra.fg_adjoin_finset _
-    haveI := (Subalgebra.fg_iff_finiteType _).mp hfg
+    have := (Subalgebra.fg_iff_finiteType _).mp hfg
     exact Algebra.FiniteType.isNoetherianRing k _
 
 end GlobalTheory.PD

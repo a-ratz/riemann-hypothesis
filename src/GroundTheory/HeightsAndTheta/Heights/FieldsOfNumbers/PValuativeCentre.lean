@@ -138,7 +138,7 @@ theorem ValuativeCentre.proof : ValuativeCentre.Statement.{u} := by
       rw [chartMap, aeval_X, ← R.valuation_le_one_iff, map_div₀]
       have h0 : R.valuation (φ (X ⟨v.1, c v.1⟩)) ≠ 0 := by
         rw [Ne, Valuation.zero_iff, hφ]; exact hcP v.1
-      exact (div_le_one₀ (zero_lt_iff.mpr h0)).mpr (hcmax v.1 v.2)
+      exact (div_le_one₀ (pos_iff_ne_zero.mpr h0)).mpr (hcmax v.1 v.2)
   let χ : MRing ι F →+* R := (chartMap P c).toRingHom.codRestrict R hchart
   have hχ : ∀ p, (χ p : L) = chartMap P c p := fun p => rfl
   let ρ : MRing ι F →+* IsLocalRing.ResidueField R := (IsLocalRing.residue R).comp χ

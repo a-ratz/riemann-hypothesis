@@ -55,7 +55,7 @@ namespace Formalism.L2.SG.Pf
 
 theorem condAll_of_locTrDual (hL : Formalism.L2.SG.Pf.CondStd.LocTrDual) : Formalism.L2.SG.Pf.NcVal.CondAll := by
   intro F _ _ hTR ψ h1 h2 v x
-  haveI := hTR
+  have := hTR
   exact CondStd.condAllTR_of hL F ψ h1 h2 v x
 
 end Formalism.L2.SG.Pf
@@ -301,7 +301,7 @@ theorem fwd (x : Fv F v)
     intro q hw hv
     set Qv := algebraMap F (v.adicCompletion F) q with hQv
     have hy : Qv / x ∈ v.adicCompletionIntegers F := by
-      rw [mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 hvx0)]
+      rw [mem_adicCompletionIntegers, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 hvx0)]
       refine hv.trans ?_
       rw [hvx, WithZero.exp_le_exp]
       omega

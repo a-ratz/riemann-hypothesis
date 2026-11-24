@@ -103,9 +103,9 @@ theorem cupSquare_crys (H : AbelianDeRham.Free) (H' : CrystallineDeRham) (hκ : 
   have hs : Smooth (A.hom ≫ 𝟙 _) := by
     rw [Category.comp_id]; exact hA.smooth
   have hsep : IsSeparated (A.hom ≫ 𝟙 _) := by
-    rw [Category.comp_id]; haveI := hA.proper; infer_instance
+    rw [Category.comp_id]; have := hA.proper; infer_instance
   have hqc : QuasiCompact (A.hom ≫ 𝟙 _) := by
-    rw [Category.comp_id]; haveI := hA.proper; infer_instance
+    rw [Category.comp_id]; have := hA.proper; infer_instance
   have hpb : IsPullback i A₀.hom (A.hom ≫ 𝟙 _) (spMap π) := by simpa using h
   obtain ⟨h1, h2⟩ := H' R I κ hκ R₀ π hπ hI A.left A₀.left (A.hom ≫ 𝟙 _) A₀.hom i hs hsep hqc hpb m.isMor
   exact CupSquare.of_bijective C0 m h1 h2

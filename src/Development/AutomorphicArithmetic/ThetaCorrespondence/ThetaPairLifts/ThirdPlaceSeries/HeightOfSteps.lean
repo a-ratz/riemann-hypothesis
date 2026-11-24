@@ -230,8 +230,8 @@ variable {O C : Type} [CommRing O] [Field C] [Algebra O C]
 theorem diag_ne_zero_of_linearIndependent {w : Fin n → U} {g : Matrix (Fin n) (Fin n) C}
     (hg : ∀ i j, i < j → g i j = 0) (h : LinearIndependent C fun i => ∑ j, g i j • w j) (i : Fin n) : g i i ≠ 0 := by
   have hl : LinearIndependent C g.row := LinearIndependent.of_comp (Fintype.linearCombination C w) h
-  have hu := (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hl)
-  rw [Matrix.det_of_lowerTriangular _ fun i j hij => hg i j hij] at hu
+  have hu := (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_row_iff_isUnit.1 hl)
+  rw [Matrix.det_of_isLowerTriangular _ fun i j hij => hg i j hij] at hu
   exact Finset.prod_ne_zero_iff.1 hu.ne_zero i (Finset.mem_univ i)
 
 theorem IsLatBasis.diag_le {v : Valuation C ℝ≥0} (hv : v.Integers O) {La : Submodule O U} {w : Fin n → U}
@@ -332,7 +332,7 @@ theorem exists_adapted_basis : ∀ (O C U : Type) [CommRing O] [Field C] [Algebr
   · have hu : IsUnit g := by
       rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_of_isLowerTriangular _ fun i j hij => hg i j hij]
       exact (Finset.prod_ne_zero_iff.2 fun i _ => hd i).isUnit
-    exact (Matrix.linearIndependent_rows_iff_isUnit.2 hu).map' (Fintype.linearCombination C b)
+    exact (Matrix.linearIndependent_row_iff_isUnit.2 hu).map' (Fintype.linearCombination C b)
       (LinearMap.ker_eq_bot.2 fun s t h => funext (Fintype.linearIndependent_iffₛ.1 hb s t h))
   · rw [hgw]
     refine le_antisymm (le_inf (Submodule.span_le.2 (Set.range_subset_iff.2 hw))
@@ -428,15 +428,15 @@ theorem exists_pull {V O : Type} [CommRing V] [CommRing O] {G : Over (Sp V)} [Gr
 
 theorem exists_lieTie_of_frMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C ℝ≥0) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] [Algebra ℤ_[p] C] [IsScalarTower ℤ_[p] O C] [Algebra c.F C] [StarRing (𝓞 E)] (T : CDVR) (io : c.F →+* T.Fr) (y₀ : IntFr Xo c T io) (k : letI := io.toAlgebra; T.Fr →ₐ[c.F] C) (kO : T.V →+* O) (P : Point p v O (𝓞 E)) (ψ : P.A.A.left ⟶ Xo.univ.t.G.left) (z : FrPt Xo c C), (letI := io.toAlgebra; PointOver P y₀.1.x k.toRingHom kO ψ) → (letI := io.toAlgebra; FrMap k y₀.1 z) → ∃ x : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → LieG P.Gt, ∀ τ j, LieTie P ψ (x τ j) (z.u τ j) := by
   intro E _ _ _ H Dw l Xo c p _ C _ _ _ v O _ _ _ _ _ _ _ _ _ T io y₀ k kO P ψ z hP hz
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨hk, G, t', m₁, m₂, π, φ, hπ, -, hφ, h4, rfl, -⟩ := hP
   obtain ⟨G₀, t₀, n₁, n₂, ⟨ub, ht, -, -, hub⟩, -⟩ := y₀.2.2
   obtain ⟨e, he, h₁⟩ := grpPullback_iso n₁.cart m₁.cart
   have h₂ : IsGrpPullback t₀.G G.G (spMap (algebraMap T.V T.Fr)) (e.hom.left ≫ m₂.φ) :=
     ((isGrpPullback_of_iso e).comp m₂.cart).congr (Category.id_comp _) rfl
   obtain ⟨F, hF, h₃⟩ := exists_hom G₀.semi G.semi n₂.cart h₂
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp₀ : ¬ IsUnit (p : O) := Fact.out
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => hp₀ (by simpa using h.map (TrivSqZeroExt.fstHom O O O))
   suffices h : ∀ τ j, ∃ x : LieG P.Gt, LieTie P (φ ≫ m₁.φ) x (z.u τ j) by
@@ -483,7 +483,7 @@ theorem exists_lieTie_of_frMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have h7 := hc.comp (TrivSqZeroExt.fstHom O O O)
   rw [xG.2] at h7
   have hu : (u' ≫ e.hom.left) ≫ t'.G.hom = spMap (algebraMap T.Fr (DualNumber T.Fr)) := by
-    haveI : Mono (spMap (algebraMap T.V T.Fr)) :=
+    have : Mono (spMap (algebraMap T.V T.Fr)) :=
       haveI : IsPreimmersion (spMap (algebraMap T.V T.Fr)) := IsPreimmersion.of_isLocalization (nonZeroDivisors T.V)
       inferInstance
     rw [← cancel_mono (spMap (algebraMap T.V T.Fr)), Category.assoc, Category.assoc, ← m₂.cart.1.w,
@@ -539,7 +539,7 @@ theorem exists_polAV_fibre {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     letI := H.starRing
     ∃ (A : PolAV (Sp C)) (oA : A.OAct (𝓞 E)) (φ : A.A.left ⟶ t.G.left), IsGrpPullback A.A t.G y φ ∧
       (∀ a, (oA.act a).left ≫ φ = φ ≫ (t.act.act a).left) ∧ LBIso A.L (u.PP.L.pull (φ ≫ m.φ)) := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨PP', cub, sym, adj, prim, m₁, -⟩ := sabPull CubePf.cubePull y t
   generalize (⟨(Over.pullback y).obj t.G, IsSemiAbelian.pullback _ t.G t.semi,
     Geo.Tor.OAct.pullback _ t.G t.act, PP', cub, sym, adj, prim⟩ : SAB H _) = t' at m₁
@@ -565,11 +565,11 @@ theorem exists_polAV_fibre {E : Type} [Field E] [NumberField E] [IsCMField E] {H
 theorem exists_pointOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C ℝ≥0) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] [Algebra ℤ_[p] C] [IsScalarTower ℤ_[p] O C] [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → v.Integers O → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y₀ : IntFr Xo c T io), y₀.IsAlg → ∀ (k : T.Fr →+* C) (kO : T.V →+* O), (∀ a, algebraMap O C (kO a) = k (algebraMap T.V T.Fr a)) → ∃ (P : Point p v O (𝓞 E)) (ψ : P.A.A.left ⟶ Xo.univ.t.G.left), (letI := io.toAlgebra; PointOver P y₀.1.x k kO ψ) := by
   intro E _ _ _ H Dw l Xo c p _ C _ _ _ v O _ _ hpO _ _ _ _ inst hstar hv T io y₀ hy k kO hk
   obtain rfl : inst = H.starRing := GlobalTheory.PowGerm.starRing_ext_of_star inst H.starRing hstar
-  letI := H.starRing
-  letI := io.toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
   obtain ⟨G, t', m₁, m₂, -⟩ := y₀.2.2
-  haveI : IsDomain O := hv.hom_inj.isDomain _
-  haveI : ValuationRing O := ValuationRing.of_integers _ hv
+  have : IsDomain O := hv.hom_inj.isDomain _
+  have : ValuationRing O := ValuationRing.of_integers _ hv
   have hinj : Function.Injective ((algebraMap O C).comp kO) := fun a b h => by
     simp only [RingHom.comp_apply, hk] at h
     exact IsFractionRing.injective T.V T.Fr (k.injective h)
@@ -578,7 +578,7 @@ theorem exists_pointOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       rw [← map_natCast ((algebraMap O C).comp f), h, map_zero])
   have hpu : ∀ {R : Type} [CommRing R] (f : R →+* O), ¬ IsUnit (p : R) := fun f h =>
     hpO.out (by simpa using h.map f)
-  haveI : IsLocalHom kO := ⟨fun a ha => by
+  have : IsLocalHom kO := ⟨fun a ha => by
     by_contra hau
     have ha0 : a ≠ 0 := by
       rintro rfl
@@ -700,7 +700,7 @@ theorem exists_isHTFrame (hs : ∀ a : 𝓞 E, star a = H.bar a) (hv : v.Integer
     (hk : ∀ a, algebraMap O C (kO a) = k (algebraMap T.V T.Fr a)) :
     ∃ y : FrPt Xo c C, IsHTFrame p v O y₀ k y := by
   classical
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨P, ψ, hP⟩ := GlobalTheory.CompHt.exists_pointOver E H Dw l Xo c p C v O hs hv T io y₀ hy k.toRingHom kO hk
   obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.allSixLaws.1.secBaseChange E H Dw l Xo c _ C k y₀.1
   obtain ⟨x, hx⟩ := GlobalTheory.CompHt.TieFrame.exists_lieTie_of_frMap E H Dw l Xo c p C v O T io y₀ k kO P ψ z hP hz
@@ -712,7 +712,7 @@ theorem exists_isHTFrame (hs : ∀ a : 𝓞 E, star a = H.bar a) (hv : v.Integer
   choose g hg0 hg1 hg2 using fun τ => GlobalTheory.CompHt.FlagBasis.exists_adapted_basis O C P.V v hv (Dw.mult τ) (htLat c P τ) (fg_htLat P τ)
     (fun j => P.bLie (x τ j)) (hli τ) fun j => ⟨1, one_ne_zero, by rw [one_smul]; exact hmem τ j⟩
   obtain ⟨y, hy', -⟩ := existsUnique_frChg E H Dw l Xo c C z g 1 fun τ => by
-    rw [Matrix.det_of_lowerTriangular _ fun i j hij => hg0 τ i j hij]
+    rw [Matrix.det_of_isLowerTriangular _ fun i j hij => hg0 τ i j hij]
     exact (Finset.prod_ne_zero_iff.2 fun i _ => hg1 τ i).isUnit
   exact ⟨y, (GlobalTheory.Exist.frame_laws_of_moduli E H Dw l Xo c).1.2.2.2.2.1 C y, kO, P, ψ, z, hP, hz, g, _, x, hy', hg0,
     by simp, hx, hg2⟩
@@ -725,9 +725,9 @@ theorem exists_isHTFrameCp {T : CDVR} {io : c.F →+* T.Fr} (y₀ : IntFr Xo c T
     ∃ (p : ℕ) (_ : Fact p.Prime) (_ : Algebra c.F ℂ_[p]) (k : letI := io.toAlgebra; T.Fr →ₐ[c.F] ℂ_[p])
       (y : FrPt Xo c ℂ_[p]), IsHTFrameCp p y₀ k y := by
   obtain ⟨p, hp, k, kO, hk⟩ := GlobalTheory.CompleteDvrEmbedding.exists_embedding_padicComplexInt T hy
-  letI := io.toAlgebra
-  letI : Algebra c.F ℂ_[p] := (k.comp io).toAlgebra
-  letI := H.starRing
+  let := io.toAlgebra
+  let : Algebra c.F ℂ_[p] := (k.comp io).toAlgebra
+  let := H.starRing
   obtain ⟨y, h⟩ := exists_isHTFrame (p := p) (v := (Valued.v : Valuation ℂ_[p] ℝ≥0)) (O := 𝓞_ℂ_[p]) (fun _ => rfl)
     (PadicComplexInt.integers p) y₀ hy { k with commutes' := fun _ => rfl } kO hk
   exact ⟨p, hp, _, _, y, h⟩
@@ -766,9 +766,9 @@ theorem exists_delta [IsGalois ℚ E] (hv : v.Integers O) {p : ℕ} (hp : p.Prim
     ∃ δ ∈ (differentIdeal ℤ (𝓞 E)).map (embO hv τ),
       δ ^ Module.finrank ℚ E ∣ (p : O) ^ padicValNat p (discr E).natAbs := by
   classical
-  haveI := Fact.mk hp
-  haveI : IsDomain O := hv.hom_inj.isDomain _
-  haveI := ValuationRing.of_integers v hv
+  have := Fact.mk hp
+  have : IsDomain O := hv.hom_inj.isDomain _
+  have := ValuationRing.of_integers v hv
   obtain ⟨δ, hδ, -⟩ := GlobalTheory.IndefiniteRowSideFullHecke.GradedDifferentComparison.exists_generator_different hv τ
   refine ⟨δ, hδ ▸ Ideal.mem_span_singleton_self δ, ?_⟩
   have hd : (discr E).natAbs ≠ 0 := Int.natAbs_ne_zero.mpr (discr_ne_zero E)
@@ -786,7 +786,7 @@ theorem exists_delta [IsGalois ℚ E] (hv : v.Integers O) {p : ℕ} (hp : p.Prim
     exact hO
   have hp0 : (p : 𝓞 E) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
   have hP0 : P ≠ ⊥ := fun h => hp0 ((Submodule.mem_bot _).1 (h ▸ hpP))
-  haveI : P.IsMaximal := hPp.isMaximal hP0
+  have : P.IsMaximal := hPp.isMaximal hP0
   have hexp := ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.diffExp E p a m hp hm hdisc P hPp hpP
   obtain ⟨Q, hQ, hD⟩ := Ideal.eq_prime_pow_mul_coprime (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 E)) P
   obtain ⟨Q', -, hI⟩ := Ideal.eq_prime_pow_mul_coprime
@@ -901,8 +901,8 @@ theorem smul_mem_wRec (hHT : HTChar p v P.Gt) {a : O} (ha0 : a ≠ 0) (ha : v (a
     {τ : Λ →+* O} {n : ℕ} {x : Fin n → LieG P.Gt} (hx : ∀ j, AvDefs.IsEig P.Gt P.oGt τ (x j)) (g : Fin n → C)
     (hg : ∑ j, g j • P.bLie (x j) ∈ P.latT) : a • ∑ j, g j • P.bLie (x j) ∈ P.wRec τ := by
   classical
-  haveI := P.isLocalRing
-  haveI : IsDomain O := P.integers.hom_inj.isDomain _
+  have := P.isLocalRing
+  have : IsDomain O := P.integers.hom_inj.isDomain _
   obtain ⟨e₁, h₁, h₂⟩ := OmegaRank.exists_param P.G (OmegaRank.smoothDim_model P)
   obtain ⟨e₂, h₃, h₄⟩ := OmegaRank.exists_lieEquiv P
   let e := e₁.trans e₂
@@ -1018,7 +1018,7 @@ theorem exists_frBor [IsGalois ℚ E] {T : CDVR} {io : c.F →+* T.Fr} {y₀ : I
     letI := io.toAlgebra
     ∃ (z : FrPt Xo c C) (t : Ix Dw → Cˣ), FrMap k y₀.1 z ∧ FrBor t z y ∧ v (t none) = 1 ∧ ∀ s,
       |Real.log (v (t (some s))) / Real.log (v (p : C))| ≤ htEx E p := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨-, kO, P, ψ, z, hP, hz, g, a, x, hc, hg, ha, hx, hb⟩ := h
   have hp : p.Prime := Fact.out
   have hv := P.integers
@@ -1036,7 +1036,7 @@ theorem exists_frBor [IsGalois ℚ E] {T : CDVR} {io : c.F →+* T.Fr} {y₀ : I
   have heig := fun j => (hx τ j).isEig hP (z.eig τ j)
   have hlow : v 1 ≤ v (g τ i i) := by
     have := IsLatBasis.diag_le hv (g' := 1) (hg τ) (fun i j hij => Matrix.one_apply_ne hij.ne) (hb τ) i (by
-      simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       exact wRec_le_htLat P τ ⟨⟨x τ i, heig i⟩, rfl⟩)
     rwa [Matrix.one_apply_eq] at this
   have hp1 : 0 < p - 1 := Nat.sub_pos_of_lt hp.one_lt
@@ -1086,7 +1086,7 @@ theorem val_le [IsGalois ℚ E] {T : CDVR} {io : c.F →+* T.Fr} {y₀ : IntFr X
     {la : HeightOneSpectrum (𝓞 c.F)} {e : ℕ} (ho : OverLa la T.V io e) (u : AllWt.Weight Dw) {f : Rul Xo c}
     (hf : f ∈ secZ Xo c (exOf Dw u 0)) : val_vw la p v (evR Xo c f y) ≤
       nval T.V e (evI y₀ f) + (((vLa la (p : c.F) : ℝ) * htEx E p * l1 u : ℝ) : EReal) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨z, t, hz, ht, h0, hs⟩ := exists_frBor hy h
   have he : (0 : ℝ) ≤ vLa la (p : c.F) := by
     have := vAdd_int_nonneg la (a := (p : 𝓞 c.F)) (by simpa using (Fact.out : p.Prime).ne_zero)
@@ -1121,7 +1121,7 @@ theorem htCmp [IsGalois ℚ E] : HTCmp Xo c := by
     obtain ⟨a, b, hab⟩ : IsCoprime (q : 𝓞 c.F) (p : 𝓞 c.F) := Nat.Coprime.cast ((Nat.coprime_primes hq.out hp).2 hne)
     exact la.isPrime.ne_top ((Ideal.eq_top_iff_one _).2
       (hab ▸ Ideal.add_mem _ (Ideal.mul_mem_left _ _ (h.mem ho)) (Ideal.mul_mem_left _ _ hla)))
-  letI := H.starRing
+  let := H.starRing
   exact ⟨_, ⟨q, hq, inst, T, io, e, y₀, k, y, ho, hy, h, rfl⟩, fun u f hf => val_le hy h ho u hf⟩
 
 end GlobalTheory.CovHt.FrameCmp

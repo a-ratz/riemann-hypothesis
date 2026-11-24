@@ -75,7 +75,7 @@ private theorem place_under {F Ω : Type} [Field F] [NumberField F] [Field Ω] [
       zero_mem' := by
         show A.valuation (algebraMap F Ω (0 : F)) < 1
         rw [map_zero, map_zero]
-        exact lt_of_le_of_lt zero_le' hp
+        exact lt_of_le_of_lt zero_le hp
       smul_mem' := by
         intro c a ha
         show A.valuation (algebraMap F Ω ((c : F) * (a : F))) < 1
@@ -150,5 +150,5 @@ private theorem charpoly_of_flag {H k : Type} [Group H] [CommRing k] {n : ℕ} {
   obtain ⟨g, hg⟩ := h
   rw [show b * r s * b⁻¹ = (b * g⁻¹) * (g * r s * g⁻¹) * (b * g⁻¹)⁻¹ by group]
   rw [Units.val_mul, Units.val_mul, Matrix.coe_units_inv, Matrix.charpoly_units_conj,
-    Matrix.charpoly_of_upperTriangular _ (fun i j hij => (hg s).1 i j hij)]
+    Matrix.charpoly_of_isUpperTriangular _ (fun i j hij => (hg s).1 i j hij)]
   exact Finset.prod_congr rfl (fun i _ => by rw [(hg s).2 i])

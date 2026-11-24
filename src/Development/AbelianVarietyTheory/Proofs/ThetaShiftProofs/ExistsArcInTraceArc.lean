@@ -541,8 +541,8 @@ theorem genVal_prim (hw : w + star w = 1)
     refine (congrArg (· * _) ?_).trans (_root_.one_mul _)
     simp only [Fin.prod_univ_four, Matrix.cons_val, ahFactor_zero hL ah, one_zpow, _root_.mul_one]
     simp only [ahFactor, ← A.H_def, norm_mul, norm_zpow, A.chi_norm, _root_.one_mul]
-    rw [← norm_zpow, ← norm_zpow, ← norm_zpow, ← norm_mul, ← norm_mul, ← Complex.exp_int_mul, ← Complex.exp_int_mul,
-      ← Complex.exp_int_mul, ← Complex.exp_add, ← Complex.exp_add]
+    rw [← norm_zpow, ← norm_zpow, ← norm_zpow, ← norm_mul, ← norm_mul, ← Complex.exp_intCast_mul, ← Complex.exp_intCast_mul,
+      ← Complex.exp_intCast_mul, ← Complex.exp_add, ← Complex.exp_add]
     refine (congrArg (fun x => ‖Complex.exp x‖) (a₂ := 0) ?_).trans (by simp)
     have k₁ := key z l
     have k₂ := key l l
@@ -755,14 +755,14 @@ theorem root_congr {n : ℕ} (hn : 0 < n) {x y : ℤ} (h : (n : ℤ) ∣ x - y) 
   ring
 
 theorem root_zpow (n : ℕ) (x y : ℤ) : root n x ^ y = root n (x * y) := Units.ext (by
-  rw [Units.val_zpow_eq_zpow_val, root, root, Units.val_mk0, Units.val_mk0, ← Complex.exp_int_mul]
+  rw [Units.val_zpow_eq_zpow_val, root, root, Units.val_mk0, Units.val_mk0, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring)
 
 theorem root_pow {n m : ℕ} (hm : 0 < m) (x : ℤ) : root (n * m) x ^ m = root n x := Units.ext (by
   have : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hm.ne'
-  rw [Units.val_pow_eq_pow_val, root, root, Units.val_mk0, Units.val_mk0, ← Complex.exp_nat_mul]
+  rw [Units.val_pow_eq_pow_val, root, root, Units.val_mk0, Units.val_mk0, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   rw [← div_div, mul_div_assoc', mul_div_cancel_left₀ _ this])

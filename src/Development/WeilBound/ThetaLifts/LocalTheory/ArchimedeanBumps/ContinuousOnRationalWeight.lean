@@ -190,7 +190,7 @@ theorem norm_gauss (z : ℂ) : ‖Complex.exp (-2 * Real.pi * (‖z‖ : ℂ) ^ 
 
 theorem poly_le (t : ℝ) (ht : 0 ≤ t) (s : ℕ) : (1 + t) ^ s * Real.exp (-2 * Real.pi * t ^ 2) ≤ Real.exp (s ^ 2) := by
   have h1 : (1 + t) ^ s ≤ Real.exp (s * t) := by
-    rw [Real.exp_nat_mul]; exact pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp t]) s
+    rw [Real.exp_natCast_mul]; exact pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp t]) s
   calc _ ≤ Real.exp (s * t) * Real.exp (-2 * Real.pi * t ^ 2) := by gcongr
     _ ≤ _ := by
       rw [← Real.exp_add]; apply Real.exp_le_exp.2
@@ -265,7 +265,7 @@ theorem tate (κ : ι → ℕ) (e : ℕ) (hκ : ∀ w, 2 * e < κ w) : ∃ Z : �
     rw [e₁, integral_fintype_prod_volume_eq_prod (fun w (z : ℂ) => ((‖z‖ ^ (κ w + 2 * e) * Real.exp (-2 * Real.pi * ‖z‖ ^ 2) : ℝ) : ℂ))]
     refine Finset.prod_ne_zero_iff.2 fun w _ => ?_
     rw [integral_complex_ofReal, Complex.ofReal_ne_zero]
-    refine (integral_pos_of_integrable_nonneg_nonzero (x := (1 : ℂ)) (by fun_prop) ?_ (fun z => by positivity) (by simp)).ne'
+    refine (integral_pos_of_integrable_nonneg_ne_zero (x := (1 : ℂ)) (by fun_prop) ?_ (fun z => by positivity) (by simp)).ne'
     simpa only [RCLike.re_to_complex, Complex.ofReal_re] using (i1 (κ w + 2 * e)).re
   have mg : Measurable (gm κ) := by unfold gm; fun_prop
   have mF : Measurable (FT (gm κ)) := (continuous_FT (integrable_gm κ)).measurable
@@ -398,7 +398,7 @@ theorem continuousOn_rationalWeight (κ : ι → ℕ) (e : ℕ) : ContinuousOn (
   simpa using hx w
 
 theorem open_U : IsOpen {p : K × (ι → ℂ) | ∀ w, p.2 w ≠ 0} := by
-  simp only [setOf_forall]
+  simp only [ofPred_forall]
   exact isOpen_iInter_of_finite fun w => isOpen_ne_fun (by fun_prop) continuous_const
 
 structure Prp (π : K × (ι → ℂ) → X) (x₀ : X) : Prop where

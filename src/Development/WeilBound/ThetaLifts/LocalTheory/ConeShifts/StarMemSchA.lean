@@ -189,11 +189,11 @@ open GlobalTheory.DiagForm in
 theorem lDiag_ne {κ : Type} [Fintype κ] {Φ : (κ → AF F) → ℂ} (h : Φ ∈ schA F κ) (h0 : Φ ≠ 0) :
     lDiag F κ (boxFun Φ (star Φ)) ≠ 0 := by
   classical
-  letI := GlobalTheory.DiagForm.measAf (F := F)
-  haveI := GlobalTheory.DiagForm.borelAf (F := F)
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  let := GlobalTheory.DiagForm.measAf (F := F)
+  have := GlobalTheory.DiagForm.borelAf (F := F)
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   have hm := GlobalTheory.SchwartzBox.boxFun_mem_schA F κ κ Φ h _ (star_mem_schA h)
   have hi := integrable_resD hm
   have hc : ∀ Ψ ∈ schA F (κ ⊕ κ), Continuous (resD F κ Ψ) := fun Ψ hΨ => by
@@ -219,8 +219,8 @@ theorem lDiag_ne {κ : Type} [Fintype κ] {Φ : (κ → AF F) → ℂ} (h : Φ �
     refine Prod.ext ?_ (zero_add _)
     change (InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (eI F κ 0 i) + _ = _
     simp only [map_zero, Pi.zero_apply, zero_add]
-  haveI : (mu F κ).IsOpenPosMeasure := by unfold mu; infer_instance
-  refine (integral_pos_of_integrable_nonneg_nonzero (x := 0 + shiftOf x) (Complex.continuous_re.comp hc') hi.re
+  have : (mu F κ).IsOpenPosMeasure := by unfold mu; infer_instance
+  refine (integral_pos_of_integrable_nonneg_ne_zero (x := 0 + shiftOf x) (Complex.continuous_re.comp hc') hi.re
     (fun p => Complex.normSq_nonneg _) ?_).ne'
   change Complex.normSq (Φ (glue _)) ≠ 0
   rw [g0]

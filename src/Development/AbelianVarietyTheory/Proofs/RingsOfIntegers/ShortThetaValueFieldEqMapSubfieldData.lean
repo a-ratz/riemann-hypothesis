@@ -114,8 +114,8 @@ theorem finite_levQ (Dw : Datum H) (l : Geo.Tor.Level H) : Finite (LevQ Dw l) :=
     rw [h, Ideal.bot_mul, eq_comm, Ideal.span_singleton_eq_bot, Nat.cast_eq_zero] at hp
     have := l.three_le
     omega
-  haveI : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
-  haveI := Dw.fin
+  have : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
+  have := Dw.fin
   exact Submodule.finite_quotient_smul l.Mb (N := (⊤ : Submodule (𝓞 E) Dw.La)) Module.Finite.fg_top
 
 theorem map_weighted {F S₁ S₂ T Q : Type} [Field F] [CommRing S₁] [CommRing S₂] [CommRing T]
@@ -123,7 +123,7 @@ theorem map_weighted {F S₁ S₂ T Q : Type} [Field F] [CommRing S₁] [CommRin
     (k : F) (w : Q → F) (A₁ : Q → S₁) (A₂ : Q → S₂) (h : ∀ q, ψ₁ (A₁ q) = ψ₂ (A₂ q)) :
     ψ₁ (algebraMap F S₁ k * ∑ᶠ q, algebraMap F S₁ (w q) * A₁ q) =
       ψ₂ (algebraMap F S₂ k * ∑ᶠ q, algebraMap F S₂ (w q) * A₂ q) := by
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
 
   simp only [finsum_eq_sum_of_fintype, map_mul, map_sum, AlgHom.commutes, h]
 
@@ -135,10 +135,10 @@ theorem exists_algHom_field (F S : Type) [Field F] [CommRing S] [Nontrivial S] [
 theorem shortValAt_eq_map : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (n : ℕ) (Λ : GenLat E n) (N : ℕ), Λ.Unimod → Λ.TrivAt l.M → Λ.LevOK N l.M → ∀ (w : (E →+* ℂ) × ℕ → ℕ) (P : MvPolynomial (LtN Dw n) c.F), P ∈ HH c w n → ∀ (cf : (Fin n → LevQ Dw l) → c.F) (β : c.F) (K k : Type) [Field K] [Algebra c.F K] [Field k] [Algebra c.F k] (ψ : K →ₐ[c.F] k) (y : FrPt Xo c K) (yk : FrPt Xo c k), FrMap ψ y yk → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo y.x ⟶ Xo.univ.t.G)) (tp : (Fin n → LevQ Dw l) → Fin n → (ptO Xo y.x ⟶ Xo.univ.t.G)) (F : (Fin n → LevQ Dw l) → Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo y.x))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo y.x z → (∀ q b, tp q b ^ N = levPt Xo y.x (levRep (q b)) ∧ ∃ j : ℕ, KilledBy Xo (l.Mb ^ j) (tp q b)) → (∀ q i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N y.s (z i b) (tp q b) (F q i b)) → ∀ v : k, ShortValAt Xo c nab cf Λ β N P yk v → v = ψ (algebraMap c.F K (β⁻¹ * ((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((Nat.card (Fin n → LevQ Dw l) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) * ∑ᶠ q : Fin n → LevQ Dw l, algebraMap c.F K (cf q) * ∑ i, hv Xo c nab y (N ^ 2) (fun b => sqN Xo N (F q i b)) P) := by
   intro E _ _ _ H Dw l Xo c _ hstar nab hnab n Λ N hU hT hN w P hP cf β K k _ _ _ _ ψ y yk hψ z tp F hz hg ht hF v hv
   have hL : Laws := GlobalTheory.firstFiveLaws.1
-  haveI := finite_levQ Dw l
+  have := finite_levQ Dw l
   obtain ⟨S1, _, _, φ1, y1, z1, tp1, F1, hf1, hm1, hz1, hg1, ht1, hu1, e1⟩ := hv
   have hinj : Function.Injective φ1 := hf1.injective
-  haveI : Nontrivial S1 := hinj.nontrivial
+  have : Nontrivial S1 := hinj.nontrivial
   obtain ⟨Ω, _, _, ⟨κ⟩⟩ := exists_algHom_field c.F S1
   obtain ⟨u, hu⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c S1 Ω κ y1
   have hu' : FrMap (κ.comp (φ1.comp ψ)) y u :=

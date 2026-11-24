@@ -254,12 +254,12 @@ theorem aic_step : ∀ (B : Type) [CommRing B] (T : Type) [CommRing T] (π : B) 
   open Polynomial in
   intro B _ T _ π g hC hπ hA hV P hP hd M a ha
   obtain ⟨_, hsurj, hinj⟩ := hC
-  haveI : Nontrivial T := by
+  have : Nontrivial T := by
     by_contra hT
     rw [not_nontrivial_iff_subsingleton] at hT
     have hP0 : P = 0 := Polynomial.ext fun n => Subsingleton.elim _ _
     simp [hP0] at hd
-  haveI : Nontrivial B := g.domain_nontrivial
+  have : Nontrivial B := g.domain_nontrivial
   choose c hc using fun i : ℕ => hsurj (P.natDegree * (M + 1)) (P.coeff i)
   have hsum : (∑ i ∈ Finset.range P.natDegree, C (c i) * X ^ i : Polynomial B) =
       ∑ i : Fin P.natDegree, C (c i) * X ^ (i : ℕ) :=

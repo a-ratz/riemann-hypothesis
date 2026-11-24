@@ -90,7 +90,7 @@ theorem genRank_le_of_inRCone_cell : ∀ (O : Type) [CommRing O] (bar : O → O)
     simp only [f, LinearMap.codRestrict_apply, LinearMap.comp_apply, Submodule.subtype_apply, LinearMap.smul_apply,
       LinearMap.id_apply, smul_eq_mul] at e2
     exact mul_left_cancel₀ (by exact_mod_cast hK.ne') e2
-  haveI : Module.Finite ℤ S := Module.Finite.span_of_finite ℤ (Set.finite_range γ)
+  have : Module.Finite ℤ S := Module.Finite.span_of_finite ℤ (Set.finite_range γ)
   exact LinearMap.finrank_le_finrank_of_injective hf
 
 end GlobalTheory.PolFan

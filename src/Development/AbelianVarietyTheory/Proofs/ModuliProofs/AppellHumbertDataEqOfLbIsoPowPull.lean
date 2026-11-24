@@ -164,7 +164,7 @@ theorem semicharacter_pull_eq_of_lbIso_pow :
     simp only [φ, c]
     rw [hexl l z, map_add (f := _)]
     refine mul_pow_mul_inv_pow_eq_of_factor m n ha ha' ?_ (hχne l) (hχne' _) (Complex.exp_ne_zero _) hb hb'
-    rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul]
     congr 1
     have e1 := hH z l
     have e2 := hH l l

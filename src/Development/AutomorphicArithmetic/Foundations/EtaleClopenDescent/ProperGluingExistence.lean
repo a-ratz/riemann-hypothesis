@@ -108,14 +108,14 @@ private lemma closedCase {Ω P R K : Type} [Field Ω] [CommRing P] [IsDomain P] 
     [Field K] [Algebra R K] [IsFractionRing R K] (ω : Ω →+* R) (ψ : P →+* K)
     (hω : ψ.comp (algebraMap Ω P) = (algebraMap R K).comp ω)
     (hker : ¬ Function.Injective ψ) (q : P) : ψ q ∈ (algebraMap R K).range := by
-  haveI hdim : Ring.KrullDimLE 1 P := by
+  have hdim : Ring.KrullDimLE 1 P := by
     rw [Ring.krullDimLE_iff, hd]
     rfl
-  haveI : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
+  have : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
   have hne : RingHom.ker ψ ≠ ⊥ := fun h => hker ((RingHom.injective_iff_ker_eq_bot ψ).mpr h)
-  haveI : (RingHom.ker ψ).IsMaximal := Ideal.IsPrime.isMaximal_of_ne_bot ‹_› hne
-  letI : Field (P ⧸ RingHom.ker ψ) := Ideal.Quotient.field _
-  haveI : Module.Finite Ω (P ⧸ RingHom.ker ψ) :=
+  have : (RingHom.ker ψ).IsMaximal := Ideal.IsPrime.isMaximal_of_ne_bot ‹_› hne
+  let : Field (P ⧸ RingHom.ker ψ) := Ideal.Quotient.field _
+  have : Module.Finite Ω (P ⧸ RingHom.ker ψ) :=
     finite_of_finite_type_of_isJacobsonRing Ω (P ⧸ RingHom.ker ψ)
   obtain ⟨p, hmon, hp⟩ : IsIntegral Ω (Ideal.Quotient.mk (RingHom.ker ψ) q) :=
     Algebra.IsIntegral.isIntegral _
@@ -191,12 +191,12 @@ theorem UpperTheory.Cb.properGluing_existence :
     LateralTheory.E.LeafGlueIsProperPf.LeafGlueExistence := by
   intro Ω L _ _ _ A B u h G S
   obtain ⟨-, -, -, hfA, hfB, -, -, hdA, hdB, hFA, hFB, hadj, hV⟩ := h
-  haveI := hfA
-  haveI := hfB
-  haveI := hFA
-  haveI := hFB
-  haveI := G.hiA
-  haveI := G.hiB
+  have := hfA
+  have := hfB
+  have := hFA
+  have := hFB
+  have := G.hiA
+  have := G.hiB
   have hagA : ∀ (K : Type) [Field K] (f : L →+* K),
       Spec.map (CommRingCat.ofHom (f.comp (algebraMap A L))) ≫ G.iA =
         Spec.map (CommRingCat.ofHom (f.comp (algebraMap B L))) ≫ G.iB := by

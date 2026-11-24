@@ -178,7 +178,7 @@ theorem leftInv_conj {V : HSp D} {F : GA D V → ℂ} (h : GlobalTheory.Automorp
 theorem rcoef_conj {s : PiLocalization₂ D} (hh : s.ν.IsHaarMeasure) (hf : IsFundamentalDomain (GQ s.V) s.fd s.ν)
     {F₁ F₂ : GA D s.V → ℂ} (h₁ : GlobalTheory.AutomorphicL2Unitary.LeftInv (GQ s.V) F₁) (h₂ : GlobalTheory.AutomorphicL2Unitary.LeftInv (GQ s.V) F₂) (g : GA D s.V) :
     GlobalTheory.Core.Rk.IP.rcoef s.ν (fun x => conj (F₁ x)) (fun x => conj (F₂ x)) g = conj (s.pet (rTr s.V g F₁) F₂) := by
-  haveI := hh
+  have := hh
   have hl : GlobalTheory.AutomorphicL2Unitary.LeftInv (GQ s.V) (rTr s.V g fun x => conj (F₁ x)) := (leftInv_conj h₁).mul_right g
   show GlobalTheory.AutomorphicL2Unitary.pet (GQ s.V) s.ν (rTr s.V g fun x => conj (F₁ x)) (fun x => conj (F₂ x)) = _
   rw [GlobalTheory.AutomorphicL2Unitary.pet_eq hf hl (leftInv_conj h₂)]
@@ -291,7 +291,7 @@ theorem levInt : ∀ D : D7, LevelLawQ D → LevInt D := by
       have hme : Measurable fun b : GinfC s.V =>
           ((GlobalTheory.Core.Rk.IP.hgtL s.V s.Λ a (b : GA D s.V) : ℝ) : ℂ) ^ ((z : ℂ) - s₁) :=
         (Complex.measurable_ofReal.comp
-          (NNReal.continuous_coe.comp (hcont.comp continuous_subtype_val)).measurable).pow_const _
+          (NNReal.continuous_coe.comp (hcont.comp continuous_subtypeVal)).measurable).pow_const _
       exact hme.aestronglyMeasurable
     have hb : ∀ᵐ b : GinfC s.V ∂mR, ‖GlobalTheory.Doubling.npow (GlobalTheory.Core.Rk.IP.hgtL s.V s.Λ a (b : GA D s.V)) ((z : ℂ) - s₁)‖ ≤ 1 :=
       ae_of_all _ fun b => by
@@ -368,7 +368,7 @@ theorem upVal_of_span_adj : ∀ D : D7, SoftQ D → UpSpanQ D → UpAdjQ D → U
   intro D hSoft hSpan hAdj
   intro hgap c tw htw k hk s s' hs hs' p hp ipD ip ipD' ip' hM hM' φ v hv
   have hk' : k + 1 ≤ D.R.m := hk
-  haveI : FiniteDimensional ℂ (s'.CC c) := (hSoft c tw htw (k + 1) hk' s' hs').1
+  have : FiniteDimensional ℂ (s'.CC c) := (hSoft c tw htw (k + 1) hk' s' hs').1
   have hl : ∀ (u : s.CC c) (x : s'.CC c), (∀ y, ip' y x = ip (p.io y) u) → ∀ (y : s'.CC c), ∀ w ∈ s'.KF,
       s'.pet (PiLocalization₂.val y w) (p.up φ (PiLocalization₂.val u v)) = ip' y x * ipD (p.It φ w) v := by
     intro u x hx y w hw
@@ -709,7 +709,7 @@ theorem normX : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A 
     apply hw0
     have : v0 τ = 0 := Subtype.ext h0
     rw [(PiTensorProduct.tprod ℂ).map_coord_zero τ this, map_zero]
-  haveI : Nontrivial R.cX.W := hm.cX.2.2.2.1
+  have : Nontrivial R.cX.W := hm.cX.2.2.2.1
   have hd : (0 : ℝ) < Module.finrank ℂ R.cX.W := by exact_mod_cast Module.finrank_pos
   have hP : (0 : ℝ) < ∏ τ, ‖(v0 τ : R.MX.H τ)‖ ^ 2 :=
     Finset.prod_pos fun τ _ => pow_pos (norm_pos_iff.2 (hv τ)) 2
@@ -972,7 +972,7 @@ theorem petersson_conj (V : HSp D) (ν : Measure (GA D V)) (hν : ν.IsHaarMeasu
     (hX : IsFundamentalDomain (GQ V) X ν)
     (f g : GA D V → ℂ) (hf : ∀ γ ∈ GQ V, ∀ h, f (γ * h) = f h) (hg : ∀ γ ∈ GQ V, ∀ h, g (γ * h) = g h) :
     GlobalTheory.Cusp.petersson V ν (fun h => conj (f h)) (fun h => conj (g h)) = conj (Lift.pet ν X f g) := by
-  haveI := hν
+  have := hν
   have hL : GlobalTheory.AutomorphicL2Unitary.LeftInv (GQ V) (fun h => conj (f h) * conj (conj (g h))) := fun γ hγ h => by
     simp only [hf γ hγ, hg γ hγ]
   change ∫ q, GlobalTheory.AutomorphicL2Unitary.descend (GQ V) (fun h => conj (f h) * conj (conj (g h))) q ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure (GQ V) ν = _
@@ -986,7 +986,7 @@ theorem up_conj {c : Com D} {s s' : PiLocalization₂ D} {w : Twist D} {k : ℕ}
     (hν : s.ν.IsHaarMeasure) (hX : IsFundamentalDomain (GQ s.V) s.fd s.ν) (φ : PolF D s'.V.rank s.V.rank)
     (F : GA D s.V → ℂ) (hF : ∀ γ ∈ GQ s.V, ∀ g, F (γ * g) = F g) :
     GlobalTheory.Core.Rk.IP.up p.ω s.ν (p.pt φ) (fun x => conj (F x)) = fun h => conj (p.up φ F h) := by
-  haveI := hν
+  have := hν
   funext h
   have hΦ : IsThetaFunO c.ψ s.V s'.V (p.pt φ) := hp.theta φ
   have hθl : ∀ γ ∈ GQ s.V, ∀ g, thetaKO p.ω (γ * g) h (p.pt φ) = thetaKO p.ω g h (p.pt φ) := by
@@ -1158,7 +1158,7 @@ theorem levChi_flag (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (r t j : ℕ)
       Lev.levChi V β (Lev.datY V.rank r t j hr Pg Q (LevelP.triv Pg r ℂ) χ ξ Lev.Frm.B) κ := by
   unfold Lev.levChi levFn
   congr 3
-  simp only [Lev.flagL, Lev.withP, Lev.datY, LevelP.full, LevelP.triv, if_true]
+  simp only [Lev.flagL, Lev.withP, Lev.datY, LevelP.full, LevelP.triv, ite_true]
   exact (Lev.subgroupCharExtension_one_apply _ _).trans (Lev.subgroupCharExtension_one_apply _ _).symm
 
 theorem lift_one_of_mem (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (r t j : ℕ) (hr : r ≤ V.rank)
@@ -1167,7 +1167,7 @@ theorem lift_one_of_mem (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (r t j : 
     Lev.IsLevelLift V β (Lev.datY V.rank r t j hr Pg Q (LevelP.triv Pg r ℂ) χ ξ Lev.Frm.B) 1 κ := by
   refine ⟨(Subgroup.mem_inf.1 hκ).1, hκ.2.1, ?_⟩
   have h2 := hκ.2.2
-  simp only [Lev.datY, LevelP.triv, if_true] at h2
+  simp only [Lev.datY, LevelP.triv, ite_true] at h2
   exact Subgroup.mem_bot.1 h2
 
 theorem lift_one_one (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) :
@@ -1375,7 +1375,7 @@ theorem realZetaTw : GlobalTheory.Published.HarishChandraModules → ∀ D : D7,
     set Hf : GinfC s.V → ℝ := fun g => ∏ w, GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW s.V a w
       (GlobalTheory.AdelicU.projArch D.sp.cm.sig s.V.gram w (g : GA D s.V)) with hHf
     have hHc : Continuous Hf := continuous_finsetProd _ fun w _ =>
-      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtype_val)
+      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtypeVal)
     have hHpos : ∀ g, 0 < Hf g ∧ Hf g ≤ 1 := fun g =>
       ⟨Finset.prod_pos fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1,
         Finset.prod_le_one₀ (fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1.le)

@@ -142,7 +142,7 @@ theorem frame_change (A : Subring Ω) {b b' : Fin r → E} (hb : LinearIndepende
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun m _ => by rw [smul_comm]
   have e' := congrFun e k
-  simp only [if_true] at e'
+  simp only [ite_true] at e'
   rw [Finset.sum_eq_single k] at e'
   · have : P k k * Q k k = 1 := Subtype.ext e'
     exact IsUnit.of_mul_eq_one _ this
@@ -168,7 +168,7 @@ theorem leadMinor_conj (Γ C : Matrix (Fin r) (Fin r) ℂ) (hC : ∀ l k, k < l 
     leadMinor (Cᴴ * Γ * C) n =
       (∏ a : Fin n, Complex.normSq (C (Fin.castLE hn a) (Fin.castLE hn a))) * leadMinor Γ n := by
   unfold leadMinor
-  rw [dif_pos hn, dif_pos hn]
+  rw [dite_eq_left hn, dite_eq_left hn]
   set ic := Fin.castLE hn with hι2
   have hz : ∀ (a : Fin n) (l : Fin r), n ≤ l → C l (ic a) = 0 := fun a l hl =>
     hC l (ic a) (Fin.lt_def.2 (lt_of_lt_of_le (show ((ic a : Fin r) : ℕ) < n by simp [hι2]) hl))
@@ -180,7 +180,7 @@ theorem leadMinor_conj (Γ C : Matrix (Fin r) (Fin r) ℂ) (hC : ∀ l k, k < l 
     congr 1
     rw [sum_castLE hn _ (fun l hl => by rw [hz a l hl]; simp)]
   have hdet : (C.submatrix ic ic).det = ∏ a, C (ic a) (ic a) := by
-    refine Matrix.det_of_upperTriangular ?_
+    refine Matrix.det_of_isUpperTriangular ?_
     intro a c hac
     exact hC _ _ (show (c : ℕ) < a from hac)
   rw [hsub, Matrix.det_mul, Matrix.det_mul, Matrix.det_conjTranspose, hdet, ← map_prod Complex.normSq]
@@ -413,7 +413,7 @@ theorem exists_dual (𝔐 : HodgeCpt Y S y) (hind : iSupIndep 𝔐.Vgen) (q : Cp
     have : b l ∈ 𝔐.dR s q := hfr ▸ Submodule.subset_span ⟨l, rfl⟩
     exact this.2
   have hpr : ∀ x (hx : x ∈ 𝔐.Vgen s), ((pr x : 𝔐.Vgen s) : 𝔐.Li) = x := fun x hx => by
-    have := Submodule.linearProjOfIsCompl_apply_left hc.symm ⟨x, hx⟩
+    have := Submodule.projectionOnto_apply_left hc.symm ⟨x, hx⟩
     exact congrArg Subtype.val this
   refine ⟨fun j => (LinearMap.proj j).comp (g.comp ((𝔐.Vgen s).subtype.comp pr)), fun j k => ?_, fun j e he => ?_⟩
   · simp only [LinearMap.comp_apply, Submodule.subtype_apply, hpr _ (hbV k), hgb, LinearMap.proj_apply]
@@ -491,7 +491,7 @@ theorem interior_pol (𝔐 : HodgeCpt Y S y) (hβ : Function.Injective β) (z : 
       (abLocus_pullback abLocusOne Y.t.semi 𝔐.m.cart.1 _).2 hz
     have hp : p = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst hp
-    letI : Algebra.IsAlgebraic ℚ c.F := by
+    let : Algebra.IsAlgebraic ℚ c.F := by
       have := c.fin
       infer_instance
     let g : O →+* ℂ := (Spec.preimage (z ≫ 𝔐.f ≫ Y.s)).hom
@@ -582,7 +582,7 @@ theorem exists_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     simpa using this.map eA
 
   let val : 𝔐.Li → Vz := fun e => if he : e ∈ 𝔐.M.lat q then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ 𝔐.M.lat q), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ 𝔐.M.lat q), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev

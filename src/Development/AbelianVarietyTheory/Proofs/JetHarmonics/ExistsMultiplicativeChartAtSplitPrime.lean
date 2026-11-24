@@ -417,7 +417,7 @@ theorem exists_law [IsDomain R] (W : WeierstrassCurve R) :
       constantCoeff F = 0 ∧ constantCoeff G = 0 ∧ eqn (up _ W) F G = 0 ∧
       ∀ i, constantCoeff (w i) = 0 ∧ eqn (up _ W) (X i) (w i) = 0 ∧
         fu (up _ W) (X i) (w i) * pderiv R i F = fu (up _ W) F G := by
-  haveI : IsDomain (MvPowerSeries (Fin 2) R) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (MvPowerSeries (Fin 2) R) := NoZeroDivisors.to_isDomain _
   set V := up (Fin 2) W with hV
   have hw : ∀ i : Fin 2, ∃ w : MvPowerSeries (Fin 2) R, constantCoeff w = 0 ∧ eqn V (X i) w = 0 := by
     intro i
@@ -772,7 +772,7 @@ theorem exists_formalGroup_add : ∀ (q : ℕ) [Fact q.Prime] (M : Mdl q), M.Ok 
   let S : Set ℂ_[q] := {M.W.a₁, M.W.a₂, M.W.a₃, M.W.a₄, M.W.a₆}
   let K : IntermediateField ℚ_[q] ℂ_[q] := IntermediateField.adjoin ℚ_[q] S
   have hK : FiniteDimensional ℚ_[q] K := by
-    haveI : Finite S := by simp only [S]; infer_instance
+    have : Finite S := by simp only [S]; infer_instance
     refine IntermediateField.finiteDimensional_adjoin fun x hx => ?_
     have : IsAlgebraic ℚ x := by
       simp only [S, Set.mem_insert_iff, Set.mem_singleton_iff] at hx
@@ -829,13 +829,13 @@ theorem thue_normSq (d e : ℕ) (he : d + 1 = 4 * e) (u v : ℤ) :
 
 theorem thue_norm_zc {q : ℕ} [Fact q.Prime] (a : ℤ_[q]) : ‖zc a‖ = ‖a‖ := by
   unfold zc
-  rw [norm_algebraMap', PadicInt.padic_norm_e_of_padicInt]
+  rw [norm_algebraMap', PadicInt.norm_coe]
 
 theorem thue_pigeon {q : ℕ} [Fact q.Prime] (a : ℤ_[q]) (k : ℕ) :
     ∃ u v : ℤ, (u ≠ 0 ∨ v ≠ 0) ∧ u ^ 2 ≤ (q : ℤ) ^ k ∧ v ^ 2 ≤ (q : ℤ) ^ k ∧
       ‖(u : ℤ_[q]) + (v : ℤ_[q]) * a‖ ≤ (q : ℝ) ^ (-(k : ℤ)) := by
   have hq : q.Prime := Fact.out
-  haveI : NeZero (q ^ k) := ⟨pow_ne_zero _ hq.ne_zero⟩
+  have : NeZero (q ^ k) := ⟨pow_ne_zero _ hq.ne_zero⟩
   set m := Nat.sqrt (q ^ k) with hm
   let f : Fin (m + 1) × Fin (m + 1) → ZMod (q ^ k) := fun p =>
     PadicInt.toZModPow k (((p.1 : ℕ) : ℤ_[q]) + ((p.2 : ℕ) : ℤ_[q]) * a)
@@ -1171,7 +1171,7 @@ theorem norm_le_of_bdT (xs : ℂ_[q]⟦X⟧) (k : ℕ) (c : ℕ → ℂ_[q]) (B 
     have h1 := hB (2 * n) (by omega)
 
     rw [← Finset.add_sum_erase _ _ (Finset.mem_range.mpr (Nat.lt_succ_of_le hj)), map_add (f := _), map_sum, mul_assoc,
-    coeff_C_mul, coeff_X_pow_mul', if_pos (by omega), hn, Nat.sub_self, coeff_zero_eq_constantCoeff] at h1
+    coeff_C_mul, coeff_X_pow_mul', ite_eq_left (by omega), hn, Nat.sub_self, coeff_zero_eq_constantCoeff] at h1
     have h2 : ‖∑ l ∈ (Finset.range (k + 1)).erase j, coeff (2 * n) (C (c l) * X ^ (2 * (k - l)) * xs ^ l)‖ ≤ B := by
       refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg hB0 ?_
       intro l hl
@@ -1462,7 +1462,7 @@ theorem zc_natCast (n : ℕ) : zc (n : ℤ_[q]) = (n : ℂ_[q]) := by simp [zc]
 theorem zc_mul (a b : ℤ_[q]) : zc (a * b) = zc a * zc b := by simp [zc]
 
 theorem continuous_zc : Continuous (zc : ℤ_[q] → ℂ_[q]) :=
-  (continuous_algebraMap ℚ_[q] ℂ_[q]).comp continuous_subtype_val
+  (continuous_algebraMap ℚ_[q] ℂ_[q]).comp continuous_subtypeVal
 
 def Van (m : ℕ) (f : ℂ_[q]⟦X⟧) : Prop := ∀ n < m, ‖coeff n f‖ < 1
 
@@ -1614,7 +1614,7 @@ theorem padic_multiplications : ∀ (q : ℕ) [Fact q.Prime] (F : FormalGroup �
       rw [hW]
       linear_combination hT + ((d⁄dX U).subst ℓ : ℂ_[q]⟦X⟧) * hh'
     have := hbd (m + N)
-    rw [e, map_add (f := _), map_add (f := _), coeff_X_pow_mul, coeff_X, if_neg (by omega), coeff_X_pow_mul', if_neg (by omega)] at this
+    rw [e, map_add (f := _), map_add (f := _), coeff_X_pow_mul, coeff_X, ite_eq_right (by omega), coeff_X_pow_mul', ite_eq_right (by omega)] at this
     simpa using this
   have hq1 : ‖(q : ℂ_[q])‖ < 1 := by
     rw [← zc_natCast, norm_zc, PadicInt.norm_p]

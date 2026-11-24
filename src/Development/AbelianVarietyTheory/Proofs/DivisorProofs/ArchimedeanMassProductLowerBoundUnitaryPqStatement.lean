@@ -161,25 +161,25 @@ theorem exists_sign {p q : ℕ} (a b : Fin p ⊕ Fin q) : ∃ σ : ℂ, σ * σ 
 def box {p q : ℕ} (r : Fin p ⊕ Fin q → Fin p ⊕ Fin q → ℝ) : Set (lieU p q) := {X | ∀ a b, ‖X.1 a b‖ < r a b}
 
 theorem measurableSet_box {p q : ℕ} (r : Fin p ⊕ Fin q → Fin p ⊕ Fin q → ℝ) : MeasurableSet (box r) := by
-  haveI : BorelSpace (lieU p q) := ⟨rfl⟩
+  have : BorelSpace (lieU p q) := ⟨rfl⟩
   refine IsOpen.measurableSet ?_
   unfold box
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun a => isOpen_iInter_of_finite fun b => ?_
-  exact isOpen_lt (continuous_subtype_val.matrix_elem a b).norm continuous_const
+  exact isOpen_lt (continuous_subtypeVal.matrix_elem a b).norm continuous_const
 
 theorem le_lam_box {p q : ℕ} (lam : Measure (lieU p q)) (h : IsOmegaLeb lam)
     (r s : Fin p ⊕ Fin q → Fin p ⊕ Fin q → ℝ) (hr : ∀ a b, r a b = r b a) (hr0 : ∀ a b, 0 ≤ r a b)
     (hs0 : ∀ a b, 0 ≤ s a b) (hs : ∀ a b, s a b ^ 2 ≤ r a b ^ 2 * Real.pi) :
     ENNReal.ofReal (∏ a, ∏ b, s a b) ≤ lam (box r) := by
-  haveI : BorelSpace (lieU p q) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) :=
+  have : BorelSpace (lieU p q) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) :=
     inferInstanceAs (LocallyCompactSpace ((Fin p ⊕ Fin q) → (Fin p ⊕ Fin q) → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) :=
     inferInstanceAs (SecondCountableTopology ((Fin p ⊕ Fin q) → (Fin p ⊕ Fin q) → ℂ))
-  haveI : LocallyCompactSpace (lieU p q) :=
-    (Submodule.closed_of_finiteDimensional (lieU p q)).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (lieU p q) :=
+  have : LocallyCompactSpace (lieU p q) :=
+    (Submodule.isClosed_of_finiteDimensional (lieU p q)).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (lieU p q) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨h1, h2⟩ := h
   have hm : AEMeasurable (fun ab : lieU p q × lieU p q =>
@@ -188,8 +188,8 @@ theorem le_lam_box {p q : ℕ} (lam : Measure (lieU p q)) (h : IsOmegaLeb lam)
     apply Continuous.aemeasurable
     apply continuous_pi fun ab => ?_
     simp only [Formalism.BasicNotions.entries, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
-    exact ((continuous_subtype_val.matrix_elem ab.1 ab.2).comp continuous_fst).add
-      (continuous_const.mul ((continuous_subtype_val.matrix_elem ab.1 ab.2).comp continuous_snd))
+    exact ((continuous_subtypeVal.matrix_elem ab.1 ab.2).comp continuous_fst).add
+      (continuous_const.mul ((continuous_subtypeVal.matrix_elem ab.1 ab.2).comp continuous_snd))
   have hT : MeasurableSet (Set.univ.pi fun ab : (Fin p ⊕ Fin q) × (Fin p ⊕ Fin q) =>
       Metric.ball (0 : ℂ) (r ab.1 ab.2)) := MeasurableSet.univ_pi fun _ => measurableSet_ball
   have he := Measure.map_apply_of_aemeasurable hm hT
@@ -200,7 +200,7 @@ theorem le_lam_box {p q : ℕ} (lam : Measure (lieU p q)) (h : IsOmegaLeb lam)
         rw [← Fintype.prod_prod_type', ENNReal.ofReal_prod_of_nonneg fun _ _ => hs0 _ _, ← Finset.prod_pow]
         exact Finset.prod_congr rfl fun ab _ => (ENNReal.ofReal_pow (hs0 _ _) 2).symm
     _ ≤ ∏ ab : (Fin p ⊕ Fin q) × (Fin p ⊕ Fin q), volume (Metric.ball (0 : ℂ) (r ab.1 ab.2)) := by
-        refine Finset.prod_le_prod' fun ab _ => ?_
+        refine Finset.prod_le_prod fun ab _ => ?_
         rw [Complex.volume_ball, ← ENNReal.ofReal_pow (hr0 _ _), ← ENNReal.ofReal_coe_nnreal,
           ← ENNReal.ofReal_mul (sq_nonneg _)]
         exact ENNReal.ofReal_le_ofReal (hs _ _)
@@ -235,8 +235,8 @@ theorem le_lam_box {p q : ℕ} (lam : Measure (lieU p q)) (h : IsOmegaLeb lam)
 theorem exists_exp_approx (n : Type) [Fintype n] [DecidableEq n] (δ : ℝ) (hδ : 0 < δ) :
     ∃ r : ℝ, 0 < r ∧ ∀ Y : Matrix n n ℂ, ∑ i, ∑ j, ‖Y i j‖ < r →
       ∀ a b, ‖(NormedSpace.exp Y - 1 - Y) a b‖ ≤ δ * ∑ i, ∑ j, ‖Y i j‖ := by
-  letI := GlobalTheory.CompactDualExists.sumNormedAddCommGroup (n := n)
-  letI := GlobalTheory.CompactDualExists.sumNormedSpace (n := n)
+  let := GlobalTheory.CompactDualExists.sumNormedAddCommGroup (n := n)
+  let := GlobalTheory.CompactDualExists.sumNormedSpace (n := n)
   have h := (GlobalTheory.CompactDualExists.exp_strict (n := n)).hasFDerivAt
   have h2 := h.isLittleO.def hδ
   obtain ⟨r, hr, H⟩ := Metric.eventually_nhds_iff_ball.1 h2
@@ -259,7 +259,7 @@ theorem norm_sMat_dg_mul {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {c : ℂ} (hc : �
   rw [hmat, Matrix.det_mul, det_dg]
   simp only [dg, Matrix.sub_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, Function.update_apply, Pi.one_apply]
   by_cases ha : a = a₀ <;> by_cases hb : b = a₀
-  · simp only [ha, hb, if_true]
+  · simp only [ha, hb, ite_true]
     congr 2
     rw [mul_inv]; field_simp
   · have : a ≠ b := by rintro rfl; exact hb ha
@@ -343,7 +343,7 @@ theorem exp_box {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {n : ℝ} (hn : n = ((p + q
     calc ∑ i ∈ Finset.univ.erase a₀, ‖X.1 i i‖ ≤ ∑ _i ∈ Finset.univ.erase a₀, 9 / 10 * ε * n⁻¹ := by
           refine Finset.sum_le_sum fun i hi => ?_
           have h1 := (hX i i).le
-          rwa [rad, if_pos ⟨rfl, Finset.ne_of_mem_erase hi⟩] at h1
+          rwa [rad, ite_eq_left ⟨rfl, Finset.ne_of_mem_erase hi⟩] at h1
       _ ≤ ∑ _i : Fin p ⊕ Fin q, 9 / 10 * ε * n⁻¹ :=
           Finset.sum_le_sum_of_subset_of_nonneg (Finset.erase_subset _ _) fun _ _ _ => by positivity
       _ = 9 / 10 * ε := by
@@ -363,7 +363,7 @@ theorem exp_box {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {n : ℝ} (hn : n = ((p + q
     unfold sMat
     simp only [dg, Matrix.sub_apply, Matrix.mul_diagonal, Function.update_apply, Pi.one_apply] at h0 ⊢
     by_cases hb : b = a₀
-    · rw [if_pos hb]
+    · rw [ite_eq_left hb]
       by_cases hab : a = b
       · subst hab
         subst hb
@@ -384,7 +384,7 @@ theorem exp_box {p q : ℕ} (a₀ : Fin p ⊕ Fin q) {n : ℝ} (hn : n = ((p + q
         linarith
       · rw [Matrix.one_apply_ne hab, sub_zero] at h0 ⊢
         rwa [norm_mul, norm_inv, hz1, inv_one, mul_one]
-    · rwa [if_neg hb, mul_one]
+    · rwa [ite_eq_right hb, mul_one]
   · linarith [Complex.abs_im_le_norm X.1.trace]
   · rw [hdet, Complex.norm_exp, Real.exp_eq_one_iff] at hz1
     rw [hdet]
@@ -607,7 +607,7 @@ theorem lam_le_two_mul_tangentHaar : ∀ (E : Type) [Field E] [NumberField E] [I
     (tendsto_iff_comap.1 ((continuous_matR Ψ G).tendsto 1))
       (eventually_mem_image Ψ G hG (ball_mem_nhds 0 hε))
 
-  haveI : ProperSpace (realLie Ψ G) := FiniteDimensional.proper_real _
+  have : ProperSpace (realLie Ψ G) := FiniteDimensional.proper_real _
   obtain ⟨δ₀, hδ₀, hinj⟩ : ∃ δ₀ : ℝ, 0 < δ₀ ∧ InjOn (chartExp Ψ G hG) (closedBall 0 δ₀) := by
     obtain ⟨s, hs, ha⟩ := hd.approximates_deriv_on_nhds (c := 1 / 2) (Or.inr (by norm_num))
     obtain ⟨δ, hδ, hsub⟩ := nhds_basis_closedBall.mem_iff.1 hs
@@ -627,7 +627,7 @@ theorem lam_le_two_mul_tangentHaar : ∀ (E : Type) [Field E] [NumberField E] [I
   have hνS : ∀ S : Set (realLie Ψ G), MeasurableSet S →
       ν S = μ (chartExp Ψ G hG '' (S ∩ closedBall 0 δ₀)) := by
     intro S hS
-    rw [hν, Measure.map_apply measurable_subtype_coe hS, hemb.comap_apply]
+    rw [hν, Measure.map_apply measurable_subtypeVal hS, hemb.comap_apply]
     congr 1
     ext g
     constructor
@@ -637,7 +637,7 @@ theorem lam_le_two_mul_tangentHaar : ∀ (E : Type) [Field E] [NumberField E] [I
       exact ⟨⟨x, hx.2⟩, hx.1, rfl⟩
   have hνsub : ∀ S : Set (realLie Ψ G), MeasurableSet S → S ⊆ closedBall 0 δ₀ →
       ν S = μ (chartExp Ψ G hG '' S) := fun S hS h => by rw [hνS S hS, inter_eq_left.2 h]
-  haveI : IsFiniteMeasure ν := by
+  have : IsFiniteMeasure ν := by
     refine ⟨?_⟩
     rw [hνS _ MeasurableSet.univ, univ_inter]
     exact ((isCompact_closedBall _ _).image he).measure_lt_top
@@ -706,7 +706,7 @@ theorem lam_le_two_mul_tangentHaar : ∀ (E : Type) [Field E] [NumberField E] [I
 
   have hνt : ∀ ε : ℝ, 0 < ε → (lam.map Subtype.val) (tanBall Ψ r ε) = lam (ball 0 ε) := by
     intro ε hε
-    rw [Measure.map_apply measurable_subtype_coe, preimage_tanBall Ψ G hε]
+    rw [Measure.map_apply measurable_subtypeVal, preimage_tanBall Ψ G hε]
     rw [show tanBall Ψ r ε = ball (0 : Ψ → Fin r → Fin r → ℂ) ε by
       ext X; rw [mem_ball_zero_iff, pi_norm_lt_iff hε]; simp only [pi_norm_lt_iff hε]; rfl]
     exact measurableSet_ball
@@ -850,7 +850,7 @@ theorem exists_lam (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x
     exact congrFun (congrFun (hτ τ) a) b
   let φ : W ≃L[ℝ] realLie Ψ G := (LinearEquiv.ofBijective Φ ⟨hinj, hsurj⟩).toContinuousLinearEquiv
   refine ⟨(stdOrthonormalBasis ℝ W).toBasis.addHaar.map φ, φ.isAddHaarMeasure_map _, ?_⟩
-  rw [Measure.map_map measurable_subtype_coe φ.continuous.measurable]
+  rw [Measure.map_map measurable_subtypeVal φ.continuous.measurable]
   rfl
 
 theorem exists_conj_bound (Ψ : Finset (E →+* ℂ)) (x : Frame Ψ r) (hx : ∀ τ, (mat x τ).det ≠ 0) :
@@ -905,7 +905,7 @@ theorem exists_exp_entry (n : Type) [Fintype n] [DecidableEq n] :
   obtain ⟨δ, hδ, h⟩ := exists_exp_bound n
   refine ⟨δ, hδ, fun ε Y hε hεδ hY a b => ?_⟩
   have hYn : ‖Y‖ < ε / 2 := (Matrix.norm_lt_iff (by positivity)).2 hY
-  calc ‖(NormedSpace.exp Y - 1) a b‖ ≤ ‖NormedSpace.exp Y - 1‖ := Matrix.norm_entry_le_entrywise_sup_norm _
+  calc ‖(NormedSpace.exp Y - 1) a b‖ ≤ ‖NormedSpace.exp Y - 1‖ := norm_apply_le_norm _
     _ ≤ 2 * ‖Y‖ := h Y (by linarith)
     _ < ε := by linarith
 
@@ -932,14 +932,14 @@ theorem riemHaar_frBall_ge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     intro τ a b
     exact ((continuous_const.matrix_mul (continuous_apply τ)).matrix_mul continuous_const).matrix_elem a b
   have hSm : MeasurableSet S := by
-    simp only [hS, Set.setOf_forall]
+    simp only [hS, Set.ofPred_forall]
     exact MeasurableSet.iInter fun τ => MeasurableSet.iInter fun a => MeasurableSet.iInter fun b =>
       measurableSet_lt (hcont τ a b).norm.measurable measurable_const
   set s : Set (realLie Ψ G) := Subtype.val ⁻¹' S with hs
-  have hsm : MeasurableSet s := measurable_subtype_coe hSm
+  have hsm : MeasurableSet s := measurable_subtypeVal hSm
   have h1 : ENNReal.ofReal ((ε / 2 / ((Ψ.card : ℝ) * (r : ℝ) ^ 2)) ^ (Ψ.card * (r ^ 2 - 1))) ≤ lam s := by
     have := GlobalTheory.T.riemannianLieMeasure_frameBox_ge E r Ψ G x hr hG hx (ε / 2) (by positivity) (by linarith)
-    rw [← hmap, Measure.map_apply measurable_subtype_coe hSm] at this
+    rw [← hmap, Measure.map_apply measurable_subtypeVal hSm] at this
     exact this
   have hball : s ⊆ Metric.ball 0 δ := by
     intro X hX
@@ -1042,7 +1042,7 @@ theorem perm_conj {ι : Type} [Fintype ι] [DecidableEq ι] {r : ℕ} (e : ι �
 theorem preimage_frBall : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (κ : Type) (p q : κ → ℕ) (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x : Frame Ψ r) (σ : κ ≃ Ψ) (A : ∀ ρ, Matrix (Fin (p ρ) ⊕ Fin (q ρ)) (Fin r) ℂ) (e : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ) ≃ Fin r) (a₀ : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ)) (π : (∀ ρ, UpqT (p ρ) (q ρ)) → realSU Ψ G), IsIdent p q Ψ G x σ A e → IsProj p q Ψ G σ A a₀ π → ∀ ε : ℝ, π ⁻¹' frBall Ψ G x ε = Set.univ.pi (fun ρ => {u : UpqT (p ρ) (q ρ) | ∀ a b, ‖(sMat (a₀ ρ) u - 1) a b‖ < ε}) := by
   intro E _ _ _ r κ p q Ψ G x σ A e a₀ π hI hP ε
   ext b
-  simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_setOf_eq, frBall]
+  simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_ofPred_eq, frBall]
   have key : ∀ ρ, (mat x (σ ρ))⁻¹ * (((π b).1 (σ ρ) : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat x (σ ρ) - 1
       = (permM (e ρ))ᵀ * (sMat (a₀ ρ) (b ρ) - 1) * permM (e ρ) := by
     intro ρ
@@ -1125,11 +1125,11 @@ theorem constant_bound : ∀ (f r : ℕ) (ε : ℝ), 1 ≤ f → 1 ≤ r → 0 <
 theorem massUp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (κ : Type) [Fintype κ] (p q : κ → ℕ) (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x : Frame Ψ r) (σ : κ ≃ Ψ) (A : ∀ ρ, Matrix (Fin (p ρ) ⊕ Fin (q ρ)) (Fin r) ℂ) (e : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ) ≃ Fin r) (a₀ : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ)) (π : (∀ ρ, UpqT (p ρ) (q ρ)) → realSU Ψ G) (m : ∀ ρ, Measure (UpqT (p ρ) (q ρ))), 1 ≤ r → 1 ≤ Ψ.card → IsIdent p q Ψ G x σ A e → Continuous π → IsProj p q Ψ G σ A a₀ π → (∀ (s : realSU Ψ G) (b₀ : ∀ ρ, UpqT (p ρ) (q ρ)), (∀ ρ, UpqT.mat (b₀ ρ) * A ρ = A ρ * ((s.1 (σ ρ) : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ)) → ∀ b, π (b₀ * b) = s * π b) → (∀ ρ, IsMinf (m ρ)) → ∀ S : Set (realSU Ψ G), MeasurableSet S → Measure.pi m (π ⁻¹' S) ≤ ENNReal.ofReal ((1000 * (Ψ.card : ℝ) * (r : ℝ) ^ 3) ^ (Ψ.card * r ^ 2)) * riemHaar Ψ G x S := by
   intro E _ _ _ r κ _ p q Ψ G x σ A e a₀ π m hr hΨ hI hπc hP hT hm S hS
   classical
-  haveI : ∀ ρ, IsTopologicalGroup (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).1
-  haveI : ∀ ρ, LocallyCompactSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.1
-  haveI : ∀ ρ, SecondCountableTopology (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.1
-  haveI : ∀ ρ, BorelSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.2.1
-  haveI : ∀ ρ, (m ρ).IsHaarMeasure := fun ρ => (hm ρ).1
+  have : ∀ ρ, IsTopologicalGroup (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).1
+  have : ∀ ρ, LocallyCompactSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.1
+  have : ∀ ρ, SecondCountableTopology (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.1
+  have : ∀ ρ, BorelSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.2.1
+  have : ∀ ρ, (m ρ).IsHaarMeasure := fun ρ => (hm ρ).1
 
   have hcard : Fintype.card κ = Ψ.card := by
     rw [Fintype.card_congr σ]; simp
@@ -1147,7 +1147,7 @@ theorem massUp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ
   set μ := Measure.pi m with hμ
   set ν := μ.map π with hν
 
-  haveI hinv : ν.IsMulLeftInvariant := by
+  have hinv : ν.IsMulLeftInvariant := by
     constructor
     intro s
     obtain ⟨b₀, hb₀⟩ := exists_lift E r κ p q Ψ G x σ A e hI s
@@ -1161,7 +1161,7 @@ theorem massUp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ
         ‖((mat x τ)⁻¹ * ((s.1 τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat x τ - 1) a b‖ := by
       intro τ a b
       have h1 : Continuous fun s : realSU Ψ G => ((s.1 τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) :=
-        Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)
+        Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)
       exact ((((continuous_const.matrix_mul h1).matrix_mul continuous_const).sub continuous_const).matrix_elem a b).norm
     have : frBall Ψ G x ε = ⋂ τ, ⋂ a, ⋂ b, {s : realSU Ψ G |
         ‖((mat x τ)⁻¹ * ((s.1 τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat x τ - 1) a b‖ < ε} := by
@@ -1190,19 +1190,19 @@ theorem massUp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ
     rw [hν, Measure.map_apply hπm (hopen ε).measurableSet,
       preimage_frBall E r κ p q Ψ G x σ A e a₀ π hI hP ε, hμ, Measure.pi_pi]
     calc _ ≤ ∏ _ρ : κ, ENNReal.ofReal ((200 * (r : ℝ)) ^ (r ^ 2) * ε ^ (r ^ 2 - 1)) :=
-          Finset.prod_le_prod' fun ρ _ => by
+          Finset.prod_le_prod fun ρ _ => by
             have := hbp ρ ε hε (hεδ ρ)
             rw [hpq ρ] at this
             exact this
       _ = ENNReal.ofReal U := by
           rw [Finset.prod_const, Finset.card_univ, hcard, ← ENNReal.ofReal_pow (by positivity)]
   have hfinB : ν (frBall Ψ G x ε) < ∞ := lt_of_le_of_lt hνB ENNReal.ofReal_lt_top
-  haveI : IsLocallyFiniteMeasure ν := ⟨fun g => ⟨(fun h => g⁻¹ * h) ⁻¹' frBall Ψ G x ε,
+  have : IsLocallyFiniteMeasure ν := ⟨fun g => ⟨(fun h => g⁻¹ * h) ⁻¹' frBall Ψ G x ε,
     (continuous_const.mul continuous_id).continuousAt.preimage_mem_nhds (by
       show frBall Ψ G x ε ∈ nhds (g⁻¹ * g)
       rw [inv_mul_cancel]; exact (hopen ε).mem_nhds (h1mem ε hε)),
     by rw [measure_preimage_mul]; exact hfinB⟩⟩
-  haveI hH : (riemHaar Ψ G x).IsHaarMeasure :=
+  have hH : (riemHaar Ψ G x).IsHaarMeasure :=
     (GlobalTheory.SUVol.DensOne.tangentHaar_riemLie (Ψ := Ψ) (G := G) (hG := hG) (x := x) (hx := hx)).1
   have hc := Measure.isMulLeftInvariant_eq_smul ν (riemHaar Ψ G x)
   set c := ν.haarScalarFactor (riemHaar Ψ G x) with hcdef
@@ -1216,14 +1216,14 @@ theorem massUp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ
       calc (c : ℝ≥0∞) * ENNReal.ofReal L ≤ c * riemHaar Ψ G x (frBall Ψ G x ε) := mul_le_mul_of_nonneg_left hL (zero_le)
         _ = ν (frBall Ψ G x ε) := by
           conv_rhs => rw [hc]
-          rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+          rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
         _ ≤ _ := hνB
     rw [← ENNReal.ofReal_coe_nnreal, ← ENNReal.ofReal_mul (NNReal.coe_nonneg _)] at h1
     exact (ENNReal.ofReal_le_ofReal_iff (pow_nonneg (mul_nonneg (by positivity) (pow_nonneg hε.le _)) _)).1 h1
   have hUC := constant_bound Ψ.card r ε hΨ hr hε
   have hcC : (c : ℝ) ≤ (1000 * (Ψ.card : ℝ) * (r : ℝ) ^ 3) ^ (Ψ.card * r ^ 2) :=
     le_of_mul_le_mul_right (hcL.trans hUC) hLpos
-  rw [← Measure.map_apply hπm hS, ← hν, hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [← Measure.map_apply hπm hS, ← hν, hc, smul_apply, ENNReal.smul_def, smul_eq_mul]
   have hcC' : (c : ℝ≥0∞) ≤ ENNReal.ofReal ((1000 * (Ψ.card : ℝ) * (r : ℝ) ^ 3) ^ (Ψ.card * r ^ 2)) := by
     rw [← ENNReal.ofReal_coe_nnreal]; exact ENNReal.ofReal_le_ofReal hcC
   exact mul_le_mul_of_nonneg_right hcC' (zero_le)
@@ -1296,11 +1296,11 @@ theorem arith (f r : ℕ) (ε : ℝ) (hr : 1 ≤ r) (hε : 0 < ε) :
 theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (κ : Type) [Fintype κ] (p q : κ → ℕ) (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x : Frame Ψ r) (σ : κ ≃ Ψ) (A : ∀ ρ, Matrix (Fin (p ρ) ⊕ Fin (q ρ)) (Fin r) ℂ) (e : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ) ≃ Fin r) (a₀ : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ)) (π : (∀ ρ, UpqT (p ρ) (q ρ)) → realSU Ψ G) (m : ∀ ρ, Measure (UpqT (p ρ) (q ρ))) (ρ₀ : κ), 1 ≤ r → IsIdent p q Ψ G x σ A e → Continuous π → IsProj p q Ψ G σ A a₀ π → (∀ (s : realSU Ψ G) (b₀ : ∀ ρ, UpqT (p ρ) (q ρ)), (∀ ρ, UpqT.mat (b₀ ρ) * A ρ = A ρ * ((s.1 (σ ρ) : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ)) → ∀ b, π (b₀ * b) = s * π b) → (∀ ρ, IsMinf (m ρ)) → ∀ S : Set (realSU Ψ G), MeasurableSet S → ENNReal.ofReal ((1 / 16 : ℝ) ^ (Ψ.card * r ^ 2)) * riemHaar Ψ G x S ≤ Measure.pi m (π ⁻¹' S ∩ {b | 0 < (UpqT.mat (b ρ₀)).det.im}) := by
   intro E _ _ _ r κ _ p q Ψ G x σ A e a₀ π m ρ₀ hr hI hπc hP hT hm S hS
   classical
-  haveI : ∀ ρ, IsTopologicalGroup (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).1
-  haveI : ∀ ρ, LocallyCompactSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.1
-  haveI : ∀ ρ, SecondCountableTopology (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.1
-  haveI : ∀ ρ, BorelSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.2.1
-  haveI : ∀ ρ, (m ρ).IsHaarMeasure := fun ρ => (hm ρ).1
+  have : ∀ ρ, IsTopologicalGroup (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).1
+  have : ∀ ρ, LocallyCompactSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.1
+  have : ∀ ρ, SecondCountableTopology (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.1
+  have : ∀ ρ, BorelSpace (UpqT (p ρ) (q ρ)) := fun ρ => (GlobalTheory.UpqTopology.upq_lcsc _ _).2.2.2.2.1
+  have : ∀ ρ, (m ρ).IsHaarMeasure := fun ρ => (hm ρ).1
   have hcard : Fintype.card κ = Ψ.card := by
     rw [Fintype.card_congr σ]; simp
   have hΨ : 1 ≤ Ψ.card := by
@@ -1320,14 +1320,14 @@ theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
   have hTm : MeasurableSet T := hTo.measurableSet
   set ν := (μ.restrict T).map π with hν
 
-  haveI hinv : ν.IsMulLeftInvariant := by
+  have hinv : ν.IsMulLeftInvariant := by
     constructor
     intro s
     obtain ⟨b₀, hb₀⟩ := MassUp.exists_lift E r κ p q Ψ G x σ A e hI s
     have hd : (UpqT.mat (b₀ ρ₀)).det = 1 := det_lift hI ρ₀ s (b₀ ρ₀) (hb₀ ρ₀)
     have hpre : (fun b => b₀ * b) ⁻¹' T = T := by
       ext b
-      simp only [Set.mem_preimage, hTdef, Set.mem_setOf_eq, Pi.mul_apply]
+      simp only [Set.mem_preimage, hTdef, Set.mem_ofPred_eq, Pi.mul_apply]
       rw [show UpqT.mat (b₀ ρ₀ * b ρ₀) = UpqT.mat (b₀ ρ₀) * UpqT.mat (b ρ₀) from rfl, Matrix.det_mul, hd, one_mul]
     rw [hν, Measure.map_map (measurable_const_mul s) hπm]
     have h : (fun y => s * y) ∘ π = π ∘ (fun b => b₀ * b) := funext fun b => (hT s b₀ hb₀ b).symm
@@ -1337,11 +1337,11 @@ theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
         = (μ.restrict ((fun b => b₀ * b) ⁻¹' T)).map (fun b => b₀ * b) := by rw [hpre]
       _ = (μ.map (fun b => b₀ * b)).restrict T := (Measure.restrict_map (measurable_const_mul b₀) hTm).symm
       _ = μ.restrict T := by rw [map_mul_left_eq_self]
-  haveI hH : (riemHaar Ψ G x).IsHaarMeasure :=
+  have hH : (riemHaar Ψ G x).IsHaarMeasure :=
     (GlobalTheory.SUVol.DensOne.tangentHaar_riemLie (Ψ := Ψ) (G := G) (hG := hG) (x := x) (hx := hx)).1
 
   have hup := MassUp.massUp E r κ p q Ψ G x σ A e a₀ π m hr hΨ hI hπc hP hT hm
-  haveI : IsFiniteMeasureOnCompacts ν := by
+  have : IsFiniteMeasureOnCompacts ν := by
     constructor
     intro K hK
     have hKm : MeasurableSet K := hK.isClosed.measurableSet
@@ -1368,7 +1368,7 @@ theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
         ‖((mat x τ)⁻¹ * ((s.1 τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat x τ - 1) a b‖ := by
       intro τ a b
       have h1 : Continuous fun s : realSU Ψ G => ((s.1 τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) :=
-        Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)
+        Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)
       exact ((((continuous_const.matrix_mul h1).matrix_mul continuous_const).sub continuous_const).matrix_elem a b).norm
     have : frBall Ψ G x ε = ⋂ τ, ⋂ a, ⋂ b, {s : realSU Ψ G |
         ‖((mat x τ)⁻¹ * ((s.1 τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat x τ - 1) a b‖ < ε} := by
@@ -1384,13 +1384,13 @@ theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
         0 < (UpqT.mat u).det.im}) ⊆ Set.univ.pi (fun ρ => {u : UpqT (p ρ) (q ρ) |
           ∀ a b, ‖(sMat (a₀ ρ) u - 1) a b‖ < ε}) ∩ T := by
       intro b hb
-      simp only [Set.mem_univ_pi, Set.mem_setOf_eq] at hb
+      simp only [Set.mem_univ_pi, Set.mem_ofPred_eq] at hb
       exact ⟨fun ρ _ => (hb ρ).1, (hb ρ₀).2⟩
     refine le_trans ?_ (measure_mono hsub)
     rw [hμ, Measure.pi_pi]
     calc ENNReal.ofReal (L ^ Ψ.card) = ∏ _ρ : κ, ENNReal.ofReal L := by
           rw [Finset.prod_const, Finset.card_univ, hcard, ENNReal.ofReal_pow (by positivity)]
-      _ ≤ _ := Finset.prod_le_prod' fun ρ _ => by
+      _ ≤ _ := Finset.prod_le_prod fun ρ _ => by
           have := hbp ρ ε hε (hεδ ρ)
           rw [hpq ρ] at this
           exact this
@@ -1401,7 +1401,7 @@ theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
       calc ENNReal.ofReal (L ^ Ψ.card) ≤ ν (frBall Ψ G x ε) := hlow
         _ = (c : ℝ≥0∞) * riemHaar Ψ G x (frBall Ψ G x ε) := by
           conv_lhs => rw [hc]
-          rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+          rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
         _ ≤ (c : ℝ≥0∞) * ENNReal.ofReal U := mul_le_mul_of_nonneg_left hupB (zero_le)
         _ = ENNReal.ofReal ((c : ℝ) * U) := by
           rw [ENNReal.ofReal_mul (NNReal.coe_nonneg _), ENNReal.ofReal_coe_nnreal]
@@ -1416,7 +1416,7 @@ theorem massLow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : �
         rw [← ENNReal.ofReal_coe_nnreal]; exact ENNReal.ofReal_le_ofReal hcK
     _ = ν S := by
         conv_rhs => rw [hc]
-        rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+        rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     _ = μ (π ⁻¹' S ∩ T) := by
         rw [hν, Measure.map_apply hπm hS, Measure.restrict_apply (hπm hS)]
 

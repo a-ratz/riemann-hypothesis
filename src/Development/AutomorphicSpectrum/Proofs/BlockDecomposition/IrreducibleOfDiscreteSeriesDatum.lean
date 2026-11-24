@@ -62,7 +62,7 @@ theorem isKTypeOf_map_of_injOn {H : Type*} [NormedAddCommGroup H] [InnerProductS
     (hcomm : ∀ k ∈ Kset ε, ∀ v, σ k (A v) = A (σ k v))
     (hinj : ∀ w ∈ S, A w = 0 → w = 0) :
     Formalism.MainNotions.S.IsKTypeOf ε σ Λ (S.map A) := by
-  haveI : FiniteDimensional ℂ S := hS.1
+  have : FiniteDimensional ℂ S := hS.1
   have hirr : ∀ S' : Submodule ℂ H, S' ≤ S.map A → Formalism.MainNotions.S.IsKStableOn ε σ S' →
       S' = ⊥ ∨ S' = S.map A := by
     intro S' hS' hK'

@@ -75,7 +75,7 @@ theorem exists_mem_Fil_corr (P : AbelianDeRham) {T : Type} [CommRing T] [Algebra
     ∃ d ∈ Fil C, (bcMor h).Corr d f := by
   obtain ⟨-, hF⟩ := P.2.2.1 T C g hC gC R A φ h
   obtain ⟨-, ⟨N, hN⟩, -⟩ := P.2.1 T C g hC gC
-  haveI : Module.Projective T (primDR C) := (P.1.prim hC gC).2.1
+  have : Module.Projective T (primDR C) := (P.1.prim hC gC).2.1
   let l : primDR C →ₗ[T] R :=
     { toFun c := f ((bcMor h).pull c)
       map_add' := fun a b => by rw [map_add (f := _), map_add (f := _)]
@@ -86,10 +86,10 @@ theorem exists_mem_Fil_corr (P : AbelianDeRham) {T : Type} [CommRing T] [Algebra
     (Submodule.mem_dualAnnihilator _).1 hf _ (hF ▸ Submodule.subset_span ⟨c, hc, rfl⟩)
   let p : primDR C →ₗ[T] primDR C := N.subtype ∘ₗ N.linearProjOfIsCompl _ hN.symm
   have p0 : ∀ c ∈ PrimitiveSubmodule C, p c = 0 := fun c hc =>
-    (congrArg N.subtype (Submodule.linearProjOfIsCompl_apply_right hN.symm ⟨c, hc⟩)).trans (map_zero _)
+    (congrArg N.subtype (Submodule.projectionOnto_apply_right hN.symm ⟨c, hc⟩)).trans (map_zero _)
   have p1 : ∀ c, c - p c ∈ PrimitiveSubmodule C := fun c => by
     obtain ⟨a, b, rfl, -⟩ := Submodule.existsUnique_add_of_isCompl hN c
-    have e : p b = b := congrArg N.subtype (Submodule.linearProjOfIsCompl_apply_left hN.symm b)
+    have e : p b = b := congrArg N.subtype (Submodule.projectionOnto_apply_left hN.symm b)
     rw [map_add (f := _), p0 a a.2, e, zero_add, add_sub_cancel_right]
     exact a.2
   refine ⟨d₀ ∘ₗ p, (Submodule.mem_dualAnnihilator _).2 fun c hc => ?_, fun c => ?_⟩
@@ -128,7 +128,7 @@ theorem exists_isFilLift_dir (P : AbelianDeRham) {ι : Type} [Fintype ι] {C : O
     · have e : κ.dpow (n + 1 + 1) a = 0 := squareZeroDividedPowers_dpow _ (by omega) a
       rw [e, map_zero]
   obtain ⟨d, hd, D, eD, ef⟩ : ∃ d ∈ Fil C, ∃ D, crysToDR κ h₀ D = d ∧ ∀ c, (D (cst.pull c)).fst = f c := by
-    letI : Algebra (TrivSqZeroExt R (ι → R)) R := (TrivSqZeroExt.fstHom R R (ι → R)).toRingHom.toAlgebra
+    let : Algebra (TrivSqZeroExt R (ι → R)) R := (TrivSqZeroExt.fstHom R R (ι → R)).toRingHom.toAlgebra
     obtain ⟨d, hd, ed⟩ := exists_mem_Fil_corr P su hC gC h₀ hf
     obtain ⟨D, rfl⟩ := (P.2.2.2.1.crysToDR_bijective hC gC (κ := κ) (isDPNilpotent_squareZero _) su rfl h₀).2 d
     refine ⟨_, hd, D, rfl, fun c => ?_⟩
@@ -148,7 +148,7 @@ theorem exists_isFilLift_dir (P : AbelianDeRham) {ι : Type} [Fintype ι] {C : O
         rw [LinearMap.map_smulₛₗ, map_smul]
         simp [TrivSqZeroExt.algebraMap_eq_inl] }
   refine ⟨gs, fun m B _ φ j hj hφ sq => ?_⟩
-  letI : Algebra (TrivSqZeroExt R (ι → R)) (DualNumber R) :=
+  let : Algebra (TrivSqZeroExt R (ι → R)) (DualNumber R) :=
     (TrivSqZeroExt.map (Fintype.linearCombination R m)).toRingHom.toAlgebra
   have hB := PolPull.isAbelianScheme_of_isGrpPullback hC hφ
   have gB := (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback hφ.1 gC
@@ -205,7 +205,7 @@ theorem IsKS.row (P : AbelianDeRham) {Φ : Finset (E →+* ℂ)} {y : FrPt Xo c 
   have gB := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hρ.1 hg
   have hA' := PolPull.isAbelianScheme_of_isGrpPullback hU hπ'
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1 hg
-  haveI : IsCommMonObj B := PolPull.isCommMonObj_of_isGrpPullback hρ
+  have : IsCommMonObj B := PolPull.isCommMonObj_of_isGrpPullback hρ
   have sq : j ≫ φ' = φ ≫ i := by
     apply hπ'.1.hom_ext
     · rw [Category.assoc, Category.assoc, eφ', e₂, e, eφ]
@@ -298,8 +298,8 @@ theorem IsKS.row (P : AbelianDeRham) {Φ : Finset (E →+* ℂ)} {y : FrPt Xo c 
             (algebraMap R R').comp (TrivSqZeroExt.fstHom R R R).toRingHom := by
           ext x <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
         rw [ee, Cris.spMap_comp, Category.assoc, hv.1]
-        letI : Monoid (Over.mk (𝟙 (Sp R')) ⟶ B) := CategoryTheory.Hom.monoid
-        letI : Monoid (Over.mk ((Over.mk (𝟙 (Sp R'))).hom ≫ spMap (algebraMap R R')) ⟶ A) := CategoryTheory.Hom.monoid
+        let : Monoid (Over.mk (𝟙 (Sp R')) ⟶ B) := CategoryTheory.Hom.monoid
+        let : Monoid (Over.mk ((Over.mk (𝟙 (Sp R'))).hom ≫ spMap (algebraMap R R')) ⟶ A) := CategoryTheory.Hom.monoid
         have he := congrArg (fun t => t.left) (map_one (pushHom hφ (Over.mk (𝟙 (Sp R')))))
         simpa [pushHom, pushPt, ArcQ.NormalForm.one_left_eq] using he.symm
       · have ee : spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫
@@ -394,7 +394,7 @@ theorem isKS_dir_sum : GlobalTheory.CovTop.Hypotheses₂ → ∀ (E : Type) [Fie
       (by rw [← Category.assoc, sq, Category.assoc, eφ, hiπ]) hpol hu hl τ a hf hd
     obtain ⟨v', hv', -⟩ := hL.1 (gs k)
     have fl := hgs (Pi.single k 1) B χ _ hj hχ sq
-    simp only [Pi.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true] at fl
+    simp only [Pi.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at fl
     obtain rfl := IsKSValue.unique P (PolPull.isAbelianScheme_of_isGrpPullback aC hχ)
       ((smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hχ.1 gC) hv ⟨_, fl, hv'⟩
     exact ⟨_, hc, hv'⟩

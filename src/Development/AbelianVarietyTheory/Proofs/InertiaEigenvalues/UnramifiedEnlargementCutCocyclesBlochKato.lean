@@ -336,7 +336,7 @@ theorem _root_.UpperTheory.KN.continuous_localCoefficientRep_twist :
   intro D i r w hw C hr x
   have h1 := GlobalTheory.PotDual.continuous_loc D i w hw _ (GlobalTheory.Pass.FamCont.stepCont D i r hr x).1
   have h2 : Continuous (fun y => C.inc y) :=
-    continuous_induced_rng.2 continuous_subtype_val
+    continuous_induced_rng.2 continuous_subtypeVal
   refine (h1.matrix_map h2).congr fun g => ?_
   ext a b
   rfl
@@ -433,7 +433,7 @@ theorem _root_.UpperTheory.KN.isLocallyConstant_torsion_push_of_continuous :
       hW.preimage ((continuous_apply m).comp (continuous_apply j))
   have key : ∀ v ∈ Y, v ∈ U → ∃ y ∈ Y, v = c • y := by
     intro v hvY hvU
-    simp only [U, W, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_range] at hvU
+    simp only [U, W, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_range] at hvU
     choose x hx using hvU
     have hxΛ : Lmap x ∈ Λ := LinearMap.mem_range_self _ _
     have hmul : μ • Lmap x = v := by
@@ -478,7 +478,7 @@ theorem _root_.UpperTheory.KN.exists_cocycle_torsion_of_hasPres :
       ∃ a : ℕ, f ∈ divisibleCocycles (stdLatG hinj M) ∧ ∀ g, lam ^ a • f g = 0 := by
   intro G O LL _ _ _ _ _ _ _ _ _ _ hinj lam Xs n k N M f hlam hopen hN hP
   obtain ⟨m, x, E, Y, hYfg, hst, hE, φ, hφ, hf⟩ := hP
-  haveI : Module.Finite O Y := Module.Finite.iff_fg.mpr hYfg
+  have : Module.Finite O Y := Module.Finite.iff_fg.mpr hYfg
   obtain ⟨e, he⟩ := exists_pow_uniformizer_smul_eq_zero_quotient_lattice lam hlam φ
   have hmul : ∀ g h (v : Fin m → Fin n → LL), actN LL (fun j => N (x j)) (g * h) v =
       actN LL (fun j => N (x j)) g (actN LL (fun j => N (x j)) h v) := by
@@ -550,12 +550,12 @@ namespace GlobalTheory.UseLoc.Cases
 theorem finite_Xq {l : ℕ} [Fact l.Prime] (LL : FinExt l) (lam : ↥(OL LL)) (hlam : Irreducible lam) (a : ℕ) :
     Finite ↥(Xq ↥LL.1 lam a) := by
   classical
-  haveI := GlobalTheory.FullCharpoly.hasFiniteQuotients_OL LL
+  have := GlobalTheory.FullCharpoly.hasFiniteQuotients_OL LL
   have hinj : Function.Injective (algebraMap ↥(OL LL) ↥LL.1) := Subtype.val_injective
   have hne : lam ^ a ≠ 0 := pow_ne_zero _ hlam.ne_zero
   have hK : algebraMap ↥(OL LL) ↥LL.1 (lam ^ a) ≠ 0 := by
     intro h; exact hne (hinj (by rw [h, map_zero]))
-  haveI : Finite (↥(OL LL) ⧸ Ideal.span {lam ^ a}) := Ring.HasFiniteQuotients.finiteQuotient (by
+  have : Finite (↥(OL LL) ⧸ Ideal.span {lam ^ a}) := Ring.HasFiniteQuotients.finiteQuotient (by
     rwa [Ne, Ideal.span_singleton_eq_bot])
   have hex : ∀ x : ↥(Xq ↥LL.1 lam a), ∃ c : ↥(OL LL), ∃ s : ↥LL.1,
       Submodule.Quotient.mk (p := intO (O := ↥(OL LL)) ↥LL.1) s = x.1 ∧ algebraMap ↥(OL LL) ↥LL.1 c = lam ^ a • s := by
@@ -822,7 +822,7 @@ theorem partW : ∀ (D : D7) (HW : HWOf D.loc) (i : D.nd.Loc)
   have hT := hTop h5' D.R.t h w' η typ U (Fin D.R.r → ↥C.LL.1) (repV C (twistM (locOC C (WpO D.nd i ρ π)) θ))
     (latC C (twistM (locOC C (WpO D.nd i ρ π)) θ)) (chiT C θ) hSet.1
   obtain ⟨a, hZ, hk⟩ := GlobalTheory.T.cutCocycles_locallyConstant_killed_by_uniformiserPow D i r w hw C lam hlam hGood hCont (WpO D.nd i ρ π) z hz
-  haveI := _root_.GlobalTheory.UseLoc.Cases.finite_Xq C.LL lam hlam a
+  have := _root_.GlobalTheory.UseLoc.Cases.finite_Xq C.LL lam hlam a
   obtain ⟨z', hcoc, hz'⟩ := _root_.GlobalTheory.UseLoc.Cases.LiftW.lift_cocycle D i w hw C lam hlam (locOC C (WpO D.nd i ρ π)) θ a
     (fun g => liftQ C.le D.R.r (z g)) hZ hk
   have hz'' : ∀ g, iotaW ↥C.LL.1 lam a D.R.r (z' g) = liftQ C.le D.R.r (z g) := hz'
@@ -855,7 +855,7 @@ theorem partC : ∀ (D : D7) (HW : HWOf D.loc) (i : D.nd.Loc)
   have hT := hTop h5' D.R.t h w' η typ U (Fin D.R.r → ↥C.LL.1) (repV C (twistM (locOC C (WpO D.nd i ρ π)) θ))
     (latC C (twistM (locOC C (WpO D.nd i ρ π)) θ)) (chiT C θ) hSet.1
   obtain ⟨a, hZ, hk⟩ := GlobalTheory.T.cutCocycles_locallyConstant_killed_by_uniformiserPow D i r w hw C lam hlam hGood hCont (chiRatO D.nd i c) z hz
-  haveI := _root_.GlobalTheory.UseLoc.Cases.finite_Xq C.LL lam hlam a
+  have := _root_.GlobalTheory.UseLoc.Cases.finite_Xq C.LL lam hlam a
   obtain ⟨z', hcoc, hz'⟩ := _root_.GlobalTheory.UseLoc.Cases.liftC_main D i w hw C lam hlam θ c a (fun g => liftQ C.le 1 (z g)) hZ hk
   have hz'' : ∀ g, iotaC ↥C.LL.1 lam a (z' g) = liftQ C.le 1 (z g) := hz'
   have hc1 : c ∈ Finset.Icc 1 D.R.t :=
@@ -890,7 +890,7 @@ theorem partU : ∀ (D : D7) (HW : HWOf D.loc) (i : D.nd.Loc)
   have hT := hTop h5' D.R.t h w' η typ U (Fin D.R.r → ↥C.LL.1) (repV C (twistM (locOC C (WpO D.nd i ρ π)) θ))
     (latC C (twistM (locOC C (WpO D.nd i ρ π)) θ)) (chiT C θ) hSet.1
   obtain ⟨a, hZ, hk⟩ := GlobalTheory.T.cutCocycles_locallyConstant_killed_by_uniformiserPow D i r w hw C lam hlam hGood hCont (chiRatO D.nd i 1) z hz
-  haveI := _root_.GlobalTheory.UseLoc.Cases.finite_Xq C.LL lam hlam a
+  have := _root_.GlobalTheory.UseLoc.Cases.finite_Xq C.LL lam hlam a
   obtain ⟨z', hcoc, hz'⟩ := _root_.GlobalTheory.UseLoc.Cases.liftC_main D i w hw C lam hlam θ 1 a (fun g => liftQ C.le 1 (z g)) hZ hk
   have hz'' : ∀ g, iotaC ↥C.LL.1 lam a (z' g) = liftQ C.le 1 (z g) := hz'
   have hc1 : 1 ∈ Finset.Icc 1 D.R.t := Finset.mem_Icc.2 ⟨le_rfl, hSet.1.1⟩

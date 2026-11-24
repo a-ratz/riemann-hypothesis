@@ -64,7 +64,7 @@ private theorem max_of_fin {O D R : Type} [CommRing O] [IsLocalRing O] [Finite (
     rfl
   have hp : ((maximalIdeal R).comap f).IsPrime := Ideal.IsPrime.comap _
   rw [hk] at hp ⊢
-  haveI : Finite (D ⧸ RingHom.ker ((res O R).toRingHom.comp f)) :=
+  have : Finite (D ⧸ RingHom.ker ((res O R).toRingHom.comp f)) :=
     Finite.of_injective _ (RingHom.kerLift_injective _)
   exact Ideal.Quotient.maximal_of_isField _ (Finite.isField_of_domain _)
 
@@ -97,9 +97,9 @@ theorem UpperTheory.V.Fr.loc_flat :
       Algebra.TensorProduct.lift (Algebra.ofId _ _) L.ι fun _ _ => Commute.all _ _
     have hι : ∀ a, ι' (1 ⊗ₜ a) = L.ι a := fun a => by simp [ι']
     have hc := loc_cpl hF hn S x L ι' hι
-    haveI := max_of_fin (O := L.O') ι'.toRingHom
+    have := max_of_fin (O := L.O') ι'.toRingHom
     have h1 : ι'.toRingHom.Flat := (@UpperTheory.V.CA.c3a _ _ _ _ _ ι'.toRingHom.toAlgebra _ _ _ hc).1
-    haveI : Module.Flat O L.O' := flat_dvr L.unr
+    have : Module.Flat O L.O' := flat_dvr L.unr
     have h2 : (Algebra.TensorProduct.includeRight (R := O) (A := L.O') (B := S.A)).toRingHom.Flat := by
       have h3 : (algebraMap S.A (TensorProduct O S.A L.O')).Flat := RingHom.flat_algebraMap_iff.2 inferInstance
       have h4 := h3.comp (RingHom.Flat.of_bijective (f := (Algebra.TensorProduct.comm O S.A L.O').toRingEquiv.toRingHom)

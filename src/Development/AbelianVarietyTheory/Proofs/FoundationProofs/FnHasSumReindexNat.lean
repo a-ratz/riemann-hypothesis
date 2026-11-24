@@ -71,7 +71,7 @@ theorem fn_hasSum_reindex_nat : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (
   have hinj : Function.Injective g := by
     intro k l hkl
     simp only [hg] at hkl
-    have := (div_left_inj' hNq).mp hkl
+    have := (div_left_inj₀ hNq).mp hkl
     have h2 : ((n₀ + k : ℤ)) = n₀ + l := by exact_mod_cast this
     omega
   set f : ℚ → ℂ := fun r => ε (h.coeff r) * Complex.exp (2 * Real.pi * Complex.I * (r : ℂ) * z) with hf
@@ -85,7 +85,7 @@ theorem fn_hasSum_reindex_nat : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (
   have hcomp : f ∘ g = fun k : ℕ => (ε (a k) * Complex.exp (2 * Real.pi * Complex.I * z / N) ^ k) * c := by
     funext k
     simp only [Function.comp, hf, hg, ha k, hc]
-    rw [← Complex.exp_nat_mul, mul_assoc (ε (a k)), ← Complex.exp_add]
+    rw [← Complex.exp_natCast_mul, mul_assoc (ε (a k)), ← Complex.exp_add]
     congr 2
     push_cast
     field_simp

@@ -103,7 +103,7 @@ theorem dim_image_le (hf : IsClosedMap f) {C : Set S} (hC : IsClosed C) :
   have := hC.isClosedEmbedding_subtypeVal.quasiSober
   have := (hf C hC).isClosedEmbedding_subtypeVal.quasiSober
   refine dim_le_of_isClosedMap (f := Set.imageFactorization f C) (fun A hA => ?_) Set.imageFactorization_surjective
-  have := (hf _ (hC.isClosedMap_subtype_val A hA)).preimage (continuous_subtype_val (p := (· ∈ f '' C)))
+  have := (hf _ (hC.isClosedMap_subtypeVal A hA)).preimage (continuous_subtypeVal (p := (· ∈ f '' C)))
   convert this using 1
   ext ⟨y, hy⟩
   simp [Set.imageFactorization, Subtype.ext_iff]
@@ -113,8 +113,8 @@ theorem dim_image_eq (hc : Continuous f) (hf : IsClosedMap f) (hd : ∀ y, _root
   have := hC.isClosedEmbedding_subtypeVal.quasiSober
   have := (hf C hC).isClosedEmbedding_subtypeVal.quasiSober
   refine (dim_image_le hf hC).antisymm (dim_le_of_isDiscrete (f := Set.imageFactorization f C)
-    ((hc.comp continuous_subtype_val).subtype_mk _) fun y => ?_)
-  have := (hd y.1).preimage (f := (Subtype.val : C → S)) continuous_subtype_val.continuousOn
+    ((hc.comp continuous_subtypeVal).subtype_mk _) fun y => ?_)
+  have := (hd y.1).preimage (f := (Subtype.val : C → S)) continuous_subtypeVal.continuousOn
     Subtype.val_injective
   convert this using 1
   ext ⟨x, hx⟩
@@ -130,7 +130,7 @@ theorem exists_hasNonzeroSec [IsProper (strHom k (X := X))] (hH : IsAmpleLB H) (
     (hi : IsIrreducible (Z : Set X)) (hd : topologicalKrullDim (Z : Set X) ≤ 1)
     (hp : IsCompleteCurve k Z → 0 < interNumRed k Z ![M]) :
     ∃ r, 1 ≤ r ∧ HasNonzeroSec ((lbPow M r).pull (redι Z)) := by
-  letI := algebraΓAlong k (redι Z)
+  let := algebraΓAlong k (redι Z)
   have := isIntegral_red hi
   have : IsProper (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by
     rw [← comp_strHom (appTop_algebraMap_along k (redι Z))]

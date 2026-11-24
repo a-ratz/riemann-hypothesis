@@ -53,16 +53,16 @@ theorem UpperTheory.exists_compact_fundamental_set_unitary :
   classical
   obtain ⟨K, hKo, hKc⟩ := UpperTheory.exists_isOpen_isCompact_subgroup_finiteAdelicUnitary E n
   obtain ⟨S, hS⟩ := GlobalTheory.T.definiteUnitary_classSet_finite E n K hKo
-  haveI : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
-  haveI : ∀ v : InfinitePlace E, CompactSpace (embU n v.embedding) := fun v => by
+  have : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
+  have : ∀ v : InfinitePlace E, CompactSpace (embU n v.embedding) := fun v => by
     obtain ⟨e, -⟩ := _root_.GlobalTheory.EmbUnitary.exists_equiv_unitaryGroup E n v.embedding
     exact e.toHomeomorph.symm.compactSpace
   let P : (∀ v : InfinitePlace E, embU n v.embedding) → UA E n :=
     fun y => (Finset.univ.toList.map fun v => (y v : UA E n)).prod
   have hP : Continuous P :=
-    continuous_list_prod _ fun v _ => continuous_subtype_val.comp (continuous_apply v)
+    continuous_list_prod _ fun v _ => continuous_subtypeVal.comp (continuous_apply v)
   have hPc : IsCompact (Set.range P) := isCompact_range hP
-  have hKc' : IsCompact (Subtype.val '' (K : Set (finU (E := E) (n := n)))) := hKc.image continuous_subtype_val
+  have hKc' : IsCompact (Subtype.val '' (K : Set (finU (E := E) (n := n)))) := hKc.image continuous_subtypeVal
   refine ⟨_, (S.finite_toSet.isCompact.mul hPc).mul hKc', fun g => ?_⟩
   obtain ⟨γ, hγ, s, hs, x, hx, k, hk, e⟩ := hS g
   obtain ⟨y, hy, -, hyx⟩ := _root_.GlobalTheory.DefU.infU_eq_list_prod_embU E n x hx

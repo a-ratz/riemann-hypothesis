@@ -119,8 +119,8 @@ theorem lintegral_fundamentalDomain_eq_iterated (Γ₁ : AddSubgroup V) [Countab
       (∀ γ ∈ Γ, ∀ w, G (γ + w) = G w) →
       ∫⁻ w in 𝓕, G w ∂ν = c₁ * ∫⁻ x in 𝓕₁, ∫⁻ y in 𝓕₁, G (x, y) ∂μ ∂μ := by
   subst hmW
-  haveI := hν
-  haveI : Countable Γ := by
+  have := hν
+  have : Countable Γ := by
     have hinj : Function.Injective (fun k : Γ =>
         ((⟨(k : V × V).1, ((hΓ _).1 k.2).1⟩ : Γ₁), (⟨(k : V × V).2, ((hΓ _).1 k.2).2⟩ : Γ₁))) := by
       intro k k' hk
@@ -146,7 +146,7 @@ namespace GlobalTheory.PeriodicIterated
 
 theorem countable_ratVec (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] :
     Countable (GlobalTheory.ThetaParseval.ratVec F κ) := by
-  haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
+  have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
   exact (AddMonoidHom.rangeRestrict_surjective _).countable
 
 theorem mem_ratPair_iff_ratVec (F : Type) [Field F] [NumberField F] (κ : Type)
@@ -169,13 +169,13 @@ theorem lintegral_ratPair_fundamentalDomain_eq_iterated : ∀ (F : Type) [Field 
       (∀ γ ∈ GlobalTheory.WeilUnitaryTransport.ratPair F κ, ∀ w, G (γ + w) = G w) →
       ∫⁻ w in 𝓕, G w ∂ν = c₁ * ∫⁻ x in 𝓕₁, ∫⁻ y in 𝓕₁, G (x, y) ∂μ ∂μ := by
   intro F _ _ κ _ μ hμ ν hν 𝓕 h𝓕 𝓕₁ h𝓕₁
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI := countable_ratVec F κ
-  haveI := hμ
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := countable_ratVec F κ
+  have := hμ
   exact lintegral_fundamentalDomain_eq_iterated (GlobalTheory.ThetaParseval.ratVec F κ)
     (GlobalTheory.WeilUnitaryTransport.ratPair F κ) (mem_ratPair_iff_ratVec F κ) μ (borel _)
     (Prod.borelSpace (α := κ → AF F) (β := κ → AF F)).measurable_eq.symm ν hν 𝓕 h𝓕 𝓕₁ h𝓕₁

@@ -77,7 +77,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem genericPt_genStr {O : Type} [CommRing O] {β : O →+* c.F} {Z : Model Xo c β} {F : Type} [Field F]
     {e : F ≃+* c.F} (C : FlagCpt Z e) :
     genericPt C.Y ≫ C.π ≫ GlobalTheory.Toroidal.genStr Z = spMap (constF e C.Y) := by
-  letI := (constF e C.Y).toAlgebra
+  let := (constF e C.Y).toAlgebra
   rw [← Category.assoc, ← C.y0_x, Category.assoc, GlobalTheory.Toroidal.genStr, Z.jQ_over]
   exact GlobalTheory.ShFam.ptF_snd _
 
@@ -182,7 +182,7 @@ theorem GlobalTheory.VarFlag.rel_specialise : ∀ {E : Type} [Field E] [NumberFi
       rw [this, map_zero])
     refine ⟨hMt, fun i => ?_⟩
     have hdet := fA.isUnit_det_co gA τ
-    rw [Matrix.det_of_upperTriangular hMt] at hdet
+    rw [Matrix.det_of_isUpperTriangular hMt] at hdet
     exact isUnit_of_dvd_unit (Finset.dvd_prod_of_mem (fun j => fA.co gA τ j j) (Finset.mem_univ i)) hdet
 
   have hxk : (spMap ρ ≫ u) ≫ X.π = spMap ρ ≫ (u ≫ X.π) := Category.assoc _ _ _

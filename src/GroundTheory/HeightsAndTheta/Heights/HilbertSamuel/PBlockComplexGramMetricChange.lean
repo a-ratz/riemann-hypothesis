@@ -112,7 +112,7 @@ theorem pair_torus (B : HermLine ι) {k₀ : K} (hB : B.a = unitDeg k₀) {z : (
   have hexp : Real.exp (-(n : ℝ) * (2 * Real.log (B.h (fun p => c p.1 * z p)))) =
       ((‖c k₀‖ * B.h z) ^ (2 * n))⁻¹ := by
     rw [h_torus B hB c hc, show -(n : ℝ) * (2 * Real.log (‖c k₀‖ * B.h z)) =
-      -(((2 * n : ℕ) : ℝ) * Real.log (‖c k₀‖ * B.h z)) by push_cast; ring, Real.exp_neg, Real.exp_nat_mul,
+      -(((2 * n : ℕ) : ℝ) * Real.log (‖c k₀‖ * B.h z)) by push_cast; ring, Real.exp_neg, Real.exp_natCast_mul,
       Real.exp_log (mul_pos hcn hρ)]
   have hcc : c k₀ ^ n * conj (c k₀) ^ n = ((‖c k₀‖ : ℝ) : ℂ) ^ (2 * n) := by
     rw [← mul_pow, Complex.mul_conj, Complex.normSq_eq_norm_sq, pow_mul]

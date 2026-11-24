@@ -102,8 +102,8 @@ theorem tame_double {χS χT : (AE D)ˣ →* Circle} {om : Om S T} (hom : IsWeil
     Tame ψ S T fun Φ => ∫ h in vA.𝓕, ∫ n, K h n * liftS om vT.μ vT.𝓕 G Φ (g h n) ∂ν ∂vA.μ := by
   obtain ⟨-, h2A, -, hbA, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D A
   obtain ⟨-, h2T, -, hbT, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D T
-  haveI := finite_vol vA
-  haveI := finite_vol vT
+  have := finite_vol vA
+  have := finite_vol vT
   have hc : Continuous fun y : (GA D A × N) × GA D T => K y.1.1 y.1.2 * G y.2 :=
     (hK.comp continuous_fst).mul (hG.continuous.comp continuous_snd)
   have hg' : Continuous fun y : (GA D A × N) × GA D T => g y.1.1 y.1.2 := hg.comp continuous_fst
@@ -145,12 +145,12 @@ theorem lift_periods_tame : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (W : H
   intro D ψ W vW G hG
   refine ⟨fun ρ B χ χ' om hom φ hφ => ?_, fun ρ J χ χ' om hom L' ζ' χ₁ χ₂ omz homz φ Φ₀ hφ hΦ₀ => ?_⟩
   · obtain ⟨-, h2, -, hb, ht, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.V
-    haveI : SecondCountableTopology (flagN B.d) := TopologicalSpace.Subtype.secondCountableTopology (flagN B.d : Set (GA D B.V))
-    haveI : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) :=
+    have : SecondCountableTopology (flagN B.d) := TopologicalSpace.Subtype.secondCountableTopology (flagN B.d : Set (GA D B.V))
+    have : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) :=
       isFiniteMeasure_restrict.2 (by rw [B.vN.unit.2.2]; exact ENNReal.one_ne_top)
     obtain ⟨C₁, a₁, h₁⟩ := GlobalTheory.T.unitaryQuotientHeight_comparable_wittDecomposition D B.V B.V₀ ρ B.d
     obtain ⟨C₂, a₂, h₂⟩ := GlobalTheory.T.unitaryQuotientHeight_orthogonalSum_comparable D B.V₀ B.A B.L B.o
-    have hn : Continuous fun p : GA D B.A × flagN B.d => p.2.1 := continuous_subtype_val.comp continuous_snd
+    have hn : Continuous fun p : GA D B.A × flagN B.d => p.2.1 := continuous_subtypeVal.comp continuous_snd
     have := tame_double hom vW hG B.vA hφ (B.vN.ν.restrict B.vN.𝓝)
       (fun h (n : flagN B.d) => φ h * star (psiBes ψ B.d 1 (vecB B.o B.ζ) n.1)) (fun h n => n.1 * embA B.d B.o h)
       ((hφ.continuous.comp continuous_fst).mul
@@ -171,12 +171,12 @@ theorem lift_periods_tame : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (W : H
     unfold BesL.per besPer besFun
     congr 1; funext h; congr 1; funext n; ring
   · obtain ⟨-, h2, -, hb, ht, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D J.W
-    haveI : SecondCountableTopology (flagN J.d) := TopologicalSpace.Subtype.secondCountableTopology (flagN J.d : Set (GA D J.W))
-    haveI : IsFiniteMeasure (J.vN.ν.restrict J.vN.𝓝) :=
+    have : SecondCountableTopology (flagN J.d) := TopologicalSpace.Subtype.secondCountableTopology (flagN J.d : Set (GA D J.W))
+    have : IsFiniteMeasure (J.vN.ν.restrict J.vN.𝓝) :=
       isFiniteMeasure_restrict.2 (by rw [J.vN.unit.2.2]; exact ENNReal.one_ne_top)
     obtain ⟨C₁, a₁, h₁⟩ := GlobalTheory.T.unitaryQuotientHeight_comparable_wittDecomposition D J.W J.W₀ ρ J.d
     obtain ⟨C₂, a₂, h₂⟩ := GlobalTheory.SupThetaGrowth.om_sup_quotHeight D ψ J.W₀ L' χ₁ χ₂ omz homz Φ₀ hΦ₀
-    have hn : Continuous fun p : GA D J.W₀ × flagN J.d => p.2.1 := continuous_subtype_val.comp continuous_snd
+    have hn : Continuous fun p : GA D J.W₀ × flagN J.d => p.2.1 := continuous_subtypeVal.comp continuous_snd
     have hth : ∀ n h, thetaJS ψ J.d ζ' omz Φ₀ n h =
         ψ (cenS J.d L' (zEll L' ρ ζ') n) * omz (h, 1) Φ₀ (ptS J.d L' (zEll L' ρ ζ') n) := fun n h => by
       rw [thetaJS, GlobalTheory.Unf.FB.ThLaws.jacS_zero_apply]

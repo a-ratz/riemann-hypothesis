@@ -142,7 +142,7 @@ theorem restrS_apply (F : Type) [Field F] [NumberField F] [Fintype κ₁] [Finty
 theorem sb_comp_extend (F : Type) [Field F] [NumberField F] (hj : Function.Injective j)
     {g : (κ → FiniteAdeleRing (𝓞 F) F) → ℂ} (hg : g ∈ SB (κ → FiniteAdeleRing (𝓞 F) F)) :
     (fun y => g (Function.extend j y 0)) ∈ SB (κ₁ → FiniteAdeleRing (𝓞 F) F) := by
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := inferInstanceAs (T2Space (RestrictedProduct
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) := inferInstanceAs (T2Space (RestrictedProduct
       (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) cofinite))
   exact ⟨hg.1.comp_continuous (continuous_extend hj), hg.2.comp_isClosedEmbedding (isClosedEmbedding_extend hj)⟩

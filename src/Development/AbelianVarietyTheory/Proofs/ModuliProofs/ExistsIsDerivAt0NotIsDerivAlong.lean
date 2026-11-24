@@ -92,10 +92,10 @@ theorem isTypeFn_of_sum (D : Datum H) {g : ℕ} (ty : Fin g → (E →+* ℂ))
   exact Nat.card_congr (e.subtypeEquiv fun i => by rw [← he i])
 
 theorem finiteDimensional (D : Datum H) : Module.Finite ℤ D.La ∧ Module.Free ℤ D.La := by
-  haveI := D.fin
-  haveI := D.proj
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.Flat ℤ D.La := Module.Flat.trans ℤ (𝓞 E) D.La
+  have := D.fin
+  have := D.proj
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.Flat ℤ D.La := Module.Flat.trans ℤ (𝓞 E) D.La
   exact ⟨inferInstance, inferInstance⟩
 
 theorem trace_eq_of_pos {W : Type} [AddCommGroup W] [Module ℝ W] [FiniteDimensional ℝ W]
@@ -178,8 +178,8 @@ theorem exists_presents {D : Datum H} {g : ℕ} {ty : Fin g → (E →+* ℂ)} {
     rintro _ ⟨x, rfl⟩
     exact ⟨1 ⊗ₜ x, by simp [hψ]⟩
   have hrk : Module.finrank ℝ (ℝ ⊗[ℤ] D.La) = Module.finrank ℝ (Fin g → ℂ) := by
-    haveI : DiscreteTopology (LinearMap.range P.toIntLinearMap) := hdisc
-    haveI : IsZLattice ℝ (LinearMap.range P.toIntLinearMap) := ⟨hspan⟩
+    have : DiscreteTopology (LinearMap.range P.toIntLinearMap) := hdisc
+    have : IsZLattice ℝ (LinearMap.range P.toIntLinearMap) := ⟨hspan⟩
     rw [Module.finrank_baseChange, (LinearEquiv.ofInjective P.toIntLinearMap hinj).finrank_eq, ZLattice.rank ℝ]
   let φ := LinearEquiv.ofBijective ψ ⟨(LinearMap.injective_iff_surjective_of_finrank_eq_finrank hrk).2 hsurj, hsurj⟩
   have hφ : ∀ (r : ℝ) x, φ (r ⊗ₜ x) = r • P x := hψ

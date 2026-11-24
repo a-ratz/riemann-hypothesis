@@ -78,15 +78,15 @@ theorem exists_log (T : GrpData p q) {k : T.G} (hk : k ∈ T.Kset) :
     ∃ X, X ∈ upq p q ∧ IsKC X ∧ T.cov (T.expt X) = T.cov k := by
   have hB := blockOrd_std p q
   obtain ⟨Y, hY, hexp, -⟩ := Formalism.REAL.compact_exponential_surjective _ _ _ (mem_Kset hB T hk)
-  letI : NormedRing (Mat p q) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℚ (Mat p q) := Matrix.linftyOpNormedAlgebra
-  letI : NormedSpace ℂ (Mat p q) := Matrix.linftyOpNormedSpace
-  letI : CompleteSpace (Mat p q) := FiniteDimensional.complete ℂ (Mat p q)
-  letI : NormedRing (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℚ (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedSpace ℂ (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) := Matrix.linftyOpNormedSpace
-  letI : CompleteSpace (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) :=
-    FiniteDimensional.complete ℂ (Matrix (Fin (p + q)) (Fin (p + q)) ℂ)
+  let : NormedRing (Mat p q) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℚ (Mat p q) := Matrix.linftyOpNormedAlgebra
+  let : NormedSpace ℂ (Mat p q) := Matrix.linftyOpNormedSpace
+  let : CompleteSpace (Mat p q) := FiniteDimensional.completeSpace ℂ (Mat p q)
+  let : NormedRing (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℚ (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedSpace ℂ (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) := Matrix.linftyOpNormedSpace
+  let : CompleteSpace (Matrix (Fin (p + q)) (Fin (p + q)) ℂ) :=
+    FiniteDimensional.completeSpace ℂ (Matrix (Fin (p + q)) (Fin (p + q)) ℂ)
   let φ := Matrix.reindexAlgEquiv ℂ ℂ (finSumFinEquiv (m := p) (n := q))
   have hφc : Continuous φ := by
     rw [Matrix.coe_reindexAlgEquiv]
@@ -132,7 +132,7 @@ theorem cov_expt_torX (T : GrpData p q) (θ : Ix p q → ℝ) :
 private theorem sq_expt_torX_sq_eq_exp (T : GrpData p q) (θ : Ix p q → ℝ) :
     ((T.sq (T.expt (torX θ)) : ℂˣ) : ℂ) ^ 2 =
       Complex.exp ((∑ a, (θ a : ℂ)) * Complex.I / 2) ^ 2 := by
-  rw [T.sq_sq, cov_expt_torX, Matrix.det_diagonal, ← Complex.exp_sum, ← Complex.exp_nat_mul]
+  rw [T.sq_sq, cov_expt_torX, Matrix.det_diagonal, ← Complex.exp_sum, ← Complex.exp_natCast_mul]
   congr 1
   rw [← Finset.sum_mul]
   push_cast

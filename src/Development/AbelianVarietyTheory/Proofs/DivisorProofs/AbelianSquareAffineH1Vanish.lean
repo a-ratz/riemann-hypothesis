@@ -59,8 +59,8 @@ namespace GlobalTheory.Obs
 theorem sq_abelian_and_affine_H1 : ∀ (R : Type) [CommRing R], (∀ (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → IsAbelianScheme (A ⊗ A) ∧ SmoothOfRelativeDimension (g + g) (A ⊗ A).hom) ∧ ∀ (X : Scheme.{0}) [IsAffine X] (s : X ⟶ Sp R) (c : HO1 s), c = 0 := by
   intro R _
   refine ⟨fun A _ g hA hg ↦ ⟨ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA, ?_⟩, fun X _ s c ↦ ?_⟩
-  · haveI := hg
-    haveI : SmoothOfRelativeDimension g (Limits.pullback.fst A.hom A.hom) :=
+  · have := hg
+    have : SmoothOfRelativeDimension g (Limits.pullback.fst A.hom A.hom) :=
       (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback
         (IsPullback.of_hasPullback _ _).flip hg
     exact inferInstanceAs (SmoothOfRelativeDimension (g + g) (Limits.pullback.fst A.hom A.hom ≫ A.hom))

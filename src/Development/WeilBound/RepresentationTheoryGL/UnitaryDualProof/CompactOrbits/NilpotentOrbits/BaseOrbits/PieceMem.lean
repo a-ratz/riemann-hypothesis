@@ -221,12 +221,12 @@ theorem core (hcomm : ∀ a b : G, a * b = b * a) (hcont : ∀ g : G, Continuous
         have hhB : h • p.2 ∈ B := by
           rw [← hgx, ← mul_smul, hcomm, mul_smul, hh]
           exact hBK i g hg r hrB
-        simp only [Φ, Set.indicator_of_mem hhB, hk, if_true, Pi.one_apply, mul_one, a]
+        simp only [Φ, Set.indicator_of_mem hhB, hk, ite_true, Pi.one_apply, mul_one, a]
         have e3 := hFK g hg (p.1, w0)
         simp only [hgx] at e3
         rw [← e3]
       · have hk : ¬ Quotient.mk (rel (K i)) (h • p.2) = Quotient.mk (rel (K i)) r := fun h' => hp (key.1 h')
-        simp only [hk, if_false, mul_zero]
+        simp only [hk, ite_false, mul_zero]
         by_contra h0
         exact hp (hFO p (Ne.symm h0))
     have hQne : Q.Nonempty := by

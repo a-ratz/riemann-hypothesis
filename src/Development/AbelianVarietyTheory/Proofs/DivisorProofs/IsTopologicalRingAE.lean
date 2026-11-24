@@ -58,15 +58,15 @@ theorem isModuleTopology_AE : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl�
 
 variable (F E) in
 theorem isTopologicalRing_AE : IsTopologicalRing (AF F ⊗[F] E) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := isModuleTopology_AE F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := isModuleTopology_AE F E
   exact IsModuleTopology.isTopologicalRing (AF F) _
 
 instance instTopRingAE : IsTopologicalRing (AF F ⊗[F] E) := isTopologicalRing_AE F E
 
 theorem continuous_cAF (σ : E →ₐ[F] E) : Continuous (cAF (F := F) σ) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := isModuleTopology_AE F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := isModuleTopology_AE F E
   let l : (AF F ⊗[F] E) →ₗ[AF F] (AF F ⊗[F] E) :=
     (Algebra.TensorProduct.map (AlgHom.id (AF F) (AF F)) σ).toLinearMap
   have e : (cAF (F := F) σ : AF F ⊗[F] E → AF F ⊗[F] E) = l := by
@@ -82,8 +82,8 @@ variable (σ : E →ₐ[F] E) {nS nT : ℕ} (JS : Matrix (Fin nS) (Fin nS) E) (J
 
 theorem continuous_symplOHF {X : Type} [TopologicalSpace X] {x y : X → WOF F E nS nT} (hx : Continuous x)
     (hy : Continuous y) : Continuous fun t => symplOHF σ JS JT xi0 (x t) (y t) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := isModuleTopology_AE F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := isModuleTopology_AE F E
   have hy' : ∀ i j, Continuous fun t => cAF σ (y t i j) := fun i j =>
     (continuous_cAF σ).comp ((continuous_apply j).comp ((continuous_apply i).comp hy))
   have hx' : ∀ i j, Continuous fun t => x t i j := fun i j =>

@@ -453,7 +453,7 @@ theorem h90 : CompanionTheory.ObstructionTrivialLocus.H90 := by
   obtain ⟨V, hV, hxV, -⟩ := exists_isAffineOpen_mem_and_subset (X := Y) (U := ⊤) (x := f x) trivial
   obtain ⟨O, hO, hxO, hOV⟩ := exists_isAffineOpen_mem_and_subset (X := X) (U := f ⁻¹ᵁ V) (x := x) hxV
   have hle : O ≤ f ⁻¹ᵁ V := hOV
-  letI := (f.appLE V O hle).hom.toAlgebra
+  let := (f.appLE V O hle).hom.toAlgebra
   have hfl' : Module.Flat Γ(Y, V) Γ(X, O) := f.flat_appLE hV hO hle
   have hij := IsAffineOpen.SpecMap_appLE_fromSpec f hV hO hle
   obtain ⟨V', e, _, t₀, hx, ht₀, P⟩ := local_unit f u (A := Γ(Y, V)) (B := Γ(X, O)) hO.fromSpec

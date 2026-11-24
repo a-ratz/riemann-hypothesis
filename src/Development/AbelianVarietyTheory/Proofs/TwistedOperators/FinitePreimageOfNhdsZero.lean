@@ -109,8 +109,8 @@ theorem charpoly_conj_ratEmb (γ : GRat σ J) (x : GAd σ J) :
   exact Matrix.charpoly_map _ _
 
 theorem finite_ratEmb_mem {K : Set (GAd σ J)} (hK : IsCompact K) : {γ : GRat σ J | ratEmb σ J γ ∈ K}.Finite := by
-  haveI : DiscreteTopology (ratPts σ J) := GlobalTheory.RationalDiscrete.discreteTopology_HFinIn σ J
-  have hcl : IsClosed (ratPts σ J : Set (GAd σ J)) := Subgroup.isClosed_of_discrete
+  have : DiscreteTopology (ratPts σ J) := GlobalTheory.RationalDiscrete.discreteTopology_HFinIn σ J
+  have hcl : IsClosed (ratPts σ J : Set (GAd σ J)) := Subgroup.isClosed_of_discreteTopology
   have hfin : ((Subtype.val : ratPts σ J → GAd σ J) ⁻¹' K).Finite :=
     (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK).finite_of_discrete
   let g : GRat σ J → ratPts σ J := fun γ => ⟨ratEmb σ J γ, range_ratEmb σ J ▸ ⟨γ, rfl⟩⟩
@@ -122,13 +122,13 @@ theorem finite_charpoly_and_ratPts : ∀ (F E : Type) [Field F] [NumberField F] 
     {Q : E[X] | ∃ γ : GRat σ J, γ.1.1.charpoly = Q ∧ ∃ x, x⁻¹ * ratEmb σ J γ * x ∈ C}.Finite ∧
       ∀ x, {γ : GRat σ J | x⁻¹ * ratEmb σ J γ * x ∈ C}.Finite := by
   intro F E _ _ _ _ _ σ _ n J C hC
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := F) (E := E)
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := F) (E := E)
   refine ⟨?_, fun x => ?_⟩
   ·
     let c : Fin (n + 1) → GAd σ J → AF F ⊗[F] E := fun i g =>
       (((matHom (AF F) σ J g : GL (Fin n) (AF F ⊗[F] E)) : Matrix (Fin n) (Fin n) (AF F ⊗[F] E))).charpoly.coeff i
     have hc : ∀ i, Continuous (c i) := fun i =>
-      (continuous_coeff_charpoly n i).comp (Units.continuous_val.comp continuous_subtype_val)
+      (continuous_coeff_charpoly n i).comp (Units.continuous_val.comp continuous_subtypeVal)
     obtain ⟨U, hU, hU0⟩ := GlobalTheory.RationalDiscrete.exists_nhds_zero_inclR (F := F) (E := E)
     let T : Fin (n + 1) → Set E := fun i => {e | (inclR (AF F)).toAddMonoidHom e ∈ c i '' C}
     have hT : ∀ i, (T i).Finite := fun i =>

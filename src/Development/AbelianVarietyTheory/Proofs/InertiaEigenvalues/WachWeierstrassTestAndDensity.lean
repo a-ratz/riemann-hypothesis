@@ -160,7 +160,7 @@ theorem prime_X_sub_C (hinj : Function.Injective (algebraMap O L)) {x : O} (hx :
   · intro a b h
     rw [← X_dvd_ev_iff hinj hx ev hev, map_mul] at h
     rw [← X_dvd_ev_iff hinj hx ev hev a, ← X_dvd_ev_iff hinj hx ev hev b]
-    exact PowerSeries.X_prime.2.2 _ _ h
+    exact PowerSeries.prime_X.2.2 _ _ h
 
 end
 
@@ -271,11 +271,11 @@ theorem dense [IsDomain O] [IsFractionRing O L] (ev : PowerSeries O →ₐ[O] Po
 
 theorem not_isUnit_sub_one [IsLocalRing O] {l : ℕ} (hp : l.Prime) (hl : ¬ IsUnit (l : O)) {μ : O} {j : ℕ}
     (hμ : μ ^ l ^ j = 1) : ¬ IsUnit (μ - 1) := by
-  haveI : Fact l.Prime := ⟨hp⟩
+  have : Fact l.Prime := ⟨hp⟩
   have h0 : ((l : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O)]
     exact (IsLocalRing.residue_eq_zero_iff _).2 hl
-  haveI : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
+  have : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
   intro h
   have h1 := (h.map (IsLocalRing.residue O)).pow (l ^ j)
   rw [map_sub, map_one, sub_pow_char_pow, ← map_pow, hμ, map_one, one_pow, sub_self] at h1
@@ -489,7 +489,7 @@ theorem root_integral {l : ℕ} [Fact l.Prime] (LL : FinExt l) {ζ : ↥LL.1} {N
 theorem exists_prim {l : ℕ} [Fact l.Prime] {K : FinExt l} {s : ℕ} {LL : FinExt l} (h : Good K s LL) :
     ∃ μ : ↥(OL LL), IsPrimitiveRoot μ (l ^ s) := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero ((l ^ s : ℕ) : Om l) := ⟨by exact_mod_cast (pow_pos hp.pos s).ne'⟩
+  have : NeZero ((l ^ s : ℕ) : Om l) := ⟨by exact_mod_cast (pow_pos hp.pos s).ne'⟩
   obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ s)
   have h1 : z ∈ Ks K s :=
     (le_sup_right : _ ≤ Ks K s) (IntermediateField.subset_adjoin _ _ hz.pow_eq_one)

@@ -112,7 +112,7 @@ theorem scale_product_measure : Formalism.FourierDecayAlt.G.ScalePi := by
   simp only [hA]
   refine Measure.pi_eq fun s hs => ?_
   rw [hc]
-  simp only [Measure.smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
+  simp only [smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
 end Formalism.FourierDecayAlt.P

@@ -91,7 +91,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (χ : HChar L) : ∃
     isOpen_lt (continuous_norm.comp (Units.continuous_val.sub continuous_const)) continuous_const
   have hc : Continuous (fun y => χ.1 (Phi L y)) := χ.2.1.comp (Phi_cont L)
   have h1 : (fun y => χ.1 (Phi L y)) 1 ∈ W := by
-    simp only [map_one, hWdef, Set.mem_setOf_eq, Units.val_one, sub_self, norm_zero]
+    simp only [map_one, hWdef, Set.mem_ofPred_eq, Units.val_one, sub_self, norm_zero]
     norm_num
   have hmem : (fun y => χ.1 (Phi L y)) ⁻¹' W ∈ 𝓝 (1 : Pu L) :=
     hc.continuousAt.preimage_mem_nhds (hW.mem_nhds h1)
@@ -104,7 +104,7 @@ theorem exists_strictHenselian_absolutely_closed_local_ring (χ : HChar L) : ∃
     exact mem_of_mem_nhds (ht i)
   refine Units.ext (no_small _ fun n => ?_)
   have h2 := hsub (hyI n)
-  simp only [Set.mem_preimage, map_pow, hWdef, Set.mem_setOf_eq, Units.val_pow_eq_pow_val] at h2
+  simp only [Set.mem_preimage, map_pow, hWdef, Set.mem_ofPred_eq, Units.val_pow_eq_pow_val] at h2
   exact h2
 
 end PI.HeckeProdW

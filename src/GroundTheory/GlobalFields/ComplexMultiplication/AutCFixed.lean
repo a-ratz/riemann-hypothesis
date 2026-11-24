@@ -104,10 +104,10 @@ theorem exists_algEquiv_apply_eq_of_minpoly_eq {x y : Ω} (hx : IsAlgebraic F x)
     (IsTranscendenceBasis.extendScalars_of_isAlgebraic (E := F⟮y⟯) hs) (Equiv.refl s)
   refine ⟨AlgEquiv.ofRingEquiv (f := σ) fun a => ?_, ?_⟩
   · have h1 := hσ (algebraMap F F⟮x⟯ a)
-    rw [AlgEquiv.coe_ringEquiv, AlgEquiv.commutes] at h1
+    rw [AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes] at h1
     rwa [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply] at h1
   · have := hσ (AdjoinSimple.gen F x)
-    rw [AlgEquiv.coe_ringEquiv, minpoly.algEquiv_apply] at this
+    rw [AlgEquiv.coe_toRingEquiv, minpoly.algEquiv_apply] at this
     simpa using this
 
 theorem mem_bot_iff_forall_algEquiv_apply_eq [PerfectField F] {x : Ω} :

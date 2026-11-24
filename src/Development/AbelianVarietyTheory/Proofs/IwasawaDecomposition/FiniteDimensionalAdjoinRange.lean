@@ -334,7 +334,7 @@ theorem exists_mulEquiv (hA : ∀ x, x ∈ A ↔ ‖j x‖ ≤ 1) (K : Loc.FinEx
     let b := Module.finBasis E L
     have hi : ∀ i, ∀ᶠ τ : ↥(Loc.GK K) in nhds 1, (τ : Loc.GQ l) (j (b i)) = j (b i) := fun i =>
       ((stabilizer_isOpen_of_isIntegral (K := ℚ_[l]) (j (b i))).preimage
-        continuous_subtype_val).mem_nhds (show ((1 : ↥(Loc.GK K)) : Loc.GQ l) • j (b i) = j (b i) from rfl)
+        continuous_subtypeVal).mem_nhds (show ((1 : ↥(Loc.GK K)) : Loc.GQ l) • j (b i) = j (b i) from rfl)
     rw [Filter.mem_map]
     filter_upwards [Filter.eventually_all.2 hi] with τ hτ
     apply hsub

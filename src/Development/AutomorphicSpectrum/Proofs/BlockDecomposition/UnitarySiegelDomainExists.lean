@@ -166,7 +166,7 @@ theorem exists_isotropic_of_isWittFrame {F E : Type} [Field F] [Field E] [Algebr
 
 theorem exists_nearMin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin (r + 1)) E), IsWittFrame σ J X Y → ∀ g : GAd σ J, ∃ v, NearMin σ J g v := by
   intro F E _ _ _ _ _ σ hCM n J _ r X Y hW g
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hCM.2.2.1⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨hCM.2.2.1⟩
   obtain ⟨c, hc, hlow⟩ := exists_pos_le_hgt σ J g
   obtain ⟨v₀, hv₀, hi₀⟩ := exists_isotropic_of_isWittFrame hW
   let S : Set ℝ := {t | ∃ u : Fin n → E, u ≠ 0 ∧ hE σ J u u = 0 ∧ t = hgt σ J g u}
@@ -399,13 +399,13 @@ theorem properSpace_completion (F : Type) [Field F] [NumberField F] (w : Infinit
 
 theorem isCompact_boxF_one (F : Type) [Field F] [NumberField F] : IsCompact (boxF F 1) := by
   have h1 : IsCompact (Set.univ.pi fun w : InfinitePlace F => Metric.closedBall (0 : w.Completion) 1) := by
-    haveI : ∀ w : InfinitePlace F, ProperSpace w.Completion := fun w => properSpace_completion F w
+    have : ∀ w : InfinitePlace F, ProperSpace w.Completion := fun w => properSpace_completion F w
     exact isCompact_univ_pi fun w => isCompact_closedBall 0 1
   have h2 := GroundTheory.Global.isCompact_integralFiniteAdeles F
   have e : boxF F 1 = (Set.univ.pi fun w : InfinitePlace F => Metric.closedBall (0 : w.Completion) 1) ×ˢ
       (GroundTheory.Global.integralFiniteAdeles (𝓞 F) F : Set (IsDedekindDomain.FiniteAdeleRing (𝓞 F) F)) := by
     ext a
-    simp only [boxF, Set.mem_setOf_eq]
+    simp only [boxF, Set.mem_ofPred_eq]
     change _ ↔ (a.1 ∈ (Set.univ.pi fun w : InfinitePlace F => Metric.closedBall (0 : w.Completion) 1) ∧
       a.2 ∈ (GroundTheory.Global.integralFiniteAdeles (𝓞 F) F : Set (IsDedekindDomain.FiniteAdeleRing (𝓞 F) F)))
     refine and_congr ⟨fun h => Set.mem_univ_pi.mpr fun w => ?_, fun h w => ?_⟩ Iff.rfl
@@ -417,9 +417,9 @@ theorem isCompact_boxF_one (F : Type) [Field F] [NumberField F] : IsCompact (box
 theorem isCompact_boxE_one (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] :
     IsCompact (boxE F E 1) := by
   set b := Algebra.TensorProduct.basis (AF F) (Module.finBasis F E) with hb
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
-  haveI : ContinuousSMul (AF F) (AF F ⊗[F] E) := inferInstance
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : ContinuousSMul (AF F) (AF F ⊗[F] E) := inferInstance
   have hK : IsCompact (Set.univ.pi fun _ : Fin (Module.finrank F E) => boxF F 1) :=
     isCompact_univ_pi fun _ => isCompact_boxF_one F
   have hc : Continuous
@@ -427,7 +427,7 @@ theorem isCompact_boxE_one (F E : Type) [Field F] [NumberField F] [Field E] [Num
     IsModuleTopology.continuous_of_linearMap _
   have e : boxE F E 1 = b.equivFun.symm '' (Set.univ.pi fun _ => boxF F 1) := by
     ext x
-    simp only [boxE, Set.mem_setOf_eq, Set.mem_image, Set.mem_univ_pi, ← hb]
+    simp only [boxE, Set.mem_ofPred_eq, Set.mem_image, Set.mem_univ_pi, ← hb]
     constructor
     · intro hx
       exact ⟨b.equivFun x, fun k => by rw [Module.Basis.equivFun_apply]; exact hx k,
@@ -611,7 +611,7 @@ theorem finprod_le_prod_of_le {α : Type*} {f b : α → ℝ} (S : Finset α) (h
   · set c : α → ℝ := fun a => if a ∈ S then b a else 1 with hc
     have hcs : Function.mulSupport c ⊆ (S : Set α) := fun a ha => by
       by_contra h
-      exact ha (by simp only [hc]; exact if_neg fun h' => h (Finset.mem_coe.2 h'))
+      exact ha (by simp only [hc]; exact ite_eq_right fun h' => h (Finset.mem_coe.2 h'))
     have hcf : (Function.mulSupport c).Finite := S.finite_toSet.subset hcs
     have hle : ∏ᶠ a, f a ≤ ∏ᶠ a, c a :=
       finprod_le_finprod_of_nonneg hf hcf h0 fun a => by
@@ -622,7 +622,7 @@ theorem finprod_le_prod_of_le {α : Type*} {f b : α → ℝ} (S : Finset α) (h
     rw [finprod_eq_prod_of_mulSupport_subset c hcs] at hle
     refine hle.trans (le_of_eq (Finset.prod_congr rfl fun a ha => ?_))
     simp only [hc]
-    rw [if_pos ha]
+    rw [ite_eq_left ha]
   · rw [finprod_of_infinite_mulSupport hf]
     exact hone
 
@@ -642,7 +642,7 @@ theorem isOpen_integralOutside (S : Finset (HeightOneSpectrum (𝓞 F))) :
   have : integralOutside (N := N) S = ⋂ i : Fin N, (fun y : Fin N → AF F => y i) ⁻¹'
       {a : AF F | ∀ v, v ∉ S → a.2 v ∈ v.adicCompletionIntegers F} := by
     ext y
-    simp only [integralOutside, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [integralOutside, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
   rw [this]
   exact isOpen_iInter_of_finite fun i => h2.preimage (continuous_apply i)
 
@@ -741,7 +741,7 @@ namespace GlobalTheory.CompanionTheory.RedCov.Simple
 theorem exists_one_le_mul_hgt : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (D : Set (GAd σ J)), IsCompact D → ∃ P : ℝ, 0 < P ∧ ∀ g ∈ D, ∀ v : Fin n → E, v ≠ 0 → 1 ≤ P * hgt σ J g v := by
   intro F E _ _ _ _ _ σ hCM n J D hD
   obtain ⟨-, -, h2, -⟩ := hCM
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   obtain ⟨P, hP, h⟩ := GroundTheory.Automorphic.Reduction.exists_adelicNorm_vecMul_le_mul
     (hD.image (Bridge.continuous_trG σ J).inv)
   refine ⟨P, hP, fun g hg v hv => ?_⟩
@@ -805,14 +805,14 @@ theorem adelicNorm_rId [IsTotallyReal F] {N : ℕ} (c : ℝ) (y : Fin N → AF F
     GroundTheory.Automorphic.Reduction.adelicNorm (rId F c • y) =
       Real.exp (Module.finrank ℚ F * c) * GroundTheory.Automorphic.Reduction.adelicNorm y := by
   have hm : ∀ w : InfinitePlace F, w.mult = 1 := fun w => by
-    rw [InfinitePlace.mult, if_pos (IsTotallyReal.isReal w)]
+    rw [InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal w)]
   have hw : ∀ w : InfinitePlace F, ‖(rId F c).1 w‖ = Real.exp c := fun w => norm_evInf_rId w c
   have hv : ∀ v, GroundTheory.Automorphic.Reduction.finComp v (rId F c • y) = GroundTheory.Automorphic.Reduction.finComp v y := fun v => by
     rw [GroundTheory.Automorphic.Reduction.finComp_smul, rId_snd]
     exact one_smul _ _
   simp only [GroundTheory.Automorphic.Reduction.adelicNorm, GroundTheory.Automorphic.Reduction.infComp_smul,
     GroundTheory.Automorphic.Reduction.euclidNorm_smul, hw, hm, pow_one, hv]
-  rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, card_infinitePlace, ← Real.exp_nat_mul, mul_assoc]
+  rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, card_infinitePlace, ← Real.exp_natCast_mul, mul_assoc]
 
 theorem hv_rId [IsTotallyReal F] (c : ℝ) (ξ : Fin n → AF F ⊗[F] E) :
     hv (algebraMap (AF F) (AF F ⊗[F] E) (rId F c) • ξ) = Real.exp (Module.finrank ℚ F * c) * hv ξ := by
@@ -955,7 +955,7 @@ theorem continuous_coordVec : Continuous fun ξ : Fin n → AF F ⊗[F] E =>
       (Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)).repr
         (ξ ((Fintype.equivFin (Fin n × Fin (Module.finrank F E))).symm p).1)
         ((Fintype.equivFin (Fin n × Fin (Module.finrank F E))).symm p).2) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   refine continuous_pi fun p => ?_
   exact (IsModuleTopology.continuous_of_linearMap
     ((Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)).coord _)).comp (continuous_apply _)
@@ -965,7 +965,7 @@ theorem upper_bound (h : IsCMExt F E σ) (x₁ x₂ : Fin n → E) {A₁ A₂ : 
     ∃ P : ℝ, 0 < P ∧ ∀ κ ∈ C, ∀ α₁ ∈ A₁, ∀ α₂ ∈ A₂, ∀ ζ ∈ boxE F E 1, ∀ z ∈ boxF F 1,
       hv ((matHom _ σ J κ⁻¹).1 *ᵥ ((α₁ * ζ) • ratV F x₁ + (α₂ * algebraMap (AF F) (AF F ⊗[F] E) z) • ratV F x₂)) ≤ P := by
   have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hbF, hbE⟩ := _root_.GlobalTheory.CompanionTheory.RedCov.Simple.BoxCpt.main F E
   have hcA : Continuous (algebraMap (AF F) (AF F ⊗[F] E)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.linearMap (AF F) (AF F ⊗[F] E))
@@ -984,7 +984,7 @@ theorem upper_bound (h : IsCMExt F E σ) (x₁ x₂ : Fin n → E) {A₁ A₂ : 
 open scoped Pointwise in
 theorem simple_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin (r + 1)) E), IsWittFrame σ J X Y → ∀ a, IsTorus σ J X Y a → ∀ (Ω C : Set (GAd σ J)), IsCompact Ω → Ω ⊆ minParOne σ J X → IsCompact C → ∃ M : ℝ, 0 < M ∧ ∀ ω ∈ Ω, ∀ s : Fin (r + 1) → ℝ, ∀ κ ∈ C, ∀ e : E, e ≠ 0 → NearMin σ J (ω * a s * κ) (e • Xᵀ 0) → ∀ j : Fin (r + 1), j.val = 1 → Real.exp (s j) ≤ M * Real.exp (s 0) := by
   intro F E _ _ _ _ _ σ h n J hJ r X Y hW a ha Ω C hΩ hΩ1 hC
-  haveI := h.1
+  have := h.1
   by_cases hr : ∃ j : Fin (r + 1), j.val = 1
   swap
   · exact ⟨1, one_pos, fun ω _ s κ _ e _ _ j hj => absurd ⟨j, hj⟩ hr⟩
@@ -1072,8 +1072,8 @@ theorem simple_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have e2 := hgt_line ha m2 s κ e
   have hl := hlow (ω * κ) (Set.mul_mem_mul hω hκ) (e • Xᵀ 0) hNM.1
   rw [← hd] at e1 e2
-  have eT : Real.exp (d * Real.log T) = T ^ d := by rw [Real.exp_nat_mul, Real.exp_log hT]
-  have eA : Real.exp (d * (-s 0)) = A ^ d := by rw [Real.exp_nat_mul, hAdef]
+  have eT : Real.exp (d * Real.log T) = T ^ d := by rw [Real.exp_natCast_mul, Real.exp_log hT]
+  have eA : Real.exp (d * (-s 0)) = A ^ d := by rw [Real.exp_natCast_mul, hAdef]
   rw [eT] at e1
   rw [eA] at e2
   have hmain : A ^ d ≤ K * T ^ d := by

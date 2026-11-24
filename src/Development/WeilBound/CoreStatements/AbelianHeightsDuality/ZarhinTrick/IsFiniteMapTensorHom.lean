@@ -152,13 +152,13 @@ theorem isFinite_map_tensorHom {X Y X' Y' : Over S} (f : X ⟶ Y) (g : X' ⟶ Y'
       IsIso.hom_inv_id, Category.comp_id]
   have ht : IsFinite (Over.Hom.left (F.map f ⊗ₘ F.map g)) :=
     GlobalTheory.TensorFinite.isFinite_tensorHom _ _ hf hg
-  haveI : IsIso (CartesianMonoidalCategory.prodComparison F X X') :=
+  have : IsIso (CartesianMonoidalCategory.prodComparison F X X') :=
     CartesianMonoidalCategory.isIso_prodComparison_of_preservesLimit_pair F X X'
-  haveI : IsIso (CartesianMonoidalCategory.prodComparison F Y Y') :=
+  have : IsIso (CartesianMonoidalCategory.prodComparison F Y Y') :=
     CartesianMonoidalCategory.isIso_prodComparison_of_preservesLimit_pair F Y Y'
-  haveI : IsIso (Over.Hom.left (CartesianMonoidalCategory.prodComparison F X X')) :=
+  have : IsIso (Over.Hom.left (CartesianMonoidalCategory.prodComparison F X X')) :=
     (Over.forget T).map_isIso (CartesianMonoidalCategory.prodComparison F X X')
-  haveI : IsIso (Over.Hom.left (inv (CartesianMonoidalCategory.prodComparison F Y Y'))) :=
+  have : IsIso (Over.Hom.left (inv (CartesianMonoidalCategory.prodComparison F Y Y'))) :=
     (Over.forget T).map_isIso (inv (CartesianMonoidalCategory.prodComparison F Y Y'))
   have h1 : IsFinite (Over.Hom.left (CartesianMonoidalCategory.prodComparison F X X')) := inferInstance
   have h2 : IsFinite (Over.Hom.left (inv (CartesianMonoidalCategory.prodComparison F Y Y'))) :=

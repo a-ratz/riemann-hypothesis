@@ -71,12 +71,12 @@ namespace GlobalTheory.CMFaithful
 theorem linearIndependent_actTate : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → (∃ d : ℕ, 0 < d ∧ SmoothOfRelativeDimension d A.hom) → ∀ (F : Type) [Field F] [NumberField F] (O : Type) [CommRing O] [Algebra O F] [IsFractionRing O F] (α : OAct O A) (l : ℕ) [Fact l.Prime], (l : K) ≠ 0 → ∀ (n : ℕ) (a : Fin n → O), LinearIndependent ℚ (fun i => algebraMap O F (a i)) → LinearIndependent ℤ_[l] (fun i => actTate α.toRingAct l (ptOver K Ω) (a i)) := by
   intro K Ω _ _ _ _ A _ _ hA hd F _ _ O _ _ _ α l _ hl n a ha
   obtain ⟨d, hd0, hdim⟩ := hd
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
   let t := spMap (algebraMap K (AlgebraicClosure Ω))
   let B := (Over.pullback t).obj A
   let β := OAct.pullback t A α
   have hB : IsAbelianScheme B := GlobalTheory.isAbelianScheme_pullback_obj t A hA
-  haveI : IsCommMonObj B := hB.comm
+  have : IsCommMonObj B := hB.comm
   obtain ⟨L, hL⟩ := GlobalTheory.T.exists_symmetric_ample_cubical_lineBundle_abelianVariety (AlgebraicClosure Ω) B hB
   obtain ⟨Q, hQ1, hQ2, hQ3, -⟩ := GlobalTheory.SS.exists_quadraticForm_end (AlgebraicClosure Ω) B hB L hL
   let ψ : O →+ Additive (B ⟶ B) := AddMonoidHom.mk' (fun x => Additive.ofMul (β.act x))
@@ -85,15 +85,15 @@ theorem linearIndependent_actTate : ∀ (K Ω : Type) [Field K] [Field Ω] [Alge
     { carrier := {f | IsMonHom (Additive.toMul f)}
       add_mem' := fun {f g} hf hg => by
         change IsMonHom (Additive.toMul f * Additive.toMul g)
-        haveI : IsMonHom (Additive.toMul f) := hf
-        haveI : IsMonHom (Additive.toMul g) := hg
+        have : IsMonHom (Additive.toMul f) := hf
+        have : IsMonHom (Additive.toMul g) := hg
         rw [Hom.mul_def]; infer_instance
       zero_mem' := by
         change IsMonHom (1 : B ⟶ B)
         rw [Hom.one_def]; infer_instance
       neg_mem' := fun {f} hf => by
         change IsMonHom (Additive.toMul f)⁻¹
-        haveI : IsMonHom (Additive.toMul f) := hf
+        have : IsMonHom (Additive.toMul f) := hf
         infer_instance }
   have hu : ∀ i, ψ (a i) ∈ H := fun i => β.hom (a i)
   have hinj : Function.Injective ψ := (injective_iff_map_eq_zero ψ).2 fun x hx =>
@@ -119,7 +119,7 @@ theorem linearIndependent_actTate : ∀ (K Ω : Type) [Field K] [Field Ω] [Alge
   push_neg at hne
   obtain ⟨j, hj⟩ := hne
   obtain ⟨N, hN⟩ := _root_.GlobalTheory.padicInt_toZModPow_not_dvd_mul l (c j) hj e he
-  haveI : NeZero (l ^ N) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ N) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   let m : Fin n → ℤ := fun i => ((PadicInt.toZModPow N (c i)).val : ℤ)
   have hm : ∀ i, PadicInt.toZModPow N (c i) = (m i : ZMod (l ^ N)) := fun i => by
     simp [m]

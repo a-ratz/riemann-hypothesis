@@ -120,7 +120,7 @@ theorem eventually_eq_zero [FiniteDimensional ℝ 𝔸] {S : Set 𝔸} (hc : IsC
   rw [not_eventually] at hcon
   obtain ⟨y, hy0, hy⟩ := exists_seq_forall_of_frequently hcon
   push_neg at hy
-  haveI : ProperSpace 𝔸 := FiniteDimensional.proper ℝ 𝔸
+  have : ProperSpace 𝔸 := FiniteDimensional.proper ℝ 𝔸
   have hsph : ∀ n, ‖y n‖⁻¹ • y n ∈ Metric.sphere (0 : 𝔸) 1 := fun n => by
     rw [mem_sphere_zero_iff_norm, norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ (norm_ne_zero_iff.2 (hy n).2.2)]
   obtain ⟨u, hu1, φ, hφ, hu⟩ := (isCompact_sphere (0 : 𝔸) 1).tendsto_subseq hsph
@@ -128,7 +128,7 @@ theorem eventually_eq_zero [FiniteDimensional ℝ 𝔸] {S : Set 𝔸} (hc : IsC
     exp_smul_mem_of_tendsto hc h1 hm hi (y := y ∘ φ) (hy0.comp hφ.tendsto_atTop) (fun n => (hy _).2.2)
       (fun n => (hy _).2.1) hu
   have huW : u ∈ W :=
-    W.closed_of_finiteDimensional.mem_of_tendsto hu (Eventually.of_forall fun n => W.smul_mem _ (hy _).1)
+    W.isClosed_of_finiteDimensional.mem_of_tendsto hu (Eventually.of_forall fun n => W.smul_mem _ (hy _).1)
   have h0 : u = 0 := (Submodule.disjoint_def.1 hW) u huL huW
   rw [h0] at hu1
   simp at hu1
@@ -187,9 +187,9 @@ theorem unrealify_mem_lieOf {m : ℕ} {S : Set (Matrix (Fin m) (Fin m) ℂ)} (hS
     {x : EuclideanSpace ℝ (Fin m × Fin m × Bool)} (hx : x ∈ lieE S) : unrealify x ∈ lieOf S := by
   let _ := Matrix.linftyOpNormedRing (n := Fin m) (α := ℂ)
   let _ := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin m) (α := ℂ)
-  have hc : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.complete ℝ _
+  have hc : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.completeSpace ℝ _
   have hL : ∀ X, X ∈ lieOf S ↔ X ∈ lieSub S hS.1 hS.2.1 hS.2.2.1 := fun X => by
-    simp only [lieOf, Set.mem_setOf_eq, Complex.coe_smul]; rfl
+    simp only [lieOf, Set.mem_ofPred_eq, Complex.coe_smul]; rfl
   rw [hL]
   induction hx using Submodule.span_induction with
   | mem x hx =>
@@ -215,9 +215,9 @@ theorem eventually_exists_exp_matrix {m : ℕ} {S : Set (Matrix (Fin m) (Fin m) 
     rw [Matrix.exp_neg]; exact (hS.2.2.2 _ hZ).1
   let _ := Matrix.linftyOpNormedRing (n := Fin m) (α := ℂ)
   let _ := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin m) (α := ℂ)
-  have hc : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.complete ℝ _
+  have hc : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h := eventually_exists_exp hS.1 hS.2.1 hS.2.2.1 hi hU
-  simp only [lieOf, Set.mem_setOf_eq, Complex.coe_smul]
+  simp only [lieOf, Set.mem_ofPred_eq, Complex.coe_smul]
   exact h
 
 theorem closed_subgroup : ∀ (m : ℕ) (S : Set (Matrix (Fin m) (Fin m) ℂ)), PI.IsMatGroup S → (∀ X : lieE S, unrealify (X : EuclideanSpace ℝ _) ∈ lieOf S) ∧ ∀ ρ : ℝ, 0 < ρ → ∃ δ : ℝ, 0 < δ ∧ ∀ g ∈ S, (∀ i j, ‖(g - 1) i j‖ < δ) → Matrix.of.symm g ∈ expSet S (Metric.ball 0 ρ) := by

@@ -155,7 +155,7 @@ theorem exists_finite_iso : ∀ (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω
   obtain ⟨R, g, hR, hg⟩ := exists_fg_iso (k := k) (C := Ω) (A := T) (A' := T') e
   have : Algebra.FiniteType k R := (Subalgebra.fg_iff_finiteType R).1 hR
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
   have : Algebra.FiniteType k (R ⧸ m) := .of_surjective (Ideal.Quotient.mkₐ k m) Ideal.Quotient.mk_surjective
   have : Module.Finite k (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing k _
   obtain ⟨e', he'⟩ := exists_iso_specialise g (Ideal.Quotient.mkₐ k m)
@@ -356,16 +356,16 @@ theorem exists_semiAbelian_model_torusExtension_of_potModel : ∀ (V : Type) [Co
     have h : Function.Injective ((algebraMap W L).comp (algebraMap V W)) := by
       rw [e]; exact (algebraMap K L).injective.comp (IsFractionRing.injective V K)
     exact Function.Injective.of_comp (f := algebraMap W L) h
-  haveI hKL : FiniteDimensional K L := by
-    letI : Algebra V L := ((algebraMap W L).comp (algebraMap V W)).toAlgebra
-    haveI : IsScalarTower V W L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : IsScalarTower V K L := IsScalarTower.of_algebraMap_eq' e
-    haveI : FaithfulSMul V W := (faithfulSMul_iff_algebraMap_injective V W).2 hinj
+  have hKL : FiniteDimensional K L := by
+    let : Algebra V L := ((algebraMap W L).comp (algebraMap V W)).toAlgebra
+    have : IsScalarTower V W L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : IsScalarTower V K L := IsScalarTower.of_algebraMap_eq' e
+    have : FaithfulSMul V W := (faithfulSMul_iff_algebraMap_injective V W).2 hinj
     exact Module.Finite.of_isLocalization V W (nonZeroDivisors V)
   obtain ⟨W', _, _, _, hW', _, hfin', hinj', -, hG', hT⟩ := _root_.GlobalTheory.exists_finite_dvr_torusExtension_specialFibre W G hG
   obtain ⟨_, hK', e', hmod'⟩ := _root_.GlobalTheory.SS.model_finite_ext V K A L W e G hmod W' hfin' hinj'
-  letI : Algebra V W' := ((algebraMap W W').comp (algebraMap V W)).toAlgebra
-  haveI : IsScalarTower V W W' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra V W' := ((algebraMap W W').comp (algebraMap V W)).toAlgebra
+  have : IsScalarTower V W W' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact ⟨FractionRing W', inferInstance, inferInstance, hK', W', inferInstance, inferInstance, inferInstance, hW',
     inferInstance, inferInstance, inferInstance, Module.Finite.trans W W', hinj'.comp hinj, e',
     baseChange W W' G, inferInstance, hG', hmod', hT⟩
@@ -490,7 +490,7 @@ theorem potModel_semiAbelian_torusExtension : ∀ (V K : Type) [CommRing V] [IsD
   obtain ⟨K', _, _, _, V', _, _, _, _, _, _, hfin, hinj, hcomm, G, _, hc, hsm, hsep, hqc, he, hT⟩ :=
     GlobalTheory.SS.semistableReduction_zero V K A hA
   obtain ⟨hloc, hcpl⟩ := GlobalTheory.isLocalHom_and_isAdicComplete_of_finite_dvr V V' hfin hinj
-  haveI := hcpl
+  have := hcpl
   have hA' : IsAbelianScheme (baseChange K K' A) := Out.TLinPf.isAb_pullback _ A hA
   have hG : IsSemiAbelian G :=
     GlobalTheory.SS.isSemiAbelian_of_abelian_generic_of_torusExt V' K' (baseChange K K' A) hA' G hc hsm hsep hqc he hT
@@ -501,7 +501,7 @@ theorem potModel_semiAbelian_torusExtension : ∀ (V K : Type) [CommRing V] [IsD
   have : IsScalarTower V V' V'' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hfinV : Module.Finite V V'' := Module.Finite.trans V' V''
   have hlocV : IsLocalHom (algebraMap V V'') := by
-    haveI := hloc; haveI := hloc'
+    have := hloc; have := hloc'
     exact (inferInstance : IsLocalHom ((algebraMap V' V'').comp (algebraMap V V')))
   exact ⟨V'', FractionRing V'', inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     inferInstance, alg, inferInstance, hcomm', hfinV, hlocV, hcpl', baseChange V' V'' G, inferInstance, he', hG', hT'⟩

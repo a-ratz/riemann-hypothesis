@@ -563,7 +563,7 @@ theorem UpperTheory.Gal.Int.Div.divSet_of :
     if h : ∃ Q, T g Q then h.choose else 1
   have hP : ∀ s ∈ {g : Formalism.ConjugateSelfDual.G E Ω | ∃ Q, T g Q}, T s (P s) := by
     intro s hs
-    have e : P s = (show ∃ Q, T s Q from hs).choose := dif_pos hs
+    have e : P s = (show ∃ Q, T s Q from hs).choose := dite_eq_left hs
     rw [e]
     exact (show ∃ Q, T s Q from hs).choose_spec
   have hss' : IsSSMat ρ := by
@@ -1041,7 +1041,7 @@ private theorem exists_finExt_gl {l n : ℕ} [Fact l.Prime] (A : GL (Fin n) (Qba
   let s : Set (Qbar l) := Set.range (fun p : Fin n × Fin n => (A : Matrix (Fin n) (Fin n) (Qbar l)) p.1 p.2) ∪
     Set.range (fun p : Fin n × Fin n => ((A⁻¹ : GL (Fin n) (Qbar l)) : Matrix (Fin n) (Fin n) (Qbar l)) p.1 p.2)
   have hs : s.Finite := (Set.finite_range _).union (Set.finite_range _)
-  haveI : Finite s := hs.to_subtype
+  have : Finite s := hs.to_subtype
   refine ⟨⟨IntermediateField.adjoin ℚ_[l] s,
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x⟩, fun i j => ⟨?_, ?_⟩⟩
   · exact IntermediateField.subset_adjoin _ _ (Or.inl ⟨(i, j), rfl⟩)
@@ -1307,7 +1307,7 @@ end Bridge
 theorem sSBlock_of : SSBlock := by
   intro Γ k _ _ a m n e r hr
   rw [isSSRep_iff, Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule]
-  haveI := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule _).1
+  have := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule _).1
     ((isSSRep_iff r).1 hr)
   set R := blockRep (a := fun _ : Fin m => a) e fun _ => r
   let L : (colRep R).asModule ≃ₗ[k] (Fin m → (colRep r).asModule) :=
@@ -1442,7 +1442,7 @@ theorem UpperTheory.Gal.Int.Div.schurU_of :
   have hcomm : ∀ (x : UA E a) (ψ : UA E a → ℂ), RU E a z (RU E a x ψ) = RU E a x (RU E a z ψ) := fun x ψ => by
     rw [GlobalTheory.DefU.RU_RU, GlobalTheory.DefU.RU_RU, hz]
   let S : Submodule ℂ (UA E a → ℂ) := Submodule.span ℂ (Set.range fun k : infU E a => RU E a k φ)
-  haveI hSfd : FiniteDimensional ℂ S := (hU.aut φ hφU).kfin
+  have hSfd : FiniteDimensional ℂ S := (hU.aut φ hφU).kfin
   have hSU : S ≤ U := Submodule.span_le.2 (by
     rintro _ ⟨k, rfl⟩
     exact hU.stable _ _ hφU)
@@ -1494,11 +1494,11 @@ theorem UpperTheory.Gal.Int.Div.schurU_of :
       smul_mem' := fun c f hf => ⟨fun v => U.smul_mem c (hf.1 v),
         fun x v => by rw [LinearMap.smul_apply, LinearMap.smul_apply, hf.2.1, map_smul],
         fun k hk v => by rw [LinearMap.smul_apply, map_smul, hf.2.2 k hk]⟩ }
-  haveI hMfd : FiniteDimensional ℂ M := UpperTheory.finiteDimensional_automorphicForms_unitary_of_type_level E a S ρ K hKo M fun f hf =>
+  have hMfd : FiniteDimensional ℂ M := UpperTheory.finiteDimensional_automorphicForms_unitary_of_type_level E a S ρ K hKo M fun f hf =>
     ⟨fun v γ hγ g => (hU.aut _ (hf.1 v)).left γ hγ g, hf.2.1, hf.2.2⟩
   have hsub : S.subtype ∈ M :=
     ⟨fun v => hSU v.2, fun _ _ => rfl, fun k hk v => hKS k hk v.1 v.2⟩
-  haveI : Nontrivial M := ⟨⟨⟨S.subtype, hsub⟩, 0, fun h => hφ0 (by
+  have : Nontrivial M := ⟨⟨⟨S.subtype, hsub⟩, 0, fun h => hφ0 (by
     have h1 := LinearMap.congr_fun (congrArg Subtype.val h) (⟨φ, hφS⟩ : S)
     exact h1)⟩⟩
   let T : Module.End ℂ M :=
@@ -1748,7 +1748,7 @@ theorem subSplit_of : SubSplit := by
   let e : Fin a ⊕ Fin b ≃ Fin (a + b) := finSumFinEquiv
   let P : Matrix (Fin (a + b)) (Fin (a + b)) k := (colM A c).submatrix id e.symm
   have hP : IsUnit P := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     have h := (col_indep A hA c hc).comp e.symm e.symm.injective
     convert h using 1
     ext j i

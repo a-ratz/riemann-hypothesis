@@ -92,7 +92,7 @@ private theorem exists_teichmuller_lift' {O : Type} [CommRing O] [IsLocalRing O]
     have := Fintype.one_lt_card (α := ResidueField O)
     omega
   obtain ⟨a₀, rfl⟩ := IsLocalRing.residue_surjective u
-  haveI := IsAdicComplete.henselianRing O (maximalIdeal O)
+  have := IsAdicComplete.henselianRing O (maximalIdeal O)
   have h1 : eval a₀ (X ^ N - C 1) ∈ maximalIdeal O := by
     rw [← IsLocalRing.residue_eq_zero_iff]
     simp only [eval_sub, eval_pow, eval_X, eval_C, eval_one, map_sub, map_pow, map_one]
@@ -115,13 +115,13 @@ private theorem exists_teichmuller_lift' {O : Type} [CommRing O] [IsLocalRing O]
 private theorem au_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  letI := Fintype.ofFinite (ResidueField O)
+  let := Fintype.ofFinite (ResidueField O)
   classical
   have ex := fun (x : ResidueField O) (hx : x ≠ 0) => exists_teichmuller_lift' (O := O) x hx
   let f : ResidueField O → O := fun x => if hx : x = 0 then 0 else Classical.choose (ex x hx)
   have hf : ∀ x, x ≠ 0 → f x ^ (Fintype.card (ResidueField O) - 1) = 1 ∧ residue O (f x) = x := by
     intro x hx
-    simp only [f, dif_neg hx]
+    simp only [f, dite_eq_right hx]
     exact Classical.choose_spec (ex x hx)
   have hf0 : f 0 = 0 := by simp [f]
   have hres : ∀ x, residue O (f x) = x := by
@@ -146,12 +146,12 @@ private theorem au_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 
 private theorem au_isTeich {l : ℕ} [hl : Fact l.Prime] {F : W.GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨hc, hfin, hlm, -⟩ := abelian₂.dvr_finite l c.O
-  haveI := hc
-  haveI := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have := hc
+  have := hfin
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out]
     have := (IsLocalRing.residue_eq_zero_iff _).mpr hlm
     simpa using this
@@ -160,7 +160,7 @@ private theorem au_isTeich {l : ℕ} [hl : Fact l.Prime] {F : W.GFrame l} (c : C
   · simp [hτ]
   · rw [MonoidHom.comp_apply, ← map_pow]
     have hp : (r.chib i g) ^ (Nat.card (ResidueField c.O) - 1) = 1 := by
-      letI := Fintype.ofFinite (ResidueField c.O)
+      let := Fintype.ofFinite (ResidueField c.O)
       ext
       rw [Units.val_pow_eq_pow_val, Units.val_one, Nat.card_eq_fintype_card]
       exact FiniteField.pow_card_sub_one_eq_one _ (r.chib i g).ne_zero
@@ -194,7 +194,7 @@ theorem UpperTheory.V.Hi.autU :
   have hop : IsOpen (τ₀.ker : Set (KT n (wt s))) :=
     au_open _ (ι.injective.comp Subtype.val_injective) τ₀ (hτ t ht).1
   have h1 := decompU l L Ω s n hn V Q c m τ₀ ι hop lam d e ξ he F hF hK hI
-  refine SetLike.le_def.1 (iSup_le fun σ => ?_) h1
+  refine IsConcreteLE.le_iff.1 (iSup_le fun σ => ?_) h1
   by_cases h0 : YOf Q ι τ₀ e ξ σ.1 = ⊥
   · rw [h0]; exact bot_le
   · obtain ⟨Y, hY, hPU, -⟩ := partU hP l L Ω s n hn V Q c r ι m τ₀ hτ lam d e ξ he σ.1 σ.2 h0

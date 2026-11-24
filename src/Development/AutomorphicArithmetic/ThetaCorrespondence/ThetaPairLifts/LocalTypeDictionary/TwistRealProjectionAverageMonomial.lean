@@ -183,7 +183,7 @@ theorem exists_rat_proj : ∀ {ι : Type} [Fintype ι] (a d : ℕ) (n : ι → �
   intro ι _ a d n k
   let PQ : Tup ι a d n → MvPolynomial (Var ι d a) ℚ := fun T => prodMinorsQ T
   let W := Submodule.span ℚ (Set.range PQ)
-  haveI : FiniteDimensional ℚ W := FiniteDimensional.span_of_finite ℚ (Set.finite_range PQ)
+  have : FiniteDimensional ℚ W := FiniteDimensional.span_of_finite ℚ (Set.finite_range PQ)
   let ψ : W →ₗ[ℚ] Module.Dual ℚ W := (fockQL (σ := Var ι d a)).flip.compl₁₂ W.subtype W.subtype
   have hinj : Function.Injective ψ := by
     rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
@@ -590,7 +590,7 @@ theorem average_monomial_eq_sum_prodMinors : ∀ {ι : Type} [Fintype ι] (a d :
   intro ι _ a d m
   refine ⟨fun τ => (-m τ).toNat, ?_⟩
   intro K _ _ ν hP hInv hleft ρ hmeas hsurj Λ k
-  haveI := hP
+  have := hP
   by_cases hpos : 0 < a ∧ ∃ τ₀, 0 < m τ₀
   · obtain ⟨ha, τ₀, hτ₀⟩ := hpos
     refine ⟨0, Fin.elim0, Fin.elim0, fun p => p.elim0, ?_⟩
@@ -752,18 +752,18 @@ theorem realCol_surjective {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp
         if ρ ∈ L then ((u ρ : Matrix (Fin V.rank) (Fin V.rank) ℂ)ᵀ) else 1 := by
     intro L
     induction L with
-    | nil => intro _ ρ; simp only [List.map_nil, List.prod_nil, List.not_mem_nil, if_false]; exact GlobalTheory.StdUnn.CartanMove.compAt_mt_one θ ρ V
+    | nil => intro _ ρ; simp only [List.map_nil, List.prod_nil, List.not_mem_nil, ite_false]; exact GlobalTheory.StdUnn.CartanMove.compAt_mt_one θ ρ V
     | cons a L ih =>
       intro hL ρ
       rw [List.nodup_cons] at hL
       rw [List.map_cons, List.prod_cons, GlobalTheory.StdUnn.CartanMove.compAt_mt_mul, ih hL.2 ρ, compAt_eq_infMat]
       by_cases c : ρ = a
       · subst c
-        rw [(hhτ ρ).2.1, if_neg hL.1, if_pos List.mem_cons_self, Matrix.mul_one]
+        rw [(hhτ ρ).2.1, ite_eq_right hL.1, ite_eq_left List.mem_cons_self, Matrix.mul_one]
       · rw [(hhτ a).2.2 ρ c, Matrix.one_mul]
         by_cases d : ρ ∈ L
-        · rw [if_pos d, if_pos (List.mem_cons_of_mem a d)]
-        · rw [if_neg d, if_neg (by simp [c, d])]
+        · rw [ite_eq_left d, ite_eq_left (List.mem_cons_of_mem a d)]
+        · rw [ite_eq_right d, ite_eq_right (by simp [c, d])]
   let L := (Finset.univ : Finset D.what₂.Tau).toList
   have hmem : (L.map hτ).prod ∈ GinfC V := by
     apply Subgroup.list_prod_mem
@@ -775,7 +775,7 @@ theorem realCol_surjective {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp
   apply Subtype.ext
   rw [realCol_apply]
   simp only [InvMemClass.coe_inv, inv_inv]
-  rw [key L (Finset.nodup_toList _) ρ, if_pos (Finset.mem_toList.2 (Finset.mem_univ ρ)), Matrix.transpose_transpose]
+  rw [key L (Finset.nodup_toList _) ρ, ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ ρ)), Matrix.transpose_transpose]
 
 end GlobalTheory.RealColAct
 end -- clump:auto
@@ -853,7 +853,7 @@ theorem boundary_real_group_action : ∀ {D : D7} {T : Type} [Finite T] {L : Lev
   · intro τ a c
     simp only [GlobalTheory.RealColAct.realCol_apply, Matrix.transpose_apply]
     exact (((continuous_apply a).comp ((continuous_apply c).comp ((GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp
-      ((GlobalTheory.RealWeil.continuous_mt A').2.comp continuous_subtype_val))))).measurable
+      ((GlobalTheory.RealWeil.continuous_mt A').2.comp continuous_subtypeVal))))).measurable
   · intro t x _ h _ g P
     choose a ha using fun τ => GlobalTheory.SplitCharExp.exists_hasInfExp D W.θ _ A'.rank τ hθ (hW t).hecS (hW t).resS
     choose e₁ he₁ using fun τ => GlobalTheory.T.exists_int_eq_exponent_add_half_index D _ A'.rank τ (a τ) (hW t).hecS (hW t).resS (ha τ)
@@ -959,7 +959,7 @@ theorem GlobalTheory.RealProj.realProjection_average_monomial : ∀ {D : D7} {T 
       ((X.ω' t (x, h)).comp (pureTensorO W.ψ W.θ A' WW X.rA'.s X.rW.s X.rA'.B X.rW.B (X.f' t)))
   have hΛ : ∀ P, Λ P = X.ker' W.ψ W.θ t P h x := fun P => rfl
   obtain ⟨hTop, -, -, -, hBorel⟩ := Formalism.IndefR.Eqv.ga_facts D A'
-  haveI : BorelSpace (GinfC A') := Subtype.borelSpace _
+  have : BorelSpace (GinfC A') := Subtype.borelSpace _
   have hleft (u : GinfC A') : AEMeasurable (u * ·) κ :=
     (continuous_const_mul u).measurable.aemeasurable
   obtain ⟨M, r, U, hr, hI⟩ := hn κ hκp hκ hleft ρ hρm hρs Λ k

@@ -72,13 +72,13 @@ private theorem jq_gen {T W J : Type} [CommGroup T] [AddCommGroup W] [Module ℂ
     simp
   case mul =>
     intro a b ha hb v
-    simp only [Set.mem_setOf_eq] at ha hb ⊢
+    simp only [Set.mem_ofPred_eq] at ha hb ⊢
     have e1 : ((θ (a * b) : Module.End ℂ W) v) = (θ a : Module.End ℂ W) ((θ b : Module.End ℂ W) v) := by
       rw [map_mul, Units.val_mul, Module.End.mul_apply]
     rw [e1, ha, hb, map_smul, smul_smul, map_mul, map_mul, Module.End.mul_apply, mul_inv, Units.val_mul, mul_comm]
   case inv =>
     intro a ha v
-    simp only [Set.mem_setOf_eq] at ha ⊢
+    simp only [Set.mem_ofPred_eq] at ha ⊢
     have h := ha ((θ a⁻¹ : Module.End ℂ W) v)
     have e1 : (θ a : Module.End ℂ W) ((θ a⁻¹ : Module.End ℂ W) v) = v := by
       rw [← Module.End.mul_apply, ← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one, Module.End.one_apply]
@@ -146,8 +146,8 @@ private theorem jq_card {G : Type} [Group G] (I : Subgroup G) (d : G) (h : FinOr
       (hk (Representation.trivial ℤ G ℤ) I d v : ℤ) = ∑ u ∈ s, Representation.trivial ℤ G ℤ (u * d) v) :
     s.card = (MulAction.orbit I (d : G ⧸ I)).ncard := by
   have hfin : (MulAction.orbit I (d : G ⧸ I)).Finite := h
-  haveI : Finite (MulAction.orbit I (d : G ⧸ I)) := hfin.to_subtype
-  letI : Fintype (MulAction.orbit I (d : G ⧸ I)) := Fintype.ofFinite _
+  have : Finite (MulAction.orbit I (d : G ⧸ I)) := hfin.to_subtype
+  let : Fintype (MulAction.orbit I (d : G ⧸ I)) := Fintype.ofFinite _
   have hv : (1 : ℤ) ∈ fixd (Representation.trivial ℤ G ℤ) I := fun u _ => rfl
   have h1 := hs ⟨1, hv⟩
   have e := (hkApply ℤ G ℤ (Representation.trivial ℤ G ℤ) I I d h).1 ⟨1, hv⟩
@@ -211,7 +211,7 @@ private theorem unif_dec {x : kˣ} (hx : IsUnif x) (y : kˣ) :
 
 private theorem dom_zpow {x : kˣ} (hx : IsUnif x) {a : Fin n → ℤ} (ha : Antitone a) : Dom fun i => x ^ a i := by
   intro i j hij
-  have h0 : 0 < valuation k (x : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
+  have h0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact (zpow_le_zpow_iff_right_of_lt_one₀ h0 (unif_lt hx)).2 (ha hij)
 

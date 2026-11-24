@@ -112,20 +112,20 @@ def HasIw (K : Subgroup (GA D T)) : Prop := ∀ h : GA D T, ∃ q : stab d, ∃ 
 
 theorem continuous_onX : Continuous (onX d) := by
   have h : Continuous fun q : stab d => (onX d q).1 :=
-    (continuous_const.matrix_mul (((continuous_mt T).comp continuous_subtype_val).matrix_mul continuous_const)).congr
+    (continuous_const.matrix_mul (((continuous_mt T).comp continuous_subtypeVal).matrix_mul continuous_const)).congr
       fun q => (eq_of_mul_jX d (mul_jX d q)).symm
   exact Units.continuous_iff.2 ⟨h, (h.comp continuous_inv).congr fun q => by simp⟩
 
 theorem continuous_absDet : Continuous (absDet d) := by
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   exact continuous_absE.comp (Units.continuous_iff.2
     ⟨(Units.continuous_val.comp (continuous_onX d)).matrix_det,
       (Units.continuous_coe_inv.comp (continuous_onX d)).matrix_det.congr fun p => by
         rw [MonoidHom.comp_apply, ← map_inv]; rfl⟩)
 
 theorem isClosed_stab : IsClosed (stab d : Set (GA D T)) := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
-  haveI := t2Space_tensorProduct_finiteExtension (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_tensorProduct_finiteExtension (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have h1 : IsClosed {q : GA D T | mt T q ⬝ d.jX = d.jX ⬝ (d.pX ⬝ (mt T q ⬝ d.jX))} :=
     isClosed_eq ((continuous_mt T).matrix_mul continuous_const)
       (continuous_const.matrix_mul (continuous_const.matrix_mul ((continuous_mt T).matrix_mul continuous_const)))

@@ -105,7 +105,7 @@ theorem ArcWit.witMove (h5 : Out.Laws5) (hQ : QkPullExistsSt) {Y : Model Xo c β
               x.left ≫ U''.gen.inv.left ≫ pullback.fst G''.hom (Out.jK R) ≫ bc.hom.left ≫
                 pullback.fst W.t.G.hom (Out.specOf (RingHom.id R)) ≫ W.m.φ = yF ≫ σ.left ≫ Y.m.φ →
               Out.QkToAkU U''.toUnifPre F k q x := by
-  letI := H.starRing
+  let := H.starRing
   have hs := specOf_id R
   obtain ⟨s1, s2, s3, s4, s5, s6⟩ := W.spec
   set Φ := hD.e.hom.left ≫ pullback.fst W.P.D.toPre.P.A.hom (Out.specOf (RingHom.id R)) with hΦ

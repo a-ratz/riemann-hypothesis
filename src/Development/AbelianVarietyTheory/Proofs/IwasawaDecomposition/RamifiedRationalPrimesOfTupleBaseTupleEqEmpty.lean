@@ -183,9 +183,9 @@ theorem irreducible_of_fixed_line {G V : Type} [Group G] [TopologicalSpace G] [I
     have h1 : IsOpen {b : G | ρ (a⁻¹ * b) w = w} := (hsm w).preimage (continuous_const_mul a⁻¹)
     filter_upwards [h1.mem_nhds (show a ∈ {b : G | ρ (a⁻¹ * b) w = w} by simp)] with b hb
     rw [← mul_inv_cancel_left a b, hmul, hb]
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have hfin : (Set.range fun k : K => ρ k w).Finite :=
-    (hlc.comp_continuous continuous_subtype_val).range_finite
+    (hlc.comp_continuous continuous_subtypeVal).range_finite
   set u := ∑ y ∈ hfin.toFinset, y with hu
   have huW : u ∈ W := W.sum_mem fun y hy => by
     obtain ⟨k, rfl⟩ := hfin.mem_toFinset.1 hy
@@ -326,8 +326,8 @@ theorem exists_rep [MeasurableSpace G] [BorelSpace G] [T2Space G] (μ : Measure 
         have h3 : f.1 k = 0 := by simpa using h2 hk
         rw [transl_law (hφP ⟨p, hp⟩) f.2, h3, mul_zero]
         rfl }
-  letI : NormedAddCommGroup (transl φ) := InnerProductSpace.Core.toNormedAddCommGroup (cd := core)
-  letI : InnerProductSpace ℂ (transl φ) := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup (transl φ) := InnerProductSpace.Core.toNormedAddCommGroup (cd := core)
+  let : InnerProductSpace ℂ (transl φ) := InnerProductSpace.ofCore core.toCore
   have hin : ∀ f f' : transl φ, inner ℂ f f' = ∫ x in (K : Set G), conj (f.1 x) * f'.1 x ∂μ := fun _ _ => rfl
   have hunit : ∀ g (f f' : transl φ), inner ℂ (translEquiv φ g f) (translEquiv φ g f') = inner ℂ f f' := by
     intro g f f'
@@ -516,7 +516,7 @@ theorem det_block {R : Type} [CommRing R] {j t : ℕ} {b : GL (Fin (j * t)) R}
     GeneralLinearGroup.det (leviProj R (eqBlocks j t) ⟨b, mem_parab_eqBlocks hb⟩ a) =
       ∏ s, u (eqBlocks j t ⟨a, s⟩) := by
   ext
-  rw [GeneralLinearGroup.val_det_apply, det_of_upperTriangular, Units.coe_prod]
+  rw [GeneralLinearGroup.val_det_apply, det_of_isUpperTriangular, Units.coe_prod]
   · exact Finset.prod_congr rfl fun s _ => (hu _).symm
   · intro s s' h
     refine hb _ _ ?_
@@ -589,9 +589,9 @@ theorem nrm_eq {nrm : AbsoluteValue (P.adicCompletion L) ℝ} (h : IsNrm P nrm) 
 
 theorem exists_isUnrM : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpectrum (𝓞 L)) (nrm : AbsoluteValue (P.adicCompletion L) ℝ), IsNrm P nrm → ∀ (ν : ℕ → (P.adicCompletion L)ˣ →* ℂˣ), (∀ i, IsNu P (ν i)) → ∀ r t j : ℕ, 1 ≤ t → ∃ (V : Type) (_ : NormedAddCommGroup V) (_ : InnerProductSpace ℂ V) (ρ : GL (Fin r) (P.adicCompletion L) × GL (Fin (j * t)) (P.adicCompletion L) →* (V ≃ₗᵢ[ℂ] V)), IsUnrM (OP P) nrm r (j * t) (satC nrm ν t (j * t)) ρ := by
   intro L _ _ P nrm hn ν hν r t j _
-  letI := GlobalTheory.LocalData.complRel P
-  haveI := GlobalTheory.LocalData.isLocalField P
-  haveI : (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := GlobalTheory.LocalData.complRel P
+  have := GlobalTheory.LocalData.isLocalField P
+  have : (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (P.adicCompletion L))
     (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ)))
@@ -609,7 +609,7 @@ theorem exists_isUnrM : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneS
     h8.toIsMulLeftInvariant, h9, h10⟩
   have hd : ∀ x, b.val x x ≠ 0 := by
     have := b.det_ne_zero
-    rw [det_of_upperTriangular hb] at this
+    rw [det_of_isUpperTriangular hb] at this
     exact fun x => Finset.prod_ne_zero_iff.1 this x (Finset.mem_univ _)
   have h11 := h5 b (fun x => Units.mk0 _ (hd x)) (fun x y h => hb h) (fun _ => rfl) 1
   rw [mul_one, h7, mul_one] at h11
@@ -647,7 +647,7 @@ theorem isClopen_mulSet {L : Type} [Field L] [NumberField L] (P : HeightOneSpect
   have e : {y : P.adicCompletion L | ∃ o ∈ OP P, y = ϖ * o} =
       (fun y => ϖ⁻¹ * y) ⁻¹' ((OP P : Subring (P.adicCompletion L)) : Set (P.adicCompletion L)) := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
     constructor
     · rintro ⟨o, ho, rfl⟩
       rwa [← mul_assoc, inv_mul_cancel₀ hϖ, one_mul]
@@ -658,9 +658,9 @@ theorem isClopen_mulSet {L : Type} [Field L] [NumberField L] (P : HeightOneSpect
 
 theorem isOpen_isCompact_parJ : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpectrum (𝓞 L)) (r c : ℕ), IsOpen (parJ (OP P) (piP P : P.adicCompletion L) r c) ∧ IsCompact (parJ (OP P) (piP P : P.adicCompletion L) r c) := by
   intro L _ _ P r c
-  letI := GlobalTheory.LocalData.complRel P
-  haveI := GlobalTheory.LocalData.isLocalField P
-  haveI : (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := GlobalTheory.LocalData.complRel P
+  have := GlobalTheory.LocalData.isLocalField P
+  have : (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (P.adicCompletion L))
     (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ)))
@@ -678,7 +678,7 @@ theorem isOpen_isCompact_parJ : ∀ (L : Type) [Field L] [NumberField L] (P : He
         (k : Matrix (Fin (r + c)) (Fin (r + c)) (P.adicCompletion L)) (Fin.natAdd r i) (Fin.castAdd c j)) ⁻¹'
         {y : P.adicCompletion L | ∃ o ∈ OP P, y = (piP P : P.adicCompletion L) * o} := by
     ext k
-    simp only [hB, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, IIset, bDA, Matrix.submatrix_apply]
+    simp only [hB, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, IIset, bDA, Matrix.submatrix_apply]
   have hcont : ∀ (i : Fin (r + c)) (j : Fin (r + c)), Continuous fun k : GL (Fin (r + c)) (P.adicCompletion L) =>
       (k : Matrix (Fin (r + c)) (Fin (r + c)) (P.adicCompletion L)) i j := fun i j =>
     (Units.continuous_val (M := Matrix (Fin (r + c)) (Fin (r + c)) (P.adicCompletion L))).matrix_elem i j
@@ -890,7 +890,7 @@ theorem lamJ_mul : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpectr
     rw [e, map_mul, map_inv₀, hab, inv_one, mul_one]
     exact hxy)
   rw [map_mul, map_inv, mul_inv_eq_one, map_mul] at tame
-  simp only [chi0, dif_neg hx0, dif_neg ha0, dif_neg hb0, tame, Units.val_mul]
+  simp only [chi0, dite_eq_right hx0, dite_eq_right ha0, dite_eq_right hb0, tame, Units.val_mul]
 
 end Main
 
@@ -1132,7 +1132,7 @@ theorem unitCharExtendedByZero_mul (δ : Fˣ →* ℂˣ) (x y : F) : chi0 δ (x 
   by_cases hy : y = 0
   · simp [chi0, hy]
   have hxy : x * y ≠ 0 := mul_ne_zero hx hy
-  simp only [chi0, dif_neg hx, dif_neg hy, dif_neg hxy]
+  simp only [chi0, dite_eq_right hx, dite_eq_right hy, dite_eq_right hxy]
   rw [← Units.val_mul, ← map_mul]
   congr 3
   ext; simp
@@ -1221,7 +1221,7 @@ theorem fvec_eq {p k : GL (Fin (r + c)) F} (hp : bDA (p : Matrix (Fin (r + c)) (
 
 include hgrp in
 theorem fvec_out {g : GL (Fin (r + c)) F} (hg : g ∉ PJset O ϖ r c) : fvec O ϖ nrm δ ρ v₀ g = 0 := by
-  rw [fvec, dif_neg hg]
+  rw [fvec, dite_eq_right hg]
 
 include hgrp in
 theorem mul_mem_PJ_iff {p g : GL (Fin (r + c)) F} (hp : bDA (p : Matrix (Fin (r + c)) (Fin (r + c)) F) = 0) :
@@ -1246,7 +1246,7 @@ theorem mul_mem_PJ_iff' {k g : GL (Fin (r + c)) F} (hk : k ∈ parJ O ϖ r c) :
 theorem unitCharExtendedByZero_det_eq_char_det (m : GL (Fin c) F) :
     chi0 δ (m : Matrix (Fin c) (Fin c) F).det = ((δ (Matrix.GeneralLinearGroup.det m) : ℂˣ) : ℂ) := by
   have h : (m : Matrix (Fin c) (Fin c) F).det ≠ 0 := m.det_ne_zero
-  rw [chi0, dif_neg h]
+  rw [chi0, dite_eq_right h]
   congr 2
   exact Units.ext (by simp [Matrix.GeneralLinearGroup.val_det_apply])
 
@@ -1335,7 +1335,7 @@ theorem nrm_det_GLint {P : HeightOneSpectrum (𝓞 L)} {nrm : AbsoluteValue (P.a
     le_antisymm h1 (by
       by_contra hc
       push_neg at hc
-      have := one_lt_inv_iff₀.2 ⟨zero_lt_iff.2 h0, hc⟩
+      have := one_lt_inv_iff₀.2 ⟨pos_iff_ne_zero.2 h0, hc⟩
       exact absurd h2 (not_le.2 this))
   exact (hn (Units.mk0 _ m.det_ne_zero)).1 hv
 
@@ -1347,7 +1347,7 @@ variable {L : Type} [Field L] [NumberField L]
 
 theorem norm_unitCharExtendedByZero_eq_one {P : HeightOneSpectrum (𝓞 L)} {δ : (P.adicCompletion L)ˣ →* ℂˣ} (hδ : IsDel P δ)
     {x : P.adicCompletion L} (hx : x ≠ 0) : ‖chi0 δ x‖ = 1 := by
-  rw [chi0, dif_neg hx]
+  rw [chi0, dite_eq_right hx]
   exact hδ.unitary _
 
 theorem piP_mem (P : HeightOneSpectrum (𝓞 L)) : (piP P : P.adicCompletion L) ∈ OP P := by
@@ -1375,7 +1375,7 @@ theorem exists_typeVec (P : HeightOneSpectrum (𝓞 L)) (δ : (P.adicCompletion 
     rw [chiP, lamJ, ← levA_val h0, ← levD_val h0, nrm_det_GLint hn h1, nrm_det_GLint hn h2]
     simp
   have hlam1 : lamJ δ (1 : GL (Fin (r + c)) (P.adicCompletion L)) = 1 := by
-    rw [lamJ, bDD_one, det_one, chi0, dif_neg one_ne_zero]
+    rw [lamJ, bDD_one, det_one, chi0, dite_eq_right one_ne_zero]
     have : Units.mk0 (1 : P.adicCompletion L) one_ne_zero = 1 := Units.ext rfl
     rw [this, map_one, Units.val_one]
   refine ⟨fvec (OP P) (piP P : P.adicCompletion L) nrm δ ρ v₀, fvec_mem hgrp hlam hfix,
@@ -1430,9 +1430,9 @@ theorem one_mem_parJ (P : HeightOneSpectrum (𝓞 L)) (r c : ℕ) :
 theorem KO_eq_GLint (P : HeightOneSpectrum (𝓞 L)) (n : ℕ) :
     letI := GlobalTheory.LocalData.complRel P
     GlobalTheory.SplitWeil.KO (P.adicCompletion L) (Fin n) = GLint (OP P) n := by
-  letI := GlobalTheory.LocalData.complRel P
-  haveI := GlobalTheory.LocalData.isLocalField P
-  haveI : (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := GlobalTheory.LocalData.complRel P
+  have := GlobalTheory.LocalData.isLocalField P
+  have : (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (P.adicCompletion L))
     (Valued.v : Valuation (P.adicCompletion L) (WithZero (Multiplicative ℤ)))
@@ -1443,15 +1443,15 @@ theorem KO_eq_GLint (P : HeightOneSpectrum (𝓞 L)) (n : ℕ) :
 
 theorem isCompact_GLint (P : HeightOneSpectrum (𝓞 L)) (n : ℕ) :
     IsCompact (GLint (OP P) n : Set (GL (Fin n) (P.adicCompletion L))) := by
-  letI := GlobalTheory.LocalData.complRel P
-  haveI := GlobalTheory.LocalData.isLocalField P
+  let := GlobalTheory.LocalData.complRel P
+  have := GlobalTheory.LocalData.isLocalField P
   rw [← KO_eq_GLint]
   exact GlobalTheory.SplitFlip.isCompact_KO
 
 theorem isOpen_GLint (P : HeightOneSpectrum (𝓞 L)) (n : ℕ) :
     IsOpen (GLint (OP P) n : Set (GL (Fin n) (P.adicCompletion L))) := by
-  letI := GlobalTheory.LocalData.complRel P
-  haveI := GlobalTheory.LocalData.isLocalField P
+  let := GlobalTheory.LocalData.complRel P
+  have := GlobalTheory.LocalData.isLocalField P
   rw [← KO_eq_GLint]
   exact GlobalTheory.SplitFlip.isOpen_KO
 
@@ -1459,9 +1459,9 @@ theorem exists_haar_parJ (P : HeightOneSpectrum (𝓞 L)) (r c : ℕ) :
     letI : MeasurableSpace (P.adicCompletion L) := borel _
     ∃ μ : Measure (GL (Fin (r + c)) (P.adicCompletion L)), μ.IsMulLeftInvariant ∧
       μ (parJ (OP P) (piP P : P.adicCompletion L) r c) = 1 ∧ μ (GLint (OP P) (r + c)) < ⊤ := by
-  letI : MeasurableSpace (P.adicCompletion L) := borel _
-  letI := GlobalTheory.LocalData.complRel P
-  haveI := GlobalTheory.LocalData.isLocalField P
+  let : MeasurableSpace (P.adicCompletion L) := borel _
+  let := GlobalTheory.LocalData.complRel P
+  have := GlobalTheory.LocalData.isLocalField P
   obtain ⟨ho, hc⟩ := _root_.GlobalTheory.ParahoricTopo.isOpen_isCompact_parJ L P r c
   let K₀ : TopologicalSpace.PositiveCompacts (GL (Fin (r + c)) (P.adicCompletion L)) :=
     ⟨⟨_, hc⟩, by
@@ -1477,7 +1477,7 @@ theorem exists_typeDim_step : ∀ (L : Type) [Field L] [NumberField L] (P : Heig
   obtain ⟨nrm, hn⟩ := GlobalTheory.Mem.NrmCompl.exists_isNrm L P
   obtain ⟨V, i1, i2, ρ, hρ⟩ := GlobalTheory.SphCyclic.exists_isUnrM L P nrm hn ν hν r t j ht
   refine ⟨⟨_, nrm, hn, V, i1, i2, ρ, hρ, rfl⟩, ?_⟩
-  letI : MeasurableSpace (P.adicCompletion L) := borel _
+  let : MeasurableSpace (P.adicCompletion L) := borel _
   obtain ⟨v₀, hv, hfix, -⟩ := hρ.sph
   obtain ⟨f, hf, U, hU, hJU, hfn⟩ := exists_typeVec P δ hδ nrm hn r (j * t) ρ v₀ hv hfix
   obtain ⟨μ, hμ, hμ1, hμK⟩ := exists_haar_parJ P r (j * t)
@@ -1536,8 +1536,8 @@ theorem exists_intCast_cong {E : Type} [Field E] [NumberField E] (w : HeightOneS
   obtain ⟨b, hb⟩ := GlobalTheory.CMVal.Euler.SplitPair.exists_int_cong w z hz
   have hc : Nat.card (𝓞 E ⧸ w.asIdeal) = Ideal.absNorm w.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Fact (Nat.card (𝓞 E ⧸ w.asIdeal)).Prime := ⟨hc ▸ hp⟩
-  haveI : Nontrivial (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.2 w.isPrime.ne_top
+  have : Fact (Nat.card (𝓞 E ⧸ w.asIdeal)).Prime := ⟨hc ▸ hp⟩
+  have : Nontrivial (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.2 w.isPrime.ne_top
   have htop : AddSubgroup.zmultiples (1 : 𝓞 E ⧸ w.asIdeal) = ⊤ := by
     rcases AddSubgroup.eq_bot_or_eq_top_of_prime_card (AddSubgroup.zmultiples (1 : 𝓞 E ⧸ w.asIdeal)) with h | h
     · exfalso
@@ -1571,8 +1571,8 @@ open Classical in
 theorem aboveF_eq_pair (D : D7) {v : HeightOneSpectrum (𝓞 D.host.F)} {w P : HeightOneSpectrum (𝓞 D.host.E)}
     (hw : w ∈ aboveF (L := D.host.E) D.host.F v) (hP : P ∈ aboveF (L := D.host.E) D.host.F v) (hne : w ≠ P) :
     aboveF (L := D.host.E) D.host.F v = {w, P} := by
-  haveI := v.isMaximal
-  haveI : NoZeroSMulDivisors (𝓞 D.host.F) (𝓞 D.host.E) := ⟨fun {c x} e => by
+  have := v.isMaximal
+  have : NoZeroSMulDivisors (𝓞 D.host.F) (𝓞 D.host.E) := ⟨fun {c x} e => by
     rw [Algebra.smul_def, mul_eq_zero,
       map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 D.host.F) (𝓞 D.host.E))] at e
     exact e⟩

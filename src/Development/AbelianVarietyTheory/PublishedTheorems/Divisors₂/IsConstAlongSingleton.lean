@@ -187,7 +187,7 @@ theorem isSqIntOn_empty {φ : GAd σ J → ℂ} : IsSqIntOn σ J X Y ∅ φ ↔ 
   rw [leviOne_empty]
   dsimp only [P]
   let t : (⊤ : Subgroup (GAd σ J)) ≃ₜ* GAd σ J :=
-    { Subgroup.topEquiv with continuous_toFun := continuous_subtype_val, continuous_invFun := continuous_id.subtype_mk _ }
+    { Subgroup.topEquiv with continuous_toFun := continuous_subtypeVal, continuous_invFun := continuous_id.subtype_mk _ }
   refine ⟨fun h μ 𝓕 h1 h2 => ?_, fun h μ 𝓕 h1 h2 g => ?_⟩
   · let e := t.toHomeomorph.toMeasurableEquiv
     have hp : MeasurePreserving e (μ.map t.symm) μ := (MeasurePreserving.symm e.symm ⟨e.symm.measurable, rfl⟩ :)
@@ -328,7 +328,7 @@ theorem ring_facts : IsTopologicalRing (AF F ⊗[F] E) ∧ T2Space (AF F ⊗[F] 
       (LinearEquiv.injective _) (IsModuleTopology.continuous_of_linearMap
         (Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)).equivFun.toLinearMap)⟩
 
-theorem continuous_mat : Continuous fun g : GAd σ J => (matHom _ σ J g).1 := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_mat : Continuous fun g : GAd σ J => (matHom _ σ J g).1 := Units.continuous_val.comp continuous_subtypeVal
 
 theorem isClosed_colSpan {L : Matrix (Fin r) (Fin n) E} (hL : L * X = 1) (I : Set (Fin r)) :
     IsClosed (colSpan F X I : Set (Fin n → AF F ⊗[F] E)) := by
@@ -351,7 +351,7 @@ theorem isClosed_colSpan {L : Matrix (Fin r) (Fin n) E} (hL : L * X = 1) (I : Se
       rw [op_smul_eq_smul]
       by_cases hi : i ∈ I
       · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, hi, rfl⟩)
-      · rw [← mulVec_mulVec, mulVec_diagonal, if_neg hi, zero_mul, zero_smul]
+      · rw [← mulVec_mulVec, mulVec_diagonal, ite_eq_right hi, zero_mul, zero_smul]
         exact zero_mem _
   exact this ▸ isClosed_eq (continuous_const.matrix_mulVec continuous_id) continuous_id
 

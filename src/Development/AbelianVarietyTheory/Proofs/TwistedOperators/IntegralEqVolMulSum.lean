@@ -65,7 +65,7 @@ theorem integral_eq_vol_mul_sum {G H : Type} [Group G] [TopologicalSpace G] [IsT
   set c := ν (J.comap π) with hc
   have h𝓖' : IsFundamentalDomain Γ 𝓖 (c⁻¹ • ν) := h𝓖.mono (Measure.smul_absolutelyContinuous)
   have h1 : (c⁻¹ • ν) (J.comap π) = 1 := by
-    rw [Measure.smul_apply, smul_eq_mul, ← hc, ENNReal.inv_mul_cancel h0 htop]
+    rw [smul_apply, smul_eq_mul, ← hc, ENNReal.inv_mul_cancel h0 htop]
   obtain ⟨hf, hi, he⟩ := GlobalTheory.DefiniteClassSum.integral_eq_sum (c⁻¹ • ν) π Γ h𝓖' J ho h1 y hy a ha Φ hl hr
   have hc1 : c⁻¹ ≠ 0 := ENNReal.inv_ne_zero.2 htop
   have hc2 : c⁻¹ ≠ ⊤ := ENNReal.inv_ne_top.2 h0
@@ -195,8 +195,8 @@ theorem finCl_regroup (V : HSp D) (hV : ∀ φ : D.host.E →+* ℂ, (V.gram.map
   have := hμ.1.1
   have hfin := (finite_finCl_and_gamOrd V K hV hK).1
   have hfin'' := (finite_finCl_and_gamOrd V K'' hV hK'').1
-  letI := Fintype.ofFinite (FinCl V K)
-  letI := Fintype.ofFinite (FinCl V K'')
+  let := Fintype.ofFinite (FinCl V K)
+  let := Fintype.ofFinite (FinCl V K'')
   have h0 : μ (K''.comap (Lev.finE V)) ≠ 0 := hK''.1.measure_ne_zero μ ⟨1, one_mem _⟩
   refine ⟨h0, ?_⟩
   choose a ha using fun c : FinCl V K => finPt_surjective V (Quotient.out c)
@@ -298,7 +298,7 @@ theorem sum_pi_regroup {ι : Type} [Fintype ι] [DecidableEq ι] {X A B : ι →
           fun c => funext fun u => Function.apply_update pt γ v c u
         simp only [hupd, Fintype.sum_sum_type]
         have := hP v _ (hf v fun u => pt u (γ u))
-        simp only [W, pt, Sum.elim_inl, Sum.elim_inr, hv, if_false, Finset.mem_insert, true_or, if_true, zero_mul,
+        simp only [W, pt, Sum.elim_inl, Sum.elim_inr, hv, ite_false, Finset.mem_insert, true_or, ite_true, zero_mul,
           Finset.sum_const_zero, add_zero, zero_add]
         exact this
   have h0 : T ∅ = ∑ α : (∀ v, A v), (∏ v, wa v (α v)) * f (fun v => pa v (α v)) := by
@@ -341,8 +341,8 @@ theorem finCl_regroup_pi {ι : Type} [Fintype ι] [DecidableEq ι] (V : ι → H
         (∏ v, ((μ v ((K'' v).comap (Lev.finE (V v)))).toReal : ℂ) * ((gamOrd (V v) (K'' v) (Quotient.out (c v)) : ℂ))⁻¹) *
           f (fun v => Quotient.out (c v)) =
       ∑ᶠ c : (∀ v, FinCl (V v) (K v)), (∏ v, ((gamOrd (V v) (K v) (Quotient.out (c v)) : ℂ))⁻¹) * f (fun v => Quotient.out (c v)) := by
-  letI : ∀ v, Fintype (FinCl (V v) (K v)) := fun v => @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V v) (K v) (hV v) (hK v)).1
-  letI : ∀ v, Fintype (FinCl (V v) (K'' v)) := fun v =>
+  let : ∀ v, Fintype (FinCl (V v) (K v)) := fun v => @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V v) (K v) (hV v) (hK v)).1
+  let : ∀ v, Fintype (FinCl (V v) (K'' v)) := fun v =>
     @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V v) (K'' v) (hV v) (hK'' v)).1
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   refine sum_pi_regroup (X := fun v => GfC (V v)) (A := fun v => FinCl (V v) (K'' v)) (B := fun v => FinCl (V v) (K v)) (fun v c => ((μ v ((K'' v).comap (Lev.finE (V v)))).toReal : ℂ) *
@@ -369,11 +369,11 @@ theorem finCl_regroup_prod {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype
       ∑ᶠ c : (∀ v, FinCl (V v) (K v)) × (∀ v, FinCl (V' v) (L v)),
         ((∏ v, ((gamOrd (V v) (K v) (Quotient.out (c.1 v)) : ℂ))⁻¹) * ∏ v, ((gamOrd (V' v) (L v) (Quotient.out (c.2 v)) : ℂ))⁻¹) *
           f (fun v => Quotient.out (c.1 v)) (fun v => Quotient.out (c.2 v)) := by
-  letI : ∀ v, Fintype (FinCl (V v) (K v)) := fun v => @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V v) (K v) (hV v) (hK v)).1
-  letI : ∀ v, Fintype (FinCl (V v) (K'' v)) := fun v =>
+  let : ∀ v, Fintype (FinCl (V v) (K v)) := fun v => @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V v) (K v) (hV v) (hK v)).1
+  let : ∀ v, Fintype (FinCl (V v) (K'' v)) := fun v =>
     @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V v) (K'' v) (hV v) (hK'' v)).1
-  letI : ∀ v, Fintype (FinCl (V' v) (L v)) := fun v => @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V' v) (L v) (hV' v) (hL v)).1
-  letI : ∀ v, Fintype (FinCl (V' v) (L'' v)) := fun v =>
+  let : ∀ v, Fintype (FinCl (V' v) (L v)) := fun v => @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V' v) (L v) (hV' v) (hL v)).1
+  let : ∀ v, Fintype (FinCl (V' v) (L'' v)) := fun v =>
     @Fintype.ofFinite _ (finite_finCl_and_gamOrd (V' v) (L'' v) (hV' v) (hL'' v)).1
   have e1 := fun x => finCl_regroup_pi V' hV' hL hL'' hle' hμ' (f x) (hf' x)
   have e2 := fun y => finCl_regroup_pi V hV hK hK'' hle hμ (fun x => f x y) (hf y)

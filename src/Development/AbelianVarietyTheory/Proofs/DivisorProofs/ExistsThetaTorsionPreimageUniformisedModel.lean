@@ -94,7 +94,7 @@ namespace GlobalTheory.Poinc
 
 theorem exists_qkPt_of_utest : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (a : S.Gam), ∃ (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk x ∧ x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left := by
   intro o Ω _ _ _ S ρ p _ y₀ u a
-  haveI : CharZero u.V := ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V _)).charZero
+  have : CharZero u.V := ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V _)).charZero
   obtain ⟨x, hx, hadd, -⟩ := utest_torsion_points o Ω S ρ p y₀ u
   obtain ⟨f, f₁, f₂, -⟩ := uTors_closed u.V u.complete u.A u.G u.D u.U (PadicAlgCl p) _ (GlobalTheory.RealCompare.one_le_rN S)
   have hx1 : x a ^ (S.r * S.N) = 1 := by

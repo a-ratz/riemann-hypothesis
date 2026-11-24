@@ -77,24 +77,24 @@ theorem UpperTheory.Reformulated.B.Qe16.ext_integral :
     Function.Injective (⇑(Algebra.algebraMap B S) : B → S) →
       ∀ (φ : B →+* K), ∃ (Φ : S →+* K), ∀ (b : B), (Φ : S → K) ((Algebra.algebraMap B S : B → S) b) = (φ : B → K) b := by
   intro B S K _ _ _ _ _ _ hinj φ
-  haveI hP : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have hP : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   obtain ⟨Q, -, hQ, hQP⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := S)
     (RingHom.ker φ) ⊥ (by
       rw [Ideal.under_def, ← RingHom.ker_eq_comap_bot, (RingHom.injective_iff_ker_eq_bot _).1 hinj]
       exact bot_le)
-  haveI : Q.LiesOver (RingHom.ker φ) := ⟨hQP.symm⟩
-  letI : Algebra (B ⧸ RingHom.ker φ) K := (RingHom.kerLift φ).toAlgebra
-  haveI : FaithfulSMul (B ⧸ RingHom.ker φ) K :=
+  have : Q.LiesOver (RingHom.ker φ) := ⟨hQP.symm⟩
+  let : Algebra (B ⧸ RingHom.ker φ) K := (RingHom.kerLift φ).toAlgebra
+  have : FaithfulSMul (B ⧸ RingHom.ker φ) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.kerLift_injective φ)
-  haveI : Algebra.IsIntegral (B ⧸ RingHom.ker φ) (S ⧸ Q) :=
+  have : Algebra.IsIntegral (B ⧸ RingHom.ker φ) (S ⧸ Q) :=
     Algebra.IsIntegral.tower_top (R := B)
-  haveI : FaithfulSMul (B ⧸ RingHom.ker φ) (S ⧸ Q) := inferInstance
-  haveI : Module.IsTorsionFree (B ⧸ RingHom.ker φ) (S ⧸ Q) :=
+  have : FaithfulSMul (B ⧸ RingHom.ker φ) (S ⧸ Q) := inferInstance
+  have : Module.IsTorsionFree (B ⧸ RingHom.ker φ) (S ⧸ Q) :=
     Module.isTorsionFree_iff_faithfulSMul.2 inferInstance
-  haveI : Module.IsTorsionFree (B ⧸ RingHom.ker φ) K :=
+  have : Module.IsTorsionFree (B ⧸ RingHom.ker φ) K :=
     Module.isTorsionFree_iff_faithfulSMul.2 inferInstance
-  haveI : Nontrivial (B ⧸ RingHom.ker φ) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
-  haveI : Algebra.IsAlgebraic (B ⧸ RingHom.ker φ) (S ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Nontrivial (B ⧸ RingHom.ker φ) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
+  have : Algebra.IsAlgebraic (B ⧸ RingHom.ker φ) (S ⧸ Q) := Algebra.IsIntegral.isAlgebraic
   let f : (S ⧸ Q) →ₐ[B ⧸ RingHom.ker φ] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -134,7 +134,7 @@ private theorem reduce_roots {κ k B : Type} [Field κ] [Field k] [CommRing B] (
     ∃ (S : Subring κ) (Φ : S →+* AlgebraicClosure k), ∀ (n : ℕ) (p : B[X]) (a : Fin n → κ),
       p.map j = ∏ i, (X - C (a i)) → ∃ h : ∀ i, a i ∈ S,
         (p.map φ).map (algebraMap k (AlgebraicClosure k)) = ∏ i, (X - C (Φ ⟨a i, h i⟩)) := by
-  letI : Algebra B κ := j.toAlgebra
+  let : Algebra B κ := j.toAlgebra
   have hinj : Function.Injective (algebraMap B (integralClosure B κ)) := by
     intro x y hxy
     exact hj (congrArg Subtype.val hxy)

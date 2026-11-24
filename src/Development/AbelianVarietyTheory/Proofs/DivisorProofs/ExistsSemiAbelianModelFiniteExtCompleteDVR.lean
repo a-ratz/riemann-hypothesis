@@ -75,7 +75,7 @@ theorem exists_model : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W],
           IsSemiAbelian G ∧ IsMonHom gen.hom := by
   intro W _ _ _ hW P
   obtain ⟨hdvr, hcomp, hchar⟩ := (GlobalTheory.LN.cDvr_iff W).1 hW
-  haveI : CharZero (FractionRing W) :=
+  have : CharZero (FractionRing W) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective W (FractionRing W))
   obtain ⟨W', L, _, _, _, _, _, _, _, _, hsq, hfin, hloc, hcompl, G, _, ⟨e, he⟩, hG⟩ :=
     GlobalTheory.SS.potModel_isSemiAbelian W (FractionRing W) P.A P.isAb
@@ -84,13 +84,13 @@ theorem exists_model : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W],
       (algebraMap (FractionRing W) L).injective.comp (IsFractionRing.injective W (FractionRing W))
     rw [← hsq] at h2
     exact Function.Injective.of_comp h2
-  haveI : CharZero W' := charZero_of_injective_algebraMap hinj
+  have : CharZero W' := charZero_of_injective_algebraMap hinj
   let ε : FractionRing W' ≃ₐ[W'] L := IsLocalization.algEquiv (nonZeroDivisors W') (FractionRing W') L
   let fK : FractionRing W →+* FractionRing W' := (ε.symm : L →+* FractionRing W').comp (algebraMap (FractionRing W) L)
   have hε : (ε.symm : L →+* FractionRing W').comp (algebraMap W' L) = algebraMap W' (FractionRing W') := by
     ext x; exact ε.symm.commutes x
   obtain ⟨A, β, hpb, -, hLB⟩ := GlobalTheory.KeyFam.SameLam.exists_polPB P fK
-  haveI : IsCommMonObj G := hG.comm
+  have : IsCommMonObj G := hG.comm
   refine ⟨W', inferInstance, inferInstance, inferInstance, algebraMap W W', fK,
     (GlobalTheory.LN.cDvr_iff W').2 ⟨inferInstance, hcompl, inferInstance⟩, hinj, hloc,
     RingHom.finite_algebraMap.2 hfin, ?_, A, β, hpb, hLB, ?_⟩

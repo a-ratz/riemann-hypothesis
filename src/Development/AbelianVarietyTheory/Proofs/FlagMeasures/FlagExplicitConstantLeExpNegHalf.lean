@@ -165,7 +165,7 @@ theorem sum_absNorm_rpow_neg_le : ∀ (K : Type) [Field K] [NumberField K] (s : 
     refine le_trans ?_ (ncard_ideal_absNorm_eq_le K (mem_Ioc.mp hn).1.ne')
     rw [← Set.ncard_coe_finset]
     exact Set.ncard_le_ncard (fun I hI => (mem_filter.mp (mem_coe.mp hI)).2)
-      (Ideal.finite_setOfPred_absNorm_eq n)
+      (Ring.HasFiniteQuotients.finite_absNorm_eq n)
   · intro I hI
     rw [mem_Ioc]
     exact ⟨Nat.pos_of_ne_zero (by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact hS I hI),
@@ -202,7 +202,7 @@ theorem classNumber_mul_regulator_le_sqrt_discr_rpow :
   set Y : ℝ := Real.sqrt |(discr K : ℝ)| with hY
   have hY0 : 0 ≤ Y := Real.sqrt_nonneg _
   have hfin : {I : Ideal (𝓞 K) | I ≠ ⊥ ∧ (Ideal.absNorm I : ℝ) ≤ Y}.Finite := by
-    refine (Ideal.finite_setOfPred_absNorm_le (S := 𝓞 K) ⌊Y⌋₊).subset fun I hI => ?_
+    refine (Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K) ⌊Y⌋₊).subset fun I hI => ?_
     exact Nat.le_floor hI.2
   set T := hfin.toFinset with hT
   have hmem : ∀ I, I ∈ T ↔ I ≠ ⊥ ∧ (Ideal.absNorm I : ℝ) ≤ Y := fun I => by
@@ -220,10 +220,10 @@ theorem classNumber_mul_regulator_le_sqrt_discr_rpow :
     · rintro ⟨⟨h0, hle⟩, hc⟩
       have hI : I ∈ nonZeroDivisors (Ideal (𝓞 K)) := mem_nonZeroDivisors_of_ne_zero h0
       refine ⟨hI, ?_, hle⟩
-      simpa only [cls, dif_pos hI] using hc
+      simpa only [cls, dite_eq_left hI] using hc
     · rintro ⟨hI, hc, hle⟩
       refine ⟨⟨nonZeroDivisors.ne_zero hI, hle⟩, ?_⟩
-      simpa only [cls, dif_pos hI] using hc
+      simpa only [cls, dite_eq_left hI] using hc
   have h2 : ∀ I ∈ T, g I ≤ Y ^ s * (Ideal.absNorm I : ℝ) ^ (-s) := by
     intro I hI
     obtain ⟨h0, hle⟩ := (hmem I).1 hI
@@ -277,7 +277,7 @@ theorem residue_rankin_numeric (x : ℝ) (hx : (3 / 2 : ℝ) ≤ x) (f : ℕ) :
     rw [add_sub_cancel_left]; field_simp; ring
   have e2 : (x ^ f) ^ (1 + 1 / L) = x ^ f * Real.exp 1 ^ f := by
     rw [Real.rpow_add (pow_pos hx0 f), Real.rpow_one, Real.rpow_def_of_pos (pow_pos hx0 f),
-      Real.log_pow, ← hLdef, ← Real.exp_nat_mul]
+      Real.log_pow, ← hLdef, ← Real.exp_natCast_mul]
     congr 2
     field_simp
   rw [e1, e2, pow_mul, pow_mul]
@@ -366,7 +366,7 @@ theorem log_factor_le (n m : ℕ) (a : ℝ) (hn : 18 ≤ n) (ha : a ≤ m) (hm :
   have hL : 0 ≤ Real.log (n / (2 * Real.pi * Real.exp 1)) :=
     Real.log_nonneg (by rw [le_div_iff₀ (by positivity)]; linarith)
   have h1 : (m : ℝ) ^ m / m.factorial ≤ Real.exp 1 ^ m := by
-    rw [← Real.exp_nat_mul, mul_one]
+    rw [← Real.exp_natCast_mul, mul_one]
     exact Real.pow_div_factorial_le_exp _ hm0.le m
   have h2 : 2 * Real.pi ^ (m + 1) / (m.factorial : ℝ) ≤
       (2 * Real.pi) * ((n / (2 * Real.pi * Real.exp 1))⁻¹) ^ m := by
@@ -651,7 +651,7 @@ theorem constantBound : ConstantBound := by
   have T3 : (sphV p * sphV q / (sphV (p - J) * sphV (q - J) * ∏ i, sphV (j i))) ^ f ≤
       Real.exp (f * J * (Real.log (2 * Real.pi) - (n - 2 * s) * (Real.log n - (Real.log (2 * Real.pi) + 1)) +
         3.49 + s / 2 * (Real.log n / 2))) := by
-    rw [mul_assoc (f : ℝ), Real.exp_nat_mul]
+    rw [mul_assoc (f : ℝ), Real.exp_natCast_mul]
     have := hpos p; have := hpos q; have := hpos (p - J); have := hpos (q - J)
     apply pow_le_pow_left₀ (by positivity)
     have e : sphV p * sphV q / (sphV (p - J) * sphV (q - J) * ∏ i, sphV (j i)) =
@@ -677,7 +677,7 @@ theorem constantBound : ConstantBound := by
       exact mul_le_mul h16 hrd hl0 (by positivity)
     have h4 := hres.trans (pow_le_pow_left₀ (by positivity) h3 _)
     refine (pow_le_pow_left₀ hres0.le h4 a).trans ?_
-    rw [← Real.exp_nat_mul, ← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
     apply Real.exp_le_exp.2
     push_cast
     have : (a : ℝ) * (2 * f * (3 + n)) ≤ J * (2 * f * (3 + n)) :=
@@ -687,7 +687,7 @@ theorem constantBound : ConstantBound := by
   have T5 : ∏ i, ∏ l ∈ Finset.Icc 2 (j i), zetaE E l ≤ Real.exp (f * J * 2) := by
     refine (Finset.prod_le_prod₀ (fun i _ => (zeta_prod E (j i)).1)
       (fun i _ => (zeta_prod E (j i)).2)).trans ?_
-    rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← Real.exp_nat_mul, hdeg]
+    rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← Real.exp_natCast_mul, hdeg]
     apply Real.exp_le_exp.2
     push_cast
     have := mul_le_mul_of_nonneg_right haJ' hf0

@@ -570,7 +570,7 @@ lemma totallyReal_F (hz : IsPrimitiveRoot z (2 ^ (e + 2))) : IsTotallyReal ℚ�
   rw [NumberField.InfinitePlace.isReal_iff, NumberField.ComplexEmbedding.isReal_iff]
   refine RingHom.ext fun y => ?_
   rw [NumberField.ComplexEmbedding.conjugate_coe_eq]
-  letI : Algebra ℚ⟮z + z⁻¹⟯ ℂ := v.embedding.toAlgebra
+  let : Algebra ℚ⟮z + z⁻¹⟯ ℂ := v.embedding.toAlgebra
   let Φ : K →ₐ[ℚ⟮z + z⁻¹⟯] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -923,7 +923,7 @@ theorem inertia_art (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 (hostE ζ a b))) [
   have hI := Formalism.FrobeniusOrbits.Final.host_field.2.2.2.2.2.2.2.2.2.2.2.2.1 e q d hH L ζ a b h σ
   by_cases hl2 : l = 2
   · subst hl2
-    haveI : P.LiesOver (span {(2 : ℤ)}) := by
+    have : P.LiesOver (span {(2 : ℤ)}) := by
       simpa using (inferInstance : P.LiesOver (span {((2 : ℕ) : ℤ)}))
     rw [hI.1 P, ordCompl_two (hH := hH)]
     exact inertia_two ..
@@ -958,7 +958,7 @@ theorem inertia_art (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 (hostE ζ a b))) [
       exact Nat.mod_modEq 1 _
     · rw [hone, map_one]
   · rintro ⟨u, hu1, hu2⟩
-    haveI : NeZero (2 ^ (e + 2) * q * d) := ⟨hN0⟩
+    have : NeZero (2 ^ (e + 2) * q * d) := ⟨hN0⟩
     have hu : u = 1 := by
       apply Units.ext
       rw [Units.val_one, ← ZMod.natCast_zmod_val (u : ZMod (2 ^ (e + 2) * q * d)), ← Nat.cast_one]
@@ -1122,7 +1122,7 @@ theorem frob_any_art (l : ℕ) [Fact l.Prime] (P : Ideal (𝓞 (hostE ζ a b))) 
     fun τ => map_inv (galEquiv hH.toHypOdd h) τ
   have hN0 : 2 ^ (e + 2) * q * d ≠ 0 :=
     mul_ne_zero (mul_ne_zero (pow_ne_zero _ two_ne_zero) hH.1.ne_zero) hH.2.1.ne_zero
-  haveI : NeZero (2 ^ (e + 2) * q * d) := ⟨hN0⟩
+  have : NeZero (2 ^ (e + 2) * q * d) := ⟨hN0⟩
   have hdvd : ordCompl[l] (2 ^ (e + 2) * q * d) ∣ 2 ^ (e + 2) * q * d := Nat.ordCompl_dvd _ _
   have hval : ∀ x y : (ZMod (2 ^ (e + 2) * q * d))ˣ,
       ((x * y : (ZMod (2 ^ (e + 2) * q * d))ˣ) : ZMod (2 ^ (e + 2) * q * d)).val ≡

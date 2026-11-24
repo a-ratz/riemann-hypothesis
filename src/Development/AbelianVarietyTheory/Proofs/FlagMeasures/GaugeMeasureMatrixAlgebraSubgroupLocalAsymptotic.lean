@@ -97,7 +97,7 @@ private theorem comap_subtype_val_haar_properties {n : ℕ} {ε : Fin n → Bool
       μ.comap (Subtype.val : S → _root_.Formalism.REAL.UJ ε) ≠ 0 := by
   obtain ⟨h1, h2, h3⟩ := h
   have hme : MeasurableEmbedding (Subtype.val : S → _root_.Formalism.REAL.UJ ε) :=
-    MeasurableEmbedding.subtype_coe hS.measurableSet
+    MeasurableEmbedding.subtypeVal hS.measurableSet
   set ν := μ.comap (Subtype.val : S → _root_.Formalism.REAL.UJ ε) with hν
   have hmap : Measure.map Subtype.val ν = μ := by
     rw [hme.map_comap, Subtype.range_coe]
@@ -143,9 +143,9 @@ private theorem comap_subtype_val_haar_properties {n : ℕ} {ε : Fin n → Bool
   refine ⟨hmap, hinv, ?_, ?_⟩
   · refine ⟨fun K hK => ?_⟩
     have hUo : IsOpen (Subtype.val ⁻¹' {g | f g < r} : Set S) :=
-      (isOpen_lt hf continuous_const).preimage continuous_subtype_val
+      (isOpen_lt hf continuous_const).preimage continuous_subtypeVal
     have hUne : (Subtype.val ⁻¹' {g | f g < r} : Set S).Nonempty :=
-      ⟨1, by simp only [Set.mem_preimage, Set.mem_setOf_eq, OneMemClass.coe_one, hf1]; exact hr⟩
+      ⟨1, by simp only [Set.mem_preimage, Set.mem_ofPred_eq, OneMemClass.coe_one, hf1]; exact hr⟩
     have hUtop : ν (Subtype.val ⁻¹' {g | f g < r}) ≠ ⊤ := by
       refine ne_top_of_le_ne_top ?_ (measure_mono (Set.preimage_mono
         (show {g | f g < r} ⊆ B from fun g (hg : f g < r) => (le_of_lt hg : f g ≤ r))))
@@ -153,7 +153,7 @@ private theorem comap_subtype_val_haar_properties {n : ℕ} {ε : Fin n → Bool
     exact measure_lt_top_of_isCompact_of_isMulLeftInvariant _ hUo hUne hUtop hK
   · intro h0
     apply hB0
-    rw [← hνB, h0, Measure.coe_zero, Pi.zero_apply]
+    rw [← hνB, h0, FunLike.coe_zero, Pi.zero_apply]
 
 
 open MeasureTheory NumberField Matrix Finset in
@@ -161,15 +161,15 @@ open Topology in
 theorem _root_.GlobalTheory.GaugeSubHaar.isGaugeSub_haar : ∀ (n : ℕ) (ε : Fin n → Bool) (S : Subgroup (_root_.Formalism.REAL.UJ ε)), IsClosed (S : Set (_root_.Formalism.REAL.UJ ε)) → ∀ (d : ℕ) (μ : Measure (_root_.Formalism.REAL.UJ ε)), _root_.GlobalTheory.FlagMeas.IsGaugeSub (S : Set (_root_.Formalism.REAL.UJ ε)) d μ → SigmaFinite μ ∧ IsFiniteMeasureOnCompacts μ ∧ ∀ μ', _root_.GlobalTheory.FlagMeas.IsGaugeSub (S : Set (_root_.Formalism.REAL.UJ ε)) d μ' → μ' = μ := by
   intro n ε S hS d μ hμ
   have hme : MeasurableEmbedding (Subtype.val : S → _root_.Formalism.REAL.UJ ε) :=
-    MeasurableEmbedding.subtype_coe hS.measurableSet
+    MeasurableEmbedding.subtypeVal hS.measurableSet
   obtain ⟨hmap, hinv, hfin, hne⟩ := comap_subtype_val_haar_properties S hS d μ hμ
   set ν := μ.comap (Subtype.val : S → _root_.Formalism.REAL.UJ ε) with hν
   have hfinμ : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => by
     rw [← hmap, hme.map_apply]
     exact (hS.isClosedEmbedding_subtypeVal.isCompact_preimage hK).measure_lt_top⟩
-  haveI : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (_root_.Formalism.REAL.UJ ε) := inferInstance
-  haveI : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (_root_.Formalism.REAL.UJ ε) := inferInstance
+  have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
   refine ⟨inferInstance, hfinμ, fun μ' hμ' => ?_⟩
   obtain ⟨hmap', hinv', hfin', -⟩ := comap_subtype_val_haar_properties S hS d μ' hμ'
   set ν' := μ'.comap (Subtype.val : S → _root_.Formalism.REAL.UJ ε) with hν'
@@ -180,9 +180,9 @@ theorem _root_.GlobalTheory.GaugeSubHaar.isGaugeSub_haar : ∀ (n : ℕ) (ε : F
     rw [← Measure.measure_univ_eq_zero, ← iUnion_compactCovering]
     exact measure_iUnion_null hcon
   obtain ⟨k, hk⟩ := hcover
-  haveI : ν.IsOpenPosMeasure :=
+  have : ν.IsOpenPosMeasure :=
     isOpenPosMeasure_of_mulLeftInvariant_of_compact _ (isCompact_compactCovering S k) hk
-  haveI : ν.IsHaarMeasure := { }
+  have : ν.IsHaarMeasure := { }
   have hsmul := Measure.isMulLeftInvariant_eq_smul ν' ν
   set c := ν'.haarScalarFactor ν with hc
   have hμc : μ' = c • μ := by
@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.GaugeSubHaar.isGaugeSub_haar : ∀ (n : ℕ) (ε : F
     (Metric.measure_ball_pos volume _ one_pos).ne'
   have hLtop : volume (Metric.ball (0 : EuclideanSpace ℝ (Fin d)) 1) ≠ ⊤ := measure_ball_lt_top.ne
   have h4 := ENNReal.Tendsto.const_mul h3 (Or.inr (ENNReal.coe_ne_top (r := c)))
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_div_assoc] at h3'
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, mul_div_assoc] at h3'
   have heq := tendsto_nhds_unique h4 h3'
   have hc1 : (c : ENNReal) = 1 := by
     rw [← ENNReal.mul_left_inj hL0 hLtop, one_mul]
@@ -229,7 +229,7 @@ theorem integral_le_of_small_balls {d : ℕ} (μ ν : Measure (EuclideanSpace �
     (h0 : ∀ x, 0 ≤ f x) (hU : ∀ x ∉ U, f x = 0) :
     ∫ x, f x ∂μ ≤ κ * ∫ x, f x ∂ν := by
   have hcν : ∀ A, (κ.toNNReal • ν) A = ENNReal.ofReal κ * ν A := fun A => by
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]; rfl
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]; rfl
 
   have hsub : ∀ s ⊆ U, μ s ≤ (κ.toNNReal • ν) s := by
     intro s hs
@@ -241,7 +241,7 @@ theorem integral_le_of_small_balls {d : ℕ} (μ ν : Measure (EuclideanSpace �
   have hle : μ.restrict U ≤ κ.toNNReal • ν.restrict U := by
     rw [Measure.le_iff]
     intro s hs
-    rw [Measure.restrict_apply hs, Measure.smul_apply, Measure.restrict_apply hs, ← Measure.smul_apply]
+    rw [Measure.restrict_apply hs, smul_apply, Measure.restrict_apply hs, ← smul_apply]
     exact hsub _ Set.inter_subset_right
   calc ∫ x, f x ∂μ = ∫ x, f x ∂(μ.restrict U) := (setIntegral_eq_integral_of_forall_compl_eq_zero hU).symm
     _ ≤ ∫ x, f x ∂(κ.toNNReal • ν.restrict U) :=
@@ -280,7 +280,7 @@ private theorem rescaled_integral_comparable_of_nonneg_compactSupport {d : ℕ} 
       finrank_euclideanSpace_fin, mul_pow, ENNReal.ofReal_mul (pow_nonneg hr.le _), mul_assoc]
   have hcv : ∀ A, ((r ^ d).toNNReal • volume : Measure (EuclideanSpace ℝ (Fin d))) A =
       ENNReal.ofReal (r ^ d) * volume A := fun A => by
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]; rfl
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]; rfl
   have hscale : Filter.Tendsto (fun s : ℝ => r * s) (nhdsWithin 0 (Set.Ioi 0)) (nhdsWithin 0 (Set.Ioi 0)) := by
     refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ ?_ ?_
     · have := ((continuous_const_mul r).tendsto (0 : ℝ))
@@ -293,7 +293,7 @@ private theorem rescaled_integral_comparable_of_nonneg_compactSupport {d : ℕ} 
     rw [norm_smul, Real.norm_of_nonneg hr.le]
   have hvan : ∀ y ∉ U, φ y = 0 := by
     intro y hy
-    simp only [hU, Set.mem_setOf_eq, not_lt] at hy
+    simp only [hU, Set.mem_ofPred_eq, not_lt] at hy
     refine hR y ?_
     by_contra hlt
     push_neg at hlt

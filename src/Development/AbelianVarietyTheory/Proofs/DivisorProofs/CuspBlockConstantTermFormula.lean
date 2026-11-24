@@ -108,9 +108,9 @@ theorem exists_measurable_addSection : ∀ (G : Type) [Group G] [TopologicalSpac
   have hH : ∀ h : H, ((h : N) : G) ∈ Γ := fun h => by
     have e : ((h : N) : G) = s (π h) := congrArg Subtype.val h.2.1
     rw [e]; exact hsΓ _ h.2.2
-  haveI : DiscreteTopology H :=
+  have : DiscreteTopology H :=
     .of_continuous_injective (f := fun h : H => (⟨((h : N) : G), hH h⟩ : Γ))
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
       fun a b e => Subtype.ext (Subtype.ext (congrArg (fun z : Γ => (z : G)) e))
   refine ⟨s' ⁻¹' stdDom H, (hsc.subtype_mk hs).measurable (measurableSet_stdDom H), fun v => ?_⟩
   obtain ⟨h, hh, hu⟩ := existsUnique_stdDom H (s' v)
@@ -147,13 +147,13 @@ theorem integral_section_eq_constTermOn : ∀ (G : Type) [Group G] [TopologicalS
   have hs'c : Continuous s' := hsc.subtype_mk _
   have hleft : Function.LeftInverse π s' := fun v => hπs _ v rfl
   have hemb : Topology.IsEmbedding s' := hleft.isEmbedding hπc hs'c
-  haveI : SecondCountableTopology V := hemb.secondCountableTopology
-  haveI : T2Space V := hemb.t2Space
-  haveI : Countable Λ := Function.Injective.countable (f := fun w : Λ => (⟨s w, hsΓ _ w.2⟩ : Γ)) fun a b h =>
+  have : SecondCountableTopology V := hemb.secondCountableTopology
+  have : T2Space V := hemb.t2Space
+  have : Countable Λ := Function.Injective.countable (f := fun w : Λ => (⟨s w, hsΓ _ w.2⟩ : Γ)) fun a b h =>
     Subtype.ext (hleft.injective (Subtype.ext (congrArg Subtype.val h : s a = s b)))
   let e := prodHomeo hle hs hsc hπc hπmul hπs hker
   let ν : Measure N := ((Measure.haar : Measure N').prod μ).map e
-  haveI : ν.IsHaarMeasure := _root_.GlobalTheory.Cusp.Shear.isHaarMeasure_map_prodHomeo G Γ N N' hle hn hc hc' V s π hs hsc hπc hπmul hπs hker hmul μ hμ
+  have : ν.IsHaarMeasure := _root_.GlobalTheory.Cusp.Shear.isHaarMeasure_map_prodHomeo G Γ N N' hle hn hc hc' V s π hs hsc hπc hπmul hπs hker hmul μ hμ
   obtain ⟨B, hBm, hB⟩ := exists_measurable_addSection G Γ N V Λ s π hsc hmul hs hπs hsΓ
   let A := stdDom (Γ.subgroupOf N')
   have hAm : MeasurableSet A := measurableSet_stdDom _
@@ -246,8 +246,8 @@ theorem isCuspidal_comp_blockEmb : ∀ (F E : Type) [Field F] [NumberField F] [F
   set U := GlobalTheory.StdPar.unip σ J X (insert k S) with hU
   set U₀ := GlobalTheory.StdPar.unip σ J X S with hU₀
   have hle : U₀ ≤ U := _root_.GlobalTheory.StdPar.unip_mono_of_subset F E σ hσ n J hJ r X Y hW _ S (Finset.subset_insert _ _)
-  haveI : LocallyCompactSpace U₀ := (GlobalTheory.StdPar.isClosed_unip S hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace U := (GlobalTheory.StdPar.isClosed_unip _ hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U₀ := (GlobalTheory.StdPar.isClosed_unip S hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U := (GlobalTheory.StdPar.isClosed_unip _ hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
   have cS := _root_.GlobalTheory.CuspCocpt.cocompact_unip F E σ hσ n J hJ r X Y hW S
   have cS' := _root_.GlobalTheory.CuspCocpt.cocompact_unip F E σ hσ n J hJ r X Y hW (insert k S)
   have esub : ∀ {N : Subgroup (GAd σ J)}, N ≤ U → (ratPts σ J ⊓ U).subgroupOf N = (ratPts σ J).subgroupOf N := by

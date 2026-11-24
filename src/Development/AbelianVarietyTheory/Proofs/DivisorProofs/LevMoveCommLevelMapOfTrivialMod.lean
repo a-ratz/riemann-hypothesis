@@ -81,7 +81,7 @@ theorem levMove_comm_levelMap_of_trivial_mod : ∀ (E : Type) [Field E] [NumberF
     rw [hA, hA2]
   have hb := hover hK
   have hred : IsReduced d.Xo₂.X := by
-    haveI := d.Xo₂.smooth
+    have := d.Xo₂.smooth
     exact (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ d.Xo₂.s
       (SmoothOfRelativeDimension.smooth Dw.dim _)).1
   have hpd : d.pd = d.l₂.M / l.M := by

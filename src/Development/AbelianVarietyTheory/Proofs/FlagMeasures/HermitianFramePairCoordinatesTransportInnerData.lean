@@ -104,7 +104,7 @@ private theorem isometry_fixing_frames_iff_grp_mem_H0 (g : V ≃ₗ[E] V) :
   simp only [_root_.GlobalTheory.HL.Frames.H0, Subgroup.mem_inf]
   unfold _root_.GlobalTheory.HL.isomG _root_.GlobalTheory.HL.unipOn _root_.GlobalTheory.HL.Frames.ME
     _root_.GlobalTheory.HL.Frames.spanTo
-  simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hiso, hfix⟩
     refine ⟨fun x y => ?_, mapsTo_and_sub_mem_bot_of_fixes _ _ ?_⟩
@@ -174,7 +174,7 @@ private theorem apply_mem_perp_X_iff_of_isometry_fixing (g : V ≃ₗ[E] V) (his
         LinearMap.id_apply, hf]
     exact fun x hx => h hx
   unfold _root_.Formalism.MainNotions.S.Loc.HermSp.perp
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   refine forall₂_congr fun x hx => ?_
   rw [← hiso v x, hX x hx]
 
@@ -236,7 +236,7 @@ private theorem grp_smul_inn_eq_inn_iff (g : V ≃ₗ[E] V) (f : Fin (r + 1) →
     ext w
     simp only [_root_.GlobalTheory.HL.Coord.inn,
       _root_.GlobalTheory.HL.Coord.lat, SetLike.mem_coe, Submodule.mem_map,
-      Submodule.mem_comap, Set.mem_image, Set.mem_setOf_eq]
+      Submodule.mem_comap, Set.mem_image, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨_, ⟨z, hz, rfl⟩, rfl⟩
       exact ⟨z, ⟨z.2, hz⟩, rfl⟩
@@ -413,7 +413,7 @@ private theorem Datum_stab_eq_comap_H0_inf_stabilizer (d : _root_.Formalism.Main
         (c.dat d)).comap c.grp.toMonoidHom :
           Set (V ≃ₗ[E] V)) := by
     ext g
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, Subgroup.mem_comap, Subgroup.mem_inf,
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Subgroup.mem_comap, Subgroup.mem_inf,
       MulAction.mem_stabilizer_iff, MulEquiv.coe_toMonoidHom]
     constructor
     · rintro ⟨hg, hm⟩

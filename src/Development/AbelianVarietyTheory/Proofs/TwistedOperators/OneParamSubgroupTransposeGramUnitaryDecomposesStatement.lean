@@ -120,8 +120,8 @@ theorem pre_mul (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d) {J : Matrix (Fi
 theorem continuous_pre (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d) {J : Matrix (Fin d) (Fin d) D.host.E}
     (hJ : J = D.host.xi0 • reindex e e X.gramᵀ) : Continuous (pre X e hJ) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact (Units.continuous_val.comp continuous_subtype_val).matrix_reindex e.symm e.symm
-  · exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_reindex e.symm e.symm
+  · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_reindex e.symm e.symm
+  · exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_reindex e.symm e.symm
 
 theorem pre_mem_GinfC (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d) (Wd : Spc D.host.F D.host.E d)
     (hJ : Wd.J = D.host.xi0 • reindex e e X.gramᵀ) {u : UA D.sp.cm.sig Wd.J}
@@ -143,8 +143,8 @@ theorem pre_mem_GinfC (X : HSp D) {d : ℕ} (e : Fin X.rank ≃ Fin d) (Wd : Spc
 
 theorem lie_of {n : Type} [Fintype n] [DecidableEq n] (G Y : Matrix n n ℂ)
     (h : ∀ t : ℝ, (NormedSpace.exp (t • Y))ᴴ * G * NormedSpace.exp (t • Y) = G) : Yᴴ * G + G * Y = 0 := by
-  letI : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
   have e1 : ∀ t : ℝ, (NormedSpace.exp (t • Y))ᴴ = NormedSpace.exp (t • Yᴴ) := fun t => by
     rw [← Matrix.exp_conjTranspose, Matrix.conjTranspose_smul, star_trivial]
   have h1 := ((hasDerivAt_exp_smul_const (Yᴴ) (0:ℝ)).mul_const G).mul (hasDerivAt_exp_smul_const Y (0:ℝ))
@@ -210,9 +210,9 @@ theorem GlobalTheory.KapXLineDec.line_dec : ∀ (D : D7) (θ : InfFam D) (X : HS
           have hs := GlobalTheory.Mem.Lift.isAtTau_oneP hθ (hYl ρ) t
           by_cases hρ : ρ = σ
           · subst hρ
-            rw [if_pos rfl]
+            rw [ite_eq_left rfl]
             exact hs.2.1.trans (hY ρ t).symm
-          · rw [if_neg hρ]
+          · rw [ite_eq_right hρ]
             exact hs.2.2 σ (Ne.symm hρ)
         exact e1.trans (GlobalTheory.RowReal.list_prod_map_ite _ _ L (Finset.nodup_toList _)
           (Finset.mem_toList.2 (Finset.mem_univ _)))

@@ -60,7 +60,7 @@ theorem UpperTheory.V.Alg.M.tsp_holds :
     ∀ I : Ideal A, I.IsHomogeneous 𝒜 → ∀ σ : 𝒜 0 →ₐ[O] K, (∀ b : 𝒜 0, (b : A) ∈ I → σ b = 0) →
       ∃ ξ : A →ₐ[O] K, OnS I ξ ∧ res0 𝒜 ξ = σ := by
   intro O _ _ _ _ _ K _ _ _ _ A _ _ 𝒜 _ _ x hW I hI σ hσ
-  haveI : Algebra.FiniteType (𝒜 0) A := (ft_holds O A 𝒜 x hW).1
+  have : Algebra.FiniteType (𝒜 0) A := (ft_holds O A 𝒜 x hW).1
   let p : A →ₗ[O] 𝒜 0 :=
     (DirectSum.component O ℤ (fun i => 𝒜 i) 0).comp (DirectSum.decomposeLinearEquiv 𝒜).toLinearMap
   have hpa : ∀ a : A, p a = DirectSum.decompose 𝒜 a 0 := fun a => rfl

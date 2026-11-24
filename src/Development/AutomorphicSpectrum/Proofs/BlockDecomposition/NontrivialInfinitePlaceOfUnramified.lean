@@ -72,7 +72,7 @@ theorem nontrivial_infinitePlace_of_forall_isUnramifiedAt (E : Type) [Field E] [
     (hU : ∀ w : HeightOneSpectrum (𝓞 E), Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) w.asIdeal) :
     Nontrivial (InfinitePlace E) := by
   by_contra hn
-  haveI : Subsingleton (InfinitePlace E) := not_nontrivial_iff_subsingleton.1 hn
+  have : Subsingleton (InfinitePlace E) := not_nontrivial_iff_subsingleton.1 hn
   have hF := finrank_maximalRealSubfield_of_subsingleton E
   have hE : Module.finrank ℚ E ≠ 1 := by
     have h5 := (letI : Module.Free (maximalRealSubfield E) E := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℚ (maximalRealSubfield E) E)
@@ -82,8 +82,8 @@ theorem nontrivial_infinitePlace_of_forall_isUnramifiedAt (E : Type) [Field E] [
   have hbot : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)
   have hw := hU ⟨P, hP.isPrime, hbot⟩
   apply hram
-  haveI : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield E)) (Localization.AtPrime P) := hw
-  haveI : Algebra.FormallyUnramified ℤ (𝓞 (maximalRealSubfield E)) :=
+  have : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield E)) (Localization.AtPrime P) := hw
+  have : Algebra.FormallyUnramified ℤ (𝓞 (maximalRealSubfield E)) :=
     Algebra.FormallyUnramified.of_surjective (Algebra.ofId ℤ _)
       (algebraMap_int_ringOfIntegers_surjective _ hF)
   exact Algebra.FormallyUnramified.comp ℤ (𝓞 (maximalRealSubfield E)) (Localization.AtPrime P)

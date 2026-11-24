@@ -108,7 +108,7 @@ theorem mem_iff (s : ℤ) (x : k⸨X⸩) :
   rw [p_zpow]
   constructor
   · rintro ⟨b, rfl⟩ m hm
-    rw [HahnSeries.coeff_single_mul, PowerSeries.coeff_coe, if_pos (by omega), mul_zero]
+    rw [HahnSeries.coeff_single_mul, PowerSeries.coeff_coe, ite_eq_left (by omega), mul_zero]
   · intro h
     refine ⟨PowerSeries.mk fun n => x.coeff (s + n), ?_⟩
     ext m
@@ -131,7 +131,7 @@ theorem comp_pow_mul {i j : ℕ} (hi : i < l) (hj : j < l) (a : k⸨X⸩) :
   by_cases h : j = i
   · subst h
     simp [Int.mul_ediv_cancel_left _ hl']
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     · simp
     · intro hd
       have : (l : ℤ) ∣ (i : ℤ) - j := by
@@ -315,9 +315,9 @@ theorem psi_pow_mul {j : ℕ} (hj : j < l) (a : k⸨X⸩) :
 theorem psi_assemble (y : Fin l → k⸨X⸩) : psiPi k l (assemble k l y) = y 0 := by
 
   rw [assemble, map_sum, Finset.sum_eq_single 0]
-  · rw [psi_pow_mul k l (0 : Fin l).2, if_pos (by simp)]
+  · rw [psi_pow_mul k l (0 : Fin l).2, ite_eq_left (by simp)]
   · intro j _ hj
-    rw [psi_pow_mul k l j.2, if_neg (by simpa using hj)]
+    rw [psi_pow_mul k l j.2, ite_eq_right (by simpa using hj)]
   · simp
 
 theorem psi_coeff (y : k⸨X⸩) (m : ℤ) :
@@ -374,7 +374,7 @@ theorem psi_comm (σ : k⸨X⸩ →+* k⸨X⸩) (hφ : ∀ x, σ (phiPi k l x) =
     simpa [hφ] using this
   · intro j _ hj0
     obtain ⟨i, w, h0, h1, h2⟩ := hj j (Nat.pos_of_ne_zero (by simpa using hj0)) j.2
-    rw [map_mul, h2, hφ, mul_assoc, ← map_mul, psi_pow_mul k l h1, if_neg h0.ne']
+    rw [map_mul, h2, hφ, mul_assoc, ← map_mul, psi_pow_mul k l h1, ite_eq_right h0.ne']
   · simp
 
 theorem assemble_mem {s : ℤ} {y : Fin l → k⸨X⸩} (h : ∀ j, y j ∈ Dp k s) : assemble k l y ∈ Dp k (l * s) :=
@@ -383,7 +383,7 @@ theorem assemble_mem {s : ℤ} {y : Fin l → k⸨X⸩} (h : ∀ j, y j ∈ Dp k
 variable [CharP k l]
 
 theorem phi_one_add : phiPi k l (1 + vv k) = (1 + vv k) ^ l := by
-  haveI : CharP k⸨X⸩ l := charP_of_injective_algebraMap (algebraMap k k⸨X⸩).injective l
+  have : CharP k⸨X⸩ l := charP_of_injective_algebraMap (algebraMap k k⸨X⸩).injective l
   rw [map_add (f := _), map_one, phiPi_vv, add_pow_char, one_pow]
 
 theorem mem_of_assemble_mem {s : ℤ} {y : Fin l → k⸨X⸩} (h : assemble k l y ∈ Dp k (l * s)) (j : Fin l) :
@@ -399,13 +399,13 @@ theorem mem_of_assemble_mem {s : ℤ} {y : Fin l → k⸨X⸩} (h : assemble k l
     congr 2; omega
 
   rw [assemble, Finset.mul_sum, map_sum, Finset.sum_eq_single j]
-  · rw [key j le_rfl, psi_pow_mul k l (by omega), if_pos (by omega)]
+  · rw [key j le_rfl, psi_pow_mul k l (by omega), ite_eq_left (by omega)]
   · intro i _ hi
     have hi' : (i : ℕ) ≠ j := fun e => hi (Fin.ext e)
     have := i.2
     rcases lt_or_ge (i : ℕ) j with h2 | h2
-    · rw [← mul_assoc, ← pow_add, psi_pow_mul k l (by omega), if_neg (by omega)]
-    · rw [key i h2, psi_pow_mul k l (by omega), if_neg (by omega)]
+    · rw [← mul_assoc, ← pow_add, psi_pow_mul k l (by omega), ite_eq_right (by omega)]
+    · rw [key i h2, psi_pow_mul k l (by omega), ite_eq_right (by omega)]
   · simp
 
 end Psi
@@ -429,7 +429,7 @@ theorem opp_dvd (z : ℤ_[l]) : PowerSeries.X ∣ onePlusPow k l z - 1 :=
 
 theorem hom_opp (σ : k⟦X⟧ →+* k⟦X⟧) (m : ℕ) (h : σ (1 + PowerSeries.X) = (1 + PowerSeries.X) ^ m) (z : ℤ_[l]) :
     σ (onePlusPow k l z) = onePlusPow k l z ^ m := by
-  haveI : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
+  have : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
   have hX : PowerSeries.X ∣ σ PowerSeries.X := by
     rw [map_add (f := _), map_one, ← eq_sub_iff_add_eq'] at h
     rw [h, PowerSeries.X_dvd_iff]; simp
@@ -481,7 +481,7 @@ theorem delPi_comm (t : ℤ_[l]ˣ) (m : ℕ) (h0 : PowerSeries.constantCoeff ((1
   exact RingHom.congr_fun this x
 
 theorem frob_eq : ((1 + PowerSeries.X : k⟦X⟧) ^ l - 1) = PowerSeries.X ^ l := by
-  haveI : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
+  have : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
   rw [add_pow_char]; simp
 
 theorem frob_ne : ((1 + PowerSeries.X : k⟦X⟧) ^ l - 1) ≠ 0 := by
@@ -567,7 +567,7 @@ theorem psi_gam (x : k⸨X⸩) : psiPi k l (gamPi k l x) = gamPi k l (psiPi k l 
   psi_comm k l (gamPi k l : k⸨X⸩ →+* k⸨X⸩) gam_phi (fun j h0 h1 => ⟨j, _, h0, h1, gam_pow j⟩) x
 
 theorem gam_vv (h5 : 5 ≤ l) : ∃ c : k⟦X⟧, gamPi k l (vv k) = vv k * (1 + (c : k⸨X⸩) * vv k ^ 2) := by
-  haveI : CharP k⸨X⸩ l := charP_of_injective_algebraMap (algebraMap k k⸨X⸩).injective l
+  have : CharP k⸨X⸩ l := charP_of_injective_algebraMap (algebraMap k k⸨X⸩).injective l
   have h := gam_one_add (k := k) (l := l)
   rw [map_add (f := _), map_one, pow_add, pow_one, add_pow_char, one_pow] at h
   obtain ⟨e, he⟩ : ∃ e, l = e + 3 := ⟨l - 3, by omega⟩

@@ -98,7 +98,7 @@ theorem UpperTheory.V.Weyl.degRank :
     have h2 : Finsupp.degree (m : Fin n × Fin n →₀ ℕ)
         = (m : Fin n × Fin n →₀ ℕ).sum fun _ e => e := rfl
     have h3 := m.2
-    simp only [Set.mem_setOf_eq] at h3
+    simp only [Set.mem_ofPred_eq] at h3
     omega
   calc Nat.card {m : Fin n × Fin n →₀ ℕ | (m.sum fun _ e => e) ≤ N}
       ≤ Nat.card (Fin n × Fin n → Fin (N + 1)) :=
@@ -599,7 +599,7 @@ private theorem prod_fin_castLE_eq_prod_le {M : Type*} [CommMonoid M] {n : ℕ} 
     ∏ l : Fin ((k : ℕ) + 1), f (Fin.castLE k.isLt l) = ∏ i : Fin n with i ≤ k, f i := by
   apply Finset.prod_bij (fun l _ => Fin.castLE k.isLt l)
   · intro l _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_iff_val_le_val, Fin.coe_castLE]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_iff_val_le_val, Fin.val_castLE]
     omega
   · intro a _ b _ h
     exact Fin.castLE_injective _ h
@@ -613,7 +613,7 @@ private theorem sum_fin_castLE_eq_sum_le {M : Type*} [AddCommMonoid M] {n : ℕ}
     ∑ l : Fin ((k : ℕ) + 1), f (Fin.castLE k.isLt l) = ∑ i : Fin n with i ≤ k, f i := by
   apply Finset.sum_bij (fun l _ => Fin.castLE k.isLt l)
   · intro l _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_iff_val_le_val, Fin.coe_castLE]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fin.le_iff_val_le_val, Fin.val_castLE]
     omega
   · intro a _ b _ h
     exact Fin.castLE_injective _ h
@@ -645,18 +645,18 @@ theorem UpperTheory.V.Weyl.minorRtr :
     apply hm
     rw [hb m (Fin.castLE k.isLt j) ?_, map_zero, mul_zero]
     simp only [not_le] at hmk
-    rw [Fin.lt_iff_val_lt_val] at hmk ⊢
-    simp only [Fin.coe_castLE]
+    rw [Fin.lt_def] at hmk ⊢
+    simp only [Fin.val_castLE]
     omega
   have hup : (Matrix.of fun i j : Fin ((k : ℕ) + 1) =>
       b (Fin.castLE k.isLt i) (Fin.castLE k.isLt j)).det =
       ∏ i : Fin n with i ≤ k, b i i := by
-    rw [Matrix.det_of_upperTriangular, ← prod_fin_castLE_eq_prod_le k (fun i => b i i)]
+    rw [det_of_isUpperTriangular, ← prod_fin_castLE_eq_prod_le k (fun i => b i i)]
     · rfl
     · intro i j hij
       simp only [Matrix.of_apply]
       apply hb
-      rw [Fin.lt_iff_val_lt_val] at hij ⊢
+      rw [Fin.lt_def] at hij ⊢
       simpa using hij
   have hC : ((Matrix.of fun i j : Fin ((k : ℕ) + 1) =>
       b (Fin.castLE k.isLt i) (Fin.castLE k.isLt j)).map (MvPolynomial.C : ℂ →+* Pol n)).det =

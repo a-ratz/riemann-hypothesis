@@ -305,7 +305,7 @@ theorem exists_finite_extension_primitive_residue :
     have hpos : 0 < n ^ j := pow_pos hn.pos j
     have : NeZero (n ^ j) := ⟨hpos.ne'⟩
     have : NeZero ((n ^ j : ℕ) : F) := inferInstance
-    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F (n ^ j)
+    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F (n ^ j)
     let W : Subalgebra V F := Algebra.adjoin V {z}
     have hzW : z ∈ W := Algebra.subset_adjoin rfl
     have hfin : Module.Finite V W :=
@@ -537,7 +537,7 @@ theorem exists_twist_conv_ne_zero : ∀ (V : Type) [CommRing V] [IsDomain V] [Is
   let T : D.X → Z'.left.presheaf.stalk z := fun β => sval (f β) rr.left z J * sval (g (α - β)) rr.left z J *
       (cubV D.cub (T := Z') z J (toUnit Z' ≫ D.c β) (toUnit Z' ≫ D.c (α - β)) (rr ≫ snd _ D.P.A)).val
   have e₄ : sval p rr.left z J = T β₀ := hp Z' rr z J hJ
-  letI : Module W (Z'.left.presheaf.stalk z) := Module.compHom _ c
+  let : Module W (Z'.left.presheaf.stalk z) := Module.compHom _ c
   have key := hj₀ j₀ le_rfl W ζ hnW hζ hprim (Z'.left.presheaf.stalk z) (Function.extend u T 0) (fun a _ => by
     obtain ⟨f', g', h, h₁, h₂, h₃, h₄⟩ := H a
     have v₁ : ∀ β, sval (f' β) r'.left z J = sval (f β) rr.left z J := fun β =>
@@ -1288,7 +1288,7 @@ theorem form_delta {T : Over (Spec (CommRingCat.of R))} (k : ℕ) (α' α : D.X)
 
 theorem noeth (V W : Type) [CommRing V] [IsNoetherianRing V] [CommRing W] [Algebra V W] [Module.Finite V W] :
     IsNoetherianRing Γ((TA V W).left, ⊤) := by
-  haveI : IsNoetherianRing W := isNoetherian_of_tower V inferInstance
+  have : IsNoetherianRing W := isNoetherian_of_tower V inferInstance
   exact isNoetherianRing_of_ringEquiv W (Scheme.ΓSpecIso (CommRingCat.of W)).commRingCatIsoToRingEquiv.symm
 
 theorem jac (V W : Type) [CommRing V] [IsLocalRing V] [CommRing W] [IsLocalRing W] [Algebra V W]
@@ -1363,14 +1363,14 @@ theorem conv_famFE : GlobalFnsSt → ∀ (V : Type) [CommRing V] [IsDomain V] [I
   obtain ⟨u₀, r₁, r₂, hu₀, -, hr₂, hrel⟩ := GlobalTheory.UU.IntGen.main hG V D (TA V W) (k + l) α mu
   obtain ⟨p, hp, hS⟩ := hconv α
   obtain ⟨p', hp', hS'⟩ := hconv (α + (k + l) • mu)
-  haveI := hV.1
-  haveI := hW.1
-  haveI := hW.2.2.2.1
-  haveI := noeth V W
-  haveI := D.P.isAb.smooth
-  haveI := D.P.isAb.geomConnected
-  haveI : IsAffine (TA V W).left := inferInstanceAs (IsAffine (Spec _))
-  haveI : IsAffine (TF (R := V) F).left := inferInstanceAs (IsAffine (Spec _))
+  have := hV.1
+  have := hW.1
+  have := hW.2.2.2.1
+  have := noeth V W
+  have := D.P.isAb.smooth
+  have := D.P.isAb.geomConnected
+  have : IsAffine (TA V W).left := inferInstanceAs (IsAffine (Spec _))
+  have : IsAffine (TF (R := V) F).left := inferInstanceAs (IsAffine (Spec _))
   have hcs : ∀ (z : (DegPre.BF D F).left) (c : V),
       gs (φ ▷ D.P.A).left z ⊤ (scal (TA V W ⊗ D.P.A).hom c) = cst (DegPre.BF D F).hom z c := fun z c => by
     rw [gs_scal, Over.w]
@@ -1446,10 +1446,10 @@ theorem main : Laws → Laws2 → AllPre fun {V} _ _ _ {D} {_} {_} _ _ U => D.Ta
   · obtain ⟨j, hj⟩ := hnv f' g' h hff hgg hconv
     by_contra hn
     push_neg at hn
-    haveI := D.P.isAb.smooth
-    haveI : Flat D.P.A.hom := inferInstance
-    haveI : IsAffine (TA V W).left := inferInstanceAs (IsAffine (Spec _))
-    haveI : IsAffine (TF (R := V) (Kbar V)).left := inferInstanceAs (IsAffine (Spec _))
+    have := D.P.isAb.smooth
+    have : Flat D.P.A.hom := inferInstance
+    have : IsAffine (TA V W).left := inferInstanceAs (IsAffine (Spec _))
+    have : IsAffine (TF (R := V) (Kbar V)).left := inferInstanceAs (IsAffine (Spec _))
     refine hj (sec_eq_zero_of_sval_whiskerRight_eq_zero _ D.P.A _ _ φ hφ _ D.P.L D.P.isLB _ _ _ (h α)
       (fun z J hJ => ?_) j)
     exact (hs α z J hJ).symm.trans (DVR.UUA.sval_zero_of hn _ z J (hJ.mem _ _))

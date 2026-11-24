@@ -98,9 +98,9 @@ theorem isCompact_box (D : ∀ w : Pl E, Set (GL (Fin n) (w.adicCompletion E))) 
     GlobalTheory.IdeleCyl.isCompact_restrictedProduct_forall_mem (fun w : Pl E => w.adicCompletion E)
       (fun w => (w.adicCompletionIntegers E : Set (w.adicCompletion E))) (Q' i j) (hQ' i j) (hQK' i j)
   have hC : IsClosed {g : GL (Fin n) (Af E) | ∀ w, GeneralLinearGroup.map (pLoc E w) g ∈ D w} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun w => ?_
-    haveI : T2Space (GL (Fin n) (w.adicCompletion E)) := Units.isEmbedding_embedProduct.t2Space
+    have : T2Space (GL (Fin n) (w.adicCompletion E)) := Units.isEmbedding_embedProduct.t2Space
     exact (hD w).isClosed.preimage (continuous_mapLoc w)
   refine IsCompact.of_isClosed_subset (Units.isClosedEmbedding_embedProduct.isCompact_preimage
     (hP.prod (hP'.image MulOpposite.continuous_op))) hC ?_
@@ -169,17 +169,17 @@ theorem GlobalTheory.BCT.LocCpt.loc_cpt : ∀ (E : Type) [Field E] [NumberField 
   have hD : ∀ w, IsCompact (D w) := by
     intro w
     by_cases hw : w ∈ S
-    · simp only [D, if_pos hw]; exact (hC w).image continuous_subtype_val
-    · simp only [D, if_neg hw]; exact ((hC _).image continuous_subtype_val).image (hφ w)
+    · simp only [D, ite_eq_left hw]; exact (hC w).image continuous_subtypeVal
+    · simp only [D, ite_eq_right hw]; exact ((hC _).image continuous_subtypeVal).image (hφ w)
   have hDK : ∀ᶠ w in cofinite, D w ⊆ GlobalTheory.LFun.KGL w (n := n) := by
     have h1 : ∀ᶠ w in cofinite, C (conjSrc c w) = KL n (conjSrc c w) :=
       (conjSrc_injective c).tendsto_cofinite.eventually hCK
     filter_upwards [hCK, h1] with w hw hw'
     by_cases hwS : w ∈ S
-    · simp only [D, if_pos hwS, hw]
+    · simp only [D, ite_eq_left hwS, hw]
       rintro _ ⟨k, hk, rfl⟩
       exact Subgroup.mem_subgroupOf.1 hk
-    · simp only [D, if_neg hwS, hw']
+    · simp only [D, ite_eq_right hwS, hw']
       rintro _ ⟨_, ⟨k, hk, rfl⟩, rfl⟩
       have hk' : (k : GL (Fin n) _) ∈ GlobalTheory.LFun.KGL (conjSrc c w) (n := n) := Subgroup.mem_subgroupOf.1 hk
       have hO : ∀ y, y ∈ ((conjSrc c w).adicCompletionIntegers E : Set _) →
@@ -204,17 +204,17 @@ theorem GlobalTheory.BCT.LocCpt.loc_cpt : ∀ (E : Type) [Field E] [NumberField 
       have : k = ⟨_, hx⟩ := Subtype.ext e
       rwa [← this]
   have hclosed : IsClosed {x : finU (E := E) (n := n) | ∀ w ∈ S, toSub (UL n w) (cLoc w (x : UA E n)) ∈ C w} := by
-    simp only [hmem, Set.setOf_forall]
+    simp only [hmem, Set.ofPred_forall]
     refine isClosed_iInter fun w => isClosed_iInter fun _ => ?_
-    haveI : T2Space (GL (Fin n) (w.adicCompletion E)) := Units.isEmbedding_embedProduct.t2Space
-    exact ((hC w).image continuous_subtype_val).isClosed.preimage
-      ((GlobalTheory.DefU.Inert.continuous_cLoc w).comp continuous_subtype_val)
+    have : T2Space (GL (Fin n) (w.adicCompletion E)) := Units.isEmbedding_embedProduct.t2Space
+    exact ((hC w).image continuous_subtypeVal).isClosed.preimage
+      ((GlobalTheory.DefU.Inert.continuous_cLoc w).comp continuous_subtypeVal)
 
-  haveI := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
+  have := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
   have hfc : IsClosed ((finU (E := E) (n := n) : Subgroup (UA E n)) : Set (UA E n)) := by
-    haveI : T2Space (GL (Fin n) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
+    have : T2Space (GL (Fin n) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
     have hc := GlobalTheory.CuspRep.ContAut.continuous_map_pInf E n
-    exact isClosed_eq (hc.comp continuous_subtype_val) continuous_const
+    exact isClosed_eq (hc.comp continuous_subtypeVal) continuous_const
   have hι : Topology.IsClosedEmbedding (fun x : finU (E := E) (n := n) => ((x : UA E n) : GA E n)) :=
     GlobalTheory.DefU.LocAdm.isClosed_UA.isClosedEmbedding_subtypeVal.comp hfc.isClosedEmbedding_subtypeVal
   refine IsCompact.of_isClosed_subset (hι.isCompact_preimage (hB.image GlobalTheory.DefU.LocAdm.continuous_finGL)) hclosed ?_
@@ -224,9 +224,9 @@ theorem GlobalTheory.BCT.LocCpt.loc_cpt : ∀ (E : Type) [Field E] [NumberField 
         cLoc u (x : UA E n) := fun u => Units.ext rfl
     rw [e]
     by_cases hwS : w ∈ S
-    · simp only [D, if_pos hwS]
+    · simp only [D, ite_eq_left hwS]
       exact (hmem x w).1 (hx w hwS)
-    · simp only [D, if_neg hwS]
+    · simp only [D, ite_eq_right hwS]
       have hw' := (mem_or_conj_mem hS w).resolve_left hwS
       refine ⟨cLoc (conjSrc c w) (x : UA E n), (hmem x _).1 (hx _ hw'), ?_⟩
       exact (cLoc_eq_invT (x : UA E n) w).symm

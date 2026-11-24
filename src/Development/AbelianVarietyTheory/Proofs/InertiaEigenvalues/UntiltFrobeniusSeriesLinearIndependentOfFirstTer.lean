@@ -129,7 +129,7 @@ theorem indep_over_Ql_of_indep_mod_l : ∀ (l : ℕ) [Fact l.Prime] (d : ℕ) (�
         have hea : ((e a : ℤ_[l]) : ℚ_[l]) = c' a := rfl
         rw [map_neg, PadicInt.coe_sub, PadicInt.coe_natCast, hea, map_sub, map_natCast]
         ring
-      rw [this, norm_algebraMap', norm_neg, PadicInt.padic_norm_e_of_padicInt]
+      rw [this, norm_algebraMap', norm_neg, PadicInt.norm_coe]
       exact hen a
   have hdiv := hn n hsmall a₀
   have hlt : ‖(n a₀ : ℤ_[l])‖ < 1 := by
@@ -353,7 +353,7 @@ theorem norm_hasSum_eq_of_dominant : ∀ (K : Type) [NormedField K] [IsUltrametr
     have := (NormedAddGroup.tendsto_nhds_zero.1 hf) (‖f i₀‖ / 2) (by positivity)
     exact Filter.eventually_cofinite.1 this
   obtain ⟨j, -, hj⟩ := Set.exists_max_image _ (fun i => ‖g i‖) hfin
-    ⟨i₀, by simp only [Set.mem_setOf_eq]; linarith⟩
+    ⟨i₀, by simp only [Set.mem_ofPred_eq]; linarith⟩
   have hb : ‖∑' i, g i‖ ≤ max (‖f i₀‖ / 2) ‖g j‖ := by
     refine IsUltrametricDist.norm_tsum_le_of_forall_le_of_nonneg (by positivity) fun i => ?_
     by_cases hi : ‖f i‖ < ‖f i₀‖ / 2

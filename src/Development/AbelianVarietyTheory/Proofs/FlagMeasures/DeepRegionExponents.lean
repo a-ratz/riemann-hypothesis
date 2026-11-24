@@ -225,7 +225,7 @@ theorem deep_region_exponents : ∀ (n f q : ℕ) (rd g b : ℝ) (τ : ℝ), 8 �
     have hsq17 : (17 * Real.sqrt n / τ ^ 2) ^ 2 = 289 * (n : ℝ) / τ ^ 4 := by
       rw [div_pow, mul_pow, hs2, ← pow_mul]; norm_num
     have hexp : Real.exp f ≤ Real.exp 1 ^ N := by
-      rw [← Real.exp_nat_mul]
+      rw [← exp_natCast_mul]
       apply Real.exp_le_exp.mpr
       rw [hNr]
       have h1 : (1 : ℝ) ≤ (n : ℝ) ^ 2 :=
@@ -248,6 +248,6 @@ theorem deep_region_exponents : ∀ (n f q : ℕ) (rd g b : ℝ) (τ : ℝ), 8 �
           simp only [mul_pow]
       _ ≤ Real.exp (-1) ^ N := pow_le_pow_left₀ (by positivity) hW N
       _ = Real.exp (-(N : ℝ)) := by
-          rw [← Real.exp_nat_mul]; congr 1; ring
+          rw [← exp_natCast_mul]; congr 1; ring
 
 end GlobalTheory

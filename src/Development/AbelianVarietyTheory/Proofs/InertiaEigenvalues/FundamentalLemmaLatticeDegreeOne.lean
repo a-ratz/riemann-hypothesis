@@ -117,8 +117,8 @@ theorem no_fil_zero_neg_slope : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
       rw [map_zero]
       calc P.ιB b = (y * P.ιB a) * P.ιB b := by rw [mul_comm y, hy, one_mul]
         _ = 0 := by rw [mul_assoc, h0, mul_zero]
-  haveI : NoZeroDivisors P.R.B := ⟨fun {a b} hab => hdom a b hab⟩
-  haveI : Nontrivial P.R.B := nontrivial_B P
+  have : NoZeroDivisors P.R.B := ⟨fun {a b} hab => hdom a b hab⟩
+  have : Nontrivial P.R.B := nontrivial_B P
   by_contra hc0
   set N : P.R.B := ∏ j ∈ Finset.range h, P.φB^[j] c with hN
   have hφN : c * P.φB N = N * P.φB^[h] c := by
@@ -214,7 +214,7 @@ namespace GlobalTheory.PMonE.OrthBasis
 private lemma exists_orthogonal_translate (l : ℕ) [Fact l.Prime] (W : Submodule ℚ_[l] ℂ_[l])
     [FiniteDimensional ℚ_[l] W] (x : ℂ_[l]) (hx : x ∉ W) :
     ∃ y : ℂ_[l], y - x ∈ W ∧ y ≠ 0 ∧ ∀ w ∈ W, ‖y‖ ≤ ‖y + w‖ ∧ ‖w‖ ≤ ‖y + w‖ := by
-  haveI : ProperSpace W := FiniteDimensional.proper ℚ_[l] W
+  have : ProperSpace W := FiniteDimensional.proper ℚ_[l] W
   obtain ⟨w₀, hw₀K, hmin⟩ := (isCompact_closedBall (0 : W) ‖x‖).exists_isMinOn
     ⟨0, Metric.mem_closedBall_self (norm_nonneg x)⟩
     (Continuous.continuousOn (f := fun w : W => ‖x - (w : ℂ_[l])‖) (by fun_prop))
@@ -258,7 +258,7 @@ private lemma exists_orthogonal_family_in_span (l : ℕ) [Fact l.Prime] :
     obtain ⟨hμ₀, hx⟩ := hμ
     obtain ⟨u₀, hu₀S, hu₀, horth⟩ := ih _ hμ₀
     set W := Submodule.span ℚ_[l] (Set.range (Fin.init μ))
-    haveI : FiniteDimensional ℚ_[l] W :=
+    have : FiniteDimensional ℚ_[l] W :=
       FiniteDimensional.span_of_finite ℚ_[l] (Set.finite_range _)
     obtain ⟨y, hyx, hy0, hy⟩ := exists_orthogonal_translate l W _ hx
     have hWS : W ≤ Submodule.span ℚ_[l] (Set.range μ) := by
@@ -792,7 +792,7 @@ theorem dep_false {AI : LocAinf l P} (T : LocTied l P AI) (h : ℕ) (hh : 2 ≤ 
   have hB := _root_.GlobalTheory.PMon.bdR_tied l P AI T
   have hp := _root_.GlobalTheory.PMon.CrisPlus.plus_props l P AI T
   let V := Submodule.span ℚ_[l] (Set.range a)
-  haveI : FiniteDimensional ℚ_[l] V := FiniteDimensional.span_of_finite ℚ_[l] (Set.finite_range a)
+  have : FiniteDimensional ℚ_[l] V := FiniteDimensional.span_of_finite ℚ_[l] (Set.finite_range a)
   let k := Module.finrank ℚ_[l] V
   let bas : Module.Basis (Fin k) ℚ_[l] V := Module.finBasis ℚ_[l] V
   let b : Fin k → P.R.B := fun m => (bas m : P.R.B)
@@ -937,7 +937,7 @@ theorem phiB_moore_det {l : ℕ} [Fact l.Prime] (P : LocPrime l) (n : ℕ) (a : 
     by_cases hi : i = Fin.last n
     · subst hi
       simp [ha]
-    · rw [if_neg hi, one_mul, Fin.val_add_one, if_neg hi]
+    · rw [ite_eq_right hi, one_mul, Fin.val_add_one, ite_eq_right hi]
   rw [h1, h2, Matrix.det_mul, Matrix.det_diagonal, Matrix.det_permute, sign_finRotate]
   simp [Finset.prod_ite_eq']
   ring
@@ -1215,8 +1215,8 @@ theorem flAt_one : FLAt 1 := by
     intro i j
     rw [hUm, Matrix.mul_diagonal]
     by_cases hj : j = x2
-    · subst hj; rw [if_pos rfl, mul_comm]; exact tz_inv_mem T (hAU1 i)
-    · rw [if_neg hj, mul_one]; exact hAU0 i j
+    · subst hj; rw [ite_eq_left rfl, mul_comm]; exact tz_inv_mem T (hAU1 i)
+    · rw [ite_eq_right hj, mul_one]; exact hAU0 i j
   have hUmdet : Um.det = kd P κ * U0.det := by
     have hdι : (A.map P.ιB).det = P.ιB A.det := ((P.ιB : P.R.B →+* P.R.BdR).map_det A).symm
     have hDxd : Dx.det = tz P (-1) := by
@@ -1275,8 +1275,8 @@ theorem flAt_one : FLAt 1 := by
     intro i j
     rw [hWm, Matrix.diagonal_mul]
     by_cases hi : i = y2
-    · subst hi; rw [if_pos rfl]; exact tz_inv_mem T (hX1 j)
-    · rw [if_neg hi, one_mul]; exact hX0 i j
+    · subst hi; rw [ite_eq_left rfl]; exact tz_inv_mem T (hX1 j)
+    · rw [ite_eq_right hi, one_mul]; exact hX0 i j
   have hVUm : V.det * Um.det = 1 := by rw [← det_mul, hVU, det_one]
   have ht : tz P (-1) * tz P 1 = 1 := by rw [← tz_add]; simp [tz_zero]
   have hWmdet : Wm.det = kd P κ' * V.det := by

@@ -54,7 +54,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem not_dvd_index_ker {H k ι : Type} [Group H] [Field k] [Finite k] [Fintype ι] {l : ℕ} [hl : Fact l.Prime]
     (h0 : (l : k) = 0) (φ : H →* (ι → kˣ)) : ¬ l ∣ φ.ker.index := by
   classical
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   intro hd
   rw [Subgroup.index_ker] at hd
   have h1 : Nat.card φ.range ∣ Nat.card (ι → kˣ) := Subgroup.card_subgroup_dvd_card _
@@ -64,7 +64,7 @@ private theorem not_dvd_index_ker {H k ι : Type} [Group H] [Field k] [Finite k]
     rcases (Nat.dvd_prime hl.out).1 (ringChar.dvd h0) with h | h
     · exact absurd h CharP.ringChar_ne_one
     · exact h
-  haveI : CharP k l := by
+  have : CharP k l := by
     rw [← hc]
     exact ringChar.charP k
   obtain ⟨n, -, hn⟩ := FiniteField.card k l
@@ -82,8 +82,8 @@ theorem UpperTheory.V.X.spKer :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.rbar.ker.Normal ∧ ¬ l ∣ D.rbar.ker.index ∧ ∀ (j : ℤ × ℤ), ∀ g ∈ D.rbar.ker, Raw.bar (D.al ^ j.1 * D.Psi ^ j.2) g = 1 := by
   intro Ω _ _ _ l _ c D
   classical
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨-, hfin, hl, -⟩ := abelian₂.dvr_finite l c.O
   have key : ∀ g, D.rbar g = 1 ↔ ∀ i, residue c.O ↑(D.ps i g) = 1 := by
     intro g

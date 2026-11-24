@@ -134,7 +134,7 @@ private theorem inner_ofFn_prod (μ : Measure G) [SigmaFinite μ] [IsFiniteMeasu
     have mp := (measurePreserving_piFinSuccAbove (fun _ : Fin (k + 1) => μ) 0).symm
     rw [← mp.integral_comp' _]
     refine Eq.trans ?_ (integral_prod _ (mp.integrable_comp_of_integrable hF)).symm
-    rw [List.ofFn_succ, List.prod_cons, ContinuousLinearMap.mul_apply, inner_cc]
+    rw [List.ofFn_succ, List.prod_cons, mul_apply_eq_comp, inner_cc]
     refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
     simp only [UnitaryRep.compHom_apply]
     rw [UnitaryRep.inner_map_right, ih (fun i => s i.succ) (fun i => hs _) (fun i => φ i.succ),

@@ -297,7 +297,7 @@ theorem smallSec_shift_of_isShortGen : ∀ (K V Ω : Type) [Field K] [NumberFiel
   have hLam2 : abelian₂ ^ 2 * Real.exp (-(2 * t)) ≤ 1 := by
     have h1 : abelian₂ ^ 2 ≤ Real.exp t ^ 2 := pow_le_pow_left₀ hLam0.le hLt 2
     have h2 : Real.exp t ^ 2 * Real.exp (-(2 * t)) = 1 := by
-      rw [← Real.exp_nat_mul, ← Real.exp_add]; simp
+      rw [← Real.exp_natCast_mul, ← Real.exp_add]; simp
     calc abelian₂ ^ 2 * Real.exp (-(2 * t)) ≤ Real.exp t ^ 2 * Real.exp (-(2 * t)) :=
           mul_le_mul_of_nonneg_right h1 (Real.exp_pos _).le
       _ = 1 := h2
@@ -540,7 +540,7 @@ private theorem exists_toField {Ω : Type} [Field Ω] {Y : Scheme.{0}} [IsIntegr
   let η := genericPoint (Sp Ω)
   have hb : Function.Bijective (Cartier.fnOf (X := Sp Ω) ⊤ trivial) := by
     refine ⟨fnOf_injective _ _, fun a => ?_⟩
-    obtain ⟨U, hU, s, hs⟩ := (Sp Ω).presheaf.germ_exist (x := η) a
+    obtain ⟨U, hU, s, hs⟩ := (Sp Ω).presheaf.exists_germ_eq (x := η) a
     obtain rfl : U = ⊤ := top_unique fun x _ => (Subsingleton.elim η x) ▸ hU
     exact ⟨s, hs⟩
   let e₁ := RingEquiv.ofBijective _ hb
@@ -563,7 +563,7 @@ private theorem dim_of_trdeg {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] {
     (q : Y ⟶ Sp K) [LocallyOfFiniteType q] (e : Y.functionField ≃+* Ω)
     (he : ∀ a, e (toFunctionField q a) = algebraMap K Ω a) {D : ℕ} (hD : Algebra.trdeg K Ω = D) :
     topologicalKrullDim Y = D := by
-  letI := (Spec.preimage (Y.fromSpecStalk (genericPoint Y) ≫ q)).hom.toAlgebra
+  let := (Spec.preimage (Y.fromSpecStalk (genericPoint Y) ≫ q)).hom.toAlgebra
   have hc : Spec.preimage (Y.fromSpecStalk (genericPoint Y) ≫ q) = CommRingCat.ofHom (toFunctionField q) :=
     Spec.map_injective ((Spec.map_preimage _).trans (genericFieldPoint_over q))
   let e' : Y.functionField ≃ₐ[K] Ω := { e with
@@ -773,7 +773,7 @@ theorem exists_isIntegrallyClosed_away (A : Type*) [CommRing A] [IsDomain A]
   have hg : ∀ y : Submonoid.powers f, IsUnit (algebraMap A K y) := fun y =>
     IsLocalization.map_units K (⟨y, hle y.2⟩ : nonZeroDivisors A)
   have : IsDomain B := IsLocalization.isDomain_of_le_nonZeroDivisors (M := Submonoid.powers f) _ hle
-  letI : Algebra B K := (IsLocalization.lift (S := B) hg).toAlgebra
+  let : Algebra B K := (IsLocalization.lift (S := B) hg).toAlgebra
   have : IsScalarTower A B K := .of_algebraMap_eq fun a => (IsLocalization.lift_eq hg a).symm
   have : IsFractionRing B K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers f) B K
@@ -1107,7 +1107,7 @@ theorem exists_ne_zero_of_rel {K V : Type} [Field K] [AddCommGroup V] [Module K 
           _ = ∑ j, r j • b j := by simp only [hb]
           _ = u l := b.sum_repr (u l)
       simp only [sub_smul, Finset.sum_sub_distrib, e, Pi.single_apply, ite_smul, one_smul,
-        zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+        zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
     have h2 := hrel _ hl
     have h3 : ∀ j, ∑ k, w k * σ (c k j) = 0 := fun j => by
       have := congrFun hx j

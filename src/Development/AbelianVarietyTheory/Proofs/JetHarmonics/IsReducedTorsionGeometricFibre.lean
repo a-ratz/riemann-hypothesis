@@ -68,7 +68,7 @@ theorem isReduced_of_forall_dualNumber (F B : Type) [Field F] [IsAlgClosed F] [C
     have hsimple : IsSimpleModule B (KaehlerDifferential F B ⧸ P) :=
       isSimpleModule_iff_isCoatom.mpr hP
     obtain ⟨m, hm, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.mp hsimple
-    letI : Field (B ⧸ m) := Ideal.Quotient.field m
+    let : Field (B ⧸ m) := Ideal.Quotient.field m
     have hb : Function.Bijective (algebraMap F (B ⧸ m)) :=
       IsAlgClosed.algebraMap_bijective_of_isIntegral
     let u : (B ⧸ m) ≃ₐ[F] F := (AlgEquiv.ofBijective (Algebra.ofId F (B ⧸ m)) hb).symm
@@ -140,7 +140,7 @@ theorem isReduced_torsion_geometric_fibre :
   intro O F _ _ _ _ G _ _ N hN hfin
   have : IsAffine (torsion G N).left := isAffine_of_isAffineHom (torsion G N).hom
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective ((torsion G N).left.isoSpec.inv ≫ (torsion G N).hom)
-  letI : Algebra O Γ((torsion G N).left, ⊤) := ψ.hom.toAlgebra
+  let : Algebra O Γ((torsion G N).left, ⊤) := ψ.hom.toAlgebra
   let e : specO O Γ((torsion G N).left, ⊤) ≅ torsion G N :=
     Over.isoMk (torsion G N).left.isoSpec.symm hψ.symm
   have h1 : IsFinite (Spec.map ψ) := by rw [hψ]; infer_instance

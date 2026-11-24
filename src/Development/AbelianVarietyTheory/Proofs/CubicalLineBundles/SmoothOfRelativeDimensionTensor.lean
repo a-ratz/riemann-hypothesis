@@ -64,7 +64,7 @@ theorem finrank_tensor_of_algebra (O M k B L : Type) [CommRing O] [IsDomain O] [
   have : IsArtinianRing B := IsArtinianRing.of_finite k B
   have : Module.FinitePresentation O M := Module.finitePresentation_of_projective O M
   obtain ⟨b⟩ := Module.nonempty_basis_of_flat_of_finrank_eq B (B ⊗[O] M) (Module.finrank O M) fun P => by
-    letI : Field (B ⧸ P.asIdeal) := Ideal.Quotient.field _
+    let : Field (B ⧸ P.asIdeal) := Ideal.Quotient.field _
     rw [(TensorProduct.AlgebraTensorModule.cancelBaseChange O B (B ⧸ P.asIdeal) (B ⧸ P.asIdeal) M).finrank_eq]
     exact TenDim.finrank_fibre O M _
   let e : L ⊗[O] M ≃ₗ[B] (Fin (Module.finrank O M) → L) :=
@@ -78,8 +78,8 @@ theorem finrank_tensor (O M k L : Type) [CommRing O] [IsDomain O] [Module.Finite
     [SMulCommClass O k L] [Module.Finite k L] :
     Module.finrank k (L ⊗[O] M) = Module.finrank O M * Module.finrank k L := by
   have : SMulCommClass k O L := SMulCommClass.symm _ _ _
-  letI : Module (k ⊗[ℤ] O) L := TensorProduct.Algebra.module
-  letI : Algebra O (k ⊗[ℤ] O) := Algebra.TensorProduct.rightAlgebra
+  let : Module (k ⊗[ℤ] O) L := TensorProduct.Algebra.module
+  let : Algebra O (k ⊗[ℤ] O) := Algebra.TensorProduct.rightAlgebra
   have : IsScalarTower k (k ⊗[ℤ] O) L := IsScalarTower.of_algebraMap_smul fun r x => by
     change (r ⊗ₜ[ℤ] (1 : O)) • x = _
     rw [TensorProduct.Algebra.smul_def, one_smul]

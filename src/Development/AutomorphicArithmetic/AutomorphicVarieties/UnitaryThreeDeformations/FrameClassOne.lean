@@ -58,7 +58,7 @@ open Matrix IsLocalRing ReciprocityTheory.Gal UpperTheory.V.HV UpperTheory.V.U3 
 open NumberField NumberField.InfinitePlace Real in
 private theorem pid4 (K : Type) [Field K] [NumberField K] [IsCyclotomicExtension {2 ^ 2} ℚ K] :
     IsPrincipalIdealRing (𝓞 K) := by
-  apply RingOfIntegers.isPrincipalIdealRing_of_abs_discr_lt
+  apply NumberField.RingOfIntegers.isPrincipalIdealRing_of_abs_discr_lt
   rw [IsCyclotomicExtension.Rat.discr_prime_pow 2 2 K, IsCyclotomicExtension.Rat.finrank (2 ^ 2) K,
     IsCyclotomicExtension.Rat.nrComplexPlaces_eq_totient_div_two (2 ^ 2) K]
   have h4 : (2 ^ 2 : ℕ).totient = 2 := by decide
@@ -70,7 +70,7 @@ open NumberField Formalism.ConjugateSelfDual UpperTheory.V UpperTheory.V.Base Up
 private theorem char_triv (K Ω : Type) [Field K] [NumberField K] [IsCyclotomicExtension {2 ^ 2} ℚ K] [Field Ω]
     [Algebra K Ω] [IsAlgClosure K Ω] (C : Type) [CommGroup C] (χ : G K Ω →* C) (h : IsLocallyConstant χ)
     (hI : ∀ A : ValuationSubring Ω, Ine (F := K) A ≤ χ.ker) (g : G K Ω) : χ g = 1 := by
-  haveI : IsPrincipalIdealRing (𝓞 K) := pid4 K
+  have : IsPrincipalIdealRing (𝓞 K) := pid4 K
   have hc : Fintype.card (ClassGroup (𝓞 K)) = 1 := by
     convert card_classGroup_eq_one (R := 𝓞 K)
   have hsub : Subsingleton (ClassGroup (𝓞 K)) :=
@@ -216,20 +216,20 @@ theorem UpperTheory.V.UnitaryThreeInertia.frame_class_one :
     F.Cl1 := by
   intro Ω _ _ _ l _ c N _ e ψ o₁ hD S A F hF
   intro Ab _ χ hloc hχ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ 4 := by
     obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic 4 Ω)
       (Polynomial.degree_cyclotomic_pos 4 Ω (by norm_num)).ne.symm
     exact ⟨z, (Polynomial.isRoot_cyclotomic_iff).1 hz⟩
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral ℚ ζ := Algebra.IsIntegral.isIntegral ζ
-  haveI : FiniteDimensional ℚ ℚ⟮ζ⟯ := IntermediateField.adjoin.finiteDimensional hint
-  haveI : NumberField ℚ⟮ζ⟯ := {}
-  haveI : IsCyclotomicExtension {2 ^ 2} ℚ ℚ⟮ζ⟯ := by
+  have : FiniteDimensional ℚ ℚ⟮ζ⟯ := IntermediateField.adjoin.finiteDimensional hint
+  have : NumberField ℚ⟮ζ⟯ := {}
+  have : IsCyclotomicExtension {2 ^ 2} ℚ ℚ⟮ζ⟯ := by
     have h4 := hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
     norm_num
     exact h4
-  haveI : IsAlgClosure ℚ⟮ζ⟯ Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) ℚ⟮ζ⟯⟩
+  have : IsAlgClosure ℚ⟮ζ⟯ Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) ℚ⟮ζ⟯⟩
   obtain ⟨hDec, hIne, hcont, hhom⟩ := UpperTheory.V.Kum.toGalDict ℚ Ω ℚ⟮ζ⟯ (galOf ℚ ℚ⟮ζ⟯ Ω) le_rfl
   obtain ⟨hh, _⟩ := hhom le_rfl
   let eq := MulEquiv.ofBijective (UpperTheory.V.Kum.toGal ℚ⟮ζ⟯ (le_refl (galOf ℚ ℚ⟮ζ⟯ Ω))) hh.bijective
@@ -244,7 +244,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.frame_class_one :
   have hπc : Continuous F.π := by
     rw [hF.π]
     exact continuous_toGS Ω _
-  have hρc : Continuous ρ := Continuous.subtype_mk (hπc.comp continuous_subtype_val) _
+  have hρc : Continuous ρ := Continuous.subtype_mk (hπc.comp continuous_subtypeVal) _
   have hec : Continuous eq.symm := by
     have hs := (hh.homeomorph _).symm.continuous
     convert hs using 1

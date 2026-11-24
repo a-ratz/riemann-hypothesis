@@ -61,9 +61,9 @@ private theorem collapse {G X Z : Type} [Finite G] [Finite X] [Finite Z]
     ∑ᶠ x, u x * ∑ᶠ p' : Subtype B, v p' * (∑ᶠ p : G, if I p ∧ tl p = x ∧ br p = p'.1 then T p else 0) =
       ∑ᶠ p : Subtype A, w p * T p := by
   classical
-  haveI := Fintype.ofFinite G
-  haveI := Fintype.ofFinite X
-  haveI := Fintype.ofFinite Z
+  have := Fintype.ofFinite G
+  have := Fintype.ofFinite X
+  have := Fintype.ofFinite Z
   have key : ∀ p : G, (∑ x, ∑ p' : Subtype B,
       u x * (v p' * if I p ∧ tl p = x ∧ br p = p'.1 then T p else 0)) =
       if h : A p then w ⟨p, h⟩ * T p else 0 := by
@@ -71,37 +71,37 @@ private theorem collapse {G X Z : Type} [Finite G] [Finite X] [Finite Z]
     by_cases hI : I p
     · by_cases hB : B (br p)
       · have hAp : A p := (hA p).2 ⟨hI, hB⟩
-        rw [dif_pos hAp, hw p hAp hB, Fintype.sum_eq_single (tl p), Fintype.sum_eq_single ⟨br p, hB⟩]
+        rw [dite_eq_left hAp, hw p hAp hB, Fintype.sum_eq_single (tl p), Fintype.sum_eq_single ⟨br p, hB⟩]
         · simp [hI]
           ring
         · intro q hq
-          rw [if_neg]
+          rw [ite_eq_right]
           · simp
           · rintro ⟨_, _, h⟩
             exact hq (Subtype.ext h.symm)
         · intro x hx
           apply Finset.sum_eq_zero
           intro q _
-          rw [if_neg]
+          rw [ite_eq_right]
           · simp
           · rintro ⟨_, h, _⟩
             exact hx h.symm
-      · rw [dif_neg (fun h => hB ((hA p).1 h).2)]
+      · rw [dite_eq_right (fun h => hB ((hA p).1 h).2)]
         apply Finset.sum_eq_zero
         intro x _
         apply Finset.sum_eq_zero
         intro q _
-        rw [if_neg]
+        rw [ite_eq_right]
         · simp
         · rintro ⟨_, _, h⟩
           exact hB (h ▸ q.2)
-    · rw [dif_neg (fun h => hI ((hA p).1 h).1)]
+    · rw [dite_eq_right (fun h => hI ((hA p).1 h).1)]
       simp [hI]
   simp only [finsum_eq_sum_of_fintype, Finset.mul_sum]
   rw [Finset.sum_congr rfl fun x _ => Finset.sum_comm, Finset.sum_comm,
     Finset.sum_congr rfl fun p _ => key p, ← Fintype.sum_subtype_add_sum_subtype A,
-    Finset.sum_congr rfl fun p _ => dif_pos p.2,
-    Finset.sum_congr rfl (fun (p : {p // ¬A p}) _ => dif_neg p.2), Finset.sum_const_zero, add_zero]
+    Finset.sum_congr rfl fun p _ => dite_eq_left p.2,
+    Finset.sum_congr rfl (fun (p : {p // ¬A p}) _ => dite_eq_right p.2), Finset.sum_const_zero, add_zero]
 
 theorem UpperTheory.Gal.InertialTypesAlt.frobL :
     FrobTwo → ResCl → ParCons → FrobL := by

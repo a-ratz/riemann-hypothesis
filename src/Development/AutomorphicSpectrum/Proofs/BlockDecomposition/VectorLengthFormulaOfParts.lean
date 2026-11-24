@@ -95,7 +95,7 @@ theorem finite_rat_compact {F E : Type} [Field F] [NumberField F] [Field E] [Num
   let f : (Fin n → Fin M → E) →+ (Fin n → Fin M → AF F ⊗[F] E) :=
     AddMonoidHom.mk' (ratTup (F := F) (AF F)) (fun X Y => by funext a i; simp [ratTup, map_add (f := _)])
   have hdisc : DiscreteTopology f.range := Formalism.IndefR.Eqv.G5.tup_disc (F := F) (E := E) M n
-  have hcl : IsClosed (f.range : Set (Fin n → Fin M → AF F ⊗[F] E)) := AddSubgroup.isClosed_of_discrete
+  have hcl : IsClosed (f.range : Set (Fin n → Fin M → AF F ⊗[F] E)) := AddSubgroup.isClosed_of_discreteTopology
   have hfin : (K ∩ (f.range : Set (Fin n → Fin M → AF F ⊗[F] E))).Finite :=
     (hK.inter_right hcl).finite ⟨DiscreteTopology.of_subset (s := (f.range : Set (Fin n → Fin M → AF F ⊗[F] E))) hdisc Set.inter_subset_right⟩
   refine (hfin.preimage hri.injOn).subset fun X hX => ⟨hX, X, rfl⟩
@@ -182,17 +182,17 @@ theorem euler_of_summable {F E : Type} [Field F] [NumberField F] [Field E] [Numb
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
   have hFi := GlobalTheory.CompanionTheory.SW.Fact.fib_facts σ hCM J hJ (Ainf F) hLi T hT hdet b laminf hinf.1 minf hminf
   have hFv : ∀ v, SigmaFinite (m v (hermOf (Fv F v) σ T hT)) ∧
       (m v (hermOf (Fv F v) σ T hT) = 0 →
         ∀ X, gramR (Fv F v) σ J X ≠ T.map (inclR (Fv F v))) := fun v => by
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     exact GlobalTheory.CompanionTheory.SW.Fact.fib_facts σ hCM J hJ (Fv F v) (hLv v) T hT hdet b (lam v) (hlam v).1 (m v) (hm v)
   by_cases h0 : minf (hermOf (Ainf F) σ T hT) = 0 ∨ ∃ v, m v (hermOf (Fv F v) σ T hT) = 0
   · have hempty : {X | gramR (AF F) σ J X = T.map (inclR (AF F))} = ∅ := by
       ext X
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       intro hX
       have hloc := (_root_.GlobalTheory.CompanionTheory.SW.GramLocal.gram_local F E σ hCM M J hJ n X T).1.1 hX
       rcases h0 with h | ⟨v, h⟩
@@ -212,7 +212,7 @@ theorem euler_of_summable {F E : Type} [Field F] [NumberField F] [Field E] [Numb
         (c S : ℝ) = c (insert v S) * (m v (hermOf (Fv F v) σ T hT) (latV b v)).toReal := by
       intro S _ v hv
       have hlatm : MeasurableSet (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) := by
-        haveI := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hCM (Fv F v) (hLv v) n M
+        have := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hCM (Fv F v) (hLv v) n M
         exact ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M).2.2.2.1 v).2.measurableSet
       let φ0 : ∀ w : HeightOneSpectrum (𝓞 F), (Fin n → Fin M → Fv F w ⊗[F] E) → ℝ≥0∞ :=
         fun w => (B w).indicator 1
@@ -288,14 +288,14 @@ theorem vector_length_formula_up_to_constant : CoCpt → LocMass → Prop1 := by
   have hfin : ∀ v, m v (hermOf (Fv F v) σ T hT) (latV b v) < ⊤ := fun v => by
     have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
     obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-    haveI := hTR
-    haveI := hLC
-    haveI := hSC
-    haveI := hT2
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := hTR
+    have := hLC
+    have := hSC
+    have := hT2
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have hh' := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm (Fv F v) d b (lam v) (hlam v).1
-    haveI hW := hh'.2.1 1 2
-    haveI hH := hh'.2.2 1
+    have hW := hh'.2.1 1 2
+    have hH := hh'.2.2 1
     have hl := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm 2 J hJ (Fv F v) hloc 1 _ _ (m v) hW hH (hm v)
       (hermOf (Fv F v) σ T hT)).1
     exact ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 2).2.2.2.1 v).1.measure_lt_top

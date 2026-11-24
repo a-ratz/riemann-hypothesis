@@ -133,7 +133,7 @@ private theorem isHaarOnSet_conj {I : Formalism.MainNotions.S.AutInst} {S : Set 
   let e : I.Ginf ≃ᵐ I.Ginf := (MeasurableEquiv.mulLeft c).trans (MeasurableEquiv.mulRight c⁻¹)
   have he : (fun y : I.Ginf => c * y * c⁻¹) = ⇑e := rfl
   refine ⟨?_, ?_, ?_, ?_⟩
-  · haveI := hσ
+  · have := hσ
     rw [he]
     exact e.sigmaFinite_map
   · intro h'
@@ -240,9 +240,9 @@ private theorem H_affine_combination_eq_of_quadratic_relation (t : TT Y u u') (w
     have e : c⁻¹ * (x * r) * c = (c⁻¹ * x * c) * (c⁻¹ * r * c) := by group
     rw [e]
     exact h2
-  haveI : Countable A := Set.Countable.to_subtype (s := (A : Set X.B.I.Ginf))
+  have : Countable A := Set.Countable.to_subtype (s := (A : Set X.B.I.Ginf))
     (by rw [hA, Subgroup.coe_map]; exact (Set.to_countable _).image _)
-  haveI : Countable B := Set.Countable.to_subtype (s := (B : Set X.B.I.Ginf))
+  have : Countable B := Set.Countable.to_subtype (s := (B : Set X.B.I.Ginf))
     (by rw [hB, Subgroup.coe_map]; exact (Set.to_countable _).image _)
   set KB : Set X.B.I.Ginf := {y | c⁻¹ * y * c ∈ K} with hKBdef
   have hKB : MeasurableSet KB := hK.preimage ((measurable_const_mul c⁻¹).mul_const c)
@@ -279,7 +279,7 @@ private theorem H_affine_combination_eq_of_quadratic_relation (t : TT Y u u') (w
     rw [Measure.map_apply ((measurable_const_mul c).mul_const c⁻¹) hKB]
     congr 1
     ext y
-    simp only [hKBdef, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [hKBdef, Set.mem_preimage, Set.mem_ofPred_eq]
     have e : c⁻¹ * (c * y * c⁻¹) * c = y := by group
     rw [e]
   rw [hKA1, hνKB, one_mul, hBA, hAB] at hcomm

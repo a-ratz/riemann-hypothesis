@@ -394,7 +394,7 @@ lemma isThetaFn_comp {Hm : Matrix (Fin g) (Fin g) ℂ} {χ : u.Λ → ℂ}
   simp only [hH] at k₁ k₂
   have e : Complex.exp (Real.pi * (n * hermForm Hm z l) + Real.pi / 2 * (n * hermForm Hm l l)) =
       Complex.exp (Real.pi * hermForm Hm z l + Real.pi / 2 * hermForm Hm l l) ^ n := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     ring
   simp only [map_add (f := _)]
@@ -443,10 +443,10 @@ lemma isMonHom_of_additive [Smooth A.hom] [IsSeparated A'.hom]
     rw [map_zero, ex_zero, ex_zero, Hom.one_def, Hom.one_def, toUnit_unit, Category.id_comp,
       Category.id_comp] at h
     exact h.symm
-  · haveI : Smooth (A ⊗ A).hom := by
+  · have : Smooth (A ⊗ A).hom := by
       change Smooth (pullback.fst A.hom A.hom ≫ A.hom)
       infer_instance
-    haveI := isReduced_of_smooth_complex _ (A ⊗ A).hom inferInstance
+    have := isReduced_of_smooth_complex _ (A ⊗ A).hom inferInstance
     refine over_hom_ext_of_complexPoints fun x => ?_
     obtain ⟨z, hz⟩ := u.ex_onto (x ≫ fst A A)
     obtain ⟨w, hw⟩ := u.ex_onto (x ≫ snd A A)
@@ -465,8 +465,8 @@ lemma exists_hom [Smooth A.hom] [Smooth A'.hom] [IsSeparated A'.hom] (hL : L.IsL
     (F : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)) (n : ℕ) (hΛ : ∀ l ∈ u.Λ, F l ∈ u'.Λ)
     (hH : ∀ z w, hermForm Hm' (F z) (F w) = (n : ℂ) * hermForm Hm z w) :
     ∃ f : A.left ⟶ A'.left, ∀ z, (u.ex z).left ≫ f = (u'.ex (F z)).left := by
-  haveI := isReduced_of_smooth_complex _ A.hom inferInstance
-  haveI := isReduced_of_smooth_complex _ A'.hom inferInstance
+  have := isReduced_of_smooth_complex _ A.hom inferInstance
+  have := isReduced_of_smooth_complex _ A'.hom inferInstance
   obtain ⟨N, -, M, s, hcov, hD⟩ := ha ⊤ (isAffineOpen_top _)
   have hr : Set.range (𝟙 A'.left : A'.left ⟶ A'.left) ⊆ Set.range (A'.hom ⁻¹ᵁ ⊤).ι := by
     intro x _
@@ -561,13 +561,13 @@ theorem exists_hom_of_linear_scaling_hermForm :
     (∀ z w, hermForm Hm' (F z) (F w) = (n : ℂ) * hermForm Hm z w) →
     ∃ f : P.A ⟶ P'.A, IsMonHom f ∧ ∀ z, u'.ex (F z) = u.ex z ≫ f := by
   intro P P' u u' Hm χ Hm' χ' h h' hs hθ F n hΛ hH
-  haveI := P.isAb.smooth
-  haveI := P'.isAb.smooth
-  haveI := P'.isAb.proper
+  have := P.isAb.smooth
+  have := P'.isAb.smooth
+  have := P'.isAb.proper
   obtain ⟨f, hf⟩ := exists_hom u u' P.isLB P'.isLB P'.ample
     (semicharacter_sq_eq_one_of_symmetric P u Hm χ h)
     (semicharacter_sq_eq_one_of_symmetric P' u' Hm' χ' h') hs hθ F n hΛ hH
-  haveI := isReduced_of_smooth_complex _ P.A.hom inferInstance
+  have := isReduced_of_smooth_complex _ P.A.hom inferInstance
   have hw : f ≫ P'.A.hom = P.A.hom := by
     refine ComplexPoints.hom_ext_of_points P.A.hom (terminal.from (Sp ℂ)) (terminal.hom_ext _ _)
       fun x hx => ?_

@@ -83,7 +83,7 @@ theorem ordFrac_ringEquiv {A B K L : Type} [CommRing A] [CommRing B] [IsDomain A
     have hea : e a ≠ 0 := by simpa using ha
     rw [Ring.ordFrac_eq_ord (R := B) (K := L), Ring.ordFrac_eq_ord (R := A) (K := K)]
     simp only [Ring.ordMonoidWithZeroHom, MonoidWithZeroHom.coe_mk, ZeroHom.coe_mk,
-      mem_nonZeroDivisors_iff_ne_zero, ne_eq, ha, hea, not_false_eq_true, if_true,
+      mem_nonZeroDivisors_iff_ne_zero, ne_eq, ha, hea, not_false_eq_true, ite_true,
       ord_ringEquiv]
   obtain ⟨⟨x, y⟩, hxy⟩ := IsLocalization.mk'_surjective (nonZeroDivisors A) f
   dsimp only at hxy
@@ -134,8 +134,8 @@ theorem ord_functionFieldMap_of_isIso {X Y : Scheme.{0}} [IsIntegral X] [IsInteg
 
 theorem coheight_eq_and_mult_pullCart : ∀ (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (s : Y ⟶ X) [IsDominant s] [IsLocallyNoetherian X] [IsLocallyNoetherian Y] (U : X.Opens), IsIso (s ∣_ U) → ∀ w : Y, s w ∈ U → Order.coheight w = Order.coheight (s w) ∧ ∀ D : CartierDiv X, (pullCart s D).mult w = D.mult (s w) := by
   intro X Y _ _ s _ _ _ U hU w hw
-  haveI := hU
-  haveI := isIso_stalkMap_of_isIso_restrict s U w hw
+  have := hU
+  have := isIso_stalkMap_of_isIso_restrict s U w hw
   refine ⟨coheight_eq_of_isIso_stalkMap s w, fun D => ?_⟩
   obtain ⟨g, hg⟩ := D.exists_isEqn (s w)
   rw [(isEqn_pullCart s hg).mult_eq, hg.mult_eq]

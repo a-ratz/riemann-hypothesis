@@ -507,7 +507,7 @@ theorem continuous_psiUni' {ψ : AddChar (AF D.host.F) ℂ} (hψ : Continuous ψ
     Continuous fun u : UX D ρ => psiUni ψ u.1 := by
   have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
-  have hc : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtype_val
+  have hc : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtypeVal
   have hu : Continuous fun u : UX D ρ => upSum (u.1.1 : Mx D ρ ρ) := by
     unfold upSum
     refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
@@ -518,9 +518,9 @@ theorem continuous_psiUni' {ψ : AddChar (AF D.host.F) ℂ} (hψ : Continuous ψ
 
 theorem flatS_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (V V₀ W W₀ : HSp D) (ρ σ : ℕ) (dV : HypDec V V₀ ρ) (dW : HypDec W W₀ σ) (s : Step ψ V V₀ W W₀ ρ σ) (x : Mx D W.rank ρ) (y : Mx D V₀.rank σ) (β₁ : Mx D W.rank ρ → ℝ) (β₂ : Mx D V₀.rank σ → ℂ) (g : WO V₀ W₀ → ℂ) (g' : WO V₀ W → ℂ) (Φ : WO V W → ℂ), g ≠ 0 → β₂ y ≠ 0 → (∀ x', (_root_.I195MixedCoordinates_b2d3c8435fe2def8ca9d7dd4.source dV) W ψ s.vS.μ s.vS.𝓕 Φ x' = (β₁ x' : ℂ) • g') → (∀ y', (_root_.I195MixedCoordinates_b2d3c8435fe2def8ca9d7dd4.target dW) V₀ ψ s.vT.μ s.vT.𝓕 g' y' = β₂ y' • g) → Continuous β₁ → β₁ x = 1 → (∀ z, 0 ≤ β₁ z) → (∀ u : UX D ρ, β₁ (x ⬝ u.1.1) ≠ 0 → 0 < (star (psiUni ψ u.1)).re) → HasCompactSupport (fun u : UX D ρ => β₁ (x ⬝ u.1.1)) → flatS dV dW s x y Φ ≠ 0 := by
   intro D ψ hψ V V₀ W W₀ ρ σ dV dW s x y β₁ β₂ g g' Φ hg hβy hS hT hβc hβx hβ0 hpos hcs
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
-  haveI : (s.vU.ν).IsHaarMeasure := s.vU.unit.1
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : (s.vU.ν).IsHaarMeasure := s.vU.unit.1
   obtain ⟨w, hw⟩ := Function.ne_iff.1 hg
   set F : UX D ρ → ℂ := fun u => star (psiUni ψ u.1) * (β₁ (x ⬝ u.1.1) : ℂ) with hF
   have hval : flatS dV dW s x y Φ w = (∫ u, F u ∂s.vU.ν) * (β₂ y * g w) := by
@@ -535,7 +535,7 @@ theorem flatS_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
     simp only [Pi.smul_apply, smul_eq_mul]
     ring
   have hxc : Continuous fun u : UX D ρ => x ⬝ u.1.1 :=
-    continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)
+    continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)
   have hβc' : Continuous fun u : UX D ρ => β₁ (x ⬝ u.1.1) := hβc.comp hxc
   have hFc : Continuous F :=
     (continuous_star.comp (continuous_psiUni' hψ.1.1 ρ)).mul (Complex.continuous_ofReal.comp hβc')
@@ -548,7 +548,7 @@ theorem flatS_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
   have hpos' : 0 < ∫ u, (F u).re ∂s.vU.ν := by
     have hrc : Continuous fun u => (F u).re := Complex.continuous_re.comp hFc
     have hrs : HasCompactSupport fun u => (F u).re := hFs.comp_left Complex.zero_re
-    refine hrc.integral_pos_of_hasCompactSupport_nonneg_nonzero hrs (x := 1) ?_ ?_
+    refine hrc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hrs (x := 1) ?_ ?_
     · intro u
       simp only [Pi.zero_apply, hre]
       by_cases h0 : β₁ (x ⬝ u.1.1) = 0
@@ -761,7 +761,7 @@ namespace GlobalTheory.AscFin
 
 theorem det_eq_one_of_upperUni {A : Type} [CommRing A] {ρ : ℕ} {M : Matrix (Fin ρ) (Fin ρ) A}
     (h : ∀ i j : Fin ρ, (j < i → M i j = 0) ∧ M i i = 1) : M.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => (h i j).1 hij)]
+  rw [det_of_isUpperTriangular (fun i j hij => (h i j).1 hij)]
   simp [fun i => (h i i).2]
 
 theorem mem_UX_iff_entries {D : D7} {ρ : ℕ} (v : GL (Fin ρ) (AE D)) :
@@ -794,11 +794,11 @@ theorem isCompact_setOf_rat_mul_mem : ∀ (D : D7) (n ρ : ℕ) (x₀ : Matrix (
     rintro M ⟨-, hM⟩
     exact ⟨_, hM, by simp only [← Matrix.mul_assoc, hLr, Matrix.one_mul]⟩
   have hcl : IsClosed S' := by
-    rw [hS'def, Set.setOf_and, Set.setOf_forall]
+    rw [hS'def, Set.ofPred_and, Set.ofPred_forall]
     refine IsClosed.inter (isClosed_iInter fun i => ?_) (hK.isClosed.preimage ((continuous_const (y := (rat x₀ : Mx D n ρ))).matrix_mul (continuous_id (X := Matrix (Fin ρ) (Fin ρ) (AE D)))))
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     refine isClosed_iInter fun j => ?_
-    rw [Set.setOf_and]
+    rw [Set.ofPred_and]
     exact (isClosed_imp isOpen_const (isClosed_eq (by fun_prop) continuous_const)).inter
       (isClosed_eq (by fun_prop) continuous_const)
   have hS' : IsCompact S' := hC.of_isClosed_subset hcl hsub
@@ -1003,8 +1003,8 @@ namespace GlobalTheory.PosNhdsChar
 
 theorem posNhds : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (n ρ : ℕ) (L : Mx D ρ n) (x : Mx D n ρ), {z : Mx D n ρ | 0 < (star (psiE ψ (upSum (L ⬝ (z - x))))).re} ∈ nhds x := by
   intro D ψ hψ n ρ L x
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
   have hlin : ∀ c : AE D, Continuous fun a : AE D => c * a := fun c =>
     IsModuleTopology.continuous_of_linearMap (LinearMap.mulLeft (AF D.host.F) c)
   have htr : Continuous fun a : AE D => Algebra.trace (AF D.host.F) (AE D) a :=
@@ -1258,10 +1258,10 @@ theorem flat_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
     intro u hu
     obtain ⟨r, hr, hrU, hrA⟩ := hbsupp _ hu
     rw [GlobalTheory.T.genericCharacter_eq_realPartChar_on_bumpSupport D ψ V V₀ W W₀ ρ σ dV dW p x₀ L hL hp u r hr hrA]
-    simpa only [Set.mem_setOf_eq, add_sub_cancel_left] using hrU
+    simpa only [Set.mem_ofPred_eq, add_sub_cancel_left] using hrU
   have hcpt : HasCompactSupport (fun u : UX D ρ => b (rat x₀ ⬝ u.1.1)) := by
     refine HasCompactSupport.intro' (GlobalTheory.T.isCompact_unitriangular_of_rational_mul_mem_compact D W.rank ρ x₀ hx₀ _ (HasCompactSupport.isCompact (f := fun z => (b z : ℂ)) hb.supp))
-      ((isClosed_tsupport _).preimage (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val))) ?_
+      ((isClosed_tsupport _).preimage (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal))) ?_
     intro u hu
     by_contra h
     exact hu (subset_tsupport _ (by simpa using h))

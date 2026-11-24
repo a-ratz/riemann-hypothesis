@@ -115,8 +115,8 @@ theorem delPolAt_of_frames_scal : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies
   intro D L hT Gi Gl Kc Dx cX ex t u μ p _ X _ E hfin hst g hLT pos fd c F g₀
   intro hFr hK Y σ cls cmp κ ι Φ₀ τ sc sH sO Gm j hj cK hN hF hMv hOp hDeg hSer hChi hYEq
   intro La hLa x Q hQ c' L' hL'
-  letI := Formalism.L2.G.Pend.wittFractionAlgebraCp p
-  letI := Formalism.L2.G.Pend.algKfC E.toCEmb
+  let := Formalism.L2.G.Pend.wittFractionAlgebraCp p
+  let := Formalism.L2.G.Pend.algKfC E.toCEmb
   have hTh : Y.ThF j La (c', L') = Formalism.L2.G.Pend.thFOf X pos F j La (c', L') :=
     (GlobalTheory.TwU.pendT_ThF_lt_of_kapLawLt p X E hfin hst g hLT D.what₂.Tau pos F hK).1 j ‹_› La (c', L') (Y.Rep_lat j La hLa) hL'
   have hsr : srOf Y j La (c', L') = (Y.eS j La * (Y.eT j (c', L'))⁻¹ : X.G.Kf) •
@@ -400,7 +400,7 @@ theorem scalAt_all : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X}
       (((t.O u μ).mt (j + 1) ((t.O u μ).dt (j + 1) (clsAt X H (j + 1) La'.1 La'.2)) : ℂˣ) : ℂ) *
         ((D.chiD ((t.O u μ).dt (j + 1) (clsAt X H (j + 1) La'.1 La'.2)) : ℂˣ) : ℂ) ^ ((((D.R.N j / 2 : ℕ) : ℤ))) := by
     simp [GL3Theta.rhoOf']
-  simp only [Dec.sC, Dec.sP, Dec.uS, Dec.uT, scal0, Base.chiFac, dif_pos hj1, dif_pos hj0]
+  simp only [Dec.sC, Dec.sP, Dec.uS, Dec.uT, scal0, Base.chiFac, dite_eq_left hj1, dite_eq_left hj0]
   rw [R0, R1, hdt0, hdt1, M0.1, M1.1, C0.1, C1.1, eN0, eN1, ht]
   exact GlobalTheory.T.pullback_contraction_scalars_identity _ _ _ _ _ _ _ _ _ _ _ _ _ _ (cTw D j) (cTw D (j + 1)) (Units.ne_zero _) (Units.ne_zero _) M0.2.1 M1.2.1 M0.2.2 M1.2.2
     (Units.ne_zero _) (Units.ne_zero _) (Units.ne_zero _) (Units.ne_zero _) C0.2 C1.2
@@ -735,8 +735,8 @@ theorem seam_coords : ∀ {D : D7} {X : Fields} (s : Seam D X), s.Ok → ∀ (δ
     · rintro ⟨x, hx, hxv⟩
       exact ⟨seamHom s x, (hM x).2 hx, (hcomp x v).2 hxv⟩
   · intro hδ Ξ v
-    haveI : Nonempty D.what₂.Tau := tau_nonempty' D
-    haveI : Nonempty X.Tau := ⟨s.iT.symm (Classical.arbitrary _)⟩
+    have : Nonempty D.what₂.Tau := tau_nonempty' D
+    have : Nonempty X.Tau := ⟨s.iT.symm (Classical.arbitrary _)⟩
     have hex : (∃ y, embH (X.embC s.σ₀) δ y = fun τ => v (s.iT τ)) ↔ ∃ x, embH (fun τ : D.what₂.Tau => TaylorLogMetric.embT D τ) δ x = v := by
       constructor
       · rintro ⟨y, hy⟩
@@ -1004,7 +1004,7 @@ namespace GlobalTheory.TwU.SeamExp
 
 theorem star_eq_conj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 
@@ -1028,11 +1028,11 @@ theorem expS_seam : ∀ {D : D7} {X : Fields} (s : Seam D X), s.Ok → ∀ (SS :
   rw [← conjP_seamP s hs] at h2
   unfold expS
   by_cases hP : P ∈ SS
-  · rw [if_pos (h1.2 hP), if_pos hP]
-  · rw [if_neg (fun h => hP (h1.1 h)), if_neg hP]
+  · rw [ite_eq_left (h1.2 hP), ite_eq_left hP]
+  · rw [ite_eq_right (fun h => hP (h1.1 h)), ite_eq_right hP]
     by_cases hQ : conjPrime₂ P ∈ SS
-    · rw [if_pos (h2.2 hQ), if_pos hQ]
-    · rw [if_neg (fun h => hQ (h2.1 h)), if_neg hQ]
+    · rw [ite_eq_left (h2.2 hQ), ite_eq_left hQ]
+    · rw [ite_eq_right (fun h => hQ (h2.1 h)), ite_eq_right hQ]
 
 end GlobalTheory.TwU.SeamExp
 end -- clump:auto
@@ -1506,7 +1506,7 @@ theorem pullbackScalar_ne_zero : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w 
       (d.gam i hi Lb) (d.mem i hi Lb) (d.kap i hi Lb) (d.eq i hi Lb hLb)
   have n1 := (key j (Nat.le_of_succ_le hj') La h1).2.2
   have n2 := (key (j + 1) hj' La' h2).2.2
-  simp only [Dec.sP, dif_pos hj', Dec.chi]
+  simp only [Dec.sP, dite_eq_left hj', Dec.chi]
   exact div_ne_zero (mul_ne_zero n1 (Units.ne_zero _)) (mul_ne_zero n2 (Units.ne_zero _))
 
 end GlobalTheory.TwV.DelB
@@ -1609,7 +1609,7 @@ theorem taylor_mul (D : D7) {N N' : ℕ} (c : ℂ) (G : TaylorLogMetric.VC D N N
   · unfold TaylorLogMetric.taylor
     have h := iteratedFDeriv_smul_of_ne c hc G (Multiset.card α.toMultiset)
     simp only [smul_eq_mul] at h
-    rw [h, Pi.smul_apply, ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_div_assoc]
+    rw [h, Pi.smul_apply, smul_apply, smul_eq_mul, mul_div_assoc]
 
 theorem padicSeries_const_mul : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) (ι : ℂ →+* ℂ_[p]),
     (∀ z : TaylorLogMetric.Qbar, ι z = lam z) → ∀ {a b : ℕ} (K G : TaylorLogMetric.VC D a b → ℂ) (s s' : ℂ), s ∈ TaylorLogMetric.Qbar →
@@ -1710,13 +1710,13 @@ theorem sum_pullMat_subBG_reframe : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (X : S
       intro z _
       simp [pullMat, Ne.symm hne]
     · intro h; exact absurd (Finset.mem_univ _) h
-  · rw [show subBG E pos (reframe fd ρ e) j La La' (τ, b0, a0) (τ', b1, a1) = 0 from if_neg hxy, mul_zero]
+  · rw [show subBG E pos (reframe fd ρ e) j La La' (τ, b0, a0) (τ', b1, a1) = 0 from ite_eq_right hxy, mul_zero]
     apply Finset.sum_eq_zero
     intro z _
     by_cases h1 : τ = z.1
     · have h2 : z.1 ≠ τ' := fun h => hxy (h1.trans h)
-      rw [show subBG E pos fd j La La' z (τ', b1, a1) = 0 from if_neg h2, mul_zero, mul_zero]
-    · rw [show pullMat (e j La) (e (j + 1) La') (τ, b0, a0) z = 0 from if_neg h1, map_zero, zero_mul]
+      rw [show subBG E pos fd j La La' z (τ', b1, a1) = 0 from ite_eq_right h2, mul_zero, mul_zero]
+    · rw [show pullMat (e j La) (e (j + 1) La') (τ, b0, a0) z = 0 from ite_eq_right h1, map_zero, zero_mul]
 
 end GlobalTheory.TwV.DelB
 end -- clump:auto
@@ -1758,10 +1758,10 @@ theorem pull_eq_linear (D : D7) (T : TaylorLogMetric.Tor D) (hT : ∀ τ, T.emb 
   funext τ i j
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.map_apply, Matrix.of_apply, hT,
     Fintype.sum_prod_type, pullMat]
-  simp only [ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_mul]
+  simp only [ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_mul]
   rw [Finset.sum_comm]
   rw [Fintype.sum_eq_single τ (fun x hx => by simp [Ne.symm hx])]
-  simp only [if_true]
+  simp only [ite_true]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
   rw [← Complex.star_def]
   ring
@@ -1902,8 +1902,8 @@ namespace GlobalTheory.TwV.DelB
 theorem delPolAt_site : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → S.Pair → S.Pos → S.Law → ∀ (d : Dec J std), ∀ ι : ℂ →+* ℂ_[D.what₂.places.resChar w], (∀ z : TaylorLogMetric.Qbar, ι z = S.lam z) → letI := wittFractionAlgebraCp (D.what₂.places.resChar w); letI := algKfC S.E.toCEmb; ∀ (Φ₀ : ∀ j, MvPolynomial (GL3Theta.FrV D (D.R.N (j + 1))) ℂ →ₛₗ[ι] XspC ((sysS H X std).Pj (j + 1)) ℂ_[D.what₂.places.resChar w]) (τ : ∀ j, (sysS H X std).Lv.comp (j + 1) → ((sysS H X std).Pj (j + 1)).Tup → XspC ((sysS H X std).Pj (j + 1)) ℂ_[D.what₂.places.resChar w] →ₗ[ℂ_[D.what₂.places.resChar w]] XspC ((sysS H X std).Pj (j + 1)) ℂ_[D.what₂.places.resChar w]) (sc : ∀ j, (sysS H X std).Lv.comp (j + 1) → ((sysS H X std).Pj (j + 1)).Tup → ℂ_[D.what₂.places.resChar w]) (sO : ∀ j, (sysS H X std).Lt j → ℂ_[D.what₂.places.resChar w]) (Gm : ∀ j, (sysS H X std).Lt j → ((ex.tw.fm u μ).lat j).V → ((sysS H X std).Pj j).Xsp), ∀ j < D.R.m, ∀ (cK : ℂ_[D.what₂.places.resChar w]) (hN : RankTie (sysS H X std) D j), MoveH S.Y u μ (kaAt X H hT).cmp (fun j La => glInv (sysS H X std) j (BOf d.fd2 j La)) Gm j → TieOpS (Y := S.Y) t u μ (clsAt X H) Gm sO j (eIdx (sysS H X std) D (hT.gat_pos u w hg) j hN) (ι := ι) (Φ₀ j) → KernelEntryDegreeCondition (Y := S.Y) t u μ (clsAt X H) j (eIdx (sysS H X std) D (hT.gat_pos u w hg) j hN) → DelYEqH S.Y (fun j La' => VOf ℂ_[D.what₂.places.resChar w] d.fd2 (ltC S.g S.hLT) j La') τ j → (∀ (La : (sysS H X std).Lt j) (La' : (sysS H X std).Lt (j + 1)), ((sysS H X std).Pj j).IsLatTup La.2 → ((sysS H X std).Pj (j + 1)).IsLatTup La'.2 → cK * (Formalism.L2.G.Pend.cA (sysS H X std) ℂ_[D.what₂.places.resChar w] j (BOf d.fd2 j La) * sO j La) * ι (d.uS S j La) * ι (d.uT S j La') = sc j La'.1 La'.2) → DelPolAt (Y := S.Y) t u μ (clsAt X H) (kaAt X H hT).cmp (fun j => clsAt X H (j + 1)) (phiH D Φ₀ τ sc) (srOf S.Y) j cK) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hDict hPair hPos hLaw d ι hι
   intro Φ₀ τ sc sO Gm j hj cK hN hMove hOp hDeg hDel hSc
-  letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-  letI := algKfC S.E.toCEmb
+  let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+  let := algKfC S.E.toCEmb
   have hR := GlobalTheory.T.siteSystem_ranks_eq_datum_ranks S
   have hFr := (GlobalTheory.T.siteFrames_and_changedFrames_invertible S).2 d
   have hSer := GlobalTheory.T.thetaSeries_site_eq_changedFrame_classSeries S hDict hPair hPos d ι hι j hj

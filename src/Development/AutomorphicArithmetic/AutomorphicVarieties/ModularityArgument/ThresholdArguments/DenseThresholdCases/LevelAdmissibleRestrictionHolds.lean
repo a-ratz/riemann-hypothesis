@@ -116,7 +116,7 @@ private theorem rep_conj {Γ C : Type} [Group Γ] [Group C] (r : Γ →* C) (P :
 theorem UpperTheory.V.Lev.levelFRes :
     UpperTheory.V.Lev.LevelFRes := by
   intro F K Ω _ _ _ _ _ _ _ _ _ _ _ l _ n M m r H
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   have hres : Continuous (res F Ω K : G K Ω →* G F Ω) := continuous_restrictScalarsHom F K Ω
   have hK : ∀ χ : G F Ω →* (Qbar l)ˣ, KillsMu M χ → KillsMu M (χ.comp (res F Ω K)) :=
     fun χ h s hs => h _ hs
@@ -167,7 +167,7 @@ private theorem place_under {A : ValuationSubring Ω} {w : HeightOneSpectrum (�
 
 private theorem exists_over (K : Type) [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 ℚ)) :
     ∃ w : HeightOneSpectrum (𝓞 K), w.under (𝓞 ℚ) = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   have hker : RingHom.ker (algebraMap (𝓞 ℚ) (𝓞 K)) ≤ v.asIdeal := by
     intro x hx
     have h1 : algebraMap ℚ K (algebraMap (𝓞 ℚ) ℚ x) = 0 := by
@@ -276,7 +276,7 @@ namespace UpperTheory.V.Z.Win.A4.SplitIrreducibility
 private theorem fix_of_dec {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : ValuationSubring Ω) {l p c : ℕ} (hc : p + 1 = 4 * l * c)
     {δ : Ω} (hδ : δ ^ 2 = -(p : Ω)) (hl : A.valuation (l : Ω) < 1) (g : Ω ≃ₐ[ℚ] Ω)
     (hg : ∀ x, g x ∈ A ↔ x ∈ A) : g δ = δ := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hg2 : g δ = δ ∨ g δ = -δ := by
     refine sq_eq_sq_iff_eq_or_eq_neg.1 ?_
     rw [← map_pow, hδ, map_neg, map_natCast]
@@ -318,7 +318,7 @@ private theorem fix_of_dec {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : Valuatio
     have h1 : (1 : _) ≤ A.valuation (l : Ω) := by
       have h3 := (A.valuation_le_one_iff _).2 hli
       rw [map_inv₀] at h3
-      haveI : Nontrivial A.ValueGroup := GroupWithZero.toNontrivial
+      have : Nontrivial A.ValueGroup := GroupWithZero.toNontrivial
       have hne : A.valuation (l : Ω) ≠ 0 := fun h0 =>
         (Nat.cast_ne_zero (R := Ω)).2 hl0 ((Valuation.zero_iff A.valuation).1 h0)
       exact (inv_le_one₀ (pos_iff_ne_zero.2 hne)).1 h3
@@ -350,8 +350,8 @@ private theorem no_sq_mul {t : ℚ} {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (h
 
 private theorem no_two {K : Type} [Field K] [Algebra ℚ K] (h2 : Module.finrank ℚ K = 2) {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     (hpq : p ≠ q) {x y : K} (hx : x * x = -(p : K)) (hy : y * y = -(q : K)) : False := by
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ K).injective
-  haveI : FiniteDimensional ℚ K := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ K).injective
+  have : FiniteDimensional ℚ K := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
   have hdep : ¬ LinearIndependent ℚ ![(1 : K), x, y] := fun h => by
     have := h.fintype_card_le_finrank
     rw [h2] at this
@@ -456,9 +456,9 @@ theorem UpperTheory.V.Z.Win.A4.splitIrr :
     SplitIrr := by
   intro Ω _ _ _ l _ n r hr
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
   have hsq : ∀ p : ℕ, ∃ δ : Ω, δ ^ 2 = -(p : Ω) := fun p => IsAlgClosed.exists_pow_nat_eq _ two_pos
   choose δ hδ using hsq
@@ -468,7 +468,7 @@ theorem UpperTheory.V.Z.Win.A4.splitIrr :
     Fin.ext (hS.natEmbedding _ |>.injective (Subtype.ext h))
   have hPp : ∀ i, (P i).Prime ∧ 4 * l ∣ P i + 1 := fun i => (hS.natEmbedding _ (i : ℕ)).2
   choose K i1 i2 i3 i4 i5 h2 hx hfix using fun i => exK Ω (hPp i).1 (δ (P i)) (hδ _)
-  haveI clo : ∀ i, IsAlgClosure (K i) Ω := fun i => ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have clo : ∀ i, IsAlgClosure (K i) Ω := fun i => ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   choose χ _ _ hχ _ using fun i => UpperTheory.exists_quadratic_sign_character ℚ (K i) Ω l (h2 i)
   have hsqK : ∀ i (x : K i) j, algebraMap (K i) Ω x = δ (P j) → x * x = -(P j : K i) := fun i x j h => by
     apply (algebraMap (K i) Ω).injective

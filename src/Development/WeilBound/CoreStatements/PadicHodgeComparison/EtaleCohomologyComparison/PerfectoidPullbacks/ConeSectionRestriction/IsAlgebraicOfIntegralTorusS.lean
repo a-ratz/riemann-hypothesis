@@ -228,7 +228,7 @@ theorem mem_homIdeal_of_vanish {K : Type} [Field K] {X : Scheme.{0}} {N : ℕ} (
   by_cases hU : ((i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j) : X.Opens) : Set X).Nonempty
   · have hW : ((V ⊓ i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j) : X.Opens) : Set X).Nonempty :=
       nonempty_preirreducible_inter V.isOpen (TopologicalSpace.Opens.isOpen _) hVne hU
-    haveI : Nonempty (V ⊓ i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j) : X.Opens) := hW.to_subtype
+    have : Nonempty (V ⊓ i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j) : X.Opens) := hW.to_subtype
     have hx := xv_mem K N j
     have hWU : V ⊓ i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j) ≤
         i ⁻¹ᵁ Proj.basicOpen (grK K N) (MvPolynomial.X j) := inf_le_right
@@ -439,7 +439,7 @@ theorem away_key {K : Type} [Field K] {N e d : ℕ} (y : Fin (d + 1) → MvPolyn
 
 theorem algebraicIndependent_tV : ∀ {K : Type} [Field K] {X : Scheme.{0}} {N d e : ℕ} (i : X ⟶ PSpace K N) (y : Fin (d + 1) → MvPolynomial (Fin (N + 1)) K) (hy : ∀ k, (y k).IsHomogeneous e) {V : X.Opens} (hV : V ≤ ⨅ k, i ⁻¹ᵁ Proj.basicOpen (grK K N) (y k)), IsIntegral X → 0 < e → ∀ (q : X ⟶ Spec (CommRingCat.of K)), i ≫ PSpace.str K N = q → (AlgebraicIndependent K fun k => Ideal.Quotient.mk (homIdeal i) (y k)) → (V : Set X).Nonempty → letI := (strV q V).toAlgebra; AlgebraicIndependent K (tV i y hy V hV) := by
   intro K _ X N d e i y hy V hV hX he q hq hind hne
-  letI := (strV q V).toAlgebra
+  let := (strV q V).toAlgebra
   rw [algebraicIndependent_iff_injective_aeval, injective_iff_map_eq_zero]
   intro P hP
   have h0 : V ≤ i ⁻¹ᵁ Proj.basicOpen (grK K N) (y 0) :=
@@ -893,7 +893,7 @@ theorem aeval_mem_torusS {K : Type} [Field K] {X : Scheme.{0}} {N d e : ℕ} (i 
     letI := (strV q V).toAlgebra
     evV i (yS y S) V hS (HomogeneousLocalization.Away.mk (grK K N) (yS_mem y hy S) j (MvPolynomial.aeval y c)
       (aeval_mem y hy S c hc)) ∈ torusS K (fun k => (ht k).unit) S := by
-  letI := (strV q V).toAlgebra
+  let := (strV q V).toAlgebra
   have hdeg : ∀ α ∈ c.support, ∑ k, α k = j * S.card := fun α hα => by
     have h := hc (MvPolynomial.mem_support_iff.1 hα)
     rw [← h]
@@ -1023,7 +1023,7 @@ theorem rel_mem {K : Type} [Field K] {N : ℕ} {D : ℕ} (r s : ℕ) (f : MvPoly
 
 theorem isIntegral_torusS : ∀ {K : Type} [Field K] {X : Scheme.{0}} {N d e : ℕ} (i : X ⟶ PSpace K N) (y : Fin (d + 1) → MvPolynomial (Fin (N + 1)) K) (hy : ∀ k, (y k).IsHomogeneous e) {V : X.Opens} (hV : V ≤ ⨅ k, i ⁻¹ᵁ Proj.basicOpen (grK K N) (y k)), 0 < e → ∀ (q : X ⟶ Spec (CommRingCat.of K)), i ≫ PSpace.str K N = q → Module.Finite (Algebra.adjoin K (Set.range fun k => Ideal.Quotient.mk (homIdeal i) (y k))) (MvPolynomial (Fin (N + 1)) K ⧸ homIdeal i) → ∀ (S : Finset (Fin (d + 1))) (hS : V ≤ i ⁻¹ᵁ Proj.basicOpen (grK K N) (yS y S)) (ht : ∀ k, IsUnit (tV i y hy V hV k)), letI := (strV q V).toAlgebra; ∀ a, IsIntegral (torusS K (fun k => (ht k).unit) S) (evV i (yS y S) V hS a) := by
   intro K _ X N d e i y hy V hV he q hq hfin S hS ht
-  letI := (strV q V).toAlgebra
+  let := (strV q V).toAlgebra
   intro a
   have hg := yS_mem y hy S
   obtain ⟨r, f, hf, rfl⟩ := HomogeneousLocalization.Away.mk_surjective (grK K N) hg a
@@ -1180,7 +1180,7 @@ theorem exists_shift {n : ℕ} (S : Finset (Fin n)) (v : Fin n → ℤ) (h : ∀
   by_cases hj : j ∈ S
   · have h1 : (v j).natAbs ≤ ∑ j, (v j).natAbs :=
       Finset.single_le_sum (f := fun j => (v j).natAbs) (fun _ _ => Nat.zero_le _) (Finset.mem_univ j)
-    simp only [hj, if_true]
+    simp only [hj, ite_true]
     omega
   · simpa [hj] using h j hj
 

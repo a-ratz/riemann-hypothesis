@@ -76,7 +76,7 @@ theorem LocallyPrincipalCoprimeField.proof : LocallyPrincipalCoprimeField.Statem
       rintro ⟨m', hm'S, hm'm⟩
       have h' := (memS m').mp (Finset.mem_of_mem_erase hm'S)
       exact Finset.ne_of_mem_erase hm'S (h'.1.eq_of_le hmS'.1.ne_top hm'm)
-    obtain ⟨e, he, hem⟩ := SetLike.not_le_iff_exists.mp hnle
+    obtain ⟨e, he, hem⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
     exact ⟨e, fun m' hm' => Finset.inf_le (f := id) hm' he, hem⟩
   choose! e he hem using havoid
   set γ : Ω := (s : Ω) * g m₀ + ∑ m ∈ S, (e m : Ω) * g m with hγdef

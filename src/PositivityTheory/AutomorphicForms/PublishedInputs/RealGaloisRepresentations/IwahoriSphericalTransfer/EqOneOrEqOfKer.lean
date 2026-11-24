@@ -156,7 +156,7 @@ theorem main : ∀ (Γ k : Type) [Group Γ] [TopologicalSpace Γ] [IsTopological
     apply ((hB.union (Set.Finite.preimage (f := fun χ => χ * η i₀)
       (fun _ _ _ _ h => mul_right_cancel h) hB)).union (Set.toFinite {1, η i₀})).subset
     intro χ hχ
-    simp only [Set.mem_setOf_eq, not_and_or, not_not] at hχ
+    simp only [Set.mem_ofPred_eq, not_and_or, not_not] at hχ
     rcases hχ with h | h | h | h
     · exact Or.inl (Or.inl h)
     · exact Or.inl (Or.inr h)
@@ -170,7 +170,7 @@ theorem main : ∀ (Γ k : Type) [Group Γ] [TopologicalSpace Γ] [IsTopological
       (fun _ _ _ _ h => mul_left_cancel h) hB)).union (Set.Finite.preimage (f := fun χ => η j₁ * χ * η i₀)
       (fun _ _ _ _ h => mul_left_cancel (mul_right_cancel h)) hB)).subset
     intro χ hχ
-    simp only [Set.mem_setOf_eq] at hχ
+    simp only [Set.mem_ofPred_eq] at hχ
     by_cases h1 : (χ ∉ B ∧ χ * η i₀ ∉ B ∧ χ ≠ 1 ∧ χ ≠ η i₀)
     · by_cases h2 : η j₁ * χ ∉ B
       · have h3 : η j₁ * χ * η i₀ ∈ B := by
@@ -186,7 +186,7 @@ theorem main : ∀ (Γ k : Type) [Group Γ] [TopologicalSpace Γ] [IsTopological
     (fun g g0 g1 => htrc i₀ j₁ g g0 g1) P1.2.2.1 P1.2.2.2 (notB _ P1.1) (notB _ P1.2.1)
   refine ⟨ρ₁, ?_, hρ1s, ?_⟩
   · exact GlobalTheory.IndexTwoExt.continuous_of_open (η i₀).ker (hopen i₀) ρ₁ ((ρe i₀).comp (η i₀).ker.subtype)
-      ((hρc i₀).comp continuous_subtype_val) (fun x => hρ1a x x.2)
+      ((hρc i₀).comp continuous_subtypeVal) (fun x => hρ1a x x.2)
   filter_upwards [hev] with j hj
   obtain ⟨ρj, hρja, hρjs, hρjt⟩ := exists_ne_zero_smul_mem_of_mem_span' n (ρe i₀) (ρe j) (η i₀) (η j) t ht (hρs i₀) (hρs j)
     (fun g g0 g1 => htrc i₀ j g g0 g1) hj.1.2.2.1 hj.1.2.2.2 (notB _ hj.1.1) (notB _ hj.1.2.1)

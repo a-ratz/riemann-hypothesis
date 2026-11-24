@@ -190,7 +190,7 @@ theorem toMK_mem_K (k : KG ε) : toMK k ∈ Kset ε := k.2
 theorem K_le_UJ {k : Mx n} (hk : k ∈ Kset ε) : k ∈ UJset ε := (maximal_compact_facts n ε).1 k hk
 
 theorem continuous_toMK (ε : Fin n → Bool) : Continuous fun k : KG ε => toMK k :=
-  (isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtype_val
+  (isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtypeVal
 
 def adInv {g : Mx n} (hg : g ∈ UJset ε) (X : lie (Jm ε)) : lie (Jm ε) :=
   ⟨g⁻¹ * X * g, conj_mem_lie (isUnit_Jm ε) hg X.2⟩
@@ -360,10 +360,10 @@ variable [CompleteSpace H]
 
 theorem Std.dense_smoothAll (h : Std ε σ) : Dense (smoothAll (Jm ε) σ : Set H) := by
   obtain ⟨hσ, hi, -, -, u, -, hu0⟩ := h
-  haveI : Nontrivial H := ⟨u, 0, hu0⟩
+  have : Nontrivial H := ⟨u, 0, hu0⟩
   refine dense_of_irred hi (fun g hg v hv k x hx hxG => ?_) ?_
-  · letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-    letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  · let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+    let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
     have h1 := hv k (fun t => x t * g) (hx.mul contDiff_const) fun t => mul_mem_UJ (hxG t) hg
     convert h1 using 2 with t
     exact (sigma_mul hσ (hxG t) hg v).symm
@@ -375,8 +375,8 @@ theorem Std.dense_smooth (h : Std ε σ) : Dense (smooth (Jm ε) σ : Set H) :=
 
 theorem Std.continuousOn_Dw (h : Std ε σ) {l : List (Mx n)} (hl : ∀ X ∈ l, X ∈ lieSet ε) {w : H} (hw : Sm ε σ w) :
     ContinuousOn (fun g => Dw σ l (σ g w)) (UJset ε) :=
-  continuousOn_iff_continuous_restrict.2
-    (continuous_word_orbit (isUnit_Jm ε) h.1 h.dense_smoothAll continuous_subtype_val (fun t => t.2) l hl hw)
+  continuousOn_iff_continuous_domRestrict.2
+    (continuous_word_orbit (isUnit_Jm ε) h.1 h.dense_smoothAll continuous_subtypeVal (fun t => t.2) l hl hw)
 
 theorem Std.continuousOn_coef (h : Std ε σ) {ℓ : H →ₗ[ℂ] ℂ} (hℓ : Sobolev₂ (lieSet ε) σ ℓ) {w : H} (hw : Sm ε σ w) :
     ContinuousOn (fun g => ℓ (σ g w)) (UJset ε) := by

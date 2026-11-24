@@ -49,8 +49,8 @@ namespace GlobalTheory.AdelicU
 theorem eventually_vecLoc_mem_latLoc {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L) (y : Fin n → Af F ⊗[F] E) :
     ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, vecLoc v y ∈ latLoc F L v := by
-  letI := hL
-  haveI := isLattice_stdLattice (E := E) (n := n)
+  let := hL
+  have := isLattice_stdLattice (E := E) (n := n)
   filter_upwards [eventually_latLoc_eq F L (stdLattice E n),
     Filter.eventually_all.2 fun i => eventually_map_evalV_mem_intLoc (y i)] with v h h1
   rw [h, mem_latLoc_stdLattice]

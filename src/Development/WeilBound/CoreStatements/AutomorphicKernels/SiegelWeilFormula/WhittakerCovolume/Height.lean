@@ -283,7 +283,7 @@ theorem exists_haar_tup (v : HeightOneSpectrum (𝓞 F)) (n : ℕ) :
 theorem normV_eq (x : (AE F E)ˣ) (v : HeightOneSpectrum (𝓞 F)) :
     ‖Algebra.norm (v.adicCompletion F) (compFin F E v x.1)‖ =
       ((GlobalTheory.Doubling.absEv F E v (GlobalTheory.Doubling.unitFin F E v x) : ℝ≥0) : ℝ) := by
-  rw [GlobalTheory.Doubling.absEv_unitFin, coe_nnnorm]
+  rw [GlobalTheory.Doubling.absEv_unitFin, coe_nnNorm]
   exact congrArg norm (GlobalTheory.Doubling.norm_map (GlobalTheory.AdelicU.evFin F v) x.1)
 
 theorem fin_supp (x : (AE F E)ˣ) :
@@ -316,7 +316,7 @@ theorem absE_split (d : SD σ) (x : (AE F E)ˣ) :
   rw [GlobalTheory.Doubling.absE_apply, NNReal.coe_mul, NNReal.coe_prod]
   congr 1
   · refine Finset.prod_congr rfl fun w _ => ?_
-    rw [GlobalTheory.Doubling.absEw_eq_sq d.ok.good.cm (d.B.emb w), NNReal.coe_pow, coe_nnnorm]
+    rw [GlobalTheory.Doubling.absEw_eq_sq d.ok.good.cm (d.B.emb w), NNReal.coe_pow, coe_nnNorm]
     rfl
   · set s := (GlobalTheory.Doubling.finite_mulSupport_absEv x).toFinset with hs
     rw [finprod_eq_prod_of_mulSupport_subset _ (s := s) (by simp [s]), NNReal.coe_prod,

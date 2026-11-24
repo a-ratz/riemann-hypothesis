@@ -92,8 +92,8 @@ theorem exists_inverse_isogeny_of_sum : ThetaUnifAV → Out.Laws → HomExtDvr �
   obtain ⟨P, pP, hP⟩ := _root_.GlobalTheory.CM.exists_polAV_isPowGrp (𝓞 K) A p
   obtain ⟨P', pP', hP'⟩ := _root_.GlobalTheory.CM.exists_polAV_isPowGrp (𝓞 K) A' q
   obtain ⟨Q, u, v, hu, hv, huv, hQ⟩ := _root_.GlobalTheory.PolProd.exists_prod_polAV hL (𝓞 K) P P'
-  haveI := pP.hom
-  haveI := pP'.hom
+  have := pP.hom
+  have := pP'.hom
   let Φ : Q.A ⟶ B.A := (∏ i, u ≫ pP.pr i ≫ φ i) * ∏ i, v ≫ pP'.pr i ≫ φ' i
   have hΦ : ∀ {T : Over (Sp (𝓞 K))} (x : T ⟶ Q.A),
       x ≫ Φ = (∏ i, (x ≫ u ≫ pP.pr i) ≫ φ i) * ∏ i, (x ≫ v ≫ pP'.pr i) ≫ φ' i := by

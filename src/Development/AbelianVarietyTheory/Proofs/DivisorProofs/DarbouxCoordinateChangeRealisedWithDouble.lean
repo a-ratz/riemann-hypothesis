@@ -315,7 +315,7 @@ theorem isOp_unip (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) {κ : Type} [Fintyp
     exact ⟨T.comp M, fun f => by rw [LinearMap.comp_apply, hM f, hT]; rfl⟩
   have nrm : ∀ (B : Matrix κ κ (AF F)) (φ : (κ → AF F) → ℂ) x, ‖mulQ ψ (⅟2) B φ x‖ₑ = ‖φ x‖ₑ := by
     intro B φ x
-    rw [mulQ_apply, enorm_mul, ← ofReal_norm (ψ _), GlobalTheory.StdCharFromIsStd.norm_psi hψ, ENNReal.ofReal_one, one_mul]
+    rw [mulQ_apply, eNorm_mul, ← ofReal_norm (ψ _), GlobalTheory.StdCharFromIsStd.norm_psi hψ, ENNReal.ofReal_one, one_mul]
   refine ⟨mulQ_mem ψ hψ _ A, mulQ_mem ψ hψ _ (-A), fun φ _ => inv A φ, fun φ _ => inv' A φ, adm A, adm (-A),
     fun w φ _ => funext fun x => ?_, ⟨1, one_ne_zero, fun φ _ => ?_⟩, ?_⟩
   · rw [act_unip, mulQ_apply]
@@ -327,12 +327,12 @@ theorem isOp_unip (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) {κ : Type} [Fintyp
     funext ξ
     rw [mulQ_apply, hAdef, quad_rat, hψ.2.1, one_mul]
   · intro μ μ' hμ hμ'
-    letI : MeasurableSpace (κ → AF F) := borel _
-    haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-    haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-    haveI : SecondCountableTopology (κ → AF F) := inferInstance
-    haveI := hμ
-    haveI := hμ'
+    let : MeasurableSpace (κ → AF F) := borel _
+    have : BorelSpace (κ → AF F) := ⟨rfl⟩
+    have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+    have : SecondCountableTopology (κ → AF F) := inferInstance
+    have := hμ
+    have := hμ'
     have e := Measure.isAddLeftInvariant_eq_smul μ' μ
     have hpos := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure μ' μ
     refine ⟨(μ'.addHaarScalarFactor μ : ℝ≥0∞), by exact_mod_cast hpos.ne', ENNReal.coe_ne_top, fun φ _ => ?_⟩
@@ -463,9 +463,9 @@ theorem isOp_levi (ψ : AddChar (AF F) ℂ) {ι : Type} [Fintype ι] [DecidableE
     congr 1
     funext i
     exact (RingHom.map_mulVec (algebraMap F (AF F)) A⁻¹ ξ i).symm
-  · haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-    letI : MeasurableSpace (ι → AF F) := borel _
-    haveI : BorelSpace (ι → AF F) := ⟨rfl⟩
+  · have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+    let : MeasurableSpace (ι → AF F) := borel _
+    have : BorelSpace (ι → AF F) := ⟨rfl⟩
     let L : (ι → AF F) ≃+ (ι → AF F) :=
       { toFun := fun x => Aim *ᵥ x
         invFun := fun x => Am *ᵥ x
@@ -475,7 +475,7 @@ theorem isOp_levi (ψ : AddChar (AF F) ℂ) {ι : Type} [Fintype ι] [DecidableE
     have hc : Continuous L := continuous_const.matrix_mulVec continuous_id
     have hc' : Continuous L.symm := continuous_const.matrix_mulVec continuous_id
     let H : (ι → AF F) ≃ₜ (ι → AF F) := { toEquiv := L.toEquiv, continuous_toFun := hc, continuous_invFun := hc' }
-    haveI : (Measure.map L μ').IsAddHaarMeasure := L.isAddHaarMeasure_map μ' hc hc'
+    have : (Measure.map L μ').IsAddHaarMeasure := L.isAddHaarMeasure_map μ' hc hc'
     have e := Measure.isAddLeftInvariant_eq_smul (Measure.map L μ') μ
     refine ⟨Measure.addHaarScalarFactor (Measure.map L μ') μ, ?_, ENNReal.coe_ne_top, fun φ _ => ?_⟩
     · exact_mod_cast (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure (Measure.map L μ') μ).ne'
@@ -689,7 +689,7 @@ private theorem exists_symm_isUnit_det_sub_mul_of_finrank_ker (b : Matrix κ κ 
   have hinj' : ∀ y, b *ᵥ y = 0 → d' *ᵥ y = 0 → y = 0 :=
     fun y hb hy => hinj y hb (hsub y hy)
   have hlt : LinearMap.ker d'.mulVecLin < LinearMap.ker d.mulVecLin := by
-    rw [SetLike.lt_iff_le_and_exists]
+    rw [IsConcreteLE.lt_iff_le_and_exists]
     refine ⟨fun y hy => ?_, x, hxk, fun hx' => ?_⟩
     · simp only [LinearMap.mem_ker, Matrix.mulVecLin_apply] at hy ⊢
       exact hsub y hy
@@ -813,11 +813,11 @@ end GlobalTheory.TowU.WeylModel
 open GlobalTheory.TowU.WeylModel in
 theorem GlobalTheory.TowU.realised_weyl2 : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsStd ψ → ∀ (κ : Type) [Fintype κ] [DecidableEq κ], ∃ (S : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ)) (S' : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ)), IsOp2 ψ (GlobalTheory.AdelicSvN.act (Matrix.fromBlocks 0 1 (-1) 0 : Matrix (κ ⊕ κ) (κ ⊕ κ) F)) S S' := by
   intro F _ _ ψ hψ κ _ _
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI : MeasurableSpace (κ ⊕ κ → AF F) := borel _
-  haveI : BorelSpace (κ ⊕ κ → AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ ⊕ κ → AF F) := borel _
+  have : BorelSpace (κ ⊕ κ → AF F) := ⟨rfl⟩
   let μ : Measure (κ → AF F) := Measure.addHaar
   let E : (κ → AF F) × (κ → AF F) ≃+ (κ ⊕ κ → AF F) :=
     { toFun := fun p => Sum.elim p.1 p.2
@@ -830,7 +830,7 @@ theorem GlobalTheory.TowU.realised_weyl2 : ∀ (F : Type) [Field F] [NumberField
   let H : (κ → AF F) × (κ → AF F) ≃ₜ (κ ⊕ κ → AF F) :=
     { toEquiv := E.toEquiv, continuous_toFun := hc, continuous_invFun := hc' }
   let ν : Measure (κ ⊕ κ → AF F) := Measure.map E (μ.prod μ)
-  haveI : ν.IsAddHaarMeasure := E.isAddHaarMeasure_map _ hc hc'
+  have : ν.IsAddHaarMeasure := E.isAddHaarMeasure_map _ hc hc'
   let ε₁ : κ → ℤˣ := fun _ => 1
   let ε₂ : κ ⊕ κ → ℤˣ := Sum.elim (fun _ => 1) (fun _ => -1)
   obtain ⟨S, S', hS, hSf⟩ := _root_.GlobalTheory.TowU.FourWeyl.isOp_fourier F ψ hψ κ μ inferInstance ε₁
@@ -883,8 +883,8 @@ theorem card_two_eq (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     {α β κ : Type} [Fintype α] [Fintype β] [Fintype κ]
     {B : Matrix α β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) → Matrix α β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) → AF F} (d : Darboux B κ) :
     Fintype.card κ * 2 = Fintype.card α * Fintype.card β * Module.finrank F E := by
-  haveI : Nontrivial (AF F) := (NumberField.AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
-  haveI : FiniteDimensional F E := Module.Finite.right ℚ F E
+  have : Nontrivial (AF F) := (NumberField.AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have : FiniteDimensional F E := Module.Finite.right ℚ F E
   have h1 := d.e.finrank_eq
   rw [Module.finrank_prod, Module.finrank_fintype_fun_eq_card, Module.finrank_matrix,
     Module.finrank_baseChange] at h1

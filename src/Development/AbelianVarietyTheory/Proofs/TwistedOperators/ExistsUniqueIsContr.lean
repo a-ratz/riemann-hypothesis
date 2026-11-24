@@ -126,7 +126,7 @@ theorem res_sum (a : ∀ i, σ i →₀ ℕ) :
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single j]
   · exact Finsupp.mapDomain_apply_of_injective (emb_injective e j) _ _
   · intro i _ hi
-    refine Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨t, ht⟩
     exact hi (congrArg Sigma.fst (e.injective ht))
   · simp

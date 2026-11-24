@@ -221,7 +221,7 @@ namespace MultiProjectiveCoordinates
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem isOpen_blocks : IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
-  simp only [Set.setOf_forall, Set.setOf_exists]
+  simp only [Set.ofPred_forall, Set.ofPred_exists]
   exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i =>
     isOpen_ne_fun (continuous_apply _) continuous_const
 
@@ -421,7 +421,7 @@ theorem card_le_encard_of_mul {Ω : Type} [Field Ω] (L : AddSubgroup Ω) (Pr : 
     (hθ : θ ≠ 0) (h : ∀ σ ∈ L, Pr σ → σ * θ ∈ S) :
     ((Nat.card {s : L // Pr (s : Ω)} : ℕ) : ℕ∞) ≤ S.encard := by
   by_cases hS : S.Finite
-  · haveI : Finite S := hS
+  · have : Finite S := hS
     let f : {s : L // Pr (s : Ω)} → S := fun s => ⟨(s.1 : Ω) * θ, h _ s.1.2 s.2⟩
     have hf : Function.Injective f := fun a b hab => by
       have h1 : (a.1 : Ω) * θ = (b.1 : Ω) * θ := congrArg Subtype.val hab
@@ -475,7 +475,7 @@ theorem volume_ge_slope : Top.Given → BirationalPullbackPushforwardFormula →
     hs hs0 (fun n => (hq n).1) hm
   have hD : 1 ≤ Top.dimFl (CMType H) (Dw.p + Dw.q) := by
     obtain ⟨τ, hτ⟩ := GlobalTheory.HostModel.exists_embedding_rt_eq H
-    haveI : Nonempty (CMType H) := ⟨⟨τ, hτ⟩⟩
+    have : Nonempty (CMType H) := ⟨⟨τ, hτ⟩⟩
     have h1 := T.j_pos
     have h2 := T.j_lt
     have h3 : 2 ≤ Dw.p + Dw.q := by omega
@@ -658,8 +658,8 @@ theorem exists_bLie_eq_smul (q : O) (hq0 : q ≠ 0) (hcok : ∀ f : omega P.Gt, 
     (χ : Λ →+* O) {u : P.V} (hu : u ∈ P.latT) (hspan : u ∈ Submodule.span C (Set.range P.bLie))
     (heig : u ∈ P.eigV χ) :
     ∃ x : LieG P.Gt, AvDefs.IsEig P.Gt P.oGt χ x ∧ P.bLie x = algebraMap O C q • u := by
-  haveI := P.isLocalRing
-  haveI : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
+  have := P.isLocalRing
+  have : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
   obtain ⟨e, h₁, h₂⟩ := exists_param P.G (smoothDim_model P)
   obtain ⟨e', h₃, h₄⟩ := exists_lieEquiv P
   let F := e.trans e'
@@ -788,8 +788,8 @@ theorem inv_diag_mem (La : Submodule O U) (b : Fin n → U) (g : Matrix (Fin n) 
     (hg : ∀ i j, i < j → g i j = 0) (hb : IsLatBasis C La fun i => ∑ j, g i j • b j) (hmem : ∀ j, b j ∈ La)
     (i : Fin n) : g i i ≠ 0 ∧ (g i i)⁻¹ ∈ (algebraMap O C).range := by
   have hl : LinearIndependent C g.row := LinearIndependent.of_comp (Fintype.linearCombination C b) hb.1
-  have hu := (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hl)
-  letI : Invertible g := Matrix.invertibleOfIsUnitDet g hu
+  have hu := (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_row_iff_isUnit.1 hl)
+  let : Invertible g := Matrix.invertibleOfIsUnitDet g hu
   have ht : g.BlockTriangular OrderDual.toDual := fun a b hab => hg a b hab
   have hinv : g⁻¹.BlockTriangular OrderDual.toDual := Matrix.blockTriangular_inv_of_blockTriangular ht
   have hgi : g⁻¹ * g = 1 := Matrix.nonsing_inv_mul g hu
@@ -824,8 +824,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
 theorem sum_abs_exOf_le (u : GlobalTheory.AllWt.Weight Dw) :
     ∑ s : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)), |((exOf Dw u 0 (some s) : ℤ) : ℝ)| ≤ GlobalTheory.CovHt.l1 u := by
   classical
-  have hm1 : ∀ {τ : E →+* ℂ}, τ (H.rt : E) = H.rt0 → Dw.mult τ = Dw.p := fun h => if_pos h
-  have hm2 : ∀ {τ : E →+* ℂ}, ¬ τ (H.rt : E) = H.rt0 → Dw.mult τ = Dw.q := fun h => if_neg h
+  have hm1 : ∀ {τ : E →+* ℂ}, τ (H.rt : E) = H.rt0 → Dw.mult τ = Dw.p := fun h => ite_eq_left h
+  have hm2 : ∀ {τ : E →+* ℂ}, ¬ τ (H.rt : E) = H.rt0 → Dw.mult τ = Dw.q := fun h => ite_eq_right h
   let φ : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) → Psi H × Fin (Dw.p + Dw.q) := fun s =>
     if h : s.1 (H.rt : E) = H.rt0 then
       (⟨s.1, h⟩, ⟨s.2, by have := lt_of_lt_of_eq s.2.2 (hm1 h); omega⟩)
@@ -846,20 +846,20 @@ theorem sum_abs_exOf_le (u : GlobalTheory.AllWt.Weight Dw) :
   have hinj : Function.Injective φ := by
     rintro ⟨τ, i⟩ ⟨τ', i'⟩ e
     by_cases h : τ (H.rt : E) = H.rt0 <;> by_cases h' : τ' (H.rt : E) = H.rt0
-    · simp only [φ, dif_pos h, dif_pos h'] at e
+    · simp only [φ, dite_eq_left h, dite_eq_left h'] at e
       have e1 : τ = τ' := congrArg (fun x : Psi H × Fin (Dw.p + Dw.q) => x.1.1) e
       subst e1
       have e2 : (i : ℕ) = i' := congrArg (fun x : Psi H × Fin (Dw.p + Dw.q) => (x.2 : ℕ)) e
       exact congrArg (Sigma.mk τ) (Fin.ext e2)
-    · simp only [φ, dif_pos h, dif_neg h'] at e
+    · simp only [φ, dite_eq_left h, dite_eq_right h'] at e
       have e2 : (i : ℕ) = Dw.p + (Dw.q - 1 - i') := congrArg (fun x : Psi H × Fin (Dw.p + Dw.q) => (x.2 : ℕ)) e
       have hi := lt_of_lt_of_eq i.2 (hm1 h)
       omega
-    · simp only [φ, dif_neg h, dif_pos h'] at e
+    · simp only [φ, dite_eq_right h, dite_eq_left h'] at e
       have e2 : Dw.p + (Dw.q - 1 - i) = (i' : ℕ) := congrArg (fun x : Psi H × Fin (Dw.p + Dw.q) => (x.2 : ℕ)) e
       have hi' := lt_of_lt_of_eq i'.2 (hm1 h')
       omega
-    · simp only [φ, dif_neg h, dif_neg h'] at e
+    · simp only [φ, dite_eq_right h, dite_eq_right h'] at e
       have e1 : conjEmb τ = conjEmb τ' := congrArg (fun x : Psi H × Fin (Dw.p + Dw.q) => x.1.1) e
       have e3 : τ = τ' := by rw [← conjEmb_conjEmb τ, e1, conjEmb_conjEmb]
       subst e3
@@ -902,7 +902,7 @@ theorem coef_mem {T : CDVR} {io : c.F →+* T.Fr} (y₀ : IntFr Xo c T io) (hy :
     (hd : ∀ w ∈ htLat c P τ, algebraMap O C d • w ∈ P.latT) (a : Fin (Dw.mult τ) → C)
     (ha : ∑ j, a j • P.bLie (x j) ∈ htLat c P τ) (j : Fin (Dw.mult τ)) :
     algebraMap O C κ * algebraMap O C d * a j ∈ (algebraMap O C).range := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hht : HTChar p v P.Gt := htChar_of_pointOver E H Dw l Xo c p C v O T io y₀ hy k.toRingHom kO P ψ hP
   have hli := (alC_surjective_and_linearIndependent_bLie p C v O (𝓞 E) P hht).2 _ _
     (linearIndependent_evLie_of_lieTie E H Dw l Xo c p C v O T io y₀ k kO P ψ z hP hz τ x hx)
@@ -940,7 +940,7 @@ theorem exists_diag {T : CDVR} {io : c.F →+* T.Fr} (y₀ : IntFr Xo c T io) (h
     ∃ t : Ix Dw → Cˣ, FrBor t z w ∧ v (t none : C) = 1 ∧ ∀ s : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)),
       1 ≤ v (t (some s) : C) ∧ v (algebraMap O C κ) * v (algebraMap O C (d s.1)) * v (t (some s) : C) ≤ 1 := by
   classical
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨g, a, x, ⟨h1, h2, pm, h3, h4, h5⟩, hg, ha, hx, hb⟩ := h
   have hmem : ∀ τ j, P.bLie (x τ j) ∈ htLat c P τ := fun τ j =>
     wRec_le_htLat P τ ⟨⟨x τ j, (hx τ j).isEig hP (z.eig τ j)⟩, rfl⟩
@@ -1017,7 +1017,7 @@ theorem exists_bound [IsGalois ℚ E] {T : CDVR} {io : c.F →+* T.Fr} {la : Hei
     ∃ t : Ix Dw → Cˣ, FrBor t z w ∧ v (t none : C) = 1 ∧ ∀ s : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)),
       |Real.log (v (t (some s) : C)) / Real.log (v (p : C))| ≤ exTwo E p := by
   classical
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hp : p.Prime := Fact.out
   have hv1 : v (p : C) < 1 := lt_one_of_not_isUnit P.integers Fact.out
   have hpC : (p : C) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
@@ -1126,8 +1126,8 @@ theorem htLow_all (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois �
   intro q la hq hql w hw
   obtain ⟨p, hp, _, T, io, e, y₀, k, y, ho, hAlg, hy, rfl⟩ := hw
   obtain rfl : p = q := prime_unique hp.out hq (hy.mem ho) hql
-  letI := H.starRing
-  letI := io.toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
   have hy' : IsHTFrame p (Valued.v : Valuation ℂ_[p] ℝ≥0) 𝓞_ℂ_[p] y₀ k y := hy
   have hm := hy'.val_vw_map ho
   obtain ⟨-, kO, P, ψ, z, hPO, hz, hch⟩ := hy'
@@ -1249,7 +1249,7 @@ theorem encard_le_pow_of_rel {α β : Type*} {A : Set α} {B : Set β} {d : ℕ}
   classical
   rcases B.finite_or_infinite with hB | hB
   · choose F hF hP using hex
-    haveI : Fintype B := hB.fintype
+    have : Fintype B := hB.fintype
     let G : A → (Fin d → B) := fun a i => ⟨F a.1 a.2 i, hF a.1 a.2 i⟩
     have hG : Function.Injective G := fun a a' e => Subtype.ext (hinj a.1 a.2 a'.1 a'.2 fun i =>
       ⟨F a.1 a.2 i, hP a.1 a.2 i, by
@@ -1299,9 +1299,9 @@ theorem vLa_natCast_nonneg {n : ℕ} (hn : n ≠ 0) : 0 ≤ vLa la (n : K) := by
   omega
 
 theorem exists_prime_mem : ∃ p : ℕ, p.Prime ∧ (p : 𝓞 K) ∈ la.asIdeal := by
-  haveI := la.isMaximal
-  haveI : Finite (𝓞 K ⧸ la.asIdeal) := la.asIdeal.finiteQuotientOfFreeOfNeBot la.ne_bot
-  letI := Ideal.Quotient.field la.asIdeal
+  have := la.isMaximal
+  have : Finite (𝓞 K ⧸ la.asIdeal) := la.asIdeal.finiteQuotientOfFreeOfNeBot la.ne_bot
+  let := Ideal.Quotient.field la.asIdeal
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 K ⧸ la.asIdeal)
   refine ⟨p, CharP.char_is_prime (𝓞 K ⧸ la.asIdeal) p, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -1407,7 +1407,7 @@ theorem clear_integral {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hH
     obtain ⟨v, hv', hle⟩ := hHT p la hp hpl w hw
     have h1 := hle u f ((GlobalTheory.AllWt.cuspOn_le U Z _).trans (GlobalTheory.AllWt.cuspW_le_secZ _) hf)
     have h2 := hv p la hp hpl v hv'
-    rw [if_pos hpS] at h2
+    rw [ite_eq_left hpS] at h2
     have h3 := h2.trans h1
     have hvp : 0 ≤ vLa la (p : c.F) := vLa_natCast_nonneg la hp.ne_zero
     have h4 : (2 * ((vLa la (p : c.F) : ℝ) * exTwo E p * GlobalTheory.CovHt.l1 u)) ≤ (vLa la ((clearN E S u : ℕ) : c.F) : ℝ) := by
@@ -1430,7 +1430,7 @@ theorem clear_integral {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hH
   · have hpm : p ∉ GlobalTheory.CompHt.htPrimes l Bd := by rw [hS]; exact hpS
     rw [GlobalTheory.CompHt.mixVals_of_not_mem hp hpm hpl] at hw
     have h2 := hv p la hp hpl w hw
-    rw [if_neg hpS] at h2
+    rw [ite_eq_right hpS] at h2
     have h3 : (0 : EReal) ≤ w f := by simpa using h2
     refine add_nonneg ?_ h3
     exact_mod_cast hvN
@@ -1453,7 +1453,7 @@ variable {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {S : Fin
 
 theorem trOf_sub (Rd : Reading Fr h Z) (u : GlobalTheory.AllWt.Weight Dw) (a b : RM.Ω) :
     trOf Rd u (a - b) = trOf Rd u a - trOf Rd u b := by
-  letI := Rd.φ.toAlgebra
+  let := Rd.φ.toAlgebra
   simp only [trOf, sub_div, map_sub]
 
 end Tr
@@ -1523,7 +1523,7 @@ theorem slope_sub_cost_le_compVolSlope : GlobalTheory.CompanionTheory.Ar.Pub.Nef
     (GlobalTheory.T.tower_weight_of_zero E H Dw l Xo c (T.M ⌊B⌋₊ (κ Z)) u).2.2.2.2.2.1
   have hS : GlobalTheory.CompHt.htPrimes l B = ↑(o.toTowerOrigin.S ⌊B⌋₊) := by
     ext p
-    simp only [GlobalTheory.CompHt.htPrimes, Set.mem_setOf_eq, Finset.mem_coe, o.toTowerOrigin.S_iff, Top.RootTower.InS,
+    simp only [GlobalTheory.CompHt.htPrimes, Set.mem_ofPred_eq, Finset.mem_coe, o.toTowerOrigin.S_iff, Top.RootTower.InS,
       o.toTowerOrigin.bad_iff]
     refine and_congr_right fun hp => or_congr (Nat.le_floor_iff' hp.ne_zero).symm ?_
     have key : ((p : ℤ) ∣ 2 * NumberField.discr E * (l.M' : ℤ)) ↔ p ∣ 2 * (NumberField.discr E).natAbs * l.M' := by

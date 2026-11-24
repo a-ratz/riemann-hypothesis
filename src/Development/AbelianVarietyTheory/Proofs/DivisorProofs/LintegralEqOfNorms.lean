@@ -171,21 +171,21 @@ theorem fderiv_vac (h : Chart θ σ) (hψ : IsStdChar D ψ (-1)) (F : BB ψ S T)
   exact congrFun (hv τ (cpt z τ)) w
 
 theorem enorm_sq_inj {E : Type} [NormedAddCommGroup E] {a b : E} : ‖a‖ₑ ^ 2 = ‖b‖ₑ ^ 2 ↔ ‖a‖ = ‖b‖ := by
-  rw [(ENNReal.pow_right_strictMono two_ne_zero).injective.eq_iff, enorm_eq_nnnorm, enorm_eq_nnnorm, ENNReal.coe_inj,
-    ← NNReal.coe_inj, coe_nnnorm, coe_nnnorm]
+  rw [(ENNReal.pow_right_strictMono two_ne_zero).injective.eq_iff, eNorm_eq_nnNorm, eNorm_eq_nnNorm, ENNReal.coe_inj,
+    ← NNReal.coe_inj, coe_nnNorm, coe_nnNorm]
 
 theorem lintegral_rhoB (hψ : IsStdChar D ψ (-1)) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)) (hμ : μ.IsAddHaarMeasure)
     (h𝓕 : IsAddFundamentalDomain (ratL T S) 𝓕 μ) (u : WO S T) (F : BB ψ S T) :
     ∫⁻ w in 𝓕, ‖(rhoB hψ u F).1 w‖ₑ ^ 2 ∂μ = ∫⁻ w in 𝓕, ‖F.1 w‖ₑ ^ 2 ∂μ := by
   obtain ⟨-, i2, i3, i4, i5, K, hK, hc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hfin := GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WO S T) (ratL T S) hK hc μ h𝓕
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rwa [Measure.restrict_apply_univ]⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rwa [Measure.restrict_apply_univ]⟩
   have key : ∀ G : BB ψ S T, ∫⁻ w in 𝓕, ‖G.1 w‖ₑ ^ 2 ∂μ = ENNReal.ofReal (∫ w in 𝓕, ‖G.1 w‖ ^ 2 ∂μ) := by
     intro G
     rw [ofReal_integral_eq_lintegral_ofReal _ (Filter.Eventually.of_forall fun w => by positivity)]
-    · simp only [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    · simp only [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     · exact Integrable.of_bound (G.1.continuous.norm.pow 2).aestronglyMeasurable (‖G‖ ^ 2)
         (Filter.Eventually.of_forall fun w => by
           rw [norm_pow, norm_norm]; exact pow_le_pow_left₀ (norm_nonneg _) (norm_ev_le w G) 2)
@@ -198,7 +198,7 @@ theorem exists_extend {G M : Type} [Group G] [AddCommGroup M] [Module ℂ M] (Θ
     (om : G →* Module.End ℂ Θ) : ∃ om' : G →* Module.End ℂ M, ∀ g (f : Θ), om' g f = om g f := by
   obtain ⟨C, hC⟩ := Θ.exists_isCompl
   let p := Θ.linearProjOfIsCompl C hC
-  have hp : ∀ f : Θ, p f = f := Submodule.linearProjOfIsCompl_apply_left hC
+  have hp : ∀ f : Θ, p f = f := Submodule.projectionOnto_apply_left hC
   refine ⟨{ toFun := fun g => Θ.subtype ∘ₗ (om g - 1) ∘ₗ p + 1, map_one' := by simp, map_mul' := fun g g' => ?_ },
     fun g f => by simp [hp]⟩
   ext f
@@ -277,10 +277,10 @@ theorem lintegral_eq_of_norms (hψ : IsStdChar D ψ (-1)) (μ : Measure (WO S T)
       (∀ w G, ‖Φ (rhoB hψ w G)‖ = ‖Φ G‖) → ‖Φ F'‖ = ‖Φ F‖) :
     ∫⁻ w in 𝓕, ‖F'.1 w‖ₑ ^ 2 ∂μ = ∫⁻ w in 𝓕, ‖F.1 w‖ₑ ^ 2 ∂μ := by
   obtain ⟨-, i2, i3, i4, i5, K, hK, hc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hlt := GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WO S T) (ratL T S) hK hc μ h𝓕
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rwa [Measure.restrict_apply_univ]⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rwa [Measure.restrict_apply_univ]⟩
   rw [lintegral_norm_sq_eq_toL2, lintegral_norm_sq_eq_toL2, enorm_sq_inj]
   refine hn _ (toL2 _ _ (μ.restrict 𝓕)) fun v G => ?_
   rw [← enorm_sq_inj, ← lintegral_norm_sq_eq_toL2, ← lintegral_norm_sq_eq_toL2]

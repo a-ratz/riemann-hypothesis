@@ -59,7 +59,7 @@ theorem _root_.GlobalTheory.UnitLemma.isIntegral_of_isLat_stable {O E A : Type} 
     [Algebra E A] (L : Submodule O A) (hL : _root_.GlobalTheory.UnitLemma.IsLat O E L) (g : A) (hg : ∀ y ∈ L, g * y ∈ L) :
     IsIntegral O g := by
   obtain ⟨hfg, hspan⟩ := hL
-  haveI : Module.Finite O L := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite O L := Module.Finite.iff_fg.mpr hfg
   let f : Module.End O L := (LinearMap.mulLeft O g).restrict hg
   have hpow : ∀ (n : ℕ) (y : L), ((f ^ n) y : A) = g ^ n * y := by
     intro n

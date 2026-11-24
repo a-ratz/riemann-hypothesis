@@ -104,7 +104,7 @@ theorem Xsp_le_orth {T : E} (F : LFlag S r T) : Xsp F ≤ orth S (Xsp F) := by
 theorem map_mem_Xflag {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T} {n : S.V ≃ₗ[E] S.V}
     (hn : n ∈ NLam Λ F) (j : ℕ) {v : S.V} (hv : v ∈ Xflag F j) : n v ∈ Xflag F j := by
   have hn' := hn
-  simp only [NLam, Set.mem_setOf_eq] at hn'
+  simp only [NLam, Set.mem_ofPred_eq] at hn'
   obtain ⟨-, hn1, -⟩ := hn'
   cases j with
   | zero =>
@@ -122,7 +122,7 @@ theorem map_Xflag_eq {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T} {n 
   have hle : (Xflag F j).map (n : S.V →ₗ[E] S.V) ≤ Xflag F j := by
     rintro _ ⟨v, hv, rfl⟩
     exact map_mem_Xflag hn j hv
-  haveI : FiniteDimensional E (Xflag F j) :=
+  have : FiniteDimensional E (Xflag F j) :=
     FiniteDimensional.span_of_finite E (Set.toFinite (F.fl.e '' {i : Fin r | i.1 < j}))
   exact Submodule.eq_of_le_of_finrank_eq hle (LinearEquiv.finrank_map_eq n _)
 
@@ -144,7 +144,7 @@ theorem diff_of_flag {Λ : Submodule (𝓞 E) S.V} {T T' : E} {F : LFlag S r T} 
     (∀ a : Fin r, y.fl.e a - x.fl.e a ∈ Xflag F a.val) ∧ y.fl.z - x.fl.z ∈ Xsp F := by
   have hn' := hn
   have hm' := hm
-  simp only [NLam, Set.mem_setOf_eq] at hn' hm'
+  simp only [NLam, Set.mem_ofPred_eq] at hn' hm'
   obtain ⟨-, hn1, hn2⟩ := hn'
   obtain ⟨-, hm1, hm2⟩ := hm'
   constructor

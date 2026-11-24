@@ -85,7 +85,7 @@ private theorem bar_mul (l L N p : ℕ) (hL : L ≠ 0) (h : Nat.Coprime p (N * l
     have hv : ((1 : ZMod (N * l ^ L))⁻¹).val = 1 := by
       rw [ZMod.inv_one, ZMod.val_one'' (by omega)]
     simp only [bar, Nat.cast_one, hv, Int.cast_one, mul_one]
-  · haveI : NeZero (N * l ^ L) := ⟨hM⟩
+  · have : NeZero (N * l ^ L) := ⟨hM⟩
     have hdvd : l ∣ N * l ^ L := Dvd.dvd.mul_left (dvd_pow_self l hL) N
     have hu : ((p : ZMod (N * l ^ L)) * (p : ZMod (N * l ^ L))⁻¹) = 1 := ZMod.coe_mul_inv_eq_one p h
     have h1 := congrArg (ZMod.castHom hdvd (ZMod l)) hu
@@ -121,11 +121,11 @@ theorem UpperTheory.V.Z.Kato.Nb.sTopT :
     have hpd : p.Coprime d := Nat.Coprime.coprime_dvd_right ⟨l * N * c, by ring⟩ hcop
     have hM0 : N * l ^ (r + n) * p ≠ 0 :=
       mul_ne_zero (mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hlp.ne_zero)) (NeZero.ne p)
-    haveI : NeZero (N * l ^ (r + n) * p) := ⟨hM0⟩
+    have : NeZero (N * l ^ (r + n) * p) := ⟨hM0⟩
     have hMeq : lvT l n r N p = N * (N * l ^ (r + n) * p) := by
       unfold lvT
       ring
-    haveI : NeZero (lvT l n r N p) := ⟨by rw [hMeq]; exact mul_ne_zero (NeZero.ne N) hM0⟩
+    have : NeZero (lvT l n r N p) := ⟨by rw [hMeq]; exact mul_ne_zero (NeZero.ne N) hM0⟩
     have hLev : Lev l n N (N * l ^ (r + n) * p) (lvT l n r N p) g :=
       ⟨hMeq, ⟨l ^ (r + n) * p, by ring⟩, ⟨N * l ^ r * p, by ring⟩, hn, hH.cop, hH.g0⟩
     have hLv : Lv c d (N * l ^ (r + n) * p) :=

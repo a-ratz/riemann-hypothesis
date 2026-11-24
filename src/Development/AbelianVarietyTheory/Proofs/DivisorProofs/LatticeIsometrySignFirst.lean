@@ -105,8 +105,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : _root_.Reciproc
   {l : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H} in
 theorem _root_.GlobalTheory.ClassSumProbe.finite_conj_half :
     Finite (Dw.La ⧸ (_root_.Formalism.L2.Pj.Mfr l • ⊤ : Submodule (𝓞 E) Dw.La)) := by
-  haveI := Dw.fin
-  haveI : Finite (𝓞 E ⧸ _root_.Formalism.L2.Pj.Mfr l) :=
+  have := Dw.fin
+  have : Finite (𝓞 E ⧸ _root_.Formalism.L2.Pj.Mfr l) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ mfr_ne_bot
   exact Module.finite_of_finite (𝓞 E ⧸ _root_.Formalism.L2.Pj.Mfr l)
 
@@ -200,12 +200,12 @@ theorem inversion {n : ℕ} [Fintype (Fin n → LevQ Dw l)] (φ : (Fin n → Lev
     ring
   simp only [h1]
   rw [Finset.sum_comm, Finset.sum_eq_single (fun b => Submodule.Quotient.mk (x b))]
-  · rw [← Finset.mul_sum, AddChar.sum_eq_ite, if_pos ((chr_eq_zero_iff l _).2 fun b => by
+  · rw [← Finset.mul_sum, AddChar.sum_eq_ite, ite_eq_left ((chr_eq_zero_iff l _).2 fun b => by
       rw [← Submodule.Quotient.eq, mk_qRep]), Nat.card_eq_fintype_card]
     have : (Fintype.card (Fin n → LevQ Dw l) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
     field_simp
   · intro y _ hy
-    rw [← Finset.mul_sum, AddChar.sum_eq_ite, if_neg, mul_zero]
+    rw [← Finset.mul_sum, AddChar.sum_eq_ite, ite_eq_right, mul_zero]
     rw [chr_eq_zero_iff]
     exact fun h => hy (funext fun b => by rw [← mk_qRep (y b), Submodule.Quotient.eq]; exact h b)
   · simp

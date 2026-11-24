@@ -102,13 +102,13 @@ private theorem rc_pow {κ : Type} [NormedField κ] [IsUltrametricDist κ] (b : 
 private theorem rc_char {l : ℕ} [Fact l.Prime] (b : PadicAlgCl l) (hb : ‖b - 1‖ < 1) :
     ∃ (κ : AddChar ℤ_[l] (PadicAlgCl l)) (c : Coef l), Continuous κ ∧ κ 1 = b ∧ ∀ x, κ x ∈ c.O ∧ ‖κ x - 1‖ < 1 := by
   let K : IntermediateField ℚ_[l] (PadicAlgCl l) := IntermediateField.adjoin ℚ_[l] {b}
-  haveI : FiniteDimensional ℚ_[l] K := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral b)
+  have : FiniteDimensional ℚ_[l] K := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral b)
   obtain ⟨c, hc⟩ := rc_coef K
-  haveI : CompleteSpace K := by
-    have h : IsClosed (K.toSubmodule : Set (PadicAlgCl l)) := Submodule.closed_of_finiteDimensional _
-    have h2 : IsComplete (K.toSubmodule : Set (PadicAlgCl l)) := Submodule.complete_of_finiteDimensional _
+  have : CompleteSpace K := by
+    have h : IsClosed (K.toSubmodule : Set (PadicAlgCl l)) := Submodule.isClosed_of_finiteDimensional _
+    have h2 : IsComplete (K.toSubmodule : Set (PadicAlgCl l)) := Submodule.isComplete_of_finiteDimensional _
     exact h2.completeSpace_coe
-  haveI : IsBoundedSMul ℤ_[l] K := by
+  have : IsBoundedSMul ℤ_[l] K := by
     refine IsBoundedSMul.of_norm_smul_le fun r x => ?_
     show ‖((r • x : K) : PadicAlgCl l)‖ ≤ ‖r‖ * ‖(x : PadicAlgCl l)‖
     have : ((r • x : K) : PadicAlgCl l) = (r : ℚ_[l]) • (x : PadicAlgCl l) := rfl
@@ -123,7 +123,7 @@ private theorem rc_char {l : ℕ} [Fact l.Prime] (b : PadicAlgCl l) (hb : ‖b -
     rw [PadicInt.addChar_of_value_at_one_def]; ring
   let κ : AddChar ℤ_[l] (PadicAlgCl l) := (K.val : K →* PadicAlgCl l).compAddChar κ₀
   have hκ : ∀ x, κ x = (κ₀ x : PadicAlgCl l) := fun _ => rfl
-  have hcont : Continuous κ := continuous_subtype_val.comp h0
+  have hcont : Continuous κ := continuous_subtypeVal.comp h0
   have hone : κ 1 = b := by rw [hκ, h1]
   have hle : ∀ x, ‖κ x - 1‖ ≤ ‖b - 1‖ := by
     intro x
@@ -141,7 +141,7 @@ private theorem rc_princ {l : ℕ} [Fact l.Prime] (u : ℤ_[l]ˣ) : u ∈ KStar.
 
 private theorem rc_equiv {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) :
     Nonempty (KStar.TotallyRealRoots.princ l 1 ≃ₜ* Multiplicative ℤ_[l]) := by
-  refine (princZl l (KStar.TotallyRealRoots.princ l 1) ?_ (by rw [qExp, if_neg hl]) ?_).1
+  refine (princZl l (KStar.TotallyRealRoots.princ l 1) ?_ (by rw [qExp, ite_eq_right hl]) ?_).1
   · apply Subgroup.isClosed_of_isOpen
     have : (KStar.TotallyRealRoots.princ l 1 : Set ℤ_[l]ˣ) = {u : ℤ_[l]ˣ | ‖(u : ℤ_[l]) - 1‖ < 1} := Set.ext rc_princ
     rw [this]
@@ -178,7 +178,7 @@ theorem UpperTheory.V.Ws.Tw.rootChar :
   have hκ₀ : ∀ x, κ₀ x = algebraMap ℤ_[l] (PadicAlgCl l) ((e.symm (Multiplicative.ofAdd x) : ℤ_[l]ˣ) : ℤ_[l]) :=
     fun _ => rfl
   have hc₀ : Continuous κ₀ :=
-    hac.comp (Units.continuous_val.comp (continuous_subtype_val.comp (e.symm.continuous.comp continuous_ofAdd)))
+    hac.comp (Units.continuous_val.comp (continuous_subtypeVal.comp (e.symm.continuous.comp continuous_ofAdd)))
   have hγ : ‖κ₀ 1 - 1‖ < 1 := by
     rw [hκ₀, ← map_one (algebraMap ℤ_[l] (PadicAlgCl l)), ← map_sub, hnorm]
     exact (rc_princ _).1 (e.symm _).2

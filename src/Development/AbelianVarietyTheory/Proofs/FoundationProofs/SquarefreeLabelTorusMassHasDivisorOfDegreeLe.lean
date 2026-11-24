@@ -170,7 +170,7 @@ theorem card_fix_ge {N : ℕ} (A : Finset (Fin N)) (h0 : 0 < A.card) (hN : A.car
   refine Finset.card_le_card_of_injOn (fun p => Perm.subtypeCongr p.1 p.2) ?_ ?_
   · rintro ⟨e, f⟩ hp
     simp only [Finset.coe_product, Set.mem_prod, Finset.coe_filter, Finset.mem_univ, true_and,
-      Set.mem_setOf_eq] at hp ⊢
+      Set.mem_ofPred_eq] at hp ⊢
     obtain ⟨⟨i, hi⟩, ⟨j, hj⟩⟩ := hp
     refine ⟨map_eq_of_mem_iff _ _ ?_, ⟨i, i.2, ?_⟩, ⟨j, j.2, ?_⟩⟩
     · intro x hx
@@ -210,7 +210,7 @@ theorem sum_wt_le {N : ℕ} (A : Finset (Fin N)) (h0 : 0 < A.card) (hN : A.card 
 theorem four_le_wt {N : ℕ} (A : Finset (Fin N)) (σ : Perm (Fin N))
     (h : A.map σ.toEmbedding = A) : 4 ≤ wt A σ := by
   unfold wt
-  rw [if_pos h]
+  rw [ite_eq_left h]
   split_ifs <;> omega
 
 theorem eight_le_sum_wt {N a : ℕ} (σ : Perm (Fin N)) (A : Finset (Fin N)) (hA : A.card = a)
@@ -244,7 +244,7 @@ theorem eight_le_sum_wt {N a : ℕ} (σ : Perm (Fin N)) (A : Finset (Fin N)) (hA
     have h1 := four_le_wt A σ h
     have h2 := four_le_wt B σ hBs
     omega
-  · have : wt A σ = 8 := by unfold wt; rw [if_pos h, if_neg hb]
+  · have : wt A σ = 8 := by unfold wt; rw [ite_eq_left h, ite_eq_right hb]
     rw [← this]
     exact Finset.single_le_sum (f := fun B => wt B σ) (fun _ _ => Nat.zero_le _) hAm
 

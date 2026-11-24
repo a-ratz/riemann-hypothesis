@@ -65,7 +65,7 @@ theorem finite_classes_mod_pow (O K : Type) [CommRing O] [IsDomain O] [IsDiscret
   have hfin : Finite (O ⧸ Ideal.span {ϖ ^ (2 * N)}) :=
     IsLocalRing.finite_quotient_iff.mpr
       ⟨2 * N, by rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow]⟩
-  haveI := Fintype.ofFinite (Matrix (Fin r ⊕ Fin t) (Fin r) (O ⧸ Ideal.span {ϖ ^ (2 * N)}))
+  have := Fintype.ofFinite (Matrix (Fin r ⊕ Fin t) (Fin r) (O ⧸ Ideal.span {ϖ ^ (2 * N)}))
   have hϖK : algebraMap O K ϖ ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective O K)).mpr hϖ.ne_zero
   let lift : O ⧸ Ideal.span {ϖ ^ (2 * N)} → O := fun c => (Ideal.Quotient.mk_surjective c).choose

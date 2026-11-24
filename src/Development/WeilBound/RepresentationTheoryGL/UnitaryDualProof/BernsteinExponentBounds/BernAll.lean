@@ -165,8 +165,8 @@ private theorem exists_compact_clopen_between {Y : Type*} [TopologicalSpace Y] [
 private theorem exists_compact_clopen_preimage_Phi_eq (hd : PhiData q Z Z' φ e) {A : Set (Sp k n)} (hA : IsClopen A)
     (hAc : IsCompact A) (hAO : A ⊆ {p | p.2 ≠ 0}) :
     ∃ B : Set (Sp k N), IsClopen B ∧ IsCompact B ∧ B ⊆ {p | p.2 ≠ 0} ∧ Φ φ e ⁻¹' B = A := by
-  haveI := totallyDisconnectedSpace_localField (F := k)
-  haveI : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
+  have := totallyDisconnectedSpace_localField (F := k)
+  have : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin N → Fin N → k))
   have hE := isClosedEmbedding_Φ hd
   have hO : IsOpen ({p : Sp k N | p.2 ≠ 0} ∩ (Φ φ e '' Aᶜ)ᶜ) :=
@@ -207,8 +207,8 @@ private theorem exists_supportedIn_comp_Phi_eq (hd : PhiData q Z Z' φ e) {f : S
       (hK.of_isClosed_subset hcl.isClosed (hsub.trans (subset_tsupport f))) (hsub.trans hsupp)
   choose! B hB using key
   have hfin : (Set.range f).Finite := by
-    haveI : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hK
-    have hc : Continuous (fun x : tsupport f => (x : Sp k n)) := continuous_subtype_val
+    have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hK
+    have hc : Continuous (fun x : tsupport f => (x : Sp k n)) := continuous_subtypeVal
     have h1 := (hlc.comp_continuous hc).range_finite
     refine (h1.insert 0).subset ?_
     rintro _ ⟨x, rfl⟩
@@ -310,7 +310,7 @@ theorem choose_zero (hd : PhiData q Z Z' φ e) (hN : 0 < N) :
     by_contra hfin
     rw [not_infinite_iff_finite] at hfin
     classical
-    haveI := Fintype.ofFinite k
+    have := Fintype.ofFinite k
     have hr : r ≠ 0 := by simpa using hr0
     have h1 := FiniteField.pow_card_sub_one_eq_one r hr
     have h2 := congrArg (ValuativeRel.valuation k) h1
@@ -318,9 +318,9 @@ theorem choose_zero (hd : PhiData q Z Z' φ e) (hN : 0 < N) :
     have hc : Fintype.card k - 1 ≠ 0 := by
       have := Fintype.one_lt_card (α := k)
       omega
-    exact (pow_lt_one₀ zero_le' hr1 hc).ne h2
-  haveI : Nontrivial (Matrix (Fin N) (Fin N) k) := by
-    haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+    exact (pow_lt_one₀ zero_le hr1 hc).ne h2
+  have : Nontrivial (Matrix (Fin N) (Fin N) k) := by
+    have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
     infer_instance
   let f : k →+* Matrix (Fin N) (Fin N) k := φ.comp (algebraMap k _)
   have hfinj : Function.Injective f := f.injective
@@ -449,7 +449,7 @@ theorem isClosed_charpoly_eq {N : ℕ} (c : k[X]) : IsClosed {A : Matrix (Fin N)
     rw [← h, Polynomial.coeff_map, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_eq_eval_map]
   have hset : {A : Matrix (Fin N) (Fin N) k | A.charpoly = c} = ⋂ i : ℕ, {A | A.charpoly.coeff i = c.coeff i} := by
     ext A
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [mem_ofPred_eq, Set.mem_iInter]
     exact ⟨fun h i => by rw [h], fun h => Polynomial.ext h⟩
   rw [hset]
   refine isClosed_iInter fun i => ?_
@@ -595,15 +595,15 @@ open PositivityTheory.RgUd.TP.Desc.Restr
 theorem finDim (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] :
     FinDim k := by
   intro p c _ _
-  letI := frMod (k := k) p c
-  letI := IsTopologicalAddGroup.rightUniformSpace k
+  let := frMod (k := k) p c
+  let := IsTopologicalAddGroup.rightUniformSpace k
   have := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let : (Valued.v (R := k)).RankOne :=
     { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   have hc : CompleteSpace k := inferInstance
-  letI : NontriviallyNormedField k := Valued.toNontriviallyNormedField k (ValueGroupWithZero k)
+  let : NontriviallyNormedField k := Valued.toNontriviallyNormedField k (ValueGroupWithZero k)
   have : CompleteSpace k := hc
   have : IsTopologicalAddGroup (Fr k p c) := inferInstanceAs (IsTopologicalAddGroup k)
   have : T2Space (Fr k p c) := inferInstanceAs (T2Space k)
@@ -962,9 +962,9 @@ variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem thmT : ThmT k := by
   obtain ⟨p, hp⟩ := CharP.exists k
   rcases CharP.char_is_prime_or_zero k p with h | rfl
-  · haveI : Fact p.Prime := ⟨h⟩
+  · have : Fact p.Prime := ⟨h⟩
     exact TP.Final.thmT k p
-  · haveI : CharZero k := CharP.charP_to_charZero k
+  · have : CharZero k := CharP.charP_to_charZero k
     exact T.Final.thmT k
 
 theorem thmB : ThmB k := AB.Final.thmB k (AB.Final.thmA k (thmT k))

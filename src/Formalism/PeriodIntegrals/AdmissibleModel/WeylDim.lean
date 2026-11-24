@@ -65,20 +65,20 @@ def SSZ (k : ℕ) (κ : Fin k → ℤ) : Type :=
 theorem sum_le_castSucc {k : ℕ} (F : Fin (k + 1) → ℕ) (a : Fin k) :
     (∑ b : Fin (k + 1) with b ≤ a.castSucc, F b) = ∑ b : Fin k with b ≤ a, F b.castSucc := by
   have h : ¬ (Fin.last k ≤ a.castSucc) := not_le.mpr (Fin.castSucc_lt_last a)
-  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, if_neg h, add_zero]
+  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, ite_eq_right h, add_zero]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   by_cases hi : i ≤ a
-  · rw [if_pos hi, if_pos (Fin.castSucc_le_castSucc_iff.mpr hi)]
-  · rw [if_neg hi, if_neg (fun h' => hi (Fin.castSucc_le_castSucc_iff.mp h'))]
+  · rw [ite_eq_left hi, ite_eq_left (Fin.castSucc_le_castSucc_iff.mpr hi)]
+  · rw [ite_eq_right hi, ite_eq_right (fun h' => hi (Fin.castSucc_le_castSucc_iff.mp h'))]
 
 theorem sum_lt_castSucc {k : ℕ} (F : Fin (k + 1) → ℕ) (a : Fin k) :
     (∑ b : Fin (k + 1) with b < a.castSucc, F b) = ∑ b : Fin k with b < a, F b.castSucc := by
   have h : ¬ (Fin.last k < a.castSucc) := not_lt.mpr (Fin.castSucc_lt_last a).le
-  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, if_neg h, add_zero]
+  rw [Finset.sum_filter, Finset.sum_filter, Fin.sum_univ_castSucc, ite_eq_right h, add_zero]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   by_cases hi : i < a
-  · rw [if_pos hi, if_pos (Fin.castSucc_lt_castSucc_iff.mpr hi)]
-  · rw [if_neg hi, if_neg (fun h' => hi (Fin.castSucc_lt_castSucc_iff.mp h'))]
+  · rw [ite_eq_left hi, ite_eq_left (Fin.castSucc_lt_castSucc_iff.mpr hi)]
+  · rw [ite_eq_right hi, ite_eq_right (fun h' => hi (Fin.castSucc_lt_castSucc_iff.mp h'))]
 
 theorem sum_le_last {k : ℕ} (F : Fin (k + 1) → ℕ) :
     (∑ b : Fin (k + 1) with b ≤ Fin.last k, F b) = ∑ b, F b := by
@@ -86,9 +86,9 @@ theorem sum_le_last {k : ℕ} (F : Fin (k + 1) → ℕ) :
 
 theorem sum_lt_last {k : ℕ} (F : Fin (k + 1) → ℕ) :
     (∑ b : Fin (k + 1) with b < Fin.last k, F b) = ∑ b : Fin k, F b.castSucc := by
-  rw [Finset.sum_filter, Fin.sum_univ_castSucc, if_neg (lt_irrefl _), add_zero]
+  rw [Finset.sum_filter, Fin.sum_univ_castSucc, ite_eq_right (lt_irrefl _), add_zero]
   refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [if_pos (Fin.castSucc_lt_last i)]
+  rw [ite_eq_left (Fin.castSucc_lt_last i)]
 
 theorem intl_zero {K N : ℕ} (f : Fin K → Fin N → ℕ) (hf : Intl f) :
     ∀ (tv : ℕ) (t : Fin N), t.val = tv → ∀ a : Fin K, a.val < tv → f a t = 0 := by
@@ -146,8 +146,8 @@ theorem rho_inj {k : ℕ} (μ : Fin (k + 1) → ℤ) : Function.Injective (rho �
     intro t a
     induction t using Fin.lastCases with
     | last =>
-      rw [intl_zero f.1 f.2.1 k (Fin.last k) rfl a.castSucc (by rw [Fin.coe_castSucc]; exact a.isLt),
-        intl_zero g.1 g.2.1 k (Fin.last k) rfl a.castSucc (by rw [Fin.coe_castSucc]; exact a.isLt)]
+      rw [intl_zero f.1 f.2.1 k (Fin.last k) rfl a.castSucc (by rw [Fin.val_castSucc]; exact a.isLt),
+        intl_zero g.1 g.2.1 k (Fin.last k) rfl a.castSucc (by rw [Fin.val_castSucc]; exact a.isLt)]
     | cast t => exact congrFun (congrFun hr a) t
   apply Subtype.ext
   funext a t
@@ -209,7 +209,7 @@ theorem ext_intl {k : ℕ} (μ : Fin (k + 1) → ℤ) (hμ : 0 ≤ μ (Fin.last 
   | last =>
     rw [sum_le_last, sum_lt_last]
     simp only [ext_cc]
-    have hj : j = l'.succ := Fin.ext (by rw [Fin.val_succ, hlj, Fin.coe_castSucc])
+    have hj : j = l'.succ := Fin.ext (by rw [Fin.val_succ, hlj, Fin.val_castSucc])
     have h1 := ext_sum μ hμ g j
     have h2 : μ j ≤ ((∑ b, g.1 b l' : ℕ) : ℤ) := by rw [hj]; exact ((mem_gtBox' μ _).1 g.2.2 l').1
     have h3 : ((∑ b, ext μ g.1 b j : ℕ) : ℤ) ≤ ((∑ b, g.1 b l' : ℕ) : ℤ) := by rw [h1]; exact h2
@@ -271,7 +271,7 @@ theorem card_SSZ : ∀ (k : ℕ) (κ : Fin k → ℤ), (∀ t, 0 ≤ κ t) → N
     intro μ hμ
     rw [Nat.card_congr (Equiv.ofBijective (rho μ) ⟨rho_inj μ, rho_surj μ (hμ _)⟩),
       Nat.card_congr (fibEquiv μ)]
-    haveI : ∀ κ : ↥(gtBox μ), Finite (SSZ k κ.1) := fun κ => SSZ_finite k κ.1
+    have : ∀ κ : ↥(gtBox μ), Finite (SSZ k κ.1) := fun κ => SSZ_finite k κ.1
     rw [Nat.card_sigma]
     simp only [dGT]
     rw [← Finset.sum_coe_sort (gtBox μ)]
@@ -303,7 +303,7 @@ theorem card_ssIdx (k : ℕ) (ν : Fin k → ℕ) : Nat.card ↥(ssIdx k k ν) =
 theorem finrank_dualWeyl (K : Type) [Field K] (k : ℕ) (ν : Fin k → ℕ) :
     Module.finrank K (dualWeyl K k k ν) = dGT k (fun t => (ν t : ℤ)) := by
   obtain ⟨b, hb, -⟩ := Formalism.GradedWeylDivisibility.sSBasis K k k ν
-  haveI : Fintype ↥(ssIdx k k ν) := (Formalism.GradedWeylDivisibility.sSIdxFinite k k ν).fintype
+  have : Fintype ↥(ssIdx k k ν) := (Formalism.GradedWeylDivisibility.sSIdxFinite k k ν).fintype
   rw [← hb.2.1, finrank_span_eq_card hb.1, ← Nat.card_eq_fintype_card, card_ssIdx]
 
 theorem prodConv (n : ℕ) (F : ℕ → ℕ → ℝ) :
@@ -314,8 +314,8 @@ theorem prodConv (n : ℕ) (F : ℕ → ℕ → ℝ) :
   have key : ∀ i : Fin n, (if i < j then F ↑i ↑j else 1) = (if (i : ℕ) < (j : ℕ) then F ↑i ↑j else 1) := by
     intro i
     by_cases h : i < j
-    · rw [if_pos h, if_pos (Fin.lt_iff_val_lt_val.mp h)]
-    · rw [if_neg h, if_neg (fun h' => h (Fin.lt_iff_val_lt_val.mpr h'))]
+    · rw [ite_eq_left h, ite_eq_left (Fin.lt_def.mp h)]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h (Fin.lt_def.mpr h'))]
   rw [Finset.prod_congr rfl (fun i _ => key i),
     Fin.prod_univ_eq_prod_range (fun m => if m < (j : ℕ) then F m ↑j else 1) n, ← Finset.prod_filter]
   congr 1
@@ -364,7 +364,7 @@ theorem finrank_tensor' (Kf : Type) [Field Kf] (S : Type) [Fintype S] [Decidable
     Module.finrank Kf (tensorLat Kf Kf fun s => dualWeyl Kf k n (ν s)) =
       ∏ s, Module.finrank Kf (dualWeyl Kf k n (ν s)) := by
   choose b hb using fun s => Formalism.GradedWeylDivisibility.sSBasis Kf k n (ν s)
-  haveI : ∀ s, Fintype ↥(ssIdx k n (ν s)) := fun s => (Formalism.GradedWeylDivisibility.sSIdxFinite k n (ν s)).fintype
+  have : ∀ s, Fintype ↥(ssIdx k n (ν s)) := fun s => (Formalism.GradedWeylDivisibility.sSIdxFinite k n (ν s)).fintype
   obtain ⟨hli, hsp⟩ := Formalism.GradedWeylDivisibility.tensorBasis Kf Kf S k n (fun s => ↥(ssIdx k n (ν s)))
     (fun s => dualWeyl Kf k n (ν s)) b (fun s => (hb s).1.1) (fun s => (hb s).1.2.1)
   rw [← hsp, finrank_span_eq_card hli, Fintype.card_pi]
@@ -388,7 +388,7 @@ theorem weylV_proved : Formalism.MainNotions.flipOneThree.WeylV := by
     unfold Vsp
     congr 1
     funext s
-    rw [if_pos (hA s)]
+    rw [ite_eq_left (hA s)]
   show ((Module.finrank Kf (Vsp Kf lam0) : ℕ) : ℚ) = _
   rw [hV, finrank_tensor', Nat.cast_prod]
   refine Finset.prod_congr rfl (fun s _ => ?_)

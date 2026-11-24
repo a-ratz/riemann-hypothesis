@@ -838,9 +838,9 @@ def LimDiscBody (E : Type) [Field E] [NumberField E] [IsCMField E] (M : ℕ) (W 
 
 theorem limL_exists_haar (M : ℕ) : ∃ (_ : MeasurableSpace (GA E M)) (_ : BorelSpace (GA E M)) (μ : Measure (GA E M)),
     μ.IsHaarMeasure := by
-  letI : MeasurableSpace (GA E M) := borel _
-  haveI : BorelSpace (GA E M) := ⟨rfl⟩
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E M
+  let : MeasurableSpace (GA E M) := borel _
+  have : BorelSpace (GA E M) := ⟨rfl⟩
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E M
   exact ⟨_, inferInstance, Measure.haar, inferInstance⟩
 
 theorem limL_lim_one (hS : ConvStrip) (hSh : ConvShift) (hC : ConvComp) (hT : TwShift) {M : ℕ} (hM : 0 < M)
@@ -917,7 +917,7 @@ theorem limLists : ConvStrip → ConvShift → ConvComp → LimLists := by
   intro M hM hMN V z R hR hD hz hTy hI hzR
   choose Kk hKk Wk hWk hty using hTy
   have hfin : (Θs M ×ˢ Ωs M).Finite := (hΘs M).1.prod (hΩs M).1
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   obtain ⟨⟨⟨K, W⟩, hKW⟩, hinf⟩ := Finite.exists_infinite_fiber
     (fun k : ℕ => (⟨(Kk k, Wk k), hKk k, hWk k⟩ : ↥(Θs M ×ˢ Ωs M)))
   have hfr : ∃ᶠ k in atTop, Kk k = K ∧ Wk k = W := by
@@ -1267,7 +1267,7 @@ theorem mem_prodSpan_inf_left (U S : Submodule ℂ (A → ℂ)) (V : Submodule �
   obtain ⟨n, f, g, hsum⟩ := Submodule.mem_span_set'.1 hG
   choose a ha b hb hg using fun i => (g i).2
   let W : Submodule ℂ (B → ℂ) := Submodule.span ℂ (Set.range b)
-  haveI : FiniteDimensional ℂ W := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
+  have : FiniteDimensional ℂ W := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
   have hWV : W ≤ V := Submodule.span_le.2 (by rintro _ ⟨i, rfl⟩; exact hb i)
   let bw : Fin n → W := fun i => ⟨b i, Submodule.subset_span ⟨i, rfl⟩⟩
   let T : A → W := fun x => ∑ i, (f i * a i x) • bw i
@@ -1474,13 +1474,13 @@ theorem pairSlices : PairSlices := by
   refine ⟨fun m₂ => ?_, fun m₁ => ?_⟩
   · obtain ⟨φ, hφ, e⟩ := h₁ m₂
     have hex : ∃ φ : Sm E a, φ.1 = fun x => F (x, m₂) := ⟨φ, e⟩
-    have hs : sl₁ F m₂ = hex.choose := by simp only [sl₁, dif_pos hex]
+    have hs : sl₁ F m₂ = hex.choose := by simp only [sl₁, dite_eq_left hex]
     have hc : hex.choose = φ := Subtype.ext (hex.choose_spec.trans e.symm)
     rw [hs, hc]
     exact ⟨hφ, e⟩
   · obtain ⟨φ, hφ, e⟩ := h₂ m₁
     have hex : ∃ φ : Sm E b, φ.1 = fun x => F (m₁, x) := ⟨φ, e⟩
-    have hs : sl₂ F m₁ = hex.choose := by simp only [sl₂, dif_pos hex]
+    have hs : sl₂ F m₁ = hex.choose := by simp only [sl₂, dite_eq_left hex]
     have hc : hex.choose = φ := Subtype.ext (hex.choose_spec.trans e.symm)
     rw [hs, hc]
     exact ⟨hφ, e⟩

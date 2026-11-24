@@ -100,7 +100,7 @@ theorem eq_smul_of_invariant
   classical
   set e : V → ℂ := (U : Set V).indicator 1 with he_def
   have he : e ∈ SB V := sb_indicator U ho hc
-  haveI := QuotientAddGroup.discreteTopology ho
+  have := QuotientAddGroup.discreteTopology ho
   have hfin : ((QuotientAddGroup.mk : V → V ⧸ U) '' tsupport f).Finite :=
     (hf.2.isCompact.image QuotientAddGroup.continuous_mk).finite_of_discrete
   set S := hfin.toFinset
@@ -231,13 +231,13 @@ theorem dualBall_subset {ψ : AddChar K ℂ} {x₀ : K} (hx₀ : ψ x₀ ≠ 1) 
     (dualBall ψ t : Set K) ⊆ {y | ValuativeRel.valuation K y ≤ ValuativeRel.valuation K (x₀ / t)} := by
   intro y hy
   by_contra hlt
-  simp only [Set.mem_setOf_eq, not_le] at hlt
+  simp only [Set.mem_ofPred_eq, not_le] at hlt
   have hy0 : y ≠ 0 := by
     rintro rfl
     simp at hlt
   have ho : x₀ / t / y ∈ (ValuativeRel.valuation K).integer := by
     rw [Valuation.mem_integer_iff, map_div₀]
-    exact div_le_one_of_le₀ hlt.le zero_le'
+    exact div_le_one_of_le₀ hlt.le zero_le
   have := hy _ ho
   rw [show x₀ / t / y * (t * y) = x₀ by field_simp] at this
   exact hx₀ this
@@ -311,7 +311,7 @@ theorem latt_small {ψ : AddChar K ℂ} {x₀ : K} (hx₀ : ψ x₀ ≠ 1)
   set s := r * a with hs
   have hvs : ValuativeRel.valuation K s < γ := by
     rw [hs, map_mul, ha]
-    exact mul_lt_of_lt_one_left (zero_lt_iff.2 hγ) hr1
+    exact mul_lt_of_lt_one_left (pos_iff_ne_zero.2 hγ) hr1
   have hs0 : s ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hvs
@@ -326,12 +326,12 @@ theorem latt_small {ψ : AddChar K ℂ} {x₀ : K} (hx₀ : ψ x₀ ≠ 1)
   have hYs : ∀ i j, ValuativeRel.valuation K (Y i j) ≤ ValuativeRel.valuation K s := by
     intro i j
     have := dualBall_subset hx₀ (div_ne_zero hx00 hs0) (hY i j)
-    rwa [Set.mem_setOf_eq, hxs] at this
+    rwa [Set.mem_ofPred_eq, hxs] at this
   have hmem : s⁻¹ • Y ∈ B := by
     intro i j
     rw [Matrix.smul_apply, smul_eq_mul, map_mul, map_inv₀]
     have hv0 : ValuativeRel.valuation K s ≠ 0 := by simpa using hs0
-    rw [inv_mul_le_iff₀ (zero_lt_iff.2 hv0), mul_one]
+    rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv0), mul_one]
     exact hYs i j
   have := hsub hvs (s⁻¹ • Y) hmem
   rwa [smul_smul, mul_inv_cancel₀ hs0, one_smul] at this
@@ -351,7 +351,7 @@ theorem latt_sep {ψ : AddChar K ℂ} (t : K) (Y : Matrix (Fin n) (Fin m) K) (hY
     intro X
     rw [Finset.sum_eq_single i (fun b _ hb => by simp [Z, hb]) (by simp),
       Finset.sum_eq_single j (fun b _ hb => by simp [Z, hb]) (by simp)]
-    simp only [Z, if_true]
+    simp only [Z, ite_true]
     ring
   refine ⟨Z, ?_, ?_⟩
   · rw [hsum]

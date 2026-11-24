@@ -129,7 +129,7 @@ theorem Hf_cs {z : Frame X.Ψ r} (hz : z ∈ X.dom) (τ : X.Ψ) (u w : Fin r →
 theorem mem_Uz_iff (z : Frame X.Ψ r) (ξ : Fin r → E) (u : X.Ψ → Fin r → ℂ) :
     u ∈ X.Uz z ξ ↔ ∀ τ : X.Ψ, hermC τ.1 X.Gm (u τ) (Data.emb τ.1 ξ) = 0 ∧
       hermC τ.1 X.Gm (X.jp z τ (u τ)) (Data.emb τ.1 ξ) = 0 := by
-  simp only [Data.Uz, Data.Iperp, Set.mem_setOf_eq, Data.Jz_apply, hermC_smul_left_embedding, mul_eq_zero,
+  simp only [Data.Uz, Data.Iperp, Set.mem_ofPred_eq, Data.Jz_apply, hermC_smul_left_embedding, mul_eq_zero,
     Complex.I_ne_zero, false_or]
   exact ⟨fun h τ => ⟨h.1 τ, h.2 τ⟩, fun h => ⟨fun τ => (h τ).1, fun τ => (h τ).2⟩⟩
 

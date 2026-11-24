@@ -277,8 +277,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.hilbert_ninety_frobenius_twisted_fini
   let f : F₀ →+* S := ((algebraMap F₁ A).comp (algebraMap F₀ F₁)).codRestrict S (fun z => by
     change τ (algebraMap F₁ A (algebraMap F₀ F₁ z)) = algebraMap F₁ A (algebraMap F₀ F₁ z)
     rw [hτ, AlgEquiv.commutes])
-  letI : Algebra F₀ S := f.toAlgebra
-  haveI : Module.Finite F₀ S := Module.Finite.of_finite
+  let : Algebra F₀ S := f.toAlgebra
+  have : Module.Finite F₀ S := Module.Finite.of_finite
   let σ : A ≃ₐ[S] A := AlgEquiv.ofRingEquiv (f := τ) (fun r => r.2)
   have hpow : ∀ (j : ℕ) (x : A), (σ ^ j) x = τ^[j] x := by
     intro j x
@@ -451,7 +451,7 @@ private theorem isNonarchimedeanLocalField_of_ringEquiv_of_isInducing {L M : Typ
   have hlt : ∀ a b : M, valuation M a < valuation M b ↔ valuation L (e a) < valuation L (e b) := by
     intro a b
     rw [← not_le, ← not_le, hle]
-  haveI : IsValuativeTopology M := ⟨fun {u x} => by
+  have : IsValuativeTopology M := ⟨fun {u x} => by
     rw [exists_image_add_valuation_lt_subset_iff, he.nhds_eq_comap x, Filter.mem_comap]
     constructor
     · rintro ⟨t, ht, hts⟩
@@ -473,10 +473,10 @@ private theorem isNonarchimedeanLocalField_of_ringEquiv_of_isInducing {L M : Typ
       · obtain ⟨z', hz', hzz⟩ := hz
         rw [e.injective hzz] at hz'
         exact hz'⟩
-  haveI : LocallyCompactSpace M := he.locallyCompactSpace (by
+  have : LocallyCompactSpace M := he.locallyCompactSpace (by
     rw [Set.range_eq_univ.mpr e.surjective]
     exact isOpen_univ.isLocallyClosed)
-  haveI : IsNontrivial M := by
+  have : IsNontrivial M := by
     obtain ⟨γ, h0, h1⟩ := (inferInstance : IsNontrivial L).condition
     obtain ⟨a, rfl⟩ := ValuativeRel.valuation_surjective γ
     refine ⟨⟨valuation M (e.symm a), ?_, ?_⟩⟩
@@ -580,8 +580,8 @@ private theorem isAdicComplete_map_maximalIdeal_adjoinRoot_of_monic {R : Type*} 
     IsAdicComplete ((IsLocalRing.maximalIdeal R).map (algebraMap R (AdjoinRoot ψ)))
       (AdjoinRoot ψ) := by
   have pb := AdjoinRoot.powerBasis' hψ
-  haveI : Module.Finite R (AdjoinRoot ψ) := pb.finite
-  haveI : IsPrecomplete (IsLocalRing.maximalIdeal R) (Fin pb.dim → R) := isPrecomplete_pi_of_fintype _
+  have : Module.Finite R (AdjoinRoot ψ) := pb.finite
+  have : IsPrecomplete (IsLocalRing.maximalIdeal R) (Fin pb.dim → R) := isPrecomplete_pi_of_fintype _
   have h2 : IsPrecomplete (IsLocalRing.maximalIdeal R) (AdjoinRoot ψ) :=
     isPrecomplete_of_linearEquiv _ pb.basis.equivFun.symm
   exact { toIsHausdorff := IsHausdorff.map_algebraMap_iff.mpr inferInstance
@@ -783,8 +783,8 @@ private theorem normPoly_lemma_7 {R F₀ F₁ : Type} [CommRing R] [IsNoetherian
     exact sb.commutes c
   obtain ⟨τ₀, hτ₀⟩ := exists_adjoinRoot_ringEquiv_iterate_mk_of_map_eq (ψ.map r) sb.toRingEquiv hsbψ
   have hsbn := gal_pow_finrank_eq_one_of_eq_pow_card sb hfrob
-  haveI : Module.Finite F₁ (AdjoinRoot (ψ.map r)) := (AdjoinRoot.powerBasis' (hψ.map r)).finite
-  haveI : Finite (AdjoinRoot (ψ.map r)) := Module.finite_of_finite F₁
+  have : Module.Finite F₁ (AdjoinRoot (ψ.map r)) := (AdjoinRoot.powerBasis' (hψ.map r)).finite
+  have : Finite (AdjoinRoot (ψ.map r)) := Module.finite_of_finite F₁
   obtain ⟨y₀, hy₀⟩ := UpperTheory.Gal.InertialTypesAlt.L.normFin F₀ F₁ sb hfrob (AdjoinRoot (ψ.map r)) τ₀
     (fun z => by
       have h1 := hτ₀ 1 (C z)
@@ -867,7 +867,7 @@ private theorem normPoly_lemma_7 {R F₀ F₁ : Type} [CommRing R] [IsNoetherian
     | ih g =>
       rw [hτ, hper]
       exact congrArg _ Polynomial.map_id
-  haveI := isAdicComplete_map_maximalIdeal_adjoinRoot_of_monic ψ hψ
+  have := isAdicComplete_map_maximalIdeal_adjoinRoot_of_monic ψ hψ
   obtain ⟨y', hy'⟩ := UpperTheory.Gal.InertialTypesAlt.L.normAdic (AdjoinRoot ψ)
     ((IsLocalRing.maximalIdeal R).map (algebraMap R (AdjoinRoot ψ))) τ n hper' hτI
     (AdjoinRoot.of ψ a) htr (AdjoinRoot.root ψ) y (isUnit_adjoinRoot_root_of_isUnit_coeff_zero ψ hψ0)
@@ -953,8 +953,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.normPoly :
   have hψr : ∀ i, ∃ c : F₀, rK (ψ.coeff i) = algebraMap F₀ F₁ c := fun i =>
     ⟨rk ⟨χ.coeff i, (Valuation.mem_integer_iff _ _).2 (hint i)⟩,
       hres.inc ⟨χ.coeff i, (Valuation.mem_integer_iff _ _).2 (hint i)⟩ (ψ.coeff i) (hψc i)⟩
-  letI : UniformSpace K := IsTopologicalAddGroup.rightUniformSpace K
-  haveI : IsUniformAddGroup K := isUniformAddGroup_of_addCommGroup
+  let : UniformSpace K := IsTopologicalAddGroup.rightUniformSpace K
+  have : IsUniformAddGroup K := isUniformAddGroup_of_addCommGroup
   obtain ⟨p, hp⟩ := normPoly_lemma_7 rK hres.onto₁ hkerK (UpperTheory.Gal.InertialTypesAlt.L.resE s) sb hres.frob hcomm
     hper ψ hψmon hψφ hψ0 hψr
   refine ⟨p.map (𝒪[K]).subtype, fun i => ?_, ?_⟩

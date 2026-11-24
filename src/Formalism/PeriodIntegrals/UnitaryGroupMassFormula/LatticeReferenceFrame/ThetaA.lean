@@ -144,7 +144,7 @@ theorem cj_ne (g : ℕ) (hg : 1 ≤ g) (hS : PI.ScRefExists.Sk.SplitG I g) (P : 
     exact (HeightOneSpectrum.ext h).symm
   have hnle : ¬ P.asIdeal ≤ x.1.asIdeal := fun h =>
     hne (P.isMaximal.eq_of_le x.1.isPrime.ne_top h)
-  obtain ⟨θ, hθP, hθx⟩ := SetLike.not_le_iff_exists.mp hnle
+  obtain ⟨θ, hθP, hθx⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
   have hfixy : star ((θ * sg I θ : 𝓞 I.E) : I.E) = ((θ * sg I θ : 𝓞 I.E) : I.E) := by
     show star ((θ : I.E) * (sg I θ : I.E)) = (θ : I.E) * (sg I θ : I.E)
     rw [sg_coe, star_mul, star_star, mul_comm]

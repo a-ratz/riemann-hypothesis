@@ -82,7 +82,7 @@ theorem rowAct_lpMinor (h : Matrix (Fin r) (Fin r) R) (hl : ∀ i j, i < j → h
       have := p.2
       omega
     rw [hl _ _ this, C_0, zero_mul]
-  rw [hM, Matrix.det_mul, Matrix.det_of_lowerTriangular, map_prod]
+  rw [hM, Matrix.det_mul, Matrix.det_of_isLowerTriangular, map_prod]
   · rfl
   · intro i j hij
     have hij' : i < j := hij

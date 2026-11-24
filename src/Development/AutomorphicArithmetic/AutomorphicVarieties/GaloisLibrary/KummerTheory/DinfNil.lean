@@ -232,11 +232,11 @@ theorem UpperTheory.V.Kum.dinfNil :
   let J : Ideal (Polynomial ℤ) :=
     { carrier := {p | Polynomial.aeval Tm p φ = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _), LinearMap.add_apply] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _), LinearMap.add_apply] at *
         rw [ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun c p hp => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, Module.End.mul_apply] at *
         rw [hp, map_zero] }
   have hB : (Polynomial.X + 1) ^ q - 1 ∈ J := by
     show (Polynomial.aeval Tm ((Polynomial.X + 1) ^ q - 1)) φ = 0

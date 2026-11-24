@@ -225,7 +225,7 @@ theorem eq_signToCircle_comp {G : Type} [Group G] (ε : G →* ℤˣ) (η : G �
     have h3 : (η a : ℂ) * η a = 1 := by exact_mod_cast congrArg (fun w : Circle => (w : ℂ)) h2
     rw [MonoidHom.comp_apply, e]
     change η a = if (-1 : ℤˣ) = 1 then 1 else -1
-    rw [if_neg (by decide)]
+    rw [ite_eq_right (by decide)]
     rcases mul_self_eq_one_iff.1 h3 with h4 | h4
     · have h5 : η a = 1 := Circle.ext h4
       rw [h5, one_mul] at h1
@@ -234,7 +234,7 @@ theorem eq_signToCircle_comp {G : Type} [Group G] (ε : G →* ℤˣ) (η : G �
 
 theorem globalNormIndexTwo : Formalism.D.Classical.GlobalNormIndexTwo := by
   intro F E _ _ _ _ _ h2
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
   refine ⟨signToCircle.comp (normSign E), ⟨?_, fun a => ?_, fun x => ?_, fun e => ?_⟩, ?_⟩
   · refine continuous_of_continuousAt_one _ ((continuousAt_const (y := (1 : Circle))).congr ?_)
     filter_upwards [eventually_normSign (K := F) E] with a ha
@@ -243,7 +243,7 @@ theorem globalNormIndexTwo : Formalism.D.Classical.GlobalNormIndexTwo := by
   · exact (congrArg signToCircle (normSign_of_mem E ⟨x, rfl⟩)).trans (map_one _)
   · obtain ⟨a, ha⟩ := exists_normSign_ne_one (K := F) E
     have h : signToCircle (normSign E a) = 1 := DFunLike.congr_fun e a
-    exact circle_neg_one_ne_one ((if_neg ha).symm.trans h)
+    exact circle_neg_one_ne_one ((ite_eq_right ha).symm.trans h)
   · rintro η ⟨-, h1, h3, h4⟩
     refine eq_signToCircle_comp _ η (fun a ha => ?_) h4
     obtain ⟨t, x, hx⟩ := (normSign_eq_one_iff E a).1 ha

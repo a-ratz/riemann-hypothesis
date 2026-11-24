@@ -274,7 +274,7 @@ theorem isValueAt_scale {a : ℤ} {T : Over Xo.X} {s : LB.Sec (LPow Xo.univ.t.G 
     IsValueAt Xo.univ.t.G Xo.univ.t.PP.L a s z (scaleGen _ _ w τ) (v * ((w⁻¹ : Γ(T.left, ⊤)ˣ) : Γ(T.left, ⊤))) := by
   intro j
   rw [hv j]
-  simp only [Formalism.L2.Pj.scaleGen, ReciprocityTheory.ChartRestriction.G.Semi.res, Units.val_mul, Units.coe_map, MonoidHom.coe_coe]
+  simp only [Formalism.L2.Pj.scaleGen, ReciprocityTheory.ChartRestriction.G.Semi.res, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass]
   rw [map_mul]
   exact mul_cancel_lemma _ _ _ _ (by erw [← map_mul, Units.inv_mul, map_one])
 

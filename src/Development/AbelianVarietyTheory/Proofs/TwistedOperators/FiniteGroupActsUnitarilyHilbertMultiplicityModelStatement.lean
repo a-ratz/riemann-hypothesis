@@ -93,7 +93,7 @@ namespace GlobalTheory
 theorem finiteGroup_acts_unitarily_hilbertMultiplicityModel : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M : DSModel V S), ∀ (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) J χ, ∀ (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (e : H →ₗ[ℂ] MMap M) (d : ℂ) (μ : Measure (GA D V)) (𝓕 : Set (GA D V)), (∀ x y, inner ℂ x y = d * ipM M μ 𝓕 (e x) (e y)) → Function.Injective e → (∀ x, e x ∈ Mult θ M J χ) → μ.IsHaarMeasure → IsFundamentalDomain (GQ V) 𝓕 μ → ∀ (g0 : G0 L.Pg L.r) (u : H ≃ₗ[ℂ] H), (∀ x v, e (u x) v = actG0 V β L g0 (e x v)) → ∀ x, ‖u x‖ = ‖x‖ := by
   intro D V S θ M β L J χ H _ _ e d μ 𝓕 hin hinj hmem hμ h𝓕 g0 u hact x
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hμ
+  have := hμ
 
   have hchoose : ∀ (P Q : ℂ → Prop) (hP : ∃ c, P c) (hQ : ∃ c, Q c), P = Q → hP.choose = hQ.choose := by
     rintro P Q hP hQ rfl; rfl
@@ -109,7 +109,7 @@ theorem finiteGroup_acts_unitarily_hilbertMultiplicityModel : ∀ {D : D7} {V : 
       have hU : ∀ v g, e (u x) v g = a * e x v (g * hk.choose) := by
         intro v g
         rw [hact x v]
-        simp only [actG0, dif_pos hk, ha_def]
+        simp only [actG0, dite_eq_left hk, ha_def]
       have hV : ∀ v g, e x v g = a⁻¹ * e (u x) v (g * hk.choose⁻¹) := by
         intro v g
         rw [hU, mul_assoc g, inv_mul_cancel, mul_one, ← mul_assoc, inv_mul_cancel₀ ha0, one_mul]
@@ -132,7 +132,7 @@ theorem finiteGroup_acts_unitarily_hilbertMultiplicityModel : ∀ {D : D7} {V : 
       have h0 : e (u x) = 0 := by
         ext v g
         rw [hact x v]
-        simp only [actG0, dif_neg hk]
+        simp only [actG0, dite_eq_right hk]
         rfl
       have hux : u x = 0 := hinj (by rw [h0, map_zero])
       have hx : x = 0 := by

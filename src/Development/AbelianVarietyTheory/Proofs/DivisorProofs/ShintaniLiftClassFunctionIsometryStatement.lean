@@ -73,9 +73,9 @@ theorem shLift_isometry : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] 
     (Nat.card (GL (Fin n) F) : ℂ) * ∑ᶠ δ, shLift s f δ * star (shLift s f' δ) =
       (Nat.card (GL (Fin n) F') : ℂ) * ∑ᶠ γ, f γ * star (f' γ) := by
   intro F F' _ _ _ _ s hs n f f' hf hf'
-  haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
-  letI : Fintype (GL (Fin n) F) := Fintype.ofFinite _
-  letI : Fintype (GL (Fin n) F') := Fintype.ofFinite _
+  have : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
+  let : Fintype (GL (Fin n) F) := Fintype.ofFinite _
+  let : Fintype (GL (Fin n) F') := Fintype.ofFinite _
   have hex := GlobalTheory.T.every_element_is_norm F F' s hs n
   have hfib := GlobalTheory.T.card_isGaloisTwistedNormGL_mul_card_GL F F' s hs n
   have hlf := (GlobalTheory.T.base_change_lift_class_function F F' s hs n f hf).1
@@ -87,7 +87,7 @@ theorem shLift_isometry : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] 
   have hcne : ∀ γ, c γ ≠ 0 := by
     intro γ
     rw [hc, Nat.cast_ne_zero]
-    haveI : Nonempty {γ' : GL (Fin n) F // IsConj γ γ'} := ⟨⟨γ, IsConj.refl γ⟩⟩
+    have : Nonempty {γ' : GL (Fin n) F // IsConj γ γ'} := ⟨⟨γ, IsConj.refl γ⟩⟩
     exact Nat.card_pos.ne'
 
   have hclass : ∀ (δ : GL (Fin n) F') (γ : GL (Fin n) F), IsNorm s δ γ → ∀ γ' : GL (Fin n) F, IsNorm s δ γ' ↔ IsConj γ γ' := by

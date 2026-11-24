@@ -105,7 +105,7 @@ private theorem jacquet_multiplicity_single_cell (hG : GeometricLemma) (hBZ : Be
   classical
   have hτ : (piTensor fun i => (x i).rep).IsIrreducible := _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun i => (x i).2.rep
   let M := fun i : Fin 2 => Fin (x i).1
-  haveI : Fintype (SizeMatrix M M) := Fintype.ofFinite _
+  have : Fintype (SizeMatrix M M) := Fintype.ofFinite _
   let b₀ : SizeMatrix M M := ⟨fun i j => if i = j then (x i).1 else 0, by
     refine ⟨fun i => ?_, fun j => ?_⟩
     · simp [M]

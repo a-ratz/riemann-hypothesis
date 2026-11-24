@@ -123,7 +123,7 @@ theorem thetaMeas_ne (hcm : IsCMExt F E σ) {J : Matrix (Fin 1) (Fin 1) E} (hJ :
     thetaMeas σ J μ 𝓕 {X : Fin 1 → Fin 1 → E | X ≠ 0} =
       Measure.sum fun β : {β : F // β ≠ 0} => thetaMeas σ J μ 𝓕 (sph σ J β.1) := by
   ext s hs
-  simp only [thetaMeas, Measure.sum_apply _ hs, Measure.smul_apply, smul_eq_mul, ENNReal.tsum_mul_left]
+  simp only [thetaMeas, Measure.sum_apply _ hs, smul_apply, smul_eq_mul, ENNReal.tsum_mul_left]
   congr 1
   rw [← (sphEquiv hcm hJ).tsum_eq, ENNReal.tsum_sigma']
   rfl
@@ -239,7 +239,7 @@ theorem rv_unit (v : HeightOneSpectrum (𝓞 F)) (e : ℝ) {s : Fv F v} (hs : Va
   rw [tsum_eq_single 0]
   · simp [h0, hs]
   · intro i hi
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨-, h⟩
     rw [hs] at h
     have h3 : (1 : WithZero (Multiplicative ℤ)) = ((Multiplicative.ofAdd (0 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := rfl
@@ -251,10 +251,10 @@ end Local
 theorem tprod_split {ι : Type} (S : Finset ι) (f : ι → ℝ) (hf : (Function.mulSupport f).Finite) :
     ∏' v, f v = (∏ v ∈ S, f v) * ∏ᶠ v : {v // v ∉ S}, f v.1 := by
   rw [tprod_eq_finprod hf, finprod_subtype_eq_finprod_cond, ← finprod_mem_univ f,
-    ← finprod_mem_mul_diff' (Set.subset_univ (S : Set ι)) (by simpa using hf), finprod_mem_coe_finset]
+    ← finprod_mem_mul_sdiff' (Set.subset_univ (S : Set ι)) (by simpa using hf), finprod_mem_coe_finset]
   congr 1
   refine finprod_congr fun v => ?_
-  simp [Set.mem_diff]
+  simp [Set.mem_sdiff]
 
 theorem ne_zero_of_finprod {ι : Type} (f : ι → ℝ) (hf : (Function.mulSupport f).Finite) (h : ∏ᶠ v, f v ≠ 0) (i : ι) :
     f i ≠ 0 := by
@@ -372,7 +372,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem smul_apply' {α : Type} [MeasurableSpace α] (c : ℝ≥0) (ν : Measure α) (B : Set α) :
     (c • ν) B = (c : ℝ≥0∞) * ν B := by
-  rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 theorem idele_ne (a : (AF F)ˣ) (v : HeightOneSpectrum (𝓞 F)) : (a : AF F).2 v ≠ 0 :=
   (IsUnit.map ((evalV F v).comp (sndA F)) a.isUnit).ne_zero

@@ -70,7 +70,7 @@ namespace GlobalTheory.TChart.AbPol
 theorem relAmple_lam_diag {S : Scheme.{0}} [IsLocallyNoetherian S] (P : PolAV S) :
     haveI := P.isAb.comm
     RelAmple P.A ((abelian₂ P.A P.L).pull (lift (𝟙 P.A) (𝟙 P.A)).left) := by
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   have hL : Laws := GlobalTheory.abelianSchemeLaws_all.1
   have hA := P.isAb
   have hLB := P.isLB
@@ -98,7 +98,7 @@ theorem nondeg_of_fieldExtension {K K' : Type} [Field K] [Field K'] (i : K →+*
     (hn : ∀ (T : Over (Sp K')) (x : T ⟶ A'),
       (∃ t : (P'.pull (lift (snd A' T ≫ x) (fst A' T)).left).Gen, t.IsGen) → x = 1)
     (T : Over (Sp K)) (x : T ⟶ A) (hx : ∃ t : (P.pull (lift (snd A T ≫ x) (fst A T)).left).Gen, t.IsGen) : x = 1 := by
-  letI := i.toAlgebra
+  let := i.toAlgebra
   have : Subsingleton (Spec (CommRingCat.of K)) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   have : Nonempty (Spec (CommRingCat.of K')) := inferInstanceAs (Nonempty (PrimeSpectrum K'))
   have : Flat (spMap i) := inferInstanceAs (Flat (specOf i))
@@ -122,21 +122,21 @@ theorem relAmple_of_generic (O K : Type) [CommRing O] [IsDomain O] [IsNoetherian
     [Algebra O K] [IsFractionRing O K] (A : Over (Sp O)) [GrpObj A] (hA : IsAbelianScheme A) {M : LB A.left} (hM : M.IsLB)
     (hamp : RelAmple ((Over.pullback (spMap (algebraMap O K))).obj A) (M.pull (pullback.fst A.hom _))) :
     RelAmple A M := by
-  haveI := hA.proper
-  haveI := hA.smooth
+  have := hA.proper
+  have := hA.smooth
   refine GlobalTheory.ProperFinite.relAmple_of_geometricFibres A hM fun K' _ _ y => ?_
   obtain ⟨g, rfl⟩ : ∃ g : O →+* K', spMap g = y := ⟨(Spec.preimage y).hom, by simp [spMap]⟩
-  haveI : (RingHom.ker g).IsPrime := RingHom.ker_isPrime g
+  have : (RingHom.ker g).IsPrime := RingHom.ker_isPrime g
   let Op := Localization.AtPrime (RingHom.ker g)
-  haveI : IsDomain Op := IsLocalization.isDomain_localization (RingHom.ker g).primeCompl_le_nonZeroDivisors
-  haveI : IsNoetherianRing Op := IsLocalization.isNoetherianRing (RingHom.ker g).primeCompl _ inferInstance
-  haveI : IsIntegrallyClosed Op := isIntegrallyClosed_of_isLocalization Op (RingHom.ker g).primeCompl
+  have : IsDomain Op := IsLocalization.isDomain_localization (RingHom.ker g).primeCompl_le_nonZeroDivisors
+  have : IsNoetherianRing Op := IsLocalization.isNoetherianRing (RingHom.ker g).primeCompl _ inferInstance
+  have : IsIntegrallyClosed Op := isIntegrallyClosed_of_isLocalization Op (RingHom.ker g).primeCompl
     (RingHom.ker g).primeCompl_le_nonZeroDivisors
-  letI : Algebra Op K := IsLocalization.localizationAlgebraOfSubmonoidLe Op K (RingHom.ker g).primeCompl
+  let : Algebra Op K := IsLocalization.localizationAlgebraOfSubmonoidLe Op K (RingHom.ker g).primeCompl
     (nonZeroDivisors O) (RingHom.ker g).primeCompl_le_nonZeroDivisors
-  haveI : IsScalarTower O Op K := IsLocalization.localization_isScalarTower_of_submonoid_le Op K
+  have : IsScalarTower O Op K := IsLocalization.localization_isScalarTower_of_submonoid_le Op K
     (RingHom.ker g).primeCompl (nonZeroDivisors O) (RingHom.ker g).primeCompl_le_nonZeroDivisors
-  haveI : IsFractionRing Op K := IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
+  have : IsFractionRing Op K := IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
     (RingHom.ker g).primeCompl Op K
   have e₁ : spMap (algebraMap Op K) ≫ spMap (algebraMap O Op) = spMap (algebraMap O K) := by
     rw [← spMap_comp, ← IsScalarTower.algebraMap_eq]
@@ -176,7 +176,7 @@ theorem isPPol_of_field (O K' : Type) [CommRing O] [IsDomain O] [IsNoetherianRin
     (ha : RelAmple A' (P'.pull (lift (𝟙 A') (𝟙 A')).left))
     (hn : ∀ (T : Over (Sp K')) (x : T ⟶ A'),
       (∃ t : (P'.pull (lift (snd A' T ≫ x) (fst A' T)).left).Gen, t.IsGen) → x = 1) : IsPPol A P := by
-  haveI := hA.proper
+  have := hA.proper
   let K := FractionRing O
   let i : K →+* K' := IsFractionRing.lift hj
   have e₁ : spMap i ≫ spMap (algebraMap O K) = spMap j := by
@@ -192,7 +192,7 @@ theorem isPPol_of_field (O K' : Type) [CommRing O] [IsDomain O] [IsNoetherianRin
   have sψ := GlobalTheory.LamPull.exists_isSquare hpb.1.w
   have e₂ := GlobalTheory.LamPull.isSquare_unique sq (hψ ▸ isSquare_comp sψ sK)
   have hM := pull_isLB hP.1 (lift (𝟙 A) (𝟙 A)).left
-  haveI : IsProper A'.hom := MorphismProperty.of_isPullback h.1 hA.proper
+  have : IsProper A'.hom := MorphismProperty.of_isPullback h.1 hA.proper
   have ha' : RelAmple A' ((P.pull (lift (𝟙 A) (𝟙 A)).left).pull φ) :=
     (GlobalTheory.relAmple_iff_isAmpleLB_of_isAffine A' (pull_isLB hM φ)).2
       ((GlobalTheory.isAmpleLB_congr (pull_isLB hP' _) (pull_isLB hM φ) (GlobalTheory.SiegelPull.diag_iso sq e)).1
@@ -221,12 +221,12 @@ theorem exists_isPPol_away : ∀ (g n : ℕ) (φ : InvFun ℤ), 3 ≤ n → ∀ 
   set t := ∏ k, C.t k with htd
   have ht0 : t ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => ht k
   let O := Localization.Away t
-  haveI := hCN.1
-  haveI := hCN.2.1
+  have := hCN.1
+  have := hCN.2.1
   have hle : Submonoid.powers t ≤ nonZeroDivisors C.R := powers_le_nonZeroDivisors_of_noZeroDivisors ht0
-  haveI : IsDomain O := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing O := IsLocalization.isNoetherianRing (Submonoid.powers t) _ inferInstance
-  haveI : IsIntegrallyClosed O := isIntegrallyClosed_of_isLocalization O (Submonoid.powers t) hle
+  have : IsDomain O := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing O := IsLocalization.isNoetherianRing (Submonoid.powers t) _ inferInstance
+  have : IsIntegrallyClosed O := isIntegrallyClosed_of_isLocalization O (Submonoid.powers t) hle
   let f := spMap (algebraMap C.R O)
   let A := (Over.pullback f).obj G₁
   have hG' : IsSemiAbelian A := IsSemiAbelian.pullback f G₁ hG
@@ -252,9 +252,9 @@ theorem exists_isPPol_away : ∀ (g n : ℕ) (φ : InvFun ℤ), 3 ≤ n → ∀ 
     rw [(IsLocalization.injective O hle).eq_iff, hκ.eq_iff]
   have e₁ : spMap j ≫ f = (𝟙 _ ≫ jK R') ≫ spMap ρ := by
     rw [Category.id_comp, ← spMap_comp, hjκ, spMap_comp]
-  haveI := U.gen_hom
-  haveI := B.isAb.comm
-  haveI : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
+  have := U.gen_hom
+  have := B.isAb.comm
+  have : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
   have ha : IsGrpPullback B.A G' (𝟙 _ ≫ jK R') (U.gen.inv.left ≫ pullback.fst G'.hom (jK R')) :=
     (isGrpPullback_of_iso U.gen.symm).comp (isGrpPullback_pullback G' (jK R'))
   have sa := GlobalTheory.LamPull.exists_isSquare ha.1.w

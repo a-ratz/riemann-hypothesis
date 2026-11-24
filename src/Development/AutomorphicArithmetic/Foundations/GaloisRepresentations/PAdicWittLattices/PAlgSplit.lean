@@ -159,9 +159,9 @@ private lemma bij_of_pts (hiso : AlgIsoPts) {C D E : Type} [CommRing C] [CommRin
     [Algebra C E] [Algebra.Etale C D] [Algebra.Etale C E] (φ : D →ₐ[C] E)
     (pts : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x : D →+* Ω), ∃! y : E →+* Ω, y.comp (φ : D →+* E) = x) :
     Function.Bijective φ := by
-  letI : Algebra D E := (φ : D →+* E).toAlgebra
-  haveI : IsScalarTower C D E := IsScalarTower.of_algebraMap_eq' (φ.comp_algebraMap).symm
-  haveI : Algebra.Etale D E := Algebra.Etale.of_restrictScalars C D E
+  let : Algebra D E := (φ : D →+* E).toAlgebra
+  have : IsScalarTower C D E := IsScalarTower.of_algebraMap_eq' (φ.comp_algebraMap).symm
+  have : Algebra.Etale D E := Algebra.Etale.of_restrictScalars C D E
   exact hiso D E pts
 
 end UpperTheory.Gal.G3.AlgebraSplitting

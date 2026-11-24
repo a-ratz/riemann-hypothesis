@@ -74,7 +74,7 @@ theorem haar_toReal_pos {G : Type*} [Group G] [TopologicalSpace G] [MeasurableSp
 theorem haar_toReal_pos' {G : Type*} [Group G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G)
     (hμ : μ.IsHaarMeasure) {U S K : Set G} (hU : IsOpen U) (hne : U.Nonempty) (h1 : U ⊆ S) (h2 : S ⊆ K)
     (hK : IsCompact K) : 0 < (μ S).toReal := by
-  haveI := hμ
+  have := hμ
   exact haar_toReal_pos μ hU hne h1 h2 hK
 
 section Typed
@@ -222,17 +222,17 @@ variable {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (hK : X.LevelSubg
 theorem sv_pos (w : D.what₂.Word) (p : TypX X) {S : Set (MassDataIdxSteps.HAp X p)}
     (h1 : MassDataIdxSteps.KgX X p ⊆ S) (h2 : S ⊆ MassDataIdxSteps.KvX X p) :
     0 < ((X.measW w).μSv p.1 (Subtype.val ⁻¹' S)).toReal := by
-  haveI := (X.measW_norm w).2.2.2.2.2.2.2.1 p.1
+  have := (X.measW_norm w).2.2.2.2.2.2.2.1 p.1
   obtain ⟨-, hc, hgo, h1g⟩ := kv_facts X p
   have hcl := MassDataLevelSSteps.LatTop.isClosed_Ssub (v := p.1) X.B.I.cm.sig X.B.I.J (frameOf X w)
-  exact haar_toReal_pos _ (hgo.preimage continuous_subtype_val)
+  exact haar_toReal_pos _ (hgo.preimage continuous_subtypeVal)
     ⟨1, show (1 : MassDataIdxSteps.HAp X p) ∈ MassDataIdxSteps.KgX X p from h1g⟩
     (Set.preimage_mono h1) (Set.preimage_mono h2) (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hc)
 
 theorem gv_pos (p : TypX X) {S : Set (MassDataIdxSteps.HAp X p)}
     (h1 : MassDataIdxSteps.KgX X p ⊆ S) (h2 : S ⊆ MassDataIdxSteps.KvX X p) :
     0 < (X.measG.μGv p.1 S).toReal := by
-  haveI := X.measG_norm.2.2.2.1 p.1
+  have := X.measG_norm.2.2.2.1 p.1
   obtain ⟨-, hc, hgo, h1g⟩ := kv_facts X p
   exact haar_toReal_pos _ hgo ⟨1, h1g⟩ h1 h2 hc
 
@@ -258,20 +258,20 @@ theorem locHaarPosC_holds : LocHaarPosC X hb hK FdN FdN' u u' X0 ψ T sd C Th vR
   · exact sv_pos X u' p (kg_sub_kv X p) subset_rfl
   · exact sv_pos X u p (level_compression_chain X hb p u).1 (level_compression_chain X hb p u).2
   · exact sv_pos X u' p (level_compression_chain X hb p u').1 (level_compression_chain X hb p u').2
-  · haveI := X.measG_norm.2.2.1
+  · have := X.measG_norm.2.2.1
     exact haar_toReal_pos _ hKc.2 ⟨1, h1K⟩ subset_rfl subset_rfl hKc.1
-  · haveI := (X.measW_norm u).2.2.2.2.2.2.1
-    exact haar_toReal_pos _ (hKc.2.preimage continuous_subtype_val) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcs u)
-  · haveI := (X.measW_norm u').2.2.2.2.2.2.1
-    exact haar_toReal_pos _ (hKc.2.preimage continuous_subtype_val) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcs u')
-  · exact haar_toReal_pos' _ (X.measW_norm u).2.2.1 (hKc.2.preimage continuous_subtype_val) ⟨1, h1K⟩ subset_rfl subset_rfl (hKch u)
-  · exact haar_toReal_pos' _ (X.measW_norm u').2.2.1 (hKc.2.preimage continuous_subtype_val) ⟨1, h1K⟩ subset_rfl subset_rfl (hKch u')
+  · have := (X.measW_norm u).2.2.2.2.2.2.1
+    exact haar_toReal_pos _ (hKc.2.preimage continuous_subtypeVal) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcs u)
+  · have := (X.measW_norm u').2.2.2.2.2.2.1
+    exact haar_toReal_pos _ (hKc.2.preimage continuous_subtypeVal) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcs u')
+  · exact haar_toReal_pos' _ (X.measW_norm u).2.2.1 (hKc.2.preimage continuous_subtypeVal) ⟨1, h1K⟩ subset_rfl subset_rfl (hKch u)
+  · exact haar_toReal_pos' _ (X.measW_norm u').2.2.1 (hKc.2.preimage continuous_subtypeVal) ⟨1, h1K⟩ subset_rfl subset_rfl (hKch u')
   · obtain ⟨ho, h1, hs⟩ := conjugated_level_open_one_mem X hb hK u
-    exact haar_toReal_pos' _ (X.measW_norm u).2.2.1 (ho.preimage continuous_subtype_val) ⟨1, h1⟩ subset_rfl (Set.preimage_mono hs) (hKch u)
+    exact haar_toReal_pos' _ (X.measW_norm u).2.2.1 (ho.preimage continuous_subtypeVal) ⟨1, h1⟩ subset_rfl (Set.preimage_mono hs) (hKch u)
   · obtain ⟨ho, h1, hs⟩ := conjugated_level_open_one_mem X hb hK u'
-    exact haar_toReal_pos' _ (X.measW_norm u').2.2.1 (ho.preimage continuous_subtype_val) ⟨1, h1⟩ subset_rfl (Set.preimage_mono hs) (hKch u')
-  · exact haar_toReal_pos' _ (X.measW_norm u).2.2.2.2.2.1 (hKc.2.preimage continuous_subtype_val) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcn u)
-  · exact haar_toReal_pos' _ (X.measW_norm u').2.2.2.2.2.1 (hKc.2.preimage continuous_subtype_val) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcn u')
+    exact haar_toReal_pos' _ (X.measW_norm u').2.2.1 (ho.preimage continuous_subtypeVal) ⟨1, h1⟩ subset_rfl (Set.preimage_mono hs) (hKch u')
+  · exact haar_toReal_pos' _ (X.measW_norm u).2.2.2.2.2.1 (hKc.2.preimage continuous_subtypeVal) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcn u)
+  · exact haar_toReal_pos' _ (X.measW_norm u').2.2.2.2.2.1 (hKc.2.preimage continuous_subtypeVal) ⟨1, h1K⟩ subset_rfl subset_rfl (hKcn u')
 
 end Main
 

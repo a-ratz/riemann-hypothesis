@@ -872,7 +872,7 @@ theorem glue_fam (T : Tower p Ω) (F : ℕ → Ω → Ω) (hF : ∀ m, GlobalThe
   have hG : ∀ m, ∀ x ∈ Lev T (m + 1), IsInt (p := p) (F (M x) x - F m x) := by
     intro m x hx
     have h : ∃ m, x ∈ Lev T (m + 1) := ⟨m, hx⟩
-    have hM : M x = Classical.choose h := dif_pos h
+    have hM : M x = Classical.choose h := dite_eq_left h
     have ha := Classical.choose_spec h
     rw [hM]
     have h1 := hc _ (max m (Classical.choose h)) (le_max_right _ _) x ha
@@ -903,7 +903,7 @@ theorem glue : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 
     (∀ m : ℕ, 1 ≤ m → ∃ dz dq : Ω → Ω, GlobalTheory.KumDlog.IsDer (Lev T m) dz ∧ GlobalTheory.KumDlog.IsDer (Lev T m) dq ∧ GlobalTheory.KumDlog.Vals T m dz dq) →
     ∃ dz dq : Ω → Ω, GlobalTheory.KumDlog.IsDer B dz ∧ GlobalTheory.KumDlog.IsDer B dq ∧ ∀ m : ℕ, 1 ≤ m → GlobalTheory.KumDlog.Vals T m dz dq := by
   intro p _ Ω _ _ hclo T B hB hlev
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hclo
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hclo
   have hp : (p : Ω) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero
   have h' : ∀ m : ℕ, ∃ dz dq : Ω → Ω, GlobalTheory.KumDlog.IsDer (Lev T (m + 1)) dz ∧ GlobalTheory.KumDlog.IsDer (Lev T (m + 1)) dq ∧
       GlobalTheory.KumDlog.Vals T (m + 1) dz dq := fun m => hlev (m + 1) (by omega)
@@ -967,7 +967,7 @@ set_option synthInstance.maxHeartbeats 200000 in
 theorem exists_levDer : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω], IsClo p Ω → ∀ (T : Tower p Ω) (m : ℕ), 1 ≤ m →
     ∃ dz dq : Ω → Ω, IsDer (Lev T m) dz ∧ IsDer (Lev T m) dq ∧ Vals T m dz dq := by
   intro p _ Ω _ _ hC T m hm
-  haveI : CharZero Ω := Basic.charZero_of_isClo hC
+  have : CharZero Ω := Basic.charZero_of_isClo hC
   obtain ⟨ι, hι⟩ := Basic.exists_isEmb T m
   obtain ⟨hinj, hrange⟩ := _root_.GlobalTheory.K5.LevEmb.emb_inj_range p Ω hC T m hm ι hι
   have hιA : ∀ z, ι z ∈ integralClosure (O0 p) Ω := fun z =>
@@ -975,11 +975,11 @@ theorem exists_levDer : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
   let ιA : On p m →ₐ[O0 p] integralClosure (O0 p) Ω := ι.codRestrict _ hιA
   have hιAv : ∀ z, ((ιA z : integralClosure (O0 p) Ω) : Ω) = ι z := fun z => rfl
   let I : Ideal (integralClosure (O0 p) Ω) := Ideal.span {((p : integralClosure (O0 p) Ω)) ^ m}
-  letI : Algebra (On p m) (integralClosure (O0 p) Ω ⧸ I) :=
+  let : Algebra (On p m) (integralClosure (O0 p) Ω ⧸ I) :=
     ((Ideal.Quotient.mk I).comp ιA.toRingHom).toAlgebra
   have halg : ∀ z, algebraMap (On p m) (integralClosure (O0 p) Ω ⧸ I) z = Ideal.Quotient.mk I (ιA z) :=
     fun z => rfl
-  haveI : IsScalarTower (O0 p) (On p m) (integralClosure (O0 p) Ω ⧸ I) :=
+  have : IsScalarTower (O0 p) (On p m) (integralClosure (O0 p) Ω ⧸ I) :=
     IsScalarTower.of_algebraMap_eq fun c => by
       rw [halg, AlgHom.commutes, Ideal.Quotient.mk_algebraMap]
 
@@ -1095,9 +1095,9 @@ theorem kaehler_rel_isInt (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algeb
     (hrel : a • KaehlerDifferential.D (O0 p) (On p n) x =
       b • KaehlerDifferential.D (O0 p) (On p n) y + c • KaehlerDifferential.D (O0 p) (On p n) z) :
     IsInt (p := p) (ι a * D (ι x) - ι b * D (ι y) - ι c * D (ι z)) := by
-  letI : Module (On p n) Ω := Module.compHom Ω ι.toRingHom
+  let : Module (On p n) Ω := Module.compHom Ω ι.toRingHom
   have hsm : ∀ (r : On p n) (w : Ω), r • w = ι r * w := fun _ _ => rfl
-  haveI : IsScalarTower (O0 p) (On p n) Ω := ⟨fun r s w => by
+  have : IsScalarTower (O0 p) (On p n) Ω := ⟨fun r s w => by
     rw [hsm, hsm, map_smul, smul_mul_assoc]⟩
   let N : Submodule (On p n) Ω :=
     { carrier := {w | IsInt (p := p) w}
@@ -1190,19 +1190,19 @@ theorem fixed_eq_div : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alge
     ∀ (T : Tower p Ω) (x : Ω), (∀ h ∈ Hinf T, h x = x) →
     ∃ m : ℕ, ∃ a ∈ Lev T m, ∃ b ∈ Lev T m, b ≠ 0 ∧ x = a / b := by
   intro p _ Ω _ _ hC T x hx
-  haveI : FaithfulSMul (O0 p) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hC.inj
-  letI : Algebra (FractionRing (O0 p)) Ω := FractionRing.liftAlgebra (O0 p) Ω
-  haveI : IsScalarTower (O0 p) (FractionRing (O0 p)) Ω :=
+  have : FaithfulSMul (O0 p) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hC.inj
+  let : Algebra (FractionRing (O0 p)) Ω := FractionRing.liftAlgebra (O0 p) Ω
+  have : IsScalarTower (O0 p) (FractionRing (O0 p)) Ω :=
     FractionRing.isScalarTower_liftAlgebra _ _
-  haveI : Algebra.IsAlgebraic (O0 p) Ω := hC.alg
-  haveI : Algebra.IsAlgebraic (FractionRing (O0 p)) Ω :=
+  have : Algebra.IsAlgebraic (O0 p) Ω := hC.alg
+  have : Algebra.IsAlgebraic (FractionRing (O0 p)) Ω :=
     Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective (O0 p) (FractionRing (O0 p)))
-  haveI : IsAlgClosed Ω := hC.clo
-  haveI : IsAlgClosure (FractionRing (O0 p)) Ω := ⟨hC.clo, inferInstance⟩
-  haveI : CharZero Ω := Basic.charZero_of_isClo hC
-  haveI : CharZero (FractionRing (O0 p)) :=
+  have : IsAlgClosed Ω := hC.clo
+  have : IsAlgClosure (FractionRing (O0 p)) Ω := ⟨hC.clo, inferInstance⟩
+  have : CharZero Ω := Basic.charZero_of_isClo hC
+  have : CharZero (FractionRing (O0 p)) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective (O0 p) (FractionRing (O0 p)))
-  haveI : IsGalois (FractionRing (O0 p)) Ω := IsAlgClosure.isGalois _ _
+  have : IsGalois (FractionRing (O0 p)) Ω := IsAlgClosure.isGalois _ _
   let E := IntermediateField.adjoin (FractionRing (O0 p)) (Set.range T.ζ ∪ Set.range T.qq)
   have hxE : x ∈ E := by
     rw [← InfiniteGalois.fixedField_fixingSubgroup E, IntermediateField.mem_fixedField_iff]
@@ -1669,7 +1669,7 @@ theorem core (hp2 : p ≠ 2) (hΩ : IsClo p Ω) (T : Tower p Ω) (n : ℕ) (hn :
 
 theorem exists_kum (T : Tower p Ω) (n : ℕ) {r : Ω} (hr : r ≠ 0)
     (h : ∀ g ∈ Gn T n, g (r ^ (p ^ n)) = r ^ (p ^ n)) : ∃ a, IsKum T n (Gn T n) r a := by
-  haveI : NeZero (p ^ n) := ⟨(ppow_pos n).ne'⟩
+  have : NeZero (p ^ n) := ⟨(ppow_pos n).ne'⟩
   have : ∀ g : Gal p Ω, ∃ i : ZMod (p ^ n), g ∈ Gn T n → g r = T.ζ n ^ i.val * r := by
     intro g
     by_cases hg : g ∈ Gn T n
@@ -1692,7 +1692,7 @@ theorem kummer_eq_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, 
   intro p _ hp2
   refine ⟨7, ?_⟩
   intro Ω _ _ hΩ T n hn ι hι k w α β hd r hr a lz lq ha hz hq
-  haveI := hΩ.clo
+  have := hΩ.clo
   have hL := emb_mem_Lev hΩ hn hι
   have hI : ∀ x, IsInt (p := p) (ι x) := fun x => Lev_int T n _ (hL x)
   have hfix : ∀ g ∈ Gn T n, ∀ x, g (ι x) = ι x := fun g hg x =>

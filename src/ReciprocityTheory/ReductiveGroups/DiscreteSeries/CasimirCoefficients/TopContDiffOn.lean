@@ -106,7 +106,7 @@ lemma capEntry_ad (E : Fin n → Fin n → 𝒰) (P Q : Matrix (Fin n) (Fin n) �
       ∑ c, ∑ d, (P c a * Q b d) • capEntry E x c d := by
   simp only [capEntry, smul_add, Finset.sum_add_distrib]
   congr 1
-  simp only [smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [← Finset.sum_smul]
   have h : ∑ c, P c a * Q b c = (Q * P) b a := by
     rw [Matrix.mul_apply]
@@ -114,7 +114,7 @@ lemma capEntry_ad (E : Fin n → Fin n → 𝒰) (P Q : Matrix (Fin n) (Fin n) �
   rw [h, hQP, Matrix.one_apply]
   by_cases hab : a = b
   · subst hab; simp
-  · rw [if_neg (Ne.symm hab), if_neg hab, zero_smul]
+  · rw [ite_eq_right (Ne.symm hab), ite_eq_right hab, zero_smul]
 
 lemma coef_det (P : Matrix (Fin n) (Fin n) ℂ) (c : Fin n → Fin n) :
     ∑ σ : Equiv.Perm (Fin n), ((Equiv.Perm.sign σ : ℤˣ) : ℤ) • ∏ j, P (c j) (σ j) = (P.submatrix c id).det := by
@@ -413,7 +413,7 @@ theorem cap_psM (T : KType ε Λ) (μ : Fin n → ℤ) (lam : Fin n → ℝ) (h�
   refine ⟨Ps1.Uset ε, Ps1.isOpen_Uset, Ps1.posSet_subset_Uset, fun z hz => ?_, fun Y z hz => ?_⟩
   · let f (x : 𝕄) (k : KG ε) := GPs.g0 μ (GPs.emb x k) • GPs.Pk T k
     have hg := GPs.smooth_g0_on_Wset μ
-    have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtype_val.comp T.cont
+    have hop : Continuous (fun k : KG ε => T.op k) := continuous_subtypeVal.comp T.cont
     have hPk : Continuous (GPs.Pk T) := (hop.mul continuous_const).mul (hop.comp continuous_inv)
     have hmem (q : 𝕄 × KG ε) (hq : q ∈ Ps1.Uset ε ×ˢ Set.univ) :
         GPs.emb q.1 q.2 ∈ GPs.Wset n := GPs.emb_mem hq.1 q.2

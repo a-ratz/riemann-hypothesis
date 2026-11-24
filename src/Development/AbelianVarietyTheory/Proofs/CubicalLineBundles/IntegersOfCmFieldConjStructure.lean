@@ -221,7 +221,7 @@ theorem isIntegrallyClosed_OK (H : Host E) : IsIntegrallyClosed (OK H) := by
     IsFractionRing.liftAlgHom (g := Algebra.ofId (OK H) E) hinj
   have hy : IsIntegral ℤ (φ x) := isIntegral_trans _ (hx.map φ)
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := OK H) x
-  obtain ⟨n, hn, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) b).exists_nonzero_dvd hb
+  obtain ⟨n, hn, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) b).exists_ne_zero_dvd hb
   have hb' : algebraMap (OK H) E b ≠ 0 := (map_ne_zero_iff _ hinj).2 (nonZeroDivisors.ne_zero hb)
   have hm : (⟨_, hy⟩ : 𝓞 E) ∈ OK H := by
     refine mem_OK_of_int_mul_mem H hn ?_

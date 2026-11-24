@@ -137,7 +137,7 @@ theorem mem_periodLattice_of_exp_thetaLinForm {g : ℕ} {τ : Matrix (Fin g) (Fi
     rw [hm]
     congr 1
     simp only [dotProduct, mulVec, hk, ofIntVec, Pi.single_apply, mul_ite, _root_.mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [hτ.apply i j]
     ring
@@ -183,7 +183,7 @@ theorem fderiv_eq_mul_of_ratio {E κ : Type*} [NormedAddCommGroup E] [NormedSpac
       rw [hv c' y hy, div_mul_cancel₀ _ hy]
     have hd := (hvd.hasFDerivAt.mul ((hθ c) z).hasFDerivAt).congr_of_eventuallyEq hprod
     rw [hd.fderiv]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, hw c',
+    simp only [add_apply, smul_apply, smul_eq_mul, hw c',
       mul_zero, add_zero]
     rw [hv c' z hc]
     ring
@@ -202,12 +202,12 @@ theorem fderiv_eq_mul_of_ratio {E κ : Type*} [NormedAddCommGroup E] [NormedSpac
       refine ⟨hx.1.add hy.1, ?_⟩
       have hs : HasFDerivAt (x + y) (fderiv ℂ x z + fderiv ℂ y z) z :=
         ((hx.1 z).hasFDerivAt.add (hy.1 z).hasFDerivAt)
-      rw [hs.fderiv, ContinuousLinearMap.add_apply, hx.2, hy.2, Pi.add_apply]
+      rw [hs.fderiv, add_apply, hx.2, hy.2, Pi.add_apply]
       ring
     | smul a x _ hx =>
       refine ⟨hx.1.const_smul a, ?_⟩
       have hs : HasFDerivAt (a • x) (a • fderiv ℂ x z) z := (hx.1 z).hasFDerivAt.const_smul a
-      rw [hs.fderiv, ContinuousLinearMap.smul_apply, smul_eq_mul, hx.2, Pi.smul_apply, smul_eq_mul]
+      rw [hs.fderiv, smul_apply, smul_eq_mul, hx.2, Pi.smul_apply, smul_eq_mul]
       ring
   exact (key f hf).2
 

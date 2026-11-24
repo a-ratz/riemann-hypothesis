@@ -125,7 +125,7 @@ theorem isLocalHom_nbhdLift [IsLocalRing A] (ψ : ∀ U : Y.Opens, y₀ ∈ U �
     IsLocalHom (nbhdLift y₀ A ψ hψ).hom := by
   constructor
   intro a ha
-  obtain ⟨U, hU, f, rfl⟩ := Y.presheaf.germ_exist a
+  obtain ⟨U, hU, f, rfl⟩ := Y.presheaf.exists_germ_eq a
   have e : (nbhdLift y₀ A ψ hψ).hom (Y.presheaf.germ U y₀ hU f) = ψ U hU f := by
     first
     | simpa using congrArg (fun g => g.hom f) (germ_nbhdLift ψ hψ U hU)
@@ -141,7 +141,7 @@ theorem nbhdPt_closedPoint [IsLocalRing A] (ψ : ∀ U : Y.Opens, y₀ ∈ U →
       Y.presheaf.map (homOfLE h).op ≫ ψ V hV = ψ U hU)
     (hloc : ∀ (U : Y.Opens) (hU : y₀ ∈ U) (f : Γ(Y, U)), IsUnit (ψ U hU f) → y₀ ∈ Y.basicOpen f) :
     nbhdPt ψ hψ (IsLocalRing.closedPoint A) = y₀ := by
-  haveI := isLocalHom_nbhdLift ψ hψ hloc
+  have := isLocalHom_nbhdLift ψ hψ hloc
   show (Y.fromSpecStalk y₀) ((Spec.map (nbhdLift y₀ A ψ hψ)) (IsLocalRing.closedPoint A)) = y₀
   have e : (Spec.map (nbhdLift y₀ A ψ hψ)) (IsLocalRing.closedPoint A) =
       IsLocalRing.closedPoint (Y.presheaf.stalk y₀) := by

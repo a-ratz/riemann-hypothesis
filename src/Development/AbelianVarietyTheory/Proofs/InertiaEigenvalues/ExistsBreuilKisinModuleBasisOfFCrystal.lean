@@ -270,7 +270,7 @@ theorem exists_dual_pair {A S W R V ι : Type} [CommRing A] [CommRing S] [CommRi
       (∀ j k, μ j (b k) = if j = k then ε else 0) ∧ (∀ x, ∑ j, μ j x • b j = ε • x) ∧
       ∀ x ∈ N, ∀ j, ∃ f, μ j x = ε * g f := by
   classical
-  letI : Algebra W R := ω.toAlgebra
+  let : Algebra W R := ω.toAlgebra
   have hm : ∀ x ∈ N, ε • x ∈ M := fun x hx => (hM _).2 ⟨hεN x hx, by rw [smul_smul, hε]⟩
   have hc : ∀ i, c i ∈ N := fun i => (hN _).2 ⟨Pi.single i 1, by
     rw [Finset.sum_eq_single i (fun k _ hk => by simp [hk]) (by simp)]; simp⟩
@@ -599,7 +599,7 @@ theorem exists_basis {V : Type} [AddCommGroup V] [Module (OW l O) V] [Module (WC
       simp only [c.repr_sum_self] at h2
       have h3 := congrArg constantCoeff (ev_injective ϖ t K h2)
       rw [map_mul, map_mul, constantCoeff_X, zero_mul, map_pow, map_natCast] at h3
-      exact X_dvd_iff.2 ((mul_eq_zero.1 h3).resolve_left (pow_ne_zero _ (WittVector.p_nonzero l _)))
+      exact X_dvd_iff.2 ((mul_eq_zero.1 h3).resolve_left (pow_ne_zero _ (WittVector.p_ne_zero l _)))
     choose r hr using h1
     refine ⟨_, (hN _).2 ⟨r, rfl⟩, ?_⟩
     rw [hX, ← hW]
@@ -609,7 +609,7 @@ theorem exists_basis {V : Type} [AddCommGroup V] [Module (OW l O) V] [Module (WC
       rw [hε, ← map_nsmul, ← map_nsmul] at h
       have h1 := congrArg (fun f : ZMod a → A O K => constantCoeff (f τ : K⟦X⟧)) (iR_injective K t ϖ h)
       simpa using h1) v N hεN fun τ => by
-    letI : Module O⟦X⟧ V := Module.compHom V g
+    let : Module O⟦X⟧ V := Module.compHom V g
     let M : Submodule O⟦X⟧ V :=
       { carrier := {x | x ∈ N ∧ ε τ • x = x}
         add_mem' := fun hx hy => ⟨add_mem hx.1 hy.1, by rw [smul_add, hx.2, hy.2]⟩
@@ -664,7 +664,7 @@ omit [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsUltrametricDist K] [Is
 theorem kappa_smul {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l] K O) (w : WCb l) :
     letI := zlLat T
     ∀ y : WCb l ⊗[ℤ_[l]] ↥T.L.T, kappa T (w • y) = ((1 : O) ⊗ₜ[ℤ_[l]] w) • kappa T y := by
-  letI := zlLat T
+  let := zlLat T
   intro y
   induction y using TensorProduct.induction_on with
   | zero => simp only [smul_zero, map_zero]
@@ -679,7 +679,7 @@ theorem kappa_frob {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[
     letI := zlLat T
     ∀ y : WCb l ⊗[ℤ_[l]] ↥T.L.T, kappa T (TensorProduct.map (frobW l).toLinearMap LinearMap.id y) =
       TWmap (frobOW l O) T (kappa T y) := by
-  letI := zlLat T
+  let := zlLat T
   intro y
   induction y using TensorProduct.induction_on with
   | zero => simp only [map_zero]
@@ -699,7 +699,7 @@ omit [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsUltrametricDist K] [Is
 theorem kappa_mulZ {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l] K O) (c : O) :
     letI := zlLat T
     ∀ y : WCb l ⊗[ℤ_[l]] ↥T.L.T, kappa T ((mulZ T c).lTensor (WCb l) y) = c • kappa T y := by
-  letI := zlLat T
+  let := zlLat T
   intro y
   induction y using TensorProduct.induction_on with
   | zero => simp only [smul_zero, map_zero]
@@ -718,9 +718,9 @@ theorem exists_ident_of_basis {G : Type} [Group G] [TopologicalSpace G] (T : Loc
       (∀ o x, ∃ y, J₀ y = (mulZ T o).lTensor (WCb l) (J₀ x)) →
       ∃ (n : ℕ) (P : PhiMod O K l e a (Fin n)) (I : Ident t ϖ P T), ∀ y, (∃ x, y = kappa T (J₀ x)) ↔
         ∃ (m : Vec K a (Fin n)) (hm : m ∈ P.M), y = I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩) := by
-  letI := zlLat T
+  let := zlLat T
   intro J₀ c₀ hJ₀ hc₀ hφ hφ' hO₀
-  letI : Module (WCb l) (TW (OW l O) T) := Module.compHom _
+  let : Module (WCb l) (TW (OW l O) T) := Module.compHom _
     (Algebra.TensorProduct.includeRight : WCb l →ₐ[ℤ_[l]] OW l O).toRingHom
   have hW : ∀ (w : WCb l) (x : TW (OW l O) T), w • x = ((1 : O) ⊗ₜ[ℤ_[l]] w) • x := fun _ _ => rfl
   obtain ⟨c, hc⟩ : ∃ c : Module.Basis (Fin q) (WCb l) (TW (OW l O) T), ∀ i, c i = kappa T (c₀ i) :=
@@ -773,14 +773,14 @@ theorem exists_ident_of_basis {G : Type} [Group G] [TopologicalSpace G] (T : Loc
 theorem nonempty_bkMod (BS : GlobalTheory.Published.BhattScholzeCrystallineLattices) (T : Lat a O K ϖ)
     (h : letI := zlLat T; ∃ E : FCrys l ↥(OL (ϖ.field a)), IsRealisation (ϖ.field a) E ↥T.L.T (actZ T)) :
     Nonempty (BKMod t ϖ T) := by
-  letI := zlLat T
+  let := zlLat T
   obtain ⟨E, j, H⟩ := h
   have : IsLocalRing (ϖ.prism a).A := inferInstanceAs (IsLocalRing (Wq l a)⟦X⟧)
   obtain ⟨q, β, c₀, hc₀, hφ, hφ'⟩ := LocalValue.general (ϖ.toAinf a) E H.bc
     (fun y => TensorProduct.map (frobW l).toLinearMap LinearMap.id y) H.j_φ
     (Q := eis l a e) (Ideal.mem_span_singleton_self _) ((inclW l).comp (ϖ.ev a)) (fun _ => rfl)
     (ϖ.isUnit_inclW_ev_eis a).ne_zero
-  letI : Module (Wq l a)⟦X⟧ (E.M (ϖ.prism a)) := E.mod (ϖ.prism a)
+  let : Module (Wq l a)⟦X⟧ (E.M (ϖ.prism a)) := E.mod (ϖ.prism a)
   obtain ⟨n, P, I, hI⟩ := exists_ident_of_basis t ϖ T (M := E.M (ϖ.prism a)) β
     (j.toAddMonoidHom.comp (E.tr (ϖ.toAinf a)).toAddMonoidHom) c₀
     (fun s x => (congrArg j ((E.tr (ϖ.toAinf a)).map_smulₛₗ s x)).trans (j.map_smulₛₗ _ _)) hc₀ hφ hφ'

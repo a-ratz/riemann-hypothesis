@@ -81,11 +81,11 @@ theorem mem_intLL_of_pow {z : ℂ} {n : ℕ} (hn : n ≠ 0) (h : z ^ n = 1) (hz 
 
 theorem mem_range_of_pow_of_fixed {K : Type} [Field K] [Countable K] [CharZero K] (f : K →+* ℂ) {z : ℂ} {n : ℕ} (hn : n ≠ 0)
     (h : z ^ n = 1) (hf : ∀ τ : ℂ ≃+* ℂ, (∀ x, τ (f x) = f x) → τ z = z) : ∃ y, f y = z := by
-  letI : Algebra K ℂ := f.toAlgebra
+  let : Algebra K ℂ := f.toAlgebra
   have hi : IsIntegral K z := ⟨Polynomial.X ^ n - Polynomial.C 1, Polynomial.monic_X_pow_sub_C 1 hn, by simp [h]⟩
   let L := IntermediateField.adjoin K {z}
-  haveI : FiniteDimensional K L := IntermediateField.adjoin.finiteDimensional hi
-  haveI : Countable L := (Module.finBasis K L).equivFun.toEquiv.injective.countable
+  have : FiniteDimensional K L := IntermediateField.adjoin.finiteDimensional hi
+  have : Countable L := (Module.finBasis K L).equivFun.toEquiv.injective.countable
   let r : L := ⟨z, IntermediateField.mem_adjoin_simple_self K z⟩
   obtain ⟨y, hy⟩ := GlobalTheory.CompRat.FixedConst.mem_range_of_fixed (K := K) L.val (r := r) (IsIntegral.of_finite K r) hf
   exact ⟨y, congrArg Subtype.val hy⟩
@@ -152,7 +152,7 @@ theorem de_chi_eq_pow {ρ : Setup D.ntw} (hρ : ρ.Good) (i : D.ntw.Tw) (j : Fin
       ext σ
       cases b <;> simp [hψ, Formalism.MainNotions.BlochKatoReduction.Gen.psiAt, MonoidHom.mem_ker]
     rw [this]; exact D.ntw.delta_open i
-  haveI : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
+  have : ψ.ker.FiniteIndex := @Subgroup.finiteIndex_of_finite_quotient _ _ _ (Subgroup.quotient_finite_of_isOpen _ hopen)
   have hpow : ∀ σ, ψ σ ^ ψ.ker.index = 1 := fun σ => by
     rw [← map_pow]; exact ψ.ker.pow_index_mem σ
   obtain ⟨σ, hσ⟩ := ρ.rc.exists_sym x
@@ -167,7 +167,7 @@ theorem de_mem_intLL (hX : FieldOk X) (i : D.ntw.Tw) (j : Fin D.R.m) (b : Bool) 
   obtain ⟨σ, hσ, n, hn, hp⟩ := de_chi_eq_pow Z.good i j b x
   have hz : (((Z.ρ.B i j b).de.chi x : Circle) : ℂ) ^ n = 1 := by
     rw [hσ, ← map_pow, ← map_pow, ← Units.val_pow_eq_pow_val, hp, Units.val_one, map_one, map_one]
-  haveI : Countable D.what₂.LL := (Module.finBasis ℚ D.what₂.LL).equivFun.toEquiv.injective.countable
+  have : Countable D.what₂.LL := (Module.finBasis ℚ D.what₂.LL).equivFun.toEquiv.injective.countable
   obtain ⟨y, hy⟩ := mem_range_of_pow_of_fixed (embLL0 D) hn hz fun τ hτ => by
     rw [hσ]
     refine GlobalTheory.DeltaFixed.aut_fixes_delta_values Z.ρ Z.good i j b (X.R.C.delAt (D.ntw.l i)) (Z.pin.delta i j b) ?_ τ hτ σ

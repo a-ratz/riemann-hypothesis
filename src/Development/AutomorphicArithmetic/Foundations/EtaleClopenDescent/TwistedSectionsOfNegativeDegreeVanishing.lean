@@ -152,7 +152,7 @@ theorem UpperTheory.primitive_root_eq_pow_locally :
     exact sub_eq_zero.mp h1
   have hq' : IsUnit ((q : ℕ) : A ⧸ p) := by
     simpa using ζ.2.1.map (Ideal.Quotient.mk p)
-  haveI : NeZero ((q : ℕ) : A ⧸ p) := ⟨hq'.ne_zero⟩
+  have : NeZero ((q : ℕ) : A ⧸ p) := ⟨hq'.ne_zero⟩
   have prim : ∀ η : Prim q A, IsPrimitiveRoot (Ideal.Quotient.mk p η.1) q := by
     intro η
     have h0 : Ideal.Quotient.mk p (Polynomial.aeval η.1 (Polynomial.cyclotomic q ℤ)) = 0 := by

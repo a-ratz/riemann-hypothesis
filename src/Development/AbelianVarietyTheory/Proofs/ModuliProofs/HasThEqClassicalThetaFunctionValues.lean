@@ -122,7 +122,7 @@ theorem exists_isGenSec_of_isThetaFn : Out.Laws → Out.Laws2 → (∀ (S : Sche
   have ρ₂ : ρ.left ≫ (snd T P.A).left = 𝟙 _ := congrArg (fun q => q.left) r₂
   have ρ₃ : (snd T P.A).left ≫ ρ.left = 𝟙 _ := congrArg (fun q => q.left) r₃
   have ρ₁ : ρ.left ≫ (fst T P.A).left ≫ T.hom = P.A.hom := Over.w (ρ ≫ fst T P.A)
-  haveI : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
+  have : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
   obtain ⟨th, hth⟩ := PowSec.down_surjective P.L (snd T P.A).left ρ.left ρ₂ ((1 : ℕ) : ℤ) s
   refine ⟨th, fun t => ?_, fun j z hz => ?_⟩
   · obtain ⟨a, ha⟩ := exists_const_mul_of_isFnPow_ne_zero hL.globalSectionsRank P u θ hne s hs
@@ -365,14 +365,14 @@ theorem ex_sum {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} (u : Hol
 theorem hasTh_classical : Out.Laws → Out.Laws2 → ThetaUnifAV → ∀ (o : Type) [CommRing o] (g N' : ℕ) (J : Type) (b : TBase o (N' ^ 2)) (em : o →+* ℂ) (t : TObj g (N' ^ 2) J b (spMap em)) (u : HolUnif t.A t.L g) (Hm : Matrix (Fin g) (Fin g) ℂ) (χ : u.Λ → ℂ) (θ : (Fin g → ℂ) → ℂ) (lam : Fin (2 * g) → u.Λ), Odd N' → u.IsAH Hm χ → u.IsThetaFn Hm χ 1 θ → θ ≠ 0 → (∀ i, (t.pt i).left = (u.ex (((N' : ℂ) ^ 2)⁻¹ • (lam i : Fin g → ℂ))).left) → t.HasTh (𝟙 _) (fun a => χ (∑ i, ((a i).val : ℤ) • lam i) * Complex.exp (-(Real.pi / 2 / (N' : ℂ) ^ 2) * hermForm Hm (∑ i, ((a i).val : ℂ) • (lam i : Fin g → ℂ)) (∑ i, ((a i).val : ℂ) • (lam i : Fin g → ℂ))) * θ ((N' : ℂ)⁻¹ • ∑ i, ((a i).val : ℂ) • (lam i : Fin g → ℂ))) := by
   intro hL hL2 hT o _ g N' J b em t u Hm χ θ lam hN hAH hθ h0 hpt
   have hN0 : (N' : ℂ) ≠ 0 := by exact_mod_cast hN.pos.ne'
-  haveI := t.ab.comm
+  have := t.ab.comm
   refine ⟨hN, ?_, fun q => ⟨⊤, trivial, ?_⟩⟩
   · have h : IsUnit (N' : ℂ) := IsUnit.mk0 _ hN0
     have h' := h.map (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom
     rw [map_natCast] at h'
     exact h'
   let T : Over (Sp ℂ) := Out.overRes (T := Out.baseOver (Sp ℂ)) ⊤
-  haveI : IsIso T.hom := by
+  have : IsIso T.hom := by
     show IsIso ((⊤ : (Sp ℂ).Opens).ι ≫ 𝟙 _)
     rw [Category.comp_id]
     exact inferInstanceAs (IsIso (Sp ℂ).topIso.hom)

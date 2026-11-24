@@ -58,7 +58,7 @@ namespace UpperTheory.V.Z.Win
 
 private theorem fix_root {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : ValuationSubring Ω) {l p c : ℕ} (hc : p + 1 = 4 * l * c)
     (hl : A.valuation (l : Ω) < 1) {g : G ℚ Ω} (hg : g ∈ Dec (F := ℚ) A) {δ : Ω} (hδ : δ ^ 2 = -(p : Ω)) : g δ = δ := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hcast : (p : Ω) + 1 = 4 * (l : Ω) * (c : Ω) := by
     have := congrArg (Nat.cast : ℕ → Ω) hc
     push_cast at this
@@ -140,14 +140,14 @@ private theorem fam_one (p : ℕ) (hp : p.Prime) (h4 : p % 4 = 3) :
       Module.finrank ℚ K = 2 ∧ discr K = -(p : ℤ) ∧ ∃ δ : K, δ ^ 2 = -(p : K) := by
   obtain ⟨K, _, _, h2, hd⟩ := KStar.Consta.exists_quadField hp h4
   obtain ⟨⟨δ, hδ⟩, htc⟩ := KStar.Choice.exists_sq_eq_neg_of_discr h2 hp.ne_zero hd
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
   exact ⟨K, _, _, IsCMField.ofCMExtension ℚ K, h2, hd, δ, hδ⟩
 
 theorem quadFamSplit (l : ℕ) [hl : Fact l.Prime] (N : ℕ) :
     ∃ (K : Fin N → Type) (_ : ∀ i, Field (K i)) (_ : ∀ i, NumberField (K i)) (_ : ∀ i, IsCMField (K i)),
       (∀ i, Module.finrank ℚ (K i) = 2) ∧ (∀ i j, i ≠ j → IsCoprime (discr (K i)) (discr (K j))) ∧
       ∀ i, ∃ (p c : ℕ) (δ : K i), 0 < p ∧ p + 1 = 4 * l * c ∧ δ ^ 2 = -(p : K i) := by
-  haveI : NeZero (4 * l) := ⟨by have := hl.out.pos; omega⟩
+  have : NeZero (4 * l) := ⟨by have := hl.out.pos; omega⟩
   have hS := Nat.infinite_setOfPred_prime_and_eq_mod (q := 4 * l) (a := -1) isUnit_one.neg
   let e := hS.natEmbedding
   let P : Fin N → ℕ := fun i => (e (i : ℕ)).1
@@ -190,8 +190,8 @@ theorem thirdSplit (K K' Ω : Type) [Field K] [NumberField K] [IsCMField K] [Fie
       Module.finrank ℚ K'' = 2 ∧ SplitIn l K'' Ω ∧ IsIrr (r.comp ((resG ℚ K Ω).range ⊓ (resG ℚ K'' Ω).range).subtype) ∧
         IsIrr (r.comp ((resG ℚ K' Ω).range ⊓ (resG ℚ K'' Ω).range).subtype) := by
   classical
-  haveI hAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI hAlg : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have hAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have hAlg : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hclos : ∀ (E : Type) [Field E] [Algebra ℚ E] [Algebra E Ω] [IsScalarTower ℚ E Ω], IsAlgClosure E Ω :=
     fun E _ _ _ _ => ⟨hAC, Algebra.IsAlgebraic.tower_top (K := ℚ) E⟩
   obtain ⟨Kf, hF, hN, hC, h2f, hcop, hsplit⟩ := quadFamSplit l (4 * n ^ 2 + 1)
@@ -202,17 +202,17 @@ theorem thirdSplit (K K' Ω : Type) [Field K] [NumberField K] [IsCMField K] [Fie
       solve_by_elim* (maxDepth := 2) only [*,
         @_root_.DivisionSemiring.to_moduleIsTorsionFree,
         @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-    letI : Algebra (Kf i) Ω := f.toRingHom.toAlgebra
+    let : Algebra (Kf i) Ω := f.toRingHom.toAlgebra
     exact ⟨inferInstance, IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)⟩
   choose algI towI using hemb
   have hsign : ∀ i, ∃ δ : G ℚ Ω →* (Qbar l)ˣ, δ ≠ 1 ∧ IsSign (Kf i) δ := by
     intro i
-    haveI := hclos (Kf i)
+    have := hclos (Kf i)
     obtain ⟨δ, -, h1, h2, -⟩ := UpperTheory.exists_quadratic_sign_character ℚ (Kf i) Ω l (h2f i)
     exact ⟨δ, h1, h2⟩
   choose δf hδne hδs using hsign
-  haveI := hclos K
-  haveI := hclos K'
+  have := hclos K
+  have := hclos K'
   obtain ⟨ε, -, hεne, hεs, -⟩ := UpperTheory.exists_quadratic_sign_character ℚ K Ω l hK
   obtain ⟨ε', -, hεne', hεs', -⟩ := UpperTheory.exists_quadratic_sign_character ℚ K' Ω l hK'
   have hinj : Function.Injective δf := by

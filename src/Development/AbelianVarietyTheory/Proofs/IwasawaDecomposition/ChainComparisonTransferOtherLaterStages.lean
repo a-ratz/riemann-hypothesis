@@ -113,7 +113,7 @@ theorem chT_tr : ∀ (B : Base) (C : Cols B) (a b : Late B C) (G : Type) [Group 
   have junk := t.junk
   have top := t.top
   have maps := And.intro (HEq.refl t.jE) (And.intro (HEq.refl t.jM) (HEq.refl t.jX))
-  letI : Algebra Ks b.D.what₂.LL := alg b iK
+  let : Algebra Ks b.D.what₂.LL := alg b iK
   refine ⟨{
     jE := t.jE
     jM := t.jM

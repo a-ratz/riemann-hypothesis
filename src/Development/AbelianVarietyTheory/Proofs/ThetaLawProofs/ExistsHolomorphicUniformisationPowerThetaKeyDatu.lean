@@ -268,7 +268,7 @@ theorem blockPr_blockIn (i i' : Fin j) (z : Fin g → ℂ) :
 
 theorem sum_blockIn_blockPr (z : Fin n → ℂ) : ∑ i, blockIn e i (blockPr e i z) = z := by
   funext q
-  simp only [Finset.sum_apply, blockIn_apply, blockPr_apply, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+  simp only [Finset.sum_apply, blockIn_apply, blockPr_apply, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     Prod.mk.eta, Equiv.apply_symm_apply]
 
 def blockLat (Λ : Submodule ℤ (Fin g → ℂ)) : Submodule ℤ (Fin n → ℂ) where
@@ -280,7 +280,7 @@ def blockLat (Λ : Submodule ℤ (Fin g → ℂ)) : Submodule ℤ (Fin n → ℂ
 theorem blockLat_discrete (Λ : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology Λ] : DiscreteTopology (blockLat e Λ) := by
   refine DiscreteTopology.of_continuous_injective (β := Fin j → Λ)
     (f := fun z i => ⟨blockPr e i z.1, z.2 i⟩)
-    (continuous_pi fun i => ((blockPr e i).continuous.comp continuous_subtype_val).subtype_mk _) fun z z' h => ?_
+    (continuous_pi fun i => ((blockPr e i).continuous.comp continuous_subtypeVal).subtype_mk _) fun z z' h => ?_
   refine Subtype.ext ?_
   rw [← sum_blockIn_blockPr e z.1, ← sum_blockIn_blockPr e z'.1]
   exact Finset.sum_congr rfl fun i _ => congrArg _ (congrArg Subtype.val (congrFun h i))
@@ -358,7 +358,7 @@ theorem exists_powUnif (hL : L.IsLB) {L' : LB G'.left} (hL' : L'.IsLB) (w : LB.I
     refine ⟨∑ i, blockIn e i (z i), pow_hom_ext p fun i => ?_⟩
 
     rw [hex, ← hz, map_sum]
-    simp only [blockPr_blockIn, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [blockPr_blockIn, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   · constructor
     · intro h i
       have := p.hom i

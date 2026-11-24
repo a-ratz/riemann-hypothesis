@@ -66,11 +66,11 @@ theorem eq_top_of_span_image {E R D M : Type} [CommRing E] [CommRing R] [AddComm
   obtain ⟨N', hN', hle⟩ := (eq_top_or_exists_le_coatom N).resolve_left hne
   obtain ⟨m, hmax, ⟨ψ⟩⟩ := isSimpleModule_iff_quot_maximal.1 (isSimpleModule_iff_isCoatom.2 hN')
   have hm' := hm m hmax
-  haveI : Nontrivial E := by
+  have : Nontrivial E := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact hmax.ne_top (Subsingleton.elim _ _)
-  haveI : Nontrivial R := by
+  have : Nontrivial R := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact hm' (Subsingleton.elim _ _)
@@ -268,31 +268,31 @@ theorem jD_map' {T T' : LocLat G Qp LL O} (f : LatHom T.L T'.L) (x : W.DD T) :
 
 include E in
 theorem finite_DD (T : LocLat G Qp LL O) : Module.Finite W.EE (W.DD T) := by
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
-  haveI := (W.DD_free T).1
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := (W.DD_free T).1
   rcases Nat.eq_zero_or_pos (Module.finrank O ↥T.L.T) with h | h
-  · haveI : Subsingleton ↥T.L.T := Module.finrank_eq_zero_iff_of_free O _ |>.1 h
-    haveI : Subsingleton (W.DD T) := (E.jD_inj T).subsingleton
+  · have : Subsingleton ↥T.L.T := Module.finrank_eq_zero_iff_of_free O _ |>.1 h
+    have : Subsingleton (W.DD T) := (E.jD_inj T).subsingleton
     infer_instance
   · rcases subsingleton_or_nontrivial W.EE with hE | hE
-    · haveI := Module.subsingleton W.EE (W.DD T)
+    · have := Module.subsingleton W.EE (W.DD T)
       infer_instance
     rw [← (W.DD_free T).2] at h
     exact Module.finite_of_finrank_pos h
 
 theorem ioE_injective : Function.Injective E.ioE := by
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := W.one.L.free
-  haveI : Module.Finite O ↥W.one.L.T := Module.Finite.iff_fg.2 W.one.L.fg
-  haveI := (W.DD_free W.one).1
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := W.one.L.free
+  have : Module.Finite O ↥W.one.L.T := Module.Finite.iff_fg.2 W.one.L.fg
+  have := (W.DD_free W.one).1
   rcases subsingleton_or_nontrivial W.EE with h | h
   · exact Function.injective_of_subsingleton _
   obtain ⟨e, he, hT⟩ := W.one_line
-  haveI : Nontrivial ↥W.one.L.T :=
+  have : Nontrivial ↥W.one.L.T :=
     ⟨⟨⟨e, hT ▸ Submodule.mem_span_singleton_self e⟩, 0, fun h => he (congrArg Subtype.val h)⟩⟩
-  haveI : Nontrivial (W.DD W.one) := by
+  have : Nontrivial (W.DD W.one) := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     have h1 := (W.DD_free W.one).2
@@ -310,10 +310,10 @@ theorem ioE_injective : Function.Injective E.ioE := by
 theorem eq_top_DD (hm : ∀ m : Ideal W.EE, m.IsMaximal → m.map E.ioE.toRingHom ≠ ⊤)
     (T : LocLat G Qp LL O) (N : Submodule W.EE (W.DD T))
     (hN : Submodule.span RW (E.jD T '' (N : Set (W.DD T))) = ⊤) : N = ⊤ := by
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := T.L.free
-  haveI := (W.DD_free T).1
-  haveI := finite_DD E T
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := T.L.free
+  have := (W.DD_free T).1
+  have := finite_DD E T
   refine eq_top_of_span_image E.ioE.toRingHom (E.jD T).toAddMonoidHom (E.jD_smul T) hm
     (fun _ => ?_) (E.jD_span T) N hN
   rw [(W.DD_free T).2, Module.finrank_baseChange]
@@ -345,7 +345,7 @@ theorem exact_of_tie (hm : ∀ m : Ideal W.EE, m.IsMaximal → m.map E.ioE.toRin
       exact ⟨⟨y, h5 y (hy ▸ x.2)⟩, Subtype.ext hy⟩
     · rintro ⟨y, rfl⟩
       exact Subtype.ext ((h4 _).2 ⟨y, rfl⟩)
-  haveI := Z.L.free
+  have := Z.L.free
   have hπR : Function.Surjective ((latMap π).baseChange RW) :=
     LinearMap.lTensor_surjective RW hπ
   have hexR : Function.Exact ((latMap ι).baseChange RW) ((latMap π).baseChange RW) :=
@@ -367,7 +367,7 @@ theorem exact_of_tie (hm : ∀ m : Ideal W.EE, m.IsMaximal → m.map E.ioE.toRin
     exact hexR.apply_apply_eq_zero _
   refine ⟨fun x y hxy => E.jD_inj T (hιR ?_), fun y => ⟨fun hy => ?_, ?_⟩, hsurj⟩
   · rw [← jD_map', ← jD_map', hxy]
-  · haveI := (W.DD_free Z).1
+  · have := (W.DD_free Z).1
     obtain ⟨s, hs⟩ := (W.map π).exists_rightInverse_of_surjective (LinearMap.range_eq_top.2 hsurj)
     have hs' : ∀ z, W.map π (s z) = z := fun z => LinearMap.congr_fun hs z
     have htop : LinearMap.range (W.map ι) ⊔ LinearMap.range s = ⊤ := by
@@ -396,9 +396,9 @@ theorem map_ne_top_of_tie [IsNoetherianRing O]
     (hO : ∀ c : O, IsUnit c ∨ ∃ k : ℕ, (PD.p : O) ∣ c ^ k)
     (hsep : ∀ x : RW, (∀ k : ℕ, (PD.p : RW) ^ k ∣ x) → x = 0)
     (m : Ideal W.EE) (hm : m.IsMaximal) : m.map E.ioE.toRingHom ≠ ⊤ := by
-  haveI := PD.finK₀
-  haveI : NeZero n := ⟨by rw [W.n_eq]; exact Module.finrank_pos.ne'⟩
-  haveI := W.EE_complete
+  have := PD.finK₀
+  have : NeZero n := ⟨by rw [W.n_eq]; exact Module.finrank_pos.ne'⟩
+  have := W.EE_complete
   refine map_maximal_ne_top n PD.p hO (algebraMap (LetA O n) W.EE) W.EE_π (fun x => ?_) _
     (ioE_injective E) hsep m hm
   simpa using W.EE_dense x 1
@@ -455,7 +455,7 @@ theorem sep_WCb (x : WCb l) (hx : ∀ k : ℕ, (l : WCb l) ^ k ∣ x) : x = 0 :=
 
 theorem sep_RW (LL : FinExt l) (x : RW LL) (hx : ∀ k : ℕ, (l : RW LL) ^ k ∣ x) : x = 0 := by
   classical
-  haveI := free_OL LL
+  have := free_OL LL
   let e := TensorProduct.equivFinsuppOfBasisLeft (N := WCb l)
     (Module.Free.chooseBasis ℤ_[l] ↥(OL LL))
   apply e.injective
@@ -479,9 +479,9 @@ theorem DD_exact :
     IsSESLat (Qp := S.Qp) ι π → Function.Injective (S.W.map ι) ∧
       Function.Exact (S.W.map ι) (S.W.map π) ∧ Function.Surjective (S.W.map π) := by
   intro D HW F _ l _ K s LL h S E T Yt Z ι π hses
-  haveI := finite_OL LL
-  haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
-  haveI : IsNoetherianRing S.O := this
+  have := finite_OL LL
+  have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+  have : IsNoetherianRing S.O := this
   have hp : S.PD.p = l := (D.loc l).PD_p K
   refine exact_of_tie E (map_ne_top_of_tie E ?_ ?_) T Yt Z ι π hses
   · rw [hp]

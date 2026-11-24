@@ -238,7 +238,7 @@ theorem coeffIn_smul {m : ℕ} {p : MvPolynomial (Fin (D + 2) × Fin (N + 1)) B}
   exact Submodule.smul_mem _ r (hp β)
 
 theorem coeffIn_X (u : Fin (D + 2) × Fin (N + 1)) : CoeffIn W 0 (X u : MvPolynomial _ B) := fun β => by
-  rw [pow_zero, coeff_X']
+  rw [pow_zero, coeff_X]
   split_ifs
   · exact Submodule.mem_one.2 ⟨1, map_one _⟩
   · exact zero_mem _
@@ -247,7 +247,7 @@ theorem coeffIn_lin (w : Fin (N + 1) → B) (hw : ∀ j, w j ∈ W) (i : Fin (D 
     CoeffIn W 1 (∑ j, X (i, j) * C (w j) : MvPolynomial (Fin (D + 2) × Fin (N + 1)) B) := fun β => by
   rw [coeff_sum, pow_one]
   refine Submodule.sum_mem _ fun j _ => ?_
-  rw [mul_comm, coeff_C_mul, coeff_X']
+  rw [mul_comm, coeff_C_mul, coeff_X]
   split_ifs
   · rw [mul_one]
     exact hw j
@@ -386,7 +386,7 @@ theorem w_eq_smul (hd : d.AxH 𝒜) (c : ι) (j : Fin (d.N + 1)) :
     d.w j c = ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c) • d.w (d.jc c) c := by
   have hex : ∃ a : Ω c, d.w j c = a • d.w (d.jc c) c := by
     have h1 := hd.finrank_one c d.wL
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨d.w (d.jc c) c, hd.w_mem _ _⟩ : 𝒜 c d.wL)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨d.w (d.jc c) c, hd.w_mem _ _⟩ : 𝒜 c d.wL)
       (fun h => hd.w_base c (congrArg Subtype.val h))).mp h1 ⟨d.w j c, hd.w_mem _ _⟩
     exact ⟨a, (congrArg Subtype.val ha).symm⟩
   unfold ratio
@@ -394,13 +394,13 @@ theorem w_eq_smul (hd : d.AxH 𝒜) (c : ι) (j : Fin (d.N + 1)) :
   exact hex.choose_spec
 
 theorem lineSection_pow_mem (hd : d.AxH 𝒜) (c : ι) (k : ℕ) : d.w (d.jc c) c ^ k ∈ 𝒜 c (k • d.wL) := by
-  haveI := hd.graded c
+  have := hd.graded c
   exact SetLike.pow_mem_graded k (hd.w_mem (d.jc c) c)
 
 theorem lineSection_pow_ne (hd : d.AxH 𝒜) (c : ι) (k : ℕ) : d.w (d.jc c) c ^ k ≠ 0 := by
   induction k with
   | zero =>
-    haveI : Nontrivial (A c) := nontrivial_of_ne _ _ (hd.w_base c)
+    have : Nontrivial (A c) := nontrivial_of_ne _ _ (hd.w_base c)
     rw [pow_zero]
     exact one_ne_zero
   | succ k ih =>
@@ -417,7 +417,7 @@ theorem norm_lineSection_pow (hd : d.AxH 𝒜) (c : ι) (P : Ω c →+* ℂ) (k 
 
 theorem map_evW_global (hd : d.AxH 𝒜) (c : ι) (Q : MvPolynomial (UXVar d.D d.N) (𝓞 K)) :
     MvPolynomial.map (Pi.evalRingHom A c) (evW (R := 𝓞 K) (D := d.D) d.w Q) = d.evc c (mapK Q) := by
-  haveI := hd.towerO c
+  have := hd.towerO c
   have key : (MvPolynomial.map (Pi.evalRingHom A c)).comp
       (evW (R := 𝓞 K) (D := d.D) d.w).toRingHom =
       (d.evc c).toRingHom.comp (MvPolynomial.map (algebraMap (𝓞 K) K)) := by
@@ -505,7 +505,7 @@ theorem up_cauchy (hd : d.AxH 𝒜) (hdel : 1 ≤ d.del) (c : ι) (F1 : MvPolyno
   have hgne : g c ≠ 0 := by rw [hgc]; exact hβ
   have hφ : φ ≠ 0 := by rintro h; apply hgne; rw [hgφ, h, zero_smul]
   have hgmem : g c ∈ 𝒜 c (n • d.wL) := by rw [hgφ]; exact Submodule.smul_mem _ φ (d.lineSection_pow_mem hd c n)
-  refine ⟨g, by convert coeff_evW_mem d.w Q hQxO β <;> first | rfl | exact Module.ext' _ _ (fun r m => funext fun i => by haveI := hd.towerO i; simp only [Algebra.smul_def, Pi.smul_apply, Pi.mul_apply]; rw [IsScalarTower.algebraMap_apply (𝓞 K) K (A i) r]; rfl), hgne, ?_⟩
+  refine ⟨g, by convert coeff_evW_mem d.w Q hQxO β <;> first | rfl | exact Module.ext' _ _ (fun r m => funext fun i => by have := hd.towerO i; simp only [Algebra.smul_def, Pi.smul_apply, Pi.mul_apply]; rw [IsScalarTower.algebraMap_apply (𝓞 K) K (A i) r]; rfl), hgne, ?_⟩
 
   set S : (K →+* ℂ) → ℝ := fun sg => ⨆ j, Real.log (d.supN sg d.wL (d.w j)) with hS
   have hcardpos : (0 : ℝ) < cardUX d.D d.N n n' := by
@@ -610,7 +610,7 @@ theorem up_cauchy (hd : d.AxH 𝒜) (hdel : 1 ≤ d.del) (c : ι) (F1 : MvPolyno
         n * (S sg + Real.log (d.N + 1 : ℕ)) := by
     intro sg
     obtain ⟨P0, hP0⟩ := exists_embedding_over (hd.fg c) sg
-    haveI : Nonempty (PT (Ω := Ω c) sg) := ⟨⟨P0, hP0⟩⟩
+    have : Nonempty (PT (Ω := Ω c) sg) := ⟨⟨P0, hP0⟩⟩
     have hsup : d.supNc c sg (n • d.wL) (g c) ≤ qnorm sg F1 n n' Q * Cst sg :=
       ciSup_le fun P => hbound sg P
     have hpos0 : 0 < d.nrm c (n • d.wL) (g c) P0 := hd.nrm_pos c P0 hgmem hgne

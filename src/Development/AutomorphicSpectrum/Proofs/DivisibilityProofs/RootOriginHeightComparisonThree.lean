@@ -97,7 +97,7 @@ theorem sum_single_block [DecidableEq K] (q : Σ k, J k) (n : ℕ) (k : K) :
     simp [Finsupp.single_apply]
   · have : ∀ i : J k, (Finsupp.single (⟨k₀, i₀⟩ : Σ k, J k) n) ⟨k, i⟩ = 0 := by
       intro i
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro e
       exact h (congrArg Sigma.fst e)
     simp [this, h]
@@ -118,7 +118,7 @@ theorem sum_mapDomain_block [DecidableEq K] {κ : K' → K} {u : (Σ k, ι k) �
     rw [Finsupp.mapDomain_single, sum_single_block, hu]
     simp only [sum_single_block]
     by_cases h : κ p.1 = k
-    · rw [if_pos h, Finset.sum_eq_single p.1]
+    · rw [ite_eq_left h, Finset.sum_eq_single p.1]
       · simp [h]
       · intro b _ hb
         split_ifs with h1 h2
@@ -126,7 +126,7 @@ theorem sum_mapDomain_block [DecidableEq K] {κ : K' → K} {u : (Σ k, ι k) �
         · rfl
         · rfl
       · simp
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       symm
       refine Finset.sum_eq_zero fun k' _ => ?_
       split_ifs with h1 h2
@@ -400,11 +400,11 @@ theorem sum_ite_pull {K₁ K : Type} [Fintype K₁] [DecidableEq K] {κ : K₁ �
     rw [pullDeg, hκ.extend_apply, Finset.sum_eq_single k₀]
     · simp
     · intro b _ hb
-      rw [if_neg fun e => hb (hκ e)]
+      rw [ite_eq_right fun e => hb (hκ e)]
     · simp
   · rw [pullDeg, Function.extend_apply' _ _ _ (by simpa using h)]
     refine Finset.sum_eq_zero fun k' _ => ?_
-    rw [if_neg fun e => h ⟨k', e⟩]
+    rw [ite_eq_right fun e => h ⟨k', e⟩]
 
 section Origin
 
@@ -517,7 +517,7 @@ theorem side_pt {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {
           Sys.phT (some (τ, p)) t (o₀.Re.π x') + (Real.log ((o₀.Re.ref (some (τ, p))).h fun q => z (vR q)) +
             ∑ k ∈ Finset.Iic p, Real.log ((R.x 1 (τ, k)).h fun q => z (vR q))) := by
   classical
-  haveI : CharZero M.Ω := j.charZero
+  have : CharZero M.Ω := j.charZero
   obtain ⟨F, hF, hFp⟩ := side o o₀ i hi hJ hJ₀
   have hyJ : y ∘ Cmp.joinVec v vR = fun p => j (Ht.joinOf M R i p) := by
     funext p
@@ -575,7 +575,7 @@ theorem root_isometric : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
 
   have hbij : Function.Bijective oR.g := by
     refine ⟨oR.g.injective, ?_⟩
-    letI := oR.g.toAlgebra
+    let := oR.g.toAlgebra
     have h1 : Module.finrank Fx.Ωf Rf.Ω = 1 := oR.g_deg.trans hdeg
     obtain ⟨u, hu0, hu⟩ := finrank_eq_one_iff'.1 h1
     intro w
@@ -704,7 +704,7 @@ theorem root_isometric : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [map_mul] at this
     exact (mul_ne_zero hF₀ hF₁) this
   have hzc := _root_.GlobalTheory.CompanionTheory.Ar.Flat.nonvanishing_dense K J (mCoordIdeal y) _ (F₀ * F₁) hA hFne hz
-  haveI hnb := mem_closure_iff_nhdsWithin_neBot.1 hzc
+  have hnb := mem_closure_iff_nhdsWithin_neBot.1 hzc
   have cont : ∀ {K₁ : Type} [Fintype K₁] {ι : K₁ → Type} [∀ k, Fintype (ι k)] (A : HermLine ι) (_ : IsSmoothHerm A)
       (u : (Σ k, ι k) → Σ k, J k), (∀ k, ∃ a, z (u ⟨k, a⟩) ≠ 0) →
       ContinuousAt (fun w : (Σ k, J k) → ℂ => A.h fun p => w (u p)) z := by

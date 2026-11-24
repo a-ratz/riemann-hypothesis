@@ -106,7 +106,7 @@ theorem valuation_val_eq {R : Type} [CommRing R] [IsDomain R] {F : Type} [Field 
         trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of (FractionRing R))).inv.hom
           (GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.genVal t j h).val) := by
     refine (gm_val (𝟙 (Spec (CommRingCat.of (FractionRing R)))) (closedPoint (FractionRing R)) _ (h trivial) (t.s j)).trans ?_
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.genVal, Units.coe_map, MonoidHom.coe_coe, res, RingHom.toMonoidHom_eq_coe]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.genVal, Units.coe_map, MonoidHom.coe_ofClass, res, RingHom.toMonoidHom_eq_coe]
     rw [Iso.hom_inv_id_apply]
     exact (TopCat.Presheaf.germ_res_apply (Spec (CommRingCat.of (FractionRing R))).presheaf (homOfLE h)
       (closedPoint (FractionRing R)) trivial _).symm

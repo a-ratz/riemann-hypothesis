@@ -49,14 +49,14 @@ private theorem exists_proper_nontrivial_normal_of_solvable_not_prime_card (G : 
   have hlt : 1 < Nat.card G := by
     have := Nat.card_pos (α := G)
     omega
-  haveI : Nontrivial G := Finite.one_lt_card_iff_nontrivial.1 hlt
-  haveI : IsSimpleGroup G :=
+  have : Nontrivial G := Finite.one_lt_card_iff_nontrivial.1 hlt
+  have : IsSimpleGroup G :=
     { eq_bot_or_eq_top_of_normal := fun N hN => by
         by_cases h : N = ⊥
         · exact Or.inl h
         · exact Or.inr (hne N hN h) }
   have hc := (IsSimpleGroup.comm_iff_isSolvable (G := G)).2 hs
-  letI : CommGroup G := { ‹Group G› with mul_comm := hc }
+  let : CommGroup G := { ‹Group G› with mul_comm := hc }
   exact hp (CommGroup.is_simple_iff_prime_card.1 ‹IsSimpleGroup G›)
 
 private theorem rc_of_intermediateField_stable_under_complexConj {F M : Type} [Field F] [NumberField F] [Field M] [NumberField M] [Algebra F M]
@@ -64,7 +64,7 @@ private theorem rc_of_intermediateField_stable_under_complexConj {F M : Type} [F
     (hK : ∀ x ∈ K, IsCMField.complexConj M x ∈ K) : RC K := by
   have hext : ∀ φ : K →+* ℂ, ∃ Φ : M →+* ℂ, ∀ x : K, Φ x = φ x := by
     intro φ
-    letI : Algebra K ℂ := φ.toAlgebra
+    let : Algebra K ℂ := φ.toAlgebra
     refine ⟨(IsAlgClosed.lift : M →ₐ[K] ℂ).toRingHom, fun x => ?_⟩
     exact (IsAlgClosed.lift : M →ₐ[K] ℂ).commutes x
   let τ : K ≃+* K :=
@@ -94,17 +94,17 @@ private theorem rc_of_intermediateField_stable_under_complexConj {F M : Type} [F
     rw [this]
     rfl
   · right
-    haveI : IsTotallyComplex K :=
+    have : IsTotallyComplex K :=
       ⟨fun w => InfinitePlace.isComplex_iff.2 ((ComplexEmbedding.isConj_ne_one_iff (hconj _)).1 h1)⟩
     obtain ⟨φ0⟩ : Nonempty (K →+* ℂ) := inferInstance
     have hord : Nat.card (Subgroup.zpowers σ) = 2 := by
       rw [Nat.card_zpowers]
       exact ComplexEmbedding.orderOf_isConj_two_of_ne_one (hconj φ0) h1
-    haveI : Finite (Subgroup.zpowers σ) := Nat.finite_of_card_ne_zero (by rw [hord]; norm_num)
-    haveI : Fintype (Subgroup.zpowers σ) := Fintype.ofFinite _
+    have : Finite (Subgroup.zpowers σ) := Nat.finite_of_card_ne_zero (by rw [hord]; norm_num)
+    have : Fintype (Subgroup.zpowers σ) := Fintype.ofFinite _
     let L : IntermediateField ℚ K := FixedPoints.intermediateField (Subgroup.zpowers σ)
     have hfix : ∀ x : L, σ (x : K) = x := fun x => x.2 ⟨σ, Subgroup.mem_zpowers σ⟩
-    haveI : IsTotallyReal L := ⟨fun w => by
+    have : IsTotallyReal L := ⟨fun w => by
       obtain ⟨W, rfl⟩ := w.comap_surjective (K := K)
       dsimp only
       rw [← InfinitePlace.mk_embedding W, InfinitePlace.comap_mk, InfinitePlace.isReal_mk_iff,
@@ -115,7 +115,7 @@ private theorem rc_of_intermediateField_stable_under_complexConj {F M : Type} [F
       simp only [RingHom.comp_apply] at h ⊢
       rw [show algebraMap L K x = (x : K) from rfl, h]
       exact congrArg W.embedding (hfix x)⟩
-    haveI : Algebra.IsQuadraticExtension L K :=
+    have : Algebra.IsQuadraticExtension L K :=
       ⟨by
         rw [Nat.card_eq_fintype_card] at hord
         rw [← hord]

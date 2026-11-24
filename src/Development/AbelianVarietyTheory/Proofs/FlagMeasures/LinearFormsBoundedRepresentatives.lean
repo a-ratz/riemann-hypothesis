@@ -106,10 +106,10 @@ theorem exists_retraction {E : Type} [Field E] [NumberField E] {V : Type} [AddCo
     have hx : x ∈ N :=
       hsat a (nonZeroDivisors.ne_zero a.2) x ((Submodule.Quotient.mk_eq_zero N).1 ha2)
     exact (Submodule.Quotient.mk_eq_zero N).2 hx
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
-  haveI : Module.Flat (𝓞 E) (L ⧸ N) := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htor
-  haveI : Module.FinitePresentation (𝓞 E) (L ⧸ N) := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 E) (L ⧸ N) := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
+  have : Module.Flat (𝓞 E) (L ⧸ N) := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htor
+  have : Module.FinitePresentation (𝓞 E) (L ⧸ N) := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 E) (L ⧸ N) := Module.Flat.projective_of_finitePresentation
   obtain ⟨p, hp1, hp2⟩ := exists_retraction_of_projective N
   refine ⟨LinearMap.codRestrict M0 (L.subtype ∘ₗ p) (fun x => hp1 x), fun x => ?_⟩
   apply Subtype.ext
@@ -144,7 +144,7 @@ theorem exists_retraction (M0 L : Submodule (𝓞 E) V) (hL : L.FG) (h : IsPrimi
 
 theorem exists_extend_fun (L : Submodule (𝓞 E) V) (hL : Submodule.span E (L : Set V) = ⊤)
     (ψ : L →ₗ[𝓞 E] 𝓞 E) : ∃ φ : V →ₗ[E] E, ∀ x : L, φ x = (ψ x : E) := by
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 E)) L.subtype := by
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 E)) L.subtype := by
     refine ⟨?_, ?_, ?_⟩
     · intro a
       rw [Module.End.isUnit_iff]
@@ -225,9 +225,9 @@ theorem exists_reps (S : HSpace E) (M0 L : Submodule (𝓞 E) S.V) (hL : Submodu
       reps.card ≤ Nat.card (dualInH S.hT L ⧸ L.comap (dualInH S.hT L).subtype) ∧
       ∀ ψ : M0 →ₗ[𝓞 E] 𝓞 E, ∃ ψ₀ ∈ reps, ∃ v ∈ L, ∀ x : M0, ((ψ x - ψ₀ x : 𝓞 E) : E) = S.hT v x := by
   choose w hw using exists_dual_vec S M0 L hL h
-  haveI : Finite (dualInH S.hT L ⧸ L.comap (dualInH S.hT L).subtype) :=
+  have : Finite (dualInH S.hT L ⧸ L.comap (dualInH S.hT L).subtype) :=
     Nat.finite_of_card_ne_zero (by omega)
-  letI := Fintype.ofFinite (dualInH S.hT L ⧸ L.comap (dualInH S.hT L).subtype)
+  let := Fintype.ofFinite (dualInH S.hT L ⧸ L.comap (dualInH S.hT L).subtype)
   let g : (M0 →ₗ[𝓞 E] 𝓞 E) → (dualInH S.hT L ⧸ L.comap (dualInH S.hT L).subtype) :=
     fun ψ => Submodule.Quotient.mk (w ψ)
   refine ⟨Finset.univ.image (Function.invFun g), ?_, fun ψ => ?_⟩

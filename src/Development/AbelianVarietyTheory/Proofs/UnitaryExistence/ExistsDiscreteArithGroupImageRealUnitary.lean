@@ -93,13 +93,13 @@ def smallSet : Set (RealGrp X) :=
 
 theorem isOpen_smallSet : IsOpen (smallSet X) := by
   unfold smallSet
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun τ => isOpen_iInter_of_finite fun a => isOpen_iInter_of_finite fun b => ?_
   refine isOpen_lt (Continuous.norm ?_) continuous_const
   have h : Continuous fun s : RealGrp X =>
       mat (baseFr X) τ * ((s τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * (mat (baseFr X) τ)⁻¹ :=
     (continuous_const.matrix_mul (Units.continuous_val.comp
-      (continuous_subtype_val.comp (continuous_apply τ)))).matrix_mul continuous_const
+      (continuous_subtypeVal.comp (continuous_apply τ)))).matrix_mul continuous_const
   exact h.matrix_elem a b
 
 theorem one_mem_smallSet : (1 : RealGrp X) ∈ smallSet X := by
@@ -120,7 +120,7 @@ theorem finite_image_inter : ((image X : Set (RealGrp X)) ∩ smallSet X).Finite
 theorem exists_discrete_image : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r), ∃ Λ : Subgroup (RealGrp X), (∀ s, s ∈ Λ ↔ ∃ γ ∈ X.Γ, lact γ (baseFr X) = frameOf X s) ∧ ∃ W ∈ 𝓝 (1 : RealGrp X), ∀ w ∈ Λ, w ∈ W → w = 1 := by
   intro E _ _ _ r X
   refine ⟨image X, fun _ => Iff.rfl, smallSet X \ (((image X : Set (RealGrp X)) ∩ smallSet X) \ {1}), ?_, ?_⟩
-  · exact ((isOpen_smallSet X).sdiff ((finite_image_inter X).subset Set.diff_subset).isClosed).mem_nhds
+  · exact ((isOpen_smallSet X).sdiff ((finite_image_inter X).subset Set.sdiff_subset).isClosed).mem_nhds
       ⟨one_mem_smallSet X, fun h => h.2 rfl⟩
   · intro w hw hW
     by_contra hne

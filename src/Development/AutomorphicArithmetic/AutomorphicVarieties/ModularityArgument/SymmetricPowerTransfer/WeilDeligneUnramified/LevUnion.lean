@@ -161,7 +161,7 @@ private theorem isCong {m : ℕ} (hm : m ≠ 0) : IsCong m (cong (L := L) (n := 
 private theorem isLevel {m : ℕ} (hm : m ≠ 0) : IsLevel (cong (L := L) (n := n) m) := by
   refine ⟨fun x hx => ((isCong hm x).1 hx).1, ?_⟩
   have hc : Continuous fun x : finU (E := L) (n := n) => fp (x : UA L n) :=
-    GlobalTheory.CuspRep.continuous_mapFin.comp (continuous_subtype_val.comp continuous_subtype_val)
+    GlobalTheory.CuspRep.continuous_mapFin.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   convert (UpperTheory.V.Af.isOpen_KLev (F := L) (n := n) (M := m) (Nat.one_le_iff_ne_zero.2 hm)).preimage hc using 1
   ext x
   exact ⟨fun h => h.2, fun h => ⟨x.2, h⟩⟩
@@ -254,7 +254,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 private theorem mem_J_of_cong (V : Lev k) {n : ℕ} (g : GL (Fin n) k)
     (h : ∀ i j, valuation k ((g.val - 1) i j) ≤ uniformizer k ^ (V.c + 1)) : g ∈ V.J n := by
-  have hu : uniformizer k ^ (V.c + 1) < 1 := pow_lt_one₀ zero_le' uniformizer_lt_one (Nat.succ_ne_zero _)
+  have hu : uniformizer k ^ (V.c + 1) < 1 := pow_lt_one₀ zero_le uniformizer_lt_one (Nat.succ_ne_zero _)
   have e : ∀ i, valuation k (g.val i i) = 1 := fun i => by
     have h1 : valuation k (g.val i i - 1) < 1 := by
       have := h i i
@@ -321,7 +321,7 @@ private theorem val_norm {F : Type} [Field F] [NumberField F] (v : Pl F) :
     change v.valuation F (algebraMap (𝓞 F) F ((Ideal.absNorm v.asIdeal : ℕ) : 𝓞 F)) < 1 at h
     rw [map_natCast] at h
     exact h
-  haveI : (Valued.v : Valuation (Kv v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kv v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have he : (valuation (Kv v)).IsEquiv (Valued.v : Valuation (Kv v) (WithZero (Multiplicative ℤ))) := isEquiv _ _
   simp only [← not_le] at h2 ⊢
   exact fun h3 => h2 (he.one_le_iff_one_le.1 h3)
@@ -850,22 +850,22 @@ private theorem trim {F : Type} [Field F] [NumberField F] {Δ : F} (D : Dat Δ) 
     intro v hv h
     apply hv
     show (if P v then 1 else y.1 v) ∈ KD ((cv v) Δ) (Ov v)
-    rw [if_pos h]
+    rw [ite_eq_left h]
     exact one_mem _
   · show ∀ᶠ v in Filter.cofinite, (if P v then y.1 v else 1) ∈ KD ((cv v) Δ) (Ov v)
     refine Filter.Eventually.of_forall fun v => ?_
     by_cases h : P v
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       exact h.1
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       exact one_mem _
   · simp only [Dat.U2, RPG.box, Subgroup.mem_iInf, Subgroup.mem_comap]
     intro v
     show (if P v then y.1 v else 1) ∈ D.J2v v
     by_cases h : P v
-    · rw [if_pos h, Dat.J2v, if_neg h.2]
+    · rw [ite_eq_left h, Dat.J2v, ite_eq_right h.2]
       exact h.1
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       exact one_mem _
   · refine Subtype.ext (funext fun v => ?_)
     show (if P v then 1 else y.1 v) * (if P v then y.1 v else 1) = y.1 v
@@ -879,7 +879,7 @@ private theorem trim {F : Type} [Field F] [NumberField F] {Δ : F} (D : Dat Δ) 
     intro v hv h
     apply hv
     show (if P v then 1 else y.1 v) = 1
-    rw [if_pos h]
+    rw [ite_eq_left h]
 
 theorem UpperTheory.V.Z.Sym.So.repsEx :
     UpperTheory.V.Z.Sym.So.RepsEx := by
@@ -891,13 +891,13 @@ theorem UpperTheory.V.Z.Sym.So.repsEx :
   · intro y' hy'
     obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hy'
     obtain ⟨w, -, -, ht, hfin⟩ := (trim A.dat y (hY y hy)).choose_spec
-    simp only [f, dif_pos (hY y hy)]
+    simp only [f, dite_eq_left (hY y hy)]
     exact ⟨ht, hfin⟩
   · intro g
     obtain ⟨γ, s, hs, y, hy, u, hu, rfl⟩ := hdec g
     obtain ⟨w, hw, hty, -, -⟩ := (trim A.dat y (hY y hy)).choose_spec
     refine ⟨γ, s, hs, f y, Finset.mem_image_of_mem f hy, w * u, mul_mem hw hu, ?_⟩
-    simp only [f, dif_pos (hY y hy)]
+    simp only [f, dite_eq_left (hY y hy)]
     conv_lhs => rw [← hty]
     simp only [mul_assoc]
 
@@ -1071,13 +1071,13 @@ private theorem exSec {W P : Type} {X : P → Type} (f : W → P) (S : Set W) (i
     obtain rfl := inj hw' hw he
     rfl
   have hex : ∃ w', ∃ hw' : w' ∈ S, f w' = f w := ⟨w, hw, rfl⟩
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   exact key _ _ _
 
 variable {L : Type} [Field L] [NumberField L] [IsCMField L]
 
 private theorem exOver (v : Pl (Lp L)) : ∃ w : Plc L, un w = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨P, hPm, hP⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 L) v.asIdeal
   have hne : P ≠ ⊥ := fun h => v.ne_bot (by
     rw [hP.over, h]
@@ -1355,7 +1355,7 @@ private theorem core (hB : B.Ok) (T : Spl B) (S : Finset (Plc L)) (V : ∀ w : P
     (∃ φ : UA L 3 → Wt.VG (InfinitePlace L) j, φ ≠ 0 ∧ IsAF (Wt.repG _ j) (lev (Kall L 3) S V) φ ∧
       ∀ w ∈ S, EigT φ w (V w) ![a w, 1, (a w)⁻¹]) ∨ ∃ φ' ∈ BK.Forms, φ' ≠ 0 ∧ A.EigK φ' (b ^ 2) := by
   classical
-  haveI : ∀ (K : Type) [Fintype K] (d : ℕ) (n : K → ℕ), FiniteDimensional ℂ (Wt.MH d n) := Wt.finMH
+  have : ∀ (K : Type) [Fintype K] (d : ℕ) (n : K → ℕ), FiniteDimensional ℂ (Wt.MH d n) := Wt.finMH
   have hD := (datOk _ _ A hA).1
   refine (inS L B hB T S V A hA f j e a b hb φ h0 hφ E).elim fun y Hy => ?_
   refine (bG A.dat hD (Wt.cG (em B) j) (Wt.thG _ j) (Wt.ch (em B) j) (Wt.cG_int _ hj) (Wt.cG_tr _ hj)).elim fun BG h =>
@@ -1416,7 +1416,7 @@ theorem UpperTheory.V.Z.Sym.W.specOutS : UpperTheory.V.Z.Sym.W.SpecOutS := by
   have hPS : Places ((S₀ ∪ S₁ : Finset (Plc L)) : Set (Plc L)) := by rwa [Finset.coe_union]
   generalize S₀ ∪ S₁ = S at hS hPS
   have hV : ∃ V : ∀ w : Plc L, Lev (Kw w), (∀ w ∈ S₀, V w = deep c w) ∧ ∀ w ∈ S₁, V w = iw w :=
-    ⟨fun w => if w ∈ S₁ then iw w else deep c w, fun w hw => if_neg (Finset.disjoint_left.1 hd hw), fun w hw => if_pos hw⟩
+    ⟨fun w => if w ∈ S₁ then iw w else deep c w, fun w hw => ite_eq_right (Finset.disjoint_left.1 hd hw), fun w hw => ite_eq_left hw⟩
   refine hV.elim fun V v => ?_
   have hF := fitEx L B hB T S V hPS fun w hw => (hT w hw).imp fun w' h => ⟨(hS w').2 (.inl h.1), h.2⟩
   refine hF.1.elim fun A hA => (hF.2 a).elim fun b hb => ?_

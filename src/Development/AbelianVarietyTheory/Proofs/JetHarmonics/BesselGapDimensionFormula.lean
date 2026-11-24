@@ -255,7 +255,7 @@ private theorem GlobalTheory.BesselNorm.InnerIntegralSquares.double_integral : H
   have e4 : Formalism.QuantumDeterminants.psi k r z Formalism.QuantumDeterminants.cStd p2 * star (Formalism.QuantumDeterminants.psi k r z Formalism.QuantumDeterminants.cStd p2) = 1 := by
     rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq, hψ1]; simp
   rw [e1, e2, e3]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, inner_smul_left, inner_smul_right,
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, inner_smul_left, inner_smul_right,
     hiso, map_mul, starRingEnd_apply, star_mul', star_star]
   linear_combination (⟪v, R.σ (p1 * p2) w⟫_ℂ * star ⟪v, R.σ (q1 * q2 * (p1 * p2)) w⟫_ℂ *
     (Formalism.QuantumDeterminants.psi k r z Formalism.QuantumDeterminants.cStd q2 * ⟪π q1⁻¹ ξ, ξ⟫_ℂ)) * e4
@@ -585,7 +585,7 @@ theorem norm_integral (hy : Hyps) (k r : ℕ) (ε : Fin (2 * r + k + 1) → Bool
       rw [hF, Set.indicator_of_mem hgood, kern, hmul _ ht _ hx, sigma_inner hR.2 ht]
     rw [integral_congr_ae e4, integral_mul_const, hSd, ← inner_conj_symm v, ← sigma_inner hR.2 ht,
       inner_self_eq_norm_sq_to_K]
-    simp only [beInt, ContinuousLinearMap.smul_apply, inner_smul_left, map_mul, RCLike.star_def,
+    simp only [beInt, smul_apply, inner_smul_left, map_mul, RCLike.star_def,
       Complex.conj_conj]
     push_cast
     simp only [Complex.coe_algebraMap]
@@ -633,7 +633,7 @@ theorem norm_identity : Hyps → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) → B
       (Filter.Eventually.of_forall fun x => by positivity)]
     unfold PI.BesselPeriodGGP.l2SG
     refine lintegral_congr fun x => ?_
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rfl
 
 end GlobalTheory.BesselNorm

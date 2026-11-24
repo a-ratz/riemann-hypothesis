@@ -118,7 +118,7 @@ theorem exists_analytic_param_of_primitives_on_box : ∀ {P : Type} [NormedAddCo
   have hFeq : ∀ k, ∀ p ∈ W k, p ∈ Z ×ˢ C → F p = G k p - G' k p := by
     intro k p hk hp
     have h : ∃ k, p ∈ W k := ⟨k, hk⟩
-    simp only [F, dif_pos h]
+    simp only [F, dite_eq_left h]
     exact hov _ _ p h.choose_spec hk hp
   have hFloc : ∀ k, ∀ p ∈ W k, p ∈ Z ×ˢ C → (fun q => G k q - G' k q) =ᶠ[nhds p] F := by
     intro k p hk hp
@@ -182,7 +182,7 @@ theorem _root_.GlobalTheory.exists_merge_fibre_primitives : ∀ {P : Type} [Norm
       fun k l p hk hl hp => hG'c k l p hk hl (hsubC' hp)⟩
   classical
   have hCeq : ∀ k, ∀ q ∈ W k ∩ Z ×ˢ C,
-      (if q.2 ∈ C then G k q else G' k q + h q.1) = G k q := fun k q hq => if_pos hq.2.2
+      (if q.2 ∈ C then G k q else G' k q + h q.1) = G k q := fun k q hq => ite_eq_left hq.2.2
   have hC'eq : ∀ k, ∀ q ∈ W k ∩ Z ×ˢ C',
       (if q.2 ∈ C then G k q else G' k q + h q.1) = G' k q + h q.1 := by
     intro k q hq
@@ -217,11 +217,11 @@ theorem _root_.GlobalTheory.exists_merge_fibre_primitives : ∀ {P : Type} [Norm
     · rw [(evC k p ⟨hpk, h1⟩).fderiv_eq]
       exact hGd k a p hpk h1
     · rw [(evC' k p ⟨hpk, h2⟩).fderiv_eq, (hfd k p ⟨hpk, h2⟩).fderiv,
-        ContinuousLinearMap.add_apply, hG'd k a p hpk h2]
+        add_apply, hG'd k a p hpk h2]
       simp
   · dsimp only
     rcases memcase p hp with h1 | h2
-    · rw [if_pos h1.2, if_pos h1.2]
+    · rw [ite_eq_left h1.2, ite_eq_left h1.2]
       exact hGc k l p hk hl h1
     · rw [hC'eq k p ⟨hk, h2⟩, hC'eq l p ⟨hl, h2⟩, add_sub_add_right_eq_sub]
       exact hG'c k l p hk hl h2
@@ -440,7 +440,7 @@ private theorem cech_shift_lemma_2 {P : Type} [NormedAddCommGroup P] [NormedSpac
     have h3 := hdiff j k a p (hSj hpS) hpk
     simp only
     rw [show (fun q => F q - c j k q) = F - c j k from rfl, fderiv_sub h1 h2]
-    simp only [ContinuousLinearMap.sub_apply, hFd a p hpS]
+    simp only [sub_apply, hFd a p hpS]
     linear_combination h3
   · have := hcoc j k l p (hSj hpS) hpk hpl
     simp only

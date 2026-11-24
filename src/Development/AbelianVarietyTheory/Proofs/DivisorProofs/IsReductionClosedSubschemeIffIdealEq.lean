@@ -61,7 +61,7 @@ theorem baseIdeal_comp_eq_comap (R : Type) [CommRing R] (J : Ideal R) {W T : Sch
     (IsPullback.of_hasPullback f m)
   obtain ⟨-, h1k, -⟩ := _root_.GlobalTheory.FormalAlg.baseChange_quotient R J T _ (i ≫ f) (pullback.fst (i ≫ f) m) (pullback.snd (i ≫ f) m)
     (IsPullback.of_hasPullback (i ≫ f) m)
-  haveI := h0c
+  have := h0c
   rw [← h1k, ← h0k, ← Scheme.IdealSheafData.ker_fst_of_isClosedImmersion,
     ← pullbackRightPullbackFstIso_hom_fst f m i, Scheme.Hom.ker_comp_of_isIso]
 
@@ -74,8 +74,8 @@ theorem map_baseIdeal_comp (R : Type) [CommRing R] (J : Ideal R) {W T : Scheme.{
 
 theorem reduces_iff_ker_eq : ∀ (R : Type) [CommRing R] (J : Ideal R) (W T Y : Scheme.{0}) (f : W ⟶ Spec (CommRingCat.of R)) (i : T ⟶ W) (j : Y ⟶ W) (q : Y ⟶ Spec (CommRingCat.of (R ⧸ J))), IsClosedImmersion i → IsClosedImmersion j → j ≫ f = q ≫ (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))) → ((∃ b : Y ⟶ T, b ≫ i = j ∧ IsPullback b q (i ≫ f) (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J)))) ↔ i.ker ⊔ baseIdeal f J = j.ker) := by
   intro R _ J W T Y f i j q hi hj hq
-  haveI := hi
-  haveI := hj
+  have := hi
+  have := hj
   constructor
   · rintro ⟨b, hb, hpb⟩
     obtain ⟨-, hbk, -⟩ := _root_.GlobalTheory.FormalAlg.baseChange_quotient R J T Y (i ≫ f) b q hpb
@@ -84,13 +84,13 @@ theorem reduces_iff_ker_eq : ∀ (R : Type) [CommRing R] (J : Ideal R) (W T Y : 
     set m := Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))
     obtain ⟨h1c, h1k, -⟩ := _root_.GlobalTheory.FormalAlg.baseChange_quotient R J T _ (i ≫ f) (pullback.fst (i ≫ f) m)
       (pullback.snd (i ≫ f) m) (IsPullback.of_hasPullback (i ≫ f) m)
-    haveI := h1c
+    have := h1c
     have hker : (pullback.fst (i ≫ f) m ≫ i).ker = j.ker := by
       rw [Scheme.Hom.ker_comp, h1k, map_baseIdeal_comp R J f i hi, hk]
     let e := IsClosedImmersion.lift (pullback.fst (i ≫ f) m ≫ i) j hker.le
     have he : e ≫ pullback.fst (i ≫ f) m ≫ i = j := IsClosedImmersion.lift_fac _ _ _
-    haveI : IsIso e := IsClosedImmersion.isIso_of_ker_eq j _ e he hker.symm
-    haveI : IsClosedImmersion m := IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
+    have : IsIso e := IsClosedImmersion.isIso_of_ker_eq j _ e he hker.symm
+    have : IsClosedImmersion m := IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
     have hmono : Mono m := inferInstance
     have hqe : e ≫ pullback.snd (i ≫ f) m = q := by
       rw [← cancel_mono m, ← hq, Category.assoc, ← pullback.condition, ← he]

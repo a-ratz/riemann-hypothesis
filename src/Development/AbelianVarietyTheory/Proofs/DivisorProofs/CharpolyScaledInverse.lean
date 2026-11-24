@@ -84,7 +84,7 @@ theorem charpoly_smul_inv_of_charpoly_eq_prod (n : ℕ) (M : GL (Fin n) ℂ) (t 
   refine Set.Infinite.mono (s := ({0} : Set ℂ)ᶜ) ?_ (Set.finite_singleton _).infinite_compl
   intro x hx
   have hx0 : x ≠ 0 := hx
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [Matrix.eval_charpoly, Polynomial.eval_multiset_prod, Multiset.map_map]
   apply mul_left_cancel₀ hne
   have key : (-A) * (Matrix.scalar (Fin n) x - t • B)

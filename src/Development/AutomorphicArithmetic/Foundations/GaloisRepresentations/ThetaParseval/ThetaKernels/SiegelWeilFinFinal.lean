@@ -359,11 +359,11 @@ def padZeroAlt (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) : Matrix (Fin d.n) (Fi
   fun i k => if h : (∃ a, L.em a = i) ∧ ∃ c, L.em c = k then β h.1.choose h.2.choose else 0
 theorem pad_zero_embedding (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) (a c : Fin L.n) : _root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt L β (L.em a) (L.em c) = β a c := by
   have h : (∃ a', L.em a' = L.em a) ∧ ∃ c', L.em c' = L.em c := ⟨⟨a, rfl⟩, ⟨c, rfl⟩⟩
-  simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dif_pos h]
+  simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dite_eq_left h]
   rw [L.inj h.1.choose_spec, L.inj h.2.choose_spec]
 theorem pad_zero_outside (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) (i k : Fin d.n)
     (h : ¬ ((∃ a, L.em a = i) ∧ ∃ c, L.em c = k)) : _root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt L β i k = 0 := by
-  simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dif_neg h]
+  simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dite_eq_right h]
 theorem pad_zero_cases (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) (P : AE F E → AE F E → Prop) (h0 : P 0 0)
     (h1 : ∀ a c, P (β a c) (β c a)) (i k : Fin d.n) : P (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt L β i k) (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt L β k i) := by
   by_cases h : (∃ a, L.em a = i) ∧ ∃ c, L.em c = k
@@ -413,7 +413,7 @@ theorem continuous_padN_k : Continuous (_root_.PositivityTheory.SiegelWeilFormul
   by_cases h : (∃ a, L.em a = i) ∧ ∃ c, L.em c = k
   · obtain ⟨⟨a, rfl⟩, ⟨c, rfl⟩⟩ := h
     simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.pad_zero_embedding]
-    exact (continuous_apply c).comp ((continuous_apply a).comp continuous_subtype_val)
+    exact (continuous_apply c).comp ((continuous_apply a).comp continuous_subtypeVal)
   · simp only [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.pad_zero_outside L _ i k h]
     exact continuous_const
 theorem prj_nF_k {β : nA σ d.Y d.b} (h : β ∈ nF σ d.Y d.b) : _root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β ∈ nF σ L.Y L.b := by
@@ -428,10 +428,10 @@ theorem padN_nF_k {β : nA σ L.Y L.b} (h : β ∈ nF σ L.Y L.b) : _root_.Posit
   ext i k
   show _root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt L β.1 i k = _
   by_cases h : (∃ a, L.em a = i) ∧ ∃ c, L.em c = k
-  · rw [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dif_pos h, hT]
-    simp only [incM, Matrix.map_apply, Matrix.of_apply, dif_pos h]
-  · rw [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dif_neg h]
-    simp only [incM, Matrix.map_apply, Matrix.of_apply, dif_neg h, map_zero]
+  · rw [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dite_eq_left h, hT]
+    simp only [incM, Matrix.map_apply, Matrix.of_apply, dite_eq_left h]
+  · rw [_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padZeroAlt, dite_eq_right h]
+    simp only [incM, Matrix.map_apply, Matrix.of_apply, dite_eq_right h, map_zero]
 theorem fiber_k {nb : nA σ d.Y d.b → d.G} {lam : Measure (nA σ d.Y d.b)} {𝓖 : Set (nA σ d.Y d.b)}
     (hc : CoefData (σ := σ) (Y := d.Y) d.b nb lam 𝓖) {nb' : nA σ L.Y L.b → G2 σ L.Y} {lam' : Measure (nA σ L.Y L.b)}
     {𝓖' : Set (nA σ L.Y L.b)} (hc' : CoefData (σ := σ) (Y := L.Y) L.b nb' lam' 𝓖')
@@ -517,7 +517,7 @@ theorem psiT_cont_per_k (T' : nF σ L.Y L.b) :
   · have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
     have htr : Continuous (Algebra.trace (AF F) (AE F E)) :=
       IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF F) (AE F E))
-    exact hstd.1.comp (htr.comp ((continuous_const.matrix_mul continuous_subtype_val).matrix_trace)).neg
+    exact hstd.1.comp (htr.comp ((continuous_const.matrix_mul continuous_subtypeVal).matrix_trace)).neg
   · have h1 := kunf.psi_rat hstd T' ⟨β₀, h₀⟩
     rw [AddSubgroup.coe_add, Matrix.mul_add, Matrix.trace_add, map_add (f := _), neg_add, AddChar.map_add_eq_mul,
       AddChar.map_neg_eq_inv, h1, inv_one, one_mul]
@@ -530,8 +530,8 @@ theorem firstEq_of_k : _root_.PositivityTheory.SiegelWeilFormula.Act.AbsConv_k �
   have hz₂ : t₂ < z.re := lt_of_le_of_lt (le_max_right _ _) hz
   obtain ⟨hint, hsum⟩ := ht₁ z hz₁ nb lam 𝓖 hc hGc uM ν 𝓤 hU hUc T x
   obtain ⟨e, he'⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C4.cos_bij_k L
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ, hc.2.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (ν.restrict 𝓤) := ⟨by rw [Measure.restrict_apply_univ, hU.2.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ, hc.2.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (ν.restrict 𝓤) := ⟨by rw [Measure.restrict_apply_univ, hU.2.2.2]; exact ENNReal.one_lt_top⟩
   set ψT : nA σ L.Y L.b → ℂ := fun β' => d.B.ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T'.1.1 * β'.1))))
     with hψT
   set H : _root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k L.sd → nA σ L.Y L.b → ℂ := fun q' β' => _root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (L.j (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q' * nb' β') * x) * ψT β' with hH
@@ -582,7 +582,7 @@ theorem firstEq_of_k : _root_.PositivityTheory.SiegelWeilFormula.Act.AbsConv_k �
         (e.tsum_eq (fun q => _root_.PositivityTheory.SiegelWeilFormula.Act.tm_k L f s₁ z nb lam 𝓖 T uM ν 𝓤 (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q.1) x)).symm
     _ = ∑' q', ∫ β in 𝓖, H q' (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β) ∂lam := tsum_congr htm
     _ = ∫ β in 𝓖, ∑' q', H q' (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β) ∂lam := by
-        haveI : Countable (_root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k L.sd) := _root_.PositivityTheory.SiegelWeilFormula.Act.C4.countableCs_k L.sd
+        have : Countable (_root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k L.sd) := _root_.PositivityTheory.SiegelWeilFormula.Act.C4.countableCs_k L.sd
         exact integral_tsum_of_summable_integral_norm hint' hsum'
     _ = ∫ β in 𝓖, G (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β) ∂lam := by simp only [hHG]
     _ = ∫ β' in 𝓖', G β' ∂lam' := _root_.PositivityTheory.SiegelWeilFormula.Act.C4.fiber_k L hc hc' G hGc hGp
@@ -661,7 +661,7 @@ theorem frame_dil_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R :
     rw [dM_apply]
     rcases u with u | u <;> rcases v with v | v <;>
       simp only [Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂,
-        Matrix.diagonal_apply, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq, if_false, Matrix.zero_apply] <;>
+        Matrix.diagonal_apply, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq, ite_false, Matrix.zero_apply] <;>
       by_cases h : u = v <;> by_cases h' : u = i₀ <;> subst_vars <;> simp_all [Pi.single_apply]
   refine _root_.PositivityTheory.SiegelWeilFormula.Place.cw_ext_k d (fun w' => ?_) ?_
   · by_cases hw' : w' = w
@@ -694,7 +694,7 @@ theorem par_dil_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _
     simp
   refine ⟨t, ht, ?_, ?_⟩
   · rw [habs, hy', Matrix.toBlocks_fromBlocks₁₁, hdetA, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos τ).le,
-      ← Real.exp_nat_mul]
+      ← Real.exp_natCast_mul]
     norm_num
   · have ht1 := ((kunf.isPar_frame ht0 (R.ι w y) t).1 ht).2
     set P := (inFrame d.b (R.ι w y)).toBlocks₁₁ with hP
@@ -897,7 +897,7 @@ theorem cLawEx_k : _root_.PositivityTheory.SiegelWeilFormula.Act.CLawEx_k := by
       · funext j; exact smul_one_mul _ _
       · funext j; rw [map_smul, smul_one_mul]
       · rw [mul_assoc, smul_one_mul, smul_one_mul, smul_assoc, mul_smul]
-    · rw [hsc2, hrm, ← Real.exp_neg, neg_neg, ← Real.exp_nat_mul, ← _root_.PositivityTheory.SiegelWeilFormula.Atop.LD.n_succ_k L]
+    · rw [hsc2, hrm, ← Real.exp_neg, neg_neg, ← Real.exp_natCast_mul, ← _root_.PositivityTheory.SiegelWeilFormula.Atop.LD.n_succ_k L]
       congr 2
       push_cast; ring
   · simp [map_intCast]
@@ -1061,9 +1061,9 @@ theorem move_k (h : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Hyp_k L nb 
     · simp
   refine Prod.ext (funext fun k => ?_) ?_
   · show inFrame d.b (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.CoordK.kom_k L uM nb' (u, β'')) (Sum.inl L.i₀) (Sum.inr (L.em k)) = B k
-    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, if_neg (_root_.PositivityTheory.SiegelWeilFormula.Act.ComplexParameterFamilyContinuity.em_ne_k L k), zero_add, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.sB_i0em_k]
+    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, ite_eq_right (_root_.PositivityTheory.SiegelWeilFormula.Act.ComplexParameterFamilyContinuity.em_ne_k L k), zero_add, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.sB_i0em_k]
   · show ellA δ (inFrame d.b (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.CoordK.kom_k L uM nb' (u, β'')) (Sum.inl L.i₀) (Sum.inr L.i₀)) = A
-    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, if_pos rfl, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.sB_i0i0_k, add_zero, map_smul, ellA_self h.δ0,
+    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, ite_eq_left rfl, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.sB_i0i0_k, add_zero, map_smul, ellA_self h.δ0,
       smul_eq_mul, mul_one]
 end PositivityTheory.SiegelWeilFormula.Act.C5.CoordK
 end
@@ -1160,11 +1160,11 @@ theorem coordsC_ck_k (h : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Hyp_k
     ∫ p, Ψ (nb p.2 * (uM p.1 * x)) * _root_.PositivityTheory.SiegelWeilFormula.Act.C5.th_k T p.2 ∂((ν.restrict 𝓤).prod (lam.restrict 𝓖)) =
       c.toReal • ∫ p, Ψ (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.sM_k R L p.2.2.1 * (cM (p.2.1, p.2.2.2) * (L.j (nb' p.1) * x))) * _root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k T' p.1
         ∂((lam'.restrict 𝓖').prod ((ν.restrict 𝓤).prod ((ν.restrict 𝓤).prod ((lamA F).restrict 𝓐)))) := by
-  haveI : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
-  haveI : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
-  haveI := hc.2.1
-  haveI := hc'.2.1
-  haveI := hU.2.1
+  have : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
+  have : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
+  have := hc.2.1
+  have := hc'.2.1
+  have := hU.2.1
   obtain ⟨-, -, hiff⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.pEquiv_k h
   let PM : (nA σ d.Y d.b) ≃ᵐ (((Fin L.n → AE F E) × AF F) × nA σ L.Y L.b) := P.toHomeomorph.toMeasurableEquiv
   have hPM : ∀ β, PM β = ((_root_.PositivityTheory.SiegelWeilFormula.Act.C5.pb_k L β, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.pa_k L δ β), _root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β) := hP
@@ -1203,11 +1203,11 @@ theorem coordsE_ck_k (h : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Hyp_k
     ∫⁻ p, Ψ (nb p.2 * (uM p.1 * x)) * ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th_k T p.2‖ₑ ∂((ν.restrict 𝓤).prod (lam.restrict 𝓖)) =
       c * ∫⁻ p, Ψ (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.sM_k R L p.2.2.1 * (cM (p.2.1, p.2.2.2) * (L.j (nb' p.1) * x))) * ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k T' p.1‖ₑ
         ∂((lam'.restrict 𝓖').prod ((ν.restrict 𝓤).prod ((ν.restrict 𝓤).prod ((lamA F).restrict 𝓐)))) := by
-  haveI : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
-  haveI : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
-  haveI := hc.2.1
-  haveI := hc'.2.1
-  haveI := hU.2.1
+  have : Fact (IsFrame2 σ d.Y d.b) := ⟨d.ok.frame⟩
+  have : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
+  have := hc.2.1
+  have := hc'.2.1
+  have := hU.2.1
   obtain ⟨-, -, hiff⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.pEquiv_k h
   let PM : (nA σ d.Y d.b) ≃ᵐ (((Fin L.n → AE F E) × AF F) × nA σ L.Y L.b) := P.toHomeomorph.toMeasurableEquiv
   have hPM : ∀ β, PM β = ((_root_.PositivityTheory.SiegelWeilFormula.Act.C5.pb_k L β, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.pa_k L δ β), _root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β) := hP
@@ -1429,7 +1429,7 @@ theorem unfqE_k (h : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Hyp_k L nb
   obtain ⟨Z, hZ, -, hheis⟩ := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.heis_k (R := R) h
   have hg : Continuous fun c => _root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (w₁ * (cM c * (L.j γ' * Y))) :=
     (_root_.PositivityTheory.SiegelWeilFormula.Act.ComplexParameterFamilyContinuity.continuous_phz_k d hf.cont s₁ z).comp (continuous_const.mul ((_root_.PositivityTheory.SiegelWeilFormula.Act.C5.continuous_cM_k h).mul continuous_const))
-  rw [← UnfoldingIntegralSum.unf_lint hU0 hU1 (fd_prod hU0 hU0) h𝓐 Λ (hΛrat hγ) hQ.measurable hZ.measurable hg.measurable.enorm]
+  rw [← UnfoldingIntegralSum.unf_lint hU0 hU1 (fd_prod hU0 hU0) h𝓐 Λ (hΛrat hγ) hQ.measurable hZ.measurable hg.measurable.eNorm]
   refine lintegral_congr fun p => ?_
   rw [← (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.rationalCosetEquiv L).symm.tsum_eq]
   exact tsum_congr fun c => by rw [_root_.PositivityTheory.SiegelWeilFormula.Act.C5.coset_point_decomposition h hf z hΛeq hheis]; rfl
@@ -1571,14 +1571,14 @@ theorem unf_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {f : d.G �
   have fin2 : ∫⁻ p, ∑' y, ‖G y p‖ₑ ∂μN < ⊤ := by
     have hE := _root_.PositivityTheory.SiegelWeilFormula.Act.C5.coordsE_k (R := R) h hc hU hc' hT h𝓐 hP hPc
       (fun g => ∑' q : {q : _root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k d // ¬ _root_.PositivityTheory.SiegelWeilFormula.Act.FirstOrbit L (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q)}, ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q.1 * g)‖ₑ)
-      (Measurable.tsum fun q => (hΦc.comp (continuous_const.mul continuous_id)).enorm.measurable)
+      (Measurable.tsum fun q => (hΦc.comp (continuous_const.mul continuous_id)).eNorm.measurable)
       (fun r hr hx g => _root_.PositivityTheory.SiegelWeilFormula.Act.C5.eisenstein_norm_sum_invariant hf z hr hx g) x
     have l1 : ∫⁻ p, (∑' q : {q : _root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k d // ¬ _root_.PositivityTheory.SiegelWeilFormula.Act.FirstOrbit L (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q)}, ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q.1 * (nb p.2 * (uM p.1 * x)))‖ₑ) *
         ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th_k T p.2‖ₑ ∂μO < ⊤ := by
       refine lt_of_eq_of_lt ?_ fin1
       refine lintegral_congr fun p => ?_
       rw [← ENNReal.tsum_mul_right]
-      exact tsum_congr fun q => (enorm_mul _ _).symm
+      exact tsum_congr fun q => (eNorm_mul _ _).symm
     rw [hE] at l1
     have l2 : ∫⁻ p, (∑' q : {q : _root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k d // ¬ _root_.PositivityTheory.SiegelWeilFormula.Act.FirstOrbit L (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q)},
         ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q.1 * (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.sM_k R L p.2.2.1 * (cM (p.2.1, p.2.2.2) * (L.j (nb' p.1) * x))))‖ₑ) * ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k (d := d) T' p.1‖ₑ
@@ -1589,14 +1589,14 @@ theorem unf_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {f : d.G �
       exact lt_irrefl _ l1
     refine lt_of_eq_of_lt (lintegral_congr fun p => ?_) l2
     rw [(_root_.PositivityTheory.SiegelWeilFormula.Act.C5.eisenstein_second_term_expand h hf z he _).2, ← ENNReal.tsum_mul_right]
-    exact tsum_congr fun y => enorm_mul _ _
-  have hGm : ∀ y, AEMeasurable (fun p => ‖G y p‖ₑ) μN := fun y => (hGc y).enorm.measurable.aemeasurable
+    exact tsum_congr fun y => eNorm_mul _ _
+  have hGm : ∀ y, AEMeasurable (fun p => ‖G y p‖ₑ) μN := fun y => (hGc y).eNorm.measurable.aemeasurable
   have hGlt : ∀ y, ∫⁻ p, ‖G y p‖ₑ ∂μN < ⊤ := fun y =>
     lt_of_le_of_lt (lintegral_mono fun p => ENNReal.le_tsum (f := fun y => ‖G y p‖ₑ) y) fin2
   have hGi : ∀ y, Integrable (G y) μN := fun y => ⟨(hGc y).aestronglyMeasurable, hGlt y⟩
   have hGs : Summable fun y => ∫ p, ‖G y p‖ ∂μN := by
     have h1 : ∀ y, ∫ p, ‖G y p‖ ∂μN = (∫⁻ p, ‖G y p‖ₑ ∂μN).toReal := fun y =>
-      integral_norm_eq_lintegral_enorm (hGi y).aestronglyMeasurable
+      integral_norm_eq_lintegral_eNorm (hGi y).aestronglyMeasurable
     simp_rw [h1]
     refine ENNReal.summable_toReal ?_
     rw [← lintegral_tsum hGm]
@@ -1625,7 +1625,7 @@ theorem unf_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {f : d.G �
     rw [← hex, ← integral_const_mul]
     refine integral_congr_ae ?_
     have hmq : Measurable fun p : nA σ L.Y L.b × ((Fin L.n → AE F E) × ((Fin L.n → AE F E) × AF F)) =>
-        ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L, ‖G ⟨q', c₀⟩ p‖ₑ := Measurable.tsum fun c₀ => (hGc _).enorm.measurable
+        ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L, ‖G ⟨q', c₀⟩ p‖ₑ := Measurable.tsum fun c₀ => (hGc _).eNorm.measurable
     have hfinq : ∫⁻ p, ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L, ‖G ⟨q', c₀⟩ p‖ₑ ∂μN < ⊤ := by
       refine lt_of_le_of_lt (lintegral_mono fun p => ?_) fin2
       exact (ENNReal.le_tsum (f := fun q'' => ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L, ‖G ⟨q'', c₀⟩ p‖ₑ) q').trans
@@ -1641,16 +1641,16 @@ theorem unf_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {f : d.G �
     have hjj : L.j (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q') * (L.j (nb' β) * x) = L.j (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q' * nb' β) * x := by rw [map_mul, mul_assoc]
     by_cases hθ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k (d := d) T' β = 0
     · rw [hθ, mul_zero, mul_zero, mul_zero]
-    · have hθe : ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k (d := d) T' β‖ₑ ≠ 0 := enorm_ne_zero.2 hθ
+    · have hθe : ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k (d := d) T' β‖ₑ ≠ 0 := eNorm_ne_zero.2 hθ
       have hl : ∫⁻ v, ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L,
           ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (w₁ * (cM c₀.1 * (L.j (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q') * (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.sM_k R L v.2.1 * (cM (v.1, v.2.2) * (L.j (nb' β) * x))))))‖ₑ ∂μI < ⊤ := by
         have e5 : ∫⁻ v, ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L, ‖G ⟨q', c₀⟩ (β, v)‖ₑ ∂μI = (∫⁻ v, ∑' c₀ : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Crat_k L,
             ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (w₁ * (cM c₀.1 * (L.j (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q') * (_root_.PositivityTheory.SiegelWeilFormula.Act.C5.sM_k R L v.2.1 * (cM (v.1, v.2.2) * (L.j (nb' β) * x))))))‖ₑ ∂μI) *
               ‖_root_.PositivityTheory.SiegelWeilFormula.Act.C5.th'_k (d := d) T' β‖ₑ := by
-          rw [← lintegral_mul_const' _ _ enorm_ne_top]
+          rw [← lintegral_mul_const' _ _ eNorm_ne_top]
           refine lintegral_congr fun v => ?_
           rw [← ENNReal.tsum_mul_right]
-          exact tsum_congr fun c₀ => enorm_mul _ _
+          exact tsum_congr fun c₀ => eNorm_mul _ _
         rw [e5] at hβ
         by_contra hcon
         rw [not_lt, top_le_iff] at hcon

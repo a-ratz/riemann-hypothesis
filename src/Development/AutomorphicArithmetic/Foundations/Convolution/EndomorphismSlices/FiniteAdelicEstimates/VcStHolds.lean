@@ -86,8 +86,8 @@ theorem vcOf : PositivityTheory.RgBcC.VCOf := by
   have hKN : KerNId := kerNId_of' GlobalTheory.CompanionTheory.LgBound.lgCpt
   have hNA : NAvg := nAvg_of GlobalTheory.CompanionTheory.ParamInt.intSmooth GlobalTheory.CompanionTheory.LgBound.lgCpt hNU
   intro n lam E Fr ε ι S Γ T hCx _ _ μ _ k val τ hMult d W₁ W₂ hW hW1 hd2 hd1 N hN ν _
-  letI : NormedAddCommGroup (RgTw.Mat n) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (RgTw.Mat n) := Matrix.normedSpace
+  let : NormedAddCommGroup (RgTw.Mat n) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (RgTw.Mat n) := Matrix.normedSpace
   obtain ⟨H, hHs, hHh, hHtr, hHk, hHq, hHd⟩ := hFF n W₁ W₂ hW hW1
   obtain ⟨m, c, w, g, ks, hks, hk, -⟩ := hMult
   have hcl : IsClosed (N : Set (RgTw.G n)) := by
@@ -98,11 +98,11 @@ theorem vcOf : PositivityTheory.RgBcC.VCOf := by
         (⋂ v ∈ W₂, (fun u : RgTw.G n => ((u : RgTw.Mat n) - 1).mulVec v) ⁻¹' (W₁ : Set (Fin n → ℂ))) ∩
         (⋂ v ∈ W₁, (fun u : RgTw.G n => ((u : RgTw.Mat n) - 1).mulVec v) ⁻¹' {0}) := by
       ext u
-      simp only [nilSet, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage,
+      simp only [nilSet, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage,
         SetLike.mem_coe, Set.mem_singleton_iff, and_assoc]
     rw [e]
-    refine ((isClosed_iInter fun v => W₂.closed_of_finiteDimensional.preimage (hc v)).inter
-      (isClosed_biInter fun v _ => W₁.closed_of_finiteDimensional.preimage (hc v))).inter
+    refine ((isClosed_iInter fun v => W₂.isClosed_of_finiteDimensional.preimage (hc v)).inter
+      (isClosed_biInter fun v _ => W₁.isClosed_of_finiteDimensional.preimage (hc v))).inter
       (isClosed_biInter fun v _ => isClosed_singleton.preimage (hc v))
   let A : RgTw.Mat n → E.V →L[ℂ] E.V := fun x => ε (H x)
   have hA : IsField E A := by
@@ -210,10 +210,10 @@ theorem lefL : LefL := by
   intro E _ _ _ a b l₁ l₂ D A
   have LA := fun v : InfinitePlace E => lefModel a (l₁ v).w (l₁ v).anti
   have LB := fun v : InfinitePlace E => lefModel b (l₂ v).w (l₂ v).anti
-  haveI := A.ha
-  haveI := A.hb
-  haveI : BorelSpace (G a) := ⟨rfl⟩
-  haveI : BorelSpace (G b) := ⟨rfl⟩
+  have := A.ha
+  have := A.hb
+  have : BorelSpace (G a) := ⟨rfl⟩
+  have : BorelSpace (G b) := ⟨rfl⟩
   refine ⟨⟨fun v k val T hm => vcBridge a A.μa (Ml l₁ v) (Tl l₁ v) k val T (LA v).1 hm ((LA v).2.2.2 A.μa k val T hm).1,
     fun v k val T hm => vcBridge b A.μb (Ml l₂ v) (Tl l₂ v) k val T (LB v).1 hm ((LB v).2.2.2 A.μb k val T hm).1⟩, ?_⟩
   intro v k k' val val' T hm hm'

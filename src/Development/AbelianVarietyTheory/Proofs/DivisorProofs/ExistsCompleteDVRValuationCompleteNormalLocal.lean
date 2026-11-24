@@ -54,11 +54,11 @@ theorem exists_cdvr_valuation_le : ∀ (V : Type) [CommRing V] [IsDomain V] [IsL
   obtain ⟨m, hmm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hm
   have hmK : algebraMap V (FractionRing V) m ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective V (FractionRing V))).2 hm0
-  haveI : ν.IsNontrivial := ⟨algebraMap V (FractionRing V) m, (ν.ne_zero_iff).2 hmK, (h2 m hmm).ne⟩
-  haveI : IsDiscreteValuationRing ν.valuationSubring := inferInstance
-  haveI : CharZero (FractionRing V) :=
+  have : ν.IsNontrivial := ⟨algebraMap V (FractionRing V) m, (ν.ne_zero_iff).2 hmK, (h2 m hmm).ne⟩
+  have : IsDiscreteValuationRing ν.valuationSubring := inferInstance
+  have : CharZero (FractionRing V) :=
     charZero_of_injective_ringHom (IsFractionRing.injective V (FractionRing V))
-  haveI : CharZero ν.valuationSubring :=
+  have : CharZero ν.valuationSubring :=
     RingHom.charZero (algebraMap ν.valuationSubring (FractionRing V))
   obtain ⟨W', _, _, _, g, hW', hg, hgl⟩ := GlobalTheory.LocalCompletion.exists_cDvr_embedding ν.valuationSubring
     inferInstance inferInstance (IsDiscreteValuationRing.ringKrullDim_eq_one _) inferInstance
@@ -71,10 +71,10 @@ theorem exists_cdvr_valuation_le : ∀ (V : Type) [CommRing V] [IsDomain V] [IsL
 
   have hnu : ∀ w : ν.valuationSubring, ν (w : FractionRing V) < 1 → ¬ IsUnit w := fun w hw hu =>
     hw.ne ((Valuation.Integers.isUnit_iff_valuation_eq_one (Valuation.integer.integers ν)).mp hu)
-  haveI hil : IsLocalHom i := ⟨fun a ha => by
+  have hil : IsLocalHom i := ⟨fun a ha => by
     by_contra hna
     exact hnu (i a) (by rw [hi]; exact h2 a ((mem_maximalIdeal _).2 hna)) ha⟩
-  haveI := hgl
+  have := hgl
   let g' : ν.valuationSubring →+* FractionRing W' := (algebraMap W' (FractionRing W')).comp g
   have hg' : Function.Injective g' :=
     (IsFractionRing.injective W' (FractionRing W')).comp hg
@@ -93,9 +93,9 @@ theorem exists_cdvr_valuation_le : ∀ (V : Type) [CommRing V] [IsDomain V] [IsL
   have hyν : ν y ≠ 0 := (ν.ne_zero_iff).2 hy
   have hz1 : 1 < ν z := by
     rw [hz', map_div₀]
-    exact (one_lt_div₀ (zero_lt_iff.2 hyν)).2 hxy
+    exact (one_lt_div₀ (pos_iff_ne_zero.2 hyν)).2 hxy
   have hz0 : z ≠ 0 := by
-    intro h; rw [h, map_zero] at hz1; exact not_lt_zero' hz1
+    intro h; rw [h, map_zero] at hz1; exact not_lt_zero hz1
   have hzi : ν z⁻¹ < 1 := by
     rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ hz1
   let w : ν.valuationSubring := ⟨z⁻¹, hzi.le⟩

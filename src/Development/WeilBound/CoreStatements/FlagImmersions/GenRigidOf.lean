@@ -186,7 +186,7 @@ theorem tri_unique {α ω : Fin m → V} (hα : LinearIndependent ℂ α) {u u' 
       rintro _ ⟨i, hi, rfl⟩
       refine Submodule.span_mono (Set.image_mono fun j hj => ?_) (hu i)
       exact lt_of_lt_of_le (show (j : ℕ) < i + 1 from hj) hi
-    haveI : FiniteDimensional ℂ (flagStep ℂ ω k) := FiniteDimensional.span_of_finite ℂ (Set.toFinite _)
+    have : FiniteDimensional ℂ (flagStep ℂ ω k) := FiniteDimensional.span_of_finite ℂ (Set.toFinite _)
     refine Submodule.eq_of_le_of_finrank_le hle ?_
     unfold flagStep
     rw [Set.image_eq_range, Set.image_eq_range]
@@ -282,7 +282,7 @@ theorem ev_frame (hξ : IsCptGen ξ) {Λ : Lat ξ L} {r : ℕ} {V : Submodule Ω
     (ha : LinearIndependent Ω a) (haV : ∀ i, a i ∈ V) : Ev ξ fun U => ∀ q : Cpt ξ, q.1 ∈ U → Λ.IsFrameAt a q := by
   obtain ⟨b, hb, hbi, hf⟩ := ev_frame₀ h
   have e : Submodule.span Ω (Set.range a) = Submodule.span Ω (Set.range b) := by
-    haveI : FiniteDimensional Ω (Submodule.span Ω (Set.range b)) := FiniteDimensional.span_of_finite Ω (Set.finite_range b)
+    have : FiniteDimensional Ω (Submodule.span Ω (Set.range b)) := FiniteDimensional.span_of_finite Ω (Set.finite_range b)
     refine Submodule.eq_of_le_of_finrank_eq (Submodule.span_le.2 ?_) ?_
     · rintro _ ⟨i, rfl⟩
       rw [hb]
@@ -326,7 +326,7 @@ theorem ev_point (T : Set Ω)
     (hT : letI := 𝔐.fn.toAlgebra; IntermediateField.adjoin 𝔐.Ω₀ T = ⊤) :
     Ev 𝔐.ξ fun U => ∀ z z' : Sp ℂ ⟶ 𝔐.X, centre z ∈ U → centre z' ∈ U → z ≫ 𝔐.f = z' ≫ 𝔐.f →
       (∀ a ∈ T, ∃ r, ValAt 𝔐.ξ z a r ∧ ValAt 𝔐.ξ z' a r) → z = z' := by
-  letI := 𝔐.fn.toAlgebra
+  let := 𝔐.fn.toAlgebra
   have hξ := 𝔐.tie.gen
   let Good : Ω → Prop := fun a => Ev 𝔐.ξ fun U => ∀ z z' : Sp ℂ ⟶ 𝔐.X, centre z ∈ U → centre z' ∈ U → z ≫ 𝔐.f = z' ≫ 𝔐.f →
       (∀ a ∈ T, ∃ r, ValAt 𝔐.ξ z a r ∧ ValAt 𝔐.ξ z' a r) → ∃ r, ValAt 𝔐.ξ z a r ∧ ValAt 𝔐.ξ z' a r
@@ -473,7 +473,7 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Cusp RootFi
 
 theorem genRigid_of : FrameVals → GenRigid := by
   intro hF hG E _ _ _ H D l Xo c Y Ω _ K _ J _ y 𝔐 Fl hD hdeg
-  letI := 𝔐.fn.toAlgebra
+  let := 𝔐.fn.toAlgebra
   obtain ⟨cs, u, hc, -, hji, -, h1, h0, hflag, -, -, hfin⟩ := Fl.generic
   rw [hdeg, IntermediateField.finrank_eq_one_iff_eq_top] at hfin
   have hξ := 𝔐.tie.gen

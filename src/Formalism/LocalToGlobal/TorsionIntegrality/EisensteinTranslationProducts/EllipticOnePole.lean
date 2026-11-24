@@ -102,7 +102,7 @@ lemma analyticAt_wZeta (L : PeriodPair) (z : ℂ) (hz : z ∉ L.lattice) : Analy
 lemma analyticAt_zetaExcept (L : PeriodPair) : AnalyticAt ℂ (zetaExcept L 0) 0 := by
   refine (differentiableOn_zetaExcept L 0).analyticAt ?_
   filter_upwards [eventually_nhdsWithin_iff.1 (eventually_notMem L 0 0)] with w hw
-  simp only [Set.mem_compl_iff, Set.mem_diff, Set.mem_singleton_iff, SetLike.mem_coe, not_and, not_not]
+  simp only [Set.mem_compl_iff, Set.mem_sdiff, Set.mem_singleton_iff, SetLike.mem_coe, not_and, not_not]
   intro hmem
   by_contra hne
   exact hw hne (by simpa using hmem)
@@ -129,7 +129,7 @@ lemma simple_local {f : ℂ → ℂ} {p : ℂ} (hf : MeromorphicAt f p) (ho : -1
     rcases eq_or_lt_of_le hn with hn | hn
     · subst hn
       obtain ⟨q, hq⟩ := hg
-      refine ⟨g p, dslope g p, ⟨_, hq.has_fpower_series_dslope_fslope⟩, ?_⟩
+      refine ⟨g p, dslope g p, ⟨_, hq.dslope_fslope⟩, ?_⟩
       filter_upwards [hfg, self_mem_nhdsWithin] with w hw hwp
       have hwp' : w ≠ p := hwp
       have hne : w - p ≠ 0 := sub_ne_zero.2 hwp'
@@ -336,7 +336,7 @@ lemma additionQuotient_periodic (hq : SigmaQuasi) : IsPeriodic L (additionQuotie
 
 lemma analyticAt_dslope (he : SigmaEntire) : AnalyticAt ℂ (dslope (wSigma L) 0) 0 := by
   obtain ⟨p, hp⟩ := (he L).analyticAt 0
-  exact ⟨_, hp.has_fpower_series_dslope_fslope⟩
+  exact ⟨_, hp.dslope_fslope⟩
 
 lemma sigma_zero (hz : SigmaZero) : wSigma L 0 = 0 := (hz L 0).2 L.lattice.zero_mem
 
@@ -405,7 +405,7 @@ private lemma exists_twistedGamma_eq_sq_mul_analytic (he : SigmaEntire) (ho : Si
     rw [h2, neg_zero] at h1
     linear_combination h1 / 2
   obtain ⟨p, hp⟩ := twistedGamma_analyticAt_zero L w he
-  have hm := hp.has_fpower_series_dslope_fslope.has_fpower_series_dslope_fslope
+  have hm := hp.dslope_fslope.dslope_fslope
   refine ⟨dslope (dslope (frobeniusStickelbergerDetMulSigmaCube L w) 0) 0, ⟨_, hm⟩, fun y => ?_⟩
   have e1 := sub_smul_dslope (frobeniusStickelbergerDetMulSigmaCube L w) 0 y
   have e2 := sub_smul_dslope (dslope (frobeniusStickelbergerDetMulSigmaCube L w) 0) 0 y
@@ -520,7 +520,7 @@ theorem sgStarAdd_of (h : SigmaAdd) : SgStarAdd := by
   have e := h L z w hz hw
   have ex : Complex.exp (-(s2 L) * (z + w) ^ 2 / 2) * Complex.exp (-(s2 L) * (z - w) ^ 2 / 2)
       = Complex.exp (-(s2 L) * z ^ 2 / 2) ^ 2 * Complex.exp (-(s2 L) * w ^ 2 / 2) ^ 2 := by
-    rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add]
     congr 1
     push_cast
     ring

@@ -229,7 +229,7 @@ theorem isSectionOn_ofWeight_one {P : Ideal (MRing ι)} (hP : P.IsPrime) (g : ((
   rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one] at hm
   have h0 : (0 : (Σ k, ι k) →₀ ℕ) = mm := by
     by_contra h
-    exact hm (if_neg h)
+    exact hm (ite_eq_right h)
   subst h0
   simp
 
@@ -373,7 +373,7 @@ theorem PtsSegreChartFibreSum.proof (h₁ : SegreChartZeroSet.Statement) (h₂ :
     · exact Eventually.of_forall fun _ h => absurd hJJ h
     have hnle : ¬ J' ≤ J := fun hle =>
       hJJ (le_antisymm hle ((hmin J hJ).2 ⟨hprime J' hJ', (hmin J' hJ').1.2⟩ hle))
-    obtain ⟨f, hfJ', hfJ⟩ := SetLike.not_le_iff_exists.1 hnle
+    obtain ⟨f, hfJ', hfJ⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
     obtain ⟨q, hq, hqz⟩ := exists_poly_of_not_mem (hprime J hJ) (hfinp J hJ) hfJ
     have hae : {y : Fin e → ℂ | MvPolynomial.eval y q = 0}ᶜ ∈ ae volume :=
       compl_mem_ae_iff.2 (DiscriminantSheetCover.volume_zero_set q hq)

@@ -67,7 +67,7 @@ namespace GlobalTheory.RatCount
 theorem exists_nat_den {E : Type} [Field E] [NumberField E] {κ : Type} [Finite κ] (A : κ → E) :
     ∃ m : ℕ, 0 < m ∧ ∀ i, IsIntegral ℤ ((m : E) * A i) := by
   classical
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   obtain ⟨y, hy, h⟩ := exists_integral_multiples ℤ ℚ (Finset.univ.image A)
   refine ⟨y.natAbs, Int.natAbs_pos.2 hy, fun i => ?_⟩
   have h1 := h (A i) (Finset.mem_image_of_mem _ (Finset.mem_univ i))
@@ -96,7 +96,7 @@ theorem exists_den_of_isCompact {F : Type} [Field F] [NumberField F] {K : Set (F
   obtain ⟨z, hz, haz⟩ := Set.mem_iUnion₂.1 (ht ha)
   have hex : ∃ a : F, algebraMap F (FiniteAdeleRing (𝓞 F) F) a ∈ U z := ⟨a, haz⟩
   have hA : algebraMap F (FiniteAdeleRing (𝓞 F) F) (A ⟨z, hz⟩) ∈ U z := by
-    simp only [A, dif_pos hex]; exact hex.choose_spec
+    simp only [A, dite_eq_left hex]; exact hex.choose_spec
   obtain ⟨c, hc⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one (R := 𝓞 F) F (a - A ⟨z, hz⟩) fun v => by
     have h1 := sub_mem (haz v) (hA v)
     have e : (algebraMap F (FiniteAdeleRing (𝓞 F) F) a - z) v -
@@ -117,8 +117,8 @@ theorem exists_den_of_isCompact {F : Type} [Field F] [NumberField F] {K : Set (F
 theorem exists_den_of_isCompact_tensor {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {K : Set (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E)} (hK : IsCompact K) :
     ∃ m : ℕ, 0 < m ∧ ∀ a : E, (1 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) ⊗ₜ[F] a ∈ K → IsIntegral ℤ ((m : E) * a) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E) := ⟨rfl⟩
   let b := Module.finBasis F E
   let B := Algebra.TensorProduct.basis (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) b
   have hc : ∀ k, Continuous (B.coord k) := fun k => IsModuleTopology.continuous_of_linearMap _
@@ -241,8 +241,8 @@ theorem ncard_rational_le : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam �
   have hinj : Function.Injective fun g : GA D V => (matHom V g).1 := fun g h e =>
     Subtype.ext (Units.ext e)
   rcases Nat.eq_zero_or_pos V.rank with hV | hV
-  · haveI : IsEmpty (Fin V.rank) := by rw [hV]; infer_instance
-    haveI : Subsingleton (GA D V) := hinj.subsingleton
+  · have : IsEmpty (Fin V.rank) := by rw [hV]; infer_instance
+    have : Subsingleton (GA D V) := hinj.subsingleton
     refine ⟨0, fun x => ⟨1, fun u _ y => ⟨Set.toFinite _, ?_⟩⟩⟩
     rw [pow_zero, mul_one]
     exact_mod_cast (Set.ncard_le_one (Set.toFinite _)).2 fun a _ b _ => Subsingleton.elim a b

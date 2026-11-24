@@ -129,7 +129,7 @@ theorem continuous_rowEl (n : ℕ) :
     Continuous fun r : {r : Fin (n + 1) → k // (rowMat n r).det ≠ 0} => rowEl n r.1 r.2 := by
   have hM : Continuous fun r : {r : Fin (n + 1) → k // (GlobalTheory.CompanionTheory.BZPhiPhi.rowMat n r).det ≠ 0} =>
       GlobalTheory.CompanionTheory.BZPhiPhi.rowMat n r.1 :=
-    (GlobalTheory.CompanionTheory.BZPhiPhi.continuous_rowMat n).comp continuous_subtype_val
+    (GlobalTheory.CompanionTheory.BZPhiPhi.continuous_rowMat n).comp continuous_subtypeVal
   apply continuous_induced_rng.2
   rw [Units.continuous_iff]
   refine ⟨hM, ?_⟩

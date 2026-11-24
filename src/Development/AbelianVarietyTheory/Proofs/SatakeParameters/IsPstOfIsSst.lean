@@ -88,7 +88,7 @@ theorem isPstAt_of_isSstAt {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAi
     IsSstAt P Bw r → IsPstAt P Bw r := by
   rintro ⟨LL', r', hm, hs⟩
   obtain ⟨T⟩ := hT
-  haveI := LL'.2
+  have := LL'.2
   exact ⟨LL', r', hm, isPst_of_isSst P AI T _ hs⟩
 
 end GlobalTheory.GalCut.IwaAll

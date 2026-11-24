@@ -175,7 +175,7 @@ theorem exists_pos_mul_norm_sq_le {V : Type} [NormedAddCommGroup V] [NormedSpace
     have h2 : Continuous J := J.continuous_of_finiteDimensional
     exact h1.clm_apply h2
   have hcomp : IsCompact (Metric.sphere (0 : V) 1) := by
-    haveI : ProperSpace V := FiniteDimensional.proper_real V
+    have : ProperSpace V := FiniteDimensional.proper_real V
     exact isCompact_sphere 0 1
   obtain ⟨c, hc, hle⟩ : ∃ c : ℝ, 0 < c ∧ ∀ u ∈ Metric.sphere (0 : V) 1, c ≤ om u (J u) := by
     rcases (Metric.sphere (0 : V) 1).eq_empty_or_nonempty with he | hne

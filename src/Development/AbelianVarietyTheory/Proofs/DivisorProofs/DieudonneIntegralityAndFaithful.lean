@@ -232,7 +232,7 @@ theorem omega_finite_of_theory (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type
   classical
   obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.Dieu.theta_exists p T k
   obtain ⟨-, hs, -, hsm, -⟩ := hθ G
-  haveI := T.base.finite G trivial
+  have := T.base.finite G trivial
   obtain ⟨S, hS⟩ := (Module.Finite.fg_top : (⊤ : Submodule (WittVector p k) (T.M G)).FG)
   refine ⟨⟨S.image (θ G), ?_⟩⟩
   rw [Finset.coe_image, eq_top_iff]
@@ -303,13 +303,13 @@ theorem exists_comp_eq_of_colength (p : ℕ) [Fact p.Prime] (T : Theory p) (k : 
     refine ⟨z, hinj ?_⟩
     rw [← LinearMap.comp_apply, ← hmq, hz, hmf, LinearMap.comp_apply]
 
-  haveI := omega_finite_of_theory p T k G
+  have := omega_finite_of_theory p T k G
   have hCq : Module.finrank k (G.omega ⧸ LinearMap.range (omegaMap G Q q)) = Module.finrank k (Cot k C) :=
     hcq.2.1 (hker ▸ sup_le_sup_left hfrob _) hqπ
   have hCq₁ : Module.finrank k (G.omega ⧸ LinearMap.range (omegaMap G Q₁ q₁)) =
       Module.finrank k (Cot k C) := hcq₁.2.1 (hk1 ▸ le_sup_left) hk1.le
   have hpos : 0 < Module.finrank k (G.omega ⧸ LinearMap.range (omegaMap G Q q)) := by
-    haveI : Nontrivial (G.omega ⧸ LinearMap.range (omegaMap G Q q)) :=
+    have : Nontrivial (G.omega ⧸ LinearMap.range (omegaMap G Q q)) :=
       Submodule.Quotient.nontrivial_iff.2 fun h => hsurj (LinearMap.range_eq_top.1 h)
     exact Module.finrank_pos
   have h1 : (1 : ℕ∞) ≤ Module.length (WittVector p k) (T.M G ⧸ LinearMap.range (T.map q₁)) := by

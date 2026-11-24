@@ -71,12 +71,12 @@ theorem unfold {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAd
     rw [hl]; exact hc.2.ne
   refine ⟨?_, ?_⟩
   · have h1 : ∫⁻ y in 𝓕, ∑' γ : Γ, ‖c (γ + y)‖ₑ ∂μ ≠ ⊤ := by
-      rw [lintegral_tsum fun γ => (hm γ).enorm]; exact hfin
+      rw [lintegral_tsum fun γ => (hm γ).eNorm]; exact hfin
     have h2 : AEMeasurable (fun y => ∑' γ : Γ, ‖c (γ + y)‖ₑ) (μ.restrict 𝓕) :=
-      AEMeasurable.tsum fun γ => (hm γ).enorm
+      AEMeasurable.tsum fun γ => (hm γ).eNorm
     filter_upwards [ae_lt_top' h2 h1] with y hy
     have : ∑' γ : Γ, (‖c (γ + y)‖₊ : ENNReal) ≠ ⊤ := by
-      simpa only [enorm_eq_nnnorm] using hy.ne
+      simpa only [eNorm_eq_nnNorm] using hy.ne
     exact (NNReal.summable_coe.2 (ENNReal.tsum_coe_ne_top_iff_summable.1 this)).congr fun _ => rfl
   · rw [integral_tsum hm hfin, hF.integral_eq_tsum'' c hc]
     rfl
@@ -86,7 +86,7 @@ theorem finite_contributing {G : Type} [AddCommGroup G] [TopologicalSpace G] [Is
     {C : Set G} (hC : IsCompact C) : {γ : Γ | ∃ x ∈ C, f (γ + x) ≠ 0}.Finite := by
   have hK := (hs.isCompact.prod hC).image (f := fun p : G × G => p.1 - p.2) (by fun_prop)
   have ht : Filter.Tendsto ((↑) : Γ → G) Filter.cofinite (Filter.cocompact G) :=
-    AddSubgroup.tendsto_coe_cofinite_of_discrete Γ (isDiscrete_iff_discreteTopology.2 inferInstance)
+    AddSubgroup.tendsto_coe_cofinite_of_isDiscrete Γ (isDiscrete_iff_discreteTopology.2 inferInstance)
   have hfin := ht hK.compl_mem_cocompact
   rw [Filter.mem_map, Filter.mem_cofinite] at hfin
   refine hfin.subset ?_

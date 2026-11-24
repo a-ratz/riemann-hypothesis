@@ -132,7 +132,7 @@ theorem exists_equiv_model : ∀ (r : ℕ) (X : Type) [AddCommGroup X] [Module R
     have hex : Function.Exact K.subtype g := LinearMap.exact_subtype_ker_map g
     let e := ((hex.splitSurjectiveEquiv Subtype.val_injective) ⟨s, hs⟩).1
     have he := ((hex.splitSurjectiveEquiv Subtype.val_injective) ⟨s, hs⟩).2
-    haveI : Module.Projective R K := by
+    have : Module.Projective R K := by
       refine Module.Projective.of_split K.subtype (LinearMap.fst R K I ∘ₗ e.toLinearMap) ?_
       ext y
       have h1 : (K.subtype y) = e.symm (y, 0) := by
@@ -174,7 +174,7 @@ theorem exists_fin_reps_projective_finrank_le :
   let P : T → Prop := fun t => Module.Finite (𝓞 E) (g t) ∧ Module.Projective (𝓞 E) (g t) ∧
     Module.finrank (𝓞 E) (g t) ≤ q
   let S := {t : T // P t}
-  haveI : Finite S := inferInstance
+  have : Finite S := inferInstance
   let eS := Finite.equivFin S
   refine ⟨Nat.card S, fun k => g (eS.symm k).1, fun k => (eS.symm k).2, ?_⟩
   intro X _ _ _ _ hq

@@ -111,7 +111,7 @@ theorem UpperTheory.V.Z.Sym.Sig.okS : UpperTheory.V.Z.Sym.Sig.OkS := by
       have ht' : valuation k (t : k) < valuation k ((unif k : kˣ) : k) ^ 2 := ht
       refine ht'.trans_le ?_
       rw [GlAx.unif_spec]
-      exact pow_le_one₀ zero_le' (ValuativeRel.uniformizer_lt_one (R := k)).le
+      exact pow_le_one₀ zero_le (ValuativeRel.uniformizer_lt_one (R := k)).le
     have hprod : valuation k ((t⁻¹ : kˣ) : k) * valuation k (t : k) = 1 := by
       rw [← map_mul, Units.inv_mul, map_one]
     have hlt : valuation k (t : k) < valuation k ((t⁻¹ : kˣ) : k) := by

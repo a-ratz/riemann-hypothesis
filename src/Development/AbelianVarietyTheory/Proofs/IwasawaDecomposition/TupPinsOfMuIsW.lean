@@ -126,7 +126,7 @@ theorem mem_pW_iff (h : JcPin D p la jc) {y : DV.KW p} {z : D.what₂.LL} (hyz :
   rw [h0, map_inv₀, not_le]
   by_cases hz : z = 0
   · simp [hz]
-  · have hv : 0 < la.1.valuation D.what₂.LL z := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hz)
+  · have hv : 0 < la.1.valuation D.what₂.LL z := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hz)
     rw [one_lt_inv₀ hv]
     simp [hz]
 
@@ -333,7 +333,7 @@ theorem valuation_lt_one_of_inv_notMem {Ω : Type*} [Field Ω] (A : ValuationSub
     A.valuation x < 1 := by
   rw [← A.valuation_le_one_iff, map_inv₀, not_le] at h
   have h0 : A.valuation x ≠ 0 := fun e => by simp [e] at h
-  exact (one_lt_inv₀ (zero_lt_iff.2 h0)).1 h
+  exact (one_lt_inv₀ (pos_iff_ne_zero.2 h0)).1 h
 
 theorem exists_emb_inducing (L : Type) [Field L] [NumberField L] {p : ℕ} (hp : p.Prime)
     (v : HeightOneSpectrum (𝓞 L)) (hv : (p : 𝓞 L) ∈ v.asIdeal) (V : ValuationSubring ℂ) (hV : (p : ℂ)⁻¹ ∉ V) :
@@ -358,7 +358,7 @@ theorem exists_emb_inducing (L : Type) [Field L] [NumberField L] {p : ℕ} (hp :
       exact this
     have h4 : v.valuation L (p : L) ≠ 0 := by simpa using hp.ne_zero
     rw [← map_natCast (algebraMap L Ω), ← map_inv₀, hm, map_inv₀, not_le]
-    exact (one_lt_inv₀ (zero_lt_iff.2 h4)).2 h3)
+    exact (one_lt_inv₀ (pos_iff_ne_zero.2 h4)).2 h3)
   obtain ⟨g, hg⟩ := exists_smul_eq hp _ _ h1 h2
   refine ⟨(ι.toRingHom.comp g.symm.toRingEquiv.toRingHom).comp (algebraMap L Ω), fun x => ?_⟩
   rw [← hm, ← hg, ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
@@ -498,8 +498,8 @@ def logLamOf (Z : ReadL R F X0 Y) (hH : Holds R F) (j : ℕ) (σ : D.what₂.FT)
 theorem lamAre_of_eq (Z : ReadL R F X0 Y) (hH : Holds R F) (Xd : DivX D) (hX : Xd.logLam = logLamOf Z hH) : Bl.LamAre Z Xd := by
   refine ⟨labOf Z hH, overIx_labOf Z hH, fun i σ e he => ?_⟩
   have h : (i : ℕ) + 1 - 1 < D.R.m := i.2
-  rw [hX, logLamOf, if_neg he, dite_eq_left h]
-  exact ⟨fun h0 => if_neg h0, fun h0 => if_pos h0⟩
+  rw [hX, logLamOf, ite_eq_right he, dite_eq_left h]
+  exact ⟨fun h0 => ite_eq_right h0, fun h0 => ite_eq_left h0⟩
 
 def x0 (Z : ReadL R F X0 Y) (hP : Pins R F cG) (hH : Holds R F) : DivX D where
   geo := Formalism.BasicNotions.Examples₂.geoExample _

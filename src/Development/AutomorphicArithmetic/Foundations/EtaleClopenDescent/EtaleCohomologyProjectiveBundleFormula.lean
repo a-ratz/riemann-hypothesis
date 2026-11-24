@@ -152,7 +152,7 @@ private theorem H_subsingleton (R : Type) [CommRing R] (X : Spc)
 theorem UpperTheory.projectiveBundleFormula_rank_zero :
     ∀ (q : ℕ) [NeZero q] (E : Spc), PBF q E 0 := by
   intro q _ E n i
-  haveI : Subsingleton (Ht q (pullback (triv E 0) (PGL.pr 0)) n i) :=
+  have : Subsingleton (Ht q (pullback (triv E 0) (PGL.pr 0)) n i) :=
     H_subsingleton _ _ (fun p T ⟨x⟩ => sx_empty E p T x) _ _
   exact ⟨fun a b _ => Subsingleton.elim a b, fun y => ⟨fun j => j.elim0, Subsingleton.elim _ _⟩⟩
 end -- clump:auto
@@ -700,11 +700,11 @@ private theorem cover_tr {R : Type} [CommRing R] {U U' V V' E : Spc} (u : U ⟶ 
   refine ⟨?_, ?_, fun n => ?_⟩
   · have : u' = inv e ≫ e ≫ u' := by simp
     rw [this]
-    letI : Mono (e ≫ u') := h1
+    let : Mono (e ≫ u') := h1
     exact mono_comp (inv e) (e ≫ u')
   · have : v' = inv e' ≫ e' ≫ v' := by simp
     rw [this]
-    letI : Mono (e' ≫ v') := h2
+    let : Mono (e' ≫ v') := h2
     exact mono_comp (inv e') (e' ≫ v')
   · have h4 := h3 n
     have : biprod.desc ((free R).map ((e ≫ u').app n)) ((free R).map ((e' ≫ v').app n)) =
@@ -758,9 +758,9 @@ theorem UpperTheory.leraHirsch_of_local_cover_of_inf :
   have sq1 := UpperTheory.Glue.sq E π h₁
   have sq2 := UpperTheory.Glue.sq E π h₂
   have sqi := UpperTheory.Glue.sq_inf E h₁ h₂
-  letI := sq1.hasPullback
-  letI := sq2.hasPullback
-  letI := sqi.hasPullback
+  let := sq1.hasPullback
+  let := sq2.hasPullback
+  let := sqi.hasPullback
   have hloc' : ∀ (T : Scheme.{0}) (x : c.D.obj Γ(T, ⊤)), (Q.comap π).P _ x →
       Loc T fun V g => (Q₁.comap π).P _ (c.D.map g.appTop x) ∨ (Q₂.comap π).P _ (c.D.map g.appTop x) := by
     intro T x hx
@@ -776,7 +776,7 @@ theorem UpperTheory.leraHirsch_of_local_cover_of_inf :
       (by simp) (by simp) (by simp) ?_
     rw [Iso.refl_hom, Category.comp_id, ← Category.assoc, IsPullback.isoPullback_hom_fst,
       UpperTheory.Glue.map_inclLe]
-  letI := sq'.hasPullback
+  let := sq'.hasPullback
   refine UpperTheory.lerayHirsch_of_mayerVietoris_cover q (Sp.map E (inclLe h₁)) (Sp.map E (inclLe h₂)) (Sp.map E (π.sub Q)) d e _
     (UpperTheory.Glue.cov _ E h₁ h₂ hloc) ?_ ?_ ?_ ?_
   · exact UpperTheory.Glue.cover_tr (Sp.map E (inclLe (UpperTheory.Glue.comap_le π h₁)))
@@ -877,9 +877,9 @@ theorem UpperTheory.cohomology_lift_of_lift_on_unit_cube_faces :
     exact x.2)
   have hsq : Sp.map E (π.sub (Pred.top _)) ≫ Sp.map E (incl (Pred.top (XC N))) =
       Sp.map E (incl (Pred.comap π (Pred.top _))) ≫ Sp.map E π := rfl
-  haveI : IsIso (Sp.map E (incl (Pred.comap π (Pred.top (XC N))))) :=
+  have : IsIso (Sp.map E (incl (Pred.comap π (Pred.top (XC N))))) :=
     UpperTheory.DividedPowerChartLift.iso_incl E _ (fun _ _ => trivial)
-  haveI : IsIso (Sp.map E (incl (Pred.top (XC N)))) := UpperTheory.DividedPowerChartLift.iso_incl E _ (fun _ _ => trivial)
+  have : IsIso (Sp.map E (incl (Pred.top (XC N)))) := UpperTheory.DividedPowerChartLift.iso_incl E _ (fun _ _ => trivial)
   have h2 := UpperTheory.lerayHirsch_of_iso_square q (Sp.map E (π.sub (Pred.top _))) (Sp.map E π)
     (inv (Sp.map E (incl (Pred.comap π (Pred.top (XC N)))))) (inv (Sp.map E (incl (Pred.top (XC N)))))
     (by rw [IsIso.inv_comp_eq, ← Category.assoc, IsIso.eq_comp_inv, hsq]) d e _ hT
@@ -1120,11 +1120,11 @@ theorem UpperTheory.eqv_twist_unimodularUnitLocus :
   intro q _ M E i hE
   induction M with
   | zero =>
-    haveI : IsIso (Sp.map E (incl (Q1 0))) :=
+    have : IsIso (Sp.map E (incl (Q1 0))) :=
       UpperTheory.isIso_stackProductMap_of_bijective E (incl (Q1 0)) bij_incl0 (fun A => Function.bijective_id)
     exact eqv_comp (eqv_iso _ _) (equiv_first_twist E hE i)
   | succ M ih =>
-    haveI : IsIso (Sp.pair E (rho M) (sig M)) :=
+    have : IsIso (Sp.pair E (rho M) (sig M)) :=
       UpperTheory.isIso_stackProductPair_of_bijective E (rho M) (sig M) (fun A => bij_plain M A) (bij_grp M)
     have e : Sp.map E (incl (Q1 (M + 1))) ≫ Sp.fst E (XC (M + 1 + 1)) =
         Sp.pair E (rho M) (sig M) ≫ Sp.fst (Sp E ((XC (M + 1)).sub (Q1 M))) affC ≫
@@ -1488,8 +1488,8 @@ private theorem eqv_main (q : ℕ) [NeZero q] (N : ℕ) (E : Spc) (i : Fin N) (Q
     (hE : Inv q E) (j : ℤ) : Eqv _ (Sp.map E ((piC N).sub Q)) (tw q j) := by
   have hS : Inv q (Sp E ((XC N).sub Q)) := fun U ⟨x⟩ => hE U ⟨x.1⟩
   have hS1 : Inv q (Sp E (prC ((XC N).sub Q))) := fun U ⟨x⟩ => hE U ⟨x.1⟩
-  haveI i1 : IsIso (Sp.pair E (rHom Q i) (tHom N Q)) := UpperTheory.isIso_stackProductPair_of_bijective E _ _ (d_bij hQ) (g_bij Q i)
-  haveI i2 : IsIso (Sp.pair E (prFst ((XC N).sub Q)) (prSnd ((XC N).sub Q))) :=
+  have i1 : IsIso (Sp.pair E (rHom Q i) (tHom N Q)) := UpperTheory.isIso_stackProductPair_of_bijective E _ _ (d_bij hQ) (g_bij Q i)
+  have i2 : IsIso (Sp.pair E (prFst ((XC N).sub Q)) (prSnd ((XC N).sub Q))) :=
     UpperTheory.isIso_stackProductPair_of_bijective E _ _ (pr_d_bij _) (pr_g_bij _)
   have e1 : Sp.map E (rHom Q i) = Sp.pair E (rHom Q i) (tHom N Q) ≫ Sp.fst (Sp E (prC ((XC N).sub Q))) (XC 1) := rfl
   have e2 : Sp.map E (prFst ((XC N).sub Q)) =

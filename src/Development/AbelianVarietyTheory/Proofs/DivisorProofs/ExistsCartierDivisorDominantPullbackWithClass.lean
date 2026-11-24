@@ -86,7 +86,7 @@ theorem germOf_map_eq (D : CartierDiv X) {x : X'} {g g' : X.functionFieldˣ} (hg
     (hg' : D.IsEqn (φ x) g') : germOf x (unitsMap φ g) = germOf x (unitsMap φ g') := by
   rw [germOf_eq_iff]
   have := unitAt_map φ (hg.iff_unitAt.1 hg')
-  simpa only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, map_div₀] using this
+  simpa only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, map_div₀] using this
 
 def pullback (D : CartierDiv X) : CartierDiv X' :=
   show cartierGroup X' from ⟨fun x => germOf x (unitsMap φ (D.exists_isEqn (φ x)).choose), fun x => by

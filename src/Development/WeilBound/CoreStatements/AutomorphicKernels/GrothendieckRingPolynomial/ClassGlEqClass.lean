@@ -267,7 +267,7 @@ theorem vars_lt (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {Δ : Segm
   have hde : d ≠ Finsupp.single Δ 1 := by
     rintro rfl
     simp at hcd
-  rw [if_neg (Ne.symm hde), sub_zero] at hcd
+  rw [ite_eq_right (Ne.symm hde), sub_zero] at hcd
   have hne : Finsupp.toMultiset d ≠ {Δ} := fun h => hde ((toMultiset_eq_single_iff d Δ).1 h)
   exact len_lt_of_msupp hA (hp d (MvPolynomial.mem_support_iff.2 hcd)) hne t ((Finsupp.mem_toMultiset d t).2 htd)
 
@@ -608,9 +608,9 @@ theorem groth_of_steps (H : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     (h1 : TriAut) (h2 : UniTri) : GlobalTheory.Published.GrothendieckRingPolynomial := by
   intro k _ _ _ _ Z hZ
   obtain ⟨hCls, hMul, hAs, hCo, hOne, hPL, hTri, hMO, hJC, hJS, hAlt⟩ := H k
-  haveI : Fact (Assoc k) := ⟨hAs⟩
-  haveI : Fact (Comm k) := ⟨hCo⟩
-  haveI : Fact (One k) := ⟨hOne⟩
+  have : Fact (Assoc k) := ⟨hAs⟩
+  have : Fact (Comm k) := ⟨hCo⟩
+  have : Fact (One k) := ⟨hOne⟩
   have hst : Steps k := ⟨hCls, hMul, hAs, hCo, hOne, hPL, hTri, hMO, hJC, hJS, hAlt⟩
   have hbij := phiZ_bijective hst h1 h2 Z hZ
   let e := RingEquiv.ofBijective (phiOf fun Δ : Segment k => (⟨Δ.len * Δ.d, Z Δ⟩ : IrrGL (k := k))) hbij

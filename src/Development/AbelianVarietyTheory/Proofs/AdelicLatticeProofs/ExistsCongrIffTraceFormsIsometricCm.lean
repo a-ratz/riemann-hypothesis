@@ -111,7 +111,7 @@ theorem isotropic_adicCompletion_of_five_le (F : Type) [Field F] [NumberField F]
     (v : HeightOneSpectrum (𝓞 F)) {ι : Type*} [Fintype ι] (hι : 5 ≤ Fintype.card ι)
     (a : ι → v.adicCompletion F) :
     ∃ x : ι → v.adicCompletion F, x ≠ 0 ∧ ∑ i, a i * x i ^ 2 = 0 := by
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨e⟩ : Nonempty (Fin 5 ↪ ι) :=
     Function.Embedding.nonempty_of_card_le (by simpa using hι)
@@ -132,7 +132,7 @@ theorem exists_norm_over_extension (H : GlobalTheory.Published.HasseNormSt) (F :
   · obtain ⟨x, y, z, t, h0, h⟩ := hr (σ.comp (algebraMap F L))
     exact exists_norm_of_quaternary (s := σ s) (γ := σ (algebraMap F L γ)) (by simpa using hα)
       (by simpa using hβ) (by simpa using hγ) (by rw [← map_pow, hs]; simp) h0 h
-  · haveI : CharZero (w.adicCompletion L) :=
+  · have : CharZero (w.adicCompletion L) :=
       charZero_of_injective_algebraMap (algebraMap L (w.adicCompletion L)).injective
     obtain ⟨v, φ, hφ⟩ := exists_ringHom_adicCompletion F L w
     obtain ⟨x, y, z, t, h0, h⟩ := hf v
@@ -197,7 +197,7 @@ theorem exists_value_isSquare_div (F : Type) [Field F] [NumberField F] {a a' : F
   have hd := (denseRange_finite_real F T).prodMap (denseRange_finite_real F T)
   have h4 : ∀ v : T, Valued.v (4 : v.1.adicCompletion F) ≠ 0 := by
     intro v
-    haveI : CharZero (v.1.adicCompletion F) :=
+    have : CharZero (v.1.adicCompletion F) :=
       charZero_of_injective_algebraMap (algebraMap F (v.1.adicCompletion F)).injective
     simp
   have h41 : ∀ v : T, Valued.v (4 : v.1.adicCompletion F) ≤ 1 := by
@@ -224,10 +224,10 @@ theorem exists_value_isSquare_div (F : Type) [Field F] [NumberField F] {a a' : F
     · exact isOpen_lt continuous_const (by fun_prop)
   obtain ⟨⟨x, y⟩, hT, hR⟩ := hd.exists_mem_open hU ⟨((p, p'), (q, q')), by
     refine ⟨Set.mem_iInter.2 fun v => ?_, Set.mem_iInter.2 fun σ => ?_⟩
-    · simp only [Set.mem_setOf_eq]
+    · simp only [Set.mem_ofPred_eq]
       rw [div_self (hpq v), sub_self, map_zero]
-      exact zero_lt_iff.2 (h4 v)
-    · simp only [Set.mem_setOf_eq]
+      exact pos_iff_ne_zero.2 (h4 v)
+    · simp only [Set.mem_ofPred_eq]
       rw [div_self (hpq' σ)]
       exact one_pos⟩
   replace hT : ∀ v : T, Valued.v (algebraMap F (v.1.adicCompletion F) (a * x ^ 2 + a' * y ^ 2) /
@@ -281,7 +281,7 @@ theorem isotropic_add_four (H : GlobalTheory.Published.HasseNormSt) (F : Type) [
             ∑ i, φ ((Fin.cons μ fun j : Fin (n + 3) => a j.succ.succ : Fin (n + 4) → F) i) * x i ^ 2
               = 0 := by
       rintro k _ φ ⟨x, hx, h⟩
-      haveI : CharZero k := (RingHom.charZero_iff φ.injective).1 inferInstance
+      have : CharZero k := (RingHom.charZero_iff φ.injective).1 inferInstance
       rw [Fin.sum_univ_succ, Fin.sum_univ_succ] at h
       obtain ⟨X, Y, hXY, H⟩ := exists_value_isotropic (a := φ (a 0)) (a' := φ (a 1))
         (b := fun j : Fin (n + 2 + 1) => φ (a j.succ.succ)) (by simpa using ha 0)
@@ -306,7 +306,7 @@ theorem isotropic_add_four (H : GlobalTheory.Published.HasseNormSt) (F : Type) [
       (fun i => Fin.cases h0 (fun j => ha _) i) (fun σ => hp' σ _ (h2 σ)) (fun v => by
         by_cases hv : v ∈ hT.toFinset
         · exact hp ⟨v, hv⟩ _ (h1 ⟨v, hv⟩)
-        · simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion,
+        · simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion,
             not_or, not_exists, not_not] at hv
           refine isotropic_of_injective (fun i => (e i).succ)
             ((Fin.succ_injective _).comp (Fin.natAdd_injective _ _)) ?_

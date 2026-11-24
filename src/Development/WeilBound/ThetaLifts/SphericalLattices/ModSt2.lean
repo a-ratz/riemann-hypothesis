@@ -1123,7 +1123,7 @@ theorem relIndex_intGL (ϖ : L) (c : L →+* L) (q : ℕ) (h : IsUnramInv ϖ c q
     intro i j k l
     exact eventually_int ϖ h.2.2.2.1 _
   obtain ⟨N, hN⟩ := hev.exists
-  haveI := hF N
+  have := hF N
   refine relIndex_conj_range (intL L) (a ^ N) p ?_
   rw [SubmonoidClass.coe_pow, ha]
   exact hN

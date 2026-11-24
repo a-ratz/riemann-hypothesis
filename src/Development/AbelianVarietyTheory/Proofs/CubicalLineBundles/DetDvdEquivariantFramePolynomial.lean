@@ -70,7 +70,7 @@ theorem exists_lower {K : Type} [Field K] {n : ℕ} (x y : Matrix (Fin n) (Fin n
     rw [hrow i (hij.trans_le (hl j)).ne, Matrix.one_apply_ne hij.ne]
   refine ⟨y * x⁻¹, ?_, hb, fun i hi => by rw [hrow i hi, Matrix.one_apply_eq], ?_⟩
   · rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hx.isUnit, Matrix.mul_one]
-  · rw [Matrix.det_of_lowerTriangular _ (fun i j hij => hb i j hij), Finset.prod_eq_single l]
+  · rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => hb i j hij), Finset.prod_eq_single l]
     · intro i _ hi; rw [hrow i hi, Matrix.one_apply_eq]
     · simp
 
@@ -82,7 +82,7 @@ theorem det_dvd_of_equivariant : ∀ (K : Type) [Field K] [Infinite K] (B : Type
   rw [hT]
   change (gen m K τ₀).det ∣ P
   by_cases h0 : m τ₀ = 0
-  · haveI : IsEmpty (Fin (m τ₀)) := by rw [h0]; infer_instance
+  · have : IsEmpty (Fin (m τ₀)) := by rw [h0]; infer_instance
     rw [Matrix.det_isEmpty]; exact one_dvd _
   let l : Fin (m τ₀) := ⟨m τ₀ - 1, by omega⟩
   have hl : ∀ i, i ≤ l := fun i => by

@@ -79,7 +79,7 @@ private theorem unit_of_closed {R : Type} [CommRing R] (r : R)
     (h : ∀ (K : Type) [Field K] [IsAlgClosed K] (φ : R →+* K), φ r ≠ 0) : IsUnit r := by
   by_contra hr
   obtain ⟨m, hm, hrm⟩ := exists_max_ideal_of_mem_nonunits hr
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   refine h (AlgebraicClosure (R ⧸ m)) ((algebraMap (R ⧸ m) _).comp (Ideal.Quotient.mk m)) ?_
   rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem.2 hrm, map_zero]
 

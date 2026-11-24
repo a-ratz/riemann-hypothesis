@@ -104,7 +104,7 @@ private theorem UpperTheory.Reformulated.B.SplittingFieldConstruction.factor {A 
     ∃! σ : B →ₐ[A] C, φ.comp (σ : B →+* C) = z := by
   have hφ : Function.Injective φ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    apply Ideal.eq_bot_of_comap_eq_bot (R := A)
+    apply Ideal.eq_bot_of_under_eq_bot (R := A)
     rw [Ideal.under_def, RingHom.comap_ker]
     exact (RingHom.injective_iff_ker_eq_bot _).1 hinj
   have hzA : ∀ a : A, z (algebraMap A B a) = φ (algebraMap A C a) := fun a =>
@@ -160,10 +160,10 @@ theorem UpperTheory.Reformulated.B.SplittingFieldConstruction.splitField_of :
   obtain ⟨p, hp, h0⟩ := UpperTheory.Reformulated.B.SplittingFieldConstruction.exists_monic (A := A) s
   let q : (FractionRing A)[X] := p.map (algebraMap A (FractionRing A))
   let L : Type := q.SplittingField
-  letI iK : Algebra (FractionRing A) L := inferInstance
-  letI iA : Algebra A L :=
+  let iK : Algebra (FractionRing A) L := inferInstance
+  let iA : Algebra A L :=
     ((algebraMap (FractionRing A) L).comp (algebraMap A (FractionRing A))).toAlgebra
-  haveI iT : @IsScalarTower A (FractionRing A) L Algebra.toSMul iK.toSMul iA.toSMul :=
+  have iT : @IsScalarTower A (FractionRing A) L Algebra.toSMul iK.toSMul iA.toSMul :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hsp : (p.map (algebraMap A L)).Splits := by
     rw [IsScalarTower.algebraMap_eq A (FractionRing A) L, ← Polynomial.map_map]

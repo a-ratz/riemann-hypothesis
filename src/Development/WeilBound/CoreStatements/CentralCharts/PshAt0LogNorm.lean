@@ -321,8 +321,8 @@ theorem pshAt0_logdet {k r : ℕ} {Λ : Type} [AddCommGroup Λ] (L : Flat.LogPer
     (hU : ∀ j, DifferentiableOn ℂ (U j) (Metric.ball 0 1)) (hli : LinearIndependent ℂ fun j => U j 0) :
     PshAt0 fun t => Real.log (HodgeMetric.periodGram L U (HodgeMetric.uncentre 0 ρ π t)).det.re := by
   classical
-  haveI := L.free
-  haveI := L.fin
+  have := L.free
+  have := L.fin
   obtain ⟨b, hb⟩ := GlobalTheory.exists_isSymplecticBasis_of_finrank (R := ℤ) (B := L.E) (fun x => L.alt x) L.unimod L.rank
   have hcA : AnalyticAt ℂ (HodgeMetric.uncentre (0 : Fin n → ℂ) ρ π) 0 := by
     have e : HodgeMetric.uncentre (0 : Fin n → ℂ) ρ π =

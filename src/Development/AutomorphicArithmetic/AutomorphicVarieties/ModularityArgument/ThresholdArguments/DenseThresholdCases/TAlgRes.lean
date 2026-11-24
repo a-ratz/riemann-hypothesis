@@ -155,11 +155,11 @@ private theorem norm_infDiag (k : Lˣ) :
 open Classical in
 private theorem emb_norm (φ : K →+* ℂ) (x : L) :
     φ (Algebra.norm K x) = ∏ ψ ∈ Finset.univ.filter fun ψ : L →+* ℂ => ψ.comp (algebraMap K L) = φ, ψ x := by
-  letI := φ.toAlgebra
-  haveI : FiniteDimensional K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  let := φ.toAlgebra
+  have : FiniteDimensional K L := Module.Finite.of_restrictScalars_finite ℚ K L
   have h := Algebra.norm_eq_prod_embeddings K ℂ x
   refine h.trans ?_
-  refine Finset.prod_bij (fun σ _ => (σ : L →+* ℂ)) (fun σ _ => ?_) (fun a _ b _ e => AlgHom.coe_ringHom_injective e)
+  refine Finset.prod_bij (fun σ _ => (σ : L →+* ℂ)) (fun σ _ => ?_) (fun a _ b _ e => AlgHom.toRingHom_injective e)
     (fun ψ hψ => ⟨⟨ψ, fun r => DFunLike.congr_fun (Finset.mem_filter.1 hψ).2 r⟩, Finset.mem_univ _, rfl⟩) fun _ _ => rfl
   exact Finset.mem_filter.2 ⟨Finset.mem_univ _, RingHom.ext σ.commutes⟩
 private theorem norm_pos (k : Lˣ) (hk : ∀ φ : L →+* ℝ, 0 < φ (k : L)) (φ : K →+* ℝ) : 0 < φ (Algebra.norm K (k : L)) := by

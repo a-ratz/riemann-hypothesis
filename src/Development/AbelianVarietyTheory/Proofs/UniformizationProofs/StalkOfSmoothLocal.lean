@@ -75,7 +75,7 @@ theorem localization_of_isStandardSmooth_ideal {V R A : Type} [CommRing V] [IsNo
     exact MorphismProperty.of_isPushout
       (P := RingHom.toMorphismProperty (@RingHom.IsStandardSmoothOfRelativeDimension g))
       (NilpotentLift.isPushout_quotient_map m (CommRingCat.ofHom ρ)).flip hρ
-  letI := ρ.toAlgebra
+  let := ρ.toAlgebra
   have : Algebra.IsStandardSmoothOfRelativeDimension g V R := hρ
   have : Algebra.IsStandardSmooth V R := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth g
   have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing V R
@@ -84,19 +84,19 @@ theorem localization_of_isStandardSmooth_ideal {V R A : Type} [CommRing V] [IsNo
     have h₂ : (algebraMap R A).Flat :=
       RingHom.flat_algebraMap_iff.2 (IsLocalization.flat A n.primeCompl)
     exact h₁.comp h₂
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   rw [← Ideal.map_map]
   set J := m.map ρ with hJ
   obtain ⟨φ, -, hφ⟩ := hq.exists_etale_mvPolynomial
   have hJn : RingHom.ker (Ideal.Quotient.mk J) ≤ n := by
     rwa [Ideal.mk_ker]
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : Algebra.Etale (MvPolynomial (Fin g) (V ⧸ m)) (R ⧸ J) := hφ.toAlgebra
   have : IsRegularRing (R ⧸ J) := isRegularRing_of_etale (MvPolynomial (Fin g) (V ⧸ m)) _
   have hm : (n.map (Ideal.Quotient.mk J)).IsMaximal :=
     Ideal.IsMaximal.map_of_surjective_of_ker_le Ideal.Quotient.mk_surjective hJn
   have hle : J ≤ (J.map (algebraMap R A)).comap (algebraMap R A) := Ideal.le_comap_map
-  letI : Algebra (R ⧸ J) (A ⧸ J.map (algebraMap R A)) := (Ideal.quotientMap _ _ hle).toAlgebra
+  let : Algebra (R ⧸ J) (A ⧸ J.map (algebraMap R A)) := (Ideal.quotientMap _ _ hle).toAlgebra
   have hl := IsLocalization.of_surjective n.primeCompl A (S' := A ⧸ J.map (algebraMap R A))
     (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective rfl
     (by rw [Ideal.mk_ker, Ideal.mk_ker])
@@ -131,10 +131,10 @@ theorem stalk_of_smooth_local : ∀ (V : Type) [CommRing V] [IsNoetherianRing V]
     rw [← hσ, ← hW.fromSpecStalk_eq_fromSpecStalk hxW, Spec.map_comp, Spec.map_comp, IsAffineOpen.fromSpecStalk,
       Category.assoc, ← IsAffineOpen.SpecMap_appLE_fromSpec f hU hW e, IsAffineOpen.fromSpec_top,
       Scheme.isoSpec_Spec_inv]
-  letI : Algebra Γ(X, W) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hxW⟩
+  let : Algebra Γ(X, W) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hxW⟩
   have hl : IsLocalization.AtPrime (X.presheaf.stalk x) (hW.primeIdealOf ⟨x, hxW⟩).asIdeal :=
     hW.isLocalization_stalk ⟨x, hxW⟩
-  haveI := hW.primeIdealOf_isMaximal_of_isClosed ⟨x, hxW⟩ hx
+  have := hW.primeIdealOf_isMaximal_of_isClosed ⟨x, hxW⟩ hx
   have hs : (algebraMap Γ(X, W) (X.presheaf.stalk x)).comp ρ.hom = σ := congrArg (fun q => q.hom) hc
   have key := localization_of_isStandardSmooth_ideal (A := X.presheaf.stalk x) (IsLocalRing.maximalIdeal V) hρ
     (hW.primeIdealOf ⟨x, hxW⟩).asIdeal (by

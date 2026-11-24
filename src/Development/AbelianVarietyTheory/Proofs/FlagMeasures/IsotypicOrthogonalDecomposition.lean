@@ -118,21 +118,21 @@ theorem selfAdjoint_eq_algebraMap_of_commute_irreducible {G H : Type} [NormedAdd
         have hu' : cfc k A u = 0 := hu
         show cfc k A (π g u) = 0
         have := congrArg (fun T : H →L[ℂ] H => T u) (hcomm g).eq
-        simp only [ContinuousLinearMap.mul_apply] at this
+        simp only [mul_apply_eq_comp] at this
         rw [this, hu', map_zero]
     rcases hS with hS | hS
     · apply hF
       ext v
       have hv : cfc f A v ∈ S := by
         show cfc k A (cfc f A v) = 0
-        rw [← ContinuousLinearMap.mul_apply, hprod, ContinuousLinearMap.zero_apply]
+        rw [← mul_apply_eq_comp, hprod, zero_apply]
       rw [hS, Submodule.mem_bot] at hv
       simpa using hv
     · apply hK
       ext v
       have hv : v ∈ S := hS ▸ Submodule.mem_top
       have hv' : cfc k A v = 0 := hv
-      rw [ContinuousLinearMap.zero_apply]
+      rw [zero_apply]
       exact hv'
   refine ⟨r, ?_⟩
   calc A = cfc (fun x : ℝ => x) A := (cfc_id' ℝ A).symm
@@ -152,8 +152,8 @@ theorem schur_unitary_irreducible (G H : Type) [Group G] [NormedAddCommGroup H]
     exact L.inner_map_map u v
   have hinv : ∀ g (v : H), π g (π g⁻¹ v) = v := by
     intro g v
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   have hadj : ∀ g, ContinuousLinearMap.adjoint (π g) = π g⁻¹ := by
     intro g
     symm
@@ -215,7 +215,7 @@ theorem inner_intertwiners (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g u, ‖σ g
     (u u' : H) : ⟪T u, T' u'⟫_ℂ = ⟪T w, T' w⟫_ℂ * ⟪u, u'⟫_ℂ := by
   have hinv : ∀ g (v : H), σ g (σ g⁻¹ v) = v := by
     intro g v
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul]
+    rw [← mul_apply_eq_comp, ← map_mul]
     simp
   have hSin : ∀ v x, ⟪v, ((ContinuousLinearMap.adjoint T) ∘L T') x⟫_ℂ = ⟪T v, T' x⟫_ℂ := by
     intro v x
@@ -224,7 +224,7 @@ theorem inner_intertwiners (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g u, ‖σ g
     intro g
     refine ContinuousLinearMap.ext fun x => ?_
     refine ext_inner_left ℂ fun v => ?_
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hSin]
+    rw [mul_apply_eq_comp, mul_apply_eq_comp, hSin]
     have h1 : T v = R g (T (σ g⁻¹ v)) := by
       have := congrArg (fun F : H →L[ℂ] L => F (σ g⁻¹ v)) (hT g)
       simp only [ContinuousLinearMap.comp_apply, hinv] at this
@@ -240,7 +240,7 @@ theorem inner_intertwiners (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g u, ‖σ g
   obtain ⟨c, hc⟩ := GlobalTheory.schur_unitary_irreducible G H σ hσ hirr _ hcomm
   have key : ∀ a b, ⟪T a, T' b⟫_ℂ = c * ⟪a, b⟫_ℂ := by
     intro a b
-    rw [← hSin, hc, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, inner_smul_right]
+    rw [← hSin, hc, smul_apply, one_apply_eq_self, inner_smul_right]
   have hww : ⟪w, w⟫_ℂ = 1 := by
     rw [inner_self_eq_norm_sq_to_K, hw]
     simp
@@ -304,7 +304,7 @@ end Abstract
 
 theorem exists_orthonormal_frame : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ), IsDSData B d → FiniteDimensional ℂ (B.I.eHom B.σs B.μf B.fund B.R B.Re) → B.I.eHom B.σs B.μf B.fund B.R B.Re ≤ B.I.HomS B.σs B.μf B.fund B.R → ∃ T : Fin B.D → (B.Hs →L[ℂ] B.I.L2 B.μf B.fund), (∀ i, T i ∈ B.I.eHom B.σs B.μf B.fund B.R B.Re) ∧ (∀ i u, ‖T i u‖ = ‖u‖) ∧ (∀ i j, i ≠ j → ∀ u u', ⟪T i u, T j u'⟫_ℂ = 0) ∧ Submodule.span ℂ (Set.range T) = B.I.eHom B.σs B.μf B.fund B.R B.Re := by
   intro B d hd hfin hle
-  haveI := hfin
+  have := hfin
   obtain ⟨hU, hI, -, hw, -⟩ := _root_.GlobalTheory.Dec.tensorRep B d hd
   obtain ⟨h1, hmul, hnorm, -⟩ := hU
   let σ : B.I.Ginf →* (B.Hs →L[ℂ] B.Hs) :=

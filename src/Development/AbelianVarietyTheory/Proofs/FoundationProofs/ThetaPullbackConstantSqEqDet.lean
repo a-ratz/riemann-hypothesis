@@ -145,7 +145,7 @@ theorem theta_signed_translation : ∀ (D : D7), ∀ (cc : Ideal (𝓞 D.host.K)
       rfl
     have e3 : Complex.exp (-(Real.pi : ℂ) * Complex.I * ((n : ℝ) : ℂ)) = (-1) ^ n := by
       rw [show -(Real.pi : ℂ) * Complex.I * ((n : ℝ) : ℂ) = (n : ℂ) * (-(Real.pi * Complex.I)) by push_cast; ring,
-        Complex.exp_int_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
+        Complex.exp_intCast_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
       norm_num
     have e4 : (-1 : ℂ) ^ m * (-1) ^ n * (if ω / 2 ∈ Λ then 1 else -1) = 1 := by
       rw [← zpow_add₀ (by norm_num)]
@@ -241,7 +241,7 @@ theorem ph_const_mul_det {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [
   simp only [key] at hL
   rw [integral_const_mul, integral_finsetSum _ (fun q _ => (hR q).1.const_mul _)] at hL
   simp only [integral_const_mul, fun q => (hR q).2, hq, mul_ite, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at hL
+    Finset.mem_univ, ite_true] at hL
   refine ph_of_mul_pos (t := μ.real Fd) (ENNReal.toReal_pos h0 hfin) ?_
   convert hL using 1
   linear_combination (-(LinearMap.det (1 - (a : V →ₗ[ℂ] V)) * c * (μ.real Fd : ℂ))) * hα0

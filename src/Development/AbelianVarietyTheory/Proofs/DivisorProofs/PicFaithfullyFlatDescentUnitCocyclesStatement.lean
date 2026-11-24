@@ -385,7 +385,7 @@ theorem descMod_map_le {B' : Type} [CommRing B'] [Algebra A B'] (φ : B →ₐ[A
     (descMod A B u).map φ.toLinearMap ≤ descMod A B' (Units.map (Algebra.TensorProduct.map φ φ).toMonoidHom u) := by
   rintro _ ⟨b, hb, rfl⟩
   simp only [descMod, LinearMap.mem_eqLocus, LinearMap.comp_apply, LinearMap.mulLeft_apply,
-    AlgHom.toLinearMap_apply, Units.coe_map, MonoidHom.coe_coe] at hb ⊢
+    AlgHom.toLinearMap_apply, Units.coe_map, MonoidHom.coe_ofClass] at hb ⊢
   have := congrArg (Algebra.TensorProduct.map φ φ) hb
   simpa using this
 
@@ -394,9 +394,9 @@ theorem nonempty_descMod_equiv [Module.FaithfullyFlat A B] {B' : Type} [CommRing
     Nonempty (descMod A B u ≃ₗ[A] descMod A B' (Units.map (Algebra.TensorProduct.map φ φ).toMonoidHom u)) := by
   set u' := Units.map (Algebra.TensorProduct.map φ φ).toMonoidHom u
   have hu' : UCoc A B' u' := uCoc_map φ hu
-  haveI : Module.Invertible A (descMod A B u) :=
+  have : Module.Invertible A (descMod A B u) :=
     inferInstanceAs (Module.Invertible A ((isUnit_descMod hu).unit : Submodule A B))
-  haveI : Module.Invertible A (descMod A B' u') :=
+  have : Module.Invertible A (descMod A B' u') :=
     inferInstanceAs (Module.Invertible A ((isUnit_descMod hu').unit : Submodule A B'))
   have hmap := descMod_map_le φ u
   let f : descMod A B u →ₗ[A] descMod A B' u' :=

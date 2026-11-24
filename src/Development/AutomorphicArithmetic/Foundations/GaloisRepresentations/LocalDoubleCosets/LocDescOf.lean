@@ -129,7 +129,7 @@ theorem locDesc_of (hS : Scalar) (hT : TracePow) : LocDesc := by
     have := hk (hψ ψ h1 h2 v)
     rw [LinearMap.mem_ker, map_sub, map_smul, ha, smul_eq_mul, sub_eq_zero] at this
     exact (mul_right_cancel₀ hv this).symm
-  · haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU
+  · have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU
     let φ : U →ₗ[ℂ] U := (jacB π t).restrict (hst t)
     have hφ : Function.Injective φ := fun a b e => by
       have e' : jacB π t a = jacB π t b := congrArg Subtype.val e

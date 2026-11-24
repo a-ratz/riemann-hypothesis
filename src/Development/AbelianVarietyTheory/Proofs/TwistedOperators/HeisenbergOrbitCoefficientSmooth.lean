@@ -187,8 +187,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
   {n d : ℕ} {X : Spc F E n} {W : Spc F E d}
 
 theorem continuous_archCo (M : Model σ X W) : Continuous (GlobalTheory.HeisOrbit.archCo M.co) := by
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
-  haveI : IsModuleTopology (AF F) (Matrix (Fin n) (Fin d) (AE F E)) :=
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  have : IsModuleTopology (AF F) (Matrix (Fin n) (Fin d) (AE F E)) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin n → Fin d → AE F E))
   have he : Continuous (M.co.e : Matrix (Fin n) (Fin d) (AE F E) → _) :=
     IsModuleTopology.continuous_of_linearMap M.co.e.toLinearMap
@@ -206,7 +206,7 @@ theorem continuous_archCo (M : Model σ X W) : Continuous (GlobalTheory.HeisOrbi
 
 theorem continuous_mat_line (γ : Multiplicative ℝ →* UA σ W.J) (hγ : Continuous γ) :
     Continuous fun t : ℝ => mat (γ (Multiplicative.ofAdd t)) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp (hγ.comp continuous_ofAdd))
+  Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.comp continuous_ofAdd))
 
 theorem mat_mul (g h : UA σ W.J) : mat (g * h) = mat g * mat h := rfl
 
@@ -259,12 +259,12 @@ theorem opR_zero (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ W.J) : o
 theorem opR_add (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ W.J) (s t : ℝ) :
     opR M γ (s + t) = opR M γ s * opR M γ t := by
   refine ContinuousLinearMap.ext fun w => ?_
-  rw [ContinuousLinearMap.mul_apply, opR_apply, opR_apply, opR_apply, opL_apply M (mat (γ (Multiplicative.ofAdd t))) w, opL_archCo M _ (at_mul (at_lift M.co w) _),
+  rw [mul_apply_eq_comp, opR_apply, opR_apply, opR_apply, opL_apply M (mat (γ (Multiplicative.ofAdd t))) w, opL_archCo M _ (at_mul (at_lift M.co w) _),
     opL_apply, ofAdd_add, map_mul, mat_mul, Matrix.transpose_mul, Matrix.mul_assoc]
 
 theorem continuous_opR (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ W.J) (hγ : Continuous γ) :
     Continuous (opR M γ) := by
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
   refine continuous_clm_apply.2 fun w => ?_
   simp only [opR_apply, opL_apply]
   exact (continuous_archCo M).comp (continuous_const.matrix_mul (continuous_mat_line γ hγ).matrix_transpose)
@@ -277,14 +277,14 @@ theorem archCo_orbit_smooth : ∀ {F E : Type} [Field F] [NumberField F] [Field 
     ∃ u' : Matrix (Fin n) (Fin d) (AE F E), At (evI F) u' ∧
       HasDerivAt (fun t : ℝ => GlobalTheory.HeisOrbit.archCo M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)) (GlobalTheory.HeisOrbit.archCo M.co u') 0 := by
   intro F E _ _ _ _ _ σ n d X W M γ hγ u hu
-  haveI : CompleteSpace ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F)) :=
-    FiniteDimensional.complete ℝ _
-  haveI : FiniteDimensional ℝ (((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))
+  have : CompleteSpace ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F)) :=
+    FiniteDimensional.completeSpace ℝ _
+  have : FiniteDimensional ℝ (((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))
       →L[ℝ] ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))) :=
     ContinuousLinearMap.finiteDimensional
   have hcomp : CompleteSpace (((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))
       →L[ℝ] ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))) :=
-    FiniteDimensional.complete ℝ _
+    FiniteDimensional.completeSpace ℝ _
   have hs : ContDiff ℝ ∞ (opR M γ) :=
     @GlobalTheory.contDiff_of_continuous_oneParameter _ _ _ hcomp (opR M γ) (continuous_opR M γ hγ.1) (opR_zero M γ) (opR_add M γ)
   have hf : (fun t : ℝ => GlobalTheory.HeisOrbit.archCo M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)) =

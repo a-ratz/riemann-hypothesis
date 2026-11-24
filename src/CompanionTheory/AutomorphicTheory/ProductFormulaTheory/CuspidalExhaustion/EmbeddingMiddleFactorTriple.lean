@@ -262,8 +262,8 @@ theorem mid_sub {V : Type} [AddCommGroup V] [Module ℂ V] {P : Representation �
   have hSs : IsSmooth S.toRepresentation := hSsub.isSmooth hs
   have hSf : HasFiniteLength S.toRepresentation :=
     GlobalTheory.ProdLength.hasFiniteLength_of_injective (subIncl S) (subIncl_injective S) hP
-  haveI := x.rep.irr
-  haveI : Nontrivial x.rep.V := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.rep.irr
+  have := x.rep.irr
+  have : Nontrivial x.rep.V := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.rep.irr
   by_cases hnt : Nontrivial S.toSubmodule
   swap
   · exfalso

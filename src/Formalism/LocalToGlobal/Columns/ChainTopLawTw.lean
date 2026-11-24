@@ -91,7 +91,7 @@ variable {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] {P : Heig
 
 private theorem redP_mul_of_intAt {a b : E} (ha : IntAt P a) (hb : IntAt P b) :
     redP P (a * b) = redP P a * redP P b := by
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨ra, sa, hsa, hra⟩ := ha
   obtain ⟨rb, sb, hsb, hrb⟩ := hb
   have hs : sa * sb ∉ P.asIdeal := fun h => (P.isPrime.mem_or_mem h).elim hsa hsb
@@ -190,12 +190,12 @@ theorem blk_D {n r d : ℕ} (hn : n = r + d) (M : Matrix (Fin (n + 1)) (Fin (n +
     refine ⟨fun j => ?_, fun i => ?_, ?_⟩
     · have e2 : brI (show n + 1 = r + (d + 1) by omega) (Fin.castSucc j) =
           Fin.castSucc (⟨r + j.1, by have := j.2; omega⟩ : Fin n) :=
-        Fin.ext (by simp only [brI, Fin.coe_castSucc])
+        Fin.ext (by simp only [brI, Fin.val_castSucc])
       simp only [Matrix.submatrix_apply, e1, e2]
       exact hM.1 _
     · have e2 : brI (show n + 1 = r + (d + 1) by omega) (Fin.castSucc i) =
           Fin.castSucc (⟨r + i.1, by have := i.2; omega⟩ : Fin n) :=
-        Fin.ext (by simp only [brI, Fin.coe_castSucc])
+        Fin.ext (by simp only [brI, Fin.val_castSucc])
       simp only [Matrix.submatrix_apply, e1, e2]
       exact hM.2.1 _
     · simp only [Matrix.submatrix_apply, e1]
@@ -212,7 +212,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {P : HeightOneSpectru
 theorem reduction_zero_of_high_divisibility (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hq0 : (q : E) ≠ 0) {cc : ℕ} (hcc : 1 ≤ cc) {x : E}
     (h : IntAt P (((q : E) ^ cc)⁻¹ * x)) : redP P x = 0 := by
   classical
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨r', s', hs', hr'⟩ := h
   have hq0' : ((q : E) ^ cc) ≠ 0 := pow_ne_zero _ hq0
   have h1 : algebraMap (𝓞 E) E s' * x = algebraMap (𝓞 E) E (((q : ℕ) : 𝓞 E) ^ cc * r') := by
@@ -240,7 +240,7 @@ theorem reduction_zero_of_high_divisibility (hq : ((q : ℕ) : 𝓞 E) ∈ P.asI
 
 private theorem redP_eq_one_of_intAt_q_pow_inv_mul_sub_one (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hq0 : (q : E) ≠ 0) {cc : ℕ} (hcc : 1 ≤ cc)
     {x : E} (h : IntAt P (((q : E) ^ cc)⁻¹ * (x - 1))) : redP P x = 1 := by
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨r', s', hs', hr'⟩ := h
   have hq0' : ((q : E) ^ cc) ≠ 0 := pow_ne_zero _ hq0
   have h1 : algebraMap (𝓞 E) E s' * x = algebraMap (𝓞 E) E (s' + ((q : ℕ) : 𝓞 E) ^ cc * r') := by
@@ -322,7 +322,7 @@ theorem tlq_phiQ_supp (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ)
 private theorem intAt_q_inv_mul_sub_of_redP_eq (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2) {a b : E}
     (ha : IntAt P a) (hb : IntAt P b) (hab : redP P a = redP P b) : IntAt P ((q : E)⁻¹ * (b - a)) := by
   classical
-  haveI := P.isPrime
+  have := P.isPrime
   have hqn : q ≠ 0 := by rintro rfl; exact hu (by simp)
   have hq0 : (q : E) ≠ 0 := Nat.cast_ne_zero.mpr hqn
   obtain ⟨ra, sa, hsa, hra⟩ := ha
@@ -338,7 +338,7 @@ private theorem intAt_q_inv_mul_sub_of_redP_eq (hq : ((q : ℕ) : 𝓞 E) ∈ P.
     apply hu
     have h3 : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal * J := by rw [← hJ]; exact Ideal.mem_span_singleton_self _
     rw [pow_two]; exact Ideal.mul_mono_right hJ' h3
-  obtain ⟨u, huJ, huP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨u, huJ, huP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   have hut : u * (sa * rb - sb * ra) ∈ Ideal.span {((q : ℕ) : 𝓞 E)} := by
     rw [hJ, mul_comm u]; exact Ideal.mul_mem_mul ht huJ
   obtain ⟨w, hw⟩ := Ideal.mem_span_singleton'.mp hut

@@ -133,7 +133,7 @@ namespace GlobalTheory.CompanionTheory.LTPer.Tilt
 theorem exists_frobenius_pow_of_ringHoms : ∀ {l : ℕ} [Fact l.Prime] {k D : Type} [Field k] [Finite k] [CommRing D] [IsDomain D] [CharP D l]
     (α β : k →+* D), ∃ i : ℕ, ∀ x, β x = α x ^ l ^ i := by
   intro l _ k D _ _ _ _ _ α β
-  haveI : CharP k l := α.charP α.injective l
+  have : CharP k l := α.charP α.injective l
   exact GlobalTheory.ResidueChar.exists_pow_of_finite_field l α β
 
 end GlobalTheory.CompanionTheory.LTPer.Tilt
@@ -706,10 +706,10 @@ theorem norm_pow_prime_pow_sub_le {a b : ℂ_[l]} (ha : ‖a‖ ≤ 1) (hb : ‖
 
 theorem isClosed_range_finExt (K : FinExt l) :
     IsClosed (Set.range fun y : ↥K.1 => omC (l := l) (y : Om l)) := by
-  haveI := K.2
+  have := K.2
   let L : ↥K.1 →ₗ[ℚ_[l]] ℂ_[l] :=
     (IsScalarTower.toAlgHom ℚ_[l] (Om l) ℂ_[l]).toLinearMap ∘ₗ K.1.val.toLinearMap
-  have h := Submodule.closed_of_finiteDimensional (LinearMap.range L)
+  have h := Submodule.isClosed_of_finiteDimensional (LinearMap.range L)
   have e : (Set.range fun y : ↥K.1 => omC (l := l) (y : Om l)) = (LinearMap.range L : Set ℂ_[l]) := by
     ext z
     rfl
@@ -804,8 +804,8 @@ theorem dvd_pow_qOf_sub_self : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (π :
   set_option synthInstance.maxHeartbeats 200000 in
     rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem,
       map_sub (Ideal.Quotient.mk _), map_pow (Ideal.Quotient.mk _), sub_eq_zero]
-  letI := Ideal.Quotient.field (Ideal.span {π})
-  letI := Fintype.ofFinite (↥(OL K) ⧸ Ideal.span {π})
+  let := Ideal.Quotient.field (Ideal.span {π})
+  let := Fintype.ofFinite (↥(OL K) ⧸ Ideal.span {π})
   rw [qOf, Nat.card_eq_fintype_card]
   exact FiniteField.pow_card _
 
@@ -844,9 +844,9 @@ theorem resfield_of_irreducible : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (�
   have hl : ¬ IsUnit ((l : ℕ) : ↥(OL K)) := by
     intro hu
     rw [← map_natCast (algebraMap ℤ_[l] ↥(OL K))] at hu
-    letI : Algebra.IsIntegral ℤ_[l] ↥(OL K) := hi
-    letI : FaithfulSMul ℤ_[l] ↥(OL K) := hf
-    letI : IsLocalHom (algebraMap ℤ_[l] ↥(OL K)) :=
+    let : Algebra.IsIntegral ℤ_[l] ↥(OL K) := hi
+    let : FaithfulSMul ℤ_[l] ↥(OL K) := hf
+    let : IsLocalHom (algebraMap ℤ_[l] ↥(OL K)) :=
       Algebra.IsIntegral.isLocalHom ℤ_[l] ↥(OL K)
     exact PadicInt.irreducible_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   have hdvd : π ∣ ((l : ℕ) : ↥(OL K)) := by
@@ -862,13 +862,13 @@ theorem resfield_of_irreducible : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (�
     have := hfin 1
     exact Finite.of_surjective _ (Ideal.Quotient.factor_surjective hle)
   refine ⟨hmax, hfinQ, ?_⟩
-  letI : Field (↥(OL K) ⧸ Ideal.span {π}) := Ideal.Quotient.field _
-  haveI : Fintype (↥(OL K) ⧸ Ideal.span {π}) := Fintype.ofFinite _
+  let : Field (↥(OL K) ⧸ Ideal.span {π}) := Ideal.Quotient.field _
+  have : Fintype (↥(OL K) ⧸ Ideal.span {π}) := Fintype.ofFinite _
   have hz : ((l : ℕ) : ↥(OL K) ⧸ Ideal.span {π}) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk (Ideal.span {π})), Ideal.Quotient.eq_zero_iff_mem,
       Ideal.mem_span_singleton]
     exact hdvd
-  haveI : CharP (↥(OL K) ⧸ Ideal.span {π}) l := (CharP.charP_iff_prime_eq_zero hlp).2 hz
+  have : CharP (↥(OL K) ⧸ Ideal.span {π}) l := (CharP.charP_iff_prime_eq_zero hlp).2 hz
   obtain ⟨n, -, hn⟩ := FiniteField.card (↥(OL K) ⧸ Ideal.span {π}) l
   refine ⟨n, n.pos, ?_⟩
   rw [qOf, Nat.card_eq_fintype_card, hn]
@@ -959,9 +959,9 @@ theorem exp_twist {l : ℕ} [Fact l.Prime] (K : FinExt l) (π : ↥(OL K)) (f : 
     (hrπ : r₀ π = 0) (μ : ↥K.1 →ₐ[ℚ_[l]] Om l) :
     ∃ i : ℕ, ∀ c, ∃ c' : ↥(OL K), sh (r₀ c ^ l ^ i) = omC (μ ((c + π * c' : ↥(OL K)) : ↥K.1)) := by
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.CompanionTheory.LTPer.Tilt.exists_gal_extending_embedding K μ
-  haveI := hmax
-  haveI := hfin
-  letI : Field (↥(OL K) ⧸ Ideal.span {π}) := Ideal.Quotient.field _
+  have := hmax
+  have := hfin
+  let : Field (↥(OL K) ⧸ Ideal.span {π}) := Ideal.Quotient.field _
   have hker : ∀ a ∈ Ideal.span {π}, r₀ a = 0 := by
     intro a ha
     obtain ⟨b, rfl⟩ := Ideal.mem_span_singleton'.1 ha
@@ -1116,8 +1116,8 @@ theorem actB_prod_periods {l : ℕ} [Fact l.Prime] (K : FinExt l) (χ : ↥(GK K
     (g : GQ l) (hg : g ∈ GK K) (hfix : ∀ (μ : ↥K.1 →ₐ[ℚ_[l]] Om l) (x : ↥K.1), g (μ x) = μ x) :
       actB g (∏ μ ∈ s, t μ) =
         algebraMap ℚ_[l] (Formalism.Per6.BdRp l) (Algebra.norm ℚ_[l] ((χ ⟨g, hg⟩ : (↥K.1)ˣ) : ↥K.1)) * ∏ μ ∈ s, t μ := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  letI : Fintype (↥K.1 →ₐ[ℚ_[l]] Om l) := minpoly.AlgHom.fintype ℚ_[l] (↥K.1) (Om l)
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  let : Fintype (↥K.1 →ₐ[ℚ_[l]] Om l) := minpoly.AlgHom.fintype ℚ_[l] (↥K.1) (Om l)
   have hsu : s = Finset.univ := Finset.eq_univ_iff_forall.2 hs
   set y : ↥K.1 := ((χ ⟨g, hg⟩ : (↥K.1)ˣ) : ↥K.1) with hy
   have hn : algebraMap ℚ_[l] (Om l) (Algebra.norm ℚ_[l] y) = ∏ μ ∈ s, μ y := by
@@ -1468,7 +1468,7 @@ theorem exists_pow_eigenvector_of_unramified_units {l : ℕ} [Fact l.Prime]
     have hc1 : Continuous fun σ : Gal(PadicAlgCl l/E) => (((ψ σ : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l]) := by
       have hu : Continuous fun σ : Gal(PadicAlgCl l/E) => ((ψ σ : ℤ_[l]ˣ) : ℤ_[l]) :=
         (Units.continuous_val (M := ℤ_[l])).comp hψ
-      exact (continuous_subtype_val : Continuous (fun y : ℤ_[l] => (y : ℚ_[l]))).comp hu
+      exact (continuous_subtypeVal : Continuous (fun y : ℤ_[l] => (y : ℚ_[l]))).comp hu
     have hc2 : Continuous fun σ : Gal(PadicAlgCl l/E) => ((χ σ⁻¹ : ℚ_[l]ˣ) : ℚ_[l]) :=
       Units.continuous_val.comp (hχc.comp continuous_inv)
     exact isometry_algebraMap_padic_cp.continuous.comp ((hc1.pow f).mul hc2)
@@ -1514,10 +1514,10 @@ theorem exact_degrees_of_product : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (
     ∀ t : (↥K.1 →ₐ[ℚ_[l]] Om l) → Formalism.Per6.BdRp l, (∀ μ, PrePer K χ μ (t μ)) →
       ∀ μ, (μ = K.1.val → t μ ∉ FB l 2) ∧ (μ ≠ K.1.val → t μ ∉ FB l 1) := by
   intro l _ K χ hN t ht
-  haveI hfK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have hfK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   obtain ⟨L, hLdef⟩ : ∃ L : IntermediateField ℚ_[l] (Om l),
       L = IntermediateField.normalClosure ℚ_[l] ↥K.1 (Om l) := ⟨_, rfl⟩
-  haveI : FiniteDimensional ℚ_[l] ↥L := by
+  have : FiniteDimensional ℚ_[l] ↥L := by
     subst hLdef
     infer_instance
   have hμL : ∀ (μ : ↥K.1 →ₐ[ℚ_[l]] Om l) (x : ↥K.1), μ x ∈ L := fun μ x => by

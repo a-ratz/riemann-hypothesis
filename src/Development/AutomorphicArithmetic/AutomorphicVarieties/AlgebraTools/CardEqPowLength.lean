@@ -82,7 +82,7 @@ theorem UpperTheory.V.AlgebraTools.card_eq_pow_length :
     ∀ {A X : Type} [CommRing A] [IsLocalRing A] [Finite (ResidueField A)] [AddCommGroup X] [Module A X], (Finite X ↔ Module.length A X ≠ ⊤) ∧ (Finite X → Nat.card X = Nat.card (ResidueField A) ^ (Module.length A X).toNat) := by
   intro A X _ _ _ _ _
   have key : Finite X → Module.length A X ≠ ⊤ := fun h => by
-    haveI := h
+    have := h
     exact Module.length_ne_top_iff.mpr
       (isFiniteLength_iff_isNoetherian_isArtinian.mpr ⟨inferInstance, isArtinian_of_finite⟩)
   refine ⟨⟨key, fun h => (UpperTheory.V.AlgebraTools.card_finite_length_module (Module.length_ne_top_iff.mp h)).1⟩, fun h => ?_⟩

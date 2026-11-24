@@ -184,7 +184,7 @@ private lemma exists_pullback_lift_apply_eq_of_isIso_sigmaDesc {Z X V : Scheme.{
     (Sigma.desc fun j => pullback.lift (s j) (𝟙 V) (by simp [hc j]) :
       (∐ fun _ : Fin m => V) ⟶ pullback f y) p
   obtain ⟨k, a, rfl⟩ := exists_sigma_ι_apply_eq_of_finite_coprod _ q
-  exact ⟨k, a, by rw [← Scheme.Hom.comp_apply, Sigma.ι_desc]⟩
+  exact ⟨k, a, by rw [← Scheme.Hom.comp_apply, Sigma.ι_comp_desc]⟩
 
 open CategoryTheory Limits AlgebraicGeometry in
 private lemma isOpenImmersion_pullback_lift_of_isIso_sigmaDesc {Z X V : Scheme.{0}} {f : Z ⟶ X} {y : V ⟶ X} {m : ℕ}
@@ -192,7 +192,7 @@ private lemma isOpenImmersion_pullback_lift_of_isIso_sigmaDesc {Z X V : Scheme.{
     [IsIso (Sigma.desc fun j => pullback.lift (s j) (𝟙 V) (by simp [hc j]) :
       (∐ fun _ : Fin m => V) ⟶ pullback f y)] (k : Fin m) :
     IsOpenImmersion (pullback.lift (s k) (𝟙 V) (by simp [hc k]) : V ⟶ pullback f y) := by
-  rw [← Sigma.ι_desc (fun j => pullback.lift (s j) (𝟙 V) (by simp [hc j]) :
+  rw [← Sigma.ι_comp_desc (fun j => pullback.lift (s j) (𝟙 V) (by simp [hc j]) :
     (j : Fin m) → V ⟶ pullback f y) k]
   infer_instance
 
@@ -215,7 +215,7 @@ private lemma index_eq_of_pullback_lift_apply_eq {Z X V : Scheme.{0}} {f : Z ⟶
       (∐ fun _ : Fin m => V) ⟶ pullback f y) (Sigma.ι (fun _ : Fin m => V) j a) =
       (Sigma.desc fun j => pullback.lift (s j) (𝟙 V) (by simp [hc j]) :
       (∐ fun _ : Fin m => V) ⟶ pullback f y) (Sigma.ι (fun _ : Fin m => V) j' b) := by
-    rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, Sigma.ι_desc, Sigma.ι_desc]
+    rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, Sigma.ι_comp_desc, Sigma.ι_comp_desc]
     exact h
   have h2 : (Sigma.ι (fun _ : Fin m => V) j) a = (Sigma.ι (fun _ : Fin m => V) j') b :=
     Scheme.Hom.injective _ h1
@@ -391,7 +391,7 @@ namespace GlobalTheory.EtC.Tr
 theorem ringHom_count_bound {A B : Type} [CommRing A] [CommRing B] (g : A →+* B)
     (hg : g.Finite) : ∃ n : ℕ, ∀ (K : Type) [Field K] (ψ : A →+* K) (φ : Fin (n + 1) → (B →+* K)),
       (∀ j, (φ j).comp g = ψ) → ¬ Function.Injective φ := by
-  letI := g.toAlgebra
+  let := g.toAlgebra
   have hfin : Module.Finite A B := hg
   obtain ⟨S, hS⟩ := hfin.fg_top
   refine ⟨S.card, fun K _ ψ φ hφ hinj => ?_⟩
@@ -431,7 +431,7 @@ theorem ringHom_count_bound {A B : Type} [CommRing A] [CommRing B] (g : A →+* 
 theorem finite_fibrePointsLE_of_isAffine : ∀ {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [IsAffine X],
     ∃ n, GlobalTheory.EtC.Tr.FibrePointsLE f n := by
   intro Z X f _ _
-  haveI := isAffine_of_isAffineHom f
+  have := isAffine_of_isAffineHom f
   obtain ⟨n, hn⟩ := ringHom_count_bound f.appTop.hom f.finite_appTop
   refine ⟨n, fun K _ y s hs hinj => ?_⟩
   refine hn K (y.appTop ≫ (Scheme.ΓSpecIso (CommRingCat.of K)).hom).hom
@@ -688,7 +688,7 @@ theorem splits_of_splits_pullback_snd {Z X S V : Scheme.{0}} (f : Z ⟶ X) (x : 
           (pullbackLeftPullbackSndIso f x v).hom := by
       apply Sigma.hom_ext
       intro j
-      rw [Sigma.ι_desc, Sigma.ι_desc_assoc]
+      rw [Sigma.ι_comp_desc, Sigma.ι_comp_desc_assoc]
       apply pullback.hom_ext
       · rw [pullback.lift_fst, Category.assoc, pullbackLeftPullbackSndIso_hom_fst, pullback.lift_fst_assoc]
       · rw [pullback.lift_snd, Category.assoc, pullbackLeftPullbackSndIso_hom_snd, pullback.lift_snd]
@@ -741,7 +741,7 @@ theorem splits_pullbackSnd_of_splits_diagComplHom {Z X V : Scheme.{0}} (f : Z �
     fun j => pullback.lift (s j) (𝟙 V) (by rw [hs j, Category.id_comp])
   let Φ : ∐ (fun _ : Fin m => V) ⟶ pullback (diagComplHom f) v := Sigma.desc d
   have hΦ : IsIso Φ := hiso
-  have hdΦ : ∀ k, d k = Sigma.ι (fun _ : Fin m => V) k ≫ Φ := fun k => (Sigma.ι_desc _ _).symm
+  have hdΦ : ∀ k, d k = Sigma.ι (fun _ : Fin m => V) k ≫ Φ := fun k => (Sigma.ι_comp_desc _ _).symm
   let eU : pullback (diagComplHom f) v ⟶ pullback (pullback.snd f f) v :=
     pullback.map (diagComplHom f) v (pullback.snd f f) v (diagCompl f).ι (𝟙 V) (𝟙 Z)
       (by simp [diagComplHom]) (by simp)
@@ -760,7 +760,7 @@ theorem splits_pullbackSnd_of_splits_diagComplHom {Z X V : Scheme.{0}} (f : Z �
   have hg : (Sigma.desc (fun j => pullback.lift (t j) (𝟙 V) (by rw [ht j, Category.id_comp])) :
       ∐ (fun _ : Fin (m + 1) => V) ⟶ pullback (pullback.snd f f) v) = Sigma.desc g := by
     refine Sigma.hom_ext _ _ (fun j => ?_)
-    rw [Sigma.ι_desc, Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc, Sigma.ι_comp_desc]
     induction j using Fin.cases with
     | zero =>
       apply pullback.hom_ext
@@ -839,7 +839,7 @@ theorem splits_pullbackSnd_of_splits_diagComplHom {Z X V : Scheme.{0}} (f : Z �
         exact ⟨hp, ⟨pullback.snd (pullback.snd f f) v p, rfl⟩⟩
       obtain ⟨q, rfl⟩ := hpD
       refine ⟨Sigma.ι (fun _ : Fin (m + 1) => V) 0 (inv l q), ?_⟩
-      rw [← Scheme.Hom.comp_apply, Sigma.ι_desc]
+      rw [← Scheme.Hom.comp_apply, Sigma.ι_comp_desc]
       show (l ≫ eD) (inv l q) = eD q
       rw [Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply (inv l), IsIso.inv_hom_id]
       rfl
@@ -852,7 +852,7 @@ theorem splits_pullbackSnd_of_splits_diagComplHom {Z X V : Scheme.{0}} (f : Z �
       obtain ⟨⟨k, x⟩, hkx⟩ := (sigmaMk (fun _ : Fin m => V)).surjective (inv Φ q)
       rw [sigmaMk_mk] at hkx
       refine ⟨Sigma.ι (fun _ : Fin (m + 1) => V) k.succ x, ?_⟩
-      rw [← Scheme.Hom.comp_apply, Sigma.ι_desc]
+      rw [← Scheme.Hom.comp_apply, Sigma.ι_comp_desc]
       show (d k ≫ eU) x = eU q
       rw [hdΦ, Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, hkx, ← Scheme.Hom.comp_apply (inv Φ),
         IsIso.inv_hom_id]

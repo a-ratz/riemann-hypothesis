@@ -965,8 +965,8 @@ theorem vec_read_at : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Typ
       (R.Pg ∪ R.Q t) (fun y => omegaK R.Pg y * omegaQ (R.Q t) (Wc D i).rank (R.xiR t) (-1) y) fun y y' h => by
         rw [GlobalTheory.PlaceVec.omegaK_congr R.Pg fun PP hPP => h PP (Finset.mem_union_left _ hPP),
           GlobalTheory.PlaceVec.omegaQ_congr (R.Q t) _ (R.xiR t) _ fun PP hPP => h PP (Finset.mem_union_right _ hPP)]
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ (R.ΛV i) hSV
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ (R.ΛW i) hSW
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ (R.ΛV i) hSV
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ (R.ΛW i) hSW
   have hSB2 := GlobalTheory.SplitLinear.isSBHalf_actO inferInstance inferInstance 1 k⁻¹ hSB
   have hcc : cA D ea * cA D (cA D ea) = 0 := by rw [GlobalTheory.SplitOnto.cA_cA, mul_comm, hc]
   have ha : cA D ea * cA D ea = cA D ea := ho.idem

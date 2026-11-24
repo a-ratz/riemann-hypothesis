@@ -285,8 +285,8 @@ open scoped TensorProduct
 private theorem core_ex {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     (K P : Subgroup Γ) [P.Normal] (hK : IsOpen (K : Set Γ)) (hP : P ≤ K) :
     ∃ U : OpenNormalSubgroup Γ, P ≤ U.toSubgroup ∧ U.toSubgroup ≤ K := by
-  haveI : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hK
-  haveI : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hK
+  have : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hc : IsClosed (K.normalCore : Set Γ) := Subgroup.normalCore_isClosed K (K.isClosed_of_isOpen hK)
   have ho : IsOpen (K.normalCore : Set Γ) := Subgroup.isOpen_of_isClosed_of_finiteIndex _ hc
   exact ⟨{ toSubgroup := K.normalCore, isOpen' := ho, isNormal' := inferInstance },
@@ -308,7 +308,7 @@ private theorem pl_le (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] (H 
 theorem UpperTheory.V.Th.Sp.close :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (n : ℕ) (O : Type) [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] (y : Pt G0.frame O n), (∀ g : G0.G₀, (g : G0.Γ) ∈ PL l T.H.toSubgroup → y.ρ g = 1) → ∀ K : ℕ, ∀ᶠ N in atTop, ∀ j a b, mat y.ρ ((T.h N).p₀ (T.ph N j)) a b - mat y.ρ (T.sg j) a b ∈ maximalIdeal O ^ K := by
   intro l _ L G0 T n O _ _ _ y hPL K
-  haveI := pl_normal l T.H.toSubgroup
+  have := pl_normal l T.H.toSubgroup
   have hle := pl_le l T.H
   let R : G0.G₀ →* Matrix (Fin n) (Fin n) (O ⧸ maximalIdeal O ^ K) :=
     (Ideal.Quotient.mk (maximalIdeal O ^ K)).mapMatrix.toMonoidHom.comp (mat y.ρ)
@@ -322,7 +322,7 @@ theorem UpperTheory.V.Th.Sp.close :
     filter_upwards [this] with g hg
     exact Matrix.ext hg
   have ho : IsOpen ((R.ker.map G0.η.ker.subtype : Subgroup G0.Γ) : Set G0.Γ) :=
-    G0.η_open.isOpenMap_subtype_val _ (h0.isOpen_fiber 1)
+    G0.η_open.isOpenMap_subtypeVal _ (h0.isOpen_fiber 1)
   have h1R : ∀ g, y.ρ g = 1 → R g = 1 := fun g h => by
     show (Ideal.Quotient.mk (maximalIdeal O ^ K)).mapMatrix (Units.coeHom _ (y.ρ g)) = 1
     rw [h, map_one, map_one]
@@ -389,7 +389,7 @@ private theorem eig_chp {O : Type} [CommRing O] (I : Ideal O) {n : ℕ} (A B : M
 theorem UpperTheory.V.Th.Sp.eig :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (y : Pt G0.frame O n) (al : Fin T.q → Fin n → O), (∀ g : G0.G₀, (g : G0.Γ) ∈ PL l T.H.toSubgroup → y.ρ g = 1) → Th.Eig y T al → ∃ F : O, F ≠ 0 ∧ ∀ᶠ N in atTop, ∃ α : Fin T.q → Fin n → O, (∀ j, (mat y.ρ ((T.h N).p₀ (T.ph N j))).charpoly = ∏ i, (Polynomial.X - Polynomial.C (α j i))) ∧ fEl (T.Nq N) α ∣ F := by
   intro l _ L G0 T n O _ _ _ hc _ y al hP hE
-  haveI : IsAdicComplete (maximalIdeal O) O := hc.complete
+  have : IsAdicComplete (maximalIdeal O) O := hc.complete
   have hF : fEl (fun _ => 1) al ≠ 0 := by
     simp only [fEl, Nat.cast_one, one_mul]
     refine Finset.prod_ne_zero_iff.2 fun j _ => Finset.prod_ne_zero_iff.2 fun i _ =>
@@ -401,7 +401,7 @@ theorem UpperTheory.V.Th.Sp.eig :
   refine ⟨_, hF, ?_⟩
   choose K' hK' using fun j => UpperTheory.V.Th.Sp.hens O n (al j) (hE j).1 K
   have hlO : (l : O) ∈ maximalIdeal O := by
-    haveI : CharP (ResidueField O) l := hc.char
+    have : CharP (ResidueField O) l := hc.char
     rw [← residue_eq_zero_iff, map_natCast]
     exact CharP.cast_eq_zero _ l
   filter_upwards [UpperTheory.V.Th.Sp.close l L G0 T n O y hP (Finset.univ.sup K'), eventually_ge_atTop K] with N hN hNK
@@ -434,11 +434,11 @@ open scoped TensorProduct
 theorem UpperTheory.V.Th.Sp.betaLam :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 G : Glob l L) (h : G.Hom G0) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (b : TWBase u J Empty D) (q N : ℕ) (A : OpMod b h q N), ∀ a : abelian₂ O Empty D, A.β (algebraMap (abelian₂ O Empty D) A.R a) = b.lam a := by
   intro l _ L G0 G h n O _ _ _ _ _ r B _ _ _ u J D b q N A a
-  haveI hOO : IsCO O O :=
+  have hOO : IsCO O O :=
     { complete := IsCoef.complete
       isLocalHom := ⟨fun x hx => by simpa using hx⟩
       res_surj := fun x => ⟨x, by simp⟩ }
-  haveI hL : IsCO O (abelian₂ O Empty D) := co_mvps O O (Empty ⊕ Fin D)
+  have hL : IsCO O (abelian₂ O Empty D) := co_mvps O O (Empty ⊕ Fin D)
   have hmax : ∀ s : Empty ⊕ Fin D, b.lam (MvPowerSeries.X s) ∈ maximalIdeal B := by
     intro s
     rw [← res_eq_zero_iff O B, res_map, res_eq_zero_iff, IsLocalRing.mem_maximalIdeal,
@@ -779,7 +779,7 @@ theorem UpperTheory.V.Th.Sp.lamW :
     ∀ (O R B M V : Type) [CommRing O] [CommRing R] [CommRing B] [Algebra O R] [Algebra O B] [AddCommGroup M] [Module B M] [AddCommGroup V] [Module R V] (q n : ℕ) (β : R →ₐ[O] B) (x : B →ₐ[O] O) (P : Fin q → Polynomial B) (act : PU R q n →ₐ[R] Module.End R V) (f : PU R q n) (α : Fin q → Fin n → O) (lam : M →+ O) (m₀ : M), TwoMaps (M := M) β.toRingHom P act f → (∀ j, (P j).map (x : B →+* O) = ∏ i, (Polynomial.X - Polynomial.C (α j i))) → (∀ (a : B) m, lam (a • m) = x a * lam m) → ∃ (lw : V →+ O) (v : V), (∀ τ w, lw (act τ w) = MvPolynomial.eval₂ ((x.comp β : R →ₐ[O] O) : R →+* O) (fun p => α p.1 p.2) τ * lw w) ∧ lw v = MvPolynomial.eval₂ ((x.comp β : R →ₐ[O] O) : R →+* O) (fun p => α p.1 p.2) f * lam m₀ := by
   intro O R B M V _ _ _ _ _ _ _ _ _ q n β x P act f α lam m₀ hT hP hlam
   obtain ⟨φ, ψ, h1, h2, h3, h4⟩ := hT
-  letI : Algebra B O := (x : B →+* O).toAlgebra
+  let : Algebra B O := (x : B →+* O).toAlgebra
   let ε : MSplitAlg P n →ₐ[B] O := MSplitAlg.lift P n (fun j i => α j i) (fun j => (hP j).symm)
   have hε : ∀ t : PU R q n, ε (Ideal.Quotient.mk (mSplitIdeal P n) (MvPolynomial.map β.toRingHom t)) =
       MvPolynomial.eval₂ ((x.comp β : R →ₐ[O] O) : R →+* O) (fun p => α p.1 p.2) t := by
@@ -919,7 +919,7 @@ private theorem tr_rep {R G : Type} [CommRing R] [Group G] {n : ℕ} (hn : 1 ≤
       | zero => simp
       | add a b ha hb => simp only [map_add (f := _), ha, hb]
       | single g r => ext i j : 2; simp [GDet.repAlg]
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   rw [GDet.tr, GDet.lam, h, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
   simp
 
@@ -958,11 +958,11 @@ private theorem qq_tr {O G : Type} [CommRing O] [IsDomain O] [Group G] {n : ℕ}
     by_cases hk : k = i <;> simp [hk, rep_single, Algebra.algebraMap_eq_smul_one]
   rw [tr_rep (Nat.succ_le_of_lt (lt_of_le_of_lt (Nat.zero_le _) i.2)), e, Sp.trp O n _ α _ h,
     Finset.sum_eq_single i]
-  · rw [Polynomial.eval_pow, Polynomial.eval_prod, ← Finset.prod_erase_mul _ _ (Finset.mem_univ i), if_pos rfl,
+  · rw [Polynomial.eval_pow, Polynomial.eval_prod, ← Finset.prod_erase_mul _ _ (Finset.mem_univ i), ite_eq_left rfl,
       Polynomial.eval_one, mul_one]
     congr 1
     refine Finset.prod_congr rfl fun k hk => ?_
-    rw [if_neg (Finset.mem_erase.1 hk).1]
+    rw [ite_eq_right (Finset.mem_erase.1 hk).1]
     simp
   · intro a _ ha
     rw [Polynomial.eval_pow, Polynomial.eval_prod, Finset.prod_eq_zero (Finset.mem_univ a) (by simp [ha]), zero_pow E.succ_ne_zero]
@@ -1168,7 +1168,7 @@ theorem UpperTheory.Reformulated.B.Qf1.lam0 :
   intro O B M _ _ _ _ _ _ _ x hx
   classical
   set p : Ideal B := RingHom.ker x with hp
-  haveI hpp : p.IsPrime := RingHom.ker_isPrime x
+  have hpp : p.IsPrime := RingHom.ker_isPrime x
   have hs : (⟨p, hpp⟩ : PrimeSpectrum B) ∈ Module.support B M :=
     Module.mem_support_iff_of_finite.mpr hx
   have hnt : Nontrivial (p.ResidueField ⊗[B] M) :=
@@ -1243,11 +1243,11 @@ open IsLocalRing Matrix Filter UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.P
 theorem UpperTheory.V.Th.split :
     Split := by
   intro l _ L G0 T n O _ _ _ _ _ r B _ _ _ u J D b y x al E hn hgen hmap hJ ⟨t₀, ht₀, hEt⟩ hPL heig
-  haveI : Module.Finite B b.M := by
-    letI : Algebra (abelian₂ O Empty D) B := b.lam.toRingHom.toAlgebra
-    haveI : IsScalarTower (abelian₂ O Empty D) B b.M := ⟨fun a c m => by
+  have : Module.Finite B b.M := by
+    let : Algebra (abelian₂ O Empty D) B := b.lam.toRingHom.toAlgebra
+    have : IsScalarTower (abelian₂ O Empty D) B b.M := ⟨fun a c m => by
       rw [b.smul_lam, ← mul_smul]; rfl⟩
-    haveI := b.fin
+    have := b.fin
     exact Module.Finite.of_restrictScalars_finite (abelian₂ O Empty D) B b.M
   obtain ⟨lam, m₀, hlam, hm₀⟩ := _root_.UpperTheory.Reformulated.B.Qf1.lam0 O B b.M x ((b.supp _ (RingHom.ker_isPrime x)).2 hJ)
   obtain ⟨F, hF, hev⟩ := Sp.eig l L G0 T n O y al hPL heig
@@ -1291,7 +1291,7 @@ private theorem cnt (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRin
     rw [← hs (t a), ← hs (t' a), Ideal.Quotient.eq, hϖ.maximalIdeal_eq, Ideal.span_singleton_pow,
       Ideal.mem_span_singleton]
     exact h2
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   have h3 := (Nat.card_le_card_of_injective f hf).trans (le_of_eq_of_le (Nat.card_coe_set_eq S) hle)
   rw [Nat.card_fun, hcard, Nat.card_eq_fintype_card (α := ι), hι, ← pow_mul,
     Nat.pow_le_pow_iff_right Finite.one_lt_card] at h3
@@ -1341,8 +1341,8 @@ private theorem mapRingHom_single_mul_partial_charpoly {S : Type} [CommRing S] (
   congr 4
   funext k
   by_cases hk : k = i
-  · simp only [Function.comp_apply, if_pos hk, map_one]
-  · simp only [Function.comp_apply, if_neg hk, map_sub, hs, map_one]
+  · simp only [Function.comp_apply, ite_eq_left hk, map_one]
+  · simp only [Function.comp_apply, ite_eq_right hk, map_sub, hs, map_one]
 
 private theorem mapDomain_partial_charpoly_power_zero {H : Type} [Group H] (φ : G →* H) (E : ℕ) (ph ta : G) (u : Fin n → R) (i : Fin n)
     (h : φ ta = 1) : MonoidAlgebra.mapDomainRingHom R φ (twoPowerModulus E ph ta u i 0) = 0 := by
@@ -1392,7 +1392,7 @@ theorem UpperTheory.V.Th.count :
   intro l _ L G0 T n O _ _ _ _ _ r B _ _ _ u J D b y x al hl hn had ⟨E, hA⟩ hgen hu hJ hEt hPL hEig ⟨C, hB⟩ δ0 hδ0 hw g0
   classical
   by_contra hd
-  haveI : Finite (ResidueField O) := IsCoef.finite
+  have : Finite (ResidueField O) := IsCoef.finite
   choose A hA using hA
   obtain ⟨c1, hc1, h1⟩ := coc l L G0 n O y hl hn
   obtain ⟨c2, hc2, h2⟩ := trPsi l L G0 n O y hn
@@ -1464,7 +1464,7 @@ theorem UpperTheory.V.Th.count :
           rfl
         rw [A.segmentWeightExponent, der_wt hδs, hδs_apply, k4, hw, map_zero, smul_zero]
       rw [LinearMap.smul_apply, hev, k3] at k2
-      simp only [hδw, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, zero_add] at k2
+      simp only [hδw, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, zero_add] at k2
       simp only [Algebra.algebraMap_eq_smul_one, smul_smul] at k2
       rw [← k2]
       congr 1
@@ -1475,7 +1475,7 @@ theorem UpperTheory.V.Th.count :
         obtain ⟨τ, hτ⟩ := tr_lin u.D hn
         rw [hδs_apply, hβtr, mapRingHom_single_mul_partial_charpoly, mapDomain_partial_charpoly_power_zero _ _ _ _ _ _ (Subtype.ext (T.ta_ker N j)), hτ, map_zero, map_zero, map_zero]
       rw [LinearMap.smul_apply, hev, k3] at k1
-      simp only [hδq, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, zero_add] at k1
+      simp only [hδq, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, zero_add] at k1
       simp only [Algebra.algebraMap_eq_smul_one, smul_smul] at k1
       have : c1 * c2 * c3 * t (some (.inr (j, i))) = c2 * (c1 * (t (some (.inr (j, i))) * c3)) := by ring
       rw [this, mul_smul, k1, smul_zero]

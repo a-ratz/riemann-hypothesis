@@ -71,7 +71,7 @@ theorem exists_pow_mul_mem {O K : Type} [CommRing O] [IsDomain O] [IsLocalRing O
     ∃ N : ℕ, ∃ c : O, algebraMap O K a ^ N * v = algebraMap O K c := by
   obtain ⟨x, y, hy, rfl⟩ := IsFractionRing.div_surjective (A := O) v
   have hy0 : y ≠ 0 := nonZeroDivisors.ne_zero hy
-  haveI : Ring.KrullDimLE 1 O := Ring.krullDimLE_iff.2 (by exact_mod_cast hd)
+  have : Ring.KrullDimLE 1 O := Ring.krullDimLE_iff.2 (by exact_mod_cast hd)
   have hrad : a ∈ (Ideal.span {y}).radical := by
     rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
     rintro J ⟨hJ, hJp⟩
@@ -100,10 +100,10 @@ theorem eq_of_specializes {X : Scheme.{0}} [IsIntegral X] {z w : X} (hd : ringKr
   have hη : genericPoint X ∈ Set.range (X.fromSpecStalk z) := by
     rw [Scheme.range_fromSpecStalk]; exact (genericPoint_spec X).specializes trivial
   obtain ⟨q, hq⟩ := hη
-  haveI : Ring.KrullDimLE 1 (X.presheaf.stalk z) := Ring.krullDimLE_iff.2 (by exact_mod_cast hd)
+  have : Ring.KrullDimLE 1 (X.presheaf.stalk z) := Ring.krullDimLE_iff.2 (by exact_mod_cast hd)
   have hp : p.asIdeal = ⊥ := by
     by_contra h
-    haveI := p.isPrime
+    have := p.isPrime
     have hm := Ideal.isMaximal_of_isPrime_of_ne_bot p.asIdeal h
     have : p = closedPoint _ := PrimeSpectrum.ext (IsLocalRing.eq_maximalIdeal hm)
     apply hne; rw [this, Scheme.fromSpecStalk_closedPoint]
@@ -140,13 +140,13 @@ theorem zeroAt_cst {R : Type} [CommRing R] {Y : Scheme.{0}} [IsIntegral Y] (h : 
 
 theorem exists_pow_mul_mem_codimOne_regular_chart : ∀ (σ : Setup) (x : Sp σ.R) (u : σ.A.left.functionField), ∃ m : ℕ, σ.c₀ σ.f ^ m * u ∈ σ.W x := by
   intro σ x u
-  haveI := (σ.C x).semi
-  haveI : Smooth (σ.C x).G.hom := IsSemiAbelian.smooth
-  haveI : QuasiCompact (σ.C x).G.hom := IsSemiAbelian.quasiCompact
-  haveI : IsLocallyNoetherian (σ.C x).G.left := LocallyOfFiniteType.isLocallyNoetherian (σ.C x).G.hom
-  haveI : CompactSpace (σ.C x).G.left := QuasiCompact.compactSpace_of_compactSpace (σ.C x).G.hom
-  haveI : IsNoetherian (σ.C x).G.left := {}
-  haveI : TopologicalSpace.NoetherianSpace (σ.C x).G.left := IsNoetherian.noetherianSpace
+  have := (σ.C x).semi
+  have : Smooth (σ.C x).G.hom := IsSemiAbelian.smooth
+  have : QuasiCompact (σ.C x).G.hom := IsSemiAbelian.quasiCompact
+  have : IsLocallyNoetherian (σ.C x).G.left := LocallyOfFiniteType.isLocallyNoetherian (σ.C x).G.hom
+  have : CompactSpace (σ.C x).G.left := QuasiCompact.compactSpace_of_compactSpace (σ.C x).G.hom
+  have : IsNoetherian (σ.C x).G.left := {}
+  have : TopologicalSpace.NoetherianSpace (σ.C x).G.left := IsNoetherian.noetherianSpace
   have hg : σ.θ x (σ.c₀ σ.f) = cst (σ.C x).G.hom (σ.ρ x σ.f) := RingHom.congr_fun (θ_comp_c₀ σ x) σ.f
   set g := cst (σ.C x).G.hom (σ.ρ x σ.f)
   set v := σ.θ x u
@@ -192,7 +192,7 @@ theorem exists_pow_mul_mem_codimOne_regular_chart : ∀ (σ : Setup) (x : Sp σ.
   by_cases hzP : z ∈ P
   · have hle : N z ≤ hF.toFinset.sup N := Finset.le_sup (hF.mem_toFinset.2 (key z hz hzP))
     have hN : RegAt z (g ^ N z * v) := by
-      simp only [N, dif_pos hz]; exact Classical.choose_spec (hpt z hz)
+      simp only [N, dite_eq_left hz]; exact Classical.choose_spec (hpt z hz)
     rw [← Nat.sub_add_cancel hle, pow_add, _root_.mul_assoc]
     exact (regAt_pow hgz _).mul hN
   · exact (regAt_pow hgz _).mul (not_not.1 hzP)

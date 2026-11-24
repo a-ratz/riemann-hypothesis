@@ -101,7 +101,7 @@ theorem torus_eigenvalue_formula : TorusEig := by
     push_cast
     rw [Finset.sum_mul, Complex.exp_sum]
   rw [Submodule.coe_inner, hPσ (torus θ) (lowerInv_torus_mem θ) x, inner_smul_right,
-    lowerInv_adj hU θ, hwt, inner_smul_left, ← Submodule.coe_inner, hdet, ← Complex.exp_nat_mul,
+    lowerInv_adj hU θ, hwt, inner_smul_left, ← Submodule.coe_inner, hdet, ← Complex.exp_natCast_mul,
     ← Complex.exp_conj, ← mul_assoc, ← Complex.exp_add]
   congr 2
   simp only [map_mul, Complex.conj_ofReal, Complex.conj_I]

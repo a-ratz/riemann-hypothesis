@@ -109,7 +109,7 @@ theorem prod_translate_mem {E : Type} [Field E] [NumberField E] (X : PT E) {n : 
   · exact ((hd.comp (by fun_prop)).pow m).mul (hd.comp (by fun_prop))
   · simp only
     rw [add_right_comm v γ, add_right_comm v γ, hs γ hγ, hs γ hγ, HC_add_smul_left,
-      HC_add_smul_left, mul_pow, mul_pow, ← Complex.exp_nat_mul]
+      HC_add_smul_left, mul_pow, mul_pow, ← Complex.exp_natCast_mul]
     have : ((m + 1 : ℕ) : ℂ) * Real.pi * HC v γ + ((m + 1 : ℕ) : ℂ) * Real.pi * HC γ γ / 2 =
         (m : ℂ) * (((1 : ℕ) : ℂ) * Real.pi * (HC v γ + 1 * HC c γ) +
           ((1 : ℕ) : ℂ) * Real.pi * HC γ γ / 2) +

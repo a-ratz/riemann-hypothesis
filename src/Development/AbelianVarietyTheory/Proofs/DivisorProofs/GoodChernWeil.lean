@@ -366,7 +366,7 @@ theorem diag_unitAt_and_mul : ∀ (F : Type) [Field F] (X : Var F) (ι : Type) (
   refine ⟨?_, ?_⟩
   · set P := A' * A⁻¹ with hPdef
     have hdet : (P τ).det = P τ i i * ∏ j ∈ Finset.univ.erase i, P τ j j := by
-      rw [Matrix.det_of_lowerTriangular _ (hl P _ hP),
+      rw [Matrix.det_of_isLowerTriangular _ (hl P _ hP),
         Finset.mul_prod_erase Finset.univ (fun j => P τ j j) (Finset.mem_univ i)]
     have hne : (P τ).det ≠ 0 := hP.det_ne τ
     rw [hdet] at hne
@@ -575,7 +575,7 @@ theorem green_frame_indep (F : Type) [Field F] (σ : F →+* ℂ) (X : Var F) (�
   have hu0 := ratVal_ne_zero hu
   have hur : RegAt (under y) ((B * A'⁻¹) τ i i / f) := by
     by_contra h
-    exact hu0 (dif_neg h)
+    exact hu0 (dite_eq_right h)
   have ht : ratVal ((A' * A⁻¹) τ i i) y ≠ 0 := hd i
   have hg := (grD_pos (hH.posDef y A hA τ) i).ne'
   have e3 : grD (H A' y τ) i = ‖ratVal ((A' * A⁻¹) τ i i) y‖ ^ 2 * grD (H A y τ) i := by
@@ -940,7 +940,7 @@ theorem alternating_of_adjacent_swap (ι : Type) [Fintype ι] (m : ι → ℕ)
             (fun x : Root m => (⟨x.1, v x.1 x.2⟩ : Root m)) ∘
               (fun x : Root m => (⟨x.1, w x.1 x.2⟩ : Root m)) := by
           funext x; rfl
-        simp only [Set.mem_setOf_eq] at hv hw ⊢
+        simp only [Set.mem_ofPred_eq] at hv hw ⊢
         rw [this, ← rename_rename, hv, hw]
         simp only [Pi.mul_apply, map_mul, Finset.prod_mul_distrib, Units.val_mul, Int.cast_mul]
         ring }
@@ -979,7 +979,7 @@ theorem alternating_of_adjacent_swap (ι : Type) [Fintype ι] (m : ι → ℕ)
         by_cases h : σ = τ
         · subst h; simp
         · simp [Pi.mulSingle_eq_of_ne h]
-      simp only [this, Finset.prod_pi_mulSingle', Finset.mem_univ, if_true]
+      simp only [this, Finset.prod_pi_mulSingle', Finset.mem_univ, ite_true]
       exact Equiv.Perm.sign_swap hab'
     show L _ = _
     rw [hf, hs, hL τ a b hab Q]
@@ -1204,9 +1204,9 @@ theorem exists_goodPatch_of_mem : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X
     fun z hz _ a b i j => ?_⟩
   · simp only [Finset.notMem_empty, false_imp_iff, implies_true, iff_true]
     exact (hsub z hz).2.1
-  · simp only [poinWt, Finset.notMem_empty, if_false, mul_one]
+  · simp only [poinWt, Finset.notMem_empty, ite_false, mul_one]
     exact (hsub z hz).2.2.2.1 a i j
-  · simp only [poinWt, Finset.notMem_empty, if_false, mul_one]
+  · simp only [poinWt, Finset.notMem_empty, ite_false, mul_one]
     exact (hsub z hz).2.2.2.2 a b i j
 
 end GlobalTheory.GoodTop
@@ -1306,8 +1306,8 @@ theorem cInfAt_finset_sum {ι : Type} (s : Finset ι) {f : ι → CxPts X.str σ
 theorem exists_cInf_bump (y : CxPts X.str σ) {U : Set (CxPts X.str σ)} (hU : U ∈ 𝓝 y) :
     ∃ χ : CxPts X.str σ → ℝ, (∀ z, CInfAt χ z) ∧ (∀ z, 0 ≤ χ z) ∧ 0 < χ y ∧ tsupport χ ⊆ U := by
   classical
-  haveI := CxPts.compactSpace σ X.isProjOver
-  haveI := CxPts.t2Space_cxPts_of_isProjOver σ X.isProjOver
+  have := CxPts.compactSpace σ X.isProjOver
+  have := CxPts.t2Space_cxPts_of_isProjOver σ X.isProjOver
   obtain ⟨c, hc⟩ := AlgChart.exists_mem_source (D := X.dim) y
   obtain ⟨K, hKy, hKc, hKV⟩ :=
     exists_mem_nhds_isClosed_subset (inter_mem hU (c.e.open_source.mem_nhds hc))
@@ -1326,30 +1326,30 @@ theorem exists_cInf_bump (y : CxPts X.str σ) {U : Set (CxPts X.str σ)} (hU : U
   · by_cases hz : z ∈ c.e.source
     · refine cInfAt_of_chart isOpen_univ c ?_ hz trivial
       refine (b.contDiff (n := ⊤)).contDiffOn.congr fun v hv => ?_
-      simp only [Function.comp_apply, if_pos (c.e.map_target hv.1), c.e.right_inv hv.1]
+      simp only [Function.comp_apply, ite_eq_left (c.e.map_target hv.1), c.e.right_inv hv.1]
     · have hzK : z ∉ K := fun h => hz (hKV h).2
       refine (cInfAt_const 0 z).congr ?_
       filter_upwards [hKc.isOpen_compl.mem_nhds hzK] with w hw
       by_cases hwS : w ∈ c.e.source
-      · simp only [if_pos hwS]
+      · simp only [ite_eq_left hwS]
         by_contra h
         exact hw (hsupp w hwS h)
-      · simp only [if_neg hwS]
+      · simp only [ite_eq_right hwS]
   · dsimp only
     split_ifs
     · exact b.nonneg
     · exact le_rfl
-  · simp only [if_pos hc]
+  · simp only [ite_eq_left hc]
     rw [b.one_of_mem_closedBall (Metric.mem_closedBall_self b.rIn_pos.le)]
     exact one_pos
   · refine (closure_minimal (fun z hz => ?_) hKc).trans fun z hz => (hKV hz).1
     by_cases hzS : z ∈ c.e.source
-    · exact hsupp z hzS (by simpa only [Function.mem_support, if_pos hzS] using hz)
-    · simp only [Function.mem_support, if_neg hzS, ne_eq, not_true_eq_false] at hz
+    · exact hsupp z hzS (by simpa only [Function.mem_support, ite_eq_left hzS] using hz)
+    · simp only [Function.mem_support, ite_eq_right hzS, ne_eq, not_true_eq_false] at hz
 
 theorem exists_cInf_partition : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X : Var F} (W : CxPts X.str σ → Set (CxPts X.str σ)), (∀ y, W y ∈ 𝓝 y) → ∃ (s : Finset (CxPts X.str σ)) (ρ : s → CxPts X.str σ → ℝ), (∀ i y, CInfAt (ρ i) y) ∧ (∀ i, tsupport (ρ i) ⊆ W i) ∧ ∀ y, ∑ i, ρ i y = 1 := by
   intro F _ σ X W hW
-  haveI := CxPts.compactSpace σ X.isProjOver
+  have := CxPts.compactSpace σ X.isProjOver
   choose χ hχ h0 hpos hs using fun y => exists_cInf_bump y (hW y)
   obtain ⟨s, hcov⟩ := CompactSpace.elim_nhds_subcover (fun y => {z | 0 < χ y z})
     fun y => (hχ y y).continuousAt.eventually (lt_mem_nhds (hpos y))
@@ -1580,7 +1580,7 @@ theorem corrC_sum_eq_zero : ∀ {n : ℕ} {r : Type} [Fintype r] [DecidableEq r]
     have hs := dbar_sum (t := Finset.univ) (A := fun i x => (ρ i x : ℂ)) (z := v)
       (fun i _ => Complex.ofRealCLM.differentiableAt.comp v (hd i))
     rw [e, dbar_const] at hs
-    rw [← ContinuousLinearMap.sum_apply, ← hs]; rfl
+    rw [← sum_apply, ← hs]; rfl
   have hadd : ∀ (K₁ K₀ : EndValuedForm11Coeffs n r) (j : Fin n) (L L' : EndValuedForm11Coeffs n r),
       mixTop (intersection_update_fsHerm_neg_one K₁ (L + L') K₀ j) = mixTop (intersection_update_fsHerm_neg_one K₁ L K₀ j) + mixTop (intersection_update_fsHerm_neg_one K₁ L' K₀ j) := by
     intro K₁ K₀ j L L'; simpa using _root_.GlobalTheory.GoodTop.mixTop_position_linear K₁ K₀ L L' 1 1 j
@@ -1654,8 +1654,8 @@ namespace GlobalTheory.GoodTop
 theorem goodTopChernForm : GlobalTheory.Published.GoodTopChernForm := by
   intro F _ σ X m E O H H₀ hH hG hH₀ t ht
   rw [hasChernIntegral_iff] at ht ⊢
-  haveI := X.smooth_str
-  haveI : SecondCountableTopology (CxPts X.str σ) := inferInstance
+  have := X.smooth_str
+  have : SecondCountableTopology (CxPts X.str σ) := inferInstance
   have hp : ∀ y : CxPts X.str σ, ∃ e S A W c, y ∈ W ∧ GoodPatch E O H e S A W c := fun y => by
     by_cases hy : y ∈ ptsIn X.str σ O
     · exact _root_.GlobalTheory.GoodTop.exists_goodPatch_of_mem E O H hH y hy

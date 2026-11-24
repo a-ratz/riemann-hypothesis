@@ -297,7 +297,7 @@ private theorem unit_of_nil {y x : S} (h : IsNilpotent (y - x)) (hx : IsUnit x) 
 private theorem local_of_aug [IsLocalRing O] (h : ∀ y : S, ∃ r : O, IsNilpotent (y - algebraMap O S r))
     (e : S →+* IsLocalRing.ResidueField O) (he : ∀ r, e (algebraMap O S r) = IsLocalRing.residue O r) :
     IsLocalRing S ∧ IsLocalHom (algebraMap O S) := by
-  haveI : Nontrivial S := e.domain_nontrivial
+  have : Nontrivial S := e.domain_nontrivial
   refine ⟨IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun y => ?_, ⟨fun r hr => ?_⟩⟩
   · obtain ⟨r, hr⟩ := h y
     rcases IsLocalRing.isUnit_or_isUnit_one_sub_self r with hu | hu
@@ -447,7 +447,7 @@ theorem exists_character_pairSer : ∀ (R₀ : Type) [CommRing R₀] (B : BX R�
     have h : ∃ z : Sˣ, ∃ hL : LocO O S, PVal p τ (mkS O S hL) (Y _ (mkS O S hL) (a 0)) z := ⟨z, hL, hz⟩
     obtain ⟨_, h'⟩ := h.choose_spec
     have := pval_unique h1 h2 h' hz
-    simp only [c, dif_pos h]
+    simp only [c, dite_eq_left h]
     exact congrArg Units.val this
   obtain ⟨u, hu⟩ := GlobalTheory.T.exists_powerSeries_of_natural_nilpotentPoints (O : Type) _ hc 1 g (fun S _ _ => LocO O S)
     (fun k m => jet_local _ hI _ k m) c (by
@@ -470,7 +470,7 @@ theorem exists_character_pairSer : ∀ (R₀ : Type) [CommRing R₀] (B : BX R�
       IsNilpotent (p : (R : Type)) → (∀ i, IsNilpotent (a i)) → PVal p τ s (Y R s a) z →
       (z : (R : Type)) = nv s.1.toRingHom u ![a] := by
     intro R s a z hR ha hz
-    letI := algOf s
+    let := algOf s
     have hL : LocO O (R : Type) := ⟨inferInstance, s.2⟩
     let f : LHom R (mkL O R hL) :=
       mkH _ _ (RingHom.id (R : Type)) (fun r => (s.1.commutes r).symm) ⟨fun _ h => h⟩

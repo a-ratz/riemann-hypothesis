@@ -115,7 +115,7 @@ theorem exists_form_of_discrete_norms : ∀ (C : Type) [NormedField C] [IsAlgClo
       Set.infinite_range_of_injective (smul_left_injective ℤ hy)
     refine hinf (hfin.subset ?_)
     rintro _ ⟨c, rfl⟩
-    simp only [Set.mem_setOf_eq, not_lt]
+    simp only [Set.mem_ofPred_eq, not_lt]
     rw [QuadraticMap.map_smul, zsmul_eq_mul]
     push_cast
     nlinarith [mul_self_nonneg (c : ℝ)]
@@ -170,7 +170,7 @@ theorem exists_form_of_discrete_norms : ∀ (C : Type) [NormedField C] [IsAlgClo
   · have hfin : {α | ¬ ((n : ℝ) * L < q α)}.Finite :=
       Filter.eventually_cofinite.1 (hI.pos.eventually (Filter.eventually_gt_atTop _))
     refine hfin.subset fun α hα => ?_
-    simp only [Set.mem_setOf_eq, hβ] at hα ⊢
+    simp only [Set.mem_ofPred_eq, hβ] at hα ⊢
     rw [not_lt, hq]
     have h1 : (2 * Q α) = (n : ℤ) := by
       rw [← hα, Int.toNat_of_nonneg (by linarith [hQnn α])]
@@ -181,7 +181,7 @@ theorem exists_form_of_discrete_norms : ∀ (C : Type) [NormedField C] [IsAlgClo
   · have hc : ((2 * Q α).toNat : ℝ) = 2 * (Q α : ℝ) := by
       have := Int.toNat_of_nonneg (show 0 ≤ 2 * Q α by linarith [hQnn α])
       exact_mod_cast this
-    rw [hβ, ← Real.exp_log hπpos, ← Real.exp_nat_mul, hc, hq]
+    rw [hβ, ← Real.exp_log hπpos, ← Real.exp_natCast_mul, hc, hq]
     congr 1
     have hm2 : (0 : ℝ) < (m : ℝ) ^ 2 := by
       have : (0 : ℝ) < m := by exact_mod_cast hm

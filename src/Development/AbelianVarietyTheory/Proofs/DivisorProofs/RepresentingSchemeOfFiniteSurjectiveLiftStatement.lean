@@ -220,7 +220,7 @@ theorem map_maximalIdeal_quot {A : Type} [CommRing A] [IsLocalRing A] (J : Ideal
 
 theorem isArtinianRing_quot {A : Type} [CommRing A] [IsLocalRing A] [IsNoetherianRing A] (n : ℕ) :
     IsArtinianRing (A ⧸ maximalIdeal A ^ (n + 1)) := by
-  haveI := isLocalRing_quot (A := A) n
+  have := isLocalRing_quot (A := A) n
   rw [isArtinianRing_iff_isNilpotent_maximalIdeal]
   refine ⟨n + 1, ?_⟩
   rw [← map_maximalIdeal_quot, ← Ideal.map_pow, Ideal.map_quotient_self]
@@ -240,7 +240,7 @@ theorem exists_retraction : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y), (∀ (B : Type
         ResidueField (Y.presheaf.stalk (f x)) :=
       Ideal.quotEquivOfEq (by rw [zero_add, pow_one])
     let r := (q.trans e).symm
-    haveI := isLocalRing_quot (A := Y.presheaf.stalk (f x)) 0
+    have := isLocalRing_quot (A := Y.presheaf.stalk (f x)) 0
     refine ⟨r.toRingHom.comp (residue _), ?_, ?_⟩
     · have : IsLocalHom r.toRingHom := IsLocalHom.of_surjective _ r.surjective
       infer_instance
@@ -251,16 +251,16 @@ theorem exists_retraction : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y), (∀ (B : Type
   | succ n ih =>
     obtain ⟨ψ, hψ, h⟩ := ih
     set A := Y.presheaf.stalk (f x) with hA
-    haveI := isLocalRing_quot (A := A) n
-    haveI := isLocalRing_quot (A := A) (n + 1)
-    haveI := isArtinianRing_quot (A := A) (n + 1)
+    have := isLocalRing_quot (A := A) n
+    have := isLocalRing_quot (A := A) (n + 1)
+    have := isArtinianRing_quot (A := A) (n + 1)
     have hle : maximalIdeal A ^ (n + 1 + 1) ≤ maximalIdeal A ^ (n + 1) :=
       Ideal.pow_le_pow_right (Nat.le_succ _)
     let I : Ideal (A ⧸ maximalIdeal A ^ (n + 1 + 1)) :=
       (maximalIdeal A ^ (n + 1)).map (Ideal.Quotient.mk _)
     let r : (A ⧸ maximalIdeal A ^ (n + 1)) ≃+* ((A ⧸ maximalIdeal A ^ (n + 1 + 1)) ⧸ I) :=
       (DoubleQuot.quotQuotEquivQuotOfLE hle).symm
-    haveI : IsLocalRing ((A ⧸ maximalIdeal A ^ (n + 1 + 1)) ⧸ I) := r.isLocalRing
+    have : IsLocalRing ((A ⧸ maximalIdeal A ^ (n + 1 + 1)) ⧸ I) := r.isLocalRing
     have h1 : I ≤ maximalIdeal _ := by
       rw [← map_maximalIdeal_quot]
       exact Ideal.map_mono (Ideal.pow_le_self n.succ_ne_zero)
@@ -313,17 +313,17 @@ theorem quotientMap_pow_bijective_of_retraction (φ : A →+* B) [IsLocalHom φ]
     (huniq : ∀ g₁ g₂ : B →+* B ⧸ maximalIdeal B ^ (n + 1), IsLocalHom g₁ → IsLocalHom g₂ →
       g₁.comp φ = g₂.comp φ → g₁ = g₂) :
     Function.Bijective (Ideal.quotientMap (maximalIdeal B ^ (n + 1)) φ hle) := by
-  haveI hA := isLocalHom_mk_maximalIdeal_pow_succ (A := A) n
-  haveI hB := isLocalHom_mk_maximalIdeal_pow_succ (A := B) n
+  have hA := isLocalHom_mk_maximalIdeal_pow_succ (A := A) n
+  have hB := isLocalHom_mk_maximalIdeal_pow_succ (A := B) n
   have hψφ : ∀ a, ψ (φ a) = Ideal.Quotient.mk _ a := fun a => RingHom.congr_fun hψ a
   have hsurj : Function.Surjective ψ := fun x => by
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact ⟨φ a, hψφ a⟩
-  haveI : Nontrivial (A ⧸ maximalIdeal A ^ (n + 1)) :=
+  have : Nontrivial (A ⧸ maximalIdeal A ^ (n + 1)) :=
     Ideal.Quotient.nontrivial_iff.mpr fun h =>
       (maximalIdeal.isMaximal A).ne_top (top_le_iff.mp (h ▸ Ideal.pow_le_self n.succ_ne_zero))
-  haveI hψl : IsLocalHom ψ := IsLocalHom.of_surjective ψ hsurj
-  haveI hφl : IsLocalHom (Ideal.quotientMap (maximalIdeal B ^ (n + 1)) φ hle) := by
+  have hψl : IsLocalHom ψ := IsLocalHom.of_surjective ψ hsurj
+  have hφl : IsLocalHom (Ideal.quotientMap (maximalIdeal B ^ (n + 1)) φ hle) := by
     refine ⟨fun x hx => ?_⟩
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
     rw [Ideal.quotientMap_mk] at hx
@@ -360,8 +360,8 @@ theorem flat_of_retractions_mod_pow {A B : Type} [CommRing A] [CommRing B] [IsLo
     intro n
     cases n with
     | zero =>
-      haveI : Subsingleton (A ⧸ maximalIdeal A ^ 0) := Ideal.Quotient.subsingleton_iff.mpr (by simp)
-      haveI : Subsingleton (B ⧸ maximalIdeal B ^ 0) := Ideal.Quotient.subsingleton_iff.mpr (by simp)
+      have : Subsingleton (A ⧸ maximalIdeal A ^ 0) := Ideal.Quotient.subsingleton_iff.mpr (by simp)
+      have : Subsingleton (B ⧸ maximalIdeal B ^ 0) := Ideal.Quotient.subsingleton_iff.mpr (by simp)
       exact ⟨fun _ _ _ => Subsingleton.elim _ _, fun _ => ⟨0, Subsingleton.elim _ _⟩⟩
     | succ n =>
       obtain ⟨ψ, hψ⟩ := hex n
@@ -398,7 +398,7 @@ namespace GlobalTheory
 
 theorem surjective_of_epi_of_field_to_field {K L : Type} [Field K] [Field L]
     (φ : CommRingCat.of K ⟶ CommRingCat.of L) [Epi φ] : Function.Surjective φ.hom := by
-  letI : Algebra K L := φ.hom.toAlgebra
+  let : Algebra K L := φ.hom.toAlgebra
   have h : ∀ a : L, (a ⊗ₜ[K] (1 : L)) = (1 : L) ⊗ₜ[K] a := by
     intro a
     have e : CommRingCat.ofHom (Algebra.TensorProduct.includeLeftRingHom (R := K) (A := L) (B := L))
@@ -460,7 +460,7 @@ theorem stalk_hom_ext_of_mono {X Y : Scheme.{0}} (f : X ⟶ Y) [Mono f] (x : X) 
 
 theorem isOpenImmersion_of_lift : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [IsLocallyNoetherian Y] [LocallyOfFiniteType f] [Mono f], (∀ (B : Type) [CommRing B] [IsLocalRing B] [IsArtinianRing B] (I : Ideal B), I ≤ IsLocalRing.maximalIdeal B → IsLocalRing.maximalIdeal B * I = ⊥ → ∀ (a : Spec (CommRingCat.of (B ⧸ I)) ⟶ X) (b : Spec (CommRingCat.of B) ⟶ Y), a ≫ f = Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) ≫ b → ∃ l : Spec (CommRingCat.of B) ⟶ X, Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) ≫ l = a ∧ l ≫ f = b) → IsOpenImmersion f := by
   intro X Y f _ _ _ hlift
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   have : Flat f := by
     refine (Flat.iff_flat_stalkMap f).2 fun x => ?_
     have hres := _root_.GlobalTheory.residueFieldMap_surjective_of_mono f x
@@ -597,8 +597,8 @@ theorem chartAt_of_affine : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbel
     obtain ⟨i, q, hq⟩ := T.left.affineCover.exists_eq (y.left p)
     let V : Over S := Over.mk (T.left.affineCover.f i ≫ T.hom)
     let j : V ⟶ T := Over.homMk (T.left.affineCover.f i) rfl
-    haveI : IsOpenImmersion j.left := inferInstanceAs (IsOpenImmersion (T.left.affineCover.f i))
-    haveI : IsAffine V.left := inferInstanceAs (IsAffine (T.left.affineCover.X i))
+    have : IsOpenImmersion j.left := inferInstanceAs (IsOpenImmersion (T.left.affineCover.f i))
+    have : IsAffine V.left := inferInstanceAs (IsAffine (T.left.affineCover.X i))
     obtain ⟨O, hO⟩ := aff V _ (Zar.fam_ev hN j)
     obtain ⟨Y', c, t, -, ⟨r, hr⟩, ht⟩ := Zar.exists_restrict y j p ⟨q, hq⟩
     have h₁ : t.left r ∈ O := (hO Y' t).1 ⟨c ≫ u, by
@@ -606,7 +606,7 @@ theorem chartAt_of_affine : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbel
       exact Zar.same_comp hN.isLB hM.isLB hu c⟩ r
     let Z : Over S := Over.mk (O.ι ≫ V.hom)
     let k : Z ⟶ V := Over.homMk O.ι rfl
-    haveI : IsOpenImmersion k.left := inferInstanceAs (IsOpenImmersion O.ι)
+    have : IsOpenImmersion k.left := inferInstanceAs (IsOpenImmersion O.ι)
     obtain ⟨v, hv⟩ := (hO Z k).2 fun w ↦ w.2
     refine ⟨Z, k ≫ j, v, by rw [Over.comp_left]; infer_instance, ⟨⟨t.left r, h₁⟩, ?_⟩,
       (Zar.same_ev_iff hN.isLB hM.isLB _ _ _).1 hv⟩
@@ -818,8 +818,8 @@ namespace GlobalTheory.ChartCrit
 theorem openChart : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (U : Over (Sp R)) (M : LB (A ⊗ U).left), SmoothOfRelativeDimension g U.hom → Fam A M → FibInj A M → IsChart A M := by
   intro R _ _ A _ g hA hAg U M hU hM hF
   have hUf : LocallyOfFiniteType U.hom := by
-    haveI := hU
-    haveI : Smooth U.hom := SmoothOfRelativeDimension.smooth g _
+    have := hU
+    have : Smooth U.hom := SmoothOfRelativeDimension.smooth g _
     infer_instance
   have hI : Inj A M := GlobalTheory.T.lineBundleFamilyParamInjective_of_geomFiberInjective R A hA U M hUf hM hF
   refine ⟨hM, hI, ?_⟩

@@ -56,7 +56,7 @@ private theorem coe_comb {N : ℕ} {k : ℤ} {I : Type} (s : Finset I) (c : I �
   classical
   induction s using Finset.induction_on with
   | empty => simp
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, ModularForm.coe_add, ModularForm.coe_smul, ih]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, FunLike.coe_add, FunLike.coe_smul, ih]
 
 private theorem one_mem_per (N : ℕ) :
     (1 : ℝ) ∈ (Subgroup.map (Matrix.SpecialLinearGroup.mapGL ℝ) (Gamma1 N)).strictPeriods := by
@@ -82,8 +82,8 @@ private theorem coef_comb {N : ℕ} {k : ℤ} {I : Type} (s : Finset I) (c : I �
   | insert a s ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha, ← ih, ← coef_smul]
     unfold coef
-    rw [ModularForm.coe_add, ModularFormClass.qExpansion_add one_pos (one_mem_per N), map_add (f := _),
-      ModularForm.coe_smul]
+    rw [FunLike.coe_add, ModularForm.qExpansion_add one_pos (one_mem_per N), map_add (f := _),
+      FunLike.coe_smul]
 
 private theorem slash_neg_one (k : ℕ) (f : ℍ → ℂ) : f ∣[(k : ℤ)] (-1 : SL(2, ℤ)) = ((-1 : ℂ) ^ k) • f := by
   ext τ
@@ -177,7 +177,7 @@ theorem UpperTheory.V.Sd.unitForm :
         rw [Finset.sum_insert ha]
         exact ((hvan a γ hγ).smul (w a)).add ih
     exact hz _
-  · haveI : Fact (2 < N) := ⟨by omega⟩
+  · have : Fact (2 < N) := ⟨by omega⟩
     have hne : (1 : (ZMod N)ˣ) ≠ -1 := by
       intro h
       have := congrArg Units.val h

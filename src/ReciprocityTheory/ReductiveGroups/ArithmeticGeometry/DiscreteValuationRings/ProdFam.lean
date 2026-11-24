@@ -63,7 +63,7 @@ variable {R : Type} [CommRing R] [IsDomain R] {j : ℕ} {D' D : DegPre R}
 
 theorem famφB_pr (pD : IsPowDeg D' D j) (α' : D'.X) (i : Fin j) (a : Fin 4) :
     D'.famφB α' a ≫ (pD.pw.pr i).left = (pD.pw.pr i).left ≫ D.famφB (pD.xe α' i) a := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   have hc := pD.c_pr α' i
   fin_cases a <;>
     simp [DegPre.famφB, ← Over.comp_left, padd, hc, IsMonHom.mul_hom, IsMonHom.one_hom]

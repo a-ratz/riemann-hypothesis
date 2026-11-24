@@ -207,7 +207,7 @@ private lemma fam_det {k M : Type} [Field k] [Finite k] [CommGroup M] (a : k) (h
     rw [← hG, LinearEquiv.coe_det, LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMap,
       Matrix.GeneralLinearGroup.coe_toLin, Matrix.GeneralLinearGroup.val_det_apply]
     exact (LinearMap.det_toLin' _).symm
-  haveI : Module.Finite k V := Module.Finite.of_finite
+  have : Module.Finite k V := Module.Finite.of_finite
   have hc := hiso V _ (Module.finBasis k V).equivFun g
   rw [← hc, hstd]
   congr 1

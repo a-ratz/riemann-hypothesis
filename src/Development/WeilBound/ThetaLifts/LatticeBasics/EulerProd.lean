@@ -146,7 +146,7 @@ theorem mem_loc {g : UA σ Y.J} : g ∈ locGrp σ Y v ↔ prj v g = g := by
 
 theorem prj_mem (g : UA σ Y.J) : prj v g ∈ locGrp σ Y v := mem_loc.2 (Subtype.ext (Units.ext (cut_cut (idem_sq v) _)))
 
-theorem cont_mat : Continuous fun g : UA σ Y.J => mat g := Units.continuous_val.comp continuous_subtype_val
+theorem cont_mat : Continuous fun g : UA σ Y.J => mat g := Units.continuous_val.comp continuous_subtypeVal
 
 theorem cont_prj : Continuous (prj v : UA σ Y.J → UA σ Y.J) := by
   have : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
@@ -202,7 +202,7 @@ def intGrp (v : Pl F) : Subgroup (UA σ Y.J) where
 
 theorem isClosed_int (hL : Y.L.IsLattice E) (v : Pl F) : IsClosed {g : UA σ Y.J | IntAt v g} := by
   have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  simp only [IntAt, Set.setOf_forall]
+  simp only [IntAt, Set.ofPred_forall]
   exact isClosed_iInter fun z => isClosed_iInter fun _ => isClosed_iInter fun _ =>
     ((isClosed_latHat hL).preimage (cont_mat.matrix_mulVec continuous_const)).inter
       ((isClosed_latHat hL).preimage ((cont_mat.comp continuous_inv).matrix_mulVec continuous_const))
@@ -224,17 +224,17 @@ theorem step (hL : Y.L.IsLattice E) {μ : Measure (UA σ Y.J)} (hμ : μ.IsHaarM
   obtain ⟨a1, a2, a3⟩ := lcsc_UA σ Y.J
   obtain ⟨b1, b2⟩ := lcsc_loc (σ := σ) (Y := Y) v
   have mA : MeasurableSet {g : UA σ Y.J | ∀ u ∈ P, IntAt u g} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact (isClosed_iInter fun u => isClosed_iInter fun _ => isClosed_int hL u).measurableSet
   rw [factor (ν := ν) (K := (intGrp σ Y v).subgroupOf (locGrp σ Y v)) (l := fun u => l u.1)
-    ((isClosed_int hL v).preimage continuous_subtype_val).measurableSet h1 (locGrp σ Y v).subtype continuous_subtype_val
+    ((isClosed_int hL v).preimage continuous_subtypeVal).measurableSet h1 (locGrp σ Y v).subtype continuous_subtypeVal
     (fun g => ⟨prj v g, prj_mem g⟩) (cont_prj.subtype_mk _)
     (fun u g => Subtype.ext ((map_mul _ _ _).trans (congrArg (· * prj v g) (mem_loc.1 u.2)))) hf
     (fun u g h => hl u u.2 g (off_of (congrArg Subtype.val h))) (fun u hu => hl1 u u.2 hu) mA
     (fun u g => forall₂_congr fun w hw => int_mul_ne (fun e : w = v => hv (e ▸ hw)) u.2 g)]
   congr 3
   ext g
-  simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq, Set.forall_mem_insert]
+  simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_ofPred_eq, Set.forall_mem_insert]
   rw [and_comm]
   exact and_congr_left' (int_prj (σ := σ) (Y := Y) (v := v) (g := g))
 
@@ -261,11 +261,11 @@ theorem _root_.GlobalTheory.ThK.Dbl.eulerProd : EulerProd := by
   have u : ⋃ S, A S = Set.univ := Set.eq_univ_of_forall fun g => by
     have c := Filter.eventually_cofinite.1 ((ae_mulVec hY.lat (mat g)).and (ae_mulVec hY.lat (mat g⁻¹)))
     refine Set.mem_iUnion.2 ⟨c.toFinset.subtype _, fun u ⟨_, h2⟩ => ?_⟩
-    rw [Finset.mem_subtype, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at h2
+    rw [Finset.mem_subtype, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at h2
     exact fun z hz h3 => ⟨h2.1 z hz h3, h2.2 z hz h3⟩
   have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   have := tendsto_setIntegral_of_monotone (s := A) (f := f) (μ := μ) (fun S => by
-    simp only [A, Set.setOf_forall]
+    simp only [A, Set.ofPred_forall]
     exact (isClosed_iInter fun u => isClosed_iInter fun _ => isClosed_int hY.lat.toIsLattice u).measurableSet)
     (fun S S' hS g hg u ⟨h1, h2⟩ => hg u ⟨h1, fun h3 => h2 (hS h3)⟩) hf.integrableOn
   simpa only [e, u, Measure.restrict_univ] using this

@@ -124,10 +124,10 @@ theorem graphPatch : GraphPatch := by
     let K : Ideal S :=
       { carrier := {z | z.1 * x ∈ S}
         add_mem' := fun {u v} hu hv => by
-          simp only [Set.mem_setOf_eq, Subalgebra.coe_add, add_mul] at *; exact S.add_mem hu hv
+          simp only [Set.mem_ofPred_eq, Subalgebra.coe_add, add_mul] at *; exact S.add_mem hu hv
         zero_mem' := by simp
         smul_mem' := fun u v hv => by
-          simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul, mul_assoc] at *
+          simp only [Set.mem_ofPred_eq, smul_eq_mul, Subalgebra.coe_mul, mul_assoc] at *
           exact S.mul_mem u.2 hv }
     have hspan : Ideal.span ((fun h => f h ^ (n + 1)) '' (s : Set A')) ≤ K := by
       rw [Ideal.span_le]

@@ -104,7 +104,7 @@ theorem reciprocity_fixedOpen_sylow {p : ℕ} [Fact p.Prime]
         commutator (((fixedOpen hLK (P : Subgroup ((K : Subgroup G) ⧸ (L : Subgroup G).subgroupOf K)) : OpenSubgroup G) : Subgroup G) ⧸
           (L : Subgroup G).subgroupOf ((fixedOpen hLK (P : Subgroup ((K : Subgroup G) ⧸ (L : Subgroup G).subgroupOf K)) : OpenSubgroup G) : Subgroup G)) :=
   reciprocity_of_isPGroup hax _ (le_fixedOpen hLK _) rfl
-    (P.isPGroup'.of_equiv (galFixedEquiv hLK (P : Subgroup ((K : Subgroup G) ⧸ (L : Subgroup G).subgroupOf K))).symm)
+    (P.isPGroup.of_equiv (galFixedEquiv hLK (P : Subgroup ((K : Subgroup G) ⧸ (L : Subgroup G).subgroupOf K))).symm)
 
 theorem reciprocity_surjective : Function.Surjective (D.reciprocity hLK hax) := by
   classical

@@ -66,7 +66,7 @@ theorem IsConjOm.cyc {σ : Ω ≃+* Ω} (h : IsConjOm σ) : cyclotomicCharacter 
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
   refine Units.ext (PadicInt.ext_of_toZModPow.mp fun n => ?_)
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have hN0 : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
   have : NeZero (l ^ n) := ⟨hN0⟩
   have hspec := cyclotomicCharacter.spec (L := Ω) l σ ζ hζ.pow_eq_one
@@ -102,7 +102,7 @@ theorem exists_isConjOm : ∃ σ : Ω ≃+* Ω, IsConjOm σ := by
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
   let c : ℂ ≃ₐ[ℚ] ℂ := Complex.conjAe.restrictScalars ℚ
   exact ⟨(c.restrictNormal Ω).toRingEquiv, j.toRingHom, fun x => c.restrictNormal_commutes Ω x⟩
 

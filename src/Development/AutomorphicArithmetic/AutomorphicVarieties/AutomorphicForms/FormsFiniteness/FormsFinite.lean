@@ -148,7 +148,7 @@ private theorem slc_op {K : Type} [Field K] [NumberField K] {n : ℕ} (X : (isEx
     rw [h1]
     funext k
     exact (F g φ k).deriv
-  · haveI := hV
+  · have := hV
     exact mem_of_hasDerivAt V (c := fun t k => slc g φ (k * γ t)) (fun t => hVs _ hφ (γ t)) (fun k => F g φ k)
 
 theorem UpperTheory.algMod_bot_compact_casimir_of_types :
@@ -304,7 +304,7 @@ theorem UpperTheory.finiteDimensional_inf_ker_aeval_monic :
           rw [LinearMap.mem_ker, map_mul, Module.End.mul_apply, map_sub, Polynomial.aeval_X,
             Polynomial.aeval_C, LinearMap.sub_apply, Module.algebraMap_end_apply, sub_eq_zero] at hxk
           exact hxk
-        haveI := hE a
+        have := hE a
         rw [Submodule.fg_iff_finiteDimensional]
         exact Submodule.finiteDimensional_of_le hle
       · apply Submodule.FG.of_le ih
@@ -351,7 +351,7 @@ theorem UpperTheory.finiteDimensional_of_bdd_cuspidal :
   obtain ⟨Q, hQm, hQ⟩ := hS.centre _ hZc
   obtain ⟨L, hLo, hL⟩ := hS.level
   let U : Subgroup (AdelicGLn.integralFiniteGL K n) := L.subgroupOf _
-  have hUo : IsOpen (U : Set (AdelicGLn.integralFiniteGL K n)) := hLo.preimage continuous_subtype_val
+  have hUo : IsOpen (U : Set (AdelicGLn.integralFiniteGL K n)) := hLo.preimage continuous_subtypeVal
   have hP'm : (Polynomial.X * P).Monic := Polynomial.monic_X.mul hPm
   have hP'd : 0 < (Polynomial.X * P).natDegree := by
     rw [Polynomial.Monic.natDegree_mul Polynomial.monic_X hPm, Polynomial.natDegree_X]
@@ -603,8 +603,8 @@ theorem finAt_of {n : ℕ} (ih : ∀ m < n, FinAt K m) : FinAt K n := by
     Submodule.subset_span ⟨φ.1, φ.2, hF1 _ _⟩
   let G : S' →ₗ[ℂ] ((i : I) → ctSp i.1.val S') :=
     LinearMap.pi (fun i => LinearMap.codRestrict _ ((F i.1.val).comp ι) (hmem i))
-  haveI : ∀ i : I, FiniteDimensional ℂ (ctSp i.1.val S') := fun i => hct _ i.2 i.1.2
-  haveI : FiniteDimensional ℂ S' := by
+  have : ∀ i : I, FiniteDimensional ℂ (ctSp i.1.val S') := fun i => hct _ i.2 i.1.2
+  have : FiniteDimensional ℂ S' := by
     refine fin_of_ker G inferInstance ?_
     have hW : FiniteDimensional ℂ ((LinearMap.ker G).map S'.subtype) := by
       refine UpperTheory.finiteDimensional_of_bdd_cuspidal K n _ (hB'.mono (Submodule.map_subtype_le _ _)) ?_

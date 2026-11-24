@@ -117,7 +117,7 @@ theorem oneTensor_act {R : Type} [CommRing R] [Algebra O R] {T T' : LocLat G Qp 
 
 theorem one_tmul_inj {R : Type} [CommRing R] [Algebra O R] (hR : Function.Injective (algebraMap O R))
     (T : LocLat G Qp LL O) (t t' : ↥T.L.T) (h : (1 : R) ⊗ₜ[O] t = (1 : R) ⊗ₜ[O] t') : t = t' := by
-  haveI := T.L.free
+  have := T.L.free
   have hi := Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T)
     (Algebra.linearMap O R) hR
   have : (1 : O) ⊗ₜ[O] t = (1 : O) ⊗ₜ[O] t' := hi (by simpa using h)
@@ -133,7 +133,7 @@ theorem clNat_of_tie {W : LocWach PD LL O v n} {RA RW : Type} [CommRing RA] [Com
     (hdense : Dense {x : ↥W.GKs | ∃ h ∈ {h : ↥W.GKs | W.resΓ (h : G) = 1}, ∃ a : ℕ, x = h * γ ^ a}) :
     W.ClNat := by
   intro T T' f pr pr' hpr
-  haveI := hT2 T'
+  have := hT2 T'
   obtain ⟨b, hb⟩ := hsurj T (E.jD T (pr : W.DD T × W.DD T).1)
   have hb' : TWmap φR T' (oneTensor RW f b) - oneTensor RW f b =
       E.jD T' (pr' : W.DD T' × W.DD T').1 := by
@@ -182,11 +182,11 @@ theorem zl_wcb_injective : Function.Injective (algebraMap ℤ_[l] (WCb l)) := by
   rw [PadicInt.unitCoeff_spec h0, map_mul, map_pow, map_natCast] at hx
   rcases mul_eq_zero.1 hx with h | h
   · exact ((PadicInt.unitCoeff h0).isUnit.map _).ne_zero h
-  · exact WittVector.p_nonzero l (Cb l) (eq_zero_of_pow_eq_zero h)
+  · exact WittVector.p_ne_zero l (Cb l) (eq_zero_of_pow_eq_zero h)
 
 theorem ol_rw_injective (LL : FinExt l) : Function.Injective (algebraMap ↥(OL LL) (RW LL)) := by
   set_option synthInstance.maxHeartbeats 200000 in
-  haveI : Module.Flat ℤ_[l] ↥(OL LL) := by
+  have : Module.Flat ℤ_[l] ↥(OL LL) := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     rintro x ⟨⟨a, ha⟩, hx⟩
     have hx' : algebraMap ℤ_[l] ↥LL.1 a * (x : ↥LL.1) = 0 := by

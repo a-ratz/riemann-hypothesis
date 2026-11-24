@@ -56,7 +56,7 @@ theorem exists_orthonormal_expansion {ι : Type} [Fintype ι] (f : ι → H) :
     ∃ (m : ℕ) (h : Fin m → H) (φ : ι → Fin m → ℂ), Orthonormal ℂ h ∧ (∀ j, f j = ∑ p, φ j p • h p) ∧
       ∀ j, ∑ p, ‖φ j p‖ ^ 2 = ‖f j‖ ^ 2 := by
   let U : Submodule ℂ H := Submodule.span ℂ (Set.range f)
-  haveI : FiniteDimensional ℂ U := FiniteDimensional.span_of_finite ℂ (Set.finite_range f)
+  have : FiniteDimensional ℂ U := FiniteDimensional.span_of_finite ℂ (Set.finite_range f)
   let b := stdOrthonormalBasis ℂ U
   let u : ι → U := fun j => ⟨f j, Submodule.subset_span ⟨j, rfl⟩⟩
   refine ⟨_, fun p => (b p : H), fun j p => ⟪b p, u j⟫_ℂ, b.orthonormal.comp_linearIsometry U.subtypeₗᵢ,
@@ -116,7 +116,7 @@ theorem sobolev_hilbertSchmidt : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) 
     refine key.trans ?_
     have h2 : (S.map fun l => ∫ g : UJ ε, ‖F l (umat g)‖ ^ 2 ∂(muG ε)).sum ≤
         (S.map fun l => ∫ g : UJ ε, ‖F l (umat g)‖ ^ 2 ∂(muG ε)).length • ((A * ∑ j, ‖f j‖ ^ 2) / d) := by
-      refine List.sum_le_card_nsmul _ _ fun r hr => ?_
+      refine List.sum_le_length_nsmul _ _ fun r hr => ?_
       obtain ⟨l, hl, rfl⟩ := List.mem_map.1 hr
       rw [(hI l).2]
       refine div_le_div_of_nonneg_right ?_ hd0.le

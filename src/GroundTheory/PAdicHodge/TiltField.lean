@@ -68,7 +68,7 @@ variable {K : Type*} [NontriviallyNormedField K] [IsUltrametricDist K]
 
 private lemma mem_integers_iff (x : K) : x ∈ (normInteger K) ↔ ‖x‖ ≤ 1 := by
   change NormedField.valuation x ≤ 1 ↔ _
-  rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+  rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
 
 private lemma norm_eq_of_norm_sub_lt {u z : K} (h : ‖u - z‖ < ‖z‖) : ‖u‖ = ‖z‖ := by
   have h1 : ‖u‖ ≤ max ‖u - z‖ ‖z‖ := by

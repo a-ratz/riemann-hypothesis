@@ -237,7 +237,7 @@ theorem psJet_eq {n d : ℕ} (m : ℕ) (q : Fin n × Fin d) (f : PS V n d) (P : 
   refine Ideal.Quotient.eq.2 (Ideal.Quotient.eq_zero_iff_mem.1 ((GlobalTheory.JetTest.mk_eq_zero_iff (m := m) _).2 ?_))
   intro e he
   have hle : ∀ i, e i ≤ m := fun i => (Finsupp.le_degree i e).trans he
-  rw [MvPolynomial.coeff_sub, MvPowerSeries.coeff_trunc, if_pos, h e he, sub_self]
+  rw [MvPolynomial.coeff_sub, MvPowerSeries.coeff_trunc, ite_eq_left, h e he, sub_self]
   refine lt_of_le_of_ne (fun i => ?_) (fun hh => ?_)
   · simpa using (hle i).trans (Nat.le_succ m)
   · have := hle q
@@ -265,9 +265,9 @@ theorem subst_sq (φ : V →+* V') {n d : ℕ} (i0 : Fin n) (m : ℕ) (f : Fin d
   rw [GlobalTheory.JetTest.jetMap_mk, MvPolynomial.aeval_X]
   refine psJet_eq m (i0, q.2) _ (MvPolynomial.map φ _) fun a ha => ?_
   have hc : MvPolynomial.constantCoeff (psTrunc m (f q.2)) = 0 := by
-    rw [MvPolynomial.constantCoeff_eq, GlobalTheory.JetTest.coeff_psTrunc, if_pos (by simp),
+    rw [MvPolynomial.constantCoeff_eq, GlobalTheory.JetTest.coeff_psTrunc, ite_eq_left (by simp),
       MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hf]
-  rw [hc, map_zero, sub_zero, MvPolynomial.coeff_map, GlobalTheory.JetTest.coeff_psTrunc, if_pos ha, e,
+  rw [hc, map_zero, sub_zero, MvPolynomial.coeff_map, GlobalTheory.JetTest.coeff_psTrunc, ite_eq_left ha, e,
     MvPowerSeries.coeff_map]
 
 theorem copy_sq (φ : V →+* V') {n d : ℕ} (i : Fin n) (m : ℕ) :
@@ -410,7 +410,7 @@ end GlobalTheory.ChartBaseChange
 open GlobalTheory.ChartBaseChange in
 theorem GlobalTheory.integralChart_baseChange : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (T' : CDVR) (φ : T.V →+* T'.V) (t' : SAB H (Sp T'.V)) (_ : SABMap t' Ch.I.G (spMap φ)), ∃ (F' : FGLaw T'.V (chD Ch.ch)) (x' : ∀ m : ℕ, algOver T'.V (JetR T'.V (Fin 1 × Fin (chD Ch.ch)) m) ⟶ t'.G) (act' : Germ.OAct (𝓞 E) F'), F'.F = (fun i => MvPowerSeries.map φ (Ch.FT i)) ∧ (∀ a, act'.act a = fun i => MvPowerSeries.map φ (Ch.actT a i)) ∧ IsChartJ t'.G F' x' ∧ ChartActs t'.G x' t'.act.toRingAct act' := by
   intro E _ _ _ H Dw l Xo c T io y Ch T' φ t' mp
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨BT, hF, hA, -⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y Ch
   have hU := GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y Ch
   obtain ⟨z', hU', hz⟩ := GlobalTheory.T.exists_universalJetCoordinates_pullback T.V T'.V φ Ch.I.G.G t'.G mp.cm.F mp.cart _ Ch.xT hU

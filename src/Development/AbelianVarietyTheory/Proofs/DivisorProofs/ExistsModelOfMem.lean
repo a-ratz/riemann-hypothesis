@@ -126,7 +126,7 @@ theorem isCrysAt_of_sub : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
     (RingHom.mapMatrix (algebraMap ℚ_[l] ↥L.1)).toMonoidHom.comp ((Units.coeHom _).comp ρ)
   have hmapρ : ∀ g, ((ρ g : GL (Fin d) ℚ_[l]) : Matrix (Fin d) (Fin d) ℚ_[l]).map (algebraMap ℚ_[l] (Om l)) =
       (ρL g).map f := fun g => by
-    simp only [ρL, MonoidHom.comp_apply, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, RingHom.mapMatrix_apply,
+    simp only [ρL, MonoidHom.comp_apply, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply,
       Units.coeHom_apply, Matrix.map_map]
     congr 1
   have hint' : ∀ g, (ρL (Bw.e g)).map f * M'.map f = M'.map f * (r g : Matrix (Fin a) (Fin a) (Om l)) := fun g => by
@@ -145,7 +145,7 @@ theorem isCrysAt_of_sub : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
     fun {m n} X Y h => Matrix.ext fun i j => f.injective (congrFun (congrFun h i) j)
   have hintL : ∀ g, ρL (Bw.e g) * M' = M' * (r' g : Matrix (Fin a) (Fin a) ↥L.1) := fun g =>
     hinjMap (by simp only [Matrix.map_mul]; rw [hr'g]; exact hint' g)
-  haveI := L.2
+  have := L.2
   have hcL : IsCrys (P.PD Bw.Kw) (Formalism.MainNotions.N.matRep ρL) :=
     (GlobalTheory.Pst.isCrys_ext_iff (P.PD Bw.Kw) (fun g => ⟨(ρ g : Matrix (Fin d) (Fin d) ℚ_[l]), fun x => rfl, fun x => rfl⟩)).2 hρ
   refine ⟨L, r', hmod, ?_⟩

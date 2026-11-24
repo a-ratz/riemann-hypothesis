@@ -80,7 +80,7 @@ theorem chi_cont (d : SD σ) (T : nF σ d.Y d.b) :
     Continuous fun β : nA σ d.Y d.b => d.B.ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T.1.1 * β.1)))) := by
   have htr : Continuous (Algebra.trace (AF F) (AE F E)) :=
     IsModuleTopology.continuous_of_linearMap (R := AF F) (Algebra.trace (AF F) (AE F E))
-  exact d.ok.good.std.1.comp ((htr.comp (continuous_const.matrix_mul continuous_subtype_val).matrix_trace).neg)
+  exact d.ok.good.std.1.comp ((htr.comp (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace).neg)
 
 theorem trace_inclR (e : E) :
     Algebra.trace (AF F) (AE F E) (inclR (F := F) (AF F) e) = algebraMap F (AF F) (Algebra.trace F E e) := by

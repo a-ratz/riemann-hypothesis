@@ -61,7 +61,7 @@ namespace GlobalTheory.CompanionTheory.SchurCentre
 
 theorem scalar_acts_by_scalar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), IsSmooth π → π.IsIrreducible → IsAdmissible π → ∀ t : kˣ, ∃ c : ℂ, ∀ v, π (Matrix.GeneralLinearGroup.scalar (Fin N) t) v = c • v := by
   intro k _ _ _ _ N V _ _ π hs hirr hadm t
-  haveI := hirr
+  have := hirr
 
   have hz : ∀ g : GL (Fin N) k, g * Matrix.GeneralLinearGroup.scalar (Fin N) t =
       Matrix.GeneralLinearGroup.scalar (Fin N) t * g := by
@@ -86,12 +86,12 @@ theorem scalar_acts_by_scalar : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     { carrier := {g | π g v = v}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hb, ha]
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul]
         simp }
@@ -101,13 +101,13 @@ theorem scalar_acts_by_scalar : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   have hKc : IsCompact (K : Set (GL (Fin N) k)) :=
     (GlobalTheory.SplitFlip.isCompact_KO (k := k) (n := Fin N)).of_isClosed_subset
       (Subgroup.isClosed_of_isOpen K hKo) (fun _ h => h.1)
-  haveI hfd : FiniteDimensional ℂ (fixed π K) := hadm.2 K hKo hKc
+  have hfd : FiniteDimensional ℂ (fixed π K) := hadm.2 K hKo hKc
   have hmem : ∀ w : V, w ∈ fixed π K ↔ ∀ h : K, π (h : GL (Fin N) k) w = w := by
     intro w
     show (∀ h : K, _ = _) ↔ _
     simp
   have hvK : v ∈ fixed π K := (hmem v).2 fun h => h.2.2
-  haveI : Nontrivial (fixed π K) :=
+  have : Nontrivial (fixed π K) :=
     ⟨⟨⟨v, hvK⟩, 0, fun h => hv (congrArg Subtype.val h)⟩⟩
   have hst : ∀ w ∈ fixed π K, π z w ∈ fixed π K := by
     intro w hw

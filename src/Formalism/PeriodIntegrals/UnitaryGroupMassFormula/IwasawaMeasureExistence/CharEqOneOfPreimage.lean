@@ -62,7 +62,7 @@ theorem nnreal_eq_of_smul (μ : Measure A) [μ.IsAddHaarMeasure] {a b : ℝ≥0}
   have h0 : μ K ≠ 0 := (measure_pos_of_nonempty_interior μ K.interior_nonempty).ne'
   have ht : μ K ≠ ⊤ := K.isCompact.measure_lt_top.ne
   have hK := congrArg (fun ν : Measure A => ν K) h
-  simp only [Measure.smul_apply, nnreal_smul_coe_apply] at hK
+  simp only [smul_apply, nnreal_smul_coe_apply] at hK
   exact_mod_cast (ENNReal.mul_left_inj h0 ht).1 hK
 
 theorem char_eq_of_map (μ : Measure A) [μ.IsAddHaarMeasure] [μ.Regular] (φ : A ≃ₜ+ A) {c : ℝ≥0} (hc : c ≠ 0)

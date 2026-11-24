@@ -131,7 +131,7 @@ theorem t_assemble [IsCMField E] {X : PT E} {DF : ℕ} (P : Par X DF) {I : Submo
     rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
       ← Real.exp_sum, Finset.mul_sum]
   have h3 : C ^ X.r = Real.exp P.p3 * (P.ka0 * P.ph) ^ ((X.r * dstar (E := E) P.m : ℝ) / 4) := by
-    rw [hC, mul_pow, ← Real.exp_nat_mul, ← Real.rpow_natCast ((P.ka0 * P.ph) ^ _),
+    rw [hC, mul_pow, ← Real.exp_natCast_mul, ← Real.rpow_natCast ((P.ka0 * P.ph) ^ _),
       ← Real.rpow_mul hkp, Par.p3]
     congr 2; ring
 
@@ -381,7 +381,7 @@ theorem tof_inv_sqrt_le [IsCMField E] {X : PT E} {DF : ℕ} (P : Par X DF) (hph 
     nlinarith [hC1, hZ, h2, mul_nonneg (sub_nonneg.mpr hZ) (lt_of_le_of_lt (mul_self_nonneg X.la1) h2).le]
   have hK1 : 1 ≤ P.ka0 * P.ph := by
     unfold Par.ka0 Par.ph PT.ph RR
-    rw [if_pos hlt]
+    rw [ite_eq_left hlt]
     have hden : PT.rd E ^ 2 * X.la1 ^ 2 ≠ 0 := (mul_pos (pow_pos hR0 2) hla).ne'
     have hY := div_mul_cancel₀ (2 * (PT.f E : ℝ)) hden
     set Y : ℝ := 2 * (PT.f E : ℝ) / (PT.rd E ^ 2 * X.la1 ^ 2) with hYd
@@ -413,7 +413,7 @@ theorem tof_inv_sqrt_le [IsCMField E] {X : PT E} {DF : ℕ} (P : Par X DF) (hph 
     push_cast
     ring
   have hE : (1 : ℝ) ≤ Real.exp ((dstar (E := E) P.m : ℕ) : ℝ) ^ 2 * (2 : ℝ) ^ (-(n : ℝ) / 2) := by
-    rw [Real.rpow_def_of_pos (by norm_num : (0 : ℝ) < 2), ← Real.exp_nat_mul, ← Real.exp_add]
+    rw [Real.rpow_def_of_pos (by norm_num : (0 : ℝ) < 2), ← Real.exp_natCast_mul, ← Real.exp_add]
     refine le_trans ?_ (Real.add_one_le_exp _)
     have hl2 : Real.log 2 ≤ 1 := by
       have := Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 2)
@@ -617,7 +617,7 @@ theorem zeroMode_pointwise_bound [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X 
     rw [thetaSectionPointwiseNormSq_eq hI s w]
     have hexp : Real.exp (-(2 * Real.pi) * ‖uc (IR I) w‖ ^ 2 - Real.pi * ‖p2 (IR I) w‖ ^ 2) =
         E0 ^ 2 := by
-      rw [← hE0def, ← Real.exp_nat_mul]
+      rw [← hE0def, ← Real.exp_natCast_mul]
       congr 1
       push_cast
       ring
@@ -1291,10 +1291,10 @@ theorem tof_yb_sup [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X DF} {I : Submo
   have hB : 2 * ((1 : ℕ) : ℝ) ^ (Col.gB (IR I)) * (1 + 4 * Real.sqrt (2 * (Col.gB (IR I))) /
       (Real.sqrt (((1 : ℕ) : ℝ) * Real.pi) * Y.la1)) ^ (2 * (Col.gB (IR I))) ≤ Real.exp P.p1 ^ 2 := by
     have hp : Real.exp P.p1 ^ 2 = Real.exp 2 * y ^ (2 * g) := by
-      rw [← Real.exp_nat_mul, Par.p1, ← hg, ← hy]
+      rw [← Real.exp_natCast_mul, Par.p1, ← hg, ← hy]
       rw [show ((2 : ℕ) : ℝ) * (1 + g * Real.log y) = 2 + ((2 * g : ℕ) : ℝ) * Real.log y by
         push_cast; ring]
-      rw [Real.exp_add, Real.exp_nat_mul, Real.exp_log (by linarith)]
+      rw [Real.exp_add, Real.exp_natCast_mul, Real.exp_log (by linarith)]
     rw [hp]
     have h2e : (2 : ℝ) ≤ Real.exp 2 := by
       have := Real.add_one_le_exp (2 : ℝ); linarith
@@ -1403,7 +1403,7 @@ theorem tOf (hx : Ext.All) (hs : SplitStatement) (hS : GSupStatement) (hd : DimS
           Finset.prod_le_prod₀ (fun j _ => div_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _))
             (fun j _ => sup_ratio_le_of_phase_zero P hS hsmem h0 (a j))
       _ = Real.exp (X.r * P.p1) := by
-          rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← Real.exp_nat_mul]
+          rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← Real.exp_natCast_mul]
 
 end ReciprocityTheory.ChartRestriction.G.I2
 end -- clump:auto

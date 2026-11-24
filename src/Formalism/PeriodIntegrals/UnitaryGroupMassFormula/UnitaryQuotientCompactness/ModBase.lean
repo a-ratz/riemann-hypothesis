@@ -147,9 +147,9 @@ instance : MeasurableSpace (MG G hG) :=
   inferInstanceAs (MeasurableSpace {x : MtM m // Matrix.of x ∈ G})
 instance : BorelSpace (MG G hG) := inferInstanceAs (BorelSpace {x : MtM m // Matrix.of x ∈ G})
 
-theorem continuous_val : Continuous (val : MG G hG → MtM m) := continuous_subtype_val
+theorem continuous_val : Continuous (val : MG G hG → MtM m) := continuous_subtypeVal
 
-theorem continuous_toM : Continuous (toM : MG G hG → Matrix (Fin m) (Fin m) ℂ) := continuous_subtype_val
+theorem continuous_toM : Continuous (toM : MG G hG → Matrix (Fin m) (Fin m) ℂ) := continuous_subtypeVal
 
 theorem continuous_iff_toM {X : Type*} [TopologicalSpace X] {f : X → MG G hG} :
     Continuous f ↔ Continuous (fun x => (f x).toM) :=

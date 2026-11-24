@@ -76,9 +76,9 @@ theorem lubin_tate_log_is_artin_hasse : LtLogIsLgF := by
   split_ifs with h
   · have hs := Nat.find_spec h
     rw [Finset.sum_eq_single (Nat.find h)]
-    · rw [if_pos hs]
+    · rw [ite_eq_left hs]
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hj'
       exact hj (Nat.pow_right_injective h1 (hj'.symm.trans hs))
     · intro hn
@@ -90,7 +90,7 @@ theorem lubin_tate_log_is_artin_hasse : LtLogIsLgF := by
   · symm
     apply Finset.sum_eq_zero
     intro j _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hj
     exact h ⟨j, hj⟩
 
@@ -149,7 +149,7 @@ theorem wpDen_map (g2 g3 : K) : PowerSeries.map φ (wpDen g2 g3) = wpDen (φ g2)
 theorem cc_wpDen (g2 g3 : K) : PowerSeries.constantCoeff (wpDen g2 g3) = 1 := by
   rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply]
   unfold wpDen
-  rw [PowerSeries.coeff_mk, if_pos rfl]
+  rw [PowerSeries.coeff_mk, ite_eq_left rfl]
 
 variable [CharZero K] [CharZero K']
 

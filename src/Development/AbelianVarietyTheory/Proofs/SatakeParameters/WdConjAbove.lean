@@ -78,8 +78,8 @@ theorem wdPst_equiv {L : FinExt l} {m : ℕ} {ρ₁ ρ₂ : Representation ↥L.
     (e : (Fin m → ↥L.1) ≃ₗ[↥L.1] (Fin m → ↥L.1)) (he : ∀ g x, e (ρ₁ g x) = ρ₂ g (e x))
     (h₁ : IsPst P ρ₁) (h₂ : IsPst P ρ₂) :
     wdPst P ι B h hj ρ₁ = wdPst P ι B h hj ρ₂ := by
-  haveI := h₁.finite
-  haveI := h₂.finite
+  have := h₁.finite
+  have := h₂.finite
   let f : (Fin m → ↥L.1) →ₗ[ℚ_[l]] (Fin m → ↥L.1) := (e : (Fin m → ↥L.1) →ₗ[↥L.1] (Fin m → ↥L.1)).restrictScalars ℚ_[l]
   have hf : ∀ g v, f (ρ₁ g v) = ρ₂ g (f v) := he
   let π : Fin 1 → (Fin m → ↥L.1) →ₗ[ℚ_[l]] (Fin m → ↥L.1) :=
@@ -175,7 +175,7 @@ theorem pst_of_dR (hB : GlobalTheory.Published.DeRhamPotSemistable) {m : ℕ} (r
     (w : PlE D.host) (hw : w ∈ placesOver D.host.E l) (hd : W.IsdRW l ι r w) {LL : FinExt l}
     (B : LocBridge l D.host.E D.nd.Om (Dec (F := D.host.E) (D.nd.plOm.1 w)) ↥(OL LL)) (hj : GlobalTheory.Pst.Induces B) :
     GlobalTheory.Pst.IsPstAt (D.loc l) B (GlobalTheory.Pst.resDec D.nd.plOm.1 r w) :=
-  hB.isPstAt (D.locT l) B _ (hr.comp continuous_subtype_val)
+  hB.isPstAt (D.locT l) B _ (hr.comp continuous_subtypeVal)
     ((GlobalTheory.DeRhamRead.isdRW_iff_isdRAt D T W l ι w hw _ B hj m r hr).1 hd)
 
 theorem wd_conj_above (hB : GlobalTheory.Published.DeRhamPotSemistable) {a : ℕ} (ρ ρ' : G D.host.E D.nd.Om →* GL (Fin a) (Qbar l))
@@ -194,7 +194,7 @@ theorem wd_conj_above (hB : GlobalTheory.Published.DeRhamPotSemistable) {a : ℕ
   have p21 := pst_of_dR D T W l ι hB ρ' hρ' w hw d' B1 j1
   have p11 := pst_of_dR D T W l ι hB ρ hρ w hw d B1 j1
   rw [GlobalTheory.Pst.BridgeParam.wdAt_indep_bridge l (D.loc l) (D.locA l) tie ι D.host.E D.nd.Om (D.nd.plOm.1 w) w _ _
-    B2 B1 (D.nd.plOm.2 w) j2 j1 a _ (hρ'.comp continuous_subtype_val) p22 p21]
+    B2 B1 (D.nd.plOm.2 w) j2 j1 a _ (hρ'.comp continuous_subtypeVal) p22 p21]
   exact wdAt_conj (D.loc l) ι B1 (D.nd.plOm.2 w) j1 _ _ Pm⁻¹ (fun g => by
     change ρ' g = Pm⁻¹ * ρ g * Pm⁻¹⁻¹
     rw [hc, inv_inv]) p11 p21

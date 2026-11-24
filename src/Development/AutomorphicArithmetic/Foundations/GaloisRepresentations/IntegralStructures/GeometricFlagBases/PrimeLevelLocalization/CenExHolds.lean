@@ -149,7 +149,7 @@ private theorem diag_int {n : ℕ} (u : HeightOneSpectrum (𝓞 E)) (ϖ : u.adic
       rw [hϖ]
       have := (HeightOneSpectrum.intValuation_le_pow_iff_mem u y 1).2 (by rwa [pow_one])
       exact this
-    exact mul_inv_le_one_of_le₀ h3 zero_le'
+    exact mul_inv_le_one_of_le₀ h3 zero_le
   · rw [mul_one]; exact alg_int u y
   · rw [mul_zero]; exact zero_mem _
 
@@ -223,8 +223,8 @@ theorem UpperTheory.Gal.Int.Geo.Pl.Tj.tKill :
   have hY : ∀ u k, Y u k ∈ u.adicCompletionIntegers E := by
     intro u k
     by_cases hp : (p : 𝓞 E) ∈ u.asIdeal
-    · simp only [Y, if_pos hp]; exact zero_mem _
-    · simp only [Y, if_neg hp, Pi.smul_apply, Matrix.mulVec, dotProduct, smul_eq_mul, Finset.mul_sum]
+    · simp only [Y, ite_eq_left hp]; exact zero_mem _
+    · simp only [Y, ite_eq_right hp, Pi.smul_apply, Matrix.mulVec, dotProduct, smul_eq_mul, Finset.mul_sum]
       refine sum_mem fun l _ => ?_
       rw [← mul_assoc]
       exact mul_mem (key u k l) ((F.vec_hat v).1 hv u hp l)
@@ -236,7 +236,7 @@ theorem UpperTheory.Gal.Int.Geo.Pl.Tj.tKill :
       rw [Frame.cmp, ← Units.val_mul, map_inv]
       simp
     rw [map_sub, F.vec_act u hu, F.vec_mul u hu, hv' u hu]
-    simp only [Y, if_neg hu]
+    simp only [Y, ite_eq_right hu]
     rw [Matrix.mulVec_smul, Matrix.mulVec_mulVec, hmul, Matrix.one_mulVec, sub_self]
 end -- clump:auto
 end -- clump:auto
@@ -520,13 +520,13 @@ private theorem mem_stabS (hj : j ≤ n) (g : GL (Fin n) κ) :
     g ∈ stabS n j κ hj ↔
       ∀ a b : Fin n, j ≤ (a : ℕ) → (b : ℕ) < j → (g : Matrix (Fin n) (Fin n) κ) a b = 0 := by
   rw [← map_stdU_iff g hj]
-  letI := actGr (κ := κ) (n := n) j
+  let := actGr (κ := κ) (n := n) j
   show g • x0 n j κ hj = x0 n j κ hj ↔ _
   exact ⟨fun h => congrArg Subtype.val h, fun h => Subtype.ext h⟩
 
 private theorem index_stabS (hj : j ≤ n) :
     (stabS n j κ hj).index = Nat.card (UpperTheory.Gal.crystallineComparison.Gr κ (Fin n → κ) j) := by
-  letI := actGr (κ := κ) (n := n) j
+  let := actGr (κ := κ) (n := n) j
   have : MulAction.IsPretransitive (GL (Fin n) κ) (UpperTheory.Gal.crystallineComparison.Gr κ (Fin n → κ) j) := by
     refine ⟨fun x y => ?_⟩
     obtain ⟨g, hg⟩ := exists_gl x.1 y.1 (x.2.trans y.2.symm)
@@ -577,19 +577,19 @@ private theorem entries_iff (n j : ℕ) (ϖ : L) (hϖ : ϖ ≠ 0) (hϖO : ϖ ∈
   constructor
   · intro H a b ha hb
     have := H a b
-    rw [if_neg (by omega), if_pos hb, one_mul, mul_comm] at this
+    rw [ite_eq_right (by omega), ite_eq_left hb, one_mul, mul_comm] at this
     exact (hmax _).1 this
   · intro H a b
     by_cases ha : (a : ℕ) < j <;> by_cases hb : (b : ℕ) < j
-    · rw [if_pos ha, if_pos hb]
+    · rw [ite_eq_left ha, ite_eq_left hb]
       have : ϖ * (((h : Matrix (Fin n) (Fin n) O) a b : O) : L) * ϖ⁻¹ =
           (((h : Matrix (Fin n) (Fin n) O) a b : O) : L) := by field_simp
       rw [this]; exact ((h : Matrix (Fin n) (Fin n) O) a b).2
-    · rw [if_pos ha, if_neg hb, mul_one]
+    · rw [ite_eq_left ha, ite_eq_right hb, mul_one]
       exact O.mul_mem hϖO ((h : Matrix (Fin n) (Fin n) O) a b).2
-    · rw [if_neg ha, if_pos hb, one_mul, mul_comm]
+    · rw [ite_eq_right ha, ite_eq_left hb, one_mul, mul_comm]
       exact (hmax _).2 (H a b (by omega) hb)
-    · rw [if_neg ha, if_neg hb, one_mul, mul_one]
+    · rw [ite_eq_right ha, ite_eq_right hb, one_mul, mul_one]
       exact ((h : Matrix (Fin n) (Fin n) O) a b).2
 
 private theorem conj_mem_iff (n j : ℕ) (hj : j ≤ n) (ϖ : L) (hϖ : ϖ ≠ 0) (hϖO : ϖ ∈ O)
@@ -721,7 +721,7 @@ private theorem alg_int {E : Type} [Field E] [NumberField E] (u : Plc E) (c : �
 
 private theorem lt_one_le {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne x 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [WithZero.exp_le_exp]
     have : WithZero.log x < 0 := by
@@ -748,7 +748,7 @@ private theorem split_at {E : Type} [Field E] [NumberField E] (w u : Plc E) (a b
       · rw [hv]; exact lt_one_le (hw rfl)
     · have : ¬ w.asIdeal ≤ u.asIdeal := fun hle => huw
         (HeightOneSpectrum.ext (w.isMaximal.eq_of_le u.isPrime.ne_top hle).symm)
-      obtain ⟨e, he, heu⟩ := SetLike.not_le_iff_exists.1 this
+      obtain ⟨e, he, heu⟩ := IsConcreteLE.not_le_iff_exists.1 this
       refine ⟨e, he, fun h => heu (h ▸ zero_mem _), ?_⟩
       have : u.valuation E ((e : 𝓞 E) : E) = 1 :=
         le_antisymm (HeightOneSpectrum.valuation_le_one u e)
@@ -764,7 +764,7 @@ private theorem split_at {E : Type} [Field E] [NumberField E] (w u : Plc E) (a b
   have he' : algebraMap (𝓞 E) (u.adicCompletion E) e ≠ 0 := fun h => hve (by rw [h, map_zero])
   have hz : y / algebraMap (𝓞 E) (u.adicCompletion E) e ∈ u.adicCompletionIntegers E := by
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀]
-    rw [div_le_one₀ (zero_lt_iff.2 hve), val_alg]
+    rw [div_le_one₀ (pos_iff_ne_zero.2 hve), val_alg]
     exact hle
   refine ⟨_, mul_mem (alg_int u α) hz, _, mul_mem (alg_int u β) hz, ?_⟩
   have : algebraMap (𝓞 E) (u.adicCompletion E) a * (algebraMap (𝓞 E) (u.adicCompletion E) α * (y / algebraMap (𝓞 E) (u.adicCompletion E) e)) +
@@ -798,7 +798,7 @@ private theorem mem_idHat (F : Frame S) (w : Plc E) {v} (hv : v ∈ LaHat S.D)
     refine F.vec_inj _ fun u hu => ?_
     rw [map_sub, map_add (f := _), F.vec_mul u hu, F.vec_mul u hu, h₁ u hu, h₂ u hu]
     funext k
-    simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, Pi.zero_apply, smul_eq_mul, dif_pos hu, e u hu k, sub_self]
+    simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, Pi.zero_apply, smul_eq_mul, dite_eq_left hu, e u hu k, sub_self]
   rw [hv']
   refine add_mem (AddSubgroup.subset_closure ⟨a, ha, v₁, m₁, rfl⟩)
     (AddSubgroup.subset_closure ⟨b, ?_, v₂, m₂, rfl⟩)
@@ -902,7 +902,7 @@ private theorem card_core (F : Frame S) (w : Plc E) (hp : (p : 𝓞 E) ∉ w.asI
     refine sup_le ?_ ((AddSubgroup.closure_le _).2 ?_)
     · rintro _ ⟨v, hv, rfl⟩ j
       change Valued.v (c (S.L.actG (F.j g) v) (Fin.castLE hi j)) < 1
-      rw [c_act, ht, Matrix.mulVec_diagonal, if_pos (by simp), map_mul]
+      rw [c_act, ht, Matrix.mulVec_diagonal, ite_eq_left (by simp), map_mul]
       exact lt_of_le_of_lt (mul_le_of_le_one_right' ((HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 E) E w).1 (c_int v hv _))) hϖ
     · rintro _ ⟨x, hx, v, hv, rfl⟩ j
       change Valued.v (c (mulF S.D x v) (Fin.castLE hi j)) < 1
@@ -938,9 +938,9 @@ private theorem card_core (F : Frame S) (w : Plc E) (hp : (p : 𝓞 E) ∉ w.asI
       refine mulVec_lt w haI (fun k => ?_) k
       rw [c_sub, hfc, Pi.sub_apply]
       by_cases hk : (k : ℕ) < i
-      · rw [if_pos hk, sub_zero]
+      · rw [ite_eq_left hk, sub_zero]
         exact h ⟨k, hk⟩
-      · rw [if_neg hk, sub_self, map_zero]
+      · rw [ite_eq_right hk, sub_self, map_zero]
         exact zero_lt_one
     have : v.1 = S.L.actG (F.j g) v' + (v.1 - S.L.actG (F.j g) v') := by abel
     rw [this]

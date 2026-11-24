@@ -309,7 +309,7 @@ theorem inertia_fixes [Algebra F H] [Algebra H M] [Algebra F M] [IsScalarTower F
       have h1 := valuation_sub_lt w σ hσ hz
       rw [ValuationSubring.mem_nonunits_iff_or, or_iff_not_imp_left]
       intro h0 h4
-      rw [hV, Valuation.mem_valuationSubring_iff, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))] at h4
+      rw [hV, Valuation.mem_valuationSubring_iff, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))] at h4
       exact absurd h1 (not_lt.2 h4)
     have aux : ∀ B : WeierstrassCurve M, B = W.map V.subtype → ∀ (h₁ : B.toAffine.Nonsingular x' y')
         (h₂ : B.toAffine.Nonsingular (σ x') (σ y')), 12 • Point.some _ _ h₁ = 0 → 12 • Point.some _ _ h₂ = 0 →
@@ -389,7 +389,7 @@ theorem dvd_or_dvd (d : ℕ) (hA : HasGoodReductionOutside d A) (p : ℕ) (hp : 
       (h4 ▸ add_mem (Ideal.mul_mem_left _ _ hpw) (Ideal.mul_mem_left _ _ hnw)))
   have := w.isPrime
   let v : HeightOneSpectrum (𝓞 F) :=
-    ⟨w.asIdeal.under (𝓞 F), inferInstance, mt Ideal.eq_bot_of_comap_eq_bot w.ne_bot⟩
+    ⟨w.asIdeal.under (𝓞 F), inferInstance, mt Ideal.eq_bot_of_under_eq_bot w.ne_bot⟩
   obtain ⟨C, hC⟩ := hA v fun e => hn d (Dvd.intro_left _ rfl) (by simpa using Ideal.mem_comap.1 e)
   refine GlobalTheory.DifferentBound.not_dvd_of_inertia H M w.asIdeal w.ne_bot (fun σ hσ => ?_) hw
   ext z

@@ -70,7 +70,7 @@ theorem exists_ext_cocycle [IsTopologicalRing LL] {T Y Z : LocLat G Qp LL O}
     rw [← hy, hr']
   have : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
   have hrc : Continuous r := IsModuleTopology.continuous_of_linearMap r
-  have : IsTopologicalAddGroup Y.V := IsModuleTopology.topologicalAddGroup LL Y.V
+  have : IsTopologicalAddGroup Y.V := IsModuleTopology.isTopologicalAddGroup LL Y.V
   refine ⟨⟨fun g => r (Y.ρ g (x : Y.V) - (x : Y.V)), ⟨?_, fun g h => ?_⟩, fun g _ => ?_⟩, hval⟩
   · exact hrc.comp ((Y.cont x).sub continuous_const)
   · apply h1

@@ -69,7 +69,7 @@ theorem cntCl_mono {α : Type} {X Y : Set α} (h : X ⊆ Y) (R : α → α → P
     rintro O ⟨a, ha, rfl⟩
     refine ⟨{b | b ∈ Y ∧ R a b}, ⟨a, h ha, rfl⟩, ?_⟩
     ext c
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨⟨_, hc⟩, hcX⟩
       exact ⟨hcX, hc⟩

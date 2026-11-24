@@ -72,8 +72,8 @@ open MeasureTheory Matrix Filter Topology in
 open scoped InnerProductSpace ENNReal Nat in
 private lemma tendsto_inv_smul_exp_smul_sub_one {m : ℕ} (X : Matrix (Fin m) (Fin m) ℂ) :
     Tendsto (fun t : ℝ => t⁻¹ • (NormedSpace.exp ((t : ℂ) • X) - 1)) (𝓝[≠] 0) (𝓝 X) := by
-  letI : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X 0
   rw [hasDerivAt_iff_tendsto_slope] at h
   simp only [zero_smul, NormedSpace.exp_zero, one_mul] at h
@@ -203,8 +203,8 @@ open scoped InnerProductSpace ENNReal Nat in
 private lemma exp_apply_eq_one_apply_of_level_le {n : ℕ} (f : Fin n → ℕ) (Y : Matrix (Fin n) (Fin n) ℂ)
     (hY : ∀ i j, f j ≤ f i → Y i j = 0) (i j : Fin n) (h : f j ≤ f i) :
     NormedSpace.exp Y i j = (1 : Matrix (Fin n) (Fin n) ℂ) i j := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have hs : HasSum (fun m : ℕ => ((m.factorial : ℂ)⁻¹ • Y ^ m)) (NormedSpace.exp Y) :=
     NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) Y
   have hs' : HasSum (fun m : ℕ => ((m.factorial : ℂ)⁻¹ • Y ^ m) i j) (NormedSpace.exp Y i j) :=

@@ -122,7 +122,7 @@ theorem exists_dim_inter {R : Type} [CommRing R] [IsDomain R] {c : ℕ} (hR : Di
     have hφ : Spec.map φ = hU.fromSpec ≫ t := Spec.map_preimage _
     have h := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) (φ := φ)).mp (hφ ▸ inferInstance)
     rwa [Subsingleton.elim (Int.castRingHom Γ(X, U)) φ.hom]
-  letI : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hx).hom.toAlgebra
+  let : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hx).hom.toAlgebra
   have hloc : IsLocalization.AtPrime (X.presheaf.stalk x) (hU.primeIdealOf ⟨x, hx⟩).asIdeal :=
     hU.isLocalization_stalk ⟨x, hx⟩
   obtain ⟨e, h₁, h₂⟩ := exists_dim_quotient_ker hR hs hA (X.evaluation U x hx).hom (by
@@ -161,7 +161,7 @@ theorem exists_hasDim {R : Type} [CommRing R] [IsDomain R] {c : ℕ} (hR : DimFo
     have hxV : x ∈ V := (specializes_iff_mem_closure.2 z.2).mem_open V.isOpen hzV
     obtain ⟨e', h₁', h₂'⟩ := exists_dim_inter hR hs t x hV hxV
     obtain rfl : e = e' := by exact_mod_cast h₁.symm.trans h₁'
-    refine ⟨Subtype.val ⁻¹' (V : Set X), V.isOpen.preimage continuous_subtype_val, hzV, ?_⟩
+    refine ⟨Subtype.val ⁻¹' (V : Set X), V.isOpen.preimage continuous_subtypeVal, hzV, ?_⟩
     rw [← h₂']
     refine (topologicalKrullDim_eq_of_isEmbedding
       (Topology.IsEmbedding.subtypeVal.comp Topology.IsEmbedding.subtypeVal) ?_).ge
@@ -181,12 +181,12 @@ theorem le_and_iff_of_dimFormula {R : Type} [CommRing R] [IsDomain R] {c : ℕ} 
     (π : Y ⟶ X) [LocallyOfFiniteType π] (y : Y) [Algebra R (X.residueField (π y))]
     [FaithfulSMul R (X.residueField (π y))] (d d' : ℕ) (hd : HasDim y d) (hd' : HasDim (π y) d') :
     d' ≤ d ∧ (π.residueDegree y ≠ 0 ↔ d = d') := by
-  letI := (π.residueFieldMap y).hom.toAlgebra
-  letI : Algebra R (Y.residueField y) := ((π.residueFieldMap y).hom.comp (algebraMap R _)).toAlgebra
-  haveI : IsScalarTower R (X.residueField (π y)) (Y.residueField y) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : FaithfulSMul R (Y.residueField y) := (faithfulSMul_iff_algebraMap_injective _ _).2
+  let := (π.residueFieldMap y).hom.toAlgebra
+  let : Algebra R (Y.residueField y) := ((π.residueFieldMap y).hom.comp (algebraMap R _)).toAlgebra
+  have : IsScalarTower R (X.residueField (π y)) (Y.residueField y) := IsScalarTower.of_algebraMap_eq' rfl
+  have : FaithfulSMul R (Y.residueField y) := (faithfulSMul_iff_algebraMap_injective _ _).2
     ((π.residueFieldMap y).hom.injective.comp (FaithfulSMul.algebraMap_injective R _))
-  haveI : Algebra.EssFiniteType (X.residueField (π y)) (Y.residueField y) :=
+  have : Algebra.EssFiniteType (X.residueField (π y)) (Y.residueField y) :=
     RingHom.EssFiniteType.residueFieldMap (LocallyOfFiniteType.stalkMap π y)
   obtain ⟨e, h₁, h₂⟩ := exists_hasDim hR hs (π ≫ t) y
   obtain ⟨e', h₁', h₂'⟩ := exists_hasDim hR hs t (π y)
@@ -222,11 +222,11 @@ theorem dim_le_and_residueDegree_ne_zero_iff : ∀ (k : Type) [CommRing k] (X Y 
     (IsFinite.SpecMap_iff _).2 (RingHom.finite_algebraMap.2 hp.finite)
   obtain ⟨l, hl⟩ := CharP.exists (X.residueField (π y))
   rcases CharP.char_is_prime_or_zero (X.residueField (π y)) l with h | rfl
-  · haveI : Fact l.Prime := ⟨h⟩
-    letI := ZMod.algebra (X.residueField (π y)) l
+  · have : Fact l.Prime := ⟨h⟩
+    let := ZMod.algebra (X.residueField (π y)) l
     exact le_and_iff_of_dimFormula (dimFormula_field (ZMod l)) (ZMod.intCast_surjective)
       (p ≫ spMap (Int.castRingHom k)) π y d d' hd hd'
-  · haveI := CharP.charP_to_charZero (X.residueField (π y))
+  · have := CharP.charP_to_charZero (X.residueField (π y))
     exact le_and_iff_of_dimFormula dimFormula_int (fun n => ⟨n, rfl⟩)
       (p ≫ spMap (Int.castRingHom k)) π y d d' hd hd'
 

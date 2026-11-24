@@ -97,7 +97,7 @@ theorem unif_baseChange_of_psiUnitOn : ∀ (R : Type) [CommRing R] [IsDomain R] 
       rw [genericPoint_eq_bot_of_affine]
       apply PrimeSpectrum.ext
       show Ideal.comap (algebraMap R' (FractionRing R')) z.asIdeal = ⊥
-      haveI := z.isPrime
+      have := z.isPrime
       rw [Ideal.eq_bot_of_prime z.asIdeal]
       exact Ideal.comap_bot_of_injective _ (IsFractionRing.injective R' (FractionRing R'))
     show (specOf φ).base ((jK R').base z) ∈ W
@@ -108,7 +108,7 @@ theorem unif_baseChange_of_psiUnitOn : ∀ (R : Type) [CommRing R] [IsDomain R] 
   have hab : IsAbelianScheme ((Over.pullback x).obj G) :=
     ⟨hBs.comm, hBs.smooth, GlobalTheory.ZH.isProper_hom_of_relAmple hamp, hBs.geomConnected⟩
   have hpbG := isGrpPullback_pullback G x
-  haveI := mbc
+  have := mbc
   have hbc : IsGrpPullback G' G (specOf φ) (bc.hom.left ≫ pullback.fst G.hom (specOf φ)) :=
     ((isGrpPullback_of_iso bc).comp (isGrpPullback_pullback G (specOf φ))).congr (Category.id_comp _) rfl
   have hgK := (isGrpPullback_pullback G' (jK R')).comp hbc

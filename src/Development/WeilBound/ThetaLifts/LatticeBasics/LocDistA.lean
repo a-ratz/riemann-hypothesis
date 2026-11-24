@@ -123,7 +123,7 @@ theorem kill_tens {X V : Type} [TopologicalSpace X] [T2Space X] [AddCommGroup V]
     · by_cases hx' : (x, v + k) ∈ tsupport F
       · simpa using (hK₁ (neg_mem hk.2 : -k ∈ K₁) _ hx').symm
       · rw [image_eq_zero_of_notMem_tsupport hx, image_eq_zero_of_notMem_tsupport hx']
-  haveI : DiscreteTopology (V ⧸ K.toAddSubgroup) := QuotientAddGroup.discreteTopology K.isOpen
+  have : DiscreteTopology (V ⧸ K.toAddSubgroup) := QuotientAddGroup.discreteTopology K.isOpen
   have hfin : ((fun z : X × V => (z.2 : V ⧸ K.toAddSubgroup)) '' tsupport F).Finite :=
     (IsCompact.image hF.2 (QuotientAddGroup.continuous_mk.comp continuous_snd)).finite_of_discrete
   have hmem : ∀ (x : V) (q : V ⧸ K.toAddSubgroup), x + -q.out ∈ (K : Set V) ↔ q = (x : V ⧸ K.toAddSubgroup) := by
@@ -193,7 +193,7 @@ theorem bump_ratio {V : Type} [AddCommGroup V] [TopologicalSpace V] [Nonarchimed
   let μ : Measure V := Measure.addHaar
   have pos : ∀ g : V → ℂ, Bump g → ∃ s : ℝ, 0 < s ∧ ∫ x, g x ∂μ = s := fun g hg => by
     refine ⟨∫ x, (g x).re ∂μ, ?_, ?_⟩
-    · refine (Complex.continuous_re.comp hg.1.1.continuous).integral_pos_of_hasCompactSupport_nonneg_nonzero
+    · refine (Complex.continuous_re.comp hg.1.1.continuous).integral_pos_of_hasCompactSupport_nonneg_ne_zero
         (hg.1.2.comp_left (g := Complex.re) rfl) (fun x => ?_) (x := 0) (by simp [hg.2.2])
       rcases hg.2.1 x with h | h <;> simp [h]
     · rw [← integral_complex_ofReal]

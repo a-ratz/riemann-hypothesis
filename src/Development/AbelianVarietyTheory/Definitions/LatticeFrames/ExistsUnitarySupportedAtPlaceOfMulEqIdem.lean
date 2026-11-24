@@ -100,11 +100,11 @@ theorem exists_inv (Φ : SB X) (A : AddSubgroup X) (hA : IsCompact (A : Set X)) 
     · by_cases hv : x + v ∈ tsupport Φ.1
       · rw [← h2 _ hv, add_neg_cancel_right]
       · rw [image_eq_zero_of_notMem_tsupport hx, image_eq_zero_of_notMem_tsupport hv]
-  haveI : DiscreteTopology (X ⧸ V) := QuotientAddGroup.discreteTopology hV
+  have : DiscreteTopology (X ⧸ V) := QuotientAddGroup.discreteTopology hV
   have hfin : ((A.map (QuotientAddGroup.mk' V) : AddSubgroup (X ⧸ V)) : Set (X ⧸ V)).Finite := by
     rw [AddSubgroup.coe_map]
     exact (hA.image QuotientAddGroup.continuous_mk).finite_of_discrete
-  haveI : Finite (A.map (QuotientAddGroup.mk' V)) := hfin
+  have : Finite (A.map (QuotientAddGroup.mk' V)) := hfin
   refine ⟨Nat.card (A.map (QuotientAddGroup.mk' V)), Nat.card_pos, fun a ha => ?_⟩
   have h := card_nsmul_eq_zero' (x := (⟨QuotientAddGroup.mk' V a, a, ha, rfl⟩ : A.map (QuotientAddGroup.mk' V)))
   have h2 := congrArg Subtype.val h

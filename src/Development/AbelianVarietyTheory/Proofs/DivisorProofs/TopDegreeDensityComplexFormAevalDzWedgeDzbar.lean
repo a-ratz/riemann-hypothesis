@@ -115,7 +115,7 @@ theorem dens_prod {m : ℕ} (x : Fin m → Fin n × Fin n) :
   swap
   · have h0 : topForm n m = 0 := by simp [topForm, hm]
     rw [h0]
-    simp only [AlternatingMap.zero_apply, mul_zero, zero_div]
+    simp only [zero_apply, mul_zero, zero_div]
     rcases lt_or_gt_of_ne hm with h | h
     · obtain ⟨c, S, hS, e⟩ := prod_sym_eq x Finset.univ
       have hne : S ≠ Finset.univ := by

@@ -141,7 +141,7 @@ theorem isMultiHomog_one : IsMultiHomog (1 : MRing ι) 0 := by
   have hm0 : m = 0 := by
     rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one] at hm
     by_contra h
-    exact hm (if_neg (Ne.symm h))
+    exact hm (ite_eq_right (Ne.symm h))
   simp [hm0]
 
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
@@ -164,7 +164,7 @@ theorem exists_colon_prime (J : Ideal (MRing ι)) (hJ : IsMultiHomogIdeal J) (hJ
   let S : Set (Ideal (MRing ι)) := {P | ∃ (f : MRing ι) (c : K → ℕ), IsMultiHomog f c ∧ f ∉ J ∧ P = J.colon {f}}
   have hne : S.Nonempty := by
     refine ⟨J.colon {1}, ?_⟩
-    simp only [S, Set.mem_setOf_eq]
+    simp only [S, Set.mem_ofPred_eq]
     exact ⟨1, 0, isMultiHomog_one, fun h => hJt ((Ideal.eq_top_iff_one J).2 h), rfl⟩
   obtain ⟨P, hP, hmax⟩ :=
     set_has_maximal_iff_noetherian.2 (inferInstance : IsNoetherian (MRing ι) (MRing ι)) S hne
@@ -184,7 +184,7 @@ theorem exists_colon_prime (J : Ideal (MRing ι)) (hJ : IsMultiHomogIdeal J) (hJ
     have hxf := SetLike.GradedMul.mul_mem hx hfm
     have hxfJ : x * f ∉ J := by rwa [Submodule.mem_colon_singleton, smul_eq_mul] at hxP
     have hmem : J.colon {x * f} ∈ S := by
-      simp only [S, Set.mem_setOf_eq]
+      simp only [S, Set.mem_ofPred_eq]
       exact ⟨x * f, _, isMultiHomog_of_mem_lex e hxf, hxfJ, rfl⟩
     have hle : J.colon {f} ≤ J.colon {x * f} := by
       intro g hg

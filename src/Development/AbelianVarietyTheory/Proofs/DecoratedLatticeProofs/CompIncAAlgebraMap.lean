@@ -105,7 +105,7 @@ theorem splitPrime_emb {v : Pl D} {e : AE D} (he : SplitAt D v e) (PP : HeightOn
   have h0 : emb he (x : D.host.E) ≠ 0 :=
     (map_ne_zero _).2 (RingOfIntegers.coe_ne_zero_iff.2 hx)
   rw [← int_iff_sec he, mem_integer_iff, HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀, map_inv₀, not_le,
-    one_lt_inv₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))]
+    one_lt_inv₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))]
 
 theorem exists_place : ∀ (D : D7) (PP : Formalism.L2.DIV.Pl D.host.E) (e : AE D), Formalism.L2.NTheta.IsIdemAt e PP → ∃ (k : Type) (_ : Field k) (_ : ValuativeRel k) (_ : TopologicalSpace k) (_ : IsNonarchimedeanLocalField k) (q : GlobalTheory.FinPl.SplitPt D k), q.e = e ∧ q.v = PP.under (NumberField.RingOfIntegers D.host.F) ∧ (∀ a, (ofSplit q).pr a ∈ 𝒪[k] ↔ Formalism.L2.Col.IntAt PP a) ∧ DenseRange (ofSplit q).pr := by
   intro D PP e h

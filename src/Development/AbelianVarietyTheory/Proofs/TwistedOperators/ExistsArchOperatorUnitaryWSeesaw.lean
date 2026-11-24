@@ -147,18 +147,18 @@ theorem GlobalTheory.ArchFactor.exists_archOperator : ∀ {F E : Type} [Field F]
   choose Tf hTf using hB
   have htens_add : ∀ f g : SInf F (Fin a × Fin (a + a')),
       tens (evI F) (⇑(f + g)) R = tens (evI F) (⇑f) R + tens (evI F) (⇑g) R := by
-    intro f g; funext x; simp only [tens, SchwartzMap.add_apply, Pi.add_apply]; ring
+    intro f g; funext x; simp only [tens, add_apply, Pi.add_apply]; ring
   have htens_smul : ∀ (c : ℂ) (f : SInf F (Fin a × Fin (a + a'))),
       tens (evI F) (⇑(c • f)) R = c • tens (evI F) (⇑f) R := by
-    intro c f; funext x; simp only [tens, SchwartzMap.smul_apply, Pi.smul_apply, smul_eq_mul]; ring
+    intro c f; funext x; simp only [tens, smul_apply, Pi.smul_apply, smul_eq_mul]; ring
   let T : SInf F (Fin a × Fin (a + a')) →ₗ[ℂ] SInf F (Fin a × Fin (a + a')) :=
     { toFun := Tf
       map_add' := fun f g => by
         ext t
-        rw [SchwartzMap.add_apply, hTf, hTf, hTf, htens_add, map_add (f := _), Pi.add_apply]; ring
+        rw [add_apply, hTf, hTf, hTf, htens_add, map_add (f := _), Pi.add_apply]; ring
       map_smul' := fun c f => by
         ext t
-        rw [SchwartzMap.smul_apply, hTf, hTf, htens_smul, map_smul, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
+        rw [smul_apply, hTf, hTf, htens_smul, map_smul, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
           RingHom.id_apply]; ring }
   refine ⟨T, fun f r hr => ?_⟩
   funext y

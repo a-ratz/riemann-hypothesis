@@ -53,8 +53,8 @@ private theorem aux {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (𝒜 :
     (h1 : DirectSum.IsInternal 𝒜) (h2 : SetLike.GradedMonoid 𝒜) (η : Ideal A) (hη : η ∈ minimalPrimes A) :
     η = Ideal.span {x | x ∈ η ∧ ∃ j, x ∈ 𝒜 j} := by
   classical
-  letI : DirectSum.Decomposition 𝒜 := h1.chooseDecomposition
-  letI : GradedRing 𝒜 := { }
+  let : DirectSum.Decomposition 𝒜 := h1.chooseDecomposition
+  let : GradedRing 𝒜 := { }
   have hp : η.IsPrime := hη.1.1
   have hc : (η.homogeneousCore 𝒜).toIdeal.IsPrime := Ideal.IsPrime.homogeneousCore hp
   have hle : (η.homogeneousCore 𝒜).toIdeal ≤ η := Ideal.toIdeal_homogeneousCore_le 𝒜 η

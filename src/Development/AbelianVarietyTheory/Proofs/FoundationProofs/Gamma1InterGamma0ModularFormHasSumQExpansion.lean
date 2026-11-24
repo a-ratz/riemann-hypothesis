@@ -67,7 +67,7 @@ theorem lev_hasSum_coef : ∀ (N l : ℕ) (k : ℤ), 0 < N → ∀ (f : ModularF
     HasSum (fun m => coef ⇑f m • Function.Periodic.qParam 1 τ ^ m) (f τ) := by
   intro N l k _ f τ
   have h1 := one_mem_strictPeriods_lev N l
-  haveI : Fact (IsCusp OnePoint.infty ((lev N l : Subgroup SL(2, ℤ)) : Subgroup (GL (Fin 2) ℝ))) :=
+  have : Fact (IsCusp OnePoint.infty ((lev N l : Subgroup SL(2, ℤ)) : Subgroup (GL (Fin 2) ℝ))) :=
     ⟨Subgroup.isCusp_of_mem_strictPeriods one_pos h1⟩
   exact ModularForm.hasSum_qExpansion f one_pos h1 τ
 

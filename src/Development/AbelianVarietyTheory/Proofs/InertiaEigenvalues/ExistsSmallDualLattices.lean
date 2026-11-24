@@ -115,7 +115,7 @@ theorem box_open_compact [IsUltrametricDist F] [LocallyCompactSpace F] [Topologi
     [IsModuleTopology F V] {ι : Type} [Fintype ι]
     (e : Module.Basis ι F V) (r : ℝ) (hr : 0 < r) :
     IsOpen (box e r hr.le : Set V) ∧ IsCompact (box e r hr.le : Set V) := by
-  haveI : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
   rw [box_eq]
   exact ⟨(IsUltrametricDist.isOpen_closedBall _ hr.ne').preimage (coordHomeo e).continuous,
     (coordHomeo e).isCompact_preimage.2 (isCompact_closedBall _ _)⟩

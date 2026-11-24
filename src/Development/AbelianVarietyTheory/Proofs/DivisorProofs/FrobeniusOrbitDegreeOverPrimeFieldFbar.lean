@@ -116,10 +116,10 @@ theorem _root_.GlobalTheory.GoodCharsCompare.frobenius_orbit_degreeOverPrimeFiel
       y ^ g ^ i = y ^ g ^ j → i = j := by
   have hg : g.Prime := Fact.out
   have hint := _root_.GlobalTheory.GoodCharsCompare.isInt y
-  haveI : FiniteDimensional (ZMod g) (IntermediateField.adjoin (ZMod g) {y}) :=
+  have : FiniteDimensional (ZMod g) (IntermediateField.adjoin (ZMod g) {y}) :=
     IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {y}) := Module.finite_of_finite (ZMod g)
-  letI : Fintype (IntermediateField.adjoin (ZMod g) {y}) := Fintype.ofFinite _
+  have : Finite (IntermediateField.adjoin (ZMod g) {y}) := Module.finite_of_finite (ZMod g)
+  let : Fintype (IntermediateField.adjoin (ZMod g) {y}) := Fintype.ofFinite _
   have hcard : Fintype.card (IntermediateField.adjoin (ZMod g) {y}) =
       g ^ _root_.GlobalTheory.GoodCharsCompare.dg y := by
     rw [Module.card_eq_pow_finrank (K := ZMod g) (V := IntermediateField.adjoin (ZMod g) {y}),
@@ -258,7 +258,7 @@ variable {g : ℕ} [Fact g.Prime] in
 theorem _root_.GlobalTheory.GoodCharsCompare.exists_log (ω : _root_.Formalism.CyclotomicNorms.Fbar g →*₀ ℂ) {d : ℕ} (hd : 0 < d)
     {y : _root_.Formalism.CyclotomicNorms.Fbar g} (hy : y ^ (g ^ d - 1) = 1) :
     ∃ m, ω y = _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspValueComparison.rootC (g ^ d - 1) ^ m := by
-  haveI : NeZero (g ^ d - 1) := ⟨(_root_.GlobalTheory.GoodCharsCompare.g_pow_sub_pos hd).ne'⟩
+  have : NeZero (g ^ d - 1) := ⟨(_root_.GlobalTheory.GoodCharsCompare.g_pow_sub_pos hd).ne'⟩
   obtain ⟨i, -, hi⟩ := (_root_.GlobalTheory.GoodCharsCompare.rootC_prim (g := g) hd).eq_pow_of_pow_eq_one
     (ξ := ω y) (by rw [← map_pow, hy, map_one])
   exact ⟨i, hi.symm⟩

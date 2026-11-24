@@ -90,7 +90,7 @@ theorem iconst_mul {F : Type} [NormedAddCommGroup F] [NormedSpace ℂ F] (G : F 
     iteratedFDeriv ℂ n (fun y => a * G y) x u = a * iteratedFDeriv ℂ n G x u := by
   have h := iteratedFDeriv_const_smul_apply' (a := a) (i := n) (hG.contDiffAt (n := n))
   simp only [smul_eq_mul] at h
-  rw [h, ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  rw [h, smul_apply, smul_eq_mul]
 
 theorem icompL {E F : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensional ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F]

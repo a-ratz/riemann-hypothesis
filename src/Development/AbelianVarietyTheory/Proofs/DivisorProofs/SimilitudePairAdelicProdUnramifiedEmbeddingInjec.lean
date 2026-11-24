@@ -64,7 +64,7 @@ theorem finiteAdeleRingAway_nontrivial (p : ℕ) [Fact p.Prime] : Nontrivial (Af
 
 theorem pair_toAf_injective {p : ℕ} [Fact p.Prime] {G : HTGroup p} (P : Pair G) (x : (AfP p ⊗[ℚ] G.C)ˣ)
     (t : (AfP p)ˣ) (hx : Triv G (AfP p) P.β x t) : Function.Injective (P.toAf x t hx) := by
-  haveI := finiteAdeleRingAway_nontrivial p
+  have := finiteAdeleRingAway_nontrivial p
   intro a b h
   have h0 := congrArg Subtype.val h
   have h1 := congrArg Prod.fst h0
@@ -74,12 +74,12 @@ theorem pair_toAf_injective {p : ℕ} [Fact p.Prime] {G : HTGroup p} (P : Pair G
   have e1 : (a : G.Cˣ × ℚˣ).1 = (b : G.Cˣ × ℚˣ).1 := by
     apply Units.ext
     have := congrArg Units.val h1
-    simp only [Units.coe_map, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, MonoidHom.coe_ofClass] at this
     exact Algebra.TensorProduct.includeRight_injective (algebraMap ℚ (AfP p)).injective this
   have e2 : (a : G.Cˣ × ℚˣ).2 = (b : G.Cˣ × ℚˣ).2 := by
     apply Units.ext
     have := congrArg Units.val h2
-    simp only [Units.coe_map, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, MonoidHom.coe_ofClass] at this
     exact (algebraMap ℚ (AfP p)).injective this
   exact Subtype.ext (Prod.ext e1 e2)
 

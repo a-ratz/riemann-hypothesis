@@ -378,11 +378,11 @@ theorem htImage_of (h1 : PlLat) (h2 : PlaceSplit) (h3 : GramBlock) : HtImage := 
   obtain ⟨hLatA, hrkA, -⟩ := h1 K V ι b X hX A hA
   obtain ⟨hLatA₀, hrkA₀, -⟩ := h1 K V ι b X hX A₀ hA₀fg
   obtain ⟨hLatI, hrkI, -⟩ := h1 K W κ b' X' hX' I hIfg
-  haveI hLd : DiscreteTopology L := hLatA.2
-  haveI hId : DiscreteTopology (zl ρ' I) := hLatI.2
+  have hLd : DiscreteTopology L := hLatA.2
+  have hId : DiscreteTopology (zl ρ' I) := hLatI.2
   obtain ⟨hQd, hrkQ, -⟩ := Formalism.F.degQuot _ L N hLd hsat.2
   set Q := Formalism.F.quot L N with hQ
-  haveI := hQd
+  have := hQd
 
   have hπU : ∀ y ∈ U, Uᗮ.starProjection y = 0 := by
     intro y hy

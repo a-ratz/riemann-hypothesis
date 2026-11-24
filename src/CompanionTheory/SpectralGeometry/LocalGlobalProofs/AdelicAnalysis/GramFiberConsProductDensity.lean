@@ -115,7 +115,7 @@ theorem swap_through_fibres {Y C X H : Type} [MeasurableSpace Y] [MeasurableSpac
         rw [hfib _ (hfc c).lintegral_prod_left']
         rw [restr]
         · refine lintegral_congr fun S => ?_
-          haveI := hm S
+          have := hm S
           exact lintegral_lintegral_swap (f := fun v y => f y c v)
             ((hfc c).comp measurable_swap).aemeasurable
         · intro S hS
@@ -137,13 +137,13 @@ theorem lintegral_Uset_eq_Mid : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   obtain ⟨hUo, hlf, hoff, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ hCM M n J D.hJ R D.hR d b lam hlam m' D.hm'
   obtain ⟨-, -, h₃, -, h₅, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM (M + 1) _ hJ' R
   have hc := (hact (n + 1)).1
-  haveI := hBorel n M
-  haveI := hBorel (n + 1) (M + 1)
-  haveI := hBorel 1 (M + 1)
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
-  haveI : SigmaFinite (coordW R b lam n M) := inferInstance
-  haveI : SigmaFinite (m₁ (hermScal R σ (algebraMap F R t))) := inferInstance
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have := hBorel n M
+  have := hBorel (n + 1) (M + 1)
+  have := hBorel 1 (M + 1)
+  have : SigmaFinite (coordK R b lam) := inferInstance
+  have : SigmaFinite (coordW R b lam n M) := inferInstance
+  have : SigmaFinite (m₁ (hermScal R σ (algebraMap F R t))) := inferInstance
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
   haveI : SFinite (Measure.pi fun _ : Fin n => coordK R b lam) := inferInstance
   have hm : ∀ S, SFinite (m' S) := fun S => inferInstance
   have hUm : MeasurableSet (Unt σ R n) := hUo.measurableSet
@@ -158,10 +158,10 @@ theorem lintegral_Uset_eq_Mid : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       f p.1 p.2.1 p.2.2 := by
     have hcm : Measurable (fun p : HA R σ (blockOne (algebraMap F E t) J) × (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) =>
         actW R σ (blockOne (algebraMap F E t) J) p.1 p.2) := by
-      haveI : SecondCountableTopology (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
-      haveI : OpensMeasurableSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
-      haveI : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J)) := inferInstance
-      haveI : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J) × (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) :=
+      have : SecondCountableTopology (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
+      have : OpensMeasurableSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
+      have : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J)) := inferInstance
+      have : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J) × (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) :=
         Prod.opensMeasurableSpace
       exact hc.measurable
     have hg : Measurable (fun p : (Fin 1 → Fin (M + 1) → R ⊗[F] E) × (Fin n → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) =>

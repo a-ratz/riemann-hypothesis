@@ -355,9 +355,9 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
         (Classical.choose_spec (Classical.choose_spec
           (D.fin.univ Tw.O (LHom.id Tw.O) _ (D.pt_p t)))).2.1⟩
     obtain ⟨φT, hφT⟩ := exists_pts T hpts
-    letI instA : ∀ i, Algebra (Tw.O : Type) (D.fin.AAx i).carrier := fun i =>
+    let instA : ∀ i, Algebra (Tw.O : Type) (D.fin.AAx i).carrier := fun i =>
       ((D.fin.sO i).1 : (Tw.O : Type) →+* (D.fin.AAx i).carrier).toAlgebra
-    haveI instT : ∀ i, IsScalarTower R₀ (Tw.O : Type) (D.fin.AAx i).carrier := fun i =>
+    have instT : ∀ i, IsScalarTower R₀ (Tw.O : Type) (D.fin.AAx i).carrier := fun i =>
       IsScalarTower.of_algebraMap_eq (fun r => ((D.fin.sO i).1.commutes r).symm)
     have hy : ∀ i, ∃ z : sp (R₀ := (Tw.O : Type)) (D.fin.AAx i).carrier ⟶ G',
         down h z = e (D.fin.AAx i) (D.fin.y i) := fun i => (down_bij h).2 _
@@ -381,8 +381,8 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
         rw [hdpt, down_nat, hy', ← (hspec t).2, hn]
         rfl
       exact DFunLike.congr_fun hf a
-    haveI hTfin : Module.Finite (Tw.O : Type) T.A := T.fin
-    haveI hAfin : ∀ i, Module.Finite (Tw.O : Type) (D.fin.AAx i).carrier := fun i => (D.fin.free i).2
+    have hTfin : Module.Finite (Tw.O : Type) T.A := T.fin
+    have hAfin : ∀ i, Module.Finite (Tw.O : Type) (D.fin.AAx i).carrier := fun i => (D.fin.free i).2
     have hloc : ∀ (A S : LAlg R₀) [Algebra (Tw.O : Type) A.carrier] [Algebra (Tw.O : Type) S.carrier]
         [Module.Finite (Tw.O : Type) A.carrier] [IsLocalHom (algebraMap (Tw.O : Type) S.carrier)]
         (f : A.carrier →ₐ[(Tw.O : Type)] S.carrier), IsLocalHom (f : A.carrier →+* S.carrier) := by
@@ -407,7 +407,7 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
           (∀ j (β' : (D.fin.AAx j).carrier →ₐ[(Tw.O : Type)] S.carrier), β'.comp (χ j) = α → j = i) ∧
           ∀ β' : (D.fin.AAx i).carrier →ₐ[(Tw.O : Type)] S.carrier, β'.comp (χ i) = α → β' = β := by
       intro S _ _ _ α
-      haveI hOS : IsLocalHom (algebraMap (Tw.O : Type) S.carrier) := isLocalHom_of_finite _ _
+      have hOS : IsLocalHom (algebraMap (Tw.O : Type) S.carrier) := isLocalHom_of_finite _ _
       let s : LHom Tw.O S := ⟨IsScalarTower.toAlgHom R₀ (Tw.O : Type) S.carrier, hOS⟩
       have hcomp : ∀ j (β' : (D.fin.AAx j).carrier →ₐ[(Tw.O : Type)] S.carrier),
           down h (spMap (β'.comp (χ j)) ≫ T.y) =
@@ -468,16 +468,16 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
       let Rg := (χ i).range
       have hint : (algebraMap Rg (D.fin.AAx i).carrier).IsIntegral := fun a =>
         (Algebra.IsIntegral.isIntegral (R := (Tw.O : Type)) a).tower_top
-      haveI hlh : IsLocalHom (algebraMap Rg (D.fin.AAx i).carrier) :=
+      have hlh : IsLocalHom (algebraMap Rg (D.fin.AAx i).carrier) :=
         hint.isLocalHom Subtype.val_injective
-      haveI hRl : IsLocalRing Rg := by
+      have hRl : IsLocalRing Rg := by
         refine { isUnit_or_isUnit_of_add_one := fun {a b} hab => ?_ }
         have hab' : algebraMap Rg (D.fin.AAx i).carrier a + algebraMap Rg (D.fin.AAx i).carrier b = 1 := by
           rw [← map_add (f := _), hab, map_one]
         rcases IsLocalRing.isUnit_or_isUnit_of_add_one hab' with hu | hu
         · exact Or.inl (isUnit_of_map_unit _ _ hu)
         · exact Or.inr (isUnit_of_map_unit _ _ hu)
-      haveI hRf : Module.Finite (Tw.O : Type) Rg :=
+      have hRf : Module.Finite (Tw.O : Type) Rg :=
         Module.Finite.of_surjective (χ i).rangeRestrict.toLinearMap (AlgHom.rangeRestrict_surjective _)
       obtain ⟨i', β, hβ, -, -⟩ := key (LAlg.mk Rg) (χ i).rangeRestrict
       have hc : (Rg.val.comp β).comp (χ i') = χ i := by
@@ -516,8 +516,8 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
       have hMi := hmax i M hM (le_trans le_sup_left hMle)
       have hMj := hmax j M hM (le_trans le_sup_right hMle)
       let I := RingHom.ker (χ i) ⊓ RingHom.ker (χ j)
-      letI : Algebra R₀ T.A := ((algebraMap (Tw.O : Type) T.A).comp (algebraMap R₀ (Tw.O : Type))).toAlgebra
-      haveI : IsScalarTower R₀ (Tw.O : Type) T.A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+      let : Algebra R₀ T.A := ((algebraMap (Tw.O : Type) T.A).comp (algebraMap R₀ (Tw.O : Type))).toAlgebra
+      have : IsScalarTower R₀ (Tw.O : Type) T.A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
       have hIne : I ≠ ⊤ := by
         intro hI
         have h1 : (1 : T.A) ∈ RingHom.ker (χ i) := by
@@ -527,8 +527,8 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
           exact (Ideal.mem_inf.mp h2).1
         rw [RingHom.mem_ker, map_one] at h1
         exact one_ne_zero h1
-      haveI : Nontrivial (T.A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hIne
-      haveI hQl : IsLocalRing (T.A ⧸ I) := by
+      have : Nontrivial (T.A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hIne
+      have hQl : IsLocalRing (T.A ⧸ I) := by
         obtain ⟨N0, hN0⟩ := Ideal.exists_maximal (T.A ⧸ I)
         have hall : ∀ N : Ideal (T.A ⧸ I), N.IsMaximal →
             N.comap (Ideal.Quotient.mk I) = (IsLocalRing.maximalIdeal (D.fin.AAx i).carrier).comap (χ i) := by
@@ -544,7 +544,7 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
         refine IsLocalRing.of_unique_max_ideal ⟨N0, hN0, fun N hN => ?_⟩
         apply Ideal.comap_injective_of_surjective _ Ideal.Quotient.mk_surjective
         rw [hall N hN, hall N0 hN0]
-      haveI : Module.Finite (Tw.O : Type) (T.A ⧸ I) :=
+      have : Module.Finite (Tw.O : Type) (T.A ⧸ I) :=
         Module.Finite.of_surjective (Ideal.Quotient.mkₐ (Tw.O : Type) I).toLinearMap
           (Ideal.Quotient.mkₐ_surjective (Tw.O : Type) I)
       obtain ⟨k, β, hβ, -, -⟩ := key (LAlg.mk (T.A ⧸ I)) (Ideal.Quotient.mkₐ (Tw.O : Type) I)
@@ -561,7 +561,7 @@ theorem htd_tie : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
         intro a
         rfl
       exact hij ((hπ i (Or.inl rfl)).symm.trans (hπ j (Or.inr rfl)))
-    haveI := D.fin.fι
+    have := D.fin.fι
     have hcrt : ∀ F : (i : D.fin.ι) → (D.fin.AAx i).carrier, ∃ a : T.A, ∀ i, χ i a = F i := by
       intro F
       choose b hb' using fun i => hsurj i (F i)
@@ -756,12 +756,12 @@ private theorem htd_of_tower (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAl
   have hker : RingHom.ker (algebraMap (Ainf.R0 p O ε) (Tw.O : Type)) ^ 2 = ⊥ := by
     refine (pow_two _).trans (eq_bot_iff.2 ?_)
     exact Ideal.mul_le.2 fun x hx y hy => (Submodule.mem_bot _).2 (hmul x y hx hy)
-  haveI : IsLocalRing (Ainf.R0 p O ε) := Ainf.local_of_surj_sq _ hsurj (fun k hk => hmul k k hk hk)
+  have : IsLocalRing (Ainf.R0 p O ε) := Ainf.local_of_surj_sq _ hsurj (fun k hk => hmul k k hk hk)
   obtain ⟨G, iG, cG, Q, ψ, ψ₂, hab, hQ, t₁, t₂, hsym, hamp, hnd, hpb, hsq, hΛ⟩ :=
     GlobalTheory.T.exists_lift_principally_polarised_abelian_square_zero p C v (Tw.O : Type) hv' T P₀ io P φ h₁ h₂ h₃ h₄ _ _ hsurj hker
-  letI : Algebra (Ainf.R0 p O ε) C :=
+  let : Algebra (Ainf.R0 p O ε) C :=
     ((algebraMap (Tw.O : Type) C).comp (algebraMap (Ainf.R0 p O ε) (Tw.O : Type))).toAlgebra
-  haveI : IsScalarTower (Ainf.R0 p O ε) (Tw.O : Type) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (Ainf.R0 p O ε) (Tw.O : Type) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hp0 : 1 ≤ p := (Fact.out : p.Prime).one_lt.le
   have hsm := GlobalTheory.T.smoothOfRelativeDimension_of_grpPullback_localRing _ _ _ G P.A ψ P.g hab hpb P.smoothDim
   obtain ⟨hθ, hn⟩ := GlobalTheory.T.cube_trivial_and_finite_flat_surjective_mul_abelianScheme _ G _ Q hab (LB.isLB_pull hQ _) hamp hQ
@@ -799,10 +799,10 @@ private theorem htd_of_tower (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAl
 theorem exists_htd_act : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] (P : Out.PolAV (Geo.Tor.Sp O)), 1 ≤ P.g → ∀ (g : ℕ), P.g = g → ∀ (OE : Type) [CommRing OE] [StarRing OE] (o : P.OAct OE) (F : FGLaw O g) (X : Fam P.A g), NilChart P.A F.F X → ∀ α : OE → Fin g → PS O 1 g, (∀ a, Reads X X (o.act a) (α a)) → ∃ (cp : O) (_ : HodgeTateSetting p v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp) (H : HodgeTateDatum p g v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp) (S : Matrix (Fin g) (Fin g) O) (pt : Nb p g → (sp (R₀ := O) O ⟶ P.A)), H.P = 0 ∧ H.PL = 0 ∧ IsUnit S ∧ (∀ a : OE, lin (α a) * S = S * H.ρL (1 ⊗ₜ[ℤ] a)) ∧ (∀ i, ∃ u : PS O 1 g, IsCh F.F u ∧ Sᵀ *ᵥ dl u = fun l => H.Ht l i) ∧ IsTorsPts P.A p pt ∧ (∀ T : TorsRep P.A p, H.AA.carrier = torsFun C T pt) ∧ ∀ (a : OE) (t : TT p g), pt (red p g (H.ρ (1 ⊗ₜ[ℤ] a) *ᵥ t)) = pt (red p g t) ≫ o.act a := by
   intro p _ C _ _ _ v O _ iA hv iF iC iZ P h₄ g hg OE _ _ o F X hX α hα
   subst hg
-  haveI : IsDomain O := Function.Injective.isDomain _ hv.hom_inj
-  haveI : IsLocalRing O := Ainf.O_local O hv
+  have : IsDomain O := Function.Injective.isDomain _ hv.hom_inj
+  have : IsLocalRing O := Ainf.O_local O hv
   obtain ⟨R, P₀, φ, hft, hg₀, h₁, h₂⟩ := GlobalTheory.KeyTf.exists_polAV_finiteType_subring O P
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   have hvp : v (p : C) < 1 := by
     have h := lt_of_le_of_ne (hv.map_le_one (p : O)) fun h => iF.out (hv.isUnit_iff_valuation_eq_one.2 h)
     simpa using h
@@ -998,7 +998,7 @@ theorem eq_one_of_g_eq_zero (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     (P : Out.PolAV (Spec (CommRingCat.of R))) (hg : P.g = 0) (z : sp (R₀ := R) R ⟶ P.A) :
     z = 1 := by
   have hd : SmoothOfRelativeDimension 0 P.A.hom := hg ▸ P.smoothDim
-  haveI := isIso_hom_of_relDim_zero P.A P.isAb hd
+  have := isIso_hom_of_relDim_zero P.A P.isAb hd
   exact over_hom_eq_of_mono _ _
 
 end GlobalTheory.CompanionTheory.Ar.DimZero
@@ -1086,15 +1086,15 @@ theorem torsFun_one_eq {p : ℕ} [Fact p.Prime] {C : Type} [Field C] {R : Type} 
 
 theorem main : HodgeTateDatumStatement := by
   intro p _ C _ _ _ v R _ _ hv hp hcomp _ P
-  haveI : IsLocalRing R := isLocal_of_integers hv
-  haveI : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
-  haveI : Fact ¬IsUnit (p : R) := ⟨fun hu => by
+  have : IsLocalRing R := isLocal_of_integers hv
+  have : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
+  have : Fact ¬IsUnit (p : R) := ⟨fun hu => by
     have h1 := hv.one_of_isUnit hu
     rw [map_natCast] at h1
     rw [h1] at hp
     exact lt_irrefl _ hp⟩
-  haveI : IsAdicComplete (Ideal.span {(p : R)}) R := hcomp
-  haveI : IsCommMonObj P.A := P.isAb.comm
+  have : IsAdicComplete (Ideal.span {(p : R)}) R := hcomp
+  have : IsCommMonObj P.A := P.isAb.comm
   have hT : Nonempty (TorsRep P.A p) :=
     GlobalTheory.T.abelian_scheme_torsion_representation R p (Fact.out : p.Prime).one_le P.A P.L P.isAb P.isLB P.ample
   refine ⟨hT, ?_⟩

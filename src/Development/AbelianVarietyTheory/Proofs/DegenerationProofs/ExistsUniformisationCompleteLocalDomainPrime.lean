@@ -233,7 +233,7 @@ theorem exists_setting (hL : Laws) (hL2 : Laws2) (hL3 : Laws3) {R : Type} [CommR
   have hm : (m ^ (0 + 1)).IsMaximal := by rw [zero_add, pow_one]; infer_instance
   have hS₀ : IsSemiAbelian (thickObj V m 0 G') := IsSemiAbelian.pullback _ G' hS'
   have hb : Nonempty (BiTriv P₀.c Q₀.i) := by
-    letI : Field (V ⧸ m ^ (0 + 1)) := Ideal.Quotient.field _
+    let : Field (V ⧸ m ^ (0 + 1)) := Ideal.Quotient.field _
     exact @BiextTriv.main (V ⧸ m ^ (0 + 1)) _ E₁.X _ _ _ (thickObj V m 0 G') _ _ hS₀.smooth hS₀.geomConnected
       P₀.L P₀.c Q₀.i Q₀.i_hom
   obtain ⟨w₀, -, hw₀, -, -, hp, -⟩ := hW'

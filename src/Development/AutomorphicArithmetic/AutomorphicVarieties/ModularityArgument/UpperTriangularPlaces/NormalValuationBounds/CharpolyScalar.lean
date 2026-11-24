@@ -79,7 +79,7 @@ theorem UpperTheory.Reformulated.B.CommonEigenvectorOfCommutingSet.common_eig :
       exact ⟨v, hv, hv0, fun f hf => h f hf v hv⟩
     · push Not at h
       obtain ⟨f, hf, x, hx, hfx⟩ := h
-      haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
+      have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
       obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue (f.restrict (hinv f hf) : Module.End k W)
       obtain ⟨w, hw⟩ := hμ.exists_hasEigenvector
       have hwe : f (w : V) = μ • (w : V) := by
@@ -151,7 +151,7 @@ private theorem chars_of_comm {Γ : Type} [Group Γ] :
       (by rw [LinearMap.charpoly_natDegree, hd])
   | succ d ih =>
     intro V _ _ _ ρ hc hd
-    haveI : Nontrivial V := Module.nontrivial_of_finrank_pos (R := k) (by omega)
+    have : Nontrivial V := Module.nontrivial_of_finrank_pos (R := k) (by omega)
     obtain ⟨v, -, hv0, hv⟩ := common_eig (Set.range ρ)
       (by rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩; exact hc a b) _ ⊤ rfl top_ne_bot (fun _ _ _ _ => trivial)
     choose c hcv using fun g => hv (ρ g) ⟨g, rfl⟩
@@ -226,10 +226,10 @@ variable {k : Type} [Field k] [IsAlgClosed k] [CharZero k]
 
 private theorem extend_char {Γ Q : Type} [Group Γ] [CommGroup Q] [Finite Q] (f : Γ →* Q) (χ : Γ →* kˣ)
     (h : f.ker ≤ χ.ker) : ∃ ψ : Q →* kˣ, ψ.comp f = χ := by
-  haveI : NeZero (Monoid.exponent Q) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (Monoid.exponent Q) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   have hk : f.rangeRestrict.ker ≤ χ.ker := by rwa [MonoidHom.ker_rangeRestrict]
   let χ' : f.range →* kˣ := f.rangeRestrict.liftOfSurjective f.rangeRestrict_surjective ⟨χ, hk⟩
-  obtain ⟨ψ, hψ⟩ := MonoidHom.restrict_surjective k f.range χ'
+  obtain ⟨ψ, hψ⟩ := MonoidHom.domRestrict_surjective k f.range χ'
   refine ⟨ψ, MonoidHom.ext fun g => ?_⟩
   have h1 : χ' (f.rangeRestrict g) = χ g :=
     MonoidHom.liftOfRightInverse_comp_apply _ _ _ ⟨χ, hk⟩ g
@@ -243,11 +243,11 @@ private theorem descend [TopologicalSpace k] {Γ : Type} [Group Γ] [Topological
       (r g : Matrix (Fin n) (Fin n) k).charpoly = ∏ i, (X - C (κ i g : k)) := by
   have hcm : ∀ a b : Γ, a * b * a⁻¹ * b⁻¹ ∈ H := fun a b =>
     hc (Subgroup.commutator_mem_commutator (Subgroup.mem_top a) (Subgroup.mem_top b))
-  haveI hN : H.Normal := ⟨fun h hh g => by
+  have hN : H.Normal := ⟨fun h hh g => by
     have h1 := H.mul_mem (hcm g h) hh
     simpa [mul_assoc] using h1⟩
-  haveI : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
-  letI : CommGroup (Γ ⧸ H) :=
+  have : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  let : CommGroup (Γ ⧸ H) :=
     { (QuotientGroup.Quotient.group H) with
       mul_comm := fun x y => by
         induction x using QuotientGroup.induction_on with | _ a =>
@@ -288,7 +288,7 @@ private theorem descend [TopologicalSpace k] {Γ : Type} [Group Γ] [Topological
           rw [map_mul, map_inv] at h1
           exact (inv_mul_eq_one.1 h1).symm
         simp [h2]
-    exact hcont.comp continuous_subtype_val
+    exact hcont.comp continuous_subtypeVal
   · have h1 := hχ ⟨g, hg⟩
     simp only [MonoidHom.comp_apply, Subgroup.subtype_apply] at h1 ⊢
     rw [h1]

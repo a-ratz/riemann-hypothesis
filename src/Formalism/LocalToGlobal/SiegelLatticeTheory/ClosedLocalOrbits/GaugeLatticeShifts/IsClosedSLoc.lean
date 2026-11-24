@@ -109,7 +109,7 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Loca
 theorem comap_inv (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν : Measure G) (hνc : ν (S : Set G)ᶜ = 0)
     (hνi : ∀ s ∈ S, ν.map (fun x => s * x) = ν) :
     (ν.comap (Subtype.val : S → G)).IsMulLeftInvariant ∧ (ν.comap (Subtype.val : S → G)).map Subtype.val = ν := by
-  have he : MeasurableEmbedding (Subtype.val : S → G) := MeasurableEmbedding.subtype_coe hS.measurableSet
+  have he : MeasurableEmbedding (Subtype.val : S → G) := MeasurableEmbedding.subtypeVal hS.measurableSet
   refine ⟨⟨fun g => ?_⟩, ?_⟩
   · refine Measure.ext fun A hA => ?_
     rw [Measure.map_apply (measurable_const_mul g) hA, he.comap_apply, he.comap_apply]
@@ -136,20 +136,20 @@ theorem unique_sf (S : Subgroup G) (hS : IsClosed (S : Set G)) (μ m : Measure G
     (hμc : μ (S : Set G)ᶜ = 0) (hμi : ∀ s ∈ S, μ.map (fun x => s * x) = μ) (hμf : IsFiniteMeasureOnCompacts μ)
     (hm0 : m ≠ 0) (hmσ : SigmaFinite m) (hmc : m (S : Set G)ᶜ = 0) (hmi : ∀ s ∈ S, m.map (fun x => s * x) = m) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • m := by
-  haveI : LocallyCompactSpace S := hS.locallyCompactSpace
-  haveI : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology (S : Set G)
-  have he : MeasurableEmbedding (Subtype.val : S → G) := MeasurableEmbedding.subtype_coe hS.measurableSet
+  have : LocallyCompactSpace S := hS.locallyCompactSpace
+  have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology (S : Set G)
+  have he : MeasurableEmbedding (Subtype.val : S → G) := MeasurableEmbedding.subtypeVal hS.measurableSet
   obtain ⟨hμ1, hμ3⟩ := comap_inv S hS μ hμc hμi
   obtain ⟨hm1, hm3⟩ := comap_inv S hS m hmc hmi
   set μ' := μ.comap (Subtype.val : S → G) with hμ'd
   set m' := m.comap (Subtype.val : S → G) with hm'd
   have : IsFiniteMeasureOnCompacts μ' := ⟨fun K hK => by
     rw [hμ'd, he.comap_apply]
-    exact (hK.image continuous_subtype_val).measure_lt_top⟩
-  haveI : SigmaFinite μ' := inferInstance
-  haveI : SigmaFinite m' := SigmaFinite.of_map m' he.measurable.aemeasurable (by rw [hm3]; exact hmσ)
-  haveI := hμ1
-  haveI := hm1
+    exact (hK.image continuous_subtypeVal).measure_lt_top⟩
+  have : SigmaFinite μ' := inferInstance
+  have : SigmaFinite m' := SigmaFinite.of_map m' he.measurable.aemeasurable (by rw [hm3]; exact hmσ)
+  have := hμ1
+  have := hm1
   have hμ'0 : μ' ≠ 0 := fun h => hμ0 (by rw [← hμ3, h, Measure.map_zero])
   have hm'0 : m' ≠ 0 := fun h => hm0 (by rw [← hm3, h, Measure.map_zero])
   obtain ⟨s, hs0, hsT⟩ : ∃ s : Set S, μ' s ≠ 0 ∧ μ' s ≠ ∞ := by
@@ -185,7 +185,7 @@ theorem unique_sf (S : Subgroup G) (hS : IsClosed (S : Set G)) (μ m : Measure G
     exact measure_iUnion_null h0
   have hμ'eq : μ' = (μ' s / m' s) • m' := by
     ext t _
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.div_eq_inv_mul, mul_assoc, ← key t, ← mul_assoc,
+    rw [smul_apply, smul_eq_mul, ENNReal.div_eq_inv_mul, mul_assoc, ← key t, ← mul_assoc,
       ENNReal.inv_mul_cancel hms0 hmsT, one_mul]
   have hfin : μ = (μ' s / m' s) • m := by
     conv_lhs => rw [← hμ3, hμ'eq]
@@ -237,7 +237,7 @@ theorem isClosed_sLoc (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : F
     intro W v
     have h1 : Continuous fun g : Formalism.REAL.UJ ε => (uMat g - 1) *ᵥ v :=
       Continuous.matrix_mulVec (hc.sub continuous_const) continuous_const
-    exact IsClosed.preimage h1 (Submodule.closed_of_finiteDimensional W)
+    exact IsClosed.preimage h1 (Submodule.isClosed_of_finiteDimensional W)
   have hset : SLoc ε e z = (⋂ a : Fin r, {g : Formalism.REAL.UJ ε | (uMat g - 1) *ᵥ e a ∈ spanLt e a.1}) ∩
       {g | (uMat g - 1) *ᵥ z ∈ spanLt e r} := by
     ext g
@@ -290,7 +290,7 @@ theorem haarG (ε : Fin (2 * r + k + 1) → Bool) (P : Matrix (Fin (2 * r + k + 
   have hP := isUnit_det_of ε P hH
   have h := Formalism.FourierDecayAlt.P.HaarUniquenessConjugation.haar_map (ε := ε) Formalism.REAL.uJEmb Formalism.REAL.unimodular Formalism.QuantumDeterminants.uHConj hP hH
   rw [psiP_eq]
-  haveI : IsFiniteMeasureOnCompacts ((Formalism.REAL.muG ε).map (Formalism.FourierDecayAlt.P.HaarUniquenessConjugation.phi ε P)) := ⟨h.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts ((Formalism.REAL.muG ε).map (Formalism.FourierDecayAlt.P.HaarUniquenessConjugation.phi ε P)) := ⟨h.finite_compact⟩
   exact ⟨inferInstance, h.ne_zero, h.conc, h.left⟩
 
 end Main

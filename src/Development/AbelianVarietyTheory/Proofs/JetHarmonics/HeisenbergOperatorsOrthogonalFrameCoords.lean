@@ -136,7 +136,7 @@ theorem opU_frame (hd : 0 < d) (hx : ∀ i j, beta d Hm (x i) (x j) = if i = j t
     simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   rw [opU, e, hG, hf_frame hd hx, hf_frame hd hx, Finset.sum_mul]
   refine Finset.sum_congr rfl fun j _ => ?_
-  simp only [U1, mul_pow, Finset.prod_mul_distrib, ← Complex.exp_nat_mul, ← Complex.exp_sum, Pi.add_apply,
+  simp only [U1, mul_pow, Finset.prod_mul_distrib, ← Complex.exp_natCast_mul, ← Complex.exp_sum, Pi.add_apply,
     Finset.mul_sum, ← Finset.sum_sub_distrib, mul_assoc]
   congr 3
   exact Finset.sum_congr rfl fun i _ => by ring
@@ -154,7 +154,7 @@ theorem opW_frame (hd : 0 < d) (hx : ∀ i j, beta d Hm (x i) (x j) = if i = j t
     rw [this, Complex.ofReal_re]
   rw [opW, opU_frame hd hx c f G hG, e, Finset.mul_sum _ (fun j => c j * _)]
   refine Finset.sum_congr rfl fun j _ => ?_
-  simp only [W1, mul_pow, Finset.prod_mul_distrib, ← Complex.exp_nat_mul, ← Complex.exp_sum, Finset.mul_sum]
+  simp only [W1, mul_pow, Finset.prod_mul_distrib, ← Complex.exp_natCast_mul, ← Complex.exp_sum, Finset.mul_sum]
   rw [mul_left_comm]
   congr 3
   exact Finset.sum_congr rfl fun i _ => by ring

@@ -279,7 +279,7 @@ theorem eq_zero_of_chart [IsIntegral X] (j₀ : PUnit → L.ι) [Nonempty (chart
     obtain ⟨y⟩ := ‹Nonempty (chart L j₀)›
     obtain ⟨z, hz⟩ := nonempty_preirreducible_inter (chart L j).isOpen (chart L j₀).isOpen
       ⟨x.1, x.2⟩ ⟨y.1, y.2⟩
-    haveI : Nonempty (chart L j ⊓ chart L j₀ : X.Opens) := ⟨⟨z, hz⟩⟩
+    have : Nonempty (chart L j ⊓ chart L j₀ : X.Opens) := ⟨⟨z, hz⟩⟩
     apply map_injective_of_isIntegral X
       (homOfLE (inf_le_left : chart L j ⊓ chart L j₀ ≤ chart L j))
     have h2 := ha j j₀
@@ -288,7 +288,7 @@ theorem eq_zero_of_chart [IsIntegral X] (j₀ : PUnit → L.ι) [Nonempty (chart
   · have hb : chart L j = ⊥ := by
       ext x
       exact ⟨fun hx => (hj ⟨⟨x, hx⟩⟩).elim, fun hx => hx.elim⟩
-    haveI : Subsingleton Γ(X, chart L j) := by
+    have : Subsingleton Γ(X, chart L j) := by
       rw [hb]
       infer_instance
     exact Subsingleton.elim _ _

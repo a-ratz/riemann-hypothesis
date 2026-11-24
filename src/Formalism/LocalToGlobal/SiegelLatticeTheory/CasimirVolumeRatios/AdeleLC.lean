@@ -133,7 +133,7 @@ theorem mem_max_iff (y : Valued.integer (v.adicCompletion K)) :
 
 
 theorem finite_residue : Finite (IsLocalRing.ResidueField (Valued.integer (v.adicCompletion K))) := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   let ψ := (IsLocalRing.residue (Valued.integer (v.adicCompletion K))).comp (toInt v)
   have hsurj : Function.Surjective ψ := by
     intro z
@@ -165,7 +165,7 @@ theorem isClosed_integer : IsClosed (Valued.integer (v.adicCompletion K) : Set (
 
 theorem compactSpace_integer : CompactSpace (Valued.integer (v.adicCompletion K)) := by
   have : CompleteSpace (Valued.integer (v.adicCompletion K)) := (isClosed_integer v).completeSpace_coe
-  haveI : IsDiscreteValuationRing (Valued.integer (v.adicCompletion K)) :=
+  have : IsDiscreteValuationRing (Valued.integer (v.adicCompletion K)) :=
     inferInstanceAs (IsDiscreteValuationRing (v.adicCompletionIntegers K))
   exact Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField.2
     ⟨inferInstance, inferInstance, finite_residue v⟩

@@ -85,11 +85,11 @@ private theorem exists_ker {n g : ℕ} (f : (Fin n → ℂ) →ₗ[ℝ] (Fin g �
   let K : Submodule ℂ (Fin n → ℂ) :=
     { carrier := {y | f y = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_add (f := _), ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun z y hy => by
-        simp only [Set.mem_setOf_eq] at hy ⊢
+        simp only [Set.mem_ofPred_eq] at hy ⊢
         have hz : z • y = z.re • y + z.im • (Complex.I • y) := by
           ext i
           simp only [Pi.smul_apply, Pi.add_apply, smul_eq_mul, Complex.real_smul]

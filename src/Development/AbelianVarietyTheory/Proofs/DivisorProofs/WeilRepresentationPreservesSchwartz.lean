@@ -85,9 +85,9 @@ theorem nonarch_pi {ι : Type} {G : ι → Type} [∀ i, AddGroup (G i)] [∀ i,
 variable {F : Type} [Field F] [NumberField F]
 
 theorem nonarch_finiteAdeleRing : NonarchimedeanAddGroup (FiniteAdeleRing (𝓞 F) F) := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
+  have : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
     nonarch_of_isInducing (v.adicCompletionIntegers F).subtype.toAddMonoidHom Topology.IsInducing.subtypeVal
-  haveI := nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
+  have := nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
   let f : (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) →+ FiniteAdeleRing (𝓞 F) F :=
     { toFun := RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
         (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite
@@ -101,7 +101,7 @@ def finChar (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) : AddChar (FiniteAdeleRing
 
 theorem finChar_isLocallyConstant (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) (hψ : Continuous ψ) :
     IsLocallyConstant (finChar ψ) := by
-  haveI := nonarch_finiteAdeleRing (F := F)
+  have := nonarch_finiteAdeleRing (F := F)
   exact GlobalTheory.WeilM.isLocallyConstant_addChar _ (hψ.comp (continuous_const.prodMk continuous_id))
 
 def p1 : AdeleRing (𝓞 F) F →+* InfiniteAdeleRing F := RingHom.fst _ _
@@ -185,7 +185,7 @@ theorem schr_pureA_mem [Invertible (2 : AdeleRing (𝓞 F) F)] (ψ : AddChar (Ad
         change q (x ⬝ᵥ w.2 + h) = _
         rw [map_add (f := _), RingHom.map_dotProduct]
         rfl
-      rw [e1, map_add (f := _), eChar_apply, ContinuousLinearMap.neg_apply, trL_apply]
+      rw [e1, map_add (f := _), eChar_apply, neg_apply, trL_apply]
       congr 1
       push_cast
       ring

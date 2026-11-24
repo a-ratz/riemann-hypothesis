@@ -101,13 +101,13 @@ theorem stalk_loc {X : Scheme.{0}} {R : Type} [CommRing R] (x : Spec (CommRingCa
     ∃ (_ : Algebra R (X.presheaf.stalk q)) (S : Submonoid R), IsLocalization S (X.presheaf.stalk q) ∧
       Spec.map (CommRingCat.ofHom (algebraMap R (X.presheaf.stalk q))) ≫ x = X.fromSpecStalk q := by
   subst hp
-  letI a₀ : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk p) := StructureSheaf.stalkAlgebra R p
-  haveI hpr : (PrimeSpectrum.asIdeal p).IsPrime := PrimeSpectrum.isPrime p
+  let a₀ : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk p) := StructureSheaf.stalkAlgebra R p
+  have hpr : (PrimeSpectrum.asIdeal p).IsPrime := PrimeSpectrum.isPrime p
   have hl : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk p) (PrimeSpectrum.asIdeal p) :=
     StructureSheaf.IsLocalization.to_stalk R p
   let e : ((Spec (CommRingCat.of R)).presheaf.stalk p) ≃+* X.presheaf.stalk (x p) :=
     (asIso (x.stalkMap p)).symm.commRingCatIsoToRingEquiv
-  letI alg : Algebra R (X.presheaf.stalk (x p)) :=
+  let alg : Algebra R (X.presheaf.stalk (x p)) :=
     (e.toRingHom.comp (algebraMap R ((Spec (CommRingCat.of R)).presheaf.stalk p))).toAlgebra
   refine ⟨alg, (PrimeSpectrum.asIdeal p).primeCompl,
     IsLocalization.isLocalization_of_algEquiv _ (AlgEquiv.ofRingEquiv (f := e) fun r => rfl), ?_⟩
@@ -135,9 +135,9 @@ theorem exists_denom {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G] [
       Spec.map (CommRingCat.ofHom (dualMap (algebraMap R O))) ≫ (M₀.pt b).left := by
   subst hz
   obtain ⟨L', _, _, ⟨M'⟩⟩ := lieModel_exists X G O (Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x)
-  letI : Module R L' := Module.compHom L' (algebraMap R O)
+  let : Module R L' := Module.compHom L' (algebraMap R O)
   have hsm : ∀ (r : R) (l : L'), r • l = algebraMap R O r • l := fun _ _ => rfl
-  haveI : IsScalarTower R O L' := ⟨fun r a l => by
+  have : IsScalarTower R O L' := ⟨fun r a l => by
     rw [Algebra.smul_def, mul_smul, hsm]⟩
   have hψ : Spec.map (CommRingCat.ofHom (dualMap (algebraMap R O))) ≫ (epsAt x).hom =
       (epsAt (Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x)).hom := by
@@ -254,9 +254,9 @@ theorem core_tan {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat
 theorem isHTAt_of_isHT : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X), IsCptGen ξ → Flat.NormalCpt ξ → ∀ (G : Over X) [GrpObj G], IsSemiAbelian G → ∀ (L : LB G.left) (n : ℕ), 1 ≤ n → FullTorsion G ξ n → ∀ e, GenWeil G L ξ n e → ∀ (E : Type) [AddCommGroup E] [Module Ω E] (M : LieModel G ξ E) (R : Type) [CommRing R] [IsDomain R] (x : Spec (CommRingCat.of R) ⟶ X) [IsOpenImmersion x] (κ : FractionRing R ≃+* Ω), spMap (κ.toRingHom.comp (algebraMap R _)) ≫ x = ξ → ∀ (T : Type) [CommGroup T] [Finite T] (Γ : BT.QFGroup R T) (i : Γ.G.left ⟶ G.left), Γ.IsTorsionAlong G x n i → ∀ (L₀ : Type) [AddCommGroup L₀] [Module R L₀] (M₀ : LieModel G x L₀) (j : L₀ → E), (∀ v, (M.pt (j v)).left = spMap (dualMap (κ.toRingHom.comp (algebraMap R _))) ≫ (M₀.pt v).left) → ∀ (y : Over.mk ξ ⟶ G) (χ : T →* Rˣ) (w₀ : Module.Dual R L₀) (w : Module.Dual Ω E), y ^ n = 1 → (∀ (t : T) (g : Over.mk ξ ⟶ G), spMap κ.toRingHom ≫ (Γ.pt t).left ≫ i = g.left → κ (algebraMap R _ (χ t : R)) = e y g) → Γ.IsHT i M₀ n χ w₀ → (∀ v, w (j v) = κ (algebraMap R _ (w₀ v))) → ∀ q : Cpt ξ, q.1 ∈ Set.range x → M.IsHTAt L n y q w := by
   intro X _ Ω _ _ ξ hξ _ G _ hG L n _ hfull e hw E _ _ M R _ _ x _ κ hx T _ _ Γ i htor L₀ _ _ M₀ j hj y χ w₀ w hy hχ
     hHT hwj q hq
-  haveI := hG.comm
-  haveI := hG.smooth
-  haveI := hG.separated
+  have := hG.comm
+  have := hG.smooth
+  have := hG.separated
   obtain ⟨p, hp⟩ := hq
   obtain ⟨_, S, hS, hzs⟩ := stalk_loc x p q.1 hp
   have hg : (genMap ξ q).comp (algebraMap R (X.presheaf.stalk q.1)) =

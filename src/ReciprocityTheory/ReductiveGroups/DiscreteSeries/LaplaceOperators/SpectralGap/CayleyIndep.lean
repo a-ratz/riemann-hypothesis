@@ -61,20 +61,20 @@ variable {n : ℕ} {ε : Fin n → Bool}
 
 lemma kset_mul {a b : Matrix (Fin n) (Fin n) ℂ} (ha : a ∈ Formalism.REAL.Kset ε) (hb : b ∈ Formalism.REAL.Kset ε) :
     a * b ∈ Formalism.REAL.Kset ε := by
-  simp only [Formalism.REAL.Kset, Set.mem_setOf_eq] at ha hb ⊢
+  simp only [Formalism.REAL.Kset, Set.mem_ofPred_eq] at ha hb ⊢
   refine ⟨Submonoid.mul_mem _ ha.1 hb.1, ?_⟩
   rw [mul_assoc, hb.2, ← mul_assoc, ha.2, mul_assoc]
 
 lemma uj_mul {a b : Matrix (Fin n) (Fin n) ℂ} (ha : a ∈ Formalism.MainNotions.S.UJset ε) (hb : b ∈ Formalism.MainNotions.S.UJset ε) :
     a * b ∈ Formalism.MainNotions.S.UJset ε := by
-  simp only [Formalism.MainNotions.S.UJset, Formalism.REAL.inUJ, Set.mem_setOf_eq] at ha hb ⊢
+  simp only [Formalism.MainNotions.S.UJset, Formalism.REAL.inUJ, Set.mem_ofPred_eq] at ha hb ⊢
   rw [Matrix.conjTranspose_mul]
   calc bᴴ * aᴴ * Formalism.REAL.Jm ε * (a * b) = bᴴ * (aᴴ * Formalism.REAL.Jm ε * a) * b := by
         simp only [mul_assoc]
     _ = Formalism.REAL.Jm ε := by rw [ha, hb]
 
 lemma kset_uj {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Formalism.REAL.Kset ε) : g ∈ Formalism.MainNotions.S.UJset ε := by
-  simp only [Formalism.REAL.Kset, Formalism.MainNotions.S.UJset, Formalism.REAL.inUJ, Set.mem_setOf_eq] at hg ⊢
+  simp only [Formalism.REAL.Kset, Formalism.MainNotions.S.UJset, Formalism.REAL.inUJ, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hu, hc⟩ := hg
   have h1 : gᴴ * g = 1 := by
     have h2 := Matrix.mem_unitaryGroup_iff'.mp hu
@@ -97,7 +97,7 @@ include hrep hab ha hb in
 lemma ab_cancel (x : H) : σ₁ a (σ₁ b x) = x := by
   have h := hrep.1.2 a (kset_uj ha) b (kset_uj hb)
   rw [hab, hrep.1.1] at h
-  rw [← ContinuousLinearMap.comp_apply, ← h, ContinuousLinearMap.one_apply]
+  rw [← ContinuousLinearMap.comp_apply, ← h, one_apply_eq_self]
 
 
 include hrep ha hb in
@@ -311,7 +311,7 @@ theorem cayleyIndep : CayleyIndepStatement := by
     all_goals first | assumption | exact hU
   · unfold Formalism.MainNotions.S.lowKSub
     refine congrArg sSup (Set.ext fun S => ?_)
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [ReciprocityTheory.ChartRestriction.DS.Lap.CayleyIndepA.ktype_iff]
     all_goals first | assumption | exact hU
 

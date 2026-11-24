@@ -359,7 +359,7 @@ theorem coeff_subst_eq_sum [Finite σ] {τ : Type} {a : σ → MvPowerSeries τ 
   simp only [smul_eq_mul]
   apply finsum_eq_sum_of_support_subset
   intro d hd
-  rw [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+  rw [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
   simp only [Function.mem_support, ne_eq] at hd
   by_contra hlt
   exact hd (by rw [ord_fprod ha d μ (by omega), mul_zero])

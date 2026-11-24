@@ -134,11 +134,11 @@ theorem UpperTheory.exists_orbit_labelling_at_inert_prime_of_odd_order :
     have h := hC
     unfold NumDatum.cls primeClass at h
     refine hP.unr _ V.l_prime (fun h2 => ?_) (fun hq => ?_) (fun hd => ?_)
-    · rw [if_pos h2] at h
+    · rw [ite_eq_left h2] at h
       cases h
-    · rw [if_pos hq] at h
+    · rw [ite_eq_left hq] at h
       split_ifs at h
-    · rw [if_pos hd] at h
+    · rw [ite_eq_left hd] at h
       split_ifs at h
   have hf : ∀ (w : RPl N.R) (x : 𝓞 E), V.MM (emA3 io ι (ComplexEmbedding.conjugate (pl (N.pos V.l w 1))) x -
       emA3 io ι (pl w) x ^ V.l) := by
@@ -453,7 +453,7 @@ private theorem coS_off (inj : Function.Injective fun x : Orb × ZMod d => tau x
   unfold coS
   apply Finset.sum_eq_zero
   intro col' _
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hl
   have h1 := congrArg (fun z => z.1.1) (lam_inj plc inj hl)
   exact h h1.symm
@@ -642,7 +642,7 @@ private theorem trueT_iff (hd2 : hd + hd = 0) (g : Fin 2) (t' s : ZMod d) :
 
 private theorem trueT_one (hd2 : hd + hd = 0) (t : ZMod d) : trueT hd 1 (t + hd) = t := by
   unfold trueT
-  rw [if_neg (by decide), add_assoc, hd2, add_zero]
+  rw [ite_eq_right (by decide), add_assoc, hd2, add_zero]
 
 private theorem SelfConjugatePlaceSetting.rkF_eq {C : Type} [Field C] {V : VF C} {T : Type} {r : T → ℕ} {cc : T → T} {a : T → ℕ → ℕ}
     {Orb : Type} [Fintype Orb] {tau : Orb → ZMod d → T} {gm : Orb → ZMod d → Matrix (Fin 2) (Fin 2) C}
@@ -777,14 +777,14 @@ private theorem first_chern_degree_lemma_3 {C : Type} [Field C] {V : VF C} {T : 
     · apply Formalism.L2.FormalSeriesBounds.RF.WeightHomogeneousMinors.isWH_of_zero
       intro x
       simp only [Function.comp]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hx
       exact ho (eq_and_eq_of_tau_eq_of_injective H.inj (Sigma.mk.inj_iff.mp hx).1).1
   · have h0 : a σ i = 0 := H.tie.2 σ (fun o s h => hσ ⟨o, s, h⟩) i i.isLt
     rw [h0]
     apply Formalism.L2.FormalSeriesBounds.RF.WeightHomogeneousMinors.isWH_of_zero
     intro x
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hx
     exact hσ ⟨_, _, (Sigma.mk.inj_iff.mp hx).1⟩
 
@@ -826,10 +826,10 @@ private theorem pderiv_subG_lam (inj : Function.Injective fun x : Orb × ZMod d 
     simp only [MvPolynomial.pderiv_C_mul, MvPolynomial.pderiv_X, Pi.single_apply, (lam_inj plc inj).eq_iff,
       Prod.mk.injEq, mul_ite, mul_one, mul_zero]
     by_cases hy : (eW r tau N y).1 = α0
-    · rw [if_pos hy]
+    · rw [ite_eq_left hy]
       subst hy
       simp
-    · rw [if_neg hy]
+    · rw [ite_eq_right hy]
       simp [hy]
   simp only [hX]
   calc ∑ y, subG r tau gm plc (MvPolynomial.pderiv y p) *
@@ -999,7 +999,7 @@ private theorem isotropic_to_std_subst_harmonic : IsotropicToStdSubstHarmonic hd
   · obtain ⟨o, t, rfl⟩ := hrange
     generalize hcc : cc (tau o t) = σ' at a2 ⊢
     obtain rfl : σ' = tau o (t + hd) := hcc.symm.trans (H.conj o t)
-    simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact lap_plane plc H.inj H.gm_hyp _ o t a1 a2
       (fun ρ g1 g2 hne h1 h2 => H.no_conj ρ o g1 g2 hne t a1 a2 h1 h2)
   · push_neg at hrange
@@ -1112,8 +1112,8 @@ namespace GlobalTheory.IntegralChartCover
 theorem cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C3 : IntChart T io y), ∃ (T' : CDVR) (φ : T.V →+* T'.V) (t' : SAB H (Sp T'.V)), Function.Injective φ ∧ φ.Finite ∧ UpFBr.GeoJ T'.V t'.G (𝓞 E) (fun a => t'.act.act a) (chD C3.ch) (fun i => MvPowerSeries.map φ (C3.FT i)) (fun a i => MvPowerSeries.map φ (C3.actT a i)) := by
   intro E _ _ _ H Dw lv Xo c inst hstar T io y C3
   obtain rfl : inst = H.starRing := GlobalTheory.PowGerm.starRing_ext_of_star inst H.starRing hstar
-  letI := H.starRing
-  letI := io.toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
   obtain ⟨T', φ, t', m, hi, hf, ⟨P⟩⟩ := GlobalTheory.ChartCharacters.exists_finite_ext_pelUnif Xo T C3.I.G C3.I.t' C3.I.m2 _ C3.I.m1
   obtain ⟨F', x', act', hF, hA, hx, ha⟩ := GlobalTheory.integralChart_baseChange E H Dw lv Xo c T io y C3 T' φ t' m
   exact ⟨T', φ, t', hi, hf, P.D, P.A, P.U.toUnifPre, F', x', _, t'.act.toRingAct, P.oD, P.oA, act', hF, funext hA, fun _ => rfl, hx, P.lin, ha⟩
@@ -1190,16 +1190,16 @@ theorem UpperTheory.labelSet_ev_of_geo_of_not_dvd_discr :
     ∀ (hg : LabSGeo C3 ι Y lab), ¬ (V.l : ℤ) ∣ NumberField.discr E → Even d → lab.RankOK Dw → (∀ o s, lab.big o 0 s ↔ Even s.val) →
     ∀ (o : Orb) (Hc : ∀ g, (Y.rawSelf (selfOfLab ha hg o)).CartHyp V g), RawChart.CHSt Hc := by
   intro hup E _ _ _ H Dw lv Xo c _ hstar T io y C3 C _ _ V ie hie k Y hY _ Orb _ d _ lab ha hg hdisc _ hr _ o Hc
-  haveI : Fact V.l.Prime := ⟨V.l_prime⟩
+  have : Fact V.l.Prime := ⟨V.l_prime⟩
   have hd : ¬ ((V.l : ℤ) ∣ Algebra.discr ℤ (Module.Free.chooseBasis ℤ (𝓞 E))) := by
     rwa [NumberField.discr_eq_discr E (Module.Free.chooseBasis ℤ (𝓞 E))]
   obtain ⟨T', φ, t', hi, hf, hG⟩ := GlobalTheory.IntegralChartCover.cover E H Dw lv Xo c hstar T io y C3
   have hp : ¬ IsUnit ((V.l : ℕ) : T.V) :=
     UpFBr.not_isUnit_l (ie.comp (algebraMap T.V T.Fr)) fun t => embIntSt_holds T C V ie hie t
   have hp' : ¬ IsUnit ((V.l : ℕ) : T'.V) := fun h => by
-    letI := φ.toAlgebra
-    haveI : Algebra.IsIntegral T.V T'.V := ⟨hf.to_isIntegral⟩
-    haveI : FaithfulSMul T.V T'.V := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+    let := φ.toAlgebra
+    have : Algebra.IsIntegral T.V T'.V := ⟨hf.to_isIntegral⟩
+    have : FaithfulSMul T.V T'.V := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
     exact hp (isUnit_of_map_unit (algebraMap T.V T'.V) _ (by rwa [map_natCast]))
   have hL := GlobalTheory.UpperBoundDescent.desc V.l T T' φ hi hf hp _ _ _ _
     (UpFBr.upFLaw_of_geoJ (hup V.l) Y.l_odd T'.V hp' t'.G _ _ _ hG hd)
@@ -1222,7 +1222,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 private theorem UpperTheory.extend_sigma_coefficients_by_zero {A C W : Type} [Fintype A] [Field C] [AddCommGroup W] [Module C W] (m : A → ℕ)
     (e : (Σ s : A, Fin (m s)) → W) (a : A) (b : Fin (m a) → C) :
     ∃ b' : (Σ s : A, Fin (m s)) → C, (∀ q, q.1 ≠ a → b' q = 0) ∧ ∑ x, b x • e ⟨a, x⟩ = ∑ q, b' q • e q := by
-  refine ⟨fun q => if h : q.1 = a then b (h ▸ q.2) else 0, fun q hq => dif_neg hq, ?_⟩
+  refine ⟨fun q => if h : q.1 = a then b (h ▸ q.2) else 0, fun q hq => dite_eq_right hq, ?_⟩
   rw [Fintype.sum_sigma, Finset.sum_eq_single a]
   · simp
   · intro s _ hs
@@ -1373,7 +1373,7 @@ theorem UpperTheory.labelSetGeo_of_even_of_rankOK_of_not_dvd_discr :
     rw [hrk0, hrk]
     have e : idxS lab.hd 1 (s + lab.hd) = s := by
       unfold idxS
-      rw [if_neg (by decide), add_sub_cancel_right]
+      rw [ite_eq_right (by decide), add_sub_cancel_right]
     rw [e]
   have hA : ∀ o, (rdS Y (selfOfLab ha hg) Hy o).Alt := fun o => ⟨hev, hbig o⟩
   have hsupp' : ∀ o s k', ga o s k' ≠ 0 → 1 ≤ k' ∧ k' ≤ (rdS Y (selfOfLab ha hg) Hy o).rkF 0 s := by
@@ -1413,7 +1413,7 @@ private noncomputable def gaT (Dw : Datum H) (a : (E →+* ℂ) × ℕ → ℕ) 
   GlobalTheory.RowAt.gap (Dw.mult τ) fun i => a (τ, i)
 
 private theorem card_reps (P : RF.Par) (Z : Finset P.Pl) (h : RF.IsReps P Z) : Z.card * P.d = Fintype.card P.Pl := by
-  haveI := P.nz
+  have := P.nz
   have hbij : Function.Bijective (fun x : {z // z ∈ Z} × ZMod P.d => P.pos x.1.1 x.2.val) := by
     constructor
     · rintro ⟨⟨z1, hz1⟩, s1⟩ ⟨⟨z2, hz2⟩, s2⟩ heq
@@ -1450,8 +1450,8 @@ private theorem exists_rowFamS (hUp : ∀ (p : ℕ) [Fact p.Prime], ReciprocityT
   obtain ⟨Y, hY⟩ := GlobalTheory.ChartBaseChange.exists_baseChange E H Dw lv Xo c T io y C3 C V ι hemb halgc hcpl hl2
     (GlobalTheory.QuadTrace.cmHost_idempotent_trace_eq_one E H hstar) lv.M hvM
   rw [← hVl] at hcls hodd ⊢
-  haveI : NeZero (N.ordP V.l) := ⟨hodd.pos.ne'⟩
-  haveI : NeZero (2 * N.ordP V.l) := ⟨by have := hodd.pos; omega⟩
+  have : NeZero (N.ordP V.l) := ⟨hodd.pos.ne'⟩
+  have : NeZero (2 * N.ordP V.l) := ⟨by have := hodd.pos; omega⟩
   obtain ⟨Z, hZ⟩ := GlobalTheory.InertLabelling.exists_reps N V.l
   have hZ' : RF.IsReps (parOf N j V.l) Z := hZ
   obtain ⟨lab, hari, hhd, hn, hj, hj', hbig, htau, hsurj, hdisc⟩ :=
@@ -1488,24 +1488,24 @@ private theorem exists_rowFamS (hUp : ∀ (p : ℕ) [Fact p.Prime], ReciprocityT
     · intro s hs
       rw [hbig] at hs
       simp only [iff_true] at hs
-      rw [hmult, if_pos hs, hn, hj, hp]
+      rw [hmult, ite_eq_left hs, hn, hj, hp]
       simp only [Ranks.sigW]
       omega
     · intro s hs
       rw [hbig] at hs
       simp only [iff_true] at hs
-      rw [hmult, if_neg hs, hj', hq]
+      rw [hmult, ite_eq_right hs, hj', hq]
       simp only [Ranks.sigW]
     · intro s hs
       rw [hbig] at hs
       simp at hs
-      rw [hhd, hmult, if_pos ((hpar s).2 (Nat.not_even_iff_odd.2 hs)), hn, hj, hp]
+      rw [hhd, hmult, ite_eq_left ((hpar s).2 (Nat.not_even_iff_odd.2 hs)), hn, hj, hp]
       simp only [Ranks.sigW]
       omega
     · intro s hs
       rw [hbig] at hs
       simp at hs
-      rw [hhd, hmult, if_neg (fun h => (hpar s).1 h hs), hj', hq]
+      rw [hhd, hmult, ite_eq_right (fun h => (hpar s).1 h hs), hj', hq]
       simp only [Ranks.sigW]
   have hbig0 : ∀ o s, lab.big o 0 s ↔ Even s.val := fun o s => by rw [hbig]; simp
   have hlt : lab.j' < lab.n := by rw [hj', hn]; omega
@@ -1543,9 +1543,9 @@ private theorem exists_rowFamS (hUp : ∀ (p : ℕ) [Fact p.Prime], ReciprocityT
     have hpos : N.pos V.l o.1 s.val = N.pos V.l o'.1 s'.val := by
       rw [htau, htau] at heq
       by_cases he : Even s.val
-      · rw [if_pos he, if_pos (hps.1 he)] at heq
+      · rw [ite_eq_left he, ite_eq_left (hps.1 he)] at heq
         exact htie.inj heq
-      · rw [if_neg he, if_neg (fun h => he (hps.2 h))] at heq
+      · rw [ite_eq_right he, ite_eq_right (fun h => he (hps.2 h))] at heq
         exact htie.inj ((ComplexEmbedding.involutive_conjugate E).injective heq)
     obtain ⟨q, -, hq'⟩ := hZ (N.pos V.l o.1 s.val)
     have e1 := hq' (o.1, (s.val : ZMod (N.ordP V.l))) ⟨o.2, by simp only [ZMod.val_natCast, RowLab.pos_mod]⟩
@@ -1562,7 +1562,7 @@ private theorem exists_rowFamS (hUp : ∀ (p : ℕ) [Fact p.Prime], ReciprocityT
       hn := fun o => ⟨(hX o).1.trans hn, (hX o).2.1.trans hnm⟩,
       alt := fun o => (hX o).2.2.1 },
     hZ', ⟨hinj, hsurj⟩, fun o s => hinP o s, fun o s he => ?_, fun o s => (hX o).2.2.2 s, ?_⟩
-  · exact (htau o s).trans ((if_pos he).trans (congrArg pl (RowLab.pos_mod N V.l o.1 s.val).symm))
+  · exact (htau o s).trans ((ite_eq_left he).trans (congrArg pl (RowLab.pos_mod N V.l o.1 s.val).symm))
   · rw [hhd] at hval
     exact hval
 
@@ -1572,9 +1572,9 @@ private theorem rest_add (n K : ℕ) (h1 : 1 ≤ n) (hK : n ≤ K) (p : Prop) [D
   push_cast
   by_cases hp : p
   · have hn : n ∈ Finset.Icc 1 K := Finset.mem_Icc.mpr ⟨h1, hK⟩
-    simp only [hp, true_and, if_true]
+    simp only [hp, true_and, ite_true]
     rw [← Finset.add_sum_erase _ _ hn, ← Finset.add_sum_erase (Finset.Icc 1 K) (fun k => (k : ℝ) * (g k : ℝ)) hn]
-    rw [if_pos rfl, Finset.sum_congr rfl (fun k hk => if_neg (Finset.ne_of_mem_erase hk))]
+    rw [ite_eq_left rfl, Finset.sum_congr rfl (fun k hk => ite_eq_right (Finset.ne_of_mem_erase hk))]
     ring
   · simp [hp]
 
@@ -1614,7 +1614,7 @@ theorem UpperTheory.exists_pkgCs_of_degree_bound_at_inert_primes :
       rw [hev o s he]
       have hin : pl (N.pos (resCharOf la) o.1 (s.val % N.ordP (resCharOf la))) ↑H.rt = H.rt0 :=
         (htie.psi _).2 ⟨_, rfl⟩
-      simp only [gaT, GlobalTheory.RowAt.gap, Datum.mult, hin, if_true, hp, Ranks.sigW, gapW]
+      simp only [gaT, GlobalTheory.RowAt.gap, Datum.mult, hin, ite_true, hp, Ranks.sigW, gapW]
       split_ifs with hc1 hc2
       · rw [show N.R.k - 1 - 1 = N.R.k - 2 by omega]
       · omega
@@ -1632,8 +1632,8 @@ theorem UpperTheory.exists_pkgCs_of_degree_bound_at_inert_primes :
         push_cast
         rfl
       · by_cases he : Even s.val
-        · rw [if_pos he, if_pos he, hmain o s he]
-        · rw [if_neg he, if_neg he]
+        · rw [ite_eq_left he, ite_eq_left he, hmain o s he]
+        · rw [ite_eq_right he, ite_eq_right he]
     have hsumW : ∑ z, (gapW N pl a z : ℝ) = ∑ o : {z // z ∈ Z}, ∑ s : ZMod (2 * (parOf N j (resCharOf la)).d),
         (if Even s.val then (gapW N pl a (N.pos (resCharOf la) o.1 (s.val % N.ordP (resCharOf la))) : ℝ) else 0) := by
       let G : (E →+* ℂ) → ℝ := fun τ => ∑ z, if pl z = τ then (gapW N pl a z : ℝ) else 0
@@ -1646,10 +1646,10 @@ theorem UpperTheory.exists_pkgCs_of_degree_bound_at_inert_primes :
         _ = _ := by
             refine Finset.sum_congr rfl fun o _ => Finset.sum_congr rfl fun s _ => ?_
             by_cases he : Even s.val
-            · rw [if_pos he, hev o s he]
+            · rw [ite_eq_left he, hev o s he]
               simp [G, htie.inj.eq_iff]
-            · rw [if_neg he]
-              refine Finset.sum_eq_zero fun z _ => if_neg ?_
+            · rw [ite_eq_right he]
+              refine Finset.sum_eq_zero fun z _ => ite_eq_right ?_
               intro hz
               have h1 : InPsi H (pl z) := (htie.psi _).2 ⟨z, rfl⟩
               rw [hz] at h1

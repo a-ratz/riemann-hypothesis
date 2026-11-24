@@ -95,7 +95,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.flip :
     rw [ENNReal.tsum_comm]
     exact tsum_congr fun m => pyth _
   have un : ∀ t, ‖M.F.U t‖ₑ ≤ 1 := fun t => by
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_le_one]
+    rw [← ofReal_norm, ENNReal.ofReal_le_one]
     exact ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun h => by rw [M.F.norm, one_mul]
   have step : ∀ n : ℤ, hsNormSq (M.P (I n) ∘L X ∘L M.P (Ioc a b)) ≤ hsNormSq (M.P (I n) ∘L ContinuousLinearMap.adjoint (M.P (Ioc a b) ∘L X)) := fun n => by
     have t1 := ((pl (Ioc a b) _ measurableSet_Ioc (measurableSet_Ioc (a := a) (b := b))).2.2.2.2 (-(n * d))).1
@@ -139,7 +139,7 @@ private theorem widen (M : Sc H V W) (φ : ℝ → ℂ) (hi : Integrable φ) (ρ
     M.P (Ioc (a - ρ) (b + ρ)) * (M.F.av φ * M.P (Ioc a b)) = M.F.av φ * M.P (Ioc a b) := by
   ext h
   obtain ⟨i1, i2⟩ := ((avSpec M.F).2.2.2 φ hi).1 (M.P (Ioc a b) h)
-  simp only [ContinuousLinearMap.mul_apply]
+  simp only [mul_apply_eq_comp]
   rw [i2, ← ContinuousLinearMap.integral_comp_comm _ i1]
   refine integral_congr_ae (Eventually.of_forall fun t => ?_)
   by_cases ht : ρ < |t|

@@ -552,7 +552,7 @@ theorem summable_exp_neg_mul_sum_abs {ι : Type*} [Fintype ι] {ε : ℝ} (hε :
     have := summable_geometric_of_lt_one (Real.exp_pos (-ε)).le
       (Real.exp_lt_one_iff.2 (by linarith))
     refine this.congr fun n => ?_
-    rw [← Real.exp_nat_mul]; congr 1; ring
+    rw [← Real.exp_natCast_mul]; congr 1; ring
   have h1 : Summable fun n : ℤ => Real.exp (-(ε * |(n : ℝ)|)) :=
     Summable.of_nat_of_neg (by simpa using h0) (by simpa using h0)
   refine (summable_prod_tuples (J := fun _ : ι => ℤ)

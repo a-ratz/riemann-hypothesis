@@ -122,7 +122,7 @@ lemma ker_piW (hv : v.Integers O) (ϖ : PreTilt O p) (hϖ : ϖ.untilt = (p : O))
 
 lemma W_local (hv : v.Integers O) (ϖ : PreTilt O p) (hϖ : ϖ.untilt = (p : O)) :
     IsLocalRing (WRing p O ϖ) := by
-  haveI := Ainf.Rn_local p O hv 0
+  have := Ainf.Rn_local p O hv 0
   refine Ainf.local_of_surj_sq (piW p O ϖ hϖ) (piW_surj p O hv ϖ hϖ) ?_
   intro k hk
   rw [ker_piW p O hv ϖ hϖ] at hk
@@ -255,7 +255,7 @@ lemma thetaBar_surj : Function.Surjective (Ainf.thetaBar p O hv ε hε) := by
 
 omit hϖ in
 lemma ainf_thetaQuotRing_isLocalRing : IsLocalRing (Ainf.R0 p O ε) := by
-  haveI := Ainf.O_local O hv
+  have := Ainf.O_local O hv
   refine Ainf.local_of_surj_sq (Ainf.thetaBar p O hv ε hε) (thetaBar_surj p O hv ε hε) ?_
   intro k hk
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective k
@@ -267,7 +267,7 @@ lemma ainf_thetaQuotRing_isLocalRing : IsLocalRing (Ainf.R0 p O ε) := by
 
 omit hϖ in
 lemma LK_localHom : IsLocalHom (algebraMap (Ainf.R0 p O ε) (LK p O hv ε hε : Type)) := by
-  haveI := ainf_thetaQuotRing_isLocalRing p O hv ε hε
+  have := ainf_thetaQuotRing_isLocalRing p O hv ε hε
   exact IsLocalHom.of_surjective _ ((resO_surj O hv).comp (thetaBar_surj p O hv ε hε))
 
 omit hϖ in

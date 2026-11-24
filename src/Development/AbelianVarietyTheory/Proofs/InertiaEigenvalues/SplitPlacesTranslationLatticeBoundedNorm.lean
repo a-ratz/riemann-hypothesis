@@ -138,7 +138,7 @@ theorem cong_one_of_suppAt : ∀ (D : D7) (V : HSp D) (Q : Finset (Pl D.host.E))
     exact (HeightOneSpectrum.intValuation_le_pow_iff_mem _ _ _).2 (Ideal.pow_mem_pow (hN P hP) c)
   have hlog : ∀ x : WithZero (Multiplicative ℤ), ∃ n : ℕ, x ≤ WithZero.exp (n : ℤ) := fun x => by
     by_cases hx : x = 0
-    · exact ⟨0, hx ▸ zero_le'⟩
+    · exact ⟨0, hx ▸ zero_le⟩
     · exact ⟨(WithZero.log x).toNat, by
         rw [← WithZero.exp_log hx]; exact WithZero.exp_le_exp.2 (by rw [WithZero.log_exp]; exact Int.self_le_toNat _)⟩
   choose fn hfn using hlog
@@ -167,7 +167,7 @@ theorem cong_one_of_suppAt : ∀ (D : D7) (V : HSp D) (Q : Finset (Pl D.host.E))
           _ ≤ 1 := by
               rw [← WithZero.exp_zero]
               exact WithZero.exp_le_exp.2 (by simp only [f] at hle; omega)
-      · rw [hy P hP, map_zero, mul_zero]; exact zero_le'
+      · rw [hy P hP, map_zero, mul_zero]; exact zero_le
     · rw [← mul_assoc, ← mul_assoc, hau, one_mul]
   have hone : ∀ P i j, evf P ((1 : Matrix (Fin V.rank) (Fin V.rank) (Af D.host.F ⊗[D.host.F] D.host.E)) i j) =
       (1 : Matrix (Fin V.rank) (Fin V.rank) (P.adicCompletion D.host.E)) i j := fun P i j => by

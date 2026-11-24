@@ -156,7 +156,7 @@ variable {K Ω : Type} [Field K] [NumberField K] [IsCMField K] [Field Ω] [Algeb
 
 private theorem polarized_of_att (H : HypothesesH) {ι : Qbar l ≃+* ℂ} (hn : 1 ≤ n) {r : G K Ω →* GL (Fin n) (Qbar l)} {π : CuspSub K n}
     (hp : Sol.Pol ι r) (ha : AttC ι r π) : ∃ χ, GlobalTheory.ContraPair.PolarizedPair π χ := by
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   obtain ⟨μ, χ, c, P, hμ, hs, hc, hP⟩ := UpperTheory.cyclotomicCharacter_plusPart (algOfCyc H) UpperTheory.cyclotomic_char_conj_invariant K Ω l ι n r hp
   have hd := selfDualC H K Ω l ι n hn r π ha χ μ hμ c P hc hP
@@ -278,18 +278,18 @@ private theorem exists_cm_field_tower (F K Ω : Type) [Field F] [NumberField F] 
   have hM : IsCMField M := (UpperTheory.solvable_cm_compositum_maximalRealSubfield L K M f hL hadj (Or.inr inferInstance)).resolve_left fun hR => by
     obtain ⟨v⟩ : Nonempty (InfinitePlace M) := inferInstance
     exact (InfinitePlace.not_isReal_iff_isComplex.2 ((isTotallyComplex_of_algebra K M).isComplex v)) (hR.isReal v)
-  letI : Algebra F M := ((algebraMap K M).comp (algebraMap F K)).toAlgebra
-  haveI : IsScalarTower F K M := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower F M Ω := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra F M := ((algebraMap K M).comp (algebraMap F K)).toAlgebra
+  have : IsScalarTower F K M := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower F M Ω := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply F K Ω, IsScalarTower.algebraMap_apply K M Ω]; rfl
-  haveI : IsAlgClosure M Ω :=
+  have : IsAlgClosure M Ω :=
     { isAlgClosed := IsAlgClosure.isAlgClosed K
       isAlgebraic := Algebra.IsAlgebraic.tower_top (K := K) M }
   have hbij : Function.Bijective (algebraMap F K) := by
     refine ⟨(algebraMap F K).injective, fun x => ?_⟩
     have e : (⊥ : Subalgebra F K) = ⊤ := Subalgebra.bot_eq_top_iff_finrank_eq_one.2 h1
     exact Algebra.mem_bot.1 (e ▸ Algebra.mem_top : x ∈ (⊥ : Subalgebra F K))
-  haveI : IsGalois F M :=
+  have : IsGalois F M :=
     IsGalois.of_equiv_equiv (F := K) (E := M) (f := (RingEquiv.ofBijective (algebraMap F K) hbij).symm) (g := RingEquiv.refl M) (by
       ext x
       obtain ⟨y, rfl⟩ := hbij.2 x
@@ -334,7 +334,7 @@ private theorem second_condition_up_trivial (h : Hyp) (h1 : Module.finrank F K =
   have bF := h.weak F M Ω l ι n r π Q hπ hQ
   have bK := h.weak K M Ω l ι n _ P Q hP hQ'
   refine (h.ud K M pK n hn P Q bK t w).2 fun u => ?_
-  haveI hv : u.1.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal :=
+  have hv : u.1.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal :=
     haveI : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
     Ideal.LiesOver.trans u.1.asIdeal w.asIdeal (w.under (𝓞 F)).asIdeal
   obtain ⟨a, b⟩ := (h.ud F M pF n hn π Q bF t (w.under (𝓞 F))).1 (ht _ (cond_down h hf hw)) ⟨u.1, hv⟩
@@ -399,12 +399,12 @@ private theorem good_trans (h : Hyp) (F E K Ω : Type) [Field F] [NumberField F]
     [Algebra F Ω] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure F Ω]
     (H : ∀ [Algebra E Ω] [IsScalarTower F E Ω] [IsScalarTower E K Ω] [IsAlgClosure E Ω],
       Good F E Ω ∧ Good E K Ω ∧ Sol.Equi F Ω E) : Good F K Ω := by
-  letI : Algebra E Ω := ((algebraMap K Ω).comp (algebraMap E K)).toAlgebra
-  haveI : IsScalarTower E K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower F E Ω := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra E Ω := ((algebraMap K Ω).comp (algebraMap E K)).toAlgebra
+  have : IsScalarTower E K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower F E Ω := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply F K Ω, IsScalarTower.algebraMap_apply F E K]; rfl
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
   obtain ⟨g1, g2, hE⟩ := H
   intro l _ ι n hn r hr hirr hpol ha hf
   have hc : (r.comp (resG F E Ω)).comp (resG E K Ω) = r.comp (resG F K Ω) := rfl
@@ -441,7 +441,7 @@ private theorem good_all (h : Hyp) (d : ℕ) :
   by_cases hp : (Module.finrank F K).Prime
   · exact good_prime h hp (UpperTheory.V.Z.Bc.solC h.pr h.pr.cyc F K Ω hsol inferInstance inferInstance)
   obtain ⟨E, hb, ht, hg, hE0⟩ := UpperTheory.solvable_cm_extension_tower F K hsol (Or.inr inferInstance) (Or.inr inferInstance) h1 hp
-  haveI hE : IsCMField E := hE0.resolve_left fun hR => by
+  have hE : IsCMField E := hE0.resolve_left fun hR => by
     obtain ⟨v⟩ : Nonempty (InfinitePlace E) := inferInstance
     exact (InfinitePlace.not_isReal_iff_isComplex.2 ((isTotallyComplex_of_algebra F E).isComplex v)) (hR.isReal v)
   have hmul : Module.finrank F E * Module.finrank E K = d := by rw [Module.finrank_mul_finrank, hd]
@@ -453,7 +453,7 @@ private theorem good_all (h : Hyp) (d : ℕ) :
     rw [← hmul]; exact lt_mul_of_one_lt_right p1 (by omega)
   have l2 : Module.finrank E K < d := by
     rw [← hmul]; exact lt_mul_of_one_lt_left p2 (by omega)
-  haveI : Group.IsSolvable (K ≃ₐ[F] K) := hsol
+  have : Group.IsSolvable (K ≃ₐ[F] K) := hsol
   have s1 : IsSolvable (E ≃ₐ[F] E) :=
     Group.isSolvable_of_surjective (AlgEquiv.restrictNormalHom_surjective (F := F) (K₁ := E) K)
   have s2 : IsSolvable (K ≃ₐ[E] K) :=

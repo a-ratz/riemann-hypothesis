@@ -92,9 +92,9 @@ theorem isIntegral_iff_valued_norm_le_one (F : Type) [Field F] [NumberField F]
     rw [← hy]
     exact y.2
   · intro h
-    letI : NontriviallyNormedField (v.adicCompletion F) :=
+    let : NontriviallyNormedField (v.adicCompletion F) :=
       Valued.toNontriviallyNormedField (v.adicCompletion F) ℤᵐ⁰
-    haveI : IsUltrametricDist (v.adicCompletion F) :=
+    have : IsUltrametricDist (v.adicCompletion F) :=
       inferInstanceAs (@IsUltrametricDist (v.adicCompletion F)
         (Valued.toNormedField (v.adicCompletion F) ℤᵐ⁰).toDist)
     have hc : ∀ n, Valued.v ((minpoly (v.adicCompletion F) x).coeff n) ≤ 1 := fun n =>

@@ -64,8 +64,8 @@ variable {L : Type} [Field L] [NumberField L]
 
 theorem coprime_absNorm_sub_one (v : HeightOneSpectrum (𝓞 L)) {p : ℕ} (hp : p.Prime) (hv : (p : 𝓞 L) ∈ v.asIdeal) :
     Nat.Coprime p (Ideal.absNorm v.asIdeal - 1) := by
-  haveI : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI := v.isPrime
+  have : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have := v.isPrime
   have hN : ((Ideal.absNorm v.asIdeal : ℕ) : 𝓞 L ⧸ v.asIdeal) = 0 := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, ← nsmul_one, card_nsmul_eq_zero']
   have h1 := GlobalTheory.Mem.WildChar.one_lt_absNorm v
@@ -87,7 +87,7 @@ theorem exists_char_teich {F : Type} [Field F] [NumberField F] [Algebra F L] {c 
       (∀ w, w.under (𝓞 F) = w0.under (𝓞 F) → ExpAt χ w 1) ∧
       ∀ w, O w → ∀ x : (w.adicCompletion L)ˣ, x ^ (Ideal.absNorm w.asIdeal - 1) = 1 → χ.loc w x = 1 := by
   classical
-  haveI : Nonempty (HeightOneSpectrum (𝓞 L)) := ⟨w0⟩
+  have : Nonempty (HeightOneSpectrum (𝓞 L)) := ⟨w0⟩
   let u : HeightOneSpectrum (𝓞 L) → HeightOneSpectrum (𝓞 F) := fun w => w.under (𝓞 F)
   let r : HeightOneSpectrum (𝓞 L) → HeightOneSpectrum (𝓞 L) := fun w => Function.invFun u (u w)
   have hr : ∀ w, (r w).under (𝓞 F) = w.under (𝓞 F) := fun w => Function.invFun_eq (f := u) ⟨w, rfl⟩
@@ -179,7 +179,7 @@ theorem exists_auxiliaryHeckeCharacter_trivial_tame_part : ∀ (R : Ranks) (H : 
     PlacesOk H q0 w0 → Units.torsionOrder H.E + 1 < q0 → ∃ χ, IsAuxiliaryHeckeCharacter H w0 c χ ∧ TeichTriv H χ := by
   intro R H q0 w0 c hP h5
   obtain ⟨cc, -, hcm, -⟩ := GlobalTheory.Mem.HostCM.host_cm R H
-  haveI : IsCMField H.E := H.isCMField_hostE
+  have : IsCMField H.E := H.isCMField_hostE
   have hd := hP.distinct
   simp only [List.nodup_cons, List.mem_cons, not_or, List.not_mem_nil] at hd
   have hq := hP.splits q0 (by simp)

@@ -114,9 +114,9 @@ variable {l : ℕ} [Fact l.Prime]
 theorem exists_aut_prim (K : FinExt l) {z z' : Om l} (hz : IsPrimitiveRoot z l)
     (hz' : IsPrimitiveRoot z' l) : ∃ g : Om l ≃ₐ[↥(K0 K)] Om l, g z = z' := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hl.ne_zero⟩
-  haveI : Algebra.IsAlgebraic ↥(K0 K) (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) _
-  haveI : IsAlgClosure ↥(K0 K) (Om l) := ⟨inferInstance, inferInstance⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
+  have : Algebra.IsAlgebraic ↥(K0 K) (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) _
+  have : IsAlgClosure ↥(K0 K) (Om l) := ⟨inferInstance, inferInstance⟩
   have hint : IsIntegral ↥(K0 K) z := Algebra.IsIntegral.isIntegral z
   have hle : K0 K ≤ Ks K 1 := le_sup_left
   have hdeg := CyclotomicLifting.cyclotomic_degree_max_unramified K
@@ -130,7 +130,7 @@ theorem exists_aut_prim (K : FinExt l) {z z' : Om l} (hz : IsPrimitiveRoot z l)
         exact pow_mem (IntermediateField.mem_adjoin_simple_self ↥(K0 K) z) b
     intro x hx
     exact h hx
-  haveI := IntermediateField.adjoin.finiteDimensional hint
+  have := IntermediateField.adjoin.finiteDimensional hint
   have hd : l - 1 ≤ (minpoly ↥(K0 K) z).natDegree := by
     rw [← IntermediateField.adjoin.finrank hint, ← hdeg]
     exact IntermediateField.finrank_le_of_le_right hsub
@@ -215,12 +215,12 @@ theorem exponent_recursion_of_dimension (D : D7) (HW : HWOf D.loc) (F : FonOf D.
   obtain ⟨p1, -, p3, p4, p5, -⟩ := h1 l K 1 LL hG
   obtain ⟨⟨hfc, -⟩, hfd⟩ := h8 l K LL T
   have hFr : IsFractionRing ↥(OL LL) ↥LL.1 := by
-    haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+    have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
     exact integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
-  haveI : FiniteDimensional ↥LL.1
+  have : FiniteDimensional ↥LL.1
       ↥(DcrisL ((D.loc l).PD K) T.ρ (((HW l).W K 1 LL hG).emb c)) :=
     Submodule.finiteDimensional_of_le (inf_le_left : _ ≤ Dcris ((D.loc l).PD K) T.ρ)
-  haveI : FiniteDimensional ↥LL.1 ↥(Formalism.MainNotions.DeltaInvariantLattices.ιDi ((HW l).W K 1 LL hG) T c) := by
+  have : FiniteDimensional ↥LL.1 ↥(Formalism.MainNotions.DeltaInvariantLattices.ιDi ((HW l).W K 1 LL hG) T c) := by
     unfold Formalism.MainNotions.DeltaInvariantLattices.ιDi
     infer_instance
   have hyc' : (letE c : LetA ↥(OL LL) (finrank ℚ_[l] ↥(K0 K))) • y = y := by
@@ -419,7 +419,7 @@ theorem kerlam2_pf : KerLamStep := by
   have hEx := hF l K 1 LL hG T Tp T'' ι π hses
   obtain ⟨-, -, ⟨w, hw⟩, -⟩ := hp9
   have e : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
-  letI : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
+  let : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
     rw [e]
     exact Formalism.MainNotions.LiftingTheory.phib_OL_complete LL
   refine frobenius_span_exact_local _ ι π π' _ h' hT'' hEx.1 hEx.2.2 hsat ?_
@@ -487,7 +487,7 @@ set_option maxHeartbeats 1000000 in
 theorem invLiftCondition : InvLiftStep := by
   set_option synthInstance.maxHeartbeats 400000 in
   intro D HW F Cm CA CB CK hA l _ hl K LL hG π' E hπ T h' hh' hT hJ c
-  haveI := ((HW l).W K 1 LL hG).ddTowO T
+  have := ((HW l).W K 1 LL hG).ddTowO T
   have hNL : NinLam ((HW l).W K 1 LL hG) T (Formalism.MainNotions.DeltaInvariantLattices.Eat E π') h' :=
     ninlam_pf D HW F Cm CA CB CK hA l hl K LL hG π' E hπ T h' hT hJ
   rcases le_or_gt (MK l K h') 1 with hM | hM
@@ -695,8 +695,8 @@ theorem multV_ne_zero (P : LocPrime l) (K LL : FinExt l)
   unfold multV
   have hle := FildR_succ_le P K LL T τ a
   have hlt : FildR (P.PD K) T.ρ τ (a + 1) < FildR (P.PD K) T.ρ τ a := lt_of_le_of_ne hle hj
-  haveI := hfd
-  haveI : FiniteDimensional ↥LL.1 ↥(FildR (P.PD K) T.ρ τ a) := Submodule.finiteDimensional_of_le inf_le_left
+  have := hfd
+  have : FiniteDimensional ↥LL.1 ↥(FildR (P.PD K) T.ρ τ a) := Submodule.finiteDimensional_of_le inf_le_left
   have := Submodule.finrank_lt_finrank_of_lt hlt
   omega
 
@@ -890,7 +890,7 @@ theorem modelqlink_pf : ModelQLinkStep := by
   obtain ⟨hcard, -, -⟩ := h9W T hT hs1 hp
   obtain ⟨-, ⟨π'₀, E₀, -, hm₀⟩, -⟩ := h9W T hT hs1 hp
   obtain ⟨r, b, hbΔ, hbu, hbe⟩ := hm₀.1
-  haveI hdvr : IsDiscreteValuationRing ↥(OL LL) := GenPf.isDVR (D.loc l) LL
+  have hdvr : IsDiscreteValuationRing ↥(OL LL) := GenPf.isDVR (D.loc l) LL
   obtain ⟨bL⟩ := MQ.basis_L ((HW l).W K 1 LL hG) T π' (sK l K) hs w₁ hw₁ hR.2.1 b hbΔ hbu hbe c
   have hι : Function.Injective (algebraMap ↥(OL LL) ↥LL.1) := Subtype.val_injective
   have hRv : ∀ y : ↥LL.1, 0 ≤ (D.loc l).v LL y ↔ ∃ a : ↥(OL LL), algebraMap ↥(OL LL) ↥LL.1 a = y := by
@@ -908,7 +908,7 @@ theorem modelqlink_pf : ModelQLinkStep := by
     gradNPf_unit_nat ((D.loc l).v LL) (algebraMap ↥(OL LL) ↥LL.1) hι hRv l hpf.out hlv _
       (Nat.not_dvd_of_pos_of_lt hcpos hclt)
   have hpP : ((D.loc l).PD K).p.Prime := by rw [hpl]; exact hpf.out
-  haveI hcompl : IsAdicComplete (Ideal.span {(((D.loc l).PD K).p : ↥(OL LL))}) ↥(OL LL) := by
+  have hcompl : IsAdicComplete (Ideal.span {(((D.loc l).PD K).p : ↥(OL LL))}) ↥(OL LL) := by
     rw [hpl]; exact FrobeniusSpanLemma.phib_OL_complete LL
   have hEΔ : Formalism.MainNotions.DeltaInvariantLattices.Eat E π' ∈ ((HW l).W K 1 LL hG).AΔ := by
     show ∀ δ ∈ ((HW l).W K 1 LL hG).DelF, ((HW l).W K 1 LL hG).γA δ (Formalism.MainNotions.DeltaInvariantLattices.Eat E π') = Formalism.MainNotions.DeltaInvariantLattices.Eat E π'
@@ -1020,8 +1020,8 @@ theorem qpf_fildR_succ_le (τ : K →ₐ[Qp] LL) (a : ℤ) :
 theorem qpf_isJumpV_iff_pos (τ : K →ₐ[Qp] LL) (hfin : Module.Finite LL ↥(DdRE PD ρ τ)) (a : ℤ) :
     IsJumpV PD ρ τ a ↔ 0 < multV PD ρ τ a := by
   have hle := qpf_fildR_succ_le PD ρ τ a
-  haveI := hfin
-  haveI : Module.Finite LL ↥(FildR PD ρ τ a) :=
+  have := hfin
+  have : Module.Finite LL ↥(FildR PD ρ τ a) :=
     Module.Finite.of_injective (Submodule.inclusion (inf_le_left : FildR PD ρ τ a ≤ DdRE PD ρ τ))
       (Submodule.inclusion_injective _)
   unfold IsJumpV multV
@@ -1048,7 +1048,7 @@ theorem quotient_jumps_subset (D : D7) (h8 : adm8 D) (h11 : adm11 D) : quotR D :
   intro l _ hl2 K LL hG
   unfold quotA
   intro T₁ T₂ F hc1 hc2 hon τ X hJ a ha
-  haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+  have : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
   have hden : Formalism.MainNotions.LiftingTheory.lker_Den ↥LL.1 ↥(OL LL) := by
     intro c
     have hint : IsIntegral ℚ_[l] c := Algebra.IsIntegral.isIntegral c

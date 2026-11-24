@@ -331,7 +331,7 @@ theorem hermitian_measure_recursion : HStep := by
   refine (hmem _).trans ((tup_all I e f z (fun x => Formalism.L2.SG.Sub.lin (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf I.F) I.cm.sig I.J
     (Formalism.L2.SG.Pf.MeasInf.toInfL I hb s) (Formalism.L2.SG.Sub.ratV (F := I.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf I.F) x) =
       Formalism.L2.SG.Sub.ratV (F := I.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf I.F) x)).trans ?_)
-  simp only [Formalism.L2.SG.HidaSetting.Hset, Set.mem_setOf_eq]
+  simp only [Formalism.L2.SG.HidaSetting.Hset, Set.mem_ofPred_eq]
   constructor
   · intro h v x hx
     rw [uMat_toInf I hb s v]
@@ -402,7 +402,7 @@ theorem nsub_iff {r : ℕ} (g : HI I) (e f : Fin r → Fin I.n → I.E) (z : Fin
           exact hu a
         · simp [Bv]
       have h3 := (mem_spanR_iff (I := I) e _ _).1 (h2 _ hx) v
-      rw [thV_lin_sub, hw v, if_pos rfl, span_univ_eq] at h3
+      rw [thV_lin_sub, hw v, ite_eq_left rfl, span_univ_eq] at h3
       exact h3
   · intro h
     refine (show _ ∧ _ from ⟨fun b => ?_, fun w hw => ?_⟩)
@@ -420,7 +420,7 @@ theorem nsub_iff {r : ℕ} (g : HI I) (e f : Fin r → Fin I.n → I.E) (z : Fin
 theorem nilpotent_measure_recursion : NStep := by
   intro I hb r e f z T hstd s
   rw [nsub_iff I _ e f z T hstd]
-  simp only [Formalism.L2.SG.HidaSetting.Ninf, Set.mem_setOf_eq]
+  simp only [Formalism.L2.SG.HidaSetting.Ninf, Set.mem_ofPred_eq]
   refine forall_congr' fun v => ?_
   rw [uMat_toInf I hb s v, inN_iff]
 

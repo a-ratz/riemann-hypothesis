@@ -391,11 +391,11 @@ theorem GlobalTheory.Mum.Two.Fac.periods_of_factor : ∀ (R : Type) [CommRing R]
     refine pt_ext R D₀ F _ _ ?_
     simpa only [Category.assoc] using h1
   refine ⟨hc, ?_⟩
-  haveI := hinc
-  haveI := hpr
-  haveI : IsMonHom (o.onB.act f) := o.onB.hom f
-  haveI : IsMonHom (o.onB.act e) := o.onB.hom e
-  haveI : IsMonHom (o.onB.act (star e)) := o.onB.hom (star e)
+  have := hinc
+  have := hpr
+  have : IsMonHom (o.onB.act f) := o.onB.hom f
+  have : IsMonHom (o.onB.act e) := o.onB.hom e
+  have : IsMonHom (o.onB.act (star e)) := o.onB.hom (star e)
   obtain ⟨w, hwg, hwn⟩ := GlobalTheory.T.exists_mumfordBundleIso_twoHom_normalisedAtOrigin D₀.P.A D'.P.A D₀.P.L D'.P.L D₀.P.isLB D'.P.isLB inc (inc ≫ o.onB.act f) hw
   have hw1 := GlobalTheory.T.mumfordBundleIso_value_one_zero_first_factor D₀.P.A D'.P.A D₀.P.L D'.P.L D₀.P.isLB D'.P.isLB D₀.P.isAb inc (inc ≫ o.onB.act f)
     w hwg hwn

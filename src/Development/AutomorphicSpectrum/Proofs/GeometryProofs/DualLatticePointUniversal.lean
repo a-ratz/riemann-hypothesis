@@ -474,8 +474,8 @@ theorem tangent_universal (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj
   intro V _ _ _ _ v hv
   obtain ⟨L', _, _, ⟨M'⟩⟩ := lieModel_exists S G (TrivSqZeroExt R V) (xB x V)
   obtain ⟨j, hj1, hj2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G R (TrivSqZeroExt R V) x L L' M M'
-  letI : Module R L' := Module.compHom L' (algebraMap R (TrivSqZeroExt R V))
-  haveI : IsScalarTower R (TrivSqZeroExt R V) L' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module R L' := Module.compHom L' (algebraMap R (TrivSqZeroExt R V))
+  have : IsScalarTower R (TrivSqZeroExt R V) L' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let β : L →ₗ[R] L' := { toFun := j, map_add' := j.map_add, map_smul' := hj2 }
   have hB : IsBaseChange (TrivSqZeroExt R V) β := hbc (TrivSqZeroExt R V) L' M' β hj1
   obtain ⟨φ, hφ⟩ := exists_form M M' hj1 hB he hv

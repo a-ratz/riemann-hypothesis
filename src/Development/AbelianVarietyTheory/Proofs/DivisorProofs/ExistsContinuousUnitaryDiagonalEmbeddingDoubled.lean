@@ -178,7 +178,7 @@ theorem exists_diagEmb : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
           Formalism.IndefR.DatumF.IsDetAtF σ e (GlobalTheory.WeilSchrodinger.DblTargetF.dblG J) (ι h) y) := by
   intro F E _ _ _ _ _ σ n J
   refine ⟨diagU σ J, ?_, fun h => mtF_diagU σ J h, ?_, ?_, ?_⟩
-  · exact Continuous.subtype_mk (continuous_diagGL.comp continuous_subtype_val) _
+  · exact Continuous.subtype_mk (continuous_diagGL.comp continuous_subtypeVal) _
   · intro γ hγ
     have h1 : (show HR (AF F) σ J from γ).1 ∈ HFin (AF F) σ J := Subgroup.mem_subgroupOf.mp hγ
     obtain ⟨γ₀, hγ₀, he⟩ := Subgroup.mem_map.mp h1

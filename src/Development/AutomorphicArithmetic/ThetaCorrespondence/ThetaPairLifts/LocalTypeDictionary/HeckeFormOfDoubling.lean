@@ -130,7 +130,7 @@ theorem heckeForm_of_global_euler : ∀ D : D7, GlobalForm D → EulerRight D �
     (fun g => (hgtL A LA a g : ℝ)) (sZero A B) (s₁ : ℂ) hmeas (fun g => by exact_mod_cast (hbd g).1)
     (fun g => by exact_mod_cast (hbd g).2) (by rw [← hflat]; exact hint)
   have hint0 : IntegrableOn (fun g => wcoef om ν 𝓕 Φ₁ Φ₂ g * rcoef m u₁ u₂ g) (openOff A LA Sf) m := by
-    have := hfz.1.1 (sZero A B) (by simp only [Set.mem_setOf_eq, Complex.ofReal_re, hs0re]; linarith)
+    have := hfz.1.1 (sZero A B) (by simp only [Set.mem_ofPred_eq, Complex.ofReal_re, hs0re]; linarith)
     rwa [GlobalTheory.IndefiniteRowSideFullHecke.FlatZetaIntegral.flatIntegrand_self] at this
   refine ⟨hUp₁, hUp₂, hint0, fun l hl => ?_⟩
   have hd := GlobalTheory.T.partialNormalizingFactorProduct_analytic_ne_zero D (Sf : Set (FinPl D)) A.rank B.rank

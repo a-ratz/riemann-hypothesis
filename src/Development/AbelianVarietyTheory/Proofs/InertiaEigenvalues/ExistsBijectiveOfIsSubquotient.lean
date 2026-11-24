@@ -62,7 +62,7 @@ theorem isIrreducible_comp_surj {G H V : Type} [Group G] [Group H] [AddCommGroup
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : IsSimpleOrder (Subrepresentation ρ) := h
+  have : IsSimpleOrder (Subrepresentation ρ) := h
   exact e.isSimpleOrder
 
 def piTensorBoolEquiv {R a b : Type} [CommRing R] [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b]
@@ -92,7 +92,7 @@ theorem isIrreducible_extTensor {R a b W W' : Type} [CommRing R] [Fintype a] [De
 
 theorem nontrivial_of_isIrreducible {G Y : Type} [Group G] [AddCommGroup Y] [Module ℂ Y]
     {τ : Representation ℂ G Y} (hτ : τ.IsIrreducible) : Nontrivial Y := by
-  haveI : IsSimpleOrder (Subrepresentation τ) := hτ
+  have : IsSimpleOrder (Subrepresentation τ) := hτ
   by_contra h
   rw [not_nontrivial_iff_subsingleton] at h
   apply (bot_ne_top : (⊥ : Subrepresentation τ) ≠ ⊤)

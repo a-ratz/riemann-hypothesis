@@ -158,7 +158,7 @@ theorem dehom_monomial_mul (m : (Σ k, ι k) →₀ ℕ) :
   induction m using Finsupp.induction_linear with
   | zero => simp
   | add m m' hm hm' =>
-    rw [← mul_one (1 : F), ← monomial_mul, map_mul, map_mul, map_add (f := _), ← hm, ← hm']
+    rw [← mul_one (1 : F), ← monomial_mul_monomial, map_mul, map_mul, map_add (f := _), ← hm, ← hm']
     simp only [Pi.add_apply, pow_add, Finset.prod_mul_distrib]
     ring
   | single p n =>
@@ -229,7 +229,7 @@ theorem finrank_chart_eq (V : Ideal (MRing ι F)) (hV : IsMultiProjPrime V) (i :
     (haveI := hV.isPrime;
       Module.finrank F (MRing ι F ⧸ ReciprocityTheory.ChartRestriction.G.AI.I1.chartIdeal V i) =
         Module.finrank F (FieldNumbers.homFracDegZero V)) := by
-  haveI := hV.isPrime
+  have := hV.isPrime
   set H := FieldNumbers.homFracDegZero V
   let ρ := Ideal.Quotient.liftₐ (ReciprocityTheory.ChartRestriction.G.AI.I1.chartIdeal V i) (dehom V i)
     (fun a ha => dehom_eq_zero_of_mem_chartIdeal i hi hV.multiHomog ha)
@@ -272,7 +272,7 @@ theorem finrank_chart_eq (V : Ideal (MRing ι F)) (hV : IsMultiProjPrime V) (i :
 
 theorem proof (hBase : FieldNumbers.IntNumBase.Statement.{u}) : IntNumPoint.Statement.{u} := by
   intro F _ K _ _ ι _ V i hV hdim hi
-  haveI := hV.isPrime
+  have := hV.isPrime
   have hrel : FieldNumbers.relDim V = 0 := by
     rw [FieldNumbers.relDim, hdim]
     have : (((0 + Fintype.card K : ℕ) : ℤ) - Fintype.card K) = 0 := by simp

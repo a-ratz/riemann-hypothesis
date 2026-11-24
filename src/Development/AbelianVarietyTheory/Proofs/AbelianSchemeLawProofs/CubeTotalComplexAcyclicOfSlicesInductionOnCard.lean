@@ -133,7 +133,7 @@ theorem subsingleton_supp (A : Cube.{v} ι R) (hP : P.OrdConnected) {s : Finset 
 theorem suppEquiv_res {s t : Finset ι} (h : s ⊆ t) (hs : s ∈ P) (ht : t ∈ P)
     (x : (supp A P hP).obj s) :
     suppEquiv A hP ht (res (supp A P hP) h x) = res A h (suppEquiv A hP hs x) :=
-  congrArg (fun g : (supp A P hP).obj s →ₗ[R] A.obj t => g x) (dif_pos hs)
+  congrArg (fun g : (supp A P hP).obj s →ₗ[R] A.obj t => g x) (dite_eq_left hs)
 
 theorem supp_ext {s : Finset ι} {x y : (supp A P hP).obj s}
     (h : ∀ hs : s ∈ P, suppEquiv A hP hs x = suppEquiv A hP hs y) : x = y :=
@@ -158,7 +158,7 @@ noncomputable def suppMapApp (φ : A ⟶ B) (hP : P.OrdConnected) (hP' : P'.OrdC
 theorem suppEquiv_suppMapApp (φ : A ⟶ B) {s : Finset ι} (hs : s ∈ P) (hs' : s ∈ P')
     (x : (supp A P hP).obj s) :
     suppEquiv B hP' hs' (suppMapApp φ hP hP' s x) = (φ.app s).hom (suppEquiv A hP hs x) :=
-  congrArg (fun g : (supp A P hP).obj s →ₗ[R] B.obj s => g x) (dif_pos hs)
+  congrArg (fun g : (supp A P hP).obj s →ₗ[R] B.obj s => g x) (dite_eq_left hs)
 
 noncomputable def suppMap (φ : A ⟶ B) (hP : P.OrdConnected) (hP' : P'.OrdConnected)
     (h : ∀ ⦃s t : Finset ι⦄, s ⊆ t → s ∈ P → t ∈ P' → (t ∈ P ↔ s ∈ P')) :
@@ -222,7 +222,7 @@ noncomputable def suppIncl (A : Cube.{v} ι R) (hP : P.OrdConnected) (hU : IsUpp
 
 theorem suppIncl_app (A : Cube.{v} ι R) (hP : P.OrdConnected) (hU : IsUpperSet P) {s : Finset ι}
     (hs : s ∈ P) : ((suppIncl A hP hU).app s).hom = (suppEquiv A hP hs).toLinearMap :=
-  dif_pos hs
+  dite_eq_left hs
 
 variable {P₁ P₂ : Set (Finset ι)}
 
@@ -382,7 +382,7 @@ theorem cubeTotalComplex_acyclic_of_slices_induction_on_card (n : ℕ) :
     have hfi : ∀ k, f k ≠ i := fun k hk => (hI i).1 hi ⟨k, hk⟩
     let f' : κ ↪o {j : μ // j ≠ i} :=
       OrderEmbedding.ofMapLEIff (fun k => ⟨f k, hfi k⟩) fun _ _ => f.le_iff_le
-    letI : DecidableEq {j : μ // j ≠ i} := LinearOrder.toDecidableEq
+    let : DecidableEq {j : μ // j ≠ i} := LinearOrder.toDecidableEq
     have hI' : ∀ j, j ∈ I.subtype (· ≠ i) ↔ j ∉ Set.range f' := fun j => by
       rw [Finset.mem_subtype, hI]
       exact not_congr ⟨fun ⟨k, hk⟩ => ⟨k, Subtype.ext hk⟩,

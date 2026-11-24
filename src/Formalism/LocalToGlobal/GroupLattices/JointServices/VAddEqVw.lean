@@ -79,7 +79,7 @@ private theorem vAdd_algebraMap_eq_vw_of_ne_zero (w : HeightOneSpectrum (𝓞 K)
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact ha
   unfold Formalism.BasicNotions.vAdd Formalism.DivisionValues.vw
   rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg _ ha, WithZero.log_exp,
-    neg_neg, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K w hI]
+    neg_neg, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K w hI]
 
 theorem vAdd_eq_vw (w : HeightOneSpectrum (𝓞 K)) (x : K) (hx : x ≠ 0) : vAdd w x = vw w x := by
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 K) x

@@ -149,8 +149,8 @@ theorem exists_frame_evR_ne_zero_of_complex : ∀ (E : Type) [Field E] [NumberFi
   have hS : Out.SecBaseChangeSt := GlobalTheory.lawsFieldsSeparately.2.1
   have hP0 : P ≠ 0 := by
     intro hP0
-    haveI : _root_.IsReduced (CAt σ) := inferInstanceAs (_root_.IsReduced ℂ)
-    haveI : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
+    have : _root_.IsReduced (CAt σ) := inferInstanceAs (_root_.IsReduced ℂ)
+    have : IsDomain (CAt σ) := inferInstanceAs (IsDomain ℂ)
     obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hS E H Dw l Xo c K _ σ₁ y
     obtain ⟨g, s, hg, hzw⟩ :=
       (GlobalTheory.Frames.frChg_exists_unique E H Dw l Xo c _ z w).1 (hw.symm.trans hz.1.symm)

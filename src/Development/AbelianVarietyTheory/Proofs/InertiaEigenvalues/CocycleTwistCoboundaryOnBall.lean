@@ -658,8 +658,8 @@ theorem mem_inC_iff (F : IntermediateField ℚ_[l] (Om l)) (y : PadicComplex l) 
 
 theorem root_mem_inC (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex l}
     (h : IsPrimitiveRoot ζ l) : ζ ∈ inC (Ks K j) := by
-  haveI : NeZero l := ⟨hl.1.ne_zero⟩
-  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  have : NeZero l := ⟨hl.1.ne_zero⟩
+  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hη' := hη.map_of_injective (algebraMap (Om l) (PadicComplex l)).injective
   obtain ⟨k, -, hk⟩ := hη'.eq_pow_of_pow_eq_one h.pow_eq_one
   refine ⟨η ^ k, ?_, ?_⟩
@@ -723,8 +723,8 @@ theorem twAct_fixed_eq_zero {act : GQ l →* (PadicComplex l ≃+* PadicComplex 
   have hg0 : g ∈ (K0 K).fixingSubgroup :=
     IntermediateField.fixingSubgroup_antitone (le_sup_left : K0 K ≤ Ks K j) hg.1
   have hgX := hstab g hg0
-  haveI : NeZero l := ⟨hl.1.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicComplex l) l
+  have : NeZero l := ⟨hl.1.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicComplex l) l
   obtain ⟨S, hS, hadd, hlin⟩ := GlobalTheory.Cyc.exists_tate_operator l act χ hact hχ K j hj g hg ζ hζ
   obtain ⟨B, c, hc0, hc1, hB, hBO, hBe⟩ := exists_quot hj hg (U g) hU hU1 i hζ
   have hBO' : ∀ a b, (-B) a b ∈ intC (Ks K j) := fun a b =>
@@ -1161,7 +1161,7 @@ theorem perturbation : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCompl
   constructor
   · intro y hy hfix
     have : NeZero l := ⟨hl.1.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicComplex l) l
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicComplex l) l
     obtain ⟨S, hS, -, hlin⟩ := GlobalTheory.Cyc.exists_tate_operator l act χ hact hχ K j hj g hg ζ hζ
     obtain ⟨B, hB, hBO, hBe⟩ := exists_quot hj hg (U g) hU hU1 i hζ
     obtain ⟨q, B', hq0, hq1, hqO, hB', rfl⟩ := exists_factor B hB hBO
@@ -1280,8 +1280,8 @@ theorem add_mem_Ohat (K : FinExt l) (j : ℕ) {y x : PadicComplex l} (hy : y ∈
 
 theorem root_mem_inC (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex l}
     (h : IsPrimitiveRoot ζ l) : ζ ∈ inC (Ks K j) := by
-  haveI : NeZero l := ⟨hl.1.ne_zero⟩
-  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  have : NeZero l := ⟨hl.1.ne_zero⟩
+  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hη' := hη.map_of_injective (algebraMap (Om l) (PadicComplex l)).injective
   obtain ⟨k, -, hk⟩ := hη'.eq_pow_of_pow_eq_one h.pow_eq_one
   refine ⟨η ^ k, ?_, ?_⟩
@@ -1404,8 +1404,8 @@ theorem torsion_coinvariants : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (Pa
     exact sub_eq_zero.1 this
   set N := max 1 (∑ u ∈ J.erase i, (m + padicValInt l (u - i))) with hN
 
-  haveI : NeZero l := ⟨hl.1.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicComplex l) l
+  have : NeZero l := ⟨hl.1.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicComplex l) l
   have hz0 : ζ - 1 ≠ 0 := sub_ne_zero.2 (hζ.ne_one hl.1.one_lt)
   obtain ⟨yx, hyx, hyxe⟩ := (GlobalTheory.CycSeries.perturbation l act χ hact hχ K m hm g hg r U hU hU1 i).2 ζ hζ
     (((l : PadicComplex l) ^ N / (ζ - 1)) • wx)

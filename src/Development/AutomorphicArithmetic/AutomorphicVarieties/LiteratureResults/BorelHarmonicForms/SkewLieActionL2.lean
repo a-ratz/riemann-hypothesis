@@ -85,10 +85,10 @@ private theorem continuous_lie_of_level {E : Type} [Field E] [NumberField E] [_r
     { carrier := {k | finRep E a k θ = θ}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hle : S φ ≤ S (lie E a X φ) := fun k hk => by
@@ -103,7 +103,7 @@ open scoped GlobalTheory.CuspRep.CuspidalL2GL in
 theorem UpperTheory.V.Lit.Bor.skew_lie_action_L2 :
     UpperTheory.V.Lit.Bor.SkewLieActionL2 := by
   intro E _ _ _ a μ _ X φ ψ hφ hψ h1 h2 h3 h4
-  haveI : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   obtain ⟨c, c0, cadd, ccont, cder, -⟩ := UpperTheory.V.Lit.Bor.oneParam E a X
   have g0 : infGL E a (c 0) = 1 := by rw [c0, map_one]
   have key : ∀ (θ : Sm E a), IsOpen {k | act (.fin k) θ = θ} →
@@ -120,7 +120,7 @@ theorem UpperTheory.V.Lit.Bor.skew_lie_action_L2 :
       (GlobalTheory.AutomorphicL2Unitary.norm_R _)).inner_map_map _ _
   rw [hc] at d
   have h := d.unique (hasDerivAt_const (0 : ℝ) _)
-  simp only [g0, map_one, ContinuousLinearMap.one_apply] at h
+  simp only [g0, map_one, one_apply_eq_self] at h
   exact (add_comm _ _).trans h
 end -- clump:auto
 end -- clump:auto

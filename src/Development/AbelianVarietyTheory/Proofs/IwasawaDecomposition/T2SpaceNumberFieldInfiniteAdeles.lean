@@ -84,7 +84,7 @@ scoped instance topGroupHA : IsTopologicalGroup (HA R σ J) :=
 
 theorem continuous_mat : Continuous fun g : HA R σ J =>
     ((HA.mat R σ J g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 scoped instance contSMulHA (n : ℕ) : ContinuousSMul (HA R σ J) (Fin n → Fin M → R ⊗[F] E) where
   continuous_smul := continuous_pi fun a =>

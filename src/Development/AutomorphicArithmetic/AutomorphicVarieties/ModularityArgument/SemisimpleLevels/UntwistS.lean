@@ -76,13 +76,13 @@ theorem UpperTheory.V.Lev.untwistS :
     simp [Formalism.MainNotions.SumRepresentations.At.twGL, tw_val, Algebra.algebraMap_eq_smul_one, Matrix.smul_apply]
   have hcR : Continuous fun g : ↥(Dec (F := K) A) =>
       ((R.comp (Dec (F := K) A).subtype g : GL (Fin n) (Loc.Om l)) : Matrix (Fin n) (Fin n) (Loc.Om l)) :=
-    Units.continuous_val.comp (hR.comp continuous_subtype_val)
+    Units.continuous_val.comp (hR.comp continuous_subtypeVal)
   have hcμ : Continuous fun g : ↥(Dec (F := K) A) =>
       (((GlobalTheory.TripleGal.rk1 μ).comp (Dec (F := K) A).subtype g : GL (Fin 1) (Loc.Om l)) :
         Matrix (Fin 1) (Fin 1) (Loc.Om l)) := by
     refine continuous_matrix fun i j => ?_
     fin_cases i; fin_cases j
-    have := Units.continuous_val.comp (hμ.comp (continuous_subtype_val (p := fun x => x ∈ Dec (F := K) A)))
+    have := Units.continuous_val.comp (hμ.comp (continuous_subtypeVal (p := fun x => x ∈ Dec (F := K) A)))
     simpa [GlobalTheory.TripleGal.rk1, Function.comp_def] using this
   have hdR := (GlobalTheory.Published.heckeLAdicCharacterAbove_iff.1 hA K Ω l _ _ ⟨T⟩ ι art hart κ m μ hκ hμ hL w A h O Bw hj).1
   have hPμ := GlobalTheory.Published.DeRhamPotSemistable.isPstAt hD T Bw _ hcμ hdR

@@ -50,8 +50,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.Kum.artSurj :
     ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω], Function.Surjective (artCl K Ω) ∧ IsLocallyConstant (artCl K Ω) := by
   intro K Ω _ _ _ _ _
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Normal K Ω := IsAlgClosure.normal K Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Normal K Ω := IsAlgClosure.normal K Ω
   set L := GroundTheory.Global.hilbertClassField K Ω
   have hL : IsOpen ((AlgEquiv.restrictNormalHom (F := K) (K₁ := Ω) L).ker : Set (G K Ω)) := by
     rw [IntermediateField.restrictNormalHom_ker]

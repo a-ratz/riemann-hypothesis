@@ -129,7 +129,7 @@ private theorem cv_rat {M : ℕ} {χ : DirichletCharacter ℂ M} {ω : HChar ℚ
 theorem UpperTheory.V.Af.Nf.charVal :
     UpperTheory.V.Af.Nf.CharVal := by
   intro M hM χ ω h
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   refine ⟨isOfFinOrder_iff_pow_eq_one.2 ⟨2 * Fintype.card (ZMod M)ˣ, by positivity, Subtype.ext (MonoidHom.ext fun z => ?_)⟩,
     fun w hw => ?_⟩
   · change ω.1 z ^ (2 * Fintype.card (ZMod M)ˣ) = 1

@@ -129,7 +129,7 @@ theorem int_str_eq (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   let π : Yt →ₗ[ℂ] Yt := Y0t.subtype ∘ₗ Y0t.linearProjOfIsCompl C hC
   have hπ : ∀ z ∈ Y0t, π z = z := fun z hz => by
     show ((Y0t.linearProjOfIsCompl C hC z : Y0t) : Yt) = z
-    have := Submodule.linearProjOfIsCompl_apply_left hC ⟨z, hz⟩
+    have := Submodule.projectionOnto_apply_left hC ⟨z, hz⟩
     exact congrArg Subtype.val this
   have hπr : ∀ z, π z ∈ Y0t := fun z => (Y0t.linearProjOfIsCompl C hC z).2
   let ℓl : (Yt →L[ℂ] Yt) →ₗ[ℂ] ℂ :=
@@ -155,7 +155,7 @@ theorem int_str_eq (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   have hWk : ∀ k, ((W k : Yt →L[ℂ] Yt) : Yt →ₗ[ℂ] Yt) =
       (((wK hD (hφK k)).restrict (hSK _ (hφK k)) : Y →ₗ[ℂ] Y) : Yt →ₗ[ℂ] Yt) := by
     intro k
-    simp only [W, tOp, dif_pos (hφK k)]
+    simp only [W, tOp, dite_eq_left (hφK k)]
     rfl
   have hY : ∀ k, LinearMap.trace ℂ Y ((gradT ∘ₗ wK hD (hφK k)).restrict
       (fun y hy => hYG _ (hSK _ (hφK k) y hy))) =
@@ -264,7 +264,7 @@ theorem btot_range (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E)
   have h1 : Ψ ((∫ k, c k • tOp hD hSK (φ k) ∂μ) y) = ∫ k, c k • Ψ (tOp hD hSK (φ k) y) ∂μ := by
     rw [ContinuousLinearMap.integral_apply hint, ← ContinuousLinearMap.integral_comp_comm Ψ
       (hint.apply_continuousLinearMap y)]
-    simp only [ContinuousLinearMap.smul_apply, map_smul]
+    simp only [smul_apply, map_smul]
   have h2 : ∀ k, c k • Ψ (tOp hD hSK (φ k) y) =
       ∑ s', (c k * ffMat ε (φ k) s s') • σ (φ k) ((tcoef ((fockBasis n).coord s') (tsubVal Y y) : D) : H) := by
     intro k

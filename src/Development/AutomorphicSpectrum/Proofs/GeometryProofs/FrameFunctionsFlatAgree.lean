@@ -88,7 +88,7 @@ theorem genMap_constGerm {X : Scheme.{0}} {Ω O : Type} [Field Ω] [CommRing O] 
     (ξ : Spec (CommRingCat.of Ω) ⟶ X) (s : X ⟶ Spec (CommRingCat.of O))
     (hs : ξ ≫ s = Spec.map (CommRingCat.ofHom f)) (p : Cpt ξ) (o : O) :
     genMap ξ p (constGerm s p.1 o) = f o := by
-  letI : Algebra O Ω := f.toAlgebra
+  let : Algebra O Ω := f.toAlgebra
   exact ConstReg.genMap_germ_const ξ s hs p o
 
 theorem genMap_self {X : Scheme.{0}} {F : Type} [Field F] (z : Spec (CommRingCat.of F) ⟶ X)
@@ -117,7 +117,7 @@ theorem isUnit_constGerm {X : Scheme.{0}} {F O : Type} [Field F] [CommRing O] (f
   have h1 : IsUnit (closedMap z (constGerm s (centre z) o)) := by
     rw [closedPoint_constGerm f z s hs o]
     exact ho.isUnit
-  haveI : IsLocalHom (closedMap z) := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo z).hom)
+  have : IsLocalHom (closedMap z) := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo z).hom)
   exact isUnit_of_map_unit (closedMap z) _ h1
 
 theorem map_frac {A L K O : Type} [CommRing A] [CommRing L] [Field K] [CommRing O] (β : O →+* K) (g : O → A)
@@ -176,7 +176,7 @@ namespace GlobalTheory.CompanionTheory.TraceProj
 
 theorem injective_of_charZero (E : Type) [Field E] [NumberField E] (K : Type) [Field K] [CharZero K]
     (σ : 𝓞 E →+* K) : Function.Injective σ := by
-  refine (RingHom.injective_iff_ker_eq_bot σ).mpr (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_)
+  refine (RingHom.injective_iff_ker_eq_bot σ).mpr (Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_)
   rw [eq_bot_iff]
   intro n hn
   rw [Ideal.mem_comap, RingHom.mem_ker, eq_intCast, map_intCast, Int.cast_eq_zero] at hn
@@ -208,7 +208,7 @@ theorem sum_repr_smul_dual (E : Type) [Field E] [NumberField E] {ι : Type} [Fin
 
     rw [hrepr, Algebra.traceForm_apply, mul_comm (algebraMap (𝓞 E) E a) (D l), mul_assoc, hB' k,
     Finset.mul_sum, map_sum]
-    simp only [hterm, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hterm, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   calc ∑ k, ((b.repr (a * b k) l : ℤ) : E) * D k
       = ∑ k, D.repr (algebraMap (𝓞 E) E a * D l) k • D k := by
         refine Finset.sum_congr rfl fun k _ => ?_
@@ -308,7 +308,7 @@ theorem valAt_act {X : Scheme.{0}} {G : Over X} [GrpObj G] {Ω : Type} [Field Ω
     {ρ : A →+* Module.End Ω V} {ρz : A →+* Module.End F W} (hρ : M.IsActOf act.act ρ)
     (hρz : Mz.IsActOf act.act ρz) (a : A) {e : V} {w : W} (h : M.ValAt z e (Mz.pt w)) :
     M.ValAt z (ρ a e) (Mz.pt (ρz a w)) := by
-  haveI : IsMonHom (act.act a) := act.hom a
+  have : IsMonHom (act.act a) := act.hom a
   obtain ⟨h', v, ⟨ht, he⟩, hw⟩ := h
   refine ⟨h', v ≫ act.act a, ⟨?_, ?_⟩, ?_⟩
   · show _ ≫ (v ≫ act.act a).left = (1 : Over.mk _ ⟶ G).left
@@ -495,8 +495,8 @@ theorem isProper_of_proj {R : Type} [CommRing R] {X : Scheme.{0}} {f : X ⟶ Sp 
 
 theorem const_ratio : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (a a' : ⋀[Z.Ω]^D.p Z.V) (b b' : ⋀[Z.Ω]^D.q Z.V), (Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) → Z.IsGeom → IsLineGenOn (Z.eig τ) (Z.eig (ComplexEmbedding.conjugate τ)) D.p D.q a b Z.genFib → IsLineGenOn (Z.eig τ) (Z.eig (ComplexEmbedding.conjugate τ)) D.p D.q a' b' Z.genFib → ∃ (x : c.F) (s t : Z.Ω), x ≠ 0 ∧ t ≠ 0 ∧ s = Z.inc x * t ∧ a' = s • a ∧ b' = t • b := by
   intro E _ _ _ H D l Xo c O _ β Y U Z τ a a' b b' ⟨hβ, hN, hfrac⟩ hG h h'
-  haveI : IsDomain O := hβ.isDomain β
-  letI : Algebra O Z.Ω := (Z.inc.comp β).toAlgebra
+  have : IsDomain O := hβ.isDomain β
+  let : Algebra O Z.Ω := (Z.inc.comp β).toAlgebra
   have halg : ∀ o : O, algebraMap O Z.Ω o = Z.inc (β o) := fun _ => rfl
   have hover : (Z.ξ₀ ≫ Y.j) ≫ Y.s = Spec.map (CommRingCat.ofHom (algebraMap O Z.Ω)) := by
     have e : (Z.ξ₀ ≫ Y.j) ≫ Y.s = spMap Z.inc ≫ spMap β := by
@@ -531,7 +531,7 @@ theorem const_ratio : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     exact ⟨z, hz⟩
   have hne : Z.genFib.Nonempty := ⟨⟨genPt (Z.ξ₀ ≫ Y.j), specializes_rfl⟩, ⟨Y.jQ (genPt Z.ξ₀), rfl⟩⟩
   obtain ⟨s, t, hs, ht, rfl, rfl, hu⟩ := exists_factors hne h h'
-  haveI : IsProper Y.s := isProper_of_proj Y.proj
+  have : IsProper Y.s := isProper_of_proj Y.proj
   let L : Lat (Z.ξ₀ ≫ Y.j) Z.Ω := fun p => Submodule.span (regAt (Z.ξ₀ ≫ Y.j) p) {1}
   obtain ⟨x', y', hy', e⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Flat.mem_lat_genFibre_iff_const_mul Y.X Z.Ω (Z.ξ₀ ≫ Y.j) O Y.s hover hinj Z.gen hcc L 1
     (fun p _ => ⟨one_ne_zero, rfl⟩) (s / t)).1 (fun p hp =>

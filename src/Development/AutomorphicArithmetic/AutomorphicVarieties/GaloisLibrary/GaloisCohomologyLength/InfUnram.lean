@@ -79,7 +79,7 @@ private theorem UpperTheory.V.LDataCardLeFinrank.vanishAll {F Ω : Type} [Field 
         have := hf.2 a⁻¹ a
         rw [inv_mul_cancel, h1, ha.2, map_zero, add_zero] at this
         exact this.symm⟩ }
-  haveI hN : N.Normal := ⟨fun a ha g => by
+  have hN : N.Normal := ⟨fun a ha g => by
     have hc := (normal_NS (Ω := Ω) S).conj_mem a ha.1 g
     refine ⟨hc, ?_⟩
     rw [GlobalTheory.Cut.ShaBound.coc_conj _ f hf.2 g a 0 (by rw [ha.2, map_zero, sub_zero])]

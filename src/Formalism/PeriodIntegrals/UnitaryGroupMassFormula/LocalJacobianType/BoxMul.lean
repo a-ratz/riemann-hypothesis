@@ -78,7 +78,7 @@ theorem mulL_apply {ι : Type} (z : ι → Fv F v ⊗[F] E) (c : ι → Fv F v �
 
 theorem det_mulL {ι : Type} [Fintype ι] [DecidableEq ι] (z : ι → Fv F v ⊗[F] E) :
     LinearMap.det (mulL v z) = ∏ i, Algebra.norm (Fv F v) (z i) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   unfold mulL
   rw [LinearMap.det_pi]
   simp only [Algebra.norm_apply]
@@ -120,21 +120,21 @@ theorem absV_prod {ι : Type} [Fintype ι] (a : ι → Fv F v) :
 theorem box_measure_mul : BoxMul (E := E) v := by
   classical
   intro ι _ μ _ y hy
-  haveI := locallyCompact_Fv v
-  haveI := secondCountable_Fv v
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+  have := locallyCompact_Fv v
+  have := secondCountable_Fv v
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   let b := Module.finBasis (Fv F v) (Fv F v ⊗[F] E)
   let eR : (Fv F v ⊗[F] E) ≃L[Fv F v] (Fin (Module.finrank (Fv F v) (Fv F v ⊗[F] E)) → Fv F v) :=
     { b.equivFun with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap }
-  haveI : SecondCountableTopology (Fv F v ⊗[F] E) := eR.toHomeomorph.secondCountableTopology
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (ι → Fv F v ⊗[F] E) := Pi.borelSpace
+  have : SecondCountableTopology (Fv F v ⊗[F] E) := eR.toHomeomorph.secondCountableTopology
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (ι → Fv F v ⊗[F] E) := Pi.borelSpace
   let e0 : (ι → Fv F v ⊗[F] E) ≃ₗ[Fv F v]
       (ι × Fin (Module.finrank (Fv F v) (Fv F v ⊗[F] E)) → Fv F v) :=
     (LinearEquiv.piCongrRight fun _ : ι => b.equivFun).trans
@@ -169,7 +169,7 @@ theorem box_measure_mul : BoxMul (E := E) v := by
   set c := PI.NglqJacSplitW.modF (Fv F v) (∏ i, Algebra.norm (Fv F v) (z i)) with hc
   have hmap : μ.map Em = c • μ := by
     ext X hX
-    rw [MeasurableEquiv.map_apply, Measure.smul_apply, smul_eq_mul]
+    rw [MeasurableEquiv.map_apply, smul_apply, smul_eq_mul]
     have hpre : Em ⁻¹' X = mulL v z '' X := by
       ext x
       constructor
@@ -183,7 +183,7 @@ theorem box_measure_mul : BoxMul (E := E) v := by
   have hS : (Set.univ.pi fun i => {c | y i * c ∈ OEv (E := E) v}) = Em ⁻¹' Obox (E := E) v ι := by
     ext x
     simp [Obox, Em, h, mulL_apply]
-  rw [hS, ← MeasurableEquiv.map_apply, hmap, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
+  rw [hS, ← MeasurableEquiv.map_apply, hmap, smul_apply, smul_eq_mul, ENNReal.toReal_mul,
     hc, modF_Fv v _ hdet0, absV_prod, ENNReal.toReal_ofReal
       (Finset.prod_nonneg fun i _ => (absV_pos v (left_ne_zero_of_mul_eq_one (hNz i))).le),
     mul_comm]

@@ -111,8 +111,8 @@ theorem exists_nhds_smul_invariant : ∀ (H X : Type) [Group H] [TopologicalSpac
 
 theorem exists_level_subset : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [T2Space H] [TotallyDisconnectedSpace H] (K : Subgroup H), IsCompact (K : Set H) → IsOpen (K : Set H) → ∀ U ∈ 𝓝 (1 : H), ∃ N : Subgroup H, IsOpen (N : Set H) ∧ N ≤ K ∧ (N : Set H) ⊆ U ∧ ∀ κ ∈ K, ∀ n ∈ N, κ * n * κ⁻¹ ∈ N := by
   intro H _ _ _ _ _ K hKc hKo U hU
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
-  have hVo : IsOpen ((Subtype.val : K → H) ⁻¹' interior U) := isOpen_interior.preimage continuous_subtype_val
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have hVo : IsOpen ((Subtype.val : K → H) ⁻¹' interior U) := isOpen_interior.preimage continuous_subtypeVal
   have h1 : (1 : K) ∈ (Subtype.val : K → H) ⁻¹' interior U := mem_interior_iff_mem_nhds.2 hU
   obtain ⟨M, hM⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hVo h1
   refine ⟨M.toSubgroup.map K.subtype, ?_, Subgroup.map_subtype_le _, ?_, ?_⟩
@@ -423,7 +423,7 @@ theorem exists_common_generator [T2Space H] [TotallyDisconnectedSpace H] [MulAct
     obtain ⟨_, _, t, _, h, h'⟩ := (reached_all ρ hρ hopen hK hKo x₀ w).add hρ hopen hK
       (reached_all ρ hρ hopen hK hKo x₀ w')
     exact ⟨t, h, h'⟩
-  · haveI : IsEmpty X := not_nonempty_iff.1 hX
+  · have : IsEmpty X := not_nonempty_iff.1 hX
     have h0 : ∀ u : SB X, u = 0 := fun u => Subtype.ext (funext fun x => isEmptyElim x)
     exact ⟨0, by rw [h0 w]; exact Submodule.zero_mem _, by rw [h0 w']; exact Submodule.zero_mem _⟩
 
@@ -447,7 +447,7 @@ theorem continuous_rAct_inv (κ : ℕ) :
     Continuous fun p : GL a k × RankIn (k := k) (a := a) (b := c) {κ} => rAct {κ} p.2 p.1⁻¹ := by
   refine Continuous.subtype_mk
     (f := fun p : GL a k × RankIn (k := k) (a := a) (b := c) {κ} => act p.2.1 (p.1⁻¹, 1)) ?_ _
-  exact (continuous_const.matrix_mul (continuous_subtype_val.comp continuous_snd)).matrix_mul
+  exact (continuous_const.matrix_mul (continuous_subtypeVal.comp continuous_snd)).matrix_mul
     (Units.continuous_coe_inv.comp continuous_fst)
 
 end Stratum
@@ -497,7 +497,7 @@ theorem common_gen (hκ : κ = Fintype.card a) (w w' : SB (RankIn (k := k) (a :=
   have hXo : IsOpen {x : Matrix a a k | x.rank ∈ ({κ} : Set ℕ)} := by
     convert isOpen_le_rank (k := k) (a := a) (b := a) κ using 1
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     exact ⟨fun h => h.ge, fun h => le_antisymm ((Matrix.rank_le_card_height x).trans hκ.ge) h⟩
   have : LocallyCompactSpace (RankIn (k := k) (a := a) (b := a) {κ}) := hXo.locallyCompactSpace
   have hop : ∀ x : RankIn (k := k) (a := a) (b := a) {κ}, IsOpenMap fun g : GL a k => g • x :=

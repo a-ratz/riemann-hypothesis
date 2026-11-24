@@ -129,7 +129,7 @@ theorem degAct_pull : GlobalFnsSt → ∀ (R R' : Type) [CommRing R] [IsDomain R
   intro hG R R' _ _ _ _ φ D D' hD O _ _ _ ιD
   have gp := pull_grp hD
   obtain ⟨o', ho'⟩ := polAct_pull _ _ _ D.P D'.P _ gp (LBIso.symm ⟨hD.w, hD.w_gen⟩) O ιD.onB
-  letI inst : Module O D'.X := hD.xe.module O
+  let inst : Module O D'.X := hD.xe.module O
   have hs : ∀ (a : O) (y : D'.X), hD.xe (a • y) = a • hD.xe y := fun a y =>
     hD.xe.apply_symm_apply _
   have he : ∀ a, o'.act a ≫ hD.e.hom = hD.e.hom ≫ (Over.pullback (specOf φ)).map (ιD.onB.act a) := fun a => by

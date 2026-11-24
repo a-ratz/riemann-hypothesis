@@ -66,7 +66,7 @@ theorem char_pow_ine {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra
     ξ t ^ (normV w - 1) = 1 := by
   have h1 : ξ ((frob h : G E Ω) * t * (frob h : G E Ω)⁻¹ * (t ^ normV w)⁻¹) = 1 := hW _ fun y hy => by
     have k := (DiscreteGroups.sglob.DzType.isWild_frob (isFrob_frob (h := h)) ⟨t, ht⟩).2 y hy
-    rw [div_sub_one hy, map_div₀, div_lt_one₀ (zero_lt_iff.2 ((_root_.map_ne_zero _).2 hy))]
+    rw [div_sub_one hy, map_div₀, div_lt_one₀ (pos_iff_ne_zero.2 ((_root_.map_ne_zero _).2 hy))]
     exact k
   simp only [map_mul, map_inv, map_pow] at h1
   have h3 : ξ t = ξ t ^ normV w := by
@@ -131,7 +131,7 @@ theorem split_tame {Γ K : Type} [Group Γ] [TopologicalSpace Γ] [Field K] [Cha
     have e : (S : Set Γ) = {γ | (ρ γ : Matrix (Fin n) (Fin n) K) * ρ γ₀ = ρ γ₀ * ρ γ} ∩
         ⋂ v : {v // d v = 0}, {γ | (ρ γ : Matrix (Fin n) (Fin n) K).mulVec v = (χ γ : K) • v.1} := by
       ext γ
-      simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_iInter, Subtype.forall, ← Units.val_mul, Units.val_inj]
+      simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_iInter, Subtype.forall, ← Units.val_mul, Units.val_inj]
       rfl
     rw [e]
     exact (isClosed_eq (hρ.matrix_mul continuous_const) (continuous_const.matrix_mul hρ)).inter

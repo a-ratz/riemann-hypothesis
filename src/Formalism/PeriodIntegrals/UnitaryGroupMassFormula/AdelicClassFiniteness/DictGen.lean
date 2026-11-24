@@ -216,8 +216,8 @@ theorem mLat_of (hInt : LInter) (hD : LDenom) : MLat := by
         rw [← Nat.cast_smul_eq_nsmul I.E, smul_smul, inv_mul_cancel₀ hNE, one_smul]
       rw [← e]
       exact Submodule.mem_map_of_mem h1
-    haveI : IsNoetherian (𝓞 I.E) (I.L.map ψ) := isNoetherian_of_fg_of_noetherian _ (I.L_fg.map ψ)
-    haveI : IsNoetherian (𝓞 I.E) (abelian₂ I x) := isNoetherian_of_le hle
+    have : IsNoetherian (𝓞 I.E) (I.L.map ψ) := isNoetherian_of_fg_of_noetherian _ (I.L_fg.map ψ)
+    have : IsNoetherian (𝓞 I.E) (abelian₂ I x) := isNoetherian_of_le hle
     first
       | exact (Submodule.fg_top _).mp (IsNoetherian.noetherian _)
       | exact Module.Finite.iff_fg.mp inferInstance

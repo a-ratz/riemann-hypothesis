@@ -119,7 +119,7 @@ lemma exists_primitive {n : ℕ} (u : Fin n → LaurentSeries F) (hu : u ≠ 0) 
   have hvl : Valued.v (u l) ≠ 0 := (Valuation.ne_zero_iff _).mpr hl
   have hvi : 0 < Valued.v (u i) := by
     have := hi l (Finset.mem_univ _)
-    exact lt_of_lt_of_le (zero_lt_iff.mpr hvl) this
+    exact lt_of_lt_of_le (pos_iff_ne_zero.mpr hvl) this
   have hui : u i ≠ 0 := (Valuation.ne_zero_iff _).mp hvi.ne'
   have key : ∀ a, ∃ P : PowerSeries F, (P : LaurentSeries F) = (u i)⁻¹ * u a := by
     intro a
@@ -568,7 +568,7 @@ theorem adapted_bases_of_redFilt : ∀ (ι : Type) (σ : Equiv.Perm ι) (l n t :
     intro s
     have h1 := (hb (pos s) _).1 (hpos_lt s)
     have h2 : ¬ b (pos s) ≤ ((rs s).castSucc : ℕ) := fun h => hpos_nlt s ((hb (pos s) _).2 h)
-    simp only [Fin.val_succ, Fin.coe_castSucc] at h1 h2
+    simp only [Fin.val_succ, Fin.val_castSucc] at h1 h2
     omega
   have hinj : Function.Injective pos := by
     intro s s' h
@@ -609,7 +609,7 @@ theorem adapted_bases_of_redFilt : ∀ (ι : Type) (σ : Equiv.Perm ι) (l n t :
     refine (hb a _).2 ?_
     have h1 : b a ≠ b (pos s) := fun h => ha (hsing s a h)
     have h2 := hbpos s
-    simp only [Fin.coe_castSucc]
+    simp only [Fin.val_castSucc]
     omega
 
   let θF : F⟦X⟧ →+* F⟦X⟧ := (PowerSeries.substAlgHom (PowerSeries.HasSubst.X_pow (R := F) hl.ne')).toRingHom
@@ -1422,7 +1422,7 @@ theorem GlobalTheory.WachPlace.wach_lattices : GlobalTheory.Published.BhattSchol
   intro hBS E Ω _ _ _ _ _ _ l _ hl hd σ hσ n t h J bot hJ hbot hIB
   obtain ⟨LL, r, ψ, ϖ, R, M, rs, hz, hE, hcr, hψcr, hirr, hM0, hMtop, hmono, hstab, hrs, hlines⟩ := hIB
   obtain ⟨_, _, _⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
-  haveI : CharP (ResidueField ↥(OL LL)) l := GlobalTheory.WachMap.charP_residueField_of_irreducible LL
+  have : CharP (ResidueField ↥(OL LL)) l := GlobalTheory.WachMap.charP_residueField_of_irreducible LL
   obtain ⟨x, dim, hx, hd0, hdR, hds⟩ :=
     _root_.GlobalTheory.WachChain.chain_of_lattices _ ↥(OL LL) n t R r ψ ϖ M rs hirr hM0 hMtop hmono hstab hlines
   obtain ⟨u, c, ζ, jj, hu, hc, hζ, hζm, hjj⟩ := _root_.GlobalTheory.WachExp.exists_locExp_expAt l LL hl hz
@@ -1714,10 +1714,10 @@ theorem latticeLink_of_blockFor : GlobalTheory.Published.BhattScholzeCrystalline
     show σ (inc τ) = if decide (σ (inc τ) ≠ inc (hf (σ (inc τ)))) = true then cj (inc (hf (σ (inc τ))))
       else inc (hf (σ (inc τ)))
     by_cases h : σ (inc τ) = inc (hf (σ (inc τ)))
-    · rw [decide_eq_false (not_not.mpr h), if_neg Bool.false_ne_true]; exact h
+    · rw [decide_eq_false (not_not.mpr h), ite_eq_right Bool.false_ne_true]; exact h
     · rcases hb (σ (inc τ)) with h' | h'
       · exact absurd h' h
-      · rw [decide_eq_true h, if_pos rfl]; exact h'
+      · rw [decide_eq_true h, ite_eq_left rfl]; exact h'
   · intro a a' haa'
     obtain rfl : a = a' := Fin.ext haa'
     simp only [labels, glue_inc hH, Formalism.CohomologicalDescent.UnitNormBounds.UN, Formalism.CohomologicalDescent.LD.res]

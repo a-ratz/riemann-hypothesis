@@ -86,10 +86,10 @@ namespace GlobalTheory.CplDiv
 theorem dvd_of_forall_mem_sup_pow : ∀ (O R : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [CommRing R] (j : O →+* R), IsCpl j → ∀ (c s : R), (∀ e : ℕ, s ∈ Ideal.span {c} ⊔ (maximalIdeal O ^ e).map j) → c ∣ s := by
   intro O R _ _ _ _ j hj c s hs
   obtain ⟨e, he⟩ := hj
-  haveI : IsNoetherianRing (AdicCompletion (maximalIdeal O) O) :=
+  have : IsNoetherianRing (AdicCompletion (maximalIdeal O) O) :=
     GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion O (maximalIdeal O)
-  haveI : IsNoetherianRing R := isNoetherianRing_of_ringEquiv _ e
-  haveI : IsLocalRing R := e.isLocalRing
+  have : IsNoetherianRing R := isNoetherianRing_of_ringEquiv _ e
+  have : IsLocalRing R := e.isLocalRing
   have hjl : (maximalIdeal O).map j ≤ maximalIdeal R := by
     rw [Ideal.map_le_iff_le_comap]
     intro a ha hu
@@ -196,7 +196,7 @@ theorem val_stalkHom_eq : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o
   have hψ : Spec.map (M.Z.presheaf.stalkSpecializes h ≫ Scheme.stalkClosedPointTo y) ≫ M.Z.fromSpecStalk x = y := by
     rw [Spec.map_comp, Category.assoc, Scheme.SpecMap_stalkSpecializes_fromSpecStalk,
       Scheme.Spec_stalkClosedPointTo_fromSpecStalk]
-  haveI : Mono (M.Z.fromSpecStalk x) := inferInstance
+  have : Mono (M.Z.fromSpecStalk x) := inferInstance
   have heq : spMap φ = Spec.map (M.Z.presheaf.stalkSpecializes h ≫ Scheme.stalkClosedPointTo y) := by
     rw [← cancel_mono (M.Z.fromSpecStalk x), hφ, hψ]
   have hφψ := Spec.map_injective heq
@@ -209,8 +209,8 @@ theorem val_stalkHom_eq : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o
 
 theorem dvd_of_norm_le_at_classical : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [ArithBase o' Ω] (M : RatModel o' Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (U₀ : M.Z.Opens), (U₀ : Set M.Z).Nonempty → ∀ (x : M.Z), IsClosed ({x} : Set M.Z) → ∀ (R : Type) [CommRing R] (j : M.Z.presheaf.stalk x →+* R), IsCpl j → ∀ (b : M.Z.presheaf.stalk x) (s : R), b ≠ 0 → (∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z) (ev : R →+* OO p), M.Cen U₀ x y → spMap ev ≫ (spMap j ≫ M.Z.fromSpecStalk x) = y → ‖(ev s : PadicAlgCl p)‖ ≤ ‖(ev (j b) : PadicAlgCl p)‖) → j b ∣ s := by
   intro o' Ω _ _ _ _ M hN U₀ hU₀ x hx R _ j hj b s hb hs
-  haveI : IsNoetherianRing (M.O x) := GlobalTheory.FibreCorr.isNoetherianRing_O M x
-  haveI : IsNoetherianRing (M.Z.presheaf.stalk x) := isNoetherianRing_of_ringEquiv _ (M.stalkEquiv x).symm
+  have : IsNoetherianRing (M.O x) := GlobalTheory.FibreCorr.isNoetherianRing_O M x
+  have : IsNoetherianRing (M.Z.presheaf.stalk x) := isNoetherianRing_of_ringEquiv _ (M.stalkEquiv x).symm
   have hfO : M.stalkHom x b ∈ M.O x := (M.stalkEquiv x b).2
   have hf0 : M.stalkHom x b ≠ 0 := fun h => hb ((map_eq_zero_iff _ (M.stalkHom_injective x)).1 h)
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.Izumi.small_mod_principal o' Ω M hN U₀ hU₀ x hx _ hfO hf0
@@ -297,8 +297,8 @@ namespace GlobalTheory.Poinc
 theorem mem_O_of_norm_val_le_one : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [ArithBase o' Ω] (M : RatModel o' Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (U₀ : M.Z.Opens), (U₀ : Set M.Z).Nonempty → ∀ x : M.Z, IsClosed ({x} : Set M.Z) → ∀ f ∈ M.ringOn (U₀ : Set M.Z), (∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z), M.Cen U₀ x y → ‖M.val (gPt p ≫ y) f‖ ≤ 1) → f ∈ M.O x := by
   intro o' Ω _ _ _ _ M hn U₀ hU x hx f hf hb
   obtain ⟨h1, h2⟩ := flat_and_lft_toInt M
-  letI : Flat (M.s ≫ spMap (algebraMap ℤ o')) := h1
-  letI : LocallyOfFiniteType (M.s ≫ spMap (algebraMap ℤ o')) := h2
+  let : Flat (M.s ≫ spMap (algebraMap ℤ o')) := h1
+  let : LocallyOfFiniteType (M.s ≫ spMap (algebraMap ℤ o')) := h2
   obtain ⟨φ, rfl⟩ := (RatModel.mem_ringOn_iff_exists hU).1 hf
   obtain ⟨W, ψ, hxW, h⟩ := GlobalTheory.regular_of_bounded_at_padicAlgCl_points.1 M.Z (M.s ≫ spMap (algebraMap ℤ o')) x hx
     (hn x).2 U₀ φ hU fun p _ y e1 e2 => (RatModel.val_valF e2 φ) ▸ hb p y ⟨e1, e2⟩
@@ -446,8 +446,8 @@ theorem main : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [Arit
       ∃ ev : R →+* OO p, IsLocalHom ev ∧ spMap ev ≫ (spMap j ≫ M.Z.fromSpecStalk x) = y := by
     intro p _ y hy
     obtain ⟨V, _, _, _, ev₀, i, -, hl₀, hli, -, hev, -⟩ := GlobalTheory.ClassicalPt.extend_completion o' Ω M x R j hj p y hy.1
-    haveI := hl₀
-    haveI := hli
+    have := hl₀
+    have := hli
     exact ⟨i.comp ev₀, RingHom.isLocalHom_comp _ _, hev⟩
   obtain ⟨p₁, hp₁, y₁, hy₁⟩ := GlobalTheory.Poinc.exists_cen_main o' Ω M x hx U₀ hO.ne
   obtain ⟨ev₁, hl₁, hev₁⟩ := hext p₁ y₁ hy₁

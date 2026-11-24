@@ -123,7 +123,7 @@ theorem X_mul_pderiv_mem {σ : Type} (u v : σ) (N : ℕ) (Q : MvPolynomial σ �
   rw [pderiv_monomial]
   by_cases h : m v = 0
   · simp [h]
-  · rw [X, monomial_mul]
+  · rw [X, monomial_mul_monomial]
     refine (totalDegree_monomial_le _ _).trans (le_trans (le_of_eq ?_) hd)
     have h1 : Finsupp.single v 1 ≤ m := by
       rw [Finsupp.single_le_iff]; omega
@@ -600,7 +600,7 @@ theorem pair_monomial (α : σ →₀ ℕ) (c : ℂ) (Q : MvPolynomial σ ℂ) :
 theorem pair_mul_X (P Q : MvPolynomial σ ℂ) (v : σ) : pair (P * X v) Q = pair P (pderiv v Q) := by
   induction P using MvPolynomial.induction_on' with
   | monomial α c =>
-    rw [X, monomial_mul, mul_one, pair_monomial, pair_monomial, coeff_pderiv, wt_add_single]
+    rw [X, monomial_mul_monomial, mul_one, pair_monomial, pair_monomial, coeff_pderiv, wt_add_single]
     ring
   | add P P' h h' => simp only [add_mul, map_add (f := _), LinearMap.add_apply, h, h']
 
@@ -673,7 +673,7 @@ theorem pair_rep (ℓ : MvPolynomial σ ℂ →ₗ[ℂ] ℂ) (d : ℕ)
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [pair_monomial, this, map_smul, smul_eq_mul, coeff_sum]
     congr 1
-    simp only [coeff_monomial, Finset.sum_ite_eq', Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [coeff_monomial, Finset.sum_ite_eq', Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     split_ifs with hd
     · exact mul_div_cancel₀ _ (wt_ne_zero α)
     · rw [h α (not_le.1 hd), mul_zero]
@@ -880,7 +880,7 @@ theorem exists_colStable_disjoint (ι : Type) [Fintype ι] (m n : ℕ) (X : Type
     simp only [hBa, LinearMap.comp_apply, fockInner_colSub]
   clear hBa
   clear_value B
-  obtain ⟨β, hβW, hβU⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨β, hβW, hβU⟩ := IsConcreteLE.exists_of_lt hlt
   obtain ⟨d, hd⟩ : ∃ d : ℕ, ∀ i, (β (b i)).totalDegree ≤ d :=
     ⟨_, fun i => Finset.le_sup (f := fun i => (β (b i)).totalDegree) (Finset.mem_univ i)⟩
   obtain ⟨R, hRf, hR⟩ : ∃ R : Submodule ℂ (Pol ι m n), FiniteDimensional ℂ R ∧ ∀ P, P ∈ R ↔ P.totalDegree ≤ d :=
@@ -896,7 +896,7 @@ theorem exists_colStable_disjoint (ι : Type) [Fintype ι] (m n : ℕ) (X : Type
       exact (Ψ x).2
     · intro h
       exact ⟨Φ.codRestrict R h, rfl⟩
-  haveI : FiniteDimensional ℂ D := inferInstance
+  have : FiniteDimensional ℂ D := inferInstance
   clear_value D
   have hDs (Φ) (h : Φ ∈ D) (τ g) : colSub m τ g ∘ₗ Φ ∈ D := by
     rw [hD] at h ⊢
@@ -1128,7 +1128,7 @@ theorem comm [DecidableEq ι] (t t' : ι) (i k l : Fin n) (P : Pol ι m n) :
         by_cases h3 : i = k <;> by_cases h4 : i = j <;> simp [h3, h4, eq_comm, sub_smul] <;>
           (try split_ifs) <;> simp_all
       · simp [h2, Ne.symm h2]
-    · simp only [if_neg h1, smul_zero, zero_sub, neg_eq_zero]
+    · simp only [ite_eq_right h1, smul_zero, zero_sub, neg_eq_zero]
       split_ifs with h2 h3
       · exact absurd ⟨h2.1.trans h3.1, h2.2.trans h3.2⟩ h1
       · rfl
@@ -1279,7 +1279,7 @@ namespace GlobalTheory.RowSupport
 
 theorem exp_I_pow_injective : Function.Injective fun e : ℕ => Complex.exp Complex.I ^ e := by
   intro a b h
-  simp only [← Complex.exp_nat_mul] at h
+  simp only [← Complex.exp_natCast_mul] at h
   obtain ⟨k, hk⟩ := Complex.exp_eq_exp_iff_exists_int.1 h
   have h2 : (a : ℝ) = b + k * (2 * Real.pi) := by
     have := congrArg Complex.im hk

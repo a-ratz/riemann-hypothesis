@@ -158,7 +158,7 @@ abbrev Yc : Scheme.{0} := ∐ fun i => (L.U i).toScheme
 
 def fc : Yc L ⟶ X := Sigma.desc fun i => (L.U i).ι
 
-theorem ι_fc (i : L.ι) : Sigma.ι (fun i => (L.U i).toScheme) i ≫ fc L = (L.U i).ι := Sigma.ι_desc _ _
+theorem ι_fc (i : L.ι) : Sigma.ι (fun i => (L.U i).toScheme) i ≫ fc L = (L.U i).ι := Sigma.ι_comp_desc _ _
 
 variable {L} {V : Scheme.{0}}
 

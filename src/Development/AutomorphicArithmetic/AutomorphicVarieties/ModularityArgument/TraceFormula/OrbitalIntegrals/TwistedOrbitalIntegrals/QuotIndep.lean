@@ -124,7 +124,7 @@ end Core
 theorem UpperTheory.V.Z.Tf.Orb.quotIndep :
     UpperTheory.V.Z.Tf.Orb.QuotIndep := by
   intro G _ _ _ _ _ _ _ _ μG hμ H μ _ _ F hF hFH ρ hρ
-  have : MeasurableInv H := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
+  have : MeasurableInv H := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
   have hex : ∃ ρ, IsQuotNormaliser H μ ρ := ⟨ρ, hρ⟩
   rw [quotIntegral, dite_eq_left hex]
-  exact wd_eq (j := H.subtype) measurable_subtype_coe hF (fun t g => hFH t t.2 g) hex.choose_spec.1 hex.choose_spec.2 hρ.1 hρ.2
+  exact wd_eq (j := H.subtype) measurable_subtypeVal hF (fun t g => hFH t t.2 g) hex.choose_spec.1 hex.choose_spec.2 hρ.1 hρ.2

@@ -447,8 +447,8 @@ theorem exists_nat_evalZ (φ : InvFun ℤ) (g : ℕ) (X : Type) [AddCommGroup X]
 theorem dvd_of_map_dvd_of_finite (A B : Type) [CommRing A] [IsDomain A] [IsIntegrallyClosed A] [CommRing B] [IsDomain B]
     (ρ : A →+* B) (hρ : Function.Injective ρ) (hf : ρ.Finite) (a c : A) (ha : a ≠ 0) (h : ρ a ∣ ρ c) : a ∣ c := by
 
-  letI : Algebra A B := ρ.toAlgebra
-  haveI : Module.Finite A B := hf
+  let : Algebra A B := ρ.toAlgebra
+  have : Module.Finite A B := hf
   obtain ⟨x, hx⟩ := h
   obtain ⟨p, hpm, hp⟩ := Algebra.IsIntegral.isIntegral (R := A) x
   let K := FractionRing A
@@ -563,7 +563,7 @@ namespace GlobalTheory.FiniteBirationalNear
 theorem isIso_morphismRestrict_of_isNormal : ∀ {S T : Scheme.{0}} [IsLocallyNoetherian T] (ν : S ⟶ T) [IsFinite ν] (U V : T.Opens), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme (V : Scheme.{0}) → Dense (U : Set T) → Dense (ν ⁻¹' (U : Set T)) → IsIso (ν ∣_ U) → IsIso (ν ∣_ V) := by
   intro S T _ ν _ U V hS hV hU hνU hiso
   have : IsReduced S := by
-    haveI : ∀ x : S, _root_.IsReduced (S.presheaf.stalk x) := fun x => by
+    have : ∀ x : S, _root_.IsReduced (S.presheaf.stalk x) := fun x => by
       have := (hS x).1
       infer_instance
     exact isReduced_of_isReduced_stalk S
@@ -618,50 +618,50 @@ namespace GlobalTheory.PoincCov
 
 theorem isProper_of_blowup {n : ℕ} {Z : Scheme.{0}} (z : Z ⟶ Sp (cycAway n)) (hz : IsProjOver z)
     {J : Z.IdealSheafData} {S₀ : Scheme.{0}} {π₀ : S₀ ⟶ Z} (hB : FinalTheorems.Blowup π₀ J) : IsProper π₀ := by
-  haveI : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
-  haveI : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
+  have : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
   obtain ⟨X', b, hb, hbs, -⟩ := GlobalTheory.ProjBlowup.exists_blowup z hz J
   obtain ⟨f, hf, -⟩ := hb.2 S₀ π₀ hB.1
   obtain ⟨f', hf', -⟩ := hB.2 X' b hb.1
   have e1 : f ≫ f' = 𝟙 S₀ := (hB.2 S₀ π₀ hB.1).unique (by simp [hf', hf]) (by simp)
   have e2 : f' ≫ f = 𝟙 X' := (hb.2 X' b hb.1).unique (by simp [hf, hf']) (by simp)
-  haveI : IsIso f := ⟨f', e1, e2⟩
-  haveI : IsSeparated z := by
+  have : IsIso f := ⟨f', e1, e2⟩
+  have : IsSeparated z := by
     obtain ⟨m, e, he, rfl⟩ := hz
     have := isProper_str (cycAway n) m
     infer_instance
-  haveI : IsProper (b ≫ z) := by
+  have : IsProper (b ≫ z) := by
     obtain ⟨m, e, he, he'⟩ := hbs
     have := isProper_str (cycAway n) m
     rw [← he']
     infer_instance
-  haveI : IsProper b := IsProper.of_comp b z
+  have : IsProper b := IsProper.of_comp b z
   rw [← hf]
   infer_instance
 
 theorem isProper_of_isNormBl {n : ℕ} {Z : Scheme.{0}} (z : Z ⟶ Sp (cycAway n)) (hz : IsProjOver z)
     {J : Z.IdealSheafData} {S : Scheme.{0}} {π : S ⟶ Z} (h : IsNormBl π J) : IsProper π := by
   obtain ⟨-, S₀, π₀, ν, U, hB, rfl, hfin, -, -, -⟩ := h
-  haveI := isProper_of_blowup z hz hB
+  have := isProper_of_blowup z hz hB
   infer_instance
 
 theorem isIso_restrict_of_isNormBl {n : ℕ} {Z : Scheme.{0}} (z : Z ⟶ Sp (cycAway n)) (hz : IsProjOver z)
     (hZ : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Z) {J : Z.IdealSheafData} {S : Scheme.{0}} {π : S ⟶ Z} (h : IsNormBl π J)
     (V : Z.Opens) (hV : ∀ x ∈ V, x ∉ J.support) : IsIso (π ∣_ V) := by
-  haveI : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
-  haveI : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
+  have : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
   obtain ⟨hS, S₀, π₀, ν, U, hB, rfl, hfin, hUd, hνd, hνU⟩ := h
   haveI hπ₀V : IsIso (π₀ ∣_ V) := GlobalTheory.Principalise.isIso_restrict_of_blowup hB V hV
-  haveI := isProper_of_blowup z hz hB
-  haveI : LocallyOfFiniteType z := by
+  have := isProper_of_blowup z hz hB
+  have : LocallyOfFiniteType z := by
     obtain ⟨m, e, he, rfl⟩ := hz
     have := isProper_str (cycAway n) m
     infer_instance
-  haveI : IsLocallyNoetherian S₀ := LocallyOfFiniteType.isLocallyNoetherian (π₀ ≫ z)
-  haveI : GlobalTheory.IsNormalScheme Z := .of_pred hZ
-  haveI hoi : IsOpenImmersion ((π₀ ⁻¹ᵁ V).ι ≫ π₀) := by
+  have : IsLocallyNoetherian S₀ := LocallyOfFiniteType.isLocallyNoetherian (π₀ ≫ z)
+  have : GlobalTheory.IsNormalScheme Z := .of_pred hZ
+  have hoi : IsOpenImmersion ((π₀ ⁻¹ᵁ V).ι ≫ π₀) := by
     rw [← morphismRestrict_ι]; infer_instance
-  haveI : GlobalTheory.IsNormalScheme (π₀ ⁻¹ᵁ V).toScheme := .of_isOpenImmersion ((π₀ ⁻¹ᵁ V).ι ≫ π₀)
+  have : GlobalTheory.IsNormalScheme (π₀ ⁻¹ᵁ V).toScheme := .of_isOpenImmersion ((π₀ ⁻¹ᵁ V).ι ≫ π₀)
   haveI : IsIso (ν ∣_ (π₀ ⁻¹ᵁ V)) :=
     _root_.GlobalTheory.FiniteBirationalNear.isIso_morphismRestrict_of_isNormal ν U (π₀ ⁻¹ᵁ V) ((GlobalTheory.isNormalScheme_iff_pred S).mp hS) (GlobalTheory.IsNormalScheme.pred _) hUd hνd hνU
   rw [morphismRestrict_comp]
@@ -673,15 +673,15 @@ namespace GlobalTheory.PoincCov
 
 theorem exists_normalisation_cover : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (Z : Scheme.{0}) (z : Z ⟶ Sp (cycAway n)) (i : F.X ⟶ Z) [IsOpenImmersion i], IsProjOver z → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Z → i ≫ z = F.s → Dense (Set.range i) → ∀ W : Matrix (Fin 8) (Fin 8) ℤ, ∀ (J : Z.IdealSheafData) (S : Scheme.{0}) (π : S ⟶ Z), (∀ x ∈ J.support, x ∉ Set.range i) → IsNormBl π J → ∀ X₁ : Setup F W i, ∃ (S₁ : Scheme.{0}) (_ : IsIntegral S₁) (p₁ : S₁ ⟶ X₁.M.Z) (ν : S₁ ⟶ S), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S₁ ∧ IsProper p₁ ∧ IsDominant p₁ ∧ IsFinite ν ∧ ν ≫ π = p₁ ≫ X₁.π ∧ IsIso (p₁ ∣_ (X₁.π ⁻¹ᵁ i.opensRange)) ∧ FinalTheorems.EffCartier (J.comap (p₁ ≫ X₁.π)) ∧ ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsIntegrallyClosed R] (a : Sp R ⟶ S) (b : Sp R ⟶ X₁.M.Z), a ≫ π = b ≫ X₁.π → Set.range (jK R ≫ b ≫ X₁.π) ⊆ Set.range i → ∃ ξ₁ : Sp R ⟶ S₁, ξ₁ ≫ ν = a ∧ ξ₁ ≫ p₁ = b := by
   intro g _ n _ _ F Z z i _ hz hZ hiz hdense W J S π hJi hNB X₁
-  haveI : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
-  haveI : Algebra.FiniteType ℤ (CommRingCat.of (cycAway n)) := ‹Algebra.FiniteType ℤ (cycAway n)›
-  haveI : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
-  haveI : LocallyOfFiniteType z := by
+  have : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
+  have : Algebra.FiniteType ℤ (CommRingCat.of (cycAway n)) := ‹Algebra.FiniteType ℤ (cycAway n)›
+  have : IsNoetherianRing (cycAway n) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have : LocallyOfFiniteType z := by
     obtain ⟨m, e, he, rfl⟩ := hz
     have := isProper_str (cycAway n) m
     infer_instance
-  haveI : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian z
-  haveI hπP : IsProper π := isProper_of_isNormBl z hz hNB
+  have : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian z
+  have hπP : IsProper π := isProper_of_isNormBl z hz hNB
   let Vi : Z.Opens := i.opensRange
   haveI hπV : IsIso (π ∣_ Vi) := isIso_restrict_of_isNormBl z hz hZ hNB Vi (fun x hx hJ => hJi x hJ hx)
   have monoV : ∀ {T : Scheme.{0}} (u v : T ⟶ S), u ≫ π = v ≫ π → Set.range (u ≫ π) ⊆ (Vi : Set Z) → u = v := by
@@ -708,29 +708,29 @@ theorem exists_normalisation_cover : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤
     show X₁.π (X₁.M.pt _) ∈ Vi
     rw [← Scheme.Hom.comp_apply, X₁.comp]
     exact ⟨_, rfl⟩
-  haveI : Nonempty U := hUne.to_subtype
+  have : Nonempty U := hUne.to_subtype
   let c : (U : Scheme.{0}) ⟶ S := X₁.π ∣_ Vi ≫ inv (π ∣_ Vi) ≫ (π ⁻¹ᵁ Vi).ι
   have hc : c ≫ π = U.ι ≫ X₁.π := by
     simp only [c, Category.assoc]
     rw [← morphismRestrict_ι, IsIso.inv_hom_id_assoc, morphismRestrict_ι]
   let j : (U : Scheme.{0}) ⟶ pullback π X₁.π := pullback.lift c U.ι hc
-  haveI := X₁.fin
-  haveI : LocallyOfFiniteType (X₁.π ≫ z) := inferInstance
-  haveI : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian (X₁.π ≫ z)
-  haveI : IsLocallyNoetherian (pullback π X₁.π) :=
+  have := X₁.fin
+  have : LocallyOfFiniteType (X₁.π ≫ z) := inferInstance
+  have : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian (X₁.π ≫ z)
+  have : IsLocallyNoetherian (pullback π X₁.π) :=
     LocallyOfFiniteType.isLocallyNoetherian (pullback.fst π X₁.π ≫ π ≫ z)
   have hjs : j ≫ pullback.snd π X₁.π = U.ι := pullback.lift_snd _ _ _
-  haveI : QuasiCompact (j ≫ pullback.snd π X₁.π) := by rw [hjs]; infer_instance
-  haveI : QuasiCompact j := QuasiCompact.of_comp j (pullback.snd π X₁.π)
-  haveI : QuasiSeparated (j ≫ pullback.snd π X₁.π) := by rw [hjs]; infer_instance
-  haveI : QuasiSeparated j := QuasiSeparated.of_comp j (pullback.snd π X₁.π)
-  haveI : LocallyOfFiniteType (j ≫ pullback.snd π X₁.π) := by rw [hjs]; infer_instance
-  haveI : LocallyOfFiniteType j := locallyOfFiniteType_of_comp j (pullback.snd π X₁.π)
-  haveI hfin : IsFinite j.fromNormalization :=
+  have : QuasiCompact (j ≫ pullback.snd π X₁.π) := by rw [hjs]; infer_instance
+  have : QuasiCompact j := QuasiCompact.of_comp j (pullback.snd π X₁.π)
+  have : QuasiSeparated (j ≫ pullback.snd π X₁.π) := by rw [hjs]; infer_instance
+  have : QuasiSeparated j := QuasiSeparated.of_comp j (pullback.snd π X₁.π)
+  have : LocallyOfFiniteType (j ≫ pullback.snd π X₁.π) := by rw [hjs]; infer_instance
+  have : LocallyOfFiniteType j := locallyOfFiniteType_of_comp j (pullback.snd π X₁.π)
+  have hfin : IsFinite j.fromNormalization :=
     GlobalTheory.NormBlowupInt.isFinite_fromNormalization_int_of_isReduced (o := CommRingCat.of (cycAway n)) j
       (pullback.fst π X₁.π ≫ π ≫ z) fun x _ => (LocallyOfFiniteType.stalkMap j x).residueFieldMap
-  haveI : GlobalTheory.IsNormalScheme X₁.M.Z := X₁.normal
-  haveI : GlobalTheory.IsNormalScheme (U : Scheme.{0}) := .of_isOpenImmersion U.ι
+  have : GlobalTheory.IsNormalScheme X₁.M.Z := X₁.normal
+  have : GlobalTheory.IsNormalScheme (U : Scheme.{0}) := .of_isOpenImmersion U.ι
   let p₁ : j.normalization ⟶ X₁.M.Z := j.fromNormalization ≫ pullback.snd π X₁.π
   let ν : j.normalization ⟶ S := j.fromNormalization ≫ pullback.fst π X₁.π
   have hp₁ : j.toNormalization ≫ p₁ = U.ι := by
@@ -773,8 +773,8 @@ theorem exists_normalisation_cover : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤
           rw [Scheme.Hom.comp_apply]
           exact (s' w).2
       · rw [Category.assoc, pullback.lift_snd, hs']
-    haveI : IsIso s' := ⟨f0, e2, e1⟩
-    haveI : IsIso f0 := ⟨s', e1, e2⟩
+    have : IsIso s' := ⟨f0, e2, e1⟩
+    have : IsIso f0 := ⟨s', e1, e2⟩
     have H := GlobalTheory.isPullback_toNormalization_of_mono f0 O.ι j (H := hf0.symm)
     have e := IsPullback.isoIsPullback_hom_fst _ _ (isPullback_morphismRestrict j.fromNormalization O) H.flip
     haveI : IsIso (j.fromNormalization ∣_ O) := by rw [← e]; infer_instance
@@ -904,18 +904,18 @@ theorem spMap_comp₁ {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f :
 set_option synthInstance.maxHeartbeats 400000 in
 theorem exists_extend_algClosed {A B K : Type} [CommRing A] [CommRing B] [Field K] [IsAlgClosed K] (g : A →+* B)
     (hg : Function.Injective g) (hi : g.IsIntegral) (ψ : A →+* K) : ∃ φ : B →+* K, φ.comp g = ψ := by
-  letI := g.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hi⟩
-  haveI : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
+  let := g.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hi⟩
+  have : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
   obtain ⟨Q, -, hQ, hQ'⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (R := A) (S := B) (RingHom.ker ψ) ⊥ (by
     intro x hx
     have : x = 0 := hg ((Ideal.mem_bot.1 hx).trans (map_zero g).symm)
     simp [this])
-  haveI : Q.LiesOver (RingHom.ker ψ) := ⟨hQ'.symm⟩
-  letI : Algebra (A ⧸ RingHom.ker ψ) K := (RingHom.kerLift ψ).toAlgebra
-  haveI : FaithfulSMul (A ⧸ RingHom.ker ψ) K :=
+  have : Q.LiesOver (RingHom.ker ψ) := ⟨hQ'.symm⟩
+  let : Algebra (A ⧸ RingHom.ker ψ) K := (RingHom.kerLift ψ).toAlgebra
+  have : FaithfulSMul (A ⧸ RingHom.ker ψ) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.kerLift_injective ψ)
-  haveI : Algebra.IsIntegral (A ⧸ RingHom.ker ψ) (B ⧸ Q) := inferInstance
+  have : Algebra.IsIntegral (A ⧸ RingHom.ker ψ) (B ⧸ Q) := inferInstance
   let l : (B ⧸ Q) →ₐ[A ⧸ RingHom.ker ψ] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1009,7 +1009,7 @@ theorem exists_stalk_of_map {S Z : Scheme.{0}} (p : S ⟶ Z) (I : S.IdealSheafDa
 theorem mem_of_map_mem {R S : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [CommRing S] [IsDomain S]
     [IsLocalRing S] (f : R →+* S) (hf : Function.Injective f) [IsLocalHom f] {I : Ideal R} {a : R}
     (h : f a ∈ I.map f) : a ∈ I := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
   have : IsLocalHom (algebraMap R S) := ‹IsLocalHom f›
   have : Module.Flat R S := inferInstance
@@ -1035,7 +1035,7 @@ theorem flat_of_dominant {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [C
   have hF : IsField (M.Z.presheaf.stalk (p (genericPoint S))) := by
     rw [hx]; exact Field.toIsField M.Z.functionField
   have hinj : Function.Injective (p.stalkMap (genericPoint S)).hom := by
-    letI := hF.toField
+    let := hF.toField
     exact RingHom.injective _
   have : CharZero S.functionField := ((p.stalkMap (genericPoint S)).hom.charZero_iff hinj).1 h0
   refine GlobalTheory.ZH.ClosureLifting.flat_of_charZero (K := S.functionField) (S.fromSpecStalk (genericPoint S)) ?_ π

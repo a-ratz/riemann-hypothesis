@@ -123,7 +123,7 @@ theorem _root_.GlobalTheory.GenericFlat.generic_charZero_and_flat : (∀ (O : Ty
     have hmap : v ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap b = Spec.map (CommRingCat.ofHom (φ.comp b)) := by
       rw [hv]; exact (Spec.map_comp _ _).symm
     rw [hmap, HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := (φ.comp b).toAlgebra
+    let := (φ.comp b).toAlgebra
     change Module.Flat R V
     rw [IsDedekindDomain.flat_iff_torsion_eq_bot, Submodule.eq_bot_iff]
     intro m hm

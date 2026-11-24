@@ -95,7 +95,7 @@ private theorem coset_tr {G H : Type*} [Group G] [Group H] (f : G →* H) (hf : 
     intro c g' hg
     have hc : ∃ g', t (f c.out) = f g' := ⟨g', hg⟩
     have : hc.choose = g' := hf (hc.choose_spec.symm.trans hg)
-    simp only [m, dif_pos hc, this]
+    simp only [m, dite_eq_left hc, this]
   refine finsum_mem_eq_of_bijOn m ⟨?_, ?_, ?_⟩ ?_
   · intro c hc
     obtain ⟨g', e, u', hu', l', hl', rfl⟩ := key c hc
@@ -238,7 +238,7 @@ private theorem trace_step {d d' : ℕ} (N : Eu d' ≃ₗᵢ[ℂ] Eu d) (s : Eu 
     | zero => intro y; simp
     | succ j ih =>
       intro y
-      rw [pow_succ, pow_succ, ContinuousLinearMap.mul_apply, ih, hV, Module.End.mul_apply]
+      rw [pow_succ, pow_succ, mul_apply_eq_comp, ih, hV, Module.End.mul_apply]
   have hP : ∀ y, eigP a x y = y := by
     intro y
     refine Submodule.starProjection_eq_self_iff.2 ?_
@@ -249,7 +249,7 @@ private theorem trace_step {d d' : ℕ} (N : Eu d' ≃ₗᵢ[ℂ] Eu d) (s : Eu 
   refine LinearMap.ext fun w => ?_
   change N (eigP a x ((u ^ j) (g (s w)))) = r • (V ^ j) (N (s w))
   rw [hP, hg]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, map_smul, hpow]
+  simp only [smul_apply, one_apply_eq_self, map_smul, hpow]
 
 end Tr
 
@@ -286,7 +286,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.famNe :
     rw [hsym] at this
     change N (symb 𝔵.βa 0 w) = N (((x : ℂ) • (1 : Eu 𝔵.d' →L[ℂ] Eu 𝔵.d')) w)
     rw [this]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, map_smul]
+    simp only [smul_apply, one_apply_eq_self, map_smul]
   have hg0 : symb 𝔵.βg 0 = ((x : ℂ) / c) • 1 := by
     refine ContinuousLinearMap.ext fun v => ?_
     have hsec : 𝔵.A'.sec (𝔵.a₀ v) = 𝔵.A'.sec (c • symb 𝔵.βg 0 v) := by
@@ -310,7 +310,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.famNe :
     have h2 : (x : ℂ) • v = c • symb 𝔵.βg 0 v := by simpa using h1
     have h3 : symb 𝔵.βg 0 v = c⁻¹ • (x : ℂ) • v := by rw [h2, smul_smul, inv_mul_cancel₀ hc, one_smul]
     rw [h3]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, smul_smul, div_eq_inv_mul]
+    simp only [smul_apply, one_apply_eq_self, smul_smul, div_eq_inv_mul]
 
   have HE := heckeEx E μ _ 𝔵.τ₁ 𝔵.τ₂ hp κ e hAL.idem S U hU 𝔵.D hty 𝔵.d 𝔵.A
   have HE' := heckeEx E μ _ 𝔵.τ₂ 𝔵.τ₁ hp' κ e hAL.idem S U hU 𝔵.D hty 𝔵.d' 𝔵.A'
@@ -383,7 +383,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.famNe :
     intro w
     rw [hV]
     exact hN _ _ _ (𝔵.v_act 0) (𝔵.u_act 0) w
-  haveI : Nontrivial (Eu 𝔵.d) := Module.nontrivial_of_finrank_pos (R := ℂ) (by simpa using hd)
+  have : Nontrivial (Eu 𝔵.d) := Module.nontrivial_of_finrank_pos (R := ℂ) (by simpa using hd)
   have hF := finTw (Eu 𝔵.d) _ (fun i x => Mh (hh i x)) hcomm hirr (𝔵.s.toLinearEquiv.trans N.toLinearEquiv) htw i₀ x₀ hinj
   refine ⟨x, hx, hF.mono fun j hj => ?_⟩
   have hxc : (x : ℂ) / c ≠ 0 := div_ne_zero (by exact_mod_cast hx.ne') hc

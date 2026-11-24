@@ -58,8 +58,8 @@ private theorem toZModPow_one_eq_zero_iff {l : ℕ} [Fact l.Prime] (x : ℤ_[l])
 private theorem exists_root_lift {l : ℕ} [Fact l.Prime] (u : (ZMod (l ^ 1))ˣ) :
     ∃ ζ ∈ rootsOfUnity (Nat.totient (l ^ 1)) ℤ_[l], redU l 1 ζ = u := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl.one_lt⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl.one_lt⟩
   have ht : Nat.totient (l ^ 1) = l - 1 := by rw [pow_one, Nat.totient_prime hl]
   have hu : u ^ (l - 1) = 1 := by
     rw [← ht, ← ZMod.card_units_eq_totient]
@@ -115,7 +115,7 @@ theorem UpperTheory.V.FW.teich :
           simp
         · rw [h]
           exact Units.ext (by simp [redU] <;> rfl)
-    · have he : ee l = 1 := if_neg h2
+    · have he : ee l = 1 := ite_eq_right h2
       have key : ∀ u : (ZMod (l ^ 1))ˣ, ∃ a : WW l, (redU l 1) a = u := by
         intro u
         obtain ⟨ζ, hζ, hred⟩ := exists_root_lift u
@@ -127,7 +127,7 @@ theorem UpperTheory.V.FW.teich :
   have hfin : Finite (WW l) := by
     show Finite (rootsOfUnity _ ℤ_[l])
     infer_instance
-  haveI : NeZero (l ^ ee l) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ ee l) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hc := card_rootsOfUnity ℤ_[l] (Nat.totient (l ^ ee l))
   refine hsurj.bijective_of_nat_card_le (le_trans hc (le_of_eq ?_))
   rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient]

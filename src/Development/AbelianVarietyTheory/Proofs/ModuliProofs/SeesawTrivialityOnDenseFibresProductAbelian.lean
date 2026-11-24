@@ -74,7 +74,7 @@ theorem triv_of_triv_on_dense_fibres_prod_abelian : Out.GlobalFnsSt → ∀ (k :
   refine _root_.GlobalTheory.seesaw_reduced_of_dense hG (Sp k) B M hB hM hamp A.left (A ⊗ B).left A.hom (snd A B).left (fst A B).left N hp hN
     (hd.mono ?_) (lift (𝟙 A) (1 : A ⟶ B)).left ?_ h0
   · intro p hp
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hp
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hp
     obtain ⟨x, hx, hpx⟩ := hp
     exact ⟨k, inferInstance, x.left, B.left, _, B.hom, hpx, isPullback_lift_toUnit_fst_left A B x, hx⟩
   · rw [← Over.comp_left, lift_fst, Over.id_left]

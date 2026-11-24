@@ -122,7 +122,7 @@ theorem factV (hl2 : l ≠ 2) (u : ℤ_[l]) (hu : (u - 1).valuation = 1) (m : �
     have h1 : (l : ℤ_[l]) ∣ 1 := by
       have := dvd_sub h hdvd
       rwa [sub_sub_cancel] at this
-    exact hprime.not_unit (isUnit_of_dvd_one h1)
+    exact hprime.not_isUnit (isUnit_of_dvd_one h1)
   have hodd : Odd l := hl.odd_of_ne_two hl2
   obtain ⟨e, m', hm', rfl⟩ := Nat.exists_eq_pow_mul_and_not_dvd hm l hl.ne_one
   have hm'0 : m' ≠ 0 := by
@@ -165,9 +165,9 @@ theorem factV (hl2 : l ≠ 2) (u : ℤ_[l]) (hu : (u - 1).valuation = 1) (m : �
     | simp
   have hne : u ^ (l ^ e * m') - 1 ≠ 0 := by
     intro h
-    rw [h, emultiplicity_zero] at htot
+    rw [h, emultiplicity_zero_right] at htot
     first
-    | exact ENat.top_ne_coe _ htot
+    | exact ENat.top_ne_natCast _ htot
     | simp at htot
   rw [emultiplicity_prime_eq_valuation _ hne] at htot
   exact_mod_cast htot
@@ -227,7 +227,7 @@ theorem pow_mem_Rs (s : ℕ) (a : (ZMod (l ^ (s + 1)))ˣ) {ξ : LL}
 theorem Rs_transitive (s : ℕ) {ξ η : LL} (hξ : ξ ∈ primitiveRoots (l ^ (s + 1)) LL)
     (hη : η ∈ primitiveRoots (l ^ (s + 1)) LL) :
     ∃! a : (ZMod (l ^ (s + 1)))ˣ, ξ ^ (a : ZMod (l ^ (s + 1))).val = η := by
-  haveI : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have h0 : 0 < l ^ (s + 1) := pow_pos (Fact.out : l.Prime).pos _
   rw [mem_primitiveRoots_iff_isPrimitiveRoot h0] at hξ hη
   obtain ⟨i, -, hi⟩ : ∃ i < l ^ (s + 1), ξ ^ i = η := by
@@ -263,7 +263,7 @@ theorem invariants_const (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]) (hu : (u - 1).v
     ∀ ξ ∈ primitiveRoots (l ^ (s + 1)) LL, ∀ η ∈ primitiveRoots (l ^ (s + 1)) LL, f ξ = f η := by
   have hl := (Fact.out : l.Prime)
   have hl2le := hl.two_le
-  haveI : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have h0 : 0 < l ^ (s + 1) := pow_pos hl.pos _
   have hmul : ∀ a b : (ZMod (l ^ (s + 1)))ˣ,
       (∀ ξ ∈ primitiveRoots (l ^ (s + 1)) LL, f (ξ ^ (a : ZMod (l ^ (s + 1))).val) = f ξ) →
@@ -316,7 +316,7 @@ theorem invariants_const (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]) (hu : (u - 1).v
     | rw [Nat.Coprime.orderOf_pow hcop, hubord]
     | rw [orderOf_pow_coprime hcop, hubord]
     | rw [orderOf_pow' ub (by omega : l - 1 ≠ 0), hcop.gcd_eq_one, Nat.div_one, hubord]
-  haveI hcyc : IsCyclic (ZMod (l ^ (s + 1)))ˣ := by
+  have hcyc : IsCyclic (ZMod (l ^ (s + 1)))ˣ := by
     first
     | exact ZMod.isCyclic_units_of_prime_pow l hl hl2 (s + 1)
     | exact ZMod.isCyclic_units_of_prime_pow hl hl2 (s + 1)
@@ -385,7 +385,7 @@ theorem sigma_u_order (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]) (hu : (u - 1).valu
     {ξ : LL} (hξ : ξ ∈ primitiveRoots (l ^ (s + 1)) LL) (k : ℕ) :
     ξ ^ ((PadicInt.toZModPow (s + 1) u).val ^ k) = ξ ↔ l ^ s ∣ k := by
   have hl := (Fact.out : l.Prime)
-  haveI : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have h0 : 0 < l ^ (s + 1) := pow_pos hl.pos _
   rw [mem_primitiveRoots_iff_isPrimitiveRoot h0] at hξ
   have h := isPrimitiveRoot_pow_eq_pow_iff_zmod_eq hξ ((PadicInt.toZModPow (s + 1) u).val ^ k) 1
@@ -601,7 +601,7 @@ theorem linkRing
         intro ξ hξ
         have hm := hmem s _ (hunitu s) ⟨ξ, hξ⟩
         simp only [f]
-        rw [dif_pos hm, dif_pos hξ]
+        rw [dite_eq_left hm, dite_eq_left hξ]
         have h := hσ s hs x ⟨ξ, hξ⟩ ⟨_, hm⟩ rfl
         rw [hxσ] at h
         exact h.symm
@@ -611,7 +611,7 @@ theorem linkRing
         obtain ⟨j, hj⟩ := exists_toZModPow_eq_of_pow_pred_eq_one om hom hom' s a ha
         have hm := hmem s a (IsUnit.of_pow_eq_one ha hl1.ne') ⟨ξ, hξ⟩
         simp only [f]
-        rw [dif_pos hm, dif_pos hξ]
+        rw [dite_eq_left hm, dite_eq_left hξ]
         have h := hτ s hs j x ⟨ξ, hξ⟩ ⟨_, hm⟩ (by rw [hj])
         rw [hxτ j] at h
         exact h.symm
@@ -621,7 +621,7 @@ theorem linkRing
         refine ⟨x ξ0, ?_⟩
         funext ζ
         have h := hconst ξ0 ξ0.2 ζ ζ.2
-        simp only [f, dif_pos ξ0.2, dif_pos ζ.2] at h
+        simp only [f, dite_eq_left ξ0.2, dite_eq_left ζ.2] at h
         simp only [Pi.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
         exact h
       · refine ⟨0, ?_⟩
@@ -871,9 +871,9 @@ def prL (s : ℕ) : LvT hR uZ ιZ T c hΔ ell →+ Amb LL (KsW W s) (Dc W T c) w
     split_ifs <;> simp
 
 theorem prL_of_lt (s : ℕ) (h : s < ell) (e : LvT hR uZ ιZ T c hΔ ell) :
-    prL s e = toA hR T c s (e ⟨s, h⟩ : AmbM hR T c s) := dif_pos h
+    prL s e = toA hR T c s (e ⟨s, h⟩ : AmbM hR T c s) := dite_eq_left h
 
-theorem prL_of_ge (s : ℕ) (h : ¬ s < ell) (e : LvT hR uZ ιZ T c hΔ ell) : prL s e = 0 := dif_neg h
+theorem prL_of_ge (s : ℕ) (h : ¬ s < ell) (e : LvT hR uZ ιZ T c hΔ ell) : prL s e = 0 := dite_eq_right h
 
 theorem prL_smul (s : ℕ) (a : PowerSeries O) (e : LvT hR uZ ιZ T c hΔ ell) :
     prL s (a • e) = HahnSeries.ofPowerSeries ℤ (KsW W s) (rhoL hR c s a) • prL s e := by

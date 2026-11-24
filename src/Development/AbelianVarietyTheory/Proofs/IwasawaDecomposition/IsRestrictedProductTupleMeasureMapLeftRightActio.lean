@@ -114,12 +114,12 @@ theorem abstract_transport {ι X Xi : Type*} {Xv : ι → Type*} [MeasurableSpac
   let B : Set X := {x | ∀ v ∈ (S ∪ S₀) \ S, pv v x ∈ Tv v ⁻¹' L v}
   have hB : MeasurableSet B := by
     have : B = ⋂ v ∈ (S ∪ S₀) \ S, pv v ⁻¹' (Tv v ⁻¹' L v) := by
-      ext x; simp only [B, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+      ext x; simp only [B, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
     rw [this]
     exact Finset.measurableSet_biInter _ fun v _ => hpv v (hTL v)
   have hset : T ⁻¹' {x | ∀ v ∉ S, pv v x ∈ L v} = B ∩ {x | ∀ v ∉ S ∪ S₀, pv v x ∈ L v} := by
     ext x
-    simp only [B, Set.mem_preimage, Set.mem_setOf_eq, Set.mem_inter_iff, hcv]
+    simp only [B, Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_inter_iff, hcv]
     constructor
     · intro h
       refine ⟨fun v hv => h v (Finset.mem_sdiff.1 hv).2, fun v hv => ?_⟩
@@ -143,15 +143,15 @@ theorem abstract_transport {ι X Xi : Type*} {Xv : ι → Type*} [MeasurableSpac
     by_cases hx : x ∈ B
     · have e2 : ∏ v ∈ (S ∪ S₀) \ S, gv v (pv v x) = 1 :=
         Finset.prod_eq_one fun v hv => by
-          simp only [gv, if_neg (Finset.mem_sdiff.1 hv).2]
+          simp only [gv, ite_eq_right (Finset.mem_sdiff.1 hv).2]
           exact Set.indicator_of_mem (hx v hv) _
       rw [Set.indicator_of_mem hx, e2, one_mul, hci]; rfl
     · rw [Set.indicator_of_notMem hx]
-      simp only [B, Set.mem_setOf_eq, not_forall] at hx
+      simp only [B, Set.mem_ofPred_eq, not_forall] at hx
       obtain ⟨v, hv, hv'⟩ := hx
       have e2 : ∏ v ∈ (S ∪ S₀) \ S, gv v (pv v x) = 0 :=
         Finset.prod_eq_zero hv (by
-          simp only [gv, if_neg (Finset.mem_sdiff.1 hv).2]
+          simp only [gv, ite_eq_right (Finset.mem_sdiff.1 hv).2]
           exact Set.indicator_of_notMem hv' _)
       rw [e2, zero_mul, mul_zero]
   rw [hl, key, tprod_tail_split _ hsum S (S ∪ S₀) hsub, ← Finset.prod_sdiff hsub,
@@ -163,7 +163,7 @@ theorem abstract_transport {ι X Xi : Type*} {Xv : ι → Type*} [MeasurableSpac
   have e2 : ∏ v ∈ (S ∪ S₀) \ S, ∫⁻ y, gv v y ∂(mv v) =
       ∏ v ∈ (S ∪ S₀) \ S, ENNReal.ofReal ((mv v).map (Tv v) (L v)).toReal :=
     Finset.prod_congr rfl fun v hv => by
-      simp only [gv, if_neg (Finset.mem_sdiff.1 hv).2]
+      simp only [gv, ite_eq_right (Finset.mem_sdiff.1 hv).2]
       rw [lintegral_indicator_one (hTL v), Measure.map_apply (hTv v) (hL v),
         ENNReal.ofReal_toReal (hfin v)]
   have e3 : ∏' v : {v // v ∉ S ∪ S₀}, (mv v.1 (L v.1)).toReal =

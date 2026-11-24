@@ -108,10 +108,10 @@ end GlobalTheory.MixExp
 open GlobalTheory.MixExp in
 theorem GlobalTheory.mixExp_interNumRed : GlobalTheory.Published.NefNumerics → ∀ (k : Type) [Field k] (X : Scheme.{0}) (q : X ⟶ Sp k), IsProjOver q → letI := algebraΓOfHom q; ∀ (N N' N₀ : LB X) (hN : N.IsLB) (hN' : N'.IsLB) (h₀ : N₀.IsLB) (a b : ℕ) (Z : Closeds X) (e : ℕ), IsNef k N → IsNef k N' → cls N₀ h₀ = a • cls N hN + b • cls N' hN' → topologicalKrullDim (Z : Set X) = e → (a : ℤ) ^ e * interNumRed k Z (fun _ : Fin e => N) ≤ interNumRed k Z (fun _ : Fin e => N₀) := by
   intro h k _ X q hq
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   intro N N' N₀ hN hN' h₀ a b Z e hnef hnef' hc hZ
   have hp : IsProjOver (strHom k (X := X)) := by rwa [strHom_eq (f := q) fun _ => rfl]
-  letI := algebraΓAlong k (redι Z)
+  let := algebraΓAlong k (redι Z)
   have hi := appTop_algebraMap_along k (redι Z)
   have hpZ : IsProjOver (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by
     obtain ⟨n, f, hf, hs⟩ := hp

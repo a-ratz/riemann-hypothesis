@@ -71,9 +71,9 @@ def InOrder (d : ℕ) (z : ℂ) : Prop := ∃ m n : ℤ, z = (m : ℂ) + n * ((1
 theorem exists_form_eq_one {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} (hg : 1 ≤ g)
     (u : HolUnif A L g) (Ef : LinearMap.BilinForm ℤ u.Λ) (hE : Function.Bijective Ef) :
     ∃ a b : u.Λ, Ef a b = 1 := by
-  haveI := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
-  haveI : Module.Free ℤ u.Λ := ZLattice.module_free ℝ u.Λ
+  have := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have : Module.Free ℤ u.Λ := ZLattice.module_free ℝ u.Λ
   have hnt : Nontrivial u.Λ := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
@@ -81,7 +81,7 @@ theorem exists_form_eq_one {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : �
     have := u.full
     rw [hb] at this
     simp only [Submodule.bot_coe, Submodule.span_zero_singleton] at this
-    haveI hne : Nonempty (Fin g) := ⟨⟨0, hg⟩⟩
+    have hne : Nonempty (Fin g) := ⟨⟨0, hg⟩⟩
     exact bot_ne_top this
   let B := Module.Free.chooseBasis ℤ u.Λ
   obtain ⟨i⟩ := B.index_nonempty
@@ -250,7 +250,7 @@ theorem map_zeta_eq_zpow_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       push_cast; ring) hn (ζ ^ N) (by
       rw [Units.val_zpow_eq_zpow_val]
       show zeta n ^ N = _
-      rw [zeta, ← Complex.exp_int_mul]
+      rw [zeta, ← Complex.exp_intCast_mul]
       congr 1
       push_cast; ring)
   rw [Category.comp_id, Category.comp_id] at W₀

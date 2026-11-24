@@ -140,8 +140,8 @@ theorem th_resMap_bij (P : {P // P ∈ Pr.vT u}) : Function.Bijective (th_resMap
   constructor
   · exact Ideal.quotientMap_injective' (le_of_eq rfl)
   · intro b
-    haveI : Fact (Pr.T u).Prime := ⟨hPr.T_prime u⟩
-    haveI : Nontrivial (𝓞 X.E ⧸ P.1.asIdeal) := Ideal.Quotient.nontrivial_iff.2 P.1.isPrime.ne_top
+    have : Fact (Pr.T u).Prime := ⟨hPr.T_prime u⟩
+    have : Nontrivial (𝓞 X.E ⧸ P.1.asIdeal) := Ideal.Quotient.nontrivial_iff.2 P.1.isPrime.ne_top
     have hcard : Nat.card (𝓞 X.E ⧸ P.1.asIdeal) = Pr.T u := by
       rw [← Ideal.absNorm_eq_natCard]
       exact hPr.vT_norm u P.1 P.2

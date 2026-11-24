@@ -97,7 +97,7 @@ theorem isAdmissible_piTensor [∀ a, T2Space (Γ a)]
     IsAdmissible (piTensor ρ) := by
   refine ⟨isSmooth_piTensor fun a => (hρ a).1, fun K ho hc => ?_⟩
   obtain ⟨H, h1, h2, h3⟩ := exists_pi_subset hG _ (ho.mem_nhds (one_mem K))
-  haveI : ∀ a, FiniteDimensional ℂ (fixed (ρ a) (H a)) := fun a => (hρ a).2 _ (h1 a) (h2 a)
+  have : ∀ a, FiniteDimensional ℂ (fixed (ρ a) (H a)) := fun a => (hρ a).2 _ (h1 a) (h2 a)
   let M : (⨂[ℂ] a, fixed (ρ a) (H a)) →ₗ[ℂ] ⨂[ℂ] a, X a :=
     PiTensorProduct.map fun a => (fixed (ρ a) (H a)).subtype
   have hle : fixed (piTensor ρ) K ≤ LinearMap.range M := by
@@ -204,7 +204,7 @@ theorem contra_rep_isIrreducible (hA : GlobalTheory.Published.IrreducibleAdmissi
 
 theorem contra_piTensor_rep (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {h : ℕ} (x : Fin h → IrrGL (k := k)) :
     Nonempty ((piTensor fun a => contra (x a).rep).Equiv (contra (piTensor fun a => (x a).rep))) := by
-  haveI : ∀ a, T2Space (GL (Fin (x a).1) k) := fun a => GlobalTheory.SplitFlip.t2Space_general_linear_group
+  have : ∀ a, T2Space (GL (Fin (x a).1) k) := fun a => GlobalTheory.SplitFlip.t2Space_general_linear_group
   exact nonempty_equiv_piTensor_contra (Γ := fun a => GL (Fin (x a).1) k)
     (fun a => GlobalTheory.SqIntUnit.compactOpen_basis k (x a).1)
     (fun a => hA k (x a).1 _ (x a).rep (x a).2.rep.smooth (x a).2.rep.irr)
@@ -235,7 +235,7 @@ theorem contra_prodIrr : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalS
   have hci := fun a => contra_rep_isIrreducible hA (x a)
   have hy : (fun a => dualCl (x a)) =
       fun a => IrrGL.of (contra (x a).rep) (isSmooth_smoothRep _) (hci a) :=
-    funext fun a => dif_pos (hci a)
+    funext fun a => dite_eq_left (hci a)
   have key : ∀ y : Fin h → IrrGL (k := k),
       y = (fun a => IrrGL.of (contra (x a).rep) (isSmooth_smoothRep _) (hci a)) →
       ∃ hd' : ∑ a, (y a).1 = N, Nonempty ((contra (prodIrr x hd)).Equiv (prodIrr y hd')) := by

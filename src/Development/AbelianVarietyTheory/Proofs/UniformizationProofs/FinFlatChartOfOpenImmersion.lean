@@ -114,7 +114,7 @@ theorem exists_finite_flat_chart : ∀ (K : Type) [Field K] (X : Scheme.{0}) [Is
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (hU.fromSpec ≫ f)
   have hft : LocallyOfFiniteType (Spec.map ψ) := by rw [hψ]; infer_instance
   have hft' : ψ.hom.FiniteType := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).mp hft
-  letI : Algebra K Γ(X, U) := ψ.hom.toAlgebra
+  let : Algebra K Γ(X, U) := ψ.hom.toAlgebra
   have : Algebra.FiniteType K Γ(X, U) := hft'
   obtain ⟨g, φ, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg K Γ(X, U)
   obtain ⟨Y, Z, j, i, p, _, _, _, _, _, _, h⟩ :=

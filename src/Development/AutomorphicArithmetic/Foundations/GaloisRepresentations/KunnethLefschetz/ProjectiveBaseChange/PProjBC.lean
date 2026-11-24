@@ -56,7 +56,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.projBC_holds :
   refine ⟨?_, ?_⟩
   · intro R R' _ _ φ X p hp
     obtain ⟨N, i, hi, rfl⟩ := hp
-    letI : Algebra R R' := φ.toAlgebra
+    let : Algebra R R' := φ.toAlgebra
     let s : Spec (CommRingCat.of R') ⟶ Spec (CommRingCat.of R) :=
       Spec.map (CommRingCat.ofHom (algebraMap R R'))
     let b := GroundTheory.Arith.SchemeCoh.ProjSpace.toSpecBase R N

@@ -371,7 +371,7 @@ theorem GlobalTheory.EtC.etFF_filtered_colimit_finiteType : ∀ (A B : CommRingC
   obtain ⟨J, _, _, D0, ι0, ⟨hc⟩, hft⟩ := GlobalTheory.FiniteTypeColimit.exists_filtered_colimit_finiteType A
   obtain ⟨j, B', g', h, hg', hP⟩ := GlobalTheory.T.etaleFaithfullyFlat_descends_of_isColimit J D0 (Cocone.mk A ι0) hc B g hg
   have hb := GlobalTheory.EtC.etFF_basic
-  haveI := hb.1.2.1
+  have := hb.1.2.1
   have hP' : IsPushout g' (ι0.app j) h g := hP
   have hL : IsColimit ((Cocone.mk A ι0).whisker (Under.forget j)) :=
     (Functor.Final.isColimitWhiskerEquiv (Under.forget j) _).symm hc
@@ -571,7 +571,7 @@ theorem exactAt_iff {N M : T ⥤ AddCommGrpCat.{1}} (ε : N ⟶ M) {X : Cosimpli
     (hX : ∀ k, IsIso (ε.app (X.obj k))) (n : ℕ) :
     ((AlgebraicTopology.alternatingCofaceMapComplex AddCommGrpCat.{1}).obj (X ⋙ N)).ExactAt (n + 1) ↔
     ((AlgebraicTopology.alternatingCofaceMapComplex AddCommGrpCat.{1}).obj (X ⋙ M)).ExactAt (n + 1) := by
-  haveI : ∀ k, IsIso ((Functor.whiskerLeft X ε).app k) := fun k => hX k
+  have : ∀ k, IsIso ((Functor.whiskerLeft X ε).app k) := fun k => hX k
   have hw : IsIso (Functor.whiskerLeft X ε) := NatIso.isIso_of_isIso_app _
   let e := (AlgebraicTopology.alternatingCofaceMapComplex AddCommGrpCat.{1}).mapIso (@asIso _ _ _ _ (Functor.whiskerLeft X ε) hw)
   exact ⟨fun h => h.of_iso e, fun h => h.of_iso e.symm⟩
@@ -837,8 +837,8 @@ theorem exists_preservesFilteredColimits_isIso :
       ∃ (N : CommRingCat.{0} ⥤ 𝒜) (ε : N ⟶ M), PreservesFilteredColimitsOfSize.{0, 0} N ∧
         (∀ A : CommRingCat.{0}, Algebra.FiniteType ℤ A → IsIso (ε.app A)) := by
   intro 𝒜 _ _ M
-  haveI : HasColimitsOfSize.{0, 1} 𝒜 := hasColimitsOfSizeShrink.{0, 1, 1, 1} 𝒜
-  haveI : finTypeZ.ι.HasPointwiseLeftKanExtension (finTypeZ.ι ⋙ M) := fun _ => inferInstance
+  have : HasColimitsOfSize.{0, 1} 𝒜 := hasColimitsOfSizeShrink.{0, 1, 1, 1} 𝒜
+  have : finTypeZ.ι.HasPointwiseLeftKanExtension (finTypeZ.ι ⋙ M) := fun _ => inferInstance
   let E := Functor.LeftExtension.mk _ (finTypeZ.ι.pointwiseLeftKanExtensionUnit (finTypeZ.ι ⋙ M))
   have hE : E.IsPointwiseLeftKanExtension :=
     finTypeZ.ι.pointwiseLeftKanExtensionIsPointwiseLeftKanExtension _
@@ -990,8 +990,8 @@ theorem locInj_of_finiteType : ∀ (N M : CommRingCat.{0} ⥤ AbCx) (ε : N ⟶ 
   rcases lt_trichotomy n 0 with hn | hn | hn
   ·
     apply fin
-    haveI := hε _ (hft j)
-    haveI := isIso_f (ε.app (D.obj j)) n
+    have := hε _ (hft j)
+    have := isIso_f (ε.app (D.obj j)) n
     have : w = 0 := inj_of_iso ((ε.app (D.obj j)).f n)
       ((eq_zero_of_isZero (hMneg n hn _) _).trans (map_zero _).symm)
     rw [this, map_zero]
@@ -1013,8 +1013,8 @@ theorem locInj_of_finiteType : ∀ (N M : CommRingCat.{0} ⥤ AbCx) (ε : N ⟶ 
       exact (map_zero _).symm
     obtain ⟨-, hF0inj⟩ := (GlobalTheory.T.preservesFilteredColimits_addCommGrp_iff_elements CommRingCat.{0} F0).1 hF0 J D (Cocone.mk A ιD) hcol
     obtain ⟨k, f, hk⟩ := hF0inj j x0 hdie
-    haveI := hε _ (hft k)
-    haveI := isIso_f (ε.app (D.obj k)) 0
+    have := hε _ (hft k)
+    have := isIso_f (ε.app (D.obj k)) 0
     have hwk : (N.map (D.map f)).f 0 w = 0 := by
       apply inj_of_iso ((ε.app (D.obj k)).f 0)
       rw [nat_apply, ← hx0, ← hιnat, hk, map_zero, map_zero]
@@ -1026,14 +1026,14 @@ theorem locInj_of_finiteType : ∀ (N M : CommRingCat.{0} ⥤ AbCx) (ε : N ⟶ 
   ·
     obtain ⟨B0, g0, hg0, y0, hy0⟩ := hMpos n hn _ _ hwv
     have hB0 := hftB _ _ g0 hg0 (hft j)
-    haveI := hε _ hB0
-    haveI := isIso_f (ε.app B0) n
-    haveI := isIso_f (ε.app B0) (n - 1)
+    have := hε _ hB0
+    have := isIso_f (ε.app B0) n
+    have := isIso_f (ε.app B0) (n - 1)
     set b0 := inv ((ε.app B0).f (n - 1)) y0 with hb0
     have hdb0 : (N.obj B0).d (n - 1) n b0 = (N.map g0).f n w := by
       apply inj_of_iso ((ε.app B0).f n)
       rw [comm_apply, hb0, inv_apply_eq, hy0, nat_apply]
-    haveI := hcob
+    have := hcob
     have hg : EtFF (pushout.inr g0 (ιD.app j)) := MorphismProperty.pushout_inr _ _ hg0
     refine ⟨pushout g0 (ιD.app j), pushout.inr g0 (ιD.app j), hg,
       (N.map (pushout.inl g0 (ιD.app j))).f (n - 1) b0 - (N.map (pushout.inr g0 (ιD.app j))).f (n - 1) y', ?_⟩
@@ -1078,13 +1078,13 @@ theorem locSurj_of_iso_on_finiteType : ∀ (N M : CommRingCat.{0} ⥤ AbCx) (ε 
   intro N M ε F0 ι hF0 hι hneg hpos _hN hiso n A z hz
   rcases lt_trichotomy n 0 with hn | rfl | hn
   ·
-    haveI := AddCommGrpCat.subsingleton_of_isZero (hneg n hn A)
+    have := AddCommGrpCat.subsingleton_of_isZero (hneg n hn A)
     refine ⟨A, 𝟙 A, etFF_id A, 0, 0, by simp, Subsingleton.elim _ _⟩
   ·
     obtain ⟨x, rfl⟩ := ((hι A).2 z).1 hz
     obtain ⟨J, _, _, D, κ, ⟨hc⟩, hft⟩ := GlobalTheory.T.exists_filteredColimit_finiteType_int_rings A
     obtain ⟨j, x0, hx0⟩ := ((GlobalTheory.T.preservesFilteredColimits_addCommGrp_iff_elements CommRingCat.{0} F0).1 hF0 J D (Cocone.mk A κ) hc).1 x
-    haveI := hiso (D.obj j) (hft j)
+    have := hiso (D.obj j) (hft j)
     set z0 : (M.obj (D.obj j)).X 0 := ι.app (D.obj j) x0 with hz0
     set c0 : (N.obj (D.obj j)).X 0 := (inv (ε.app (D.obj j))).f 0 z0 with hc0
     have hεc0 : (ε.app (D.obj j)).f 0 c0 = z0 := by
@@ -1150,7 +1150,7 @@ theorem cohomology_filteredColimit_of_descent :
   obtain ⟨N, ε, hN, hiso⟩ := _root_.GlobalTheory.FinExt.exists_preservesFilteredColimits_isIso AbCx M
   have hterm := (GlobalTheory.T.complexCohomology_commutes_with_filteredColimits N hN).1
   have hcontN := (GlobalTheory.T.complexCohomology_commutes_with_filteredColimits N hN).2
-  haveI : EtFF.IsStableUnderComposition := GlobalTheory.T.etaleFaithfullyFlatRingHom_basic_properties.1.1.toIsStableUnderComposition
+  have : EtFF.IsStableUnderComposition := GlobalTheory.T.etaleFaithfullyFlatRingHom_basic_properties.1.1.toIsStableUnderComposition
 
   have hNneg : ∀ n : ℤ, n < 0 → ∀ A, IsZero ((N.obj A).X n) := by
     intro n hn A
@@ -1163,7 +1163,7 @@ theorem cohomology_filteredColimit_of_descent :
     intro x
     obtain ⟨j, w, rfl⟩ := hel.1 x
     have hz : IsZero ((N.obj (D.obj j)).X n) := by
-      haveI := hiso (D.obj j) (hft j)
+      have := hiso (D.obj j) (hft j)
       have e : (N.obj (D.obj j)).X n ≅ (M.obj (D.obj j)).X n :=
         (HomologicalComplex.eval _ _ n).mapIso (asIso (ε.app (D.obj j)))
       exact (hneg n hn (D.obj j)).of_iso e
@@ -1177,7 +1177,7 @@ theorem cohomology_filteredColimit_of_descent :
     (GlobalTheory.T.coveringsRefine_of_cechConerve_property CommRingCat.{0} EtFF _ (fun A B g hg n =>
       ⟨GlobalTheory.T.coalternatingExact_of_finiteType_iso_filteredColimits (term N n) (term M n) (Functor.whiskerRight ε (HomologicalComplex.eval _ _ n)) (hterm n)
         (fun A' hA' => by
-          haveI := hiso A' hA'
+          have := hiso A' hA'
           change IsIso ((HomologicalComplex.eval _ _ n).map (ε.app A'))
           infer_instance)
         (fun A' B' g' hg' => hdesc A' B' g' hg' n) A B g hg,

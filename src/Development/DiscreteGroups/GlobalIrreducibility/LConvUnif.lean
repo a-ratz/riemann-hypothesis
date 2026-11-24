@@ -85,7 +85,7 @@ theorem fixedProj_eq_avg {L : Subgroup G} (hLK : L ≤ K) (hLo : IsOpen (L : Set
         (fixedProj ρ hρ hKc hKo v : V) = (N : ℂ)⁻¹ • ∑ i, ρ (r i) v := by
   classical
   have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
-  have hHo : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) := hLo.preimage continuous_subtype_val
+  have hHo : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) := hLo.preimage continuous_subtypeVal
   have : Finite (K ⧸ L.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hHo
   let _ : Fintype (K ⧸ L.subgroupOf K) := Fintype.ofFinite _
   have hNpos : 0 < Fintype.card (K ⧸ L.subgroupOf K) :=
@@ -448,9 +448,9 @@ theorem dom_nonneg {n : ℕ} (P : (Fin n → ℤ) → Prop) (h0 : P 0) (hgen : �
       exact hj (hi_max j (lt_of_le_of_ne h1 (Ne.symm hne)))
     have hin : ¬ ((i : ℕ) = n) := by have := i.2; omega
     have hν1 : ∀ j : Fin n, (j : ℕ) ≤ i → gen n (Fin.castSucc i) j = 1 := fun j hj => by
-      simp only [gen, Fin.val_castSucc, if_neg hin, if_pos hj]
+      simp only [gen, Fin.val_castSucc, ite_eq_right hin, ite_eq_left hj]
     have hν0 : ∀ j : Fin n, ¬ (j : ℕ) ≤ i → gen n (Fin.castSucc i) j = 0 := fun j hj => by
-      simp only [gen, Fin.val_castSucc, if_neg hin, if_neg hj]
+      simp only [gen, Fin.val_castSucc, ite_eq_right hin, ite_eq_right hj]
     have hdom' : IsDominant (μ - gen n (Fin.castSucc i)) := by
       intro j j' hjj'
       have h := hμ hjj'
@@ -674,7 +674,7 @@ theorem unifOfComm : UnifOfComm := by
     isCompact_iff_compactSpace.mp (GLnLocal.isCompact_integralGL k m)
   have hHo : IsOpen (((GLnLocal.congruenceSubgroup k m r).subgroupOf (GLnLocal.integralGL k m) :
       Subgroup (GLnLocal.integralGL k m)) : Set (GLnLocal.integralGL k m)) :=
-    hKo.preimage continuous_subtype_val
+    hKo.preimage continuous_subtypeVal
   have : Finite (GLnLocal.integralGL k m ⧸
       (GLnLocal.congruenceSubgroup k m r).subgroupOf (GLnLocal.integralGL k m)) :=
     Subgroup.quotient_finite_of_isOpen _ hHo

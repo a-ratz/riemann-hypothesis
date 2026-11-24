@@ -105,7 +105,7 @@ theorem affine_preimage_pullback_meets_fibres {R R' : Type} [CommRing R] [CommRi
     ∃ V : ((Over.pullback (spMap a)).obj A).left.Opens, IsAffineOpen V ∧
       ∀ s : Sp R', ∃ x ∈ V, ((Over.pullback (spMap a)).obj A).hom x = s := by
   intro hW hfib
-  haveI : IsAffineHom (pullback.fst A.hom (spMap a)) :=
+  have : IsAffineHom (pullback.fst A.hom (spMap a)) :=
     isAffineHom_isStableUnderBaseChange.of_isPullback (IsPullback.of_hasPullback _ _).flip inferInstance
   refine ⟨(pullback.fst A.hom (spMap a)) ⁻¹ᵁ W, hW.preimage _, ?_⟩
   intro s
@@ -664,7 +664,7 @@ theorem isPullback_sigmaι_desc {X : Scheme.{0}} {κ : Type} (V : κ → X.Opens
     obtain ⟨⟨j, y⟩, hy⟩ := (sigmaMk B).surjective (s.fst t)
     rw [sigmaMk_mk] at hy
     have e1 : (Sigma.desc fun j => f j ≫ (V j).ι) (s.fst t) = (V i).ι (s.snd t) := congr($(s.condition) t)
-    rw [← hy, ← Scheme.Hom.comp_apply, Sigma.ι_desc, Scheme.Hom.comp_apply] at e1
+    rw [← hy, ← Scheme.Hom.comp_apply, Sigma.ι_comp_desc, Scheme.Hom.comp_apply] at e1
     by_cases hji : j = i
     · subst hji
       exact ⟨y, hy⟩
@@ -674,12 +674,12 @@ theorem isPullback_sigmaι_desc {X : Scheme.{0}} {κ : Type} (V : κ → X.Opens
       rw [e1] at h1
       have h3 := (hd hji).le_bot (show (V i).ι (s.snd t) ∈ V j ⊓ V i from ⟨h1, h2⟩)
       simp at h3
-  refine ⟨⟨Sigma.ι_desc _ _⟩, ⟨PullbackCone.IsLimit.mk _
+  refine ⟨⟨Sigma.ι_comp_desc _ _⟩, ⟨PullbackCone.IsLimit.mk _
     (fun s => IsOpenImmersion.lift (Sigma.ι B i) s.fst (hr s)) ?_ ?_ ?_⟩⟩
   · intro s
     exact IsOpenImmersion.lift_fac _ _ _
   · intro s
-    rw [← cancel_mono (V i).ι, Category.assoc, ← Sigma.ι_desc (fun j => f j ≫ (V j).ι) i,
+    rw [← cancel_mono (V i).ι, Category.assoc, ← Sigma.ι_comp_desc (fun j => f j ≫ (V j).ι) i,
       IsOpenImmersion.lift_fac_assoc, s.condition]
   · intro s m h1 _
     rw [← cancel_mono (Sigma.ι B i), IsOpenImmersion.lift_fac, h1]
@@ -809,7 +809,7 @@ theorem hasRepAF_of_disjoint_cover {S : Scheme.{0}} (A : Over S) [GrpObj A] (g :
   let Bt : Over S := Over.mk (Sigma.desc fun i => (B i).hom)
   let j : ∀ i, B i ⟶ Bt := fun i => Over.homMk (Sigma.ι (fun i => (B i).left) i) (by simp [Bt])
   have hjl : ∀ i, (j i).left = Sigma.ι (fun i => (B i).left) i := fun i => rfl
-  haveI : ∀ i, IsOpenImmersion (j i).left := fun i => by rw [hjl]; infer_instance
+  have : ∀ i, IsOpenImmersion (j i).left := fun i => by rw [hjl]; infer_instance
   have hjc : ⨆ i, (j i).left.opensRange = ⊤ := by
     rw [eq_top_iff]
     intro x _
@@ -825,7 +825,7 @@ theorem hasRepAF_of_disjoint_cover {S : Scheme.{0}} (A : Over S) [GrpObj A] (g :
   have hb : ∀ i, j i ≫ bt = b i ≫ Over.homMk (V i).ι := fun i => by
     ext1; simp [j, bt]
 
-  haveI hk : ∀ i, IsOpenImmersion (A ◁ j i).left := fun i => (GlobalTheory.T.isOpenImmersion_whiskerLeft_range_preimage_snd A (j i)).1
+  have hk : ∀ i, IsOpenImmersion (A ◁ j i).left := fun i => (GlobalTheory.T.isOpenImmersion_whiskerLeft_range_preimage_snd A (j i)).1
   have hkc : ⨆ i, (A ◁ j i).left.opensRange = ⊤ := by
     rw [eq_top_iff]
     intro z _
@@ -1067,16 +1067,16 @@ theorem exists_finiteIndex_prod_normalDomains :
           algebraMap R (∀ i, D i) y = algebraMap R (∀ i, D i) a * r := by
   intro R _ _ _ _
   classical
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
-  letI : Fintype (minimalPrimes R) := (minimalPrimes.finite_of_isNoetherianRing R).fintype
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  let : Fintype (minimalPrimes R) := (minimalPrimes.finite_of_isNoetherianRing R).fintype
   let e := Fintype.equivFin (minimalPrimes R)
   let p : Fin (Fintype.card (minimalPrimes R)) → Ideal R := fun k => (e.symm k).1
-  haveI hp : ∀ k, (p k).IsPrime := fun k => Ideal.minimalPrimes_isPrime (e.symm k).2
+  have hp : ∀ k, (p k).IsPrime := fun k => Ideal.minimalPrimes_isPrime (e.symm k).2
   have hmin : ∀ k l, p k ≤ p l → k = l := by
     intro k l h
     have h2 : p l ≤ p k := (e.symm l).2.2 ⟨hp k, bot_le⟩ h
     exact e.symm.injective (Subtype.ext (le_antisymm h h2))
-  haveI : ∀ k, Module.Finite (R ⧸ p k) (integralClosure (R ⧸ p k) (FractionRing (R ⧸ p k))) :=
+  have : ∀ k, Module.Finite (R ⧸ p k) (integralClosure (R ⧸ p k) (FractionRing (R ⧸ p k))) :=
     fun k => by
       have h : Algebra.EssFiniteType ℤ (R ⧸ p k) := Algebra.instEssFiniteTypeQuotientIdeal ℤ R (p k)
       refine @GlobalTheory.finite_integralClosure_of_essFiniteType_int (R ⧸ p k) _ _ ?_
@@ -1174,7 +1174,7 @@ theorem hasRepAF_factor (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g 
   have hP := isGrpPullback_pullback A (spMap f)
   obtain ⟨hA', hg'⟩ := GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback f A
     ((Over.pullback (spMap f)).obj A) _ g hP hA hg
-  haveI : IsAffineHom (pullback.fst A.hom (spMap f)) :=
+  have : IsAffineHom (pullback.fst A.hom (spMap f)) :=
     (AlgebraicGeometry.isAffineHom_isStableUnderBaseChange.{0}).of_isPullback (IsPullback.of_hasPullback _ _).flip
       (inferInstance : IsAffineHom (spMap f))
   have hV' : IsAffineOpen (pullback.fst A.hom (spMap f) ⁻¹ᵁ V) := hV.preimage _
@@ -1191,7 +1191,7 @@ theorem hasRepAF_factor (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g 
 
 theorem step : ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ V : A.left.Opens, IsAffineOpen V → (∀ s : Sp R, ∃ x ∈ V, A.hom x = s) → (∀ J : Ideal R, J ≠ ⊥ → HasRep A g (Over.mk (spMap (Ideal.Quotient.mk J)))) → HasRep A g (𝟙_ _) := by
   intro R _ _ _ A _ g hA hg V hV hVs hJ
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   rcases subsingleton_or_nontrivial R with hR | hR
   · haveI : IsEmpty (𝟙_ (Over (Sp R))).left := inferInstanceAs (IsEmpty (PrimeSpectrum R))
     obtain ⟨B, b, P, hP, hG, -⟩ := GlobalTheory.T.hasProperSmoothDualRepresentativeFinAffine_of_isEmpty _ A (𝟙_ _) g this
@@ -1200,11 +1200,11 @@ theorem step : ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced
   have hfac : ∀ i, HasRepAF A g (Over.mk (spMap (algebraMap R (D i)))) := by
     intro i
     obtain ⟨h1, h2, h3⟩ := hD i
-    haveI : IsNoetherianRing (D i) := by
-      haveI : Algebra.FiniteType R (D i) := inferInstance
+    have : IsNoetherianRing (D i) := by
+      have : Algebra.FiniteType R (D i) := inferInstance
       exact Algebra.FiniteType.isNoetherianRing R (D i)
     exact hasRepAF_factor R A g hA hg V hV hVs (D i)
-  haveI : ∀ i, Module.Finite R (D i) := fun i ↦ (hD i).2.2
+  have : ∀ i, Module.Finite R (D i) := fun i ↦ (hD i).2.2
   have hprod := GlobalTheory.T.hasProperSmoothDualRep_of_finite_product_algebras R A g hA n D hfac
   have hac : a ∈ conductor R (∀ i, D i) := ha
   have hc : conductor R (∀ i, D i) ≠ ⊥ := fun h ↦ ha0 (by rw [h] at hac; exact (Submodule.mem_bot R).1 hac)
@@ -1390,7 +1390,7 @@ theorem local_rep (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced 
   obtain ⟨f, hs, W, hW, hWf⟩ := GlobalTheory.T.exists_basicOpen_affineOpen_meeting_fibres_grpScheme R A s
   let a := algebraMap R (Localization.Away f)
   let A' := (Over.pullback (spMap a)).obj A
-  letI : GrpObj A' := Functor.grpObjObj
+  let : GrpObj A' := Functor.grpObjObj
   have hφ : IsGrpPullback A' A (spMap a) (pullback.fst _ _) := isGrpPullback_pullback A (spMap a)
   obtain ⟨hA', hg'⟩ := GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback a A A' _ g hφ hA hg
   obtain ⟨V, hV, hVs⟩ := GlobalTheory.T.affineOpen_meeting_fibres_pullback_specRingHom a A W hW hWf
@@ -1410,7 +1410,7 @@ theorem local_rep (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] [IsReduced 
 
 theorem step : ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → (∀ J : Ideal R, J ≠ ⊥ → HasRep A g (Over.mk (spMap (Ideal.Quotient.mk J)))) → HasRep A g (𝟙_ _) := by
   intro R _ _ A _ g hA hg hJ
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   by_cases hr : IsReduced R
   · exact GlobalTheory.T.hasProperSmoothDualRepresentative_of_local _ A g hA (local_rep R A g hA hg hJ)
   · obtain ⟨J, hJ0, hJ2⟩ := exists_sq_zero R hr
@@ -1460,7 +1460,7 @@ theorem hasRep_quot_of_factor {S T : Type} [CommRing S] [CommRing T] (J : Ideal 
     HasRep A g (Over.mk (spMap (Ideal.Quotient.mk J))) := by
   let f : Sp T ⟶ Sp S := spMap φ
   let B : Over (Sp T) := (Over.pullback f).obj A
-  letI : GrpObj B := Functor.grpObjObj
+  let : GrpObj B := Functor.grpObjObj
   have hB : IsGrpPullback B A f (pullback.fst A.hom f) := isGrpPullback_pullback A f
   obtain ⟨hAB, hgB⟩ :=
     GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback φ A B _ g hB hA hg
@@ -1477,7 +1477,7 @@ namespace GlobalTheory.DualConFT
 theorem hasRep_quot (R : Type) [CommRing R] [Algebra.FiniteType ℤ R] (g : ℕ) (I : Ideal R) :
     ∀ (A : Over (Sp (R ⧸ I))) [GrpObj A], IsAbelianScheme A → SmoothOfRelativeDimension g A.hom →
       HasRep A g (𝟙_ _) := by
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   induction I using WellFoundedGT.induction with
   | _ I ih =>
     intro A _ hA hg
@@ -1696,7 +1696,7 @@ theorem dimLe_of_local : ∀ (S : Scheme.{0}) (A B : Over S), Surjective A.hom �
   refine IsZariskiLocalAtTarget.of_iSup_eq_top (P := @SmoothOfRelativeDimension n) _ hcov fun i => ?_
   by_cases hne : ∃ y, y ∈ t ⁻¹ᵁ V i
   · obtain ⟨y, hy⟩ := hne
-    have : Surjective (pullback.snd A.hom t) := by haveI := hs; infer_instance
+    have : Surjective (pullback.snd A.hom t) := by have := hs; infer_instance
     obtain ⟨x, hx⟩ := (pullback.snd A.hom t).surjective y
     have h1 : SmoothOfRelativeDimension n (pullback.snd A.hom t ∣_ (t ⁻¹ᵁ V i)) :=
       IsZariskiLocalAtTarget.restrict hn _
@@ -1850,7 +1850,7 @@ theorem rep_isDual : ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A] (P : LB (A �
     Rep A (toUnit B) P → ∃ _ : GrpObj B, IsCommMonObj B ∧ IsDual A B P ∧ IsAdditive (swap P) := by
   intro S A B _ P h
   have hP := h.fam.isLB
-  letI inst : CommGrpObj B := CommGrpObj.ofRepresentableBy B _ (famRep h)
+  let inst : CommGrpObj B := CommGrpObj.ofRepresentableBy B _ (famRep h)
   have hmul : ∀ (Y : Over S) (x y : Y ⟶ B), ptCls h Y (x * y) = ptCls h Y x + ptCls h Y y := by
     have hμ : ptCls h (B ⊗ B) μ[B] = ptCls h _ (fst B B) + ptCls h _ (snd B B) :=
       Equiv.ofBijective_apply_symm_apply (ptCls h (B ⊗ B)) (ptCls_bij h _) _
@@ -1929,7 +1929,7 @@ theorem hasRep_affineOpen {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbeli
     (hV : IsAffineOpen V) (g : ℕ) (hg : SmoothOfRelativeDimension g (pullback.snd A.hom V.ι)) :
     HasRep A g (Over.mk V.ι) := by
   let A' : Over (Sp Γ(S, V)) := (Over.pullback hV.fromSpec).obj A
-  letI : GrpObj A' := Functor.grpObjObj
+  let : GrpObj A' := Functor.grpObjObj
   have hpb : IsGrpPullback A' A hV.fromSpec (pullback.fst A.hom hV.fromSpec) :=
     isGrpPullback_pullback A hV.fromSpec
   have hA' : IsAbelianScheme A' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hA hpb
@@ -1940,7 +1940,7 @@ theorem hasRep_affineOpen {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbeli
         (pullback.snd A.hom hV.fromSpec) (pullback.snd A.hom V.ι) hV.isoSpec.inv :=
       IsPullback.of_right (by rw [pullback.lift_fst]; exact IsPullback.of_hasPullback A.hom hV.fromSpec)
         (pullback.lift_snd _ _ _) (IsPullback.of_hasPullback A.hom V.ι)
-    haveI := smoothOfRelativeDimension_isStableUnderBaseChange g
+    have := smoothOfRelativeDimension_isStableUnderBaseChange g
     exact MorphismProperty.of_isPullback sq hg
   have h1 := ((GlobalTheory.T.hasProperSmoothDualRepresentative_grpPullback_iff _ _ hV.fromSpec A A' _ hpb g (𝟙_ _)).1).1 (GlobalTheory.T.abelianScheme_dual_representable_affine_base _ A' g hA' hg')
   refine hasRep_of_iso (Over.isoMk hV.isoSpec.symm ?_) h1
@@ -1963,7 +1963,7 @@ theorem exists_dual : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianSch
     exact
       { comm := hcomm
         smooth := GlobalTheory.CoverGlue.of_isPullback_cover @Smooth hU sq fun i => by
-          haveI := (hGood i).smooth; exact SmoothOfRelativeDimension.smooth (g i) _
+          have := (hGood i).smooth; exact SmoothOfRelativeDimension.smooth (g i) _
         proper := GlobalTheory.CoverGlue.of_isPullback_cover @IsProper hU sq fun i => (hGood i).proper
         geomConnected := GlobalTheory.CoverGlue.of_isPullback_cover @GeometricallyConnected hU sq fun i => (hGood i).conn }
   · have : GeometricallyConnected A.hom := hA.geomConnected

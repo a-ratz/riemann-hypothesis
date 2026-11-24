@@ -126,7 +126,7 @@ private theorem kappa_ne_zero {F : Type} [Field F] [NumberField F] [IsTotallyRea
   have hK0 : M.κ (KK F) = 0 := by
     refine measure_mono_null hcov ?_
     exact (measure_biUnion_null_iff t.countable_toSet).2 fun x hx => hnull _ (hmem k hk x (ht x hx))
-  haveI := M.prob
+  have := M.prob
   have hle : M.κ Set.univ ≤ M.κ (KK F) + M.κ (KK F)ᶜ := by
     rw [← Set.union_compl_self (KK F)]
     exact measure_union_le _ _
@@ -138,7 +138,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.aeZero :
     ∀ a, ∀ k ∈ KK F, u (a, k) = 0 := by
   intro F _ _ _ M u hu h a k hk
   by_contra hne
-  haveI := M.prob
+  have := M.prob
   have hc : ContinuousWithinAt u (Set.univ ×ˢ KK F) (a, k) := hu (a, k) ⟨Set.mem_univ _, hk⟩
   have h1 : {p | u p ≠ 0} ∈ 𝓝[Set.univ ×ˢ KK F] (a, k) := hc.eventually_ne hne
   rw [nhdsWithin_prod_eq, Filter.mem_prod_iff] at h1
@@ -392,7 +392,7 @@ private theorem term_int {N : ℕ} (L : (FractionalIdeal (𝓞 F)⁰ F)ˣ)
     have : 0 ≤ wt4 L N ![0, ((a⁻¹ : (A F)ˣ) : A F), (a : A F), 0] :=
       Finset.prod_nonneg fun _ _ => GlobalTheory.CompanionTheory.EpConvB.adeleWeight_nonneg _ _ _
     positivity
-  rw [Real.enorm_of_nonneg hnn, ENNReal.ofReal_mul (by positivity)]
+  rw [Real.eNorm_of_nonneg hnn, ENNReal.ofReal_mul (by positivity)]
   refine mul_le_mul' le_rfl ?_
   have h := ENNReal.le_tsum (f := fun ξ : Fin 2 → F =>
     ENNReal.ofReal (wt4 L N ![0, ((a⁻¹ : (A F)ˣ) : A F), (a : A F) * rt (ξ 0), (a : A F) * rt (ξ 1)])) ![1, 0]
@@ -457,7 +457,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.expInt :
   choose Bg L hBg0 hBg using hg
   obtain ⟨Bf, hBf0, hBf⟩ := UpperTheory.ConvolutionTheory.R2.G.bdInv F π f hf (gl '' KK F) (hK.image UpperTheory.ConvolutionTheory.R2.continuous_gl)
   obtain ⟨-, -, -, -, hint⟩ := UpperTheory.ConvolutionTheory.R2.conv F E D W M π f hf φ hφ 1
-  haveI := M.prob
+  have := M.prob
 
   let T : Fin n → IdeleGroup F → ℝ := fun i a =>
     (ab a)⁻¹ ^ 2 * wt4 (L i) N ![0, ((a⁻¹ : (A F)ˣ) : A F), (a : A F), 0]
@@ -576,14 +576,14 @@ theorem UpperTheory.ConvolutionTheory.R2.G.factor :
   have hh : ∀ x, h (r x) = H x := by
     intro x
     have hy : ∃ x', r x' = r x := ⟨x, rfl⟩
-    simp only [h, dif_pos hy]
+    simp only [h, dite_eq_left hy]
     exact hf _ _ hy.choose_spec
   refine ⟨h, measurable_of_isClosed fun C hC => ?_, hh⟩
   have himg : MeasurableSet (r '' (H ⁻¹' C)) := key _ (hC.preimage hH)
   have hout : ∀ y, y ∉ Set.range r → h y = 0 := by
     intro y hy
     have hy' : ¬ ∃ x, r x = y := hy
-    simp only [h, dif_neg hy']
+    simp only [h, dite_eq_right hy']
   by_cases h0 : (0 : ℂ) ∈ C
   · have e : h ⁻¹' C = r '' (H ⁻¹' C) ∪ (Set.range r)ᶜ := by
       ext y
@@ -657,7 +657,7 @@ private theorem td_adic {F : Type} [Field F] [NumberField F] (v : HeightOneSpect
 
 private theorem td_fin (F : Type) [Field F] [NumberField F] :
     TotallyDisconnectedSpace (FiniteAdeleRing (𝓞 F) F) := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), TotallyDisconnectedSpace (v.adicCompletion F) :=
+  have : ∀ v : HeightOneSpectrum (𝓞 F), TotallyDisconnectedSpace (v.adicCompletion F) :=
     fun v => td_adic v
   refine ⟨isTotallyDisconnected_of_image (f := fun (x : FiniteAdeleRing (𝓞 F) F) v => x v)
     (continuous_pi fun v => RestrictedProduct.continuous_eval v).continuousOn
@@ -667,7 +667,7 @@ private theorem td_fin (F : Type) [Field F] [NumberField F] :
 private theorem basis_fin (F : Type) [Field F] [NumberField F] :
     TopologicalSpace.IsTopologicalBasis
       {T : Set (Fin 2 → FiniteAdeleRing (𝓞 F) F) | IsCompact T ∧ IsOpen T} := by
-  haveI := td_fin F
+  have := td_fin F
   have hb : TopologicalSpace.IsTopologicalBasis
       {s : Set (Fin 2 → FiniteAdeleRing (𝓞 F) F) | IsClopen s} :=
     loc_compact_Haus_tot_disc_of_zero_dim
@@ -932,7 +932,7 @@ private theorem ae_KK {F : Type} [Field F] [NumberField F] [IsTotallyReal F] (M 
   have e : {p : IdeleGroup F × G1 F | ¬ p.2 ∈ KK F} = Set.univ ×ˢ (KK F)ᶜ := by
     ext p
     simp
-  haveI := M.prob
+  have := M.prob
   rw [e, Meas.ν, Measure.prod_prod, M.supp, mul_zero]
 
 private theorem exists_q {F : Type} [Field F] [NumberField F] [IsTotallyReal F]
@@ -942,9 +942,9 @@ private theorem exists_q {F : Type} [Field F] [NumberField F] [IsTotallyReal F]
     ∃ h : (Fin 2 → A F) → ℂ, Measurable h ∧ ∀ (a : IdeleGroup F), ∀ k ∈ KK F,
       h (UpperTheory.ConvolutionTheory.R2.G.row (mD a * k)) = u (mD a * k) := by
   have hr := cont_row (F := F)
-  haveI : CompactSpace (KK F) := isCompact_iff_compactSpace.1 (UpperTheory.ConvolutionTheory.R2.M.kkCpt F).2
+  have : CompactSpace (KK F) := isCompact_iff_compactSpace.1 (UpperTheory.ConvolutionTheory.R2.M.kkCpt F).2
   have hι : Continuous fun x : IdeleGroup F × KK F => ((x.1, x.2.1) : IdeleGroup F × G1 F) :=
-    continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
+    continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)
   have hmem : ∀ x : IdeleGroup F × KK F,
       ((x.1, x.2.1) : IdeleGroup F × G1 F) ∈ (Set.univ ×ˢ KK F : Set (IdeleGroup F × G1 F)) :=
     fun x => Set.mk_mem_prod (Set.mem_univ _) x.2.2
@@ -1117,7 +1117,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Pp.infDec :
     have h := congrArg (fun h : GL (Fin 2) (Af F) => h.val i j) (TR.pFin_infGL (E := F) g)
     have h1 : ((1 : Matrix (Fin 2) (Fin 2) (A F)) i j).2 = (1 : GL (Fin 2) (Af F)).val i j := by
       by_cases e : i = j
-      · simp only [Matrix.one_apply, e, if_true, Units.val_one]
+      · simp only [Matrix.one_apply, e, ite_true, Units.val_one]
         rfl
       · simp [Matrix.one_apply, e]
     rw [h1]

@@ -61,7 +61,7 @@ theorem exists_nat_mem_mul_integer (c : k) (hc : c ≠ 0) :
   let H : AddSubgroup 𝒪[k] := S.comap (𝒪[k].subtype.toAddMonoidHom)
   have hS : IsOpen (S : Set k) :=
     (Valuation.isOpen_integer (v := valuation k)).preimage (continuous_const.mul continuous_id)
-  have hH : IsOpen (H : Set 𝒪[k]) := hS.preimage continuous_subtype_val
+  have hH : IsOpen (H : Set 𝒪[k]) := hS.preimage continuous_subtypeVal
   let H' : OpenAddSubgroup 𝒪[k] := ⟨H, hH⟩
   have : Finite (𝒪[k] ⧸ H) := AddSubgroup.instFiniteQuotientOfSeparatelyContinuousAddOfCompactSpace H'
   have hne : H.index ≠ 0 := AddSubgroup.index_ne_zero_of_finite
@@ -82,7 +82,7 @@ theorem exists_ne_zero_of_eventually {P : k → Prop} (h : ∀ᶠ s in nhds (0 :
   show valuation k (a * w) < γ
   rw [map_mul, ha]
   calc (γ : ValueGroupWithZero k) * valuation k w < γ * 1 :=
-        mul_lt_mul_of_pos_left hw1 (zero_lt_iff.mpr γ.ne_zero)
+        mul_lt_mul_of_pos_left hw1 (pos_iff_ne_zero.mpr γ.ne_zero)
     _ = γ := mul_one _
 
 end GlobalTheory.SBUnif

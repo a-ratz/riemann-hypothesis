@@ -528,7 +528,7 @@ theorem UpperTheory.discr_CMDatum_eq_prod_places :
   set q : ℝ := ((v (algebraMap O C (p : O)) : NNReal) : ℝ) with hqdef
   have hq0 : 0 < q := by
     rw [hqdef, hpC, NNReal.coe_pos]
-    exact lt_of_le_of_ne (zero_le') (fun h => hpne ((v.zero_iff).mp h.symm))
+    exact lt_of_le_of_ne (zero_le) (fun h => hpne ((v.zero_iff).mp h.symm))
   have hq1 : q ≠ 1 := by
     intro h
     have h' : v (algebraMap O C (p : O)) = 1 := by
@@ -553,7 +553,7 @@ theorem UpperTheory.discr_CMDatum_eq_prod_places :
     intro i
     by_cases h0 : (w i).n = 0
     · have hA : (A i).det = 1 := by
-        haveI : IsEmpty (Fin (w i).n) := by rw [h0]; infer_instance
+        have : IsEmpty (Fin (w i).n) := by rw [h0]; infer_instance
         exact Matrix.det_isEmpty
       have hx1 : x i = 1 := by
         simp only [hxdef, hA, one_pow, map_one, NNReal.coe_one]
@@ -784,7 +784,7 @@ theorem UpperTheory.exists_splitIdempotent_of_splitAt :
         ∀ (O : Type) [CommRing O] [IsDomain O] [CharZero O] [Algebra ℤ_[p] O] (σ : 𝓞 E →+* O),
           (σ ∈ Emb (O := O) e ↔ σ H.rt = algebraMap ℤ_[p] O α) ∧ (σ ∈ Emb (O := O) (1 - e) ↔ σ H.rt = - algebraMap ℤ_[p] O α) := by
   intro p _ E _ _ _ H hs
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨k, hk⟩ : ∃ k : ℕ, H.d + 1 = 8 * k := ⟨(H.d + 1) / 8, by have := H.d_mod; omega⟩
   obtain ⟨β, γ, hβ, hγ⟩ := UpperTheory.Depth.SplitIdem.exists_root p H.d k hk hs
   have hw : H.w0 * H.w0 = H.w0 - 2 * k := by
@@ -814,7 +814,7 @@ theorem UpperTheory.exists_splitIdempotent_of_splitAt :
   have hsum : ι γ * (j H.w0 - ι β) + sig p (𝓞 E) (ι γ * (j H.w0 - ι β)) = 1 := by
     rw [map_mul, map_sub, hsι, hsι, hsj]
     linear_combination hγ'
-  haveI : Nontrivial (ℤ_[p] ⊗[ℤ] 𝓞 E) := Module.FaithfullyFlat.rTensor_nontrivial ℤ (𝓞 E) ℤ_[p]
+  have : Nontrivial (ℤ_[p] ⊗[ℤ] 𝓞 E) := Module.FaithfullyFlat.rTensor_nontrivial ℤ (𝓞 E) ℤ_[p]
   refine ⟨ι γ * (j H.w0 - ι β), 1 - 2 * β, ?_, ?_, ?_, hsum, ?_, ?_⟩
   · linear_combination (ι γ) ^ 2 * hw' - (ι γ) ^ 2 * hβ' + ι γ * (j H.w0 - ι β) * hγ'
   · intro h
@@ -844,7 +844,7 @@ theorem UpperTheory.exists_splitIdempotent_of_splitAt :
     have ha : algebraMap ℤ_[p] O (1 - 2 * β) = 1 - 2 * algebraMap ℤ_[p] O β := by
       simp only [map_mul, map_sub, map_ofNat, map_one]
     have h2 : (2 : O) ≠ 0 := two_ne_zero
-    simp only [Emb, Set.mem_setOf_eq]
+    simp only [Emb, Set.mem_ofPred_eq]
     rw [map_sub (tauExt σ) 1, map_one, hτ, ha]
     set g := algebraMap ℤ_[p] O γ
     set b := algebraMap ℤ_[p] O β
@@ -900,13 +900,13 @@ private theorem exists_equiv (E : Type) [Field E] [NumberField E] (C : Type) [Fi
       exact this
     have h2 : σ.toRingHom = τ.toRingHom :=
       IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) h1
-    exact AlgHom.coe_ringHom_injective h2
+    exact AlgHom.toRingHom_injective h2
   have hFs : Function.Surjective F := by
     intro τ
     let g : 𝓞 E →+* C := (algebraMap O C).comp τ
     have hg : Function.Injective g := by
       rw [RingHom.injective_iff_ker_eq_bot]
-      apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+      apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
       change Ideal.comap (algebraMap ℤ (𝓞 E)) (RingHom.ker g) = ⊥
       rw [RingHom.comap_ker]
       have : g.comp (algebraMap ℤ (𝓞 E)) = Int.castRingHom C := RingHom.ext_int _ _
@@ -1026,17 +1026,17 @@ theorem UpperTheory.splitPlaces_discriminantDepth_of_splitAt :
     ∀ (p : ℕ) [Fact p.Prime] (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E), SplitAt H.d p →
       ∀ f : ℕ, Module.finrank ℚ E = 2 * f → SplitPlaces p H f ((padicValInt p (NumberField.discr E) : ℝ) / (Module.finrank ℚ E : ℝ)) := by
   intro p _ E _ _ _ H hsp f hf
-  letI := H.starRing
+  let := H.starRing
   intro C _ _ _ v O _ _ hv _ _ τO hinj hrt
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI : CharZero O := (algebraMap O C).charZero
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : CharZero O := (algebraMap O C).charZero
   obtain ⟨τ₀, hτ₀⟩ := exists_inPsi H
   have hpos : 0 < Module.finrank ℚ E := Module.finrank_pos
   have hsq : ∀ σ : 𝓞 E →+* O, σ H.rt ^ 2 = -(H.d : O) := fun σ => by
     rw [← map_pow, H.rt_sq]; simp
   have hsurj : Function.Surjective τO := by
     have hc := (UpperTheory.trace_form_decomposition_CMDatum E p C v O hv 0 (by simp)).2
-    haveI : Finite (𝓞 E →+* O) := Nat.finite_of_card_ne_zero (by omega)
+    have : Finite (𝓞 E →+* O) := Nat.finite_of_card_ne_zero (by omega)
     refine (hinj.bijective_of_nat_card_le ?_).2
     rw [hc, Nat.card_eq_fintype_card, Embeddings.card E ℂ]
   have hpsi : ∀ τ, InPsi H τ ↔ τO τ H.rt = τO τ₀ H.rt := fun τ => by
@@ -1051,7 +1051,7 @@ theorem UpperTheory.splitPlaces_discriminantDepth_of_splitAt :
     rw [h3] at h4
     have : (H.d : O) = 0 := by linear_combination h4
     exact H.d_prime.ne_zero (by exact_mod_cast this)
-  haveI : IsNoetherianRing (ℤ_[p] ⊗[ℤ] 𝓞 E) :=
+  have : IsNoetherianRing (ℤ_[p] ⊗[ℤ] 𝓞 E) :=
     IsNoetherianRing.of_finite ℤ_[p] (ℤ_[p] ⊗[ℤ] 𝓞 E)
   obtain ⟨e, he, hs, hp, hm⟩ : ∃ e : ℤ_[p] ⊗[ℤ] 𝓞 E, e * e = e ∧ e + sig p (𝓞 E) e = 1 ∧
       (∀ σ : 𝓞 E →+* O, σ ∈ Emb (O := O) e ↔ σ H.rt = τO τ₀ H.rt) ∧

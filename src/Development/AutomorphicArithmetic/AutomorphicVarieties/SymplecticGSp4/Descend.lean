@@ -240,7 +240,7 @@ private theorem ns_le {M : Type} [Monoid M] (f : G ℚ Ω →* M) (hc : IsClosed
   refine Subgroup.topologicalClosure_minimal _ ?_ hc
   refine Subgroup.normalClosure_le_normal ?_
   intro g hg
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff, exists_prop] at hg
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff, exists_prop] at hg
   obtain ⟨v, hv, A, hA, hgA⟩ := hg
   have hAw : Raw.Away D.S A := by
     intro p hp hlt
@@ -263,7 +263,7 @@ private theorem toGS_ine {A : ValuationSubring Ω} (hA : Raw.Away D.S A) {g : G 
       exact hA p hp ((val_iff hv p).mpr hpv)
     apply Subgroup.le_topologicalClosure
     apply Subgroup.subset_normalClosure
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff, exists_prop]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff, exists_prop]
     exact ⟨v, hvS, A, hv, hg⟩
 
 omit [CharZero Ω] [IsAlgClosure ℚ Ω] in

@@ -326,7 +326,7 @@ def restrictMap (W : Submodule E S.V) (τ : InfinitePlace E) :
 theorem restrictMap_injective (W : Submodule E S.V) (τ : InfinitePlace E) :
     Function.Injective (S.restrictMap W τ) := by
   change Function.Injective (W.subtype.baseChange (CAt τ.embedding))
-  rw [LinearMap.baseChange_eq_ltensor]
+  rw [LinearMap.baseChange_eq_lTensor]
   exact Module.Flat.lTensor_preserves_injective_linearMap _ W.injective_subtype
 
 def restrict (W : Submodule E S.V) : MetSpace E where
@@ -518,7 +518,7 @@ theorem mem_stdLat_iff (y : Fin n → E) :
   · intro h
     refine ⟨fun i => (h i).choose, funext fun j => ?_⟩
     simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, Algebra.smul_def, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact (h j).choose_spec
 
 end Standard
@@ -961,7 +961,7 @@ theorem proof : LineIdealDual.Statement := by
         rw [← hKid j k, map_sum, Finset.mul_sum]
         exact Finset.sum_congr rfl fun i _ ↦ by rw [map_mul]; ring
       simp only [e, apply_ite (algebraMap K K'), map_one, map_zero, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     choose y hy using h
     rw [hid' (a • v)]
     refine Submodule.sum_mem _ fun i _ ↦ ?_
@@ -1093,7 +1093,7 @@ theorem dualPointCoord_ne_zero {K : Type} [Field K] [NumberField K] {i : ℕ} (F
   simp only [Λ, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.zero_apply,
     zsmul_eq_mul, Pi.mul_apply, Pi.intCast_apply, Pi.single_apply, mul_ite, mul_one, mul_zero,
     apply_ite (algebraMap K K'), map_intCast, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at this
+    Finset.mem_univ, ite_true] at this
   rcases mul_eq_zero.mp this with h | h
   · apply hD
     have h' : algebraMap K K' (D : K) = 0 := by rw [map_intCast]; exact h

@@ -57,7 +57,7 @@ private theorem flo_sub_mem {O R : Type} [CommRing O] [IsLocalRing O] [Finite (R
     [Algebra O R] [IsCO O R] (P : Ideal R) (a c : R) (h : res O R a = res O R c) (ha : IsUnit a)
     (hp : a ^ (Nat.card (ResidueField O) - 1) - c ^ (Nat.card (ResidueField O) - 1) ∈ P) : a - c ∈ P := by
   classical
-  haveI := Fintype.ofFinite (ResidueField O)
+  have := Fintype.ofFinite (ResidueField O)
   set q := Nat.card (ResidueField O) with hq
   have hq2 : 2 ≤ q := by
     rw [hq, Nat.card_eq_fintype_card]; exact Fintype.one_lt_card
@@ -113,12 +113,12 @@ private theorem flo_lam {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {O : Type} [Co
     (hψ : ∀ v i, ∀ g ∈ F.Iv v, ((p.ψ v i g : Rˣ) : R) ^ (Nat.card (ResidueField O) - 1) - 1 ∈ P) :
     ∀ x ∈ maximalIdeal Λ.Λ, Λ.toPair p x ∈ P := by
   intro x hx
-  haveI hnt : Nontrivial (R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP
-  haveI hco : IsCO O (R ⧸ P) :=
+  have hnt : Nontrivial (R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP
+  have hco : IsCO O (R ⧸ P) :=
     co_quot O R (R ⧸ P) (Ideal.Quotient.mkₐ O P) (Ideal.Quotient.mkₐ_surjective O P)
   have hu : ∀ z : ResidueField O, z ≠ 0 → z ^ (Nat.card (ResidueField O) - 1) = 1 := by
     intro z hz
-    haveI := Fintype.ofFinite (ResidueField O)
+    have := Fintype.ofFinite (ResidueField O)
     rw [Nat.card_eq_fintype_card]
     exact FiniteField.pow_card_sub_one_eq_one z hz
   have hzero : ∀ a ∈ maximalIdeal O, (Algebra.ofId O (R ⧸ P)) a = 0 := by
@@ -203,9 +203,9 @@ private theorem flo_max {A R : Type} [CommRing A] [IsLocalRing A] [CommRing R] (
       rfl
     rw [e]
     exact (RingHom.Finite.of_surjective _ (Ideal.Quotient.factor_surjective hJ)).comp hf
-  haveI hnt : Nontrivial (R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 ‹P.IsPrime›.ne_top
-  haveI hdom : IsDomain (R ⧸ P) := Ideal.Quotient.isDomain P
-  haveI : (⊥ : Ideal (R ⧸ P)).IsPrime := Ideal.isPrime_bot
+  have hnt : Nontrivial (R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 ‹P.IsPrime›.ne_top
+  have hdom : IsDomain (R ⧸ P) := Ideal.Quotient.isDomain P
+  have : (⊥ : Ideal (R ⧸ P)).IsPrime := Ideal.isPrime_bot
   have hc : Ideal.comap ((Ideal.Quotient.mk P).comp f) ⊥ = maximalIdeal A := by
     have h1 : Ideal.comap ((Ideal.Quotient.mk P).comp f) ⊥ = Ideal.comap f P := by
       rw [← Ideal.comap_comap, ← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
@@ -217,7 +217,7 @@ private theorem flo_max {A R : Type} [CommRing A] [IsLocalRing A] [CommRing R] (
       rw [Ideal.mem_comap, map_one] at h1'
       exact ‹P.IsPrime›.ne_top ((Ideal.eq_top_iff_one P).2 h1')
     · exact h
-  have hb := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' _ hfin.to_isIntegral
+  have hb := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap _ hfin.to_isIntegral
     (⊥ : Ideal (R ⧸ P)) (by rw [hc]; exact IsLocalRing.maximalIdeal.isMaximal A)
   have hm := Ideal.comap_isMaximal_of_surjective (Ideal.Quotient.mk P)
     Ideal.Quotient.mk_surjective (K := ⊥)
@@ -226,8 +226,8 @@ private theorem flo_max {A R : Type} [CommRing A] [IsLocalRing A] [CommRing R] (
 theorem UpperTheory.V.Pr.finLamOf :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (n : ℕ) (T : UpperTheory.V.Pr.Setup F n), T.FinLamOf := by
   intro l _ O _ _ _ _ _ F n T Φ hΦ hsurj Λ J hfin
-  haveI : Finite (ResidueField O) := Fr.IsCoef.fin (l := l)
-  haveI : IsLocalRing ↥T.S.B := IsLocalRing.of_surjective' (Φ : T.B.B →+* ↥T.S.B) hsurj
+  have : Finite (ResidueField O) := Fr.IsCoef.fin (l := l)
+  have : IsLocalRing ↥T.S.B := IsLocalRing.of_surjective' (Φ : T.B.B →+* ↥T.S.B) hsurj
   show T.S.mB ≤ (Ideal.map Φ J ⊔ T.S.lamId).radical
   rw [Ideal.radical_eq_sInf]
   refine le_sInf ?_
@@ -242,7 +242,7 @@ theorem UpperTheory.V.Pr.finLamOf :
     exact hOQ (Ideal.mem_map_of_mem _ ha)
   have hu : ∀ u : (ResidueField O)ˣ, u ^ (Nat.card (ResidueField O) - 1) = 1 := by
     intro u
-    haveI := Fintype.ofFinite (ResidueField O)
+    have := Fintype.ofFinite (ResidueField O)
     apply Units.ext
     rw [Units.val_pow_eq_pow_val, Units.val_one, Nat.card_eq_fintype_card]
     exact FiniteField.pow_card_sub_one_eq_one _ u.ne_zero
@@ -273,7 +273,7 @@ theorem UpperTheory.V.Pr.finLamOf :
       rw [← IsLocalRing.residue_eq_zero_iff, map_sub, map_pow, map_one, sub_eq_zero]
       have hne : IsLocalRing.residue O (T.K.κ ((T.G.φ v) g) : O) ≠ 0 :=
         ((T.K.κ ((T.G.φ v) g)).isUnit.map (IsLocalRing.residue O)).ne_zero
-      haveI := Fintype.ofFinite (ResidueField O)
+      have := Fintype.ofFinite (ResidueField O)
       rw [Nat.card_eq_fintype_card]
       exact FiniteField.pow_card_sub_one_eq_one _ hne
     rw [Ideal.mem_comap, map_sub, map_pow, map_one, hx, mul_pow, e1]
@@ -282,7 +282,7 @@ theorem UpperTheory.V.Pr.finLamOf :
     exact Q.add_mem (Q.mul_mem_right _ hA) hB
   have hPt : Ideal.comap Φ Q ≠ ⊤ := (Ideal.comap_isPrime Φ Q).ne_top
   have hlam := flo_lam Λ T.B.u (Ideal.comap Φ Q) hPt hO hψ
-  haveI : (Ideal.comap Φ Q).IsPrime := Ideal.comap_isPrime Φ Q
+  have : (Ideal.comap Φ Q).IsPrime := Ideal.comap_isPrime Φ Q
   have hPmax : (Ideal.comap Φ Q).IsMaximal :=
     flo_max (Λ.toPair T.B.u : Λ.Λ →+* T.B.B) J (Ideal.comap Φ Q) hJP hfin (fun x hx => hlam x hx)
   have hQle : Q ≤ maximalIdeal ↥T.S.B := IsLocalRing.le_maximalIdeal hQ.ne_top

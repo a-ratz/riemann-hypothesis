@@ -152,7 +152,7 @@ theorem exists_split [IsSemisimpleModule k[X] M] (T : Submodule k[X] M) :
 
 theorem finrank_lt_of_split {S T : Submodule k[X] M} [IsSimpleModule k[X] S]
     (e : M ≃ₗ[k[X]] S × T) : Module.finrank k T < Module.finrank k M := by
-  haveI : Nontrivial S := IsSimpleModule.nontrivial k[X] S
+  have : Nontrivial S := IsSimpleModule.nontrivial k[X] S
   rw [(e.restrictScalars k).finrank_eq, Module.finrank_prod]
   have : 0 < Module.finrank k S := Module.finrank_pos
   omega
@@ -197,7 +197,7 @@ theorem equiv_of_chi_eq {k : Type} [Field k]
   · have h : Module.finrank k N = 0 := by
       rw [← chi_natDegree, ← hc, chi_natDegree]
       exact Module.finrank_zero_of_subsingleton
-    haveI : Subsingleton N := Module.finrank_zero_iff.mp h
+    have : Subsingleton N := Module.finrank_zero_iff.mp h
     exact ⟨LinearEquiv.ofSubsingleton _ _⟩
   obtain ⟨S, hS⟩ := IsSemisimpleModule.exists_simple_submodule k[X] M
   obtain ⟨T, ⟨e⟩⟩ := exists_split S
@@ -228,8 +228,8 @@ theorem conj_of_charpoly_eq {k V W : Type} [Field k] [AddCommGroup V] [Module k 
     [FiniteDimensional k V] [AddCommGroup W] [Module k W] [FiniteDimensional k W]
     (f : Module.End k V) (g : Module.End k W) (hf : f.IsSemisimple) (hg : g.IsSemisimple)
     (h : f.charpoly = g.charpoly) : ∃ e : V ≃ₗ[k] W, ∀ v, e (f v) = g (e v) := by
-  haveI : IsSemisimpleModule k[X] (Module.AEval' f) := hf
-  haveI : IsSemisimpleModule k[X] (Module.AEval' g) := hg
+  have : IsSemisimpleModule k[X] (Module.AEval' f) := hf
+  have : IsSemisimpleModule k[X] (Module.AEval' g) := hg
   obtain ⟨e⟩ := equiv_of_chi_eq (k := k) _ (Module.AEval' f) (Module.AEval' g) rfl
     (by rw [chi_aeval, chi_aeval, h])
   refine ⟨(Module.AEval'.of f).trans ((e.restrictScalars k).trans (Module.AEval'.of g).symm),
@@ -399,18 +399,18 @@ open TensorProduct Module
 theorem descent (A S M : Type) [CommRing A] [CommRing S] [Algebra A S] [Module.FaithfullyFlat A S]
     [Finite (MaximalSpectrum A)] [AddCommGroup M] [Module A M] [Module.Finite A M] (r : ℕ)
     (b : Basis (Fin r) S (S ⊗[A] M)) : Nonempty (Basis (Fin r) A M) := by
-  haveI : Module.Free S (S ⊗[A] M) := Module.Free.of_basis b
-  haveI : Module.Flat A M := Module.Flat.of_flat_tensorProduct A M S
+  have : Module.Free S (S ⊗[A] M) := Module.Free.of_basis b
+  have : Module.Flat A M := Module.Flat.of_flat_tensorProduct A M S
   have hrk : ∀ p : PrimeSpectrum A, rankAtStalk M p = r := by
     intro p
     obtain ⟨q, rfl⟩ := PrimeSpectrum.comap_surjective_of_faithfullyFlat (A := A) (B := S) p
-    haveI : Nontrivial S := q.nontrivial
+    have : Nontrivial S := q.nontrivial
     rw [← rankAtStalk_baseChange, rankAtStalk_eq_finrank_of_free]
     simp [finrank_eq_card_basis b]
   apply nonempty_basis_of_flat_of_finrank_eq A M r
   intro P
-  haveI := P.2
-  letI := Ideal.Quotient.field P.1
+  have := P.2
+  let := Ideal.Quotient.field P.1
   have h := rankAtStalk_baseChange (R := A) (M := M) (S := A ⧸ P.1) ⟨⊥, Ideal.isPrime_bot⟩
   rw [hrk, rankAtStalk_eq_finrank_of_free] at h
   simpa using h
@@ -454,9 +454,9 @@ theorem abstract_descent (F k A S M N ι : Type) [Field F] [Field k] [CommRing A
     (hsp : Submodule.span k (Set.range fun q : Fin r × ι => act q.2 (x q.1)) = ⊤) :
     ∃ x0 : Fin r → M, LinearIndependent F (fun q : Fin r × ι => b q.2 • x0 q.1) ∧
       Submodule.span F (Set.range fun q : Fin r × ι => b q.2 • x0 q.1) = ⊤ := by
-  haveI : Module.Finite F A := Module.Finite.of_basis b
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite F A
-  haveI : Module.Finite A M := Module.Finite.of_restrictScalars_finite F A M
+  have : Module.Finite F A := Module.Finite.of_basis b
+  have : IsArtinianRing A := IsArtinianRing.of_finite F A
+  have : Module.Finite A M := Module.Finite.of_restrictScalars_finite F A M
   have ibc : IsBaseChange k (IsScalarTower.toAlgHom F A S).toLinearMap := Algebra.IsPushout.out
   let c : Basis ι k S := ibc.basis b
   have hc : ∀ i, c i = algebraMap A S (b i) := fun i => ibc.basis_apply b i
@@ -505,11 +505,11 @@ theorem matrix_descent (F k A n ι : Type) [Field F] [Field k] [CommRing A]
       ((φ (b q.2)).map (algebraMap F k)).mulVec (x q.1)) = ⊤) :
     ∃ x0 : Fin r → n → F, LinearIndependent F (fun q : Fin r × ι => (φ (b q.2)).mulVec (x0 q.1)) ∧
       Submodule.span F (Set.range fun q : Fin r × ι => (φ (b q.2)).mulVec (x0 q.1)) = ⊤ := by
-  letI : Module A (n → F) := Module.compHom (n → F) φ.toRingHom
+  let : Module A (n → F) := Module.compHom (n → F) φ.toRingHom
   have hs : ∀ (a : A) (m : n → F), a • m = (φ a).mulVec m := fun _ _ => rfl
-  haveI : IsScalarTower F A (n → F) := ⟨fun c a m => by
+  have : IsScalarTower F A (n → F) := ⟨fun c a m => by
     rw [hs, hs, map_smul, Matrix.smul_mulVec]⟩
-  haveI : Algebra.IsPushout F k A (A ⊗[F] k) := Algebra.IsPushout.symm inferInstance
+  have : Algebra.IsPushout F k A (A ⊗[F] k) := Algebra.IsPushout.symm inferInstance
   exact abstract_descent F k A (A ⊗[F] k) (n → F) (n → k) ι b
     (TensorProduct.piScalarRight F k k n)
     (fun i => ((φ (b i)).map (algebraMap F k)).mulVecLin)
@@ -563,7 +563,7 @@ end PositivityTheory.Xgn.FreeNakayamaDescent
 
 theorem PositivityTheory.Xgn.free_module_nakayama_descent : ∀ (E : Type) [Field E] [NumberField E] (R k : Type) [CommRing R] [IsLocalRing R] [Field k] (f : R →+* k) [IsLocalHom f] (n : Type) [Fintype n] [DecidableEq n] (r : ℕ) (ρ : 𝓞 E →+* Matrix n n R), (∃ x : Fin r → n → k, LinearIndependent k (fun q : Fin r × Module.Free.ChooseBasisIndex ℤ (𝓞 E) => ((ρ (RingOfIntegers.basis E q.2)).map f).mulVec (x q.1)) ∧ Submodule.span k (Set.range fun q : Fin r × Module.Free.ChooseBasisIndex ℤ (𝓞 E) => ((ρ (RingOfIntegers.basis E q.2)).map f).mulVec (x q.1)) = ⊤) → ∃ x : Fin r → n → R, LinearIndependent R (fun q : Fin r × Module.Free.ChooseBasisIndex ℤ (𝓞 E) => (ρ (RingOfIntegers.basis E q.2)).mulVec (x q.1)) ∧ Submodule.span R (Set.range fun q : Fin r × Module.Free.ChooseBasisIndex ℤ (𝓞 E) => (ρ (RingOfIntegers.basis E q.2)).mulVec (x q.1)) = ⊤ := by
   intro E _ _ R k _ _ _ f _ n _ _ r ρ ⟨x, hli, hsp⟩
-  letI : Algebra (IsLocalRing.ResidueField R) k := (IsLocalRing.ResidueField.lift f).toAlgebra
+  let : Algebra (IsLocalRing.ResidueField R) k := (IsLocalRing.ResidueField.lift f).toAlgebra
   let ρ0 : 𝓞 E →+* Matrix n n (IsLocalRing.ResidueField R) :=
     (IsLocalRing.residue R).mapMatrix.comp ρ
   have hb : ∀ a, ρ0 a = (ρ a).map (IsLocalRing.residue R) := fun _ => rfl

@@ -146,7 +146,7 @@ theorem _root_.GlobalTheory.exists_herm_coord_of_datum :
   have hherm : ∀ x y, h0 y x = - σ (h0 x y) := fun x y => huniq _ _ fun a => by
     rw [hh0, hanti, ← hbb a, ← D.adj, Int.cast_neg, ← hh0, hbb, hbar, ← htr (σ a * h0 x y),
       map_mul, hσσ, mul_neg, map_neg]
-  haveI := D.fin
+  have := D.fin
   have hrk : Module.finrank (𝓞 E) D.La = r := hr ▸ D.rank
   obtain ⟨l, hl⟩ := exists_linearIndependent_of_le_finrank (R := 𝓞 E) (M := D.La) hrk.ge
   have hmax : ∀ x : D.La, ∃ t : 𝓞 E, t ≠ 0 ∧ ∃ c : Fin r → 𝓞 E, ∑ i, c i • l i = t • x := by

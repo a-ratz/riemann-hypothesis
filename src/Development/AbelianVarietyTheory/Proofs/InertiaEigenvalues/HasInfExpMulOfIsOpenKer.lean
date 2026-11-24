@@ -72,7 +72,7 @@ variable {D : D7}
 
 theorem eq_one_of_isOpen_ker {θ : InfFam D} (hθ : IsInfFam θ) {χ : (AE D)ˣ →* Circle}
     (hχ : IsOpen (χ.ker : Set (AE D)ˣ)) (x : (AE D)ˣ) (hx : finPart D (x : AE D) = 1) : χ x = 1 := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
   obtain ⟨σ, hσ⟩ := GlobalTheory.FockCompare.exists_chart hθ
   let a : (D.what₂.Tau → ℂ) → AE D := fun z => 1 + σ fun τ => Complex.exp (z τ) - 1
   have a1 : ∀ z, finPart D (a z) = 1 := fun z => by

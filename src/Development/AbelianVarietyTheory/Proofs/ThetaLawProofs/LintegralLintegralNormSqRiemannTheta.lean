@@ -196,7 +196,7 @@ theorem norm_sq_riemannThetaTerm_mul_exp {g : ℕ} {τ : Matrix (Fin g) (Fin g) 
     simp [mulVec, dotProduct]
   have e2 : y + (fun i => (n i : ℝ)) + a = y + fun i => (n i : ℝ) + a i := by
     rw [add_assoc]; rfl
-  rw [norm_riemannThetaTerm, e1, e2, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [norm_riemannThetaTerm, e1, e2, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 1
   generalize (fun i => (n i : ℝ) + a i) = u
   have e3 : y ⬝ᵥ τ.map Complex.im *ᵥ u = u ⬝ᵥ τ.map Complex.im *ᵥ y := by

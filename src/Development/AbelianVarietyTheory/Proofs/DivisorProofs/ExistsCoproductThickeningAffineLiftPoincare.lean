@@ -381,11 +381,11 @@ theorem lie_pow_smul_mDR (hv : ∀ b, v (α b) = 0) (e : ℕ → P) (he0 : v (e 
   | succ k ih =>
     rw [pow_succ', Module.End.mul_apply, ih]
     by_cases hk : k ≤ n
-    · rw [if_pos hk, lie_smul_mDR v h hv]
+    · rw [ite_eq_left hk, lie_smul_mDR v h hv]
       by_cases hk' : k + 1 ≤ n
-      · rw [if_pos hk', show n - k = (n - (k + 1)) + 1 by omega, hs]
-      · rw [if_neg hk', show n - k = 0 by omega, he0]
-    · rw [if_neg hk, if_neg (by omega), zero_smul, map_zero]
+      · rw [ite_eq_left hk', show n - k = (n - (k + 1)) + 1 by omega, hs]
+      · rw [ite_eq_right hk', show n - k = 0 by omega, he0]
+    · rw [ite_eq_right hk, ite_eq_right (by omega), zero_smul, map_zero]
 
 end Gen
 
@@ -393,7 +393,7 @@ theorem alt_sum_choose_succ (n : ℕ) :
     ∑ k ∈ Finset.range (n + 1), (-1 : ℤ) ^ k * ((n + 1).choose (k + 1) : ℤ) = 1 := by
   have h0 := Int.alternating_sum_range_choose (n := n + 1)
   rw [Finset.sum_range_succ'] at h0
-  simp only [pow_succ, Nat.choose_zero_right, pow_zero, Nat.cast_one, mul_one, if_neg (Nat.succ_ne_zero n)] at h0
+  simp only [pow_succ, Nat.choose_zero_right, pow_zero, Nat.cast_one, mul_one, ite_eq_right (Nat.succ_ne_zero n)] at h0
   have : ∑ k ∈ Finset.range (n + 1), (-1 : ℤ) ^ k * -1 * ((n + 1).choose (k + 1) : ℤ) =
       -∑ k ∈ Finset.range (n + 1), (-1 : ℤ) ^ k * ((n + 1).choose (k + 1) : ℤ) := by
     rw [← Finset.sum_neg_distrib]; exact Finset.sum_congr rfl fun _ _ ↦ by ring
@@ -1051,8 +1051,8 @@ theorem exists_isFree_one_qAt : ∀ (R : Type) [CommRing R] (I : Ideal R) (κ : 
   have hsub : η.IsSubDPIdeal K := by rw [hK]; exact GlobalTheory.PDA.fil_isSubDPIdeal Q.P (Q.ext T.J) η (n + 1) (by omega)
   obtain ⟨δ', hδ', huniv⟩ := (GlobalTheory.DPQuot.quotient_subDPIdeal Q.P (Q.ext T.J) η).1 K hsub
   have hKle : K ≤ Q.ext T.J := by rw [hK]; exact (hfil.2.2.1 1 (n + 1) (by omega)).trans hfil.2.1.le
-  letI : Algebra R Q.P := ((algebraMap T.B Q.P).comp (algebraMap R T.B)).toAlgebra
-  haveI : IsScalarTower R T.B Q.P := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let : Algebra R Q.P := ((algebraMap T.B Q.P).comp (algebraMap R T.B)).toAlgebra
+  have : IsScalarTower R T.B Q.P := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   have hε1 : ∀ b, ε (algebraMap T.B Q.P b) = b := fun b ↦ by simp
   have hεJ : ∀ p : Q.P, ε p ∈ T.J ↔ p ∈ Q.ext T.J := by
     intro p
@@ -1390,7 +1390,7 @@ theorem exists_cop : ∀ (D : Data) (Λ : Lift D) (n : ℕ) (U : AffOp D.X) (T :
         IsCop (n + 1) (u ≫ q) r := by
   intro D Λ n U T hT hU
   obtain ⟨h1, h2, h3, -⟩ := _root_.GlobalTheory.PDForm.Lift.hom_spec D Λ
-  haveI : Algebra.Smooth D.R (Sec D.s U.unop.1) := (_root_.GlobalTheory.SmoothLift.Data.smooth_mono_inf D).1 U.unop
+  have : Algebra.Smooth D.R (Sec D.s U.unop.1) := (_root_.GlobalTheory.SmoothLift.Data.smooth_mono_inf D).1 U.unop
   obtain ⟨m, pres, hpres⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1
     (inferInstance : Algebra.FiniteType D.R (Sec D.s U.unop.1))
   obtain ⟨g, hgx, hgR⟩ := h2 U T hU
@@ -1466,7 +1466,7 @@ theorem exists_cop : ∀ (D : Data) (Λ : Lift D) (n : ℕ) (U : AffOp D.X) (T :
     have e : g'.φ.comp ψ = b.φ.comp ((Λ.e U).toAlgHom.comp pres) := by
       apply MvPolynomial.algHom_ext
       intro i
-      simp only [AlgHom.comp_apply, hψX, map_add (f := _), AlgEquiv.coe_toAlgHom, AlgHom.coe_coe]
+      simp only [AlgHom.comp_apply, hψX, map_add (f := _), AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass]
       rw [hg'τ i, ← Thick.comp_φ, hg'u]
       simp only [c]
       abel
@@ -1542,7 +1542,7 @@ theorem exists_cop_qAt : ∀ (D : Data) (Λ : Lift D) (n : ℕ) (U : AffOp D.X) 
   obtain ⟨F, G, u, q, r, hu, hF, hq, hJ, hc⟩ := _root_.GlobalTheory.CopEx.exists_cop D Λ n U T hT hU
   obtain ⟨h1, -, -, -⟩ := _root_.GlobalTheory.PDForm.Lift.hom_spec D Λ
   refine ⟨G, u ≫ q, r, hc, ?_⟩
-  haveI := D.sec_smooth U.unop
+  have := D.sec_smooth U.unop
   have hker : RingHom.ker (q.φ : F.B →+* G.B) ≤ F.J := fun b hb ↦ hJ b (by
     rw [show q.φ b = 0 from hb]; exact G.J.zero_mem)
   have hnil : IsNilpotent (RingHom.ker (q.φ : F.B →+* G.B)) := by
@@ -1561,7 +1561,7 @@ theorem exists_cop_qAt : ∀ (D : Data) (Λ : Lift D) (n : ℕ) (U : AffOp D.X) 
     · obtain ⟨c, rfl⟩ := G.surj c
       obtain ⟨b, rfl⟩ := hq c
       exact ⟨F.π b, q.comm b⟩
-  haveI : IsIso (spMap q.φ₀) :=
+  have : IsIso (spMap q.φ₀) :=
     (inferInstance : IsIso (Spec.map (RingEquiv.ofBijective q.φ₀ hbij).toCommRingCatIso.hom))
   have hy := (h1 U G y).2 ⟨r, fun _ ↦ rfl⟩
   have hpt : spMap (F.π.comp (y' : Sec D.s U.unop.1 →+* F.B)) ≫ affPt D.s U.unop = F.x ≫ D.i := by

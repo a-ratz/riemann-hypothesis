@@ -179,16 +179,16 @@ namespace GlobalTheory.IdemAdj
 
 theorem typeClosure_of_intertwine : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (π : CuspSub E a) (W : Type) [AddCommGroup W] [Module ℂ W] (ρ₀ : Representation ℂ (Kinf E a) W) (U : Submodule ℂ π.V), FiniteDimensional ℂ U → (∀ k, ∀ u ∈ U, cptOn π k u ∈ U) → ∀ f : π.V →ₗ[ℂ] π.V, (∀ k, ∀ u ∈ U, f (cptOn π k u) = cptOn π k (f u)) → ∀ u ∈ U, (∀ g, (fun k : Kinf E a => (cptRep E a k u.1).1 g) ∈ AutFin.coeffSpan ρ₀) → ∀ g, (fun k : Kinf E a => (cptRep E a k (f u).1).1 g) ∈ AutFin.coeffSpan ρ₀ := by
   intro E _ _ _ a π W _ _ ρ₀ U hU hst f hf u hu hcoef g
-  haveI := hU
+  have := hU
   let w : Kinf E a → U := fun k => ⟨cptOn π k u, hst k u hu⟩
   let A : (U →ₗ[ℂ] ℂ) →ₗ[ℂ] (Kinf E a → ℂ) :=
     { toFun := fun ℓ k => ℓ (w k), map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
   let ev : GA E a → (U →ₗ[ℂ] ℂ) := fun h =>
     (LinearMap.proj h).comp ((Sm E a).subtype.comp (π.V.subtype.comp U.subtype))
   have hspan : Submodule.span ℂ (Set.range ev) = ⊤ := by
-    haveI hfr : Module.Free ℂ ((U →ₗ[ℂ] ℂ) ⧸ Submodule.span ℂ (Set.range ev)) :=
+    have hfr : Module.Free ℂ ((U →ₗ[ℂ] ℂ) ⧸ Submodule.span ℂ (Set.range ev)) :=
       Module.Free.of_divisionRing ℂ _
-    haveI : Module.Projective ℂ ((U →ₗ[ℂ] ℂ) ⧸ Submodule.span ℂ (Set.range ev)) :=
+    have : Module.Projective ℂ ((U →ₗ[ℂ] ℂ) ⧸ Submodule.span ℂ (Set.range ev)) :=
       @Module.Projective.of_free _ _ _ _ _ hfr
     refine Submodule.span_eq_top_of_ne_zero fun z hz => ?_
     by_contra hc
@@ -326,7 +326,7 @@ namespace TypeComplement
 
 theorem exists_typeComplement : ∀ (K V : Type) [Group K] [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ K V), ρ.IsSemisimpleRepresentation → (∀ X : Subrepresentation ρ, X.toSubmodule = ⨆ (S : Subrepresentation ρ) (_ : IsAtom S ∧ S ≤ X), S.toSubmodule) → ∀ X : Subrepresentation ρ, (∀ S₁ S₂ : Subrepresentation ρ, IsAtom S₁ → S₂ ≤ X → Nonempty (S₁.toRepresentation.Equiv S₂.toRepresentation) → S₁ ≤ X) → ∃ Y : Subrepresentation ρ, IsCompl X.toSubmodule Y.toSubmodule ∧ (∀ S₁ S₂ : Subrepresentation ρ, IsAtom S₁ → IsAtom S₂ → S₁ ≤ Y → S₂ ≤ X → IsEmpty (S₁.toRepresentation.Equiv S₂.toRepresentation)) ∧ ∀ T : V →ₗ[ℂ] V, (∀ k v, T (ρ k v) = ρ k (T v)) → (∀ v ∈ X.toSubmodule, T v ∈ X.toSubmodule) ∧ ∀ v ∈ Y.toSubmodule, T v ∈ Y.toSubmodule := by
   intro K V _ _ _ ρ hss hsum X hcl
-  haveI : ComplementedLattice (Subrepresentation ρ) := hss
+  have : ComplementedLattice (Subrepresentation ρ) := hss
   let Y : Subrepresentation ρ := supRep (fun S => IsAtom S ∧ ¬ S ≤ X)
   have hYle : ∀ S : Subrepresentation ρ, IsAtom S → ¬ S ≤ X → S.toSubmodule ≤ Y.toSubmodule :=
     fun S hA hn => le_iSup₂ (f := fun (S : Subrepresentation ρ) (_ : IsAtom S ∧ ¬ S ≤ X) =>
@@ -524,9 +524,9 @@ theorem nonempty_equiv_of_pair (hσ : Function.Surjective σ)
     (hn₁ : ∃ x ∈ S₁.toSubmodule, ∃ y ∈ S.toSubmodule, B x y ≠ 0)
     (hn₂ : ∃ x ∈ S₂.toSubmodule, ∃ y ∈ S.toSubmodule, B x y ≠ 0) :
     Nonempty (S₁.toRepresentation.Equiv S₂.toRepresentation) := by
-  haveI := hfin S₁ h₁
-  haveI := hfin S₂ h₂
-  haveI := hfin S h
+  have := hfin S₁ h₁
+  have := hfin S₂ h₂
+  have := hfin S h
   set f₁ := B.domRestrict₁₂ S₁.toSubmodule S.toSubmodule with hf₁def
   set f₂ := B.domRestrict₁₂ S₂.toSubmodule S.toSubmodule with hf₂def
   have i₁ : Function.Injective f₁ := restr_injective B hB h₁ hn₁
@@ -608,8 +608,8 @@ theorem orth_isCompl : ∀ (K V : Type) [Group K] [AddCommGroup V] [Module ℂ V
     by_cases hX : S.toSubmodule ≤ ⨅ x ∈ X.toSubmodule, LinearMap.ker (B x)
     · exact le_sup_of_le_right hX
     exfalso
-    obtain ⟨ψ₁, hψ₁, hψ₁'⟩ := SetLike.not_le_iff_exists.mp hY
-    obtain ⟨ψ₂, hψ₂, hψ₂'⟩ := SetLike.not_le_iff_exists.mp hX
+    obtain ⟨ψ₁, hψ₁, hψ₁'⟩ := IsConcreteLE.not_le_iff_exists.mp hY
+    obtain ⟨ψ₂, hψ₂, hψ₂'⟩ := IsConcreteLE.not_le_iff_exists.mp hX
     simp only [Submodule.mem_iInf, LinearMap.mem_ker, not_forall] at hψ₁' hψ₂'
     obtain ⟨y, hy, hy'⟩ := hψ₁'
     obtain ⟨x, hx, hx'⟩ := hψ₂'
@@ -663,7 +663,7 @@ theorem isSemisimple_ofInvariant (U : Submodule ℂ V) (hU : ∀ k, ∀ u ∈ U,
     (hfd : FiniteDimensional ℂ U)
     (hc : ∀ (ℓ : Module.Dual ℂ V), ∀ u ∈ U, Continuous fun k => ℓ (ρ k u)) :
     (ofInvariant U hU).toRepresentation.IsSemisimpleRepresentation := by
-  haveI : FiniteDimensional ℂ (ofInvariant U hU).toSubmodule := hfd
+  have : FiniteDimensional ℂ (ofInvariant U hU).toSubmodule := hfd
   refine GlobalTheory.isSemisimpleRepresentation_of_continuous_coeff _ fun l v => ?_
   obtain ⟨g, hg⟩ := LinearMap.exists_extend (p := U) l
   have h : ∀ k, l ((ofInvariant U hU).toRepresentation k v) = g (ρ k v) := fun k => by
@@ -687,7 +687,7 @@ theorem le_iSup_atoms
   intro x hxX
   obtain ⟨U, hxU, hfd, hU, hc⟩ := H x
   let R := ofInvariant U hU
-  haveI : ComplementedLattice (Subrepresentation R.toRepresentation) :=
+  have : ComplementedLattice (Subrepresentation R.toRepresentation) :=
     isSemisimple_ofInvariant U hU hfd hc
   let W : Subrepresentation R.toRepresentation :=
     ⟨N.comap U.subtype, fun k w hw => hNinv k _ hw⟩
@@ -703,7 +703,7 @@ theorem le_iSup_atoms
       X.apply_mem_toSubmodule k hu2⟩, rfl⟩⟩
   have hY : Y = ⊥ := by
     by_contra hne
-    haveI : FiniteDimensional ℂ Y.toSubmodule := Submodule.finiteDimensional_of_le
+    have : FiniteDimensional ℂ Y.toSubmodule := Submodule.finiteDimensional_of_le
       (S₂ := U) (fun y hy => by obtain ⟨u, _, rfl⟩ := Submodule.mem_map.1 hy; exact u.2)
     obtain ⟨T, hT, hTY⟩ := exists_isAtom_le _ Y this rfl hne
     have hTX : T ≤ X := by
@@ -892,7 +892,7 @@ theorem exists_idem_adj : AutomorphicFormsFiniteGL → ∀ (L : Type) [Field L] 
         (∀ X φ ψ, B (π.op (.lie X) φ) ψ + B φ (π.op (s (.lie X)) ψ) = 0) →
         ∃ P' : Module.End ℂ π.V, ∀ φ ψ, B (P φ) ψ = B φ (P' ψ) := by
   intro h L _ _ _ a π
-  haveI := _root_.GlobalTheory.KinfCompactness.compactSpace_Kinf L a
+  have := _root_.GlobalTheory.KinfCompactness.compactSpace_Kinf L a
 
   obtain ⟨φ, hφ, h0⟩ := (Submodule.ne_bot_iff _).1 π.ne_bot
   set φ₀ : π.V := ⟨φ, hφ⟩ with hφ₀
@@ -904,7 +904,7 @@ theorem exists_idem_adj : AutomorphicFormsFiniteGL → ∀ (L : Type) [Field L] 
     hUc.of_isClosed_subset (Subgroup.isClosed_of_isOpen _ hKo) inf_le_left
 
   set O := LocEx.orbSpan φ with hO
-  haveI : FiniteDimensional ℂ O := (π.cusp φ hφ).1.kfin
+  have : FiniteDimensional ℂ O := (π.cusp φ hφ).1.kfin
   set ρ₀ := sub (cptRep L a) O (LocEx.orbSpan_stable φ) with hρ₀
   have hρc : AutFin.IsContRep ρ₀ := LocEx.isContRep_sub _ _
 
@@ -914,7 +914,7 @@ theorem exists_idem_adj : AutomorphicFormsFiniteGL → ∀ (L : Type) [Field L] 
     have hSV : LocEx.orbSpan v.1 ≤ π.V := Submodule.span_le.2 (by
       rintro _ ⟨k, rfl⟩
       exact (π.op (.cpt k) v).2)
-    haveI : FiniteDimensional ℂ (LocEx.orbSpan v.1) := (π.cusp v.1 v.2).1.kfin
+    have : FiniteDimensional ℂ (LocEx.orbSpan v.1) := (π.cusp v.1 v.2).1.kfin
     set Uv : Submodule ℂ π.V := (LocEx.orbSpan v.1).comap π.V.subtype
     refine ⟨Uv, Submodule.subset_span ⟨1, by simp⟩, ?_, fun k u hu => ?_, fun ℓ u hu => ?_⟩
     · exact FiniteDimensional.of_injective ((π.V.subtype ∘ₗ Uv.subtype).codRestrict (LocEx.orbSpan v.1)
@@ -932,8 +932,8 @@ theorem exists_idem_adj : AutomorphicFormsFiniteGL → ∀ (L : Type) [Field L] 
   have hclos : ∀ S₁ S₂ : Subrepresentation (cptOn π), IsAtom S₁ → S₂ ≤ X →
       Nonempty (S₁.toRepresentation.Equiv S₂.toRepresentation) → S₁ ≤ X := by
     rintro S₁ S₂ hS₁ hS₂ ⟨e⟩
-    haveI := hfin S₁ hS₁
-    haveI : FiniteDimensional ℂ S₂.toSubmodule := LinearEquiv.finiteDimensional e.toLinearEquiv
+    have := hfin S₁ hS₁
+    have : FiniteDimensional ℂ S₂.toSubmodule := LinearEquiv.finiteDimensional e.toLinearEquiv
     obtain ⟨F, hF⟩ := LinearMap.exists_extend (S₁.toSubmodule.subtype ∘ₗ e.symm.toLinearEquiv.toLinearMap)
     have hFv : ∀ u (hu : u ∈ S₂.toSubmodule), F u = (e.symm ⟨u, hu⟩ : π.V) := fun u hu =>
       LinearMap.congr_fun hF ⟨u, hu⟩
@@ -1006,7 +1006,7 @@ theorem exists_idem_adj : AutomorphicFormsFiniteGL → ∀ (L : Type) [Field L] 
   · have hle : LinearMap.range (e ∘ₗ PT) ≤ X.toSubmodule ⊓ fixed π.finPart K' := by
       rintro _ ⟨v, rfl⟩
       exact ⟨heX _ (hPTm v), LocGL.idem_mem π.isSmooth_finPart hKc _⟩
-    haveI := finiteDimensional_typeSub_fixed h π hρc hKo (ρ₀ := ρ₀)
+    have := finiteDimensional_typeSub_fixed h π hρc hKo (ρ₀ := ρ₀)
     exact Submodule.finiteDimensional_of_le hle
   · intro s hs B hl hr hfinB hcptB _
     obtain ⟨σ, hσc, hσ⟩ : ∃ σ : GL (Fin a) (Af L) →* GL (Fin a) (Af L), Continuous σ ∧

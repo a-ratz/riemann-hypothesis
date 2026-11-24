@@ -175,7 +175,7 @@ theorem quotient_generic_section_field [CharZero K] (hfg : (⊤ : IntermediateFi
   have hint : ∀ c : CT Ω D j₀,
       IsIntegral (KTf K D m) (algebraMap (CT Ω D j₀) (FractionRing (CT Ω D j₀)) c) := by
     intro c
-    haveI := hal
+    have := hal
     obtain ⟨p, hp0, hp⟩ := Algebra.IsAlgebraic.isAlgebraic (R := Algebra.adjoin K (Set.range (gs (D := D) x j₀))) c
     let e := hind.aevalEquiv
     have hKT : IsAlgebraic (KT K D m) (algebraMap (CT Ω D j₀) (FractionRing (CT Ω D j₀)) c) := by
@@ -196,9 +196,9 @@ theorem quotient_generic_section_field [CharZero K] (hfg : (⊤ : IntermediateFi
   let G : Set (FractionRing (CT Ω D j₀)) :=
     Set.range (fun v => algebraMap (CT Ω D j₀) (FractionRing (CT Ω D j₀)) (X v)) ∪
       (fun ω => algebraMap (CT Ω D j₀) (FractionRing (CT Ω D j₀)) (MvPolynomial.C ω)) '' (t : Set Ω)
-  haveI : Finite G := ((Set.finite_range _).union (t.finite_toSet.image _)).to_subtype
+  have : Finite G := ((Set.finite_range _).union (t.finite_toSet.image _)).to_subtype
   let E' := IntermediateField.adjoin (KTf K D m) G
-  haveI hfd : FiniteDimensional (KTf K D m) E' := IntermediateField.finiteDimensional_adjoin (by
+  have hfd : FiniteDimensional (KTf K D m) E' := IntermediateField.finiteDimensional_adjoin (by
     rintro _ (⟨v, rfl⟩ | ⟨ω, _, rfl⟩) <;> exact hint _)
   have hK : ∀ k : K, algebraMap (CT Ω D j₀) (FractionRing (CT Ω D j₀))
       (MvPolynomial.C (algebraMap K Ω k)) ∈ E' := by
@@ -260,7 +260,7 @@ theorem quotient_generic_section_field [CharZero K] (hfg : (⊤ : IntermediateFi
         exact hrange r⟩
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  haveI : FiniteDimensional (KTf K D m) S :=
+  have : FiniteDimensional (KTf K D m) S :=
     FiniteDimensional.of_injective L (by
       intro a b h
       have h' := congrArg (fun e : E' => (e : FractionRing (CT Ω D j₀))) h
@@ -573,7 +573,7 @@ theorem s1T [CharZero K] (hfg : (⊤ : IntermediateField K Ω).FG) (htr : Algebr
   classical
 
   have hφ : Function.Injective (MvPolynomial.aeval t : KT K D m →ₐ[K] K').toRingHom := ht
-  letI : Algebra (KTf K D m) K' := (IsFractionRing.lift (A := KT K D m) (K := KTf K D m) hφ).toAlgebra
+  let : Algebra (KTf K D m) K' := (IsFractionRing.lift (A := KT K D m) (K := KTf K D m) hφ).toAlgebra
   obtain ⟨-, hB⟩ := s1 (K := K) hfg htr v k₀ hv₀ hbig
   obtain ⟨hBfin, hBred⟩ := hB K'
   let ι : TZ K Ω Kl K' →+* (Localization.Away (tsec (K := K) (Ω := Ω) (Kl := Kl) (K' := K') t v 0) ⧸ tJ (K := K) (Ω := Ω) (Kl := Kl) (K' := K') t v) :=
@@ -666,7 +666,7 @@ theorem s1T [CharZero K] (hfg : (⊤ : IntermediateField K Ω).FG) (htr : Algebr
     { g1 with commutes' := fun r => congrArg (fun f => f r) hcomm }
   let Θ := Algebra.TensorProduct.lift (Algebra.ofId K' (Localization.Away (tsec (K := K) (Ω := Ω) (Kl := Kl) (K' := K') t v 0) ⧸ tJ (K := K) (Ω := Ω) (Kl := Kl) (K' := K') t v))
     g (fun _ _ => Commute.all _ _)
-  haveI : IsArtinianRing (K' ⊗[KTf K D m] (RS K Ω D m ⧸ Is (K := K) (D := D) v)) :=
+  have : IsArtinianRing (K' ⊗[KTf K D m] (RS K Ω D m ⧸ Is (K := K) (D := D) v)) :=
     IsArtinianRing.of_finite K' _
 
   have hΘ1 : ∀ y : RS K Ω D m ⧸ Is (K := K) (D := D) v, Θ (1 ⊗ₜ y) = g y := fun y => by

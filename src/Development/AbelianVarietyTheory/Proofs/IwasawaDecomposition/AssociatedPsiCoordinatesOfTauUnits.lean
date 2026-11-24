@@ -124,7 +124,7 @@ theorem associated_of_tau : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
             algebraMap W (FractionRing W) (u : W) * (x' : FractionRing W)) →
     ∀ (y : P.D.toPre.X) (r : R) (r' : W), PsiCoord P.D.toPre y r → PsiCoord P'.D.toPre (ρ y) r' → Associated (g r) r' := by
   intro E _ _ _ H R _ _ _ t P W _ _ _ g hg t' P' ρ hρ y r r' hr hr'
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨x, hx⟩ := exists_isTauCoord R P.D.toPre y (H.w0 • y)
   obtain ⟨x', hx'⟩ := exists_isTauCoord W P'.D.toPre (ρ y) (H.w0 • ρ y)
   have hx'' : GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.IsTauCoord P'.D.toPre (ρ y) (ρ (H.w0 • y)) x' := by rwa [ρ.map_smul]
@@ -143,7 +143,7 @@ theorem associated_of_tau : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have h2 : (x' : FractionRing W) = algebraMap W (FractionRing W) ((u2⁻¹ : Wˣ) : W) * algebraMap W (FractionRing W) r' := by
       rw [hu2, ← _root_.mul_assoc, ← map_mul, Units.inv_mul, map_one, _root_.one_mul]
     rw [e1, h2]
-    simp only [v, Units.val_mul, map_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [v, Units.val_mul, map_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     ring
   exact Associated.symm ⟨v, key.symm⟩
 

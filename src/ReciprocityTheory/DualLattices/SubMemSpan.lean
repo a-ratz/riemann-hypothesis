@@ -251,7 +251,7 @@ theorem ht_ext (B : BX R₀) {R : LAlg R₀} (Dp : DualPair R) (N : ℕ) (y : B.
       rw [← B.map_comp, Dp.mr_comp_σ]
     rw [e1, e2] at k
     refine ⟨_, k, ?_⟩
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     rw [ez, map_add (f := _), map_one, Dp.mr_ση, hext_tmul, map_mul]
     ring
   | add V V' ihV ihV' =>

@@ -136,7 +136,7 @@ theorem invF_mem {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : invF X b ∈ Bor X
     exact (Matrix.isUnit_nonsing_inv_det _ hu).ne_zero
   · refine (upper_iff X _ τ).2 ?_
     rw [e]
-    haveI := Matrix.invertibleOfIsUnitDet _ hu
+    have := Matrix.invertibleOfIsUnitDet _ hu
     exact Matrix.blockTriangular_inv_of_blockTriangular ((upper_iff X b τ).1 (mem_bor_iff'.1 hb τ).2)
 
 theorem rmul_invF {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : rmul b (invF X b) = oneF X := by
@@ -202,7 +202,7 @@ theorem poincareLift_on_chart (la : Wt X.Ψ r) (F : V (nd X) → ℂ) {z : V (nd
   obtain ⟨h1, h2, h3⟩ := cpt_cell D hz
   have hd : cpt X x0 z ∈ X.dom := hz
   unfold P0
-  rw [if_pos ⟨hd, h1⟩, h2, h3, bchar_oneF X, one_mul]
+  rw [ite_eq_left ⟨hd, h1⟩, h2, h3, bchar_oneF X, one_mul]
 
 theorem poincareLift_borel_equivariant (la : Wt X.Ψ r) (F : V (nd X) → ℂ) {x b : Frame X.Ψ r} (hx : x ∈ X.dom)
     (hb : b ∈ Bor X.Ψ r) : P0 D la F (rmul x b) = bchar la b * P0 D la F x := by
@@ -212,10 +212,10 @@ theorem poincareLift_borel_equivariant (la : Wt X.Ψ r) (F : V (nd X) → ℂ) {
   · have hΔ' : D.Δ (rmul x b) = 0 := by
       by_contra h
       exact cell_of_rmul D hx hb h hΔ
-    rw [if_neg (fun h => h.2 hΔ'), if_neg (fun h => h.2 hΔ), mul_zero]
+    rw [ite_eq_right (fun h => h.2 hΔ'), ite_eq_right (fun h => h.2 hΔ), mul_zero]
   · obtain ⟨h1, h2, h3⟩ := cell_rmul D hx hΔ hb
     obtain ⟨-, hbx, -⟩ := D.split x hx hΔ
-    rw [if_pos ⟨hxb, h1⟩, if_pos ⟨hx, hΔ⟩, h2, h3, bchar_mul X la hbx hb]
+    rw [ite_eq_left ⟨hxb, h1⟩, ite_eq_left ⟨hx, hΔ⟩, h2, h3, bchar_mul X la hbx hb]
     ring
 
 private lemma continuous_dmin' {Ψ : Finset (E →+* ℂ)} (G : Matrix (Fin r) (Fin r) E) (τ : Ψ) (i : Fin (r + 1)) :
@@ -230,7 +230,7 @@ private lemma continuous_dmin' {Ψ : Finset (E →+* ℂ)} (G : Matrix (Fin r) (
 private lemma isOpen_dom_upper_bounds : IsOpen X.dom := by
   show IsOpen {x : Frame X.Ψ r | ∀ τ : X.Ψ, (mat x τ).det ≠ 0 ∧
     ∀ i : Fin (r + 1), 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [Set.ofPred_forall, Set.ofPred_and]
   refine isOpen_iInter_of_finite (fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite (fun i => ?_)))
   · exact isOpen_ne_fun (by unfold mat; fun_prop) continuous_const
   · exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (continuous_dmin' X.Gm τ i)))
@@ -269,7 +269,7 @@ theorem poincareLift_differentiableOn (la : Wt X.Ψ r) (F : V (nd X) → ℂ) (h
   refine (hbc.mul hFz).congr (fun x hx => ?_)
   have hx' : x ∈ X.dom ∧ D.Δ x ≠ 0 := hx
   unfold P0
-  rw [if_pos hx']
+  rw [ite_eq_left hx']
   rfl
 
 end

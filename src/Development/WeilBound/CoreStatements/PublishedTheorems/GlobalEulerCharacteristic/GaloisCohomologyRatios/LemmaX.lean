@@ -290,7 +290,7 @@ theorem toFun_rootsRepGal_zero (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) �
     [Finite (TorsN (AA hL 0) ℓ)]
     [Finite (cohomology (Rep.res (PP hL).subtype (gsRootsZMod S ℓ)) 0)] :
     d.toFun _ (rootsRepGal hL 0) = dTors hL d 0 := by
-  haveI := compactSpace_PP hL
+  have := compactSpace_PP hL
   exact toFun_eq_torsN_zero (PP hL) (gsRestrictGal hL) (gsRestrictGal_surjective hL)
     (ker_gsRestrictGal_le hL) (gsKummer_shortExact S ℓ hℓS) d (rootsRepGal hL 0)
     (rootsZModEquiv hL 0).symm (rootsZModEquiv_symm_conj hL 0)
@@ -332,7 +332,7 @@ theorem toFun_rootsRepGal_one (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) ∉
     [Finite (ModN (AA hL 0) ℓ)] [Finite (TorsN (AA hL 1) ℓ)]
     [Finite (cohomology (Rep.res (PP hL).subtype (gsRootsZMod S ℓ)) 1)] :
     d.toFun _ (rootsRepGal hL 1) = dMod hL d 0 + dTors hL d 1 := by
-  haveI := compactSpace_PP hL
+  have := compactSpace_PP hL
   have h := toFun_eq_modN_add_torsN (PP hL) (gsRestrictGal hL) (gsRestrictGal_surjective hL)
     (ker_gsRestrictGal_le hL) (gsKummer_shortExact S ℓ hℓS) d 0 (rootsRepGal hL 1)
     (rootsZModEquiv hL 1).symm (rootsZModEquiv_symm_conj hL 1)
@@ -628,7 +628,7 @@ variable {K : FiniteSubfield} {S : Set (HeightOneSpectrum (𝓞 K.1))} {ℓ : �
   (M : Rep.{0} (ZMod ℓ) (galUnramifiedOutside K.1 ℚ̄ S)) [IsDiscreteRep M] [Module.Finite (ZMod ℓ) M]
 
 theorem finite_of_moduleFinite : Finite M := by
-  haveI : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
+  have : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
   exact Module.finite_of_finite (ZMod ℓ)
 
 variable [Finite M]
@@ -699,8 +699,8 @@ theorem finite_cohomology_two_int [Finite S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) 
 
 theorem card_H2_integral_module [Finite S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) ∉ v.asIdeal) :
     Nat.card (cohomology (intRep M) 2) = ℓ ^ Module.finrank (ZMod ℓ) (cohomology M 2) := by
-  haveI := finite_cohomology_two_int M hℓS
-  haveI : Finite (cohomology M 2) := Finite.of_equiv _ (cohomologyIntEquiv M 2).symm.toEquiv
+  have := finite_cohomology_two_int M hℓS
+  have : Finite (cohomology M 2) := Finite.of_equiv _ (cohomologyIntEquiv M 2).symm.toEquiv
   rw [← Nat.card_congr (cohomologyIntEquiv M 2).toEquiv]
   exact natCard_eq_pow_finrank_zmod ℓ _
 
@@ -722,7 +722,7 @@ local instance finiteZModDual : Finite (dualRep (gsRootsZMod S ℓ) M) := by
 theorem card_H0_dual_module :
     Nat.card (cohomology (dualRep (gsRoots S ℓ) (intRep M)) 0) =
       ℓ ^ Module.finrank (ZMod ℓ) (dualRep (gsRootsZMod S ℓ) M).ρ.invariants := by
-  haveI : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
+  have : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
   refine (Nat.card_congr (H0Iso (dualRep (gsRoots S ℓ) (intRep M))).toLinearEquiv.toEquiv).trans ?_
   exact (natCard_invariants_eq_of_addEquiv (dualRep (gsRoots S ℓ) (intRep M)).ρ
     (dualRep (gsRootsZMod S ℓ) M).ρ
@@ -734,7 +734,7 @@ theorem card_H0_dual_local
     Nat.card (cohomology (Rep.res (gsFinFamily S ιs v).toMonoidHom (dualRep (gsRoots S ℓ) (intRep M))) 0) =
       ℓ ^ Module.finrank (ZMod ℓ) (Representation.invariants
           ((dualRep (gsRootsZMod S ℓ) M).ρ.comp (gsFinFamily S ιs v).toMonoidHom)) := by
-  haveI : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
+  have : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
   refine (Nat.card_congr (H0Iso (Rep.res (gsFinFamily S ιs v).toMonoidHom
     (dualRep (gsRoots S ℓ) (intRep M)))).toLinearEquiv.toEquiv).trans ?_
   exact (natCard_invariants_eq_of_addEquiv
@@ -747,8 +747,8 @@ theorem card_sha_int [Finite S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) �
     (ιs : ∀ v : S, ℚ̄ →ₐ[K.1] AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1)) :
     Nat.card (ptSha (gsFinFamily S ιs) (intRep M) 2) =
       ℓ ^ Module.finrank (ZMod ℓ) (shaSubmodule (gsFinFamily S ιs) M 2) := by
-  haveI := finite_cohomology_two_int M hℓS
-  haveI : Finite (cohomology M 2) := Finite.of_equiv _ (cohomologyIntEquiv M 2).symm.toEquiv
+  have := finite_cohomology_two_int M hℓS
+  have : Finite (cohomology M 2) := Finite.of_equiv _ (cohomologyIntEquiv M 2).symm.toEquiv
   have e : (shaSubmodule (gsFinFamily S ιs) M 2) ≃ (ptSha (gsFinFamily S ιs) (intRep M) 2) :=
     (cohomologyIntEquiv M 2).toEquiv.subtypeEquiv fun x => by
       rw [mem_ptSha_iff_mem_shaSubmodule]
@@ -950,11 +950,11 @@ theorem poitou_tate_H2_nat [Fintype S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞
           ((dualRep (gsRootsZMod S ℓ) M).ρ.comp (gsFinFamily S ιs v).toMonoidHom)) := by
   classical
   have hℓ : ℓ.Prime := Fact.out
-  haveI : NeZero ℓ := ⟨hℓ.ne_zero⟩
+  have : NeZero ℓ := ⟨hℓ.ne_zero⟩
   have hS' : ∀ v : HeightOneSpectrum (𝓞 K.1), ((ℓ : ℕ) : 𝓞 K.1) ∈ v.asIdeal → v ∈ S := fun v hv => by
     by_contra h
     exact hℓS v h hv
-  haveI : Finite M := finite_of_moduleFinite M
+  have : Finite M := finite_of_moduleFinite M
   have hPT := natCard_gs_cohomology_two_mul S ιs hS' hKK (gsBaseCase S ιs hS' hKK) (intRep M) (nsmul_intRep M)
   apply Nat.pow_right_injective hℓ.two_le
   simp only [pow_add]
@@ -1023,7 +1023,7 @@ theorem finrank_H2_euler_formula [Finite S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) :
     (Module.finrank (ZMod ℓ) (cohomology M 2) : ℤ) =
       dMod hL (dN hL hζ M hM hΓ) 1 + dPlaces (S := S) (dN hL hζ M hM hΓ) - (dN hL hζ M hM hΓ).one := set_option synthInstance.maxHeartbeats 200000 in by
   classical
-  haveI : Fintype S := Fintype.ofFinite S
+  have : Fintype S := Fintype.ofFinite S
   have ιs : ∀ v : S, ℚ̄ →ₐ[K.1] AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1) :=
     fun v => IsAlgClosed.lift
   have h1 := poitou_tate_H2_int hL hζ M hM hΓ hℓS hcop hK ιs
@@ -1141,7 +1141,7 @@ theorem finrank_ker_sub_one_of_neg {T M : Type*} [AddCommGroup T] [Module k T] [
     [Module k M] [FiniteDimensional k M] (hT : Module.finrank k T = 1) (b : M →ₗ[k] M)
     (Ψ : (T →ₗ[k] M) →ₗ[k] (T →ₗ[k] M)) (hΨ : ∀ f t, Ψ f t = -b (f t)) :
     Module.finrank k (LinearMap.ker (Ψ - 1)) = Module.finrank k (LinearMap.ker (b + 1)) := by
-  haveI : Module.Finite k T := Module.finite_of_finrank_eq_succ hT
+  have : Module.Finite k T := Module.finite_of_finrank_eq_succ hT
   let b0 := Module.finBasisOfFinrankEq k T hT
   have hspan : ∀ t : T, b0.repr t 0 • b0 0 = t := fun t => by
     have := b0.sum_repr t
@@ -1210,7 +1210,7 @@ theorem real_place_H0_finrank_b (ιr : ∀ v : {v : InfinitePlace K.1 // v.IsRea
     exfalso
     subst h2
     have hTC : IsTotallyComplex L.1 := hK.resolve_left fun h => h rfl
-    haveI : IsGalois K.1 L.1 := ⟨⟩
+    have : IsGalois K.1 L.1 := ⟨⟩
     have hcomap : (infPlaceOfEmbedding (ιr v) L : InfinitePlace L.1).comap (algebraMap K.1 L.1) = v.1 := by
       have := (infPlaceOfEmbedding (ιr v) L).2
       exact NumberField.InfinitePlace.LiesOver.comap_eq _ _
@@ -1393,14 +1393,14 @@ theorem S_units_euler_difference [Finite S] (d : AdditiveFunction.{0} ℓ (L.1 �
     [Finite (ModN (AA hL 0) ℓ)] [Finite (TorsN (AA hL 0) ℓ)] :
     dMod hL d 0 - dTors hL d 0 = dPlaces (S := S) d + dInf d - d.one := by
   have : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
-  haveI : Finite (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) := finite_placesOver (L := L.1) (S := S)
-  haveI : Finite (ModN (Additive ((placesOver S : Set (HeightOneSpectrum (𝓞 L.1))).unit L.1)) ℓ) :=
+  have : Finite (placesOver S : Set (HeightOneSpectrum (𝓞 L.1))) := finite_placesOver (L := L.1) (S := S)
+  have : Finite (ModN (Additive ((placesOver S : Set (HeightOneSpectrum (𝓞 L.1))).unit L.1)) ℓ) :=
     units_finite_modN_of_addEquiv (gsH0SUnitsEquiv hL) ℓ
-  haveI : Finite (TorsN (Additive ((placesOver S : Set (HeightOneSpectrum (𝓞 L.1))).unit L.1)) ℓ) :=
+  have : Finite (TorsN (Additive ((placesOver S : Set (HeightOneSpectrum (𝓞 L.1))).unit L.1)) ℓ) :=
     units_finite_torsN_of_addEquiv (gsH0SUnitsEquiv hL) ℓ
   have hU := conj_gsH0SUnits_eq hL d
   have hg : (letI := actA hL 0; d.g (AA hL 0)) = dMod hL d 0 - dTors hL d 0 := by
-    letI := actA hL 0
+    let := actA hL 0
     exact d.g_eq _
   have hS := d.g_sUnits (placesOver S : Set (HeightOneSpectrum (𝓞 L.1)))
     (placesOver_stable (S := S) (K := K) (L := L))
@@ -1411,8 +1411,8 @@ theorem class_group_mod_eq_torsion [Finite S] (d : AdditiveFunction.{0} ℓ (L.1
     [Finite (ModN (AA hL 1) ℓ)] [Finite (TorsN (AA hL 1) ℓ)] :
     dMod hL d 1 = dTors hL d 1 := by
   have : NeZero ℓ := ⟨(Fact.out : ℓ.Prime).ne_zero⟩
-  letI := actA hL 1
-  haveI : Finite (AA hL 1) := finite_gsH1SUnits hL
+  let := actA hL 1
+  have : Finite (AA hL 1) := finite_gsH1SUnits hL
   have h1 := d.g_eq_zero_of_finite (AA hL 1)
   rw [d.g_eq (AA hL 1)] at h1
   unfold dMod dTors

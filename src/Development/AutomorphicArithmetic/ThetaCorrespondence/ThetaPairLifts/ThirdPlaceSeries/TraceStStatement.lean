@@ -91,7 +91,7 @@ theorem traceLevel_flat (R : RealDat D A Ks) (i : Fin D.R.m) (B : Base (Vc D i) 
   classical
   have hW : IsWeilDatumO B.F.ψ (Vc D i) (Wc D i) _ _ ω := hω
   have hlift := fun g => exists_lift_datWp hB hBo e hent g
-  haveI : Fintype B.G.P.H := Fintype.ofFinite _
+  have : Fintype B.G.P.H := Fintype.ofFinite _
   have hQ' : (GlobalTheory.FlatVecSum.princ B).admitted τ.Q := hQ
   have hfθ : IsThetaFunO B.F.ψ (Vc D i) (Wc D i) ((GlobalTheory.FlatVecSum.princ B).vecFlat τ) :=
     GlobalTheory.GalLift.Vec.theta_of_thetaAt hB.frame.vac.1 hB.frame.vac.2.inf

@@ -80,7 +80,7 @@ theorem det_of_mem_UX {ρ : ℕ} {u : GL (Fin ρ) (AE D)} (hu : u ∈ UX D ρ) :
   have hb : Matrix.BlockTriangular u.1 id := fun i j h => (hu i j).1 h
   apply Units.ext
   rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one]
-  rw [Matrix.det_of_upperTriangular hb]
+  rw [det_of_isUpperTriangular hb]
   exact Finset.prod_eq_one fun i _ => (hu i i).2
 
 theorem halfMod_of_mem_UX {ρ : ℕ} (m : ℕ) {u : GL (Fin ρ) (AE D)} (hu : u ∈ UX D ρ) :

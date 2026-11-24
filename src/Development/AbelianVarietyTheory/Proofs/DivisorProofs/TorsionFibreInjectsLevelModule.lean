@@ -106,7 +106,7 @@ theorem eq_of_valAt_eq : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsN
     (hQT : QT ≫ (torsion.ι G n).left = Q.left) (x : Sp K) (c : M) (hcP : GlobalTheory.TorsSpec.ValAt G n ℓ w (PT x) c)
     (hcQ : GlobalTheory.TorsSpec.ValAt G n ℓ w (QT x) c), P = Q := by
   intro X' _ _ G _ _ _ n hn V _ ℓ _ M w hw _ K _ _ t P Q PT QT hPT hQT x c hcP hcQ
-  haveI hEt : Etale (torsion G n).hom := GlobalTheory.GrpTangent.etale_torsion G hn
+  have hEt : Etale (torsion G n).hom := GlobalTheory.GrpTangent.etale_torsion G hn
   have hιT : (torsion.ι G n).left ≫ G.hom = (torsion G n).hom := Over.w (torsion.ι G n)
   have hPt : PT ≫ (torsion G n).hom = t := by
     rw [← hιT, ← Category.assoc, hPT]; exact Over.w P
@@ -121,7 +121,7 @@ theorem eq_of_valAt_eq : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsN
   have hsq : (pullback.snd (torsion G n).hom (torsion G n).hom) q = QT (IsLocalRing.closedPoint K) := by
     show (pq ≫ pullback.snd (torsion G n).hom (torsion G n).hom) (IsLocalRing.closedPoint K) = _
     rw [pullback.lift_snd]
-  haveI hdom : IsDomain ((pullback (torsion G n).hom (torsion G n).hom).presheaf.stalk q) :=
+  have hdom : IsDomain ((pullback (torsion G n).hom (torsion G n).hom).presheaf.stalk q) :=
     isDomain_stalk_of_etale (pullback.fst (torsion G n).hom (torsion G n).hom ≫ (torsion G n).hom) q
   let Wp := pullback (torsion G n).hom (torsion G n).hom
   let R : Type := Wp.presheaf.stalk q
@@ -133,7 +133,7 @@ theorem eq_of_valAt_eq : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsN
     rw [e]
     exact (algebraMap (FractionRing R) Ω).injective.comp (IsFractionRing.injective R (FractionRing R))
   let ybar : Sp Ω ⟶ Spec (Wp.presheaf.stalk q) := Spec.map (CommRingCat.ofHom φ)
-  haveI hyd : IsDominant ybar := by
+  have hyd : IsDominant ybar := by
     rw [isDominant_iff]
     show DenseRange (PrimeSpectrum.comap φ)
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical, (RingHom.injective_iff_ker_eq_bot φ).1 hφ]
@@ -1034,13 +1034,13 @@ theorem class_act : ∀ {E : Type} [Field E] {X' : Scheme.{0}} [IsIntegral X'] [
     (hRT : RT ≫ (torsion.ι G n).left = (P ≫ act.act r).left) (x : Sp K) (cP cR : M)
     (hcP : GlobalTheory.TorsSpec.ValAt G n ℓ w (PT x) cP) (hcR : GlobalTheory.TorsSpec.ValAt G n ℓ w (RT x) cR), cR = r • cP := by
   intro E _ X' _ _ G _ _ _ n hn V _ ℓ _ M w hw _ _ hun act hlin K _ _ t P r PT RT hPT hRT x cP cR hcP hcR
-  haveI := GrpTangent.etale_torsion G hn
-  haveI := mono_torsion_ι G n
+  have := GrpTangent.etale_torsion G hn
+  have := mono_torsion_ι G n
   have hι : torsion.ι G n ≫ mulN G n = 1 := by
     rw [Hom.one_def]
     exact pullback.condition.trans (congrArg (· ≫ (MonObj.one : 𝟙_ (Over X') ⟶ G)) (CartesianMonoidalCategory.toUnit_unique _ _))
   have hτ : (torsion.ι G n ≫ act.act r) ≫ mulN G n = 1 := by
-    haveI := act.hom r
+    have := act.hom r
     rw [← act_natCast act n, Category.assoc, ← act.mul, mul_comm, act.mul, ← Category.assoc,
       act_natCast act n, hι, Hom.one_def, Category.assoc, IsMonHom.one_hom, ← Hom.one_def]
   obtain ⟨τ, hτι⟩ := exists_lift_torsion n _ hτ
@@ -1133,7 +1133,7 @@ theorem valAt_unique {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsNormalSch
     (hun : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x : Sp Ω ⟶ V) (c c' : M), x ≫ w c = x ≫ w c' → c = c')
     (p : (torsion G n).left) (c c' : M) (h : GlobalTheory.TorsSpec.ValAt G n ℓ w p c)
     (h' : GlobalTheory.TorsSpec.ValAt G n ℓ w p c') : c = c' := by
-  haveI : Etale (torsion G n).hom := GrpTangent.etale_torsion G hn
+  have : Etale (torsion G n).hom := GrpTangent.etale_torsion G hn
   obtain ⟨t, ht, e⟩ := Flat.generalizingMap (torsion G n).hom
     (genericPoint_specializes ((torsion G n).hom p))
   obtain ⟨q, rfl⟩ : t ∈ Set.range ((torsion G n).left.fromSpecStalk p) := by
@@ -1216,7 +1216,7 @@ theorem class_move : ∀ {E : Type} [Field E] {X' : Scheme.{0}} [IsIntegral X'] 
     (hcP : GlobalTheory.TorsSpec.ValAt G n ℓ w (PT x) cP) (hcQ : GlobalTheory.TorsSpec.ValAt G n ℓ w (QT x) cQ), cQ = ι γ cP := by
   intro E _ X' _ _ G _ _ _ n hn V _ ℓ _ M w hw _ _ hun act Γ _ ρ' ρ hρ ι m hm hmv K _ _ t γ P Q PT QT hPT hQT hPQ
     x cP cQ hcP hcQ
-  haveI := mono_torsion_ι G n
+  have := mono_torsion_ι G n
   have hpb := hm.1 γ
   obtain ⟨τ, hτι, hτh⟩ := exists_torsion_map_of_isGrpPullback G n hpb
     (by rw [← act_natCast act n]; exact hm.2.1 γ _)
@@ -1338,7 +1338,7 @@ theorem valAt_mul : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsNormal
     (cP cQ cR : M) (hcP : GlobalTheory.TorsSpec.ValAt G n ℓ w (PT x) cP) (hcQ : GlobalTheory.TorsSpec.ValAt G n ℓ w (QT x) cQ)
     (hcR : GlobalTheory.TorsSpec.ValAt G n ℓ w (RT x) cR), cR = cP + cQ := by
   intro X' _ _ G _ _ _ n hn V _ ℓ _ M w hw _ hun hadd K _ _ t P Q PT QT RT hPT hQT hRT x cP cQ cR hcP hcQ hcR
-  haveI : Etale (torsion G n).hom := GlobalTheory.GrpTangent.etale_torsion G hn
+  have : Etale (torsion G n).hom := GlobalTheory.GrpTangent.etale_torsion G hn
   have hιT : (torsion.ι G n).left ≫ G.hom = (torsion G n).hom := Over.w (torsion.ι G n)
   have hPt : PT ≫ (torsion G n).hom = t := by
     rw [← hιT, ← Category.assoc, hPT]; exact Over.w P
@@ -1346,9 +1346,9 @@ theorem valAt_mul : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsNormal
     rw [← hιT, ← Category.assoc, hQT]; exact Over.w Q
   let h : pullback (torsion G n).hom (torsion G n).hom ⟶ X' :=
     pullback.fst (torsion G n).hom (torsion G n).hom ≫ (torsion G n).hom
-  haveI : Etale h := inferInstance
+  have : Etale h := inferInstance
   let pq : Sp K ⟶ pullback (torsion G n).hom (torsion G n).hom := pullback.lift PT QT (hPt.trans hQt.symm)
-  haveI : IsDomain ((pullback (torsion G n).hom (torsion G n).hom).presheaf.stalk (pq x)) :=
+  have : IsDomain ((pullback (torsion G n).hom (torsion G n).hom).presheaf.stalk (pq x)) :=
     isDomain_stalk_of_etale h (pq x)
   obtain ⟨Ω, _, _, y, hy, -⟩ := GlobalTheory.T.exists_dominant_geometricGenericPoint_spec_domain ((pullback (torsion G n).hom (torsion G n).hom).presheaf.stalk (pq x))
   obtain ⟨z, hz⟩ := GlobalTheory.T.exists_lift_geometricGenericPoint_stalk_of_flat h (pq x) ℓ Ω y hy
@@ -1359,7 +1359,7 @@ theorem valAt_mul : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsNormal
   let A : WO ⟶ G := A' ≫ torsion.ι G n
   let B : WO ⟶ G := B' ≫ torsion.ι G n
   have hs : (A * B) ≫ mulN G n = 1 := by
-    letI : CommGroup (WO ⟶ G) := Hom.commGroup
+    let : CommGroup (WO ⟶ G) := Hom.commGroup
     rw [GlobalTheory.GrpTangent.comp_mulN, mul_pow, ← GlobalTheory.GrpTangent.comp_mulN, ← GlobalTheory.GrpTangent.comp_mulN,
       comp_torsion_ι_mulN, comp_torsion_ι_mulN, _root_.one_mul]
   obtain ⟨sT, hsT⟩ := exists_lift_torsion n (A * B) hs
@@ -1373,7 +1373,7 @@ theorem valAt_mul : ∀ {X' : Scheme.{0}} [IsIntegral X'] [GlobalTheory.IsNormal
     ext1
     simp only [B, B', g, pq, Over.comp_left, Over.homMk_left, pullback.lift_snd_assoc, hQT]
   have hRT' : pq ≫ sT.left = RT := by
-    haveI := mono_torsion_ι G n
+    have := mono_torsion_ι G n
     rw [← cancel_mono (torsion.ι G n).left, Category.assoc, ← Over.comp_left, hsT, hRT, ← hgA, ← hgB,
       ← MonObj.comp_mul]
     rfl
@@ -1486,13 +1486,13 @@ namespace GlobalTheory.EqvAct
 open GlobalTheory.TorsSpec in
 theorem torsLevel_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), 1 ≤ Dw.p + Dw.q → l.A = 1 → ∀ (I : Ideal (𝓞 E)) (g : ℕ), NeatPrime I g (Dw.p + Dw.q) → l.Mb ≤ I → ∀ (Γ : Type) [Group Γ] [Finite Γ] (ι : Γ →* LevelAut Dw l) (ρ : Γ →* Aut (V₀ TF.Y Z)), ActsBy ι ρ → ∀ (X' : Scheme.{0}) [IsIntegral X'] (φ : X' ⟶ X₀ TF.Y Z) (ℓ : V₀ TF.Y Z ⟶ X') (ρ' : Γ →* Aut X'), GlobalTheory.IsNormalScheme X' → IsProjOver (φ ≫ s₀ TF.Y Z) → IsOpenImmersion ℓ → ℓ ≫ φ = j₀ TF.Y Z → (∀ γ, (ρ γ).asIso.hom ≫ ℓ = ℓ ≫ (ρ' γ).asIso.hom) → ∀ m : Γ → ((GlobalTheory.EqvAct.pullG TF Z φ).left ⟶ (GlobalTheory.EqvAct.pullG TF Z φ).left), GlobalTheory.EqvAct.IsEqvAct ρ' (GlobalTheory.EqvAct.pullG TF Z φ) (GlobalTheory.EqvAct.pullAct TF Z φ) m → GlobalTheory.EqvAct.MovesEta TF Z ι ρ ℓ (GlobalTheory.EqvAct.pullG TF Z φ) (GlobalTheory.EqvAct.pullψ TF Z φ) m → GlobalTheory.EqvAct.TorsLevel I ι ρ' (GlobalTheory.EqvAct.pullG TF Z φ) (GlobalTheory.EqvAct.pullAct TF Z φ) m := by
   intro E _ _ _ H Dw l Xo c TF Z _ _ I g _ hMb Γ _ _ ι ρ _ X' _ φ ℓ ρ' hX _ hℓo hℓ hρ m hm hmv
-  haveI := hX
-  haveI := hℓo
+  have := hX
+  have := hℓo
   have hsemi : IsSemiAbelian (pullG TF Z φ) := IsSemiAbelian.pullback _ _ TF.Y.t.semi
-  haveI := hsemi.smooth
-  haveI := hsemi.separated
-  haveI := hsemi.comm
-  haveI : Nonempty (V₀ TF.Y Z) := by
+  have := hsemi.smooth
+  have := hsemi.separated
+  have := hsemi.comm
+  have : Nonempty (V₀ TF.Y Z) := by
     obtain ⟨z, hz⟩ := Z.2.1.nonempty
     exact ⟨⟨z, (j_mem_barComp Z z).2 hz⟩⟩
   have hn : IsUnit ((l.M : ℕ) : Γ(X', ⊤)) := by
@@ -1540,9 +1540,9 @@ theorem torsLevel_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   refine ⟨fun P => if h : IsTorsI I (pullAct TF Z φ) P then cl P h else 0, ?_, ?_, ?_, ?_⟩
   · intro P Q hP hQ
     have hPQ : IsTorsI I (pullAct TF Z φ) (P * Q) := fun a ha => by
-      haveI := (pullAct TF Z φ).hom a
+      have := (pullAct TF Z φ).hom a
       rw [MonObj.mul_comp, hP a ha, hQ a ha, _root_.mul_one]
-    simp only [dif_pos hP, dif_pos hQ, dif_pos hPQ]
+    simp only [dite_eq_left hP, dite_eq_left hQ, dite_eq_left hPQ]
     exact GlobalTheory.T.torsionPoint_class_mul_eq_add (pullG TF Z φ) l.M hn ℓ (etaSecL TF Z φ ℓ hℓ) (etaSecL_w TF Z φ ℓ hℓ) hun
       (GlobalTheory.T.levelSection_add_at_geometricPoint TF Z φ ℓ hℓ) K t P Q _ _ _ (hPT P hP) (hPT Q hQ) (hPT _ hPQ) _ _ _ _ (hcl P hP) (hcl Q hQ)
       (hcl _ hPQ)
@@ -1550,11 +1550,11 @@ theorem torsLevel_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     have hPa : IsTorsI I (pullAct TF Z φ) (P ≫ (pullAct TF Z φ).act a) := fun r hr => by
       rw [Category.assoc, ← (pullAct TF Z φ).mul]
       exact hP _ (I.mul_mem_left a hr)
-    simp only [dif_pos hP, dif_pos hPa]
+    simp only [dite_eq_left hP, dite_eq_left hPa]
     exact GlobalTheory.T.torsionPointClassAtStalk_smul_action (pullG TF Z φ) l.M hn ℓ (etaSecL TF Z φ ℓ hℓ) (etaSecL_w TF Z φ ℓ hℓ) hun (pullAct TF Z φ)
       (GlobalTheory.T.levelSection_smul_at_geometricPoint TF Z φ ℓ hℓ) K t P a _ _ (hPT P hP) (hPT _ hPa) _ _ _ (hcl P hP) (hcl _ hPa)
   · intro P Q hP hQ he
-    simp only [dif_pos hP, dif_pos hQ] at he
+    simp only [dite_eq_left hP, dite_eq_left hQ] at he
     exact GlobalTheory.T.eq_of_torsionPointClassAtStalk_eq (pullG TF Z φ) l.M hn ℓ (etaSecL TF Z φ ℓ hℓ) (etaSecL_w TF Z φ ℓ hℓ) K t P Q _ _
       (hPT P hP) (hPT Q hQ) _ _ (hcl P hP) (he ▸ hcl Q hQ)
   · intro γ ht P Q hP hQP
@@ -1564,7 +1564,7 @@ theorem torsLevel_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       rw [one_left] at e1
       rw [Over.comp_left, one_left, hQP, Category.assoc, ← hm.2.1 γ a, ← Category.assoc, ← Over.comp_left, e1,
         Category.assoc, eta_comp_of_isGrpPullback (hm.1 γ), ← Category.assoc, ht]
-    simp only [dif_pos hP, dif_pos hQ]
+    simp only [dite_eq_left hP, dite_eq_left hQ]
     exact GlobalTheory.T.torsionPoint_class_image_eq_level_action (pullG TF Z φ) l.M hn ℓ (etaSecL TF Z φ ℓ hℓ) (etaSecL_w TF Z φ ℓ hℓ) hun (pullAct TF Z φ)
       ρ' ρ hρ ι m hm hmv' K t γ P Q _ _ (hPT P hP) (hPT Q hQ) hQP _ _ _ (hcl P hP) (hcl Q hQ)
 

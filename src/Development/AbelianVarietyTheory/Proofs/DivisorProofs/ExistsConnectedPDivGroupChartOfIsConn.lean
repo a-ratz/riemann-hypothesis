@@ -178,7 +178,7 @@ theorem GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank :
     intro i
     rw [X_pow_dvd_iff]
     intro m hm
-    rw [hic, if_neg]
+    rw [hic, ite_eq_right]
     omega
   have hsum : h = ∑ i, hi i := by
     ext β
@@ -192,7 +192,7 @@ theorem GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank :
       symm
       apply Finset.sum_eq_zero
       intro i _
-      rw [if_neg]
+      rw [ite_eq_right]
       have := hb i
       omega
     · push_neg at hb
@@ -200,12 +200,12 @@ theorem GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank :
         (by obtain ⟨i, hi⟩ := hb; exact ⟨i, by simp [hi]⟩)
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, id] at hi0mem hmin
       rw [Finset.sum_eq_single i0]
-      · rw [if_pos]
+      · rw [ite_eq_left]
         refine ⟨hi0mem, fun j hj => ?_⟩
         by_contra hc
         exact absurd (hmin j (by omega)) (not_le.2 hj)
       · intro j _ hj
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨hjq, hjlt⟩
         rcases lt_or_gt_of_ne hj with hlt | hlt
         · exact absurd (hmin j hjq) (not_le.2 hlt)
@@ -253,7 +253,7 @@ theorem aeval_surjective_of_dUnit_span {K A : Type} [Field K] [CommRing A] [Bial
     (hx : ∀ i, Coalgebra.counit (R := K) (x i) = 0)
     (hspan : ∀ c : Cot K A, ∃ l : Fin d → K, c = ∑ i, l i • dUnit (R := K) (x i)) :
     Function.Surjective (MvPolynomial.aeval (R := K) x) := by
-  haveI : IsNoetherianRing A := isNoetherian_of_tower K inferInstance
+  have : IsNoetherianRing A := isNoetherian_of_tower K inferInstance
   have hxm : ∀ i, x i ∈ RingHom.ker (counitAlgHom K A) := fun i => by
     rw [RingHom.mem_ker]; exact hx i
   have hnil : IsNilpotent (RingHom.ker (counitAlgHom K A)) := by
@@ -279,9 +279,9 @@ theorem exists_coords_generate (p : ℕ) [Fact p.Prime] (K : Type) [Field K] (h 
     ∃ x : ∀ n, Fin (Module.finrank K G.omega) → G.A n,
       (∀ n i, G.res n (x (n + 1) i) = x n i) ∧ (∀ n i, Coalgebra.counit (R := K) (x n i) = 0) ∧
         ∀ n, Function.Surjective (MvPolynomial.aeval (R := K) (x n)) := by
-  haveI : Module.Finite K (Cot K (G.A 1)) :=
+  have : Module.Finite K (Cot K (G.A 1)) :=
     Module.Finite.of_surjective (AugCot.d (counitAlgHom K (G.A 1))) (AugCot.d_surjective _)
-  haveI : Module.Finite K G.omega :=
+  have : Module.Finite K G.omega :=
     Module.Finite.equiv (LinearEquiv.ofBijective _ (G.omegaLevel_one_bijective h)).symm
   set d := Module.finrank K G.omega with hd
   let b := Module.finBasis K G.omega
@@ -526,8 +526,8 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
   set εQ : (H ⧸ J) →ₐ[K] K := Ideal.Quotient.liftₐ J ε hJI with hεQ
   have hεQmk : ∀ a, εQ (mk a) = ε a := fun a => rfl
   have hmks : Function.Surjective mk := Ideal.Quotient.mkₐ_surjective K J
-  haveI hfinQ : Module.Finite K (H ⧸ J) := Module.Finite.of_surjective mk.toLinearMap hmks
-  haveI : IsNoetherianRing (H ⧸ J) := isNoetherian_of_tower K inferInstance
+  have hfinQ : Module.Finite K (H ⧸ J) := Module.Finite.of_surjective mk.toLinearMap hmks
+  have : IsNoetherianRing (H ⧸ J) := isNoetherian_of_tower K inferInstance
 
   have hkerQ : ∀ z ∈ RingHom.ker εQ, ∃ a ∈ RingHom.ker ε, mk a = z := by
     intro z hz
@@ -545,7 +545,7 @@ theorem finrank_quot_frobKerIdeal_le : ∀ (q : ℕ) (K H : Type) [Field K] [Com
     intro f hf
     exact ⟨q, hpowQ f hf⟩
 
-  haveI : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
+  have : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
   set d := Module.finrank K (AugCot ε) with hd
   let b := Module.finBasis K (AugCot ε)
   choose x hx using fun i => (RingHom.ker ε).toCotangent_surjective (b i)
@@ -729,7 +729,7 @@ theorem pow_finrank_omega_le_finrank_frobKer : ∀ (p : ℕ) [Fact p.Prime] (K :
     (G : PDivGroup p K), ∀ r : ℕ,
     (p ^ r) ^ Module.finrank K G.omega ≤ Module.finrank K (G.A r ⧸ frobKerIdeal (p ^ r) K (G.A r)) := by
   intro p _ K _ h G r
-  haveI : CharP K p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 h
+  have : CharP K p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 h
   have hN : Module.finrank K (G.A r) = p ^ (r * G.height) := by
     have := G.rank_eq r (IsLocalRing.closedPoint K)
     rwa [Module.rankAtStalk_eq_finrank_of_free] at this

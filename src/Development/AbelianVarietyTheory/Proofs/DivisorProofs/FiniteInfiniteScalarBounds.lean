@@ -99,7 +99,7 @@ theorem vw_natCast_nonneg' (w : HeightOneSpectrum (𝓞 K)) (q : ℕ) : 0 ≤ vw
   have e : (q : K) = algebraMap (𝓞 K) K (q : 𝓞 K) := by simp
   unfold vw
   rw [e, ← FractionalIdeal.coeIdeal_span_singleton]
-  exact FractionalIdeal.count_coe_nonneg K w _
+  exact FractionalIdeal.count_coeIdeal_nonneg K w _
 
 theorem loss_sqrt_prod {ι : Type} (P : Finset ι) (q : ι → ℕ) (hq : ∀ i ∈ P, q i ≠ 0) (s : ι → K)
     (hs : ∀ i ∈ P, s i ^ 2 = (q i : K)) (n : ι → ℤ) :
@@ -188,14 +188,14 @@ variable {E : Type} [Field E] [NumberField E]
 theorem vw_int_nonneg' (w : HeightOneSpectrum (𝓞 E)) (z : 𝓞 E) : 0 ≤ vw w (z : E) := by
   unfold vw
   rw [show (z : E) = algebraMap (𝓞 E) E z from rfl, ← FractionalIdeal.coeIdeal_span_singleton]
-  exact FractionalIdeal.count_coe_nonneg E w _
+  exact FractionalIdeal.count_coeIdeal_nonneg E w _
 
 theorem sum_count_log_le (I : Ideal (𝓞 E)) (hI : I ≠ 0) (S : Finset (HeightOneSpectrum (𝓞 E))) :
     ∑ w ∈ S, (FractionalIdeal.count E w (I : FractionalIdeal (𝓞 E)⁰ E) : ℝ) * Real.log (Ideal.absNorm w.asIdeal) ≤
       Real.log (Ideal.absNorm I) := by
   classical
   set c : HeightOneSpectrum (𝓞 E) → ℕ := fun w => (Associates.mk w.asIdeal).count (Associates.mk I).factors with hcdef
-  have hc : ∀ w, FractionalIdeal.count E w (I : FractionalIdeal (𝓞 E)⁰ E) = c w := fun w => FractionalIdeal.count_coe E w hI
+  have hc : ∀ w, FractionalIdeal.count E w (I : FractionalIdeal (𝓞 E)⁰ E) = c w := fun w => FractionalIdeal.count_coeIdeal E w hI
   set f : HeightOneSpectrum (𝓞 E) → ℕ := fun w => Ideal.absNorm w.asIdeal ^ c w with hf
   have hprod : ∏ᶠ w, f w = Ideal.absNorm I := by
     have := map_finprod (Ideal.absNorm (S := 𝓞 E)).toMonoidHom (Ideal.hasFiniteMulSupport hI)
@@ -276,13 +276,13 @@ theorem sum_abs_count_AA_le (hcc : D.host.ccK = ⊤) (S : Finset (HeightOneSpect
   have hAle : ∀ w, FractionalIdeal.count D.host.E w D.host.AA ≤ 0 := fun w => by
     simp only [Formalism.BasicNotions.Host.AA, Formalism.BasicNotions.Host.AA0, Formalism.BasicNotions.Host.ccE, hcc, Ideal.map_top, FractionalIdeal.coeIdeal_top,
       one_mul, FractionalIdeal.count_inv, neg_nonpos]
-    exact FractionalIdeal.count_coe_nonneg _ _ _
+    exact FractionalIdeal.count_coeIdeal_nonneg _ _ _
   have hBle : ∀ w, FractionalIdeal.count D.host.E w D.host.AAbar ≤ 0 := fun w => by
     have ht : (D.host.conj • D.host.ccE : Ideal (𝓞 D.host.E)) = ⊤ := by
       rw [Formalism.BasicNotions.Host.ccE, hcc, Ideal.map_top]
       first | rw [Ideal.pointwise_smul_def, Ideal.map_top] | simp [Ideal.pointwise_smul_def] | rfl
     simp only [Formalism.BasicNotions.Host.AAbar, ht, FractionalIdeal.coeIdeal_top, one_mul, FractionalIdeal.count_inv, neg_nonpos]
-    exact FractionalIdeal.count_coe_nonneg _ _ _
+    exact FractionalIdeal.count_coeIdeal_nonneg _ _ _
   have hterm : ∀ w ∈ S, ((|FractionalIdeal.count D.host.E w D.host.AA| + |FractionalIdeal.count D.host.E w D.host.AAbar| : ℤ) : ℝ) *
       Real.log (Ideal.absNorm w.asIdeal) ≤
       (FractionalIdeal.count D.host.E w ((D.host.ddE : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : ℝ) *

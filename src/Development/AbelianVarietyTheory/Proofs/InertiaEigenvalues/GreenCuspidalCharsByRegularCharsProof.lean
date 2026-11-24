@@ -370,7 +370,7 @@ theorem card_generic_irr_le : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g
   have hsumN : ∑ ρ ∈ S, m ρ ^ 2 = g ^ n - g ^ (n - 1) := by exact_mod_cast hsum
   have hset : {ρ : Gn g n → ℂ | IsIrr ρ ∧ wh ψ ρ ≠ 0} = ↑(S.filter fun ρ => m ρ ≠ 0) := by
     ext ρ
-    simp only [Set.mem_setOf_eq, Finset.coe_filter, hmemS]
+    simp only [Set.mem_ofPred_eq, Finset.coe_filter, hmemS]
     constructor
     · rintro ⟨h1, h2⟩
       exact ⟨h1, fun h0 => h2 (by rw [hm ρ h1, h0, Nat.cast_zero])⟩
@@ -515,9 +515,9 @@ theorem exists_cusp_of_regular : ∀ (g : ℕ) [Fact g.Prime] (d : ℕ), 0 < d �
   have hgp : g.Prime := Fact.out
   have hg : 0 < g := hgp.pos
   have hcF : Nat.card (ZMod g) = g := Nat.card_zmod g
-  haveI : FiniteDimensional (ZMod g) K := Module.finite_of_finrank_pos (by rw [hK]; exact hd)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  letI : Fintype K := Fintype.ofFinite K
+  have : FiniteDimensional (ZMod g) K := Module.finite_of_finrank_pos (by rw [hK]; exact hd)
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  let : Fintype K := Fintype.ofFinite K
   have hcardK : Fintype.card K = g ^ d := by
     rw [Module.card_eq_pow_finrank (K := ZMod g), ZMod.card, hK]
   have hcardU : Nat.card Kˣ = g ^ d - 1 := by
@@ -558,7 +558,7 @@ theorem exists_cusp_of_regular : ∀ (g : ℕ) [Fact g.Prime] (d : ℕ), 0 < d �
   have hpow : ∀ θ : Kˣ →* ℂˣ, ∃ k, θ = lam ^ k := by
     intro θ
     have h1 : θ γ ^ (g ^ d - 1) = 1 := by rw [← map_pow, hmod, map_one]
-    haveI : NeZero (g ^ d - 1) := ⟨hN0.ne'⟩
+    have : NeZero (g ^ d - 1) := ⟨hN0.ne'⟩
     have h1' : ((θ γ : ℂˣ) : ℂ) ^ (g ^ d - 1) = 1 := by rw [← Units.val_pow_eq_pow_val, h1, Units.val_one]
     obtain ⟨k, -, hk0⟩ := (IsPrimitiveRoot.coe_units_iff.2 hprim).eq_pow_of_pow_eq_one h1'
     have hk : lam γ ^ k = θ γ := Units.ext (by rw [Units.val_pow_eq_pow_val]; exact hk0)
@@ -693,16 +693,16 @@ variable {g : ℕ} [hg : Fact g.Prime]
 
 theorem aeval_pow_frob {K : Type} [Field K] [Algebra (ZMod g) K] (n : ℕ) (Q : (ZMod g)[X]) (y : K) :
     aeval (y ^ g ^ n) Q = (aeval y Q) ^ g ^ n := by
-  haveI : CharP K g := (Algebra.charP_iff (ZMod g) K g).1 (ZMod.charP g)
-  haveI : ExpChar K g := ExpChar.prime hg.out
+  have : CharP K g := (Algebra.charP_iff (ZMod g) K g).1 (ZMod.charP g)
+  have : ExpChar K g := ExpChar.prime hg.out
   rw [← iterateFrobenius_def g n y, ← iterateFrobenius_def g n (aeval y Q), aeval_def, aeval_def, hom_eval₂]
   congr 1
   exact Subsingleton.elim _ _
 
 theorem frob_injective {K : Type} [Field K] [Algebra (ZMod g) K] (n : ℕ) :
     Function.Injective (fun y : K => y ^ g ^ n) := by
-  haveI : CharP K g := (Algebra.charP_iff (ZMod g) K g).1 (ZMod.charP g)
-  haveI : ExpChar K g := ExpChar.prime hg.out
+  have : CharP K g := (Algebra.charP_iff (ZMod g) K g).1 (ZMod.charP g)
+  have : ExpChar K g := ExpChar.prime hg.out
   intro a b h
   apply (iterateFrobenius K g n).injective
   simpa only [iterateFrobenius_def] using h
@@ -711,7 +711,7 @@ theorem card_le_of_gen_fixed {L : Type} [Field L] [Algebra (ZMod g) L] [Fintype 
     (hgen : ∀ y : L, ∃ Q : (ZMod g)[X], aeval x Q = y) (hx : x ^ g ^ k = x) : Fintype.card L ≤ g ^ k := by
   have hq : 1 < g ^ k := Nat.one_lt_pow hk.ne' hg.out.one_lt
   set f : L[X] := X ^ (g ^ k) - X with hf
-  have hf0 : f ≠ 0 := FiniteField.X_pow_card_sub_X_ne_zero hq
+  have hf0 : f ≠ 0 := X_pow_sub_X_ne_zero hq
   have hfix : ∀ y : L, y ^ g ^ k = y := by
     intro y
     obtain ⟨Q, rfl⟩ := hgen y
@@ -731,7 +731,7 @@ variable {d : ℕ} {P : (ZMod g)[X]} (hP : IsPrimeLab d P)
 include hP
 
 theorem finrank_adjoin : haveI := Fact.mk hP.2.1; Module.finrank (ZMod g) (AdjoinRoot P) = d := by
-  haveI := Fact.mk hP.2.1
+  have := Fact.mk hP.2.1
   rw [(AdjoinRoot.powerBasis hP.1.ne_zero).finrank, AdjoinRoot.powerBasis_dim, hP.2.2.2]
 
 theorem adjoin_gen : ∀ y : AdjoinRoot P, ∃ Q : (ZMod g)[X], aeval (AdjoinRoot.root P) Q = y := by
@@ -740,10 +740,10 @@ theorem adjoin_gen : ∀ y : AdjoinRoot P, ∃ Q : (ZMod g)[X], aeval (AdjoinRoo
   exact ⟨Q, AdjoinRoot.aeval_eq Q⟩
 
 theorem le_of_dvd {k : ℕ} (hk : 0 < k) (hdvd : P ∣ X ^ (g ^ k) - X) : d ≤ k := by
-  haveI := Fact.mk hP.2.1
-  haveI : Module.Finite (ZMod g) (AdjoinRoot P) := (AdjoinRoot.powerBasis hP.1.ne_zero).finite
-  haveI : Finite (AdjoinRoot P) := Module.finite_of_finite (ZMod g)
-  letI : Fintype (AdjoinRoot P) := Fintype.ofFinite _
+  have := Fact.mk hP.2.1
+  have : Module.Finite (ZMod g) (AdjoinRoot P) := (AdjoinRoot.powerBasis hP.1.ne_zero).finite
+  have : Finite (AdjoinRoot P) := Module.finite_of_finite (ZMod g)
+  let : Fintype (AdjoinRoot P) := Fintype.ofFinite _
   have hcard : Fintype.card (AdjoinRoot P) = g ^ d := by
     rw [Module.card_eq_pow_finrank (K := ZMod g), ZMod.card, finrank_adjoin hP]
   have hx : (AdjoinRoot.root P) ^ g ^ k = AdjoinRoot.root P := by
@@ -762,13 +762,13 @@ variable {K : Type} [Field K] [Algebra (ZMod g) K]
 
 theorem exists_unit_root {d : ℕ} (hd : 0 < d) (hK : Module.finrank (ZMod g) K = d) {P : (ZMod g)[X]}
     (hP : IsPrimeLab d P) : ∃ u : Kˣ, aeval (u : K) P = 0 := by
-  haveI := Fact.mk hP.2.1
-  haveI : Module.Finite (ZMod g) (AdjoinRoot P) := (AdjoinRoot.powerBasis hP.1.ne_zero).finite
-  haveI : Finite (AdjoinRoot P) := Module.finite_of_finite (ZMod g)
-  letI : Fintype (AdjoinRoot P) := Fintype.ofFinite _
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hd)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  letI : Fintype K := Fintype.ofFinite _
+  have := Fact.mk hP.2.1
+  have : Module.Finite (ZMod g) (AdjoinRoot P) := (AdjoinRoot.powerBasis hP.1.ne_zero).finite
+  have : Finite (AdjoinRoot P) := Module.finite_of_finite (ZMod g)
+  let : Fintype (AdjoinRoot P) := Fintype.ofFinite _
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hd)
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  let : Fintype K := Fintype.ofFinite _
   have hc : Fintype.card (AdjoinRoot P) = Fintype.card K := by
     rw [Module.card_eq_pow_finrank (K := ZMod g), Module.card_eq_pow_finrank (K := ZMod g) (V := K),
       finrank_adjoin hP, hK]
@@ -808,15 +808,15 @@ theorem primeLab_to_regularChar : ∀ (g : ℕ) [Fact g.Prime] (d : ℕ), 0 < d 
     Module.finrank (ZMod g) K = d → ∃ c : (ZMod g)[X] → (Kˣ →* ℂˣ), (∀ P, IsPrimeLab d P → IsRegularChar g d (c P)) ∧
       ∀ P P', IsPrimeLab d P → IsPrimeLab d P' → (∃ i < d, c P' = c P ^ g ^ i) → P = P' := by
   intro g _ d hd K _ _ hK
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hd)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hd)
+  have : Finite K := Module.finite_of_finite (ZMod g)
   let e : Kˣ ≃* (Kˣ →* ℂˣ) := (CommGroup.monoidHom_mulEquiv_of_hasEnoughRootsOfUnity Kˣ ℂ).some.symm
   let c : (ZMod g)[X] → (Kˣ →* ℂˣ) := fun P =>
     if h : ∃ u : Kˣ, aeval (u : K) P = 0 then e h.choose else 1
   have hc : ∀ P, IsPrimeLab d P → ∃ u : Kˣ, aeval (u : K) P = 0 ∧ c P = e u := by
     intro P hP
     have h := exists_unit_root hd hK hP
-    exact ⟨h.choose, h.choose_spec, dif_pos h⟩
+    exact ⟨h.choose, h.choose_spec, dite_eq_left h⟩
   refine ⟨c, fun P hP => ?_, fun P P' hP hP' ⟨i, hi, h⟩ => ?_⟩
   · obtain ⟨u, hu, hcu⟩ := hc P hP
     intro i j hi hj h
@@ -857,14 +857,14 @@ theorem monic_deg_equiv_card (g : ℕ) [Fact g.Prime] (n : ℕ) :
   refine ⟨?_, ?_⟩
   · rw [← Nat.card_coe_set_eq, Nat.card_congr e, Nat.card_eq_fintype_card,
       Fintype.card_fun, ZMod.card, Fintype.card_fin]
-  · haveI : Finite {f : (ZMod g)[X] | f.Monic ∧ f.natDegree = n} := Finite.of_equiv _ e.symm
+  · have : Finite {f : (ZMod g)[X] | f.Monic ∧ f.natDegree = n} := Finite.of_equiv _ e.symm
     exact Set.toFinite _
 
 theorem zero_part_eq (g : ℕ) [Fact g.Prime] (n : ℕ) (hn : 0 < n) :
     {f : (ZMod g)[X] | f.Monic ∧ f.natDegree = n ∧ f.coeff 0 = 0} =
       (fun h => X * h) '' {f : (ZMod g)[X] | f.Monic ∧ f.natDegree = n - 1} := by
   ext f
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · rintro ⟨hm, hd, h0⟩
     obtain ⟨h, rfl⟩ := X_dvd_iff.mpr h0
@@ -893,7 +893,7 @@ theorem GlobalTheory.GrPolys.card_monic_coeff_zero_ne_zero :
   have hfB : B.Finite := hfS.subset hBS
   have hU : A ∪ B = S := by
     ext f
-    simp only [A, B, S, Set.mem_union, Set.mem_setOf_eq]
+    simp only [A, B, S, Set.mem_union, Set.mem_ofPred_eq]
     tauto
   have hD : Disjoint A B := by
     rw [Set.disjoint_left]

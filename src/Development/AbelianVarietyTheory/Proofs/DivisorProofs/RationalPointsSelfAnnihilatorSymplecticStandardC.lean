@@ -73,7 +73,7 @@ theorem psiV_exists_ne_one {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (v : Heigh
 
 theorem adele_rat_of_isGood {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) (a : AF F)
     (h : ∀ c : F, B.ψ (a * algebraMap F _ c) = 1) : ∃ d : F, a = algebraMap F _ d := by
-  haveI : IsTotallyReal F := hB.cm.1
+  have : IsTotallyReal F := hB.cm.1
   obtain ⟨⟨θ, hθ⟩, -⟩ := (GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood F E σ B hB).2
   let L : Ainf F →+ ℂ := AddMonoidHom.mk' (fun x => ∑ w, θ w (x ⊗ₜ[F] (1 : E))) fun a b => by
     simp only [map_add (f := _), TensorProduct.add_tmul, Finset.sum_add_distrib]
@@ -106,7 +106,7 @@ theorem exists_symplOF_eq (σ : E →ₐ[F] E) (hσ : Function.Surjective σ) {n
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun c _ =>
       Finset.sum_congr rfl fun d _ => ?_
     simp only [AddMonoidHom.mapMatrix_apply, Matrix.map_apply, Matrix.of_apply, RingHom.toAddMonoidHom_eq_coe,
-      AddMonoidHom.coe_coe, cAF_incAF, g, Function.surjInv_eq hσ]
+      AddMonoidHom.coe_ofClass, cAF_incAF, g, Function.surjInv_eq hσ]
     rfl
   rw [symplOF, h2, ← mul_assoc, ← RingHom.map_mul, mul_inv_cancel_left₀ hξ]
 
@@ -120,7 +120,7 @@ theorem symplOF_rat (σ : E →ₐ[F] E) [Module.Finite F E] {nS nT : ℕ}
       incAF F E (∑ a, ∑ b, ∑ c, ∑ d, JS⁻¹ a b * σ (N c b) * JT c d * M d a) := by
     set_option synthInstance.maxHeartbeats 100000 in
       simp only [hOF, AddMonoidHom.mapMatrix_apply, Matrix.map_apply, RingHom.toAddMonoidHom_eq_coe,
-      AddMonoidHom.coe_coe, cAF_incAF, map_sum, map_mul]
+      AddMonoidHom.coe_ofClass, cAF_incAF, map_sum, map_mul]
   rw [symplOF, h, ← map_mul]
   show Algebra.trace (AF F) (AEF F E) ((1 : AF F) ⊗ₜ[F] _) = _
   rw [GlobalTheory.LatVac.trace_tmul, one_mul]
@@ -131,7 +131,7 @@ theorem ratLF_annihilator : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → ∀ x : WOF F E nS nT,
       (∀ γ ∈ ratLF F E nS nT, B.ψ (symplOF σ JS JT ξ₀ x γ) = 1) ↔ x ∈ ratLF F E nS nT := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ x
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hB.cm.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hB.cm.2.2.1]; norm_num)
   have hσ : Function.Surjective σ := (Algebra.IsAlgebraic.algHom_bijective σ).2
   constructor
   · intro h

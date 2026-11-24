@@ -67,7 +67,7 @@ theorem UpperTheory.maximalCompact_unique_arch_finite_decomposition :
     ∀ {K : Type} [Field K] [NumberField K] (n : ℕ), ∃ (α : KG K n → archCompact K n) (β : KG K n → AdelicGLn.integralFiniteGL K n), Continuous α ∧ Continuous β ∧ (∀ k : KG K n, (k : G1 K n) = arc1 (α k) * fin1 (β k : FA K n)) ∧ (∀ (a : archCompact K n) (h : AdelicGLn.integralFiniteGL K n) (k : KG K n), (k : G1 K n) = arc1 a * fin1 (h : FA K n) → α k = a ∧ β k = h) ∧ (∀ a : archCompact K n, arc1 a ∈ KG K n) ∧ ∀ h : AdelicGLn.integralFiniteGL K n, fin1 (h : FA K n) ∈ KG K n := by
   intro K _ _ n
   have hval : Continuous fun k : KG K n => ((k : G1 K n) : AdelicGLn.AdelicGL K n) :=
-    continuous_subtype_val.comp continuous_subtype_val
+    continuous_subtypeVal.comp continuous_subtypeVal
   have hpe : Continuous fun k : KG K n => AdelicGLn.prodEquiv K n ((k : G1 K n) : AdelicGLn.AdelicGL K n) :=
     (AdelicGLn.prodEquiv K n).continuous.comp hval
   refine ⟨fun k => ⟨archPart ((k : G1 K n) : AdelicGLn.AdelicGL K n), archPart_mem_archCompact k.2⟩,

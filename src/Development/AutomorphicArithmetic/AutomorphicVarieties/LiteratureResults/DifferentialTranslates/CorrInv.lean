@@ -96,7 +96,7 @@ theorem corrInv : CorrInv := by
       ext1 v
       have hv' : v = fun i => (2 : ℝ) • sand g (hv (hv.symm ((2 : ℝ)⁻¹ • sand g⁻¹ (v i)))) := by
         funext i
-        rw [LinearEquiv.apply_symm_apply, map_smul, smul_smul, ← ContinuousLinearMap.mul_apply, ← map_mul,
+        rw [LinearEquiv.apply_symm_apply, map_smul, smul_smul, ← mul_apply_eq_comp, ← map_mul,
           mul_inv_cancel, map_one]
         simp
       rw [hv', act_corr ho U Ξ q α w h, h, hL]

@@ -139,7 +139,7 @@ theorem part_one {n L : ℕ} (T : Finset ℕ) (hT : ∀ s ∈ T, 4 * L * s < n) 
 theorem part_two {n L : ℕ} (hn : 0 < n) (T : Finset ℕ) (hT : ∀ s ∈ T, 4 * L * s < n)
     (u₀ t h : ZMod n) (hord : addOrderOf h ≤ 4 * L) :
     {x : ZMod n | (∃ i : ℤ, x = t + i • h) ∧ InTranslate T u₀ x}.ncard ≤ 1 := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   rw [Set.ncard_le_one]
   rintro x ⟨⟨i, rfl⟩, s₁, hs₁, e₁⟩ y ⟨⟨i', rfl⟩, s₂, hs₂, e₂⟩
   set m := addOrderOf h with hm

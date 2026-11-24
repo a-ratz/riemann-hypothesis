@@ -119,23 +119,23 @@ theorem foldBound_holds (G : Type*) [Group G] [TopologicalSpace G] [IsTopologica
     (μ : Measure G) [μ.IsHaarMeasure] : FoldBound G μ := by
   intro Γ S hΓ hSΓ Ω hΩ a Ph hPh hS hbd F hF D hD x
   classical
-  haveI := hΓ
-  haveI : Countable Γ := by
+  have := hΓ
+  have : Countable Γ := by
     obtain ⟨s, hs, hd⟩ := TopologicalSpace.exists_countable_dense Γ
     have hu : s = Set.univ := by
       have := hd.closure_eq
       rwa [closure_discrete] at this
     rw [hu] at hs
     exact Set.countable_univ_iff.mp hs
-  haveI : Countable D := ((Set.countable_range ((↑) : Γ → G)).mono
+  have : Countable D := ((Set.countable_range ((↑) : Γ → G)).mono
     (show D ⊆ Set.range ((↑) : Γ → G) from fun y hy => ⟨⟨y, hD.1 hy⟩, rfl⟩)).to_subtype
-  haveI : Countable S := ((Set.countable_range ((↑) : Γ → G)).mono
+  have : Countable S := ((Set.countable_range ((↑) : Γ → G)).mono
     (show (S : Set G) ⊆ Set.range ((↑) : Γ → G) from fun y hy => ⟨⟨y, hSΓ hy⟩, rfl⟩)).to_subtype
   set ind : G → ℝ≥0∞ := Ω.indicator (fun _ => 1) with hind
   have hindm : Measurable ind := measurable_const.indicator hΩ
   set Fd : G → G → ℝ≥0∞ := fun g y => ind (g⁻¹ * y) * ‖Ph y‖ₑ with hFd
   have hFdm : ∀ g, Measurable (Fd g) := fun g =>
-    (hindm.comp (measurable_const_mul _)).mul hPh.enorm
+    (hindm.comp (measurable_const_mul _)).mul hPh.eNorm
 
   have step1 : ∀ g : G, ‖Ph g‖ₑ ≤ (a : ℝ≥0∞) * ∫⁻ y, Fd g y ∂μ := by
     intro g
@@ -182,6 +182,6 @@ theorem foldBound_holds (G : Type*) [Group G] [TopologicalSpace G] [IsTopologica
         exact step4 y
     _ = (a : ℝ≥0∞) * mult Γ Ω x * quotientLIntegral μ F Ph := by
         unfold quotientLIntegral
-        rw [lintegral_const_mul _ hPh.enorm, mul_assoc]
+        rw [lintegral_const_mul _ hPh.eNorm, mul_assoc]
 
 end Formalism.L2.SG.FoldBound

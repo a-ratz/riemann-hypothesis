@@ -128,14 +128,14 @@ theorem loc {V : Type} [AddCommGroup V] [Module L V] [Module (𝓞 L) V] [IsScal
   classical
   have hξ := 𝔐.tie.gen
   let A := Localization.AtPrime P
-  letI : Algebra A L := cc.toAlgebra
+  let : Algebra A L := cc.toAlgebra
   have hc' : ∀ a, algebraMap A L (algebraMap (𝓞 L) A a) = algebraMap (𝓞 L) L a := fun a => RingHom.congr_fun hc a
-  haveI : IsScalarTower (𝓞 L) A L := IsScalarTower.of_algebraMap_eq fun a => (hc' a).symm
-  letI : Module A V := Module.compHom V cc
-  haveI : IsScalarTower A L V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower (𝓞 L) A V := IsScalarTower.of_algebraMap_smul fun r x => by
+  have : IsScalarTower (𝓞 L) A L := IsScalarTower.of_algebraMap_eq fun a => (hc' a).symm
+  let : Module A V := Module.compHom V cc
+  have : IsScalarTower A L V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower (𝓞 L) A V := IsScalarTower.of_algebraMap_smul fun r x => by
     rw [← algebraMap_smul L (algebraMap (𝓞 L) A r) x, hc', algebraMap_smul]
-  haveI : IsFractionRing A L := IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.primeCompl A L
+  have : IsFractionRing A L := IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.primeCompl A L
   have inj := IsFractionRing.injective A L
   let zA : Sp A ⟶ 𝔐.X := spMap (algebraMap (𝓞 L) A) ≫ z
   have hzL : spMap (algebraMap (𝓞 L) L) ≫ z = Spec.map (CommRingCat.ofHom (algebraMap A L)) ≫ zA := by
@@ -190,7 +190,7 @@ theorem loc {V : Type} [AddCommGroup V] [Module L V] [Module (𝓞 L) V] [IsScal
     · obtain ⟨p, hpS, hp⟩ := hex
       have hp0 : (p : 𝓞 L) ≠ 0 := Nat.cast_ne_zero.2 (𝔐.S_prime p hpS).ne_zero
       have hP0 : P ≠ ⊥ := fun h => hp0 (by rwa [h, Ideal.mem_bot] at hp)
-      haveI : IsDiscreteValuationRing A :=
+      have : IsDiscreteValuationRing A :=
         IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 L) hP0 A
       obtain ⟨v, hv, hv1⟩ := exists_val A L
       have hvp : v (p : L) < 1 := by

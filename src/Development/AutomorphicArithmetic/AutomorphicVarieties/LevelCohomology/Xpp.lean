@@ -100,7 +100,7 @@ private theorem UpperTheory.V.X.xiSq_ft {R : Type} [CommRing R] {n d : ℕ} [NeZ
       simp [ha_def, ZMod.natCast_zmod_val]
     have hcop : IsCoprime a n := by
       have hu : IsUnit ((a : ℤ) : ZMod n) := by rw [hax]; exact x.isUnit
-      rw [ZMod.coe_int_isUnit_iff_isCoprime] at hu
+      rw [ZMod.isUnit_intCast_iff_isCoprime] at hu
       exact hu.symm
     have hd1 : (d : ℤ) ∣ a - 1 := by
       apply (ZMod.intCast_zmod_eq_zero_iff_dvd (a - 1) d).mp
@@ -245,7 +245,7 @@ theorem UpperTheory.V.X.dirData :
   intro l hl c N iN e ψ o₁ hD q hX ω hω
   have hl2 : l ≠ 2 := hD.l_odd
   have h4l : 4 ≤ c2 ψ := hD.four_le
-  haveI : NeZero l := ⟨hl.out.ne_zero⟩
+  have : NeZero l := ⟨hl.out.ne_zero⟩
   obtain ⟨hq0, hq, hb⟩ := hX
   obtain ⟨-, -, hcod, hf0, hfour, hth, hl1⟩ := UpperTheory.V.X.th1Facts c.O N ψ l hl.out hl2
   obtain ⟨-, -, -, h2c, h2N, -⟩ := UpperTheory.V.HV.compCond c.O N ψ 2 Nat.prime_two
@@ -349,13 +349,13 @@ theorem UpperTheory.V.X.dir :
   obtain ⟨ω, hω1, hωT⟩ := omDir Ω l c
   obtain ⟨d, f, n, φ, ξ, hXD, hdvd, hv⟩ := dirData l c N e ψ o₁ hHD q hX ω hω1
   have hl : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   have hf0 : f ≠ 0 := by
     rintro rfl
     obtain ⟨k, hk⟩ := hXD.f_odd
     omega
-  haveI hNZ : NeZero (f * 2 ^ n) := ⟨Nat.mul_ne_zero hf0 (pow_ne_zero _ two_ne_zero)⟩
-  haveI : NeZero (l * N * N) := ⟨Nat.mul_ne_zero (Nat.mul_ne_zero hl.ne_zero (NeZero.ne N)) (NeZero.ne N)⟩
+  have hNZ : NeZero (f * 2 ^ n) := ⟨Nat.mul_ne_zero hf0 (pow_ne_zero _ two_ne_zero)⟩
+  have : NeZero (l * N * N) := ⟨Nat.mul_ne_zero (Nat.mul_ne_zero hl.ne_zero (NeZero.ne N)) (NeZero.ne N)⟩
   refine ⟨d, f, n, hNZ, φ, ξ, hXD, ?_⟩
   intro g
   obtain ⟨a, ha, hA⟩ := dirVal Ω (l * N * N) g
@@ -506,11 +506,11 @@ theorem UpperTheory.V.X.xpp :
     CorX → UnitaryThreeInertia.HostXpp := by
   intro hX Ω _ _ _ l hlp c N _ e ψ o₁ hD q hq S A F hF
   obtain ⟨d, f, n, _, φ, ξ, hx, hγ⟩ := dir Ω l c N e ψ o₁ hD q hq
-  haveI : Finite (ResidueField c.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hlp.out).2 (by
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hlp.out).2 (by
     have h := (dvrFacts l c.O).2.2.1
     have h1 : (l : c.O) ∈ maximalIdeal c.O := by
       have : ¬ IsUnit (algebraMap ℤ_[l] c.O l) := fun h2 => PadicInt.irreducible_p.not_isUnit (h.map_nonunit _ h2)
@@ -525,7 +525,7 @@ theorem UpperTheory.V.X.xpp :
     intro h
     have h1 := h.trans (Subgroup.card_subgroup_dvd_card κ.range)
     rw [Nat.card_prod, Nat.card_units, Nat.card_eq_fintype_card, Fintype.card_units_int] at h1
-    haveI := Fintype.ofFinite (ResidueField c.O)
+    have := Fintype.ofFinite (ResidueField c.O)
     obtain ⟨r, -, hr⟩ := FiniteField.card (ResidueField c.O) l
     rcases hlp.out.dvd_mul.1 h1 with h2 | h2
     · exact hD.l_odd ((Nat.prime_dvd_prime_iff_eq hlp.out Nat.prime_two).1 h2)

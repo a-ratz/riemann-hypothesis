@@ -301,7 +301,7 @@ theorem LZIdemSumApprox_of : LateralTheory.E.IdempotentLiftingAlt.LZIdemSumAppro
     · exact Set.Finite.biUnion (List.finite_toSet _) (fun s _ => hTBf s)
     · exact Set.Finite.biUnion (List.finite_toSet _) (fun s _ => hTCf s)
   obtain ⟨A', _, _, _, φ, hlift, hmax⟩ := approx_base TA hTA
-  letI : Algebra A' K := ((algebraMap A K).comp φ).toAlgebra
+  let : Algebra A' K := ((algebraMap A K).comp φ).toAlgebra
   have hφ : algebraMap A' K = (algebraMap A K).comp φ := rfl
   have sa : ∀ {s : Set K} {x : K}, x ∈ s → x ∈ Algebra.adjoin A' s := fun h => Algebra.subset_adjoin h
   have hrange : TA ⊆ Set.range φ := fun a ha => by

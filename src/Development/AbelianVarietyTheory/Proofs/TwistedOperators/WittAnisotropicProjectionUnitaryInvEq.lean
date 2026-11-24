@@ -193,7 +193,7 @@ def proj (g : (flagN d ⊔ d.emb0.range : Subgroup (GA D S))) : GA D S₀ :=
 theorem continuous_proj : Continuous (proj d) := by
   apply continuous_of_mt
   simp only [proj, mt_ofMat]
-  exact continuous_const.matrix_mul (((continuous_mt S).comp continuous_subtype_val).matrix_mul continuous_const)
+  exact continuous_const.matrix_mul (((continuous_mt S).comp continuous_subtypeVal).matrix_mul continuous_const)
 
 theorem proj_mul (h : GA D S₀) (n : flagN d) :
     proj d ⟨n.1 * d.emb0 h, mul_mem (Subgroup.mem_sup_left n.2) (Subgroup.mem_sup_right ⟨h, rfl⟩)⟩ = h := by

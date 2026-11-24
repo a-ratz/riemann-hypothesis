@@ -129,7 +129,7 @@ theorem inv_tau_pow_le (I : AutInst) (hn : 1 ≤ I.n) (x g : I.GA) (hg : g.2 ∈
     field_simp
   calc _ ≤ _ := h3
     _ = (tau1 I x)⁻¹ ^ (2 * I.n ^ 2 * I.f) * Real.exp (2 * (I.n : ℝ) ^ 2 * D) := by
-      rw [mul_pow, ← Real.exp_nat_mul, h4]
+      rw [mul_pow, ← Real.exp_natCast_mul, h4]
 
 theorem reproducing_fixed : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h : ℝ), IsDSData B d → 1 ≤ B.I.n → LocDec B h → HBig B 40 h → ∀ T, B.I.IsRConv B.μf B.fund B.R (phe B d) T → ∀ (y : B.I.L2 B.μf B.fund) (f : B.I.GA → ℂ) (C : ℝ), T y = y → IsContRep B y f → (∀ x, ‖f x‖ ≤ C * (tau1 B.I x)⁻¹ ^ (2 * B.I.n ^ 2 * B.I.f)) → (∃ Φ : B.I.GA → ℝ, Integrable Φ (B.I.muA B.μf) ∧ ∀ x g, ‖phe B d g * f (x * g)‖ ≤ (tau1 B.I x)⁻¹ ^ (2 * B.I.n ^ 2 * B.I.f) * Φ g) ∧ ∀ x, f x = ∫ g, phe B d g * f (x * g) ∂(B.I.muA B.μf) := by
   intro B d h hd hn hl hb T hT y f C hy hf hC
@@ -182,8 +182,8 @@ theorem reproducing_fixed : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) 
   obtain ⟨hext1, hext2, -, -⟩ := GlobalTheory.ExtContRep.ext_ae_eq_contRep B y f hcr
   have hrc := (GlobalTheory.ConvKernel.rconv_eq_integral B (phe B d) T hT y).2
   rw [hy] at hrc
-  haveI : SecondCountableTopology B.I.Gf := (GlobalTheory.CongTop.adelic_topology B.I).2.2.1
-  haveI : FirstCountableTopology B.I.Ginf := inferInstance
+  have : SecondCountableTopology B.I.Gf := (GlobalTheory.CongTop.adelic_topology B.I).2.2.1
+  have : FirstCountableTopology B.I.Ginf := inferInstance
   have hshift : ∀ x : B.I.GA, ∀ᵐ g ∂(B.I.muA B.μf), B.I.ext y (x * g) = f (x * g) := by
     intro x
     have hmap := (GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).1 x
@@ -298,7 +298,7 @@ theorem continuous_phe (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (hd : IsD
   have hv : ∀ v, Continuous (fun g : B.I.Ginf => B.σ v (uMat (g v)) (B.w v)) := by
     intro v
     have hc := ((hd v).2.1.2.2.1).2.2 (B.w v)
-    exact hc.comp_continuous ((Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v))
+    exact hc.comp_continuous ((Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v))
       (fun g => (g v).2)
   have hph : Continuous (ph B d) := by
     unfold ph
@@ -324,7 +324,7 @@ noncomputable def incl (I : AutInst) (v : InfinitePlace I.F) : UJ (I.ε v) →* 
 
 theorem isClosedEmbedding_incl (I : AutInst) (v : InfinitePlace I.F) : Topology.IsClosedEmbedding (incl I v) := by
   obtain ⟨hT2, -⟩ := CongTop.adelic_topology I
-  haveI := hT2
+  have := hT2
   classical
   refine Function.LeftInverse.isClosedEmbedding (f := fun p : I.GA => p.1 v) ?_ ?_ ?_
   · intro m
@@ -335,15 +335,15 @@ theorem isClosedEmbedding_incl (I : AutInst) (v : InfinitePlace I.F) : Topology.
 theorem cusp_of_fixed : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h : ℝ), IsDSData B d → (∀ (v : InfinitePlace B.I.F) (Wv : Submodule ℂ (Fin B.I.n → ℂ)), IsIsoC (B.I.ε v) Wv → ∀ ν : Measure (UJ (B.I.ε v)), IsHaarSub (NW (B.I.ε v) Wv) ν → ∀ x y : B.I.GA, ∫ m, phe B d (x * (open Classical in ((Pi.mulSingle v m, 1) : B.I.GA)) * y) ∂ν = 0) → LocDec B h → HBig B 40 h → ∀ T, B.I.IsRConv B.μf B.fund B.R (phe B d) T → ∀ (y : B.I.L2 B.μf B.fund) (f : B.I.GA → ℂ) (C : ℝ), T y = y → IsContRep B y f → (∀ x, ‖f x‖ ≤ C * (tau1 B.I x)⁻¹ ^ (2 * B.I.n ^ 2 * B.I.f)) → (∀ W, B.I.IsIsot W → ∀ ν : Measure B.I.GA, B.I.IsNQuotMeas W ν → ∀ x, ∫ m, f (m * x) ∂ν = 0) ∧ B.I.IsCuspFn (B.I.muA B.μf) (B.I.ext y) := by
   intro B d h hd hfib hloc hbig T hT y f C hfix hrep hgr
   obtain ⟨hT2, hLC, hSC, -⟩ := CongTop.adelic_topology B.I
-  haveI := hT2
-  haveI := hLC
-  haveI := hSC
-  haveI hHaar : (B.I.muA B.μf).IsHaarMeasure := by
-    haveI h1 : ∀ w, (muG (B.I.ε w)).IsHaarMeasure := fun w => inferInstance
-    haveI h2 : ∀ w, SigmaFinite (muG (B.I.ε w)) := fun w => inferInstance
-    haveI h3 : (Measure.pi fun w => muG (B.I.ε w)).IsHaarMeasure := Measure.pi.isHaarMeasure _
-    haveI h4 : SFinite (Measure.pi fun w => muG (B.I.ε w)) := inferInstance
-    haveI h5 : SFinite B.μf := inferInstance
+  have := hT2
+  have := hLC
+  have := hSC
+  have hHaar : (B.I.muA B.μf).IsHaarMeasure := by
+    have h1 : ∀ w, (muG (B.I.ε w)).IsHaarMeasure := fun w => inferInstance
+    have h2 : ∀ w, SigmaFinite (muG (B.I.ε w)) := fun w => inferInstance
+    have h3 : (Measure.pi fun w => muG (B.I.ε w)).IsHaarMeasure := Measure.pi.isHaarMeasure _
+    have h4 : SFinite (Measure.pi fun w => muG (B.I.ε w)) := inferInstance
+    have h5 : SFinite B.μf := inferInstance
     unfold AutInst.muA
     exact Measure.prod.instIsHaarMeasure _ _
   have main : ∀ W, B.I.IsIsot W → ∀ ν : Measure B.I.GA, B.I.IsNQuotMeas W ν →
@@ -352,7 +352,7 @@ theorem cusp_of_fixed : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h :
     have hn : 1 ≤ B.I.n := one_le_of_isIsot B.I W hW
     obtain ⟨⟨Φ, hΦi, hΦb⟩, hrepf⟩ := _root_.GlobalTheory.ReproducingFixed.reproducing_fixed B d h hd hn hloc hbig T hT y f C hfix hrep hgr
     obtain ⟨hfin, -, hconc, hinvN⟩ := hνW
-    haveI := hfin
+    have := hfin
     obtain ⟨c, hc0, hc⟩ := exists_pos_le_tau1_mul_of_mem_NA_of_isIsot B.I W x hW
     have hbd : ∀ᵐ m ∂ν, ∀ g, ‖phe B d g * f (m * x * g)‖ ≤
         c⁻¹ ^ (2 * B.I.n ^ 2 * B.I.f) * Φ g := by

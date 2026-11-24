@@ -76,14 +76,14 @@ theorem relAmple_diag_lam {k : Type} [Field k] {B : Over (Sp k)} [GrpObj B] [IsC
   have hι : (M.pull ((𝟙 B)⁻¹ : B ⟶ B).left).IsLB := pull_isLB hM _
   have hD1 : (LB.div ((abelian₂ B M).pull (lift (𝟙 B) (𝟙 B)).left) M).IsLB := LB.isLB_div hN hM
   have hD := LB.isLB_div hD1 hι
-  haveI : IsProper B.hom := IsAbelianScheme.proper
+  have : IsProper B.hom := IsAbelianScheme.proper
   have hI : ((𝟙 B)⁻¹ : B ⟶ B) ≫ (𝟙 B)⁻¹ = 𝟙 B := by
     first
     | rw [GrpObj.comp_inv, Category.comp_id, inv_inv]
     | rw [GrpObj.inv_def, Category.id_comp, GrpObj.inv_inv]
     | simp [GrpObj.comp_inv]
-  haveI : IsIso ((𝟙 B)⁻¹ : B ⟶ B) := ⟨⟨_, hI, hI⟩⟩
-  haveI : IsIso ((𝟙 B)⁻¹ : B ⟶ B).left :=
+  have : IsIso ((𝟙 B)⁻¹ : B ⟶ B) := ⟨⟨_, hI, hI⟩⟩
+  have : IsIso ((𝟙 B)⁻¹ : B ⟶ B).left :=
     ⟨⟨((𝟙 B)⁻¹ : B ⟶ B).left, by rw [← Over.comp_left, hI, Over.id_left],
       by rw [← Over.comp_left, hI, Over.id_left]⟩⟩
   have h0 : ∀ (L : LB (Sp k)), L.IsLB → ∃ t : LB.Gen L, t.IsGen := by
@@ -177,7 +177,7 @@ theorem exists_polAV_hypS_retract : ∀ (k : Type) [Field k] [IsAlgClosed k] (B 
   intro k _ _ B _ g hB hd M hM ha hK
   obtain ⟨hL1, hL2⟩ := GlobalTheory.abelianSchemeLaws_all
   have hG : Out.GlobalFnsSt := hL1.globalFns
-  letI : IsCommMonObj B := hB.comm
+  let : IsCommMonObj B := hB.comm
   have hΘ : ∃ t : LB.Gen (Theta B M), t.IsGen := GlobalTheory.exists_gen_theta_of_isAbelianScheme k B hB M hM
   let b : GlobalTheory.ZM.TBase k 1 := ⟨1, by simp, fun K _ β => by simp [IsPrimitiveRoot.one]⟩
   let c := siegOne hG hB hM g
@@ -190,7 +190,7 @@ theorem exists_polAV_hypS_retract : ∀ (k : Type) [Field k] [IsAlgClosed k] (B 
     hW hb hw hw' hs 1 k b (Sp k) (𝟙 _) c (show (1 : kˣ) ^ 1 = 1 from one_pow 1) odd_one hc hd
   obtain ⟨pr, hpr, hu, -, -, -⟩ := hsh
   obtain ⟨i, hi, -⟩ := hu B (fun _ => 𝟙 B)
-  letI := t.ab.comm
+  let := t.ab.comm
   refine ⟨t.pol, i, pr 0, ⟨t.act w, t.act w', t.hom w, t.hom w', hp.1, hp.2.2, hp.2.1⟩, ?_, hpr 0, hi 0⟩
   exact isMonHom_of_coord hpr hu (fun u => by rw [hi u]; exact (inferInstance : IsMonHom (𝟙 B)))
 

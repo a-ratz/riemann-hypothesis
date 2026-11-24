@@ -93,9 +93,9 @@ theorem ptEntry_row : ∀ (bs : List (ℂ × ℕ)), (∀ b ∈ bs, b.1 ≠ 0 ∧
     by_cases his : i < s
     · refine ⟨s - 1 - i, by omega, ?_, ?_, ?_⟩
       · simp only [blockIdx]
-        rw [if_pos (by omega), if_pos his]
+        rw [ite_eq_left (by omega), ite_eq_left his]
       · simp only [ptEntry]
-        rw [if_pos (by omega), if_pos (by omega)]
+        rw [ite_eq_left (by omega), ite_eq_left (by omega)]
         exact ht
       · intro j' hj'
         simp only [ptEntry]
@@ -106,13 +106,13 @@ theorem ptEntry_row : ∀ (bs : List (ℂ × ℕ)), (∀ b ∈ bs, b.1 ≠ 0 ∧
       obtain ⟨j, h1, h2, h3, h4⟩ := ih hbs (i - s) hi'
       refine ⟨j + s, by omega, ?_, ?_, ?_⟩
       · simp only [blockIdx]
-        rw [if_neg (by omega), if_neg his, Nat.add_sub_cancel, h2]
+        rw [ite_eq_right (by omega), ite_eq_right his, Nat.add_sub_cancel, h2]
       · simp only [ptEntry]
-        rw [if_neg (by omega), if_pos (by omega), Nat.add_sub_cancel]
+        rw [ite_eq_right (by omega), ite_eq_left (by omega), Nat.add_sub_cancel]
         exact h3
       · intro j' hj'
         simp only [ptEntry]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         split_ifs with hh
         · exact h4 _ (by omega)
         · rfl
@@ -293,9 +293,9 @@ theorem eq_of_map_eq {α β : Type} [TopologicalSpace α] [PolishSpace α] [Meas
     (h : μ.map f = ν.map f) : μ = ν := by
   have hE := hf.continuousOn.measurableEmbedding hS hi
   have key : ∀ μ : Measure α, μ Sᶜ = 0 → (μ.comap (Subtype.val : S → α)).map Subtype.val = μ := fun μ hμ => by
-    rw [map_comap_subtype_coe hS, Measure.restrict_eq_self_of_ae_mem hμ]
+    rw [map_comap_subtypeVal hS, Measure.restrict_eq_self_of_ae_mem hμ]
   rw [← key μ hμ, ← key ν hν] at h ⊢
-  rw [Measure.map_map hf.measurable measurable_subtype_coe, Measure.map_map hf.measurable measurable_subtype_coe] at h
+  rw [Measure.map_map hf.measurable measurable_subtypeVal, Measure.map_map hf.measurable measurable_subtypeVal] at h
   rw [hE.map_injective h]
 
 variable {k r : ℕ}
@@ -307,10 +307,10 @@ theorem F_row {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {ι : Type} (U
     (i : Fin (2 * r + k + 1)) (hi : i.val < r) (j : ι) : (Fm k r z * U) i j = U ⟨i.val, by omega⟩ j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (⟨i.val, by omega⟩ : Fin (r + 1))]
   · simp only [Fm, Matrix.of_apply]
-    rw [fvec_apply_lt z hz _ i hi, if_pos rfl, one_mul]
+    rw [fvec_apply_lt z hz _ i hi, ite_eq_left rfl, one_mul]
   · intro c _ hc
     simp only [Fm, Matrix.of_apply]
-    rw [fvec_apply_lt z hz _ i hi, if_neg (fun h => hc (Fin.ext h)), zero_mul]
+    rw [fvec_apply_lt z hz _ i hi, ite_eq_right (fun h => hc (Fin.ext h)), zero_mul]
   · simp
 
 theorem besselUnipotent_matrix_mul_three {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {a x b : Mat k r} (ha : a ∈ Nset k r)
@@ -322,7 +322,7 @@ theorem besselUnipotent_matrix_mul_three {z : Fin (2 * r + k + 1) → ℂ} (hz :
       N_F hz ha]
     simp only [Matrix.mul_assoc]
   conv_lhs => unfold Uof
-  rw [dif_pos hc', e, F_row hz _ _ hc']
+  rw [dite_eq_left hc', e, F_row hz _ _ hc']
   rfl
 
 theorem continuous_rootCoords (z : Fin (2 * r + k + 1) → ℂ) (p : Point ℂ (r + 1)) :
@@ -463,7 +463,7 @@ theorem eq_one_of_fix {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz
     ext i j
     by_cases hi : i.val < r
     · rw [F_row hz _ _ hi]
-      simp only [T, Matrix.of_apply, dif_pos hi]
+      simp only [T, Matrix.of_apply, dite_eq_left hi]
       rfl
     · rw [h7 i j (by omega), Matrix.mul_apply]
       refine (Finset.sum_eq_zero fun l _ => ?_).symm
@@ -640,7 +640,7 @@ theorem rootMeas_unique : ∀ (D : Formalism.BasicNotions.D7) (z z' : Fin (2 * D
     have hg : 0 < gg D := mul_pos (by exact_mod_cast (D.host.g_prime 0).pos) (by exact_mod_cast (D.host.g_prime 1).pos)
     have := Real.pi_pos
     have h2 := congrArg (fun ν : Measure (rootPat p → ℂ) => ν Set.univ) h1
-    simp only [Measure.smul_apply, smul_eq_mul, Measure.coe_zero, Pi.zero_apply] at h2
+    simp only [smul_apply, smul_eq_mul, FunLike.coe_zero, Pi.zero_apply] at h2
     rcases mul_eq_zero.1 h2.symm with h2 | h2
     · exact absurd h2 (ENNReal.ofReal_pos.2 (by positivity)).ne'
     · exact NeZero.ne _ (Measure.measure_univ_eq_zero.1 h2)

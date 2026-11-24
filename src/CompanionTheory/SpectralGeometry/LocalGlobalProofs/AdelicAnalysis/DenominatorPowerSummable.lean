@@ -173,7 +173,7 @@ theorem fibre_bound (N : ℕ) (hN : 0 < N) (s : Set F)
     apply Nat.eq_of_mul_eq_mul_right (Nat.pos_of_ne_zero hC0')
     rw [h1, mul_pow, ← hnormNat a, hmul]
     ring
-  haveI hfinQ : Finite (K ⧸ H.addSubgroupOf K) := Nat.finite_of_card_ne_zero (by
+  have hfinQ : Finite (K ⧸ H.addSubgroupOf K) := Nat.finite_of_card_ne_zero (by
     show H.relIndex K ≠ 0
     rw [hrel]
     exact Nat.mul_ne_zero (pow_ne_zero _ hN.ne') ha0)
@@ -194,20 +194,20 @@ theorem summable_den :
       intro I
       by_cases hI : I = ⊥
       · subst hI
-        haveI : IsEmpty {b : s // dI (b : F) = ⊥} := ⟨fun b => dI_ne_bot _ b.2⟩
+        have : IsEmpty {b : s // dI (b : F) = ⊥} := ⟨fun b => dI_ne_bot _ b.2⟩
         infer_instance
       · exact (fibre_bound N hN s hs I hI).1
     let f : s → ℝ := fun b => ((den (b : F) : ℝ) ^ M)⁻¹
     show Summable f
     rw [← (Equiv.sigmaFiberEquiv (fun b : s => dI (b : F))).summable_iff]
     refine (summable_sigma_of_nonneg (fun _ => by simp only [Function.comp, f]; positivity)).mpr ⟨fun I => ?_, ?_⟩
-    · haveI := hfin I
+    · have := hfin I
       exact Summable.of_finite
     · refine Summable.of_nonneg_of_le (fun I => tsum_nonneg (fun _ => by simp only [Function.comp, f]; positivity)) (fun I => ?_)
         (hsum2.mul_left ((N : ℝ) ^ Module.finrank ℤ (𝓞 F)))
       by_cases hI : I = ⊥
       · subst hI
-        haveI : IsEmpty {b : s // dI (b : F) = ⊥} := ⟨fun b => dI_ne_bot _ b.2⟩
+        have : IsEmpty {b : s // dI (b : F) = ⊥} := ⟨fun b => dI_ne_bot _ b.2⟩
         rw [tsum_empty]
         positivity
       · have hterm : ∀ y : {b : s // dI (b : F) = I},

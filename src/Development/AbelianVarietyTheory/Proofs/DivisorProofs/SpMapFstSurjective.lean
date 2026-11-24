@@ -61,7 +61,7 @@ namespace GlobalTheory.Pinch
 theorem spMap_fst_surjective (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Module Rᵐᵒᵖ M]
     [IsCentralScalar R M] : Function.Surjective (spMap (TrivSqZeroExt.fstHom R R M).toRingHom) := by
   intro q
-  haveI : q.asIdeal.IsPrime := q.2
+  have : q.asIdeal.IsPrime := q.2
   refine ⟨⟨q.asIdeal.comap (TrivSqZeroExt.inlHom R M), Ideal.IsPrime.comap _⟩, ?_⟩
   apply PrimeSpectrum.ext
   ext a

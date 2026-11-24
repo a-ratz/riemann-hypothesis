@@ -187,7 +187,7 @@ lemma submatrix_mul_lower {p k : ℕ} (h : k ≤ p) (L X : Matrix (Fin p) (Fin p
     by_contra hlt
     have hlt : t.val < k := not_le.mp hlt
     exact ht (Finset.mem_map.mpr ⟨⟨t.val, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
-  rw [hL _ _ (by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE]; omega), zero_mul]
+  rw [hL _ _ (by rw [Fin.lt_def, Fin.val_castLE]; omega), zero_mul]
 
 lemma ldu_upper_bound {p : ℕ} (L U : Matrix (Fin p) (Fin p) ℂ) (d : Fin p → ℂ)
     (hL : ∀ a b, a < b → L a b = 0) (hL1 : ∀ a, L a a = 1) (hU : ∀ a b, b < a → U a b = 0)
@@ -204,7 +204,7 @@ lemma ldu_upper_bound {p : ℕ} (L U : Matrix (Fin p) (Fin p) ℂ) (d : Fin p �
       have hab' : a < b := hab
       simp only [submatrix_apply]
       apply hL
-      rw [hr, Fin.lt_iff_val_lt_val, Fin.coe_castLE, Fin.coe_castLE]
+      rw [hr, Fin.lt_def, Fin.val_castLE, Fin.val_castLE]
       exact hab'
     rw [Matrix.det_of_isLowerTriangular _ hb]
     simp [hL1]
@@ -223,7 +223,7 @@ lemma ldu_upper_bound {p : ℕ} (L U : Matrix (Fin p) (Fin p) ℂ) (d : Fin p �
       simp only [submatrix_apply, diagonal_mul]
       have hb' : b.val < i.val := lt_of_lt_of_le hab' (Nat.lt_succ_iff.mp a.isLt)
       have : f b = r b := by simp [hf, hb']
-      rw [this, hU _ _ (by rw [hr, Fin.lt_iff_val_lt_val, Fin.coe_castLE, Fin.coe_castLE]; exact hab'), mul_zero]
+      rw [this, hU _ _ (by rw [hr, Fin.lt_def, Fin.val_castLE, Fin.val_castLE]; exact hab'), mul_zero]
     rw [Matrix.det_of_isUpperTriangular hb, Fin.prod_univ_castSucc, Fin.prod_univ_castSucc]
     simp only [submatrix_apply, diagonal_mul, hfc, hrl, hfl, hU1, mul_one]
     ring

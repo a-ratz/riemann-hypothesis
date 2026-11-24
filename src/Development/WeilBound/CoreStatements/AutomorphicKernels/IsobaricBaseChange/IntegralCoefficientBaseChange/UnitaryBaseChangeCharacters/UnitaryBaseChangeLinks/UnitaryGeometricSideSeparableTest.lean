@@ -138,8 +138,8 @@ theorem finprod_mem_eq_zero_of_factor {ι : Type} (f : ι → ℂ) (S : Set ι)
 theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι → Type) [∀ w, Finite (Cl w)] (D R : Type) [Finite D] (loc : R → ∀ w, Cl w) (O : ∀ w, Cl w → ℂ) (s : D → ∀ w, Cl w → ℂ) (good : ∀ w, Cl w → Prop) (N : ℂ), (∀ᶠ w in (cofinite : Filter ι), (∃! c, good w c) ∧ ∀ c, (O w c = if good w c then 1 else 0) ∧ (good w c → ∀ d, s d w c = 1)) → (∀ w, w ∉ S → Nonempty (Cl w)) → (∀ r, ∀ᶠ w in (cofinite : Filter ι), good w (loc r w)) → (∀ r r', (∀ w ∈ S, loc r w = loc r' w) → r = r') → (∀ x : ∀ w, Cl w, (∀ᶠ w in (cofinite : Filter ι), good w (x w)) → ∑ᶠ d : D, ∏ᶠ w ∈ S, s d w (x w) = if ∃ r, ∀ w ∈ S, loc r w = x w then N else 0) → (Function.support fun r : R => ∏ᶠ w ∈ S, O w (loc r w)).Finite ∧ (∑ᶠ r : R, ∏ᶠ w ∈ S, O w (loc r w)) * N = ∑ᶠ d : D, ∏ᶠ w ∈ S, ∑ᶠ c : Cl w, s d w c * O w c := by
   intro ι S Cl _ D R _ loc O s good N hA hB hC hD hE
   classical
-  haveI : ∀ w, Fintype (Cl w) := fun w => Fintype.ofFinite _
-  haveI : Fintype D := Fintype.ofFinite D
+  have : ∀ w, Fintype (Cl w) := fun w => Fintype.ofFinite _
+  have : Fintype D := Fintype.ofFinite D
   obtain ⟨T, hTfin, hTA⟩ : ∃ T : Set ι, T.Finite ∧ ∀ w, w ∉ T →
       ((∃! c, good w c) ∧ ∀ c, (O w c = if good w c then 1 else 0) ∧ (good w c → ∀ d, s d w c = 1)) :=
     ⟨_, Filter.eventually_cofinite.1 hA, fun w hw => not_not.1 hw⟩
@@ -153,9 +153,9 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
       (∀ x (w : F), ext x w = x w) ∧ ∀ x w, w ∉ T → good w (ext x w) := by
     refine ⟨fun x w => if h : w ∈ F then x ⟨w, h⟩ else if hw : w ∈ T then
       (hB w (fun hS => h ((hF w).2 ⟨hS, hw⟩))).some else (hTA w hw).1.exists.choose,
-      fun x w => dif_pos w.2, fun x w hw => ?_⟩
+      fun x w => dite_eq_left w.2, fun x w hw => ?_⟩
     have hwF : w ∉ F := fun h => hw ((hF w).1 h).2
-    simp only [dif_neg hwF, dif_neg hw]
+    simp only [dite_eq_right hwF, dite_eq_right hw]
     exact (hTA w hw).1.exists.choose_spec
   obtain ⟨ρ, hρdef⟩ : ∃ ρ : R → ∀ w : F, Cl w, ∀ r (w : F), ρ r w = loc r w :=
     ⟨fun r w => loc r w, fun _ _ => rfl⟩
@@ -179,9 +179,9 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
     · intro w _ hw
       obtain ⟨c0, hc0⟩ := (hTA w hw).1.exists
       rw [finsum_eq_sum_of_fintype, Finset.sum_eq_single c0]
-      · rw [hO w hw c0, if_pos hc0, hs1 w hw c0 hc0 d, mul_one]
+      · rw [hO w hw c0, ite_eq_left hc0, hs1 w hw c0 hc0 d, mul_one]
       · intro c _ hc
-        rw [hO w hw c, if_neg (fun hg => hc (huniq w hw c c0 hg hc0)), mul_zero]
+        rw [hO w hw c, ite_eq_right (fun hg => hc (huniq w hw c c0 hg hc0)), mul_zero]
       · intro h
         exact absurd (Finset.mem_univ c0) h
   have hs_ext : ∀ d x, ∏ᶠ w ∈ S, s d w (ext x w) = ∏ w : F, s d w (x w) := by
@@ -216,15 +216,15 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
     refine finprod_mem_eq_zero_of_factor _ S ?_ hwS ?_
     · refine (hTfin.union (Filter.eventually_cofinite.1 (hC r))).subset fun v hv => ?_
       by_contra hcon
-      simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hcon
-      exact hv (by rw [hO v hcon.1, if_pos hcon.2])
-    · rw [hO w hwT, if_neg hg]
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hcon
+      exact hv (by rw [hO v hcon.1, ite_eq_left hcon.2])
+    · rw [hO w hwT, ite_eq_right hg]
   have hP1 : ∀ r ∈ G, ∏ᶠ w ∈ S, O w (loc r w) = ∏ w : F, O w (ρ r w) := by
     intro r hr
     rw [prodS]
     · exact Finset.prod_congr rfl fun w _ => by rw [hρdef]
     · intro w hwS hwT
-      rw [hO w hwT, if_pos ((hG r).1 hr w hwS hwT)]
+      rw [hO w hwT, ite_eq_left ((hG r).1 hr w hwS hwT)]
   have hGfin : G.Finite := Set.Finite.of_finite_image (Set.toFinite _) hρinj
   have hmem : ∀ x, x ∈ ρ '' G ↔ ∃ r, ∀ w ∈ S, loc r w = ext x w := by
     intro x
@@ -246,9 +246,9 @@ theorem finsum_finprod_local_sums_expand : ∀ (ι : Type) (S : Set ι) (Cl : ι
           apply finsum_congr
           intro r
           by_cases hr : r ∈ G
-          · simp only [Set.indicator_apply, hr, if_true]
+          · simp only [Set.indicator_apply, hr, ite_true]
             exact hP1 r hr
-          · simp only [Set.indicator_apply, hr, if_false]
+          · simp only [Set.indicator_apply, hr, ite_false]
             exact hP0 r hr
       _ = ∑ᶠ x ∈ ρ '' G, ∏ w : F, O w (x w) :=
           (finsum_mem_image (f := fun x : (∀ w : F, Cl w) => ∏ w : F, O w (x w)) hρinj).symm
@@ -314,7 +314,7 @@ theorem eventually_valued_le_one {E : Type} [Field E] [NumberField E] (x : E) :
   rw [Filter.eventually_cofinite]
   refine h.subset ?_
   intro w hw
-  simp only [Set.mem_setOf_eq, not_le] at hw ⊢
+  simp only [Set.mem_ofPred_eq, not_le] at hw ⊢
   have e : Valued.v (algebraMap E (w.adicCompletion E) x) = w.valuation E x :=
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (K := E) w x
   rwa [e] at hw
@@ -334,7 +334,7 @@ theorem eventually_coeffs_integral {E : Type} [Field E] [NumberField E] (P : E[X
   change Valued.v (algebraMap E (w.adicCompletion E) (P.coeff n)) ≤ 1
   by_cases h0 : P.coeff n = 0
   · rw [h0, map_zero, map_zero]
-    exact zero_le'
+    exact zero_le
   · exact hw n (Polynomial.mem_support_iff.2 h0)
 
 theorem goodPlaces (E : Type) [Field E] [NumberField E] (P : E[X]) (hP : P.Separable) :
@@ -829,9 +829,9 @@ theorem Phi_transpose : (GlobalTheory.Tw.Phi n R)ᵀ = (-1 : R) ^ (n + 1) • Gl
   ext i j
   simp only [GlobalTheory.Tw.Phi, Matrix.of_apply, Matrix.transpose_apply, Matrix.smul_apply, smul_eq_mul]
   by_cases h : (i : ℕ) + j + 1 = n
-  · rw [if_pos h, if_pos (by omega), ← pow_add, show n + 1 + i = j + 2 * (i + 1) by omega, pow_add, pow_mul]
+  · rw [ite_eq_left h, ite_eq_left (by omega), ← pow_add, show n + 1 + i = j + 2 * (i + 1) by omega, pow_add, pow_mul]
     simp
-  · rw [if_neg h, if_neg (by omega), mul_zero]
+  · rw [ite_eq_right h, ite_eq_right (by omega), mul_zero]
 
 theorem PhiU_sq : (PhiU n R * PhiU n R).val = (-1 : R) ^ (n + 1) • (1 : Matrix (Fin n) (Fin n) R) := by
   rw [← Phi_mul_transpose n R, Phi_transpose, mul_smul_comm, smul_smul, ← mul_pow]
@@ -927,7 +927,7 @@ theorem pU_injective : Function.Injective (pU (E := E) (n := n)) := fun a b h =>
 
 theorem continuous_pU : Continuous (pU (E := E) (n := n)) :=
   (Continuous.units_map _ (continuous_id.matrix_map (continuous_snd : Continuous (pFin E)))).comp
-    (continuous_subtype_val.comp continuous_subtype_val)
+    (continuous_subtypeVal.comp continuous_subtypeVal)
 
 theorem tau_pU (k : finU (E := E) (n := n)) : tau n (conjFin (cc E)) (pU k) = pU k := (tau_eq_iff _ _).2 (cT_pFin k.1)
 
@@ -951,16 +951,16 @@ theorem ratF_injective : Function.Injective (ratF E n) := fun a b h => by
   obtain ⟨w⟩ : Nonempty (HeightOneSpectrum (𝓞 E)) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     exact ⟨⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩⟩
-  haveI : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
+  have : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
   have h' : (ratF E n a).val = (ratF E n b).val := congrArg Units.val h
   exact (algebraMap E (Af E)).injective (congrFun₂ h' i j)
 
 theorem pU_finPt (γ : UE E n) : pU (finPt γ) = ratF E n γ.1 := by
   have h : tau n (conjFin (cc E)) (ratF E n γ.1) = ratF E n γ.1 := by rw [← ratF_tau, (mem_UE _).1 γ.2]
   have e : finPt γ = sU _ h := by
-    have h1 : toSub (UA E n) (finGL E n (ratF E n γ.1)) = (sU _ h).1 := dif_pos (sU _ h).1.2
+    have h1 : toSub (UA E n) (finGL E n (ratF E n γ.1)) = (sU _ h).1 := dite_eq_left (sU _ h).1.2
     rw [finPt, h1]
-    exact dif_pos (sU _ h).2
+    exact dite_eq_left (sU _ h).2
   rw [e, pU_sU]
 
 theorem mem_ratFinU (k : finU (E := E) (n := n)) : k ∈ ratFinU E n ↔ pU k ∈ (ratF E n).range := by
@@ -1004,9 +1004,9 @@ theorem exists_norm (γ : UE E n) : ∃ δ : GL (Fin n) E, δ * thE E n δ = γ.
     ((tau_eq_iff _ _).1 ((mem_UE _).1 γ.2))
   refine ⟨B * (PhiU n E)⁻¹, norm_eq _ B γ.1 hN, ?_⟩
   have hΦ : ratF E n (PhiU n E) = PhiU n (Af E) := map_PhiU _
-  haveI : T2Space (Af E) := inferInstanceAs (T2Space (RestrictedProduct _ _ _))
-  haveI : T2Space (GL (Fin n) (Af E)) := Units.isEmbedding_embedProduct.t2Space
-  haveI : T2Space (finU (E := E) (n := n)) := T2Space.of_injective_continuous pU_injective continuous_pU
+  have : T2Space (Af E) := inferInstanceAs (T2Space (RestrictedProduct _ _ _))
+  have : T2Space (GL (Fin n) (Af E)) := Units.isEmbedding_embedProduct.t2Space
+  have : T2Space (finU (E := E) (n := n)) := T2Space.of_injective_continuous pU_injective continuous_pU
   refine GlobalTheory.T.twistedCentralizerMass_eq_of_topEquiv _ _ _ _ _ _ _ _ (isClosed_twCent _ continuous_id _) (isClosed_twCent _ continuous_thF _)
     (centEquiv (finPt γ) (ratF E n (B * (PhiU n E)⁻¹)) fun g => ?_) fun t => mem_ratFinU t.1
   rw [map_mul, map_inv, hΦ, pU_finPt]
@@ -1094,9 +1094,9 @@ theorem twOrb_conj [TopologicalSpace G] [IsTopologicalGroup G] {K K' : Subgroup 
     (hK' : IsLevel (MonoidHom.id G) K K') {f : G → ℂ} (hf : IsHecke K' f) (δ g : G) :
     twOrb (MonoidHom.id G) K (g⁻¹ * δ * g) f = twOrb (MonoidHom.id G) K δ f := by
   refine _root_.GlobalTheory.TwOrbConj.twOrb_twConj G (MonoidHom.id G) K δ g f fun x => ?_
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have ho : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.1.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have ho : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.1.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   have hi : (K'.subgroupOf K).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   refine ne_zero_of_dvd_ne_zero hi (Subgroup.index_dvd_of_le fun k hk y => ?_)
   have hk' : (k : G) ∈ K' := hk
@@ -1218,9 +1218,9 @@ theorem kapOrb_support (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSect
     filter_upwards [ae_good hU hn hS hP hf] with w hw
     obtain ⟨⟨c, hc, hc'⟩, h2⟩ := hw
     rw [kapOrb_eq w rfl, finsum_eq_single _ c]
-    · rw [(h2 c).1, if_pos hc, (h2 c).2 hc _ (dvd_mul_right _ _), mul_one]
+    · rw [(h2 c).1, ite_eq_left hc, (h2 c).2 hc _ (dvd_mul_right _ _), mul_one]
     · intro x hx
-      rw [(h2 x).1, if_neg fun hg => hx (hc' x hg), mul_zero]
+      rw [(h2 x).1, ite_eq_right fun hg => hx (hc' x hg), mul_zero]
   have h2 := ne_zero_of_finprod h1 h w hw
   rw [kapOrb_eq w rfl] at h2
   obtain ⟨c, hc⟩ : ∃ c : LocCl n (P₁ * P₂) w, twOrb (MonoidHom.id _) (KL n w) c.1.rep (f w) ≠ 0 := by
@@ -1238,7 +1238,7 @@ theorem orb_support (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection
   intro w hw
   have h1 : ∀ᶠ w in cofinite, twOrb (MonoidHom.id _) (KL n w) (locPt w γ) (f w) = 1 := by
     filter_upwards [hf, GlobalTheory.T.orbitalIntegral_unitIndicator_eventually_oneClass E hU n hn S hS _ hP, (GlobalTheory.T.local_points_integral_almost_all E hU n γ).2.1] with w h1 h2 h3
-    rw [h1, (h2 _ (charpoly_locPt hU w γ)).1, if_pos ⟨1, by simpa using h3⟩]
+    rw [h1, (h2 _ (charpoly_locPt hU w γ)).1, ite_eq_left ⟨1, by simpa using h3⟩]
   obtain ⟨g, hg⟩ := exists_ne_zero_of_twOrb _ _ _ (ne_zero_of_finprod h1 h w hw)
   exact ⟨_, hg, (charpoly_conj _ _).trans (charpoly_locPt hU w γ)⟩
 
@@ -1354,15 +1354,15 @@ theorem signs (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P
       have hy1 : ∀ w, ∃ g, y w = g⁻¹ * (x w).1.rep * g := by
         intro w
         by_cases h : Good w (x w)
-        · exact ⟨_, dif_pos h⟩
-        · exact ⟨1, by rw [show y w = (x w).1.rep from dif_neg h]; group⟩
+        · exact ⟨_, dite_eq_left h⟩
+        · exact ⟨1, by rw [show y w = (x w).1.rep from dite_eq_right h]; group⟩
       have hyP : ∀ w, (y w).1.val.charpoly = atPl w P := by
         intro w
         obtain ⟨g, hg⟩ := hy1 w
         rw [hg, charpoly_conj, (x w).2]
       have hyK : ∀ᶠ w in (cofinite : Filter (Pl E)), y w ∈ KL n w := by
         filter_upwards [hx] with w h
-        rw [show y w = _ from dif_pos h]
+        rw [show y w = _ from dite_eq_left h]
         exact h.choose_spec
       have hyS : ∀ P₁ : E[X], P₁.Monic → P₁ ∣ P → ∏ᶠ w ∈ S, kapSign n w (atPl w P₁) (y w).1 = 1 := by
         intro P₁ h1 h2
@@ -1391,8 +1391,8 @@ theorem signs (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P
       exact kapSign_conj hU hn _ _ _ hs'
   rw [hsum, hdiv]
   by_cases h : ∀ Q : E[X], Q.Monic → Q ∣ P → σ Q = 1
-  · rw [if_pos h, if_pos (key.1 h)]
-  · rw [if_neg h, if_neg (fun h' => h (key.2 h'))]
+  · rw [ite_eq_left h, ite_eq_left (key.1 h)]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h (key.2 h'))]
 
 
 theorem fixedP (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P : E[X]} (hP : P ∈ Ell E n)
@@ -1405,12 +1405,12 @@ theorem fixedP (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {
     ∑ᶠ p : E[X] × E[X], if p.1.Monic ∧ p.2.Monic ∧ p.1 * p.2 = P then
       ∏ᶠ w ∈ S, kapOrb n w (atPl w p.1) (atPl w p.2) (f w) else 0 := by
   have hsep : ∀ w : Pl E, (atPl w P).Separable := atPl_separable hP
-  haveI : ∀ w, Finite (LocCl n P w) := fun w =>
+  have : ∀ w, Finite (LocCl n P w) := fun w =>
     ((_root_.GlobalTheory.BCT.ClsFin.classes_finite E hU n w (atPl w P) (hsep w)).2).to_subtype
   have hdivs := (GlobalTheory.T.monic_divisor_sign_sum E P hP.1 hP.2.2.1 (fun _ => 1) (fun _ _ _ _ _ _ => by simp) (fun _ _ _ => Or.inl rfl)).1
   have hP0 : P ≠ 0 := hP.1.ne_zero
-  haveI : Finite (Fac P) := by
-    haveI := hdivs.to_subtype
+  have : Finite (Fac P) := by
+    have := hdivs.to_subtype
     refine Finite.of_injective (fun d : Fac P => (⟨d.1.1, d.2.1, ⟨d.1.2, d.2.2.2.symm⟩⟩ :
       {Q : E[X] | Q.Monic ∧ Q ∣ P})) fun d d' h => ?_
     have h1 : d.1.1 = d'.1.1 := congrArg Subtype.val h
@@ -1512,17 +1512,17 @@ theorem geomURat_eq_geomU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       intro c
       by_cases h : c.rep.1.val.charpoly.Separable
       · have he := (GlobalTheory.T.local_points_integral_almost_all E hU n c.rep).2.2 h
-        rw [if_pos h, if_pos he, GlobalTheory.T.unitary_mass_formula E hU n hn c.rep he]
-      · rw [if_neg h, if_neg fun h' => h h'.2.2.1]
+        rw [ite_eq_left h, ite_eq_left he, GlobalTheory.T.unitary_mass_formula E hU n hn c.rep he]
+      · rw [ite_eq_right h, ite_eq_right fun h' => h h'.2.2.1]
     have hsupp : ∀ c : TwCl (MonoidHom.id (UE E n)), (if c.rep.1.val.charpoly ∈ Ell E n then
         kap c.rep.1.val.charpoly * 2 ^ nfac c.rep.1.val.charpoly * chW lam c.rep.1.val.charpoly * orb c.rep else 0) ≠ 0 →
         c.rep.1.val.charpoly ∈ F ∧ orb c.rep ≠ 0 := by
       intro c hc
       by_cases h : c.rep.1.val.charpoly ∈ Ell E n
-      · rw [if_pos h] at hc
+      · rw [ite_eq_left h] at hc
         have ho : orb c.rep ≠ 0 := right_ne_zero_of_mul hc
         exact ⟨(hmemF _).2 ⟨h, orb_support hU hn hS h hf.2 ho⟩, ho⟩
-      · rw [if_neg h] at hc
+      · rw [ite_eq_right h] at hc
         exact absurd rfl hc
     unfold geomURat
     rw [finsum_congr hterm, finsum_fibres _ (fun c => c.rep.1.val.charpoly) F ?_ fun c hc => (hsupp c hc).1]
@@ -1531,12 +1531,12 @@ theorem geomURat_eq_geomU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       rw [mul_comm _ ((2 : ℂ) ^ nfac P), ← mul_assoc, mul_finsum]
       refine finsum_congr fun c => ?_
       by_cases h : c.rep.1.val.charpoly = P
-      · rw [if_pos h, if_pos h, h, if_pos hPE]
+      · rw [ite_eq_left h, ite_eq_left h, h, ite_eq_left hPE]
         ring
-      · rw [if_neg h, if_neg h, mul_zero]
+      · rw [ite_eq_right h, ite_eq_right h, mul_zero]
     · refine ((F.finite_toSet.biUnion fun P hP => (fixedP hU hn hS ((hmemF P).1 hP).1 hK' hf).1)).subset fun c hc => ?_
       obtain ⟨h1, h2⟩ := hsupp c hc
-      exact Set.mem_biUnion h1 (by simp only [Function.mem_support, if_pos rfl]; exact h2)
+      exact Set.mem_biUnion h1 (by simp only [Function.mem_support, ite_eq_left rfl]; exact h2)
 
   let A : Set (E[X] × E[X]) := {p | p.1.Monic ∧ p.2.Monic ∧ p.1 * p.2 ∈ Ell E n}
   let V : E[X] × E[X] → ℂ := fun p => if p ∈ A then kap (p.1 * p.2) * chW lam (p.1 * p.2) *
@@ -1545,9 +1545,9 @@ theorem geomURat_eq_geomU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     intro p hp
     by_cases h : p ∈ A
     · have hp' : kap (p.1 * p.2) * chW lam (p.1 * p.2) * ∏ᶠ w ∈ S, kapOrb n w (atPl w p.1) (atPl w p.2) (f w) ≠ 0 := by
-        simpa only [V, if_pos h] using hp
+        simpa only [V, ite_eq_left h] using hp
       exact ⟨(hmemF _).2 ⟨h.2.2, kapOrb_support hU hn hS h.2.2 hf.2 (right_ne_zero_of_mul hp')⟩, h⟩
-    · exact absurd (by simp only [V, if_neg h]) hp
+    · exact absurd (by simp only [V, ite_eq_right h]) hp
   have hVfin : (Function.support V).Finite := by
     refine (F.finite_toSet.biUnion fun P hP => fac_finite ((hmemF P).1 hP).1).subset fun p hp => ?_
     obtain ⟨h1, h2⟩ := hVs p hp
@@ -1582,14 +1582,14 @@ theorem geomURat_eq_geomU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       rw [Set.indicator_apply]
       by_cases h : p ∈ {p : E[X] × E[X] | p.1 ∈ Ell E a ∧ p.2 ∈ Ell E (n - a) ∧ IsCoprime p.1 p.2}
       · obtain ⟨hpA, hd⟩ := (hA a ha p).1 h
-        rw [if_pos h, if_pos hd]
-        simp only [V, if_pos hpA]
-      · rw [if_neg h]
+        rw [ite_eq_left h, ite_eq_left hd]
+        simp only [V, ite_eq_left hpA]
+      · rw [ite_eq_right h]
         by_cases hd : p.1.natDegree = a
-        · rw [if_pos hd]
+        · rw [ite_eq_left hd]
           have hpA : p ∉ A := fun hpA => h ((hA a ha p).2 ⟨hpA, hd⟩)
-          simp only [V, if_neg hpA]
-        · rw [if_neg hd]
+          simp only [V, ite_eq_right hpA]
+        · rw [ite_eq_right hd]
     rw [Finset.sum_congr rfl h1, ← finsum_sum_comm]
     · have h2 : ∀ p : E[X] × E[X], ∑ a ∈ Finset.range (n + 1), (if p.1.natDegree = a then V p else 0) = V p := by
         intro p
@@ -1610,12 +1610,12 @@ theorem geomURat_eq_geomU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       by_cases h : p.1 * p.2 = P
       · by_cases hm : p.1.Monic ∧ p.2.Monic
         · have hpA : p ∈ A := ⟨hm.1, hm.2, h ▸ hPE⟩
-          rw [if_pos h, if_pos ⟨hm.1, hm.2, h⟩]
-          simp only [V, if_pos hpA, h]
+          rw [ite_eq_left h, ite_eq_left ⟨hm.1, hm.2, h⟩]
+          simp only [V, ite_eq_left hpA, h]
         · have hpA : p ∉ A := fun hpA => hm ⟨hpA.1, hpA.2.1⟩
-          rw [if_pos h, if_neg fun h' => hm ⟨h'.1, h'.2.1⟩, mul_zero]
-          simp only [V, if_neg hpA]
-      · rw [if_neg h, if_neg fun h' => h h'.2.2, mul_zero]
+          rw [ite_eq_left h, ite_eq_right fun h' => hm ⟨h'.1, h'.2.1⟩, mul_zero]
+          simp only [V, ite_eq_right hpA]
+      · rw [ite_eq_right h, ite_eq_right fun h' => h h'.2.2, mul_zero]
     · intro a _
       refine hVfin.subset fun p hp => ?_
       by_contra h0

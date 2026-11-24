@@ -110,7 +110,7 @@ theorem count_pairs : Fintype.card Ψ * p * q + Fintype.card (PairIx Ψ p q) = d
         (Finset.univ.filter fun a : Fin (p + q) => (a : ℕ) < p) ×ˢ
           (Finset.univ.filter fun b : Fin (p + q) => ¬ (b : ℕ) < p) := by
       ext ⟨a, b⟩
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_product, Fin.lt_iff_val_lt_val]
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_product, Fin.lt_def]
       omega
     have h1 : (Finset.univ.filter fun a : Fin (p + q) => (a : ℕ) < p).card = p := by
       rw [Fin.card_filter_val_lt]
@@ -155,7 +155,7 @@ theorem test_factor {n r : ℕ} (e : Fin r ≃ PairIx Ψ p q) (hq : q ≤ p) (hn
   have hmu : (muSmall p : RP Ψ (p + q)) = ∑ x, muCoef Ψ p q x • (X x : RP Ψ (p + q)) := by
     rw [sum_muCoef (X : Ψ × Fin (p + q) → RP Ψ (p + q))]
     unfold muSmall
-    rw [if_pos hN]
+    rw [ite_eq_left hN]
   have hdim : dimX Ψ (p + q) p = n := by
     unfold dimX
     rw [hn, Nat.add_sub_cancel_left]

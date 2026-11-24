@@ -186,10 +186,10 @@ theorem Sys_of (hI : IdemSec) : Sys := by
     exact ⟨he.mul hf, s * t, map_mul _ _ _, by rw [Scheme.basicOpen_mul]; exact ⟨hs, ht⟩⟩
   obtain ⟨q, hq⟩ := prime_of_filter hW F (fun e h => h.1) hF0 hFu hFm
   let J : Type := {s : Γ(w.normalization, ⊤) // IsIdempotentElem (phi w s) ∧ phi w s ∉ q.asIdeal}
-  letI : Preorder J := Preorder.lift (fun s : J => w.normalization.basicOpen s.1)
+  let : Preorder J := Preorder.lift (fun s : J => w.normalization.basicOpen s.1)
   have hmono : Monotone (fun s : J => w.normalization.basicOpen s.1) := fun _ _ h => h
   have hne : Nonempty J := ⟨⟨1, by rw [map_one]; exact IsIdempotentElem.one, by rw [map_one]; exact (Ideal.ne_top_iff_one _).1 q.2.ne_top⟩⟩
-  haveI : IsCodirectedOrder J := by
+  have : IsCodirectedOrder J := by
     refine ⟨?_⟩
     rintro ⟨s, hs1, hs2⟩ ⟨t, ht1, ht2⟩
     refine ⟨⟨s * t, by rw [map_mul]; exact hs1.mul ht1, by rw [map_mul]; exact q.2.mul_notMem hs2 ht2⟩, ?_, ?_⟩
@@ -197,7 +197,7 @@ theorem Sys_of (hI : IdemSec) : Sys := by
       rw [Scheme.basicOpen_mul]; exact inf_le_left
     · show w.normalization.basicOpen (s * t) ≤ w.normalization.basicOpen t
       rw [Scheme.basicOpen_mul]; exact inf_le_right
-  haveI : IsCofiltered J := { nonempty := hne }
+  have : IsCofiltered J := { nonempty := hne }
   let D : J ⥤ Scheme.{0} := hmono.functor ⋙ w.normalization.restrictFunctor ⋙ Over.forget _
   have hDι : ∀ {j k : J} (f : j ⟶ k), D.map f ≫ (w.normalization.basicOpen k.1).ι = (w.normalization.basicOpen j.1).ι :=
     fun f => Over.w (w.normalization.restrictFunctor.map (hmono.functor.map f))
@@ -215,7 +215,7 @@ theorem Sys_of (hI : IdemSec) : Sys := by
     have := @IsClosedImmersion.of_comp_isClosedImmersion _ _ _ (D.map f) (ι k) hk hc
     infer_instance
   · ext x
-    simp only [Set.mem_iInter, hr, RR, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_iInter, hr, RR, Set.mem_ofPred_eq, SetLike.mem_coe]
     exact ⟨fun h s h1 h2 => h ⟨s, h1, h2⟩, fun h j => h j.1 j.2.1 j.2.2⟩
 
 theorem SysFM_of (hI : IdemSec) (hE : FMex) (hR : FMrange) : LateralTheory.E.NbIsoPf.SysFM :=

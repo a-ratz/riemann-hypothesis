@@ -87,7 +87,7 @@ theorem entire_of_halfPlane_continuations :
     have hsub : {s : ℂ | -(j : ℝ) < s.re} ⊆ {s : ℂ | -(k : ℝ) < s.re} := by
       intro s hs
       have h1 : (j : ℝ) ≤ k := by exact_mod_cast hjk
-      simp only [Set.mem_setOf_eq] at hs ⊢
+      simp only [Set.mem_ofPred_eq] at hs ⊢
       linarith
     have hfj : AnalyticOnNhd ℂ (G j) {s : ℂ | -(j : ℝ) < s.re} :=
       (hG j).analyticOnNhd (hopen _)
@@ -97,7 +97,7 @@ theorem entire_of_halfPlane_continuations :
       (convex_halfSpace_re_gt (-(j : ℝ))).isPreconnected
     have h2 : (2 : ℂ) ∈ {s : ℂ | -(j : ℝ) < s.re} := by
       have h0 : (0 : ℝ) ≤ j := Nat.cast_nonneg j
-      simp only [Set.mem_setOf_eq, Complex.re_ofNat]
+      simp only [Set.mem_ofPred_eq, Complex.re_ofNat]
       linarith
     have hev : G j =ᶠ[nhds (2 : ℂ)] G k := by
       have hmem : {s : ℂ | (1 : ℝ) < s.re} ∈ nhds (2 : ℂ) :=
@@ -201,7 +201,7 @@ theorem degree_shift_sub_lt (q : Polynomial ℂ) (d : ℕ) (hq : q.degree < ((d 
       rw [← Polynomial.leadingCoeff_eq_zero, ← hlc, h, Polynomial.leadingCoeff_zero]
     have hdeg : (q.comp (Polynomial.X + 1)).degree = q.degree := by
       rw [Polynomial.degree_eq_natDegree hp0, Polynomial.degree_eq_natDegree hq0, hnat]
-    have hlt := Polynomial.degree_sub_lt hdeg hp0 hlc
+    have hlt := Polynomial.degree_sub_lt_left hdeg hp0 hlc
     rw [hdeg, Polynomial.degree_eq_natDegree hq0] at hlt
     rw [Polynomial.degree_eq_natDegree hq0] at hq
     have h1 : q.natDegree < d + 1 := by exact_mod_cast hq
@@ -289,7 +289,7 @@ theorem lineDeg_coneTerm (ι : Type) [Fintype ι] (r : ℕ) (a : ι → Fin r �
     congr 1
     simp only [c, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, Nat.cast_add, Nat.cast_mul,
       Nat.cast_ite, Nat.cast_one, Nat.cast_zero, mul_ite, mul_one, mul_zero, mul_add, Finset.sum_add_distrib,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     push_cast
     ring
 

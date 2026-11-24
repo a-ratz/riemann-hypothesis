@@ -77,7 +77,7 @@ theorem _root_.GlobalTheory.HSAmp.gram_isHermitian_and_l2_eq_quadratic_form (S :
       0 ≤ _root_.GlobalTheory.HSAmp.l2 μ v c ∧
       (_root_.GlobalTheory.HSAmp.l2 μ v c : ℂ) =
         ∑ i, ∑ j, c i * (starRingEnd ℂ) (c j) * _root_.GlobalTheory.HSAmp.gram μ v i j := by
-  haveI : Fintype S := @Fintype.ofFinite S h.finite
+  have : Fintype S := @Fintype.ofFinite S h.finite
   have hint := h.integrable
   have hterm : ∀ (c : ι → ℂ) (σ : S), Integrable (fun y => ∑ i, ∑ j,
       c i * (starRingEnd ℂ) (c j) * (v σ y i * (starRingEnd ℂ) (v σ y j))) (μ σ) :=

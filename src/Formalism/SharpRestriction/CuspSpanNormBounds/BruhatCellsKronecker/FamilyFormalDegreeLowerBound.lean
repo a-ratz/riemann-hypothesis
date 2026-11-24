@@ -72,7 +72,7 @@ private theorem szh_sf_inner_lemma (N : ℕ) (a : Fin N) :
   · intro j hj
     simp only [Finset.coe_Ico, Set.mem_Ico] at hj
     refine ⟨⟨j, hj.2⟩, ?_, rfl⟩
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
     show (a : ℕ) < j
     omega
   · intro b _
@@ -147,7 +147,7 @@ theorem szh_anti (hH : StandingHypotheses D large₂ C' Cl Cg cb Cu cT CT) (τ :
   intro i
   unfold lamSH
   have h := hd τ (Fin.cast hr (Fin.castSucc i))
-    (by have := i.2; simp only [Fin.coe_cast, Fin.coe_castSucc]; omega)
+    (by have := i.2; simp only [Fin.val_cast, Fin.val_castSucc]; omega)
   have e : ∀ hh, (⟨(Fin.cast hr (Fin.castSucc i) : ℕ) + 1, hh⟩ : Fin D.R.r) = Fin.cast hr i.succ :=
     fun hh => Fin.ext (by simp)
   rw [e] at h

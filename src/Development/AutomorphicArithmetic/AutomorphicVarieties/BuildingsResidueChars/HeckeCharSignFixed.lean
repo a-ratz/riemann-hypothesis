@@ -184,8 +184,8 @@ theorem restrictScalarsHom_maximalRealSubfield_continuous :
     rintro x ⟨i, rfl⟩
     have : IsIntegral F (b i) := IsIntegral.of_finite F _
     exact (IsIntegral.map (IsScalarTower.toAlgHom F M Ω) this).tower_top
-  haveI : Finite t := Set.finite_range _
-  haveI : FiniteDimensional E (IntermediateField.adjoin E t) :=
+  have : Finite t := Set.finite_range _
+  have : FiniteDimensional E (IntermediateField.adjoin E t) :=
     IntermediateField.finiteDimensional_adjoin hint
   rw [Filter.mem_map, krullTopology_mem_nhds_one_iff]
   refine ⟨IntermediateField.adjoin E t, inferInstance, fun σ hσ => hMs ?_⟩
@@ -199,7 +199,7 @@ theorem restrictScalarsHom_maximalRealSubfield_continuous :
     exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hτ x
       (IntermediateField.subset_adjoin E _ hx)
   exact IntermediateField.fixingSubgroup_antitone hMt
-    ((IntermediateField.le_iff_le _ _).1 hH ⟨σ, hσ, rfl⟩)
+    ((IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 hH ⟨σ, hσ, rfl⟩)
 
 end GlobalTheory
 end -- clump:auto
@@ -287,7 +287,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (w : Heigh
     exact (mul_eq_one.1 this.symm).2
   have h2 : Module.finrank (𝓞 (maximalRealSubfield E)) (𝓞 E) = 2 := by
     rw [← Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield E) E]
-    exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 (maximalRealSubfield E))
+    exact (IsFractionRing.finrank_eq (𝓞 (maximalRealSubfield E))
       (maximalRealSubfield E) (𝓞 E) E).symm
   let _ : Fintype (v.asIdeal.primesOver (𝓞 E)) := Fintype.ofFinite _
   have hsum := Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 E)
@@ -394,9 +394,9 @@ theorem eq_one_of_frob_trivial : ∀ (E Ω : Type) [Field E] [NumberField E] [Fi
   have hS := Filter.eventually_cofinite.1 hev
   obtain ⟨v, hv, hf, he, B, hB, -, σ, hσ, hU⟩ := GlobalTheory.Published.cheb_holds E Ω L.fixingSubgroup
     L.fixingSubgroup_isOpen ((InfiniteGalois.normal_iff_isGalois L).2 hgal) g hS.toFinset
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
   have h1 := hL hU
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, inv_mul_cancel_right] at h1
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, inv_mul_cancel_right] at h1
   exact h1 (hv hf he B σ hB hσ)
 
 end GlobalTheory.FrobTrivChar
@@ -671,7 +671,7 @@ theorem restrict_eq_cycBar_pow : ∀ (E Ω : Type) [Field E] [NumberField E] [Is
     rw [map_mul, map_pow, compNorm_quadChar, one_pow, mul_one, hψ]
   have hcyc : Continuous (cycBar E Ω l) :=
     (Continuous.units_map _ (show Continuous (fun x : ℤ_[l] => algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l])) from
-      (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (ReciprocityTheory.Gal.continuous_cycZ E Ω l)
+      (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (ReciprocityTheory.Gal.continuous_cycZ E Ω l)
   rw [← div_eq_one]
   refine GlobalTheory.T.galoisCharacter_eq_one_of_trivial_degreeOne_frobenius E Ω l _ ((hμc.comp (GlobalTheory.T.continuous_restrictScalarsHom_maximalRealSubfield E Ω)).div' (hcyc.zpow m)) ?_
   filter_upwards [val_below_of_degree_one E ν s hν _ hχ, GlobalTheory.HeightCounting.eventually_natCast_notMem E l] with w h1 hl hf he A σ hA hσ

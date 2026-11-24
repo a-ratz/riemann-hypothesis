@@ -122,7 +122,7 @@ variable {n : ℕ} {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRin
 theorem gl_operator_mem_integral_enveloping (E : GLOps n (KK O) V) (a b : Fin n) : E a b ∈ UZmon E := by
   rw [UZmon.eq_1]
   apply Submonoid.subset_closure
-  simp only [UZgens.eq_1, Set.mem_setOf_eq]
+  simp only [UZgens.eq_1, Set.mem_ofPred_eq]
   by_cases hab : a = b
   · subst hab
     right
@@ -138,7 +138,7 @@ theorem enveloping_le_integral_enveloping (E : GLOps n (KK O) V) : Umon E ≤ UZ
 theorem mem_nabla_iff_coordinate_integral {E : GLOps n (KK O) V} {lam : Fin n → ℤ} {v : V} {xi : V →ₗ[KK O] KK O} (h1 : xi v = 1)
     (h2 : ∀ w ∈ otherWts E lam, xi w = 0) (h3 : ∀ x, x - xi x • v ∈ otherWts E lam) (x : V) :
     x ∈ Nabla (O := O) E lam v ↔ ∀ u ∈ UZmon E, ∃ c : O, xi (u x) = algebraMap O (KK O) c := by
-  rw [Nabla.eq_1, Set.mem_setOf_eq]
+  rw [Nabla.eq_1, Set.mem_ofPred_eq]
   constructor
   · intro H u hu
     obtain ⟨c, hc⟩ := H u hu
@@ -248,7 +248,7 @@ theorem lattice_fg_of_integral_functionals {W : Type*} [AddCommGroup W] [Module 
   classical
   obtain ⟨b, hbXi, hbspan, hbli⟩ := exists_linearIndependent (KK O) Xi
   have hbfin : b.Finite := hbli.setFinite
-  haveI : Fintype b := hbfin.fintype
+  have : Fintype b := hbfin.fintype
   have hbsep : ∀ w : W, (∀ ξ ∈ b, ξ w = 0) → w = 0 := by
     intro w hw
     apply hsep
@@ -583,13 +583,13 @@ theorem raising_dividedPower_loweringSpan [CharZero (KK O)] {E : GLOps n (KK O) 
       · have hda : d ≠ a := fun e => hcase ⟨hbc.symm, e⟩
         subst hbc
         refine key (E a d) ?_ ?_ ?_ ?_
-        · rw [if_pos rfl, if_neg hda, sub_zero] at hr
+        · rw [ite_eq_left rfl, ite_eq_right hda, sub_zero] at hr
           rw [← hr]; abel
         · have := hE.1 a d b d
-          rw [if_neg (ne_of_lt hdc), if_neg hda, sub_zero] at this
+          rw [ite_eq_right (ne_of_lt hdc), ite_eq_right hda, sub_zero] at this
           exact sub_eq_zero.1 this
         · have := hE.1 a b a d
-          rw [if_neg (ne_of_gt hab), if_neg hda, sub_zero] at this
+          rw [ite_eq_right (ne_of_gt hab), ite_eq_right hda, sub_zero] at this
           exact sub_eq_zero.1 this
         · intro j y hy
           rw [dividedPower_eq_divPowE]
@@ -604,13 +604,13 @@ theorem raising_dividedPower_loweringSpan [CharZero (KK O)] {E : GLOps n (KK O) 
       · by_cases hda : d = a
         · subst hda
           refine key (-E c b) ?_ ?_ ?_ ?_
-          · rw [if_neg hbc, if_pos rfl, zero_sub] at hr
+          · rw [ite_eq_right hbc, ite_eq_left rfl, zero_sub] at hr
             rw [← hr]; abel
           · have := hE.1 c b c d
-            rw [if_neg hbc, if_neg (ne_of_lt hdc), sub_zero] at this
+            rw [ite_eq_right hbc, ite_eq_right (ne_of_lt hdc), sub_zero] at this
             rw [neg_mul, mul_neg, sub_eq_zero.1 this]
           · have := hE.1 d b c b
-            rw [if_neg hbc, if_neg (ne_of_gt hab), sub_zero] at this
+            rw [ite_eq_right hbc, ite_eq_right (ne_of_gt hab), sub_zero] at this
             rw [neg_mul, mul_neg, sub_eq_zero.1 this]
           · intro j y hy
             rw [dividedPower_neg_sign, LinearMap.smul_apply, dividedPower_eq_divPowE]
@@ -624,7 +624,7 @@ theorem raising_dividedPower_loweringSpan [CharZero (KK O)] {E : GLOps n (KK O) 
               have : (0 : ℤ) ≤ (j : ℤ) := by positivity
               nlinarith
         · refine key 0 ?_ (by simp) (by simp) ?_
-          · rw [if_neg hbc, if_neg hda, sub_zero] at hr
+          · rw [ite_eq_right hbc, ite_eq_right hda, sub_zero] at hr
             rw [add_zero]; exact sub_eq_zero.1 hr
           · intro j y hy
             rcases Nat.eq_zero_or_pos j with rfl | hj
@@ -677,7 +677,7 @@ private theorem eq_of_isLoweringWord_of_weight_eq {E : GLOps n (KK O) V} {lam : 
     have h2 := weight_height_add_root_smul nu' c d l
     rw [heq] at h2
     have hl' : (1 : ℤ) ≤ l := by exact_mod_cast hl
-    have hcd : ((d : ℕ) : ℤ) < ((c : ℕ) : ℤ) := by exact_mod_cast (Fin.lt_iff_val_lt_val.mp hdc)
+    have hcd : ((d : ℕ) : ℤ) < ((c : ℕ) : ℤ) := by exact_mod_cast (Fin.lt_def.mp hdc)
     nlinarith
 
 theorem loweringSpan_divided_power_stable [CharZero (KK O)] {E : GLOps n (KK O) V} (hE : IsGLRep E) {lam : Fin n → ℤ} {v : V}
@@ -742,7 +742,7 @@ end hw
 
 theorem highest_vector_integrality : HighestWeightVectorIntegrality := by
   intro p n' O _ _ _ S hG n _ lam V _ _ _ _ E v hI
-  haveI := dvr_fraction_field_char_zero_prime S hG.prime
+  have := dvr_fraction_field_char_zero_prime S hG.prime
   exact highest_vector_mem_nabla hI.1 hI.2.2.1
 
 end Formalism.MainNotions.G.GLWeightTheory

@@ -77,7 +77,7 @@ theorem Tens.c_smul : ∀ (R : Type) [CommRing R] [IsDomain R] (D D' : DegPre R)
     (T : Tens D D' W) (s : SymUnit r), letI := T.mod s; ∀ (a : TensO s) (y : D'.X),
     D'.c (a • y) = D'.c y ≫ T.act (TensO.mat s a) := by
   intro R _ _ D D' r W T s
-  letI := T.mod s
+  let := T.mod s
   intro a y
   refine Fan.IsLimit.hom_ext T.lim _ _ fun i => ?_
   show D'.c (a • y) ≫ T.pr i = (D'.c y ≫ T.act (TensO.mat s a)) ≫ T.pr i

@@ -87,7 +87,7 @@ private theorem herm_rp (D : Dat ℚ E) (ξ : Fin 4 → ℚ) :
 
 private theorem act_iff (D : Dat ℚ E) (γ : SpecialLinearGroup (Fin 2) E) (ξ η : Fin 4 → ℚ) :
     D.act (gl (ratS E γ)) (rp ξ) = rp η ↔ γ.1 * hm D ξ * (γ.1.map D.σ)ᵀ = hm D η := by
-  haveI := AdeleBaseChange.nontrivial_adeleRing E
+  have := AdeleBaseChange.nontrivial_adeleRing E
   have inj : Function.Injective fun X : Matrix (Fin 2) (Fin 2) E => X.map (algebraMap E (A E)) :=
     Matrix.map_injective (algebraMap E (A E)).injective
   have hγ : ((gl (ratS E γ)) : Matrix (Fin 2) (Fin 2) (A E)) = γ.1.map (algebraMap E (A E)) := by

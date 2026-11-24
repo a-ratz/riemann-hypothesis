@@ -286,8 +286,8 @@ theorem APrimeChartLeviLocal.proof (hP : ProjHoloLocal.Statement) : APrimeChartL
     (by simp only [Function.comp_apply, hL0, hγ0]
         exact NineStatements.APrimeLeviCharts.contDiffAt_log_h hsm hz.1)
   rw [hγD.fderiv] at s1
-  simp only [Function.comp_apply, hL0, hγ0, ContinuousLinearMap.coe_comp', ContinuousLinearMap.smulRight_apply,
-    ContinuousLinearMap.one_apply, hLe, one_smul] at s1
+  simp only [Function.comp_apply, hL0, hγ0, ContinuousLinearMap.coe_comp, ContinuousLinearMap.smulRight_apply,
+    one_apply_eq_self, hLe, one_smul] at s1
 
   have hβD : HasFDerivAt (β ∘ L₁) ((ContinuousLinearMap.smulRight (1 : ℂ →L[ℂ] ℂ) v).comp L₁) 0 := by
     have h := hβv.hasFDerivAt
@@ -296,8 +296,8 @@ theorem APrimeChartLeviLocal.proof (hP : ProjHoloLocal.Statement) : APrimeChartL
   have s3 := levi_comp (φ := φ ∘ g) e₁ hβL
     (by rw [hβL0]; exact (hgC y₁ (hy₁ ▸ hzW)).of_le (WithTop.coe_le_coe.2 le_top))
   rw [hβD.fderiv, hβL0] at s3
-  simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.smulRight_apply,
-    ContinuousLinearMap.one_apply, hLe, one_smul] at s3
+  simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.smulRight_apply,
+    one_apply_eq_self, hLe, one_smul] at s3
 
   have s2 := NineStatements.APrimeLeviCharts.levi_log_h_torus hsm hτ₁ hτ₂ (hLt.eventually hrelC) e₁
   rw [← s1]

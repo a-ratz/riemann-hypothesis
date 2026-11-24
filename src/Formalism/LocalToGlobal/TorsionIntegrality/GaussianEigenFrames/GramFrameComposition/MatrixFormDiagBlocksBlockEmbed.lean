@@ -93,7 +93,7 @@ lemma matrixForm_diagBlocks_blockEmbed {n : Type} [Fintype n] [DecidableEq n] (h
   rw [matH_apply']
   by_cases hab : a = b
   · subst hab
-    rw [if_pos rfl, matH_apply', Fintype.sum_prod_type, Finset.sum_eq_single a]
+    rw [ite_eq_left rfl, matH_apply', Fintype.sum_prod_type, Finset.sum_eq_single a]
     · refine Finset.sum_congr rfl fun i _ => ?_
       rw [Fintype.sum_prod_type, Finset.sum_eq_single a]
       · simp [emb, blk4]
@@ -109,7 +109,7 @@ lemma matrixForm_diagBlocks_blockEmbed {n : Type} [Fintype n] [DecidableEq n] (h
       intro w _
       simp [emb, hc]
     · simp
-  · rw [if_neg hab]
+  · rw [ite_eq_right hab]
     apply Finset.sum_eq_zero
     intro x _
     apply Finset.sum_eq_zero

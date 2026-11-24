@@ -67,7 +67,7 @@ theorem hfe : ∀ a b : Fin D.R.rS, a ≠ b → ZMod' X.B.I X.B.g (hA X.B.I (X.f
   intro a b hab
   rw [hA_symm]
   have := (X.gramIntegral b a).2.2
-  rw [if_neg (Ne.symm hab), sub_zero] at this
+  rw [ite_eq_right (Ne.symm hab), sub_zero] at this
   exact Z_sig X.B.I X.B.g this
 
 theorem hfz : ∀ a, ZMod' X.B.I X.B.g (hA X.B.I (X.f0 a) X.z0) := fun a => ((X.formsAtZero).2 a).2
@@ -115,7 +115,7 @@ theorem chiN_inv {x : X.B.I.Gf} (hx : x ∈ X.B.I.Kset) (hcx : Formalism.L2.SG.N
 
 theorem level_subgroup_norm_congruence {x : X.B.I.Gf} (hk : x ∈ X.K2) : x ∈ X.B.I.Kset ∧ Formalism.L2.SG.NormCut.NCong X x := by
   unfold Formalism.L2.SG.HidaSetting.HidaSetting.K2 at hk
-  simp only [K2set, Set.mem_setOf_eq] at hk
+  simp only [K2set, Set.mem_ofPred_eq] at hk
   refine ⟨hk.1, ?_⟩
   have h2 := hk.2
   unfold K2cong at h2

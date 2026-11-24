@@ -118,9 +118,9 @@ theorem basis_tr {R A : Type} [CommRing R] [CommRing A] (ψ : R →+* A) (x : Sp
     ∃ (β : F →ₛₗ[ψ] Fy) (B : Module.Basis (Fin n) A Fy), (∀ k, B k = β (b k)) ∧
       ∀ e, (My.pt (β e)).left = spMap (dualMap ψ) ≫ (MR.pt e).left := by
   obtain ⟨j, hj⟩ := exists_tr x y ψ hψ MR My
-  letI : Algebra R A := ψ.toAlgebra
-  letI : Module R Fy := Module.compHom Fy ψ
-  haveI : IsScalarTower R A Fy :=
+  let : Algebra R A := ψ.toAlgebra
+  let : Module R Fy := Module.compHom Fy ψ
+  have : IsScalarTower R A Fy :=
     ⟨fun s r e => by
       change (ψ s * r) • e = ψ s • r • e
       rw [mul_smul]⟩
@@ -192,8 +192,8 @@ theorem exists_chart (G : Over X) [GrpObj G] [Smooth G.hom] [IsCommMonObj G] (y 
   obtain ⟨hfin, hproj, hbc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G R₀ x₀ F₀ M₀
   let P : PrimeSpectrum R₀ := hU.primeIdealOf ⟨y, hy⟩
   have hP : x₀ P = y := hU.fromSpec_primeIdealOf ⟨y, hy⟩
-  haveI : Module.FinitePresentation R₀ F₀ := Module.finitePresentation_of_projective R₀ F₀
-  haveI : Module.Free (Localization.AtPrime P.asIdeal) (LocalizedModule P.asIdeal.primeCompl F₀) :=
+  have : Module.FinitePresentation R₀ F₀ := Module.finitePresentation_of_projective R₀ F₀
+  have : Module.Free (Localization.AtPrime P.asIdeal) (LocalizedModule P.asIdeal.primeCompl F₀) :=
     Module.free_of_flat_of_isLocalRing
   obtain ⟨f, hf, hfree, -⟩ := Module.FinitePresentation.exists_free_localizedModule_powers
     P.asIdeal.primeCompl (LocalizedModule.mkLinearMap P.asIdeal.primeCompl F₀) (Localization.AtPrime P.asIdeal)
@@ -204,8 +204,8 @@ theorem exists_chart (G : Over X) [GrpObj G] [Smooth G.hom] [IsCommMonObj G] (y 
   have hx : IsOpenImmersion x := inferInstance
   obtain ⟨F, _, _, ⟨MF⟩⟩ := lieModel_exists X G R x
   obtain ⟨β, hβ⟩ := exists_tr x₀ x (algebraMap R₀ R) rfl M₀ MF
-  letI : Module R₀ F := Module.compHom F (algebraMap R₀ R)
-  haveI : IsScalarTower R₀ R F :=
+  let : Module R₀ F := Module.compHom F (algebraMap R₀ R)
+  have : IsScalarTower R₀ R F :=
     ⟨fun s r e => by
       rw [Algebra.smul_def, mul_smul]
       rfl⟩
@@ -214,21 +214,21 @@ theorem exists_chart (G : Over X) [GrpObj G] [Smooth G.hom] [IsCommMonObj G] (y 
       map_add' := β.map_add
       map_smul' := fun r e => β.map_smulₛₗ r e }
   have hb : IsBaseChange R β' := hbc R F MF β' hβ
-  haveI : IsLocalizedModule (Submonoid.powers f) β' :=
+  have : IsLocalizedModule (Submonoid.powers f) β' :=
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers f) R β').2 hb
   have e : LocalizedModule (Submonoid.powers f) F₀ ≃ₗ[R] F :=
     (IsLocalizedModule.linearEquiv (Submonoid.powers f)
       (LocalizedModule.mkLinearMap (Submonoid.powers f) F₀) β').extendScalarsOfIsLocalization
       (Submonoid.powers f) R
-  haveI : Module.Free R F := Module.Free.of_equiv e
-  haveI : Module.Finite R F := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G R x F MF).1
+  have : Module.Free R F := Module.Free.of_equiv e
+  have : Module.Finite R F := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G R x F MF).1
   have hmem : P ∈ Set.range (spMap (algebraMap R₀ R)) := by
     have := PrimeSpectrum.localization_away_comap_range R f
     have h2 : P ∈ PrimeSpectrum.basicOpen f := hf
     rw [← SetLike.mem_coe, ← this] at h2
     exact h2
   obtain ⟨t, ht⟩ := hmem
-  haveI : Nontrivial R := PrimeSpectrum.nontrivial t
+  have : Nontrivial R := PrimeSpectrum.nontrivial t
   refine ⟨R, inferInstance, x, hx, F, inferInstance, inferInstance, MF, _, Module.finBasis R F, ?_⟩
   refine ⟨t, ?_⟩
   change (spMap (algebraMap R₀ R) ≫ x₀) t = y
@@ -242,7 +242,7 @@ namespace GlobalTheory.CompanionTheory.Ar
 open GlobalTheory.CompanionTheory.Ar.LieTangent GlobalTheory.CompanionTheory.Ar.LieVB in
 theorem lieLat_isVB_of_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (G : Over X) [GrpObj G] [IsCommMonObj G] (Li : Type) [AddCommGroup Li] [Module Ω Li] (M : LieModel G ξ Li), IsCptGen ξ → Smooth G.hom → M.lat.IsVB (Module.finrank Ω Li) ⊤ ∧ M.omLat.IsVB (Module.finrank Ω Li) ⊤ := by
   intro X Ω _ ξ G _ _ Li _ _ M _ hs
-  haveI := hs
+  have := hs
   have hvb : M.lat.IsVB (Module.finrank Ω Li) ⊤ := by
     intro p _
     obtain ⟨R, _, x, hx, F, _, _, MR, n, b, hp⟩ := exists_chart G p.1

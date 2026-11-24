@@ -124,10 +124,10 @@ theorem irr_of_finrank_one {k : Type} [Field k] [Finite G] [NeZero (Nat.card G :
   have hE : Module.finrank k (Module.End (MonoidAlgebra k G) ρ.asModule) = 1 := by
     rw [← (Representation.IntertwiningMap.equivAlgEnd ρ).toLinearEquiv.finrank_eq]
     exact h
-  haveI : Nontrivial ρ.asModule := by
+  have : Nontrivial ρ.asModule := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
-    haveI : Subsingleton (Module.End (MonoidAlgebra k G) ρ.asModule) :=
+    have : Subsingleton (Module.End (MonoidAlgebra k G) ρ.asModule) :=
       ⟨fun f g => LinearMap.ext fun x => Subsingleton.elim _ _⟩
     rw [Module.finrank_zero_of_subsingleton] at hE
     exact zero_ne_one hE
@@ -135,7 +135,7 @@ theorem irr_of_finrank_one {k : Type} [Field k] [Finite G] [NeZero (Nat.card G :
   refine { eq_bot_or_eq_top := fun N => ?_ }
   obtain ⟨q, hq⟩ := exists_isCompl N
   set e : Module.End (MonoidAlgebra k G) ρ.asModule := N.subtype ∘ₗ Submodule.projectionOnto N q hq with he
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (1 : Module.End (MonoidAlgebra k G) ρ.asModule) h1).mp hE e
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : Module.End (MonoidAlgebra k G) ρ.asModule) h1).mp hE e
   have hcx : ∀ x : ρ.asModule, e x = c • x := fun x => by
     rw [← hc, LinearMap.smul_apply, Module.End.one_apply]
   by_cases hN : N = ⊥
@@ -172,14 +172,14 @@ theorem absIrr_isIrr [Fintype G] {K : Type} [Field K] [CharZero K] (σ : K →+*
     (hχ : Formalism.L2.DIV.IsAbsIrrChar χ) : Formalism.L2.NT.IsIrrChar (fun x => σ (χ x)) := by
   classical
   obtain ⟨n, ρ, hρ, hch⟩ := hχ
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let τ : AlgebraicClosure K →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hτ : ∀ a : K, τ (algebraMap K _ a) = σ a := fun a => by rw [τ.commutes]; rfl
-  haveI : CharZero (AlgebraicClosure K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+  have : CharZero (AlgebraicClosure K) := charZero_of_injective_algebraMap (algebraMap K _).injective
   let ρc : G →* GL (Fin n) ℂ := (Matrix.GeneralLinearGroup.map τ.toRingHom).comp (toGL ρ)
   have htr : ∀ x, σ (χ x) = Matrix.trace ((ρc x : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ) := by
     intro x
@@ -191,11 +191,11 @@ theorem absIrr_isIrr [Fintype G] {K : Type} [Field K] [CharZero K] (σ : K →+*
   have hstar : ∀ x, star (σ (χ x)) = σ (χ x⁻¹) := fun x => by rw [htr, htr, star_trace_inv]
   show ∑ x, σ (χ x) * star (σ (χ x)) = _
   simp_rw [hstar]
-  letI : ρ.IsIrreducible := hρ
-  letI : Invertible (Nat.card G : AlgebraicClosure K) :=
+  let : ρ.IsIrreducible := hρ
+  let : Invertible (Nat.card G : AlgebraicClosure K) :=
     invertibleOfNonzero (by exact_mod_cast Nat.card_pos.ne')
   have horth := Representation.char_orthonormal ρ ρ
-  rw [if_pos ⟨Representation.Equiv.refl ρ⟩] at horth
+  rw [ite_eq_left ⟨Representation.Equiv.refl ρ⟩] at horth
   have hne : (Nat.card G : AlgebraicClosure K) ≠ 0 := by exact_mod_cast Nat.card_pos.ne'
   rw [inv_mul_eq_one₀ hne] at horth
   have := congrArg τ horth

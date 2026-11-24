@@ -653,7 +653,7 @@ theorem algebraicIndependent_sumElim_cx (Q : Ideal (MRingOver ℂ ι)) [Q.IsPrim
   have hH'hom : IsWeightedHomogeneous (sWt k0 r) H' δ :=
     weightedHomogeneousComponent_isWeightedHomogeneous δ H
   have hn0' : n0 ∈ H'.support := by
-    rw [mem_support_iff, coeff_weightedHomogeneousComponent, if_pos rfl]
+    rw [mem_support_iff, coeff_weightedHomogeneousComponent, ite_eq_left rfl]
     exact mem_support_iff.mp hn0
   have hmem : aeval yt H ∈ Q := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, hcomp]
@@ -704,7 +704,7 @@ theorem forms_not_algebraicIndependent_cx (Q : Ideal (MRingOver ℂ ι)) (e : �
     ¬ AlgebraicIndependent ℂ (forms (segC Q) L) := by
   intro hind
   obtain ⟨⟨k0⟩, ⟨hprime, hhom, hrel⟩, hdim⟩ := hQ
-  haveI := hprime
+  have := hprime
   choose i0 hi0 using hrel
   have hs := algebraicIndependent_sumElim_cx Q hhom k0 i0 hi0 L hind
   let eqv : Fin (r + Fintype.card {k // k ≠ k0}) ≃ Fin r ⊕ {k // k ≠ k0} :=
@@ -803,7 +803,7 @@ theorem exists_goodProj_coord (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
   obtain ⟨r, hr, L, hL⟩ := exists_linear_normalization (k := ℂ) (segC Q) (e + 1)
     (fun r L hr => forms_not_algebraicIndependent_cx Q e hQ hr L)
   obtain ⟨⟨k0⟩, ⟨hprime, hhom, -⟩, -⟩ := hQ
-  haveI := hprime
+  have := hprime
   cases r with
   | zero => exact (false_of_forms_vanish_cx Q hhom k0 L hL hz0 fun j => j.elim0).elim
   | succ r' =>
@@ -817,7 +817,7 @@ theorem exists_goodProj_coord (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
     intro m hm
     rw [mem_support_iff, coeff_homogeneousComponent] at hm
     by_contra hne
-    exact hm (if_neg hne)
+    exact hm (ite_eq_right hne)
   obtain ⟨lam, hlam⟩ := exists_eval_cons_one_ne_zero _ _ hsupp
     (homogeneousComponent_totalDegree_ne_zero hc0)
   let Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ) :=
@@ -843,7 +843,7 @@ theorem exists_goodProj_coord (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
   have hVs : ∀ j : Fin r', V j.succ = lam j * V 0 := by
     intro j
     have h := congrFun hΨ (Fin.succ ⟨j, by omega⟩)
-    simp only [Ψ, LinearMap.coe_mk, AddHom.coe_mk, Fin.cases_succ, dif_pos j.2, Fin.eta,
+    simp only [Ψ, LinearMap.coe_mk, AddHom.coe_mk, Fin.cases_succ, dite_eq_left j.2, Fin.eta,
       Pi.zero_apply] at h
     simp only [hVdef]
     rw [← sub_eq_zero, Finset.mul_sum, ← Finset.sum_sub_distrib, ← h]
@@ -1033,7 +1033,7 @@ theorem graphIdeal_surjective (J : Ideal (MvPolynomial (Fin n) ℂ)) (f : MvPoly
 
 theorem graphIdeal_isPrime {J : Ideal (MvPolynomial (Fin n) ℂ)} (f : MvPolynomial (Fin n) ℂ)
     (hJ : J.IsPrime) : (graphIdeal J f).IsPrime := by
-  haveI := hJ
+  have := hJ
   exact RingHom.ker_isPrime _
 
 theorem graphIdeal_dim (J : Ideal (MvPolynomial (Fin n) ℂ)) (f : MvPolynomial (Fin n) ℂ) :
@@ -1180,7 +1180,7 @@ theorem lintegral_lt_top (d : ℕ) {J : Ideal (MvPolynomial (Fin n) ℂ)} (f : M
     · rw [← Real.exp_mul]; ring_nf
   have hle : ∀ z ∈ S, ‖F z‖ₑ ≤ ENNReal.ofReal M + ENNReal.ofReal (G z) := by
     intro z hz
-    rw [Real.enorm_eq_ofReal_abs, ← ENNReal.ofReal_add (le_max_right _ _) (le_max_right _ _)]
+    rw [Real.eNorm_eq_ofReal_abs, ← ENNReal.ofReal_add (le_max_right _ _) (le_max_right _ _)]
     refine ENNReal.ofReal_le_ofReal ?_
     have h1 := hFle z hz
     rcases le_or_gt 0 (F z) with h2 | h2
@@ -1233,13 +1233,13 @@ theorem integrable_chartAbsDens_log :
       ‖|Real.log ‖eval (WithLp.ofLp z) f‖| + C‖ₑ ≤
         ‖Real.log ‖eval (fun i => z i) f‖‖ₑ + ‖C‖ₑ := by
     intro z
-    refine (enorm_add_le _ _).trans ?_
+    refine (eNorm_add_le _ _).trans ?_
     have : ‖|Real.log ‖eval (WithLp.ofLp z) f‖|‖ₑ = ‖Real.log ‖eval (fun i => z i) f‖‖ₑ := by
-      rw [Real.enorm_eq_ofReal_abs, Real.enorm_eq_ofReal_abs, abs_abs]
+      rw [Real.eNorm_eq_ofReal_abs, Real.eNorm_eq_ofReal_abs, abs_abs]
     rw [this]
   refine lt_of_le_of_lt (lintegral_mono fun z => hle z) ?_
   rw [lintegral_add_right _ measurable_const, lintegral_const, Measure.restrict_apply_univ]
-  exact ENNReal.add_lt_top.mpr ⟨hlog, ENNReal.mul_lt_top enorm_lt_top hSfin⟩
+  exact ENNReal.add_lt_top.mpr ⟨hlog, ENNReal.mul_lt_top eNorm_lt_top hSfin⟩
 
 end GlobalTheory.CompanionTheory.Ar.Pub.CxChart.PolyLog
 
@@ -1364,7 +1364,7 @@ theorem integrable_chartAbsDens_cellWeight : ∀ (K : Type) [Fintype K] [Decidab
       have hnz := chartLift_blockNonzero σ i h1
       have habs : absLogNorm A s (chartLift σ i x) = |logNormC A s (chartLift σ i x)| := by
         simp only [absLogNorm]
-        rw [if_pos hnz]
+        rw [ite_eq_left hnz]
       rw [Set.indicator_of_mem hd, Set.indicator_of_mem hb, habs, abs_abs, logNormC,
         ← eval_chartSection]
       exact (abs_log_div_le (norm_nonneg _) (A.pos _ hnz) hC' (le_max_right _ _)).trans
@@ -1581,7 +1581,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Pub.CxChart.logNorm_mass_lt_top : ∀ (K
     intro z hz
     obtain ⟨i, hi⟩ := exists_mem_domCell hz.1
     have : |logNormC A s z| = G i z := by
-      simp only [hG, Set.indicator_of_mem hi, absLogNorm, if_pos hz.1]
+      simp only [hG, Set.indicator_of_mem hi, absLogNorm, ite_eq_left hz.1]
     rw [this]
     exact Finset.single_le_sum (f := fun i => G i z) (fun i _ => hG0 i z) (Finset.mem_univ i)
   have hpt : ∀ y, ENNReal.ofReal (∑ᶠ w ∈ setFibre (conePts Q) Ψ y,
@@ -1702,7 +1702,7 @@ theorem abs_setSheetDensity_eq {K : Type} [Fintype K] {ι : K → Type} [∀ k, 
   split_ifs with hγ
   · have hz := hS _ hγ.choose_spec.2.self_of_nhds.2.1
     have ha : absLogNorm A s (hγ.choose y) = |logNormC A s (hγ.choose y)| := by
-      simp only [absLogNorm, if_pos hz]
+      simp only [absLogNorm, ite_eq_left hz]
     beta_reduce
     rw [ha, abs_mul]
     generalize maDensity (fun j y' => φ j (hγ.choose y')) y = m

@@ -230,7 +230,7 @@ theorem val_mul {a a' : Ω} {r r' : F} (h : ValAt ξ z a r) (h' : ValAt ξ z a' 
 theorem val_inv {a : Ω} {r : F} (h : ValAt ξ z a r) (hr : r ≠ 0) : ValAt ξ z a⁻¹ r⁻¹ := by
   obtain ⟨hs, s, e1, e2⟩ := h
   have hu : IsUnit s := by
-    haveI := RootHt.Pick.isLocalHom_valMap z
+    have := RootHt.Pick.isLocalHom_valMap z
     refine isUnit_of_map_unit (RootHt.Pick.valMap z) s ?_
     have : RootHt.Pick.valMap z s = r := e2
     rw [this]
@@ -534,7 +534,7 @@ theorem rat_base {F F' : Type} [Field F] [Field F'] (f : F →+* F') {y : Sp F �
     (h : IsRat Z τ a b y v w r) :
     IsRat Z τ a b (spMap f ≫ y) v' w' (f r) := by
   obtain ⟨βF, b₁, b₂, α, κ, hfr, ea, eb, hv, hw, hr⟩ := h
-  haveI : Smooth Xo.univ.t.G.hom := Xo.univ.t.semi.smooth
+  have : Smooth Xo.univ.t.G.hom := Xo.univ.t.semi.smooth
   have hx : spMap f ≫ under y = under (spMap f ≫ y) := (Category.assoc _ _ _).symm
   refine ⟨f.comp βF, b₁, b₂, α, κ, ⟨?_, ?_, ?_, ?_⟩, ea, eb, valFam_base Z f rfl hv' hv, valFam_base Z f rfl hw' hw, ?_⟩
   · rw [Category.assoc, hfr.1]

@@ -57,8 +57,8 @@ theorem primeUnder_mem (w : PlL D) : ((primeUnder w : ℕ) : 𝓞 D.what₂.LL) 
   exact ringChar.Nat.cast_ringChar
 
 theorem primeUnder_prime (w : PlL D) : (primeUnder w).Prime := by
-  haveI : w.asIdeal.IsPrime := w.isPrime
-  haveI : Finite (𝓞 D.what₂.LL ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
+  have : w.asIdeal.IsPrime := w.isPrime
+  have : Finite (𝓞 D.what₂.LL ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
   exact CharP.char_is_prime (𝓞 D.what₂.LL ⧸ w.asIdeal) (ringChar (𝓞 D.what₂.LL ⧸ w.asIdeal))
 
 def kerLoss (G : GridData L sc) (δ : ℕ → ℝ) (C1 b : ℝ) (X Y : Node) (l n : ℕ) : ℝ :=
@@ -77,7 +77,7 @@ theorem vw_natCast_nonneg (w : PlL D) (n : ℕ) : 0 ≤ vw w ((n : ℕ) : D.what
       map_natCast (algebraMap (𝓞 D.what₂.LL) D.what₂.LL)]
   unfold vw
   rw [e]
-  exact FractionalIdeal.count_coe_nonneg _ _ _
+  exact FractionalIdeal.count_coeIdeal_nonneg _ _ _
 
 theorem kerLoss_nonneg (G : GridData L sc) {δ : ℕ → ℝ} (hδ : ∀ l, 0 ≤ δ l) (C1 b : ℝ) (X Y : Node) {l : ℕ} (hl : l.Prime)
     (n : ℕ) : 0 ≤ kerLoss G δ C1 b X Y l n := by

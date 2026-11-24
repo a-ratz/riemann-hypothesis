@@ -163,7 +163,7 @@ theorem sat_eq (x1 : Frame X.Ψ r) (ρ : ℝ) :
     {x | ∃ γ ∈ X.Γ, ∃ b ∈ Bor X.Ψ r, ∃ z' ∈ Metric.ball (0 : V (nd X)) ρ, x = lact γ (rmul (cpt X x1 z') b)} =
       ⋃ γ : X.Γ, lact γ.1⁻¹ ⁻¹' Tset X x1 ρ := by
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, Tset, Set.mem_image, Set.mem_prod,
+  simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage, Tset, Set.mem_image, Set.mem_prod,
     Prod.exists]
   constructor
   · rintro ⟨γ, hγ, b, hb, z', hz', rfl⟩

@@ -85,7 +85,7 @@ theorem Lg_pow (u : ℤ_[l]ˣ) (n : ℕ) : large₂ (u ^ n) = n * large₂ u := 
 
 theorem continuous_Lg : Continuous (large₂ (l := l)) :=
   (GlobalTheory.PadicLogUnits.logZl_hom l).2.1.comp_continuous
-    (continuous_subtype_val.comp (Units.continuous_val (M := ℤ_[l]))) norm_coe_unit
+    (continuous_subtypeVal.comp (Units.continuous_val (M := ℤ_[l]))) norm_coe_unit
 
 theorem norm_Lg {j : ℕ} (h1 : 1 ≤ j) (h2 : l = 2 → 2 ≤ j) (u : ℤ_[l]ˣ)
     (hu : ‖(u : ℤ_[l]) - 1‖ ≤ (l : ℝ) ^ (-(j : ℤ))) : ‖large₂ u‖ = ‖(u : ℤ_[l]) - 1‖ :=
@@ -317,7 +317,7 @@ theorem exists_gamma_coordinates : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
   obtain ⟨hs1, hs2, hK, -⟩ := hg
   obtain ⟨χ₀, hχ₀, hc₀, hon⟩ := GlobalTheory.Cyc.exists_integral_cyclotomicChar l P
   let χ : ↥(GK K) →* ℤ_[l]ˣ := χ₀.comp (GK K).subtype
-  have hc : Continuous χ := hc₀.comp continuous_subtype_val
+  have hc : Continuous χ := hc₀.comp continuous_subtypeVal
   have hPD : ∀ g, ((P.PD K).χ g : ℚ_[l]) = ((χ g : ℤ_[l]) : ℚ_[l]) := fun g => by
     rw [P.PD_χ]; exact (hχ₀ _).symm
   have hres : ∀ g, algebraMap ↥(OL LL) ↥LL.1 (Γ.χΓ (Γ.resΓ g) : ↥(OL LL)) =
@@ -361,7 +361,7 @@ theorem exists_gamma_coordinates : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
     intro g
     simp only [Γ.DelF_def, ← map_pow, hker]
   refine ⟨?_, ?_⟩
-  · obtain ⟨lam, h1, h2, h3⟩ := exists_coord (χ.comp Γ.GKs.subtype) (hc.comp continuous_subtype_val)
+  · obtain ⟨lam, h1, h2, h3⟩ := exists_coord (χ.comp Γ.GKs.subtype) (hc.comp continuous_subtypeVal)
       ⟨g₀, hm₀⟩ hL₀ (fun g => by
         change ‖large₂ (χ g)‖ ≤ ‖large₂ (χ g₀)‖
         rw [norm_Lg hs1 hs2 _ hn₀.le, hn₀, norm_Lg hs1 hs2 _ ((hmem g).1 g.2)]

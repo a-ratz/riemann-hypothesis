@@ -200,8 +200,8 @@ theorem relation_baseChange_field_zpow : ∀ (E : Type) [Field E] [NumberField E
   classical
   intro E _ _ _ H Dw l Xo c K _ _ y₀ e k F hF G hG S _ _ φ z z' Y s hY hz hz'
   have hS : Out.SecBaseChangeSt := GlobalTheory.lawsFieldsSeparately.2.1
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
-  haveI : Infinite K := inferInstance
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
+  have : Infinite K := inferInstance
   obtain ⟨P, N, hP⟩ := GlobalTheory.FrameDenseZ.exists_poly_div_det_secZ E H Dw l Xo c K y₀ e F hF
 
   have hevK : ∀ (n : (E →+* ℂ) → ℕ) (X : ∀ b : E →+* ℂ, Matrix (Fin (Dw.mult b)) (Fin (Dw.mult b)) K),
@@ -364,7 +364,7 @@ theorem coeff_mul_prod_zpow_mem_det : ∀ (E : Type) [Field E] [NumberField E] [
   intro E _ _ _ H Dw l Xo c _ z f La hz e k p T iK hT hiK M
   intro φ yT y' g a hφ hyT hy' ha hg hL hS cl hcl F hF hv G hG μ
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hτ : (∏ b, (g b).det ^ k b) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun b _ => pow_ne_zero _ (hg b).ne_zero
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hφ, hz.2.2.2.1]
@@ -378,7 +378,7 @@ theorem coeff_mul_prod_zpow_mem_det : ∀ (E : Type) [Field E] [NumberField E] [
       apply IsFractionRing.injective T.V T.Fr
       apply fW.injective
       rw [hfW, hfW, h]
-    haveI : CharZero W := charZero_of_injective_ringHom hinj
+    have : CharZero W := charZero_of_injective_ringHom hinj
     let T' : Formalism.L2.Pj.CDVR := ⟨W⟩
     let κ : KW →+* T'.Fr := ((FractionRing.algEquiv W KW).symm : KW ≃ₐ[W] FractionRing W).toRingEquiv.toRingHom
     have hκ : ∀ w : W, κ (algebraMap W KW w) = algebraMap T'.V T'.Fr w := fun w =>
@@ -389,7 +389,7 @@ theorem coeff_mul_prod_zpow_mem_det : ∀ (E : Type) [Field E] [NumberField E] [
       show _ = κ (fW _)
       rw [hfW, hκ]
       rfl
-    letI := (i.comp io).toAlgebra
+    let := (i.comp io).toAlgebra
     let iA : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
     obtain ⟨yW, hyW⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ iA yT
     obtain ⟨y'', hy''⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ iA y'
@@ -480,7 +480,7 @@ theorem exists_clear_coeff_at_prime_any : ∀ (E : Type) [Field E] [NumberField 
   obtain ⟨T, iK, hT, hiK⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff z.K p
   obtain ⟨M⟩ := (_root_.GlobalTheory.LamT.locMod_exists E H Dw l Xo c z T iK).1 fun a => (hiK _).2 (p.valuation_le_one a)
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let φ : z.K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ φ z.y
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hz.2.2.2.1]
@@ -534,7 +534,7 @@ theorem exists_clear_coeff_at_prime_any : ∀ (E : Type) [Field E] [NumberField 
   have hG1 := hG
   have hdeg := GlobalTheory.FrameHomZ.frPoly_secZ_degree_eq_any E H Dw l Xo c z.K z.y e k F hF G hG1 μ hμ
   have hμS : μ ∈ S := by
-    simp only [S, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [S, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     omega
   obtain ⟨w, hw⟩ := hloc F hF hv G hG1 μ
   obtain ⟨r, hr⟩ := hd (yμ μ) (Finset.mem_image_of_mem yμ hμS)
@@ -591,7 +591,7 @@ theorem coeff_valuation_le_one_almost_all_any : ∀ (E : Type) [Field E] [Number
   obtain ⟨T, iK, hT, hiK⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff z.K p
   obtain ⟨M⟩ := (_root_.GlobalTheory.LamT.locMod_exists E H Dw l Xo c z T iK).1 fun a => (hiK _).2 (p.valuation_le_one a)
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let φ : z.K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ φ z.y
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hz.2.2.2.1]
@@ -1127,8 +1127,8 @@ theorem weight_lattice_pow_fg : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
     ∀ (la : GlobalTheory.AllWt.Weight (T.Q.Dw j)), (∀ τ, Antitone (la τ)) → (∀ τ, 1 ≤ gap (la τ) ((T.Q.Dw j).p - 1)) →
     (∀ k : ℕ, Y.GoodAt (wtOf _ ((k + 1) • la) 0)) → ∀ m : ℕ, (GlobalTheory.AllWt.latW Y.U (wtOf _ la m)).FG := by
   intro _ D T _ j hp hq _ _ Y e o hY la hA hb _ m
-  letI := T.Q.H.starRing
-  haveI := GlobalTheory.Deep.finiteDimensional_V_of_good D T.toCore j Y e o hY (wtOf _ la m)
+  let := T.Q.H.starRing
+  have := GlobalTheory.Deep.finiteDimensional_V_of_good D T.toCore j Y e o hY (wtOf _ la m)
   refine GlobalTheory.fg_of_integral_functionals Y.d.c₂.F (Y.V (wtOf _ la m)) _ fun x hx => ?_
   obtain ⟨z, La, y, hz, hyx, hne⟩ := exists_good_cmPt_frame_ne_zero Y hY (fun _ => rfl) _ x.1 x.2
     (fun h => hx (Subtype.ext h))
@@ -1208,8 +1208,8 @@ theorem span_latW_add (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) (G G₀ : WTZ
     (h : Submodule.span c.F (latW U G : Set (cuspW Xo c U G)) = ⊤) :
     Submodule.span c.F (latW U (G + G₀) : Set (cuspW Xo c U (G + G₀))) = ⊤ := by
   classical
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   rw [eq_top_iff]
   intro F _
   have hF : F = ∑ Z : Comp Xo c,

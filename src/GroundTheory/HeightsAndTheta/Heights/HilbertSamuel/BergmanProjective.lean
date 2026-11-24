@@ -373,10 +373,10 @@ lemma continuous_projMatrix : Continuous (projMatrix (N := N)) := by
   have hn : Continuous fun v : {v : Fin (N + 1) → ℂ // v ≠ 0} => ((normSq2 v.1 : ℝ) : ℂ) := by
     unfold normSq2
     exact Complex.continuous_ofReal.comp (continuous_finsetSum _ fun m _ =>
-      (continuous_norm.comp ((continuous_apply m).comp continuous_subtype_val)).pow 2)
+      (continuous_norm.comp ((continuous_apply m).comp continuous_subtypeVal)).pow 2)
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  refine Continuous.div (((continuous_apply i).comp continuous_subtype_val).mul
-    (Complex.continuous_conj.comp ((continuous_apply j).comp continuous_subtype_val))) hn fun v => ?_
+  refine Continuous.div (((continuous_apply i).comp continuous_subtypeVal).mul
+    (Complex.continuous_conj.comp ((continuous_apply j).comp continuous_subtypeVal))) hn fun v => ?_
   exact_mod_cast (normSq2_pos v.2).ne'
 
 lemma projMatrix_injective : Function.Injective (projMatrix (N := N)) := by
@@ -461,7 +461,7 @@ lemma fderiv2_logPot (z a b : Fin N → ℂ) :
         ((-((1 + normSqSum z) ^ 2)⁻¹) • dNormSqSum z).smulRight (dNormSqSum z)) z :=
     (hasFDerivAt_inv_q z).smul hd
   rw [h2.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.smulRight_apply, coe_dNCLM, smul_eq_mul]
   ring
 

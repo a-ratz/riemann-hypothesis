@@ -91,12 +91,12 @@ theorem _root_.GlobalTheory.FunctionFieldPrimitive.exists_integral_primitive {F 
         IntermediateField.adjoin F {t}) : L) = Polynomial.aeval t p := fun p =>
     (Polynomial.aeval_algHom_apply (IntermediateField.adjoin F {t}).val
       (⟨t, htK⟩ : IntermediateField.adjoin F {t}) p).symm
-  letI algK : Algebra (Polynomial F) (IntermediateField.adjoin F {t}) :=
+  let algK : Algebra (Polynomial F) (IntermediateField.adjoin F {t}) :=
     (Polynomial.aeval (⟨t, htK⟩ : IntermediateField.adjoin F {t})).toRingHom.toAlgebra
-  letI algL : Algebra (Polynomial F) L := (Polynomial.aeval t).toRingHom.toAlgebra
-  haveI : IsScalarTower (Polynomial F) (IntermediateField.adjoin F {t}) L :=
+  let algL : Algebra (Polynomial F) L := (Polynomial.aeval t).toRingHom.toAlgebra
+  have : IsScalarTower (Polynomial F) (IntermediateField.adjoin F {t}) L :=
     IsScalarTower.of_algebraMap_eq fun p => (hcomm p).symm
-  haveI : Algebra.IsAlgebraic (Polynomial F) (IntermediateField.adjoin F {t}) := by
+  have : Algebra.IsAlgebraic (Polynomial F) (IntermediateField.adjoin F {t}) := by
     constructor
     intro k
     obtain ⟨s, hs, r, hsr⟩ := hden k.1 k.2
@@ -112,9 +112,9 @@ theorem _root_.GlobalTheory.FunctionFieldPrimitive.exists_integral_primitive {F 
         ((Polynomial.aeval (⟨t, htK⟩ : IntermediateField.adjoin F {t}) r :
           IntermediateField.adjoin F {t}) : L) = 0
       rw [hcomm, hcomm, hsr, sub_self]
-  haveI : Algebra.IsAlgebraic (IntermediateField.adjoin F {t}) L :=
+  have : Algebra.IsAlgebraic (IntermediateField.adjoin F {t}) L :=
     Algebra.IsAlgebraic.of_finite _ _
-  haveI : Algebra.IsAlgebraic (Polynomial F) L :=
+  have : Algebra.IsAlgebraic (Polynomial F) L :=
     Algebra.IsAlgebraic.trans (Polynomial F) (IntermediateField.adjoin F {t}) L
   obtain ⟨θ, hθ⟩ := Field.exists_primitive_element (IntermediateField.adjoin F {t}) L
   obtain ⟨y, hy0, hyint⟩ :=

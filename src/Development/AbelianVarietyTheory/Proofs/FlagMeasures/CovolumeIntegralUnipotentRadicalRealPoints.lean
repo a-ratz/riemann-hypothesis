@@ -438,7 +438,7 @@ theorem herm_single {k r : ℕ} (b : Fin r) (c : ℂ) (j : Fin (2 * r + k + 1)) 
     herm (Hpk k r) (bvec j) (c • bvec (esI k r b)) = if j = eI k r b then star c else 0 := by
   simp only [herm, bvec, dotProduct, mulVec, Pi.star_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply]
   rw [Finset.sum_eq_single (esI k r b)]
-  · simp only [if_true, mul_one, star_mul', star_one]
+  · simp only [ite_true, mul_one, star_mul', star_one]
     rw [Finset.sum_eq_single j]
     · simp [Hpk_esI]
     · intro m _ hm; simp [hm]
@@ -522,7 +522,7 @@ theorem lift_entry : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     refine ⟨fun w => ?_, fun β hβ _ w => ?_⟩
     · change gM A _ w (eI k r a) (eI k r b) = l w
       rw [key, hlu]
-      simp only [eI_inj, hab.ne, if_false, true_and, if_true, zero_sub]
+      simp only [eI_inj, hab.ne, ite_false, true_and, ite_true, zero_sub]
       push_cast
       simp only [star_mul', star_neg, star_star, Complex.star_def, Complex.conj_ofReal, map_inv₀, Complex.conj_conj]
       ring
@@ -534,7 +534,7 @@ theorem lift_entry : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
           obtain rfl := eI_inj.1 h
           exact hβ rfl
         have hne' : a' ≠ b' := ne_of_lt hab'
-        rw [if_neg hne, if_neg (fun h => hne' (eI_inj.1 h)), sub_zero]
+        rw [ite_eq_right hne, ite_eq_right (fun h => hne' (eI_inj.1 h)), sub_zero]
       · change (fun j => gM A _ w (eI k r a') (wI k r j)) = (0 : Fin (k + 1) → ℂ)
         funext j
         rw [key]
@@ -565,7 +565,7 @@ theorem existsUnique_layered_fundamentalDomain :
     ∀ {G X B : Type} [Group G] [Finite B] {V : B → Type} [∀ β, AddCommGroup (V β)] (ρ : G → X → X) (NN : Set X) (o : X) (deg : B → ℕ) (c : ∀ β, X → V β) (L D : ∀ β, Set (V β)), o ∈ NN → (∀ x, ρ 1 x = x) → (∀ g h x, ρ (g * h) x = ρ g (ρ h x)) → (∀ g, ∀ x ∈ NN, ρ g x ∈ NN) → (∀ β, (0 : V β) ∈ L β) → (∀ β v, ∃! l, l ∈ L β ∧ v + l ∈ D β) → (∀ β, c β o = 0) → (∀ (d : ℕ) (g : G), (∀ β, deg β < d → c β (ρ g o) = 0) → ∀ x ∈ NN, ∀ β, deg β ≤ d → c β (ρ g x) = c β x + c β (ρ g o)) → (∀ (g : G) (β : B), (∀ β', deg β' < deg β → c β' (ρ g o) = 0) → c β (ρ g o) ∈ L β) → (∀ β, ∀ l ∈ L β, ∃ g : G, c β (ρ g o) = l ∧ ∀ β', β' ≠ β → deg β' ≤ deg β → c β' (ρ g o) = 0) → (∀ g : G, (∀ β, c β (ρ g o) = 0) → g = 1) → ∀ x ∈ NN, ∃! g : G, ∀ β, c β (ρ g x) ∈ D β := by
   intro G X B _ _ V _ ρ NN o deg c L D ho h1 hmul hst hL0 hD hco htr hL hon hinj x hx
   classical
-  haveI := Fintype.ofFinite B
+  have := Fintype.ofFinite B
   have hgx : ∀ (g : G) (y : X), y ∈ NN → ρ g y ∈ NN := fun g y hy => hst g y hy
 
   have step : ∀ (d : ℕ) (T : Finset B), (∀ β ∈ T, deg β = d) →
@@ -667,7 +667,7 @@ theorem Hpk_mulVec_e {k r : ℕ} (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
     have h1 : (eI k r a).val = a.val := rfl
     have h2 : (esI k r a).val = 2 * r + k - a.val := rfl
     unfold Hpk
-    rw [if_pos (by omega), one_mul]
+    rw [ite_eq_left (by omega), one_mul]
   · intro l _ hl
     have hl' : l.val ≠ 2 * r + k - a.val := fun h => hl (Fin.ext h)
     have := a.isLt
@@ -684,9 +684,9 @@ theorem Hpk_e_es {k r : ℕ} (a b : Fin r) :
   unfold Hpk
   by_cases hab : a = b
   · subst hab
-    rw [if_pos (by omega), if_pos rfl]
+    rw [ite_eq_left (by omega), ite_eq_left rfl]
   · have hab' : a.val ≠ b.val := fun h => hab (Fin.ext h)
-    rw [if_neg (by omega), if_neg (by omega), if_neg (by omega), if_neg hab]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right hab]
 
 theorem es_es {k r : ℕ} {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx : x ∈ Nset k r)
     (b : Fin r) : ∀ (n : ℕ) (a : Fin r), a.val = n → a ≤ b →
@@ -702,17 +702,17 @@ theorem es_es {k r : ℕ} {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)
       ∑ i, star (x i (eI k r a)) * (Hpk k r *ᵥ fun l => x l (esI k r b)) i := by
     simp [Matrix.mul_apply, Matrix.mulVec, dotProduct, Finset.mul_sum]
   rw [hs, Finset.sum_eq_single (eI k r a)] at h
-  · rw [Hpk_mulVec_e, hx.2.1 a (eI k r a) le_rfl, if_pos rfl, star_one, one_mul] at h
+  · rw [Hpk_mulVec_e, hx.2.1 a (eI k r a) le_rfl, ite_eq_left rfl, star_one, one_mul] at h
     exact h
   · intro i _ hi
     by_cases hia : a.val ≤ i.val
-    · rw [hx.2.1 a i hia, if_neg hi, star_zero, zero_mul]
+    · rw [hx.2.1 a i hia, ite_eq_right hi, star_zero, zero_mul]
     · have ha := a.isLt
       obtain ⟨c, rfl⟩ : ∃ c : Fin r, i = eI k r c := ⟨⟨i.val, by omega⟩, Fin.ext rfl⟩
       have hca : c.val < a.val := by simpa [eI] using not_le.1 hia
       rw [Hpk_mulVec_e]
       have hcb : c ≤ b := le_trans (le_of_lt (show c < a from hca)) hab
-      rw [ih c.val (han ▸ hca) c rfl hcb, if_neg (fun h => by
+      rw [ih c.val (han ▸ hca) c rfl hcb, ite_eq_right (fun h => by
         subst h; exact absurd hab (not_le.2 hca)), mul_zero]
   · simp
 
@@ -743,7 +743,7 @@ theorem dep_one : ∀ (k r : ℕ) (x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r 
     rw [key]
     by_cases hij' : i = j
     · subst hij'; simp
-    · rw [if_neg hij', if_neg]
+    · rw [ite_eq_right hij', ite_eq_right]
       intro h
       apply hij'
       rw [ei, ej, h]
@@ -812,7 +812,7 @@ namespace GlobalTheory.SnMass.VolN
 theorem Hpk_mulVec_esI (k r : ℕ) (a : Fin r) (v : Fin (2 * r + k + 1) → ℂ) :
     (Hpk k r *ᵥ v) (esI k r a) = v (eI k r a) := by
   simp only [Matrix.mulVec, dotProduct, Hpk_esI_apply, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem map_mulVec_comp {E : Type} [Field E] (φ : E →+* ℂ) {n : ℕ} (γ : Matrix (Fin n) (Fin n) E)
     (v : Fin n → E) : (γ.map φ) *ᵥ (fun i => φ (v i)) = fun i => φ ((γ *ᵥ v) i) := by
@@ -1074,13 +1074,13 @@ theorem sq_mp (ι : Type) [Fintype ι] (k r : ℕ) : MeasurePreserving (sq ι k 
     ReciprocityTheory.GeometryOfNumbersTheory.measurePreserving_swapPi (volume : Measure (Fin (k + 1) → ℂ))
   have s3 : MeasurePreserving (fun (f : ι → Fin r → ℝ) (p : Fin r) (i : ι) => f i p) volume volume :=
     ReciprocityTheory.GeometryOfNumbersTheory.measurePreserving_swapPi (volume : Measure ℝ)
-  haveI u0 : SigmaFinite (volume : Measure (Fin (k + 1) → ℂ)) := inferInstance
-  haveI u1 : SigmaFinite (volume : Measure (Fin r → Fin (k + 1) → ℂ)) := inferInstance
-  haveI u2 : SigmaFinite (volume : Measure (ι → Fin (k + 1) → ℂ)) := inferInstance
-  haveI t1 : SigmaFinite (volume : Measure (ι → UTr r → ℂ)) := inferInstance
-  haveI t2 : SigmaFinite (volume : Measure (ι → Fin r → Fin (k + 1) → ℂ)) := inferInstance
-  haveI t3 : SigmaFinite (volume : Measure (UTr r → ι → ℂ)) := inferInstance
-  haveI t4 : SigmaFinite (volume : Measure (Fin r → ι → Fin (k + 1) → ℂ)) := inferInstance
+  have u0 : SigmaFinite (volume : Measure (Fin (k + 1) → ℂ)) := inferInstance
+  have u1 : SigmaFinite (volume : Measure (Fin r → Fin (k + 1) → ℂ)) := inferInstance
+  have u2 : SigmaFinite (volume : Measure (ι → Fin (k + 1) → ℂ)) := inferInstance
+  have t1 : SigmaFinite (volume : Measure (ι → UTr r → ℂ)) := inferInstance
+  have t2 : SigmaFinite (volume : Measure (ι → Fin r → Fin (k + 1) → ℂ)) := inferInstance
+  have t3 : SigmaFinite (volume : Measure (UTr r → ι → ℂ)) := inferInstance
+  have t4 : SigmaFinite (volume : Measure (Fin r → ι → Fin (k + 1) → ℂ)) := inferInstance
   have a := s1.prod s2
   have b := s1.prod s3
   have c := (a.prod b).comp ((h2.prod h3).comp h1)
@@ -1088,14 +1088,14 @@ theorem sq_mp (ι : Type) [Fintype ι] (k r : ℕ) : MeasurePreserving (sq ι k 
 
 theorem pi_smul (ι : Type) [Fintype ι] {X : Type} [MeasurableSpace X] (ν : Measure X) [SigmaFinite ν] (c : NNReal) :
     Measure.pi (fun _ : ι => (c : ℝ≥0∞) • ν) = ((c : ℝ≥0∞) ^ Fintype.card ι) • Measure.pi (fun _ : ι => ν) := by
-  haveI : SigmaFinite ((c : ℝ≥0∞) • ν) := by
+  have : SigmaFinite ((c : ℝ≥0∞) • ν) := by
     have e : (c : ℝ≥0∞) • ν = c • ν := by
       ext s _
-      simp [Measure.smul_apply]
+      simp [smul_apply]
     rw [e]
     infer_instance
   refine Measure.pi_eq fun s hs => ?_
-  simp [Measure.smul_apply, Measure.pi_pi, Finset.prod_mul_distrib, smul_eq_mul]
+  simp [smul_apply, Measure.pi_pi, Finset.prod_mul_distrib, smul_eq_mul]
 
 theorem mem_iff (ι : Type) (k r : ℕ) (DU : UTr r → Set (ι → ℂ)) (DH : Fin r → Set (ι → Fin (k + 1) → ℂ))
     (DC : UTr r → Set (ι → ℂ)) (DG : Fin r → Set (ι → ℝ)) (x : ι → Mt k r) :
@@ -1134,7 +1134,7 @@ theorem measure_blocks : ∀ (ι : Type) [Fintype ι] (k r : ℕ) (DU : UTr r �
       ∀ β : Bk r, (fun w => cM k r β (x w)) ∈ blkSet ι k r DU DH DC DG β} =
       (sp ι k r ∘ F) ⁻¹' R ∩ {x : ι → Mt k r | ∀ w, Matrix.of (x w) ∈ Nset k r} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, Function.comp_apply]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, Function.comp_apply]
     rw [mem_iff]
     exact and_comm
   rw [hS]
@@ -1150,17 +1150,17 @@ theorem measure_blocks : ∀ (ι : Type) [Fintype ι] (k r : ℕ) (DU : UTr r �
   have hc : ((2 : ℝ≥0∞) ^ e) = ((2 ^ e : NNReal) : ℝ≥0∞) := by
     push_cast
     rfl
-  haveI : SigmaFinite (μ.map (nCoords k r)) := by
+  have : SigmaFinite (μ.map (nCoords k r)) := by
     rw [hmap, hc]
     have e' : ((2 ^ e : NNReal) : ℝ≥0∞) • (volume : Measure (Yf k r)) = (2 ^ e : NNReal) • volume := by
       ext s _
-      simp [Measure.smul_apply]
+      simp [smul_apply]
     rw [e']
     infer_instance
   have hpi : (Measure.pi fun _ : ι => μ).map F = Measure.pi fun _ : ι => μ.map (nCoords k r) :=
     Measure.pi_map_pi (fun _ => NEntry.cont_nCoords.measurable.aemeasurable)
   have hpre : (sp ι k r ∘ F) ⁻¹' R = F ⁻¹' (sp ι k r ⁻¹' R) := rfl
-  rw [hpre, ← Measure.map_apply hF (hsp hR), hpi, hmap, hc, pi_smul, Measure.smul_apply, smul_eq_mul]
+  rw [hpre, ← Measure.map_apply hF (hsp hR), hpi, hmap, hc, pi_smul, smul_apply, smul_eq_mul]
 
   have hΦ : MeasurePreserving (fun (y : ι → Ys k r) w => ((NEntry.glue (y w).1, (y w).2) : Yf k r)) volume volume :=
     volume_preserving_pi (f := fun _ : ι => Prod.map (NEntry.glue (k := k) (r := r)) id)
@@ -1175,11 +1175,11 @@ theorem measure_blocks : ∀ (ι : Type) [Fintype ι] (k r : ℕ) (DU : UTr r �
     have h1 := hΦ.measure_preimage (hsp hR).nullMeasurableSet
     rw [hcomp, (sq_mp ι k r).measure_preimage hR.nullMeasurableSet] at h1
     exact h1.symm
-  haveI u0 : SigmaFinite (volume : Measure (Fin (k + 1) → ℂ)) := inferInstance
-  haveI u2 : SigmaFinite (volume : Measure (ι → Fin (k + 1) → ℂ)) := inferInstance
-  haveI t3 : SigmaFinite (volume : Measure (UTr r → ι → ℂ)) := inferInstance
-  haveI t4 : SigmaFinite (volume : Measure (Fin r → ι → Fin (k + 1) → ℂ)) := inferInstance
-  haveI t5 : SigmaFinite (volume : Measure (Fin r → ι → ℝ)) := inferInstance
+  have u0 : SigmaFinite (volume : Measure (Fin (k + 1) → ℂ)) := inferInstance
+  have u2 : SigmaFinite (volume : Measure (ι → Fin (k + 1) → ℂ)) := inferInstance
+  have t3 : SigmaFinite (volume : Measure (UTr r → ι → ℂ)) := inferInstance
+  have t4 : SigmaFinite (volume : Measure (Fin r → ι → Fin (k + 1) → ℂ)) := inferInstance
+  have t5 : SigmaFinite (volume : Measure (Fin r → ι → ℝ)) := inferInstance
   have hpow : ((2 ^ e : NNReal) : ℝ≥0∞) ^ Fintype.card ι = (2 : ℝ≥0∞) ^ (Fintype.card ι * e) := by
     rw [← hc, ← pow_mul, mul_comm]
   rw [hvol, hRdef, Measure.volume_eq_prod, Measure.prod_prod, Measure.volume_eq_prod, Measure.prod_prod,
@@ -1203,7 +1203,7 @@ open scoped TensorProduct ENNReal nonZeroDivisors
 namespace GlobalTheory.SnMass.VolN
 
 theorem nset_closed (k r : ℕ) : IsClosed {y : Mt k r | Matrix.of y ∈ Nset k r} := by
-  simp only [Nset, UH, Set.mem_setOf_eq, Set.setOf_and, Set.setOf_forall]
+  simp only [Nset, UH, Set.mem_ofPred_eq, Set.ofPred_and, Set.ofPred_forall]
   refine IsClosed.inter ?_ (IsClosed.inter ?_ ?_)
   · have hc : Continuous fun y : Mt k r => (Matrix.of y)ᴴ * Hpk k r * Matrix.of y := by
       have h0 : Continuous fun y : Mt k r => (Matrix.of y : Matrix _ _ ℂ) := continuous_id
@@ -1219,7 +1219,7 @@ theorem pi_nset_full : ∀ (ι : Type) [Fintype ι] (k r : ℕ), MeasurableSet {
   intro ι _ k r
   have hS : MeasurableSet {y : Mt k r | Matrix.of y ∈ Nset k r} := (nset_closed k r).measurableSet
   have hH := (_root_.GlobalTheory.SnMass.NEntry.haarLie_entries k r).1
-  haveI : SigmaFinite (haarLie (Nset k r) 1) := hH.1
+  have : SigmaFinite (haarLie (Nset k r) 1) := hH.1
   have hset : {x : ι → Mt k r | ∀ w, Matrix.of (x w) ∈ Nset k r} =
       ⋂ w, Function.eval w ⁻¹' {y : Mt k r | Matrix.of y ∈ Nset k r} := by
     ext x; simp
@@ -1229,7 +1229,7 @@ theorem pi_nset_full : ∀ (ι : Type) [Fintype ι] (k r : ℕ), MeasurableSet {
   · rw [hset, Set.compl_iInter]
     refine measure_iUnion_null fun w => ?_
     rw [← Set.preimage_compl]
-    exact Measure.pi_eval_preimage_null _ (by simpa [Set.compl_setOf] using hH.2.2.1)
+    exact Measure.pi_eval_preimage_null _ (by simpa [Set.compl_ofPred] using hH.2.2.1)
 
 end GlobalTheory.SnMass.VolN
 end -- clump:auto
@@ -1282,7 +1282,7 @@ theorem re_corner_eq_zero (k r : ℕ) (x : Matrix (Fin (2 * r + k + 1)) (Fin (2 
       have hes : e ≠ s := fun h => by have := congrArg Fin.val h; omega
       have : Hpk k r e s = 1 := by simp only [Hpk, Fin.ext_iff, and_true]; split_ifs <;> first | rfl | omega | (exfalso; omega)
       simp [hes, hes.symm, this, hss]
-    rw [if_neg h1, if_neg h2, add_zero]
+    rw [ite_eq_right h1, ite_eq_right h2, add_zero]
     have hi : i = s ∨ i.val ≤ a.val ∨ x i s = 0 := by
       by_cases h : i = s
       · exact Or.inl h
@@ -1349,7 +1349,7 @@ theorem strictFD_measure_eq_tsum {G X : Type} [Countable G] [MeasurableSpace X]
     (hmeas : ∀ g, Measurable (ρ g)) (hu' : ∀ x ∈ NN, ∃! g : G, ρ g x ∈ D') :
     μ D = ∑' g, μ (D ∩ NN ∩ (ρ g)⁻¹' D') := by
   have h1 : μ D = μ (D ∩ NN) := by
-    rw [← measure_inter_add_diff D hNN]
+    rw [← measure_inter_add_sdiff D hNN]
     have : μ (D \ NN) = 0 := measure_mono_null (fun x hx => hx.2) hnull
     rw [this, add_zero]
   rw [h1]
@@ -1576,7 +1576,7 @@ theorem actM_measurePreserving (E : Type) [Field E] [NumberField E] (k r : ℕ)
     MeasurePreserving (actM A γ) (Measure.pi fun _ : InfinitePlace E => haarLie (Nset k r) 1)
       (Measure.pi fun _ : InfinitePlace E => haarLie (Nset k r) 1) := by
   have hH := (_root_.GlobalTheory.SnMass.NEntry.haarLie_entries k r).1
-  haveI : SigmaFinite (haarLie (Nset k r) 1) := hH.1
+  have : SigmaFinite (haarLie (Nset k r) 1) := hH.1
   have hf : ∀ w, MeasurePreserving (lmulM (gM A γ w)) (haarLie (Nset k r) 1) (haarLie (Nset k r) 1) :=
     fun w => ⟨GlobalTheory.Amp.StabMeas.meas_lmul _, hH.2.2.2 _ (hN w)⟩
   exact measurePreserving_pi (fun _ : InfinitePlace E => haarLie (Nset k r) 1) (fun _ => haarLie (Nset k r) 1) hf
@@ -1654,7 +1654,7 @@ theorem covol_blocks_prod : ∀ (d : ℝ) (f k r : ℕ) (s : Fin r → ℝ), 0 <
         (2 * δ * ((r - p.1.2.val : ℕ) : ℝ) - 2 * f * σ p.1.2)) := by
     intro p
     rw [h2i]
-    simp only [← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_sub, ← Real.exp_add]
+    simp only [← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_sub, ← Real.exp_add]
     congr 1; push_cast; ring
   have e3 : ∀ p : UTr r, (2⁻¹ : ℝ) ^ f * Real.exp δ ^ (1 - 2 * ((r - p.1.1.val : ℕ) : ℝ) -
       2 * ((r - p.1.2.val : ℕ) : ℝ)) * (Real.exp (σ p.1.1) * Real.exp (σ p.1.2)) ^ (2 * f) =
@@ -1662,22 +1662,22 @@ theorem covol_blocks_prod : ∀ (d : ℝ) (f k r : ℕ) (s : Fin r → ℝ), 0 <
         (-(2 * δ * ((r - p.1.2.val : ℕ) : ℝ)) + 2 * f * σ p.1.2)) := by
     intro p
     rw [h2i]
-    simp only [← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_add]
+    simp only [← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_add]
     congr 1; push_cast; ring
   have e2 : ∀ a : Fin r, ((2⁻¹ : ℝ) ^ f * Real.exp δ ^ (1 - 2 * ((r - a.val : ℕ) : ℝ)) *
       Real.exp (σ a) ^ (2 * f)) ^ (k + 1) =
       Real.exp (((k : ℝ) + 1) * (-(f : ℝ) * Real.log 2 + δ * (1 - 2 * ((r - a.val : ℕ) : ℝ)) + 2 * f * σ a)) := by
     intro a
     rw [h2i]
-    simp only [← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_add]
+    simp only [← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_add]
     congr 1; push_cast; ring
   have e4 : ∀ a : Fin r, Real.exp δ ^ (1 / 2 - 2 * ((r - a.val : ℕ) : ℝ)) * (Real.exp (σ a) ^ 2) ^ f =
       Real.exp (δ * (1 / 2 - 2 * ((r - a.val : ℕ) : ℝ)) + 2 * f * σ a) := by
     intro a
-    simp only [← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_add]
+    simp only [← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_add]
     congr 1; push_cast; ring
   have e5 : ∀ a : Fin r, Real.exp (σ a) ^ (4 * (r - (a : ℕ)) + 2 * k) =
-      Real.exp (((4 * (r - (a : ℕ)) + 2 * k : ℕ) : ℝ) * σ a) := fun a => (Real.exp_nat_mul _ _).symm
+      Real.exp (((4 * (r - (a : ℕ)) + 2 * k : ℕ) : ℝ) * σ a) := fun a => (Real.exp_natCast_mul _ _).symm
   rw [Finset.prod_congr rfl (fun p _ => e1 p), Finset.prod_congr rfl (fun a _ => e2 a),
     Finset.prod_congr rfl (fun p _ => e3 p), Finset.prod_congr rfl (fun a _ => e4 a),
     Finset.prod_congr rfl (fun a _ => e5 a)]
@@ -1691,8 +1691,8 @@ theorem covol_blocks_prod : ∀ (d : ℝ) (f k r : ℕ) (s : Fin r → ℝ), 0 <
   rw [← Real.exp_sum, ← Real.exp_sum, ← Real.exp_sum, ← Real.exp_sum, ← Real.exp_sum, hu1, hu3]
   rw [show (2 : ℝ) ^ (f * (r * (r - 1) + r * (k + 1))) =
       Real.exp (((f * (r * (r - 1) + r * (k + 1)) : ℕ) : ℝ) * Real.log 2) by
-    rw [Real.exp_nat_mul, Real.exp_log two_pos]]
-  simp only [← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_add]
+    rw [Real.exp_natCast_mul, Real.exp_log two_pos]]
+  simp only [← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_add]
   rw [Real.exp_eq_exp]
   rw [Finset.mul_sum, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,
     ← sub_eq_zero, show ∀ x y z w : ℝ, x + y - (z + w) = (y - w) + (x - z) from fun _ _ _ _ => by ring,
@@ -1769,9 +1769,9 @@ theorem eq_one_of_dep {k r : ℕ} {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r 
 
 theorem countable_units (E : Type) [Field E] [NumberField E] (n : ℕ) :
     Countable (Matrix (Fin n) (Fin n) E)ˣ := by
-  haveI : Countable E :=
+  have : Countable E :=
     Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
   exact Function.Injective.countable (f := fun u : (Matrix (Fin n) (Fin n) E)ˣ => (u : Matrix (Fin n) (Fin n) E))
     Units.val_injective
 
@@ -1906,8 +1906,8 @@ theorem covolume_N : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       obtain ⟨u, rfl⟩ := hGu γ hγ.1
       refine ⟨⟨u, (hG u).2 hγ.1⟩, hγ.2, fun g hg => ?_⟩
       exact Subtype.ext (Units.ext (hu _ ⟨(hG _).1 g.2, hg⟩))
-  haveI : Countable G := by
-    haveI := countable_units E (2 * r + k + 1)
+  have : Countable G := by
+    have := countable_units E (2 * r + k + 1)
     infer_instance
   refine ⟨⟨Dset, hDm, (conv Dset).1 hstrict⟩, fun 𝓓 h𝓓 => ?_⟩
   have hEq := _root_.GlobalTheory.SnMass.VolN.strictFD_measure_eq (G := G) _ ρ NN 𝓓 Dset hNm hN0 h𝓓.1 hDm hρ1 hρm hρN

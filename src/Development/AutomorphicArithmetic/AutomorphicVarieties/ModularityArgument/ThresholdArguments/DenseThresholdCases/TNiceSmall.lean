@@ -50,7 +50,7 @@ private theorem charpoly_flag' {H k : Type} [Group H] [CommRing k] {n : ℕ} (r 
   have h1 := Matrix.charpoly_units_conj g (Pr.gm r s)
   have h2 : ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv] at h3
   rw [h3]
@@ -67,8 +67,8 @@ theorem UpperTheory.V.Th.nice_zero_of_rank_two_or_three_irreducible_free :
     · exact Nat.prime_three
   have h3 : n ≤ 3 := by omega
   obtain ⟨-, A, _, j, φ, hj, hred, hlift⟩ := Th.Det.redB x ρ hA.rep
-  haveI : V.frame.G'.Normal := MonoidHom.normal_ker _
-  haveI : CompactSpace V.frame.G₀ :=
+  have : V.frame.G'.Normal := MonoidHom.normal_ker _
+  have : CompactSpace V.frame.G₀ :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ V.frame.η_open).isCompact
   have key := Th.Det.irrSmall hp V.frame.G' ρ j φ r.chib (V.frame.φ v) (x.psi v) (r.psib v) hirr hj hred
     (hA.flag v) (hlift v) (hfree v) hne

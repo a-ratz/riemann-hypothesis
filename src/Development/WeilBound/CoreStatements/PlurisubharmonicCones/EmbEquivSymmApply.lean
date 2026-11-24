@@ -120,7 +120,7 @@ theorem emb_uniq {w : (𝓞 E →+* ℂ) → W} (h : ∀ a, ∑ s : 𝓞 E →+*
   have h1 := congrArg φ (h a)
 
   simp only [map_sum, map_smul, smul_eq_mul, map_zero] at h1
-  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply, MonoidHom.coe_coe]
+  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply, MonoidHom.coe_ofClass]
   rw [← h1]
   exact Finset.sum_congr rfl fun t _ => mul_comm _ _
 
@@ -212,7 +212,7 @@ theorem sum_coef (s : 𝓞 E →+* ℂ) : ∑ j, coef j s * s (RingOfIntegers.ba
     (w' := fun t => if t = s then 1 else 0) (fun a => by
       have h1 := dec_spec (W := ℂ) (RingHom.toAddMonoidHom s) a
       simp only [smul_eq_mul] at h1
-      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact h1.symm) s
   simpa using h0
 
@@ -273,7 +273,7 @@ theorem proj_eig_self {s : 𝓞 E →+* ℂ} {x : W} (hx : x ∈ eigSp ρ s) : p
   simpa using proj_eig hx s
 
 theorem proj_eig_ne {s t : 𝓞 E →+* ℂ} {x : W} (hx : x ∈ eigSp ρ s) (h : t ≠ s) : proj ρ t x = 0 := by
-  rw [proj_eig hx, if_neg h]
+  rw [proj_eig hx, ite_eq_right h]
 
 variable (ρ)
 
@@ -383,8 +383,8 @@ theorem basis_indep {ι : Type} [Fintype ι] (e : Module.Basis ι ℤ Λ) :
   simpa [Finsupp.single_apply] using h
 
 theorem span_top : Submodule.span ℝ (Set.range R.P) = ⊤ := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   let e := Module.Free.chooseBasis ℤ Λ
   have hli := basis_indep R e
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex ℤ Λ) = Module.finrank ℝ (Fin g → ℂ) := by
@@ -396,8 +396,8 @@ theorem span_top : Submodule.span ℝ (Set.range R.P) = ⊤ := by
 
 theorem real_indep {ι : Type} {v : ι → Λ} (h : LinearIndependent ℤ v) :
     LinearIndependent ℝ fun i => R.P (v i) := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   let e := Module.Free.chooseBasis ℤ Λ
   let bR := Algebra.TensorProduct.basis ℝ e
   let L : TensorProduct ℤ ℝ Λ →ₗ[ℝ] (Fin g → ℂ) := LinearMap.liftBaseChange ℝ R.P.toIntLinearMap
@@ -483,7 +483,7 @@ private theorem coef_ne_lemma {u t : 𝓞 E →+* ℂ} (h : u ≠ t) :
     (w' := fun u => if u = t then 1 else 0) (fun a => by
       have h1 := dec_spec (W := ℂ) (RingHom.toAddMonoidHom t) a
       simp only [smul_eq_mul] at h1
-      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact h1.symm) u
   simpa [h] using h0
 
@@ -545,8 +545,8 @@ theorem proj_indep {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : �
           refine Finset.sum_congr rfl fun u _ => ?_
           by_cases hu : u = t
           · subst hu
-            rw [if_pos rfl, sum_coef]
-          · rw [if_neg hu, coef_ne_lemma hu]
+            rw [ite_eq_left rfl, sum_coef]
+          · rw [ite_eq_right hu, coef_ne_lemma hu]
       _ = ∑ j, x a j * t (RingOfIntegers.basis E j) := by
           simp only [x, Finset.mul_sum, Finset.sum_mul]
           rw [Finset.sum_comm]
@@ -569,7 +569,7 @@ theorem proj_indep {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : �
         apply_ite (starRingEnd ℂ), map_zero, Complex.conj_conj, add_comm]
     have hzero : ∑ a, ∑ t, γ a t • proj R.B t (R.P (v a)) = 0 := by
       simp only [γ, add_smul, ite_smul, zero_smul, Finset.sum_add_distrib, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       rw [hc, hc', add_zero]
     have h3 := key γ hγ hzero a s
     simpa [γ] using h3
@@ -581,11 +581,11 @@ theorem proj_indep {I : Submodule (𝓞 E) Λ} (hI : IsIsoSub R.form I) (s : �
       simp only [mul_smul]
       rw [← Finset.smul_sum, hc, smul_zero]) a
   by_cases hs : s = (starRingEnd ℂ).comp s
-  · rw [if_pos hs] at h1 h2
+  · rw [ite_eq_left hs] at h1 h2
     rw [map_mul, Complex.conj_I] at h2
     have h4 : (2 : ℂ) * Complex.I * c a = 0 := by linear_combination Complex.I * h1 + h2
     simpa [Complex.I_ne_zero] using h4
-  · rw [if_neg hs, add_zero] at h1
+  · rw [ite_eq_right hs, add_zero] at h1
     exact h1
 
 end Riem

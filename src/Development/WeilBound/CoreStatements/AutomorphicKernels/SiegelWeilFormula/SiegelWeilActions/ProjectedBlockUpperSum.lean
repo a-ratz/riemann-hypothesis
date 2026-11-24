@@ -233,7 +233,7 @@ theorem sigNeId (hcm : IsCMExt F E σ) : ∃ x, σ x ≠ x := by
 theorem eigLine (hcm : IsCMExt F E σ) (ε : ℤˣ) {δ : E} (hδ0 : δ ≠ 0) (hδ : σ δ = -(((ε : ℤ) : E)) * δ) {e : E}
     (he : σ e = -(((ε : ℤ) : E)) * e) : ∃ c : F, c • δ = e := by
   have h2 : Module.finrank F E = 2 := hcm.2.2.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   set V : Submodule F E := LinearMap.ker (σ.toLinearMap + ((ε : ℤ) : F) • LinearMap.id) with hV
   have hmem : ∀ x, x ∈ V ↔ σ x + ((ε : ℤ) : E) * x = 0 := by
     intro x
@@ -257,7 +257,7 @@ theorem eigLine (hcm : IsCMExt F E σ) (ε : ℤˣ) {δ : E} (hδ0 : δ ≠ 0) (
     rw [Module.finrank_pos_iff_exists_ne_zero]
     exact ⟨⟨δ, hδV⟩, fun h => hδ0 (congrArg Subtype.val h)⟩
   have h1 : Module.finrank F V = 1 := by omega
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨δ, hδV⟩ : V) (fun h => hδ0 (congrArg Subtype.val h))).1 h1 ⟨e, heV⟩
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨δ, hδV⟩ : V) (fun h => hδ0 (congrArg Subtype.val h))).1 h1 ⟨e, heV⟩
   exact ⟨c, congrArg Subtype.val hc⟩
 
 theorem ellSpec {δ : E} (hδ0 : δ ≠ 0) :

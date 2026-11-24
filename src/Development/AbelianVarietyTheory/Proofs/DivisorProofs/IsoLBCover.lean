@@ -59,7 +59,7 @@ open GlobalTheory.HomFixMat
 
 theorem psi_unique {Rg : Type} [CommRing Rg] {A : Over (Sp Rg)} [GrpObj A] {X : Scheme.{0}} (ψ ψ₂ : X ⟶ (topS Rg ⊗ A).left)
     (h : ψ ≫ (snd (topS Rg) A).left = ψ₂ ≫ (snd (topS Rg) A).left) : ψ = ψ₂ := by
-  haveI : Mono (topS Rg).hom := by
+  have : Mono (topS Rg).hom := by
     show Mono ((⊤ : (Sp Rg).Opens).ι ≫ 𝟙 _); infer_instance
   have e : ψ ≫ (fst (topS Rg) A).left = ψ₂ ≫ (fst (topS Rg) A).left := by
     rw [← cancel_mono (topS Rg).hom]

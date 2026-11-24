@@ -832,7 +832,7 @@ theorem annSub_min (n i : ℕ) : annSub Ω n (min i n) = annSub Ω n i := by
   congr 1
   ext j
   have := j.2
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   omega
 
 theorem vanSub_min (F : Type) [Zero F] (n i : ℕ) : vanSub Ω F n (min i n) = vanSub Ω F n i := by
@@ -1796,7 +1796,7 @@ theorem sum_allOne (q : ℕ) (F : (Fin q →₀ ℕ) → ℤ) :
     ∑ μ ∈ (monomial (allOne q) (1 : ℤ) : MvPolynomial (Fin q) ℤ).support,
       (monomial (allOne q) (1 : ℤ) : MvPolynomial (Fin q) ℤ).coeff μ * F μ = F (allOne q) := by
   classical
-  rw [support_monomial, if_neg one_ne_zero, Finset.sum_singleton, coeff_monomial, if_pos rfl, one_mul]
+  rw [support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton, coeff_monomial, ite_eq_left rfl, one_mul]
 
 theorem classNum_perm {K : Type} [DecidableEq K] {ι : K → Type} {O : Type} [CommRing O] [IsDomain O]
     [IsDiscreteValuationRing O] {σ : Type} (cls : σ → K → ℤ) (H : MvPolynomial σ ℤ)

@@ -64,7 +64,7 @@ theorem UpperTheory.V.Kum.toGalDict :
   have hcomp : galEmb F K Ω ∘ toGal K hU = Subtype.val := funext fun u => AlgEquiv.ext fun x => rfl
   have hc : Continuous (toGal K hU) := by
     rw [hE.isInducing.continuous_iff, hcomp]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   refine ⟨hD, fun A u => ?_, hc, fun h => ⟨?_, ?_⟩⟩
   · exact ⟨fun h => ⟨(hD A u).1 h.1, h.2⟩, fun h => ⟨(hD A u).2 h.1, h.2⟩⟩
   · rw [isHomeomorph_iff_exists_inverse]

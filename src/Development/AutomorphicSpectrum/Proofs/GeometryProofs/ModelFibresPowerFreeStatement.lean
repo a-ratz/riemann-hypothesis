@@ -117,7 +117,7 @@ theorem exists_root (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRin
       M = Ideal.map (AdjoinRoot.of P) (maximalIdeal V) := by
     intro M hM
     have h1 : (M.comap (algebraMap V (AdjoinRoot P))).IsMaximal := by
-      letI := hM
+      let := hM
       exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
         (algebraMap V (AdjoinRoot P)) (by
           intro x
@@ -280,7 +280,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.complete_dvr_dominating_valuat
     minpoly.ne_zero (Algebra.IsIntegral.isIntegral (b i))
   obtain ⟨R1, _, _, _, f1, _, hinj1, hsplit⟩ := PositivityTheory.HtPt.Pdvr.exists_splits _ V
     (∏ i, minpoly (IsLocalRing.ResidueField V) (b i)) rfl
-  letI : Algebra (IsLocalRing.ResidueField V) (IsLocalRing.ResidueField R1) :=
+  let : Algebra (IsLocalRing.ResidueField V) (IsLocalRing.ResidueField R1) :=
     (IsLocalRing.ResidueField.map f1).toAlgebra
   have hS : IntermediateField.adjoin (IsLocalRing.ResidueField V) (Set.range b) = ⊤ := by
     rw [eq_top_iff]
@@ -590,11 +590,11 @@ theorem exists_complete_dvr (A : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
       (s : k →+* ResidueField R), IsAdicComplete (maximalIdeal R) R ∧ Function.Injective g ∧
         s.comp (algebraMap _ k) = ResidueField.map g := by
   obtain ⟨V, hV, hA1, hA2⟩ := GroundTheory.Heights₂.Heights.Model.DominatingDVR.full A hA (FractionRing A)
-  haveI := hV
+  have := hV
   let g₀ : A →+* V := (algebraMap A (FractionRing A)).codRestrict V hA1
   have hg₀ : Function.Injective g₀ := fun a b h =>
     IsFractionRing.injective A (FractionRing A) (congrArg Subtype.val h)
-  haveI : IsLocalHom g₀ := ⟨fun a ha => by
+  have : IsLocalHom g₀ := ⟨fun a ha => by
     by_contra hu
     exact (hA2 a).mpr hu ha⟩
   let _ : Algebra (ResidueField A) (ResidueField V) := (ResidueField.map g₀).toAlgebra
@@ -606,7 +606,7 @@ theorem exists_complete_dvr (A : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   let bs := Module.finBasis (ResidueField A) k
   let k' := IntermediateField.adjoin (ResidueField V) (Set.range fun i => σ (bs i))
-  haveI : FiniteDimensional (ResidueField V) k' :=
+  have : FiniteDimensional (ResidueField V) k' :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   have hmem : ∀ x : k, σ x ∈ k' := fun x => by
 
@@ -656,15 +656,15 @@ open IsLocalRing in
 theorem model_fibPF : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] [IsNoetherianRing O] (β : O →+* c.F) (Y : Model Xo c β), Dense (Set.range Y.j) → Y.SplitFibres → Y.N3 → ∀ (p : ℕ), p.Prime → ∀ z : Y.X, (p : Y.X.residueField z) = 0 → FibPF Y.t z := by
   intro E _ _ _ H D l Xo c O _ _ β Y hd hS h3 p hp z hz
   obtain ⟨hdom, hic⟩ := Y.normal z
-  haveI := hdom
+  have := hdom
   obtain ⟨w, hw⟩ := stalkGen_mem_range Y hd z
   have hwz : Y.j w ⤳ z := hw ▸ stalkGen_specializes Y.X z
-  haveI : CharZero (Y.X.presheaf.stalk z) := charZero_stalk Y z w hwz
+  have : CharZero (Y.X.presheaf.stalk z) := charZero_stalk Y z w hwz
   have hprop : IsProper Y.s := by
     obtain ⟨N, i, hi, e⟩ := Y.proj
     have := isProper_str O N
     rw [← e]; infer_instance
-  haveI : IsLocallyNoetherian Y.X := LocallyOfFiniteType.isLocallyNoetherian Y.s
+  have : IsLocallyNoetherian Y.X := LocallyOfFiniteType.isLocallyNoetherian Y.s
   have hnf : ¬ IsField (Y.X.presheaf.stalk z) := fun hf => by
     have hp0 : (p : Y.X.presheaf.stalk z) ≠ 0 := Nat.cast_ne_zero.mpr hp.ne_zero
     obtain ⟨b, hb⟩ := hf.mul_inv_cancel hp0
@@ -673,11 +673,11 @@ theorem model_fibPF : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       rw [map_natCast]; exact hz
     exact ((residue_eq_zero_iff _).mp hm) hu
   obtain ⟨k, ik, ia, hfin, -, S, hGt⟩ := hS z
-  letI : Algebra (ResidueField (Y.X.presheaf.stalk z)) k := ia
-  haveI : FiniteDimensional (ResidueField (Y.X.presheaf.stalk z)) k := hfin
+  let : Algebra (ResidueField (Y.X.presheaf.stalk z)) k := ia
+  have : FiniteDimensional (ResidueField (Y.X.presheaf.stalk z)) k := hfin
   obtain ⟨R, iR, iD, iV, g, iL, s, hc, hg, hs⟩ := exists_complete_dvr (Y.X.presheaf.stalk z) hnf k
   let ξ : Sp R ⟶ Y.X := spMap g ≫ Y.X.fromSpecStalk z
-  haveI : CharZero R := charZero_of_injective_ringHom hg
+  have : CharZero R := charZero_of_injective_ringHom hg
   obtain ⟨PP', cub, sym, adj, prim, m, -⟩ := sabPull Out.proved_CubePullSt ξ Y.t
   let t : SAB H (Sp R) := ⟨(Over.pullback ξ).obj Y.t.G, IsSemiAbelian.pullback _ Y.t.G Y.t.semi,
     OAct.pullback _ Y.t.G Y.t.act, PP', cub, sym, adj, prim⟩

@@ -138,7 +138,7 @@ theorem trace_aeval_end {V : Type*} [AddCommGroup V] [Module ℂ V] [Module.Fini
   rw [Finset.sum_multiset_map_count]
   have hs : h_fin.toFinset = f.charpoly.roots.toFinset := by
     ext μ
-    rw [Set.Finite.mem_toFinset, Multiset.mem_toFinset, Set.mem_setOf_eq,
+    rw [Set.Finite.mem_toFinset, Multiset.mem_toFinset, Set.mem_ofPred_eq,
       ← Multiset.count_ne_zero, count_roots, ← LinearMap.finrank_maxGenEigenspace_eq,
       Ne, Ne, Submodule.finrank_eq_zero]
   rw [hs]
@@ -262,7 +262,7 @@ theorem trace_aeval_end {V : Type*} [AddCommGroup V] [Module C V] [Module.Finite
   rw [Finset.sum_multiset_map_count]
   have hs : h_fin.toFinset = f.charpoly.roots.toFinset := by
     ext μ
-    rw [Set.Finite.mem_toFinset, Multiset.mem_toFinset, Set.mem_setOf_eq,
+    rw [Set.Finite.mem_toFinset, Multiset.mem_toFinset, Set.mem_ofPred_eq,
       ← Multiset.count_ne_zero, count_roots, ← LinearMap.finrank_maxGenEigenspace_eq,
       Ne, Ne, Submodule.finrank_eq_zero]
   rw [hs]
@@ -464,8 +464,8 @@ theorem exists_spec {K L : Type} [Field K] [Field L] [CharZero K] [Algebra K L]
 
 theorem trace_specialisation : ∀ (K L : Type) [Field K] [Field L] [CharZero K] (φ : K →+* L) (B₀ : Finset L) (x : L), (letI := φ.toAlgebra; FiniteDimensional K L) → ∃ B' : Finset K, ∀ A' : Subring K, (↑B' : Set K) ⊆ A' → ∃ (A : Subring L) (hA : ∀ a : A', φ a ∈ A) (_ : (↑B₀ : Set L) ⊆ A) (hx : x ∈ A) (ht : (letI := φ.toAlgebra; Algebra.trace K L x) ∈ A'), ∀ (C : Type) [Field C] [IsAlgClosed C] (ev : A' →+* C), (∀ a, IsAlgebraic ℤ (ev a)) → ∃ (n : ℕ) (ev' : Fin n → (A →+* C)), (∀ j (a : A'), ev' j ⟨φ a, hA a⟩ = ev a) ∧ (∀ j a, IsAlgebraic ℤ (ev' j a)) ∧ ev ⟨_, ht⟩ = ∑ j, ev' j ⟨x, hx⟩ := by
   intro K L _ _ _ φ B₀ x hfd
-  letI := φ.toAlgebra
-  haveI : FiniteDimensional K L := hfd
+  let := φ.toAlgebra
+  have : FiniteDimensional K L := hfd
   exact exists_spec B₀ x
 
 end GlobalTheory.CompanionTheory.TraceSpec

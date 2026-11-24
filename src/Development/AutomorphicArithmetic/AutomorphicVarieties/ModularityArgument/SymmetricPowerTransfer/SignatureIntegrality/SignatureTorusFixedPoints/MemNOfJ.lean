@@ -72,7 +72,7 @@ private theorem conjNm {d : Fin n → kˣ} (hd : Dom d) {c : ℕ} {y : GL (Fin n
     have h1 : valuation k ((d j : k)) ≤ valuation k (d i : k) := hd j i hji.le
     have h2 : valuation k (((d⁻¹) i : kˣ) : k) ≤ valuation k (((d⁻¹) j : kˣ) : k) := by
       simp only [Pi.inv_apply, Units.val_inv_eq_inv_val, map_inv₀]
-      exact inv_anti₀ (zero_lt_iff.2 (by simp)) h1
+      exact inv_anti₀ (pos_iff_ne_zero.2 (by simp)) h1
     have h3 := ord_le_ord_of_valuation_le h2
     omega
 

@@ -134,7 +134,7 @@ theorem snd_valR_transl {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] [IsCom
     [CommRing B] {β : K →+* B} {x : Sp B ⟶ A.left} {w : Sp (DualNumber B) ⟶ A.left} (hw : IsTransl β x u w)
     {O : A.left.Opens} (h : ⊤ ≤ x ⁻¹ᵁ O) (f : Γ(A.left, O)) : (valR w O f).snd = valR x O (dd O f) := by
   obtain ⟨x', v', h₁, h₂, rfl⟩ := hw
-  letI : Algebra K (DualNumber B) := ((algebraMap B (DualNumber B)).comp β).toAlgebra
+  let : Algebra K (DualNumber B) := ((algebraMap B (DualNumber B)).comp β).toAlgebra
   have hz : ⊤ ≤ x'.left ⁻¹ᵁ O := by
     rw [h₁]; exact fun p _ => h (Set.mem_univ _)
   obtain ⟨h', e⟩ := evalPt_translate (B := DualNumber B) hu hd DualNumber.eps DualNumber.eps_mul_eps x' O hz
@@ -399,7 +399,7 @@ theorem eq_zero_of_forall_field {R : Type} [CommRing R] [_root_.IsReduced R] (r 
   have hn : r ∈ nilradical R := by
     rw [nilradical_eq_sInf, Submodule.mem_sInf]
     intro p hp
-    haveI : Ideal.IsPrime p := hp
+    have : Ideal.IsPrime p := hp
     have h0 := h (FractionRing (R ⧸ p)) ((algebraMap (R ⧸ p) (FractionRing (R ⧸ p))).comp (Ideal.Quotient.mk p))
     rwa [RingHom.comp_apply, IsFractionRing.to_map_eq_zero_iff, Ideal.Quotient.eq_zero_iff_mem] at h0
   exact (mem_nilradical.1 hn).eq_zero

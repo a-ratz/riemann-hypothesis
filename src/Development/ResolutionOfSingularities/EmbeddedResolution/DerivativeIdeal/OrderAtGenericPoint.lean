@@ -110,7 +110,7 @@ private theorem span_eq_top_of_forall_mem_basicOpen {X : Scheme.{u}} {U : X.Open
     Ideal.span s = ⊤ := by
   have hUeq : (⨆ f : s, X.basicOpen (f : Γ(X, U))) = U := by
     refine le_antisymm (iSup_le fun f => Scheme.basicOpen_le (X := X) (f : Γ(X, U)))
-      (SetLike.le_def.mpr ?_)
+      (IsConcreteLE.le_iff.mpr ?_)
     intro x hx
     obtain ⟨t, hts, hxt⟩ := hcov x hx
     exact TopologicalSpace.Opens.mem_iSup.mpr ⟨⟨t, hts⟩, hxt⟩
@@ -552,7 +552,7 @@ private theorem specializes_of_primeIdealOf_le {Y : Scheme.{u}} {V : Y.Opens}
   have hfa : f ∉ (hV.primeIdealOf ⟨a, ha⟩).asIdeal := fun hcon => hfb (h hcon)
   have haf : a ∈ Y.basicOpen f :=
     (Scheme.mem_basicOpen Y f a ha).mpr ((isUnit_germ_iff_notMem_primeIdealOf hV a ha f).mpr hfa)
-  exact ⟨a, SetLike.le_def.mp hfW haf, rfl⟩
+  exact ⟨a, IsConcreteLE.le_iff.mp hfW haf, rfl⟩
 
 private theorem exists_mem_primeIdealOf_eq_of_isPrime {Y : Scheme.{u}} {V : Y.Opens} (hV : IsAffineOpen V)
     (P : Ideal Γ(Y, V)) (hP : P.IsPrime) :

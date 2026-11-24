@@ -125,20 +125,20 @@ theorem finite_aeval : (MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).Fi
 theorem ringKrullDim_quotient_eq_comap (I : Ideal T) : ringKrullDim (T ⧸ I) =
     ringKrullDim (MvPolynomial ι K ⧸
       I.comap (MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).toRingHom) := by
-  letI : Algebra (MvPolynomial ι K) T :=
+  let : Algebra (MvPolynomial ι K) T :=
     (MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial ι K) T := finite_aeval hfin
+  have : Module.Finite (MvPolynomial ι K) T := finite_aeval hfin
   exact ReciprocityTheory.CA.ringKrullDim_quotient_eq_quotient_comap_of_isIntegral
     (A := MvPolynomial ι K) I
 
 variable [Finite ι]
 
 theorem finiteType : Algebra.FiniteType K T := by
-  letI : Algebra (MvPolynomial ι K) T :=
+  let : Algebra (MvPolynomial ι K) T :=
     (MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).toRingHom.toAlgebra
-  haveI : IsScalarTower K (MvPolynomial ι K) T := IsScalarTower.of_algebraMap_eq fun r =>
+  have : IsScalarTower K (MvPolynomial ι K) T := IsScalarTower.of_algebraMap_eq fun r =>
     ((MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).commutes r).symm
-  haveI : Module.Finite (MvPolynomial ι K) T := finite_aeval hfin
+  have : Module.Finite (MvPolynomial ι K) T := finite_aeval hfin
   exact Algebra.FiniteType.trans (S := MvPolynomial ι K) inferInstance inferInstance
 
 theorem isNoetherianRing : IsNoetherianRing T :=
@@ -235,12 +235,12 @@ theorem exists_isHilbertPoly_gradedQuotPiece {I : Ideal T} (hI : I.IsHomogeneous
     (∀ n, Module.Finite K (𝒜 n)) ∧
       ∃ P : ℚ[X], IsHilbertPoly (gradedQuotPiece 𝒜 I) P ∧ P.degree < (s.card : ℕ) := by
   classical
-  letI : Algebra (MvPolynomial ι K) T :=
+  let : Algebra (MvPolynomial ι K) T :=
     (MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).toRingHom.toAlgebra
-  haveI : IsScalarTower K (MvPolynomial ι K) T := IsScalarTower.of_algebraMap_eq fun r =>
+  have : IsScalarTower K (MvPolynomial ι K) T := IsScalarTower.of_algebraMap_eq fun r =>
     ((MvPolynomial.aeval x : MvPolynomial ι K →ₐ[K] T).commutes r).symm
-  haveI : Module.Finite (MvPolynomial ι K) T := finite_aeval hfin
-  letI := decompositionExtend 𝒜
+  have : Module.Finite (MvPolynomial ι K) T := finite_aeval hfin
+  let := decompositionExtend 𝒜
   have hsm : ∀ i (m : T), (MvPolynomial.X i : MvPolynomial ι K) • m = x i * m := fun i m => by
     rw [Algebra.smul_def]
     exact congrArg (· * m) (MvPolynomial.aeval_X x i)
@@ -273,11 +273,11 @@ theorem exists_isHilbertPoly_gradedQuotPiece {I : Ideal T} (hI : I.IsHomogeneous
       rw [hsm]
       exact I.mul_mem_right _ (hs i hi))
   refine ⟨fun n => hpiece n, P, ⟨fun n => ?_, ?_⟩, hP⟩
-  · haveI := hpiece n
+  · have := hpiece n
     unfold gradedQuotPiece
     infer_instance
   · filter_upwards [h] with n hn
-    haveI := hpiece n
+    have := hpiece n
     have e := GradedHilbert.finrank_map_add_finrank_inf_ker (Ideal.Quotient.mkₐ K I).toLinearMap
       (extendGradingByZero 𝒜 n)
     have e2 : LinearMap.ker (Ideal.Quotient.mkₐ K I).toLinearMap =
@@ -325,7 +325,7 @@ theorem eventually_nonneg {I : Ideal T} (hI : I.IsHomogeneous 𝒜) :
 theorem finrank_piece_add (I : Ideal T) (n : ℕ) :
     finrank K (gradedQuotPiece 𝒜 I n) +
       finrank K (I.restrictScalars K ⊓ 𝒜 n : Submodule K _) = finrank K (𝒜 n) := by
-  haveI := finite_piece hx hfin n
+  have := finite_piece hx hfin n
   have e := GradedHilbert.finrank_map_add_finrank_inf_ker (Ideal.Quotient.mkₐ K I).toLinearMap
     (𝒜 n)
   have e2 : LinearMap.ker (Ideal.Quotient.mkₐ K I).toLinearMap = I.restrictScalars K := by
@@ -341,8 +341,8 @@ theorem finrank_sup_add_colon {I : Ideal T} (hI : I.IsHomogeneous 𝒜) {f : T} 
   have h1 := finrank_piece_add hx hfin (I ⊔ Ideal.span {f}) (n + d)
   have h2 := finrank_piece_add hx hfin (Submodule.colon I {f}) n
   have h3 := finrank_piece_add hx hfin I (n + d)
-  haveI := finite_piece hx hfin n
-  haveI := finite_piece hx hfin (n + d)
+  have := finite_piece hx hfin n
+  have := finite_piece hx hfin (n + d)
   have e := GradedHilbert.finrank_sup_map_add_finrank_inf_comap (LinearMap.mulRight K f)
     (𝒜 n) (I.restrictScalars K ⊓ 𝒜 (n + d))
   have a₁ : (I ⊔ Ideal.span {f}).restrictScalars K ⊓ 𝒜 (n + d) =
@@ -402,7 +402,7 @@ theorem degree_hilbertPoly_anti {I J : Ideal T} (hI : I.IsHomogeneous 𝒜)
   filter_upwards [eventually_finrank hx hfin hI, eventually_finrank hx hfin hJ] with n h1 h2
   have h3 := finrank_piece_add hx hfin I n
   have h4 := finrank_piece_add hx hfin J n
-  haveI := finite_piece hx hfin n
+  have := finite_piece hx hfin n
   have h5 : finrank K (I.restrictScalars K ⊓ 𝒜 n : Submodule K _) ≤
       finrank K (J.restrictScalars K ⊓ 𝒜 n : Submodule K _) :=
     Submodule.finrank_mono (inf_le_inf_right _ fun x hx => h hx)
@@ -425,7 +425,7 @@ theorem hilbertPoly_top : gradedQuotHilbertPoly 𝒜 (⊤ : Ideal T) = 0 :=
 
 theorem degree_hilbertPoly_lt {I : Ideal T} (hI : I.IsHomogeneous 𝒜) {m : ℕ}
     (hm : ringKrullDim (T ⧸ I) ≤ m) : (gradedQuotHilbertPoly 𝒜 I).degree < m := by
-  haveI := isNoetherianRing hfin
+  have := isNoetherianRing hfin
   induction I using IsNoetherian.induction generalizing m with
   | _ I ih =>
   have mono : ∀ J, I ≤ J → ringKrullDim (T ⧸ J) ≤ m := fun J hJ =>
@@ -464,7 +464,7 @@ theorem degree_hilbertPoly_lt {I : Ideal T} (hI : I.IsHomogeneous 𝒜) {m : ℕ
 theorem degree_hilbertPoly_eq_of_isPrime {P : Ideal T} [hP : P.IsPrime]
     (hI : P.IsHomogeneous 𝒜) {e : ℕ} (he : ringKrullDim (T ⧸ P) = (e + 1 : ℕ)) :
     (gradedQuotHilbertPoly 𝒜 P).degree = e := by
-  haveI := finiteType hfin
+  have := finiteType hfin
   refine le_antisymm ((degree_le_iff_coeff_zero _ _).2 fun m hm =>
     (degree_lt_iff_coeff_zero _ _).1 (degree_hilbertPoly_lt hx hfin hI he.le) m
       (by exact_mod_cast hm)) ?_
@@ -510,7 +510,7 @@ theorem sum_coeff_hilbertPoly_le {I : Ideal T} (hI : I.IsHomogeneous 𝒜) {e : 
     (hs : ∀ Q ∈ s, Q ∈ I.minimalPrimes) :
     ∑ Q ∈ s, (gradedQuotHilbertPoly 𝒜 Q).coeff e ≤ (gradedQuotHilbertPoly 𝒜 I).coeff e := by
   classical
-  haveI := isNoetherianRing hfin
+  have := isNoetherianRing hfin
   induction I using IsNoetherian.induction generalizing s with
   | _ I ih =>
   have h0 := coeff_nonneg_of_eventually_eval_nat he (eventually_nonneg hx hfin hI)
@@ -585,7 +585,7 @@ omit hx [GradedAlgebra 𝒜] in
 theorem ringKrullDim_quotient_of_mem_minimalPrimes_sup {P Q : Ideal T} [P.IsPrime] {r : ℕ}
     (hr : ringKrullDim (T ⧸ P) = (r + 1 : ℕ)) {f : T} (hfP : f ∉ P)
     (hQ : Q ∈ (P ⊔ Ideal.span {f}).minimalPrimes) : ringKrullDim (T ⧸ Q) = r := by
-  haveI := finiteType hfin
+  have := finiteType hfin
   obtain ⟨δ, hδ⟩ := exists_ringKrullDim_quotient_eq_nat hfin hQ.1.1.ne_top
   have h1 := ringKrullDim_quotient_add_one_of_mem_minimalPrimes_sup K hfP hQ
   rw [hr, hδ] at h1
@@ -723,13 +723,13 @@ open scoped BigOperators in
 private theorem exists_algHom_vanishing_prime_ne_zero_of_notMem {K T : Type} [Field K] [IsAlgClosed K] [CommRing T]
     [Algebra K T] [Algebra.FiniteType K T] {P : Ideal T} [hP : P.IsPrime] {y : T} (hy : y ∉ P) :
     ∃ φ : T →ₐ[K] K, (∀ z ∈ P, φ z = 0) ∧ φ y ≠ 0 := by
-  haveI := isJacobsonRing_of_finiteType (A := K) (B := T)
+  have := isJacobsonRing_of_finiteType (A := K) (B := T)
   have hJ : P.jacobson = P := IsJacobsonRing.out' P hP.isRadical
   rw [← hJ] at hy
-  simp only [Ideal.jacobson, Ideal.mem_sInf, Set.mem_setOf_eq, not_forall] at hy
+  simp only [Ideal.jacobson, Ideal.mem_sInf, Set.mem_ofPred_eq, not_forall] at hy
   obtain ⟨m, ⟨hPm, hm⟩, hym⟩ := hy
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite K (T ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (T ⧸ m)
+  let := Ideal.Quotient.field m
+  have : Module.Finite K (T ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (T ⧸ m)
   have hsurj : Function.Surjective (algebraMap K (T ⧸ m)) :=
     IsSepClosed.algebraMap_surjective K (T ⧸ m)
   let e : K ≃ₐ[K] T ⧸ m := AlgEquiv.ofBijective (Algebra.ofId K (T ⧸ m))
@@ -751,7 +751,7 @@ private theorem exists_mem_notMem_homogeneous_prime_of_finite_points {K T : Type
     {Q : Ideal T} [hQp : Q.IsPrime] (hQ : Q.IsHomogeneous 𝒜) {k : ℕ}
     (hdim : ringKrullDim (T ⧸ Q) = (k + 1 + 1 : ℕ)) : ∃ f ∈ F, f ∉ Q := by
   classical
-  haveI : Algebra.FiniteType K T := _root_.GlobalTheory.GradedBezout.finiteType hfin
+  have : Algebra.FiniteType K T := _root_.GlobalTheory.GradedBezout.finiteType hfin
   by_contra! hFQ
   obtain ⟨Φ, hΦfin, hΦ⟩ := hΦ
   let G : Finset (T →ₐ[K] K) := hΦfin.toFinset.filter (fun ψ => ∃ i, ψ (x i) ≠ 0)
@@ -782,7 +782,7 @@ private theorem exists_mem_notMem_homogeneous_prime_of_finite_points {K T : Type
   have hne : Q ⊔ Ideal.span {h} ≠ ⊤ :=
     sup_span_ne_top_of_homogeneous_pos_degree hQ hQp.ne_top hh1 one_pos
   obtain ⟨Q', hQ'⟩ := Ideal.nonempty_minimalPrimes hne
-  haveI : Q'.IsPrime := hQ'.1.1
+  have : Q'.IsPrime := hQ'.1.1
   have hQQ' : Q ⊔ Ideal.span {h} ≤ Q' := hQ'.1.2
   have hj : ∃ j, x j ∉ Q' := by
     by_contra! hall
@@ -828,7 +828,7 @@ private theorem card_le_of_points_lemma_2 {K T : Type} [Field K] [IsAlgClosed K]
       (∀ P ∈ J, P.IsPrime ∧ P.IsHomogeneous 𝒜 ∧ Q ≤ P ∧ (∀ f ∈ F, f ∈ P) ∧ ∃ i, x i ∉ P) →
       (J.card : ℚ) ≤ (a : ℚ) ^ k * _root_.GlobalTheory.gradedQuotDeg 𝒜 k Q := by
   classical
-  haveI : IsNoetherianRing T := _root_.GlobalTheory.GradedBezout.isNoetherianRing hfin
+  have : IsNoetherianRing T := _root_.GlobalTheory.GradedBezout.isNoetherianRing hfin
   induction k with
   | zero =>
     intro Q _ hQ hdim J hJ
@@ -840,7 +840,7 @@ private theorem card_le_of_points_lemma_2 {K T : Type} [Field K] [IsAlgClosed K]
       obtain ⟨n, y, hy, hyP, hyQ⟩ := _root_.GlobalTheory.exists_homogeneous_notMem_of_not_le 𝒜 hPh hPQ
       obtain ⟨Q'', hQ'', hQ''P⟩ := Ideal.exists_minimalPrimes_le (J := P)
         (sup_le hQP ((Ideal.span_singleton_le_iff_mem _).mpr hyP))
-      haveI : Q''.IsPrime := hQ''.1.1
+      have : Q''.IsPrime := hQ''.1.1
       have hd0 := _root_.GlobalTheory.GradedBezout.ringKrullDim_quotient_of_mem_minimalPrimes_sup hfin (r := 0) hdim hyQ hQ''
       have hQ''h : Q''.IsHomogeneous 𝒜 := _root_.GlobalTheory.isHomogeneous_of_mem_minimalPrimes 𝒜
         (_root_.GlobalTheory.GradedBezout.isHomogeneous_sup_span hQ hy) hQ''
@@ -871,7 +871,7 @@ private theorem card_le_of_points_lemma_2 {K T : Type} [Field K] [IsAlgClosed K]
         (a : ℚ) ^ k * _root_.GlobalTheory.gradedQuotDeg 𝒜 k Q' := by
       intro Q' hQ'
       rw [Set.Finite.mem_toFinset] at hQ'
-      haveI : Q'.IsPrime := hQ'.1.1
+      have : Q'.IsPrime := hQ'.1.1
       refine ih Q' (_root_.GlobalTheory.isHomogeneous_of_mem_minimalPrimes 𝒜
         (_root_.GlobalTheory.GradedBezout.isHomogeneous_sup_span hQ hfa) hQ')
         (_root_.GlobalTheory.GradedBezout.ringKrullDim_quotient_of_mem_minimalPrimes_sup hfin hdim hfQ hQ') _ ?_
@@ -899,7 +899,7 @@ theorem _root_.GlobalTheory.graded_bezout_bound :
     (∀ (K T : Type) [Field K] [IsAlgClosed K] [CommRing T] [IsDomain T] [Algebra K T] (𝒜 : ℕ → Submodule K T) [GradedAlgebra 𝒜] (m g N d a : ℕ) (x : Fin m → T) (s : T) (F : Set T), 1 ≤ g → (∀ i, x i ∈ 𝒜 1) → Module.Finite (Algebra.adjoin K (Set.range x)) T → ringKrullDim T = (g + 1 : ℕ) → (∀ e, 1 ≤ e → Module.finrank K (𝒜 e) ≤ (N * e) ^ g) → s ∈ 𝒜 d → s ≠ 0 → (∀ f ∈ F, f ∈ 𝒜 a) → (∃ Φ : Set (T →ₐ[K] K), Φ.Finite ∧ ∀ φ : T →ₐ[K] K, (∃ i, φ (x i) ≠ 0) → (∀ f ∈ F, φ f = 0) → ∃ ψ ∈ Φ, (∃ c : K, ∀ (e : ℕ), ∀ y ∈ 𝒜 e, φ y = c ^ e * ψ y)) → ∀ (n : ℕ) (φ : Fin n → (T →ₐ[K] K)), (∀ j, ∃ i, φ j (x i) ≠ 0) → (∀ j, φ j s = 0 ∧ ∀ f ∈ F, φ j f = 0) → (∀ j j', (∃ c : K, ∀ (e : ℕ), ∀ y ∈ 𝒜 e, φ j' y = c ^ e * φ j y) → j = j') → n ≤ N ^ g * g.factorial * d * a ^ (g - 1)) := by
   intro K T _ _ _ _ _ 𝒜 _ m g N d a x s F hg hx hfin hdim hN hs hs0 hF hΦ n φ hφx hφ hinj
   classical
-  haveI : IsNoetherianRing T := _root_.GlobalTheory.GradedBezout.isNoetherianRing hfin
+  have : IsNoetherianRing T := _root_.GlobalTheory.GradedBezout.isNoetherianRing hfin
   obtain ⟨g, rfl⟩ : ∃ g', g = g' + 1 := ⟨g - 1, by omega⟩
   let core : Fin n → Ideal T := fun j => (Ideal.homogeneousCore 𝒜 (RingHom.ker (φ j))).toIdeal
   have hcore_prime : ∀ j, (core j).IsPrime := fun j =>
@@ -919,7 +919,7 @@ theorem _root_.GlobalTheory.graded_bezout_bound :
   let J := Finset.univ.image core
   have hJcard : J.card = n := by
     rw [Finset.card_image_of_injective _ hinjc, Finset.card_univ, Fintype.card_fin]
-  haveI : (⊥ : Ideal T).IsPrime := Ideal.isPrime_bot
+  have : (⊥ : Ideal T).IsPrime := Ideal.isPrime_bot
   have hbot_h : (⊥ : Ideal T).IsHomogeneous 𝒜 := by
     intro i r hr
     rw [Ideal.mem_bot] at hr ⊢
@@ -931,7 +931,7 @@ theorem _root_.GlobalTheory.graded_bezout_bound :
   have hsub : J ⊆ hMfin.toFinset.biUnion (fun Q' => J.filter (fun P => Q' ≤ P)) := by
     intro P hP
     obtain ⟨j, -, rfl⟩ := Finset.mem_image.mp hP
-    haveI := hcore_prime j
+    have := hcore_prime j
     obtain ⟨Q', hQ', hQ'P⟩ := Ideal.exists_minimalPrimes_le (J := core j)
       (sup_le bot_le ((Ideal.span_singleton_le_iff_mem _).mpr (hcore_mem j d s hs (hφ j).1)))
     exact Finset.mem_biUnion.mpr
@@ -940,7 +940,7 @@ theorem _root_.GlobalTheory.graded_bezout_bound :
       (a : ℚ) ^ g * _root_.GlobalTheory.gradedQuotDeg 𝒜 g Q' := by
     intro Q' hQ'
     rw [Set.Finite.mem_toFinset] at hQ'
-    haveI : Q'.IsPrime := hQ'.1.1
+    have : Q'.IsPrime := hQ'.1.1
     refine card_le_of_points_lemma_2 hx hfin hF hΦ g Q' (_root_.GlobalTheory.isHomogeneous_of_mem_minimalPrimes
       𝒜 (_root_.GlobalTheory.GradedBezout.isHomogeneous_sup_span hbot_h hs) hQ')
       (_root_.GlobalTheory.GradedBezout.ringKrullDim_quotient_of_mem_minimalPrimes_sup hfin hdim0 hs0' hQ') _ ?_

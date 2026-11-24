@@ -194,10 +194,10 @@ variable {X : Scheme.{0}} [IsLocallyNoetherian X] {Ω : Type} [Field Ω] [CharZe
 
 theorem exists_frac (hξ : IsCptGen ξ) (q : Cpt ξ) :
     ∃ κ : FractionRing (X.presheaf.stalk q.1) ≃+* Ω, ∀ r, κ (algebraMap _ _ r) = genMap ξ q r := by
-  letI : Algebra (X.presheaf.stalk q.1) Ω := (genMap ξ q).toAlgebra
-  haveI : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain _
-  haveI : FaithfulSMul (X.presheaf.stalk q.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 (hξ.inj q)
-  haveI : IsFractionRing (X.presheaf.stalk q.1) Ω := IsFractionRing.of_field _ _ fun z => by
+  let : Algebra (X.presheaf.stalk q.1) Ω := (genMap ξ q).toAlgebra
+  have : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain _
+  have : FaithfulSMul (X.presheaf.stalk q.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 (hξ.inj q)
+  have : IsFractionRing (X.presheaf.stalk q.1) Ω := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨b, c, hc, e⟩ := GlobalTheory.CompanionTheory.Ar.exists_frac_genMap ξ hξ q z
     exact ⟨b, c, eq_div_of_mul_eq hc e⟩
   exact ⟨(FractionRing.algEquiv _ Ω).toRingEquiv, fun r => (FractionRing.algEquiv _ Ω).commutes r⟩
@@ -218,8 +218,8 @@ theorem exists_gamma (hξ : IsCptGen ξ) {G : Over X} [GrpObj G] (hG : IsSemiAbe
       Γ₀.IsTorsionAlong G (X.fromSpecStalk q.1) n i ∧
       ∀ t, ∃ g : Over.mk ξ ⟶ G, g ^ n = 1 ∧
         (Γ₀.pt t).left ≫ i = spMap (κ.symm : Ω →+* FractionRing (X.presheaf.stalk q.1)) ≫ g.left := by
-  haveI : IsCommMonObj G := hG.comm
-  haveI : CharZero (X.presheaf.stalk q.1) := (RingHom.charZero_iff (hξ.inj q)).2 inferInstance
+  have : IsCommMonObj G := hG.comm
+  have : CharZero (X.presheaf.stalk q.1) := (RingHom.charZero_iff (hξ.inj q)).2 inferInstance
   let b : Spec (CommRingCat.of (FractionRing (X.presheaf.stalk q.1))) ⟶ Spec (CommRingCat.of Ω) :=
     spMap (κ.symm : Ω →+* FractionRing (X.presheaf.stalk q.1))
   have hcomp : (κ.symm : Ω →+* FractionRing (X.presheaf.stalk q.1)).comp (genMap ξ q) = algebraMap _ _ := by
@@ -235,8 +235,8 @@ theorem exists_gamma (hξ : IsCptGen ξ) {G : Over X} [GrpObj G] (hG : IsSemiAbe
   let β : Over.mk ((BT.genPt (X.presheaf.stalk q.1)).hom ≫ X.fromSpecStalk q.1) ⟶ Over.mk ξ := Over.homMk b hb
   let T : Subgroup (Over.mk ξ ⟶ G) := (powMonoidHom n : (Over.mk ξ ⟶ G) →* (Over.mk ξ ⟶ G)).ker
   have hTm : ∀ t : T, (t : Over.mk ξ ⟶ G) ^ n = 1 := fun t => t.2
-  haveI : Finite T := by
-    haveI := GW.finite
+  have : Finite T := by
+    have := GW.finite
     exact Finite.of_injective (fun t : T => (⟨t.1, hTm t⟩ : {x : Over.mk ξ ⟶ G // x ^ n = 1}))
       (fun a c h => Subtype.ext (congrArg Subtype.val h))
   let τ : T →* (Over.mk ((BT.genPt (X.presheaf.stalk q.1)).hom ≫ X.fromSpecStalk q.1) ⟶ G) :=
@@ -309,8 +309,8 @@ theorem tangent_congr (hξ : IsCptGen ξ) {G : Over X} [GrpObj G] (hG : IsSemiAb
     ∃ r₀ : X.presheaf.stalk q.1, (secVal (B := DualNumber (X.presheaf.stalk q.1)) v.left W h f).snd -
       (secVal (B := DualNumber (X.presheaf.stalk q.1)) v.left W' h' f').snd = n * r₀ := by
 
-  haveI : IsCommMonObj G := hG.comm
-  haveI : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain _
+  have : IsCommMonObj G := hG.comm
+  have : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain _
   obtain ⟨κ, hκ⟩ := exists_frac hξ q
   obtain ⟨T, _, _, Γ₀, i, hΓ, hpt⟩ := exists_gamma hξ hG hn hT GW q κ hκ
   let V : G.left.Opens := W ⊓ W'

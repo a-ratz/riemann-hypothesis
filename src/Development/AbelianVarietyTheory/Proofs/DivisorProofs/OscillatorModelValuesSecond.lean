@@ -96,7 +96,7 @@ theorem anFib_frMove (σ : c.F →+* ℂ) {ρ : Xo.X ⟶ Xo.X} {ν : SABMap Xo.u
     letI : Algebra c.F ℂ := σ.toAlgebra
     ∀ (y y' : FrPt Xo c ℂ) (A : AnFib X bas idx e x L y), FrMove ρ ν y y' →
       ∃ A' : AnFib X bas idx e x L y', ∀ θ, A.Reads 1 y.s θ → A'.Reads 1 y'.s θ := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   intro y y' A hm
   obtain ⟨O, ω, o1, o2, o3, o4, o5⟩ := GlobalTheory.MoveValues.frMove_values E H Dw l Xo c σ ρ ν y y' hm
   obtain ⟨Φ, hΦ⟩ := exists_mulEquiv ν.cart y.x y'.x hm.1.symm
@@ -174,7 +174,7 @@ theorem anFib_of_eq (σ : c.F →+* ℂ) :
       (∀ a n, ∀ f ∈ sec Xo c a n, evR Xo c f y' = t ^ n * evR Xo c f y) ∧
       ∀ A' : AnFib X bas idx e x L y', ∃ A : AnFib X bas idx e x L y,
         ∀ θ, A'.Reads 1 y'.s θ → A.Reads 1 y.s (fun z => t⁻¹ * θ z) := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   intro y y' hx hu
   obtain ⟨x', hover', u', tan', eig', basis', s', gen'⟩ := y'
   simp only at hx hu
@@ -324,7 +324,7 @@ theorem const_move {H : Geo.Tor.Host D.host.E} {Dw : Datum H} {W : HSp D} {l : G
     {a : (D.host.E →+* ℂ) × ℕ → ℕ} {f : Rul Xo c} (hf : f ∈ sec Xo c a V.rank) :
     m₁ * toC (evR Xo c f y') = m₂ * toC (evR Xo c f (U.un k' ⟨x', hx'⟩)) := by
   subst hfr
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hmt := hc.mt
   have hr1 : 1 ≤ W.rank := hU.1 ▸ hpq
   obtain ⟨Wt⟩ := nonempty_uw (U := Formalism.L2.PjFree.Unf.ofPj U) hU
@@ -471,8 +471,8 @@ theorem value_move {H : Geo.Tor.Host D.host.E} {Dw : Datum H} {W₀ W : HSp D} (
       rw [e₀, hm2, hm2, Module.End.mul_apply, Module.End.mul_apply, hvac, map_smul, map_smul, Pi.smul_apply,
         GlobalTheory.WeilRat.om_rat_actO D ψ hP.weil.std V W₀ χV χW om hP.weil 1 (one_mem _) _ hγ _ (hP.weil.om_pres _ _ hf₀)]
       rfl) hν hm hf
-  have u₁ : rdU U f' (dict h).1 (dict h).2 = toC (evR Xo c f' (U.un _ ⟨_, hdom h⟩)) := dif_pos (hdom h)
-  have u₂ : rdU U f (dict (h * κ)).1 (dict (h * κ)).2 = toC (evR Xo c f (U.un _ ⟨_, hdom (h * κ)⟩)) := dif_pos (hdom _)
+  have u₁ : rdU U f' (dict h).1 (dict h).2 = toC (evR Xo c f' (U.un _ ⟨_, hdom h⟩)) := dite_eq_left (hdom h)
+  have u₂ : rdU U f (dict (h * κ)).1 (dict (h * κ)).2 = toC (evR Xo c f (U.un _ ⟨_, hdom (h * κ)⟩)) := dite_eq_left (hdom _)
   rw [u₁, u₂, hv]
   apply mul_left_cancel₀ (mul_ne_zero (hmu0 h) (hmu0 κ))
   rw [hmu] at key

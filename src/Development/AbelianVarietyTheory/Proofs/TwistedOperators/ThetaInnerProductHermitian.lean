@@ -61,8 +61,8 @@ theorem ipO_self {D : D7} {m n : ℕ} (μ : Measure (Mx D m n)) (𝓕 : Set (Mx 
   rw [Complex.mul_conj, Complex.normSq_eq_norm_sq]
 
 private theorem countable_ratL' {D : D7} (S T : HSp D) : Countable ↥(ratL T S) := by
-  haveI : Countable D.host.E := Finsupp.Countable.of_moduleFinite (R := ℚ) (M := D.host.E)
-  haveI : Countable (Matrix (Fin T.rank) (Fin S.rank) D.host.E) :=
+  have : Countable D.host.E := Countable.of_moduleFinite (R := ℚ) (M := D.host.E)
+  have : Countable (Matrix (Fin T.rank) (Fin S.rank) D.host.E) :=
     inferInstanceAs (Countable (Fin T.rank → Fin S.rank → D.host.E))
   have h : (ratL T S : Set (WO S T)).Countable := by
     rw [ratL, AddMonoidHom.coe_range]
@@ -74,7 +74,7 @@ theorem ipO_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (
   have hμ₀ := hμ
   unfold IsCovolOne at hμ₀
   obtain ⟨hHaar, hFD, -⟩ := hμ₀
-  haveI := hHaar
+  have := hHaar
   obtain ⟨-, hL2⟩ := GlobalTheory.ThetaSquare.theta_square_integrable D S T
   obtain ⟨hSq, hHeis, -⟩ := hL2 ψ hψ
   obtain ⟨-, hInvol, hPres, hUnit, -⟩ := hHeis
@@ -122,10 +122,10 @@ theorem ipO_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (
   ·
 
     intro h0
-    haveI := countable_ratL' S T
-    haveI : BorelSpace (WO S T) := ⟨rfl⟩
-    haveI : MeasurableConstVAdd ↥(ratL T S) (WO S T) := ⟨fun γ => measurable_const_add (γ : WO S T)⟩
-    haveI : VAddInvariantMeasure ↥(ratL T S) (WO S T) μ :=
+    have := countable_ratL' S T
+    have : BorelSpace (WO S T) := ⟨rfl⟩
+    have : MeasurableConstVAdd ↥(ratL T S) (WO S T) := ⟨fun γ => measurable_const_add (γ : WO S T)⟩
+    have : VAddInvariantMeasure ↥(ratL T S) (WO S T) μ :=
       ⟨fun γ s _ => measure_preimage_add μ (γ : WO S T) s⟩
     unfold nrm2 at h0
     have hI : IntegrableOn (fun w => ‖f w‖ ^ 2) 𝓕 μ := by

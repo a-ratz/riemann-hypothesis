@@ -137,7 +137,7 @@ theorem norm_natCast_eq_one (l : ℕ) [Fact l.Prime] {s : ℕ} (hs : ¬ l ∣ s)
 theorem norm_le_one_of_cols {C : Type} [NormedField C] [IsUltrametricDist C] {n : ℕ} (U : Matrix (Fin n) (Fin n) C) (p : C)
     (hp : ‖p‖ < 1) (h : ∀ b, ∃ T : Fin n → C, (∀ c, ‖T c‖ ≤ 1) ∧ ∀ a, ‖U a b - p * ∑ c, U a c * T c‖ ≤ 1) (a b : Fin n) :
     ‖U a b‖ ≤ 1 := by
-  haveI : Nonempty (Fin n × Fin n) := ⟨(a, b)⟩
+  have : Nonempty (Fin n × Fin n) := ⟨(a, b)⟩
   obtain ⟨⟨a₀, b₀⟩, hmax⟩ := Finite.exists_max fun q : Fin n × Fin n => ‖U q.1 q.2‖
   refine (hmax (a, b)).trans ?_
   obtain ⟨T, hT, hU⟩ := h b₀
@@ -535,7 +535,7 @@ theorem res_eq {ι : Type} {n : ℕ} {lam : ι → DomWeight n} {lamW : ι → �
   have h2 := h τ ⟨n - 1, by omega⟩
   have h3 : (lam τ).w ⟨n - 1, by omega⟩ ≤ (lam τ).w a := (lam τ).anti (by
     rw [Fin.le_def]; have := a.2; simp only; omega)
-  simp only [res, DomWeight.natW, DomWeight.detShift, dif_pos hn] at h2 ⊢
+  simp only [res, DomWeight.natW, DomWeight.detShift, dite_eq_left hn] at h2 ⊢
   omega
 
 theorem liftPol_mem {K C : Type} [Field K] [Field C] (e0 : K →+* C) {ι : Type} {n : ℕ} {lam : ι → DomWeight n}
@@ -566,7 +566,7 @@ theorem detPol_ne_zero (R : Type) [CommRing R] [Nontrivial R] (n : ℕ) : detPol
 theorem linInd_map {F K σ ι : Type} [Field F] [Field K] (e : F →+* K) {v : ι → MvPolynomial σ F}
     (hv : LinearIndependent F v) : LinearIndependent K (fun i => MvPolynomial.map e (v i)) := by
   classical
-  letI : Algebra F K := e.toAlgebra
+  let : Algebra F K := e.toAlgebra
   rw [linearIndependent_iff'] at hv ⊢
   intro s c hsum i hi
   let B := Module.Free.chooseBasis F K
@@ -638,7 +638,7 @@ theorem exists_phi (K C : Type) [Field K] [Field C] (e0 : K →+* C) (ι : Type)
   let t : VVIdx lam → NablaT C n lamW := fun i => PiTensorProduct.tprod C fun τ => u τ (i τ)
   refine ⟨semiConstr e0 (bVV K lam) t, ?_, ?_⟩
   · intro x v hx hv
-    haveI : ∀ τ, Fintype (ssIdx n n (lam τ).natW) := fun τ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).fintype
+    have : ∀ τ, Fintype (ssIdx n n (lam τ).natW) := fun τ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).fintype
     have hex : ∀ τ, ∃ a : ssIdx n n (lam τ).natW → K, ∑ j, a j • ssB K (lam τ).natW j = x τ := fun τ => by
       have h1 := hx τ
       unfold nablaSq at h1
@@ -1861,7 +1861,7 @@ theorem reads_rank (j : Fin D.R.m) (w : HeightOneSpectrum (𝓞 D.what₂.LL)) [
     obtain ⟨-, -, hfg, hsp, -⟩ := GlobalTheory.Member.latHat_eq_hat_and_gram D (Vc D j)
     obtain ⟨Λ, hΛ, h1, h2, -⟩ := GlobalTheory.AdLat.exists_lattice_latOf D.host.F D.host.E (Vc D j).rank (GlobalTheory.Member.latC (Vc D j)) g.1 hfg hsp
     rw [SetLike.coe_injective ((GlobalTheory.RepsCompare.coe_hLat (Vc D j) g).trans hΛ.symm)]
-    letI : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
+    let : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
     exact { span_eq_top := h2 }
   obtain ⟨rd, h1, h2, h3, h4, h5, h6⟩ := exists_reading_lat (p.R.B.L j (p.R.mu w)).pres (labLL D) _ (c0L j) e hce
     (fun c => hLat (Vc D j) ((p.R.B.L j (p.R.mu w)).pres.y c)) (fun c => hLatFull _) hN hD hM.2.1 hM.2.2 w e0 io hw hio

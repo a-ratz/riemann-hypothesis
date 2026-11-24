@@ -55,7 +55,7 @@ theorem UpperTheory.V.KT.cardsep :
     ∀ (M : Type) [AddCommGroup M] [Module.Free ℤ M] [Module.Finite ℤ M] (q : ℕ), q ≠ 0 → ∀ S : Set M,
     (∀ a ∈ S, ∀ b ∈ S, ∀ x : M, a - b = q • x → a = b) → S.Finite ∧ S.ncard ≤ q ^ Module.finrank ℤ M := by
   intro M _ _ _ q hq S hS
-  haveI : NeZero q := ⟨hq⟩
+  have : NeZero q := ⟨hq⟩
   set r := Module.finrank ℤ M
   let bs := Module.finBasis ℤ M
   let f : M → (Fin r → ZMod q) := fun m i => ((bs.equivFun m i : ℤ) : ZMod q)

@@ -175,7 +175,7 @@ theorem pull_unif_tors : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (
   obtain ⟨D, hD, A, U, hG', hU, hpt, -⟩ := GlobalTheory.T.uniformisation_endomorphisms_to_complete_dvr hL R J hR D₀ A₀ G₀ hG U₀ V f hV hf hJ
   refine ⟨D, hD, A, U, hG', hU, ?_⟩
   intro F₀ _ _ _ F _ _ _ j hj k hk p₀ x₀ hx₀
-  letI : Algebra (FractionRing R) F := (j.comp (algebraMap (FractionRing R) F₀)).toAlgebra
+  let : Algebra (FractionRing R) F := (j.comp (algebraMap (FractionRing R) F₀)).toAlgebra
   let σ : F₀ →ₐ[FractionRing R] F := { j with commutes' := fun _ => rfl }
   have hB := D₀.tau_bimult
   have hF : ∀ r : R, algebraMap (FractionRing R) F (algebraMap R _ r) =
@@ -245,7 +245,7 @@ theorem exists_ext {R V : Type} [CommRing R] [IsDomain R] [CommRing V] [IsDomain
   have hg : Function.Injective g :=
     (algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).injective.comp
       ((IsFractionRing.injective V (FractionRing V)).comp hf)
-  letI : Algebra (FractionRing R) (AlgebraicClosure (FractionRing V)) := (IsFractionRing.lift hg).toAlgebra
+  let : Algebra (FractionRing R) (AlgebraicClosure (FractionRing V)) := (IsFractionRing.lift hg).toAlgebra
   refine ⟨(IsAlgClosed.lift : AlgebraicClosure (FractionRing R) →ₐ[FractionRing R]
     AlgebraicClosure (FractionRing V)).toRingHom, fun r => ?_⟩
   rw [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.commutes, RingHom.algebraMap_toAlgebra,
@@ -257,7 +257,7 @@ theorem sq {R V : Type} [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (f :
     (j : F₀ →+* F) (hj : Ext f j) (κ : Sp (FractionRing V) ⟶ Sp (FractionRing R))
     (hκ : κ ≫ jK R = jK V ≫ spMap f) :
     spMap j ≫ jFK (R := R) F₀ = jFK (R := V) F ≫ κ := by
-  haveI : Mono (jK R) :=
+  have : Mono (jK R) :=
     haveI := IsPreimmersion.of_isLocalization (R := CommRingCat.of R) (S := CommRingCat.of (FractionRing R))
       (nonZeroDivisors R)
     inferInstanceAs (Mono (Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R)))))

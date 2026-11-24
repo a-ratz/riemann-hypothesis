@@ -174,7 +174,7 @@ theorem vol_prodFin_eq {M : Type*} [TopologicalSpace M] [SecondCountableTopology
   have hA' : A = ⋃ i : Fin p, ((fun x => (x, i)) ⁻¹' A) ×ˢ {i} := by
     ext ⟨x, j⟩
     simp
-  rw [MeasureTheory.Measure.coe_finsetSum, Finset.sum_apply]
+  rw [FunLike.coe_sum, Finset.sum_apply]
   conv_lhs => rw [hA']
   rw [measure_iUnion (by
       intro i j hij

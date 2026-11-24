@@ -60,7 +60,7 @@ theorem exists_pow_regAt {V : X.Opens} (hV : IsAffineOpen V) (τ : Γ(X, V))
     (hf : ∀ x ∈ X.basicOpen τ, RegAt x f) :
     ∃ m : ℕ, ∀ x ∈ V, RegAt x (f * fnOf V (X.basicOpen_le τ hη) τ ^ m) := by
   obtain ⟨b, hb⟩ := exists_fnOf_eq hη hf
-  haveI := hV.isLocalization_basicOpen τ
+  have := hV.isLocalization_basicOpen τ
   obtain ⟨m, a, e⟩ := IsLocalization.Away.surj τ b
   refine ⟨m, fun x hx => ?_⟩
   have e' := congrArg (fnOf _ hη) e
@@ -116,12 +116,12 @@ end GlobalTheory.Cartier.EffDiff
 theorem GlobalTheory.Cartier.EffDiff.exists_eff_and_add_eff : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (H : LB X),
     IsAmpleLB H → ∀ D : CartierDiv X, ∃ E : CartierDiv X, E.Eff ∧ (D + E).Eff := by
   intro X _ _ H hH D
-  haveI := hH.compactSpace
+  have := hH.compactSpace
   obtain ⟨W, hηW, g, hg⟩ := D.exists_isEqn_nhds (genericPoint X)
   obtain ⟨n, -, t, hηt, htW, hU⟩ := hH.exists_affine_le hηW
   have hL := isLB_lbPow hH.isLB n
-  haveI : Nonempty (nonzeroLocus t) := ⟨⟨_, hηt⟩⟩
-  haveI := functionField_isFractionRing_of_isAffineOpen X _ hU
+  have : Nonempty (nonzeroLocus t) := ⟨⟨_, hηt⟩⟩
+  have := functionField_isFractionRing_of_isAffineOpen X _ hU
   obtain ⟨a, c, hc, e⟩ := IsFractionRing.div_surjective (A := Γ(X, nonzeroLocus t))
     (g : X.functionField)
   have hfn : ∀ b : Γ(X, nonzeroLocus t),

@@ -61,10 +61,10 @@ private theorem trace_pi_eq_sum {C J : Type} [CommRing C] [Fintype J] (a : J →
 theorem UpperTheory.Gal.G3.pAlgTr :
     AlgTr := by
   intro A A' C _ _ _ _ _ _ _ J _ τ e he b
-  letI : Algebra A' (C ⊗[A] A') := Algebra.TensorProduct.rightAlgebra
-  haveI : Module.Projective A A' := projective_of_etale A A'
-  haveI : Module.Free C (C ⊗[A] A') := Module.Free.of_equiv e.symm.toLinearEquiv
-  haveI : Module.Finite C (C ⊗[A] A') := Module.Finite.equiv e.symm.toLinearEquiv
+  let : Algebra A' (C ⊗[A] A') := Algebra.TensorProduct.rightAlgebra
+  have : Module.Projective A A' := projective_of_etale A A'
+  have : Module.Free C (C ⊗[A] A') := Module.Free.of_equiv e.symm.toLinearEquiv
+  have : Module.Finite C (C ⊗[A] A') := Module.Finite.equiv e.symm.toLinearEquiv
   have h1 := algTrace_of_isPushout (B := A) (B' := A') (C := C) (C' := C ⊗[A] A') b
   have h2 : (etTrace A A') b = (algTrace A A') b := rfl
   rw [h2, ← h1, algTrace_eq_trace]

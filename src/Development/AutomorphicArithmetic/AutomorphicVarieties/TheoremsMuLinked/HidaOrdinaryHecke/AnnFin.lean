@@ -88,8 +88,8 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.annFin :
         exact hmap _ _ (ht' y) }
   refine ⟨I, fun t => Iff.rfl, ?_⟩
   obtain ⟨n, s, hs⟩ := Module.Finite.exists_fin (R := A) (M := M)
-  letI : Module O M := Module.compHom M (algebraMap O A)
-  haveI : IsScalarTower O A M := ⟨fun o a m => by
+  let : Module O M := Module.compHom M (algebraMap O A)
+  have : IsScalarTower O A M := ⟨fun o a m => by
     show (o • a) • m = algebraMap O A o • (a • m)
     rw [Algebra.smul_def, mul_smul]⟩
   let N' : Submodule O M := N.restrictScalars O
@@ -155,8 +155,8 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.annFin :
     show Ideal.Quotient.mkₐ O I t = 0
     rw [Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem]
     exact htI
-  haveI : Module.Finite O (LinearMap.range φ) := Module.IsNoetherian.finite O _
-  haveI : Module.Finite O (T ⧸ LinearMap.ker φ) := Module.Finite.equiv (φ.quotKerEquivRange).symm
+  have : Module.Finite O (LinearMap.range φ) := Module.IsNoetherian.finite O _
+  have : Module.Finite O (T ⧸ LinearMap.ker φ) := Module.Finite.equiv (φ.quotKerEquivRange).symm
   exact Module.Finite.of_surjective ((LinearMap.ker φ).liftQ _ hker) (by
     intro q
     obtain ⟨t, rfl⟩ := Ideal.Quotient.mk_surjective q

@@ -55,7 +55,7 @@ variable {𝔸 L G : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [FiniteDim
   [NormedSpace ℝ L] [Group G] {σ : 𝔸 →ₗ[ℝ] 𝔸} {j : L →ₗ[ℝ] 𝔸} {s : 𝔸 → G}
 
 theorem anti_exp (H : IsLieData σ j s) (a : 𝔸) : σ (NormedSpace.exp a) = NormedSpace.exp (σ a) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   let _ : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   let f : 𝔸 →+* 𝔸ᵐᵒᵖ :=
     { toFun := fun b => MulOpposite.op (σ b)
@@ -71,7 +71,7 @@ theorem anti_exp (H : IsLieData σ j s) (a : 𝔸) : σ (NormedSpace.exp a) = No
 
 theorem exp_unitary (H : IsLieData σ j s) (X : L) :
     σ (NormedSpace.exp (j X)) * NormedSpace.exp (j X) = 1 := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   let _ : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   have hs : σ (j X) = -j X := (H.skew (j X)).2 ⟨X, rfl⟩
   rw [anti_exp H, hs, ← NormedSpace.exp_add_of_commute (Commute.neg_left (Commute.refl _)), neg_add_cancel,
@@ -79,7 +79,7 @@ theorem exp_unitary (H : IsLieData σ j s) (X : L) :
 
 theorem contDiff_exp (H : IsLieData σ j s) : ContDiff ℝ ∞ fun X : L => NormedSpace.exp (j X) := by
   have : FiniteDimensional ℝ L := Module.Finite.of_injective j H.inj
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have hexp : ContDiff ℝ ∞ (NormedSpace.exp : 𝔸 → 𝔸) :=
     contDiff_iff_contDiffAt.2 fun x => (NormedSpace.exp_analytic (𝕂 := ℝ) x).contDiffAt
   exact hexp.comp (LinearMap.toContinuousLinearMap j).contDiff

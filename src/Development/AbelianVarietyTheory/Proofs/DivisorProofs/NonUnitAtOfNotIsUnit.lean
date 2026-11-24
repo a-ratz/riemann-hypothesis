@@ -168,9 +168,9 @@ theorem pow_le_approxIdeal (U : M.Z.Opens) (D : EffCartierData M.Z) (z : M₁.Z)
   exact Or.inr ⟨h, nonUnitAt_of_not_isUnit hh, hle⟩
 
 theorem isNoetherianRing_O [ArithBase o Ω] (M : RatModel o Ω) (z : M.Z) : IsNoetherianRing (M.O z) := by
-  haveI : IsDedekindDomain o := ArithBase.ded Ω
-  haveI := M.lft
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : IsDedekindDomain o := ArithBase.ded Ω
+  have := M.lft
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
   exact isNoetherianRing_of_ringEquiv _ (M.stalkEquiv z)
 
 end GlobalTheory.FibreCorr

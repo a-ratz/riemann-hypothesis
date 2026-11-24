@@ -59,11 +59,11 @@ theorem isFinite_etale_surjective_of_isQuasiInv : ∀ (Y : Scheme.{0}) (A B : Ov
   obtain ⟨⟨-, hBe⟩, -⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion B (hG := hB) hk
   rw [GlobalTheory.GrpTangent.mulN_eq_pow, ← h1, Over.comp_left] at hAf hAe
   rw [GlobalTheory.GrpTangent.mulN_eq_pow, ← h2, Over.comp_left] at hBe
-  haveI := hB.proper
-  haveI : IsSeparated (ψ'.left ≫ A.hom) := by rw [Over.w]; infer_instance
-  haveI := IsSeparated.of_comp ψ'.left A.hom
-  haveI := FormallyUnramified.of_comp ψ'.left ψ.left
-  haveI := locallyOfFiniteType_of_comp ψ'.left ψ.left
+  have := hB.proper
+  have : IsSeparated (ψ'.left ≫ A.hom) := by rw [Over.w]; infer_instance
+  have := IsSeparated.of_comp ψ'.left A.hom
+  have := FormallyUnramified.of_comp ψ'.left ψ.left
+  have := locallyOfFiniteType_of_comp ψ'.left ψ.left
   refine ⟨IsFinite.of_comp ψ.left ψ'.left, Etale.of_comp ψ.left ψ'.left, ?_⟩
   rcases Nat.eq_zero_or_pos k with rfl | hk0
   · refine ⟨fun b => ?_⟩

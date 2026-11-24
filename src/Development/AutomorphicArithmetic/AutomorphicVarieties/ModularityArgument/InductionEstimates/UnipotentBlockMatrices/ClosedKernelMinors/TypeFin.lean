@@ -166,27 +166,27 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.typeFin :
   have hle : D.U ≤ KG K n := fun g hg => ((hUO g).1 hg).2
   have hK : IsCompact (KG K n : Set (G1 K n)) := ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 n).1
   have hU : IsCompact (D.U : Set (G1 K n)) := by
-    haveI : CompactSpace (KG K n) := isCompact_iff_compactSpace.1 hK
+    have : CompactSpace (KG K n) := isCompact_iff_compactSpace.1 hK
     have hop : IsOpen ((D.U.subgroupOf (KG K n) : Subgroup (KG K n)) : Set (KG K n)) := by
       have : ((D.U.subgroupOf (KG K n) : Subgroup (KG K n)) : Set (KG K n)) =
           (fun k : KG K n => ((k : G1 K n) : AdelicGLn.AdelicGL K n)) ⁻¹' O := by
         ext k
         exact ⟨fun h => ((hUO k).1 h).1, fun h => (hUO k).2 ⟨h, k.2⟩⟩
       rw [this]
-      exact hO.preimage (continuous_subtype_val.comp continuous_subtype_val)
-    have := ((Subgroup.isClosed_of_isOpen _ hop).isCompact).image continuous_subtype_val
+      exact hO.preimage (continuous_subtypeVal.comp continuous_subtypeVal)
+    have := ((Subgroup.isClosed_of_isOpen _ hop).isCompact).image continuous_subtypeVal
     convert this using 1
     ext g
     exact ⟨fun h => ⟨⟨g, hle h⟩, h, rfl⟩, by rintro ⟨k, hk, rfl⟩; exact hk⟩
   refine ⟨hU, hle, ?_⟩
-  haveI := D.prob
+  have := D.prob
   let V : Submodule ℂ (D.U → ℂ) := (fixSub hU D.ν D.supp D.cont).map (LinearMap.funLeft ℂ ℂ (Subtype.val : D.U → G1 K n))
   have hmem : ∀ f : G1 K n → ℂ, Continuous f → D.Fix f → ∀ g, (fun u : D.U => f (g * u)) ∈ V := by
     intro f hf hfix g
     refine ⟨fun x => f (g * x), ⟨by fun_prop, fun y => ?_⟩, rfl⟩
     simp only [← mul_assoc]
     exact hfix (g * y)
-  haveI : FiniteDimensional ℂ V := by
+  have : FiniteDimensional ℂ V := by
     obtain ⟨t, ht, h⟩ := detect D.U hU D.ν D.supp D.inv D.cont
     let ev : V →ₗ[ℂ] (t → ℂ) := (LinearMap.funLeft ℂ ℂ (fun x : t => (⟨x, ht x x.2⟩ : D.U))).comp V.subtype
     refine FiniteDimensional.of_injective ev ((injective_iff_map_eq_zero _).2 ?_)
@@ -201,7 +201,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.typeFin :
     | mem b hb =>
       obtain ⟨_, ⟨F, ⟨hF, hfix⟩, rfl⟩, u, rfl⟩ := hb
       refine ⟨?_, fun w => Submodule.subset_span ⟨_, ⟨F, ⟨hF, hfix⟩, rfl⟩, w * u, by simp only [mul_assoc]⟩⟩
-      exact hF.comp (continuous_subtype_val.comp (continuous_id.mul continuous_const))
+      exact hF.comp (continuous_subtypeVal.comp (continuous_id.mul continuous_const))
     | zero => exact ⟨continuous_const, fun _ => Submodule.zero_mem _⟩
     | add a b _ _ ha hb => exact ⟨ha.1.add hb.1, fun u => Submodule.add_mem _ (ha.2 u) (hb.2 u)⟩
     | smul c a _ ha => exact ⟨ha.1.const_smul c, fun u => Submodule.smul_mem _ c (ha.2 u)⟩

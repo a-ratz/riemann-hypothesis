@@ -68,7 +68,7 @@ theorem evalZero_mem_adelicSchwartzAdmittedForms (κ : Type) [Fintype κ] :
   intro g _
   refine ⟨g 0 • (BoundedContinuousFunction.evalCLM ℂ 0).comp
     (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (κ → mixedEmbedding.mixedSpace F) ℂ), fun f => ?_⟩
-  simp only [LinearMap.proj_apply, pureA, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
+  simp only [LinearMap.proj_apply, pureA, FunLike.coe_smul, ContinuousLinearMap.coe_comp,
     Function.comp_apply, Pi.smul_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     BoundedContinuousFunction.evalCLM_apply, smul_eq_mul]
   have h1 : (fun i : κ => InfiniteAdeleRing.ringEquiv_mixedSpace F ((0 : κ → AdeleRing (𝓞 F) F) i).1) = 0 := by

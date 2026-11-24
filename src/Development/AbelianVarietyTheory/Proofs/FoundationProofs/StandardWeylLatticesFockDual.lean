@@ -248,12 +248,12 @@ theorem weight_rowW_diagExp (ν : Fin n → ℕ) :
   · rw [Finset.sum_eq_single ⟨a.val, h⟩]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       exact hb (Fin.ext e.symm)
     · simp
   · refine Finset.sum_eq_zero fun s _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     have := s.2
     omega
 
@@ -368,7 +368,7 @@ theorem component_eq_smul_hw {R : Type} [CommRing R] [IsDomain R] (hn : n ≤ r)
     (colSums R r n ν G hGm _ hd) (hGw (mem_support_iff.mp hd))
   rw [he, mem_support_iff] at hd
   apply hd
-  rw [hGdef, MvPolynomial.coeff_sub, coeff_weightedHomogeneousComponent, if_pos (weight_rowW_diagExp ν), MvPolynomial.coeff_smul,
+  rw [hGdef, MvPolynomial.coeff_sub, coeff_weightedHomogeneousComponent, ite_eq_left (weight_rowW_diagExp ν), MvPolynomial.coeff_smul,
     ← eval_idFrame_eq_coeff (colSums R r n ν F hF), ← eval_idFrame_eq_coeff (colSums R r n ν _ hH),
     eval_idFrame_hw]
   simp
@@ -382,7 +382,7 @@ theorem fockQ_hw : Formalism.GradedWeylDivisibility.FockQHW := by
   refine Finset.sum_congr rfl fun m hm => ?_
   have hw' := hwRowWeight ℚ r n hn ν hν (mem_support_iff.mp hm)
   have h2 := congrArg (AddMonoidAlgebra.coeff · m) h
-  rw [coeff_weightedHomogeneousComponent, if_pos hw', MvPolynomial.coeff_smul, smul_eq_mul] at h2
+  rw [coeff_weightedHomogeneousComponent, ite_eq_left hw', MvPolynomial.coeff_smul, smul_eq_mul] at h2
   rw [h2]
   ring
 
@@ -417,7 +417,7 @@ theorem single_monomial (p : Fin r × Fin n) (m : Fin r × Fin n →₀ ℕ) (c 
     single R p (monomial m c) = Polynomial.monomial (m p) (monomial (m.erase p) c) := by
   classical
   have h1 : (monomial m c : MvPolynomial (Fin r × Fin n) R) = monomial (m.erase p) c * X p ^ (m p) := by
-    rw [X_pow_eq_monomial, monomial_mul, mul_one, Finsupp.erase_add_single]
+    rw [X_pow_eq_monomial, monomial_mul_monomial, mul_one, Finsupp.erase_add_single]
   have h2 : single R p (monomial (m.erase p) c) = Polynomial.C (monomial (m.erase p) c) := by
     rw [single, aeval_monomial, monomial_eq, map_mul, map_finsuppProd]
     congr 1
@@ -871,7 +871,7 @@ theorem exists_dual_bases (n : ℕ) (ν : Fin n → ℕ) (hν : Antitone ν) [Fi
 theorem std_dual : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (ι : Type) [Fintype ι] (n : ℕ) (lam : ι → DomWeight n) (x : Pol K ι n), x ∈ VV K lam → ((∀ y ∈ delStd K lam, pairP lam (fun _ => 1) y x ∈ (algebraMap (𝓞 K) K).range) ↔ x ∈ nabStd K lam) ∧ ((∀ y ∈ nabStd K lam, pairP lam (fun _ => 1) y x ∈ (algebraMap (𝓞 K) K).range) ↔ x ∈ delStd K lam) := by
   classical
   intro K _ _ _ ι _ n lam x hx
-  haveI : ∀ τ, Fintype (Formalism.GradedWeylDivisibility.ssIdx n n (lam τ).natW) :=
+  have : ∀ τ, Fintype (Formalism.GradedWeylDivisibility.ssIdx n n (lam τ).natW) :=
     fun τ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).fintype
   choose b d hb hd hbd using fun τ => exists_dual_bases n (lam τ).natW (natW_antitone (lam τ))
   set φ := algebraMap ℚ K with hφ
@@ -927,10 +927,10 @@ theorem std_dual : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (ι : T
     simp only [← fockL_apply (f _ _), h]
     split_ifs with hij
     · subst hij
-      simp only [if_true]
+      simp only [ite_true]
       exact div_mul_cancel₀ 1 (Finset.prod_ne_zero_iff.mpr fun τ _ => hne τ)
     · obtain ⟨τ, hτ⟩ := Function.ne_iff.mp hij
-      rw [Finset.prod_eq_zero (Finset.mem_univ τ) (if_neg hτ), mul_zero]
+      rw [Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ), mul_zero]
   have hc : ∀ a ∈ (algebraMap (𝓞 K) K).range, starRingEnd K a ∈ (algebraMap (𝓞 K) K).range := by
     rintro _ ⟨a, rfl⟩
     exact ⟨⟨_, (RingOfIntegers.isIntegral_coe a).map (starRingEnd K).toIntAlgHom⟩, rfl⟩

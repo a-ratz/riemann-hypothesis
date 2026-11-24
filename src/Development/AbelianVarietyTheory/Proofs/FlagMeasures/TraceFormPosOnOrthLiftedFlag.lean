@@ -146,8 +146,8 @@ theorem amb_of_sig : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (S : 
       have hker : LinearMap.ker (S.frame.equivFun.toLinearMap ∘ₗ U.subtype) = ⊥ :=
         LinearMap.ker_eq_bot.2 (S.frame.equivFun.injective.comp Subtype.val_injective)
       exact u.linearIndependent.map' _ hker
-    letI : Algebra E ℂ := τ.toAlgebra
-    haveI : FaithfulSMul E ℂ := (faithfulSMul_iff_algebraMap_injective E ℂ).2 τ.injective
+    let : Algebra E ℂ := τ.toAlgebra
+    have : FaithfulSMul E ℂ := (faithfulSMul_iff_algebraMap_injective E ℂ).2 τ.injective
     have hvC : LinearIndependent ℂ (fun j => algebraMap E ℂ ∘ v j) :=
       linearIndependent_algebraMap_comp_iff.2 hv
     let C : Matrix (Fin S.rank) (Fin (Module.finrank E U)) ℂ := Matrix.of fun a j => τ (v j a)

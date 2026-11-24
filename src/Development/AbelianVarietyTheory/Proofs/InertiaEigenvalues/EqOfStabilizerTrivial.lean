@@ -169,8 +169,8 @@ theorem exists_place {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField 
 theorem eq_of_stabilizer_trivial {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberField E] [IsGalois ℚ E]
     (a b : E →+* PadicAlgCl l) (P : Ideal (𝓞 E)) (ha : ∀ x : 𝓞 E, x ∈ P ↔ ‖a (x : E)‖ < 1)
     (hb : ∀ x : 𝓞 E, x ∈ P ↔ ‖b (x : E)‖ < 1) (hP : ∀ σ : E ≃ₐ[ℚ] E, σ • P = P → σ = 1) : a = b := by
-  letI : Algebra E (PadicAlgCl l) := a.toAlgebra
-  haveI : IsScalarTower ℚ E (PadicAlgCl l) :=
+  let : Algebra E (PadicAlgCl l) := a.toAlgebra
+  have : IsScalarTower ℚ E (PadicAlgCl l) :=
     IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
   let φ : E →ₐ[ℚ] PadicAlgCl l := b.toRatAlgHom
   let σ : E ≃ₐ[ℚ] E := φ.restrictNormal' E
@@ -196,7 +196,7 @@ theorem type_prime_places : ∀ (D : D7) (i : D.nd.Loc) (k : Fin 2), D.nd.l i = 
   intro D i k hk
   have hs : (placesOver D.host.E (D.nd.l i)).ncard = finrank ℚ D.host.E := by
     rw [hk]; exact D.nd.g_split k
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   refine ⟨fun w hw => ⟨(GlobalTheory.TypeDegOne.degree_one D i k hk).2 w hw, fun w' hc he => ?_⟩, fun a b hab => ?_⟩
   · subst he
     have hP := (GlobalTheory.Mem.Chr.splitsC_place (p := D.nd.l i) Fact.out hs w' hw).2.2

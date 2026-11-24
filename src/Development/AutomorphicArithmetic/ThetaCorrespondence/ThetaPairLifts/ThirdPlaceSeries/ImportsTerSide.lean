@@ -303,7 +303,7 @@ theorem all_central (P : PairedCharacterCondition.Pend D) (hC : OnMtPreservesTyp
       D.ntypes.onMt (D.nd.mu i) (D.nd.j i)
         (PairedCharacterCondition.mapCoef (iotaO D.nd D.naut i) (z : MonoidAlgebra (D.nd.O i) (G0g D.nd))) (s.Φ w) := by
   classical
-  haveI : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
+  have : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
   have hQ : ∀ v : MonoidAlgebra (D.nd.O i) (G0g D.nd), ∀ w,
       s.Φ ((P.zO i ⟨conjSum v, conjSum_mem_center v⟩).baseChange (KK D.nd i) w) =
         D.ntypes.onMt (D.nd.mu i) (D.nd.j i) (PairedCharacterCondition.mapCoef (iotaO D.nd D.naut i) (conjSum v)) (s.Φ w) := by
@@ -455,7 +455,7 @@ theorem GlobalTheory.PrimCentIdem.main : ∀ (g a : ℕ) [Fact g.Prime] (L : Pai
     obtain ⟨ρ, hρ, rfl⟩ := (Set.Finite.mem_toFinset hfin).1 hz
     exact hno ρ hρ
   obtain ⟨ρ, hρ, hne⟩ := hex
-  haveI := hρ
+  have := hρ
   refine ⟨ρ, hρ, ?_⟩
   set e := L.idem τ with he_def
   set z := Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ with hz_def
@@ -511,7 +511,7 @@ namespace GlobalTheory.AdmDepthZero
 
 theorem main : ∀ (D : D7) (P : PairedCharacterCondition.Pend D), PairedCharacterCondition.RT.AdmDepthZeroTypes (D := D) → PairedCharacterCondition.admDZ P := by
   intro D P h i k v PI τ hτ
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   intro hsq hu
   obtain ⟨ρ, hρ, he⟩ := _root_.GlobalTheory.PrimCentIdem.main (D.host.g k) D.R.r (P.lz k) τ
   have hO := PairedCharacterCondition.RT.ktyTie_of_spec P i PI k v τ hτ
@@ -757,7 +757,7 @@ theorem exists_lz_serEq : ∀ D : D7, ∃ lz : ∀ k : Fin 2, PairedCharacterCon
   refine ⟨fun k => haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩;
     lzE (D.host.g k) D.R.r (D.ntypes.eSer k), ?_⟩
   intro k f
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   exact lzE_ser _ _ _ (D.ntypes.eSer_idem k) (D.ntypes.eSer_central k) (D.ntypes.eSer_orth k)
     (D.ntypes.eSer_sum k) f
 
@@ -793,7 +793,7 @@ theorem eq_one_of_pow_eq_one_of_charpoly (K : Type) [Field K] [CharZero K] (N : 
   have hsi : ((X - 1 : K[X]) ^ i).Separable := hsep.of_dvd (hi.symm.dvd.trans h1)
   have hle : minpoly K M ∣ X - 1 := by
     rcases hsi.of_pow' with hu | ⟨-, rfl⟩ | rfl
-    · exact absurd hu hpr.not_unit
+    · exact absurd hu hpr.not_isUnit
     · simpa using hi.dvd
     · exact hi.dvd.trans (by simp)
   have h0 : Polynomial.aeval M (X - 1 : K[X]) = 0 := minpoly.dvd_iff.1 hle
@@ -895,7 +895,7 @@ theorem charpoly_eq_of_gen {n : ℕ} (ρ : Ine (F := E) A →* GL (Fin n) ℂ)
   obtain ⟨U, hU, hUρ⟩ := hρ
   choose V hV hVχ using fun x : T => hopen x (Multiset.mem_toFinset.1 x.2)
   let W : Set (Ine (F := E) A) := Subtype.val ⁻¹' ((U : Set (G E Ω)) ∩ ⋂ x, (V x : Set (G E Ω)))
-  have hWo : IsOpen W := continuous_subtype_val.isOpen_preimage _ (hU.inter (isOpen_iInter_of_finite hV))
+  have hWo : IsOpen W := continuous_subtypeVal.isOpen_preimage _ (hU.inter (isOpen_iInter_of_finite hV))
   have hWk : ∀ σ ∈ W, Φ σ = 1 := by
     intro σ hσ
     refine Prod.ext (hUρ σ hσ.1) (funext fun x => Units.ext ?_)
@@ -934,7 +934,7 @@ theorem charpoly_eq_of_gen {n : ℕ} (ρ : Ine (F := E) A →* GL (Fin n) ℂ)
     intro x hx
     have := congrArg (fun p : GL (Fin n) ℂ × (T → ℂˣ) => ((p.2 ⟨x, Multiset.mem_toFinset.2 hx⟩ : ℂˣ) : ℂ)) hm
     simp only [Φ, MonoidHom.prod_apply, Prod.pow_snd, Pi.pow_apply, Units.val_pow_eq_pow_val,
-      Pi.monoidHom_apply] at this
+      MonoidHom.pi_apply] at this
     exact this
   rw [hρm, Units.val_pow_eq_pow_val, charpoly_pow_of_prod _ s (fun x => χ x γ) hργ m]
   exact congrArg Multiset.prod (Multiset.map_congr rfl fun x hx => by rw [hχm x hx])
@@ -1031,7 +1031,7 @@ end GlobalTheory.TwistLabel
 open GlobalTheory.TwistLabel in
 theorem main : ∀ D : D7, SumRepresentations.tie0 D → IneRep D → LabDepth D → LabGen D → LabChar D := by
   intro D hT _ hDep hGen k w hw L χ u hL hχ hχl
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨γ, hγ, hG⟩ := hGen
   have hLP := hT.1
   have hγI : γ k w ∈ Ine (F := D.host.E) (D.nd.plOm.1 w) := (hγ.2 k w hw).1

@@ -75,7 +75,7 @@ def lat0 (m : ℕ) : AddSubgroup (Fin (m + 1) → k) where
 
 theorem coe_standard_lattice (m : ℕ) : (lat0 k m : Set (Fin (m + 1) → k)) = Set.univ.pi fun _ => cball (1 : kˣ) := by
   ext x
-  simp only [Set.mem_univ_pi, cball, Set.mem_setOf_eq]
+  simp only [Set.mem_univ_pi, cball, Set.mem_ofPred_eq]
   exact Iff.rfl
 
 theorem isLattice_standard_lattice (m : ℕ) : IsLat (lat0 k m) := by
@@ -148,7 +148,7 @@ theorem chain_succ (d : ℕ) (hN : d + 2 ≤ N)
         v ∈ twKer π (derUnip k N (N - 2 - d + 1)) (lvlChar k ψ N (N - 2 - d + 1)) ⊔
           LinearMap.ker (chain hUD hψc hψ1 π hs B d)) := by
   have hh : ∃ hN : d + 2 ≤ N, Lvl k ψ π (N - 2 - d) (by omega) (d : ℝ) (chain hUD hψc hψ1 π hs B d) := ⟨hN, hL⟩
-  simp only [chain, dif_pos hh]
+  simp only [chain, dite_eq_left hh]
   exact Classical.choose_spec (hUD ψ hψc hψ1 (N - 2 - d) N (by omega) V π hs (d : ℝ)
     (chain hUD hψc hψ1 π hs B d) hL (lat0 k (N - 2 - d)) (isLattice_standard_lattice _))
 

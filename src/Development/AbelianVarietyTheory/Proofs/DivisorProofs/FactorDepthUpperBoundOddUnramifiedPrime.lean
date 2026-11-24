@@ -468,10 +468,10 @@ theorem inPsi_conj_iff (H : Host E) (τ : E →+* ℂ) :
   · rw [h, map_neg, hc, neg_neg]; simp [h3]
 
 theorem mult_of_inPsi {H : Host E} (Dw : Datum H) {τ : E →+* ℂ} (h : InPsi H τ) : Dw.mult τ = Dw.p := by
-  unfold Datum.mult; rw [if_pos (show τ (H.rt : E) = H.rt0 from h)]
+  unfold Datum.mult; rw [ite_eq_left (show τ (H.rt : E) = H.rt0 from h)]
 
 theorem mult_of_not_inPsi {H : Host E} (Dw : Datum H) {τ : E →+* ℂ} (h : ¬ InPsi H τ) : Dw.mult τ = Dw.q := by
-  unfold Datum.mult; rw [if_neg (show ¬ τ (H.rt : E) = H.rt0 from h)]
+  unfold Datum.mult; rw [ite_eq_right (show ¬ τ (H.rt : E) = H.rt0 from h)]
 
 theorem rpow_neg_succ (p : ℕ) (hp : 0 < p) (i : ℕ) :
     (p : ℝ) ^ (-((i : ℝ) + 1)) = ((p : ℝ)⁻¹) ^ (i + 1) := by
@@ -503,11 +503,11 @@ theorem tsum_alt (p : ℕ) (hp : 1 < p) (a b : ℝ) :
   have ge : (fun k => g (2 * k)) = fun k => (r ^ 2) ^ k * (r * a) := by
     funext k
     simp only [hg]
-    rw [rpow_neg_succ p (by omega), if_pos (even_two_mul k), ← hr, pow_succ, pow_mul]; ring
+    rw [rpow_neg_succ p (by omega), ite_eq_left (even_two_mul k), ← hr, pow_succ, pow_mul]; ring
   have go : (fun k => g (2 * k + 1)) = fun k => (r ^ 2) ^ k * (r ^ 2 * b) := by
     funext k
     simp only [hg]
-    rw [rpow_neg_succ p (by omega), if_neg (Nat.not_even_iff_odd.2 (odd_two_mul_add_one k)), ← hr,
+    rw [rpow_neg_succ p (by omega), ite_eq_right (Nat.not_even_iff_odd.2 (odd_two_mul_add_one k)), ← hr,
       show 2 * k + 1 + 1 = 2 * k + 2 by ring, pow_add, pow_mul]; ring
   have hs := summable_geometric_of_lt_one r0 r1
   rw [← tsum_even_add_odd (by rw [ge]; exact hs.mul_right _) (by rw [go]; exact hs.mul_right _), ge, go,
@@ -524,7 +524,7 @@ namespace GlobalTheory.FacUpOdd
 
 theorem nuFac_le_odd_unram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), ¬ IsUnit (p : T.V) → y.IsAlg → p ≠ 2 → ¬ (p : ℤ) ∣ discr E → ∀ (f : Lt1 Dw) (k : ℕ), InPsi H f.1 → (SplitInK H p → nuFac p y f k ≤ ((k * (Dw.q / ((p : ℝ) - 1)) : ℝ) : EReal)) ∧ (InertInK H p → nuFac p y f k ≤ ((k * (Dw.q / ((p : ℝ) - 1) + ((Dw.p : ℝ) - Dw.q) * p / ((p : ℝ) ^ 2 - 1)) : ℝ) : EReal)) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y hnu hy hp2 hdisc f k hpsi
   have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
   obtain ⟨X⟩ := GlobalTheory.CharDepth.nonempty_valExt T p hnu
@@ -532,7 +532,7 @@ theorem nuFac_le_odd_unram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨hfot, horb⟩ := _root_.GlobalTheory.FrobOrbit.frobOnType_and_orbit E H l c p T io X hdisc
   obtain ⟨τ, i⟩ := f
   obtain ⟨h, hh, -, lab, hl0, hfr, hinj, -⟩ := horb τ
-  haveI : NeZero h := ⟨hh.ne'⟩
+  have : NeZero h := ⟨hh.ne'⟩
   subst hl0
   obtain ⟨xs, hxs, hle⟩ := GlobalTheory.CharMinor.colength_bound p (GlobalTheory.ChF.unramified_companion_chart_characters p) hp2 E H Dw l Xo c
     T io y Ch X hy hdisc h lab hinj (fun s x => hfr s x) 0
@@ -562,11 +562,11 @@ theorem nuFac_le_odd_unram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       intro n
       rw [zero_add]
       by_cases hn : Even n
-      · rw [if_pos hn, mult_of_inPsi Dw ((inPsi_conj_iff H _).2 (fun h' => ?_))]
+      · rw [ite_eq_left hn, mult_of_inPsi Dw ((inPsi_conj_iff H _).2 (fun h' => ?_))]
         have := (halt (n + 1)).1 h'
         rw [Nat.even_add_one] at this
         exact this hn
-      · rw [if_neg hn, mult_of_not_inPsi Dw (fun h' => ?_)]
+      · rw [ite_eq_right hn, mult_of_not_inPsi Dw (fun h' => ?_)]
         have := (inPsi_conj_iff H _).1 h'
         rw [halt, Nat.even_add_one, not_not] at this
         exact hn this

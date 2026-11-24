@@ -421,9 +421,9 @@ def SemiHom.m1' (h : SemiHom σ α) : Ω[B⁄R] →ₛₗ[α] Ω[B'⁄R'] :=
     map_smul' := fun b x ↦ δ.liftKaehlerDifferential.map_smul b x }
 
 theorem SemiHom.m1'_D (h : SemiHom σ α) (b : B) : h.m1' (D R B b) = D R' B' (α b) := by
-  letI : Module B Ω[B'⁄R'] := Module.compHom _ α
-  letI : Module R Ω[B'⁄R'] := Module.compHom _ σ
-  haveI : IsScalarTower R B Ω[B'⁄R'] := ⟨fun r b x ↦ by
+  let : Module B Ω[B'⁄R'] := Module.compHom _ α
+  let : Module R Ω[B'⁄R'] := Module.compHom _ σ
+  have : IsScalarTower R B Ω[B'⁄R'] := ⟨fun r b x ↦ by
     change α (r • b) • x = σ r • α b • x
     rw [h, smul_assoc]⟩
   exact Derivation.liftKaehlerDifferential_comp_D (M := Ω[B'⁄R']) _ _
@@ -448,13 +448,13 @@ def SemiHom.mDR (h : SemiHom σ α) : DR R B →+* DR R' B' :=
         rw [h.oneFormMap_smul_semilinear, map_smul, Algebra.smul_def]; rfl }, fun _ ↦ ExteriorAlgebra.ι_sq_zero _⟩).toRingHom
 
 @[simp] theorem SemiHom.mDR_ι (h : SemiHom σ α) (ω : Ω[B⁄R]) : h.mDR (ι1 ω) = ι1 (h.m1 ω) := by
-  letI : Algebra B (DR R' B') := ((algebraMap B' (DR R' B')).comp α).toAlgebra'
+  let : Algebra B (DR R' B') := ((algebraMap B' (DR R' B')).comp α).toAlgebra'
     fun b x ↦ Algebra.commutes (α b) x
   exact ExteriorAlgebra.lift_ι_apply (A := DR R' B') _ _ _ _
 
 @[simp] theorem SemiHom.mDR_algebraMap (h : SemiHom σ α) (b : B) :
     h.mDR (algebraMap B _ b) = algebraMap B' _ (α b) := by
-  letI : Algebra B (DR R' B') := ((algebraMap B' (DR R' B')).comp α).toAlgebra'
+  let : Algebra B (DR R' B') := ((algebraMap B' (DR R' B')).comp α).toAlgebra'
     fun b x ↦ Algebra.commutes (α b) x
   exact AlgHom.commutes (B := DR R' B') _ _
 

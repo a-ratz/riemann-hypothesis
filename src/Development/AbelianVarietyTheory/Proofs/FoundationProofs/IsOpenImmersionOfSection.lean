@@ -68,7 +68,7 @@ theorem subsingleton_of_etale {K : Type} [Field K] {X : Scheme.{0}} (f : X ⟶ S
 
 theorem isOpenImmersion_of_section {X Y : Scheme.{0}} (f : X ⟶ Y) [Etale f] (s : Y ⟶ X) (hs : s ≫ f = 𝟙 _) :
     IsOpenImmersion s := by
-  haveI : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion
+  have : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion
       (MorphismProperty.diagonal @IsOpenImmersion) :=
     MorphismProperty.hasOfPostcompProperty_iff_le_diagonal.2 le_rfl
   exact MorphismProperty.of_postcomp (W := @IsOpenImmersion)

@@ -128,7 +128,7 @@ theorem exists_approx (v : HeightOneSpectrum (𝓞 F)) (d : 𝓞 F) (hd : d ≠ 
     apply hk1
     rw [hJ, pow_succ]
     exact mul_dvd_mul_left _ (Ideal.dvd_iff_le.2 hle)
-  obtain ⟨t, htJ, htP⟩ := SetLike.not_le_iff_exists.1 hJP
+  obtain ⟨t, htJ, htP⟩ := IsConcreteLE.not_le_iff_exists.1 hJP
   have hb : ∀ w : HeightOneSpectrum (𝓞 F), w ≠ v → ∃ b ∈ v.asIdeal ^ k, b ∉ w.asIdeal := by
     intro w hw
     by_contra h
@@ -162,7 +162,7 @@ theorem exists_approx (v : HeightOneSpectrum (𝓞 F)) (d : 𝓞 F) (hd : d ≠ 
       have hc : ∀ c : F, (algebraMap F 𝔸 c) w = algebraMap F (w.adicCompletion F) c := fun c => rfl
       rw [hc, levelaf_valued_algebraMap, map_div₀, HeightOneSpectrum.valuation_of_algebraMap,
         HeightOneSpectrum.valuation_of_algebraMap,
-        div_le_one₀ (zero_lt_iff.2 (w.intValuation_ne_zero d hd))]
+        div_le_one₀ (pos_iff_ne_zero.2 (w.intValuation_ne_zero d hd))]
       exact hval w hw
   · rw [IsScalarTower.algebraMap_apply (𝓞 F) F 𝔸 t, IsScalarTower.algebraMap_apply (𝓞 F) F 𝔸 d]
     have hq : algebraMap F 𝔸 (algebraMap (𝓞 F) F t / algebraMap (𝓞 F) F d) *
@@ -199,7 +199,7 @@ theorem exists_den {n : ℕ} (Λ : Submodule (𝓞 E) (Fin n → E))
     funext i
     rw [Finset.sum_apply, Pi.smul_apply]
     simp only [Pi.smul_apply, Pi.single_apply, smul_ite, smul_zero, Finset.sum_ite_eq,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [Algebra.smul_def, map_intCast, hmk]
     push_cast
     show (m : E) * (m' : E) * x i = ((m' : E) * x i) * (m : E)
@@ -293,7 +293,7 @@ end Main
 
 theorem mem_loc_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (hs : ∀ e, (σ : E →+* E) ((σ : E →+* E) e) = e), (∀ e : E, σ e = e → ∃ a : F, algebraMap F E a = e) → ∀ (n : ℕ) (Λ : Submodule (𝓞 E) (Fin n → E)), Module.Finite (𝓞 E) Λ → Submodule.span E (Λ : Set (Fin n → E)) = ⊤ → ∀ (v : HeightOneSpectrum (𝓞 F)) (p : Ideal (𝓞 E)), p.IsPrime → p.comap (algebraMap (𝓞 F) (𝓞 E)) = v.asIdeal → ∀ x : Fin n → E, (letI := Formalism.UG.CS.starOfInv (σ : E →+* E) hs; x ∈ Formalism.HermitianLatticesTheory.loc (K := E) p Λ) ↔ (afsplitEps E v • fun i => inclE (F := F) (FiniteAdeleRing (𝓞 F) F) (x i)) ∈ latS (F := F) (FiniteAdeleRing (𝓞 F) F) (tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)) Λ := by
   intro F E _ _ _ _ _ σ hs hfix n Λ hfin hspan v p hp hpv x
-  letI := Formalism.UG.CS.starOfInv (σ : E →+* E) hs
+  let := Formalism.UG.CS.starOfInv (σ : E →+* E) hs
   show x ∈ Formalism.HermitianLatticesTheory.locS (Formalism.HermitianLatticesTheory.hcompl (K := E) p) Λ ↔ _
   rw [Formalism.HermitianLatticesTheory.locBasic_mem_locS]
   constructor
@@ -582,7 +582,7 @@ theorem exists_place (p : Ideal (𝓞 E)) (hp : p.IsMaximal) :
 
 theorem exists_over (v : HeightOneSpectrum (𝓞 F)) :
     ∃ p : Ideal (𝓞 E), p.IsMaximal ∧ p.comap (algebraMap (𝓞 F) (𝓞 E)) = v.asIdeal := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   refine Ideal.exists_ideal_over_maximal_of_isIntegral v.asIdeal ?_
   rw [(RingHom.injective_iff_ker_eq_bot _).1 (FaithfulSMul.algebraMap_injective (𝓞 F) (𝓞 E))]
   exact bot_le
@@ -657,7 +657,7 @@ theorem globLat_mem_genus (hfix : ∀ e : E, σ e = e → ∃ a : F, algebraMap 
     (hsp : Submodule.span E (Λ : Set (Fin n → E)) = ⊤) (g : GL (Fin n) 𝒜) (hg : g ∈ UPts σ J 𝔸) :
     letI := starOfInv (σ : E →+* E) hs
     globLat g Λ ∈ Formalism.HermitianLatticesTheory.genus (formJ (σ : E →+* E) hs J 1) Λ := by
-  letI := starOfInv (σ : E →+* E) hs
+  let := starOfInv (σ : E →+* E) hs
   have hL := csGlob_lattice Λ hΛ hsp g
   refine ⟨hL, fun p hp => ?_⟩
   obtain ⟨v, hv⟩ := exists_place (F := F) p hp
@@ -675,7 +675,7 @@ theorem exists_globLat_eq (hfix : ∀ e : E, σ e = e → ∃ a : F, algebraMap 
     (N : Submodule (𝓞 E) (Fin n → E))
     (hN : letI := starOfInv (σ : E →+* E) hs; N ∈ Formalism.HermitianLatticesTheory.genus (formJ (σ : E →+* E) hs J 1) Λ) :
     ∃ g ∈ UPts σ J 𝔸, globLat g Λ = N := by
-  letI := starOfInv (σ : E →+* E) hs
+  let := starOfInv (σ : E →+* E) hs
   obtain ⟨hL, hG⟩ := hN
   have hNf : Module.Finite (𝓞 E) N := Module.Finite.iff_fg.2 hL.fg
   have hNsp : Submodule.span E (N : Set (Fin n → E)) = ⊤ := hL.span_eq_top
@@ -737,7 +737,7 @@ theorem mk_eq_iff (hΛ : Module.Finite (𝓞 E) Λ) (hsp : Submodule.span E (Λ 
     DoubleCoset.mk Γ 𝒦 g = DoubleCoset.mk Γ 𝒦 g' ↔
       ∃ u ∈ Formalism.HermitianLatticesTheory.isom (formJ (σ : E →+* E) hs J 1),
         Formalism.HermitianLatticesTheory.gmap u (globLat (g : GL (Fin n) 𝒜) Λ) = globLat (g' : GL (Fin n) 𝒜) Λ := by
-  letI := starOfInv (σ : E →+* E) hs
+  let := starOfInv (σ : E →+* E) hs
   constructor
   · intro h
     obtain ⟨c, ⟨γ, hγ, e⟩, k, hk, rfl⟩ := (@DoubleCoset.eq _ _ _ _ _ _).1 h
@@ -769,9 +769,9 @@ theorem conj_mem_stab_iff (hΛ : Module.Finite (𝓞 E) Λ) (hsp : Submodule.spa
 
 omit [NumberField E] in
 theorem bc_injective : Function.Injective (bc (n := Fin n) ιA) := by
-  haveI : Nontrivial 𝒜 := by
+  have : Nontrivial 𝒜 := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
-    haveI : Nontrivial 𝔸 := (evalV F ⟨P, hP.isPrime,
+    have : Nontrivial 𝔸 := (evalV F ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩).toRingHom.domain_nontrivial
     exact (Algebra.TensorProduct.includeRight_injective (R := F) (A := E) (B := 𝔸)
       (algebraMap F E).injective).nontrivial
@@ -796,7 +796,7 @@ theorem card_stabAt (hΛ : Module.Finite (𝓞 E) Λ) (hsp : Submodule.span E (�
     letI := starOfInv (σ : E →+* E) hs
     Nat.card (stabAt Γ 𝒦 g) =
       Nat.card (Formalism.ThetaLiftIndependence.autL (formJ (σ : E →+* E) hs J 1) (globLat (g : GL (Fin n) 𝒜) Λ)) := by
-  letI := starOfInv (σ : E →+* E) hs
+  let := starOfInv (σ : E →+* E) hs
   refine (card_stabAt_of_injective (bc ιA) bc_injective (UJ (σ : E →+* E) J) (UPts σ J 𝔸) (stabGL (𝓛 Λ))
     (fun γ hγ => rational_points_le_holds F E (Fin n) σ J 𝔸 ⟨γ, hγ, rfl⟩) g).trans ?_
   refine Nat.card_eq_of_bijective (fun γ => ⟨glEquiv γ.1,
@@ -823,20 +823,20 @@ theorem GlobalTheory.Mass.classMass_lattice_eq_genus_mass {F E : Type} [Field F]
                  ((levelAfL σ J Λ).subgroupOf (UPts σ J (Af F))) =
       Formalism.HermitianLatticesTheory.mass (formJ (σ : E →+* E) hs J 1) Λ := by
   classical
-  letI := starOfInv (σ : E →+* E) hs
+  let := starOfInv (σ : E →+* E) hs
   have hτ : ∀ τ : E →+* ℂ, τ.comp (σ : E →+* E) = (starRingEnd ℂ).comp τ :=
     fun τ => RingHom.ext (hσ.2.2.2 τ)
   have hH : IsHerm (σ : E →+* E) J := Matrix.ext fun i j => hJ.1 i j
   have hne : ∃ z, σ z ≠ z := by
     by_contra! h
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-    haveI := hσ.2.1
+    have := hσ.2.1
     refine IsTotallyComplex.complexEmbedding_not_isReal τ (ComplexEmbedding.isReal_iff.2 (RingHom.ext fun x => ?_))
     have := hσ.2.2.2 τ x
     rw [h] at this
     exact this.symm
   have hfix := fixed_mem σ hσ.2.2.1 hne
-  haveI := Formalism.UG.Final.ClassSetFiniteL F E _ σ J hτ hH hJ.2.isUnit hd Λ hΛ hsp
+  have := Formalism.UG.Final.ClassSetFiniteL F E _ σ J hτ hH hJ.2.isUnit hd Λ hΛ hsp
   have hgen := globLat_mem_genus hs hfix hne hH hJ.2 hΛ hsp
   have hsur := exists_globLat_eq (J := J) hs hfix hΛ hsp
   have hmk := mk_eq_iff (J := J) hs hΛ hsp

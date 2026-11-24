@@ -86,7 +86,7 @@ theorem spread₂_surjective : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsC
   have hM : ρ.range ≠ ⊤ := fun h => hρ (AddMonoidHom.range_eq_top.1 h)
   obtain ⟨F, _, _, l, hl0, hl⟩ := GlobalTheory.TorusOnto.exists_finite_quotient_ne_zero ρ.range hM
   have hlρ : l.comp ρ = 0 := AddMonoidHom.ext fun x => hl _ ⟨x, rfl⟩
-  haveI := hj
+  have := hj
   let f : splitTorus (Sp W) F ⟶ GW := GlobalTheory.SplitTorus.torusMap (Sp W) l ≫ j
   have e0 : (1 : splitTorus (Sp W) F ⟶ GW) = GlobalTheory.SplitTorus.torusMap (Sp W) (0 : D₁.toPre.X →+ F) ≫ j := by
     rw [GlobalTheory.SplitTorus.torusMap_zero, MonObj.one_comp]
@@ -95,9 +95,9 @@ theorem spread₂_surjective : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsC
     rw [e0, GlobalTheory.TorusPart.pullTorus_torusMap_comp, GlobalTheory.TorusPart.pullTorus_torusMap_comp, hκj, ← Category.assoc,
       ← Category.assoc, ← GlobalTheory.SplitTorus.torusMap_comp, ← GlobalTheory.SplitTorus.torusMap_comp, hlρ,
       AddMonoidHom.zero_comp]
-  letI : Algebra W κ := c.toAlgebra
-  letI : Algebra (ResidueField W) κ := (ResidueField.lift c).toAlgebra
-  haveI : IsScalarTower W (ResidueField W) κ :=
+  let : Algebra W κ := c.toAlgebra
+  let : Algebra (ResidueField W) κ := (ResidueField.lift c).toAlgebra
+  have : IsScalarTower W (ResidueField W) κ :=
     IsScalarTower.of_algebraMap_eq' (ResidueField.lift_comp_residue c).symm
   have hbc : (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraMaps.baseChange W κ).map f = (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraMaps.baseChange W κ).map 1 :=
     pullback_map_eq_of_pullTorus_eq hm f 1 hκ
@@ -110,7 +110,7 @@ theorem spread₂_surjective : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsC
   have hf0 : GlobalTheory.SplitTorus.torusMap (Sp W) l ≫ j = GlobalTheory.SplitTorus.torusMap (Sp W) 0 ≫ j := hf1.trans e0
   have e2 := congrArg (GlobalTheory.TorusPart.pullTorus hn) hf0
   rw [GlobalTheory.TorusPart.pullTorus_torusMap_comp, GlobalTheory.TorusPart.pullTorus_torusMap_comp, hΩj] at e2
-  haveI := (GlobalTheory.TorusPart.mono_gtTorus_and_factor (U₁.gt 0) hb₁ hn₁).1
+  have := (GlobalTheory.TorusPart.mono_gtTorus_and_factor (U₁.gt 0) hb₁ hn₁).1
   have e3 : GlobalTheory.SplitTorus.torusMap (Sp Ω) l = GlobalTheory.SplitTorus.torusMap (Sp Ω) 0 := (cancel_mono _).1 e2
   exact hl0 (GlobalTheory.SplitTorus.torusMap_injective e3)
 

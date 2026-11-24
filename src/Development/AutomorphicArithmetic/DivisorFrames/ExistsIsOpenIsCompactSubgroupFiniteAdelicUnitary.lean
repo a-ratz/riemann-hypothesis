@@ -48,11 +48,11 @@ open NumberField IsDedekindDomain Matrix GlobalTheory.CuspRep GlobalTheory.PRep 
 theorem UpperTheory.exists_isOpen_isCompact_subgroup_finiteAdelicUnitary :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ), ∃ K : Subgroup (finU (E := E) (n := n)), IsOpen (K : Set (finU (E := E) (n := n))) ∧ IsCompact (K : Set (finU (E := E) (n := n))) := by
   intro E _ _ _ n
-  haveI := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
+  have := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
   obtain ⟨U0, hU0o, hU0c⟩ := GlobalTheory.GLIntegral.exists_isOpen_isCompact E n
   let p : finU (E := E) (n := n) →* GL (Fin n) (Af E) :=
     (GeneralLinearGroup.map (pFin E)).comp ((UA E n).subtype.comp (finU (E := E) (n := n)).subtype)
-  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtype_val.comp continuous_subtype_val)
+  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hKo : IsOpen (U0.comap p : Set (finU (E := E) (n := n))) := hU0o.preimage hp
   have hfin : ∀ x : UA E n, x ∈ finU (E := E) (n := n) ↔
       finGL E n (GeneralLinearGroup.map (pFin E) (x : GA E n)) = (x : GA E n) := by
@@ -69,8 +69,8 @@ theorem UpperTheory.exists_isOpen_isCompact_subgroup_finiteAdelicUnitary :
         {x : UA E n | finGL E n (GeneralLinearGroup.map (pFin E) (x : GA E n)) = (x : GA E n)} :=
       Set.ext hfin
     rw [e]
-    exact isClosed_eq (GlobalTheory.DefU.LocAdm.continuous_finGL.comp (continuous_map_pFin.comp continuous_subtype_val))
-      continuous_subtype_val
+    exact isClosed_eq (GlobalTheory.DefU.LocAdm.continuous_finGL.comp (continuous_map_pFin.comp continuous_subtypeVal))
+      continuous_subtypeVal
   have hι : Topology.IsClosedEmbedding (fun x : finU (E := E) (n := n) => ((x : UA E n) : GA E n)) :=
     GlobalTheory.DefU.LocAdm.isClosed_UA.isClosedEmbedding_subtypeVal.comp hc.isClosedEmbedding_subtypeVal
   exact ⟨U0.comap p, hKo, IsCompact.of_isClosed_subset

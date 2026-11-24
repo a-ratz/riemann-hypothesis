@@ -195,9 +195,9 @@ theorem chow_rigidity : ∀ (K Ω : Type) [Field K] [CharZero K] [Field Ω] [IsA
   have := hf
   obtain ⟨R, gR, ⟨s, hs⟩, hgR, hR⟩ := GlobalTheory.HomDescent.exists_fg_isMonHom f
   have := hgR
-  haveI : IsAlgClosed (algebraicClosure K Ω) := IsAlgClosure.isAlgClosed K
+  have : IsAlgClosed (algebraicClosure K Ω) := IsAlgClosure.isAlgClosed K
   let S : Subalgebra (algebraicClosure K Ω) Ω := Algebra.adjoin (algebraicClosure K Ω) (s : Set Ω)
-  haveI : Algebra.FiniteType (algebraicClosure K Ω) S := ⟨(Subalgebra.fg_top S).mpr ⟨s, rfl⟩⟩
+  have : Algebra.FiniteType (algebraicClosure K Ω) S := ⟨(Subalgebra.fg_top S).mpr ⟨s, rfl⟩⟩
   obtain ⟨ρ₀⟩ := GlobalTheory.Ex.ThetaDescent.nonempty_algHom (algebraicClosure K Ω) S
   have hRS : ∀ r ∈ R, r ∈ S := fun r hr => by
     have h1 : Algebra.adjoin K (s : Set Ω) ≤

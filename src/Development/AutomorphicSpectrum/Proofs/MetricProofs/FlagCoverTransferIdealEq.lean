@@ -129,7 +129,7 @@ theorem exists_scale (M : FlagModel y Ψ N j) {F : Type} [Field F] (f : MvPolyno
   have hdiag : ∀ τ c, B τ c c ≠ 0 := fun τ c h0 => by
     have h1 : (G τ).det * (B τ).det = 1 := by rw [← det_mul, (hB τ).2.2.det]
     have h2 : ∏ i, B τ i i = 0 := Finset.prod_eq_zero (Finset.mem_univ c) h0
-    rw [det_of_upperTriangular (hB τ).2.1, h2, mul_zero] at h1
+    rw [det_of_isUpperTriangular (hB τ).2.1, h2, mul_zero] at h1
     exact zero_ne_one h1
   let s : Ψ × Fin N → F := fun p => ∏ c ∈ stepCols N j p.2, B p.1 c c
   have hs : ∀ p, s p ≠ 0 := fun p => Finset.prod_ne_zero_iff.2 fun c _ => hdiag p.1 c
@@ -142,10 +142,10 @@ theorem exists_scale (M : FlagModel y Ψ N j) {F : Type} [Field F] (f : MvPolyno
   · rintro ⟨k, m⟩
     by_cases h : ∀ p, M.blk p ≠ some k
     · have e := hbase ⟨⟨k, h⟩, m⟩
-      simp only [polyPt, dif_pos h, one_mul, hfC]
+      simp only [polyPt, dite_eq_left h, one_mul, hfC]
       exact e
     · set_option synthInstance.maxHeartbeats 100000 in
-        simp only [polyPt, dif_neg h, map_sum, map_mul, hfC, map_minorIJ, hmap]
+        simp only [polyPt, dite_eq_right h, map_sum, map_mul, hfC, map_minorIJ, hmap]
       rw [hstep _ k (blk_stepOf M k h) m, Finset.mul_sum]
       refine Finset.sum_congr rfl fun I _ => ?_
       rw [(_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main F N j (stepOf M k h).2 M.j_le).2.2.1 _ _ I (hB _).1 (hB _).2.1]

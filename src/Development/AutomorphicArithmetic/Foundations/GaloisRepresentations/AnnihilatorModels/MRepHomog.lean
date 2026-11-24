@@ -107,7 +107,7 @@ end UpperTheory.Gal.crystallineComparison.Mod
 theorem UpperTheory.Gal.crystallineComparison.Mod.repHomog_of :
     RepHomog := by
   intro κ _ A _ P hSub B _ _ i hmono hiff
-  haveI : Mono i := hmono
+  have : Mono i := hmono
   refine ⟨?_, ?_⟩
   · refine Nat.card_congr (Equiv.ofBijective
       (fun ε => (⟨ptOf ε ≫ i, (hiff _ _).1 ⟨_, rfl⟩⟩ : { g // P (𝟙_ (Over (Sp κ))) g })) ⟨?_, ?_⟩)
@@ -168,7 +168,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.repHomog_of :
           exact congrArg CommaMorphism.left h2
         exact AlgHom.ext fun x => RingHom.congr_fun (spMap_inj h') x
       refine ⟨AlgEquiv.ofAlgHom τ τ' e1 e2, ?_⟩
-      rw [AlgEquiv.coe_algHom_ofAlgHom]
+      rw [AlgEquiv.toAlgHom_ofAlgHom]
       apply ptOf_inj
       apply Over.OverMorphism.ext
       show spMap (ε₀.toRingHom.comp τ.toRingHom) = (ptOf ε).left

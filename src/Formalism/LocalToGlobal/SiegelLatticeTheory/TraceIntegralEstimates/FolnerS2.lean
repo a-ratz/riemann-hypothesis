@@ -94,7 +94,7 @@ theorem haarSub_prop {S : Set G} {μ ν : Measure G} (hμ : LeftHaarSub S μ) (h
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ μ = c • ν := by
   obtain ⟨hC, h1, hm, hi, -, -, -, -⟩ := id hμ
   let H : Subgroup G := subOf S h1 hm hi
-  have hemb : MeasurableEmbedding (Subtype.val : H → G) := MeasurableEmbedding.subtype_coe hC.measurableSet
+  have hemb : MeasurableEmbedding (Subtype.val : H → G) := MeasurableEmbedding.subtypeVal hC.measurableSet
   have key : ∀ ρ : Measure G, LeftHaarSub S ρ →
       (ρ.comap (Subtype.val : H → G)).map Subtype.val = ρ ∧
       IsMulLeftInvariant (ρ.comap (Subtype.val : H → G)) ∧
@@ -138,16 +138,16 @@ theorem haarSub_prop {S : Set G} {μ ν : Measure G} (hμ : LeftHaarSub S μ) (h
   set A := spanningSets (μ' + ν') n with hA
   have hAm : MeasurableSet A := measurableSet_spanningSets _ n
   have hAfin : (μ' + ν') A < ⊤ := measure_spanningSets_lt_top _ n
-  rw [Measure.add_apply] at hAfin
+  rw [add_apply] at hAfin
   have hμA : μ' A ≠ ⊤ := (lt_of_le_of_lt le_self_add hAfin).ne
   have hνA : ν' A ≠ ⊤ := (lt_of_le_of_lt le_add_self hAfin).ne
-  haveI : BorelSpace H := Subtype.borelSpace (fun x => x ∈ (H : Set G))
-  haveI : SecondCountableTopology H := by
+  have : BorelSpace H := Subtype.borelSpace (fun x => x ∈ (H : Set G))
+  have : SecondCountableTopology H := by
     first
       | exact inferInstanceAs (SecondCountableTopology (H : Set G))
       | exact TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
-  haveI : MeasurableMul₂ H := ContinuousMul.measurableMul₂
-  haveI : MeasurableInv H := ContinuousInv.measurableInv
+  have : MeasurableMul₂ H := ContinuousMul.measurableMul₂
+  have : MeasurableInv H := ContinuousInv.measurableInv
   have heq : μ' = (μ' A / ν' A) • ν' := measure_eq_div_smul μ' ν' hn hνA
   refine ⟨μ' A / ν' A, ?_, ENNReal.div_ne_top hμA hn, ?_⟩
   · intro hc
@@ -184,7 +184,7 @@ theorem map_cjB {S : Set G} {μ : Measure G} (hμ : LeftHaarSub S μ) (b : G) (h
   obtain ⟨hC, h1, hm, hi, hσ, h0, hc, hl⟩ := hμ
   have hL : LeftHaarSub S (μ.map (cjB b)) := by
     refine ⟨hC, h1, hm, hi, ?_, ?_, ?_, ?_⟩
-    · haveI := hσ
+    · have := hσ
       show SigmaFinite (μ.map M)
       first
         | exact M.sigmaFinite_map
@@ -236,7 +236,7 @@ private theorem preimage_cjB_lemma {S : Set G} {μ : Measure G} (hμ : LeftHaarS
   refine ⟨c, hc0, hctop, fun A => ?_⟩
   have h1 : (μ.map (cjB b)) A = μ (cjB b ⁻¹' A) := by
     exact MeasurableEquiv.map_apply M A
-  rw [← h1, hceq, Measure.smul_apply, smul_eq_mul]
+  rw [← h1, hceq, smul_apply, smul_eq_mul]
 
 theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS) (C : Set G) (f : G → ℝ)
     (hf : Continuous f) (hfC : ∀ c ∈ C, ∀ x, f (c * x) = f x) (hfK : ∀ ρ : ℝ, IsCompact ({x | f x ≤ ρ} ∩ S))
@@ -284,7 +284,7 @@ theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS
     rw [Real.volume_Icc] at h0
     simp at h0
   have hlevel : μS {x | f x = ρ} = 0 := by
-    simp only [Set.mem_setOf_eq, not_lt, nonpos_iff_eq_zero] at hρN
+    simp only [Set.mem_ofPred_eq, not_lt, nonpos_iff_eq_zero] at hρN
     exact hρN
   have hV0 : μS (L ρ) ≠ 0 := by
     intro h
@@ -300,7 +300,7 @@ theorem isFolner_of_contract {S : Set G} {μS : Measure G} (hS : IsHaarSub S μS
     linarith
   have hunion : (⋃ n : ℕ, L (ρ - 1 / ((n : ℝ) + 1))) = {x | f x < ρ} ∩ S := by
     ext x
-    simp only [Set.mem_iUnion, hLmem, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, hLmem, Set.mem_inter_iff, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨n, hn, hx⟩
       refine ⟨?_, hx⟩

@@ -59,7 +59,7 @@ theorem addL_zero_wt (u wL : WeightFamilies.Wt D j) : addL u wL 0 = u := by
 
 theorem rk_Mlat_eq_finrank (X : PJ D B P j) (ka : WeightFamilies.Wt D j) (h : LatAt B j ka) :
     X.rk ka (B.Mlat j ka) = Module.finrank B.KO (⊤ : Submodule B.KO (B.Cusp j ka)) := by
-  letI : Submodule.IsFullLattice B.KO (B.Mlat j ka) := h
+  let : Submodule.IsFullLattice B.KO (B.Mlat j ka) := h
   unfold PJ.rk
   rw [Submodule.IsFullLattice.span_eq_top]
 
@@ -128,13 +128,13 @@ theorem shareRd_of_inBasis : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : Modul
   have hcard : Nat.card ({α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a0 D j T} × Fin G.del) ≤
       Module.finrank B.KO (⊤ : Submodule B.KO (B.Cusp j ka)) := by
     rw [← hfr]
-    haveI : FiniteDimensional ℂ (R.sp ka Set.univ) := hfd
+    have : FiniteDimensional ℂ (R.sp ka Set.univ) := hfd
     have hLI' : LinearIndependent ℂ (fun p =>
         (⟨R.lead G.w t T (a0 D j T) (fun i => R.ev (X.inc wF (G.th' i))) p, hmem p⟩ :
           R.sp ka Set.univ)) :=
       LinearIndependent.of_comp (R.sp ka Set.univ).subtype hLI
-    haveI := hLI'.finite
-    haveI := Fintype.ofFinite ({α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a0 D j T} × Fin G.del)
+    have := hLI'.finite
+    have := Fintype.ofFinite ({α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a0 D j T} × Fin G.del)
     rw [Nat.card_eq_fintype_card]
     exact hLI'.fintype_card_le_finrank
   have hcnt : Nat.card {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a0 D j T} =

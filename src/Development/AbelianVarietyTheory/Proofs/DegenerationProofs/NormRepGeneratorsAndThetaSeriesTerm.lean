@@ -81,7 +81,7 @@ theorem norm_rep_generators_eq_exp (h : N.Int q) {k : ℕ} (p : N.QT k) (hk : k 
   have e := h.norm_pow_generators_eq_pow p.1.2 k χ
   rw [N.mem_QT.1 p.2, NumD.io_s, h.norm_τ] at e
   refine (pow_left_inj₀ (norm_nonneg _) (Real.exp_pos _).le hk).1 ?_
-  rw [← e, ← Real.exp_nat_mul]
+  rw [← e, ← Real.exp_natCast_mul]
   congr 1
   have : (k : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hk
   field_simp
@@ -92,7 +92,7 @@ theorem norm_wQ (h : N.Int q) {k : ℕ} (hk : Odd k) (p : N.QT k) :
   rw [NumD.wQ, NumB.wS]
   simp only [Units.val_div_eq_div_val, Units.val_mul, Units.val_pow_eq_pow_val, norm_div, norm_mul, norm_pow,
     h.norm_cubN, h.norm_dbl, h.norm_mulq, h.ψ, h.norm_rep_generators_eq_exp p hk0, mul_one, one_pow, div_one]
-  rw [← Real.exp_nat_mul, ← Real.exp_sub, QuadraticMap.polar_self]
+  rw [← Real.exp_natCast_mul, ← Real.exp_sub, QuadraticMap.polar_self]
   congr 1
   obtain ⟨j, rfl⟩ := hk
   have e : (2 * j + 1 - 1) / 2 = j := by omega
@@ -108,7 +108,7 @@ theorem norm_txT (h : N.Int q) {m : ℕ} (hm : Odd m) (p : N.QT (m ^ 2)) (χ : N
   rw [NumD.txT, NumD.vt]
   simp only [Units.val_div_eq_div_val, Units.val_mul, norm_div, norm_mul, h.norm_mulq, h.ψ,
     h.norm_wQ hm.pow, h.norm_pow_generators_eq_pow, h.norm_rep_generators_eq_exp p (pow_ne_zero 2 hm0), div_one, NumD.Gt.pow_b]
-  rw [← mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+  rw [← mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
   congr 2
   have e : q (p.1.1.toAdd + m • χ) =
       q p.1.1.toAdd + (m : ℝ) ^ 2 * q χ + m * QuadraticMap.polar q p.1.1.toAdd χ := by

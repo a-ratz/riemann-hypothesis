@@ -233,7 +233,7 @@ theorem det_isom (L : LocE F E) {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (hH : 
   refine hH.mul_left_cancel ?_
   rw [mul_one]
   conv_rhs => rw [← h3]
-  simp only [RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, AlgEquiv.coe_ringEquiv,
+  simp only [RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, AlgEquiv.coe_toRingEquiv,
     AlgEquiv.coe_toRingEquiv]
   ring
 

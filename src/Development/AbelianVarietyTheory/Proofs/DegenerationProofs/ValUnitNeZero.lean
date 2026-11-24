@@ -120,7 +120,7 @@ theorem val_unit_ne_zero (x : Sp C ⟶ X) {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ 
 
 theorem val_zpow (x : Sp C ⟶ X) {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (s : Γ(X, U)ˣ) (n : ℤ) :
     valR x U (s ^ n).val = valR x U s.val ^ n := by
-  rw [valR_eq x U h, valR_eq x U h, ← MonoidHom.coe_coe, ← Units.coe_map, map_zpow, Units.val_zpow_eq_zpow_val]
+  rw [valR_eq x U h, valR_eq x U h, ← MonoidHom.coe_ofClass, ← Units.coe_map, map_zpow, Units.val_zpow_eq_zpow_val]
   rfl
 
 theorem val_res_pull (x : Sp C ⟶ Y) (g : Y ⟶ X) {U : X.Opens} {W : Y.Opens} (e : W ≤ g ⁻¹ᵁ U)

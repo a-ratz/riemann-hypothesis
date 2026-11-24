@@ -444,7 +444,7 @@ namespace GlobalTheory.AdSpan.ReVec.ThetaCarry
 
 theorem continuous_reW {D : D7} (S T : HSp D) (b : Module.Basis (Fin S.rank) D.host.E S.V) :
     Continuous (reW S T b : WO (reS S b) T → WO S T) := by
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   exact (continuous_id.matrix_mul continuous_const :
     Continuous fun x : Matrix (Fin T.rank) (Fin S.rank) (AE D) =>
       HMul.hMul (α := Matrix (Fin T.rank) (Fin S.rank) (AE D)) x ((frPinv S b).map (incA D)))
@@ -817,12 +817,12 @@ def reWEquiv (S T : HSp D) (b : Module.Basis (Fin S.rank) D.host.E S.V) : WO S T
 
 theorem continuous_reW (S T : HSp D) (b : Module.Basis (Fin S.rank) D.host.E S.V) :
     Continuous (reW S T b) := by
-  haveI : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
+  have : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
   exact continuous_id.matrix_mul continuous_const
 
 theorem continuous_reWi (S T : HSp D) (b : Module.Basis (Fin S.rank) D.host.E S.V) :
     Continuous (reWi S T b) := by
-  haveI : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
+  have : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
   exact continuous_id.matrix_mul continuous_const
 
 theorem reW_mem_ratL_iff (S T : HSp D) (b : Module.Basis (Fin S.rank) D.host.E S.V) (x : WO S T) :

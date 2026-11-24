@@ -214,7 +214,7 @@ theorem _root_.GlobalTheory.CuspSecFinData.finiteDimensional_of_le_holSub : ∀ 
     (∀ P ∈ W, ∀ k, ∀ x ∉ (X k).dom, P k x = 0) → FiniteDimensional ℂ W := by
   intro E _ _ _ r Comp _ X la W hW hoff
   choose N hNfin hN using fun k => exists_finite_determining_set_SS (X k) (la k)
-  haveI : ∀ k, Fintype (N k) := fun k => (hNfin k).fintype
+  have : ∀ k, Fintype (N k) := fun k => (hNfin k).fintype
   let L : W →ₗ[ℂ] ((k : Comp) → N k → ℂ) :=
     { toFun := fun P k y => P.1 k y
       map_add' := fun _ _ => rfl

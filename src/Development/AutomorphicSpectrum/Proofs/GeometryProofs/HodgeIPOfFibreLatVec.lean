@@ -175,7 +175,7 @@ theorem isOpen_offBd (D : ComponentData II Ψ K J Ω W) (a : Fin D.nCharts) : Is
   have e : offBd D a = ball 0 1 ∩ ⋂ i : Fin (Fintype.card Ψ * D.j * (D.N - D.j)),
       {t | (i : ℕ) < (D.chart a).a → t i ≠ 0} := by
     ext t
-    simp only [offBd, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [offBd, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     refine and_congr_right fun ht => ?_
     rw [(D.chart a).boundary t ht]
     push_neg

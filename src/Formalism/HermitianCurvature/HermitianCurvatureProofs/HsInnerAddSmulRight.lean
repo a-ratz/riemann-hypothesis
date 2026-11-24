@@ -60,12 +60,12 @@ variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [Norm
 
 theorem hsInner_add_smul_left (A A' C : Wq →L[ℂ] Wp) (a : ℂ) :
     B.hsInner (A + a • A') C = B.hsInner A C + a * B.hsInner A' C := by
-  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
+  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, add_apply, FunLike.coe_smul,
     Pi.smul_apply, inner_add_right, inner_smul_right, Finset.sum_add_distrib, Finset.mul_sum]
 
 theorem hsInner_add_smul_right (A C C' : Wq →L[ℂ] Wp) (a : ℂ) :
     B.hsInner A (C + a • C') = B.hsInner A C + conj a * B.hsInner A C' := by
-  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
+  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, add_apply, FunLike.coe_smul,
     Pi.smul_apply, inner_add_left, inner_smul_left, Finset.sum_add_distrib, Finset.mul_sum]
 
 end HS

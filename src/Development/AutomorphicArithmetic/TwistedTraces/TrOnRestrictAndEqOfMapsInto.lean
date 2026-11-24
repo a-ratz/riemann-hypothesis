@@ -55,7 +55,7 @@ open scoped InnerProductSpace
 variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 private theorem prj_eq (E : Submodule ℂ H) [FiniteDimensional ℂ E] : UpperTheory.ConvolutionTheory.C.prj E = E.starProjection := by
-  have h : E.topologicalClosure = E := E.closed_of_finiteDimensional.submodule_topologicalClosure_eq
+  have h : E.topologicalClosure = E := E.isClosed_of_finiteDimensional.submodule_topologicalClosure_eq
   unfold UpperTheory.ConvolutionTheory.C.prj
   congr 1
 
@@ -77,7 +77,7 @@ private theorem trOn_eq (E : Submodule ℂ H) [FiniteDimensional ℂ E] (T : H �
   · rfl
   · funext i
     rw [ContinuousLinearMap.comp_apply, b.starProjection_eq_sum_rankOne]
-    simp only [ContinuousLinearMap.sum_apply, inner_sum, InnerProductSpace.rankOne_apply, inner_smul_right,
+    simp only [sum_apply, inner_sum, InnerProductSpace.rankOne_apply, inner_smul_right,
       ContinuousLinearMap.adjoint_inner_left]
   · refine Finset.sum_congr rfl fun k _ => ?_
     rw [ContinuousLinearMap.adjoint_inner_left, Submodule.coe_inner, cprs_coe, hS, ContinuousLinearMap.comp_apply,

@@ -116,7 +116,7 @@ theorem base_sizes_ge (eps : ℝ) (he : 0 < eps) : ∃ x0 : ℝ, ∀ (s : Scale)
   have hX1 : 1 ≤ s.X' := Real.one_le_exp (Real.rpow_nonneg hx0.le _)
   have h2 : s.x ^ 434 * s.X' ≤ s.b := by
     have e : s.x ^ 434 = Real.exp (434 * Real.log s.x) := by
-      rw [show (434 : ℝ) = ((434 : ℕ) : ℝ) by norm_num, Real.exp_nat_mul, Real.exp_log hx0]
+      rw [show (434 : ℝ) = ((434 : ℕ) : ℝ) by norm_num, Real.exp_natCast_mul, Real.exp_log hx0]
     rw [e, Scale.X', Scale.b, Scale.L, ← Real.exp_add]
     exact Real.exp_le_exp.2 (by linarith)
   have h3 : s.x ^ 430 ≤ s.x ^ 434 := pow_le_pow_right₀ hx1 (by norm_num)

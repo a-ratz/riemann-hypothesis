@@ -152,7 +152,7 @@ theorem zLoc_lower (A : WeightedAtlas n Y ι La) {L : La} {N : ℕ} {w : Fin N �
   set E := (LinearMap.equivOfDetNeZero (D : V n →ₗ[ℂ] V n) hdet).toContinuousLinearEquiv
   obtain ⟨K0, hK0⟩ : ∃ K0 : ℝ, ∀ u, ‖u‖ ≤ K0 * ‖D u‖ := by
     refine ⟨‖(E.symm : V n →L[ℂ] V n)‖, fun u => ?_⟩
-    have h := E.antilipschitz.le_mul_dist u 0
+    have h := E.antilipschitzWith.le_mul_dist u 0
     simp only [dist_zero_right, map_zero] at h
     exact h
   set K1 := max K0 1

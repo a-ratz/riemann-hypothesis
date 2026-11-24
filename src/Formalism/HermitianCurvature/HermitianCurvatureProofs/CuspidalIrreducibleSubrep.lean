@@ -94,7 +94,7 @@ theorem geom {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (hX : IsStrictUpper X) (
 
 theorem det_shift {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (hX : IsStrictUpper X) (t : ℂ) :
     (t • (1 : Matrix (Fin n) (Fin n) ℂ) + X).det = t ^ n := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · simp [hX _ _ le_rfl]
   · intro i j hij
     have hne : i ≠ j := (ne_of_lt hij).symm
@@ -134,7 +134,7 @@ theorem det_blk_ne {n : ℕ} (t : ℂ) (ht : t ≠ 0) (X : Matrix (Fin n) (Fin n
   have hdet : (t • (1 : Matrix (Fin n) (Fin n) ℂ) + X).det = t ^ n := det_shift X hX t
   have ht' : t ^ n ≠ 0 := pow_ne_zero n ht
   have hinv : IsUnit (t • (1 : Matrix (Fin n) (Fin n) ℂ) + X).det := by rw [hdet]; exact ht'.isUnit
-  letI := (t • (1 : Matrix (Fin n) (Fin n) ℂ) + X).invertibleOfIsUnitDet hinv
+  let := (t • (1 : Matrix (Fin n) (Fin n) ℂ) + X).invertibleOfIsUnitDet hinv
   have hA : ⅟(t • (1 : Matrix (Fin n) (Fin n) ℂ) + X) = (t ^ n)⁻¹ • geoS X t := by
     apply invOf_eq_right_inv
     rw [Matrix.mul_smul, geom X hX t, smul_smul, inv_mul_cancel₀ ht', one_smul]
@@ -241,7 +241,7 @@ theorem redIntegrable : RedIntegrable := by
       redIntegrand β m Φ (c * t ^ (m + 1)) t q) (muRed β m) := by
     refine h6.congr (Filter.Eventually.of_forall fun q => ?_)
     have := pointwise_red β m Φ t c ht q
-    simp only [NNReal.smul_def, NNReal.coe_pow, coe_nnnorm, Function.comp]
+    simp only [NNReal.smul_def, NNReal.coe_pow, coe_nnNorm, Function.comp]
     rw [← Complex.coe_smul]
     exact this
   have hne : ((‖t‖ ^ (2 * (m + 1)) : ℝ) : ℂ) ≠ 0 := by

@@ -65,14 +65,14 @@ theorem tensor_padic_cls_eq {G : Type} [CommGroup G] (l : ℕ) [Fact l.Prime] (n
     map_smul' := fun (k : ℤ) x => by simp [smul_smul, mul_comm]
   }
   let P : Submodule ℤ M := LinearMap.range ψ
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hkill : ∀ q : M ⧸ P, (l ^ n) • q = 0 := by
     intro q
     induction q using Submodule.Quotient.induction_on with
     | H m =>
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
       exact ⟨m, by change ((l : ℤ) ^ n) • m = l ^ n • m; rw [← Nat.cast_pow, natCast_zsmul]⟩
-  letI : Module (ZMod (l ^ n)) (M ⧸ P) := AddCommGroup.zmodModule hkill
+  let : Module (ZMod (l ^ n)) (M ⧸ P) := AddCommGroup.zmodModule hkill
   let B : ℤ_[l] →ₗ[ℤ] M →ₗ[ℤ] M ⧸ P :=
     LinearMap.mk₂ ℤ (fun c m => (PadicInt.toZModPow n c) • P.mkQ m)
       (fun c c' m => by simp [add_smul])

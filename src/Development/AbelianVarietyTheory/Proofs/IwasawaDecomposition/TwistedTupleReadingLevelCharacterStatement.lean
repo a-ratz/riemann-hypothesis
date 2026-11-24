@@ -160,8 +160,8 @@ theorem coarseBlockIndex_eq_twoBlock (hn : n = r + b) : (fun i : Fin n => coarse
   funext i
   unfold Formalism.L2.DIV.blk2
   by_cases hi : i.val < r
-  · rw [if_pos hi, coarse_of_lt hi]
-  · rw [if_neg hi, coarse_of_le (Nat.not_lt.mp hi)]
+  · rw [ite_eq_left hi, coarse_of_lt hi]
+  · rw [ite_eq_right hi, coarse_of_le (Nat.not_lt.mp hi)]
     have : i.val - r < b := by have := i.2; omega
     simp [blkIdx, this]
 
@@ -221,7 +221,7 @@ theorem rdLevOn_reads_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
       (fun _ => blockTri (blk2 B.R.r)) (fun P => (ξ P.1).comp (blkDet (blk2 B.R.r) 1)) := by
   intro B X I hOk hPins l Z a bad S y lat st h c ξ hξ z hzA hz hzU
   have hn : B.R.N B.R.m - 1 = B.R.r + B.R.m * B.R.t := Formalism.L2.Col.rank_X'_eq B.R
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have := Formalism.L2.Col.rank_X'_eq B.R; have := B.R.m_add_three_le_k; unfold Ranks.r at *; omega⟩
   choose cc hcc hred using fun P : I.Q a => exists_glint_of_rat (F := B.host.F) P.1 hz (hzA P)
   have hpt := isPtOf_mul_rat (h.pt c) hzU hz (cc : GLQ B.fields.E (B.R.N B.R.m - 1) (I.Q a)) hcc

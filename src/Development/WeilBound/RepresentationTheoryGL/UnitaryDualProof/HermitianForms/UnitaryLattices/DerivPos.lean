@@ -230,7 +230,7 @@ theorem bessel (v : V) : ∫⁻ ξ, ENNReal.ofReal (Df gl s C ξ v v).re ∂ν �
   let K : ℕ → Set (Fin (m + 1) → k) := fun n => E n \ W n
   have hKc : ∀ n, IsCompact (K n) := fun n => (E.isCompact n).diff (hWp n).2
   have h0K : ∀ n, (0 : Fin (m + 1) → k) ∉ K n := fun n h => h.2 (hWp n).1
-  have hKmono : Monotone K := fun a b hab => Set.diff_subset_diff (E.subset hab) (hW.antitone hab)
+  have hKmono : Monotone K := fun a b hab => Set.sdiff_subset_sdiff (E.subset hab) (hW.antitone hab)
   let g : ℕ → (Fin (m + 1) → k) → ℝ≥0∞ := fun n => (K n).indicator f
   have hgm : ∀ n, Measurable (g n) := fun n => hfm.indicator (hKc n).measurableSet
   have hgmono : Monotone g := fun a b hab ξ =>
@@ -452,7 +452,7 @@ theorem lift_form : ∃ I : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ, Psd I ∧ (∀ x
       rw [AvA.av_eigen' ψ hψ col hS.col_zero hS.col_add hS.smooth_col (Df gl s C ξ) ψ ξ
         (Df_col hS hCc hC' ξ) A hA (xz m) v w]
       by_cases hm : ξ - xz m ∈ perp ψ A
-      · rw [Set.indicator_of_mem (show ξ ∈ {ξ | ξ - xz m ∈ perp ψ A} from hm), if_pos]
+      · rw [Set.indicator_of_mem (show ξ ∈ {ξ | ξ - xz m ∈ perp ψ A} from hm), ite_eq_left]
         · have h2 : ξ - xz m ∈ perp ψ A₂ := perp_anti ψ (h21.trans hA1) hm
           have h3 := hsub h2
           simpa using h3
@@ -460,7 +460,7 @@ theorem lift_form : ∃ I : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ, Psd I ∧ (∀ x
           have := (mem_perp ψ A _).1 hm a ha
           rw [sub_dotProduct, AddChar.map_sub_eq_div, div_eq_one] at this
           exact this
-      · rw [Set.indicator_of_notMem (show ξ ∉ {ξ | ξ - xz m ∈ perp ψ A} from hm), if_neg]
+      · rw [Set.indicator_of_notMem (show ξ ∉ {ξ | ξ - xz m ∈ perp ψ A} from hm), ite_eq_right]
         intro hall
         apply hm
         rw [mem_perp]
@@ -500,10 +500,10 @@ theorem lift_form : ∃ I : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ, Psd I ∧ (∀ x
       rw [AvA.av_eigen' 1 hone col hS.col_zero hS.col_add hS.smooth_col (Df gl s C ξ) ψ ξ
         (Df_col hS hCc hC' ξ) A.1 A.2 0 v w]
       by_cases hm : ξ ∈ perp ψ A.1
-      · rw [Set.indicator_of_mem (show ξ ∈ (perp ψ A.1 : Set (Fin (m + 1) → k)) from hm), if_pos]
+      · rw [Set.indicator_of_mem (show ξ ∈ (perp ψ A.1 : Set (Fin (m + 1) → k)) from hm), ite_eq_left]
         intro a ha
         rw [(mem_perp ψ _ _).1 hm a ha, AddChar.one_apply]
-      · rw [Set.indicator_of_notMem (show ξ ∉ (perp ψ A.1 : Set (Fin (m + 1) → k)) from hm), if_neg]
+      · rw [Set.indicator_of_notMem (show ξ ∉ (perp ψ A.1 : Set (Fin (m + 1) → k)) from hm), ite_eq_right]
         intro hall
         apply hm
         rw [mem_perp]
@@ -533,17 +533,17 @@ end Main
 
 theorem absLift : @AbsLift k _ _ _ _ := by
   intro ψ hψ hψ1 m V _ _ col gl hS s B B' C A₀ hA₀ hBp hBc hBg hD hCp hCc hC hCB
-  letI : MeasurableSpace k := measurableSpaceFourthLift
-  haveI : BorelSpace k := borelSpaceOnK
-  haveI : SecondCountableTopology k := instSCK4
+  let : MeasurableSpace k := measurableSpaceFourthLift
+  have : BorelSpace k := borelSpaceOnK
+  have : SecondCountableTopology k := instSCK4
   let μ : Measure (Fin (m + 1) → k) := Measure.addHaar
   have h0 : μ (perp ψ A₀) ≠ 0 := meas_perp_ne_zero ψ μ hψ hψ1 hA₀
   have htop : μ (perp ψ A₀) ≠ ⊤ := (meas_perp_lt_top ψ μ hψ hψ1 hA₀).ne
   let ν : Measure (Fin (m + 1) → k) := (μ (perp ψ A₀))⁻¹ • μ
-  haveI : ν.IsAddHaarMeasure :=
+  have : ν.IsAddHaarMeasure :=
     Measure.IsAddHaarMeasure.smul μ (ENNReal.inv_ne_zero.2 htop) (ENNReal.inv_ne_top.2 h0)
   have hν : ν (perp ψ A₀) = 1 := by
-    simp only [ν, Measure.smul_apply, smul_eq_mul]
+    simp only [ν, smul_apply, smul_eq_mul]
     exact ENNReal.inv_mul_cancel h0 htop
   exact lift_form hψ hψ1 hS hA₀ hBp hBc hBg hD hCp hCc hC hCB hν
 
@@ -973,7 +973,7 @@ theorem ball_mono (m : ℕ) {u u' : kˣ} (hu : valuation k (u : k) ≤ valuation
 theorem scl_ball (m : ℕ) (z u : kˣ) : scl z (ball m u) = ball m (z * u) := by
   ext x
   rw [mem_scl]
-  have hz : 0 < valuation k (z : k) := by simp [zero_lt_iff]
+  have hz : 0 < valuation k (z : k) := by simp [pos_iff_ne_zero]
   refine forall_congr' fun i => ?_
   show valuation k (((z⁻¹ : kˣ) • x) i) ≤ valuation k (u : k) ↔ valuation k (x i) ≤ valuation k ((z * u : kˣ) : k)
   rw [Pi.smul_apply, Units.smul_def, smul_eq_mul, Units.val_mul, map_mul, map_mul, Units.val_inv_eq_inv_val, map_inv₀,
@@ -985,16 +985,16 @@ theorem ball_pow_mono (m : ℕ) (z : kˣ) (hz : valuation k (z : k) < 1) (u₀ :
   have hz0 : valuation k (z : k) ≠ 0 := (Valuation.ne_zero_iff _).mpr z.ne_zero
   have h1 : 1 ≤ (valuation k (z : k))⁻¹ := by
     calc 1 = valuation k (z : k) * (valuation k (z : k))⁻¹ := (mul_inv_cancel₀ hz0).symm
-      _ ≤ 1 * (valuation k (z : k))⁻¹ := mul_le_mul_of_nonneg_right hz.le zero_le'
+      _ ≤ 1 * (valuation k (z : k))⁻¹ := mul_le_mul_of_nonneg_right hz.le zero_le
       _ = (valuation k (z : k))⁻¹ := one_mul _
   simp only [Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow, Units.val_inv_eq_inv_val, map_inv₀]
-  exact mul_le_mul_of_nonneg_right (pow_le_pow_right₀ h1 htt') zero_le'
+  exact mul_le_mul_of_nonneg_right (pow_le_pow_right₀ h1 htt') zero_le
 
 theorem exists_mem_ball (m : ℕ) (z : kˣ) (hz : valuation k (z : k) < 1) (u₀ : kˣ) (x : Fin (m + 1) → k) :
     ∃ t : ℕ, x ∈ ball m (z⁻¹ ^ t * u₀) := by
   have hz0 : valuation k (z : k) ≠ 0 := (Valuation.ne_zero_iff _).mpr z.ne_zero
-  have hu0 : 0 < valuation k (u₀ : k) := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr u₀.ne_zero)
-  have h1 : 1 < (valuation k (z : k))⁻¹ := (one_lt_inv₀ (zero_lt_iff.mpr hz0)).mpr hz
+  have hu0 : 0 < valuation k (u₀ : k) := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr u₀.ne_zero)
+  have h1 : 1 < (valuation k (z : k))⁻¹ := (one_lt_inv₀ (pos_iff_ne_zero.mpr hz0)).mpr hz
   have : MulArchimedean (ValueGroupWithZero k) :=
     ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
   have hi : ∀ i, ∃ t : ℕ, valuation k (x i) ≤ (valuation k (z : k))⁻¹ ^ t * valuation k (u₀ : k) := by
@@ -1006,7 +1006,7 @@ theorem exists_mem_ball (m : ℕ) (z : kˣ) (hz : valuation k (z : k) < 1) (u₀
   show valuation k (x i) ≤ valuation k ((z⁻¹ ^ Finset.univ.sup t * u₀ : kˣ) : k)
   simp only [Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow, Units.val_inv_eq_inv_val, map_inv₀]
   exact (ht i).trans (mul_le_mul_of_nonneg_right
-    (pow_le_pow_right₀ h1.le (Finset.le_sup (Finset.mem_univ i))) zero_le')
+    (pow_le_pow_right₀ h1.le (Finset.le_sup (Finset.mem_univ i))) zero_le)
 
 theorem tendsto_ball (m : ℕ) (z : kˣ) (hz : valuation k (z : k) < 1) (u₀ : kˣ) :
     Filter.Tendsto (fun t : ℕ => (⟨ball m (z⁻¹ ^ t * u₀), isLat_ball m _⟩ : {A : AddSubgroup (Fin (m + 1) → k) // IsLat A}))

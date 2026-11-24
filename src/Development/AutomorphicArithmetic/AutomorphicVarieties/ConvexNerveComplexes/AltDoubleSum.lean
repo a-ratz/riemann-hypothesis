@@ -53,12 +53,12 @@ private theorem UpperTheory.V.ConeExtensionAcyclic.succAbove_predAbove_val (n : 
       ((j.predAbove i : ℕ) = if (j : ℕ) < i then (i : ℕ) - 1 else i) := by
   by_cases h : (j : ℕ) < i
   · have h' : j.castSucc < i := by
-      rw [Fin.lt_def, Fin.coe_castSucc]
+      rw [Fin.lt_def, Fin.val_castSucc]
       exact h
     rw [Fin.succAbove_of_castSucc_lt _ _ h', Fin.predAbove_of_castSucc_lt _ _ h']
     simp [h]
   · have h' : i ≤ j.castSucc := by
-      rw [Fin.le_def, Fin.coe_castSucc]
+      rw [Fin.le_def, Fin.val_castSucc]
       omega
     rw [Fin.succAbove_of_le_castSucc _ _ h', Fin.predAbove_of_le_castSucc _ _ h']
     simp [h]

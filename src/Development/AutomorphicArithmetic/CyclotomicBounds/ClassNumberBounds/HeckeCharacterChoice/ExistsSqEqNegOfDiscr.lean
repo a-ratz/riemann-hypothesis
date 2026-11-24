@@ -69,7 +69,7 @@ private theorem exists_sq_eq_neg_of_quadratic_discr {K : Type*} [Field K] [Numbe
   obtain ⟨x, hx⟩ : ∃ x : K, ∀ c : ℚ, c • (1 : K) ≠ x := by
     by_contra h
     push_neg at h
-    have := (finrank_eq_one_iff_of_nonzero' (1 : K) one_ne_zero).2 h
+    have := (finrank_eq_one_iff_of_ne_zero' (1 : K) one_ne_zero).2 h
     omega
   have li : LinearIndependent ℚ ![(1 : K), x] := by
     rw [LinearIndependent.pair_iff]

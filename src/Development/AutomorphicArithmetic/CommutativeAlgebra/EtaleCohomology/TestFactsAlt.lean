@@ -85,7 +85,7 @@ theorem UpperTheory.Ru.crystallineComparison.testFacts :
   obtain ⟨ϖ, hϖ, h0, ha⟩ := RL.untilt_valuation_mod_square A hA
   have hl : (l : A.U) ∈ nonZeroDivisors A.U := (RL.u_tf A).1
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : IsAdicComplete (Ideal.span {ϖ}) A.U :=
+  have : IsAdicComplete (Ideal.span {ϖ}) A.U :=
     (RL.val_pow ϖ l hl0).2 (by rw [hϖ]; exact RL.u_complete A)
   have hnz : ϖ ∈ nonZeroDivisors A.U := by
     have h : ϖ ^ (l - 1) * ϖ ∈ nonZeroDivisors A.U := by

@@ -87,8 +87,8 @@ theorem edgeSum_elem (Ed : Fin r → Fin r → Prop) [DecidableRel Ed] (hE : ∀
   have h1 : ∀ a b, (if Ed a b then (elem h u).val a b else 0) = if i = a then (if j = b then u else 0) else 0 := fun a b => by
     rw [elem_apply]
     by_cases h2 : Ed a b
-    · rw [if_pos h2, one_apply_ne fun e => hE a (by rwa [← e] at h2), zero_add, ite_and]
-    · rw [if_neg h2, ← ite_and, if_neg]
+    · rw [ite_eq_left h2, one_apply_ne fun e => hE a (by rwa [← e] at h2), zero_add, ite_and]
+    · rw [ite_eq_right h2, ← ite_and, ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact h2 hij
   unfold edgeSum
@@ -99,13 +99,13 @@ theorem elem_mem_unipCol {i j : Fin r} (h : i ≠ j) (hij : i.val < j.val) (u : 
     elem h u ∈ unipCol κ r a c := by
   refine ⟨⟨fun x y hxy => ?_, fun x => ?_⟩, fun x y h1 h2 h3 => ?_⟩
   · have hxy' : y.val < x.val := hxy
-    rw [elem_apply, one_apply_ne (fun e => by rw [e] at hxy'; omega), if_neg, add_zero]
+    rw [elem_apply, one_apply_ne (fun e => by rw [e] at hxy'; omega), ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     omega
-  · rw [elem_apply, one_apply_eq, if_neg, add_zero]
+  · rw [elem_apply, one_apply_eq, ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     exact h rfl
-  · rw [elem_apply, one_apply_ne (fun e => by rw [e] at h2; omega), if_neg, add_zero]
+  · rw [elem_apply, one_apply_ne (fun e => by rw [e] at h2; omega), ite_eq_right, add_zero]
     rintro ⟨rfl, rfl⟩
     omega
 
@@ -120,7 +120,7 @@ omit [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 include hψ in
 theorem chr_near {t : kˣ} (ht : IsUnif t) {y y' : k} (hy : valuation k (y - y') < 1) :
     ψ (((t⁻¹ : kˣ) : k) * y) = ψ (((t⁻¹ : kˣ) : k) * y') := by
-  have tp : 0 < valuation k (t : k) := zero_lt_iff.2 ((map_ne_zero _).2 t.ne_zero)
+  have tp : 0 < valuation k (t : k) := pos_iff_ne_zero.2 ((map_ne_zero _).2 t.ne_zero)
   have triv : ψ (((t⁻¹ : kˣ) : k) * (y - y')) = 1 := (hψ 1).2 (by simp) _ (by
     rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀, map_one, inv_mul_le_one₀ tp]
     exact (ht _).1 hy)
@@ -177,7 +177,7 @@ theorem near_of_res {t t' : kˣ} (ht : IsUnif t) (ht' : IsUnif t')
   have h2 : valuation k c ≤ 1 := by
     by_cases c0 : c = 0
     · rw [c0, map_zero]; exact zero_le
-    have cp : 0 < valuation k c := zero_lt_iff.2 ((map_ne_zero _).2 c0)
+    have cp : 0 < valuation k c := pos_iff_ne_zero.2 ((map_ne_zero _).2 c0)
     have := (hψ c).1 fun y hy => by
       have h3 := h1 (c⁻¹ * y) (by rw [map_mul, map_inv₀, inv_mul_le_one₀ cp]; exact hy)
       rw [← mul_inv_eq_one, ← AddChar.map_neg_eq_inv, ← AddChar.map_add_eq_mul, ← sub_eq_add_neg, ← sub_mul, ← hc,
@@ -188,7 +188,7 @@ theorem near_of_res {t t' : kˣ} (ht : IsUnif t) (ht' : IsUnif t')
     rw [hc, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val]
     field_simp
     ring
-  have tp : 0 < valuation k (t : k) := zero_lt_iff.2 ((map_ne_zero _).2 t.ne_zero)
+  have tp : 0 < valuation k (t : k) := pos_iff_ne_zero.2 ((map_ne_zero _).2 t.ne_zero)
   rw [e, map_mul]
   refine mul_lt_of_lt_one_right tp ?_
   rw [map_mul, Valuation.map_neg]
@@ -254,12 +254,12 @@ theorem edgeSum_eq_supSum {κ : Type} [CommRing κ] {r : ℕ} (g : GL (Fin r) κ
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
-    · exact if_pos (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
+    · exact ite_eq_left (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
     · intro j _ hj
-      exact if_neg (fun hj' => hj (Fin.ext hj'))
+      exact ite_eq_right (fun hj' => hj (Fin.ext hj'))
     · intro hn; exact absurd (Finset.mem_univ _) hn
   · refine Finset.sum_eq_zero fun j _ => ?_
-    refine if_neg (fun hj => ?_)
+    refine ite_eq_right (fun hj => ?_)
     have := j.2
     unfold supEdge at hj
     omega

@@ -56,18 +56,18 @@ namespace GlobalTheory.Desc
 
 theorem ringKrullDim_stalk_le_of_flat {X Y : Scheme.{0}} (f : X ⟶ Y) [Flat f] (z : X) :
     ringKrullDim (Y.presheaf.stalk (f z)) ≤ ringKrullDim (X.presheaf.stalk z) := by
-  letI : Algebra (Y.presheaf.stalk (f z)) (X.presheaf.stalk z) := (f.stalkMap z).hom.toAlgebra
-  haveI : Module.Flat (Y.presheaf.stalk (f z)) (X.presheaf.stalk z) := Flat.stalkMap f z
-  haveI : IsLocalHom (algebraMap (Y.presheaf.stalk (f z)) (X.presheaf.stalk z)) :=
+  let : Algebra (Y.presheaf.stalk (f z)) (X.presheaf.stalk z) := (f.stalkMap z).hom.toAlgebra
+  have : Module.Flat (Y.presheaf.stalk (f z)) (X.presheaf.stalk z) := Flat.stalkMap f z
+  have : IsLocalHom (algebraMap (Y.presheaf.stalk (f z)) (X.presheaf.stalk z)) :=
     inferInstanceAs (IsLocalHom (f.stalkMap z).hom)
-  haveI : Algebra.HasGoingDown (Y.presheaf.stalk (f z)) (X.presheaf.stalk z) := Algebra.HasGoingDown.of_flat
+  have : Algebra.HasGoingDown (Y.presheaf.stalk (f z)) (X.presheaf.stalk z) := Algebra.HasGoingDown.of_flat
   exact GroundTheory.Arith.SchemeCoh.ringKrullDim_le_of_hasGoingDown
 
 theorem Setup.height_under_vert (σ : Setup) (x : Sp σ.R) (z : (σ.C x).G.left)
     (hz : Vert (σ.C x).G.hom (σ.ρ x σ.f) z) :
     (spMap (σ.ρ x) ((σ.C x).G.hom z)).asIdeal.height = 1 := by
-  haveI := (σ.C x).semi.smooth
-  haveI : Flat (spMap (σ.ρ x)) := by
+  have := (σ.C x).semi.smooth
+  have : Flat (spMap (σ.ρ x)) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact σ.flat x
   have h1 := (ringKrullDim_stalk_le_of_flat (spMap (σ.ρ x)) ((σ.C x).G.hom z)).trans
@@ -75,9 +75,9 @@ theorem Setup.height_under_vert (σ : Setup) (x : Sp σ.R) (z : (σ.C x).G.left)
   rw [hz.1] at h1
   have hf : σ.f ∈ (spMap (σ.ρ x) ((σ.C x).G.hom z)).asIdeal := hz.2
   generalize spMap (σ.ρ x) ((σ.C x).G.hom z) = p at h1 hf ⊢
-  letI : Algebra σ.R ((Sp σ.R).presheaf.stalk p) := StructureSheaf.stalkAlgebra σ.R p
-  haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime (R := σ.R) p
-  haveI : IsLocalization.AtPrime ((Sp σ.R).presheaf.stalk p) p.asIdeal :=
+  let : Algebra σ.R ((Sp σ.R).presheaf.stalk p) := StructureSheaf.stalkAlgebra σ.R p
+  have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime (R := σ.R) p
+  have : IsLocalization.AtPrime ((Sp σ.R).presheaf.stalk p) p.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk σ.R p
   rw [IsLocalization.AtPrime.ringKrullDim_eq_height p.asIdeal] at h1
   refine le_antisymm (by exact_mod_cast h1) ?_

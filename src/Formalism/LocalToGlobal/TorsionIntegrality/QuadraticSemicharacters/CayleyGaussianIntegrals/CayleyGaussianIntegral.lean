@@ -90,10 +90,10 @@ theorem symm_diag [FiniteDimensional ℂ V] (H : Sesq V) (hH : IsHerm H) (hP : I
     (hT : ∀ x y, H (T x) y = H x (T y)) :
     ∃ (b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V) (t : Fin (Module.finrank ℂ V) → ℝ),
       (∀ i j, H (b i) (b j) = if i = j then 1 else 0) ∧ ∀ i, T (b i) = (t i : ℂ) • b i := by
-  letI cd : InnerProductSpace.Core ℂ V := coreOf H hH hP
-  letI : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ cd
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore cd.toCore
-  haveI : FiniteDimensional ℂ V := ‹FiniteDimensional ℂ V›
+  let cd : InnerProductSpace.Core ℂ V := coreOf H hH hP
+  let : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ cd
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore cd.toCore
+  have : FiniteDimensional ℂ V := ‹FiniteDimensional ℂ V›
   have hS : LinearMap.IsSymmetric T := fun x y => (hT y x).symm
   let b := hS.eigenvectorBasis rfl
   refine ⟨b.toBasis, fun i => hS.eigenvalues rfl i, ?_, ?_⟩
@@ -185,7 +185,7 @@ theorem form_of_diag {n : Type*} [Fintype n] [DecidableEq n] (H : Sesq V) (b : M
 
   simp only [map_sum, map_smul, hL, smul_smul, LinearMap.sum_apply, Finset.sum_apply,
   LinearMap.smul_apply, map_smulₛₗ, hb, smul_eq_mul, mul_ite, mul_one, mul_zero,
-  Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine Finset.sum_congr rfl fun i _ => ?_
   have h := Complex.mul_conj (w i)
   rw [Complex.normSq_eq_norm_sq] at h

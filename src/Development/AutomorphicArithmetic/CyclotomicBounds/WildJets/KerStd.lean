@@ -472,7 +472,7 @@ theorem UpperTheory.WildA.kkTab :
     rw [map_prod, ← Finset.prod_mul_distrib]
     refine Finset.prod_eq_one fun τ _ => ?_
     rw [map_pow, ← mul_pow, ← map_mul, Pi.one_apply, div_mul_cancel₀ _ (period_ne hδ τ), map_one, one_pow]
-  rw [if_pos h1, h, h2, Normal.scal, map_mul, mul_mul_mul_comm, Units.inv_mul, one_mul, ← mul_assoc, h3, one_mul]
+  rw [ite_eq_left h1, h, h2, Normal.scal, map_mul, mul_mul_mul_comm, Units.inv_mul, one_mul, ← mul_assoc, h3, one_mul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CyclotomicBounds.WildJets.JetOpMulTab =====
@@ -671,7 +671,7 @@ theorem UpperTheory.WildA.kerStd :
           ((vw w ((l : ℕ) : D.what₂.LL) : ℝ) * GlobalTheory.SumSize.TopInt.kerLoss ch.G δ 1 b p.small p.big l (padicValNat l k)) := by
   intro D large₂ Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hI hD S δ hL t p hp k d hk hc hz hP x y hR w l hl hw hsp hx hy b i j
   classical
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨Ls, Lt, κ, n, r, s, hLs, hLt, hκ, hs, hr, -, hq, htab⟩ := hD t p hp k d hk hc hz hP x y
   obtain ⟨hEs, hEt, hκ1⟩ := hq l hx hy
   have hcc : D.host.ccK = ⊤ := hS.size.2.2.2.2.2.2.2.2.2.2.2.2.2

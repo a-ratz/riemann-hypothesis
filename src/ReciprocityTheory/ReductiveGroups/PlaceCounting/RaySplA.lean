@@ -66,13 +66,13 @@ theorem ncard_places_eq_finrank_iff (E : Type) [Field E] [NumberField E] (p : �
       ∀ W : HeightOneSpectrum (𝓞 E), ((p : ℕ) : 𝓞 E) ∈ W.asIdeal →
         W.asIdeal.ramificationIdx ℤ = 1 ∧ W.asIdeal.inertiaDeg ℤ = 1 := by
   classical
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   set P : Ideal ℤ := Ideal.span {(p : ℤ)} with hPdef
-  haveI hPmax : P.IsMaximal := Int.ideal_span_isMaximal_of_prime p
+  have hPmax : P.IsMaximal := Int.ideal_span_isMaximal_of_prime p
   have hP0 : P ≠ ⊥ := by
     rw [hPdef, Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hp.ne_zero
-  haveI : Fintype (P.primesOver (𝓞 E)) := by
+  have : Fintype (P.primesOver (𝓞 E)) := by
     rw [← IsDedekindDomain.coe_primesOverFinset hP0 (𝓞 E)]
     infer_instance
   have hsum : ∑ q : P.primesOver (𝓞 E), (q : Ideal (𝓞 E)).ramificationIdx ℤ * (q : Ideal (𝓞 E)).inertiaDeg ℤ =
@@ -90,7 +90,7 @@ theorem ncard_places_eq_finrank_iff (E : Type) [Field E] [NumberField E] (p : �
   have hpos : ∀ q : P.primesOver (𝓞 E),
       1 ≤ (q : Ideal (𝓞 E)).ramificationIdx ℤ * (q : Ideal (𝓞 E)).inertiaDeg ℤ := by
     intro q
-    haveI := Ideal.primesOver.isPrime P q
+    have := Ideal.primesOver.isPrime P q
     exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (Ideal.ramificationIdx_pos (R := ℤ) _).ne' (Ideal.inertiaDeg_pos _ ℤ).ne')
   have hcard : Fintype.card (P.primesOver (𝓞 E)) = ∑ _q : P.primesOver (𝓞 E), 1 := by simp
   have heqv : ∀ W : HeightOneSpectrum (𝓞 E), ∀ hW : ((p : ℕ) : 𝓞 E) ∈ W.asIdeal,

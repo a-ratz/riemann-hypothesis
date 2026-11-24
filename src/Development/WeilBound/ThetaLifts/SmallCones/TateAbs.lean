@@ -76,12 +76,12 @@ variable (F E) in
 abbrev Φ : AE F E ≃ₐ[AF F] AdeleRing (𝓞 E) E := adeleTensorAlgEquivLeft F E
 
 theorem cont_Φ : Continuous (Φ F E) := by
-  haveI := isModuleTopology_adeleRing (K := F) (L := E)
+  have := isModuleTopology_adeleRing (K := F) (L := E)
   exact IsModuleTopology.continuous_of_linearMap (Φ F E).toLinearMap
 
 theorem cont_Φ_symm : Continuous (Φ F E).symm := by
-  haveI := isModuleTopology_adeleRing (K := F) (L := E)
-  haveI := (ideleTop F E).1.1
+  have := isModuleTopology_adeleRing (K := F) (L := E)
+  have := (ideleTop F E).1.1
   exact IsModuleTopology.continuous_of_linearMap (Φ F E).symm.toLinearMap
 
 
@@ -140,7 +140,7 @@ theorem ext_Φ (W : InfinitePlace E) {w : InfinitePlace F} (h : W.embedding.comp
 
 theorem norm_le (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w) (W : InfinitePlace E) (l : (AE F E)ˣ) :
     ‖(Φ F E l).1 W‖ ≤ ∑ w, ‖piInf (τ w) (l : AE F E)‖ := by
-  haveI := h.1
+  have := h.1
   let w := InfinitePlace.mk (W.embedding.comp (algebraMap F E))
   have hw : W.embedding.comp (algebraMap F E) = w.embedding :=
     (InfinitePlace.embedding_mk_eq_of_isReal (InfinitePlace.isReal_mk_iff.1 (IsTotallyReal.isReal w))).symm
@@ -149,7 +149,7 @@ theorem norm_le (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w)
     (Finset.mem_univ w))
   have := (GlobalTheory.Doubling.absEw_eq_sq h (⟨W.embedding, hw⟩ : EmbOver E w) (GlobalTheory.Doubling.unitInf F E w l)).symm.trans
     (GlobalTheory.Doubling.absEw_eq_sq h (τ w) (GlobalTheory.Doubling.unitInf F E w l))
-  exact congrArg NNReal.toReal ((pow_left_inj₀ zero_le' zero_le' two_ne_zero).1 this)
+  exact congrArg NNReal.toReal ((pow_left_inj₀ zero_le zero_le two_ne_zero).1 this)
 
 theorem snd_eq {l c : AE F E} (h : At (evI F) (l - c)) : (Φ F E l).2 = (Φ F E c).2 := by
   let u : AF F := ((0 : Ainf F), (1 : Af F))
@@ -176,7 +176,7 @@ theorem tateAbs : TateAbs := by
     fun l ⟨c, hc, hl⟩ => hL ⟨c, hc, (Tate.snd_eq hl).symm⟩) ?_
   refine le_trans (setLIntegral_mono' hT.measurableSet fun l hl => ENNReal.ofReal_le_ofReal ?_) (setLIntegral_le_lintegral _ _)
   have hm : (IdeleGroup.toFinite E (Tate.Ψ F E l) : FiniteAdeleRing (𝓞 E) E) ∈ idealFiniteAdeles L := hl
-  rw [finiteZetaBound, if_pos hm, Tate.absE_eq, ← Real.rpow_natCast, ideleModule_rpow_eq, infiniteZetaBound,
+  rw [finiteZetaBound, ite_eq_left hm, Tate.absE_eq, ← Real.rpow_natCast, ideleModule_rpow_eq, infiniteZetaBound,
     Finset.prod_div_distrib, div_mul_eq_mul_div]
   refine div_le_div_of_nonneg_left (mul_nonneg (Finset.prod_nonneg fun _ _ => by positivity)
     (Real.rpow_nonneg (IdeleGroup.finiteModule_pos _).le _)) (Finset.prod_pos fun _ _ => by positivity) ?_

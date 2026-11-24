@@ -70,7 +70,7 @@ theorem UpperTheory.Reformulated.B.Yla8.main :
   · rw [hx, zero_div]; exact A.zero_mem
   · rw [← A.valuation_le_one_iff, map_div₀]
     have hpos : (0 : A.ValueGroup) < A.valuation (y x₀) := by
-      rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).mpr h0
+      rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).mpr h0
     exact (div_le_one₀ hpos).mpr (hmax ⟨x, hx⟩)
 end -- clump:auto
 end -- clump:auto

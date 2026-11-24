@@ -86,7 +86,7 @@ theorem exists_frac {X : Scheme.{0}} (U W : X.affineOpens) (hW : W.1 ≤ U.1) (f
     (hf : W.1 = X.basicOpen f) (b : Γ(X, W.1)) :
     ∃ u r : Γ(X, U.1), IsUnit ((X.presheaf.map (homOfLE hW).op).hom u) ∧
       b * (X.presheaf.map (homOfLE hW).op).hom u = (X.presheaf.map (homOfLE hW).op).hom r := by
-  letI : Algebra Γ(X, U.1) Γ(X, W.1) := (X.presheaf.map (homOfLE hW).op).hom.toAlgebra
+  let : Algebra Γ(X, U.1) Γ(X, W.1) := (X.presheaf.map (homOfLE hW).op).hom.toAlgebra
   have hl : IsLocalization.Away f Γ(X, W.1) := U.2.isLocalization_of_eq_basicOpen f (homOfLE hW) hf
   obtain ⟨⟨r, u⟩, h⟩ := IsLocalization.surj (Submonoid.powers f) b
   exact ⟨u.1, r, IsLocalization.map_units Γ(X, W.1) u, h⟩

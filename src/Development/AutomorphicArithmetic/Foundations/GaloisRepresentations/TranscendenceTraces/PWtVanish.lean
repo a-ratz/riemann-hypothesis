@@ -56,7 +56,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtVanish_of :
   funext Ω _ _ z
   show w Ω z = 0
   obtain ⟨A, W, v, hEt, hW, hvW, hvz, huniq⟩ := hIso p (pt z)
-  haveI : IsFinite A.r := A.finite
+  have : IsFinite A.r := A.finite
   classical
   let φ : A.V → ℤ := fun y => if y ∈ W then 1 else 0
   have hφ : IsLocallyConstant φ := by

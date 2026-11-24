@@ -121,8 +121,8 @@ theorem lOp_apply (ℓ : mixedEmbedding.mixedSpace F →ₗ[ℝ] ℝ)
     lOp ℓ v f x = fderiv ℝ f x v.1 + (2 * Real.pi * Complex.I) * ((lForm ℓ v.2 x : ℝ) : ℂ) * f x := by
   have htg : Function.HasTemperateGrowth fun x : κ → mixedEmbedding.mixedSpace F => ((lForm ℓ v.2 x : ℝ) : ℂ) :=
     (Complex.ofRealCLM.comp (lForm ℓ v.2)).hasTemperateGrowth
-  simp only [lOp, SchwartzMap.add_apply,
-      SchwartzMap.smul_apply, LineDeriv.lineDerivOpCLM_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv,
+  simp only [lOp, add_apply,
+      smul_apply, LineDeriv.lineDerivOpCLM_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv,
       SchwartzMap.smulLeftCLM_apply_apply htg, smul_eq_mul]
   ring
 
@@ -265,9 +265,9 @@ theorem l2A_sumPure_le {m : ℕ} (μ : @Measure (κ → FiniteAdeleRing (𝓞 F)
     (f : Fin m → SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ) :
     GlobalTheory.WeilL2Words.l2A F μ (GlobalTheory.ThetaSobolevBase.sumPure g f) ≤
       (m : ENNReal) * ∑ i, (∫⁻ x, ‖f i x‖ₑ ^ 2) * @lintegral _ (borel _) μ (fun y => ‖g i y‖ₑ ^ 2) := by
-  haveI hO : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  letI : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have hO : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  let : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
   have hpt : ∀ x y, ‖GlobalTheory.ThetaSobolevBase.sumPure g f (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2 ≤
       (m : ENNReal) * ∑ i, ‖f i x‖ₑ ^ 2 * ‖g i y‖ₑ ^ 2 := by
     intro x y
@@ -278,15 +278,15 @@ theorem l2A_sumPure_le {m : ℕ} (μ : @Measure (κ → FiniteAdeleRing (𝓞 F)
       refine (pow_le_pow_left₀ (norm_nonneg _) ((norm_sum_le _ _).trans_eq (Finset.sum_congr rfl fun i _ => norm_mul _ _)) 2).trans ?_
       simpa using sq_sum_le_card_mul_sum_sq (s := Finset.univ) (f := fun i => ‖f i x‖ * ‖g i y‖)
     have := ENNReal.ofReal_le_ofReal hr
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm, ENNReal.ofReal_mul (by positivity),
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm, ENNReal.ofReal_mul (by positivity),
       ENNReal.ofReal_natCast, ENNReal.ofReal_sum_of_nonneg (fun i _ => by positivity)] at this
     refine this.trans_eq ?_
     congr 1
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [mul_pow, ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-      ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm, ofReal_norm_eq_enorm]
-  have hfm : ∀ i, Measurable fun x => ‖f i x‖ₑ ^ 2 := fun i => (f i).continuous.measurable.enorm.pow_const 2
-  have hgm : ∀ i, Measurable fun y => ‖g i y‖ₑ ^ 2 := fun i => (hg i).measurable.enorm.pow_const 2
+      ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm, ofReal_norm]
+  have hfm : ∀ i, Measurable fun x => ‖f i x‖ₑ ^ 2 := fun i => (f i).continuous.measurable.eNorm.pow_const 2
+  have hgm : ∀ i, Measurable fun y => ‖g i y‖ₑ ^ 2 := fun i => (hg i).measurable.eNorm.pow_const 2
   unfold GlobalTheory.WeilL2Words.l2A
   calc ∫⁻ y, (∫⁻ x, ‖GlobalTheory.ThetaSobolevBase.sumPure g f (GlobalTheory.WeilCont.adeleJoin F x y)‖ₑ ^ 2) ∂μ
       ≤ ∫⁻ y, (∫⁻ x, (m : ENNReal) * ∑ i, ‖f i x‖ₑ ^ 2 * ‖g i y‖ₑ ^ 2) ∂μ :=
@@ -314,16 +314,16 @@ theorem GlobalTheory.WeilL2Words.l2A_word_le : ∀ (F : Type) [Field F] [NumberF
     ∀ (n : ℕ) (R : ℝ), ∃ B : ENNReal, B ≠ ⊤ ∧ ∀ ws : List ((κ → mixedEmbedding.mixedSpace F) × (κ → mixedEmbedding.mixedSpace F)), ws.length = n → (∀ h ∈ ws, ‖h‖ ≤ R) →
       GlobalTheory.WeilL2Words.l2A F μ (GlobalTheory.WeilL2Words.word F ψ ws Φ) ≤ B := by
   intro F _ _ _ κ _ ψ hψ Φ hΦ μ hμ n R
-  haveI hO : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI := GlobalTheory.WeilAdm.HaarSplit.volume_isAddHaar F κ
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).HasTemperateGrowth := inferInstance
+  have hO : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have := GlobalTheory.WeilAdm.HaarSplit.volume_isAddHaar F κ
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).HasTemperateGrowth := inferInstance
   obtain ⟨ℓ, -, hℓ⟩ := hψ
   obtain ⟨m, g, f, hg, rfl⟩ := GlobalTheory.ThetaSobolevBase.exists_sumPure hΦ
   have hgc : ∀ i, Continuous (g i) := fun i => (hg i).1.continuous
-  letI : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have := hμ
   have hG : ∀ i, ∫⁻ y, ‖g i y‖ₑ ^ 2 ∂μ ≠ ⊤ := by
     intro i
     have h := (hgc i).memLp_of_hasCompactSupport (p := 2) (μ := μ) (hg i).2

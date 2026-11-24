@@ -48,8 +48,8 @@ section SlopeTestRemainingChoices
 variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}
 
 private theorem charP_res (c : Coef l) : CharP (ResidueField c.O) l := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨-, -, hloc, -, -, he, -, hval, -⟩ := dvrFacts l c.O
   rw [CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)]
   have hmem : ((l : ℕ) : c.O) ∈ maximalIdeal c.O := by
@@ -62,8 +62,8 @@ private theorem charP_res (c : Coef l) : CharP (ResidueField c.O) l := by
   simpa using this
 
 private theorem pow_inj {x y : ResidueField c.O} (j : ℕ) (h : x ^ l ^ j = y ^ l ^ j) : x = y := by
-  haveI := charP_res c
-  haveI : ExpChar (ResidueField c.O) l := ExpChar.prime Fact.out
+  have := charP_res c
+  have : ExpChar (ResidueField c.O) l := ExpChar.prime Fact.out
   induction j with
   | zero => simpa using h
   | succ n ih =>

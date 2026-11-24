@@ -111,7 +111,7 @@ theorem stdJ_basis {L : Type} [Field L] (σ : L →+* ℂ) (n : ℕ) {κ : Type}
     LinearIndependent ℂ (fun i => stdJ σ n (b i)) ∧
       Submodule.span ℂ (Set.range (fun i => stdJ σ n (b i))) = ⊤ := by
   constructor
-  · letI : Algebra L ℂ := σ.toAlgebra
+  · let : Algebra L ℂ := σ.toAlgebra
     have h : LinearIndependent ℂ (fun i => algebraMap L ℂ ∘ b i) :=
       linearIndependent_algebraMap_comp_iff.2 b.linearIndependent
     exact h.map' (WithLp.linearEquiv 2 ℂ (Fin n → ℂ)).symm.toLinearMap (LinearEquiv.ker _)

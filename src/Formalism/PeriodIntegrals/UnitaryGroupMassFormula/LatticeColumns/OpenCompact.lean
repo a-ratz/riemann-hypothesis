@@ -75,7 +75,7 @@ theorem isClosed_stabT_Af {a : ℕ} (X0 : Fin a → Fin n → E) :
     unfold actTup HA.mat
     refine continuous_pi fun b => Continuous.matrix_mulVec ?_ continuous_const
     exact Units.continuous_val.comp
-      (continuous_subtype_val : Continuous fun g : HR (Af F) σ J => (g : GL (Fin n) (Af F ⊗[F] E)))
+      (continuous_subtypeVal : Continuous fun g : HR (Af F) σ J => (g : GL (Fin n) (Af F ⊗[F] E)))
   have : ((stabT (Af F) σ J X0 : Subgroup (HA (Af F) σ J)) : Set (HA (Af F) σ J)) =
       {g | g • ratTup (F := F) (Af F) X0 = ratTup (F := F) (Af F) X0} := by
     ext g
@@ -127,7 +127,7 @@ theorem openCompactStep_of (hE : FinHAHomeo) (hK2 : LevelOpenCompact) (hKc : Kse
           (unitaryLevelIntersection X hb hK u : Set (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) := rfl
       rw [this, Subgroup.closure_eq]
     rw [hset]
-    refine IsOpen.preimage continuous_subtype_val ?_
+    refine IsOpen.preimage continuous_subtypeVal ?_
     have h1 : IsOpen (levelUnitary X hb) := by
       unfold levelUnitary
       rw [hfe]

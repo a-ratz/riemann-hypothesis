@@ -226,7 +226,7 @@ theorem weilPairJ (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : Re
           (σc (Matrix.of (Tm C τ x')) w0)⟫_ℂ‖₊ : NNReal) : ℝ≥0∞) * ((‖l u (σc (Matrix.of (Tm C τ x)) w0)‖₊ : NNReal) : ℝ≥0∞) *
           ((‖l u (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞)) := by
       intro x x' s
-      rw [key, key, hsig s, hWl, hWl, enorm_smul, enorm_smul]
+      rw [key, key, hsig s, hWl, hWl, eNorm_smul, eNorm_smul]
       show _ * (‖a u‖ₑ * ‖l u (σc (Matrix.of (Tm C τ x)) w0)‖ₑ) * (‖a u‖ₑ * ‖l u (σc (Matrix.of (Tm C τ x')) w0)‖ₑ) = _
       simp only [eNorm_eq_nnNorm]
       ring
@@ -239,11 +239,11 @@ theorem weilPairJ (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : Re
           (σc (Matrix.of (Tm C τ x')) w0)⟫_ℂ‖₊ : NNReal) : ℝ≥0∞) * ((‖l u (σc (Matrix.of (Tm C τ x)) w0)‖₊ : NNReal) : ℝ≥0∞) *
           ((‖l u (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞))
           ∂((Formalism.MainNotions.S.muS (C.muW u τ) μNc).comap (Tm C τ)) ∂((νq u).comap (Tm C τ)) ∂((νq u).comap (Tm C τ)) := by
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x => ?_
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x' => ?_
-      rw [← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun s => ?_
       exact e x x' s
     rw [step]
@@ -252,7 +252,7 @@ theorem weilPairJ (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : Re
           ((‖l u (σc (Matrix.of m') w0)‖₊ : NNReal) : ℝ≥0∞))
     beta_reduce at hL
     rw [hL]
-    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top enorm_lt_top enorm_lt_top) hint
+    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top eNorm_lt_top eNorm_lt_top) hint
   · intro s hs
     have hmap : ((Formalism.MainNotions.S.muS (C.muW u τ) μNc).comap (Tm C τ)).map (Tm C τ) = Formalism.MainNotions.S.muS (C.muW u τ) μNc := by
       rw [(Tm_emb C τ).map_comap, Measure.restrict_eq_self_of_ae_mem]
@@ -300,7 +300,7 @@ theorem weilPairJ (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : Re
           ((‖l u (σc (Matrix.of (Tm C τ x)) w0)‖₊ : NNReal) : ℝ≥0∞) *
           ((‖l u' (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞)) := by
       intro x x' s s'
-      rw [key, key, hsg, hWl, hWl, enorm_smul, enorm_smul]
+      rw [key, key, hsg, hWl, hWl, eNorm_smul, eNorm_smul]
       show _ * (‖a u‖ₑ * ‖l u (σc (Matrix.of (Tm C τ x)) w0)‖ₑ) * (‖a u'‖ₑ * ‖l u' (σc (Matrix.of (Tm C τ x')) w0)‖ₑ) = _
       simp only [eNorm_eq_nnNorm]
       ring
@@ -316,13 +316,13 @@ theorem weilPairJ (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : Re
           ((‖l u' (σc (Matrix.of (Tm C τ x')) w0)‖₊ : NNReal) : ℝ≥0∞))
           ∂((Formalism.MainNotions.S.muS (C.muW u' τ) μNc).comap (Tm C τ)) ∂((Formalism.MainNotions.S.muS (C.muW u τ) μNc).comap (Tm C τ))
           ∂((νq u').comap (Tm C τ)) ∂((νq u).comap (Tm C τ)) := by
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x => ?_
-      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [lintegral_map_equiv, ← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun x' => ?_
-      rw [← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun s => ?_
-      rw [← hcm _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)]
+      rw [← hcm _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)]
       refine lintegral_congr fun s' => ?_
       exact e x x' s s'
     rw [step]
@@ -331,7 +331,7 @@ theorem weilPairJ (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : Re
           ((‖l u (σc (Matrix.of m) w0)‖₊ : NNReal) : ℝ≥0∞) * ((‖l u' (σc (Matrix.of m') w0)‖₊ : NNReal) : ℝ≥0∞))
     beta_reduce at hL
     rw [hL]
-    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top enorm_lt_top enorm_lt_top) hint
+    exact ENNReal.mul_lt_top (ENNReal.mul_lt_top eNorm_lt_top eNorm_lt_top) hint
 
 end Formalism.L2.SG.RealObj.EnergyConvJ
 end -- clump:auto

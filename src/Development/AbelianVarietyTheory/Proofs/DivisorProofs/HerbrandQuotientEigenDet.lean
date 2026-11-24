@@ -398,7 +398,7 @@ theorem detIdentity_of_relLen : ∀ (C : Type) [Field C] (v : AddValuation C (Wi
     _root_.GlobalTheory.herbrand_lattice_facts C v S a ha N Fil hsat τ
   obtain ⟨hfFil, -, -, -, hfLie, -, -⟩ := _root_.GlobalTheory.HerbFin.finite_main C v S a ha N Fil hsat τ
 
-  haveI : Module.IsTorsionFree (Int0 v) (eigSub a τ ((Fin N → RS a) ⧸ Fil)) :=
+  have : Module.IsTorsionFree (Int0 v) (eigSub a τ ((Fin N → RS a) ⧸ Fil)) :=
     Module.IsTorsionFree.of_smul_eq_zero fun c m hcm => by
       by_cases hc : c = 0
       · exact Or.inl hc
@@ -413,14 +413,14 @@ theorem detIdentity_of_relLen : ∀ (C : Type) [Field C] (v : AddValuation C (Wi
         show Submodule.Quotient.mk z = 0
         rw [Submodule.Quotient.mk_eq_zero]
         exact hsat c z hc h0
-  haveI := hfLie
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v)
+  have := hfLie
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v)
     (M := eigSub a τ ((Fin N → RS a) ⧸ Fil))
 
-  haveI := hfFil
-  haveI hfQ : Module.Finite (Int0 v) (eigQuot a Fil τ) :=
+  have := hfFil
+  have hfQ : Module.Finite (Int0 v) (eigQuot a Fil τ) :=
     Module.Finite.map (Fil.restrictScalars (Int0 v)) (comp a N τ)
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := eigQuot a Fil τ)
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := eigQuot a Fil τ)
   have hrk : finrank (Int0 v) (eigQuot a Fil τ) = eigRank v a Fil τ :=
     _root_.GlobalTheory.finrank_addValuationInteger_submodule_eq_finrank_span C v N (eigQuot a Fil τ) hfQ
   have bF := Module.finBasisOfFinrankEq (Int0 v) (eigQuot a Fil τ) hrk
@@ -476,24 +476,24 @@ theorem exists_relLen_of_smul_le (C : Type) [Field C] (v : AddValuation C (WithT
     (X' X : Submodule (Int0 v) M) (hle : X' ≤ X) (hX : Module.Finite (Int0 v) X)
     (hX' : Module.Finite (Int0 v) X') (c : Int0 v) (hc : c ≠ 0) (hcX : ∀ x ∈ X, c • x ∈ X') :
     ∃ r : ℝ, RelLen v X' X r := by
-  haveI tfX : Module.IsTorsionFree (Int0 v) X :=
+  have tfX : Module.IsTorsionFree (Int0 v) X :=
     Module.isTorsionFree_iff_smul_eq_zero.mpr fun r x h => by
       by_cases hr : r = 0
       · exact Or.inl hr
       · refine Or.inr (Subtype.ext ?_)
         have h' : r • (x : M) = 0 := by rw [← Submodule.coe_smul, h, Submodule.coe_zero]
         exact htf r _ hr h'
-  haveI tfX' : Module.IsTorsionFree (Int0 v) X' :=
+  have tfX' : Module.IsTorsionFree (Int0 v) X' :=
     Module.isTorsionFree_iff_smul_eq_zero.mpr fun r x h => by
       by_cases hr : r = 0
       · exact Or.inl hr
       · refine Or.inr (Subtype.ext ?_)
         have h' : r • (x : M) = 0 := by rw [← Submodule.coe_smul, h, Submodule.coe_zero]
         exact htf r _ hr h'
-  haveI := hX
-  haveI := hX'
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X)
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X')
+  have := hX
+  have := hX'
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X)
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X')
   let ι : X' →ₗ[Int0 v] X := Submodule.inclusion hle
   have hι : Function.Injective ι := Submodule.inclusion_injective hle
   let μ : X →ₗ[Int0 v] X' :=
@@ -599,7 +599,7 @@ theorem relLen_map_lsmul : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop
   unfold GlobalTheory.IndefiniteRowSideFullHecke.MultiplicationKernelIdentity.RelLen
   refine ⟨n, b, b.map e, Matrix.diagonal (fun _ => c), fun k => ?_, ?_⟩
   · simp only [Basis.map_apply, Matrix.diagonal_apply, ite_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rfl
   · rw [Matrix.det_diagonal, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
       Subring.coe_pow, AddValuation.map_pow, hr, ← WithTop.coe_nsmul, nsmul_eq_mul]
@@ -670,7 +670,7 @@ theorem relLen_chain_add : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop
     rw [map_sum] at hh'
     simpa [D, LinearMap.toMatrix_apply] using hh'.symm
   · have hu : IsUnit (b'.toMatrix c).det := by
-      letI := b'.invertibleToMatrix c
+      let := b'.invertibleToMatrix c
       exact Matrix.isUnit_det_of_invertible _
     rw [hD, Matrix.det_mul, Matrix.det_mul, Subring.coe_mul, Subring.coe_mul,
       v.map_mul, v.map_mul, v_unit v hu, add_zero, hrA, hrB]
@@ -1171,10 +1171,10 @@ theorem filKer_finite_free (hsat : ∀ (c : Int0 v) (x : Fin N → RS a), c ≠ 
     (τ : S) : Module.Finite (Int0 v) (filKer a Fil τ) ∧ Module.Free (Int0 v) (filKer a Fil τ) := by
   have hmon : (∏ s, (X - Polynomial.C (a s)) : (Int0 v)[X]).Monic :=
     monic_prod_of_monic _ _ fun s _ => monic_X_sub_C _
-  haveI : Module.Finite (Int0 v) (RS a) := hmon.finite_adjoinRoot
-  haveI : Module.Free (Int0 v) (RS a) := hmon.free_adjoinRoot
-  haveI : Module.Free (Int0 v) (Fin N → RS a) := inferInstance
-  haveI : Module.IsTorsionFree (Int0 v) (Fin N → RS a) := Module.Free.instIsTorsionFree _ _
+  have : Module.Finite (Int0 v) (RS a) := hmon.finite_adjoinRoot
+  have : Module.Free (Int0 v) (RS a) := hmon.free_adjoinRoot
+  have : Module.Free (Int0 v) (Fin N → RS a) := inferInstance
+  have : Module.IsTorsionFree (Int0 v) (Fin N → RS a) := Module.Free.instIsTorsionFree _ _
   have hsat' : GlobalTheory.IsSaturatedSubmodule (filKer a Fil τ) := by
     rw [GlobalTheory.isSaturatedSubmodule_iff]
     intro c hc x hx

@@ -253,7 +253,7 @@ variable {V V₁ : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [NormedAddCo
 
 theorem equicont {ι : Type} (T : ι → 𝓢(V, ℂ) →L[ℂ] 𝓢(V₁, ℂ)) (q : Seminorm ℂ 𝓢(V₁, ℂ)) (hq : Continuous q)
     (h : ∀ f, ∃ C, ∀ i, q (T i f) ≤ C) : ∃ p : Seminorm ℂ 𝓢(V, ℂ), Continuous p ∧ ∀ i f, q (T i f) ≤ p f := by
-  haveI := GlobalTheory.CompanionTheory.SchwartzBaire.baireSpace (E := V) (F := ℂ)
+  have := GlobalTheory.CompanionTheory.SchwartzBaire.baireSpace (E := V) (F := ℂ)
   have hb : BddAbove (range fun i => q.comp (T i).toLinearMap) := by
     rw [Seminorm.bddAbove_range_iff]
     intro f
@@ -282,10 +282,10 @@ theorem strong_of_weak [FiniteDimensional ℝ V] {K : Type} [TopologicalSpace K]
     (hw : ∀ T : 𝓢(V, ℂ) →L[ℂ] ℂ, Continuous fun k => T (g k))
     (hb : ∀ q : Seminorm ℂ 𝓢(V, ℂ), Continuous q → ∃ C, ∀ k, q (g k) ≤ C) : Continuous g := by
   have hd : ∀ n x, Continuous fun k => iteratedFDeriv ℝ n (g k) x := fun n x => by
-    haveI : Module.Finite ℝ (V [×n]→L[ℝ] ℂ) :=
+    have : Module.Finite ℝ (V [×n]→L[ℝ] ℂ) :=
       Module.Finite.of_injective (ContinuousMultilinearMap.toMultilinearMapLinear (R' := ℝ))
         ContinuousMultilinearMap.toMultilinearMap_injective
-    haveI : Module.Finite ℂ (V [×n]→L[ℝ] ℂ) := Module.Finite.of_restrictScalars_finite ℝ ℂ _
+    have : Module.Finite ℂ (V [×n]→L[ℝ] ℂ) := Module.Finite.of_restrictScalars_finite ℝ ℂ _
     let b := (Module.finBasis ℂ (V [×n]→L[ℝ] ℂ)).equivFunL
     have : Continuous fun k => b (derAt n x (g k)) := continuous_pi fun i =>
       hw ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ => ℂ) i).comp (b.toContinuousLinearMap.comp (derAt n x)))

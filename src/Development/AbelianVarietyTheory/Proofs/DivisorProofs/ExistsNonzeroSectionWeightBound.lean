@@ -125,7 +125,7 @@ theorem phiC_le_valuation (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have htors := GlobalTheory.UT.torsionIso_of_pelUnif hLL h2 h3 h4 h5 E H V _ hA G P
   obtain ⟨v, hv, hvv⟩ := GlobalTheory.T.exists_valuation_algebraicClosure_extending_vV V ϖ hϖ
   let F := AlgebraicClosure (FractionRing V)
-  letI : Algebra c.F F := ((algebraMap (FractionRing V) F).comp (algebraMap c.F (FractionRing V))).toAlgebra
+  let : Algebra c.F F := ((algebraMap (FractionRing V) F).comp (algebraMap c.F (FractionRing V))).toAlgebra
   let ψ : FractionRing V →ₐ[c.F] F := { algebraMap (FractionRing V) F with commutes' := fun _ => rfl }
   have hψ : ψ.toRingHom = algebraMap (FractionRing V) F := rfl
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c _ F ψ y
@@ -165,7 +165,7 @@ theorem phiC_le_valuation (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       (hevt a) (htr _) (hw a)
     exact GlobalTheory.T.le_valuation_oddLevel_thetaConstant_integralExpansion V hcpl ϖ hϖ P.D Q hQ F v hv P.A G.G G.semi P.U w₀ Φ.ρ hN th ϑ hϑ hν (R ^ 2) hR2 (pt a)
       (tr (ev a)) t (w a) (hpt a) ht q hq
-  haveI : Module.Finite ℤ P.D.toPre.X := P.D.toPre.finX
+  have : Module.Finite ℤ P.D.toPre.X := P.D.toPre.finX
   have hcj1 : ∀ a : 𝓞 E, ∃ a' : 𝓞 E, (a' : E) = cj a := fun a => ⟨H.bar a, by rw [H.bar_eq, hcj]⟩
   have hcj2 : (H.w0 : E) + cj H.w0 = 1 := by
     rw [hcj, ← H.bar_eq, GlobalTheory.HostModel.cmHost_bar_halfIntegerGenerator]; simp
@@ -187,7 +187,7 @@ theorem tau_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Geo.To
     (hφ : GlobalTheory.SlopeRec.HasPhi y φ) {R : ℕ} (hR : Odd R) (hR1 : 1 < R) {J : Type} [Fintype J] {n : ℕ}
     {cf : J → ℤ} {xs : J → Fin n → LatMod Dw (R ^ 4)} (hsp : GlobalTheory.EtaAn.Spans xs) {f : Rul Xo c}
     (hf : IsTauRule Xo c R cf xs f) (hne : evI y f ≠ 0) : φ / (R : ℝ) ^ 4 ≤ (vV T.V (evI y f) : ℝ) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, t', m1, m2, P, ϖ, Q, β, hϖ, hQ, h0, hβ, rfl⟩ := hφ
   obtain ⟨G₀, ⟨I⟩⟩ := (intSec_exists_and_baseChange E H Dw l Xo c).1 T io y
   obtain ⟨mF, -⟩ := sabCancel pullCubCancel E H _ _ _ Xo.univ.t I.t' t' y.1.x (𝟙 _) I.m1
@@ -263,7 +263,7 @@ theorem exists_tied_integral {κ : KeyRule} (hκ : IsKeyRule κ) (hpq : 1 ≤ Dw
     (y : letI := io.toAlgebra; FrPt Xo c T.Fr) (hy : Integral T io y) :
     letI := io.toAlgebra
     ∃ (Φ : FibKey Xo T.Fr y.x), Tied e y.s y.u Φ ∧ (κ T.Fr Φ.key : T.Fr) ∈ (algebraMap T.V T.Fr).range := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   choose τ' hτ using fun τ : E →+* ℂ => exists_lift_ringHom T (io.comp (embK c τ)) fun a => ho _
   replace hτ : ∀ τ a, algebraMap T.V T.Fr (τ' τ a) = io (embK c τ a) := fun τ a => DFunLike.congr_fun (hτ τ) a
   obtain ⟨G, t', m1, m2, ⟨ub, u1, u2, u3, u4⟩, θ, hθ, w1, w2, σ, s1, θ2, r1, r2, i1, i2, hp, hs⟩ := hy
@@ -325,7 +325,7 @@ theorem exists_key (hpq : 1 ≤ Dw.p + Dw.q) (hg : ∀ p : ℕ, p.Prime → l.Go
     · simpa only [GlobalTheory.KeyCl.Homog, mul_one] using k₁
     · simpa only [GlobalTheory.KeyCl.ArchNorm, mul_one] using k₅
   refine ⟨K, hKmem, fun T io y ho => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨Φ, hΦ, h⟩ := exists_tied_integral hkr hpq hg e ho y.1 y.2.2
   rw [← hKval T.Fr y.1 Φ hΦ] at h
   exact h
@@ -395,17 +395,17 @@ theorem exists_extension {Y : Scheme.{0}} [IsIntegral Y] [IsLocallyNoetherian Y]
         ∀ hO hi, H0.val (Spec.map (CommRingCat.ofHom ((algebraMap T.V T.Fr).comp g)) ≫ Y.fromSpecStalk y) i hO hi m ∈
           (algebraMap T.V T.Fr).range) :
     ∃ s : H0 p B ⊤, H0.restr le_top s = m := by
-  haveI := GlobalTheory.IsNormalScheme.of_pred hN
-  haveI : Nonempty O := hO.to_subtype
+  have := GlobalTheory.IsNormalScheme.of_pred hN
+  have : Nonempty O := hO.to_subtype
   obtain ⟨t, ht⟩ := (GlobalTheory.exists_sec_res_eq_iff hB (W := O) (LB.coord_mem m)).2 fun y hy hyO => by
-    haveI := GlobalTheory.IsNormalScheme.isDiscreteValuationRing_stalk hy
+    have := GlobalTheory.IsNormalScheme.isDiscreteValuationRing_stalk hy
     obtain ⟨i, hi⟩ := exists_chart hB y
     obtain ⟨T, g, hg, hinj, hv⟩ := h y hyO inferInstance i hi
     have hη : ∀ V : Y.Opens, (V : Set Y).Nonempty → genericPoint Y ∈ V := fun V hV =>
       ((genericPoint_spec Y).mem_open_set_iff V.isOpen).2 (by simpa using hV)
     have hηO := hη O hO
     have hηi := hη (B.U i) ⟨y, hi⟩
-    haveI hne : Nonempty (O ⊓ B.U i : Y.Opens) := ⟨⟨genericPoint Y, hηO, hηi⟩⟩
+    have hne : Nonempty (O ⊓ B.U i : Y.Opens) := ⟨⟨genericPoint Y, hηO, hηi⟩⟩
     refine ⟨i, hne, hi, ?_⟩
     have hinj' : Function.Injective ((algebraMap T.V T.Fr).comp g) := (IsFractionRing.injective T.V T.Fr).comp hinj
     let ψ : Y.functionField →+* T.Fr := IsFractionRing.lift hinj'
@@ -503,7 +503,7 @@ theorem through_point (y : Y₀ X Z) (T : CDVR) (io : c.F →+* T.Fr) (y' : IntF
     ∀ (la : AllWt.Weight Dw) (f : AllWt.secZ Xo c (AllWt.exOf Dw la 0)) (j : (L₀ X Z la).ι), y ∈ (L₀ X Z la).U j →
       ∀ hO hj, ∃ u : T.Vˣ, H0.val (Spec.map (CommRingCat.ofHom ((algebraMap T.V T.Fr).comp g)) ≫
         (Y₀ X Z).fromSpecStalk y) j hO hj (sec₀ X Z _ f) = algebraMap T.V T.Fr (u : T.V) * evI y' f.1 := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have he : Spec.map (CommRingCat.ofHom ((algebraMap T.V T.Fr).comp g)) =
       Spec.map (CommRingCat.ofHom (algebraMap T.V T.Fr)) ≫ Spec.map (CommRingCat.ofHom g) := by
     rw [CommRingCat.ofHom_comp, Spec.map_comp]
@@ -554,7 +554,7 @@ theorem through_point (y : Y₀ X Z) (T : CDVR) (io : c.F →+* T.Fr) (y' : IntF
   have hP : Units.map (algebraMap T.V T.Fr : T.V →* T.Fr) (∏ ix, uf ix) = ∏ ix, t ix ^ AllWt.exOf Dw la 0 ix := by
     rw [map_prod]; exact Finset.prod_congr rfl fun ix _ => huf ix
   refine ⟨(∏ ix, uf ix)⁻¹, ?_⟩
-  rw [e2, ← hP, Units.coe_map, ← mul_assoc, MonoidHom.coe_coe, ← map_mul, Units.inv_mul, map_one, one_mul]
+  rw [e2, ← hP, Units.coe_map, ← mul_assoc, MonoidHom.coe_ofClass, ← map_mul, Units.inv_mul, map_one, one_mul]
 
 theorem mul_mem_vanBd {a b s : AllWt.Weight Dw} (h : a + b = s) (θ : H0 (str₀ X Z) (L₀ X Z a) ⊤)
     {f : H0 (str₀ X Z) (L₀ X Z b) ⊤} (hf : f ∈ vanBd X Z b) : ((common₀ X Z).addChart h).mul θ f ∈ vanBd X Z s := by

@@ -65,14 +65,14 @@ theorem exists_esymm_eq (n : ℕ) (a : ℕ → ℂ) (h0 : a 0 = 1) (hn : a n ≠
   have hqc : ∀ k (hk : k < n), q.coeff k = c ⟨k, hk⟩ := by
     intro k hk
     rw [hq, Polynomial.finsetSum_coeff, Finset.sum_eq_single (⟨k, hk⟩ : Fin n)]
-    · rw [Polynomial.coeff_C_mul_X_pow, if_pos rfl]
+    · rw [Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl]
     · intro i _ hi
-      rw [Polynomial.coeff_C_mul_X_pow, if_neg]
+      rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right]
       intro h; exact hi (Fin.ext h.symm)
     · intro h; exact absurd (Finset.mem_univ _) h
   have hpc : ∀ k (hk : k < n), p.coeff k = c ⟨k, hk⟩ := by
     intro k hk
-    rw [hp, Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg hk.ne, zero_add, hqc k hk]
+    rw [hp, Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right hk.ne, zero_add, hqc k hk]
   have hroots : Multiset.card p.roots = p.natDegree := by
     first
     | exact Polynomial.splits_iff_card_roots.mp (IsAlgClosed.splits p)
@@ -171,7 +171,7 @@ theorem Tj_indep (j : ℕ) {ϖ ϖ' : w.adicCompletion E} (h : IsUnifV E w ϖ) (h
   unfold Tj
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨a, ha, b, hb, hab⟩
     refine ⟨a, ha, Dk * b, mul_mem hDk hb, ?_⟩
@@ -197,12 +197,12 @@ theorem heckeVec_Tj_zero (ρ : Representation ℂ (GL (Fin n) (w.adicCompletion 
     unfold Tj
     rw [Set.indicator_apply]
     by_cases hg : g ∈ KGL w (n := n)
-    · rw [if_pos hg, if_pos]
+    · rw [ite_eq_left hg, ite_eq_left]
       · rfl
-      · simp only [Set.mem_setOf_eq]
+      · simp only [Set.mem_ofPred_eq]
         exact ⟨g, hg, 1, one_mem _, by simp [hd]⟩
-    · rw [if_neg hg, if_neg]
-      simp only [Set.mem_setOf_eq]
+    · rw [ite_eq_right hg, ite_eq_right]
+      simp only [Set.mem_ofPred_eq]
       rintro ⟨a, ha, b, hb, hab⟩
       apply hg
       have hg' : g = a * b := Units.ext (by simp [hab, hd])
@@ -211,9 +211,9 @@ theorem heckeVec_Tj_zero (ρ : Representation ℂ (GL (Fin n) (w.adicCompletion 
   unfold heckeVec
   rw [finsum_eq_single _ (QuotientGroup.mk 1 : GL (Fin n) (w.adicCompletion E) ⧸ KGL w (n := n))]
   · obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul (KGL w (n := n)) (1 : GL (Fin n) (w.adicCompletion E))
-    rw [hk, one_mul, hK, if_pos k.2, one_smul, hfix _ k.2]
+    rw [hk, one_mul, hK, ite_eq_left k.2, one_smul, hfix _ k.2]
   · intro c hc
-    rw [hK, if_neg, zero_smul]
+    rw [hK, ite_eq_right, zero_smul]
     intro hmem
     apply hc
     rw [← QuotientGroup.out_eq' c]
@@ -276,7 +276,7 @@ theorem exists_hasSatGL (E : Type) [Field E] [NumberField E] (w : HeightOneSpect
   have hmem : ∀ j, Tj ℂ n (Ov E w) π j ∈ Hecke ℂ (KGL w (n := n)) := by
     intro j
     unfold Hecke
-    simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+    simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
     exact ⟨hbi j, hfin j⟩
   choose c hc using fun j => hH _ (hmem j)
   have hq : (qV E w : ℂ) ≠ 0 := by

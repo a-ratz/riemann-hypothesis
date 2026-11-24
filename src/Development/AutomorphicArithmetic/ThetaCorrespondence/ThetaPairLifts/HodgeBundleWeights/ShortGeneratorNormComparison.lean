@@ -115,8 +115,8 @@ theorem exists_isShortGen_of_short_span : ∀ (K V : Type) [Field K] [NumberFiel
       n ≤ 2 * Module.finrank ℚ K * Formalism.HN.rkK L := by
   intro K V _ _ _ _ _ _ _ N L s A hLfg h0 hsm hadd hsL hsp hA
   classical
-  letI : Module ℚ V := Module.compHom V (algebraMap ℚ K)
-  haveI : IsScalarTower ℚ K V := ⟨fun q a x => by
+  let : Module ℚ V := Module.compHom V (algebraMap ℚ K)
+  have : IsScalarTower ℚ K V := ⟨fun q a x => by
     show (q • a) • x = (algebraMap ℚ K q) • (a • x)
     rw [Algebra.smul_def, mul_smul]⟩
   have hspL : Submodule.span K (L : Set V) = ⊤ := eq_top_iff.2 (hsp ▸ Submodule.span_mono hsL)
@@ -125,12 +125,12 @@ theorem exists_isShortGen_of_short_span : ∀ (K V : Type) [Field K] [NumberFiel
 
   obtain ⟨t, hts, htsp, hti⟩ := exists_linearIndependent K s
   let vb : Basis t K V := Basis.mk hti (by rw [Subtype.range_coe, htsp, hsp])
-  haveI : Finite t := Module.Finite.finite_basis vb
-  haveI : Fintype t := Fintype.ofFinite t
+  have : Finite t := Module.Finite.finite_basis vb
+  have : Fintype t := Fintype.ofFinite t
   have hm : Fintype.card t = Formalism.HN.rkK L := by rw [hrk, finrank_eq_card_basis vb]
 
   obtain ⟨ω, hωi, hωb⟩ := exists_short_independent_integers K
-  haveI : Nonempty (Fin (finrank ℚ K)) := ⟨⟨0, Module.finrank_pos⟩⟩
+  have : Nonempty (Fin (finrank ℚ K)) := ⟨⟨0, Module.finrank_pos⟩⟩
   let ob : Basis (Fin (finrank ℚ K)) ℚ K := basisOfLinearIndependentOfCardEqFinrank hωi (by simp)
   have hob : ∀ k, ob k = (ω k : K) := fun k => by
     simp [ob, coe_basisOfLinearIndependentOfCardEqFinrank]
@@ -180,17 +180,17 @@ theorem exists_isShortGen_of_short_span : ∀ (K V : Type) [Field K] [NumberFiel
     rw [nsmul_eq_mul, Finset.card_univ, Fintype.card_prod, Fintype.card_fin, hm]
     push_cast; ring
 
-  haveI : NoZeroSMulDivisors ℤ V := ⟨fun {c x} h => by
+  have : NoZeroSMulDivisors ℤ V := ⟨fun {c x} h => by
     rw [← Int.cast_smul_eq_zsmul K] at h
     exact (smul_eq_zero.1 h).imp_left Int.cast_eq_zero.1⟩
   let Lz := L.restrictScalars ℤ
-  haveI : Module.Finite ℤ Lz := Module.Finite.iff_fg.2 hLfg.restrictScalars
-  haveI : Module.Free ℤ Lz := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ Lz := Module.Finite.iff_fg.2 hLfg.restrictScalars
+  have : Module.Free ℤ Lz := Module.free_of_finite_type_torsion_free'
   let ZB := Module.Free.chooseBasis ℤ Lz
   let bZ : Module.Free.ChooseBasisIndex ℤ Lz → V := fun j => (ZB j : V)
   have hZq : LinearIndependent ℚ bZ := (LinearIndependent.iff_fractionRing ℤ ℚ).1
     (ZB.linearIndependent.map' Lz.subtype (Submodule.ker_subtype _))
-  haveI : Module.Finite ℚ V := Module.Finite.of_basis E
+  have : Module.Finite ℚ V := Module.Finite.of_basis E
   have hcardZ : Fintype.card (Module.Free.ChooseBasisIndex ℤ Lz) ≤ Fintype.card (Fin (finrank ℚ K) × t) := by
     rw [← finrank_eq_card_basis E]; exact hZq.fintype_card_le_finrank
   have hLz : Lz = Submodule.span ℤ (Set.range bZ) := by
@@ -287,7 +287,7 @@ namespace GlobalTheory.PetAdd
 
 theorem normOn_add_le : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (x : ℝ) {D : D7} (V : (c.F →+* ℂ) → HSp D) (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r) (Z : Comp Xo c) (G : WTZ E), GoodOn U x V dict Z G → ∀ σ (f g : cuspOn U Z G), normOn U x V dict Z G σ (f + g) ≤ normOn U x V dict Z G σ f + normOn U x V dict Z G σ g := by
   intro E _ _ _ H Dw l Xo c r U x D V dict Z G h σ f g
-  letI : Module c.F (cuspOn U Z G) := Submodule.module (cuspOn U Z G)
+  let : Module c.F (cuspOn U Z G) := Submodule.module (cuspOn U Z G)
   obtain ⟨n, ⟨p, hp⟩⟩ := h.1
   have hconj : ∀ y, normOn U x V dict Z G ((starRingEnd ℂ).comp σ) y = normOn U x V dict Z G σ y :=
     fun y => GlobalTheory.CompHt.petOn_conj U x V dict Z G σ y
@@ -609,7 +609,7 @@ theorem exists_short_elt (B : Finset ℕ) (hB : ∀ p ∈ B, p.Prime) (r : (K �
       volume_fundamentalDomain_latticeBasis, toReal_mul, toReal_pow, toReal_inv, coe_toReal, toReal_ofNat,
       mixedEmbedding.finrank]
     rw [ENNReal.toReal_ofReal (Rat.cast_nonneg.mpr (FractionalIdeal.absNorm_nonneg _))]
-    simp only [J, Units.val_mk0, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs, hAdef]
+    simp only [J, Units.val_mk0, Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs, hAdef]
     ring
   have hV : volume (convexBodyLT K f) ≠ ⊤ := by
     rw [convexBodyLT_volume]; exact mul_ne_top coe_ne_top coe_ne_top
@@ -727,7 +727,7 @@ theorem eLpNorm_homN_ne_top {E : Type} [Field E] [NumberField E] [IsCMField E] {
   have hb : ∀ q : AutQ W, ‖GlobalTheory.AllWt.homN V x G f (dict q.out)‖ₑ ≤
       ENNReal.ofReal (GlobalTheory.AllWt.lieFacZ Dw x G) * supE V.X (GlobalTheory.AllWt.modelWt V G) (rdU V f) := by
     intro q
-    rw [Real.enorm_eq_ofReal (GlobalTheory.AllWt.homN_nonneg _ _ _ _ _), GlobalTheory.AllWt.homN,
+    rw [Real.eNorm_eq_ofReal (GlobalTheory.AllWt.homN_nonneg _ _ _ _ _), GlobalTheory.AllWt.homN,
       ENNReal.ofReal_mul (GlobalTheory.AllWt.lieFacZ_pos _ _).le]
     gcongr
     by_cases h : (dict q.out).2 ∈ (V.X (dict q.out).1).dom
@@ -745,7 +745,7 @@ theorem eLpNorm_homN_ne_top {E : Type} [Field E] [NumberField E] [IsCMField E] {
     (Filter.Eventually.of_forall (fun q => by simpa using hb q))
   rw [MeasureTheory.eLpNorm'_const _ (by norm_num)] at hbound
   apply ne_top_of_le_ne_top _ hbound
-  simp only [enorm_eq_self]
+  simp only [eNorm_eq_self]
   exact ENNReal.mul_ne_top (ENNReal.mul_ne_top ENNReal.ofReal_ne_top (supE_ne_top _ _ hf))
     (ENNReal.rpow_ne_top_of_nonneg (by positivity) (ne_top_of_le_ne_top ENNReal.one_ne_top hμ))
 
@@ -773,7 +773,7 @@ theorem petOn_mul_sig_le {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.
   have h1 := MeasureTheory.eLpNorm'_mono_ae (q := 2) (μ := GlobalTheory.AllWt.muOn (U (goodOf c σ)) (V (goodOf c σ))
     (dict (goodOf c σ)) Z) (by norm_num) (Filter.Eventually.of_forall (fun q =>
       (hpt q).trans (le_abs_self _ |>.trans_eq (Real.norm_eq_abs _).symm)))
-  rw [MeasureTheory.eLpNorm'_const_smul _ (by norm_num), Real.enorm_eq_ofReal (t.cInf_pos σ).le] at h1
+  rw [MeasureTheory.eLpNorm'_const_smul _ (by norm_num), Real.eNorm_eq_ofReal (t.cInf_pos σ).le] at h1
   have hfin := eLpNorm_homN_ne_top (U (goodOf c σ)) x (dict (goodOf c σ))
     (GlobalTheory.AllWt.muOn (U (goodOf c σ)) (V (goodOf c σ)) (dict (goodOf c σ)) Z) (GlobalTheory.AllWt.muPart_univ_le _ _ _) G F
     ((GlobalTheory.AllWt.mem_cuspW.1 hF).2 _ (goodEmb_goodOf c σ))
@@ -859,22 +859,22 @@ theorem wtOf_nonneg_antitone (la : AllWt.Weight Dw) (m : ℤ) (ha : ∀ τ, Anti
   have hi0 := h0 (τ, i)
   simp only [wtOf] at hi0 ⊢
   by_cases h : τ (H.rt : E) = H.rt0
-  · simp only [dif_pos h] at hi0 ⊢
+  · simp only [dite_eq_left h] at hi0 ⊢
     by_cases hj : j < Dw.p
     · have hi : i < Dw.p := by omega
-      simp only [dif_pos hi, dif_pos hj]
+      simp only [dite_eq_left hi, dite_eq_left hj]
       have := ha ⟨τ, h⟩ (show (⟨i, by omega⟩ : Fin (Dw.p + Dw.q)) ≤ ⟨j, by omega⟩ from hij)
       omega
-    · simpa only [dif_neg hj] using hi0
+    · simpa only [dite_eq_right hj] using hi0
   · have h' := AllWt.conj_mem h
-    simp only [dif_neg h, dif_pos h'] at hi0 ⊢
+    simp only [dite_eq_right h, dite_eq_left h'] at hi0 ⊢
     by_cases hj : j < Dw.q
     · have hi : i < Dw.q := by omega
-      simp only [dif_pos hi, dif_pos hj]
+      simp only [dite_eq_left hi, dite_eq_left hj]
       have := ha ⟨_, h'⟩ (show (⟨Dw.p + (Dw.q - 1 - j), by omega⟩ : Fin (Dw.p + Dw.q)) ≤
         ⟨Dw.p + (Dw.q - 1 - i), by omega⟩ from Fin.mk_le_mk.2 (by omega))
       omega
-    · simpa only [dif_neg hj] using hi0
+    · simpa only [dite_eq_right hj] using hi0
 
 theorem exists_exponents (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E)
     (Dw : Datum H) (m : ℕ) (la : AllWt.Weight Dw) (hp : 1 ≤ Dw.p) (ha : ∀ τ, Antitone (la τ))
@@ -895,7 +895,7 @@ theorem exists_exponents (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     have hk2 := k.2
     have hlt : Dw.p - 1 + 1 < Dw.p + Dw.q := by omega
     have h1 := hg τ
-    rw [GlobalTheory.CompHS.gap, dif_pos hlt] at h1
+    rw [GlobalTheory.CompHS.gap, dite_eq_left hlt] at h1
     have h2 := ha τ (show (⟨Dw.p - 1 + 1, hlt⟩ : Fin (Dw.p + Dw.q)) ≤ k from Fin.le_def.2 (by simp only; omega))
     rw [e]; push_cast at h1; omega
   have hanti : ∀ τ, Antitone (lb τ) := fun τ i j hij => by
@@ -1425,7 +1425,7 @@ theorem short_generator_comparison : _root_.GlobalTheory.CovTop.PublishedHodgeBu
   have hgood := (_root_.GlobalTheory.T.covering_domain_lattice_regularity hP D T hT j hp hq hE hj Y e o hY la hla fun τ =>
     le_trans (by exact_mod_cast (by omega : 1 ≤ 8 * D.R.f * D.R.r + 10)) (hgap τ)).2 Z
   obtain ⟨s, hsL, hsp, hsn⟩ := h2 D T hT j hp hq hE hj Y e o hY Lb hLb hM hfs hfr ho c₁ hc₁ hc₁b la hla hgap hsz Z
-  haveI : FiniteDimensional Y.d.c₂.F (cuspOn Y.U Z (wtOf (T.Q.Dw j) la 0)) :=
+  have : FiniteDimensional Y.d.c₂.F (cuspOn Y.U Z (wtOf (T.Q.Dw j) la 0)) :=
     hgood.1.some.2.1.1.finiteDimensional_of_finite
   obtain ⟨n, w, abelian₂, hsg, hLam, hn⟩ := _root_.GlobalTheory.exists_isShortGen_of_short_span Y.d.c₂.F _
     (normOn Y.U (xiR D) (fun _ => D.sp.W j) Y.dict Z (wtOf (T.Q.Dw j) la 0)) (latOn Y.U Z (wtOf (T.Q.Dw j) la 0)) s _

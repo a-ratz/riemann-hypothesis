@@ -50,10 +50,10 @@ private theorem pow_cyc_char_iff_toZModPow_eq {Ω : Type} [Field Ω] (l : ℕ) [
     (g : Ω ≃+* Ω) (k : ℕ) (c : ZMod (l ^ k)) :
     (∀ t : Ω, t ^ (l ^ k) = 1 → g t = t ^ c.val) ↔
       PadicInt.toZModPow k ((cyclotomicCharacter Ω l g : ℤ_[l]ˣ) : ℤ_[l]) = c := by
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   constructor
   · intro h
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ k)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ k)
     have h1 := cyclotomicCharacter.spec l g ζ hζ.pow_eq_one
     rw [h ζ hζ.pow_eq_one] at h1
     have h2 := hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h1
@@ -68,9 +68,9 @@ private theorem pow_mod_eq_pow_of_pow_eq_one {Ω : Type} [Field Ω] (t : Ω) (n 
 theorem UpperTheory.V.Odd.fixLev :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (l : ℕ) [Fact l.Prime] (N m : ℕ) [NeZero N], fixMu E Ω (l ^ m) = Un E Ω l m ∧ Uinf E Ω l ⊓ fixMu E Ω N ≤ fixMu E Ω (N * l ^ m) ∧ ∀ (M : ℕ) [NeZero M] (b : (ZMod M)ˣ) (σ : Ω ≃+* Ω), l ^ m ∣ M → CycLift M b σ → (l : ℤ_[l]) ^ m ∣ ((cyclotomicCharacter Ω l σ : ℤ_[l]ˣ) : ℤ_[l]) - (((b : ZMod M).val : ℕ) : ℤ_[l]) := by
   intro E Ω _ _ _ _ _ l _ N m _
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero⟩
   have key : ∀ (g : G E Ω) (k : ℕ),
       PadicInt.toZModPow k ((cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G E Ω) Ω g) : ℤ_[l]ˣ) : ℤ_[l]) = 1 ↔
         ∀ t : Ω, t ^ (l ^ k) = 1 → g t = t := by
@@ -83,7 +83,7 @@ theorem UpperTheory.V.Odd.fixLev :
   · ext g
     simp only [Un, levU, Subgroup.mem_inf, Subgroup.mem_top, true_and, Subgroup.mem_comap, KStar.TotallyRealRoots.princ,
       cycZ, MonoidHom.mem_ker, KStar.TotallyRealRoots.redPow, MonoidHom.comp_apply, Units.ext_iff, Units.coe_map,
-      MonoidHom.coe_coe, Units.val_one]
+      MonoidHom.coe_ofClass, Units.val_one]
     change _ ↔ PadicInt.toZModPow m _ = 1
     rw [key]
     rfl

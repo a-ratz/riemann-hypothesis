@@ -130,7 +130,7 @@ theorem UpperTheory.finiteDimensional_span_adjoin_apply_of_commuting_algebraic :
     | insert a t hat ih =>
       intro hts
       rw [Finset.coe_insert, Set.insert_subset_iff] at hts
-      haveI := ih hts.2
+      have := ih hts.2
       obtain ⟨P, hP0, hPv⟩ := hpoly a hts.1
       set Q := Polynomial.C (P.leadingCoeff)⁻¹ * P with hQ
       have hQm : Q.Monic := Polynomial.monic_C_mul_of_mul_leadingCoeff_eq_one
@@ -214,7 +214,7 @@ theorem UpperTheory.finiteDimensional_span_adjoin_apply_of_commuting_algebraic :
         · simpa using hpow 0 v (hvU _)
       exact Submodule.finiteDimensional_of_le hle
   obtain ⟨t, hts, -, hspan, -⟩ := Submodule.exists_finset_span_eq_linearIndepOn ℂ s
-  haveI := hind t hts
+  have := hind t hts
   refine Submodule.finiteDimensional_of_le (S₂ := U ↑t) ?_
   apply Submodule.span_mono
   apply Set.image_mono

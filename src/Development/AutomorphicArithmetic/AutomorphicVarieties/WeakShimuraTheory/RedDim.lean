@@ -71,10 +71,10 @@ private theorem redDim_set {k V X : Type} [Field k] [AddCommGroup V] [Module k V
     (h : Module.rank k V ≤ n) (M : Set X) (ev : X → Module.Dual k V) :
     ∃ S : Finset X, (S : Set X) ⊆ M ∧ S.card ≤ n ∧ ∀ v, (∀ s ∈ S, ev s v = 0) → ∀ x ∈ M, ev x v = 0 := by
   classical
-  haveI : Module.Finite k V := Module.rank_lt_aleph0_iff.1 (h.trans_lt (Cardinal.natCast_lt_aleph0))
+  have : Module.Finite k V := Module.rank_lt_aleph0_iff.1 (h.trans_lt (Cardinal.natCast_lt_aleph0))
   obtain ⟨b, hb, hsp, hli⟩ := exists_linearIndependent k (ev '' M)
   have hfin : b.Finite := hli.set_finite_of_isNoetherian
-  haveI := hfin.fintype
+  have := hfin.fintype
   have hcard : Fintype.card b ≤ n := by
     refine hli.fintype_card_le_finrank.trans ?_
     rw [Subspace.dual_finrank_eq]
@@ -95,8 +95,8 @@ private theorem redDim_set {k V X : Type} [Field k] [AddCommGroup V] [Module k V
 private theorem redDim_dual (O : Type) [CommRing O] [IsLocalRing O] (M : Type) [AddCommGroup M] [Module O M]
     (h : Module.IsTorsionBySet O M (maximalIdeal O)) (x : M) (hx : x ≠ 0) :
     ∃ D : M →ₗ[O] ResidueField O, D x ≠ 0 := by
-  letI : Module (ResidueField O) M := h.module
-  haveI : IsScalarTower O (ResidueField O) M := h.isScalarTower
+  let : Module (ResidueField O) M := h.module
+  have : IsScalarTower O (ResidueField O) M := h.isScalarTower
   have := (Module.forall_dual_apply_eq_zero_iff (ResidueField O) x).not.2 hx
   push Not at this
   obtain ⟨φ, hφ⟩ := this

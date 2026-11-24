@@ -82,7 +82,7 @@ open UpperTheory.V.Af.Nf CongruenceSubgroup GlobalTheory.CuspRep Neutral.B1 Form
 private theorem level_zero_eq_maximal_compact (w : HeightOneSpectrum (𝓞 ℚ)) : UpperTheory.V.Sd.K1 w 0 = GlobalTheory.LFun.KGL w (n := 2) := by
   ext g
   refine ⟨fun ⟨k, _, e⟩ => ⟨k, e⟩, fun ⟨k, e⟩ => ⟨k, ?_, e⟩⟩
-  haveI : Subsingleton (w.adicCompletionIntegers ℚ ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers ℚ) ^ 0) :=
+  have : Subsingleton (w.adicCompletionIntegers ℚ ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers ℚ) ^ 0) :=
     Ideal.Quotient.subsingleton_iff.2 (by simp)
   exact Subsingleton.elim _ _
 
@@ -180,7 +180,7 @@ theorem newLevel : Af.Hypotheses₂ → Published.CuspSemisimpleReal → ∀ (k 
     fun z g' => hω z x.1 x.2 g'
   obtain ⟨χ, hχ⟩ := UpperTheory.V.Br.charOf _ hN ω x.1 hx0' hone hfix hc
   obtain ⟨f, hf, hL⟩ := UpperTheory.V.Br.deadel k _ hN χ ω hχ x.1 hcusp ⟨hwt, hlo, hone⟩ hfix hc
-  haveI : NeZero (g.M / normV w) := ⟨by omega⟩
+  have : NeZero (g.M / normV w) := ⟨by omega⟩
   have hf0 : f ≠ 0 := by
     rintro rfl
     refine hx0' (Subtype.ext (funext fun g' => ?_))
@@ -191,7 +191,7 @@ theorem newLevel : Af.Hypotheses₂ → Published.CuspSemisimpleReal → ∀ (k 
     ⟨hcusp.1, fun q u hu => hfix _ (kLocal _ hN q u hu), hc, hwt, hlo⟩
   refine hf0 (g.new _ hNM hNne f χ hf ?_)
   refine Filter.eventually_cofinite.2 ((Set.finite_le_nat g.M).subset fun q hq => ?_)
-  simp only [Set.mem_setOf_eq] at hq
+  simp only [Set.mem_ofPred_eq] at hq
   push_neg at hq
   obtain ⟨hqp, hqe⟩ := hq
   by_contra hqM
@@ -232,7 +232,7 @@ private theorem sources_of_spherical (P : Af.HypothesesH) (hT : TwNewQ) (hF : Up
     (hS : UpperTheory.V.Z.Kato.SphAt ι e W) : GlobalTheory.Ord2.SrcL ι e W := by
   have hl0 : 0 < l := hl.out.pos
   obtain ⟨N, hN, hNk⟩ := UpperTheory.V.CF.kwAbs Ω (dt W).ker (ker_open h.cont h.det2)
-    (Abelianization.commutator_subset_ker (dt W))
+    (Group.Abelianization.commutator_le_ker (dt W))
   have hθN : KillsMu N (dt W) := fun s hs => hNk s hs
   obtain ⟨A, χ, κ, hA, hχ, hfl, hine, hk⟩ := h.flag
   set φ : G ℚ Ω →* (Qbar l)ˣ := (dt W)⁻¹ * χ⁻¹ with hφdef

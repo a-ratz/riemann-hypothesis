@@ -97,7 +97,7 @@ theorem exists_eq_openSubgroupOf (U : OpenSubgroup G) (W : OpenSubgroup (U : Sub
     { toSubgroup := (W : Subgroup (U : Subgroup G)).map (U : Subgroup G).subtype
       isOpen' := by
         change IsOpen (Subtype.val '' (W : Set (U : Subgroup G)))
-        exact U.isOpen.isOpenMap_subtype_val _ W.isOpen }
+        exact U.isOpen.isOpenMap_subtypeVal _ W.isOpen }
   refine ⟨V, fun x hx => ?_, ?_⟩
   · exact Subgroup.map_subtype_le (W : Subgroup (U : Subgroup G)) hx
   · apply OpenSubgroup.toSubgroup_injective
@@ -330,7 +330,7 @@ def topOpenSubgroupEquiv : ((⊤ : OpenSubgroup G) : Subgroup G) ≃* G where
 omit [IsTopologicalGroup G] in
 theorem continuous_topOpenSubgroupEquiv :
     Continuous (topOpenSubgroupEquiv (G := G)).toMonoidHom :=
-  continuous_subtype_val
+  continuous_subtypeVal
 
 omit [IsTopologicalGroup G] in
 theorem continuous_topOpenSubgroupEquiv_symm :

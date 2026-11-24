@@ -62,7 +62,7 @@ theorem sp_id (R : Type) [CommRing R] : spMap (RingHom.id R) = 𝟙 (Sp R) := by
 
 theorem sp_cancel {F K : Type} [Field F] [Field K] (i : F →+* K) {X : Scheme.{0}} (a b : Sp F ⟶ X)
     (h : spMap i ≫ a = spMap i ≫ b) : a = b := by
-  haveI : Nonempty (Spec (CommRingCat.of K)) := inferInstanceAs (Nonempty (PrimeSpectrum K))
+  have : Nonempty (Spec (CommRingCat.of K)) := inferInstanceAs (Nonempty (PrimeSpectrum K))
   obtain ⟨⟨p, φ⟩, rfl⟩ := (Scheme.SpecToEquivOfField F X).symm.surjective a
   obtain ⟨⟨q, ψ⟩, rfl⟩ := (Scheme.SpecToEquivOfField F X).symm.surjective b
   simp only [Scheme.SpecToEquivOfField_symm_apply] at h ⊢

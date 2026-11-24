@@ -250,7 +250,7 @@ theorem loUni_inv {L : Matrix (Fin N) (Fin N) K} (h : IsLoUni L) :
   have hu : IsUnit L.det := by rw [hdet]; exact isUnit_one
   have h1 := Matrix.nonsing_inv_mul L hu
   have h2 := Matrix.mul_nonsing_inv L hu
-  letI : Invertible L := Matrix.invertibleOfIsUnitDet L hu
+  let : Invertible L := Matrix.invertibleOfIsUnitDet L hu
   have hBi := Matrix.blockTriangular_inv_of_blockTriangular hB
   refine ⟨fun i j => ⟨fun hij => hBi hij, fun hij => ?_⟩, h1, h2⟩
   subst hij
@@ -272,7 +272,7 @@ theorem upUni_inv {U : Matrix (Fin N) (Fin N) K} (h : IsUpUni U) :
   have hu : IsUnit U.det := by rw [hdet]; exact isUnit_one
   have h1 := Matrix.nonsing_inv_mul U hu
   have h2 := Matrix.mul_nonsing_inv U hu
-  letI : Invertible U := Matrix.invertibleOfIsUnitDet U hu
+  let : Invertible U := Matrix.invertibleOfIsUnitDet U hu
   have hBi := Matrix.blockTriangular_inv_of_blockTriangular hB
   refine ⟨fun i j => ⟨fun hij => hBi hij, fun hij => ?_⟩, h1, h2⟩
   subst hij
@@ -365,17 +365,17 @@ theorem ptMat_fσ (p : Point K N) (a b : Fin N) : ptMat p a b = if b = fσ p a t
 theorem mul_ptMat (p : Point K N) (n : Matrix (Fin N) (Fin N) K) (i j : Fin N) :
     (n * ptMat p) i j = n i (fσ p j) * pv p.1 (fσ p j) := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (fσ p j)]
-  · rw [ptMat_fσ, if_pos (fσ_fσ p j).symm]
+  · rw [ptMat_fσ, ite_eq_left (fσ_fσ p j).symm]
   · intro k _ hk
-    rw [ptMat_fσ, if_neg (fun hj => hk (by rw [hj, fσ_fσ])), mul_zero]
+    rw [ptMat_fσ, ite_eq_right (fun hj => hk (by rw [hj, fσ_fσ])), mul_zero]
   · simp
 
 theorem ptMat_mul (p : Point K N) (m : Matrix (Fin N) (Fin N) K) (i j : Fin N) :
     (ptMat p * m) i j = pv p.1 i * m (fσ p i) j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (fσ p i)]
-  · rw [ptMat_fσ, if_pos rfl]
+  · rw [ptMat_fσ, ite_eq_left rfl]
   · intro k _ hk
-    rw [ptMat_fσ, if_neg hk, zero_mul]
+    rw [ptMat_fσ, ite_eq_right hk, zero_mul]
   · simp
 
 theorem pv_ne' (p : Point K N) (a : Fin N) : pv p.1 a ≠ 0 :=
@@ -521,7 +521,7 @@ theorem mem_Xa_coef {T : E} (F : FlagG S r T) {j : ℕ} {x : S.V} (hx : x ∈ F.
   refine ⟨fun i => l i, fun i hi => ?_, ?_⟩
   · by_contra h
     have := (Finsupp.mem_supported E l).mp hl (Finsupp.mem_support_iff.mpr h)
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     omega
   · rw [Finsupp.linearCombination_apply, Finsupp.sum_fintype]
     intro i; simp
@@ -552,7 +552,7 @@ theorem nlam_frame (Λ : Submodule (𝓞 E) S.V) {T : E} (F : LFlag S r T) {s : 
   refine ⟨fun c b => if c = b then 1 else Fin.lastCases (0 : E) (fun k => col b k) c, ?_, ?_⟩
   · intro c b
     refine ⟨fun hbc => ?_, fun hcb => by simp [hcb]⟩
-    simp only [if_neg (ne_of_gt hbc)]
+    simp only [ite_eq_right (ne_of_gt hbc)]
     induction c using Fin.lastCases with
     | last => simp
     | cast k =>
@@ -565,12 +565,12 @@ theorem nlam_frame (Λ : Submodule (𝓞 E) S.V) {T : E} (F : LFlag S r T) {s : 
   · intro b
     induction b using Fin.lastCases with
     | last =>
-      simp only [frame, FlagG.fvec, Fin.snoc_last, Fin.sum_univ_castSucc, Fin.snoc_castSucc, if_pos rfl,
-        one_smul, col, Fin.lastCases_last, Fin.lastCases_castSucc, if_neg (Fin.castSucc_lt_last _).ne]
+      simp only [frame, FlagG.fvec, Fin.snoc_last, Fin.sum_univ_castSucc, Fin.snoc_castSucc, ite_eq_left rfl,
+        one_smul, col, Fin.lastCases_last, Fin.lastCases_castSucc, ite_eq_right (Fin.castSucc_lt_last _).ne]
       rw [hcz, add_comm]; simp
     | cast i =>
       simp only [frame, FlagG.fvec, Fin.snoc_last, Fin.sum_univ_castSucc, Fin.snoc_castSucc,
-        if_neg (Fin.castSucc_lt_last i).ne', Fin.lastCases_last, zero_smul, add_zero, Fin.castSucc_inj, col,
+        ite_eq_right (Fin.castSucc_lt_last i).ne', Fin.lastCases_last, zero_smul, add_zero, Fin.castSucc_inj, col,
         Fin.lastCases_castSucc]
       rw [hce i]
       have : ∀ k : Fin r, (if k = i then (1 : E) else ce i k) = ce i k + if k = i then 1 else 0 := by
@@ -578,7 +578,7 @@ theorem nlam_frame (Λ : Submodule (𝓞 E) S.V) {T : E} (F : LFlag S r T) {s : 
         · subst hk; simp [hce0 k k le_rfl]
         · simp [hk]
       simp only [this, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       abel
 
 theorem zhat_move {T T' : E} (F : LFlag S r T) (F' : LFlag S r T') {s : S.V ≃ₗ[E] S.V}
@@ -613,7 +613,7 @@ theorem ptMat_sq (p : Point K N) :
   rw [ptMat_mul, ptMat_fσ, fσ_fσ, Matrix.diagonal_apply]
   by_cases h : j = i
   · subst h; simp
-  · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), mul_zero]
 
 theorem det_ptMat_ne (p : Point K N) : (ptMat p).det ≠ 0 := by
   intro h0

@@ -100,13 +100,13 @@ lemma exists_eigenvector_of_character [FiniteDimensional K L] (χ : Gal(L/K) →
   have hf : groupCohomology.IsMulCocycle₁ f := by
     intro g h
     ext
-    simp only [f, map_mul, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, AlgEquiv.smul_units_def,
+    simp only [f, map_mul, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, AlgEquiv.smul_units_def,
       AlgEquiv.commutes]
     ring
   obtain ⟨β, hβ⟩ := groupCohomology.isMulCoboundary₁_of_isMulCocycle₁_of_aut_to_units f hf
   refine ⟨β, fun σ => ?_⟩
   have := congrArg Units.val (hβ σ)
-  simp only [AlgEquiv.smul_units_def, Units.val_div_eq_div_val, Units.coe_map, MonoidHom.coe_coe,
+  simp only [AlgEquiv.smul_units_def, Units.val_div_eq_div_val, Units.coe_map, MonoidHom.coe_ofClass,
     f] at this
   rw [← this, div_mul_cancel₀ _ β.ne_zero]
 

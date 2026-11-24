@@ -295,7 +295,7 @@ theorem finsum_comp_eq_ncard {X Z : Type} (A : Set X) (φ : X → Z) (F : Z → 
       Set.Finite.biUnion (Finset.finite_toSet _) fun z _ => hφ z
     have hmem : ∀ x, x ∈ hX.toFinset ↔ x ∈ A ∧ φ x ∈ hf.toFinset := by
       intro x
-      simp only [Set.Finite.mem_toFinset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+      simp only [Set.Finite.mem_toFinset, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
       constructor
       · rintro ⟨z, hz, hx, rfl⟩
         exact ⟨hx, hz⟩
@@ -308,7 +308,7 @@ theorem finsum_comp_eq_ncard {X Z : Type} (A : Set X) (φ : X → Z) (F : Z → 
       refine Finset.sum_congr rfl fun z hz => ?_
       have hset : ((hX.toFinset.filter fun x => φ x = z : Finset X) : Set X) = {x | x ∈ A ∧ φ x = z} := by
         ext x
-        simp only [Finset.coe_filter, hmem, Set.mem_setOf_eq]
+        simp only [Finset.coe_filter, hmem, Set.mem_ofPred_eq]
         constructor
         · rintro ⟨⟨h1, _⟩, h2⟩
           exact ⟨h1, h2⟩
@@ -317,7 +317,7 @@ theorem finsum_comp_eq_ncard {X Z : Type} (A : Set X) (φ : X → Z) (F : Z → 
       rw [← hset, Set.ncard_coe_finset, Finset.sum_congr rfl (g := fun _ => F z), Finset.sum_const, nsmul_eq_mul]
       intro x hx
       have hx' : x ∈ {x | x ∈ A ∧ φ x = z} := hset ▸ (Finset.mem_coe.2 hx)
-      rw [if_pos hx'.1, hx'.2]
+      rw [ite_eq_left hx'.1, hx'.2]
     · intro x hx
       rw [hsub] at hx
       rw [Finset.mem_coe, hmem, Set.Finite.mem_toFinset, hsz]
@@ -503,7 +503,7 @@ theorem dsum_eq_zero_of_fibre_sums : ∀ (H : Type) [Group H] (T P N L U : Subgr
     intro x
     obtain ⟨t, ht, l, hl', e⟩ := DoubleCoset.mk_out_eq_mul T L x
     rw [e, hr l hl', hl t ht]
-  simp only [hΨ, Set.mem_setOf_eq] at hB
+  simp only [hΨ, Set.mem_ofPred_eq] at hB
   have h0 := hsum m hm
   rw [show (∑ᶠ q : H ⧸ (N ⊓ L), (if Quotient.out q ∈ N then Ψ (m * Quotient.out q) else 0)) = _ from by
     convert hB] at h0
@@ -827,8 +827,8 @@ theorem exists_haar_of_le (V : Type) [AddCommGroup V] [TopologicalSpace V] [IsTo
     ∃ μ : Measure V, μ.IsAddHaarMeasure := by
   obtain ⟨ν, h1, h2, h3⟩ : ∃ ν : @Measure V (borel V), (∀ C, IsCompact C → ν C < ⊤) ∧
       (∀ U, IsOpen U → U.Nonempty → ν U ≠ 0) ∧ ∀ (x : V) (s : Set V), ν ((fun y => x + y) ⁻¹' s) = ν s := by
-    letI : MeasurableSpace V := borel V
-    haveI : BorelSpace V := ⟨rfl⟩
+    let : MeasurableSpace V := borel V
+    have : BorelSpace V := ⟨rfl⟩
     exact ⟨Measure.addHaar, fun C hC => hC.measure_lt_top, fun U hU hne => hU.measure_ne_zero _ hne,
       fun x s => measure_preimage_add _ x s⟩
   refine ⟨ν.trim hle, ?_⟩
@@ -1018,7 +1018,7 @@ theorem finsum_conj_eq_zero : ∀ (K : Type) [Field K] [TopologicalSpace K] [IsT
     have h0 : s (QuotientGroup.mk (uGL e X)) = f (γ * uGL e (Φ X)) := by
       obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul H (uGL e X)
       have hU : uGL e X * h ∈ blockUni e := (blockUni e).mul_mem (uGL_mem e X) h.2.1
-      simp only [hs, hh, hU, if_true]
+      simp only [hs, hh, hU, ite_true]
       rw [← hΦ, ← hbi _ (K'.inv_mem h.2.2.2) _ h.2.2.2 ((uGL e X)⁻¹ * γ * uGL e X)]
       congr 1
       group
@@ -1027,7 +1027,7 @@ theorem finsum_conj_eq_zero : ∀ (K : Type) [Field K] [TopologicalSpace K] [IsT
       intro q hq
       have hq' : Quotient.out q ∈ blockUni e := by
         by_contra hn
-        exact (hfin.mem_toFinset.1 hq) (if_neg hn)
+        exact (hfin.mem_toFinset.1 hq) (ite_eq_right hn)
       have e1 : (Quotient.out q)⁻¹ * uGL e X = uGL e (-coord e (Quotient.out q) + X) := by
         rw [uGL_add, uGL_neg, ← eq_uGL_coord e hq']
       rw [hM, ← map_neg, ← map_add (f := _), Φ.symm_apply_apply]
@@ -1139,14 +1139,14 @@ theorem dsum_eq_zero_of_par (H : Type) [Group H] (T P L U : Subgroup H) (Ψ : H 
     have hn' : Quotient.out q ∉ P := hn
     apply hq
     show wt T Ly U (fun x => if x ∈ P then Ψ (x * y) else 0) (Quotient.out q) = 0
-    simp only [wt, if_neg hn', mul_zero]
+    simp only [wt, ite_eq_right hn', mul_zero]
   have hGF : ∀ q ∈ A, G q = F (φ q) := by
     intro q hq
     have hq' : Quotient.out q ∈ P := hq
     show wt T Ly U (fun x => if x ∈ P then Ψ (x * y) else 0) (Quotient.out q) =
       wt T L U Ψ (Quotient.out (DoubleCoset.mk T L (Quotient.out q * y)))
     rw [wt_out U hT hΨl hΨr]
-    simp only [wt, if_pos hq', hLy, locPart_inf_conj hTP hq' y]
+    simp only [wt, ite_eq_left hq', hLy, locPart_inf_conj hTP hq' y]
   have hinj : Set.InjOn φ A := by
     intro q₁ h₁ q₂ h₂ h
     obtain ⟨t, ht, l, hl, e⟩ := (@DoubleCoset.eq _ _ T L _ _).1 h
@@ -1161,7 +1161,7 @@ theorem dsum_eq_zero_of_par (H : Type) [Group H] (T P L U : Subgroup H) (Ψ : H 
       group
   have himg : φ '' A = {q | π q = DoubleCoset.mk P L y} := by
     ext q
-    simp only [Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_image, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨q', hq', rfl⟩
       simp only [hπ, hφ, mk_out_of_le hTP, DoubleCoset.eq]
@@ -1237,16 +1237,16 @@ theorem bdiag_mul (e : ι ≃ Fin a ⊕ Fin b) {A B : Matrix ι ι K}
   split_ifs with hij
   · refine Finset.sum_congr rfl fun k _ => ?_
     by_cases hik : side e i = side e k
-    · rw [if_pos hik, if_pos (hik.symm.trans hij)]
-    · rw [if_neg hik, zero_mul]
+    · rw [ite_eq_left hik, ite_eq_left (hik.symm.trans hij)]
+    · rw [ite_eq_right hik, zero_mul]
       rcases lt_or_gt_of_ne (Ne.symm hik) with h | h
       · rw [hA h, zero_mul]
       · rw [hB (hij ▸ h), mul_zero]
   · symm
     refine Finset.sum_eq_zero fun k _ => ?_
     by_cases hik : side e i = side e k
-    · rw [if_neg (fun h => hij (hik.trans h)), mul_zero]
-    · rw [if_neg hik, zero_mul]
+    · rw [ite_eq_right (fun h => hij (hik.trans h)), mul_zero]
+    · rw [ite_eq_right hik, zero_mul]
 
 theorem bdiag_one (e : ι ≃ Fin a ⊕ Fin b) : bdiag e (1 : Matrix ι ι K) = 1 := by
   ext i j
@@ -1308,22 +1308,22 @@ def bdiagHom (e : ι ≃ Fin a ⊕ Fin b) : blockPar (K := K) e →* GL ι K whe
 theorem continuous_bdiag (e : ι ≃ Fin a ⊕ Fin b) : Continuous (bdiag (K := K) e) :=
   continuous_matrix fun i j => by
     by_cases h : side e i = side e j
-    · simp only [bdiag, Matrix.of_apply, if_pos h]
+    · simp only [bdiag, Matrix.of_apply, ite_eq_left h]
       exact continuous_id.matrix_elem i j
-    · simp only [bdiag, Matrix.of_apply, if_neg h]
+    · simp only [bdiag, Matrix.of_apply, ite_eq_right h]
       exact continuous_const
 
 theorem continuous_bdiagHom (e : ι ≃ Fin a ⊕ Fin b) : Continuous (bdiagHom (K := K) e) := by
-  refine Units.continuous_iff.2 ⟨(continuous_bdiag e).comp (Units.continuous_val.comp continuous_subtype_val), ?_⟩
+  refine Units.continuous_iff.2 ⟨(continuous_bdiag e).comp (Units.continuous_val.comp continuous_subtypeVal), ?_⟩
   show Continuous fun p : blockPar (K := K) e => bdiag e (((p : GL ι K)⁻¹ : GL ι K) : Matrix ι ι K)
-  exact (continuous_bdiag e).comp (Units.continuous_val.comp (continuous_inv.comp continuous_subtype_val))
+  exact (continuous_bdiag e).comp (Units.continuous_val.comp (continuous_inv.comp continuous_subtypeVal))
 
 theorem isClosed_blockPar (e : ι ≃ Fin a ⊕ Fin b) (h0 : IsClosed ({0} : Set K)) :
     IsClosed (blockPar (K := K) e : Set (GL ι K)) := by
   have : (blockPar (K := K) e : Set (GL ι K)) = ⋂ i, ⋂ j, ⋂ (_ : side e j < side e i),
       {g : GL ι K | (g : Matrix ι ι K) i j ∈ ({0} : Set K)} := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq, Set.mem_singleton_iff]
     rfl
   rw [this]
   exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
@@ -1338,10 +1338,10 @@ theorem relIndex_ne_zero_of_subset_compact {G : Type} [Group G] [TopologicalSpac
   have hCQ : (C : Set G) ⊆ Q := by
     rw [Subgroup.topologicalClosure_coe]; exact closure_minimal hS hQ.isClosed
   have hC : IsCompact (C : Set G) := hQ.of_isClosed_subset S.isClosed_topologicalClosure hCQ
-  haveI : CompactSpace C := isCompact_iff_compactSpace.mp hC
+  have : CompactSpace C := isCompact_iff_compactSpace.mp hC
   have hWo : IsOpen ((W.subgroupOf C : Subgroup C) : Set C) := by
-    rw [Subgroup.coe_subgroupOf]; exact hW.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ hWo
+    rw [Subgroup.coe_subgroupOf]; exact hW.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ hWo
   have h1 : W.relIndex C ≠ 0 := Subgroup.index_ne_zero_of_finite
   intro h
   exact h1 (Subgroup.relIndex_eq_zero_of_le_right S.le_topologicalClosure h)
@@ -1374,8 +1374,8 @@ theorem relIndex_twCent_inf_ne_zero : ∀ (K : Type) [Field K] [TopologicalSpace
     exact ⟨P.mul_mem (P.mul_mem (P.inv_mem hx) (hTP hgT)) hx, (hWmem g).1 hgW⟩
   have key : W.relIndex S ≠ 0 := by
     by_cases h0 : IsClosed ({0} : Set K)
-    · haveI : T1Space K := IsTopologicalAddGroup.t1Space K h0
-      haveI : T2Space (GL ι K) := Units.isEmbedding_embedProduct.t2Space
+    · have : T1Space K := IsTopologicalAddGroup.t1Space K h0
+      have : T2Space (GL ι K) := Units.isEmbedding_embedProduct.t2Space
       have hPc : IsClosed (P : Set (GL ι K)) := isClosed_blockPar e h0
       set π := bdiagHom (K := K) e
       have hWc : IsCompact (W : Set (GL ι K)) := by
@@ -1651,7 +1651,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
       rw [this, hright' k hk]
     · rfl
   · intro x hx
-    simp only [if_neg hx]
+    simp only [ite_eq_right hx]
   · exact GlobalTheory.T.relIndex_ne_zero_centralizer_parabolicCosetStabilizer K ι a b e γ' hT _ hK'.1 hK'.2
   · intro m hm
     set d := c * y⁻¹
@@ -1671,11 +1671,11 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     refine Eq.trans (finsum_congr fun q => ?_) hC2
     by_cases h1 : Quotient.out q ∈ N
     · have h2 : m * Quotient.out q ∈ P := P.mul_mem hm (hNP h1)
-      rw [if_pos h1, if_pos h1]
+      rw [ite_eq_left h1, ite_eq_left h1]
       change (if m * Quotient.out q ∈ P then Ψ (m * Quotient.out q * y) else 0) = _
-      rw [if_pos h2, hΨ]
+      rw [ite_eq_left h2, hΨ]
       exact congrArg f (by simp only [d]; group)
-    · rw [if_neg h1, if_neg h1]
+    · rw [ite_eq_right h1, ite_eq_right h1]
 
 end GlobalTheory.OrbDesc
 end -- clump:auto

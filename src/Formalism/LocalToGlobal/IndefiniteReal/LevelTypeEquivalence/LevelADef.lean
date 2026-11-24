@@ -68,7 +68,7 @@ theorem finHom_eq_one_iff (h : GA D V) : finHom V h = 1 ↔ Lev.finE V h = 1 := 
   apply Units.ext
   ext i j
   have h2 := congrArg (fun g => (Units.val g) i j) h1
-  simp only [Formalism.UG.bc, Units.coe_map, MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply,
+  simp only [Formalism.UG.bc, Units.coe_map, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply,
     Units.val_one] at h2
   apply hinj
   refine Eq.trans h2 ?_
@@ -101,7 +101,7 @@ theorem brg_mem_GinfC (fr : UI.Frames D V) (x : (UI.instV fr).GA) : UI.brg fr x 
 theorem ginf_compact (F : MF.FrA V) (hD : V.IsDefinite) : CompactSpace (UI.instV (MF.toFrames F)).Ginf := by
   have hc : ∀ v : InfinitePlace D.host.F, CompactSpace (Formalism.REAL.UJ ((MF.toFrames F).ε v)) := by
     intro v
-    haveI : CompactSpace (UpqT (V.sig (tauE D ((Formalism.L2.Host.tauPl D).symm v))).1
+    have : CompactSpace (UpqT (V.sig (tauE D ((Formalism.L2.Host.tauPl D).symm v))).1
         (V.sig (tauE D ((Formalism.L2.Host.tauPl D).symm v))).2) := by
       rcases hD (tauE D ((Formalism.L2.Host.tauPl D).symm v)) with h | h
       · rw [h]; infer_instance
@@ -111,7 +111,7 @@ theorem ginf_compact (F : MF.FrA V) (hD : V.IsDefinite) : CompactSpace (UI.instV
 
 theorem isCompact_GinfC (hS : V.SigOK) (hD : V.IsDefinite) : IsCompact (GinfC V : Set (GA D V)) := by
   obtain ⟨F⟩ := MF.frA_nonempty hS
-  haveI := ginf_compact F hD
+  have := ginf_compact F hD
   have e : (GinfC V : Set (GA D V)) = UI.brg (MF.toFrames F) '' (Set.univ ×ˢ {1}) := by
     ext h
     obtain ⟨x, rfl⟩ := (UI.brg (MF.toFrames F)).surjective h

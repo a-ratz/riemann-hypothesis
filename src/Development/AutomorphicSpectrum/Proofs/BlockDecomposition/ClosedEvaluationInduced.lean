@@ -273,7 +273,7 @@ theorem hgp_cocompact : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
             (Fin.castSucc (GlobalTheory.SmGL.stdSum (rfl : (i + 1) + t = (i + 1) + t) (Sum.inl a))) = 0 := by
           rw [hlast]
           simp only [GlobalTheory.BZMir.eLast, Pi.single_apply]
-          rw [if_neg (Fin.castSucc_lt_last _).ne]
+          rw [ite_eq_right (Fin.castSucc_lt_last _).ne]
         convert h0 using 2 <;> apply Fin.ext <;>
           simp [GlobalTheory.SmGL.stdSum_inl, GlobalTheory.SmGL.stdSum_inr]
       | cast b =>
@@ -584,8 +584,8 @@ theorem dpow_zero (n : ℕ) (g : GL (Fin n) k) : dpow n 0 g = 1 := by
   rfl
 
 theorem isFinite_muD (t : ℕ) : @MeasureTheory.IsFiniteMeasureOnCompacts (Fin t → k) (_root_.borel _) _ (muD k t) := by
-  letI : MeasurableSpace (Fin t → k) := borel _
-  haveI : BorelSpace (Fin t → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin t → k) := borel _
+  have : BorelSpace (Fin t → k) := ⟨rfl⟩
   unfold muD
   infer_instance
 
@@ -627,9 +627,9 @@ theorem scalar_one {i t : ℕ} (g : GL (Fin (i + 1)) k) (A : GL (Fin (t + 1)) k)
 theorem equiv_eC {i t : ℕ} (ψ : AddChar k Circle) (hψ : Continuous ψ) {τ : MRep k (i + 1)} {σ : GRep k (t + 1)} (f : XS τ σ)
     (h : MirabolicParabolic k (i + 1) t) (m : Mir k ((i + 1) + t)) :
     eC ψ f ((h : Mir k ((i + 1) + t)) * m) = sigC τ σ h (eC ψ f m) := by
-  letI : MeasurableSpace (Fin (t + 1) → k) := _root_.borel _
-  haveI : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
-  haveI := isFinite_muD (k := k) (t + 1)
+  let : MeasurableSpace (Fin (t + 1) → k) := _root_.borel _
+  have : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
+  have := isFinite_muD (k := k) (t + 1)
   obtain ⟨g, hg⟩ : ∃ g, g = (gpProj k (i + 1) t h).1 := ⟨_, rfl⟩
   obtain ⟨A, hA⟩ : ∃ A : GL (Fin (t + 1)) k, A = (((gpProj k (i + 1) t h).2 : Mir k t) : GL (Fin (t + 1)) k) := ⟨_, rfl⟩
   obtain ⟨η, hη⟩ : ∃ η, η = sEmb k ((i + 1) + t) (h : Mir k ((i + 1) + t)) := ⟨_, rfl⟩

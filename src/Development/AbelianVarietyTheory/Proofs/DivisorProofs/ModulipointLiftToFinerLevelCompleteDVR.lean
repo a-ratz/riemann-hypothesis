@@ -236,12 +236,12 @@ theorem exists_field_over (K F M : Type) [Field K] [Field F] [Field M] [Algebra 
     (io : K →+* M) :
     ∃ (L₀ : Type) (_ : Field L₀) (_ : Algebra M L₀) (_ : FiniteDimensional M L₀) (io' : F →+* L₀),
       io'.comp (algebraMap K F) = (algebraMap M L₀).comp io := by
-  letI : Algebra K M := io.toAlgebra
-  haveI : Nontrivial (M ⊗[K] F) :=
+  let : Algebra K M := io.toAlgebra
+  have : Nontrivial (M ⊗[K] F) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain K M F io.injective
       (algebraMap K F).injective
   obtain ⟨I, hI⟩ := Ideal.exists_maximal (M ⊗[K] F)
-  letI : Field (M ⊗[K] F ⧸ I) := Ideal.Quotient.field I
+  let : Field (M ⊗[K] F ⧸ I) := Ideal.Quotient.field I
   refine ⟨M ⊗[K] F ⧸ I, inferInstance, inferInstance, inferInstance,
     (Ideal.Quotient.mk I).comp Algebra.TensorProduct.includeRight.toRingHom, ?_⟩
   ext k
@@ -253,23 +253,23 @@ theorem exists_point_finite_surjective {X Y : Scheme.{0}} (f : X ⟶ Y) (hf : Is
     (L₀ : Type) [Field L₀] (y : Sp L₀ ⟶ Y) :
     ∃ (L : Type) (_ : Field L) (_ : Algebra L₀ L) (_ : FiniteDimensional L₀ L) (x : Sp L ⟶ X),
       x ≫ f = spMap (algebraMap L₀ L) ≫ y := by
-  haveI := hf
-  haveI := hs
-  haveI : Surjective (pullback.snd f y) := inferInstance
-  haveI : IsAffine (pullback f y) := isAffine_of_isAffineHom (pullback.snd f y)
+  have := hf
+  have := hs
+  have : Surjective (pullback.snd f y) := inferInstance
+  have : IsAffine (pullback f y) := isAffine_of_isAffineHom (pullback.snd f y)
   let P := pullback f y
   let g' : Spec Γ(P, ⊤) ⟶ Sp L₀ := P.isoSpec.inv ≫ pullback.snd f y
-  haveI : IsFinite g' := inferInstance
+  have : IsFinite g' := inferInstance
   obtain ⟨φ, hφ⟩ := Spec.map_surjective g'
   have hφf : φ.hom.Finite := by
     rw [← IsFinite.SpecMap_iff, hφ]
     infer_instance
-  haveI : Nonempty (Sp L₀) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
+  have : Nonempty (Sp L₀) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨p, -⟩ := (pullback.snd f y).surjective (Classical.arbitrary (Sp L₀))
-  haveI : Nontrivial Γ(P, ⊤) := PrimeSpectrum.nonempty_iff_nontrivial.1 ⟨P.isoSpec.hom p⟩
+  have : Nontrivial Γ(P, ⊤) := PrimeSpectrum.nonempty_iff_nontrivial.1 ⟨P.isoSpec.hom p⟩
   obtain ⟨I, hI⟩ := Ideal.exists_maximal Γ(P, ⊤)
-  letI : Field (Γ(P, ⊤) ⧸ I) := Ideal.Quotient.field I
-  letI : Algebra L₀ (Γ(P, ⊤) ⧸ I) := ((Ideal.Quotient.mk I).comp φ.hom).toAlgebra
+  let : Field (Γ(P, ⊤) ⧸ I) := Ideal.Quotient.field I
+  let : Algebra L₀ (Γ(P, ⊤) ⧸ I) := ((Ideal.Quotient.mk I).comp φ.hom).toAlgebra
   have hfin : ((Ideal.Quotient.mk I).comp φ.hom).Finite :=
     RingHom.Finite.comp (RingHom.Finite.of_surjective _ Ideal.Quotient.mk_surjective) hφf
   refine ⟨Γ(P, ⊤) ⧸ I, inferInstance, inferInstance, hfin,
@@ -288,8 +288,8 @@ theorem lift_to_finer_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hpos : 0 < l₂.M' := Nat.lcm_pos (by have := l₂.three_le; omega) l₂.A_pos
   have hint : IsIntegral ℚ (zeta l₂.M') :=
     ((Complex.isPrimitiveRoot_exp l₂.M' hpos.ne').isIntegral hpos).tower_top
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {zeta l₂.M'}) :=
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {zeta l₂.M'}) :=
     IntermediateField.adjoin.finiteDimensional hint
   have hfin : FiniteDimensional ℚ F₂ := IntermediateField.finiteDimensional_sup _ _
   have hKA : KA l₂ = KA l := by unfold KA; rw [hA]
@@ -301,10 +301,10 @@ theorem lift_to_finer_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     { F := F₂, fin := hfin, conj := fun τ a => hle (c.conj τ a), zeta_mem := hle c.zeta_mem,
       le := c.le.trans hle }
   obtain ⟨rF, hr1, hr2, hfinr, -, hsurj, -⟩ := hrF c' c₂ rfl
-  letI : Algebra c.F F₂ := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ c.F F₂ := IsScalarTower.of_algebraMap_eq fun q => by
+  let : Algebra c.F F₂ := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower ℚ c.F F₂ := IsScalarTower.of_algebraMap_eq fun q => by
     simp
-  haveI : FiniteDimensional c.F F₂ := Module.Finite.of_restrictScalars_finite ℚ c.F F₂
+  have : FiniteDimensional c.F F₂ := Module.Finite.of_restrictScalars_finite ℚ c.F F₂
   obtain ⟨L₀, _, _, _, io', hio'⟩ := exists_field_over c.F F₂ T.Fr io
   have cond : (spMap (algebraMap T.Fr L₀) ≫ x) ≫ Xo.s =
       spMap io' ≫ spMap (IntermediateField.inclusion c'.le).toRingHom := by
@@ -315,12 +315,12 @@ theorem lift_to_finer_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     exact h.symm
   let z' : Sp L₀ ⟶ Xo.XF c' := pullback.lift (spMap (algebraMap T.Fr L₀) ≫ x) (spMap io') cond
   obtain ⟨L, _, _, _, x', hx'⟩ := exists_point_finite_surjective rF hfinr hsurj L₀ z'
-  letI : Algebra T.Fr L := ((algebraMap L₀ L).comp (algebraMap T.Fr L₀)).toAlgebra
-  haveI : IsScalarTower T.Fr L₀ L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FiniteDimensional T.Fr L := Module.Finite.trans L₀ L
+  let : Algebra T.Fr L := ((algebraMap L₀ L).comp (algebraMap T.Fr L₀)).toAlgebra
+  have : IsScalarTower T.Fr L₀ L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional T.Fr L := Module.Finite.trans L₀ L
   obtain ⟨T', iT, e', ψ, φ, he', hv, hψ, hφ, -⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T L
   let io₂ : c₂.F →+* T'.Fr := ψ.toRingHom.comp ((algebraMap L₀ L).comp io')
-  haveI : NumberField c₂.F := { to_charZero := inferInstance, to_finiteDimensional := hfin }
+  have : NumberField c₂.F := { to_charZero := inferInstance, to_finiteDimensional := hfin }
   obtain ⟨la₂, e₂, ho₂⟩ := GlobalTheory.LocalDepthCompare.exists_overLa_of_not_charZero (V := T'.V) io₂
     (GlobalTheory.LocalDepthCompare.not_charZero_of_overLa (ho.bc iT he' hv))
   have hid : spMap (IntermediateField.inclusion (le_of_eq (rfl : c'.F = c₂.F))).toRingHom = 𝟙 (Sp c₂.F) := by

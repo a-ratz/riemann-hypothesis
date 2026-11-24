@@ -187,7 +187,7 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 private lemma exists_inv_mem_O_of_vE_mul_cj_eq_zero (ϖ : (ValuativeRel.valuation F).integer)
     (hϖ : Irreducible ϖ) {x : E} (hx : x ∈ L.O) (hxu : IsUnit x)
     (hv : _root_.GlobalTheory.HL.vE L ϖ (x * L.cj x) = 0) : ∃ y ∈ L.O, x * y = 1 := by
-  haveI := _root_.GlobalTheory.HL.Model.nontrivial L
+  have := _root_.GlobalTheory.HL.Model.nontrivial L
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.UnramOrder.exists_norm L hx
   have hc0 : (c : F) ≠ 0 := by
     intro h0
@@ -266,9 +266,9 @@ private lemma norm_amp_BBzero_eq_one_and_mass_eq_one_of_Hp_eq_one (hk : 4 * r + 
       ENNReal.ofReal (S.mu (Quotient.out o0)) := by
     unfold _root_.GlobalTheory.HL.Frames.mass
     rw [tsum_eq_single o0]
-    · rw [if_pos ⟨hT2, trivial⟩]
+    · rw [ite_eq_left ⟨hT2, trivial⟩]
     · intro o ho
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun hc => hne o ho hc.1
   have hpos : 0 < S.mu (Quotient.out o0) := by
     obtain ⟨hA, hB, -⟩ := (_root_.GlobalTheory.HL.volSt L r k S).1 _
@@ -288,9 +288,9 @@ private lemma norm_amp_BBzero_eq_one_and_mass_eq_one_of_Hp_eq_one (hk : 4 * r + 
   rw [tsum_eq_single o0]
   swap
   · intro o ho
-    rw [if_neg]
+    rw [ite_eq_right]
     exact fun hc => hne o ho hc.1
-  rw [if_pos ⟨hT2, hBB _ _ hT2⟩, hmu]
+  rw [ite_eq_left ⟨hT2, hBB _ _ hT2⟩, hmu]
   obtain ⟨-, hW, -⟩ := _root_.GlobalTheory.HL.TermBasic.term_basic L r k S d' _ hT2
   simpa using (_root_.GlobalTheory.HL.WitIndep.witness_independence L r k S d' _ _ _ hW).2.2.2.2
 
@@ -326,7 +326,7 @@ theorem _root_.GlobalTheory.HL.BadPlaces.bad_places : ∀ {F E : Type} [Field F]
     calc (2 : ℝ) ≤ (G.S p).q := by exact_mod_cast hb.1
       _ ≤ _ := hb.2
   · intro p hp
-    haveI := hlf p; haveI := hch p
+    have := hlf p; have := hch p
     have hH : (G.S p).Hp = 1 := by
       by_contra hne; exact hp ((hmemOm p).2 hne)
     obtain ⟨hgg, hG, hDl⟩ := gg_false_and_vE_eq_zero_of_Hp_eq_one _ (hloc p) hH

@@ -60,8 +60,8 @@ namespace GlobalTheory.LocalLog
 theorem exists_local_log (n : ℕ) : ∃ L : Mx n → Mx n, ContinuousAt L 1 ∧ L 1 = 0 ∧
     (∀ᶠ g in 𝓝 (1 : Mx n), NormedSpace.exp (L g) = g) ∧
     ∀ᶠ X in 𝓝 (0 : Mx n), L (NormedSpace.exp X) = X := by
-  letI : NormedRing (Mx n) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Mx n) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Mx n) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Mx n) := Matrix.linftyOpNormedAlgebra
   have h : HasStrictFDerivAt (NormedSpace.exp : Mx n → Mx n)
       ((ContinuousLinearEquiv.refl ℂ (Mx n) : Mx n ≃L[ℂ] Mx n) : Mx n →L[ℂ] Mx n) 0 :=
     hasStrictFDerivAt_exp_zero (𝕂 := ℂ)
@@ -124,7 +124,7 @@ namespace GlobalTheory.TypeSum.SmoothFrechet
 variable {n : ℕ} {ε : Fin n → Bool} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {ρ : Mx n → (E →L[ℂ] E)}
 
 theorem continuous_eval (l : List (lie (Jm ε))) : Continuous fun v : Fam ε ρ => v.1 l :=
-  (continuous_apply l).comp continuous_subtype_val
+  (continuous_apply l).comp continuous_subtypeVal
 
 def der (ρ : Mx n → (E →L[ℂ] E)) (X : lie (Jm ε)) : Fam ε ρ →L[ℂ] Fam ε ρ where
   toFun v := ⟨fun l => v.1 (l ++ [X]), fun l Y => v.2.1 (l ++ [X]) Y,
@@ -234,8 +234,8 @@ theorem continuous_sz (φ : Fin d → (Mx n →ₗ[ℝ] ℝ)) : Continuous (sz �
   continuous_finsetSum _ fun j _ => (φ j).continuous_of_finiteDimensional.abs
 
 theorem exists_sz_le (φ : Fin d → (Mx n →ₗ[ℝ] ℝ)) : ∃ C, 0 ≤ C ∧ ∀ X, sz φ X ≤ C * (1 + hs X) := by
-  letI : NormedAddCommGroup (Mx n) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Mx n) := Matrix.normedSpace
+  let : NormedAddCommGroup (Mx n) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Mx n) := Matrix.normedSpace
   have h1 : ∀ X : Mx n, ‖X‖ ≤ 1 + hs X := fun X =>
     (Matrix.norm_le_iff (by linarith [hs_nonneg X])).2 fun i j => by
       have : ‖X i j‖ ^ 2 ≤ hs X :=
@@ -320,8 +320,8 @@ theorem sn_act_le (h : ModRep ε ρ) (hb : ∀ X : lie (Jm ε), ∑ j, φ j X �
 
 theorem hasDerivAt_conj (f : Mx n →ₗ[ℝ] ℝ) (X Y : Mx n) :
     HasDerivAt (fun t : ℝ => f ((NormedSpace.exp (t • X))⁻¹ * Y * NormedSpace.exp (t • X))) (f (Y * X - X * Y)) 0 := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
   have h2 : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] (f : V →ₗ[ℝ] ℝ)
       (c : ℝ → V) (c' : V), HasDerivAt c c' 0 → HasDerivAt (fun t => f (c t)) (f c') 0 := fun V _ _ _ f c c' h =>
     (LinearMap.toContinuousLinearMap f).hasFDerivAt.comp_hasDerivAt 0 h
@@ -387,8 +387,8 @@ theorem hasDerivAt_act (h : ModRep ε ρ) (X : lie (Jm ε)) (l : List (lie (Jm �
   exact congrArg (fun w : Fam ε ρ => w.1 l) (act_mul h _ _ _ (by rw [← exp_add_smul, sub_add_cancel]) v)
 
 theorem continuous_mexp : Continuous (NormedSpace.exp : Mx n → Mx n) := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
   exact continuous_iff_continuousAt.2 fun x => (NormedSpace.exp_analytic (𝕂 := ℝ) x).continuousAt
 
 
@@ -400,9 +400,9 @@ open Classical in
 def dpiOp (ε : Fin n → Bool) (ρ : Mx n → (E →L[ℂ] E)) (X : Mx n) : Fam ε ρ →L[ℂ] Fam ε ρ :=
   if hX : X ∈ lie (Jm ε) then der ρ ⟨X, hX⟩ else 0
 
-theorem piOp_eq (h : ModRep ε ρ) {g : Mx n} (hg : g ∈ UJset ε) : piOp h g = act h hg := dif_pos hg
+theorem piOp_eq (h : ModRep ε ρ) {g : Mx n} (hg : g ∈ UJset ε) : piOp h g = act h hg := dite_eq_left hg
 
-theorem dpiOp_eq (X : lie (Jm ε)) : dpiOp ε ρ X = der ρ X := dif_pos X.2
+theorem dpiOp_eq (X : lie (Jm ε)) : dpiOp ε ρ X = der ρ X := dite_eq_left X.2
 
 theorem tendsto_piOp_one (h : ModRep ε ρ) (v : Fam ε ρ) :
     Tendsto (fun g => piOp h g v) (𝓝[UJset ε] 1) (𝓝 v) := by

@@ -262,7 +262,7 @@ theorem isClosed_normOneSubgroup : IsClosed (normOneSubgroup K : Set (IdeleGroup
     ext x
     exact mem_normOneSubgroup
   rw [h]
-  exact isClosed_singleton.preimage (continuous_subtype_val.comp continuous_ideleModule)
+  exact isClosed_singleton.preimage (continuous_subtypeVal.comp continuous_ideleModule)
 
 variable (K) in
 theorem range_diagonal_le_normOneSubgroup : (diagonal K).range ≤ normOneSubgroup K := by

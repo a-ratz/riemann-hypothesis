@@ -135,7 +135,7 @@ end SlopeTestRemainingChoices
 
 theorem anFib_move_renum : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r g g' : ℕ) (X' X : Data D.host.E r) (hX : SameSp X' X) (bas' : (Fin g' ⊕ Fin g' → ℤ) ≃ₗ[ℤ] X'.Λ) (idx' : Fin g' ≃ X'.Ψ × Fin r) (e' : Fin g' ≃ Lt1 Dw) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (e : Fin g ≃ Lt1 Dw), IsSympl X' bas' → IsSympl X bas → Matched c σ X' idx' e' → Matched c σ X idx e → ∀ x ∈ X'.dom, ∀ L : Lt D.host.E r, SelfD X' L → ∀ ga : GL (Fin r) D.host.E, IsUn X ga → letI : Algebra c.F ℂ := σ.toAlgebra; ∀ (y : FrPt Xo c ℂ) (A' : AnFib X' bas' idx' e' x L y) (th' : (Fin g' → ℂ) → ℂ), A'.Reads 1 y.s th' → ∃ (A : AnFib X bas idx e (lact ga (castFr hX.psi x)) (mapL ga L) y) (th : (Fin g → ℂ) → ℂ), A.Reads 1 y.s th ∧ (∀ mk : Dw.La →ₗ[𝓞 D.host.E] (Fin r → D.host.E), A'.Marked mk → A.Marked (mvMap ga mk)) ∧ ∀ (n : ℕ) (v' : GlobalTheory.Ker.WR X' n) (v : GlobalTheory.Ker.WR X n), (∀ (τ : X'.Ψ) (k : Fin n), v ⟨τ.1, hX.psi ▸ τ.2⟩ k = ((ga : Matrix (Fin r) (Fin r) D.host.E).map τ.1) *ᵥ v' τ k) → GlobalTheory.Ker.gaussR X bas idx (lact ga (castFr hX.psi x)) (GlobalTheory.Ker.zR X idx (lact ga (castFr hX.psi x)) v) * ∏ b, th (GlobalTheory.Ker.zR X idx (lact ga (castFr hX.psi x)) v b) = GlobalTheory.Ker.gaussR X' bas' idx' x (GlobalTheory.Ker.zR X' idx' x v') * ∏ b, th' (GlobalTheory.Ker.zR X' idx' x v' b) := by
   intro D H Dw l Xo c σ r g g' X' X h bas' idx' e' bas idx e hs' hs hm' hm x hxd L hL ga hga
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   intro y A th' hth
   let q : Fin g' ≃ Fin g := e'.trans e.symm
   have hq (j) : e (q j) = e' j := e.apply_symm_apply _

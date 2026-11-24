@@ -96,7 +96,7 @@ private theorem zeta_sub_mem {O Γ R : Type} [CommRing O] [IsLocalRing O] [Group
 
 private theorem norm_coe_coefO_le_one {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) :
     ‖(x : PadicAlgCl l)‖ ≤ 1 := by
-  haveI := c.fin
+  have := c.fin
   have hint : IsIntegral ℤ_[l] (x : PadicAlgCl l) := by
     have hx : IsIntegral ℤ_[l] x := Algebra.IsIntegral.isIntegral x
     exact hx.map c.O.val

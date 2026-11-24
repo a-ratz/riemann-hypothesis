@@ -163,10 +163,10 @@ theorem isThetaPt_zero (k : ℕ) (hk : Odd k) {T : Over S} (hu : IsUnit (k : Γ(
     fun _ => theta1 S _ _, fun _ => oneSec S _ _, fun _ => 1, 1, ?_, ?_, ?_, ?_, fun i => ⟨?_, ?_, ?_⟩,
     ?_, ?_, ?_⟩⟩
   · intro s
-    haveI : IsIso (fst (overRes (T := T) ⊤) (zeroPolAV S).A) := by
+    have : IsIso (fst (overRes (T := T) ⊤) (zeroPolAV S).A) := by
       show IsIso (fst _ (𝟙_ (Over S)))
       rw [← rightUnitor_hom]; infer_instance
-    haveI : IsIso (fst (overRes (T := T) ⊤) (zeroPolAV S).A).left :=
+    have : IsIso (fst (overRes (T := T) ⊤) (zeroPolAV S).A).left :=
       inferInstanceAs (IsIso ((Over.forget S).map (fst (overRes (T := T) ⊤) (zeroPolAV S).A)))
     obtain ⟨r, hr⟩ := surj_appLE (fst (overRes (T := T) ⊤) (zeroPolAV S).A).left
       ((LPow (zeroPolAV S).A (zeroPolAV S).L 1 (overRes (T := T) ⊤)).U fun _ => PUnit.unit)

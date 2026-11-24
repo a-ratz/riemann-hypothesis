@@ -50,9 +50,9 @@ namespace GlobalTheory.HTW
 
 theorem exists_aut_comp_eq_of_normal {E L : Type} [Field E] [CharZero E] [Normal ℚ E] [Field L]
     (f f' : E →+* L) : ∃ σ : E ≃ₐ[ℚ] E, ∀ x, f' x = f (σ x) := by
-  haveI : CharZero L := (RingHom.charZero_iff f.injective).1 inferInstance
-  letI : Algebra E L := f.toAlgebra
-  haveI : IsScalarTower ℚ E L := IsScalarTower.of_algebraMap_eq fun q => by
+  have : CharZero L := (RingHom.charZero_iff f.injective).1 inferInstance
+  let : Algebra E L := f.toAlgebra
+  have : IsScalarTower ℚ E L := IsScalarTower.of_algebraMap_eq fun q => by
     change _ = f (algebraMap ℚ E q)
     simp
   obtain ⟨σ, hσ⟩ := (Normal.algHomEquivAut ℚ L E).symm.surjective f'.toRatAlgHom
@@ -62,7 +62,7 @@ theorem exists_aut_comp_eq_of_normal {E L : Type} [Field E] [CharZero E] [Normal
 
 theorem exists_letter_of_local_embedding : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : w ∈ placesOver D.host.E (D.nd.l i)) (τ : Br.Kw D.nbr i w hw →ₐ[ℚ_[D.nd.l i]] Br.LL D.nbr i w hw), ∃ g : D.R.GG, (∀ x : D.host.E, τ (Br.cEw D.nbr i w hw x) = Br.toLLK (D.nbr i w hw) (D.nd.embK i (D.embE (D.host.sigmaOf g x)))) ∧ (Br.EmbTypeU D.nbr i w hw τ ↔ g ∈ D.R.Psi) := by
   intro D i w hw τ
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   obtain ⟨σ, hσ⟩ := exists_aut_comp_eq_of_normal
     (((Br.toLLK (D.nbr i w hw)).comp (D.nd.embK i)).comp D.embE)
     ((τ : Br.Kw D.nbr i w hw →+* Br.LL D.nbr i w hw).comp (Br.cEw D.nbr i w hw))

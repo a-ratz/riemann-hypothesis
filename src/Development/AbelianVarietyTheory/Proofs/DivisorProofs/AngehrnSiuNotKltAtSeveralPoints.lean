@@ -83,10 +83,10 @@ theorem mem_of_formallyEtale {K R F : Type} [Field K] [CommRing R] [Field F] [Al
     [Algebra.IsSeparable F K] (φ : K →+* R) (B : Subring R)
     (hF : ∀ c : F, φ (algebraMap F K c) ∈ B) (N : Ideal R) (hN : IsNilpotent N)
     (σ : K →+* B) (hσ : ∀ a, φ a - σ a ∈ N) (a : K) : φ a ∈ B := by
-  haveI : Algebra.FormallyEtale F K := Algebra.FormallyEtale.of_isSeparable F K
+  have : Algebra.FormallyEtale F K := Algebra.FormallyEtale.of_isSeparable F K
   let iB : F →+* B := (φ.comp (algebraMap F K)).codRestrict B hF
-  letI : Algebra F B := iB.toAlgebra
-  letI : Algebra F R := (φ.comp (algebraMap F K)).toAlgebra
+  let : Algebra F B := iB.toAlgebra
+  let : Algebra F R := (φ.comp (algebraMap F K)).toAlgebra
   let I : Ideal B := N.comap B.subtype
   have hI : IsNilpotent I := by
     obtain ⟨n, hn⟩ := hN
@@ -141,11 +141,11 @@ theorem jets_finrank_le : ∀ {κ κ' : Type} [Field κ] [Field κ'] [Algebra �
     (M + k - 1).choose k ∧
   Module.Finite κ' ((κ ⊗[ℂ] κ') ⧸ (RingHom.ker (Algebra.TensorProduct.productMap ρ (AlgHom.id ℂ κ'))) ^ M) := by
   intro κ κ' _ _ _ _ k M ρ hz0
-  letI : Algebra κ' (κ ⊗[ℂ] κ') := Algebra.TensorProduct.rightAlgebra
+  let : Algebra κ' (κ ⊗[ℂ] κ') := Algebra.TensorProduct.rightAlgebra
   obtain ⟨z, hz⟩ := hz0
   set J := RingHom.ker (Algebra.TensorProduct.productMap ρ (AlgHom.id ℂ κ')) with hJ
   rcases Nat.eq_zero_or_pos M with rfl | hM
-  · haveI : Subsingleton ((κ ⊗[ℂ] κ') ⧸ J ^ 0) :=
+  · have : Subsingleton ((κ ⊗[ℂ] κ') ⧸ J ^ 0) :=
       Ideal.Quotient.subsingleton_iff.2 (by rw [pow_zero, Ideal.one_eq_top])
     exact ⟨by rw [Module.finrank_zero_of_subsingleton]; exact Nat.zero_le _, inferInstance⟩
   let mk : κ ⊗[ℂ] κ' →+* (κ ⊗[ℂ] κ') ⧸ J ^ M := Ideal.Quotient.mk (J ^ M)
@@ -214,15 +214,15 @@ theorem jets_finrank_le : ∀ {κ κ' : Type} [Field κ] [Field κ'] [Algebra �
     unfold TrBasis at hz
     rw [eAlg] at hz
     exact hz
-  haveI := hz'.isAlgebraic_field
-  letI : Algebra (IntermediateField.adjoin ℂ (Set.range z)) F :=
+  have := hz'.isAlgebraic_field
+  let : Algebra (IntermediateField.adjoin ℂ (Set.range z)) F :=
     (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower (IntermediateField.adjoin ℂ (Set.range z)) F κ :=
+  have : IsScalarTower (IntermediateField.adjoin ℂ (Set.range z)) F κ :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsAlgebraic F κ :=
+  have : Algebra.IsAlgebraic F κ :=
     Algebra.IsAlgebraic.extendScalars (R := IntermediateField.adjoin ℂ (Set.range z))
       (IntermediateField.inclusion_injective hle)
-  haveI : Algebra.IsSeparable F κ := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : Algebra.IsSeparable F κ := Algebra.IsAlgebraic.isSeparable_of_perfectField
   let σ : κ →+* B.toSubring :=
     ((algebraMap κ' _).comp ρ.toRingHom).codRestrict B.toSubring (fun a => B.algebraMap_mem _)
   have key : ∀ a, φ a ∈ B := fun a =>
@@ -315,11 +315,11 @@ theorem count_kernel_nonzero : ∀ {κ κ' : Type} [Field κ] [Field κ'] [Algeb
   ∃ b : Fin l → κ', b ≠ 0 ∧ ∀ i, ∑ j, w j ⊗ₜ[ℂ] b j ∈
     (RingHom.ker (Algebra.TensorProduct.productMap (ρ i) (AlgHom.id ℂ κ'))) ^ M := by
   intro κ κ' _ _ _ _ k c M l ρ w hz hlt
-  letI : Algebra κ' (κ ⊗[ℂ] κ') := Algebra.TensorProduct.rightAlgebra
+  let : Algebra κ' (κ ⊗[ℂ] κ') := Algebra.TensorProduct.rightAlgebra
   set J : Fin c → Ideal (κ ⊗[ℂ] κ') := fun i =>
     (RingHom.ker (Algebra.TensorProduct.productMap (ρ i) (AlgHom.id ℂ κ'))) ^ M with hJ
   have hjet := fun i => _root_.GlobalTheory.JetDim.jets_finrank_le k M (ρ i) hz
-  haveI : ∀ i, Module.Finite κ' ((κ ⊗[ℂ] κ') ⧸ J i) := fun i => (hjet i).2
+  have : ∀ i, Module.Finite κ' ((κ ⊗[ℂ] κ') ⧸ J i) := fun i => (hjet i).2
   let g : (Fin l → κ') →ₗ[κ'] (κ ⊗[ℂ] κ') := Fintype.linearCombination κ' (fun j => w j ⊗ₜ[ℂ] (1 : κ'))
   have hg : ∀ b, g b = ∑ j, w j ⊗ₜ[ℂ] b j := by
     intro b
@@ -373,10 +373,10 @@ theorem exists_locModel_at_point :
   intro A _ _ _ _ ε
   let K := FractionRing A
   let P : Ideal A := RingHom.ker (ε : A →+* ℂ)
-  haveI : P.IsPrime := RingHom.ker_isPrime _
+  have : P.IsPrime := RingHom.ker_isPrime _
   have hle : P.primeCompl ≤ nonZeroDivisors A := P.primeCompl_le_nonZeroDivisors
   let B : Subalgebra A K := Localization.subalgebra.ofField K P.primeCompl hle
-  haveI hB : IsLocalization P.primeCompl B := Localization.subalgebra.isLocalization_ofField K _ hle
+  have hB : IsLocalization P.primeCompl B := Localization.subalgebra.isLocalization_ofField K _ hle
   let b : A →+* B := algebraMap A B
   have hu : ∀ y : P.primeCompl, IsUnit ((ε : A →+* ℂ) y) := fun y => by
     refine isUnit_iff_ne_zero.2 fun h => y.2 ?_
@@ -437,7 +437,7 @@ theorem exists_residue_complex : ∀ {K : Type} [Field K] [Algebra ℂ K] (R : S
   RatRes (algebraMap ℂ K) R →
   ∃ ε : R →+* ℂ, (∀ a : ℂ, ε ⟨algebraMap ℂ K a, h.const_mem a⟩ = a) ∧ ∀ r : R, ε r = 0 ↔ NonUnit R (r : K) := by
   intro K _ _ R h hr
-  haveI := h.isLocalRing
+  have := h.isLocalRing
   let c0 : ℂ →+* R := (algebraMap ℂ K).codRestrict R h.const_mem
   let φ : ℂ →+* IsLocalRing.ResidueField R := (IsLocalRing.residue R).comp c0
   have hφ : Function.Bijective φ := by
@@ -490,7 +490,7 @@ theorem exists_residue {K : Type} [Field K] [Algebra ℂ K] (R : Subring K)
     (h : IsLocModel (algebraMap ℂ K) R) (h' : RatRes (algebraMap ℂ K) R) :
     letI : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R h.const_mem).toAlgebra
     ∃ ε : R →ₐ[ℂ] ℂ, ∀ r : R, ε r = 0 ↔ NonUnit R (r : K) := by
-  letI : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R h.const_mem).toAlgebra
+  let : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R h.const_mem).toAlgebra
   obtain ⟨ε, h1, h2⟩ := _root_.GlobalTheory.FieldPair.exists_residue_complex R h h'
   exact ⟨⟨ε, h1⟩, h2⟩
 
@@ -501,14 +501,14 @@ theorem pair_step : ∀ {K L : Type} [Field K] [Field L] [Algebra ℂ K] [Algebr
     IsLocModel (algebraMap ℂ M) T ∧ RatRes (algebraMap ℂ M) T ∧
     Dominates ρ.toRingHom T R ∧ Dominates σ.toRingHom T S := by
   intro K L _ _ _ _ R S hR hR' hS hS'
-  letI : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R hR.const_mem).toAlgebra
-  letI : Algebra ℂ S := ((algebraMap ℂ L).codRestrict S hS.const_mem).toAlgebra
-  haveI : IsScalarTower ℂ R K := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℂ S L := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.EssFiniteType ℂ R := hR.essFiniteType
-  haveI : Algebra.EssFiniteType ℂ S := hS.essFiniteType
-  haveI := isFractionRing_of_isLocModel hR
-  haveI := isFractionRing_of_isLocModel hS
+  let : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R hR.const_mem).toAlgebra
+  let : Algebra ℂ S := ((algebraMap ℂ L).codRestrict S hS.const_mem).toAlgebra
+  have : IsScalarTower ℂ R K := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower ℂ S L := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.EssFiniteType ℂ R := hR.essFiniteType
+  have : Algebra.EssFiniteType ℂ S := hS.essFiniteType
+  have := isFractionRing_of_isLocModel hR
+  have := isFractionRing_of_isLocModel hS
   obtain ⟨εR, hεR⟩ := exists_residue R hR hR'
   obtain ⟨εS, hεS⟩ := exists_residue S hS hS'
   let iR : R →ₐ[ℂ] K := IsScalarTower.toAlgHom ℂ R K
@@ -525,11 +525,11 @@ theorem pair_step : ∀ {K L : Type} [Field K] [Field L] [Algebra ℂ K] [Algebr
     have ex := LinearMap.congr_fun e x
     have ey := LinearMap.congr_fun e y
     exact h1 (h2 (ex.symm.trans (hxy.trans ey)))
-  haveI : IsDomain (K ⊗[ℂ] L) := GlobalTheory.TensorFields.isDomain_tensor_complex K L
-  haveI : IsDomain (R ⊗[ℂ] S) := hinj.isDomain _
-  haveI : Algebra.EssFiniteType S (S ⊗[ℂ] R) := Algebra.EssFiniteType.baseChange ℂ R S
-  haveI : Algebra.EssFiniteType ℂ (S ⊗[ℂ] R) := Algebra.EssFiniteType.comp ℂ S (S ⊗[ℂ] R)
-  haveI : Algebra.EssFiniteType ℂ (R ⊗[ℂ] S) :=
+  have : IsDomain (K ⊗[ℂ] L) := GlobalTheory.TensorFields.isDomain_tensor_complex K L
+  have : IsDomain (R ⊗[ℂ] S) := hinj.isDomain _
+  have : Algebra.EssFiniteType S (S ⊗[ℂ] R) := Algebra.EssFiniteType.baseChange ℂ R S
+  have : Algebra.EssFiniteType ℂ (S ⊗[ℂ] R) := Algebra.EssFiniteType.comp ℂ S (S ⊗[ℂ] R)
+  have : Algebra.EssFiniteType ℂ (R ⊗[ℂ] S) :=
     Algebra.EssFiniteType.of_surjective (Algebra.TensorProduct.comm ℂ S R).toAlgHom
       (Algebra.TensorProduct.comm ℂ S R).surjective
   let ε : R ⊗[ℂ] S →ₐ[ℂ] ℂ := Algebra.TensorProduct.lift εR εS fun _ _ => Commute.all _ _
@@ -563,14 +563,14 @@ theorem pair_step : ∀ {K L : Type} [Field K] [Field L] [Algebra ℂ K] [Algebr
 
 theorem trBasis_of_isLocModel {κ : Type} [Field κ] [Algebra ℂ κ] {O : Subring κ}
     (h : IsLocModel (algebraMap ℂ κ) O) : ∃ (k : ℕ) (z : Fin k → κ), TrBasis (algebraMap ℂ κ) z := by
-  letI : Algebra ℂ O := ((algebraMap ℂ κ).codRestrict O h.const_mem).toAlgebra
-  haveI : Algebra.EssFiniteType ℂ O := h.essFiniteType
-  haveI : IsScalarTower ℂ O κ := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsFractionRing O κ := IsFractionRing.of_field O κ (fun f => by
+  let : Algebra ℂ O := ((algebraMap ℂ κ).codRestrict O h.const_mem).toAlgebra
+  have : Algebra.EssFiniteType ℂ O := h.essFiniteType
+  have : IsScalarTower ℂ O κ := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsFractionRing O κ := IsFractionRing.of_field O κ (fun f => by
     obtain ⟨a, ha, b, hb, hb0, e⟩ := h.frac f
     exact ⟨⟨a, ha⟩, ⟨b, hb⟩, (eq_div_iff hb0).2 e⟩)
-  haveI : Algebra.EssFiniteType O κ := Algebra.EssFiniteType.of_isLocalization κ (nonZeroDivisors O)
-  haveI : Algebra.EssFiniteType ℂ κ := Algebra.EssFiniteType.comp ℂ O κ
+  have : Algebra.EssFiniteType O κ := Algebra.EssFiniteType.of_isLocalization κ (nonZeroDivisors O)
+  have : Algebra.EssFiniteType ℂ κ := Algebra.EssFiniteType.comp ℂ O κ
   obtain ⟨s, hs⟩ := exists_finset_isTranscendenceBasis ℂ κ
   refine ⟨s.card, fun i => (s.equivFin.symm i : κ), ?_⟩
   have e : (algebraMap ℂ κ).toAlgebra = (inferInstance : Algebra ℂ κ) :=
@@ -729,7 +729,7 @@ theorem isFractionRing_of_injective {A F : Type} [CommRing A] [Field F] [Algebra
     (hi : Function.Injective (algebraMap A F))
     (hs : ∀ z : F, ∃ x y : A, algebraMap A F y ≠ 0 ∧ z * algebraMap A F y = algebraMap A F x) :
     IsFractionRing A F := by
-  haveI : IsDomain A := hi.isDomain (algebraMap A F)
+  have : IsDomain A := hi.isDomain (algebraMap A F)
   refine ⟨fun y => ?_, fun z => ?_, fun {x y} e => ⟨1, by simp [hi e]⟩⟩
   · exact (map_ne_zero_iff _ hi).2 (nonZeroDivisors.ne_zero y.2) |>.isUnit
   · obtain ⟨x, y, hy, e⟩ := hs z
@@ -744,7 +744,7 @@ theorem isFractionRing_subring {K : Type} [Field K] (R : Subring K)
 theorem exists_residue {κ : Type} [Field κ] [Algebra ℂ κ] (B : Subring κ)
     (hB : IsLocModel (algebraMap ℂ κ) B) (hr : RatRes (algebraMap ℂ κ) B) :
     ∃ ev : B →+* ℂ, ∀ (b : B) (a : ℂ), NonUnit B ((b : κ) - algebraMap ℂ κ a) ↔ ev b = a := by
-  haveI := hB.isLocalRing
+  have := hB.isLocalRing
   let c0 : ℂ →+* B := (algebraMap ℂ κ).codRestrict B hB.const_mem
   let g : ℂ →+* IsLocalRing.ResidueField B := (IsLocalRing.residue B).comp c0
   have key : ∀ (b : B) (a : ℂ), NonUnit B ((b : κ) - algebraMap ℂ κ a) ↔
@@ -778,21 +778,21 @@ theorem exists_isEtTower_tensor : ∀ {K κ L : Type} [Field K] [Field κ] [Fiel
     (∀ t : T, ∃ s s' : T, s ∈ Subring.closure (Set.range ι ∪ Set.range j) ∧
       s' ∈ Subring.closure (Set.range ι ∪ Set.range j) ∧ IsUnit (ψ s') ∧ (t : L) * s' = s) := by
   intro K κ L _ _ _ _ _ _ _ _ _ R B hB r τ hR hRn hRr hBr hm he
-  haveI := hR.isLocalRing
-  haveI := hB.isLocalRing
-  letI iR : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R hR.const_mem).toAlgebra
-  letI iB : Algebra ℂ B := ((algebraMap ℂ κ).codRestrict B hB.const_mem).toAlgebra
-  haveI : IsScalarTower ℂ R K := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℂ B κ := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsFractionRing R K := isFractionRing_subring R hR.frac
-  haveI : IsFractionRing B κ := isFractionRing_subring B hB.frac
+  have := hR.isLocalRing
+  have := hB.isLocalRing
+  let iR : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R hR.const_mem).toAlgebra
+  let iB : Algebra ℂ B := ((algebraMap ℂ κ).codRestrict B hB.const_mem).toAlgebra
+  have : IsScalarTower ℂ R K := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower ℂ B κ := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsFractionRing R K := isFractionRing_subring R hR.frac
+  have : IsFractionRing B κ := isFractionRing_subring B hB.frac
   obtain ⟨hinj, hsurj⟩ := _root_.GlobalTheory.tensor_fractionRing_of_tensor (k := ℂ) (R := R) (B := B) (K := K) (κ := κ) (L := L)
   set f := (algebraMap (K ⊗[ℂ] κ) L).comp (Algebra.TensorProduct.map
     (IsScalarTower.toAlgHom ℂ R K) (IsScalarTower.toAlgHom ℂ B κ)).toRingHom with hf
-  letI iA : Algebra (R ⊗[ℂ] B) L := f.toAlgebra
-  haveI : IsFractionRing (R ⊗[ℂ] B) L := isFractionRing_of_injective hinj hsurj
-  haveI : IsDomain (R ⊗[ℂ] B) := hinj.isDomain f
-  haveI : Nontrivial (R ⊗[ℂ] B) := IsDomain.toNontrivial
+  let iA : Algebra (R ⊗[ℂ] B) L := f.toAlgebra
+  have : IsFractionRing (R ⊗[ℂ] B) L := isFractionRing_of_injective hinj hsurj
+  have : IsDomain (R ⊗[ℂ] B) := hinj.isDomain f
+  have : Nontrivial (R ⊗[ℂ] B) := IsDomain.toNontrivial
   have hft : ∀ (a : R) (b : B), algebraMap (R ⊗[ℂ] B) L (a ⊗ₜ b) =
       algebraMap (K ⊗[ℂ] κ) L ((a : K) ⊗ₜ (b : κ)) := fun a b => rfl
 
@@ -807,10 +807,10 @@ theorem exists_isEtTower_tensor : ∀ {K κ L : Type} [Field K] [Field κ] [Fiel
   have hφ : ∀ (a : R) (b : B), φ (a ⊗ₜ b) = a * algebraMap ℂ R (ev b) := fun a b => by
     simp [φ, ev']
   let q : Ideal (R ⊗[ℂ] B) := (IsLocalRing.maximalIdeal R).comap φ
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
+  have : q.IsPrime := Ideal.comap_isPrime _ _
   have hq : q.primeCompl ≤ nonZeroDivisors (R ⊗[ℂ] B) := q.primeCompl_le_nonZeroDivisors
   let A : Subalgebra (R ⊗[ℂ] B) L := Localization.subalgebra.ofField L q.primeCompl hq
-  haveI hA : IsLocalization q.primeCompl A := Localization.subalgebra.isLocalization_ofField L _ hq
+  have hA : IsLocalization q.primeCompl A := Localization.subalgebra.isLocalization_ofField L _ hq
   have hu : ∀ y : q.primeCompl, IsUnit (φ.toRingHom y) := fun y => by
     by_contra hy
     exact y.2 (show (y : R ⊗[ℂ] B) ∈ q from (IsLocalRing.mem_maximalIdeal _).2 hy)
@@ -849,9 +849,9 @@ theorem exists_isEtTower_tensor : ∀ {K κ L : Type} [Field K] [Field κ] [Fiel
   · have e : (algebraMap ℂ L).codRestrict A.toSubring hmem = a.comp (algebraMap ℂ (R ⊗[ℂ] B)) :=
       RingHom.ext fun z => Subtype.ext (hcL z).symm
     rw [e]
-    haveI : Algebra.EssFiniteType ℂ R := RingHom.essFiniteType_algebraMap.1 hR.essFiniteType
-    haveI : Algebra.EssFiniteType ℂ B := RingHom.essFiniteType_algebraMap.1 hB.essFiniteType
-    haveI : Algebra.EssFiniteType ℂ (R ⊗[ℂ] B) := Algebra.EssFiniteType.comp ℂ R _
+    have : Algebra.EssFiniteType ℂ R := RingHom.essFiniteType_algebraMap.1 hR.essFiniteType
+    have : Algebra.EssFiniteType ℂ B := RingHom.essFiniteType_algebraMap.1 hB.essFiniteType
+    have : Algebra.EssFiniteType ℂ (R ⊗[ℂ] B) := Algebra.EssFiniteType.comp ℂ R _
     have h1 : (algebraMap (R ⊗[ℂ] B) A).EssFiniteType :=
       RingHom.essFiniteType_algebraMap.2 (Algebra.EssFiniteType.of_isLocalization A q.primeCompl)
     have h2 : (algebraMap ℂ (R ⊗[ℂ] B)).EssFiniteType := RingHom.essFiniteType_algebraMap.2 inferInstance
@@ -977,7 +977,7 @@ theorem not_klt_at_points : GlobalTheory.Published.Principalisation →
     exact not_nonUnit_one B h1
   refine ⟨a, ha0, ?_⟩
   intro i xi φ u s t hxi hφ hEff hu ht hs hs0 hcase hKlt
-  haveI := GlobalTheory.TensorFields.isDomain_tensor_complex K κ'
+  have := GlobalTheory.TensorFields.isDomain_tensor_complex K κ'
   obtain ⟨T, ι, ψ, jB, hT, hι, hj, hψj, hTfrac⟩ := GlobalTheory.FieldPair.TensorTower.exists_isEtTower_tensor (L := FractionRing (K ⊗[ℂ] κ'))
     (R i) B hB r τ (hR i).1 (hR i).2.1 (hR i).2.2 hBr hmax het
   let β : Fin l → B := fun j => ⟨b j / b j₀, hbB j⟩
@@ -1075,7 +1075,7 @@ theorem not_klt_at_points : GlobalTheory.Published.Principalisation →
     rw [hsum]
     apply h4
     intro hD
-    letI := hB.isLocalRing
+    let := hB.isLocalRing
     choose cc hcc using fun q => hBr _ (b' q).2
     have hψb : ∀ q, ψ (jB (b' q)) = ⟨algebraMap ℂ K (cc q), (hR i).1.const_mem _⟩ :=
       fun q => Subtype.ext (hψj _ _ (hcc q))

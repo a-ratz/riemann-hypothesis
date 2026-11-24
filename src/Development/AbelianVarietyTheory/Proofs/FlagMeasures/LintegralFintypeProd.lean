@@ -103,7 +103,7 @@ theorem _root_.GlobalTheory.SnMass.Push.lintegral_fintype_prod {ι : Type} [Fint
     simp
   · push_neg at hne
     obtain ⟨i, hi⟩ := hne
-    haveI : IsEmpty ((i : ι) → X i) := ⟨fun x => hi.elim (x i)⟩
+    have : IsEmpty ((i : ι) → X i) := ⟨fun x => hi.elim (x i)⟩
     rw [Finset.prod_eq_zero (Finset.mem_univ i) (by simp [Measure.eq_zero_of_isEmpty (μ i)])]
     simp [Measure.eq_zero_of_isEmpty (Measure.pi μ)]
 

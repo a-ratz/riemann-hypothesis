@@ -213,7 +213,7 @@ private theorem intg_lemma (hμK : ∀ S : Set (Mt k r), IsCompact S → μ S < 
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hΘ.continuousOn
   have hKm : MeasurableSet K := hK.isClosed.measurableSet
   have hint : Integrable (K.indicator fun _ => Mh * max C 0) μ :=
-    (integrableOn_const (hμK K hK).ne enorm_ne_top).integrable_indicator hKm
+    (integrableOn_const (hμK K hK).ne eNorm_ne_top).integrable_indicator hKm
   have hGae : ∀ᵐ y ∂μ, y ∈ (GV k r : Set (Mt k r)) := mem_ae_iff.2 hG
   refine hint.mono' (hh.smul hΘ.aestronglyMeasurable) ?_
   filter_upwards [hMh, hGae] with y hy1 hyG
@@ -252,7 +252,7 @@ theorem pint_hasFDerivAt (hμK : ∀ S : Set (Mt k r), IsCompact S → μ S < �
     · have : pd Ψ (g, y) = 0 :=
         pd_zero hΨ hU hz g (hεU (Metric.ball_subset_ball (half_le_self hε.le) hg)) y hyG hyK
       simp [this, Set.indicator, hyK]
-  · exact (integrableOn_const (hμK K hK).ne enorm_ne_top).integrable_indicator hKm
+  · exact (integrableOn_const (hμK K hK).ne eNorm_ne_top).integrable_indicator hKm
   · exact Filter.Eventually.of_forall fun y g _ => (pd_hasFDerivAt hΨ g y).const_smul (h y)
 
 theorem pint_contDiffOn (hμK : ∀ S : Set (Mt k r), IsCompact S → μ S < ∞) (hG : μ (GV k r)ᶜ = 0)
@@ -356,7 +356,7 @@ variable {D X}
 private theorem vint_lemma {Ψ : Mat k r → ℂ} (hc : Continuous Ψ) (hs : HasCompactSupport Ψ) {a : Mat k r}
     (ha : a ∈ GV k r) :
     Integrable (fun x : Mt k r => Ψ (Matrix.of x) • X.σ (a * Matrix.of x) X.w) D.μG := by
-  haveI : IsFiniteMeasureOnCompacts D.μG := ⟨D.haarG.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts D.μG := ⟨D.haarG.finite_compact⟩
   have hGae : ∀ᵐ x ∂D.μG, x ∈ (GV k r : Set (Mt k r)) := mem_ae_iff.2 D.haarG.conc
   have hof : Continuous fun x : Mt k r => (Matrix.of x : Mat k r) := continuous_id
   have hc' : Continuous fun x : Mt k r => Ψ (Matrix.of x) := hc.comp hof
@@ -415,7 +415,7 @@ theorem V_transl {Φ : Mat k r → ℂ} (hc : Continuous Φ) (hs : HasCompactSup
 theorem V_hasDerivAt {Φ : Mat k r → ℂ} (hΦ : ContDiff ℝ ninf Φ) (hs : HasCompactSupport Φ) (Y : Mat k r) :
     HasDerivAt (fun t : ℝ => V D X (fun x => Φ (NormedSpace.exp (t • Y) * x)))
       (V D X (fun x => fderiv ℝ Φ x (Y * x))) 0 := by
-  haveI : IsFiniteMeasureOnCompacts D.μG := ⟨D.haarG.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts D.μG := ⟨D.haarG.finite_compact⟩
   have hGae : ∀ᵐ x ∂D.μG, x ∈ (GV k r : Set (Mt k r)) := mem_ae_iff.2 D.haarG.conc
   have hof : Continuous fun x : Mt k r => (Matrix.of x : Mat k r) := continuous_id
   have hσm : AEStronglyMeasurable (fun x : Mt k r => X.σ (Matrix.of x) X.w) D.μG := by
@@ -463,9 +463,9 @@ theorem V_hasDerivAt {Φ : Mat k r → ℂ} (hΦ : ContDiff ℝ ninf Φ) (hs : H
         exact ⟨(t, NormedSpace.exp (t • Y) * Matrix.of x),
           ⟨Metric.ball_subset_closedBall ht, tsupport_fderiv_subset ℝ (subset_tsupport _ hne)⟩,
           exp_neg_mul Y t _⟩
-      rw [h0, ContinuousLinearMap.zero_apply, norm_zero]
+      rw [h0, zero_apply, norm_zero]
       exact Set.indicator_nonneg (fun _ _ => le_max_right _ _) _
-  · exact (integrableOn_const (D.haarG.finite_compact S hS).ne enorm_ne_top).integrable_indicator hSm
+  · exact (integrableOn_const (D.haarG.finite_compact S hS).ne eNorm_ne_top).integrable_indicator hSm
   · refine Filter.Eventually.of_forall fun x t _ => ?_
     have h1 := ((hΦ.differentiable ninf_ne_zero) (NormedSpace.exp (t • Y) * Matrix.of x)).hasFDerivAt.comp_hasDerivAt t
       (curveDer Y (Matrix.of x) t)
@@ -529,7 +529,7 @@ private theorem TG_DX_lemma {Φ : Mat k r → ℂ} (h : TG Φ) (Y : Mat k r) : T
   intro x hx
   rw [Function.mem_support] at hx ⊢
   intro h0
-  exact hx (by show fderiv ℝ Φ x (-(Y * x)) = 0; rw [h0, ContinuousLinearMap.zero_apply])
+  exact hx (by show fderiv ℝ Φ x (-(Y * x)) = 0; rw [h0, zero_apply])
 
 theorem TG_Dw {Φ : Mat k r → ℂ} (h : TG Φ) (l : List (Mat k r)) : TG (Dw l Φ) := by
   induction l with
@@ -538,7 +538,7 @@ theorem TG_Dw {Φ : Mat k r → ℂ} (h : TG Φ) (l : List (Mat k r)) : TG (Dw l
 
 private theorem semiExp_lemma_7 {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℂ 𝔸] [FiniteDimensional ℂ 𝔸]
     {H A B : 𝔸} (h : H * A = B * H) : H * NormedSpace.exp A = NormedSpace.exp B * H := by
-  haveI : CompleteSpace 𝔸 := FiniteDimensional.complete ℂ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℂ 𝔸
   have hA := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A
   have hB := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) B
   have hpow : ∀ n : ℕ, H * A ^ n = B ^ n * H := fun n =>
@@ -567,7 +567,7 @@ private theorem expGV_lemma_9 {Y : Mat k r} (hY : inLie k r Y) (s : ℝ) :
 
 theorem sig_exp {Φ : Mat k r → ℂ} (hΦ : TG Φ) {Y : Mat k r} (hY : inLie k r Y) (t : ℝ) :
     X.σ (NormedSpace.exp (t • Y)) (V D X Φ) = V D X (fun x => Φ (NormedSpace.exp (t • (-Y)) * x)) := by
-  haveI := X.hC
+  have := X.hC
   have hrep := X.rep
   have hc : (t • Y : Mat k r) = (t : ℂ) • Y := by
     ext i j
@@ -655,7 +655,7 @@ theorem LdV_cf {Φ Φ' : Mat k r → ℂ} (hΦ' : TG Φ') {Y : Mat k r} (hY : in
 
 private theorem hs_lemma_0 {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℂ 𝔸] [FiniteDimensional ℂ 𝔸]
     {H A B : 𝔸} (h : H * A = B * H) : H * NormedSpace.exp A = NormedSpace.exp B * H := by
-  haveI : CompleteSpace 𝔸 := FiniteDimensional.complete ℂ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℂ 𝔸
   have hA := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A
   have hB := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) B
   refine (hA.mul_left H).unique ?_
@@ -688,7 +688,7 @@ private theorem mem_lemma_3 {Y g : Mat k r} (hY : inLie k r Y) (hg : g ∈ GV k 
     g * NormedSpace.exp ((s : ℂ) • Y) ∈ GV k r := by
   unfold GV inLie at *
   unfold UH at *
-  simp only [Set.mem_setOf_eq] at hg ⊢
+  simp only [Set.mem_ofPred_eq] at hg ⊢
   rw [Matrix.conjTranspose_mul]
   calc _ = (NormedSpace.exp ((s : ℂ) • Y))ᴴ * (gᴴ * Hpk k r * g) * NormedSpace.exp ((s : ℂ) • Y) := by
         simp only [Matrix.mul_assoc]
@@ -707,7 +707,7 @@ private theorem memL_lemma_4 {Y g : Mat k r} (hY : inLie k r Y) (hg : g ∈ GV k
   rw [e]
   unfold GV inLie at *
   unfold UH at *
-  simp only [Set.mem_setOf_eq] at hg ⊢
+  simp only [Set.mem_ofPred_eq] at hg ⊢
   rw [Matrix.conjTranspose_mul]
   calc _ = gᴴ * ((NormedSpace.exp (((-s : ℝ) : ℂ) • Y))ᴴ * Hpk k r *
         NormedSpace.exp (((-s : ℝ) : ℂ) • Y)) * g := by
@@ -816,7 +816,7 @@ theorem cf_decay (hGL : GNLower) (ha : 0 ≤ X.a) {T T' : Set (Mt k r)} (hT : Is
       ← integral_inner (V_intH hΨ hsΨ hyg) X.w, hQ, ← smul_eq_mul (D.μG.real T),
       ← integral_indicator_const _ hTm]
     refine norm_integral_le_of_norm_le ((integrable_indicator_iff hTm).2
-      (integrableOn_const (D.haarG.finite_compact _ hT).ne enorm_ne_top)) ?_
+      (integrableOn_const (D.haarG.finite_compact _ hT).ne eNorm_ne_top)) ?_
     filter_upwards [ae_mem_gv D.haarG.conc] with x hx
     by_cases hxT : x ∈ T
     · rw [Set.indicator_of_mem hxT, inner_smul_right, norm_mul]
@@ -834,7 +834,7 @@ theorem cf_decay (hGL : GNLower) (ha : 0 ≤ X.a) {T T' : Set (Mt k r)} (hT : Is
     unfold sigInt
     rw [← integral_inner (V_int hΨ' hsΨ') _, ← smul_eq_mul (D.μG.real T'), ← integral_indicator_const _ hTm']
     refine norm_integral_le_of_norm_le ((integrable_indicator_iff hTm').2
-      (integrableOn_const (D.haarG.finite_compact _ hT').ne enorm_ne_top)) ?_
+      (integrableOn_const (D.haarG.finite_compact _ hT').ne eNorm_ne_top)) ?_
     filter_upwards [ae_mem_gv D.haarG.conc] with y hy
     by_cases hyT : y ∈ T'
     · rw [Set.indicator_of_mem hyT, inner_smul_right, norm_mul]

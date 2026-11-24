@@ -117,7 +117,7 @@ theorem isClosedSub_Sset {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT
     have : CompactSpace (UWset k r z) := isCompact_iff_compactSpace.mp hK
     have hC : IsClosed {p : UWset k r z × Mat k r | Hpk k r * (p.1 : Mat k r)ᴴ * Hpk k r * p.2 ∈ Nset k r} :=
       IsClosed.preimage (f := fun p : UWset k r z × Mat k r => Hpk k r * (p.1 : Mat k r)ᴴ * Hpk k r * p.2)
-        (((continuous_const.mul (continuous_subtype_val.comp continuous_fst).matrix_conjTranspose).mul
+        (((continuous_const.mul (continuous_subtypeVal.comp continuous_fst).matrix_conjTranspose).mul
           continuous_const).mul continuous_snd) hN.closed
     have himg : Sset k r z =
         Prod.snd '' {p : UWset k r z × Mat k r | Hpk k r * (p.1 : Mat k r)ᴴ * Hpk k r * p.2 ∈ Nset k r} := by

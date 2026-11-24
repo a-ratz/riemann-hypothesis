@@ -89,7 +89,7 @@ def posRealMeasure : Measure {r : ℝ // 0 < r} :=
 
 theorem measurableEmbedding_posReal_val :
     MeasurableEmbedding (Subtype.val : {r : ℝ // 0 < r} → ℝ) :=
-  MeasurableEmbedding.subtype_coe measurableSet_Ioi
+  MeasurableEmbedding.subtypeVal measurableSet_Ioi
 
 theorem posRealMeasure_eq_map_expPos : posRealMeasure = Measure.map expPos volume := by
   ext S hS
@@ -183,12 +183,12 @@ theorem norm_posRealElem_pow (w : InfinitePlace K) {t : ℝ} (ht : 0 ≤ t) :
   · have h : ‖(ringEquivRealOfIsReal hw).symm t‖ = ‖t‖ :=
       (isometryEquivRealOfIsReal hw).symm.isometry.norm_map_of_map_zero
         (map_zero (ringEquivRealOfIsReal hw).symm) t
-    rw [h, mult, if_pos hw, pow_one, Real.norm_of_nonneg ht]
+    rw [h, mult, ite_eq_left hw, pow_one, Real.norm_of_nonneg ht]
   · have hc := not_isReal_iff_isComplex.1 hw
     have h : ‖(ringEquivComplexOfIsComplex hc).symm (Real.sqrt t : ℂ)‖ = ‖(Real.sqrt t : ℂ)‖ :=
       (isometryEquivComplexOfIsComplex hc).symm.isometry.norm_map_of_map_zero
         (map_zero (ringEquivComplexOfIsComplex hc).symm) _
-    rw [h, mult, if_neg hw, Complex.norm_real, Real.norm_of_nonneg (Real.sqrt_nonneg t),
+    rw [h, mult, ite_eq_right hw, Complex.norm_real, Real.norm_of_nonneg (Real.sqrt_nonneg t),
       Real.sq_sqrt ht]
 
 theorem posRealElem_ne_zero (w : InfinitePlace K) {t : ℝ} (ht : 0 < t) : posRealElem w t ≠ 0 := by
@@ -210,8 +210,8 @@ def posRealToUnits (w : InfinitePlace K) : {r : ℝ // 0 < r} →* (w.Completion
   map_mul' s _ := Units.ext (posRealElem_mul w s.2.le)
 
 theorem continuous_posRealToUnits (w : InfinitePlace K) : Continuous (posRealToUnits w) :=
-  Units.continuous_iff.2 ⟨(continuous_posRealElem w).comp continuous_subtype_val,
-    ((continuous_posRealElem w).comp continuous_subtype_val).inv₀ fun t ↦
+  Units.continuous_iff.2 ⟨(continuous_posRealElem w).comp continuous_subtypeVal,
+    ((continuous_posRealElem w).comp continuous_subtypeVal).inv₀ fun t ↦
       posRealElem_ne_zero w t.2⟩
 
 variable [NumberField K]
@@ -328,7 +328,7 @@ variable (K : Type*) [Field K] [NumberField K]
 def posRealUnitInterval : Set {r : ℝ // 0 < r} := Subtype.val ⁻¹' Set.Icc 1 (exp 1)
 
 theorem measurableSet_posRealUnitInterval : MeasurableSet posRealUnitInterval :=
-  measurable_subtype_coe measurableSet_Icc
+  measurable_subtypeVal measurableSet_Icc
 
 theorem posRealMeasure_posRealUnitInterval : posRealMeasure posRealUnitInterval = 1 := by
   rw [posRealMeasure_eq_map_expPos, Measure.map_apply measurable_expPos

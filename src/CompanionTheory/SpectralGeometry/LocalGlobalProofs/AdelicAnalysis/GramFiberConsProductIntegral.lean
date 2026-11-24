@@ -84,7 +84,7 @@ theorem coords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     unfold s0
     have h1 : Continuous (fun S : HermR R σ (n + 1) =>
         (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) 0 0) :=
-      (continuous_apply_apply 0 0).comp continuous_subtype_val
+      (continuous_apply_apply 0 0).comp continuous_subtypeVal
     exact continuous_const.mul (htr.comp h1)
   have hA : IsOpen {S : HermR R σ (n + 1) |
       s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) ∈ B₀} := D.hB₀.preimage hs0
@@ -105,7 +105,7 @@ theorem coords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     refine continuousOn_pi.2 fun j => ?_
     have hent : Continuous (fun S : HermR R σ (n + 1) =>
         (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) 0 j.succ) :=
-      (continuous_apply_apply 0 j.succ).comp continuous_subtype_val
+      (continuous_apply_apply 0 j.succ).comp continuous_subtypeVal
     have hu : ContinuousOn (fun S : HermR R σ (n + 1) =>
         ((((a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))))⁻¹ : Rˣ) : R)))
         {S | s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) ∈ B₀} :=
@@ -127,7 +127,7 @@ theorem coords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     refine continuousOn_pi.2 fun i => continuousOn_pi.2 fun j => ?_
     have hent : Continuous (fun S : HermR R σ (n + 1) =>
         (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) i.succ j.succ) :=
-      (continuous_apply_apply i.succ j.succ).comp continuous_subtype_val
+      (continuous_apply_apply i.succ j.succ).comp continuous_subtypeVal
     have hci := (continuous_apply i).comp_continuousOn hc
     have hcj := (continuous_apply j).comp_continuousOn hc
     exact hent.continuousOn.sub (((hsig.comp_continuousOn hci).mul continuousOn_const).mul hcj)

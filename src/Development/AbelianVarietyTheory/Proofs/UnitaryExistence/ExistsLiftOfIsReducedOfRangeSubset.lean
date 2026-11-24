@@ -58,10 +58,10 @@ namespace GlobalTheory
 theorem exists_lift_of_isReduced_of_range_subset {Y X Z : Scheme.{0}} [IsReduced Y] (i : Z ⟶ X)
     [IsClosedImmersion i] (a : Y ⟶ X) (h : Set.range a ⊆ Set.range i) :
     ∃ b : Y ⟶ Z, b ≫ i = a := by
-  haveI : Surjective (pullback.snd i a) := ⟨by
+  have : Surjective (pullback.snd i a) := ⟨by
     rw [← Set.range_eq_univ, Scheme.Pullback.range_snd]
     exact Set.eq_univ_of_forall fun y => h ⟨y, rfl⟩⟩
-  haveI := isIso_of_isClosedImmersion_of_surjective (pullback.snd i a)
+  have := isIso_of_isClosedImmersion_of_surjective (pullback.snd i a)
   exact ⟨inv (pullback.snd i a) ≫ pullback.fst i a, by
     rw [Category.assoc, pullback.condition, IsIso.inv_hom_id_assoc]⟩
 
@@ -78,9 +78,9 @@ theorem finite_geometric_kernel_of_pow_eq_one :
       x ≫ io ≫ fst G G' = 1} by
     have e : (𝟙_ (Over (Sp Ω))).hom ≫ t = t := Category.id_comp t
     rwa [e] at H
-  haveI := hG'.comm
-  haveI := hG'.smooth
-  haveI := hG'.quasiCompact
+  have := hG'.comm
+  have := hG'.smooth
+  have := hG'.quasiCompact
   have h := isGrpPullback_pullback G' t
   let T : Over S := Over.mk ((𝟙_ (Over (Sp Ω))).hom ≫ t)
   let ρ : (𝟙_ (Over (Sp Ω)) ⟶ (Over.pullback t).obj G') →* (T ⟶ G') := pushHom h _
@@ -103,7 +103,7 @@ theorem finite_geometric_kernel_of_pow_eq_one :
     · rw [hs₂, MonObj.mul_comp, hs₂, hs₂]
   let κ : (T ⟶ Ga) →* (T ⟶ G ⊗ G') :=
     MonoidHom.mk' (fun x => x ≫ io) fun x y => MonObj.mul_comp x y io
-  haveI : Mono io := (Over.forget S).mono_of_mono_map (inferInstanceAs (Mono io.left))
+  have : Mono io := (Over.forget S).mono_of_mono_map (inferInstanceAs (Mono io.left))
   have hκ : Function.Injective κ := fun x y hxy => (cancel_mono io).1 hxy
   let C := κ.range.comap (σ.comp ρ)
   have hC : Finite C := by
@@ -118,7 +118,7 @@ theorem finite_geometric_kernel_of_pow_eq_one :
       have e : x.left ≫ io.left = y.left ≫ pullback.fst G'.hom t ≫ s.left :=
         (congrArg (fun z => z.left) hx).trans (Category.assoc _ _ _)
       exact ⟨x.left p, by rw [← Scheme.Hom.comp_apply, e, Scheme.Hom.comp_apply]⟩
-    · haveI : IsReduced T.left := inferInstanceAs (IsReduced (Sp Ω))
+    · have : IsReduced T.left := inferInstanceAs (IsReduced (Sp Ω))
       obtain ⟨b, hb⟩ := exists_lift_of_isReduced_of_range_subset io.left (ρ y ≫ s).left (by
         rintro _ ⟨p, rfl⟩
         have e : (ρ y ≫ s).left = y.left ≫ pullback.fst G'.hom t ≫ s.left := Category.assoc _ _ _

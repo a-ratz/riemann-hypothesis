@@ -148,9 +148,9 @@ theorem exists_isWeilOn_of_coord {S T V W : HSp D} {E : WO S T ≃+ WA V W} (hE 
       ∃ x' y', SuppAt e S (j (g, h)).1 ∧ SuppAt e T (j (g, h)).2 ∧ IsDetAt e S (j (g, h)).1 x' ∧
         IsDetAt e T (j (g, h)).2 y' ∧ splitFacO χS χT x' y' = splitFac V W χ χ' x y) :
     ∃ om', IsWeilOn ψ V W χ χ' om' := by
-  haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WA V W) := Pi.topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
+  have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WA V W) := Pi.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
   let P : (WA V W → ℂ) ≃ₗ[ℂ] (WO S T → ℂ) := LinearEquiv.funCongrLeft ℂ ℂ E.toEquiv
   have hP : ∀ f, P f = f ∘ E := fun _ => rfl
   have hPs : ∀ f, P.symm f ∘ E = f := fun f => P.apply_symm_apply f
@@ -279,7 +279,7 @@ theorem weilCoreEx_of_datum : ∀ D : D7, (∀ (ψ : AddChar (AF D.host.F) ℂ),
         (fun g h x => (GlobalTheory.OrientedSmall.bridgeSmall D V W hr.le).2 g h x) (fun _ a _ b => ⟨a, b⟩)
         fun e g h hg hh x y hx hy => ⟨x, y, hg, hh, hx, hy, ?_⟩
       unfold splitFacO splitFac
-      rw [if_pos hr.le]
+      rw [ite_eq_left hr.le]
     · obtain ⟨om, H⟩ := hO ψ hψ W V χ' χ h2.1 h1.1 h4 h3
       refine exists_isWeilOn_of_coord (isCoord_large W V hr) H ((MonoidHom.snd _ _).prod (MonoidHom.fst _ _)) continuous_swap
         (fun g h x => ?_) (fun _ a _ b => ⟨b, a⟩) fun e g h hg hh x y hx hy => ⟨y, x, hh, hg, hy, hx, ?_⟩
@@ -287,7 +287,7 @@ theorem weilCoreEx_of_datum : ∀ D : D7, (∀ (ψ : AddChar (AF D.host.F) ℂ),
         have e2 := actHom_swap V W hne g h (mulGramInv W V x)
         exact Matrix.transpose_injective (e1.trans e2)
       · unfold splitFacO splitFac
-        rw [if_neg (not_le.2 hr), mul_comm]
+        rw [ite_eq_right (not_le.2 hr), mul_comm]
   choose om hom using key
   exact ⟨⟨om, hom⟩⟩
 

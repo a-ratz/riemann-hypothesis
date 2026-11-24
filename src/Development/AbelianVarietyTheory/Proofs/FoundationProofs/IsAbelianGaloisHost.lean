@@ -97,7 +97,7 @@ theorem dvd_different_iff [IsGalois ℚ E] {l : ℕ} (hl : l.Prime) {w : Ideal (
     (hlw : (l : 𝓞 E) ∈ w) : w ∣ differentIdeal ℤ (𝓞 E) ↔ (l : ℤ) ∣ discr E := by
   have hp : Prime (l : ℤ) := Nat.prime_iff_prime_int.mp hl
   have hwp := hw.isPrime
-  haveI : w.LiesOver (Ideal.span {(l : ℤ)}) := (Ideal.liesOver_span_iff hw.ne_top hp).mpr (by simpa using hlw)
+  have : w.LiesOver (Ideal.span {(l : ℤ)}) := (Ideal.liesOver_span_iff hw.ne_top hp).mpr (by simpa using hlw)
   rw [← not_iff_not, not_dvd_differentIdeal_iff, not_dvd_discr_iff_forall_liesOver E (𝓞 E) hp]
   refine ⟨fun h P hP hPl => ?_, fun h => h w hw inferInstance⟩
   have hPp := hP.isPrime
@@ -115,7 +115,7 @@ theorem isSquare_iff (H : Host E) {l : ℕ} (hl : l.Prime) {w : Ideal (𝓞 E)} 
     (hlw : (l : 𝓞 E) ∈ w) (hd : l ≠ H.d) :
     IsSquare (-(H.d : ZMod l)) ↔ ∃ a ∈ Algebra.adjoin ℤ {H.w0}, a ∈ w ∧ H.bar a ∉ w := by
   have hwp := hw.isPrime
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have h1 : (1 : 𝓞 E) ∉ w := fun h => hw.ne_top ((Ideal.eq_top_iff_one _).2 h)
   have hw0 : H.w0 ∈ Algebra.adjoin ℤ {H.w0} := Algebra.self_mem_adjoin_singleton ℤ _
   by_cases h2 : l = 2
@@ -218,8 +218,8 @@ theorem isHostField_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   · have hw := w.isMaximal
     refine ⟨?_, fun l hl hlw => ?_⟩
     · obtain ⟨l, hl, hlw⟩ : ∃ l : ℕ, l.Prime ∧ (l : 𝓞 E) ∈ w.asIdeal := by
-        haveI : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-        letI := Ideal.Quotient.field w.asIdeal
+        have : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+        let := Ideal.Quotient.field w.asIdeal
         refine ⟨ringChar (𝓞 E ⧸ w.asIdeal), CharP.char_is_prime (𝓞 E ⧸ w.asIdeal) _, ?_⟩
         rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
         exact ringChar.Nat.cast_ringChar
@@ -295,7 +295,7 @@ theorem not_cube_dvd (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : ((D.host.d : 
   rw [Ideal.IsDedekindDomain.ramificationIdx'_eq_multiplicity (by rw [hm]; simpa using hp.ne_zero) w.isPrime, hm] at hIn
   have hf : FiniteMultiplicity w.asIdeal (Ideal.span {((D.host.d : ℕ) : 𝓞 D.host.E)}) := by
     by_contra hn
-    rw [multiplicity_eq_one_of_not_finiteMultiplicity hn] at hIn
+    rw [multiplicity_eq_zero_of_not_finiteMultiplicity hn] at hIn
     omega
   have := hf.le_multiplicity_of_pow_dvd h
   omega

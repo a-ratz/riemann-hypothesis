@@ -112,8 +112,8 @@ theorem exists_gen_idem {R : Type} [CommRing R] [IsDedekindDomain R] (w : Ideal 
 
 theorem ringHom_flat_of_retract {A B C : CommRingCat.{0}} (ψ : A ⟶ C) (σ : C ⟶ B) (π : B ⟶ C)
     (h : σ ≫ π = 𝟙 C) (hf : (ψ ≫ σ).hom.Flat) : ψ.hom.Flat := by
-  letI := ψ.hom.toAlgebra
-  letI := (ψ ≫ σ).hom.toAlgebra
+  let := ψ.hom.toAlgebra
+  let := (ψ ≫ σ).hom.toAlgebra
   have hB : Module.Flat A B := hf
   have hπσ : ∀ z, π.hom (σ.hom z) = z := fun z => by
     rw [← CommRingCat.comp_apply, h, CommRingCat.id_apply]
@@ -137,12 +137,12 @@ theorem flat_of_retract {X Y S : Scheme.{0}} (f : X ⟶ S) (i : X ⟶ Y) (r : Y 
   refine Flat.of_stalkMap f fun x => ?_
   have hx : r (i x) = x := by
     rw [← Scheme.Hom.comp_apply, h]; rfl
-  haveI : IsIso (i ≫ r) := by rw [h]; infer_instance
-  haveI : IsOpenImmersion (i ≫ r) := inferInstance
-  haveI : IsIso ((i ≫ r).stalkMap x) := inferInstance
+  have : IsIso (i ≫ r) := by rw [h]; infer_instance
+  have : IsOpenImmersion (i ≫ r) := inferInstance
+  have : IsIso ((i ≫ r).stalkMap x) := inferInstance
   have key : (f.stalkMap (r (i x))).hom.Flat := by
     have e1 : r.stalkMap (i x) ≫ i.stalkMap x = (i ≫ r).stalkMap x := (Scheme.Hom.stalkMap_comp i r x).symm
-    haveI hg : IsIso (r.stalkMap (i x) ≫ i.stalkMap x) := by rw [e1]; exact this
+    have hg : IsIso (r.stalkMap (i x) ≫ i.stalkMap x) := by rw [e1]; exact this
     have e2 : r.stalkMap (i x) ≫ (i.stalkMap x ≫ CategoryTheory.inv (r.stalkMap (i x) ≫ i.stalkMap x)) = 𝟙 _ := by
       rw [← Category.assoc, IsIso.hom_inv_id]
     refine ringHom_flat_of_retract (f.stalkMap (r (i x))) (r.stalkMap (i x)) _ e2 ?_
@@ -177,9 +177,9 @@ theorem act_finite_flat {S : Scheme.{0}} [IsLocallyNoetherian S] {F O : Type} [F
   obtain ⟨hfe, -⟩ := GlobalTheory.MulFiniteFlat.isFinite_and_flat_mul S A hA _ (Nat.one_le_iff_ne_zero.2 he)
   have hpr := hA.proper
   have hsm := hA.smooth
-  haveI : IsSeparated ((act.act (algebraMap (𝓞 F) O a)).left ≫ A.hom) := by rw [Over.w]; infer_instance
-  haveI : IsSeparated (act.act (algebraMap (𝓞 F) O a)).left := IsSeparated.of_comp _ A.hom
-  haveI : IsFinite ((act.act (algebraMap (𝓞 F) O c)).left ≫ (act.act (algebraMap (𝓞 F) O a)).left) := by
+  have : IsSeparated ((act.act (algebraMap (𝓞 F) O a)).left ≫ A.hom) := by rw [Over.w]; infer_instance
+  have : IsSeparated (act.act (algebraMap (𝓞 F) O a)).left := IsSeparated.of_comp _ A.hom
+  have : IsFinite ((act.act (algebraMap (𝓞 F) O c)).left ≫ (act.act (algebraMap (𝓞 F) O a)).left) := by
     rw [← Over.comp_left, hcomp]; exact hfe
   have hf : IsFinite (act.act (algebraMap (𝓞 F) O c)).left := IsFinite.of_comp _ (act.act (algebraMap (𝓞 F) O a)).left
   refine ⟨hf, GlobalTheory.flat_of_isFinite_of_flat_geometric_fibres S A A _ inferInstance inferInstance hf fun K _ _ t => ?_⟩
@@ -200,9 +200,9 @@ theorem exists_torsion_finite_flat : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalThe
   obtain ⟨α, x, hα0, -, -, hxx, hwx⟩ := exists_gen_idem w hw
   obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.1 hxx
   have hA := o.ab
-  haveI := o.act.hom (algebraMap (𝓞 D.F) D.O α)
-  haveI := o.act.hom (algebraMap (𝓞 D.F) D.O x)
-  haveI := o.act.hom (algebraMap (𝓞 D.F) D.O t)
+  have := o.act.hom (algebraMap (𝓞 D.F) D.O α)
+  have := o.act.hom (algebraMap (𝓞 D.F) D.O x)
+  have := o.act.hom (algebraMap (𝓞 D.F) D.O t)
   have comm : o.act.act (algebraMap (𝓞 D.F) D.O α) ≫ o.act.act (algebraMap (𝓞 D.F) D.O x) =
       o.act.act (algebraMap (𝓞 D.F) D.O x) ≫ o.act.act (algebraMap (𝓞 D.F) D.O α) := by
     rw [← o.act.mul, ← o.act.mul, ← map_mul, ← map_mul, mul_comm]
@@ -216,16 +216,16 @@ theorem exists_torsion_finite_flat : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalThe
   set fx := o.act.act (algebraMap (𝓞 D.F) D.O x) with hfx
   set ft := o.act.act (algebraMap (𝓞 D.F) D.O t) with hft
   obtain ⟨hfinα, hflα⟩ := act_finite_flat o.A hA o.act α hα0
-  letI gH : GrpObj (ker fα) := grp fα
-  haveI : IsMonHom (pullback.fst fα η[o.A]) := isMonHom_fst fα
+  let gH : GrpObj (ker fα) := grp fα
+  have : IsMonHom (pullback.fst fα η[o.A]) := isMonHom_fst fα
   have hPB := (IsPullback.of_hasPullback fα η[o.A]).map (Over.forget S)
   have hHfin : IsFinite (ker fα).hom := by
     rw [← Over.w (pullback.snd fα η[o.A])]
-    haveI : IsFinite (pullback.snd fα η[o.A]).left := MorphismProperty.of_isPullback (P := @IsFinite) hPB hfinα
+    have : IsFinite (pullback.snd fα η[o.A]).left := MorphismProperty.of_isPullback (P := @IsFinite) hPB hfinα
     exact inferInstanceAs (IsFinite (_ ≫ 𝟙 S))
   have hHflat : Flat (ker fα).hom := by
     rw [← Over.w (pullback.snd fα η[o.A])]
-    haveI : Flat (pullback.snd fα η[o.A]).left := MorphismProperty.of_isPullback (P := @Flat) hPB hflα
+    have : Flat (pullback.snd fα η[o.A]).left := MorphismProperty.of_isPullback (P := @Flat) hPB hflα
     exact inferInstanceAs (Flat (_ ≫ 𝟙 S))
 
   set jH := pullback.fst fα η[o.A] with hjH
@@ -235,8 +235,8 @@ theorem exists_torsion_finite_flat : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalThe
   have hg : g ≫ jH = jH ≫ fx := lift_fst _ _ _
   have hxx' : jH ≫ fx ≫ fx = jH ≫ fx := by
     rw [idem, MonObj.comp_mul, ← Category.assoc jH fα ft, hj, MonObj.one_comp, _root_.mul_one]
-  letI gK : GrpObj (ker (jH ≫ fx)) := grp (jH ≫ fx)
-  haveI : IsMonHom (pullback.fst (jH ≫ fx) η[o.A]) := isMonHom_fst (jH ≫ fx)
+  let gK : GrpObj (ker (jH ≫ fx)) := grp (jH ≫ fx)
+  have : IsMonHom (pullback.fst (jH ≫ fx) η[o.A]) := isMonHom_fst (jH ≫ fx)
   set iK := pullback.fst (jH ≫ fx) η[o.A] with hiK
   have hk : iK ≫ jH ≫ fx = 1 := fst_comp (jH ≫ fx)
   have hrk : (𝟙 (ker fα) / g) ≫ jH ≫ fx = 1 := by
@@ -251,14 +251,14 @@ theorem exists_torsion_finite_flat : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalThe
   have hirl : iK.left ≫ r.left = 𝟙 _ := by rw [← Over.comp_left, hir, Over.id_left]
 
   have hKfin : IsFinite (ker (jH ≫ fx)).hom := by
-    haveI : IsFinite (r.left ≫ (ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHfin
-    haveI : IsSeparated (r.left ≫ (ker (jH ≫ fx)).hom) := by rw [Over.w r]; infer_instance
-    haveI : IsSeparated r.left := IsSeparated.of_comp _ (ker (jH ≫ fx)).hom
-    haveI : IsFinite (iK.left ≫ r.left) := by rw [hirl]; infer_instance
-    haveI : IsFinite iK.left := IsFinite.of_comp _ r.left
+    have : IsFinite (r.left ≫ (ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHfin
+    have : IsSeparated (r.left ≫ (ker (jH ≫ fx)).hom) := by rw [Over.w r]; infer_instance
+    have : IsSeparated r.left := IsSeparated.of_comp _ (ker (jH ≫ fx)).hom
+    have : IsFinite (iK.left ≫ r.left) := by rw [hirl]; infer_instance
+    have : IsFinite iK.left := IsFinite.of_comp _ r.left
     rw [← Over.w iK]; infer_instance
   have hKflat : Flat (ker (jH ≫ fx)).hom := by
-    haveI : Flat (r.left ≫ (ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHflat
+    have : Flat (r.left ≫ (ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHflat
     exact flat_of_retract _ iK.left r.left hirl
   refine ⟨ker (jH ≫ fx), gK, iK ≫ jH, inferInstance, inferInstance, hKfin, hKflat, fun T z => ?_⟩
   rw [hwx, Ideal.map_span, Set.image_pair, GlobalTheory.IwLevel.killedBy_span]

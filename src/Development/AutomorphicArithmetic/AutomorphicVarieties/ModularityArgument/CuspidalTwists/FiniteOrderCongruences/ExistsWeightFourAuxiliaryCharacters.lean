@@ -68,13 +68,13 @@ private theorem cls_one {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
     (hs : ∀ ζ : Ω, ζ ^ N = 1 → s ζ = ζ) : UpperTheory.V.Chr.cls ℚ Ω N s = 1 := by
   have hcs := UpperTheory.V.Chr.cls_spec (k := ℚ) (Ω := Ω) N s
   rcases Nat.lt_or_ge 1 N with hN | hN
-  · haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-    haveI : NeZero (N : Ω) := ⟨by exact_mod_cast NeZero.ne N⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  · have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+    have : NeZero (N : Ω) := ⟨by exact_mod_cast NeZero.ne N⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
     have h1 : ζ ^ 1 = ζ ^ (UpperTheory.V.Chr.cls ℚ Ω N s : ZMod N).val := by
       rw [pow_one, ← hcs ζ hζ.pow_eq_one, hs ζ hζ.pow_eq_one]
     have hv := hζ.pow_inj hN (ZMod.val_lt _) h1
-    haveI : Fact (1 < N) := ⟨hN⟩
+    have : Fact (1 < N) := ⟨hN⟩
     apply Units.ext
     rw [Units.val_one]
     apply ZMod.val_injective
@@ -136,7 +136,7 @@ theorem UpperTheory.exists_splitPrime_cmDatum :
   have hwN : w ≡ 1 [MOD N] := Nat.ModEq.of_dvd (Dvd.intro_left M rfl) hmod
   refine ⟨w, hw, hMw, hwM, ?_⟩
   intro A hA g hg
-  haveI : Fact (Nat.Prime w) := ⟨hw⟩
+  have : Fact (Nat.Prime w) := ⟨hw⟩
   have hcop : N.Coprime w := by
     have h := Nat.ModEq.gcd_eq hwN
     rw [Nat.gcd_one_left] at h
@@ -181,14 +181,14 @@ theorem UpperTheory.exists_theta_character_cmDatum : UpperTheory.V.Sd.S3.ThetaEx
   unfold UpperTheory.V.Sd.S3.ThetaEx
   intro Ω _ _ _ l _ w hw hwl
   unfold KillsMu
-  haveI : Fact w.Prime := ⟨hw⟩
+  have : Fact w.Prime := ⟨hw⟩
   have hlp : Nat.Prime l := Fact.out
   have hdvd : l ∣ Nat.card (ZMod w)ˣ := by
     rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient, Nat.totient_prime hw]
     exact (Nat.modEq_iff_dvd' hw.one_lt.le).1 hwl.symm
-  haveI : IsAlgClosed (Qbar l) := inferInstance
-  haveI : NeZero (l : Qbar l) := ⟨by exact_mod_cast hlp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Qbar l) l
+  have : IsAlgClosed (Qbar l) := inferInstance
+  have : NeZero (l : Qbar l) := ⟨by exact_mod_cast hlp.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Qbar l) l
   let z : (Qbar l)ˣ := (hζ.isUnit hlp.ne_zero).unit
   have hz : z ≠ 1 := by
     intro h
@@ -208,7 +208,7 @@ theorem UpperTheory.exists_theta_character_cmDatum : UpperTheory.V.Sd.S3.ThetaEx
   · ext s
     simp [hφl]
   · intro s hs
-    haveI : Fact (1 < w) := ⟨hw.one_lt⟩
+    have : Fact (1 < w) := ⟨hw.one_lt⟩
     have h1 : UpperTheory.V.Chr.cls ℚ Ω w s = 1 :=
       (UpperTheory.V.Chr.clsFacts ℚ Ω w).2.2.1 s 1 (fun ζ hζ => by
         rw [Units.val_one, ZMod.val_one, pow_one]
@@ -235,7 +235,7 @@ namespace UpperTheory.V.Cu2
 private theorem cls_one {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (N : ℕ) [NeZero N] (s : G ℚ Ω)
     (hs : ∀ ζ : Ω, ζ ^ N = 1 → s ζ = ζ) : UpperTheory.V.Chr.cls ℚ Ω N s = 1 := by
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   have h := UpperTheory.V.Chr.cls_spec N s ζ hζ.pow_eq_one
   rw [hs ζ hζ.pow_eq_one] at h
   have h2 : ζ ^ ((UpperTheory.V.Chr.cls ℚ Ω N s : (ZMod N)ˣ) : ZMod N).val = ζ ^ (1 : ZMod N).val := by

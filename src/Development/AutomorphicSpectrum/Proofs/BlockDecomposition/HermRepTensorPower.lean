@@ -212,7 +212,7 @@ theorem isHermRep_pow (m : ℕ) (n : Fin (m + 1) → ℕ) (M : HermLB (mpStr ℤ
       (u (j PUnit.unit) c) r hy
     beta_reduce
     rw [h_powLine, e, eφ, show CxPts.ev (mpStr ℤ m n) σ₀ ((M.pow r).B.U j ⊓ mchart c) _ y = _ from ev, norm_pow, mul_pow, mul_pow, ← Finset.prod_pow,
-      ← Real.exp_nat_mul, mul_div_assoc]
+      ← Real.exp_natCast_mul, mul_div_assoc]
     congr 2
     refine Finset.prod_congr rfl fun k _ => ?_
     rw [powLine_a, mul_comm, zpow_mul, zpow_natCast]

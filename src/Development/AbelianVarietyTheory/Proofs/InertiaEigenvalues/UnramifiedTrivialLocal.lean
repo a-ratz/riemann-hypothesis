@@ -66,7 +66,7 @@ theorem unramifiedCocycles_le_blochKatoFinite_trivial {l : ℕ} [Fact l.Prime] {
   obtain ⟨hZ, x, hx⟩ := hc
   refine ⟨hZ, ?_⟩
   obtain ⟨hcont, hadd⟩ := hZ
-  haveI := LL.2
+  have := LL.2
   let v := Module.finBasis ℚ_[l] ↥LL.1
   have hI : ∀ g ∈ IK K, c g = 0 := fun g hg => by simpa using hx g hg
   have hex : ∀ i, ∃ b : P.R.B, ∀ g : ↥(GK K),
@@ -90,7 +90,7 @@ theorem unramifiedCocycles_le_blochKatoFinite_trivial {l : ℕ} [Fact l.Prime] {
 theorem Z1ur_ne_bot {l : ℕ} [Fact l.Prime] (K LL : FinExt l) :
     Z1ur (1 : Representation ↥LL.1 ↥(GK K) ↥LL.1) (IK K) ≠ ⊥ := by
   obtain ⟨δ, hδc, hδa, hδI, g₀, hg₀⟩ := GlobalTheory.UnramZl.exists_unramified_character l K
-  haveI := LL.2
+  have := LL.2
   let c : ↥(GK K) → ↥LL.1 := fun g => algebraMap ℚ_[l] ↥LL.1 (δ g)
   have hcc : Continuous c :=
     (Algebra.linearMap ℚ_[l] ↥LL.1).continuous_of_finiteDimensional.comp hδc
@@ -127,10 +127,10 @@ theorem unrTriv_of_finrank {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAi
     UnrTriv (P.PD K) (LL := ↥LL.1) (IK K) := by
   have hZ : finrank ↥LL.1 ↥(finiteCocycles (P.PD K) (1 : Representation ↥LL.1 ↥(GK K) ↥LL.1)) = 1 :=
     (finrank_Z1f_trivial P K LL).trans h1
-  haveI : FiniteDimensional ↥LL.1 ↥(finiteCocycles (P.PD K) (1 : Representation ↥LL.1 ↥(GK K) ↥LL.1)) :=
+  have : FiniteDimensional ↥LL.1 ↥(finiteCocycles (P.PD K) (1 : Representation ↥LL.1 ↥(GK K) ↥LL.1)) :=
     Module.finite_of_finrank_eq_succ hZ
   have hle := unramifiedCocycles_le_blochKatoFinite_trivial AI T K LL
-  haveI := Submodule.finiteDimensional_of_le hle
+  have := Submodule.finiteDimensional_of_le hle
   have hpos : 0 < finrank ↥LL.1 ↥(Z1ur (1 : Representation ↥LL.1 ↥(GK K) ↥LL.1) (IK K)) := by
     refine Nat.pos_of_ne_zero fun h0 => Z1ur_ne_bot K LL ?_
     exact Submodule.finrank_eq_zero.1 h0
@@ -143,7 +143,7 @@ namespace GlobalTheory.UnramifiedTrivial
 theorem unrTriv : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI →
     ∀ (K LL : FinExt l), UnrTriv (P.PD K) (LL := ↥LL.1) (IK K) := by
   intro l _ P AI T K LL
-  haveI := LL.2
+  have := LL.2
   obtain ⟨hgood, -⟩ := GlobalTheory.LocalIntegers.good_integers l LL
   let A : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) :=
     { V := ↥LL.1

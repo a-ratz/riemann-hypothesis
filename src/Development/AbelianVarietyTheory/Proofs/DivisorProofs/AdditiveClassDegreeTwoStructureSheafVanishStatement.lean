@@ -117,7 +117,7 @@ theorem lowerWedge_sub_flip :
     LinearMap.smul_apply, wedgeBil_apply]
   rcases lt_trichotomy i j with h | rfl | h
   · simp [h, h.not_gt]
-  · simp only [lt_irrefl, if_false, sub_zero]
+  · simp only [lt_irrefl, ite_false, sub_zero]
     exact congrArg _ ((exteriorPower.ιMulti R 2 (M := I →₀ R)).map_eq_zero_of_eq ![Finsupp.single i 1, Finsupp.single i 1] (i := 0) (j := 1) rfl (by decide)).symm
   · have hs := (exteriorPower.ιMulti R 2).map_swap ![Finsupp.single j (1:R), Finsupp.single i 1] (i := 0) (j := 1) (by decide)
     have e : ![Finsupp.single j (1:R), Finsupp.single i 1] ∘ Equiv.swap 0 1 = ![Finsupp.single i 1, Finsupp.single j 1] := by
@@ -186,7 +186,7 @@ namespace GlobalTheory.WedgeDiag
 theorem eq_zero_of_diag_additive : ∀ (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Module.Projective R M] (t : ⋀[R]^2 M), exteriorPower.map 2 (LinearMap.inl R M M + LinearMap.inr R M M) t = exteriorPower.map 2 (LinearMap.inl R M M) t + exteriorPower.map 2 (LinearMap.inr R M M) t → t = 0 := by
   intro R M _ _ _ _ t H
   obtain ⟨s, hs⟩ := Module.projective_def'.mp (inferInstance : Module.Projective R M)
-  letI : LinearOrder M := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder M := IsWellOrder.linearOrder WellOrderingRel
   set p : (M →₀ R) →ₗ[R] M := Finsupp.linearCombination R id
   have e0 : (LinearMap.inl R (M →₀ R) (M →₀ R) + LinearMap.inr R (M →₀ R) (M →₀ R)) ∘ₗ s =
       (s.prodMap s) ∘ₗ (LinearMap.inl R M M + LinearMap.inr R M M) := by
@@ -424,7 +424,7 @@ theorem GlobalTheory.Obs.primitiveStructureSheafDegTwoVanish_of_cup_iso
       intro z
       rw [← LinearMap.comp_apply, ← exteriorPower.map_comp, hid, exteriorPower.map_id, LinearMap.id_apply]
     rw [← k x, ← k y, hxy]
-  haveI := hproj
+  have := hproj
   rw [GlobalTheory.T.exteriorPowerTwo_diagonal_additive_eq_zero_projective R (HO1 A.hom) t (hinj E), map_zero]
 end -- clump:auto
 end -- clump:auto

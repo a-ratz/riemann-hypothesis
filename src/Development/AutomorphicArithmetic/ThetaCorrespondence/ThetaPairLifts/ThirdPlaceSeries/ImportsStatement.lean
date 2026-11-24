@@ -387,7 +387,7 @@ theorem lift_levelP_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
       ((_root_.GlobalTheory.Fam.pk_z W).ItY j) ((_root_.GlobalTheory.Fam.pk_z W).CC t (j + 1)) ((_root_.GlobalTheory.Fam.pk_z W).CC t j) ((_root_.GlobalTheory.Fam.pk_z W).ioY t j) :=
     hW.bot.hyp.2.2.2.1.chain.ioY t j (by omega)
   have hfin : ∀ PP : (_root_.GlobalTheory.Fam.pk_z W).Pg, Finite (kP PP.1) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot _ PP.1.ne_bot
-  haveI : Fintype (_root_.GlobalTheory.Fam.complexLevelStructure W).H := Fintype.ofFinite _
+  have : Fintype (_root_.GlobalTheory.Fam.complexLevelStructure W).H := Fintype.ofFinite _
   obtain ⟨κ, hκ, hsum⟩ := _root_.GlobalTheory.FockVecSum.fockVec_eq_sum_alt W hW t j hj
   funext g
   unfold liftS Lift.liftInt

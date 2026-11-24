@@ -64,7 +64,7 @@ namespace GlobalTheory.ChartKSBracket
 
 theorem tanPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t), letI := H.starRing; ∀ (Y : Ray P.oD) (u : TanM (𝟙 (Sp R)) Y.H), ∃ v' : TanM (𝟙 (Sp R)) t.G, GlobalTheory.FormalPoint.IsPointOf P.U.toUnifPre (Y.Φ _ (tv u)) (tv v') := by
   intro E _ _ _ H R _ _ _ _ _ t P Y u
-  letI := H.starRing
+  let := H.starRing
   have : Module.Finite R (DualNumber R) := inferInstanceAs (Module.Finite R (R × R))
   have := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal R) (DualNumber R)
   have : Nontrivial (DualNumber R) := (TrivSqZeroExt.inl_injective (R := R) (M := R)).nontrivial

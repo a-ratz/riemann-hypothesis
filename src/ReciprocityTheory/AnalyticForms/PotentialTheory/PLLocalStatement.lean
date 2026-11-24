@@ -595,7 +595,7 @@ theorem pl_good (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
   congr 1
   cases hσ : σ k with
   | none =>
-    simp only [reduceCtorEq, if_false, Finset.sum_const_zero]
+    simp only [reduceCtorEq, ite_false, Finset.sum_const_zero]
     have hv0 (p : W k) : v p.1 = 0 := by
       by_contra hne
       have hp : p.1 ∈ tsupport v := subset_tsupport _ hne
@@ -607,8 +607,8 @@ theorem pl_good (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
       exact absurd hi (by simp)
     exact (mInt_zero_fun (B k) _ (g := v ∘ Subtype.val) hv0).symm
   | some i =>
-    simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, if_true]
-    haveI : CompactSpace (W k) :=
+    simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
+    have : CompactSpace (W k) :=
       isCompact_iff_compactSpace.1 (SimpleNormalCrossingSliceCharts.isClosed_divisorComponent A L s m W hSNC k).isCompact
     have hWψ' : W k ∩ ψ.source = {p ∈ ψ.source | ψ p i = 0} := by
       rw [hWψ k, hσ]
@@ -699,7 +699,7 @@ theorem pl_exists_chart (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X 
     intro hp hpW
     rw [hVdef] at hp
     have := Set.mem_iInter.1 hp.2 k
-    rw [if_neg hk] at this
+    rw [ite_eq_right hk] at this
     exact this hpW
 
 theorem pl_global : PoincareLelongStatement := by
@@ -722,7 +722,7 @@ theorem pl_global : PoincareLelongStatement := by
     rw [hf]
     exact smoothOn_mul h1 hv
   have hfpl : ∀ j, mInt A (Fin.cons (LocPot.ofFun (f j)) Φ) (logNormSec L s) =
-      ∑ k, (m k : ℝ) * mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
+      ∑ k, (m k : ℝ) * mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
         (f j ∘ Subtype.val) - mInt A (Fin.cons L Φ) (f j) := by
     intro j
     obtain ⟨i, hi⟩ := hAC2 j
@@ -742,15 +742,15 @@ theorem pl_global : PoincareLelongStatement := by
     · exact hΦ k
   have : ∀ k, CompactSpace (W k) := fun k =>
     isCompact_iff_compactSpace.1 (sncClosed A L s m W hSNC k).isCompact
-  have hΦB : ∀ k i, IsPotential (B k) ((Φ i).pullback Subtype.val continuous_subtype_val) :=
+  have hΦB : ∀ k i, IsPotential (B k) ((Φ i).pullback Subtype.val continuous_subtypeVal) :=
     fun k i => isPotentialPullback A (B k) Subtype.val (hB k) (Φ i) (hΦ i)
   have hc : ∀ j, Continuous (f j) := fun j => smooth_continuous (hfs j)
-  have hk : ∀ k, mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
+  have hk : ∀ k, mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
       ((fun p => ∑ j ∈ Finset.univ, f j p) ∘ Subtype.val) =
-      ∑ j, mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
+      ∑ j, mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
         (f j ∘ Subtype.val) := fun k =>
     mInt_sum_cont (B k) _ (hΦB k) Finset.univ (fun j => f j ∘ Subtype.val)
-      (fun j => (hc j).comp continuous_subtype_val)
+      (fun j => (hc j).comp continuous_subtypeVal)
   rw [hvsum, lhs_sum A L s (fun Φ' hΦ' => logNormIntegrable A L s m W hL hs hSNC Φ' hΦ') Φ hΦ
     Finset.univ f hfs, mInt_sum_cont A (Fin.cons L Φ) hpot Finset.univ f hc,
     Finset.sum_congr rfl fun j _ => hfpl j, Finset.sum_sub_distrib]

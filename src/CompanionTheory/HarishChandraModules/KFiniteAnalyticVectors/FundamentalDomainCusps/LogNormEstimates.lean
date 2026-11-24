@@ -235,7 +235,7 @@ theorem arithmetic_subgroup_of_transport : Transp → GamSub := by
       from h1 v, ← atM_mul, Units.mul_inv, atM_one]
   · let f : I.Ginf → InfinitePlace I.F → Fin I.n → Fin I.n → ℂ := fun g v i j => (I.P v * uMat (g v) * (I.P v)⁻¹) i j
     have hf : Continuous f := continuous_pi fun v => continuous_pi fun i => continuous_pi fun j =>
-      ((continuous_const.matrix_mul ((Units.continuous_val.comp continuous_subtype_val).comp
+      ((continuous_const.matrix_mul ((Units.continuous_val.comp continuous_subtypeVal).comp
         (continuous_apply v))).matrix_mul continuous_const).matrix_elem i j
     obtain ⟨B, hB⟩ := hC.exists_bound_of_continuousOn hf.continuousOn
     have hfin := Set.Finite.pi' fun _ : Fin I.n => Set.Finite.pi' fun _ : Fin I.n =>
@@ -256,7 +256,7 @@ theorem fundamental_domain_discrete_of : GamSub → GFDisc := by
   intro _ I C hC
   have := Formalism.L2.SG.Pf.finite_adeles_group_t2 I
   have := Formalism.L2.SG.Pf.gf_discrete I
-  have hcl : IsClosed ((rr_GF I : Subgroup I.GA) : Set I.GA) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed ((rr_GF I : Subgroup I.GA) : Set I.GA) := Subgroup.isClosed_of_discreteTopology
   exact (hC.inter_right hcl).finite
     (IsDiscrete.mono (isDiscrete_iff_discreteTopology.2 this) Set.inter_subset_right)
 

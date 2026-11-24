@@ -288,8 +288,8 @@ theorem exists_lattice_sections : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       have ex : ∃ f : EigFrame Z ((ψ u).comp φ) (spMap (ψ u) ≫ (x ≫ genι Z)), ∀ τ i, f.v τ i = spMap (dualMap (ψ u)) ≫ fr.v τ i := by
         open ReciprocityTheory.ChartRestriction.G.PullbackSections GlobalTheory.LieMet GlobalTheory.LocM GlobalTheory.LocM.FrameBC in
         have h : GlobalTheory.LocM.IsFrame Z.t ((ψ u).comp φ) (spMap (ψ u) ≫ (x ≫ genι Z)) ((fun τ i => spMap (dualMap (ψ u)) ≫ fr.v τ i)) := by
-          letI : Algebra c.F A := φ.toAlgebra
-          letI : Algebra c.F ℂ := ((ψ u).comp φ).toAlgebra
+          let : Algebra c.F A := φ.toAlgebra
+          let : Algebra c.F ℂ := ((ψ u).comp φ).toAlgebra
           let v : ∀ τ, Fin (Dw.mult τ) → TanM (x ≫ genι Z) Z.t.G := fun τ i => tanOf (fr.tan τ i)
           have eps_dual (a : A) : spMap (dualMap (ψ u)) ≫ spMap (epsMul a) = spMap (epsMul ((ψ u) a)) ≫ spMap (dualMap (ψ u)) := by
             rw [spMap_comp_spMap, spMap_comp_spMap]

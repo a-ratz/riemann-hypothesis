@@ -148,7 +148,7 @@ theorem le_of_le_reductions : ∀ (R : Type) [CommRing R] (I : Ideal R), I ≤ I
   have h2 : ∀ x : V, I ≤ (p x).asIdeal → ∃ U : S, x ∈ U.1.1 := by
     intro x hx
     obtain ⟨U, hU⟩ := exists_affineOpen_mem x
-    haveI : IsNoetherianRing Γ(V, U) := IsLocallyNoetherian.component_noetherian U
+    have : IsNoetherianRing Γ(V, U) := IsLocallyNoetherian.component_noetherian U
     obtain ⟨r, hr, hr'⟩ := _root_.GlobalTheory.krull_inter_ideal_local Γ(V, U) (I.map (cst p U.1)) (a.ideal U) (a'.ideal U)
       (fun e => by
         have := hle e U

@@ -54,7 +54,7 @@ theorem eq_one_of_forall_isOpen_subgroup : ∀ (E Ω : Type) [Field E] [NumberFi
     (g : Gab E Ω), (∀ U : Subgroup (Gab E Ω), IsOpen (U : Set (Gab E Ω)) → g ∈ U) → g = 1 := by
   intro E Ω _ _ _ _ g hg
   by_contra hne
-  haveI : IsClosed ((commutator (G E Ω)).topologicalClosure : Set (G E Ω)) :=
+  have : IsClosed ((commutator (G E Ω)).topologicalClosure : Set (G E Ω)) :=
     Subgroup.isClosed_topologicalClosure _
   have hT1 : T1Space (Gab E Ω) := inferInstance
   have hopen : IsOpen ({g}ᶜ : Set (Gab E Ω)) := isOpen_compl_singleton

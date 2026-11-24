@@ -109,7 +109,7 @@ theorem prodW_cover (W : Scheme.{0}) :
   intro u
   obtain ⟨V, j, v, hj, hv, hS'⟩ := (GlobalTheory.T.mem_etale_covering_sieves_iff_points U S).1 hS ((prod.snd : W ⨯ U ⟶ U) u)
   obtain ⟨z, hz1, hz2⟩ := Scheme.Pullback.exists_preimage_pullback (f := (prod.snd : W ⨯ U ⟶ U)) (g := j) u v hv.symm
-  haveI := hj
+  have := hj
   refine ⟨pullback (prod.snd : W ⨯ U ⟶ U) j, pullback.fst _ _, z, ?_, hz1, ?_⟩
   · exact MorphismProperty.pullback_fst _ _ hj
   refine ⟨V, j, prod.lift (pullback.fst _ _ ≫ prod.fst) (pullback.snd _ _), hS', ?_⟩

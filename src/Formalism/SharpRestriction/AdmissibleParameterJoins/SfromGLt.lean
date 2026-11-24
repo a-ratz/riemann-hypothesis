@@ -86,7 +86,7 @@ theorem img_places (hp : p.Prime) :
 theorem ncard_places (hp : p.Prime) :
     ({v : HeightOneSpectrum (𝓞 K) | ((p : ℕ) : 𝓞 K) ∈ v.asIdeal}).ncard =
       (IsDedekindDomain.primesOverFinset (span {(p : ℤ)}) (𝓞 K)).card := by
-  haveI := pI_max p hp
+  have := pI_max p hp
   rw [← Set.ncard_coe_finset, IsDedekindDomain.coe_primesOverFinset (pI_ne_bot p hp), ← img_places K p hp,
     Set.ncard_image_of_injective _ (fun v w h => HeightOneSpectrum.ext h)]
 
@@ -96,7 +96,7 @@ theorem map_pI_ne_bot (hp : p.Prime) : map (algebraMap ℤ (𝓞 K)) (span {(p :
 
 theorem ef_pos (hp : p.Prime) (P : Ideal (𝓞 K)) (hP : P ∈ IsDedekindDomain.primesOverFinset (span {(p : ℤ)}) (𝓞 K)) :
     1 ≤ (span {(p : ℤ)}).ramificationIdx' P * (span {(p : ℤ)}).inertiaDeg' P := by
-  haveI := pI_max p hp
+  have := pI_max p hp
   obtain ⟨hPp, hPl⟩ := (IsDedekindDomain.mem_primesOverFinset_iff (pI_ne_bot p hp) (𝓞 K)).mp hP
   have he : 0 < (span {(p : ℤ)}).ramificationIdx' P := by
     rw [Ideal.ramificationIdx'_eq_ramificationIdx _ _ (pI_ne_bot p hp)]
@@ -107,7 +107,7 @@ theorem ef_pos (hp : p.Prime) (P : Ideal (𝓞 K)) (hP : P ∈ IsDedekindDomain.
 theorem sum_ef (hp : p.Prime) :
     ∑ P ∈ IsDedekindDomain.primesOverFinset (span {(p : ℤ)}) (𝓞 K),
       (span {(p : ℤ)}).ramificationIdx' P * (span {(p : ℤ)}).inertiaDeg' P = Module.finrank ℚ K := by
-  haveI := pI_max p hp
+  have := pI_max p hp
   exact Ideal.sum_ramification_inertia (𝓞 K) ℚ K (pI_ne_bot p hp)
 
 theorem ef_one_of_card (hp : p.Prime)
@@ -135,14 +135,14 @@ theorem ef_one_sub (hp : p.Prime)
     ∀ P ∈ IsDedekindDomain.primesOverFinset (span {(p : ℤ)}) (𝓞 K),
       (span {(p : ℤ)}).ramificationIdx' P * (span {(p : ℤ)}).inertiaDeg' P = 1 := by
   intro P hP
-  haveI := pI_max p hp
+  have := pI_max p hp
   obtain ⟨hPp, hPl⟩ := (IsDedekindDomain.mem_primesOverFinset_iff (pI_ne_bot p hp) (𝓞 K)).mp hP
   have hPne : P ≠ ⊥ := liesOver_ne_bot K p hp P hPl
-  haveI : P.IsMaximal := hPp.isMaximal hPne
+  have : P.IsMaximal := hPp.isMaximal hPne
 
   obtain ⟨Q, hQm, hQl⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 L) P
-  haveI := hQl
-  haveI hQp : Q.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans Q P _
+  have := hQl
+  have hQp : Q.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans Q P _
   have hQ : Q ∈ IsDedekindDomain.primesOverFinset (span {(p : ℤ)}) (𝓞 L) :=
     (IsDedekindDomain.mem_primesOverFinset_iff (pI_ne_bot p hp) (𝓞 L)).mpr ⟨hQm.isPrime, hQp⟩
   have h1 := hL Q hQ
@@ -169,7 +169,7 @@ theorem splits_sub (hp : p.Prime)
     (h : ({w : HeightOneSpectrum (𝓞 L) | ((p : ℕ) : 𝓞 L) ∈ w.asIdeal}).ncard = Module.finrank ℚ L) :
     Nat.card {v : HeightOneSpectrum (𝓞 K) // ((p : ℕ) : 𝓞 K) ∈ v.asIdeal} = Module.finrank ℚ K ∧
     ∀ v : HeightOneSpectrum (𝓞 K), ((p : ℕ) : 𝓞 K) ∈ v.asIdeal → Nat.card (𝓞 K ⧸ v.asIdeal) = p := by
-  haveI := pI_max p hp
+  have := pI_max p hp
   have hL : (IsDedekindDomain.primesOverFinset (span {(p : ℤ)}) (𝓞 L)).card = Module.finrank ℚ L := by
     rw [← ncard_places L p hp]
     exact h

@@ -86,7 +86,7 @@ theorem frK_isometric_and_one_sub_surjective (l : ℕ) [Fact l.Prime] (P : LocPr
     ∀ j : ℕ, 1 ≤ j → ∀ c : ↥(K0 K), ‖(c : Om l)‖ ≤ 1 →
       ∃ d : ↥(K0 K), ‖(d : Om l)‖ ≤ 1 ∧ d - (l : ↥(K0 K)) ^ j * frK P K d = c := by
   refine ⟨norm_algHom_self _ _, fun j hj c hc => ?_⟩
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
   let T : ↥(K0 K) →ₗ[ℚ_[l]] ↥(K0 K) :=
     LinearMap.id - (LinearMap.mulLeft ℚ_[l] ((l : ↥(K0 K)) ^ j)).comp (frK P K).toLinearMap
   have hT : ∀ d, T d = d - (l : ↥(K0 K)) ^ j * frK P K d := fun d => rfl

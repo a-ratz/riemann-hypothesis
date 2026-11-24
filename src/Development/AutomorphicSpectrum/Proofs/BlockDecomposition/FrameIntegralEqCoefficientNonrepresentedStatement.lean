@@ -157,7 +157,7 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.NoFrame.Gram
 
 theorem inner_facts : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (r : ℕ) (ρ : D.what₂.Tau), Continuous (fun y : Mx D V.rank r => (inner V y y : Mx D r r)) ∧ ∀ y : Mx D V.rank r, (inner V y y : Mx D r r) ∈ hermA D r ∧ compAt θ ρ (inner V y y : Mx D r r) = (compAt θ ρ y).conjTranspose * gramAt D V ρ * compAt θ ρ y := by
   intro D θ hθ V r ρ
-  haveI := (Formalism.IndefR.Eqv.ae_facts D).1
+  have := (Formalism.IndefR.Eqv.ae_facts D).1
   refine ⟨?_, fun y => ⟨?_, ?_⟩⟩
   · change Continuous (fun y : Mx D V.rank r => GlobalTheory.MixModel.adj y * (GlobalTheory.MixModel.gA V * y))
     exact GlobalTheory.MixModel.continuous_adj.matrix_mul (continuous_const.matrix_mul continuous_id)
@@ -327,7 +327,7 @@ theorem exists_dual (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) (r : ℕ) 
     · have := hd i i
       rw [tB_apply, this]; simp
     · intro j _ hj
-      rw [tB_apply, hd, if_neg hj, mul_zero]
+      rw [tB_apply, hd, ite_eq_right hj, mul_zero]
     · simp
   refine ⟨_, fun i => (b i).1, fun i => (b' i).1, fun i => (b i).2, fun i => (b' i).2, ?_, ?_, ?_⟩
   · intro i j
@@ -508,7 +508,7 @@ theorem pairing_comb {n : ℕ} (m : Fin n → Matrix (Fin r) (Fin r) D.host.E) (
 
 theorem continuous_comb {n : ℕ} (m : Fin n → Matrix (Fin r) (Fin r) D.host.E) :
     Continuous fun v : Fin n → AF D.host.F => ∑ i, v i • (rat (m i) : Mx D r r) := by
-  haveI : IsTopologicalAddGroup (Mx D r r) := (lattice_Mx D r r).1
+  have : IsTopologicalAddGroup (Mx D r r) := (lattice_Mx D r r).1
   exact continuous_finsetSum _ fun i _ => (continuous_smul_rat (m i)).comp (continuous_apply i)
 
 theorem comb_mem {n : ℕ} (m : Fin n → Matrix (Fin r) (Fin r) D.host.E)
@@ -555,14 +555,14 @@ theorem isTamagawa_map {lam : Measure (hermA D r)} {𝓖 : Set (hermA D r)} (h :
     GlobalTheory.SWLit.IsTamagawa D.host.F (Fin n) (lam.map c.symm) := by
   obtain ⟨t2, -, t3⟩ := Formalism.IndefR.Eqv.G5.af_facts D.host.F
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D r r
-  haveI : IsTopologicalAddGroup (Mx D r r) := i1
-  haveI : SecondCountableTopology (Mx D r r) := i3
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : BorelSpace (AF D.host.F) := ⟨rfl⟩
-  haveI : BorelSpace (Fin n → AF D.host.F) := Pi.borelSpace
-  haveI : BorelSpace (hermA D r) := Subtype.borelSpace _
+  have : IsTopologicalAddGroup (Mx D r r) := i1
+  have : SecondCountableTopology (Mx D r r) := i3
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : BorelSpace (AF D.host.F) := ⟨rfl⟩
+  have : BorelSpace (Fin n → AF D.host.F) := Pi.borelSpace
+  have : BorelSpace (hermA D r) := Subtype.borelSpace _
   obtain ⟨hH, hF, hm⟩ := h
-  haveI := hH
+  have := hH
   have hc : Measurable c := c.continuous.measurable
   have hcs : Measurable c.symm := c.symm.continuous.measurable
   let me : hermA D r ≃ᵐ (Fin n → AF D.host.F) := c.symm.toHomeomorph.toMeasurableEquiv
@@ -602,7 +602,7 @@ theorem finEF (D : D7) : FiniteDimensional D.host.F D.host.E :=
 
 theorem coords : ∀ (D : D7) (r : ℕ) (lam : Measure (hermA D r)) (𝓖 : Set (hermA D r)), IsCovolOneH lam 𝓖 → ∃ (n : ℕ) (c : (Fin n → AF D.host.F) ≃ₜ+ hermA D r) (u : Mx D r r → Fin n → AF D.host.F) (R : (Fin n → AF D.host.F) → Mx D r r), Continuous u ∧ Continuous R ∧ (∀ x : Mx D r r, x ∈ hermA D r → R (u x) = x) ∧ (∀ (v : Fin n → AF D.host.F) (x : Mx D r r), halfTr (Matrix.trace (HMul.hMul (c v).1 x : Mx D r r)) = v ⬝ᵥ u x) ∧ GlobalTheory.SWLit.IsTamagawa D.host.F (Fin n) (lam.map c.symm) := by
   intro D r lam 𝓖 h
-  haveI := finEF D
+  have := finEF D
   obtain ⟨n, e, e', he, he', hd, hrec, hrec'⟩ := exists_dual (F := D.host.F) D.sp.cm.sig (fun x => star_star x) r
   refine ⟨n, cEquiv e e' he' hd hrec', fun x i => uL (e' i) x, fun w => ∑ i, w i • (rat (e i) : Mx D r r),
     continuous_pi fun i => continuous_uL (e' i), continuous_comb e, fun x hx => sum_uL_smul e e' hrec hx, ?_, ?_⟩
@@ -818,7 +818,7 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.NoFrame
 theorem isOpen_posOn (n : ℕ) (ε : ℝ) (S : Submodule ℂ (Fin n → ℂ)) :
     IsOpen {Z : Matrix (Fin n) (Fin n) ℂ | PosOn ε Z S} := by
   set K : Set (Fin n → ℂ) := (S : Set (Fin n → ℂ)) ∩ Metric.sphere 0 1 with hK
-  have hKc : IsCompact K := (isCompact_sphere 0 1).inter_left S.closed_of_finiteDimensional
+  have hKc : IsCompact K := (isCompact_sphere 0 1).inter_left S.isClosed_of_finiteDimensional
   let F : Matrix (Fin n) (Fin n) ℂ → (Fin n → ℂ) → ℝ := fun Z w => ε * (star w ⬝ᵥ Z.mulVec w).re
   have hF : Continuous (fun p : Matrix (Fin n) (Fin n) ℂ × (Fin n → ℂ) => F p.1 p.2) :=
     continuous_const.mul (Complex.continuous_re.comp
@@ -978,7 +978,7 @@ theorem stdChar_inl (z : InfiniteAdeleRing F) :
   ring
 
 theorem isStd_stdChar : IsStd (stdChar F) := by
-  refine ⟨continuous_subtype_val.comp continuous_adelicChar, fun x => ?_, fun a ha => ?_⟩
+  refine ⟨continuous_subtypeVal.comp continuous_adelicChar, fun x => ?_, fun a ha => ?_⟩
   · show (adelicChar F (algebraMap F (AF F) x) : ℂ) = 1
     rw [adelicChar_algebraMap]; rfl
   · have h0 : evI F ((0, 1) : AF F) = 0 := by
@@ -1026,10 +1026,10 @@ theorem fourier_mem_schA_std (F : Type) [Field F] [NumberField F] (ψ : AddChar 
     (κ : Type) [Fintype κ] [MeasurableSpace (κ → AF F)] [BorelSpace (κ → AF F)] (μ : Measure (κ → AF F))
     [μ.IsAddHaarMeasure] : ∀ Φ ∈ schA F κ, (fun y : κ → AF F => ∫ x, Φ x * ψ (x ⬝ᵥ y) ∂μ) ∈ schA F κ := by
   have hunr := psiUnr_eventually ψ hψ
-  letI mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
-  letI mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
-  haveI bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
+  let mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
+  let mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
+  have bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
   obtain ⟨μi, hμi⟩ : ∃ μ : Measure (κ → mixedEmbedding.mixedSpace F), μ.IsAddHaarMeasure :=
     ⟨Measure.addHaar, inferInstance⟩
   obtain ⟨μv, hμv, hμv1⟩ : ∃ μv : ∀ v : Pl (F := F), Measure (κ → Fv F v), (∀ v, (μv v).IsAddHaarMeasure) ∧
@@ -1045,7 +1045,7 @@ theorem fourier_mem_schA_std (F : Type) [Field F] [NumberField F] (ψ : AddChar 
       ext x; simp [K]
     rw [e]
     exact Measure.addHaarMeasure_self
-  haveI := hμv
+  have := hμv
   obtain ⟨c₀, hc₀, hpure⟩ := _root_.GlobalTheory.AdelicHaarPure.integral_pure_haar F κ μ μi μv hμv1
   obtain ⟨ei', hei'bij, hei'⟩ := _root_.GlobalTheory.ArchFourier.exists_fourier_sInf F κ μi
   have hψc : ∀ v, Continuous (GlobalTheory.LatVac.psiAt ψ v) := fun v => GlobalTheory.SchrSB.continuous_psiAt ψ hψ.1 v
@@ -1154,14 +1154,14 @@ open GlobalTheory.SWLit
 open GlobalTheory.SWQ GlobalTheory.PoissonReindex in
 theorem GlobalTheory.SWLit.tamagawa_eq_map_pi : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] (N : ℕ) (e : κ ≃ Fin N) (ν : Measure (AF F)), GlobalTheory.SWQ.IsCov1 ν → ∀ μ : Measure (κ → AF F), IsTamagawa F κ μ → μ = Measure.map (GlobalTheory.PoissonReindex.reidx (F := F) e) (GlobalTheory.SWQ.muV N ν) := by
   intro F _ _ κ _ N e ν hν μ ⟨hμ, 𝓕, h𝓕1, h𝓕⟩
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   obtain ⟨hHaar, hmem, -, -, D, hDm, hD, hD1⟩ := GlobalTheory.SWQ.rat_lattice_fundamentalDomain F N ν hν
-  haveI := hHaar
-  haveI := hμ
+  have := hHaar
+  have := hμ
   let T : (Fin N → AF F) ≃ₜ+ (κ → AF F) := reidx e
   let Tm : (Fin N → AF F) ≃ᵐ (κ → AF F) := T.toHomeomorph.toMeasurableEquiv
-  haveI hm : (Measure.map Tm (muV N ν)).IsAddHaarMeasure := T.isAddHaarMeasure_map (muV N ν)
+  have hm : (Measure.map Tm (muV N ν)).IsAddHaarMeasure := T.isAddHaarMeasure_map (muV N ν)
   have hr := Measure.isAddLeftInvariant_eq_smul μ (Measure.map Tm (muV N ν))
   set r := μ.addHaarScalarFactor (Measure.map Tm (muV N ν))
   let L := (AddMonoidHom.compLeft (algebraMap F (AF F)).toAddMonoidHom κ).range
@@ -1189,8 +1189,8 @@ theorem GlobalTheory.SWLit.tamagawa_eq_map_pi : ∀ (F : Type) [Field F] [Number
   have hac : μ ≪ Measure.map Tm (muV N ν) := by
     rw [hr]
     exact Measure.smul_absolutelyContinuous
-  haveI : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
-  haveI : Countable L := by
+  have : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
+  have : Countable L := by
     have : Countable (Set.range (AddMonoidHom.compLeft (algebraMap F (AF F)).toAddMonoidHom κ)) :=
       (Set.countable_range _).to_subtype
     exact this
@@ -1198,7 +1198,7 @@ theorem GlobalTheory.SWLit.tamagawa_eq_map_pi : ∀ (F : Type) [Field F] [Number
     rw [← h𝓕1]
     exact (hD'.mono hac).measure_eq h𝓕
   have hr1 : r = 1 := by
-    rw [hr, Measure.smul_apply, hD'1] at h1
+    rw [hr, smul_apply, hD'1] at h1
     simpa using h1
   rw [hr1, one_smul] at hr
   exact hr
@@ -1426,8 +1426,8 @@ theorem fourier_inversion_tamagawa : ∀ (F : Type) [Field F] [NumberField F], I
   intro F _ _ hF ψ hψ κ _ inst hB μ hμ Φ hΦ x
   have hFT : ∀ H ∈ schA F κ, (fun y : κ → AF F => ∫ z, H z * ψ (z ⬝ᵥ y) ∂μ) ∈ schA F κ :=
     _root_.GlobalTheory.AdelicFourierSch.fourier_mem_schA F hF ψ hψ κ μ hμ.1
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have hinst : inst = MeasurableSpace.pi := by
     rw [hB.measurable_eq]
     exact (Pi.borelSpace (ι := κ) (X := fun _ => AF F)).measurable_eq.symm
@@ -1704,8 +1704,8 @@ theorem vanish_generic (F : Type) [Field F] [NumberField F] (hF : NumberField.Is
     (hg : Measurable g) (N : Set (κ → AF F)) (hN : IsOpen N) (hgN : ∀ y, g y ∉ N)
     (z₀ : κ → AF F) (hz : z₀ ∈ closure N) :
     ∫ v, (∫ y, φ y * ψ (v ⬝ᵥ g y) ∂ν) * ψ (-(v ⬝ᵥ z₀)) ∂μ = 0 := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := hμ.1
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := hμ.1
   refine vanish_ring ψ hψ.1 hψ.2.1 κ μ Y ν φ g hg N hN ?_ z₀ hz
   intro hφ hJ N' hN' hsub z₁ hz₁
   obtain ⟨Φ, hΦ, hΦ0, hΦN, hΦ1⟩ := GlobalTheory.T.exists_nonnegative_schwartz_bump F κ N' hN' z₁ hz₁
@@ -1759,11 +1759,11 @@ theorem W_eq_zero_of_obstruction (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.
       Module.finrank ℂ T < Module.finrank ℂ S) :
     W ψ V μ lam φ β = 0 := by
   obtain ⟨hr, hψ, hθ, ⟨𝓕, hF⟩, ⟨𝓖, hG⟩, -, -, -⟩ := h
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
-  haveI : BorelSpace (AF D.host.F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
+  have : BorelSpace (AF D.host.F) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D V.rank r
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
-  haveI : μ.IsAddHaarMeasure := hF.1
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : μ.IsAddHaarMeasure := hF.1
   obtain ⟨n, c, u, R, hu, hR, hRu, hcu, hTam⟩ := GlobalTheory.T.hermitian_coordinates_trace_pairing D r lam 𝓖 hG
   have hin := GlobalTheory.T.gram_map_continuous_hermitian D θ hθ V r ρ
   let g : Mx D V.rank r → Fin n → AF D.host.F := fun y => u (inner V y y)
@@ -1806,8 +1806,8 @@ theorem W_eq_zero_of_obstruction (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.
         simp
   have key := vanish_generic D.host.F D.sp.cm.totReal ψ hψ (Fin n) (lam.map c.symm) hTam _ μ φ g
     hgc.measurable N hN hgN z₀ hz
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D r) := Subtype.borelSpace _
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : BorelSpace (hermA D r) := Subtype.borelSpace _
   have hemb : MeasurableEmbedding (c.symm) := c.symm.toHomeomorph.measurableEmbedding
   rw [hemb.integral_map] at key
   refine Eq.trans ?_ key
@@ -1828,7 +1828,7 @@ theorem noFrame : ∀ (D : D7) (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F)
   intro D r V ψ θ μ lam ν φ h t β hβ hno
   obtain ⟨ρ, ε, S, hε, hS, hT⟩ := GlobalTheory.T.nonrepresented_signature_obstruction D r V h.1 t β hβ hno
   rw [W_eq_zero_of_obstruction r V ψ θ μ lam ν φ h β ρ ε S hε hS hT]
-  haveI hemp : IsEmpty {x : Matrix (Fin V.rank) (Fin r) D.host.E // x.rank = r ∧ gramQ V x = β.1} :=
+  have hemp : IsEmpty {x : Matrix (Fin V.rank) (Fin r) D.host.E // x.rank = r ∧ gramQ V x = β.1} :=
     ⟨fun x => hno ⟨x.1, x.2⟩⟩
   unfold IfrB
   have h0 : (fun q => GlobalTheory.AutomorphicL2Unitary.descend (GQ V) (fun h => ∑' x : {x : Matrix (Fin V.rank) (Fin r) D.host.E // x.rank = r ∧ gramQ V x = β.1},

@@ -139,12 +139,12 @@ theorem exists_sharpOver_cover (g n k : ℕ) (F : SFam g n (zetaAway n)) (F' : S
   have hd : SmoothOfRelativeDimension g c.A.hom :=
     SiegSharpCover.smoothDim c (by omega) b.ζ.isUnit b.unit
   obtain ⟨L₁, L₂⟩ := abelianSchemeLaws_all
-  haveI : IsDedekindDomain (cycAway (n * k)) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
-  haveI : IsLocallyNoetherian (Sp (cycAway (n * k))) :=
+  have : IsDedekindDomain (cycAway (n * k)) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
+  have : IsLocallyNoetherian (Sp (cycAway (n * k))) :=
     inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of _)))
-  haveI := F'.smooth
-  haveI : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
-  haveI : IsLocallyNoetherian F'.X := LocallyOfFiniteType.isLocallyNoetherian F'.s
+  have := F'.smooth
+  have : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
+  have : IsLocallyNoetherian F'.X := LocallyOfFiniteType.isLocallyNoetherian F'.s
   obtain ⟨t, ht, hp⟩ := GlobalTheory.exists_isSharp_and_prim L₁ L₂ Moduli.cube_of_isLB g (8 * g) W J a w w' bas hW hb hw hw'
     hs k (cycAway (n * k)) b F'.X F'.s c (powBaseR_pow hn.ne' hk) hko hc hd
   refine ⟨b, t, hp, ?_⟩
@@ -174,10 +174,10 @@ theorem exists_chart : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
   have hko : Odd ((n.minFac ^ j) ^ 2) := hℓo.pow.pow
   obtain ⟨κ, F', q, ⟨-, hζ, hfin, -, -⟩, ⟨hqs, hqfin, hqet, hqsurj, hq⟩, -⟩ :=
     GlobalTheory.SiegLevCover.exists_levelCover g n n.minFac j F hg hn hodd hℓ hℓn hj
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
-  haveI := F'.smooth
-  haveI : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have := F'.smooth
+  have : Smooth F'.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F'.s
   obtain ⟨Ω, _, _, _, R, y, hRfg, hfrac, hys, hpt, hstalk⟩ :=
     chartL n (n * (n.minFac ^ j) ^ 2) F.X F'.X F.s F'.s q (by omega) (Nat.mul_pos (by omega) (pow_pos (pow_pos hℓ.pos _) _)) inferInstance inferInstance
       hqfin hqet hqsurj η hη

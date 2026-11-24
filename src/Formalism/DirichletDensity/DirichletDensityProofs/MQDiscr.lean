@@ -146,7 +146,7 @@ lemma mqk_finrank_two (K : IntermediateField F E) (β b : E) (hb : b ∈ K) (hβ
   have hev : aeval β (X ^ 2 - C b' : K[X]) = 0 := by simp [b', hβ]
   have hint : IsIntegral K β := ⟨X ^ 2 - C b', hmon, by simpa [aeval_def] using hev⟩
   have hirr : Irreducible (X ^ 2 - C b' : K[X]) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two fun z hz =>
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two fun z hz =>
       hns z z.2 (by simpa [b'] using congrArg Subtype.val hz)
   have hmin : minpoly K β = X ^ 2 - C b' := (minpoly.eq_of_irreducible_of_monic hirr hev hmon).symm
   rw [IntermediateField.adjoin.finrank hint, hmin, natDegree_X_pow_sub_C _]
@@ -360,7 +360,7 @@ theorem adjoin_top_of_lift {E : Type} [Field E] [Algebra ℚ E] (K : Intermediat
 
 theorem nrRealPlaces_zero {E : Type} [Field E] [NumberField E] (x : E) (c : ℤ) (hc : c < 0)
     (hx : x ^ 2 = (c : E)) : nrRealPlaces E = 0 := by
-  haveI : IsEmpty {w : InfinitePlace E // w.IsReal} := ⟨fun ⟨w, hw⟩ => by
+  have : IsEmpty {w : InfinitePlace E // w.IsReal} := ⟨fun ⟨w, hw⟩ => by
     have h1 := congrArg (embedding_of_isReal hw) hx
     rw [map_pow, map_intCast] at h1
     have h2 : (0 : ℝ) ≤ (embedding_of_isReal hw x) ^ 2 := sq_nonneg _

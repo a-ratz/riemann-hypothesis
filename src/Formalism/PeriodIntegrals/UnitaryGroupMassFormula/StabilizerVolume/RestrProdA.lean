@@ -60,9 +60,9 @@ theorem hasProd_compl_of_ne_zero {β : Type} {f : β → ℂ} {p : ℂ} (h : Has
     HasProd ({b | b ∉ S}.mulIndicator f) (p * ∏ b ∈ S, (f b)⁻¹) := by
   classical
   have h2 : HasProd (fun b => if b ∈ S then (f b)⁻¹ else 1)
-      (∏ b ∈ S, (if b ∈ S then (f b)⁻¹ else 1)) := hasProd_prod_of_ne_finset_one fun b hb => if_neg hb
+      (∏ b ∈ S, (if b ∈ S then (f b)⁻¹ else 1)) := hasProd_prod_of_ne_finset_one fun b hb => ite_eq_right hb
   have e : ∏ b ∈ S, (if b ∈ S then (f b)⁻¹ else 1) = ∏ b ∈ S, (f b)⁻¹ :=
-    Finset.prod_congr rfl fun b hb => if_pos hb
+    Finset.prod_congr rfl fun b hb => ite_eq_left hb
   rw [e] at h2
   convert h.mul h2 using 1
   funext b
@@ -100,14 +100,14 @@ theorem rpTail_gen {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E
   have hpure : IsPureFin b (fun Y => ∏ᶠ v, Φv v (projV v Y)) Φv := by
     refine ⟨fun v => ?_, ?_, fun Y => rfl⟩
     · by_cases hv : v ∈ S
-      · simp only [Φv, hv, if_true]; exact hgSB v
-      · simp only [Φv, hv, if_false]; exact PositiveNearLattice.isSB_latV b v a M
+      · simp only [Φv, hv, ite_true]; exact hgSB v
+      · simp only [Φv, hv, ite_false]; exact PositiveNearLattice.isSB_latV b v a M
     · refine Filter.eventually_cofinite.2 (S.finite_toSet.subset fun v hv => ?_)
       by_contra h
-      exact hv (if_neg h)
+      exact hv (ite_eq_right h)
   have hP := (hmult _ Φv hpure).hasProd
   have hne : ∀ v ∈ S, ∫ X, Φv v X ∂(m v) ≠ 0 := fun v hv => by
-    simp only [Φv, hv, if_true]; exact hg0 v
+    simp only [Φv, hv, ite_true]; exact hg0 v
   have h1 := hasProd_compl_of_ne_zero hP S hne
   have hL : ∀ v, MeasurableSet (latV (M := M) (n := a) b v) := fun v =>
     (PositiveNearLattice.isClopen_latV b v a M).isOpen.measurableSet
@@ -120,7 +120,7 @@ theorem rpTail_gen {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E
     funext v
     by_cases hv : v ∈ S
     · simp [Set.mulIndicator, hv]
-    · simp only [Set.mulIndicator, Set.mem_setOf_eq, hv, not_false_eq_true, if_true, Φv, if_false]
+    · simp only [Set.mulIndicator, Set.mem_ofPred_eq, hv, not_false_eq_true, ite_true, Φv, ite_false]
       rw [integral_indicator (hL v)]
       simp [Measure.real]
   rw [e] at h1
@@ -171,7 +171,7 @@ theorem latCofin_holds : LatCofin := by
     Filter.eventually_all.2 fun k' => Filter.eventually_all.2 fun k => key _
   filter_upwards [h1, h2] with v hv1 hv2
   ext Y
-  simp only [latV, Set.mem_setOf_eq]
+  simp only [latV, Set.mem_ofPred_eq]
   constructor
   · intro hY x i k'
     rw [repr_change (Fv F v) b b']

@@ -104,11 +104,11 @@ theorem exists_le_isRoot_of_simple_root (R : Type) [CommRing R] [IsLocalRing R] 
       (h.map ((EtNbhd.trans hij).comp (algebraMap i.A i.B))).IsRoot c ∧
       c - EtNbhd.trans hij (algebraMap i.A i.B a₀) ∈ maximalIdeal j.B := by
   let P : StandardEtalePair i.A := ⟨h, hm, derivative h, ⟨1, 0, 1, by simp⟩⟩
-  letI : Algebra R P.Ring := ((algebraMap i.A P.Ring).comp (algebraMap R i.A)).toAlgebra
-  haveI : IsScalarTower R i.A P.Ring := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.Etale R P.Ring := Algebra.Etale.comp R i.A P.Ring
-  letI : Algebra i.A (ResidueField R) := (i.pt : i.A →+* ResidueField R).toAlgebra
-  haveI : IsScalarTower R i.A (ResidueField R) :=
+  let : Algebra R P.Ring := ((algebraMap i.A P.Ring).comp (algebraMap R i.A)).toAlgebra
+  have : IsScalarTower R i.A P.Ring := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.Etale R P.Ring := Algebra.Etale.comp R i.A P.Ring
+  let : Algebra i.A (ResidueField R) := (i.pt : i.A →+* ResidueField R).toAlgebra
+  have : IsScalarTower R i.A (ResidueField R) :=
     IsScalarTower.of_algebraMap_eq' (i.pt.comp_algebraMap).symm
   have hmap : P.HasMap (i.pt a₀) := by
     constructor
@@ -150,7 +150,7 @@ theorem exists_le_isRoot_of_simple_root (R : Type) [CommRing R] [IsLocalRing R] 
     rw [this]
     change _ = (0 : j.B)
     rw [show eval₂ (algebraMap i.A P.Ring) P.X h = 0 from hX, map_zero]
-  · haveI : j.q.IsPrime := RingHom.ker_isPrime _
+  · have : j.q.IsPrime := RingHom.ker_isPrime _
     rw [trans_algebraMap_eq_of_comp _ φ hφ, ← (algebraMap j.A j.B).map_sub (e.symm P.X) (φ a₀), IsLocalization.AtPrime.to_map_mem_maximal_iff j.B j.q]
     show _ ∈ RingHom.ker j.pt
     rw [RingHom.mem_ker, map_sub, hjpt, hxX, sub_eq_zero]
@@ -200,9 +200,9 @@ theorem isUnit_of_sub_mem_maximalIdeal {S : Type*} [CommRing S] [IsLocalRing S] 
 theorem henselianLocalRing_hens : ∀ (R : Type) [CommRing R] [IsLocalRing R],
     HenselianLocalRing (Hens R) := by
   intro R _ _
-  haveI : IsDirected (EtNbhd R) (· ≤ ·) := _root_.GlobalTheory.Henselisation.etNbhd_isDirected R
+  have : IsDirected (EtNbhd R) (· ≤ ·) := _root_.GlobalTheory.Henselisation.etNbhd_isDirected R
   obtain ⟨hloc, hofloc⟩ := _root_.GlobalTheory.Henselisation.hens_isLocalRing_and_isLocalHom_of R
-  letI := hloc
+  let := hloc
   refine { toIsLocalRing := hloc, is_henselian := ?_ }
   intro f hf a₀ hfa₀ hf'a₀
 
@@ -211,7 +211,7 @@ theorem henselianLocalRing_hens : ∀ (R : Type) [CommRing R] [IsLocalRing R],
   obtain ⟨r, hr⟩ := _root_.GlobalTheory.Henselisation.EtNbhd.exists_sub_mem_maximalIdeal R i' b₀
   set ρ := algebraMap R (Hens R) r with hρdef
   have hρ : a₀ - ρ ∈ maximalIdeal (Hens R) := by
-    haveI := hofloc i'
+    have := hofloc i'
     rw [← hb₀, hρdef, ← _root_.GlobalTheory.Henselisation.Hens.of_algebraMap R i' r, ← (Hens.of i').map_sub b₀ ((algebraMap R i'.B) r)]; exact map_nonunit _ _ hr
   have hfρ : f.eval ρ ∈ maximalIdeal (Hens R) := by
     have hd := sub_dvd_eval_sub ρ a₀ f
@@ -228,7 +228,7 @@ theorem henselianLocalRing_hens : ∀ (R : Type) [CommRing R] [IsLocalRing R],
 
   obtain ⟨i, g, hg⟩ : ∃ (i : EtNbhd R) (g : Polynomial i.B), g.map (Hens.of i) = f :=
     Ring.DirectLimit.Polynomial.exists_of (f' := fun _ _ h => EtNbhd.trans h) f
-  haveI := hofloc i
+  have := hofloc i
   have hgm : g.Monic := monic_of_injective (_root_.GlobalTheory.Henselisation.Hens.of_injective_of_nbhd R i) (hg ▸ hf)
   let M := i.q.primeCompl
   let ψ : i.A →+* i.B := algebraMap i.A i.B
@@ -271,7 +271,7 @@ theorem henselianLocalRing_hens : ∀ (R : Type) [CommRing R] [IsLocalRing R],
     rw [key2] at hΦm
     exact (mem_maximalIdeal _).1 hΦm ((hu.pow _).mul hf'ρ)
   obtain ⟨j, hij, c, hc, hcm⟩ := _root_.GlobalTheory.Henselisation.exists_le_isRoot_of_simple_root R i h a₀' hhm hpt1 hpt2
-  haveI := hofloc j
+  have := hofloc j
   have hofj : (Hens.of j).comp (EtNbhd.trans hij) = Hens.of i :=
     RingHom.ext fun x => Ring.DirectLimit.of_f hij x
   have hΦj : (Hens.of j).comp ((EtNbhd.trans hij).comp ψ) = Φ := by

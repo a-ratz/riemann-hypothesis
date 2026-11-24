@@ -55,16 +55,16 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 private theorem natCard_of_finrank {g : ℕ} [Fact g.Prime] {m : ℕ} (hm : 0 < m) {K : Type} [Field K] [Algebra (ZMod g) K]
     (hK : Module.finrank (ZMod g) K = m) : Nat.card K = g ^ m := by
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  have : Fintype K := Fintype.ofFinite K
   rw [Nat.card_eq_fintype_card, Module.card_eq_pow_finrank (K := ZMod g), ZMod.card, hK]
 
 private theorem frob_top {g : ℕ} [Fact g.Prime] {m : ℕ} (hm : 0 < m) {K : Type} [Field K] [Algebra (ZMod g) K]
     (hK : Module.finrank (ZMod g) K = m) (x : K) : x ^ g ^ m = x := by
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  have : Fintype K := Fintype.ofFinite K
   have hc : Fintype.card K = g ^ m := by
     rw [← Nat.card_eq_fintype_card]
     exact natCard_of_finrank hm hK
@@ -84,9 +84,9 @@ private theorem conj_ne {g : ℕ} [Fact g.Prime] {m : ℕ} (hm : 0 < m) {K : Typ
   intro h
   classical
   have hg : g.Prime := Fact.out
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  have : Fintype K := Fintype.ofFinite K
   have hint : IsIntegral (ZMod g) (z : K) := Algebra.IsIntegral.isIntegral _
   set F := IntermediateField.adjoin (ZMod g) {(z : K)} with hFdef
   have hF : Module.finrank (ZMod g) F = m := by
@@ -186,9 +186,9 @@ private theorem regular_character_of_pow {g : ℕ} [Fact g.Prime] {m : ℕ} (hm 
     GlobalTheory.Published.IsRegularChar g m ((Units.map (Θ.comp ι.toMonoidHom)) ^ c : Kˣ →* ℂˣ) := by
   intro i j hi hj hij
   have hg : g.Prime := Fact.out
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hm)
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  have : Fintype K := Fintype.ofFinite K
   obtain ⟨ζ, hζ⟩ := IsCyclic.exists_generator (α := Kˣ)
   have hord : orderOf ζ = g ^ m - 1 := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hζ, Nat.card_eq_fintype_card, Fintype.card_units,

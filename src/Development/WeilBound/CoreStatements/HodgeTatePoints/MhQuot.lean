@@ -194,8 +194,8 @@ namespace PositivityTheory.HtPt.Mh
 
 theorem quot : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (H : Type) [CommGroup H] [Finite H] (Γ₁ : QFGroup R H) (a : Γ₁.G ⟶ Γ.G) [IsMonHom a] (α : H →* T), (∀ h, Γ₁.pt h ≫ a = Γ.pt (α h)) → IsFinite Γ₁.G.hom → IsFinite Γ.G.hom → Flat a.left → Surjective a.left → quotOrder α (Γ₁.btOrder ⊤) = Γ.btOrder ⊤ := by
   intro R _ _ _ T _ _ Γ H _ _ Γ₁ a _ α hpt hfin₁ hfin hfl hsurj
-  haveI : IsAffine Γ.G.left := isAffine_of_isAffineHom Γ.G.hom
-  haveI : IsAffine Γ₁.G.left := isAffine_of_isAffineHom Γ₁.G.hom
+  have : IsAffine Γ.G.left := isAffine_of_isAffineHom Γ.G.hom
+  have : IsAffine Γ₁.G.left := isAffine_of_isAffineHom Γ₁.G.hom
   have hα : Function.Surjective α := by
     intro t
     let z : Spec (CommRingCat.of (FractionRing R)) := IsLocalRing.closedPoint (FractionRing R)
@@ -287,7 +287,7 @@ theorem quot : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (
       rw [← Scheme.isoSpec_hom_naturality, Iso.inv_hom_id_assoc]
     have hff : a.left.appTop.hom.FaithfullyFlat :=
       (flat_and_surjective_SpecMap_iff _).1 ⟨by rw [e]; infer_instance, by rw [e]; infer_instance⟩
-    letI : Algebra Γ(Γ.G.left, ⊤) Γ(Γ₁.G.left, ⊤) := a.left.appTop.hom.toAlgebra
+    let : Algebra Γ(Γ.G.left, ⊤) Γ(Γ₁.G.left, ⊤) := a.left.appTop.hom.toAlgebra
     have hmem : s0 ∈ Ideal.span {pb Γ.G.hom d} := by
       rw [← @Ideal.comap_map_eq_self_of_faithfullyFlat _ _ _ _ _ hff (Ideal.span {pb Γ.G.hom d}),
         Ideal.mem_comap, Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton]

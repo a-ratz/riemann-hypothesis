@@ -100,7 +100,7 @@ theorem weil_integral {X A E : Type} [MeasurableSpace X] [MeasurableSpace A] [No
   have key : (P.withDensity fun x => ((θ x).toNNReal : ENNReal)).map J = c • ν.map J := by
     ext T hT
     have hT' : MeasurableSet (J ⁻¹' T) := hJ hT
-    rw [Measure.map_apply hJ hT, Measure.smul_apply, Measure.map_apply hJ hT, withDensity_apply _ hT',
+    rw [Measure.map_apply hJ hT, smul_apply, Measure.map_apply hJ hT, withDensity_apply _ hT',
       ← lintegral_indicator hT', hW _ (hθ'.coe_nnreal_ennreal.indicator hT'), smul_eq_mul,
       ← lintegral_indicator_const hT']
     apply lintegral_congr_ae
@@ -261,7 +261,7 @@ theorem rootMeas_iff (hz : Bs.z = L.z) (hc : L.c = cStd) (γ : Point ℂ (r + 1)
     all_goals first | exact hm.aemeasurable | exact (cjE _).measurable.aemeasurable
   · rintro rfl
     refine ⟨?_, ?_⟩
-    · rw [Measure.smul_apply]
+    · rw [smul_apply]
       have : D.muR Bs g (permOf γ) {x | Matrix.of x ∉ RStab k r g} = 0 := (Rad.haar_good Bs hg hd hG).conc
       rw [this, smul_zero]
     · rw [Measure.map_smul, hmu, Measure.map_map hrm hm]
@@ -381,14 +381,14 @@ theorem hsNormSq_hsVec [FiniteDimensional ℂ Wq] (X : Wq →L[ℂ] Wp) : hsNorm
 theorem haar_smul {U : Set (B.Mat k r)} {μ : Measure (Mt k r)} (h : B.IsHaarOn U μ) {c : ENNReal} (h0 : c ≠ 0)
     (h1 : c ≠ ⊤) : B.IsHaarOn U (c • μ) := by
   refine ⟨?_, fun a ha => ?_, fun a ha => ?_, fun K hK => ?_, ?_⟩
-  · rw [Measure.smul_apply, h.conc, smul_zero]
+  · rw [smul_apply, h.conc, smul_zero]
   · rw [Measure.map_smul, h.left a ha]
     exact (show Continuous (lmulM a : Mt k r → Mt k r) from
       continuous_const.matrix_mul continuous_id).measurable.aemeasurable
   · rw [Measure.map_smul, h.right a ha]
     exact (show Continuous (B.rmulF a : Mt k r → Mt k r) from
       continuous_id.matrix_mul continuous_const).measurable.aemeasurable
-  · rw [Measure.smul_apply, smul_eq_mul]; exact ENNReal.mul_lt_top h1.lt_top (h.finite_compact K hK)
+  · rw [smul_apply, smul_eq_mul]; exact ENNReal.mul_lt_top h1.lt_top (h.finite_compact K hK)
   · intro e
     have e2 : c * μ Set.univ = 0 := congrArg (fun m : Measure (Mt k r) => m Set.univ) e
     exact (mul_eq_zero.1 e2).elim h0 fun e3 => h.ne_zero (Measure.measure_univ_eq_zero.1 e3)

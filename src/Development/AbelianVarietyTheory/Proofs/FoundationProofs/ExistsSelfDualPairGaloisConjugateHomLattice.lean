@@ -252,7 +252,7 @@ theorem gal_comm (D : D7) (σ τ : D.host.E ≃ₐ[ℚ] D.host.E) : σ * τ = τ
   rw [map_mul, map_mul, mul_comm]
 
 theorem conj_mul_conj (D : D7) : D.host.conj * D.host.conj = 1 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   ext x
   rw [AlgEquiv.mul_apply, ← h, ← h, star_star]
@@ -311,7 +311,7 @@ theorem exists_twisting_ideal (D : D7) (σ : D.host.E ≃ₐ[ℚ] D.host.E) :
   · have h1 : (1 : D.host.E) ∈ ((Y / B : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) :
         Submodule (𝓞 D.host.E) D.host.E) * ((B / Y : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) :
         Submodule (𝓞 D.host.E) D.host.E) := by
-      rw [← FractionalIdeal.coe_mul, e1]
+      rw [← FractionalIdeal.coeToSubmodule_mul, e1]
       exact FractionalIdeal.one_mem_one _
     generalize (1 : D.host.E) = t at h1
     refine Submodule.mul_induction_on h1 (fun m hm n hn => ?_) ?_
@@ -331,7 +331,7 @@ theorem exists_twisting_ideal (D : D7) (σ : D.host.E ≃ₐ[ℚ] D.host.E) :
 
 theorem exists_conjugate_pair : ∀ (D : D7) (σ : D.host.E ≃ₐ[ℚ] D.host.E), (∀ a : D.host.K, σ (a : D.host.E) = (a : D.host.E)) → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)), SD D L → SD D L' → ∃ (L₁ : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L₁' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)), SD D L₁ ∧ SD D L₁' ∧ ∀ A : Matrix (Fin N') (Fin N) D.host.E, A ∈ YYl D L L' ↔ A.map σ ∈ YYl D L₁ L₁' := by
   intro D σ _ N N' L L' hL hL'
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   obtain ⟨C, h1, ⟨ι, _, c, d, hc, hd, h2⟩, h3, h4⟩ := exists_twisting_ideal D σ
   simp only [← h] at h1 h2 h3

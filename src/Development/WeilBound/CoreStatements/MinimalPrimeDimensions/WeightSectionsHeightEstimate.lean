@@ -76,11 +76,11 @@ theorem mem_of_forall_valuationSubring {R F : Type} [CommRing R] [IsDomain R] [I
   by_contra hx
   let S : Subring F := (algebraMap R F).range
   have hxS : x ∉ S := fun hm => hx hm
-  letI : Algebra R S := (algebraMap R F).rangeRestrict.toAlgebra
-  haveI : IsScalarTower R S F := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsIntegral R S :=
+  let : Algebra R S := (algebraMap R F).rangeRestrict.toAlgebra
+  have : IsScalarTower R S F := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsIntegral R S :=
     ⟨fun y => RingHom.isIntegral_of_surjective _ (algebraMap R F).rangeRestrict_surjective y⟩
-  haveI : IsIntegrallyClosedIn S F := isIntegrallyClosedIn_iff.2 ⟨Subtype.val_injective, fun {y} hy => by
+  have : IsIntegrallyClosedIn S F := isIntegrallyClosedIn_iff.2 ⟨Subtype.val_injective, fun {y} hy => by
     obtain ⟨a, ha⟩ := IsIntegrallyClosed.algebraMap_eq_of_integral (isIntegral_trans (R := R) y hy)
     exact ⟨⟨y, a, ha⟩, rfl⟩⟩
   obtain ⟨V, hV, hxV⟩ := Subring.exists_le_valuationSubring_of_isIntegrallyClosedIn hxS
@@ -191,7 +191,7 @@ theorem reg_of_val {K V Ω : Type} [Field K] [NumberField K] [AddCommGroup V] [M
       ∃ l ∈ W, O.valuation b ≤ O.valuation (ev l) ^ τ)
     (w : W) (hw : ev w ≠ 0) (k : L.B.ι) (x : X) (hx : x ∈ L.B.U k) :
     GlobalTheory.Cartier.RegAt x (ψ b * (ψ (ev w))⁻¹ ^ τ * fnOf (L.B.U k) (gen_mem hx) ((s w).f k) ^ τ) := by
-  haveI := (hM.normal x).2
+  have := (hM.normal x).2
   refine mem_of_forall_valuationSubring fun O hO => ?_
   have hreg : ∀ g, GlobalTheory.Cartier.RegAt x g → g ∈ O := fun g ⟨a, ha⟩ => ha ▸ hO a
   obtain ⟨la, O', hle, h1, h2⟩ := exists_refine (K := K) (O.comap ψ) fun a => by

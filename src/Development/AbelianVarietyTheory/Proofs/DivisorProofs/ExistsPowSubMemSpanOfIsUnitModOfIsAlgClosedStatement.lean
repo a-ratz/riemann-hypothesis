@@ -72,8 +72,8 @@ namespace GlobalTheory
 theorem exists_algebraMap_sub_mem_of_isMaximal_of_isAlgClosed (k B : Type) [Field k] [IsAlgClosed k]
     [CommRing B] [Algebra k B] [Algebra.FiniteType k B] (P : Ideal B) [hP : P.IsMaximal] (b : B) :
     ∃ c : k, b - algebraMap k B c ∈ P := by
-  letI := Ideal.Quotient.field P
-  haveI : Module.Finite k (B ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ P)
+  let := Ideal.Quotient.field P
+  have : Module.Finite k (B ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ P)
   let φ : (B ⧸ P) →ₐ[k] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -148,7 +148,7 @@ theorem exists_pow_sub_mem_span_of_isUnit_mod_of_isAlgClosed : ∀ (k B : Type) 
     have hmem := Multiset.mem_toFinset.mp P.prop
     have hprime : Prime (P : Ideal B) := UniqueFactorizationMonoid.prime_of_factor _ hmem
     have hne : (P : Ideal B) ≠ ⊥ := hprime.ne_zero
-    haveI hmax : (P : Ideal B).IsMaximal := (Ideal.isPrime_of_prime hprime).isMaximal hne
+    have hmax : (P : Ideal B).IsMaximal := (Ideal.isPrime_of_prime hprime).isMaximal hne
     have hle : Ideal.span {f} ≤ (P : Ideal B) :=
       Ideal.le_of_dvd (UniqueFactorizationMonoid.dvd_of_mem_factors hmem)
     have hb : b ∉ (P : Ideal B) := by

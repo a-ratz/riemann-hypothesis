@@ -92,7 +92,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.adSurj :
     rw [Filter.eventually_cofinite]
     refine hbad.subset ?_
     intro v hv
-    simp only [Set.mem_setOf_eq, not_forall] at hv
+    simp only [Set.mem_ofPred_eq, not_forall] at hv
     obtain ⟨i, j, hij⟩ := hv
     have : ¬ ∀ w h, R.ρ v w h (x v i j) ∈ w.adicCompletionIntegers L := fun h => hij ((R.ρ_int v _).2 h)
     simp only [not_forall] at this

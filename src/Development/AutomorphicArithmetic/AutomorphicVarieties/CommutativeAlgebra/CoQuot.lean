@@ -78,9 +78,9 @@ theorem UpperTheory.V.Alg.co_quot :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (R' : Type) [CommRing R'] [Algebra O R'] [Nontrivial R'] (p : R →ₐ[O] R'), Function.Surjective p → IsCO O R' := by
   intro O _ _ R _ _ _ R' _ _ _ p hp
   have hp' : Function.Surjective (p : R →+* R') := hp
-  haveI hL : IsLocalRing R' := IsLocalRing.of_surjective' (p : R →+* R') hp'
-  haveI hN : IsNoetherianRing R' := isNoetherianRing_of_surjective R R' (p : R →+* R') hp'
-  haveI hH : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp'
+  have hL : IsLocalRing R' := IsLocalRing.of_surjective' (p : R →+* R') hp'
+  have hN : IsNoetherianRing R' := isNoetherianRing_of_surjective R R' (p : R →+* R') hp'
+  have hH : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp'
   have hm : (maximalIdeal R).map (p : R →+* R') = maximalIdeal R' :=
     IsLocalRing.map_maximalIdeal_of_surjective _ hp'
   have hP : IsPrecomplete (maximalIdeal R') R' := hm ▸ prec_of_surj (p : R →+* R') hp' (maximalIdeal R)

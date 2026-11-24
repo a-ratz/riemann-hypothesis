@@ -192,7 +192,7 @@ theorem level_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr 
 
   have hK : (∀ i j, Valued.v (Y i j) ≤ 1) → g⁻¹ * N * g ∈ GlobalTheory.LFun.KGL w (n := m) := by
     intro hYi
-    haveI : IsLocalRing (Ov E w) := inferInstanceAs (IsLocalRing (w.adicCompletionIntegers E))
+    have : IsLocalRing (Ov E w) := inferInstanceAs (IsLocalRing (w.adicCompletionIntegers E))
     have hcS : c ∈ Ov E w := by
       show c ∈ w.adicCompletionIntegers E
       rw [mem_adicCompletionIntegers, hv]

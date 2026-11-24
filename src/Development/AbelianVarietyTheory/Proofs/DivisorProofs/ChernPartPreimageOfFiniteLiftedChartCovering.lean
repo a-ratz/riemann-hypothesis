@@ -120,7 +120,7 @@ theorem exists_evenly_covered_on
       have hpre : ∀ z ∈ F, ∃ z', z' ∈ M z ∧ m z' = m w := fun z hz => by
         obtain ⟨z', h₁, h₂⟩ := mem_iInter₂.1 hWx.1 z hz
         exact ⟨z', h₁, h₂⟩
-      haveI : Nonempty B := ⟨w⟩
+      have : Nonempty B := ⟨w⟩
       choose! f hfM hfm using hpre
       have hinj : InjOn f F := fun z₁ h₁ z₂ h₂ h12 => by
         by_contra hne
@@ -165,7 +165,7 @@ theorem glueMeas_preimage_of_cover_on
     exists_evenly_covered_on hd hρ hd' hρ' hm hU hfib hch x.2
   choose W hWo hxW hWU hWQ using hW
   obtain ⟨C, hC, hCW⟩ := TopologicalSpace.isOpen_iUnion_countable W hWo
-  haveI : Countable C := hC.to_subtype
+  have : Countable C := hC.to_subtype
   have key : (Measure.map m (glueMeas e' ρ')).restrict U =
       ((d : ℝ≥0∞) • glueMeas e ρ).restrict U := by
     refine Measure.ext_of_iUnion_eq_univ
@@ -193,10 +193,10 @@ theorem glueMeas_preimage_of_cover_on
         have hQWU := hQW.inter hU.measurableSet
         rw [Measure.restrict_apply hQ, Measure.restrict_apply hQ, Measure.restrict_apply hQW,
           Measure.restrict_apply hQW, Measure.map_apply hm.measurable hQWU,
-          hWQ c.1 _ hQWU fun y hy => hy.1.2, Measure.smul_apply, smul_eq_mul]
+          hWQ c.1 _ hQWU fun y hy => hy.1.2, smul_apply, smul_eq_mul]
   have h := congrArg (fun μ : Measure A => μ S) key
   simp only [Measure.restrict_apply hS, inter_eq_left.2 hSU,
-    Measure.map_apply hm.measurable hS, Measure.smul_apply, smul_eq_mul] at h
+    Measure.map_apply hm.measurable hS, smul_apply, smul_eq_mul] at h
   exact h
 
 end Cover

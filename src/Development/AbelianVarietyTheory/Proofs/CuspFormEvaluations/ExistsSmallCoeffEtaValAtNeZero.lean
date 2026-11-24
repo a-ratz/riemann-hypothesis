@@ -84,9 +84,9 @@ private theorem frMap_id_self {E : Type} [Field E] [NumberField E] [IsCMField E]
 theorem exists_small_coeff_etaValAt_ne_zero : Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (R : ℕ), Odd R → 1 < R → ∀ [Fintype (LatMod Dw R)] (n : ℕ) (x₀ : Fin n → Dw.La) (K : Type) [Field K] [IsAlgClosed K] [Algebra c.F K] (Nc : ℕ) (y : Fin Nc → FrPt Xo c K), ∃ cf : (Fin n → LatMod Dw R) → ℕ, (∀ j, cf j ≤ Nc * Nat.card (LevGrp Dw (R ^ 4))) ∧ ∀ k v, EtaValAt Xo c R (fun j => (cf j : ℤ)) (shiftFam R x₀) (y k) v → v ≠ 0 := by
   intro hL E _ _ _ H Dw l Xo c R hodd hR _ n x₀ K _ _ _ Nc y
   classical
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
-  haveI : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R hR).1
-  letI : Fintype (LevGrp Dw (R ^ 4)) := Fintype.ofFinite _
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
+  have : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R hR).1
+  let : Fintype (LevGrp Dw (R ^ 4)) := Fintype.ofFinite _
   have hlev := GlobalTheory.fullLevel_cover_baseChange_torsor hL E H Dw l Xo (R ^ 4) (by positivity)
   choose ev hev using fun k => hlev.2.2.2 K (y k).x
   have hpow : ∀ k q, ev k q ^ ((R ^ 2) ^ 2) = 1 := by

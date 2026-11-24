@@ -381,8 +381,8 @@ theorem finite_quot_of_gen {R A B : Type} [CommRing R] [CommRing A] [CommRing B]
     rw [Subring.mem_closure_iff] at hx
     refine AddSubgroup.closure_mono ?_ hx
     exact Submonoid.closure_le.2 hsub
-  haveI : AddGroup.FG (R ⧸ I) := AddGroup.fg_iff.mpr ⟨S, htop, hS⟩
-  refine AddCommGroup.finite_of_fg_torsion _ fun x => ?_
+  have : AddGroup.FG (R ⧸ I) := AddGroup.fg_iff.mpr ⟨S, htop, hS⟩
+  refine AddCommGroup.finite_of_fg_isAddTorsion _ fun x => ?_
   refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨n, Nat.pos_of_ne_zero hn, ?_⟩
   rw [nsmul_eq_mul]
   have : (n : R ⧸ I) = 0 := by
@@ -540,7 +540,7 @@ theorem gl_one_map_conj {R : Type} [CommRing R] (H : Subgroup (GL (Fin 1) R)) (g
 theorem Kres_commensurable (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K]
     (n r : ℕ) (hr : 0 < r) (g : GL (Fin n) (KQ p K r)) :
     Subgroup.Commensurable ((Kres p K n r).map (MulAut.conj g).toMonoidHom) (Kres p K n r) := by
-  haveI : FiniteDimensional ℚ_[p] (Qr p r) :=
+  have : FiniteDimensional ℚ_[p] (Qr p r) :=
     ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance hr
   have mono : ∀ (x : KQ p K r) (k l : ℕ), k ≤ l → (p : KQ p K r) ^ k * x ∈ intKQ p K r →
       (p : KQ p K r) ^ l * x ∈ intKQ p K r := by

@@ -203,12 +203,12 @@ theorem main (hB1a : B1a) (hB : B1b) (hBc : B1c) (hE0a : E0a) (hKS : KapSum) (hA
   have hfin : ∀ y : D.Y, ∑' γ, ‖T D k p γ y‖ₑ ≠ ⊤ := fun y =>
     ne_top_of_le_ne_top (ENNReal.mul_ne_top ENNReal.ofReal_ne_top ENNReal.ofReal_ne_top) (hT y)
   have hsumm : ∀ y : D.Y, Summable fun γ => ‖T D k p γ y‖ := fun y => by
-    simpa only [toReal_enorm] using ENNReal.summable_toReal (hfin y)
+    simpa only [toReal_eNorm] using ENNReal.summable_toReal (hfin y)
   have hc0 : 0 ≤ cK k / nrm k p.1 := div_nonneg (cK_nonneg k hk) (nrm_pos k p.1).le
   have hbound : ∀ y : D.Y, ∑' γ, ‖T D k p γ y‖ ≤ cK k / nrm k p.1 * Bnd * nrm k y.2 := fun y => by
     have h1 : ∑' γ, ‖T D k p γ y‖ = (∑' γ, ‖T D k p γ y‖ₑ).toReal := by
-      rw [ENNReal.tsum_toReal_eq (fun γ => enorm_ne_top)]
-      simp only [toReal_enorm]
+      rw [ENNReal.tsum_toReal_eq (fun γ => eNorm_ne_top)]
+      simp only [toReal_eNorm]
     rw [h1]
     refine ENNReal.toReal_le_of_le_ofReal (mul_nonneg (mul_nonneg hc0 hBnd) (nrm_pos k y.2).le) ?_
     calc _ ≤ _ := hT y
@@ -217,8 +217,8 @@ theorem main (hB1a : B1a) (hB : B1b) (hBc : B1c) (hE0a : E0a) (hKS : KapSum) (hA
         congr 1
         ring
   refine ⟨hsumm, ?_, ⟨cK k / nrm k p.1 * Bnd, fun y => (norm_tsum_le_tsum_norm (hsumm y)).trans (hbound y)⟩⟩
-  haveI := hcount
-  haveI := hborel
+  have := hcount
+  have := hborel
   obtain ⟨-, -, -, -, -, -, hjc, hqc, -⟩ := hB
   have hgc : ∀ g : GL (Fin 2) ℝ, Continuous fun z : P => g • z := fun g => (hB1a.2.2 g).1
   have hTm : ∀ γ : PG F, Measurable (T D k p γ) := fun γ => by

@@ -83,7 +83,7 @@ theorem exists_psi_loc_ne_one (w : HeightOneSpectrum (𝓞 E)) :
 
 variable (E) in
 theorem stdPsi_psi : StdPsi (psi E) := by
-  have hc : Continuous (psi E) := continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar (K := E))
+  have hc : Continuous (psi E) := continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar (K := E))
   have hr : ∀ c : E, psi E (algebraMap E (Ad E) c) = 1 := fun c => by
     rw [psi_apply, GroundTheory.Global.adelicChar_algebraMap]
     rfl
@@ -92,8 +92,8 @@ theorem stdPsi_psi : StdPsi (psi E) := by
     rw [psi_apply, AddChar.one_apply] at this
     rw [AddChar.one_apply]
     exact Circle.coe_eq_one.1 this)
-  letI : Invertible (2 : E) := invertibleOfNonzero two_ne_zero
-  letI : Invertible (2 : Ad E) := (Invertible.map (algebraMap E (Ad E)) 2).copy 2 (map_ofNat _ 2).symm
+  let : Invertible (2 : E) := invertibleOfNonzero two_ne_zero
+  let : Invertible (2 : Ad E) := (Invertible.map (algebraMap E (Ad E)) 2).copy 2 (map_ofNat _ 2).symm
   have h := GlobalTheory.CompanionTheory.AdeleAnn.unitary_and_annihilator_eq E (psi E) hc hne hr
   exact ⟨hc, h.1, hr, h.2, exists_psi_loc_ne_one⟩
 

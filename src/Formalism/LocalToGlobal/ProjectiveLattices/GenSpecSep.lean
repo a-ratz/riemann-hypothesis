@@ -88,7 +88,7 @@ theorem sepX (Xo : Moduli Dw l) : SepXSt Xo := by
   unfold IsQProjOver at hq
   obtain ⟨N, i, hi, -, hcomp⟩ := hq
   rw [← hcomp]
-  haveI := hi
+  have := hi
   infer_instance
 
 theorem spMap_isDominant {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T) (hφ : Function.Injective φ) :
@@ -103,8 +103,8 @@ theorem spMap_isDominant {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T)
 theorem x_eq_of_inj (Xo : Moduli Dw l) {S T : Type} [CommRing S] [IsReduced S] [CommRing T] (φ : S →+* T)
     (hφ : Function.Injective φ) {f g : Sp S ⟶ Xo.X} (hs : f ≫ Xo.s = g ≫ Xo.s)
     (h : spMap φ ≫ f = spMap φ ≫ g) : f = g := by
-  haveI : IsSeparated Xo.s := sepX Xo
-  haveI : IsDominant (spMap φ) := spMap_isDominant φ hφ
+  have : IsSeparated Xo.s := sepX Xo
+  have : IsDominant (spMap φ) := spMap_isDominant φ hφ
   first
   | exact ext_of_isDominant_of_isSeparated Xo.s hs (spMap φ) h
   | exact ext_of_isDominant_of_isSeparated Xo.s hs h

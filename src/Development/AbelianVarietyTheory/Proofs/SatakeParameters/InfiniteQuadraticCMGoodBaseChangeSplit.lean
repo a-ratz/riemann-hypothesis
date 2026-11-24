@@ -111,8 +111,8 @@ theorem exists_qcm_adjoin_sqrt_neg : ∀ (E Ω : Type) [Field E] [NumberField E]
   intro E Ω _ _ _ _ _ _ p hp δ hδ hδn
   have hδ' : δ ^ 2 = algebraMap E Ω (-(p : E)) := by simp [hδ]
   obtain ⟨hint, htwo⟩ := finrank_adjoin_sq (-(p : E)) δ hδ' hδn
-  haveI : FiniteDimensional E E⟮δ⟯ := IntermediateField.adjoin.finiteDimensional hint
-  haveI nf : NumberField E⟮δ⟯ := NumberField.of_module_finite E _
+  have : FiniteDimensional E E⟮δ⟯ := IntermediateField.adjoin.finiteDimensional hint
+  have nf : NumberField E⟮δ⟯ := NumberField.of_module_finite E _
   obtain ⟨d, s, hs, hsn, hneg⟩ := GlobalTheory.CMGen.exists_sqrt_totallyNegative E
   have hs0 : s ≠ 0 := fun h => hsn (h ▸ zero_mem _)
   let t : E⟮δ⟯ := ⟨δ * algebraMap E Ω s,
@@ -236,7 +236,7 @@ theorem GlobalTheory.exists_nat_unramified_over_real_of_cm_subfield :
     exact h2d
   intro K _ _ _ _ w hw
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {2 * d}))
-  haveI : Algebra.IsAlgebraic E K := Algebra.IsAlgebraic.tower_top (K := ℚ) E
+  have : Algebra.IsAlgebraic E K := Algebra.IsAlgebraic.tower_top (K := ℚ) E
   have hint : ∀ x : 𝓞 (maximalRealSubfield E),
       IsIntegral ℤ (algebraMap E K ((x : maximalRealSubfield E) : E)) := fun x =>
     (RingOfIntegers.isIntegral_coe x).map
@@ -517,15 +517,15 @@ theorem not_sq_mul_unit (K : Type) [Field K] [NumberField K] (Q : Ideal (𝓞 K)
       y ^ 2 = (p : 𝓞 K) * u → False := by
   intro h p hp hpQ y u hu hyu
   have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
-  haveI hPr : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).mpr hpZ
+  have hPr : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).mpr hpZ
   have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
     hPr.isMaximal (by simpa using hpZ.ne_zero)
-  haveI hQp : Q.IsPrime := inferInstance
-  haveI : Q.LiesOver (Ideal.span {(p : ℤ)}) := by
+  have hQp : Q.IsPrime := inferInstance
+  have : Q.LiesOver (Ideal.span {(p : ℤ)}) := by
     refine ⟨hmax.eq_of_le (Ideal.IsPrime.under ℤ Q).ne_top ?_⟩
     rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap]
     simpa using hpQ
-  letI := Localization.AtPrime.algebraOfLiesOver (Ideal.span {(p : ℤ)}) Q
+  let := Localization.AtPrime.algebraOfLiesOver (Ideal.span {(p : ℤ)}) Q
   have h2 := ((Algebra.isUnramifiedAt_iff_map_eq ℤ (Ideal.span {(p : ℤ)}) Q).1 h).2
   have hyQ : y ∈ Q := hQp.mem_of_pow_mem 2 (by rw [hyu]; exact Q.mul_mem_right _ hpQ)
   have h3 : algebraMap (𝓞 K) (Localization.AtPrime Q) y ∈
@@ -674,10 +674,10 @@ end GlobalTheory.CMFam
 open GlobalTheory.CMFam GlobalTheory.ExSplitCM in
 theorem GlobalTheory.GalCut.infinite_qcm_split_good : AutomorphicFormsFiniteGL → ∀ (E Ω : Type) [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (l : ℕ) [Fact l.Prime] (a : ℕ) (π : CuspSub E a) (w₀ : HeightOneSpectrum (𝓞 E)), {Q : GlobalTheory.RealGal.QCM E Ω | (∀ A : ValuationSubring Ω, IsPlaceOver A w₀ → Dec (F := E) A ≤ (UpperTheory.V.Af.Bc.res E Ω ↥Q.K).range) ∧ (∀ w : HeightOneSpectrum (𝓞 ↥Q.K), w.under (𝓞 E) = w₀ → GlobalTheory.UnitaryBC.IsSplitAt w) ∧ (∃ w : HeightOneSpectrum (𝓞 ↥Q.K), ¬ Algebra.IsUnramifiedAt (𝓞 E) w.asIdeal ∧ ∃ B, (CG.mk π).HasSat (w.under (𝓞 E)) B) ∧ ∀ P : CuspSub ↥Q.K a, IsLift π P → Good l P}.Infinite := by
   intro hAF E Ω _ _ _ _ _ _ l _ a π w₀
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have halg : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   obtain ⟨q₀, hq₀, hq₀w⟩ := exists_prime_mem w₀
-  haveI : Fact q₀.Prime := ⟨hq₀⟩
+  have : Fact q₀.Prime := ⟨hq₀⟩
   obtain ⟨N, hN0, hN⟩ := exists_unram E
   set S : Set (HeightOneSpectrum (𝓞 E)) := {v | ¬ ∃ B, (CG.mk π).HasSat v B} with hSdef
   have hS : S.Finite := Filter.eventually_cofinite.1 (GlobalTheory.CuspRep.UnrSat.eventually_hasSatGL_locRep hAF E a π)
@@ -707,13 +707,13 @@ theorem GlobalTheory.GalCut.infinite_qcm_split_good : AutomorphicFormsFiniteGL �
     · exact (Fact.out : l.Prime).ne_zero h.symm
     · exact hq₀.ne_zero h.symm
     · exact Nat.not_prime_zero h.1
-  haveI : NeZero M := ⟨hM0⟩
+  have : NeZero M := ⟨hM0⟩
   have hsq : ∀ p : ℕ, ∃ δ : Ω, δ ^ 2 = -(p : Ω) := fun p =>
     IsAlgClosed.exists_pow_nat_eq (-(p : Ω)) two_pos
   choose δ hδ using hsq
   set Gd : Set ℕ := {p | p.Prime ∧ p ∉ T ∧ (M : ℤ) ∣ (p : ℤ) + 1} with hGd
   have hGood : Gd.Infinite := by
-    refine ((Nat.infinite_setOfPred_prime_and_eq_mod (q := M) isUnit_one.neg).diff T.finite_toSet).mono ?_
+    refine ((Nat.infinite_setOfPred_prime_and_eq_mod (q := M) isUnit_one.neg).sdiff T.finite_toSet).mono ?_
     rintro p ⟨⟨hp, hpe⟩, hpT⟩
     refine ⟨hp, hpT, ?_⟩
     have : (((p : ℤ) + 1 : ℤ) : ZMod M) = 0 := by push_cast; rw [hpe]; ring

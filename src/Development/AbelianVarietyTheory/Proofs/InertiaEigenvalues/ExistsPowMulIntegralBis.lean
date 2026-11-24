@@ -160,7 +160,7 @@ theorem ee_torsionFree (hp : ∀ a : O, (PD.p : O) * a = 0 → a = 0) (x : W.EE)
     have h2 := congrArg (PowerSeries.coeff k) h1
     rw [← nsmul_eq_mul, map_nsmul, nsmul_eq_mul, map_zero] at h2
     simpa using hp _ h2
-  haveI := W.EE_complete
+  have := W.EE_complete
   refine IsHausdorff.haus (I := Ideal.span {((PD.p : ℕ) : W.EE)}) inferInstance x fun k => ?_
   rw [SModEq.zero, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow]
   obtain ⟨a, m, ha⟩ := W.EE_dense x k
@@ -264,7 +264,7 @@ theorem exists_quasi_inverse (c : O)
     rw [this, e.apply_symm_apply]
   obtain ⟨m, hm⟩ := GlobalTheory.WachSat.exists_pow_smul_le (LL := LL) c hc T'.L.T
     (T.L.T.map (e.symm.toLinearMap.restrictScalars O)) T'.L.span (T.L.fg.map _)
-  haveI : ContinuousSMul LL T'.V := IsModuleTopology.toContinuousSMul LL T'.V
+  have : ContinuousSMul LL T'.V := IsModuleTopology.toContinuousSMul LL T'.V
   let g : LatHom T.L T'.L :=
     { f := algebraMap O LL (c ^ m) • e.symm.toLinearMap
       equiv := fun g y => by simp [he]
@@ -292,7 +292,7 @@ theorem dd_torsionFree (hp : ∀ a : O, (PD.p : O) * a = 0 → a = 0) (T : LocLa
     | succ k ih =>
       intro y hy
       exact ih y (GlobalTheory.WachSat.ee_torsionFree W hp _ (by rw [← hy]; ring))
-  haveI := (W.DD_free T).1
+  have := (W.DD_free T).1
   let b := Module.Free.chooseBasis W.EE (W.DD T)
   rw [← algebraMap_smul W.EE, map_pow, map_natCast] at hx
   apply b.repr.injective

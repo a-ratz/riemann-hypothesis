@@ -58,7 +58,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem exists_zetaM_pow (c : Coeff l) (ta : c.F ≃+* c.F) :
     ∃ a a' : ℕ, ta (zetaM c) = zetaM c ^ a ∧ a * a' ≡ 1 [MOD l.M] := by
   have h3 := l.three_le
-  haveI : NeZero l.M := ⟨by omega⟩
+  have : NeZero l.M := ⟨by omega⟩
   have hp := zetaM_prim c
   have hp' : IsPrimitiveRoot (ta (zetaM c)) l.M := hp.map_of_injective ta.injective
   obtain ⟨a, -, ha⟩ := hp.eq_pow_of_pow_eq_one hp'.pow_eq_one

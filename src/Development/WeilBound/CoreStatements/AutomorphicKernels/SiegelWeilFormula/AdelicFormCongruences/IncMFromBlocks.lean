@@ -307,7 +307,7 @@ theorem cNA_pres (hσ : ∀ a, σ (σ a) = a) {b : GL (Fin n ⊕ Fin n) E} (hb :
     have hpre : τm ⁻¹' (τ '' 𝓖) = 𝓖 := Set.preimage_image_eq _ τ.injective
     rw [hpre, h1]
   rw [e1] at hmap ⊢
-  rw [Measure.smul_apply, hmeas] at hmap
+  rw [smul_apply, hmeas] at hmap
   have hc : (lam.map τ).addHaarScalarFactor lam = 1 := by
     have h2 : (((lam.map τ).addHaarScalarFactor lam : ℝ≥0) : ENNReal) = 1 := by
       rw [← hmap, ENNReal.smul_def, smul_eq_mul, mul_one]

@@ -63,7 +63,7 @@ theorem exists_finite_generic {F : Set X} (hF : IsClosed F) :
     ∃ G : Set X, G.Finite ∧ G ⊆ F ∧ ∀ x ∈ F, ∃ g ∈ G, g ⤳ x := by
   obtain ⟨S, hS, hc, hi, rfl⟩ := NoetherianSpace.exists_finite_set_isClosed_irreducible hF
   choose η hη using fun t (ht : t ∈ S) => QuasiSober.sober (hi t ht) (hc t ht)
-  haveI := hS.to_subtype
+  have := hS.to_subtype
   refine ⟨Set.range fun t : S => η t.1 t.2, Set.finite_range _, ?_, ?_⟩
   · rintro _ ⟨t, rfl⟩
     exact ⟨t.1, t.2, (hη t.1 t.2).mem⟩
@@ -74,7 +74,7 @@ theorem mem_of_maximal {x : X} (hx : ∀ x' : X, x' ⤳ x → x' = x) {U : Set X
     x ∈ U := by
   obtain ⟨G, hG, -, h⟩ := exists_finite_generic (isClosed_univ (X := X))
   have hC : IsClosed (⋃ g ∈ G \ {x}, closure ({g} : Set X)) :=
-    (hG.subset Set.diff_subset).isClosed_biUnion fun _ _ => isClosed_closure
+    (hG.subset Set.sdiff_subset).isClosed_biUnion fun _ _ => isClosed_closure
   obtain ⟨y, hy, hyU⟩ := hd.inter_open_nonempty _ hC.isOpen_compl ⟨x, fun hm => by
     obtain ⟨g, hg, hgx⟩ := Set.mem_iUnion₂.1 hm
     exact hg.2 (hx g (specializes_iff_mem_closure.2 hgx))⟩
@@ -103,19 +103,19 @@ theorem isProper_toroidalModel_structureMap (Z : Mdl Y i₀) : IsProper Z.s := b
   infer_instance
 
 theorem noetherianSpace (hp : p ≠ 0) (hW : (p : ℂ) ∈ W.nonunits) (Z : Mdl Y i₀) : NoetherianSpace Z.X := by
-  haveI := Z.i.c.fin
-  haveI : NumberField Z.i.c.F := {}
-  haveI := (isDiscreteValuationRing_and_finite_residueField_of_numberField (Z.i.c.V W) hp
+  have := Z.i.c.fin
+  have : NumberField Z.i.c.F := {}
+  have := (isDiscreteValuationRing_and_finite_residueField_of_numberField (Z.i.c.V W) hp
     (mem_nonunits_V Z.i.c hp hW)).1
-  haveI := isProper_toroidalModel_structureMap Z
-  haveI : IsLocallyNoetherian Z.X := LocallyOfFiniteType.isLocallyNoetherian Z.s
-  haveI : CompactSpace Z.X := QuasiCompact.compactSpace_of_compactSpace Z.s
-  haveI : IsNoetherian Z.X := {}
+  have := isProper_toroidalModel_structureMap Z
+  have : IsLocallyNoetherian Z.X := LocallyOfFiniteType.isLocallyNoetherian Z.s
+  have : CompactSpace Z.X := QuasiCompact.compactSpace_of_compactSpace Z.s
+  have : IsNoetherian Z.X := {}
   infer_instance
 
 theorem abP_of_isGenP (hp : p ≠ 0) (hW : (p : ℂ) ∈ W.nonunits) (Z : Mdl Y i₀) (x : Z.X) (hx : Z.isGenP x) :
     Z.abP x := by
-  haveI := noetherianSpace hp hW Z
+  have := noetherianSpace hp hW Z
   have ho : IsOpen Z.opn := by
     rw [← Z.cover]
     exact isOpen_iUnion fun a => (Z.U a).1.2

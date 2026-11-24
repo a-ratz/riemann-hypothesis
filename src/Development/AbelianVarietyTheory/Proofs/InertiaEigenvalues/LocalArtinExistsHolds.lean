@@ -163,7 +163,7 @@ theorem LocLanglands.isSmoothChar_of_comp {E Ω : Type} [Field E] [NumberField E
     (hc : Continuous fun σ : Ine (F := E) A => a (ineIncl h σ))
     (ho : ∀ σ, ord (w.adicCompletion E) (a σ) = -deg σ) {χ : (w.adicCompletion E)ˣ →* ℂˣ}
     (hχ : WeilDeligne.IsSmooth (χ.comp a)) : IsSmoothChar χ := by
-  haveI : CompactSpace (Ine (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Ine A).isCompact
+  have : CompactSpace (Ine (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Ine A).isCompact
   have hK : IsOpen {σ : Ine (F := E) A | χ (a (ineIncl h σ)) = 1} := hχ
   have hC : IsClosed ((fun σ : Ine (F := E) A => a (ineIncl h σ)) ''
       {σ : Ine (F := E) A | χ (a (ineIncl h σ)) = 1}ᶜ) :=

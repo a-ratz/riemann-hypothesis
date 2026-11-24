@@ -89,7 +89,7 @@ theorem exists_periods
     simp only [hP]
     exact DifferentiableAt.fun_sum fun i _ => (hb i).differentiableAt.fun_const_smul _
   let K : (Fin m → ℂ) → AddSubgroup (Fin g → ℂ) := fun b => if hb : b ∈ B then homKer (he b hb).1.1 else ⊥
-  have hK : ∀ b ∈ B, ∀ z, z ∈ K b ↔ e b z = 1 := fun b hb z => by simp only [K, dif_pos hb, mem_homKer]
+  have hK : ∀ b ∈ B, ∀ z, z ∈ K b ↔ e b z = 1 := fun b hb z => by simp only [K, dite_eq_left hb, mem_homKer]
   obtain ⟨C, hC, hCo, hC₀⟩ := eventually_nhds_iff.1 ((eventually_all.2 h3).and (hB.mem_nhds hb₀))
   have := hLat La g m C b₀ K P r hCo hC₀ hr
     (fun b hb z hz hn => (he b (hC b hb).2).2 z hn ((hK b (hC b hb).2 z).1 hz)) (fun b z z₀ hb hz hm => ?_)
@@ -108,12 +108,12 @@ theorem exists_periods
     exact sum_mem fun i _ => zsmul_mem ((hK b (hC b hb).2 _).2 ((hC b hb).1 i)) _
 
 theorem isReduced_complex_tensor (E : Type) [Field E] [NumberField E] : IsReduced (ℂ ⊗[ℤ] 𝓞 E) := by
-  haveI : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
-  haveI : Algebra.EssFiniteType ℤ ℚ := Algebra.EssFiniteType.of_isLocalization ℚ (nonZeroDivisors ℤ)
-  haveI : Algebra.FormallyUnramified ℚ E := Algebra.FormallyUnramified.of_isSeparable ℚ E
-  haveI : Algebra.FormallyUnramified ℤ E := Algebra.FormallyUnramified.comp ℤ ℚ E
-  haveI : Algebra.EssFiniteType ℤ E := Algebra.EssFiniteType.comp ℤ ℚ E
-  haveI : IsReduced (ℂ ⊗[ℤ] E) := Algebra.FormallyUnramified.isReduced_of_field ℂ (ℂ ⊗[ℤ] E)
+  have : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
+  have : Algebra.EssFiniteType ℤ ℚ := Algebra.EssFiniteType.of_isLocalization ℚ (nonZeroDivisors ℤ)
+  have : Algebra.FormallyUnramified ℚ E := Algebra.FormallyUnramified.of_isSeparable ℚ E
+  have : Algebra.FormallyUnramified ℤ E := Algebra.FormallyUnramified.comp ℤ ℚ E
+  have : Algebra.EssFiniteType ℤ E := Algebra.EssFiniteType.comp ℤ ℚ E
+  have : IsReduced (ℂ ⊗[ℤ] E) := Algebra.FormallyUnramified.isReduced_of_field ℂ (ℂ ⊗[ℤ] E)
   have hinj : Function.Injective (Algebra.TensorProduct.map (AlgHom.id ℤ ℂ) (IsScalarTower.toAlgHom ℤ (𝓞 E) E)) :=
     Module.Flat.lTensor_preserves_injective_linearMap _ (IsFractionRing.injective _ _)
   exact isReduced_of_injective _ hinj
@@ -263,10 +263,10 @@ theorem LocLift.holomorphic_map_lifts_to_periods : ThetaUnifAV → Out.Laws → 
   intro hT hL hsm hpol _ hrel hLat hdiag hweil E _ _ _ H D l Xo σ g ty _ _ hty D' t m B y b₀ P₀ e₀ hB hb₀ hyσ hy
     ⟨_, ⟨q1, q2, _, q4, _⟩, he₀, k₀, l₀, w₀, η₀, ηA₀⟩
   obtain ⟨hab, hdim, hrig, hsym⟩ := hpol E H D l _ _ _ _ Xo.univ
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim _
-  haveI := (hsm _ _ Xo.s inferInstance).2.2
-  haveI := hab.proper
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim _
+  have := (hsm _ _ Xo.s inferInstance).2.2
+  have := hab.proper
   let A : Out.PolAV Xo.X :=
     { A := Xo.univ.t.G, isAb := hab, g := _, smoothDim := hdim, L := Xo.univ.t.PP.L, isLB := Xo.univ.t.PP.isLB,
       rigid := hrig, sym := hsym, ample := Xo.univ.ample, ktriv := Xo.univ.ktriv }
@@ -286,9 +286,9 @@ theorem LocLift.holomorphic_map_lifts_to_periods : ThetaUnifAV → Out.Laws → 
       rfl)
   obtain ⟨B₂, h, hB₂, hb₂, hB₂₁, hh₀, hhd, hh⟩ := hdiag (𝓞 E) g m B₁ b₀ F _ inferInstance (isReduced_complex_tensor E)
     hB₁ hb₁ hFd hF₀
-  haveI := D'.fin
-  haveI : Module.Finite ℤ D'.La := Module.Finite.trans (𝓞 E) D'.La
-  haveI := datum_free_int D'
+  have := D'.fin
+  have : Module.Finite ℤ D'.La := Module.Finite.trans (𝓞 E) D'.La
+  have := datum_free_int D'
   obtain ⟨P, hP₀, hP⟩ := exists_periods hLat hB₁ hb₁ hy₁ hr hol he hl P₀ q2 q4 k₀
   obtain ⟨ε, hε, hball⟩ := Metric.eventually_nhds_iff_ball.1 (hP.and (hB₂.mem_nhds hb₂))
   set C := Metric.ball b₀ ε
@@ -308,7 +308,7 @@ theorem LocLift.holomorphic_map_lifts_to_periods : ThetaUnifAV → Out.Laws → 
   have hlin : ∀ (a : 𝓞 E) x, ∀ b ∈ C, P b (a • x) - (F b a).mulVec (P b x) = 0 := fun a x => by
     refine eq_zero_of_small hCc ((hPd _).sub (hmv (M := fun b => F b a) (β := id)
       (fun i j => (hFd a i j).mono hC₁) (hPd x))).continuousOn hr (fun b hb hn => (he b (hC₁ hb)).2 _ hn ?_) hC₀ ?_
-    · haveI := Xo.univ.t.act.hom a
+    · have := Xo.univ.t.act.hom a
       exact (hom_sub_eq_one (he b (hC₁ hb)).1.1).2 (by rw [hF b (hC₁ hb), hk1 b hb, hk1 b hb, MonObj.one_comp])
     · ext i
       simp [hP₀, hF₀, q1, Matrix.mulVec_diagonal]

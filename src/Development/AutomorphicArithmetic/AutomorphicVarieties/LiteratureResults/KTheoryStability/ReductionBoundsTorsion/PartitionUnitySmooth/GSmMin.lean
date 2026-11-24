@@ -125,7 +125,7 @@ private theorem qR_cont {X : Type} [TopologicalSpace X] {f : X → HS L N} {g : 
     (hf : Continuous f) (hg : Continuous g) : Continuous fun x => qR (f x) (g x) := by
   have hv : ∀ (w : InfinitePlace L) (i j : Fin N), Continuous fun x => (f x).1 w i j :=
     fun w i j => (continuous_apply j).comp ((continuous_apply i).comp
-      ((continuous_apply w).comp (continuous_subtype_val.comp hf)))
+      ((continuous_apply w).comp (continuous_subtypeVal.comp hf)))
   have hz : ∀ (w : InfinitePlace L) (i : Fin N), Continuous fun x => g x w i :=
     fun w i => (continuous_apply i).comp ((continuous_apply w).comp hg)
   simp only [qR, mat, dotProduct, mulVec, Matrix.of_apply, Pi.star_apply]
@@ -406,7 +406,7 @@ private theorem nu_lip (hB : Basic) (hC : Count) (hN : 1 ≤ N) : ∃ C : ℝ, 0
   have hq : ∀ v, |q y' v - q y v| ≤ δ * q y v := fun v => hcl (toR v)
   have hset : {v : Lat L N | q y v ≤ lam y / 2} = {0} := by
     ext v
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · intro hv; by_contra hne; have := h2 v hne; linarith
     · rintro rfl; rw [q_zero']; positivity

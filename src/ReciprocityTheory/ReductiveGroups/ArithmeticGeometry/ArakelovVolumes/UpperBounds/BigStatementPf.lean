@@ -57,7 +57,7 @@ variable {r : ℕ}
 
 private theorem norm_dmin_succ_div_castSucc_pos (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (i : Fin r) :
     0 < ‖dmin X.Gm x τ i.succ / dmin X.Gm x τ i.castSucc‖ := by
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hx
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx
   have h := (hx τ).2
   have h1 := h i.succ
   have h2 := h i.castSucc

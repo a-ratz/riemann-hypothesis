@@ -411,8 +411,8 @@ namespace GlobalTheory
 
 theorem matrix_inv_entries_bounded (R : Type) [NormedCommRing R] [NormedAlgebra ℝ R] [FiniteDimensional ℝ R] (n : ℕ) (G : Matrix (Fin n) (Fin n) R → ℝ) (hG : Continuous G) (hU : ∀ c, G c ≠ 0 → IsUnit c) (B ε : ℝ) (hε : 0 < ε) :
     ∃ C : ℝ, (∀ c : Matrix (Fin n) (Fin n) R, (∀ i j, ‖c i j‖ ≤ B) → G c ≤ C) ∧ ∀ c : GL (Fin n) R, (∀ i j, ‖c.1 i j‖ ≤ B) → ε ≤ G c.1 → ∀ i j, ‖c⁻¹.1 i j‖ ≤ C := by
-  haveI : ProperSpace R := FiniteDimensional.proper_real R
-  haveI : CompleteSpace R := FiniteDimensional.complete ℝ R
+  have : ProperSpace R := FiniteDimensional.proper_real R
+  have : CompleteSpace R := FiniteDimensional.completeSpace ℝ R
   set K : Set (Matrix (Fin n) (Fin n) R) := Set.pi Set.univ (fun _ => Set.pi Set.univ (fun _ => Metric.closedBall (0 : R) B)) with hK
   have hKc : IsCompact K := isCompact_univ_pi (fun _ => isCompact_univ_pi (fun _ => isCompact_closedBall _ _))
   have hmemK : ∀ c : Matrix (Fin n) (Fin n) R, (∀ i j, ‖c i j‖ ≤ B) → c ∈ K := by
@@ -531,7 +531,7 @@ theorem red_inf (E : Type) [Field E] [NumberField E] (R : Type) [NormedCommRing 
         (∀ i j, ‖c.1 i j‖ ≤ C ∧ ‖c⁻¹.1 i j‖ ≤ C) ∧
         δ.1.map τ * g.1 = diagonal (fun i => algebraMap ℝ R (2 ^ l i)) * c.1 := by
   classical
-  haveI : Nontrivial R := Module.nontrivial_of_finrank_pos (R := ℝ) (hd ▸ finrank_pos)
+  have : Nontrivial R := Module.nontrivial_of_finrank_pos (R := ℝ) (hd ▸ finrank_pos)
   let ε := toEuclidean (E := Fin n → R)
   let κ := Σ _ : Fin n, Free.ChooseBasisIndex ℤ (𝓞 E)
   have hκ : Fintype.card κ = finrank ℚ E * n := by
@@ -574,7 +574,7 @@ theorem red_inf (E : Type) [Field E] [NumberField E] (R : Type) [NormedCommRing 
     (_root_.GlobalTheory.linearIndependent_vecMul_of_span_rat E R τ hτ hd n _ u (Fintype.card_fin _) hu' g).map' ε.toLinearEquiv.toLinearMap ε.toLinearEquiv.ker
   obtain ⟨w, hw, hwu, hle⟩ := GlobalTheory.SW.exists_linearIndependent_prod_norm_le (E := E) (N := n) (Fintype.card_fin _) φ u hφu
   have hGu : 0 < (gram ℝ fun k => φ (u k)).det := (posDef_gram_of_linearIndependent hφu).det_pos
-  obtain ⟨δ, hδ⟩ : IsUnit (of w) := linearIndependent_rows_iff_isUnit.1 hw
+  obtain ⟨δ, hδ⟩ : IsUnit (of w) := linearIndependent_row_iff_isUnit.1 hw
   have hw0 : ∀ i, 0 < ‖φ (w i)‖ := fun i => norm_pos_iff.2 fun h => hw.ne_zero i (funext fun k => τ.injective (by
     have := (vecMul_injective_of_isUnit g.isUnit) ((ε.map_eq_zero_iff.1 h).trans (zero_vecMul _).symm)
     rw [Pi.zero_apply, map_zero]; exact congrFun this k))
@@ -662,12 +662,12 @@ theorem red_gl (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] 
     (hc : IsCMExt F E σ) (n : ℕ) : ∃ Ω : Set (AF F ⊗[F] E), IsCompact Ω ∧ ∀ β : GL (Fin n) (AF F ⊗[F] E),
       ∃ (δ : GL (Fin n) E) (l : Fin n → ℤ) (c : GL (Fin n) (AF F ⊗[F] E)), (∀ i j, c.1 i j ∈ Ω ∧ c⁻¹.1 i j ∈ Ω) ∧
         δ.1.map (inclR (F := F) (AF F)) * β.1 = diagonal (fun i => (halfE F E ^ l i).1) * c.1 := by
-  haveI := hc.2.1
+  have := hc.2.1
   obtain ⟨e, he, he1, he2⟩ := _root_.GlobalTheory.Eis.Conv.AdeleCMSplit.exists_adele_split F E σ hc
   obtain ⟨M, C, hM, H⟩ := red_inf E _ _ (_root_.GlobalTheory.totallyComplex_span_embeddings_and_finrank E).1 (_root_.GlobalTheory.totallyComplex_span_embeddings_and_finrank E).2 n
   let O : Set (FiniteAdeleRing (𝓞 E) E) := {a | ∀ v, a v ∈ v.adicCompletionIntegers E}
   have hO : IsCompact O := GlobalTheory.AdeleCocompact.isCompact_integral E
-  haveI : ProperSpace (InfinitePlace E → ℂ) := inferInstance
+  have : ProperSpace (InfinitePlace E → ℂ) := inferInstance
   refine ⟨e.symm '' (Metric.closedBall 0 C ×ˢ (O ∪ (fun a => algebraMap E _ (M : E)⁻¹ * a) '' O)),
     ((isCompact_closedBall _ _).prod (hO.union (hO.image (continuous_const.mul continuous_id)))).image he, fun β => ?_⟩
   let p₁ := (RingHom.fst _ _).comp e.toRingHom
@@ -725,14 +725,14 @@ theorem summable_hgt (hc : IsCMExt F E σ) (hσ : ∀ x, σ (σ x) = x) (h : Q =
     {K : Subgroup (GAd σ Q)} (hK : IsCompact (K : Set (GAd σ Q))) (hI : HasIwasawa σ Q K) {X : Type} {γ : X → GAd σ Q}
     (hγ : ∀ q, γ q ∈ AdelicU.ratPts σ Q) (hi : ∀ q q', γ q' * (γ q)⁻¹ ∈ siegelH (AF F) σ Q → q = q') {t : ℝ}
     (ht : (n : ℝ) < t) : Summable fun q => (hgtH σ Q (absE F E) K (γ q) : ℝ) ^ t := by
-  haveI := hc.1
-  haveI := t2Space_adeleRing' (F := F)
-  haveI := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI := t2Space_tensorProduct_finiteExtension (F := F) (E := E) (R := AF F)
-  haveI : Nontrivial (AF F) := inferInstanceAs (Nontrivial (Ainf F × Af F))
-  haveI : Nontrivial (AF F ⊗[F] E) := inferInstance
-  letI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
-  letI : Invertible (2 : AF F ⊗[F] E) := (Invertible.map (algebraMap F (AF F ⊗[F] E)) 2).copy _ (map_ofNat _ 2).symm
+  have := hc.1
+  have := t2Space_adeleRing' (F := F)
+  have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := t2Space_tensorProduct_finiteExtension (F := F) (E := E) (R := AF F)
+  have : Nontrivial (AF F) := inferInstanceAs (Nontrivial (Ainf F × Af F))
+  have : Nontrivial (AF F ⊗[F] E) := inferInstance
+  let : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  let : Invertible (2 : AF F ⊗[F] E) := (Invertible.map (algebraMap F (AF F ⊗[F] E)) 2).copy _ (map_ofNat _ 2).symm
   choose p k hk e using fun q => hI (γ q)
   obtain ⟨U, hU⟩ := (isUnit_iff_isUnit_det _).2 (isUnit_det_JR (F := F) (R := AF F) hJ.2)
   obtain ⟨Ω₀, C₀, hΩ₀, hcov⟩ := _root_.GlobalTheory.Eis.ConvCover.exists_cover F

@@ -75,8 +75,8 @@ namespace GlobalTheory.RatDarbouxTransfer
 
 theorem finrank_AE (D : D7) : Module.Free (AF D.host.F) (AE D) ∧ Module.Finite (AF D.host.F) (AE D) ∧
     Module.finrank (AF D.host.F) (AE D) = 2 := by
-  haveI : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
-  haveI : FiniteDimensional D.host.F D.host.E :=
+  have : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
+  have : FiniteDimensional D.host.F D.host.E :=
     Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   let bA := Algebra.TensorProduct.basis (AF D.host.F) (Module.finBasis D.host.F D.host.E)
   exact ⟨Module.Free.of_basis bA, Module.Finite.of_basis bA, by
@@ -95,7 +95,7 @@ theorem finrank_mat (K L : Type) [Field K] [Field L] [Algebra K L] [FiniteDimens
 theorem card_eq (D : D7) (S T : HSp D) (κ : Type) [Fintype κ]
     (e : Matrix (Fin T.rank) (Fin S.rank) (AE D) ≃ₗ[AF D.host.F] (κ → AF D.host.F) × (κ → AF D.host.F)) :
     Fintype.card κ = T.rank * S.rank := by
-  haveI : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
+  have : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
   obtain ⟨h1, h2, hAE⟩ := finrank_AE D
   have h := e.finrank_eq
   have ha : Module.finrank (AF D.host.F) (Matrix (Fin T.rank) (Fin S.rank) (AE D)) = T.rank * S.rank * 2 := by
@@ -114,10 +114,10 @@ theorem onto (D : D7) (S T : HSp D) (κ : Type) [Fintype κ]
       e (incM D.host.F x) = (fun i => algebraMap D.host.F (AF D.host.F) (y i),
         fun i => algebraMap D.host.F (AF D.host.F) (z i))) :
     ∀ p ∈ GlobalTheory.WeilUnitaryTransport.ratPair D.host.F κ, e.symm p ∈ ratL T S := by
-  haveI : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
+  have : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
   obtain ⟨h1, h2, hAE⟩ := finrank_AE D
   have hκ := card_eq D S T κ e
-  haveI : FiniteDimensional D.host.F D.host.E :=
+  have : FiniteDimensional D.host.F D.host.E :=
     Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   let J1 : (κ → D.host.F) →ₗ[D.host.F] (κ → AF D.host.F) :=
     LinearMap.compLeft (Algebra.linearMap D.host.F (AF D.host.F)) κ
@@ -125,7 +125,7 @@ theorem onto (D : D7) (S T : HSp D) (κ : Type) [Fintype κ]
   let I : Matrix (Fin T.rank) (Fin S.rank) D.host.E →ₗ[D.host.F] Matrix (Fin T.rank) (Fin S.rank) (AE D) :=
     (Algebra.TensorProduct.includeRight (R := D.host.F) (A := AF D.host.F) (B := D.host.E)).toLinearMap.mapMatrix
   let L := (e.toLinearMap.restrictScalars D.host.F).comp I
-  haveI : Nontrivial (AE D) := Module.nontrivial_of_finrank_pos (R := AF D.host.F) (by rw [hAE]; norm_num)
+  have : Nontrivial (AE D) := Module.nontrivial_of_finrank_pos (R := AF D.host.F) (by rw [hAE]; norm_num)
   have hJinj : Function.Injective J := by
     rintro ⟨y, z⟩ ⟨y', z'⟩ h
     have hi := AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F
@@ -182,11 +182,11 @@ theorem haar_fundDomain_transfer : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
             ∀ f : (κ → AF D.host.F) × (κ → AF D.host.F) → ℂ,
               ∫⁻ w in 𝓕, ‖f (co.e w)‖ₑ ^ 2 ∂ν = ∫⁻ w in 𝓕', ‖f w‖ₑ ^ 2 ∂ν' := by
   intro D ψ _ S T JA JB ξ _ _ κ _ co hrat ν 𝓕 hν h𝓕
-  haveI hMT : IsModuleTopology (AF D.host.F) (Matrix (Fin T.rank) (Fin S.rank) (AE D)) :=
+  have hMT : IsModuleTopology (AF D.host.F) (Matrix (Fin T.rank) (Fin S.rank) (AE D)) :=
     inferInstanceAs (IsModuleTopology (AF D.host.F) (Fin T.rank → Fin S.rank → AE D))
-  letI mP : MeasurableSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := borel _
-  haveI : BorelSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := ⟨rfl⟩
-  haveI : BorelSpace (Formalism.IndefR.Datum.WO S T) := ⟨rfl⟩
+  let mP : MeasurableSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := borel _
+  have : BorelSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := ⟨rfl⟩
+  have : BorelSpace (Formalism.IndefR.Datum.WO S T) := ⟨rfl⟩
   let ce : Matrix (Fin T.rank) (Fin S.rank) (AE D) ≃L[AF D.host.F] (κ → AF D.host.F) × (κ → AF D.host.F) :=
     { co.e with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap

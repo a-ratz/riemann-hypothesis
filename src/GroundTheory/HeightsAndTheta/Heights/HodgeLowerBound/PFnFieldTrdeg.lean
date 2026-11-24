@@ -101,7 +101,7 @@ theorem FnFieldTrdeg.full : FnFieldTrdeg.Statement := by
     have h3 : (Algebra.trdeg ℤ Ω).toENat + ((Fintype.card K + 1 : ℕ) : ℕ∞) = (d : ℕ∞) + ((Fintype.card K + 1 : ℕ) : ℕ∞) := by
       push_cast at h1 ⊢
       rw [← add_assoc, h1]; ring
-    exact WithTop.add_right_cancel (ENat.coe_ne_top _) h3
+    exact WithTop.add_right_cancel (ENat.natCast_ne_top _) h3
   exact Cardinal.toENat_eq_natCast.mp h2
 
 end GroundTheory.Heights₂.Heights.LowerBoundFree

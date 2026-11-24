@@ -123,7 +123,7 @@ theorem stepT : StepT := by
     (measurableEmbedding_addRight a) (fun v => g (v - a)) (X.fd n)
   simp only [add_sub_cancel_right] at h1
   rw [← h1]
-  haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range (Bn X n))).toAddSubgroup
+  have : VAddInvariantMeasure (Submodule.span ℤ (Set.range (Bn X n))).toAddSubgroup
       (Fin n → Vsp X.dim) volume :=
     ⟨fun g s _ => measure_preimage_add volume (g : Fin n → Vsp X.dim) s⟩
   exact (fd_trans X n a).setIntegral_eq (fd_fund X n) (per_span X n g hper)
@@ -154,7 +154,7 @@ theorem stepPos : StepPos := by
         rw [Set.mem_vadd_set_iff_neg_vadd_mem]
         show 0 < X.ptN2 q F (-g +ᵥ v) ↔ 0 < X.ptN2 q F v
         rw [per_span X n (X.ptN2 q F) hper (-g) v]
-      haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range (Bn X n))).toAddSubgroup
+      have : VAddInvariantMeasure (Submodule.span ℤ (Set.range (Bn X n))).toAddSubgroup
           (Fin n → Vsp X.dim) volume :=
         ⟨fun g s _ => measure_preimage_add volume (g : Fin n → Vsp X.dim) s⟩
       rw [pos_iff_ne_zero]

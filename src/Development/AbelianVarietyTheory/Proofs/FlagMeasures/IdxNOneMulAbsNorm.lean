@@ -88,7 +88,7 @@ theorem idxN_one_mul_absNorm (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) 
       rw [← finrank_eq_card_chooseBasisIndex, ← finrank_eq_card_chooseBasisIndex, fractionalIdeal_rank])
   have h1 := det_basisOfFractionalIdeal_eq_absNorm K u e
   have hle : (1 : Submodule (𝓞 K) K) ≤ I := by
-    rw [← FractionalIdeal.coe_one (S := nonZeroDivisors (𝓞 K))]
+    rw [← FractionalIdeal.coeToSubmodule_one (S := nonZeroDivisors (𝓞 K))]
     exact hI
   have h2 := AddSubgroup.relIndex_eq_abs_det _ _ ((Submodule.toAddSubgroup_le _ _).mpr hle) (integralBasis K)
     ((basisOfFractionalIdeal K u).reindex e.symm) (by
@@ -107,7 +107,7 @@ variable {ι : Type} [Fintype ι]
 
 theorem isLattice_pi (I : ι → FractionalIdeal (nonZeroDivisors (𝓞 K)) K) (hI : ∀ i, 1 ≤ I i) :
     Submodule.IsFullLattice K (Submodule.pi Set.univ fun i => (I i : Submodule (𝓞 K) K)) := by
-  haveI : Submodule.IsLattice K (Submodule.pi Set.univ fun i => (I i : Submodule (𝓞 K) K)) := by
+  have : Submodule.IsLattice K (Submodule.pi Set.univ fun i => (I i : Submodule (𝓞 K) K)) := by
     refine ⟨Submodule.fg_pi fun i => FractionalIdeal.fg_of_isNoetherianRing le_rfl _, ?_⟩
     intro s hs hli
     exact (LinearIndependent.iff_fractionRing _ _).mp hli
@@ -190,7 +190,7 @@ theorem latDetH_pseudo [DecidableEq ι] (hK : IsCMUnram K) (h : V →ₗ⋆[K] V
   have e1 := ((DiscOrder.main K _ h' hK hs' hn' P₀ hP₀i).2.2.1 P hPi hle).2
   have n0 := (DiscOrder.main K _ h' hK hs' hn' P hPi).1
   have e2 : idxN P P₀ = ∏ i, idxN (I i : Submodule (𝓞 K) K) 1 := by
-    rw [← FractionalIdeal.coe_one (S := nonZeroDivisors (𝓞 K))]
+    rw [← FractionalIdeal.coeToSubmodule_one (S := nonZeroDivisors (𝓞 K))]
     exact relIndex_pi_pi
       (fun _ => ((1 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K).toAddSubgroup)
       fun i => (I i : Submodule (𝓞 K) K).toAddSubgroup
@@ -199,7 +199,7 @@ theorem latDetH_pseudo [DecidableEq ι] (hK : IsCMUnram K) (h : V →ₗ⋆[K] V
     have hm : ∀ x, x ∈ dual h' P₀ ↔ G *ᵥ x ∈ P₀ := fun x => by
       rw [dualBasic_mem_dual]
       refine ⟨fun H i _ => ?_, fun H y hy => ?_⟩
-      · rw [FractionalIdeal.coe_one, ← hx1]
+      · rw [FractionalIdeal.coeToSubmodule_one, ← hx1]
         refine H _ fun j _ => ?_
         rw [Pi.single_apply]
         split_ifs
@@ -329,13 +329,13 @@ theorem exists_norm_eq (F : FlagG S r T) (F' : FlagG S r T') (hT : T ≠ 0) (hs 
 
     simp only [hy, map_sum, LinearMap.sum_apply, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hT_fvec,
     diagonal_apply, starRingEnd_apply, RingHom.id_apply, mul_ite, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, hc]
+    Finset.mem_univ, ite_true, hc]
     ring
   have h3 : S.hT F.z y = Z.det := by simpa [FlagG.fvec] using h1 (Fin.last r)
   have h4 : S.hT y F.z = star Z.det := by rw [← h3]; exact (S.herm.eq _ _).symm
   refine ⟨y + (Z.det / T) • F.z, (Formalism.MainNotions.mem_orth_iff _ _).2 (Formalism.MainNotions.hT_zero_of_mem_Xplus F (fun a => ?_) ?_), ?_⟩
   · have := h1 a.castSucc
-    simp only [FlagG.fvec, Fin.snoc_castSucc, Fin.castSucc_ne_last, if_false] at this
+    simp only [FlagG.fvec, Fin.snoc_castSucc, Fin.castSucc_ne_last, ite_false] at this
     rw [map_add (f := _), map_smul, this, F.z_orth, smul_zero, add_zero]
   · rw [map_add (f := _), map_smul, h3, F.z_norm, smul_eq_mul]
     field_simp

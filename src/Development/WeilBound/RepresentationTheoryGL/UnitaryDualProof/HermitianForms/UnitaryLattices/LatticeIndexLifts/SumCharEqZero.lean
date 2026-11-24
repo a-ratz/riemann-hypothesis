@@ -93,7 +93,7 @@ theorem sum_transl {M : Type*} [AddCommMonoid M] (A H : AddSubgroup G) (_hHA : H
   let r : G → G := fun x => if hx : x ∈ A then (hex x hx).choose else x
   have hr : ∀ x ∈ A, r x ∈ T ∧ x - r x ∈ H := by
     intro x hx
-    simp only [r, dif_pos hx]
+    simp only [r, dite_eq_left hx]
     exact (hex x hx).choose_spec
   have huniq : ∀ x ∈ A, ∀ t ∈ T, x - t ∈ H → r x = t := fun x hx t ht hxt =>
     (hu x hx).unique (hr x hx) ⟨ht, hxt⟩

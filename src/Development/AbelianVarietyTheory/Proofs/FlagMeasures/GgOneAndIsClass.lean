@@ -55,7 +55,7 @@ namespace GlobalTheory.GLq.GGDeg
 variable {g : ℕ} [Fact g.Prime]
 
 theorem isUnit_of_isUniUp {n : ℕ} {M : Mt g n} (h : IsUniUp M) : IsUnit M := by
-  rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_of_upperTriangular (fun a b hab => (h a b).1 hab),
+  rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_of_isUpperTriangular (fun a b hab => (h a b).1 hab),
     Finset.prod_eq_one fun a _ => (h a a).2 rfl]
   exact isUnit_one
 
@@ -134,7 +134,7 @@ theorem gg_one_and_isClass : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g)
       · exact Matrix.one_apply_ne (by simp)
       · rfl
     unfold gg
-    simp only [mul_one, inv_mul_cancel, Units.val_one, h1, if_true, h2, Finset.sum_const_zero,
+    simp only [mul_one, inv_mul_cancel, Units.val_one, h1, ite_true, h2, Finset.sum_const_zero,
       AddChar.map_zero_eq_one, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
     rw [card_uniUp, card_Gn]
     push_cast

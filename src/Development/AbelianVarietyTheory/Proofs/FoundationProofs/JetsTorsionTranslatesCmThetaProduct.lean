@@ -177,7 +177,7 @@ theorem pull_law : ∀ Λ : AddSubgroup ℂ, IsLat Λ → ∀ t₀ : ℂ, 2 * t�
       Complex.exp ((Real.pi : ℂ) * z * (starRingEnd ℂ) ω / (area Λ : ℂ) +
         (Real.pi : ℂ) * ω * (starRingEnd ℂ) ω / (2 * (area Λ : ℂ))) ^ (2 * N ^ 2) *
       (cocy Λ ((N : ℂ) * ω) y ^ 2 * cocy Λ ((N : ℂ) * ω) t₀ ^ 4) := by
-    simp only [cocy, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    simp only [cocy, ← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     simp only [map_mul, map_add (f := _), map_natCast]
     push_cast
@@ -371,7 +371,7 @@ theorem U1_sgStar_pow_eight : ∀ Λ : AddSubgroup ℂ, IsLat Λ → ∀ t : ℂ
   have hexp : Complex.exp (-(Real.pi : ℂ) * 0 * (starRingEnd ℂ) (2 * t) / (area Λ : ℂ) -
       (Real.pi : ℂ) * (2 * t) * (starRingEnd ℂ) (2 * t) / (2 * (area Λ : ℂ))) =
       Complex.exp (-(Real.pi : ℂ) * t * (starRingEnd ℂ) t / (2 * (area Λ : ℂ))) ^ 4 := by
-    rw [← Complex.exp_nat_mul, map_mul, map_ofNat]
+    rw [← Complex.exp_natCast_mul, map_mul, map_ofNat]
     congr 1
     push_cast
     ring
@@ -562,9 +562,9 @@ theorem mu_add (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.host.K)) (�
     (hg : GL3Theta.At D cc δ g) (v ω : ℂ) (hv : InRationalLattice g.abelian₂ v) (hω : ω ∈ g.abelian₂) : mu g (v + ω) = mu g v := by
   obtain ⟨hlat, -⟩ := setup D p cc δ g hg
   by_cases hv0 : v ∈ g.abelian₂
-  · rw [mu, mu, if_pos (add_mem hv0 hω), if_pos hv0]
+  · rw [mu, mu, ite_eq_left (add_mem hv0 hω), ite_eq_left hv0]
   · have h1 : v + ω ∉ g.abelian₂ := fun h => hv0 (by simpa using sub_mem h hω)
-    rw [mu, mu, if_neg h1, if_neg hv0, GlobalTheory.ThetaTransl.cval_norm_periodic D p cc δ g hg v ω hv hω]
+    rw [mu, mu, ite_eq_right h1, ite_eq_right hv0, GlobalTheory.ThetaTransl.cval_norm_periodic D p cc δ g hg v ω hv hω]
     congr 3
     rw [xAt, xAt, hlat.wpF_add_of_mem hω]
 
@@ -572,10 +572,10 @@ theorem mu_two (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.host.K)) (�
     (hg : GL3Theta.At D cc δ g) (v : ℂ) (hv : InRationalLattice g.abelian₂ v) : mu g (2 * v) = mu g v ^ 4 := by
   by_cases hv0 : v ∈ g.abelian₂
   · have h2 : 2 * v ∈ g.abelian₂ := by rw [two_mul]; exact add_mem hv0 hv0
-    rw [mu, mu, if_pos h2, if_pos hv0, one_pow]
+    rw [mu, mu, ite_eq_left h2, ite_eq_left hv0, one_pow]
   by_cases h2v : 2 * v ∈ g.abelian₂
-  · rw [mu, mu, if_pos h2v, if_neg hv0, mu_two_tors D p cc δ g hg v hv hv0 h2v]
-  · rw [mu, mu, if_neg h2v, if_neg hv0, mu_double D p cc δ g hg v hv hv0 h2v]
+  · rw [mu, mu, ite_eq_left h2v, ite_eq_right hv0, mu_two_tors D p cc δ g hg v hv hv0 h2v]
+  · rw [mu, mu, ite_eq_right h2v, ite_eq_right hv0, mu_double D p cc δ g hg v hv hv0 h2v]
 
 theorem mu_pow_two (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (g : GL3Theta.G1 p)
     (hg : GL3Theta.At D cc δ g) (v : ℂ) (hv : InRationalLattice g.abelian₂ v) (k : ℕ) :
@@ -612,7 +612,7 @@ theorem height_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.h
   intro D p _ cc δ g hg v hv hv0
   obtain ⟨m, hm, hmv⟩ := hv
   have hv' : InRationalLattice g.abelian₂ v := ⟨m, hm, hmv⟩
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   obtain ⟨a, b, hab, he⟩ := Finite.exists_ne_map_eq_of_infinite (fun k : ℕ => (2 : ZMod m) ^ k)
   have step : ∀ a b : ℕ, a < b → (2 : ZMod m) ^ a = (2 : ZMod m) ^ b → mu g v = 1 := by
     intro a b hlt hpow
@@ -637,7 +637,7 @@ theorem height_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D.h
     rcases lt_or_gt_of_ne hab with hlt | hlt
     · exact step a b hlt he
     · exact step b a hlt he.symm
-  rwa [mu, if_neg hv0] at h
+  rwa [mu, ite_eq_right hv0] at h
 
 end GlobalTheory.TorsionHeight
 end -- clump:auto
@@ -912,7 +912,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem lamC_natCast (lam : Qbar →+* ℂ_[p]) (n : ℕ) : lamC lam (n : ℂ) = n := by
   have h : (n : ℂ) ∈ Qbar := natCast_mem _ n
-  simp only [lamC, dif_pos h]
+  simp only [lamC, dite_eq_left h]
   rw [← map_natCast lam n]; rfl
 
 theorem iteratedDeriv_scale (G : ℂ → ℂ) (c : ℂ) (n : ℕ) :
@@ -1233,21 +1233,21 @@ theorem algLe_iteratedFDeriv_prod {V : Type*} [NormedAddCommGroup V] [NormedSpac
       funext y
       have h1 : ∀ j ∈ Finset.univ, HasFDerivAt (fun z => g j (l j z)) (deriv (g j) (l j y) • l j) y :=
         fun j _ => ((hg j) (l j y)).hasDerivAt.comp_hasFDerivAt y (l j).hasFDerivAt
-      rw [(HasFDerivAt.finsetProd h1).fderiv, ContinuousLinearMap.sum_apply]
+      rw [(HasFDerivAt.finsetProd h1).fderiv, sum_apply]
       refine Finset.sum_congr rfl fun j _ => ?_
       have h0 : ∏ i ∈ Finset.univ.erase j, Function.update g j (deriv (g j)) i (l i y) =
           ∏ i ∈ Finset.univ.erase j, g i (l i y) :=
         Finset.prod_congr rfl fun i hi => by rw [Function.update_of_ne (Finset.ne_of_mem_erase hi)]
       rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ j), Function.update_self, h0]
-      simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+      simp only [smul_apply, smul_eq_mul]
       ring
     rw [iteratedFDeriv_succ_apply_right,
       ← iteratedFDeriv_clm_apply_const_apply (n := n) ((hcd g hg (n + 1)).fderiv_right le_rfl) le_rfl,
       hfd, iteratedFDeriv_fun_sum_apply fun j _ => ((hcd _ (hg' j) n).const_smul _).contDiffAt,
-      ContinuousMultilinearMap.sum_apply]
+      sum_apply]
     have ht0 : ∀ j, 0 ≤ t j := fun j => by simpa using (ht j 0).nonneg
     refine AlgLe.sum _ (mul_nonneg (Finset.prod_nonneg fun j _ => ht0 j) (pow_nonneg hA _)) fun j _ => ?_
-    rw [iteratedFDeriv_const_smul_apply' (hcd _ (hg' j) n).contDiffAt, ContinuousMultilinearMap.smul_apply,
+    rw [iteratedFDeriv_const_smul_apply' (hcd _ (hg' j) n).contDiffAt, smul_apply,
       smul_eq_mul]
     have h2 := ih _ (Function.update t j (t j * A)) (hg' j) (by
       intro i k

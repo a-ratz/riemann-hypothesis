@@ -189,7 +189,7 @@ theorem exists_proj (e : Module.Basis (Fin N) ℤ Λ) {v : Fin m → Λ} {A : Se
     have h6 : Q i j ^ 2 ≤ d ^ 2 := by nlinarith
     exact abs_le_of_sq_le_sq h6 hd.le
   · ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro hx
       obtain ⟨y, rfl⟩ := (hA x).1 hx
@@ -368,8 +368,8 @@ open LevelTowerAlt.LocFin in
 theorem LevelTowerAlt.cusps_locally_finite_family : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (g : ℕ) (Λ : Type) [AddCommGroup Λ] [Module (𝓞 E) Λ] (Ψ : Type) [Fintype Ψ] (n : ℕ) (U : Set (Fin n → ℂ)) (R : (Fin n → ℂ) → RiemLat E g Λ) (σ : Ψ → (𝓞 E →+* ℂ)) (m : ℕ), IsOpen U → IsHolFam U R → IsCMFam σ → (∀ t ∈ U, (R t).HasRank σ m) → ∀ t₀ ∈ U, ∃ (ε : ℝ) (F : Finset (Submodule (𝓞 E) Λ)), 0 < ε ∧ ∀ t ∈ U ∩ Metric.ball t₀ ε, (∀ I ∈ F, (R t).IsCusp I) ∧ ∀ I, (R t).IsCusp I → (R t).nz σ I ≤ 1 → I ∈ F := by
   intro E _ _ _ g Λ _ _ Ψ _ n U R σ m hU hHol hCM _ t₀ ht₀
   classical
-  haveI := (R t₀).free
-  haveI := (R t₀).fin
+  have := (R t₀).free
+  have := (R t₀).fin
   let e := Module.finBasis ℤ Λ
   have hHm : ∀ i j, ContinuousOn (fun t => (R t).Hm i j) U := by
     intro i j
@@ -402,9 +402,9 @@ theorem LevelTowerAlt.cusps_locally_finite_family : ∀ (E : Type) [Field E] [Nu
     ⟨fun I hI => hcusp t₀ ht₀ t ht.1 I (Finset.mem_filter.1 hI).2, fun I hI hnz => ?_⟩⟩
   refine Finset.mem_filter.2 ⟨hfin.mem_toFinset.2 ?_, hcusp t ht.1 t₀ ht₀ I hI⟩
   have hinj : Function.Injective (I.subtype.toAddMonoidHom.toIntLinearMap) := Subtype.val_injective
-  haveI : Module.Finite ℤ I := Module.Finite.of_injective _ hinj
-  haveI : Module.IsTorsionFree ℤ I := Function.Injective.moduleIsTorsionFree _ hinj (fun _ _ => map_smul _ _ _)
-  haveI : Module.Free ℤ I := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ I := Module.Finite.of_injective _ hinj
+  have : Module.IsTorsionFree ℤ I := Function.Injective.moduleIsTorsionFree _ hinj (fun _ _ => map_smul _ _ _)
+  have : Module.Free ℤ I := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ I
   have hli : LinearIndependent ℤ fun i => (b i : Λ) :=
     b.linearIndependent.map' (I.subtype.toAddMonoidHom.toIntLinearMap) (LinearMap.ker_eq_bot.2 hinj)
@@ -469,7 +469,7 @@ variable {E : Type} [Field E] [NumberField E]
 
 theorem emb_injective (s : 𝓞 E →+* ℂ) : Function.Injective s :=
   (RingHom.injective_iff_ker_eq_bot _).2
-    (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) (eq_bot_iff.2 fun n hn => by simpa using hn))
+    (Ideal.eq_bot_of_under_eq_bot (R := ℤ) (eq_bot_iff.2 fun n hn => by simpa using hn))
 
 def extend (s : 𝓞 E →+* ℂ) : E →+* ℂ := IsFractionRing.lift (K := E) (emb_injective s)
 
@@ -672,7 +672,7 @@ theorem exists_complement {k g' : ℕ} (v : Fin k → Fin (k + g') → ℂ)
   have hs : LinearIndependent ℂ (Sum.elim v f) := hv.sum_type hf hdisj
   have hc := hs.comp _ (finSumFinEquiv.symm.injective)
   refine ⟨f, ?_⟩
-  have hu := Matrix.linearIndependent_cols_iff_isUnit
+  have hu := linearIndependent_col_iff_isUnit
     (A := (Matrix.of fun i j => Sum.elim v f (finSumFinEquiv.symm j) i :
       Matrix (Fin (k + g')) (Fin (k + g')) ℂ)) |>.1 hc
   exact ((Matrix.isUnit_iff_isUnit_det _).1 hu).ne_zero
@@ -1701,10 +1701,10 @@ theorem logDet_cont {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ}
     ContinuousOn (fun t => (R t).logDet fun τ i => b τ i t) U := by
   rcases U.eq_empty_or_nonempty with rfl | ⟨t₁, ht₁⟩
   · exact continuousOn_empty _
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hH : Continuous fun x : U => (R x).Hm :=
     _root_.GlobalTheory.CompanionTheory.Ar.Cusp.HmCont.continuous_Hm E g Λ U (fun x => R x) (R t₁).form (fun x => hR.1 x x.2 t₁ ht₁)
-      fun v => continuousOn_iff_continuous_restrict.1 (hR.2 v).continuousOn
+      fun v => continuousOn_iff_continuous_domRestrict.1 (hR.2 v).continuousOn
   apply continuous_finsetSum _
   intro τ _
   apply Continuous.log _ (fun (x : U) => (gram_det_pos _ _ (hl x x.2 τ)).ne')
@@ -1712,7 +1712,7 @@ theorem logDet_cont {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ}
   apply Continuous.matrix_det
   apply continuous_matrix
   intro p q
-  have hb' : ∀ i, Continuous fun x : U => b τ i x := fun i => continuousOn_iff_continuous_restrict.1 (hb τ i)
+  have hb' : ∀ i, Continuous fun x : U => b τ i x := fun i => continuousOn_iff_continuous_domRestrict.1 (hb τ i)
   exact (hb' q).dotProduct (hH.matrix_mulVec (hb' p).star)
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H}
@@ -1729,7 +1729,7 @@ theorem unit_factor (a : Fin Dc.nCharts) (t₀ : Fin (Fintype.card (CMType H) * 
         Real.log (‖valAt Dc.y d.u ((Dc.chart a).γ t)‖ * ∏ k, ‖(Dc.chart a).γ t ⟨k, d.c k⟩‖ ^ Hd.aMu k) = (G t).re := by
   have hex : ∃ v, IsValueAt Dc.y d.u ((Dc.chart a).γ t₀) v := by
     by_contra hn
-    exact hv0 (dif_neg hn)
+    exact hv0 (dite_eq_right hn)
   obtain ⟨v₀, dg, pg, ph, hpg, hph, hne, heq, hhne, hv₀⟩ := hex
   have hq : ∀ p, AnalyticAt ℂ (fun t => (Dc.chart a).γ t p) t₀ := fun p =>
     ((ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : (Σ k, J k) => ℂ) p).analyticAt _).comp
@@ -1879,7 +1879,7 @@ theorem near_all (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
     exact ⟨fun i => i.elim0, fun k _ => (pi_norm_lt_iff one_pos).1 (mem_ball_zero_iff.1 hu') k⟩
   let R : (Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) → RiemLat E g Λ := fun u =>
     if h : u ∈ logCover L.a_le then L.riem u h else L.riem 0 (hlc 0 h0)
-  have hR : ∀ u (h : u ∈ logCover L.a_le), R u = L.riem u h := fun u h => dif_pos h
+  have hR : ∀ u (h : u ∈ logCover L.a_le), R u = L.riem u h := fun u h => dite_eq_left h
   have hHol : IsHolFam (ball 0 1) R := by
     refine ⟨fun t ht t' ht' => ?_, fun x => ?_⟩
     · rw [hR t (hlc t ht), hR t' (hlc t' ht')]

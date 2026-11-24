@@ -89,7 +89,7 @@ theorem isHaarOn_smul' {k r : ℕ} {S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (
          first
            | exact hu
            | exact Measure.measure_univ_eq_zero.mp hu)
-  · rw [Measure.smul_apply, hnull, smul_zero]
+  · rw [smul_apply, hnull, smul_zero]
   · intro s hs'
     rw [Measure.map_smul, hinv s hs']
     exact (Formalism.L2.SG.Pf.WFL.measurable_lmulM s).aemeasurable

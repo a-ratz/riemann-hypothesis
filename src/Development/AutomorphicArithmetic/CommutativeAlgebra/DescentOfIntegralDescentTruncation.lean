@@ -125,12 +125,12 @@ theorem UpperTheory.cohomology_base_change_integral_surjective_cech :
   obtain ⟨u, hu, -⟩ := GlobalTheory.cech_baseChange Y X _ _ _ _ k (pullback.fst r c) hP
   have hq₀ : IsUnit (q : Γ(pullback r c, ⊤)) := by
     simpa using hq.map (pullback.fst r c).appTop.hom
-  haveI : IsIntegralHom (pullback.snd k (pullback.fst r c)) := MorphismProperty.of_isPullback hP inferInstance
-  haveI : Surjective (pullback.snd k (pullback.fst r c)) := MorphismProperty.of_isPullback hP inferInstance
+  have : IsIntegralHom (pullback.snd k (pullback.fst r c)) := MorphismProperty.of_isPullback hP inferInstance
+  have : Surjective (pullback.snd k (pullback.fst r c)) := MorphismProperty.of_isPullback hP inferInstance
   refine ⟨_, _, u, cechAug _, cechAug k, hu.w, b4 q k hq i, b4 q _ hq₀ i, fun p => ?_, fun n h => ?_⟩
   · obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.EtC.cech_level_representable (@IsIntegralHom) Y X k inferInstance
       (Opposite.op (SimplexCategory.mk p))
-    haveI : IsIntegralHom π := hπ
+    have : IsIntegralHom π := hπ
     exact ⟨Z, π ≫ k, inferInstance, fun n h =>
       level_rel k r c _ u hu _ (π ≫ k) e he q i n h⟩
   · exact level_rel k r c _ u hu _ k (cech_zero k) (cech_zero_aug k) q i n h
@@ -152,10 +152,10 @@ theorem UpperTheory.descent_of_integral_descent_truncation :
       RelZS (ZMod q) (tw q i) n (sch.map (pullback.fst g (LateralTheory.E.t_E2Cut.cpt A))) := by
     intro n hn X g
     refine ⟨fun m hm => ?_, fun x y _ => ?_⟩
-    · haveI := (hH.a9 (ZMod q) (tw q i)).1
+    · have := (hH.a9 (ZMod q) (tw q i)).1
         (sch.obj (pullback g (LateralTheory.E.t_E2Cut.cpt A))) m (by omega)
       exact fun y => ⟨0, Subsingleton.elim _ _⟩
-    · haveI := (hH.a9 (ZMod q) (tw q i)).1 (sch.obj X) n hn
+    · have := (hH.a9 (ZMod q) (tw q i)).1 (sch.obj X) n hn
       exact Subsingleton.elim _ _
   let C : ℤ → Prop := fun n => ∀ {X : Scheme} (g : X ⟶ Spec (CommRingCat.of A)),
       (∃ h : X ⟶ P, IsIntegralHom h ∧ g = h ≫ p) →
@@ -164,8 +164,8 @@ theorem UpperTheory.descent_of_integral_descent_truncation :
     intro n ih X g hg
     obtain ⟨h, hh, rfl⟩ := hg
     obtain ⟨Y, k, hk, hks, hpb⟩ := hyp X h hh
-    haveI := hk
-    haveI := hks
+    have := hk
+    have := hks
     obtain ⟨U, E, u, a', a, hcomm, ha, ha', hall, h0⟩ :=
       UpperTheory.cohomology_base_change_integral_surjective_cech hH.b4 q i k (h ≫ p) (LateralTheory.E.t_E2Cut.cpt A)
         (LateralTheory.E.t_E2Cut.unit_of hq (h ≫ p))
@@ -173,8 +173,8 @@ theorem UpperTheory.descent_of_integral_descent_truncation :
       refine hT (ZMod q) (tw q i) u n (fun p' m hm => ?_) ?_
       · obtain ⟨L, l, hl, hL⟩ := hall p'
         apply hL m
-        haveI := hl
-        haveI := hh
+        have := hl
+        have := hh
         exact ih m hm (l ≫ h ≫ p) ⟨l ≫ h, inferInstance, by simp [Category.assoc]⟩
       · apply h0 n
         exact ⟨fun m' _ => (hpb m').2, (hpb n).1⟩

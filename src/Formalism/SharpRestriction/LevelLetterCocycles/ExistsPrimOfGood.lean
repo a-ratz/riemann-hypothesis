@@ -82,7 +82,7 @@ theorem smulS_delta (g : PowerSeries LL) (w : V) (j : ℕ) :
   rw [Finset.sum_eq_single j]
   · simp
   · intro b _ hb
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     simp
   · intro hj
     simp at hj
@@ -507,8 +507,8 @@ theorem lev0MpL_of_from (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (
 theorem lev0MpL_of (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F)
     (hAdm : AdmArcA D HW F Cm) (h4 : Formalism.MainNotions.DeltaInvariantLattices.P4 D HW F Cm) (h9 : Formalism.MainNotions.DeltaInvariantLattices.P9 D HW F) : LevelZeroModPLocal D HW :=
   lev0MpL_of_from D HW F Cm hAdm h4 h9 fun l _ K LL hG _ _ => by
-    haveI := neZero_finrank_max_unramified K
-    haveI := eq_sum_herm_smul_frame_of_inW (D.loc l) K LL
+    have := neZero_finrank_max_unramified K
+    have := eq_sum_herm_smul_frame_of_inW (D.loc l) K LL
     intro C Ti E1 E2 h4' hζ A hA c' hc' T hT d b sol hb e
     exact CrC.level_zero_membership_of_horizontal _ _ C Ti E1 E2 h4' hζ A hA c' hc' T hT b sol hb e
 

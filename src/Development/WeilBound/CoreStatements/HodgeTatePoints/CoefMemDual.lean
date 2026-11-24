@@ -204,10 +204,10 @@ theorem tri {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V] {n : ℕ} (w
   have hF : F.BlockTriangular id := fun a' a h => f1 a a' h
   have hG : G.BlockTriangular id := fun a' a h => g1 a a' h
   have hdet : IsUnit G.det := by
-    rw [Matrix.det_of_upperTriangular hG, isUnit_iff_ne_zero, Finset.prod_ne_zero_iff]
+    rw [Matrix.det_of_isUpperTriangular hG, isUnit_iff_ne_zero, Finset.prod_ne_zero_iff]
     intro a _
     simpa [G, g2] using hg0 a
-  haveI := G.invertibleOfIsUnitDet hdet
+  have := G.invertibleOfIsUnitDet hdet
   have hT : (G⁻¹ * F).BlockTriangular id := (Matrix.blockTriangular_inv_of_blockTriangular hG).mul hF
   have e : G * (G⁻¹ * F) = F := Matrix.mul_nonsing_inv_cancel_left _ _ hdet
   refine ⟨G⁻¹ * F, fun a' a h => hT h, fun a => ?_, fun a => ?_⟩

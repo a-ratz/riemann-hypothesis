@@ -215,8 +215,8 @@ theorem codim_inf_le [DecidableEq ι] (Y : Submodule K V) [FiniteDimensional K Y
     have e : (Y ⊓ (A a ⊓ s.inf A) : Submodule K V) = (Y ⊓ A a) ⊓ (Y ⊓ s.inf A) := by
       rw [inf_inf_distrib_left]
     rw [e]
-    haveI : FiniteDimensional K ↥(Y ⊓ A a) := Submodule.finiteDimensional_of_le inf_le_left
-    haveI : FiniteDimensional K ↥(Y ⊓ s.inf A) := Submodule.finiteDimensional_of_le inf_le_left
+    have : FiniteDimensional K ↥(Y ⊓ A a) := Submodule.finiteDimensional_of_le inf_le_left
+    have : FiniteDimensional K ↥(Y ⊓ s.inf A) := Submodule.finiteDimensional_of_le inf_le_left
     have h1 := Submodule.finrank_sup_add_finrank_inf_eq (Y ⊓ A a) (Y ⊓ s.inf A)
     have h2 : Module.finrank K ↥((Y ⊓ A a) ⊔ (Y ⊓ s.inf A)) ≤ Module.finrank K Y :=
       hle (sup_le inf_le_left inf_le_left)
@@ -242,14 +242,14 @@ theorem ops_keep_supp (S : Set σ) (Q : Set (σ →₀ ℕ))
   unfold FockB.Ops at hT
   induction hT using Algebra.adjoin_induction
   · rename_i T' hT'
-    simp only [FockB.atoms, Set.mem_setOf_eq] at hT'
+    simp only [FockB.atoms, Set.mem_ofPred_eq] at hT'
     obtain ⟨u, hu, rfl | rfl⟩ := hT'
     · intro z hz
       rw [MvPolynomial.mem_restrictSupport_iff] at hz
       show X u * z ∈ restrictSupport k Q
       rw [MvPolynomial.as_sum z, Finset.mul_sum]
       refine Submodule.sum_mem _ fun m hm => ?_
-      rw [X, monomial_mul, one_mul, MvPolynomial.mem_restrictSupport_iff]
+      rw [X, monomial_mul_monomial, one_mul, MvPolynomial.mem_restrictSupport_iff]
       refine (Finset.coe_subset.mpr support_monomial_subset).trans ?_
       rw [Finset.coe_singleton, Set.singleton_subset_iff]
       refine hQ m _ (fun w hw => ?_) (hz hm)
@@ -314,15 +314,15 @@ theorem glAct_mem {N r : ℕ} (LL : Letters N) (j : ℕ) (c d : Fin r) :
   split_ifs with hi hv
   · have h1 : (LinearMap.mulLeft ℚ_[p] (X (i, c)) : Module.End ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈
         Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | (v.1 : ℕ) < j}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, c), hi, Or.inl rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, c), hi, Or.inl rfl⟩)
     have h2 : ((pderiv (R := ℚ_[p]) (i, d) : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈ Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | (v.1 : ℕ) < j}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, d), hi, Or.inr rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, d), hi, Or.inr rfl⟩)
     exact Subalgebra.mul_mem _ h1 h2
   · have h1 : (LinearMap.mulLeft ℚ_[p] (X (i, d)) : Module.End ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈
         Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | (v.1 : ℕ) < j}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, d), hi, Or.inl rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, d), hi, Or.inl rfl⟩)
     have h2 : ((pderiv (R := ℚ_[p]) (i, c) : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈ Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | (v.1 : ℕ) < j}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, c), hi, Or.inr rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, c), hi, Or.inr rfl⟩)
     exact Subalgebra.neg_mem _ (Subalgebra.mul_mem _ h1 h2)
   · exact Subalgebra.zero_mem _
 
@@ -514,7 +514,7 @@ theorem XD_keep (u v : σ) (Q Q' : Set (σ →₀ ℕ))
   rw [MvPolynomial.as_sum x, map_sum, Finset.mul_sum]
   refine Submodule.sum_mem _ fun m hm => ?_
   have hmQ : m ∈ Q := hx hm
-  rw [pderiv_monomial, X, monomial_mul, one_mul]
+  rw [pderiv_monomial, X, monomial_mul_monomial, one_mul]
   by_cases hv : m v = 0
   · rw [hv, Nat.cast_zero, mul_zero, map_zero]
     exact Submodule.zero_mem _
@@ -624,7 +624,7 @@ private theorem coeff_XD_lemma (v : Fin N × Fin r) (x : MvPolynomial (Fin N × 
     (m : Fin N × Fin r →₀ ℕ) : AddMonoidAlgebra.coeff (X v * pderiv v x) m = (m v : ℚ_[p]) * AddMonoidAlgebra.coeff x m := by
   induction x using MvPolynomial.induction_on'
   · rename_i n a
-    rw [pderiv_monomial, X, monomial_mul, one_mul, coeff_monomial, coeff_monomial]
+    rw [pderiv_monomial, X, monomial_mul_monomial, one_mul, coeff_monomial, coeff_monomial]
     by_cases hn : n v = 0
     · simp only [hn, Nat.cast_zero, mul_zero, ite_self]
       split_ifs with h
@@ -696,7 +696,7 @@ theorem comm_wtsp (LL : Letters N) (j : ℕ) (T : MvPolynomial (Fin N × Fin r) 
   unfold WtSpC
   rw [MvPolynomial.mem_restrictSupport_iff]
   intro m hm
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   intro c _
   have := eig_supp LL j c (μ c) (T x) (heig c)
   rw [MvPolynomial.mem_restrictSupport_iff] at this
@@ -736,12 +736,12 @@ theorem glAct_wtsp (LL : Letters N) (j : ℕ) (c d : Fin r) (μ : Fin r → ℤ)
   unfold WtSpC
   apply glAct_keep
   · intro i hi hvi m hm h1
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     intro c' _
     unfold shiftW
     rw [(wt_shift LL j c d c' i hi m).1 hvi h1, hm c' (Finset.mem_univ c')]
   · intro i hi hvi m hm h1
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     intro c' _
     unfold shiftW
     rw [(wt_shift LL j c d c' i hi m).2 hvi h1, hm c' (Finset.mem_univ c')]
@@ -755,11 +755,11 @@ theorem lower_action_preserves_weight_le [NeZero r] (LL : Letters N) (j : ℕ) (
     simp at h1
   apply glAct_keep
   · intro i hi hvi m hm h1
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     rw [(wt_shift LL j c d 0 i hi m).1 hvi h1, ite_eq_right hc0]
     exact le_trans (WithTop.coe_le_coe.mpr (by split_ifs <;> omega)) hm
   · intro i hi hvi m hm h1
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     rw [(wt_shift LL j c d 0 i hi m).2 hvi h1, ite_eq_right hc0]
     exact le_trans (WithTop.coe_le_coe.mpr (by split_ifs <;> omega)) hm
 
@@ -821,15 +821,15 @@ theorem tm_mem (LL : Letters N) (j : ℕ) (i : Fin N) (c d : Fin r) :
   split_ifs with hi hv
   · have h1 : (LinearMap.mulLeft ℚ_[p] (X (i, c)) : Module.End ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈
         Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | v.1 = i}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, c), rfl, Or.inl rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, c), rfl, Or.inl rfl⟩)
     have h2 : ((pderiv (R := ℚ_[p]) (i, d) : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈ Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | v.1 = i}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, d), rfl, Or.inr rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, d), rfl, Or.inr rfl⟩)
     exact Subalgebra.mul_mem _ h1 h2
   · have h1 : (LinearMap.mulLeft ℚ_[p] (X (i, d)) : Module.End ℚ_[p] (MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈
         Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | v.1 = i}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, d), rfl, Or.inl rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, d), rfl, Or.inl rfl⟩)
     have h2 : ((pderiv (R := ℚ_[p]) (i, c) : MvPolynomial (Fin N × Fin r) ℚ_[p] →ₗ[ℚ_[p]] MvPolynomial (Fin N × Fin r) ℚ_[p])) ∈ Algebra.adjoin ℚ_[p] (FockB.atoms {v : Fin N × Fin r | v.1 = i}) :=
-      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_setOf_eq]; exact ⟨(i, c), rfl, Or.inr rfl⟩)
+      Algebra.subset_adjoin (by simp only [FockB.atoms, Set.mem_ofPred_eq]; exact ⟨(i, c), rfl, Or.inr rfl⟩)
     exact Subalgebra.neg_mem _ (Subalgebra.mul_mem _ h1 h2)
   · exact Subalgebra.zero_mem _
 

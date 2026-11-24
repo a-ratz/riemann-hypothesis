@@ -71,7 +71,7 @@ theorem exists_minor_ne_zero {K : Type} [Field K] {m g k : ℕ} (a : Fin m → F
     exact (Matrix.finrank_span_range_col M).trans (hM.rank_matrix.trans (Fintype.card_fin k))
   let e : Fin k ≃ κ := (Fintype.equivFinOfCardEq hκ).symm
   have h1 : LinearIndependent K (M.submatrix id (b ∘ e)).col := hli.comp e e.injective
-  exact ⟨b ∘ e, ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 h1)).ne_zero⟩
+  exact ⟨b ∘ e, ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_col_iff_isUnit.1 h1)).ne_zero⟩
 
 theorem map_minor {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {m g k : ℕ} (a : Fin m → Fin g → R)
     (hk : k ≤ m) (s : Fin k → Fin g) : φ (minor a hk s) = minor (fun l i => φ (a l i)) hk s := by

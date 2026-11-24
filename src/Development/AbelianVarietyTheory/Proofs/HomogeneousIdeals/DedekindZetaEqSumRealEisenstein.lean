@@ -319,7 +319,7 @@ theorem tsum_rowError_one (z : ℂ) (hz : 0 < z.im) :
   have hY : 0 < ((m : ℝ) + 1) * z.im := by positivity
   have := rowSum_one ((m + 1) * z) (by simpa using hY)
   rw [show 2 * π * Complex.I * ((m + 1) * z) = ((m + 1 : ℕ) : ℂ) * (2 * π * Complex.I * z) by
-    push_cast; ring, Complex.exp_nat_mul] at this
+    push_cast; ring, Complex.exp_natCast_mul] at this
   have e1 : ((m + 1) * z).re = (m + 1) * z.re := by simp
   have e2 : ((m + 1) * z).im = (m + 1) * z.im := by simp
   rw [e1, e2] at this
@@ -546,7 +546,7 @@ theorem dedekindZeta_eq_sum_realEisenstein (h2 : finrank ℚ K = 2) (hD : discr 
         rw [inv_eq_iff_mul_eq_one, ← ClassGroup.mk_mk0 K]
         conv_rhs => rw [← hc c, ← map_mul, ClassGroup.mk_eq_one_iff]
         rfl
-      simp only [this, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [this, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       ring
   have h4 := Complex.hasSum_ofReal.2 (h3.tsum_fiberwise Ideal.absNorm)
   rw [dedekindZeta, LSeries]

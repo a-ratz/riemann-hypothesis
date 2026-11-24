@@ -63,7 +63,7 @@ theorem schemeFil_comp_iso (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
     (A₀ B₀ : Over (Sp R₀)) [GrpObj A₀] [GrpObj B₀] (σ : A₀ ⟶ B₀) [IsMonHom σ] [IsIso σ] (X : Over (Sp R)) (j : B₀.left ⟶ X.left)
     (wj : j ≫ X.hom = B₀.hom ≫ spMap π) (w : (σ.left ≫ j) ≫ X.hom = A₀.hom ≫ spMap π) (d : Crys κ (spMap π) A₀) :
     d ∈ schemeFil κ A₀ X (σ.left ≫ j) w ↔ push κ (spMap π) σ d ∈ schemeFil κ B₀ X j wj := by
-  haveI : IsMonHom (inv σ) :=
+  have : IsMonHom (inv σ) :=
     { one_hom := by rw [← cancel_mono σ]; simp
       mul_hom := by
         rw [← cancel_mono σ]
@@ -343,12 +343,12 @@ theorem exists_lift_shear : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I 
     ∃ φ : X ⊗ Y ⟶ Y, l ≫ φ.left = ((fst A₀ B₀ ≫ f₀) * snd A₀ B₀).left ≫ j := by
   intro R R₀ _ _ I hI π hπ hker hL g g' A₀ B₀ _ _ A' B' _ _ i' j' hA hB hAab hBab hAg hBg X Y i j h k hX hY
     e e' he he' hie hje l hl₁ hl₂ f₀ _ hf
-  haveI : IsCommMonObj B' := hBab.comm
-  haveI : IsCommMonObj B₀ := isCommMonObj_of_isGrpPullback hB
-  haveI hm : IsMonHom ((fst A₀ B₀ ≫ f₀) * snd A₀ B₀) := isMonHom_mul _ _
+  have : IsCommMonObj B' := hBab.comm
+  have : IsCommMonObj B₀ := isCommMonObj_of_isGrpPullback hB
+  have hm : IsMonHom ((fst A₀ B₀ ≫ f₀) * snd A₀ B₀) := isMonHom_mul _ _
   obtain ⟨σ, hσ⟩ : ∃ σ : A₀ ⊗ B₀ ⟶ A₀ ⊗ B₀, σ = lift (fst A₀ B₀) ((fst A₀ B₀ ≫ f₀) * snd A₀ B₀) := ⟨_, rfl⟩
   obtain ⟨τ, hτ⟩ : ∃ τ : A₀ ⊗ B₀ ⟶ A₀ ⊗ B₀, τ = lift (fst A₀ B₀) ((fst A₀ B₀ ≫ f₀)⁻¹ * snd A₀ B₀) := ⟨_, rfl⟩
-  haveI : IsMonHom σ := by rw [hσ]; infer_instance
+  have : IsMonHom σ := by rw [hσ]; infer_instance
   have σ₁ : σ ≫ fst A₀ B₀ = fst A₀ B₀ := by rw [hσ, lift_fst]
   have σ₂ : σ ≫ snd A₀ B₀ = (fst A₀ B₀ ≫ f₀) * snd A₀ B₀ := by rw [hσ, lift_snd]
   have τ₁ : τ ≫ fst A₀ B₀ = fst A₀ B₀ := by rw [hτ, lift_fst]
@@ -362,8 +362,8 @@ theorem exists_lift_shear : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I 
     apply CartesianMonoidalCategory.hom_ext
     · rw [Category.assoc, σ₁, τ₁, Category.id_comp]
     · rw [Category.assoc, σ₂, comp_mul, ← Category.assoc, τ₁, τ₂, mul_inv_cancel_left, Category.id_comp]
-  haveI : IsIso σ := ⟨τ, hστ, hτσ⟩
-  haveI : IsIso σ.left :=
+  have : IsIso σ := ⟨τ, hστ, hτσ⟩
+  have : IsIso σ.left :=
     ⟨τ.left, by rw [← Over.comp_left, hστ, Over.id_left], by rw [← Over.comp_left, hτσ, Over.id_left]⟩
   obtain ⟨h₀, h₀₁, h₀₂⟩ := GlobalTheory.AbDual.exists_prod_pullback hA hB
   have hAB : IsGrpPullback (A₀ ⊗ B₀) (A' ⊗ B') (spMap π) h₀ := isGrpPullback_tensor hA hB h₀₁ h₀₂
@@ -375,8 +375,8 @@ theorem exists_lift_shear : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I 
       (g := 𝟙 _) ⟨by rw [Over.w, Category.comp_id]⟩).paste_horiz hl
     rwa [Category.id_comp] at q
   have hsm : Smooth (X ⊗ Y).hom := by
-    haveI := hX
-    haveI := hY
+    have := hX
+    have := hY
     rw [Over.tensorObj_hom, Limits.pullback.condition]
     infer_instance
   have hfil : schemeFil (divided₂ hI) (A₀ ⊗ B₀) (X ⊗ Y) l hl.w =

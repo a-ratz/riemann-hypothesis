@@ -116,9 +116,9 @@ def ind (S : Set (HeightOneSpectrum (𝓞 F))) : FiniteAdeleRing (𝓞 F) F :=
     · simp only [if_pos h]; exact one_mem _
     · simp only [if_neg h]; exact zero_mem _⟩
 
-theorem ind_pos {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∈ S) : ind S w = 1 := if_pos h
+theorem ind_pos {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∈ S) : ind S w = 1 := ite_eq_left h
 
-theorem ind_neg {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∉ S) : ind S w = 0 := if_neg h
+theorem ind_neg {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∉ S) : ind S w = 0 := ite_eq_right h
 
 theorem loc_ind_pos {S : Set (HeightOneSpectrum (𝓞 F))} {w} (h : w ∈ S) :
     loc E w (ind S ⊗ₜ[F] (1 : E)) = 1 := by rw [loc_tmul, ind_pos h]; rfl
@@ -139,7 +139,7 @@ theorem isSplitPlace_of_splitPl (c : E ≃ₐ[F] E) {v : HeightOneSpectrum (𝓞
 
 theorem aut_eq (c : E ≃ₐ[F] E) (h2 : Module.finrank F E = 2) (hc : c ≠ 1) (σ : E ≃ₐ[F] E) :
     σ = 1 ∨ σ = c := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   have hcard : Nat.card (E ≃ₐ[F] E) = 2 := by rw [IsGalois.card_aut_eq_finrank, h2]
   obtain ⟨y, -, hy⟩ := (Nat.card_eq_two_iff' (1 : E ≃ₐ[F] E)).1 hcard
   by_cases h : σ = 1
@@ -155,7 +155,7 @@ theorem moved_of_not_le (c : E ≃ₐ[F] E) (h2 : Module.finrank F E = 2) (hc : 
     {P Q : Ideal (𝓞 E)} (hQ : Q.IsPrime)
     (h : P.comap (algebraMap (𝓞 F) (𝓞 E)) = Q.comap (algebraMap (𝓞 F) (𝓞 E))) (hPQ : ¬ P ≤ Q) :
     Moved c Q := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   obtain ⟨a, haP, haQ⟩ := Set.not_subset.1 hPQ
   let σ : 𝓞 E ≃+* 𝓞 E := RingOfIntegers.mapRingEquiv c.toRingEquiv
   have hσ : ∀ x : 𝓞 E, ((σ x : 𝓞 E) : E) = c x := fun _ => rfl
@@ -264,7 +264,7 @@ theorem moved_of_hom {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
       refine ho.mem_nhds ?_
       show Valued.v (φ z - φ z) < _
       rw [sub_self, map_zero]
-      exact zero_lt_iff.2 hab'
+      exact pos_iff_ne_zero.2 hab'
     obtain ⟨t, ht⟩ := hd.mem_nhds hN
     exact ⟨t, ht⟩
   have hb : Valued.v (φ (c z) - algebraMap F (v.adicCompletion F) t) = Valued.v (φ z - φ (c z)) := by
@@ -352,7 +352,7 @@ theorem exists_splitAt_of_isIdemAt {e : AE D} {P : HeightOneSpectrum (𝓞 D.hos
     · have hx0 : Valued.v (φ x) ≠ 0 := by
         rw [Valuation.ne_zero_iff, map_ne_zero]
         exact fun h => hx (Subtype.ext h)
-      rw [h.2 x hx, hφ, mem_iff he, map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+      rw [h.2 x hx, hφ, mem_iff he, map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
 
 theorem finPart_sub_one (V : HSp D) (h : GA D V) (i j : Fin V.rank) :
     finPart D ((Formalism.L2.Theta.mt V h - 1) i j) = ((finHom V h).1 - 1) i j := by

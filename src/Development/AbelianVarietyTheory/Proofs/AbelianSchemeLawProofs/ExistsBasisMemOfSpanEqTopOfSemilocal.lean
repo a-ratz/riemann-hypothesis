@@ -132,7 +132,7 @@ theorem exists_linearIndependent {A B M : Type*} [CommRing A] [IsLocalRing A]
       fun m => ((q m).restrictScalars A).comap N.subtype
     obtain ⟨x, hx⟩ := exists_forall_notMem p (fun m h => by
       have := m.isMaximal
-      letI := Ideal.Quotient.field m.asIdeal
+      let := Ideal.Quotient.field m.asIdeal
       have h1 : q m = ⊤ := by
         rw [eq_top_iff, ← hN, Submodule.span_le]
         intro y hy
@@ -163,7 +163,7 @@ theorem exists_linearIndependent {A B M : Type*} [CommRing A] [IsLocalRing A]
       · exact x.2
       · exact hvN j
     · have := m.isMaximal
-      letI := Ideal.Quotient.field m.asIdeal
+      let := Ideal.Quotient.field m.asIdeal
       have h1 : (fun i => red e m.asIdeal (Fin.cons (α := fun _ => M) (x : M) v i)) =
           Fin.cons (red e m.asIdeal x) (fun i => red e m.asIdeal (v i)) := by
         funext i
@@ -180,10 +180,10 @@ theorem exists_basis_mem_of_span_eq_top_of_semilocal :
   have hu : IsUnit (e.det v) := by
     by_contra hne
     obtain ⟨I, hI, hmem⟩ := exists_max_ideal_of_mem_nonunits hne
-    letI := Ideal.Quotient.field I
+    let := Ideal.Quotient.field I
     have h1 := hv ⟨I, hI⟩
     have h2 : IsUnit ((e.toMatrix v).map (Ideal.Quotient.mk I)) :=
-      Matrix.linearIndependent_cols_iff_isUnit.mp h1
+      Matrix.linearIndependent_col_iff_isUnit.mp h1
     rw [Matrix.isUnit_iff_isUnit_det, ← RingHom.mapMatrix_apply, ← RingHom.map_det,
       ← Module.Basis.det_apply, Ideal.Quotient.eq_zero_iff_mem.mpr hmem] at h2
     exact not_isUnit_zero h2

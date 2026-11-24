@@ -78,7 +78,7 @@ theorem stalk_loc {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCa
   obtain ⟨q, hq⟩ := q
   dsimp only at hp
   subst hp
-  letI a₀ : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk p) := StructureSheaf.stalkAlgebra R p
+  let a₀ : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk p) := StructureSheaf.stalkAlgebra R p
   have hl : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk p) p.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk R p
   have hu : ∀ s : p.asIdeal.primeCompl, IsUnit (k₀ s) := fun s =>
@@ -118,10 +118,10 @@ theorem stalk_loc {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCa
       have ht' := congrArg (x.stalkMap p).hom ht
       rw [map_mul, map_one, hs'] at ht'
       rw [map_mul, ha', ← hb, _root_.mul_assoc, ht', _root_.mul_one]
-  haveI : IsIso (x.stalkMap p) := (ConcreteCategory.isIso_iff_bijective _).2 hbij
+  have : IsIso (x.stalkMap p) := (ConcreteCategory.isIso_iff_bijective _).2 hbij
   let e : ((Spec (CommRingCat.of R)).presheaf.stalk p) ≃+* X.presheaf.stalk (x p) :=
     (asIso (x.stalkMap p)).symm.commRingCatIsoToRingEquiv
-  letI alg : Algebra R (X.presheaf.stalk (x p)) :=
+  let alg : Algebra R (X.presheaf.stalk (x p)) :=
     (e.toRingHom.comp (algebraMap R ((Spec (CommRingCat.of R)).presheaf.stalk p))).toAlgebra
   refine ⟨alg, IsLocalization.isLocalization_of_algEquiv _ (AlgEquiv.ofRingEquiv (f := e) fun r => rfl), ?_, ?_⟩
   · have h3 : Spec.map (CommRingCat.ofHom (algebraMap R (X.presheaf.stalk (x p)))) =
@@ -146,7 +146,7 @@ theorem lift_sec {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsSeparated G.hom] {R
       ∀ {B : Type} [CommRing B] (y : Spec (CommRingCat.of B) ⟶ Γ.G.left)
         (b : Spec (CommRingCat.of B) ⟶ Spec (X.presheaf.stalk q)), y ≫ Γ.G.hom = b ≫ a →
         ∀ hy : ⊤ ≤ (y ≫ i) ⁻¹ᵁ W, valAt (y ≫ i) W hy f = valAt y ⊤ le_top s := by
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.BT.isClosedImmersion_torsion_lift G R T Γ x N i h
+  have := _root_.GlobalTheory.CompanionTheory.Ar.BT.isClosedImmersion_torsion_lift G R T Γ x N i h
   let c : pullback Γ.G.hom a ⟶ pullback G.hom (X.fromSpecStalk q) :=
     pullback.lift (pullback.fst _ _ ≫ i) (pullback.snd _ _) (by
       rw [Category.assoc, h.isOver, ← ha, pullback.condition_assoc])
@@ -163,7 +163,7 @@ theorem lift_sec {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsSeparated G.hom] {R
         apply pullback.hom_ext <;>
           simp only [c, m, Category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_snd_assoc,
             pullback.condition]) p1.flip
-  haveI : IsClosedImmersion c := MorphismProperty.of_isPullback p2.flip ‹_›
+  have : IsClosedImmersion c := MorphismProperty.of_isPullback p2.flip ‹_›
   have hover : G.hom ((η[G]).left q) = q := by
     have e : ((η[G]).left ≫ G.hom) q = q := by
       rw [Over.w]
@@ -189,9 +189,9 @@ theorem exists_denom {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G] [
       Spec.map (CommRingCat.ofHom (dualMap (algebraMap R O))) ≫ (M₀.pt b).left := by
   subst hz
   obtain ⟨L', _, _, ⟨M'⟩⟩ := lieModel_exists X G O (Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x)
-  letI : Module R L' := Module.compHom L' (algebraMap R O)
+  let : Module R L' := Module.compHom L' (algebraMap R O)
   have hsm : ∀ (r : R) (l : L'), r • l = algebraMap R O r • l := fun _ _ => rfl
-  haveI : IsScalarTower R O L' := ⟨fun r a l => by
+  have : IsScalarTower R O L' := ⟨fun r a l => by
     rw [Algebra.smul_def, mul_smul, hsm]⟩
   have hψ : Spec.map (CommRingCat.ofHom (dualMap (algebraMap R O))) ≫ (epsAt x).hom =
       (epsAt (Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x)).hom := by

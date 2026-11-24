@@ -560,14 +560,14 @@ theorem sum_coeff {k : Type} [CommRing k] (p : MvPolynomial σ k) (hp : p.totalD
   · rw [Finset.sum_eq_single ⟨n, hn⟩]
     · simp
     · intro m _ hm
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h; exact hm (Subtype.ext h)
     · simp
   · rw [Finset.sum_eq_zero]
     · by_contra h
       exact hn ((sum_eq_degree n ▸ le_totalDegree (mem_support_iff.mpr (Ne.symm h))).trans hp)
     · intro m _
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro rfl; exact hn m.2
 
 end GlobalTheory.SplitSpread
@@ -653,9 +653,9 @@ theorem bad_iff (f g : MvPolynomial σ A) (D : ℕ) (k : Type) [Field k] (ψ : A
       cases b <;> simpa [z]
     · rw [eval_eqs_inv]
       cases b
-      · simp only [z, Sum.elim_inr, Bool.false_eq_true, if_false]
+      · simp only [z, Sum.elim_inr, Bool.false_eq_true, ite_false]
         exact sub_eq_zero.mpr (inv_mul_cancel₀ hQg)
-      · simp only [z, Sum.elim_inr, if_true]
+      · simp only [z, Sum.elim_inr, ite_true]
         exact sub_eq_zero.mpr (inv_mul_cancel₀ hPg)
 
 end GlobalTheory.SplitSpread
@@ -767,7 +767,7 @@ def bwd0 : MvPolynomial σ k →ₐ[k] k ⊗[A] LA f g :=
 lemma fibreHypersurfaceBackwardPolynomial_map (p : MvPolynomial σ A) :
     bwd0 f g k (MvPolynomial.map (algebraMap A k) p) =
       Algebra.TensorProduct.includeRight (R := A) (A := k) (rhoA f g p) := by
-  letI : IsScalarTower A k (k ⊗[A] LA f g) := TensorProduct.isScalarTower_left
+  let : IsScalarTower A k (k ⊗[A] LA f g) := TensorProduct.isScalarTower_left
   rw [bwd0, MvPolynomial.aeval_map_algebraMap]
   change _ = ((Algebra.TensorProduct.includeRight (R := A) (A := k)).comp (rhoA f g)) p
   conv_rhs => rw [MvPolynomial.aeval_unique ((Algebra.TensorProduct.includeRight (R := A) (A := k)).comp (rhoA f g))]
@@ -805,7 +805,7 @@ lemma fwd_bwd : (fwd f g k).comp (bwd2 f g k) = AlgHom.id k _ := by
     _root_.one_mul, fwd2, h1]
 
 lemma bwd_fwd : (bwd2 f g k).comp (fwd f g k) = AlgHom.id k _ := by
-  letI : IsScalarTower A k (k ⊗[A] LA f g) := TensorProduct.isScalarTower_left
+  let : IsScalarTower A k (k ⊗[A] LA f g) := TensorProduct.isScalarTower_left
   apply Algebra.TensorProduct.ext
   · ext
   · apply IsLocalization.algHom_ext (Submonoid.powers (Ideal.Quotient.mk (Ideal.span {f}) g))
@@ -1051,15 +1051,15 @@ theorem preirreducibleSpace_primeSpectrum_tensor_localizationAway
     PreirreducibleSpace (PrimeSpectrum (k ⊗[A] B)) →
       PreirreducibleSpace (PrimeSpectrum (k ⊗[A] Localization.Away b)) := by
   intro hX
-  letI : Algebra (k ⊗[A] B) (k ⊗[A] Localization.Away b) :=
+  let : Algebra (k ⊗[A] B) (k ⊗[A] Localization.Away b) :=
     (Algebra.TensorProduct.map (AlgHom.id A k)
       (IsScalarTower.toAlgHom A B (Localization.Away b))).toAlgebra
-  haveI : IsScalarTower k (k ⊗[A] B) (k ⊗[A] Localization.Away b) :=
+  have : IsScalarTower k (k ⊗[A] B) (k ⊗[A] Localization.Away b) :=
     .of_algebraMap_eq <| by intro; simp [RingHom.algebraMap_toAlgebra]
-  haveI hl := IsLocalization.tensorProduct_tensorProduct_right A k (Submonoid.powers b)
+  have hl := IsLocalization.tensorProduct_tensorProduct_right A k (Submonoid.powers b)
     (Localization.Away b) (by ext; simp [RingHom.algebraMap_toAlgebra])
   rw [Submonoid.map_powers] at hl
-  haveI : IsLocalization.Away
+  have : IsLocalization.Away
       (Algebra.TensorProduct.includeRight (R := A) (A := k) b) (k ⊗[A] Localization.Away b) := hl
   exact (PrimeSpectrum.localization_away_isOpenEmbedding (k ⊗[A] Localization.Away b)
     (Algebra.TensorProduct.includeRight (R := A) (A := k) b)).preirreducibleSpace
@@ -1117,7 +1117,7 @@ theorem exists_basicOpen_fibres_preirreducible :
   rw [Set.image_univ, PrimeSpectrum.comap_comp, Set.range_comp,
     _root_.GlobalTheory.range_comap_includeRight_field, hker]
   ext r
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · rintro ⟨hr, hbr⟩
     have : r ∈ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b))) := by
@@ -1216,7 +1216,7 @@ theorem exists_open_nbhd_section_fibre_isPreirreducible : ∀ (X S : Scheme.{0})
   obtain ⟨V, W, hWV, hV, hW, hes, hirr⟩ := _root_.GlobalTheory.exists_affine_chart_preirreducible_fiber X S f e hf hef s
   have hfes : f (e s) = s := by rw [← Scheme.Hom.comp_apply, hef]; rfl
   have hsV : s ∈ V := by have h := hWV hes; rwa [Scheme.Hom.mem_preimage, hfes] at h
-  letI : Algebra Γ(S, V) Γ(X, W) := (f.appLE V W hWV).hom.toAlgebra
+  let : Algebra Γ(S, V) Γ(X, W) := (f.appLE V W hWV).hom.toAlgebra
   have hsm : Algebra.Smooth Γ(S, V) Γ(X, W) :=
     RingHom.smooth_algebraMap.mp (HasRingHomProperty.appLE @Smooth f hf ⟨V, hV⟩ ⟨W, hW⟩ hWV)
 

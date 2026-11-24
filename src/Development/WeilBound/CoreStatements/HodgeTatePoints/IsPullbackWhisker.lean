@@ -122,15 +122,15 @@ theorem psTrunc_expand {σ : Type} [Fintype σ] [DecidableEq σ] (p : ℕ) (hp :
   rw [hR]
   by_cases hs : ∃ j, Finsupp.single j p = e
   · obtain ⟨j, rfl⟩ := hs
-    rw [GermFun.coeff_psTrunc _ _ _ (by simp), Finset.sum_eq_single j, if_pos rfl]
+    rw [GermFun.coeff_psTrunc _ _ _ (by simp), Finset.sum_eq_single j, ite_eq_left rfl]
     · have : Finsupp.single j p = p • Finsupp.single j 1 := by simp
       rw [this, MvPowerSeries.coeff_expand_smul]
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hb ((Finsupp.single_left_inj hp).1 h)
     · simp
-  · rw [Finset.sum_eq_zero fun j _ => if_neg fun h => hs ⟨j, h⟩]
+  · rw [Finset.sum_eq_zero fun j _ => ite_eq_right fun h => hs ⟨j, h⟩]
     by_cases hd : e.degree ≤ p
     · rw [GermFun.coeff_psTrunc _ _ _ hd]
       by_cases hdv : ∀ i, p ∣ e i
@@ -156,7 +156,7 @@ theorem psTrunc_expand {σ : Type} [Fintype σ] [DecidableEq σ] (p : ℕ) (hp :
         exact MvPowerSeries.coeff_expand_of_not_dvd _ _ _ hi
     · rw [psTrunc, MvPolynomial.coeff_sum]
       refine Finset.sum_eq_zero fun b hb => ?_
-      rw [MvPolynomial.coeff_monomial, if_neg]
+      rw [MvPolynomial.coeff_monomial, ite_eq_right]
       rintro rfl
       apply hd
       have := (Finset.mem_filter.1 hb).2
@@ -196,7 +196,7 @@ theorem exists_low {κ κ' : Type} {m n : ℕ} (h : n ≤ m) (χ : Jet k κ m �
 
 theorem pow_eq_of_first {k : Type} [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (hp : 1 ≤ p) {κ : Type}
     (a b : Jet k κ p) (h : trTo k κ hp a = trTo k κ hp b) : a ^ p = b ^ p := by
-  haveI : CharP (MvPolynomial κ k) p := inferInstance
+  have : CharP (MvPolynomial κ k) p := inferInstance
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective a
   obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b
   rw [trTo_mk, trTo_mk, Ideal.Quotient.eq] at h
@@ -360,7 +360,7 @@ theorem basis_bc {n : ℕ} {tg : Fin n → (Sp (DualNumber S) ⟶ t.G.left)} (ht
     (hb : ∀ w, IsTanAtG t x w → ∃! a : Fin n → S, IsCombAtG t x tg a w) (w : Sp (DualNumber S₂) ⟶ t.G.left)
     (hw : IsTanAtG t (spMap f ≫ x) w) :
     ∃! a : Fin n → S₂, IsCombAtG t (spMap f ≫ x) (fun i => spMap (GlobalTheory.CompanionTheory.Ar.dualMap f) ≫ tg i) a w := by
-  letI : Algebra S S₂ := f.toAlgebra
+  let : Algebra S S₂ := f.toAlgebra
   obtain ⟨V, _, _, ⟨M⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_exists X0 t.G S x
   obtain ⟨V', _, _, ⟨M'⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_exists X0 t.G S₂ (spMap f ≫ x)
   obtain ⟨j, hj, -, hbs⟩ := PositivityTheory.HtPt.Htat.lie_bc X0 t.G S S₂ x V V' M M'
@@ -812,7 +812,7 @@ theorem first_eq_zero {k : Type} [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] 
       simpa [MvPolynomial.constantCoeff_eq] using h0
   rw [pow_eq_of_first p hp _ _ e, ← map_pow, Ideal.Quotient.eq_zero_iff_mem, mem_orig_pow_iff] at h
   have h4 := h (p • Finsupp.single () 1) (by simp)
-  rw [MvPolynomial.monomial_pow, MvPolynomial.coeff_monomial, if_pos rfl, pow_eq_zero_iff (by omega)] at h4
+  rw [MvPolynomial.monomial_pow, MvPolynomial.coeff_monomial, ite_eq_left rfl, pow_eq_zero_iff (by omega)] at h4
   rw [e, h4]
   simp
 
@@ -1468,8 +1468,8 @@ theorem desc_first {k : Type} [Field k] {X : Type} [AddCommGroup X] {G B : Over 
 
 theorem triv_descend : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G] (T : TorusExtension G) (M : LB T.B.left) (y : overAt (𝟙 (Sp k)) (Jet k Unit 1) ⟶ G), letI := T.grpB; M.IsLB → homAt (𝟙 (Sp k)) (jetAug : Jet k Unit 1 →ₐ[k] k) ≫ y = 1 → (∃ c : LB.Gen (Out.translDiff G (M.pull T.q.left) y), c.IsGen) → ∃ c : LB.Gen (Out.translDiff T.B M (y ≫ T.q)), c.IsGen := by
   intro k _ G _ T M y
-  letI := T.grpB
-  letI := T.addCommGroup
+  let := T.grpB
+  let := T.addCommGroup
   intro hM hy ⟨c, hc⟩
   have := T.q_hom
   have := T.i_hom
@@ -1566,8 +1566,8 @@ end
 
 theorem geompf_tan : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X0 : Scheme.{0}) (t : SAB H X0), PowFns t → ∀ (k : Type) [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (x : Sp k ⟶ X0), GeomPF t x → TanPF t x p := by
   intro E _ _ _ H _ hstar X0 t hP k _ p _ _ x ⟨T, M, hM, hK, w, hw⟩ hp y hy hyp ⟨c, hc⟩
-  letI := T.grpB
-  letI := T.addCommGroup
+  let := T.grpB
+  let := T.addCommGroup
   have := T.q_hom
   have := T.i_hom
   have := T.free

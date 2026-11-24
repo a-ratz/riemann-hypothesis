@@ -253,7 +253,7 @@ theorem finite_S0_conj {D : D7} {N : NData D.R D.host D.what₂} (X : NTw D.R D.
 theorem charDual_of_frobDual : ∀ (D : D7), GlobalTheory.TypeLeaf.FrobDense D → ∀ (i : D.ntw.Tw) (s : D.ntw.Sig i),
     FrobDual i s → CharDual i s := by
   intro D hF i s hFD g g' hg'
-  haveI := t2_O0 D.ntw i
+  have := t2_O0 D.ntw i
   have e : g' = GlobalTheory.TwistDet.cConj D.ntw g := by
     ext x
     rw [hg', GlobalTheory.TwistDet.cConj_apply]
@@ -383,7 +383,7 @@ theorem finite_of_isdR {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [Field �
     FiniteDimensional ↥Bw.LL.1 ↥(Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := by
   set_option synthInstance.maxHeartbeats 200000 in
   rcases Nat.eq_zero_or_pos m with rfl | hm
-  · haveI : Subsingleton (Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := by
+  · have : Subsingleton (Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := by
       refine ⟨fun x y => Subtype.ext ?_⟩
       have hz : ∀ z : (Fin 0 → ↥Bw.LL.1) ⊗[ℚ_[l]] P.R.BdR, z = 0 := fun z => by
         induction z using TensorProduct.induction_on with
@@ -391,17 +391,17 @@ theorem finite_of_isdR {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [Field �
         | tmul a b => rw [Subsingleton.elim a 0, TensorProduct.zero_tmul]
         | add a b ha hb => rw [ha, hb, add_zero]
       rw [hz x.1, hz y.1]
-    haveI : Finite (Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := Finite.of_subsingleton
+    have : Finite (Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := Finite.of_subsingleton
     exact Module.Finite.of_finite
-  · haveI := (P.PD Bw.Kw).finK
-    haveI : Module.Free ↥Bw.LL.1 ↥(Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := Module.Free.of_divisionRing _ _
+  · have := (P.PD Bw.Kw).finK
+    have : Module.Free ↥Bw.LL.1 ↥(Formalism.WeaklyAdmissibleFiltrations.DdR (P.PD Bw.Kw) (Bw.rep r)) := Module.Free.of_divisionRing _ _
     exact Module.finite_of_finrank_pos (by rw [h]; exact Nat.mul_pos Module.finrank_pos hm)
 
 theorem dims_of_mult : ∀ (D : D7) (bkP : BlochKatoReduction.BK D) (i : D.ntw.Tw) (s : D.ntw.Sig i), ∀ (v : HeightOneSpectrum (𝓞 D.host.E)) (hv : v ∈ placesOver D.host.E (D.ntw.l i)) (τ : EmbV bkP i v hv) (M : Multiset ℤ), HodgeL bkP i s → (∀ a : ℤ, Formalism.WeaklyAdmissibleFiltrations.multV (PDv bkP i v hv) (repV bkP i v hv (Tgl i s)) τ a = (M.count a : ℤ)) → dimD bkP i v hv (Tgl i s) τ = Multiset.card M ∧ dimFil0 bkP i v hv (Tgl i s) τ = Multiset.card (M.filter (0 ≤ ·)) := by
   set_option synthInstance.maxHeartbeats 200000 in
   intro D bkP i s v hv τ M hH hM
   have hdR := (hH v hv (Tgl i s) (Or.inr rfl)).1
-  haveI := finite_of_isdR _ _ _ hdR
+  have := finite_of_isdR _ _ _ hdR
   haveI : FiniteDimensional _ ↥(Formalism.WeaklyAdmissibleFiltrations.DdRE (PDv bkP i v hv) (repV bkP i v hv (Tgl i s)) τ) :=
     Submodule.finiteDimensional_of_le (S₂ := Formalism.WeaklyAdmissibleFiltrations.DdR (PDv bkP i v hv) (repV bkP i v hv (Tgl i s)))
       inf_le_left
@@ -502,7 +502,7 @@ theorem eq_zero_of_mem_Fil_one (c : K) (h : algebraMap K BdR c ∈ PD.Fil 1) : c
 theorem isJumpV_zero_of_invariant [CharZero Qp] (ρ : Representation LL G V) (x : V) (hx : x ≠ 0)
     (hinv : ∀ g, ρ g x = x) (τ : K →ₐ[Qp] LL) : IsJumpV PD ρ τ 0 := by
   classical
-  haveI := PD.finK
+  have := PD.finK
   let b := Module.finBasis Qp K
   let b' := b.traceDual
   let y : V ⊗[Qp] BdR := ∑ i, (τ (b' i) • x) ⊗ₜ[Qp] algebraMap K BdR (b i)

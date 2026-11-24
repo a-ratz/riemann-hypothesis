@@ -72,10 +72,10 @@ theorem loc_cont {k : ℕ} {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ p
   simp only [MonoidHom.coe_comp]
   refine Continuous.comp ?_ (Continuous.comp (Continuous.comp ?_ (Continuous.comp hM ?_)) ?_)
   · first
-      | exact continuous_id.matrix_map continuous_subtype_val
+      | exact continuous_id.matrix_map continuous_subtypeVal
       | exact continuous_id.matrix_map continuous_induced_dom
   · exact continuous_id.matrix_map (D.nbr i w hw).eO_cont
-  · exact continuous_subtype_val
+  · exact continuous_subtypeVal
   · first
       | exact (D.nbr i w hw).e_symm_cont
       | exact continuous_subtype_val.comp (D.nbr i w hw).e_symm_cont

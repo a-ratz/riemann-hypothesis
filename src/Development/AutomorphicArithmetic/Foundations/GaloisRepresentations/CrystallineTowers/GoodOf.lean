@@ -116,7 +116,7 @@ end Ring
 theorem goodOf : GoodOf := by
   intro l _ K _ M hs hp
   refine ⟨hp, ?_⟩
-  haveI : IsDiscreteValuationRing (OK l K) := OK_dvr
+  have : IsDiscreteValuationRing (OK l K) := OK_dvr
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (OK l K)
   refine ⟨ϖ, hϖ, fun x => ?_⟩
   obtain ⟨_, ⟨V, hV, rfl⟩, hxV, -⟩ :=

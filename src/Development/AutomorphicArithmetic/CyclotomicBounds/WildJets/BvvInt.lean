@@ -72,7 +72,7 @@ private theorem sum_map_apply {ι σ : Type} [Fintype ι] (m : ι → σ →₀ 
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single i]
   · exact Finsupp.mapDomain_apply_of_injective (fun a b h => (Prod.mk.inj h).2) _ _
   · intro j _ hj
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨y, hy⟩
     exact hj (Prod.mk.inj hy).1
   · intro h

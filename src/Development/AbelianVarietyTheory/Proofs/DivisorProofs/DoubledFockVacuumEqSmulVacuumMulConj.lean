@@ -226,7 +226,7 @@ theorem heisenbergDeriv_tensor_conj (F : Type) [Field F] [NumberField F] (κ : T
       map_add, map_neg, Function.comp_apply]
     ring
   rw [hh x, hg₁, hg₂, hD, htr, hf₀]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, hL₁, hL₂, smul_eq_mul]
   have e1 : ((fun i => evI F (Sum.elim a₁ a₂ i)) ∘ Sum.inl) = fun i => evI F (a₁ i) := rfl
   have e2 : ((fun i => evI F (Sum.elim a₁ a₂ i)) ∘ Sum.inr) = fun i => evI F (a₂ i) := rfl
@@ -377,8 +377,8 @@ theorem vac_box : DerEx → VacLine → ∀ (F E : Type) [Field F] [NumberField 
     rw [sumPl_smul_tprod _ _ _ _ (fun w => heisOp_rot_one _ (-1))] at h2'
     rw [map_smul] at h1' h2'
     ext x
-    rw [SchwartzMap.smul_apply, hbox u' hu' x, hbox u hu x, h1', h2', h1, h2]
-    simp only [SchwartzMap.smul_apply, smul_eq_mul, star_mul', Complex.star_def, map_mul, Complex.conj_ofReal,
+    rw [smul_apply, hbox u' hu' x, hbox u hu x, h1', h2', h1, h2]
+    simp only [smul_apply, smul_eq_mul, star_mul', Complex.star_def, map_mul, Complex.conj_ofReal,
       Complex.conj_I]
     push_cast
     ring
@@ -392,11 +392,11 @@ theorem vac_box : DerEx → VacLine → ∀ (F E : Type) [Field F] [NumberField 
   have hz0 : z' ≠ 0 := by
     rintro rfl
     have h := congrArg (fun g : SInf F (κ ⊕ κ) => g (Sum.elim y y)) hz'
-    simp only [zero_smul, SchwartzMap.zero_apply, hf₀', Sum.elim_comp_inl, Sum.elim_comp_inr] at h
+    simp only [zero_smul, zero_apply, hf₀', Sum.elim_comp_inl, Sum.elim_comp_inr] at h
     exact mul_ne_zero hy (star_ne_zero.2 hy) h
   refine ⟨z'⁻¹, inv_ne_zero hz0, fun x => ?_⟩
   have h := congrArg (fun g : SInf F (κ ⊕ κ) => g x) hz'
-  simp only [SchwartzMap.smul_apply, smul_eq_mul, hf₀'] at h
+  simp only [smul_apply, smul_eq_mul, hf₀'] at h
   rw [mul_assoc, h, ← mul_assoc, inv_mul_cancel₀ hz0, one_mul]
 
 end GlobalTheory.RealLift.VacBox

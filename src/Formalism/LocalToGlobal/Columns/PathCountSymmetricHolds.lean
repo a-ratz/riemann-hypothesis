@@ -79,13 +79,13 @@ theorem one_lt_card_residue : 1 < Nat.card (𝓞 E ⧸ Q.asIdeal) := by
 
 theorem card_eq_card_quotient_pow_of_ideal_smul_eq_zero {M : Type} [AddCommGroup M] [Module (𝓞 E) M] [Finite M]
     (hM : ∀ p ∈ Q.asIdeal, ∀ x : M, p • x = 0) : ∃ m, Nat.card M = Nat.card (𝓞 E ⧸ Q.asIdeal) ^ m := by
-  haveI : Q.asIdeal.IsMaximal := Q.isMaximal
-  letI : Field (𝓞 E ⧸ Q.asIdeal) := Ideal.Quotient.field Q.asIdeal
+  have : Q.asIdeal.IsMaximal := Q.isMaximal
+  let : Field (𝓞 E ⧸ Q.asIdeal) := Ideal.Quotient.field Q.asIdeal
   have htor : Module.IsTorsionBySet (𝓞 E) M (Q.asIdeal : Set (𝓞 E)) := by
     intro x a
     exact hM a.1 a.2 x
-  letI : Module (𝓞 E ⧸ Q.asIdeal) M := htor.module
-  haveI : Module.Finite (𝓞 E ⧸ Q.asIdeal) M := Module.Finite.of_finite
+  let : Module (𝓞 E ⧸ Q.asIdeal) M := htor.module
+  have : Module.Finite (𝓞 E ⧸ Q.asIdeal) M := Module.Finite.of_finite
   refine ⟨Module.finrank (𝓞 E ⧸ Q.asIdeal) M, ?_⟩
   rw [Nat.card_congr (Module.finBasis (𝓞 E ⧸ Q.asIdeal) M).equivFun.toEquiv, Nat.card_fun,
     Nat.card_eq_fintype_card (α := Fin _), Fintype.card_fin]
@@ -615,7 +615,7 @@ theorem pathCount_symm_same_prime (P : HeightOneSpectrum (𝓞 E)) (hne : conjPr
       left
       refine ⟨fun x => ?_⟩
       obtain ⟨e, he1, he2⟩ := x
-      simp only [DecoSet.heckeSet, Set.mem_setOf_eq] at he1 he2
+      simp only [DecoSet.heckeSet, Set.mem_ofPred_eq] at he1 he2
       apply hc
       refine ⟨he2.2.1.trans he1.2.1, he2.2.2.trans he1.2.2, ?_⟩
       intro p hp p' hp' x hx
@@ -652,7 +652,7 @@ theorem topNeighbour_inf_eq (Q : HeightOneSpectrum (𝓞 E)) {N Z : Submodule (�
   rw [conjIdeal_asIdeal] at h2 e
   obtain ⟨ρ, hρs, hρk⟩ := exists_redLat (hcnt_isFullLattice_of_unimodular hN huN) (conjPrime₂ Q)
   have hle : (conjPrime₂ Q).asIdeal • N ≤ Z ⊓ N := le_inf h2 Submodule.smul_le_right
-  haveI : Finite (N ⧸ ((conjPrime₂ Q).asIdeal • N).comap N.subtype) :=
+  have : Finite (N ⧸ ((conjPrime₂ Q).asIdeal • N).comap N.subtype) :=
     finite_quot_smul N hN.fg _ (conjPrime₂ Q).ne_bot
   have hpos : 0 < Nat.card (N ⧸ ((conjPrime₂ Q).asIdeal • N).comap N.subtype) := Nat.card_pos
   have c1 : Nat.card (N ⧸ ((conjPrime₂ Q).asIdeal • N).comap N.subtype) =
@@ -706,7 +706,7 @@ theorem neighbour_conj_of_topNeighbour (Q : HeightOneSpectrum (𝓞 E)) (hne : c
     exact hQZ
   · rw [conjIdeal_asIdeal, conjugatePrime_conjugatePrime]
     have hinf := topNeighbour_inf_eq Q hN huN hZ
-    haveI : Finite (𝓞 E ⧸ Q.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot Q.asIdeal Q.ne_bot
+    have : Finite (𝓞 E ⧸ Q.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot Q.asIdeal Q.ne_bot
     have hq : 0 < Nat.card (𝓞 E ⧸ Q.asIdeal) := Nat.card_pos
     have hZs := wmp_isHeckeNbr_symm hN hZl huN huZ hZ
     have hHs := wmp_isHeckeNbr_symm hN hHl huN huH hH
@@ -886,7 +886,7 @@ theorem heckeNeighbour_empty_of_gt (Q : HeightOneSpectrum (𝓞 E)) (hneQ : conj
   split_ifs with hfin
   · have hc := DecoSet.card_heckeSet g Q hneQ hSTQ hSGQ i
     rw [gaussBin_eq_zero _ hi] at hc
-    haveI := hfin.to_subtype
+    have := hfin.to_subtype
     have hemp : g.heckeSet Q.asIdeal i = ∅ := by
       rcases Nat.card_eq_zero.mp hc with hc | hc
       · exact Set.isEmpty_coe_sort.mp hc

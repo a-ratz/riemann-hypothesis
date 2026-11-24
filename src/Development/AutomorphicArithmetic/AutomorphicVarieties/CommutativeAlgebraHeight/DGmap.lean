@@ -58,7 +58,7 @@ private theorem gdet_inst {n : ℕ} {A G : Type} [CommRing A] [Group G] (D : GDe
 private theorem gdet_chi {n : ℕ} {A G : Type} [CommRing A] [Group G] (D : GDet n A G)
     {B : Type} [CommRing B] (f : A →+* B) (y : MonoidAlgebra A G) :
     (D.map f).chi (MonoidAlgebra.mapRingHom G f y) = (D.chi y).map f := by
-  letI : Algebra A B[X] := ((algebraMap B B[X]).comp f).toAlgebra
+  let : Algebra A B[X] := ((algebraMap B B[X]).comp f).toAlgebra
   let φ : A[X] →ₐ[A] B[X] :=
     { Polynomial.mapRingHom f with
       commutes' := fun a => by
@@ -86,6 +86,6 @@ theorem UpperTheory.V.CA.d_gmap :
     simp only [GDet.lam, gdet_chi, Polynomial.coeff_map, map_mul, map_pow, map_neg, map_one]
   · intro B _ f ρ
     refine GDet.ext fun S _ _ x => ?_
-    letI : Algebra A S := ((algebraMap B S).comp f).toAlgebra
+    let : Algebra A S := ((algebraMap B S).comp f).toAlgebra
     change (GDet.repAlg ρ S x).det = (GDet.repAlg (f.mapMatrix.toMonoidHom.comp ρ) S x).det
     congr 2

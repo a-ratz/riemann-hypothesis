@@ -95,7 +95,7 @@ theorem exists_invAlg_adjoinRoot : ∀ (E : Type) [Field E] [NumberField E] [IsC
   let A := AdjoinRoot Q'
   let r : A := AdjoinRoot.root Q'
   let pb := AdjoinRoot.powerBasis' hQ'm
-  haveI : Module.Finite K.E A := pb.finite
+  have : Module.Finite K.E A := pb.finite
   have hr0 : aeval r Q' = 0 := by
     rw [aeval_def, AdjoinRoot.algebraMap_eq]; exact AdjoinRoot.eval₂_root Q'
   set v : A := -(aeval r (divX Q')) * algebraMap K.E A (Q'.coeff 0)⁻¹ with hv
@@ -105,7 +105,7 @@ theorem exists_invAlg_adjoinRoot : ∀ (E : Type) [Field E] [NumberField E] [IsC
     have h2 : algebraMap K.E A (Q'.coeff 0) * algebraMap K.E A (Q'.coeff 0)⁻¹ = 1 := by
       rw [← map_mul, mul_inv_cancel₀ hQ'0, map_one]
     linear_combination (-(algebraMap K.E A (Q'.coeff 0)⁻¹)) * h1 + h2
-  letI : Invertible v := ⟨r, hrv, by rw [mul_comm]; exact hrv⟩
+  let : Invertible v := ⟨r, hrv, by rw [mul_comm]; exact hrv⟩
   have hce : ∀ y, K.c (e.symm y) = e.symm (cj w y) := by
     intro y; apply e.injective; rw [he, RingEquiv.apply_symm_apply, RingEquiv.apply_symm_apply]
   have hmapc : Q'.map K.c.toRingHom = (Q.map (cj w)).map e.symm.toRingHom := by
@@ -550,7 +550,7 @@ theorem charpoly_eq_of_adjoin {F A : Type} [Field F] [CommRing A] [Algebra F A] 
   have hcd : (LinearMap.mulLeft F x).charpoly.natDegree = Module.finrank F A := LinearMap.charpoly_natDegree _
   have hle : Module.finrank F A ≤ (minpoly F x).natDegree := by
     let pb := AdjoinRoot.powerBasis' hmon
-    haveI : Module.Finite F (AdjoinRoot (minpoly F x)) := pb.finite
+    have : Module.Finite F (AdjoinRoot (minpoly F x)) := pb.finite
     let f := AdjoinRoot.liftAlgHom (minpoly F x) (Algebra.ofId F A) x
       (by rw [← minpoly.aeval F x, aeval_def]; rfl)
     have hs : Function.Surjective f := by
@@ -672,11 +672,11 @@ theorem match_principal_congruence_inert : ∀ (E : Type) [Field E] [NumberField
     intro h0
     have hc := K.card_res
     rw [h0] at hc
-    haveI : Nonempty (IsLocalRing.ResidueField K.O) := ⟨0⟩
+    have : Nonempty (IsLocalRing.ResidueField K.O) := ⟨0⟩
     have := Nat.card_pos (α := IsLocalRing.ResidueField K.O)
     simp at hc; omega
   unfold delta absHalf
-  rw [if_neg hw, hq]
+  rw [ite_eq_right hw, hq]
   exact unit_product_rescale_disjoint_finsets K.q hq0 _ (k * a * b) _
 
 end GlobalTheory.CongMatch

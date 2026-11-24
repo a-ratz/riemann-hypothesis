@@ -86,7 +86,7 @@ namespace GlobalTheory.StdRescale
 theorem exists_isStd_mulShift : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ ψ : AddChar (AF F) ℂ, IsCharAF F ψ →
     ∃ a : F, a ≠ 0 ∧ IsStd (ψ.mulShift (algebraMap F (AF F) a)) := by
   intro F _ _ hF ψ h
-  haveI := hF
+  have := hF
   obtain ⟨a₀, ha₀, hinf⟩ := GlobalTheory.AdeleCharConductor.exists_scaling h
   have him : ∀ (w : InfinitePlace F) (x : F), (w.embedding x).im = 0 := fun w x => by
     have := congrArg Complex.im (GlobalTheory.AdeleCharConductor.embedding_re w x)
@@ -178,8 +178,8 @@ theorem UpperTheory.Gal.TP.Skew.conjAut :
   classical
   intro F E _ _ _ _ _ σ hσ
   obtain ⟨_, hE, h2, hconj⟩ := hσ
-  haveI hfin : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have hfin : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   have hgal : IsGalois F E := inferInstance
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   have hsq : ∀ x, σ (σ x) = x := fun x => τ.injective (by rw [hconj, hconj, star_star])
@@ -228,8 +228,8 @@ theorem UpperTheory.Gal.TP.Skew.ideleStep :
     UpperTheory.Gal.TP.Skew.ConjAut → UpperTheory.Gal.TP.Skew.IdeleStep := by
   intro hconj F E _ _ _ _ _ σ hcm a
   obtain ⟨hgal, s, -, -, hss, hall, -⟩ := hconj F E σ hcm
-  haveI := hgal
-  haveI hcomm : IsMulCommutative Gal(E/F) := ⟨⟨fun g h => by
+  have := hgal
+  have hcomm : IsMulCommutative Gal(E/F) := ⟨⟨fun g h => by
     rcases hall g with rfl | rfl <;> rcases hall h with rfl | rfl <;> simp⟩⟩
   obtain ⟨hFr, hEc, -, -⟩ := hcm
   let v : InfinitePlace F := Classical.arbitrary _
@@ -349,13 +349,13 @@ theorem UpperTheory.Gal.TP.Skew.lineEx :
       ∀ x ∈ (I : Submodule (𝓞 E) E), ∀ o : 𝓞 E, IsIntegral ℤ (Algebra.trace ℚ E (o * (y * (δ * σ x)))) :=
     fun y => forall₂_congr fun x _ => hD E _
   refine ⟨δ, (I : Submodule (𝓞 E) E), hδ, hsk, m3, fun y => ?_⟩
-  rw [FractionalIdeal.mem_coe, ← hdual y]
+  rw [FractionalIdeal.mem_coeToSubmodule, ← hdual y]
   constructor
   · intro hy x hx
     by_cases hy0 : y = 0
-    · simpa [hy0] using FractionalIdeal.mem_coe.mp (Submodule.zero_mem _)
+    · simpa [hy0] using FractionalIdeal.mem_coeToSubmodule.mp (Submodule.zero_mem _)
     by_cases hx0 : x = 0
-    · simpa [hx0] using FractionalIdeal.mem_coe.mp (Submodule.zero_mem _)
+    · simpa [hx0] using FractionalIdeal.mem_coeToSubmodule.mp (Submodule.zero_mem _)
     refine (d1 _ (mul_ne_zero hy0 (mul_ne_zero hδ (hσ0 x hx0)))).mpr fun w => ?_
     have h1 := (m1 y hy0).mp hy w
     have h2 := (m1 x hx0).mp hx (s • w)
@@ -364,7 +364,7 @@ theorem UpperTheory.Gal.TP.Skew.lineEx :
     omega
   · intro h
     by_cases hy0 : y = 0
-    · simpa [hy0] using FractionalIdeal.mem_coe.mp (Submodule.zero_mem _)
+    · simpa [hy0] using FractionalIdeal.mem_coeToSubmodule.mp (Submodule.zero_mem _)
     refine (m1 y hy0).mpr fun w => ?_
     obtain ⟨x, hx, hx0, hxo⟩ := m2 (s • w)
     have h1 := (d1 _ (mul_ne_zero hy0 (mul_ne_zero hδ (hσ0 x hx0)))).mp (h x hx) w
@@ -405,7 +405,7 @@ theorem lineSkew : LineSkew := by
     exact absurd v.2 (by simp [hP])
   case lat =>
     have hfg := Submodule.fg_pi (ι := Fin d) (p := fun _ => 𝔞) (fun _ => hl.lat.fg)
-    haveI : Submodule.IsLattice E (skewSpc F δ 𝔞 d).L := Submodule.IsLattice.of_fg E hfg
+    have : Submodule.IsLattice E (skewSpc F δ 𝔞 d).L := Submodule.IsLattice.of_fg E hfg
     have ha : ∃ a : E, a ∈ 𝔞 ∧ a ≠ 0 := by
       by_contra h
       have hz : ∀ x ∈ 𝔞, x = 0 := by
@@ -590,7 +590,7 @@ private theorem attained {E : Type} [Field E] [NumberField E] (I : FractionalIde
   have hle : I ≤ ((w.asIdeal : Ideal (𝓞 E)) : FractionalIdeal (𝓞 E)⁰ E) * I := by
     intro x hx
     by_cases hx0 : x = 0
-    · rw [hx0]; exact FractionalIdeal.mem_coe.mp (Submodule.zero_mem _)
+    · rw [hx0]; exact FractionalIdeal.mem_coeToSubmodule.mp (Submodule.zero_mem _)
     refine (mem_iff _ hPI x hx0).mpr fun v => ?_
     rw [FractionalIdeal.count_mul E v hP hI]
     have h1 := (mem_iff I hI x hx0).mp hx v
@@ -640,7 +640,7 @@ private theorem count_le_count_galois_smul {F E : Type} [Field F] [NumberField F
       FractionalIdeal.count E (g • P) ((g • J : Ideal (𝓞 E)) : FractionalIdeal (𝓞 E)⁰ E) := by
   classical
   have hgJ : g • J ≠ 0 := fun h => hJ ((smul_eq_zero_iff_eq g).mp h)
-  rw [FractionalIdeal.count_coe E P hJ, FractionalIdeal.count_coe E (g • P) hgJ, Nat.cast_le,
+  rw [FractionalIdeal.count_coeIdeal E P hJ, FractionalIdeal.count_coeIdeal E (g • P) hgJ, Nat.cast_le,
     ← Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.mpr hgJ)
       (g • P).associates_irreducible]
   have h1 := (Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.mpr hJ)
@@ -894,7 +894,7 @@ theorem stdHerm : StdHerm := by
       · have e' : ¬ j = i := fun h => e h.symm
         simp [e, e']
     all_goals first | exact i.elim0 | exact j.elim0
-  · haveI : (stdSpc F E n).L.IsLattice E := by
+  · have : (stdSpc F E n).L.IsLattice E := by
       refine ⟨Submodule.fg_pi fun _ => ?_, ?_⟩
       · rw [Submodule.one_eq_span]
         exact Submodule.fg_span_singleton 1
@@ -982,15 +982,15 @@ theorem wtId_holds : WtId := by
       congr 1
       funext k
       have h1 := hL (Fin.castAdd t k)
-      simp only [Fin.coe_castAdd, k.2, dif_pos, Fin.eta] at h1
-      simp only [Function.comp_apply, Fin.coe_castAdd]
+      simp only [Fin.val_castAdd, k.2, dite_eq_left, Fin.eta] at h1
+      simp only [Function.comp_apply, Fin.val_castAdd]
       omega
     · rw [multiset_map_fin_rev_eq (fun i : Fin t => -p i)]
       congr 1
       funext i
       have h1 := hL (Fin.natAdd n i)
       have h2 := hp i.rev
-      simp only [Fin.coe_natAdd, Fin.val_rev] at h1 h2 ⊢
+      simp only [Fin.val_natAdd, Fin.val_rev] at h1 h2 ⊢
       rw [dite_eq_right (by omega)] at h1
       have hi := i.2
       push_cast at h1
@@ -1004,15 +1004,15 @@ theorem wtId_holds : WtId := by
       congr 1
       funext k
       have h1 := hL (Fin.castAdd t k)
-      simp only [Fin.coe_castAdd, k.2, dif_pos, Fin.eta] at h1
-      simp only [Function.comp_apply, Fin.coe_castAdd]
+      simp only [Fin.val_castAdd, k.2, dite_eq_left, Fin.eta] at h1
+      simp only [Function.comp_apply, Fin.val_castAdd]
       have hk := k.2
       omega
     · congr 1
       funext i
       have h1 := hL (Fin.natAdd n i)
       have h2 := hp i
-      simp only [Fin.coe_natAdd] at h1 h2 ⊢
+      simp only [Fin.val_natAdd] at h1 h2 ⊢
       rw [dite_eq_right (by omega)] at h1
       have hi := i.2
       have hc : ((n + t - (n + (i : ℕ) + 1) : ℕ) : ℤ) = (t : ℤ) - 1 - (i : ℕ) := by
@@ -1041,7 +1041,7 @@ open UpperTheory.Gal.TP.Sub
 private theorem unram_of_forall {E : Type} [Field E] [NumberField E] [IsCMField E]
     (hE : ∀ w : HeightOneSpectrum (𝓞 E), Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) w.asIdeal) :
     Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := by
-  haveI : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := by
+  have : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield E)) (𝓞 E) := by
     rw [Algebra.formallyUnramified_iff_forall]
     intro q
     obtain ⟨Q, hQ, hqQ⟩ := Ideal.exists_le_maximal q.1 q.2.ne_top
@@ -1236,8 +1236,8 @@ theorem UpperTheory.Gal.TP.Sub.upOf_holds :
       ∃ w, τ = ComplexEmbedding.conjugate (Bs.emb w).1 ∧ lam' τ = (l' w).dual := by
     intro τ
     rcases hw₀ τ with h | h
-    · exact Or.inl ⟨w₀ τ, h, if_pos h⟩
-    · exact Or.inr ⟨w₀ τ, h, if_neg fun h' => hne (w₀ τ) (w₀ τ) (h'.symm.trans h)⟩
+    · exact Or.inl ⟨w₀ τ, h, ite_eq_left h⟩
+    · exact Or.inr ⟨w₀ τ, h, ite_eq_right fun h' => hne (w₀ τ) (w₀ τ) (h'.symm.trans h)⟩
   refine ⟨lam', hL.aut, fun τ => ?_, hD.alg, fun τ => ?_, ?_⟩
   · rcases key τ with ⟨w, rfl, h⟩ | ⟨w, rfl, h⟩
     · rw [h]

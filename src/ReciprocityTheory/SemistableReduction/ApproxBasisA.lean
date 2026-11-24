@@ -237,7 +237,7 @@ theorem approxB_det_le_of_posSemidef {n : Type*} [Fintype n] [DecidableEq n]
     calc ∑ k, (N k k).re ≤ ∑ _k : n, c := Finset.sum_le_sum fun k _ => hc k
       _ = Fintype.card n * c := by simp
   rcases Nat.eq_zero_or_pos (Fintype.card n) with h0 | hpos
-  · haveI : IsEmpty n := Fintype.card_eq_zero_iff.mp h0
+  · have : IsEmpty n := Fintype.card_eq_zero_iff.mp h0
     simp [h0]
   · have hm : (0 : ℝ) < Fintype.card n := by exact_mod_cast hpos
     have hAM := Real.geom_mean_le_arith_mean_weighted Finset.univ (fun _ => (1 : ℝ) / Fintype.card n)

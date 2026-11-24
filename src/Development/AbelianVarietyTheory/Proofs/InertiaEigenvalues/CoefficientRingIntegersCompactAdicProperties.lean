@@ -133,7 +133,7 @@ lemma padicInt_mem_range [IsModuleTopology ℚ_[l] LL] [IsTopologicalRing LL]
     funext x
     exact Algebra.algebraMap_eq_smul_one x
   have hf : Continuous fun z : ℤ_[l] => algebraMap ℚ_[l] LL (algebraMap ℤ_[l] ℚ_[l] z) :=
-    h1.comp (continuous_subtype_val : Continuous fun z : ℤ_[l] => (z : ℚ_[l]))
+    h1.comp (continuous_subtypeVal : Continuous fun z : ℤ_[l] => (z : ℚ_[l]))
   have hS : IsClosed {z : ℤ_[l] | algebraMap ℚ_[l] LL (algebraMap ℤ_[l] ℚ_[l] z) ∈ Set.range (algebraMap O LL)} :=
     (isClosed_range ho).preimage hf
   have hN : Set.range (Nat.cast : ℕ → ℤ_[l]) ⊆
@@ -336,7 +336,7 @@ lemma finite_quotient [IsTopologicalRing LL] (hinj : Function.Injective (algebra
     (n : ℕ) : Finite (O ⧸ Ideal.span {(l : O) ^ n}) := by
   let tO : TopologicalSpace O := TopologicalSpace.induced (algebraMap O LL) ‹TopologicalSpace LL›
   have hemb : Topology.IsEmbedding (algebraMap O LL) := ⟨⟨rfl⟩, hinj⟩
-  have : IsTopologicalAddGroup O := topologicalAddGroup_induced (algebraMap O LL)
+  have : IsTopologicalAddGroup O := isTopologicalAddGroup_induced (algebraMap O LL)
   have : CompactSpace O := ⟨hemb.isCompact_iff.2 (by simpa [Set.image_univ] using hc)⟩
   have hopen : IsOpen ((Ideal.span {(l : O) ^ n} : Ideal O) : Set O) :=
     isOpen_induced_iff.2 ⟨powImage l LL O n, isOpen_powImage ho n, by
@@ -433,7 +433,7 @@ variable {l : ℕ} [Fact l.Prime] {LL : Type} [Field LL] [Algebra ℚ_[l] LL] [T
   [IsModuleTopology ℚ_[l] LL]
 
 theorem continuous_algebraMap_padic : Continuous (algebraMap ℚ_[l] LL) := by
-  haveI := IsModuleTopology.toContinuousSMul ℚ_[l] LL
+  have := IsModuleTopology.toContinuousSMul ℚ_[l] LL
   have h : (algebraMap ℚ_[l] LL : ℚ_[l] → LL) = fun c => c • (1 : LL) :=
     funext Algebra.algebraMap_eq_smul_one
   rw [h]

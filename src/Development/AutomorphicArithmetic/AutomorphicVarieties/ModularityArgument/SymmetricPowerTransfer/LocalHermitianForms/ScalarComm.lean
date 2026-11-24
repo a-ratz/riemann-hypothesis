@@ -60,8 +60,8 @@ theorem orb_congr {T G G' : Type} [CommGroup T] [Group G] [Group G'] (ι : T →
     (h4 : ∀ y y', y⁻¹ * y' ∈ U → f (y⁻¹ * δ * θ y) = f (y'⁻¹ * δ * θ y')) (h5 : ∀ t, (ι t)⁻¹ * δ * θ (ι t) = δ) :
     orb ι C θ U f δ = orb ι' C θ' U' f' δ' := by
   classical
-  letI : MulAction T (G ⧸ U) := MulAction.compHom (G ⧸ U) ι
-  letI : MulAction T (G' ⧸ U') := MulAction.compHom (G' ⧸ U') ι'
+  let : MulAction T (G ⧸ U) := MulAction.compHom (G ⧸ U) ι
+  let : MulAction T (G' ⧸ U') := MulAction.compHom (G' ⧸ U') ι'
   have sm : ∀ (t : T) (y : G), t • (y : G ⧸ U) = ((ι t * y : G) : G ⧸ U) := fun _ _ => rfl
   have sm' : ∀ (t : T) (y : G'), t • (y : G' ⧸ U') = ((ι' t * y : G') : G' ⧸ U') := fun _ _ => rfl
   have kmk : ∀ y : G, f ((Quotient.out (y : G ⧸ U))⁻¹ * δ * θ (Quotient.out (y : G ⧸ U))) =

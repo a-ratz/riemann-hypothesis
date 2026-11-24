@@ -180,7 +180,7 @@ theorem evA_ht_eq {N : ℕ} (μ : Fin N → ℕ) :
   rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul]
   have hI : (Finset.univ.filter fun k : Fin N => k.val < a.val) = Finset.Iio a := by
     ext k
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_Iio, Fin.lt_iff_val_lt_val]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_Iio, Fin.lt_def]
   rw [hI, Fin.card_Iio]
 
 theorem evA_ht {N : ℕ} (μ ν : Fin N → ℕ)
@@ -294,7 +294,7 @@ theorem evaluation_at_one : EvalOne := by
     rw [Finset.sum_subset hsub (fun d _ hd => by rw [mem_support_iff, not_not] at hd; simp [hd])]
     refine Finset.sum_congr rfl fun d hd => ?_
     by_cases hw : Finsupp.weight (Formalism.GradedWeylDivisibility.rowW N N) d = ν
-    · rw [hP, coeff_weightedHomogeneousComponent, if_pos hw]
+    · rw [hP, coeff_weightedHomogeneousComponent, ite_eq_left hw]
     · have hcol : Finsupp.weight (Formalism.GradedWeylDivisibility.colW N N) d = ν := hscol (mem_support_iff.mp hd)
       have hz : (∏ v ∈ d.support, ((1 : Matrix (Fin N) (Fin N) ℂ) v.1 v.2) ^ d v) = 0 := by
         by_contra hne
@@ -305,7 +305,7 @@ theorem evaluation_at_one : EvalOne := by
     rw [evA_fock_right s, evA_fock_right P]
     refine Finset.sum_congr rfl fun m hm => ?_
     have hw : Finsupp.weight (Formalism.GradedWeylDivisibility.rowW N N) m = ν := heRow (mem_support_iff.mp hm)
-    rw [hP, coeff_weightedHomogeneousComponent, if_pos hw]
+    rw [hP, coeff_weightedHomogeneousComponent, ite_eq_left hw]
   have hfce : ∀ e : MvPolynomial (Fin N × Fin N) ℂ,
       Formalism.REAL.fockF (c • e) e = c * Formalism.REAL.fockF e e := by
     intro e
@@ -366,11 +366,11 @@ theorem isMulRightInvariant_of_compact {G : Type*} [Group G] [TopologicalSpace G
 
 theorem unitary_haar_measure : HaarU := by
   intro N
-  haveI : CompactSpace (Matrix.unitaryGroup (Fin N) ℂ) := compactSpace_unitaryGroup N
+  have : CompactSpace (Matrix.unitaryGroup (Fin N) ℂ) := compactSpace_unitaryGroup N
   let μG : Measure (Matrix.unitaryGroup (Fin N) ℂ) := Measure.haarMeasure ⊤
-  haveI : μG.IsMulRightInvariant := isMulRightInvariant_of_compact μG
+  have : μG.IsMulRightInvariant := isMulRightInvariant_of_compact μG
   have hm : Measurable (Subtype.val : Matrix.unitaryGroup (Fin N) ℂ → Matrix (Fin N) (Fin N) ℂ) :=
-    measurable_subtype_coe
+    measurable_subtypeVal
   refine ⟨Measure.map Subtype.val μG, ?_, ?_, ?_, ?_⟩
   · constructor
     rw [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ]
@@ -920,14 +920,14 @@ theorem schurOrth_of (h : PI.HwIrred) (hA : EvalOne) : SchurOrth := by
     exact Int.toNat_le_toNat (by omega)
   have he : extremal ℂ N lam ∈ V := Formalism.GradedWeylDivisibility.hwMem ℂ N N le_rfl lam.natW anti
   have he0 : extremal ℂ N lam ≠ 0 := Formalism.GradedWeylDivisibility.hwNe ℂ N N le_rfl lam.natW
-  haveI : FiniteDimensional ℂ V := by
+  have : FiniteDimensional ℂ V := by
     obtain ⟨bb, ⟨-, hspan, -⟩, -⟩ := Formalism.GradedWeylDivisibility.sSBasis ℂ N N lam.natW
-    haveI : Finite (Formalism.GradedWeylDivisibility.ssIdx N N lam.natW) := (Formalism.GradedWeylDivisibility.sSIdxFinite N N lam.natW).to_subtype
+    have : Finite (Formalism.GradedWeylDivisibility.ssIdx N N lam.natW) := (Formalism.GradedWeylDivisibility.sSIdxFinite N N lam.natW).to_subtype
     have : V = Submodule.span ℂ (Set.range bb) := hspan.symm
     rw [this]
     exact FiniteDimensional.span_of_finite ℂ (Set.finite_range bb)
-  haveI : Nontrivial V := ⟨⟨⟨_, he⟩, 0, fun h0 => he0 (congrArg Subtype.val h0)⟩⟩
-  letI core : InnerProductSpace.Core ℂ V :=
+  have : Nontrivial V := ⟨⟨⟨_, he⟩, 0, fun h0 => he0 (congrArg Subtype.val h0)⟩⟩
+  let core : InnerProductSpace.Core ℂ V :=
     { inner := fun x y => normFock lam (y : MvPolynomial (Fin N × Fin N) ℂ) x
       conj_inner_symm := fun x y => by
         show (starRingEnd ℂ) (normFock lam (x : MvPolynomial (Fin N × Fin N) ℂ) y) = normFock lam y x
@@ -948,8 +948,8 @@ theorem schurOrth_of (h : PI.HwIrred) (hA : EvalOne) : SchurOrth := by
       definite := fun x hx => by
         by_contra hne
         exact normFock_self_ne_zero lam (x : MvPolynomial (Fin N × Fin N) ℂ) (fun h0 => hne (Subtype.ext h0)) hx }
-  letI : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ core
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ core
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore core.toCore
   have hin : ∀ x y : V, @inner ℂ V _ x y = normFock lam (y : MvPolynomial (Fin N × Fin N) ℂ) x := fun _ _ => rfl
   let b := stdOrthonormalBasis ℂ V
   let rv : Matrix (Fin N) (Fin N) ℂ → V → V := fun g x => ⟨Formalism.GradedWeylDivisibility.rowAct ℂ g x, hstab g x x.2⟩
@@ -1055,7 +1055,7 @@ theorem schurOrth_of (h : PI.HwIrred) (hA : EvalOne) : SchurOrth := by
     simp only [Aform]
     rw [← MeasureTheory.integral_finsetSum _ fun i _ => ci_integrable hμ (ci_cont2 _ _)]
     rw [integral_congr_ae (g := fun _ => (1 : ℂ)) ?_]
-    · haveI := hμ.1
+    · have := hμ.1
       simp
     · filter_upwards [hμ.2.1] with x hx
       exact hsum1 x hx

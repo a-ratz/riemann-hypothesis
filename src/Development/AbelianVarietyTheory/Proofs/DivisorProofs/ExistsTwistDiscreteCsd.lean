@@ -62,12 +62,12 @@ theorem dchi_pow (χ : HChar E) (k : ℕ) : dchi (χ ^ k) = (k : ℝ) • dchi �
   obtain ⟨L, hL⟩ := exists_lin _ (continuous_chiInf χ)
   have h1 : dchi χ = L := fderiv_extZero (continuous_chiInf χ) hL
   have h2 : dchi (χ ^ k) = (k : ℝ) • L := fderiv_extZero (continuous_chiInf (χ ^ k)) fun z => by
-    rw [chiInf_pow, Units.val_pow_eq_pow_val, hL, ← Complex.exp_nat_mul]
+    rw [chiInf_pow, Units.val_pow_eq_pow_val, hL, ← Complex.exp_natCast_mul]
     simp
   rw [h1, h2]
 
 theorem expo_pow (χ : HChar E) (k : ℕ) (τ : E →+* ℂ) : expo (χ ^ k) τ = k * expo χ τ := by
-  simp only [expo, dchi_pow, ContinuousLinearMap.smul_apply, Complex.real_smul, Complex.ofReal_natCast]
+  simp only [expo, dchi_pow, smul_apply, Complex.real_smul, Complex.ofReal_natCast]
   ring
 
 theorem chiDet_splitCentre {μ : HChar E} {e : InfinitePlace E → ℤ}
@@ -91,8 +91,8 @@ theorem isSqInt_mulChi {χ : HChar E} (hu : χ.IsUnitary) (hs : ∀ t, chiDet a 
   · simp only [mulChi_apply, map_mul, hs, one_mul, h1]
   · have e : ∀ g, ‖(mulChi a χ φ).1 g‖ₑ = ‖φ.1 g‖ₑ := fun g => by
       have h2 : ‖((chiDet a χ g : ℂˣ) : ℂ)‖ₑ = 1 := by
-        rw [← ofReal_norm_eq_enorm, show ‖((chiDet a χ g : ℂˣ) : ℂ)‖ = 1 from hu _, ENNReal.ofReal_one]
-      rw [mulChi_apply, enorm_mul, h2, mul_one]
+        rw [← ofReal_norm, show ‖((chiDet a χ g : ℂˣ) : ℂ)‖ = 1 from hu _, ENNReal.ofReal_one]
+      rw [mulChi_apply, eNorm_mul, h2, mul_one]
     simp only [e]
     exact hI
 

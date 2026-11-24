@@ -117,8 +117,8 @@ theorem GlobalTheory.UPel.HT.Hecke.weil_value_translate : ∀ (p : ℕ) [Fact p.
   have hev : ∀ w : D.La, I.ev (n * k) (g w) = I.ev (n * (m * k ^ 2)) (m • g w) ≫ Out.mulA o.A k := fun w => by
     rw [Out.mulA, MonObj.comp_pow, Category.comp_id, ← TateIsoO.ev_nsmul, smul_smul, mul_comm k m,
       TateIsoO.ev_nsmul, eN, I.tower (n * k) (m * k) (by positivity) (by positivity) (by rw [← eN]; exact hNp)]
-  letI : IsCommMonObj o.A := o.ab.comm
-  haveI : IsMonHom (Out.mulA o.A k) := by
+  let : IsCommMonObj o.A := o.ab.comm
+  have : IsMonHom (Out.mulA o.A k) := by
     change IsMonHom ((𝟙 o.A) ^ k)
     constructor
     · rw [MonObj.comp_pow, Category.comp_id, MonObj.one_eq_one, one_pow]

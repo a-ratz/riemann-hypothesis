@@ -69,9 +69,9 @@ theorem natCard_subPts {k : Type} [Field k] (S : LinSys k) (I : S.Y.IdealSheafDa
     (Ω : Type) [Field Ω] [Algebra k Ω] :
     letI := algebraΓOfHom (I.subschemeι ≫ S.str)
     Nat.card (S.subPts I Ω) = Nat.card (Γ(I.subscheme, ⊤) →ₐ[k] Ω) := by
-  letI := algebraΓOfHom (I.subschemeι ≫ S.str)
-  haveI : IsFinite (I.subschemeι ≫ S.str) := hI
-  haveI : IsAffine I.subscheme := isAffine_of_isAffineHom (I.subschemeι ≫ S.str)
+  let := algebraΓOfHom (I.subschemeι ≫ S.str)
+  have : IsFinite (I.subschemeι ≫ S.str) := hI
+  have : IsAffine I.subscheme := isAffine_of_isAffineHom (I.subschemeι ≫ S.str)
   obtain ⟨a, ha, he⟩ := exists_eq_isoSpec_comp (I.subschemeι ≫ S.str)
   have e1 : Nat.card (S.subPts I Ω) =
       Nat.card {z : Sp Ω ⟶ I.subscheme // z ≫ I.subschemeι ≫ S.str = spMap (algebraMap k Ω)} := by
@@ -128,10 +128,10 @@ theorem natCard_subPts {k : Type} [Field k] (S : LinSys k) (I : S.Y.IdealSheafDa
 theorem etale_of_algebraEtale {k : Type} [Field k] (S : LinSys k) (I : S.Y.IdealSheafData) (hI : S.IsFiniteSub I) :
     letI := algebraΓOfHom (I.subschemeι ≫ S.str)
     Algebra.Etale k Γ(I.subscheme, ⊤) → Etale (I.subschemeι ≫ S.str) := by
-  letI := algebraΓOfHom (I.subschemeι ≫ S.str)
+  let := algebraΓOfHom (I.subschemeι ≫ S.str)
   intro h
-  haveI : IsFinite (I.subschemeι ≫ S.str) := hI
-  haveI : IsAffine I.subscheme := isAffine_of_isAffineHom (I.subschemeι ≫ S.str)
+  have : IsFinite (I.subschemeι ≫ S.str) := hI
+  have : IsAffine I.subscheme := isAffine_of_isAffineHom (I.subschemeι ≫ S.str)
   obtain ⟨a, ha, he⟩ := exists_eq_isoSpec_comp (I.subschemeι ≫ S.str)
   have h2 : Etale (Spec.map a) := by
     refine HasRingHomProperty.Spec_iff.mpr ?_

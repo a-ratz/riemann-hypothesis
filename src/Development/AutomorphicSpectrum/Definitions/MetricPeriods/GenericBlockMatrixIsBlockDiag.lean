@@ -153,7 +153,7 @@ theorem IsBlockDiag.map {A : Matrix (Fin N) (Fin N) R} (hA : IsBlockDiag j A) (f
 
 theorem IsBlockDiag.inv {A : Matrix (Fin N) (Fin N) R} (hA : IsBlockDiag j A) (hd : IsUnit A.det) :
     IsBlockDiag j A⁻¹ := by
-  letI := Matrix.invertibleOfIsUnitDet A hd
+  let := Matrix.invertibleOfIsUnitDet A hd
   let f : Fin N → ℕ := fun a => if (a : ℕ) < N - j then 0 else 1
   have h1 : A.BlockTriangular f := fun a b h => hA a b fun e => by
     simp only [f, e] at h; exact lt_irrefl _ h
@@ -174,17 +174,17 @@ theorem IsLowerUni.map {L : Matrix (Fin N) (Fin N) R} (h : IsLowerUni L) (f : R 
 
 theorem IsLowerUni.det_submatrix {L : Matrix (Fin N) (Fin N) R} (h : IsLowerUni L) (P : Fin N → Prop)
     [DecidablePred P] : (L.submatrix (Subtype.val : {a // P a} → Fin N) Subtype.val).det = 1 := by
-  rw [det_of_lowerTriangular (L.submatrix (Subtype.val : {a // P a} → Fin N) Subtype.val) fun a b e => h.2 _ _ e]
+  rw [det_of_isLowerTriangular (L.submatrix (Subtype.val : {a // P a} → Fin N) Subtype.val) fun a b e => h.2 _ _ e]
   exact Finset.prod_eq_one fun a _ => h.1 _
 
 theorem IsLowerUni.det {L : Matrix (Fin N) (Fin N) R} (h : IsLowerUni L) : L.det = 1 := by
-  rw [det_of_lowerTriangular _ fun a b e => h.2 _ _ e]
+  rw [det_of_isLowerTriangular _ fun a b e => h.2 _ _ e]
   exact Finset.prod_eq_one fun a _ => h.1 _
 
 theorem IsLowerUni.eq_one {L U : Matrix (Fin N) (Fin N) R} (h : IsLowerUni L) (hU : U.BlockTriangular id)
     (h' : IsLowerUni (L * U)) : U = 1 := by
   have hd : IsUnit L.det := by rw [h.det]; exact isUnit_one
-  letI := Matrix.invertibleOfIsUnitDet L hd
+  let := Matrix.invertibleOfIsUnitDet L hd
   have h1 : L.BlockTriangular OrderDual.toDual := fun a b e => h.2 _ _ e
   have h2 : (L * U).BlockTriangular OrderDual.toDual := fun a b e => h'.2 _ _ e
   have h3 : U.BlockTriangular OrderDual.toDual := by
@@ -214,41 +214,41 @@ theorem IsBlockDiag.exists_upper {G : Matrix (Fin N) (Fin N) R} (hG : IsBlockDia
   have key : ∀ a b, (G * B) a b = ∑ c : {c // P b c}, G a c * v b c := fun a b => by
     rw [Matrix.mul_apply, ← Finset.sum_filter_add_sum_filter_not Finset.univ (P b),
       Finset.sum_eq_zero (s := Finset.univ.filter fun c => ¬ P b c) (fun c hc => by
-        rw [show B c b = 0 from dif_neg (Finset.mem_filter.1 hc).2, mul_zero]), add_zero,
+        rw [show B c b = 0 from dite_eq_right (Finset.mem_filter.1 hc).2, mul_zero]), add_zero,
       Finset.sum_subtype (p := P b) _ (by simp)]
-    exact Finset.sum_congr rfl fun c _ => by rw [show B c b = v b c from dif_pos c.2]
+    exact Finset.sum_congr rfl fun c _ => by rw [show B c b = v b c from dite_eq_left c.2]
   have key2 : ∀ a b (h : P b a), (G * B) a b = if a = b then 1 else 0 := fun a b h => by
     have := congrFun (congrFun (Matrix.mul_nonsing_inv _ (hu b)) ⟨a, h⟩) ⟨b, le_rfl, Iff.rfl⟩
     rw [Matrix.mul_apply, Matrix.one_apply] at this
     rw [key]
     refine this.trans ?_
     simp [Subtype.ext_iff]
-  refine ⟨B, fun a b h => dif_neg fun e => h e.2, fun a b h => dif_neg fun e => absurd e.1 (not_le.2 h),
-    fun a => by rw [key2 a a ⟨le_rfl, Iff.rfl⟩, if_pos rfl], fun a b h => ?_⟩
+  refine ⟨B, fun a b h => dite_eq_right fun e => h e.2, fun a b h => dite_eq_right fun e => absurd e.1 (not_le.2 h),
+    fun a => by rw [key2 a a ⟨le_rfl, Iff.rfl⟩, ite_eq_left rfl], fun a b h => ?_⟩
   by_cases e : ((a : ℕ) < N - j ↔ (b : ℕ) < N - j)
-  · rw [key2 a b ⟨h.le, e⟩, if_neg h.ne]
+  · rw [key2 a b ⟨h.le, e⟩, ite_eq_right h.ne]
   · rw [key]
     exact Finset.sum_eq_zero fun c _ => by rw [hG a c fun e' => e (e'.trans c.2.2), zero_mul]
 
-theorem generic_block_matrix_isBlockDiag (τ : Ψ) : IsBlockDiag j (genericBlockMatrix R N j τ) := fun _ _ h => dif_neg h
+theorem generic_block_matrix_isBlockDiag (τ : Ψ) : IsBlockDiag j (genericBlockMatrix R N j τ) := fun _ _ h => dite_eq_right h
 
 theorem genLow_blockDiag (τ : Ψ) : IsBlockDiag j (genLow R N j τ) := fun a b h =>
-  (dif_neg fun e => h e.2).trans (if_neg fun e => h (by rw [e]))
+  (dite_eq_right fun e => h e.2).trans (ite_eq_right fun e => h (by rw [e]))
 
 theorem genLow_lowerUni (τ : Ψ) : IsLowerUni (genLow R N j τ) :=
-  ⟨fun _ => (dif_neg fun e => lt_irrefl _ e.1).trans (if_pos rfl),
-    fun _ _ h => (dif_neg fun e => lt_asymm h e.1).trans (if_neg h.ne)⟩
+  ⟨fun _ => (dite_eq_right fun e => lt_irrefl _ e.1).trans (ite_eq_left rfl),
+    fun _ _ h => (dite_eq_right fun e => lt_asymm h e.1).trans (ite_eq_right h.ne)⟩
 
-theorem genLow_apply (q : LowIdx Ψ N j) : genLow R N j q.1.1 q.1.2.1 q.1.2.2 = X q := dif_pos q.2
+theorem genLow_apply (q : LowIdx Ψ N j) : genLow R N j q.1.1 q.1.2.1 q.1.2.2 = X q := dite_eq_left q.2
 
-theorem generic_block_matrix_apply (q : inertBlockIndex Ψ N j) : genericBlockMatrix R N j q.1.1 q.1.2.1 q.1.2.2 = X q := dif_pos q.2
+theorem generic_block_matrix_apply (q : inertBlockIndex Ψ N j) : genericBlockMatrix R N j q.1.1 q.1.2.1 q.1.2.2 = X q := dite_eq_left q.2
 
-theorem genUp_apply (q : UpIdx Ψ N j) : genUp R N j q.1.1 q.1.2.1 q.1.2.2 = X q := dif_pos q.2
+theorem genUp_apply (q : UpIdx Ψ N j) : genUp R N j q.1.1 q.1.2.1 q.1.2.2 = X q := dite_eq_left q.2
 
-theorem genUp_blockDiag (τ : Ψ) : IsBlockDiag j (genUp R N j τ) := fun _ _ h => dif_neg fun e => h e.2
+theorem genUp_blockDiag (τ : Ψ) : IsBlockDiag j (genUp R N j τ) := fun _ _ h => dite_eq_right fun e => h e.2
 
 theorem genUp_upper (τ : Ψ) : (genUp R N j τ).BlockTriangular id := fun _ _ h =>
-  dif_neg fun e => absurd e.1 (not_le.2 h)
+  dite_eq_right fun e => absurd e.1 (not_le.2 h)
 
 theorem generic_block_matrix_map (f : MvPolynomial (inertBlockIndex Ψ N j) R →+* S) {H : Ψ → Matrix (Fin N) (Fin N) S}
     (hH : ∀ τ, IsBlockDiag j (H τ)) (hf : ∀ q, f (X q) = H q.1.1 q.1.2.1 q.1.2.2) (τ : Ψ) :
@@ -381,7 +381,7 @@ theorem IsGenericFlag.indep_mul_genUp {Ω Φ : Type} [Field Ω] [CommRing Φ] [A
   let ν : MvPolynomial (UpIdx Ψ N j) A →ₐ[Ω] T := aevalTower lo fun q => (B' q.1.1)⁻¹ q.1.2.1 q.1.2.2
   have hν : ∀ τ, (genUp A N j τ).map ν.toRingHom = (B' τ)⁻¹ :=
     genUp_map _ (fun τ => ⟨(hB' τ).1.inv (hd τ), by
-      letI := Matrix.invertibleOfIsUnitDet _ (hd τ)
+      let := Matrix.invertibleOfIsUnitDet _ (hd τ)
       exact blockTriangular_inv_of_blockTriangular (hB' τ).2.1⟩) fun q => aevalTower_X _ _ q
   let Z : Ψ → Matrix (Fin N) (Fin N) (MvPolynomial (UpIdx Ψ N j) A) := fun τ =>
     (genLow Ω N j τ).map (C : A →+* _) * genUp A N j τ
@@ -599,8 +599,8 @@ def yH (x : Fin 3 → Ω) : (Σ k, ιH k) → ΦH Ω := fun q =>
 theorem minor_single {R : Type} [CommRing R] (h : Matrix (Fin 2) (Fin 2) R) (a b : Fin 2) :
     minorIJ h {a} {b} = h a b := by
   unfold minorIJ
-  rw [dif_pos (by simp)]
-  haveI : Unique (Fin ({b} : Finset (Fin 2)).card) := inferInstanceAs (Unique (Fin 1))
+  rw [dite_eq_left (by simp)]
+  have : Unique (Fin ({b} : Finset (Fin 2)).card) := inferInstanceAs (Unique (Fin 1))
   rw [det_unique]
   show h _ _ = _
   congr 1
@@ -614,8 +614,8 @@ theorem sum_minor {R : Type} [CommRing R] (u : Finset (Fin 2) → R) (h : Matrix
   have : (Finset.univ : Finset (Finset (Fin 2))) = {∅, {0}, {1}, {0, 1}} := by decide
   rw [this, Finset.sum_insert (by decide), Finset.sum_insert (by decide), Finset.sum_pair (by decide),
     minor_single, minor_single]
-  have e1 : minorIJ h ∅ {0} = 0 := dif_neg (by decide)
-  have e2 : minorIJ h {0, 1} {0} = 0 := dif_neg (by decide)
+  have e1 : minorIJ h ∅ {0} = 0 := dite_eq_right (by decide)
+  have e2 : minorIJ h {0, 1} {0} = 0 := dite_eq_right (by decide)
   rw [e1, e2]; ring
 
 theorem detFac0 {R : Type} [CommRing R] (T : Matrix (Fin 2) (Fin 2) R) : detFac 2 0 T = 1 := by
@@ -626,15 +626,15 @@ theorem detFac1 {R : Type} [CommRing R] (T : Matrix (Fin 2) (Fin 2) R) : detFac 
   have e2 : omIdx 2 2 = ∅ := by decide
   have h1 : minorIJ T Finset.univ Finset.univ = T.det := by
     unfold minorIJ
-    rw [dif_pos rfl]
+    rw [dite_eq_left rfl]
     exact det_submatrix_equiv_self (Equiv.ofBijective (Finset.univ.orderEmbOfFin rfl)
       ⟨(Finset.univ.orderEmbOfFin rfl).injective, fun a => by
         have := Finset.range_orderEmbOfFin (Finset.univ : Finset (Fin 2)) rfl
         exact (Set.range_eq_univ.1 (by simpa using this)) a⟩) T
   have h2 : minorIJ T ∅ ∅ = 1 := by
     unfold minorIJ
-    rw [dif_pos rfl]
-    haveI : IsEmpty (Fin (∅ : Finset (Fin 2)).card) := inferInstanceAs (IsEmpty (Fin 0))
+    rw [dite_eq_left rfl]
+    have : IsEmpty (Fin (∅ : Finset (Fin 2)).card) := inferInstanceAs (IsEmpty (Fin 0))
     exact det_isEmpty
   simp [detFac, e1, e2, h1, h2]
 

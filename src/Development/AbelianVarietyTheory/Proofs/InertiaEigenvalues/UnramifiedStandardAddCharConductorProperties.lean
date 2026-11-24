@@ -230,7 +230,7 @@ theorem conductor_trace [hU : Unram F E]
     (he : ∃ e : E, ‖e‖ ≤ 1 ∧ e + star e = 1)
     {ψ : AddChar F ℂ} (hψ : IsStdChar ψ) (y : E) :
     (∀ e : E, ‖e‖ ≤ 1 → ψ (Algebra.trace F E (e * y)) = 1) ↔ ‖y‖ ≤ 1 := by
-  haveI := hU.ultraE
+  have := hU.ultraE
   constructor
   · intro h
     by_contra hy
@@ -270,10 +270,10 @@ theorem psi_conductor : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivial
     (∀ y : F, (∀ e : F, ‖e‖ ≤ 1 → ψ (e * y) = 1) ↔ ‖y‖ ≤ 1) ∧
     ∀ y : E, (∀ e : E, ‖e‖ ≤ 1 → ψ (Algebra.trace F E (e * y)) = 1) ↔ ‖y‖ ≤ 1 := by
   intro F E _ _ _ _ hU
-  haveI := hU.ultraF
-  haveI := hU.charZero
-  haveI := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have := hU.ultraF
+  have := hU.charZero
+  have := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨htr, he, -⟩ := _root_.GlobalTheory.NTr.traceForm_perfect F E
   exact ⟨exists_stdChar F, fun ψ hψ => ⟨locConst hψ, norm_eq_one hψ, conductor hψ,
     conductor_trace htr he hψ⟩⟩

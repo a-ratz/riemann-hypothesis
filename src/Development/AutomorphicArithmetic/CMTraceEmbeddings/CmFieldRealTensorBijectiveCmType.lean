@@ -56,7 +56,7 @@ private theorem func_repr {ι : Type} [Fintype ι] [DecidableEq ι] (f : (ι →
       intro τ
       by_cases h : k = τ
       · subst h
-        simp only [Pi.add_apply, Pi.smul_apply, Pi.single_eq_same, if_true]
+        simp only [Pi.add_apply, Pi.smul_apply, Pi.single_eq_same, ite_true]
         apply Complex.ext <;> simp
       · simp [Pi.single_apply, h]
     rw [Finset.sum_apply]
@@ -101,7 +101,7 @@ theorem UpperTheory.cmField_real_tensor_bijective_cmType :
   intro hT E _ _ _ A
   classical
   obtain ⟨-, -, h3, him⟩ := hT E A
-  haveI : Fintype (Phi A) := Fintype.ofFinite _
+  have : Fintype (Phi A) := Fintype.ofFinite _
   let L : ℝ ⊗[ℚ] E →ₗ[ℝ] (Phi A → ℂ) := LinearMap.pi (fun τ => (ev1 τ.1).toLinearMap)
   have hL : ∀ z τ, L z τ = ev1 τ.1 z := fun _ _ => rfl
   have hsurj : Function.Surjective L := by

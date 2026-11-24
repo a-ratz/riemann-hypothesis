@@ -192,7 +192,7 @@ theorem lead_mem : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R]
   have hloc : ∀ P : Ideal R, ∀ hP : P.IsPrime, P.height = 1 →
       ∃ J : ℕ, (r α ∉ P → J = 0) ∧ ∀ j ≥ J, Φ P j := by
     intro P hP h1
-    haveI := GlobalTheory.localizationAtPrime_isDiscreteValuationRing_of_height_eq_one R P h1
+    have := GlobalTheory.localizationAtPrime_isDiscreteValuationRing_of_height_eq_one R P h1
     set D := Localization.AtPrime P
     have hne : ∀ x, IsDiscreteValuationRing.addVal D (algebraMap R D (r x)) ≠ ⊤ := by
       intro x h
@@ -201,7 +201,7 @@ theorem lead_mem : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R]
         (by rw [h, map_zero]))
     set v : X → ℕ := fun x => (IsDiscreteValuationRing.addVal D (algebraMap R D (r x))).toNat
     have he : ∀ x, IsDiscreteValuationRing.addVal D (algebraMap R D (r x)) = (v x : ℕ∞) :=
-      fun x => (ENat.coe_toNat (hne x)).symm
+      fun x => (ENat.natCast_toNat (hne x)).symm
     have hvz : v 0 = 0 := by
       have := he 0
       rw [hrz, map_one, IsDiscreteValuationRing.addVal_one] at this
@@ -327,7 +327,7 @@ theorem gm_eq_unitAt {Z : Scheme.{0}} (r : Z ⟶ Spec (CommRingCat.of (FractionR
     Subsingleton.elim _ _
   simp only [GlobalTheory.ThFam.unitAt, DVR.GC.evalTop, Units.coe_map, RingHom.comp_apply, e,
     CategoryTheory.Functor.map_id, CommRingCat.hom_id, RingHom.id_apply, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, Iso.hom_inv_id_apply]
+    MonoidHom.coe_ofClass, Iso.hom_inv_id_apply]
   rfl
 
 theorem gm_jK_eq_unitAt {Z : Scheme.{0}} (r : Z ⟶ Spec (CommRingCat.of (FractionRing R))) (z : Z)
@@ -418,7 +418,7 @@ theorem toGen_unit (z : (TK R).left) (u : Rˣ) :
       (Units.map (DegPre.toOpen (R := R) ⊤).toMonoidHom u) = u := by
     apply Units.ext
     have e : (homOfLE (le_top : (⊤ : (Spec (CommRingCat.of R)).Opens) ≤ ⊤)).op = 𝟙 _ := Subsingleton.elim _ _
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, DVR.GC.evalTop, GlobalTheory.BetaAdd.toOpen_top,
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, DVR.GC.evalTop, GlobalTheory.BetaAdd.toOpen_top,
       RingHom.comp_apply, e, CategoryTheory.Functor.map_id, CommRingCat.hom_id, RingHom.id_apply, Iso.inv_hom_id_apply]
   rw [e1, Category.id_comp] at h
   rw [← h]
@@ -463,7 +463,7 @@ theorem even (hE : D.PsiEven) (χ : D.X) : ∃ u : Rˣ, ((kap D (-χ) : (Fractio
     (fun k => by fin_cases k <;> simp [Over.w]) (𝟙 (TK R).left ≫ D.xK χ) (by rw [Category.id_comp, xK_eq]))
   rw [h1, h2, h3, ← map_mul] at e
   have e' := congrArg Units.val (unitAt_inj z e)
-  simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at e'
+  simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at e'
   refine ⟨u2 * u1⁻¹ * u3⁻¹, ?_⟩
   simp only [Units.val_mul, map_mul, map_units_inv]
   have n1 := ne0 u1
@@ -506,7 +506,7 @@ theorem cube (hB : D.TauBimult) (a a' b : D.X) : ∃ u : Rˣ,
   simp only [← map_inv, ← map_mul] at e
   have e' := congrArg Units.val (unitAt_inj z e)
   simp only [Units.val_mul, Units.val_inv_eq_inv_val, Units.coe_map, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, map_units_inv] at e'
+    MonoidHom.coe_ofClass, map_units_inv] at e'
   clear h1 h2 h3 h4 h5 h6 h7 hr hur huc hc e hI hJ
   refine ⟨u2 * u4 * u6 * (u1 * u5 * u7 * u3 * ur * uc)⁻¹, ?_⟩
   simp only [Units.val_mul, map_mul, map_units_inv]
@@ -545,7 +545,7 @@ theorem psiIn_mem (I : Ideal R) (χ : D.X) (h : D.PsiIn χ I) :
             CommRingCat.hom_id, RingHom.id_apply, Iso.inv_hom_id_apply]
   refine ⟨s * ((Units.map (DVR.GC.evalTop _ (ch_top D χ)).toMonoidHom ((gen D χ).s (ch D χ)))⁻¹ : Rˣ),
     I.mul_mem_right _ hs, ?_⟩
-  simp only [kap, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_mul, map_units_inv,
+  simp only [kap, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_mul, map_units_inv,
     Units.val_inv_eq_inv_val, key]
   exact congrArg (· * _) key
 
@@ -730,11 +730,11 @@ theorem exists_even_cubic_unit_multiple (R : Type) [CommRing R] [IsDomain R] (X 
       rw [h1, h2, h3, h4]
       exact indicator_sum_mul i j k l hne
     rw [hκ, hsplit, prodPow_single, prodPow_single, prodPow_single, prodPow_single]
-    have hzk : z k k = κ₀ (b k) := by simp only [z]; exact if_pos trivial
-    have hzl : z l l = κ₀ (b l) := by simp only [z]; exact if_pos trivial
+    have hzk : z k k = κ₀ (b k) := by simp only [z]; exact ite_eq_left trivial
+    have hzl : z l l = κ₀ (b l) := by simp only [z]; exact ite_eq_left trivial
     have hzkl : z k l = κ₀ (b k + b l) * (κ₀ (b k))⁻¹ * (κ₀ (b l))⁻¹ := by
-      simp only [z]; rw [if_neg hne, if_pos hkl]
-    have hzlk : z l k = 1 := by simp only [z]; rw [if_neg hne.symm, if_neg (not_lt_of_gt hkl)]
+      simp only [z]; rw [ite_eq_right hne, ite_eq_left hkl]
+    have hzlk : z l k = 1 := by simp only [z]; rw [ite_eq_right hne.symm, ite_eq_right (not_lt_of_gt hkl)]
     rw [hzk, hzl, hzkl, hzlk, mul_one, mul_comm (κ₀ (b k) * κ₀ (b l)), mul_assoc, mul_assoc,
       ← mul_assoc (κ₀ (b k))⁻¹, ← mul_inv, inv_mul_cancel, mul_one]
   have κbb' : ∀ k l, k ≠ l → κ (b k + b l) = κ₀ (b k + b l) := by
@@ -1169,7 +1169,7 @@ theorem core (hR : Base R) (D : DegData R (maximalIdeal R)) (κ : D.toPre.X → 
     · right
       have hβ' : ¬ VanMod (maximalIdeal R) (g β) e := by
         have := hβ
-        simp only [Set.mem_setOf_eq] at this
+        simp only [Set.mem_ofPred_eq] at this
         rwa [Function.update_of_ne h] at this
       obtain ⟨mu, hmu, hn⟩ := ((hg β).2 h).2 e hβ'
       exact ⟨mu, hn, hmu⟩
@@ -1182,8 +1182,8 @@ theorem exists_intFam_lead : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
       ∃ F : IntFam (maximalIdeal R) D.toPre k, F.Lead α b) ∧
       ∀ k : ℕ, 1 ≤ k → ∀ b : D.toPre.SecB k 0, ∃ F : IntFam (maximalIdeal R) D.toPre k, F.Lead 0 b := by
   intro R _ _ _ hR D
-  haveI := hR.1.1
-  haveI := hR.1.2.2.1
+  have := hR.1.1
+  have := hR.1.2.2.1
   obtain ⟨κ, hκ, hev, hcub, hpos, htend⟩ := GlobalTheory.T.exists_even_cubic_integral_reading_of_trivialisations R hR D
   obtain ⟨κ', hev', hcub', hu⟩ := _root_.GlobalTheory.EvenCubicNorm.exists_even_cubic_unit_multiple R D.toPre.X κ hev hcub
   have hu0 := hu

@@ -88,7 +88,7 @@ theorem adjoin_conj_inPar : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'
     { carrier := {M | ∀ i j : Fin n, (j : ℕ) < a → a ≤ (i : ℕ) → M i j = 0}
       mul_mem' := by
         intro M N hM hN i j hj hi
-        simp only [Set.mem_setOf_eq] at hM hN
+        simp only [Set.mem_ofPred_eq] at hM hN
         rw [Matrix.mul_apply]
         refine Finset.sum_eq_zero fun k _ => ?_
         by_cases hk : (k : ℕ) < a
@@ -96,7 +96,7 @@ theorem adjoin_conj_inPar : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'
         · rw [hN k j hj (not_lt.1 hk), mul_zero]
       add_mem' := by
         intro M N hM hN i j hj hi
-        simp only [Set.mem_setOf_eq] at hM hN
+        simp only [Set.mem_ofPred_eq] at hM hN
         rw [Matrix.add_apply, hM i j hj hi, hN i j hj hi, add_zero]
       algebraMap_mem' := by
         intro r i j hj hi
@@ -349,8 +349,8 @@ theorem fibre_count_comap_mul (G₀ G : Type) [Group G₀] [Group G] [Finite G�
     (ι : G₀ →* G) (H : Subgroup G) (T : G → ℂ)
     (hT : ∀ y, T y ≠ 0 → ∃ k p, p ∈ H ∧ y = ι k * p) :
     (Nat.card (H.comap ι) : ℂ) * ∑ᶠ y, T y = ∑ᶠ k : G₀, ∑ᶠ p : H, T (ι k * p) := by
-  haveI : Fintype G₀ := Fintype.ofFinite G₀
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G₀ := Fintype.ofFinite G₀
+  have : Fintype G := Fintype.ofFinite G
   have inner : ∀ k : G₀, ∑ᶠ p : H, T (ι k * p) =
       ∑ y : G, if (ι k)⁻¹ * y ∈ H then T y else 0 := by
     intro k
@@ -657,11 +657,11 @@ theorem inPar_inv {a n : ℕ} {x : GL (Fin n) K} (hx : InPar a x) : InPar a x⁻
     intro i j hij
     simp only at hij
     split_ifs at hij with h1 h2 <;> first | omega | exact hx i j (by omega) (by omega)
-  haveI : Invertible (x : Matrix (Fin n) (Fin n) K) := x.invertible
+  have : Invertible (x : Matrix (Fin n) (Fin n) K) := x.invertible
   have := Matrix.blockTriangular_inv_of_blockTriangular hB
   intro i j hj hi
   rw [Matrix.coe_units_inv]
-  exact this (by simp only; rw [if_pos hi, if_neg (by omega)]; exact Nat.zero_lt_one)
+  exact this (by simp only; rw [ite_eq_left hi, ite_eq_right (by omega)]; exact Nat.zero_lt_one)
 
 theorem tl_mul {a b : ℕ} {x y : GL (Fin (a + b)) K} (hy : InPar a y) :
     tl a (x * y).val = tl a x.val * tl a y.val := by
@@ -917,7 +917,7 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
       rw [← hH]
       exact H.mul_mem (H.mul_mem (H.inv_mem ((hH p).2 hp)) ((hH _).2 hδ₁))
         ((hH _).2 (inPar_gal _ a n p hp))
-    rw [if_pos hin, if_pos h1]
+    rw [ite_eq_left hin, ite_eq_left h1]
     obtain ⟨et, eb⟩ := blocks_twist (s : F' →+* F') a b n hn p δ₁ hp hδ₁
     have hN₁ : nrm s δ₁ = incl F F' n (y₀⁻¹ * γ * y₀) := by
       rw [hδ₁def, nrm_conj_incl, hN, map_mul, map_mul, map_inv]
@@ -929,7 +929,7 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
     have eβ := lβ.2 (brG a b δ₁) (brG a b p)
     rw [galAct_apply] at eα eβ
     rw [eα, eβ, lα.1 _ _ (by unfold IsNorm; rw [nt]), lβ.1 _ _ (by unfold IsNorm; rw [nb])]
-  · rw [if_neg h1, if_neg]
+  · rw [ite_eq_right h1, ite_eq_right]
     intro hin
     obtain ⟨y₁, p₁, hp₁, e, hγ₁⟩ := (GlobalTheory.T.blockUpper_twistedConj_iff_defined_over_base F F' s hs a n hle γ δ (c * p) hA hN).1 hin
     have hh : incl F F' n (y₁⁻¹ * y₀) = p₁ * p⁻¹ := by
@@ -951,7 +951,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
       Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')})
     (hN : nrm s δ = incl F F' n γ) :
     hcTw (s : F' →+* F') a b (shLift s α) (shLift s β) n δ = hc a b α β n γ := by
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
   obtain ⟨H, -, hH, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F' a b n hn
   set T : GL (Fin n) F' → ℂ := fun y => if InPar a (y⁻¹ * δ * gal (s : F' →+* F') n y) then
       shLift s α (tlG a (y⁻¹ * δ * gal (s : F' →+* F') n y)) *
@@ -961,7 +961,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
   have hsupp : ∀ y, T y ≠ 0 → ∃ k p, p ∈ H ∧ y = incl F F' n k * p := by
     intro y hy
     have hin : InPar a (y⁻¹ * δ * gal (s : F' →+* F') n y) := by
-      by_contra h; exact hy (if_neg h)
+      by_contra h; exact hy (ite_eq_right h)
     obtain ⟨k, p, hp, e, -⟩ := (GlobalTheory.T.blockUpper_twistedConj_iff_defined_over_base F F' s hs a n (by omega) γ δ y hA hN).1 hin
     exact ⟨k, p, (hH p).2 hp, e⟩
   have hcnt := count (incl F F' n) H T hsupp
@@ -976,7 +976,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
     rw [← e1]; exact_mod_cast (Nat.card_pos (α := H.comap (incl F F' n))).ne'
   have hpos2 : (Nat.card {p : GL (Fin n) F' // InPar a p} : ℂ) ≠ 0 := by
     rw [← e2]; exact_mod_cast (Nat.card_pos (α := H)).ne'
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
   have hconst : ∀ k, ∑ᶠ _p : H, c₀ k = (Nat.card H : ℂ) * c₀ k := by
     intro k; rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, Nat.card_eq_fintype_card, nsmul_eq_mul]
   simp only [hconst] at hcnt
@@ -993,7 +993,7 @@ end GlobalTheory.Shin.LiftHc
 
 theorem GlobalTheory.Shin.shLift_hc_eq_hcTw : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ), IsCl α → IsCl β → shLift s (hc a b α β n) = hcTw (s : F' →+* F') a b (shLift s α) (shLift s β) n := by
   intro F F' _ _ _ _ s hs a b n hn α β hα hβ
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
   funext δ
   obtain ⟨γ, hγ⟩ := GlobalTheory.T.every_element_is_norm F F' s hs n δ
   obtain ⟨y, hyA, hyN⟩ := GlobalTheory.T.conjugate_into_adjoined_algebra F F' s hs n δ γ hγ

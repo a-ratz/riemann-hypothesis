@@ -76,7 +76,7 @@ theorem discreteTopology_HFinIn (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin 
   let f : HFinIn (AF F) σ J → Matrix (Fin M) (Fin M) (AF F ⊗[F] E) :=
     fun g => ((g.1.1 : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) - 1
   have hf : Continuous f :=
-    (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).sub
+    (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).sub
       continuous_const
   have hf1 : f 1 = 0 := sub_self _
   rw [isOpen_singleton_iff_nhds_eq_pure]

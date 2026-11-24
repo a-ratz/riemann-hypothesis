@@ -221,7 +221,7 @@ theorem continuous_chi (hψ : IsCharAF D.host.F ψ) {k ρ : ℕ} (T : HSp D) {S 
 
 theorem countable_mat (m n : ℕ) : Countable (Matrix (Fin m) (Fin n) D.host.E) := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   exact Function.Injective.countable (f := fun ξ => (⟨rat ξ, rat_mem ξ⟩ : ratMx D m n))
     fun a b h => rat_injective (congrArg Subtype.val h)
 
@@ -230,9 +230,9 @@ theorem integral_series (hψ : IsCharAF D.host.F ψ) {k ρ : ℕ} {T S : HSp D} 
     (hμ : IsCovolOne (ratMx D k ρ) μ 𝓕) (c : Matrix (Fin T.rank) (Fin ρ) D.host.E → ℂ) (hc : Summable fun η => ‖c η‖) :
     ∫ (z : Mx D k ρ) in 𝓕, ∑' η, ψ (symplO S T (e.extX T (rat η)) (e.extY T (rat J ⬝ z))) * c η ∂μ =
       ∑' η, if Jᴴ * T.gram * η = 0 then c η else 0 := by
-  haveI := countable_mat (D := D) T.rank ρ
-  haveI : BorelSpace (Mx D k ρ) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
+  have := countable_mat (D := D) T.rank ρ
+  have : BorelSpace (Mx D k ρ) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
   have hn : ∀ η (z : Mx D k ρ), ‖ψ (symplO S T (e.extX T (rat η)) (e.extY T (rat J ⬝ z))) * c η‖ = ‖c η‖ := fun η z => by
     rw [norm_mul, hψ.2.1, one_mul]
   rw [← integral_tsum_of_summable_integral_norm]
@@ -266,12 +266,12 @@ theorem integral_halves {t ρ : ℕ} {S : HSp D} (e : HypDec S (zeroSp D) ρ) {�
     ∫ ξ in 𝓕₁, h ξ ∂μ₁ = ∫ u in 𝓕, ∫ v in 𝓕, h (u ⬝ e.pX + v ⬝ e.pY) ∂μ ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D t S.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D t ρ
-  haveI : BorelSpace (Mx D t S.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D t ρ) := ⟨rfl⟩
-  haveI : IsProbabilityMeasure (μ₁.restrict 𝓕₁) := ⟨by rw [Measure.restrict_apply_univ, h₁.2.2]⟩
-  haveI : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h₂.2.2]⟩
-  haveI := sFinite_of_prob (μ₁.restrict 𝓕₁)
-  haveI := sFinite_of_prob (μ.restrict 𝓕)
+  have : BorelSpace (Mx D t S.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D t ρ) := ⟨rfl⟩
+  have : IsProbabilityMeasure (μ₁.restrict 𝓕₁) := ⟨by rw [Measure.restrict_apply_univ, h₁.2.2]⟩
+  have : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h₂.2.2]⟩
+  have := sFinite_of_prob (μ₁.restrict 𝓕₁)
+  have := sFinite_of_prob (μ.restrict 𝓕)
   have hL : Continuous fun p : Mx D t ρ × Mx D t ρ => (p.1 ⬝ e.pX + p.2 ⬝ e.pY : Mx D t S.rank) :=
     (continuous_fst.matrix_mul continuous_const).add (continuous_snd.matrix_mul continuous_const)
   have hI : Integrable (Function.uncurry fun (p : Mx D t ρ × Mx D t ρ) (ξ : Mx D t S.rank) =>
@@ -306,9 +306,9 @@ theorem integral_unfold {m n : ℕ} {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D 
     (P : Mx D m n → ℂ) (hc : Continuous P) (hP : Integrable P μ) :
     ∫ u in 𝓕, ∑' γ : Matrix (Fin m) (Fin n) D.host.E, P (rat γ + u) ∂μ = ∫ x, P x ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := hμ.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := hμ.1
   let ε : Matrix (Fin m) (Fin n) D.host.E ≃ ratMx D m n := Equiv.ofBijective (fun ξ => ⟨rat ξ, rat_mem ξ⟩)
     ⟨fun a b h => rat_injective (congrArg Subtype.val h), fun ⟨_, δ, hδ⟩ => ⟨δ, Subtype.ext hδ⟩⟩
   have e1 : ∀ u, ∑' γ : Matrix (Fin m) (Fin n) D.host.E, P (rat γ + u) = ∑' g : ratMx D m n, P (g +ᵥ u) :=
@@ -330,8 +330,8 @@ theorem integrable_slice (hψ : IsStdChar D ψ (-1)) (v : GlobalTheory.Unf.VolM 
   refine ⟨hc, ?_⟩
   obtain ⟨θ, hθ⟩ := GlobalTheory.DualPairCompare.exists_infFam D
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D t ρ
-  haveI : BorelSpace (Mx D t ρ) := ⟨rfl⟩
-  haveI := hμ.1
+  have : BorelSpace (Mx D t ρ) := ⟨rfl⟩
+  have := hμ.1
   obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajInt.maj_integrable D θ hθ t ρ (fun _ _ => True) 0 μ inferInstance
     (Filter.Eventually.of_forall fun x i j h => (h trivial).elim)
     (fun s _ => by
@@ -351,7 +351,7 @@ theorem integrable_slice (hψ : IsStdChar D ψ (-1)) (v : GlobalTheory.Unf.VolM 
   refine ⟨hc.aestronglyMeasurable, ?_⟩
   have hI := ((hN K' hK').const_mul C').2
   refine lt_of_le_of_lt (lintegral_mono fun x => (hC f ⟨hf, hfU⟩ (d.jX ⬝ x) 0).trans
-    (mul_le_mul_right ((ENNReal.ofReal_le_ofReal (hC' x)).trans (Real.ofReal_le_enorm _)) _)) ?_
+    (mul_le_mul_right ((ENNReal.ofReal_le_ofReal (hC' x)).trans (Real.ofReal_le_eNorm _)) _)) ?_
   rw [lintegral_const_mul' _ _ hfin]
   exact ENNReal.mul_lt_top hfin.lt_top hI
 
@@ -387,10 +387,10 @@ theorem tsum_reindex (G : Matrix (Fin T.rank) (Fin ρ) D.host.E → ℂ) :
   · refine tsum_congr fun γ => ?_
     have a1 : d.eᴴ * T.gram * (d.e * γ) = 0 := by rw [← Matrix.mul_assoc, d.ee, Matrix.zero_mul]
     have a2 : d.i₀ᴴ * T.gram * (d.e * γ) = 0 := by rw [← Matrix.mul_assoc, d.i₀e, Matrix.zero_mul]
-    exact (if_pos a1).trans (if_pos a2)
+    exact (ite_eq_left a1).trans (ite_eq_left a2)
   · intro η hη
-    have hY : d.eᴴ * T.gram * η = 0 := by by_contra h; exact hη (if_neg h)
-    have h0 : d.i₀ᴴ * T.gram * η = 0 := by by_contra h; exact hη (by simp only [if_neg h, ite_self])
+    have hY : d.eᴴ * T.gram * η = 0 := by by_contra h; exact hη (ite_eq_right h)
+    have h0 : d.i₀ᴴ * T.gram * η = 0 := by by_contra h; exact hη (by simp only [ite_eq_right h, ite_self])
     refine ⟨d.qX * η, ?_⟩
     have := congrArg (· * η) d.sum_eq_one_rat
     simpa only [Matrix.add_mul, HypDec.q0, HypDec.qY, Matrix.mul_assoc d.e, Matrix.mul_assoc d.i₀, Matrix.mul_assoc d.e',
@@ -446,12 +446,12 @@ theorem at_zero (hψ : IsStdChar D ψ (-1)) (v : GlobalTheory.Unf.VolM D T.rank 
     (_root_.I195MixedCoordinates_41e0c4a6f0d84a965825a95e.source e) T' ψ ν 𝓨 (ikeda ψ d μ₁ 𝓕₁ f) 0 0 = ∫ x : Mx D t ρ, (_root_.I195MixedCoordinates_41e0c4a6f0d84a965825a95e.source e) T ψ v.μ v.𝓕 f (d.jX ⬝ x) 0 ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D t S.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D T'.rank ρ
-  haveI : BorelSpace (Mx D t S.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D T'.rank ρ) := ⟨rfl⟩
-  haveI : IsProbabilityMeasure (μ₁.restrict 𝓕₁) := ⟨by rw [Measure.restrict_apply_univ, h₁.2.2]⟩
-  haveI : IsProbabilityMeasure (ν.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hν.2.2]⟩
-  haveI := sFinite_of_prob (μ₁.restrict 𝓕₁)
-  haveI := sFinite_of_prob (ν.restrict 𝓨)
+  have : BorelSpace (Mx D t S.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D T'.rank ρ) := ⟨rfl⟩
+  have : IsProbabilityMeasure (μ₁.restrict 𝓕₁) := ⟨by rw [Measure.restrict_apply_univ, h₁.2.2]⟩
+  have : IsProbabilityMeasure (ν.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hν.2.2]⟩
+  have := sFinite_of_prob (μ₁.restrict 𝓕₁)
+  have := sFinite_of_prob (ν.restrict 𝓨)
   obtain ⟨C, hC⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded S T ψ hψ f hf
   have hc : Continuous fun p : Mx D T'.rank ρ × Mx D t S.rank => f (d.jX ⬝ p.2 + d.j0 ⬝ (p.1 ⬝ e.pY)) :=
     hf.cont.comp ((continuous_const.matrix_mul continuous_snd).add
@@ -606,9 +606,9 @@ theorem projK_comm {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS 
   have key := GlobalTheory.CommIntBdd.om_integral_comm_bdd D ψ S T χS χT om hW K ν
     (fun k : K => om (1, (k : GA D T)) φ) (g, 1)
     (fun k => hW.om_pres _ φ hφ)
-    (hc.comp ((continuous_const.prodMk (continuous_subtype_val.comp continuous_fst)).prodMk continuous_snd))
+    (hc.comp ((continuous_const.prodMk (continuous_subtypeVal.comp continuous_fst)).prodMk continuous_snd))
     ⟨C1, fun k y => hC1 (1, (k : GA D T)) ⟨Set.mem_singleton _, k.2⟩ y⟩
-    (by rw [hF2]; exact hc.comp ((continuous_const.prodMk (continuous_subtype_val.comp continuous_fst)).prodMk
+    (by rw [hF2]; exact hc.comp ((continuous_const.prodMk (continuous_subtypeVal.comp continuous_fst)).prodMk
       continuous_snd))
     ⟨C2, fun k y => by rw [weilRepUnitaryPair_left_apply_right]; exact hC2 (g, (k : GA D T)) ⟨Set.mem_singleton _, k.2⟩ y⟩
     hP x

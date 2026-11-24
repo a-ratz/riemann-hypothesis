@@ -62,7 +62,7 @@ variable {D : D7}
 
 theorem lt_one_le_exp {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1) := by
   rcases eq_or_ne x 0 with rfl | hx
-  · exact zero_le'
+  · exact zero_le
   · obtain ⟨n, rfl⟩ := WithZero.ne_zero_iff_exists.1 hx
     have : (n : WithZero (Multiplicative ℤ)) = WithZero.exp (Multiplicative.toAdd n) := rfl
     rw [this, ← WithZero.exp_zero, WithZero.exp_lt_exp] at h
@@ -149,7 +149,7 @@ theorem frame_mat_sub_one_lt : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (E
       simp only [Formalism.UG.cT, Matrix.sub_apply, Matrix.transpose_apply, Matrix.map_apply, map_sub, Matrix.one_apply]
       by_cases hij : i = j
       · subst hij; simp
-      · rw [if_neg hij, if_neg (Ne.symm hij), map_zero]
+      · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij), map_zero]
     rw [e]
     exact cpt_sg_lt_one Q _ (h j i)
   have hint : ∀ x ∈ GlobalTheory.StdFrames.OA D, Valued.v (cpt (cP Q) x) ≤ 1 := fun x hx => (mem_OA x).1 hx (cP Q)

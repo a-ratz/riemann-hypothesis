@@ -63,9 +63,9 @@ private theorem adL_rho {C G V : Type} [CommRing C] [Group G] [AddCommGroup V] [
 private theorem adL_emb {F Ω K : Type} [Field F] [Field Ω] [Field K] [CharZero F] [Algebra F Ω] [IsAlgClosure F Ω]
     (j j₀ : Ω →+* K) (h : j₀.comp (algebraMap F Ω) = j.comp (algebraMap F Ω)) :
     ∃ γ : Ω ≃ₐ[F] Ω, ∀ y, j (γ y) = j₀ y := by
-  letI : Algebra F K := (j.comp (algebraMap F Ω)).toAlgebra
-  letI : Algebra Ω K := j.toAlgebra
-  haveI : IsScalarTower F Ω K := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra F K := (j.comp (algebraMap F Ω)).toAlgebra
+  let : Algebra Ω K := j.toAlgebra
+  have : IsScalarTower F Ω K := IsScalarTower.of_algebraMap_eq' rfl
   let f : Ω →ₐ[F] K := { j₀ with commutes' := fun x => RingHom.congr_fun h x }
   exact ⟨f.restrictNormal' Ω, fun y => f.restrictNormal_commutes Ω y⟩
 

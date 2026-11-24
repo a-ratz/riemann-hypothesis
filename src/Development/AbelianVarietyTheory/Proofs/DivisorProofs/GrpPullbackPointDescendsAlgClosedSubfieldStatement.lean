@@ -68,11 +68,11 @@ namespace GlobalTheory.AlgClosedDescent
 
 theorem grpPullback_point_descends : ∀ (K : Type) [Field K] [CharZero K] (k₀ : Subfield K), IsAlgClosed k₀ → ∀ (B₀ : Over (Sp k₀)) [GrpObj B₀] (G : Over (Sp K)) [GrpObj G] (π : G.left ⟶ B₀.left), IsAbelianScheme B₀ → IsGrpPullback G B₀ (spMap k₀.subtype) π → ∀ (n : ℕ), 0 < n → ∀ (y : 𝟙_ (Over (Sp K)) ⟶ G) (z₀ : Sp k₀ ⟶ B₀.left), (y ^ n).left ≫ π = spMap k₀.subtype ≫ z₀ → ∃ y₀ : Sp k₀ ⟶ B₀.left, y.left ≫ π = spMap k₀.subtype ≫ y₀ := by
   intro K _ _ k₀ hk B₀ _ G _ π hB hG n hn y z₀ hz
-  haveI : IsAlgClosed k₀ := hk
+  have : IsAlgClosed k₀ := hk
   have hs : spMap (algebraMap k₀ K) = spMap k₀.subtype := rfl
   have hst := isGrpPullback_pullback B₀ (spMap (algebraMap k₀ K))
   obtain ⟨e, he, heφ⟩ := grpPullback_iso hG (hst.congr hs rfl)
-  haveI := he
+  have := he
   have hepi : Epi (spMap (algebraMap k₀ K)) := Flat.epi_of_flat_of_surjective _
   have hn' : (n : k₀) ≠ 0 := by
     intro h

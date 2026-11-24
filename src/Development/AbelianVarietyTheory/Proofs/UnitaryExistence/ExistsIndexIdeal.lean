@@ -105,7 +105,7 @@ theorem smul_det_mem (M' : Submodule (𝓞 E) (Fin n → E)) (m : Fin n → E) (
         intro i k
         by_cases hi : i = j
         · subst hi; simp
-        · simp only [Matrix.updateRow_ne hi, hi, if_false, Matrix.updateRow_self, Matrix.of_apply]
+        · simp only [Matrix.updateRow_ne hi, hi, ite_false, Matrix.updateRow_self, Matrix.of_apply]
           rw [ht i]; rfl
       rw [e1, smul_add]
       refine Submodule.add_mem _ (ih _ (row_update_mem w hw j _ (Submodule.mem_sup_left (hv j))) ?_) ?_
@@ -172,12 +172,12 @@ theorem detSpan_cyclic (M' : Submodule (𝓞 E) (Fin n → E)) (m : Fin n → E)
     let I : FractionalIdeal (nonZeroDivisors (𝓞 E)) E := ⟨detSpan M, frac_of_bdd hb⟩
     have hI : I ≠ 0 := fun h => h0 (by
       have := congrArg (fun J : FractionalIdeal (nonZeroDivisors (𝓞 E)) E => (J : Submodule (𝓞 E) E)) h
-      simp only [FractionalIdeal.coe_zero] at this
+      simp only [FractionalIdeal.coeToSubmodule_zero] at this
       exact this)
     have h1 : detSpan M * ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) = 1 := by
       have := congrArg (fun J : FractionalIdeal (nonZeroDivisors (𝓞 E)) E => (J : Submodule (𝓞 E) E))
         (mul_inv_cancel₀ hI)
-      simp only [FractionalIdeal.coe_mul, FractionalIdeal.coe_one] at this
+      simp only [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_one] at this
       exact this
     generalize ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) = J at h1
     have hint : ∀ x ∈ detSpan M, ∀ y ∈ J, ∃ b : 𝓞 E, (b : E) = x * y := by

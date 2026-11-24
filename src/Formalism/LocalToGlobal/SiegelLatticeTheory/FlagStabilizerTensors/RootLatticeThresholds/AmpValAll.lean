@@ -202,7 +202,7 @@ theorem rowsSum_of_val (vR : TermDef.Term D u u' (X.Fu u) (Y.what₂ u) → ℝ)
 
   by_cases hne : Nonempty Sw
   swap
-  · haveI : IsEmpty Sw := not_nonempty_iff.1 hne
+  · have : IsEmpty Sw := not_nonempty_iff.1 hne
     rw [tsum_empty, norm_zero, zero_div, zero_mul]
     exact hgS0
   obtain ⟨t0⟩ := hne
@@ -295,7 +295,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem poincareConstant_pos {D : D7} (X : HidaSetting D) (Y : Formalism.L2.SG.Full.Full X) (u : D.what₂.Word) :
     0 < Formalism.L2.SG.PoincareInHH.PoincareSetting.c0X X u (Y.FN u) := by
   have hv := Formalism.L2.SG.Closed.VolPosC_holds D X Y u (Formalism.L2.SG.Closed.level_subgroup_properties X)
-  haveI : Nontrivial (X.Vpi u) := Formalism.L2.SG.Pf.ColDictPf.vpi_nontrivial X u
+  have : Nontrivial (X.Vpi u) := Formalism.L2.SG.Pf.ColDictPf.vpi_nontrivial X u
   have hr : (0 : ℝ) < (Module.finrank ℂ (X.Vpi u) : ℝ) := by exact_mod_cast Module.finrank_pos
   rw [Formalism.L2.SG.Full.Full.poincare_constant_eq]
   exact div_pos (mul_pos hv.1 hv.2) hr

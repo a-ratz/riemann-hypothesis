@@ -86,9 +86,9 @@ namespace GlobalTheory.RatPartition
 theorem finite_ratW_mem {D : D7} (A T : HSp D) {C : Set (WO A T)} (hC : IsCompact C) :
     {γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E | ratW T A γ ∈ C}.Finite := by
   obtain ⟨i1, -, -, i4, i5, -⟩ := lattice_Mx D T.rank A.rank
-  haveI := i1; haveI := i4; haveI := i5
-  haveI : T1Space (Mx D T.rank A.rank) := @T2Space.t1Space _ _ i4
-  have hLc : IsClosed (ratMx D T.rank A.rank : Set (Mx D T.rank A.rank)) := AddSubgroup.isClosed_of_discrete
+  have := i1; have := i4; have := i5
+  have : T1Space (Mx D T.rank A.rank) := @T2Space.t1Space _ _ i4
+  have hLc : IsClosed (ratMx D T.rank A.rank : Set (Mx D T.rank A.rank)) := AddSubgroup.isClosed_of_discreteTopology
   let φ : Matrix (Fin T.rank) (Fin A.rank) D.host.E → ratMx D T.rank A.rank := fun γ => ⟨ratW T A γ, γ, rfl⟩
   have hφ : Function.Injective φ := fun a b h =>
     Matrix.map_injective GlobalTheory.MixModel.incA_injective (congrArg Subtype.val h)
@@ -101,9 +101,9 @@ theorem exists_partition_one : ∀ (D : D7) (A T : HSp D), ∃ χ : WO A T → �
     (∀ u, 0 ≤ χ u) ∧ ∀ u, HasSum (fun γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E => χ (ratW T A γ + u)) 1 := by
   intro D A T
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D T.rank A.rank
-  haveI := i1; haveI := i2; haveI := i4
-  haveI : RegularSpace (Mx D T.rank A.rank) := IsTopologicalAddGroup.regularSpace _
-  haveI : ContinuousSub (Mx D T.rank A.rank) := IsTopologicalAddGroup.to_continuousSub
+  have := i1; have := i2; have := i4
+  have : RegularSpace (Mx D T.rank A.rank) := IsTopologicalAddGroup.regularSpace _
+  have : ContinuousSub (Mx D T.rank A.rank) := IsTopologicalAddGroup.to_continuousSub
   obtain ⟨f, hf1, -, hfc, hf01⟩ := exists_continuous_one_zero_of_isCompact hK isClosed_empty (Set.disjoint_empty K)
   have hS : IsCompact (tsupport f) := hfc
   let g : Matrix (Fin T.rank) (Fin A.rank) D.host.E → WO A T → ℝ := fun γ u => f (ratW T A γ + u)
@@ -187,8 +187,8 @@ theorem ratW_sub (A T : HSp D) (γ γ₀ : Matrix (Fin T.rank) (Fin A.rank) D.ho
 theorem finite_ratW_mem (A T : HSp D) (K : Set (WO A T)) (hK : IsCompact K) :
     {γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E | ratW T A γ ∈ K}.Finite := by
   obtain ⟨hg, hlc, hsc, ht2, hdisc, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T A
-  haveI : T1Space (WA T A) := @T2Space.t1Space _ _ ht2
-  have hcl : IsClosed (ratL T A : Set (WA T A)) := AddSubgroup.isClosed_of_discrete
+  have : T1Space (WA T A) := @T2Space.t1Space _ _ ht2
+  have hcl : IsClosed (ratL T A : Set (WA T A)) := AddSubgroup.isClosed_of_discreteTopology
   have hS : IsCompact ((Subtype.val : ratL T A → WA T A) ⁻¹' K) :=
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK
   have hfin := (hS.finite_of_discrete.image Subtype.val).preimage (ratW_inj A T).injOn
@@ -208,9 +208,9 @@ theorem symplOH_neg_left (A T : HSp D) (y z : WO A T) : symplOH A T (-y) z = -sy
 theorem poincare_law : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (A T : HSp D) (h : WO A T → ℂ), Continuous h → HasCompactSupport h → (∀ u, {γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E | h (ratW T A γ + u) ≠ 0}.Finite) ∧ Continuous (fun u => ∑' γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E, ψ (symplOH A T (ratW T A γ) u) * h (ratW T A γ + u)) ∧ ∀ (γ₀ : Matrix (Fin T.rank) (Fin A.rank) D.host.E) (u : WO A T), (∑' γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E, ψ (symplOH A T (ratW T A γ) (ratW T A γ₀ + u)) * h (ratW T A γ + (ratW T A γ₀ + u))) = ψ (-(symplOH A T (ratW T A γ₀) u)) * ∑' γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E, ψ (symplOH A T (ratW T A γ) u) * h (ratW T A γ + u) := by
   intro D ψ hψ A T h hc hs
   obtain ⟨hg, hlc, -, -, -, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T A
-  haveI : IsTopologicalAddGroup (WO A T) := hg
-  haveI : LocallyCompactSpace (WO A T) := hlc
-  haveI : ContinuousSub (WO A T) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hg
+  have : IsTopologicalAddGroup (WO A T) := hg
+  have : LocallyCompactSpace (WO A T) := hlc
+  have : ContinuousSub (WO A T) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hg
   have laws := GlobalTheory.OrientedFormLaws.symplOH_laws D A T
 
   have vanish : ∀ (U : Set (WO A T)) (u : WO A T), u ∈ U → ∀ γ,
@@ -433,15 +433,15 @@ theorem exists_average_of_compact {X : Type} [AddCommGroup X] [TopologicalSpace 
       (∀ (c : ℂ) (x y : X), (∀ u ∈ K, f x u = c * f y u) → g x = c * g y) ∧
       (∀ (c : ℂ) (x y : X), ∀ u₀ ∈ K, (∀ u ∈ K, c * f x u = f y (u₀ + u)) → c * g x = g y) ∧
       ∀ (δ : ℝ) (z : ℂ) (w : X), (∀ a ∈ K, ‖f w a - z‖ ≤ δ) → ‖g w - z‖ ≤ δ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  letI mK : MeasurableSpace K := borel K
-  haveI : BorelSpace K := ⟨rfl⟩
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  let mK : MeasurableSpace K := borel K
+  have : BorelSpace K := ⟨rfl⟩
   let ν : Measure K := Measure.addHaarMeasure ⊤
-  haveI : IsProbabilityMeasure ν := ⟨by
+  have : IsProbabilityMeasure ν := ⟨by
     have h := Measure.addHaarMeasure_self (G := K) (K₀ := ⊤)
     rwa [TopologicalSpace.PositiveCompacts.coe_top] at h⟩
   have hF : Continuous (Function.uncurry fun (w : X) (u : K) => f w u) :=
-    hf.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))
+    hf.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))
   have hfw : ∀ w, Continuous fun u : K => f w u := fun w => hF.comp (Continuous.prodMk_right w)
   have hint : ∀ w, Integrable (fun u : K => f w u) ν := fun w =>
     integrableOn_univ.1 ((hfw w).continuousOn.integrableOn_compact isCompact_univ)
@@ -572,9 +572,9 @@ theorem contDiff_integral_kernel {R : Type} [NormedAddCommGroup R] [NormedSpace 
 
 theorem sm_heisO_average : ∀ (D : D7) (θ : InfFam D) (σ : (D.what₂.Tau → ℂ) →+ AE D), GlobalTheory.FockCompare.Chart θ σ → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (A T : HSp D) (φ : GlobalTheory.FockCompare.RW T A → ℝ), ContDiff ℝ ∞ φ → HasCompactSupport φ → ∀ (f : WO A T → ℂ), Continuous f → GlobalTheory.FockCompare.Sm (GlobalTheory.FockCompare.iotaW σ T A) (fun w => ∫ x, (φ x : ℂ) * heisO ψ A T (GlobalTheory.FockCompare.iotaW σ T A x) f w) := by
   intro D θ σ h ψ hψ A T φ hφ hφc f hf w
-  haveI : (volume : Measure (Fin A.rank → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin T.rank → Fin A.rank → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (RW T A)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin A.rank → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin T.rank → Fin A.rank → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (RW T A)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   let Bc : RW T A →L[ℝ] RW T A →L[ℝ] ℝ := LinearMap.toContinuousLinearMap
     ((LinearMap.toContinuousLinearMap : (RW T A →ₗ[ℝ] ℝ) ≃ₗ[ℝ] (RW T A →L[ℝ] ℝ)).toLinearMap ∘ₗ omO A T)
   have hK : ContDiff ℝ ∞ fun p : RW T A × RW T A =>
@@ -713,8 +713,8 @@ theorem norm_integral_sub_le {X : Type} [MeasurableSpace X] (μ : Measure X) (φ
 
 theorem isAddHaarMeasure_volume (ι m n : Type) [Fintype ι] [Fintype m] [Fintype n] :
     (volume : Measure (ι → m → n → ℂ)).IsAddHaarMeasure := by
-  haveI : (volume : Measure (n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (m → n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (m → n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   exact Measure.pi.isAddHaarMeasure _
 
 theorem exists_theta_of_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (A T : HSp D) (f : WO A T → ℂ), Continuous f → (∀ (γ : Matrix (Fin T.rank) (Fin A.rank) D.host.E) (u : WO A T), f (ratW T A γ + u) = ψ (-(symplOH A T (ratW T A γ) u)) * f u) → (∃ U : AddSubgroup (WO A T), IsOpen (U : Set (WO A T)) ∧ ∀ u ∈ U, u.map (infPart D) = 0 → heisO ψ A T u f = f) → ∀ N ∈ 𝓝 (0 : WO A T), ∀ δ : ℝ, (∀ a ∈ N, ∀ w, ‖heisO ψ A T a f w - f w‖ ≤ δ) → ∃ g : WO A T → ℂ, IsThetaFunO ψ A T g ∧ ∀ w, ‖g w - f w‖ ≤ δ := by
@@ -722,7 +722,7 @@ theorem exists_theta_of_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), I
   obtain ⟨θ, hθ⟩ := GlobalTheory.Member.exists_isInfFam_family D
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨i1, -⟩ := lattice_Mx D T.rank A.rank
-  haveI : (volume : Measure (RW T A)).IsAddHaarMeasure := isAddHaarMeasure_volume _ _ _
+  have : (volume : Measure (RW T A)).IsAddHaarMeasure := isAddHaarMeasure_volume _ _ _
   have hι : Continuous (iotaW σ T A) := h.continuous_iota T A
   have hN' : iotaW σ T A ⁻¹' N ∈ 𝓝 (0 : RW T A) :=
     hι.continuousAt.preimage_mem_nhds (by rw [AddMonoidHom.map_zero]; exact hN)

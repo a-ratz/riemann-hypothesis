@@ -85,7 +85,7 @@ theorem conjDual_finite (E : Type) [AddCommGroup E] [Module ℂ E] [FiniteDimens
       map_add' := fun l l' => by ext i; simp
       map_smul' := fun c l => by ext i; simp }
   have he : Function.Injective e := fun l l' h => b.ext fun i => congrFun h i
-  haveI : FiniteDimensional ℂ (E →ₗ⋆[ℂ] ℂ) := Module.Finite.of_injective e he
+  have : FiniteDimensional ℂ (E →ₗ⋆[ℂ] ℂ) := Module.Finite.of_injective e he
   refine ⟨this, ?_⟩
   have h := LinearMap.finrank_le_finrank_of_injective he
   simpa using h
@@ -144,7 +144,7 @@ theorem admissible_and_equiv (σ : Representation ℂ G X) (π : Representation 
   have hex : ∀ x, ∃ a, C a = B x := by
     intro x
     obtain ⟨U, hUc, hUo, hxU⟩ := (isSmooth_iff_forall_exists σ).1 hσ x
-    haveI : FiniteDimensional ℂ (fixedVectors π U) := hπ.2 U hUc hUo
+    have : FiniteDimensional ℂ (fixedVectors π U) := hπ.2 U hUc hUo
     set E := fixedVectors π U with hE
     have hCinv : ∀ a ∈ E, ∀ u ∈ U, ∀ z, C a (π u z) = C a z := by
       intro a ha u hu z
@@ -194,11 +194,11 @@ theorem admissible_and_equiv (σ : Representation ℂ G X) (π : Representation 
       have := congrArg (fun F : Representation.IntertwiningMap σ π => F x₀) h
       exact this
     rw [← hT0, h1, map_zero]
-  haveI := hσi
-  haveI := hπi
+  have := hσi
+  have := hπi
   rcases Representation.IsIrreducible.bijective_or_eq_zero f with hb | h0
   · refine ⟨⟨hσ, fun U hUc hUo => ?_⟩, ⟨Representation.IntertwiningMap.ofBijective f hb⟩⟩
-    haveI : FiniteDimensional ℂ (fixedVectors π U) := hπ.2 U hUc hUo
+    have : FiniteDimensional ℂ (fixedVectors π U) := hπ.2 U hUc hUo
     exact Module.Finite.of_injective (fixedMap σ f U) (fixedMap_injective σ hb.1)
   · exact absurd h0 hf0
 
@@ -242,8 +242,8 @@ theorem exists_vec (m : Measure G) [m.IsHaarMeasure] (ρ : Representation ℂ G 
   classical
   have hloc := orbit_isLocallyConstant ρ hρ v
   have hS : ((fun g => ρ g v) '' tsupport φ).Finite := by
-    haveI : CompactSpace (tsupport φ) := isCompact_iff_compactSpace.1 hφc
-    have h1 := (hloc.comp_continuous (continuous_subtype_val (p := (· ∈ tsupport φ)))).range_finite
+    have : CompactSpace (tsupport φ) := isCompact_iff_compactSpace.1 hφc
+    have h1 := (hloc.comp_continuous (continuous_subtypeVal (p := (· ∈ tsupport φ)))).range_finite
     rwa [Set.range_comp, Subtype.range_coe] at h1
   set S := hS.toFinset
   let E : X → Set G := fun s => {g | ρ g v = s}
@@ -295,7 +295,7 @@ theorem exists_integralOp (m : Measure G) [m.IsHaarMeasure] (ρ : Representation
   obtain ⟨K, hKc, hK⟩ := exists_forall_mul_left (R := ℂ) (E := ℂ)
     (show φ ∈ locallyConstantCompactSupport G ℂ ℂ from ⟨hφ, hφc⟩)
   refine ⟨A, fun v l => ⟨hint v l, hA0 v l⟩, ?_⟩
-  haveI : FiniteDimensional ℂ (fixedVectors ρ (K : Subgroup G)) := hρ.2 K hKc K.isOpen
+  have : FiniteDimensional ℂ (fixedVectors ρ (K : Subgroup G)) := hρ.2 K hKc K.isOpen
   refine Submodule.finiteDimensional_of_le (S₂ := fixedVectors ρ (K : Subgroup G)) ?_
   rintro _ ⟨v, rfl⟩ k hk
   refine huniq _ _ fun l => ?_

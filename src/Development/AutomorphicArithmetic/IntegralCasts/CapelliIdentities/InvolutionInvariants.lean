@@ -122,7 +122,7 @@ theorem aux9 : ∀ (n : ℕ) (ε : Fin n → Bool),
 theorem laurent_T_neg_one_mul_T_one : ∀ (n : ℕ) (ε : Fin n → Bool),
   LocallyCompactSpace ↥(UJ ε) := by
   intro n ε
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
   have hc : IsClosed {g : (Matrix (Fin n) (Fin n) ℂ)ˣ |
       (g.val).conjTranspose * Jm ε * g.val = Jm ε} :=
@@ -154,8 +154,8 @@ private theorem haar_map_inv {G : Type*} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [MeasurableSpace G] [BorelSpace G] [LocallyCompactSpace G]
     (h : ∀ g : G, Measure.map (fun x => x * g) (haar : Measure G) = haar) :
     Measure.map (fun x => x⁻¹) (haar : Measure G) = haar := by
-  haveI : (haar : Measure G).IsMulRightInvariant := ⟨h⟩
-  haveI : (haar : Measure G).Regular := regular_haarMeasure
+  have : (haar : Measure G).IsMulRightInvariant := ⟨h⟩
+  have : (haar : Measure G).Regular := regular_haarMeasure
   obtain ⟨c, hc⟩ : ∃ c : ENNReal, (haar : Measure G).inv = c • haar :=
     ⟨haarScalarFactor (haar : Measure G).inv haar,
       isMulLeftInvariant_eq_smul_of_regular (haar : Measure G).inv haar⟩
@@ -163,7 +163,7 @@ private theorem haar_map_inv {G : Type*} [Group G] [TopologicalSpace G]
   have h0 : (haar : Measure G) K ≠ 0 := (measure_pos_of_nonempty_interior _ K.interior_nonempty).ne'
   have ht : (haar : Measure G) K ≠ ⊤ := K.isCompact.measure_lt_top.ne
   have h1 : ∀ s : Set G, (haar : Measure G) s⁻¹ = c * haar s := fun s => by
-    rw [← MeasureTheory.Measure.inv_apply, hc, Measure.smul_apply, smul_eq_mul]
+    rw [← MeasureTheory.Measure.inv_apply, hc, smul_apply, smul_eq_mul]
   have h2 : c ^ 2 * (haar : Measure G) K = 1 ^ 2 * (haar : Measure G) K := by
     rw [pow_two, mul_assoc, ← h1, ← h1, inv_inv, one_pow, one_mul]
   have h3 : c = 1 :=
@@ -174,9 +174,9 @@ private theorem haar_map_inv {G : Type*} [Group G] [TopologicalSpace G]
 theorem invInvariant_of : Unimodular →
   InvInvariant := by
   intro h n ε
-  haveI := aux8 ε
-  haveI := aux9 n ε
-  haveI := laurent_T_neg_one_mul_T_one n ε
+  have := aux8 ε
+  have := aux9 n ε
+  have := laurent_T_neg_one_mul_T_one n ε
   exact haar_map_inv (G := ↥(UJ ε)) (h n ε)
 
 end UpperTheory.Reformulated.B.InvolutionInvariants

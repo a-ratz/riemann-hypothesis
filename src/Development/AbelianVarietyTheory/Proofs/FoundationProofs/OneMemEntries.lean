@@ -252,7 +252,7 @@ theorem exists_card_le (hF : ∀ Ω : Set A, IsCompact Ω → {x : E | j x ∈ �
   refine h1.mem_toFinset.2 fun a b => ?_
   obtain ⟨x, hx⟩ := (mem_rat j).1 (mul_mem (inv_mem (hZ q₀)) (hZ q)) a b
   refine ⟨x, ?_, hx⟩
-  rw [Set.mem_setOf_eq, hx, hT q hq, hT q₀ h₀, show (z * w q₀)⁻¹ * (z * w q) = (w q₀)⁻¹ * w q by group]
+  rw [Set.mem_ofPred_eq, hx, hT q hq, hT q₀ h₀, show (z * w q₀)⁻¹ * (z * w q) = (w q₀)⁻¹ * w q by group]
   exact h (q₀, q) a b
 
 omit [Nontrivial A] in

@@ -204,7 +204,7 @@ theorem formulaF (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ : v�
     intro k
     show inner ℂ (T.op k (Ψ g v - q)) v₀ *
       (inner ℂ v₀ (Ψ (S7.toMK k * g) v) - inner ℂ v₀ (Ψ (S7.toMK k) q)) = _
-    rw [hΨk k g hg, hΨk1 k, ContinuousLinearMap.mul_apply, ← inner_sub_right, ← map_sub,
+    rw [hΨk k g hg, hΨk1 k, mul_apply_eq_comp, ← inner_sub_right, ← map_sub,
       ← inner_conj_symm, Complex.conj_mul', Complex.ofReal_pow]
   have hI : ∫ k, ‖inner ℂ v₀ (T.op k (Ψ g v - q))‖ ^ 2 ∂(dk ε) = 0 := by
     have e2 : ((∫ k, ‖inner ℂ v₀ (T.op k (Ψ g v - q))‖ ^ 2 ∂(dk ε) : ℝ) : ℂ) = 0 := by

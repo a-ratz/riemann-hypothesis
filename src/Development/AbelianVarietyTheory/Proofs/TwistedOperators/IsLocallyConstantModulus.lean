@@ -93,12 +93,12 @@ theorem isUnitarisable_extTensor {ρ : Representation ℂ G V} {σ : Representat
     (h₁ : IsUnitarisable ρ) (h₂ : IsUnitarisable σ) : IsUnitarisable (extTensor ρ σ) := by
   obtain ⟨B, b1, b2, b3⟩ := h₁
   obtain ⟨C, c1, c2, c3⟩ := h₂
-  letI : InnerProductSpace.Core ℂ V := core B b1 b2
-  letI : InnerProductSpace.Core ℂ W := core C c1 c2
-  letI : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : NormedAddCommGroup W := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore _
-  letI : InnerProductSpace ℂ W := InnerProductSpace.ofCore _
+  let : InnerProductSpace.Core ℂ V := core B b1 b2
+  let : InnerProductSpace.Core ℂ W := core C c1 c2
+  let : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : NormedAddCommGroup W := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore _
+  let : InnerProductSpace ℂ W := InnerProductSpace.ofCore _
   refine ⟨(innerₛₗ ℂ (E := V ⊗[ℂ] W)).flip, fun v w => (inner_conj_symm (𝕜 := ℂ) v w).symm, fun v hv => ?_, fun g v w => ?_⟩
   · exact (re_inner_self_pos (𝕜 := ℂ)).2 hv
   · show inner ℂ (extTensor ρ σ g w) (extTensor ρ σ g v) = inner ℂ w v
@@ -115,10 +115,10 @@ theorem exists_orthonormal (B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ)
     (hs : ∀ v w, B w v = starRingEnd ℂ (B v w)) (hp : ∀ v, v ≠ 0 → 0 < (B v v).re) {S : Set V}
     (hS : S.Finite) : ∃ (d : ℕ) (b : Fin d → V), (∀ i j, B (b i) (b j) = if i = j then 1 else 0) ∧
       ∀ v ∈ S, ∃ c : Fin d → ℂ, v = ∑ i, c i • b i := by
-  letI : InnerProductSpace.Core ℂ V := core B hs hp
-  letI : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore _
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ S) := FiniteDimensional.span_of_finite ℂ hS
+  let : InnerProductSpace.Core ℂ V := core B hs hp
+  let : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore _
+  have : FiniteDimensional ℂ (Submodule.span ℂ S) := FiniteDimensional.span_of_finite ℂ hS
   let b := stdOrthonormalBasis ℂ (Submodule.span ℂ S)
   refine ⟨_, fun i => b i, fun i j => ?_, fun v hv => ⟨b.repr ⟨v, Submodule.subset_span hv⟩, ?_⟩⟩
   · exact (orthonormal_iff_ite.1 b.orthonormal j i).trans (by simp only [eq_comm])
@@ -353,22 +353,22 @@ theorem lintegral_KO_mul_right (μ : Measure (GL n k)) [μ.IsHaarMeasure] {φ : 
     (hlaw : ∀ (p : parab k e) x, φ (p * x) = ENNReal.ofReal (modulus k m (leviProj k e p)) * φ x) (g : GL n k) :
     ∫⁻ x in (KO k n : Set (GL n k)), φ (x * g) ∂μ = ∫⁻ x in (KO k n : Set (GL n k)), φ x ∂μ := by
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := k)
-  haveI : SecondCountableTopology (unipRad k e) := (unipHomeo e).secondCountableTopology
-  haveI : LocallyCompactSpace (unipRad k e) := (unipHomeo e).isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (unipRad k e) := (unipHomeo e).secondCountableTopology
+  have : LocallyCompactSpace (unipRad k e) := (unipHomeo e).isClosedEmbedding.locallyCompactSpace
   obtain ⟨ν, _, _⟩ : ∃ ν : Measure (unipRad k e), ν.IsHaarMeasure ∧ ν.IsMulRightInvariant :=
     ⟨_, isHaarMeasure_map e Measure.addHaar, isMulRightInvariant_map e Measure.addHaar⟩
   let τ : Measure (Levi k m) := Measure.pi fun _ => Measure.haar
   let N₀ : Set (unipRad k e) := Subtype.val ⁻¹' (KO k n : Set (GL n k))
   let M₀ : Set (Levi k m) := Set.univ.pi fun a => (KO k (m a) : Set (GL (m a) k))
   have hK : MeasurableSet (KO k n : Set (GL n k)) := isOpen_KO.measurableSet
-  have hN₀ : IsOpen N₀ := isOpen_KO.preimage continuous_subtype_val
+  have hN₀ : IsOpen N₀ := isOpen_KO.preimage continuous_subtypeVal
   have hM₀ : IsOpen M₀ := isOpen_set_pi Set.finite_univ fun _ _ => isOpen_KO
   have hNc : IsCompact N₀ := by
     have : IsClosed (unipRad k e : Set (GL n k)) := by
       have h : (unipRad k e : Set (GL n k)) = (⋂ (i) (j) (_ : blk e j < blk e i), {g | g.val i j = 0}) ∩
           ⋂ (a) (i) (j), {g | g.val (e ⟨a, i⟩) (e ⟨a, j⟩) = (1 : Matrix (m a) (m a) k) i j} := by
         ext g
-        simp only [SetLike.mem_coe, mem_unipRad, mem_parab, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [SetLike.mem_coe, mem_unipRad, mem_parab, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
       rw [h]
       refine IsClosed.inter ?_ ?_ <;>
         exact isClosed_iInter fun _ => isClosed_iInter fun _ => isClosed_iInter fun _ =>
@@ -379,7 +379,7 @@ theorem lintegral_KO_mul_right (μ : Measure (GL n k)) [μ.IsHaarMeasure] {φ : 
     (hM₀.measure_pos τ ⟨1, fun a _ => one_mem (KO k (m a))⟩).ne'
   have hc1 : ν N₀ * τ M₀ ≠ ⊤ := ENNReal.mul_ne_top hNc.measure_lt_top.ne hMc.measure_lt_top.ne
   let j : Levi k m × unipRad k e → GL n k := fun y => y.2 * leviEmb k e y.1
-  have hj : Measurable j := ((continuous_subtype_val.comp continuous_snd).mul
+  have hj : Measurable j := ((continuous_subtypeVal.comp continuous_snd).mul
     ((continuous_leviEmb k e).comp continuous_fst)).measurable
   let δ : Levi k m × unipRad k e → ℝ≥0∞ := fun y => ENNReal.ofReal (modulus k m y.1⁻¹)
   have hδ : Measurable δ := ((isLocallyConstant_modulus (k := k) (m := m)).continuous.comp

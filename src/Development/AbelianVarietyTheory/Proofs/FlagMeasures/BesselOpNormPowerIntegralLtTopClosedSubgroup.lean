@@ -158,7 +158,7 @@ theorem isOpen_nbhdU : IsOpen (nbhdU k r) := by
   exact isOpen_lt this continuous_const
 
 theorem isAddHaarMeasure_volume_Mt : (volume : Measure (Mt k r)).IsAddHaarMeasure := by
-  haveI : (volume : Measure (Fin (2 * r + k + 1) → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin (2 * r + k + 1) → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   exact Measure.pi.isAddHaarMeasure _
 
 attribute [local instance] isAddHaarMeasure_volume_Mt

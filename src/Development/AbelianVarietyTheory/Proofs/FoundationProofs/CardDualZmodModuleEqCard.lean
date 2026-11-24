@@ -57,7 +57,7 @@ theorem exists_stdAddChar_eq (n : ℕ) [NeZero n] (z : ℂ) (hz : z ^ n = 1) :
     ∃ j : ZMod n, ZMod.stdAddChar j = z := by
   obtain ⟨i, -, hi⟩ := (Complex.isPrimitiveRoot_exp n (NeZero.ne n)).eq_pow_of_pow_eq_one hz
   refine ⟨((i : ℤ) : ZMod n), ?_⟩
-  rw [ZMod.stdAddChar_coe, ← hi, ← Complex.exp_nat_mul]
+  rw [ZMod.stdAddChar_coe, ← hi, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   ring

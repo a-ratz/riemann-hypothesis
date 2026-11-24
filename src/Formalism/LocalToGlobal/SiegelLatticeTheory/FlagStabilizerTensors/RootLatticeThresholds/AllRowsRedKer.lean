@@ -113,7 +113,7 @@ theorem wB_conjH (X : HidaSetting D) (w : HeightOneSpectrum (𝓞 D.host.E)) : w
   rw [hc]
 
 theorem finrank_cmField (D : D7) : Module.finrank ℚ D.host.E = 2 * D.R.f := by
-  haveI := D.host.galois
+  have := D.host.galois
   rw [← IsGalois.card_aut_eq_finrank, Nat.card_congr D.host.gal.toEquiv, Formalism.HC.Frame.natCard_GG]
   simp only [Formalism.BasicNotions.Ranks.f, Formalism.BasicNotions.Ranks.n]
   ring

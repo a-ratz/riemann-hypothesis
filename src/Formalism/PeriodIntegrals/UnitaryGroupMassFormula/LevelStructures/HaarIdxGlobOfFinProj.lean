@@ -117,7 +117,7 @@ def ParabolicLevelOpenLocal : Prop :=
 theorem contMul_sub {G : Type} [Group G] [TopologicalSpace G] [ContinuousMul G] (S : Subgroup G) :
     ContinuousMul S := by
   have hc : Continuous fun q : S × S => ((q.1 : G) * (q.2 : G)) :=
-    (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    (continuous_subtypeVal.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   exact ⟨hc.subtype_mk (fun q => S.mul_mem q.1.2 q.2.2)⟩
 
 theorem contMul_HAf {D : D7} (X : HidaSetting D) : ContinuousMul (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := by
@@ -138,7 +138,7 @@ theorem haarIdxGlob_of (hO : ConjugateLevelOpenUnitary) : HaarIdxGlob := by
   have hH : ((X.measW w).μHf).IsHaarMeasure := (X.measW_norm w).2.2.1
   have := contMul_HAf X
   have := contMul_sub (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X w))
-  haveI : BorelSpace (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   have eA : (Subtype.val ⁻¹' K2u X hb w : Set (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X w))) =
       (((conjugateLevelSubgroup X hb hK w).subgroupOf (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X w))) : Set _) := by
     ext x
@@ -181,7 +181,7 @@ theorem haarIdxLoc_of (hO : ParabolicLevelOpenLocal) : HaarIdxLoc := by
   have hH : ((X.measW w).μSv p.1).IsHaarMeasure := (X.measW_norm w).2.2.2.2.2.2.2.1 p.1
   have := contMul_HAv X p.1
   have := contMul_sub (Ssub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X w))
-  haveI : BorelSpace (HA (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   have eA : (Subtype.val ⁻¹' compSet X.B.I.cm.sig X.B.I.J (K2u X hb w) p.1 :
       Set (Ssub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X w))) =
       (((conjugateLevelLocal X hb hK w p.1).subgroupOf (Ssub (Fv X.B.I.F p.1) X.B.I.cm.sig X.B.I.J (frameOf X w))) : Set _) := by
@@ -322,7 +322,7 @@ theorem conjugate_level_isOpen (hP : FinProjOpen) {D : D7} (X : HidaSetting D) (
 theorem k2uOpenH_of (hP : FinProjOpen) : ConjugateLevelOpenUnitary := by
   unfold ConjugateLevelOpenUnitary
   intro D X hb hK _ hL w
-  exact (conjugate_level_isOpen hP X hb hK hL w).preimage continuous_subtype_val
+  exact (conjugate_level_isOpen hP X hb hK hL w).preimage continuous_subtypeVal
 
 theorem haarIdxGlob_of_finProj (hP : FinProjOpen) : HaarIdxGlob :=
   haarIdxGlob_of (k2uOpenH_of hP)
@@ -332,7 +332,7 @@ def EvalVOpen : Prop :=
 
 theorem k2vOpenS_of (hP : FinProjOpen) (hE : EvalVOpen) : ParabolicLevelOpenLocal := by
   intro D X hb hK _ hL w p
-  exact ((hE X.B.I p.1) _ (conjugate_level_isOpen hP X hb hK hL w)).preimage continuous_subtype_val
+  exact ((hE X.B.I p.1) _ (conjugate_level_isOpen hP X hb hK hL w)).preimage continuous_subtypeVal
 
 theorem haarIdxLoc_of_open (hP : FinProjOpen) (hE : EvalVOpen) : HaarIdxLoc :=
   haarIdxLoc_of (k2vOpenS_of hP hE)

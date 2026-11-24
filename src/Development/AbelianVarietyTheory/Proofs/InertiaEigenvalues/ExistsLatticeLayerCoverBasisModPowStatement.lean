@@ -117,12 +117,12 @@ theorem GlobalTheory.CovRep.rep_of_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Ty
   have hcrd : ∀ x ∈ T, x = ∑ s, zOm l (crd x s) • bb s := by
     intro x hx
     have h := hcoord x hx
-    simp only [crd, dif_pos h]
+    simp only [crd, dite_eq_left h]
     exact h.choose_spec
   have hcrd_eq : ∀ z : Fin d' → ℤ_[l], crd (∑ s, zOm l (z s) • bb s) = z := by
     intro z
     have h : ∃ z' : Fin d' → ℤ_[l], ∑ s, zOm l (z s) • bb s = ∑ s, zOm l (z' s) • bb s := ⟨z, rfl⟩
-    simp only [crd, dif_pos h]
+    simp only [crd, dite_eq_left h]
     exact (coord_unique hli h.choose_spec).symm
   let Mf : Γ → Matrix (Fin d') (Fin d') ℤ_[l] := fun g => Matrix.of fun s j => crd (GlobalTheory.TraceConjugationCover.tup ρs g * bb j) s
   have hMf : ∀ g j, GlobalTheory.TraceConjugationCover.tup ρs g * bb j = ∑ s, zOm l (Mf g s j) • bb s :=
@@ -163,7 +163,7 @@ theorem GlobalTheory.CovRep.rep_of_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Ty
 
   let W := Submodule.span ℚ_[l] (Set.range bb)
   let B : Module.Basis (Fin d') ℚ_[l] W := Module.Basis.span hli
-  haveI : FiniteDimensional ℚ_[l] W := Module.Finite.of_basis B
+  have : FiniteDimensional ℚ_[l] W := Module.Finite.of_basis B
   have hW : ∀ x ∈ T, x ∈ W := by
     intro x hx
     rw [hcrd x hx]
@@ -383,7 +383,7 @@ theorem satA : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (a m : ℕ) (
     rw [← Finset.univ_sum_single (GlobalTheory.TraceConjugationCover.tup ρs g)]
     exact Submodule.sum_mem _ fun k _ => hspanΛ k (hρ k g)
   have hfg : Λ.FG := Submodule.fg_span (Set.finite_iUnion fun k => (t k).finite_toSet.image _)
-  haveI : IsNoetherian ℤ_[l] Λ := isNoetherian_of_fg_of_noetherian Λ hfg
+  have : IsNoetherian ℤ_[l] Λ := isNoetherian_of_fg_of_noetherian Λ hfg
   let f : ℕ →o Submodule ℤ_[l] Λ :=
     ⟨fun v => (E.comap Λ.subtype).comap (((l : ℤ_[l]) ^ v) • LinearMap.id), by
       intro v w hvw y hy
@@ -592,18 +592,18 @@ theorem latT_basis : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (a m : 
     refine Submodule.fg_span ?_
     exact Set.finite_iUnion fun k => (t k).finite_toSet.image _
   have hfg : (latT ρs t M).FG := hfg0.of_le hT
-  haveI : Module.Finite ℤ_[l] (latT ρs t M) := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite ℤ_[l] (latT ρs t M) := Module.Finite.iff_fg.2 hfg
   have hinj : Function.Injective (zOm l) :=
     (algebraMap ℚ_[l] (Om l)).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
-  haveI tf0 : Module.IsTorsionFree ℤ_[l] (Om l) := .of_smul_eq_zero fun c x h => by
+  have tf0 : Module.IsTorsionFree ℤ_[l] (Om l) := .of_smul_eq_zero fun c x h => by
     rw [← zOm_smul, smul_eq_mul, mul_eq_zero] at h
     rcases h with h | h
     · left; exact hinj (by simpa using h)
     · right; exact h
-  haveI tf1 : Module.IsTorsionFree ℤ_[l] (Matrix (Fin a) (Fin a) (Om l)) :=
+  have tf1 : Module.IsTorsionFree ℤ_[l] (Matrix (Fin a) (Fin a) (Om l)) :=
     inferInstanceAs (Module.IsTorsionFree ℤ_[l] (Fin a → Fin a → Om l))
-  haveI : Module.IsTorsionFree ℤ_[l] (latT ρs t M) := inferInstance
-  haveI : Module.Free ℤ_[l] (latT ρs t M) := Module.free_of_finite_type_torsion_free'
+  have : Module.IsTorsionFree ℤ_[l] (latT ρs t M) := inferInstance
+  have : Module.Free ℤ_[l] (latT ρs t M) := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ_[l] (latT ρs t M)
   refine ⟨_, fun s => (b s : Fin m → Matrix (Fin a) (Fin a) (Om l)), ?_, fun s => (b s).2, ?_⟩
   · rw [← LinearIndependent.iff_fractionRing ℤ_[l] ℚ_[l]]

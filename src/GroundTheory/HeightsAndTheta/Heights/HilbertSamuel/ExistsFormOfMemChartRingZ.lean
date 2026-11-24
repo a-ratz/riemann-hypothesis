@@ -88,7 +88,7 @@ theorem mh_C (r : ℤ) : IsMultiHomog (C r : MRing ι) 0 := by
   intro m hm k
   have h0 : m = 0 := by
     by_contra h
-    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C, if_neg (Ne.symm h)] at hm
+    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C, ite_eq_right (Ne.symm h)] at hm
     exact hm rfl
   subst h0
   simp
@@ -235,7 +235,7 @@ theorem final_step {X N nw r s t η C : ℝ} {n : ℕ} (hX : X ≤ N * nw * (Rea
       _ ≤ N * Real.exp (n * (s - t) + C) * (Real.exp (n * (t + η / 2)) * r) := by gcongr
       _ = N * Real.exp (n * (s - t) + C) * Real.exp (n * (t + η / 2)) * r := by ring
       _ ≤ Real.exp (n * η) * Real.exp (n * s) * r := by gcongr
-  rw [← Real.exp_nat_mul, div_le_iff₀ (Real.exp_pos _)]
+  rw [← Real.exp_natCast_mul, div_le_iff₀ (Real.exp_pos _)]
   linarith
 
 theorem proof (hG3 : G3.Statement) (hW : EmbeddingWeight.Statement) (hT : TwistIntersectionInt.Statement)

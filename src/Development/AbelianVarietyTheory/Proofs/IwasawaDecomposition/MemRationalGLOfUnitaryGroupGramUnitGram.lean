@@ -85,8 +85,8 @@ theorem af_nontrivial : Nontrivial (ReciprocityTheory.Aut.AFplus D.host.E) := by
 
 theorem inclL_injective :
     Function.Injective (Algebra.TensorProduct.includeLeftRingHom : D.host.E →+* ReciprocityTheory.Aut.AL D.host.E) := by
-  haveI := af_nontrivial (D := D)
-  haveI : Nontrivial (ReciprocityTheory.Aut.AL D.host.E) :=
+  have := af_nontrivial (D := D)
+  have : Nontrivial (ReciprocityTheory.Aut.AL D.host.E) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_flat_left _ _ _
       (algebraMap (maximalRealSubfield D.host.E) (ReciprocityTheory.Aut.AFplus D.host.E)).injective
   exact (Algebra.TensorProduct.includeLeftRingHom : D.host.E →+* ReciprocityTheory.Aut.AL D.host.E).injective

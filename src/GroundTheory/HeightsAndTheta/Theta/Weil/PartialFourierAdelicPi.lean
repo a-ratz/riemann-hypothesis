@@ -242,10 +242,10 @@ theorem hasFDerivAt_partialFourierSnd_integrand (F : 𝓢(V₁ × (EuclideanSpac
         (((-2 * π * I * 𝐞 (-(innerSL ℝ) v q.2)) • (ofRealCLM ∘L ((innerSL ℝ) v))).comp
           (ContinuousLinearMap.snd ℝ V₁ (EuclideanSpace ℝ ι))).smulRight (F (q.1, v))) q := he.smul hF
   refine hs.congr_fderiv (ContinuousLinearMap.ext fun r ↦ ?_)
-  rw [ContinuousLinearMap.smul_apply, partialFourierDeriv_apply]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+  rw [smul_apply, partialFourierDeriv_apply]
+  simp only [add_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.inl_apply,
-    ContinuousLinearMap.coe_smul', Pi.smul_apply, ofRealCLM_apply, innerSL_apply_apply,
+    FunLike.coe_smul, Pi.smul_apply, ofRealCLM_apply, innerSL_apply_apply,
     smul_eq_mul]
   rw [← Complex.coe_smul, smul_add, smul_smul, smul_smul]
   congr 1
@@ -261,7 +261,7 @@ theorem hasFDerivAt_partialFourierSnd (F : 𝓢(V₁ × (EuclideanSpace ℝ ι),
   obtain ⟨b₀, hb₀, hb₀F⟩ := exists_integrable_bound_snd F
   have hce : ∀ w : (EuclideanSpace ℝ ι),
       Continuous fun v : (EuclideanSpace ℝ ι) ↦ ((𝐞 (-inner ℝ v w) : Circle) : ℂ) := fun w ↦
-    continuous_subtype_val.comp (continuous_fourierChar.comp
+    continuous_subtypeVal.comp (continuous_fourierChar.comp
       (continuous_id.inner continuous_const).neg)
   have hcont : ∀ q : V₁ × (EuclideanSpace ℝ ι),
       Continuous fun v : (EuclideanSpace ℝ ι) ↦ ((𝐞 (-inner ℝ v q.2) : ℂ)) • F (q.1, v) :=

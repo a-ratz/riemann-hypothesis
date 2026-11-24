@@ -100,7 +100,7 @@ theorem xa_succ_decomp {T : E} (G : FlagG S r T) (i : Fin r) {v : S.V} (hv : v �
     rw [← Set.image_insert_eq]
     congr 1
     ext j
-    simp only [Set.mem_insert_iff, Set.mem_setOf_eq, Fin.ext_iff]
+    simp only [Set.mem_insert_iff, Set.mem_ofPred_eq, Fin.ext_iff]
     omega
   unfold FlagG.Xa at hv ⊢
   rw [hset, Submodule.mem_span_insert] at hv
@@ -188,7 +188,7 @@ theorem relevant_of_inSF (K : Type) [Field K] [Algebra K E] {T T' : E} {F : LFla
     · simp only [FlagG.fvec, Fin.snoc_last, Fin.val_last]
       rw [Xflag_r]
       exact h.2
-    · simp only [FlagG.fvec, Fin.snoc_castSucc, Fin.coe_castSucc]
+    · simp only [FlagG.fvec, Fin.snoc_castSucc, Fin.val_castSucc]
       exact h.1 a
   unfold FlagG.dpsi
   rw [ell_eq_of hfv hY.1]

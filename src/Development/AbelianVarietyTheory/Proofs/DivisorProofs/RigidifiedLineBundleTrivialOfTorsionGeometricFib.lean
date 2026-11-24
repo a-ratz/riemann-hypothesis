@@ -153,11 +153,11 @@ theorem eq_zero_of_sqZero_baseChange_nsmul : ∀ (k : ℕ) (R R₀ : Type) [Comm
     Function.Surjective i.appTop.hom → ∀ m : GlobalTheory.CechPic.Pic X, GlobalTheory.CechPic.pull i m = 0 →
     (k + 1) • m = 0 → m = 0 := by
   intro k R R₀ _ _ π hπ hk h2 X X₀ s s₀ i hP hsurj m hm hm2
-  haveI : IsClosedImmersion (spMap π) :=
+  have : IsClosedImmersion (spMap π) :=
     IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom π) hπ
-  haveI : IsClosedImmersion i :=
+  have : IsClosedImmersion i :=
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) hP.flip inferInstance
-  haveI : Surjective i := GlobalTheory.LiftSys.surjective_of_isPullback_sqZero (I := RingHom.ker π)
+  have : Surjective i := GlobalTheory.LiftSys.surjective_of_isPullback_sqZero (I := RingHom.ker π)
     (by rw [hk]; rfl) hπ rfl hP
   have hsq : ∀ (W : X.Opens) (x y : Γ(X, W)), (i.app W).hom x = 0 → (i.app W).hom y = 0 → x * y = 0 :=
     GlobalTheory.SquareZero.mul_eq_zero_of_app_eq_zero R R₀ π hπ hk X X₀ s s₀ i hP
@@ -293,7 +293,7 @@ theorem exists_isGen_of_lbPow_of_sqZero_abelianScheme : ∀ (T : Type) [CommRing
   have hee : e * e = 0 := hme e hem
   have hker : RingHom.ker q ^ 2 = ⊥ := by
     rw [Ideal.mk_ker, Ideal.span_singleton_pow, Ideal.span_singleton_eq_bot, pow_two, hee]
-  haveI : IsClosedImmersion (spMap q) :=
+  have : IsClosedImmersion (spMap q) :=
     IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom q) Ideal.Quotient.mk_surjective
   have hq : Function.Surjective (spMap q).appTop.hom :=
     (IsClosedImmersion.isAffine_surjective_of_isAffine (spMap q)).2
@@ -380,10 +380,10 @@ theorem triv_lbPow_pull {X Y : Scheme.{0}} {M : LB X} (hM : M.IsLB) (k : ℕ) (�
 
 theorem triv_basicOpen_of_triv_fibre : (∀ (T : Type) [CommRing T] [IsLocalRing T] (e : T), (∀ a ∈ IsLocalRing.maximalIdeal T, a * e = 0) → e ∈ IsLocalRing.maximalIdeal T → ∀ (A : Over (Sp T)) [GrpObj A], IsAbelianScheme A → ∀ (M : LB A.left), M.IsLB → ∀ k : ℕ, IsUnit (k : T) → (∃ t : (GlobalTheory.UPel.HT.Hecke.lbPow M k).Gen, t.IsGen) → ∀ (X' : Scheme.{0}) (π : X' ⟶ A.left) (f' : X' ⟶ Sp (T ⧸ Ideal.span {e})), IsPullback π f' A.hom (spMap (Ideal.Quotient.mk (Ideal.span {e}))) → (∃ t : (M.pull π).Gen, t.IsGen) → ∃ t : M.Gen, t.IsGen) → ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A], IsAbelianScheme A → ∀ (M : LB A.left), M.IsLB → (∃ t : (M.pull (1 : 𝟙_ (Over (Sp R)) ⟶ A).left).Gen, t.IsGen) → ∀ k : ℕ, IsUnit (k : R) → (∃ t : (GlobalTheory.UPel.HT.Hecke.lbPow M k).Gen, t.IsGen) → ∀ (K : Type) [Field K] (g₀ : R →+* K), (∃ t : (M.pull (pullback.fst A.hom (spMap g₀))).Gen, t.IsGen) → ∃ r : R, g₀ r ≠ 0 ∧ ∃ t : (M.pull (A.hom ⁻¹ᵁ PrimeSpectrum.basicOpen r).ι).Gen, t.IsGen := by
   intro hinf R _ _ A _ hA M hM _hrig k hk hpow K _ g₀ ht₀
-  haveI := hA.proper
-  haveI := hA.smooth
+  have := hA.proper
+  have := hA.smooth
   have hP := GlobalTheory.ProperFinite.nonempty_perf_of_isProper A.hom hM
-  haveI : Surjective A.hom := by
+  have : Surjective A.hom := by
     haveI : Surjective ((1 : 𝟙_ (Over (Sp R)) ⟶ A).left ≫ A.hom) := by
       rw [Over.w]
       change Surjective (𝟙 _)
@@ -392,13 +392,13 @@ theorem triv_basicOpen_of_triv_fibre : (∀ (T : Type) [CommRing T] [IsLocalRing
   have h₀ := IsPullback.of_hasPullback A.hom (spMap g₀)
   obtain ⟨r, I, hr, hI, H⟩ := GlobalTheory.AbLaw.Seesaw.seesaw R A.left A.hom M hM hP inferInstance inferInstance K g₀
     _ _ _ h₀ (GlobalTheory.AbLaw.CubeOpen.bijective_appTop GlobalTheory.ExpansionTotal.globalFns A hA h₀) ht₀
-  haveI : (RingHom.ker g₀).IsPrime := RingHom.ker_isPrime g₀
+  have : (RingHom.ker g₀).IsPrime := RingHom.ker_isPrime g₀
   obtain ⟨c, hc, hcI⟩ := GlobalTheory.AbLaw.CubeOpen.exists_ann (RingHom.ker g₀) I hI
     ((H K g₀ _ _ _ h₀ (Ne.isUnit hr)).1 ht₀) (fun T _ _ g e hu he he' hle => by
       have hg := IsPullback.of_hasPullback A.hom (spMap g)
       refine (H T g _ _ _ hg (hu r hr)).1 ?_
       have hkT : IsUnit (k : T) := by simpa using hk.map g
-      letI : GrpObj ((Over.pullback (spMap g)).obj A) := Functor.grpObjObj
+      let : GrpObj ((Over.pullback (spMap g)).obj A) := Functor.grpObjObj
       have hp := IsPullback.of_hasPullback ((Over.pullback (spMap g)).obj A).hom
         (spMap (Ideal.Quotient.mk (Ideal.span {e})))
       refine hinf T e he he' ((Over.pullback (spMap g)).obj A)
@@ -415,7 +415,7 @@ theorem triv_basicOpen_of_triv_fibre : (∀ (T : Type) [CommRing T] [IsLocalRing
   have hp := IsPullback.of_hasPullback A.hom (Spec.map (CommRingCat.ofHom (algebraMap R L)))
   have ht := (H L (algebraMap R L) _ _ _ hp hu.1).2 fun x hx => by
     rw [RingHom.mem_ker, ← hu.2.mul_right_eq_zero, ← map_mul, hcI x hx, map_zero]
-  haveI : IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap R L))) :=
+  have : IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap R L))) :=
     IsOpenImmersion.of_isLocalization (r * c)
   have hsub : Set.range ((A.hom ⁻¹ᵁ (PrimeSpectrum.basicOpen (r * c))).ι ≫ A.hom) ⊆
       Set.range (Spec.map (CommRingCat.ofHom (algebraMap R L))) := by
@@ -486,7 +486,7 @@ theorem triv_of_geometricFibres : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [
   intro s
   obtain ⟨R, j, hj, ⟨p, hp⟩, -⟩ := Scheme.exists_affine_mem_range_and_range_subset (x := s) (U := ⊤) trivial
   let j' : Sp R ⟶ S := j
-  haveI : IsOpenImmersion j' := hj
+  have : IsOpenImmersion j' := hj
   let A' := (Over.pullback j').obj A
   have hA' : IsAbelianScheme A' := Out.TLinPf.isAb_pullback j' A hA
   let φ := pullback.fst A.hom j'
@@ -506,7 +506,7 @@ theorem triv_of_geometricFibres : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [
     rw [cls_linComb hM']
     simp [pull_id, cls_pull hM φ, ← map_nsmul, hkM]
   let P : PrimeSpectrum R := p
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   let F := AlgebraicClosure P.asIdeal.ResidueField
   let ψ : R →+* F := (algebraMap P.asIdeal.ResidueField F).comp (algebraMap R P.asIdeal.ResidueField)
   have hfib' : ∃ t : ((M.pull φ).pull (pullback.fst A'.hom (spMap ψ))).Gen, t.IsGen := by

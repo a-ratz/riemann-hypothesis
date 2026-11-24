@@ -168,8 +168,8 @@ theorem exists_chart (h876 : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.BT
       ((∀ w w' : Module.Dual Ω Li, (∀ b, w (j₀ b) = w' (j₀ b)) → w = w') ∧
         ∀ w : Module.Dual Ω Li, ∃ w' : L₀ →ₗ[A] Ω, ∀ b, w' b = w (j₀ b)) ∧
       Module.finrank Ω Li = Module.finrank A L₀ := by
-    letI : Module A Li := Module.compHom Li (algebraMap A Ω)
-    haveI : IsScalarTower A Ω Li := ⟨fun r a l => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+    let : Module A Li := Module.compHom Li (algebraMap A Ω)
+    have : IsScalarTower A Ω Li := ⟨fun r a l => by rw [Algebra.smul_def, mul_smul]; rfl⟩
     obtain ⟨j₀, h1, h2⟩ := exists_lieBC M M₀ hx
     obtain ⟨j, h3, h4⟩ := exists_dualBC j₀ h1
     exact ⟨j₀.toAddMonoidHom, j, h3, h4, h2,
@@ -271,7 +271,7 @@ open scoped CategoryTheory.Obj
 
 theorem exists_torsion' : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [CharZero R] (T : Type) [CommGroup T] (S : Scheme.{0}) (G : Over S) [GrpObj G], IsSemiAbelian G → ∀ (x : Spec (CommRingCat.of R) ⟶ S) (N : ℕ), 1 ≤ N → ∀ τ : T →* (Over.mk ((genPt R).hom ≫ x) ⟶ G), Function.Injective τ → (∀ t, τ t ^ N = 1) → (∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (a : FractionRing R →+* Ω) (g : Over.mk (Spec.map (CommRingCat.ofHom a) ≫ (genPt R).hom ≫ x) ⟶ G), g ^ N = 1 → ∃ t, g.left = Spec.map (CommRingCat.ofHom a) ≫ (τ t).left) → ∃ (Γ : QFGroup R T) (i : Γ.G.left ⟶ G.left), Γ.IsTorsionAlong G x N i ∧ ∀ t, (Γ.pt t).left ≫ i = (τ t).left := by
   intro R _ _ _ _ T _ S G _ hG x N hN τ hτ htor hsurj
-  haveI : IsCommMonObj G := hG.comm
+  have : IsCommMonObj G := hG.comm
   have hBs : IsSemiAbelian ((Over.pullback x).obj G) :=
     { comm := by have := hG.comm; infer_instance
       smooth := by have := hG.smooth; show Smooth (pullback.snd G.hom x); infer_instance
@@ -283,12 +283,12 @@ theorem exists_torsion' : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherian
         let eM := (Functor.mapMonNatIso (Over.pullbackComp q x) ≪≫ Functor.mapMonCompIso).app (Mon.mk G)
         let e : (Over.pullback (q ≫ x)).obj G ≅ (Over.pullback q).obj ((Over.pullback x).obj G) :=
           (Mon.forget _).mapIso eM
-        haveI : IsMonHom e.hom := by
+        have : IsMonHom e.hom := by
           show IsMonHom eM.hom.hom
           infer_instance
-        letI := E.grpB
-        haveI := E.q_hom
-        haveI := E.i_hom
+        let := E.grpB
+        have := E.q_hom
+        have := E.i_hom
         refine ⟨{
           X := E.X
           addCommGroup := E.addCommGroup
@@ -318,14 +318,14 @@ theorem exists_torsion' : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherian
           have : IsIso e.inv.left := Functor.map_isIso (Over.forget _) e.inv
           infer_instance
         · refine IsPullback.of_iso E.isKernel (Iso.refl _) e (Iso.refl _) (Iso.refl _) ?_ ?_ ?_ ?_ <;> simp }
-  haveI : IsCommMonObj ((Over.pullback x).obj G) := hBs.comm
-  haveI : Smooth ((Over.pullback x).obj G).hom := hBs.smooth
-  haveI : IsSeparated ((Over.pullback x).obj G).hom := hBs.separated
-  haveI : QuasiCompact ((Over.pullback x).obj G).hom := hBs.quasiCompact
+  have : IsCommMonObj ((Over.pullback x).obj G) := hBs.comm
+  have : Smooth ((Over.pullback x).obj G).hom := hBs.smooth
+  have : IsSeparated ((Over.pullback x).obj G).hom := hBs.separated
+  have : QuasiCompact ((Over.pullback x).obj G).hom := hBs.quasiCompact
   obtain ⟨hfl, hqf⟩ :=
     GlobalTheory.SemiAbMulFlat.flat_and_locallyQuasiFinite_pow _ _ hBs N (by omega)
-  haveI := hfl
-  haveI := hqf
+  have := hfl
+  have := hqf
   have hP : IsPullback (pullback.fst (𝟙 ((Over.pullback x).obj G) ^ N) η)
       (toUnit (pullback (𝟙 ((Over.pullback x).obj G) ^ N) η))
       (𝟙 ((Over.pullback x).obj G) ^ N) η := by
@@ -333,11 +333,11 @@ theorem exists_torsion' : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherian
     exact toUnit_unique _ _
   obtain ⟨hA, hAc, hj⟩ := GlobalTheory.CompanionTheory.Ar.BT.Tors.exists_kernel_grp hP
   obtain ⟨h1, h2, h3, h4, h5⟩ := GlobalTheory.CompanionTheory.Ar.BT.Tors.kernel_props hP
-  haveI := h1
-  haveI := h5
+  have := h1
+  have := h5
   have het := GlobalTheory.CompanionTheory.Ar.BT.Tors.kernel_base_etale (genPt R).hom hP
     (GlobalTheory.CompanionTheory.Ar.BT.Tors.isUnit_natCast_generic (R := R) hN)
-  haveI : AlgebraicGeometry.IsReduced (genPt R).left :=
+  have : AlgebraicGeometry.IsReduced (genPt R).left :=
     (inferInstance : AlgebraicGeometry.IsReduced (Spec (CommRingCat.of (FractionRing R))))
   have hred : AlgebraicGeometry.IsReduced
       (pullback (pullback (𝟙 ((Over.pullback x).obj G) ^ N) η).hom (genPt R).hom) :=

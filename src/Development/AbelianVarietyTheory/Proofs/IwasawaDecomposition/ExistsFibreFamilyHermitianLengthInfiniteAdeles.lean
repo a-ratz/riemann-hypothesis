@@ -73,7 +73,7 @@ omit [TopologicalSpace R] [IsTopologicalRing R] in
 theorem isUnit_of_mul_inverse {t a : R} (h : IsUnit (t * Ring.inverse a)) : IsUnit a := by
   by_contra ha
   rw [Ring.inverse_non_unit a ha, mul_zero, isUnit_zero_iff] at h
-  haveI := subsingleton_of_zero_eq_one h
+  have := subsingleton_of_zero_eq_one h
   exact ha (isUnit_of_subsingleton a)
 
 omit [TopologicalSpace R] [IsTopologicalRing R] in
@@ -133,7 +133,7 @@ theorem exists_map_smul (μ : Measure V) [μ.IsAddHaarMeasure] {c : R} (hc : IsU
       map_add' := fun x y => smul_add c x y
       continuous_toFun := continuous_const_smul c
       continuous_invFun := continuous_const_smul _ }
-  haveI : (μ.map (fun x : V => c • x)).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
+  have : (μ.map (fun x : V => c • x)).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
   exact ⟨_, (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ μ).ne',
     Measure.isAddLeftInvariant_eq_smul _ μ⟩
 
@@ -258,7 +258,7 @@ theorem exists_fibreFamily (hR : Nice R) (μ : Measure V) [μ.IsAddHaarMeasure]
     fun φ hφ hc _ => ?_⟩
   · have hA : MeasurableSet (q ⁻¹' {id t} ∩ Set.univ)ᶜ :=
       (((isClosed_singleton.preimage hq).measurableSet).inter MeasurableSet.univ).compl
-    rw [Measure.smul_apply, Measure.map_apply (hgt t) hA, withDensity_apply _ (hgt t hA),
+    rw [smul_apply, Measure.map_apply (hgt t) hA, withDensity_apply _ (hgt t hA),
       setLIntegral_congr_fun (g := fun _ => 0) (hgt t hA), lintegral_zero, smul_zero]
     intro x hx
     by_contra h
@@ -444,7 +444,7 @@ theorem finite_quadratic_zeros {K : Type} [Field K] {a : K} (ha : a ≠ 0) (c d 
     have := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 2) h0
     simp [Polynomial.coeff_X, Polynomial.coeff_C] at this
     exact ha this
-  refine (Polynomial.finite_setOf_isRoot hne).subset fun t ht => ?_
+  refine (Polynomial.finite_setOfPred_isRoot hne).subset fun t ht => ?_
   simpa [Polynomial.IsRoot] using ht
 
 theorem isUnit_ainf_iff {F : Type} [Field F] [NumberField F] (c : Ainf F) :
@@ -463,7 +463,7 @@ theorem exists_fibreFamily_ainf : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   refine exists_fibreFamily (nice_ainf_fv F).1 μ ν _ hq (qR_smul _ σ J) ?_
   simp only [isUnit_ainf_iff]
   refine ae_all_iff.2 fun w => ?_
-  haveI := hσ.1
+  have := hσ.1
   have hw : w.IsReal := IsTotallyReal.isReal w
   obtain ⟨y, a, ha, hy⟩ := exists_line (Ainf F) σ J hσ hM hJ
   let i := (InfinitePlace.Completion.isometryEquivRealOfIsReal hw).symm
@@ -482,7 +482,7 @@ theorem exists_fibreFamily_ainf : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   have h1 : qR (Ainf F) σ J (x 0 + j t • y) w = 0 := ht
   rw [hc] at h1
   have h2 : j t w = i t := Pi.single_eq_same _ _
-  rw [Set.mem_preimage, Set.mem_setOf_eq, ← h2]
+  rw [Set.mem_preimage, Set.mem_ofPred_eq, ← h2]
   exact h1
 
 end GlobalTheory.GaugeEx.FibExist

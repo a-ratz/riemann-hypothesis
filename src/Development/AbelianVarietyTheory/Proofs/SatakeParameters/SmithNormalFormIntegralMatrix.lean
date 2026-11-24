@@ -215,7 +215,7 @@ theorem exists_diag : ∀ (m n : ℕ) (x : Matrix (Fin m) (Fin n) L),
       have hp : x1 0 0 ≠ 0 := by
         rw [h00]; intro h
         have h2 : Valued.v (x i0 j0) ≤ Valued.v (x r c) := hrc (i0, j0) (Finset.mem_univ _)
-        rw [h, map_zero, le_zero_iff, Valuation.zero_iff] at h2
+        rw [h, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at h2
         exact hx0 h2
       have hmax : ∀ i j, Valued.v (x1 i j) ≤ Valued.v (x1 0 0) := by
         intro i j; rw [h00]
@@ -313,15 +313,15 @@ theorem GlobalTheory.Hk3.smith_int_approx : ∀ (L : Type) [Field L] [Valued L (
   by_cases hij : (i : ℕ) = (j : ℕ)
   · have hi : (i : ℕ) < n := hij ▸ j.isLt
     have hj : j = ⟨i, hi⟩ := Fin.ext hij.symm
-    have hzd : z i j = d i := by simp only [d, dif_pos hi, hj]
+    have hzd : z i j = d i := by simp only [d, dite_eq_left hi, hj]
     rw [hzd]
     by_cases ha : 0 < a i
-    · rw [if_pos ⟨hij, ha⟩]
-      simp only [s, if_pos ha]
+    · rw [ite_eq_left ⟨hij, ha⟩]
+      simp only [s, ite_eq_left ha]
       rw [div_mul_cancel₀ _ (hdne i ha), sub_self]
       exact Subring.zero_mem _
-    · rw [if_neg (fun h => ha h.2), sub_zero]
-      simp only [s, if_neg ha, one_mul]
+    · rw [ite_eq_right (fun h => ha h.2), sub_zero]
+      simp only [s, ite_eq_right ha, one_mul]
       by_cases hd0 : d i = 0
       · rw [hd0]; exact Subring.zero_mem _
       · rw [mem_intL, v_eq_ord hd0]
@@ -329,5 +329,5 @@ theorem GlobalTheory.Hk3.smith_int_approx : ∀ (L : Type) [Field L] [Valued L (
         rw [Int.toNat_eq_zero] at h0
         rw [← WithZero.coe_one, WithZero.coe_le_coe, ← ofAdd_zero, Multiplicative.ofAdd_le]
         exact h0
-  · rw [hD i j hij, if_neg (fun h => hij h.1), mul_zero, sub_zero]
+  · rw [hD i j hij, ite_eq_right (fun h => hij h.1), mul_zero, sub_zero]
     exact Subring.zero_mem _

@@ -177,13 +177,13 @@ theorem edgeSum_glCast (hr : r = n + 1) (h : GL (Fin (n + 1)) k) :
   rw [Fin.sum_univ_castSucc]
   have h0 : (∑ j : Fin (n + 1), if j.val = (Fin.last n).val + 1 then
       (h : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.last n) j else 0) = 0 :=
-    Finset.sum_eq_zero fun j _ => if_neg (by have := j.2; simp; omega)
+    Finset.sum_eq_zero fun j _ => ite_eq_right (by have := j.2; simp; omega)
   rw [h0, add_zero]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single i.succ]
   · simp
   · intro j _ hj
-    exact if_neg fun h => hj (Fin.ext (by simpa using h))
+    exact ite_eq_right fun h => hj (Fin.ext (by simpa using h))
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -335,8 +335,8 @@ theorem exists_isLevelChar (h : R.grp_levels F) : ∃ χ, IsLevelChar R F χ := 
     intro u hu hu'
     have e := congrArg Units.val (key _ _ h0 (mirToGL R u) hu' ((mem_pi_unip_iff R _).2 ⟨u, hu, rfl⟩))
     refine Eq.trans e ?_
-    letI : IsOneApply ((Subgroup.pi Set.univ fun v : R.Pg => unip (kP v.1) D.R.r) →* ℂˣ) := ⟨by intros; rfl⟩
-    letI : IsMulApply ((Subgroup.pi Set.univ fun v : R.Pg => unip (kP v.1) D.R.r) →* ℂˣ) := ⟨by intros; rfl⟩
+    let : IsOneApply ((Subgroup.pi Set.univ fun v : R.Pg => unip (kP v.1) D.R.r) →* ℂˣ) := ⟨by intros; rfl⟩
+    let : IsMulApply ((Subgroup.pi Set.univ fun v : R.Pg => unip (kP v.1) D.R.r) →* ℂˣ) := ⟨by intros; rfl⟩
     refine (congrArg Units.val (prod_apply Finset.univ (fun v : R.Pg =>
       (addCharHom (ψ v.1) (supHom (kP v.1) D.R.r)).comp (LevelP.prj (fun v : R.Pg => unip (kP v.1) D.R.r) v))
         _)).trans ?_

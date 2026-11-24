@@ -283,7 +283,7 @@ theorem chiLenPic_pushforward (k : Type) [Field k] [Algebra R k] [Algebra k Γ(Y
     chiLenPic R ((Scheme.Modules.pushforward i).obj H) = chiPic k H ∘ pull i := by
   funext c
   obtain ⟨M, hM, rfl⟩ := cls_surj c
-  letI : Algebra R Γ(Y, ⊤) := ((algebraMap k Γ(Y, ⊤)).comp (algebraMap R k)).toAlgebra
+  let : Algebra R Γ(Y, ⊤) := ((algebraMap k Γ(Y, ⊤)).comp (algebraMap R k)).toAlgebra
   have : IsScalarTower R k Γ(Y, ⊤) := .of_algebraMap_eq fun _ => rfl
   refine (chiLen_congr R (Twist.projIso M i H)).symm.trans ?_
   rw [chiLen_eq_of_linearEquiv R fun n => LinearEquiv.ofBijective _
@@ -495,7 +495,7 @@ theorem exists_topForm (h : DiffVanish (d + 1) φ) : ∃ l : SymQ G →ₗ[ℚ] 
         rw [show MvPolynomial.monomial m c = c • MvPolynomial.monomial m (1 : ℚ) by
           simp [MvPolynomial.smul_monomial], smul_mul_assoc, map_smul]
         simp only [mul_sub, mul_add, map_sub, map_add (f := _), MvPolynomial.X,
-          MvPolynomial.monomial_mul, mul_one, hl, Finsupp.toMultiset_single, one_nsmul, hf]
+          MvPolynomial.monomial_mul_monomial, mul_one, hl, Finsupp.toMultiset_single, one_nsmul, hf]
         simp
       | add p q hp hq => rw [add_mul, map_add (f := _), hp, hq, add_zero]
     | zero => simp
@@ -533,7 +533,7 @@ theorem topForm_eq_zero (h : DiffVanish (d + 1) φ) {n : ℕ} (hn : n ≠ d) {x 
     (hx : x ∈ symDeg G n) : topForm h x = 0 := by
   refine (Submodule.span_le (p := LinearMap.ker (topForm h))).2 ?_ hx
   rintro _ ⟨g, rfl⟩
-  exact (topForm_prod h g).trans (if_neg (by simpa using hn))
+  exact (topForm_prod h g).trans (ite_eq_right (by simpa using hn))
 
 theorem topForm_eq_add {χ : G → ℤ} (h : DiffVanish (d + 1) χ) (h₁ : DiffVanish (d + 1) φ)
     (h₂ : DiffVanish (d + 1) ψ) (a : G) (e : ∀ x, χ x = φ (a + x) + ψ x) :

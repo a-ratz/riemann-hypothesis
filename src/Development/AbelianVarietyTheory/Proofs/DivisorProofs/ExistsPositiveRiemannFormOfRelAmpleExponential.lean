@@ -73,8 +73,8 @@ theorem exists_riemannForm_of_relAmple : ∀ (X : Scheme.{0}) (G : Over X) [GrpO
   intro X G _ _ g hG hsm L hL hamp y e La _ P he hP hker
   obtain ⟨Λ, hd, hfull, hΛ⟩ := _root_.GlobalTheory.ExpKernel.kernel_isFullLattice X G g hG hsm y e he
   obtain ⟨hadd, honto, hhol, -, -⟩ := he
-  letI : GrpObj ((Over.pullback y).obj G) := Functor.grpObjObj
-  haveI : IsCommMonObj ((Over.pullback y).obj G) := Functor.isCommMonObj_obj
+  let : GrpObj ((Over.pullback y).obj G) := Functor.grpObjObj
+  have : IsCommMonObj ((Over.pullback y).obj G) := Functor.isCommMonObj_obj
   have hp : IsGrpPullback ((Over.pullback y).obj G) G y (pullback.fst G.hom y) := isGrpPullback_pullback G y
   have hLA : (L.pull (pullback.fst G.hom y)).IsLB := LB.isLB_pull hL _
   obtain ⟨hA, hampA, -⟩ := GlobalTheory.pol_pull X (Sp ℂ) G ((Over.pullback y).obj G) y (pullback.fst G.hom y) L

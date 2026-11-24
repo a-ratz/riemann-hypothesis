@@ -186,10 +186,10 @@ theorem map_actTup {n M d : ℕ} (b : Module.Basis (Fin d) F E) (g : GL (Fin M) 
       ν.map (fun x => (actMat n b (g : Matrix (Fin M) (Fin M) E)).map (algebraMap F R) *ᵥ x) = c • ν)
     (μ : Measure (Fin n → Fin M → R ⊗[F] E)) (hμ : μ.IsAddHaarMeasure) :
     μ.map (actTup R (bc (inclR R) g)) = c • μ := by
-  haveI : IsTopologicalRing (R ⊗[F] E) := TopK.isTopRing R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := TopK.isTopRing R
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have e0 := TopK.coordHomeo R (Module.finBasis F E)
-  haveI : SecondCountableTopology (R ⊗[F] E) := e0.secondCountableTopology
+  have : SecondCountableTopology (R ⊗[F] E) := e0.secondCountableTopology
   let e : (Fin n → Fin M → R ⊗[F] E) ≃ₜ (Fin n × Fin M × Fin d → R) := coHomeo R b
   let f : (Fin n → Fin M → R ⊗[F] E) →+ (Fin n × Fin M × Fin d → R) :=
     { toFun := e
@@ -226,24 +226,24 @@ end Meas
 
 theorem product_formula_actTup : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n M : ℕ) (g : GL (Fin M) E), ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (∀ μ : Measure (Fin n → Fin M → Ainf F ⊗[F] E), μ.IsAddHaarMeasure → μ.map (actTup (Ainf F) (bc (inclR (Ainf F)) g)) = cinf • μ) ∧ ∀ v : HeightOneSpectrum (𝓞 F), (∀ μ : Measure (Fin n → Fin M → Fv F v ⊗[F] E), μ.IsAddHaarMeasure → μ.map (actTup (Fv F v) (bc (inclR (Fv F v)) g)) = c v • μ) := by
   intro F E _ _ _ _ _ σ hσ n M g
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   obtain ⟨cinf, c, hU, hinf, hv⟩ := _root_.GlobalTheory.CompanionTheory.SW.ProdFormula.modulus_matrix F _
     (actMat n b (g : Matrix (Fin M) (Fin M) E)) (det_actMat_ne_zero n b g)
   refine ⟨cinf, c, hU, ?_, fun v => ?_⟩
   · obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := h1
+    have := h2
+    have := h3
+    have := h4
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     exact map_actTup (Ainf F) b g cinf hinf
   · obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := h1
+    have := h2
+    have := h3
+    have := h4
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     exact map_actTup (Fv F v) b g (c v) (hv v)
 
 end GlobalTheory.CompanionTheory.SW.PfAct

@@ -149,8 +149,8 @@ theorem prime_of_not_two (𝔭 : Ideal (𝓞 D.host.F)) [h𝔭 : 𝔭.IsMaximal]
         have : 2 * 2 ≤ P0.ramificationIdx (𝓞 D.host.F) * 𝔭.inertiaDeg' P0 :=
           Nat.mul_le_mul (by omega) h
         omega
-    rw [Ideal.inertiaDeg_algebraMap] at hf1
-    letI : Field (𝓞 D.host.F ⧸ 𝔭) := Ideal.Quotient.field 𝔭
+    rw [Ideal.inertiaDeg'_algebraMap] at hf1
+    let : Field (𝓞 D.host.F ⧸ 𝔭) := Ideal.Quotient.field 𝔭
     have hbt := Subalgebra.bot_eq_top_of_finrank_eq_one hf1
     obtain ⟨θ, t, ht, hθt⟩ := hU P0 hP0max
     have hts : t = sigO θ := RingOfIntegers.ext ht
@@ -301,7 +301,7 @@ theorem t_factor_product_of_eta (hη : EtaF X) (u : D.what₂.Word) : Formalism.
     refine (Formalism.L2.SG.TypedSets.finite_over X.B.I.F ((D.mem u).A.T) (D.mem u).A.T_prime.ne_zero).subset ?_
     intro v hv
     by_contra hc
-    exact (Function.mem_mulSupport.1 hv) (if_neg hc)
+    exact (Function.mem_mulSupport.1 hv) (ite_eq_right hc)
   have hfh : f = h ∘ maxEquiv X := by
     funext v
     show _ = if (((D.mem u).A.T : ℕ) : 𝓞 D.host.F) ∈ (plEquiv X v).asIdeal then
@@ -824,8 +824,8 @@ theorem root_of_twoOver (h : ThetaAt p θ c tr nm) (h2 : TwoOver p.asIdeal) :
   have hf1 : p.asIdeal.inertiaDeg' P = 1 := Nat.eq_one_of_mul_eq_one_left hef
   have : P.LiesOver p.asIdeal := ⟨hPc.symm⟩
   have : P.IsPrime := hP
-  rw [Ideal.inertiaDeg_algebraMap] at hf1
-  letI : Field (𝓞 D.host.F ⧸ p.asIdeal) := Ideal.Quotient.field p.asIdeal
+  rw [Ideal.inertiaDeg'_algebraMap] at hf1
+  let : Field (𝓞 D.host.F ⧸ p.asIdeal) := Ideal.Quotient.field p.asIdeal
   have hbt := Subalgebra.bot_eq_top_of_finrank_eq_one hf1
   have hmem : Ideal.Quotient.mk P (thO h) ∈ (⊥ : Subalgebra (𝓞 D.host.F ⧸ p.asIdeal) (𝓞 D.host.E ⧸ P)) := by
     rw [hbt]; trivial
@@ -1019,8 +1019,8 @@ theorem etaLoc_of_tied (hL : Formalism.L2.SG.Pf.LocCP.LocTied D) (p : PlF D) :
       exact h4
   unfold Formalism.HermitianLattices.Ext.L3.etaF
   by_cases hp : (p.asIdeal.map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E))).IsPrime
-  · rw [if_pos (h1.2 hp), if_pos hp]
-  · rw [if_neg (mt h1.1 hp), if_neg hp]
+  · rw [ite_eq_left (h1.2 hp), ite_eq_left hp]
+  · rw [ite_eq_right (mt h1.1 hp), ite_eq_right hp]
 
 end Final
 

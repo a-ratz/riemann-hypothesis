@@ -169,7 +169,7 @@ theorem VarWirtinger.proof (hDSC : DiscriminantSheetCover.Statement) (hMF : Mass
       ((hUD k).2.2.2 j).continuousOn.measurable_piecewise continuousOn_const (hUD k).1.measurableSet
     have e : E k j = Dk k ∩ ((U k).piecewise (s k j) fun _ => 0) ⁻¹' ((fun x => WithLp.toLp 2 x) ⁻¹' B) := by
       ext y
-      simp only [hE, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage]
+      simp only [hE, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_preimage]
       constructor
       · rintro ⟨hy, hB⟩
         exact ⟨hy, by rw [Set.piecewise_eq_of_mem _ _ _ ((hUD k).2.2.1 hy)]; exact hB⟩
@@ -238,7 +238,7 @@ theorem VarWirtinger.proof (hDSC : DiscriminantSheetCover.Statement) (hMF : Mass
         rw [hZ]
         exact ⟨hzJ, hcomp hzD⟩
       have hle : I ≤ RingHom.ker (MvPolynomial.eval (WithLp.ofLp z)) := fun q hq => hzI q hq
-      haveI : (RingHom.ker (MvPolynomial.eval (WithLp.ofLp z))).IsPrime :=
+      have : (RingHom.ker (MvPolynomial.eval (WithLp.ofLp z))).IsPrime :=
         RingHom.ker_isPrime _
       obtain ⟨Q, hQ, hQle⟩ := Ideal.exists_minimalPrimes_le hle
       exact Set.mem_biUnion hQ fun q hq => hQle hq
@@ -249,7 +249,7 @@ theorem VarWirtinger.proof (hDSC : DiscriminantSheetCover.Statement) (hMF : Mass
   have hunion : zeroSetEuc J ∩ B ∩ {z : EuclideanSpace ℂ (Fin n) | A *ᵥ WithLp.ofLp z ∈ ⋃ k, Dk k} =
       ⋃ k, ⋃ j, S k j := by
     ext z
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_iUnion]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_iUnion]
     constructor
     · rintro ⟨⟨hzJ, hzB⟩, k, hk⟩
       obtain ⟨hfibeq, -, -⟩ := hfib k _ ((hUD k).2.2.1 hk)
@@ -294,9 +294,9 @@ theorem VarWirtinger.proof (hDSC : DiscriminantSheetCover.Statement) (hMF : Mass
     have e : (zeroSetEuc J ∩ B) \ (zeroSetEuc J ∩ {z : EuclideanSpace ℂ (Fin n) | A *ᵥ WithLp.ofLp z ∉ ⋃ k, Dk k}) =
         zeroSetEuc J ∩ B ∩ {z : EuclideanSpace ℂ (Fin n) | A *ᵥ WithLp.ofLp z ∈ ⋃ k, Dk k} := by
       ext z
-      simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_sdiff, Set.mem_inter_iff, Set.mem_ofPred_eq]
       tauto
-    rw [← measure_diff_null hnull, e, hunion, measure_iUnion hdisjK
+    rw [← measure_sdiff_null hnull, e, hunion, measure_iUnion hdisjK
       (fun k => MeasurableSet.iUnion fun j => hSm k j)]
     refine tsum_congr fun k => ?_
     rw [measure_iUnion (hdisjS k) (hSm k), tsum_fintype]

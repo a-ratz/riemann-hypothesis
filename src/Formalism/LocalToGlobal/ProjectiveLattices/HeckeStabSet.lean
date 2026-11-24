@@ -91,7 +91,7 @@ theorem hkTerm_smul (c : K) (f : Rules pts) {Ω : Type} [Field Ω] [IsAlgClosed 
 theorem hkVal_add (hF : HkFin pts hkIdx) (f g : Rules pts) {Ω : Type} [Field Ω] [IsAlgClosed Ω] [Algebra K Ω]
     (y : pts Ω) :
     hkVal pts mapR hkIdx quotR (f + g) y = hkVal pts mapR hkIdx quotR f y + hkVal pts mapR hkIdx quotR g y := by
-  haveI := hF Ω y
+  have := hF Ω y
   unfold hkVal
   simp_rw [hkTerm_add]
   exact finsum_add_distrib (Set.toFinite _) (Set.toFinite _)

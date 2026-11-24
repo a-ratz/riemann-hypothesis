@@ -96,7 +96,7 @@ instance : CompactSpace ℤ̂ :=
   isCompact_iff_compactSpace.mp isClosed_profiniteIntegers.isCompact
 
 theorem continuous_proj (n : ℕ+) : Continuous (proj n) :=
-  (continuous_apply n).comp continuous_subtype_val
+  (continuous_apply n).comp continuous_subtypeVal
 
 instance : CharZero ℤ̂ := by
   refine charZero_of_inj_zero fun n hn => ?_

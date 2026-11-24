@@ -116,7 +116,7 @@ theorem Eset_meas (μ : Measure G) [SFinite μ] (K : ℕ → Set G) (hK : ∀ n,
   have h1 : MeasurableSet {x | gf μ K n x ≠ 0} :=
     (gf_meas μ K hK n) (measurableSet_singleton 0).compl
   have h2 : MeasurableSet {x | ∀ k < n, gf μ K k x = 0} := by
-    simp only [Set.setOf_forall]
+    simp only [ofPred_forall]
     exact MeasurableSet.iInter fun k => MeasurableSet.iInter fun _ =>
       (gf_meas μ K hK k) (measurableSet_singleton 0)
   exact h1.inter h2
@@ -139,7 +139,7 @@ theorem Eset_inv (μ : Measure G) (K : ℕ → Set G) (hK : ∀ n, IsClosed (K n
     (hr : ∀ s ∈ S, μ.map (fun x => x * s) = μ) (n : ℕ) {t : G} (ht : t ∈ S) (x : G) :
     t * x ∈ Eset μ K n ↔ x ∈ Eset μ K n := by
   have h : ∀ k, gf μ K k (t * x) = gf μ K k x := fun k => gf_inv μ K hK S hr k ht x
-  simp only [Eset, Set.mem_setOf_eq, h]
+  simp only [Eset, mem_ofPred_eq, h]
 
 theorem bf_meas (μ : Measure G) [SFinite μ] (K : ℕ → Set G) (hK : ∀ n, IsClosed (K n)) :
     Measurable (bf μ K) := by
@@ -154,8 +154,8 @@ open Bru in
 theorem bruhat_decomposition' : Bruhat := by
   intro G _ _ _ _ _ _ _ _ S hS hG μ hinv hfin hpos hr
   obtain ⟨hsf, -, hSc, -⟩ := hinv
-  haveI := hsf
-  haveI := hfin
+  have := hsf
+  have := hfin
   obtain ⟨K, hKc, hKx⟩ := exists_cover (G := G)
   have hKcl : ∀ n, IsClosed (K n) := fun n => (hKc n).isClosed
   refine ⟨bf μ K, bf_meas μ K hKcl, fun x => ?_⟩

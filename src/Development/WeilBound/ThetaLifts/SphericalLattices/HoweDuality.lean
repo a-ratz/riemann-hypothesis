@@ -321,8 +321,8 @@ theorem mem_span_boxes (F : Type) [Field F] [NumberField F] (v : Pl (F := F)) (�
         rfl
       rw [Pi.smul_apply, Set.indicator_apply]
       by_cases h : (x : (κ → Fv F v) ⧸ BG v κ N) = q
-      · rw [if_pos (hm.2 h), if_pos h, Pi.one_apply, smul_eq_mul, mul_one]
-      · rw [if_neg (fun h' => h (hm.1 h')), if_neg h, smul_zero]
+      · rw [ite_eq_left (hm.2 h), ite_eq_left h, Pi.one_apply, smul_eq_mul, mul_one]
+      · rw [ite_eq_right (fun h' => h (hm.1 h')), ite_eq_right h, smul_zero]
     rw [Finset.sum_apply]
     simp_rw [hterm]
     rw [Finset.sum_ite_eq]
@@ -883,8 +883,8 @@ theorem exists_integral_form_separating {R K : Type} [CommRing R] [IsDomain R]
     (t : κ → K) (ht : t ∉ M) :
     ∃ y : κ → K, (∀ s ∈ M, s ⬝ᵥ y ∈ (algebraMap R K).range) ∧ t ⬝ᵥ y ∉ (algebraMap R K).range := by
   classical
-  haveI : Module.Finite R M := Module.Finite.iff_fg.mpr hM
-  haveI : Module.Free R M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite R M := Module.Finite.iff_fg.mpr hM
+  have : Module.Free R M := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis R M
   let ι := Module.Free.ChooseBasisIndex R M
   let a : ι → (κ → K) := fun i => (b i : κ → K)
@@ -936,7 +936,7 @@ theorem exists_integral_form_separating {R K : Type} [CommRing R] [IsDomain R]
   · obtain ⟨j, hj⟩ := h2
     refine ⟨(z / B.repr t (Sum.inr j)) • B.coord (Sum.inr j), fun i => ?_, ?_⟩
     · rw [LinearMap.smul_apply, ← hB, Module.Basis.coord_apply, Module.Basis.repr_self,
-        Finsupp.single_apply, if_neg Sum.inl_ne_inr, smul_zero]
+        Finsupp.single_apply, ite_eq_right Sum.inl_ne_inr, smul_zero]
       exact ⟨0, map_zero _⟩
     · rw [LinearMap.smul_apply, Module.Basis.coord_apply, smul_eq_mul, div_mul_cancel₀ _ hj]
       exact hz
@@ -988,7 +988,7 @@ theorem mem_of_mem_doubleOrth : ∀ (F : Type) [Field F] [NumberField F] (v : Pl
     rw [hs']
     exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
   have hMfg : M.FG := by
-    haveI := isNoetherian_of_fg_of_noetherian N hN
+    have := isNoetherian_of_fg_of_noetherian N hN
     have h1 : (M.comap N.subtype).FG := IsNoetherian.noetherian _
     have h2 := h1.map N.subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hMN] at h2

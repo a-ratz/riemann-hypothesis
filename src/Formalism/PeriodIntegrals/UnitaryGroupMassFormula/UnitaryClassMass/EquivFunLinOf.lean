@@ -86,7 +86,7 @@ theorem Lam_mul_sfin (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) 
   have hk : ∀ y, y ∈ latHat F E L ↔
       (finMat σ J ((k : HA (AF F) σ J)⁻¹)).mulVec y ∈ latHat F E L := (k⁻¹).2
   ext x
-  simp only [UJClassFin.abelian₂, Set.mem_setOf_eq, mul_inv_rev]
+  simp only [UJClassFin.abelian₂, Set.mem_ofPred_eq, mul_inv_rev]
   unfold finMat at hk ⊢
   unfold HA.mat at hk ⊢
   simp only [Subgroup.coe_mul, Units.val_mul, ← AlgHom.mapMatrix_apply, map_mul] at hk ⊢

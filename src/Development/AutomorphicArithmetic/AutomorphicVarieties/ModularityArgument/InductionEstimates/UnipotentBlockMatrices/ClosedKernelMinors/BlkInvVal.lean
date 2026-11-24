@@ -158,7 +158,7 @@ private theorem w_arch (w : InfinitePlace K) : wGL w.Completion ∈ archCompact 
     Fintype.sum_sum_type, Fintype.sum_sum_type, add_comm]
   simp only [wGL_val, vec_l, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁,
       Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, mul_zero, Finset.sum_const_zero, add_zero, zero_add,
-      Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 private theorem blk_max {a b : ℕ} {x : AdelicGLn.AdelicGL K a} {y : AdelicGLn.AdelicGL K b}
     (hx : x ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL K a)))
@@ -236,8 +236,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.blkLaws :
   · apply Subtype.ext
     rw [lv_coe, neg_zero, zt_zero, Subgroup.coe_one, Subgroup.coe_one, mul_one, blk_one']
   · exact continuous_retractOne.comp (blk_cont.comp
-      (((continuous_subtype_val.comp continuous_fst).mul (hz.comp continuous_snd.snd)).prodMk
-        ((continuous_subtype_val.comp continuous_snd.fst).mul (hz.comp continuous_snd.snd.neg))))
+      (((continuous_subtypeVal.comp continuous_fst).mul (hz.comp continuous_snd.snd)).prodMk
+        ((continuous_subtypeVal.comp continuous_snd.fst).mul (hz.comp continuous_snd.snd.neg))))
   · change ((w0 K : G1 K (2 + 2)) : AdelicGLn.AdelicGL K (2 + 2)) ∈ AdelicGLn.rationalGL K (2 + 2)
     rw [hw]
     exact ⟨wGL K, Units.ext (w_map (algebraMap K 𝔸[K]))⟩

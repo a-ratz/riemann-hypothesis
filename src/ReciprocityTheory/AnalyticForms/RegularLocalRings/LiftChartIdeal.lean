@@ -148,7 +148,7 @@ def lift (c : w.Idx) (q : Σ k, ι k) : MvPolynomial (Fin (w.pres c.1 c.2).n) �
 
 theorem coord_of_mem (c : w.Idx) (x : w.M) (hx : x ∈ w.src c) :
     w.coord c x = (w.pres c.1 c.2).coord x.1 hx := by
-  unfold coord; exact dif_pos hx
+  unfold coord; exact dite_eq_left hx
 
 theorem eval_coord_val (c : w.Idx) (x : w.M) (hx : x ∈ w.src c) (f : MvPolynomial (Fin (w.pres c.1 c.2).n) ℂ) :
     eval (w.coord c x) f = val (w.π ≫ toSpecC hP) ((w.pres c.1 c.2).secHom f) x.1 hx := by

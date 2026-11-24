@@ -158,7 +158,7 @@ theorem biHom_plus (j : Fin D.T.t → ℕ) (jp : ℕ) :
   · simp only [Finsupp.add_apply]
     rw [Finset.sum_add_distrib]
     have e1 : ∀ c, Finsupp.mapDomain (chainEmb N r D.T.t) m1 (xiVar N r D.T.t c) = 0 := fun c =>
-      Finsupp.mapDomain_notin_range _ _ (xi_notin (D := D) c)
+      Finsupp.mapDomain_of_notMem_range _ _ (xi_notin (D := D) c)
     simp only [e1, Finset.sum_const_zero, zero_add]
     exact hxi.2
 

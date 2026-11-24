@@ -175,13 +175,13 @@ private theorem ne_type {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [F
       ∃ F : Fin m → UA L n → ℂ, F ≠ 0 ∧ (∀ i, F i ∈ σ ⊓ fixd (RU L n) K) ∧
         ∀ (k : KT n wt) i, ∑ a, τ₀ k i a • RU L n (J k) (F a) = F i := by
   classical
-  letI := Fintype.ofFinite St
+  let := Fintype.ofFinite St
   obtain ⟨J, hJ, j1, j2, j3, j4⟩ := ne_J hinj j h1 h2 h3
   let M := σ ⊓ fixd (RU L n) K
   have hst : ∀ g, ∀ φ ∈ M, ((RU L n).comp J) g φ ∈ M := fun g φ hφ => ⟨hσ.stable _ _ hφ.1, fun k hk => by
     change RU L n k (RU L n (J g) φ) = RU L n (J g) φ
     rw [GlobalTheory.DefU.RU_RU, (j4 g k (hK k hk)).eq, ← GlobalTheory.DefU.RU_RU, hφ.2 k hk]⟩
-  haveI : Nontrivial M := Submodule.nontrivial_iff_ne_bot.2 h0
+  have : Nontrivial M := Submodule.nontrivial_iff_ne_bot.2 h0
   let ρ : Representation ℂ (GV n wt) M := GlobalTheory.PRep.sub ((RU L n).comp J) M hst
   obtain ⟨F, hF0, hF⟩ := (hT.2 M ρ τ fun u => ne_iso (h1 u) (h2 u) (h3 u) hσ (τ u) (hτ u) M inf_le_left _ fun g y => by
     change RU L n (J (Pi.mulSingle u g)) y = _
@@ -194,8 +194,8 @@ private theorem ne_type {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [F
 private theorem ne_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -206,8 +206,8 @@ private theorem ne_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 private theorem ne_isTeich {l : ℕ} [hl : Fact l.Prime] {F : W.GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
@@ -474,7 +474,7 @@ private theorem up_ord {A : Type} [CommRing A] (θ : H.X.I.T →* Aˣ) (x : A �
     fun v _ => ⟨Up.singleP I v _ (I v).z_mem, (Up.uOpPi I _ v _ (I v).z_mem F hN).trans (hz v)⟩).2
   have hzz : (Finset.univ.toList.map fun v => (Pi.mulSingle v (I v).z : GV n H.Sl)).prod = H.X.I.z := by
     funext w
-    rw [up_list (fun v => (I v).z) w _ (Finset.nodup_toList _), if_pos (by simp)]
+    rw [up_list (fun v => (I v).z) w _ (Finset.nodup_toList _), ite_eq_left (by simp)]
     rfl
   rw [hzz, Finset.prod_map_toList] at hZ
   have hl : ∀ v, ((List.range n).map (psEig (ω v))).prod = ∏ j ∈ Finset.range n, psEig (ω v) j := fun v => rfl
@@ -503,8 +503,8 @@ theorem UpperTheory.V.Hi.coreUp_alt :
     ∀ (ι : Qbar l ≃+* ℂ), ∀ (x : A →ₐ[c.O] Qbar l) (lam : Wt L l n) (d : ℕ) (ξ : GV n H.Sl →* GL (Fin d) ℂ) (c0 : ℕ) (sp : H.X.Fn A H.m → Fin H.m → H.X.Fn ℂ d), H.IsSpec θ ι x.toRingHom lam ξ c0 sp →
     ∀ (Y : H.PartAltAlt ι lam ξ) (K : H.Lev), (∀ q, fixd (Y.σq q).ρ (K.1 q) ≠ ⊥) → ∀ ω : ∀ v, Fin n → ((H.Sl v).adicCompletion L)ˣ →* ℂˣ, (∀ v, Nonempty ((Y.σl v).ρ.Equiv (PS (ω v)))) → (∀ v i (u : Uo ((H.Sl v).adicCompletion L)), (ω v i u : ℂ) * ι (H.finPart θ x.toRingHom lam v i u) = 1) → ∀ a : H.Op → c.O, (∀ w (j : Fin n), ‖ι.symm (Y.a w (j + 1)) - algebraMap c.O (Qbar l) (a (.inl (w, j)))‖ < 1) → (∀ v (j : Fin n), ‖ι.symm ((H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1))‖ = 1 ∧ ‖ι.symm ((H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1)) - algebraMap c.O (Qbar l) (a (.inr (v, j)))‖ < 1) → ∀ [Fact (CommOn (H.MK θ a K) (H.op A))], H.MK θ a K ≠ ⊥ ∧ ∃ y : H.TK θ a K →ₐ[c.O] Qbar l, y.toRingHom.comp (algebraMap A _) = x.toRingHom ∧ (∀ w (j : Fin n), ι (y (H.gen θ a K (.inl (w, j)))) = Y.a w (j + 1)) ∧ ∀ v (j : Fin n), ι (y (H.gen θ a K (.inr (v, j)))) = (H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1) := by
   intro hL L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι x lam d ξ c0 sp hsp Y K hK ω hω1 hω2 a ha1 ha2 hFact
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨hC, hfin, hfree, -⟩ := hiComm L Ω l n c H hH A θ hθ K
   choose φ hφ using fun v => Up.exInv (ω v)
   obtain ⟨F, hF, h0, hV, hQ⟩ := up_vec H ι hL hH Y K hK ω hω1 c0 (fun v i y hy => by
@@ -523,7 +523,7 @@ theorem UpperTheory.V.Hi.coreUp_alt :
     have h2 : x.toRingHom b = x.toRingHom (b - algebraMap c.O A o) + x (algebraMap c.O A o) := by simp
     rw [h2]
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hx2 _ ho).le h1)
-  haveI : Fact (CommOn (locPart (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) fun i => algebraMap c.O A (a i)) (H.op A)) := hFact
+  have : Fact (CommOn (locPart (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) fun i => algebraMap c.O A (a i)) (H.op A)) := hFact
   obtain ⟨hne, y, hy1, hy2⟩ := Up.eigPt (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) hC ι x.toRingHom hx1 hx2 sp
     (hsp.add K) (hsp.smul K) (hsp.indep K) (H.opC ι lam d) (hsp.op K) F hO h0
     (Sum.elim (fun p => Y.a p.1 (p.2 + 1)) fun p => (H.lowVal ι lam p.1 (p.2 + 1))⁻¹ * psEig (ω p.1) (p.2 + 1))
@@ -571,8 +571,8 @@ private theorem ord_val (hN : _root_.GlobalTheory.Mem.LiteralAutomorphy.Literatu
   have h1 : (ψ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = _ := ho.val s _ rfl (Set.mem_univ _)
   have h2 : algPow w (-htW lam i) (a s : w.adicCompletion F) * algPow w (fun _ => 1) (a s : w.adicCompletion F) ^ (i : ℕ) =
       (algPow w (lowW lam i) (a s : w.adicCompletion F))⁻¹ := by
-    haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-    haveI := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
+    have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+    have := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
     unfold algPow
     simp only [finprod_eq_prod_of_fintype]
     rw [← Finset.prod_pow, ← Finset.prod_mul_distrib, ← Finset.prod_inv_distrib]
@@ -695,7 +695,7 @@ private theorem types (hn : 1 ≤ n) (x : B.Pt) {σ : Submodule ℂ (UA L n → 
   intro i
   obtain ⟨-, hfin, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
   refine Subgroup.isOpen_mono (H₁ := (r.chib i).ker.comap (V.pr.comp (Ine (F := L) (s.A u)).subtype)) (fun g hg => ?_)
-    ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtype_val))
+    ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtypeVal))
   have h1 : residue c.O (t i (V.pr g)) = 1 := (ht i _).1.trans (congrArg Units.val hg)
   have h2 : ((t i (V.pr g) : c.O)) ^ (Nat.card (ResidueField c.O) - 1) = 1 :=
     (Units.val_pow_eq_pow_val _ _).symm.trans (congrArg Units.val (ht i _).2)
@@ -706,7 +706,7 @@ private theorem types (hn : 1 ≤ n) (x : B.Pt) {σ : Submodule ℂ (UA L n → 
 
     simp only [map_sum, map_pow, h1, one_pow, Finset.sum_const, Finset.card_range, nsmul_one, map_zero] at h6
     rw [Nat.cast_pred Nat.card_pos] at h6
-    letI := Fintype.ofFinite (ResidueField c.O)
+    let := Fintype.ofFinite (ResidueField c.O)
     simp [Nat.card_eq_fintype_card] at h6))
   exact (congrArg (Units.map (algebraMap c.O (Qbar l) : c.O →* Qbar l)) h4).trans (map_one _)
 private theorem chi_map {A A' H : Type} [CommRing A] [CommRing A'] [Group H] (D : W.GDet n A H) (f : A →+* A') (g : H) :
@@ -773,7 +773,7 @@ theorem UpperTheory.V.Z.Desc.W.upU_w_alt :
       (fun v => (UpperTheory.building_component_uniqueness L n σ hσ _ (split_w (Or.inl v.2)) _ _ _ _ (hY v) (hτ v)).elim fun a => (hω v).elim fun b =>
         ⟨a.trans b⟩) hfin R.a hsph (fun v => _root_.UpperTheory.V.Hi.Up.norm_lowVal_inv_mul_psEig_eq_one_and_norm_sub_lt_one R x hN hA v (ho v))
   rcases hJ with ⟨hb, -⟩ | ⟨hc, hco, f, -, hmap, -, -, rfl⟩
-  · haveI := Fact.mk ((hiComm L Ω l n c _ hA Λ.Λ R.θ R.isWt K).2.2.2 R.a).1
+  · have := Fact.mk ((hiComm L Ω l n c _ hA Λ.Λ R.θ R.isWt K).2.2.2 R.a).1
     exact absurd hb up.1
   obtain ⟨-, y, hy, hy1, hy2⟩ := up
   obtain ⟨F, hF, hF0⟩ := (Submodule.ne_bot_iff _).1 Y.ne
@@ -781,7 +781,7 @@ theorem UpperTheory.V.Z.Desc.W.upU_w_alt :
     rw [hy1]
     exact Y.sph w _ F hF
   obtain ⟨hcp, hfn, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : CharP (ResidueField c.O) l := by
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero Fact.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm

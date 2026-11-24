@@ -89,7 +89,7 @@ theorem adjoin_primitive_eq_top : ∀ (p : ℕ) [Fact p.Prime] (K H : Type) [Fie
   classical
   set ε := counitAlgHom K H with hεdef
   set S := Algebra.adjoin K {φ : CartierDual K H | cobOne K (CartierDual K H) φ = 0} with hSdef
-  haveI : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
+  have : Module.Finite K (AugCot ε) := Module.Finite.of_surjective _ (AugCot.d_surjective ε)
   let b := Module.finBasis K (AugCot ε)
   choose x hx using fun i => (RingHom.ker ε).toCotangent_surjective (b i)
   let y : Fin (Module.finrank K (AugCot ε)) → H := fun i => (x i : H)

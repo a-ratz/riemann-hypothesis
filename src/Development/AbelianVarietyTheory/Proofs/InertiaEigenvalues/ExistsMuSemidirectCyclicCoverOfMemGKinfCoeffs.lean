@@ -60,7 +60,7 @@ theorem exists_sigma_pow (g : GQ l) :
     rw [mem_resSub, RingHom.comp_apply, ← map_pow]
     exact congrArg (Per.σF g) (mem_resSub.1 x.2)
   have hρ : ∀ x, Fq.val l a (ρ x) = Per.σF g (Fq.val l a x) := fun _ => rfl
-  letI : Algebra (ZMod l) (Fq l a) := ZMod.algebra _ l
+  let : Algebra (ZMod l) (Fq l a) := ZMod.algebra _ l
   have := Fintype.ofFinite (Fq l a)
   let ψ : Fq l a →ₐ[ZMod l] Fq l a :=
     { ρ with commutes' := fun r =>

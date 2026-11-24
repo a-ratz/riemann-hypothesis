@@ -71,7 +71,7 @@ theorem exists_lagrInt_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       ∃ φ ∈ schA F κ, GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ φ) ≠ 0 := by
   intro F E _ _ _ _ _ σ B hB nS nT JT JB ξ κ _ co hco ν 𝓕 hν h𝓕
   have hstd : IsStd B.ψ := hB.std
-  haveI : IsModuleTopology (AF F) (WOF F E nS nT) :=
+  have : IsModuleTopology (AF F) (WOF F E nS nT) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin nT → Fin nS → AF F ⊗[F] E))
   set C : Matrix (Fin (nT + nT)) (Fin nT) (AF F ⊗[F] E) :=
     (diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id with hC
@@ -82,7 +82,7 @@ theorem exists_lagrInt_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
     rcases i with i | i <;> by_cases h : i = j <;>
       simp only [hC, hC₀, incM, diagCols, Matrix.submatrix_apply, Matrix.map_apply, Equiv.symm_apply_apply, id,
-        Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.one_apply, h, if_true, if_false, map_one, map_zero]
+        Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.one_apply, h, ite_true, ite_false, map_one, map_zero]
   let mC : WOF F E nS nT →ₗ[AF F] Matrix (Fin (nT + nT)) (Fin nS) (AF F ⊗[F] E) :=
     { toFun := fun u => C * u
       map_add' := fun u v => Matrix.mul_add _ _ _

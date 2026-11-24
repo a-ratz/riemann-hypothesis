@@ -91,7 +91,7 @@ theorem rowWeight_le_colSum (N : ℕ) (d : Fin N × Fin N →₀ ℕ) (a : Fin N
   apply Finset.sum_le_sum
   intro i _
   rw [← Finset.mul_sum]
-  simp only [rowW, colW, Finset.sum_pi_single', Finset.mem_univ, if_true]
+  simp only [rowW, colW, Finset.sum_pi_single', Finset.mem_univ, ite_true]
   apply Nat.mul_le_mul_left
   rw [Pi.single_apply]
   split_ifs <;> omega
@@ -278,7 +278,7 @@ theorem PSh.one (a b : Fin N) : PSh (O := O) a b 0 1 := by
   intro j
   rcases j with _ | j
   · simpa using isWeightedHomogeneous_one O (wZ N)
-  · rw [Polynomial.coeff_one, if_neg (Nat.succ_ne_zero j)]
+  · rw [Polynomial.coeff_one, ite_eq_right (Nat.succ_ne_zero j)]
     exact isWeightedHomogeneous_zero _ _ _
 
 theorem PSh.pow {a b : Fin N} {u : Fin N → ℤ} {P : Polynomial (MvPolynomial (Fin N × Fin N) O)}
@@ -548,7 +548,7 @@ namespace GlobalTheory.GenCoef.LduLead
 theorem key_lt_diag {N : ℕ} {j : Fin N × Fin N} {d : Fin N} (h : key N j < key N (d, d)) :
     j = (j.1, j.1) ∧ d < j.1 := by
   obtain ⟨x, y⟩ := j
-  simp only [key, if_true] at h
+  simp only [key, ite_true] at h
   split_ifs at h with hxy
   · subst hxy; refine ⟨rfl, ?_⟩
     rw [Fin.lt_def]; have := d.2; have := x.2; simp at h ⊢; omega
@@ -598,7 +598,7 @@ theorem entry_lead [Nontrivial O] (a b : Fin N) :
       have e2 : lead N (a, b) = Finsupp.single (a, a) 1 + Finsupp.single (a, b) 1 := by
         simp [lead, h.ne, min_eq_left h.le, add_comm]
       rw [e1, e2]
-      simp [lowGen, upGen, h, h.ne, X, monomial_mul]
+      simp [lowGen, upGen, h, h.ne, X, monomial_mul_monomial]
     · subst h
       have e1 : d = a := hd.trans (min_self a)
       rw [e1]
@@ -607,7 +607,7 @@ theorem entry_lead [Nontrivial O] (a b : Fin N) :
       have e2 : lead N (a, b) = Finsupp.single (a, b) 1 + Finsupp.single (b, b) 1 := by
         simp [lead, h.ne', min_eq_right h.le]
       rw [e1, e2]
-      simp [lowGen, upGen, h, h.ne', X, monomial_mul]
+      simp [lowGen, upGen, h, h.ne', X, monomial_mul_monomial]
   have hpos : 0 < (ord N).toSyn (lead N (a, b)) := by
     rw [MonomialOrder.toSyn_lt_iff_ne_zero, Ne, (ord N).toSyn_eq_zero_iff]
     exact lead_ne_zero N _
@@ -622,7 +622,7 @@ theorem entry_lead [Nontrivial O] (a b : Fin N) :
       have hcb : c < b := lt_of_lt_of_le hcd hdb
       have hm : lowGen O N a c * X (c, c) * upGen O N c b =
           monomial (Finsupp.single (a, c) 1 + Finsupp.single (c, c) 1 + Finsupp.single (c, b) 1) 1 := by
-        simp [lowGen, upGen, hca.ne', hca, hcb.ne, hcb, X, monomial_mul]
+        simp [lowGen, upGen, hca.ne', hca, hcb.ne, hcb, X, monomial_mul_monomial]
       rw [hm]
       have h1 : (d : ℕ) ≤ a := hda
       have h2 : (d : ℕ) ≤ b := hdb
@@ -676,7 +676,7 @@ theorem image_monomial_lead [Nontrivial O] (m : Fin N × Fin N →₀ ℕ) :
   induction m using Finsupp.induction_linear with
   | zero => simp [leadExp, MonomialOrder.monic_one]
   | add f g hf hg =>
-    have e : monomial (f + g) (1 : O) = monomial f 1 * monomial g 1 := by rw [monomial_mul, one_mul]
+    have e : monomial (f + g) (1 : O) = monomial f 1 * monomial g 1 := by rw [monomial_mul_monomial, one_mul]
     rw [e, map_mul]
     have hle : leadExp N (f + g) = leadExp N f + leadExp N g := by
       simp [leadExp, add_smul, Finset.sum_add_distrib]
@@ -855,7 +855,7 @@ namespace GlobalTheory.DiagRowSubst
 
 theorem diag_var (N : ℕ) (R : Type) [CommRing R] (d : Fin N → R) (v : Fin N × Fin N) :
     (∑ b : Fin N, C (Matrix.diagonal d v.1 b) * X (b, v.2) : MvPolynomial (Fin N × Fin N) R) = C (d v.1) * X v := by
-  simp only [Matrix.diagonal_apply, apply_ite C, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Matrix.diagonal_apply, apply_ite C, map_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem weight_prod (N : ℕ) (R : Type) [CommRing R] (d : Fin N → R) (m : Fin N × Fin N →₀ ℕ) :
     ∏ a, d a ^ Finsupp.weight (rowW N N) m a = m.prod (fun v e => d v.1 ^ e) := by
@@ -900,7 +900,7 @@ theorem rowSubst_diagonal_eq_sum_components : ∀ (O : Type) [CommRing O] (N : �
   Finset.sum_filter]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun m hm => ?_
-  rw [Finset.sum_ite_eq, if_pos, mul_comm]
+  rw [Finset.sum_ite_eq, ite_eq_left, mul_comm]
   rw [Fintype.mem_piFinset]
   intro a
   rw [Finset.mem_range, Nat.lt_succ_iff]
@@ -1017,7 +1017,7 @@ theorem rowSubst_transvection (O : Type) [CommRing O] (N : ℕ) (R : Type) [Comm
         Finset.sum_add_distrib, add_mul, ite_mul, Finset.sum_ite_eq, Finset.sum_ite_eq']
       by_cases h : v.1 = a
       · have h' : a = v.1 := h.symm
-        simp only [h', true_and, if_true]
+        simp only [h', true_and, ite_true]
         simp [apply_ite C, ite_mul, Finset.sum_ite_eq']
         ring
       · have h' : ¬ a = v.1 := fun e => h e.symm
@@ -1623,7 +1623,7 @@ theorem baseChange_holds : BaseChange := by
   have hmax : (Ideal.span {ϖ}).IsMaximal := by
     rw [← (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ]
     exact IsLocalRing.maximalIdeal.isMaximal O
-  letI : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
+  let : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
   have hdom : IsDomain (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.isDomain _
   constructor
   · intro f hf
@@ -1831,7 +1831,7 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 theorem GlobalTheory.HighWt.simpleSubquot_embeds : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] (N : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] (lam : ι → ℕ → ℕ) (ϖ : O), Irreducible ϖ → (∀ τ, Antitone (res N (lam τ))) → ∀ (Gm : Type) [AddCommGroup Gm] [Module (alg O N lam) Gm], IsSimpleModule (alg O N lam) Gm → SubQ O N lam ϖ Gm → ∃ mu : ι → ℕ → ℕ, (∀ τ, Antitone (res N (mu τ)) ∧ ∑ a : Fin N, mu τ a = ∑ a : Fin N, lam τ a ∧ (∀ a : Fin N, lam τ (N - 1) ≤ mu τ a ∧ mu τ a ≤ lam τ 0) ∧ ∃ (e : alg O N lam) (z : Gm), IsProj O N lam τ (res N (mu τ)) e ∧ e • z ≠ 0) ∧ Embeds O N lam mu ϖ Gm := by
   intro O _ _ _ _ N ι _ _ lam ϖ hϖ hlam Gm _ _ hs hsub
   classical
-  haveI : Nontrivial Gm := IsSimpleModule.nontrivial (alg O N lam) Gm
+  have : Nontrivial Gm := IsSimpleModule.nontrivial (alg O N lam) Gm
   obtain ⟨w0, hw0⟩ := _root_.GlobalTheory.HighWt.exists_jointWt O N ι lam Gm inferInstance
   have hB := _root_.GlobalTheory.HighWt.jointWt_bounds O N ι lam hlam Gm
   let S : Set (ι → Fin N → ℕ) := {w | GlobalTheory.HighWt.JointWt O N lam Gm w}

@@ -213,8 +213,8 @@ theorem sPartOf {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] (
       by_cases h : v ∈ S
       · rw [h2 v h, evFin_sS_one_mem h]; rfl
       · rw [h3 v h, evFin_sS_one_not h, TensorProduct.zero_tmul]
-  haveI : IsArtinianRing (Ainf F) := inferInstanceAs (IsArtinianRing (∀ v : InfinitePlace F, v.Completion))
-  haveI : IsReduced (Ainf F) := inferInstanceAs (IsReduced (∀ v : InfinitePlace F, v.Completion))
+  have : IsArtinianRing (Ainf F) := inferInstanceAs (IsArtinianRing (∀ v : InfinitePlace F, v.Completion))
+  have : IsReduced (Ainf F) := inferInstanceAs (IsReduced (∀ v : InfinitePlace F, v.Completion))
   refine ⟨RS S, inferInstance, inferInstance, inferInstance, inferInstance, tP (pS S), tQ (sS S),
     rTensor_includeRight _, rTensor_lTensor_comm₂ _ _, tQ_sigR _ _, rTensor_rTensor_of_rightInverse _ _ pS_sS, fun x => ?_, tQ_mul _ sS_mul⟩
   rw [hE]
@@ -228,7 +228,7 @@ theorem sPart : (∀ (D : D7) (a : AE D), (∀ w, compInf D.host.F D.host.E w a 
       (∀ y, Q (sigR R D.sp.cm.sig y) = cA D (Q y)) ∧ (∀ y, P (Q y) = y) ∧ (∀ x, Q (P x) = e * x) ∧
       ∀ y y', Q (y * y') = Q y * Q y' := by
   intro hinj D S e he
-  exact sPartOf D.sp.cm.sig S e (hinj D) he.1 (fun v h => (he.2 v).trans (if_pos h))
-    (fun v h => (he.2 v).trans (if_neg h))
+  exact sPartOf D.sp.cm.sig S e (hinj D) he.1 (fun v h => (he.2 v).trans (ite_eq_left h))
+    (fun v h => (he.2 v).trans (ite_eq_right h))
 
 end GlobalTheory.CompanionTheory.SPartTensor

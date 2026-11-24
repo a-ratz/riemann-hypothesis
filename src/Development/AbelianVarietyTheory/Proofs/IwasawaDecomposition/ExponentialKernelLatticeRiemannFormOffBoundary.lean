@@ -214,7 +214,7 @@ theorem kernel_lattice_of_inner : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   refine ⟨Hm, hH, hpos, ?_, ?_, ?_⟩
   · have hset : {w | ex w = 1} = (L.toLinearMap.restrictScalars ℝ) '' Set.range P := by
       ext w
-      simp only [Set.mem_setOf_eq, hkerex, Set.mem_image, Set.mem_range]
+      simp only [Set.mem_ofPred_eq, hkerex, Set.mem_image, Set.mem_range]
       constructor
       · rintro ⟨a, rfl⟩
         exact ⟨P a, ⟨a, rfl⟩, rfl⟩

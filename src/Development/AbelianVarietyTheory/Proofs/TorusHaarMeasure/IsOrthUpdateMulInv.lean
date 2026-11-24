@@ -73,7 +73,7 @@ lemma inv_keeps_gram {r : ℕ} {J a : Matrix (Fin r) (Fin r) ℂ} (hJ : J.det �
 theorem isOrth_update_mul_inv :
     (∀ (r : ℕ) (X : Data E r) (τ0 : X.Ψ) (x : Frame X.Ψ r) (a : Matrix (Fin r) (Fin r) ℂ), IsOrth X x → (a)ᵀ * (Matrix.diagonal fun k : Fin r => if (k : ℕ) < X.p0 then (1 : ℂ) else -1) * (a).map (starRingEnd ℂ) = (Matrix.diagonal fun k : Fin r => if (k : ℕ) < X.p0 then (1 : ℂ) else -1) → IsOrth X (@Function.update X.Ψ (fun _ => Fin r → Fin r → ℂ) (Classical.decEq _) x τ0 (mat x τ0 * a⁻¹ : Matrix (Fin r) (Fin r) ℂ))) := by
   intro r X τ0 x a hx ha τ
-  letI : DecidableEq X.Ψ := Classical.decEq _
+  let : DecidableEq X.Ψ := Classical.decEq _
   by_cases hτ : τ = τ0
   · subst hτ
     have hm : mat (Function.update x τ (mat x τ * a⁻¹ : Matrix (Fin r) (Fin r) ℂ)) τ

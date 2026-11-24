@@ -64,7 +64,7 @@ open Size Formalism.MainNotions.S
 theorem complex_embedding_cases (I : AutInst) (σ : I.E →+* ℂ) :
     ∃ v, σ = I.φ v ∨ σ = (starRingEnd ℂ).comp (I.φ v) := by
   classical
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   let ψ : I.F →+* ℂ := σ.comp (algebraMap I.F I.E)
   let v : InfinitePlace I.F := InfinitePlace.mk ψ
   have hreal : ComplexEmbedding.IsReal ψ := InfinitePlace.isReal_mk_iff.mp (IsTotallyReal.isReal v)
@@ -153,7 +153,7 @@ theorem embedding_linear_independent (I : AutInst) :
   exact_mod_cast hi
 
 theorem card_infinite_places (I : AutInst) : Fintype.card (InfinitePlace I.F) = I.f := by
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   have h := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank I.F
   rw [NumberField.IsTotallyReal.nrComplexPlaces_eq_zero, mul_zero, add_zero] at h
   rw [NumberField.InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces,

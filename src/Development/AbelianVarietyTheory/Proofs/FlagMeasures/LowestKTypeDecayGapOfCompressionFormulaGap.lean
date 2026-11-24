@@ -138,17 +138,17 @@ lemma norm_Phi_le {n : ℕ} {ε : Fin n → Bool} {lam : Fin n → ℝ} {h : ℝ
       nlinarith
     unfold GlobalTheory.Dec.Phi
     rw [norm_prod, Fin.prod_univ_castSucc]
-    simp only [norm_zpow, Fin.val_last, Fin.coe_castSucc]
+    simp only [norm_zpow, Fin.val_last, Fin.val_castSucc]
     rw [hlast, _root_.one_zpow, mul_one]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [hre, ← Real.rpow_intCast]
     congr 1
     have hi : (i.castSucc : ℕ) + 1 < m + 1 := by simp
     have e : (⟨(i.castSucc : ℕ) + 1, hi⟩ : Fin (m + 1)) = i.succ := Fin.ext (by simp)
-    simp only [GlobalTheory.Dec.sInt, dif_pos hi, e]
+    simp only [GlobalTheory.Dec.sInt, dite_eq_left hi, e]
     push_cast
     rw [muInt_cast hlam, muInt_cast hlam]
-    simp only [Formalism.QuantumDeterminants.rhoStd, Fin.coe_castSucc, Fin.val_succ]
+    simp only [Formalism.QuantumDeterminants.rhoStd, Fin.val_castSucc, Fin.val_succ]
     push_cast
     ring
 
@@ -161,7 +161,7 @@ lemma Phi_one' {n : ℕ} (lam : Fin n → ℝ) : Phi lam (1 : Matrix (Fin n) (Fi
   rw [e, _root_.one_zpow]
 
 lemma continuous_toMK {n : ℕ} (ε : Fin n → Bool) : Continuous (fun k : KG ε => toMK k) := by
-  exact Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+  exact Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
 
 lemma weighted_bound {α : Type*} [MeasurableSpace α] (μ : Measure α) (d : ℕ) (φ a b : α → ℂ)
     (M U V : ℝ) (hM : 0 ≤ M) (hU : 0 ≤ U) (hV : 0 ≤ V) (hφ : ∀ x, ‖φ x‖ ≤ M)
@@ -220,7 +220,7 @@ lemma dec_exp (hF : FormulaGap) (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
     (X : Matrix (Fin n) (Fin n) ℂ) (hX : inP ε X) (u : H) (hu : u ∈ lowKSub ε lam σ)
     (v : H) (hv : v ∈ lowKSub ε lam σ) :
     ‖⟪v, σ (NormedSpace.exp X) u⟫_ℂ‖ ≤ decHS h (rkR ε) (Real.sqrt (hs X)) * ‖u‖ * ‖v‖ := by
-  haveI : CompleteSpace H := hDS.1
+  have : CompleteSpace H := hDS.1
   obtain ⟨w, hw⟩ := (GlobalTheory.LowKProj.lowK_projection n ε lam H σ hDS).1
   have hURep := hDS.2.2.1
   have hform := hF n ε lam H σ hlam hDS h hgap hh w hw
@@ -251,7 +251,7 @@ lemma dec_exp (hF : FormulaGap) (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
         ((‖⟪x, σ (toMK k) w⟫_ℂ‖ ^ 2 : ℝ) : ℂ) := fun k => by
       rw [← inner_conj_symm (σ (toMK k) w) x, Complex.mul_conj, Complex.normSq_eq_norm_sq]
     have e := hform 0 h0 x hx x hx
-    simp only [NormedSpace.exp_zero, hURep.1.1, ContinuousLinearMap.one_apply, mul_one, hinv,
+    simp only [NormedSpace.exp_zero, hURep.1.1, one_apply_eq_self, mul_one, hinv,
       Phi_one', one_mul, hpt] at e
     rw [integral_complex_ofReal, inner_self_eq_norm_sq_to_K] at e
     apply Complex.ofReal_injective

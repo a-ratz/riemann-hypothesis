@@ -109,7 +109,7 @@ theorem valR_coef_eq_zero [Smooth G.hom] (v : Module.Basis (Fin n) R (TanM (𝟙
   obtain ⟨φ', hφ'⟩ := Spec.map_surjective (R := CommRingCat.of R) (S := CommRingCat.of S) (g ≫ G.hom)
   let φ : R →+* S := φ'.hom
   have hφ : g ≫ G.hom = spMap φ := hφ'.symm
-  letI : Algebra R S := φ.toAlgebra
+  let : Algebra R S := φ.toAlgebra
   let z : ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) S ⟶ G := Over.homMk g hφ
   let s : Fin n → S := fun b => valR g W (c b)
   obtain ⟨u, hb, hu⟩ := GlobalTheory.HeatMod.TorField.exists_isLieBasis v
@@ -146,7 +146,7 @@ theorem valR_coef_eq_zero [Smooth G.hom] (v : Module.Basis (Fin n) R (TanM (𝟙
 
 theorem coef_eq_zero : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∀ (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G)) (dd : Fin n → Fld G.left), (∀ a, IsInv G (v a) (dd a)) → ∀ (W : G.left.Opens) (c : Fin n → Γ(G.left, W)), (∀ O, O ≤ W → ∀ f, ∑ a, rsT (c a) O * dd a O f = 0) → ∀ a, c a = 0 := by
   intro R _ G _ _ hs n v dd hd W c hc a
-  haveI := hs
+  have := hs
   refine GlobalTheory.KS.eq_of_rsT_eq (J := {W' : G.left.affineOpens // W'.1 ≤ W}) (fun W' => W'.1.1) (fun W' => W'.2)
     ?_ (c a) 0 fun W' => ?_
   · intro x hx
@@ -320,8 +320,8 @@ theorem exists_lift_of_smooth (R : Type) [CommRing R] (X : Scheme.{0}) (f : X �
     refine RingHom.Smooth.comp (RingHom.Smooth.of_bijective ?_) ?_
     · exact ((Scheme.ΓSpecIso (CommRingCat.of R)).commRingCatIsoToRingEquiv.symm).bijective
     · exact HasRingHomProperty.appLE @Smooth f inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ _
-  letI : Algebra R Γ(X, U) := g.toAlgebra
-  haveI : Algebra.FormallySmooth R Γ(X, U) := hg.formallySmooth
+  let : Algebra R Γ(X, U) := g.toAlgebra
+  have : Algebra.FormallySmooth R Γ(X, U) := hg.formallySmooth
   obtain ⟨d, hadd, hmul, hc⟩ := GlobalTheory.KS.exists_derivation_extend_of_formallySmooth R Γ(X, U) Γ(X, U)
     (RingHom.id _) (fun r => g (D r)) (fun a b => by simp) (fun a b => by
       simp only [Derivation.leibniz, smul_eq_mul, map_add (f := _), map_mul, RingHom.id_apply]
@@ -823,14 +823,14 @@ namespace GlobalTheory.Heat.WtSub
 theorem valR_resG' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) {U V : X.Opens} (e : V ≤ U)
     (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(X, U)) : valR x V (resG X e f) = valR x U f := by
   have h' : ⊤ ≤ x ⁻¹ᵁ U := h.trans (x.preimage_mono e)
-  simp only [valR, dif_pos h, dif_pos h']
+  simp only [valR, dite_eq_left h, dite_eq_left h']
   congr 1
   change (X.presheaf.map (homOfLE e).op ≫ x.appLE V ⊤ h).hom f = _
   rw [Scheme.Hom.map_appLE]
 
 theorem valR_one' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
     valR x U (1 : Γ(X, U)) = 1 := by
-  simp only [valR, dif_pos h, map_one]
+  simp only [valR, dite_eq_left h, map_one]
 
 variable {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R} {O : Type} [CommRing O] [StarRing O] [Module O Q.X]
   {oa : Q.OAct O} {Y : Ray oa}
@@ -1148,7 +1148,7 @@ noncomputable section
 
 namespace GlobalTheory.HeatInvLift
 
-theorem rsT_of_le' {Z : Scheme.{0}} {O₀ O : Z.Opens} (h : O ≤ O₀) (s : Γ(Z, O₀)) : rsT s O = resG Z h s := dif_pos h
+theorem rsT_of_le' {Z : Scheme.{0}} {O₀ O : Z.Opens} (h : O ≤ O₀) (s : Γ(Z, O₀)) : rsT s O = resG Z h s := dite_eq_left h
 
 theorem rsT_rsT' {Z : Scheme.{0}} {O₀ O₁ O₂ : Z.Opens} (h₁ : O₁ ≤ O₀) (h₂ : O₂ ≤ O₁) (s : Γ(Z, O₀)) :
     rsT (rsT s O₁) O₂ = rsT s O₂ := by
@@ -1159,7 +1159,7 @@ theorem rsT_pbT' {Z X : Scheme.{0}} (m : Z ⟶ X) {O₀ : X.Opens} {O₁ O₂ : 
     (s : Γ(X, O₀)) : rsT (pbT m s O₁) O₂ = pbT m s O₂ := by
   rw [rsT_of_le' h₂]
   unfold pbT
-  rw [dif_pos h₁, dif_pos (h₂.trans h₁), ← CommRingCat.comp_apply, Scheme.Hom.appLE_map]
+  rw [dite_eq_left h₁, dite_eq_left (h₂.trans h₁), ← CommRingCat.comp_apply, Scheme.Hom.appLE_map]
 
 theorem rsT_constFn' {R : Type} [CommRing R] {Z : Scheme.{0}} (p : Z ⟶ Sp R) {O₀ O : Z.Opens} (h : O ≤ O₀) (a : R) :
     rsT (constFn p O₀ a) O = constFn p O a := by

@@ -190,7 +190,7 @@ private theorem approx_monic_totally_real_rational (l : ℕ) [Fact l.Prime] (f :
     have e : g₀.degree = h.degree := by
       rw [degree_eq_natDegree gmon.ne_zero, degree_eq_natDegree hmon.ne_zero, hdeg]
     rw [← e]
-    exact degree_sub_lt e gmon.ne_zero (by rw [gmon.leadingCoeff, hmon.leadingCoeff])
+    exact degree_sub_lt_left e gmon.ne_zero (by rw [gmon.leadingCoeff, hmon.leadingCoeff])
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   let u : ℕ → ℚ := fun N => (1 + (l : ℚ) ^ N)⁻¹
   have huR : Tendsto (fun N => ((u N : ℚ) : ℝ)) atTop (𝓝 0) := by
@@ -264,7 +264,7 @@ private theorem krasner_totally_real_generator (l : ℕ) [Fact l.Prime] (α : Pa
     hfin.isOpen_biInter fun x' _ => isOpen_lt (by fun_prop) continuous_const
   have hmem : α ∈ (⋂ x' ∈ ({x' | IsConjRoot ℚ_[l] α x' ∧ α ≠ x'} : Set (PadicAlgCl l)),
       {y : PadicAlgCl l | ‖α - y‖ < ‖α - x'‖}) := by
-    simp only [Set.mem_iInter, Set.mem_setOf_eq, sub_self, norm_zero, norm_pos_iff, sub_ne_zero]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq, sub_self, norm_zero, norm_pos_iff, sub_ne_zero]
     exact fun x' h => h.2
   obtain ⟨δ, δpos, hball⟩ := Metric.isOpen_iff.1 hop α hmem
   have hn : (minpoly ℚ_[l] α).natDegree ≠ 0 := (minpoly.natDegree_pos (hint α)).ne'
@@ -287,7 +287,7 @@ private theorem krasner_totally_real_generator (l : ℕ) [Fact l.Prime] (α : Pa
   refine ⟨β, g, gmon, gdeg.symm, hgβ, greal, ?_⟩
   refine IsKrasner.krasner (minpoly.irreducible (hint α)).separable (IsAlgClosed.splits _)
     (hint β) fun x' h1 h2 => ?_
-  simp only [Set.mem_iInter, Set.mem_setOf_eq] at hβU
+  simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hβU
   exact hβU x' ⟨h1, h2⟩
 
 private theorem exists_totally_real_generator (l : ℕ) [Fact l.Prime]
@@ -303,7 +303,7 @@ private theorem exists_totally_real_generator (l : ℕ) [Fact l.Prime]
     (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
   rw [hKα]
   symm
-  haveI : FiniteDimensional ℚ_[l] ℚ_[l]⟮β⟯ := IntermediateField.adjoin.finiteDimensional (hint β)
+  have : FiniteDimensional ℚ_[l] ℚ_[l]⟮β⟯ := IntermediateField.adjoin.finiteDimensional (hint β)
   refine IntermediateField.eq_of_le_of_finrank_le
     (IntermediateField.adjoin_simple_le_iff.2 hαβ) ?_
   rw [IntermediateField.adjoin.finrank (hint β), IntermediateField.adjoin.finrank (hint _), ← gdeg]
@@ -319,7 +319,7 @@ end
 theorem UpperTheory.exists_totally_real_primitive_element_padic_finite_ext :
     ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l), ∃ (β : Om l) (g : Polynomial ℚ), g.Monic ∧ Polynomial.aeval β g = 0 ∧ (∀ z : ℂ, Polynomial.aeval z g = 0 → z.im = 0) ∧ IntermediateField.adjoin ℚ_[l] {β} = K.1 := by
   intro l _ K
-  haveI := K.2
+  have := K.2
   exact exists_totally_real_generator l K.1
 end -- clump:auto
 end -- clump:auto
@@ -555,7 +555,7 @@ private theorem locAlg_step {l : ℕ} [Fact l.Prime] (c : Weil h →* Weil h')
     (hwt : ∀ τ' : Emb l w, wt' τ' = wt ⟨τ'.1.comp i.toRingHom, τ'.2.comp hi⟩) :
     IsLocAlg h' κ' wt' → IsLocAlg h κ wt := by
   rintro ⟨ph, hop, hph⟩
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   have hm : ∀ σ : Ine (F := F) A, ((c (ineIncl h σ) : Weil h') : G M Ω) ∈ Ine (F := M) A := fun σ => by
     rw [← deg_eq_zero_iff, hdeg, deg_ineIncl]
   let e : Ine (F := F) A →* Ine (F := M) A :=
@@ -568,7 +568,7 @@ private theorem locAlg_step {l : ℕ} [Fact l.Prime] (c : Weil h →* Weil h')
       exact this
     obtain ⟨U, hU, hU1, hUO⟩ := GlobalTheory.WeilTransport.conj_nhds F Ω M Ω (RingEquiv.refl Ω) O' (hO'.mem_nhds h1)
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
-      (Filter.mem_of_superset ((hU.preimage continuous_subtype_val).mem_nhds hU1) fun τ hτ => ?_)
+      (Filter.mem_of_superset ((hU.preimage continuous_subtypeVal).mem_nhds hU1) fun τ hτ => ?_)
     have hO : e τ ∈ Subtype.val ⁻¹' O' := hUO τ hτ _ (hc (ineIncl h τ))
     rw [hpre] at hO
     exact hO
@@ -739,11 +739,11 @@ private theorem ex_comp (F E Ω : Type) [Field F] [NumberField F] [Field E] [Num
       ∀ S : Subfield Ω, (∀ x : F, algebraMap F Ω x ∈ S) → (∀ x : E, algebraMap E Ω x ∈ S) →
         ∀ x : M, algebraMap M Ω x ∈ S := by
   obtain ⟨α, hα⟩ := Field.exists_primitive_element ℚ E
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   let M := IntermediateField.adjoin F {algebraMap E Ω α}
-  haveI : FiniteDimensional F M := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral _)
-  haveI : NumberField M := NumberField.of_module_finite F M
+  have : FiniteDimensional F M := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral _)
+  have : NumberField M := NumberField.of_module_finite F M
   have hE : ∀ x : E, algebraMap E Ω x ∈ M := fun x => by
     let T : IntermediateField ℚ E := (M.toSubfield.comap (algebraMap E Ω)).toIntermediateField fun q => by
       simpa using SubfieldClass.ratCast_mem (M.toSubfield.comap (algebraMap E Ω)) q
@@ -751,7 +751,7 @@ private theorem ex_comp (F E Ω : Type) [Field F] [NumberField F] [Field E] [Num
       IntermediateField.adjoin_simple_le_iff.2 (IntermediateField.mem_adjoin_simple_self F _)
     rw [hα] at this
     exact this (IntermediateField.mem_top (x := x))
-  letI : Algebra E M := ((algebraMap E Ω).codRestrict M hE).toAlgebra
+  let : Algebra E M := ((algebraMap E Ω).codRestrict M hE).toAlgebra
   refine ⟨M, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     IsScalarTower.of_algebraMap_eq fun _ => rfl, ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) M⟩,
     fun S hF hS x => ?_⟩
@@ -837,7 +837,7 @@ theorem laGlob (hG : GlobalArtinReciprocity) (hH : HeckeLAdicCharacter) {F Ω : 
     show Bw.j (((e.symm (Bw.e g) : ↥(Dec (F := E) A)) : G E Ω) z) = _
     rw [← hec, MulEquiv.apply_symm_apply, Bw.e_comm, hg]
   refine ⟨E, inferInstance, inferInstance, inferInstance, inferInstance, u, hu, Bw', art, χ, n, μ, ν, rfl, rfl, rfl,
-    hart, hχ, hμ, hL, (hμ.comp continuous_subtype_val).comp (he'.comp Bw.e_cont), hν, ?_,
+    hart, hχ, hμ, hL, (hμ.comp continuous_subtypeVal).comp (he'.comp Bw.e_cont), hν, ?_,
     fun τ s τE h1 h2 => hn τE τ ⟨s, h1, fun x => h2 x _⟩⟩
   obtain ⟨M, _, _, _, _, _, _, _, _, hM⟩ := ex_comp F E Ω
   have hMK : ∀ x : M, Bw.j (algebraMap M Ω x) ∈ Bw.Kw.1 := hM (Bw.Kw.1.toSubfield.comap Bw.j) Bw.j_E hE

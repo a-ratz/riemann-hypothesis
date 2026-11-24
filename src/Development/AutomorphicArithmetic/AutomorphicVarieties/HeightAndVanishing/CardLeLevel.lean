@@ -85,7 +85,7 @@ theorem UpperTheory.V.HV.xCard :
   set g := Nat.gcd M N with hgdef
   have hgN : g ∣ N := Nat.gcd_dvd_right M N
   have hgM : g ≤ M := Nat.le_of_dvd hM (Nat.gcd_dvd_left M N)
-  haveI : NeZero g := ⟨(Nat.gcd_pos_of_pos_left N hM).ne'⟩
+  have : NeZero g := ⟨(Nat.gcd_pos_of_pos_left N hM).ne'⟩
   have hex : ∀ ψ ∈ T, ∃ ψ₀ : DirichletCharacter O g, ψ = DirichletCharacter.changeLevel hgN ψ₀ := by
     intro ψ hψ
     obtain ⟨hc, χ₀, hχ₀⟩ := ψ.factorsThrough_conductor
@@ -98,7 +98,7 @@ theorem UpperTheory.V.HV.xCard :
   have hf : ∀ ψ ∈ T, ψ = DirichletCharacter.changeLevel hgN (f ψ) := by
     intro ψ hψ
     have h := hex ψ hψ
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     exact h.choose_spec
   have hinj : Set.InjOn f T := by
     intro a ha b hb hab

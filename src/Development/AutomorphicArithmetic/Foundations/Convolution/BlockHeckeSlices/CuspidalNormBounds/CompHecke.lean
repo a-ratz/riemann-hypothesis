@@ -279,7 +279,7 @@ theorem UpperTheory.exists_satakeTset_sum_eigenvector :
   obtain ⟨hf0, hfix, -, hT⟩ := hf
   have hϖ := mem_Ov_of_isUnifV hu
   have hπ : ϖ ≠ 0 := satake_unif_ne_zero w hu
-  letI : Fintype (satakeRes (Ov E w) ⟨ϖ, hϖ⟩) := @Fintype.ofFinite _ (satake_res_finite w hϖ hu)
+  let : Fintype (satakeRes (Ov E w) ⟨ϖ, hϖ⟩) := @Fintype.ofFinite _ (satake_res_finite w hϖ hu)
   have hne : ∀ j, j ≤ r → Nonempty (SatakeIdx w hϖ (n := r) j) := by
     intro j hj
     obtain ⟨S, -, hS⟩ := Finset.exists_subset_card_eq (s := (Finset.univ : Finset (Fin r))) (n := j)
@@ -306,7 +306,7 @@ theorem UpperTheory.exists_satakeTset_sum_eigenvector :
   obtain ⟨i₀⟩ := hne r le_rfl
   have hcard : (Fintype.card (SatakeIdx w hϖ (n := r) r) : ℂ) ≠ 0 := by
     have : Fintype.card (SatakeIdx w hϖ (n := r) r) ≠ 0 := by
-      haveI : Nonempty (SatakeIdx w hϖ (n := r) r) := ⟨i₀⟩
+      have : Nonempty (SatakeIdx w hϖ (n := r) r) := ⟨i₀⟩
       exact Fintype.card_ne_zero
     exact_mod_cast this
   set c : ℂ := (Fintype.card (SatakeIdx w hϖ (n := r) r) : ℂ)⁻¹ * satEig (qV E w) r B r with hcdef
@@ -598,7 +598,7 @@ private theorem move (b : Blo S r) {w : Pl E} {ϖ : w.adicCompletion E} (hu : Is
     refine Subtype.ext ?_
     rw [Positive.val_mul, UpperTheory.detModule_satakeTset_eq_inv_pow E w r a ϖ hu ha x hx]
     change Real.exp _ * _ = 1
-    rw [Real.exp_nat_mul, Real.exp_log hq]
+    rw [Real.exp_natCast_mul, Real.exp_log hq]
     exact mul_inv_cancel₀ (pow_ne_zero _ hq.ne')
   have hl : AutomorphicForm.IsLeftInvariant b.f.1 := b.cusp.1.isLeftInvariant
   have := UpperTheory.integral_quotient_rightTranslate_eq_and_integrable_iff E r (fun y => Φ (zt E r (t - a * Real.log (qV E w)) * y) *

@@ -57,8 +57,8 @@ open PositivityTheory.RgBcC PositivityTheory.RgBcC.Real PositivityTheory.RgBcC.R
 
 private theorem hder_entry {n : ℕ} (X : Mat n) (t : ℝ) (i j : Fin n) :
     HasDerivAt (fun s : ℝ => (NormedSpace.exp (s • X) : Mat n) i j) ((NormedSpace.exp (t • X) * X : Mat n) i j) t := by
-  letI : NormedRing (Mat n) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mat n) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Mat n) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mat n) := Matrix.linftyOpNormedAlgebra
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X t
   have hL := ((Matrix.entryLinearMap ℝ ℂ i j).toContinuousLinearMap).hasFDerivAt (x := NormedSpace.exp (t • X))
   exact hL.comp_hasDerivAt t h
@@ -74,12 +74,12 @@ theorem UpperTheory.RealTr.basic :
   intro n
   have hmem : ∀ g : Mat n, g ∈ GLs n ↔ IsUnit g := by
     intro g
-    simp only [GLs, Set.mem_setOf_eq]
+    simp only [GLs, Set.mem_ofPred_eq]
     rw [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero]
   have hval : ∀ {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℂ U] (π : G n →* (U →L[ℂ] U)) (g : G n),
       piM π g.val = π g := by
     intro U _ _ π g
-    simp only [piM, dif_pos g.isUnit]
+    simp only [piM, dite_eq_left g.isUnit]
     congr 1
     exact Units.ext rfl
   refine ⟨?_, hmem, ?_, ?_, ?_⟩

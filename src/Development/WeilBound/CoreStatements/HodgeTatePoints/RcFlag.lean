@@ -89,7 +89,7 @@ lemma flagSub_succ {n : ℕ} (b : Module.Basis (Fin n) F N) (i : Fin n) :
     flagSub b ((i : ℕ) + 1) = Submodule.span F {b i} ⊔ flagSub b i := by
   have hs : {j : Fin n | (j : ℕ) < (i : ℕ) + 1} = insert i {j : Fin n | (j : ℕ) < (i : ℕ)} := by
     ext j
-    simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Fin.ext_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Fin.ext_iff]
     omega
   unfold flagSub
   rw [hs, Set.image_insert_eq, Submodule.span_insert]
@@ -161,7 +161,7 @@ lemma flag_ind [IsAlgClosed C] [CharZero C] (hv : v.Integers R) [Fintype F] [Dec
         ext j
         simp [j.isLt]
       rw [hu, Set.image_univ, b.span_eq]
-    haveI : Subsingleton Q := by
+    have : Subsingleton Q := by
       constructor
       intro x y
       obtain ⟨x', rfl⟩ := hψ x
@@ -193,7 +193,7 @@ lemma flag_ind [IsAlgClosed C] [CharZero C] (hv : v.Integers R) [Fintype F] [Dec
       rw [hii, ← hker]
       exact h0
     let L : Submodule F Q := Submodule.span F {ψ (b ii)}
-    haveI : Fintype (Q ⧸ L) := Fintype.ofFinite _
+    have : Fintype (Q ⧸ L) := Fintype.ofFinite _
     let ψ' : N →ₗ[F] Q ⧸ L := L.mkQ.comp ψ
     have hψ' : Function.Surjective ψ' := L.mkQ_surjective.comp hψ
     have hker' : LinearMap.ker ψ' = flagSub b (i + 1) := by
@@ -253,7 +253,7 @@ end Gen
 theorem step : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable (F := F) AA.carrier → ∀ (K : Submodule F N) (t : N), t ∉ K → (∃ S : HopfOrder (C := C) R F, S.carrier = stepOrder AA.carrier K t ∧ FStable (F := F) S.carrier) ∧ stepOrder AA.carrier K t = stepOrderRes AA.carrier K t := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hf N _ _ _ _ AA hst K t ht
   classical
-  haveI : Fintype (N ⧸ K) := Fintype.ofFinite _
+  have : Fintype (N ⧸ K) := Fintype.ofFinite _
   have hsurj : Function.Surjective K.mkQ := K.mkQ_surjective
   have hne : K.mkQ t ≠ 0 := by
     simpa [Submodule.Quotient.mk_eq_zero] using ht

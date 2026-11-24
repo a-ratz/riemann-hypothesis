@@ -45,9 +45,9 @@ open CategoryTheory Limits CochainComplex CochainComplex.HomComplex GlobalTheory
 
 private theorem H_subsingleton_of_neg (R : Type) [CommRing R] (E : Spc) (F : Shv R) {n : ℤ} (hn : n < 0) :
     Subsingleton (H R E F n) := by
-  haveI hK : ((chains R).obj E).IsStrictlyLE 0 :=
+  have hK : ((chains R).obj E).IsStrictlyLE 0 :=
     (inferInstance : CochainComplex.IsStrictlyLE (((chainsN R).obj E).extend ComplexShape.embeddingDownNat) 0)
-  haveI hL : (res R F).IsStrictlyGE 0 := by
+  have hL : (res R F).IsStrictlyGE 0 := by
     dsimp [res]
     infer_instance
   have hz : ∀ z : Cochain ((chains R).obj E) (res R F) n, z = 0 := by
@@ -68,9 +68,9 @@ private theorem H_subsingleton_of_neg (R : Type) [CommRing R] (E : Spc) (F : Shv
 theorem UpperTheory.Gal.Seam.negVan :
     NegVan := by
   intro l _ X n hn
-  haveI : ∀ k : ℕ, Subsingleton (HtL l k (sch.obj X) n 0) := fun k =>
+  have : ∀ k : ℕ, Subsingleton (HtL l k (sch.obj X) n 0) := fun k =>
     H_subsingleton_of_neg (ZMod (l ^ k)) (sch.obj X) (tw (l ^ k) 0) hn
-  haveI : Subsingleton (Hl l (sch.obj X) n 0) := by
+  have : Subsingleton (Hl l (sch.obj X) n 0) := by
     dsimp only [Hl]
     infer_instance
   dsimp only [HQ]

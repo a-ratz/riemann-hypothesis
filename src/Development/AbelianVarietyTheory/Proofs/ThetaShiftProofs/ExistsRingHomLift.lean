@@ -78,7 +78,7 @@ theorem ex_eq_iff (z w : Fin g → ℂ) : u.ex z = u.ex w ↔ z - w ∈ u.Λ := 
 theorem ex_zero' : u.ex 0 = 1 := (u.ker 0).2 u.Λ.zero_mem
 
 theorem lin_ext {F G : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)} (h : ∀ z, u.ex (F z) = u.ex (G z)) : F = G := by
-  haveI := u.discrete
+  have := u.discrete
   have hc : Continuous fun z => (⟨F z - G z, (ex_eq_iff u _ _).1 (h z)⟩ : u.Λ) :=
     Continuous.subtype_mk (F.continuous_of_finiteDimensional.sub G.continuous_of_finiteDimensional) _
   refine LinearMap.ext fun z => ?_
@@ -105,7 +105,7 @@ theorem exists_lift_points (r : Out.RingAct A O) (F : O →+* Module.End ℂ (Fi
     (c : X → (𝟙_ (Over (Sp ℂ)) ⟶ A)) (hadd : ∀ a b, c (a + b) = padd A (c a) (c b))
     (hlin : ∀ (a : O) y, c (a • y) = c y ≫ r.act a) :
     ∃ ct : X →+ (Fin g → ℂ), (∀ (a : O) x, ct (a • x) = F a (ct x)) ∧ ∀ x, u.ex (ct x) = c x := by
-  letI : Module O (Fin g → ℂ) := Module.compHom _ F
+  let : Module O (Fin g → ℂ) := Module.compHom _ F
   have c0 : c 0 = 1 := by
     have := hadd 0 0
     rw [add_zero] at this
@@ -269,11 +269,11 @@ theorem nonempty_gtAn : Out.Laws → Out.Laws2 → ThetaUnifAV → ∀ (E : Type
     [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (b : O →+* ℂ) (a : ArcIn D l β ℂ b),
     letI := H.starRing; Nonempty (GtAn a) := by
   intro hL _ hT E _ _ _ H D l c O _ β _ _ b a
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨u, Hm, χ, Ef, hAH, hrig, ht₁, ht₂, hend, hpow, hEf, hbij, -⟩ := hT a.D₀.P a.D₀.rig a.D₀.rig_gen
   obtain ⟨F, hF⟩ := exists_ringHom_lift u a.oa.onB.toRingAct hend
-  haveI : Module.Projective (𝓞 E) a.D₀.X := Forms.projective_of_int _ _
-  haveI : Module.Finite (𝓞 E) a.D₀.X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Module.Projective (𝓞 E) a.D₀.X := Forms.projective_of_int _ _
+  have : Module.Finite (𝓞 E) a.D₀.X := Module.Finite.of_restrictScalars_finite ℤ _ _
   obtain ⟨ct, hct, hc⟩ := exists_lift_points u a.oa.onB.toRingAct F hF a.D₀.c a.D₀.c_add a.oa.c_lin
   have bal := fun x : 𝓞 E =>
     haveI := a.oa.onB.hom x

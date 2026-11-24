@@ -105,7 +105,7 @@ theorem bestChart_finite : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp 
   have hmax : ∀ k, ∃ c : J k, w ⟨k, c⟩ ≠ 0 ∧ ∀ i, v (w ⟨k, i⟩) ≤ v (w ⟨k, c⟩) := by
     intro k
     obtain ⟨u, hu⟩ := hC.1 k
-    haveI : Nonempty (J k) := ⟨u⟩
+    have : Nonempty (J k) := ⟨u⟩
     obtain ⟨c, hc⟩ := Finite.exists_max (fun i => v (w ⟨k, i⟩))
     refine ⟨c, ?_, hc⟩
     have h0 : 0 < v (w ⟨k, u⟩) := FinitePlace.pos_iff.2 hu.ne_zero

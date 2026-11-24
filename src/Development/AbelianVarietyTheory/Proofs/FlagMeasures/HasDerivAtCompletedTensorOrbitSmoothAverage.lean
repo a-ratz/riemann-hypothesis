@@ -139,8 +139,8 @@ theorem continuous_expU {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) : Continuo
 
 theorem hasDerivAt_exp_mul_entry {n : ℕ} (X Y : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) (i j : Fin n) :
     HasDerivAt (fun s : ℝ => (NormedSpace.exp (s • X) * Y) i j) ((X * (NormedSpace.exp (t • X) * Y)) i j) t := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have h := (hasDerivAt_exp_smul_const' (𝕂 := ℝ) X t).mul_const Y
   let l : Matrix (Fin n) (Fin n) ℂ →ₗ[ℝ] ℂ :=
     { toFun := fun M => M i j
@@ -162,8 +162,8 @@ theorem hasDerivAt_orbit_average : ∀ (B : RowsAut) (F : (InfinitePlace B.I.F �
   intro B F E w hσ hF hFc
 
   have hμ : muInf B.I = Measure.pi (fun v => Formalism.REAL.muG (B.I.ε v)) := rfl
-  haveI : (muInf B.I).IsMulLeftInvariant := by rw [hμ]; infer_instance
-  haveI : IsFiniteMeasureOnCompacts (muInf B.I) := by rw [hμ]; infer_instance
+  have : (muInf B.I).IsMulLeftInvariant := by rw [hμ]; infer_instance
+  have : IsFiniteMeasureOnCompacts (muInf B.I) := by rw [hμ]; infer_instance
   let c : B.I.Ginf → (InfinitePlace B.I.F → Fin B.I.n → Fin B.I.n → ℂ) :=
     fun g v i j => uMat (g v) i j
   have hc : Topology.IsClosedEmbedding c :=

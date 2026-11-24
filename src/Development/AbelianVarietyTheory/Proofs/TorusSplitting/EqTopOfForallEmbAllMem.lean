@@ -104,7 +104,7 @@ lemma exists_real_combination (Ψ : Finset (E →+* ℂ))
     have h3 := h τ.1 τ.2
     have h4 : ComplexEmbedding.conjugate (ComplexEmbedding.conjugate τ.1) ∈ Ψ := by
       rw [conjugate_conjugate]; exact τ.2
-    simp only [z, dif_neg h3, dif_pos h4]
+    simp only [z, dite_eq_right h3, dite_eq_left h4]
     congr 2
     exact Subtype.ext (conjugate_conjugate τ.1).symm
   have h5 : y τ = ∑ i, (starRingEnd ℂ) (B.repr z i) * τ.1 (integralBasis E i) := by
@@ -176,10 +176,10 @@ theorem exists_basis_of_cmType (Ψ : Finset (E →+* ℂ))
       ∀ y, y ∈ Submodule.span ℤ (Set.range b) ↔ ∃ v ∈ Λ, embAll Ψ r v = y := by
   classical
   let L : Submodule ℤ (Fin r → E) := Λ.restrictScalars ℤ
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
-  haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
-  haveI : Module.Finite ℤ L := inferInstanceAs (Module.Finite ℤ Λ)
-  haveI : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
+  have : Module.Finite ℤ L := inferInstanceAs (Module.Finite ℤ Λ)
+  have : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
   let c := Module.Free.chooseBasis ℤ L
   let w : Module.Free.ChooseBasisIndex ℤ L → (Fin r → E) := fun i => (c i : Fin r → E)
   have hw : Submodule.span ℤ (Set.range w) = L := by

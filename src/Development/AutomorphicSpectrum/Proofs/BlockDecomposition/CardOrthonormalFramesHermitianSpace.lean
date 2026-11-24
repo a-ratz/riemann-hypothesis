@@ -199,7 +199,7 @@ theorem count : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ) (ε : ℤ
       rw [h1]; ring
     obtain ⟨ihc, ihz⟩ := ih (B.perp w) (B.perpForm hw) hP
     classical
-    haveI := Fintype.ofFinite E
+    have := Fintype.ofFinite E
     have hdfix : τ (B.h w w) = B.h w w := (B.symm w w).symm
     obtain ⟨di, hdi⟩ : ∃ di, B.h w w * di = 1 := hw.exists_right_inv
     have hdifix : τ di = di := by
@@ -330,9 +330,9 @@ theorem card_orthonormal_tuples : ∀ (E : Type) [CommRing E] (τ : E →+* E) (
     obtain ⟨m', rfl⟩ : ∃ m', m = m' + 1 := ⟨m - 1, by omega⟩
     have hq : 1 < q := hR.one_lt
     have hq0 : q ≠ 0 := by omega
-    haveI : Finite V := Nat.finite_of_card_ne_zero (by rw [hc]; exact pow_ne_zero _ hq0)
-    haveI : Finite E := Nat.finite_of_card_ne_zero (by rw [hR.card]; exact pow_ne_zero _ hq0)
-    haveI : Nontrivial E := Finite.one_lt_card_iff_nontrivial.1 (by rw [hR.card]; nlinarith)
+    have : Finite V := Nat.finite_of_card_ne_zero (by rw [hc]; exact pow_ne_zero _ hq0)
+    have : Finite E := Nat.finite_of_card_ne_zero (by rw [hR.card]; exact pow_ne_zero _ hq0)
+    have : Nontrivial E := Finite.one_lt_card_iff_nontrivial.1 (by rw [hR.card]; nlinarith)
     have hsph := (_root_.GlobalTheory.CompanionTheory.UnrDens.Sphere.count E τ q ε hR (m' + 1) V B hc).1 1 (map_one τ) one_ne_zero
     have hperp : ∀ w : {w : V // B.h w w = 1}, Nat.card (B.perp w.1) = q ^ (2 * m') := by
       intro w
@@ -345,7 +345,7 @@ theorem card_orthonormal_tuples : ∀ (E : Type) [CommRing E] (τ : E →+* E) (
         (Nat.card (Tuples (B.perpForm (isUnit_norm B w)) n) : ℝ) =
           ∏ i : Fin n, ((q : ℝ) ^ (2 * (m' - (i : ℕ))) / q * (1 - ((ε : ℝ) / q) ^ (m' - (i : ℕ)))) :=
       fun w => ih m' (by omega) (B.perp w.1) (B.perpForm (isUnit_norm B w)) (hperp w)
-    haveI : Fintype {w : V // B.h w w = 1} := Fintype.ofFinite _
+    have : Fintype {w : V // B.h w w = 1} := Fintype.ofFinite _
     have hcard : (Nat.card (Tuples B (n + 1)) : ℝ) =
         (Nat.card {w : V // B.h w w = 1} : ℝ) *
           ∏ i : Fin n, ((q : ℝ) ^ (2 * (m' - (i : ℕ))) / q * (1 - ((ε : ℝ) / q) ^ (m' - (i : ℕ)))) := by

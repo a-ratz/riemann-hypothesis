@@ -93,7 +93,7 @@ theorem lenR_baseChange_subquotient (hinj : Function.Injective (algebraMap O O')
     Formalism.MainNotions.IntegralHeckeForms.lenR O' l
               (A.baseChange O' ⧸ (B.baseChange O').comap (A.baseChange O').subtype) =
       Formalism.MainNotions.IntegralHeckeForms.lenR O l (A ⧸ B.comap A.subtype) := by
-  haveI : FaithfulSMul O O' := (faithfulSMul_iff_algebraMap_injective O O').mpr hinj
+  have : FaithfulSMul O O' := (faithfulSMul_iff_algebraMap_injective O O').mpr hinj
   have h1 : Module.length O'
       (A.baseChange O' ⧸ (B.baseChange O').comap (A.baseChange O').subtype) =
       Module.length O (A ⧸ B.comap A.subtype) *
@@ -104,7 +104,7 @@ theorem lenR_baseChange_subquotient (hinj : Function.Injective (algebraMap O O')
   have he : (((IsLocalRing.maximalIdeal O').ramificationIdx O : ℕ) : ℝ) ≠ 0 := by
     exact_mod_cast (ramificationIdx_maximalIdeal_pos O O').ne'
   unfold Formalism.MainNotions.IntegralHeckeForms.lenR
-  rw [h1, h2, ENat.toNat_mul, ENat.toNat_mul, ENat.toNat_coe, Nat.cast_mul, Nat.cast_mul,
+  rw [h1, h2, ENat.toNat_mul, ENat.toNat_mul, ENat.toNat_natCast, Nat.cast_mul, Nat.cast_mul,
     mul_div_mul_right _ _ he]
 
 end

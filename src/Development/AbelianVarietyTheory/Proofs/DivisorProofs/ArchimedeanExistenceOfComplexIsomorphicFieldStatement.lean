@@ -429,7 +429,7 @@ section Dual
 variable {F F' : Type} [Field F] [Field F'] {X : Scheme.{0}} {L : LB X}
 
 theorem redE_cpt : redE F (cpt F) = cpt (DualNumber F) := by
-  haveI : IsLocalHom (TrivSqZeroExt.fstHom F F F).toRingHom :=
+  have : IsLocalHom (TrivSqZeroExt.fstHom F F F).toRingHom :=
     ⟨fun a h => TrivSqZeroExt.isUnit_iff_isUnit_fst.2 h⟩
   exact IsLocalRing.comap_closedPoint (TrivSqZeroExt.fstHom F F F).toRingHom
 
@@ -661,7 +661,7 @@ namespace GlobalTheory.MBLow
 
 theorem archF_of_arch : ∀ κ : Rule, Funct κ → Arch κ → ArchF κ := by
   intro κ hF hA R _ _ _ _ D hP hT F _ _ _ e N ν g r m k hg hm hk β ζ q hq s hs vB bX σ gm hAd k₀ hK
-  letI : Algebra (FractionRing R) ℂ := ((e : F →+* ℂ).comp (algebraMap (FractionRing R) F)).toAlgebra
+  let : Algebra (FractionRing R) ℂ := ((e : F →+* ℂ).comp (algebraMap (FractionRing R) F)).toAlgebra
   have he : ∀ x, e (algebraMap (FractionRing R) F x) = algebraMap (FractionRing R) ℂ x := fun _ => rfl
   obtain ⟨N', ν', I, hb, hh, hl, heX, hth, hrg, hvE, hfam⟩ := GlobalTheory.T.degenerationValues_transport_fieldIso R D F ℂ e he N ν
   obtain ⟨hform, hlev⟩ := GlobalTheory.T.degenerationDataValuesIso_transport_formsLevelsFamilies F ℂ e N N' I hb hh hl

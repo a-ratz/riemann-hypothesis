@@ -100,25 +100,25 @@ private theorem exists_ext {ι A : Type*} {X : A → Type*} (wi : ι → A) (hw 
     (ψ : ∀ i, X (wi i)) (d : ∀ a, X a) :
     ∃ h : ∀ a, X a, (∀ i, h (wi i) = ψ i) ∧ ∀ a, a ∉ Set.range wi → h a = d a := by
   refine ⟨fun a => if ha : ∃ i, wi i = a then ha.choose_spec ▸ ψ ha.choose else d a, fun i => ?_,
-    fun a ha => dif_neg ha⟩
+    fun a ha => dite_eq_right ha⟩
   have key : ∀ j (hj : wi j = wi i), (hj ▸ ψ j : X (wi i)) = ψ i := by
     intro j hj
     obtain rfl := hw hj
     rfl
   have ha : ∃ j, wi j = wi i := ⟨i, rfl⟩
-  simp only [dif_pos ha]
+  simp only [dite_eq_left ha]
   exact key _ _
 
 private theorem finprod_split {A M : Type*} [CommMonoid M] {r : ℕ} (wi : Fin r → A) (hw : Function.Injective wi)
     (X : A → M) (hX : (Function.mulSupport X).Finite) :
     ∏ᶠ u, X u = (∏ i, X (wi i)) * ∏ᶠ (u) (_ : u ∉ Set.range wi), X u := by
-  have h := finprod_mem_inter_mul_diff' (f := X) (s := Set.univ) (Set.range wi)
+  have h := finprod_mem_inter_mul_sdiff' (f := X) (s := Set.univ) (Set.range wi)
     (hX.subset Set.inter_subset_right)
   rw [Set.univ_inter, finprod_mem_univ, finprod_mem_range hw, finprod_eq_prod_of_fintype] at h
   rw [← h]
   congr 1
   refine finprod_congr fun u => ?_
-  simp only [Set.mem_diff, Set.mem_univ, true_and]
+  simp only [Set.mem_sdiff, Set.mem_univ, true_and]
 
 section Main
 
@@ -176,7 +176,7 @@ private theorem prodFn_eq {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (w.
 private theorem prodFn_test {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (w.1.adicCompletion E) → ℂ)
     (hc : ∀ w, IsLocallyConstant (h w) ∧ HasCompactSupport (h w)) :
     IsLocallyConstant (GM.prodFn h) ∧ HasCompactSupport (GM.prodFn h) := by
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   rw [prodFn_eq]
   constructor
   · have key : ∀ T : Finset (PlacesOver E v),
@@ -190,9 +190,9 @@ private theorem prodFn_test {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (
         simp only [Finset.prod_insert ha]
         exact ((hc a).1.comp_continuous (cmp_cont a)).mul ih
     exact key _
-  · haveI : T2Space (CompletionsOver E v) := Pi.t2Space
-    haveI : T2Space (GL (Fin n) (CompletionsOver E v)) := Units.instT2Space
-    haveI : R1Space (GL (Fin n) (CompletionsOver E v)) := T2Space.r1Space
+  · have : T2Space (CompletionsOver E v) := Pi.t2Space
+    have : T2Space (GL (Fin n) (CompletionsOver E v)) := Units.instT2Space
+    have : R1Space (GL (Fin n) (CompletionsOver E v)) := T2Space.r1Space
     refine HasCompactSupport.intro ((isCompact_univ_pi fun w => (hc w).2.isCompact).image glue_cont) fun g hg => ?_
     by_contra hne
     refine hg ⟨fun w => GM.cmp w g, fun w _ => subset_tsupport _ ?_, ?_⟩
@@ -202,7 +202,7 @@ private theorem prodFn_test {v : Pl F} (h : ∀ w : PlacesOver E v, GL (Fin n) (
 private theorem unit_prod (v : Pl F) :
     (GM.prodFn fun w : PlacesOver E v => (GLnLocal.integralGL (w.1.adicCompletion E) n : Set (GL (Fin n) (w.1.adicCompletion E))).indicator (1 : GL (Fin n) (w.1.adicCompletion E) → ℂ)) =
       (unitSet E n v).indicator 1 := by
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   funext g
   rw [GM.prodFn, finprod_eq_prod_of_fintype]
   by_cases hg : g ∈ unitSet E n v
@@ -299,8 +299,8 @@ theorem UpperTheory.exists_pos_const_typed_test_function_bound :
   have hcof : ∀ᶠ w : Pl E in Filter.cofinite,
       w.under (𝓞 F) ∉ T.S ∧ w.under (𝓞 F) ≠ q := by
     refine Filter.eventually_cofinite.2 (hfin.subset fun w hw => ?_)
-    simp only [Set.mem_setOf_eq, not_and_or, not_not] at hw
-    simp only [Set.mem_setOf_eq, Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe]
+    simp only [Set.mem_ofPred_eq, not_and_or, not_not] at hw
+    simp only [Set.mem_ofPred_eq, Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe]
     tauto
   obtain ⟨κ, hκ, H⟩ := tensFactor E n hn μ νE T.J T.χ (fun w => ⟨T.co w, T.chr w⟩)
     (hcof.mono fun w hw => T.off w hw.1 hw.2)
@@ -411,9 +411,9 @@ private theorem rho_typed (J : ∀ w : Pl K, Subgroup (Gw n w)) (χ : ∀ w : Pl
     have hg : g ∈ levOn P (fun _ => ⊥) := by
       intro v
       by_cases hv : v ∈ P
-      · simp only [hv, if_true]
+      · simp only [hv, ite_true]
         exact Subgroup.mem_bot.2 (h1 v hv (Finset.notMem_empty v))
-      · simp only [hv, if_false]
+      · simp only [hv, ite_false]
         exact h2 v hv
     simpa using ((UpperTheory.ConvolutionTheory.Tf.commPrj K n μ _).2.1 f).1 hfix g hg
   | insert a R ha ih =>
@@ -647,7 +647,7 @@ private theorem prj_inf {P X : Submodule ℂ H} (hP : IsClosed (P : Set H)) (hX 
     refine Submodule.eq_starProjection_of_mem_of_inner_eq_zero ?_ fun w hw => ?_
     · refine (prj_mem_cl hXP _).2 ⟨prj_mem hX _, ?_⟩
       have := congrArg (fun S : H →L[ℂ] H => S v) hc
-      simp only [ContinuousLinearMap.mul_apply] at this
+      simp only [mul_apply_eq_comp] at this
       rw [← this]
       exact prj_mem hP _
     · have hw' := (prj_mem_cl hXP _).1 hw
@@ -695,11 +695,11 @@ private theorem core (Ty Fx V : Submodule ℂ H) (hTy : IsClosed (Ty : Set H)) (
     obtain ⟨h1, h2⟩ := mem_eigIn.1 hv
     refine mem_eigIn.2 ⟨?_, ?_⟩
     · have := congrArg (fun S : H →L[ℂ] H => S v) hVP
-      simp only [ContinuousLinearMap.mul_apply, prj_self h1] at this
+      simp only [mul_apply_eq_comp, prj_self h1] at this
       rw [← this]
       exact prj_mem hV _
     · have := congrArg (fun S : H →L[ℂ] H => S v) hAP
-      simp only [ContinuousLinearMap.mul_apply] at this
+      simp only [mul_apply_eq_comp] at this
       rw [this, h2, map_smul]
   obtain ⟨k1, k2⟩ := prj_inf hTy hXc hPX
   rw [heq] at k1 k2
@@ -731,7 +731,7 @@ private theorem alg {R : Type} [Ring R] [Algebra ℂ R] (PX P PZ A Oa Ui Bp U : 
     mul_assoc PX]
 
 private theorem trace_sm (c : ℂ) (S : H →L[ℂ] H) : trace (c • S) = c * trace S := by
-  simp only [trace, ContinuousLinearMap.smul_apply, inner_smul_right, tsum_mul_left]
+  simp only [trace, smul_apply, inner_smul_right, tsum_mul_left]
 
 end Hil
 
@@ -765,7 +765,7 @@ private theorem oloc_comm {w : Pl K} [MeasurableSpace (Gw n w)] {m : Measure (Gw
   congr 1
   rw [ContinuousLinearMap.adjoint_inner_left]
   have := congrArg (fun S : LL μ →L[ℂ] LL μ => S v) (hR g).eq
-  simp only [ContinuousLinearMap.mul_apply] at this
+  simp only [mul_apply_eq_comp] at this
   rw [this]
 
 private theorem oloc_fix {w : Pl K} [MeasurableSpace (Gw n w)] [BorelSpace (Gw n w)] {m : Measure (Gw n w)} [m.IsHaarMeasure]
@@ -804,7 +804,7 @@ private theorem comm_typed (T : Ty σ n q w₀) (R : LL μ →L[ℂ] LL μ) (hR 
   rw [mem_typed] at hv ⊢
   intro w x hx
   have := congrArg (fun S : LL μ →L[ℂ] LL μ => S v) (hR w x).eq
-  simp only [ContinuousLinearMap.mul_apply] at this
+  simp only [mul_apply_eq_comp] at this
   rw [← this, hv w x hx, map_smul]
 
 private theorem typed_step (T : Ty σ n q w₀) (Bo : LL μ →L[ℂ] LL μ) (w₁ : Pl E)
@@ -820,7 +820,7 @@ private theorem typed_step (T : Ty σ n q w₀) (Bo : LL μ →L[ℂ] LL μ) (w�
     rw [hχ]
     exact (mem_eigL μ).1 h2 x hx
   · have := congrArg (fun S : LL μ →L[ℂ] LL μ => S v) (hc w h x).eq
-    simp only [ContinuousLinearMap.mul_apply] at this
+    simp only [mul_apply_eq_comp] at this
     rw [← this, hv w x hx, map_smul]
 
 end Ty
@@ -862,7 +862,7 @@ theorem UpperTheory.ConvolutionTheory.L1.sideTrace :
     intro v hv
     refine (hcp.2.1 _).2 fun u hu => ?_
     have := congrArg (fun S : LL μ →L[ℂ] LL μ => S v) (hOF u).eq
-    simp only [ContinuousLinearMap.mul_apply, (hcp.2.1 v).1 hv u hu] at this
+    simp only [mul_apply_eq_comp, (hcp.2.1 v).1 hv u hu] at this
     exact this.symm
   have hVc : IsClosed (V : Set (LL μ)) := IsSummandOf.closed hV
   have hVT : ∀ v ∈ T.typed μ, prj V v ∈ T.typed μ := by
@@ -884,7 +884,7 @@ theorem UpperTheory.ConvolutionTheory.L1.sideTrace :
   have hBG : Good (List.ofFn B).prod := by
     refine List.prod_induction _ hGmul hGone fun O hO => ?_
     obtain ⟨i, rfl⟩ := (List.mem_ofFn' _ _).1 hO
-    haveI := (hmm i).1
+    have := (hmm i).1
     have hsp : p i ∈ T.sp := (hpr _).2 ⟨i, rfl⟩
     have hspl : GM.Split E (p i) := (Finset.mem_filter.1 hsp).2
     have ht := (hF.test (p i) hsp).2

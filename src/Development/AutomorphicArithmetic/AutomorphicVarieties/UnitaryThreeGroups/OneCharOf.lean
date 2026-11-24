@@ -103,9 +103,9 @@ end Transfer
 private theorem exists_unram {l : ℕ} [Fact l.Prime] (c : Coef l) {N : ℕ} [NeZero N] (ψ : DirichletCharacter c.O N)
     (h : ¬ l ∣ orderOf ψ) : ∃ (c' : Coef l) (ψ' : DirichletCharacter c'.O N), eO l c'.O = 1 ∧
       ∀ a : ZMod N, ((ψ a : c.O) : PadicAlgCl l) = ((ψ' a : c'.O) : PadicAlgCl l) := by
-  haveI : NeZero (orderOf ψ) := ⟨fun h0 => h (h0 ▸ dvd_zero l)⟩
+  have : NeZero (orderOf ψ) := ⟨fun h0 => h (h0 ▸ dvd_zero l)⟩
   obtain ⟨c', he, hr⟩ := (coefSup l).2.1 (orderOf ψ) h
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot c'.O (orderOf ψ)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot c'.O (orderOf ψ)
   have hζ' : IsPrimitiveRoot (ζ : PadicAlgCl l) (orderOf ψ) :=
     hζ.map_of_injective (f := c'.O.val) Subtype.val_injective
   have hmem : ∀ a : ZMod N, ((ψ a : c.O) : PadicAlgCl l) ∈ c'.O := by

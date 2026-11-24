@@ -65,7 +65,7 @@ theorem omegaPull_id (s : X ⟶ Sp k) (j : ℕ) :
 
 theorem hodgePull_id (s : X ⟶ Sp k) (j q : ℕ) (x : hodgeH s j q) :
     hodgePull (f := 𝟙 X) (Category.id_comp s) j q x = x := by
-  letI := algΓ s
+  let := algΓ s
   apply (cohOn.toH' (Omega s j) ⊤ q).injective
   refine (cohOn.toH'_pull (appTop_algebraMap (Category.id_comp s))
     (omegaPull (Category.id_comp s) j) (le_refl ((𝟙 X) ⁻¹ᵁ ⊤)) (n := q) x).trans ?_

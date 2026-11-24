@@ -106,7 +106,7 @@ private lemma mem_of_irred_lemma_2 {k V : Type*} [Field k] [IsAlgClosed k] [AddC
     by_contra h
     push_neg at h
     exact hT0 (LinearMap.ext h)
-  haveI : Nontrivial (LinearMap.range T) :=
+  have : Nontrivial (LinearMap.range T) :=
     ⟨⟨⟨T u, LinearMap.mem_range_self T u⟩, 0, fun h => hu (congrArg Subtype.val h)⟩⟩
 
   have key : ∀ b ∈ B, ∃ c : k, T * b * T = c • T := by

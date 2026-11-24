@@ -117,7 +117,7 @@ theorem finsum_locDeg_mul (g : HeightOneSpectrum (𝓞 K) → ℝ) (hg : (Functi
   rw [← sum_locDeg v, Nat.cast_sum, Finset.sum_mul]
   refine Finset.sum_congr ?_ fun w hw => by rw [(Set.Finite.mem_toFinset _).1 hw]
   ext w
-  simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hv ⊢
+  simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hv ⊢
   exact ⟨fun h => h.2, fun h => ⟨h ▸ hv, h⟩⟩
 
 theorem sum_comp_algebraMap (f : (K →+* ℂ) → ℝ) :

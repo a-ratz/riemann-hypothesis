@@ -149,8 +149,8 @@ theorem defect_transfer (e : K →+* ℂ) (c : L →+* L) (τ : L →+* K) {ι :
     (hK : ∀ B : GL (Fin n) K, B.val.BlockTriangular id → ∀ i, defect (RingHom.id K) c τ P v lam B.val (B⁻¹).val i = 0)
     (B : GL (Fin n) ℂ) (hB : B.val.BlockTriangular id) (i : ι) :
     defect e c τ P v lam B.val (B⁻¹).val i = 0 := by
-  haveI : CharZero K := RingHom.charZero e
-  haveI : Infinite K := inferInstance
+  have : CharZero K := RingHom.charZero e
+  have : Infinite K := inferInstance
   classical
   obtain ⟨D, hD⟩ : ∃ D : MvPolynomial (Fin n × Fin n) K, D = ∏ a, X (a, a) := ⟨_, rfl⟩
   let A := Localization.Away D
@@ -158,13 +158,13 @@ theorem defect_transfer (e : K →+* ℂ) (c : L →+* L) (τ : L →+* K) {ι :
   let G : Matrix (Fin n) (Fin n) A := fun a b => if b < a then 0 else algebraMap (MvPolynomial (Fin n × Fin n) K) A (X (a, b))
   have hGtri : G.BlockTriangular id := fun a b h => by
     simp only [G]
-    rw [if_pos (show b < a from h)]
+    rw [ite_eq_left (show b < a from h)]
   have hDA : algebraMap (MvPolynomial (Fin n × Fin n) K) A D =
       ∏ a, algebraMap (MvPolynomial (Fin n × Fin n) K) A (X (a, a)) := by
     rw [← map_prod]
     exact congrArg _ hD
   have hdet : G.det = algebraMap (MvPolynomial (Fin n × Fin n) K) A D := by
-    rw [Matrix.det_of_upperTriangular hGtri, hDA]
+    rw [Matrix.det_of_isUpperTriangular hGtri, hDA]
     simp [G]
   have hunit : IsUnit G.det := hdet ▸ IsLocalization.Away.algebraMap_isUnit D
   have hGinv : G⁻¹ * G = 1 := Matrix.nonsing_inv_mul G hunit
@@ -183,7 +183,7 @@ theorem defect_transfer (e : K →+* ℂ) (c : L →+* L) (τ : L →+* K) {ι :
         show ψ (G a a) = x (a, a)
         simp [G, hψ]
       have hMdet : M.det ≠ 0 := by
-        rw [Matrix.det_of_upperTriangular hMtri, Finset.prod_congr rfl (fun a _ => hMd a)]
+        rw [Matrix.det_of_isUpperTriangular hMtri, Finset.prod_congr rfl (fun a _ => hMd a)]
         simpa [hD] using hx
       let BK := Matrix.GeneralLinearGroup.mkOfDetNeZero M hMdet
       have h1 := hK BK hMtri i
@@ -211,7 +211,7 @@ theorem defect_transfer (e : K →+* ℂ) (c : L →+* L) (τ : L →+* K) {ι :
 
   have hBdiag : eval₂ e (fun p => B.val p.1 p.2) D ≠ 0 := by
     have : B.val.det ≠ 0 := (Matrix.isUnit_iff_isUnit_det _).1 B.isUnit |>.ne_zero
-    rw [Matrix.det_of_upperTriangular hB] at this
+    rw [Matrix.det_of_isUpperTriangular hB] at this
     simpa [hD] using this
   let ψ : A →+* ℂ := IsLocalization.Away.lift D (g := eval₂Hom e (fun p => B.val p.1 p.2)) (Ne.isUnit hBdiag)
   have hψ : ∀ r, ψ (algebraMap (MvPolynomial (Fin n × Fin n) K) A r) = eval₂ e (fun p => B.val p.1 p.2) r := IsLocalization.Away.lift_eq D _
@@ -236,7 +236,7 @@ open MvPolynomial
 theorem diag_ne_zero {n : ℕ} {F : Type} [Field F] (B : GL (Fin n) F) (hB : B.val.BlockTriangular id) (a : Fin n) :
     B.val a a ≠ 0 := by
   have h : B.val.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det _).1 B.isUnit).ne_zero
-  rw [Matrix.det_of_upperTriangular hB] at h
+  rw [Matrix.det_of_isUpperTriangular hB] at h
   exact Finset.prod_ne_zero_iff.1 h a (Finset.mem_univ a)
 
 end GlobalTheory.HwTransfer
@@ -286,7 +286,7 @@ theorem GlobalTheory.hwAt_of_hwAtF : ∀ (L : Type) [Field L] [NumberField L] [I
     simp only [hb', map_sum, map_smul, Module.Basis.repr_self]
     rw [Finsupp.finsetSum_apply]
     simp only [Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [hev]
     have h2 := congrFun (congrFun h1 i) j
     rw [LinearMap.toMatrix_apply] at h2
@@ -357,7 +357,7 @@ theorem tenIrr_conj (emb : ι → L →+* ℂ) (lam : ι → DomWeight n) (h : T
     TenIrr (mtwConj emb) lam := by
   unfold TenIrr
   rw [mtRep_eq_tenRep, mtwConj_conj]
-  haveI : FiniteDimensional ℂ (VV ℂ lam) := Module.Finite.of_basis (bVV ℂ lam)
+  have : FiniteDimensional ℂ (VV ℂ lam) := Module.Finite.of_basis (bVV ℂ lam)
   have hd := GlobalTheory.WtDual.dual_isIrreducible (mtRep emb lam) h
   let Φ : VV ℂ lam →ₗ[ℂ] Module.Dual ℂ (VV ℂ lam) := (pairBK lam).flip
   have hΦ : ∀ x y, Φ y x = pairBK lam x y := fun x y => rfl

@@ -72,7 +72,7 @@ theorem latCont_discrete {E : Type} [NormedAddCommGroup E] (H : AddSubgroup E) (
       have := h z z.2 hz
       simpa using this
   rw [e]
-  exact Metric.isOpen_ball.preimage continuous_subtype_val
+  exact Metric.isOpen_ball.preimage continuous_subtypeVal
 
 noncomputable def latContMap {E J : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [Fintype J]
     (v : J → E) : (J → ℝ) →L[ℝ] E :=

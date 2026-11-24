@@ -60,7 +60,7 @@ section Count
 variable (F : Type) [Field F] [NumberField F]
 
 theorem numField_countable : Countable F := by
-  exact Finsupp.Countable.of_moduleFinite (R := ℚ) (M := F)
+  exact Countable.of_moduleFinite (R := ℚ) (M := F)
 
 theorem numField_hos_countable : Countable (HeightOneSpectrum (𝓞 F)) := by
   have := numField_countable F

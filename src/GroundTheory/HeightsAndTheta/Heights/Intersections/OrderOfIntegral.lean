@@ -66,7 +66,7 @@ theorem RegularityOrder.order_of_integral {F : Type*} [Field F] [NumberField F] 
     obtain ⟨c, hc, hc0, hxc⟩ := hden x
     have hci : IsIntegral ℤ (⟨c, hc⟩ : S) :=
       (isIntegral_algHom_iff S.subtype.toIntAlgHom Subtype.val_injective).1 (hint c hc)
-    have hne := Ideal.comap_ne_bot_of_integral_mem (I := Ideal.span {(⟨c, hc⟩ : S)})
+    have hne := Ideal.under_ne_bot_of_integral_mem (I := Ideal.span {(⟨c, hc⟩ : S)})
       (fun h => hc0 (congrArg Subtype.val h)) (Ideal.mem_span_singleton_self _) hci
     obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     obtain ⟨d, hd⟩ := Ideal.mem_span_singleton'.1 (Ideal.mem_comap.1 hm)

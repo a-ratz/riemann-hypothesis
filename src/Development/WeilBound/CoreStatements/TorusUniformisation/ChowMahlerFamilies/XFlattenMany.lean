@@ -147,8 +147,8 @@ theorem exists_minor {N M : ℕ} (hN : Module.finrank Ω V = N) (v : Fin M → V
     ∃ (B : Module.Basis (Fin N) Ω V) (I : Fin N → Fin M), B.det (v ∘ I) ≠ 0 := by
   classical
   obtain ⟨κ, e, he, hsp, hli⟩ := exists_linearIndependent' Ω v
-  haveI : Finite κ := Finite.of_injective e he
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective e he
+  let : Fintype κ := Fintype.ofFinite κ
   let B : Module.Basis κ Ω V := Module.Basis.mk hli (by rw [hsp, hv])
   have hc : Fintype.card κ = N := by rw [← hN, Module.finrank_eq_card_basis B]
   let σ : κ ≃ Fin N := Fintype.equivFinOfCardEq hc

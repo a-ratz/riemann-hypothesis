@@ -111,7 +111,7 @@ private theorem res_res_eq_res_trans' {Z : Scheme.{0}} {U V W : Z.Opens} (h₁ :
   apply Units.ext
   first
     | (simp [res]; done)
-    | (simp only [res, Units.coe_map, MonoidHom.coe_coe]
+    | (simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
        rw [← CommRingCat.comp_apply, ← Functor.map_comp]
        rfl)
 

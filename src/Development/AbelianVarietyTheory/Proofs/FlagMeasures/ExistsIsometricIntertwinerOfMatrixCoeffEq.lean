@@ -108,7 +108,7 @@ theorem exists_isometric_intertwiner_of_matrixCoeff_eq :
     refine hcyc y fun g => inner_eq_zero_symm.mp ((Submodule.mem_orthogonal _ _).mp hy _ ?_)
     exact ⟨Finsupp.single g 1, by simp [hA]⟩
   have hdense : DenseRange (LinearMap.range A).subtypeL :=
-    denseRange_subtype_val.mpr (Submodule.dense_iff_topologicalClosure_eq_top.mpr hclos)
+    denseRange_subtypeVal.mpr (Submodule.dense_iff_topologicalClosure_eq_top.mpr hclos)
   have huni : IsUniformInducing (LinearMap.range A).subtypeL :=
     (LinearMap.range A).subtypeₗᵢ.isometry.isUniformInducing
 

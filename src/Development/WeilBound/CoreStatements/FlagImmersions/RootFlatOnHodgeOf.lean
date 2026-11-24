@@ -434,7 +434,7 @@ open GlobalTheory.CompanionTheory.Ar.Flat.DegZ in
 theorem germ_degZero_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (X : Scheme.{0}) (t : SAB H X) (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Sp Ω ⟶ X) (d r : ℕ) (M : LieModel t.G ξ (Fin d → Ω)) (S : GermSys t ξ M) (ρ : 𝓞 E →+* Module.End Ω (Fin d → Ω)) (𝓗 : HodgeLat M.lat ρ H.bar r) (O : Type) [CommRing O] [Algebra O Ω] (O' : Type) [CommRing O'] (s : X ⟶ Sp O') [IsSeparated s] [LocallyOfFiniteType s] (p : ℕ) (σ : E →+* Ω), p.Prime → Function.Injective (algebraMap O Ω) → (∀ (q : Cpt ξ) (o : O), algebraMap O Ω o ∈ regAt ξ q) → IsCptGen ξ → PowFns t → S.Gives 𝓗 → (∀ q : Cpt ξ, (p : X.residueField q.1) = 0 → FibPF t q.1) → Nat.card (E →+* Ω) = Module.finrank ℚ E → (∀ (s' : E →+* Ω) (a : 𝓞 E), s' (a : E) ∈ (algebraMap O Ω).range) → 𝓗.DegZero σ (p : Ω) := by
   intro E _ _ _ H _ hstar X t Ω _ _ ξ d r M S ρ 𝓗 O _ _ O' _ s _ _ p σ hp hinj hreg hξ hpow hgive hfib hcard hrange
     u hu hsp Γ
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hσ : ∀ (q : Cpt ξ) (a : 𝓞 E), σ (a : E) ∈ regAt ξ q := fun q a => by
     obtain ⟨o, ho⟩ := hrange σ a
     exact ho ▸ hreg q o
@@ -456,7 +456,7 @@ theorem germ_degZero_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     have h3 := congrArg v0 e
     rw [map_natCast] at h3
     exact h3.trans hs1
-  haveI : CharP Γ.κ p := (CharP.charP_iff_prime_eq_zero hp).2 hpκ
+  have : CharP Γ.κ p := (CharP.charP_iff_prime_eq_zero hp).2 hpκ
   obtain ⟨F, hF0, hFi⟩ := GlobalTheory.T.fibre_curve_germ_powers E H hstar X t Ω ξ d M S O' s _ p Γ hξ hpow hfib
   choose hFB φ' ψ' lam' he hφ hψ hlam using hFi
   choose xs A hxs hfr hpr using GlobalTheory.T.hodge_lattice_germ_eigen E H X t Ω ξ d r M S ρ 𝓗 σ u hξ hgive hσ hu hsp
@@ -502,7 +502,7 @@ theorem germ_degZero_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     exact congrArg (· * (A q0).det) (RingHom.map_det (genMap ξ q0) (Mt i)).symm
   have hunit : ∀ i, IsUnit (Mt i).det := fun i => by
     have h1 : IsUnit (v0 (Mt i).det) := isUnit_iff_ne_zero.2 (hNdet i ▸ hne i)
-    haveI : IsLocalHom v0 := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo Γ.η).hom)
+    have : IsLocalHom v0 := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo Γ.η).hom)
     exact (isUnit_map_iff v0 _).1 h1
   refine ⟨(A q0).det, fun i => (A (qi i)).det, fun i => ((N i).det)⁻¹, hdet q0,
     fun i => ⟨FibreCurve.z_spec Γ i, hdet (qi i)⟩, fun i => ⟨inv_ne_zero (hne i), ?_⟩, ?_, ?_⟩
@@ -739,7 +739,7 @@ variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) 
 
 theorem unitAt_of_not_dvd {p : ℕ} (hp : p.Prime) {x : Cpt ξ} (hx : InFibre ξ p x) {n : ℤ} (hn : ¬ (p : ℤ) ∣ n) :
     unitAt ξ x (n : Ω) := by
-  haveI : IsLocalRing (regAt ξ x) := EigSplit.isLocalRing_regAt x
+  have : IsLocalRing (regAt ξ x) := EigSplit.isLocalRing_regAt x
   have key : ∀ m : ℤ, IsUnit (m : regAt ξ x) → unitAt ξ x (m : Ω) := fun m hm => by
     obtain ⟨c, hc⟩ := hm.exists_right_inv
     have h1 : (m : Ω) * (c : Ω) = 1 := by simpa using congrArg (regAt ξ x).subtype hc
@@ -807,7 +807,7 @@ theorem numTriv_of_degZero [CharZero Ω] {E : Type} [Field E] [NumberField E] {L
     (eB : ∀ x, InFibre ξ r x → B x = L.inter (HT.eigSp ρ σ') x)
     (hz : 𝓗.DegZero σ (r : Ω)) {a : ⋀[Ω]^p V} {b : ⋀[Ω]^q V} (ha : a ≠ 0) (hb : b ≠ 0)
     (hc : ∃ x f, IsCoeffAt A B p q a b x f) : NumTrivMod (lineLat A B p q a b) (r : Ω) := by
-  haveI := 𝓗.finiteDimensional
+  have := 𝓗.finiteDimensional
   obtain ⟨x₀, -, α, β, hα, hβ, hwA, hwB, -⟩ := hc
   obtain ⟨v, c, hv, hvs, hc0, ev⟩ := exists_basis_of_wedge hA ha hα hwA
   obtain ⟨w, d, hw, hws, hd0, ew⟩ := exists_basis_of_wedge hB hb hβ hwB
@@ -871,7 +871,7 @@ theorem genPt_max {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCa
     exact hz
   obtain ⟨w, rfl⟩ := h1
   have h2 : w = IsLocalRing.closedPoint (X.presheaf.stalk (genPt ξ)) := by
-    letI := hF.toField
+    let := hF.toField
     exact Subsingleton.elim (α := PrimeSpectrum (X.presheaf.stalk (genPt ξ))) _ _
   rw [h2, Scheme.fromSpecStalk_closedPoint]
 
@@ -896,7 +896,7 @@ theorem emb_inr (𝔐 : HodgeCpt Y S y) (τ : CMType H) :
   RingHom.ext fun a => congrArg 𝔐.cst (CptHodge.tauIn_conj c τ.1 a).symm
 
 theorem cst_mem (𝔐 : HodgeCpt Y S y) (q : Cpt 𝔐.ξ) (o : 𝓞 c.F) : 𝔐.cst (o : c.F) ∈ regAt 𝔐.ξ q := by
-  letI algΩ : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
+  let algΩ : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
   exact GlobalTheory.T.base_constants_regular 𝔐.X Ω 𝔐.ξ (𝓞 c.F) (𝔐.f ≫ Y.s) 𝔐.cst_over q o
 
 
@@ -905,19 +905,19 @@ theorem exists_hodgeLat (𝔐 : HodgeCpt Y S y)
     (hFibY : ∀ (p : ℕ), p.Prime → ∀ z : Y.X, (p : Y.X.residueField z) = 0 → FibPF Y.t z) (p : ℕ) (hp : p.Prime) :
     ∃ 𝓗 : HodgeLat 𝔐.M.lat 𝔐.ρ H.bar (D.p + D.q), ∀ σ : E →+* Ω, 𝓗.DegZero σ (p : Ω) := by
   classical
-  letI : StarRing (𝓞 E) := H.starRing
+  let : StarRing (𝓞 E) := H.starRing
   have hstar : ∀ a : 𝓞 E, star a = H.bar a := fun _ => rfl
-  haveI := c.fin
-  haveI : NumberField c.F := {}
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have := c.fin
+  have : NumberField c.F := {}
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   have hgen := 𝔐.tie.gen
   obtain ⟨s₀, hft, hqc, -⟩ := GlobalTheory.CompanionTheory.Ar.ChartFType.main 𝔐.X Ω 𝔐.ξ _ _ 𝔐.all 𝔐.tie
-  haveI hprop : IsProper s₀ := LocModel.isProper_of_coordTie 𝔐.all 𝔐.tie s₀
-  haveI hLN : IsLocallyNoetherian 𝔐.X := LocallyOfFiniteType.isLocallyNoetherian s₀
+  have hprop : IsProper s₀ := LocModel.isProper_of_coordTie 𝔐.all 𝔐.tie s₀
+  have hLN : IsLocallyNoetherian 𝔐.X := LocallyOfFiniteType.isLocallyNoetherian s₀
   have hFib : ∀ (p : ℕ), p.Prime → ∀ z : 𝔐.X, (p : 𝔐.X.residueField z) = 0 → FibPF 𝔐.t z := fun p hp z hz =>
     (GlobalTheory.T.fibre_power_free_pullback E H _ _ _ 𝔐.t 𝔐.f 𝔐.m z).2 (hFibY p hp _ (by
       rwa [← map_natCast (𝔐.f.residueFieldMap z).hom p, map_eq_zero] at hz))
-  haveI : ∀ x : 𝔐.X, _root_.IsReduced (𝔐.X.presheaf.stalk x) := fun x => by
+  have : ∀ x : 𝔐.X, _root_.IsReduced (𝔐.X.presheaf.stalk x) := fun x => by
     have := (𝔐.normal x).1
     infer_instance
   have hred : AlgebraicGeometry.IsReduced 𝔐.X := isReduced_of_isReduced_stalk 𝔐.X
@@ -967,7 +967,7 @@ theorem exists_hodgeLat (𝔐 : HodgeCpt Y S y)
   have hfree := GlobalTheory.T.germ_system_height_free E H hstar 𝔐.X 𝔐.t Ω 𝔐.ξ d (D.p + D.q) M G hPow hgen hC
     (fun q p' hp' h => hFib p' hp' q.1 h)
   obtain ⟨𝓗, hG⟩ := GlobalTheory.T.exists_hodge_lattice_germ_system E H hstar 𝔐.X 𝔐.t Ω 𝔐.ξ d (D.p + D.q) M G ρ' hgen hact hfree
-  letI algΩ : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
+  let algΩ : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
   have hint : ∀ (s' : E →+* Ω) (a : 𝓞 E), s' (a : E) ∈ (algebraMap (𝓞 c.F) Ω).range := by
     intro s' a
     obtain ⟨τ', hτ'⟩ := hfac s'
@@ -994,7 +994,7 @@ theorem PositivityTheory.Xgn.numerical_triviality_of_good_reduction : ∀ (E : T
   intro E _ _ _ H D Xo Yl hY l c hg Y hdom S Ω _ K _ J _ y 𝔐 p hp hpS hdisc τ a b ha hb hc
   obtain ⟨-, hFib⟩ := GlobalTheory.T.global_model_power_free E H D Xo Yl hY l c hg Y hdom
   obtain ⟨𝓗, hz⟩ := exists_hodgeLat 𝔐 hFib p hp
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   let σ : E →+* Ω := 𝔐.cst.comp (τ.1.codRestrict c.F.toSubfield (c.conj τ.1))
   let σ' : E →+* Ω := 𝔐.cst.comp ((ComplexEmbedding.conjugate τ.1).codRestrict c.F.toSubfield (c.conj _))
   have e1 : GlobalTheory.CompanionTheory.Ar.eigSp 𝔐.ρ (𝔐.emb (.inl τ)) = HT.eigSp 𝔐.ρ σ := eigSp_eq _ _ _ fun _ => rfl
@@ -1051,7 +1051,7 @@ namespace RootFieldNumerics.RF
 theorem sum_Iic_step {M : Type} [AddCommGroup M] {N : ℕ} (f : Fin N → M) (i : Fin N) :
     f i + -∑ k ∈ Finset.Iic i, f k =
       if h : 0 < (i : ℕ) then -∑ k ∈ Finset.Iic (⟨i - 1, by omega⟩ : Fin N), f k else 0 := by
-  rw [← Finset.Iio_insert, Finset.sum_insert Finset.notMem_Iio_self]
+  rw [← Finset.insert_Iio, Finset.sum_insert Finset.notMem_Iio_self]
   split_ifs with h
   · have : Finset.Iio i = Finset.Iic (⟨i - 1, by omega⟩ : Fin N) := by
       ext k
@@ -1068,8 +1068,8 @@ theorem rootFlatOnHodge_of (h1 : CptEx) (h2 : PeriodOf) (h3 : SmoothLine) (h4 : 
     (hFD : FlatDegree) (hG : Top.Given) : RootFlatOnHodge := by
   intro E _ _ _ _ H D Xo l c Y bad M Sys Fx o hY hp hq hbad hom τ
   classical
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
   obtain ⟨Yl, hg, hYl, -, -, hdom⟩ := hY
   obtain ⟨U, Z, hU, hUi, hgp⟩ := h1 E H D l (Xo l) c Y bad M.Ω M.K M.ι M.y o.𝔐
   obtain ⟨φ, N, k1, k2, k3, k4, k5, k6⟩ := exists_norms hG hFD h2 h5 Xo l c Y U Z τ hg hp hq hU hUi (isGeom_of o Z hgp)

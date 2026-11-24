@@ -136,7 +136,7 @@ theorem finB_one_UH (k r : ℕ) : (1 : Mat k r) ∈ Formalism.QuantumDeterminant
 
 theorem finB_frob_conj_ge {k r : ℕ} {P : Mat k r} (hP : IsUnit P.det) :
     ∃ c : ℝ, 0 < c ∧ ∀ g : Mat k r, c * Formalism.FourierDecayAlt.B.gN g ≤ frob (P * g * P⁻¹) := by
-  letI : NormedAddCommGroup (Mat k r) := Matrix.frobeniusNormedAddCommGroup
+  let : NormedAddCommGroup (Mat k r) := Matrix.frobeniusNormedAddCommGroup
   have hg : ∀ A : Mat k r, Formalism.FourierDecayAlt.B.gN A = ‖A‖ := by
     intro A
     rw [Matrix.frobenius_norm_def, Formalism.FourierDecayAlt.B.gN, Real.sqrt_eq_rpow]
@@ -286,8 +286,8 @@ theorem finFub_int' (hIS : S0.IntSStatement) (k r : ℕ) (ε : Fin (2 * r + k + 
         chiInv (Formalism.MainNotions.S.psiGen k r z c) π (Matrix.of q.2.1) (Matrix.of q.2.2) ξ))
       ((Formalism.REAL.muG ε).prod (μW.prod μN)) := by
   obtain ⟨hz, hT, -, hπW, hHW, hHN⟩ := hB
-  haveI : SigmaFinite μW := hHW.1
-  haveI : SigmaFinite μN := hHN.1
+  have : SigmaFinite μW := hHW.1
+  have : SigmaFinite μN := hHN.1
   obtain ⟨hq0, hh, hmax⟩ := finB_gap hgap
   set a := aExp ε h with ha
   set β := a - 1 with hβ
@@ -477,8 +477,8 @@ theorem finFub (hIS : S0.IntSStatement) (k r : ℕ) (ε : Fin (2 * r + k + 1) �
   have hd : IsUnit P.det := (Matrix.isUnit_iff_isUnit_det P).1 hP.1
   have hHW := hB.2.2.2.2.1
   have hHN := hB.2.2.2.2.2
-  haveI : SigmaFinite μW := hHW.1
-  haveI : SigmaFinite μN := hHN.1
+  have : SigmaFinite μW := hHW.1
+  have : SigmaFinite μN := hHN.1
   let integrand (y : Formalism.REAL.UJ ε)
       (p : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r) : Vp :=
     F (Formalism.MainNotions.S.umat y) • (finKer T' μ' v₁ v₂ P x (Formalism.MainNotions.S.umat y) p •

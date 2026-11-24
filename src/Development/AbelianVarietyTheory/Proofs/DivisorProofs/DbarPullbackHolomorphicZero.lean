@@ -98,7 +98,7 @@ theorem _root_.GlobalTheory.CxForm.PullClosed.dbarAt_sum_smul {ι : Type} [Finty
 
     simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul]
     rw [_root_.GlobalTheory.dbar_sum fun i _ => (hf i).mul_const _]
-    simp [ContinuousLinearMap.sum_apply,
+    simp [sum_apply,
       _root_.GlobalTheory.dbar_mul (hf _) (differentiableAt_const _),
       _root_.GlobalTheory.dbar_const]
   rw [key, Finset.mul_sum]
@@ -171,7 +171,7 @@ private theorem dbarAt_add_of_differentiableAt {v : _root_.ReciprocityTheory.L2D
   apply (_root_.GlobalTheory.CxForm.bas n).repr.injective
   ext S
   simp only [map_add (f := _), Finsupp.add_apply, _root_.GlobalTheory.CxForm.FormMul.repr_coefwise]
-  rw [_root_.GlobalTheory.dbar_add (hF S) (hG S), ContinuousLinearMap.add_apply]
+  rw [_root_.GlobalTheory.dbar_add (hF S) (hG S), add_apply]
 
 
 open Set Filter Topology in

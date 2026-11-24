@@ -142,7 +142,7 @@ theorem upper_eq_uni_mul_diag {K : Type} [Field K] (b : GL (Fin n) K) (hb : b.va
   have hne : ∀ i, b.val i i ≠ 0 := by
     intro i h
     apply hdet0
-    rw [Matrix.det_of_upperTriangular hb]
+    rw [det_of_isUpperTriangular hb]
     exact Finset.prod_eq_zero (Finset.mem_univ i) h
   let t : GL (Fin n) K :=
     ⟨diagonal (fun i => b.val i i), diagonal (fun i => (b.val i i)⁻¹),

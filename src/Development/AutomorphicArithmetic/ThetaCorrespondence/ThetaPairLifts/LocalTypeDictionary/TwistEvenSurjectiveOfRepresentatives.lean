@@ -549,7 +549,7 @@ theorem ontoAll_of : ∀ D : D7, FinDim D → MetEx D → EigSpan D → ParIndep
   obtain ⟨hs, hadj⟩ := hUp c hc s₀ hs₀ k hk s Θ hR
   obtain ⟨ipD₀, ip₀, hm₀⟩ := hMet c hc 0 (Nat.zero_le _) s₀ hs₀
   obtain ⟨ipD, ip, hm⟩ := hMet c hc k hk s hs
-  haveI : FiniteDimensional ℂ (s₀.CC c) := hFin c hc 0 (Nat.zero_le _) s₀ hs₀
+  have : FiniteDimensional ℂ (s₀.CC c) := hFin c hc 0 (Nat.zero_le _) s₀ hs₀
   let Sab := GlobalTheory.LFun.above D.host.E (c.S : Set (HeightOneSpectrum (𝓞 D.host.F)))
   let R : GlobalTheory.LFun.Fam D.host.E → GlobalTheory.LFun.Fam D.host.E → Prop := fun B B' => ∀ w ∉ Sab, B w = B' w
   have hRe : Equivalence R :=
@@ -818,7 +818,7 @@ theorem stepUp : ∀ D : D7, FinDim D → ParOfVal D → UpSpan D → UpAdj D �
   intro D hFin hPV hSpan hAdj hPar hNe
   intro c hc k hk s s' hs hs' p hp ipD ip ipD' ip' hM hM' u B hB hL
   have hk' : k + 1 ≤ c.m := hk
-  haveI : FiniteDimensional ℂ (s'.CC c) := hFin c hc (k + 1) hk' s' hs'
+  have : FiniteDimensional ℂ (s'.CC c) := hFin c hc (k + 1) hk' s' hs'
   obtain ⟨x, hx, -⟩ := GlobalTheory.hermitian_adjoint_exists_unique (s.CC c) (s'.CC c) ip ip' hM'.herm hM'.pos p.io u
   obtain ⟨φ, v, hv, hF⟩ := hNe c hc k hk s s' hs hs' p hp u B hB hL
   have key := GlobalTheory.ChainOnto.value_of_adjoint_of_mem_span (GA D s'.V) (SmT s'.M) (s'.CC c) (s'.CC c).subtype s'.KF ipD' ip' s'.pet
@@ -954,7 +954,7 @@ theorem realZeta : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.P
     set Hf : GinfC s.V → ℝ := fun g => ∏ w, GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW s.V a w
       (GlobalTheory.AdelicU.projArch D.sp.cm.sig s.V.gram w (g : GA D s.V)) with hHf
     have hHc : Continuous Hf := continuous_finsetProd _ fun w _ =>
-      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtype_val)
+      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtypeVal)
     have hHpos : ∀ g, 0 < Hf g ∧ Hf g ≤ 1 := fun g =>
       ⟨Finset.prod_pos fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1,
         Finset.prod_le_one₀ (fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1.le)
@@ -1013,7 +1013,7 @@ variable {D : D7}
 open GlobalTheory.ChainOnto.HaarInf in
 theorem meas_petco : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff c s) ∧ MeasurableSet s.big ∧ s.big ⊆ intOff c s ∧ ∃ mR : Measure (GinfC s.V), mR.IsHaarMeasure ∧ ∀ (f : GinfC s.V → ℂ) (F : GA D s.V → ℂ), Integrable f mR → (∀ (b : GinfC s.V), ∀ κ ∈ s.J, F ((b : GA D s.V) * κ) = f b) → IntegrableOn F s.big s.ν ∧ ∫ g in s.big, F g ∂s.ν = ∫ b, f b ∂mR) ∧ ∀ ipD ip, IsMet c s ipD ip → ∀ (u : s.CC c) (v : s.M.Vec) (b : GinfC s.V), ∀ κ ∈ s.J, s.pet (rTr s.V ((b : GA D s.V) * κ) (PiLocalization₂.val u (PiTensorProduct.tprod ℂ v))) (PiLocalization₂.val u (PiTensorProduct.tprod ℂ v)) = ip u u * ∏ τ, ⟪(v τ : s.M.H τ), s.M.rep τ (infMat D.sp.cm.sig s.V.gram (c.θ τ) (b : GA D s.V)) (v τ : s.M.H τ)⟫_ℂ := by
   intro D c hc j hj s hs
-  haveI := hs.haar
+  have := hs.haar
   set V := s.V
   let K : Subgroup (GA D V) := s.J
   let Lf : Subgroup (GfC V) := K.subgroupOf (GfC V)
@@ -1029,7 +1029,7 @@ theorem meas_petco : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff 
     exact hκ
   have hLf : IsOpen (Lf : Set (GfC V)) := by
     obtain ⟨U, hU, hUK⟩ := hs.isOpen
-    refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtype_val)
+    refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtypeVal)
     exact Subgroup.mem_subgroupOf.2 (hUK _ (Subgroup.mem_subgroupOf.1 hk) k.2)
   have hAopen : IsOpen (A : Set (GA D V)) := hLf.preimage (GlobalTheory.AutMult.continuous_toFin V)
   have hAint : (A : Set (GA D V)) ⊆ intOff c s := by
@@ -1044,7 +1044,7 @@ theorem meas_petco : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff 
   have hIopen : IsOpen (I : Set (GA D V)) := Subgroup.isOpen_mono (H₁ := A) hAint hAopen
   have hker : {g : GA D V | g ∈ A ∧ GlobalTheory.AutMult.toInf V g = 1} = (K : Set (GA D V)) := by
     ext g
-    simp only [Set.mem_setOf_eq, toInf_eq_one_iff]
+    simp only [Set.mem_ofPred_eq, toInf_eq_one_iff]
     constructor
     · rintro ⟨hgA, hgf⟩
       have := hfinK g hgA
@@ -1062,7 +1062,7 @@ theorem meas_petco : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff 
     exact ⟨b, 1, one_mem _, by simp⟩
   have hHaar : (Measure.map (GlobalTheory.AutMult.toInf V) (s.ν.restrict (A : Set (GA D V)))).IsHaarMeasure :=
     GlobalTheory.ChainOnto.map_restrict_isHaar (GA D V) (GinfC V) s.ν A (GinfC V).subtype (GlobalTheory.AutMult.toInf V) hAopen
-      continuous_subtype_val (GlobalTheory.AutMult.continuous_toInf V) hpi hiA (hker ▸ hKc)
+      continuous_subtypeVal (GlobalTheory.AutMult.continuous_toInf V) hpi hiA (hker ▸ hKc)
   refine ⟨⟨hIopen.measurableSet, hAset ▸ hAopen.measurableSet, hAset ▸ hAint, _, hHaar, fun f F hf hF => ?_⟩, ?_⟩
   · have hmeas : AEMeasurable (GlobalTheory.AutMult.toInf V) (s.ν.restrict (A : Set (GA D V))) :=
       (GlobalTheory.AutMult.continuous_toInf V).measurable.aemeasurable
@@ -1205,13 +1205,13 @@ theorem zetaNe_of_real : ∀ D : D7, MetEx D → RealZeta D → ZetaNe D := by
     by_contra hni
     exact hz (integral_undef hni)
   refine ⟨?_, ?_⟩
-  · rw [setIntegral_eq_of_subset_of_forall_diff_eq_zero hmOff hAsub hoff]
+  · rw [setIntegral_eq_of_subset_of_forall_sdiff_eq_zero hmOff hAsub hoff]
     rw [(hint _ _ (hzInt.const_mul (conj (ip u u))) hlawZ).2, integral_const_mul]
     exact mul_ne_zero hcipu hz
   · intro a hmaj hcomp
     obtain ⟨s₁, hs₁, hI⟩ := hzI a hmaj hcomp
     refine ⟨s₁, hs₁, ?_⟩
-    refine IntegrableOn.of_forall_diff_eq_zero (s := s.big) ?_ hmOff ?_
+    refine IntegrableOn.of_forall_sdiff_eq_zero (s := s.big) ?_ hmOff ?_
     · refine (hint _ _ (hI.const_mul (conj (ip u u))) ?_).1
       intro b κ hκ
       rw [hlawZ b κ hκ, hgtS_mul_lev hs.selfDual hs.fin hs.stab a b κ hκ, mul_assoc]

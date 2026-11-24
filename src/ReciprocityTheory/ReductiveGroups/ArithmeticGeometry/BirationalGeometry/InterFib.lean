@@ -106,13 +106,13 @@ theorem fibSys_finite {W : Type*} [Fintype W] (r : W → ℕ) (H : W → MvPolyn
           eval w (monomial u a) = eval w (monomial u' a * H i) := by
         intro w hw
         rw [hu', show monomial (u' + Finsupp.single i (r i)) a =
-          monomial u' a * monomial (Finsupp.single i (r i)) 1 by rw [monomial_mul, mul_one],
+          monomial u' a * monomial (Finsupp.single i (r i)) 1 by rw [monomial_mul_monomial, mul_one],
           map_mul, map_mul, ← X_pow_eq_monomial, map_pow, eval_X, hw i]
       have hsum : monomial u' a * H i =
           ∑ v ∈ (H i).support, monomial (u' + v) (a * AddMonoidAlgebra.coeff (H i) v) := by
         conv_lhs => rw [(H i).as_sum]
         rw [Finset.mul_sum]
-        simp only [monomial_mul]
+        simp only [monomial_mul_monomial]
       have hterm : ∀ v ∈ (H i).support, ∃ q ∈ M, ∀ w : W → ℂ, (∀ i, w i ^ r i = eval w (H i)) →
           eval w (monomial (u' + v) (a * AddMonoidAlgebra.coeff (H i) v)) = eval w q := by
         intro v hv

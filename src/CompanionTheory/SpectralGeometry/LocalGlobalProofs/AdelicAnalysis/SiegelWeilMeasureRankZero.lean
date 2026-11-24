@@ -83,7 +83,7 @@ theorem coordW_univ {d : ℕ} (b : Module.Basis (Fin d) F E) (lam : Measure R) (
 theorem coordHerm_univ (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin d) F E) (lam : Measure R) :
     coordHerm R σ b lam 0 Set.univ = 1 := by
   unfold coordHerm
-  haveI : IsEmpty {p : Fin 0 × Fin 0 // p.1 < p.2} := ⟨fun p => p.1.1.elim0⟩
+  have : IsEmpty {p : Fin 0 × Fin 0 // p.1 < p.2} := ⟨fun p => p.1.1.elim0⟩
   rw [Measure.comap_apply _ (fun x y _ => Subsingleton.elim x y)
     (fun s _ => Subsingleton.measurableSet) _ MeasurableSet.univ]
   rw [Measure.pi_of_empty, Measure.pi_of_empty]
@@ -126,7 +126,7 @@ theorem theta_univ (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)
   have hS : {X : Fin 0 → Fin M → E | gramE σ J X = T} = Set.univ :=
     Set.eq_univ_of_forall fun X => Subsingleton.elim _ _
   unfold thetaMeas
-  rw [hS, Measure.smul_apply, Measure.sum_apply _ MeasurableSet.univ]
+  rw [hS, smul_apply, Measure.sum_apply _ MeasurableSet.univ]
   have h2 : ∀ X : (Set.univ : Set (Fin 0 → Fin M → E)),
       ((μ.restrict 𝓕).map fun h => actW (AF F) σ J h⁻¹
         (ratTup (AF F) (X : Fin 0 → Fin M → E))) Set.univ = μ 𝓕 := fun X => by
@@ -144,8 +144,8 @@ theorem swMeas_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   obtain ⟨⟨hLC, hSC, hT2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨tg, lc, sc, t2, bs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
   let Γ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J
-  haveI : Countable Γ := (GlobalTheory.CompanionTheory.SW.rational_countable_discrete F E σ hCM M J hJ).1
-  haveI : μ.IsHaarMeasure := hμ
+  have : Countable Γ := (GlobalTheory.CompanionTheory.SW.rational_countable_discrete F E σ hCM M J hJ).1
+  have : μ.IsHaarMeasure := hμ
   have h𝓕' : IsFundamentalDomain Γ 𝓕 μ := h𝓕
   have h0 : μ 𝓕 ≠ 0 :=
     (GlobalTheory.CompanionTheory.SW.LatticeUnimod.unimodular_of_isFundamentalDomain (HA (AF F) σ J) Γ μ 𝓕 h𝓕' hfin).1

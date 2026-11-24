@@ -63,7 +63,7 @@ namespace GlobalTheory.NormCompat.NormCont
 
 theorem le_exp_neg_one_of_lt_one {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1) := by
   by_cases hx : x = 0
-  · rw [hx]; exact zero_le'
+  · rw [hx]; exact zero_le
   rw [← WithZero.exp_log hx] at h ⊢
   rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
   rw [WithZero.exp_le_exp]; omega
@@ -143,11 +143,11 @@ theorem exists_mul_mem_integers (v : HeightOneSpectrum (𝓞 E)) (y : K)
       Classical.choose (exists_mem_comap_not_mem v w h) else 1
   have hf : ∀ w, f w ∉ v.asIdeal := fun w => by
     by_cases h : w.asIdeal.comap (algebraMap (𝓞 E) (𝓞 K)) ≠ v.asIdeal
-    · simp only [f, dif_pos h]; exact (Classical.choose_spec (exists_mem_comap_not_mem v w h)).2
-    · simp only [f, dif_neg h]; exact fun h1 => v.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h1)
+    · simp only [f, dite_eq_left h]; exact (Classical.choose_spec (exists_mem_comap_not_mem v w h)).2
+    · simp only [f, dite_eq_right h]; exact fun h1 => v.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h1)
   have hfw : ∀ w, w.asIdeal.comap (algebraMap (𝓞 E) (𝓞 K)) ≠ v.asIdeal →
       algebraMap (𝓞 E) (𝓞 K) (f w) ∈ w.asIdeal := fun w h => by
-    simp only [f, dif_pos h]; exact (Classical.choose_spec (exists_mem_comap_not_mem v w h)).1
+    simp only [f, dite_eq_left h]; exact (Classical.choose_spec (exists_mem_comap_not_mem v w h)).1
   let a : 𝓞 E := ∏ w ∈ F, f w ^ k
   have ha : a ∉ v.asIdeal := by
     refine Finset.prod_induction _ (· ∉ v.asIdeal) (fun x y hx hy h => (v.isPrime.mem_or_mem h).elim hx hy)
@@ -177,7 +177,7 @@ theorem exists_mul_mem_integers (v : HeightOneSpectrum (𝓞 E)) (y : K)
             w.intValuation (algebraMap (𝓞 E) (𝓞 K) (∏ x ∈ F.erase w, f x ^ k))
           ≤ w.intValuation (algebraMap (𝓞 E) (𝓞 K) (f w)) ^ k * 1 := mul_le_mul' le_rfl (w.intValuation_le_one _)
         _ ≤ WithZero.exp (-1) ^ k := by rw [mul_one]; exact pow_le_pow_left' (le_exp_neg_one_of_lt_one hlt) k
-    rw [mul_div_assoc', div_le_one₀ (zero_lt_iff.2 hc')]
+    rw [mul_div_assoc', div_le_one₀ (pos_iff_ne_zero.2 hc')]
     calc w.intValuation (algebraMap (𝓞 E) (𝓞 K) a) * w.intValuation b
         ≤ WithZero.exp (-(k : ℤ)) * 1 := mul_le_mul' hle hb1
       _ ≤ w.intValuation c := by rw [mul_one]; exact hk w
@@ -224,7 +224,7 @@ theorem norm_close_to_one : ∀ (E K : Type) [Field E] [NumberField E] [Field K]
   obtain ⟨a, ha, r, hr⟩ := exists_mul_mem_integers v ((z - 1) / algebraMap E K (d : E)) fun w hw => by
     have h0 : w.valuation K (algebraMap E K (d : E)) ≠ 0 := by
       rw [Ne, map_eq_zero]; exact hdK
-    rw [map_div₀, div_le_one₀ (zero_lt_iff.2 h0)]
+    rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 h0)]
     exact (hz w hw).trans (hdw w)
 
   have hadr : algebraMap E K (a : E) * (z - 1) = algebraMap E K (d : E) * (r : K) := by

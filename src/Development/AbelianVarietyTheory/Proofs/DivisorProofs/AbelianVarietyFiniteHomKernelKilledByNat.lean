@@ -63,15 +63,15 @@ theorem flat_of_isFinite_field (K : Type) [Field K] (H : Over (Sp K)) [GrpObj H]
   have haff : IsAffine H.left := isAffine_of_isAffineHom H.hom
   obtain ⟨A, ⟨e⟩⟩ := (essImage_hopfSpec (G := Grp.mk H)).2 haff
   let B : Type := A.unop
-  letI : HopfAlgebra K B := A.unop.hopfAlgebra
+  let : HopfAlgebra K B := A.unop.hopfAlgebra
   let G : Over (Spec (CommRingCat.of K)) :=
     (Spec (CommRingCat.of B)).asOver (Spec (CommRingCat.of K))
-  letI : GrpObj G := instGrpObjSpecAsOverSpec (R := CommRingCat.of K) (A := CommRingCat.of B)
+  let : GrpObj G := instGrpObjSpecAsOverSpec (R := CommRingCat.of K) (A := CommRingCat.of B)
   let i : G ≅ H := (Grp.forget _).mapIso e
   obtain ⟨j, hj, hw⟩ : ∃ j : Spec (CommRingCat.of B) ⟶ H.left, IsIso j ∧
       Spec.map (CommRingCat.ofHom (algebraMap K B)) = j ≫ H.hom :=
     ⟨i.hom.left, inferInstanceAs (IsIso ((Over.forget _).map i.hom)), (Over.w i.hom).symm⟩
-  haveI h1 : Flat (Spec.map (CommRingCat.ofHom (algebraMap K B))) := by
+  have h1 : Flat (Spec.map (CommRingCat.ofHom (algebraMap K B))) := by
     rw [Flat.SpecMap_iff]
     exact RingHom.flat_algebraMap_iff.2 inferInstance
   have e : H.hom = inv j ≫ Spec.map (CommRingCat.ofHom (algebraMap K B)) := by
@@ -87,14 +87,14 @@ theorem kernel_killed : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), 
   have hp : IsPullback i (toUnit H) f.hom η[B.X] := by
     rw [toUnit_unique (toUnit _) (pullback.snd f.hom η[B.X])]
     exact IsPullback.of_hasPullback _ _
-  haveI : Mono i := ⟨fun _ _ e => hp.hom_ext e (toUnit_unique _ _)⟩
+  have : Mono i := ⟨fun _ _ e => hp.hom_ext e (toUnit_unique _ _)⟩
   let lift {W : Over (Sp K)} (g : W ⟶ A.X) (hg : g ≫ f.hom = 1) : W ⟶ H :=
     GlobalTheory.CompanionTheory.KerPull.Kernel.kerLift hp g hg
   have lift_comp {W : Over (Sp K)} (g : W ⟶ A.X) (hg : g ≫ f.hom = 1) :
       lift g hg ≫ i = g := GlobalTheory.CompanionTheory.KerPull.Kernel.kerLift_comp hp g hg
   have kills (W : Over (Sp K)) (x : W ⟶ H) : (x ≫ i) ≫ f.hom = 1 := by
     rw [Category.assoc, hp.w, ← Category.assoc, toUnit_unique (x ≫ toUnit H) (toUnit W), Hom.one_def]
-  letI : GrpObj H :=
+  let : GrpObj H :=
     { one := lift η[A.X] (by rw [IsMonHom.one_hom, Hom.one_def, toUnit_unique (toUnit _) (𝟙 _), Category.id_comp])
       mul := lift (fst H H ≫ i * snd H H ≫ i) (by
         rw [MonObj.mul_comp, kills, kills, _root_.mul_one])
@@ -125,13 +125,13 @@ theorem kernel_killed : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), 
         simp [MonObj.comp_mul, lift, lift_comp]
         rw [← Hom.one_def]
         exact mul_inv_cancel i }
-  haveI : IsMonHom i := by
+  have : IsMonHom i := by
     refine { one_hom := lift_comp _ _, mul_hom := ?_ }
     refine (lift_comp _ _).trans ?_
     rw [Hom.mul_def]
     simp
-  haveI : IsCommMonObj A.X := A.ab.comm
-  haveI : IsCommMonObj H := by
+  have : IsCommMonObj A.X := A.ab.comm
+  have : IsCommMonObj H := by
     refine (isCommMonObj_iff_isMulCommutative _).mpr fun T => ⟨⟨fun x y => ?_⟩⟩
     rw [← cancel_mono i, MonObj.mul_comp, MonObj.mul_comp, mul_comm]
   have hHf : IsFinite H.hom := by

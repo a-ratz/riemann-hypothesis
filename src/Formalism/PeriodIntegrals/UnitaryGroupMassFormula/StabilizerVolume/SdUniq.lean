@@ -77,8 +77,8 @@ theorem eq_of_testEx {V : Type} [AddCommGroup V] [TopologicalSpace V]
     (hμ : SelfDual μ χ) (hν : SelfDual ν χ) (hT : TestEx μ χ) : μ = ν := by
   obtain ⟨hHμ, hμi⟩ := hμ
   obtain ⟨hHν, hνi⟩ := hν
-  haveI := hHμ
-  haveI := hHν
+  have := hHμ
+  have := hHν
   obtain ⟨Φ, hc, hcs, hi, z, hz⟩ := hT
   obtain ⟨c, hνμ⟩ : ∃ c : NNReal, ν = c • μ := by
     first
@@ -138,8 +138,8 @@ theorem transform_indicator (hLo : IsOpen (L : Set V)) (y : V) :
       · simp [Set.indicator_apply, hx]
     rw [hfun, integral_indicator_const _ hLo.measurableSet]
     simp [Measure.real]
-  · rw [Set.indicator_apply, if_neg hy]
-    simp only [ann, Set.mem_setOf_eq, not_forall] at hy
+  · rw [Set.indicator_apply, ite_eq_right hy]
+    simp only [ann, Set.mem_ofPred_eq, not_forall] at hy
     obtain ⟨x0, hx0, hne⟩ := hy
     set f : V → ℂ := fun x => (L : Set V).indicator (fun _ => (1 : ℂ)) x * χ x y with hf
     have key : ∫ x, f (x0 + x) ∂μ = ∫ x, f x ∂μ := integral_add_left_eq_self (μ := μ) f x0
@@ -210,7 +210,7 @@ theorem testEx_of_trivial (hχ : ∀ x y, χ x y = 1) (L : AddSubgroup V)
     | exact integrableOn_const hfin.ne
     | exact integrableOn_const_iff.2 (Or.inr hfin)
   by_cases hL : ∀ t, t ∈ L
-  · haveI : IsFiniteMeasure μ := ⟨(measure_mono (fun x _ => hL x)).trans_lt hfin⟩
+  · have : IsFiniteMeasure μ := ⟨(measure_mono (fun x _ => hL x)).trans_lt hfin⟩
     refine ⟨fun _ => 1, continuous_const, HasCompactSupport.intro hLc (fun x hx => absurd (hL x) hx), ?_, ⟨0, one_ne_zero⟩⟩
     simp only [hχ, mul_one]
     exact integrable_const _
@@ -372,7 +372,7 @@ theorem continuous_pairHerm_right (σ : E →ₐ[F] E) (n : ℕ) (S : HermR R σ
   apply continuous_const.mul
   apply ht.comp
   exact continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun b _ =>
-    continuous_const.mul ((continuous_apply a).comp ((continuous_apply b).comp continuous_subtype_val))
+    continuous_const.mul ((continuous_apply a).comp ((continuous_apply b).comp continuous_subtypeVal))
 
 end ContY
 

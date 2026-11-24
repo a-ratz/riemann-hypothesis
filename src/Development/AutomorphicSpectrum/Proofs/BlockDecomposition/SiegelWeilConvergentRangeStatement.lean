@@ -203,7 +203,7 @@ theorem adelic_phase_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       (Matrix.trace (((hermFin σ b : HermR (Af F) σ n) : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) *
         gramR (Af F) σ J (projFin X)))) := by
   intro F E _ _ _ _ _ σ _ M J n ψ b X
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have h1 := tmap_phase (fstA F) σ J (b : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) X
   have h2 := tmap_phase (sndA F) σ J (b : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) X
   have key : ∀ T : AF F, ψ T = psiInf F ψ (fstA F T) * psiFin F ψ (sndA F T) := by
@@ -324,7 +324,7 @@ theorem HasCO.sub {G : Type} [AddGroup G] [TopologicalSpace G] (h : HasCO G) (S 
   intro W hW
   obtain ⟨W', hW', hsub⟩ := mem_nhds_subtype (S : Set G) 0 W |>.1 hW
   obtain ⟨P, hPo, hPc, hPW⟩ := h W' hW'
-  refine ⟨P.comap S.subtype, hPo.preimage continuous_subtype_val, ?_, ?_⟩
+  refine ⟨P.comap S.subtype, hPo.preimage continuous_subtypeVal, ?_, ?_⟩
   · have hemb : Topology.IsClosedEmbedding (Subtype.val : S → G) := hS.isClosedEmbedding_subtypeVal
     exact hemb.isCompact_preimage hPc
   · intro x hx
@@ -402,11 +402,11 @@ theorem psiFin_trivial (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
 theorem hasCO_herm (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (n : ℕ) : HasCO (HermR (Af F) σ n) := by
   obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : LocallyCompactSpace (Af F) := a1
-  haveI : SecondCountableTopology (Af F) := a2
-  haveI : T2Space (Af F) := a3
+  have : LocallyCompactSpace (Af F) := a1
+  have : SecondCountableTopology (Af F) := a2
+  have : T2Space (Af F) := a3
   obtain ⟨-, -, -, -, -, -, hh, -, hcl, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Af F)
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   let c : (Af F ⊗[F] E) →+ (Fin (Module.finrank F E) → Af F) :=
     { toFun := fun y k => (Algebra.TensorProduct.basis (Af F) b).repr y k
@@ -451,18 +451,18 @@ theorem starLoc_periodic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       ∀ b, ∀ u ∈ U, starLoc (Af F) σ J (psiFin F ψ) μ Q (b + u) = starLoc (Af F) σ J (psiFin F ψ) μ Q b := by
   intro F E _ _ _ _ _ σ hσ M J n ψ hψ μ _ Q hQ
   obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : LocallyCompactSpace (Af F) := a1
-  haveI : SecondCountableTopology (Af F) := a2
-  haveI : T2Space (Af F) := a3
+  have : LocallyCompactSpace (Af F) := a1
+  have : SecondCountableTopology (Af F) := a2
+  have : T2Space (Af F) := a3
   obtain ⟨t1, -, -, -, -, htr, -, -, -, hG⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Af F)
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := t1
+  have : IsTopologicalRing (Af F ⊗[F] E) := t1
   obtain ⟨V, hVo, hV⟩ := psiFin_trivial F ψ hψ
   let ph : HermR (Af F) σ n → (Fin n → Fin M → Af F ⊗[F] E) → Af F := fun u X =>
     algebraMap F (Af F) (1 / 2) * Algebra.trace (Af F) (Af F ⊗[F] E)
       (Matrix.trace ((u : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) * gramR (Af F) σ J X))
   have hph : Continuous fun p : HermR (Af F) σ n × (Fin n → Fin M → Af F ⊗[F] E) => ph p.1 p.2 := by
     refine continuous_const.mul (htr.comp (Continuous.matrix_trace (Continuous.matrix_mul ?_ ?_)))
-    · exact continuous_subtype_val.comp continuous_fst
+    · exact continuous_subtypeVal.comp continuous_fst
     · exact (hG n M J).comp continuous_snd
   have hK : IsCompact (tsupport Q) := hQ.2
   have h0 : ∀ X, ph 0 X ∈ (V : Set (Af F)) := fun X => by
@@ -564,7 +564,7 @@ theorem denseRange_inclR (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     [TopologicalSpace R] [IsTopologicalRing R] [LocallyCompactSpace R]
     [SecondCountableTopology R] [T2Space R] (hd : DenseRange (algebraMap F R)) :
     DenseRange (inclR R : E →+* R ⊗[F] E) := by
-  haveI : Module.Finite F E :=
+  have : Module.Finite F E :=
     Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   let b := Module.finBasis F E
   have hφ := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).2.2.2.2.2.2.1 _ b
@@ -754,9 +754,9 @@ theorem exists_smul_mem_open : ∀ (F E : Type) [Field F] [NumberField F] [Field
     ∀ t : F, t ≠ 0 → ∃ τ : ℕ, 0 < τ ∧ ∀ c ∈ hermO σ n, hermIn (Af F) σ n (((τ : F) / t) • c) ∈ U := by
   intro F E _ _ _ _ _ σ hcm n U hU t ht
   obtain ⟨-, hSC, hT2, -, -, -, hF, hN, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : SecondCountableTopology (Af F) := hSC
-  haveI : T2Space (Af F) := hT2
-  haveI : LocallyCompactSpace (Af F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).1
+  have : SecondCountableTopology (Af F) := hSC
+  have : T2Space (Af F) := hT2
+  have : LocallyCompactSpace (Af F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).1
   obtain ⟨-, -, -, -, -, -, hH, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Af F)
   let b := Module.finBasis F E
   have hh := hH _ b
@@ -940,7 +940,7 @@ theorem integrable_of_summable_quotient_periodic :
   refine ⟨hcont.aestronglyMeasurable, ?_⟩
   have hsum : ∑' x, ‖f (r x)‖ₑ < ⊤ := by
     have h1 : ∑' x, ‖f (r x)‖ₑ = ∑' x, ENNReal.ofReal ‖f (r x)‖ := by
-      simp [ofReal_norm_eq_enorm]
+      simp [ofReal_norm]
     rw [h1]
     exact hs.tsum_ofReal_lt_top
   have hint : ∫⁻ g, ‖f g‖ₑ ∂ν = (∑' x, ‖f (r x)‖ₑ) * ν (U : Set G) := by
@@ -1013,7 +1013,7 @@ theorem summable_comp_of_injective_prod {X Y Q : Type*} [Finite Q] {d : Y → �
 
 theorem finite_quot_nsmul {M : Type*} [AddCommGroup M] [Module.Finite ℤ M] {τ : ℕ} (hτ : 0 < τ) :
     Finite (M ⧸ (nsmulAddMonoidHom τ : M →+ M).range) := by
-  haveI : Module.Finite ℤ (M ⧸ (nsmulAddMonoidHom τ : M →+ M).range) :=
+  have : Module.Finite ℤ (M ⧸ (nsmulAddMonoidHom τ : M →+ M).range) :=
     Module.Finite.of_surjective (QuotientAddGroup.mk' _).toIntLinearMap
       (QuotientAddGroup.mk'_surjective _)
   apply Module.finite_of_fg_torsion
@@ -1101,8 +1101,8 @@ theorem summable_quot_of_le_delta_rpow : ∀ (F E : Type) [Field F] [NumberField
     Summable (fun x : hermE σ n ⧸ hermO σ n => (delta (Quotient.out x).1 : ℝ) ^ (-s)) →
     Summable (fun x : hermE σ n ⧸ Λ => g (Quotient.out x)) := by
   intro F E _ _ _ _ _ σ n Λ t ht τ hτ hΛ g hg hper C s hb hsum
-  haveI : Module.Finite ℤ (hermO σ n) := finite_hermO σ n
-  haveI := finite_quot_nsmul (M := hermO σ n) hτ
+  have : Module.Finite ℤ (hermO σ n) := finite_hermO σ n
+  have := finite_quot_nsmul (M := hermO σ n) hτ
   let y : hermE σ n ⧸ Λ → hermE σ n ⧸ hermO σ n :=
     fun x => QuotientAddGroup.mk (t • Quotient.out x)
   have hmem : ∀ x, t • Quotient.out x - Quotient.out (y x) ∈ hermO σ n := by
@@ -1202,17 +1202,17 @@ theorem integrable_starLoc_fin : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     Integrable (starLoc (Af F) σ J (psiFin F ψ) μ Q) ν := by
   intro F E _ _ _ _ _ σ hCM M J hJ n hn ψ hψ μ hμ ν hν Q hQ
   obtain ⟨hLC, hSC, hT2, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTR, -, hSC2, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)
-  haveI := hTR
-  haveI := hSC2
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) :=
+  have := hTR
+  have := hSC2
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → Af F ⊗[F] E))
-  haveI : SecondCountableTopology (HermR (Af F) σ n) :=
+  have : SecondCountableTopology (HermR (Af F) σ n) :=
     TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : BorelSpace (HermR (Af F) σ n) := inferInstance
+  have : BorelSpace (HermR (Af F) σ n) := inferInstance
   obtain ⟨U, hUo, hUc, hUp⟩ := GlobalTheory.T.finite_adelic_integral_invariant_open_subgroup F E σ hCM M J n ψ hψ μ hμ Q hQ
   obtain ⟨C, t, ht, hb⟩ := GlobalTheory.T.finite_local_orbital_integral_bounded F E σ hCM M J hJ n ψ hψ μ hμ Q hQ
   obtain ⟨τ, hτ, hc⟩ := GlobalTheory.T.scaled_integral_hermitian_in_open_subgroup F E σ hCM n U hUo t ht

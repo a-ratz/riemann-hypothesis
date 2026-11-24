@@ -168,7 +168,7 @@ theorem exists_height_le_normOne {ω : Set (AdelicGLn.AdelicGL K n)} (hω : IsCo
       height x ≤ C * A ^ (2 * Fintype.card (InfinitePlace K)) := by
   obtain ⟨Mb, hMb⟩ := exists_height_le_of_isCompact hω
   have hdc : Continuous fun g : AdelicGLn.AdelicGL K n => (Reduction.detModule K n g : ℝ) :=
-    continuous_subtype_val.comp Reduction.continuous_detModule
+    continuous_subtypeVal.comp Reduction.continuous_detModule
   obtain ⟨M₁, hM₁⟩ := hω.exists_bound_of_continuousOn hdc.continuousOn
   obtain ⟨M₂, hM₂⟩ := hω.exists_bound_of_continuousOn
     (hdc.inv₀ fun g => (Reduction.detModule K n g).2.ne').continuousOn

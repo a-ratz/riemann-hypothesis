@@ -77,7 +77,7 @@ theorem liftAlg_e (Q : PDPoly B) {C : Type} [CommRing C] [Algebra B C] (c : ℕ 
 theorem exists_lift (Q : PDPoly B) (C : Type) [CommRing C] (f : B →+* C) (c : ℕ → C) (h0 : c 0 = 1)
     (hm : ∀ m n, c m * c n = ((m + n).choose m : C) * c (m + n)) :
     ∃ F : Q.P →+* C, (∀ b, F (algebraMap B Q.P b) = f b) ∧ ∀ n, F (Q.e n) = c n := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact ⟨(liftAlg Q c h0 hm).toRingHom, fun b ↦ (liftAlg Q c h0 hm).commutes b, fun n ↦ liftAlg_e Q c h0 hm n⟩
 
 theorem fil_isSubDPIdeal {J : Ideal B} (δ : DividedPowers J) (N : ℕ) (hN : 1 ≤ N) :

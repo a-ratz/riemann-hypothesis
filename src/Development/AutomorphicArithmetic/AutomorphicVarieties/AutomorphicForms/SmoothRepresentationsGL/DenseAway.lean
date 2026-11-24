@@ -164,9 +164,9 @@ open UpperTheory.V.Af.Smo.DenseAwayFromPlace in
 theorem UpperTheory.V.Af.Smo.denseAway :
     UpperTheory.V.Af.Smo.DenseAway := by
   intro E _ _ n S
-  haveI : Inhabited (Finset.univ : Finset (InfinitePlace E)) := ⟨⟨Classical.arbitrary _, Finset.mem_univ _⟩⟩
-  haveI : Nontrivial (∀ w : (Finset.univ : Finset (InfinitePlace E)), w.1.Completion) := Pi.nontrivial
-  haveI : Nontrivial (RS S) := nontrivial_prod_right
+  have : Inhabited (Finset.univ : Finset (InfinitePlace E)) := ⟨⟨Classical.arbitrary _, Finset.mem_univ _⟩⟩
+  have : Nontrivial (∀ w : (Finset.univ : Finset (InfinitePlace E)), w.1.Completion) := Pi.nontrivial
+  have : Nontrivial (RS S) := nontrivial_prod_right
   refine (dense_abs n (algebraMap E (Ad E)) (pS S) (sS S) (cont_sS S) (pS_sS S)
     (GroundTheory.Global.denseRange_algebraMap_prod_pi S Finset.univ)).mono ?_
   rintro _ ⟨γ, k, hk, rfl⟩
@@ -180,6 +180,6 @@ theorem UpperTheory.V.Af.Smo.denseAway :
     · refine (congrFun (congrArg Prod.snd (h i j)) ⟨w, Finset.mem_univ w⟩).trans ?_
       change _ = (((1 : Matrix (Fin n) (Fin n) (Ad E)) i j).1 - 0 + 0) w
       rw [add_zero, sub_zero]
-      by_cases e : i = j <;> simp only [Matrix.one_apply, e, if_true, if_false] <;> rfl
+      by_cases e : i = j <;> simp only [Matrix.one_apply, e, ite_true, ite_false] <;> rfl
     · exact (congrArg (fun x : GL (Fin n) (Af E) => x i j)
         (GlobalTheory.CuspRep.pFin_finGL (GeneralLinearGroup.map (pFin E) k))).symm

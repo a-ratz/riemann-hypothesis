@@ -60,7 +60,7 @@ theorem twist_finrank_eq (K : Type) [Field K] [NumberField K] [_root_.NumberFiel
     (Module.finrank ℚ K : ℝ) = 2 * (nPl K : ℝ) := by
   have key : Module.finrank ℚ K = 2 * nPl K := by
     have h1 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank K
-    haveI : IsEmpty {w : InfinitePlace K // w.IsReal} := by
+    have : IsEmpty {w : InfinitePlace K // w.IsReal} := by
       refine ⟨fun w => ?_⟩
       have hc : w.1.IsComplex := IsTotallyComplex.isComplex w.1
       first
@@ -83,7 +83,7 @@ theorem twist_of (h1 : RescaleCovol) (h2 : PlLat) (h3 : ShiftInvariance.{0, 0, 0
     exact ((isUnit_iff_ne_zero.mpr (by exact_mod_cast (hc v).ne' : ((c v : ℂ)) ≠ 0)).pow _).mul (hX v)
   have hfg : ∀ N : Submodule (𝓞 K) V, N ≤ L → N.FG := by
     intro N hN
-    haveI := isNoetherian_of_fg_of_noetherian L hL
+    have := isNoetherian_of_fg_of_noetherian L hL
     have h1' : (N.comap L.subtype).FG := IsNoetherian.noetherian _
     have h2' := h1'.map L.subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hN] at h2'
@@ -103,7 +103,7 @@ theorem twist_of (h1 : RescaleCovol) (h2 : PlLat) (h3 : ShiftInvariance.{0, 0, 0
     obtain ⟨-, hrk₂, -⟩ := h2 K V ι b (fun v => ((c v : ℂ)) • X v) hX' N hNfg
     refine ⟨by rw [hrk, hrk₂], ?_⟩
     have hcov := h1 K V ι b X c hX hc N hNfg
-    haveI := hlat.2
+    have := hlat.2
     have hC := Formalism.F.covol_pos (zl (Formalism.HermitianLatticesTheory.realize b X) N)
     simp only [deg, Formalism.F.deg]
     rw [hcov, Real.log_mul (Real.rpow_pos_of_pos hP _).ne' hC.ne', Real.log_rpow hP, hlogP, hrk]
@@ -124,7 +124,7 @@ theorem twist_of (h1 : RescaleCovol) (h2 : PlLat) (h3 : ShiftInvariance.{0, 0, 0
       obtain ⟨s, hs⟩ := hL
       unfold rkK
       rw [← hs, Submodule.span_span_of_tower (𝓞 K) K (s : Set V)]
-      haveI : FiniteDimensional K (Submodule.span K (s : Set V)) := FiniteDimensional.span_finset K s
+      have : FiniteDimensional K (Submodule.span K (s : Set V)) := FiniteDimensional.span_finset K s
       rw [Module.finrank_pos_iff, Submodule.nontrivial_iff_ne_bot]
       intro h0
       apply hne

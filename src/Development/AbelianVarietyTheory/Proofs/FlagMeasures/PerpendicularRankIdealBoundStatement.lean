@@ -161,20 +161,20 @@ theorem exists_ann (n : ℕ) : ∀ (X : Type) [AddCommGroup X] [Module (𝓞 K) 
   push Not at h0
   obtain ⟨x0, hx0⟩ := h0
 
-  haveI : Nontrivial X := ⟨⟨x0, 0, hx0⟩⟩
-  haveI : Module.Finite (𝓞 K) X := Module.Finite.of_finite
+  have : Nontrivial X := ⟨⟨x0, 0, hx0⟩⟩
+  have : Module.Finite (𝓞 K) X := Module.Finite.of_finite
   obtain ⟨N, hN⟩ : ∃ N : Submodule (𝓞 K) X, IsCoatom N := by
     rcases (IsCoatomic.eq_top_or_exists_le_coatom (⊥ : Submodule (𝓞 K) X)) with h | ⟨N, hN, -⟩
     · exact absurd h bot_ne_top
     · exact ⟨N, hN⟩
-  haveI : IsSimpleModule (𝓞 K) (X ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
+  have : IsSimpleModule (𝓞 K) (X ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
   obtain ⟨m, hm, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.1 this
   have hc : Nat.card X = Nat.card N * Nat.card (X ⧸ N) := by
     rw [Submodule.card_eq_card_quotient_mul_card N]
   have hq : Nat.card (X ⧸ N) = Ideal.absNorm m := by
     rw [Nat.card_congr e.toEquiv, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Nontrivial (X ⧸ N) := IsSimpleModule.nontrivial (𝓞 K) _
-  haveI : Finite (X ⧸ N) := Finite.of_surjective _ N.mkQ_surjective
+  have : Nontrivial (X ⧸ N) := IsSimpleModule.nontrivial (𝓞 K) _
+  have : Finite (X ⧸ N) := Finite.of_surjective _ N.mkQ_surjective
   have h1 : 1 < Nat.card (X ⧸ N) := Finite.one_lt_card
   have hp : 0 < Nat.card N := Nat.card_pos
   obtain ⟨I, hI, hIn, hIk⟩ := ih (Nat.card N) (by rw [← hn, hc]; nlinarith) N rfl
@@ -205,7 +205,7 @@ theorem exists_ann (n : ℕ) : ∀ (X : Type) [AddCommGroup X] [Module (𝓞 K) 
 theorem exists_ideal_smul_le {V : Type} [AddCommGroup V] [Module (𝓞 K) V] (A B : Submodule (𝓞 K) V)
     (h : 1 ≤ Nat.card (A ⧸ B.comap A.subtype)) :
     ∃ I : Ideal (𝓞 K), I ≠ ⊥ ∧ Ideal.absNorm I ≤ Nat.card (A ⧸ B.comap A.subtype) ∧ I • A ≤ B := by
-  haveI : Finite (A ⧸ B.comap A.subtype) := Nat.finite_of_card_ne_zero (by omega)
+  have : Finite (A ⧸ B.comap A.subtype) := Nat.finite_of_card_ne_zero (by omega)
   obtain ⟨I, h1, h2, h3⟩ := exists_ann (K := K) _ (A ⧸ B.comap A.subtype) rfl
   refine ⟨I, h1, h2, Submodule.smul_le.2 fun r hr x hx => ?_⟩
   have := h3 r hr (Submodule.Quotient.mk ⟨x, hx⟩)

@@ -105,9 +105,9 @@ private theorem coprime_absNorm_of_isCoprime_span {K : Type} [Field K] [NumberFi
     have h4 := Int.eq_one_of_dvd_one (by positivity) h3
     norm_cast at h4
     exact hp.one_lt.ne' h4
-  · haveI : Finite (𝓞 K ⧸ J) := J.finiteQuotientOfFreeOfNeBot hJb
-    haveI : Fintype (𝓞 K ⧸ J) := Fintype.ofFinite _
-    haveI := Fact.mk hp
+  · have : Finite (𝓞 K ⧸ J) := J.finiteQuotientOfFreeOfNeBot hJb
+    have : Fintype (𝓞 K ⧸ J) := Fintype.ofFinite _
+    have := Fact.mk hp
     have hcard : p ∣ Fintype.card (𝓞 K ⧸ J) := by
       rw [← Nat.card_eq_fintype_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
       exact hpc

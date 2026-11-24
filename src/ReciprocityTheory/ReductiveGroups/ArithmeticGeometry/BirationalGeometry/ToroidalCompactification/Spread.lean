@@ -180,12 +180,12 @@ theorem etale_parameter_exists {R' S : Type} [CommRing R'] [Algebra R R'] (g : R
     [Algebra.FormallyEtale (MvPolynomial (Fin n) R) S] (ug : IsUnit (algebraMap R S g)) :
     ∃ (_ : Algebra R' S) (_ : IsScalarTower R R' S) (_ : Algebra (MvPolynomial (Fin n) R') S)
       (_ : IsScalarTower R' (MvPolynomial (Fin n) R') S), Algebra.FormallyEtale (MvPolynomial (Fin n) R') S := by
-  letI iA : Algebra R' S := (IsLocalization.Away.lift g ug).toAlgebra
+  let iA : Algebra R' S := (IsLocalization.Away.lift g ug).toAlgebra
   have h1 : IsScalarTower R R' S := IsScalarTower.of_algebraMap_eq fun r => (IsLocalization.Away.lift_eq _ ug r).symm
   let ev : MvPolynomial (Fin n) R' →ₐ[R'] S := MvPolynomial.aeval fun j => algebraMap (MvPolynomial (Fin n) R) S (MvPolynomial.X j)
-  letI iB : Algebra (MvPolynomial (Fin n) R') S := ev.toRingHom.toAlgebra
+  let iB : Algebra (MvPolynomial (Fin n) R') S := ev.toRingHom.toAlgebra
   have h2 : IsScalarTower R' (MvPolynomial (Fin n) R') S := IsScalarTower.of_algebraMap_eq fun r => (ev.commutes r).symm
-  letI : Algebra (MvPolynomial (Fin n) R) (MvPolynomial (Fin n) R') := MvPolynomial.algebraMvPolynomial
+  let : Algebra (MvPolynomial (Fin n) R) (MvPolynomial (Fin n) R') := MvPolynomial.algebraMvPolynomial
   have : IsScalarTower (MvPolynomial (Fin n) R) (MvPolynomial (Fin n) R') S := IsScalarTower.of_algebraMap_eq' (by
     apply MvPolynomial.ringHom_ext
     · intro r
@@ -257,7 +257,7 @@ theorem exists_param {B : Type} [CommRing B] [Algebra R B] [Algebra.Smooth R B] 
 
 theorem exists_lieBasis_away [Smooth G.hom] (C : Chart G) (p : Ideal R) [p.IsPrime] :
     ∃ g ∉ p, ∃ (n : ℕ) (v : Fin n → (Geo.Tor.epsR (Localization.Away g) ⟶ Gs G g)), Geo.Tor.IsLieBasis v := by
-  haveI := chart_smooth C
+  have := chart_smooth C
   obtain ⟨f, hf, n, S, _, _, _, _, _, _, _, toS, ext, lift⟩ := exists_param (eps C) p
   refine ⟨eps C f, hf, n, ?_⟩
   let R' := Localization.Away (eps C f)
@@ -268,8 +268,8 @@ theorem exists_lieBasis_away [Smooth G.hom] (C : Chart G) (p : Ideal R) [p.IsPri
   refine lieBasis_of_etale ε' (pullR G (pt C toS)) (pushR_inj G (by rw [py, hε', pt_eps, pushR_one])) (fun φ₁ φ₂ h => ?_)
     fun {A} _ _ aug hJ y hy => ?_
   · exact AlgHom.restrictScalars_injective R (ext _ _ (pt_injective C ((py _).symm.trans ((congrArg (pushR G) h).trans (py _)))))
-  · letI : Algebra R A := ((algebraMap R' A).comp (algebraMap R R')).toAlgebra
-    haveI : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  · let : Algebra R A := ((algebraMap R' A).comp (algebraMap R R')).toAlgebra
+    have : IsScalarTower R R' A := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hy' : spMap (aug.restrictScalars R) ≫ pushR G y = pt C ((Algebra.ofId R R').comp (eps C)) := by
       rw [← pushR_spMap, hy, pushR_one, pt_eps]
     obtain ⟨φ, hφ⟩ := exists_pt C (pushR G y) (le_preimage_of_nil C (aug.restrictScalars R) (aug_surj aug) (elt_nil _ hJ) _ _ hy')
@@ -305,7 +305,7 @@ theorem isReduced_sec_of_smooth {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶
   have h := HasRingHomProperty.appLE @Smooth q ‹_› ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
   have h' : RingHom.Smooth ((q.appLE ⊤ U le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom) :=
     RingHom.Smooth.comp (RingHom.Smooth.of_bijective (Scheme.ΓSpecIso (CommRingCat.of K)).symm.commRingCatIsoToRingEquiv.bijective) h
-  letI := ((q.appLE ⊤ U le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom).toAlgebra
+  let := ((q.appLE ⊤ U le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom).toAlgebra
   have : Algebra.Smooth K Γ(X, U) := h'
   exact isReduced_of_smooth_alg K _
 
@@ -313,7 +313,7 @@ theorem isReduced_of_smooth {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Sp 
   have : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := fun x => by
     obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (U := ⊤) (x := x) trivial
     have := isReduced_sec_of_smooth q hU
-    letI := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
+    let := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
     have := hU.isLocalization_stalk ⟨x, hx⟩
     exact isReduced_localizationPreserves (hU.primeIdealOf ⟨x, hx⟩).asIdeal.primeCompl _ ‹_›
   exact isReduced_of_isReduced_stalk X

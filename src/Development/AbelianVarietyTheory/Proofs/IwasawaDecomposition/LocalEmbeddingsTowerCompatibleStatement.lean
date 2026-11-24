@@ -91,7 +91,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 theorem GlobalTheory.adicCompletion_trace_norm_of_basis_image : ∀ (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L] (v : HeightOneSpectrum (𝓞 K)) (v' : HeightOneSpectrum (𝓞 L)) (f : v.adicCompletion K →+* v'.adicCompletion L), (∀ x : K, f (algebraMap K _ x) = algebraMap L _ (algebraMap K L x)) → letI := f.toAlgebra; ∀ (n : ℕ) (b : Module.Basis (Fin n) K L) (b' : Module.Basis (Fin n) (v.adicCompletion K) (v'.adicCompletion L)), (∀ i, b' i = algebraMap L _ (b i)) → ∀ z : L, Algebra.trace (v.adicCompletion K) (v'.adicCompletion L) (algebraMap L _ z) = algebraMap K _ (Algebra.trace K L z) ∧ Algebra.norm (v.adicCompletion K) (algebraMap L (v'.adicCompletion L) z) = algebraMap K _ (Algebra.norm K z) := by
   intro K L _ _ _ _ _ v v' f hf
-  letI := f.toAlgebra
+  let := f.toAlgebra
   intro n b b' hb z
   have hM : Algebra.leftMulMatrix b' (algebraMap L (v'.adicCompletion L) z) =
       (Algebra.leftMulMatrix b z).map (algebraMap K (v.adicCompletion K)) := by
@@ -284,7 +284,7 @@ theorem algebraMap_mem_span_of_mem_span {K L A M : Type} [Field K] [Field L] [Al
 theorem linearIndependent_completion_of_irreducible_minpoly :
     ∀ (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L] (v : HeightOneSpectrum (𝓞 K)) (v' : HeightOneSpectrum (𝓞 L)) (f : v.adicCompletion K →+* v'.adicCompletion L), (∀ x : K, f (algebraMap K _ x) = algebraMap L _ (algebraMap K L x)) → (∀ α : L, Irreducible ((minpoly K α).map (algebraMap K (v.adicCompletion K)))) → letI := f.toAlgebra; ∀ (n : ℕ) (b : Module.Basis (Fin n) K L), LinearIndependent (v.adicCompletion K) fun i => algebraMap L (v'.adicCompletion L) (b i) := by
   intro K L _ _ _ _ _ v v' f hf hirr
-  letI := f.toAlgebra
+  let := f.toAlgebra
   intro n b
   obtain ⟨α, hα⟩ := Field.exists_primitive_element K L
   have hint : IsIntegral K α := Algebra.IsIntegral.isIntegral α
@@ -317,7 +317,7 @@ theorem linearIndependent_completion_of_irreducible_minpoly :
   have h1 := finrank_span_eq_card hpow
   have h2 := finrank_range_le_card (R := v.adicCompletion K)
     (fun i => algebraMap L (v'.adicCompletion L) (b i))
-  haveI : Module.Finite (v.adicCompletion K) (Submodule.span (v.adicCompletion K)
+  have : Module.Finite (v.adicCompletion K) (Submodule.span (v.adicCompletion K)
       (Set.range fun i => algebraMap L (v'.adicCompletion L) (b i))) :=
     FiniteDimensional.span_of_finite _ (Set.finite_range _)
   have h3 := Submodule.finrank_mono hle
@@ -359,10 +359,10 @@ namespace GlobalTheory.LocEmbDec
 
 theorem exists_dec_of_isLocEmb : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K] [Algebra K Ω] [IsAlgClosure K Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)) (ι ι₂ : Ω →ₐ[K] Kbar v), IsLocEmb A v ι → IsLocEmb A v ι₂ → ∃ σ ∈ Dec (F := K) A, ∀ z, ι₂ z = ι (σ z) := by
   intro K Ω _ _ _ _ _ A v ι ι₂ hι hι₂
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : Normal K Ω := IsAlgClosure.normal K Ω
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Normal K Ω := IsAlgClosure.normal K Ω
   set e : Ω ≃ₐ[K] ι.fieldRange := AlgEquiv.ofInjectiveField ι with he
-  haveI : Normal K ι.fieldRange := Normal.of_algEquiv e
+  have : Normal K ι.fieldRange := Normal.of_algEquiv e
   have hr : (ι₂.comp e.symm.toAlgHom).fieldRange = ι.fieldRange :=
     AlgHom.fieldRange_of_normal _
   have hmem : ∀ z, ι₂ z ∈ ι.fieldRange := fun z => by
@@ -416,9 +416,9 @@ namespace GlobalTheory.LocIrred
 theorem minpoly_map_adicCompletion_irreducible : ∀ (K L Ω : Type) [Field Ω] [Field K] [NumberField K] [Algebra K Ω] [IsAlgClosure K Ω] [Field L] [NumberField L] [Algebra L Ω] [Algebra K L] [IsScalarTower K L Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)), IsPlaceOver A v → (∀ σ : G K Ω, ∃ τ ∈ Dec (F := K) A, ∀ x : L, τ (algebraMap L Ω x) = σ (algebraMap L Ω x)) → ∀ ι : Ω →ₐ[K] Kbar v, IsLocEmb A v ι → ∀ α : L, Irreducible ((minpoly K α).map (algebraMap K (v.adicCompletion K))) := by
   intro K L Ω _ _ _ _ _ _ _ _ _ _ A v hA hdec ι hι α
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Normal K Ω := IsAlgClosure.normal K Ω
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Normal K Ω := IsAlgClosure.normal K Ω
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   set a : Ω := algebraMap L Ω α with ha
   have hPa : minpoly K a = minpoly K α := by
     have := minpoly.algHom_eq (IsScalarTower.toAlgHom K L Ω) (algebraMap L Ω).injective α
@@ -513,13 +513,13 @@ theorem valued_coeff_minpoly_le_one (e : ℕ) (he : 0 < e)
     letI := f.toAlgebra; FiniteDimensional (v.adicCompletion K) (v'.adicCompletion L) →
     ∀ x : v'.adicCompletion L, Valued.v x ≤ 1 →
       ∀ n, Valued.v ((minpoly (v.adicCompletion K) x).coeff n) ≤ 1 := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   intro hfd x hx n
-  letI : NontriviallyNormedField (v.adicCompletion K) := Valued.toNontriviallyNormedField _ ℤᵐ⁰
-  haveI : IsUltrametricDist (v.adicCompletion K) :=
+  let : NontriviallyNormedField (v.adicCompletion K) := Valued.toNontriviallyNormedField _ ℤᵐ⁰
+  have : IsUltrametricDist (v.adicCompletion K) :=
     inferInstanceAs (@IsUltrametricDist (v.adicCompletion K)
       (Valued.toNormedField (v.adicCompletion K) ℤᵐ⁰).toDist)
-  haveI : CompleteSpace (v.adicCompletion K) := inferInstance
+  have : CompleteSpace (v.adicCompletion K) := inferInstance
   choose c hc using (exists_valued_eq (v := v) : ∀ γ : ℤᵐ⁰, ∃ c : v.adicCompletion K, Valued.v c = γ)
   have hmono : ∀ a b : v.adicCompletion K, Valued.v a ≤ Valued.v b → ‖a‖ ≤ ‖b‖ :=
     fun a b h => Valued.toNormedField.norm_le_iff.2 h
@@ -606,13 +606,13 @@ theorem isIntegral_iff_isIntegral_map : ∀ (K L : Type) [Field K] [NumberField 
       ∀ y : Kbar v, IsIntegral (v.adicCompletionIntegers K) y ↔
         IsIntegral (v'.adicCompletionIntegers L) (b₀ y) := by
   intro K L _ _ _ _ v v' e f he hfv
-  letI := f.toAlgebra
+  let := f.toAlgebra
   intro hfd b₀ hb y
   have hle : ∀ a ∈ v.adicCompletionIntegers K, f a ∈ v'.adicCompletionIntegers L := by
     intro a ha
     rw [HeightOneSpectrum.mem_adicCompletionIntegers] at ha ⊢
     rw [hfv]
-    exact pow_le_one₀ zero_le' ha
+    exact pow_le_one₀ zero_le ha
   let g : v.adicCompletionIntegers K →+* v'.adicCompletionIntegers L :=
     f.restrict (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) hle
   have hg : ∀ a, ((g a : v'.adicCompletionIntegers L) : v'.adicCompletion L) = f a := fun _ => rfl
@@ -629,17 +629,17 @@ theorem isIntegral_iff_isIntegral_map : ∀ (K L : Type) [Field K] [NumberField 
   · intro hy
     exact IsIntegral.map_of_comp_eq g b₀.toRingHom hcomp hy
   · intro hy
-    letI alg1 : Algebra (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) := g.toAlgebra
-    letI alg2 : Algebra (v'.adicCompletionIntegers L) (Kbar v) :=
+    let alg1 : Algebra (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) := g.toAlgebra
+    let alg2 : Algebra (v'.adicCompletionIntegers L) (Kbar v) :=
       (b₀.symm.toRingHom.comp (algebraMap (v'.adicCompletionIntegers L) (Kbar v'))).toAlgebra
-    haveI : IsScalarTower (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) (Kbar v) := by
+    have : IsScalarTower (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) (Kbar v) := by
       refine IsScalarTower.of_algebraMap_eq fun a => ?_
       have h := congrArg (fun φ => b₀.symm (φ a)) hcomp
       simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
         RingEquiv.coe_toRingHom, RingEquiv.symm_apply_apply] at h
       rw [← h]
       rfl
-    haveI : Algebra.IsIntegral (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) := by
+    have : Algebra.IsIntegral (v.adicCompletionIntegers K) (v'.adicCompletionIntegers L) := by
       constructor
       intro a
       have ha : Valued.v (a : v'.adicCompletion L) ≤ 1 :=
@@ -721,7 +721,7 @@ theorem valuation_pow_of_isPlaceOver : ∀ (K L Ω : Type) [Field Ω] [Field K] 
     rw [Ideal.mem_comap, ← hv x, ← hv' (algebraMap (𝓞 K) (𝓞 L) x)]
     have : ((algebraMap (𝓞 K) (𝓞 L) x : 𝓞 L) : L) = algebraMap K L (x : K) := rfl
     rw [this, ← IsScalarTower.algebraMap_apply]
-  haveI : v'.asIdeal.LiesOver v.asIdeal := ⟨hcomap.symm⟩
+  have : v'.asIdeal.LiesOver v.asIdeal := ⟨hcomap.symm⟩
   refine ⟨v.asIdeal.ramificationIdx' v'.asIdeal,
     Nat.pos_of_ne_zero (Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver v'.asIdeal v.ne_bot), ?_⟩
   intro x
@@ -764,22 +764,22 @@ theorem GlobalTheory.LocalExtCompletion.exists_completion_ext : ∀ (K L Ω : Ty
   have hirr := GlobalTheory.T.minpoly_irreducible_local_embedding K L Ω A v h (fun σ => by
     obtain ⟨τ, hτ⟩ := hloc σ
     exact ⟨τ, Weil_le_Dec h τ.2, hτ⟩) ι hι
-  letI : Algebra (v.adicCompletion K) (v'.adicCompletion L) := f.toAlgebra
+  let : Algebra (v.adicCompletion K) (v'.adicCompletion L) := f.toAlgebra
   have hind := GlobalTheory.T.linearIndependent_completion_of_irreducible_minpoly_alt K L v v' f hfK hirr _ (Module.finBasis K L)
   have hspan := GlobalTheory.T.span_basis_image_adicCompletion_eq_top_alt K L v v' f hfc hfK _ (Module.finBasis K L)
   let b' : Module.Basis (Fin (Module.finrank K L)) (v.adicCompletion K) (v'.adicCompletion L) :=
     Module.Basis.mk hind hspan.ge
   have hb' : ∀ i, b' i = algebraMap L _ (Module.finBasis K L i) := fun i => Module.Basis.mk_apply _ _ _
-  haveI hfd : FiniteDimensional (v.adicCompletion K) (v'.adicCompletion L) := Module.Finite.of_basis b'
+  have hfd : FiniteDimensional (v.adicCompletion K) (v'.adicCompletion L) := Module.Finite.of_basis b'
   have hrank : Module.finrank (v.adicCompletion K) (v'.adicCompletion L) = Module.finrank K L := by
     rw [Module.finrank_eq_card_basis b', Fintype.card_fin]
   have htn := GlobalTheory.T.adicCompletion_trace_norm_of_basis_image_alt K L v v' f hfK _ (Module.finBasis K L) b' hb'
   have hcont := GlobalTheory.T.adicCompletion_trace_norm_continuous_alt K L v v' f hfc hfd
 
-  haveI : Algebra.IsAlgebraic (v.adicCompletion K) (v'.adicCompletion L) := Algebra.IsAlgebraic.of_finite _ _
-  haveI : Algebra.IsAlgebraic (v.adicCompletion K) (Kbar v') :=
+  have : Algebra.IsAlgebraic (v.adicCompletion K) (v'.adicCompletion L) := Algebra.IsAlgebraic.of_finite _ _
+  have : Algebra.IsAlgebraic (v.adicCompletion K) (Kbar v') :=
     Algebra.IsAlgebraic.trans (v.adicCompletion K) (v'.adicCompletion L) (Kbar v')
-  haveI : IsAlgClosure (v.adicCompletion K) (Kbar v') := ⟨inferInstance, inferInstance⟩
+  have : IsAlgClosure (v.adicCompletion K) (Kbar v') := ⟨inferInstance, inferInstance⟩
   let b₀ : Kbar v ≃ₐ[v.adicCompletion K] Kbar v' := IsAlgClosure.equiv (v.adicCompletion K) (Kbar v) (Kbar v')
   have hb₀ : ∀ x, b₀ (algebraMap (v.adicCompletion K) (Kbar v) x) = algebraMap (v'.adicCompletion L) (Kbar v') (f x) :=
     fun x => (b₀.commutes x).trans rfl

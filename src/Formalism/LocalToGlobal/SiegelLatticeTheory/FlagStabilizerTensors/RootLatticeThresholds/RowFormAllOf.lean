@@ -156,12 +156,12 @@ theorem gmap_inv_of {a : S.V ≃ₗ[E] S.V} {L L' : Submodule (𝓞 E) S.V} (h :
 
 theorem xflag_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (F : LFlag S r T) (j : ℕ) :
     Xflag (mapLF γ F) j = (Xflag F j).map (γ : S.V →ₗ[E] S.V) := by
-  simp only [Xflag, mapLF, dif_pos hγ, Formalism.MainNotions.S.FlagG.Xa, mapFlag, Submodule.map_span, Set.image_image]
+  simp only [Xflag, mapLF, dite_eq_left hγ, Formalism.MainNotions.S.FlagG.Xa, mapFlag, Submodule.map_span, Set.image_image]
   rfl
 
 theorem z_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (F : LFlag S r T) :
     (mapLF γ F).fl.z = γ F.fl.z := by
-  simp only [mapLF, dif_pos hγ, mapFlag]
+  simp only [mapLF, dite_eq_left hγ, mapFlag]
 
 theorem isPair_quot {T T' : E} (Λ Λ' : Submodule (𝓞 E) S.V) (g : ℕ) (F : LFlag S r T) (F' : LFlag S r T')
     (γ₁ γ₂ : S.V ≃ₗ[E] S.V) (h₁ : γ₁ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (h₂ : γ₂ ∈ Formalism.HermitianLatticesTheory.isom S.hT)
@@ -222,7 +222,7 @@ theorem scalTC_of (hκ : Formalism.L2.SG.DataInst.RowLabel κ) (hι : LiftIotaC 
   have hx₂ : Gval (lf D (X.Fu u)) x₂.1 ≠ 0 := by rw [← gv]; exact hG₂'
   have hs0 : s0T s₁ s₂ = Lat.s0 l₁ (lf D (X.Fu u)) s₁.frame s₂.frame (s₂.lin * s₁.lin⁻¹) D.R.k := by
     unfold s0T
-    exact if_pos ⟨rfl, rfl⟩
+    exact ite_eq_left ⟨rfl, rfl⟩
   have hsc : scalT s₁ s₂ ↔ (Lat.s0 l₁ (lf D (X.Fu u)) s₁.frame s₂.frame (s₂.lin * s₁.lin⁻¹) D.R.k = 1 ∧
       IsScalar l₁ (lf D (X.Fu u)) s₁.frame s₂.frame (s₂.lin * s₁.lin⁻¹)) := by
     unfold scalT
@@ -276,7 +276,7 @@ theorem liftAtSomeC_holds {D : D7} (X : HidaSetting D) (Y : Formalism.L2.SG.Full
     apply s.2.1
     show Formalism.L2.SG.TermOp.Gt s.1 = 0
     unfold Formalism.L2.SG.TermOp.Gt
-    exact if_pos h0
+    exact ite_eq_left h0
   exact Formalism.L2.SG.LeadingMinorsNonvanishing.atSomeAll_holds D X Y u u' s.1.toTerm hG hrel
 
 theorem atPtRelevantC_holds {D : D7} (X : HidaSetting D) (Y : Formalism.L2.SG.Full.Full X) (u u' : D.what₂.Word) :
@@ -359,7 +359,7 @@ variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (Y : Formalism
 
 theorem pointRegroupC_of (hA : ClassAbsC X Y u u' vR i0 i0' νq κ) : PointRegroupC X Y u u' vR i0 i0' νq κ := by
   intro ρ
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   set V : Point D.host.E (D.R.rS + 1) → Formalism.L2.SG.PackageTie.HS (X.Vpi u') (X.Vpi u) :=
     fun w => Formalism.L2.SG.PackageTie.hsEmb (Formalism.L2.SG.RealObj.unscaledOperatorAtPointRepresentative X u u' 1 i0 i0' νq w) with hV
 
@@ -438,7 +438,7 @@ theorem pointRegroupC_of (hA : ClassAbsC X Y u u' vR i0 i0' νq κ) : PointRegro
       exact ⟨⟨w, t.1, t.2.1, t.2.2, hw⟩, rfl⟩
     · exfalso
       apply ht
-      simp only [hf, Formalism.L2.SG.PairVal.cTerm, dif_neg h, mul_zero, zero_smul]
+      simp only [hf, Formalism.L2.SG.PairVal.cTerm, dite_eq_right h, mul_zero, zero_smul]
   exact he.tsum_eq hsuppf
 
 end Regroup
@@ -638,7 +638,7 @@ theorem ff_gmap_latSpan (ν : S.V ≃ₗ[E] S.V) (aa : Fin r → FractionalIdeal
   rw [Submodule.map_span]
   congr 1
   ext y
-  simp only [Set.mem_image, Set.mem_setOf_eq]
+  simp only [Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨z, ⟨a, c, hc, rfl⟩, rfl⟩
     exact ⟨a, c, hc, by simp⟩
@@ -850,7 +850,7 @@ theorem frameCorrection_holds : FrameFixNeed X Y u u' := by
 
   have hδ'i : δ * μ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := mul_mem hδi hμi
   have hzs : s.frame.fl.z = s.lin (X.Fu u').z := by
-    simp [GTerm.frame, mapLF, dif_pos hγi, Formalism.L2.SG.TermOp.mapFlag]
+    simp [GTerm.frame, mapLF, dite_eq_left hγi, Formalism.L2.SG.TermOp.mapFlag]
   have hz : (δ * μ) (X.Fu u').z = y.1.fl.z := by
     show β (s.lin (μ (X.Fu u').z)) = _
     rw [hμL _ hzL, ← hzs]
@@ -858,7 +858,7 @@ theorem frameCorrection_holds : FrameFixNeed X Y u u' := by
   have hyz : y.1.zt = y.1.fl.z := y.2.1.2
   refine ⟨μ, hμi, hμΛ, hμX, hμo, 1, one_mem_NLam _ _, 1, one_mem_NLam _ _, ?_, ?_⟩
   · intro a
-    rw [mapLF, dif_pos hδ'i]
+    rw [mapLF, dite_eq_left hδ'i]
     refine Fin.lastCases ?_ (fun b => ?_) a
     · simp only [frame, FlagG.fvec, Fin.snoc_last]
       exact hz
@@ -866,7 +866,7 @@ theorem frameCorrection_holds : FrameFixNeed X Y u u' := by
       show (δ * μ) (e b) = y.1.fl.e b
       rw [show (δ * μ) (e b) = δ (μ (e b)) from rfl, hμe b]
       exact hxδ b
-  · rw [mapLF, dif_pos hδ'i]
+  · rw [mapLF, dite_eq_left hδ'i]
     show (δ * μ) (X.Fu u').z = y.1.zt
     rw [hyz]
     exact hz
@@ -978,7 +978,7 @@ theorem regroup (vec : ι → E) (hv : Summable fun t => ‖vec t‖) (P : ι �
     rw [e1, tsum_subtype (A c ×ˢ A c) G, tsum_subtype ((fun p : ι × ι => q p.1) ⁻¹' {c}) (S.indicator G)]
     refine tsum_congr fun p => ?_
     have hm : p ∈ (fun p : ι × ι => q p.1) ⁻¹' {c} ∧ p ∈ S ↔ p ∈ A c ×ˢ A c := by
-      simp only [Set.mem_preimage, Set.mem_singleton_iff, hSdef, Set.mem_setOf_eq, Set.mem_prod, hA]
+      simp only [Set.mem_preimage, Set.mem_singleton_iff, hSdef, Set.mem_ofPred_eq, Set.mem_prod, hA]
       constructor
       · rintro ⟨h1, hp1, hp2, h12⟩
         exact ⟨⟨hp1, h1⟩, hp2, h12 ▸ h1⟩
@@ -986,8 +986,8 @@ theorem regroup (vec : ι → E) (hv : Summable fun t => ‖vec t‖) (P : ι �
         exact ⟨h1, hp1, hp2, h1.trans h2.symm⟩
     rw [Set.indicator_indicator, Set.indicator_apply, Set.indicator_apply]
     by_cases h : p ∈ A c ×ˢ A c
-    · rw [if_pos (Set.mem_inter_iff _ _ _ |>.2 (hm.2 h)), if_pos h]
-    · rw [if_neg (fun h' => h (hm.1 ((Set.mem_inter_iff _ _ _).1 h'))), if_neg h]
+    · rw [ite_eq_left (Set.mem_inter_iff _ _ _ |>.2 (hm.2 h)), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h (hm.1 ((Set.mem_inter_iff _ _ _).1 h'))), ite_eq_right h]
   refine ⟨hA1, hfib.summable.congr key, ?_⟩
   rw [← hfib.tsum_eq, tsum_congr key]
 
@@ -1131,7 +1131,7 @@ theorem ampValLowerC_of {D : D7} (X : HidaSetting D) (Y : Formalism.L2.SG.Full.F
   · have hGt : (Y.tO u u').G s ≠ 0 := by
       show Formalism.L2.SG.TermOp.Gt s ≠ 0
       unfold Formalism.L2.SG.TermOp.Gt
-      have e : (if s.G = 0 then (0 : ℝ) else 1) = 1 := if_neg hG
+      have e : (if s.G = 0 then (0 : ℝ) else 1) = 1 := ite_eq_right hG
       rw [e]
       exact one_ne_zero
     let s' : LiftT X Y u u' κ ((Y.tO u u').rowOf s) (κ s.toTerm) := ⟨s, hGt, hgen, rfl, rfl⟩
@@ -1173,8 +1173,8 @@ theorem unram_of_splitsCompl (E : Type) [Field E] [NumberField E] (p : ℕ) (hp 
     exact hp.ne_zero (by exact_mod_cast hpQ)
   have hmax : Q.IsMaximal := Ideal.IsPrime.isMaximal hQ hne
   obtain ⟨-, hsq⟩ := h Q hmax hpQ
-  rw [← Ideal.ramificationIdx_eq_ramificationIdx' (p := Ideal.span {(p : ℤ)})]
-  apply Ideal.ramificationIdx_spec
+  rw [← Ideal.ramificationIdx'_eq_ramificationIdx (p := Ideal.span {(p : ℤ)})]
+  apply Ideal.ramificationIdx'_spec
   · rw [pow_one, Ideal.map_le_iff_le_comap]
     exact le_of_eq hover
   · intro hle

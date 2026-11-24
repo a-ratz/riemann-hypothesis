@@ -152,7 +152,7 @@ lemma kfa_mem_Kset (ε : Fin n → Bool) {Y : Matrix (Fin n) (Fin n) ℂ} (hY : 
   have hYJ : Y * Jm ε = Jm ε * Y := hY.2
   have hsk : Yᴴ = -Y := ((kfa_inK_iff ε Y).1 hY).1
   unfold Kset
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨?_, ?_⟩
   · rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, kfa_exp_conjTranspose hsk,
       kfa_exp_mul_neg]

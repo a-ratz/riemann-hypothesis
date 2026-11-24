@@ -168,7 +168,7 @@ theorem exists_expandsAt (α : a.D₀.X) (s₀ : SecBMod a.D₀ j α) : ∃ m₀
     ∃ (f : ∀ χ, SecBMod P.toPre j χ) (σ : H0 U.LG.L j), IsIntegralForm hW j α s₀ m f ∧
       ∀ n, U.toUnifPre.ExpandsAt n j σ f := by
   obtain ⟨s, ⟨r, hr, σ, f', -, hf', hE⟩, -⟩ := (U.expand j hj).2 (constFam hW _ hG hj α s₀)
-  obtain ⟨n₀, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hr PowerSeries.X_irreducible
+  obtain ⟨n₀, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hr PowerSeries.irreducible_X
   obtain ⟨m₁, hm₁⟩ := exists_expo_bound hj α
   refine ⟨max n₀ m₁, fun m hm => ?_⟩
   obtain ⟨f, hf⟩ := exists_isIntegralForm hW hj α s₀ (hm₁ m ((le_max_right _ _).trans hm))
@@ -197,7 +197,7 @@ theorem exists_pow_smul_mem_span {C : Type} (rep : C → a.D₀.X) (hrep : ∀ �
   obtain ⟨t, ht, h⟩ := exists_smul_mem_span_of_expandsAt U hj B B.span_eq (fun i => PowerSeries.X ^ m i)
     (fun i => pow_ne_zero _ PowerSeries.X_ne_zero) σ f (fun i χ => by
       rw [show B i = _ from hB i.1 i.2]; exact (hf i).resF_eq _ hG hj χ) hE s
-  obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible ht PowerSeries.X_irreducible
+  obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible ht PowerSeries.irreducible_X
   refine ⟨n, ?_⟩
   have := Submodule.smul_mem _ u⁻¹.val h
   rwa [smul_smul, Units.inv_mul_cancel_left] at this

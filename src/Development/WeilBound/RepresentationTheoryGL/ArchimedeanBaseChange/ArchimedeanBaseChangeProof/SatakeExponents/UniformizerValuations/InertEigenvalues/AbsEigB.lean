@@ -656,7 +656,7 @@ theorem exists_form_of_faithful {k Q : Type} [Field k] [AddCommGroup Q] [Module 
     ∃ μ : Module.Dual k Q, μ ≠ 0 ∧ ∀ (r : R) (c : k), r • q₀ = c • q₀ → ∀ x, μ (r • x) = c * μ x := by
   let I : Ideal R := LinearMap.ker (LinearMap.toSpanSingleton R Q q₀)
   have hI : ∀ r : R, r ∈ I ↔ r • q₀ = 0 := fun r => by simp [I, LinearMap.mem_ker]
-  haveI : Module.Finite R Q := Module.Finite.of_restrictScalars_finite k R Q
+  have : Module.Finite R Q := Module.Finite.of_restrictScalars_finite k R Q
   have hne : I • (⊤ : Submodule R Q) ≠ ⊤ := by
     intro htop
     obtain ⟨r, hr1, hr2⟩ := Submodule.exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul I (⊤ : Submodule R Q)
@@ -689,9 +689,9 @@ theorem exists_eigenform_of_commute {Q : Type} [AddCommGroup Q] [Module ℂ Q] [
   have hcomm : ∀ a ∈ Set.range A, ∀ b ∈ Set.range A, a * b = b * a := by
     rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
     exact hc i j
-  letI : IsMulCommutative (Algebra.adjoin ℂ (Set.range A)) :=
+  let : IsMulCommutative (Algebra.adjoin ℂ (Set.range A)) :=
     Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hcomm a ha b hb)
-  letI : CommRing (Algebra.adjoin ℂ (Set.range A)) := by
+  let : CommRing (Algebra.adjoin ℂ (Set.range A)) := by
     open scoped IsMulCommutative in exact inferInstance
   obtain ⟨μ, hμ0, hμ⟩ := exists_form_of_faithful (k := ℂ) (Q := Q) (Algebra.adjoin ℂ (Set.range A))
     (fun r hr => Subtype.ext (LinearMap.ext fun x => by
@@ -794,7 +794,7 @@ theorem eqFormU_of (hA4 : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopol
   have hdom : D.IsStrDom ⟨t, (hT t).2 htD⟩ := (hDom L ϖ σ q hu n D hJ hN hNm hT ⟨t, (hT t).2 htD⟩).2 htS
   have a4 := (hA4 (GU σ n) D V ρ hadm ⟨_, hdom⟩).2
   have hker : twKer ρ D.N 1 = jacU ρ := twKer_eq_jacSub D _ hN ρ
-  haveI hfJ : FiniteDimensional ℂ (fixed ρ D.J) := hadm.2 D.J D.isOpen_J D.isCompact_J
+  have hfJ : FiniteDimensional ℂ (fixed ρ D.J) := hadm.2 D.J D.isOpen_J D.isCompact_J
   have hfin : FiniteDimensional ℂ (fixed (D.piN ρ) D.JT) := by
     let f : fixed ρ D.J →ₗ[ℂ] Jacquet ρ D.N := (twKer ρ D.N 1).mkQ ∘ₗ (fixed ρ D.J).subtype
     have hle : fixed (D.piN ρ) D.JT ≤ LinearMap.range f := by
@@ -809,16 +809,16 @@ theorem eqFormU_of (hA4 : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopol
       { carrier := {g | D.piN ρ g (Submodule.Quotient.mk v) = Submodule.Quotient.mk v}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul]
           simp }
-    have hop : IsOpen {g : D.T | ρ (g : GU σ n) v = v} := (hadm.1 v).preimage continuous_subtype_val
+    have hop : IsOpen {g : D.T | ρ (g : GU σ n) v = v} := (hadm.1 v).preimage continuous_subtypeVal
     refine Sg.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset (hop.mem_nhds (by simp)) ?_)
     intro g hg
     show D.piN ρ g (Submodule.Quotient.mk v) = Submodule.Quotient.mk v
@@ -1009,7 +1009,7 @@ private lemma key {E : Type} [AddCommGroup E] [Module ℂ E] [FiniteDimensional 
     (hmin : ∀ W' : Submodule ℂ E, W' ≠ ⊥ → (∀ i, ∀ x ∈ W', T i x ∈ W') →
       Module.finrank ℂ W ≤ Module.finrank ℂ W')
     (i : I) (w : E) (hw : w ∈ W) : ∃ μ : ℂ, T i w = μ • w := by
-  haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
+  have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
   let f : Module.End ℂ W := (T i).restrict (fun x hx => hinv i x hx)
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue f
   obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
@@ -1116,7 +1116,7 @@ theorem mem_latK_iff {L : Type} [Field L] [Valued L (WithZero (Multiplicative �
   have hvv : ∀ i, Valued.v ((a : Matrix (Fin n) (Fin n) L).mulVec x i) = Valued.v (x i) := by
     intro i
     rw [hc, map_mul, hv, one_mul]
-  simp only [latK, Set.mem_setOf_eq, hvv]
+  simp only [latK, Set.mem_ofPred_eq, hvv]
 
 theorem mem_iwGL_of_diag {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {n : ℕ} (a : GL (Fin n) L)
     (ha : IsDiagM a) (hv : ∀ i, Valued.v ((a : Matrix (Fin n) (Fin n) L) i i) = 1) : a ∈ IwGL L n := by

@@ -567,8 +567,8 @@ theorem him (R : RiemLat E g Λ) (x y : Λ) :
     ((R.form x y : ℤ) : ℝ) = (inner ℂ (per R y) (per R x) : ℂ).im := (R.im x y).symm
 
 theorem finite_ball (R : RiemLat E g Λ) (T : ℝ) : {x : Λ | ‖per R x‖ < T}.Finite := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   exact finite_short (per R) R.form (him R) R.unimod.2 T
 
 theorem per_injective (R : RiemLat E g Λ) : Function.Injective (per R) :=
@@ -772,7 +772,7 @@ theorem exists_subspace (R : RiemLat E g Λ) {Ψ : Type} [Fintype Ψ] [Nonempty 
   classical
   obtain ⟨τ₀⟩ := ‹Nonempty Ψ›
   obtain ⟨s, hs1, hs2⟩ := exists_maximal_linearIndepOn (𝓞 E) (Subtype.val : T → Λ)
-  haveI : Finite T := hT.to_subtype
+  have : Finite T := hT.to_subtype
   let r := Nat.card s
   let e : Fin r ≃ s := (Finite.equivFin s).symm
   let v : Fin r → Λ := fun i => ((e i : T) : Λ)
@@ -856,7 +856,7 @@ theorem short_vectors : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hv₀ : ∃ v₀ : Λ, v₀ ≠ 0 := by
     by_contra hcon
     push_neg at hcon
-    haveI : Subsingleton Λ := ⟨fun x y => by rw [hcon x, hcon y]⟩
+    have : Subsingleton Λ := ⟨fun x y => by rw [hcon x, hcon y]⟩
     have h1 := R.rank
     rw [Module.finrank_zero_of_subsingleton] at h1
     omega
@@ -999,7 +999,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 theorem ringOfIntegers_hom_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   have hk : RingHom.ker s = ⊥ := by
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [eq_bot_iff]
     intro m hm
     have h1 : s (algebraMap ℤ (𝓞 E) m) = 0 := hm
@@ -1266,11 +1266,11 @@ theorem encard_translates (Γ₀ Γ₁ : Subgroup G) (hle : Γ₁ ≤ Γ₀) (hi
   classical
   set H : Subgroup Γ₀ := Γ₁.subgroupOf Γ₀ with hH
   have hHidx : H.index ≠ 0 := hidx
-  haveI : H.FiniteIndex := ⟨hHidx⟩
-  haveI : Finite (Γ₀ ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : Finite (trivPart p Γ₀) := hfin
+  have : H.FiniteIndex := ⟨hHidx⟩
+  have : Finite (Γ₀ ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
+  have : Finite (trivPart p Γ₀) := hfin
   set Z := {z : Γ₀ // z ∈ trivPart p Γ₀ ∧ (z : G) ∈ Γ₁} with hZ
-  haveI : Finite Z := Finite.of_injective (fun z : Z => (⟨z.1, z.2.1⟩ : trivPart p Γ₀))
+  have : Finite Z := Finite.of_injective (fun z : Z => (⟨z.1, z.2.1⟩ : trivPart p Γ₀))
     (fun x y h => Subtype.ext (congrArg (fun w : trivPart p Γ₀ => w.1) h))
   have memH : ∀ u : Γ₀, u ∈ H ↔ (u : G) ∈ Γ₁ := fun u => Subgroup.mem_subgroupOf
 
@@ -1323,7 +1323,7 @@ theorem encard_translates (Γ₀ Γ₁ : Subgroup G) (hle : Γ₁ ≤ Γ₀) (hi
         simpa [mul_assoc] using h6
       refine ⟨(q, ⟨γ * (g q)⁻¹, htriv, hu'⟩), Subtype.ext ?_⟩
       simp [Φ]
-  haveI : Finite {γ : Γ₀ | (γ : G) * a ∈ S} := Finite.of_surjective Φ hbij.2
+  have : Finite {γ : Γ₀ | (γ : G) * a ∈ S} := Finite.of_surjective Φ hbij.2
   have hc := Nat.card_eq_of_bijective Φ hbij
   rw [Nat.card_prod] at hc
   have hfinT : {γ : Γ₀ | (γ : G) * a ∈ S}.Finite := Set.toFinite _
@@ -1443,7 +1443,7 @@ theorem null_fixed (Δ : GroupDict F) (μ : Measure (archUnitary Δ.h 𝐯)) [μ
     (isPreconnected_ballDom F.q) hfa ⟨Δ.π a₀, pi_mem_ball Δ a₀, sub_ne_zero.2 hi⟩
   set Zr := {z | z ∈ ballDom F.q ∧ A z i - z i = 0} with hZr
   have hν : (μ.map Δ.π) Zr = 0 := by
-    rw [hc, Measure.smul_apply, smul_eq_mul]
+    rw [hc, smul_apply, smul_eq_mul]
     have h1 : (volume.restrict (ballDom F.q)) Zr = 0 := Measure.restrict_le_self.absolutelyContinuous hz
     have h2 := withDensity_absolutelyContinuous (volume.restrict (ballDom F.q))
       (fun t => ENNReal.ofReal (ballDens F.q t)) h1
@@ -1457,11 +1457,11 @@ theorem null_fixed (Δ : GroupDict F) (μ : Measure (archUnitary Δ.h 𝐯)) [μ
 
 theorem finite_trivPart (Δ : GroupDict F) :
     (trivPart Δ.π (archLatticeGroup Δ.h 𝐯 Δ.e.range)).Finite := by
-  haveI : DiscreteTopology (archLatticeGroup Δ.h 𝐯 Δ.e.range) :=
+  have : DiscreteTopology (archLatticeGroup Δ.h 𝐯 Δ.e.range) :=
     ArchLatticeDiscrete.proof Δ.h 𝐯 Δ.e.range Δ.integral.isLattice
   have hK : IsCompact (Δ.M.stab : Set (archUnitary Δ.h 𝐯)) := MajorantStabCompact.proof Δ.h 𝐯 Δ.M
   have hcl : IsClosed ((archLatticeGroup Δ.h 𝐯 Δ.e.range : Subgroup _) : Set (archUnitary Δ.h 𝐯)) :=
-    Subgroup.isClosed_of_discrete
+    Subgroup.isClosed_of_discreteTopology
   have hf : (((archLatticeGroup Δ.h 𝐯 Δ.e.range : Subgroup _) : Set (archUnitary Δ.h 𝐯)) ∩ Δ.M.stab).Finite :=
     (hK.inter_left hcl).finite
       ((isDiscrete_iff_discreteTopology.2 (inferInstanceAs (DiscreteTopology (archLatticeGroup Δ.h 𝐯 Δ.e.range)))).mono
@@ -1504,7 +1504,7 @@ theorem exists_const_lintegral (Δ : GroupDict F) (μ : Measure (archUnitary Δ.
     refine relIndex_map_range_ne_zero φ _ ?_
     rw [Subgroup.index_comap, hψ]
     exact hΓ.2
-  haveI : Countable Γ₀ := by
+  have : Countable Γ₀ := by
     have : Countable Δ.h.unitaryGroup := countable_unitaryGroup Δ.h 𝐯
     have h1 : ((Γ₀ : Subgroup _) : Set (archUnitary Δ.h 𝐯)).Countable := by
       rw [hΓ₀, archLatticeGroup, Subgroup.coe_map]
@@ -1537,11 +1537,11 @@ theorem exists_const_lintegral (Δ : GroupDict F) (μ : Measure (archUnitary Δ.
   set N : ℕ := Γ₁.relIndex Γ₀ * Nat.card {z : Γ₀ // z ∈ trivPart Δ.π Γ₀ ∧ (z : archUnitary Δ.h 𝐯) ∈ Γ₁} with hN
   have hN0 : N ≠ 0 := by
     refine Nat.mul_ne_zero hidx ?_
-    haveI : Finite (trivPart Δ.π Γ₀) := hfin
-    haveI : Finite {z : Γ₀ // z ∈ trivPart Δ.π Γ₀ ∧ (z : archUnitary Δ.h 𝐯) ∈ Γ₁} :=
+    have : Finite (trivPart Δ.π Γ₀) := hfin
+    have : Finite {z : Γ₀ // z ∈ trivPart Δ.π Γ₀ ∧ (z : archUnitary Δ.h 𝐯) ∈ Γ₁} :=
       Finite.of_injective (fun z => (⟨z.1, z.2.1⟩ : trivPart Δ.π Γ₀))
         (fun x y h => Subtype.ext (congrArg (fun w : trivPart Δ.π Γ₀ => w.1) h))
-    haveI : Nonempty {z : Γ₀ // z ∈ trivPart Δ.π Γ₀ ∧ (z : archUnitary Δ.h 𝐯) ∈ Γ₁} :=
+    have : Nonempty {z : Γ₀ // z ∈ trivPart Δ.π Γ₀ ∧ (z : archUnitary Δ.h 𝐯) ∈ Γ₁} :=
       ⟨⟨1, fun a => by simp, Γ₁.one_mem⟩⟩
     exact Nat.card_pos.ne'
   have hgood : ∀ᵐ a ∂μ, ∀ γ : Γ₀, Δ.π ((γ : archUnitary Δ.h 𝐯) * a) = Δ.π a → γ ∈ trivPart Δ.π Γ₀ := by
@@ -1739,7 +1739,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 theorem hom_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   have hk : RingHom.ker s = ⊥ := by
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [eq_bot_iff]
     intro m hm
     have h1 : s (algebraMap ℤ (𝓞 E) m) = 0 := hm
@@ -1763,7 +1763,7 @@ theorem finrank_eq_two_mul {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* �
       right_inv := fun s => by
         ext x
         simp }
-  haveI : Fintype (𝓞 E →+* ℂ) := Fintype.ofEquiv _ e
+  have : Fintype (𝓞 E →+* ℂ) := Fintype.ofEquiv _ e
   have hc : Fintype.card (𝓞 E →+* ℂ) = Module.finrank ℚ E := by
     rw [← Fintype.card_congr e]
     exact NumberField.Embeddings.card E ℂ

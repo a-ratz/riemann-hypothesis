@@ -228,7 +228,7 @@ theorem isEqn_chart (X : FlagCover Y) (C : FlagCpt Y (RingEquiv.refl c.F)) (g : 
     rw [hA, GlobalTheory.FlagMod.tri_mul_diag (X.F.B_map_tri k k₀ τ _) (hG₀ τ).1, Matrix.map_apply, (hG₀ τ).2]
   have hTt : T.BlockTriangular id := fun a b h => hTf.1 a b h
   have hTT : T * C.f0.co fF τ = 1 := by rw [hT_def, EigFrame.co_mul, EigFrame.co_self]
-  letI : Invertible T := Matrix.invertibleOfIsUnitDet T (Matrix.isUnit_det_of_right_inverse hTT)
+  let : Invertible T := Matrix.invertibleOfIsUnitDet T (Matrix.isUnit_det_of_right_inverse hTT)
   have hinv : C.f0.co fF τ = T⁻¹ := (Matrix.inv_eq_right_inv hTT).symm
   have hTi : (T⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hTt
   have hM' : M.map α = A * T⁻¹ := by rw [hM_def, ← hco, ← hinv, hA_def, EigFrame.co_mul]
@@ -238,7 +238,7 @@ theorem isEqn_chart (X : FlagCover Y) (C : FlagCpt Y (RingEquiv.refl c.F)) (g : 
     exact hα (h1.trans (map_zero α).symm)
   have hMu : IsUnit (M i i) := by
     have hdet := gy'.isUnit_det_co fy τ
-    rw [← hM_def, Matrix.det_of_upperTriangular hMt] at hdet
+    rw [← hM_def, Matrix.det_of_isUpperTriangular hMt] at hdet
     exact isUnit_of_dvd_unit (Finset.dvd_prod_of_mem (fun j => M j j) (Finset.mem_univ i)) hdet
   have hTd : T i i * T⁻¹ i i = 1 := by
     rw [← GlobalTheory.FlagMod.tri_mul_diag hTt hTi, Matrix.mul_inv_of_invertible, Matrix.one_apply_eq]
@@ -410,9 +410,9 @@ theorem growth_vanishing (hN : GlobalTheory.Published.NefNumerics) (k : Type) [F
     (hV : ∀ m s, s ∈ V m ↔ ∀ y ∈ B, ∀ i hi, H0.germ i y (memTop y) hi s ∈ IsLocalRing.maximalIdeal _) :
     GlobalTheory.CompHt.growth D (fun m => Cardinal.toENat (Module.rank k (V m))) =
       ENNReal.ofReal ((letI := algebraΓOfHom p; topSelfIntersection k L D : ℤ) : ℝ) := by
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   let i := redι B
-  letI := algebraΓOfHom (i ≫ p)
+  let := algebraΓOfHom (i ≫ p)
   have := ReducedSubgroup.isReduced_subscheme_vanishingIdeal B
   have hs : strHom k X = p := strHom_eq fun _ => rfl
   have hs' : strHom k _ = i ≫ p := strHom_eq fun _ => rfl
@@ -421,7 +421,7 @@ theorem growth_vanishing (hN : GlobalTheory.Published.NefNumerics) (k : Type) [F
     exact ⟨n, i ≫ j, inferInstance, by rw [Category.assoc, hj']⟩
   have hfin : ∀ {T : Scheme.{0}} (q : T ⟶ Sp k) (N : LB T), IsProjOver q → N.IsLB → Module.Finite k (H0 q N ⊤) := by
     intro T q N hq hN
-    letI := algebraΓOfHom q
+    let := algebraΓOfHom q
     have := finite_coh_zero_twist_of_isProjOver (k := k) (f := q) (fun _ => rfl) hq hN
     have e (c : k) : algebraMap k Γ(T, ⊤) c = DVR.FlatBC.algX q ⊤ c := by
       change q.appTop _ = _
@@ -551,7 +551,7 @@ theorem exists_iso (T : TorFlag Xo c) (Z : Comp Xo c) (B : Comp Xo c → GlobalT
   have hVo : Nonempty (Vo C) := by
     refine ⟨⟨genericPoint C.Y.X, ?_⟩⟩
     show C.π (genericPoint C.Y.X) ∈ Set.range T.Y.jQ
-    letI := (GlobalTheory.ShFam.constF (RingEquiv.refl c.F) C.Y).toAlgebra
+    let := (GlobalTheory.ShFam.constF (RingEquiv.refl c.F) C.Y).toAlgebra
     have e1 := Scheme.Hom.comp_apply (GlobalTheory.ShFam.genericPt C.Y) C.π (IsLocalRing.closedPoint C.Y.Fn)
     have e2 := Scheme.Hom.comp_apply (GlobalTheory.AllWt.ptF C.y0) T.Y.jQ (IsLocalRing.closedPoint C.Y.Fn)
     rw [C.y0_x] at e2
@@ -636,7 +636,7 @@ theorem topSelf_eq_inter (T : TorFlag Xo c) (Z : Comp Xo c) (C : FlagCpt T.Y (Ri
     [IsIso h] (hh : h ≫ C.π ≫ genι T.Y = inc₀ T.X Z ≫ T.X.π) (hs : h ≫ C.Y.str = str₀ T.X Z)
     (hR : ∀ (K : Type) [Field K] (z : Sp K ⟶ Y₀ T.X Z), Rel T.X.F C (z ≫ inc₀ T.X Z) (z ≫ h)) (la : AllWt.Weight Dw) :
     (letI := algebraΓOfHom (str₀ T.X Z); topSelfIntersection c.F (L₀ T.X Z la) C.Y.dim) = C.Y.inter fun _ => C.Lw la := by
-  letI := algebraΓOfHom (str₀ T.X Z)
+  let := algebraΓOfHom (str₀ T.X Z)
   have hL := isLB_L₀ T.X Z la
   have hL' := T.X.F.isLB_LL (AllWt.exOf Dw la 0)
   have e := _root_.GlobalTheory.VarFlag.lbIso_LL_pull T.X C (inv h ≫ inc₀ T.X Z) (by rw [Category.assoc, ← hh, IsIso.inv_hom_id_assoc])

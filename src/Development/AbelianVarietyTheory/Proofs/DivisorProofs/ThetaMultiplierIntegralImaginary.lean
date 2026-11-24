@@ -148,7 +148,7 @@ theorem im_form_mem_int (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ))
     simp
 
   obtain ⟨s, b, hfin, hbΛ⟩ := exists_basis_in Λ hΛ
-  haveI : Fintype s := Fintype.ofFinite s
+  have : Fintype s := Fintype.ofFinite s
   have hspan : ∀ x ∈ Submodule.span ℤ (Set.range b), x ∈ Λ := by
     intro x hx
     induction hx using Submodule.span_induction with

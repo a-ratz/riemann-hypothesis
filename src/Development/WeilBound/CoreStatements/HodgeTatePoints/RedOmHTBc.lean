@@ -91,12 +91,12 @@ theorem fg_inf_restrictScalars_of_integers (C : Type) [Field C] (v : Valuation C
     [Module O V] [IsScalarTower O C V] (L : Submodule O V) (U : Submodule C V) (hL : L.FG) :
     (L ⊓ U.restrictScalars O).FG := by
   have hinj : Function.Injective (algebraMap O C) := hv.hom_inj
-  haveI : IsDomain O := hinj.isDomain
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : IsDomain O := hinj.isDomain
+  have : ValuationRing O := ValuationRing.of_integers v hv
   let f : L →ₗ[O] (V ⧸ U) := (U.mkQ.restrictScalars O).comp L.subtype
-  haveI : Module.Finite O L := Module.Finite.iff_fg.2 hL
-  haveI : Module.Finite O (LinearMap.range f) := inferInstance
-  haveI : Module.Flat O (LinearMap.range f) := by
+  have : Module.Finite O L := Module.Finite.iff_fg.2 hL
+  have : Module.Finite O (LinearMap.range f) := inferInstance
+  have : Module.Flat O (LinearMap.range f) := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     rintro ⟨x, hx⟩ ⟨⟨a, ha⟩, h⟩
     have h1 : a • x = 0 := congrArg Subtype.val h
@@ -106,7 +106,7 @@ theorem fg_inf_restrictScalars_of_integers (C : Type) [Field C] (v : Valuation C
     rw [← algebraMap_smul C a x] at h1
     have : x = 0 := (smul_eq_zero.1 h1).resolve_left ha0
     simp [this]
-  haveI : Module.Free O (LinearMap.range f) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O (LinearMap.range f) := Module.free_of_flat_of_isLocalRing
   obtain ⟨s, hs⟩ := Module.projective_lifting_property f.rangeRestrict LinearMap.id
     f.surjective_rangeRestrict
   let p : L →ₗ[O] V := L.subtype.comp (LinearMap.id - s.comp f.rangeRestrict)
@@ -188,7 +188,7 @@ theorem latIn_isLattice : ∀ (C : Type) [Field C] (v : Valuation C NNReal) (O :
     · rintro ⟨h1, h2⟩
       exact ⟨⟨x, h2⟩, h1, rfl⟩
   · intro s hs hli
-    letI : IsFractionRing O C := hv.isFractionRing
+    let : IsFractionRing O C := hv.isFractionRing
     exact (LinearIndependent.iff_fractionRing _ _).mp hli
 end GlobalTheory.CompanionTheory.Ar.HT
 end -- clump:auto
@@ -221,7 +221,7 @@ theorem eigQuot_lattice {C : Type} [Field C] {v : Valuation C NNReal} {O : Type}
       exact ⟨y, hy, Subtype.ext h⟩
     · rintro ⟨y, hy, h⟩
       exact ⟨y, hy, congrArg Subtype.val h⟩
-  haveI : IsFractionRing O C := hv.isFractionRing
+  have : IsFractionRing O C := hv.isFractionRing
   rw [hmap]
   exact Submodule.IsLattice.of_fg C (hX.fg.map f)
 
@@ -271,7 +271,7 @@ theorem finrank_eigSp [CharZero C] {v : Valuation C NNReal} (hv : v.Integers O) 
 
 theorem finrank_W_add_Ω [CharZero C] {v : Valuation C NNReal} (hv : v.Integers O) (σ : E →+* C) :
     finrank C (P.Wsp σ) + finrank C (P.Ωsp σ) = N := by
-  haveI := PtBasic.finite_V P
+  have := PtBasic.finite_V P
   let f := P.ht ∘ₗ (eigSp P.ρ σ).subtype
   have h := f.finrank_range_add_finrank_ker
   have hr : LinearMap.range f = P.Ωsp σ := by
@@ -295,7 +295,7 @@ theorem finrank_W_add_Ω [CharZero C] {v : Valuation C NNReal} (hv : v.Integers 
 theorem finrank_W_add_conj [CharZero C] {v : Valuation C NNReal} (hv : v.Integers O)
     (hc : ∀ x, c (c x) = x) (σ : E →+* C) :
     finrank C (P.Wsp σ) + finrank C (P.Wsp (σ.comp c.toRingHom)) = N := by
-  haveI := PtBasic.finite_V P
+  have := PtBasic.finite_V P
   set τ := σ.comp c.toRingHom
   let B : eigSp P.ρ σ →ₗ[C] Module.Dual C (eigSp P.ρ τ) :=
     (P.e.domRestrict₁₂ (eigSp P.ρ σ) (eigSp P.ρ τ))

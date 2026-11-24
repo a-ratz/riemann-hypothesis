@@ -78,8 +78,8 @@ theorem basis_extend [FiniteDimensional L E] {n : Type} [Fintype n] [DecidableEq
         (Algebra.leftMulMatrix b e).map (algebraMap L (FractionRing (MvPolynomial σ L))) := by
 
   try intro _
-  letI : Algebra (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) := (liftY (L := L) (E := E) (σ := σ)).toAlgebra
-  letI : Algebra (MvPolynomial σ L) (MvPolynomial σ E) := MvPolynomial.algebraMvPolynomial
+  let : Algebra (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) := (liftY (L := L) (E := E) (σ := σ)).toAlgebra
+  let : Algebra (MvPolynomial σ L) (MvPolynomial σ E) := MvPolynomial.algebraMvPolynomial
   classical
   have hlift : ∀ q : MvPolynomial σ L, algebraMap (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) (algebraMap (MvPolynomial σ L) (FractionRing (MvPolynomial σ L)) q) =
       algebraMap (MvPolynomial σ E) (FractionRing (MvPolynomial σ E)) (MvPolynomial.map (algebraMap L E) q) := by

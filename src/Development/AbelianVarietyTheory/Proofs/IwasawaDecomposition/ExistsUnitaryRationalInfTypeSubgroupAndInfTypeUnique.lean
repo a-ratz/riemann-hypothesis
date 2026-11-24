@@ -77,7 +77,7 @@ theorem emb_mul_indep {L I : Type} [Field L] [CharZero L] [Fintype I] (σ : I �
       rw [← Nat.cofinite_eq_atTop]
       refine Set.Subsingleton.finite ?_
       intro a ha b hb
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_not] at ha hb
+      simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_not] at ha hb
       have ha1 : ((a : L) + 1) ≠ 0 := Nat.cast_add_one_ne_zero a
       have hb1 : ((b : L) + 1) ≠ 0 := Nat.cast_add_one_ne_zero b
       field_simp at ha hb
@@ -92,7 +92,7 @@ theorem emb_mul_indep {L I : Type} [Field L] [CharZero L] [Fintype I] (σ : I �
       simp only [slope, h2, h3, vsub_self, smul_zero]
     exact tendsto_nhds_unique (hs.comp hu) h0
   have li := (linearIndependent_monoidHom L ℂ).comp (fun i => (σ i : L →* ℂ))
-    (fun i j hij => hσ (RingHom.coe_monoidHom_injective hij))
+    (fun i j hij => hσ (RingHom.toMonoidHom_injective hij))
   have := Fintype.linearIndependent_iff.1 li (fun i => (m i : ℂ)) (by
     funext x
     simpa [Finset.sum_apply] using key x)

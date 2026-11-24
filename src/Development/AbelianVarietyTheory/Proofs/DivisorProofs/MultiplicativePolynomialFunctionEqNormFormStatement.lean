@@ -100,7 +100,7 @@ theorem eq_prod_aroots : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra �
       refine Set.Infinite.mono (s := Set.range (Int.cast : ℤ → ℚ)) ?_
         (Set.infinite_range_of_injective Int.cast_injective)
       rintro _ ⟨n, rfl⟩
-      simp only [Set.mem_setOf_eq, IsRoot.def]
+      simp only [Set.mem_ofPred_eq, IsRoot.def]
       rw [hPe, ← _root_.one_mul (C n - Polynomial.X : ℤ[X]), hm, h0, zero_mul]
     exact hP.ne_zero hP0
   obtain ⟨M, hM⟩ := exists_ext δ Φ hN h1 hm Ω
@@ -109,7 +109,7 @@ theorem eq_prod_aroots : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra �
     refine Set.Infinite.mono (s := Set.range (Int.cast : ℤ → ℚ)) ?_
       (Set.infinite_range_of_injective Int.cast_injective)
     rintro _ ⟨n, rfl⟩
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [hPe, hN 2 _ (lt_of_le_of_lt (natDegree_sub_le _ _) (by simp)), ← coe_evalRingHom, ev_map]
     congr 1
     simp

@@ -531,8 +531,8 @@ theorem exists_local_homFixRep : ∀ (Rg : Type) [CommRing Rg] [IsNoetherianRing
     rw [PrimeSpectrum.basicOpen_mul]; exact ⟨hp₁, hp₂⟩
   refine ⟨PrimeSpectrum.basicOpen (f₁ * f₂), hp, GlobalTheory.HomFixTransport.homFixRep_basicOpen Rg A B L M (f₁ * f₂) hL hM ?_ _ rfl⟩
   intro Af Bf _ _ φA φB hpA hpB
-  haveI := GlobalTheory.isCommMonObj_of_grpPullback _ _ A Af _ φA hpA
-  haveI := GlobalTheory.isCommMonObj_of_grpPullback _ _ B Bf _ φB hpB
+  have := GlobalTheory.isCommMonObj_of_grpPullback _ _ A Af _ φA hpA
+  have := GlobalTheory.isCommMonObj_of_grpPullback _ _ B Bf _ φB hpB
   obtain ⟨hA', hL', rL', aL'⟩ := GlobalTheory.GrpPullbackPol.isAbelianScheme_and_pull_of_isGrpPullback _ _ _ A Af φA L hpA hA hL rL aL
   obtain ⟨hB', hM', rM', -⟩ := GlobalTheory.GrpPullbackPol.isAbelianScheme_and_pull_of_isGrpPullback _ _ _ B Bf φB M hpB hB hM rM aM
   exact GlobalTheory.T.exists_fixedPullbackHomScheme_of_sectionBases (Localization.Away (f₁ * f₂)) Af Bf (L.pull φA) (M.pull φB) k hA' hB' hL' hM' rL' rM' aL' hk
@@ -641,7 +641,7 @@ theorem homFix_finiteType : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A B : 
     obtain ⟨U, hU, hs, -⟩ := exists_isAffineOpen_mem_and_subset (show s ∈ (⊤ : S.Opens) from trivial)
     exact ⟨⟨U, hU⟩, hU.range_fromSpec.ge hs⟩
   · intro U
-    haveI : IsNoetherianRing Γ(S, U) := IsLocallyNoetherian.component_noetherian U
+    have : IsNoetherianRing Γ(S, U) := IsLocallyNoetherian.component_noetherian U
     obtain ⟨A', _, _, φA, gA, hA', hL', rA', aA'⟩ := _root_.GlobalTheory.OpenRestrictPol.exists_restrict_open S A L hA hL rA aA _ U.2.fromSpec (IsAffineOpen.isOpenImmersion_fromSpec U.2)
     obtain ⟨B', _, _, φB, gB, hB', hM', rB', aB'⟩ := _root_.GlobalTheory.OpenRestrictPol.exists_restrict_open S B M hB hM rB aB _ U.2.fromSpec (IsAffineOpen.isOpenImmersion_fromSpec U.2)
     obtain ⟨R, h1, h2, h3⟩ := GlobalTheory.T.exists_finiteType_scheme_representing_polarizedHoms Γ(S, U) A' B' (L.pull φA) (M.pull φB) hA' hB' hL' hM' rA' rB' aA' aB'
@@ -742,7 +742,7 @@ theorem formallyUnramified_homFixRep : ∀ (S : Scheme.{0}) (A B : Over S) [GrpO
     have h' : IsGrpPullback ((Over.pullback g).obj GH) G f (pullback.fst GH.hom g ≫ φ) :=
       ((isGrpPullback_pullback GH g).comp hG).congr hgf rfl
     obtain ⟨e, he, heφ⟩ := grpPullback_iso (isGrpPullback_pullback G f) h'
-    haveI := he
+    have := he
     exact ⟨e, he, ((isGrpPullback_of_iso e).comp (isGrpPullback_pullback GH g)).congr (Category.id_comp _) rfl,
       by rw [Category.assoc, heφ]⟩
   have build : ∀ g : Spec R ⟶ Rp.H, g ≫ Rp.π = f → ∃ (v : AT ⟶ BT) (χA : AT.left ⟶ Rp.AH.left)
@@ -751,9 +751,9 @@ theorem formallyUnramified_homFixRep : ∀ (S : Scheme.{0}) (A B : Over S) [GrpO
     intro g hgf
     obtain ⟨eA, heA, hpA, hφA⟩ := tr g hgf A Rp.AH Rp.φA Rp.pbA
     obtain ⟨eB, heB, hpB, hφB⟩ := tr g hgf B Rp.BH Rp.φB Rp.pbB
-    haveI := heA
-    haveI := heB
-    haveI := Rp.hom
+    have := heA
+    have := heB
+    have := Rp.hom
     have hie : eB.inv.left ≫ eB.hom.left = 𝟙 _ := by rw [← Over.comp_left, eB.inv_hom_id, Over.id_left]
     refine ⟨eA.hom ≫ (Over.pullback g).map Rp.Φ ≫ eB.inv, _, _, inferInstance, hpA, hpB, hφA, hφB, ?_⟩
     have hm : ((Over.pullback g).map Rp.Φ).left ≫ pullback.fst Rp.BH.hom g =
@@ -770,7 +770,7 @@ theorem formallyUnramified_homFixRep : ∀ (S : Scheme.{0}) (A B : Over S) [GrpO
     have hε : Spec.map q = Spec.map (CommRingCat.ofHom ε.toRingHom) ≫ j := by
       rw [← Spec.map_comp]
       congr 1
-    haveI : IsIso (CommRingCat.ofHom ε.toRingHom) := ε.toCommRingCatIso.isIso_hom
+    have : IsIso (CommRingCat.ofHom ε.toRingHom) := ε.toCommRingCatIso.isIso_hom
     rw [hε, Category.assoc, Category.assoc] at hi
     exact (cancel_epi _).1 hi
   have hχA : pullback.fst AT.hom j ≫ χA₁ = pullback.fst AT.hom j ≫ χA₂ := by
@@ -1006,7 +1006,7 @@ theorem isProper_of_finiteType : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A
   intro S _ A B _ _ _ _ L M R hA hB hL hM _ _ hqc hsep hlft
   have hex : ValuativeCriterion.Existence R.π := by
     refine _root_.GlobalTheory.DvrCriterion.existence_of_lift_discreteValuationRing R.π hlft hqc hsep fun V _ _ _ x y hxy => ?_
-    haveI := R.hom
+    have := R.hom
 
     let AV := (Over.pullback y).obj A
     let ψA : AV.left ⟶ A.left := pullback.fst A.hom y
@@ -1114,7 +1114,7 @@ theorem isProper_of_finiteType : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A
       by rw [Category.assoc, hχA1, hκA1], by rw [Category.assoc, hχB1, hκB1],
       by rw [← Category.assoc, hΦV1, Category.assoc, hχΦ, Category.assoc]⟩
     exact ⟨g, e2.trans e1.symm, hg⟩
-  haveI : UniversallyClosed R.π := UniversallyClosed.of_valuativeCriterion R.π hex
+  have : UniversallyClosed R.π := UniversallyClosed.of_valuativeCriterion R.π hex
   exact IsProper.mk
 
 end GlobalTheory.EndLoc.HomFixProper

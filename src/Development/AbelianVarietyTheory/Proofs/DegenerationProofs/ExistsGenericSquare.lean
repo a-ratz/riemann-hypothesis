@@ -194,12 +194,12 @@ theorem main : Laws → Laws2 → Laws3 → USt → ∀ (R : Type) [CommRing R] 
       obtain ⟨E⟩ := hG.fibres Ω (q ≫ spMap φ)
       let em := (Functor.mapMonNatIso (Over.pullbackComp q (spMap φ)) ≪≫ Functor.mapMonCompIso).app (Mon.mk G)
       let e : (Over.pullback (q ≫ spMap φ)).obj G ≅ (Over.pullback q).obj ((Over.pullback (spMap φ)).obj G) := (Mon.forget _).mapIso em
-      haveI : IsMonHom e.hom := by
+      have : IsMonHom e.hom := by
         show IsMonHom em.hom.hom
         infer_instance
-      letI := E.grpB
-      haveI := E.q_hom
-      haveI := E.i_hom
+      let := E.grpB
+      have := E.q_hom
+      have := E.i_hom
       exact ⟨{ X := E.X
                addCommGroup := E.addCommGroup
                free := E.free

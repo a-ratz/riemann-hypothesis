@@ -113,9 +113,9 @@ theorem aeval_ne_zero_of_norm_eq (K : FinExt l) (N : ℕ) (π : Om l)
     apply Finset.sum_subset supp_subset_range_natDegree_succ
     intro i _ hi
     rw [notMem_support_iff.1 hi, zero_smul]
-  have h6 := IsUltrametricDist.nnnorm_sum_eq_sup_of_pairwise_ne hpw
-  rw [hs, nnnorm_zero] at h6
-  have hm : p.natDegree ∈ p.support := natDegree_mem_support_of_nonzero hp
+  have h6 := IsUltrametricDist.nnNorm_sum_eq_sup_of_pairwise_ne hpw
+  rw [hs, nnNorm_zero] at h6
+  have hm : p.natDegree ∈ p.support := natDegree_mem_support_of_ne_zero hp
   have h7 := Finset.le_sup (f := fun i => ‖p.coeff i • π ^ i‖₊) hm
   rw [← h6] at h7
   obtain ⟨n, hn⟩ := key _ hm
@@ -154,15 +154,15 @@ theorem minpoly_unramifiedSubfield_eq_cyclotomic (K : FinExt l) (j : ℕ) (hj : 
 
 theorem exists_primitiveRoot_Om (j : ℕ) : ∃ ζ : Om l, IsPrimitiveRoot ζ (l ^ j) := by
   have hlp : l.Prime := Fact.out
-  haveI : NeZero (l ^ j) := ⟨(pow_pos hlp.pos j).ne'⟩
-  haveI : CharZero (Om l) := algebraRat.charZero _
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ j)
+  have : NeZero (l ^ j) := ⟨(pow_pos hlp.pos j).ne'⟩
+  have : CharZero (Om l) := algebraRat.charZero _
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ j)
 
 theorem Ks_eq_restrictScalars (K : FinExt l) (j : ℕ) (ζ : Om l)
     (hζ : IsPrimitiveRoot ζ (l ^ j)) :
     Ks K j = ((↥(K0 K))⟮ζ⟯).restrictScalars ℚ_[l] := by
   have hlp : l.Prime := Fact.out
-  haveI : NeZero (l ^ j) := ⟨(pow_pos hlp.pos j).ne'⟩
+  have : NeZero (l ^ j) := ⟨(pow_pos hlp.pos j).ne'⟩
   rw [IntermediateField.restrictScalars_adjoin_eq_sup, Ks]
   congr 1
   apply le_antisymm
@@ -239,8 +239,8 @@ theorem exists_chi_eq (K : FinExt l) (χ : GQ l →* ℚ_[l]ˣ) (hχ : IsCyc χ)
   have hlp : l.Prime := Fact.out
   have hl1 : (1 : ℝ) < l := by exact_mod_cast hlp.one_lt
   have hcont := (cyc_basic l χ hχ).2.1
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     FiniteDimensional.of_injective
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective inf_le_left)

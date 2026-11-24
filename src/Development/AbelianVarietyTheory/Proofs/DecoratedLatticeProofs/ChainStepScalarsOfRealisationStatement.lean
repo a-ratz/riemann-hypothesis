@@ -273,7 +273,7 @@ theorem mid_scalar (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFull
     have hp := (hRC t).2.2.2.1 k hk1
     obtain ⟨-, ⟨ipD, ip, hm⟩, -⟩ := hSoft _ _ hw k hk.le _ hs
     obtain ⟨hfin', ⟨ipD', ip', hm'⟩, -⟩ := hSoft _ _ hw (k + 1) hk1.le _ hs'
-    haveI := hfin'
+    have := hfin'
     obtain rfl : ipD = ipD₀ := sesq_eq_of_tprod _ _ fun v v' => (hm.pure v v').trans (hp₀ v v').symm
     obtain rfl : ipD' = ipD₀' := sesq_eq_of_tprod _ _ fun v v' => (hm'.pure v v').trans (hp₀' v v').symm
     obtain ⟨u₀, hu₀, hu₀0⟩ := (Submodule.ne_bot_iff _).1 hc
@@ -395,7 +395,7 @@ theorem top_key (R : RealDat D A Ks) (hN : GlobalTheory.IndefiniteRowSideFullHec
   have hp : IsStep (twR R t) (D.R.m - 1 + 1) (stepX R h t) := by rw [e]; exact (hRC t).2.2.2.2
   obtain ⟨-, ⟨ipD, ip, hm⟩, -⟩ := hSoft _ _ hw (D.R.m - 1) hk.le _ hs
   obtain ⟨hfin', ⟨ipD', ip', hm'⟩, -⟩ := hSoft _ _ hw D.R.m le_rfl _ hsX
-  haveI := hfin'
+  have := hfin'
   obtain ⟨hbij, hnorm⟩ := hNXt t
   have hnorm' := hnorm ipD' ip' hm'
   obtain rfl : ipD = ipD₀ := sesq_eq_of_tprod _ _ fun v v' => (hm.pure v v').trans (hp₀ v v').symm
@@ -514,16 +514,16 @@ theorem scalars_of_realisation : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
   choose! rM hrM hM using hmid
   refine ⟨fun j => if j = D.R.m then rT else rM (j - 1), fun j hj1 hjm => ?_, fun t c hc => ?_⟩
   · by_cases hj : j = D.R.m
-    · simp only [if_pos hj]; exact hrT
-    · simp only [if_neg hj]; exact hrM (j - 1) (by omega)
+    · simp only [ite_eq_left hj]; exact hrT
+    · simp only [ite_eq_right hj]; exact hrM (j - 1) (by omega)
   · refine ⟨(hRP t c).1 hc, fun B hB => ⟨fun k hk => ?_, ?_⟩⟩
     · obtain ⟨l, hl, hS⟩ := hM k hk t c hc B hB
       refine ⟨l, hl, ?_⟩
-      simp only [if_neg (show k + 1 ≠ D.R.m by omega), Nat.add_sub_cancel]
+      simp only [ite_eq_right (show k + 1 ≠ D.R.m by omega), Nat.add_sub_cancel]
       exact hS
     · obtain ⟨l, hl, hS⟩ := hT t c hc B hB
       refine ⟨l, hl, ?_⟩
-      simp only [if_pos rfl]
+      simp only [ite_eq_left rfl]
       exact hS
 
 end GlobalTheory.ChainTw

@@ -75,10 +75,10 @@ theorem _root_.GlobalTheory.exists_faithfullyFlat_pushout (F S S₁ S₂ : Type)
     (φ₂ : S →ₐ[F] S₂) (h : φ₂.toRingHom.FaithfullyFlat) :
     ∃ (T : Type) (_ : CommRing T) (_ : Algebra F T) (ψ₁ : S₁ →ₐ[F] T) (ψ₂ : S₂ →ₐ[F] T),
       ψ₁.comp φ₁ = ψ₂.comp φ₂ ∧ ψ₁.toRingHom.FaithfullyFlat ∧ Function.Injective ψ₁ := by
-  letI : Algebra S S₁ := φ₁.toRingHom.toAlgebra
-  letI : Algebra S S₂ := φ₂.toRingHom.toAlgebra
-  haveI : Module.FaithfullyFlat S S₂ := RingHom.faithfullyFlat_algebraMap_iff.1 h
-  letI : Algebra F (S₁ ⊗[S] S₂) :=
+  let : Algebra S S₁ := φ₁.toRingHom.toAlgebra
+  let : Algebra S S₂ := φ₂.toRingHom.toAlgebra
+  have : Module.FaithfullyFlat S S₂ := RingHom.faithfullyFlat_algebraMap_iff.1 h
+  let : Algebra F (S₁ ⊗[S] S₂) :=
     ((Algebra.TensorProduct.includeLeftRingHom : S₁ →+* S₁ ⊗[S] S₂).comp
       (algebraMap F S₁)).toAlgebra
   have hff : (algebraMap S₁ (S₁ ⊗[S] S₂)).FaithfullyFlat :=
@@ -100,10 +100,10 @@ theorem _root_.GlobalTheory.existsUnique_preimage_of_faithfullyFlat (F S S' : Ty
     (h : φ.toRingHom.FaithfullyFlat) (w : S')
     (hw : ∀ (T : Type) [CommRing T] [Algebra F T] (ψ₁ ψ₂ : S' →ₐ[F] T),
       ψ₁.comp φ = ψ₂.comp φ → ψ₁ w = ψ₂ w) : ∃! v : S, φ v = w := by
-  letI : Algebra S S' := φ.toRingHom.toAlgebra
-  haveI : Module.FaithfullyFlat S S' := RingHom.faithfullyFlat_algebraMap_iff.1 h
+  let : Algebra S S' := φ.toRingHom.toAlgebra
+  have : Module.FaithfullyFlat S S' := RingHom.faithfullyFlat_algebraMap_iff.1 h
   have hinj := h.injective
-  letI : Algebra F (S' ⊗[S] S') :=
+  let : Algebra F (S' ⊗[S] S') :=
     ((Algebra.TensorProduct.includeLeftRingHom : S' →+* S' ⊗[S] S').comp
       (algebraMap F S')).toAlgebra
   let ψ₁ : S' →ₐ[F] S' ⊗[S] S' :=

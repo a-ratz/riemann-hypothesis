@@ -168,7 +168,7 @@ theorem fderiv_chart_eq (φ : Sm E a) (h : GA E a) {y : Lie E a} (hy : y ∈ inv
       exact (Matrix.isUnit_iff_isUnit_det _).1 u.isUnit), one_mul]
   have h1 := chart_lieD φ.2 X h hy
   rw [hZ, chart_val] at h1
-  rw [← h1, ContinuousLinearMap.sum_apply]
+  rw [← h1, sum_apply]
   have h2 : ∀ i : Ix E a, chart (lie E a (bs E a i) φ).1 h (toL u.val) =
       fderiv ℝ (chart φ.1 (h * infGL E a u)) (oneL E a) (bs E a i) := fun i => chart_val _ _ _
   simp only [h2]
@@ -274,16 +274,16 @@ theorem chart_ctFun (φ : Sm E a) (g : GA E a) :
     chart (fun g => ∫ x : BlockIx a r → Ad E, φ.1 (unip x * g) ∂ν) g = ct ν φ g := by
   funext y
   by_cases h : IsUnit (Matrix.of y)
-  · simp only [chart, dif_pos h, ct, mul_assoc]
+  · simp only [chart, dite_eq_left h, ct, mul_assoc]
   · simp [chart, h, ct]
 
 end Integral
 
 theorem ct_smooth : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a r : ℕ) (φ : Sm E a), (∀ (γ : GL (Fin a) E) (g : GA E a), φ.1 (ratGL E a γ * g) = φ.1 g) → IsOpen {k | finRep E a k φ = φ} → ∀ [MeasurableSpace (BlockIx a r → Ad E)] [BorelSpace (BlockIx a r → Ad E)] (μ : Measure (BlockIx a r → Ad E)) (𝓕 : Set (BlockIx a r → Ad E)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratN E a r) 𝓕 μ → ∃ F : Sm E a, (∀ g, F.1 g = ∫ x in 𝓕, φ.1 (unip x * g) ∂μ) ∧ ∀ (X : Lie E a) (g : GA E a), (lie E a X F).1 g = ∫ x in 𝓕, (lie E a X φ).1 (unip x * g) ∂μ := by
   intro E _ _ _ a r φ hl ho _ _ μ 𝓕 hμ hF
-  haveI := hμ
+  have := hμ
   have hfin := GlobalTheory.CuspRep.covol_lt_top μ 𝓕 hF
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
   have hφ : LO φ := ⟨hl, ho⟩
   refine ⟨⟨fun g => ∫ x in 𝓕, φ.1 (unip x * g) ∂μ, fun g => ?_⟩, fun g => rfl, fun X g => ?_⟩
   · rw [chart_ctFun]

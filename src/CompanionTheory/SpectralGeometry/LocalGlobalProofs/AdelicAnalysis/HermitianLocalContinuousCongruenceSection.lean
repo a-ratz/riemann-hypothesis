@@ -72,7 +72,7 @@ theorem exists_local_section : ∀ (F E : Type) [Field F] [NumberField F] [Field
   refine ⟨Set.range o, fun S' => ((Function.invFun o S' : Q) : GL (Fin n) (R ⊗[F] E)),
     ho.isOpen_range, ⟨1, ho1⟩, ?_, ?_, ?_⟩
   · have hcont : ContinuousOn (Function.invFun o) (Set.range o) := by
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       have h1 : (fun y : Set.range o => Function.invFun o y.1) = ho.isEmbedding.toHomeomorph.symm := by
         funext y
         obtain ⟨_, x, rfl⟩ := y
@@ -83,7 +83,7 @@ theorem exists_local_section : ∀ (F E : Type) [Field F] [NumberField F] [Field
         rw [h1]
         exact Homeomorph.continuous _
       exact h2
-    exact continuous_subtype_val.comp_continuousOn hcont
+    exact continuous_subtypeVal.comp_continuousOn hcont
   · show ((Function.invFun o S : Q) : GL (Fin n) (R ⊗[F] E)) = 1
     rw [← ho1, hinv 1]
     rfl

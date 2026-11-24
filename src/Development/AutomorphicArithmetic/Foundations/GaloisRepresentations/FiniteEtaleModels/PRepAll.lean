@@ -113,8 +113,8 @@ theorem clopenCond_injective_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
         have hr := (H _ _).1 hx
         obtain ⟨q⟩ : Nonempty (Sp k) := inferInstance
         exact (hsub ⟨x q, rfl⟩ (hr ⟨q, by simp⟩)).elim
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   have hpos : 0 < p ^ r := pow_pos (Fact.out : p.Prime).pos r
   obtain ⟨κ', _, q, hq⟩ := GlobalTheory.LevCover.exists_finite_mod D.La hpos
   have hpr : ∀ c : D.La, (p ^ r) • c ∈ wSub D w0 r := by
@@ -163,7 +163,7 @@ namespace GlobalTheory.UPel.HT.EtLev.Onto
 
 theorem range_sp_subset_iff {k : Type} [Field k] {X : Scheme.{0}} (f : Sp k ⟶ X) (U : Set X) :
     Set.range f ⊆ U ↔ ∃ t, f t ∈ U := by
-  haveI : Unique (Sp k) := inferInstanceAs (Unique (PrimeSpectrum k))
+  have : Unique (Sp k) := inferInstanceAs (Unique (PrimeSpectrum k))
   constructor
   · intro h
     exact ⟨default, h ⟨default, rfl⟩⟩
@@ -172,7 +172,7 @@ theorem range_sp_subset_iff {k : Type} [Field k] {X : Scheme.{0}} (f : Sp k ⟶ 
 
 theorem range_sp_subset_compl {k : Type} [Field k] {X : Scheme.{0}} (f : Sp k ⟶ X) (U : Set X) :
     Set.range f ⊆ Uᶜ ↔ ¬ Set.range f ⊆ U := by
-  haveI : Unique (Sp k) := inferInstanceAs (Unique (PrimeSpectrum k))
+  have : Unique (Sp k) := inferInstanceAs (Unique (PrimeSpectrum k))
   rw [range_sp_subset_iff, range_sp_subset_iff]
   constructor
   · rintro ⟨t, ht⟩ ⟨t', ht'⟩
@@ -189,7 +189,7 @@ open GlobalTheory.UPel.HT.EtLev.Onto
 
 theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)) (r : ℕ), IsEtPlace b w0 → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b N s) (K : Over S) (κ : K ⟶ o.A), IsFinite K.hom → Etale K.hom → (∀ c ∈ w0 ^ r, κ ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → (∀ (T : Over S) (x : T ⟶ o.A), (∀ c ∈ w0 ^ r, x ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃! y : T ⟶ K, y ≫ κ = x) → ∀ (Z : Over S) (et : D.La → (Z ⟶ o.A)), IsFinite Z.hom → Etale Z.hom → (∀ x y, et (x + y) = et x * et y) → (∀ (c : D.O) x, et (c • x) = et x ≫ o.act.act c) → (∀ x ∈ wSub D w0 r, et x = 1) → GlobalTheory.LevCover.ClopenCond Z fun T' h => ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ T'.left), ∀ g : Over.mk (x ≫ T'.hom) ⟶ o.A, (∀ c ∈ w0 ^ r, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃ y, (Over.homMk x rfl : Over.mk (x ≫ T'.hom) ⟶ T') ≫ h ≫ et y = g := by
   intro p _ D R _ b N w0 r hw S _ s o K κ hKf hKe hκ hrep Z et hZf hZe hadd hlin hker
-  haveI := hKf; haveI := hKe; haveI := hZf; haveI := hZe
+  have := hKf; have := hKe; have := hZf; have := hZe
   have hkc : ∀ (T T' : Over S) (f : T ⟶ T') (g : T' ⟶ o.A),
       (∀ c ∈ w0 ^ r, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) →
       ∀ c ∈ w0 ^ r, (f ≫ g) ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1 := by
@@ -201,8 +201,8 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
   have huniq : ∀ (T : Over S) (y y' : T ⟶ K), y ≫ κ = y' ≫ κ → y = y' := fun T y y' h =>
     (hrep T (y' ≫ κ) (hkc _ _ y' κ hκ)).unique h rfl
   choose lam hlam using fun a => (hrep Z (et a) (hetk a)).exists
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   obtain ⟨J, _, q, hq⟩ := LevCover.exists_finite_mod D.La (pow_pos (Fact.out : p.Prime).pos r)
   have hlamq : ∀ a a', q a = q a' → lam a = lam a' := by
     intro a a' h
@@ -218,7 +218,7 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
     refine ⟨⟨q a, Set.mem_range_self a⟩, ?_⟩
     exact hlamq _ _ (Classical.choose_spec (Set.mem_range_self (f := q) a))
   obtain ⟨hPf, hPe⟩ := LevCover.finiteEtale_tensor Z K
-  haveI := hPf; haveI := hPe
+  have := hPf; have := hPe
   let U : (Z ⟶ K) → (Z ⊗ K).left.Opens := fun l => (LevCover.clopenCond_eq (snd Z K) (fst Z K ≫ l)).choose
   have hU : ∀ l, IsClosed (U l : Set (Z ⊗ K).left) ∧ ∀ (T' : Over S) (h : T' ⟶ Z ⊗ K),
       h ≫ snd Z K = h ≫ fst Z K ≫ l ↔ Set.range h.left ⊆ U l := fun l =>
@@ -227,7 +227,7 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
   have hCo : IsOpen C := hfin.isOpen_biInter fun l _ => (hU l).1.isOpen_compl
   have hCc : IsClosed C := isClosed_biInter fun l _ => (U l).isOpen.isClosed_compl
   obtain ⟨V, i, hVf, hVe, -, hV⟩ := LevCover.exists_sub (Z := Z ⊗ K) ⟨C, hCo⟩ hCc
-  haveI := hVf; haveI := hVe
+  have := hVf; have := hVe
   obtain ⟨I, hIc, hI⟩ := LevCover.exists_image (i ≫ fst Z K)
   have hA : ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (z : Over.mk x ⟶ Z),
       Set.range z.left ⊆ (I : Set Z.left)ᶜ ↔ ∀ g : Over.mk x ⟶ o.A,
@@ -259,7 +259,7 @@ theorem clopenCond_onto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
         simpa only [Category.assoc, hlam] using this.symm
       have h1 := ((hU (lam a)).2 _ _).1 hs
       have h2 : Set.range (w ≫ i).left ⊆ C := (hV _ _).2 ⟨w, rfl⟩
-      haveI : Unique (Over.mk x).left := inferInstanceAs (Unique (PrimeSpectrum k))
+      have : Unique (Over.mk x).left := inferInstanceAs (Unique (PrimeSpectrum k))
       have h3 := h2 ⟨default, rfl⟩
       exact Set.mem_iInter₂.1 h3 (lam a) ⟨a, rfl⟩ (h1 ⟨default, rfl⟩)
   refine ⟨⟨(I : Set Z.left)ᶜ, hIc.isOpen_compl⟩, I.isOpen.isClosed_compl, fun T' h => ?_⟩
@@ -350,7 +350,7 @@ theorem Kil.comp {b : Base D R} {N : ℕ} {s : S ⟶ Sp R} {o : Obj b N s} {w0 :
 
 theorem Kil.act {b : Base D R} {N : ℕ} {s : S ⟶ Sp R} {o : Obj b N s} {w0 : Ideal (𝓞 D.F)} {r : ℕ}
     {T : Over S} {f : T ⟶ o.A} (hf : Kil o w0 r f) (d : D.O) : Kil o w0 r (f ≫ o.act.act d) := fun c hc => by
-  haveI := o.act.hom d
+  have := o.act.hom d
   rw [Category.assoc, ← o.act.mul, Algebra.commutes, o.act.mul, ← Category.assoc, hf c hc, MonObj.one_comp]
 
 theorem vanish {b : Base D R} {N : ℕ} {s : S ⟶ Sp R} {o : Obj b N s} {w0 : Ideal (𝓞 D.F)} {r : ℕ}
@@ -369,7 +369,7 @@ theorem vanish {b : Base D R} {N : ℕ} {s : S ⟶ Sp R} {o : Obj b N s} {w0 : I
     exact (mul_eq_left.1 h0.symm)
   | add x y _ _ hx hy => rw [hadd, hx, hy, _root_.mul_one]
   | smul d x _ hx =>
-    haveI := o.act.hom d
+    have := o.act.hom d
     rw [hlin, hx, MonObj.one_comp]
 
 end GlobalTheory.UPel.HT.EtLev.RepLat
@@ -380,12 +380,12 @@ namespace GlobalTheory.UPel.HT.EtLev
 open RepLat in
 theorem exists_finiteEtale_linTorsHom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)) (r : ℕ), IsEtPlace b w0 → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b N s) (K : Over S) (κ : K ⟶ o.A), IsFinite K.hom → Etale K.hom → (∀ c ∈ w0 ^ r, κ ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → (∀ (T : Over S) (x : T ⟶ o.A), (∀ c ∈ w0 ^ r, x ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃! y : T ⟶ K, y ≫ κ = x) → ∃ (Z : Over S) (et : D.La → (Z ⟶ o.A)), IsFinite Z.hom ∧ Etale Z.hom ∧ (∀ x y, et (x + y) = et x * et y) ∧ (∀ (c : D.O) x, et (c • x) = et x ≫ o.act.act c) ∧ (∀ x ∈ wSub D w0 r, et x = 1) ∧ ∀ (T : Over S) (l : D.La → (T ⟶ o.A)), (∀ x y, l (x + y) = l x * l y) → (∀ (c : D.O) x, l (c • x) = l x ≫ o.act.act c) → (∀ x ∈ wSub D w0 r, l x = 1) → ∃! h : T ⟶ Z, ∀ y, h ≫ et y = l y := by
   intro p _ D R _ b N w0 r _ S _ s o K κ hKf hKe hκ hK
-  haveI := D.freeLa
-  haveI := D.finLa
-  haveI := D.freeO
-  haveI := D.finO
-  haveI := hKf
-  haveI := hKe
+  have := D.freeLa
+  have := D.finLa
+  have := D.freeO
+  have := D.finO
+  have := hKf
+  have := hKe
   have hκ' : Kil o w0 r κ := hκ
   have hcan : ∀ {T : Over S} (v v' : T ⟶ K), v ≫ κ = v' ≫ κ → v = v' := fun v v' e =>
     (hK _ (v' ≫ κ) (hκ'.comp v')).unique e rfl
@@ -404,15 +404,15 @@ theorem exists_finiteEtale_linTorsHom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
     rw [Finset.prod_eq_single i (fun j _ hj => by simp [Finsupp.single_eq_of_ne hj]) (by simp)]
     simp
   have hkil : ∀ a, Kil o w0 r (et₀ a) := fun a c hc => by
-    haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+    have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
     change postHom (T := Z₀) _ (∏ i, x i ^ (bb.repr a i)) = 1
     rw [map_prod]
     refine Finset.prod_eq_one fun i _ => ?_
     rw [map_zpow]
     change (x i ≫ _) ^ _ = 1
     rw [(hκ'.comp (Out.powPr K i)) c hc, one_zpow]
-  haveI hZf : IsFinite Z₀.hom := GlobalTheory.LatticeTorsion.prop_powObj @IsFinite K hKf n
-  haveI hZe : Etale Z₀.hom := GlobalTheory.LatticeTorsion.prop_powObj @Etale K hKe n
+  have hZf : IsFinite Z₀.hom := GlobalTheory.LatticeTorsion.prop_powObj @IsFinite K hKf n
+  have hZe : Etale Z₀.hom := GlobalTheory.LatticeTorsion.prop_powObj @Etale K hKe n
   have c1 : ClopenCond Z₀ fun _ h => ∀ (c : D.O) a, h ≫ et₀ (c • a) = h ≫ (et₀ a ≫ o.act.act c) := by
     have hfin : ClopenCond Z₀ fun _ h => ∀ ji : Fin (Module.finrank ℤ D.O) × Fin n,
         h ≫ et₀ (bO ji.1 • bb ji.2) = h ≫ (et₀ (bb ji.2) ≫ o.act.act (bO ji.1)) := by
@@ -429,7 +429,7 @@ theorem exists_finiteEtale_linTorsHom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
       (fun c c' a => by beta_reduce; rw [o.act.add, MonObj.comp_mul, MonObj.comp_mul])
       (fun c a a' => by
         beta_reduce
-        haveI := o.act.hom c
+        have := o.act.hom c
         rw [hadd, MonObj.mul_comp, MonObj.comp_mul])
       (fun j i => H (j, i))
   obtain ⟨U, hU, HU⟩ := c1
@@ -497,8 +497,8 @@ namespace GlobalTheory.UPel.HT.EtLev
 
 theorem exists_rep_pow_of_le : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)) (r r' : ℕ), r ≤ r' → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b N s) (H : Over S) (i : H ⟶ o.A), IsFinite H.hom → Etale H.hom → (∀ c ∈ w0 ^ r', i ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → (∀ (T : Over S) (x : T ⟶ o.A), (∀ c ∈ w0 ^ r', x ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃! y : T ⟶ H, y ≫ i = x) → ∃ (K : Over S) (κ : K ⟶ o.A), IsFinite K.hom ∧ Etale K.hom ∧ (∀ c ∈ w0 ^ r, κ ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) ∧ ∀ (T : Over S) (x : T ⟶ o.A), (∀ c ∈ w0 ^ r, x ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃! y : T ⟶ K, y ≫ κ = x := by
   intro p _ D R _ b N w0 r r' hrr' S _ s o H i hHf hHe hi hH
-  haveI := hHf
-  haveI := hHe
+  have := hHf
+  have := hHe
   have hmh := o.act.hom
 
   let kil : ∀ (T : Over S) (x : T ⟶ o.A), Ideal (𝓞 D.F) := fun T x =>
@@ -568,7 +568,7 @@ theorem exists_rep_pow_of_le : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
     have hr : Set.range y0.left ⊆ U := (hU T y0).1 ((htr T y0).2 (by rw [hy0]; exact hx))
     obtain ⟨y, hy⟩ := (hiK T y0).1 hr
     refine ⟨y, show y ≫ iK ≫ i = x by rw [← Category.assoc, hy, hy0], fun y' hy' => ?_⟩
-    haveI := hiKm
+    have := hiKm
     apply (cancel_mono iK).1
     apply hmono
     rw [Category.assoc, Category.assoc, hy', ← Category.assoc, hy, hy0]
@@ -679,14 +679,14 @@ namespace GlobalTheory.UPel.HT.EtLev
 
 theorem etale_of_killed_tangent_trivial : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)) (r : ℕ) (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b N s) (H : Over S) (i : H ⟶ o.A), IsFinite H.hom → Flat H.hom → (∀ c ∈ w0 ^ r, i ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → (∀ (T : Over S) (x : T ⟶ o.A), (∀ c ∈ w0 ^ r, x ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃! y : T ⟶ H, y ≫ i = x) → (∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (v : epsPtR x ⟶ o.A), spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ v.left = (1 : Over.mk x ⟶ o.A).left → (∀ c ∈ w0 ^ r, v ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → v = 1) → Etale H.hom := by
   intro p _ D R _ b N w0 r S _ s o H i hfin hflat hkill hrep htan
-  haveI := hfin
-  haveI := hflat
-  haveI : LocallyOfFinitePresentation H.hom := inferInstance
+  have := hfin
+  have := hflat
+  have : LocallyOfFinitePresentation H.hom := inferInstance
   have hinv : ∀ {T : Over S} (a : T ⟶ o.A) (f : o.A ⟶ o.A) [IsMonHom f], a⁻¹ ≫ f = (a ≫ f)⁻¹ := by
     intro T a f _
     refine eq_inv_of_mul_eq_one_left ?_
     rw [← mul_comp, inv_mul_cancel, one_comp]
-  haveI : FormallyUnramified H.hom := by
+  have : FormallyUnramified H.hom := by
     refine TangentCrit.formallyUnramified_of_tangent H.hom fun k _ _ w hw => ?_
     let x : Sp k ⟶ S := TangentCrit.dualPt k ≫ w ≫ H.hom
     let W : epsPtR x ⟶ H := Over.homMk w hw
@@ -703,7 +703,7 @@ theorem etale_of_killed_tangent_trivial : ∀ (p : ℕ) [Fact p.Prime] (D : Datu
           rw [comp_mul, GrpObj.comp_inv, ← Category.assoc, ← Category.assoc, heU, mul_inv_cancel]
         exact congrArg (fun q => q.left) h1
       · intro c hc
-        haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+        have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
         rw [mul_comp, hinv, Category.assoc, Category.assoc, hkill c hc, comp_one, comp_one, inv_one, _root_.mul_one]
     have hWU : W ≫ i = U ≫ i := mul_inv_eq_one.1 hv
     have hk : ∀ c ∈ w0 ^ r, (W ≫ i) ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1 := by
@@ -756,8 +756,8 @@ theorem exists_etLevScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Typ
   have c1 := GlobalTheory.T.clopenCond_injective_geom_alt p D R b N w0 r hw S s o K κ hKf hKe hKk hKu Z et hZf hZe eadd elin eker
   have c2 := GlobalTheory.T.clopenCond_onto_alt p D R b N w0 r hw S s o K κ hKf hKe hKk hKu Z et hZf hZe eadd elin eker
   obtain ⟨U, hU, HU⟩ := c1.and c2
-  haveI := hZf
-  haveI := hZe
+  have := hZf
+  have := hZe
   obtain ⟨V, j, hV1, hV2, hmono, Hj⟩ := GlobalTheory.LevCover.exists_sub U hU
   have hPV := (HU V j).2 ((Hj V j).2 ⟨𝟙 V, Category.id_comp j⟩)
   refine ⟨V.left, V.hom, fun y => j ≫ et y, hV1, hV2, ⟨fun x y => ?_, fun c x => ?_, fun x hx => ?_,
@@ -834,7 +834,7 @@ private theorem mem_wSub_top (z : D.La) : z ∈ wSub D ⊤ 1 := by
 private theorem repLev_top (o : Obj b N s) : RepLev o ⊤ 1 := by
   refine ⟨S, 𝟙 S, fun _ => 1, inferInstance, inferInstance, ?_, ?_⟩
   · refine ⟨fun _ _ => (mul_one 1).symm, fun c _ => ?_, fun _ _ => by rfl, fun k _ _ x => ⟨fun y _ => mem_wSub_top y, fun g hg => ⟨0, ?_⟩⟩⟩
-    · haveI := o.act.hom c
+    · have := o.act.hom c
       exact (MonObj.one_comp _).symm
     · have h1 := hg 1 (by simp)
       rw [map_one, o.act.one, Category.comp_id] at h1

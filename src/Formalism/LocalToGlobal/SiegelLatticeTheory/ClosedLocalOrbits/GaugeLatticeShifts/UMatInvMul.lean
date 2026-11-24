@@ -220,7 +220,7 @@ theorem locOrbG_of (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : R
             simp only [Matrix.mul_assoc]
         _ = Qics C τ * (uMat (γ (vOf X τ))⁻¹ * uMat x) * Qcs C τ * yi := by
             rw [h2, Matrix.mul_one]; simp only [Matrix.mul_assoc]
-    rw [hW x, hW' ((γ (vOf X τ))⁻¹ * x), enorm_smul, enorm_smul, ← key x, ← key ((γ (vOf X τ))⁻¹ * x)]
+    rw [hW x, hW' ((γ (vOf X τ))⁻¹ * x), eNorm_smul, eNorm_smul, ← key x, ← key ((γ (vOf X τ))⁻¹ * x)]
     simp only [hF]
     rw [e2]
     show ‖a‖ₑ * ‖l (σc (Formalism.L2.SG.RealObj.trG (Qcs C τ) (Qics C τ) x * yi) w0)‖ₑ *
@@ -236,10 +236,10 @@ theorem locOrbG_of (hI : Formalism.FourierDecayAlt.ThreeDimData.Inputs) (hRT : R
     _ = (‖a‖ₑ * ‖a'‖ₑ) * ∫⁻ x,
           F (Formalism.FourierDecayAlt.B.rmulF yi (Matrix.of.symm (Formalism.L2.SG.RealObj.trG (Qcs C τ) (Qics C τ) x)))
           ∂(Formalism.REAL.muG (X.B.I.ε (vOf X τ))) :=
-        lintegral_const_mul' _ _ (ENNReal.mul_ne_top enorm_ne_top enorm_ne_top)
+        lintegral_const_mul' _ _ (ENNReal.mul_ne_top eNorm_ne_top eNorm_ne_top)
     _ < ⊤ := by
         rw [hCV, hR]
-        exact ENNReal.mul_lt_top (ENNReal.mul_lt_top enorm_lt_top enorm_lt_top) hFfin
+        exact ENNReal.mul_lt_top (ENNReal.mul_lt_top eNorm_lt_top eNorm_lt_top) hFfin
 
 
 variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] in

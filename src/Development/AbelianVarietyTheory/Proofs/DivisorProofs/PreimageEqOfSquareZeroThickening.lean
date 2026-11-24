@@ -59,8 +59,8 @@ theorem preimage_eq_of_comp_eq_of_sqZero : ∀ (S T : Type) [CommRing S] [CommRi
         rw [sq]; exact Ideal.mul_mem_mul hx hx
       rw [hsq, Ideal.mem_bot] at hx2
       exact (p.isPrime.mem_or_mem (by rw [hx2]; exact p.asIdeal.zero_mem)).elim id id
-    haveI := p.isPrime
-    haveI : (Ideal.map q p.asIdeal).IsPrime := Ideal.map_isPrime_of_surjective hq hker
+    have := p.isPrime
+    have : (Ideal.map q p.asIdeal).IsPrime := Ideal.map_isPrime_of_surjective hq hker
     refine ⟨⟨Ideal.map q p.asIdeal, this⟩, ?_⟩
     rw [Spec.map_base]
     apply PrimeSpectrum.ext

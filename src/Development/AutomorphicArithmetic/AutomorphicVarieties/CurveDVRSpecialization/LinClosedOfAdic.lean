@@ -66,20 +66,20 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
         have h : e (x + y) = e x + e y := by
           ext s t
           simp [e]
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [h, map_add (f := _), hx, hy, add_zero]
       zero_mem' := by
         have h : e 0 = 0 := by
           ext s t
           simp [e]
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         rw [h, map_zero]
       smul_mem' := by
         intro r x hx
         have h : e (r • x) = j r • e x := by
           ext s t
           simp [e]
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         rw [h, map_smul, hx, smul_zero] }
   let y : G → (Fin n × Fin n → A) := fun g p => a g p.1 p.2
   have hy : ∀ g, (a g).map j = e (y g) := fun g => by
@@ -114,7 +114,7 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
     have hd : ∀ p, y g p - y g0 p ∈ maximalIdeal A ^ N := by
       intro p
       have hp := Set.mem_iInter.mp hg p
-      simp only [Set.mem_setOf_eq] at hp
+      simp only [Set.mem_ofPred_eq] at hp
       rw [← Ideal.Quotient.eq]
       exact hp
     have h0 : K.mkQ (y g) = 0 := by
@@ -126,7 +126,7 @@ theorem UpperTheory.V.Pr.linClosedOfAdic :
       funext q
       rw [Finset.sum_apply]
       simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, mul_one,
-        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hmem : K.mkQ (y g - y g0) ∈
         (maximalIdeal A ^ N • ⊤ : Submodule A ((Fin n × Fin n → A) ⧸ K)) := by
 

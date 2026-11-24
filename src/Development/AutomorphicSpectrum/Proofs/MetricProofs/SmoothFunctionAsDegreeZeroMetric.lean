@@ -115,8 +115,8 @@ theorem exists_localLeftInverse {E F : Type} [NormedAddCommGroup E] [NormedSpace
     {a : E → F} {y₀ : E} (ha : AnalyticAt ℂ a y₀) (hk : (fderiv ℂ a y₀).ker = ⊥) :
     ∃ r : F → E, (∀ᶠ w in 𝓝 (a y₀), AnalyticAt ℂ r w) ∧ r (a y₀) = y₀ ∧
       ∀ᶠ y in 𝓝 y₀, r (a y) = y := by
-  haveI : CompleteSpace E := FiniteDimensional.complete ℂ E
-  haveI : CompleteSpace F := FiniteDimensional.complete ℂ F
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
+  have : CompleteSpace F := FiniteDimensional.completeSpace ℂ F
   have hT : HasFDerivAt a (fderiv ℂ a y₀) y₀ := ha.differentiableAt.hasFDerivAt
   obtain ⟨L, hL⟩ := LinearMap.exists_leftInverse_of_injective
     ((fderiv ℂ a y₀ : E →L[ℂ] F) : E →ₗ[ℂ] F) hk
@@ -133,7 +133,7 @@ theorem exists_localLeftInverse {E F : Type} [NormedAddCommGroup E] [NormedSpace
   have hn : (ω : WithTop ℕ∞) ≠ 0 := by simp
   have hg := hc.to_localInverse hd hn
   refine ⟨fun w => hc.localInverse hd hn (Lc w), ?_, hc.localInverse_apply_image hd hn,
-    (hc.hasStrictFDerivAt' hd hn).eventually_left_inverse⟩
+    (hc.hasStrictFDerivAt hd hn).eventually_left_inverse⟩
   have hga : AnalyticAt ℂ (hc.localInverse hd hn) (Lc (a y₀)) := hg.analyticAt
   have ht : Filter.Tendsto Lc (𝓝 (a y₀)) (𝓝 (Lc (a y₀))) := Lc.continuous.tendsto _
   filter_upwards [ht.eventually hga.eventually_analyticAt] with w hw

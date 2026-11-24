@@ -103,10 +103,10 @@ theorem normZeta_of (hS : SWFullX) (hX : BoxSecX) (hW : DblX) (hH : HgtEx) (hT :
     K' a' k1 k2 μ D hμ hD Φ hΦ Φ hΦ
   obtain ⟨hol, t₁, far⟩ := kpair_cont T.base (.inl T.herm) h0 cX T.hW he ce (hK F E σ B _ X _ _ T.base (.inl T.herm) K' k1)
     k2 k3 k4 sec.cont sec.law hE T.good.haar T.good.dom hi
-  haveI := cX.sc; haveI := cW.sc; haveI := cX.lc; haveI := cW.lc; haveI := T.good.haar; haveI := cX.right M.μ T.good.haar
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : IsFiniteMeasure (μ.restrict D) := ⟨by rw [Measure.restrict_apply_univ]; exact cW.fin _ _ hμ hD⟩
-  haveI : IsFiniteMeasure (M.μ.restrict M.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact cX.fin _ _ T.good.haar T.good.dom⟩
+  have := cX.sc; have := cW.sc; have := cX.lc; have := cW.lc; have := T.good.haar; have := cX.right M.μ T.good.haar
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : IsFiniteMeasure (μ.restrict D) := ⟨by rw [Measure.restrict_apply_univ]; exact cW.fin _ _ hμ hD⟩
+  have : IsFiniteMeasure (M.μ.restrict M.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact cX.fin _ _ T.good.haar T.good.dom⟩
   obtain ⟨c, c1, hc1⟩ := inv_scale M.μ
   have rp : IsRapid (fun _ : UA σ X.J => (1 : ℂ)) := cX.rapid continuous_const fun _ _ _ => rfl
   have v0 := Complex.ofReal_ne_zero.2 (cX.vol_ne T.good.haar T.good.dom)

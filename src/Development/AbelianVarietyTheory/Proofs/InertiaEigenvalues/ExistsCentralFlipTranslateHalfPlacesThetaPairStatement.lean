@@ -291,7 +291,7 @@ theorem flip_translates : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
         rw [hlam0 hu0, symplO_zero_left, AddChar.map_zero_eq_one]
         exact one_mem _
       have hprim := Complex.isPrimitiveRoot_exp M hM0
-      haveI : NeZero M := ⟨hM0⟩
+      have : NeZero M := ⟨hM0⟩
       have hcM : ψ (symplO V W lam y'') ^ M = 1 := by rw [hM, pow_mul, hpow y'' hy'', one_pow]
       obtain ⟨i, -, hi⟩ := hprim.eq_pow_of_pow_eq_one hcM
       rw [← hi]
@@ -857,7 +857,7 @@ open MeasureTheory
 
 theorem weil_norm_one_of_unit_norm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ (μ : MeasureTheory.Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ (p : GA D S × GA D T) (f : WO S T → ℂ), IsThetaFunO ψ S T f → nrm2 μ 𝓕 f = 1 → nrm2 μ 𝓕 (om p f) = 1 := by
   intro D ψ S T χS χT om hW μ 𝓕 hC p f hf h1
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   have key := hW.om_unit μ 𝓕 hC.1 hC.2.1 p f hf
   have hf' := hW.om_pres p f hf
   have m1 : AEStronglyMeasurable (fun w => ‖om p f w‖ ^ 2) (μ.restrict 𝓕) :=

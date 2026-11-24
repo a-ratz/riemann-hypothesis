@@ -96,7 +96,7 @@ theorem exists_torsion_twist_tsum_norm_ge :
       rw [← norm_pow, ← Units.val_pow_eq_pow_val, TorsionFourier.apply_pow_eq_one t.2,
         Units.val_one, norm_one]
     exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hN.ne').1 h1
-  haveI := Fintype.ofFinite {t : Multiplicative X →* Kˣ // t ^ N = 1}
+  have := Fintype.ofFinite {t : Multiplicative X →* Kˣ // t ^ N = 1}
   rw [finsum_eq_sum_of_fintype] at hsum
   obtain ⟨t, -, ht⟩ := IsUltrametricDist.exists_norm_finsetSum_le_of_nonempty
     (t := (Finset.univ : Finset {t : Multiplicative X →* Kˣ // t ^ N = 1}))
@@ -218,9 +218,9 @@ theorem exists_norm_tx_ge (hI : N.Int q) {n g : ℕ} (hp : n.Prime) (ho : Odd n)
   set p₁ : N.QT ((n ^ j) ^ 2) := p * ⟨(1, γ), hQ γ hγ⟩ with hp₁
   have hy : p₁.1.1 = p.1.1 := mul_one _
   have hb : p₁.1.2 = p.1.2 * γ := rfl
-  haveI : NeZero (n : C) := ⟨hn0⟩
-  haveI : NeZero n := ⟨hp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C n
+  have : NeZero (n : C) := ⟨hn0⟩
+  have : NeZero n := ⟨hp.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C n
   have hr : ∀ x : ℝ, Real.exp (-1) ^ x = Real.exp (-x) := fun x => by
     rw [← Real.exp_mul, neg_one_mul]
   have hsq : (0 : ℝ) < ((n ^ j : ℕ) : ℝ) ^ 2 := by positivity

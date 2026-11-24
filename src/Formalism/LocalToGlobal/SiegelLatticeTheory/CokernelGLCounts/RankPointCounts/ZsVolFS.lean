@@ -194,7 +194,7 @@ theorem g_mul_mem {k : ℕ} {x : D.host.E} (hx : x ∈ Formalism.L2.SG.Pf.StabIn
   FractionalIdeal.mul_mem_mul g_mem_qq hx
 
 theorem o_mem_ddPow (k : ℕ) (o : 𝓞 D.host.E) : (o : D.host.E) ∈ Formalism.L2.SG.Pf.StabIntSh.ddPow D k := by
-  have h := (FractionalIdeal.mem_coe).1 (Submodule.smul_mem _ o ((FractionalIdeal.mem_coe).2 (one_mem_ddPow (D := D) k)))
+  have h := (FractionalIdeal.mem_coeToSubmodule).1 (Submodule.smul_mem _ o ((FractionalIdeal.mem_coeToSubmodule).2 (one_mem_ddPow (D := D) k)))
   rwa [Algebra.smul_def, mul_one] at h
 
 theorem cong_glob {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T')
@@ -210,17 +210,17 @@ theorem cong_glob {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag 
   have h2 : uu' j i ∈ Formalism.L2.SG.Pf.StabIntSh.ddPow D ((i : ℕ) - (j : ℕ)) :=
     frame_entry F' Λ hX' hz' s hs uu' huu' hfr' j i hji
   have hd : uu j i - uu' j i ∈ Formalism.L2.SG.Pf.StabIntSh.ddPow D ((i : ℕ) - (j : ℕ)) :=
-    (FractionalIdeal.mem_coe).1 (Submodule.sub_mem _ ((FractionalIdeal.mem_coe).2 h1) ((FractionalIdeal.mem_coe).2 h2))
-  refine (FractionalIdeal.mem_coe).1 (mem_of_loc _ _ fun P => ?_)
+    (FractionalIdeal.mem_coeToSubmodule).1 (Submodule.sub_mem _ ((FractionalIdeal.mem_coeToSubmodule).2 h1) ((FractionalIdeal.mem_coeToSubmodule).2 h2))
+  refine (FractionalIdeal.mem_coeToSubmodule).1 (mem_of_loc _ _ fun P => ?_)
   by_cases hgP : ((Lat.gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal
   · obtain ⟨t, ht, o, ho⟩ := cong_at F F' Λ hc hc' hz' hadm s hs uu uu' huu huu' hfr hfr' P hgP j i hji
     refine ⟨t, ht, ?_⟩
     rw [ho]
-    exact (FractionalIdeal.mem_coe).2 (g_mul_mem (o_mem_ddPow _ o))
+    exact (FractionalIdeal.mem_coeToSubmodule).2 (g_mul_mem (o_mem_ddPow _ o))
   · refine ⟨((Lat.gS D : ℕ) : 𝓞 D.host.E), hgP, ?_⟩
     have e : (((Lat.gS D : ℕ) : 𝓞 D.host.E) : D.host.E) = ((Lat.gS D : ℕ) : D.host.E) := by simp
     rw [e]
-    exact (FractionalIdeal.mem_coe).2 (g_mul_mem hd)
+    exact (FractionalIdeal.mem_coeToSubmodule).2 (g_mul_mem hd)
 
 end Formalism.L2.SG.Pf.ZsVolLat
 

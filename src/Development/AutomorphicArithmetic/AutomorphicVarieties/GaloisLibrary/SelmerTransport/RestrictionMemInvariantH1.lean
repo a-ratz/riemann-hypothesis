@@ -166,7 +166,7 @@ def conjHom (U : Subgroup G) [hU : U.Normal] (g : G) : U →* U where
 
 theorem continuous_conjHom (U : Subgroup G) [U.Normal] (g : G) : Continuous (conjHom U g) := by
   refine continuous_induced_rng.2 ?_
-  exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+  exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
 
 def conjU (ρ : Representation R G M) (U : Subgroup G) [U.Normal] (g : G) : H1U ρ U →ₗ[R] H1U ρ U :=
   pairH1DecompositionMap _ _ (conjHom U g) (continuous_conjHom U g) (ρ g) continuous_of_discreteTopology fun u m => by

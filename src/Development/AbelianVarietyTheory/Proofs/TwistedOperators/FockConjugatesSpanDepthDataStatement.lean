@@ -340,7 +340,7 @@ end GlobalTheory.CosShift
 private theorem GlobalTheory.CosShift.selfDual_full {D : D7} : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
     IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
   intro V Λ hΛ
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr
@@ -1135,7 +1135,7 @@ theorem fockTot : FockTot := by
       rw [hwf_def, symplO_smul_left', ← symplO_smul_right', hy]
     have hfinΓ : ∀ u ∈ latRow G i.1, Eqv.eFin D • u = u := latRow_fin i.1
     have hAnn : wf ∈ Ann W.ψ _ _ (latRow G i.1) := by
-      simp only [Ann, Set.mem_setOf_eq] at hw ⊢
+      simp only [Ann, Set.mem_ofPred_eq] at hw ⊢
       refine ⟨fun u hu => ?_, fun e he u hu hh => ?_⟩
       · rw [hsy _ (by rw [smul_comm, hfinΓ u hu])]; exact hw.1 u hu
       · rw [hsy _ (hfinΓ u hu)]; exact hw.2 e he u hu hh

@@ -128,8 +128,8 @@ set_option synthInstance.maxHeartbeats 200000 in
 private theorem cv_cont (μ : Measure (H E n 0)) [IsLocallyFiniteMeasure μ] {φ : H E n 0 → ℂ} (hφ : IsTestH φ)
     {u : ℝ → ℂ} (hu : Continuous u) {f : GA E n → ℂ} (hf : Continuous f) : Continuous (cvF μ φ u f) := by
   have hl : Continuous (ldet : H E n 0 → ℝ) := DiscreteGroups.T1.G.continuous_ldet
-  haveI : SecondCountableTopology (H E n 0) := inferInstance
-  haveI : FirstCountableTopology (H E n 0) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : SecondCountableTopology (H E n 0) := inferInstance
+  have : FirstCountableTopology (H E n 0) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   have h1 : Continuous fun x : H E n 0 => ∫ y in tsupport φ, φ y * u (ldet y) * f (x.1 * y.1) ∂μ :=
     continuous_parametric_integral_of_continuous
       (f := fun (x y : H E n 0) => φ y * u (ldet y) * f (x.1 * y.1))
@@ -207,7 +207,7 @@ private theorem cut_value (hB : Basic) (hn : 1 ≤ n) (D : Dom E n 0) (π : Cusp
   have e2 : ∫ y, kerH φ' x y * f y ∂D.ν = ∫ y, φ' (x⁻¹ * y) * f y ∂D.μ :=
     (DiscreteGroups.T1.G.unfold X PositivityTheory.Rg.BcB.E1.kerBasic PositivityTheory.Rg.BcB.E1.kernel_rows_columns_square_integrable ht hinv hfL x).2
   have e3 : ∫ y, φ' (x⁻¹ * y) * f y ∂D.μ = ∫ y, φ' y * f (x * y) ∂D.μ := by
-    haveI : D.μ.IsMulLeftInvariant := D.haar.1
+    have : D.μ.IsMulLeftInvariant := D.haar.1
     have h := integral_mul_left_eq_self (μ := D.μ) (fun y => φ' y * f (x * y)) x⁻¹
     simpa only [mul_inv_cancel_left] using h
   have e4 : ∫ y, φ' y * f (x * y) ∂D.μ = cvF D.μ φ u ψ.1 x.1 := by

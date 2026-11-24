@@ -67,7 +67,7 @@ theorem under_smul_of_fix {E K : Type} [Field E] [NumberField E] [Field K] [Numb
 
 theorem exists_over {E K : Type} [Field E] [NumberField E] [Field K] [NumberField K] [Algebra K E]
     (v : HeightOneSpectrum (𝓞 K)) : ∃ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 K) = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQ, hl⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
   exact ⟨⟨Q, hQ.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q⟩, HeightOneSpectrum.ext hl.over.symm⟩
 
@@ -82,8 +82,8 @@ theorem exists_smul_eq {E : Type} [Field E] [NumberField E] [IsGalois ℚ E] {p 
     refine ⟨hm.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_⟩
     rw [Ideal.span_singleton_le_iff_mem, Ideal.under_def, Ideal.mem_comap]
     simpa using hI
-  haveI := key P hP
-  haveI := key Q hQ
+  have := key P hP
+  have := key Q hQ
   exact Ideal.exists_smul_eq_of_isGaloisGroup (Ideal.span {(p : ℤ)}) P Q (E ≃ₐ[ℚ] E)
 
 variable {R : Ranks} (H : Formalism.BasicNotions.Host R)
@@ -113,7 +113,7 @@ theorem fix_of_sqrt (σ : H.E ≃ₐ[ℚ] H.E) (h : σ H.sqrtMinusD = H.sqrtMinu
 theorem exists_over_both {p : ℕ} (hp : p.Prime) (𝔭 : HeightOneSpectrum (𝓞 H.K)) (h𝔭 : (p : 𝓞 H.K) ∈ 𝔭.asIdeal)
     (v : HeightOneSpectrum (𝓞 H.F)) (hv : (p : 𝓞 H.F) ∈ v.asIdeal) :
     ∃ w : HeightOneSpectrum (𝓞 H.E), w.under (𝓞 H.F) = v ∧ w.under (𝓞 H.K) = 𝔭 := by
-  haveI := H.hostE_isGalois
+  have := H.hostE_isGalois
   obtain ⟨w, rfl⟩ := exists_over (E := H.E) v
   obtain ⟨u, rfl⟩ := exists_over (E := H.E) 𝔭
   have hu : (p : 𝓞 H.E) ∈ u.asIdeal := by
@@ -122,8 +122,8 @@ theorem exists_over_both {p : ℕ} (hp : p.Prime) (𝔭 : HeightOneSpectrum (�
   have hw : (p : 𝓞 H.E) ∈ w.asIdeal := by
     have : algebraMap (𝓞 H.F) (𝓞 H.E) (p : 𝓞 H.F) ∈ w.asIdeal := hv
     rwa [map_natCast] at this
-  haveI := u.isPrime
-  haveI := w.isPrime
+  have := u.isPrime
+  have := w.isPrime
   obtain ⟨σ, hσ⟩ := exists_smul_eq hp u.asIdeal w.asIdeal hu hw
   have hs : σ H.sqrtMinusD = H.sqrtMinusD ∨ σ H.sqrtMinusD = -H.sqrtMinusD := by
     apply sq_eq_sq_iff_eq_or_eq_neg.1

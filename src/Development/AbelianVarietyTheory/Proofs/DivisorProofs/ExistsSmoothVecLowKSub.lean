@@ -89,7 +89,7 @@ theorem isKTypeOf_map {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommG
     · have : v ∈ S ⊓ (⊥ : Submodule ℂ H).comap L := by rw [h]; exact hv
       exact absurd (by simpa using this.2) hLv
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · haveI := hfd
+  · have := hfd
     infer_instance
   · rintro g hg _ ⟨x, hx, rfl⟩
     exact ⟨σ g x, hst g hg x hx, (hL g hg x).symm⟩
@@ -239,7 +239,7 @@ theorem garding_ne_zero [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (hφ : 
   have hψc : HasCompactSupport fun g : Formalism.REAL.UJ ε => φ (umat g) := hφc.comp_isClosedEmbedding hemb
   have hψi : Integrable (fun g : Formalism.REAL.UJ ε => φ (umat g)) μ := hψ.integrable_of_hasCompactSupport hψc
   have hpos : 0 < ∫ g : Formalism.REAL.UJ ε, φ (umat g) ∂μ :=
-    hψ.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hψc (fun g => hφ0 _)
+    hψ.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hψc (fun g => hφ0 _)
       (by show φ 1 ≠ 0; rw [hφ1]; exact one_ne_zero)
   intro h0
   have e1 : ∫ g : Formalism.REAL.UJ ε, (φ (umat g) • σ (umat g) w - φ (umat g) • w) ∂μ
@@ -281,7 +281,7 @@ theorem garding_comm [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (hφ : Con
     {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Formalism.REAL.Kset ε) (w : H) :
     σ k (garding hσ hφ hφc w) = garding hσ hφ hφc (σ k w) := by
   have h1 : kᴴ * k = 1 := (mem_unitaryGroup_iff').1 hk.1
-  haveI : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
+  have : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
   obtain ⟨-, hrange⟩ := Formalism.REAL.isClosedEmbeddingMatrix n ε
   obtain ⟨z, hz⟩ : k ∈ Set.range (fun g : Formalism.REAL.UJ ε => umat g) := by
     rw [show Set.range (fun g : Formalism.REAL.UJ ε => umat g) = _ from hrange]; exact kset_subset hk

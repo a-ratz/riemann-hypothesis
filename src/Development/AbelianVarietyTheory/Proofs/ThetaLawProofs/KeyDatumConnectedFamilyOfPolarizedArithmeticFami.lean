@@ -390,8 +390,8 @@ theorem exists_points (K K' R : Type) [Field K] [NumberField K] [Field K'] [Numb
     [CommRing R] [Algebra K R] (s : R →+* ℂ) (s₀ : R →ₐ[K] K) :
     ∃ (i : R →+* K' ⊗[K] R) (s' : K' ⊗[K] R →+* ℂ) (s₀' : K' ⊗[K] R →ₐ[K'] K'),
       s'.comp i = s ∧ s₀'.toRingHom.comp i = (algebraMap K K').comp s₀.toRingHom := by
-  letI : Algebra K ℂ := (s.comp (algebraMap K R)).toAlgebra
-  haveI : Algebra.IsAlgebraic K K' := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  let : Algebra K ℂ := (s.comp (algebraMap K R)).toAlgebra
+  have : Algebra.IsAlgebraic K K' := Algebra.IsAlgebraic.tower_top (K := ℚ) K
   let e : K' →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -415,12 +415,12 @@ theorem connFam_of_polFam : Out.Laws → Out.Laws2 → PolFam → GlobalTheory.K
   obtain ⟨K, _, _, R, _, _, Q, s, s₀, φ, hG, hP, hK⟩ := hF x.P x.g_pos
   obtain ⟨P₀, φ₀, hP₀⟩ := polPB_exists hL.polBaseChange Q s₀.toRingHom
   obtain ⟨K', _, _, j, hKn⟩ := hK P₀ φ₀ hP₀
-  letI : Algebra K K' := j.toAlgebra
+  let : Algebra K K' := j.toAlgebra
   obtain ⟨i, s', s₀', hs', hs₀'⟩ := exists_points K K' R s s₀
   obtain ⟨Q', ψ, hQ'⟩ := polPB_exists hL.polBaseChange Q i
   have hG' : GeomInt K' (K' ⊗[K] R) := (GlobalTheory.T.geom_integral_base_change_and_localization K K' R hG).1
-  haveI := hG'.1
-  haveI : IsNoetherianRing (K' ⊗[K] R) := Algebra.FiniteType.isNoetherianRing K' _
+  have := hG'.1
+  have : IsNoetherianRing (K' ⊗[K] R) := Algebra.FiniteType.isNoetherianRing K' _
   obtain ⟨r, hr, hr₀, y, χ, hy⟩ := GlobalTheory.T.exists_keyData_near_two_primes hL hL2 (K' ⊗[K] R) Q' ⟨RingHom.ker s', RingHom.ker_isPrime _⟩
     ⟨RingHom.ker s₀'.toRingHom, RingHom.ker_isPrime _⟩ (by rw [hQ'.2.1, ← hP.2.1]; exact x.g_pos)
   have hu : IsUnit (s' r) := isUnit_iff_ne_zero.2 hr

@@ -131,7 +131,7 @@ theorem weight_factor_dilation {n : ℕ} (i₀ : Fin n) (τ : ℝ) (y : GR n) (h
     · intro j _ hj; simp [Pi.single_eq_of_ne hj]
     · simp
   rw [weight_factor_blocks pp qq e y _ _ hy, hd1, hd2, ← Complex.exp_add, add_neg_cancel, Complex.exp_zero, one_zpow, one_mul]
-  rw [← Complex.exp_int_mul, ← Complex.exp_int_mul, ← Complex.exp_add]
+  rw [← Complex.exp_intCast_mul, ← Complex.exp_intCast_mul, ← Complex.exp_add]
   congr 1
   push_cast
   ring

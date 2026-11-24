@@ -398,12 +398,12 @@ theorem phiOf_cs {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) (M : KMo
 theorem archEx_of (hG : PositivityTheory.Rg.BcB.E1.GrowthJ) (hC : CompatEx) (hL : Lef) (hV : VCBridge) (hP : LefPair)
     (hK : KerEx) : ArchEx := by
   intro E _ _ _ hE a b l₁ l₂ μ₁ μ₂ μa μb h₁ h₂ ha hb
-  haveI : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
-  haveI : BorelSpace (GA E a) := ⟨rfl⟩
-  haveI : BorelSpace (GA E b) := ⟨rfl⟩
-  haveI : BorelSpace (G a) := ⟨rfl⟩
-  haveI : BorelSpace (G b) := ⟨rfl⟩
-  haveI : BorelSpace (Hf E a b) := ⟨rfl⟩
+  have : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
+  have : BorelSpace (GA E a) := ⟨rfl⟩
+  have : BorelSpace (GA E b) := ⟨rfl⟩
+  have : BorelSpace (G a) := ⟨rfl⟩
+  have : BorelSpace (G b) := ⟨rfl⟩
+  have : BorelSpace (Hf E a b) := ⟨rfl⟩
   have := h₁
   have := h₂
   have := ha

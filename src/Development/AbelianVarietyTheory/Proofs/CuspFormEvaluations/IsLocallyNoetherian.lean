@@ -70,16 +70,16 @@ theorem smooth (Xo : Moduli D l) : Smooth Xo.s :=
   SmoothOfRelativeDimension.smooth D.dim Xo.s
 
 theorem isLocallyNoetherian (Xo : Moduli D l) : IsLocallyNoetherian Xo.X := by
-  haveI := smooth Xo
+  have := smooth Xo
   exact LocallyOfFiniteType.isLocallyNoetherian Xo.s
 
 theorem isReduced (Xo : Moduli D l) : IsReduced Xo.X := by
-  haveI := smooth Xo
+  have := smooth Xo
   exact GlobalTheory.isReduced_of_smooth_of_isReduced Xo.s
 
 theorem isUnit_natCast (Xo : Moduli D l) (n : ℕ) (hn : 0 < n) : IsUnit (n : Γ(Xo.X, ⊤)) := by
   have hK : IsUnit (n : KA l) := by
-    haveI : CharZero (KA l) := (RingHom.charZero_iff (algebraMap (KA l) ℂ).injective).2 inferInstance
+    have : CharZero (KA l) := (RingHom.charZero_iff (algebraMap (KA l) ℂ).injective).2 inferInstance
     exact (isUnit_iff_ne_zero).2 (Nat.cast_ne_zero.2 hn.ne')
   have hΓ := hK.map ((Scheme.ΓSpecIso (CommRingCat.of (KA l))).inv.hom)
   have hX := hΓ.map Xo.s.appTop.hom

@@ -363,7 +363,7 @@ namespace UpperTheory.Gal.W2
 theorem extendEmb_of : ExtendEmb := by
   intro F _ _ φ
   have hker : RingHom.ker φ = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [eq_bot_iff]
     intro n hn
     rw [Ideal.mem_comap, RingHom.mem_ker, eq_intCast, map_intCast] at hn
@@ -393,7 +393,7 @@ theorem UpperTheory.Gal.W2.fibDet_of :
   classical
   intro F _ _ O _ bar g ρ a H Sb ty ev hD k α y
   obtain ⟨hdet, hρ, hH⟩ := hD
-  letI : Invertible Sb := Matrix.invertibleOfIsUnitDet Sb (isUnit_iff_ne_zero.2 hdet)
+  let : Invertible Sb := Matrix.invertibleOfIsUnitDet Sb (isUnit_iff_ne_zero.2 hdet)
   let cb : Module.Basis (Fin g) ℂ (Fin g → ℂ) :=
     (Pi.basisFun ℂ (Fin g)).map (Matrix.toLinearEquiv' Sb this)
   have hcb : ∀ i, cb i = Sb *ᵥ Pi.single i 1 := by
@@ -463,8 +463,8 @@ theorem UpperTheory.Gal.W2.flatAffine_of :
   have hpW := (le_preimage_iff _ _).1 hsW
   obtain ⟨g, hgle, hpg⟩ := hW.exists_basicOpen_le (V := U) ⟨_, hpU⟩ hpW
   have hDW : Y.basicOpen g ≤ W := Y.basicOpen_le g
-  letI := (Y.presheaf.map (homOfLE hDW).op).hom.toAlgebra
-  haveI := hW.isLocalization_basicOpen g
+  let := (Y.presheaf.map (homOfLE hDW).op).hom.toAlgebra
+  have := hW.isLocalization_basicOpen g
   obtain ⟨⟨h, ⟨_, k, rfl⟩⟩, e⟩ :=
     IsLocalization.surj (Submonoid.powers g) ((Y.presheaf.map (homOfLE hgle).op).hom f)
   simp only [RingHom.algebraMap_toAlgebra] at e
@@ -600,7 +600,7 @@ theorem UpperTheory.Gal.W2.holPi_of :
   induction k with
   | zero =>
     intro B s hB h0 _
-    haveI := pow_zero_hom_isIso A
+    have := pow_zero_hom_isIso A
     refine GlobalTheory.CompanionTheory.Ar.Flat.ExpLoc.isHolTo_congr
       (ReciprocityTheory.ChartRestriction.G.PullbackSections.isHolTo_comp h0 (inv (GlobalTheory.KS.pow A 0).hom)) ?_
     intro b _
@@ -1031,7 +1031,7 @@ theorem UpperTheory.Gal.W2.piLattice_of :
       fun x i => ⟨x.1 i, (AddSubgroup.mem_pi _).mp x.2 i trivial⟩
     refine DiscreteTopology.of_continuous_injective (f := φ) ?_ ?_
     · refine continuous_pi fun i => ?_
-      exact ((continuous_apply i).comp continuous_subtype_val).subtype_mk _
+      exact ((continuous_apply i).comp continuous_subtypeVal).subtype_mk _
     · intro x y hxy
       apply Subtype.ext
       funext i
@@ -1358,7 +1358,7 @@ theorem tanDeriv_of : TanDeriv := by
   have hval : ∀ v (hv : v ∈ {v | v ∈ B ∧ ⊤ ≤ s v ⁻¹ᵁ W}) (b : Sec s' W),
       valAt' (s v) W b = CxPts.ev s' (RingHom.id ℂ) W b ⟨s v, hss v hv.1⟩ := by
     intro v hv b
-    simp only [valAt', CxPts.ev, valR, dif_pos hv.2]
+    simp only [valAt', CxPts.ev, valR, dite_eq_left hv.2]
     rfl
   let g : Sec s' W → V → ℂ := fun b v => valAt' (s v) W b
   have hd : ∀ b, DifferentiableAt ℂ (g b) v₀ := fun b =>
@@ -1385,8 +1385,8 @@ theorem tanDeriv_of : TanDeriv := by
     exact CxPts.ev_eq hyW b
   have hφa : ∀ a : ℂ, CxPts.evHom hyW (algebraMap ℂ (Sec s' W) a) = a := fun a =>
     (CxPts.ev_eq hyW _).symm.trans (CxPts.ev_algX hyW a)
-  letI : Module (Sec s' W) (V →L[ℂ] ℂ) := Module.compHom _ (CxPts.evHom hyW)
-  haveI : IsScalarTower ℂ (Sec s' W) (V →L[ℂ] ℂ) := ⟨fun a b m => by
+  let : Module (Sec s' W) (V →L[ℂ] ℂ) := Module.compHom _ (CxPts.evHom hyW)
+  have : IsScalarTower ℂ (Sec s' W) (V →L[ℂ] ℂ) := ⟨fun a b m => by
     change (CxPts.evHom hyW (a • b)) • m = a • ((CxPts.evHom hyW b) • m)
     have h1 : CxPts.evHom hyW (a • b) = a * CxPts.evHom hyW b :=
       (congrArg (CxPts.evHom hyW) (Algebra.smul_def a b)).trans
@@ -1513,8 +1513,8 @@ private lemma trace_of_basis (L : Type) [AddCommGroup L] [Module.Free ℤ L] [Mo
   let b := Module.Free.chooseBasis ℤ L
   let Lsub : Submodule ℤ (Fin g → ℂ) := LinearMap.range P.toIntLinearMap
   have hcar : (Lsub : Set (Fin g → ℂ)) = Set.range P := LinearMap.coe_range _
-  haveI : DiscreteTopology Lsub := hd
-  haveI : IsZLattice ℝ Lsub := ⟨by rw [hcar]; exact hs⟩
+  have : DiscreteTopology Lsub := hd
+  have : IsZLattice ℝ Lsub := ⟨by rw [hcar]; exact hs⟩
   let e : L ≃ₗ[ℤ] Lsub := LinearEquiv.ofInjective P.toIntLinearMap hinj
   let bV := (b.map e).ofZLatticeBasis ℝ Lsub
   have hbV : ∀ i, bV i = P (b i) := fun i => by
@@ -1640,28 +1640,28 @@ theorem UpperTheory.Gal.W2.tspDiag_of :
         show T j i = T i j
         by_cases h1 : i = i₀ ∧ ty j = ComplexEmbedding.conjugate t₀
         · have h2 : ¬ (j = i₀ ∧ ty i = ComplexEmbedding.conjugate t₀) := fun h => hnot j h1.2 h.1
-          simp only [T, dif_pos h1, dif_neg h2]
+          simp only [T, dite_eq_left h1, dite_eq_right h2]
         · by_cases h2 : j = i₀ ∧ ty i = ComplexEmbedding.conjugate t₀
-          · simp only [T, dif_pos h2, dif_neg h1]
-          · simp only [T, dif_neg h1, dif_neg h2]
+          · simp only [T, dite_eq_left h2, dite_eq_right h1]
+          · simp only [T, dite_eq_right h1, dite_eq_right h2]
       · intro c i j
         by_cases h1 : i = i₀ ∧ ty j = ComplexEmbedding.conjugate t₀
-        · simp only [T, dif_pos h1]
+        · simp only [T, dite_eq_left h1]
           have e : ty j (c : F) = (starRingEnd ℂ) (ty i (c : F)) := by
             rw [h1.2, h1.1, hi₀, ComplexEmbedding.conjugate_coe_eq]
           rw [e, mul_comm]
         · by_cases h2 : j = i₀ ∧ ty i = ComplexEmbedding.conjugate t₀
-          · simp only [T, dif_neg h1, dif_pos h2]
+          · simp only [T, dite_eq_right h1, dite_eq_left h2]
             have e : ty j (c : F) = (starRingEnd ℂ) (ty i (c : F)) := by
               rw [h2.2, h2.1, hi₀, ComplexEmbedding.conjugate_coe_eq, Complex.conj_conj]
             rw [e, mul_comm]
-          · simp only [T, dif_neg h1, dif_neg h2]
+          · simp only [T, dite_eq_right h1, dite_eq_right h2]
             simp
     refine ⟨⟨T, hT⟩, ?_⟩
     funext j
     show T i₀ j.1 = v j
     have h1 : i₀ = i₀ ∧ ty j.1 = ComplexEmbedding.conjugate t₀ := ⟨rfl, j.2⟩
-    simp only [T, dif_pos h1]
+    simp only [T, dite_eq_left h1]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PTspDiag =====
@@ -1693,7 +1693,7 @@ private theorem emb_eq_of_coeffs {F : Type} [Field F] [NumberField F] (N m : (F 
     funext c
     have hc := h c
     simp only [Finset.sum_apply, Pi.smul_apply, Function.comp_apply, smul_eq_mul, Pi.zero_apply]
-    simp only [f, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, RingHom.coe_comp, Function.comp_apply, sub_mul, Finset.sum_sub_distrib]
+    simp only [f, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, RingHom.coe_comp, Function.comp_apply, sub_mul, Finset.sum_sub_distrib]
     rw [sub_eq_zero]
     exact hc)
   intro τ
@@ -1732,18 +1732,18 @@ theorem typeCount_of : TypeCount := by
   by_cases h0 : τ = t₀
   · subst h0
     have hne : ComplexEmbedding.conjugate τ ≠ τ := hS.cx τ
-    simp only [typeMult, if_true, if_neg hne]
+    simp only [typeMult, ite_true, ite_eq_right hne]
     omega
   · by_cases h1 : τ = ComplexEmbedding.conjugate t₀
     · subst h1
       rw [hconj]
-      simp only [typeMult, if_neg h0, if_true]
+      simp only [typeMult, ite_eq_right h0, ite_true]
       omega
     · have h2 : ComplexEmbedding.conjugate τ ≠ t₀ := by
         intro e; apply h1; rw [← e, hconj]
       have h3 : ComplexEmbedding.conjugate τ ≠ ComplexEmbedding.conjugate t₀ := by
         intro e; apply h0; rw [← hconj τ, e, hconj]
-      simp only [typeMult, if_neg h0, if_neg h1, if_neg h2, if_neg h3]
+      simp only [typeMult, ite_eq_right h0, ite_eq_right h1, ite_eq_right h2, ite_eq_right h3]
       rw [← Nat.mul_add, hS.eps τ h0 h1, Nat.mul_one]
 
 end UpperTheory.Gal.W2

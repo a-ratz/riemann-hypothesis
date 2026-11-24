@@ -64,21 +64,21 @@ theorem exists_perfect_radical (p : ℕ) [Fact p.Prime] (S : Type) [CommRing S] 
       (∀ t : T, ∃ (k : ℕ) (x : S), t ^ p ^ k = i x) ∧
       ∀ x : S, i x = 0 ↔ x ∈ I.radical := by
   by_cases htop : I.radical = ⊤
-  · haveI : Subsingleton (S ⧸ I.radical) := Ideal.Quotient.subsingleton_iff.mpr htop
+  · have : Subsingleton (S ⧸ I.radical) := Ideal.Quotient.subsingleton_iff.mpr htop
     refine ⟨S ⧸ I.radical, inferInstance, Ideal.Quotient.mk I.radical, Subsingleton.elim _ _,
       ⟨fun a b _ => Subsingleton.elim a b, fun b => ⟨b, Subsingleton.elim _ _⟩⟩, fun t => ?_,
       fun x => Ideal.Quotient.eq_zero_iff_mem⟩
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective t
     exact ⟨0, x, by simp⟩
-  · haveI : Nontrivial (S ⧸ I.radical) := Ideal.Quotient.nontrivial_iff.mpr htop
+  · have : Nontrivial (S ⧸ I.radical) := Ideal.Quotient.nontrivial_iff.mpr htop
     have hpQ : ((p : ℕ) : S ⧸ I.radical) = 0 := by
       rw [← map_natCast (Ideal.Quotient.mk I.radical), hp, map_zero]
-    haveI : CharP (S ⧸ I.radical) p := by
+    have : CharP (S ⧸ I.radical) p := by
       first
         | exact (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).mpr hpQ
         | exact ringChar.of_eq (CharP.ringChar_of_prime_eq_zero (Fact.out : p.Prime) hpQ)
-    haveI : ExpChar (S ⧸ I.radical) p := ExpChar.prime (Fact.out : p.Prime)
-    haveI : IsReduced (S ⧸ I.radical) :=
+    have : ExpChar (S ⧸ I.radical) p := ExpChar.prime (Fact.out : p.Prime)
+    have : IsReduced (S ⧸ I.radical) :=
       (Ideal.isRadical_iff_quotient_reduced _).mp (Ideal.radical_isRadical I)
     refine ⟨PerfectClosure (S ⧸ I.radical) p, inferInstance,
       (PerfectClosure.of (S ⧸ I.radical) p).comp (Ideal.Quotient.mk I.radical), ?_, ?_, ?_, ?_⟩

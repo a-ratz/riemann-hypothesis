@@ -86,7 +86,7 @@ theorem awayT (C : Core l) : C.AwayT :=
   away_of_injective C.t (core_t_unit_fil l C).1 (_root_.GlobalTheory.MemLoc.bcris_eq_acris_localization_periodT_alt l C) (acris_injective C)
 
 theorem plusAwayT (C : Core l) : C.PlusAwayT := by
-  letI := (plusToB l).toAlgebra
+  let := (plusToB l).toAlgebra
   have e : ∀ x : Per.Acris l, algebraMap (BcrisP l) (Per.Bcris l) (algebraMap _ _ x) =
       algebraMap (Per.Acris l) (Per.Bcris l) x := plusToB_alg
   refine away_of_injective _ ?_ (fun b => ?_) (plusToB_injective C)

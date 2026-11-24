@@ -108,7 +108,7 @@ theorem continuous_cyc (P : LocPrime l) (K LL : FinExt l) :
   rw [e]
   refine Continuous.subtype_mk (f := fun g : ↥(GK K) =>
     algebraMap ℚ_[l] (Om l) (P.χQ (g : GQ l) : ℚ_[l])) ?_ _
-  exact (continuous_algebraMap ℚ_[l] (Om l)).comp (h.comp continuous_subtype_val)
+  exact (continuous_algebraMap ℚ_[l] (Om l)).comp (h.comp continuous_subtypeVal)
 
 section Triv
 
@@ -258,7 +258,7 @@ theorem multV_shift {V : Type} [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[
     (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (b : ℤ)
     (h : ∀ a, multV (P.PD K) (charRep θ) τ a = (({b} : Multiset ℤ).count a : ℤ)) (a : ℤ) :
     multV (P.PD K) ρ' τ (a + b) = multV (P.PD K) ρ τ a := by
-  haveI := (P.PD K).finK
+  have := (P.PD K).finK
   obtain ⟨m, k, β, d, hd, h1⟩ := _root_.GlobalTheory.DRFil.deRham_filtered l P AI T K LL ↥LL.1 (charRep θ) (isDR T K LL _ hθ) 0 1
     ⟨1 ⊗ₜ ⟨1, (P.PD K).one_mem⟩, rfl⟩
   have key := finrank_twist (P.PD K) (AlgHom.id ↥LL.1 ↥LL.1) ρ ρ' (charRep θ) (fun g => (θ g : ↥LL.1))
@@ -278,8 +278,8 @@ variable {n : ℕ} (emb : ZMod n → (↥(K0 K) →ₐ[ℚ_[l]] ↥LL.1))
 
 theorem crysWith_cyc (θ : ↥(GK K) →* (↥LL.1)ˣ) (e : ℕ) (hθ : θ = cycLL (P.PD K) ↥LL.1 ^ (-(e : ℤ))) :
     CrysWith (P.PD K) emb (charRep θ) (fun _ => {(e : ℤ)}) := by
-  haveI := (P.PD K).finK
-  haveI := LL.2
+  have := (P.PD K).finK
+  have := LL.2
   subst hθ
   refine ⟨GlobalTheory.BlockCrys.isCrys_cyc_zpow (P.PD K) _, fun i τ _ a => ?_⟩
   rw [GlobalTheory.BlockJumps.multV_twist (P.PD K) (exists_inverse_fontaineElement_mem_fil_neg_one T K) _ e (fun g x => ?_) τ a, Multiset.count_singleton]
@@ -314,14 +314,14 @@ theorem multV_char_zero (hc : Nat.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = finran
     (h : ∀ a, IsJumpV (P.PD K) (charRep θ) τ a → a = 0) (a : ℤ) :
     multV (P.PD K) (charRep θ) τ a = (({0} : Multiset ℤ).count a : ℤ) := by
   classical
-  haveI := (P.PD K).finK
+  have := (P.PD K).finK
   have hdr := isDR T K LL _ hθ
-  haveI := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL ↥LL.1 (charRep θ)).1
+  have := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL ↥LL.1 (charRep θ)).1
   obtain ⟨m, k, β, d, hd, h1⟩ := _root_.GlobalTheory.DRFil.deRham_filtered l P AI T K LL ↥LL.1 (charRep θ) hdr 0 1
     ⟨1 ⊗ₜ ⟨1, (P.PD K).one_mem⟩, rfl⟩
   set_option synthInstance.maxHeartbeats 200000 in
   have hpos : ∀ τ', 1 ≤ finrank ↥LL.1 (DdRE (P.PD K) (charRep θ) τ') := fun τ' => by
-    haveI : FiniteDimensional ↥LL.1 (DdRE (P.PD K) (charRep θ) τ') :=
+    have : FiniteDimensional ↥LL.1 (DdRE (P.PD K) (charRep θ) τ') :=
       Submodule.finiteDimensional_of_le (S₂ := DdR (P.PD K) (charRep θ)) inf_le_left
     rw [Nat.one_le_iff_ne_zero, Ne, Submodule.finrank_eq_zero]
     exact ddRE_ne_bot (P.PD K) (exists_inverse_fontaineElement_mem_fil_neg_one T K) (charRep θ) (fun g => (θ g : ↥LL.1)) (fun _ _ => rfl) k β d
@@ -352,8 +352,8 @@ theorem crysCalc {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (h
       (GlobalTheory.Cmp.WachMonoidal.isCrys_prod _ h.1 h'.1)
     rw [LinearEquiv.symm_apply_eq, he, LinearEquiv.apply_symm_apply]
     rfl
-  · haveI := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T S.K S.LL _ A.ρ).1
-    haveI := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T S.K S.LL _ A'.ρ).1
+  · have := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T S.K S.LL _ A.ρ).1
+    have := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T S.K S.LL _ A'.ρ).1
     rw [GlobalTheory.HTW.SumJumps.multV_add _ e he, h.2 i τ hτ, h'.2 i τ hτ, Multiset.count_add, Nat.cast_add]
   · exact (isCrys_iff T _ _ _ _ (chiLL ↥S.LL.1 θ) (fun _ _ => rfl) hθ.2.1).1 h.1
   · obtain ⟨c, rfl⟩ : ∃ c', c = c' + a i := ⟨c - a i, by ring⟩

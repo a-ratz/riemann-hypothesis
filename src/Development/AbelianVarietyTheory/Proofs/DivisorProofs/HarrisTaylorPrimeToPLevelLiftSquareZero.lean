@@ -68,10 +68,10 @@ theorem existsUnique_torsion_lift_thick (C C₀ : Type) [CommRing C] [CommRing C
     (i : A₀.left ⟶ A.left) (hA : IsAbelianScheme A) (hpb : IsGrpPullback A₀ A (spMap π) i)
     (s₀ : 𝟙_ (Over (Sp C₀)) ⟶ A₀) (hs₀ : s₀ ^ n = 1) :
     ∃! s : 𝟙_ (Over (Sp C)) ⟶ A, s ^ n = 1 ∧ s₀.left ≫ i = spMap π ≫ s.left := by
-  haveI : Smooth A.hom := hA.smooth
+  have : Smooth A.hom := hA.smooth
   have hn' : IsUnit (n : Γ(Sp C, ⊤)) := by
     simpa using hn.map (Scheme.ΓSpecIso (CommRingCat.of C)).inv.hom
-  haveI := GlobalTheory.GrpTangent.etale_id_pow A hn'
+  have := GlobalTheory.GrpTangent.etale_id_pow A hn'
   let T' : Over (Sp C₀) := 𝟙_ (Over (Sp C₀))
   let T : Over (Sp C) := Over.mk (T'.hom ≫ spMap π)
   have hwi : i ≫ A.hom = A₀.hom ≫ spMap π := hpb.1.w
@@ -156,8 +156,8 @@ theorem level_lift : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datu
     rw [o₀.eta_add, ← e, ← MonObj.comp_mul, hcomp]
   refine ⟨eta, hadd, ?_, ?_, ?_, fun y => (hspec y).2⟩
   · intro c x
-    haveI := act.hom c
-    haveI := o₀.act.hom c
+    have := act.hom c
+    have := o₀.act.hom c
     refine (huniq (c • x) _ ⟨by rw [← MonObj.pow_comp, (hspec x).1, MonObj.one_comp], ?_⟩).symm
     rw [o₀.eta_lin, Over.comp_left, Category.assoc, hact, ← Category.assoc, (hspec x).2, Over.comp_left,
       Category.assoc]

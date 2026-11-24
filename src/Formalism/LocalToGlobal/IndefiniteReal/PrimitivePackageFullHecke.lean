@@ -676,7 +676,7 @@ lemma charOf_conj {T : Type} [AddCommGroup T] [Module K T] (τ : Representation 
       first
       | exact LinearMap.trace_eq_zero_of_not_finite hf
       | exact LinearMap.trace_eq_zero_of_not_finite (R := K) (M := T) hf
-      | (rw [LinearMap.trace, dif_neg]; rintro ⟨_, ⟨b⟩⟩; exact hf (Module.Finite.of_basis b))
+      | (rw [LinearMap.trace, dite_eq_right]; rintro ⟨_, ⟨b⟩⟩; exact hf (Module.Finite.of_basis b))
       | (unfold LinearMap.trace; rw [dif_neg]; rintro ⟨_, ⟨b⟩⟩; exact hf (Module.Finite.of_basis b))
     simp [h0]
 
@@ -757,7 +757,7 @@ lemma finrank_int_self {T : Type} [AddCommGroup T] [Module K T] [Nontrivial T]
     apply hv
     have := congrArg (fun f : Representation.IntertwiningMap τ τ => f v) h0
     simpa using this
-  rw [finrank_eq_one_iff_of_nonzero' _ hne]
+  rw [finrank_eq_one_iff_of_ne_zero' _ hne]
   intro w
   obtain ⟨c, hc⟩ := h w.toLinearMap (fun g => w.isIntertwining' g)
   refine ⟨c, ?_⟩
@@ -865,7 +865,7 @@ theorem schur : Schur := by
     unfold charOf
     rw [map_one, LinearMap.trace_one]
   have hpos : ∀ s, (finrank K (T s) : K) ≠ 0 := fun s => by
-    haveI := hnt s
+    have := hnt s
     exact_mod_cast (Module.finrank_pos (R := K) (M := T s)).ne'
   have hcard : (Fintype.card G : K) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
   have htr : ∀ s t, LinearMap.trace K (T t) (eS (τ s) (τ t)) =
@@ -874,7 +874,7 @@ theorem schur : Schur := by
     rw [trace_eS, sum_char_eq, hdim]
     field_simp
   have hone : ∀ s, finrank K (Representation.IntertwiningMap (τ s) (τ s)) = 1 := fun s => by
-    haveI := hnt s
+    have := hnt s
     exact finrank_int_self (τ s) (habs s)
   have hsum : ∀ s, ∑ x : G, charOf (τ s) x⁻¹ * charOf (τ s) x = (Fintype.card G : K) := by
     intro s
@@ -888,7 +888,7 @@ theorem schur : Schur := by
     rw [hc, h3, one_smul]
   · obtain ⟨c, hc⟩ := hcomm s t
     have hne : charOf (τ s) ≠ charOf (τ t) := fun h => hst (hinj s t h)
-    haveI : Subsingleton (Representation.IntertwiningMap (τ s) (τ t)) :=
+    have : Subsingleton (Representation.IntertwiningMap (τ s) (τ t)) :=
       ⟨fun f g => (int_eq_zero (τ s) (τ t) (hirr s) (hirr t) hne f).trans
         (int_eq_zero (τ s) (τ t) (hirr s) (hirr t) hne g).symm⟩
     have h1 := htr s t
@@ -1108,8 +1108,8 @@ theorem passage_of_steps [_root_.NumberField.IsTotallyComplex K] {s : ℕ} (H : 
   have hFrm : (I.LA τ nbar).FramesG := hFr s H
   have hL : (I.LA τ nbar).LatG := by
     classical
-    letI : Finite T := H.ok.ok2.tup_fin
-    letI : Fintype T := Fintype.ofFinite T
+    let : Finite T := H.ok.ok2.tup_fin
+    let : Fintype T := Fintype.ofFinite T
     let L : T → Submodule (𝓞 K) (Fin I.Sg.D → K) := fun t => matLat (I.X.rowMat I.cg false t)
       ((lv (faceOf3 I.A3 ⊥ 1 I.P1 I.ψ1 I.Dc I.Sp I.Zsc I.X.zs) false).abelian₂ t)
     have hfull : ∀ t, Submodule.IsFullLattice K (L t) := fun t =>

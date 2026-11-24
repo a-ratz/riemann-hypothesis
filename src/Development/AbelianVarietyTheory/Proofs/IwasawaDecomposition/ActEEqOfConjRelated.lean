@@ -150,7 +150,7 @@ theorem isClosed_NS {f : Fin ρ → B.V} (ef : ∀ i j, B.hD (e i) (f j) = if i 
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
   have : T2Space (AE D) := e0.isEmbedding.t2Space
   have : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
-  have hm : Continuous (fun k : GA D B => mt B k) := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous (fun k : GA D B => mt B k) := Units.continuous_val.comp continuous_subtypeVal
   have hh : ∀ y, Continuous fun v => hA B v y := fun y =>
     continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => continuous_const.mul (continuous_apply j)
   have hc : ∀ k, IsClosed (spanLt B e k : Set (Fin B.rank → AE D)) := fun k => by
@@ -158,11 +158,11 @@ theorem isClosed_NS {f : Fin ρ → B.V} (ef : ∀ i j, B.hD (e i) (f j) = if i 
         (⋂ l : Fin ρ, ⋂ _ : k ≤ l.1, {v | hA B v (vecA B (f l)) = 0}) ∩
           {v | v = ∑ l, hA B v (vecA B (f l)) • vecA B (e l)} := by
       ext v
-      simp only [SetLike.mem_coe, mem_spanLt_iff ef, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, mem_spanLt_iff ef, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact (isClosed_iInter fun l => isClosed_iInter fun _ => isClosed_eq (hh _) continuous_const).inter
       (isClosed_eq continuous_id (continuous_finsetSum _ fun l _ => (hh _).smul continuous_const))
-  have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
+  have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
   have : ContinuousSub (AE D) := IsTopologicalAddGroup.to_continuousSub
   have ha : ∀ x, Continuous fun n : GA D B => actV B n x - vecA B x := fun x =>
     continuous_pi fun j => ((continuous_apply j).comp (hm.matrix_mulVec continuous_const)).sub continuous_const
@@ -212,7 +212,7 @@ theorem haar_eq_of_covolume_one (μ μ' : Measure G) [μ.IsHaarMeasure] [μ'.IsH
   have e : μ' = (μ'.haarScalarFactor μ : ℝ≥0∞) • μ := Measure.isMulLeftInvariant_eq_smul μ' μ
   have h2 : IsFundamentalDomain Γ 𝓕 μ' := h.mono (by rw [e]; exact Measure.smul_absolutelyContinuous)
   have h3 : μ' 𝓕 = 1 := (h2.measure_eq h').trans h1'
-  rw [e, Measure.smul_apply, h1, smul_eq_mul, mul_one] at h3
+  rw [e, smul_apply, h1, smul_eq_mul, mul_one] at h3
   rw [e, h3, one_smul]
 
 theorem setIntegral_mul_right (μ : Measure G) [μ.IsHaarMeasure] {𝓕 : Set G} (h : IsFundamentalDomain Γ 𝓕 μ)
@@ -227,7 +227,7 @@ theorem setIntegral_mul_right (μ : Measure G) [μ.IsHaarMeasure] {𝓕 : Set G}
       Function.bijective_id fun γ x => mul_assoc _ _ _
   have h1 : μ.map (· * g) 𝓕 = μ 𝓕 :=
     ((MeasurableEquiv.mulRight g).map_apply 𝓕).trans (h'.measure_eq h)
-  rw [e, Measure.smul_apply, smul_eq_mul] at h1
+  rw [e, smul_apply, smul_eq_mul] at h1
   have h2 := (ENNReal.mul_left_inj (h.measure_ne_zero (NeZero.ne μ)) hfin).1 (h1.trans (one_mul _).symm)
   rw [h2, one_smul] at e
   have hp : MeasurePreserving (· * g) μ μ := ⟨measurable_mul_const g, e⟩
@@ -266,7 +266,7 @@ theorem actE_eq_of_conj_related (d : BesselDatum A B ι) {n : GA D B} (hn : n �
     rw [this, Fin.snoc_castSucc]
     obtain ⟨c, hc, e⟩ := hn.1 ⟨i.1 + 1, hlt⟩
     refine ⟨?_, c, fun l hl => hc l (show i.1 + 1 ≤ l.1 from hl), e⟩
-    rw [d.ef, if_neg (fun h => by have : i.1 + 1 = i.1 := congrArg Fin.val h; omega)]
+    rw [d.ef, ite_eq_right (fun h => by have : i.1 + 1 = i.1 := congrArg Fin.val h; omega)]
 
 theorem simpleSum_mul (d : BesselDatum A B ι) {n n' : GA D B} (hn : n ∈ d.NSet) (hn' : n' ∈ d.NSet) :
     d.simpleSum (n * n') = d.simpleSum n + d.simpleSum n' := by
@@ -281,12 +281,12 @@ theorem simpleSum_mul (d : BesselDatum A B ι) {n n' : GA D B} (hn : n ∈ d.NSe
     rfl
   rw [e1, e, hA_add, hA_add, hA_coeff B d.e d.f d.ef, hA_vec, h0, RingHom.map_zero, zero_add, hA_sum,
     Finset.sum_eq_single i]
-  · rw [hA_smul, hA_act_e d hn le_rfl, if_pos rfl, mul_one]
+  · rw [hA_smul, hA_act_e d hn le_rfl, ite_eq_left rfl, mul_one]
   · intro l _ hl
     rw [hA_smul]
     rcases lt_or_ge i l with h | h
     · rw [hc l h, zero_mul]
-    · rw [hA_act_e d hn h, if_neg hl, mul_zero]
+    · rw [hA_act_e d hn h, ite_eq_right hl, mul_zero]
   · exact fun h => absurd (Finset.mem_univ _) h
 
 theorem psiN_mul (d : BesselDatum A B ι) (ψ : AddChar (AF D.host.F) ℂ) {n n' : GA D B} (hn : n ∈ d.NSet)

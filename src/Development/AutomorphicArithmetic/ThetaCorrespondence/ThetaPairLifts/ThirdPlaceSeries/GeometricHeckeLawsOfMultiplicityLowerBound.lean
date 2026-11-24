@@ -487,13 +487,13 @@ theorem exists_ptC_of_finExt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (∀ a, σ (algebraMap c.F L a) = φ a) → ∀ (y : FrPt Xo c L) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ),
       ∃ (z : PtC Xo c φ) (u : ℂ_[p]), u ≠ 0 ∧ ∀ f ∈ sec Xo c a n, valC z.1 f = u * σ (evR Xo c f y) := by
   intro E _ _ _ H Dw l Xo c p _ φ hIA L _ _ _ σ hσ y a n
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
-  haveI : NumberField L := NumberField.of_module_finite c.F L
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : NumberField L := NumberField.of_module_finite c.F L
   have hL : GlobalTheory.Reg.EvLaws Xo c := (GlobalTheory.Reg.evLaws_genFr_nonempty_comp E H Dw l Xo c).1
 
   let w : HeightOneSpectrum (𝓞 L) := placeAt σ
-  haveI : Finite (𝓞 L ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-  haveI : CharZero (adicCompletionIntegers L w) :=
+  have : Finite (𝓞 L ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
+  have : CharZero (adicCompletionIntegers L w) :=
     charZero_of_injective_algebraMap
       (FaithfulSMul.algebraMap_injective (𝓞 L) (adicCompletionIntegers L w))
   obtain ⟨e1, he1, h1⟩ := CompletionHelpers.exists_e (L := L) w
@@ -525,12 +525,12 @@ theorem exists_ptC_of_finExt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     rw [Ideal.ramificationIdx'_eq_ramificationIdx (placeAt φ).asIdeal w.asIdeal (placeAt φ).ne_bot]
     ring
 
-  letI : Algebra c.F T.Fr := io.toAlgebra
+  let : Algebra c.F T.Fr := io.toAlgebra
   let ιA : L →ₐ[c.F] T.Fr := { ι with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := hL.bc L T.Fr ιA y
 
   obtain ⟨T', io', e', y', hO', hy'alg, φ', zz, t, hint, hmap, hbor⟩ := hIA (placeAt φ) T io _ hO hFin yT
-  letI : Algebra c.F T'.Fr := io'.toAlgebra
+  let : Algebra c.F T'.Fr := io'.toAlgebra
 
   let ψ : T.Fr →+* T'.Fr := (φ' : T.Fr →+* T'.Fr)
   obtain ⟨r, hr⟩ := exists_vV_map (V := T.V) (V' := T'.V) ψ hint
@@ -649,9 +649,9 @@ theorem sec_eq_zero_of_finite_values :
 
   have key : ∀ m : Ideal p.R, m.IsMaximal → h p y ∈ m := by
     intro m hm
-    letI : Field (p.R ⧸ m) := Ideal.Quotient.field m
-    haveI : Algebra.FiniteType c.F (p.R ⧸ m) := inferInstance
-    haveI : FiniteDimensional c.F (p.R ⧸ m) := finite_of_finite_type_of_isJacobsonRing c.F (p.R ⧸ m)
+    let : Field (p.R ⧸ m) := Ideal.Quotient.field m
+    have : Algebra.FiniteType c.F (p.R ⧸ m) := inferInstance
+    have : FiniteDimensional c.F (p.R ⧸ m) := finite_of_finite_type_of_isJacobsonRing c.F (p.R ⧸ m)
     obtain ⟨w, hw⟩ := hL.bc p.R (p.R ⧸ m) (Ideal.Quotient.mkₐ c.F m) y
     have e := evR_eq_map_of_test_point hL hh p (Ideal.Quotient.mkₐ c.F m) y w hw
     rw [hv (p.R ⧸ m) w, Ideal.Quotient.mkₐ_eq_mk] at e
@@ -726,7 +726,7 @@ theorem core {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw
   have hfin : FiniteDimensional c.F K0 := IntermediateField.finiteDimensional_adjoin (fun x hx => by
     obtain ⟨s, rfl⟩ := hx
     exact (mem_algebraicClosure_iff.1 (d s).2).isIntegral)
-  letI : Module.Free c.F K0 := by
+  let : Module.Free c.F K0 := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact inferInstance
   let bs := Module.finBasis c.F K0
@@ -1171,7 +1171,7 @@ theorem isIntegralUpToUnits_up {cls : PtClass Xo c} {T : CDVR} {io : c.F →+* T
     (hz : FrMap φ z₀ z) (h : IsIntegralUpToUnits cls T io k z₀) :
     IsIntegralUpToUnits cls T io (φ.toRingHom.comp k) z := by
   obtain ⟨T', i, hi, j, rfl, y', h₁, h₂, w, u, hw, hb⟩ := h
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   obtain ⟨w', hw'⟩ := exists_frMap φ w
   exact ⟨T', i, hi, φ.comp j, rfl, y', h₁, h₂, w', u, frMap_comp hw hw' fun _ => rfl, frBor_map φ hb hw' hz⟩
 
@@ -1195,10 +1195,10 @@ namespace GlobalTheory.HkAnyFieldOf
 
 theorem heckeFrameInt_anyField_of : GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.HeckeInt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (la : HeightOneSpectrum (𝓞 c.F)) (𝔓 : Ideal (𝓞 E)) (p i : ℕ), GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.IsHeckePrime H l 𝔓 p → (p : 𝓞 c.F) ∉ la.asIdeal → ∀ (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la T.V io e → ∀ y : IntFr Xo c T io, algCls Xo c T io y → ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra c.F Ω], letI := io.toAlgebra; ∀ k : T.Fr →ₐ[c.F] Ω, ∀ yΩ : FrPt Xo c Ω, FrMap k y.1 yΩ → ∀ (C : hkKer (Xo := Xo) 𝔓 p i Ω yΩ) (z : FrPt Xo c Ω), hkRelFr 𝔓 p i (GlobalTheory.ThetaTrace.hkTr Xo c p) Ω yΩ C z → GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.IsIntegralUpToUnits (GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.trivialClassCondition Xo c) T io k.toRingHom z := by
   intro hHI E _ _ _ H Dw l Xo c la 𝔓 p i hP hpla T io e hla y hy Ω _ _ _ k yΩ hyΩ C z hz
-  letI : Algebra c.F T.Fr := io.toAlgebra
+  let : Algebra c.F T.Fr := io.toAlgebra
 
-  letI : Algebra T.Fr Ω := k.toRingHom.toAlgebra
-  haveI : IsScalarTower c.F T.Fr Ω := IsScalarTower.of_algebraMap_eq fun a => (k.commutes a).symm
+  let : Algebra T.Fr Ω := k.toRingHom.toAlgebra
+  have : IsScalarTower c.F T.Fr Ω := IsScalarTower.of_algebraMap_eq fun a => (k.commutes a).symm
   let k₀ : T.Fr →ₐ[c.F] AlgebraicClosure T.Fr := IsScalarTower.toAlgHom c.F T.Fr (AlgebraicClosure T.Fr)
   let φ₀ : AlgebraicClosure T.Fr →ₐ[T.Fr] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -1400,11 +1400,11 @@ theorem heckeStable : GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39.Hecke
       Nat.Coprime.cast hcop
     exact (placeAt (embC YS iC b)).isPrime.ne_top ((Ideal.eq_top_iff_one _).2
       (hac ▸ Ideal.add_mem _ (Ideal.mul_mem_left _ _ hm) (Ideal.mul_mem_left _ _ hl)))
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hint := _root_.GlobalTheory.HkAnyFieldOf.heckeFrameInt_anyField_of hI D.host.E T0.Q.H (T0.Q.Dw ((j : ℕ) + 1)) T0.Q.l (T0.Q.Xo ((j : ℕ) + 1)) T0.Q.c
     (placeAt (embC YS iC b)) P.asIdeal (charAt P) k hHP hpla T io e he y hy (PAt (embC YS iC b)) h.alg w hw C₀ w' hw'
   obtain ⟨T', i', hi', j', hj', y', hy', -, w2, u2, hw2, hb2⟩ := hint
-  letI := (i'.comp io).toAlgebra
+  let := (i'.comp io).toAlgebra
   let jj : T'.Fr →+* ℂ_[D.ntw.l i] := (toCp (embC YS iC b)).comp j'.toRingHom
   have hjj : jj.comp i' = kk := RingHom.ext fun a => congrArg (toCp (embC YS iC b)) (DFunLike.congr_fun hj' a)
   have hR := _root_.GlobalTheory.GeoTie.ReadExt.isReading_ext (D.ntw.l i) T0.Q.c.F (embC YS iC b) T io kk h T' i' hi' jj hjj

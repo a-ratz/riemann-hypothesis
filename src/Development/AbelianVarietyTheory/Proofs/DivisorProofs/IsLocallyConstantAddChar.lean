@@ -191,8 +191,8 @@ variable {F} [MeasurableSpace F] [BorelSpace F] (ν : Measure F) [ν.IsAddHaarMe
 
 theorem smul_map_mulVec_pi (M : Matrix κ κ F) (u : Fˣ) (hu : (u : F) = M.det) :
     (distribHaarChar F u : ENNReal) • Measure.map M.mulVec (Measure.pi fun _ : κ => ν) = Measure.pi fun _ : κ => ν := by
-  haveI := SplitWeil.secondCountable F
-  haveI := SplitWeil.t2Space F
+  have := SplitWeil.secondCountable F
+  have := SplitWeil.t2Space F
   have hm : ∀ A : Matrix κ κ F, Measurable A.mulVec := fun A =>
     (continuous_const.matrix_mulVec continuous_id).measurable
   have hM : M.det ≠ 0 := hu ▸ u.ne_zero
@@ -203,7 +203,7 @@ theorem smul_map_mulVec_pi (M : Matrix κ κ F) (u : Fˣ) (hu : (u : F) = M.det)
     rw [det_diagonal] at hD hu
     have A : ∀ i, D i ≠ 0 := fun i => Finset.prod_ne_zero_iff.1 hD i (Finset.mem_univ i)
     have hu' : u = ∏ i, Units.mk0 (D i) (A i) := Units.ext (by simp [hu])
-    rw [Measure.smul_apply, Measure.map_apply (hm _) (MeasurableSet.univ_pi hs)]
+    rw [smul_apply, Measure.map_apply (hm _) (MeasurableSet.univ_pi hs)]
     have : ((diagonal D).mulVec ⁻¹' Set.pi Set.univ fun i : κ => s i) =
         Set.pi Set.univ fun i : κ => (Units.mk0 (D i) (A i))⁻¹ • s i := by
       ext f
@@ -236,7 +236,7 @@ theorem smul_map_mulVec_pi (M : Matrix κ κ F) (u : Fˣ) (hu : (u : F) = M.det)
 theorem integral_comp_mulVec (g : GL κ F) (f : (κ → F) → ℂ) :
     ((distribHaarChar F (Matrix.GeneralLinearGroup.det g) : ℝ) : ℂ) *
       ∫ x, f (g.val.mulVec x) ∂(Measure.pi fun _ : κ => ν) = ∫ x, f x ∂(Measure.pi fun _ : κ => ν) := by
-  haveI := SplitWeil.secondCountable F
+  have := SplitWeil.secondCountable F
   have hm : ∀ A : Matrix κ κ F, Measurable A.mulVec := fun A =>
     (continuous_const.matrix_mulVec continuous_id).measurable
   let e : (κ → F) ≃ᵐ (κ → F) :=

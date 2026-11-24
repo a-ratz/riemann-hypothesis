@@ -159,7 +159,7 @@ theorem kap_abs (hR : R.Facts) (hi : ∀ c, R.i c ∈ R.P) (hS : S.Good) (P : Rh
   have hκ : ∀ {M : Model l K} (a : D.Ch M) (hM : G M) (j : ℕ) x φ,
       κ a j x φ = ((kP a hM j x φ : R.P) : R.B) := by
     intro M a hM j x φ
-    rw [show κ a j = (AddMonoidHom.compHom R.P.subtype.toAddMonoidHom).comp (kP a hM j) from dif_pos hM]
+    rw [show κ a j = (AddMonoidHom.compHom R.P.subtype.toAddMonoidHom).comp (kP a hM j) from dite_eq_left hM]
     rfl
   have hB : ∀ u v : R.P, (∀ m, (S.L m).toB u = (S.L m).toB v) → (u : R.B) = v :=
     fun u v h => congrArg Subtype.val (ext_P hS h)
@@ -268,7 +268,7 @@ theorem rho_one_eval : ∀ {Λ A B K : Type} [CommRing Λ] [CommRing A] [CommRin
     rw [map_sub, map_smulₛₗ, hP.one_b, sub_eq_zero] at h0
     rw [h0]
     simp
-  haveI := hC.fin 0
+  have := hC.fin 0
   let bs := Module.finBasis K (C.V 0)
   have h1 := hb bs
   rw [hw] at h1
@@ -664,7 +664,7 @@ theorem rho_cup :
   obtain ⟨-, e, z, hzr, hzb⟩ := hf
   obtain ⟨-, e', w, hwr, hwb⟩ := hg
   obtain ⟨hh1, e'', u, hur, hub⟩ := hh
-  haveI := hC.fin (i + j)
+  have := hC.fin (i + j)
   let b := Module.finBasis K (C.V (i + j))
   have hv : ∀ n, C.red n (i + j) (P.cZ i j z w) =
       ((C.ℓ : A) ^ (e + e')) • C.r n (i + j) (P.cS n i j (x n) (y n)) := by
@@ -788,7 +788,7 @@ theorem exists_rho {Λ A B K : Type} [CommRing Λ] [CommRing A] [CommRing B] [Fi
     (C : Chain.{1} Λ A B K) (hC : C.Good) {j : ℕ} (x : ∀ n, C.S n j) (hx : C.Comp x) :
     ∃ f : Module.Dual K (C.V j) →+ B, C.Rho x f := by
   obtain ⟨e, z, hz⟩ := hC.lift j x hx
-  haveI := hC.fin j
+  have := hC.fin j
   have hunit : IsUnit (C.ℓ : B) := by
     first
     | exact hC.unit
@@ -1280,7 +1280,7 @@ theorem fil_lev_pf [FiniteDimensional ℚ_[l] K] (hM : M.Sm) (U : Cov M.q) (hU :
   have h4 := hsep N (by exact_mod_cast hN) z h1
   rw [← map_smul] at h4
   have h5 := quoM_bMap hL M s (qb_le hL M s) N j _ h4
-  haveI := (m_fin M hM j).1
+  have := (m_fin M hM j).1
   let bs := Module.finBasis K (HdR M.q j)
   have h6 : (l : L.B) ^ e • ∑ t, f (bs.coord t) • muB L.γB M.q 1 s {⊤} j (bs t) = bMap M s hL (qb_le hL M s) j z := hb bs
   rw [LinearMap.map_smulₛₗ, ← h6, map_pow, map_natCast, map_smul, map_smul] at h5

@@ -194,11 +194,11 @@ variable [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasur
 theorem integral_conj_colE' (p : ℕ) (β : n → k) (f : GL (n ⊕ Fin c) k → ℂ) :
     ∫ u : N k n c p, f (colE c p β * (u : GL (n ⊕ Fin c) k) * (colE c p β)⁻¹) ∂(volN ν n c p) =
       ∫ u : N k n c p, f u ∂(volN ν n c p) := by
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI : LocallyCompactSpace (N k n c p) := (VolN.isClosed_N p).locallyCompactSpace
-  haveI := VolN.isHaarMeasure_volN (n := n) (c := c) ν p
-  haveI : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
+  have := secondCountable k
+  have := t2Space k
+  have : LocallyCompactSpace (N k n c p) := (VolN.isClosed_N p).locallyCompactSpace
+  have := VolN.isHaarMeasure_volN (n := n) (c := c) ν p
+  have : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
   let E : (n → k) → Subgroup.normalizer (N k n c p : Set (GL (n ⊕ Fin c) k)) := fun b => ⟨_, colE_mem p b⟩
   have hs : ∀ a : k, a ≠ 0 → md (N k n c p) (E (a • β)) = md (N k n c p) (E β) := fun a ha => by
     let x : GL n k := Matrix.GeneralLinearGroup.scalar n (Units.mk0 a ha)
@@ -254,14 +254,14 @@ theorem _root_.GlobalTheory.QuotIntFJ.quotIntFJ_unique : ∀ (k : Type) [Field k
   intro k _ _ _ _ _ _ n _ _ c ρ hρ hρc ν _ μX _ μG _ f z z' hz hz'
   obtain ⟨F₁, hF₁, hf₁, rfl⟩ := hz
   obtain ⟨F₂, hF₂, hf₂, rfl⟩ := hz'
-  haveI := _root_.GlobalTheory.SplitWeil.secondCountable k
+  have := _root_.GlobalTheory.SplitWeil.secondCountable k
   have hA := _root_.GlobalTheory.SplitWeil.volGL_haar k n ν
   have hB := _root_.GlobalTheory.SplitWeil.volGL_haar k (n ⊕ Fin c) ν
-  haveI := hA.1; haveI := hA.2.1; haveI := hB.1; haveI := hB.2.1
+  have := hA.1; have := hA.2.1; have := hB.1; have := hB.2.1
   set U := _root_.GlobalTheory.RootEx.N k n c (ρ + 1)
   set μU := _root_.GlobalTheory.RootEx.volN ν n c (ρ + 1)
-  haveI : μU.IsHaarMeasure := _root_.GlobalTheory.RootEx.VolN.isHaarMeasure_volN ν (ρ + 1)
-  haveI : SFinite μU := by
+  have : μU.IsHaarMeasure := _root_.GlobalTheory.RootEx.VolN.isHaarMeasure_volN ν (ρ + 1)
+  have : SFinite μU := by
     show SFinite (_root_.GlobalTheory.RootEx.volN ν n c (ρ + 1))
     rw [_root_.GlobalTheory.RootEx.VolN.volN_eq]; infer_instance
   set emb := _root_.GlobalTheory.RootEx.embX (k := k) (n := n) c
@@ -269,7 +269,7 @@ theorem _root_.GlobalTheory.QuotIntFJ.quotIntFJ_unique : ∀ (k : Type) [Field k
   let m : GL n k × (U × (n → k)) → GL (n ⊕ Fin c) k := fun p => emb p.1 * ↑p.2.1 * col p.2.2
   have hm : Continuous m := by
     refine (_root_.GlobalTheory.RootEx.QuotStep.continuous_embX.comp continuous_fst).mul
-      (continuous_subtype_val.comp (continuous_fst.comp continuous_snd)) |>.mul
+      (continuous_subtypeVal.comp (continuous_fst.comp continuous_snd)) |>.mul
       ((_root_.GlobalTheory.RootEx.QuotStep.continuous_colE (ρ + 1)).comp
         (continuous_snd.comp continuous_snd))
   have hSB : ∀ φ ∈ _root_.GlobalTheory.SplitWeil.SB (GL (n ⊕ Fin c) k), Continuous φ ∧ HasCompactSupport φ :=
@@ -340,7 +340,7 @@ theorem _root_.GlobalTheory.QuotIntFJ.quotIntFJ_unique : ∀ (k : Type) [Field k
       rcases h01 (m p) with h | h <;> simp [h]
     rw [hΛP φ hφ, integral_congr_ae (Filter.Eventually.of_forall hre), integral_complex_ofReal]
     obtain ⟨D, hD, hDm⟩ := hcs φ hφ
-    have hpos := Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μP)
+    have hpos := Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μP)
       (x := (x, ⟨u, hu⟩, β)) (Complex.continuous_re.comp ((hSB φ hφ).1.comp hm))
       (HasCompactSupport.intro hD (fun p hp => by
         by_contra h
@@ -353,11 +353,11 @@ theorem _root_.GlobalTheory.QuotIntFJ.quotIntFJ_unique : ∀ (k : Type) [Field k
       mul_mem' := fun {a b} ha hb φ => by
         have e : (fun g ↦ φ (a * b * g)) = fun g ↦ (fun y ↦ φ (a * y)) (b * g) := by
           funext g; simp only [mul_assoc]
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [e, hb (fun y ↦ φ (a * y)), ha φ]
       one_mem' := fun φ => by simp only [one_mul]
       inv_mem' := fun {a} ha φ => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have := ha (fun y ↦ φ (a⁻¹ * y))
         simp only [inv_mul_cancel_left] at this
         exact this.symm }

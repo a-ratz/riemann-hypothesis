@@ -80,7 +80,7 @@ theorem ncard_primesOver_eq (E : Type) [Field E] [NumberField E] (l : ℕ) (hl :
     exact hl.ne_zero (by simpa using hmem)
 
 theorem conjF_ne_id (B : Base) : B.toPre.conjF ≠ AlgHom.id _ _ := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   intro h
   have h2 := B.sp.cm.deg2
   have hs : Function.Surjective (algebraMap B.host.F B.host.E) := fun a => by
@@ -134,8 +134,8 @@ theorem exists_innerProductSpace (V : Type) [AddCommGroup V] [Module ℂ V] [Fin
         · exact (hp x h).le
       add_left := ha, smul_left := hm
       definite := fun x h => by by_contra h'; have := hp x h'; rw [h] at this; simp at this }
-  letI n : NormedAddCommGroup V := c.toNormedAddCommGroup
-  letI i : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
+  let n : NormedAddCommGroup V := c.toNormedAddCommGroup
+  let i : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
   exact ⟨V, n, i, inferInstance, LinearEquiv.refl _ _, fun x y => rfl⟩
 
 theorem exists_sStage (B : Base) (C : Cols B) (W : RowsRest B C)

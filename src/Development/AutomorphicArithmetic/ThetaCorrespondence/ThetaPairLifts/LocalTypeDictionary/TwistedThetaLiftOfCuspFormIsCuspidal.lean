@@ -445,8 +445,8 @@ theorem dense_level : ∀ (D : D7) (G₀ : Type) [Group G₀] [Fintype G₀] (Pl
   have hθ : IsInfFam R.θ := hRB.inf
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨-, i2, i3, i4, i5, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D (G.V i (j + 1)).V (G.V i j).V
-  haveI : BorelSpace (WO (G.V i j).V (G.V i (j + 1)).V) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) :=
+  have : BorelSpace (WO (G.V i j).V (G.V i (j + 1)).V) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
   have e0 : coeL R.ψ _ _ (toB hψ Φ hΦ.1) = Φ := coe_toB hψ Φ hΦ.1
   have hF : toB hψ Φ hΦ.1 ∈ (thetaLevel R.ψ (G.V i j).V (G.V i (j + 1)).V U).comap (coeL R.ψ _ _) := by
@@ -462,7 +462,7 @@ theorem dense_level : ∀ (D : D7) (G₀ : Type) [Group G₀] [Fintype G₀] (Pl
     (ENNReal.ofReal_pos.2 hε)
   have e1 : ∀ F : BB R.ψ (G.V i j).V (G.V i (j + 1)).V,
       l2O μ 𝓕 (coeL R.ψ _ _ F) = ‖toL2 _ _ (μ.restrict 𝓕) F‖ₑ := fun F =>
-    (eLpNorm_congr_ae (BoundedContinuousFunction.coeFn_toLp 2 (μ.restrict 𝓕) ℂ F.1)).symm.trans (Lp.enorm_def _).symm
+    (eLpNorm_congr_ae (BoundedContinuousFunction.coeFn_toLp 2 (μ.restrict 𝓕) ℂ F.1)).symm.trans (Lp.eNorm_def _).symm
   have e2 : Φ - coeL R.ψ _ _ g = coeL R.ψ _ _ (toB hψ Φ hΦ.1 - g) := by rw [LinearMap.map_sub, e0]
   have hS : sobO R.ψ R.θ μ 𝓕 d (Φ - coeL R.ψ _ _ g) < ENNReal.ofReal ε := by
     refine lt_of_eq_of_lt ?_ h3
@@ -485,7 +485,7 @@ theorem dense_level : ∀ (D : D7) (G₀ : Type) [Group G₀] [Fintype G₀] (Pl
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [hP l, map_smul]
       rfl
-    rw [e3, sobO_smul, enorm_neg, enorm_one, one_mul]
+    rw [e3, sobO_smul, eNorm_neg, eNorm_one, one_mul]
     exact hS
 
 end GlobalTheory.ArrowFockDense

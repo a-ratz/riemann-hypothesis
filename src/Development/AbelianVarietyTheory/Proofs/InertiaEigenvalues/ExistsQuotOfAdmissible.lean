@@ -260,7 +260,7 @@ theorem exists_red {T : LocLat G Qp LL O} {U : ZMod n → Multiset ℤ} (h : Cry
   refine ⟨A, q, N, hm.trans ?_, ⟨hq, hg⟩, hK, hN⟩
   have : Submodule.IsFullLattice LL T.L.T :=
     { toIsLattice := Submodule.IsLattice.of_fg LL T.L.fg, span_eq_top := T.L.span }
-  rw [Module.finrank, Module.finrank, Submodule.IsLattice.rank' LL]
+  rw [Module.finrank, Module.finrank, Submodule.IsFullLattice.rank_eq LL]
 
 theorem exists_red_sum {T T' : LocLat G Qp LL O} {U U' : ZMod n → Multiset ℤ} (h : CrysWith PD emb T.ρ U)
     (h' : CrysWith PD emb T'.ρ U') {A A' : Ob k G} {q q' N N'} (hr : Red Γ RN (tw hθ T) A q N)

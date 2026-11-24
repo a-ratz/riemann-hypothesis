@@ -63,12 +63,12 @@ open GlobalTheory.HeightCounting.Up (PrN)
 namespace GlobalTheory.PlaceUnit
 
 theorem card_residueField_ne_zero {E : Type} [Field E] [NumberField E] (P : Pl E) : Nat.card (kP P) ≠ 0 := by
-  haveI : Finite (kP P) := P.asIdeal.finiteQuotientOfFreeOfNeBot P.ne_bot
+  have : Finite (kP P) := P.asIdeal.finiteQuotientOfFreeOfNeBot P.ne_bot
   exact Nat.card_pos.ne'
 
 theorem card_residueField_mem {E : Type} [Field E] [NumberField E] (P : Pl E) : ((Nat.card (kP P) : ℕ) : 𝓞 E) ∈ P.asIdeal := by
-  haveI : Finite (kP P) := P.asIdeal.finiteQuotientOfFreeOfNeBot P.ne_bot
-  letI : Fintype (kP P) := Fintype.ofFinite _
+  have : Finite (kP P) := P.asIdeal.finiteQuotientOfFreeOfNeBot P.ne_bot
+  let : Fintype (kP P) := Fintype.ofFinite _
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, Nat.card_eq_fintype_card]
   exact Nat.cast_card_eq_zero (kP P)
 
@@ -97,7 +97,7 @@ theorem not_mem_of_pD {D : D7} (i : D.ntw.Tw) {P : Pl D.host.E} (hP : P ∈ D.nt
 
 theorem isUnit_card_residueField_Oe {D : D7} (c : NChoice D) (w : D.what₂.places.Pl) {P : Pl D.host.E}
     (hl : ((D.ntw.l (c.twI w) : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal) : IsUnit ((Nat.card (kP P) : ℕ) : c.Oe w) := by
-  haveI := D.ntw.Ok_fin (c.twI w) (c.k' w)
+  have := D.ntw.Ok_fin (c.twI w) (c.k' w)
   have h : IsUnit ((Nat.card (kP P) : ℕ) : D.ntw.Ok (c.twI w) (c.k' w)) :=
     GlobalTheory.ResidueUnit.isUnit_of_coprime _ _ (GlobalTheory.ResidueUnit.card_residueField_coprime P _ (D.ntw.lPrime _).out hl)
       (GlobalTheory.ResidueUnit.natCast_mem_maximalIdeal_of_finite (O := D.ntw.O (c.twI w)) _ (D.ntw.O_l _))

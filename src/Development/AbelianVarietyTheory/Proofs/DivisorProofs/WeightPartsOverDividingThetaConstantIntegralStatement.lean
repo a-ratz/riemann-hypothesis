@@ -61,7 +61,7 @@ namespace GlobalTheory.Poinc.GSumInt
 theorem mem_O_of_pow_eq_one {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω)
     (hn : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z) (z : M.Z) {u : Ω} {k : ℕ} (hk : 0 < k) (hu : u ^ k = 1) :
     u ∈ M.O z := by
-  haveI := RatModel.isIntegrallyClosed_O hn z
+  have := RatModel.isIntegrallyClosed_O hn z
   have hint : IsIntegral (M.O z) u :=
     ⟨_, Polynomial.monic_X_pow_sub_C (1 : M.O z) hk.ne', by simp [hu]⟩
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
@@ -82,7 +82,7 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (
   obtain ⟨y, u, k, hk, hu, he⟩ := _root_.GlobalTheory.ZH.EvRoot.ev_eq_root_mul_th _ _ D.X.S D.X.ρ x j
   have hd := GlobalTheory.T.thetaSetup_dividingLabel_persists_deeperLevel g n F W Z i X₁ hg hn ho himm he8 hth hproj ε₁ hε D z₁ _ (base_mem X₁ z₁) z' hz'
   have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme D.X.M.Z := fun z => by
-    haveI := D.X.normal
+    have := D.X.normal
     exact ⟨D.X.normal.isDomain_stalk z, GlobalTheory.IsNormalScheme.isIntegrallyClosed_stalk z⟩
   rw [he, mul_div_assoc]
   exact mul_mem (mem_O_of_pow_eq_one D.X.M hN z' hk hu) (hd.2 y)

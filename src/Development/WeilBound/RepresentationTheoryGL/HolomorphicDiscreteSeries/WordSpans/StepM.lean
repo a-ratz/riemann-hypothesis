@@ -151,7 +151,7 @@ theorem gen_step (hS : IsSmMod ε σ S E) (hU : IsURepOn (UJset ε) σ) (g : UJ 
   rw [map_sum]
   exact Finset.sum_congr rfl fun d _ => map_smul _ _ _
 
-theorem continuous_um : Continuous fun g : UJ ε => um g := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_um : Continuous fun g : UJ ε => um g := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_um_inv : Continuous fun g : UJ ε => um g⁻¹ := continuous_um.comp continuous_inv
 
@@ -550,10 +550,10 @@ theorem phiEq : PhiEq := by
     intro g₀ hg₀
     have hx' : PI.PhMeasCore.SmoothOnH (Jm ε) (fun g => π g x) := (hS.mem x).mp hx
     obtain ⟨U, F, hUo, hg₀U, hFc, hFeq⟩ := hx' (emb e g₀) (hembJ g₀ hg₀)
-    letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedAddCommGroup
-    letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedSpace
-    letI : NormedAddCommGroup (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := Matrix.normedAddCommGroup
-    letI : NormedSpace ℝ (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := Matrix.normedSpace
+    let : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedAddCommGroup
+    let : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.normedSpace
+    let : NormedAddCommGroup (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := Matrix.normedAddCommGroup
+    let : NormedSpace ℝ (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := Matrix.normedSpace
     let L : Matrix (Fin n) (Fin n) ℂ →ₗ[ℝ] Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ :=
       { toFun := fun g => emb e g - emb e 0
         map_add' := by
@@ -585,7 +585,7 @@ theorem phiEq : PhiEq := by
   refine ⟨fun l => ?_, fun h => ?_⟩
   · show P (ap (E (e (Sum.inl l)) (zi e)) η) ∈ _
     unfold ap
-    rw [dif_pos hη]
+    rw [dite_eq_left hη]
     exact hsm _ (Subtype.coe_prop _)
   · have hgU : emb e (um h) ∈ UJset ε := (embU hF h).2
     have hgiU : emb e (um h⁻¹) ∈ UJset ε := (embU hF h⁻¹).2
@@ -606,11 +606,11 @@ theorem phiEq : PhiEq := by
     funext c0
     show P (ap (E (e (Sum.inl c0)) (zi e)) (π (emb e (um h)) η)) =
       ∑ d, (um h)⁻¹ d c0 • σ (um h) (P (ap (E (e (Sum.inl d)) (zi e)) η))
-    simp only [ap, dif_pos hη, dif_pos hπη]
+    simp only [ap, dite_eq_left hη, dite_eq_left hπη]
     have hc := hS.conj _ hgiU (e (Sum.inl c0)) (zi e) ⟨π (emb e (um h)) η, hπη⟩ ⟨η, hη⟩ (hcomp1 η).symm
     rw [hinv] at hc
     simp only [emb_row, mul_ite, mul_one, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, ite_true] at hc
+      Finset.mem_univ, ite_true, ite_true] at hc
     have hc2 := congrArg (fun y => P (π (emb e (um h)) y)) hc
 
     simp only [hcomp2, map_sum, map_smul] at hc2
@@ -898,14 +898,14 @@ theorem pj_words {N : ℕ} {ε : Fin (N + 2) → Bool} {ε' : Fin (N + 1) → Bo
     let X0 : Fin (N + 1) → S := fun a => E (ι a) z ζ'
     let x : Fin (N + 1) → S' := fun c => f (X0 c)
     have hco' : co x = phi E e P ζ := funext fun c => by
-      simp only [co, x, X0, phi, ap, dif_pos hζ]
+      simp only [co, x, X0, phi, ap, dite_eq_left hζ]
       rfl
     have hT : T l ζ' = Th (fun a b => E (ι a) (ι b)) w X0 l := by
       rw [Th_apply]
       simp only [T, LinearMap.sum_apply, LinearMap.smul_apply, Module.End.mul_apply]
       rfl
     have h1 : P (ap (d⁻¹ • T l) ζ) = d⁻¹ • (f (Th (fun a b => E (ι a) (ι b)) w X0 l) : H') := by
-      simp only [ap, dif_pos hζ, LinearMap.smul_apply, Submodule.coe_smul, map_smul]
+      simp only [ap, dite_eq_left hζ, LinearMap.smul_apply, Submodule.coe_smul, map_smul]
       rw [hT]
       rfl
     have h2 := (thMap S S' N (fun a b => E (ι a) (ι b)) E' f hf w X0 l).1
@@ -953,8 +953,8 @@ theorem stepM_of (hKey : KeyId) (hZ : Zero) (hPhi : PhiEq) (hIrr : Irr) :
                          have := pow_le_pow_left₀ hc1 this 3; linarith)
   obtain ⟨H, i1, i2, π, hπ⟩ := exists_ds ε lam (by omega) hG.hc gG
   obtain ⟨H', i3, i4, σ, hσ⟩ := exists_ds ε' mu hN1 hG.hc' gH
-  haveI : CompleteSpace H := hπ.1
-  haveI : CompleteSpace H' := hσ.1
+  have : CompleteSpace H := hπ.1
+  have : CompleteSpace H' := hσ.1
   obtain ⟨j0, hj0, hj0m⟩ := hOcc H H' π σ hπ hσ
   obtain ⟨P, hP, hP0⟩ := exists_P hG.fits hπ hσ hj0 hj0m
   obtain ⟨S, E, hS⟩ := hSmMod (N + 2) ε H π hπ.2.2.1

@@ -232,8 +232,8 @@ theorem hkPtC_values_lie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
         ∑ m, b i (jm m) (cr m * a) *
           valAt' (lift (𝟙 (Over.mk y.x)) ((cr m * a) ^ p)).left ((PPx y.x).U (fun _ => jm m)) (y.s.f (fun _ => jm m))) := by
   intro E _ _ _ H Dw l Xo c σ p y z C hk
-  letI := fieldCAt σ
-  haveI := algClosedCAt σ
+  let := fieldCAt σ
+  have := algClosedCAt σ
   obtain ⟨ψ, ψp, hiso, hL, htr⟩ := hk
   obtain ⟨β, s₁, n, cr, hβ, hs, hr, hv⟩ := isThetaTrace_iff.1 htr
   obtain ⟨β₀, hβ₀, hc₀⟩ := hs.exists_isRigIso
@@ -520,8 +520,8 @@ theorem hecke_lift_reps : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   obtain ⟨ψ, ψp, n, cr, b, hk, hL, hr, hb0, hbt, hbr, hbh, hbv⟩ :=
     GlobalTheory.HeckeLiftScalar.hkPtC_values_lie E H Dw l Xo c σ p (U.un k x) z C hz
   have hcard : n = Ideal.absNorm P ^ i := by
-    letI := fieldCAt σ
-    haveI := algClosedCAt σ
+    let := fieldCAt σ
+    have := algClosedCAt σ
     exact GlobalTheory.ThetaTrace.card_reps hA.2.2.1.pos hK hr
   subst hcard
   obtain ⟨hzx, hcfB, hbc⟩ := hb
@@ -602,7 +602,7 @@ theorem hecke_lift_reps : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
           have : Formalism.L2.PjFree.toC (cf τ m j) = 0 := by rw [h0j]; rfl
           simp [this, not_lt.2 hj.le, hj.ne']
       rw [Finset.sum_congr rfl (fun j _ => key j), Finset.sum_add_distrib, Finset.sum_ite_eq' Finset.univ m,
-        if_pos (Finset.mem_univ _), add_sub_cancel_right, ← Finset.sum_filter]
+        ite_eq_left (Finset.mem_univ _), add_sub_cancel_right, ← Finset.sum_filter]
       refine Submodule.sum_mem _ fun j hj => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, ?_, rfl⟩)
       simpa using hj
     · intro τ m

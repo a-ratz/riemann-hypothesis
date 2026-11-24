@@ -150,7 +150,7 @@ theorem exists_induced_locus {B : Type} [Field B] {b : Base l B} {s : S ⟶ Sp B
     · rw [Category.assoc, hp1, MonObj.comp_pow, ← hI', ev_pow_div I hN hMN]
   · rintro ⟨I, h1, h2, h3⟩
     obtain ⟨β', hβ'⟩ : ∃ β' : L →+* k, β'.comp (algebraMap B L) = β := by
-      letI : Algebra B k := β.toAlgebra
+      let : Algebra B k := β.toAlgebra
       exact ⟨(IsAlgClosed.lift : L →ₐ[B] k).toRingHom, (IsAlgClosed.lift : L →ₐ[B] k).comp_algebraMap⟩
     obtain ⟨I', g1, g2, g3⟩ := exists_adjust hν l₂ N (hM l₂ N) I hN hAN (hprim β')
       (Units.ext ((hval β' hβ').trans h1.symm))

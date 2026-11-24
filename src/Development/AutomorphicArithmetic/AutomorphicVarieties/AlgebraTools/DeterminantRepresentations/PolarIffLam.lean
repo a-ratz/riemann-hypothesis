@@ -90,14 +90,14 @@ theorem UpperTheory.V.AlgebraTools.Det.starDet :
     rfl
   refine ⟨{ D := E, nat := ?_, homog := ?_ }, fun B _ _ _ _ y => hE B y⟩
   · intro B B' _ _ _ _ f x
-    letI : Algebra O B := ((algebraMap R B).comp (algebraMap O R)).toAlgebra
-    haveI : IsScalarTower O R B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-    letI : Algebra O B' := ((algebraMap R B').comp (algebraMap O R)).toAlgebra
-    haveI : IsScalarTower O R B' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra O B := ((algebraMap R B).comp (algebraMap O R)).toAlgebra
+    have : IsScalarTower O R B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra O B' := ((algebraMap R B').comp (algebraMap O R)).toAlgebra
+    have : IsScalarTower O R B' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     rw [hE B', hE B, star_mapRingHom_algHom_eq F O R n B B' f x, D.nat]
   · intro B _ _ b x
-    letI : Algebra O B := ((algebraMap R B).comp (algebraMap O R)).toAlgebra
-    haveI : IsScalarTower O R B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra O B := ((algebraMap R B).comp (algebraMap O R)).toAlgebra
+    have : IsScalarTower O R B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have hsm : F.star O B n (b • x) = b • F.star O B n x := by simp [GFrame.star, map_smul]
     rw [hE B, hE B, hsm, D.homog]
 end -- clump:auto

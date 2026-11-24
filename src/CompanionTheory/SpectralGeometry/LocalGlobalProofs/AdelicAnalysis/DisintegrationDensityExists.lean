@@ -67,7 +67,7 @@ theorem measure_eq_of_lintegral_eq {V : Type} [TopologicalSpace V] [LocallyCompa
     have hχm : Measurable fun v => ENNReal.ofReal (χ v) :=
       ENNReal.measurable_ofReal.comp χ.continuous.measurable
     have hint := (h χ χ.continuous hc hs (fun v => (h01 v).1)).1
-    haveI : IsFiniteMeasure (m.withDensity fun v => ENNReal.ofReal (χ v)) :=
+    have : IsFiniteMeasure (m.withDensity fun v => ENNReal.ofReal (χ v)) :=
       isFiniteMeasure_withDensity_ofReal hint.2
     have key : (m.withDensity fun v => ENNReal.ofReal (χ v)) =
         m'.withDensity fun v => ENNReal.ofReal (χ v) := by

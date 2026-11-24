@@ -83,7 +83,7 @@ private theorem cls_frob {A : ValuationSubring Ω} {q N : ℕ} [NeZero N] (hq : 
   · rw [← pow_mul, mul_comm, pow_mul, hζ, one_pow]
 private theorem cyc_frob {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {q : ℕ} (hp : q.Prime) (hq : A.valuation (q : Ω) < 1)
     (h : q.Coprime l) {t : G ℚ Ω} (ht : IsFrob (F := ℚ) A q t) : ((cycBar ℚ Ω l t : (Qbar l)ˣ) : Qbar l) = q := by
-  haveI : Fact q.Prime := ⟨hp⟩
+  have : Fact q.Prime := ⟨hp⟩
   obtain ⟨v, hv⟩ := (places ℚ Ω q A).1 fun hA => ((places ℚ Ω q A).2.1 hA).2 hq
   have hl : ((l : ℕ) : 𝓞 ℚ) ∉ v.asIdeal := fun hm =>
     not_lt_of_coprime A hq h (((places ℚ Ω l A).2.2.1 v hv).2 hm)
@@ -93,7 +93,7 @@ private theorem cyc_frob {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {q :
   rw [e, map_natCast]
 private theorem continuous_cyc (l : ℕ) [Fact l.Prime] :
     Continuous fun t : G ℚ Ω => ((cycBar ℚ Ω l t : (Qbar l)ˣ) : Qbar l) :=
-  ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val).comp
+  ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal).comp
     ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l))
 variable (K : Type) [Field K] [NumberField K] [Algebra K Ω]
 omit [IsAlgClosure ℚ Ω] in
@@ -123,11 +123,11 @@ private theorem exists_chi [IsAlgClosure K Ω] (hK : Module.finrank ℚ K = 2) (
   let δ : G ℚ Ω →* ℂˣ := MonoidHom.mk' (fun s => if s ∈ galOf ℚ K Ω then 1 else -1) fun a b => by
     by_cases ha : a ∈ galOf ℚ K Ω <;> by_cases hb : b ∈ galOf ℚ K Ω <;>
       simp [Subgroup.mul_mem_iff_of_index_two hi, ha, hb]
-  have hδ : (Chr.cls ℚ Ω N).ker ≤ δ.ker := fun s hs => if_pos (hker hs)
+  have hδ : (Chr.cls ℚ Ω N).ker ≤ δ.ker := fun s hs => ite_eq_left (hker hs)
   have hs := (Chr.clsOnto Ω N).1
   have e : ∀ t, (Chr.cls ℚ Ω N).liftOfSurjective hs ⟨δ, hδ⟩ (Chr.cls ℚ Ω N t) = δ t := fun t =>
     MonoidHom.liftOfRightInverse_comp_apply _ _ _ _ t
-  refine ⟨hker, (Chr.cls ℚ Ω N).liftOfSurjective hs ⟨δ, hδ⟩, MonoidHom.ext fun u => ?_, fun t ht => (e t).trans (if_neg ht)⟩
+  refine ⟨hker, (Chr.cls ℚ Ω N).liftOfSurjective hs ⟨δ, hδ⟩, MonoidHom.ext fun u => ?_, fun t ht => (e t).trans (ite_eq_right ht)⟩
   obtain ⟨t, rfl⟩ := hs u
   rw [MonoidHom.pow_apply, e]
   change (if t ∈ galOf ℚ K Ω then (1 : ℂˣ) else -1) ^ 2 = 1
@@ -161,14 +161,14 @@ open UpperTheory.V.Sd.Tw in
 theorem UpperTheory.V.Sd.twist_of_printed_results :
     _root_.UpperTheory.V.Af.Hypotheses' → UpperTheory.V.Sd.Twist := by
   intro hP K Ω _ _ _ _ _ _ _ hK l hl hl2 hld ι c hc
-  haveI : IsAlgClosure K Ω :=
+  have : IsAlgClosure K Ω :=
     ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   set N := (discr K).natAbs with hN
   have hN3 : 3 ≤ N := by
     have := abs_discr_gt_two (K := K) (by omega)
     rw [Int.abs_eq_natAbs] at this
     omega
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   obtain ⟨hker, χ, hχ2, hχ⟩ := exists_chi (Ω := Ω) K hK N hN
   have hχ1 : χ (-1) = -1 := by
     rw [← (Chr.clsFacts ℚ Ω N).2.2.2.1 c hc]

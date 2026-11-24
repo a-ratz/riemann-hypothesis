@@ -52,8 +52,8 @@ private theorem opOf_finset_sum {Γ V ι : Type} [Group Γ] [AddCommGroup V] [Mo
 
 private theorem finite_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {A B : Subgroup G}
     (hA : IsCompact (A : Set G)) (hB : IsOpen (B : Set G)) : Finite (A ⧸ B.subgroupOf A) := by
-  haveI : CompactSpace A := isCompact_iff_compactSpace.1 hA
-  have ho : IsOpen ((B.subgroupOf A : Subgroup A) : Set A) := hB.preimage continuous_subtype_val
+  have : CompactSpace A := isCompact_iff_compactSpace.1 hA
+  have ho : IsOpen ((B.subgroupOf A : Subgroup A) : Set A) := hB.preimage continuous_subtypeVal
   exact Subgroup.quotient_finite_of_isOpen _ ho
 
 private theorem bound_arith {M s ε c t : ℝ} (hM : 0 ≤ M) (hs : 0 ≤ s) (hε : 0 < ε) (hc : 0 ≤ c) (ht : t ≤ ε / (M * s + 1)) :
@@ -77,8 +77,8 @@ theorem UpperTheory.Gal.Gen.count_pf :
   obtain ⟨h, h1, h2, h3, h4⟩ := hB _ hδ
   obtain ⟨n₀, hn₀⟩ := hSep E a w₀ hs K hK J hJ S h.support h1 h2
   refine ⟨n₀, fun n hn => ?_⟩
-  haveI : Finite (J 0 ⧸ (J n).subgroupOf (J 0)) := finite_quot (hJ.compact 0) (hJ.isOpen n)
-  letI : Fintype (J 0 ⧸ (J n).subgroupOf (J 0)) := Fintype.ofFinite _
+  have : Finite (J 0 ⧸ (J n).subgroupOf (J 0)) := finite_quot (hJ.compact 0) (hJ.isOpen n)
+  let : Fintype (J 0 ⧸ (J n).subgroupOf (J 0)) := Fintype.ofFinite _
   obtain ⟨r, hr, hcov⟩ := hS n
   have hsep : Separates (lev K w₀ (J n)) (fun y : S × (J 0 ⧸ (J n).subgroupOf (J 0)) => y.1.1 * r y.2) h.support :=
     fun y g hg g' hg' γ hγ x hx c hc e =>

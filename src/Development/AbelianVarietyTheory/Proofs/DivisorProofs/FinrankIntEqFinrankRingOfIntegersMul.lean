@@ -57,10 +57,10 @@ theorem finrank_int_eq_finrank_ringOfIntegers_mul : ∀ (E : Type) [Field E] [Nu
   let g : N →ₗ[𝓞 E] E ⊗[𝓞 E] N := TensorProduct.mk (𝓞 E) E N 1
   have hb : IsBaseChange E g := TensorProduct.isBaseChange (𝓞 E) N E
   have h1 : Module.finrank E (E ⊗[𝓞 E] N) = Module.finrank (𝓞 E) N := hb.finrank_eq
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) E := inferInstance
-  haveI h2 : IsLocalizedModule (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) g :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) E := inferInstance
+  have h2 : IsLocalizedModule (Algebra.algebraMapSubmonoid (𝓞 E) ℤ⁰) g :=
     (isLocalizedModule_iff_isBaseChange _ E g).2 hb
-  haveI h3 : IsLocalizedModule ℤ⁰ (g.restrictScalars ℤ) :=
+  have h3 : IsLocalizedModule ℤ⁰ (g.restrictScalars ℤ) :=
     IsLocalizedModule.restrictScalars ℤ⁰ g
   have h4 : Module.finrank ℤ (E ⊗[𝓞 E] N) = Module.finrank ℤ N :=
     IsLocalizedModule.finrank_eq ℤ⁰ (g.restrictScalars ℤ) le_rfl

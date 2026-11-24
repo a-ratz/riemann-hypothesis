@@ -146,15 +146,15 @@ theorem iop_eq_sumOp : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.host.K)
       refine huniq _ _ ?_
       have := A.sub_mem hex hq
       rwa [sub_sub_sub_cancel_left] at this
-  haveI : Finite (B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup) :=
+  have : Finite (B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup) :=
     Nat.finite_of_card_ne_zero hidx
-  haveI : Finite (La₂ ⧸ La₁.addSubgroupOf La₂) := by
+  have : Finite (La₂ ⧸ La₁.addSubgroupOf La₂) := by
     refine Finite.of_injective (fun q => (QuotientAddGroup.mk ⟨_, hzB q⟩ :
       B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup)) fun q q' h => ?_
     rw [QuotientAddGroup.eq, AddSubgroup.mem_addSubgroupOf] at h
     refine (huniq q' q ?_).symm
     simpa [neg_add_eq_sub] using h
-  haveI := Fintype.ofFinite (La₂ ⧸ La₁.addSubgroupOf La₂)
+  have := Fintype.ofFinite (La₂ ⧸ La₁.addSubgroupOf La₂)
   obtain ⟨h1, h2⟩ := (GlobalTheory.FinWeil.sumOp_transversal hM.1 A B hSD).1 F hF _ (fun q => (z q).map (inc D)) hzB htr
   rw [h1, h2]
   funext v

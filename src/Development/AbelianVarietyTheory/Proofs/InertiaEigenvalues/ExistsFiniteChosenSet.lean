@@ -188,13 +188,13 @@ theorem wild_of_pow {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra 
 
   have hxA : x ∈ A := (A.valuation_le_one_iff x).1 hx1.le
   set xa : A := ⟨x, hxA⟩
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hlm : ((l : A) : Ω) = (l : Ω) := by simp
   have hl0 : ((l : ℕ) : IsLocalRing.ResidueField A) = 0 := by
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff,
       ValuationSubring.valuation_lt_one_iff, hlm]
     exact hA
-  haveI : CharP (IsLocalRing.ResidueField A) l := (CharP.charP_iff_prime_eq_zero hl).2 hl0
+  have : CharP (IsLocalRing.ResidueField A) l := (CharP.charP_iff_prime_eq_zero hl).2 hl0
   have h1 : IsLocalRing.residue A (xa ^ (l ^ n) - 1) = 0 := by
     rw [IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff]
     simpa [xa] using hxN
@@ -269,7 +269,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (k : Fin 2), D.nd.l i = D.host.g k �
           (1 + L ^ D.nd.s0 i)‖ ≤ ((D.nd.l i : ℝ)) ^ (-((D.nd.s0 i + 1 : ℕ) : ℤ))
       rw [PadicInt.norm_le_pow_iff_mem_span_pow, map_pow, Units.val_pow_eq_pow_val, hσc]
       exact one_add_pow_sub_mem hs (ex_mod hl k)
-    rw [Set.mem_setOf_eq, PadicInt.norm_le_pow_iff_mem_span_pow, Ideal.mem_span_singleton'] at hg
+    rw [Set.mem_ofPred_eq, PadicInt.norm_le_pow_iff_mem_span_pow, Ideal.mem_span_singleton'] at hg
     obtain ⟨t, ht⟩ := hg
     have hu : IsUnit (1 + L * t) := by
       rw [← sub_neg_eq_add]

@@ -78,7 +78,7 @@ theorem eq_zero_of_tmul_one (v : V) (hv : v ⊗ₜ[Qp] (1 : BdR) = 0) : v = 0 :=
 
 theorem finrank_H0V_le [FiniteDimensional LL ↥(DdR PD ρ)] :
     finrank LL ↥(H0V ρ) ≤ finrank LL ↥(DdR PD ρ ⊓ FilV PD (LL := LL) (V := V) 0) := by
-  haveI : FiniteDimensional LL ↥(DdR PD ρ ⊓ FilV PD (LL := LL) (V := V) 0) :=
+  have : FiniteDimensional LL ↥(DdR PD ρ ⊓ FilV PD (LL := LL) (V := V) 0) :=
     Submodule.finiteDimensional_of_le inf_le_left
   let j : V →ₗ[LL] V ⊗[Qp] BdR := (AlgebraTensorModule.mk Qp LL V BdR).flip 1
   have hj : ∀ v, j v = v ⊗ₜ[Qp] (1 : BdR) := fun v => rfl
@@ -109,7 +109,7 @@ theorem h0_add_le [FiniteDimensional LL V] (hK : finrank Qp K = 1) (h : IsDR PD 
   rcases Nat.eq_zero_or_pos (finrank LL V) with h0 | h0
   · have := Submodule.finrank_le (H0V ρ)
     omega
-  · haveI : FiniteDimensional LL ↥(DdR PD ρ) := Module.finite_of_finrank_pos (by omega)
+  · have : FiniteDimensional LL ↥(DdR PD ρ) := Module.finite_of_finrank_pos (by omega)
     have := finrank_H0V_le PD ρ
     omega
 

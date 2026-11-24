@@ -63,7 +63,7 @@ theorem eq_of_regAt_eq_of_coordTie :
   intro X Ω _ ξ o _ _ κ x h p q e
   obtain ⟨c, hc⟩ := h.cover p
   have hq : InChart ξ x c q := ⟨hc.1, fun c' => e ▸ hc.2 c'⟩
-  haveI hloc : IsLocalRing (regAt ξ p) :=
+  have hloc : IsLocalRing (regAt ξ p) :=
     (regAt_isLocalRing_isFractionRing_stalk X Ω ξ h.gen p).1
   have hmem : ∀ s : Algebra.adjoin o (Set.range fun j => x j / x c), (s : Ω) ∈ regAt ξ p :=
     fun s => (h.ring c hc.1 s).1 s.2 p hc

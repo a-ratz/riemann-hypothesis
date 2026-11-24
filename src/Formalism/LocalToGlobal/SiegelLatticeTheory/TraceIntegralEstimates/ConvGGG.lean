@@ -79,8 +79,8 @@ theorem measurable_PhiGG {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w 
   have h1 : Continuous (fun p : G × G => ⟪σ p.1 w, σ γ (σ p.2 w)⟫_ℂ) :=
     Continuous.inner (𝕜 := ℂ) ((hσ.2.2.2 w).comp continuous_fst)
       ((σ γ).continuous.comp ((hσ.2.2.2 w).comp continuous_snd))
-  exact ((h1.enorm.measurable).mul ((hW.comp continuous_fst).enorm.measurable)).mul
-    ((hW'.comp continuous_snd).enorm.measurable)
+  exact ((h1.eNorm.measurable).mul ((hW.comp continuous_fst).eNorm.measurable)).mul
+    ((hW'.comp continuous_snd).eNorm.measurable)
 
 theorem quad_eq_GG {μ μS ν μS' ν' : Measure G} [SFinite μS] [SFinite ν] [SFinite μS'] [SFinite ν'] [SFinite μ]
     {S S' : Set G} {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w : HH) {W : G → V} {W' : G → V'}
@@ -100,9 +100,9 @@ theorem quad_eq_GG {μ μS ν μS' ν' : Measure G} [SFinite μS] [SFinite ν] [
     unfold PhiGG
     rw [coef_shift hσ w γ z s z' s']
     have e1 : ‖W (s⁻¹ * z)‖ₑ = ‖W z‖ₑ := by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, hWS _ (hiS s hs)]
+      rw [← ofReal_norm, ← ofReal_norm, hWS _ (hiS s hs)]
     have e2 : ‖W' (s'⁻¹ * z')‖ₑ = ‖W' z'‖ₑ := by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, hWS' _ (hiS' s' hs')]
+      rw [← ofReal_norm, ← ofReal_norm, hWS' _ (hiS' s' hs')]
     rw [e1, e2]
   have haeS : ∀ᵐ s ∂μS, s ∈ S := by rw [ae_iff]; exact h0
   have haeS' : ∀ᵐ s ∂μS', s ∈ S' := by rw [ae_iff]; exact h0'
@@ -147,7 +147,7 @@ theorem triple_lintegral_eq {μ μS ν : Measure G} [SFinite μS] [SFinite ν] {
   set H : G → ℝ≥0∞ := fun y => ‖⟪σ z w, σ y w⟫_ℂ‖ₑ * ‖W y‖ₑ with hHdef
   have hHm : Measurable H := by
     have h1 : Continuous (fun y => ⟪σ z w, σ y w⟫_ℂ) := Continuous.inner (𝕜 := ℂ) continuous_const (hσ.2.2.2 w)
-    exact (h1.enorm.measurable).mul hWc.enorm.measurable
+    exact (h1.eNorm.measurable).mul hWc.eNorm.measurable
   have hae : ∀ᵐ s ∂μS, s ∈ S := by rw [ae_iff]; exact h0
   have hin : ∀ z', ∫⁻ s, ‖⟪σ z w, σ s (σ z' w)⟫_ℂ‖ₑ * ‖W z‖ₑ * ‖W z'‖ₑ ∂μS =
       ‖W z‖ₑ * ∫⁻ s, H (s * z') ∂μS := by
@@ -158,7 +158,7 @@ theorem triple_lintegral_eq {μ μS ν : Measure G} [SFinite μS] [SFinite ν] {
     simp only [hHdef]
     have e1 : σ s (σ z' w) = σ (s * z') w := (rep_mul_apply hσ s z' w)
     have e2 : ‖W z'‖ₑ = ‖W (s * z')‖ₑ := by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, hWS s hs z']
+      rw [← ofReal_norm, ← ofReal_norm, hWS s hs z']
     rw [e1, e2]
     ring
   simp only [hin]

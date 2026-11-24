@@ -334,9 +334,9 @@ theorem diff_est {α h : G → ℂ} (hα : Integrable α μ) (hh : BC h) {B : Se
   rw [e1, ← integral_sub (integrable_mul_bc (hα.comp_mul_left _) hc' fun _ => hM _)
     (integrable_mul_bc hα hc' fun _ => hM _), ← lintegral_indicator hB.measurableSet,
     ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
-  refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun y => ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun y => ?_)
   by_cases hy : y ∈ B
-  · rw [indicator_of_mem hy, ← sub_mul, enorm_mul]
+  · rw [indicator_of_mem hy, ← sub_mul, eNorm_mul]
     gcongr
     rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hu y).1
@@ -362,8 +362,8 @@ theorem far_from_cusp_estimate : FarEst := by
   have h2 : ∫ y, α y * h (x * y) ∂μ = -∫ m, (∫ y, α y * h (m * x * y) ∂μ - ∫ y, α y * h (x * y) ∂μ) ∂ν := by
     rw [integral_sub hI.integral_prod_left (integrable_const _), h1]
     simp
-  rw [h2, enorm_neg]
-  refine (enorm_integral_le_lintegral_enorm _).trans ((lintegral_mono_ae ?_).trans
+  rw [h2, eNorm_neg]
+  refine (eNorm_integral_le_lintegral_eNorm _).trans ((lintegral_mono_ae ?_).trans
     (le_of_eq (by rw [lintegral_const, measure_univ, mul_one])))
   filter_upwards [hνU] with m hm
   have := diff_est hα hh.1 hB (hU _ hm) x
@@ -393,7 +393,7 @@ theorem near_cusp_estimate : NearEst := by
     rw [← (measurePreserving_mul_left μ p).setLIntegral_comp_preimage_emb (measurableEmbedding_mulLeft p)
       (fun y => ‖h y‖ₑ) (C * B)]
     exact lintegral_mono_set fun y hy => ⟨p, htC p hp, y, hy, rfl⟩
-  have h4 := hL (fun y => ‖h y‖ₑ) hh.1.measurable.enorm fun g hg y => by simp only [hΓ g hg]
+  have h4 := hL (fun y => ‖h y‖ₑ) hh.1.measurable.eNorm fun g hg y => by simp only [hΓ g hg]
   calc _ ≤ (ENNReal.ofReal d * ∫⁻ y in C * B, ‖h y‖ₑ ∂μ) ^ 2 := by gcongr; exact h1.trans (by gcongr)
     _ ≤ ENNReal.ofReal d ^ 2 * (M * sq μ D h) := by rw [mul_pow]; gcongr; exact h4
     _ ≤ _ := by rw [← mul_assoc]; gcongr
@@ -424,15 +424,15 @@ theorem discrete_series_bound_of_inputs : Core := by
   obtain ⟨hZm, hZ⟩ := near_cusp_measure_estimate G μ Γ D hD C hC
   set Z := {x | ∃ γ ∈ Γ, γ * x ∈ C}
   set S := sq μ D h with hS
-  have hf : Measurable fun y => ‖h y‖ₑ := hhc.measurable.enorm
+  have hf : Measurable fun y => ‖h y‖ₑ := hhc.measurable.eNorm
   have hfΓ : LInv Γ fun y => ‖h y‖ₑ := fun g hg y => by simp only [hh.2.1 g hg]
   have hm2 : Measurable fun p : G × G => ‖h (p.1 * p.2)‖ₑ := hf.comp measurable_mul
   let θ₁ : G → ℝ≥0∞ := fun y => ‖φ y - α y‖ₑ
   let θ₂ : G → ℝ≥0∞ := B.indicator fun _ => ENNReal.ofReal e
-  have hθ₁ : AEMeasurable θ₁ μ := (hφ.sub hα).aestronglyMeasurable.enorm
+  have hθ₁ : AEMeasurable θ₁ μ := (hφ.sub hα).aestronglyMeasurable.eNorm
   have hθ₂ : Measurable θ₂ := measurable_const.indicator hB.measurableSet
   have i₁ : ∫⁻ y, θ₁ y ∂μ ≤ 8⁻¹ := by
-    refine (ofReal_integral_norm_eq_lintegral_enorm (hφ.sub hα)).symm.trans_le ?_
+    refine (ofReal_integral_norm_eq_lintegral_eNorm (hφ.sub hα)).symm.trans_le ?_
     refine (ENNReal.ofReal_le_ofReal hap).trans (le_of_eq ?_)
     rw [ENNReal.ofReal_inv_of_pos (by norm_num)]; simp
   have i₂ : ∫⁻ y, θ₂ y ∂μ ≤ 8⁻¹ := by
@@ -452,7 +452,7 @@ theorem discrete_series_bound_of_inputs : Core := by
       congr 1; funext y; ring
     have b1 : ‖∫ y, (φ y - α y) * h (x * y) ∂μ‖ₑ ^ 2 ≤ r₁ x := by
       refine pow_le_pow_left' ?_ 2
-      exact (enorm_integral_le_lintegral_enorm _).trans (le_of_eq (by simp only [enorm_mul, θ₁]))
+      exact (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq (by simp only [eNorm_mul, θ₁]))
     have b2 : ‖∫ y, α y * h (x * y) ∂μ‖ₑ ^ 2 ≤ Z.indicator (fun _ => ENNReal.ofReal e₂ * S) x + r₂ x := by
       rcases hCx x with hx | hx
       · rw [indicator_of_mem (show x ∈ Z from hx)]
@@ -467,7 +467,7 @@ theorem discrete_series_bound_of_inputs : Core := by
         congr 1; funext y
         by_cases hy : y ∈ B <;> simp [θ₂, hy]
     rw [e1]
-    refine (pow_le_pow_left' (enorm_add_le _ _) 2).trans ((add_sq_le _ _).trans ?_)
+    refine (pow_le_pow_left' (eNorm_add_le _ _) 2).trans ((add_sq_le _ _).trans ?_)
     gcongr
   have tot : S ≤ 2 * (8⁻¹ * S + 8⁻¹ ^ 2 * S + 8⁻¹ ^ 2 * S) := by
     refine (lintegral_mono pt).trans ?_
@@ -524,10 +524,10 @@ theorem finite_dimensional_from_linear_forms : FiniteDimensionalFromLinearForms 
         exact integral_const_mul _ _ }
   have hker : LinearMap.ker l ≤ LinearMap.ker r := fun h hh => by
     have hfin : sq μ D h.1 ≠ ∞ := by
-      have := (lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top two_ne_zero (by simp) h.2.2).ne
+      have := (lintegral_rpow_eNorm_lt_top_of_eLpNorm_lt_top two_ne_zero (by simp) h.2.2).ne
       simpa [sq] using this
     have h0 := hdet h.1 h.2.1 hfin fun i => congrFun hh i
-    rw [sq, lintegral_eq_zero_iff (h.2.1.1.1.measurable.enorm.pow_const 2)] at h0
+    rw [sq, lintegral_eq_zero_iff (h.2.1.1.1.measurable.eNorm.pow_const 2)] at h0
     refine (Lp.eq_zero_iff_ae_eq_zero).2 (h.2.2.coeFn_toLp.trans ?_)
     filter_upwards [h0] with x hx
     simpa using hx
@@ -536,7 +536,7 @@ theorem finite_dimensional_from_linear_forms : FiniteDimensionalFromLinearForms 
     rw [← Submodule.range_liftQ _ r hker]
     infer_instance
   refine Submodule.finiteDimensional_of_le (S₂ := LinearMap.range r) fun F hF => ?_
-  refine (LinearMap.range r).closed_of_finiteDimensional.closure_subset_iff.2 ?_ (hS F hF)
+  refine (LinearMap.range r).isClosed_of_finiteDimensional.closure_subset_iff.2 ?_ (hS F hF)
   rintro F' ⟨h, hh, hae⟩
   exact ⟨⟨h, hh, (memLp_congr_ae hae).1 (Lp.memLp F')⟩, Lp.ext ((MemLp.coeFn_toLp
     ((memLp_congr_ae hae).1 (Lp.memLp F'))).trans hae.symm)⟩
@@ -834,10 +834,10 @@ theorem averaging_of_fundamental_domain : FundIn → Avg := by
   have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   let Λ' : Subgroup N := Λ.subgroupOf N
   have hd' : Disc Λ' := fun C hC =>
-    ((hd _ (hC.image continuous_subtype_val)).preimage Subtype.val_injective.injOn).subset
+    ((hd _ (hC.image continuous_subtypeVal)).preimage Subtype.val_injective.injOn).subset
       fun x hx => ⟨mem_image_of_mem _ hx.1, hx.2⟩
   have := hd'.countable
-  obtain ⟨D, hDm, hDV, hD⟩ := hF N Λ' hd' (Subtype.val ⁻¹' V) (hV.preimage continuous_subtype_val) fun m => by
+  obtain ⟨D, hDm, hDV, hD⟩ := hF N Λ' hd' (Subtype.val ⁻¹' V) (hV.preimage continuous_subtypeVal) fun m => by
     obtain ⟨l, hl, h⟩ := hcov m m.2
     exact ⟨⟨l, hle hl⟩, hl, h⟩
   let μ : Measure N := Measure.haar
@@ -851,14 +851,14 @@ theorem averaging_of_fundamental_domain : FundIn → Avg := by
   have hR : ∀ g : N, μ.map (fun x => x * g) = μ := fun g => by
     have h1 := Measure.isMulLeftInvariant_eq_smul (μ.map fun x => x * g) μ
     have h2 := congrArg (fun m : Measure N => m D) h1
-    simp only [Measure.map_apply (measurable_mul_const g) hDm, Measure.smul_apply] at h2
+    simp only [Measure.map_apply (measurable_mul_const g) hDm, smul_apply] at h2
     rw [(hFD g).measure_eq hFD1, ENNReal.smul_def, smul_eq_mul] at h2
     have h3 : ((μ.map fun x => x * g).haarScalarFactor μ : ℝ≥0∞) = 1 :=
       (ENNReal.mul_left_inj hpos hfin).1 (h2.symm.trans (one_mul _).symm)
     rw [h1, show (μ.map fun x => x * g).haarScalarFactor μ = 1 by exact_mod_cast h3, one_smul]
-  have hE : MeasurableEmbedding (Subtype.val : N → G) := MeasurableEmbedding.subtype_coe hN.measurableSet
+  have hE : MeasurableEmbedding (Subtype.val : N → G) := MeasurableEmbedding.subtypeVal hN.measurableSet
   have hP : IsProbabilityMeasure ((μ D)⁻¹ • μ.restrict D) :=
-    ⟨by rw [Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]⟩
+    ⟨by rw [smul_apply, Measure.restrict_apply_univ, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]⟩
   refine ⟨((μ D)⁻¹ • μ.restrict D).map Subtype.val, (Measure.isProbabilityMeasure_map_iff hE.measurable.aemeasurable).2 hP,
     hE.ae_map_iff.2 (Measure.ae_smul_measure ((ae_restrict_mem hDm).mono fun x hx => hDV hx) _),
     fun u _ hu m₀ hm₀ y => ?_⟩
@@ -972,8 +972,8 @@ theorem unipotent_radical_subgroup : NWSub := by
       ext g; simp [NWset, Lowers]
     rw [this]
     exact (isClosed_biInter fun w _ => isClosed_eq (hc w) continuous_const).inter
-      ((isClosed_biInter fun z _ => W.closed_of_finiteDimensional.preimage (hc z)).inter
-        (isClosed_iInter fun z => (perp (Jm ε) W).closed_of_finiteDimensional.preimage (hc z)))
+      ((isClosed_biInter fun z _ => W.isClosed_of_finiteDimensional.preimage (hc z)).inter
+        (isClosed_iInter fun z => (perp (Jm ε) W).isClosed_of_finiteDimensional.preimage (hc z)))
   · exact ⟨{ carrier := NWset ε W
              mul_mem' := fun {a b} ha hb => lowers_iff.2 (by
                simpa [uMat_mul] using (lowers_iff.1 ha).mul hW (lowers_iff.1 hb))

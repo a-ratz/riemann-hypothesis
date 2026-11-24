@@ -54,7 +54,7 @@ theorem exists_ext {A B M N R T ι : Type} [CommRing A] [CommRing B] [CommRing R
     (v : M →+ (T → ι → R)) (hv : ∀ (w : A) (x : M) τ i, v (w • x) τ i = J τ (f w) * v x τ i) :
     ∃ lam : N →+ (T → ι → R), (∀ (r : B) (y : N) τ i, lam (r • y) τ i = J τ r * lam y τ i) ∧
       ∀ x, lam (u x) = v x := by
-  letI : Module B (T → ι → R) := Module.compHom (T → ι → R)
+  let : Module B (T → ι → R) := Module.compHom (T → ι → R)
     (RingHom.pi fun τ => RingHom.pi fun _ : ι => J τ : B →+* (T → ι → R))
   let v' : M →ₛₗ[f] (T → ι → R) :=
     { toFun := v

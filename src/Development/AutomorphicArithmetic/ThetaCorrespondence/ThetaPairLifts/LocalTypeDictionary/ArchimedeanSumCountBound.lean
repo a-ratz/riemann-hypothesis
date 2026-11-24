@@ -90,8 +90,8 @@ theorem finrank_le_dim (M : Submodule (𝓞 K) V) : Module.finrank (𝓞 K) M �
 theorem card_quot_le_of_fg (M : Submodule (𝓞 K) V) [Module.Finite (𝓞 K) M] {I : Ideal (𝓞 K)} (hI : I ≠ ⊥) :
     Finite (M ⧸ (I • ⊤ : Submodule (𝓞 K) M)) ∧
       Nat.card (M ⧸ (I • ⊤ : Submodule (𝓞 K) M)) ≤ Ideal.absNorm I ^ Module.finrank K V := by
-  haveI : Finite (𝓞 K ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  haveI : Module.Flat (𝓞 K) M := by
+  have : Finite (𝓞 K ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have : Module.Flat (𝓞 K) M := by
     rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
     rintro x ⟨⟨a, ha⟩, hx⟩
     have h1 : (a : K) • (x : V) = 0 := by
@@ -113,13 +113,13 @@ theorem card_quot_le (M : Submodule (𝓞 K) V) {I : Ideal (𝓞 K)} (hI : I ≠
     Nat.card (M ⧸ (I • ⊤ : Submodule (𝓞 K) M)) ≤ Ideal.absNorm I ^ Module.finrank K V := by
   by_cases hf : Finite (M ⧸ (I • ⊤ : Submodule (𝓞 K) M))
   swap
-  · haveI := not_finite_iff_infinite.1 hf
+  · have := not_finite_iff_infinite.1 hf
     rw [Nat.card_eq_zero_of_infinite]
     exact Nat.zero_le _
   choose s hs using Submodule.Quotient.mk_surjective (I • ⊤ : Submodule (𝓞 K) M)
   let M' : Submodule (𝓞 K) V := Submodule.span (𝓞 K) (Set.range fun q => (s q : V))
   have hle : M' ≤ M := Submodule.span_le.2 (by rintro _ ⟨q, rfl⟩; exact (s q).2)
-  haveI : Module.Finite (𝓞 K) M' := Module.Finite.span_of_finite _ (Set.finite_range _)
+  have : Module.Finite (𝓞 K) M' := Module.Finite.span_of_finite _ (Set.finite_range _)
   obtain ⟨hfin, hc⟩ := card_quot_le_of_fg M' hI
   let φ : (M' ⧸ (I • ⊤ : Submodule (𝓞 K) M')) →ₗ[𝓞 K] (M ⧸ (I • ⊤ : Submodule (𝓞 K) M)) :=
     Submodule.mapQ _ _ (Submodule.inclusion hle) (by
@@ -163,7 +163,7 @@ theorem absNorm_modul_le : (Ideal.absNorm G.modul : ℝ) ≤ Real.exp (2 * sig G
     exact_mod_cast Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.2 v.ne_bot)
   have e : Real.exp (2 * ((G.pl.depth sc v : ℝ) * Real.log (Ideal.absNorm v.asIdeal))) =
       ((Ideal.absNorm v.asIdeal : ℝ) ^ 2) ^ G.pl.depth sc v := by
-    rw [← pow_mul, ← mul_assoc, ← Nat.cast_ofNat, ← Nat.cast_mul, Real.exp_nat_mul, Real.exp_log hpos]
+    rw [← pow_mul, ← mul_assoc, ← Nat.cast_ofNat, ← Nat.cast_mul, Real.exp_natCast_mul, Real.exp_log hpos]
   rw [e, map_pow, Nat.cast_pow]
   exact pow_le_pow_left₀ (Nat.cast_nonneg _) (by exact_mod_cast h1) _
 
@@ -193,10 +193,10 @@ theorem card_cosAt_le {i : ℕ} (hi : i < D.R.m) :
   have h3 : Nat.card (G.CosAt i) ≤ Ideal.absNorm G.modul ^ (bigN D ^ 2) := h1.trans (Nat.pow_le_pow_right hpos h2)
   calc (Nat.card (G.CosAt i) : ℝ) ≤ (Ideal.absNorm G.modul : ℝ) ^ (bigN D ^ 2) := by exact_mod_cast h3
     _ ≤ Real.exp (2 * sig G) ^ (bigN D ^ 2) := pow_le_pow_left₀ (Nat.cast_nonneg _) (absNorm_modul_le G) _
-    _ = _ := by rw [← Real.exp_nat_mul]; push_cast; rfl
+    _ = _ := by rw [← Real.exp_natCast_mul]; push_cast; rfl
 
 theorem card_datum_le : (Nat.card G.Datum : ℝ) ≤ Real.exp (D.R.m * ((bigN D : ℝ) ^ 2 * (2 * sig G))) := by
-  rw [Nat.card_pi, Nat.cast_prod, Real.exp_nat_mul]
+  rw [Nat.card_pi, Nat.cast_prod, Real.exp_natCast_mul]
   refine (Finset.prod_le_prod₀ (fun _ _ => Nat.cast_nonneg _) fun i _ => card_cosAt_le G i.2).trans (le_of_eq ?_)
   rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
@@ -244,9 +244,9 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 private theorem reps_fg {V : Type} [AddCommGroup V] [Module ℚ V] [Module.Finite ℚ V] (M : Submodule ℤ V) (hM : M.FG) (n : ℕ)
     (hn : 0 < n) : ∃ R : Finset V, R.card ≤ n ^ Module.finrank ℚ V ∧ ∀ u ∈ M, ∃ r ∈ R, ∃ v ∈ M, u = r + n • v := by
   classical
-  haveI : Module.Finite ℤ M := Module.Finite.iff_fg.2 hM
-  haveI : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
-  haveI : Module.Free ℤ M := inferInstance
+  have : Module.Finite ℤ M := Module.Finite.iff_fg.2 hM
+  have : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
+  have : Module.Free ℤ M := inferInstance
   let b := Module.finBasis ℤ M
   have h1 : LinearIndependent ℤ (fun i => (b i : V)) := b.linearIndependent.map' M.subtype M.ker_subtype
   have h2 : LinearIndependent ℚ (fun i => (b i : V)) := (LinearIndependent.iff_fractionRing ℤ ℚ).1 h1
@@ -633,7 +633,7 @@ theorem _root_.GlobalTheory.T.pureTensorCountBound_of_cosetDepthBound : GlobalTh
   have h1 := card_support hL hτ
   set n := expDepth ch.S.toGridChoice A.μ0 Φ β
   have h2 := depth_le (G := ch.G) hk fun l hl => by
-    haveI : (Ideal.span {(l : ℤ)}).IsPrime := (Ideal.span_singleton_prime (by exact_mod_cast hl.ne_zero)).2
+    have : (Ideal.span {(l : ℤ)}).IsPrime := (Ideal.span_singleton_prime (by exact_mod_cast hl.ne_zero)).2
       (Nat.prime_iff_prime_int.1 hl)
     obtain ⟨Q, hQ1, hQ2⟩ := Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain (S := 𝓞 D.what₂.LL) (Ideal.span {(l : ℤ)})
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 D.what₂.LL)).injective_int]; exact bot_le)
@@ -708,7 +708,7 @@ theorem cosFam_apply_eq_of_mem_supp {μ₀ : T} (hL : L.Is μ₀) (S : GridChoic
     rw [h1, h2]
   have hm : 0 < D.R.m := by have := D.R.two_le_m; omega
   have h00 := ((Good.locGrid_isGood hL G W t hde hc).1 P hl).square 0 hm 0 hm
-  haveI := (isUnitVol_unitVol P).1
+  have := (isUnitVol_unitVol P).1
   have hT := isTensor_Tflip hL W S.B t Φ hde hc hl
   rw [hdep] at hT
   have hO := oneCoset hs (psiAt W P) (unitVol P) (givenLevel G t P) (Tflip W S.B t Φ P) (unifAt P) (cosExp G P) D.R.m_even
@@ -760,7 +760,7 @@ theorem card_kCosets_theta : _root_.GlobalTheory.FunPr.ThetaLocalInputs → CosK
   have hQ := GlobalTheory.LiftLower.Q_base hL
   have hsub : (ch.S.supp A.μ0 Φ).Subsingleton := supp_subsingleton hL ch.S.toGridChoice A.μ0 Φ hde hQ
   have h1 : ((ch.S.supp A.μ0 Φ).ncard : ℝ) ≤ 1 := by
-    haveI : Finite (ch.S.supp A.μ0 Φ) := hsub.finite.to_subtype
+    have : Finite (ch.S.supp A.μ0 Φ) := hsub.finite.to_subtype
     exact_mod_cast Set.ncard_le_one_iff_subsingleton.mpr hsub
   have hb : 1 ≤ large₂.sc.b := Real.one_le_exp (Real.rpow_nonneg (by linarith [large₂.sc.one_lt_alt]) _)
   have hX := ResidueCardinalityNilpotence.GlobalTheory.CompanionTheory.VolVal.sig_nonneg ch.G

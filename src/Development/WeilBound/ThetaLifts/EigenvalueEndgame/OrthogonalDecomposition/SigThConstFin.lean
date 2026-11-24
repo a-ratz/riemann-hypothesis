@@ -99,13 +99,13 @@ theorem decomp (ρ : H → Module.End ℂ P) (c : H → Module.End ℂ Q) [Nontr
       f = ∑ i, U i (ξ i) := by
   classical
   let A := FreeAlgebra ℂ H
-  letI : Module A P := Module.compHom P (FreeAlgebra.lift ℂ ρ).toRingHom
-  letI : Module A Q := Module.compHom Q (FreeAlgebra.lift ℂ c).toRingHom
+  let : Module A P := Module.compHom P (FreeAlgebra.lift ℂ ρ).toRingHom
+  let : Module A Q := Module.compHom Q (FreeAlgebra.lift ℂ c).toRingHom
   have eP : ∀ (a : A) (x : P), a • x = FreeAlgebra.lift ℂ ρ a x := fun _ _ => rfl
   have eQ : ∀ (a : A) (x : Q), a • x = FreeAlgebra.lift ℂ c a x := fun _ _ => rfl
-  haveI : IsScalarTower ℂ A P := ⟨fun z a x => by rw [eP, eP, map_smul]; rfl⟩
-  haveI : IsScalarTower ℂ A Q := ⟨fun z a x => by rw [eQ, eQ, map_smul]; rfl⟩
-  haveI : IsSimpleModule A P := by
+  have : IsScalarTower ℂ A P := ⟨fun z a x => by rw [eP, eP, map_smul]; rfl⟩
+  have : IsScalarTower ℂ A Q := ⟨fun z a x => by rw [eQ, eQ, map_smul]; rfl⟩
+  have : IsSimpleModule A P := by
     refine { eq_bot_or_eq_top := fun N => ?_ }
     rcases irr (N.restrictScalars ℂ) (fun h x hx => by
       simpa [eP] using N.smul_mem (FreeAlgebra.ι ℂ h) hx) with h | h
@@ -140,7 +140,7 @@ theorem decomp (ρ : H → Module.End ℂ P) (c : H → Module.End ℂ Q) [Nontr
     fun i => ⟨fun h y => ?_, fun y => Subtype.prop (p := (· ∈ R'.comap T)) _⟩, ?_⟩
   · simpa [eP, eQ] using (T ∘ₗ π ∘ₗ LinearMap.single A (fun _ => P) i).map_smul (FreeAlgebra.ι ℂ h) y
   · have e : π (fun i => z i • x i) = fun i => z i • x i :=
-      congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hC ⟨_, show T _ ∈ R from hT ▸ hf⟩)
+      congrArg Subtype.val (Submodule.projectionOnto_apply_left hC ⟨_, show T _ ∈ R from hT ▸ hf⟩)
 
     simp only [LinearMap.restrictScalars_apply, LinearMap.comp_apply, ← map_sum, LinearMap.single_apply, Finset.univ_sum_single]
     exact hT.symm.trans (congrArg T e.symm)

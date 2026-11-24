@@ -224,7 +224,7 @@ private theorem addOrderOf_dvd_of_zmod (x : ZMod N) : addOrderOf x ∣ N :=
 
 theorem card_KK {f : ℕ} (hf : f ∣ N) : (KK N f).card * f.totient = N.totient := by
   classical
-  haveI : NeZero f := ⟨ne_zero_of_dvd_of_neZero hf⟩
+  have : NeZero f := ⟨ne_zero_of_dvd_of_neZero hf⟩
   have h1 : (KK N f).card = Nat.card (ZMod.unitsMap hf).ker := by
     rw [Nat.card_eq_fintype_card]
     exact (Fintype.card_of_subtype (p := fun u => u ∈ (ZMod.unitsMap hf).ker) _
@@ -379,7 +379,7 @@ theorem half_le_rho (U : Subgroup (ZMod N)ˣ) {f : ℕ} (hf : f ∣ N) (h : ∃ 
         ((KK N f).filter fun u => u ∉ U).card := by
     apply Finset.card_le_card_of_injOn (fun v => u0 * v)
     · intro v hv
-      simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_filter, Set.mem_setOf_eq] at hv ⊢
+      simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_filter, Set.mem_ofPred_eq] at hv ⊢
       refine ⟨mul_mem_KK hf hu0 hv.1, fun h => hu0' ?_⟩
       have h' := mul_mem h (inv_mem hv.2)
       rwa [mul_inv_cancel_right] at h'
@@ -430,7 +430,7 @@ theorem rho_le_half (U : Subgroup (ZMod N)ˣ) {f : ℕ} (hf : f ∣ N)
     · rw [Finset.mem_filter] at hu0
       apply Finset.card_le_card_of_injOn (fun v => u0 * v)
       · intro v hv
-        simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_filter, Set.mem_setOf_eq] at hv ⊢
+        simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_filter, Set.mem_ofPred_eq] at hv ⊢
         exact ⟨mul_mem_KK hf hu0.1 hv.1, h u0 hu0.1 v hv.1 hu0.2 hv.2⟩
       · intro a _ b _ hab
         exact mul_left_cancel hab

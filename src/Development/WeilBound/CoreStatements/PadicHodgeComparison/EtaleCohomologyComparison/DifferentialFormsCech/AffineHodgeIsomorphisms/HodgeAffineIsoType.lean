@@ -657,8 +657,8 @@ variable {K : Type} [CommRing K] {A B : Type} [CommRing A] [CommRing B] [Algebra
 
 theorem omMap_eq_mOm (φ : A →ₐ[K] B) (h : SemiHom (RingHom.id K) (φ : A →+* B)) (a : ℕ) (ω : CrystallineSemistableComparison.Onto.Om K A a) :
     CrystallineSemistableComparison.Onto.omMap φ a ω = h.mOm a ω := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
   have hs : ∀ (c : A) (x : CrystallineSemistableComparison.Onto.Om K A a), CrystallineSemistableComparison.Onto.omMap φ a (c • x) = φ c • CrystallineSemistableComparison.Onto.omMap φ a x := by
     intro c x
     have h' := map_smul (exteriorPower.alternatingMapLinearEquiv
@@ -826,14 +826,14 @@ theorem isForm_res (q : Z ⟶ Spec (CommRingCat.of K)) {V V' : Z.Opens} (k : V' 
     { v := fun T g => if h : inU q V' T.obj then Λ'.v ⟨T.obj, h⟩ (φ g) else Λ₀.v T g
       hv := fun T g => by
         by_cases h : inU q V' T.obj
-        · simp only [dif_pos h]
+        · simp only [dite_eq_left h]
           refine (Λ'.hv ⟨T.obj, h⟩ (φ g)).trans ?_
           rw [hφ]
           exact ev_res q k T.obj h T.property g
-        · simp only [dif_neg h]
+        · simp only [dite_eq_right h]
           exact Λ₀.hv T g }
   have hv : ∀ (T : (inU q V').FullSubcategory) (g : Sec q V),
-      Λ.v ((ObjectProperty.ιOfLE (inU_mono q k)).obj T) g = Λ'.v T (φ g) := fun T g => dif_pos T.property
+      Λ.v ((ObjectProperty.ιOfLE (inU_mono q k)).obj T) g = Λ'.v T (φ g) := fun T g => dite_eq_left T.property
   have hz := GlobalTheory.CompanionTheory.ConeRep.rep_resB (thA (smFun Z q)) (thFil (smFun Z q) (a : ℤ)) (thFil (smFun Z q) ((a : ℤ) + 1))
     (inU_mono q k) (Λ.form g₀ g) c (hc Λ)
   have e : Λ'.form (φ g₀) (fun j => φ (g j)) = resB (thA (smFun Z q)) (inU_mono q k) (Λ.form g₀ g) := by

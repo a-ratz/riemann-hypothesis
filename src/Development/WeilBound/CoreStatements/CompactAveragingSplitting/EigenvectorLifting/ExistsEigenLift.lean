@@ -137,10 +137,10 @@ theorem exists_eigen_lift {K S T : Type} [Group K] [TopologicalSpace K] [IsTopol
     { carrier := {k | ω k f₀ = (c k : ℂ) • f₀}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, map_smul, ha, smul_smul, map_mul, Units.val_mul, mul_comm]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h1 : ω a⁻¹ (ω a f₀) = f₀ := by rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
         rw [ha, map_smul] at h1
         rw [map_inv c, ← h1, smul_smul, h1, Units.inv_mul, one_smul] }
@@ -148,8 +148,8 @@ theorem exists_eigen_lift {K S T : Type} [Group K] [TopologicalSpace K] [IsTopol
   have hHo : IsOpen (H : Set K) := H.isOpen_of_mem_nhds (Filter.mem_of_superset hU1 fun k hk => by
     change ω k f₀ = (c k : ℂ) • f₀
     rw [(hU2 k hk).1, (hU2 k hk).2, Units.val_one, one_smul])
-  haveI : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
-  letI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
+  let : Fintype (K ⧸ H) := Fintype.ofFinite _
   have hg : ∀ a b : K, (a : K ⧸ H) = b → g a = g b := fun a b hab => by
     have hm : ω (a⁻¹ * b) f₀ = (c (a⁻¹ * b) : ℂ) • f₀ := QuotientGroup.eq.1 hab
     have : ω b f₀ = (c (a⁻¹ * b) : ℂ) • ω a f₀ := by
@@ -253,8 +253,8 @@ theorem finAt_of {ω ρ ω' ρ'} (L : IsLocRep G.M B.ψ om v ω ρ) (L' : IsLocR
     { Pi := fun _ => Q
       p := fun u => if h : v = u then h ▸ (π ∘ₗ p) else 0
       p' := fun u => if h : v = u then h ▸ (π ∘ₗ q) else 0 }
-  have e : R.p v = π ∘ₗ p := dif_pos rfl
-  have e' : R.p' v = π ∘ₗ q := dif_pos rfl
+  have e : R.p v = π ∘ₗ p := dite_eq_left rfl
+  have e' : R.p' v = π ∘ₗ q := dite_eq_left rfl
   have on' : ∀ x : Q, ∃ φ ∈ SB _, q φ = x := fun x => x.2
   have on : ∀ x : Q, ∃ φ ∈ SB _, p φ = x := fun x => (h1.symm ▸ x.2 : x.1 ∈ (SB _).map p)
   have hx : ∀ x : Q, π x.1 = x := fun x => hπ' x.1 x.2
@@ -336,16 +336,16 @@ theorem finInert_of (hKS : CompAtTriple) (hR : CoinvEmbeds) (hA : LocRepEx) (hB1
       ((L'.acts 1 o1' h hh φ' hφ' _).2 rfl)
   obtain ⟨c, hc⟩ := L.exists_char hs hn (hD F E σ _ _ B _ _ _ _ P v)
   obtain ⟨c', hc'⟩ := L'.exists_char hs' hn' (hD F E σ _ _ B _ _ _ _ P' v)
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
-  haveI : IsTopologicalGroup (GL (Fin (a + a')) (AE F E)) := inferInstance
-  haveI : IsTopologicalGroup (UA σ G.W.J) := inferInstance
-  haveI : IsTopologicalGroup (KSub σ G.W v) := inferInstance
-  haveI : CompactSpace (KSub σ G.W v) := isCompact_iff_compactSpace.1 (hB1 F E σ _ _ B _ _ _ _ P v)
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  have : IsTopologicalGroup (GL (Fin (a + a')) (AE F E)) := inferInstance
+  have : IsTopologicalGroup (UA σ G.W.J) := inferInstance
+  have : IsTopologicalGroup (KSub σ G.W v) := inferInstance
+  have : CompactSpace (KSub σ G.W v) := isCompact_iff_compactSpace.1 (hB1 F E σ _ _ B _ _ _ _ P v)
   obtain ⟨f₀, hf₀, hpf₀⟩ : (augAt om' v).mkQ (G.M'.vac v) ∈ (SB _).map p := h1 ▸ Submodule.mem_map_of_mem hs'
   obtain ⟨f, hf, hpf⟩ := exists_eigen_lift L.onK c' (p ∘ₗ (SB _).subtype) ⟨f₀, hf₀⟩ (by
       obtain ⟨U, hU, hU'⟩ := L.smooth f₀ hf₀
       obtain ⟨U₁, hU₁, hU₁'⟩ := L'.smooth _ hs'
-      refine ⟨Subtype.val ⁻¹' (U ∩ U₁), continuous_subtype_val.continuousAt (Filter.inter_mem hU hU₁), fun k hk =>
+      refine ⟨Subtype.val ⁻¹' (U ∩ U₁), continuous_subtypeVal.continuousAt (Filter.inter_mem hU hU₁), fun k hk =>
         ⟨Subtype.ext (hU' k.1 hk.1 k.2.1), Units.ext (smul_left_injective ℂ hn' ?_)⟩⟩
       change _ • _ = (1 : ℂ) • _
       rw [← hc' k, one_smul]
@@ -371,7 +371,7 @@ theorem finInert_of (hKS : CompAtTriple) (hR : CoinvEmbeds) (hA : LocRepEx) (hB1
       (fun g hg g' hg' => by
         have hg₁ : g ∈ KSub σ G.W v := hg
         have hg₂ : g' ∈ KSub σ G.W v := hg'
-        rw [dif_pos (mul_mem hg₁ hg₂), dif_pos hg₁, dif_pos hg₂, ← Units.val_mul, div_mul_div_comm, ← map_mul, ← map_mul]
+        rw [dite_eq_left (mul_mem hg₁ hg₂), dite_eq_left hg₁, dite_eq_left hg₂, ← Units.val_mul, div_mul_div_comm, ← map_mul, ← map_mul]
         rfl)
       (fun g hg hgP => by
         have hg₁ : g ∈ KSub σ G.W v := hg
@@ -382,8 +382,8 @@ theorem finInert_of (hKS : CompAtTriple) (hR : CoinvEmbeds) (hA : LocRepEx) (hB1
         rw [hf' ⟨g, hg₁⟩, map_smul, smul_eq_mul] at a2
         have : c ⟨g, hg₁⟩ = c' ⟨g, hg₁⟩ :=
           Units.ext ((mul_right_cancel₀ hl0 a1).trans (mul_right_cancel₀ hlf a2).symm)
-        rw [dif_pos hg₁, this, div_self', Units.val_one]) k.1 k.2
-    rw [dif_pos k.2] at this
+        rw [dite_eq_left hg₁, this, div_self', Units.val_one]) k.1 k.2
+    rw [dite_eq_left k.2] at this
     exact div_eq_one.1 (Units.ext this)
   set t := l f.1 / l (G.M.vac v) with ht
   have ht0 : t ≠ 0 := div_ne_zero hlf hl0

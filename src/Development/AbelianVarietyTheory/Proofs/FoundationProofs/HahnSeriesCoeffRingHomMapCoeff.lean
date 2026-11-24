@@ -103,7 +103,7 @@ theorem pow_coeff_gt (y : HahnSeries ℚ R) (N : ℚ) (hy : ∀ t, y.coeff t ≠
 theorem coeff_pow_char (p : ℕ) [hp : Fact p.Prime] [CharP R p] (x : HahnSeries ℚ R) (n : ℚ) :
     (x ^ p).coeff n = (x.coeff (n / p)) ^ p := by
   classical
-  haveI : CharP (HahnSeries ℚ R) p :=
+  have : CharP (HahnSeries ℚ R) p :=
     charP_of_injective_ringHom (HahnSeries.C_injective) p
   set N : ℚ := n / p with hN
   have hp0 : (p : ℚ) ≠ 0 := by exact_mod_cast hp.out.ne_zero
@@ -120,7 +120,7 @@ theorem coeff_pow_char (p : ℕ) [hp : Fact p.Prime] [CharP R p] (x : HahnSeries
     intro t ht; by_contra h; push_neg at h; apply ht
     rw [hb_def, HahnSeries.coeff_sub, HahnSeries.coeff_sub, ha_def, hc_def, HahnSeries.coeff_truncLT]
     rcases h.lt_or_eq with h | h
-    · rw [if_pos h, HahnSeries.coeff_single_of_ne h.ne]; simp
+    · rw [ite_eq_left h, HahnSeries.coeff_single_of_ne h.ne]; simp
     · subst h; simp
   rw [show x ^ p = (a + c + b) ^ p by rw [← hx], add_pow_char, add_pow_char, HahnSeries.coeff_add, HahnSeries.coeff_add]
   have h1 : (a ^ p).coeff n = 0 := by
@@ -145,14 +145,14 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω 
 
 theorem eOm_spec (hε : Function.Injective ε) (y : ℚ) :
     ε (eOm ε y) = Complex.exp (2 * Real.pi * Complex.I * (y : ℂ)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff hε).2 inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff hε).2 inferInstance
   have hn : 0 < y.den := y.den_pos
-  haveI : NeZero y.den := ⟨hn.ne'⟩
-  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω y.den
+  have : NeZero y.den := ⟨hn.ne'⟩
+  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω y.den
   have hεω := hω.map_of_injective hε
   have hz : (Complex.exp (2 * Real.pi * Complex.I * (y : ℂ))) ^ y.den = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨y.num, ?_⟩
     have e : (y.den : ℂ) * (y : ℂ) = (y.num : ℂ) := by
       have := Rat.mul_den_eq_num y
@@ -166,7 +166,7 @@ theorem eOm_zero (hε : Function.Injective ε) : eOm ε 0 = 1 := by
   apply hε; rw [eOm_spec hε, map_one]; simp
 
 theorem eOm_mul_nat (hε : Function.Injective ε) (n : ℕ) (y : ℚ) : eOm ε (n * y) = eOm ε y ^ n := by
-  apply hε; rw [map_pow, eOm_spec hε, eOm_spec hε, ← Complex.exp_nat_mul]; push_cast; ring_nf
+  apply hε; rw [map_pow, eOm_spec hε, eOm_spec hε, ← Complex.exp_natCast_mul]; push_cast; ring_nf
 
 end Roots
 
@@ -251,12 +251,12 @@ open GlobalTheory.KroneckerCongruence in
 theorem kronecker_congruence_tower : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (M q : ℕ) (f : X.K), 0 < M → q.Prime → Nat.Coprime q M → (∀ γ ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL γ) f = f) → ∀ (σ : SL(2, ℤ)), ((en σ 1 0 : ZMod M) = 0 ∧ (en σ 1 1 : ZMod M) = q) → ∀ (V : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω), ((q : ℕ) : Ω) ∈ V.nonunits → (∀ x ∈ V, s x ∈ V ∧ s.symm x ∈ V ∧ V.valuation (s x - x ^ q) < 1) → (∀ r, (X.exp f).coeff r ∈ V) → (∀ r, (X.exp (X.sl (ofSL σ) f)).coeff r ∈ V) → ∀ r, (X.exp ((∏ j ∈ Finset.range q, X.sl (toGQ !![1, (j * M : ℤ); 0, (q : ℤ)]) f) * X.sl (toGQ ((σ : Matrix (Fin 2) (Fin 2) ℤ) * !![(q : ℤ), 0; 0, 1])) f - X.gal s f * (X.gal s.symm (X.sl (ofSL σ) f)) ^ q)).coeff r ∈ V.nonunits := by
   intro Ω _ _ _ ε X hε _ M q f hM hq _ hf σ _ V s hqV hs hfV hσV r
   classical
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hq0 : (q : ℚ) ≠ 0 := by exact_mod_cast hq.ne_zero
   set ρ := IsLocalRing.residue V with hρ_def
   have hρ0 : ∀ x : V, ρ x = 0 ↔ V.valuation (x : Ω) < 1 := fun x => by
     rw [hρ_def, IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff]
-  haveI : CharP (IsLocalRing.ResidueField V) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
+  have : CharP (IsLocalRing.ResidueField V) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
     have : ρ (q : V) = 0 := (hρ0 _).2 (by simpa [ValuationSubring.mem_nonunits_iff] using hqV)
     simpa using this)
   have hfrob : ∀ x : V, ρ ⟨s x, (hs x x.2).1⟩ = ρ x ^ q := by

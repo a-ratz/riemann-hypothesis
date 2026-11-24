@@ -192,7 +192,7 @@ theorem exists_frames_cover_mcPts : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] 
   let T : Set (((k : K) → J k) × Ω × (Fin r → F)) :=
     ⋃ c, (fun a : Ω × (Fin r → F) => (c.1, a.1, a.2)) '' S c
   have hTfin : T.Finite := Set.finite_iUnion fun c => (hfin c).image _
-  haveI := hTfin.to_subtype
+  have := hTfin.to_subtype
   obtain ⟨m, ⟨e⟩⟩ := Finite.exists_equiv_fin T
   refine ⟨m, fun i => (e.symm i).1.1, fun i => (e.symm i).1.2.1, fun i => (e.symm i).1.2.2, ?_, ?_⟩
   · have hall : ∀ t ∈ T, IsFrameOver y W t.1 t.2.1 t.2.2 := by

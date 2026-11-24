@@ -112,7 +112,7 @@ theorem invM_hmul (h x : Bridge.Gf V) : invM (h * x) = invM x * invM h := by
 
 theorem fg_of_le_fg {R M : Type*} [CommRing R] [IsNoetherianRing R] [AddCommGroup M] [Module R M]
     {P Q : Submodule R M} (hQ : Q.FG) (hPQ : P ≤ Q) : P.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian Q hQ
+  have := isNoetherian_of_fg_of_noetherian Q hQ
   have h1 : (P.comap Q.subtype).FG := IsNoetherian.noetherian _
   have h2 := h1.map Q.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hPQ] at h2

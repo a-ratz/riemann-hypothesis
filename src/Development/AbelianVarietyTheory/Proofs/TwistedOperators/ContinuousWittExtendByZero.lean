@@ -312,14 +312,14 @@ theorem continuous_big {ψ : AddChar k Circle} (hψ : Continuous ψ) (q : Fin c)
     Continuous (big ψ q χ Φ) := by
   unfold big ch
   refine ((hχ.comp (continuous_pi fun s => continuous_id.matrix_elem _ _)).mul hΦ).mul
-    (continuous_subtype_val.comp (hψ.comp (Continuous.neg ?_)))
+    (continuous_subtypeVal.comp (hψ.comp (Continuous.neg ?_)))
   exact continuous_finsetSum _ fun i _ => continuous_id.matrix_elem _ _
 
 omit [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] in
 theorem hasCompactSupport_big (ψ : AddChar k Circle) (q : Fin c) (χ : (n' → k) → ℂ)
     {Φ : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ} (hΦ : HasCompactSupport Φ) (x₀ : Matrix n n' k) :
     HasCompactSupport fun y => big ψ q χ Φ (mat x₀ y) := by
-  haveI := t2Space k
+  have := t2Space k
   refine HasCompactSupport.intro
     (K := (fun (x : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) (i : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1))) =>
       x i.1 i.2 - basePt c x₀ i.1 i.2) '' tsupport Φ)
@@ -359,8 +359,8 @@ theorem opE_rowE {ψ : AddChar k Circle} (hψ : Continuous ψ) (ν : Measure k) 
     {Φ : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ} (hΦ : Continuous Φ) (x₀ : Matrix n n' k) (u : n' → k) :
     χ u * opE ψ ν (q.val + 1) (om μ (rowE (c + 1) (q.val + 1) u) 1 Φ) x₀ =
       ∫ e, big ψ q χ Φ (mat x₀ (ext0 (Free (q.val + 1)) e + gRow q u)) ∂(Measure.pi fun _ => ν) := by
-  haveI := t2Space k
-  haveI := secondCountable k
+  have := t2Space k
+  have := secondCountable k
   unfold opE
   rw [← integral_const_mul]
   refine Eq.trans ?_ (integral_shear ν (fun i => i.1.2.isLeft) (sRow q u) ?_ ?_ ?_
@@ -398,8 +398,8 @@ theorem opE_colE {ψ : AddChar k Circle} (hψ : Continuous ψ) (ν : Measure k) 
     opE ψ ν (q'.val + 1) (fun x => χ (fun s => x (Sum.inr q) (Sum.inl s)) *
         om μ 1 (colE c (q'.val + 1) β) Φ x) x₀ =
       ∫ e, big ψ q χ Φ (mat x₀ (ext0 (Free (q'.val + 1)) e + gCol q' (-β))) ∂(Measure.pi fun _ => ν) := by
-  haveI := t2Space k
-  haveI := secondCountable k
+  have := t2Space k
+  have := secondCountable k
   unfold opE
   refine Eq.trans ?_ (integral_shear ν (fun i => i.1.1.isLeft) (sCol q' β) ?_ ?_ ?_
     (fun e => big ψ q χ Φ (mat x₀ (ext0 (Free (q'.val + 1)) e + gCol q' (-β))))
@@ -431,8 +431,8 @@ open Classical in
 theorem opE_exchange : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n n' : Type) [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] (c p : ℕ) (_ : 1 ≤ p) (_ : p < c) (ψ : AddChar k Circle) (_ : Continuous ψ) (ν : Measure k) [ν.IsAddHaarMeasure] (μ : kˣ →* ℂˣ), ∀ Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), ∀ x₀ : Matrix n n' k, (∀ χ : (n' → k) → ℂ, IsLocallyConstant χ → HasCompactSupport (fun u : n' → k => opE ψ ν p (om μ (rowE (c + 1) p u) 1 Φ) x₀) ∧ HasCompactSupport (fun β : n → k => opE ψ ν (p + 1) (om μ 1 (colE c (p + 1) β) Φ) x₀) ∧ ∫ u : n' → k, χ u * opE ψ ν p (om μ (rowE (c + 1) p u) 1 Φ) x₀ ∂(Measure.pi fun _ => ν) = ∫ β : n → k, opE ψ ν (p + 1) (fun x => (∑ l : Fin c, if l.val + 1 = p then χ (fun s => x (Sum.inr l) (Sum.inl s)) else 0) * om μ 1 (colE c (p + 1) β) Φ x) x₀ ∂(Measure.pi fun _ => ν)) := by
   classical
   intro k _ _ _ _ _ _ n n' _ _ _ _ c p hp hpc ψ hψ ν _ μ Φ hΦ x₀ χ hχ
-  haveI := t2Space k
-  haveI := secondCountable k
+  have := t2Space k
+  have := secondCountable k
   obtain ⟨q, rfl⟩ : ∃ q : Fin c, p = q.val + 1 := ⟨⟨p - 1, by omega⟩, by simp only; omega⟩
   obtain ⟨q', hq⟩ : ∃ q' : Fin c, q.val + 1 = q'.val := ⟨⟨_, hpc⟩, rfl⟩
   have hΦ1 : Continuous Φ := hΦ.1.continuous
@@ -483,9 +483,9 @@ theorem opE_exchange : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
         rintro u ⟨r | r, s | s⟩ h <;> simp [gCol]
         rintro rfl
         exact absurd rfl (h r)) _ hf hc
-    haveI : ν.Regular := Measure.regular_of_isAddLeftInvariant (isCompact_int k)
+    have : ν.Regular := Measure.regular_of_isAddLeftInvariant (isCompact_int k)
       (by rw [(isOpen_int k).interior_eq]; exact ⟨0, zero_mem _⟩) (isCompact_int k).measure_ne_top
-    haveI : ν.IsNegInvariant := inferInstance
+    have : ν.IsNegInvariant := inferInstance
     refine Eq.trans ?_ (integral_neg_eq_self (fun β : n → k => ∫ e, big ψ q χ Φ
       (mat x₀ (ext0 (Free (q'.val + 1)) e + gCol q' β)) ∂(Measure.pi fun _ => ν)) _).symm
     exact h1.trans h2.symm

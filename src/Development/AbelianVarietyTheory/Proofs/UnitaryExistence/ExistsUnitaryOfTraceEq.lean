@@ -237,7 +237,7 @@ theorem exists_matrix_of_lattice (Λ : Submodule (𝓞 E) (Fin n → E))
     ∃ M : Matrix (Fin n) (Fin n) E, ∀ x : Λ, M *ᵥ (x : Fin n → E) = ψ x := by
   have hun : ∀ s : nonZeroDivisors (𝓞 E), IsUnit (algebraMap (𝓞 E) (Module.End (𝓞 E) (Fin n → E)) s) :=
     (isLocalizedModule_id (nonZeroDivisors (𝓞 E)) (Fin n → E) E).map_units
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 E)) Λ.subtype :=
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 E)) Λ.subtype :=
     { map_units := hun
       surj := fun v => by
         obtain ⟨d, hd, h⟩ := exists_smul_mem Λ hΛ v

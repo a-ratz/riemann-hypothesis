@@ -160,10 +160,10 @@ theorem isFiniteLength_of_killed {O : Type} [CommRing O] [IsDomain O] [IsDiscret
   refine ⟨inferInstance, ?_⟩
   have ht : Module.IsTorsionBySet O M (Ideal.span {c}) :=
     (Module.isTorsionBySet_span_singleton_iff c).mpr (fun x => h x)
-  letI := ht.module
-  haveI : IsScalarTower O (O ⧸ Ideal.span {c}) M := ht.isScalarTower
-  haveI : IsArtinianRing (O ⧸ Ideal.span {c}) := isArtinian_of_tower O hfl.2
-  haveI : Module.Finite (O ⧸ Ideal.span {c}) M := Module.Finite.of_restrictScalars_finite O _ _
+  let := ht.module
+  have : IsScalarTower O (O ⧸ Ideal.span {c}) M := ht.isScalarTower
+  have : IsArtinianRing (O ⧸ Ideal.span {c}) := isArtinian_of_tower O hfl.2
+  have : Module.Finite (O ⧸ Ideal.span {c}) M := Module.Finite.of_restrictScalars_finite O _ _
   exact isArtinian_of_surjective_algebraMap (R := O ⧸ Ideal.span {c}) Ideal.Quotient.mk_surjective
 
 theorem length_lt_top_of_killed {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
@@ -205,9 +205,9 @@ theorem finiteLength_invariants_negTwist_KmodO : ∀ (D : D7) (i : D.nd.Loc), �
   obtain ⟨g, hgI, hg⟩ := GlobalTheory.EpsInertia.epsAll D i w hw 1
   have hgD : g ∈ Dec (F := D.host.E) (D.nd.plOm.1 w) := hgI.1
   have hp : (D.nd.l i).Prime := (D.nd.lPrime i).out
-  haveI : CharZero (FractionRing (D.nd.O i)) :=
+  have : CharZero (FractionRing (D.nd.O i)) :=
     (D.nd.embK i).charZero_iff (D.nd.embK i).injective |>.1 inferInstance
-  haveI : CharZero (D.nd.O i) := (algebraMap (D.nd.O i) (FractionRing (D.nd.O i))).charZero
+  have : CharZero (D.nd.O i) := (algebraMap (D.nd.O i) (FractionRing (D.nd.O i))).charZero
   have hle : 1 ≤ (1 + D.nd.l i ^ D.nd.s0 i) ^ e := Nat.one_le_pow _ _ (by omega)
   have hlt : 1 < (1 + D.nd.l i ^ D.nd.s0 i) ^ e :=
     Nat.one_lt_pow he.ne' (by have := pow_pos hp.pos (D.nd.s0 i); omega)
@@ -308,11 +308,11 @@ theorem cyclotomic_isLocallyConstant_mod {p : ℕ} [Fact p.Prime] {K : Intermedi
     IsLocallyConstant (fun σ : Formalism.GaloisCohomology.GK p K => Ideal.Quotient.mk (Ideal.span {(p : O) ^ N}) ((ε σ : Oˣ) : O)) := by
   have hp : p.Prime := Fact.out
   have hne : ((p ^ N : ℕ) : PadicAlgCl p) ≠ 0 := by exact_mod_cast pow_ne_zero N hp.ne_zero
-  haveI : NeZero ((p ^ N : ℕ) : PadicAlgCl p) := ⟨hne⟩
-  haveI : NeZero (p ^ N) := ⟨pow_ne_zero N hp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl p) (p ^ N)
+  have : NeZero ((p ^ N : ℕ) : PadicAlgCl p) := ⟨hne⟩
+  have : NeZero (p ^ N) := ⟨pow_ne_zero N hp.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl p) (p ^ N)
   have hint : IsIntegral K ζ := (hζ.isIntegral (pow_pos hp.pos N)).tower_top
-  haveI : FiniteDimensional K (IntermediateField.adjoin K {ζ}) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K {ζ}) :=
     IntermediateField.adjoin.finiteDimensional hint
   have hU : IsOpen ((IntermediateField.adjoin K {ζ}).fixingSubgroup : Set (Formalism.GaloisCohomology.GK p K)) :=
     IntermediateField.fixingSubgroup_isOpen _
@@ -453,7 +453,7 @@ theorem finite_invariants_of_smul_ne_one : ∀ {O : Type} [CommRing O] [IsDomain
     have h2 := congrArg (fun x : M => ((u⁻¹ : Oˣ) : O) • x) h1
     simp only [smul_zero, smul_smul] at h2
     rwa [← mul_assoc, Units.inv_mul, one_mul] at h2
-  haveI := (lev_pow_card hϖ e c).1
+  have := (lev_pow_card hϖ e c).1
   refine Finite.of_injective (fun m : ρ.invariants => (Lev.mk (m : M) (hkill m) : Lev M (ϖ ^ c))) ?_
   intro x y hxy
   have := congrArg Lev.val hxy
@@ -524,10 +524,10 @@ open Formalism.NG Formalism.RepresentationBoundsCohomology.JT ReciprocityTheory.
 theorem shapeG_of_localDuality (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Formalism.GaloisCohomology.LocalEulerCharK) :
     ReciprocityTheory.ChartRestriction.T2.ShapeG := by
   intro p _ K O _ _ _ _ _ _ _ G _ _ hK hO hF i ε hcyc e he M _ _ u ρ hρ
-  haveI := hO.ring
-  haveI := hO.compact
-  haveI : CompactSpace G := i.symm.toHomeomorph.compactSpace
-  haveI hres : Finite (IsLocalRing.ResidueField O) := _root_.GlobalTheory.ShapeNeg.finite_residueField_of_compact_isAdic hO.adic
+  have := hO.ring
+  have := hO.compact
+  have : CompactSpace G := i.symm.toHomeomorph.compactSpace
+  have hres : Finite (IsLocalRing.ResidueField O) := _root_.GlobalTheory.ShapeNeg.finite_residueField_of_compact_isAdic hO.adic
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hpϖ : (p : O) ∈ Ideal.span {ϖ} := by
     rw [← (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ]; exact hO.p_mem
@@ -582,7 +582,7 @@ theorem shapeG_of_localDuality (hT : Formalism.GaloisCohomology.LocalTateDuality
       Nat.card (LinearMap.ker (ϖ ^ n • LinearMap.id : ReciprocityTheory.ChartRestriction.T2.HcLC ρ →ₗ[O] ReciprocityTheory.ChartRestriction.T2.HcLC ρ)) =
         Nat.card (ReciprocityTheory.Gal.H2 (GlobalTheory.ShapeNeg.levRepZ p n (hpn n) ρ')) * q ^ (n * d)) := by
     intro n hn
-    letI := GlobalTheory.ShapeNeg.levZ (M := M) p n (hpn n)
+    let := GlobalTheory.ShapeNeg.levZ (M := M) p n (hpn n)
     obtain ⟨hLf, hLc⟩ := _root_.GlobalTheory.ShapeNeg.levKO_card hϖ u n
     obtain ⟨hH1f, -⟩ := GlobalTheory.finite_H1_H2_of_localTateDuality hT p K hK n (GlobalTheory.ShapeNeg.Lev M (ϖ ^ n))
       (GlobalTheory.ShapeNeg.levRepZ p n (hpn n) ρ') hn (hcont n (hpn n))
@@ -595,7 +595,7 @@ theorem shapeG_of_localDuality (hT : Formalism.GaloisCohomology.LocalTateDuality
     have h0c := _root_.GlobalTheory.ShapeNeg.card_H0_level_rep ρ (ϖ ^ n) hNfin
     set Nq := Nat.card (ρ.invariants ⧸
       LinearMap.range (ϖ ^ n • LinearMap.id : ρ.invariants →ₗ[O] ρ.invariants)) with hNq
-    haveI : Finite (ρ.invariants ⧸
+    have : Finite (ρ.invariants ⧸
         LinearMap.range (ϖ ^ n • LinearMap.id : ρ.invariants →ₗ[O] ρ.invariants)) :=
       Finite.of_surjective _ (Submodule.mkQ_surjective _)
     have hpos : 0 < Nq := Nat.card_pos
@@ -610,7 +610,7 @@ theorem shapeG_of_localDuality (hT : Formalism.GaloisCohomology.LocalTateDuality
     simpa only [pow_one] using h1
   obtain ⟨a, F, _, _, hFf, ⟨φ⟩⟩ := _root_.GlobalTheory.CofinGen.exists_equiv_pi_prod_finite hϖ (Y := ReciprocityTheory.ChartRestriction.T2.HcLC ρ)
     (fun y => (htors y.1 y.2).imp fun n hn => Subtype.ext (by simpa using hn)) hfin1
-  haveI := hFf
+  have := hFf
   refine _root_.GlobalTheory.ShapeNeg.Shape.quotShape_of_counts hϖ (ReciprocityTheory.ChartRestriction.T2.HcLC ρ) d a φ ⟨C, fun n hn => ?_⟩ ?_
   · obtain ⟨hXf, hX⟩ := key n hn
     try dsimp only at hX
@@ -650,9 +650,9 @@ open ReciprocityTheory.ChartRestriction.T2 (PadicCoeff FracTop TopEx)
 theorem padicCoeff_of_finite {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [IsDomain O]
     [IsDiscreteValuationRing O] [Algebra ℤ_[p] O] [Module.Finite ℤ_[p] O] [TopologicalSpace O]
     [IsModuleTopology ℤ_[p] O] (hinj : Function.Injective (algebraMap ℤ_[p] O)) : PadicCoeff p O := by
-  haveI : Module.IsTorsionFree ℤ_[p] O := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj
-  haveI : Module.Free ℤ_[p] O := inferInstance
-  haveI hR : IsTopologicalRing O := IsModuleTopology.isTopologicalRing ℤ_[p] O
+  have : Module.IsTorsionFree ℤ_[p] O := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj
+  have : Module.Free ℤ_[p] O := inferInstance
+  have hR : IsTopologicalRing O := IsModuleTopology.isTopologicalRing ℤ_[p] O
   have hpR : (0 : ℝ) < p := by exact_mod_cast (Fact.out : p.Prime).pos
   set b := Module.Free.chooseBasis ℤ_[p] O
   set e : O ≃ₗ[ℤ_[p]] (Module.Free.ChooseBasisIndex ℤ_[p] O → ℤ_[p]) := b.equivFun with he_def
@@ -833,8 +833,8 @@ theorem exists_fracTop (O' : Type) [CommRing O'] [IsDomain O'] [IsDiscreteValuat
 
 theorem topEx : TopEx := by
   intro p _ O _ _ _ _ _ hinj
-  letI τ : TopologicalSpace O := moduleTopology ℤ_[p] O
-  haveI : IsModuleTopology ℤ_[p] O := ⟨rfl⟩
+  let τ : TopologicalSpace O := moduleTopology ℤ_[p] O
+  have : IsModuleTopology ℤ_[p] O := ⟨rfl⟩
   have hO := padicCoeff_of_finite hinj
   obtain ⟨τK, h1, h2, h3⟩ := exists_fracTop O hO.adic
   exact ⟨τ, τK, h1, h2, hO, h3⟩
@@ -1128,7 +1128,7 @@ theorem mem_range_j'_of_map_eq_zero (D : LatData O G VT VT') (y : H1 D.ρT')
     abel⟩
   refine ⟨Submodule.Quotient.mk t, ?_⟩
   show (Submodule.Quotient.mk
-    (cocycles1MapOfEquivariant D.ρTl' D.ρT' D.T'.subtype continuous_subtype_val (fun _ _ => rfl) t) : H1 D.ρT') =
+    (cocycles1MapOfEquivariant D.ρTl' D.ρT' D.T'.subtype continuous_subtypeVal (fun _ _ => rfl) t) : H1 D.ρT') =
       Submodule.Quotient.mk z
   rw [Submodule.Quotient.eq]
   refine (mem_coboundaries1 _ _).2 ⟨-m, fun g => ?_⟩
@@ -1173,7 +1173,7 @@ theorem perfectRight_flip {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
     (hb : PerfectRight b) : PerfectRight b.flip := by
   classical
   obtain ⟨⟨s, hs⟩, hspan⟩ := hT
-  haveI : FiniteDimensional (FractionRing O) V := ⟨⟨s, by
+  have : FiniteDimensional (FractionRing O) V := ⟨⟨s, by
     rw [← Submodule.span_span_of_tower O (FractionRing O) (s : Set V), hs, hspan]⟩⟩
   let e : V' →ₗ[FractionRing O] Module.Dual (FractionRing O) V := (fracBilinear b).flip
   have he : ∀ f x, e f x = b x f := fun _ _ => rfl
@@ -1221,8 +1221,8 @@ theorem exists_eq_of_nondeg {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValu
     (hnd : ∀ w, (∀ a, Φ a w = 0) → w = 0) (f : W →ₗ[O] FractionRing O) :
     ∃ a, ∀ w, Φ a w = f w := by
   classical
-  haveI : Module.Finite O M := Module.Finite.iff_fg.2 hM
-  haveI : Module.IsTorsionFree O M := ⟨fun r hr m₁ m₂ h => by
+  have : Module.Finite O M := Module.Finite.iff_fg.2 hM
+  have : Module.IsTorsionFree O M := ⟨fun r hr m₁ m₂ h => by
     have hr0 : r ≠ 0 := hr.ne_zero
     have h' : r • m₁ = r • m₂ := h
     have hw : ((m₁ - m₂ : M) : W) = 0 := hnd _ fun a => by
@@ -1299,8 +1299,8 @@ open ReciprocityTheory.Gal Formalism.RepresentationBoundsCohomology.LOC Reciproc
 
 theorem ratIso_of_localTateDuality : Formalism.GaloisCohomology.LocalTateDualityK → ReciprocityTheory.ChartRestriction.T2.RatIso := by
   intro hLTD p _ K O _ _ _ _ _ _ _ VT VT' _ _ _ _ _ _ _ _ _ _ _ _ _ _ G _ _ hK hO hF i D hD hinj f
-  haveI := hD.cs
-  haveI := hD.cs'
+  have := hD.cs
+  have := hD.cs'
   obtain ⟨inv', -, -⟩ := _root_.GlobalTheory.InvColim.inv_iso hLTD hK hO hF i hD.cyc
   have hlat' : IsLatticeIn D.T' := by
     refine ⟨Module.Finite.iff_fg.1 (GlobalTheory.dualLat_finite_free D.bT D.T hD.lat hD.perf).1, ?_⟩
@@ -1326,7 +1326,7 @@ theorem ratIso_of_localTateDuality : Formalism.GaloisCohomology.LocalTateDuality
       rw [pr_swapLat_q, cup_H1_flip_eq_zero D.ρT D.ρT' (twist D.ε (FractionRing O)) D.bT D.contbT
         D.eqT (D.contbT.comp continuous_swap) (fun g x f => D.eqT g f x) hD.contT D.contT'
         ((swapLat D hD.contT inv'.toLinearMap).j' t) z (hz _), map_zero, map_zero]
-  haveI : Module.Finite O (H1 D.ρTl') := _root_.GlobalTheory.FinIsoDualLattice.finIso_of_localTateDuality hLTD hK hO i hD
+  have : Module.Finite O (H1 D.ρTl') := _root_.GlobalTheory.FinIsoDualLattice.finIso_of_localTateDuality hLTD hK hO i hD
   have hnd : ∀ y : H1 D.ρT', (∀ a, D.invF (cupFG D a y) = 0) → y = 0 := by
     intro y hy
     obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
@@ -1339,7 +1339,7 @@ theorem ratIso_of_localTateDuality : Formalism.GaloisCohomology.LocalTateDuality
       have e : π ^ n • D.invF (cupFG D a yn) = D.invF (cupFG D a (π ^ n • yn)) := by
         rw [map_smul, map_smul]
       rw [e, hyn, hy]
-    haveI : Module.Finite O (LinearMap.range D.j') := Module.Finite.range D.j'
+    have : Module.Finite O (LinearMap.range D.j') := Module.Finite.range D.j'
     obtain ⟨y0, hy0, hy0e⟩ := hmem 0
     have hyR : y ∈ LinearMap.range D.j' := by
       rw [← hy0e]
@@ -1399,7 +1399,7 @@ theorem exists_frob_at_place_over_prime : ∀ {F Ω : Type} [Field F] [NumberFie
   obtain ⟨σ, hσA, hσ⟩ := exists_frob_over (F := F) (A := A) (v := v) (fun x => (memI x).symm)
   refine ⟨σ, hσA, Nat.card (𝓞 F ⧸ v.asIdeal), fun h1 => ?_, hσ⟩
   have hss : Subsingleton (𝓞 F ⧸ v.asIdeal) := by
-    haveI : Finite (𝓞 F ⧸ v.asIdeal) := Nat.finite_of_card_ne_zero (by rw [h1]; exact one_ne_zero)
+    have : Finite (𝓞 F ⧸ v.asIdeal) := Nat.finite_of_card_ne_zero (by rw [h1]; exact one_ne_zero)
     exact Finite.card_le_one_iff_subsingleton.mp h1.le
   have : (1 : 𝓞 F) ∈ v.asIdeal := by
     rw [← Ideal.Quotient.eq_zero_iff_mem]; exact Subsingleton.elim _ _
@@ -1473,7 +1473,7 @@ theorem padicInt_hom_normalize : ∀ {G : Type} [Group G] [TopologicalSpace G] (
     exact hle g
   refine ⟨fun g => ⟨(χ g : ℚ_[p]) / (χ g₁ : ℚ_[p]), hbd g⟩, ?_, ?_, ?_, g₁, ?_⟩
   · apply Continuous.subtype_mk
-    exact (continuous_subtype_val.comp hχ).div_const _
+    exact (continuous_subtypeVal.comp hχ).div_const _
   · intro g h
     apply Subtype.ext
     show ((χ (g * h) : ℚ_[p])) / (χ g₁ : ℚ_[p]) = (χ g : ℚ_[p]) / (χ g₁ : ℚ_[p]) + (χ h : ℚ_[p]) / (χ g₁ : ℚ_[p])
@@ -1598,15 +1598,15 @@ theorem pow_pow_sub_one_ne_zero (p : ℕ) [Fact p.Prime] (n : ℕ) : p ^ p ^ n -
 
 theorem exists_primitive (Ω : Type) [Field Ω] [IsAlgClosed Ω] [CharZero Ω] (p : ℕ) [Fact p.Prime]
     (n : ℕ) : ∃ ζ : Ω, IsPrimitiveRoot ζ (p ^ p ^ n - 1) := by
-  haveI : NeZero (p ^ p ^ n - 1) := ⟨pow_pow_sub_one_ne_zero p n⟩
-  haveI : NeZero ((p ^ p ^ n - 1 : ℕ) : Ω) := inferInstance
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω _
+  have : NeZero (p ^ p ^ n - 1) := ⟨pow_pow_sub_one_ne_zero p n⟩
+  have : NeZero ((p ^ p ^ n - 1 : ℕ) : Ω) := inferInstance
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω _
 
 theorem not_valuation_lt_one {Ω : Type} [Field Ω] {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω)
     (hp : A.valuation (p : Ω) < 1) (n : ℕ) : ¬ A.valuation ((p ^ p ^ n - 1 : ℕ) : Ω) < 1 := by
   intro h
   have h1 : A.valuation ((p : Ω) ^ p ^ n) < 1 := by
-    rw [map_pow]; exact pow_lt_one₀ zero_le' hp (pow_pos (Fact.out : p.Prime).pos n).ne'
+    rw [map_pow]; exact pow_lt_one₀ zero_le hp (pow_pos (Fact.out : p.Prime).pos n).ne'
   have e : (1 : Ω) = (p : Ω) ^ p ^ n + -((p ^ p ^ n - 1 : ℕ) : Ω) := by
     rw [Nat.cast_sub (one_lt_pow_pow p n).le]; push_cast; ring
   have := Valuation.map_add_lt A.valuation h1 (by rw [Valuation.map_neg]; exact h)
@@ -1650,17 +1650,17 @@ variable [NumberField F] [IsAlgClosure F Ω]
 
 theorem exists_powOn {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuation (p : Ω) < 1)
     (g : A.decompositionSubgroup F) (n : ℕ) : ∃ e, PowOn p (g : Ω ≃ₐ[F] Ω) n e := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have hpp : p.Prime := Fact.out
   obtain ⟨ζ, hζ⟩ := exists_primitive Ω p n
   have hm0 : p ^ p ^ n - 1 ≠ 0 := pow_pow_sub_one_ne_zero p n
-  haveI : NeZero (p ^ p ^ n - 1) := ⟨hm0⟩
+  have : NeZero (p ^ p ^ n - 1) := ⟨hm0⟩
   have hζm : ζ ^ (p ^ p ^ n - 1) = 1 := hζ.pow_eq_one
   have hgm : ((g : Ω ≃ₐ[F] Ω) ζ) ^ (p ^ p ^ n - 1) = 1 := by rw [← map_pow, hζm, map_one]
   have hζA : ζ ∈ A := (A.valuation_le_one_iff ζ).mp (valuation_eq_one_of_pow_eq_one A hm0 hζm).le
   let a : A := ⟨ζ, hζA⟩
-  haveI : CharP (IsLocalRing.ResidueField A) p := by
+  have : CharP (IsLocalRing.ResidueField A) p := by
     rw [CharP.charP_iff_prime_eq_zero hpp]
     have : ((p : A)) ∈ IsLocalRing.maximalIdeal A := (A.valuation_lt_one_iff _).mpr (by simpa using hp)
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff]; exact this
@@ -1686,8 +1686,8 @@ theorem main {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuatio
     ∃ χ : ↥(A.decompositionSubgroup F) → ℤ_[p], Continuous χ ∧ (∀ g h, χ (g * h) = χ g + χ h) ∧
       (∀ g : ↥(A.decompositionSubgroup F), (g : Ω ≃ₐ[F] Ω) ∈ Ine (F := F) A → χ g = 0) ∧
         ∃ g, χ g = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have hpp : p.Prime := Fact.out
   choose E hE using fun (g : A.decompositionSubgroup F) n => exists_powOn A hp g n
   have compat : ∀ (g : A.decompositionSubgroup F) n₁ n₂ (h : n₁ ≤ n₂),
@@ -1719,9 +1719,9 @@ theorem main {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuatio
     refine continuous_iff_continuousAt.mpr fun g₀ => Metric.tendsto_nhds.mpr fun ε hε => ?_
     obtain ⟨k, hk⟩ := PadicInt.exists_pow_neg_lt p hε
     obtain ⟨ζ, hζ⟩ := exists_primitive Ω p k
-    haveI : NeZero (p ^ p ^ k - 1) := ⟨pow_pow_sub_one_ne_zero p k⟩
+    have : NeZero (p ^ p ^ k - 1) := ⟨pow_pow_sub_one_ne_zero p k⟩
     have hV : IsOpen {g : A.decompositionSubgroup F | (g : Ω ≃ₐ[F] Ω) ζ = (g₀ : Ω ≃ₐ[F] Ω) ζ} :=
-      (isOpen_setOf_apply (F := F) ζ (· = (g₀ : Ω ≃ₐ[F] Ω) ζ)).preimage continuous_subtype_val
+      (isOpen_setOf_apply (F := F) ζ (· = (g₀ : Ω ≃ₐ[F] Ω) ζ)).preimage continuous_subtypeVal
     filter_upwards [hV.mem_nhds rfl] with g hg
     have hg' : (g : Ω ≃ₐ[F] Ω) ζ = (g₀ : Ω ≃ₐ[F] Ω) ζ := hg
     have he : PowOn p (g : Ω ≃ₐ[F] Ω) k (E g₀ k) := by

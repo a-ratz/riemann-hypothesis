@@ -93,7 +93,7 @@ private theorem pow_mem_lemma {V : Type*} [NormedAddCommGroup V] [NormedSpace �
   | zero => intro v hv; simpa using hv
   | succ k ih =>
     intro v hv
-    rw [pow_succ', ContinuousLinearMap.mul_apply]
+    rw [pow_succ', mul_apply_eq_comp]
     exact hA _ (ih v hv)
 
 theorem exp_mem_of_stable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] [CompleteSpace V]
@@ -102,10 +102,10 @@ theorem exp_mem_of_stable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V]
   intro v hv
   have hs := (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A).mapL
     (ContinuousLinearMap.apply ℂ V v)
-  refine (Submodule.closed_of_finiteDimensional W).mem_of_tendsto hs.tendsto_sum_nat
+  refine (Submodule.isClosed_of_finiteDimensional W).mem_of_tendsto hs.tendsto_sum_nat
     (Filter.Eventually.of_forall fun m => ?_)
   refine Submodule.sum_mem _ fun k _ => ?_
-  simp only [ContinuousLinearMap.apply_apply, ContinuousLinearMap.smul_apply]
+  simp only [ContinuousLinearMap.apply_apply, smul_apply]
   exact W.smul_mem _ (pow_mem_lemma W A hA k v hv)
 
 theorem inK_of_skew_comm {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (h1 : Xᴴ = -X)
@@ -119,15 +119,15 @@ theorem KType.dτ_irred {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε
   have hstab : ∀ Y, inK ε Y → ∀ v ∈ W, T.dτ Y v ∈ W := by
     intro Y hY v hv
 
-    rw [Matrix.matrix_eq_sum_single Y, map_sum, ContinuousLinearMap.sum_apply]
+    rw [Matrix.matrix_eq_sum_single Y, map_sum, sum_apply]
     refine Submodule.sum_mem _ fun a _ => ?_
 
-    rw [map_sum, ContinuousLinearMap.sum_apply]
+    rw [map_sum, sum_apply]
     refine Submodule.sum_mem _ fun b _ => ?_
     by_cases hab : ε a = ε b
     · have hs : Matrix.single a b (Y a b) = Y a b • Matrix.single a b (1 : ℂ) := by
         rw [Matrix.smul_single, smul_eq_mul, mul_one]
-      rw [hs, map_smul, ContinuousLinearMap.smul_apply]
+      rw [hs, map_smul, smul_apply]
       exact W.smul_mem _ (hW a b hab v hv)
     · simp [inK_entry_eq_zero hY hab]
   refine T.irred W fun k v hv => ?_

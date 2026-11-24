@@ -340,7 +340,7 @@ theorem isBlowupAlongIdealSheaf_of_isIso_comp {X A B : Scheme.{u}} (f : A ⟶ X)
 private theorem isCompact_of_subset_noetherianSpace {α : Type u} [TopologicalSpace α] (s : Set α)
     [NoetherianSpace s] (t : Set α) (ht : t ⊆ s) : IsCompact t := by
   have h1 : IsCompact ((Subtype.val : s → α) ⁻¹' t) := NoetherianSpace.isCompact _
-  have h2 := h1.image continuous_subtype_val
+  have h2 := h1.image continuous_subtypeVal
   have h3 : (Subtype.val : s → α) '' ((Subtype.val : s → α) ⁻¹' t) = t := by
     apply Set.Subset.antisymm
     · rintro x ⟨y, hy, rfl⟩

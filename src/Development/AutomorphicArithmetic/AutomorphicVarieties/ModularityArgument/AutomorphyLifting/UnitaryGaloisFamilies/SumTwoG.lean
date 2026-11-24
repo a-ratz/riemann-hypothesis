@@ -90,10 +90,10 @@ private theorem isPst_split {AI : LocAinf l P} (T : LocTied l P AI) {i : V₀ �
     {s : V₂ →ₗ[↥LL.1] V₁} (hi : ∀ g v, i (ρ₀ g v) = ρ₁ g (i v)) (hp : ∀ g v, p (ρ₁ g v) = ρ₂ g (p v))
     (hs : ∀ g v, s (ρ₂ g v) = ρ₁ g (s v)) (h1 : Function.Injective i) (h2 : Function.Exact i p)
     (hps : ∀ v, p (s v) = v) (hV₀ : IsPst P ρ₀) (hV₂ : IsPst P ρ₂) : IsPst P ρ₁ := by
-  haveI := LL.2
-  haveI : FiniteDimensional ℚ_[l] V₀ := Module.Finite.trans ↥LL.1 V₀
-  haveI : FiniteDimensional ℚ_[l] V₁ := Module.Finite.trans ↥LL.1 V₁
-  haveI : FiniteDimensional ℚ_[l] V₂ := Module.Finite.trans ↥LL.1 V₂
+  have := LL.2
+  have : FiniteDimensional ℚ_[l] V₀ := Module.Finite.trans ↥LL.1 V₀
+  have : FiniteDimensional ℚ_[l] V₁ := Module.Finite.trans ↥LL.1 V₁
+  have : FiniteDimensional ℚ_[l] V₂ := Module.Finite.trans ↥LL.1 V₂
   obtain ⟨f₀, c₀⟩ := (isPst_iff P ρ₀).1 hV₀
   obtain ⟨f₂, c₂⟩ := (isPst_iff P ρ₂).1 hV₂
   obtain ⟨hinj, hex⟩ := UpperTheory.V.Loc.PstExact.dmap_exact P hi hp h1 h2
@@ -109,9 +109,9 @@ private theorem isPst_split {AI : LocAinf l P} (T : LocTied l P AI) {i : V₀ �
   have sur : Function.Surjective dp := fun y =>
     ⟨toUr P ρ₁ (dmap P hs ((toUr P ρ₂).symm y)), Subtype.ext (tensV_section P p s hps _)⟩
   have ex : Function.Exact di dp := fun y => hex y
-  letI := f₀
-  letI := f₂
-  haveI f₁ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₁) :=
+  let := f₀
+  let := f₂
+  have f₁ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₁) :=
     Module.Finite.of_exact ex sur
   have e := dp.finrank_range_add_finrank_ker
   rw [LinearMap.range_eq_top.2 sur, finrank_top, LinearMap.exact_iff.mp ex, LinearMap.finrank_range_of_inj inj] at e

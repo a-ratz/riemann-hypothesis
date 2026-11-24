@@ -213,11 +213,11 @@ theorem exists_openSubgroup_GL {n : ℕ}
         exact ⟨hg', by simpa using hg⟩ }
   refine ⟨U, ?_, ?_⟩
   · have h1 : IsOpen {g : GL (Fin n) A | ∀ i j, ((g : M) - 1) i j ∈ I} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         hIo.preimage ((Units.continuous_val.sub continuous_const).matrix_elem i j)
     have h2 : IsOpen {g : GL (Fin n) A | ∀ i j, (((g⁻¹ : GL (Fin n) A) : M) - 1) i j ∈ I} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         hIo.preimage ((Units.continuous_coe_inv.sub continuous_const).matrix_elem i j)
     exact h1.inter h2
@@ -263,11 +263,11 @@ theorem le_closure_span (π : G →* (X →L[ℂ] X)) (hiso : ∀ g x, ‖π g x
       simp [Y]
     rw [this]
     exact hH.1.inter (isClosed_biInter fun u _ => isClosed_eq (π (fin u)).continuous continuous_id)
-  haveI : CompleteSpace Y := hYc.completeSpace_coe
+  have : CompleteSpace Y := hYc.completeSpace_coe
   have hYinv : ∀ k, ∀ x ∈ Y, π (inf k) x ∈ Y := by
     intro k x hx
     refine ⟨hH.2 _ x hx.1, fun u hu => ?_⟩
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, hcomm, map_mul, ContinuousLinearMap.mul_apply, hx.2 u hu]
+    rw [← mul_apply_eq_comp, ← map_mul, hcomm, map_mul, mul_apply_eq_comp, hx.2 u hu]
   let ρ : K →* (Y →L[ℂ] Y) :=
     { toFun := fun k => ((π (inf k)).comp Y.subtypeL).codRestrict Y fun x => hYinv k x x.2
       map_one' := by
@@ -277,7 +277,7 @@ theorem le_closure_span (π : G →* (X →L[ℂ] X)) (hiso : ∀ g x, ‖π g x
         intro k l
         ext x
         change π (inf (k * l)) x = π (inf k) (π (inf l) x)
-        rw [map_mul, map_mul, ContinuousLinearMap.mul_apply] }
+        rw [map_mul, map_mul, mul_apply_eq_comp] }
   have hd := GlobalTheory.CompactRep.dense_finite_vectors K Y ρ (fun k x => hiso _ x)
     (fun x => (hinf x).subtype_mk _)
   obtain ⟨y, hyb, S, hSf, hyS, hSinv⟩ := Metric.dense_iff.1 hd ⟨w, hwH, fun u hu => hwfix ⟨u, hu⟩⟩ (ε / 2) (half_pos hε)
@@ -286,14 +286,14 @@ theorem le_closure_span (π : G →* (X →L[ℂ] X)) (hiso : ∀ g x, ‖π g x
       { carrier := {u | π (fin u) y = y}
         mul_mem' := fun {u v} hu hv => by
           change π (fin (u * v)) y = y
-          rw [map_mul, map_mul, ContinuousLinearMap.mul_apply, hv, hu]
+          rw [map_mul, map_mul, mul_apply_eq_comp, hv, hu]
         one_mem' := by
           change π (fin 1) y = y
           simp
         inv_mem' := fun {u} hu => by
           change π (fin u⁻¹) y = y
           have h1 : π (fin u⁻¹) (π (fin u) (y : X)) = y := by
-            rw [← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul, inv_mul_cancel]
+            rw [← mul_apply_eq_comp, ← map_mul, ← map_mul, inv_mul_cancel]
             simp
           rwa [hu] at h1 }
     exact Subgroup.isOpen_mono (H₁ := U) (H₂ := St) (fun u hu => y.2.2 u hu) hUo
@@ -319,7 +319,7 @@ omit [_root_.NumberField.IsTotallyComplex E] in
 theorem exists_openSubgroup_GLAf {W : Set (GL (Fin a) (Af E))} (hW : W ∈ 𝓝 (1 : GL (Fin a) (Af E))) :
     ∃ U : Subgroup (GL (Fin a) (Af E)), IsOpen (U : Set (GL (Fin a) (Af E))) ∧
       (U : Set (GL (Fin a) (Af E))) ⊆ W := by
-  haveI := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := E)
+  have := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := E)
   exact exists_openSubgroup_GL (fun V hV => exists_mulClosed (Formalism.L2.GlobalTheoryTheory.FiltrationBoundaryCriterion.CompactFixesLatticeTheory.intAd E)
     Formalism.L2.GlobalTheoryTheory.FiltrationBoundaryCriterion.CompactFixesLatticeTheory.isOpen_intAd Formalism.L2.Col.rlt_isCompact_intAd hV) hW
 
@@ -343,12 +343,12 @@ theorem le_closure_span_K_finite (E : Type) [Field E] [NumberField E] [_root_.Nu
     (μ : Measure (GA E a)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (H : Submodule ℂ (L2 (latticeGL E a) μ))
     (hH : IsSubrep (R (latticeGL E a) μ) H) :
     H ≤ (Submodule.span ℂ {F | F ∈ H ∧ IsKFinL2 μ F}).topologicalClosure := by
-  haveI := GlobalTheory.KinfCompactness.compactSpace_Kinf E a
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Cinf E)) :=
+  have := GlobalTheory.KinfCompactness.compactSpace_Kinf E a
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Cinf E)) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin a → Cinf E))
-  haveI : SecondCountableTopology (Kinf E a) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (Kinf E a) := TopologicalSpace.Subtype.secondCountableTopology _
   have hU : Continuous fun k : Kinf E a => (Unitary.toUnits k : GL (Fin a) (Cinf E)) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_subtype_val.star⟩
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_subtypeVal.star⟩
   have hc := fun F : L2 (latticeGL E a) μ => continuous_R (Γ := latticeGL E a) (μ := μ) F
   exact le_closure_span (R (latticeGL E a) μ) (fun g x => norm_R g x) (finGL E a) ((infGL E a).comp Unitary.toUnits)
     (fun x => (hc x).comp continuous_finGL)

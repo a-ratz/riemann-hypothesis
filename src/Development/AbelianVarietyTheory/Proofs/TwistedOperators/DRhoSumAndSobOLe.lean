@@ -149,7 +149,7 @@ theorem sobO_sum_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {ι : Type} 
   revert hg
   refine Finset.induction_on s (fun _ => ?_) ?_
   · have h0 := sobO_smul (ψ := ψ) (θ := θ) (μ := μ) (𝓕 := 𝓕) (f := (0 : WO V W → ℂ)) d 0
-    simp only [smul_zero, enorm_zero, zero_mul] at h0
+    simp only [smul_zero, eNorm_zero, zero_mul] at h0
     simp [h0]
   · intro a t ha ih hg
     have ha' : IsThetaFunO ψ V W (g a) := hg a (Finset.mem_insert_self a t)
@@ -168,7 +168,7 @@ theorem sobO_dRho_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (hf : IsThe
       (((z i j).im : ℝ) : ℂ) • heisDer ψ θ (τ, i, j, true) f) := fun i j =>
     theta_add (theta_smul _ (hD _)) (theta_smul _ (hD _))
   have hre : ∀ r : ℝ, ‖(r : ℂ)‖ₑ = ENNReal.ofReal |r| := fun r => by
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs]
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs]
   rw [dRho_eq_sum_heisDer hψ hθ hf τ z]
   refine (sobO_sum_le hψ hθ Finset.univ (fun i _ => theta_finsetSum Finset.univ fun j _ => hT i j) d).trans ?_
   calc _ ≤ ∑ i, ∑ j, (ENNReal.ofReal |(z i j).re| + ENNReal.ofReal |(z i j).im|) *

@@ -84,7 +84,7 @@ theorem fdl_inner_continuous {ε : Fin n → Bool} (lam : Fin n → ℝ) {Λ : F
   have hPh : Continuous fun p : (PCoord ε → ℂ) × KG ε => Ph lam (toMK p.2⁻¹ * pmat p.1 * toMK p.2) :=
     continuous_potential_comp lam hM (fun p => ⟨adK p.2⁻¹ p.1, conj_pmat_eq_adK p.2 p.1⟩)
   have hop : Continuous fun p : (PCoord ε → ℂ) × KG ε => T.op p.2 :=
-    (continuous_subtype_val.comp T.cont).comp continuous_snd
+    (continuous_subtypeVal.comp T.cont).comp continuous_snd
   have hF : Continuous fun p : (PCoord ε → ℂ) × KG ε =>
       ((Real.exp (-Ph lam (toMK p.2⁻¹ * pmat p.1 * toMK p.2)) : ℝ) : ℂ) *
         (⟪T.op p.2 T.w, v⟫_ℂ * ⟪u, T.op p.2 T.w⟫_ℂ) :=

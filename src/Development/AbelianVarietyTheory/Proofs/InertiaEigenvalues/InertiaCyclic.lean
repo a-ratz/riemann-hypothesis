@@ -60,7 +60,7 @@ variable {l : ℕ} [hl : Fact l.Prime]
 
 theorem exists_pow_norm (K : FinExt l) :
     ∃ d : ℕ, 0 < d ∧ ∀ x ∈ K.1, x ≠ 0 → ∃ a : ℤ, ‖x‖ ^ d = (l : ℝ) ^ a := by
-  haveI := K.2
+  have := K.2
   refine ⟨Module.finrank ℚ_[l] ↥K.1, Module.finrank_pos, fun x hxK hx => ?_⟩
   have e := spectralNorm.spectralNorm_eq_norm_coeff_zero_rpow ℚ_[l] (PadicAlgCl l) x
   rw [PadicAlgCl.spectralNorm_eq] at e
@@ -89,7 +89,7 @@ theorem exists_gen (K : FinExt l) :
       neg_mem' := by
         rintro a ⟨x, hx, hx0, ex⟩
         exact ⟨x⁻¹, inv_mem hx, inv_ne_zero hx0, by rw [norm_inv, inv_pow, ex, zpow_neg]⟩ }
-  haveI : IsAddCyclic S := AddSubgroup.isAddCyclic S
+  have : IsAddCyclic S := AddSubgroup.isAddCyclic S
   obtain ⟨f, hf⟩ := IsAddCyclic.exists_zsmul_surjective (G := S)
   have hfS : (f : ℤ) ∈ S := f.property
   obtain ⟨π, hπ, hπ0, eπ⟩ := hfS

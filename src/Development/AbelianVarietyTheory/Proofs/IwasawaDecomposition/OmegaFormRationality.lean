@@ -114,7 +114,7 @@ theorem lieFac_eq_pow {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor
   have h : 0 < 2 * Real.pi * xiR D := by positivity
   have h2 : (Real.sqrt (2 * Real.pi * xiR D))⁻¹ = Real.exp (-(Real.log (2 * Real.pi * xiR D) / 2)) := by
     rw [Real.exp_neg, ← Real.log_sqrt h.le, Real.exp_log (Real.sqrt_pos.2 h)]
-  rw [h2, ← Real.exp_nat_mul, lieFac]
+  rw [h2, ← Real.exp_natCast_mul, lieFac]
   congr 1
   push_cast
   ring

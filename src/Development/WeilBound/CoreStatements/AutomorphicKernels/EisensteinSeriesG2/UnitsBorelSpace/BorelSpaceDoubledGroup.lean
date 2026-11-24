@@ -55,10 +55,10 @@ theorem units_borelSpace (M : Type*) [Monoid M] [TopologicalSpace M] [T2Space M]
     [LocallyCompactSpace M] [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] :
     BorelSpace Mˣ := by
   have hce := Units.isClosedEmbedding_embedProduct (α := M)
-  haveI : LocallyCompactSpace Mˣ := hce.locallyCompactSpace
-  haveI : SecondCountableTopology Mᵐᵒᵖ :=
+  have : LocallyCompactSpace Mˣ := hce.locallyCompactSpace
+  have : SecondCountableTopology Mᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := M)).symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology Mˣ := hce.isEmbedding.secondCountableTopology
+  have : SecondCountableTopology Mˣ := hce.isEmbedding.secondCountableTopology
   refine ⟨le_antisymm ?_ ?_⟩
   · show MeasurableSpace.comap Units.val ‹MeasurableSpace M› ≤ borel Mˣ
     rw [BorelSpace.measurable_eq (α := M)]

@@ -182,7 +182,7 @@ private theorem card_range_filter_lt_or_even_eq (a b : ℕ) :
 theorem card_epsV : (Finset.univ.filter fun i => epsV D i = true).card = D.R.k + D.R.rS := by
   unfold epsV epsS
   rw [Finset.card_filter]
-  simp only [Fin.coe_cast]
+  simp only [Fin.val_cast]
   rw [Fin.sum_univ_eq_sum_range
     (fun n => if (if n < D.R.k - 1 then true else decide ((n - (D.R.k - 1)) % 2 = 0)) = true then 1 else 0)
     (VS D).rank]
@@ -232,7 +232,7 @@ theorem Jpq_sub (p q : ℕ) {n : Type} [DecidableEq n] (e : n ≃ Fin p ⊕ Fin 
   · subst hab
     have ha := he a
     rcases hea : e a with x | x <;> simp_all [Matrix.one_apply]
-  · rw [if_neg hab]
+  · rw [ite_eq_right hab]
     have hne : e a ≠ e b := fun h => hab (e.injective h)
     rcases hea : e a with x | x <;> rcases heb : e b with y | y <;> simp_all [Matrix.one_apply]
 

@@ -84,7 +84,7 @@ private theorem levOn_inter {K : Type} [Field K] [NumberField K] {n : ℕ} (P : 
       · exact this.2
       · exact this
     · have := hh' v
-      rw [if_pos hv] at this
+      rw [ite_eq_left hv] at this
       exact this.1
   · rintro ⟨h1, h2⟩
     have h1' := (AdelicGLn.mem_integralFiniteGL_iff_forall K n).1 h1
@@ -106,7 +106,7 @@ private theorem fixL_anti {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : M
 private theorem fin_of_compact {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (W E : Submodule ℂ H) (T : H →L[ℂ] H) {c : ℂ} (hc : c ≠ 0) (hT : IsCompactOperator (T ∘L prj W))
     (h : ∀ f ∈ E, f ∈ W ∧ T f = c • f) : FiniteDimensional ℂ E := by
-  haveI := ContinuousLinearMap.finite_dimensional_eigenspace hT c hc
+  have := ContinuousLinearMap.finite_dimensional_eigenspace hT c hc
   refine Submodule.finiteDimensional_of_le (S₂ := Module.End.eigenspace (T ∘L prj W).toLinearMap c) ?_
   intro f hf
   obtain ⟨h1, h2⟩ := h f hf

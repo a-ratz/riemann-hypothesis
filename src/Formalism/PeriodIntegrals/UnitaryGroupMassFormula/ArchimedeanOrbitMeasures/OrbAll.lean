@@ -78,14 +78,14 @@ theorem ker_meas (x0 : X) (hc : Continuous fun g : G => g • x0)
     Measurable (fun y => Measure.map (fun h : MulAction.stabilizer G x0 => s y * (h : G)) ν) := by
   classical
   have hcl : IsClosed ((MulAction.stabilizer G x0 : Subgroup G) : Set G) := isClosed_singleton.preimage hc
-  haveI : IsClosed ((MulAction.stabilizer G x0 : Subgroup G) : Set G) := hcl
-  haveI : PolishSpace G := PI.AprimeInfA.polish_of_lcsc G
-  haveI : PolishSpace (G ⧸ MulAction.stabilizer G x0) := PI.AprimeInfA.polish_of_lcsc _
-  haveI : BorelSpace (G ⧸ MulAction.stabilizer G x0) := CosetSpace.borelSpace
+  have : IsClosed ((MulAction.stabilizer G x0 : Subgroup G) : Set G) := hcl
+  have : PolishSpace G := PI.AprimeInfA.polish_of_lcsc G
+  have : PolishSpace (G ⧸ MulAction.stabilizer G x0) := PI.AprimeInfA.polish_of_lcsc _
+  have : BorelSpace (G ⧸ MulAction.stabilizer G x0) := CosetSpace.borelSpace
   set ι : G ⧸ MulAction.stabilizer G x0 → X := fun q => q.out • x0 with hιdef
   have hemb : MeasurableEmbedding ι := (PI.AprimeInfA.orb_cont x0 hc).measurableEmbedding (PI.AprimeInfA.orb_inj x0)
   have hmv : ∀ t : G, Measurable (fun h : MulAction.stabilizer G x0 => t * (h : G)) :=
-    fun t => (continuous_const_mul t |>.comp continuous_subtype_val).measurable
+    fun t => (continuous_const_mul t |>.comp continuous_subtypeVal).measurable
   refine Measure.measurable_of_measurable_coe _ fun A hA => ?_
   have hf : Measurable (A.indicator (1 : G → ℝ≥0∞)) := measurable_const.indicator hA
   have eq : (fun y => Measure.map (fun h : MulAction.stabilizer G x0 => s y * (h : G)) ν A) =
@@ -126,29 +126,29 @@ open scoped TensorProduct
 theorem kerMeas_holds : KerMeas := by
   intro D X u' ψ hT μinf νinf fibInf hP
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : SecondCountableTopology (GI X) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : SecondCountableTopology (GI X) :=
     PI.AprimeInfT.secondCountable_HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J
-  haveI : BorelSpace (TupI X) :=
+  have : BorelSpace (TupI X) :=
     PI.AprimeInfT.borelSpace_tup (F := X.B.I.F) (E := X.B.I.E) (Ainf X.B.I.F) (D.R.rS + 1 + D.R.rS)
   set x0 := ratTup (F := X.B.I.F) (Ainf X.B.I.F) (tupH (frameOf X u')) with hx0
   have hc : Continuous fun g : GI X => g • x0 :=
     PI.AprimeInfT.continuous_orbit (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J _
   have hcl : IsClosed ((MulAction.stabilizer (GI X) x0 : Subgroup (GI X)) : Set (GI X)) :=
     isClosed_singleton.preimage hc
-  haveI : LocallyCompactSpace (MulAction.stabilizer (GI X) x0) :=
+  have : LocallyCompactSpace (MulAction.stabilizer (GI X) x0) :=
     hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let ν : Measure (MulAction.stabilizer (GI X) x0) := (X.measW u').μHinf
-  haveI hH : ν.IsHaarMeasure := (X.measW_norm u').2.1
-  haveI : SecondCountableTopology (MulAction.stabilizer (GI X) x0) :=
+  have hH : ν.IsHaarMeasure := (X.measW_norm u').2.1
+  have : SecondCountableTopology (MulAction.stabilizer (GI X) x0) :=
     Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : SigmaCompactSpace (MulAction.stabilizer (GI X) x0) := inferInstance
-  haveI : SigmaFinite ν := inferInstance
+  have : SigmaCompactSpace (MulAction.stabilizer (GI X) x0) := inferInstance
+  have : SigmaFinite ν := inferInstance
   have hs : ∀ y, (∃ g : GI X, g • x0 = y) → sect X u' y • x0 = y := fun y hy => sect_spec X u' y hy
   have h1 : ∀ y, ¬ (∃ g : GI X, g • x0 = y) → sect X u' y = 1 := by
     intro y hy
     unfold sect
-    exact dif_neg hy
+    exact dite_eq_right hy
   exact PI.AprimeInfK.ker_meas (G := GI X) x0 hc ν (sect X u') hs h1
 
 end PI.AprimeInfW
@@ -233,7 +233,7 @@ theorem orbRep_of (hK : KerMeas) (hU : HaarUniqInf) (hR : RegI) (hF : HinfFin) :
   refine ⟨c / μH Set.univ, ENNReal.div_ne_top hc hne, Measure.ext fun B hB => ?_⟩
   have e : μH Set.univ * ν B = c * X.measG.μGinf.map (orbM X u') B := by
     rw [Measure.map_apply horb hB, show c * X.measG.μGinf (orbM X u' ⁻¹' B) =
-        (c • X.measG.μGinf) (orbM X u' ⁻¹' B) by rw [Measure.smul_apply, smul_eq_mul], ← hmc, hm,
+        (c • X.measG.μGinf) (orbM X u' ⁻¹' B) by rw [smul_apply, smul_eq_mul], ← hmc, hm,
       Measure.bind_apply (horb hB) hk.aemeasurable, ← lintegral_indicator_one hB, ← lintegral_const_mul _
         (measurable_one.indicator hB)]
     refine lintegral_congr_ae (hae.mono fun y hy => ?_)
@@ -251,7 +251,7 @@ theorem orbRep_of (hK : KerMeas) (hU : HaarUniqInf) (hR : RegI) (hF : HinfFin) :
       ext h
       simp only [Set.mem_preimage, Set.mem_empty_iff_false, iff_false, orbM_sect_mul X u' y hy h]
       exact hyB
-  rw [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul]
   calc ν B = (μH Set.univ)⁻¹ * (μH Set.univ * ν B) := by
         rw [← mul_assoc, ENNReal.inv_mul_cancel hne hfin.ne, one_mul]
     _ = (μH Set.univ)⁻¹ * (c * X.measG.μGinf.map (orbM X u') B) := by rw [e]

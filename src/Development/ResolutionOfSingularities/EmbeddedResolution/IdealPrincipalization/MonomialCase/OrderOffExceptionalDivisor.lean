@@ -62,7 +62,7 @@ theorem orderAt_comap_eq_of_notMem_exceptionalIdeal
     apply hx'
     rw [Blowup.exceptionalIdeal_eq_comap]
     exact Scheme.IdealSheafData.mem_support_comap.mpr hc
-  haveI : IsIso (π.stalkMap x') := isIso_stalkMap_of_isBlowupAlongIdealSheaf π Z hπ x' hx
+  have : IsIso (π.stalkMap x') := isIso_stalkMap_of_isBlowupAlongIdealSheaf π Z hπ x' hx
   exact orderAt_comap_of_isIso_stalkMap π A x'
 
 end FunctorialResolution.EmbeddedResolution

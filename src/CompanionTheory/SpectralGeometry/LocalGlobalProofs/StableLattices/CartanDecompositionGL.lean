@@ -93,13 +93,13 @@ theorem exists_tExp_eq_indicator (b : Fin n → ℤ) (hb : Antitone b) :
   refine ⟨⟨Nat.find hex, by omega⟩, ?_⟩
   funext j
   have hne : Nat.find hex ≠ n + 1 := by omega
-  simp only [tExp, hne, if_false]
+  simp only [tExp, hne, ite_false]
   by_cases hj : (j : ℕ) < Nat.find hex
   · have hnot := Nat.find_min hex hj
     have hpos : 0 < b j := by
       by_contra hcon
       exact hnot (Or.inr ⟨j.2, not_lt.mp hcon⟩)
-    rw [if_pos hj, if_pos hpos]
+    rw [ite_eq_left hj, ite_eq_left hpos]
   · have hspec := Nat.find_spec hex
     have hnpos : ¬ 0 < b j := by
       rcases hspec with h | ⟨h, h'⟩
@@ -109,7 +109,7 @@ theorem exists_tExp_eq_indicator (b : Fin n → ℤ) (hb : Antitone b) :
           rw [Fin.le_def]
           exact not_lt.mp hj)
         omega
-    rw [if_neg hj, if_neg hnpos]
+    rw [ite_eq_right hj, ite_eq_right hnpos]
 
 theorem dPow_mem_closure_of_nonneg (p : Lˣ) (N : ℕ) :
     ∀ b : Fin n → ℤ, Antitone b → (∀ j, 0 ≤ b j) → (∀ j, b j ≤ N) →
@@ -335,7 +335,7 @@ theorem cartan_unitBall (L : Type) [NontriviallyNormedField L] [IsUltrametricDis
     (n : ℕ) (p : Lˣ) (hp : IsUnif p) (g : GL (Fin n) L) :
     ∃ a : Fin n → ℤ, Antitone a ∧ ∃ k₁ ∈ congK L n 1 zero_le_one le_rfl,
       ∃ k₂ ∈ congK L n 1 zero_le_one le_rfl, g = k₁ * dPow p a * k₂ := by
-  haveI := isDVR hp
+  have := isDVR hp
   have hdet : IsUnit (g : Matrix (Fin n) (Fin n) L).det :=
     (Matrix.isUnit_iff_isUnit_det _).1 g.isUnit
   obtain ⟨u, v, a, hu, hv, ha, hg⟩ := GlobalTheory.CompanionTheory.Dblock.CartanDVR.cartan_exists (ball L) L n (unif hp)
@@ -430,7 +430,7 @@ theorem isCompact_congK (L : Type) [NontriviallyNormedField L] [IsUltrametricDis
           (MulOpposite.op '' {M : Matrix (Fin n) (Fin n) L | ∀ i j, ‖(M - 1) i j‖ ≤ r})) := by
     ext k
     simp only [SetLike.mem_coe, mem_congK, Set.mem_preimage, Set.mem_prod, Units.embedProduct_apply,
-      Set.mem_image, Set.mem_setOf_eq, MulOpposite.op_inj, exists_eq_right]
+      Set.mem_image, Set.mem_ofPred_eq, MulOpposite.op_inj, exists_eq_right]
     exact ⟨fun hk => ⟨fun i j => (hk i j).1, fun i j => (hk i j).2⟩,
       fun hk i j => ⟨hk.1 i j, hk.2 i j⟩⟩
   rw [e]
@@ -715,7 +715,7 @@ theorem tExp_antitone (n : ℕ) (i : Fin (n + 2)) : Antitone (tExp n i) := by
   unfold tExp
   by_cases h : (i : ℕ) = n + 1
   · simp [h]
-  · simp only [h, if_false]
+  · simp only [h, ite_false]
     by_cases hk : (k : ℕ) < i
     · have hj : (j : ℕ) < i := lt_of_le_of_lt hjk' hk
       simp [hj, hk]

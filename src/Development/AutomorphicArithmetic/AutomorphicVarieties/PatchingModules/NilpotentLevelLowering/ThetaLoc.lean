@@ -58,7 +58,7 @@ private theorem mul_prod_le_of_le_one_of_le_of_mul_le_one {G : Type} [CommGroup 
       Finset.mul_prod_erase _ _ (Finset.mem_univ i)]
   calc a i * ∏ l, b l = (a i * b i) * (b j * ∏ l ∈ (Finset.univ.erase i).erase j, b l) := by
         rw [hsplit, mul_assoc]
-    _ ≤ 1 * (b j * 1) := mul_le_mul' (hab i) (mul_le_mul' le_rfl (Finset.prod_le_one' (fun l _ => hb1 l)))
+    _ ≤ 1 * (b j * 1) := mul_le_mul' (hab i) (mul_le_mul' le_rfl (Finset.prod_le_one (fun l _ => hb1 l)))
     _ ≤ a j := by rw [one_mul, mul_one]; exact hba j
 
 private theorem mul_pow_sub_le_of_mul_le_of_le_of_le_one {G : Type} [CommGroup G] [LinearOrder G] [IsOrderedMonoid G] {n : ℕ}
@@ -66,7 +66,7 @@ private theorem mul_pow_sub_le_of_mul_le_of_le_of_le_one {G : Type} [CommGroup G
     (hij : i ≤ j) : a i * c ^ (n - (i : ℕ)) ≤ a j * c ^ (n - (j : ℕ)) := by
   rcases lt_or_eq_of_le hij with h | h
   · obtain ⟨d, hd⟩ : ∃ d, n - (i : ℕ) = (n - (j : ℕ)) + d + 1 :=
-      ⟨(j : ℕ) - i - 1, by have := j.isLt; have := Fin.lt_iff_val_lt_val.mp h; omega⟩
+      ⟨(j : ℕ) - i - 1, by have := j.isLt; have := Fin.lt_def.mp h; omega⟩
     calc a i * c ^ (n - (i : ℕ)) = (a i * c) * c ^ d * c ^ (n - (j : ℕ)) := by
           rw [hd, pow_add, pow_add, pow_one]; ac_rfl
       _ ≤ a j * 1 * c ^ (n - (j : ℕ)) := mul_le_mul' (mul_le_mul' (hc i j h) (pow_le_one' hc1 d)) le_rfl
@@ -97,7 +97,7 @@ private theorem thetaLoc_split {k : Type} [Field k] [ValuativeRel k] [Topologica
     · exact mul_le_one' h h
     · rw [map_inv, mul_inv_cancel]
   have hC : φ (∏ l, w l) = ∏ l, φ (w l) := map_prod φ _ _
-  have hc1 : ∏ l, φ (w l) ≤ 1 := Finset.prod_le_one' (fun l _ => hw1 l)
+  have hc1 : ∏ l, φ (w l) ≤ 1 := Finset.prod_le_one (fun l _ => hw1 l)
   refine ⟨fun i => (∏ l, w l) ^ (n - (i : ℕ)), ?_, ?_⟩
   · intro i j hij
     dsimp only

@@ -207,7 +207,7 @@ theorem sumF_of_sum_on_thickenings_any : ∀ (R : Type) [CommRing R] [IsDomain R
   obtain ⟨i₀, hi₀⟩ := exists_mem P (b.left z)
   let t := trF φ ε b.left z (P.ch i₀) (fun k => J (b.left ≫ φ k)) * val τ (𝟙 _) z J
   choose y hy using fun k => CoefBasic.cstH_surj z (gs b.left z _ (P.u k i₀) * (t⁻¹).val)
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   let ev : (Fin P.a → R) →ₗ[R] F := Fintype.linearCombination R y
   have key : ∀ (s : LB.Sec (LB.LinComb N φ ε)) (w : Fin P.a → R) (c : F),
       (∀ i, AbLaw.rs _ (P.le i) (s.f (P.ch i)) = loc₀ P w i) →
@@ -502,14 +502,14 @@ theorem coeff_eq_zero_over {Y : Over (Spec (CommRingCat.of R))} (p : Y ⟶ D.P.A
       if ψ w ∈ N.U (J (σ.left ≫ ψ)) then J (σ.left ≫ ψ) else j ψ
     have hJ₂ : Good N w J₂ := fun ψ => by
       by_cases h : ψ w ∈ N.U (J (σ.left ≫ ψ))
-      · simpa only [J₂, if_pos h] using h
-      · simpa only [J₂, if_neg h] using hj ψ
+      · simpa only [J₂, ite_eq_left h] using h
+      · simpa only [J₂, ite_eq_right h] using hj ψ
     have eJ : ∀ ψ : Z.left ⟶ X, ψ ((snd (WeightPf.Te D I e) Z).left w) ∈ N.U (J ψ) →
         J₂ ((snd (WeightPf.Te D I e) Z).left ≫ ψ) = J ψ := fun ψ h => by
       have e₁ : σ.left ≫ (snd (WeightPf.Te D I e) Z).left ≫ ψ = ψ := by
         rw [← Category.assoc, hσ, Category.id_comp]
       simp only [J₂, e₁]
-      exact if_pos h
+      exact ite_eq_left h
     have E := H _ ((WeightPf.Te D I e ◁ x).left ≫ (WeightPf.act g).left) ((snd (WeightPf.Te D I e) Z).left ≫ r)
       (by rw [Category.assoc, Category.assoc, hr, WeightPf.act_left_pG, ← Category.assoc, ← Category.assoc, hsn])
       w J₂ hJ₂
@@ -894,8 +894,8 @@ theorem coreF₂ [CharZero R] (hL : LL) (hR : AdmBase R I) {U₁ : UnifPre I D�
     SumF I F (fun p : {p : D₂.toPre.X × D₁.toPre.X // h p.1 + p.2 = α} =>
       ∑ ν, c ν * (x ν p.1.1 * x' ν p.1.2)) 0 := by
   obtain ⟨n, β, ρ, hβ, hc⟩ := MixedConv.exists_indep (R := R) c
-  haveI : Nonempty G₁.left := ⟨eSec G₁ (⊥ : PrimeSpectrum R)⟩
-  haveI : Nonempty G₂.left := ⟨eSec G₂ (⊥ : PrimeSpectrum R)⟩
+  have : Nonempty G₁.left := ⟨eSec G₁ (⊥ : PrimeSpectrum R)⟩
+  have : Nonempty G₂.left := ⟨eSec G₂ (⊥ : PrimeSpectrum R)⟩
   have P₁ := isPart_inl U₁.LG.L U₂.LG.L
   have P₂ := isPart_inr U₁.LG.L U₂.LG.L
   let d : Fin n → SecOver G₁.hom (LB.LinComb (join U₁.LG.L U₂.LG.L)
@@ -1219,7 +1219,7 @@ namespace GlobalTheory
 
 theorem crossH_iff_of_isActOf : ∀ (R : Type) [CommRing R] [IsDomain R] (A₁ A₂ : PolAV (Sp (FractionRing R))) (F : Type) [Field F] [Algebra (FractionRing R) F] (c : A₁.A ⟶ A₂.A), IsMonHom c → ∀ (j j' : ℕ) (θ : ThetaGrp A₂.A A₂.L (j : ℤ) (TFK (R := R) F)) (θ' : ThetaGrp A₁.A A₁.L (j' : ℤ) (TFK (R := R) F)), θ.pt = θ'.pt ≫ c → ∀ (t₁ t₂ T₁ T₂ : SecA A₂ F j) (t₁' t₂' T₁' T₂' : SecA A₁ F j'), IsActOf A₂.A A₂.L j θ t₁ T₁ → IsActOf A₂.A A₂.L j θ t₂ T₂ → IsActOf A₁.A A₁.L j' θ' t₁' T₁' → IsActOf A₁.A A₁.L j' θ' t₂' T₂' → (CrossH c t₁ t₂ t₁' t₂' ↔ CrossH c T₁ T₂ T₁' T₂') := by
   intro R _ _ A₁ A₂ F _ _ c hc j j' θ θ' hp t₁ t₂ T₁ T₂ t₁' t₂' T₁' T₂' h₁ h₂ h₁' h₂'
-  haveI := hc
+  have := hc
   exact CrossTheta₂.cross_act A₁.isLB A₂.isLB c θ θ' hp h₁ h₂ h₁' h₂'
 
 end GlobalTheory

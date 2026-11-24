@@ -126,7 +126,7 @@ theorem eventually_finsum (hS : SzFin) (A₀ : Matrix (Fin n) (Fin n) (Ad E)) :
     (continuous_elem p).continuousAt.eventually (eventually_fin (A₀ p.1 p.2))
   filter_upwards [Filter.eventually_all.2 hev] with A hA
   refine finsum_eq_sum_of_support_subset _ fun w hw => ?_
-  rw [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  rw [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   by_contra hn
   have h0 : sz (A₀.map (cW w)) ≤ 1 := not_lt.1 hn
   refine hw ((Real.posLog_eq_zero_iff _).2 ?_)
@@ -425,7 +425,7 @@ theorem vecsEx_of : RatProper → KerBasic → KerLin → CntBasic → CntPair �
     VecsEx := by
   intro hR hKB hKL hCB hCP hVE hVN hVI hPt E _ _ _ a b D ι _ Φ₁ Φ₂ T₁ T₂ M h₁ h₂ o₁ o₂
   open PositivityTheory.Rg.BcB.E GlobalTheory.CuspRep in
-  letI : MeasurableSpace (H E a b) := borelH E a b
+  let : MeasurableSpace (H E a b) := borelH E a b
   let X : Ctx := by
     haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E a
     haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E b

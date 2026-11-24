@@ -94,7 +94,7 @@ theorem qp_unit_EE (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP W) :
     rw [hw, map_mul, map_pow]
     exact (w.isUnit.map _).mul (W.EE_π.pow _)
   obtain ⟨U, hU⟩ := hπ₀
-  haveI := W.EE_complete
+  have := W.EE_complete
   have hJ : ((PD.p : ℕ) : W.EE) ∈ (⊥ : Ideal W.EE).jacobson :=
     IsAdicComplete.le_jacobson_bot (Ideal.span {((PD.p : ℕ) : W.EE)})
       (Ideal.subset_span (Set.mem_singleton _))

@@ -136,16 +136,16 @@ theorem measurePreserving_toMixed : MeasurePreserving (toMixed F) volume volume 
     rfl
 
 theorem coord_measurable : Measurable (coord F) := by
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   exact (isHomeomorph_coord F).continuous.measurable
 
 open scoped Classical in
 theorem map_coord_eq (lam : Measure (Ainf F)) (hl : IsStdInf lam) :
     lam.map (coord F) = ENNReal.ofReal (Real.sqrt |(discr F : ℝ)|)⁻¹ • (volume : Measure (InfinitePlace F → ℝ)) := by
   obtain ⟨hH, D, hD, hD1⟩ := hl
-  haveI := hH
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : (lam.map (coord F)).IsAddHaarMeasure :=
+  have := hH
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : (lam.map (coord F)).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map lam (coord F).toAddEquiv (isHomeomorph_coord F).continuous
       (coordHomeo F).symm.continuous
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, lam.map (coord F) = c • (volume : Measure (InfinitePlace F → ℝ)) :=
@@ -189,7 +189,7 @@ theorem map_coord_eq (lam : Measure (Ainf F)) (hl : IsStdInf lam) :
     (mixedEmbedding.fundamentalDomain_integerLattice F).preimage_of_equiv hq hmbij (fun g x => by
       change Ψ ((m g : Ainf F) + x) = (g : mixedEmbedding.mixedSpace F) + Ψ x
       rw [hΨadd, hmΨ])
-  haveI : Countable Γ := hmbij.surjective.countable
+  have : Countable Γ := hmbij.surjective.countable
   have h1 : lam (Ψ ⁻¹' P) = 1 := by
     rw [← hD1]
     exact hFD.measure_eq hD
@@ -203,7 +203,7 @@ theorem map_coord_eq (lam : Measure (Ainf F)) (hl : IsStdInf lam) :
   have h3 : volume (toMixed F ⁻¹' P) = ENNReal.ofReal (Real.sqrt |(discr F : ℝ)|) := by
     rw [hmp.measure_preimage hPm.nullMeasurableSet, hP, mixedEmbedding.volume_fundamentalDomain_latticeBasis,
       IsTotallyReal.nrComplexPlaces_eq_zero, pow_zero, one_mul,
-      ← ENNReal.ofReal_coe_nnreal, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs]
+      ← ENNReal.ofReal_coe_nnreal, Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs]
   have hd : 0 < Real.sqrt |(discr F : ℝ)| := by
     have : (discr F : ℝ) ≠ 0 := by exact_mod_cast discr_ne_zero F
     positivity
@@ -219,5 +219,5 @@ end GlobalTheory.CompanionTheory.SW.RealCoord
 open GlobalTheory.CompanionTheory.SW.RealCoord in
 theorem GlobalTheory.CompanionTheory.SW.real_iso : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∃ (ρ : InfinitePlace F → (F →+* ℝ)) (e : Ainf F ≃+* (InfinitePlace F → ℝ)), (∀ w x, ((ρ w x : ℝ) : ℂ) = w.embedding x) ∧ IsHomeomorph e ∧ (∀ x w, e (algebraMap F (Ainf F) x) w = ρ w x) ∧ (∀ y w, |e y w| = ‖y w‖) ∧ ∀ lam : Measure (Ainf F), IsStdInf lam → lam.map e = ENNReal.ofReal (Real.sqrt |(discr F : ℝ)|)⁻¹ • (volume : Measure (InfinitePlace F → ℝ)) := by
   intro F _ _ hF
-  haveI := hF
+  have := hF
   exact ⟨rho F, coord F, rho_coe F, isHomeomorph_coord F, coord_algebraMap F, abs_coord F, map_coord_eq F⟩

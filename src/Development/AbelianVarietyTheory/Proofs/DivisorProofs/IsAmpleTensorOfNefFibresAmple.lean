@@ -116,13 +116,13 @@ namespace GlobalTheory.AmpleFibre
 
 theorem isAmpleLB_fibre : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ L A : HermLB p, NefFib L → IsAmpleLB A.B → ∀ (l : ℕ) [Fact l.Prime], IsAmpleLB ((L.tens A).B.pull (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod l))))) := by
   intro k _ X _ p D hX L A hL hA l _
-  haveI := hX.finite
+  have := hX.finite
   have hc := GlobalTheory.NefFibPrime.isClosedImmersion_spMap_zmod l
-  haveI : IsClosedImmersion (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod l)))) :=
+  have : IsClosedImmersion (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod l)))) :=
     IsClosedImmersion.isStableUnderBaseChange.of_isPullback (IsPullback.of_hasPullback _ _).flip hc
   set f := Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod l))) with hf
   set g := Limits.pullback.snd (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod l))) with hg
-  letI := GlobalTheory.algebraΓOfHom g
+  let := GlobalTheory.algebraΓOfHom g
   have hproj : IsProjOver g := by
     have h := GlobalTheory.FibreNef.isProjOver_fibre hX.isProjOver l f
     rwa [GlobalTheory.strHom_eq (f := g) fun _ => rfl] at h
@@ -208,22 +208,22 @@ theorem exists_prime_le (P : Ideal ℤ) [P.IsPrime] :
 
 theorem isAmpleLB_tens_of_nefFib : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ L A : HermLB p, NefFib L → IsAmpleLB A.B → IsAmpleLB (L.tens A).B := by
   intro k _ X _ p D hX L A hL hA
-  haveI : Module.Finite ℤ k := hX.finite
+  have : Module.Finite ℤ k := hX.finite
   set s : X ⟶ Sp ℤ := p ≫ spMap (Int.castRingHom k) with hs_def
   have hsZ : s = ShFam.Pad.toSpZ X := specZIsTerminal.hom_ext _ _
   have hP : IsProjOver s := hsZ ▸ ShFam.Pad.isProjOver_toSpZ hX.isProjOver
   have hPB : AbLaw.IsProjBy s := (ProjSpace.isProjBy_iff_isProjOver s).2 hP
-  haveI : IsProper s := hsZ ▸ FibreProj.isProper_of_isArithVar (ShFam.Pad.isArithVar_toSpZ hX)
+  have : IsProper s := hsZ ▸ FibreProj.isProper_of_isArithVar (ShFam.Pad.isArithVar_toSpZ hX)
   have hM : (L.tens A).B.IsLB := (L.tens A).isLB
-  haveI : IsProper (Over.mk s).hom := ‹IsProper s›
+  have : IsProper (Over.mk s).hom := ‹IsProper s›
   refine (relAmple_iff_isAmpleLB_of_isAffine (Over.mk s) hM).1 ?_
   refine AmpleLocal.relAmple_of_locally _ (Over.mk s) _ hM inferInstance inferInstance fun P => ?_
   obtain ⟨l, hl, hlP⟩ := @exists_prime_le P.asIdeal P.isPrime
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have F := _root_.GlobalTheory.AmpleFibre.isAmpleLB_fibre k X p D hX L A hL hA l
   have hFib : Out.RelAmple ((Over.pullback (Spec.map (CommRingCat.ofHom (Int.castRingHom (ZMod l))))).obj (Over.mk s))
       ((L.tens A).B.pull (pullback.fst s (Spec.map (CommRingCat.ofHom (Int.castRingHom (ZMod l)))))) := by
-    haveI : IsProper ((Over.pullback (Spec.map (CommRingCat.ofHom (Int.castRingHom (ZMod l))))).obj (Over.mk s)).hom :=
+    have : IsProper ((Over.pullback (Spec.map (CommRingCat.ofHom (Int.castRingHom (ZMod l))))).obj (Over.mk s)).hom :=
       inferInstanceAs (IsProper (pullback.snd s _))
     exact (relAmple_iff_isAmpleLB_of_isAffine _ (LB.isLB_pull hM _)).2 F
   have hfrac : ∀ y : ZMod l, ∃ a b : ℤ, Int.castRingHom (ZMod l) b ≠ 0 ∧
@@ -236,7 +236,7 @@ theorem isAmpleLB_tens_of_nefFib : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) 
     intro h
     exact hr ((ZMod.intCast_zmod_eq_zero_iff_dvd r l).2 h)
   let U : (Spec (CommRingCat.of ℤ)).Opens := PrimeSpectrum.basicOpen r
-  haveI : IsAffine U.toScheme := IsAffineOpen.Spec_basicOpen (R := CommRingCat.of ℤ) r
+  have : IsAffine U.toScheme := IsAffineOpen.Spec_basicOpen (R := CommRingCat.of ℤ) r
   exact ⟨U, hlP r hrl, AmpleFibres.relAmple_restrict U (Over.mk s) hM hA'⟩
 
 end GlobalTheory.AmpleNefFibZ

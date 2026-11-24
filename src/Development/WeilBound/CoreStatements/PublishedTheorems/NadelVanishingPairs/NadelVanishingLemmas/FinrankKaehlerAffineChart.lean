@@ -125,7 +125,7 @@ theorem kaehler_baseChange_independent_extend :
     have := htb ⟨c, Set.mem_univ _, rfl⟩
     rwa [Set.image_eq_range] at this
   let bas := Module.Basis.mk hli hspanb
-  haveI : Finite b := Module.Finite.finite_basis bas
+  have : Finite b := Module.Finite.finite_basis bas
   have hcard : Nat.card b = d := by
     rw [← hd, Module.finrank_eq_nat_card_basis bas]
   let eq : b ≃ Fin d := Finite.equivFinOfCardEq hcard
@@ -162,7 +162,7 @@ theorem exists_away_linearCombination_bijective : ∀ (R : Type) [CommRing R] (M
       (∀ c : J →₀ R, Finsupp.linearCombination R v c = 0 → ∃ n : ℕ, g ^ n • c = 0) := by
   intro R _ M _ _ _ _ J _ v p _ hbij
   classical
-  haveI : Module.FinitePresentation R M := Module.finitePresentation_of_projective R M
+  have : Module.FinitePresentation R M := Module.finitePresentation_of_projective R M
   let Rp := Localization.AtPrime p
   have hloc : Function.Bijective (IsLocalizedModule.map p.primeCompl
       (Finsupp.mapRange.linearMap (Algebra.linearMap R Rp)) (TensorProduct.mk R Rp M 1)
@@ -230,8 +230,8 @@ theorem fibre_bijective (B K : Type) [CommRing B] [Field K] [Algebra B K] (M : T
   let φ : p.ResidueField →+* K := Ideal.ResidueField.lift p (algebraMap B K) le_rfl (fun x hx => by
     simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff, isUnit_iff_ne_zero]
     exact fun h => hx (RingHom.mem_ker.2 h))
-  letI : Algebra p.ResidueField K := φ.toAlgebra
-  haveI : IsScalarTower B p.ResidueField K := IsScalarTower.of_algebraMap_eq fun r =>
+  let : Algebra p.ResidueField K := φ.toAlgebra
+  have : IsScalarTower B p.ResidueField K := IsScalarTower.of_algebraMap_eq fun r =>
     (Ideal.ResidueField.lift_algebraMap _ _ _ _ r).symm
   let e := AlgebraTensorModule.cancelBaseChange B p.ResidueField K K M
   have he : ∀ a, e ((1 : K) ⊗ₜ[p.ResidueField] ((1 : p.ResidueField) ⊗ₜ[B] v a)) = (1 : K) ⊗ₜ[B] v a :=
@@ -244,7 +244,7 @@ theorem fibre_bijective (B K : Type) [CommRing B] [Field K] [Algebra B K] (M : T
   have hli2 : LinearIndependent K (fun a => (1 : K) ⊗ₜ[p.ResidueField] ((1 : p.ResidueField) ⊗ₜ[B] v a)) :=
     hfun ▸ hli.map' e.symm.toLinearMap (LinearEquiv.ker _)
   have hli3 : LinearIndependent p.ResidueField (fun a => (1 : p.ResidueField) ⊗ₜ[B] v a) := by
-    haveI : FaithfulSMul p.ResidueField K := (faithfulSMul_iff_algebraMap_injective _ K).2 φ.injective
+    have : FaithfulSMul p.ResidueField K := (faithfulSMul_iff_algebraMap_injective _ K).2 φ.injective
     exact LinearIndependent.of_comp (TensorProduct.mk p.ResidueField K (p.ResidueField ⊗[B] M) 1)
       (hli2.restrict_scalars' p.ResidueField)
   have hdim : Module.finrank p.ResidueField (p.ResidueField ⊗[B] M) = d := by
@@ -262,10 +262,10 @@ theorem exists_away_etale : ∀ (R B K : Type) [CommRing R] [CommRing B] [Field 
     Ω[B⁄R] (Fin d) (fun a => D R B (t a)) (RingHom.ker (algebraMap B K)) hbij
   refine ⟨g, fun h0 => hg (RingHom.mem_ker.2 h0), ?_⟩
   let A := Localization.Away g
-  haveI : Algebra.Smooth B A := Algebra.Smooth.of_isLocalization_Away g
-  haveI : Algebra.Smooth R A := Algebra.Smooth.comp R B A
+  have : Algebra.Smooth B A := Algebra.Smooth.of_isLocalization_Away g
+  have : Algebra.Smooth R A := Algebra.Smooth.comp R B A
   let f := KaehlerDifferential.map R R B A
-  haveI : IsLocalizedModule (Submonoid.powers g) f :=
+  have : IsLocalizedModule (Submonoid.powers g) f :=
     KaehlerDifferential.isLocalizedModule_map R B A (Submonoid.powers g)
   let w : Fin d → Ω[A⁄R] := fun a => D R A (algebraMap B A (t a))
   have hfw : ∀ a, f (D R B (t a)) = w a := fun a => KaehlerDifferential.map_D R R B A (t a)
@@ -322,9 +322,9 @@ theorem exists_away_etale : ∀ (R B K : Type) [CommRing R] [CommRing B] [Field 
       rw [← hu.mul_right_eq_zero, ← map_mul, mul_assoc, hi, map_zero]
     rw [hc, Algebra.smul_def] at hci
     exact ((hunit b hb).mul_right_eq_zero).1 hci
-  letI : Algebra (MvPolynomial (Fin d) R) A :=
+  let : Algebra (MvPolynomial (Fin d) R) A :=
     (MvPolynomial.eval₂Hom (algebraMap R A) (fun a => algebraMap B A (t a))).toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin d) R) A :=
+  have : IsScalarTower R (MvPolynomial (Fin d) R) A :=
     IsScalarTower.of_algebraMap_eq fun r => by
       change algebraMap R A r = MvPolynomial.eval₂Hom (algebraMap R A) _ (MvPolynomial.C r)
       simp
@@ -371,8 +371,8 @@ theorem isEtCoord_basicOpen {R : Type} [CommRing R] {X : Scheme.{0}} (f : X ⟶ 
       (MvPolynomial.eval₂Hom (algebraMap R (Localization.Away h))
         (fun a => algebraMap Γ(X, U) (Localization.Away h) (t a))).Etale) :
     IsEtCoord f (X.basicOpen h) (fun a => resG X (X.basicOpen_le h) (t a)) := by
-  letI : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
-  letI : Algebra Γ(X, U) Γ(X, X.basicOpen h) := (resG X (X.basicOpen_le h)).toAlgebra
+  let : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
+  let : Algebra Γ(X, U) Γ(X, X.basicOpen h) := (resG X (X.basicOpen_le h)).toAlgebra
   have hl : IsLocalization.Away h Γ(X, X.basicOpen h) := hU.isLocalization_basicOpen h
   let φ := IsLocalization.algEquiv (Submonoid.powers h) (Localization.Away h) Γ(X, X.basicOpen h)
   have H' := RingHom.Etale.respectsIso.1 _ φ.toRingEquiv H
@@ -381,11 +381,11 @@ theorem isEtCoord_basicOpen {R : Type} [CommRing R] {X : Scheme.{0}} (f : X ⟶ 
   refine MvPolynomial.ringHom_ext (fun r => ?_) (fun a => ?_)
   · rw [cstOn_res f (X.basicOpen_le h)]
     simp only [MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_C, RingHom.coe_comp, Function.comp_apply,
-      RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv]
+      RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv]
     rw [IsScalarTower.algebraMap_apply R Γ(X, U) (Localization.Away h), AlgEquiv.commutes]
     rfl
   · simp only [MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_X, RingHom.coe_comp, Function.comp_apply,
-      RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv]
+      RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv]
     rw [AlgEquiv.commutes]
     rfl
 
@@ -402,7 +402,7 @@ theorem resG_comp {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V
 theorem exists_chart : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X ⟶ Sp R) [Smooth f] (d : ℕ) (s : ℕ) (L : Fin s → LB X) (σ : ∀ i, (L i).Sec) (U : X.Opens) (c : ∀ i, (L i).ι) (hc : ∀ i, U ≤ (L i).U (c i)) (x : X) (K : Type) [Field K] [Algebra Γ(X, U) K], IsAffineOpen U → x ∈ U → (∀ a : Γ(X, U), algebraMap Γ(X, U) K a ≠ 0 ↔ x ∈ X.basicOpen a) → (letI : Algebra R Γ(X, U) := (cstOn f U).toAlgebra; Module.finrank K (K ⊗[Γ(X, U)] Ω[Γ(X, U)⁄R]) = d ∧ LinearIndependent K (fun i : {i : Fin s // algebraMap Γ(X, U) K (resG X (hc i) ((σ i).f (c i))) = 0} => (1 : K) ⊗ₜ[Γ(X, U)] KaehlerDifferential.D R Γ(X, U) (resG X (hc i) ((σ i).f (c i))))) → ∃ C : SncChart f d L σ, x ∈ C.U := by
   intro R _ X f _ d s L σ U c hc x K _ _ hU hxU hK H
   classical
-  letI : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
+  let : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
   obtain ⟨hd, hli⟩ := H
   have : Algebra.Smooth R Γ(X, U) := smooth_cstOn f hU
   obtain ⟨t, e', het, htli⟩ := _root_.GlobalTheory.kaehler_baseChange_independent_extend R Γ(X, U) K d
@@ -418,7 +418,7 @@ theorem exists_chart : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X ⟶ S
   have hgs : ∀ i, algebraMap Γ(X, U) K (sf i) ≠ 0 → X.basicOpen g ≤ X.basicOpen (sf i) := by
     intro i hi
     obtain ⟨k, hk⟩ : sf i ∣ g := by
-      have hq : q i = sf i := if_neg hi
+      have hq : q i = sf i := ite_eq_right hi
       exact dvd_mul_of_dvd_right (hq ▸ Finset.dvd_prod_of_mem q (Finset.mem_univ i)) h
     rw [hk, Scheme.basicOpen_mul]; exact inf_le_left
   have hxg : x ∈ X.basicOpen g := by

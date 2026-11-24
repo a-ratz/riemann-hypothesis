@@ -135,7 +135,7 @@ theorem odeA : CompanionTheory.RgExh.Dec.N.OdeA := by
     refine lintegral_congr fun t => ?_
     simp only [V, E]
     rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-      ofReal_norm_eq_enorm]
+      ofReal_norm]
   have hVint : IntegrableOn V (Ioi 0) :=
     ⟨hV.aestronglyMeasurable,
       (hasFiniteIntegral_iff_ofReal (ae_of_all _ hVn)).2 hVlin⟩
@@ -182,7 +182,7 @@ theorem odeA : CompanionTheory.RgExh.Dec.N.OdeA := by
   have ht0 : (0 : ℝ) ≤ t := le_of_lt ht
   simp only [U, E, hfe t ht0]
   rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-    ofReal_norm_eq_enorm]
+    ofReal_norm]
 
 end GlobalTheory.CompanionTheory.OdeRoots
 end -- clump:auto
@@ -358,7 +358,7 @@ theorem odeB : CompanionTheory.RgExh.Dec.N.OdeB := by
     refine lintegral_congr fun t => ?_
     simp only [V, E]
     rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-      ofReal_norm_eq_enorm]
+      ofReal_norm]
   have hVint : IntegrableOn V (Ioi 0) :=
     ⟨hV.aestronglyMeasurable,
       (hasFiniteIntegral_iff_ofReal (ae_of_all _ hVn)).2 hVlin⟩
@@ -374,7 +374,7 @@ theorem odeB : CompanionTheory.RgExh.Dec.N.OdeB := by
     refine lt_of_le_of_lt (le_of_eq ?_) hfi
     refine lintegral_congr fun t => ?_
     rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-      ofReal_norm_eq_enorm]
+      ofReal_norm]
 
   let Fz : ℝ → ℂ := fun r => Complex.exp (-z * r) * f r
   let Fd : ℝ → ℂ := fun r => Complex.exp (-z * r) * g r
@@ -505,7 +505,7 @@ theorem odeB : CompanionTheory.RgExh.Dec.N.OdeB := by
   have ht0 : (0 : ℝ) ≤ t := le_of_lt ht
   simp only [U, E, hfe t ht0]
   rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-    ofReal_norm_eq_enorm]
+    ofReal_norm]
 
 end GlobalTheory.CompanionTheory.OdeRoots.Above
 end -- clump:auto
@@ -544,12 +544,12 @@ theorem enorm_add_sq_le (a b : ℂ) : ‖a + b‖ₑ ^ 2 ≤ 2 * ‖a‖ₑ ^ 2 
     rw [← NNReal.coe_le_coe]
     push_cast
     nlinarith [norm_add_le a b, norm_nonneg a, norm_nonneg b, norm_nonneg (a + b), sq_nonneg (‖a‖ - ‖b‖)]
-  simp only [enorm_eq_nnnorm]
+  simp only [eNorm_eq_nnNorm]
   exact_mod_cast h
 
 theorem measurable_integrand {f : ℝ → ℂ} (hf : Continuous f) (s : ℝ) :
     Measurable fun t : ℝ => ‖f t‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (-2 * s * t)) := by
-  have h1 : Measurable fun t : ℝ => ‖f t‖ₑ := hf.measurable.enorm
+  have h1 : Measurable fun t : ℝ => ‖f t‖ₑ := hf.measurable.eNorm
   have h2 : Measurable fun t : ℝ => ENNReal.ofReal (Real.exp (-2 * s * t)) :=
     ENNReal.measurable_ofReal.comp (by fun_prop)
   exact (h1.pow_const 2).mul h2
@@ -707,7 +707,7 @@ theorem wInt_shift {f h : ℝ → ℂ} {k s : ℝ} (hp : ∀ t, f t = ((Real.exp
       ← Real.exp_add]
     congr 2
     ring
-  rw [hp t, enorm_mul, mul_pow, mul_comm (_ ^ 2) (_ ^ 2), mul_assoc, e]
+  rw [hp t, eNorm_mul, mul_pow, mul_comm (_ ^ 2) (_ ^ 2), mul_assoc, e]
 
 theorem shift_mem (hc : IsCoefFam ε X c) (hA : Formalism.REAL.inG ε A) (μ : Measure (S7.UJ ε))
     (Y : Matrix (Fin n) (Fin n) ℂ) (k : ℤ) (hY : A * Y - Y * A = (k : ℂ) • Y) (s : ℝ) (u : X.V)

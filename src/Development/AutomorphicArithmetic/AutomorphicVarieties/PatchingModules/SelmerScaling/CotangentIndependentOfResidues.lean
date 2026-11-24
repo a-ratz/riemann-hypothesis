@@ -140,7 +140,7 @@ theorem UpperTheory.V.AlgebraTools.dim_relIdeal_le :
       have h1 : z.mulVec m i ∈ q := hrel (Ideal.subset_span ⟨i, rfl⟩)
       have h2 : m i * m i = z.mulVec m i - ∑ j, g (i, j) * m j := by
         simp only [g, Matrix.mulVec, dotProduct, sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul,
-          Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          Finset.sum_ite_eq, Finset.mem_univ, ite_true]
         ring
       have h3 : m i * m i ∈ q := by
         rw [h2]
@@ -211,10 +211,10 @@ private theorem UpperTheory.V.AlgebraTools.exists_div_mem_valuationSubring_of_ne
     funext j
     have hj := hc j (Finset.mem_univ j)
     rw [h0, map_zero] at hj
-    exact (Valuation.zero_iff _).mp (le_antisymm hj zero_le')
+    exact (Valuation.zero_iff _).mp (le_antisymm hj zero_le)
   refine ⟨c, hwc, fun j => ?_⟩
   rw [← V.valuation_le_one_iff, map_div₀]
-  exact div_le_one_of_le₀ (hc j (Finset.mem_univ j)) zero_le'
+  exact div_le_one_of_le₀ (hc j (Finset.mem_univ j)) zero_le
 
 theorem UpperTheory.V.AlgebraTools.exists_kernel_vector :
     ∀ (K : Type) [Field K] (V : ValuationSubring K) (ι : Type) [Fintype ι] [DecidableEq ι] [Nonempty ι]
@@ -253,19 +253,19 @@ private theorem UpperTheory.V.AlgebraTools.generic_kernel_monotone
     genKer z m c ≤ genKer z m d := by
   classical
   intro f hf
-  haveI hQ : (Ideal.map (MvPolynomial.C : P →+* MvPolynomial ι P) (maximalIdeal P)).IsPrime :=
+  have hQ : (Ideal.map (MvPolynomial.C : P →+* MvPolynomial ι P) (maximalIdeal P)).IsPrime :=
     isPrime_map_C (ι := ι) (maximalIdeal P)
   set Q : Ideal (MvPolynomial ι P) := Ideal.map MvPolynomial.C (maximalIdeal P) with hQdef
   let L := Localization.AtPrime Q
   let J : Ideal L := Ideal.map (algebraMap (MvPolynomial ι P) L) (chartIdeal z m d)
-  haveI hJ : J.IsPrime := chartIdeal_localization_isPrime P ι z m h d Q le_rfl
-  haveI : IsLocalRing (L ⧸ J) := .of_surjective' _ Ideal.Quotient.mk_surjective
+  have hJ : J.IsPrime := chartIdeal_localization_isPrime P ι z m h d Q le_rfl
+  have : IsLocalRing (L ⧸ J) := .of_surjective' _ Ideal.Quotient.mk_surjective
   let ψ : MvPolynomial ι P →+* L ⧸ J := (Ideal.Quotient.mk J).comp (algebraMap (MvPolynomial ι P) L)
   let φ : P →+* L ⧸ J := ψ.comp MvPolynomial.C
   have hJle : J ≤ maximalIdeal L := IsLocalRing.le_maximalIdeal hJ.ne_top
   have hψ : ∀ g ∈ chartIdeal z m d, ψ g = 0 := fun g hg =>
     Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_map_of_mem _ hg)
-  haveI : IsLocalHom φ := by
+  have : IsLocalHom φ := by
     constructor
     intro p hp
     by_contra hpu
@@ -312,10 +312,10 @@ private theorem UpperTheory.V.AlgebraTools.generic_kernel_monotone
     intro hall
     by_cases hcd : c = d
     · have h0 := hall 0
-      rw [show lam P d c = 1 from if_pos hcd, MvPolynomial.coeff_zero_one] at h0
+      rw [show lam P d c = 1 from ite_eq_left hcd, MvPolynomial.coeff_zero_one] at h0
       exact (IsLocalRing.maximalIdeal.isMaximal P).ne_top ((Ideal.eq_top_iff_one _).2 h0)
     · have h0 := hall (Finsupp.single c 1)
-      rw [show lam P d c = MvPolynomial.X c from if_neg hcd, MvPolynomial.coeff_X, if_pos rfl] at h0
+      rw [show lam P d c = MvPolynomial.X c from ite_eq_right hcd, MvPolynomial.coeff_X, ite_eq_left rfl] at h0
       exact (IsLocalRing.maximalIdeal.isMaximal P).ne_top ((Ideal.eq_top_iff_one _).2 h0)
   have hunitL : IsUnit (algebraMap (MvPolynomial ι P) L (lam P d c)) :=
     IsLocalization.map_units L (⟨lam P d c, hlamc⟩ : Q.primeCompl)
@@ -373,9 +373,9 @@ theorem UpperTheory.V.AlgebraTools.genKer_isPrime :
       CotInd P (Sum.elim (fun ij : ι × ι => z ij.1 ij.2) m) →
       ∀ c : ι, (genKer z m c).IsPrime ∧ detIdeal z m ≤ genKer z m c := by
   intro P _ _ ι _ _ z m hind c
-  haveI hQ : (Ideal.map (MvPolynomial.C : P →+* MvPolynomial ι P) (maximalIdeal P)).IsPrime :=
+  have hQ : (Ideal.map (MvPolynomial.C : P →+* MvPolynomial ι P) (maximalIdeal P)).IsPrime :=
     isPrime_map_C _
-  haveI hJ := chartIdeal_localization_isPrime P ι z m hind c
+  have hJ := chartIdeal_localization_isPrime P ι z m hind c
     (Ideal.map (MvPolynomial.C : P →+* MvPolynomial ι P) (maximalIdeal P)) le_rfl
   have key : genKer z m c = Ideal.comap
       ((algebraMap (MvPolynomial ι P) (Localization.AtPrime
@@ -467,7 +467,7 @@ theorem UpperTheory.V.AlgebraTools.exists_least_prime_detIdeal :
     rw [RingHom.map_det] at h3
     exact h3
   obtain ⟨c, l, hc, hl, hz, hm⟩ := exists_kernel_vector _ V ι (z.map f) (fun j => f (m j)) h1 h2
-  haveI : IsLocalRing V.toSubring := inferInstanceAs (IsLocalRing V)
+  have : IsLocalRing V.toSubring := inferInstanceAs (IsLocalRing V)
   have hk := genKer_le_ker P ι z m h c V.toSubring (f.codRestrict V.toSubring hV)
     (fun j => ⟨l j, hl j⟩) (Subtype.ext hc) (by
       funext i
@@ -507,8 +507,8 @@ theorem UpperTheory.V.AlgebraTools.le_of_detIdeal_le :
     refine le_trans ?_ hdet
     simp [detIdeal, Matrix.det_isEmpty]
   obtain ⟨K, hK, hKdet, hKmin⟩ := exists_least_prime_detIdeal P ι z m hc hne
-  haveI := hK
-  haveI := hZ
+  have := hK
+  have := hZ
   refine le_trans ?_ (hKmin Q hQ hdet)
   have hKZ : K ≤ Z := hKmin Z hZ hdZ
   by_contra hnot
@@ -559,13 +559,13 @@ theorem UpperTheory.V.AlgebraTools.under_le_of_det_mem :
       (∀ Z' : Ideal A, Z'.IsPrime → Z'.comap (algebraMap B A) = Z → ∃ j, π (m j) ∉ Z') →
       ∀ Q' : Ideal A, Q'.IsPrime → π z.det ∈ Q' → Z ≤ Q'.comap (algebraMap B A) := by
   intro P _ _ ι _ _ z m hC B A _ _ _ _ _ π hπ hrel Z hZ hdim hm Q' hQ' hdet
-  haveI := hZ
+  have := hZ
   have hinj : Function.Injective (algebraMap B A) := FaithfulSMul.algebraMap_injective B A
   obtain ⟨Z', -, hZ'p, hZ'c⟩ := Ideal.exists_ideal_over_prime_of_isIntegral Z (⊥ : Ideal A) (by
     rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]; exact bot_le)
   change Ideal.comap (algebraMap B A) Z' = Z at hZ'c
-  haveI := hZ'p
-  haveI := hQ'
+  have := hZ'p
+  have := hQ'
   obtain ⟨j, hj⟩ := hm Z' hZ'p hZ'c
   have hker : RingHom.ker ((Ideal.Quotient.mk Z').comp π) = Z'.comap π := by
     ext x
@@ -655,8 +655,8 @@ theorem UpperTheory.V.Pa.aaCO :
       rw [map_sub, map_mul, ← hcn]
       ring
     exact isUnit_of_mul_isUnit_left (by rw [hprod]; exact hu.map _)
-  haveI : Nontrivial A := hinj.nontrivial
-  haveI hloc : IsLocalRing A := by
+  have : Nontrivial A := hinj.nontrivial
+  have hloc : IsLocalRing A := by
     apply IsLocalRing.of_nonunits_add
     intro a a' ha ha'
     have hS' : ∀ x : A, x ∈ nonunits A → x ∈ S := fun x hx => by
@@ -680,7 +680,7 @@ theorem UpperTheory.V.Pa.aaCO :
         · exact (hmemS _).mpr ⟨b, hb, 0, N.zero_mem, by simp⟩
         · exact (hmemS _).mpr ⟨0, zero_mem _, n, hn, by simp⟩
       exact hle ha
-  haveI hco : IsCO O A := co_finite O B A (fun x => by
+  have hco : IsCO O A := co_finite O B A (fun x => by
     obtain ⟨b, n, hn, rfl⟩ := hdec x
     obtain ⟨o, ho⟩ := IsCO.res_surj (O := O) b
     refine ⟨o, (hmemS _).mpr ⟨b - algebraMap O B o, ho, n, hn, ?_⟩⟩
@@ -772,14 +772,14 @@ private theorem cotangent_independent_of_residues (O : Type) [CommRing O] [IsDom
 theorem UpperTheory.V.Pa.presOut1 :
     ∀ (O B A : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O] [CommRing B] [Algebra O B] [IsCO O B] [CommRing A] [Algebra B A] [Module.Finite B A] (N : Submodule B A), Function.Injective (algebraMap B A) → _root_.IsCompl (1 : Submodule B A) N → (∀ a ∈ N, ∀ b ∈ N, ∃ c ∈ maximalIdeal B, a * b = algebraMap B A c) → ∀ (D0 g : ℕ) (X : Fin D0 → B) (m : Fin g → N) (c : Fin g × Fin g → Fin D0 → O), (∀ a, X a ∈ maximalIdeal B) → Submodule.span B (Set.range m) = ⊤ → LinearIndependent (ResidueField O) (fun p a => residue O (c p a)) → maximalIdeal B ≤ Ideal.span (Set.range X) ⊔ ((maximalIdeal O).map (algebraMap O B) ⊔ maximalIdeal B ^ 2 ⊔ ired N) → (∀ i, ∑ j, (∑ a, algebraMap O B (c (i, j) a) * X a) • m j ∈ ((maximalIdeal O).map (algebraMap O B) ⊔ maximalIdeal B ^ 2 ⊔ ired N) • (⊤ : Submodule B N)) → ∀ Z Q : Ideal B, Z.IsPrime → Q.IsPrime → ((1 + D0 : ℕ) : WithBot ℕ∞) ≤ ringKrullDim (B ⧸ Z) → ¬ ired N ≤ Z → (¬ ired N ≤ Q ∨ Module.annihilator B N ≤ Q) → Z ≤ Q := by
   intro O B A _ _ _ _ _ _ _ _ _ _ N hinj hcompl hmul D0 g X m c hX hm hc hg hr Z Q hZ hQ hd hZr hQr
-  letI : Algebra O A := ((algebraMap B A).comp (algebraMap O B)).toAlgebra
-  haveI : IsScalarTower O B A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra O A := ((algebraMap B A).comp (algebraMap O B)).toAlgebra
+  have : IsScalarTower O B A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨hA, hmA, hired⟩ := aaCO O B A N hinj hcompl hmul
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hmO : maximalIdeal O = Ideal.span {ϖ} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ
   obtain ⟨hreg, hdim, hx⟩ := mvPowerSeries_cotInd O ϖ hϖ (Fin D0 ⊕ Fin g)
-  haveI := co_mvps O O (Fin D0 ⊕ Fin g)
+  have := co_mvps O O (Fin D0 ⊕ Fin g)
   have hBA : (maximalIdeal B).map (algebraMap B A) ≤ maximalIdeal A := fun a ha =>
     (hmA a).2 (Ideal.mem_sup_left ha)
   obtain ⟨F, ⟨hC, hF⟩, -⟩ := co_ev O O A (Fin D0 ⊕ Fin g) (Algebra.ofId O A)
@@ -868,7 +868,7 @@ theorem UpperTheory.V.Pa.presOut1 :
       rw [this]
       exact Q.zero_mem
     · exact h hann
-  haveI : FaithfulSMul B A := (faithfulSMul_iff_algebraMap_injective B A).2 hinj
+  have : FaithfulSMul B A := (faithfulSMul_iff_algebraMap_injective B A).2 hinj
   obtain ⟨Q', -, hQ', hQQ⟩ := Ideal.exists_ideal_over_prime_of_isIntegral Q (⊥ : Ideal A) (by
     intro x hx
     rw [Ideal.mem_comap, Ideal.mem_bot] at hx

@@ -114,7 +114,7 @@ theorem exists_form [Algebra ℚ Ω] (x : Fin (N + 1) → Ω) {c : Fin (N + 1)} 
     (ha : a ∈ chartQ x c) :
     ∃ (m d : ℕ) (H : MRing (fun _ : Unit => Fin (N + 1))),
       m ≠ 0 ∧ H.IsHomogeneous d ∧ ratEval x c H = m * a := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   induction ha using Algebra.adjoin_induction with
   | mem a ha =>
     obtain ⟨j, rfl⟩ := ha
@@ -368,7 +368,7 @@ theorem exists_prime_of_chart {Ω : Type} [Field Ω] [Algebra ℚ Ω] {X : Schem
     (hdict : ∀ a ∈ regAt ξ p, ∃ s ∈ chartQ x c, unitAt ξ p s ∧ s * a ∈ chartQ x c) :
     ∃ I : Ideal (chartQ x c), I.IsPrime ∧ (∀ s : chartQ x c, s ∉ I ↔ unitAt ξ p (s : Ω)) ∧
       IsLocAt (chartQ x c) I (regAt ξ p) := by
-  haveI hloc : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hξ p).1
+  have hloc : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hξ p).1
   have hmem : ∀ s : chartQ x c, (s : Ω) ∈ regAt ξ p := fun s => hle _ s.2
   let f : chartQ x c →+* regAt ξ p :=
     ((chartQ x c).val : chartQ x c →+* Ω).codRestrict (regAt ξ p) hmem
@@ -452,12 +452,12 @@ theorem differentials_basis_invAdj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω]
       · exact ⟨1, by rw [pow_one, inv_mul_cancel₀ hg0]; exact A.one_mem⟩
       · exact ⟨0, by simpa using hx⟩
     exact fun x hx => hle hx
-  letI : Algebra A (Mdl.invAdj A g) := (Subalgebra.inclusion hAB).toRingHom.toAlgebra
+  let : Algebra A (Mdl.invAdj A g) := (Subalgebra.inclusion hAB).toRingHom.toAlgebra
   have hinc : ∀ a : A, ((algebraMap A (Mdl.invAdj A g) a : Mdl.invAdj A g) : Ω) = a := fun _ => rfl
-  haveI : IsScalarTower ℚ A (Mdl.invAdj A g) :=
+  have : IsScalarTower ℚ A (Mdl.invAdj A g) :=
     IsScalarTower.of_algebraMap_eq (fun _ => Subtype.ext rfl)
   let g' : A := ⟨g, hg⟩
-  haveI : IsLocalization (Submonoid.powers g') (Mdl.invAdj A g) := by
+  have : IsLocalization (Submonoid.powers g') (Mdl.invAdj A g) := by
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨y, n, rfl⟩
       have hu : IsUnit (algebraMap A (Mdl.invAdj A g) g') :=
@@ -478,7 +478,7 @@ theorem differentials_basis_invAdj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω]
       refine ⟨1, ?_⟩
       have hxy : x = y := Subtype.ext (by simpa [hinc] using congrArg Subtype.val h)
       rw [hxy]
-  haveI : Algebra.FormallyEtale A (Mdl.invAdj A g) :=
+  have : Algebra.FormallyEtale A (Mdl.invAdj A g) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers g')
   have hzz : ∀ i, algebraMap A (Mdl.invAdj A g) (z i) = z' i := fun i =>
     Subtype.ext ((hinc (z i)).trans (hz i).symm)
@@ -649,7 +649,7 @@ theorem isLocalizationAway_invAdj {Ω : Type} [Field Ω] [Algebra ℚ Ω] {A : S
     (hg : g ∈ A) (h0 : g ≠ 0) :
     letI : Algebra A (invAdj A g) := (Subalgebra.inclusion (le_invAdj A g)).toRingHom.toAlgebra
     IsLocalization.Away (⟨g, hg⟩ : A) (invAdj A g) := by
-  letI : Algebra A (invAdj A g) := (Subalgebra.inclusion (le_invAdj A g)).toRingHom.toAlgebra
+  let : Algebra A (invAdj A g) := (Subalgebra.inclusion (le_invAdj A g)).toRingHom.toAlgebra
   have hmap : ∀ a : A, ((algebraMap A (invAdj A g) a : invAdj A g) : Ω) = a := fun _ => rfl
   refine IsLocalization.Away.mk (⟨g, hg⟩ : A) ?_ ?_ ?_
   · refine IsUnit.of_mul_eq_one (⟨g⁻¹, inv_mem_invAdj A g⟩ : invAdj A g) (Subtype.ext ?_)
@@ -665,10 +665,10 @@ theorem isLocalizationAway_invAdj {Ω : Type} [Field Ω] [Algebra ℚ Ω] {A : S
 theorem smooth_invAdj : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (A : Subalgebra ℚ Ω) (g : Ω), g ∈ A → g ≠ 0 →
     Algebra.Smooth ℚ A → Algebra.Smooth ℚ (invAdj A g) := by
   intro Ω _ _ A g hg h0 hA
-  letI : Algebra A (invAdj A g) := (Subalgebra.inclusion (le_invAdj A g)).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ A (invAdj A g) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsLocalization.Away (⟨g, hg⟩ : A) (invAdj A g) := isLocalizationAway_invAdj hg h0
-  haveI : Algebra.Smooth A (invAdj A g) := Algebra.Smooth.of_isLocalization_Away (⟨g, hg⟩ : A)
+  let : Algebra A (invAdj A g) := (Subalgebra.inclusion (le_invAdj A g)).toRingHom.toAlgebra
+  have : IsScalarTower ℚ A (invAdj A g) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsLocalization.Away (⟨g, hg⟩ : A) (invAdj A g) := isLocalizationAway_invAdj hg h0
+  have : Algebra.Smooth A (invAdj A g) := Algebra.Smooth.of_isLocalization_Away (⟨g, hg⟩ : A)
   exact Algebra.Smooth.comp ℚ A (invAdj A g)
 
 end GlobalTheory.CompanionTheory.Ar.SncBase.Mdl
@@ -980,7 +980,7 @@ theorem pointPrime {κ : Type} {x : κ → Ω} {c : κ} (hT : CoordTie ℤ ξ x)
     ∃ q : Ideal (invAdj (chartQ x c) h), q.IsPrime ∧
       (∀ s : invAdj (chartQ x c) h, s ∉ q ↔ unitAt ξ p (s : Ω)) ∧
       IsLocAt (invAdj (chartQ x c) h) q (regAt ξ p) := by
-  haveI hloc : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hT.gen p).1
+  have hloc : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hT.gen p).1
   have hmem : ∀ s : invAdj (chartQ x c) h, (s : Ω) ∈ regAt ξ p :=
     fun s => invAdj_le hp (fun _ => chartQ_le hp hc) hu s.2
   let f : invAdj (chartQ x c) h →+* regAt ξ p :=

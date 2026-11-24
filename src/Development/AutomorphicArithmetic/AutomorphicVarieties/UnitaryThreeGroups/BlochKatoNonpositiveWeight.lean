@@ -65,14 +65,14 @@ open UpperTheory.V UpperTheory.V.Base UpperTheory.V.HV UpperTheory.V.Alg UpperTh
 
 private theorem fd_adjoin_range (l : ℕ) [Fact l.Prime] {ι : Type} [Finite ι] (f : ι → PadicAlgCl l) :
     FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] (Set.range f)) := by
-  haveI : Finite (Set.range f) := (Set.finite_range _).to_subtype
+  have : Finite (Set.range f) := (Set.finite_range _).to_subtype
   exact IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
 
 private theorem char_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ]
     [CompactSpace Γ] (ψ : Γ →* (PadicAlgCl l)ˣ) (hψ : IsOpen (ψ.ker : Set Γ)) :
     ∃ K : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] K ∧ ∀ g, (ψ g : PadicAlgCl l) ∈ K := by
-  haveI : Finite (Γ ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
+  have : Finite (Γ ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
   refine ⟨_, fd_adjoin_range l (fun q : Γ ⧸ ψ.ker => (ψ q.out : PadicAlgCl l)), fun g => ?_⟩
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul ψ.ker g
   refine IntermediateField.subset_adjoin _ _ ⟨(g : Γ ⧸ ψ.ker), ?_⟩
@@ -89,8 +89,8 @@ private theorem desc {l : ℕ} [Fact l.Prime] {H : Type} [Group H] [TopologicalS
   obtain ⟨⟨hcc, hcoc⟩, x, hx⟩ := hc
   obtain ⟨S, rfl⟩ := TensorProduct.exists_finset x
   obtain ⟨T⟩ := Loc.tiedP l
-  haveI : IsDomain (Loc.Bcr l) := GlobalTheory.RegularRing.isDomain_of_tied T (Loc.botExt l)
-  haveI := fd_adjoin_range l (fun p : S => p.1.1)
+  have : IsDomain (Loc.Bcr l) := GlobalTheory.RegularRing.isDomain_of_tied T (Loc.botExt l)
+  have := fd_adjoin_range l (fun p : S => p.1.1)
   let E : IntermediateField ℚ_[l] (PadicAlgCl l) := E₀ ⊔ IntermediateField.adjoin ℚ_[l] (Set.range fun p : S => p.1.1)
   have hκE : ∀ g, (κ g : PadicAlgCl l) ∈ E := fun g => (le_sup_left : E₀ ≤ E) (hκ g)
   have hS : ∀ p ∈ S, p.1 ∈ E := fun p hp =>
@@ -256,7 +256,7 @@ private theorem neg_case (hP : CohInp) (θ χ : G ℚ Ω →* (PadicAlgCl l)ˣ) 
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l)]
     exact K₀.algebraMap_mem _
   obtain ⟨E, _, κ, c', hκ, hc', hf⟩ := desc _ (θ.comp (Loc.iota j)) K₀ (fun g => hθK _) _ hj
-  haveI : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
   have hw : Loc.HasWeight (MonoidHom.id (GQ l)) κ (-(e : ℤ)) := by
     refine ⟨χ.ker.comap (Loc.iota j), hχ.preimage i1.continuous, fun g hg _ => ?_⟩
     rw [_root_.zpow_neg, zpow_natCast]
@@ -294,7 +294,7 @@ private theorem zero_case (hP : CohInp) (K : Type) [Field K] [NumberField K] [Al
     (c : G ℚ Ω → PadicAlgCl l) (hc : c ∈ Z1 (Loc.chRep θ)) (hb : Af.IsBK l (Loc.chRep θ) c) :
     ∀ g ∈ galOf ℚ K Ω, c g = 0 := by
   have hcoc : ∀ g h, c (g * h) = c g + θ g * c h := hc.2
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   obtain ⟨g1, g2, -⟩ := galEmbTop ℚ K Ω
   obtain ⟨-, hIne, -, -⟩ := Kum.toGalDict ℚ Ω K _ le_rfl
   have hχ : IsOpen (θ.ker : Set (G ℚ Ω)) := Subgroup.isOpen_mono hθ g2
@@ -305,7 +305,7 @@ private theorem zero_case (hP : CohInp) (K : Type) [Field K] [NumberField K] [Al
   obtain ⟨i1, -, -, i4, -, -, -⟩ := Loc.iotaFacts j
   obtain ⟨K₀, hK₀, hψK⟩ := char_finext l (G ℚ Ω) θ hχ
   obtain ⟨E, _, κ, c', hκ, hc', hf⟩ := desc _ (θ.comp (Loc.iota j)) K₀ (fun g => hψK _) _ hj
-  haveI : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
   have hκc : Continuous fun g => (κ g : E) :=
     continuous_induced_rng.2 (((Units.continuous_val.comp hθc).comp i1.continuous).congr fun g => (hκ g).symm)
   have hz := (Loc.z1fUnr hP.loc (MonoidHom.id (GQ l)) Topology.IsOpenEmbedding.id (Loc.chRep κ)
@@ -429,9 +429,9 @@ theorem UpperTheory.V.U3.bloch_kato_nonpositive_weight :
         · simp [hg, mul_add]
         · simp [hg, hη1 g hg, mul_add]
       · rcases hs with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
-        · simp only [hg, if_false, MonoidHom.one_apply, Units.val_one]
+        · simp only [hg, ite_false, MonoidHom.one_apply, Units.val_one]
           ring
-        · simp only [hg, if_false, hη2 g hg, Units.val_neg, Units.val_one]
+        · simp only [hg, ite_false, hη2 g hg, Units.val_neg, Units.val_one]
           ring
     rw [hab]
     refine hch θ (hs.imp And.right And.right) (fun g => f (γ g)) ⟨hfc.comp hγ.1, fun g h => ?_⟩
@@ -454,8 +454,8 @@ theorem UpperTheory.V.U3.bloch_kato_nonpositive_weight :
   simp only [wt_rev, Fin.rev_rev, Units.val_mul, MonoidHom.one_apply, Units.val_one, Matrix.of_apply] at h1 h2 h3 h4 ⊢
   by_cases hg : D.η g = 1
   · rw [hη1 g hg, Units.val_one] at h1 h2
-    rw [if_pos hg]
+    rw [ite_eq_left hg]
     linear_combination (h1 + h2 + h3 - h4) / 4
   · rw [hη2 g hg, Units.val_neg, Units.val_one] at h1 h2
-    rw [if_neg hg]
+    rw [ite_eq_right hg]
     linear_combination (h1 + h2 + h3 - h4) / 4

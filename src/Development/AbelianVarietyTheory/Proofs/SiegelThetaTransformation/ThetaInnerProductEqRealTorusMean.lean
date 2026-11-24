@@ -88,7 +88,7 @@ theorem discrete_image [T2Space G] [T2Space V] [LocallyCompactSpace V] (hR : Con
     (hL : ∀ v ∈ L, ∃ γ ∈ Γ, γ ∈ tube p R U ∧ p γ = v) : DiscreteTopology L := by
   obtain ⟨K, hKc, hK0⟩ := exists_compact_mem_nhds (0 : V)
   obtain ⟨K', hK', hsub⟩ := exists_compact (p := p) (U := U) hR hU hKc
-  have hΓc : IsClosed (Γ : Set G) := AddSubgroup.isClosed_of_discrete
+  have hΓc : IsClosed (Γ : Set G) := AddSubgroup.isClosed_of_discreteTopology
   have hfin : ((Γ : Set G) ∩ K').Finite := by
     apply (hK'.inter_left hΓc).finite
     have hd : DiscreteTopology (Γ : Set G) := inferInstanceAs (DiscreteTopology Γ)

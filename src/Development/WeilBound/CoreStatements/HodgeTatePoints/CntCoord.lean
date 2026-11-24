@@ -209,7 +209,7 @@ private theorem genAF_bot_of_span_monomials {C : Type} [Field C] {R : Type} [Com
 theorem cnt_of (hcoord : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (AA : HopfOrder (C := C) R (ι → ZMod p)), ∀ cA cN, HasLen v R (AFQuot p AA.carrier) cA → HasColen R v AA.carrier cN → cA ^ (Fintype.card (ι → ZMod p) * (p - 1)) ≤ cN ^ 2 ∧ (cA ^ (Fintype.card (ι → ZMod p) * (p - 1)) = cN ^ 2 → ∃ x : ι → (ι → ZMod p) → C, (∀ j, x j ∈ afFun p AA.carrier) ∧ AA.carrier = Submodule.span R (Set.range fun (α : ι → ZMod p) (y : ι → ZMod p) => ∏ j, x j y ^ (α j).val))) :
     ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N], (∀ x : N, p • x = 0) → ∀ AA : HopfOrder (C := C) R N, ∀ cA cN, HasLen v R (AFQuot p AA.carrier) cA → HasColen R v AA.carrier cN → cA ^ (Fintype.card N * (p - 1)) ≤ cN ^ 2 ∧ (cA ^ (Fintype.card N * (p - 1)) = cN ^ 2 → GenAF p AA.carrier ⊥) := by
   intro p _ C _ _ _ v R _ _ hvR hp N _ _ _ hN AA cA cN hA hC
-  letI : Module (ZMod p) N := AddCommGroup.zmodModule hN
+  let : Module (ZMod p) N := AddCommGroup.zmodModule hN
   obtain ⟨n, ⟨e⟩⟩ := exists_coord p N
   have hcard : Fintype.card (Fin n → ZMod p) = Fintype.card N := Fintype.card_congr e.toEquiv
   obtain ⟨f⟩ := afQuot_equiv (C := C) (R := R) p e AA.carrier
@@ -308,10 +308,10 @@ theorem exists_smith_basis (hv : v.Integers R) {ι : Type} [Fintype ι] [Decidab
     · have hj : ((e (e.symm j)) : ℕ) < m := by
         rw [Equiv.apply_symm_apply, ← hkj]; exact k.2
       have hε : ε (e.symm j) = a j := by
-        simp only [ε, if_pos hj, Equiv.apply_symm_apply]
-      rw [if_pos hkj, mul_smul, ← hε]
+        simp only [ε, ite_eq_left hj, Equiv.apply_symm_apply]
+      rw [ite_eq_left hkj, mul_smul, ← hε]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨e.symm j, rfl⟩)
-    · rw [if_neg hkj, mul_zero, zero_smul]
+    · rw [ite_eq_right hkj, mul_zero, zero_smul]
       exact Submodule.zero_mem _
   · rw [Submodule.span_le]
     rintro _ ⟨j, rfl⟩
@@ -328,17 +328,17 @@ theorem exists_smith_basis (hv : v.Integers R) {ι : Type} [Fintype ι] [Decidab
           rw [Matrix.mul_apply, Finset.sum_eq_single (e j)]
           · rw [hD]; simp [mul_comm]
           · intro b _ hb
-            rw [hD, if_neg, mul_zero]
+            rw [hD, ite_eq_right, mul_zero]
             intro h
             exact hb (Fin.ext h.symm)
           · intro h; exact absurd (Finset.mem_univ _) h
         simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
         rw [← h2, h1, h3]
-        simp only [ε, if_pos hj, Λ, Matrix.of_apply]
+        simp only [ε, ite_eq_left hj, Λ, Matrix.of_apply]
       rw [hsum, ← hg]
       exact Submodule.sum_mem _ fun l _ =>
         Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, rfl⟩)
-    · have : ε j = 0 := if_neg hj
+    · have : ε j = 0 := ite_eq_right hj
       rw [this, zero_smul]
       exact Submodule.zero_mem _
 

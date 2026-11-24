@@ -121,7 +121,7 @@ theorem lvPr_smul (hs : ∀ x ∈ M', s • x ∈ M) (r : 𝓞 E) (z : ↥M') :
   | H x => rw [Module.Quotient.mk_smul_mk, Submodule.Quotient.mk_smul]
 
 theorem lv_exists_inv {a : 𝓞 E} (ha : a ∉ P.asIdeal) : ∃ t : 𝓞 E, a * t - 1 ∈ P.asIdeal := by
-  haveI := P.isMaximal
+  have := P.isMaximal
   have h0 : Ideal.Quotient.mk P.asIdeal a ≠ 0 := by
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   obtain ⟨t, ht⟩ := Ideal.Quotient.mk_surjective (Ideal.Quotient.mk P.asIdeal a)⁻¹
@@ -146,11 +146,11 @@ theorem lv_LshKer_eq : d.1.LshKer P = d.1.L ⊔ P.1.asIdeal • d.1.Lsh := by
     obtain ⟨b, hb⟩ := crtPl ST (fun R => if R = P.1 then c else 0)
     have hbP : b - c ∈ P.1.asIdeal := by
       have := hb P.1 P.2
-      rwa [if_pos rfl] at this
+      rwa [ite_eq_left rfl] at this
     have hbQ : ∀ Q : ST, Q ≠ P → b ∈ Q.1.asIdeal := by
       intro Q hQ
       have := hb Q.1 Q.2
-      rwa [if_neg (fun e => hQ (Subtype.ext e)), sub_zero] at this
+      rwa [ite_eq_right (fun e => hQ (Subtype.ext e)), sub_zero] at this
     have he : a * b - 1 ∈ P.1.asIdeal := by
       have : a * b - 1 = a * (b - c) + (a * c - 1) := by ring
       rw [this]

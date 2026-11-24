@@ -122,7 +122,7 @@ end
 
 theorem finite_gen {L Ω : Type} [Field L] [Field Ω] (β : L →+* Ω) (hβ : β.IsIntegral) (s : Finset Ω) :
     (β.codRestrict _ (mem_gen β s)).Finite := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have : FiniteDimensional L (IntermediateField.adjoin L (s : Set Ω)) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => hβ x
   exact this
@@ -213,12 +213,12 @@ theorem exists_common_fib {Ω : Type} [Field Ω] (M₀ : Subfield Ω) (P₁ P₂
   obtain ⟨u, hu⟩ := H M h hs.1 Q₁ Q₂ q₁ q₂ c₁ c₂ k₁ k₂ e₁ e₂ l₁ l₂
   obtain ⟨v, hv⟩ := H' M h hs.2 Q₂ Q₁ q₂ q₁ c₂ c₁ k₂ k₁ e₂ e₁ l₂ l₁
   have F := GlobalTheory.FieldBaseChange.epi_and_isMonHom_iff M Ω M.subtype
-  haveI : Epi c₁ := (F.1 _ _ _ _ c₁ l₁.1.1).1
-  haveI : Epi c₂ := (F.1 _ _ _ _ c₂ l₂.1.1).1
+  have : Epi c₁ := (F.1 _ _ _ _ c₁ l₁.1.1).1
+  have : Epi c₂ := (F.1 _ _ _ _ c₂ l₂.1.1).1
   let e : Q₁.A ≅ Q₂.A := ⟨u, v,
     Over.OverMorphism.ext (by rw [← cancel_epi c₁, Over.comp_left, ← Category.assoc, hu, hv, Over.id_left, Category.comp_id]),
     Over.OverMorphism.ext (by rw [← cancel_epi c₂, Over.comp_left, ← Category.assoc, hv, hu, Over.id_left, Category.comp_id])⟩
-  haveI : IsMonHom e.hom := (F.2 _ _ _ _ c₁ c₂ u (𝟙 B.A) l₁.1 l₂.1 (hu.trans (Category.id_comp _).symm)).1 inferInstance
+  have : IsMonHom e.hom := (F.2 _ _ _ _ c₁ c₂ u (𝟙 B.A) l₁.1 l₂.1 (hu.trans (Category.id_comp _).symm)).1 inferInstance
   have hid : spMap (RingHom.id M) = 𝟙 _ := Spec.map_id _
   have k : Fib Q₁ Q₂ (RingHom.id M) u.left := by
     refine ⟨(isGrpPullback_of_iso e).congr hid.symm rfl, ?_⟩
@@ -295,8 +295,8 @@ theorem cDvr_of_finExt {R R' : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [
     [IsLocalRing R'] {ρ : R →+* R'} (hR : GlobalTheory.LN.CDvr R) (h : FinExt ρ) : GlobalTheory.LN.CDvr R' := by
   obtain ⟨hdvr, -, h0⟩ := hR
   obtain ⟨⟨hn, -, hic, hc⟩, hinj, hfin⟩ := h
-  letI := ρ.toAlgebra
-  haveI : Algebra.IsIntegral R R' := ⟨fun x => (RingHom.IsIntegral.of_finite hfin) x⟩
+  let := ρ.toAlgebra
+  have : Algebra.IsIntegral R R' := ⟨fun x => (RingHom.IsIntegral.of_finite hfin) x⟩
   have hd : ringKrullDim R' = 1 := by
     rw [ReciprocityTheory.CA.ringKrullDim_eq_of_isIntegral_of_injective hinj]
     exact IsDiscreteValuationRing.ringKrullDim_eq_one R
@@ -305,13 +305,13 @@ theorem cDvr_of_finExt {R R' : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [
 theorem exists_extend {R R₁ F Ω : Type} [CommRing R] [CommRing R₁] [IsDomain R₁] [Field F] [Field Ω] [IsAlgClosed Ω]
     {ρ : R →+* R₁} (hρ : ρ.Finite) (i : R →+* F) (τ : F →+* FractionRing R₁)
     (hτ : τ.comp i = (algebraMap R₁ _).comp ρ) (j : F →+* Ω) : ∃ j₁ : FractionRing R₁ →+* Ω, j₁.comp τ = j := by
-  letI := τ.toAlgebra
-  letI := j.toAlgebra
+  let := τ.toAlgebra
+  let := j.toAlgebra
   have hint : ∀ r : R₁, IsIntegral F (algebraMap R₁ (FractionRing R₁) r) := fun r => by
     obtain ⟨p, hp, e⟩ := RingHom.IsIntegral.of_finite hρ r
     refine ⟨p.map i, hp.map i, ?_⟩
     rw [Polynomial.eval₂_map, RingHom.algebraMap_toAlgebra, hτ, ← Polynomial.hom_eval₂, e, map_zero]
-  haveI : Algebra.IsAlgebraic F (FractionRing R₁) := ⟨fun x => by
+  have : Algebra.IsAlgebraic F (FractionRing R₁) := ⟨fun x => by
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := R₁) x
     rw [div_eq_mul_inv]
     exact (hint a).isAlgebraic.mul (hint b).isAlgebraic.inv⟩
@@ -326,7 +326,7 @@ theorem exists_range_le_gen {R R₁ L Ω : Type} [CommRing R] [CommRing R₁] [I
     {ρ : R →+* R₁} (hρ : ρ.Finite) (β : L →+* Ω) (χ : R →+* L) (j : FractionRing R₁ →+* Ω)
     (h : ∀ r, j (algebraMap R₁ _ (ρ r)) = β (χ r)) : ∃ s : Finset Ω, ∀ x, j x ∈ gen β s := by
   classical
-  letI := ρ.toAlgebra
+  let := ρ.toAlgebra
   obtain ⟨t, ht⟩ := (show Module.Finite R R₁ from hρ).fg_top
   refine ⟨t.image fun r => j (algebraMap R₁ _ r), fun x => ?_⟩
   have key : ∀ r : R₁, j (algebraMap R₁ _ r) ∈ gen β (t.image fun r => j (algebraMap R₁ _ r)) := fun r => by
@@ -365,7 +365,7 @@ theorem exists_restrict {R R₁ W : Type} [CommRing R] [IsLocalRing R] [CommRing
   · exact IsFractionRing.injective R₁ (FractionRing R₁)
       (ga.injective ((hf a).symm.trans ((congrArg (algebraMap W _) e).trans (hf b))))
   · have hm : ((maximalIdeal W).comap φ).IsMaximal := by
-      refine Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' ρ (RingHom.IsIntegral.of_finite hρ) _ ?_
+      refine Ideal.isMaximal_of_isIntegral_of_isMaximal_comap ρ (RingHom.IsIntegral.of_finite hρ) _ ?_
       rw [Ideal.comap_comap, hc, IsLocalRing.maximalIdeal_comap]
       infer_instance
     exact ((IsLocalRing.local_hom_tfae φ).out 5 1).1 (IsLocalRing.eq_maximalIdeal hm)
@@ -431,7 +431,7 @@ theorem exists_uniTrait_of_fib {R : Type} [CommRing R] [IsDomain R] [IsLocalRing
   obtain ⟨D₂, hD₂, A₂, U₂, a₂, hA₂⟩ := exists_unif_fib hWb.1 hio.1 io hio.2.1 (map_maximalIdeal_le io) hG' U' (σ.comp i)
     ((RingHom.comp_assoc _ _ _).trans hσ)
   obtain ⟨d, -, hd⟩ := Fib.cancel (RingHom.id _) f₂ hA₂ (RingHom.id_comp _)
-  haveI := hio.1.2.2.1
+  have := hio.1.2.2.1
   obtain ⟨φ₁, hφ₁, hcomp, hinj, hl⟩ := exists_restrict hρ.2.2 (io.comp φ) (σ.comp k) fun r =>
     (congrArg σ (m.injective ((hmk _).trans ((hjρ r).trans (hmi _).symm)))).trans (DFunLike.congr_fun hσ (φ r))
   obtain ⟨q⟩ := GlobalTheory.PullDegComp.nonempty_isPullDeg_comp hφ hio.2.1 hD' hD₂

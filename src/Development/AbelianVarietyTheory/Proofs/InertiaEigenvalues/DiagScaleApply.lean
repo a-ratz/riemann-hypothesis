@@ -102,7 +102,7 @@ theorem diagScale_smul (s : ZMod a → K) (f : K⟦X⟧) (w : Vec K a ι) :
 
 theorem isoProj_vpow {P : PhiMod O K l e a ι} (Δ : Descent P) (c : ZMod e) (n : ℕ) (v : Vec K a ι) :
     isoProj Δ c (((X : K⟦X⟧) ^ e) ^ n • v) = ((X : K⟦X⟧) ^ e) ^ n • isoProj Δ c v := by
-  letI := Fintype.ofFinite (rootsOfUnity e K)
+  let := Fintype.ofFinite (rootsOfUnity e K)
   simp only [isoProj, LinearMap.smul_apply, LinearMap.sum_apply,
     LinearMap.comp_apply, act_vpow_smul, diagScale_smul, Finset.smul_sum]
   refine Finset.sum_congr rfl fun ζ _ => ?_
@@ -111,7 +111,7 @@ theorem isoProj_vpow {P : PhiMod O K l e a ι} (Δ : Descent P) (c : ZMod e) (n 
 theorem app_isoProj {P : PhiMod O K l e a ι} {Q : PhiMod O K l e a κ} {Δ₁ : Descent P}
     {Δ₂ : Descent Q} (F : Descent.Hom Δ₁ Δ₂) (c : ZMod e) (v : Vec K a ι) :
     F.app (isoProj Δ₁ c v) = isoProj Δ₂ c (F.app v) := by
-  letI := Fintype.ofFinite (rootsOfUnity e K)
+  let := Fintype.ofFinite (rootsOfUnity e K)
 
   simp only [isoProj, LinearMap.smul_apply, LinearMap.sum_apply,
   LinearMap.comp_apply, LinearMap.map_smul_of_tower, map_sum]

@@ -280,9 +280,9 @@ open Matrix Module in
 private theorem isField_or_exists_swap_ringEquiv {F : Type} [Field F] [ValuativeRel F]
     [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
     (L : _root_.Formalism.MainNotions.S.Loc.LocE F E) : IsField E ∨ ∃ e : E ≃+* F × F, ∀ x, e (L.cj x) = (e x).swap := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ L.rank
-  haveI : Nontrivial E := Module.nontrivial_of_finrank_eq_succ L.rank
-  haveI := L.reduced
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ L.rank
+  have : Nontrivial E := Module.nontrivial_of_finrank_eq_succ L.rank
+  have := L.reduced
   by_cases hfield : IsField E
   · exact Or.inl hfield
   right
@@ -370,7 +370,7 @@ open scoped Pointwise ENNReal Classical in
 open Matrix Module in
 theorem _root_.GlobalTheory.HermTuple.witt_tuples : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : _root_.Formalism.MainNotions.S.Loc.LocE F E), ∀ {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E), _root_.GlobalTheory.HL.IsHermND L Hm → ∀ (m : ℕ) (x y : Fin m → Fin n → E), (∀ i j, _root_.GlobalTheory.HL.hf L Hm (x i) (x j) = _root_.GlobalTheory.HL.hf L Hm (y i) (y j)) → IsUnit (Matrix.of fun i j => _root_.GlobalTheory.HL.hf L Hm (x i) (x j)).det → ∃ g ∈ _root_.GlobalTheory.HL.isomG L Hm, ∀ i, g (x i) = y i := by
   intro F _ _ _ _ _ E _ _ _ L n Hm hHm m x y hxy hunit
-  haveI : Nontrivial E := Module.nontrivial_of_finrank_eq_succ L.rank
+  have : Nontrivial E := Module.nontrivial_of_finrank_eq_succ L.rank
   have hHm' := hHm
   unfold _root_.GlobalTheory.HL.IsHermND _root_.GlobalTheory.HL.IsHerm _root_.GlobalTheory.HL.cT at hHm'
   obtain ⟨hherm, hdet⟩ := hHm'
@@ -402,7 +402,7 @@ theorem _root_.GlobalTheory.HermTuple.witt_tuples : ∀ {F : Type} [Field F] [Va
     exact h2
   obtain ⟨P, hPG, hPX⟩ : ∃ P : Matrix (Fin n) (Fin n) E, Pᵀ * Hm * P.map c = Hm ∧ P * X = Y := by
     rcases isField_or_exists_swap_ringEquiv L with hfield | ⟨e, he⟩
-    · letI : Field E := hfield.toField
+    · let : Field E := hfield.toField
       obtain ⟨γ, hγG, hγX⟩ := _root_.GlobalTheory.HermWitt.exists_gl_isometry_mul_eq_of_det_ne_zero h2 (c := c)
         (fun t => L.cj_cj t) hG hXu.ne_zero hXY
       exact ⟨γ, hγG, hγX⟩
@@ -414,7 +414,7 @@ theorem _root_.GlobalTheory.HermTuple.witt_tuples : ∀ {F : Type} [Field F] [Va
       rw [hd]
       exact hdet
     exact isUnit_of_mul_isUnit_left (isUnit_of_mul_isUnit_left h')
-  letI := P.invertibleOfIsUnitDet hPdet
+  let := P.invertibleOfIsUnitDet hPdet
   have hcol : ∀ u : Fin n → E,
       (Matrix.of fun k (_ : Unit) => (P *ᵥ u) k) = P * Matrix.of fun k (_ : Unit) => u k := by
     intro u

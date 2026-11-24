@@ -86,7 +86,7 @@ section Compact
 theorem isClosed_leviUnipotent :
     IsClosed ((leviUnipotent F n β γ : Subgroup (levi F n β)) : Set (levi F n β)) := by
   rw [leviUnipotent, Subgroup.coe_subgroupOf]
-  exact isClosed_unipotentRadical.preimage continuous_subtype_val
+  exact isClosed_unipotentRadical.preimage continuous_subtypeVal
 
 theorem isClosedEmbedding_leviUnipotent :
     IsClosedEmbedding fun u : leviUnipotent F n β γ => ((u : levi F n β) : GL (Fin n) F) :=
@@ -355,7 +355,7 @@ def blockExtend (a : Set.range δ) (ε : Fin (blockSize δ a) → ℕ) : Fin n �
 theorem restrictFun_blockExtend_self (a : Set.range δ) (ε : Fin (blockSize δ a) → ℕ) :
     restrictFun δ (blockExtend δ a ε) a = ε := by
   funext k
-  simp only [restrictFun, blockExtend, dif_pos (fiberFin δ a k).2]
+  simp only [restrictFun, blockExtend, dite_eq_left (fiberFin δ a k).2]
   congr 1
   rw [Equiv.symm_apply_eq]
 
@@ -783,7 +783,7 @@ theorem not_surjective_of_blockEmb {δ : Fin n → ℕ} {X : Type*} [AddCommGrou
     intro z hz f
     apply Subtype.ext
     show P (blockEmb F δ a z) f.1 = ω z • f.1
-    rw [show ω z = (hcent z hz).choose from dif_pos hz]
+    rw [show ω z = (hcent z hz).choose from dite_eq_left hz]
     exact (hcent z hz).choose_spec f.1
   have hρ : IsSmooth (C.toRepresentation.comp (blockEmb F δ a)) :=
     isSmooth_comp_of_continuous (isSmooth_toRepresentation_of_isSmooth hP C) _
@@ -1020,7 +1020,7 @@ theorem mk_mk_apply_of_mem_leviUnipotent (h : Refines β γ) (hγδ : Refines γ
       split_ifs
       · exact huP hij
       · rfl
-    · rw [leviProj_apply, if_pos (hγδ.eq_of_eq hij)]
+    · rw [leviProj_apply, ite_eq_left (hγδ.eq_of_eq hij)]
       exact hu1 i j hij
   have hn' := leviProj_inv_mul_mem p
   set n' : levi F n β := (h.leviIncl F m)⁻¹ * (u : levi F n β)
@@ -1128,7 +1128,7 @@ theorem exists_finset_span_leviJacquetRep (h : Refines β γ) (hρ : IsSmooth ρ
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
     exact (isOpen_subgroupOf_levi (isOpen_congruenceSubgroup F n m₀)).preimage
-      continuous_subtype_val
+      continuous_subtypeVal
   have := Fintype.ofFinite (K₀ ⧸ Km.subgroupOf K₀)
   let R : Finset (levi F n β) :=
     Finset.univ.image fun q : K₀ ⧸ Km.subgroupOf K₀ => ((Quotient.out q : K₀) : levi F n β)
@@ -1340,7 +1340,7 @@ theorem exact_subrepInclusionOfLE_subquotientMk {A B : Subrepresentation ρ} (h 
 theorem isIrreducible_subquotientRep {A B : Subrepresentation ρ} (h : A ⋖ B) :
     (subquotientRep A B).IsIrreducible := by
   set T := A.toSubmodule.comap B.toSubmodule.subtype
-  obtain ⟨b₀, hb₀B, hb₀A⟩ := SetLike.exists_of_lt h.lt
+  obtain ⟨b₀, hb₀B, hb₀A⟩ := IsConcreteLE.exists_of_lt h.lt
   have hmk : ∀ b : B.toSubmodule, Submodule.Quotient.mk (p := T) b = 0 ↔ (b : V) ∈ A :=
     fun b => Submodule.Quotient.mk_eq_zero _
   refine { exists_pair_ne := ⟨⊥, ⊤, fun hbt => ?_⟩, eq_bot_or_eq_top := fun Z => ?_ }

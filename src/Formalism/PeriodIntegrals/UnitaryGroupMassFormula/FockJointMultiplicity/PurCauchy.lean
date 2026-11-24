@@ -133,7 +133,7 @@ private theorem aeval_fill_column_elimination {m n : ℕ} (ι : Fin m × Fin (n 
 
 theorem elim_step {m n : ℕ} (ι : Fin (m + 1) × Fin (n + 1) → σ) (hι : Function.Injective ι)
     (f : MvPolynomial σ ℂ) (hf : HWB ι f) (hg : aeval (killS (edge ι)) f = 0) : f = 0 := by
-  haveI : Infinite ℂ := Infinite.of_injective (Nat.cast : ℕ → ℂ) Nat.cast_injective
+  have : Infinite ℂ := Infinite.of_injective (Nat.cast : ℕ → ℂ) Nat.cast_injective
   have key : ∀ y : σ → ℂ, y (ι (0, 0)) ≠ 0 → aeval y f = 0 := by
     intro y hc
     let M : Fin (m + 1) → Fin (n + 1) → ℂ := fun i k => y (ι (i, k))
@@ -154,7 +154,7 @@ theorem elim_step {m n : ℕ} (ι : Fin (m + 1) × Fin (n + 1) → σ) (hι : Fu
       aeval_fill_column_elimination ι hι f (fun d hd => hf.2 0 d hd) M1 y 0 (Finset.univ.erase 0) (by simp)
     have hvan : ∀ v ∈ edge ι, fill ι M2 y v = 0 := by
       intro v hv
-      simp only [edge, Set.mem_setOf_eq] at hv
+      simp only [edge, Set.mem_ofPred_eq] at hv
       rcases hv with ⟨l, rfl⟩ | ⟨j, rfl⟩
       · rw [fill_ι hι]
         simp [M2, M1, M]
@@ -197,7 +197,7 @@ theorem diag_zero : ∀ (m n : ℕ) (ι : Fin m × Fin n → σ), Function.Injec
     intro n ι _ f _ hg
     have hempty : offD ι = ∅ := by
       ext v
-      simp only [offD, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [offD, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨i, _, _, _⟩
       exact Fin.elim0 i
     rw [hempty, aeval_killS_empty] at hg
@@ -209,7 +209,7 @@ theorem diag_zero : ∀ (m n : ℕ) (ι : Fin m × Fin n → σ), Function.Injec
       intro ι _ f _ hg
       have hempty : offD ι = ∅ := by
         ext v
-        simp only [offD, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [offD, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         rintro ⟨_, k, _, _⟩
         exact Fin.elim0 k
       rw [hempty, aeval_killS_empty] at hg
@@ -292,7 +292,7 @@ theorem aeval_killS_free {S : Set σ} {Q : MvPolynomial σ ℂ} (h : ∀ e ∈ Q
   congr 1
   refine Finset.prod_congr rfl fun v hv => ?_
   have hvS : v ∉ S := fun hvS => (Finsupp.mem_support_iff.mp hv) (h e he v hvS)
-  simp only [killS, if_neg hvS]
+  simp only [killS, ite_eq_right hvS]
 
 private theorem pderiv_eq_zero_of_forall_support_apply_eq_zero {v : σ} {Q : MvPolynomial σ ℂ} (h : ∀ e ∈ Q.support, e v = 0) :
     pderiv v Q = 0 := by

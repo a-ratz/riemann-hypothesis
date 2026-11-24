@@ -100,7 +100,7 @@ def psi (n : ℕ) : ℤ_[l] →+ (G →+ G ⧸ H l n G) :=
 
 theorem psi_one (n : ℕ) (g : G) : psi (l := l) n 1 g = QuotientAddGroup.mk g := by
   have e : (1 : ZMod (l ^ n)) = ((1 : ℤ) : ZMod (l ^ n)) := by simp
-  simp only [psi, AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, map_one]
+  simp only [psi, AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, map_one]
   rw [e, ZMod.lift_coe]
   simp
 

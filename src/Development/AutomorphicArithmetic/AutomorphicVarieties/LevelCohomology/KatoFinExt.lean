@@ -56,7 +56,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem fd_adjoin_range (l : ℕ) [Fact l.Prime] {ι : Type} [Finite ι] (f : ι → PadicAlgCl l) :
     FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] (Set.range f)) := by
-  haveI : Finite (Set.range f) := (Set.finite_range _).to_subtype
+  have : Finite (Set.range f) := (Set.finite_range _).to_subtype
   exact IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
 
@@ -82,8 +82,8 @@ private theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topo
         rw [eq_neg_of_add_eq_zero_left h1.symm]
         exact neg_mem (hθ _ le_sup_left _ _ hg j) }
   have hcl : ∀ i, IsClosed (H i : Set Γ) := fun i => by
-    haveI := hK i
-    haveI : FiniteDimensional ℚ_[l] (K₀ ⊔ K i).toSubalgebra.toSubmodule :=
+    have := hK i
+    have : FiniteDimensional ℚ_[l] (K₀ ⊔ K i).toSubalgebra.toSubmodule :=
       (inferInstance : FiniteDimensional ℚ_[l] (K₀ ⊔ K i : IntermediateField ℚ_[l] (PadicAlgCl l)))
     have : (H i : Set Γ) = ⋂ j, (fun g => c g j) ⁻¹' ((K₀ ⊔ K i).toSubalgebra.toSubmodule : Set (PadicAlgCl l)) := by
       ext g
@@ -91,7 +91,7 @@ private theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topo
       exact Iff.rfl
     rw [this]
     exact isClosed_iInter fun j =>
-      (Submodule.closed_of_finiteDimensional (K₀ ⊔ K i).toSubalgebra.toSubmodule).preimage
+      (Submodule.isClosed_of_finiteDimensional (K₀ ⊔ K i).toSubalgebra.toSubmodule).preimage
         ((continuous_apply j).comp hc)
   have hun : ⋃ i, (H i : Set Γ) = Set.univ := by
     refine Set.eq_univ_of_forall fun g => ?_
@@ -99,9 +99,9 @@ private theorem coc_finext (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [Topo
     exact Set.mem_iUnion.2 ⟨i, fun j => (le_sup_right : K i ≤ K₀ ⊔ K i) (hi ⟨j, rfl⟩)⟩
   obtain ⟨i, x, hx⟩ := nonempty_interior_of_iUnion_of_closed hcl hun
   have hop : IsOpen (H i : Set Γ) := Subgroup.isOpen_of_mem_nhds _ (mem_interior_iff_mem_nhds.1 hx)
-  haveI : Finite (Γ ⧸ H i) := Subgroup.quotient_finite_of_isOpen _ hop
-  haveI := fd_adjoin_range l (fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2)
-  haveI := hK i
+  have : Finite (Γ ⧸ H i) := Subgroup.quotient_finite_of_isOpen _ hop
+  have := fd_adjoin_range l (fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2)
+  have := hK i
   refine ⟨IntermediateField.adjoin ℚ_[l] (Set.range fun q : (Γ ⧸ H i) × Fin n => c q.1.out q.2) ⊔ (K₀ ⊔ K i),
     inferInstance, le_sup_left.trans le_sup_right, fun g j => ?_⟩
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul (H i) g

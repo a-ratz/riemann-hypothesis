@@ -108,10 +108,10 @@ namespace GlobalTheory.ResHeisCont
 theorem continuous_res_heisO : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ (ψ : AddChar (AF D.host.F) ℂ) (χS χT : (AE D)ˣ →* Circle) (ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)), IsWeilDatumO ψ V W χS χT ω → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ f, IsThetaFunO ψ V W f → ∀ u : WO V W, Continuous fun p : GA D V × GA D W => res V V' W C B μ 𝓨 (heisO ψ V W u (ω p f)) 0 := by
   intro D V V' W r C B hs ψ χS χT ω hω μ 𝓨 h𝓨 f hf u
   have hψ := hω.std.1
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI := (GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D V).1
-  haveI := (GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D W).1
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have := (GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D V).1
+  have := (GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D W).1
+  have : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, h𝓨.2.2]; exact ENNReal.one_lt_top⟩
   have hy : Continuous fun y : Mx D W.rank r => isoPart V W C y + midPart V V' W B 0 := by
     unfold isoPart
@@ -181,13 +181,13 @@ namespace GlobalTheory.MixedTerm
 theorem enorm_term_le_iSup : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ (G : WO V W → ℂ) (y : Matrix (Fin W.rank) (Fin r) D.host.E), ‖term ψ V V' W C C' B μ 𝓨 G y‖ₑ ≤ ⨆ w, ‖G w‖ₑ := by
   intro D V V' W r C C' B ψ hψ μ 𝓨 hμ G y
   have hψ1 : ∀ x, ‖(ψ x : ℂ)‖ₑ = 1 := fun x => by
-    rw [← ofReal_norm_eq_enorm, hψ.1.2.1 x, ENNReal.ofReal_one]
+    rw [← ofReal_norm, hψ.1.2.1 x, ENNReal.ofReal_one]
   calc ‖term ψ V V' W C C' B μ 𝓨 G y‖ₑ
       ≤ ∫⁻ z in 𝓨, ‖heisO ψ V W (isoPart V W C' (Matrix.map y (incA D))) G
-          (isoPart V W C z + midPart V V' W B 0)‖ₑ ∂μ := enorm_integral_le_lintegral_enorm _
+          (isoPart V W C z + midPart V V' W B 0)‖ₑ ∂μ := eNorm_integral_le_lintegral_eNorm _
     _ ≤ ∫⁻ _ in 𝓨, (⨆ w, ‖G w‖ₑ) ∂μ := by
         refine lintegral_mono fun z => ?_
-        simp only [heisO, enorm_mul, hψ1, one_mul]
+        simp only [heisO, eNorm_mul, hψ1, one_mul]
         exact le_iSup (fun w => ‖G w‖ₑ) _
     _ = ⨆ w, ‖G w‖ₑ := by rw [setLIntegral_const, hμ.2.2, mul_one]
 
@@ -915,8 +915,8 @@ theorem phase_lineAt (hθ : IsInfFam θ) (V W : HSp D) {r : ℕ} (C C' : Matrix 
   rw [GlobalTheory.T.mixedModelHeisenbergPhase_eq_cexp_realPoints D V W r C C' hCC ψ hψ θ hθ y _ (hL.2.1 t)]
   congr 4
   simp only [hL.2.2 t]
-  rw [Finset.sum_eq_single τ (fun b _ hb => by rw [if_neg hb, Matrix.mul_zero, Matrix.trace_zero, Complex.zero_re,
-    mul_zero]) (by simp), if_pos rfl, Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, Complex.re_ofReal_mul]
+  rw [Finset.sum_eq_single τ (fun b _ hb => by rw [ite_eq_right hb, Matrix.mul_zero, Matrix.trace_zero, Complex.zero_re,
+    mul_zero]) (by simp), ite_eq_left rfl, Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, Complex.re_ofReal_mul]
   ring
 
 end GlobalTheory.MixedTerm.IsoDeriv
@@ -943,7 +943,7 @@ theorem term_dRho_dirAt : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matrix
     exact h2.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => hg t)
 
   obtain ⟨K, hK⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ (GlobalTheory.OrientedHeis.theta_dLine hθ hψ hL'r hG)
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, h.2.2]; exact ENNReal.one_lt_top⟩
   have e0 : heisO ψ V W (lineAt θ τ (dirAt V W C τ z) 0) (GlobalTheory.OrientedHeis.dLine ψ V W (lineAt θ τ (dirAt V W C τ z)) G) =
       Formalism.IndefR.Datum.dRho (heisO ψ V W) θ τ (dirAt V W C τ z) G := by
@@ -1186,7 +1186,7 @@ lemma pi_sum_le (n : ℕ) (f : ℤ → ℝ≥0∞) :
   calc ∑ c ∈ s, ∏ j, f (c j) ≤ ∑ c ∈ Fintype.piFinset t, ∏ j, f (c j) :=
         Finset.sum_le_sum_of_subset hs
     _ = ∏ j, ∑ z ∈ t j, f z := (Finset.prod_univ_sum t (fun _ z => f z)).symm
-    _ ≤ ∏ _j : Fin n, ∑' z, f z := Finset.prod_le_prod' fun j _ => ENNReal.sum_le_tsum _
+    _ ≤ ∏ _j : Fin n, ∑' z, f z := Finset.prod_le_prod fun j _ => ENNReal.sum_le_tsum _
     _ = (∑' z, f z) ^ n := by simp
 
 theorem tsum_le {Y : Type} (n N : ℕ) (hN : 0 < N) (a : Y → ENNReal) (T : Fin n → Y → ℝ)
@@ -1273,7 +1273,7 @@ abbrev supWord (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (V W : HSp D) (k
   GlobalTheory.Size.wordSum (GlobalTheory.Size.heisDer ψ θ) (fun φ : WO V W → ℂ => ⨆ w, ‖φ w‖ₑ) k G
 
 theorem enorm_real_cast {a : ℝ} (h : 0 ≤ a) : ‖(a : ℂ)‖ₑ = ENNReal.ofReal a := by
-  rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg h]
+  rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg h]
 
 def opAlong (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (V W : HSp D) {r : ℕ}
     (C : Matrix (Fin V.rank) (Fin r) D.host.E) (x : Matrix (Fin W.rank) (Fin r) D.host.E) (G : WO V W → ℂ) : WO V W → ℂ :=
@@ -1344,7 +1344,7 @@ theorem term_decay {V V' W : HSp D} {r : ℕ} {C C' : Matrix (Fin V.rank) (Fin r
     have hp : (0 : ℝ) ≤ 1 + ratPair W y a ^ 2 := by positivity
     have hterm : ‖term ψ V V' W C C' B μ 𝓨 (opAlong ψ θ V W C a G) y‖ₑ =
         ENNReal.ofReal (1 + ratPair W y a ^ 2) * ‖term ψ V V' W C C' B μ 𝓨 G y‖ₑ := by
-      rw [term_opAlong hs h1 hψ hθ hμ hG a y, enorm_mul, enorm_real_cast hp]
+      rw [term_opAlong hs h1 hψ hθ hμ hG a y, eNorm_mul, enorm_real_cast hp]
     have hlen : 2 * (a :: l).length = 2 * l.length + 1 + 1 := by
       simp only [List.length_cons]
       ring
@@ -1399,7 +1399,7 @@ theorem mixed_terms_bound : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matr
   have hbound := GlobalTheory.T.tsum_le_of_lattice_coords_quadraticDecay (Y := Matrix (Fin W.rank) (Fin r) D.host.E) n N hNpos
     (fun y => ‖term ψ V V' W C C' B μ 𝓨 F y‖ₑ) (fun j y => ratPair W y (X j))
     (fun y y' _ _ hyy => hXsep y y' hyy)
-    (fun y hy j => hint F hF hfix y (enorm_ne_zero.mp hy) (X j) (hXint j))
+    (fun y hy j => hint F hF hfix y (eNorm_ne_zero.mp hy) (X j) (hXint j))
     (ENNReal.ofReal K₀ * supWord ψ θ V W (2 * n) F)
     (fun y => by
       have hy := hdec F hF y

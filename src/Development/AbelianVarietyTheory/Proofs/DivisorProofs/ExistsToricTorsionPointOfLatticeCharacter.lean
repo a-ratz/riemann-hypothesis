@@ -59,7 +59,7 @@ namespace GlobalTheory.Poinc.Sep.Spz
 theorem exists_torAt : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A G) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (k : ℕ) (z : F), 1 ≤ k → z ^ k = 1 → ∀ c : D.toPre.X →+ ℤ, ∃ x : TFK (R := V) F ⟶ A.A, TorAt U F k z c x := by
   intro V _ _ _ hB G _ _ hG D A U F _ _ _ k z hk hz c
   obtain ⟨hAdm, hChar⟩ := hB
-  haveI := hChar
+  have := hChar
   have hz0 : z ≠ 0 := by
     rintro rfl
     rw [zero_pow (by omega)] at hz

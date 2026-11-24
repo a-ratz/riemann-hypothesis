@@ -317,7 +317,7 @@ theorem linPull_coord_weight_nonneg : ∀ (C : Type) [Field C] [CharZero C] (V :
       (∀ c (k : ℕ) x, 1 ≤ k → S.al c k x = ∑ b, al c k b * S.al b 0 x) ∧
       ∀ c (n : ℕ) b, V.Ge (-(n : ℝ)) (al c n b) := by
     refine ⟨fun c k b => if k = 0 then (if c = b then 1 else 0) else S.co (Sum.elim (S.al c k) 0) b,
-      fun c b => if_pos rfl, ?_, ?_⟩
+      fun c b => ite_eq_left rfl, ?_, ?_⟩
     · intro c k x hk
       have hk0 : k ≠ 0 := by omega
       have hs := S.co_spec (Sum.elim (S.al c k) 0) x
@@ -325,16 +325,16 @@ theorem linPull_coord_weight_nonneg : ∀ (C : Type) [Field C] [CharZero C] (V :
       rw [← hs]
       refine Finset.sum_congr rfl fun b _ => ?_
       beta_reduce
-      rw [if_neg hk0, Sys.al, S.cur_zero_inl]
+      rw [ite_eq_right hk0, Sys.al, S.cur_zero_inl]
     · intro c n b
       rcases Nat.eq_zero_or_pos n with rfl | hn
       · beta_reduce
-        rw [if_pos rfl, Nat.cast_zero, neg_zero]
+        rw [ite_eq_left rfl, Nat.cast_zero, neg_zero]
         split_ifs
         · exact VF.Ge.one
         · exact VF.Ge.zero _
       · beta_reduce
-        rw [if_neg (show n ≠ 0 by omega)]
+        rw [ite_eq_right (show n ≠ 0 by omega)]
         exact hco _ _ (fun k => lattice_inclusion_forms_injective G S c n (Sum.inl k)) b
   obtain ⟨h0, hlog, -⟩ := _root_.GlobalTheory.MainTerm.linPull_coords C V d I J G S t hT (Fin N) e z al hze hal0 halk
 
@@ -476,7 +476,7 @@ theorem pderiv_mainM (V : VF C) (i : ℕ) {ι ι' : Type} [Fintype ι] [Fintype 
 
 theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I J : Fin 2 → Type) [∀ g, Fintype (I g)] [∀ g, Fintype (J g)] (X : RowData C V d I J), X.Alt → 5 ≤ V.l → ∀ (g : Fin 2) (a : ZMod d) (i : ℕ), Odd i → i < d → ∀ (S : ∀ g, Sys (X.G g)) (t : ∀ g, I g → MvPowerSeries (I g) C), (∀ g, (S g).IsT (t g)) → ∀ (N M : ℕ) (e : Fin N → I g → C) (v' : Fin M → I (1 - g) → C) (Φt : Fin N → J g → C), (∀ c x, (X.G g).ty (Sum.inl x) ≠ a → e c x = 0) → (∀ b k, V.Ge 0 (v' b k)) → (∀ b k, (X.G (1 - g)).ty (Sum.inl k) ≠ a + (i : ZMod d) → v' b k = 0) → (∀ c, WtGe1 V i 0 (linPull e (t g c))) → (∀ κ : J g, (X.G g).ty (Sum.inr κ) = a + (i : ZMod d) → WtGe1 V i 0 (linPull e ((S g).ze (t g) κ) - ((V.l : C) ^ expE V.l i)⁻¹ • ∑ δ : Fin N, Φt δ κ • (MvPowerSeries.X δ : MvPowerSeries (Fin N) C) ^ (V.l ^ i))) → WtGe2 V i (1 / ((V.l : ℝ) - 1)) (X.hM g a i e v' - mainM V i (fun b c => ∑ κ : J g, ∑ k : I (1 - g), Φt c κ * X.pair g κ k * v' b k)) := by
   intro C _ V d _ I J _ _ X hA hl g a i hi hid S t ht N M e v' Φt he hv hv' hT hZ
-  haveI := X.charZero
+  have := X.charZero
   have hl0 : V.l ≠ 0 := V.l_prime.ne_zero
   have hpull := _root_.GlobalTheory.MainTerm.hPullW_upG_toW C I g (Fin N) (Fin M) e v'
   have key := GlobalTheory.weight_of_weight_pderiv C V.v V.l V.l_prime V.v_l hl i (Fin N) (Fin M)

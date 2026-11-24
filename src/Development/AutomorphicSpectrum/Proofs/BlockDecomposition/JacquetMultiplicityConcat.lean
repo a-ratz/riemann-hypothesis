@@ -150,7 +150,7 @@ private theorem eq_of_lexMono_lemma_4 {s : ℕ} {D : Fin s → ℕ} {N : ℕ} (f
       rw [Equiv.apply_symm_apply, Equiv.apply_symm_apply] at h2
       exact absurd h2 (lt_asymm huv)
   have heq : (fun u => f (g.symm u)) = id :=
-    (StrictMono.range_inj hmono strictMono_id).1 (by
+    (StrictMono.range_inj_of_wellFoundedLT hmono strictMono_id).1 (by
       rw [Set.range_id]
       exact Set.range_eq_univ.2 fun u => ⟨g (f.symm u), by simp⟩)
   refine Equiv.ext fun p => ?_

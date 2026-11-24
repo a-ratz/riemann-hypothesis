@@ -71,10 +71,10 @@ def haarOn (H : Subgroup G) (hH : IsClosed (H : Set G)) : Measure G :=
 theorem haarOn_spec (H : Subgroup G) (hH : IsClosed (H : Set G)) :
     SigmaFinite (haarOn H hH) ∧ haarOn H hH ≠ 0 ∧ haarOn H hH (H : Set G)ᶜ = 0 ∧
       ∀ s ∈ H, (haarOn H hH).map (fun x => s * x) = haarOn H hH := by
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  have hm : Measurable (Subtype.val : H → G) := measurable_subtype_coe
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have hm : Measurable (Subtype.val : H → G) := measurable_subtypeVal
   refine ⟨?_, ?_, ?_, ?_⟩
-  · haveI : IsFiniteMeasureOnCompacts (haarOn H hH) := by
+  · have : IsFiniteMeasureOnCompacts (haarOn H hH) := by
       constructor
       intro K hK
       simp only [haarOn]
@@ -113,7 +113,7 @@ theorem quot_exists_gen (H : Subgroup G) (hH : IsClosed (H : Set G)) (μG μS : 
     exact hScon
   set κ : Measure H := μS.comap e with hκ
   have hκmap : κ.map e = μS := by rw [hκ, he.map_comap, Measure.restrict_eq_self_of_ae_mem hae]
-  haveI : SigmaFinite κ := SigmaFinite.of_map κ he.measurable.aemeasurable (by rw [hκmap]; exact hSsf)
+  have : SigmaFinite κ := SigmaFinite.of_map κ he.measurable.aemeasurable (by rw [hκmap]; exact hSsf)
   have hκinv : ∀ g : H, κ.map (g * ·) = κ := by
     intro g
     have hcomm : e ∘ (g * ·) = (fun x => (g : G) * x) ∘ e := by
@@ -121,7 +121,7 @@ theorem quot_exists_gen (H : Subgroup G) (hH : IsClosed (H : Set G)) (μG μS : 
       rfl
     rw [← he.comap_map (κ.map (g * ·)), Measure.map_map he.measurable (measurable_const_mul g), hcomm,
       ← Measure.map_map (measurable_const_mul _) he.measurable, hκmap, hSinv _ g.2, hκ]
-  haveI : κ.IsMulLeftInvariant := ⟨fun g => hκinv g⟩
+  have : κ.IsMulLeftInvariant := ⟨fun g => hκinv g⟩
   set lam : Measure H := Measure.haar with hlam
   obtain ⟨K, hKc, hK1⟩ := exists_compact_mem_nhds (1 : H)
   have hK0 : lam K ≠ 0 := (Measure.measure_pos_of_mem_nhds lam hK1).ne'
@@ -137,7 +137,7 @@ theorem quot_exists_gen (H : Subgroup G) (hH : IsClosed (H : Set G)) (μG μS : 
     have hnull : ∀ n, lam (spanningSets κ n) = 0 := fun n => by
       have h1 := measure_spanningSets_lt_top κ n
       generalize spanningSets κ n = A at h1 ⊢
-      rw [hκeq, ht, Measure.smul_apply, smul_eq_mul] at h1
+      rw [hκeq, ht, smul_apply, smul_eq_mul] at h1
       by_contra hne
       rw [ENNReal.top_mul hne] at h1
       exact lt_irrefl _ h1
@@ -191,12 +191,12 @@ theorem quot_exists_gen (H : Subgroup G) (hH : IsClosed (H : Set G)) (μG μS : 
     _ = ∫⁻ y, ∫⁻ h, c⁻¹ * φ ((h : G)⁻¹ * y) * f y ∂κ ∂μG := by
         refine lintegral_lintegral_swap ?_
         have hc2 : Measurable fun p : H × G => (p.1 : G)⁻¹ * p.2 :=
-          ((measurable_subtype_coe.comp measurable_fst).inv).mul measurable_snd
+          ((measurable_subtypeVal.comp measurable_fst).inv).mul measurable_snd
         exact ((measurable_const.mul (hφm.comp hc2)).mul (hf.comp measurable_snd)).aemeasurable
     _ = ∫⁻ y, f y ∂μG := by
         refine lintegral_congr fun y => ?_
         have hmeas : Measurable fun h : H => φ ((h : G)⁻¹ * y) :=
-          hφm.comp ((measurable_subtype_coe.inv).mul measurable_const)
+          hφm.comp ((measurable_subtypeVal.inv).mul measurable_const)
         calc ∫⁻ h, c⁻¹ * φ ((h : G)⁻¹ * y) * f y ∂κ = (∫⁻ h, c⁻¹ * φ ((h : G)⁻¹ * y) ∂κ) * f y :=
               lintegral_mul_const _ (measurable_const.mul hmeas)
           _ = (c⁻¹ * ∫⁻ h, φ ((h : G)⁻¹ * y) ∂κ) * f y := by rw [lintegral_const_mul _ hmeas]
@@ -206,8 +206,8 @@ theorem eq_smul_dirac_of_conc (μ : Measure G) (a : G) (h : μ ({a} : Set G)ᶜ 
     μ = μ {a} • Measure.dirac a := by
   ext s hs
   have h0 : μ (s \ {a}) = 0 := measure_mono_null (fun x hx => hx.2) h
-  rw [Measure.smul_apply, Measure.dirac_apply' _ hs, smul_eq_mul,
-    ← measure_inter_add_diff s (measurableSet_singleton a), h0, add_zero]
+  rw [smul_apply, Measure.dirac_apply' _ hs, smul_eq_mul,
+    ← measure_inter_add_sdiff s (measurableSet_singleton a), h0, add_zero]
   by_cases ha : a ∈ s
   · rw [Set.inter_eq_right.mpr (Set.singleton_subset_iff.mpr ha)]
     simp [ha]
@@ -377,7 +377,7 @@ private theorem measurable_stCoordV (w : Point D.host.E (D.R.rS + 1)) (γ : X.B.
   apply Continuous.measurable
   unfold stCoordV hJ
   have hu : Continuous fun y : Formalism.REAL.UJ (X.B.I.ε v) => uMat ((γ v)⁻¹ * y * γ v) :=
-    (Units.continuous_val.comp continuous_subtype_val).comp
+    (Units.continuous_val.comp continuous_subtypeVal).comp
       ((continuous_const.mul continuous_id).mul continuous_const)
   refine continuous_pi fun p => continuous_const.mul ?_
   exact continuous_const.dotProduct (continuous_const.matrix_mulVec (hu.matrix_mulVec continuous_const))
@@ -400,7 +400,7 @@ theorem pt_eq_of_rep {w w' : Point D.host.E (D.R.rS + 1)} {γ : X.B.I.Ginf} (h :
 private theorem sf_smul_lemma {α : Type*} [MeasurableSpace α] (μ : Measure α) [SigmaFinite μ] {c : ℝ≥0∞}
     (hc : c ≠ ⊤) : SigmaFinite (c • μ) := by
   have hfin : ∀ i, (c • μ) (spanningSets μ i) < ⊤ := fun i => by
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top hc.lt_top (measure_spanningSets_lt_top μ i)
   exact ⟨⟨{ set := spanningSets μ, set_mem := fun _ => trivial, finite := hfin, spanning := iUnion_spanningSets μ }⟩⟩
 
@@ -416,9 +416,9 @@ private theorem pi_pi_univ_lemma_2 {ι κ : Type*} [Fintype ι] [Fintype κ] (k 
       · left; exact zero_pow hn.ne'
       · right; left; exact one_pow n
       · right; right; exact ENNReal.pow_eq_top_iff.2 ⟨rfl, hn.ne'⟩
-  haveI : SigmaFinite (k • (volume : Measure ℂ)) := sf_smul_lemma _ hk
+  have : SigmaFinite (k • (volume : Measure ℂ)) := sf_smul_lemma _ hk
   have hvol : (volume : Measure ℂ) Set.univ = ⊤ := measure_univ_of_isAddLeftInvariant _
-  simp only [Measure.pi_univ, Measure.smul_apply, smul_eq_mul, hvol, Finset.prod_const, Finset.card_univ]
+  simp only [Measure.pi_univ, smul_apply, smul_eq_mul, hvol, Finset.prod_const, Finset.card_univ]
   apply key
   apply key
   by_cases h0 : k = 0
@@ -434,7 +434,7 @@ theorem pin_reg (hP : PinHaarEx) {w : Point D.host.E (D.R.rS + 1)} (hw : ∃ γ,
     (hreg : RegX X u u' (gamW X u u' w)) :
     (Measure.dirac (1 : X.B.I.Ginf)).map (stCoord X u' w (gamW X u u' w)) = muStab X w := by
   obtain ⟨μ, c, ⟨hsf, hne, hcon, _⟩, hc0, hct, hmap⟩ := hP D X u u' w hw
-  haveI := hsf
+  have := hsf
   rw [stInf_reg X u u' _ hreg] at hcon
   have hμ := eq_smul_dirac_of_conc μ 1 hcon
   have ha0 : μ {1} ≠ 0 := by
@@ -449,7 +449,7 @@ theorem pin_reg (hP : PinHaarEx) {w : Point D.host.E (D.R.rS + 1)} (hw : ∃ γ,
   have h1 : m Set.univ = 1 := by
     rw [hm, Measure.map_apply_of_aemeasurable hf MeasurableSet.univ, Set.preimage_univ, measure_univ]
   have h2 := congrArg (fun n : Measure _ => n Set.univ) hmap
-  simp only [Measure.smul_apply, smul_eq_mul, h1, mul_one] at h2
+  simp only [smul_apply, smul_eq_mul, h1, mul_one] at h2
   have h3 : muStab X w Set.univ = 1 := by
     rcases muStab_univ X w with h | h | h
     · rw [h, mul_zero] at h2; exact absurd h2 ha0
@@ -474,7 +474,7 @@ theorem muInf_map (h : X.B.I.Ginf) :
 theorem quot_St (γ : X.B.I.Ginf) (μR : Measure X.B.I.Ginf) (hR : IsHaarOnSet X.B.I (StInf X u u' γ) μR) :
     ∃ ν, IsQuotMeasS X.B.I μR ν := by
   obtain ⟨hsf, hne, hcon, hinv⟩ := hR
-  haveI := hsf
+  have := hsf
   exact quot_exists_gen (StG X u u' γ) (isClosed_StG X u u' γ) (Formalism.L2.SG.ProjRows.muInf X.B.I) μR
     (fun h _ => muInf_map X h) hne hcon hinv
 
@@ -485,13 +485,13 @@ theorem pinned_at (hP : PinHaarEx) {w : Point D.host.E (D.R.rS + 1)} (hw : ∃ �
     ∃ μR, IsHaarOnSet X.B.I (StInf X u u' (gamW X u u' w)) μR ∧
       μR.map (stCoord X u' w (gamW X u u' w)) = muStab X w := by
   obtain ⟨μ, c, ⟨hsf, hne, hcon, hinv⟩, hc0, hct, hmap⟩ := hP D X u u' w hw
-  haveI := hsf
+  have := hsf
   refine ⟨c⁻¹ • μ, ⟨sf_smul_lemma μ (ENNReal.inv_ne_top.2 hc0), ?_, ?_, ?_⟩, ?_⟩
   · intro h0
     apply hne
     have h2 := congrArg (fun m : Measure X.B.I.Ginf => c • m) h0
     simpa [smul_smul, ENNReal.mul_inv_cancel hc0 hct] using h2
-  · rw [Measure.smul_apply, hcon, smul_zero]
+  · rw [smul_apply, hcon, smul_zero]
   · intro s hs
     rw [Measure.map_smul _ (measurable_const_mul s).aemeasurable, hinv s hs]
   · have hf : Measurable (stCoord X u' w (gamW X u u' w)) := by
@@ -577,8 +577,8 @@ theorem pi_smul {ι : Type*} [Fintype ι] {α : ι → Type*} [∀ i, Measurable
     [∀ i, SigmaFinite (μ i)] (c : ι → ℝ≥0∞) [∀ i, SigmaFinite (c i • μ i)] :
     Measure.pi (fun i => c i • μ i) = (∏ i, c i) • Measure.pi μ := by
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
-  simp only [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
+  simp only [smul_apply, smul_eq_mul]
 
 theorem sf_smul {α : Type*} [MeasurableSpace α] (μ : Measure α) [SigmaFinite μ] {c : ℝ≥0∞} (hc : c ≠ ⊤) :
     SigmaFinite (c • μ) := sf_smul_lemma μ hc
@@ -598,7 +598,7 @@ theorem muStab_eq (w : Point D.host.E (D.R.rS + 1)) :
       exact_mod_cast Nat.mul_pos h0 h1
     unfold Formalism.BasicNotions.Host.ka Formalism.BasicNotions.Host.v
     positivity
-  haveI : SigmaFinite (k • (volume : Measure ℂ)) := sf_smul _ hkt
+  have : SigmaFinite (k • (volume : Measure ℂ)) := sf_smul _ hkt
   have hin : Measure.pi (fun _ : FreeE w => k • (volume : Measure ℂ)) =
       (∏ _ : FreeE w, k) • Measure.pi (fun _ : FreeE w => (volume : Measure ℂ)) := pi_smul _ _
   set K1 := ∏ _ : FreeE w, k with hK1

@@ -75,8 +75,8 @@ private theorem appr_unit_lemma (m c : 𝓞 F) (hc : c ∉ v.asIdeal) :
     ∃ a : 𝓞 F, v.valuation F (algebraMap (𝓞 F) F m / algebraMap (𝓞 F) F c -
       algebraMap (𝓞 F) F a) < 1 := by
   obtain ⟨c', hc'⟩ : ∃ c' : 𝓞 F, c * c' - 1 ∈ v.asIdeal := by
-    haveI : v.asIdeal.IsMaximal := v.isMaximal
-    letI := Ideal.Quotient.field v.asIdeal
+    have : v.asIdeal.IsMaximal := v.isMaximal
+    let := Ideal.Quotient.field v.asIdeal
     have hne : Ideal.Quotient.mk v.asIdeal c ≠ 0 := by
       rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
     obtain ⟨c', hc'⟩ := Ideal.Quotient.mk_surjective (I := v.asIdeal) (Ideal.Quotient.mk v.asIdeal c)⁻¹
@@ -148,7 +148,7 @@ private theorem appr_den_lemma_2 (k : F) (hk : v.valuation F k ≤ 1) :
     apply hndiv
     rw [hJ, pow_succ]
     exact mul_dvd_mul_left _ (Ideal.dvd_iff_le.mpr h)
-  obtain ⟨c, hcJ, hcP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨c, hcJ, hcP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   have hn : n ∈ v.asIdeal ^ e := by
     have hιn : v.intValuation n ≤ v.intValuation d := by
       have h := hk
@@ -180,7 +180,7 @@ theorem exists_appr {x : Fv F v} (hx : x ∈ v.adicCompletionIntegers F) :
     mem_closure_iff_nhds.mp (HeightOneSpectrum.denseRange_algebraMap F v x) _ hnhds
   have hy' : Valued.v (x - algebraMap F (Fv F v) k) < 1 := by
     have h := hy
-    rwa [Set.mem_setOf_eq, ← neg_sub, Valuation.map_neg] at h
+    rwa [Set.mem_ofPred_eq, ← neg_sub, Valuation.map_neg] at h
   have hk1 : Valued.v (algebraMap F (Fv F v) k) ≤ 1 := by
     have h := Valuation.map_add_le Valued.v (le_of_lt hy) hx1
     rwa [sub_add_cancel] at h

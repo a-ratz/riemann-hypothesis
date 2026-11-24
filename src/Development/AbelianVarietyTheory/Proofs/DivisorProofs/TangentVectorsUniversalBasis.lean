@@ -186,7 +186,7 @@ theorem exists_lie_basis_stable (E : Type) [Field E] [NumberField E] [IsCMField 
     infer_instance
   obtain ⟨n, xc, hx⟩ := ReciprocityTheory.ChartRestriction.G.Chart.univChartLoc ((Over.pullback x).obj t.G)
   refine ⟨n, fun e => vec t x xc (Pi.single e 1), fun e => vec_tan hx _, fun S' _ φ w hw => ?_⟩
-  letI : Algebra S S' := φ.toAlgebra
+  let : Algebra S S' := φ.toAlgebra
   obtain ⟨xc', hx', hv⟩ := vec_bc (S' := S') hx
   obtain ⟨cc, rfl⟩ := vec_exists hx' w hw
   have hD : (fun e => spMap (dualMap φ) ≫ vec t x xc (Pi.single e 1)) =

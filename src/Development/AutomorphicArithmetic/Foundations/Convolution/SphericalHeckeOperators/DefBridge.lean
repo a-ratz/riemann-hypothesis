@@ -120,7 +120,7 @@ theorem UpperTheory.ConvolutionTheory.H.defBridge :
   unfold PositivityTheory.Rg.Tf.Loc.iwahoriFn uFn dco
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq, hI, SetLike.mem_coe, hfac]
+  simp only [Set.mem_ofPred_eq, hI, SetLike.mem_coe, hfac]
   constructor
   · rintro ⟨x, hx, y, hy, rfl⟩
     exact ⟨x, hx, _ * y, mul_mem hd hy, by simp only [mul_assoc]⟩

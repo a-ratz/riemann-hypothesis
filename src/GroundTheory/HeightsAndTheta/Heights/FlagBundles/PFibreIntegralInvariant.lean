@@ -114,7 +114,7 @@ def sphereMap (R : E3 ≃ₗᵢ[ℝ] E3) (n : Sphere2) : Sphere2 :=
     (sphereMap R n : E3) = R n := rfl
 
 theorem continuous_sphereMap (R : E3 ≃ₗᵢ[ℝ] E3) : Continuous (sphereMap R) :=
-  (R.continuous.comp continuous_subtype_val).subtype_mk _
+  (R.continuous.comp continuous_subtypeVal).subtype_mk _
 
 def sphereHomeo (R : E3 ≃ₗᵢ[ℝ] E3) : Sphere2 ≃ₜ Sphere2 where
   toFun := sphereMap R

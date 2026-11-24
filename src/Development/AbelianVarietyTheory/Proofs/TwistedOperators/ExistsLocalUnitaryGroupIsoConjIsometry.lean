@@ -106,9 +106,9 @@ theorem exists_equiv {R : Type} [CommRing R] [TopologicalSpace R] [IsTopological
   let φ : UJ σ J →* UJ σ J' := φ₀.codRestrict _ hφU
   let ψ : UJ σ J' →* UJ σ J := ψ₀.codRestrict _ hψU
   have hφc : Continuous φ :=
-    ((Continuous.units_map _ (hc a b)).comp continuous_subtype_val).subtype_mk _
+    ((Continuous.units_map _ (hc a b)).comp continuous_subtypeVal).subtype_mk _
   have hψc : Continuous ψ :=
-    ((Continuous.units_map _ (hc b a)).comp continuous_subtype_val).subtype_mk _
+    ((Continuous.units_map _ (hc b a)).comp continuous_subtypeVal).subtype_mk _
   have l : ∀ g, ψ (φ g) = g := by
     intro g
     apply Subtype.ext; apply Units.ext
@@ -128,8 +128,8 @@ theorem exists_equiv {R : Type} [CommRing R] [TopologicalSpace R] [IsTopological
 
 theorem exists_locIso : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) {r r' : ℕ} (J : Matrix (Fin r) (Fin r) E) (J' : Matrix (Fin r') (Fin r') E) (v : HeightOneSpectrum (𝓞 F)) (a : Matrix (Fin r') (Fin r) (Fv F v ⊗[F] E)) (b : Matrix (Fin r) (Fin r') (Fv F v ⊗[F] E)), a * b = 1 → b * a = 1 → Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (Fv F v) σ) a * JR (F := F) (Fv F v) J' * a = JR (F := F) (Fv F v) J → ∃ φ : GLoc σ J v ≃ₜ* GLoc σ J' v, ∀ g, (GlobalTheory.AdelicU.matHom _ σ J' (φ g)).val = a * (GlobalTheory.AdelicU.matHom _ σ J g).val * b := by
   intro F E _ _ _ _ _ σ r r' J J' v a b hab hba hJ
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
   obtain ⟨φ, hφ⟩ := exists_equiv (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (Fv F v) σ) a b hab hba _ _ hJ
   exact ⟨φ, hφ⟩
 

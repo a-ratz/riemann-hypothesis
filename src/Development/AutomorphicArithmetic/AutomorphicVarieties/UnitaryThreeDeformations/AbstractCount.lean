@@ -253,7 +253,7 @@ private theorem norm_two_eq_one {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O]
       rcases mul_eq_zero.1 hx with h1 | h1
       · exact ((Units.isUnit _).map (algebraMap ℤ_[l] O)).ne_zero h1
       · exact pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero) h1
-    haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+    have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
     exact hn (isUnit_of_map_unit (algebraMap ℤ_[l] O) 2 (by rwa [map_ofNat]))
   have h3 : ‖(2 : ℚ_[l])‖ = 1 := by
     have := PadicInt.isUnit_iff.1 h2
@@ -388,8 +388,8 @@ private theorem exists_sum_X_mul (p : MvPowerSeries σ O) (hp : MvPowerSeries.co
     rw [map_sum]
     simp only [hq]
     by_cases h : n ≠ 0
-    · simp [dif_pos h]
-    · simp only [dif_neg h, Finset.sum_const_zero]
+    · simp [dite_eq_left h]
+    · simp only [dite_eq_right h, Finset.sum_const_zero]
       push Not at h
       subst h
       simpa using hp
@@ -581,9 +581,9 @@ private theorem coord
     (∀ p, W.π p = 0 → ∑ i, MvPowerSeries.coeff (Finsupp.single i 1) p •
       ((Tm O (a i) (b i) * psi F.Ψ (b i) (g i)) • n (g i)) = 0) ∧
     ((∀ i, (Tm O (a i) (b i) * psi F.Ψ (b i) (g i)) • n (g i) = 0) → n = 0) := by
-  letI : Module Oᵐᵒᵖ M := Module.compHom M ((RingHom.id O).fromOpposite mul_comm)
-  haveI : IsCentralScalar O M := ⟨fun _ _ => rfl⟩
-  haveI : IsCO O (TrivSqZeroExt O M) := tsz_isCO
+  let : Module Oᵐᵒᵖ M := Module.compHom M ((RingHom.id O).fromOpposite mul_comm)
+  have : IsCentralScalar O M := ⟨fun _ _ => rfl⟩
+  have : IsCO O (TrivSqZeroExt O M) := tsz_isCO
   have hmul : ∀ (c : O) (m : M), algebraMap O (TrivSqZeroExt O M) c * TrivSqZeroExt.inr m =
       TrivSqZeroExt.inr (c • m) := fun c m => TrivSqZeroExt.inl_mul_inr c m
   let I : Ideal (TrivSqZeroExt O M) := RingHom.ker (TrivSqZeroExt.fstHom O O M)
@@ -708,7 +708,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.mprime_coord :
   intro O _ _ _ _ _ _ G Γ ι _ _ _ _ _ _ _ _ _ _ _ _ _ F hF g₁ hg R _ _ _ u hu W hW a ha
   choose g p q _ hwt hz using hW.var
   obtain ⟨N, hN1, hN2⟩ := exists_norm F.Ψ a F.c g₁ hF.Ψc hg.2
-  haveI : Module.Finite O (OQ a) := inferInstanceAs (Module.Finite O (O ⧸ Ideal.span {a}))
+  have : Module.Finite O (OQ a) := inferInstanceAs (Module.Finite O (O ⧸ Ideal.span {a}))
   have hρ : ∀ g (m : OQ a), oqRep F.Ψ⁻¹ a g m = (((F.Ψ g)⁻¹ : Oˣ) : O) • m := fun _ _ => rfl
   let d : F.ShaO a →+ (W.σ → OQ a) :=
     { toFun := fun x i => (Tm O (p i) (q i) * psi F.Ψ (q i) (g i)) • N x.1 (g i)
@@ -779,13 +779,13 @@ private theorem wtPart_decomp {O σ : Type} [CommRing O] (wt : σ → ℤ) (j : 
       intro n i
       rw [MvPowerSeries.X_def, MvPowerSeries.coeff_monomial_mul]
       by_cases hle : Finsupp.single i 1 ≤ n
-      · rw [if_pos hle, one_mul, hg, tsub_add_cancel_of_le hle]
+      · rw [ite_eq_left hle, one_mul, hg, tsub_add_cancel_of_le hle]
       · have hP : ¬ P n i := by
           rintro ⟨h, hc⟩
           apply hle
           rw [Finsupp.single_le_iff, ← hc]
           exact Nat.one_le_iff_ne_zero.mpr h.choose_spec.2
-        rw [if_neg hle, if_neg hP]
+        rw [ite_eq_right hle, ite_eq_right hP]
     ext n
 
     rw [map_sum]
@@ -793,9 +793,9 @@ private theorem wtPart_decomp {O σ : Type} [CommRing O] (wt : σ → ℤ) (j : 
     by_cases h : ∃ k ∈ s, n k ≠ 0
     · have hP : ∀ i, P n i ↔ h.choose = i := fun i => ⟨fun ⟨_, e⟩ => e, fun e => ⟨h, e⟩⟩
       simp_rw [hP]
-      rw [Finset.sum_ite_eq, if_pos h.choose_spec.1]
+      rw [Finset.sum_ite_eq, ite_eq_left h.choose_spec.1]
     · have hP : ∀ i, ¬ P n i := fun i ⟨h', _⟩ => h h'
-      simp only [hP, if_false, Finset.sum_const_zero]
+      simp only [hP, ite_false, Finset.sum_const_zero]
       push_neg at h
       exact hs n h
 
@@ -805,7 +805,7 @@ private theorem vanish_of_entries {O : Type} [CommRing O] [IsLocalRing O] {G Γ 
     (h : ∀ g, F.η g = 1 → ∀ a b, wt a b ∉ M → ptMat u ξ g a b = 0) (j : ℤ) (hj : j ∉ M) (x : R)
     (hx : x ∈ wpart (O := O) u j) : ξ ⟨x, mem_Sring u hx⟩ = 0 := by
   classical
-  haveI := W.fin
+  have := W.fin
   have hmemz : ∀ i, W.z i ∈ Sring (O := O) u := fun i =>
     mem_Sring u (j := W.wt i) (by rw [← hW.part]; exact W.z_mem i)
   have hzero : ∀ i, W.wt i ∉ M → ξ ⟨W.z i, hmemz i⟩ = 0 := by
@@ -1195,19 +1195,19 @@ theorem UpperTheory.V.UnitaryThreeInertia.eq_rz_of_vanE :
         decide)
     (fun e => by
       obtain ⟨Z, hZ⟩ := (htri F.vl (Set.mem_insert _ _)).2
-      refine ⟨Matrix.of fun a b => if wt a b = j then Z a b else 0, fun a b hab => if_neg hab, fun g hg => ?_⟩
+      refine ⟨Matrix.of fun a b => if wt a b = j then Z a b else 0, fun a b hab => ite_eq_right hab, fun g hg => ?_⟩
       ext a b
       have hg' : F.η (F.loc _ g) = 1 := hg
-      rw [cob, Matrix.sub_apply, adRep_baseLift_apply, if_pos hg', Matrix.of_apply]
+      rw [cob, Matrix.sub_apply, adRep_baseLift_apply, ite_eq_left hg', Matrix.of_apply]
       by_cases hab : wt a b = j
-      · simp only [if_pos hab]
+      · simp only [ite_eq_left hab]
         have h1 := hZ g hg a b (hab ▸ e)
         rw [hs] at h1
         have h2 : ((F.Ψ (F.loc _ g) ^ wt a b : Oˣ) : O) * psi F.Ψ b (F.loc _ g) = psi F.Ψ a (F.loc _ g) := by
           rw [psi, psi, ← Units.val_mul, ← _root_.zpow_add, wt, sub_add_cancel]
         refine (hpu b (F.loc _ g)).mul_right_cancel ?_
         linear_combination h1 + Z a b * h2
-      · simp only [if_neg hab]
+      · simp only [ite_eq_right hab]
         rw [hgw _ a b hab]; simp)
   have hcob : cob (r0 F.η F.Ψ) X = fun g => t • γ g := funext fun g => (hX g).symm
   have hzv : zvar F.c g₁ (r0 F.η F.Ψ) (fun g => t • γ g) = t • (ms (r g₁).mat - ms (r (gstar F.c g₁)).mat) := by
@@ -1300,7 +1300,7 @@ private theorem exists_tan {O R : Type} [CommRing O] [CommRing R] [Algebra O R] 
   · exact TrivSqZeroExt.ext ((tangent_point_fst d f).trans (h0 f hf)) ((tangent_point_snd d f).trans (hd f hf))
   · have : (Ideal.quotientKerAlgEquivOfSurjective W.surj).symm (W.π f) = Ideal.Quotient.mk _ f := by
       rw [AlgEquiv.symm_apply_eq]; rfl
-    simp only [AlgHom.comp_apply, AlgEquiv.coe_algHom]
+    simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
     erw [this]
     rfl
 
@@ -1315,11 +1315,11 @@ theorem UpperTheory.V.UnitaryThreeInertia.tangent_coord_eq_zero_of_nonpos_weight
   classical
   obtain ⟨h0, hor⟩ := hasOrigin F hF g₁ hg u hu W hW
   obtain ⟨τ, hτ⟩ := exists_tan W h0 d hd
-  haveI : IsLocalRing (DualNumber O) := dual_local
+  have : IsLocalRing (DualNumber O) := dual_local
   have hfst : ∀ x, (τ x).fst = W.origin h0 x := fun x => by
     obtain ⟨f, rfl⟩ := W.surj x
     rw [hτ, tangent_point_fst, WPres.origin_π]
-  haveI : IsLocalHom τ := ⟨fun x hx => by
+  have : IsLocalHom τ := ⟨fun x hx => by
     rw [TrivSqZeroExt.isUnit_iff_isUnit_fst, hfst] at hx
     by_contra hn
     have h1 : res O O (W.origin h0 x) = 0 := by
@@ -1349,7 +1349,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.tangent_coord_eq_zero_of_nonpos_weight
     rw [WPres.z, hτ, tangent_point_snd, Finset.sum_eq_single i]
     · simp [MvPowerSeries.coeff_X]
     · intro k _ hk
-      rw [MvPowerSeries.coeff_X, if_neg, zero_mul]
+      rw [MvPowerSeries.coeff_X, ite_eq_right, zero_mul]
       intro e
       exact hk (Finsupp.single_left_injective one_ne_zero e)
     · simp
@@ -1455,7 +1455,7 @@ private theorem diagonal_reps_eq_of_same_frame_point {O R G Γ ι : Type} [CommR
         · obtain ⟨h, hh, hD⟩ := (hr.loc v).2.1 hv
           exact ⟨h, hh, hD.toTriIn⟩
       exact h2 ⟨_, hη⟩ fun a => (key r hr hd a).trans (key ρ hρ hd' a).symm
-    · haveI := Fintype.ofFinite (ResidueField O)
+    · have := Fintype.ofFinite (ResidueField O)
       have hmem : s ^ Fintype.card (ResidueField O)ˣ ∈ F.Nv v := by
         refine ⟨⟨pow_mem hs _, pow_mem (show s ∈ (F.ηv v).ker from hη) _⟩, ?_⟩
         show ((Units.map (residue O).toMonoidHom).comp (F.Ψv v)) _ = 1
@@ -1498,7 +1498,7 @@ private theorem diagonal_reps_eq_of_same_frame_point {O R G Γ ι : Type} [CommR
     have lc : ∀ (r : Γ →* GG (m := 3) (R := R)) (hr : F.IsPt g₁ r) (hd : ∀ g, F.η g = 1 → (r g).mat.IsDiag),
         IsLocallyConstant fun g => Units.map q ((kap F.η r hr.mult hd a).toHomUnits g) := fun r hr hd =>
       IsLocallyConstant.desc _ Units.val
-        (((hr.cont n).comp fun X => X a a).comp_continuous continuous_subtype_val) Units.val_injective
+        (((hr.cont n).comp fun X => X a a).comp_continuous continuous_subtypeVal) Units.val_injective
     have hχ := hC _ ((Units.map q).comp (u a)) (by
       have := (lc r hr hd).div (lc ρ hρ hd')
       convert this using 1
@@ -1532,7 +1532,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.eq_rz_of_diag :
       [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [T2Space Γ] [TotallyDisconnectedSpace Γ] [Finite ι] (F : Frame O G Γ ι), F.Ok →
     F.Cl1 → ∀ g₁, F.Marked g₁ → ∀ (r : Γ →* GG (m := 3) (R := PadicAlgCl l)), F.IsCharZeroPt g₁ r → Upper F.η r → Lower F.η r → r = F.rz (PadicAlgCl l) := by
   intro l _ O _ _ _ _ _ _ _ _ _ _ _ G Γ ι _ _ _ _ _ _ _ _ _ _ _ _ _ F hF hC g₁ _ r ⟨A, _, _, t, r', hp, he⟩ hU hL
-  haveI : FaithfulSMul O A := (faithfulSMul_iff_algebraMap_injective O A).2 fun x y h =>
+  have : FaithfulSMul O A := (faithfulSMul_iff_algebraMap_injective O A).2 fun x y h =>
     FaithfulSMul.algebraMap_injective O (PadicAlgCl l) (congrArg Subtype.val h)
   have hz : ∀ (B : Type) [CommRing B] [Algebra O B] g, (F.rz B g).mat.IsDiag := by
     intro B _ _ g a b hab
@@ -1552,8 +1552,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.eq_rz_of_diag :
     rcases lt_or_gt_of_ne this with h | h
     · rw [hU g hg a b h, mul_zero]; rfl
     · rw [hL g hg a b h, mul_zero]; rfl
-  haveI : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
-  haveI : IsLocalHom (algebraMap O A) := Algebra.IsIntegral.isLocalHom O A
+  have : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
+  have : IsLocalHom (algebraMap O A) := Algebra.IsIntegral.isLocalHom O A
   have e := diagonal_reps_eq_of_same_frame_point F hF hC g₁ r' (F.rz A) hp (isPt_rz F hF g₁) hd fun g _ => hz A g
   subst e
   ext1 g

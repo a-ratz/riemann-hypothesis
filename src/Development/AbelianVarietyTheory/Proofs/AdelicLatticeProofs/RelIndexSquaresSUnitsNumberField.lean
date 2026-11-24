@@ -115,8 +115,8 @@ theorem index_double_of_fg (M : Type) [AddCommGroup M] [AddGroup.FG M] :
     (nsmulAddMonoidHom (α := M) 2).range.index =
       2 ^ Module.finrank ℤ M * Nat.card (nsmulAddMonoidHom (α := M) 2).ker := by
   obtain ⟨n, ι, _, p, hp, e, ⟨f⟩⟩ := AddCommGroup.equiv_free_prod_directSum_zmod M
-  haveI : ∀ i, NeZero (p i ^ e i) := fun i => ⟨pow_ne_zero _ (hp i).ne_zero⟩
-  haveI : Finite (DirectSum ι fun i => ZMod (p i ^ e i)) :=
+  have : ∀ i, NeZero (p i ^ e i) := fun i => ⟨pow_ne_zero _ (hp i).ne_zero⟩
+  have : Finite (DirectSum ι fun i => ZMod (p i ^ e i)) :=
     Finite.of_equiv _ (DFinsupp.equivFunOnFintype).symm
   have h := index_double_prod (Fin n →₀ ℤ) (DirectSum ι fun i => ZMod (p i ^ e i))
   rw [← AddSubgroup.index_map_equiv _ f, AddEquiv.map_range_nsmulAddMonoidHom, h,
@@ -194,7 +194,7 @@ theorem card_sq_eq_one_sUnits (F : Type) [Field F] [NumberField F]
 
 theorem relIndex_sqs_sUnits : ∀ (F : Type) [Field F] [NumberField F] (S : Finset (HeightOneSpectrum (𝓞 F))), (sqs (sUnits F S)).relIndex (sUnits F S) = 2 ^ (S.card + Fintype.card (InfinitePlace F)) := by
   intro F _ _ S
-  haveI := _root_.GlobalTheory.QNorm.sUnits_fg F S
+  have := _root_.GlobalTheory.QNorm.sUnits_fg F S
   rw [Subgroup.relIndex, sqs_subgroupOf_self, _root_.GlobalTheory.QNorm.index_sqs_top_of_fg, card_sq_eq_one_sUnits,
     ← _root_.GlobalTheory.QNorm.sUnits_rank F S, pow_succ]
 

@@ -261,7 +261,7 @@ theorem ArithmeticVolumeNefDual.proof (hG7p : ArithmeticVolumeNef.Statement) (hP
       have hpos : 0 < ‖sg ((ε : 𝓞 F) : F)‖ := norm_pos_iff.2 ((map_ne_zero sg).2 hε0)
       have hlog : Real.log ‖sg ((ε : 𝓞 F) : F)‖ ≤ τ * u sg + τ * δ := by
         linarith [(abs_le.1 (hε sg)).2]
-      rw [← mul_add, Real.log_le_iff_le_exp hpos, Real.exp_nat_mul] at hlog
+      rw [← mul_add, Real.log_le_iff_le_exp hpos, Real.exp_natCast_mul] at hlog
       rw [hpt z hz sg hsg, mul_pow]
       exact mul_le_mul_of_nonneg_right hlog (pow_nonneg hAz.le τ)
     · exact isCoboundedUnder_le_of_le atTop (fun k => div_nonneg (Real.log_natCast_nonneg _) (hden k))

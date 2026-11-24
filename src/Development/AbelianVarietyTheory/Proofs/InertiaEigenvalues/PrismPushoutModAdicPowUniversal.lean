@@ -156,7 +156,7 @@ theorem _root_.GlobalTheory.BSP.PoUniv.isPO_univ (l : ℕ) [Fact l.Prime] (R : T
     (hab : a.comp h = b.comp k) :
     ∃! c : _root_.GlobalTheory.Prism.Hom C' Q,
       c.comp k' = a ∧ c.comp h' = b := by
-  haveI : IsAdicComplete (_root_.GlobalTheory.BSP.adI Q) Q.A :=
+  have : IsAdicComplete (_root_.GlobalTheory.BSP.adI Q) Q.A :=
     Q.complete
   have hex : ∀ m, ∃ ψ : C'.A ⧸ _root_.GlobalTheory.BSP.adI C' ^ m →+*
       Q.A ⧸ _root_.GlobalTheory.BSP.adI Q ^ m,

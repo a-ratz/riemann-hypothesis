@@ -150,7 +150,7 @@ theorem Tw_one {q : ℕ} (w : Fm U Ξ q) (x : GL (Fin a) (Af E)) : Tw U Ξ w 1 x
 theorem Tw_eq {q : ℕ} (w : Fm U Ξ q) (g h : GL (Fin a) (Cinf E)) (x : GL (Fin a) (Af E)) :
     Tw U Ξ w g x = tp (sand h⁻¹) (mulVecL (Ξ.mat h)) (Tw U Ξ w (g * h) x) := by
   have e : ∀ p : HV E a, sand (g * h) (sand h⁻¹ p) = sand g p := fun p => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel_right]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel_right]
   funext p
   refine ContinuousAlternatingMap.ext fun v => ?_
   simp only [Tw, tp_apply, e, mulVecL_apply, Matrix.mulVec_mulVec, ← map_mul, _root_.mul_inv_rev, mul_inv_cancel_left]

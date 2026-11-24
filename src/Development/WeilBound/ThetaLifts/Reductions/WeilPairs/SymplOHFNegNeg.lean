@@ -103,7 +103,7 @@ theorem heis_delta {ψ : AddChar (AF F) ℂ} (hψ : ∀ a, ‖ψ a‖ = 1) (w : 
 theorem theta_delta {ψ : AddChar (AF F) ℂ} (hψ : ∀ a, ‖ψ a‖ = 1) {f₁ f₂ : WOF F E nS nT → ℂ}
     (h₁ : IsThetaFunOF σ JS JT ξ₀ ψ f₁) (h₂ : IsThetaFunOF σ JS JT ξ₀ ψ f₂) :
     IsThetaFunOF σ JS (dblG JT) ξ₀ ψ (deltaT f₁ f₂) := by
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   let tA : WOF F E nS (nT + nT) →+ WOF F E nS nT := ⟨⟨topR, rfl⟩, fun _ _ => rfl⟩
   let bA : WOF F E nS (nT + nT) →+ WOF F E nS nT := -⟨⟨botR, rfl⟩, fun _ _ => rfl⟩
   have htA : Continuous tA := continuous_topR

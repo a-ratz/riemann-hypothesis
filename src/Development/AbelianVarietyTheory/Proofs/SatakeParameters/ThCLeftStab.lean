@@ -541,7 +541,7 @@ theorem core (hconj : ∀ τ x, X.embC A.σ₀ τ (star x) = starRingEnd ℂ (X.
     rw [← map_add (f := _)]
     refine (onV_emb A hδ Ξ _).trans ((hΞ x y ⟨(c : X.E)⁻¹ • y, fun P hP => per_loc A (hAA P hP) ?_, ?_⟩).trans (onV_emb A hδ Ξ x).symm)
     · have := (mem_tw _ _ _ _).1 hy P
-      rwa [expS, if_pos hP, zpow_one] at this
+      rwa [expS, ite_eq_left hP, zpow_one] at this
     · change (c : 𝓞 X.E) • (c : X.E)⁻¹ • y = y
       rw [← algebraMap_smul X.E (c : 𝓞 X.E), map_natCast, smul_smul, mul_inv_cancel₀ hcE, one_smul]
 
@@ -569,7 +569,7 @@ theorem aa_le {P : HeightOneSpectrum (𝓞 X.E)} (h2 : ((D.host.QS : ℕ) : 𝓞
     (ambOf s B χ cD : Amb X).AA ≤ localization₂ P.asIdeal (1 : Submodule (𝓞 X.E) X.E) := by
   let j : 𝓞 D.host.E →+* 𝓞 X.E := RingOfIntegers.mapRingHom (s.iE.symm : D.host.E →+* X.E)
   have hj : ∀ a : 𝓞 D.host.E, ((j a : 𝓞 X.E) : X.E) = s.iE.symm (a : D.host.E) := fun _ => rfl
-  haveI := P.isPrime
+  have := P.isPrime
   have : Finite (𝓞 X.E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   have hl : (ringChar (𝓞 X.E ⧸ P.asIdeal)).Prime := CharP.char_is_prime (𝓞 X.E ⧸ P.asIdeal) _
   have hP : ((ringChar (𝓞 X.E ⧸ P.asIdeal) : ℕ) : 𝓞 X.E) ∈ P.asIdeal := by
@@ -593,7 +593,7 @@ theorem aa_le {P : HeightOneSpectrum (𝓞 X.E)} (h2 : ((D.host.QS : ℕ) : 𝓞
 theorem vac_leftE (hok : s.Ok) (hE : B.EqP χ) {a b : ℕ} {N : Submodule (𝓞 X.E) (Sp X.E a)} {N' : Submodule (𝓞 X.E) (Sp X.E b)}
     (hA : TaylorLogMetric.admitted D a b (s.lat N) (s.lat N')) (γ : UF X.E b) (hγ : gmap γ.1 N' = N') (z : VCx X.Tau a b) :
     (ambOf s B χ cD : Amb X).e a b N N' (leftE (ambOf s B χ cD : Amb X) a γ.1 z) = (ambOf s B χ cD : Amb X).e a b N N' z := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h := hE.1 a b ⟨s.lat N, hA.2.2.1⟩ ⟨s.lat N', hA.2.2.2⟩ hA.1 hA.2.1 1 ⟨matOf s γ.1, matOf_unitary s hok γ⟩
   have h1 : SDLat.smulLat ((1 : Matrix.unitaryGroup (Fin a) D.host.E) : Matrix (Fin a) (Fin a) D.host.E) (s.lat N) = s.lat N := by
     change SDLat.smulLat (1 : Matrix (Fin a) (Fin a) D.host.E) _ = _
@@ -652,7 +652,7 @@ theorem thC_left_stab : ∀ (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (�
       change reidx s a b ((reidx s a b).symm y) ∈ _
       rwa [LinearEquiv.apply_symm_apply]
     rw [e]
-    letI := f1
+    let := f1
     infer_instance
   exact core (ambOf s B χ cD) (fun τ x => by
       change s.σ₀ (X.emb τ (star x)) = starRingEnd ℂ (s.σ₀ (X.emb τ x))

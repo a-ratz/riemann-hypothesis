@@ -65,11 +65,11 @@ namespace GlobalTheory.Poinc.Sep.Spz
 
 theorem exists_stalk_factor : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (R : Subalgebra o Ω) (K : Type) [Field K] (x : Sp K ⟶ M.Z) (yK : R →+* K), (∀ a ∈ R, a ∈ M.O (x (closedPoint K))) → (∀ a : R, yK a = M.val x a) → ∃ (O : Type) (_ : CommRing O) (_ : IsDomain O) (_ : IsNoetherianRing O) (_ : IsIntegrallyClosed O) (_ : Algebra O Ω) (_ : IsFractionRing O Ω) (xO : Sp O ⟶ M.Z) (u : R →+* O) (v : O →+* K), spMap (algebraMap O Ω) ≫ xO = M.pt ∧ (algebraMap O Ω).comp u = R.val.toRingHom ∧ spMap v ≫ xO = x ∧ v.comp u = yK := by
   intro o Ω _ _ _ _ M hN R K _ x yK hR hy
-  haveI := ArithBase.ded (o := o) (Ω := Ω)
-  haveI := M.lft
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
-  haveI : IsIntegrallyClosed (M.O (x (closedPoint K))) := RatModel.isIntegrallyClosed_O (M := M) hN _
-  haveI : IsNoetherianRing (M.O (x (closedPoint K))) :=
+  have := ArithBase.ded (o := o) (Ω := Ω)
+  have := M.lft
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : IsIntegrallyClosed (M.O (x (closedPoint K))) := RatModel.isIntegrallyClosed_O (M := M) hN _
+  have : IsNoetherianRing (M.O (x (closedPoint K))) :=
     isNoetherianRing_of_ringEquiv _ (M.stalkEquiv (x (closedPoint K)))
   have h1 : CommRingCat.ofHom (M.stalkEquiv (x (closedPoint K))).toRingHom ≫
       CommRingCat.ofHom (algebraMap (M.O (x (closedPoint K))) Ω) =

@@ -86,7 +86,7 @@ theorem continuous_nB : Continuous d.nB := by
       (continuous_const.matrix_mul h2)
 
 theorem continuous_nC : Continuous d.nC := by
-  have h3 : Continuous fun c : skewA D ρ => d.jX ⬝ c.1 := continuous_const.matrix_mul continuous_subtype_val
+  have h3 : Continuous fun c : skewA D ρ => d.jX ⬝ c.1 := continuous_const.matrix_mul continuous_subtypeVal
   refine continuous_of_mt S ?_
   simp only [nC, mt_ofImages]
   exact Continuous.add continuous_const (Continuous.matrix_mul (Continuous.add continuous_const h3) continuous_const)

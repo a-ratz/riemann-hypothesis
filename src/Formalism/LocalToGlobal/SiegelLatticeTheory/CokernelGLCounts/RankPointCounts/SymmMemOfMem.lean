@@ -120,7 +120,7 @@ theorem X_pres {s : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hs : ∀ j, ∀ x ∈ X
   exact flag_pres F hs _ x hx
 
 theorem SRat_inv {s : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hs : s ∈ SRat F) : s.symm ∈ SRat F := by
-  simp only [SRat, Set.mem_setOf_eq] at hs ⊢
+  simp only [SRat, Set.mem_ofPred_eq] at hs ⊢
   refine ⟨(Formalism.HermitianLatticesTheory.isom (VS D).hT).inv_mem hs.1, flag_inv F hs.2.1, ?_⟩
   have h1 := symm_mem_of_mem s (Xsp F) (X_pres F hs.2.1) _ hs.2.2
   have h2 := Submodule.neg_mem _ h1
@@ -128,7 +128,7 @@ theorem SRat_inv {s : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hs : s ∈ SRat F) : 
   exact h2
 
 theorem SRat_mul {s t : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hs : s ∈ SRat F) (ht : t ∈ SRat F) : s * t ∈ SRat F := by
-  simp only [SRat, Set.mem_setOf_eq] at hs ht ⊢
+  simp only [SRat, Set.mem_ofPred_eq] at hs ht ⊢
   refine ⟨(Formalism.HermitianLatticesTheory.isom (VS D).hT).mul_mem hs.1 ht.1, flag_mul F hs.2.1 ht.2.1, ?_⟩
   have hw := ht.2.2
   have hsw := X_pres F hs.2.1 _ hw
@@ -151,7 +151,7 @@ theorem perp_pres {n : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hi : n ∈ Formalism
   exact hy _ (hX x hx)
 
 theorem NRat_inv {n : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hn : n ∈ NRat F) : n.symm ∈ NRat F := by
-  simp only [NRat, Set.mem_setOf_eq] at hn ⊢
+  simp only [NRat, Set.mem_ofPred_eq] at hn ⊢
   have hX : ∀ x ∈ Xsp F, n.symm x ∈ Xsp F := symm_mem_of_mem n (Xsp F) (X_pres F hn.2.1)
   have hO := perp_pres F hn.1 hX
   refine ⟨(Formalism.HermitianLatticesTheory.isom (VS D).hT).inv_mem hn.1, flag_inv F hn.2.1, ?_⟩
@@ -162,7 +162,7 @@ theorem NRat_inv {n : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hn : n ∈ NRat F) : 
   exact h2
 
 theorem NRat_mul {n m : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hn : n ∈ NRat F) (hm : m ∈ NRat F) : n * m ∈ NRat F := by
-  simp only [NRat, Set.mem_setOf_eq] at hn hm ⊢
+  simp only [NRat, Set.mem_ofPred_eq] at hn hm ⊢
   refine ⟨(Formalism.HermitianLatticesTheory.isom (VS D).hT).mul_mem hn.1 hm.1, flag_mul F hn.2.1 hm.2.1, ?_⟩
   intro x hx
   have hw := hm.2.2 x hx

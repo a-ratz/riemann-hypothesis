@@ -105,7 +105,7 @@ theorem le_of_eventually_up {ε δ : ℝ} (hε1 : ε < 1) (hq : QInv nu ε δ) (
     (s : Set V) (hs : s ⊆ ball 0 δ) : nu s ≤ M' * lam s := by
   have key := (Besicovitch.vitaliFamily nu).measure_le_of_frequently_le (M' • lam)
     (Measure.AbsolutelyContinuous.refl nu) s ?_
-  · rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at key
+  · rw [smul_apply, ENNReal.smul_def, smul_eq_mul] at key
     exact key
   intro X hX
   have hXn : ‖X‖ < δ := by simpa using hs hX
@@ -119,7 +119,7 @@ theorem le_of_eventually_up {ε δ : ℝ} (hε1 : ε < 1) (hq : QInv nu ε δ) (
     _ ≤ M * lam (closedBall 0 r) := hr
     _ ≤ (M' * ENNReal.ofReal ((1 - ε) ^ finrank ℝ V)) * lam (closedBall 0 r) := by gcongr
     _ = (M' • lam) (closedBall X ((1 - ε) * r)) := by
-        rw [Measure.smul_apply, Measure.addHaar_closedBall_mul_of_pos lam X (by linarith) r,
+        rw [smul_apply, Measure.addHaar_closedBall_mul_of_pos lam X (by linarith) r,
           ENNReal.smul_def, smul_eq_mul, mul_assoc]
 
 theorem le_of_eventually_down {ε δ : ℝ} (hε0 : 0 < ε) (hq : QInv nu ε δ) (M M' : ℝ≥0)
@@ -128,7 +128,7 @@ theorem le_of_eventually_down {ε δ : ℝ} (hε0 : 0 < ε) (hq : QInv nu ε δ)
     (s : Set V) (hs : s ⊆ ball 0 δ) : M' * lam s ≤ nu s := by
   have key := (Besicovitch.vitaliFamily lam).measure_le_of_frequently_le (ρ := M' • lam) nu
     (Measure.AbsolutelyContinuous.smul_left (Measure.AbsolutelyContinuous.refl lam) M') s ?_
-  · rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at key
+  · rw [smul_apply, ENNReal.smul_def, smul_eq_mul] at key
     exact key
   intro X hX
   have hXn : ‖X‖ < δ := by simpa using hs hX
@@ -140,7 +140,7 @@ theorem le_of_eventually_down {ε δ : ℝ} (hε0 : 0 < ε) (hq : QInv nu ε δ)
   filter_upwards [hev, Ioo_mem_nhdsGT hδ] with r hr hrδ
   calc (M' • lam) (closedBall X ((1 + ε) * r))
       = (M' * ENNReal.ofReal ((1 + ε) ^ finrank ℝ V)) * lam (closedBall 0 r) := by
-        rw [Measure.smul_apply, Measure.addHaar_closedBall_mul_of_pos lam X (by linarith) r,
+        rw [smul_apply, Measure.addHaar_closedBall_mul_of_pos lam X (by linarith) r,
           ENNReal.smul_def, smul_eq_mul, mul_assoc]
     _ ≤ M * lam (closedBall 0 r) := by gcongr
     _ ≤ nu (closedBall 0 r) := hr
@@ -344,7 +344,7 @@ theorem exp_cont : Continuous (exp : 𝔸 → 𝔸) :=
   exp_continuous
 
 theorem exp_neg_mul (X : 𝔸) : exp (-X) * exp X = 1 := by
-  letI := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   rw [← exp_add_of_commute (Commute.neg_left (Commute.refl X)), neg_add_cancel, exp_zero]
 
 theorem exp_mul_neg (X : 𝔸) : exp X * exp (-X) = 1 := by
@@ -471,7 +471,7 @@ theorem expG_cont : Continuous C.expG := by
   rw [C.emb.isInducing.continuous_iff]
   have : C.mat ∘ C.expG = fun X : V => exp (X : 𝔸) := funext C.mat_expG
   rw [this]
-  exact exp_cont.comp continuous_subtype_val
+  exact exp_cont.comp continuous_subtypeVal
 
 theorem exists_rho : ∃ ρ > 0, ∀ Z : 𝔸, ‖Z‖ < ρ →
     logA 𝔸 (exp Z) = Z ∧ ((∃ g, C.mat g = exp Z) → Z ∈ V) := by
@@ -516,8 +516,8 @@ theorem nu_apply {s : Set V} (hs : MeasurableSet s) :
     refine C.meas_image hR (MeasurableSet.subtype_image measurableSet_ball ht) ?_
     rintro _ ⟨x, -, rfl⟩
     exact x.2
-  rw [nu, Measure.map_apply measurable_subtype_coe hs,
-    Measure.comap_apply _ hinj hm _ (measurable_subtype_coe hs)]
+  rw [nu, Measure.map_apply measurable_subtypeVal hs,
+    Measure.comap_apply _ hinj hm _ (measurable_subtypeVal hs)]
   congr 1
   ext g
   constructor

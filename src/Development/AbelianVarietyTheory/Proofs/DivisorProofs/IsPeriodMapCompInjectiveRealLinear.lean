@@ -69,7 +69,7 @@ theorem isPeriod_comp_realLinear {O : Type} [Ring O] {bar : O → O} (D : PLat O
         exact ⟨x, (e.symm_apply_apply (P₀ x)).symm⟩⟩
     have hf : Continuous f := by
       apply Continuous.subtype_mk
-      exact ec.symm.continuous.comp continuous_subtype_val
+      exact ec.symm.continuous.comp continuous_subtypeVal
     have hi : Function.Injective f := by
       intro z w h
       apply Subtype.ext

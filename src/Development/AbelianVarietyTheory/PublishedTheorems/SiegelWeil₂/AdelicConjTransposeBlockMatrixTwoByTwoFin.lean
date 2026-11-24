@@ -151,13 +151,13 @@ theorem isCompact_K : IsCompact (K D n : Set (G D n)) :=
   isCompact_levelAll (isCMExt_host D) _ _ _
 
 theorem isClosed_P : IsClosed (P D n : Set (G D n)) := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  haveI := t2Space_tensorProduct_finiteExtension (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := t2Space_tensorProduct_finiteExtension (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have : (P D n : Set (G D n)) = ⋂ x ∈ upperHalf D n, ({g | (mat g).mulVec x ∈ upperHalf D n} ∩
       {g | (mat g⁻¹).mulVec x ∈ upperHalf D n}) := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq, SetLike.mem_coe]
     refine ⟨fun h x hx => ⟨(h x).1 hx, ((P D n).inv_mem h x).1 hx⟩, fun h x => ⟨fun hx => (h x hx).1, fun hx => ?_⟩⟩
     have := (h _ hx).2
     change (mat g⁻¹).mulVec ((mat g).mulVec x) ∈ _ at this

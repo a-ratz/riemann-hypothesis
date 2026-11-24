@@ -561,8 +561,8 @@ private theorem thG_extN {B B' : Base} (q : B'.toPre = B.toPre) {f : Fr B.toPre}
       (z.R.B.jL j (mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))) x)) :
     HEq (z'.R.thG j' (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' Wt'))) (z'.R.jV j' (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' Wt'))) x'))
       (z.R.thG j (mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))) (z.R.jV j (mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))) x)) := by
-  letI := z.alg
-  letI := z'.alg
+  let := z.alg
+  let := z'.alg
   have hM := hE.MW j j' hj
   have h0 := hmod_fields' q j j' hj _ _ hM.1 hM.2.1 hM.2.2.1 hM.2.2.2.1 hM.2.2.2.2.1 hM.2.2.2.2.2.1 hM.2.2.2.2.2.2.1 _ _
     hM.2.2.2.2.2.2.2.2.1
@@ -613,8 +613,8 @@ theorem _root_.GlobalTheory.T.extendedData_lift_blockDatum_baseChange_one_matrix
   have hsb := Hs B f T w hE hff hPin hpx Z hX Wt z hG hGA hFine hHL Z' hX' hG' hGA' hVol z' hFine' hExt j j' hj φ hφ L hL hC
   obtain ⟨C, hCL, c1, c2, c3, c4, c5⟩ := GlobalTheory.Mem.R3.LiftLatBC.forms_of_semilinear_at φ e _ _ _ _ L hL hli hsp hcs hac hnb hsb
   refine ⟨e, C, ⟨c1, c2, c3, c4, c5, hXg, hP, hψ⟩, fun x => ?_⟩
-  letI := z.alg
-  letI := z'.alg
+  let := z.alg
+  let := z'.alg
   have hj0 := hExt.jL j j' hj (Formalism.L2.Col.mtKOk (Pr := B.primes w.px) B.wts w.I.Ch w.I.sel (mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))).1 hX ((j : ℕ) + 1))
     (Formalism.L2.Col.mtKOk (Pr := B'.primes w'.px) B'.wts w'.I.Ch w'.I.sel (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}))).1 hX' ((j' : ℕ) + 1)) _ _ (hC x)
   have hj1 : HEq (z'.R.B.jL j' (mu0F (X := B'.fields) (tuOf w'.I (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}))) ((by with_unfolding_all exact ((L x) :))))
@@ -716,7 +716,7 @@ variable {K K' : Type} [Field K] [Field K'] [NumberField K] [NumberField K'] (φ
 theorem relSet_eq {n : ℕ} (S : Set (Fin n → K)) :
     {x' : Fin n → K' | ∃ x ∈ S, ∀ (k k' : Fin n), (k : ℕ) = k' → x' k' = φ (x k)} = (fun x k => φ (x k)) '' S := by
   ext x'
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · rintro ⟨x, hx, h⟩; exact ⟨x, hx, funext fun k => (h k k rfl).symm⟩
   · rintro ⟨x, hx, rfl⟩; exact ⟨x, hx, fun k k' hk => by rw [Fin.ext hk]⟩
@@ -813,12 +813,12 @@ theorem span_image_inf {n : ℕ} (X : Submodule (𝓞 K) (Fin n → K)) (V : Sub
       have := hb (i, r)
       rw [Algebra.smul_def] at this
       exact this
-    letI : Algebra (𝓞 K) (𝓞 K') := ψ.toAlgebra
+    let : Algebra (𝓞 K) (𝓞 K') := ψ.toAlgebra
     have hinj : Function.Injective ψ := fun a a' h => by
       have := congrArg (fun z : 𝓞 K' => (z : K')) h
       simp only [hψ] at this
       exact RingOfIntegers.ext (φ.injective this)
-    haveI : Module.Flat (𝓞 K) (𝓞 K') := by
+    have : Module.Flat (𝓞 K) (𝓞 K') := by
       rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
       rintro z ⟨a, ha⟩
       have ha' : ψ a * z = 0 := ha

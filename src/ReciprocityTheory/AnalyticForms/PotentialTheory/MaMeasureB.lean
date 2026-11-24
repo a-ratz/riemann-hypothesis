@@ -112,7 +112,7 @@ theorem integrableOn_target_of_closed {e : ℕ} {X : Type} [TopologicalSpace X]
     (ch : OpenPartialHomeomorph X (Fin e → ℂ)) {Z : Set X} {G : (Fin e → ℂ) → ℝ}
     (hG0 : ∀ y ∈ ch.target, ch.symm y ∉ Z → G y = 0) (hG : IntegrableOn G (ch '' Z)) :
     IntegrableOn G ch.target :=
-  hG.of_forall_diff_eq_zero ch.open_target.measurableSet
+  hG.of_forall_sdiff_eq_zero ch.open_target.measurableSet
     (fun y hy => hG0 y hy.1 (fun hz => hy.2 ⟨_, hz, ch.right_inv hy.1⟩))
 
 theorem image_closed_compact {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace X]
@@ -141,7 +141,7 @@ theorem maMeasure_mono_of_psh {e : ℕ} {X : Type} [TopologicalSpace X] [Measura
   split_ifs with h
   · rw [Measure.le_iff]
     intro s hs
-    simp only [MeasureTheory.Measure.coe_finsetSum, Finset.sum_apply]
+    simp only [FunLike.coe_sum, Finset.sum_apply]
     refine Finset.sum_le_sum fun j _ => ?_
     have hT := (A.chart j).open_target.measurableSet
     have hsm : AEMeasurable (A.chart j).symm (volume.restrict (A.chart j).target) :=
@@ -253,7 +253,7 @@ theorem maMeasure_converse (A : FinHolAtlas e X) (Φ : Fin e → LocPot X)
     intro k
     rw [maMeasure_eq_sum A Φ hne, Measure.le_iff']
     intro s
-    simp only [MeasureTheory.Measure.coe_finsetSum, Finset.sum_apply]
+    simp only [FunLike.coe_sum, Finset.sum_apply]
     exact Finset.single_le_sum (f := fun i => chartMeasure A hne.some Φ i s)
       (fun _ _ => by simp) (Finset.mem_univ k)
   have hF : ∀ k, IntegrableOn (fun z => g ((A.chart k).symm z) *
@@ -304,7 +304,7 @@ theorem maMeasure_converse (A : FinHolAtlas e X) (Φ : Fin e → LocPot X)
       simp only [smul_eq_mul, Function.comp_apply]
       rw [hl, locDensChart A Φ hΦ j k y hy.2.1 hy.2.2, absDet_clm_fin]
       ring
-    refine hS'.of_forall_diff_eq_zero hKm ?_
+    refine hS'.of_forall_sdiff_eq_zero hKm ?_
     intro y hy
     have hyt : y ∈ (A.chart j).target := hKs hy.1
     have hnot : (A.chart j).symm y ∉ (A.chart k).source := fun h => hy.2 ⟨hy.1, hyt, h⟩

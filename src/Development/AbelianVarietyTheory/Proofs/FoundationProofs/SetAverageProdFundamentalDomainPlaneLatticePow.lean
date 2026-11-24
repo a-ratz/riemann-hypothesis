@@ -133,7 +133,7 @@ theorem mean_prod_eq_pow : ∀ (Λ : AddSubgroup ℂ), (∃ w₁ w₂ : ℂ, Lin
   · intro a ha z
     refine Finset.prod_congr rfl fun k _ => ?_
     rw [map_add (f := _), Pi.add_apply, hf _ ((hA a).1 ha k)]
-  haveI : (μ.map em).IsAddHaarMeasure := ec.isAddHaarMeasure_map μ
+  have : (μ.map em).IsAddHaarMeasure := ec.isAddHaarMeasure_map μ
   have hs := Measure.isAddLeftInvariant_eq_smul (μ.map em) (volume : Measure (Fin r → ℂ))
   have hc0 : Measure.addHaarScalarFactor (μ.map em) (volume : Measure (Fin r → ℂ)) ≠ 0 :=
     (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne'

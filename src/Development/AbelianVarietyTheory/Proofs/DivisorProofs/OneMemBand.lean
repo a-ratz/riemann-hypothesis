@@ -72,7 +72,7 @@ variable (E a) in
 def band : Set (GA E a) := {g | 1 ≤ absDetA g ∧ absDetA g ≤ 2}
 
 theorem one_mem_band : (1 : GA E a) ∈ band E a := by
-  simp only [band, Set.mem_setOf_eq, absDetA_one]; norm_num
+  simp only [band, Set.mem_ofPred_eq, absDetA_one]; norm_num
 
 end GlobalTheory.HCF
 

@@ -128,7 +128,7 @@ theorem exists_isCompact {A : Type} [CommRing A] [TopologicalSpace A] [IsTopolog
   have hf : Continuous f := by
     apply Continuous.subtype_mk
     rw [Units.continuous_iff]
-    exact ⟨continuous_subtype_val, hca.comp continuous_subtype_val⟩
+    exact ⟨continuous_subtypeVal, hca.comp continuous_subtypeVal⟩
   have : CompactSpace C := isCompact_iff_compactSpace.mp hCc
   refine ⟨Set.range f, isCompact_range hf, ?_⟩
   intro g hg
@@ -261,19 +261,19 @@ theorem commute_map_of_mem_centPts {F E : Type} [Field F] [CommRing E] [Algebra 
 
 theorem notCompactOfIdempotent_of (hD : IdempotentDet) : NotCompactOfIdempotent := by
   intro F E _ _ _ _ n _ _ σ J γ hreg ε hε hε0 hεε ht hc
-  haveI := quad_finite hreg.quad
-  letI : TopologicalSpace (E ⊗[F] AdeleRing (𝓞 F) F) :=
+  have := quad_finite hreg.quad
+  let : TopologicalSpace (E ⊗[F] AdeleRing (𝓞 F) F) :=
     Formalism.BasicNotions.tensTopL (F := F) (E := E) (AdeleRing (𝓞 F) F)
   obtain ⟨d, χ, hd, hχ, h1, hmul, hrat, hval⟩ := hD F E n ε hε0 hεε (AdeleRing (𝓞 F) F)
   let χ₀ : centPts σ J γ (AdeleRing (𝓞 F) F) →* AdeleRing (𝓞 F) F :=
     { toFun := fun g => χ (g.1 : Matrix n n _)
       map_one' := h1
       map_mul' := fun g h => hmul _ _ (commute_map_of_mem_centPts _ hε h.2) }
-  have hχ₀ : Continuous χ₀ := hχ.comp (Units.continuous_val.comp continuous_subtype_val)
+  have hχ₀ : Continuous χ₀ := hχ.comp (Units.continuous_val.comp continuous_subtypeVal)
   have hχi : Continuous fun g => χ₀ g⁻¹ :=
-    hχ.comp (Units.continuous_coe_inv.comp continuous_subtype_val)
+    hχ.comp (Units.continuous_coe_inv.comp continuous_subtypeVal)
   have hχ₁ : Continuous χ₀.toHomUnits := Units.continuous_iff.2 ⟨hχ₀, hχi⟩
-  haveI : CompactSpace (centPts σ J γ (AdeleRing (𝓞 F) F) ⧸
+  have : CompactSpace (centPts σ J γ (AdeleRing (𝓞 F) F) ⧸
     ((centRat σ J γ).map (bc (inclE (F := F) (AdeleRing (𝓞 F) F)))).subgroupOf
       (centPts σ J γ (AdeleRing (𝓞 F) F))) := hc
   obtain ⟨C, hC⟩ := bddAbove_of_compact_quotient
@@ -290,7 +290,7 @@ theorem notCompactOfIdempotent_of (hD : IdempotentDet) : NotCompactOfIdempotent 
       have hc0 : c ≠ 0 := by
         rintro rfl
         rw [map_zero] at e
-        haveI : Nontrivial (AdeleRing (𝓞 F) F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+        have : Nontrivial (AdeleRing (𝓞 F) F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
         exact Units.ne_zero _ e
       have e' : χ₀.toHomUnits g = principalIdele F (Units.mk0 c hc0) := Units.ext e
       rw [MonoidHom.comp_apply, e', ideleNorm_principalIdele])
@@ -330,11 +330,11 @@ theorem unitBounded_of_split (hL : TensorLattice) {F B : Type} [Field F] [Number
     (hcomm : ∀ i x, π i (τ x) = ρ i (π i x))
     (h : ∀ i, UnitBounded F (C i) (ρ i)) : UnitBounded F B τ := by
   classical
-  letI : TopologicalSpace (B ⊗[F] AdeleRing (𝓞 F) F) :=
+  let : TopologicalSpace (B ⊗[F] AdeleRing (𝓞 F) F) :=
     Formalism.BasicNotions.tensTopL (F := F) (E := B) (AdeleRing (𝓞 F) F)
-  letI (i : Fin k) : TopologicalSpace (C i ⊗[F] AdeleRing (𝓞 F) F) :=
+  let (i : Fin k) : TopologicalSpace (C i ⊗[F] AdeleRing (𝓞 F) F) :=
     Formalism.BasicNotions.tensTopL (F := F) (E := C i) (AdeleRing (𝓞 F) F)
-  haveI := (hL F B).1
+  have := (hL F B).1
   choose D hD hDu using h
   let p (i : Fin k) : B ⊗[F] AdeleRing (𝓞 F) F →ₐ[F] C i ⊗[F] AdeleRing (𝓞 F) F :=
     Algebra.TensorProduct.map (π i) (AlgHom.id F _)
@@ -496,9 +496,9 @@ theorem exists_centRat {σ : E →ₐ[F] E} {J : Matrix n n E} {γ : GL n E} (h 
 theorem matOfNormBounded : MatOfNormBounded := by
   intro F E _ _ _ _ n _ _ σ J γ h _ _ hP hN
   obtain ⟨D, hD, hu⟩ := hN
-  letI : TopologicalSpace (E ⊗[F] AdeleRing (𝓞 F) F) :=
+  let : TopologicalSpace (E ⊗[F] AdeleRing (𝓞 F) F) :=
     Formalism.BasicNotions.tensTopL (F := F) (E := E) (AdeleRing (𝓞 F) F)
-  letI : TopologicalSpace ((plusAlg σ J (γ : Matrix n n E) ⊗[F] E) ⊗[F] AdeleRing (𝓞 F) F) :=
+  let : TopologicalSpace ((plusAlg σ J (γ : Matrix n n E) ⊗[F] E) ⊗[F] AdeleRing (𝓞 F) F) :=
     Formalism.BasicNotions.tensTopL (F := F) (E := plusAlg σ J (γ : Matrix n n E) ⊗[F] E) (AdeleRing (𝓞 F) F)
   let a := Algebra.TensorProduct.assoc F F F (plusAlg σ J (γ : Matrix n n E)) E (AdeleRing (𝓞 F) F)
   have hc : Continuous fun x => toMat σ J (γ : Matrix n n E) (AdeleRing (𝓞 F) F) (a x) := by
@@ -557,7 +557,7 @@ theorem splitRankUpper (hL : SubtorusLaurent) (hM : CharacterMonomial) (hP : Sep
   intro F E _ _ _ _ n _ _ σ J γ hR hPl hPC k K _ _ he s hA
   classical
   obtain ⟨A⟩ := hA
-  haveI : Module.Finite F (plusAlg σ J (γ : Matrix n n E)) := Module.Finite.of_basis hPl.2.1.some
+  have : Module.Finite F (plusAlg σ J (γ : Matrix n n E)) := Module.Finite.of_basis hPl.2.1.some
   obtain ⟨ψ, hsep, hfield⟩ := hP F E σ hR.quad (plusAlg σ J (γ : Matrix n n E)) k K he
   have hinj := (hPC F).1
   have hcent := (hPC F).2.2
@@ -592,7 +592,7 @@ theorem splitRankUpper (hL : SubtorusLaurent) (hM : CharacterMonomial) (hP : Sep
       (fun a => ψ i (ρ (C a))) (fun t => ?_)
 
     simp only [MonoidHom.coe_comp, Function.comp_apply, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, RingHom.coe_coe, huu, hC t, map_sum, map_smul]
+    MonoidHom.coe_ofClass, RingHom.coe_coe, huu, hC t, map_sum, map_smul]
   choose a ha using hmono
   have hconj : ∀ i t, ψ i (uu t) * ψ i (lConj σ J (γ : Matrix n n E) F (uu t)) = 1 := by
     intro i t; rw [← map_mul, huu, hnorm, map_one]
@@ -677,8 +677,8 @@ namespace GlobalTheory.RegSS
 theorem nonempty_algHom_algebraicClosure (F A : Type) [Field F] [CommRing A] [Algebra F A]
     [Module.Finite F A] [Nontrivial A] : Nonempty (A →ₐ[F] AlgebraicClosure F) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite F (A ⧸ m) :=
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite F (A ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ F m).toLinearMap (Ideal.Quotient.mkₐ_surjective F m)
   exact ⟨(IsAlgClosed.lift : (A ⧸ m) →ₐ[F] AlgebraicClosure F).comp (Ideal.Quotient.mkₐ F m)⟩
 
@@ -701,12 +701,12 @@ theorem exists_eq_tmul_add_tmul {F E P : Type} [Field F] [CommRing E] [Algebra F
 
 theorem separatingPoints : SeparatingPoints := by
   intro F E _ _ _ _ σ hσ P _ _ _ k K _ _ ⟨e⟩
-  haveI := quad_finite hσ
-  haveI := quad_nontrivial hσ
+  have := quad_finite hσ
+  have := quad_nontrivial hσ
   obtain ⟨b, d, hb0, hb1, hd, hbb⟩ := quad_exists_basis hσ
   let pr : ∀ i, P →ₐ[F] K i := fun i => (Pi.evalAlgHom F K i).comp e.toAlgHom
   have hpr : ∀ i p, pr i p = e p i := fun _ _ => rfl
-  haveI : ∀ i, Module.Finite F (K i) := fun i =>
+  have : ∀ i, Module.Finite F (K i) := fun i =>
     Module.Finite.of_surjective (pr i).toLinearMap fun y => by
       obtain ⟨p, hp⟩ := e.surjective (Pi.single i y)
       exact ⟨p, by simp [hpr, hp]⟩
@@ -773,10 +773,10 @@ theorem splitClosed_etale (F P Ω n : Type) [Field F] [CommRing P] [Algebra F P]
     (h : Module.finrank F P = Fintype.card n) :
     Nonempty (Ω ⊗[F] P ≃ₐ[Ω] (n → Ω)) := by
   classical
-  haveI : Module.Finite F P := Algebra.FormallyUnramified.finite_of_free F P
-  haveI : IsArtinianRing (Ω ⊗[F] P) := isArtinian_of_tower Ω inferInstance
+  have : Module.Finite F P := Algebra.FormallyUnramified.finite_of_free F P
+  have : IsArtinianRing (Ω ⊗[F] P) := isArtinian_of_tower Ω inferInstance
   let e := Algebra.FormallyEtale.equivPiOfIsSepClosed Ω (Ω ⊗[F] P)
-  letI : Fintype (PrimeSpectrum (Ω ⊗[F] P)) := Fintype.ofFinite _
+  let : Fintype (PrimeSpectrum (Ω ⊗[F] P)) := Fintype.ofFinite _
   have hc : Fintype.card (PrimeSpectrum (Ω ⊗[F] P)) = Fintype.card n := by
     have := e.toLinearEquiv.finrank_eq
     rw [Module.finrank_baseChange, h, Module.finrank_fintype_fun_eq_card] at this
@@ -787,9 +787,9 @@ theorem splitClosed_quad {F E : Type} [Field F] [CharZero F] [CommRing E] [Algeb
     {σ : E →ₐ[F] E} (h : IsQuadInvol F E σ) (Ω : Type) [Field Ω] [Algebra F Ω] [IsAlgClosed Ω] :
     ∃ φ : E ⊗[F] Ω ≃ₐ[F] Ω × Ω, (∀ ω : Ω, φ (1 ⊗ₜ ω) = (ω, ω)) ∧
       ∀ u, φ (Algebra.TensorProduct.map σ (AlgHom.id F Ω) u) = (φ u).swap := by
-  haveI := h.etale
-  haveI := quad_finite h
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have := h.etale
+  have := quad_finite h
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   obtain ⟨e⟩ := splitClosed_etale F E Ω (Fin 2) (by simp [h.finrank_eq])
   let θ : E →ₐ[F] Ω := (((Pi.evalAlgHom Ω (fun _ : Fin 2 => Ω) 0).comp e.toAlgHom).restrictScalars F).comp
     Algebra.TensorProduct.includeRight
@@ -896,11 +896,11 @@ end
 
 theorem traceClause_of_tracePerfect (hP : TracePerfect) : TraceClause := by
   intro F E _ _ _ _ n _ _ σ J γ h hA
-  haveI := quad_finite h.quad
-  haveI := genAlg_isReduced h hA
+  have := quad_finite h.quad
+  have := genAlg_isReduced h hA
   obtain ⟨b⟩ := hA.2.2.1
-  haveI : Module.Free E (genAlg (γ : Matrix n n E)) := Module.Free.of_basis b
-  haveI : Module.Finite E (genAlg (γ : Matrix n n E)) := Module.Finite.of_basis b
+  have : Module.Free E (genAlg (γ : Matrix n n E)) := Module.Free.of_basis b
+  have : Module.Finite E (genAlg (γ : Matrix n n E)) := Module.Finite.of_basis b
   obtain ⟨v, hv⟩ := hA.2.2.2.1
   obtain ⟨τ, hτ, hττ, hτE, hplus⟩ := exists_adjEquiv h hA
   have hP' := hP F E (genAlg (γ : Matrix n n E))
@@ -956,7 +956,7 @@ theorem traceClause_of_tracePerfect (hP : TracePerfect) : TraceClause := by
     simp only [h0, ZeroMemClass.coe_zero, Matrix.zero_mulVec]
 
   let xp : plusAlg σ J (γ : Matrix n n E) := ⟨x, hxplus⟩
-  haveI : Module.Finite F (genAlg (γ : Matrix n n E)) := Module.Finite.trans E _
+  have : Module.Finite F (genAlg (γ : Matrix n n E)) := Module.Finite.trans E _
   have hsurj : Function.Surjective (LinearMap.mulLeft F xp) := by
     refine LinearMap.injective_iff_surjective.1 fun a c hac => ?_
     have : x * ((a : genAlg (γ : Matrix n n E)) - c) = 0 := by
@@ -1047,8 +1047,8 @@ theorem subtorusNotCentral_of (hU : UnitaryCommutant) (hL : SubtorusLaurent)
   push Not at hcon
   have hfield : IsField (E ⊗[F] F) :=
     MulEquiv.isField hE (Algebra.TensorProduct.rid F F E).toMulEquiv
-  haveI : Nontrivial (E ⊗[F] F) := hfield.nontrivial
-  haveI : CharZero (E ⊗[F] F) := charZero_of_injective_algebraMap (algebraMap F (E ⊗[F] F)).injective
+  have : Nontrivial (E ⊗[F] F) := hfield.nontrivial
+  have : CharZero (E ⊗[F] F) := charZero_of_injective_algebraMap (algebraMap F (E ⊗[F] F)).injective
   have h2 : (2 : F) ≠ 0 := two_ne_zero
   let t₀ : Fin s → Fˣ := fun _ => Units.mk0 2 h2
   have hsq : A.hom F (t₀ * t₀) = 1 := by
@@ -1068,7 +1068,7 @@ theorem subtorusNotCentral_of (hU : UnitaryCommutant) (hL : SubtorusLaurent)
       obtain ⟨c, hc⟩ := hU (E ⊗[F] F) hfield (sigR σ F) (sigR_sigR hreg.quad.invol F) n _ hH hdet
         (A.hom F t : Matrix n n (E ⊗[F] F)) (fun g hg => congrArg Units.val (hcon g hg t))
       rw [hc]; simp
-    letI := hfield.toField
+    let := hfield.toField
     let f : (Fin s → Fˣ) →* E ⊗[F] F :=
       { toFun := fun t => (A.hom F t : Matrix n n (E ⊗[F] F)) i i
         map_one' := by simp

@@ -175,11 +175,11 @@ def columnBlock (L : LevCh D T) : ℕ → LSp D
 theorem colY_lt (L : LevCh D T) {j : ℕ} (h : j < D.R.m) : columnBlock L j = ⟨Yc D j, L.ΛY j⟩ := by
   cases j with
   | zero => rfl
-  | succ j => exact if_pos h
+  | succ j => exact ite_eq_left h
 
 theorem colY_m (L : LevCh D T) : columnBlock L D.R.m = ⟨D.sp.X', L.ΛX⟩ := by
   obtain ⟨j, hj⟩ : ∃ j, D.R.m = j + 1 := ⟨D.R.m - 1, by have := D.R.two_le_m; omega⟩
-  have : columnBlock L (j + 1) = ⟨D.sp.X', L.ΛX⟩ := if_neg (by omega)
+  have : columnBlock L (j + 1) = ⟨D.sp.X', L.ΛX⟩ := ite_eq_right (by omega)
   rw [← this, ← hj]
 
 def vtxOf (L : LevCh D T) (W : ℕ → ℕ → LSp D) : ℕ → ℕ → LSp D
@@ -459,7 +459,7 @@ abbrev Datum : Type := ∀ i : Fin D.R.m, G.CosAt i
 
 theorem finite_datum (h : (L.ΛY 0).FG) : Finite G.Datum := by
   have : ∀ i : Fin D.R.m, Finite (G.CosAt i) := fun ⟨i, hi⟩ => by
-    letI : Submodule.IsFullLattice D.host.E (G.Λ (.grid (i + 1) 0)) :=
+    let : Submodule.IsFullLattice D.host.E (G.Λ (.grid (i + 1) 0)) :=
       Formalism.IndefR.Fin.PDA.selfDual_isFullLattice _ _
       (G.sp.V_is (i + 1) 0 (by omega) hi (by omega)).sd
     refine finite_cos (inferInstance) ?_ (G.pl.modul_ne_bot sc)

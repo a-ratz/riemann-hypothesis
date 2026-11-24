@@ -216,7 +216,7 @@ theorem expandsAt_cancel_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [
     rintro _ ⟨c, hc, rfl⟩
     obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective c
     refine ⟨c, hn _ _ ?_, by rw [hs, cst_comp]⟩
-    rw [Set.mem_setOf_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem] at hc
+    rw [Set.mem_ofPred_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem] at hc
     rwa [Nat.add_right_comm]
   have h₁ : ExpandsAtMod U (e + n) k σ f S (I ^ (e + 1) : Ideal R) := by
     intro y J hJ

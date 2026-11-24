@@ -96,7 +96,7 @@ namespace GlobalTheory.CharKer
 lemma res_res_pull {X : Scheme.{0}} {U V W : X.Opens} (h₁ : V ≤ U) (h₂ : W ≤ V) (x : Γ(X, U)ˣ) :
     res h₂ (res h₁ x) = res (h₂.trans h₁) x := by
   apply Units.ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -176,7 +176,7 @@ private theorem coe_gm_eq_stalkMap_germ {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y)
       f.stalkMap y (X.presheaf.germ U (f y) h (a : Γ(X, U))) := by
   unfold gm
   rw [dite_eq_left h]
-  simp only [pullU, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullU, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
   exact (Scheme.Hom.germ_stalkMap_apply f U y h _).symm
 
 private theorem gm_res_pullU_lemma_2 {X Y Z : Scheme.{0}} (φ : Y ⟶ X) (ψ : Z ⟶ Y) (z : Z) (U : X.Opens)
@@ -185,7 +185,7 @@ private theorem gm_res_pullU_lemma_2 {X Y Z : Scheme.{0}} (φ : Y ⟶ X) (ψ : Z
   have h1 : φ (ψ z) ∈ U := hle hz
   apply Units.ext
   rw [coe_gm_eq_stalkMap_germ ψ z V hz, coe_gm_eq_stalkMap_germ (ψ ≫ φ) z U h1]
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rw [Scheme.Hom.stalkMap_comp]
   erw [TopCat.Presheaf.germ_res_apply]
   exact congrArg (Scheme.Hom.stalkMap ψ z) (Scheme.Hom.germ_stalkMap_apply φ U (ψ z) h1 _).symm
@@ -298,7 +298,7 @@ private theorem mul_mul_mul_inv_cancel_left_factors {G : Type*} [CommGroup G] (c
 
 theorem addGen_invariant : ∀ (S : Scheme.{0}) (A A' N T : Over S) [GrpObj A] [IsCommMonObj A] [GrpObj A'] [GrpObj N] (i : N ⟶ A) (q : A ⟶ A') [IsMonHom q] (χ : Γ((N ⊗ T).left, ⊤)ˣ) (M : LB (A' ⊗ T).left) (e : ∀ k, Γ((A ⊗ T).left, (pmap q T).left ⁻¹ᵁ M.U k)ˣ), IsMonHom i → IsPullback i (toUnit N) q η[A'] → IsCharacter χ → IsEquivGen i q χ M e → ∀ (Z : Scheme.{0}) (y₁ y₂ : Z ⟶ (A ⊗ (A ⊗ T)).left), y₁ ≫ (pmap2 q T).left = y₂ ≫ (pmap2 q T).left → ∀ (k : (addBundle M).ι) (W : Z.Opens) (h₁ : W ≤ y₁ ⁻¹ᵁ ((pmap2 q T).left ⁻¹ᵁ (addBundle M).U k)) (h₂ : W ≤ y₂ ⁻¹ᵁ ((pmap2 q T).left ⁻¹ᵁ (addBundle M).U k)), res h₁ (pullU y₁ _ (addGen q M e k)) = res h₂ (pullU y₂ _ (addGen q M e k)) := by
   intro S A A' N T _i1 _i2 _i3 _i4 i q _i5 χ M e hi hpb hχ he Z y₁ y₂ hy k W h₁ h₂
-  haveI := hi
+  have := hi
   apply Units.ext
   apply TopCat.Presheaf.section_ext Z.sheaf W
   intro w hw
@@ -720,9 +720,9 @@ namespace GlobalTheory.CharKer
 
 theorem isAdditive_of_isEquivGen : ∀ (K : Type) [Field K] [IsAlgClosed K] (A A' N T : Over (Sp K)) [GrpObj A] [GrpObj A'] [GrpObj N] (i : N ⟶ A) (q : A ⟶ A') (χ : Γ((N ⊗ T).left, ⊤)ˣ) (M : LB (A' ⊗ T).left) (e : ∀ k, Γ((A ⊗ T).left, (pmap q T).left ⁻¹ᵁ M.U k)ˣ), IsAbelianScheme A → IsAbelianScheme A' → IsMonHom i → IsMonHom q → IsFinite q.left → Flat q.left → Surjective q.left → IsPullback i (toUnit N) q η[A'] → IsCharacter χ → M.IsLB → IsEquivGen i q χ M e → IsAdditive M := by
   intro K _ _ A A' N T _ _ _ i q χ M e hA hA' hi hq hfin hflat hsurj hker hχ hM he
-  haveI := hA
-  haveI := hq
-  haveI : IsCommMonObj A := IsAbelianScheme.comm
+  have := hA
+  have := hq
+  have : IsCommMonObj A := IsAbelianScheme.comm
   obtain ⟨h₁, h₂, h₃⟩ := GlobalTheory.T.prodMapPairTimesIdentity_flat_surjective_affine _ A A' T q hflat hsurj inferInstance
   exact isAdditive_of_universal hM (GlobalTheory.T.lineBundle_trivial_of_invariant_pullback_generator _ _ (pmap2 q T).left h₁ h₂ h₃ (addBundle M) (addGen q M e)
     (GlobalTheory.T.isPullbackLineBundleGenerator_additivityDefect _ A A' T q M e he.1) (GlobalTheory.T.additivityDefect_generator_invariant_same_image _ A A' N T i q χ M e hi hker hχ he))
@@ -852,7 +852,7 @@ theorem triOverlap : ∀ (S : Scheme.{0}) (A N T : Over S) [GrpObj A] [GrpObj N]
       pullTop m₁₃ (pullTop (snd A (N ⊗ T)).left χ) =
         pullTop m₁₂ (pullTop (snd A (N ⊗ T)).left χ) * pullTop m₂₃ (pullTop (snd A (N ⊗ T)).left χ) := by
   intro S A N T _ _ i χ hi hχ
-  haveI := hi
+  have := hi
   refine ⟨(A ⊗ (N ⊗ (N ⊗ T))).left, (triM₁₂ A N T).left, (triM₂₃ A N T i).left, (triM₁₃ A N T).left,
     (tri_isPullback_over A N T i).map (Over.forget S), ?_, ?_, ?_⟩
   · rw [← Over.comp_left, ← Over.comp_left, triM₁₃_prMap]
@@ -1033,8 +1033,8 @@ theorem exists_local (R B C D : CommRingCat.{0}) (f : R ⟶ B) (j₁ j₂ : B �
     (h₂ : j₂ ≫ d₁₃ = j₂ ≫ d₂₃) (hf : f.hom.FaithfullyFlat) (c : Cˣ)
     (hc : d₁₃.hom (c : C) = d₁₂.hom (c : C) * d₂₃.hom (c : C)) (P : Ideal R) (hP : P.IsPrime) :
     ∃ s : R, s ∉ P ∧ ∃ x y : B, x * y = f.hom s ∧ j₂.hom x = (c : C) * j₁.hom x := by
-  letI : Algebra R B := f.hom.toAlgebra
-  haveI : Module.FaithfullyFlat R B := hf
+  let : Algebra R B := f.hom.toAlgebra
+  have : Module.FaithfullyFlat R B := hf
   have hT := CommRingCat.isPushout_tensorProduct R B B
   let e : C ≅ CommRingCat.of (B ⊗[R] B) := hC.isoIsPushout _ _ hT
   have e1 : j₁ ≫ e.hom = _ := hC.inl_isoIsPushout_hom _ _ hT
@@ -1174,9 +1174,9 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
       (m₁₂.appLE _ _ h12).hom (c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))) * (m₂₃.app _).hom (c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))) := by
     have := congrArg (fun u => ((res (le_top : m₂₃ ⁻¹ᵁ (a ⁻¹ᵁ (p ⁻¹ᵁ V)) ≤ ⊤) u : Γ(W, _)ˣ) :
       Γ(W, m₂₃ ⁻¹ᵁ (a ⁻¹ᵁ (p ⁻¹ᵁ V))))) hχ
-    simp only [map_mul, Units.val_mul, res, pullTop, Units.coe_map, MonoidHom.coe_coe] at this
+    simp only [map_mul, Units.val_mul, res, pullTop, Units.coe_map, MonoidHom.coe_ofClass] at this
     rw [Scheme.Hom.app_eq_appLE m₂₃]
-    simp only [c, res, Units.coe_map, MonoidHom.coe_coe]
+    simp only [c, res, Units.coe_map, MonoidHom.coe_ofClass]
     rw [appLE_map_top, appLE_map_top, appLE_map_top]
     exact this
   obtain ⟨s, hs, x, x', hxx', hx⟩ := _root_.GlobalTheory.UnitCocycle.exists_local _ _ _ _ (p.app V) _ _ _ _ _ P₁ P₂ E₁ E₂ FF c hc
@@ -1201,13 +1201,13 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
   have hW : W' ≤ a ⁻¹ᵁ (p ⁻¹ᵁ V) := fun z hz => hle (h₁ hz)
   have hWb : W' ≤ b ⁻¹ᵁ (p ⁻¹ᵁ V) := hW.trans hab.le
   apply Units.ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe, IsUnit.unit_spec, Units.val_mul]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass, IsUnit.unit_spec, Units.val_mul]
   rw [map_app_map_eq_appLE a hle W' h₁ hW, map_app_map_eq_appLE b hle W' h₂ hWb]
   have := congrArg (Z.presheaf.map (homOfLE hW).op).hom hx
   rw [map_mul, app_map_eq_appLE, appLE_map_eq_appLE] at this
   rw [this]
   congr 1
-  simp only [c, res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [c, res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 

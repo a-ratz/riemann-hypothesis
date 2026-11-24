@@ -70,10 +70,10 @@ theorem exists_complex_point {K A : Type} [Field K] [CommRing A] [Algebra K A] [
     (σ : K →+* ℂ) (I : Ideal A) (hI : I ≠ ⊤) : ∃ ψ : A →ₐ[K] CAt σ, ∀ x ∈ I, ψ x = 0 := by
   classical
   obtain ⟨M, hM, hIM⟩ := Ideal.exists_le_maximal I hI
-  haveI := hM
-  letI : Field (A ⧸ M) := Ideal.Quotient.field M
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI : Module.Finite K (A ⧸ M) := finite_of_finite_type_of_isJacobsonRing K (A ⧸ M)
+  have := hM
+  let : Field (A ⧸ M) := Ideal.Quotient.field M
+  let : Algebra K ℂ := σ.toAlgebra
+  have : Module.Finite K (A ⧸ M) := finite_of_finite_type_of_isJacobsonRing K (A ⧸ M)
   let g : (A ⧸ M) →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -119,7 +119,7 @@ theorem noCommonZero_of_readings : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j : 
   obtain ⟨kk, x, t, hb⟩ := hu z'
   obtain ⟨i, hi⟩ := hz kk x.1 x.2
   apply hi
-  haveI : IsDomain (CAt T.σ₀) := inferInstanceAs (IsDomain ℂ)
+  have : IsDomain (CAt T.σ₀) := inferInstanceAs (IsDomain ℂ)
   have e2 := GlobalTheory.ArcQ.evR_frBor_of_isDomain hL (hws i) t _ _ hb
   have e3 := GlobalTheory.Reg.evR_baseChange_of_isReduced _ _ _ _ (T.Q.Xo j) T.Q.c hL a n (ws i) (hws i) _ _ ψ' C.y z' hz'
   have e4 : ψ' (evR (T.Q.Xo j) T.Q.c (ws i) C.y) = 0 := hψ' _ (Ideal.subset_span ⟨i, rfl⟩)
@@ -130,7 +130,7 @@ theorem noCommonZero_of_readings : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j : 
     rw [← e2, e3, e4]
   have e5 := (mul_eq_zero.mp e6).resolve_left hw2
   unfold rdU
-  simp only [LinearMap.coe_mk, AddHom.coe_mk, dif_pos x.2, e5]
+  simp only [LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left x.2, e5]
   unfold toC
   rfl
 

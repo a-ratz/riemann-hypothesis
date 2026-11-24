@@ -58,7 +58,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.rankN_of :
   have hpO : (p : O) ∈ IsLocalRing.maximalIdeal O := hS.pmem
   have hK : CharZero (FractionRing V) := by
     let φ : O →+* V := (Spec.preimage (x ≫ M.s)).hom
-    haveI : CharP (FractionRing V) (ringChar (FractionRing V)) := ringChar.charP _
+    have : CharP (FractionRing V) (ringChar (FractionRing V)) := ringChar.charP _
     rcases CharP.char_is_prime_or_zero (FractionRing V) (ringChar (FractionRing V)) with hq | hq
     · exfalso
       have hqK : ((ringChar (FractionRing V) : ℕ) : FractionRing V) = 0 := ringChar.Nat.cast_ringChar
@@ -83,7 +83,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.rankN_of :
         have := (hu.map φ).ne_zero
         rw [map_natCast] at this
         exact this hqV
-    · haveI := ringChar.of_eq hq
+    · have := ringChar.of_eq hq
       exact CharP.charP_to_charZero (FractionRing V)
   have hpf : p ^ f ≠ 0 := pow_ne_zero f (Fact.out : Nat.Prime p).ne_zero
   have hw : w ≠ ⊥ := by
@@ -115,16 +115,16 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.rankN_of :
   have hH : Nat.card W.H = Ideal.absNorm w ^ D.n := by
     rw [Nat.card_eq_of_bijective _ (hΦ.comp hΨ), hcard, hS.m1, _root_.one_mul]
   have hnz : Ideal.absNorm w ≠ 0 := by rw [hS.norm]; exact hpf
-  haveI : Finite W.H := Nat.finite_of_card_ne_zero (by rw [hH]; exact pow_ne_zero _ hnz)
+  have : Finite W.H := Nat.finite_of_card_ne_zero (by rw [hH]; exact pow_ne_zero _ hnz)
   have hk : Nat.card (𝓞 D.F ⧸ w) = Ideal.absNorm w := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.F ⧸ w) := Nat.finite_of_card_ne_zero (by rw [hk]; exact hnz)
+  have : Finite (𝓞 D.F ⧸ w) := Nat.finite_of_card_ne_zero (by rw [hk]; exact hnz)
   have h2 : 2 ≤ Ideal.absNorm w := by
     rw [← hk]
     exact Finite.one_lt_card
   refine ⟨Module.Finite.of_finite, ?_⟩
-  letI := Fintype.ofFinite W.H
-  letI := Fintype.ofFinite (𝓞 D.F ⧸ w)
+  let := Fintype.ofFinite W.H
+  let := Fintype.ofFinite (𝓞 D.F ⧸ w)
   have := Module.card_eq_pow_finrank (K := 𝓞 D.F ⧸ w) (V := W.H)
   rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card, hH, hk] at this
   exact (Nat.pow_right_injective h2 this).symm

@@ -114,9 +114,9 @@ theorem charIdem_self {τ : Representation ℂ G W} (hτ : τ.IsIrreducible) : c
     ⟨charIdem τ τ, fun g => commute_charIdem τ τ g⟩
   have h1 : charIdem τ τ = c • (1 : Module.End ℂ W) :=
     LinearMap.ext fun w => (congrArg (fun f : τ.IntertwiningMap τ => f w) hc).symm
-  haveI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero (Nat.cast_ne_zero.2 Nat.card_pos.ne')
+  have : Invertible (Nat.card G : ℂ) := invertibleOfNonzero (Nat.cast_ne_zero.2 Nat.card_pos.ne')
   have ho := Representation.char_orthonormal τ τ
-  rw [if_pos ⟨.refl _⟩, Nat.card_eq_fintype_card] at ho
+  rw [ite_eq_left ⟨.refl _⟩, Nat.card_eq_fintype_card] at ho
   have hd : (Module.finrank ℂ W : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Module.finrank_pos.ne'
   have h2 : LinearMap.trace ℂ W (charIdem τ τ) = Module.finrank ℂ W := by
 
@@ -144,7 +144,7 @@ variable {G V W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [A
 theorem map_idem (hπ : IsSmooth π) (hσ : IsSmooth σ) (hH : IsCompact (H : Set G)) (f : π.IntertwiningMap σ) (v : V) :
     f (idem hπ hH v) = idem hσ hH (f v) := by
   obtain ⟨U, -, _, hU⟩ := exists_normal_fix hπ hH v
-  letI := Fintype.ofFinite (H ⧸ U)
+  let := Fintype.ofFinite (H ⧸ U)
   rw [idem_eq_cosetSum hπ hH U hU, idem_eq_cosetSum hσ hH U fun u hu => by rw [← f.isIntertwining, hU u hu]]
 
   simp only [map_smul, map_sum, f.isIntertwining]
@@ -152,7 +152,7 @@ theorem map_idem (hπ : IsSmooth π) (hσ : IsSmooth σ) (hH : IsCompact (H : Se
 theorem map_idem_of_mem (hπ : IsSmooth π) (hH : IsCompact (H : Set G)) (f : π.IntertwiningMap σ) {v : V}
     (hv : f v ∈ fixed σ H) : f (idem hπ hH v) = f v := by
   obtain ⟨U, -, _, hU⟩ := exists_normal_fix hπ hH v
-  letI := Fintype.ofFinite (H ⧸ U)
+  let := Fintype.ofFinite (H ⧸ U)
   have hc : (Fintype.card (H ⧸ U) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   rw [idem_eq_cosetSum hπ hH U hU]
 

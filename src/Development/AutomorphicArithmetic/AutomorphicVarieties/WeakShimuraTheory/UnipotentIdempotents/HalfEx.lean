@@ -88,8 +88,8 @@ private theorem norm_le_one_of_isIntegral_padicInt' {l : ℕ} [Fact l.Prime] (x 
 
 private theorem norm_coe_padicAlgCl_coefO_le_one {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) :
     ‖(x : PadicAlgCl l)‖ ≤ 1 := by
-  haveI := c.fin
-  haveI : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
+  have := c.fin
+  have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
   exact norm_le_one_of_isIntegral_padicInt' _ ((Algebra.IsIntegral.isIntegral x).map c.O.val)
 
 private theorem norm_natCast_prime_padicAlgCl_eq_inv {l : ℕ} [Fact l.Prime] : ‖(l : PadicAlgCl l)‖ = (l : ℝ)⁻¹ := by
@@ -97,7 +97,7 @@ private theorem norm_natCast_prime_padicAlgCl_eq_inv {l : ℕ} [Fact l.Prime] : 
 
 private theorem norm_coe_lt_one_of_mem_maximalIdeal_coefO {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O)
     (hx : x ∈ IsLocalRing.maximalIdeal c.O) : ‖(x : PadicAlgCl l)‖ < 1 := by
-  haveI := c.dvr
+  have := c.dvr
   have hcast : ((l : c.O) : PadicAlgCl l) = (l : PadicAlgCl l) := by simp
   have hl : ‖((l : c.O) : PadicAlgCl l)‖ = (l : ℝ)⁻¹ := by rw [hcast, norm_natCast_prime_padicAlgCl_eq_inv]
   have hlt : (l : ℝ)⁻¹ < 1 :=

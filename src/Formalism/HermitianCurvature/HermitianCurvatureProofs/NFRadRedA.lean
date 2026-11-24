@@ -108,9 +108,9 @@ theorem muZ_contDiffOn (hsec : IsSection k r z z' μsec) :
   refine contDiffOn_pi.2 fun i => contDiffOn_pi.2 fun j => ?_
   simp only [NF.muZ, B2.embWb]
   by_cases h : (r ≤ i.val ∧ i.val ≤ r + k) ∧ (r ≤ j.val ∧ j.val ≤ r + k)
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     exact hsec.1 _ _
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact contDiffOn_const
 
 theorem decomp (hk : 1 ≤ k) (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hT' : 0 < Tz k r z')
@@ -145,7 +145,7 @@ theorem radRedMem : NF.RadRedMem := by
     refine hc.congr fun q hq => ?_
     simp only [radR, Set.indicator_of_mem hq.1, Function.comp_apply]
     exact hΦF _ hq.2.2 (uwb_glev (muZ_uwb hsec hq.1.2))
-  · simp only [radR, Set.indicator_of_mem hq, Fib, Set.mem_setOf_eq]
+  · simp only [radR, Set.indicator_of_mem hq, Fib, Set.mem_ofPred_eq]
     intro p hp
     obtain ⟨hp1, hp2, hpe⟩ := hp
     have h3 := he _ (mem_domR hz hz' hsec hq) p.1 hp1 p.2 hp2

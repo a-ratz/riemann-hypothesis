@@ -81,7 +81,7 @@ theorem bcP_mem_cof {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.I
   by_contra hnd
   apply hp
   have := p.isPrime
-  letI := hΛ
+  let := hΛ
   rw [Formalism.L2.SG.Pf.LocalDenominators.baseChangeAt_mem_localLattice_iff Zd p (Λ := Λ) (by infer_instance)]
   exact (Formalism.HermitianLattices.Ext.L3.LocalSpans.mem_locF p.asIdeal Λ x).2 ⟨d, hnd, hdx⟩
 

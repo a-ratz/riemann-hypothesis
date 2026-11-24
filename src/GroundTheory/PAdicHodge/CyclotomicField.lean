@@ -86,7 +86,7 @@ instance finiteDimensional_cycl (n : ℕ) : FiniteDimensional ℚ_[p] (cycl p n)
   exact finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
 
 theorem exists_isPrimitiveRoot (n : ℕ) : ∃ ζ : PadicAlgCl p, IsPrimitiveRoot ζ (p ^ n) := by
-  haveI : NeZero ((p ^ n : ℕ) : PadicAlgCl p) :=
+  have : NeZero ((p ^ n : ℕ) : PadicAlgCl p) :=
     ⟨Nat.cast_ne_zero.2 (pow_ne_zero n (Fact.out : p.Prime).ne_zero)⟩
   have hpos : 0 < p ^ n := pow_pos (Fact.out : p.Prime).pos n
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (cyclotomic (p ^ n) (PadicAlgCl p))

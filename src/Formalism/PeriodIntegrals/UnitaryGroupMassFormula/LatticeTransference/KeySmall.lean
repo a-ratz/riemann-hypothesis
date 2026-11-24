@@ -76,7 +76,7 @@ theorem keySmall : KeySmall := by
     simp
   · obtain ⟨a, haΛ, ha0, hmul⟩ := exists_generator_of_finrank_eq_one_zLattice Λ h1
     obtain ⟨t, rfl⟩ : ∃ t : ℝ, u = t • a := by
-      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' a ha0).mp h1 u
+      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' a ha0).mp h1 u
       exact ⟨c, hc.symm⟩
     have hα : 0 < ‖a‖ := norm_pos_iff.mpr ha0
     rw [h1, Nat.cast_one]

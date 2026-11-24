@@ -81,11 +81,11 @@ theorem etale_eval₂Hom_of_away {R A C ι : Type} [CommRing R] [CommRing A] [Co
     (hE : (MvPolynomial.eval₂Hom (ψ.comp (algebraMap R A)) N).Etale) :
     (MvPolynomial.eval₂Hom ψ N).Etale := by
   have : Algebra.Etale R A := Algebra.Etale.of_isLocalizationAway g
-  letI : Algebra (MvPolynomial ι R) (MvPolynomial ι A) := MvPolynomial.algebraMvPolynomial
+  let : Algebra (MvPolynomial ι R) (MvPolynomial ι A) := MvPolynomial.algebraMvPolynomial
   have : Algebra.Etale (MvPolynomial ι R) (MvPolynomial ι A) :=
     Algebra.Etale.of_equiv (Algebra.IsPushout.equiv R (MvPolynomial ι R) A (MvPolynomial ι A))
-  letI : Algebra (MvPolynomial ι A) C := (MvPolynomial.eval₂Hom ψ N).toAlgebra
-  letI : Algebra (MvPolynomial ι R) C :=
+  let : Algebra (MvPolynomial ι A) C := (MvPolynomial.eval₂Hom ψ N).toAlgebra
+  let : Algebra (MvPolynomial ι R) C :=
     (MvPolynomial.eval₂Hom (ψ.comp (algebraMap R A)) N).toAlgebra
   have : IsScalarTower (MvPolynomial ι R) (MvPolynomial ι A) C :=
     IsScalarTower.of_algebraMap_eq fun p => by
@@ -100,7 +100,7 @@ theorem isRadical_span_of_away {R A C ι : Type} [CommRing R] [CommRing A] [Comm
     (hδ : (Ideal.span {algebraMap R A δ}).IsRadical) :
     (Ideal.span {ψ (algebraMap R A δ)}).IsRadical := by
   have he := etale_eval₂Hom_of_away g ψ N hE
-  letI : Algebra (MvPolynomial ι A) C := (MvPolynomial.eval₂Hom ψ N).toAlgebra
+  let : Algebra (MvPolynomial ι A) C := (MvPolynomial.eval₂Hom ψ N).toAlgebra
   have : Algebra.Etale (MvPolynomial ι A) C := he
   have hI : (Ideal.map (MvPolynomial.C (σ := ι)) (Ideal.span {algebraMap R A δ})).IsRadical := by
     rw [Ideal.isRadical_iff_quotient_reduced] at hδ ⊢
@@ -161,8 +161,8 @@ theorem reducedEq_pullback_etale : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X
     exact inf_eq_right.2 hgU'
   have hVU' : V ≤ U'.1 := X.basicOpen_le g'
   have hVU : V ≤ U.1 := hVU'.trans hU'
-  letI : Algebra Γ(X, U.1) Γ(X, V) := (resG X hVU).toAlgebra
-  haveI : IsLocalization.Away g Γ(X, V) := U.2.isLocalization_of_eq_basicOpen g (homOfLE hVU) hV'
+  let : Algebra Γ(X, U.1) Γ(X, V) := (resG X hVU).toAlgebra
+  have : IsLocalization.Away g Γ(X, V) := U.2.isLocalization_of_eq_basicOpen g (homOfLE hVU) hV'
   have hδV : (Ideal.span {algebraMap Γ(X, U.1) Γ(X, V) δ}).IsRadical := by
     have e := (Scheme.IdealSheafData.vanishingIdeal Vo.compl).map_ideal_basicOpen U' g'
     rw [hδ, Ideal.map_span, Set.image_singleton] at e
@@ -198,8 +198,8 @@ theorem reducedEq_pullback_etale : ∀ (X Y : Scheme.{0}) [IsLocallyNoetherian X
       (fun i => resG Y hW1W (N i))).Etale := by
     rw [hcomp]
     have h2 : (resG Y hW1W).Etale := by
-      letI : Algebra Γ(Y, W) Γ(Y, W1) := (resG Y hW1W).toAlgebra
-      haveI : IsLocalization.Away h Γ(Y, W1) := hW.isLocalization_basicOpen h
+      let : Algebra Γ(Y, W) Γ(Y, W1) := (resG Y hW1W).toAlgebra
+      have : IsLocalization.Away h Γ(Y, W1) := hW.isLocalization_basicOpen h
       exact Algebra.Etale.of_isLocalizationAway h
     exact RingHom.Etale.stableUnderComposition _ _ hEt h2
   have rad := isRadical_span_of_away g δ ψ (fun i => resG Y hW1W (N i)) hE hδV

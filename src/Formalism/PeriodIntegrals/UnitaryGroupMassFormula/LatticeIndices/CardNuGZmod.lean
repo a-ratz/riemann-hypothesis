@@ -77,7 +77,7 @@ theorem card_nuG (K : Type) [Field K] [Fintype K] (r k : ℕ) :
     Nat.card (nuG K r k) = Nat.card {x : Matrix (Idx r k) (Idx r k) K // IsN x} * Nat.card (upUniG K k) := by
   have hdet : ∀ u : Matrix (Fin k) (Fin k) K, IsUpUni u → IsUnit u.det := by
     intro u hu
-    rw [Matrix.det_of_upperTriangular hu.1]
+    rw [det_of_isUpperTriangular hu.1]
     simp [hu.2]
   have hU : Nat.card (upUniG K k) = Nat.card {u : Matrix (Fin k) (Fin k) K // IsUpUni u} :=
     Nat.card_congr

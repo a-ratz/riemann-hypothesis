@@ -150,7 +150,7 @@ variable {D : D7} (X : HidaSetting D)
 
 theorem ooR_holds : OOR := by
   intro D X u u' γ Ω x
-  have := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   have hs : (γ : X.B.I.GA).1 ∈ Hinf X u' := (Subgroup.mem_prod.1 (Subgroup.mem_inf.1 γ.2).2).1
   set s : X.B.I.Ginf := (γ : X.B.I.GA).1 with hsdef
   let P := Formalism.L2.SG.Pf.SatGramActL.piUe u' s hs
@@ -168,7 +168,7 @@ theorem ooR_holds : OOR := by
     congr 1
     have e1 : X.piU u' s (X.piU u' s⁻¹ ξ) = ξ := by
       rw [← ContinuousLinearMap.comp_apply, ← ContinuousLinearMap.mul_def, ← (X.piU_rep u').2.1 _ hsS _ hsS',
-        mul_inv_cancel, (X.piU_rep u').1, ContinuousLinearMap.one_apply]
+        mul_inv_cancel, (X.piU_rep u').1, one_apply_eq_self]
     conv_lhs => rw [← e1]
     exact (X.piU_rep u').2.2.1 s hsS w (X.piU u' s⁻¹ ξ)
   unfold OO
@@ -319,7 +319,7 @@ theorem right_action_three_families (hB : ChiNBiAll) (hIR : IotaRepC) (hAR : Amp
     show ((scl (Y.FN u) (Y.FN u') (X := X) (u := u) (u' := u') * X.volK2 : ℝ) : ℂ) •
         (chiN X (kOf X u u' ((Y.cs u).h ((Y.cs u).base t.lam) : X.B.I.Gf)
           ((Y.cs u').h ((Y.cs u').base t.lam') : X.B.I.Gf) (t.rep.1.1 * (γ : X.B.I.GA)⁻¹)) •
-          (haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+          (haveI := FiniteDimensional.completeSpace ℂ (X.Vpi u)
            OO (Formalism.L2.SG.ProjRows.muInf X.B.I) (FundOf t) (X.Wu u) (X.Wu u')
             (t.rep.1.1.1 * ((γ : X.B.I.GA).1)⁻¹))) = _
     rw [eχ, ooR_holds D X u u' γ (FundOf t) t.rep.1.1.1, hU]

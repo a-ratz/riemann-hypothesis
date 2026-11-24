@@ -120,7 +120,7 @@ theorem tm_cont (hA : EvAdm) (hp : IsPair B M χX χW om r s r' s') (hM₂ : M�
   obtain ⟨⟨l, hl, hθ⟩, -, h⟩ := hA F E σ B n d n₂ d₂ X W X₂ W₂ M M₂ hp.base hp.good hM₂
   obtain ⟨l', hl', h'⟩ := h ι ι' I e he (incM F U) l hl
   have hc := ((IsUWeilPair.isUSplitting hp.weil).cont l' hl' Φ hΦ).comp
-    (f := fun u : unip σ W H' => ((1 : UA σ X.J), u.1)) (continuous_const.prodMk continuous_subtype_val)
+    (f := fun u : unip σ W H' => ((1 : UA σ X.J), u.1)) (continuous_const.prodMk continuous_subtypeVal)
   refine hc.congr fun u => ?_
   rw [Function.comp_apply, h' _ (om_mem hp _ hΦ), hθ _ (he.maps _ (rho_mem M hp.base.std _ (om_mem hp _ hΦ)))]
   rfl
@@ -399,7 +399,7 @@ theorem theta_unif {κ : Type} [Fintype κ] {ψ : AddChar (AF F) ℂ} (hψ : IsS
     by_cases h0 : g (fun i => ((y + k) i).2) = 0
     · rw [h0, mul_zero, norm_zero]
       exact mul_nonneg (by positivity) (hw0 _)
-    have hm : wt η = (PositivityTheory.ThKCT.sz y ^ N)⁻¹ := if_pos ⟨(_, k), ⟨subset_tsupport g h0, hkK⟩, by
+    have hm : wt η = (PositivityTheory.ThKCT.sz y ^ N)⁻¹ := ite_eq_left ⟨(_, k), ⟨subset_tsupport g h0, hkK⟩, by
       funext i
       change (y i).2 + (k i).2 - (k i).2 = _
       rw [add_sub_cancel_right]⟩
@@ -628,7 +628,7 @@ theorem ctKernel_of (hE : ThetaExp) (hQ : EvUniq) (hS : Slice) (hA : EvAdm) (hW 
     simp only [constant_term_integral_at_zero hm (hi₀ hp) hΨ, om_om, Prod.mk_mul_mk, one_mul] at this
     exact this
   refine ⟨C₀, hC₀, fun han χX χW om r s r' s' hp Φ hΦ g μ 𝓕 a b c h => ?_, fun n₁ X₁ H j₀ j₁ M₂ hH hM₂ e he => ?_⟩
-  · haveI : IsEmpty (IsoV σ X) := ⟨fun x => x.2.1 (han _ x.2.2)⟩
+  · have : IsEmpty (IsoV σ X) := ⟨fun x => x.2.1 (han _ x.2.2)⟩
     exact (sub_eq_zero.1 ((key hp (meanOK hU hG hO hp hH' a b c) Φ hΦ g h).unique hasSum_empty)).symm
   have h := pg_herm hB hH hp₀.herm
   obtain ⟨om₁, hp₁⟩ := pair_low hP hL hp₀ hH' hM₁

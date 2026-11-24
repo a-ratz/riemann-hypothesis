@@ -102,10 +102,10 @@ theorem coeff_frob_single (p : ℕ) [hp : Fact p.Prime] {Q : Type} [CommRing Q] 
         Finsupp.smul_single, smul_eq_mul]
   simp_rw [key]
   rw [finsum_eq_single _ (Finsupp.single j 1)]
-  · rw [coeff_monomial, if_pos (by rw [Finsupp.smul_single, smul_eq_mul, mul_one]), smul_eq_mul,
+  · rw [coeff_monomial, ite_eq_left (by rw [Finsupp.smul_single, smul_eq_mul, mul_one]), smul_eq_mul,
       mul_one, coeff_map, lin]
   · intro e he
-    rw [coeff_monomial, if_neg, smul_zero]
+    rw [coeff_monomial, ite_eq_right, smul_zero]
     intro h
     apply he
     ext i
@@ -352,7 +352,7 @@ private lemma coeff_subst_X_comp_eq_zero_of_not_mem_range {σ τ S : Type} [Comm
     coeff γ (subst (fun s => (X (g s) : MvPowerSeries τ S)) F) = 0 := by
   classical
   rw [coeff_subst_X_comp_eq_finsum]
-  exact (finsum_congr fun e => if_neg fun h => hγ ⟨e, h.symm⟩).trans finsum_zero
+  exact (finsum_congr fun e => ite_eq_right fun h => hγ ⟨e, h.symm⟩).trans finsum_zero
 
 open MvPowerSeries in
 set_option autoImplicit false in
@@ -362,9 +362,9 @@ private lemma coeff_mapDomain_subst_X_comp_of_injective {σ τ S : Type} [CommRi
     coeff (Finsupp.mapDomain g e) (subst (fun s => (X (g s) : MvPowerSeries τ S)) F) =
       coeff e F := by
   classical
-  rw [coeff_subst_X_comp_eq_finsum, finsum_eq_single _ e, if_pos rfl]
+  rw [coeff_subst_X_comp_eq_finsum, finsum_eq_single _ e, ite_eq_left rfl]
   intro e' he'
-  rw [if_neg]
+  rw [ite_eq_right]
   exact fun h => he' (Finsupp.mapDomain_injective hg h).symm
 
 
@@ -431,7 +431,7 @@ theorem _root_.GlobalTheory.LawDer.Kernel.constantCoeff_iterate_invDer_mem : ∀
   have hCit : ∀ (k : ℕ) (c : Q), D^[k + 1] (C c) = 0 := fun k c => by
     rw [Function.iterate_succ_apply, hDC, Function.iterate_fixed hD0]
   have hzero : ∀ (β : Fin d →₀ ℕ) (i : Fin d), Finsupp.mapDomain Sum.inl β (Sum.inr i) = 0 :=
-    fun β i => Finsupp.mapDomain_notin_range _ _ (by simp)
+    fun β i => Finsupp.mapDomain_of_notMem_range _ _ (by simp)
   have hsplit : subst μ' l = _root_.GlobalTheory.Katz.cob1 μ' l + _root_.GlobalTheory.Katz.inL l +
       _root_.GlobalTheory.Katz.inR l := by
     unfold _root_.GlobalTheory.Katz.cob1
@@ -461,7 +461,7 @@ theorem _root_.GlobalTheory.LawDer.Kernel.constantCoeff_iterate_invDer_mem : ∀
         push_neg at h
         exact hβ (Finsupp.ext h)
       have h := congrArg (fun x => x (Sum.inl k)) he
-      rw [Finsupp.mapDomain_notin_range _ _ (by simp)] at h
+      rw [Finsupp.mapDomain_of_notMem_range _ _ (by simp)] at h
       simp [Finsupp.mapDomain_apply_of_injective Sum.inl_injective] at h
       omega
   have hg : ∀ β, coeff β (D l - C (algebraMap B Q (u j))) ∈ S := by
@@ -568,7 +568,7 @@ theorem coeff_subst_zero_X (H : MvPowerSeries (Fin d ⊕ Fin d) R) (e : Fin d �
     congr 1
     exact prod_X_pow _
   have h1 : ∀ j : Fin d, (e.mapDomain (Sum.inr : Fin d → Fin d ⊕ Fin d)) (Sum.inl j) = 0 := fun j =>
-    Finsupp.mapDomain_notin_range _ _ (by simp)
+    Finsupp.mapDomain_of_notMem_range _ _ (by simp)
   have h2 : ∀ j : Fin d, (e.mapDomain (Sum.inr : Fin d → Fin d ⊕ Fin d)) (Sum.inr j) = e j := fun j =>
     Finsupp.mapDomain_apply_of_injective Sum.inr_injective _ _
   rw [coeff_subst ha, finsum_eq_single _ (e.mapDomain Sum.inr)]
@@ -615,7 +615,7 @@ theorem coeff_inr_of_unit (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R)
   rw [← h2]
   by_cases hki : k = i
   · simp [hki]
-  · rw [if_neg, if_neg hki]
+  · rw [ite_eq_right, ite_eq_right hki]
     intro h
     exact hki (Finsupp.single_left_injective one_ne_zero h)
 
@@ -735,7 +735,7 @@ theorem invDer_monomial (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R)
       rw [h1, h2, add_zero]
     · have hXi : invDer μ u (X i) = C (u i) + Ri := by rw [hRi]; ring
       rw [hmono, _root_.GlobalTheory.LawDer.invDer_mul R d μ hc hunit u, hD, hXi, ← Finset.sum_congr rfl (fun j _ => hterm j),
-        Finset.sum_add_distrib, Finset.sum_ite_eq' Finset.univ i, if_pos (Finset.mem_univ _)]
+        Finset.sum_add_distrib, Finset.sum_ite_eq' Finset.univ i, ite_eq_left (Finset.mem_univ _)]
       rw [add_mul, Finset.sum_mul, smul_eq_C_mul (monomial α' (1 : R)) (u i)]
       ring
 
@@ -871,7 +871,7 @@ theorem constantCoeff_iterate_invDer_X_sub_mem : ∀ (p : ℕ) [Fact p.Prime] (B
   let P : (Fin d →₀ ℕ) → Prop := fun α => α.degree ≤ p ∧ ∀ i, α ≠ Finsupp.single i p
   let h : (Fin d →₀ ℕ) → B := fun α => if hα : P α then (h3 α hα.1 hα.2).choose else 0
   have hh : ∀ α, P α → algebraMap B Q (h α) = coeff α l := fun α hα => by
-    simp only [h, dif_pos hα]; exact (h3 α hα.1 hα.2).choose_spec.symm
+    simp only [h, dite_eq_left hα]; exact (h3 α hα.1 hα.2).choose_spec.symm
   let H : MvPowerSeries (Fin d) B := fun α => h α
   have hH : ∀ α, coeff α H = h α := fun α => rfl
   let q : Fin d → Q := fun i => coeff (Finsupp.single i p) l
@@ -885,12 +885,12 @@ theorem constantCoeff_iterate_invDer_X_sub_mem : ∀ (p : ℕ) [Fact p.Prime] (B
     simp only [G, map_add (f := _), coeff_map, hH, map_sum, map_smul, coeff_monomial, smul_eq_mul, mul_ite,
     mul_one, mul_zero]
     by_cases hP : ∀ i, α ≠ Finsupp.single i p
-    · rw [hh α ⟨hα, hP⟩, Finset.sum_eq_zero (fun i _ => if_neg (hP i)), add_zero]
+    · rw [hh α ⟨hα, hP⟩, Finset.sum_eq_zero (fun i _ => ite_eq_right (hP i)), add_zero]
     · push_neg at hP
       obtain ⟨i, rfl⟩ := hP
-      have : h (Finsupp.single i p) = 0 := dif_neg fun hα => hα.2 i rfl
-      rw [this, map_zero, zero_add, Finset.sum_eq_single i (fun k _ hk => if_neg fun e =>
-        hk ((hinj i k).1 e).symm) (by simp), if_pos rfl]
+      have : h (Finsupp.single i p) = 0 := dite_eq_right fun hα => hα.2 i rfl
+      rw [this, map_zero, zero_add, Finset.sum_eq_single i (fun k _ hk => ite_eq_right fun e =>
+        hk ((hinj i k).1 e).symm) (by simp), ite_eq_left rfl]
 
   have hnat : ∀ F : MvPowerSeries (Fin d) B,
       constantCoeff ((invDer (up Q μ) (fun i => algebraMap B Q (u i)))^[p] (map (algebraMap B Q) F)) =
@@ -903,7 +903,7 @@ theorem constantCoeff_iterate_invDer_X_sub_mem : ∀ (p : ℕ) [Fact p.Prime] (B
       (p.factorial : B) * u i ^ p := fun i => by
     have := _root_.GlobalTheory.LawDer.MonoIter.constantCoeff_iterate_invDer_monomial B d μ hμ hL.unit hL.comm u (Finsupp.single i p)
     rw [Finsupp.degree_single] at this
-    rw [this, Finset.prod_eq_single i (fun k _ hk => by rw [Finsupp.single_apply, if_neg (Ne.symm hk),
+    rw [this, Finset.prod_eq_single i (fun k _ hk => by rw [Finsupp.single_apply, ite_eq_right (Ne.symm hk),
       pow_zero]) (by simp), Finsupp.single_eq_same]
   have e1 := _root_.GlobalTheory.LawDer.IterateLocal.constantCoeff_iterate_invDer_congr Q d (up Q μ) hμQ (fun i => algebraMap B Q (u i)) p l G hG
   have e2 : constantCoeff ((invDer (up Q μ) (fun i => algebraMap B Q (u i)))^[p] G) =
@@ -1001,7 +1001,7 @@ theorem comul_ev_sub_ev₂_subst_mem :
   have hT : ∀ α : Fin d →₀ ℕ, α.degree < N → coeff α T = 0 := by
     intro α hα
     simp only [T, P, map_sub, MvPolynomial.coeff_coe, coeff_trunc']
-    rw [if_pos, sub_self]
+    rw [ite_eq_left, sub_self]
     intro i
     show α i ≤ N
     exact le_of_lt (lt_of_le_of_lt (Finsupp.le_degree i α) hα)
@@ -1057,12 +1057,12 @@ theorem counit_ev_sub_constantCoeff (p : ℕ) (O : Type) [CommRing O] (G : PDivG
     rw [show Coalgebra.counit (R := O) (c.ev n (P : MvPowerSeries (Fin d) O)) =
       Bialgebra.counitAlgHom O (G.A n) (c.ev n (P : MvPowerSeries (Fin d) O)) from rfl, this]
     rw [MvPolynomial.aeval_zero', hP, ← coeff_zero_eq_constantCoeff_apply, Algebra.algebraMap_self,
-      RingHom.id_apply, MvPolynomial.constantCoeff_eq, coeff_trunc', if_pos]
+      RingHom.id_apply, MvPolynomial.constantCoeff_eq, coeff_trunc', ite_eq_left]
     intro i
     exact Nat.zero_le _
   have hT : ∀ α : Fin d →₀ ℕ, α.degree < N → coeff α (F - (P : MvPowerSeries (Fin d) O)) = 0 := by
     intro α hα
-    rw [map_sub, MvPolynomial.coeff_coe, hP, coeff_trunc', if_pos, sub_self]
+    rw [map_sub, MvPolynomial.coeff_coe, hP, coeff_trunc', ite_eq_left, sub_self]
     intro i
     show α i ≤ N
     exact le_trans (Finsupp.le_degree i α) hα.le
@@ -1105,7 +1105,7 @@ theorem mem_of_monomial_mem_of_tail_mem {σ R : Type} [CommRing R] [Fintype σ]
     (h2 (H - (trunc' R (Finsupp.equivFunOnFinite.symm fun _ => N) H : MvPolynomial σ R)) ?_)
   · simpa using this
   · intro α hα
-    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', if_pos, sub_self]
+    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', ite_eq_left, sub_self]
     intro j
     exact (Finsupp.le_degree j α).trans hα.le
 
@@ -1383,15 +1383,15 @@ theorem exists_pow_mem_map {O R : Type*} [CommRing O] [CommRing R] [Algebra O R]
   set J : Ideal R := m.map (algebraMap O R) with hJ
   by_cases htop : J = ⊤
   · exact ⟨0, fun φ _ s _ => htop ▸ Submodule.mem_top⟩
-  letI : Field (O ⧸ m) := Ideal.Quotient.field m
-  haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 htop
-  haveI : IsLocalRing (R ⧸ J) :=
+  let : Field (O ⧸ m) := Ideal.Quotient.field m
+  have : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 htop
+  have : IsLocalRing (R ⧸ J) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
-  haveI : Module.Finite (O ⧸ m) (R ⧸ J) := Module.Finite.of_restrictScalars_finite O _ _
-  haveI : IsArtinianRing (R ⧸ J) := IsArtinianRing.of_finite (O ⧸ m) _
+  have : Module.Finite (O ⧸ m) (R ⧸ J) := Module.Finite.of_restrictScalars_finite O _ _
+  have : IsArtinianRing (R ⧸ J) := IsArtinianRing.of_finite (O ⧸ m) _
   obtain ⟨r, hr⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := R ⧸ J)
   rw [IsLocalRing.jacobson_eq_maximalIdeal _ bot_ne_top] at hr
-  haveI : IsLocalHom (Ideal.Quotient.mk J) :=
+  have : IsLocalHom (Ideal.Quotient.mk J) :=
     IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   refine ⟨r, fun φ hφ s hs => ?_⟩
   have h1 : ¬ IsUnit φ := fun h => hm.ne_top (Ideal.eq_top_of_isUnit_mem _ hφ (h.map ε))

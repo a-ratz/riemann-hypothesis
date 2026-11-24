@@ -62,7 +62,7 @@ def intPts : Set (κ → Af F) :=
   Set.univ.pi fun _ => {a : Af F | ∀ v, a v ∈ v.adicCompletionIntegers F}
 
 theorem indicator_intPts_mem_SB : (intPts F κ).indicator (1 : (κ → Af F) → ℂ) ∈ SB (κ → Af F) := by
-  haveI := GlobalTheory.IntegralFinAdele.t2Space_finiteAdeleRing' F
+  have := GlobalTheory.IntegralFinAdele.t2Space_finiteAdeleRing' F
   have hO : IsOpen {a : Af F | ∀ v, a v ∈ v.adicCompletionIntegers F} :=
     RestrictedProduct.isOpen_forall_mem fun v => Valued.isOpen_valuationSubring _
   have hC : IsCompact {a : Af F | ∀ v, a v ∈ v.adicCompletionIntegers F} :=

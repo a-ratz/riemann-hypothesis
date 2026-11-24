@@ -88,8 +88,8 @@ theorem UpperTheory.V.B5.card_signedInvolutionChar_eq_card_involutionQuotient :
       · exact absurd h hne
       · simpa using h
   obtain ⟨χ₀⟩ := hne₀
-  haveI : NeZero (Monoid.exponent Γ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
-  haveI : HasEnoughRootsOfUnity Ω (Monoid.exponent (Γ ⧸ Subgroup.zpowers c)) :=
+  have : NeZero (Monoid.exponent Γ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : HasEnoughRootsOfUnity Ω (Monoid.exponent (Γ ⧸ Subgroup.zpowers c)) :=
     HasEnoughRootsOfUnity.of_dvd Ω (Group.exponent_quotient_dvd _)
   rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
     Nat.card_congr ((chMul c ε χ₀).symm.trans (chOne c)),

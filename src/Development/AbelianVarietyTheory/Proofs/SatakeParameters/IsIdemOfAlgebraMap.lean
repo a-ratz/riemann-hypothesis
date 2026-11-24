@@ -210,7 +210,7 @@ theorem exists_orthonormal (hc : CMData (maximalRealSubfield E) E) (V : HSpace E
     (v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))) :
     ∃ h : GL (Fin V.rank) (Fv (maximalRealSubfield E) v ⊗[maximalRealSubfield E] E), IsFrameAt V v h ∧
       Formalism.UG.cT (sigR (Fv (maximalRealSubfield E) v) hc.sig) h.1 * JR (Fv (maximalRealSubfield E) v) V.gram * h.1 = 1 := by
-  haveI := unramified hc
+  have := unramified hc
   have hG : ∀ a b, ReciprocityTheory.ChartRestriction.G.FD.cc (V.gramᵀ a b) = V.gramᵀ b a :=
     fun a b => V.herm.eq (V.frame b) (V.frame a)
   have hd : V.gramᵀ.det ≠ 0 := by

@@ -116,7 +116,7 @@ theorem weilVanish : WeilVanish := by
   unfold WeilVanish
   intro G _ _ _ _ _ _ _ _ μ _ N ν hN hν F φ hF hφ hinv hint h0
   obtain ⟨β, hβ, hβt, hβ1⟩ := exists_measurable_cutoff_fibre_integral_one G N ν hN hν
-  haveI : IsFiniteMeasureOnCompacts ν := hν.2.1
+  have : IsFiniteMeasureOnCompacts ν := hν.2.1
   have hN' : ∀ᵐ m ∂ν, m ∈ (N : Set G) := mem_ae_iff.2 hν.2.2.1
   have hae : ∀ᵐ m ∂ν, ∀ y, F (m * y) = F y := hN'.mono fun m hm y => hinv m hm y
   exact integral_mul_eq_zero_of_cutoff μ ν β hβ hβt hβ1 F φ hF hφ hae hint h0

@@ -453,7 +453,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
     (h4 : ∀ j (q : Over.mk x ⟶ A), q ^ (l ^ j) = 1 ↔ ∃ y, ev j y = q) :
     Nat.card {g : Over.mk x ⟶ A // g ≫ u = 1} = (LinearMap.det φ).natAbs := by
   obtain ⟨x', rfl⟩ : ∃ x', x = 𝟙 _ ≫ x' := ⟨x, (Category.id_comp x).symm⟩
-  letI : GrpObj ((Over.pullback x').obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback x').obj A) := Functor.grpObjObj
   have hA' := GlobalTheory.isAbelianScheme_pullback_obj x' A hA
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim k ((Over.pullback x').obj A) hA'
   let B : AbVar k := { X := (Over.pullback x').obj A, ab := hA', dim := g, smooth := hg }
@@ -492,7 +492,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
       (∀ j (q : Over.mk (𝟙 (Sp k)) ⟶ B.X), q ^ (l ^ j) = 1 ↔ ∃ x, ev j x = q) →
       LinearMap.charpoly φ = GlobalTheory.AV.AbVar.charpoly (CategoryTheory.End.of f) := by
     intro k _ _ B f L _ _ _ φ l hl hlk ev hadd hequi hker him
-    haveI : Fact l.Prime := ⟨hl⟩
+    have : Fact l.Prime := ⟨hl⟩
     obtain ⟨e, he⟩ := pts_equiv k B
     obtain ⟨hfree, hfin, -⟩ := tl_free_finrank k l hlk B
     have hc : ∀ n : ℕ, Nat.card {x : B.Pt // x ^ (l ^ n) = 1} = l ^ (2 * B.dim * n) := by
@@ -506,10 +506,10 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
     have key : ∀ j : ℕ, (LinearMap.charpoly φ).map (Int.castRingHom (ZMod (l ^ j))) =
         (LinearMap.charpoly (tend l B (CategoryTheory.End.of f))).map (PadicInt.toZModPow j) := by
       intro j
-      haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.ne_zero⟩
+      have : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.ne_zero⟩
       let K := (powMonoidHom (l ^ j) : B.Pt →* B.Pt).ker
       have hK : ∀ x : B.Pt, x ∈ K ↔ x ^ (l ^ j) = 1 := fun x => MonoidHom.mem_ker
-      letI : Module (ZMod (l ^ j)) (Additive K) := AddCommGroup.zmodModule fun x =>
+      let : Module (ZMod (l ^ j)) (Additive K) := AddCommGroup.zmodModule fun x =>
         congrArg Additive.ofMul (Subtype.ext (by
           change ((Additive.toMul x : K) : B.Pt) ^ (l ^ j) = 1
           exact (hK _).1 (Additive.toMul x).2))
@@ -567,7 +567,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
       rw [Polynomial.map_map, ← LinearMap.charpoly_baseChange]
       have hc : (algebraMap ℤ_[l] ℚ_[l]).comp (algebraMap ℤ ℤ_[l]) = algebraMap ℤ ℚ_[l] := Subsingleton.elim _ _
       rw [hc]
-      haveI : Module.Finite ℚ_[l] (Vl l B) := (tl_free_finrank k l hlk B).2.2.2.1
+      have : Module.Finite ℚ_[l] (Vl l B) := (tl_free_finrank k l hlk B).2.2.2.1
       obtain ⟨⟨hm, hd, hev⟩, -⟩ := charpoly_spec k B (CategoryTheory.End.of f)
       have key := GlobalTheory.T.abelianVariety_degreePolynomial_map_eq_charpoly_rationalTate k l hlk B (CategoryTheory.End.of f)
         ((GlobalTheory.AV.AbVar.charpoly (CategoryTheory.End.of f)).map (algebraMap ℤ ℚ)) (hm.map _)
@@ -605,7 +605,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
     rfl
   have hiso : IsIsogeny (A := B) (B := B) (-f) := by
     by_contra h
-    rw [deg, if_neg h] at hdeg
+    rw [deg, ite_eq_right h] at hdeg
     exact hφ (Int.natAbs_eq_zero.1 hdeg.symm)
   have hneg : ∀ (T : Over (Sp k)) (y : T ⟶ B.X), y ≫ Hom.hom (-f) = 1 ↔ y ≫ f.hom = 1 := fun T y => by
     rw [neg_hom, GrpObj.comp_inv, inv_eq_one]
@@ -640,9 +640,9 @@ theorem natAbs_det_mulLa (w : Ideal (𝓞 D.F)) (hw : w.IsMaximal) (H : ℕ) (c 
     letI := D.freeLa
     letI := D.finLa
     (LinearMap.det (mulLa D c)).natAbs = Nat.card (𝓞 D.F ⧸ w) ^ (H * (D.m * D.n)) := by
-  letI := D.freeLa
-  letI := D.finLa
-  letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  let := D.freeLa
+  let := D.finLa
+  let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
   have hinj : Function.Injective (mulLa D c) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro y hy
@@ -699,7 +699,7 @@ theorem card_torsion_place {F : Type} [Field F] [NumberField F] (M : Type) [AddC
       apply Nat.finite_of_card_ne_zero
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
       exact hne
-    letI := Ideal.Quotient.field w
+    let := Ideal.Quotient.field w
     exact Finite.one_lt_card
   have hTHfin : Finite (Submodule.torsionBySet (𝓞 F) M ((w ^ H : Ideal (𝓞 F)) : Set (𝓞 F))) := by
     apply Nat.finite_of_card_ne_zero
@@ -710,8 +710,8 @@ theorem card_torsion_place {F : Type} [Field F] [NumberField F] (M : Type) [AddC
     Submodule.torsionBySet_le_torsionBySet_of_subset (Ideal.pow_le_self hH0.ne')
   have hT1fin : Finite (Submodule.torsionBySet (𝓞 F) M (w : Set (𝓞 F))) :=
     Finite.of_injective _ (Submodule.inclusion_injective hsub)
-  letI := Ideal.Quotient.field w
-  haveI : Module.Finite (𝓞 F ⧸ w) (Submodule.torsionBySet (𝓞 F) M (w : Set (𝓞 F))) :=
+  let := Ideal.Quotient.field w
+  have : Module.Finite (𝓞 F ⧸ w) (Submodule.torsionBySet (𝓞 F) M (w : Set (𝓞 F))) :=
     Module.Finite.of_finite
   set h' := Module.finrank (𝓞 F ⧸ w) (Submodule.torsionBySet (𝓞 F) M (w : Set (𝓞 F))) with hh'
   have hT1 : Nat.card (Submodule.torsionBySet (𝓞 F) M (w : Set (𝓞 F))) =
@@ -731,13 +731,13 @@ theorem exists_lev_of_card (G : Type) [CommGroup G] (act : D.O → G → G)
         Nat.card {g : G // act (algebraMap (𝓞 D.F) D.O c) g = 1} = (LinearMap.det (mulLa D c)).natAbs) (e : ℕ) :
     ∃ ev : D.La → G, (∀ y z, ev (y + z) = ev y * ev z) ∧ (∀ (c : D.O) y, ev (c • y) = act c (ev y)) ∧
       (∀ y, ev y = 1 ↔ ∃ z, y = p ^ e • z) ∧ (∀ q : G, q ^ (p ^ e) = 1 ↔ ∃ y, ev y = q) := by
-  letI : Module D.O (Additive G) := GlobalTheory.EtLevMorita.actModule act hmul hone hcomp hadd
-  letI : Module (𝓞 D.F) (Additive G) := Module.compHom (Additive G) (algebraMap (𝓞 D.F) D.O)
-  haveI : IsScalarTower (𝓞 D.F) D.O (Additive G) := ⟨fun c b x => by
+  let : Module D.O (Additive G) := GlobalTheory.EtLevMorita.actModule act hmul hone hcomp hadd
+  let : Module (𝓞 D.F) (Additive G) := Module.compHom (Additive G) (algebraMap (𝓞 D.F) D.O)
+  have : IsScalarTower (𝓞 D.F) D.O (Additive G) := ⟨fun c b x => by
     show (c • b) • x = algebraMap (𝓞 D.F) D.O c • (b • x)
     rw [Algebra.smul_def, mul_smul]⟩
-  letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  haveI : IsScalarTower (𝓞 D.F) D.O D.La := ⟨fun c b x => by
+  let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  have : IsScalarTower (𝓞 D.F) D.O D.La := ⟨fun c b x => by
     show (c • b) • x = algebraMap (𝓞 D.F) D.O c • (b • x)
     rw [Algebra.smul_def, mul_smul]⟩
   have hp0 : ((p : ℕ) : 𝓞 D.F) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero
@@ -798,11 +798,11 @@ theorem act_natCast {O : Type} [Ring O] {S : Scheme.{0}} {G : Over S} [GrpObj G]
 
 theorem exists_ev_pow : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (x : Sp k ⟶ S) (β : R →+* k), x ≫ s = spMap β → ∀ e : ℕ, ∃ ev : D.La → (Over.mk x ⟶ o.A), (∀ y z, ev (y + z) = ev y * ev z) ∧ (∀ (c : D.O) y, ev (c • y) = ev y ≫ o.act.act c) ∧ (∀ y, ev y = 1 ↔ ∃ z, y = p ^ e • z) ∧ (∀ (q : Over.mk x ⟶ o.A), q ^ (p ^ e) = 1 ↔ ∃ y, ev y = q) := by
   intro p _ D R _ b N _ _ S s o k _ _ _ x β hx e
-  letI : CommGroup (Over.mk x ⟶ o.A) := Hom.commGroup
-  letI := D.freeLa
-  letI := D.finLa
+  let : CommGroup (Over.mk x ⟶ o.A) := Hom.commGroup
+  let := D.freeLa
+  let := D.finLa
   refine exists_lev_of_card D (Over.mk x ⟶ o.A) (fun c g => g ≫ o.act.act c)
-    (fun c g h => by haveI := o.act.hom c; exact MonObj.mul_comp _ _ _)
+    (fun c g h => by have := o.act.hom c; exact MonObj.mul_comp _ _ _)
     (fun g => by simp only [o.act.one, Category.comp_id])
     (fun c d g => by simp only [o.act.mul, Category.assoc])
     (fun c d g => by simp only [o.act.add]; exact MonObj.comp_mul _ _ _)
@@ -812,8 +812,8 @@ theorem exists_ev_pow : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [C
   have hco : ∀ j, (l ^ j).Coprime p := fun j =>
     Nat.Coprime.pow_left j ((Nat.coprime_primes hl Fact.out).2 (by omega))
   obtain ⟨c', n, hn, h⟩ := exists_mul_eq_nat c hc
-  haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
-  haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c')
+  have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+  have := o.act.hom (algebraMap (𝓞 D.F) D.O c')
   exact card_ker_eq_det o.A o.ab k x (o.act.act (algebraMap (𝓞 D.F) D.O c))
     (o.act.act (algebraMap (𝓞 D.F) D.O c')) n hn
     (by rw [← o.act.mul, ← map_mul, h, map_natCast, act_natCast]) D.La (mulLa D c) hd l hl
@@ -863,10 +863,10 @@ theorem exists_padic_similitude : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
   let E : ℕ → Q → Q → kˣ → Prop := fun n g g' z =>
     Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) n g g' (unitOn z)
   have amul : ∀ c a b, act c (a * b) = act c a * act c b := fun c a b => by
-    haveI := o.act.hom c
+    have := o.act.hom c
     exact MonObj.mul_comp _ _ _
   have apow : ∀ c (a : Q) n, a ^ n = 1 → act c a ^ n = 1 := fun c a n h => by
-    haveI := o.act.hom c
+    have := o.act.hom c
     show (a ≫ _) ^ n = 1
     rw [← MonObj.pow_comp, h, MonObj.one_comp]
   have powl : ∀ (n : ℕ) (a b : Q), (lift a b) ^ n = lift (a ^ n) (b ^ n) := by
@@ -1017,7 +1017,7 @@ theorem pow_eq_one_geom {gb : GBase D.toG R'} {N : ℕ} {t : S ⟶ Sp R'} (o : G
     (hg : ∃ u : (o.P.pull (lift (snd o.A (Over.mk x₀) ≫ g) (fst o.A (Over.mk x₀))).left).Gen, u.IsGen) :
     g ^ e = 1 := by
   obtain ⟨β, hβ⟩ := exists_spMap (x₀ ≫ t)
-  haveI := charZero_of_hom β
+  have := charZero_of_hom β
   obtain ⟨I, -⟩ := o.geom k x₀ β hβ
   obtain ⟨y, hy⟩ : ∃ y : D.La, I.ev M y = g := (I.onto M hM g).1 hn
   have key : ∀ z : D.La, (M : ℤ) ∣ D.EF y z := by
@@ -1135,8 +1135,8 @@ theorem fullTate (gb : GBase D.toG R) {N : ℕ} (h3 : 3 ≤ N) (hN : N.Coprime p
     ∃ I : GTateIso D.toG k (Over.mk x ⟶ o.A) (fun c g => g ≫ o.act.act c)
         (fun n g g' z => Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) n g g' (unitOn z)),
       ∀ y, toUnit _ ≫ o.eta y = I.ev N y := by
-  haveI : CharZero k := by
-    letI : Algebra ℚ k := (β.comp (algebraMap ℚ R)).toAlgebra
+  have : CharZero k := by
+    let : Algebra ℚ k := (β.comp (algebraMap ℚ R)).toAlgebra
     exact algebraRat.charZero k
   exact GlobalTheory.T.exists_tate_module_iso p D R gb.toBaseAt N h3 hN S s o k x β h
 

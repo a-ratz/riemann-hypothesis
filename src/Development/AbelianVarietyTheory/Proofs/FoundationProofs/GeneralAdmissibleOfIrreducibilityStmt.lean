@@ -108,7 +108,7 @@ theorem isWild_of_isWildAt {E Ω : Type} [Field E] [NumberField E] [Field Ω] [A
     (A : ValuationSubring Ω) (σ : G E Ω) (h : IsWildAt A σ) : IsWild A σ := by
   have h1 : ∀ x : Ω, x ≠ 0 → A.valuation (σ x - x) < A.valuation x := fun x hx => by
     have e : σ x - x = (σ x / x - 1) * x := by field_simp
-    have h0 : 0 < A.valuation x := zero_lt_iff.mpr (by simpa using hx)
+    have h0 : 0 < A.valuation x := pos_iff_ne_zero.mpr (by simpa using hx)
     rw [e, map_mul]
     exact mul_lt_of_lt_one_left h0 (h x hx)
   have h2 : ∀ x : Ω, A.valuation (σ x) = A.valuation x := fun x => by
@@ -223,7 +223,7 @@ theorem wildAt_conj (c : Ω ≃+* Ω) {A : ValuationSubring Ω} {u u' : G E Ω} 
 
 theorem wildAt_of_isWild {A : ValuationSubring Ω} {u : G E Ω} (h : BlochKatoReduction.IsWild A u) : WildAt A u := fun y hy => by
   have e : u y / y - 1 = (u y - y) / y := by field_simp
-  have h0 : 0 < A.valuation y := zero_lt_iff.mpr (by simpa using hy)
+  have h0 : 0 < A.valuation y := pos_iff_ne_zero.mpr (by simpa using hy)
   rw [e, map_div₀, div_lt_one₀ h0]
   exact h.2 y hy
 

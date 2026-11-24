@@ -87,7 +87,7 @@ private theorem exists_split (g : GA E a) : ∃ t : ℝ, splitCentre E a t * g =
 private theorem qht_mul {C : Set (GA E a)} (hC : IsCompact C) :
     ∃ B : ℝ, ∀ g : GA E a, ∀ h ∈ C, qht (g * h) ≤ B * qht g := by
   obtain ⟨M, hM⟩ := exists_height_le_of_isCompact (K := E) (n := a)
-    (hC.image (continuous_subtype_val.comp (continuous_retractOne (K := E) (n := a))))
+    (hC.image (continuous_subtypeVal.comp (continuous_retractOne (K := E) (n := a))))
   have hc : 0 < heightConst E a := one_pos.trans_le one_le_heightConst
   refine ⟨heightConst E a * M, fun g h hh => ?_⟩
   have hm := hM _ ⟨h, hh, rfl⟩

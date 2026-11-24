@@ -70,8 +70,8 @@ theorem exists_indep_span {Q : Type} [AddCommGroup Q] [Module k⸨X⸩ Q] [Modul
     ∃ (ι : Type) (_ : Fintype ι) (e : ι → Q), LinearIndependent k⸨X⸩ e ∧
       Submodule.span k⟦X⟧ (Set.range e) = P := by
   classical
-  haveI : Module.Finite k⟦X⟧ P := Module.Finite.iff_fg.mpr hP
-  haveI : NoZeroSMulDivisors k⟦X⟧ Q := by
+  have : Module.Finite k⟦X⟧ P := Module.Finite.iff_fg.mpr hP
+  have : NoZeroSMulDivisors k⟦X⟧ Q := by
     refine ⟨fun {c x} h => ?_⟩
     by_contra hne
     push_neg at hne
@@ -82,7 +82,7 @@ theorem exists_indep_span {Q : Type} [AddCommGroup Q] [Module k⸨X⸩ Q] [Modul
       rw [algebraMap_smul]
       exact h
     exact hne.2 ((smul_eq_zero.mp h').resolve_left hc)
-  haveI : Module.Free k⟦X⟧ P := Module.free_of_finite_type_torsion_free'
+  have : Module.Free k⟦X⟧ P := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis k⟦X⟧ P
   refine ⟨Module.Free.ChooseBasisIndex k⟦X⟧ P, inferInstance, fun i => (b i : Q), ?_, ?_⟩
   · have hli : LinearIndependent k⟦X⟧ (P.subtype ∘ b) :=
@@ -254,7 +254,7 @@ theorem isLat_comap (f : W →ₗ[LaurentSeries k] V) (hf : Function.Injective f
     IsLat (N.comap (f.restrictScalars (PowerSeries k))) := by
   refine ⟨?_, ?_⟩
   · refine Submodule.fg_of_fg_map_injective (f.restrictScalars (PowerSeries k)) hf ?_
-    haveI : IsNoetherian (PowerSeries k) N := isNoetherian_of_fg_of_noetherian N hN.1
+    have : IsNoetherian (PowerSeries k) N := isNoetherian_of_fg_of_noetherian N hN.1
     exact isNoetherian_submodule.1 this _ (Submodule.map_comap_le _ _)
   · refine eq_top_iff.2 fun w _ => ?_
     obtain ⟨m, hm⟩ := exists_pow_smul_mem hN.2 (f w)

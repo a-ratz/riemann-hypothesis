@@ -459,7 +459,7 @@ theorem continuous_evalAt (f : Pol N ℂ) : Continuous fun y : Matrix (Fin N) (F
     exact hp.mul (continuous_apply_apply _ _)
 
 theorem continuous_evalAt_coe (f : Pol N ℂ) : Continuous fun g : UN N => evalAt g.1 f :=
-  (continuous_evalAt f).comp continuous_subtype_val
+  (continuous_evalAt f).comp continuous_subtypeVal
 
 theorem integrable_mul_conj (f f' : Pol N ℂ) :
     Integrable (fun g : UN N => evalAt g.1 f * conj (evalAt g.1 f')) (haarU N) :=
@@ -645,7 +645,7 @@ theorem continuous_rhoSpace (v : Space la) : Continuous fun u : UN N => rhoSpace
   rintro _ ⟨y, rfl⟩
   simp only [rhoSpace_toSpace, evSpace_toSpace, rhoU_apply, evalAt_rho]
   have h : Continuous fun u : UN N => u.1ᵀ * y.1 :=
-    (continuous_subtype_val (p := fun x => x ∈ Matrix.unitaryGroup (Fin N) ℂ)).matrix_transpose.matrix_mul
+    (continuous_subtypeVal (p := fun x => x ∈ Matrix.unitaryGroup (Fin N) ℂ)).matrix_transpose.matrix_mul
       continuous_const
   exact (continuous_evalAt f.1).comp h
 

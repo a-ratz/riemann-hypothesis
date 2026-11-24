@@ -82,8 +82,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 
 theorem countable_La (D : Datum H) : Countable D.La := by
   have := D.fin
-  have : Countable (𝓞 E) := Finsupp.Countable.of_moduleFinite (R := ℤ)
-  exact Finsupp.Countable.of_moduleFinite (R := 𝓞 E)
+  have : Countable (𝓞 E) := Countable.of_moduleFinite (R := ℤ)
+  exact Countable.of_moduleFinite (R := 𝓞 E)
 
 theorem fibrewise {X : Scheme.{0}} (t : SAB H (Sp ℂ)) (t' : SAB H X) (D₁ D₂ : Datum H) {g : ℕ}
     (ty : Fin g → (E →+* ℂ))

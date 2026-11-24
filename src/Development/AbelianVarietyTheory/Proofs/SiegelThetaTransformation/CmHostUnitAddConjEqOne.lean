@@ -210,7 +210,7 @@ theorem exists_comp (l : Geo.Tor.Level H) {L : Lt E r} {mk mk' : Dw.La →ₗ[�
     (h : IsMark l L mk) (h' : IsMark l L mk') :
     ∃ f : Dw.La →ₗ[𝓞 E] Dw.La, (∀ a, f a - a ∈ (Mfr l • ⊤ : Submodule (𝓞 E) Dw.La)) ∧
       ∀ a ∈ (Mfr l • ⊤ : Submodule (𝓞 E) Dw.La), ∃ u ∈ L, mk a = mk' (f a) + l.M • u := by
-  haveI := Dw.proj
+  have := Dw.proj
   set P : Submodule (𝓞 E) Dw.La := Mfr l • ⊤ with hP
   set K : Submodule (𝓞 E) (Fin r → E) := L.map (LinearMap.lsmul (𝓞 E) (Fin r → E) (l.M : 𝓞 E)) with hK
   have hKm : ∀ v, v ∈ K ↔ ∃ u ∈ L, v = l.M • u := fun v => by
@@ -412,8 +412,8 @@ theorem root_mem (l : Geo.Tor.Level H) {L : Lt E r} {mk : Dw.La →ₗ[𝓞 E] (
 
 theorem finite_half {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l} (d : DeltaDat Xo c n)
     (hb : d.l₂.Mb = l.Mb * d.I) : Finite (LaI Xo c d) := by
-  haveI := Dw.fin
-  haveI : Module.Finite ℤ (LaI Xo c d) := Module.Finite.trans (𝓞 E) _
+  have := Dw.fin
+  have : Module.Finite ℤ (LaI Xo c d) := Module.Finite.trans (𝓞 E) _
   have hM : (d.l₂.M : 𝓞 E) ∈ d.I := (Ideal.mul_le_inf.trans inf_le_right) (hb ▸ (level_mem d.l₂).1)
   refine Module.finite_of_fg_torsion _ fun q => ⟨⟨(d.l₂.M : ℤ), mem_nonZeroDivisors_of_ne_zero (by
     have := d.l₂.three_le; omega)⟩, ?_⟩
@@ -432,8 +432,8 @@ theorem gphi_move : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     (comp_base hd hm o₂ o₃ hf2)
   have hM0 : (d.l₂.M : E) ≠ 0 := by have := d.l₂.three_le; exact_mod_cast (by omega : d.l₂.M ≠ 0)
   refine ⟨algebraMap d.c₂.F ℂ (d.eF (((ψ kI)⁻¹ : c.Fˣ) : c.F)), ?_, ?_⟩
-  · haveI := finite_half d hb
-    haveI : Finite (LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d) := Finite.of_injective _ DFunLike.coe_injective
+  · have := finite_half d hb
+    have : Finite (LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d) := Finite.of_injective _ DFunLike.coe_injective
     obtain ⟨m, hm0, hm1⟩ := isOfFinOrder_iff_pow_eq_one.1 (isOfFinOrder_of_finite kI)
     refine Complex.norm_eq_one_of_pow_eq_one (n := m) ?_ hm0.ne'
     rw [← map_pow, ← map_pow, ← Units.val_pow_eq_pow_val, inv_pow, ← map_pow, hm1, map_one, inv_one,

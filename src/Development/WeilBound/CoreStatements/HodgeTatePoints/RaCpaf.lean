@@ -110,7 +110,7 @@ theorem cpaf : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C]
   intro p _ C _ _ _ v R _ _ hv hp N _ _ _ AA μ
   have hpp : p.Prime := Fact.out
   have : NeZero (p : C) := ⟨Nat.cast_ne_zero.2 hpp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C p
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C p
   let ψ : AddChar N C := (AddChar.zmodChar p hζ.pow_eq_one).compAddMonoidHom μ
   have hψ : ∀ x, ψ x = ζ ^ (μ x).val := fun x => rfl
   have hψp : ∀ x, ψ x ^ p = 1 := fun x => by

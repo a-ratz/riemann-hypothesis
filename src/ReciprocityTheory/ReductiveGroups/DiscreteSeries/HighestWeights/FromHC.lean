@@ -114,11 +114,11 @@ lemma fhSig_isURepOn (τ : KG ε →* unitary (V →L[ℂ] V)) (hτ : Continuous
     rw [fhSig_of_mem τ hg]
     exact Unitary.norm_map _ v
   · intro v
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     show Continuous fun x : ↥(Kset ε) => fhSig τ (x : Matrix (Fin n) (Fin n) ℂ) v
     have hc : Continuous fun x : ↥(Kset ε) =>
         ((τ (torepK ε x.2) : unitary (V →L[ℂ] V)) : V →L[ℂ] V) v :=
-      (continuous_subtype_val.comp (hτ.comp (continuous_torepK ε))).clm_apply continuous_const
+      (continuous_subtypeVal.comp (hτ.comp (continuous_torepK ε))).clm_apply continuous_const
     refine hc.congr fun x => ?_
     rw [fhSig_of_mem τ x.2]
 
@@ -281,7 +281,7 @@ theorem derivExists_allPos : DerivExistsAllPosStatement := by
     · intro v
       rw [continuousOn_iff_continuous_domRestrict]
       have hc : Continuous fun g : Kset ε => (τ (torepK ε g.2)).val v :=
-        (continuous_subtype_val.comp (hτ.comp (continuous_torepK ε))).clm_apply continuous_const
+        (continuous_subtypeVal.comp (hτ.comp (continuous_torepK ε))).clm_apply continuous_const
       exact hc.congr fun g => (congrArg (fun A : V →L[ℂ] V => A v) (hσ g.2)).symm
   let b := stdOrthonormalBasis ℂ V
   have hcoeff (i j : Fin (Module.finrank ℂ V)) :=
@@ -333,8 +333,8 @@ theorem kType_of_hcTypeU {k : ℕ} {u : Fin k → ℝ} {H : Type} [NormedAddComm
     ∃ T : KType (fun _ : Fin k => true) (lowK (fun _ : Fin k => true) u), ∃ U : H ≃ₗᵢ[ℂ] T.V,
       ∀ (g : KG (fun _ : Fin k => true)) (v : H), U (π (toMK g) v) = T.op g (U v) := by
   obtain ⟨hnt, hfd, hU, hK⟩ := hπ
-  haveI := hfd
-  haveI : CompleteSpace H := FiniteDimensional.complete ℂ H
+  have := hfd
+  have : CompleteSpace H := FiniteDimensional.completeSpace ℂ H
   obtain ⟨dτ, hd⟩ := derivExists_allPos k H (fhTau π hU) (fhTau_cont π hU)
   have hσ : ∀ g, π (toMK g) = ((fhTau π hU g : unitary (H →L[ℂ] H)) : H →L[ℂ] H) :=
     fun g => (fhTau_coe π hU g).symm

@@ -69,7 +69,7 @@ theorem fubini_compact_quotient : ∀ (H : Type) [Group H] [TopologicalSpace H] 
   intro H _ _ _ _ _ _ _ _ μ _ Γ hΓc hΓd hK 𝓕 h𝓕 X _ m _ f hf hinv hB
   obtain ⟨K, hKc, hKcov⟩ := hK
   obtain ⟨B, hB⟩ := hB K hKc
-  haveI : Countable Γ := hΓc
+  have : Countable Γ := hΓc
 
   have hbd : ∀ h, ∫⁻ x, ‖f h x‖ₑ ∂m ≤ B := by
     intro h
@@ -93,7 +93,7 @@ theorem fubini_compact_quotient : ∀ (H : Type) [Group H] [TopologicalSpace H] 
     exact hle.trans_lt hKc.measure_lt_top
   refine ⟨hf.aestronglyMeasurable, ?_⟩
   have hm : AEMeasurable (fun z : H × X => ‖Function.uncurry f z‖ₑ) ((μ.restrict 𝓕).prod m) :=
-    hf.enorm.aemeasurable
+    hf.eNorm.aemeasurable
   rw [HasFiniteIntegral, lintegral_prod _ hm]
   calc ∫⁻ h, ∫⁻ x, ‖Function.uncurry f (h, x)‖ₑ ∂m ∂(μ.restrict 𝓕)
       ≤ ∫⁻ _, (B : ENNReal) ∂(μ.restrict 𝓕) := lintegral_mono (fun h => hbd h)

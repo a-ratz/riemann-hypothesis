@@ -323,7 +323,7 @@ theorem normVal_eq_of_places {LL : Type} [Field LL] (vw : AddValuation LL (WithT
     · linarith
     · linarith
   unfold nval
-  rw [hA1, hB1, hA2, hB2, ENat.toNat_coe, ENat.toNat_coe, ENat.toNat_coe, ENat.toNat_coe,
+  rw [hA1, hB1, hA2, hB2, ENat.toNat_natCast, ENat.toNat_natCast, ENat.toNat_natCast, ENat.toNat_natCast,
     div_eq_div_iff (by exact_mod_cast hA10) (by exact_mod_cast hA20)]
   exact_mod_cast heq
 
@@ -383,8 +383,8 @@ theorem conductor_le_tameVal : ∀ (D : D7) (C : NChoice D), NChTie D C → ∀ 
       IsLocalRing.maximalIdeal (D.ntw.Ok (C.twI (D.nd.w i)) (C.k' (D.nd.w i))) := by
     rw [← hl']
     exact l_mem_maximalIdeal (C.twI (D.nd.w i)) (C.k' (D.nd.w i))
-  haveI := C.Oe_loc (D.nd.w i)
-  haveI := C.Oe_fin (D.nd.w i)
+  have := C.Oe_loc (D.nd.w i)
+  have := C.Oe_fin (D.nd.w i)
   have hl2 : ((D.nd.l i : ℕ) : C.Oe (D.nd.w i)) ∈ IsLocalRing.maximalIdeal (C.Oe (D.nd.w i)) := by
     rw [← map_natCast (algebraMap (D.ntw.Ok (C.twI (D.nd.w i)) (C.k' (D.nd.w i))) (C.Oe (D.nd.w i)))]
     refine (IsLocalRing.mem_maximalIdeal _).2 fun hu => ?_
@@ -499,7 +499,7 @@ theorem cH_mem_H1ur (J : Subgroup G) (x : H1 ρ') (hx : x ∈ H1ur ρ' J) :
     cH ρ ρ' u hu he x ∈ H1ur ρ J := by
   unfold H1ur at hx ⊢
   rw [LinearMap.mem_ker] at hx ⊢
-  exact (res_cH ρ ρ' u hu he J.subtype continuous_subtype_val x).trans
+  exact (res_cH ρ ρ' u hu he J.subtype continuous_subtypeVal x).trans
     ((congrArg _ hx).trans (map_zero _))
 
 theorem cH_mem_Sel {I : Type} {Dc : I → Type} [∀ v, Group (Dc v)] [∀ v, TopologicalSpace (Dc v)]
@@ -666,7 +666,7 @@ theorem exists_lift {k : ℕ} (M : ↥Gw →* Matrix (Fin k) (Fin k) O) (hM : �
       change Continuous fun g => (∑ j, ((B.eO (M (B.e.symm g) a j) : Br.Ow B) : Br.LLw B) * m j) - m a
       refine Continuous.sub (continuous_finsetSum _ fun j _ => Continuous.mul ?_ continuous_const)
         continuous_const
-      exact continuous_subtype_val.comp (B.eO_cont.comp ((hM a j).comp B.e_symm_cont))
+      exact continuous_subtypeVal.comp (B.eO_cont.comp ((hM a j).comp B.e_symm_cont))
     · simp [cob]
     · simp [cob, actVB, TensorProduct.sub_tmul]
   refine ⟨_, add_mem hz hcob, ?_⟩
@@ -700,7 +700,7 @@ theorem nlen_le_lenN {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRi
   · intro h1
     have h2 : Module.length O A ≠ ⊤ := fun h3 => h1 (by
       rw [(top_le_iff.1 (h3 ▸ h) : Module.length O A' = ⊤), ENat.toENNReal_top, ENNReal.top_div_of_ne_top (ENNReal.natCast_ne_top _)])
-    rw [if_neg h2]
+    rw [ite_eq_right h2]
     exact WithTop.coe_ne_top
   · intro q hq
     split_ifs at hq with h2
@@ -711,7 +711,7 @@ theorem nlen_le_lenN {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRi
       generalize (IsDiscreteValuationRing.addVal O (l : O)).toNat = a
       rcases Nat.eq_zero_or_pos a with rfl | ha
       · simp
-      · rw [ENat.toNat_coe, Rat.cast_div, Rat.cast_natCast, Rat.cast_natCast,
+      · rw [ENat.toNat_natCast, Rat.cast_div, Rat.cast_natCast, Rat.cast_natCast,
           ENNReal.ofReal_div_of_pos (by exact_mod_cast ha), ENNReal.ofReal_natCast, ENNReal.ofReal_natCast]
         exact ENNReal.div_le_div_right (by simpa using ENat.toENNReal_le.2 h) _
 
@@ -772,7 +772,7 @@ theorem cond_le (v : PlE D.host) (hv : v ∈ placesOver D.host.E (D.ntw.l i))
       (latT D.ntw i s g.1).map (toOk D.ntw i k) := fun g => by
     simp [latTpsi, twistM, mapM, hψ g.1 g.2]
   obtain ⟨z, hz, y, hy, hc⟩ := exists_lift (D.loc (D.ntw.l i)) (D.ntwbr i v hv)
-    ((latT D.ntw i s).comp (decS D.nd v)) (fun a b => (latT_cont D i s a b).comp continuous_subtype_val) c₀ h₀
+    ((latT D.ntw i s).comp (decS D.nd v)) (fun a b => (latT_cont D i s a b).comp continuous_subtypeVal) c₀ h₀
   rw [rep_eq] at hz
   refine ⟨⟨(continuous_of_discreteTopology (f := pushKO _ (toOk_inj D.ntw i k) D.R.r)).comp c₀.2.1,
     fun g h => ?_⟩, Submodule.subset_span
@@ -1140,11 +1140,11 @@ theorem exists_coords {O₀ O : Type} [CommRing O₀] [IsDomain O₀] [IsDiscret
       (∀ a y x, p a (fracMap f hf y * x) = y * p a x) ∧
       (∀ a (c : O), ∃ d : O₀, p a (algebraMap O _ c) = algebraMap O₀ _ d) ∧
       ∀ x, ∑ a, b a • fracMap f hf (p a x) = x := by
-  letI := f.toAlgebra
-  haveI : IsScalarTower ℤ_[l] O₀ O := IsScalarTower.of_algebraMap_eq fun z => (hz z).symm
-  haveI : Module.Finite O₀ O := Module.Finite.of_restrictScalars_finite ℤ_[l] O₀ O
-  haveI : FaithfulSMul O₀ O := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
-  letI := FractionRing.liftAlgebra O₀ (FractionRing O)
+  let := f.toAlgebra
+  have : IsScalarTower ℤ_[l] O₀ O := IsScalarTower.of_algebraMap_eq fun z => (hz z).symm
+  have : Module.Finite O₀ O := Module.Finite.of_restrictScalars_finite ℤ_[l] O₀ O
+  have : FaithfulSMul O₀ O := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
+  let := FractionRing.liftAlgebra O₀ (FractionRing O)
   let b := Module.Free.chooseBasis O₀ O
   have he : ∀ y, fracMap f hf y = algebraMap (FractionRing O₀) (FractionRing O) y := by
     intro y
@@ -1324,8 +1324,8 @@ theorem res_map (rho rho' : Representation R G M) (u : M →ₗ[R] M) (hu : Cont
 theorem ur_map (rho rho' : Representation R G M) (u : M →ₗ[R] M) (hu : Continuous u)
     (he : ∀ g m, u (rho g m) = rho' g (u m)) (J : Subgroup G) (x : H1 rho)
     (hx : x ∈ H1ur rho J) : mapH1 rho rho' u hu he x ∈ H1ur rho' J := by
-  have hx' : resH1 rho J.subtype continuous_subtype_val x = 0 := hx
-  exact (res_map rho rho' u hu he J.subtype continuous_subtype_val x).trans
+  have hx' : resH1 rho J.subtype continuous_subtypeVal x = 0 := hx
+  exact (res_map rho rho' u hu he J.subtype continuous_subtypeVal x).trans
     ((congrArg _ hx').trans (map_zero _))
 
 theorem map_left_inv (rho rho' : Representation R G M) (u u' : M →ₗ[R] M) (hu : Continuous u)
@@ -1408,7 +1408,7 @@ theorem sel_map (M M' : Formalism.ConjugateSelfDual.G E Ω →* Matrix (Fin k) (
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   refine (res_map (WKG M) (WKG M') (qMat (FractionRing O) U) continuous_of_discreteTopology
-    (qMat_equiv M M' U h) (Dec (F := E) (A.1 v)).subtype continuous_subtype_val x).symm ▸ ?_
+    (qMat_equiv M M' U h) (Dec (F := E) (A.1 v)).subtype continuous_subtypeVal x).symm ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · unfold Br.LlG at hv ⊢
@@ -1502,7 +1502,7 @@ theorem selT_eq_selG (a : D.nd.Loc) (s : D.ntw.Sig (D.ntw.twOf a)) (ψ : Formali
   rw [hS]
   by_cases hv : v ∈ placesOver D.host.E (D.nd.l a)
   · have hv' : v ∈ placesOver D.host.E (D.ntw.l (D.ntw.twOf a)) := by rw [hl]; exact hv
-    refine (if_pos hv').trans (Eq.trans ?_ (if_pos hv).symm)
+    refine (ite_eq_left hv').trans (Eq.trans ?_ (ite_eq_left hv).symm)
     unfold condL Br.LlG
     rw [dite_eq_left hv, dite_eq_left hv']
     have := IsAlgClosure.isAlgClosed D.host.E (K := D.nd.Om)
@@ -1512,7 +1512,7 @@ theorem selT_eq_selG (a : D.nd.Loc) (s : D.ntw.Sig (D.ntw.twOf a)) (ψ : Formali
     ext g i j
     simp [latTpsi, twistM, mapM, hψ v hv g.1 g.2]
   · have hv' : v ∉ placesOver D.host.E (D.ntw.l (D.ntw.twOf a)) := by rw [hl]; exact hv
-    exact (if_neg hv').trans (if_neg hv).symm
+    exact (ite_eq_right hv').trans (ite_eq_right hv).symm
 
 theorem nlen_congr {O : Type} [CommRing O] (l : ℕ) (M N : Type) [AddCommGroup M] [Module O M]
     [AddCommGroup N] [Module O N] (h : Module.length O M = Module.length O N) :
@@ -1745,14 +1745,14 @@ theorem sel_at (hC : GlobalTheory.TwSys.Cheb) (D : D7) (hT : TriplesGood D) (hG 
     unfold Br.sFin
     rw [lt_top_iff_ne_top]
     intro h4
-    exact h3 (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, if_true])
+    exact h3 (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, ite_true])
   · by_cases h4 : Module.length (D.nd.O a) ↥(Br.selPi D.loc D.nbr a ρ π) = ⊤
     · have h5 : BlochKatoReduction.Gen.sLen (BlochKatoReduction.bk0 D) _ s k (D.nd.Q a) ψ = ⊤ := by
         by_contra hne
-        exact h1 hne (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, if_true])
+        exact h1 hne (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, ite_true])
       rw [h5]
       exact le_top
-    · exact h2 _ (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, if_false, Br.sPi])
+    · exact h2 _ (by simp only [GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.sPiTop, GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.nlen, h4, ite_false, Br.sPi])
 
 theorem selCore : GlobalTheory.TwSys.Cheb → ∀ (D : D7) (C : NChoice D), NChTie D C → TriplesGood D → GoodPtRow D →
     ResAbsIrr D → SameTwist D C →

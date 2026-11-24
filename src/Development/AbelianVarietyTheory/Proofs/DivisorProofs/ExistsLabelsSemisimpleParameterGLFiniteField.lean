@@ -51,7 +51,7 @@ variable {p : ℕ} [Fact p.Prime]
 theorem exists_labelsChar_of_pos (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < d) (θ : Tor p d →* ℂˣ) :
     ∃ x : Fbar p, LabelsChar L θ x := by
   have hp : 0 < p ^ d - 1 := Nat.sub_pos_of_lt (Nat.one_lt_pow hd.ne' (Fact.out : p.Prime).one_lt)
-  haveI : NeZero (p ^ d - 1) := ⟨hp.ne'⟩
+  have : NeZero (p ^ d - 1) := ⟨hp.ne'⟩
   have hprim : IsPrimitiveRoot (L.gen d) (p ^ d - 1) := L.gen_order d hd ▸ IsPrimitiveRoot.orderOf _
   have h0 : L.gen d ≠ 0 := hprim.ne_zero hp.ne'
   have hprimC : IsPrimitiveRoot (L.teich (L.gen d)) (p ^ d - 1) := by

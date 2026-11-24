@@ -161,7 +161,7 @@ variable (P : _root_.GlobalTheory.UTr.Csr s) in
 theorem _root_.GlobalTheory.UTr.eval₂_gamma_inv :
     P.1.eval₂ ((algebraMap B (_root_.GlobalTheory.UTr.Alg P)).comp s)
       ((_root_.GlobalTheory.UTr.gamma P)⁻¹ : (_root_.GlobalTheory.UTr.Alg P)ˣ) = 0 := by
-  letI := (_root_.GlobalTheory.UTr.gamma P)⁻¹.invertible
+  let := (_root_.GlobalTheory.UTr.gamma P)⁻¹.invertible
   have key := eval₂_reflect_mul_pow (algebraMap B (_root_.GlobalTheory.UTr.Alg P))
     (((_root_.GlobalTheory.UTr.gamma P)⁻¹ : (_root_.GlobalTheory.UTr.Alg P)ˣ) :
       _root_.GlobalTheory.UTr.Alg P) P.1.natDegree (P.1.map s) (natDegree_map_le)

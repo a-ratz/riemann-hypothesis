@@ -388,7 +388,7 @@ theorem pb_dom (a : ℂ) (ha : a = Complex.I ∨ a = -Complex.I) (lam : Fin n �
     have e1 : ((1 - a • b) *ᵥ x) i0 = x i0 - a * ∑ j, b i0 j * x j := by
       simp only [Matrix.mulVec, dotProduct, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, sub_mul,
         Finset.sum_sub_distrib, Finset.mul_sum, Matrix.one_apply, ite_mul, one_mul, zero_mul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_assoc]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true, mul_assoc]
     rw [e1]; simp only [sub_mul, Finset.sum_sub_distrib, hD]; ring
   have hsum : ‖∑ j, (b i0 j - Matrix.diagonal (fun i => (lam i : ℂ)) i0 j) * x j‖ ≤ (n : ℝ) * (c₀ * pbwt lam i0 * m) := by
     calc ‖∑ j, (b i0 j - Matrix.diagonal (fun i => (lam i : ℂ)) i0 j) * x j‖ ≤ ∑ j, ‖(b i0 j - Matrix.diagonal (fun i => (lam i : ℂ)) i0 j) * x j‖ := norm_sum_le _ _
@@ -621,8 +621,8 @@ theorem pBound : PBound := by
     apply hCR
     rintro ⟨t, i, j⟩
     cases t
-    · simp only [Bool.false_eq_true, if_false]; rw [i1]; exact hent _ hY1 i j
-    · simp only [if_true]; rw [i2]; exact hent _ hY2 i j
+    · simp only [Bool.false_eq_true, ite_false]; rw [i1]; exact hent _ hY1 i j
+    · simp only [ite_true]; rw [i2]; exact hent _ hY2 i j
   have hrp : P ^ (-((p + q : ℕ) : ℝ)) = (P ^ (p + q))⁻¹ := by
     rw [Real.rpow_neg hP.le, Real.rpow_natCast]
   show ‖(1 - (Complex.I * s) • (k * b * kᴴ))⁻¹.det ^ p * (1 + (Complex.I * s) • (k * b * kᴴ))⁻¹.det ^ q *
@@ -658,8 +658,8 @@ variable {n : ℕ}
 
 theorem contDiffOn_cpart {F : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U)
     (hF : ContDiffOn ℂ (⊤ : ℕ∞) F U) (i j : Fin n) : ContDiffOn ℂ (⊤ : ℕ∞) (cpart i j F) U := by
-  letI : NormedAddCommGroup (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedAddCommGroup
-  letI : NormedSpace ℂ (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedSpace
+  let : NormedAddCommGroup (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedAddCommGroup
+  let : NormedSpace ℂ (Mc n →L[ℂ] ℂ) := ContinuousLinearMap.toNormedSpace
   have hle : ((⊤ : ℕ∞) : WithTop ℕ∞) + 1 ≤ ((⊤ : ℕ∞) : WithTop ℕ∞) := by
     rw [← WithTop.coe_one, ← WithTop.coe_add, top_add]
   have h1 : ContDiffOn ℂ (⊤ : ℕ∞) (fun b => fderiv ℂ F b) U :=
@@ -682,7 +682,7 @@ theorem shift_apply (b : Mc n) (w : ℂ) (i j a c : Fin n) :
   by_cases h : i = a ∧ j = c
   · obtain ⟨rfl, rfl⟩ := h
     simp
-  · rw [Matrix.single_apply_of_ne _ _ _ _ _ h, if_neg h, mul_zero]
+  · rw [Matrix.single_apply_of_ne _ _ _ _ _ h, ite_eq_right h, mul_zero]
 
 theorem shift_mem (b : Mc n) {r : Fin n → Fin n → ℝ} (hr : ∀ i j, 0 < r i j) (i j : Fin n) {w : ℂ}
     (hw : ‖w‖ ≤ r i j) : b + w • Matrix.single i j (1 : ℂ) ∈ pdisc b r := by
@@ -875,14 +875,14 @@ theorem dirC_mul {f g : E n → ℂ} {y : E n} (hf : DifferentiableAt ℝ f y) (
     (w : Fin n → Fin n → ℂ) : dirC (fun x => f x * g x) w y = f y * dirC g w y + g y * dirC f w y := by
   unfold dirC
   rw [fderiv_fun_mul hf hg]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem dirC_const_mul {f : E n → ℂ} {y : E n} (hf : DifferentiableAt ℝ f y) (a : ℂ)
     (w : Fin n → Fin n → ℂ) : dirC (fun x => a * f x) w y = a * dirC f w y := by
   unfold dirC
   rw [(hf.hasFDerivAt.const_mul a).fderiv]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem dirC_sum {ι : Type*} (s : Finset ι) {A : ι → E n → ℂ} {y : E n}
@@ -890,14 +890,14 @@ theorem dirC_sum {ι : Type*} (s : Finset ι) {A : ι → E n → ℂ} {y : E n}
     dirC (fun x => ∑ i ∈ s, A i x) w y = ∑ i ∈ s, dirC (A i) w y := by
   unfold dirC
   rw [(HasFDerivAt.fun_sum (fun i hi => (h i hi).hasFDerivAt)).fderiv]
-  simp only [ContinuousLinearMap.sum_apply]
+  simp only [sum_apply]
   rw [Finset.mul_sum, ← Finset.sum_add_distrib]
 
 theorem dirC_exp {g : E n → ℂ} {y : E n} (hg : DifferentiableAt ℝ g y) (w : Fin n → Fin n → ℂ) :
     dirC (fun x => Complex.exp (g x)) w y = Complex.exp (g y) * dirC g w y := by
   unfold dirC
   rw [hg.hasFDerivAt.cexp.fderiv]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem dirC_zero (w : Fin n → Fin n → ℂ) (y : E n) : dirC (0 : E n → ℂ) w y = 0 := by
@@ -1105,11 +1105,11 @@ theorem twist : Twist := by
   have hc0 : ∀ j, ContDiff ℝ (⊤ : ℕ∞) (c0 j) := by
     intro j
     by_cases h : j = 0
-    · simp only [c0, h, if_true]; exact hH
-    · simp only [c0, h, if_false]; exact contDiff_const
+    · simp only [c0, h, ite_true]; exact hH
+    · simp only [c0, h, ite_false]; exact contDiff_const
   have hc0s : ∀ j, 1 ≤ j → c0 j = 0 := by
     intro j hj
-    simp only [c0, show j ≠ 0 by omega, if_false]
+    simp only [c0, show j ≠ 0 by omega, ite_false]
   refine ⟨TDelta^[N] c0, iter_smooth N hc0, ?_⟩
   intro z y
   have h0 : (fun y => ((dP y : ℝ) : ℂ) ^ (-z) * H y) =

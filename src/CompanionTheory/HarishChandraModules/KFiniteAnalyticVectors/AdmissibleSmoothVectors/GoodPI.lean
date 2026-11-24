@@ -197,7 +197,7 @@ theorem goodPI_of (hS : SmallPI) : GoodPI := by
   refine eq_top_of_minimal (fun x => ρ x) (fun x => ⟨st x, hρ.adj x⟩) _ fun W hW0 hWs hmin => ?_
   obtain ⟨w₀, hw₀, hne, heig⟩ := exists_common_eigenvector h hinj W hW0
   have hcont : Continuous fun x : K => ρ x *ᵥ w₀ :=
-    (hρ.cont.comp continuous_subtype_val).matrix_mulVec continuous_const
+    (hρ.cont.comp continuous_subtypeVal).matrix_mulVec continuous_const
   have hint : ∀ i, Integrable (fun x : K => φ i x • (ρ x *ᵥ w₀)) μ := fun i =>
     ((hφc i).smul hcont).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   set θ : Fin d → ι → ℂ := fun i => ∫ x : K, φ i x • (ρ x *ᵥ w₀) ∂μ with hθ

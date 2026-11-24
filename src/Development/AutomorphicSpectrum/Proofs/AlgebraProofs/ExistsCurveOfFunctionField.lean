@@ -139,7 +139,7 @@ theorem exists_curve_of_function_field :
         ∀ W : ValuationSubring κ, W ≠ ⊤ → (∀ a : k, algebraMap k κ a ∈ W) →
           ∃! i, (C.v i).valuationSubring = W := by
   intro k κ _ _ _ hfg htr
-  haveI : IsFunctionField k κ := isFunctionField_of_fg_trdeg hfg htr
+  have : IsFunctionField k κ := isFunctionField_of_fg_trdeg hfg htr
   have key : ∀ i : Place k κ, (i.valuation).valuationSubring = i.ring := fun i => by
     ext y
     rw [Valuation.mem_valuationSubring_iff]

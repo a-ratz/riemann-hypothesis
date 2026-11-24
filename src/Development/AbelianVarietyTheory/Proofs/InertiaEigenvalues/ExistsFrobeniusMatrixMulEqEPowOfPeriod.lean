@@ -79,7 +79,7 @@ theorem C_dvd_iff {R : Type} [CommRing R] (p : R) (f : R⟦X⟧) :
     exact (h n).choose_spec
 
 theorem prime_C {R : Type} [CommRing R] [IsDomain R] {p : R} (hp : Prime p) : Prime (C p : R⟦X⟧) := by
-  haveI : (Ideal.span {p}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp
+  have : (Ideal.span {p}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp
   let q : R →+* R ⧸ Ideal.span {p} := Ideal.Quotient.mk _
   have key : ∀ f : R⟦X⟧, C p ∣ f ↔ PowerSeries.map q f = 0 := by
     intro f
@@ -92,7 +92,7 @@ theorem prime_C {R : Type} [CommRing R] [IsDomain R] {p : R} (hp : Prime p) : Pr
       have := congrArg (coeff n) h
       rw [coeff_map, map_zero] at this
       exact Ideal.mem_span_singleton.1 (Ideal.Quotient.eq_zero_iff_mem.1 this)
-  refine ⟨fun h => hp.ne_zero (by simpa using congrArg (constantCoeff) h), fun h => hp.not_unit ?_, ?_⟩
+  refine ⟨fun h => hp.ne_zero (by simpa using congrArg (constantCoeff) h), fun h => hp.not_isUnit ?_, ?_⟩
   · simpa using h.map (constantCoeff (R := R))
   · intro f g hfg
     rw [key, key]

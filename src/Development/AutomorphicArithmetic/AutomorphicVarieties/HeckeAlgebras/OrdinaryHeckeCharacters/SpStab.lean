@@ -91,8 +91,8 @@ private theorem spStab_rp (b : Gp) (f : X.Fn A m) (g : Ga × Gp) : X.rp A m b f 
 
 private theorem spStab_U {a : Gp} (ha : a ∈ X.I.P) :
     ∃ (ι : Type) (s : Finset ι) (b : ι → Gp), ∀ f : X.Fn A m, X.U A m a f = ∑ i ∈ s, X.rp A m (b i) f := by
-  haveI : ((X.I.Nconj a).subgroupOf X.I.N).FiniteIndex := ⟨X.I.fin_N a ha⟩
-  haveI : Fintype (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N) := Fintype.ofFinite _
+  have : ((X.I.Nconj a).subgroupOf X.I.N).FiniteIndex := ⟨X.I.fin_N a ha⟩
+  have : Fintype (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N) := Fintype.ofFinite _
   refine ⟨X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N, Finset.univ, fun q => (q.out : X.I.N) * a, fun f => ?_⟩
   unfold Frame.U Iwa.uOp
   rw [finsum_eq_sum_of_fintype, LinearMap.sum_apply]
@@ -221,7 +221,7 @@ theorem UpperTheory.V.Hi.spStab :
     rw [← (key _).2, ← map_sub]
     exact spStab_valU X k ha _ hn
   · intro U V K K' x hfin hfix f hf
-    letI : Fintype (MulAction.orbit K (x : X.Ub ⧸ K')) := hfin.fintype
+    let : Fintype (MulAction.orbit K (x : X.Ub ⧸ K')) := hfin.fintype
     have hdc : ∀ v, dc (X.ra τ) K K' x v =
         ∑ q : MulAction.orbit K (x : X.Ub ⧸ K'), X.ra τ (q : X.Ub ⧸ K').out v := fun v => by
       rw [dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply]

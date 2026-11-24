@@ -259,10 +259,10 @@ theorem decomp {r : ℕ} (e f : Fin r → S.V) (hee : ∀ a b, S.hT (e a) (e b) 
   constructor
 
   · simp only [map_sub, map_sum, map_smul, hee, hef, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
 
   · simp only [map_sub, map_sum, map_smul, hff, hfe, smul_eq_mul, mul_zero, Finset.sum_const_zero,
-    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+    mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
 
 theorem key_split (Λ : Submodule (𝓞 E) S.V) {r : ℕ} (e f : Fin r → S.V)
     (P Q : Fin r → FractionalIdeal (nonZeroDivisors (𝓞 E)) E) (hee : ∀ a b, S.hT (e a) (e b) = 0)
@@ -336,7 +336,7 @@ theorem zero_of_dual {r : ℕ} {e f : Fin r → S.V} (hfe : ∀ a b, S.hT (f a) 
     have h := h0 b
 
     simp only [map_sum, map_smul, hfe, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true] at h
+    Finset.mem_univ, ite_true] at h
     exact h
   simp [ht]
 
@@ -382,17 +382,17 @@ open Formalism.L2.SG.Saturated
 
 theorem fi_neg {E : Type} [Field E] [NumberField E] {I : FractionalIdeal (nonZeroDivisors (𝓞 E)) E} {u : E}
     (hu : u ∈ I) : -u ∈ I :=
-  FractionalIdeal.mem_coe.1 (Submodule.neg_mem _ (FractionalIdeal.mem_coe.2 hu))
+  FractionalIdeal.mem_coeToSubmodule.1 (Submodule.neg_mem _ (FractionalIdeal.mem_coeToSubmodule.2 hu))
 
 theorem fi_sum {E : Type} [Field E] [NumberField E] {I : FractionalIdeal (nonZeroDivisors (𝓞 E)) E} {r : ℕ}
     (g : Fin r → E) (hg : ∀ k, g k ∈ I) : ∑ k, g k ∈ I :=
-  FractionalIdeal.mem_coe.1 (Submodule.sum_mem _ (fun k _ => FractionalIdeal.mem_coe.2 (hg k)))
+  FractionalIdeal.mem_coeToSubmodule.1 (Submodule.sum_mem _ (fun k _ => FractionalIdeal.mem_coeToSubmodule.2 (hg k)))
 
 theorem fi_intm {E : Type} [Field E] [NumberField E] {I : FractionalIdeal (nonZeroDivisors (𝓞 E)) E}
     (o : 𝓞 E) {t : E} (ht : t ∈ I) : (o : E) * t ∈ I := by
-  have h1 := Submodule.smul_mem (I : Submodule (𝓞 E) E) o (FractionalIdeal.mem_coe.2 ht)
+  have h1 := Submodule.smul_mem (I : Submodule (𝓞 E) E) o (FractionalIdeal.mem_coeToSubmodule.2 ht)
   rw [Algebra.smul_def] at h1
-  exact FractionalIdeal.mem_coe.1 h1
+  exact FractionalIdeal.mem_coeToSubmodule.1 h1
 
 theorem genFrame_holds : GenFrame := by
   apply GlobalTheory.St.Lat.genFrame_holds <;> assumption
@@ -602,7 +602,7 @@ theorem exists_gen {I : FractionalIdeal (nonZeroDivisors (𝓞 E)) E} (hI : I �
     have h2 : I * (P : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) = I * 1 := by rw [h, mul_one]
     have h3 := mul_left_cancel₀ hI h2
     exact hP (by rw [FractionalIdeal.coeIdeal_eq_one.1 h3, Ideal.one_eq_top])
-  obtain ⟨c, hc, hcn⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨c, hc, hcn⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   exact ⟨c, hc, hcn⟩
 
 theorem mem_locP {V : Type} [AddCommGroup V] [Module (𝓞 E) V] (P : Ideal (𝓞 E)) [P.IsPrime]
@@ -858,7 +858,7 @@ theorem lat_riesz (φ : (VS D).V →ₗ[D.host.E] D.host.E) : ∃ μ : (VS D).V,
       congr 1
       rw [← (VS D).herm.eq ((VS D).frame i) (bs j), hbs]
       split_ifs <;> simp
-    simp only [hs, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hs, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [key]
 
 private theorem lat_span_eq_top_of_unimodular {Λ : Submodule (𝓞 D.host.E) (VS D).V}
@@ -920,7 +920,7 @@ theorem latExists_of_steps (hSB : SatBasis) (hPC : PrimesInClasses) (hDd : DdG D
 
       rw [map_sum, map_zero, Fin.sum_univ_castSucc] at h1
       simp only [wf, map_smul, Fin.snoc_castSucc, Fin.snoc_last, (hwo j).2, hfe_hyp, smul_eq_mul, mul_zero,
-        add_zero, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
+        add_zero, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h1
       exact h1
     have hl : g (Fin.last _) = 0 := by
       rw [Fin.sum_univ_castSucc] at hg
@@ -938,7 +938,7 @@ theorem latExists_of_steps (hSB : SatBasis) (hPC : PrimesInClasses) (hDd : DdG D
     · exact D.sp.hyp_ee i j
   have haa := PI.SRW.adjoint_action_reduction D
   have hfull : Submodule.IsFullLattice D.host.E (VS D).L0 := by
-    letI := (VS D).standardTuple_isLattice
+    let := (VS D).standardTuple_isLattice
     exact ⟨lat_span_eq_top_of_unimodular D (VS D).standardTuple_isLattice.fg (VS D).baseLattice_isUnimodular⟩
   obtain ⟨e', c, hind', hspan, hc0, hX⟩ :=
     hSB D.host.E (VS D) (VS D).L0 hfull D.R.rS wf hind (aaS D) (fun a => (haa a).1)
@@ -982,9 +982,9 @@ theorem latExists_of_steps (hSB : SatBasis) (hPC : PrimesInClasses) (hDd : DdG D
   have hflc : ∀ y ∈ (VS D).L0, (VS D).hT fl y ∈ c := fun y hy => by simpa [cc] using hf'Λ (Fin.last _) y hy
   have hl1 : ∀ a, (VS D).hT (eX a) el = 0 := fun a => he'iso _ _
   have hl2 : ∀ a, (VS D).hT (eX a) fl = 0 := fun a => by
-    simp only [eX, fl, he'f']; rw [if_neg (Fin.castSucc_ne_last a)]
+    simp only [eX, fl, he'f']; rw [ite_eq_right (Fin.castSucc_ne_last a)]
   have hl3 : ∀ a, (VS D).hT (fY a) el = 0 := fun a => by
-    rw [← hconj]; simp only [fY, el, he'f']; rw [if_neg (Fin.castSucc_ne_last a).symm, star_zero]
+    rw [← hconj]; simp only [fY, el, he'f']; rw [ite_eq_right (Fin.castSucc_ne_last a).symm, star_zero]
   have hl4 : ∀ a, (VS D).hT (fY a) fl = 0 := fun a => hf'iso _ _
 
   have hz : ∀ u : D.what₂.Word, ∃ z : (VS D).V, z ∈ Submodule.span D.host.E {el, fl} ∧ z ∈ (VS D).L0 ∧

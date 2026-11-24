@@ -210,7 +210,7 @@ theorem rowLat_map (hL : LatIso D) {T : D.host.E} (β : (VS D).V ≃ₗ[D.host.E
     rw [Submodule.map_span]
     congr 1
     ext y
-    simp only [Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_image, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨y0, ⟨a, x, hx, rfl⟩, rfl⟩
       exact ⟨a, x, hx, by simp [Formalism.L2.SG.Saturated.mapFlag]⟩

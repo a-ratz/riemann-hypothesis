@@ -78,7 +78,7 @@ lemma bt_mul_diag {α : Type*} [LinearOrder α] {b : Fin m → α} (hb : Functio
 lemma bt_inv_facts {α : Type*} [LinearOrder α] {b : Fin m → α} (hb : Function.Injective b)
     {M : Matrix (Fin m) (Fin m) ℂ} (hM : M.BlockTriangular b) (hd : ∀ i, M i i = 1) (hu : IsUnit M.det) :
     M⁻¹.BlockTriangular b ∧ ∀ i, M⁻¹ i i = 1 := by
-  haveI := M.invertibleOfIsUnitDet hu
+  have := M.invertibleOfIsUnitDet hu
   have hi := Matrix.blockTriangular_inv_of_blockTriangular hM
   refine ⟨hi, fun i => ?_⟩
   have := congrFun (congrFun (Matrix.mul_nonsing_inv M hu) i) i
@@ -86,11 +86,11 @@ lemma bt_inv_facts {α : Type*} [LinearOrder α] {b : Fin m → α} (hb : Functi
   exact this
 
 lemma ut_det {u : Matrix (Fin m) (Fin m) ℂ} (hu : u ∈ C2.UTset m) : u.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (ut_bt hu)]
+  rw [det_of_isUpperTriangular (ut_bt hu)]
   simp [hu.2]
 
 lemma lt_det {l : Matrix (Fin m) (Fin m) ℂ} (hl : l ∈ C2.LTset m) : l.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular _ (lt_bt hl)]
+  rw [det_of_isLowerTriangular _ (lt_bt hl)]
   simp [hl.2]
 
 lemma ut_unit {u : Matrix (Fin m) (Fin m) ℂ} (hu : u ∈ C2.UTset m) : IsUnit u.det := by
@@ -132,8 +132,8 @@ lemma monomialMatrix_inv_left (w : Equiv.Perm (Fin m)) (d : Fin m → ℂ) (hd :
   rw [Finset.sum_eq_single (w j)]
   · by_cases hij : i = j
     · subst hij; simp [hd i]
-    · rw [if_neg (by simpa using hij), zero_mul, Matrix.one_apply_ne hij]
-  · intro k _ hk; rw [if_neg hk, mul_zero]
+    · rw [ite_eq_right (by simpa using hij), zero_mul, Matrix.one_apply_ne hij]
+  · intro k _ hk; rw [ite_eq_right hk, mul_zero]
   · simp
 
 lemma isUnit_det_monomialMatrix (w : Equiv.Perm (Fin m)) (d : Fin m → ℂ) (hd : ∀ a, d a ≠ 0) : IsUnit (C2.monoP w d).det :=
@@ -149,12 +149,12 @@ lemma monomialMatrix_conj_apply (w : Equiv.Perm (Fin m)) (d : Fin m → ℂ) (hd
   rw [monomialMatrix_inv w d hd]
   simp only [Matrix.mul_apply, C2.monoP, Matrix.of_apply]
   rw [Finset.sum_eq_single (w b)]
-  · rw [if_pos rfl, Finset.sum_eq_single (w a)]
+  · rw [ite_eq_left rfl, Finset.sum_eq_single (w a)]
     · simp
     · intro k _ hk
-      rw [if_neg (fun e => hk (by rw [e]; simp)), zero_mul]
+      rw [ite_eq_right (fun e => hk (by rw [e]; simp)), zero_mul]
     · simp
-  · intro k _ hk; rw [if_neg hk, mul_zero]
+  · intro k _ hk; rw [ite_eq_right hk, mul_zero]
   · simp
 
 lemma isMonomial_unit {P : Matrix (Fin m) (Fin m) ℂ} (hP : C2.IsMonomial P) : IsUnit P.det := by
@@ -169,7 +169,7 @@ theorem unipotent_radical_image : C2.URImage := by
   intro m P hP
   have hPu := isMonomial_unit hP
   ext u
-  simp only [Set.mem_setOf_eq, C2.Lstg]
+  simp only [Set.mem_ofPred_eq, C2.Lstg]
   constructor
   · rintro ⟨hu, u', hu', he⟩
     refine ⟨hu, ut_conjT hu, ?_⟩
@@ -195,19 +195,19 @@ lemma c2x2_lowOf_sub {m : ℕ} (p : Fin m × Fin m → Prop) [DecidablePred p] (
   · rw [Finset.sum_eq_single ⟨(i, j), h⟩]
     · simp
     · intro q _ hq
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e; apply hq; exact Subtype.ext e
     · simp
   · apply Finset.sum_eq_zero
     intro q _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e; apply h; rw [← e]; exact q.2
 
 theorem lower_parabolic_coordinates : C2.LPCoords := by
   intro m w d hd
   constructor
   · ext l
-    simp only [Set.mem_range, C2.LPg, Set.mem_setOf_eq]
+    simp only [Set.mem_range, C2.LPg, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨v, rfl⟩
       refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, ⟨fun a b hab => ?_, fun a => ?_⟩⟩
@@ -246,7 +246,7 @@ theorem lower_parabolic_coordinates : C2.LPCoords := by
             · exact h2.symm
           · exact absurd h1 hdj
   · ext l
-    simp only [Set.mem_range, C2.Lstg, Set.mem_setOf_eq]
+    simp only [Set.mem_range, C2.Lstg, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨v, rfl⟩
       refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, ⟨fun a b hab => ?_, fun a => ?_⟩⟩

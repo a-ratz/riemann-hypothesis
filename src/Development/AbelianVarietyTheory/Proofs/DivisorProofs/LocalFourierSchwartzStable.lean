@@ -83,7 +83,7 @@ theorem isSelfDualFor_measV (ψ : AddChar (AF F) ℂ) (hψ : Continuous ψ) (v :
     IsSelfDualFor (GlobalTheory.LatVac.psiAt ψ v) (measV ψ v) := by
   obtain ⟨χ, c, hc, hχ⟩ := exists_circle_conductor ψ hψ v h1
   have h : ∃ ν, IsSelfDualFor (GlobalTheory.LatVac.psiAt ψ v) ν := by
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     obtain ⟨ν, hν⟩ := GlobalTheory.SplitWeil.exists_isSelfDual_of_hasConductor hc
     refine ⟨ν, hν.1, fun f hf => ?_⟩
     simpa only [hχ] using hν.2 f hf
@@ -99,9 +99,9 @@ theorem fourV_sb : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
   classical
   have hcont : Continuous (GlobalTheory.LatVac.psiAt ψ v) := GlobalTheory.VacAny.continuous_psiV hψ.1 v
   obtain ⟨χ, c, hc, hχ⟩ := exists_circle_conductor ψ hψ.1 v h1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Fv F v) := GlobalTheory.SplitWeil.secondCountable _
-  haveI := (isSelfDualFor_measV ψ hψ.1 v h1).1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : SecondCountableTopology (Fv F v) := GlobalTheory.SplitWeil.secondCountable _
+  have := (isSelfDualFor_measV ψ hψ.1 v h1).1
   refine ⟨fun φ hφ => ?_, fun φ hφ φ' hφ' => ?_, fun w φ hφ => GlobalTheory.SchrSBFin.schr_mem_SB v _ hcont w φ hφ⟩
   · have h := GlobalTheory.SplitWeil.FourierPi.fourier_mem_SB (Measure.pi fun _ : κ => measV ψ v) hc hφ
     simp only [hχ] at h

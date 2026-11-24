@@ -126,8 +126,8 @@ theorem lagrange_eigen_decomposition {ι : Type*} [Fintype ι] [DecidableEq ι] 
       _ = x := by rw [hs, map_one, Module.End.one_apply]
   · rw [aeval_apply_eigenvector_alt T (v j) u hu]
     by_cases h : i = j
-    · subst h; rw [Lagrange.eval_basis_self hinj (Finset.mem_univ _), one_smul, if_pos rfl]
-    · rw [Lagrange.eval_basis_of_ne h (Finset.mem_univ _), zero_smul, if_neg h]
+    · subst h; rw [Lagrange.eval_basis_self hinj (Finset.mem_univ _), one_smul, ite_eq_left rfl]
+    · rw [Lagrange.eval_basis_of_ne h (Finset.mem_univ _), zero_smul, ite_eq_right h]
 
 end Gen
 
@@ -366,7 +366,7 @@ theorem jsetSplit_all : ∀ (D : D7) (HW : HWOf D.loc) (l : ℕ) [Fact l.Prime] 
   have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact Module.finrank_pos.ne')
-  letI := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
+  let := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
   exact jump_exists_of_filtration_strict ((D.loc l).PD K) (by rw [Fintype.card_eq_nat_card, hc]) Y.ρ a ha
 
 end Formalism.MainNotions.N.JsetEmb

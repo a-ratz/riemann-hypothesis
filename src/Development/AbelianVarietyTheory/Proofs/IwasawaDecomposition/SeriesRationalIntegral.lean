@@ -243,7 +243,7 @@ theorem exists_avoid {K : Type} [Field K] [NumberField K] (q : Ideal (𝓞 K)) (
       exact hq.ne_top hpq
     · have h1 : p.asIdeal ≤ q := hq.le_of_pow_le hpq
       exact hs p hp (p.isMaximal.eq_of_le hq.ne_top h1)
-  obtain ⟨t, ht, htq⟩ := SetLike.not_le_iff_exists.1 hle
+  obtain ⟨t, ht, htq⟩ := IsConcreteLE.not_le_iff_exists.1 hle
   exact ⟨t, htq, fun p hp => (Ideal.prod_le_inf.trans (Finset.inf_le hp)) ht⟩
 
 theorem le_vLa_of_mem {K : Type} [Field K] [NumberField K] (p : HeightOneSpectrum (𝓞 K)) {t : 𝓞 K} (n : ℕ)
@@ -524,9 +524,9 @@ theorem bddAll_of_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
     y₂ hfin'
   rw [map_one, one_mul] at hB
   have laws := GlobalTheory.firstFiveLaws.1
-  letI a1 : Algebra C.c'.F T'.Fr := (iT.comp io).toAlgebra
-  letI a2 : Algebra C.d.c₂.F T'.Fr := io₂.toAlgebra
-  letI a0 : Algebra T.Q.c.F T'.Fr := ((iT.comp io).comp (incF T.Q.c C.c' C.hle)).toAlgebra
+  let a1 : Algebra C.c'.F T'.Fr := (iT.comp io).toAlgebra
+  let a2 : Algebra C.d.c₂.F T'.Fr := io₂.toAlgebra
+  let a0 : Algebra T.Q.c.F T'.Fr := ((iT.comp io).comp (incF T.Q.c C.c' C.hle)).toAlgebra
   have hAO : AlgOver T.Q.c C.c' C.hle T'.Fr := fun _ => rfl
   have hcomp : ∀ z : C.c'.F, algebraMap C.d.c₂.F T'.Fr (C.d.eF z) = algebraMap C.c'.F T'.Fr z := hio₂
   have e1 : ∀ b, evI y₂ (f₂ b) = evR (T.Q.Xo j) T.Q.c (f b) (y'.1.res C.hle hAO) := fun b =>
@@ -541,7 +541,7 @@ theorem bddAll_of_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
   have hgs : (∑ b, x b • GlobalTheory.FieldBC.rulBC C.hle (f b)) ∈ sec (T.Q.Xo j) C.c' a n :=
     sum_mem fun b _ => Submodule.smul_mem _ _ (GlobalTheory.FieldBCModel.rulBC_mem_sec C.hle (hf b))
   obtain ⟨φ, hφ, hm⟩ := hext.2.2
-  letI a3 : Algebra C.c'.F Tv.Fr := io.toAlgebra
+  let a3 : Algebra C.c'.F Tv.Fr := io.toAlgebra
   have e4 : evI y' (∑ b, x b • GlobalTheory.FieldBC.rulBC C.hle (f b)) =
       iT (evI y (∑ b, x b • GlobalTheory.FieldBC.rulBC C.hle (f b))) := by
     have := GlobalTheory.PlaceInt.evR_of_frMap_fromTest
@@ -724,12 +724,12 @@ namespace GlobalTheory.InertiaEigenvalues.UnramPlace
 
 theorem exists_place_below : ∀ (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] (φ : K →+* L) (l : ℕ), l.Prime → ∀ la : HeightOneSpectrum (𝓞 L), ((l : ℕ) : 𝓞 L) ∈ la.asIdeal → GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.UnramAt φ {la} → ∃ p : HeightOneSpectrum (𝓞 K), GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.below φ {la} = {p} ∧ ((l : ℕ) : 𝓞 K) ∈ p.asIdeal ∧ ∀ x : K, la.valuation L (φ x) = p.valuation K x := by
   intro K L _ _ _ _ φ l _ la hl hun
-  letI : Algebra K L := φ.toAlgebra
+  let : Algebra K L := φ.toAlgebra
   have hmap : RingOfIntegers.mapRingHom φ = algebraMap (𝓞 K) (𝓞 L) := by
     ext x; rfl
   refine ⟨la.under (𝓞 K), ?_, ?_, ?_⟩
   · ext q
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.below, Set.mem_singleton_iff, exists_eq_left, Set.mem_setOf_eq]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.TwistSeries.below, Set.mem_singleton_iff, exists_eq_left, Set.mem_ofPred_eq]
     rw [hmap]
     exact ⟨fun h => HeightOneSpectrum.ext h, fun h => h ▸ rfl⟩
   · show ((l : ℕ) : 𝓞 K) ∈ la.asIdeal.comap (algebraMap (𝓞 K) (𝓞 L))
@@ -776,7 +776,7 @@ theorem evR_sum_eq {D : D7} (T : CoreJ D) (j : ℕ) (σ : T.Q.c.F →+* ℂ) (C 
     (y : FrPt (T.Q.Xo j) T.Q.c (CAt σ)) :
     (∑ b, C.σ₂ (C.d.eF (x b)) * toC (evR (T.Q.Xo j) T.Q.c (f b) y)) =
       ∑ i, C.σ₂ (C.d.eF (as i)) * toC (evR (T.Q.Xo j) T.Q.c (fs i) y) := by
-  letI : Algebra C.c'.F (CAt σ) := (C.σ₂.comp (C.d.eF : C.c'.F →+* C.d.c₂.F)).toAlgebra
+  let : Algebra C.c'.F (CAt σ) := (C.σ₂.comp (C.d.eF : C.c'.F →+* C.d.c₂.F)).toAlgebra
   have hA : AlgOver T.Q.c C.c' C.hle (CAt σ) := by
     intro c0
     show C.σ₂ (C.d.eF (incF T.Q.c C.c' C.hle c0)) = σ c0
@@ -793,9 +793,9 @@ theorem phiJ_sum_eq_of_isBC : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (σ : T.Q.c.F
     funext k z
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
     by_cases h : z ∈ ((T.U j σ).X k).dom
-    · simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos h]
+    · simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left h]
       exact evR_sum_eq T j σ C hσ a n x f as fs hf hBC ((T.U j σ).un k ⟨z, h⟩)
-    · simp [rdU, dif_neg h]
+    · simp [rdU, dite_eq_right h]
   let L : FDSec (T.U j σ).X →ₗ[ℂ] (GA D (T.V j σ) → ℂ) := (lieFac (T.Q.Dw j) (xiR D) a : ℂ) •
     adel (T.V j σ) (T.dict j σ) (muPin (T.V j σ) (T.dict j σ) (T.mu j σ) (T.cE j σ))
   have e : ∀ g : T.R j, T.phiJ j σ a g = L (rdU (T.U j σ) g) := fun _ => rfl

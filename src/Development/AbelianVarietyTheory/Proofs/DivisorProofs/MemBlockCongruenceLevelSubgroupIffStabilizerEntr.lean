@@ -110,7 +110,7 @@ theorem bt_transfer {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) {d : 
     (Y.map f).BlockTriangular b := by
   have h' : Y.map f * X.map f = 1 := by
     rw [← Matrix.map_mul, h, Matrix.map_one _ f.map_zero f.map_one]
-  letI : Invertible (X.map f) := ⟨Y.map f, h', mul_eq_one_comm.mp h'⟩
+  let : Invertible (X.map f) := ⟨Y.map f, h', mul_eq_one_comm.mp h'⟩
   have := Matrix.blockTriangular_inv_of_blockTriangular hX
   rwa [Matrix.inv_eq_left_inv h'] at this
 

@@ -180,7 +180,7 @@ def Qset {n ρ : ℕ} (X : Mx D n ρ) (Y : Mx D ρ n) : Set (Mx D n ρ) :=
 
 theorem isClosed_Qset {n ρ : ℕ} (X : Mx D n ρ) (Y : Mx D ρ n) : IsClosed (Qset X Y) := by
   have hc : Continuous fun w : Mx D n ρ => Y ⬝ w := continuous_const.matrix_mul continuous_id
-  simp only [Qset, Set.setOf_and, Set.setOf_forall]
+  simp only [Qset, Set.ofPred_and, Set.ofPred_forall]
   refine IsClosed.inter (isClosed_eq (continuous_const.matrix_mul hc) continuous_id) (IsClosed.inter ?_ ?_)
   · exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
       isClosed_eq (hc.matrix_elem i j) continuous_const
@@ -191,9 +191,9 @@ def Sset (W : HSp D) {ρ : ℕ} (C : Set (GA D W)) (X : Mx D W.rank ρ) (Y : Mx 
 
 theorem isClosed_Sset (W : HSp D) {ρ : ℕ} {C : Set (GA D W)} (hC : IsCompact C) (X : Mx D W.rank ρ) (Y : Mx D ρ W.rank) :
     IsClosed (Sset W C X Y) := by
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hC
   have h1 : Continuous fun p : C × Mx D W.rank ρ => mt W (p.1 : GA D W) :=
-    (GlobalTheory.MixModel.continuous_mt W).comp (continuous_subtype_val.comp continuous_fst)
+    (GlobalTheory.MixModel.continuous_mt W).comp (continuous_subtypeVal.comp continuous_fst)
   have h2 : Continuous fun p : C × Mx D W.rank ρ => mt W (p.1 : GA D W) ⬝ p.2 := h1.matrix_mul continuous_snd
   have hf : Continuous fun p : C × Mx D W.rank ρ => eInf D • (mt W (p.1 : GA D W) ⬝ p.2) :=
     continuous_matrix fun i j => continuous_const.mul (h2.matrix_elem i j)
@@ -227,7 +227,7 @@ theorem unit_mix {ρ : ℕ} (m' : Matrix (Fin ρ) (Fin ρ) (AE D)) (hlo : ∀ i 
     intro i
     rw [hv, Matrix.add_apply, Matrix.smul_apply, hd i, Matrix.one_apply_eq, smul_eq_mul, _root_.mul_one, eInf_add_eFin]
   have hvdet : IsUnit v.det := by
-    rw [Matrix.det_of_upperTriangular (fun a b h => hvlo a b h)]
+    rw [det_of_isUpperTriangular (fun a b h => hvlo a b h)]
     simp only [hvd, Finset.prod_const_one]
     exact isUnit_one
   refine ⟨((Matrix.isUnit_iff_isUnit_det v).2 hvdet).unit, ?_, hv⟩
@@ -320,7 +320,7 @@ theorem strip_measurable : ∀ (D : D7) (W : HSp D) (ρ : ℕ) (x₀ : Matrix (F
   have hYX : (rat y : Mx D ρ W.rank) ⬝ (rat x₀ : Mx D W.rank ρ) = 1 := by
     change y.map (incA D) * x₀.map (incA D) = 1
     rw [← Matrix.map_mul, hy, Matrix.map_one _ (incA D).map_zero (incA D).map_one]
-  haveI : BorelSpace (Mx D W.rank ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank ρ) := ⟨rfl⟩
   have hS : MeasurableSet (Sset W C (rat x₀) (rat y)) := (isClosed_Sset W hC _ _).measurableSet
   have hiff : ∀ (h : GA D W) (u : GL (Fin ρ) (AE D)), u ∈ UX D ρ →
       (mt W h⁻¹ ⬝ ((rat x₀ : Mx D W.rank ρ) ⬝ u.1) ∈ Sset W C (rat x₀) (rat y) ↔ h ∈ strip W (Rgrp W (rat x₀)) C) :=

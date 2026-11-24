@@ -98,7 +98,7 @@ theorem galois_of_isInvariant (A B G : Type) [CommRing A] [CommRing B] [Algebra 
 theorem map_maximalIdeal_le {A B : Type} [CommRing A] [CommRing B] [IsLocalRing A]
     [IsLocalRing B] (f : A →+* B) (hf : f.IsIntegral) :
     (IsLocalRing.maximalIdeal A).map f ≤ IsLocalRing.maximalIdeal B := by
-  have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' f hf (IsLocalRing.maximalIdeal B)
+  have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal f hf (IsLocalRing.maximalIdeal B)
   rw [Ideal.map_le_iff_le_comap, IsLocalRing.eq_maximalIdeal this]
 
 end ResidueGalois

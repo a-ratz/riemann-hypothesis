@@ -99,7 +99,7 @@ theorem setAverage_fundamentalDomain {ι : Type} [Fintype ι] (b : Module.Basis 
     rw [hμ, hme.map_apply, hpre, volume_pi_pi]
     simp
   rw [setAverage_eq, hv, Measure.restrict_smul, integral_smul_nnreal_measure, Measure.real,
-    Measure.smul_apply, h1, hμ, hme.setIntegral_map, hpre]
+    smul_apply, h1, hμ, hme.setIntegral_map, hpre]
   simp only [he]
   have : (c : ℝ) ≠ 0 := by exact_mod_cast hc
   simp [NNReal.smul_def, this]
@@ -119,7 +119,7 @@ theorem jacobiTheta₂_add_lattice (z τ : ℂ) (m k : ℤ) :
 theorem thetaTranslation_weighted_normSq_mul (Λ : AddSubgroup ℂ) (t : ℂ) (g : ℂ → ℂ) (z : ℂ) :
     ‖U1 Λ t g z‖ ^ 2 * Real.exp (-π * ‖z‖ ^ 2 / area Λ) =
       ‖g (z + t)‖ ^ 2 * Real.exp (-π * ‖z + t‖ ^ 2 / area Λ) := by
-  rw [U1, norm_mul, Complex.norm_exp, mul_pow, ← Real.exp_nat_mul, mul_assoc, ← Real.exp_add]
+  rw [U1, norm_mul, Complex.norm_exp, mul_pow, ← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add]
   congr 2
   rw [show (2 * (area Λ : ℂ)) = ((2 * area Λ : ℝ) : ℂ) by push_cast; rfl, Complex.sub_re,
     Complex.div_ofReal_re, Complex.div_ofReal_re]
@@ -171,7 +171,7 @@ theorem deriv_canTheta (a : ℂ) (τ : ℍ) : deriv (canTheta a τ) 0 = deriv (o
   exact h3
 
 theorem exp_pi_I_int (j : ℤ) : Complex.exp (π * Complex.I * j) = if Even j then 1 else -1 := by
-  rw [mul_comm, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [mul_comm, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   split_ifs with h
   · exact h.neg_one_zpow
   · exact (Int.not_even_iff_odd.1 h).neg_one_zpow
@@ -283,13 +283,13 @@ theorem odd_theta_norm_smul (c : ℂ) (g : ℂ → ℂ) :
 theorem odd_theta_norm_translate {g : ℂ → ℂ}
     (hg : ∀ ω ∈ Λ, ∀ z, U1 Λ ω g z = (if ω / 2 ∈ Λ then 1 else -1) * g z) (t : ℂ) :
     nrm1Sq Λ (U1 Λ t g) = nrm1Sq Λ g := by
-  haveI := countable_lattice ha h
+  have := countable_lattice ha h
   simp only [nrm1Sq, thetaTranslation_weighted_normSq_mul]
   exact setAverage_add (epsilon_fundamental ha h)
     (f := fun z => ‖g z‖ ^ 2 * Real.exp (-π * ‖z‖ ^ 2 / area Λ)) (weight_invariant hg) t
 
 theorem odd_theta_norm_canonical : nrm1Sq Λ (canTheta a τ) = (Real.sqrt (2 * τ.im))⁻¹ := by
-  haveI := countable_lattice ha h
+  have := countable_lattice ha h
   obtain ⟨b, h1, h2, hb⟩ := exists_basis ha h
   have key := ThetaNorm.integral_norm_sq_thetaChar 1 !![(τ : ℂ)] ![1 / 2] ![1 / 2]
     (by ext i j; fin_cases i; fin_cases j; rfl)
@@ -315,7 +315,7 @@ theorem odd_theta_norm_canonical : nrm1Sq Λ (canTheta a τ) = (Real.sqrt (2 * �
     ext i; fin_cases i; simp [Matrix.mulVec, dotProduct, mul_comm]
   simp only [e, e2, e3, canTheta, mul_div_cancel_left₀ _ ha, oddTheta,
     LatticeAreaBound.area_eq ha h]
-  rw [norm_mul, Complex.norm_exp, mul_pow, ← Real.exp_nat_mul, mul_right_comm, ← Real.exp_add,
+  rw [norm_mul, Complex.norm_exp, mul_pow, ← Real.exp_natCast_mul, mul_right_comm, ← Real.exp_add,
     mul_comm]
   congr 2
   have hy := τ.im_ne_zero

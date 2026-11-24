@@ -75,7 +75,7 @@ theorem length_le_semi {M N : Type} [AddCommGroup M] [Module R M] [AddCommGroup 
         rw [hs, RingEquiv.apply_symm_apply] }
   have hF : StrictMono F := by
     intro p q hpq
-    rw [SetLike.lt_iff_le_and_exists] at hpq ⊢
+    rw [IsConcreteLE.lt_iff_le_and_exists] at hpq ⊢
     obtain ⟨hle, x, hxq, hxp⟩ := hpq
     refine ⟨?_, f x, ⟨x, hxq, rfl⟩, ?_⟩
     · rintro _ ⟨y, hy, rfl⟩

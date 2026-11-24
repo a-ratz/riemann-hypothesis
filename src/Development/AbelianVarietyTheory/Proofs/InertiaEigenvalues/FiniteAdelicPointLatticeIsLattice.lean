@@ -88,7 +88,7 @@ theorem latAt_isFullLattice : ∀ (D : D7) (ρ : Setup D.ntw), ρ.Good → ∀ (
     constructor
     · intro hz
       have := GlobalTheory.PrincInLevel.swap_symm_mem_hat (ρ.B i j b).F.ΛS _ hz
-      simpa only [Set.mem_setOf_eq, AlgEquiv.symm_apply_apply] using this
+      simpa only [Set.mem_ofPred_eq, AlgEquiv.symm_apply_apply] using this
     · intro hz
       exact GlobalTheory.PrincInLevel.swap_mem_hatL (ρ.B i j b).F.ΛS _ hz
   rw [heq]

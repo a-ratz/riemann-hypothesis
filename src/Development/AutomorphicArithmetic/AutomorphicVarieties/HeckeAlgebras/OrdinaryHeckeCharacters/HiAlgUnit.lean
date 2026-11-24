@@ -87,12 +87,12 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.finMax :
   have h2 : Module.Finite (Λ ⧸ maximalIdeal Λ) (T ⧸ I) :=
     Module.Finite.of_restrictScalars_finite Λ _ _
   have h0 : IsArtinianRing (Λ ⧸ maximalIdeal Λ) := by
-    letI := Ideal.Quotient.field (maximalIdeal Λ)
+    let := Ideal.Quotient.field (maximalIdeal Λ)
     infer_instance
   have h3 : IsArtinianRing (T ⧸ I) := IsArtinianRing.of_finite (Λ ⧸ maximalIdeal Λ) (T ⧸ I)
   have hcomap : ∀ m : Ideal T, m.IsMaximal → m.comap (algebraMap Λ T) = maximalIdeal Λ := by
     intro m hm
-    haveI := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := Λ) m
+    have := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := Λ) m
     exact IsLocalRing.eq_maximalIdeal this
   have hIm : ∀ m : Ideal T, m.IsMaximal → I ≤ m := fun m hm =>
     Ideal.map_le_iff_le_comap.2 (hcomap m hm).ge
@@ -115,8 +115,8 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.finMax :
     · exact ⟨⟨_, h⟩, MaximalSpectrum.ext hcm⟩
   · intro m hm
     refine ⟨hcomap m hm, fun hk => ?_⟩
-    haveI : Finite (Λ ⧸ maximalIdeal Λ) := hk
-    haveI : Finite (T ⧸ I) := Module.finite_of_finite (Λ ⧸ maximalIdeal Λ)
+    have : Finite (Λ ⧸ maximalIdeal Λ) := hk
+    have : Finite (T ⧸ I) := Module.finite_of_finite (Λ ⧸ maximalIdeal Λ)
     exact Finite.of_surjective _ (Ideal.Quotient.factor_surjective (hIm m hm))
   · obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := T ⧸ I)
     refine ⟨n, ?_, ?_⟩
@@ -215,9 +215,9 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeLocal :
   obtain ⟨hcL, hidem, hfinL, -, -⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locFree A M ι Y op a hcomm
   have hLY : locPart Y op a ≤ Y := inf_le_left
   generalize locPart Y op a = L at *
-  haveI : Module.Finite A T := Module.Finite.of_injective j.toLinearMap hj
-  haveI : Nontrivial L := Submodule.nontrivial_iff_ne_bot.2 hne
-  haveI : Nontrivial T := j.toRingHom.domain_nontrivial
+  have : Module.Finite A T := Module.Finite.of_injective j.toLinearMap hj
+  have : Nontrivial L := Submodule.nontrivial_iff_ne_bot.2 hne
+  have : Nontrivial T := j.toRingHom.domain_nontrivial
   obtain ⟨-, hmax, n, hn1, hn2⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.finMax A T
   have hle : ∀ P : Ideal T, P.IsMaximal → (maximalIdeal A).map (algebraMap A T) ≤ P :=
     fun P hP => Ideal.map_le_iff_le_comap.2 (hmax P hP).1.ge
@@ -277,7 +277,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeLocal :
         rw [map_mul]; ring
     intro s
     exact key (j s) (hrange ▸ ⟨s, rfl⟩) s rfl
-  haveI hloc : IsLocalRing T := by
+  have hloc : IsLocalRing T := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal T
     refine IsLocalRing.of_unique_max_ideal ⟨P, hP, fun Q hQ => hQ.eq_of_le hP.ne_top fun s hs => ?_⟩
     obtain ⟨c, hc⟩ := h2 s
@@ -289,7 +289,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeLocal :
     have := P.add_mem (hc P hP) h4
     rwa [sub_add_cancel] at this
   have hm := maximalIdeal.isMaximal T
-  haveI : IsNoetherianRing T := IsNoetherianRing.of_finite A T
+  have : IsNoetherianRing T := IsNoetherianRing.of_finite A T
   rw [jacobson_eq_maximalIdeal ⊥ bot_ne_top] at hn1 hn2
   have hcomp : IsAdicComplete (maximalIdeal T) T :=
     UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.cofinalCompl T T _ _ n hn1 hn2
@@ -459,7 +459,7 @@ private theorem hiAlg_abs {O A M ι : Type} [CommRing O] [IsLocalRing O] [Finite
     ∃ _ : Alg.IsCO O (heckeAlg L op), (algebraMap A (heckeAlg L op)).Finite ∧
       (∀ b : A, (∀ y ∈ Y, b • y = 0 → y = 0) → ∀ t, algebraMap A (heckeAlg L op) b * t = 0 → t = 0) ∧
       (∀ i, heckeGen _ op i - algebraMap O (heckeAlg L op) (a i) ∈ maximalIdeal _) := by
-  haveI : IsCNL A := IsCNL.ofCO O A
+  have : IsCNL A := IsCNL.ofCO O A
   subst hL
   obtain ⟨hT, hfin, hloc, hres, hgen, hnzd⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeLocal A M ι Y op
     (fun i => algebraMap O A (a i)) hc hne (heckeAlg (locPart Y op fun i => algebraMap O A (a i)) op)
@@ -489,16 +489,16 @@ theorem UpperTheory.V.Hi.hiAlg :
     ∀ (A : Type) [CommRing A] [Algebra c.O A] [Alg.IsCO c.O A] (θ : H.X.I.T →* Aˣ), H.IsWt θ →
     ∀ (a : H.Op → c.O) (K : H.Lev) [Fact (CommOn (H.MK θ a K) (H.op A))], H.MK θ a K ≠ ⊥ → ∃ _ : Alg.IsCO c.O (H.TK θ a K), (algebraMap A (H.TK θ a K)).Finite ∧ (IsDomain A → ∀ b : A, b ≠ 0 → ∀ t : H.TK θ a K, algebraMap A (H.TK θ a K) b * t = 0 → t = 0) ∧ (∀ i, H.gen θ a K i - algebraMap c.O (H.TK θ a K) (a i) ∈ maximalIdeal (H.TK θ a K)) ∧ (∀ v j, IsUnit (H.gen θ a K (.inr (v, j)))) ∧ Algebra.adjoin A (Set.range (H.gen θ a K)) = ⊤ := by
   intro L Ω _ _ _ _ _ l _ n c H hAx A _ _ _ θ hθ a K _ hne
-  haveI : Finite (IsLocalRing.ResidueField c.O) := by
-    haveI := c.fin
-    haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+  have : Finite (IsLocalRing.ResidueField c.O) := by
+    have := c.fin
+    have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
     exact IsLocalRing.ResidueField.finite_of_finite (R := ℤ_[l]) inferInstance
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨hcY, hfY, hfrY, hMK⟩ := hiComm L Ω l n c H hAx A θ hθ K
   obtain ⟨-, hfM, -⟩ := hMK a
-  haveI := hfY
-  haveI := hfM
-  haveI := hfrY
+  have := hfY
+  have := hfM
+  have := hfrY
   have hP : ∀ (v : H.V) (k : ℕ), alV n H.Sl v k ∈ H.X.I.P := by
     intro v k
     unfold UpperTheory.V.Hi.alV UpperTheory.V.Hi.HSet.X
@@ -512,7 +512,7 @@ theorem UpperTheory.V.Hi.hiAlg :
     · subst hw
       simp only [Pi.mulSingle_eq_same]
       exact al_mem _ n k
-    · simp only [Pi.mulSingle, Function.update, hw, dif_neg, not_false_eq_true, Pi.one_apply]
+    · simp only [Pi.mulSingle, Function.update, hw, dite_eq_right, not_false_eq_true, Pi.one_apply]
       exact (glIwa _ n).P.one_mem
   obtain ⟨-, -, hbij⟩ := ordFree _ _ _ H.X A H.m (H.τA A) θ hθ.cont (H.lev K) (hAx.fin K) (hθ.free K)
   obtain ⟨hCO, hfin, hnz, hres⟩ := hiAlg_abs (O := c.O) (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) a hcY

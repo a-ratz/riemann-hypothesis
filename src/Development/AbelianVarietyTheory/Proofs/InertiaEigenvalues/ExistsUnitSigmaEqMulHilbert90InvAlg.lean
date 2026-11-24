@@ -59,7 +59,7 @@ namespace GlobalTheory.UnitLemma.HilbertNinety
 theorem exists_unit_sigma (K : UQ) (B : InvAlg K) (u : B.A) (hu : u * B.σ u = 1) :
     ∃ β : B.Aˣ, B.σ (β : B.A) = β * u := by
   classical
-  letI : Module ℚ B.A := Module.compHom B.A (algebraMap ℚ K.E)
+  let : Module ℚ B.A := Module.compHom B.A (algebraMap ℚ K.E)
   let b : B.A →+ B.A :=
     { toFun := fun a => a + B.σ a * B.σ u
       map_zero' := by simp
@@ -81,8 +81,8 @@ theorem exists_unit_sigma (K : UQ) (B : InvAlg K) (u : B.A) (hu : u * B.σ u = 1
     intro z
     rw [hb, hb, map_mul, B.σ_alg, map_sub]
     ring
-  haveI : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
-  haveI : Fintype (MaximalSpectrum B.A) := Fintype.ofFinite _
+  have : IsArtinianRing B.A := IsArtinianRing.of_finite K.E B.A
+  have : Fintype (MaximalSpectrum B.A) := Fintype.ofFinite _
   let S : MaximalSpectrum B.A → Submodule ℚ B.A := fun m =>
     { carrier := {a | b a ∈ m.asIdeal}
       add_mem' := fun {a c} ha hc => by

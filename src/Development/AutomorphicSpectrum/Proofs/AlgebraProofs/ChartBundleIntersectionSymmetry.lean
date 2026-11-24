@@ -247,7 +247,7 @@ theorem repr_bc (bc : V →ₗ[Ω] V₁) (w : Module.Basis (Fin N) Ω V) (w₁ :
   · rw [map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_eq_same, smul_eq_mul,
       mul_one]
   · intro i _ hij
-    rw [map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, if_neg hij,
+    rw [map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, ite_eq_right hij,
       smul_zero]
   · intro hj
     exact absurd (Finset.mem_univ j) hj
@@ -545,7 +545,7 @@ theorem rank_add {i : V₁ →ₗ[Ω] V} {p : V →ₗ[Ω] V₂} (hi : Function.
     (hp : Function.Surjective p) (hr : LinearMap.range i = LinearMap.ker p)
     (w : Module.Basis (Fin N) Ω V) (w₁ : Module.Basis (Fin N₁) Ω V₁)
     (w₂ : Module.Basis (Fin N₂) Ω V₂) : N = N₁ + N₂ := by
-  haveI : FiniteDimensional Ω V := w.finiteDimensional_of_finite
+  have : FiniteDimensional Ω V := w.finiteDimensional_of_finite
   have h := LinearMap.finrank_range_add_finrank_ker p
   rw [LinearMap.range_eq_top.2 hp, finrank_top, ← hr, LinearMap.finrank_range_of_inj hi] at h
   have e := Module.finrank_eq_card_basis w

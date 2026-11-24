@@ -145,7 +145,7 @@ theorem chernIntegrableOn_descend : ∀ (k : Type) [CommRing k] (Y : Scheme.{0})
           (PtsOver.map ρ (rfl : ρ ≫ q = ρ ≫ q) (spMap σ) ⁻¹' (ptsIn q σ U ∩ ptsIn q σ V))) := by
     intro ε
     ext A hA
-    rw [Measure.smul_apply, Measure.restrict_apply hA, Measure.map_apply hFm hA,
+    rw [smul_apply, Measure.restrict_apply hA, Measure.map_apply hFm hA,
       Measure.restrict_apply (hFm hA), ← Set.preimage_inter,
       _root_.GlobalTheory.CoverChern.chernPart_preimage_of_cover hY hY' ρ rfl (N.φ σ) (N.cInf σ) ε (ptsIn q σ V) (isOpen_ptsIn V) _ hcard hchart
         hlift (fun c c' hc w hw => _root_.GlobalTheory.PullChartDens.chernDens_pull_of_chart ρ rfl (N.φ σ) (N.cInf σ) c c' hc w hw) _
@@ -320,9 +320,9 @@ theorem exists_generating_secs_tens_lbPow {F : Type} [Field F] {X : Scheme.{0}} 
 
 theorem exists_twist_generated_sec_nonzero : ∀ (F : Type) [Field F] [Infinite F] (X : Scheme.{0}) (p : X ⟶ Sp F), IsProjOver p → ∀ (B : LB X), B.IsLB → ∀ S : Set X, S.Finite → ∃ (A : LB X) (_ : A.IsLB) (a : A.Sec), (∃ (n : ℕ) (u : Fin n → A.Sec), ⨆ i, nonzeroLocus (u i) = ⊤) ∧ (∃ (n : ℕ) (u : Fin n → (CechPic.tens B A).Sec), ⨆ i, nonzeroLocus (u i) = ⊤) ∧ ∀ z ∈ S, z ∈ nonzeroLocus a := by
   intro F _ _ X p hp B hB S hS
-  haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hp
+  have : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hp
   obtain ⟨N, ι, hι, e⟩ := hp
-  haveI := hι
+  have := hι
   have hs := ProjSpace.veryAmpleBy_secPull_coord ι
   rw [e] at hs
   have hH : ((ProjSpace.O1 F N).pull ι).IsLB := pull_isLB (ProjSpace.O1_isLB F N) _
@@ -455,7 +455,7 @@ theorem defect_add : GlobalTheory.Published.Principalisation → ∀ (F : Type) 
   obtain ⟨s₁, h₁, hloc, hmult, hlog⟩ := _root_.GlobalTheory.Mix.exists_sec_tens F X p σ M A s hs a ha
   refine ⟨s₁, h₁, hloc, ?_⟩
   have hσ : Function.Injective σ := σ.injective
-  haveI : CompactSpace X := compactSpace_of_projOver hproj
+  have : CompactSpace X := compactSpace_of_projOver hproj
   have iM := _root_.GlobalTheory.Mix.logSec_intg_proj hP F X p σ (e + 1) hproj hdim (Fin.cons N L) M s hs
   have iA := _root_.GlobalTheory.Mix.logSec_intg_proj hP F X p σ (e + 1) hproj hdim (Fin.cons N L) A a ha
   have iMh := _root_.GlobalTheory.Mix.logSec_intg_proj hP F X p σ (e + 1) hproj hdim (Fin.cons M L) N t ht
@@ -539,7 +539,7 @@ theorem isNoetherian_of_locallyNoetherian_projOverField {F : Type} [Field F] {X 
   exact {}
 
 theorem infinite_of_ringHom_complex {F : Type} [Field F] (σ : F →+* ℂ) : Infinite F := by
-  haveI : CharZero F := σ.charZero
+  have : CharZero F := σ.charZero
   exact Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
 
 theorem reciprocity_of_generated_right (hP : GlobalTheory.Published.Principalisation) (F : Type) [Field F] (X : Scheme.{0})
@@ -550,8 +550,8 @@ theorem reciprocity_of_generated_right (hP : GlobalTheory.Published.Principalisa
     (hN : ∃ (n : ℕ) (u : Fin n → N.B.Sec), ⨆ i, nonzeroLocus (u i) = ⊤) :
     side N L (M.logSec s) (N.logSec t) (divOfSec M.φ.isLB s hs) =
       side M L (N.logSec t) (M.logSec s) (divOfSec N.φ.isLB t ht) := by
-  haveI := isNoetherian_of_locallyNoetherian_projOverField hproj
-  haveI := infinite_of_ringHom_complex σ
+  have := isNoetherian_of_locallyNoetherian_projOverField hproj
+  have := infinite_of_ringHom_complex σ
   let S : Set X := {genericPoint X} ∪ {z | Order.coheight z = 1 ∧ z ∉ nonzeroLocus t}
   have hS : S.Finite := (Set.finite_singleton _).union (_root_.GlobalTheory.Mix.finite_coheight_one_notMem_open X (nonzeroLocus t) ht)
   obtain ⟨A, hA, a, hAgen, hMAgen, haS⟩ := _root_.GlobalTheory.TwistMove.exists_twist_generated_sec_nonzero F X p hproj M.B M.φ.isLB S hS
@@ -581,8 +581,8 @@ theorem reciprocity_of_generated_right (hP : GlobalTheory.Published.Principalisa
 
 theorem reciprocity_of_noCommonDivisor : GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (e : ℕ), IsProjOver p → topologicalKrullDim X = (e + 1 : ℕ) → ∀ (L : Fin e → MLine p σ) (M N : MLine p σ) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (t : N.B.Sec) (ht : genericPoint X ∈ nonzeroLocus t), (∀ z : X, Order.coheight z = 1 → z ∈ nonzeroLocus s ∨ z ∈ nonzeroLocus t) → side N L (M.logSec s) (N.logSec t) (divOfSec M.φ.isLB s hs) = side M L (N.logSec t) (M.logSec s) (divOfSec N.φ.isLB t ht) := by
   intro hP F _ X _ _ p σ e hproj hdim L M N s hs t ht hcod
-  haveI := isNoetherian_of_locallyNoetherian_projOverField hproj
-  haveI := infinite_of_ringHom_complex σ
+  have := isNoetherian_of_locallyNoetherian_projOverField hproj
+  have := infinite_of_ringHom_complex σ
   let S : Set X := {genericPoint X} ∪ {z | Order.coheight z = 1 ∧ z ∉ nonzeroLocus s}
   have hS : S.Finite := (Set.finite_singleton _).union (_root_.GlobalTheory.Mix.finite_coheight_one_notMem_open X (nonzeroLocus s) hs)
   obtain ⟨A, hA, a, hAgen, hNAgen, haS⟩ := _root_.GlobalTheory.TwistMove.exists_twist_generated_sec_nonzero F X p hproj N.B N.φ.isLB S hS
@@ -718,7 +718,7 @@ theorem GlobalTheory.Mix.cycInt_genericFibre : ∀ (k K : Type) [CommRing k] [Fi
     have h1 := (GlobalTheory.MixHt.dimOne k X p (GlobalTheory.MixHt.isAmb_of_isArithVar hX) (e + 1) hX.dim_eq).1 (j x)
     exact h1.1 ((hcoh x).trans hx)
   have hZ : IsArithVar (closι (j x) ≫ p) e := hX.of_isClosedImmersion (closι (j x)) hc hdim
-  haveI := hZi
+  have := hZi
   let G' := Limits.pullback (closι (j x) ≫ p) (spMap (algebraMap k K))
   let j' : G' ⟶ clos (j x) := Limits.pullback.fst _ _
   let q' : G' ⟶ Sp K := Limits.pullback.snd _ _
@@ -784,7 +784,7 @@ theorem side_bc_eq : ∀ (k K : Type) [CommRing k] [Field K] [Algebra k K] [IsFr
   have h1 := ((_root_.GlobalTheory.MixGen.part_int_generic k K X G p q j hp τ (e + 1) hA (Fin.cons N L)).2 f).2
   have hzero : ∀ z : X, z ∉ Set.range j → cycInt L g z = 0 := by
     intro z hz
-    haveI := hemp z hz (τ.comp (algebraMap k K))
+    have := hemp z hz (τ.comp (algebraMap k K))
     simp [cycInt, Mix.int, MeasureTheory.integral_of_isEmpty]
   unfold side
   rw [hcons, h1]
@@ -828,7 +828,7 @@ theorem injective_of_finite_int {k : Type} [CommRing k] [IsDomain k] [Module.Fin
     (σ : k →+* ℂ) : Function.Injective σ := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   have hker : RingHom.ker σ = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [eq_bot_iff]
     intro n hn
     rw [Ideal.mem_comap, RingHom.mem_ker, eq_intCast, map_intCast, Int.cast_eq_zero] at hn
@@ -845,8 +845,8 @@ theorem exists_extension {k : Type} [CommRing k] [IsDomain k] [Module.Finite ℤ
 
 theorem side_symm : GlobalTheory.Published.Principalisation → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp k) (e : ℕ), IsArithVar p (e + 1) → ∀ (σ : k →+* ℂ) (L : Fin e → MLine p σ) (M N : MLine p σ) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (t : N.B.Sec) (ht : genericPoint X ∈ nonzeroLocus t), (∀ z : X, Order.coheight z = 1 → z ∈ nonzeroLocus s ∨ z ∈ nonzeroLocus t) → side N L (M.logSec s) (N.logSec t) (divOfSec M.φ.isLB s hs) = side M L (N.logSec t) (M.logSec s) (divOfSec N.φ.isLB t ht) := by
   intro hP k _ X _ _ p e h σ
-  haveI := h.isDomain
-  haveI := h.finite
+  have := h.isDomain
+  have := h.finite
   obtain ⟨K, _, _, _⟩ : ∃ (K : Type) (_ : Field K) (_ : Algebra k K), IsFractionRing k K :=
     ⟨FractionRing k, inferInstance, inferInstance, inferInstance⟩
   obtain ⟨τ, hτ⟩ := exists_extension K σ
@@ -910,7 +910,7 @@ theorem resArch_eq_finsum_cycInt : GlobalTheory.Published.Principalisation → �
   have hc (σ : k →+* ℂ) := (_root_.GlobalTheory.Mix.cycInt_of_closedImmersion k X (clo z) p (cloι z ≫ p) σ hX.isProjOver (cloι z) rfl e
     (fun i => MLine.ofHerm (L i) σ) ((MLine.ofHerm N σ).logSec t)).2
   simp only [cloι_genericPoint] at hc
-  refine (dif_pos hgen).trans ?_
+  refine (dite_eq_left hgen).trans ?_
   rcases isArithVar_or_isEmpty hamb' hd with hv | hE
   · refine (_root_.GlobalTheory.MixPolar.mixArch_eq_sum hP k (clo z) (cloι z ≫ p) e hv (fun a => (L a).restr (cloι z)) (N.restr (cloι z))
       (Cartier.secPull t (cloι z)) hgen).trans (finsum_congr fun σ => ?_)
@@ -918,7 +918,7 @@ theorem resArch_eq_finsum_cycInt : GlobalTheory.Published.Principalisation → �
     rfl
   · refine (mixArch_eq_zero_of_isEmpty hE _ _ _).trans (finsum_eq_zero_of_forall_eq_zero fun σ => ?_).symm
     rw [hc σ]
-    haveI := hE σ
+    have := hE σ
     simp only [Mix.int, MeasureTheory.integral_of_isEmpty, sub_zero]
 
 end GlobalTheory.MixHt

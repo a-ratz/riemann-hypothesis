@@ -83,10 +83,10 @@ theorem delta_fin {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridDat
   classical
   rcases Set.eq_empty_or_nonempty {γ : UR D.sp.cm (Xp G).gram | a⁻¹ * ((ratIn G γ)⁻¹ * finG (Xp G) x) ∈ G.Kplus} with h | ⟨γ₀, h₀⟩
   · rw [h]; exact Set.finite_empty
-  haveI : Finite {γ : ratFin (Xp G) // finG (Xp G) (x⁻¹ * γ * x) ∈ G.Kplus} := Nat.finite_of_card_ne_zero hx
+  have : Finite {γ : ratFin (Xp G) // finG (Xp G) (x⁻¹ * γ * x) ∈ G.Kplus} := Nat.finite_of_card_ne_zero hx
   choose e he he' using exists_ratFin (Xp G)
   have hinj : Function.Injective (ratIn G) := fun γ γ' h => by
-    haveI : Nontrivial (Formalism.L2.Herm.Af D.host.F) := by
+    have : Nontrivial (Formalism.L2.Herm.Af D.host.F) := by
       obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
       have hne : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _)
       exact (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV D.host.F ⟨P, hP.isPrime, hne⟩).toRingHom.domain_nontrivial
@@ -119,12 +119,12 @@ theorem deltaForm_sum {Γ A K M : Type} [Group Γ] [Group A] [Field K] [AddCommG
   classical
   unfold deltaForm
   rw [finsum_eq_sum_of_support_subset (s := hA.toFinset)]
-  · exact Finset.sum_congr rfl fun γ h => if_pos (hA.mem_toFinset.1 h)
+  · exact Finset.sum_congr rfl fun γ h => ite_eq_left (hA.mem_toFinset.1 h)
   · intro γ h
     rw [Function.mem_support] at h
     simp only [Finset.coe_sort_coe, Set.Finite.coe_toFinset]
     by_contra h'
-    exact h (if_neg h')
+    exact h (ite_eq_right h')
 
 theorem psiC_delta_lin {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (rp : ClassReps G) (cl : G.ClPlus)
     (x : FinPt G (.top 0)) (hx : gamOrd (Xp G) G.Kplus x ≠ 0) {ι : Type} [Fintype ι] (w : ι → D.what₂.LL) (b : ι → WtSp G) :
@@ -209,8 +209,8 @@ theorem classSum_lin (h : S.SumOK t Φ) (β : CosFam G t) (τ : PureDat G t →�
     (Fo : FinPt G (.grid 0 D.R.m) → VV ℂ (listedWt G (.grid 0 D.R.m)))
     (hΨ : ∀ c : S.Classes t Φ β, Ψ (S.ptTop c 0) = ∑ i, a i • Ψi i (S.ptTop c 0)) :
     S.classSum Φ β τ Ψ Fo = ∑ i, a i * S.classSum Φ β τ (Ψi i) Fo := by
-  haveI := h.cls β
-  haveI : Fintype (S.Classes t Φ β) := Fintype.ofFinite _
+  have := h.cls β
+  have : Fintype (S.Classes t Φ β) := Fintype.ofFinite _
   simp only [GridChoice.classSum, finsum_eq_sum_of_fintype, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun c _ => ?_
@@ -366,7 +366,7 @@ theorem opNorm_sq_le {N n : ℕ} {X : Matrix (Fin N) (Fin N) ℂ} {X' : Matrix (
     exact (PiLp.continuous_toLp 2 _).comp this
   have hgs : Function.Surjective g := fun w => ⟨X *ᵥ w.ofLp, by
     simp only [g, Matrix.mulVec_mulVec, hXX', Matrix.one_mulVec]⟩
-  have hd : DenseRange (g ∘ Subtype.val : S → _) := hgs.denseRange.comp hS.denseRange_val hgc
+  have hd : DenseRange (g ∘ Subtype.val : S → _) := hgs.denseRange.comp hS.denseRange_subtypeVal hgc
   have hcl : IsClosed {w | ‖T w‖ ≤ Real.sqrt B * ‖w‖} :=
     isClosed_le (by fun_prop) (by fun_prop)
   refine hcl.closure_subset_iff.2 ?_ (hd w)
@@ -541,8 +541,8 @@ theorem vCore_ratLe {σ : D.what₂.LL →+* ℂ} {Φ : ch.G.Datum} (hOK : ch.S.
   have hnn : 0 ≤ nC * (nD * (rT * rP)) := mul_nonneg hnC (mul_nonneg hnD (mul_nonneg hrT hrP))
   refine (RatLe.sum _ hnn fun β hβ => ?_).mono (mul_le_mul_of_nonneg_right hcard hnn)
   have hβ' : β ∈ ch.S.supp A.μ0 Φ := hOK.fin.mem_toFinset.1 hβ
-  haveI := hOK.cls β
-  haveI : Fintype (ch.S.Classes A.μ0 Φ β) := Fintype.ofFinite _
+  have := hOK.cls β
+  have : Fintype (ch.S.Classes A.μ0 Φ β) := Fintype.ofFinite _
   have hcc : ((Finset.univ : Finset (ch.S.Classes A.μ0 Φ β)).card : ℝ) ≤ nC := by
     rw [Finset.card_univ, ← Nat.card_eq_fintype_card]; exact hC β hβ'
   have hnn' : 0 ≤ nD * (rT * rP) := mul_nonneg hnD (mul_nonneg hrT hrP)
@@ -577,13 +577,13 @@ theorem pair_ratLe (C b : ℝ) (p : InfinitePlace D.what₂.LL) {g g' : Infinite
     (fun j => if h : j < D.R.m then ch.S.Z.kkMap 1 (d.1 ⟨j, h⟩) (ch.S.ptTop c j) (ch.S.ptTop c (j + 1)) else 0)
     (fun j v B => NrmLe _ p.embedding v B) (g p) D.R.m
     (fun j hj B v h => by
-      simp only [dif_pos hj]
+      simp only [dite_eq_left hj]
       exact hg p Φ β d hd c ⟨j, hj⟩ B v h) D.R.m le_rfl _ Bu hu
   have h2 := chain_le (V := fun i => VV ℂ (wt ch.G (.grid i D.R.m)))
     (fun i => if h : i < D.R.m then ch.S.Z.kkMap 1 (d.2 ⟨i, h⟩) (ch.S.ptRow c i) (ch.S.ptRow c (i + 1)) else 0)
     (fun j v B => NrmLe _ p.embedding v B) (g' p) D.R.m
     (fun j hj B v h => by
-      simp only [dif_pos hj]
+      simp only [dite_eq_left hj]
       exact hg' p Φ β d hd c ⟨j, hj⟩ B v h) D.R.m le_rfl _ Bf hv
   obtain ⟨y, e, hy⟩ := hP p.embedding _ _ _ _ h1 h2
   exact ⟨y, e, Real.le_sqrt_of_sq_le hy⟩
@@ -676,9 +676,9 @@ theorem test_bound (C sb : ℝ) (hm : 0 < D.R.m) (hA : 0 ≤ D.R.m * aOne ch.G C
   rcases isEmpty_or_nonempty (Fin ch.n) with h0 | ⟨⟨a0⟩⟩
   · simp [dotProduct]
   set k0 := (ch.e a0).2 with hk0
-  haveI : Finite (TestIx ch.G) := Finite.of_injective (fun b => ch.e.symm (b, k0)) fun b b' h => by
+  have : Finite (TestIx ch.G) := Finite.of_injective (fun b => ch.e.symm (b, k0)) fun b b' h => by
     simpa using h
-  letI : Fintype (TestIx ch.G) := Fintype.ofFinite _
+  let : Fintype (TestIx ch.G) := Fintype.ofFinite _
   set nb : TestIx ch.G → ℝ := fun b => nrm (LaP ch.G) (fun τ => (gramKd (emb D) (Xp ch.G).gram τ).map σ)
     (GlobalTheory.CoefModel.mapVV σ _ (valAt (LaP ch.G) ch.e b c)) with hnb
   have hnb0 : ∀ b, 0 ≤ nb b := fun b => by
@@ -852,7 +852,7 @@ theorem infAt_of (F : Face D A) (C sb : ℝ) (hC0 : 0 ≤ C) (hb : 1 ≤ sb)
   set Lb : InfinitePlace D.what₂.LL → ℝ := fun p => 11 * (D.R.m * Aa) + 2 * Sg + Aa + D.R.m * g p + D.R.m * g' p with hLb
   have hexp : ∀ p, Formalism.HN.opNormAt (Pi.basisFun _ _) X (Pi.basisFun _ _) X' p V.mulVecLin ^ 2 ≤ Real.exp (Lb p) := fun p => by
     refine (opNorm_bound ch C sb hm hmA p hOK hD hS hT hN hC hg hg' hP hPsi hForm hTL hX hV).trans (le_of_eq ?_)
-    rw [← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
     congr 1
   have hnPl : 0 ≤ (1 / (Formalism.HN.nPl D.what₂.LL : ℝ)) := by positivity
   have hmean : (1 / (Formalism.HN.nPl D.what₂.LL : ℝ)) * ∑ p, g p ≤ Aa := by rw [← meanInf_eq]; exact hgm

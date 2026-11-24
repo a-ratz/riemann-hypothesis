@@ -303,12 +303,12 @@ theorem finiteFourier_mul_eq_finprod_localEpsilon {δ : (FiniteAdeleRing (𝓞 K
   set c : HeightOneSpectrum (𝓞 K) → ℂ := fun v ↦ if v ∈ S then s v * I v else 1 with hcdef
   have hc : (Function.mulSupport c).Finite := S.finite_toSet.subset fun v hv ↦ by
     by_contra h
-    exact hv (if_neg h)
+    exact hv (ite_eq_right h)
   have hcS : ∏ᶠ v, c v = ∏ v ∈ S, s v * I v := by
     rw [finprod_eq_prod_of_mulSupport_subset c (s := S) fun v hv ↦ by
       by_contra h
-      exact hv (if_neg h)]
-    exact Finset.prod_congr rfl fun v hv ↦ if_pos hv
+      exact hv (ite_eq_right h)]
+    exact Finset.prod_congr rfl fun v hv ↦ ite_eq_left hv
   rw [finprod_congr (χ.localEpsilon_half_eq hδ),
     finprod_mul_distrib (χ.finite_mulSupport_localComponent δ) hc, ← χ.toIdele_ofFinite_eq_finprod δ,
     hcS, χ.finiteFourier_finiteTestFun_inv_eq hδ]
@@ -325,7 +325,7 @@ theorem finiteFourier_mul_eq_finprod_localEpsilon {δ : (FiniteAdeleRing (𝓞 K
       rw [Ne, Real.sqrt_eq_zero hd0, abs_eq_zero]
       exact_mod_cast discr_ne_zero K
     have h1 : (((NNReal.sqrt ‖discr K‖₊)⁻¹ : ℝ≥0) : ℝ) = (Real.sqrt |(discr K : ℝ)|)⁻¹ := by
-      rw [NNReal.coe_inv, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs]
+      rw [NNReal.coe_inv, Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs]
     rw [show (((NNReal.sqrt ‖discr K‖₊)⁻¹ : ℝ≥0) : ℂ) = ((((NNReal.sqrt ‖discr K‖₊)⁻¹ : ℝ≥0) : ℝ) : ℂ)
       from rfl, h1, Complex.ofReal_inv, inv_mul_cancel₀ (Complex.ofReal_ne_zero.2 hne)]
   rw [hA, Finset.prod_mul_distrib, Finset.prod_coe_sort S I]

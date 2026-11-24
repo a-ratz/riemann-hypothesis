@@ -171,14 +171,14 @@ theorem cas_comm (ε : Fin n → Bool) (hgl : GlRel E) (a b : Fin n) (x : V) : E
       noncomm_ring
     have A1 : ∑ c, ∑ d, (if b = c then E a d else 0) * E d c = ∑ d, E a d * E d b := by
       rw [Finset.sum_comm]
-      simp only [ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have A2 : ∑ c, ∑ d, (if d = a then E c b else 0) * E d c = ∑ c, E c b * E a c := by
-      simp only [ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     have A3 : ∑ c, ∑ d, E c d * (if b = d then E a c else 0) = ∑ c, E c b * E a c := by
-      simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have A4 : ∑ c, ∑ d, E c d * (if c = a then E d b else 0) = ∑ d, E a d * E d b := by
       rw [Finset.sum_comm]
-      simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     calc E a b * Cas E - Cas E * E a b
         = ∑ c, ∑ d, (E a b * (E c d * E d c) - E c d * E d c * E a b) := by
           simp only [Cas, Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
@@ -314,7 +314,7 @@ theorem locFin_sE (hF : LocFin ε E) (hF' : LocFin ε E') : LocFin ε (sE E E') 
   obtain ⟨S₁, hf₁, hk₁, hx₁⟩ := hF (toP x).1
   obtain ⟨S₂, hf₂, hk₂, hx₂⟩ := hF' (toP x).2
   refine ⟨(S₁.prod S₂).map ofP, ?_, ?_, ?_⟩
-  · haveI : FiniteDimensional ℂ (S₁.prod S₂) := by
+  · have : FiniteDimensional ℂ (S₁.prod S₂) := by
       first
         | infer_instance
         | (rw [← Submodule.range_subtype S₁, ← Submodule.range_subtype S₂, ← LinearMap.range_prodMap]

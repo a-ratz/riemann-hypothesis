@@ -101,7 +101,7 @@ private theorem psiV_liftOne_self (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F
 
   simp only [Finsupp.sum, map_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
-  simp only [PI.FinKW.psiV, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe, AlgEquiv.coe_algHom,
+  simp only [PI.FinKW.psiV, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass, AlgEquiv.coe_toAlgHom,
     Algebra.TensorProduct.comm_tmul, Algebra.TensorProduct.map_tmul, evalV_singleV_self', AlgHom.coe_id, id_eq,
     TensorProduct.zero_tmul]
 
@@ -113,7 +113,7 @@ private theorem psiV_liftOne_of_ne (I : AutInst) {v w : HeightOneSpectrum (𝓞 
 
   simp only [Finsupp.sum, map_sum]
   refine Finset.sum_eq_zero fun j _ => ?_
-  simp only [PI.FinKW.psiV, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe, AlgEquiv.coe_algHom,
+  simp only [PI.FinKW.psiV, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass, AlgEquiv.coe_toAlgHom,
     Algebra.TensorProduct.comm_tmul, Algebra.TensorProduct.map_tmul, evalV_singleV_of_ne hw, AlgHom.coe_id, id_eq,
     TensorProduct.zero_tmul]
 
@@ -146,8 +146,8 @@ private theorem equivFinsuppOfBasisRight_psiV_eq_evalV (I : AutInst) (w : Height
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul e a =>
-    simp only [PI.FinKW.psiV, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe,
-      AlgEquiv.coe_algHom, Algebra.TensorProduct.comm_tmul, Algebra.TensorProduct.map_tmul,
+    simp only [PI.FinKW.psiV, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass,
+      AlgEquiv.coe_toAlgHom, Algebra.TensorProduct.comm_tmul, Algebra.TensorProduct.map_tmul,
       AlgHom.coe_id, id_eq, TensorProduct.equivFinsuppOfBasisRight_apply_tmul,
       TensorProduct.equivFinsuppOfBasisLeft_apply_tmul, Finsupp.mapRange_apply]
     first
@@ -210,13 +210,13 @@ private theorem psiV_sigR_eq_sigV_psiV (I : AutInst) (w : HeightOneSpectrum (�
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul e a =>
-    simp [Formalism.UG.sigR, sigV, PI.FinKW.psiV, AlgEquiv.coe_algHom, Algebra.TensorProduct.comm_tmul,
+    simp [Formalism.UG.sigR, sigV, PI.FinKW.psiV, AlgEquiv.coe_toAlgHom, Algebra.TensorProduct.comm_tmul,
       Algebra.TensorProduct.map_tmul]
   | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
 private theorem psiV_inclE' (I : AutInst) (w : HeightOneSpectrum (𝓞 I.F)) (e : I.E) :
     PI.FinKW.psiV I w (Formalism.UG.inclE (F := I.F) (Af I.F) e) = inclV I w e := by
-  simp [Formalism.UG.inclE, inclV, PI.FinKW.psiV, AlgEquiv.coe_algHom, Algebra.TensorProduct.comm_tmul,
+  simp [Formalism.UG.inclE, inclV, PI.FinKW.psiV, AlgEquiv.coe_toAlgHom, Algebra.TensorProduct.comm_tmul,
     Algebra.TensorProduct.map_tmul]
 
 theorem liftMat_unitary (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F))

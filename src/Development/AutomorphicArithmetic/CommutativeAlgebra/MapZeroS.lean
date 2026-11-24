@@ -237,7 +237,7 @@ theorem LL_inj {I Q : Cx R} (hI : ∀ s, Injective (I.X s)) (hQ : ∀ s, Injecti
       ((biprod.snd : LL I Q ⟶ sh Q).f s) ≫ ((biprod.inr : sh Q ⟶ LL I Q).f s) = 𝟙 _ := by
     rw [← HomologicalComplex.comp_f, ← HomologicalComplex.comp_f, ← HomologicalComplex.add_f_apply, biprod.total, HomologicalComplex.id_f]
   refine ⟨fun {X Y} g f _ => ?_⟩
-  haveI := hI s
+  have := hI s
   obtain ⟨h₁, e₁⟩ := Injective.factors (g ≫ (biprod.fst : LL I Q ⟶ I).f s) f
   obtain ⟨h₂, e₂⟩ := Injective.factors (g ≫ (biprod.snd : LL I Q ⟶ sh Q).f s) f
   refine ⟨h₁ ≫ (biprod.inl : I ⟶ LL I Q).f s + h₂ ≫ (biprod.inr : sh Q ⟶ LL I Q).f s, ?_⟩

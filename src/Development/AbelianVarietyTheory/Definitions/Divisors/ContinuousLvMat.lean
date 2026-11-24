@@ -177,8 +177,8 @@ theorem lvMat_frame (f : Fr σ J C D Z J₀) (α : GL (Fin j) (AF F ⊗[F] E)) :
       lvMat f α * adMat F D = adMat F D * cT (sigR (AF F) σ) (α⁻¹).1 := carry_frame (gram_ad f) (inv_mul_ad f)
 
 theorem continuous_lvMat (f : Fr σ J C D Z J₀) : Continuous (lvMat f) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hs : Continuous (sigR (AF F) σ) :=
     IsModuleTopology.continuous_of_linearMap (R := AF F)
       (Algebra.TensorProduct.map (AlgHom.id (AF F) (AF F)) σ).toLinearMap
@@ -193,8 +193,8 @@ def lv (f : Fr σ J C D Z J₀) : GL (Fin j) (AF F ⊗[F] E) →* GAd σ J :=
       (lvMat_frame f α).2.2
 
 theorem isLv_lv (f : Fr σ J C D Z J₀) : IsLv σ J C D Z (lv f) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   refine ⟨?_, fun α => (lvMat_frame f α).1, fun α => (lvMat_frame f α).2.2, fun α => (lvMat_frame f α).2.1, fun δ => ?_⟩
   · refine (isEmbedding_matHom (AF F) σ J).continuous_iff.2 (Units.continuous_iff.2 ⟨continuous_lvMat f, ?_⟩)
     exact (continuous_lvMat f).comp continuous_inv

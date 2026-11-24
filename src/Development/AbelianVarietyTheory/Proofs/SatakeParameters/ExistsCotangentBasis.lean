@@ -61,8 +61,8 @@ theorem exists_basis_mod_sq {A : Type} [CommRing A] [Algebra ℂ A] (e : A →+*
     ∃ g : Fin d → A, (∀ j, e (g j) = 0) ∧
       (∀ a : A, e a = 0 → ∃ c : Fin d → ℂ, a - ∑ j, c j • g j ∈ RingHom.ker e ^ 2) ∧
       (∀ c : Fin d → ℂ, ∑ j, c j • g j ∈ RingHom.ker e ^ 2 → c = 0) := by
-  letI : Algebra A ℂ := e.toAlgebra
-  haveI : IsScalarTower ℂ A ℂ := IsScalarTower.of_algebraMap_eq fun c => (he c).symm
+  let : Algebra A ℂ := e.toAlgebra
+  have : IsScalarTower ℂ A ℂ := IsScalarTower.of_algebraMap_eq fun c => (he c).symm
   obtain ⟨b⟩ := hb
   have hs : Function.Surjective (algebraMap A ℂ) := fun c => ⟨algebraMap ℂ A c, he c⟩
   have key : ∀ (c : ℂ) (w : Ω[A⁄ℂ]), (1 : ℂ) ⊗ₜ[A] (c • w) = c • ((1 : ℂ) ⊗ₜ[A] w) := by
@@ -121,20 +121,20 @@ theorem nonempty_basis_fibre {A : Type} [CommRing A] [Algebra ℂ A] (e : A →+
     (he : ∀ c : ℂ, e (algebraMap ℂ A c) = c) (d : ℕ) (t : A) (ht : e t ≠ 0)
     [Algebra.IsStandardSmoothOfRelativeDimension d ℂ (Localization.Away t)] :
     letI := e.toAlgebra; Nonempty (Module.Basis (Fin d) ℂ (ℂ ⊗[A] Ω[A⁄ℂ])) := by
-  letI : Algebra A ℂ := e.toAlgebra
-  haveI : IsScalarTower ℂ A ℂ := IsScalarTower.of_algebraMap_eq fun c => (he c).symm
+  let : Algebra A ℂ := e.toAlgebra
+  have : IsScalarTower ℂ A ℂ := IsScalarTower.of_algebraMap_eq fun c => (he c).symm
   let et : Localization.Away t →+* ℂ := IsLocalization.Away.lift t (isUnit_iff_ne_zero.2 ht)
-  letI : Algebra (Localization.Away t) ℂ := et.toAlgebra
-  haveI : IsScalarTower A (Localization.Away t) ℂ := IsScalarTower.of_algebraMap_eq fun a =>
+  let : Algebra (Localization.Away t) ℂ := et.toAlgebra
+  have : IsScalarTower A (Localization.Away t) ℂ := IsScalarTower.of_algebraMap_eq fun a =>
     (IsLocalization.Away.lift_eq t (isUnit_iff_ne_zero.2 ht) a).symm
-  haveI : Nontrivial (Localization.Away t) := et.domain_nontrivial
-  haveI : Algebra.FormallyEtale A (Localization.Away t) :=
+  have : Nontrivial (Localization.Away t) := et.domain_nontrivial
+  have : Algebra.FormallyEtale A (Localization.Away t) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers t)
-  haveI : Algebra.IsStandardSmooth ℂ (Localization.Away t) :=
+  have : Algebra.IsStandardSmooth ℂ (Localization.Away t) :=
     Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth d
   have hr := Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential
     (R := ℂ) (S := Localization.Away t) d
-  haveI : Module.Finite (Localization.Away t) Ω[Localization.Away t⁄ℂ] := Module.finite_of_rank_eq_nat hr
+  have : Module.Finite (Localization.Away t) Ω[Localization.Away t⁄ℂ] := Module.finite_of_rank_eq_nat hr
   let b0 := Module.finBasisOfFinrankEq (Localization.Away t) Ω[Localization.Away t⁄ℂ]
     (Module.finrank_eq_of_rank_eq hr)
   let b1 : Module.Basis (Fin d) ℂ (ℂ ⊗[Localization.Away t] Ω[Localization.Away t⁄ℂ]) := b0.baseChange ℂ
@@ -172,7 +172,7 @@ theorem GlobalTheory.CotDim.exists_cotangent_basis : ∀ (X : Scheme.{0}) (p : X
     (Scheme.ΓSpecIso (CommRingCat.of ℂ)).symm.commRingCatIsoToRingEquiv
     (@h t hts (Localization.Away t) _ (inferInstance : Algebra (Sec p U) (Localization.Away t))
       (by exact (inferInstance : IsLocalization (Submonoid.powers t) (Localization.Away t))))
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension d ℂ (Localization.Away (t : Sec p U)) := by
+  have : Algebra.IsStandardSmoothOfRelativeDimension d ℂ (Localization.Away (t : Sec p U)) := by
     rw [← RingHom.isStandardSmoothOfRelativeDimension_algebraMap,
       IsScalarTower.algebraMap_eq ℂ (Sec p U) (Localization.Away (t : Sec p U))]
     first

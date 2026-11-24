@@ -243,7 +243,7 @@ theorem quotMap_bijective : Function.Bijective (quotMap hw h ha hM hα) := by
 theorem length_eq_addVal :
     Module.length (intLoc F E v) (latLoc F L v ⧸ M.submoduleOf (latLoc F L v)) =
       IsDiscreteValuationRing.addVal _ (intMat hw h ha hM hα).det := by
-  haveI : RingHomSurjective (intMap h) := ⟨intMap_surjective hw h⟩
+  have : RingHomSurjective (intMap h) := ⟨intMap_surjective hw h⟩
   rw [← GlobalTheory.length_quotient_range_mulVecLin_eq_addVal_det, Module.length, Module.length, WithBot.unbot_inj]
   exact Order.krullDim_eq_of_orderIso
     (Submodule.orderIsoMapComapOfBijective (quotMap hw h ha hM hα) (quotMap_bijective hw h ha hM hα))
@@ -457,7 +457,7 @@ theorem unitaryLocalPoint_latticeGraphNorm_identity : ∀ (F E : Type) [Field F]
   simp only [KFin] at hk
   unfold GlobalTheory.AdelicU.stabLoc at hk
   rw [Subgroup.mem_comap, latLoc_sumLat] at hk
-  simp only [Formalism.UG.stabGL, Subgroup.mem_mk, Set.mem_setOf_eq, Submonoid.mem_mk, Subsemigroup.mem_mk] at hk
+  simp only [Formalism.UG.stabGL, Subgroup.mem_mk, Set.mem_ofPred_eq, Submonoid.mem_mk, Subsemigroup.mem_mk] at hk
   have hmat : (matHom (Fv F v) σ (dblGram finSumFinEquiv J) (p : GLoc σ (dblGram finSumFinEquiv J) v)).1 *
       (matHom (Fv F v) σ (dblGram finSumFinEquiv J) k).1 =
       blkMat finSumFinEquiv (matHom (Fv F v) σ J g).1 1 := by
@@ -605,7 +605,7 @@ theorem hgtV_mul_stab (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin 
     {k k' : GlobalTheory.AdelicU.GLoc D.sp.cm.sig V.gram v} (hk : k ∈ GlobalTheory.AdelicU.stabLoc D.sp.cm.sig V.gram Λ v)
     (hk' : k' ∈ GlobalTheory.AdelicU.stabLoc D.sp.cm.sig V.gram Λ v) (g : GlobalTheory.AdelicU.GLoc D.sp.cm.sig V.gram v) :
     GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtV V Λ v (k * g * k') = GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtV V Λ v g := by
-  haveI : Submodule.IsFullLattice D.host.E Λ := GlobalTheory.ProjXCols.selfDual_isFullLattice V Λ hΛ
+  have : Submodule.IsFullLattice D.host.E Λ := GlobalTheory.ProjXCols.selfDual_isFullLattice V Λ hΛ
   have hI := GlobalTheory.Core.Rk.IwSplit.hasIwasawa_of_algHom (GlobalTheory.AdelicU.isCMExt_host D) (gram_hdbl V) (isHermND_gram V)
     (isHermND_gram (dblSp V)) τ Λ (GlobalTheory.Core.Rk.IwSplit.isSelfDualAt_of_isSelfDualC hΛ v)
   unfold GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtV
@@ -629,11 +629,11 @@ theorem nnnorm_unif (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum 
     letI := GlobalTheory.LocalData.complRel v
     haveI := GlobalTheory.LocalData.isLocalField v
     ‖(ϖ : Fv F v)‖₊ = ((GlobalTheory.SplitWeil.resCard (Fv F v) : ℕ) : ℝ≥0)⁻¹ := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
   rw [GlobalTheory.LFun.SatBoundGL.resCard_completion]
   apply GlobalTheory.norm_uniformiser_eq_inv_absNorm
-  haveI : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have he := isEquiv (valuation (Fv F v)) (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ)))
   have h1 : Valued.v (ϖ : Fv F v) < 1 := by
     rw [← he.lt_one_iff_lt_one, h]; exact uniformizer_lt_one
@@ -698,7 +698,7 @@ theorem isHgt_chart : ∀ (D : D7) (s : PiLocalization₂ D) (k : ℕ) (v : Heig
     rwa [mul_one, ← hmul] at this
   · have := hgtV_mul_stab D s.V s.Λ hΛ v τ (one_mem _) ((hK κ).2 hκ) (e g)
     rwa [one_mul, ← hmul] at this
-  · haveI : Submodule.IsFullLattice D.host.E s.Λ := GlobalTheory.ProjXCols.selfDual_isFullLattice s.V s.Λ hΛ
+  · have : Submodule.IsFullLattice D.host.E s.Λ := GlobalTheory.ProjXCols.selfDual_isFullLattice s.V s.Λ hΛ
     have hsd := GlobalTheory.Core.Rk.IwSplit.isSelfDualAt_of_isSelfDualC hΛ v
     obtain ⟨-, hval, -⟩ := (GlobalTheory.GraphNorm.graphNormFinite D.host.F D.host.E D.sp.cm.sig (GlobalTheory.AdelicU.isCMExt_host D)
       s.V.rank s.V.gram (GlobalTheory.Doubling.isHermND_gram s.V) s.Λ v hsd).1 τ β hB
@@ -721,7 +721,7 @@ theorem isHgt_chart : ∀ (D : D7) (s : PiLocalization₂ D) (k : ℕ) (v : Heig
       exact congrArg _ (hgtFin_ioH_eq _ _ _ _ _ _ _)
     refine e2.trans ?_
     rw [h1]
-    simp only [Units.val_zpow_eq_zpow_val, nnnorm_zpow, hn]
+    simp only [Units.val_zpow_eq_zpow_val, nnNorm_zpow, hn]
     simp only [min_zpow_inv _ hq]
     rw [prod_zpow_eq _ _ (zero_lt_one.trans_le hq).ne', NNReal.coe_zpow, NNReal.coe_natCast, Finset.sum_neg_distrib]
     congr 2

@@ -156,7 +156,7 @@ theorem tensor_existsUnique_lift {P Qb R B : Type} [CommRing P] [CommRing Qb] [C
     [Algebra P Qb] [Algebra P R] (u : Qb →+* B) (g : R →+* B)
     (h : ∀ p, g (algebraMap P R p) = u (algebraMap P Qb p)) :
     ∃! w : Qb ⊗[P] R →+* B, (∀ b, w (b ⊗ₜ[P] 1) = u b) ∧ ∀ r, w ((1 : Qb) ⊗ₜ[P] r) = g r := by
-  letI : Algebra P B := (u.comp (algebraMap P Qb)).toAlgebra
+  let : Algebra P B := (u.comp (algebraMap P Qb)).toAlgebra
   let ua : Qb →ₐ[P] B := { u with commutes' := fun _ => rfl }
   let ga : R →ₐ[P] B := { g with commutes' := h }
   refine ⟨(Algebra.TensorProduct.productMap ua ga).toRingHom, ⟨fun b => ?_, fun r => ?_⟩, ?_⟩
@@ -179,10 +179,10 @@ theorem exists_lift_hom {P Q Qb R : Type} [CommRing P] [CommRing Q] [CommRing Qb
         j.comp ρ = jb.comp μ ∧
         ∀ (B : Type) [CommRing B] (u : Qb →+* B) (g : R →+* B), g.comp ρ = u.comp μ →
           ∃! w : (D ⧸ L) →+* B, w.comp jb = u ∧ w.comp j = g := by
-  letI := ρ.toAlgebra
-  letI := μ.toAlgebra
-  letI := π.toAlgebra
-  haveI : Algebra.Etale P R := hρ
+  let := ρ.toAlgebra
+  let := μ.toAlgebra
+  let := π.toAlgebra
+  have : Algebra.Etale P R := hρ
   obtain ⟨D, _, _, hD, ⟨e⟩⟩ := exists_etale_lift_of_surjective (Q := Q) (Qb := Qb) hs (Qb ⊗[P] R)
   refine ⟨D, inferInstance, algebraMap Q D, RingHom.etale_algebraMap.mpr hD, ?_⟩
   rintro L rfl

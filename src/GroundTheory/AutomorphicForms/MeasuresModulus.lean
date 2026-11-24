@@ -99,11 +99,11 @@ theorem sigmaCompactSpace : SigmaCompactSpace F := by
   refine ⟨m, ?_⟩
   have hϖ := GLnLocal.valuation_uniformizer_ne_zero F
   have h1 : valuation F (GLnLocal.uniformizer F : F) ^ m * valuation F x < 1 := by
-    have := mul_lt_mul_of_pos_right hm (zero_lt_iff.mpr hvx)
+    have := mul_lt_mul_of_pos_right hm (pos_iff_ne_zero.mpr hvx)
     simpa [hvx] using this
   have hm0 : valuation F (GLnLocal.uniformizer F : F) ^ m ≠ 0 := pow_ne_zero _ hϖ
   rw [inv_pow, ← mul_one ((valuation F (GLnLocal.uniformizer F : F) ^ m)⁻¹),
-    le_inv_mul_iff₀ (zero_lt_iff.mpr hm0)]
+    le_inv_mul_iff₀ (pos_iff_ne_zero.mpr hm0)]
   exact h1.le
 
 instance secondCountableTopology : SecondCountableTopology F := by
@@ -250,7 +250,7 @@ theorem distribHaarChar_glEquiv_diagonal {D : ι → F} (h : (Matrix.diagonal D)
   borelize F
   let ν : Measure F := Measure.addHaar
   let μ : Measure (ι → F) := Measure.pi fun _ => ν
-  letI : Regular μ := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure μ
+  let : Regular μ := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure μ
   have himage : glEquiv (Matrix.GeneralLinearGroup.mkOfDetNeZero _ h) • box (F := F) (ι := ι) =
       Set.univ.pi fun i => u i • (𝒪[F] : Set F) := by
     ext x

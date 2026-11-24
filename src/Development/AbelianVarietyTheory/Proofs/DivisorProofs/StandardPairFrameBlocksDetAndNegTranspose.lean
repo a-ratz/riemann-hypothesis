@@ -152,8 +152,8 @@ theorem measurableSet_and_vol {a : ℕ} (g₁ : GL (Fin a) k) :
     @MeasurableSet (GL (Fin a) k) Units.instMeasurableSpace ((fun g => g * g₁) ⁻¹' (KO k (Fin a) : Set (GL (Fin a) k))) ∧
     (haarVol (KO k (Fin a))).real ((fun g => g * g₁) ⁻¹' (KO k (Fin a) : Set (GL (Fin a) k))) = 1 := by
   refine ⟨?_, ?_⟩
-  · letI : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
-    haveI : BorelSpace (GL (Fin a) k) := borel_GL
+  · let : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
+    have : BorelSpace (GL (Fin a) k) := borel_GL
     exact (isOpen_KO.preimage (continuous_mul_const _)).measurableSet
   · simp [Measure.real, measure_preimage_mul_right, haarVol_self isOpen_KO le_rfl]
 
@@ -329,7 +329,7 @@ theorem cball_neg_transpose {k : Type} [Field k] [ValuativeRel k] {m n : ℕ} (s
       Set.indicator {M : Matrix (Fin m) (Fin n) k | ∀ i j, M i j ∈ cball s} (1 : Matrix (Fin m) (Fin n) k → ℂ) M := by
   have : (-Mᵀ ∈ {M : Matrix (Fin n) (Fin m) k | ∀ i j, M i j ∈ cball s}) ↔
       M ∈ {M : Matrix (Fin m) (Fin n) k | ∀ i j, M i j ∈ cball s} := by
-    simp only [Set.mem_setOf_eq, cball, Matrix.neg_apply, Matrix.transpose_apply, Valuation.map_neg]
+    simp only [Set.mem_ofPred_eq, cball, Matrix.neg_apply, Matrix.transpose_apply, Valuation.map_neg]
     exact forall_comm
   by_cases hM : M ∈ {M : Matrix (Fin m) (Fin n) k | ∀ i j, M i j ∈ cball s}
   · rw [Set.indicator_of_mem hM, Set.indicator_of_mem (this.2 hM)]; rfl

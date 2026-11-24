@@ -82,9 +82,9 @@ theorem om_heis_bound (hom : IsWeilDatumO ψ S T χS χT om) {f : WO S T → ℂ
 theorem continuous_actO_gen {X : Type} [TopologicalSpace X] {g : X → GA D S} {h : X → GA D T} {u : X → WO S T}
     (hg : Continuous g) (hh : Continuous h) (hu : Continuous u) : Continuous fun t => actO S T (g t) (h t) (u t) := by
   have hmt : ∀ V : HSp D, Continuous (Formalism.L2.Theta.mt V) := fun V =>
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hmti : ∀ V : HSp D, Continuous fun g : GA D V => Formalism.L2.Theta.mt V g⁻¹ := fun V =>
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   unfold actO
   exact (((hmt T).comp hh).matrix_mul hu).matrix_mul ((hmti S).comp hg)
 
@@ -114,8 +114,8 @@ theorem om_superpos (hom : IsWeilDatumO ψ S T χS χT om) {f : WO S T → ℂ} 
     (hI : IsThetaFunO ψ S T (fun x => ∫ u, α u * heisO ψ S T u f x ∂m')) (x : WO S T) :
     om p (fun x => ∫ u, α u * heisO ψ S T u f x ∂m') x = ∫ u, α u * om p (heisO ψ S T u f) x ∂m' := by
   obtain ⟨-, -, i3, -, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : SecondCountableTopology (WO S T) := i3
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : SecondCountableTopology (WO S T) := i3
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   have hφ : AEMeasurable (fun u : WO S T => (u, α u)) m' := measurable_id.aemeasurable.prodMk hα.aemeasurable
   set ν : Measure (WO S T × ℂ) := m'.map (fun u => (u, α u)) with hν
   obtain ⟨C1, hC1⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded S T ψ hom.std f hf
@@ -179,9 +179,9 @@ theorem kernel_tame : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D
       Tame ψ S T fun f => ∫ y, c y * om (g y, h y) f (w y) ∂m := by
   intro D ψ S T χS χT om hom Y _ _ _ _ m _ c g h w hc hg hh hw hint
   obtain ⟨-, -, i3, -, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : SecondCountableTopology (WO S T) := i3
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : FirstCountableTopology (WO S T) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
+  have : SecondCountableTopology (WO S T) := i3
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : FirstCountableTopology (WO S T) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
   have hgh : Continuous fun y => ((g y, h y) : GA D S × GA D T) := hg.prodMk hh
 
   have hK : ∀ f, IsThetaFunO ψ S T f →

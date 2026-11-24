@@ -169,7 +169,7 @@ theorem shear_fix_vector {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
       {g | T g v = v} ∈ 𝓝 (0 : Fin (n + 1) → k) :=
     htend (hopen.mem_nhds (by simp))
   obtain ⟨r, hr⟩ := GlobalTheory.CompanionTheory.BZOnto.PerpSmall.exists_box_subset hΩ
-  haveI : (valuation k).IsNontrivial :=
+  have : (valuation k).IsNontrivial :=
     (ValuativeRel.isNontrivial_iff_isNontrivial (valuation k)).1 inferInstance
   obtain ⟨x, hx0, hx1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   by_cases hr1 : valuation k (r : k) < 1

@@ -170,7 +170,7 @@ theorem factor_bounds [CharZero Qp] [Fintype (K →ₐ[Qp] LL)]
     (hJ : ∀ τ, ∀ n ∈ J τ, |n| ≤ N) (hm : ∀ τ n, multV PD ρ τ n = ((J τ).count n : ℤ)) :
     DdR PD ρ ≤ FilV PD (LL := LL) (V := V) (-(N : ℤ)) ∧
       DdR PD ρ ⊓ FilV PD (LL := LL) (V := V) ((N : ℤ) + 1) = ⊥ := by
-  haveI := GlobalTheory.Cmp.SmallJumps.finite_ddR_of_isField PD hF ρ
+  have := GlobalTheory.Cmp.SmallJumps.finite_ddR_of_isField PD hF ρ
   have fin : ∀ τ a, FiniteDimensional LL (FildR PD ρ τ a) := fun τ a =>
     Submodule.finiteDimensional_of_le (S₂ := DdR PD ρ) (inf_le_left.trans inf_le_left)
   have anti : ∀ τ a, FildR PD ρ τ (a + 1) ≤ FildR PD ρ τ a := fun τ a =>
@@ -358,7 +358,7 @@ theorem layer_DdR_bounds : ∀ (l : ℕ) [Fact l.Prime] (K L₀ : FinExt l) (P :
     intro k
     have := (Ly.L k).2
     have := K.2
-    letI : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥(Ly.L k).1) := Fintype.ofFinite _
+    let : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥(Ly.L k).1) := Fintype.ofFinite _
     have hcl := hCl (Ly.rep k) (Ly.mem k) (Ly.L k) (repL (Ly.L k) (Ly.rep k) (Ly.rep_mem k))
       (matRepL (Ly.L k) (repL (Ly.L k) (Ly.rep k) (Ly.rep_mem k))) (Ly.le k)
       (fun g v => matRepL_apply _ _ g v) (fun g i j => rfl)

@@ -80,7 +80,7 @@ lemma taylor_const_mul (D : D7) {N N' : ℕ} (c : ℂ) (G : VC D N N' → ℂ) (
   have h := iteratedFDeriv_const_smul_apply (𝕜 := ℂ) (i := (Finsupp.toMultiset α).card) (a := c) (x := (0 : VC D N N'))
     (hG.contDiffAt.of_le (by exact_mod_cast le_top))
   rw [show (fun z => c * G z) = c • G from rfl, h]
-  rw [ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_div_assoc]
+  rw [smul_apply, smul_eq_mul, mul_div_assoc]
 
 lemma contDiff_U (D : D7) (T : Tor D) {N N' : ℕ} (x : VC D N N') (F : VC D N N' → ℂ)
     (hF : ContDiff ℂ ⊤ F) : ContDiff ℂ ⊤ (U D T x F) := by
@@ -112,7 +112,7 @@ lemma wPh_sq (D : D7) (T : Tor D) {N N' : ℕ} (p : ℕ) (y : VC D N N') (m : �
     wPh D T p y ^ 2 = 1 := by
   unfold wPh
   split_ifs with hp
-  · rw [← Complex.exp_nat_mul, hm]
+  · rw [← Complex.exp_natCast_mul, hm]
     have : ((2 : ℕ) : ℂ) * ((Real.pi : ℂ) * Complex.I * ((m : ℝ) : ℂ)) = (m : ℂ) * (2 * Real.pi * Complex.I) := by
       push_cast; ring
     rw [this, Complex.exp_int_mul_two_pi_mul_I]
@@ -133,7 +133,7 @@ lemma root_alg (D : D7) (T : Tor D) {N N' : ℕ} (y t : VC D N N') (a b : ℕ) (
     rw [Hf_swap]
     apply Complex.ext <;> simp <;> ring
   apply sq_one_alg (n := 2 * (a * b)) (by positivity)
-  rw [hdiff, ← Complex.exp_nat_mul]
+  rw [hdiff, ← Complex.exp_natCast_mul]
   have : ((2 * (a * b) : ℕ) : ℂ) * (-(Real.pi : ℂ) * (2 * Complex.I * ((Hf D T y t).im : ℂ) / 2))
       = ((-k : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
     have hk'' : ((a * b : ℕ) : ℂ) * ((Hf D T y t).im : ℂ) = (k : ℂ) := by exact_mod_cast hk'

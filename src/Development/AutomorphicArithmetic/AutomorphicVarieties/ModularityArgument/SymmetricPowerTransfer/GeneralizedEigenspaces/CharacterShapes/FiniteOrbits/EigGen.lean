@@ -475,7 +475,7 @@ theorem val_inv_ge {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [I
     (h : valuation k (t : k) < 1) : valuation k (t : k) ≤ valuation k ((t⁻¹ : kˣ) : k) := by
   have h₀ : valuation k (t : k) ≠ 0 := (Valuation.ne_zero_iff _).2 t.ne_zero
   rw [Units.val_inv_eq_inv_val, map_inv₀]
-  exact h.le.trans ((one_le_inv₀ (zero_lt_iff.2 h₀)).2 h.le)
+  exact h.le.trans ((one_le_inv₀ (pos_iff_ne_zero.2 h₀)).2 h.le)
 
 variable {B : Bridge L}
 

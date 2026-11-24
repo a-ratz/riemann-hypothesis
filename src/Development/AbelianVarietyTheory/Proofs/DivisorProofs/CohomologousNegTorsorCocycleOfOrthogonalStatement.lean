@@ -1049,17 +1049,17 @@ theorem tensor_mem_of_dualAnnihilator : ∀ (R : Type) [CommRing R] (M N : Type 
   set e' : N →ₗ[R] N := C'.subtype.comp (C'.linearProjOfIsCompl F' hC'.symm) with he'
   have eF : ∀ f ∈ F, e f = 0 := fun f hf => by
     rw [he, LinearMap.comp_apply, show C.linearProjOfIsCompl F hC.symm f = 0 from
-      Submodule.linearProjOfIsCompl_apply_right hC.symm ⟨f, hf⟩, map_zero]
+      Submodule.projectionOnto_apply_right hC.symm ⟨f, hf⟩, map_zero]
   have eF' : ∀ f ∈ F', e' f = 0 := fun f hf => by
     rw [he', LinearMap.comp_apply, show C'.linearProjOfIsCompl F' hC'.symm f = 0 from
-      Submodule.linearProjOfIsCompl_apply_right hC'.symm ⟨f, hf⟩, map_zero]
+      Submodule.projectionOnto_apply_right hC'.symm ⟨f, hf⟩, map_zero]
   have sub : ∀ m, m - e m ∈ F := fun m => by
-    rw [← Submodule.linearProjOfIsCompl_ker hC.symm, LinearMap.mem_ker, map_sub, he,
-      LinearMap.comp_apply, Submodule.subtype_apply, Submodule.linearProjOfIsCompl_apply_left]
+    rw [← Submodule.ker_projectionOnto hC.symm, LinearMap.mem_ker, map_sub, he,
+      LinearMap.comp_apply, Submodule.subtype_apply, Submodule.projectionOnto_apply_left]
     exact sub_self _
   have sub' : ∀ m, m - e' m ∈ F' := fun m => by
-    rw [← Submodule.linearProjOfIsCompl_ker hC'.symm, LinearMap.mem_ker, map_sub, he',
-      LinearMap.comp_apply, Submodule.subtype_apply, Submodule.linearProjOfIsCompl_apply_left]
+    rw [← Submodule.ker_projectionOnto hC'.symm, LinearMap.mem_ker, map_sub, he',
+      LinearMap.comp_apply, Submodule.subtype_apply, Submodule.projectionOnto_apply_left]
     exact sub_self _
   have ann : ∀ x : Module.Dual R M, x.comp e ∈ F.dualAnnihilator := fun x => by
     rw [Submodule.mem_dualAnnihilator]; intro f hf; simp [eF f hf]

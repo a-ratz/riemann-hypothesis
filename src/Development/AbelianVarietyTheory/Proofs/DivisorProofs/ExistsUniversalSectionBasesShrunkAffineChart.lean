@@ -98,7 +98,7 @@ theorem GlobalTheory.Poinc.exists_univBasis_affineChart : ∀ (o Ω : Type) [Com
   obtain ⟨P', φ, hg, hφ, hiso⟩ := GlobalTheory.exists_isPolFibre hL.polBaseChange (Subalgebra.inclusion h).toRingHom P
   refine ⟨U, h, P', φ, hUU₀, hU, hwU, hφ, hiso.symm, hg, ?_, ?_⟩
   · obtain ⟨c₁, hc₁⟩ := GlobalTheory.T.universalBasis_move_baseChange _ _ _ P P' φ hφ hiso.symm _ _ _ τ₁ hτ₁ b₁ hb₁
-    haveI : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
+    have : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
     have key : GlobalTheory.ThetaReal.UnivBasis P' ((1 : ℕ) : ℤ) (fun _ : Fin 1 => c₁ default) := by
       intro T hT u
       have h2 := @hc₁ T hT u

@@ -100,7 +100,7 @@ theorem isGalois_and_units (D : Formalism.BasicNotions.D7) :
     IsGalois ℚ D.host.K ∧ ∀ u : (𝓞 D.host.K)ˣ, u = 1 ∨ u = -1 := by
   have h2 : Module.finrank ℚ D.host.K = 2 := Formalism.MainNotions.DIV.Bridge.LogAbsNormDifferent.finrank_K D
   refine ⟨?_, fun u => ?_⟩
-  · haveI : Algebra.IsQuadraticExtension ℚ D.host.K := ⟨h2⟩
+  · have : Algebra.IsQuadraticExtension ℚ D.host.K := ⟨h2⟩
     infer_instance
   · let σ : D.host.K →+* ℂ := (IsAlgClosed.lift (R := ℚ) (M := ℂ) (S := D.host.K)).toRingHom
     exact GlobalTheory.QuadraticZeta.unit_eq h2 (Formalism.MainNotions.DIV.Bridge.LogAbsNormDifferent.discr_K D) σ (four_lt_d D) u
@@ -157,10 +157,10 @@ theorem quotientMap_bijective {O S : Type*} [CommRing O] [IsLocalRing O] [CommRi
     [Algebra O S] [Algebra.IsIntegral O S] [IsAlgClosed (ResidueField O)] (M : Ideal S)
     [M.IsMaximal] (hM : M.comap (algebraMap O S) = maximalIdeal O) :
     Function.Bijective (Ideal.quotientMap M (algebraMap O S) hM.ge) := by
-  letI : Field (O ⧸ maximalIdeal O) := Ideal.Quotient.field _
-  haveI : IsAlgClosed (O ⧸ maximalIdeal O) := ‹IsAlgClosed (ResidueField O)›
-  letI : Field (S ⧸ M) := Ideal.Quotient.field _
-  letI := (Ideal.quotientMap M (algebraMap O S) hM.ge).toAlgebra
+  let : Field (O ⧸ maximalIdeal O) := Ideal.Quotient.field _
+  have : IsAlgClosed (O ⧸ maximalIdeal O) := ‹IsAlgClosed (ResidueField O)›
+  let : Field (S ⧸ M) := Ideal.Quotient.field _
+  let := (Ideal.quotientMap M (algebraMap O S) hM.ge).toAlgebra
   refine ⟨RingHom.injective _, fun x => ?_⟩
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective x
   have hs : IsIntegral (O ⧸ maximalIdeal O) (Ideal.Quotient.mk M s) :=
@@ -191,8 +191,8 @@ theorem range_le_range_of_isUnramifiedAt
       map_zero' := hinj (by simp [hg₀])
       map_add' := fun x y => hinj (by simp [hg₀]) }
   have hιO : ∀ x, algebraMap O (FractionRing O) (ιO x) = ι x := hg₀
-  letI : Algebra (𝓞 K₀) O := ιO.toAlgebra
-  letI : Algebra O ℂ := (e.comp (algebraMap O (FractionRing O))).toAlgebra
+  let : Algebra (𝓞 K₀) O := ιO.toAlgebra
+  let : Algebra O ℂ := (e.comp (algebraMap O (FractionRing O))).toAlgebra
   have hOC : ∀ o : O, algebraMap O ℂ o = e (algebraMap O (FractionRing O) o) := fun _ => rfl
   let S := integralClosure O ℂ
   have hOS : Function.Injective (algebraMap O S) := fun a b h => by
@@ -214,10 +214,10 @@ theorem range_le_range_of_isUnramifiedAt
     show σA l ∈ M
     rw [map_natCast, ← map_natCast (algebraMap O S), ← Ideal.mem_comap, hMc]
     exact hl
-  haveI := hur P hlP
-  haveI : Algebra.FinitePresentation (𝓞 K₀) (𝓞 L) :=
+  have := hur P hlP
+  have : Algebra.FinitePresentation (𝓞 K₀) (𝓞 L) :=
     Algebra.FinitePresentation.of_finiteType.1 inferInstance
-  haveI : Module.Flat (𝓞 K₀) (𝓞 L) := IsDedekindDomain.flat_iff_torsion_eq_bot.2 (by
+  have : Module.Flat (𝓞 K₀) (𝓞 L) := IsDedekindDomain.flat_iff_torsion_eq_bot.2 (by
     rw [eq_bot_iff]
     intro x hx
     obtain ⟨⟨r, hr⟩, hrx⟩ := hx
@@ -227,15 +227,15 @@ theorem range_le_range_of_isUnramifiedAt
     · exact absurd ((FaithfulSMul.algebraMap_injective _ _) (h.trans (map_zero _).symm)) hr0
     · exact h)
   obtain ⟨f, hfP, hfU⟩ := Algebra.exists_formallyUnramified_of_isUnramifiedAt (R := 𝓞 K₀) P
-  haveI : Algebra.FinitePresentation (𝓞 K₀) (Localization.Away f) :=
+  have : Algebra.FinitePresentation (𝓞 K₀) (Localization.Away f) :=
     .trans _ (𝓞 L) _
-  haveI : Module.Flat (𝓞 K₀) (Localization.Away f) := .trans _ (𝓞 L) _
-  haveI : Algebra.Etale (𝓞 K₀) (Localization.Away f) := Algebra.Etale.of_formallyUnramified_of_flat
-  haveI : Algebra.IsEtaleAt (𝓞 K₀) P :=
+  have : Module.Flat (𝓞 K₀) (Localization.Away f) := .trans _ (𝓞 L) _
+  have : Algebra.Etale (𝓞 K₀) (Localization.Away f) := Algebra.Etale.of_formallyUnramified_of_flat
+  have : Algebra.IsEtaleAt (𝓞 K₀) P :=
     Algebra.basicOpen_subset_etaleLocus_iff_etale.2 this
       (show (⟨P, inferInstance⟩ : PrimeSpectrum (𝓞 L)) ∈ PrimeSpectrum.basicOpen f from hfP)
   obtain ⟨g, hgP, hgE⟩ := Algebra.IsEtaleAt.exists_isStandardEtale (R := 𝓞 K₀) P
-  letI : Field (O ⧸ maximalIdeal O) := Ideal.Quotient.field _
+  let : Field (O ⧸ maximalIdeal O) := Ideal.Quotient.field _
   let q := Ideal.quotientMap M (algebraMap O S) hMc.ge
   have hq := quotientMap_bijective M hMc
   let qe := RingEquiv.ofBijective q hq
@@ -257,13 +257,13 @@ theorem range_le_range_of_isUnramifiedAt
         apply hq.1
         rw [hφ₀, hSR]
         rfl }
-  haveI := hgE
+  have := hgE
   obtain ⟨ψ, hψ⟩ := GlobalTheory.exists_algHom_lift_of_smooth (maximalIdeal O)
     (Ideal.Quotient.mkₐ (𝓞 K₀) (maximalIdeal O)) Ideal.Quotient.mk_surjective
     (fun b => Ideal.Quotient.eq_zero_iff_mem.symm) φ
-  haveI := hMmax
+  have := hMmax
   let T := Localization.AtPrime M
-  letI : Algebra (𝓞 K₀) T := ((algebraMap S T).comp ((algebraMap O S).comp ιO)).toAlgebra
+  let : Algebra (𝓞 K₀) T := ((algebraMap S T).comp ((algebraMap O S).comp ιO)).toAlgebra
   have hgT : IsUnit ((algebraMap S T).comp σA g) :=
     (IsLocalization.AtPrime.isUnit_to_map_iff T M (σA g)).2 hgP
   let χ₂r : Localization.Away g →+* T := IsLocalization.Away.lift g hgT
@@ -505,10 +505,10 @@ theorem _root_.GlobalTheory.RayCompositum.fieldRange_sup_eq_top : ∀ {K H H₁ 
     𝔟 ≤ Ideal.span {(q : 𝓞 K)} → _root_.GlobalTheory.FieldSize.IsRay H (𝔞 ⊓ 𝔟) → _root_.GlobalTheory.FieldSize.IsRay H₁ 𝔞 →
     _root_.GlobalTheory.FieldSize.IsRay H₂ 𝔟 → ∀ (f₁ : H₁ →ₐ[K] H) (f₂ : H₂ →ₐ[K] H), f₁.fieldRange ⊔ f₂.fieldRange = ⊤ := by
   intro K H H₁ H₂ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hu 𝔞 𝔟 _ _ q hq hq2 haq hbq hH hH₁ hH₂ f₁ f₂
-  letI : Algebra H₁ H := f₁.toRingHom.toAlgebra
-  haveI : IsScalarTower K H₁ H := IsScalarTower.of_algebraMap_eq fun x => (f₁.commutes x).symm
-  letI : Algebra H₂ H := f₂.toRingHom.toAlgebra
-  haveI : IsScalarTower K H₂ H := IsScalarTower.of_algebraMap_eq fun x => (f₂.commutes x).symm
+  let : Algebra H₁ H := f₁.toRingHom.toAlgebra
+  have : IsScalarTower K H₁ H := IsScalarTower.of_algebraMap_eq fun x => (f₁.commutes x).symm
+  let : Algebra H₂ H := f₂.toRingHom.toAlgebra
+  have : IsScalarTower K H₂ H := IsScalarTower.of_algebraMap_eq fun x => (f₂.commutes x).symm
   have hres : ∀ {E : Type} [Field E] [Algebra K E] [Algebra E H] [IsScalarTower K E H] [Normal K E]
       (f : E →ₐ[K] H), (∀ y, algebraMap E H y = f y) → ∀ σ : Gal(H/K),
       (∀ x ∈ f.fieldRange, σ x = x) → AlgEquiv.restrictNormalHom E σ = 1 := by
@@ -640,7 +640,7 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
       GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.RayIn D (m * N) L.toSubfield ∧ ∀ z : ℂ, z ^ (m * N) = 1 → z ∈ L := by
   classical
   obtain ⟨hKgal, hU⟩ := hostK_facts D
-  letI : Algebra D.host.K ℂ := (phiK D).toAlgebra
+  let : Algebra D.host.K ℂ := (phiK D).toAlgebra
   have hlp : (D.ntw.l i).Prime := (D.ntw.lPrime i).out
   have hm₀0 : D.host.g 0 * D.host.g 1 * D.host.pde * D.host.pde' ≠ 0 := by
     have := (D.host.g_prime 0).ne_zero; have := (D.host.g_prime 1).ne_zero
@@ -707,8 +707,8 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
     rw [this]
     exact hLe (hj₀v (g₁ y))
   have h2 : ∀ x : H₂, j (f₂ x) ∈ (ρ.e i b).fieldRange := by
-    haveI := D.ntw.O_complete i
-    haveI := D.ntw.resO_ac i
+    have := D.ntw.O_complete i
+    have := D.ntw.resO_ac i
     let ι : D.host.K →+* FractionRing (D.ntw.O i) :=
       (sideEmb D.ntw i b).comp ((eLL0 D).comp (algebraMap D.host.K D.host.E))
     have hσ : ((j.comp f₂ : H₂ →ₐ[D.host.K] ℂ) : H₂ →+* ℂ).comp (algebraMap D.host.K H₂) = (ρ.e i b).comp ι := by
@@ -724,7 +724,7 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
         rw [h0, Ideal.mem_bot] at hlK
         exact hlp.ne_zero (by exact_mod_cast hlK)
       let 𝔭 : HeightOneSpectrum (𝓞 D.host.K) := ⟨P.under (𝓞 D.host.K), inferInstance, hne⟩
-      haveI : P.LiesOver 𝔭.asIdeal := ⟨rfl⟩
+      have : P.LiesOver 𝔭.asIdeal := ⟨rfl⟩
       refine isUnramifiedAt_of_unramIn (hH₂'.1 𝔭 fun hd => ?_) P
       have h3 : ((m'' * N : ℕ) : 𝓞 D.host.K) ∈ 𝔭.asIdeal := Ideal.dvd_iff_le.1 hd (Ideal.mem_span_singleton_self _)
       have hc : (D.ntw.l i).Coprime (m'' * N) := Nat.Coprime.mul_right hm'' hNl.symm
@@ -749,15 +749,15 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
 
   let A : IntermediateField ℚ ℂ := (embLL0 D).toRatAlgHom.fieldRange
   let B : IntermediateField ℚ ℂ := (j : H →+* ℂ).toRatAlgHom.fieldRange
-  haveI : FiniteDimensional ℚ A := (AlgEquiv.ofInjectiveField (embLL0 D).toRatAlgHom).toLinearEquiv.finiteDimensional
-  haveI : FiniteDimensional ℚ B :=
+  have : FiniteDimensional ℚ A := (AlgEquiv.ofInjectiveField (embLL0 D).toRatAlgHom).toLinearEquiv.finiteDimensional
+  have : FiniteDimensional ℚ B :=
     (AlgEquiv.ofInjectiveField (j : H →+* ℂ).toRatAlgHom).toLinearEquiv.finiteDimensional
   have hA : ∀ x, embLL0 D x ∈ A ⊔ B := fun x => (le_sup_left : A ≤ A ⊔ B) ⟨x, rfl⟩
   have hB : ∀ x, j x ∈ A ⊔ B := fun x => (le_sup_right : B ≤ A ⊔ B) ⟨x, rfl⟩
   refine ⟨A ⊔ B, inferInstance, fun hG => ?_, ?_, ?_, ?_, ?_⟩
   · have gA : IsGalois ℚ A := IsGalois.of_algEquiv (AlgEquiv.ofInjectiveField (embLL0 D).toRatAlgHom)
     have gB : IsGalois ℚ B := isGalois_fieldRange_of_isRay hmN hH' (j : H →+* ℂ)
-    haveI : Normal ℚ ↥(A ⊔ B) := @IntermediateField.normal_sup ℚ ℂ _ _ _ A B gA.to_normal gB.to_normal
+    have : Normal ℚ ↥(A ⊔ B) := @IntermediateField.normal_sup ℚ ℂ _ _ _ A B gA.to_normal gB.to_normal
     exact ⟨⟩
   · rintro _ ⟨x, rfl⟩
     exact hA x
@@ -771,7 +771,7 @@ theorem exists_field (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw) 
     exact j.commutes x
   · obtain ⟨ζ, hζ⟩ := exists_isPrimitiveRoot_of_isRay hmN hH'
     intro z hz
-    haveI : NeZero (m * N) := ⟨hmN⟩
+    have : NeZero (m * N) := ⟨hmN⟩
     have hζ' := hζ.map_of_injective (j : H →+* ℂ).injective
     obtain ⟨k, -, rfl⟩ := hζ'.eq_pow_of_pow_eq_one hz
     exact pow_mem (hB ζ) k
@@ -800,7 +800,7 @@ theorem exists_field_k (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw
   obtain ⟨L, hfin, hgal, h1, h2, ⟨H, i1, i2, i3, i4, hH, jj, hjj, hv⟩, hroot⟩ :=
     exists_field D ρ hρ i b hRF hray m N hm hm' hN hNl
   have hlp : (D.ntw.l i).Prime := (D.ntw.lPrime i).out
-  haveI : NeZero (D.ntw.l i ^ k) := ⟨pow_ne_zero _ hlp.ne_zero⟩
+  have : NeZero (D.ntw.l i ^ k) := ⟨pow_ne_zero _ hlp.ne_zero⟩
   set ζ : ℂ := ρ.eOk i b k (D.ntw.zk i k : D.ntw.Ok i k) with hζdef
   have hζ : IsPrimitiveRoot ζ (D.ntw.l i ^ k) := (D.ntw.zk_prim i k).map_of_injective (ρ.eOk_injective i b k)
   let p : Polynomial ℚ := Polynomial.X ^ (D.ntw.l i ^ k) - 1
@@ -810,14 +810,14 @@ theorem exists_field_k (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) (i : D.ntw.Tw
     rw [Polynomial.mem_rootSet, and_iff_right hp0]
     simp [p, sub_eq_zero]
   let C : IntermediateField ℚ ℂ := IntermediateField.adjoin ℚ (p.rootSet ℂ)
-  haveI hCs : Polynomial.IsSplittingField ℚ C p :=
+  have hCs : Polynomial.IsSplittingField ℚ C p :=
     IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-  haveI : FiniteDimensional ℚ C := Polynomial.IsSplittingField.finiteDimensional C p
+  have : FiniteDimensional ℚ C := Polynomial.IsSplittingField.finiteDimensional C p
   refine ⟨L ⊔ C, inferInstance, fun hG => ?_, ?_, ?_, ?_, ?_, ?_⟩
   · have gL : IsGalois ℚ L := hgal hG
-    haveI : Normal ℚ C := Normal.of_isSplittingField p
+    have : Normal ℚ C := Normal.of_isSplittingField p
     have gC : IsGalois ℚ C := ⟨⟩
-    haveI : Normal ℚ ↥(L ⊔ C) := @IntermediateField.normal_sup ℚ ℂ _ _ _ L C gL.to_normal gC.to_normal
+    have : Normal ℚ ↥(L ⊔ C) := @IntermediateField.normal_sup ℚ ℂ _ _ _ L C gL.to_normal gC.to_normal
     exact ⟨⟩
   · exact fun z hz => (le_sup_left : L ≤ L ⊔ C) (h1 hz)
   · intro z hz

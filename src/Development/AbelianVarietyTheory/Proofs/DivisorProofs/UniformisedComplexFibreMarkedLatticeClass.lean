@@ -238,7 +238,7 @@ theorem unifAt_cls : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
   have hlin : ∀ (c : D.O) x, P (c • x) = ρ c *ᵥ P x := hper.1
   have hinj : Function.Injective P := hper.2.1
   obtain ⟨I, hI⟩ := o.geom ℂ (𝟙 _) σ (Category.id_comp _)
-  haveI := D.freeLa
+  have := D.freeLa
   have hlift : ∀ n : ℕ, 0 < n → n.Coprime p → ∃ φ : D.La →+ D'.La, ∀ a, I.ev n a = e ((n : ℂ)⁻¹ • P (φ a)) :=
     fun n hn hnp => unifCls_lift e P hadd hsurj hker (I.ev n) (I.add n) hn
       (fun x => (I.onto n hn hnp _).2 ⟨x, rfl⟩)
@@ -249,12 +249,12 @@ theorem unifAt_cls : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
   let ν : ℕ → ℤ := fun n => if hn : 0 < n ∧ n.Coprime p then Classical.choose (hroot n hn.1 hn.2) else 0
   have hf : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p) a, I.ev n a = e ((n : ℂ)⁻¹ • P (f n a)) := by
     intro n hn hnp a
-    simp only [f, dif_pos (And.intro hn hnp)]
+    simp only [f, dite_eq_left (And.intro hn hnp)]
     exact Classical.choose_spec (hlift n hn hnp) a
   have hν : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p), IsCoprime (ν n) n ∧
       ((I.ζ n : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (ν n : ℂ) / n) := by
     intro n hn hnp
-    simp only [ν, dif_pos (And.intro hn hnp)]
+    simp only [ν, dite_eq_left (And.intro hn hnp)]
     exact Classical.choose_spec (hroot n hn hnp)
   have heq : ∀ {n : ℕ}, 0 < n → ∀ v v' : D'.La,
       e ((n : ℂ)⁻¹ • P v) = e ((n : ℂ)⁻¹ • P v') ↔ ∃ w, v = v' + n • w :=
@@ -267,7 +267,7 @@ theorem unifAt_cls : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
     · have hz := I.ζ_pow n m hn hm hnm
       have hz' := congrArg (fun u : ℂˣ => (u : ℂ)) hz
       simp only [Units.val_pow_eq_pow_val] at hz'
-      rw [(hν _ (Nat.mul_pos hn hm) hnm).2, (hν n hn hnp).2, ← Complex.exp_nat_mul] at hz'
+      rw [(hν _ (Nat.mul_pos hn hm) hnm).2, (hν n hn hnp).2, ← Complex.exp_natCast_mul] at hz'
       have : (m : ℂ) * (-(2 * Real.pi * Complex.I) * (ν (n * m) : ℂ) / ((n * m : ℕ) : ℂ)) =
           -(2 * Real.pi * Complex.I) * (ν (n * m) : ℂ) / n := by
         have : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
@@ -303,7 +303,7 @@ theorem unifAt_cls : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
       have hu := _root_.GlobalTheory.WeilComplexUnique.weilIs_unitOn_unique_complex (Sp ℂ) o.A D.g o.ab h _ hL (𝟙 _) n _ _ _ _ hiso hw
       have hu' := congrArg (fun u : ℂˣ => (u : ℂ)) hu
       simp only [Units.val_zpow_eq_zpow_val, Units.val_mk0] at hu'
-      rw [(hν n hn hnp).2, ← Complex.exp_int_mul] at hu'
+      rw [(hν n hn hnp).2, ← Complex.exp_intCast_mul] at hu'
       have : ((2 * D.EF a a' : ℤ) : ℂ) * (-(2 * Real.pi * Complex.I) * (ν n : ℂ) / n) =
           -(2 * Real.pi * Complex.I) * ((ν n * (2 * D.EF a a') : ℤ) : ℂ) / n := by
         push_cast; ring

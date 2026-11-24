@@ -113,7 +113,7 @@ private theorem gen_pi {T : Module.End ℂ M} {T' : Module.End ℂ (Fin m → M)
 
 private theorem uOp_pi (I : Iwa G) (h : ∀ g F i, ρF g F i = ρ g (F i)) (a : G) (F : Fin m → M) (i : Fin m) :
     I.uOp ρF a F i = I.uOp ρ a (F i) := by
-  haveI : Nonempty (Fin m) := ⟨i⟩
+  have : Nonempty (Fin m) := ⟨i⟩
   let c : Module.End ℂ M →+ Module.End ℂ (Fin m → M) :=
     { toFun := fun T => LinearMap.compLeft T (Fin m)
       map_zero' := by ext; simp

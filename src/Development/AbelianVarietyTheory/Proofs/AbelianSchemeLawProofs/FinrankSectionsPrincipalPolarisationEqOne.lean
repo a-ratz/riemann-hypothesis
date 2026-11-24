@@ -106,7 +106,7 @@ theorem le_one_of_convolution (a b : ℕ → ℕ) (g : ℕ)
     (h : ∀ n, ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, a x.1 * b x.2 = if n = g then 1 else 0) :
     a 0 ≤ 1 := by
   have hg := h g
-  rw [if_pos rfl] at hg
+  rw [ite_eq_left rfl] at hg
   obtain ⟨x, -, hx⟩ := Finset.exists_ne_zero_of_sum_ne_zero (hg.trans_ne one_ne_zero)
   have hb : 1 ≤ b x.2 := Nat.one_le_iff_ne_zero.2 (right_ne_zero_of_mul hx)
   have h₁ : a 0 * b x.2 ≤ ∑ y ∈ Finset.HasAntidiagonal.antidiagonal x.2, a y.1 * b y.2 :=
@@ -323,7 +323,7 @@ theorem exists_sq_eq (K : Type) [Field K] (N : ℕ) (hN : 1 ≤ N) (t₀ : ℤ) 
         rw [CharP.cast_eq_zero K p]
         simp
     · subst h
-      haveI := CharP.charP_to_charZero K
+      have := CharP.charP_to_charZero K
       exact ⟨t₀.toNat, Int.self_le_toNat t₀, Nat.cast_ne_zero.2 (by omega)⟩
   obtain ⟨a, ha, hK⟩ := key
   refine ⟨1 + N * a, 2 * a + N * a ^ 2, hK, ?_, ?_⟩
@@ -344,7 +344,7 @@ theorem one_le_finrank_secM :
     GlobalTheory.AbLaw.polAV_veryAmpleBy GlobalTheory.laws_without_cohomology.2.2.1 _ P K (𝟙 _) _ π f hpb
   have hgi := GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ P.A.hom
     P.isAb.smooth P.isAb.geomConnected
-  haveI : IsIntegral (T ⊗ P.A).left := GeometricallyIntegral.geometrically_isIntegral _ _ _ hpb
+  have : IsIntegral (T ⊗ P.A).left := GeometricallyIntegral.geometrically_isIntegral _ _ _ hpb
   obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.exists_high_twist_section_ne_zero K _ f _ m s (P.L.pull π) hH (LB.isLB_pull P.isLB π) hs
   obtain ⟨n, t, hn, ht, hnt⟩ := exists_sq_eq K N hN t₀
   obtain ⟨σ, i, hi⟩ := ht₀ t ht
@@ -355,10 +355,10 @@ theorem one_le_finrank_secM :
   obtain ⟨e⟩ := (GlobalTheory.AbLaw.FromCube.all_of_cubeGen CubeAssembly.cube_gen).2.2.2.2.2.2.2.2.2 K P n 1 hn le_rfl
   have hone : Nontrivial (SecM P.A P.L ((1 : ℕ) : ℤ) T) := by
     by_contra h
-    haveI := not_nontrivial_iff_subsingleton.1 h
+    have := not_nontrivial_iff_subsingleton.1 h
     exact not_subsingleton _ e.toEquiv.subsingleton
   have hfin := (CubeAssembly.sections_growth K P).1 1
-  letI : Field Γ(T.left, ⊤) :=
+  let : Field Γ(T.left, ⊤) :=
     (isField_of_isIntegral_of_subsingleton (Spec (CommRingCat.of K))).toField
   exact Module.finrank_pos (R := Γ(T.left, ⊤)) (M := SecM P.A P.L ((1 : ℕ) : ℤ) T)
 

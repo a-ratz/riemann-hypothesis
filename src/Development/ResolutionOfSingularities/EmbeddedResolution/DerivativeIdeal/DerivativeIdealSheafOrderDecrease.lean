@@ -453,7 +453,7 @@ private theorem ideal_eq_top_of_support_eq_empty {X : Scheme.{u}} (J : X.IdealSh
     J.ideal U = ⊤ := by
   have hcover : (⨆ f : (J.ideal U : Set Γ(X, U.1)), X.basicOpen (f : Γ(X, U.1))) = U.1 := by
     refine le_antisymm (iSup_le fun f => X.basicOpen_le (f : Γ(X, U.1))) ?_
-    rw [SetLike.le_def]
+    rw [IsConcreteLE.le_iff]
     intro x hxU
     have hxs : x ∉ J.support := by
       intro hc
@@ -463,7 +463,7 @@ private theorem ideal_eq_top_of_support_eq_empty {X : Scheme.{u}} (J : X.IdealSh
     have hnle : ¬ stalkIdeal J x ≤ IsLocalRing.maximalIdeal (X.presheaf.stalk x) := fun hc =>
       hxs ((mem_support_iff_stalkIdeal_le_maximalIdeal J x).mpr hc)
     rw [stalkIdeal_eq_map_germ J x U hxU, Ideal.map_le_iff_le_comap,
-      SetLike.not_le_iff_exists] at hnle
+      IsConcreteLE.not_le_iff_exists] at hnle
     obtain ⟨a, ha, ha2⟩ := hnle
     have hbo : x ∈ X.basicOpen a := by
       refine (X.mem_basicOpen a x hxU).mpr ?_

@@ -434,13 +434,13 @@ theorem injR_of_vanKG (hV : VanKG) : InjR := by
         rw [e] at hA
         obtain ⟨B, -, hB⟩ := exists_ne_zero_of_sum_ne_zero hA
         by_cases h1 : pot B = N
-        · rw [if_pos h1, zero_sub, neg_ne_zero] at hB
+        · rw [ite_eq_left h1, zero_sub, neg_ne_zero] at hB
           rcases t4 B with h2 | h2
           · simp [h2] at hB
           · have := s4 B _ _ h2.2 A hB
             have := h2.1
             omega
-        · rw [if_neg h1, t3 B h1] at hB
+        · rw [ite_eq_right h1, t3 B h1] at hB
           have hB' : r B A ≠ 0 := by simpa using hB
           have h2 := (hrne B A hB').1
           have h3 := (hr B A hB').1
@@ -503,11 +503,11 @@ theorem numKG : NumKG := by
   have ta : ∀ a b, t b a = -t a b := fun a b => by
     simp only [t]; rw [sig_anti a b, sc_anti ε a b, sc_anti ε (w.symm a)]; ring
   have tb : ∀ a b, a < b → |t a b| ≤ 1 := fun a b h => by
-    simp only [t, ind_eq, dif_pos h, dif_neg h.not_gt, sc, hws]
+    simp only [t, ind_eq, dite_eq_left h, dite_eq_right h.not_gt, sc, hws]
     by_cases h1 : ε a = ε b
-    · rw [if_neg fun h2 => (hBn _ h2).1 h1]
+    · rw [ite_eq_right fun h2 => (hBn _ h2).1 h1]
       simpa [h1] using abs_sig _ _
-    · simp only [if_neg h1, sig, if_pos h]
+    · simp only [ite_eq_right h1, sig, ite_eq_left h]
       split_ifs <;> norm_num
   have tb' : ∀ a b, |t a b| ≤ 1 := fun a b => by
     rcases lt_trichotomy a b with h | h | h
@@ -520,7 +520,7 @@ theorem numKG : NumKG := by
   have hcd' : c < d := hcd
   have hne : t c d = -1 := by
     have h1 : ¬ε c = ε d := (hBn _ hi).1
-    simp only [t, ind_eq, dif_pos hcd', dif_neg hcd'.not_gt, sc, hws, if_neg h1, if_pos hi, sig, if_pos hcd']
+    simp only [t, ind_eq, dite_eq_left hcd', dite_eq_right hcd'.not_gt, sc, hws, ite_eq_right h1, ite_eq_left hi, sig, ite_eq_left hcd']
     norm_num
   have hgcd : Lc n ≤ X c - X d := hgap c d (hBn _ hi).2
 
@@ -624,10 +624,10 @@ theorem exists_character_of_smul_ne_zero :
     have h1 : (1 : R) ∈ J := h ▸ Submodule.mem_top
     exact ht (by simpa using (hmemJ 1).1 h1)
   obtain ⟨m, hm, hJm⟩ := Ideal.exists_le_maximal J hJ
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType ℂ (R ⧸ m) :=
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType ℂ (R ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℂ m) (Ideal.Quotient.mkₐ_surjective ℂ m)
-  haveI : Module.Finite ℂ (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ (R ⧸ m)
+  have : Module.Finite ℂ (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℂ (R ⧸ m)
   have bij : Function.Bijective (algebraMap ℂ (R ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : ℂ ≃ₐ[ℂ] R ⧸ m := AlgEquiv.ofBijective (Algebra.ofId ℂ (R ⧸ m)) bij
@@ -745,7 +745,7 @@ theorem cre_ann (i : Pos n) (x : Cn n V) (B : Finset (Pos n)) :
     cre i (ann i x) B = if i ∈ B then x B else 0 := by
   rw [cre_app]
   split_ifs with h
-  · rw [ann_app, if_neg (notMem_erase i B), insert_erase h, sg_erase, smul_smul, sg_sq, one_smul]
+  · rw [ann_app, ite_eq_right (notMem_erase i B), insert_erase h, sg_erase, smul_smul, sg_sq, one_smul]
   · rfl
 
 theorem adC_self (a : Fin n) (i k : Pos n) :
@@ -804,7 +804,7 @@ theorem top_cycle_weight : ∀ (n : ℕ) (ε : Fin n → Bool) (lev : Fin n → 
           · exact notMem_erase _ _ h
       · rfl
     · intro i _
-      rw [if_pos rfl, ann_app]
+      rw [ite_eq_left rfl, ann_app]
       split_ifs with hi
       · exact map_zero _
       · by_cases e : insert i B = omU ε lev
@@ -999,9 +999,9 @@ theorem sub_char {W : Type} [AddCommGroup W] [Module ℂ W] (R : Subalgebra ℂ 
     ∃ f : Module.End ℂ W → ℂ, f 1 = 1 ∧ (∀ x ∈ R, ∀ y ∈ R, f (x + y) = f x + f y ∧ f (x * y) = f x * f y) ∧
       (∀ x ∈ R, ∀ c : ℂ, f (c • x) = c * f x) ∧ ∀ x ∈ R, ∀ c : ℂ, x t = c • t → f x = c := by
   classical
-  letI cr : CommRing R := { (inferInstance : Ring R) with
+  let cr : CommRing R := { (inferInstance : Ring R) with
     mul_comm := fun x y => Subtype.ext (hc x x.2 y y.2) }
-  haveI : Algebra.FiniteType ℂ R := (Subalgebra.fg_iff_finiteType R).1 hfg
+  have : Algebra.FiniteType ℂ R := (Subalgebra.fg_iff_finiteType R).1 hfg
   obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.CompanionTheory.RgCOBlock.exists_character_of_smul_ne_zero R W t ht
   refine ⟨fun x => if h : x ∈ R then φ ⟨x, h⟩ else 0, ?_, ?_, ?_, ?_⟩
   · simp only [R.one_mem, dite_eq_left]
@@ -1037,7 +1037,7 @@ theorem L_core : ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (t : W) (M : ℕ
       mem_image.2 ⟨j, mem_range.2 (Nat.lt_succ_of_le hj), rfl⟩⟩))
   set R := Algebra.adjoin ℂ (S : Set (Module.End ℂ W)) with hR
   have hcomm : ∀ x ∈ R, ∀ y ∈ R, x * y = y * x := by
-    letI := Algebra.isMulCommutative_adjoin ℂ (s := (S : Set (Module.End ℂ W))) (fun a ha b hb _ => by
+    let := Algebra.isMulCommutative_adjoin ℂ (s := (S : Set (Module.End ℂ W))) (fun a ha b hb _ => by
       obtain ⟨i, j, rfl⟩ := hS a ha
       obtain ⟨k, l, rfl⟩ := hS b hb
       exact c4 i k j l)
@@ -1107,14 +1107,14 @@ theorem L_core : ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (t : W) (M : ℕ
         rw [h0, LinearMap.zero_apply] at this
         exact (smul_eq_zero.1 this.symm).resolve_right ht
       have hn0 : (P i).nextCoeff = 0 := by
-        rw [Polynomial.nextCoeff, if_pos ((hnd i).trans hd)]
+        rw [Polynomial.nextCoeff, ite_eq_left ((hnd i).trans hd)]
       rw [hn0, this, hd]
       simp
     · have h1 : 1 ≤ d i := Nat.one_le_iff_ne_zero.2 hd
       rw [nextCoeff_of_natDegree_pos (by rw [hnd i]; omega), hnd i]
       have hco : (P i).coeff (d i - 1) = a i (d i - 1) := by
         simp only [P, coeff_add, coeff_X_pow, finsetSum_coeff, coeff_C_mul]
-        rw [if_neg (by omega), zero_add, Finset.sum_eq_single (d i - 1)]
+        rw [ite_eq_right (by omega), zero_add, Finset.sum_eq_single (d i - 1)]
         · simp
         · intro b _ hb; simp [Ne.symm hb]
         · intro h; exact absurd (mem_range.2 (by omega)) h
@@ -1163,17 +1163,17 @@ theorem coBlock : InjU → GenCOU → COBlock := by
     rintro ⟨p, q⟩ z ⟨h1, h2, h3⟩
     by_cases hpq : lev p = lev q
     · obtain ⟨g1, g2, g3⟩ := (L_lF n lev V E hmono hE z h1).1 p q hpq
-      simp only [lL, if_pos hpq]
+      simp only [lL, ite_eq_left hpq]
       exact ⟨g1, g2 _ h2, by rw [← g3, h3, map_zero]⟩
-    · simp only [lL, if_neg hpq]
+    · simp only [lL, ite_eq_right hpq]
       exact Z.zero_mem
   have hBs : ∀ k, ∀ z ∈ B, lL lev E k z ∈ B := by
     rintro ⟨p, q⟩ _ ⟨w, h1, h2, rfl⟩
     by_cases hpq : lev p = lev q
     · obtain ⟨g1, g2, g3⟩ := (L_lF n lev V E hmono hE w h1).1 p q hpq
-      simp only [lL, if_pos hpq]
+      simp only [lL, ite_eq_left hpq]
       exact ⟨_, g1, g2 _ h2, g3.symm⟩
-    · simp only [lL, if_neg hpq]
+    · simp only [lL, ite_eq_right hpq]
       exact B.zero_mem
   obtain ⟨ρ, hρ⟩ := _root_.GlobalTheory.CompanionTheory.RgCOBlock.QuotAction.descends (Cn n V) (Fin n × Fin n) (lL lev E) Z B hZs hBs
   have hlift : FreeAlgebra.lift ℂ (lL lev E) = evLc lev E := rfl
@@ -1198,7 +1198,7 @@ theorem coBlock : InjU → GenCOU → COBlock := by
         simp only [hinj] at g
         have hll : ∀ (a b : Fin (sz lev M i)), lev (s ⟨i, a⟩) = lev (s ⟨i, b⟩) := fun a b => (hsame _ _ _ _).2 rfl
         by_cases c1 : q = r <;> by_cases c2 : v = p <;>
-          simp only [c1, c2, if_true, if_false, map_sub, map_mul, map_zero, LinearMap.sub_apply, Module.End.mul_apply, hev _ _ (hll _ _), LinearMap.zero_apply] at g ⊢ <;>
+          simp only [c1, c2, ite_true, ite_false, map_sub, map_mul, map_zero, LinearMap.sub_apply, Module.End.mul_apply, hev _ _ (hll _ _), LinearMap.zero_apply] at g ⊢ <;>
           simp [g])
     simp only [map_sub, map_mul] at e
     rw [sub_eq_zero] at e
@@ -1210,7 +1210,7 @@ theorem coBlock : InjU → GenCOU → COBlock := by
         have g := (L_lF n lev V E hmono hE z z.2.1).2 (s ⟨i, p⟩) (s ⟨i, q⟩) (s ⟨j, r⟩) (s ⟨j, v⟩) ((hsame _ _ _ _).2 rfl) ((hsame _ _ _ _).2 rfl)
         have n1 : s ⟨i, q⟩ ≠ s ⟨j, r⟩ := fun e => hij ((hsame _ _ q r).1 (by rw [e]))
         have n2 : s ⟨j, v⟩ ≠ s ⟨i, p⟩ := fun e => hij ((hsame _ _ p v).1 (by rw [e]))
-        rw [if_neg n1, if_neg n2, sub_zero] at g
+        rw [ite_eq_right n1, ite_eq_right n2, sub_zero] at g
         simp only [map_sub, map_mul, LinearMap.sub_apply, Module.End.mul_apply, hev _ _ ((hsame _ _ _ _).2 rfl)]
         exact g)
     simp only [map_sub, map_mul] at e

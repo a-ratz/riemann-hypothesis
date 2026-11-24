@@ -148,7 +148,7 @@ theorem exists_partition {F : Type} [Field F] (σ : F →+* ℂ) (X : Var F)
       (∀ j y, 0 ≤ χ j y) ∧ (∀ y, ∑ j, χ j y = 1) ∧ (∀ j, tsupport (χ j) ⊆ W (pt j)) ∧
       ∀ j y, CInfAt (χ j) y := by
   classical
-  haveI := CxPts.compactSpace σ X.isProjOver
+  have := CxPts.compactSpace σ X.isProjOver
   have hc : ∀ y, ∃ c : AlgChart X.str σ X.dim, y ∈ c.e.source ∧ c.e.source ⊆ W y := fun y => by
     obtain ⟨c, hc⟩ := AlgChart.exists_mem_source (p := X.str) (σ := σ) (D := X.dim) y
     exact ⟨c.restr (W y) (hWo y), ⟨hc, hW y⟩, Set.inter_subset_right⟩
@@ -391,7 +391,7 @@ theorem mdel_lie (ρ : PolyRep m) {n : ℕ} {A : V n → Mat m ℂ} {v : V n}
   ext i j
   simp only [mdel_apply, lie_apply]
   rw [del_sum (fun w _ => (differentiableAt_const _).mul ((h w.1).diff w.2.1 w.2.2)),
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [del_mul (differentiableAt_const _) ((h w.1).diff w.2.1 w.2.2)]
   simp
@@ -402,7 +402,7 @@ theorem mdbar_lie (ρ : PolyRep m) {n : ℕ} {A : V n → Mat m ℂ} {v : V n}
   ext i j
   simp only [mdbar_apply, lie_apply]
   rw [dbar_sum (fun w _ => (differentiableAt_const _).mul ((h w.1).diff w.2.1 w.2.2)),
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [dbar_mul (differentiableAt_const _) ((h w.1).diff w.2.1 w.2.2)]
   simp
@@ -1223,7 +1223,7 @@ theorem charpolyRev_neg_lie_nsum (ρ : PolyRep m) (k : ℕ) {S : Type} [CommRing
   induction k with
   | zero =>
     rw [pow_zero, Matrix.charpolyRev]
-    haveI : IsEmpty (Fin (ρ.nsum 0).M) := inferInstanceAs (IsEmpty (Fin 0))
+    have : IsEmpty (Fin (ρ.nsum 0).M) := inferInstanceAs (IsEmpty (Fin 0))
     exact Matrix.det_isEmpty
   | succ k ih =>
     rw [pow_succ, ← ih, ← _root_.GlobalTheory.GoodMetric.ChernSpan.charpolyRev_neg_blockSum]
@@ -1295,10 +1295,10 @@ theorem ptr_mul_trProd_mem_reach (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ 
         rw [← hσ A (r + i - a) (by omega), Finset.mul_sum]
         exact Finset.sum_congr rfl fun j _ => (mul_smul_comm _ _ _).symm
       rw [Finset.sum_congr rfl e, Finset.sum_eq_single r]
-      · rw [if_pos (by omega), Algebra.smul_def, map_natCast, mul_assoc]
+      · rw [ite_eq_left (by omega), Algebra.smul_def, map_natCast, mul_assoc]
       · intro a ha har
         rw [Finset.mem_range] at ha
-        rw [if_neg (by omega), mul_zero]
+        rw [ite_eq_right (by omega), mul_zero]
       · intro h
         exact absurd (Finset.mem_range.2 (by omega)) h
     simp only [Pi.smul_apply, Finset.sum_apply]

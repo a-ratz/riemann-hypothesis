@@ -105,19 +105,19 @@ theorem sub_at (x y : A F) (v : HeightOneSpectrum (𝓞 F)) : (x - y) v = x v - 
 theorem one_at (v : HeightOneSpectrum (𝓞 F)) : (1 : A F) v = 1 := rfl
 
 theorem idem_int {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : IntAt b v) : idem b v = 1 :=
-  if_pos h
+  ite_eq_left h
 theorem idem_not {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : ¬ IntAt b v) : idem b v = 0 :=
-  if_neg h
+  ite_eq_right h
 theorem scale_int {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : IntAt b v) : scale b v = 1 :=
-  if_pos h
+  ite_eq_left h
 theorem scale_not {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : ¬ IntAt b v) :
     scale b v = (algebraMap F (A F) b v)⁻¹ :=
-  if_neg h
+  ite_eq_right h
 theorem scaleInv_int {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : IntAt b v) : scaleInv b v = 1 :=
-  if_pos h
+  ite_eq_left h
 theorem scaleInv_not {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : ¬ IntAt b v) :
     scaleInv b v = algebraMap F (A F) b v :=
-  if_neg h
+  ite_eq_right h
 
 theorem ne_zero_of_not_int {b : F} {v : HeightOneSpectrum (𝓞 F)} (h : ¬ IntAt b v) :
     algebraMap F (A F) b v ≠ 0 := fun h0 =>
@@ -331,7 +331,7 @@ theorem fstar_decay : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace 
     have h2 := (_root_.GlobalTheory.CompanionTheory.SW.Core.PiScale.pi_scale F lf hlf h1 ι).2 a _ hs'
     rw [Set.image_image, ha, hden, hQ.2.1] at h2
     simp only [smul_smul, Units.mul_inv, one_smul, Set.image_id'] at h2
-    rw [muF, Measure.smul_apply, Measure.smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← mul_assoc _ (_ ^ _),
+    rw [muF, smul_apply, smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← mul_assoc _ (_ ^ _),
       ← pow_mul, ENNReal.ofReal_pow (Nat.cast_nonneg _), ENNReal.ofReal_natCast, mul_comm M 2, ← mul_pow,
       ENNReal.mul_inv_cancel (by exact_mod_cast hd) (ENNReal.natCast_ne_top _), one_pow, one_mul]
   have hT := impl_mul hD (impl_mul (impl_U H (-y)) (impl_mul (impl_fou_chiB H) (impl_U H (algebraMap F (A F) b))))

@@ -196,7 +196,7 @@ theorem jl_unit_iff (t : 𝓞 D.host.F) :
 theorem jl_dvd_iff (ϖ : 𝒪[(D.s.atP p).Fp]) (hϖ : Irreducible ϖ) (t : 𝓞 D.host.F) :
     ϖ ∣ (⟨(D.s.atP p).ιF (t : D.host.F), Formalism.L2.SG.Pf.LocUnramP.iotaF_mem p t⟩ : 𝒪[(D.s.atP p).Fp]) ↔
       t ∈ p.asIdeal := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   rw [← Ideal.mem_span_singleton, ← hϖ.maximalIdeal_eq, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff,
     jl_unit_iff, not_not]
 

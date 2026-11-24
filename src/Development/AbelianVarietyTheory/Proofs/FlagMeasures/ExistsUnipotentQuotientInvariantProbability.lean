@@ -174,14 +174,14 @@ theorem exists_prob_subgroup [LocallyCompactSpace G] (N Γ : Subgroup G) (hN : I
     intro a b h
     exact Subtype.ext (Subtype.ext (congrArg (fun z : Γ => (z : G)) h))
   obtain ⟨ν, hν, hνC, hνf⟩ := exists_prob (Γ.subgroupOf N) (fun K hK => by
-      have := hfin _ (hK.image continuous_subtype_val)
+      have := hfin _ (hK.image continuous_subtypeVal)
       refine (this.preimage (f := (Subtype.val : N → G)) Subtype.val_injective.injOn).subset ?_
       rintro x ⟨hx, hx'⟩
       exact ⟨⟨x, hx, rfl⟩, hx'⟩)
     (Subtype.val ⁻¹' C) (hce.isCompact_preimage hC) (fun m => by
       obtain ⟨γ, h1, h2, h3⟩ := hcov m m.2
       exact ⟨⟨γ, h2⟩, h1, h3⟩)
-  refine ⟨ν.map Subtype.val, (by letI := hν; infer_instance), ?_, ?_, ?_⟩
+  refine ⟨ν.map Subtype.val, (by let := hν; infer_instance), ?_, ?_, ?_⟩
   · rw [hemb.map_apply]; exact hνC
   · rw [hemb.map_apply]
     have : (Subtype.val : N → G) ⁻¹' (N : Set G)ᶜ = ∅ := by

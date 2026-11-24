@@ -96,7 +96,7 @@ theorem schwartzDq : SchwartzDq := by
     have e := (hF.differentiable (by simp) (0, x)).hasFDerivAt.comp_hasDerivAt (0 : ℝ)
       ((hasDerivAt_id (0 : ℝ)).prodMk (hasDerivAt_const (0 : ℝ) x))
     have e' : fderiv ℝ F (0, x) (1, 0) = Lib.dop a L f x := e.unique (hd x)
-    rw [show ((v, 0) : ℝ × V) = v • (1, 0) by simp, map_smul, e', SchwartzMap.smul_apply, smul_eq_mul, Complex.real_smul]
+    rw [show ((v, 0) : ℝ × V) = v • (1, 0) by simp, map_smul, e', smul_apply, smul_eq_mul, Complex.real_smul]
   have key := hasFDerivAt_family hF 0 (fun k n => bound_mul_translate hA f l 0 k n) G (fun v => (v : ℂ) • Lib.dop a L f) hR hD T
     ((ContinuousLinearMap.id ℝ ℝ).smulRight (T (Lib.dop a L f))) fun v => by simp
   exact key.hasDerivAt.congr_deriv (by simp)

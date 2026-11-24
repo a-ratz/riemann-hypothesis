@@ -148,7 +148,7 @@ private theorem cu_le {C R : Type} [CommRing C] [CommRing R] [Algebra C R] [IsLo
 
 private theorem cu_map {C R : Type} [CommRing C] [CommRing R] [Algebra C R] [IsLocalRing R] {x : Ideal C}
     (h : IsCplAt x R) : x.map (algebraMap C R) = maximalIdeal R := by
-  haveI := h.noeth
+  have := h.noeth
   refine le_antisymm (Ideal.map_le_iff_le_comap.2 (cu_le h)) ?_
   refine Submodule.le_of_le_smul_of_le_jacobson_bot (I := maximalIdeal R) (IsNoetherian.noetherian _)
     (maximalIdeal_le_jacobson _) fun r hr => ?_
@@ -169,8 +169,8 @@ private theorem cu_map {C R : Type} [CommRing C] [CommRing R] [Algebra C R] [IsL
 private theorem cu_equiv {C R S : Type} [CommRing C] [CommRing R] [Algebra C R] [IsLocalRing R]
     [CommRing S] [Algebra C S] [IsLocalRing S] {x : Ideal C}
     (h : IsCplAt x R) (h' : IsCplAt x S) : Nonempty (R ≃ₐ[C] S) := by
-  haveI := h.complete
-  haveI := h'.complete
+  have := h.complete
+  have := h'.complete
   obtain ⟨F, hF1, hF2⟩ := cu_ex h (maximalIdeal S) (algebraMap C S) (cu_le h')
   obtain ⟨G, hG1, hG2⟩ := cu_ex h' (maximalIdeal R) (algebraMap C R) (cu_le h)
   have e1 : G.comp F = RingHom.id R :=

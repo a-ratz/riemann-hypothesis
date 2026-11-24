@@ -52,11 +52,11 @@ open GlobalTheory.FlagTan (IsDef)
 theorem exists_isFreeGen_dForm {k A : Type} [CommRing k] [CommRing A] {α : k →+* A} {D : ℕ}
     (h : α.IsStandardSmoothOfRelativeDimension D) : ∃ f : Fin D → A, IsFreeGen A (dForm α f) := by
   classical
-  letI := α.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
+  let := α.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
   obtain ⟨ι, σ, _, _, P, hP⟩ := ‹Algebra.IsStandardSmoothOfRelativeDimension D k A›.out
-  letI := Fintype.ofFinite ι
-  letI := Fintype.ofFinite σ
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite σ
   have hc : Fintype.card ((Set.range P.map)ᶜ : Set ι) = D := by
     rw [Fintype.card_compl_set, Set.card_range_of_injective P.map_inj, ← hP]
     simp [Algebra.Presentation.dimension]

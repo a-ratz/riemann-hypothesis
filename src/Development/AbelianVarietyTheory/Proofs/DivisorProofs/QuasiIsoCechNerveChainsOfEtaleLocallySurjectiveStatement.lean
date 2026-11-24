@@ -173,8 +173,8 @@ theorem quasiIso_chains_cech_of_locSurj (R : Type) [CommRing R] {P Q : PSh} (φ 
       (chains R).map aπ ≫ (chains R).map (disc.map ι) := by
     rw [← Functor.map_comp, ← Functor.map_comp, sq]
   rw [← quasiIso_iff_comp_left ((chains R).map (Arrow.mapCechNerve F)), key]
-  haveI := h1
-  haveI := h2
+  have := h1
+  have := h2
   have h2' : QuasiIso ((chains R).map (disc.map ι)) := inferInstance
   exact quasiIso_comp ((chains R).map aπ) ((chains R).map (disc.map ι)) (hφ := h1) (hφ' := h2')
 

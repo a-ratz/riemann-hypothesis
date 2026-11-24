@@ -83,7 +83,7 @@ theorem exists_mem_maximal_annihilator {R X : Type} [CommRing R] [AddCommGroup X
     ∃ x ∈ B, ∃ P : Ideal R, P.IsMaximal ∧ Finite (R ⧸ P) ∧ ∀ r : R, r • x ∈ A ↔ r ∈ P := by
   have hex : ∃ n, ∃ y ∈ B, y ∉ A ∧
       (A.comap (LinearMap.toSpanSingleton R X y)).toAddSubgroup.index = n := by
-    obtain ⟨y, hyB, hyA⟩ := SetLike.not_le_iff_exists.1 hBA
+    obtain ⟨y, hyB, hyA⟩ := IsConcreteLE.not_le_iff_exists.1 hBA
     exact ⟨_, y, hyB, hyA, rfl⟩
   obtain ⟨x, hxB, hxA, hx⟩ := Nat.find_spec hex
   have hne := index_comap_toSpanSingleton_ne_zero A B hAB hxB
@@ -120,7 +120,7 @@ theorem exists_mem_maximal_annihilator {R X : Type} [CommRing R] [AddCommGroup X
         rw [smul_smul]
         exact (hP _).2 hrs
       exact hcon.1 (h1 hr)
-  haveI := hprime
+  have := hprime
   exact ⟨x, hxB, P, Ideal.Quotient.maximal_of_isField P (Finite.isField_of_domain _), hfin, hP⟩
 
 theorem exists_adj_selfDual_step : ∀ {R X M : Type} [CommRing R] [AddCommGroup X] [Module R X] [AddCommGroup M] [Module ℂ M] {σ : R →+* R} {w : R} {γ : X → X → ℂ} {W : X → M →ₗ[ℂ] M}, IsHeis σ w γ W → ∀ (A B : Submodule R X), SelfDual γ A → SelfDual γ B → idx A B ≠ 0 → ¬ B ≤ A → ∃ A' : Submodule R X, SelfDual γ A' ∧ Adj A A' ∧ A' ≤ (A' ⊓ A) ⊔ (A' ⊓ B) := by
@@ -201,7 +201,7 @@ theorem _root_.GlobalTheory.FinWeil.sumOp_comp_of_adj_of_inf_eq : ∀ {R X M : T
       (∀ r : R, r • x ∈ A ↔ r ∈ P) ∧ B ≤ (A ⊓ B) ⊔ Submodule.span R {x} := hAdj
   obtain ⟨hAB, -, hrep, -, -⟩ :=
     _root_.GlobalTheory.FinWeil.adjacent_selfDual_simple hW A B hA hB x hx P hP hfin hxP hBle
-  haveI := Fintype.ofFinite (R ⧸ P)
+  have := Fintype.ofFinite (R ⧸ P)
   have hN : Nat.card (R ⧸ P) ≠ 0 := Nat.card_pos.ne'
   have hu : _root_.GlobalTheory.FinWeil.sumOp W A B v = ∑ q : R ⧸ P, W (Quotient.out q • x) v :=
     (_root_.GlobalTheory.FinWeil.sumOp_eq_sum_transversal hW A B hB v hv (R ⧸ P) (fun q => Quotient.out q • x)
@@ -461,7 +461,7 @@ theorem normOp_comp : ∀ {R X M : Type} [CommRing R] [AddCommGroup X] [Module R
     obtain ⟨x, hx, P, hP, hfin, hann, hgen⟩ := id hadj
     obtain ⟨e1, e2, -⟩ := _root_.GlobalTheory.FinWeil.adjacent_selfDual_simple h A A' hA hA' x hx P hP hfin hann hgen
     have hcard : 1 < Nat.card (R ⧸ P) := by
-      haveI : Nontrivial (R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
+      have : Nontrivial (R ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP.ne_top
       exact Finite.one_lt_card
     have hAA' : idx A A' ≠ 0 := by omega
     have hA'A : idx A' A ≠ 0 := by omega

@@ -69,8 +69,8 @@ theorem val_le_iff (hj : IsLocIso j) (x y : k) :
   by_cases hy : y = 0
   · subst hy; simp
   have h := hj.2.2 (x / y)
-  have h0 : 0 < valuation k y := zero_lt_iff.2 (by simpa using hy)
-  have h1 : 0 < valuation k' (j y) := zero_lt_iff.2 (by simpa using hy)
+  have h0 : 0 < valuation k y := pos_iff_ne_zero.2 (by simpa using hy)
+  have h1 : 0 < valuation k' (j y) := pos_iff_ne_zero.2 (by simpa using hy)
   rwa [Valuation.mem_integer_iff, Valuation.mem_integer_iff, map_div₀, map_div₀, map_div₀, div_le_one₀ h0,
     div_le_one₀ h1] at h
 

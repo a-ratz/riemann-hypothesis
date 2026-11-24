@@ -47,7 +47,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped Pointwise
 
 private theorem UpperTheory.V.Two.deg_sup_le (A B : AbF) : (A.sup B).deg ≤ A.deg * B.deg := by
-  haveI : NeZero (A.m * B.m) := ⟨(Nat.mul_pos A.pos B.pos).ne'⟩
+  have : NeZero (A.m * B.m) := ⟨(Nat.mul_pos A.pos B.pos).ne'⟩
   have h1 := A.H.index_comap_of_surjective (ZMod.unitsMap_surjective (dvd_mul_right A.m B.m))
   have h2 := B.H.index_comap_of_surjective (ZMod.unitsMap_surjective (dvd_mul_left B.m A.m))
   unfold AbF.deg
@@ -62,7 +62,7 @@ private theorem UpperTheory.V.Two.deg_cyc_four : (AbF.cyc 4).deg = 2 := by
 private theorem UpperTheory.V.Two.deg_quad_dvd (p : ℕ) (hp : p.Prime) : (AbF.quad p).deg ∣ 2 := by
   show ((powMonoidHom 2 : (ZMod (max p 1))ˣ →* _).range).index ∣ 2
   have hp' : (max p 1).Prime := by rwa [max_eq_left hp.pos]
-  haveI := Fact.mk hp'
+  have := Fact.mk hp'
   rw [IsCyclic.index_powMonoidHom_range]
   exact Nat.gcd_dvd_right _ _
 

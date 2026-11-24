@@ -59,7 +59,7 @@ theorem finite_range {X W : Type} [TopologicalSpace X] [AddCommGroup W] {φ : X 
     (hl : IsLocallyConstant φ) (hc : HasCompactSupport φ) : (Set.range φ).Finite := by
   have : CompactSpace (tsupport φ) := isCompact_iff_compactSpace.mp hc
   have h1 : (Set.range (φ ∘ ((↑) : tsupport φ → X))).Finite :=
-    (hl.comp_continuous continuous_subtype_val).range_finite
+    (hl.comp_continuous continuous_subtypeVal).range_finite
   refine (h1.insert 0).subset ?_
   rintro _ ⟨x, rfl⟩
   by_cases hx : x ∈ tsupport φ

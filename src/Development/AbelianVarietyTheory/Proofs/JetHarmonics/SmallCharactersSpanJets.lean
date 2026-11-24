@@ -470,7 +470,7 @@ theorem eq_top_of_monomials {S A : Type} [CommRing S] [CommRing A] (f : S →+* 
     (htv : ∀ y ∈ t, (∃ s, y = f s) ∨ ∃ j s s', y = f s * v j + f s') (N : AddSubgroup A)
     (hN : ∀ e : Fin r → ℕ, ∑ j, e j ≤ n → ∀ s, f s * ∏ j, v j ^ e j ∈ N) : N = ⊤ := by
   classical
-  letI := f.toAlgebra
+  let := f.toAlgebra
   let M : ℕ → Submodule S A := fun m => Submodule.span S {y | ∃ e : Fin r → ℕ, ∑ j, e j ≤ m ∧ y = ∏ j, v j ^ e j}
   have mono : ∀ m, M m ≤ M (m + 1) := fun m => Submodule.span_mono fun y ⟨e, he, hy⟩ => ⟨e, by omega, hy⟩
   have mulv : ∀ m j, ∀ y ∈ M m, y * v j ∈ M (m + 1) := by
@@ -479,7 +479,7 @@ theorem eq_top_of_monomials {S A : Type} [CommRing S] [CommRing A] (f : S →+* 
     | mem y hy =>
       obtain ⟨e, he, rfl⟩ := hy
       refine Submodule.subset_span ⟨e + Pi.single j 1, ?_, ?_⟩
-      · simp only [Pi.add_apply, Finset.sum_add_distrib, Finset.sum_pi_single', Finset.mem_univ, if_true]
+      · simp only [Pi.add_apply, Finset.sum_add_distrib, Finset.sum_pi_single', Finset.mem_univ, ite_true]
         omega
       · simp only [Pi.add_apply, pow_add, Finset.prod_mul_distrib]
         congr 1
@@ -666,7 +666,7 @@ theorem ker_jetAug_eq (k : Type) [CommRing k] (hk : IsField k) (X : Type) [AddCo
       (Scheme.ΓSpecIso (CommRingCat.of (DualNumber k))).inv.hom (1 + φ (T j)) =
         y.left.appTop.hom (charUnit (Spec (CommRingCat.of k)) X (b j)).val) :
     RingHom.ker (jetAug k (Fin d) n) = Ideal.span (Set.range T ∪ Set.range fun l => ψ (zR n l)) := by
-  letI := hk.toField
+  let := hk.toField
   exact ker_jetAug_eq_span_torus_union_quotient k X r b G B q i hq hi hpb d g n x xB hx hxB ψ hψ T hT h
 
 theorem ker_fst_sq (k : Type) [CommRing k] : RingHom.ker (TrivSqZeroExt.fstHom k k k) ^ (1 + 1) = ⊥ := by
@@ -681,7 +681,7 @@ theorem spMap_closedPoint_dual {k : Type} [CommRing k] (hk : IsField k) {d n : �
     [IsLocalRing (DualNumber k)] (φ : JetR k (Fin d) n →ₐ[k] DualNumber k) :
     Geo.Tor.spMap φ.toRingHom (closedPoint _) = closedPoint _ := by
   have ha : (TrivSqZeroExt.fstHom k k k).comp φ = jetAug k (Fin d) n := jet_ext fun l => by
-    letI := hk.toField
+    let := hk.toField
     rw [jetAug_zR]
     exact ((elt_nil _ (ker_jetAug_nil (R := k) (Fin d) n) _ (zR_mem_ker n l)).map _).eq_zero
   have : IsLocalHom φ.toRingHom := ⟨fun s hs => isUnit_of_aug _ (ker_jetAug_pow _ _)
@@ -711,7 +711,7 @@ theorem torus_jets (hk : IsField (R ⧸ I ^ (e + 1))) (c : D.toPre.P.A.left → 
         IntegralJets.germOf (closedPoint _) (v χ).val) ∧
       ∀ N : AddSubgroup (JetR (R ⧸ I ^ (e + 1)) (Fin d) n),
         (∀ a : Fin r → ℕ, ∑ j, a j ≤ n → ∀ s, f s * v (∑ j, a j • b j) ∈ N) → N = ⊤ := by
-  have hloc : IsLocalRing (R ⧸ I ^ (e + 1)) := by letI := hk.toField; infer_instance
+  have hloc : IsLocalRing (R ⧸ I ^ (e + 1)) := by let := hk.toField; infer_instance
   have hmk : IsLocalHom (algebraMap R (R ⧸ I ^ (e + 1))) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   have hG : IsGrpPullback (thickObj R I e G) G (Spec.map (CommRingCat.ofHom (algebraMap R (R ⧸ I ^ (e + 1)))))
     (pullback.fst G.hom (thick R I e)) := isGrpPullback_pullback G (thick R I e)
@@ -867,7 +867,7 @@ theorem small_characters_span_jets : Laws → TwistBCSpanStatement → ∀ (V : 
     exact ⟨fun ⟨i, hi⟩ => hi ▸ (s.equivFin.symm i).2, fun ha => ⟨s.equivFin ⟨a, ha⟩, by simp⟩⟩
   have hk : IsField (V ⧸ maximalIdeal V ^ (0 + 1)) :=
     (Ideal.Quotient.maximal_ideal_iff_isField_quotient _).1 (by rw [zero_add, pow_one]; infer_instance)
-  have hloc : IsLocalRing (V ⧸ maximalIdeal V ^ (0 + 1)) := by letI := hk.toField; infer_instance
+  have hloc : IsLocalRing (V ⧸ maximalIdeal V ^ (0 + 1)) := by let := hk.toField; infer_instance
   have := D.toPre.P.isAb.smooth
   obtain ⟨g, xB, hxB⟩ := univChartLoc D.toPre.P.A
   have hl1 : IsLocalRing (JetR (V ⧸ maximalIdeal V ^ (0 + 1)) (Fin d) n) := isLocalRing_of_aug _ (ker_jetAug_pow _ _)

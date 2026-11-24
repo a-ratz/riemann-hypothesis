@@ -121,7 +121,7 @@ theorem exists_unit_of_three_term [FiniteDimensional ℂ E] {θ : E → ℂ} (h�
   obtain ⟨ψ, hψ, hDψ⟩ := exists_entire_quotient (D := D) hU (by
     intro a
     obtain ⟨b, hb1, hb2⟩ := ((hU' (s - a) k hk0).inter_of_isOpen_right hU hUo).nonempty
-    simp only [Set.mem_setOf_eq] at hb1 hb2
+    simp only [Set.mem_ofPred_eq] at hb1 hb2
     refine ⟨fun x => γ - k * D b / θ b - D (s - x - k • b) / θ (s - x - k • b), ?_⟩
     have hc : ContinuousAt (fun x => θ (s - x - k • b)) a :=
       (hθ.continuous.comp (by fun_prop)).continuousAt
@@ -148,7 +148,7 @@ theorem exists_unit_of_three_term [FiniteDimensional ℂ E] {θ : E → ℂ} (h�
         (f := fun a => ψ a + k * ψ b + ψ (s - a - k • b)) (g := fun _ => γ)
         (by fun_prop) continuous_const ?_) a
       rintro x ⟨hx1, hx2⟩
-      simp only [Set.mem_setOf_eq, one_smul] at hx1 hx2
+      simp only [Set.mem_ofPred_eq, one_smul] at hx1 hx2
       rw [sub_right_comm] at hx1
       have := hrel x b
       have e1 := hDψ x
@@ -243,7 +243,7 @@ theorem level_three_separates_tangent_vectors :
               * eC (-(1 : ℂ) * (ofIntVec n ⬝ᵥ (τ *ᵥ ofIntVec n) / 2
                   + ofIntVec n ⬝ᵥ (x + (c - z)))) := by
           unfold eC
-          rw [← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add, hc]
+          rw [← exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add, hc]
           congr 1
           simp only [dotProduct_add, dotProduct_sub, dotProduct_smul, smul_eq_mul]
           push_cast

@@ -108,7 +108,7 @@ theorem periodic_schwarz {g : ℂ → ℂ} {M T t B : ℝ} (hM : 0 < M) (ht : 0 
       intro h; rw [h, norm_zero] at hz; exact hR.ne' hz.symm
     rw [dslope_of_ne _ hz0, slope_def_field, hF0, sub_zero, sub_zero, norm_div, hz]
     apply div_le_div_of_nonneg_right _ hR.le
-    rw [hF, cuspFunction_eq_of_nonzero _ _ hz0]
+    rw [hF, cuspFunction_eq_of_ne_zero _ _ hz0]
     apply hB
     rw [im_invQParam, hz, hRdef, Real.log_exp]
     field_simp

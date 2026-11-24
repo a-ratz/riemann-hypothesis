@@ -88,7 +88,7 @@ def monoBox (a : K → ℕ) : Finset ((Σ k, ι k) →₀ ℕ) := (finite_monoBo
 theorem support_subset_monoBox {a : K → ℕ} {f : MRing ι} (hf : f ∈ mHom ι a) :
     f.support ⊆ monoBox a := by
   intro m hm
-  simp only [monoBox, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  simp only [monoBox, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   exact fun p => le_of_mem_support_mHom hf hm p
 
 theorem finite_mPiece (J : Ideal (MRing ι)) (a : K → ℕ) {p : ℕ} (hp : 0 < p)
@@ -143,7 +143,7 @@ theorem finite_mPiece (J : Ideal (MRing ι)) (a : K → ℕ) {p : ℕ} (hp : 0 <
 
 theorem card_mPiece_pos (J : Ideal (MRing ι)) (a : K → ℕ) {p : ℕ} (hp : 0 < p)
     (hpJ : (p : MRing ι) ∈ J) : 0 < Nat.card (mPiece J a) := by
-  haveI := finite_mPiece J a hp hpJ
+  have := finite_mPiece J a hp hpJ
   exact Nat.card_pos
 
 theorem card_mPiece_irrel {q : Ideal (MRing ι)} {k : K} (hk : ∀ i, (X ⟨k, i⟩ : MRing ι) ∈ q)
@@ -163,7 +163,7 @@ theorem card_mPiece_irrel {q : Ideal (MRing ι)} {k : K} (hk : ∀ i, (X ⟨k, i
         omega
       have e : MvPolynomial.monomial m (AddMonoidAlgebra.coeff s m) =
           MvPolynomial.X ⟨k, i⟩ * MvPolynomial.monomial (m - Finsupp.single ⟨k, i⟩ 1) (AddMonoidAlgebra.coeff s m) := by
-        rw [MvPolynomial.X, MvPolynomial.monomial_mul, one_mul,
+        rw [MvPolynomial.X, monomial_mul_monomial, one_mul,
           add_tsub_cancel_of_le (Finsupp.single_le_iff.mpr hi)]
       rw [e]
       exact q.mul_mem_right _ (hk i)
@@ -176,7 +176,7 @@ theorem card_mPiece_irrel {q : Ideal (MRing ι)} {k : K} (hk : ∀ i, (X ⟨k, i
     apply Subtype.ext
     show Ideal.Quotient.mk q f = 0
     exact Ideal.Quotient.eq_zero_iff_mem.mpr (hmem f hf)
-  haveI : Unique (mPiece q a) := ⟨⟨0⟩, hzero⟩
+  have : Unique (mPiece q a) := ⟨⟨0⟩, hzero⟩
   exact Nat.card_unique
 
 theorem card_mPiece_mono {J J' : Ideal (MRing ι)} (h : J ≤ J') (a : K → ℕ) [Finite (mPiece J a)] :

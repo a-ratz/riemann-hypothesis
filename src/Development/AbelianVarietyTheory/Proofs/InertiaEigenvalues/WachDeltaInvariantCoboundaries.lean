@@ -375,7 +375,7 @@ theorem exists_primitiveRoot_coeffRing_of_good {l : ℕ} [Fact l.Prime] (K LL : 
   have hdeg : (Polynomial.cyclotomic l (Om l)).degree ≠ 0 :=
     (Polynomial.degree_cyclotomic_pos l (Om l) hl).ne'
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root _ hdeg
-  haveI : NeZero (l : Om l) := ⟨Nat.cast_ne_zero.mpr hl.ne'⟩
+  have : NeZero (l : Om l) := ⟨Nat.cast_ne_zero.mpr hl.ne'⟩
   have hζ : IsPrimitiveRoot z l := Polynomial.isRoot_cyclotomic_iff.mp hz
   have hmem : z ∈ Ks K 1 := by
     refine (le_sup_right : _ ≤ Ks K 1) ?_
@@ -734,7 +734,7 @@ theorem exists_eeTie [IsDomain O] [CharZero O] [NeZero n] (hp : PD.p = l) (R : F
     have : (letγ j letπ : LetA O n) = letπ ^ R.s * fun _ => (w : O⟦X⟧) := funext fun _ => hw.symm
     rw [this, map_mul, map_pow]
     exact (W.EE_π.pow _).mul (IsUnit.map _ (Pi.isUnit_iff.2 fun _ => w.isUnit))
-  haveI := R.EE_complete
+  have := R.EE_complete
   have hcomp := isAdicComplete_pi (ι := ZMod n) (E := R.EE) PD.p
   have hdense : ∀ (y : ZMod n → R.EE) (k : ℕ), ∃ (a : LetA O n) (m : ℕ),
       (PD.p : ZMod n → R.EE) ^ k ∣ y * ι (letπ ^ m) - ι a := by
@@ -900,7 +900,7 @@ theorem exists_frTie [IsDiscreteValuationRing O] [IsAdicComplete (IsLocalRing.ma
   have hfa : ∀ p : ℤ_[l]ˣ → Prop, (∀ δ ∈ Δ, p δ) ↔ ∀ δ ∈ W.DelF, p (χ δ) := by
     intro p
     simp only [← SetLike.mem_coe, hΔ, Finset.coe_image, Set.forall_mem_image]
-  haveI : Finite Δ := by
+  have : Finite Δ := by
     change Finite (Δ : Set ℤ_[l]ˣ)
     rw [hΔ]; infer_instance
   have hcard : Nat.card Δ = W.DelF.card := by
@@ -1049,8 +1049,8 @@ theorem exists_attached {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P
     have h0 : (H.W K 1 LL h).DelF.card ≠ 0 := fun h0 => by rw [h0] at hes; omega
     apply Nat.eq_of_mul_eq_mul_left (Nat.pos_of_ne_zero h0)
     rw [hc, mul_comm, hes]
-  haveI := (P.PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := (P.PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨jE, hE⟩ := exists_eeTie (H.W K 1 LL h) (P.PD_p K) R j h2 h4
   exact ⟨R, j, jE, rfl, h3, h2, hE, h5, fun T hT =>
     exists_sysTie _ R j jE h2 hE hs (by rwa [P.PD_p]) h4 T hT (GlobalTheory.WachFree.wach_free P H K 1 LL h T hT)⟩

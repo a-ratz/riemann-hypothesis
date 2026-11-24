@@ -158,11 +158,11 @@ theorem exists_fixed_smInd_apply_one (P : Subgroup G) (σ : Representation ℂ P
   have hF : ∀ (p : P) (c : G), c ∈ K → F ((p : G) * c) = σ p u := by
     intro p c hc
     have h : ∃ p' : P, ∃ c' ∈ K, (p : G) * c = (p' : G) * c' := ⟨p, c, hc, rfl⟩
-    simp only [F, dif_pos h]
+    simp only [F, dite_eq_left h]
     obtain ⟨c', hc', e⟩ := h.choose_spec
     exact wd _ _ _ _ hc' hc e.symm
   have hF0 : ∀ g, (¬ ∃ p : P, ∃ c ∈ K, g = (p : G) * c) → F g = 0 := fun g h => by
-    simp only [F, dif_neg h]
+    simp only [F, dite_eq_right h]
   have hmem : F ∈ indSpace P σ := by
     intro h g
     by_cases hg : ∃ p : P, ∃ c ∈ K, g = (p : G) * c
@@ -270,10 +270,10 @@ theorem exists_piTensor_fin : ∀ (n : ℕ) (Γ : Fin n → Type) [∀ j, Group 
     intro Γ _ _ _ _ V _ _ τ _ hirr _
     obtain ⟨hnt, hinv⟩ := (GlobalTheory.CuspRep.isIrreducible_iff τ).1 hirr
     have hg : ∀ g : ∀ j, Γ j, g = 1 := fun g => funext fun j => j.elim0
-    haveI : IsSimpleModule ℂ V :=
+    have : IsSimpleModule ℂ V :=
       { eq_bot_or_eq_top := fun W => hinv W fun g v hv => by rw [hg g, map_one]; exact hv }
     have h1 : Module.finrank ℂ V = 1 := isSimpleModule_iff_finrank_eq_one.1 inferInstance
-    haveI : Module.Finite ℂ V := Module.finite_of_finrank_eq_succ h1
+    have : Module.Finite ℂ V := Module.finite_of_finrank_eq_succ h1
     refine ⟨fun j => j.elim0, (LinearEquiv.ofFinrankEq V ℂ (by simp [h1])).trans
       (PiTensorProduct.isEmptyEquiv (Fin 0)).symm, fun g v => ?_⟩
     rw [hg g, map_one, map_one]
@@ -354,7 +354,7 @@ theorem finFixed_levi (hBZ : GlobalTheory.Published.BernsteinZelevinskyFinitenes
     [TopologicalSpace k] [IsNonarchimedeanLocalField k] (β : Type) [Fintype β] (c : β → Type)
     [∀ j, Fintype (c j)] [∀ j, DecidableEq (c j)] (τ : IrrRep (Levi k c)) : FinFixed τ.ρ := by
   classical
-  letI : LinearOrder β := LinearOrder.lift' (Fintype.equivFin β) (Fintype.equivFin β).injective
+  let : LinearOrder β := LinearOrder.lift' (Fintype.equivFin β) (Fintype.equivFin β).injective
   intro K hK
   let e : (Σ j, c j) ≃ (Σ j, c j) := Equiv.refl _
   obtain ⟨h1, -, h3, -⟩ := hBZ k

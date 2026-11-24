@@ -200,7 +200,7 @@ theorem main : ∀ (F : Type) [Field F] (v : AddValuation F (WithTop ℚ)) (π :
   have key : ∃ t : F, t ≠ 0 ∧ (q : WithTop ℚ) ≤ v t ∧
       ∀ a : F, (q : WithTop ℚ) ≤ v a → v t ≤ v a := by
     rcases hcase with hac | ⟨d, hd, hdisc⟩
-    · haveI := hac
+    · have := hac
       obtain ⟨t, ht, htv⟩ := exists_val_eq_rat v hπ q
       refine ⟨t, ht, htv.ge, fun a ha => ?_⟩
       rw [htv]

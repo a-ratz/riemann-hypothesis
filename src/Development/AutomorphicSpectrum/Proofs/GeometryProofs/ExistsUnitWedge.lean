@@ -166,7 +166,7 @@ theorem wedge_frame : ∀ (Ω E : Type) [Field Ω] [AddCommGroup E] [Module Ω E
     refine le_antisymm ?_ (Submodule.span_le.2 ?_)
     · intro y hy
       have hspan : Submodule.span Ω (Set.range b) = Submodule.span Ω (Set.range v) := by
-        haveI : FiniteDimensional Ω (Submodule.span Ω (Set.range v)) :=
+        have : FiniteDimensional Ω (Submodule.span Ω (Set.range v)) :=
           FiniteDimensional.span_of_finite Ω (Set.finite_range v)
         refine Submodule.eq_of_le_of_finrank_eq (Submodule.span_le.2 ?_) ?_
         · rintro _ ⟨i, rfl⟩

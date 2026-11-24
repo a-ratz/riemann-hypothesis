@@ -212,7 +212,7 @@ theorem AA_apply (hG : Gd z z' μs π π' Pr) (j : ℕ) (ζ0 : ℂ)
     simp only [pw, smul_smul]
   rw [e, VV_sum hG _ _ (fun s => pw_smooth j s ζ0 _)]
   unfold AA
-  rw [ContinuousLinearMap.sum_apply]
+  rw [sum_apply]
   refine Finset.sum_congr rfl fun s _ => ?_
   rw [ContinuousLinearMap.comp_apply, ContinuousMultilinearMap.apply_apply, Bsl_apply hG]
 
@@ -473,13 +473,13 @@ theorem jetT_Top {N : ℕ} {f : Q.Mx k r → E} {g₀ : Q.Mx k r} (u : ℂ) (a b
   · have he : Top (Q.EH k r) u (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f =
         fun g => u • f g + Q.EH k r (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f g := by
       funext g
-      simp only [Formalism.QuantumDeterminants.Top, hab, if_true]
+      simp only [Formalism.QuantumDeterminants.Top, hab, ite_true]
     rw [he]
     exact jetT_add (jetT_smul u (jetT_mono (Nat.le_succ N) h)) (jetT_EH a b h)
   · have he : Top (Q.EH k r) u (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f =
         Q.EH k r (Q.posL k r (Fin.last r) a) (Q.posL k r (Fin.last r) b) f := by
       funext g
-      simp only [Formalism.QuantumDeterminants.Top, hab, if_false, zero_add]
+      simp only [Formalism.QuantumDeterminants.Top, hab, ite_false, zero_add]
     rw [he]
     exact jetT_EH a b h
 
@@ -862,7 +862,7 @@ theorem poly_hom {j i : ℕ} (hij : i ≠ j) (m : ContinuousMultilinearMap ℝ (
   set L : E →L[ℝ] E := (2 : ℝ) • ContinuousLinearMap.id ℝ E with hL
   have hcomp : (fun ζ : E => m (fun _ => ζ)) ∘ L = ((2 : ℝ) ^ j) • (fun ζ : E => m (fun _ => ζ)) := by
     funext ζ
-    simp only [Function.comp_apply, Pi.smul_apply, hL, ContinuousLinearMap.smul_apply,
+    simp only [Function.comp_apply, Pi.smul_apply, hL, smul_apply,
       ContinuousLinearMap.id_apply]
     rw [m.map_smul_univ (fun _ => (2 : ℝ)) (fun _ => ζ)]
     simp [Finset.prod_const]
@@ -877,16 +877,16 @@ theorem poly_hom {j i : ℕ} (hij : i ≠ j) (m : ContinuousMultilinearMap ℝ (
   have key : ((2 : ℝ) ^ j) • iteratedFDeriv ℝ i (fun ζ : E => m (fun _ => ζ)) 0 v =
       ((2 : ℝ) ^ i) • iteratedFDeriv ℝ i (fun ζ : E => m (fun _ => ζ)) 0 v := by
     have hv := congrArg (fun T => T v) h1
-    simp only [ContinuousMultilinearMap.smul_apply,
+    simp only [smul_apply,
       ContinuousMultilinearMap.compContinuousLinearMap_apply] at hv
     rw [hv, hL]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+    simp only [smul_apply, ContinuousLinearMap.id_apply]
     rw [ContinuousMultilinearMap.map_smul_univ (iteratedFDeriv ℝ i (fun ζ : E => m (fun _ => ζ)) 0)
       (fun _ => (2 : ℝ)) v]
     simp [Finset.prod_const]
   have h0 : ((2 : ℝ) ^ j - (2 : ℝ) ^ i) • iteratedFDeriv ℝ i (fun ζ : E => m (fun _ => ζ)) 0 v = 0 := by
     rw [sub_smul, key, sub_self]
-  rw [ContinuousMultilinearMap.zero_apply]
+  rw [zero_apply]
   exact (smul_eq_zero.1 h0).resolve_left (sub_ne_zero.2 hne)
 
 theorem poly_at {j i : ℕ} (m : ContinuousMultilinearMap ℝ (fun _ : Fin j => E) W) (a : E) (v : Fin i → E) :
@@ -921,7 +921,7 @@ theorem taylor_expansion_holds : GTCLRTaylor := by
   refine (iteratedFDeriv_sub_apply hψat hS.contDiffAt).trans ?_
   rw [sub_eq_zero, iteratedFDeriv_sum (fun j _ => (poly_contDiff _ _).const_smul _)]
   ext v
-  rw [Finset.sum_apply, ContinuousMultilinearMap.sum_apply]
+  rw [Finset.sum_apply, sum_apply]
   have hterm : ∀ j ∈ Finset.range (N + 1),
       iteratedFDeriv ℝ i (fun ζ : ℂ => ((j.factorial : ℝ)⁻¹) • iteratedFDeriv ℝ j ψ ζ₀ (fun _ => ζ - ζ₀)) ζ₀ v =
         if j = i then ((i.factorial : ℝ)⁻¹) • ∑ σ : Equiv.Perm (Fin i), iteratedFDeriv ℝ i ψ ζ₀ (v ∘ σ)
@@ -930,14 +930,14 @@ theorem taylor_expansion_holds : GTCLRTaylor := by
     rw [show (fun ζ : ℂ => ((j.factorial : ℝ)⁻¹) • iteratedFDeriv ℝ j ψ ζ₀ (fun _ => ζ - ζ₀)) =
         ((j.factorial : ℝ)⁻¹) • (fun ζ : ℂ => iteratedFDeriv ℝ j ψ ζ₀ (fun _ => ζ - ζ₀)) from rfl,
       iteratedFDeriv_const_smul_apply ((poly_contDiff _ _).contDiffAt),
-      ContinuousMultilinearMap.smul_apply, poly_at]
+      smul_apply, poly_at]
     split_ifs with h1 h2 h2
     · subst h1; rfl
     · exact absurd h1.symm h2
     · exact absurd h2.symm h1
     · rw [smul_zero]
   rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' (Finset.range (N + 1)) i,
-    if_pos (Finset.mem_range.2 (Nat.lt_succ_of_le hi))]
+    ite_eq_left (Finset.mem_range.2 (Nat.lt_succ_of_le hi))]
   have hs : ∀ σ : Equiv.Perm (Fin i), iteratedFDeriv ℝ i ψ ζ₀ (v ∘ σ) = iteratedFDeriv ℝ i ψ ζ₀ v :=
     fun σ => symm_iter i V ψ U hU hψ ζ₀ hζ σ v
   rw [Finset.sum_congr rfl (fun σ _ => hs σ), Finset.sum_const, Finset.card_univ, Fintype.card_perm,

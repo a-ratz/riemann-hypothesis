@@ -135,7 +135,7 @@ theorem eq_cspB_rule {C : Set (Xo.XF c)} (hC : IsClopen C) (e : Formalism.L2.Pj.
       (¬ Set.range (fpt z ψ) ⊆ C → ψ (e p z) = 0) ∧ (Set.range (fpt z ψ) ⊆ C → ψ (e p z) = 1)) :
     e = Formalism.L2.Pj.CompSplitPfB.cspB_rule Xo c C hC := by
   funext p z
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
   refine sub_eq_zero.1 (eq_zero_of_fields _ fun F _ ψ => ?_)
   have hsp := Formalism.L2.Pj.CompSplitPfB.cspB_idem_spec C hC z.x z.x_over (kerPt ψ)
   have hid := Formalism.L2.Pj.CompSplitPfB.cspB_idem_idem C hC z.x z.x_over
@@ -176,7 +176,7 @@ theorem exOf_add_detE (τ : GlobalTheory.AllWt.Psi H) (i : Formalism.L2.Pj.Ix D)
     rw [hex]
     simp only [detE, Formalism.L2.Pj.ex]
     by_cases h : σ (H.rt : E) = H.rt0
-    · have hm : D.mult σ = D.p := by rw [Datum.mult, if_pos h]
+    · have hm : D.mult σ = D.p := by rw [Datum.mult, ite_eq_left h]
       have hi : (i : ℕ) < D.p := hm ▸ i.2
       have hw := GlobalTheory.AllWt.wtOf_big (GlobalTheory.FlatLine.flatWt D τ) 0 ⟨σ, h⟩ i hi
       simp only at hw
@@ -189,7 +189,7 @@ theorem exOf_add_detE (τ : GlobalTheory.AllWt.Psi H) (i : Formalism.L2.Pj.Ix D)
       · rw [f0 _ _ fun h' => e (congrArg Subtype.val h')]
         simp [e, hc]
     · have h' := GlobalTheory.AllWt.conj_mem h
-      have hm : D.mult σ = D.q := by rw [Datum.mult, if_neg h]
+      have hm : D.mult σ = D.q := by rw [Datum.mult, ite_eq_right h]
       have hi : (i : ℕ) < D.q := hm ▸ i.2
       have hw := GlobalTheory.AllWt.wtOf_small (GlobalTheory.FlatLine.flatWt D τ) 0 ⟨conjEmb σ, h'⟩ i hi
       simp only [GlobalTheory.AllWt.conjEmb_conjEmb] at hw
@@ -234,7 +234,7 @@ theorem exists_flat_sec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hl := hf.1
   obtain ⟨s, s', e, -, hss₀, hsE₀, hs'E₀, -, hval⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_flat_rule E H D l Xo c (Z : Set (Xo.XF c)) τ.1 O β Y Z' φ hτ hC hl hf
-  have hp : D.mult τ.1 = D.p := by rw [Datum.mult, if_pos hτ]
+  have hp : D.mult τ.1 = D.p := by rw [Datum.mult, ite_eq_left hτ]
   have hq : D.mult (ComplexEmbedding.conjugate τ.1) = D.q := conj_mult hτ
   have red : ∀ p : Formalism.L2.Pj.TRing c.F, IsReduced p.R := fun p => (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
   have hss : ∀ p z, s p z * s' p z = e p z := fun p z => congrFun (congrFun hss₀ p) z
@@ -257,7 +257,7 @@ theorem exists_flat_sec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     hse p z F ψ (fpt z ψ) (fpt_under z ψ) (fpt_snd z ψ)
   have zero : ∀ (p : Formalism.L2.Pj.TRing c.F) (x : p.R), (∀ (F : Type) [Field F] (ψ : p.R →+* F), ψ x = 0) → x = 0 :=
     fun p x h => by
-      haveI := red p
+      have := red p
       exact eq_zero_of_fields x h
   have hE : e = GlobalTheory.FlatLine.idem Z := eq_cspB_rule _ e fun p z F _ ψ =>
     ⟨fun hr => ((C p z F ψ).1 hr).1, fun hr => ((C p z F ψ).2 hr).1⟩
@@ -628,7 +628,7 @@ theorem mult_conj (τ : E →+* ℂ) (h : τ (H.rt : E) = H.rt0) : D.mult (Compl
     simp at hre
     exact H.d_prime.ne_zero hre
   unfold Datum.mult
-  rw [if_neg]
+  rw [ite_eq_right]
   rw [ComplexEmbedding.conjugate_coe_eq, h]
   intro h2
   exact hi (by have := congrArg Complex.im h2; simp at this; linarith)
@@ -824,13 +824,13 @@ open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.Chart
 
 theorem GlobalTheory.CompanionTheory.Ar.Flat.nval_flat_rule : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (U : Set (Xo.XF c)) (τ : E →+* ℂ) (φ : FrameFn Xo c) (s : Formalism.L2.Pj.Rul Xo c) (t : ∀ p : Nat.Primes, (c.F →+* ℂ_[p]) → ℝ), τ (H.rt : E) = H.rt0 → IsLineFn U τ φ → (∀ (p : Formalism.L2.Pj.TRing c.F) (z : Formalism.L2.Pj.FrPt Xo c p.R) (F : Type) [Field F] (ψ : p.R →+* F) (y : Sp F ⟶ Xo.XF c), under y = spMap ψ ≫ z.x → y ≫ pullback.snd _ _ = spMap (ψ.comp (algebraMap c.F p.R)) → Set.range y ⊆ U → ∀ (v : Vecs y D.p) (w : Vecs y D.q) (hp : D.mult τ = D.p) (hq : D.mult (ComplexEmbedding.conjugate τ) = D.q), (∀ i, (v i).left = spMap (Formalism.L2.Pj.dualMap ψ) ≫ z.u τ (i.cast hp.symm)) → (∀ j, (w j).left = spMap (Formalism.L2.Pj.dualMap ψ) ≫ z.u (ComplexEmbedding.conjugate τ) (j.cast hq.symm)) → ψ (s p z) = φ F y v w) → (∀ p κ, HasFinNorm U τ φ p κ (t p κ)) → ∀ (la : IsDedekindDomain.HeightOneSpectrum (𝓞 c.F)) (T : Formalism.L2.Pj.CDVR) (io : c.F →+* T.Fr) (e : ℕ) (y : Formalism.L2.Pj.IntFr Xo c T io) (y' : Sp T.Fr ⟶ Xo.XF c), Formalism.L2.Pj.OverLa la T.V io e → y.IsAlg → under y' = (letI := io.toAlgebra; y.1.x) → y' ≫ pullback.snd _ _ = spMap io → Set.range y' ⊆ U → ∃ (p : Nat.Primes) (κ : c.F →+* ℂ_[p]), (∀ a : c.F, la.valuation c.F a ≤ 1 ↔ ‖κ a‖ ≤ 1) ∧ ∀ π : c.F, la.valuation c.F π = WithZero.exp (-1 : ℤ) → Formalism.L2.Pj.nval T.V e (Formalism.L2.Pj.evI y s) = ((t p κ / Real.log ‖κ π‖ : ℝ) : EReal) := by
   intro E _ _ _ H D l Xo c U τ φ s t hτ hφ hs hN la T io e y y' ho halg hy hyo hyU
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨p, j, hj⟩ := RuleVal.exists_embed T halg
   obtain ⟨ρ, hρ, hlog⟩ := RuleVal.exists_log_norm T j hj
   have hI : Formalism.L2.Pj.Integral T io y.1 := y.2.2
   obtain ⟨G, t', m1, m2, ⟨ub, htan, heig, hbas, hlift⟩, -⟩ := hI
   obtain ⟨m, hm⟩ := RuleVal.exists_cast hy.symm m1
-  have hp : D.mult τ = D.p := if_pos hτ
+  have hp : D.mult τ = D.p := ite_eq_left hτ
   have hq : D.mult (ComplexEmbedding.conjugate τ) = D.q := RuleVal.mult_conj τ hτ
   obtain ⟨v, hv⟩ := RuleVal.exists_vecs y.1 hy τ hp
   obtain ⟨w, hw⟩ := RuleVal.exists_vecs y.1 hy (ComplexEmbedding.conjugate τ) hq
@@ -917,7 +917,7 @@ theorem PositivityTheory.Xgn.line_function_place_valuation : ∀ (E : Type) [Fie
   choose pl hpl using fun (p : Nat.Primes) (κ : c.F →+* ℂ_[p]) => PositivityTheory.Xgn.PlaceValuation.exists_place p κ
   choose un hun using fun la : HeightOneSpectrum (𝓞 c.F) => la.valuation_exists_uniformizer c.F
   obtain ⟨⟨_, T, io, e, ho, y, hy, eta, -, rfl⟩, rfl⟩ := hv
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨p, κ, hκ, hval⟩ := GlobalTheory.CompanionTheory.Ar.Flat.nval_flat_rule E H D l Xo c (Z : Set (Xo.XF c)) τ.1 φ s
     (fun p κ => ρ (pl p κ) * Real.log ‖κ (un (pl p κ))‖) τ.2 hφ hs
     (fun p κ => hN p κ (pl p κ) _ (hpl p κ) (hun _)) la T io e y (GlobalTheory.AllWt.ptF y.1) ho hy.1
@@ -1020,7 +1020,7 @@ theorem exists_test (f : Rul Xo c) {S : Type} [CommRing S] [Algebra c.F S] (y : 
     ∃ (p : TRing c.F) (ψ : p.R →ₐ[c.F] S) (y₀ : FrPt Xo c p.R), FrMap ψ y₀ y ∧ evR Xo c f y = ψ (f p y₀) := by
   refine ⟨h.choose, h.choose_spec.choose, h.choose_spec.choose_spec.choose, h.choose_spec.choose_spec.choose_spec, ?_⟩
   unfold evR evalAt
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 theorem exists_gram_det (hσ : GoodEmb c σ) (hU : IsUnf U) {k : U.Comp} (x : (U.X k).dom)
     (hx : (U.X k).IsOrtho x.1) (y : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ) (ht : FrBor t (U.un k x) y)
@@ -1063,14 +1063,14 @@ theorem exists_gram_det (hσ : GoodEmb c σ) (hU : IsUnf U) {k : U.Comp} (x : (U
       · rw [Pi.single_eq_of_ne (fun hh => hab (eq_of_heq (Sigma.mk.inj (W.e.symm.injective hh)).2))]
         simp
     simp only [hf, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, Matrix.smul_apply, Matrix.mul_apply,
-      Matrix.conjTranspose_apply, mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+      Matrix.conjTranspose_apply, mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
       smul_eq_mul, Finset.mul_sum, hκ]
     refine Finset.sum_congr rfl fun j _ => ?_
     push_cast
     ring
   have hdet : Y.det = ∏ i, toC (t (some ⟨τ, i⟩) : CAt σ) := by
     have hb : Y.BlockTriangular id := fun a b h => h2 b a h
-    rw [Matrix.det_of_upperTriangular hb]
+    rw [Matrix.det_of_isUpperTriangular hb]
     exact Finset.prod_congr rfl fun i _ => h1 i
   rw [← Matrix.det_transpose, hG, Matrix.det_mul, Matrix.det_mul, Matrix.det_conjTranspose, Matrix.det_smul,
     Matrix.det_one, hdet]
@@ -1123,7 +1123,7 @@ theorem homN_eq_exp_hodge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have h := GlobalTheory.AllWt.conj_not_mem τ
     have h' : ¬ (ComplexEmbedding.conjugate τ.1) (H.rt : E) = H.rt0 := h
     unfold Datum.mult
-    rw [if_neg h']
+    rw [ite_eq_right h']
   let ψ' : p.R →+* ℂ := (ψ : p.R →+* CAt σ)
   let yF : Sp ℂ ⟶ Xo.XF c := GlobalTheory.AllWt.ptF (S := CAt σ) (U.un k ⟨y, hy⟩)
   have hβ : ψ'.comp (algebraMap c.F p.R) = σ := RingHom.ext fun a => ψ.commutes a
@@ -1180,7 +1180,7 @@ theorem homN_eq_exp_hodge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
         (by show D.q - 1 - (j : ℕ) + (j : ℕ) + 1 = (U.X k).p0; rw [hp0]; omega)
       rw [← inv_eq_iff_eq_inv.2 h, Real.sqrt_inv, Real.sqrt_sq (norm_nonneg _)]
   have hrd : rdU U s k y = φ ℂ yF v w := by
-    simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hy, dif_pos]
+    simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hy, dite_eq_left]
     rw [hval]
     exact hread'
   have hL : GlobalTheory.AllWt.lieFacZ D x (GlobalTheory.AllWt.wtOf D (GlobalTheory.FlatLine.flatWt D τ) 0) =
@@ -1352,7 +1352,7 @@ theorem exists_isometry_conj_of_unit_ball (K : Type) [Field K] [NumberField K] (
   have hτn : ∀ x, ‖τ.toRingEquiv x‖ = ‖x‖ := fun x => by
     rw [← PadicAlgCl.spectralNorm_eq, ← PadicAlgCl.spectralNorm_eq]
     unfold spectralNorm
-    rw [AlgEquiv.coe_ringEquiv, minpoly.algEquiv_eq]
+    rw [AlgEquiv.coe_toRingEquiv, minpoly.algEquiv_eq]
   obtain ⟨g, hgn, hg⟩ := exists_extension τ.toRingEquiv hτn
   have hv : ∀ v : ℚ[X], τ (φ (aeval θ v)) = ψ (aeval θ v) := by
     intro v
@@ -1396,7 +1396,7 @@ theorem val_lt_one_iff (v : Valuation F Γ) (κ : F →+* N) (h : ∀ a, v a ≤
     v a < 1 ↔ ‖κ a‖ < 1 := by
   by_cases ha : a = 0
   · simp [ha]
-  have hv : 0 < v a := zero_lt_iff.mpr ((Valuation.ne_zero_iff v).mpr ha)
+  have hv : 0 < v a := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr ha)
   have hn : 0 < ‖κ a‖ := norm_pos_iff.mpr ((map_ne_zero κ).mpr ha)
   have e := h a⁻¹
   rw [map_inv₀, map_inv₀, norm_inv, inv_le_one₀ hv, inv_le_one₀ hn] at e
@@ -1404,7 +1404,7 @@ theorem val_lt_one_iff (v : Valuation F Γ) (κ : F →+* N) (h : ∀ a, v a ≤
 
 theorem norm_le_of_val_le (v : Valuation F Γ) (κ : F →+* N) (h : ∀ a, v a ≤ 1 ↔ ‖κ a‖ ≤ 1) {a b : F} (hb : b ≠ 0)
     (hab : v a ≤ v b) : ‖κ a‖ ≤ ‖κ b‖ := by
-  have hv : 0 < v b := zero_lt_iff.mpr ((Valuation.ne_zero_iff v).mpr hb)
+  have hv : 0 < v b := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr hb)
   have hn : 0 < ‖κ b‖ := norm_pos_iff.mpr ((map_ne_zero κ).mpr hb)
   have e := (h (a / b)).mp (by rw [map_div₀]; exact div_le_one_of_le₀ hab zero_le)
   rw [map_div₀, norm_div] at e
@@ -1780,13 +1780,13 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem exists_complex_point {U : Set (Xo.XF c)} (hU : IsOpen U) (hne : U.Nonempty) :
     ∃ y : Sp ℂ ⟶ Xo.XF c, y ≫ pullback.snd _ _ = spMap (algebraMap c.F ℂ) ∧ ∀ z, y z ∈ U := by
-  haveI := Xo.smooth
-  haveI hs0 : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
+  have := Xo.smooth
+  have hs0 : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
   let s : Xo.XF c ⟶ Sp c.F := pullback.snd _ _
-  haveI hs : Smooth s := inferInstanceAs (Smooth (pullback.snd _ _))
+  have hs : Smooth s := inferInstanceAs (Smooth (pullback.snd _ _))
   obtain ⟨L, _, j, g, hj, hg, hZ⟩ := GlobalTheory.FlatLine.exists_finite_point s hU hne
-  letI : Algebra c.F L := j.toAlgebra
-  haveI : Module.Finite c.F L := hj
+  let : Algebra c.F L := j.toAlgebra
+  have : Module.Finite c.F L := hj
   let e : L →ₐ[c.F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1898,7 +1898,7 @@ noncomputable section
 namespace GlobalTheory.CompanionTheory.Ar.Br.CovEx
 
 theorem exists_padic_emb (K : Type) [Field K] [NumberField K] (p : Nat.Primes) : Nonempty (K →+* ℂ_[p]) := by
-  haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
+  have : Fact (p : ℕ).Prime := ⟨p.2⟩
   exact ⟨(IsAlgClosed.lift (R := ℚ) (S := K) (M := ℂ_[p]) : K →ₐ[ℚ] ℂ_[p]).toRingHom⟩
 
 theorem goodOf_or {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {l : Level H} (c : Coeff l)

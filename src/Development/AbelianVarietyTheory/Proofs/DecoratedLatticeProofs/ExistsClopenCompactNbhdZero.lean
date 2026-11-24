@@ -77,7 +77,7 @@ theorem isCompact_intAf : IsCompact (intAf F) :=
   (GlobalTheory.IntegralFinAdele.integral_finiteAdele_properties F).1
 
 theorem isClosed_intAf : IsClosed (intAf F) := by
-  haveI := GlobalTheory.IntegralFinAdele.t2Space_finiteAdeleRing' F
+  have := GlobalTheory.IntegralFinAdele.t2Space_finiteAdeleRing' F
   exact (isCompact_intAf F).isClosed
 
 theorem zero_mem_intAf : (0 : FiniteAdeleRing (𝓞 F) F) ∈ intAf F := fun v => by
@@ -100,8 +100,8 @@ theorem continuous_coordEquiv : Continuous (coordEquiv F E) :=
   IsModuleTopology.continuous_of_linearMap (coordEquiv F E).toLinearMap
 
 theorem continuous_coordEquiv_symm : Continuous (coordEquiv F E).symm := by
-  haveI : ContinuousAdd ((Af F) ⊗[F] E) := IsModuleTopology.toContinuousAdd (Af F) _
-  haveI : ContinuousSMul (Af F) ((Af F) ⊗[F] E) := IsModuleTopology.toContinuousSMul (Af F) _
+  have : ContinuousAdd ((Af F) ⊗[F] E) := IsModuleTopology.toContinuousAdd (Af F) _
+  have : ContinuousSMul (Af F) ((Af F) ⊗[F] E) := IsModuleTopology.toContinuousSMul (Af F) _
   exact IsModuleTopology.continuous_of_linearMap (coordEquiv F E).symm.toLinearMap
 
 noncomputable def intTens : Set ((Af F) ⊗[F] E) := coordEquiv F E ⁻¹' Set.univ.pi (fun _ => intAf F)

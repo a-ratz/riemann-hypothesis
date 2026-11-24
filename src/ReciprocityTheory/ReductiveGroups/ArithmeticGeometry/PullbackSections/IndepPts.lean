@@ -223,12 +223,12 @@ theorem indep_of_complex [Algebra K ℂ] (hWD : EvalWD pts mapR)
     (c : Fin n → ℂ) (hc : ∀ z : pts ℂ, FromTest pts mapR z → ∑ i, c i * evalAt pts mapR (b i) z = 0) :
     c = 0 := by
   classical
-  haveI : CharZero K := (algebraMap K ℂ).charZero
+  have : CharZero K := (algebraMap K ℂ).charZero
   let F := AlgebraicClosure K
-  haveI : IsAlgClosed ℂ := Complex.isAlgClosed
-  haveI : Normal K F := IsAlgClosure.normal K F
-  haveI : Algebra.IsSeparable K F := IsAlgClosure.separable K F
-  haveI : IsGalois K F := ⟨⟩
+  have : IsAlgClosed ℂ := Complex.isAlgClosed
+  have : Normal K F := IsAlgClosure.normal K F
+  have : Algebra.IsSeparable K F := IsAlgClosure.separable K F
+  have : IsGalois K F := ⟨⟩
   let ι : F →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

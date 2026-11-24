@@ -105,9 +105,9 @@ instance isLocalRing_regAt {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (C
 
 theorem int_trans {o K : Type} [CommRing o] [Field K] [Algebra o K] (A B : Subalgebra o K)
     (hAB : ∀ a ∈ A, a ∈ B) (hB : ∀ b ∈ B, IsIntegral A b) (a : K) (ha : IsIntegral B a) : IsIntegral A a := by
-  letI : Algebra A B := (Subalgebra.inclusion hAB).toRingHom.toAlgebra
-  haveI : IsScalarTower A B K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsIntegral A B := ⟨fun b => by
+  let : Algebra A B := (Subalgebra.inclusion hAB).toRingHom.toAlgebra
+  have : IsScalarTower A B K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsIntegral A B := ⟨fun b => by
     have := hB b b.2
     exact (isIntegral_algebraMap_iff (A := B) (B := K) (x := b) ).1 this⟩
   exact isIntegral_trans a ha

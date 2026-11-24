@@ -280,7 +280,7 @@ theorem signs_pos_of_frame_gram_posdef {r : ℕ} (ε : Fin r → Bool) (fr G : M
   have h5 := congrFun (congrFun h4 i) i
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Formalism.REAL.Jm, Matrix.diagonal_apply_eq, hi'] at h5
   have h6 := congrArg Complex.re h5
-  simp only [Complex.re_sum, Bool.false_eq_true, if_false, Complex.neg_re, Complex.one_re] at h6
+  simp only [Complex.re_sum, Bool.false_eq_true, ite_false, Complex.neg_re, Complex.one_re] at h6
   have h7 : ∀ k, 0 ≤ (Q i k * star (Q i k)).re := by
     intro k
     rw [Complex.star_def, Complex.mul_conj]
@@ -814,7 +814,7 @@ theorem lamE_half {ψ : AddChar (AF D.host.F) ℂ} (e : AE D) {e' : AE D} (he' :
 theorem finite_Qm {V : Type} [AddCommGroup V] {Λ : AddSubgroup V} {m : ℕ} {R : Set V} (hR : R.Finite)
     (h : ∀ t ∈ Λ, ∃ r ∈ R, ∃ u ∈ Λ, t = r + m • u) : Finite (Qm m Λ) := by
   classical
-  haveI : Finite R := hR
+  have : Finite R := hR
   refine Finite.of_surjective
     (fun r : R => if hr : (r : V) ∈ Λ then (QuotientAddGroup.mk (⟨r, hr⟩ : Λ) : Qm m Λ) else 0) fun q => ?_
   obtain ⟨r, hr, u, hu, ht⟩ := h _ (repm_mem q)
@@ -822,7 +822,7 @@ theorem finite_Qm {V : Type} [AddCommGroup V] {Λ : AddSubgroup V} {m : ℕ} {R 
     have := Λ.sub_mem (repm_mem q) (Λ.nsmul_mem hu m)
     rwa [ht, add_sub_cancel_right] at this
   refine ⟨⟨r, hr⟩, ?_⟩
-  simp only [dif_pos hrΛ]
+  simp only [dite_eq_left hrΛ]
   rw [← mk_repm q, QuotientAddGroup.eq, AddSubgroup.mem_addSubgroupOf]
   refine mem_mLat.2 ⟨u, hu, ?_⟩
   change m • u = -r + repm q
@@ -877,7 +877,7 @@ theorem decomp_of_lam (ψ : AddChar (AF D.host.F) ℂ) (Λ : AddSubgroup (WO S T
     simp only [h3]
     rw [Finset.sum_comm]
     simp only [← Finset.sum_smul, hs, charSum_selfAnn D ψ S T Λ m hm hinf hΛ hmax, ← hN, ite_smul, zero_smul]
-    rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)]
     obtain ⟨l, hl, hl'⟩ := mem_mLat.1 (repm_zero_mem (m := m) (Λ := Λ))
     have h2 : heisL S T ψ (m • l) f = f := hf l hl
     rw [← hl', hlm l hl, h2, one_mul, smul_smul, mul_inv_cancel₀ hN0, one_smul]
@@ -892,8 +892,8 @@ theorem theta_eq_sum_latVac : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ 
   change ∀ u ∈ latO S T LS LT fun _ => True, _ at hfk
   generalize latO S T (LS : Set (Fin S.rank → D.host.E)) (LT : Set (Fin T.rank → D.host.E)) (fun _ => True) = Λ
     at hfk hmod hdual hinf hRc ⊢
-  haveI : Finite (Qm (2 * k) Λ) := finite_Qm hR hRc
-  letI : Fintype (Qm (2 * k) Λ) := Fintype.ofFinite _
+  have : Finite (Qm (2 * k) Λ) := finite_Qm hR hRc
+  let : Fintype (Qm (2 * k) Λ) := Fintype.ofFinite _
   obtain ⟨e, h1, h2, hi, hi', h, hh, h3⟩ := GlobalTheory.TwoPlaceIdem.exists_idem_half D
   have hΛ : ∀ x ∈ Λ, ∀ y ∈ Λ, ψ (symplO S T x y) = 1 := fun x hx => (hdual x (hinf x hx)).1 hx
   have hr : ∀ u ∈ Λ, ∃ z ∈ Λ, (1 - e - cA D e) • u = 2 • z := fun u hu =>
@@ -952,7 +952,7 @@ theorem heisO_pureTensorO_fin {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : I
   classical
   have h := GlobalTheory.FiniteHeisComb.sum_heisO_pureTensorO D ψ θ S T hψ hθ sS BS sT BT (Finsupp.single u 1)
     (fun v hv => by
-      rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hv
+      rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hv
       rw [hv]; exact hu) x hx P
   simpa [Finsupp.sum_single_index] using h
 
@@ -1073,7 +1073,7 @@ theorem unframe_mem_UH {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S
 theorem rep_scalar {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (τ : D.what₂.Tau) [FiniteDimensional ℂ (M.H τ)]
     {a : Matrix (Fin V.rank) (Fin V.rank) ℂ} (ha : a ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ))
     (hc : ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ), g * a = a * g) : ∃ c : ℂ, ∀ w, M.rep τ a w = c • w := by
-  haveI : Nontrivial (M.H τ) := (M.ds τ).2.1
+  have : Nontrivial (M.H τ) := (M.ds τ).2.1
   have hd := (Matrix.isUnit_iff_isUnit_det _).1 (M.fr_unit τ)
   let A : Module.End ℂ (M.H τ) := (M.rep τ a : M.H τ →ₗ[ℂ] M.H τ)
   obtain ⟨c, hcA⟩ := Module.End.exists_eigenvalue A
@@ -1093,7 +1093,7 @@ theorem rep_scalar {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) (�
     rw [← GlobalTheory.ConjMult.rep_mul M τ _ ha _ hg, ← hc _ hg, GlobalTheory.ConjMult.rep_mul M τ _ hg _ ha]
     have hv' : M.rep τ a v = c • v := hv
     rw [hv', map_smul]
-  rcases hirr (A.eigenspace c) (Submodule.closed_of_finiteDimensional _) hinv with h | h
+  rcases hirr (A.eigenspace c) (Submodule.isClosed_of_finiteDimensional _) hinv with h | h
   · exact absurd h hcA
   · have hw : w ∈ A.eigenspace c := h ▸ Submodule.mem_top
     exact (Module.End.mem_eigenspace_iff).1 hw
@@ -1144,7 +1144,7 @@ theorem rTr_realAll {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {S : D.what�
         · subst h; simp [hτ]
         · rw [Function.update_of_ne h]; simp [Finset.mem_insert, h]
       rw [e, Finset.prod_insert hτ]
-      simp only [Finset.mem_insert_self, if_true]
+      simp only [Finset.mem_insert_self, ite_true]
       funext x
       have i1 := congrFun ih (x * atTau θ V τ (Mz τ))
       have i2 := congrFun (rTr_atTau_of_scalar hT τ (hM τ) (hc τ) v) x
@@ -1165,7 +1165,7 @@ theorem cusp_hasCen : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (N : Glo
       ∀ w, N.M.rep ρ (infMat D.sp.cm.sig N.V.gram (θ ρ) z) w = c • w := by
     intro z ρ
     by_cases hz : z ∈ Subgroup.center (GA D N.V)
-    · haveI := hfd ρ
+    · have := hfd ρ
       obtain ⟨c, hc⟩ := rep_scalar N.M ρ (GlobalTheory.FockCompare.RealAction.infMat_mem_UH hθ N.V z ρ)
         (fun g hg => infMat_comm hθ hz ρ hg)
       exact ⟨c, fun _ => hc⟩
@@ -1376,10 +1376,10 @@ theorem exists_central_average_one : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   have hcl : IsClosed (Subgroup.center (GA D S) : Set (GA D S)) := by
     have : (Subgroup.center (GA D S) : Set (GA D S)) = ⋂ g, {a | g * a = a * g} := by
       ext a
-      simp only [SetLike.mem_coe, Subgroup.mem_center_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, Subgroup.mem_center_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact isClosed_iInter fun g => isClosed_eq (continuous_const.mul continuous_id) (continuous_id.mul continuous_const)
-  haveI : CompactSpace Z :=
+  have : CompactSpace Z :=
     isCompact_iff_compactSpace.mp ((Formalism.IndefR.Eqv.isCompact_GinfC hsig hdef).inter_right hcl)
   let m : Measure Z := GlobalTheory.haarProb Z
   obtain ⟨h₀, hh₀⟩ := Function.ne_iff.1 hz
@@ -1397,9 +1397,9 @@ theorem exists_central_average_one : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
       funext a
       rw [hcen _ a.2.1 a.2.2, mul_div_cancel_right₀ _ hh]
     rw [this]
-    exact (hφ.2.comp (continuous_const.mul continuous_subtype_val)).div_const _
+    exact (hφ.2.comp (continuous_const.mul continuous_subtypeVal)).div_const _
   have hj : ∀ a : Z, (a : GA D S) ∈ GinfC S := fun a => a.2.1
-  refine ⟨avg1 om m Subtype.val (fun a => χ a) Φ, isThetaFunction_average_compactFamily_weilTranslates m hom continuous_subtype_val hj hcont hΦ,
+  refine ⟨avg1 om m Subtype.val (fun a => χ a) Φ, isThetaFunction_average_compactFamily_weilTranslates m hom continuous_subtypeVal hj hcont hΦ,
     fun a ha1 ha2 => ?_, fun h => ?_⟩
   · let a' : Z := ⟨a, ha1, ha2⟩
     have hne : χ a ≠ 0 := by
@@ -1410,7 +1410,7 @@ theorem exists_central_average_one : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
       rw [h0, mul_zero] at this
       exact one_ne_zero this
     funext u
-    rw [weilOperator_average_eq_average_translated m hom continuous_subtype_val hj hcont hΦ]
+    rw [weilOperator_average_eq_average_translated m hom continuous_subtypeVal hj hcont hΦ]
     simp only [Pi.smul_apply, smul_eq_mul, avg1]
     rw [← integral_mul_left_eq_self (μ := m) (fun b : Z => χ b * om ((b : GA D S), 1) Φ u) a', ← integral_const_mul]
     congr 1
@@ -1419,8 +1419,8 @@ theorem exists_central_average_one : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
     change _ = (χ a)⁻¹ * (χ a * χ b * om ((a * b : GA D S), 1) Φ u)
     rw [Prod.mk_mul_mk, mul_one]
     field_simp
-  · haveI : Countable (GQ S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig S.gram
-    haveI : ν.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds S ν hν
+  · have : Countable (GQ S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig S.gram
+    have : ν.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds S ν hν
     have hF_inv : ∀ γ ∈ GQ S, ∀ g, thetaKO om (γ * g) h Φ * φ (γ * g) = thetaKO om g h Φ * φ g := by
       intro γ hγ g
       have : om (γ * g, h) Φ 0 = om (g, h) Φ 0 := by
@@ -1433,13 +1433,13 @@ theorem exists_central_average_one : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
         ∫ k : Z, thetaKO om (g * k) h Φ * φ (g * k) ∂m := by
       intro g
       unfold thetaKO
-      rw [weilOperator_average_eq_average_translated m hom continuous_subtype_val hj hcont hΦ, ← integral_mul_const]
+      rw [weilOperator_average_eq_average_translated m hom continuous_subtypeVal hj hcont hΦ, ← integral_mul_const]
       congr 1
       funext k
       rw [Prod.mk_mul_mk, mul_one, hcen _ k.2.1 k.2.2]
       ring
     simp_rw [key]
-    exact (GlobalTheory.Chain.IoLift.AvgLift.setIntegral_average (GQ S) ν hfd m continuous_subtype_val
+    exact (GlobalTheory.Chain.IoLift.AvgLift.setIntegral_average (GQ S) ν hfd m continuous_subtypeVal
       (Φ := fun g => thetaKO om g h Φ * φ g) hF_inv hF_cont (hint h)).symm
 
 end GlobalTheory.CenAvgOne

@@ -155,7 +155,7 @@ def yf (τ : (U.X k).Ψ) (b : Fin r) : ℂ :=
 include hU in
 theorem index_lt_signature_of_mem {ρ : E →+* ℂ} (h : ρ ∈ (U.X k).Ψ) (a : Fin (A.T.dim ρ)) : (a : ℕ) < (U.X k).p0 := by
   have h1 := dim_of hU A ρ
-  rw [if_pos h] at h1
+  rw [ite_eq_left h] at h1
   have := a.2
   omega
 

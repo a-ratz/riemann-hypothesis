@@ -64,7 +64,7 @@ theorem symTup_unit_of_prim : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsLoca
   set i := io.comp (algebraMap V (FractionRing V)) with hi
   have hio : Function.Injective io := io.injective
   have hinj : Function.Injective i := hio.comp (IsFractionRing.injective V (FractionRing V))
-  letI : Algebra V K := i.toAlgebra
+  let : Algebra V K := i.toAlgebra
   have hcI : ∀ a, IsIntegral V (c a) := hP.1
   have hsI : ∀ j, IsIntegral V (symTup c j) := by
     intro j

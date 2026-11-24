@@ -75,9 +75,9 @@ theorem sum_ord_sub_one_le_formOrd_dOn : ∀ {k : Type} [Field k] [PerfectField 
     ∑ j, E.ord (u j) - 1 ≤ (fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (formOf U (gen_mem hy) (dOn p z)) := by
   intro k _ _ X _ p _ n hn E U y hy hE z hz0 J _ e he u hu
   classical
-  letI := (Cartier.constFn p).toAlgebra
-  letI := E.const.toAlgebra
-  haveI : IsScalarTower k E.ring X.functionField := IsScalarTower.of_algebraMap_eq' rfl
+  let := (Cartier.constFn p).toAlgebra
+  let := E.const.toAlgebra
+  have : IsScalarTower k E.ring X.functionField := IsScalarTower.of_algebraMap_eq' rfl
   let x : Fin n → X.functionField := fun i => fnOf U (gen_mem hy) (z i)
   have hxV : ∀ i, x i ∈ E.ring := fun i => hE _ (regAt_fnOf hy _ (z i))
   have hη : formOf U (gen_mem hy) (dOn p z) = dWedge k x := by

@@ -56,16 +56,16 @@ theorem isEmpty_realEmb (E : Type) [Field E] [NumberField E] [_root_.NumberField
 
 theorem degOver_le_and_sz : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (φ : E →+* ℂ) (N : ℕ) (M : IntermediateField ℚ ℂ) (h : IsRayFieldIn φ (natIdeal E N) M), N ≠ 0 → degOver φ M h.emb_mem ≤ classNumber E * N ^ Module.finrank ℚ E ∧ Sz M (Real.log (Module.finrank ℚ E) + Real.log (degOver φ M h.emb_mem)) (Real.log |((discr E : ℤ) : ℝ)| / Module.finrank ℚ E + Real.log N + Real.log (degOver φ M h.emb_mem)) := by
   intro E _ _ _ φ N M h hN
-  haveI : NumberField M := h.numberField
-  letI := algOf φ M h.emb_mem
+  have : NumberField M := h.numberField
+  let := algOf φ M h.emb_mem
   have hR : IsRayField E M (natIdeal E N) := h.isRayField
-  haveI : IsAbelianGalois E M := hR.1
+  have : IsAbelianGalois E M := hR.1
   have hdeg : degOver φ M h.emb_mem = Module.finrank E M := rfl
   have hfin := finrank_mul_degOver φ M h.emb_mem
   rw [hdeg] at hfin ⊢
   refine ⟨?_, ?_⟩
   · have h1 := GlobalTheory.FieldSize.RayDegree.finrank_le E M (natIdeal E N) (natIdeal_ne_bot hN) hR.2
-    haveI := isEmpty_realEmb E
+    have := isEmpty_realEmb E
     rwa [Fintype.card_eq_zero, pow_zero, mul_one, Ideal.absNorm_span_natCast, RingOfIntegers.rank] at h1
   · refine ⟨inferInstance, ?_, ?_⟩
     · rw [← hfin]

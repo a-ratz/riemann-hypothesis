@@ -192,7 +192,7 @@ theorem hol_lp (W : (A.hom ⁻¹ᵁ ⊤).toScheme.Opens) (f : Γ((A.hom ⁻¹ᵁ
   obtain ⟨ho, hd⟩ := u.hol U f'
   rw [hset]
   refine ⟨ho, hd.congr fun z hz => ?_⟩
-  have h2 := (h (lp (u.ex z))).2 (by rw [← Set.mem_setOf_eq (p := fun z => ⊤ ≤ (lp (u.ex z)) ⁻¹ᵁ W), hset]; exact hz)
+  have h2 := (h (lp (u.ex z))).2 (by rw [← Set.mem_ofPred_eq (p := fun z => ⊤ ≤ (lp (u.ex z)) ⁻¹ᵁ W), hset]; exact hz)
   rw [lp_comp] at h2
   exact h2
 

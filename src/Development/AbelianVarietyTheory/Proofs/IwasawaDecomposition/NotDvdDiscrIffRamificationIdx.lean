@@ -148,7 +148,7 @@ theorem absNorm_eq_of_span {𝔮 : Ideal (𝓞 K)} (hR : IsRayField K L 𝔮) (h
   have hcop : IsCoprime 𝔭.asIdeal 𝔮 := by
     rw [hπ]
     exact Ideal.isCoprime_iff_exists.2 ⟨π, Ideal.mem_span_singleton_self _, -(π - 1), neg_mem h1, by ring⟩
-  have hnd : ¬ 𝔭.asIdeal ∣ 𝔮 := fun h => 𝔭.prime.not_unit (hcop.isUnit_of_dvd' dvd_rfl h)
+  have hnd : ¬ 𝔭.asIdeal ∣ 𝔮 := fun h => 𝔭.prime.not_isUnit (hcop.isUnit_of_dvd' dvd_rfl h)
   have hπ0 : π ≠ 0 := by
     rintro rfl
     exact 𝔭.ne_bot (by simpa using hπ)

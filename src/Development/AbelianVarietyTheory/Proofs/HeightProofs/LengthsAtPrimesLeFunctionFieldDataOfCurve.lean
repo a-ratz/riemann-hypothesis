@@ -96,7 +96,7 @@ theorem exists_ringHom_tensor_OmS_of_point :
     ∀ (K Ω K' U : Type) [Field K] [Field Ω] [Algebra K Ω] [Field K'] [Field U] (D N : ℕ) (j₀ : Fin (N + 1)) (x : Fin N → Ω) [Algebra (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) (ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N)] [Algebra (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) K'] (κ : K' →+* U) (τ : Ω →+* U) (T : ReciprocityTheory.ChartRestriction.G.T0.TVar D N → K'), Algebra.trdeg K Ω = D → (∀ p : ReciprocityTheory.ChartRestriction.G.T0.KTp K D N, algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) (ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N) (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTp K D N) (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) p) = ReciprocityTheory.ChartRestriction.G.T0.sHom j₀ x p) → (∀ p, algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) K' (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTp K D N) (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) (MvPolynomial.X p)) = T p) → (∀ a : K, τ (algebraMap K Ω a) = κ (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) K' (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTp K D N) (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) (MvPolynomial.C a)))) → (∀ i : Fin D, κ (T (i.succ, j₀)) + ∑ k, κ (T (i.succ, j₀.succAbove k)) * τ (x k) = 0) → ∃ χ : K' ⊗[ReciprocityTheory.ChartRestriction.G.T0.KTf K D N] ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N →+* U, (∀ a : K', χ (a ⊗ₜ 1) = κ a) ∧ ∀ ω : Ω, χ (1 ⊗ₜ algebraMap Ω (ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N) ω) = τ ω := by
   intro K Ω K' U _ _ _ _ _ D N j₀ x _ _ κ τ T hD hS hT hC hrel
   classical
-  letI : Algebra K U := (τ.comp (algebraMap K Ω)).toAlgebra
+  let : Algebra K U := (τ.comp (algebraMap K Ω)).toAlgebra
   have hKU : ∀ a : K, algebraMap K U a = τ (algebraMap K Ω a) := fun _ => rfl
   let φ : Ω →ₐ[K] U := { τ with commutes' := fun _ => rfl }
   let g : ReciprocityTheory.ChartRestriction.G.T0.KTp K D N →+* U :=
@@ -138,7 +138,7 @@ theorem exists_ringHom_tensor_OmS_of_point :
         simp [ReciprocityTheory.ChartRestriction.G.T0.sHom]
     rw [RingHom.comp_apply, hS]
     exact DFunLike.congr_fun this q
-  letI : Algebra (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) U :=
+  let : Algebra (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) U :=
     (κ.comp (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.KTf K D N) K')).toAlgebra
   let κ' : K' →ₐ[ReciprocityTheory.ChartRestriction.G.T0.KTf K D N] U := { κ with commutes' := fun _ => rfl }
   let P' : ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N →ₐ[ReciprocityTheory.ChartRestriction.G.T0.KTf K D N] U :=
@@ -192,11 +192,11 @@ theorem exists_evalRp (X : PJ D B P j) (la : HeightOneSpectrum (𝓞 B.KO)) (N :
     (hχ : ∀ (a : B.KO) (f : X.Forms), χ (a • f) =
       algebraMap (Kp X la N) C (algebraMap (X.Kl la) (Kp X la N) (algebraMap B.KO (X.Kl la) a)) * χ f) :
     ∃ Θ : Rp X la N →ₐ[Kp X la N] C, ∀ F, Θ (Formalism.MainNotions.Gaps.EtaleWeightGaps.emb X la N F) = χ F := by
-  letI : Algebra (X.Kl la) C := ((algebraMap (Kp X la N) C).comp (algebraMap (X.Kl la) (Kp X la N))).toAlgebra
-  letI : Algebra B.KO C := ((algebraMap (Kp X la N) C).comp
+  let : Algebra (X.Kl la) C := ((algebraMap (Kp X la N) C).comp (algebraMap (X.Kl la) (Kp X la N))).toAlgebra
+  let : Algebra B.KO C := ((algebraMap (Kp X la N) C).comp
     ((algebraMap (X.Kl la) (Kp X la N)).comp (algebraMap B.KO (X.Kl la)))).toAlgebra
-  haveI : IsScalarTower B.KO (X.Kl la) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (X.Kl la) (Kp X la N) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower B.KO (X.Kl la) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (X.Kl la) (Kp X la N) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let g : X.Forms →ₐ[B.KO] C :=
     { χ with
       commutes' := fun a => by
@@ -307,8 +307,8 @@ theorem mem_span_one_tmul_of_order_bound (R R' F F' : Type) [CommRing R] [IsDoma
     refine hx w.1 w.2 (w' w) (h1 w) fun r => ?_
     exact (h2 _).1 (isIntegral_algebraMap (R := R') (A := F' ⊗[F] L) (x := r)) w
   have hmem := (hB _).1 hint
-  haveI := integralClosure.isDedekindDomain R F L
-  haveI := integralClosure.isFractionRing_of_finite_extension (A := R) F L
+  have := integralClosure.isDedekindDomain R F L
+  have := integralClosure.isFractionRing_of_finite_extension (A := R) F L
   have hxe : x = (x * (1 : F') ⊗ₜ[F] η) * (1 : F') ⊗ₜ[F] η⁻¹ := by
     rw [mul_assoc, Algebra.TensorProduct.tmul_mul_tmul, mul_one, mul_inv_cancel₀ hη0,
       ← Algebra.TensorProduct.one_def, mul_one]
@@ -464,7 +464,7 @@ theorem centre_isPrime (u : AddValuation A (WithTop ℤ)) (hu : ∀ a : ↥(As O
 theorem centre_isMaximal (u : AddValuation A (WithTop ℤ)) (hu : ∀ a : ↥(As O A), 0 ≤ u (a : A))
     {ϖ : O} (hϖ : Irreducible ϖ) (hpos : 0 < u (algebraMap O A ϖ)) :
     (centre u hu).IsMaximal := by
-  haveI := centre_isPrime u hu
+  have := centre_isPrime u hu
   refine Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) _ ?_
   have hle : IsLocalRing.maximalIdeal O ≤ (centre u hu).comap (algebraMap O ↥(As O A)) := by
     rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_le_iff_mem]
@@ -644,11 +644,11 @@ theorem sum_sImg (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x 
 
 theorem sum_sImg_succ (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x k * y j₀) (i : Fin D) :
     ∑ k, sImg (D := D) j₀ x (i.succ, k) * algebraMap Ω (OmS Ω D N) (y k) = 0 := by
-  rw [sum_sImg j₀ x y hy, if_neg (Fin.succ_ne_zero i), map_zero, zero_mul]
+  rw [sum_sImg j₀ x y hy, ite_eq_right (Fin.succ_ne_zero i), map_zero, zero_mul]
 
 theorem sum_sImg_zero (y : Fin (N + 1) → Ω) (hy : ∀ k, y (j₀.succAbove k) = x k * y j₀) (h0 : y j₀ ≠ 0) :
     ∑ k, sImg (D := D) j₀ x (0, k) * algebraMap Ω (OmS Ω D N) (y k) ≠ 0 := by
-  rw [sum_sImg j₀ x y hy, if_pos rfl]
+  rw [sum_sImg j₀ x y hy, ite_eq_left rfl]
   refine mul_ne_zero ?_ ((map_ne_zero _).2 h0)
   rw [map_ne_zero_iff _ (IsFractionRing.injective (MvPolynomial (SVar D N) Ω) (OmS Ω D N))]
   intro h
@@ -845,10 +845,10 @@ theorem plOver_iff (d : Data B.KO ι Ω WT A) (hs : d.S1) (la : HeightOneSpectru
     letI := d.algOp hs la c
     w ∈ ReciprocityTheory.ChartRestriction.G.T0.ValPl.PlacesOver (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (OmS (Ω c) d.D d.N) ↔
       w ∈ d.PlOver la c := by
-  letI := d.algOp hs la c
-  letI : Algebra (OT B.KO d.D d.N) (OmS (Ω c) d.D d.N) := (d.OTtoS c).toAlgebra
-  letI : Algebra (OT B.KO d.D d.N) (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) := inferInstance
-  haveI : IsScalarTower (OT B.KO d.D d.N) (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (OmS (Ω c) d.D d.N) :=
+  let := d.algOp hs la c
+  let : Algebra (OT B.KO d.D d.N) (OmS (Ω c) d.D d.N) := (d.OTtoS c).toAlgebra
+  let : Algebra (OT B.KO d.D d.N) (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) := inferInstance
+  have : IsScalarTower (OT B.KO d.D d.N) (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (OmS (Ω c) d.D d.N) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       show _ = d.KTtoS hs c (ReciprocityTheory.ChartRestriction.G.T0.OpToKT d.D d.N la (algebraMap _ _ x))
       rw [ReciprocityTheory.ChartRestriction.G.T0.OpToKT, IsLocalization.lift_eq]
@@ -891,34 +891,34 @@ theorem ila_le (G : GlobalFamilyData X ka wL wF) (la : HeightOneSpectrum (𝓞 B
   classical
   obtain ⟨f, φ, hflat, hloc, hmax, hres, hφ, hC, hT⟩ :=
     GlobalTheory.GaussCompletion.gaussRing_completion_rename D B P j X la G.N d.D d.N (eVar hD eN)
-  haveI := ReciprocityTheory.ChartRestriction.G.T0.Op_isDVR (K := B.KO) d.D d.N la
-  letI : Algebra (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N) := f.toAlgebra
-  letI : Algebra (KTf B.KO d.D d.N) (Kp X la G.N) := φ.toAlgebra
-  letI := ReciprocityTheory.ChartRestriction.G.T0.algOpKT (K := B.KO) d.D d.N la
-  haveI := ReciprocityTheory.ChartRestriction.G.T0.isFractionRing_Op (K := B.KO) d.D d.N la
-  letI : Algebra (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Kp X la G.N) :=
+  have := ReciprocityTheory.ChartRestriction.G.T0.Op_isDVR (K := B.KO) d.D d.N la
+  let : Algebra (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N) := f.toAlgebra
+  let : Algebra (KTf B.KO d.D d.N) (Kp X la G.N) := φ.toAlgebra
+  let := ReciprocityTheory.ChartRestriction.G.T0.algOpKT (K := B.KO) d.D d.N la
+  have := ReciprocityTheory.ChartRestriction.G.T0.isFractionRing_Op (K := B.KO) d.D d.N la
+  let : Algebra (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Kp X la G.N) :=
     ((@algebraMap (Op X la G.N) (Kp X la G.N) _ _ _).comp f).toAlgebra
-  haveI : IsScalarTower (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (KTf B.KO d.D d.N) (Kp X la G.N) :=
+  have : IsScalarTower (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (KTf B.KO d.D d.N) (Kp X la G.N) :=
     IsScalarTower.of_algebraMap_eq fun r => (hφ r).symm
-  haveI : IsScalarTower (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N) (Kp X la G.N) :=
+  have : IsScalarTower (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N) (Kp X la G.N) :=
     IsScalarTower.of_algebraMap_eq fun r => rfl
-  haveI : Module.Flat (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N) := hflat
-  haveI : IsLocalHom (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N)) := hloc
-  letI : ∀ c, Algebra (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS hs c).toAlgebra
-  letI : ∀ c, Algebra (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (OmS (Ω c) d.D d.N) := fun c => d.algOp hs la c
-  haveI : ∀ c, IsScalarTower (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N) :=
+  have : Module.Flat (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N) := hflat
+  have : IsLocalHom (algebraMap (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (Op X la G.N)) := hloc
+  let : ∀ c, Algebra (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS hs c).toAlgebra
+  let : ∀ c, Algebra (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (OmS (Ω c) d.D d.N) := fun c => d.algOp hs la c
+  have : ∀ c, IsScalarTower (ReciprocityTheory.ChartRestriction.G.T0.Op d.D d.N la) (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N) :=
     fun c => IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : ∀ c, FiniteDimensional (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.omS_finite hd hs c).1
+  have : ∀ c, FiniteDimensional (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.omS_finite hd hs c).1
   have hS : ∀ c (p : KTp B.KO d.D d.N), algebraMap (KTf B.KO d.D d.N) (OmS (Ω c) d.D d.N)
       (algebraMap (KTp B.KO d.D d.N) (KTf B.KO d.D d.N) p) = sHom (d.jc c) (d.x c) p := fun c p =>
     IsFractionRing.lift_algebraMap (hs c) p
   choose Θ ψ Ψ hΘ hu hmul hfr hrho using fun c =>
     exists_comp_maps X la G.w hD eN hC hT (gF c) (d.jc c) (d.x c) (hS c) (h0 c) (hx c) wF
   obtain ⟨hfin, hred, hgen⟩ := hcurve
-  haveI : CharZero (Kp X la G.N) :=
+  have : CharZero (Kp X la G.N) :=
     charZero_of_injective_ringHom
       ((algebraMap (X.Kl la) (Kp X la G.N)).comp (algebraMap B.KO (X.Kl la))).injective
-  haveI : ∀ ζ : PtsG G la, IsDVRAt ζ := (integralClosure_dvr' (Op X la G.N) (Kp X la G.N) (OsK X la G.w)).2
+  have : ∀ ζ : PtsG G la, IsDVRAt ζ := (integralClosure_dvr' (Op X la G.N) (Kp X la G.N) (OsK X la G.w)).2
   have hirr : Irreducible (unifO X la G.N) :=
     Op.irreducible_map _ _ _ (Classical.choose_spec (IsDiscreteValuationRing.exists_irreducible (X.Ol la)))
   have hU : IsUnif (OsK X la G.w) (unifO X la G.N) := isUnif_of_field (Kp X la G.N) hirr

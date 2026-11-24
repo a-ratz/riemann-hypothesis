@@ -155,12 +155,12 @@ theorem massU_of (Y : Formalism.L2.SG.Full.Full X) (hLF : LocFactor C) (hB : WuB
     (QPK.invOn_pi _ _ hH)
 
   set F : ∀ v, Formalism.REAL.UJ (X.B.I.ε v) → ℝ≥0∞ := fun v y => ‖X.Wloc u v y‖ₑ ^ 2 with hF_def
-  have hFm : ∀ v, Measurable (F v) := fun v => (X.Wloc_cont u v).enorm.measurable.pow_const 2
+  have hFm : ∀ v, Measurable (F v) := fun v => (X.Wloc_cont u v).eNorm.measurable.pow_const 2
   have hFinv : ∀ v, ∀ m ∈ Nloc X u v, ∀ h ∈ Hloc X u v, ∀ x, F v (m * h * x) = F v x := by
     intro v m hm h hh x
     have hs := mul_mem_Sloc X u v (Nloc_sub X u v hm) (Hloc_sub X u v hh)
     show ‖X.Wloc u v (m * h * x)‖ₑ ^ 2 = ‖X.Wloc u v x‖ₑ ^ 2
-    rw [← enorm_norm (X.Wloc u v (m * h * x)), norm_Wloc_inv X u v hs, enorm_norm]
+    rw [← eNorm_norm (X.Wloc u v (m * h * x)), norm_Wloc_inv X u v hs, eNorm_norm]
   set f : X.B.I.Ginf → ℝ≥0∞ := fun x => ∏ v, β v (x v) * F v (x v) with hf_def
   have hfm : Measurable f :=
     Finset.measurable_prod _ fun v _ =>
@@ -214,9 +214,9 @@ theorem massU_of (Y : Formalism.L2.SG.Full.Full X) (hLF : LocFactor C) (hB : WuB
       Formalism.L2.SG.LoopTerm.dnB D θ (Formalism.L2.SG.LoopTerm.trInf C '' Y.FN u) := by
     rw [← hmapT, hemb.map_apply, Set.preimage_image_eq _ hemb.injective]
   have hNF : X.muN u (Y.FN u) = cN * Formalism.L2.SG.LoopTerm.dnB D θ (Formalism.L2.SG.LoopTerm.trInf C '' Y.FN u) := by
-    rw [hcN, Measure.smul_apply, smul_eq_mul, hcov]
+    rw [hcN, smul_apply, smul_eq_mul, hcov]
   have hHU : X.muH u Set.univ = cH := by
-    rw [hcH, Measure.smul_apply, smul_eq_mul, ← Set.pi_univ, Measure.pi_pi]
+    rw [hcH, smul_apply, smul_eq_mul, ← Set.pi_univ, Measure.pi_pi]
     rw [Finset.prod_eq_one fun v _ => hH1 v, mul_one]
   unfold Formalism.L2.SG.Pf.AmpWin.MassU Formalism.L2.SG.LoopTerm.covN
   rw [hNF, hHU, ← ENNReal.toReal_prod, hprod, ENNReal.toReal_mul, ENNReal.toReal_mul]

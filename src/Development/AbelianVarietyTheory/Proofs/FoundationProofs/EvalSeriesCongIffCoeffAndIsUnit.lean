@@ -167,7 +167,7 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 theorem const_of_pow_eq {f : ℕ} (hf : f ≠ 0) (a : LaurentSeries (ZMod p)) (ha : a ^ p ^ f = a) :
     a = HahnSeries.C (a.coeff 0) := by
-  haveI : CharP (LaurentSeries (ZMod p)) p :=
+  have : CharP (LaurentSeries (ZMod p)) p :=
     (CharP.charP_iff_prime_eq_zero hp.out).2 (by
       rw [← map_natCast (HahnSeries.C : ZMod p →+* LaurentSeries (ZMod p))]; simp)
   by_contra hne
@@ -191,7 +191,7 @@ theorem coeff_rel_of_pow {k : Type} [Field k] [Algebra (ZMod p) k] {ι : Type} [
     (s : Finset ι) : ∀ b : ι → LaurentSeries (ZMod p), (∀ t, t ∉ s → b t = 0) → ∑ t, ε t * φ (b t) = 0 →
       ∀ r, ∑ t, ε t * algebraMap (ZMod p) k ((b t).coeff r) = 0 := by
   classical
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hp.out).2 (by
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero hp.out).2 (by
       rw [← map_natCast (algebraMap (ZMod p) k)]; simp)
   have hC : ∀ c : ZMod p, φ (HahnSeries.C c) = algebraMap (ZMod p) k c := fun c =>
     DFunLike.congr_fun (Subsingleton.elim (φ.comp HahnSeries.C) (algebraMap (ZMod p) k)) c
@@ -258,11 +258,11 @@ theorem coeff_rel_of_pow {k : Type} [Field k] [Algebra (ZMod p) k] {ι : Type} [
 theorem exists_pow_eq {k : Type} [Field k] [Algebra (ZMod p) k] {ι : Type} [Fintype ι] (ε : ι → k)
     (h : ∀ t, IsAlgebraic (ZMod p) (ε t)) : ∃ f : ℕ, f ≠ 0 ∧ ∀ t, ε t ^ p ^ f = ε t := by
   let K := IntermediateField.adjoin (ZMod p) (Set.range ε)
-  haveI : FiniteDimensional (ZMod p) K :=
+  have : FiniteDimensional (ZMod p) K :=
     IntermediateField.finiteDimensional_adjoin (by rintro _ ⟨t, rfl⟩; exact (h t).isIntegral)
-  haveI : Finite K := Module.finite_of_finite (ZMod p)
-  letI : Fintype K := Fintype.ofFinite K
-  haveI : CharP K p := (CharP.charP_iff_prime_eq_zero hp.out).2 (by
+  have : Finite K := Module.finite_of_finite (ZMod p)
+  let : Fintype K := Fintype.ofFinite K
+  have : CharP K p := (CharP.charP_iff_prime_eq_zero hp.out).2 (by
       rw [← map_natCast (algebraMap (ZMod p) K)]; simp)
   obtain ⟨n, -, hn⟩ := FiniteField.card K p
   refine ⟨n, n.ne_zero, fun t => ?_⟩
@@ -274,7 +274,7 @@ open Polynomial in
 theorem exists_prim (P : ℤ_[p][X]) (hP : P ≠ 0) :
     ∃ (c : ℤ_[p]) (Q : ℤ_[p][X]), c ≠ 0 ∧ P = C c * Q ∧ Q.map (PadicInt.toZMod (p := p)) ≠ 0 := by
   classical
-  letI : NormalizedGCDMonoid ℤ_[p] := Classical.arbitrary _
+  let : NormalizedGCDMonoid ℤ_[p] := Classical.arbitrary _
   refine ⟨P.content, P.primPart, by rwa [Ne, content_eq_zero_iff], P.eq_C_content_mul_primPart, ?_⟩
   intro h0
   have hd : ∀ n, (p : ℤ_[p]) ∣ P.primPart.coeff n := by
@@ -283,7 +283,7 @@ theorem exists_prim (P : ℤ_[p][X]) (hP : P ≠ 0) :
     simp only [coeff_map, coeff_zero] at this
     rwa [← RingHom.mem_ker, PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p,
       Ideal.mem_span_singleton] at this
-  exact PadicInt.prime_p.not_unit (isPrimitive_primPart P (p : ℤ_[p]) ((C_dvd_iff_dvd_coeff _ _).2 hd))
+  exact PadicInt.prime_p.not_isUnit (isPrimitive_primPart P (p : ℤ_[p]) ((C_dvd_iff_dvd_coeff _ _).2 hd))
 
 theorem coeff_lt_one : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω],
     IsClo p Ω → ∀ (v : Valuation Ω ℝ≥0), (∀ x : Ω, v x ≤ 1 ↔ IsInt (p := p) x) →
@@ -319,8 +319,8 @@ theorem coeff_lt_one : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alge
   have hg : ∀ x, (g x : Ω) = ψ (algebraMap (Lau p) (O0 p) x) := fun _ => rfl
   have hp0 : (p : k) = 0 := by
     rw [← map_natCast ρ, hρ]; simpa using hvp
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hp.out).2 hp0
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero hp.out).2 hp0
+  let : Algebra (ZMod p) k := ZMod.algebra k p
   have hker : RingHom.ker (LauZ.red p) ≤ RingHom.ker (ρ.comp g) := by
     intro x hx
     obtain ⟨y, rfl⟩ := (Basic.dvd_iff_map p x).2 hx
@@ -357,7 +357,7 @@ theorem coeff_lt_one : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alge
     refine ⟨_, hQ, ?_⟩
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, hg0, Polynomial.eval₂_mul, Polynomial.eval₂_C] at hPe
     have hc' : (A.subtype.comp g0) c ≠ 0 := by
-      haveI : CharZero Ω := Basic.charZero_of_isClo hC
+      have : CharZero Ω := Basic.charZero_of_isClo hC
       obtain ⟨m, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hc PadicInt.irreducible_p
       rw [map_mul, map_pow, map_natCast]
       exact mul_ne_zero (u.isUnit.map _).ne_zero (pow_ne_zero _ (by exact_mod_cast hp.out.ne_zero))
@@ -481,11 +481,11 @@ theorem cong_iff (hv : ∀ x, v x ≤ 1 ↔ IsInt (p := p) x) (hp0 : 0 < v (p : 
   · rintro ⟨z, hz, e⟩
     rw [sub_zero] at e
     rw [e, map_mul, map_pow]
-    exact mul_le_of_le_one_right zero_le' ((hv z).2 hz)
+    exact mul_le_of_le_one_right zero_le ((hv z).2 hz)
   · intro hy
     refine ⟨y / (p : Ω) ^ k, (hv _).1 ?_, by rw [sub_zero]; field_simp⟩
     rw [map_div₀, map_pow]
-    exact div_le_one_of_le₀ hy zero_le'
+    exact div_le_one_of_le₀ hy zero_le
 
 def S (ψ : O0 p →+* Ω) {E F : ℕ} (π : Ω) (κ : Fin F → Ω) (b : Fin F → Fin E → Lau p) : Ω :=
   ∑ j, ∑ s : Fin E, κ j * π ^ (s : ℕ) * ψ (algebraMap (Lau p) (O0 p) (b j s))
@@ -513,7 +513,7 @@ theorem key_k (hp0 : 0 < v (p : Ω)) (hp1 : v (p : Ω) < 1) (ψ : O0 p →+* Ω)
     constructor
     · intro h
       have h1 : ∀ j s, (p : Lau p) ∣ b j s :=
-        K1 b (h.trans (pow_le_of_le_one zero_le' hp1.le (Nat.succ_ne_zero k)))
+        K1 b (h.trans (pow_le_of_le_one zero_le hp1.le (Nat.succ_ne_zero k)))
       choose b' hb' using h1
       have hb : b = fun j s => (p : Lau p) ^ 1 * b' j s := by
         funext j s; rw [pow_one]; exact hb' j s
@@ -527,7 +527,7 @@ theorem key_k (hp0 : 0 < v (p : Ω)) (hp1 : v (p : Ω) < 1) (ψ : O0 p →+* Ω)
       have hb : b = fun j s => (p : Lau p) ^ (k + 1) * b' j s := by
         funext j s; exact hb' j s
       rw [hb, S_mul, map_mul, map_pow]
-      exact mul_le_of_le_one_right zero_le' (S_le_one v ψ π κ hπ hκ hψ b')
+      exact mul_le_of_le_one_right zero_le (S_le_one v ψ π κ hπ hκ hψ b')
 
 end Val
 

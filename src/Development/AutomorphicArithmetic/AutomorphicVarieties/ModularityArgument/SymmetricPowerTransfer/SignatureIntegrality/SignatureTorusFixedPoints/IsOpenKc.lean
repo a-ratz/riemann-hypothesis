@@ -61,7 +61,7 @@ theorem UpperTheory.V.Z.Sym.Sig.isOpen_Kc (c : ℕ) : IsOpen (Kc k n c : Set (GL
     rw [map_mul, GlAx.val_zpow, _root_.zpow_neg, mul_inv_le_iff₀ (zpow_pos GlAx.unif_pos _), one_mul]
     rfl
   have h : ∀ f : GL (Fin n) k → GL (Fin n) k, Continuous f → IsOpen {g | GlAx.Bd c (f g)} := fun f hf => by
-    simp only [GlAx.Bd, Set.setOf_forall]
+    simp only [GlAx.Bd, Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
       ho.preimage (((Units.continuous_val.comp hf).sub continuous_const).matrix_elem i j)
   have : (Kc k n c : Set (GL (Fin n) k)) = {g | GlAx.Bd c (id g)} ∩ {g | GlAx.Bd c g⁻¹} := Set.ext fun g => GlAx.mem_Kc
@@ -101,7 +101,7 @@ theorem UpperTheory.V.Z.Sym.Sig.fixPt : UpperTheory.V.Z.Sym.Sig.FixPt := by
     · have : (((glIwa k n).N : Subgroup _) : Set (GL (Fin n) k)) =
           ((⋂ i, ⋂ j, ⋂ (_ : j < i), {g | g.val i j = 0}) ∩ ⋂ i, {g | g.val i i = 1}) ∩ KO k (Fin n) := by
         ext g
-        simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
         exact and_congr_left' (mem_unipB _)
       rw [this]
       exact ((isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => isClosed_eq (ce i j) continuous_const).inter
@@ -109,13 +109,13 @@ theorem UpperTheory.V.Z.Sym.Sig.fixPt : UpperTheory.V.Z.Sym.Sig.FixPt := by
     · have : (((glIwa k n).Nm c : Subgroup _) : Set (GL (Fin n) k)) =
           ((⋂ i, ⋂ j, ⋂ (_ : i < j), {g | g.val i j = 0}) ∩ ⋂ i, {g | g.val i i = 1}) ∩ Kc k n (c + 1) := by
         ext g
-        simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
         exact and_congr_left' GlAx.mem_low
       rw [this]
       exact ((isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => isClosed_eq (ce i j) continuous_const).inter
         (isClosed_iInter fun i => isClosed_eq (ce i i) continuous_const)).inter ((Kc k n _).isClosed_of_isOpen (isOpen_Kc _))
   have hc : IsCompact (Q : Set (GL (Fin n) k)) := GlobalTheory.SplitFlip.isCompact_KO.of_isClosed_subset hcl hle
-  haveI : CompactSpace Q := isCompact_iff_compactSpace.1 hc
+  have : CompactSpace Q := isCompact_iff_compactSpace.1 hc
   have hcont : Continuous Ψ := by
     refine continuous_iff_continuousAt.2 fun a => ?_
     rw [ContinuousAt, Filter.tendsto_def]
@@ -126,10 +126,10 @@ theorem UpperTheory.V.Z.Sym.Sig.fixPt : UpperTheory.V.Z.Sym.Sig.FixPt := by
       obtain ⟨W, hW, hW'⟩ := (mem_nhds_subtype _ _ _).1 hS
       exact Filter.mem_of_superset hW fun g hg h => hW' hg)
     have ho : IsOpen {b : Q | (a : GL (Fin n) k)⁻¹ * b ∈ Kc k n m} :=
-      (isOpen_Kc m).preimage (continuous_const.mul continuous_subtype_val)
+      (isOpen_Kc m).preimage (continuous_const.mul continuous_subtypeVal)
     refine Filter.mem_of_superset (ho.mem_nhds (by simp)) fun b hb => ?_
     have := hm (GlAx.Kc_anti (Nat.le_succ m) (hΨ m a b hb))
-    simp only [Set.mem_preimage, mul_inv_cancel_left, Set.mem_setOf_eq] at this
+    simp only [Set.mem_preimage, mul_inv_cancel_left, Set.mem_ofPred_eq] at this
     exact this (Ψ b).2
   let C : ℕ → Set Q := fun m => {a | (a : GL (Fin n) k)⁻¹ * Ψ a ∈ Kc k n m}
   have hne : ∀ m, (C m).Nonempty := fun m => by
@@ -139,7 +139,7 @@ theorem UpperTheory.V.Z.Sym.Sig.fixPt : UpperTheory.V.Z.Sym.Sig.FixPt := by
         rw [GlAx.Kc_zero]; exact mul_mem (inv_mem (hle (1 : Q).2)) (hle (Ψ 1).2)⟩
     | succ m ih => obtain ⟨a, ha⟩ := ih; exact ⟨Ψ a, hΨ m _ _ ha⟩
   have hC : ∀ m, IsClosed (C m) := fun m => ((Kc k n m).isClosed_of_isOpen (isOpen_Kc m)).preimage
-    (continuous_subtype_val.inv.mul (continuous_subtype_val.comp hcont))
+    (continuous_subtypeVal.inv.mul (continuous_subtypeVal.comp hcont))
   obtain ⟨a, ha⟩ := IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed C
     (fun m _ h => GlAx.Kc_anti (Nat.le_succ m) h) hne (hC 0).isCompact hC
   refine ⟨a, Subtype.ext (inv_mul_eq_one.1 (kc_sep fun m => Set.mem_iInter.1 ha m)).symm⟩

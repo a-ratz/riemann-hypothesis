@@ -157,7 +157,7 @@ theorem refN_isHaarLoc (hF : IsFrameJ ε e f wf z0) {zB : Fin (2 * r + k + 1) �
     rw [← hmap, h0, Measure.map_zero]
   · refine measure_mono_null (t := C ⁻¹' {x : Mt k r | of x ∉ Nset k r}) ?_ ?_
     · intro g hg
-      simp only [Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq]
       intro hm
       exact hg (inN_of_conj hF hzB hm)
     · rw [← hE.map_apply, hmap]

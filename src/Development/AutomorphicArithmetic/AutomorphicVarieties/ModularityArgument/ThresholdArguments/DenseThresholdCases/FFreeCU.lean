@@ -81,7 +81,7 @@ private theorem pow_fixes (F Ω : Type) [Field F] [Field Ω] [Algebra F Ω] {M :
   have hfin : {ζ : Ω | ζ ^ M = 1}.Finite := by
     refine ((Polynomial.nthRoots M (1 : Ω)).toFinset.finite_toSet).subset fun ζ hζ => ?_
     simpa [Polynomial.mem_nthRoots (show 0 < M by omega)] using hζ
-  haveI : Finite {ζ : Ω // ζ ^ M = 1} := hfin
+  have : Finite {ζ : Ω // ζ ^ M = 1} := hfin
   let f : G F Ω →* Equiv.Perm {ζ : Ω // ζ ^ M = 1} :=
     { toFun := fun s => Equiv.Perm.subtypePerm (s : Ω ≃ₐ[F] Ω).toEquiv fun x => by
         change s x ^ M = 1 ↔ x ^ M = 1
@@ -104,7 +104,7 @@ theorem UpperTheory.V.Z.J.free_at_of_unlinked_of_automorphic_cyclotomic_twist :
   have hz : Continuous fun s : G F Ω => ((cycZ F Ω l s : ℤ_[l]ˣ) : ℤ_[l]) :=
     Units.continuous_val.comp (continuous_cycZ F Ω l)
   have hcyc : Continuous fun s : G F Ω => (cycBar F Ω l s : Qbar l) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtype_val.comp hz)
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtypeVal.comp hz)
   have hχ : Continuous fun s : G F Ω => cycBar F Ω l s ^ a := (cont_units _ hcyc).zpow a
   have hc : Continuous (tw r (cycBar F Ω l ^ a)) := by
     refine cont_units _ ?_
@@ -140,6 +140,6 @@ theorem UpperTheory.V.Z.J.free_at_of_unlinked_of_automorphic_cyclotomic_twist :
       rw [map_mul, map_mul, map_inv]; group
     show (r (t * s * t⁻¹)).val.charpoly = _
     rw [e, Units.val_mul, Units.val_mul, Matrix.coe_units_inv, Matrix.charpoly_units_conj,
-      Matrix.charpoly_of_upperTriangular _ (fun i j hij => (hg s).1 i j hij)]
+      Matrix.charpoly_of_isUpperTriangular _ (fun i j hij => (hg s).1 i j hij)]
     exact Finset.prod_congr rfl fun i _ => by rw [(hg s).2 i]
 end

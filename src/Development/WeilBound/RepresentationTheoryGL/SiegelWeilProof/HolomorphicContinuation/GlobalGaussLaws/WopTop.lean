@@ -309,7 +309,7 @@ theorem awayNZ : AwayNZ := by
     simp [compAt]
   have hg0 : g (fun i j => finPart D ((0 : Mx D V.rank n) i j)) = 1 := by
     simp only [g]
-    rw [if_pos]
+    rw [ite_eq_left]
     simp only [Matrix.zero_apply, map_zero]
     exact (QuotientAddGroup.eq_zero_iff (N := W) (0 : Matrix (Fin V.rank) (Fin n) _)).2 W.zero_mem
   show evalPoly _ _ * gAway V l s τ _ * g _ ≠ 0
@@ -406,7 +406,7 @@ theorem hasCLM_n (hU : UnipTau) (hC : Cx D n V ψ χ θ μ ω H l s ν τ ε fr 
     | mul_X p k hp =>
       have hk : (fun u : (Fin V.rank → Fin n → ℂ) => if k.2.2 then star (u k.1 k.2.1) else u k.1 k.2.1).HasTemperateGrowth := by
         by_cases h : k.2.2
-        · simp only [h, if_true]
+        · simp only [h, ite_true]
           exact ((Complex.conjCLE.toContinuousLinearMap.restrictScalars ℝ).comp (coordL k.1 k.2.1)).hasTemperateGrowth
         · simp only [h]
           exact (coordL k.1 k.2.1).hasTemperateGrowth
@@ -541,7 +541,7 @@ theorem hasCLM_nbar (hU : UnipTau) (hW : WEx) (hS : SchOps) (hF : FTfact) (hl0 :
     | mul_X p k hp =>
       have hk : (fun u : (Fin V.rank → Fin n → ℂ) => if k.2.2 then star (u k.1 k.2.1) else u k.1 k.2.1).HasTemperateGrowth := by
         by_cases h : k.2.2
-        · simp only [h, if_true]
+        · simp only [h, ite_true]
           exact ((Complex.conjCLE.toContinuousLinearMap.restrictScalars ℝ).comp (coordL k.1 k.2.1)).hasTemperateGrowth
         · simp only [h]
           exact (coordL k.1 k.2.1).hasTemperateGrowth
@@ -597,16 +597,16 @@ theorem hasCLM_nbar (hU : UnipTau) (hW : WEx) (hS : SchOps) (hF : FTfact) (hl0 :
   have hFT1 : ∀ S u, FT1 S u = κ * ftLoc ε (tLoc l τ) S u := by
     intro S u
     rw [h1]
-    simp only [FT1, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp', Function.comp_apply, Pi.smul_apply,
-      SchwartzMap.smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, SchwartzMap.fourierTransformCLM_apply,
+    simp only [FT1, FunLike.coe_smul, ContinuousLinearMap.coe_comp, Function.comp_apply, Pi.smul_apply,
+      smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, SchwartzMap.fourierTransformCLM_apply,
       smul_eq_mul]
     push_cast
     ring
   have hFT2 : ∀ S u, FT2 S u = κ⁻¹ * ftLoc ε (-tLoc l τ) S u := by
     intro S u
     rw [h2]
-    simp only [FT2, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp', Function.comp_apply, Pi.smul_apply,
-      SchwartzMap.smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, SchwartzMap.fourierTransformCLM_apply,
+    simp only [FT2, FunLike.coe_smul, ContinuousLinearMap.coe_comp, Function.comp_apply, Pi.smul_apply,
+      smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, SchwartzMap.fourierTransformCLM_apply,
       smul_eq_mul]
     push_cast
     ring
@@ -618,8 +618,8 @@ theorem hasCLM_nbar (hU : UnipTau) (hW : WEx) (hS : SchOps) (hF : FTfact) (hl0 :
   rw [hform Ψ hΨ (⇑S) ⟨S, rfl⟩]
   congr 1
   funext u
-  simp only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
-    Function.comp_apply, Pi.smul_apply, SchwartzMap.smul_apply, smul_eq_mul, hFT1]
+  simp only [ContinuousLinearMap.coe_restrictScalars', FunLike.coe_smul, ContinuousLinearMap.coe_comp,
+    Function.comp_apply, Pi.smul_apply, smul_apply, smul_eq_mul, hFT1]
   congr 3
   funext v
   rw [hEm, hFT2]

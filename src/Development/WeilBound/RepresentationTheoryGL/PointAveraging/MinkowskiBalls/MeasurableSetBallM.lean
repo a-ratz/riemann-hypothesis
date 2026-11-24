@@ -70,11 +70,11 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem valSet_eq (a : k) (c : kˣ) :
     {y : k | valuation k (y - a) ≤ valuation k (c : k)} = (fun y => -a + y) ⁻¹' (c • (𝒪[k] : Set k)) := by
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage]
   rw [Set.mem_smul_set_iff_inv_smul_mem]
   change _ ↔ valuation k (((c⁻¹ : kˣ) : k) * (-a + y)) ≤ 1
   have hc : (0 : ValueGroupWithZero k) < valuation k (c : k) := by
-    rw [zero_lt_iff, ne_eq, map_eq_zero]
+    rw [pos_iff_ne_zero, ne_eq, map_eq_zero]
     exact c.ne_zero
   rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀, neg_add_eq_sub, inv_mul_le_iff₀ hc, mul_one]
 
@@ -85,7 +85,7 @@ theorem isOpen_valSet (a : k) (c : kˣ) : IsOpen {y : k | valuation k (y - a) �
 private theorem vol_valSet_lemma : SigmaCompactSpace k := by
   obtain ⟨t, ht0, ht1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   have hpos : (0 : ValueGroupWithZero k) < valuation k t := by
-    rw [zero_lt_iff, ne_eq, map_eq_zero]
+    rw [pos_iff_ne_zero, ne_eq, map_eq_zero]
     exact ht0
   have hs : 1 < valuation k t⁻¹ := by
     rw [map_inv₀]
@@ -100,7 +100,7 @@ private theorem vol_valSet_lemma : SigmaCompactSpace k := by
 
 theorem vol_valSet [MeasurableSpace k] [BorelSpace k] (ν : Measure k) (hν : IsUnitVol ν) (a : k) (c : kˣ) :
     ν {y : k | valuation k (y - a) ≤ valuation k (c : k)} = ENNReal.ofReal (nabs k c) := by
-  haveI := hν.1
+  have := hν.1
   rw [valSet_eq, measure_preimage_add]
   exact GlobalTheory.SplitWeil.Model.nabs_vol ν hν c
 
@@ -111,7 +111,7 @@ theorem ballM_eq_pi (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
       (Set.univ.pi fun i => Set.univ.pi fun l => {y : k | valuation k (y - x₀ i l) ≤ valuation k (c : k)} :
         Set (Fin n → Fin r → k)) := by
   ext x
-  simp only [ballM, Set.mem_setOf_eq]
+  simp only [ballM, Set.mem_ofPred_eq]
   exact ⟨fun h i _ l _ => h i l, fun h i l => h i (Set.mem_univ _) l (Set.mem_univ _)⟩
 
 theorem measurableSet_ballM [MeasurableSpace k] [BorelSpace k] (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
@@ -122,8 +122,8 @@ theorem measurableSet_ballM [MeasurableSpace k] [BorelSpace k] (c : kˣ) (x₀ :
 theorem volM_ballM [MeasurableSpace k] [BorelSpace k] (ν : Measure k) (hν : IsUnitVol ν) (c : kˣ)
     (x₀ : Matrix (Fin n) (Fin r) k) :
     volM ν (Fin n) (Fin r) (ballM c x₀) = ∏ _i : Fin n, ∏ _l : Fin r, ENNReal.ofReal (nabs k c) := by
-  haveI := hν.1
-  haveI := vol_valSet_lemma (k := k)
+  have := hν.1
+  have := vol_valSet_lemma (k := k)
   have h1 : (Measure.pi fun _ : Fin n => Measure.pi fun _ : Fin r => ν)
       (Set.univ.pi fun i => Set.univ.pi fun l => {y : k | valuation k (y - x₀ i l) ≤ valuation k (c : k)}) =
       ∏ _i : Fin n, ∏ _l : Fin r, ENNReal.ofReal (nabs k c) := by
@@ -371,7 +371,7 @@ theorem decomp_smul (ν : Measure k) (hν : IsUnitVol ν) {n r : ℕ} {V W : Typ
     (Ψ : SB (Matrix (Fin n) (Fin r) k)) (S : Finset (Matrix (Fin n) (Fin r) k)) (hS : ∀ x ∈ S, x ∈ R)
     (hsum : Ψ.1 = ∑ x ∈ S, Ψ.1 x • (ballM c' x).indicator (fun _ => (1 : ℂ))) :
     (((volM ν (Fin n) (Fin r) (ballM c' x₀)).toReal : ℂ)) • B Ψ w = (∫ y, Ψ.1 y ∂volM ν (Fin n) (Fin r)) • B (I c' x₀) w := by
-  haveI := hν.1
+  have := hν.1
   have hΨ : Ψ = ∑ x ∈ S, Ψ.1 x • I c' x := by
     apply Subtype.ext
     rw [Submodule.coe_sum]

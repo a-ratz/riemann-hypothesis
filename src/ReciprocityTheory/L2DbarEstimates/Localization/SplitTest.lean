@@ -82,7 +82,7 @@ theorem splitT_ae {X : Type*} (ph : M → ℝ) (hph : Continuous ph) {F G : M �
 
 theorem splitT_fin (hz : IsLocalHomeomorph z) (ph : M → ℝ) (hph : Continuous ph) :
     IsFiniteMeasureOnCompacts (wvol n z ph) := by
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   unfold wvol
   refine ⟨fun K hK => ?_⟩
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn (Real.continuous_exp.comp hph.neg).continuousOn
@@ -224,10 +224,10 @@ theorem splitTest (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
     Complex.continuous_re.comp (Smooth.continuous n z hz (fun x => (ph₁ x : ℂ)) hph₁)
   have hc2 : Continuous ph₂ :=
     Complex.continuous_re.comp (Smooth.continuous n z hz (fun x => (ph₂ x : ℂ)) hph₂)
-  haveI hfin2 : IsFiniteMeasureOnCompacts (wvol n z ph₂) := splitT_fin hz ph₂ hc2
-  haveI hfin1 : IsFiniteMeasureOnCompacts (wvol n z ph₁) := splitT_fin hz ph₁ hc1
+  have hfin2 : IsFiniteMeasureOnCompacts (wvol n z ph₂) := splitT_fin hz ph₂ hc2
+  have hfin1 : IsFiniteMeasureOnCompacts (wvol n z ph₁) := splitT_fin hz ph₁ hc1
   obtain ⟨K, hKc, hKiff⟩ := hK z hz ph₂ hc2
-  haveI : CompleteSpace K := hKc.completeSpace_coe
+  have : CompleteSpace K := hKc.completeSpace_coe
   unfold IsTestForm at hf
   have hfcont : Continuous f := splitT_cont f fun j => Ck.continuous n z hz 2 _ (hf j).1
   have hfsupp : HasCompactSupport f := by

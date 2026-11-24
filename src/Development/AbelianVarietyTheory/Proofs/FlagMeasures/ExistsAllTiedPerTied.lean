@@ -77,11 +77,11 @@ theorem flag_topology (B : HSp D) {ρ : ℕ} {e : Matrix (Fin B.rank) (Fin ρ) D
       Countable (NFlagQ B e) := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
   obtain ⟨K, hK, h⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D B ρ e he).1
-  haveI : DiscreteTopology (GQ B ⊓ NFlag B e : Subgroup (GA D B)) :=
+  have : DiscreteTopology (GQ B ⊓ NFlag B e : Subgroup (GA D B)) :=
     DiscreteTopology.of_subset (s := (GQ B : Set (GA D B))) i6 (fun x hx => hx.1)
-  have h1 : IsClosed ((GQ B ⊓ NFlag B e : Subgroup (GA D B)) : Set (GA D B)) := Subgroup.isClosed_of_discrete
+  have h1 : IsClosed ((GQ B ⊓ NFlag B e : Subgroup (GA D B)) : Set (GA D B)) := Subgroup.isClosed_of_discreteTopology
   have h2 : IsClosed (NFlag B e : Set (GA D B)) := by
-    convert h1.mul_right_of_isCompact (hK.image continuous_subtype_val) using 1
+    convert h1.mul_right_of_isCompact (hK.image continuous_subtypeVal) using 1
     ext x
     constructor
     · intro hx

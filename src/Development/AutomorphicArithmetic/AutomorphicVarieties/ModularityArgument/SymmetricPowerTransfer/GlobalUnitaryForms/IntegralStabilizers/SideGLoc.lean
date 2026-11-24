@@ -115,7 +115,7 @@ private theorem mem_val {K : Type} [Field K] (d : K) (u : Kˣ) :
   constructor
   · rintro ⟨w, rfl⟩
     refine ⟨(w : QuadraticAlgebra K d 0).re, (w : QuadraticAlgebra K d 0).im, ?_⟩
-    simp only [Units.coe_map, MonoidHom.coe_coe, QuadraticAlgebra.norm_def]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, QuadraticAlgebra.norm_def]
     ring
   · rintro ⟨a, b, h⟩
     have hn : QuadraticAlgebra.norm (⟨a, b⟩ : QuadraticAlgebra K d 0) = u := by
@@ -135,12 +135,12 @@ private theorem algNorm {K : Type} [Field K] (d : K) (z : QuadraticAlgebra K d 0
 private theorem index_val {K : Type} [Field K] [CharZero K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] (d : K) (hd : ¬ IsSquare d) : (val d).index = 2 := by
   classical
-  haveI : IsSepClosure K (AlgebraicClosure K) :=
+  have : IsSepClosure K (AlgebraicClosure K) :=
     IsSepClosure.of_isAlgClosure_of_perfectField K (AlgebraicClosure K)
   obtain ⟨α, hα⟩ : ∃ α : AlgebraicClosure K, α ^ 2 = algebraMap K (AlgebraicClosure K) d :=
     IsAlgClosed.exists_pow_nat_eq _ two_pos
   have hirr : Irreducible (Polynomial.X ^ 2 - Polynomial.C d : Polynomial K) := by
-    refine X_pow_sub_C_irreducible_of_prime Nat.prime_two ?_
+    refine irreducible_X_pow_sub_C_of_prime Nat.prime_two ?_
     intro b hb
     exact hd ⟨b, by rw [← hb]; ring⟩
   have hmin : (Polynomial.X ^ 2 - Polynomial.C d : Polynomial K) = minpoly K α :=
@@ -150,9 +150,9 @@ private theorem index_val {K : Type} [Field K] [CharZero K] [ValuativeRel K] [To
   set L : IntermediateField K (AlgebraicClosure K) := IntermediateField.adjoin K {α} with hL
   have hrank : Module.finrank K L = 2 := by
     rw [hL, IntermediateField.adjoin.finrank hint, ← hmin, Polynomial.natDegree_X_pow_sub_C _]
-  haveI : FiniteDimensional K L := Module.finite_of_finrank_eq_succ hrank
-  haveI : Algebra.IsQuadraticExtension K L := ⟨hrank⟩
-  haveI : IsAbelianGalois K L := IsAbelianGalois.of_isCyclic K L
+  have : FiniteDimensional K L := Module.finite_of_finrank_eq_succ hrank
+  have : Algebra.IsQuadraticExtension K L := ⟨hrank⟩
+  have : IsAbelianGalois K L := IsAbelianGalois.of_isCyclic K L
   have key := GroundTheory.LocalField.index_range_normUnits_of_isAbelianGalois
     (K := K) (Ω := AlgebraicClosure K) L
   rw [hrank] at key
@@ -217,7 +217,7 @@ private theorem index_val {K : Type} [Field K] [CharZero K] [ValuativeRel K] [To
     refine ⟨Units.map (e.symm : L →* QuadraticAlgebra K d 0) x, Units.ext ?_⟩
     rw [← hx]
     have hx' : φ (e.symm x) = x := e.apply_symm_apply x
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     rw [← hnorm, hx']
 
 private theorem hs_mul {K : Type} [Field K] [CharZero K] [ValuativeRel K] [TopologicalSpace K]
@@ -232,7 +232,7 @@ private theorem hs_mul {K : Type} [Field K] [CharZero K] [ValuativeRel K] [Topol
     have all : ∀ z : K, hs (r * r) z = 1 := by
       intro z
       unfold hs
-      rw [if_pos]
+      rw [ite_eq_left]
       refine ⟨(z + 1) / 2, (z - 1) / (2 * r), ?_⟩
       field_simp
       ring
@@ -253,7 +253,7 @@ end UpperTheory.V.Z.Sym.Glob
 theorem UpperTheory.V.Z.Sym.Glob.hsMul :
     UpperTheory.V.Z.Sym.Glob.HsMul := by
   intro F _ _ v d x y hd hx hy
-  haveI : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
+  have : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
   exact hs_mul d x y hd hx hy
 end -- clump:auto
 end -- clump:auto
@@ -267,7 +267,7 @@ section -- clump:auto
 open NumberField Filter Topology UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Glob GlobalTheory.QuadSymbol
 
 private theorem hs_sq {A : Type} [Field A] [CharZero A] {s : A} (hs0 : s ≠ 0) (x : A) : Loc.hs (s * s) x = 1 := by
-  refine if_pos ⟨(x + 1) / 2, (x - 1) / (2 * s), ?_⟩
+  refine ite_eq_left ⟨(x + 1) / 2, (x - 1) / (2 * s), ?_⟩
   field_simp
   ring
 
@@ -307,7 +307,7 @@ private theorem ev_sign {t d : ℝ} (ht : t ≠ 0) (h : t < 0 → 0 < d) :
 private theorem sign_fix {F : Type} [Field F] [NumberField F] {d t : F} (hd : ¬ IsSquare d) (ht : t ≠ 0)
     (h : ∀ σ : F →+* ℝ, σ t < 0 → 0 < σ d) :
     ∃ a b : F, a ^ 2 - d * b ^ 2 ≠ 0 ∧ ∀ σ : F →+* ℝ, 0 < σ (t * (a ^ 2 - d * b ^ 2)) := by
-  haveI : Finite (F →+* ℝ) := Finite.of_injective (fun σ : F →+* ℝ => Complex.ofRealHom.comp σ)
+  have : Finite (F →+* ℝ) := Finite.of_injective (fun σ : F →+* ℝ => Complex.ofRealHom.comp σ)
     (fun σ τ hστ => by
       ext x
       have := congrArg (fun f : F →+* ℂ => f x) hστ
@@ -340,12 +340,12 @@ private theorem hs_eta {F A : Type} [Field F] [Field A] [Algebra F A] (d : F) [F
   unfold Loc.hs eta
   by_cases hx : x ∈ normGroup F (QuadraticAlgebra F d 0) A
   · obtain ⟨a, b, hab⟩ := (Model.mem_normGroup_sqrt d).mp hx
-    rw [if_pos hx, if_pos ⟨a, b, hab.symm⟩]
+    rw [ite_eq_left hx, ite_eq_left ⟨a, b, hab.symm⟩]
     simp
   · have hn : ¬ ∃ a b : A, a ^ 2 - algebraMap F A d * b ^ 2 = (x : A) := by
       rintro ⟨a, b, hab⟩
       exact hx ((Model.mem_normGroup_sqrt d).mpr ⟨a, b, hab.symm⟩)
-    rw [if_neg hx, if_neg hn]
+    rw [ite_eq_right hx, ite_eq_right hn]
     simp
 
 private theorem real_sign {F : Type} [Field F] [NumberField F] (d : F) [Fact (∀ r : F, r ^ 2 ≠ d + 0 * r)] (t : Fˣ)
@@ -388,19 +388,19 @@ theorem UpperTheory.V.Z.Sym.Glob.symbolEx :
       rintro rfl
       simp at hd0
     refine ⟨1, one_ne_zero, fun σ => by simp, fun v => ?_⟩
-    haveI : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
+    have : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
     have hs' : cv v s ≠ 0 := (map_ne_zero _).mpr hs0
     rw [map_mul, hs_sq hs', hs_sq hs']
-  · haveI : Fact (∀ r : F, r ^ 2 ≠ d + 0 * r) :=
+  · have : Fact (∀ r : F, r ^ 2 ≠ d + 0 * r) :=
       ⟨fun r hr => hsq ⟨r, by linear_combination (-1 : F) * hr⟩⟩
-    haveI := Model.numberField d
-    haveI := Model.isQuadratic d
+    have := Model.numberField d
+    have := Model.isQuadratic d
     have E : ∀ (v : Pl F) (x : (Kv v)ˣ), Loc.hs (cv v d) (x : Kv v) =
         (((eta F (QuadraticAlgebra F d 0) (Kv v) x : ℤˣ) : ℤ) : ℂ) := fun v x => hs_eta d x
     obtain ⟨-, -, h3, -⟩ := exactSequence F (QuadraticAlgebra F d 0)
     have hA : AlmostNorm F (QuadraticAlgebra F d 0) y := by
       refine hfin.subset fun v hv => ?_
-      simp only [Set.mem_setOf_eq] at hv ⊢
+      simp only [Set.mem_ofPred_eq] at hv ⊢
       rw [E v (y v), eta_eq_neg_one_iff.mpr hv]
       norm_num
     have hP : etaProd F (QuadraticAlgebra F d 0) y 1 = 1 := by
@@ -485,7 +485,7 @@ private theorem abs_sum {I G : Type} (Sg : Finset I) (P : G → Prop) (S : G →
     · intro hvS
       by_cases hs : v ∈ S g
       · exact Finset.mem_union_right _ hs
-      · rw [if_neg hs] at hv
+      · rw [ite_eq_right hs] at hv
         refine Finset.mem_union_left _ ?_
         by_contra hvT
         exact hv (hout v hvS hvT).1
@@ -499,7 +499,7 @@ private theorem abs_sum {I G : Type} (Sg : Finset I) (P : G → Prop) (S : G →
     rw [hPi g]
     obtain ⟨v, hvS, hvT⟩ := Finset.not_subset.mp hsub
     apply Finset.prod_eq_zero (Finset.mem_union_right _ hvS)
-    rw [if_pos hvS]
+    rw [ite_eq_left hvS]
     exact (hout v (hSg g v hvS) hvT).2
   have hPi_w : ∀ g, S g ⊆ T →
       (∏ᶠ (v : I) (_ : v ∉ Sg), if v ∈ S g then b v else a v) =
@@ -511,8 +511,8 @@ private theorem abs_sum {I G : Type} (Sg : Finset I) (P : G → Prop) (S : G →
     intro s hs
     rw [← Finset.prod_sdiff hs, mul_comm]
     congr 1
-    · exact Finset.prod_congr rfl fun v hv => if_pos hv
-    · exact Finset.prod_congr rfl fun v hv => if_neg (Finset.mem_sdiff.mp hv).2
+    · exact Finset.prod_congr rfl fun v hv => ite_eq_left hv
+    · exact Finset.prod_congr rfl fun v hv => ite_eq_right (Finset.mem_sdiff.mp hv).2
   have hw0 : ∀ s ⊆ T, (∃ v ∈ s, ¬ E v) → (∏ v ∈ T, if v ∈ s then b v else a v) = 0 := by
     rintro s hs ⟨v, hv, hE⟩
     rw [hw s hs, Finset.prod_eq_zero hv (hb v hE), zero_mul]
@@ -598,13 +598,13 @@ private theorem abs_sum {I G : Type} (Sg : Finset I) (P : G → Prop) (S : G →
   by_cases hev : Even t.card
   · rw [hev.neg_one_pow]
     by_cases hE : ∀ v ∈ t, E v
-    · rw [if_pos ⟨hev, hE⟩]
+    · rw [ite_eq_left ⟨hev, hE⟩]
       ring
-    · rw [if_neg (fun h => hE h.2)]
+    · rw [ite_eq_right (fun h => hE h.2)]
       push_neg at hE
       rw [hw0 t ht hE]
       ring
-  · rw [if_neg (fun h => hev h.1), (Nat.not_even_iff_odd.mp hev).neg_one_pow]
+  · rw [ite_eq_right (fun h => hev h.1), (Nat.not_even_iff_odd.mp hev).neg_one_pow]
     ring
 
 open Classical in
@@ -640,11 +640,11 @@ private theorem two_cls {Γ : Type} [Group Γ] (N : Subgroup Γ) (h : Γ → ℂ
           rw [QuotientGroup.eq, hN, hm, hinv, hy']
           norm_num
         simp [hqy]
-    rw [finsum_eq_sum_of_support_subset _ hsub, Finset.sum_pair (Ne.symm hyq), if_pos rfl, if_neg hyq]
+    rw [finsum_eq_sum_of_support_subset _ hsub, Finset.sum_pair (Ne.symm hyq), ite_eq_left rfl, ite_eq_right hyq]
   · push_neg at hy
     rw [add_zero]
     have hall : ∀ q : Γ ⧸ N, q = ((1 : Γ) : Γ ⧸ N) := fun q => (key q).mp (hy _)
-    rw [finsum_eq_single _ ((1 : Γ) : Γ ⧸ N) (fun q hq => absurd (hall q) hq), if_pos rfl]
+    rw [finsum_eq_single _ ((1 : Γ) : Γ ⧸ N) (fun q hq => absurd (hall q) hq), ite_eq_left rfl]
 
 open Loc
 
@@ -670,7 +670,7 @@ private theorem mem_NE {K : Type} [Field K] [CharZero K] (τ : K) (t : Kˣ) : t 
   · rintro ⟨z, rfl⟩
     refine ⟨(z : QuadraticAlgebra K (-1) τ).re + τ * (z : QuadraticAlgebra K (-1) τ).im / 2,
       (z : QuadraticAlgebra K (-1) τ).im / 2, ?_⟩
-    simp only [Units.coe_map, MonoidHom.coe_coe, QuadraticAlgebra.norm_def]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, QuadraticAlgebra.norm_def]
     field_simp
     ring
   · rintro ⟨a, b, hab⟩
@@ -682,7 +682,7 @@ private theorem mem_NE {K : Type} [Field K] [CharZero K] (τ : K) (t : Kˣ) : t 
       simpa only [e] using t.ne_zero
     refine ⟨hz.unit, ?_⟩
     ext
-    simp only [Units.coe_map, MonoidHom.coe_coe, IsUnit.unit_spec, QuadraticAlgebra.norm_def]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, IsUnit.unit_spec, QuadraticAlgebra.norm_def]
     rw [← hab]
     ring
 
@@ -777,9 +777,9 @@ private theorem finprod_sign {I : Type} (u : I → ℂ) (s : Finset I) (h : ∀ 
     intro v hv
     by_contra hvs
     have hvs' : v ∉ s := fun h' => hvs (Finset.mem_coe.mpr h')
-    exact hv (by rw [h v, if_neg hvs'])
+    exact hv (by rw [h v, ite_eq_right hvs'])
   rw [finprod_eq_prod_of_mulSupport_subset u hs,
-    Finset.prod_congr rfl (g := fun _ => (-1 : ℂ)) (fun v hv => by rw [h v, if_pos hv]), Finset.prod_const]
+    Finset.prod_congr rfl (g := fun _ => (-1 : ℂ)) (fun v hv => by rw [h v, ite_eq_left hv]), Finset.prod_const]
 
 open Classical in
 theorem sumT : SumT := by
@@ -805,7 +805,7 @@ theorem sumT : SumT := by
       stabSum (Ov v) (cv v c) (elmap (cv v) d) (elmap (cv v) m) = f v 1 + b v ∧
       kapSum (Ov v) (cv v c) (elmap (cv v) d) (elmap (cv v) m) = f v 1 - b v := by
     intro v hv
-    haveI := hCZ v
+    have := hCZ v
     have hDatv := (modelMap F (Kv v) (cv v) Δ τ c d m hDat).1
     have hinv : ∀ t ∈ NE (cv v τ), ∀ x : (Kv v)ˣ, f v (t * x) = f v x := by
       intro t ht x
@@ -821,19 +821,19 @@ theorem sumT : SumT := by
       exact finsum_congr fun q => by rw [hfdef]
   have hab : ∀ᶠ v in Filter.cofinite, f v 1 = 1 ∧ b v = 0 := by
     filter_upwards [genPl F Δ D hOk τ c d m hDat] with v hv
-    haveI := hCZ v
+    have := hCZ v
     refine ⟨?_, ?_⟩
     · rw [hfdef, hv 1]
       simp [one]
     · rw [hbdef]
       split_ifs with hex
-      · rw [hfdef, hv, one, if_neg]
+      · rw [hfdef, hv, one, ite_eq_right]
         rw [mem_NE]
         exact hex.choose_spec
       · rfl
   have hsplit : ∀ v ∈ D.Sg, ∀ z : Kv v, hs (cv v (τ ^ 2 - 4)) z = 1 := by
     intro v hv z
-    haveI := hCZ v
+    have := hCZ v
     exact hs_sq (hKne v) (by rw [hDv]; exact hSpl v hv) z
   have hmulF : ∀ v (x y : Fˣ), hs (cv v (τ ^ 2 - 4)) (cv v ((x * y : Fˣ) : F)) =
       hs (cv v (τ ^ 2 - 4)) (cv v (x : F)) * hs (cv v (τ ^ 2 - 4)) (cv v (y : F)) := by
@@ -887,9 +887,9 @@ theorem sumT : SumT := by
     have hsgn := finprod_sign (fun v => hs (cv v (τ ^ 2 - 4)) (cv v ((g.out : Fˣ) : F))) (S g) (by
       intro v
       by_cases hv : v ∈ S g
-      · rw [if_pos hv]
+      · rw [ite_eq_left hv]
         exact (hs_cases _ _).resolve_left ((hS g v).mp hv)
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
         by_contra h
         exact hv ((hS g v).mpr h))
     rw [hsgn, hreal] at hr
@@ -903,18 +903,18 @@ theorem sumT : SumT := by
       refine ⟨fun v => if h : v ∈ s then (hE v h).choose else 1, fun v => ?_⟩
       beta_reduce
       by_cases hv : v ∈ s
-      · rw [if_pos hv, dite_eq_left hv]
+      · rw [ite_eq_left hv, dite_eq_left hv]
         have hc := (hE v hv).choose_spec
         rw [hDv]
         exact (hs_cases _ _).resolve_left hc
-      · rw [if_neg hv, dite_eq_right hv, Units.val_one, hs_iff]
+      · rw [ite_eq_right hv, dite_eq_right hv, Units.val_one, hs_iff]
         exact ⟨1, 0, by ring⟩
     have hfin : {v | hs (cv v (τ ^ 2 - 4)) ((y v : (Kv v)ˣ) : Kv v) ≠ 1}.Finite := by
       apply s.finite_toSet.subset
       intro v hv
       by_contra hvs
       apply hv
-      rw [hy, if_neg (fun h => hvs (Finset.mem_coe.mpr h))]
+      rw [hy, ite_eq_right (fun h => hvs (Finset.mem_coe.mpr h))]
     have hprod : ∏ᶠ v, hs (cv v (τ ^ 2 - 4)) ((y v : (Kv v)ˣ) : Kv v) = 1 := by
       rw [finprod_sign _ s hy]
       exact hs2.neg_one_pow
@@ -931,9 +931,9 @@ theorem sumT : SumT := by
     · ext v
       rw [hS, hgo, hmulF, hs_map (cv v) hnF, mul_one, hux, hxloc v, hy]
       by_cases hv : v ∈ s
-      · rw [if_pos hv]
+      · rw [ite_eq_left hv]
         exact ⟨fun _ => hv, fun _ => by norm_num⟩
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
         exact ⟨fun h => absurd rfl h, fun h => absurd h hv⟩
   have hb0 : ∀ v, ¬ (∃ y : (Kv v)ˣ, hs (cv v τ ^ 2 - 4) (y : Kv v) ≠ 1) → b v = 0 :=
     fun v h => by rw [hbdef, dite_eq_right h]
@@ -955,8 +955,8 @@ theorem sumT : SumT := by
     rw [hc] at e
     rw [elmap_smul, e, ← hDv]
     by_cases h1 : hs (cv v (τ ^ 2 - 4)) (cv v ((g.out : Fˣ) : F)) = 1
-    · rw [if_pos h1, if_neg (fun hm => (hS g v).mp hm h1)]
-    · rw [if_neg h1, if_pos ((hS g v).mpr h1)]
+    · rw [ite_eq_left h1, ite_eq_right (fun hm => (hS g v).mp hm h1)]
+    · rw [ite_eq_right h1, ite_eq_left ((hS g v).mpr h1)]
   have R1 : (∏ᶠ (v : Pl F) (_ : v ∉ D.Sg), stabSum (Ov v) (cv v c) (elmap (cv v) d) (elmap (cv v) m)) =
       ∏ᶠ (v : Pl F) (_ : v ∉ D.Sg), (f v 1 + b v) :=
     finprod_congr fun v => finprod_congr fun hv => (loc v hv).2.1
@@ -985,7 +985,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 theorem UpperTheory.V.Z.Sym.Loc.pStable :
     UpperTheory.V.Z.Sym.Loc.PStable := by
   intro O K _ _ _ _ _ Δ τ L hr j χ hj hχ a ha
-  haveI := L.frac
+  have := L.frac
   have hnω : QuadraticAlgebra.norm (a : Etau K τ) = 1 := by
     rw [ha, QuadraticAlgebra.norm_def]
     simp
@@ -1245,7 +1245,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stable : UpperTheory.V.Z.Sym.Loc.Stable := by
     have h1 : hs (τ ^ 2 - 4) ((1 : Kˣ) : K) = 1 := by
       rw [Units.val_one]
       unfold hs
-      rw [if_pos ⟨1, 0, by ring⟩]
+      rw [ite_eq_left ⟨1, 0, by ring⟩]
     exact ((sumShift O K Δ τ hL hreg f hf 1).2.2 _ _ hG ⟨1, h1⟩).1
 end -- clump:auto
 end -- clump:auto
@@ -1294,7 +1294,7 @@ private theorem ae_int {F : Type} [Field F] [NumberField F] (x : F) :
     ∀ᶠ v : Pl F in Filter.cofinite, cv v x ∈ (algebraMap (Ov v) (Kv v)).range := by
   refine (HeightOneSpectrum.Support.finite (𝓞 F) x).subset fun v hv => ?_
   by_contra hn
-  simp only [HeightOneSpectrum.Support, Set.mem_setOf_eq, not_lt] at hn
+  simp only [HeightOneSpectrum.Support, Set.mem_ofPred_eq, not_lt] at hn
   exact hv ⟨⟨_, mem_int v x hn⟩, rfl⟩
 
 private theorem ae_unit {F : Type} [Field F] [NumberField F] {x : F} (hx : x ≠ 0) :
@@ -1352,7 +1352,7 @@ theorem sg_ev (hD : D.Ok) {τ c : F} {d m : EL Δ τ} (h : IsDat c d m) (hn : D.
     have := hv 1
     rw [Units.val_one, one_smul] at this
     rw [this]
-    exact if_pos (one_mem _)
+    exact ite_eq_left (one_mem _)
   have := (vanish (Ov w) (Kv w) (cv w Δ) (cv w τ) (hD.off w hw) _ _ _ (modelMap F (Kv w) (cv w) Δ τ c d m h).1 hl).2
   rw [map_mul, map_sub, map_ofNat]
   exact this
@@ -1390,26 +1390,26 @@ theorem sg_inner (hD : D.Ok) {τ : F} {e : ℝ} {d m : EL Δ τ} (hτ : IsCM τ)
     have h3 := left_ne_zero_of_mul h2
     simp only [Set.mem_iUnion]
     refine ⟨c, ?_, u, ⟨?_, right_ne_zero_of_mul h2⟩, rfl⟩
-    · by_contra hn; exact h1 (if_neg hn)
-    · by_contra hn; exact h3 (if_neg hn)
+    · by_contra hn; exact h1 (ite_eq_right hn)
+    · by_contra hn; exact h3 (ite_eq_right hn)
   refine ⟨hf, ?_⟩
   rw [finsum_curry _ hf, ← hcard]
   have e1 : ∀ c : Fˣ ⧸ (powMonoidHom 2 : Fˣ →* Fˣ).range, (∑ᶠ u : Fˣ ⧸ NE τ,
       one (c ∈ D.Sel (2 - τ)) * (one (TPos (u.out : F)) * D.nL (c.out : F) d ((u.out : F) • m))) =
       ∑ᶠ (_ : c ∈ D.Sel (2 - τ)), (1 / 2 * (D.nS τ + e * D.nK τ)) := fun c => by
     by_cases hc : c ∈ D.Sel (2 - τ)
-    · have : one (c ∈ D.Sel (2 - τ)) = 1 := if_pos hc
+    · have : one (c ∈ D.Sel (2 - τ)) = 1 := ite_eq_left hc
       simp only [this, one_mul]
-      rw [(hT c.out).2, sg_stab D hD (hd _) hc.2, hk _ hc.1 hc.2, finsum_eq_if, if_pos hc]
-    · have : one (c ∈ D.Sel (2 - τ)) = 0 := if_neg hc
+      rw [(hT c.out).2, sg_stab D hD (hd _) hc.2, hk _ hc.1 hc.2, finsum_eq_if, ite_eq_left hc]
+    · have : one (c ∈ D.Sel (2 - τ)) = 0 := ite_eq_right hc
       simp only [this, zero_mul, finsum_zero]
-      rw [finsum_eq_if, if_neg hc]
+      rw [finsum_eq_if, ite_eq_right hc]
   rw [finsum_congr e1, finsum_mem_eq_finite_toFinset_sum _ hfin, Finset.sum_const, Set.ncard_eq_toFinset_card _ hfin, nsmul_eq_mul]
 
 theorem sg_sigma {T : Type} [Finite T] {β : T → Type} (g : (Σ i, β i) → ℂ)
     (hg : ∀ i, (Function.support fun x => g ⟨i, x⟩).Finite) : ∑ᶠ j, g j = ∑ᶠ i, ∑ᶠ x, g ⟨i, x⟩ := by
   classical
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   rw [finsum_eq_sum_of_support_subset (s := Finset.univ.sigma fun i => (hg i).toFinset), Finset.sum_sigma, finsum_eq_sum_of_fintype]
   · exact Finset.sum_congr rfl fun i _ => (finsum_eq_sum _ (hg i)).symm
   · rintro ⟨i, x⟩ hx

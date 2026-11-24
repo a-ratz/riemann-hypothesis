@@ -74,10 +74,10 @@ private theorem poly_ind {H σ ι : Type*} [NormedAddCommGroup H] [NormedSpace �
     (P : MvPolynomial σ (MvPolynomial ι ℂ)) (hP : ∀ y ∈ P.vars, y ∈ s) : ev P v = f P • v := by
   have hadd : ∀ P Q, ev P v = f P • v → ev Q v = f Q • v → ev (P + Q) v = f (P + Q) • v := by
     intro P Q hP hQ
-    rw [map_add (f := _), map_add (f := _), ContinuousLinearMap.add_apply, hP, hQ, add_smul]
+    rw [map_add (f := _), map_add (f := _), add_apply, hP, hQ, add_smul]
   have hmul : ∀ P Q, ev P v = f P • v → ev Q v = f Q • v → ev (P * Q) v = f (P * Q) • v := by
     intro P Q hP hQ
-    rw [map_mul, map_mul, ContinuousLinearMap.mul_apply, hQ, map_smul, hP, smul_smul, mul_comm]
+    rw [map_mul, map_mul, mul_apply_eq_comp, hQ, map_smul, hP, smul_smul, mul_comm]
   have hC : ∀ c : MvPolynomial ι ℂ, ev (C c) v = f (C c) • v := by
     intro c
     induction c using MvPolynomial.induction_on with
@@ -127,7 +127,7 @@ private theorem ev_val {K : Type} [Field K] [NumberField K] {n : ℕ} {μ : Meas
   have hO : Oinf μ 𝔞.ν 𝔞.a₀ v = (x : ℂ) • v := by
     rw [← hAv, Amp.A, ContinuousLinearMap.comp_apply, prj_self _ hvU]
   refine poly_ind ev (val x Λ t) v {y | y.1 ∉ 𝔞.S} (fun c => ?_) (fun o => ?_) (fun y hy => ?_) P hPv
-  · rw [hev.const, val_CC, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply]
+  · rw [hev.const, val_CC, smul_apply, one_apply_eq_self]
   · cases o with
     | none => rw [hev.amp, hAv, val_none]
     | some y =>

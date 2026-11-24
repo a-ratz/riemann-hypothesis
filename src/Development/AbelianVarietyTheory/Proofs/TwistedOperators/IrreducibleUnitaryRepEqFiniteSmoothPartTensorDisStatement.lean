@@ -106,8 +106,8 @@ theorem comp_mem_stage (hΦ : Φ ∈ stage e δ ρ s) {g : G} (hg : ∀ i ∈ s,
     (ρ g).compContinuousMultilinearMap Φ ∈ stage e δ ρ s := by
   refine ⟨fun i hi a y => ?_, fun i hi y => ?_⟩
   · simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply]
-    rw [hΦ.1 i hi a y, ← ContinuousLinearMap.mul_apply, ← map_mul, (hg i hi a).eq, map_mul,
-      ContinuousLinearMap.mul_apply]
+    rw [hΦ.1 i hi a y, ← mul_apply_eq_comp, ← map_mul, (hg i hi a).eq, map_mul,
+      mul_apply_eq_comp]
   · simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply]
     rw [hΦ.2 i hi y, map_smul]
 
@@ -211,7 +211,7 @@ theorem invariant_vals (hcomm : ∀ i j, i ≠ j → ∀ a b, Commute (e i a) (e
       · exact map_mem_vals (fun Φ hΦ y => apply_mem_vals (comp_mem_stage hΦ fun i hi b =>
           hcomm j i (fun h => hj (h ▸ hi)) a b) y) hv
   | one => simpa using hv
-  | mul x y _ _ hx hy => rw [map_mul, ContinuousLinearMap.mul_apply]; exact hx (hy hv)
+  | mul x y _ _ hx hy => rw [map_mul, mul_apply_eq_comp]; exact hx (hy hv)
 
 noncomputable def pureMap (v : K) : ContinuousMultilinearMap ℂ Hs K :=
   (ContinuousMultilinearMap.mkPiRing ℂ ι v).compContinuousLinearMap fun i => innerSL ℂ (unitVec (Hs i))
@@ -335,9 +335,9 @@ theorem exists_stage_insert (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsUnitaryR
     exact norm_le_apply_unit hδ hρ hΨ
   have hinj : ∀ Ψ ∈ stage e δ ρ s, ∀ Ψ' ∈ stage e δ ρ s, Ψ y0 = Ψ' y0 → Ψ = Ψ' := fun Ψ hΨ Ψ' hΨ' h => by
     have := hbound (Ψ - Ψ') (Submodule.sub_mem _ hΨ hΨ')
-    rw [ContinuousMultilinearMap.sub_apply, h, sub_self, norm_zero, mul_zero] at this
+    rw [sub_apply, h, sub_self, norm_zero, mul_zero] at this
     exact sub_eq_zero.1 (norm_le_zero_iff.1 this)
-  haveI : CompleteSpace (stage e δ ρ s) := isClosed_stage.completeSpace_coe
+  have : CompleteSpace (stage e δ ρ s) := isClosed_stage.completeSpace_coe
   let ev : stage e δ ρ s →L[ℂ] K := (ContinuousMultilinearMap.apply ℂ Hs K y0).comp (stage e δ ρ s).subtypeL
   have hev : ∀ Ψ, ev Ψ = (Ψ : ContinuousMultilinearMap ℂ Hs K) y0 := fun _ => rfl
   have hanti : AntilipschitzWith (c⁻¹).toNNReal ev :=
@@ -348,7 +348,7 @@ theorem exists_stage_insert (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsUnitaryR
   have hFc : IsClosed (F : Set K) := by
     change IsClosed (Set.range ev)
     exact hanti.isClosed_range ev.uniformContinuous
-  haveI : CompleteSpace F := hFc.completeSpace_coe
+  have : CompleteSpace F := hFc.completeSpace_coe
   have hmemF : ∀ Ψ ∈ stage e δ ρ s, Ψ y0 ∈ F := fun Ψ hΨ => ⟨⟨Ψ, hΨ⟩, rfl⟩
 
   let L : stage e δ ρ s ≃L[ℂ] F := ContinuousLinearEquiv.ofBijective (ev.codRestrict F fun Ψ => ⟨Ψ, rfl⟩)
@@ -377,7 +377,7 @@ theorem exists_stage_insert (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsUnitaryR
   refine ⟨insertMap σ (u σ) B, insertMap_mem_stage hσ hB hBint, fun h0 => hy' ?_⟩
   have h1 : insertMap σ (u σ) B (Function.update y0 σ x0) = F.starProjection (S x0) := by
     rw [insertMap_apply, Function.update_self, Function.update_idem, ← hy0c σ hσ, Function.update_eq_self, hBy0]
-  rw [h0, ContinuousMultilinearMap.zero_apply] at h1
+  rw [h0, zero_apply] at h1
   have h2 := Submodule.starProjection_inner_eq_zero (S x0) (Φ y0) (hmemF Φ hΦ)
   rw [← h1, sub_zero] at h2
   exact h2
@@ -392,9 +392,9 @@ theorem exists_ne_zero_homPi (hδ : ∀ i, IsIrrUnitary (δ i)) (hρ : IsIrrUnit
     (hcomm : ∀ i j, i ≠ j → ∀ a b, Commute (e i a) (e j b)) {C : Set G}
     (hC : ∀ c ∈ C, ∀ i a, Commute c (e i a)) (hgen : ∀ g, g ∈ Submonoid.closure (C ∪ ⋃ i, Set.range (e i)))
     (hiso : ∀ i, IsIsotypic (δ i) (ρ.comp (e i))) : ∃ Φ ∈ homPi e δ ρ ⊤, Φ ≠ 0 := by
-  haveI := hρ.complete
-  haveI : Nontrivial K := hρ.irred.1
-  haveI : ∀ i, Nontrivial (Hs i) := fun i => (hδ i).irred.1
+  have := hρ.complete
+  have : Nontrivial K := hρ.irred.1
+  have : ∀ i, Nontrivial (Hs i) := fun i => (hδ i).irred.1
   have hne : ∀ Φ : ContinuousMultilinearMap ℂ Hs K, Φ ≠ 0 → ∃ y, Φ y ≠ 0 := fun Φ hΦ0 => by
     by_contra h
     push_neg at h
@@ -543,17 +543,17 @@ theorem exists_smooth_ne_zero : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → 
   have hinj : Function.Injective f := fun a b h => by
     have h0 : ‖a - b‖ ≤ 0 := by simpa [map_sub, h] using hnorm (a - b)
     exact sub_eq_zero.1 (norm_le_zero_iff.1 h0)
-  haveI : CompleteSpace (homDS M π ⊤) := (isClosed_homDS (π := π)).completeSpace_coe
+  have : CompleteSpace (homDS M π ⊤) := (isClosed_homDS (π := π)).completeSpace_coe
   have hclosed : IsClosed (Set.range f) :=
     (f.antilipschitz_of_bound (K := 1) fun x => by simpa using hnorm x).isClosed_range f.uniformContinuous
   have hequiv : ∀ (g : GfC V) (Ψ : homDS M π ⊤), f (finPartDS M hU g Ψ) = π g (f Ψ) := fun g Ψ => rfl
   have hv : f Φ ≠ 0 := fun h => hΦ (hinj (by rw [h, map_zero]))
-  haveI := nonarchimedeanGroup_GfC D V
-  have hcont : Continuous fun g : GfC V => π g (f Φ) := (hπ.continuous_apply _).comp continuous_subtype_val
+  have := nonarchimedeanGroup_GfC D V
+  have hcont : Continuous fun g : GfC V => π g (f Φ) := (hπ.continuous_apply _).comp continuous_subtypeVal
   have hN : {g : GfC V | dist (π g (f Φ)) (f Φ) < ‖f Φ‖ / 2} ∈ nhds (1 : GfC V) :=
     (isOpen_lt (hcont.dist continuous_const) continuous_const).mem_nhds (by simp [norm_pos_iff.2 hv])
   obtain ⟨K, hK⟩ := NonarchimedeanGroup.is_nonarchimedean _ hN
-  letI : InnerProductSpace ℝ H := InnerProductSpace.rclikeToReal ℂ H
+  let : InnerProductSpace ℝ H := InnerProductSpace.rclikeToReal ℂ H
   let O : Set H := Set.range fun k : K => π ((k : GfC V) : GA D V) (f Φ)
   let C : Set H := closure (convexHull ℝ O)
   have hCconv : Convex ℝ C := (convex_convexHull ℝ O).closure
@@ -676,7 +676,7 @@ theorem GlobalTheory.TrCopy.isCopyFinDS_finPartDSSm : ∀ (D : D7) (V : HSp D) (
     have : T ⟨Ψ0, hΨ0⟩ y ∈ (Submodule.span ℂ {v | ∃ w y, v = T w y}).topologicalClosure :=
       Submodule.le_topologicalClosure _ (Submodule.subset_span ⟨_, y, rfl⟩)
     rw [h, Submodule.mem_bot] at this
-    simp only [ZeroMemClass.coe_zero, ContinuousMultilinearMap.zero_apply]
+    simp only [ZeroMemClass.coe_zero, zero_apply]
     exact this
   · exact h
 end -- clump:auto

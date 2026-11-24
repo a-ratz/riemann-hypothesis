@@ -176,7 +176,7 @@ theorem kw_le_Kur (hlN : ¬ l ∣ H.condN) (Kw : FinExt l) (hE : ∀ x : H.E, J 
     FiniteDimensional.of_injective (IntermediateField.inclusion hle).toLinearMap
       (IntermediateField.inclusion hle).injective
   have hcl : IsClosed ((K0 Kw : IntermediateField ℚ_[l] (Om l)) : Set (Om l)) :=
-    Submodule.closed_of_finiteDimensional (K0 Kw).toSubalgebra.toSubmodule
+    Submodule.isClosed_of_finiteDimensional (K0 Kw).toSubalgebra.toSubmodule
   intro x hx
   have hx0 : x ∈ K0 Kw := by
     refine closure_minimal ?_ hcl (hdense hx)
@@ -298,7 +298,7 @@ theorem jump_of_total [CharZero Qp] [FiniteDimensional Qp K] (hs : Nat.card (K �
   apply h
   refine le_antisymm (inf_le_inf_left _ (FilV_anti' PD a)) fun x hx => ?_
   let pb := Field.powerBasisOfFiniteOfSeparable Qp K
-  letI : Fintype (K →ₐ[Qp] LL) := Fintype.ofFinite _
+  let : Fintype (K →ₐ[Qp] LL) := Fintype.ofFinite _
   let v : (K →ₐ[Qp] LL) → LL := fun τ => τ pb.gen
   have hv : Function.Injective v := fun τ τ' e => pb.algHom_ext e
   have hcard : (Finset.univ : Finset (K →ₐ[Qp] LL)).card = pb.dim := by

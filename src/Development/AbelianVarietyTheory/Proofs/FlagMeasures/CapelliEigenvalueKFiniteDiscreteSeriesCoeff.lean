@@ -189,7 +189,7 @@ private theorem Tm_conj_eq_sum_conj_Tm {A : Type} [Ring A] [Algebra ℂ A] {n : 
       Finset.sum_congr rfl fun c _ => mul_comm _ _, this]
     by_cases h : a = b <;> simp [h, eq_comm]
   simp only [Formalism.REAL.Tm, smul_add, Finset.sum_add_distrib, smul_ite, smul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   congr 1
   rw [← Finset.sum_smul, h1]
   by_cases h : a = b <;> simp [h]
@@ -404,7 +404,7 @@ theorem coefSm_of (hT : CapTransport) (hF : FunAct) (hD : PI.DSInfCharCap.DSInfC
   rw [hF (2 * r + k + 1) ε lam Hs (fun x => σ (P₀⁻¹ * x * P₀)) Wp Wq hDS P Q hvec _ _ hgJ w]
   simp only [hback]
   rw [hu, hD (2 * r + k + 1) ε lam Hs (fun x => σ (P₀⁻¹ * x * P₀)) hlam hDS (Q w) (hvec w) Y]
-  simp only [map_smul, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+  simp only [map_smul, smul_apply, ContinuousLinearMap.comp_apply]
 
 theorem capEig_of_coefSm (hL : Loc) (hC : CoefSm) (hK : PI.KFinSmooth) : PI.CapelliEig.CapEig := by
   intro k r ε lam Hs _ _ _ σ Wp Wq _ _ _ _ _ _ hlam hds f hf Y g hg

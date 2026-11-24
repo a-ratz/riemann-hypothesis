@@ -135,7 +135,7 @@ theorem rr_rep_smul (h : rr_FD μ Γ D) {y c : G} (hc : c ∈ Γ) (hy : y ∉ rr
 theorem rr_exists_meas_rep [Countable Γ] (h : rr_FD μ Γ D) :
     ∃ r : G → G, Measurable r ∧ ∀ y, ∃ γ ∈ Γ, r y = γ * y ∧ γ * y ∈ D := by
   classical
-  haveI : Nonempty Γ := ⟨1⟩
+  have : Nonempty Γ := ⟨1⟩
   obtain ⟨e, he⟩ := exists_surjective_nat Γ
   have hex : ∀ y : G, ∃ n : ℕ, ((e n : Γ) : G) * y ∈ D := by
     intro y
@@ -208,14 +208,14 @@ theorem rr_meas_pre [μ.IsMulLeftInvariant] [μ.IsMulRightInvariant] [Countable 
     (hr : ∀ y, ∃ γ ∈ Γ, r y = γ * y ∧ γ * y ∈ D) (g : G) {A : Set G} (hA : MeasurableSet A) :
     μ ((fun x => r (x * g)) ⁻¹' A ∩ D) = μ (A ∩ D) := by
   obtain ⟨r₀, hr₀, hr₀rep⟩ := rr_exists_meas_rep h
-  haveI : MeasurableConstSMul Γ G := ⟨fun c => measurable_const_mul (c : G)⟩
-  haveI : SMulInvariantMeasure Γ G μ := ⟨fun c s _ => measure_preimage_mul μ (c : G) s⟩
+  have : MeasurableConstSMul Γ G := ⟨fun c => measurable_const_mul (c : G)⟩
+  have : SMulInvariantMeasure Γ G μ := ⟨fun c s _ => measure_preimage_mul μ (c : G) s⟩
   have hMmeas : MeasurableSet (rr_N Γ D) := measurableSet_rr_N h.meas
   have hN0 : μ ((fun x => x * g) ⁻¹' rr_N Γ D) = 0 := by
     rw [measure_preimage_mul_right]; exact rr_N_null h
   have hN : ∀ᵐ x ∂μ, x * g ∉ rr_N Γ D := by
     refine ae_iff.mpr (measure_mono_null (fun x hx => ?_) hN0)
-    simp only [Set.mem_setOf_eq, not_not] at hx
+    simp only [mem_ofPred_eq, not_not] at hx
     exact hx
   have hSmeas : MeasurableSet ((fun x => x * g) ⁻¹' ((rr_N Γ D)ᶜ ∩ r₀ ⁻¹' A)) :=
     measurable_mul_const g (hMmeas.compl.inter (hr₀ hA))
@@ -289,7 +289,7 @@ theorem rr_rep_self [μ.IsMulLeftInvariant] [Countable Γ] (h : rr_FD μ Γ D) :
   rw [ae_restrict_iff' h.meas, ae_iff]
   refine measure_mono_null (fun x hx => ?_) (rr_N_null h)
   by_contra hxM
-  simp only [Set.mem_setOf_eq, Classical.not_imp] at hx
+  simp only [mem_ofPred_eq, Classical.not_imp] at hx
   obtain ⟨hxD, hne⟩ := hx
   apply hne
   rw [mul_one]
@@ -333,7 +333,7 @@ theorem rr_mul [μ.IsMulLeftInvariant] [μ.IsMulRightInvariant] [Countable Γ] (
 theorem rr_one [μ.IsMulLeftInvariant] [Countable Γ] (h : rr_FD μ Γ D) (hR : rr_IsReg μ Γ D R) : R 1 = 1 := by
   ext F : 1
   refine Lp.ext ?_
-  rw [ContinuousLinearMap.one_apply]
+  rw [one_apply_eq_self]
   filter_upwards [hR 1 F, rr_rep_self h] with x e1 e2
   simp only [e1, e2]
 

@@ -205,7 +205,7 @@ def eCls0 (u : B.Word) (a : I.ι) : (I.stp u I.mu0 0).Cl ≃ (I.stp u a 0).Cl :=
 include l in
 theorem latAt_lattice (u : B.Word) (a : I.ι) (i : ℕ) (c : (I.stp u a i).Cl) :
     letI := B.host.cmStar; Submodule.IsFullLattice B.host.E (I.latAt u a i c) := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   unfold latAt
   split_ifs with hi
   · let d := ((I.stp u a i).rep c).1.1.deco

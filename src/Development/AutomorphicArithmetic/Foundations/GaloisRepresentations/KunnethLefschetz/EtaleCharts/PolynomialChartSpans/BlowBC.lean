@@ -63,8 +63,8 @@ private theorem etale_pushout {K K' B B' : Type} [CommRing K] [CommRing K'] [Com
   have hl : IsPushout (CommRingCat.ofHom (MvPolynomial.C : K →+* MvPolynomial σ K)) (CommRingCat.ofHom φ)
       (CommRingCat.ofHom (MvPolynomial.map φ : MvPolynomial σ K →+* MvPolynomial σ K'))
       (CommRingCat.ofHom (MvPolynomial.C : K' →+* MvPolynomial σ K')) := by
-    letI := φ.toAlgebra
-    letI : Algebra (MvPolynomial σ K) (MvPolynomial σ K') := MvPolynomial.algebraMvPolynomial
+    let := φ.toAlgebra
+    let : Algebra (MvPolynomial σ K) (MvPolynomial σ K') := MvPolynomial.algebraMvPolynomial
     exact ((CommRingCat.isPushout_iff_isPushout (R := K) (S := MvPolynomial σ K) (R' := K')
       (S' := MvPolynomial σ K')).mpr inferInstance).flip
   have e1 : CommRingCat.ofHom (MvPolynomial.C : K →+* MvPolynomial σ K) ≫
@@ -103,7 +103,7 @@ private theorem etale_pushout {K K' B B' : Type} [CommRing K] [CommRing K'] [Com
 
 theorem coordBC : UpperTheory.Gal.KunnethLefschetz.G.CoordBC := by
   intro K K' _ _ φ Z Z' q q' a hpb V hV σ x hE
-  haveI : IsAffineHom a := MorphismProperty.of_isPullback (P := @IsAffineHom) hpb.flip inferInstance
+  have : IsAffineHom a := MorphismProperty.of_isPullback (P := @IsAffineHom) hpb.flip inferInstance
   have hU : IsAffineOpen (a ⁻¹ᵁ V) := hV.preimage a
   refine ⟨hU, ?_⟩
   have hUY : a ⁻¹ᵁ V = a ⁻¹ᵁ V ⊓ q' ⁻¹ᵁ ⊤ := by simp

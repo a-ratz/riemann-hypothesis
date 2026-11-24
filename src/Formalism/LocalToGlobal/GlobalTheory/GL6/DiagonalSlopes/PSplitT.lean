@@ -304,7 +304,7 @@ theorem host_conj_involutive (x : D.host.E) : D.host.conj (D.host.conj x) = x :=
   first
     | simp
     | (rw [← forms_involution_eq_host_conj, ← forms_involution_eq_host_conj]; simp)
-    | (letI := D.host.cmStar; rw [← Formalism.L2.Herm.star_conj, ← Formalism.L2.Herm.star_conj, star_star])
+    | (let := D.host.cmStar; rw [← Formalism.L2.Herm.star_conj, ← Formalism.L2.Herm.star_conj, star_star])
     | (letI := D.host.cmStar; rw [← Formalism.L2.Herm.star_conj, ← Formalism.L2.Herm.star_conj]; exact star_star x)
 
 
@@ -322,7 +322,7 @@ theorem splitAtT_of_tied (A : AtTTied u) : SplitAtT A := by
     rw [hαE, map_sub, forms_involution_eq_host_conj, forms_involution_eq_host_conj, host_conj_involutive]
     ring
   have hfix : (α : D.host.E) * α ∈ (algebraMap D.host.F D.host.E).range := by
-    letI := D.host.cmStar
+    let := D.host.cmStar
     rw [← D.sp.cm.fixed]
     have h1 : star (α : D.host.E) = -(α : D.host.E) := hσα
     rw [star_mul, h1]

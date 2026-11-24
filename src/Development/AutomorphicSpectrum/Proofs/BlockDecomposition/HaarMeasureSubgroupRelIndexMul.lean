@@ -62,7 +62,7 @@ theorem measure_eq_relIndex_mul : ∀ (G : Type) [AddGroup G] [MeasurableSpace G
   have hidx : H.relIndex K = H'.index := rfl
   have : H'.FiniteIndex := ⟨by rw [← hidx]; exact hn⟩
   have : Finite (K ⧸ H') := inferInstance
-  letI := Fintype.ofFinite (K ⧸ H')
+  let := Fintype.ofFinite (K ⧸ H')
   let o : K ⧸ H' → G := fun q => ((Quotient.out q : K) : G)
   let S : K ⧸ H' → Set G := fun q => (fun x => -o q + x) ⁻¹' (H : Set G)
   have hS : ∀ q, MeasurableSet (S q) := fun q => (measurable_const_add (-o q)) hH

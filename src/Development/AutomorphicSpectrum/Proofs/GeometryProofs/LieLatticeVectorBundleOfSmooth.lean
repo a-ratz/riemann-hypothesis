@@ -86,9 +86,9 @@ theorem exists_isCoord (c : Module.Basis (Fin g) B Ω[B⁄A]) :
     refine Eq.trans (Finset.sum_congr rfl fun x _ => rfl) (this.trans ?_)
     simp [Finsupp.single_apply, eq_comm]
   · intro T M _ _ _ ε δ hL hA b
-    letI : Module B M := Module.compHom M ε
-    letI : Module A M := Module.compHom M (ε.comp (algebraMap A B))
-    haveI : IsScalarTower A B M := ⟨fun a b m => by
+    let : Module B M := Module.compHom M ε
+    let : Module A M := Module.compHom M (ε.comp (algebraMap A B))
+    have : IsScalarTower A B M := ⟨fun a b m => by
       change ε (a • b) • m = ε (algebraMap A B a) • ε b • m
       rw [Algebra.smul_def, map_mul, mul_smul]⟩
     let δl : B →ₗ[A] M :=
@@ -457,11 +457,11 @@ theorem frame_at (hs : SmoothOfRelativeDimension g G.hom) (M : LieModel G ξ E) 
     have := MonObj.comp_one (M := G) (Over.homMk x (by simp) : Over.mk x ⟶ Over.mk (𝟙 X))
     exact (congrArg (fun k : Over.mk x ⟶ G => k.left) this).symm
   obtain ⟨U, hU, V, hV, hx, e, hsm⟩ := hs.exists_isStandardSmoothOfRelativeDimension (s p.1)
-  letI : Algebra Γ(X, U) Γ(G.left, V) := (G.hom.appLE U V e).hom.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension g Γ(X, U) Γ(G.left, V) := hsm
-  haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth g (R := Γ(X, U)) (S := Γ(G.left, V))
-  haveI : Nonempty V := ⟨⟨s p.1, hx⟩⟩
-  haveI : Nontrivial Γ(G.left, V) := inferInstance
+  let : Algebra Γ(X, U) Γ(G.left, V) := (G.hom.appLE U V e).hom.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension g Γ(X, U) Γ(G.left, V) := hsm
+  have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth g (R := Γ(X, U)) (S := Γ(G.left, V))
+  have : Nonempty V := ⟨⟨s p.1, hx⟩⟩
+  have : Nontrivial Γ(G.left, V) := inferInstance
   have hfr : Module.finrank Γ(G.left, V) Ω[Γ(G.left, V)⁄Γ(X, U)] = g := by
     rw [Module.finrank, Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential g]
     simp

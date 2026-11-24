@@ -214,7 +214,7 @@ theorem isEtaT_of_conj {D : D7} {σ : D.what₂.LL →+* ℂ} (hσ : OverK σ) {
     · simpa only [HChar.val, rt, Ideal.absNorm_eq_natCard] using hy2
   choose y hy hy' using hy
   obtain ⟨c, -, hcm, -⟩ := GlobalTheory.Mem.HostCM.host_cm D.R D.host
-  haveI := hcm.cplx
+  have := hcm.cplx
   obtain ⟨hb, hl⟩ := (labels_overK σ).1 hσ
   have hinf : ∀ k, (χ' * χ⁻¹).inf k = 1 := fun k => by
     rw [HChar.inf_mul, HChar.inf_inv, mul_inv_eq_one]

@@ -116,7 +116,7 @@ theorem UpperTheory.Reformulated.B.ComplementSubspace.main :
     have hla : LinearIndependent K (fun i => a i) := by
       rw [← linearIndependent_equiv e, hae]; exact hg
     rw [← Matrix.isUnit_iff_isUnit_det]
-    exact Matrix.linearIndependent_rows_iff_isUnit.mp hla
+    exact Matrix.linearIndependent_row_iff_isUnit.mp hla
   · intro i hi
     simp [a, hi]
 end -- clump:auto

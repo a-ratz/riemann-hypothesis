@@ -97,7 +97,7 @@ theorem continuous_sphereRotation :
     exact coe_sphereRotation q.1 q.2
   rw [e]
   exact ((continuous_circleMap 0 1).comp continuous_fst).smul
-    (continuous_subtype_val.comp continuous_snd)
+    (continuous_subtypeVal.comp continuous_snd)
 
 variable [NormedSpace ℝ E] [IsScalarTower ℝ ℂ E]
 

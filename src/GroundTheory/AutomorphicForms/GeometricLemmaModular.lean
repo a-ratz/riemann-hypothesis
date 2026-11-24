@@ -169,7 +169,7 @@ theorem isOpenEmbedding_toLieLeviPar : IsOpenEmbedding (toLieLeviPar F n γ δ) 
       rw [hu]
       exact A.2
   rw [this]
-  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtype_val
+  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtypeVal
 
 noncomputable def mulLeftLeviPar (l : leviPar F n γ δ) :
     lieLeviPar F n γ δ ≃ₗ[F] lieLeviPar F n γ δ :=
@@ -253,7 +253,7 @@ theorem modularCharacter_leviPar_eq_one_of_mem_integralGL (l : leviPar F n γ δ
   borelize F ↥(leviPar F n γ δ)
   let V : OpenSubgroup (leviPar F n γ δ) :=
     ⟨(GLnLocal.integralGL F n).subgroupOf (leviPar F n γ δ),
-      (GLnLocal.isOpen_integralGL F n).preimage continuous_subtype_val⟩
+      (GLnLocal.isOpen_integralGL F n).preimage continuous_subtypeVal⟩
   have hV : IsCompact (V : Set (leviPar F n γ δ)) :=
     (isClosed_leviPar F n γ δ).isClosedEmbedding_subtypeVal.isCompact_preimage
       (GLnLocal.isCompact_integralGL F n)
@@ -278,10 +278,10 @@ theorem coe_leviParCoord_symm_single (t : LeviParIndex n γ δ) :
   · obtain ⟨h1, h2⟩ := hij
     have ht : (⟨(i, j), h1 ▸ h2 ▸ t.2⟩ : LeviParIndex n γ δ) = t := by
       ext <;> simp [← h1, ← h2]
-    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), if_pos ⟨h1, h2⟩, ht, Pi.single_eq_same]
-  · rw [if_neg hij]
+    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), ite_eq_left ⟨h1, h2⟩, ht, Pi.single_eq_same]
+  · rw [ite_eq_right hij]
     split_ifs with h
-    · rw [Pi.single_apply, if_neg]
+    · rw [Pi.single_apply, ite_eq_right]
       rintro rfl
       exact hij ⟨rfl, rfl⟩
     · rfl
@@ -324,7 +324,7 @@ theorem det_adLeviPar_of_diagonal (l : leviPar F n γ δ)
   classical
   have hQ : ∀ i j, i ≠ j →
       (((l : GL (Fin n) F)⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) i j = 0 :=
-    fun i j hij => by rw [inv_apply_of_diagonal hl, if_neg hij]
+    fun i j hij => by rw [inv_apply_of_diagonal hl, ite_eq_right hij]
   set P : Matrix (Fin n) (Fin n) F := ((l : GL (Fin n) F) : Matrix (Fin n) (Fin n) F)
   set Q : Matrix (Fin n) (Fin n) F :=
     (((l : GL (Fin n) F)⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F)
@@ -367,7 +367,7 @@ theorem modularCharacter_leviPar_of_diagonal (l : leviPar F n γ δ)
         (((l : GL (Fin n) F)⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) s.1.2 s.1.2) =
       f s.1.1 / f s.1.2 := by
     intro s
-    rw [map_mul, inv_apply_of_diagonal hl, if_pos rfl, map_inv₀, div_eq_mul_inv]
+    rw [map_mul, inv_apply_of_diagonal hl, ite_eq_left rfl, map_inv₀, div_eq_mul_inv]
   rw [Finset.prod_congr rfl fun s _ => hfac s]
   change ∏ s : LeviParIndex n γ δ, f s.1.1 / f s.1.2 =
     ∏ s : {ij : Fin n × Fin n // γ ij.1 = γ ij.2 ∧ δ ij.1 < δ ij.2}, f s.1.1 / f s.1.2

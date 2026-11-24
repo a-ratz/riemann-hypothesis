@@ -89,7 +89,7 @@ theorem torBd_sum {B : Base F E} {M : Model σ X W} {χX χW : Chr F E} {om : Re
     refine ⟨A + A', fun s hs t ht κ hκ κ' hκ' => ?_⟩
     rw [Finset.sum_insert ha, theta, map_add (f := _),
       thetaSum_add F (hpres _ _ (hΦ a)) (hpres _ _ (Submodule.sum_mem _ fun i _ => hΦ i)), ENNReal.coe_add, add_mul]
-    exact (enorm_add_le _ _).trans (add_le_add (hA s hs t ht κ hκ κ' hκ') (hA' s hs t ht κ hκ κ' hκ'))
+    exact (eNorm_add_le _ _).trans (add_le_add (hA s hs t ht κ hκ κ' hκ') (hA' s hs t ht κ hκ κ' hκ'))
 
 theorem torBd_pure (hC : LatCpt) {B : Base F E} {M : Model σ X W} {om : Rep σ X W} (hB : B.IsGood σ) (hX : EpsHerm σ X.J)
     (hW : EpsHerm σ W.J) {fr : Frame σ X.J} {fr' : Frame σ W.J} {𝓕 : Set ((Fin n × Fin d → Af F) → ℂ)}
@@ -107,7 +107,7 @@ theorem torBd_pure (hC : LatCpt) {B : Base F E} {M : Model σ X W} {om : Rep σ 
   have e1 : ((NNReal.sqrt (K * K') : ℝ≥0) : ℝ≥0∞) ^ 2 = K * K' := by
     rw [← ENNReal.coe_pow, NNReal.sq_sqrt, ENNReal.coe_mul]
   have e2 : ENNReal.ofReal (Real.exp (e₂ s t)) ≤ ENNReal.ofReal (Real.exp (e s t)) ^ 2 := by
-    rw [← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_nat_mul]
+    rw [← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_natCast_mul]
     exact ENNReal.ofReal_le_ofReal (Real.exp_le_exp.2 (by exact_mod_cast he s hs t ht))
   calc _ ≤ ENNReal.ofReal (p f) ^ 2 * (K * (K' * ENNReal.ofReal (Real.exp (e s t)) ^ 2)) := by
         refine mul_le_mul_right ((hK S _ _ κ hκ κ' hκ').trans (mul_le_mul_right ((hK' s hs t ht).trans ?_) _)) _
@@ -148,17 +148,17 @@ theorem square_integrable_of_torus_bound (hG : GrpTop) (hTh : ThetaBasic) {B : B
     intro t ht κ' hκ'
     have a1 := H (fun s => (A * ENNReal.ofReal (Real.exp (V t))) * ENNReal.ofReal (Real.exp (U s)))
       (measurable_const.mul (Real.measurable_exp.comp hUm).ennreal_ofReal)
-      (fun g => ‖theta om Φ g (fr'.a t * κ')‖ₑ) (hcont.comp (continuous_id.prodMk continuous_const)).measurable.enorm
+      (fun g => ‖theta om Φ g (fr'.a t * κ')‖ₑ) (hcont.comp (continuous_id.prodMk continuous_const)).measurable.eNorm
       (fun γ hγ g => by have := hinv γ hγ 1 (one_mem _) g (fr'.a t * κ'); rw [one_mul] at this; simp only [this])
       (fun s hs κ hκ => (hA s hs t ht κ hκ κ' hκ').trans (le_of_eq (by
         rw [Real.exp_add, ENNReal.ofReal_mul (Real.exp_pos _).le]; ring)))
-    refine (enorm_integral_le_lintegral_enorm _).trans (a1.trans (le_of_eq ?_))
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (a1.trans (le_of_eq ?_))
     simp only [mul_assoc]
     rw [lintegral_const_mul' _ _ ENNReal.coe_ne_top, lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, mul_comm IU]
   have hc : K * A * IU ≠ ⊤ := ENNReal.mul_ne_top (ENNReal.mul_ne_top hK.ne ENNReal.coe_ne_top) hU.ne
   have h2 := H' (fun t => (K * A * IU) ^ 2 * ENNReal.ofReal (Real.exp (2 * V t)))
     (measurable_const.mul (Real.measurable_exp.comp (hVm.const_mul 2)).ennreal_ofReal)
-    (fun h => ‖M.I om Φ h‖ₑ ^ 2) (hsm.measurable.enorm.pow_const 2)
+    (fun h => ‖M.I om Φ h‖ₑ ^ 2) (hsm.measurable.eNorm.pow_const 2)
     (fun γ hγ h => by
       have : M.I om Φ (γ * h) = M.I om Φ h := by
         unfold Model.I
@@ -168,9 +168,9 @@ theorem square_integrable_of_torus_bound (hG : GrpTop) (hTh : ThetaBasic) {B : B
         rwa [one_mul] at this
       simp only [this])
     (fun t ht κ' hκ' => (pow_le_pow_left' (h1 t ht κ' hκ') 2).trans (le_of_eq (by
-      rw [mul_pow _ (ENNReal.ofReal _), ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_nat_mul]; norm_num)))
+      rw [mul_pow _ (ENNReal.ofReal _), ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_natCast_mul]; norm_num)))
   refine ⟨(hsm.norm.pow 2).aestronglyMeasurable, ?_⟩
-  have e : ∀ h, ‖‖M.I om Φ h‖ ^ 2‖ₑ = ‖M.I om Φ h‖ₑ ^ 2 := fun h => by rw [enorm_pow, enorm_norm]
+  have e : ∀ h, ‖‖M.I om Φ h‖ ^ 2‖ₑ = ‖M.I om Φ h‖ₑ ^ 2 := fun h => by rw [eNorm_pow, eNorm_norm]
   unfold HasFiniteIntegral
   simp only [e]
   refine h2.trans_lt (ENNReal.mul_lt_top hK' ?_)

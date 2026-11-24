@@ -148,7 +148,7 @@ theorem homogeneousComponent_totalDegree_ne_zero {σ : Type*} {F : MvPolynomial 
     (fun s => s.sum fun _ e => e)
   intro h0
   have hcoeff := congrArg (AddMonoidAlgebra.coeff · m) h0
-  rw [coeff_homogeneousComponent, if_pos (by rw [totalDegree, hmax]; rfl)] at hcoeff
+  rw [coeff_homogeneousComponent, ite_eq_left (by rw [totalDegree, hmax]; rfl)] at hcoeff
   exact (mem_support_iff.mp hm) (hcoeff.trans rfl)
 
 theorem eval_smul_of_degree {σ : Type*} [Fintype σ] (H : MvPolynomial σ k) (d : ℕ)
@@ -208,7 +208,7 @@ theorem exists_isIntegralElem_linear [Infinite k] {R : Type*} [CommRing R] [Alge
     intro m hm
     rw [mem_support_iff, coeff_homogeneousComponent] at hm
     by_contra hne
-    exact hm (if_neg hne)
+    exact hm (ite_eq_right hne)
   obtain ⟨lam, hlam⟩ := exists_eval_cons_one_ne_zero _ d hsupp
     (homogeneousComponent_totalDegree_ne_zero hF)
   set c := eval (Fin.cons (1 : k) lam) (homogeneousComponent d F)

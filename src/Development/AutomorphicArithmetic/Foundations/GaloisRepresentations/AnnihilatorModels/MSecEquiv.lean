@@ -56,7 +56,7 @@ private theorem kerAt_sub {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Com
       ∀ g ∈ K, ∀ a : D.O, g ≫ M.univ.act.act a ∈ K := by
   subst hz
   obtain ⟨-, hmon, hact, -⟩ := T.isog
-  haveI := hmon
+  have := hmon
   let e := T.ms.ptEquiv (Over.mk z)
   have key : ∀ g : Over.mk (z ≫ T.s) ⟶ M.univ.A, KerAt T z g.left ↔ e.symm g ≫ T.ψ = 1 := by
     intro g
@@ -82,7 +82,7 @@ private theorem kerAt_sub {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Com
   have hs : e.symm (g ≫ M.univ.act.act a) = e.symm g ≫ T.o.act.act a := by
     apply e.injective
     rw [MulEquiv.apply_symm_apply, ObjMap.ptEquiv_act, MulEquiv.apply_symm_apply]
-  haveI := T.o'.act.hom a
+  have := T.o'.act.hom a
   change e.symm (g ≫ M.univ.act.act a) ≫ T.ψ = 1
   change e.symm g ≫ T.ψ = 1 at hg
   rw [hs, Category.assoc, hact a, ← Category.assoc, hg, MonObj.one_comp]
@@ -98,8 +98,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.secEquiv_of :
     apply Over.OverMorphism.ext
     rw [hρl, Over.comp_left]
     rfl
-  haveI : IsProper M.univ.A.hom := M.univ.ab.proper
-  haveI := T.fin
+  have : IsProper M.univ.A.hom := M.univ.ab.proper
+  have := T.fin
   obtain ⟨hAu, hAe⟩ := hV _ _ M.univ.A.hom inferInstance V x
   obtain ⟨hYu, hYe⟩ := hV _ _ T.s inferInstance V x
   have uinj : ∀ g g' : Over.mk x ⟶ M.univ.A, u ≫ g = u ≫ g' → g = g' := by
@@ -177,10 +177,10 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.secEquiv_of :
     rw [Nat.card_congr e1]
     exact hC p D O b N M r w j _ T hstd.m1 (FractionRing V) hpK (q ≫ x) (q ≫ z.1)
       (by rw [Category.assoc, z.2])
-  haveI : Module.Finite (𝓞 D.F ⧸ w) W.H := (hR p D O f b N r w hstd M V hp x W).1
+  have : Module.Finite (𝓞 D.F ⧸ w) W.H := (hR p D O f b N r w hstd M V hp x W).1
   have hck : Nat.card (𝓞 D.F ⧸ w) = Ideal.absNorm w := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.F ⧸ w) := by
+  have : Finite (𝓞 D.F ⧸ w) := by
     apply Nat.finite_of_card_ne_zero
     rw [hck, hstd.norm]
     exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero

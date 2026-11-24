@@ -106,7 +106,7 @@ theorem grpHaarH_of (hBH : BlockHaarV) : GrpHaarH := by
   have hgd : ∀ v, Formalism.MainNotions.S.Gauge.GaugeDens (X.B.I.ε v) := hP.2.2.2.1
   choose β hβ L1 P1 ν r e hmem h1 h2 h3 h4 hνL hνF hν0 hr hem hen hec he0 hrat hcont hinj hdens using
     fun v => hBH X.B.I.n (X.B.I.ε v) (S v) D.R.k (hc.1 v).1 (hc.1 v).2 (hgd v)
-  letI : ∀ v, Fintype (β v) := hβ
+  let : ∀ v, Fintype (β v) := hβ
   have hUJ : ∀ v, SecondCountableTopology (Formalism.REAL.UJ (X.B.I.ε v)) := fun v => Formalism.REAL.instSecondCountableUJ _ _
   have : ∀ v, SecondCountableTopology (UstdSub (X.B.I.ε v) (S v)) := fun v =>
     TopologicalSpace.Subtype.secondCountableTopology ((UstdSub (X.B.I.ε v) (S v) : Set (Formalism.REAL.UJ (X.B.I.ε v))))
@@ -148,7 +148,7 @@ theorem grpHaarH_of (hBH : BlockHaarV) : GrpHaarH := by
   have hψc : Continuous ψm := by
     apply Continuous.subtype_mk
     exact (MassDataMassesW.continuous_toInf X hb).comp ((continuous_const.mul (continuous_pi fun v =>
-      continuous_subtype_val.comp (continuous_apply v))).mul continuous_const)
+      continuous_subtypeVal.comp (continuous_apply v))).mul continuous_const)
   have hψi : Function.Injective ψm := by
     intro g h he
     have e1 := toInf_injective X hb (congrArg Subtype.val he)

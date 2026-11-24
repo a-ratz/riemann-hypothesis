@@ -141,10 +141,10 @@ theorem GlobalTheory.HSShort.deepStep_finrank : ∀ (F A : Type) [Field F] [Numb
     have e : S.D + α.1.degree = S.T := by rw [α.2]; omega
     rw [e] at h
     exact h
-  haveI : FiniteDimensional F (S.V S.T) := by
+  have : FiniteDimensional F (S.V S.T) := by
     obtain ⟨r, b, -⟩ := hS.shortT
     exact Module.Finite.of_basis b
-  haveI : FiniteDimensional F P := Submodule.finiteDimensional_of_le hPT
+  have : FiniteDimensional F P := Submodule.finiteDimensional_of_le hPT
   have hdeep : S.deepRank s = Module.finrank F P := rfl
   let b := Module.finBasis F P
   let v : Fin (Module.finrank F P) → A := fun i => (b i : A)

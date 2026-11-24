@@ -74,7 +74,7 @@ theorem sizeMu_rpow_eq (f J C d : ℝ) (hf : 0 < f) (hJ : 0 < J) (hC : 0 < C) (h
 theorem sizeMu_finrank_eq (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] :
     Module.finrank ℚ K = 2 * nPl K := by
   have h1 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank K
-  haveI : IsEmpty {w : InfinitePlace K // w.IsReal} := by
+  have : IsEmpty {w : InfinitePlace K // w.IsReal} := by
     refine ⟨fun w => ?_⟩
     have hc : w.1.IsComplex := IsTotallyComplex.isComplex w.1
     first

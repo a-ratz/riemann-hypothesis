@@ -157,7 +157,7 @@ def latMax (L : Submodule (𝓞 E) (Fin M → E)) : Submodule (SelfDualLatticeAc
 theorem isSelfDualLat_latMax (hJ : IsHermND σ J) {L : Submodule (𝓞 E) (Fin M → E)}
     (hL : SelfDualLatticeOrthogonalParts.IsSelfDualLattice σ J L) : SelfDualLatticeActions.IsSelfDualLat v σ J (latMax v L) := by
   classical
-  haveI : Submodule.IsLattice E L := Submodule.IsLattice.of_fg E hL.1
+  have : Submodule.IsLattice E L := Submodule.IsLattice.of_fg E hL.1
   have hl : Submodule.IsFullLattice E L := ⟨hL.2.1⟩
   have hsd : IsSelfDualAt σ J L v := by
     refine (SelfDual.forall_isSelfDualAt_iff hJ.2 hl).2 (fun y => (hL.2.2 y).trans ?_) v
@@ -204,8 +204,8 @@ theorem exists_stab_act_eq (H : SelfDualLatticeActions.SelfDualLatticeLemmas) (h
     (hy : y ∈ latHat F E (L : Set (Fin M → E))) (hy' : y' ∈ latHat F E (L : Set (Fin M → E)))
     (qy : qR (Af F) σ J y = algebraMap F (Af F) β) (qy' : qR (Af F) σ J y' = algebraMap F (Af F) β) :
     ∃ k ∈ SelfDualLatticeOrthogonalParts.stabHat σ J (L : Set (Fin M → E)), SelfDualLatticeOrthogonalParts.actVec σ J k y = y' := by
-  haveI : Submodule.IsLattice E L := Submodule.IsLattice.of_fg E hL.1
-  haveI : Submodule.IsFullLattice E L := ⟨hL.2.1⟩
+  have : Submodule.IsLattice E L := Submodule.IsLattice.of_fg E hL.1
+  have : Submodule.IsFullLattice E L := ⟨hL.2.1⟩
   have hloc : ∀ v : HeightOneSpectrum (𝓞 F), ∃ g ∈ SelfDualLatticeActions.latStab v σ J (latMax v L),
       SelfDualLatticeActions.act v σ J g (vecLoc v y) = vecLoc v y' := fun v => by
     obtain ⟨u, hu'⟩ : ∃ u : (v.adicCompletionIntegers F)ˣ,

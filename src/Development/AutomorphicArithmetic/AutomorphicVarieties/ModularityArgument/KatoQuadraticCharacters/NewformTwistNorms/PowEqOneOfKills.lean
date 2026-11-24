@@ -86,7 +86,7 @@ theorem ev_not_mem (N : ℕ) (hN : N ≠ 0) :
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors h0).subset fun w hw => ?_)
-  simp only [Set.mem_setOf_eq, not_not] at hw
+  simp only [Set.mem_ofPred_eq, not_not] at hw
   exact Ideal.dvd_span_singleton.2 hw
 
 theorem normV_eq (w : HeightOneSpectrum (𝓞 ℚ)) : normV w = Ideal.absNorm w.asIdeal := by
@@ -186,10 +186,10 @@ theorem exists_rep (P : Af.Hypotheses₂) [IsAlgClosure ℚ Ω] {k : ℕ} (hk : 
 
 theorem pow_eq_one_of_kills [IsAlgClosure ℚ Ω] {C : Type} [CommGroup C] {N : ℕ} (hN : 0 < N) {φ : G ℚ Ω →* C}
     (h : KillsMu N φ) : ∃ m : ℕ, 1 ≤ m ∧ ∀ s, φ s ^ m = 1 := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : NeZero N := ⟨hN.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   refine ⟨Fintype.card (ZMod N)ˣ, Fintype.card_pos, fun s => ?_⟩
   rw [← map_pow]
   refine h _ fun ζ hζ => ?_
@@ -248,8 +248,8 @@ theorem norm_cyc (s : G ℚ Ω) : ‖((cycBar ℚ Ω l s : (Qbar l)ˣ) : Qbar l)
 
 theorem norm_flag [IsAlgClosure ℚ Ω] {W : R2 Ω l} (hW : Continuous W) {H : Subgroup (G ℚ Ω)} {κ : Fin 2 → ↥H →* (Qbar l)ˣ}
     (h : IsFlagOn W H κ) (i : Fin 2) (s : ↥H) : ‖(κ i s : Qbar l)‖ = 1 := by
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
   obtain ⟨g, hg⟩ := h
   have hc : Continuous fun t : G ℚ Ω => ‖(g * W t * g⁻¹ : GL (Fin 2) (Qbar l)) i i‖ := by
     refine Continuous.norm ?_

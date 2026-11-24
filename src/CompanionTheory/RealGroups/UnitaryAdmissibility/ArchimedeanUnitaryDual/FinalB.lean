@@ -135,7 +135,7 @@ theorem locPI_of (h2 : StSimple) (h3 : StStar) (h4 : StHecke) (h5 : StMod) (h7 :
 
 theorem admissible_of (hL : LocPI) (hP : StProj) : GlobalTheory.Published.UnitaryIrreducibleAdmissible := by
   intro F E _ _ _ _ _ σ hc n J hJ v H _ _ π hπ U ho _
-  haveI := hπ.complete
+  have := hπ.complete
   obtain ⟨K, hKU, M, hM⟩ := hL F E σ hc n J hJ v U ho
   obtain ⟨P, hP1, -⟩ := hP _ H π hπ.unitary.norm_apply K
   have hfin := (CompanionTheory.D.gk.admitted.finite_rank_of_irreducible_unitary _ H π hπ.unitary.norm_apply (fun S hS h => hπ.irred.2 S ⟨hS, h⟩) P M
@@ -146,8 +146,8 @@ theorem admissible_of (hL : LocPI) (hP : StProj) : GlobalTheory.Published.Unitar
 theorem flath_of (hL : LocPI) (hP : StProj) (hV : StFixVec) (hF : StFactor) (hA : StArchPI) (hI : StIso) (hO : StOp)
     (hT : StTensor) : GlobalTheory.Published.FlathTensorProduct := by
   intro F E _ _ _ _ _ σ hc n J hJ H _ _ π hπ
-  haveI := hπ.complete
-  haveI := hπ.irred.1
+  have := hπ.complete
+  have := hπ.irred.1
   have hcomm : ∀ v x g, projPl σ J v g = 1 → Commute (embPl σ J v x) g := by
     rintro (w | v) x g hg
     · exact commute_embArch σ J x hg
@@ -156,7 +156,7 @@ theorem flath_of (hL : LocPI) (hP : StProj) (hV : StFixVec) (hF : StFactor) (hA 
   have hproj : ∀ v, ∃ P, IsPIProj (π.comp (embPl σ J v)) P := by
     rintro (w | v)
     · exact hA F E σ hc n J hJ w H _ (hu (.inl w))
-    · haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J v
+    · have := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J v
       have h1 : IsUnitaryRep (π.comp (emb σ J v)) := hu (.inr v)
       obtain ⟨U, x, ho, hx, hfix⟩ := hV _ H _ h1.norm_apply h1.continuous_apply
       obtain ⟨K, hKU, M, hM⟩ := hL F E σ hc n J hJ v U ho
@@ -567,7 +567,7 @@ theorem stFixVec : StFixVec := by
     isOpen_lt (((hcont v).sub continuous_const).norm) continuous_const
   have hone : (1 : G) ∈ {g : G | ‖σ g v - v‖ < 1 / 2} := by simp
   obtain ⟨V, hV⟩ := NonarchimedeanGroup.is_nonarchimedean _ (hopen.mem_nhds hone)
-  letI : InnerProductSpace ℝ H := InnerProductSpace.rclikeToReal ℂ H
+  let : InnerProductSpace ℝ H := InnerProductSpace.rclikeToReal ℂ H
   set A : Set H := Set.range (fun k : V => σ (k : G) v) with hA
   set C : Set H := closure (convexHull ℝ A) with hC
   have hvA : v ∈ A := ⟨1, by simp⟩
@@ -577,7 +577,7 @@ theorem stFixVec : StFixVec := by
     refine closure_minimal (convexHull_min ?_ (convex_closedBall _ _)) Metric.isClosed_closedBall
     rintro _ ⟨k, rfl⟩
     have := hV k.2
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     rw [Metric.mem_closedBall, dist_eq_norm]
     exact this.le
   have hstable : ∀ k : V, ∀ y ∈ C, σ (k : G) y ∈ C := by
@@ -620,8 +620,8 @@ theorem stHensel_holds : StHensel := by
   have hcont : Continuous s := (AddMonoidHomClass.isometry_of_norm s hn).continuous
   have hXc : IsClosed {u : L | s u = u ∧ ‖u‖ ≤ 1} :=
     (isClosed_eq hcont continuous_id).inter (isClosed_le continuous_norm continuous_const)
-  haveI : CompleteSpace {u : L | s u = u ∧ ‖u‖ ≤ 1} := hXc.completeSpace_coe
-  haveI : Nonempty {u : L | s u = u ∧ ‖u‖ ≤ 1} := ⟨⟨0, map_zero s, by simp⟩⟩
+  have : CompleteSpace {u : L | s u = u ∧ ‖u‖ ≤ 1} := hXc.completeSpace_coe
+  have : Nonempty {u : L | s u = u ∧ ‖u‖ ≤ 1} := ⟨⟨0, map_zero s, by simp⟩⟩
   have hmaps : ∀ u : L, s u = u ∧ ‖u‖ ≤ 1 → s (-d - c * u ^ 2) = -d - c * u ^ 2 ∧
       ‖-d - c * u ^ 2‖ ≤ 1 := by
     rintro u ⟨hu, hu1⟩
@@ -642,7 +642,7 @@ theorem stHensel_holds : StHensel := by
         = -(c * (((x : L) + y) * ((x : L) - y))) := by ring
     rw [Subtype.dist_eq, Subtype.dist_eq, dist_eq_norm, dist_eq_norm]
     change ‖(-d - c * (x : L) ^ 2) - (-d - c * (y : L) ^ 2)‖ ≤ _
-    rw [key, norm_neg, norm_mul, norm_mul, coe_nnnorm]
+    rw [key, norm_neg, norm_mul, norm_mul, coe_nnNorm]
     have h0 : 0 ≤ ‖(x : L) - y‖ := norm_nonneg _
     exact mul_le_mul_of_nonneg_left
       (mul_le_of_le_one_left h0 hxy) (norm_nonneg _)
@@ -670,7 +670,7 @@ namespace GlobalTheory.CompanionTheory.FactorIso
 
 theorem stIso : StIso := by
   intro G G₁ H _ _ _ _ _ _ π hπ j p hj hpj hc W hW
-  haveI := hπ.complete
+  have := hπ.complete
   have hu : IsUnitaryRep (π.comp j) := isUnitaryRep_comp hπ.unitary hj
   refine ⟨⟨W, hW.1.rep, isIrrUnitary_rep hu hW⟩, ?_⟩
   show isoPart hW.1.rep (π.comp j) ⊤ = ⊤
@@ -834,8 +834,8 @@ theorem exists_op_unit (hδ : IsIrrUnitary δ) (hρ : IsUnitaryRep ρ) (y : X) {
     rw [h]
     rfl
   let K : Submodule ℂ H := S.topologicalClosure
-  haveI : IsClosed (K : Set H) := S.isClosed_topologicalClosure
-  haveI : CompleteSpace K := IsClosed.completeSpace_coe (s := (K : Set H))
+  have : IsClosed (K : Set H) := S.isClosed_topologicalClosure
+  have : CompleteSpace K := IsClosed.completeSpace_coe (s := (K : Set H))
   let i : S →ₗᵢ[ℂ] K := ⟨Submodule.inclusion S.le_topologicalClosure, fun _ => rfl⟩
   have hd : DenseRange i.toContinuousLinearMap := by
     refine Topology.IsInducing.subtypeVal.dense_iff.2 fun w => closure_mono (fun z hz => ?_) w.2
@@ -866,7 +866,7 @@ theorem exists_op (hδ : IsIrrUnitary δ) (hρ : IsUnitaryRep ρ) (y ξ : X) :
   obtain ⟨A, hA⟩ := exists_op_unit hδ hρ y (u := (‖ξ‖ : ℂ)⁻¹ • ξ) (by
     rw [norm_smul, norm_inv, Complex.norm_real, norm_norm, inv_mul_cancel₀ hn])
   refine ⟨(‖ξ‖ : ℂ) • A, fun T hT x => ?_⟩
-  rw [ContinuousLinearMap.smul_apply, hA T hT, inner_smul_left, smul_smul, map_inv₀, Complex.conj_ofReal,
+  rw [smul_apply, hA T hT, inner_smul_left, smul_smul, map_inv₀, Complex.conj_ofReal,
     ← mul_assoc, mul_inv_cancel₀ hn', one_mul]
 
 theorem stOp : StOp := by
@@ -1079,7 +1079,7 @@ theorem stPair : StPair := by
   have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hKo
   have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   have hcont : Continuous fun k : K => (((k : G) * g : G) : G ⧸ K) :=
-    (QuotientGroup.continuous_mk (N := K)).comp (continuous_subtype_val.mul continuous_const)
+    (QuotientGroup.continuous_mk (N := K)).comp (continuous_subtypeVal.mul continuous_const)
   have hfin : (Set.range fun k : K => (((k : G) * g : G) : G ⧸ K)).Finite :=
     (isCompact_range hcont).finite_of_discrete
   refine hfin.subset ?_
@@ -1121,7 +1121,7 @@ theorem stProj : StProj := by
       exact hmem v
     rw [hV]
     exact isClosed_biInter fun k _ => isClosed_eq (σ k).continuous continuous_id
-  haveI : CompleteSpace V := hVc.completeSpace_coe
+  have : CompleteSpace V := hVc.completeSpace_coe
   have hin : ∀ g v w, inner ℂ (σ g v) w = inner ℂ v (σ g⁻¹ w) := CompanionTheory.D.gk.admitted.FinOfPIAux.inner_left σ hiso
   refine ⟨V.starProjection, ?_, ?_, ?_⟩
   · unfold IsAvg
@@ -1297,7 +1297,7 @@ theorem exists_basis_of_pid {L V : Type} [Field L] [AddCommGroup V] [Module L V]
 theorem stSandwich : StSandwich := by
   intro L _ _ hp V _ _ Λ₀ Λ c ⟨m, b, hb⟩ hc hcΛ hspan hO
   have hmem : ∀ x : L, x ∈ 𝒪[L] ↔ ‖x‖ ≤ 1 := fun x => Valued.integer.mem_iff
-  haveI : CompactSpace 𝒪[L] := by
+  have : CompactSpace 𝒪[L] := by
     have hset : ((𝒪[L] : Subring L) : Set L) = Metric.closedBall 0 1 := by
       ext x
       simp [hmem]
@@ -1305,12 +1305,12 @@ theorem stSandwich : StSandwich := by
       rw [hset]
       exact isCompact_closedBall 0 1
     exact isCompact_iff_compactSpace.1 hk
-  haveI : (Valued.v : Valuation L NNReal).IsNontrivial := by
+  have : (Valued.v : Valuation L NNReal).IsNontrivial := by
     obtain ⟨x, hx0, hx1⟩ := NormedField.exists_norm_lt_one L
     refine (Valued.v : Valuation L NNReal).isNontrivial_iff_exists_lt_one.2 ⟨x, ?_, ?_⟩
     · simpa using hx0
     · simpa [← NNReal.coe_lt_coe] using hx1
-  haveI : IsDiscreteValuationRing 𝒪[L] := Valued.integer.isDiscreteValuationRing_of_compactSpace
+  have : IsDiscreteValuationRing 𝒪[L] := Valued.integer.isDiscreteValuationRing_of_compactSpace
   have hfrac : ∀ x : L, ∃ a : 𝒪[L], (a : L) ≠ 0 ∧ (a : L) * x ∈ 𝒪[L] := by
     intro x
     by_cases hx : ‖x‖ ≤ 1
@@ -1725,7 +1725,7 @@ theorem tor_e (hH : IsHerm s h) (hF : IsFrame h δ e f W) (hδ : δ ≠ 0) (u : 
   have hs : s δ ≠ 0 := (map_ne_zero s).2 hδ
   rw [tor_apply]
   simp only [pair_fe hH hF, hF.1, zero_smul, smul_zero, Finset.sum_const_zero, add_zero, ite_smul,
-    smul_ite, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    smul_ite, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [smul_smul, mul_assoc, inv_mul_cancel₀ hs, mul_one, sub_smul, one_smul]
   abel
 
@@ -1733,7 +1733,7 @@ theorem tor_f (hH : IsHerm s h) (hF : IsFrame h δ e f W) (hδ : δ ≠ 0) (u : 
     tor hH δ e f u (f j) = (s (u j))⁻¹ • f j := by
   rw [tor_apply]
   simp only [hF.2.1, hF.2.2.1, zero_smul, smul_zero, Finset.sum_const_zero, add_zero, ite_smul,
-    smul_ite, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    smul_ite, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [smul_smul, mul_assoc, inv_mul_cancel₀ hδ, mul_one, sub_smul, one_smul]
   abel
 

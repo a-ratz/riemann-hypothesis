@@ -131,11 +131,11 @@ theorem trdeg_numberField (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Ch
 theorem smooth_spec_numberField (F A Ω : Type) [Field F] [NumberField F] [CommRing A] [IsDomain A] [Algebra ℚ A]
     [Algebra.Smooth ℚ A] [Field Ω] [CharZero Ω] [Algebra A Ω] [IsFractionRing A Ω] (b : F →+* A) (n : ℕ)
     (ht : Algebra.trdeg ℤ Ω = n) : SmoothOfRelativeDimension n (spMap b) := by
-  letI : Algebra F A := b.toAlgebra
+  let : Algebra F A := b.toAlgebra
   have t1 : IsScalarTower ℚ F A := IsScalarTower.of_algebraMap_eq fun r => RingHom.congr_fun
     (Subsingleton.elim (algebraMap ℚ A) ((algebraMap F A).comp (algebraMap ℚ F))) r
   have s1 : Algebra.Smooth F A := smooth_of_numberField F A
-  letI : Algebra F Ω := ((algebraMap A Ω).comp b).toAlgebra
+  let : Algebra F Ω := ((algebraMap A Ω).comp b).toAlgebra
   have t2 : IsScalarTower F A Ω := IsScalarTower.of_algebraMap_eq' rfl
   exact smoothOfRelativeDimension_spec F A Ω n ((trdeg_numberField F Ω).trans ht)
 
@@ -159,10 +159,10 @@ theorem isPullback_spec (F Z Q : Type) [Field F] [NumberField F] [CommRing Z] [C
     (hj : Function.Injective j) (hu : ∀ m : ℕ, m ≠ 0 → IsUnit (m : Q))
     (hs : ∀ q : Q, ∃ m : ℕ, m ≠ 0 ∧ ∃ z : Z, j z = (m : Q) * q) :
     IsPullback (spMap b) (spMap j) (spMap (algebraMap (𝓞 F) F)) (spMap i) := by
-  letI : Algebra (𝓞 F) Z := i.toAlgebra
-  letI : Algebra Z Q := j.toAlgebra
-  letI : Algebra F Q := b.toAlgebra
-  letI : Algebra (𝓞 F) Q := (j.comp i).toAlgebra
+  let : Algebra (𝓞 F) Z := i.toAlgebra
+  let : Algebra Z Q := j.toAlgebra
+  let : Algebra F Q := b.toAlgebra
+  let : Algebra (𝓞 F) Q := (j.comp i).toAlgebra
   have t1 : IsScalarTower (𝓞 F) Z Q := IsScalarTower.of_algebraMap_eq' rfl
   have t2 : IsScalarTower (𝓞 F) F Q := IsScalarTower.of_algebraMap_eq' h
   have l1 : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 F) (nonZeroDivisors ℤ)) F :=
@@ -350,8 +350,8 @@ end Charts
 open GlobalTheory.CompanionTheory.Ar.SncBase.Mdl in
 theorem smooth_genericFibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Ω : Type) [Field Ω] [CharZero Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (M : PModel ℤ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩)) (f : M.X ⟶ Y.X) (y₀ : Sp Ω ⟶ Xo.XF c) (U : (pullback (f ≫ Y.s) (spMap (algebraMap (𝓞 c.F) c.F))).Opens), M.ξ ≫ f = y₀ ≫ Y.j → SmoothGenericFibreM y → Algebra.trdeg ℤ Ω = ((D.dim : ℕ) : Cardinal) → SmoothOfRelativeDimension D.dim (U.ι ≫ pullback.snd (f ≫ Y.s) (spMap (algebraMap (𝓞 c.F) c.F))) := by
   intro E _ _ _ H D l Xo c Y Ω _ _ K _ J _ y M f y₀ U hξ hsm htr
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   obtain ⟨cst, hcst⟩ : ∃ cst : c.F →+* Ω, y₀ ≫ Y.j ≫ Y.s = spMap (cst.comp (algebraMap (𝓞 c.F) c.F)) := by
     refine ⟨(Spec.preimage (y₀ ≫ pullback.snd _ _)).hom, ?_⟩
     rw [Model.j, Category.assoc, pullback.condition, ← Category.assoc Y.jQ, Y.jQ_over, ← Category.assoc]

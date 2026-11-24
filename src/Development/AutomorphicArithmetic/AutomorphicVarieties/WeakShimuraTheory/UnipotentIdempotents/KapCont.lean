@@ -45,8 +45,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem cont_resLe {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {F L : IntermediateField ℚ Ω} (h : F ≤ L) :
     Continuous (resLe h) := by
-  letI : Algebra F L := (IntermediateField.inclusion h).toRingHom.toAlgebra
-  haveI : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra F L := (IntermediateField.inclusion h).toRingHom.toAlgebra
+  have : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Af.continuous_restrictScalarsHom F L Ω
 
 private theorem cont_of_open_ker {Γ H : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [Group H]

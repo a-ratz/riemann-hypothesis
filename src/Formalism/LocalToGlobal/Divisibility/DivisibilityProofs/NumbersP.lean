@@ -91,7 +91,7 @@ theorem vw_prime_eq_zero (w : HeightOneSpectrum (𝓞 K)) {p : ℕ} (hp : p.Prim
   have hJ : (Ideal.span {(p : 𝓞 K)} : Ideal (𝓞 K)) ≠ 0 := by
     rw [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact hx
-  rw [← h, Formalism.DivisionValues.W5.vw_int, FractionalIdeal.count_coe K w hJ]
+  rw [← h, Formalism.DivisionValues.W5.vw_int, FractionalIdeal.count_coeIdeal K w hJ]
   have hm : Associates.mk (Ideal.span {(p : 𝓞 K)} : Ideal (𝓞 K)) ≠ 0 := by
     rwa [ne_eq, Associates.mk_eq_zero]
   have h0 : (Associates.mk w.asIdeal).count

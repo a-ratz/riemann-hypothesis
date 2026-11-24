@@ -106,8 +106,8 @@ theorem formRelC_of (hRD : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
   obtain ⟨g, hg, g', hg', hdec⟩ := hall _ hγ
   obtain ⟨c, hc⟩ := formTransp_any (X := X) (Y := Y) (u := u) (u' := u') (νq := ν) hν.2 hRC t hrel hwr g hg g' hg'
     hdec
-  have := FiniteDimensional.complete ℂ (X.Vpi u)
-  have := FiniteDimensional.complete ℂ (X.Vpi u')
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u')
   refine ⟨(c : ℂ) * (X.psiInfU u g * conj (X.psiInfU u' g')),
     ((Formalism.L2.SG.RealObj.InfCut.piIso X u g hg).toContinuousLinearEquiv : X.Vpi u →L[ℂ] X.Vpi u),
     ((Formalism.L2.SG.RealObj.InfCut.piIso X u' g' hg').symm.toContinuousLinearEquiv : X.Vpi u' →L[ℂ] X.Vpi u'), ?_⟩

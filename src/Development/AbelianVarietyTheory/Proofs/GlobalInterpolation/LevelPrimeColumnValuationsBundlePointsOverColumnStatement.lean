@@ -579,8 +579,8 @@ theorem exists_basis_ker {d : Deco E n ST SG} (hd : d.Ok) (P : ST) (hs : d.at P.
     obtain ⟨s', hs', b, hb⟩ := exists_mul_eq_of_unif hT hT2 h1
     refine (Formalism.L2.Col.mem_locP P.1 _ x).2 ⟨s' * s, fun hm => (P.1.isPrime.mem_or_mem hm).elim hs' hs1, ?_⟩
     have h2 : s' • r = ∑ j, (Function.update (s' • r) i b) j • fun a => B₀ a j := by
-      rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i), hcol, if_pos rfl, Function.update_self,
-        Finset.sum_congr rfl fun j hj => by rw [hcol, if_neg (Finset.ne_of_mem_erase hj),
+      rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i), hcol, ite_eq_left rfl, Function.update_self,
+        Finset.sum_congr rfl fun j hj => by rw [hcol, ite_eq_right (Finset.ne_of_mem_erase hj),
           Function.update_of_ne (Finset.ne_of_mem_erase hj)]]
       funext a
       by_cases ha : a = i
@@ -621,7 +621,7 @@ theorem unramOver_of_mem {X : Fields} {S : Set ℕ} (mu : Tup X.F X.E X.K S) {p 
   have h2 : ringChar (𝓞 X.F ⧸ v.asIdeal) ∣ p := by
     rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact hv
-  haveI := v.isPrime
+  have := v.isPrime
   have h3 : ringChar (𝓞 X.F ⧸ v.asIdeal) = p := ((Nat.dvd_prime hp).1 h2).resolve_left CharP.ringChar_ne_one
   exact h1.2.2 (show ringChar (𝓞 X.F ⧸ v.asIdeal) ∈ S from h3 ▸ hS)
 
@@ -645,7 +645,7 @@ theorem pTerm_std : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMomen
   have hZ := hyp.ok
   have hPr := hZ.primes
   have hTp := hPr.T_prime u
-  haveI : Fact (Z.Pr.T u).Prime := ⟨hTp⟩
+  have : Fact (Z.Pr.T u).Prime := ⟨hTp⟩
   obtain ⟨τ₀⟩ : Nonempty Z.X.Tau := Fintype.card_pos_iff.1 hZ.fields.f_pos
   have hP : ∀ τ, pullW τ w ∈ Z.Pr.vT u := (seenC_iff hPr u w).1 hw
   have hTw : ((Z.Pr.T u : ℕ) : 𝓞 Z.X.K) ∈ w.asIdeal := by
@@ -686,7 +686,7 @@ theorem pTerm_std : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMomen
     have hp : p ≠ 0 := Finset.prod_ne_zero_iff.mpr fun P _ => hg0 P
     have hp' : algebraMap (𝓞 Z.X.E) Z.X.E p ≠ 0 :=
       (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 Z.X.E) Z.X.E)).mpr hp
-    letI := e.2.L_lattice
+    let := e.2.L_lattice
     refine { span_eq_top := top_unique ?_ }
     rw [← (Formalism.L2.Ker.full_of_sd ⟨e.2.lat, e.2.uni⟩).span_eq_top]
     refine Submodule.span_le.mpr fun x hx => ?_
@@ -699,8 +699,8 @@ theorem pTerm_std : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMomen
     rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ P)]
     exact Ideal.mul_mem_right _ _ (hg P)
   have hfullLsh : Submodule.IsFullLattice Z.X.E d.1.Lsh := by
-    letI := Formalism.L2.Ker.full_of_sd hsd
-    letI := d.2.Lsh_lattice
+    let := Formalism.L2.Ker.full_of_sd hsd
+    let := d.2.Lsh_lattice
     exact Submodule.IsFullLattice.of_le Z.X.E d.2.N_le_Lsh
   have hM : LatWithBasis w (fun τ => tauLat Z.X.emb τ d.1.Lsh) 1 := fun τ =>
     ⟨(tauLatLattice _ _ _ _ Z.X.emb τ _ hfullLsh).fg, by
@@ -897,7 +897,7 @@ theorem kerP : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments �
     unfold OverT at e
     rw [e] at h1
     exact h1
-  letI : StarRing B.fields.E := B.fields.starE
+  let : StarRing B.fields.E := B.fields.starE
   have key := hPT d.1.1.deco _ d'.1.1.deco _ Ξ₀ hfr hfr' hbox (hint _ hT) F hF
   rw [ColIn.A, eA]
   have eS : ∀ τ, (dat I l Z u a).ch.C.sDiv i τ = -((B.wts.lamTrue u (i + 1) τ).detShift) := fun τ => by
@@ -1138,7 +1138,7 @@ omit hP hq hq2 hd₀ in
 theorem up_f {v : Sp E n} (hv : v ∈ d.at P.1) : d.f P v = d₀.f P (q • v) := by
   obtain ⟨x, -, -, rfl⟩ := h
   rw [Deco.up_f]
-  exact if_pos hv
+  exact ite_eq_left hv
 
 omit hP hq hq2 hd₀ in
 theorem up_be : d₀.be = d.be := by
@@ -1221,13 +1221,13 @@ theorem exists_dn_of_up {d₁ : Deco E b ST SG'} (h₁ : d'.IsUp P q d₁) (r₁
   have hone : ∀ e ∈ d.N, d.f P e = 1 → q • e ∈ d.dnN P ∧ f₀ (q • e) = 1 := fun e he hfe => by
     have m1 : q • e ∈ d.dnN P := (le_sup_left : d.kerAt P ≤ d.dnN P) (hd.smul_mem_kerAt P hq he)
     refine ⟨m1, ?_⟩
-    simp only [f₀, if_pos (le_locP _ _ m1)]
+    simp only [f₀, ite_eq_left (le_locP _ _ m1)]
     rw [hom_smul, ← up_f h₁ (r₁ P e (le_locP _ _ he)).1, (r₁ P e (le_locP _ _ he)).2, hfe]
   have hok : (d.dn P f₀).Ok := by
-    refine hd.dn P hP (fun y hy z hz => ?_) (fun c y hy => ?_) (fun y hy => if_neg hy) ?_
-    · simp only [f₀, if_pos hy, if_pos hz, if_pos (add_mem hy hz)]
+    refine hd.dn P hP (fun y hy z hz => ?_) (fun c y hy => ?_) (fun y hy => ite_eq_right hy) ?_
+    · simp only [f₀, ite_eq_left hy, ite_eq_left hz, ite_eq_left (add_mem hy hz)]
       rw [map_add (f := _), hd'.f_add P _ (hx y hy) _ (hx z hz)]
-    · simp only [f₀, if_pos hy, if_pos (Submodule.smul_mem _ c hy)]
+    · simp only [f₀, ite_eq_left hy, ite_eq_left (Submodule.smul_mem _ c hy)]
       rw [hom_smul, hd'.f_smul P c _ (hx y hy)]
     · obtain ⟨e, he, hfe⟩ := exists_f_one hd P
       exact ⟨_, (hone e he hfe).1, by rw [(hone e he hfe).2]; exact one_ne_zero⟩
@@ -1239,7 +1239,7 @@ theorem exists_dn_of_up {d₁ : Deco E b ST SG'} (h₁ : d'.IsUp P q d₁) (r₁
   · subst hQ
     have hy' : y ∈ localization₂ Q.1.asIdeal (d.dnN Q) := hy
     rw [hf]
-    exact ⟨hx y hy', (if_pos hy').symm⟩
+    exact ⟨hx y hy', (ite_eq_left hy').symm⟩
   · rw [up_at_ne hP hq hq2 hok hup hQ] at hy
     rw [up_at_ne hP' hq hq2 hd' h₁ hQ, up_f_ne h₁ hQ, up_f_ne hup hQ]
     exact r₁ Q y hy
@@ -1292,8 +1292,8 @@ theorem sum_ite_unique {α K : Type} [Field K] (s : Finset α) (p : α → Prop)
     (∑ u ∈ s, if p u then (1 : K) else 0) = if ∃ u ∈ s, p u then 1 else 0 := by
   split_ifs with he
   · obtain ⟨u, hu, hp⟩ := he
-    rw [Finset.sum_eq_single_of_mem u hu fun v hv hne => if_neg fun hv' => hne (h v hv u hu hv' hp), if_pos hp]
-  · exact Finset.sum_eq_zero fun v hv => if_neg fun hv' => he ⟨v, hv, hv'⟩
+    rw [Finset.sum_eq_single_of_mem u hu fun v hv hne => ite_eq_right fun hv' => hne (h v hv u hu hv' hp), ite_eq_left hp]
+  · exact Finset.sum_eq_zero fun v hv => ite_eq_right fun hv' => he ⟨v, hv, hv'⟩
 
 theorem sum_phiT (K : Type) [Field K] {P : ST} (hP : MoveHyp ST SG P) (hP' : MoveHyp ST SG' P) {q : 𝓞 E} (hq : q ∈ P.1.asIdeal)
     (hq2 : q ∉ P.1.asIdeal ^ 2) (d : DecoSet (E := E) (n := a) (ST := ST) (SG := SG)) (d' : DecoSet (E := E) (n := b) (ST := ST) (SG := SG')) (U : Finset (DecoSet (E := E) (n := b) (ST := ST) (SG := SG')))
@@ -1331,7 +1331,7 @@ theorem inBox_of {K : Type} [Field K] {SA SB : Finset (HeightOneSpectrum (𝓞 E
   · rcases (hS Q).1 hQ with hQ | hQ
     · have hr : Rel d d' x := by
         by_contra hr
-        exact left_ne_zero_of_mul hx (by rw [phiT_eq, if_neg hr])
+        exact left_ne_zero_of_mul hx (by rw [phiT_eq, ite_eq_right hr])
       exact Submodule.smul_mem _ (cA : 𝓞 E) (h1 x hr ⟨Q, hQ⟩ v hv)
     · exact h₀.1 x (right_ne_zero_of_mul hx) Q hQ v hv
   · rintro x _ ⟨z, hz, rfl⟩
@@ -1393,12 +1393,12 @@ theorem kerOf_sum {K : Type} [Field K] {SB : Finset (HeightOneSpectrum (𝓞 E))
     classical
     obtain ⟨σ, hσ⟩ := hπ.hasRightInverse
     let F : Submodule ℤ A := Submodule.span ℤ (↑(s.image σ) : Set A)
-    haveI : Module.Finite ℤ F := Module.Finite.span_of_finite ℤ (Finset.finite_toSet _)
+    have : Module.Finite ℤ F := Module.Finite.span_of_finite ℤ (Finset.finite_toSet _)
     let g : F →ₗ[ℤ] V := f.toIntLinearMap ∘ₗ F.subtype
     have hg : Function.Injective g := hf.comp F.subtype_injective
-    haveI : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
-    haveI : Module.IsTorsionFree ℤ F := Function.Injective.moduleIsTorsionFree g hg (by simp)
-    haveI : Module.Free ℤ F := Module.free_of_finite_type_torsion_free'
+    have : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
+    have : Module.IsTorsionFree ℤ F := Function.Injective.moduleIsTorsionFree g hg (by simp)
+    have : Module.Free ℤ F := Module.free_of_finite_type_torsion_free'
     have hr : Module.finrank ℤ F ≤ Module.finrank ℚ V := by
       let b := Module.finBasis ℤ F
       have h1 : LinearIndependent ℤ (g ∘ b) := b.linearIndependent.map' g (LinearMap.ker_eq_bot.2 hg)
@@ -1415,7 +1415,7 @@ theorem kerOf_sum {K : Type} [Field K] {SB : Finset (HeightOneSpectrum (𝓞 E))
     rw [AddSubgroup.index_ker] at hdvd
     have hne : Nat.card p.range ≠ 0 := fun h => by
       rw [h] at hdvd; exact hpos.ne' (Nat.eq_zero_of_zero_dvd hdvd)
-    haveI : Finite p.range := Nat.finite_of_card_ne_zero hne
+    have : Finite p.range := Nat.finite_of_card_ne_zero hne
     have hsub : (↑s : Set Q) ⊆ (p.range : Set Q) := fun q hq =>
       ⟨⟨σ q, Submodule.subset_span (by simpa using ⟨q, hq, rfl⟩)⟩, hσ q⟩
     calc s.card = Nat.card (↑s : Set Q) := by simp
@@ -1428,15 +1428,15 @@ theorem kerOf_sum {K : Type} [Field K] {SB : Finset (HeightOneSpectrum (𝓞 E))
     have h := card_finset_le f hf π hπ n hn h0
     have hfin : Finite Q := by
       by_contra hinf
-      haveI : Infinite Q := not_finite_iff_infinite.1 hinf
+      have : Infinite Q := not_finite_iff_infinite.1 hinf
       obtain ⟨s, hs⟩ := Infinite.exists_subset_card_eq Q (n ^ Module.finrank ℚ V + 1)
       have := h s
       omega
     refine ⟨hfin, ?_⟩
-    haveI := Fintype.ofFinite Q
+    have := Fintype.ofFinite Q
     rw [Nat.card_eq_fintype_card]
     exact h Finset.univ
-  haveI : Module.Finite ℚ (HomE E a b) := Module.Finite.trans E (HomE E a b)
+  have : Module.Finite ℚ (HomE E a b) := Module.Finite.trans E (HomE E a b)
   have : Finite (↥(divLat cA (homAt SA N N')) ⧸ (mulLat cB (homAt SA N N')).comap (divLat cA (homAt SA N N')).subtype) := by
     refine (finite_card_le (divLat cA (homAt SA N N')).subtype.toAddMonoidHom (Submodule.subtype_injective _)
       ((mulLat cB (homAt SA N N')).comap (divLat cA (homAt SA N N')).subtype).mkQ.toAddMonoidHom

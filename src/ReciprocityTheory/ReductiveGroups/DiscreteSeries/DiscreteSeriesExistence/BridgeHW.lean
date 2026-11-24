@@ -76,7 +76,7 @@ theorem bhw_Ecc_Eab (hE : IsGlRep E) {μ : Fin n → ℝ} {v : D} (hv : ∀ c, E
 
 private theorem hasDerivAt_zero_mem_of_forall_mem_finiteDim {S : Submodule ℂ H} [FiniteDimensional ℂ S] {f : ℝ → H} {L : H}
     (hf : HasDerivAt f L 0) (hS : ∀ t, f t ∈ S) : L ∈ S := by
-  have hc : IsClosed (S : Set H) := Submodule.closed_of_finiteDimensional S
+  have hc : IsClosed (S : Set H) := Submodule.isClosed_of_finiteDimensional S
   refine hc.mem_of_tendsto hf.tendsto_slope_zero (Filter.Eventually.of_forall fun t => ?_)
   rw [zero_add]
   exact Submodule.smul_of_tower_mem S t⁻¹ (S.sub_mem (hS t) (hS 0))
@@ -189,7 +189,7 @@ theorem exists_isKHWVec_of_isKTypeOf (hσ : IsURepOn (UJset ε) σ) (hD : IsDeri
     {μ : Fin n → ℝ} {S : Submodule ℂ H} (hS : Formalism.MainNotions.S.IsKTypeOf ε σ μ S) (hSD : S ≤ D) :
     ∃ w : D, (w : H) ∈ S ∧ w ≠ 0 ∧ IsKHWVec ε E μ w := by
   obtain ⟨hfd, hst, -, ⟨v, hvS, hv0, hvw⟩, hdom⟩ := hS
-  haveI : FiniteDimensional ℂ S := hfd
+  have : FiniteDimensional ℂ S := hfd
   have hwt := (isWtOn_iff hσ hD ⟨v, hSD hvS⟩ μ).1 hvw
   refine ⟨⟨v, hSD hvS⟩, hvS, ?_, fun a => hwt a, fun a b hab he => ?_⟩
   · intro h

@@ -234,7 +234,7 @@ theorem continuous_UJ {n : ℕ} [TopologicalSpace K] [IsTopologicalRing K] {s : 
     {J Ji : Matrix (Fin n) (Fin n) K} (hJ : Ji * J = 1) :
     Topology.IsInducing fun g : UJ s J => ((g : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) := by
   have h1 : Continuous fun g : UJ s J => ((g : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have h2 : Continuous fun g : Matrix (Fin n) (Fin n) K => (g, MulOpposite.op (Ji * cT s g * J)) :=
     continuous_id.prodMk (MulOpposite.continuous_op.comp
       ((continuous_const.matrix_mul (continuous_id.matrix_map hs).matrix_transpose).matrix_mul continuous_const))

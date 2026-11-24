@@ -285,7 +285,7 @@ private theorem exists_mult_evAt_eq_and_vanish_off_class : ∀ (D : D7) (θ : In
     rw [evAt_apply, hval, hfx, hinv, hw, PiTensorProduct.lift.tprod]
   · intro h' hne
     ext v
-    rw [evAt_apply, hval, hf0 h' hne, map_zero, map_zero, LinearMap.zero_apply, MultilinearMap.zero_apply]
+    rw [evAt_apply, hval, hf0 h' hne, map_zero, map_zero, LinearMap.zero_apply, zero_apply]
 
 end
 

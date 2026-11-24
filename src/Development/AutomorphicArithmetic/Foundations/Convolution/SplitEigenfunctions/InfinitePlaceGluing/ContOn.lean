@@ -248,7 +248,7 @@ private lemma UpperTheory.fourier_vanishing_homogeneous (F : ℝ → ℂ) (hc : 
       rw [this, exp_mul_I, ← ofReal_cos, ← ofReal_sin, Real.cos_neg, Real.sin_neg]
       push_cast; ring
   have hpow : cexp (s * (2 * k) * (t * I)) = cexp (s * (t * I)) ^ (2 * k) := by
-    rw [← exp_nat_mul]; congr 1; push_cast; ring
+    rw [← exp_natCast_mul]; congr 1; push_cast; ring
   simp only [map_pow, map_add (f := _), map_mul, MvPolynomial.eval_X, MvPolynomial.eval_C,
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.head_cons]
   rw [hpow, he]
@@ -259,7 +259,7 @@ theorem UpperTheory.eq_zero_of_orthogonal_even_homogeneous_trig :
           ∫ t in (0 : ℝ)..2 * Real.pi, MvPolynomial.eval ![(Real.sin t : ℂ), (Real.cos t : ℂ)] p * F t = 0) →
         ∀ t, F t = 0 := by
   intro F hc hp h
-  haveI : Fact (0 < Real.pi) := ⟨Real.pi_pos⟩
+  have : Fact (0 < Real.pi) := ⟨Real.pi_pos⟩
   have hper : Function.Periodic F Real.pi := hp
   let f : C(AddCircle Real.pi, ℂ) :=
     ⟨hper.lift, (QuotientAddGroup.isQuotientMap_mk _).continuous_iff.2 hc⟩
@@ -516,9 +516,9 @@ private theorem contOn_chi (χ : HChar ℚ) : ContinuousOn (fun y : ℝ => ((χ.
 
 private theorem continuousOn_wo_compl_zero_of_adm {D : Dat ℚ E} {ω : HChar ℚ} {φ : GL (Fin 2) (A E) → ℂ} (hA : admitted D ω φ) :
     ContinuousOn (fun y : ℝ => Wo D φ (em E (aE (iy y)))) ({0}ᶜ : Set ℝ) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   refine cont_Wo D hA.cont hA.bdd (c := fun y : ({0}ᶜ : Set ℝ) => em E (aE (iy y))) ?_
-  exact continuousOn_iff_continuous_restrict.1 (cont_em.comp_continuousOn (continuous_aE.comp_continuousOn contOn_iy))
+  exact continuousOn_iff_continuous_domRestrict.1 (cont_em.comp_continuousOn (continuous_aE.comp_continuousOn contOn_iy))
 
 private noncomputable def GG (D : Dat ℚ E) (χ : HChar ℚ) (k : ℕ) (s : ℂ) (φ : GL (Fin 2) (A E) → ℂ) (y : ℝ) : ℂ :=
   Wo D φ (em E (aE (iy y))) * ((χ.1 (iy y) : ℂˣ) : ℂ) * (y : ℂ) ^ k * ((|y| : ℝ) : ℂ) ^ (s - 2)

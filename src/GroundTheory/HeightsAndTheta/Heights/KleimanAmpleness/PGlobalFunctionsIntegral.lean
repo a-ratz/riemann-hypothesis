@@ -107,7 +107,7 @@ theorem GlobalFunctionsIntegral.proof : GlobalFunctionsIntegral.Statement := by
       exact (isHomogeneous_monomial _ rfl).mul (hf i)
     · have hmono : (monomial m (AddMonoidAlgebra.coeff g m) : MvPolynomial (Fin (N + 1)) k) =
           monomial m' (AddMonoidAlgebra.coeff g m) * X i ^ e i := by
-        rw [X_pow_eq_monomial, monomial_mul, mul_one, hsplit]
+        rw [X_pow_eq_monomial, monomial_mul_monomial, mul_one, hsplit]
       rw [AlgHom.toLinearMap_apply, map_mul, ← hrel i, hmono, map_mul, map_pow, aeval_X]
       ring
 

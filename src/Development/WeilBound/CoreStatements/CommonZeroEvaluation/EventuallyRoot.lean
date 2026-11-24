@@ -303,12 +303,12 @@ theorem eventually_root (hH : HenselN K) {π : K} (h0 : π ≠ 0) (h1 : ‖π‖
 
 theorem infinite_inter {π : K} (h0 : π ≠ 0) (h1 : ‖π‖ < 1) {D : Set K} (hD : Dense D) (x : K) (r : ℝ)
     (hr : 0 < r) : (D ∩ Metric.ball x r).Infinite := by
-  letI : NontriviallyNormedField K := NontriviallyNormedField.ofNormNeOne ⟨π, h0, h1.ne⟩
+  let : NontriviallyNormedField K := NontriviallyNormedField.ofNormNeOne ⟨π, h0, h1.ne⟩
   intro hfin
   have hU : IsOpen (Metric.ball x r \ (D ∩ Metric.ball x r)) :=
     Metric.isOpen_ball.sdiff hfin.isClosed
   have hne : (Metric.ball x r \ (D ∩ Metric.ball x r)).Nonempty :=
-    ((infinite_of_mem_nhds x (Metric.ball_mem_nhds x hr)).diff hfin).nonempty
+    ((infinite_of_mem_nhds x (Metric.ball_mem_nhds x hr)).sdiff hfin).nonempty
   obtain ⟨y, hyU, hyD⟩ := hD.inter_open_nonempty _ hU hne
   exact hyU.2 ⟨hyD, hyU.1⟩
 

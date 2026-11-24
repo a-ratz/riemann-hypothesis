@@ -61,7 +61,7 @@ theorem eq_of_invariant_of_open {G : Type} [AddCommGroup G] [TopologicalSpace G]
     [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
     (μ ν : Measure G) [ν.IsAddHaarMeasure] [μ.IsAddLeftInvariant] {C : Set G} (hC : IsOpen C)
     (h0 : (0 : G) ∈ C) (hμ : μ C = 1) (hν : ν C = 1) : μ = ν := by
-  haveI : IsFiniteMeasureOnCompacts μ := by
+  have : IsFiniteMeasureOnCompacts μ := by
     refine ⟨fun K hK => ?_⟩
     have hU : ∀ k : G, IsOpen ((fun x => -k + x) ⁻¹' C) := fun k =>
       hC.preimage (continuous_const.add continuous_id)
@@ -76,7 +76,7 @@ theorem eq_of_invariant_of_open {G : Type} [AddCommGroup G] [TopologicalSpace G]
   have h := Measure.isAddLeftInvariant_eq_smul μ ν
   have hc : Measure.addHaarScalarFactor μ ν = 1 := by
     have h2 : μ C = (Measure.addHaarScalarFactor μ ν • ν) C := by rw [← h]
-    rw [Measure.smul_apply, hμ, hν] at h2
+    rw [smul_apply, hμ, hν] at h2
     simpa [ENNReal.smul_def, eq_comm] using h2
   rw [hc, one_smul] at h
   exact h
@@ -110,7 +110,7 @@ theorem measure_inter_preimage {G T : Type} [AddCommGroup G] [MeasurableSpace G]
     (ν : Measure T) [ν.IsAddHaarMeasure] {C : Set T} (hC : IsOpen C) (h0 : (0 : T) ∈ C)
     (hm : m ((H : Set G) ∩ ρ ⁻¹' C) = 1) (hν : ν C = 1) {B : Set T} (hB : MeasurableSet B) :
     m ((H : Set G) ∩ ρ ⁻¹' B) = ν B := by
-  haveI := map_restrict_invariant m H hH ρ hρ hs
+  have := map_restrict_invariant m H hH ρ hρ hs
   have hmap : ∀ D : Set T, MeasurableSet D → ((m.restrict H).map ρ) D = m ((H : Set G) ∩ ρ ⁻¹' D) := by
     intro D hD
     rw [Measure.map_apply hρ hD, Measure.restrict_apply (hρ hD), Set.inter_comm]
@@ -185,12 +185,12 @@ theorem pi_box : ∀ (F : Type) [Field F] [NumberField F] (lam : ∀ v : HeightO
   intro F _ _ lam hlam lf hlf h1 ι _ S A hA
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   have hloc := fun v => _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : BorelSpace (Af F) := ⟨rfl⟩
   let ν : Measure (∀ v : S, ι → Fv F v.1) := Measure.pi fun v : S => Measure.pi fun _ : ι => lam v.1
   let O : Set (∀ v : S, ι → Fv F v.1) :=
     Set.pi Set.univ fun v : S => Set.pi Set.univ fun _ : ι => (v.1.adicCompletionIntegers F : Set (Fv F v.1))

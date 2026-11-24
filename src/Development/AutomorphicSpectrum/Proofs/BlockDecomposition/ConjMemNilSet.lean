@@ -75,7 +75,7 @@ theorem modular_comp (φ : H ≃* H) (h1 : Continuous φ) (h2 : Continuous φ.sy
     Measure.modularCharacter (φ g) = Measure.modularCharacter g := by
   let ν : Measure H := Measure.haar
   have hm : Measurable φ := h1.measurable
-  haveI : (Measure.map φ ν).IsHaarMeasure := MulEquiv.isHaarMeasure_map ν φ h1 h2
+  have : (Measure.map φ ν).IsHaarMeasure := MulEquiv.isHaarMeasure_map ν φ h1 h2
   have e : Measure.map (· * φ g) (Measure.map φ ν) =
       Measure.modularCharacter g • Measure.map φ ν := by
     rw [Measure.map_map (measurable_mul_const _) hm]
@@ -160,7 +160,7 @@ theorem exists_proj (W : Submodule ℂ (Fin n → ℂ)) :
   · rw [LinearMap.toMatrix'_mulVec]
     simp [f]
   · rw [LinearMap.toMatrix'_mulVec]
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hC ⟨v, hv⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hC ⟨v, hv⟩)
 
 theorem mat_ext {A B : Mat n} (h : ∀ v, A *ᵥ v = B *ᵥ v) : A = B :=
   Matrix.toLin'.injective (LinearMap.ext h)
@@ -260,9 +260,9 @@ theorem conj_mem_nilSet {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} (g : G n)
 theorem isClosed_nilSet (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) : IsClosed (nilSet W₁ W₂) := by
   have hc : ∀ v : Fin n → ℂ, Continuous fun u : G n => (u.val - 1) *ᵥ v := fun v =>
     Continuous.matrix_mulVec (Units.continuous_val.sub continuous_const) continuous_const
-  have c₁ : IsClosed (W₁ : Set (Fin n → ℂ)) := W₁.closed_of_finiteDimensional
-  have c₂ : IsClosed (W₂ : Set (Fin n → ℂ)) := W₂.closed_of_finiteDimensional
-  simp only [nilSet, Set.setOf_and, Set.setOf_forall]
+  have c₁ : IsClosed (W₁ : Set (Fin n → ℂ)) := W₁.isClosed_of_finiteDimensional
+  have c₂ : IsClosed (W₂ : Set (Fin n → ℂ)) := W₂.isClosed_of_finiteDimensional
+  simp only [nilSet, Set.ofPred_and, Set.ofPred_forall]
   exact (isClosed_iInter fun v => c₂.preimage (hc v)).inter
     ((isClosed_iInter fun v => isClosed_iInter fun _ => c₁.preimage (hc v)).inter
       (isClosed_iInter fun v => isClosed_iInter fun _ => isClosed_eq (hc v) continuous_const))
@@ -394,9 +394,9 @@ theorem contract {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} (h12 : W₁ ≤ W�
     rw [inv_inv] at this
     exact (hmem _).2 this
   have hcφ : ∀ t, Continuous (conjN N (gA h t) (hA t) (hA' t)) := fun t =>
-    Continuous.subtype_mk (((continuous_const.mul continuous_subtype_val).mul continuous_const)) _
+    Continuous.subtype_mk (((continuous_const.mul continuous_subtypeVal).mul continuous_const)) _
   have hcφ' : ∀ t, Continuous (conjN N (gA h t) (hA t) (hA' t)).symm := fun t =>
-    Continuous.subtype_mk (((continuous_const.mul continuous_subtype_val).mul continuous_const)) _
+    Continuous.subtype_mk (((continuous_const.mul continuous_subtypeVal).mul continuous_const)) _
   have hlim : ∀ x ∈ nilSet W₁ W₂, Tendsto (fun k => (gA h (sq k) * x * (gA h (sq k))⁻¹).val) atTop
       (𝓝 1) := fun x hx => by
     simp only [conj_val h h1 h2 hx]
@@ -416,17 +416,17 @@ theorem nilUni : PositivityTheory.RgBcC.NilUni := by
   intro n _ _ W₁ W₂ h12 N hN
   have hcl : IsClosed (N : Set (G n)) := hN ▸ isClosed_nilSet W₁ W₂
   refine ⟨hcl, fun ν _ => ?_⟩
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (GL (Fin n) ℂ) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : LocallyCompactSpace (GL (Fin n) ℂ) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Fin n) ℂ) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : LocallyCompactSpace N := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : ν.IsMulRightInvariant := rightInvariant (fun u C hC => contract h12 N hN u C hC) ν
+  have : SecondCountableTopology (GL (Fin n) ℂ) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : LocallyCompactSpace N := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : ν.IsMulRightInvariant := rightInvariant (fun u C hC => contract h12 N hN u C hC) ν
   exact GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant ν
 
 end Main

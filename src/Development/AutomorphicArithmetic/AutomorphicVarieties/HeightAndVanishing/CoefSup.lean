@@ -52,7 +52,7 @@ private theorem exists_coef_ge (l : ℕ) [Fact l.Prime] (A : Subalgebra ℤ_[l] 
     ∃ c : Coef l, A ≤ c.O := by
   obtain ⟨s, hs⟩ : (Subalgebra.toSubmodule A).FG := Module.Finite.iff_fg.1 hA
   let K : IntermediateField ℚ_[l] (PadicAlgCl l) := IntermediateField.adjoin ℚ_[l] (s : Set (PadicAlgCl l))
-  haveI : FiniteDimensional ℚ_[l] K :=
+  have : FiniteDimensional ℚ_[l] K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   obtain ⟨h1, h2, -⟩ := UpperTheory.V.abelian₂.dvr_intClosure l K
   let f : K →ₐ[ℤ_[l]] PadicAlgCl l := K.val.restrictScalars ℤ_[l]
@@ -108,37 +108,37 @@ private theorem eO_eq_one (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLo
 
 private theorem exists_unram (l : ℕ) [hl : Fact l.Prime] (n : ℕ) [NeZero n] (hn : ¬ l ∣ n) :
     ∃ c : Coef l, eO l c.O = 1 ∧ HasEnoughRootsOfUnity c.O n := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl l) n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl l) n
   have hζi : IsIntegral ℤ_[l] ζ := (hζ.isIntegral (NeZero.pos n)).tower_top
   have hu : IsUnit (n : ℤ_[l]) := by
     rw [PadicInt.isUnit_iff]
     exact PadicInt.norm_natCast_eq_one_iff.2 ((Nat.Prime.coprime_iff_not_dvd hl.out).2 hn)
   let A : Subalgebra ℤ_[l] (PadicAlgCl l) := Algebra.adjoin ℤ_[l] {ζ}
-  haveI hfin : Module.Finite ℤ_[l] A := Module.Finite.iff_fg.2 hζi.fg_adjoin_singleton
-  haveI : Algebra.FormallyUnramified ℤ_[l] A := unram_adjoin (NeZero.ne n) hu hζ.pow_eq_one
+  have hfin : Module.Finite ℤ_[l] A := Module.Finite.iff_fg.2 hζi.fg_adjoin_singleton
+  have : Algebra.FormallyUnramified ℤ_[l] A := unram_adjoin (NeZero.ne n) hu hζ.pow_eq_one
   obtain ⟨c, hc⟩ := exists_coef_ge l A
   let f : A →ₐ[ℤ_[l]] c.O := Subalgebra.inclusion hc
   have hf : Function.Injective f := Subalgebra.inclusion_injective hc
-  haveI hloc : IsLocalRing A := by
-    letI : Algebra A c.O := f.toAlgebra
-    haveI : IsScalarTower ℤ_[l] A c.O := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
-    haveI : Algebra.IsIntegral A c.O := Algebra.IsIntegral.tower_top ℤ_[l]
-    haveI : FaithfulSMul A c.O := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
-    haveI : IsLocalHom (algebraMap A c.O) := inferInstance
+  have hloc : IsLocalRing A := by
+    let : Algebra A c.O := f.toAlgebra
+    have : IsScalarTower ℤ_[l] A c.O := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
+    have : Algebra.IsIntegral A c.O := Algebra.IsIntegral.tower_top ℤ_[l]
+    have : FaithfulSMul A c.O := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
+    have : IsLocalHom (algebraMap A c.O) := inferInstance
     exact (algebraMap A c.O).domain_isLocalRing
   have hinj : Function.Injective (algebraMap ℤ_[l] A) := by
     intro a b hab
     have h := congrArg (fun x : A => (x : PadicAlgCl l)) hab
     simp only [Subalgebra.coe_algebraMap, IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l)] at h
     exact IsFractionRing.injective ℤ_[l] ℚ_[l] ((algebraMap ℚ_[l] (PadicAlgCl l)).injective h)
-  haveI : FaithfulSMul ℤ_[l] A := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : IsLocalHom (algebraMap ℤ_[l] A) := inferInstance
+  have : FaithfulSMul ℤ_[l] A := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have : IsLocalHom (algebraMap ℤ_[l] A) := inferInstance
   have hm : Ideal.span {(l : A)} = IsLocalRing.maximalIdeal A := by
     rw [← Algebra.FormallyUnramified.map_maximalIdeal (R := ℤ_[l]), PadicInt.maximalIdeal_eq_span_p,
       Ideal.map_span, Set.image_singleton, map_natCast]
   have hnf : ¬ IsField A := fun hf =>
     IsDiscreteValuationRing.not_isField ℤ_[l] ((Algebra.IsIntegral.isField_iff_isField hinj).2 hf)
-  haveI : IsNoetherianRing A := IsNoetherianRing.of_finite ℤ_[l] A
+  have : IsNoetherianRing A := IsNoetherianRing.of_finite ℤ_[l] A
   have hp : (IsLocalRing.maximalIdeal A).IsPrincipal := hm ▸ inferInstance
   have hd : IsDiscreteValuationRing A := ((IsDiscreteValuationRing.TFAE _ hnf).out 1 5).mpr hp
   refine ⟨⟨A, hd, hfin⟩, ?_, ?_⟩
@@ -153,11 +153,11 @@ theorem UpperTheory.V.HV.coefSup :
       ∀ (c : Coef l) (x : PadicAlgCl l), IsIntegral ℤ_[l] x → (∃ a b : c.O, (b : PadicAlgCl l) ≠ 0 ∧ x * b = a) → x ∈ c.O := by
   intro l _
   refine ⟨fun c c' => ?_, fun n _ hn => exists_unram l n hn, fun c x hx => ?_, fun c x hx ⟨a, b, hb, hab⟩ => ?_⟩
-  · haveI := Subalgebra.finite_sup c.O c'.O
+  · have := Subalgebra.finite_sup c.O c'.O
     obtain ⟨d, hd⟩ := exists_coef_ge l (c.O ⊔ c'.O)
     exact ⟨d, le_sup_left.trans hd, le_sup_right.trans hd⟩
-  · haveI : Module.Finite ℤ_[l] (Algebra.adjoin ℤ_[l] {x}) := Module.Finite.iff_fg.2 hx.fg_adjoin_singleton
-    haveI := Subalgebra.finite_sup c.O (Algebra.adjoin ℤ_[l] {x})
+  · have : Module.Finite ℤ_[l] (Algebra.adjoin ℤ_[l] {x}) := Module.Finite.iff_fg.2 hx.fg_adjoin_singleton
+    have := Subalgebra.finite_sup c.O (Algebra.adjoin ℤ_[l] {x})
     obtain ⟨d, hd⟩ := exists_coef_ge l (c.O ⊔ Algebra.adjoin ℤ_[l] {x})
     exact ⟨d, le_sup_left.trans hd, (le_sup_right.trans hd) (Algebra.self_mem_adjoin_singleton _ x)⟩
   · let g : FractionRing c.O →ₐ[c.O] PadicAlgCl l :=

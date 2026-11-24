@@ -158,7 +158,7 @@ theorem continuous_tensHom [TopologicalSpace G] {ρ : G →* unitary (Matrix ι 
     {σ : G →* unitary (V →L[ℂ] V)}
     (hρ : Continuous (fun g : G => ((ρ g : unitary (Matrix ι ι ℂ)) : Matrix ι ι ℂ))) (hσ : Continuous σ) :
     Continuous (tensHom ρ σ) :=
-  continuous_induced_rng.2 (continuous_tensL hρ (continuous_subtype_val.comp hσ))
+  continuous_induced_rng.2 (continuous_tensL hρ (continuous_subtypeVal.comp hσ))
 
 end Gen
 

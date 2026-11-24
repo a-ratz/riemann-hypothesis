@@ -129,7 +129,7 @@ variable {F : Type} [Field F] [NumberField F]
 omit [NumberField F] in
 theorem injective_of_charZero [CharZero Ω] (φ : 𝓞 F →+* Ω) : Function.Injective φ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   ext n
   simp [Ideal.mem_comap, RingHom.mem_ker]
 

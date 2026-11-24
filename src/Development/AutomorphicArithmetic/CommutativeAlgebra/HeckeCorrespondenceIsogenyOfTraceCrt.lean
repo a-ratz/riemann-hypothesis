@@ -58,7 +58,7 @@ variable {X : Scheme.{0}} {U V A B : Over X} [GrpObj U] [GrpObj V] [GrpObj A] [G
 
 private theorem cartIso {φ : A.left ⟶ B.left} (h : IsGrpPullback A B (𝟙 X) φ) :
     ∃ e : A ≅ B, e.hom.left = φ ∧ IsMonHom e.hom := by
-  haveI : IsIso φ := h.1.isIso_fst_of_isIso
+  have : IsIso φ := h.1.isIso_fst_of_isIso
   have hw : φ ≫ B.hom = A.hom := by simpa using h.1.w
   have he : (Over.isoMk (asIso φ) hw).hom.left = φ := rfl
   refine ⟨Over.isoMk (asIso φ) hw, rfl, ?_⟩
@@ -122,7 +122,7 @@ private theorem polMove {PU : LB (G2 U).left} {PV : LB (G2 V).left} {PA : LB (G2
     (l₁ : LBIso PU (PA.pull φ₁)) (l₂ : LBIso PV (PB.pull φ₂)) (c : ℕ)
     (l : LBIso (Hecke.lbPow PU c) (PV.pull (Hecke.sq2 ψ))) :
     LBIso (Hecke.lbPow PA c) (PB.pull (Hecke.sq2 χ)) := by
-  haveI : IsIso φ₁ := isIso_sq e₁ s₁
+  have : IsIso φ₁ := isIso_sq e₁ s₁
   have key : φ₁ ≫ Hecke.sq2 χ = Hecke.sq2 ψ ≫ φ₂ := ES.PIsogExt.isSquare_square_compatible_homs s₁ s₂ he
   have hPAc : (Hecke.lbPow PA c).IsLB := LB.isLB_linComb hA _ _
   have hPUc : (Hecke.lbPow PU c).IsLB := LB.isLB_linComb hU _ _
@@ -175,9 +175,9 @@ theorem UpperTheory.heckeCorrespondence_isogeny_of_trace_crt :
   have hhu : L.CongOne S.N₀ (h * u) := Link.CongOne.mul L hhN₀ huN₀
   obtain ⟨e₁, he₁, hm₁⟩ := cartIso n₁.cart
   obtain ⟨e₂, he₂, hm₂⟩ := cartIso n₂.cart
-  haveI := hm₁
-  haveI := hm₂
-  haveI : IsMonHom W.ψ := W.trans.1
+  have := hm₁
+  have := hm₂
+  have : IsMonHom W.ψ := W.trans.1
   have hM : Ideal.absNorm 𝔴 ^ i = q ^ (S.f * i) := by
     rw [S.std.norm, pow_mul]
   have hqp : q.Coprime p := (Nat.coprime_primes (Fact.out) (Fact.out)).2 S.atq.ne
@@ -247,7 +247,7 @@ theorem UpperTheory.heckeCorrespondence_isogeny_of_trace_crt :
             map_one, Module.End.one_apply, hvv, hM]
       obtain ⟨ψ', hψ', h1, h2⟩ := hTB p D G L E gb (h * u) (T.M N').X (T.M N').s N' N (T.M N').univ W.o W.ψ
         W.trans _ hMcop hback
-      haveI := hψ'
+      have := hψ'
       exact ⟨e₂.inv ≫ ψ' ≫ e₁.hom, inferInstance, quasiInv e₁ e₂ W.ψ ψ' _ h1, quasiInv e₂ e₁ ψ' W.ψ _ h2⟩
   · intro kk _ _ _ x
     obtain ⟨hT1, hT2⟩ := hTT p D G L E gb (h * u) (T.M N').X (T.M N').s N' N (T.M N').univ W.o W.ψ W.trans q r 𝔴
@@ -255,7 +255,7 @@ theorem UpperTheory.heckeCorrespondence_isogeny_of_trace_crt :
     have hk : ∀ (g : Over.mk x ⟶ o₁.A) (d : D.O), g ≫ o₁.act.act d = 1 ↔ (g ≫ e₁.inv) ≫ (T.M N').univ.act.act d = 1 := by
       intro g d
       rw [Category.assoc, ← a1' d, ← Category.assoc]
-      haveI : IsMonHom e₁.symm.hom := (inferInstance : IsMonHom e₁.inv)
+      have : IsMonHom e₁.symm.hom := (inferInstance : IsMonHom e₁.inv)
       exact (isoEqOne e₁.symm (g ≫ o₁.act.act d)).symm
     have hker : ∀ g : Over.mk x ⟶ o₁.A, g ≫ (e₁.inv ≫ W.ψ ≫ e₂.hom) = 1 ↔ (g ≫ e₁.inv) ≫ W.ψ = 1 := by
       intro g

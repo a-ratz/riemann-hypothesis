@@ -203,7 +203,7 @@ theorem hasFDerivAt_family {F : P × E → ℂ} (hF : ContDiff ℝ ∞ F) (z : P
       (fun _ _ => abs_nonneg _) hi)
   rw [hL, ← map_sub, ← map_sub, Real.norm_of_nonneg (by positivity), mul_assoc]
   refine le_trans h1 ?_
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul]
   gcongr
 
 theorem bound_mul_translate {A : P × E → ℂ} (hA : Function.HasTemperateGrowth A) (s : SchwartzMap E ℂ)

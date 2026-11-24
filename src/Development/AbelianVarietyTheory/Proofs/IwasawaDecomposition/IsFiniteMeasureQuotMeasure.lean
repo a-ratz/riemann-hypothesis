@@ -154,7 +154,7 @@ theorem covol_slab_le (hj : 1 ≤ j) (Λ : Submodule (𝓞 E) (Fin j → E)) (c 
   refine covol_le_of_mul_left E j _ _ (scal E j r) (hd ▸ inv_pos.2 hc) _ _ ?_
     (fun δ hδ => ⟨δ, hδ, fun x => scal_mul_comm E j r δ x⟩)
   rintro x ⟨h1, h2⟩
-  simp only [Set.mem_setOf_eq, detNorm_mul, hd]
+  simp only [Set.mem_ofPred_eq, detNorm_mul, hd]
   constructor
   · rw [inv_mul_eq_div, le_div_iff₀ hc, one_mul]; exact h1
   · rw [inv_mul_eq_div, div_lt_iff₀ hc, mul_comm]; exact h2
@@ -164,7 +164,7 @@ theorem covol_le_of_carries {γ : GL (Fin j) E} {Λ Λ' : Submodule (𝓞 E) (Fi
       covol (autGL E j Λ') (haarGL E j) (slab E j (detNorm E j (embInf E j γ))) := by
   refine covol_le_of_mul_left E j _ _ (embInf E j γ) (detNorm_embInf E j γ) _ _ ?_ ?_
   · rintro x ⟨h1, h2⟩
-    simp only [slab, Set.mem_setOf_eq, detNorm_mul]
+    simp only [slab, Set.mem_ofPred_eq, detNorm_mul]
     have hp := detNorm_embInf E j γ
     exact ⟨le_mul_of_one_le_right hp.le h1, mul_lt_mul_of_pos_left h2 hp⟩
   · intro x hx
@@ -230,7 +230,7 @@ open GlobalTheory.AutomorphicL2Unitary GlobalTheory.UnitaryBC GlobalTheory.CuspR
 
 theorem _root_.GlobalTheory.T.covolume_unitDetNormSlab_latticeAut_lt_top : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex E → ∀ j : ℕ, 1 ≤ j → ∀ Λ : Submodule (𝓞 E) (Fin j → E), Submodule.IsFullLattice E Λ → GlobalTheory.FlagMeas.covol (GlobalTheory.FlagMeas.autGL E j Λ) (GlobalTheory.FlagMeas.haarGL E j) {x | 1 ≤ GlobalTheory.FlagMeas.detNorm E j x ∧ GlobalTheory.FlagMeas.detNorm E j x < Real.exp 1} < ⊤ := by
   intro E _ _ hE j hj Λ hΛ
-  letI : Submodule.IsFullLattice E Λ := hΛ
+  let : Submodule.IsFullLattice E Λ := hΛ
   apply GlobalTheory.SlabFinVol.covol_unitSlab_lt_top <;> first | assumption | infer_instance
 end -- clump:auto
 end -- clump:auto
@@ -271,7 +271,7 @@ theorem isOpenEmbedding_val :
     IsOpenEmbedding (Units.val : GL (Fin j) (Cinf E) → Matrix (Fin j) (Fin j) (Cinf E)) := by
   let _ := Matrix.linftyOpNormedRing (n := Fin j) (α := Cinf E)
   let _ := Matrix.linftyOpNormedAlgebra (n := Fin j) (R := ℂ) (α := Cinf E)
-  have : CompleteSpace (Matrix (Fin j) (Fin j) (Cinf E)) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Matrix (Fin j) (Fin j) (Cinf E)) := FiniteDimensional.completeSpace ℂ _
   exact Units.isOpenEmbedding_val
 
 theorem isOpenEmbedding_entP : IsOpenEmbedding (entP E j) :=
@@ -303,7 +303,7 @@ theorem haarGL_lt_top_of_isCompact (S : Set (InfinitePlace E → Fin j → Fin j
     (hpos : ∀ x ∈ S, 0 < detNorm E j x) : haarGL E j S < ⊤ := by
   have hd : Continuous fun x : InfinitePlace E → Fin j → Fin j → ℂ => detNorm E j x :=
     GlobalTheory.HaarLeftInv.continuous_detNorm E j
-  haveI := GlobalTheory.HaarLeftInv.isAddHaar_volume E j
+  have := GlobalTheory.HaarLeftInv.isAddHaar_volume E j
   rcases S.eq_empty_or_nonempty with h | h
   · subst h; exact (measure_empty (μ := haarGL E j)).trans_lt ENNReal.zero_lt_top
   obtain ⟨x0, hx0, hmin⟩ := hS.exists_isMinOn h hd.continuousOn
@@ -322,7 +322,7 @@ theorem haarGL_ne_zero_of_isOpen (S : Set (InfinitePlace E → Fin j → Fin j �
     (hne : S.Nonempty) (hpos : ∀ x ∈ S, 0 < detNorm E j x) : haarGL E j S ≠ 0 := by
   have hd : Continuous fun x : InfinitePlace E → Fin j → Fin j → ℂ => detNorm E j x :=
     GlobalTheory.HaarLeftInv.continuous_detNorm E j
-  haveI := GlobalTheory.HaarLeftInv.isAddHaar_volume E j
+  have := GlobalTheory.HaarLeftInv.isAddHaar_volume E j
   show Measure.withDensity (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ))
     (fun x => ENNReal.ofReal ((detNorm E j x)⁻¹ ^ j)) S ≠ 0
   have hf : Measurable fun x : InfinitePlace E → Fin j → Fin j → ℂ => ENNReal.ofReal ((detNorm E j x)⁻¹ ^ j) :=
@@ -378,14 +378,14 @@ end GlobalTheory.HaarFinVol
 
 theorem GlobalTheory.haarGL_finite_pullback : ∀ (E : Type) [Field E] [NumberField E] (j : ℕ) [MeasurableSpace (GL (Fin j) (Cinf E))] [BorelSpace (GL (Fin j) (Cinf E))] (ν : Measure (GL (Fin j) (Cinf E))) [ν.IsHaarMeasure] (D : Set (GlobalTheory.FlagMeas.MatInf E j)), MeasurableSet D → GlobalTheory.FlagMeas.haarGL E j D < ⊤ → ν {y | (fun w a b => (y : Matrix (Fin j) (Fin j) (Cinf E)) a b w : GlobalTheory.FlagMeas.MatInf E j) ∈ D} < ⊤ := by
   intro E _ _ j _ _ ν _ D _ hD
-  haveI := GlobalTheory.HaarFinVol.isHaarMeasure_nuGL E j
+  have := GlobalTheory.HaarFinVol.isHaarMeasure_nuGL E j
   have he := GlobalTheory.HaarFinVol.isOpenEmbedding_entP E j
-  haveI : LocallyCompactSpace (GL (Fin j) (Cinf E)) := he.locallyCompactSpace
-  haveI : SecondCountableTopology (GL (Fin j) (Cinf E)) := he.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace (GL (Fin j) (Cinf E)) := he.locallyCompactSpace
+  have : SecondCountableTopology (GL (Fin j) (Cinf E)) := he.isEmbedding.secondCountableTopology
   have h2 : GlobalTheory.HaarFinVol.nuGL E j {y | (fun w a b => (y : Matrix (Fin j) (Fin j) (Cinf E)) a b w :
       GlobalTheory.FlagMeas.MatInf E j) ∈ D} ≤ GlobalTheory.FlagMeas.haarGL E j D :=
     (GlobalTheory.HaarFinVol.nuGL_apply E j _).trans_le (measure_mono fun _ ⟨_, hy, e⟩ => e ▸ hy)
-  rw [Measure.isMulLeftInvariant_eq_smul ν (GlobalTheory.HaarFinVol.nuGL E j), Measure.smul_apply,
+  rw [Measure.isMulLeftInvariant_eq_smul ν (GlobalTheory.HaarFinVol.nuGL E j), smul_apply,
     ENNReal.smul_def, smul_eq_mul]
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top (h2.trans_lt hD)
 end -- clump:auto
@@ -448,8 +448,8 @@ theorem GlobalTheory.GLInfReduction.exists_cover_of_finite_measure (E : Type) [F
       ∃ n : ℤ, GeneralLinearGroup.map (pInf E) (ratGL E a γ * splitCentre E a 1 ^ n) * y ∈ Ω := by
   rcases Nat.eq_zero_or_pos a with rfl | ha
   · refine ⟨Set.univ, ?_, fun y => ⟨1, by simp, 0, trivial⟩⟩
-    haveI : Subsingleton (GL (Fin 0) (Cinf E)) := ⟨fun x y => Units.ext (Subsingleton.elim _ _)⟩
-    haveI : Finite (GL (Fin 0) (Cinf E)) := Finite.of_subsingleton
+    have : Subsingleton (GL (Fin 0) (Cinf E)) := ⟨fun x y => Units.ext (Subsingleton.elim _ _)⟩
+    have : Finite (GL (Fin 0) (Cinf E)) := Finite.of_subsingleton
     exact isCompact_univ.measure_lt_top
   set r := Fintype.card (InfinitePlace E) with hr_def
   have hr : 0 < r := Fintype.card_pos
@@ -458,7 +458,7 @@ theorem GlobalTheory.GLInfReduction.exists_cover_of_finite_measure (E : Type) [F
   have hNR : (N : ℝ) ≠ 0 := by exact_mod_cast hN.ne'
 
   have hslab := GlobalTheory.T.covolume_unitDetNormSlab_latticeAut_lt_top E inferInstance a ha Λ (by
-    letI := hΛ
+    let := hΛ
     infer_instance)
   simp only [GlobalTheory.FlagMeas.covol, iInf_lt_iff] at hslab
   obtain ⟨D, hDm, hcov, hDlt⟩ := hslab
@@ -477,7 +477,7 @@ theorem GlobalTheory.GLInfReduction.exists_cover_of_finite_measure (E : Type) [F
     rw [hc_val, dn]
     simp only [Matrix.scalar_apply, Matrix.det_diagonal, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
       Pi.pow_apply, norm_pow, Complex.norm_exp_ofReal]
-    rw [← hr_def, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_nat_mul, hN_def]
+    rw [← hr_def, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, hN_def]
     congr 1; push_cast; ring
   have hcomm : ∀ t g, c t * g = g * c t := by
     intro t g
@@ -812,12 +812,12 @@ namespace GlobalTheory.CovolGL
 theorem lcsc_GL (R : Type) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R]
     [LocallyCompactSpace R] [SecondCountableTopology R] (n : ℕ) :
     LocallyCompactSpace (GL (Fin n) R) ∧ SecondCountableTopology (GL (Fin n) R) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact ⟨Units.isClosedEmbedding_embedProduct.locallyCompactSpace, Units.isEmbedding_embedProduct.secondCountableTopology⟩
 
@@ -838,13 +838,13 @@ variable (E a) in
 theorem isFiniteMeasure_quotMeasure (μ : Measure (GA E a)) [μ.IsHaarMeasure] :
     IsFiniteMeasure (GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ) := by
   classical
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
-  letI : MeasurableSpace (GL (Fin a) (Cinf E)) := borel _
-  haveI : BorelSpace (GL (Fin a) (Cinf E)) := ⟨rfl⟩
-  letI : MeasurableSpace (GL (Fin a) (Af E)) := borel _
-  haveI : BorelSpace (GL (Fin a) (Af E)) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
+  let : MeasurableSpace (GL (Fin a) (Cinf E)) := borel _
+  have : BorelSpace (GL (Fin a) (Cinf E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin a) (Af E)) := borel _
+  have : BorelSpace (GL (Fin a) (Af E)) := ⟨rfl⟩
   obtain ⟨_, _⟩ := lcsc_GL (Cinf E) a
   obtain ⟨_, _⟩ := lcsc_GL (Af E) a
   obtain ⟨e, he⟩ := _root_.GlobalTheory.CuspRep.GASplit.exists_split E a

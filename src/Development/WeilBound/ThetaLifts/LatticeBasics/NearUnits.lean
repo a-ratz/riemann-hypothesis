@@ -128,7 +128,7 @@ theorem exists_level {P : Matrix (Fin n) (Fin n) (Fv F v) × Matrix (Fin n) (Fin
   have : CompactSpace (Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F)) := inferInstanceAs (CompactSpace (_ → _ → _))
   obtain ⟨w, w1, w0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (IsDiscreteValuationRing.not_a_field (v.adicCompletionIntegers F))
   have cm : Continuous fun α : Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F) => α.map (algebraMap _ (Fv F v)) :=
-    continuous_id.matrix_map continuous_subtype_val
+    continuous_id.matrix_map continuous_subtypeVal
   have h1 : ∀ᶠ a : Fv F v in 𝓝 0, ∀ y ∈ (Set.univ : Set (Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F) × Matrix _ _ _)),
       P (a • y.1.map (algebraMap _ _) + 1, a • y.2.map (algebraMap _ _) + 1) :=
     isCompact_univ.eventually_forall_of_forall_eventually fun y _ =>
@@ -156,7 +156,7 @@ theorem ind_mem {a : v.adicCompletionIntegers F} (ha : a ≠ 0) (Y₀ : Matrix (
     exact Matrix.ext fun i j => mul_inv_cancel_left₀ ha' _
   have hf := GlobalTheory.WeilM.HaarUniq.indicator_mem ⟨_, op⟩ (isCompact_range
     (f := fun α : Matrix (Fin n) (Fin d) (v.adicCompletionIntegers F) => (a : Fv F v) • α.map (algebraMap _ (Fv F v)))
-    (continuous_matrix fun i j => continuous_const.mul (continuous_subtype_val.comp (continuous_id.matrix_elem i j))))
+    (continuous_matrix fun i j => continuous_const.mul (continuous_subtypeVal.comp (continuous_id.matrix_elem i j))))
   exact ⟨hf.1.comp_continuous (Homeomorph.subRight Y₀).continuous, hf.2.comp_homeomorph (Homeomorph.subRight Y₀)⟩
 
 end Bmp

@@ -105,7 +105,7 @@ theorem lattice_finitelyGenerated_of_commensurable (h0 : LatticeCommensurable) :
     refine ⟨(m : I.E) • u, hA u hu, ?_⟩
     simp [φ, smul_smul, inv_mul_cancel₀ hm0]
   have hfg : (I.L.map φ).FG := I.L_fg.map φ
-  haveI := isNoetherian_of_fg_of_noetherian _ hfg
+  have := isNoetherian_of_fg_of_noetherian _ hfg
   have h1 := IsNoetherian.noetherian ((latSubmodule I x).comap (I.L.map φ).subtype)
   have h2 := h1.map (I.L.map φ).subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h2

@@ -320,7 +320,7 @@ theorem line_of (h : IsCMExt F E σ) {γ : ℝ → GAd σ J} (hγ : IsRealLine �
   have hc : Continuous y := hE.continuous_iff.2 (by
     have : (matCoord (archMat σ J τ) ∘ y) = fun t : ℝ => NormedSpace.exp (t • Z) := funext e2
     rw [this]
-    haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+    have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
     have hz : Continuous fun t : ℝ => t • Z := continuous_id.smul continuous_const
     exact (NormedSpace.exp_continuous (𝔸 := Matrix (Fin n) (Fin n) ℂ)).comp hz)
   let δ : Multiplicative ℝ →* GAd σ J :=
@@ -333,7 +333,7 @@ theorem line_of (h : IsCMExt F E σ) {γ : ℝ → GAd σ J} (hγ : IsRealLine �
 theorem level (τ : ∀ w : InfinitePlace F, EmbOver E w) {f : GAd σ J → ℂ} {U : Set (GAd σ J)} (hU : U ∈ 𝓝 1)
     (hf : ∀ u ∈ U, (∀ w, (matHom _ σ J u).1.map (piInf (τ w)) = 1) → ∀ h, f (h * u) = f h) :
     ∃ U : Subgroup (GAd σ J), IsOpen (U : Set (GAd σ J)) ∧ ∀ k ∈ U, k ∈ finPts σ J → ∀ g, f (g * k) = f g := by
-  haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GFin σ J
+  have := GlobalTheory.Doubling.nonarchimedeanGroup_GFin σ J
   obtain ⟨V, hV⟩ := NonarchimedeanGroup.is_nonarchimedean (ofFin σ J ⁻¹' U)
     ((continuous_ofFin σ J).continuousAt.preimage_mem_nhds (by rwa [map_one]))
   refine ⟨V.1.comap (GlobalTheory.AdelicU.projFin σ J), V.isOpen.preimage (continuous_projFin σ J), fun k hk hk' => hf k ?_ fun w => ?_⟩
@@ -702,7 +702,7 @@ theorem main [FiniteDimensional ℝ A] (ha : ∀ x y, a (x * y) = a y * a x) (h1
     ∃ (m : ℕ) (Y : Fin m → A) (c : Fin m → A →ₗ[ℝ] ℝ), (∀ i, a (Y i) = -Y i) ∧ ∀ Z : A,
       (∀ t : ℝ, Gr a (NormedSpace.exp (t • Z))) → ∃ s : Fin m → ℝ → ℝ, (∀ i, s i 0 = 0) ∧ (∀ i, HasDerivAt (s i) (c i Z) 0) ∧
         ∀ᶠ t in 𝓝 (0 : ℝ), NormedSpace.exp (t • Z) = (List.ofFn fun i => NormedSpace.exp (s i t • Y i)).prod := by
-  have : CompleteSpace A := FiniteDimensional.complete ℝ A
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
   let L : Submodule ℝ A := LinearMap.ker ((a : A →ₗ[ℝ] A) + LinearMap.id)
   have hL : ∀ x, x ∈ L ↔ a x = -x := fun x => by
     simp [L, LinearMap.mem_ker, add_eq_zero_iff_eq_neg]
@@ -1218,7 +1218,7 @@ theorem lineGen_of : LineGen := by
     intro w
     let g : ℝ → Matrix (Fin d) (Fin d) ℂ := fun t => (mat (γ (Multiplicative.ofAdd t))).map (piInf (τ w))
     have hm : Continuous (mat : UA σ W.J → Matrix (Fin d) (Fin d) (AE F E)) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hc : Continuous g :=
       ((hm.comp (hγ.1.comp continuous_ofAdd))).matrix_map (continuous_piInf (τ w))
     have h0 : g 0 = 1 := by
@@ -1375,7 +1375,7 @@ theorem exists_soFin (hF : SoFin) (hp : IsPair B M χX χW om r s r' s') {m : �
     set x : Fin n × Fin d → mixedEmbedding.mixedSpace F := fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (z i).1
     have e4 : (fun j => w j x) = ∑ j, w j x • (P (Pi.single j 1) : Fin m → ℂ) := by
       have a1 : (P (fun j => w j x) : Fin m → ℂ) = fun j => w j x :=
-        congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hQ ⟨_, hmem x⟩)
+        congrArg Subtype.val (Submodule.projectionOnto_apply_left hQ ⟨_, hmem x⟩)
       have a2 : (fun j => w j x) = ∑ j, w j x • (Pi.single j 1 : Fin m → ℂ) := by
         funext i; simp [Finset.sum_apply, Pi.single_apply]
       conv_lhs => rw [← a1, a2]

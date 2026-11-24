@@ -93,7 +93,7 @@ theorem step (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F
   have h1 : {x | ∀ i, e' x i ∈ v.adicCompletionIntegers F} =
       {x | ∀ i, Valued.v (e x i) ≤ WithZero.exp n} := by
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine forall_congr' fun i => ?_
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, he', ← WithZero.exp_zero, hv, add_zero]
   have hres : ∀ y : v.adicCompletionIntegers F,
@@ -107,7 +107,7 @@ theorem step (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F
         ({0} : Set (ι → IsLocalRing.ResidueField (v.adicCompletionIntegers F)))} =
       {x | ∀ i, Valued.v (e x i) ≤ WithZero.exp (n - 1)} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, funext_iff, Pi.zero_apply, hres]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, funext_iff, Pi.zero_apply, hres]
     constructor
     · rintro ⟨y, hy, hy'⟩ i
       rw [sub_eq_add_neg, ← hv, ← he', hy]
@@ -124,7 +124,7 @@ theorem step (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F
 
 theorem measureReal_valued_le_exp : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (V : Type) [AddCommGroup V] [Module (Fv F v) V] [TopologicalSpace V] [IsTopologicalAddGroup V] [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasure] (ι : Type) [Fintype ι] (e : V ≃L[Fv F v] (ι → Fv F v)) (n : ℤ), μ.real {x | ∀ i, Valued.v (e x i) ≤ WithZero.exp n} = ((Nat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) : ℝ) ^ n) ^ Fintype.card ι * μ.real {x | ∀ i, e x i ∈ v.adicCompletionIntegers F} := by
   intro F _ _ v V _ _ _ _ _ _ μ _ ι _ e n
-  haveI := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
   have hq : (Nat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) : ℝ) ≠ 0 := by
     exact_mod_cast Nat.card_pos.ne'
   have hs := step F v V μ ι e

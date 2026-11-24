@@ -81,8 +81,8 @@ theorem exists_cutoff {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     ∃ b : G → ℝ≥0, Measurable b ∧ ∀ g, ∫⁻ s, (b (s * g) : ℝ≥0∞) ∂μ = 1 := by
   have hce : Topology.IsClosedEmbedding R.subtype := hR.isClosedEmbedding_subtypeVal
   have hφ : MeasurableEmbedding R.subtype := hce.measurableEmbedding
-  haveI : LocallyCompactSpace R := hce.locallyCompactSpace
-  haveI : SecondCountableTopology R := hce.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace R := hce.locallyCompactSpace
+  have : SecondCountableTopology R := hce.isEmbedding.secondCountableTopology
   have h2 : (μ.comap R.subtype).map R.subtype = μ := by
     rw [hφ.map_comap]
     refine Measure.restrict_eq_self_of_ae_mem ?_
@@ -90,20 +90,20 @@ theorem exists_cutoff {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     rw [this]
     exact hc
   set ν : Measure R := μ.comap R.subtype with hν
-  haveI : SigmaFinite ν := SigmaFinite.of_map _ hφ.measurable.aemeasurable (by rwa [h2])
-  haveI : ν.IsMulLeftInvariant := ⟨fun g => by
+  have : SigmaFinite ν := SigmaFinite.of_map _ hφ.measurable.aemeasurable (by rwa [h2])
+  have : ν.IsMulLeftInvariant := ⟨fun g => by
     apply hφ.map_injective
     have hm : Measurable fun x : G => (g : G) * x := measurable_const_mul _
     rw [Measure.map_map hφ.measurable (measurable_const_mul g), h2]
     conv_rhs => rw [← (hi g g.2).1, ← h2, Measure.map_map hm hφ.measurable]
     rfl⟩
-  haveI : ν.IsMulRightInvariant := ⟨fun g => by
+  have : ν.IsMulRightInvariant := ⟨fun g => by
     apply hφ.map_injective
     have hm : Measurable fun x : G => x * (g : G) := measurable_mul_const _
     rw [Measure.map_map hφ.measurable (measurable_mul_const g), h2]
     conv_rhs => rw [← (hi g g.2).2, ← h2, Measure.map_map hm hφ.measurable]
     rfl⟩
-  haveI : ν.IsHaarMeasure := isHaarMeasure_of_sigmaFinite ν fun h => h0 (by rw [← h2, h, Measure.map_zero])
+  have : ν.IsHaarMeasure := isHaarMeasure_of_sigmaFinite ν fun h => h0 (by rw [← h2, h, Measure.map_zero])
   obtain ⟨b, hb, h1⟩ := GlobalTheory.exists_measurable_lintegral_coset_eq_one G R ν R.subtype hce
   refine ⟨fun x => (b x).toNNReal, hb.ennreal_toNNReal, fun g => ?_⟩
   have hm : Measurable fun s => b (s * g) := hb.comp (measurable_mul_const g)

@@ -243,16 +243,16 @@ theorem exists_sqrt : Out.Laws → ∀ (h k : ℕ) (o : Type) [CommRing o] (ζ :
   have sm₁ := GlobalTheory.T.siegel_smoothOfRelativeDimension_charZero hL h k o ζ R β c₁ hk hζ
 
   obtain ⟨R₁, _, _, ⟨fin₁, et₁, ff₁⟩, lab₁⟩ := GlobalTheory.T.exists_finiteEtale_cover_constant_torsion R c₁.A h 2 c₁.ab sm₁ (two R)
-  haveI : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R R₁
-  letI : Algebra ℚ R₁ := ((algebraMap R R₁).comp (algebraMap ℚ R)).toAlgebra
+  have : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R R₁
+  let : Algebra ℚ R₁ := ((algebraMap R R₁).comp (algebraMap ℚ R)).toAlgebra
   obtain ⟨c₂, hpb₂, hc₂⟩ := pull_sieg (spMap ((algebraMap R R₁).comp β)) (spMap (algebraMap R R₁))
     (spMap_comp_var β (algebraMap R R₁)).symm c₁ hc₁
   obtain ⟨φ₂, φ₂₂, hg₂, hsq₂, hiso₂, hlev₂⟩ := hpb₂
   obtain ⟨i, hi⟩ := lab₁ c₂.A φ₂ hg₂
 
   obtain ⟨R₂, _, _, ⟨fin₂, et₂, ff₂⟩, H91⟩ := GlobalTheory.T.exists_symmetric_linearisation_square_diagonalBundle hL h k o ζ R₁ ((algebraMap R R₁).comp β) c₂ h i hc₂
-  haveI : IsNoetherianRing R₂ := Algebra.FiniteType.isNoetherianRing R₁ R₂
-  letI : Algebra ℚ R₂ := ((algebraMap R₁ R₂).comp (algebraMap ℚ R₁)).toAlgebra
+  have : IsNoetherianRing R₂ := Algebra.FiniteType.isNoetherianRing R₁ R₂
+  let : Algebra ℚ R₂ := ((algebraMap R₁ R₂).comp (algebraMap ℚ R₁)).toAlgebra
   obtain ⟨c₃, hpb₃, hc₃⟩ := pull_sieg (spMap ((algebraMap R₁ R₂).comp ((algebraMap R R₁).comp β)))
     (spMap (algebraMap R₁ R₂))
     (spMap_comp_var ((algebraMap R R₁).comp β) (algebraMap R₁ R₂)).symm c₂ hc₂
@@ -274,8 +274,8 @@ theorem exists_sqrt : Out.Laws → ∀ (h k : ℕ) (o : Type) [CommRing o] (ζ :
   obtain ⟨ψ₁, hψ₁⟩ := sqOf_of_pb hψ₂ ⟨φ₂, φ₂₂, hg₂, hsq₂, hiso₂, hlev₂⟩
   obtain ⟨ψ₀, hψ₀⟩ := sqOf_of_pb hψ₁ hpb₁
   obtain ⟨iP, -, hiP⟩ := exists_pull_labels hP.1 2 i₃ hi₃
-  letI : Algebra R R₂ := ((algebraMap R₁ R₂).comp (algebraMap R R₁)).toAlgebra
-  haveI : IsScalarTower R R₁ R₂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R R₂ := ((algebraMap R₁ R₂).comp (algebraMap R R₁)).toAlgebra
+  have : IsScalarTower R R₁ R₂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   refine ⟨R₂, inferInstance, inferInstance, P, ψ₀, ⟨?_, ?_, ?_⟩, ?_, ?_⟩
   · first | exact Module.Finite.trans R₁ R₂ | infer_instance
   · first | exact Algebra.Etale.comp R R₁ R₂ | infer_instance

@@ -92,7 +92,7 @@ theorem exists_secVal {ξ : Spec (CommRingCat.of Ω) ⟶ X} (hall : ∀ q : X, g
       secVal ξ V hV s = a := by
     intro q
     obtain ⟨g, hg⟩ := ha q.1 q.2
-    obtain ⟨V, hqV, s, rfl⟩ := X.presheaf.germ_exist g
+    obtain ⟨V, hqV, s, rfl⟩ := X.presheaf.exists_germ_eq g
     have hV : genPt ξ ∈ V := (hall q.1).mem_open V.isOpen hqV
     have hVU : genPt ξ ∈ V ⊓ U := ⟨hV, h⟩
     refine ⟨V ⊓ U, ⟨hqV, q.2⟩, homOfLE inf_le_right, X.presheaf.map (homOfLE inf_le_left).op s, hVU, ?_⟩
@@ -171,7 +171,7 @@ theorem finite_of_values {o A B : Type} [CommRing o] [CommRing A] [CommRing B] [
     (hs : ∀ t ∈ s, ∃ b, v' b = t) (hb : ∀ b, v' b ∈ Submodule.span R₀ (s : Set Ω')) : φ.Finite := by
   classical
   choose! σ hσ using hs
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have hsm : ∀ a (b : B), a • b = φ a * b := fun a b => Algebra.smul_def a b
   have key : ∀ z ∈ Submodule.span R₀ (s : Set Ω'),
       ∃ b ∈ Submodule.span A ((s.image σ : Finset B) : Set B), v' b = z := by

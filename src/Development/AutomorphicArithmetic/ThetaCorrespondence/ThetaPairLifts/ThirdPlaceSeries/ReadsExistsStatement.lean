@@ -244,7 +244,7 @@ theorem locV_mem_iff
     (tw : GlobalTheory.TwBridge.AtTwist (R := B.R) (k := G.k) I.sel (I.tup a) (I.cst a) B.embLL P (G.q.pr.comp (incA (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G))) G.s (E.tw hψ sg))
     (M : ℕ) (e) (z) : locV G e z ∈ box _ (G.ϖ ^ M)⁻¹ ↔
       (Formalism.L2.Col.qOf P.1 : B.fields.E) ^ M • z ∈ Formalism.L2.Col.stdAt B.fields.E (B.R.N (G.s + 1)) P.1 := by
-  letI := GlobalTheory.Mem.Col2.starE B
+  let := GlobalTheory.Mem.Col2.starE B
   rw [GlobalTheory.TopStep.mem_stdAt, mem_box, e.forall_congr_right.symm]
   refine forall_congr' fun r => ?_
   have hu : (G.ϖ : G.k) = _ := tw.compl.unif
@@ -294,7 +294,7 @@ theorem lev_of_orbAt (hI : I.Ok) (hA : A.Is)
   have H := sameOrb_equiv (E.le (G.s + 1) 0 rfl) (G.ϖ ^ E.M)
   obtain ⟨κ, hκ, h1⟩ := (orb_iff hI tw hM b hQ he _ _).1 (H.trans (H.symm (h rfl e he)) (h' rfl e he))
   refine ⟨κ, hκ, _, repY_mem hI hA hj β hk P, mem_of_sub (repY_mem hI hA hj β' hk' P) ?_⟩
-  rw [if_neg tw.nmem]
+  rw [ite_eq_right tw.nmem]
   exact h1
 
 
@@ -325,7 +325,7 @@ theorem exists_vec (hI : I.Ok) (hA : A.Is)
   rintro hQ β hk ⟨κ, hκ, h3⟩ _ e' he'
   obtain rfl : e' = e := Equiv.ext fun r => Fin.ext ((he' r).trans (he r).symm)
   have h4 := sub_of_mem hj (repY_mem hI hA hj β hk P) h3
-  rw [if_neg tw.nmem] at h4
+  rw [ite_eq_right tw.nmem] at h4
   have h5 := (orb_iff hI tw hM b hQ he _ _).2 ⟨κ, hκ, h4⟩
   have h6 : Submodule.Quotient.mk (locV G e' fun r => f (w (e'.symm r))) = E.cos y := ((Submodule.Quotient.eq _).2 h1).trans hc.symm
   exact (congrArg (fun x => Orb E x _) h6).mp h5
@@ -342,9 +342,9 @@ theorem couplingCoset_sub_basePoint_integral_typePrime (hI : I.Ok) (hA : A.Is) {
     (hk : A.kb (s + 1) β = TC.kStd X u (B.R.N (s + 1))) (hβ : Good (A.p0 (s + 1) β))
     (e : XIx (Fin B.R.k) (Fin B.R.t) (s + 1) ≃ Fin (B.R.N (s + 1))) (he : GlobalTheory.SymBridge.IsOrd GlobalTheory.SymBridge.xPos e) (r) :
     ι (Formalism.L2.Col.repY (A.p0 (s + 1) β).1.2 (e r)) - S.y0 (Fin B.R.t) r ∈ 𝒪[k] := by
-  letI := GlobalTheory.Mem.Col2.starE B
+  let := GlobalTheory.Mem.Col2.starE B
   have h1 := sub_of_mem hs (hβ P hP) (repY_mem hI hA hs β hk P)
-  rw [if_pos hP, pow_zero, inv_one, one_smul] at h1
+  rw [ite_eq_left hP, pow_zero, inv_one, one_smul] at h1
   have h2 := (hint _).2 (GlobalTheory.TopStep.mem_stdAt.1 h1 (e r))
   rw [Pi.sub_apply, map_sub, Pi.smul_apply, smul_eq_mul, map_mul, map_inv₀, map_natCast] at h2
   have h3 : ((Formalism.L2.Col.qOf P.1 : ℕ) : k)⁻¹ * ι (Formalism.L2.Col.Loc.eN B.fields.E (B.R.N (s + 1)) B.R.k (e r)) - S.y0 (Fin B.R.t) r ∈ 𝒪[k] := by
@@ -352,9 +352,9 @@ theorem couplingCoset_sub_basePoint_integral_typePrime (hI : I.Ok) (hA : A.Is) {
     unfold Formalism.L2.Col.Loc.eN GlobalTheory.SymChain.SymData.y0
     by_cases hr : r = Sum.inl (Sum.inr 0)
     · subst hr
-      rw [if_pos h0, map_one, mul_one, Pi.single_eq_same]
+      rw [ite_eq_left h0, map_one, mul_one, Pi.single_eq_same]
       exact inv_sub_inv_int S.unif hu
-    · rw [if_neg fun h => hr (e.injective (Fin.ext (h.trans h0.symm))), map_zero, mul_zero, Pi.single_eq_of_ne hr, sub_zero]
+    · rw [ite_eq_right fun h => hr (e.injective (Fin.ext (h.trans h0.symm))), map_zero, mul_zero, Pi.single_eq_of_ne hr, sub_zero]
       exact zero_mem _
   have := add_mem h2 h3
   rwa [sub_add_sub_cancel] at this
@@ -584,7 +584,7 @@ theorem exists_rat_of_sameOrb : ∀ {E k : Type} [Field E] [NumberField E] [Star
   · rw [← hr]
     rfl
   · have h1 := GlobalTheory.TwBridge.LevOrb.mulVec_mem_box (hJ hg) _ ((mem_box_iff hc e M _).2 hy')
-    rw [Set.mem_setOf_eq, ← ev] at a2
+    rw [Set.mem_ofPred_eq, ← ev] at a2
     rw [← hr, phi_mulVec e e' he] at h1 a2
     rw [eq_comm, Submodule.Quotient.eq]
     convert add_mem h1 a2 using 1
@@ -708,8 +708,8 @@ theorem full_stdLat (n : ℕ) : Full (stdLat E n) := by
   rw [pi_eq_sum_univ x]
   refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span fun j _ => ?_)
   by_cases h : i = j
-  · simp only [if_pos h]; exact Submodule.mem_one.2 ⟨1, map_one _⟩
-  · simp only [if_neg h]; exact Submodule.zero_mem _
+  · simp only [ite_eq_left h]; exact Submodule.mem_one.2 ⟨1, map_one _⟩
+  · simp only [ite_eq_right h]; exact Submodule.zero_mem _
 
 theorem intAt_of_mem_stdAt {n : ℕ} {P : HeightOneSpectrum (𝓞 E)} {x : Sp E n} (hx : x ∈ stdAt E n P) (i : Fin n) :
     IntAt P (x i) := by
@@ -825,18 +825,18 @@ theorem exists_transport (K : Type) [Field K] {ST SG SG' SB : Finset (HeightOneS
       else homInto (S₀ : Set (Sp E a)) (((qOf P : E))⁻¹ • LinearMap.id) d'.N)
     (fun P => by
       by_cases h : P ∈ SB
-      · simp only [dif_pos h]; exact full_homInto _ _ (full_stdLat b)
-      · simp only [dif_neg h]; exact full_homInto _ _ hfull)
+      · simp only [dite_eq_left h]; exact full_homInto _ _ (full_stdLat b)
+      · simp only [dite_eq_right h]; exact full_homInto _ _ hfull)
     (fun P => if h : P ∈ SB then (f ⟨P, h⟩).toLinearMap ∘ₗ (f' ⟨P, h⟩).symm.toLinearMap ∘ₗ x else x)
   refine ⟨t, ?_, fun P s l => ?_⟩
   · rw [← add_sub_cancel x t]
     refine phiT_add K d hd' x _ fun P y hy => ?_
     have h : P.1 ∉ SB := Finset.disjoint_left.1 hdis P.2
     have h1 := ht P.1 (Finset.mem_union_left _ P.2)
-    simp only [dif_neg h] at h1
+    simp only [dite_eq_right h] at h1
     exact apply_mem_of_mem_locP h1 (by rw [hS₀]; exact hy)
   · have h1 := ht P.1 (Finset.mem_union_right _ P.2)
-    simp only [dif_pos P.2] at h1
+    simp only [dite_eq_left P.2] at h1
     have h2 := apply_mem_of_mem_locP h1 (y := f₀ P (Pi.single s 1))
       (mem_localization_of_mem _ (Submodule.subset_span (by simp)))
     have h3 := intAt_of_mem_stdAt h2 l
@@ -986,12 +986,12 @@ theorem dead_moved (hI : I.Ok) {b : I.ι} {Ch₀ Ch : ℕ → Type} {A A' : TwDa
   · unfold TwDat.xi
     rw [hb, hne j h1]
     unfold xiAt
-    rw [dif_neg (by omega), dite_eq_left h2]
+    rw [dite_eq_right (by omega), dite_eq_left h2]
     exact (congrArg B.embLL (key _)).trans (map_zero _)
   · obtain ⟨z', hz'⟩ := toHom_surj _ _ (rankN (I.rec7 l Z) j (Nat.le_of_succ_le hj)) (rankN (I.rec7 l Z) (j + 1) hj) x
     have h := hl.dead j hj γ hγ α z'
     unfold TwDat.xi xiAt at h
-    rw [dif_neg (by omega), dite_eq_left h2] at h
+    rw [dite_eq_right (by omega), dite_eq_left h2] at h
     subst hz'
     exact (map_eq_zero_iff _ B.embLL.injective).1 h
 
@@ -1144,8 +1144,8 @@ theorem cos_pi_eq_mk_pr_repY (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W
   have h1 := GlobalTheory.AdForm.Rebase.repY_cong hs (J.A.p0 ((J.G i).s + 1) β) p' hc (J.P i)
   have h2 : frsF I.sel (I.tup (W.P.I.tup t)) p'.1.1 (J.P i) = p'.1.1.fr ⟨(J.P i).1, _root_.GlobalTheory.Fam.Rebase.P_mem_Q_of_readsStd hJ i⟩ := by
     unfold frsF
-    exact dif_neg hPn
-  rw [_root_.GlobalTheory.Fam.Rebase.frsF_p0_eq_one_of_readsStd hW hJ i _ (by omega) β, h2, if_neg hPn] at h1
+    exact dite_eq_right hPn
+  rw [_root_.GlobalTheory.Fam.Rebase.frsF_p0_eq_one_of_readsStd hW hJ i _ (by omega) β, h2, ite_eq_right hPn] at h1
   rw [hJ.M i]
   exact h1
 
@@ -1161,7 +1161,7 @@ theorem pr_repY_sub_mem_integers (hW : _root_.GlobalTheory.Fam.AllFamilyConditio
   have h2 : frsF I.sel (I.tup b) p'.1.1 P = frsF I.sel (I.tup b) p.1.1 P := by
     unfold frsF
     rw [dite_eq_left hP', dite_eq_left hP', hd]
-  rw [h2, if_pos hP', pow_zero, inv_one, one_smul, ← map_sub] at h1
+  rw [h2, ite_eq_left hP', pow_zero, inv_one, one_smul, ← map_sub] at h1
   have h3 := (isFr_ptFr p.1.1 P.1 _).2 h1
   rw [← frsF_eq_ptFr, LinearEquiv.apply_symm_apply, hN] at h3
   have h4 := (mem_localization_standardLattice P.1 _).1 h3 x

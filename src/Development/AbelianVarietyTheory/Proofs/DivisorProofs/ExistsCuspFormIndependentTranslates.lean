@@ -263,7 +263,7 @@ theorem not_iso (X : Data E r) (hp : X.p0 = 0 ∨ X.p0 = r) (ξ : Fin r → E) :
   have hsum : hermC τ X.Gm u u = e * ∑ a, v a * conj (v a) := by
     rw [← hPv, hermC_mulVec, hg]
     simp only [Matrix.diagonal_apply, hsg, mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.mem_univ, ite_true, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     ring
   have hv : v = 0 := by
@@ -289,7 +289,7 @@ theorem detPow_mem_SS (X : Data E r) (hΓ : ∀ γ ∈ X.Γ, γ = 1) (hdef : ∀
   · intro x _ b hb
     unfold detPow bchar
     have hb' : ∀ τ : X.Ψ, (mat b τ).det = ∏ i, b τ i i := fun τ =>
-      Matrix.det_of_upperTriangular (fun i j hij => (hb τ).2 i j hij)
+      Matrix.det_of_isUpperTriangular (fun i j hij => (hb τ).2 i j hij)
     have e1 : ∀ τ : X.Ψ, (mat (rmul x b) τ).det ^ a = (mat x τ).det ^ a * ∏ i, b τ i i ^ la τ i := by
       intro τ
       rw [show mat (rmul x b) τ = mat x τ * mat b τ from rfl, Matrix.det_mul, mul_zpow, hb' τ]
@@ -332,7 +332,7 @@ namespace GlobalTheory.LevelSplit
 theorem primesOver_eq (E : Type) [Field E] [NumberField E] {g : ℕ} (hg : g.Prime) :
     (Ideal.span {(g : ℤ)}).primesOver (𝓞 E) = {P : Ideal (𝓞 E) | P.IsPrime ∧ (g : 𝓞 E) ∈ P} := by
   ext P
-  simp only [Ideal.primesOver, Set.mem_setOf_eq]
+  simp only [Ideal.primesOver, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hP, hL⟩
     refine ⟨hP, ?_⟩
@@ -622,10 +622,10 @@ theorem gapsPairing_deMul' {E : Type} [Field E] [NumberField E] [IsCMField E] {r
     have hj' : ((j : ℕ) : ℤ) = (i : ℕ) + 1 := by exact_mod_cast hj
     simp only [Pi.sub_apply, deMul, kapW, hj']
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]; omega
-    · rw [if_neg (mt e.1 hi), if_neg hi]; omega
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]; omega
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]; omega
   · simp only [Pi.sub_apply, deMul, kapW, h0', h1', hk]
-    rw [if_pos h0, if_neg (by omega)]
+    rw [ite_eq_left h0, ite_eq_right (by omega)]
     have hr : ((r - 1 : ℕ) : ℤ) = (r : ℤ) - 1 := by omega
     rw [hr]
     push_cast
@@ -662,10 +662,10 @@ theorem orbit_interp_small : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   · have e : ((j : ℕ) < X.p0 ↔ (i : ℕ) < X.p0) := by omega
     simp only [deMul]
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]
-    · rw [if_neg (mt e.1 hi), if_neg hi]
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]
   · simp only [deMul]
-    rw [if_pos (by omega), if_neg (by omega)]
+    rw [ite_eq_left (by omega), ite_eq_right (by omega)]
     omega
 
 end GlobalTheory.Up.OrbitInterpSmall
@@ -697,10 +697,10 @@ theorem gapsPairing_deMul {r : ℕ} (X : Data E r) (h0 : 0 < X.p0) (h1 : X.p0 < 
     have hj' : ((j : ℕ) : ℤ) = (i : ℕ) + 1 := by exact_mod_cast hj
     simp only [Pi.sub_apply, deMul, kapW, hj']
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]; omega
-    · rw [if_neg (mt e.1 hi), if_neg hi]; omega
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]; omega
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]; omega
   · simp only [Pi.sub_apply, deMul, kapW, h0', h1', hk]
-    rw [if_pos h0, if_neg (by omega)]
+    rw [ite_eq_left h0, ite_eq_right (by omega)]
     have hr : ((r - 1 : ℕ) : ℤ) = (r : ℤ) - 1 := by omega
     rw [hr]
     push_cast
@@ -742,10 +742,10 @@ theorem large : ∀ (r : ℕ) (X : Data E r) (G : Subgroup (GL (Fin r) E)) (x0 :
   · have e : ((j : ℕ) < X.p0 ↔ (i : ℕ) < X.p0) := by omega
     simp only [deMul]
     by_cases hi : (i : ℕ) < X.p0
-    · rw [if_pos (e.2 hi), if_pos hi]
-    · rw [if_neg (mt e.1 hi), if_neg hi]
+    · rw [ite_eq_left (e.2 hi), ite_eq_left hi]
+    · rw [ite_eq_right (mt e.1 hi), ite_eq_right hi]
   · simp only [deMul]
-    rw [if_pos (by omega), if_neg (by omega)]
+    rw [ite_eq_left (by omega), ite_eq_right (by omega)]
     omega
 
 theorem orbit_interp_deMul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r),
@@ -890,7 +890,7 @@ theorem bchar_ne_zero {E : Type} [Field E] [NumberField E] [IsCMField E] {r : �
   intro h0
   apply (hb τ).1
   have hU : (mat b τ).IsUpperTriangular := fun a c hca => (hb τ).2 a c hca
-  rw [Matrix.det_of_upperTriangular hU]
+  rw [Matrix.det_of_isUpperTriangular hU]
   exact Finset.prod_eq_zero (Finset.mem_univ i) (by simpa [mat] using h0)
 
 theorem comp_interp {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X : DataX E r)
@@ -959,7 +959,7 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     · subst hc
       have e : (fun y => u c' (castFrame (M.comp_Ψ c') y)) = P := by
         funext y
-        simp only [u, if_pos rfl]
+        simp only [u, ite_eq_left rfl]
         exact congrArg P (castFrame_symm_cast _ y)
       rw [e, castWt_deMul]
       rw [M.comp_basePoint c'] at hP
@@ -973,7 +973,7 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   · intro h hh
     unfold TwoLevels.pull
     by_cases hc : h • c = c
-    · simp only [u, hc, if_pos rfl]
+    · simp only [u, hc, ite_eq_left rfl]
       rw [castFrame_lact]
       refine hPγ _ ((hG _).2 ⟨h, hc, 1, (M.comp c).Γ.one_mem, by simp⟩) fun hm => hh ?_
       exact M.tr_faithful h c hc hm
@@ -1162,8 +1162,8 @@ theorem detNeAt [Fintype U] [DecidableEq U] {la : Wt M.Ψ r} {u u0 : C → Frame
     rw [Matrix.of_apply, entry, Matrix.submatrix_apply, id, Matrix.smul_apply, Matrix.one_apply,
       smul_eq_mul]
     by_cases e : h * h' * k = 1
-    · rw [if_pos ((key h h').1 e), e, mul_one]
-    · rw [if_neg (fun e' => e ((key h h').2 e')), mul_zero]
+    · rw [ite_eq_left ((key h h').1 e), e, mul_one]
+    · rw [ite_eq_right (fun e' => e ((key h h').2 e')), mul_zero]
       exact hz _ e
   unfold TwoLevels.detTr
   rw [hmat, Matrix.det_permute, Matrix.det_smul, Matrix.det_one, mul_one]
@@ -1183,7 +1183,7 @@ theorem independentTranslates : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       ∀ c', (∀ h : U, h • c ≠ c') → ∀ y, u c' y = 0 := fun c =>
     _root_.GlobalTheory.LiftInterp.exists_form_one_lift E r U C M hL s hs hsle c _ (hnc c) (domOfComp M c (hxb c))
   choose uc huS hu0 hu1 hu2 using hI
-  haveI : Fintype (Quotient (MulAction.orbitRel U C)) := Fintype.ofFinite _
+  have : Fintype (Quotient (MulAction.orbitRel U C)) := Fintype.ofFinite _
   have hsum : ∀ c' y, (∑ q : Quotient (MulAction.orbitRel U C), uc q.out) c' y =
       uc (Quotient.mk (MulAction.orbitRel U C) c').out c' y := by
     intro c' y

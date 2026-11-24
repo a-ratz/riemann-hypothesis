@@ -645,7 +645,7 @@ namespace GlobalTheory
 theorem localFactor_counital_descends :
     ∀ (k A : Type) [Field k] [CommRing A] [Algebra k A] [Module.Finite k A] (ε : A →ₐ[k] k) (Δ : A →ₐ[k] A ⊗[k] A), ((∀ a : A, TensorProduct.lid k A (LinearMap.rTensor A ε.toLinearMap (Δ a)) = a) ∧ (∀ a : A, TensorProduct.rid k A (LinearMap.lTensor A ε.toLinearMap (Δ a)) = a)) → ∃ e : A, ε e = 1 ∧ IsIdempotentElem e ∧ ∃ (ε' : (A ⧸ Ideal.span {1 - e}) →ₐ[k] k) (Δ' : (A ⧸ Ideal.span {1 - e}) →ₐ[k] (A ⧸ Ideal.span {1 - e}) ⊗[k] (A ⧸ Ideal.span {1 - e})), ((∀ a : (A ⧸ Ideal.span {1 - e}), TensorProduct.lid k (A ⧸ Ideal.span {1 - e}) (LinearMap.rTensor (A ⧸ Ideal.span {1 - e}) ε'.toLinearMap (Δ' a)) = a) ∧ (∀ a : (A ⧸ Ideal.span {1 - e}), TensorProduct.rid k (A ⧸ Ideal.span {1 - e}) (LinearMap.lTensor (A ⧸ Ideal.span {1 - e}) ε'.toLinearMap (Δ' a)) = a)) ∧ IsNilpotent (RingHom.ker ε') := by
   intro k A _ _ _ _ ε Δ ⟨hL, hR⟩
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   set I : Ideal A := RingHom.ker ε with hI
   obtain ⟨n, hn⟩ := IsArtinian.monotone_stabilizes
     (⟨fun m => OrderDual.toDual (I ^ m), fun a b h => Ideal.pow_le_pow_right h⟩ : ℕ →o (Ideal A)ᵒᵈ)
@@ -1284,11 +1284,11 @@ theorem frobSubalgebra_counit : ∀ (p : ℕ) [Fact p.Prime] (k A : Type) [Field
   intro p _ k A _ _ _ _ _ ε Δ ⟨hl, hr⟩
   have injA : Function.Injective (algebraMap k A) := fun x y h => by
     simpa using congrArg ε h
-  haveI : CharP A p := charP_of_injective_algebraMap injA p
+  have : CharP A p := charP_of_injective_algebraMap injA p
   let εε : A ⊗[k] A →ₐ[k] k := Algebra.TensorProduct.lift ε ε (fun _ _ => Commute.all _ _)
   have injAA : Function.Injective (algebraMap k (A ⊗[k] A)) := fun x y h => by
     simpa only [AlgHom.commutes, Algebra.algebraMap_self, RingHom.id_apply] using congrArg εε h
-  haveI : CharP (A ⊗[k] A) p := charP_of_injective_algebraMap injAA p
+  have : CharP (A ⊗[k] A) p := charP_of_injective_algebraMap injAA p
   let B : Subalgebra k A :=
     { carrier := {a | ∃ c : A, c ^ p = a}
       mul_mem' := by rintro _ _ ⟨c, rfl⟩ ⟨d, rfl⟩; exact ⟨c * d, mul_pow c d p⟩
@@ -1487,7 +1487,7 @@ theorem truncMono_eq_zero {p : ℕ} [Fact p.Prime] {k A : Type} [Field k] [CommR
       rw [coeff_C]
       by_cases hm : m = 0
       · subst hm; simp
-      · rw [if_neg (Ne.symm hm)]; exact hc m hm
+      · rw [ite_eq_right (Ne.symm hm)]; exact hc m hm
     rw [hFC, aeval_C] at hF
     have h0 : AddMonoidAlgebra.coeff F 0 = 0 := Subtype.ext (by simpa using hF)
     rw [hFC, h0, C_0]
@@ -1581,7 +1581,7 @@ theorem truncMono_linearIndependent : ∀ (p : ℕ) [Fact p.Prime] (k A : Type) 
     obtain ⟨a, _, ha⟩ := Finset.exists_ne_zero_of_sum_ne_zero hm
     have hm' : toF a = m := by
       by_contra h
-      exact ha (if_neg h)
+      exact ha (ite_eq_right h)
     subst hm'
     refine ⟨fun i => by simp [toF], ?_⟩
     apply Finset.sum_le_sum
@@ -1646,7 +1646,7 @@ theorem square_presentation_counital_comul_of_finrank (p : ℕ) [Fact p.Prime] (
     have hBtop : B ≠ ⊤ := by
       intro h
       have h1 := hE ⟨0, hd⟩ ⟨0, hd⟩
-      rw [hEB _ _ (h ▸ Algebra.mem_top), if_pos rfl] at h1
+      rw [hEB _ _ (h ▸ Algebra.mem_top), ite_eq_left rfl] at h1
       exact zero_ne_one h1
     have hlt : Module.finrank k B < n := by
       rw [← hn]
@@ -1705,19 +1705,19 @@ theorem GlobalTheory.PDivGroup.mulP_mem_sq_counit : ∀ (p : ℕ) [Fact p.Prime]
   have hpk : ((p : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
     exact (IsLocalRing.mem_maximalIdeal _).2 hpu
-  haveI : CharP (IsLocalRing.ResidueField O) p := (CharP.charP_iff_prime_eq_zero hp.out).2 hpk
-  haveI : ExpChar (IsLocalRing.ResidueField O) p := ExpChar.prime hp.out
-  haveI : PerfectRing (IsLocalRing.ResidueField O) p :=
+  have : CharP (IsLocalRing.ResidueField O) p := (CharP.charP_iff_prime_eq_zero hp.out).2 hpk
+  have : ExpChar (IsLocalRing.ResidueField O) p := ExpChar.prime hp.out
+  have : PerfectRing (IsLocalRing.ResidueField O) p :=
     PerfectRing.ofSurjective _ p (fun y => by
       obtain ⟨a, rfl⟩ := IsLocalRing.residue_surjective y
       obtain ⟨c, hc⟩ := hroot a
       exact ⟨IsLocalRing.residue O c, by rw [frobenius_def, ← map_pow, hc]⟩)
 
-  letI : Algebra (G.A n) (G.A (n + 1)) :=
+  let : Algebra (G.A n) (G.A (n + 1)) :=
     ((G.mulP n : G.A n →ₐ[O] G.A (n + 1)) : G.A n →+* G.A (n + 1)).toAlgebra
-  haveI : IsScalarTower O (G.A n) (G.A (n + 1)) :=
+  have : IsScalarTower O (G.A n) (G.A (n + 1)) :=
     IsScalarTower.of_algebraMap_eq fun c => ((G.mulP n : G.A n →ₐ[O] G.A (n + 1)).commutes c).symm
-  haveI : Module.Flat (G.A n) (G.A (n + 1)) := GlobalTheory.T.mulP_flat' p O G n
+  have : Module.Flat (G.A n) (G.A (n + 1)) := GlobalTheory.T.mulP_flat' p O G n
   have hε : ∀ b : G.A n, Bialgebra.counitAlgHom O (G.A (n + 1)) (algebraMap (G.A n) (G.A (n + 1)) b) =
       Bialgebra.counitAlgHom O (G.A n) b := fun b => by
     rw [Bialgebra.counitAlgHom_apply, Bialgebra.counitAlgHom_apply]
@@ -1809,9 +1809,9 @@ theorem GlobalTheory.PDivGroup.mulP_mem_sq_counit : ∀ (p : ℕ) [Fact p.Prime]
     refine ⟨MvPolynomial.map (algebraMap O (G.A n)) (MvPolynomial.rename Sum.inr q), ?_⟩
     rw [MvPolynomial.aeval_map_algebraMap, MvPolynomial.aeval_rename, hfa, hxd]
     rfl
-  haveI : Module.FinitePresentation O (G.A (n + 1)) := Module.finitePresentation_of_projective _ _
-  haveI : Algebra.FinitePresentation O (G.A (n + 1)) := Algebra.FinitePresentation.of_finitePresentation _ _
-  haveI : Algebra.FinitePresentation (G.A n) (G.A (n + 1)) :=
+  have : Module.FinitePresentation O (G.A (n + 1)) := Module.finitePresentation_of_projective _ _
+  have : Algebra.FinitePresentation O (G.A (n + 1)) := Algebra.FinitePresentation.of_finitePresentation _ _
+  have : Algebra.FinitePresentation (G.A n) (G.A (n + 1)) :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation O _ _
   have hFG : (RingHom.ker (MvPolynomial.aeval x : MvPolynomial (Fin s ⊕ Fin r) (G.A n) →ₐ[G.A n] G.A (n + 1))).FG :=
     Algebra.FinitePresentation.ker_fG_of_surjective _ hxs

@@ -213,9 +213,9 @@ theorem hkLin : HkLin := by
   refine ⟨?_, ?_, fun hs => ⟨?_, ?_⟩, fun hs => ?_⟩ <;> funext u v h
   · simp only [Matrix.add_apply, Pi.add_apply, key, fn2, ex_add]; ring
   · simp only [Matrix.smul_apply, Pi.smul_apply, smul_eq_mul, key, fn2, ex_smul]; ring
-  · simp only [Matrix.add_apply, Pi.add_apply, key, fn2, ex_add, if_pos hs]; ring
-  · simp only [Matrix.smul_apply, Pi.smul_apply, smul_eq_mul, key, fn2, ex_smul, if_pos hs]; ring
-  · simp only [key, if_neg hs]
+  · simp only [Matrix.add_apply, Pi.add_apply, key, fn2, ex_add, ite_eq_left hs]; ring
+  · simp only [Matrix.smul_apply, Pi.smul_apply, smul_eq_mul, key, fn2, ex_smul, ite_eq_left hs]; ring
+  · simp only [key, ite_eq_right hs]
 
 end UpperTheory.Zero.ConvolutionTheory.EB
 end -- clump:auto
@@ -524,12 +524,12 @@ theorem packStep : PackStep := by
   obtain ⟨W₁, W₂, f₁, f₂, hW⟩ := PositivityTheory.Rg.BcB.CG.pack_holds E a b (Ml l₁) (Ml l₂)
   refine ⟨W₁, W₂, f₁, f₂, ?_⟩
   intro D A S Z L hS hZ T e₁ e₂ s f hs hE
-  haveI := A.ha
-  haveI := A.hb
-  haveI := A.hν
-  haveI : BorelSpace (G a) := ⟨rfl⟩
-  haveI : BorelSpace (G b) := ⟨rfl⟩
-  haveI : BorelSpace (Hf E a b) := ⟨rfl⟩
+  have := A.ha
+  have := A.hb
+  have := A.hν
+  have : BorelSpace (G a) := ⟨rfl⟩
+  have : BorelSpace (G b) := ⟨rfl⟩
+  have : BorelSpace (Hf E a b) := ⟨rfl⟩
   obtain ⟨-, -, hOk, -, -⟩ := ptOk E a b l₁ l₂ D A
   obtain ⟨hψ, -, -, -, -, -, hhk, -⟩ := hkMul E a b l₁ l₂ D A S Z L hS hZ
   obtain ⟨hlev, -, hfix⟩ := idmAct E a b l₁ l₂ D A S Z L hS hZ
@@ -762,12 +762,12 @@ theorem UpperTheory.Zero.ConvolutionTheory.EB.readOne :
     if h : w ∈ S ∧ w ∉ Z then s (.inr (.inr (.inl (⟨w, h⟩, p, true)))) / s (.inl ()) else 0
   have ht₁ : ∀ w, w ∈ S → w ∉ Z → ∀ p, convF A.ν (A.hk1 S L w p false) f = t₁ w p • f := by
     intro w hw hwZ p
-    have h : t₁ w p = s (.inr (.inr (.inl (⟨w, hw, hwZ⟩, p, false)))) / s (.inl ()) := dif_pos ⟨hw, hwZ⟩
+    have h : t₁ w p = s (.inr (.inr (.inl (⟨w, hw, hwZ⟩, p, false)))) / s (.inl ()) := dite_eq_left ⟨hw, hwZ⟩
     rw [h]
     exact hv (.inl (⟨w, hw, hwZ⟩, p, false))
   have ht₂ : ∀ w, w ∈ S → w ∉ Z → ∀ p, convF A.ν (A.hk1 S L w p true) f = t₂ w p • f := by
     intro w hw hwZ p
-    have h : t₂ w p = s (.inr (.inr (.inl (⟨w, hw, hwZ⟩, p, true)))) / s (.inl ()) := dif_pos ⟨hw, hwZ⟩
+    have h : t₂ w p = s (.inr (.inr (.inl (⟨w, hw, hwZ⟩, p, true)))) / s (.inl ()) := dite_eq_left ⟨hw, hwZ⟩
     rw [h]
     exact hv (.inl (⟨w, hw, hwZ⟩, p, true))
 

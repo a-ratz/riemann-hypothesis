@@ -91,7 +91,7 @@ theorem dH_bound [CompleteSpace B] (h : IsHeis om ρ) (T : B →L[ℂ] B) (hT : 
     by_cases hz : z = 0
     · simp [hz]
     · have hz' : 0 < ‖z‖ := norm_pos_iff.2 hz
-      simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
+      simp only [smul_apply, sub_apply, ContinuousLinearMap.comp_apply,
         norm_smul, norm_inv, Complex.norm_real, norm_norm]
       rw [inv_mul_le_iff₀ hz', mul_comm]
       exact (hC z).trans (mul_le_mul_of_nonneg_right (le_max_left _ _) hz'.le))
@@ -104,7 +104,7 @@ theorem dH_bound [CompleteSpace B] (h : IsHeis om ρ) (T : B →L[ℂ] B) (hT : 
     · simp [hz]
     · have hz' : 0 < ‖w‖ := norm_pos_iff.2 hz
       have := ContinuousLinearMap.le_of_opNorm_le _ (hC w) x
-      simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
+      simp only [smul_apply, sub_apply, ContinuousLinearMap.comp_apply,
         norm_smul, norm_inv, Complex.norm_real, norm_norm] at this
       rw [inv_mul_le_iff₀ hz', mul_comm] at this
       simpa only [h.1, sub_zero] using this

@@ -64,7 +64,7 @@ private theorem chi_comap' {n : ℕ} {A Γ H : Type} [CommRing A] [Group Γ] [Gr
 
 private theorem chi_map' {n : ℕ} {A A' Γ : Type} [CommRing A] [CommRing A'] [Group Γ] (D : W.GDet n A Γ) (f : A →+* A') (g : Γ) :
     (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-  letI : Algebra A A'[X] := ((algebraMap A' A'[X]).comp f).toAlgebra
+  let : Algebra A A'[X] := ((algebraMap A' A'[X]).comp f).toAlgebra
   let φ : A[X] →ₐ[A] A'[X] :=
     { Polynomial.mapRingHom f with
       commutes' := fun a => by simp [RingHom.algebraMap_toAlgebra] }

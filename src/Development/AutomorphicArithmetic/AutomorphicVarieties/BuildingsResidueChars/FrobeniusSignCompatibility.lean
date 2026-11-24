@@ -76,9 +76,9 @@ private theorem one_lt_normV' {K : Type} [Field K] [NumberField K] (w : HeightOn
 private theorem normV_le {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) {q : ℕ} (hq : 1 < q)
     (h : ∀ x : 𝓞 K, x - x ^ q ∈ w.asIdeal) : normV w ≤ q := by
   have := w.isMaximal
-  letI : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
   have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
   have e : normV w = Fintype.card (𝓞 K ⧸ w.asIdeal) := by
     rw [normV, Nat.card_eq_fintype_card]
   rw [e]

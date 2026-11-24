@@ -64,7 +64,7 @@ theorem dickson_finite_below_every {ι : Type} (n : ℕ) (f : ι → Fin n → �
   set s : Set (Fin n → ℕ) := Set.range f
   have hpwo : s.IsPWO := Set.isPWO_of_wellQuasiOrderedLE s
   set m : Set (Fin n → ℕ) := {x | Minimal (· ∈ s) x}
-  have hm : m.Finite := (setOf_minimal_antichain (· ∈ s)).finite_of_partiallyWellOrderedOn
+  have hm : m.Finite := (setOfPred_minimal_antichain (· ∈ s)).finite_of_partiallyWellOrderedOn
     (hpwo.mono (fun x hx => hx.prop))
   have hpre : ∀ x ∈ m, ∃ j, f j = x := fun x hx => hx.prop
   rcases isEmpty_or_nonempty ι with hι | hι

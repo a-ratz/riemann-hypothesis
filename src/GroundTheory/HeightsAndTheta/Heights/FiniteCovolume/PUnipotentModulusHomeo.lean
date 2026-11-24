@@ -94,7 +94,7 @@ theorem continuous_unipRadical_at (w : InfinitePlace E) :
     Continuous fun n : unipRadical h v x₀ =>
       (((n : archUnitary h v) : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ) :=
   Units.continuous_val.comp ((continuous_apply w).comp
-    (continuous_subtype_val.comp continuous_subtype_val))
+    (continuous_subtypeVal.comp continuous_subtypeVal))
 
 theorem heisU_heisPoint (hp : IsHyperbolicPair h x₀ w₀) (p : HeisCoord h v x₀ w₀)
     (w : InfinitePlace E) :

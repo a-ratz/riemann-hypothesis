@@ -104,7 +104,7 @@ theorem main : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (E E' : 
     simp only [bcMap, pullback.map]
     set_option synthInstance.maxHeartbeats 200000 in
       exact pullback.lift_fst _ _ _
-  haveI hI : IsIso (sch.map U0.hom) := by
+  have hI : IsIso (sch.map U0.hom) := by
     change IsIso (sch.map (𝟙 S))
     rw [CategoryTheory.Functor.map_id]
     infer_instance

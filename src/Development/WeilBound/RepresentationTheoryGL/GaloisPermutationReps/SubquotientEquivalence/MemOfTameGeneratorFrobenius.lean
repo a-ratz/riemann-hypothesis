@@ -70,7 +70,7 @@ theorem wild_inertia_isWild {σ : G E Ω} (hσ : σ ∈ GlobalTheory.WeilDeligne
     rw [mul_sub, mul_div_cancel₀ _ hx, mul_one]
   rw [e, map_mul]
   calc A.valuation x * A.valuation (σ x / x - 1) < A.valuation x * 1 :=
-        mul_lt_mul_of_pos_left hlt (zero_lt_iff.mpr hx0)
+        mul_lt_mul_of_pos_left hlt (pos_iff_ne_zero.mpr hx0)
     _ = A.valuation x := mul_one _
 
 variable [IsAlgClosure E Ω] {h : IsPlaceOver A w}

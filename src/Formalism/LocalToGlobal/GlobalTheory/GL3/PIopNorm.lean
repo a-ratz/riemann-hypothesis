@@ -176,7 +176,7 @@ theorem avg_sub {M La : AddSubgroup (VC D N N')} [Countable La] [Countable M] (h
     (f : VC D N N' → ℝ) (hf0 : ∀ x, 0 ≤ f x) (hfc : Continuous f)
     (hper : ∀ g ∈ La, ∀ x, f (x + g) = f x) :
     ⨍ x in t, f x = ⨍ x in s, f x := by
-  haveI := Fintype.ofFinite (La ⧸ M.addSubgroupOf La)
+  have := Fintype.ofFinite (La ⧸ M.addSubgroupOf La)
   set k := Fintype.card (La ⧸ M.addSubgroupOf La)
   have hk : k ≠ 0 := Fintype.card_ne_zero
   have ht' := unionFd_fd hle hs
@@ -375,12 +375,12 @@ theorem full_inf {La₁ La₂ : AddSubgroup (VC D N N')} (h₁ : FullLat La₁) 
     [Finite (La₂ ⧸ La₁.addSubgroupOf La₂)] : FullLat (La₁ ⊓ La₂) := by
   obtain ⟨hd, -⟩ := h₁
   obtain ⟨-, hs⟩ := h₂
-  haveI := hd
+  have := hd
   constructor
   · exact DiscreteTopology.of_continuous_injective
       (f := AddSubgroup.inclusion (inf_le_left : La₁ ⊓ La₂ ≤ La₁))
       (continuous_inclusion inf_le_left) (AddSubgroup.inclusion_injective _)
-  · haveI := Fintype.ofFinite (La₂ ⧸ La₁.addSubgroupOf La₂)
+  · have := Fintype.ofFinite (La₂ ⧸ La₁.addSubgroupOf La₂)
     set k := Fintype.card (La₂ ⧸ La₁.addSubgroupOf La₂)
     have hk : (k : ℝ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
     rw [eq_top_iff, ← hs, Submodule.span_le]
@@ -461,12 +461,12 @@ theorem iso_core (T : Tor D) {La₁ La₂ : AddSubgroup (VC D N N')}
   classical
   set M := La₁ ⊓ La₂ with hMdef
   have hM : FullLat M := full_inf h₁ h₂
-  haveI : Countable La₁ := countable_of_full h₁
-  haveI : Countable La₂ := countable_of_full h₂
-  haveI : Countable M := countable_of_full hM
-  haveI : Finite (La₁ ⧸ M.addSubgroupOf La₁) := by
+  have : Countable La₁ := countable_of_full h₁
+  have : Countable La₂ := countable_of_full h₂
+  have : Countable M := countable_of_full hM
+  have : Finite (La₁ ⧸ M.addSubgroupOf La₁) := by
     rw [hMdef, AddSubgroup.inf_addSubgroupOf_left]; infer_instance
-  haveI : Finite (La₂ ⧸ M.addSubgroupOf La₂) := by
+  have : Finite (La₂ ⧸ M.addSubgroupOf La₂) := by
     rw [hMdef, AddSubgroup.inf_addSubgroupOf_right]; infer_instance
   obtain ⟨t, ht⟩ := fd_of_full hM
   have hs₁ := Classical.epsilon_spec (fd_of_full h₁)
@@ -486,7 +486,7 @@ theorem iso_core (T : Tor D) {La₁ La₂ : AddSubgroup (VC D N N')}
       (dens_cont T hIG.1.continuous)
       fun g hg z => Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.dens_periodic T La₂ _ hIG g hg z).symm
   rw [hA, hB]
-  haveI := Fintype.ofFinite (La₂ ⧸ La₁.addSubgroupOf La₂)
+  have := Fintype.ofFinite (La₂ ⧸ La₁.addSubgroupOf La₂)
   set Q := La₂ ⧸ La₁.addSubgroupOf La₂
   set k := Fintype.card Q
   have hk : k ≠ 0 := Fintype.card_ne_zero
@@ -605,8 +605,8 @@ theorem IopIso_of_parts (hA : HfIntRec) (hB : SelfDualRec) :
     rw [IO.Iop_of_le _ hle hG, e1, e2]
   · have f1 := FL.fullLat D L₁ L₁' h1 cc hcc δ h0
     have f2 := FL.fullLat D L₂ L₂' h2 cc hcc δ h0
-    haveI := La_index_finite cc hcc δ L₁ L₂ L₁' L₂' h1 h2
-    haveI := La_index_finite cc hcc δ L₂ L₁ L₂' L₁' h2 h1
+    have := La_index_finite cc hcc δ L₁ L₂ L₁' L₂' h1 h2
+    have := La_index_finite cc hcc δ L₂ L₁ L₂' L₁' h2 h1
     have hI2 := hA D cc hcc δ hδ h0 N N' L₂ L₂' h2
     refine IL.iso_core _ f1 f2 ?_ (semiChar_of_HfInt _ hI2) ?_ hG
     · intro x hx y hy

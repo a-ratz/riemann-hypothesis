@@ -75,8 +75,8 @@ theorem counit_dUnit_evA : ∀ (k : Type) [CommRing k] (d : ℕ) (A : Type) [Com
   have h1 : (Bialgebra.counitAlgHom k A).comp (evA k x hx) = c0 :=
     _root_.GlobalTheory.mvPowerSeries_algHom_ext_of_isNilpotent k (Fin d) k _ _ (fun i => by simp [hev, h0]) (fun i => by simp [hev, h0, hc0])
   refine ⟨(AlgHom.congr_fun h1 f).trans (hc0 f), ?_⟩
-  letI : Module kᵐᵒᵖ (Cot k A) := Module.compHom _ ((RingHom.id k).fromOpposite mul_comm)
-  haveI : IsCentralScalar k (Cot k A) := ⟨fun _ _ => rfl⟩
+  let : Module kᵐᵒᵖ (Cot k A) := Module.compHom _ ((RingHom.id k).fromOpposite mul_comm)
+  have : IsCentralScalar k (Cot k A) := ⟨fun _ _ => rfl⟩
   let D : MvPowerSeries (Fin d) k →ₗ[k] Cot k A :=
     ∑ i, LinearMap.smulRight (coeff (Finsupp.single i 1)) (dUnit (R := k) (x i))
   have hD : ∀ g, D g = ∑ i, lin g i • dUnit (R := k) (x i) := fun g => by simp [D, lin]

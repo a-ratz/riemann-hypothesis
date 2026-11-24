@@ -94,13 +94,13 @@ theorem meas_level (V : HSp D) (θ : InfFam D) (A : Frames V) (m : ∀ ρ, Measu
     (hrp : IsRealPart V θ A rp) (hK : IsOpen {h : GA D V | finE V h ∈ K}) (hμ : IsMeasLev V K μ)
     (B : Set (∀ ρ, Upq V ρ)) (hB : MeasurableSet B) :
     μ {h | finE V h ∈ K ∧ rp h ∈ B} = Measure.pi m B := by
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
   obtain ⟨-, hsc, hbo, -⟩ := GlobalTheory.TwistAdelicTop.locallyCompact_secondCountable_borel_countable V
-  haveI := hsc
-  haveI := hbo
+  have := hsc
+  have := hbo
   have hBm : MeasurableSet (rp ⁻¹' B) := hc.measurable hB
   have H := GlobalTheory.RealBoxMeasure.lintegral_levelSet_eq_pi D θ hθ V hV K μ hμ A hA m hm
     ((rp ⁻¹' B).indicator 1) (measurable_one.indicator hBm) (fun g k hk => by
@@ -114,11 +114,11 @@ theorem meas_level (V : HSp D) (θ : InfFam D) (A : Frames V) (m : ∀ ρ, Measu
 
 theorem meas_translate_le : ∀ (D : D7) (V : HSp D) (θ : InfFam D) (A : Frames V) (m : ∀ ρ, Measure (Upq V ρ)) (rp : GA D V →* (∀ ρ, Upq V ρ)) (K K₀ : Subgroup (GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D))) (μ : Measure (GA D V)), V.SigOK → IsInfFam θ → IsFrames V A → (∀ ρ, IsMinf (m ρ)) → Continuous rp → IsRealPart V θ A rp → K ≤ K₀ → K.relIndex K₀ ≠ 0 → IsOpen {h : GA D V | finE V h ∈ K} → IsMeasLev V K μ → ∀ g ∈ GfC V, ∀ B : Set (∀ ρ, Upq V ρ), MeasurableSet B → μ {h | finE V (g⁻¹ * h) ∈ K₀ ∧ rp h ∈ B} ≤ (K.relIndex K₀ : ℝ≥0∞) * Measure.pi m B := by
   intro D V θ A m rp K K₀ μ hV hθ hA hm hc hrp _ hi hK hμ g _ B hB
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI := hμ.1
-  haveI : (K.subgroupOf K₀).FiniteIndex := ⟨hi⟩
-  haveI : Fintype (K₀ ⧸ K.subgroupOf K₀) := Fintype.ofFinite _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have := hμ.1
+  have : (K.subgroupOf K₀).FiniteIndex := ⟨hi⟩
+  have : Fintype (K₀ ⧸ K.subgroupOf K₀) := Fintype.ofFinite _
   let S : (K₀ ⧸ K.subgroupOf K₀) → Set (GA D V) := fun q =>
     {h | (∃ hh : finE V (g⁻¹ * h) ∈ K₀, (QuotientGroup.mk ⟨_, hh⟩ : K₀ ⧸ K.subgroupOf K₀) = q) ∧ rp h ∈ B}
   have hS : ∀ q, μ (S q) ≤ Measure.pi m B := by

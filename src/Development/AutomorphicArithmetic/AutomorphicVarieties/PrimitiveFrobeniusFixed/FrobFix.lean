@@ -81,9 +81,9 @@ open scoped nonZeroDivisors Pointwise
 private theorem cyc_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (m : ℕ)
     (g : G ℚ Ω) (x : Ω) (hx : x ^ l ^ m = 1) :
     g x = x ^ (PadicInt.toZModPow m ((cycZ ℚ Ω l g : ℤ_[l]ˣ) : ℤ_[l])).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
   exact cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (G ℚ Ω) Ω g) x hx
 
 private theorem dvd_sub_val (l : ℕ) [Fact l.Prime] (m : ℕ) (z : ℤ_[l]) :
@@ -99,7 +99,7 @@ theorem UpperTheory.V.ML.radEqv :
     ∀ (γ : G ℚ Ω →* Oˣ) (f : G ℚ Ω → W), (∀ u ∈ fixMu ℚ Ω F, ∀ v ∈ fixMu ℚ Ω F, f (u * v) = f u + f v) → (∀ g : G ℚ Ω, ∀ u ∈ fixMu ℚ Ω F, f (g * u * g⁻¹) = (γ g : O) • f u) →
     (∀ u ∈ fixMu ℚ Ω F, (l ^ m) • f u = 0) → (∀ u ∈ fixMu ℚ Ω F, u ρ = ρ → f u = 0) → ∀ g : G ℚ Ω, ∀ u ∈ fixMu ℚ Ω F, ((γ g : O) - (chiO ℚ Ω l O g : O)) • f u = 0 := by
   intro Ω _ _ _ l _ O W _ _ _ _ m F r hF hlF hr ρ hρ γ f hadd hconj htor hfixρ g u hu
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hmem : ∀ w : G ℚ Ω, w ∈ fixMu ℚ Ω F ↔ ∀ x : Ω, x ^ F = 1 → w x = x := fun w => Iff.rfl
   have hr0 : (r : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hr
   have hρ0 : ρ ≠ 0 := by
@@ -201,8 +201,8 @@ open scoped nonZeroDivisors Pointwise
 
 private theorem two_sub {Γ : Type} [Group Γ] (H A B : Subgroup Γ) (hA : ¬ H ≤ A) (hB : ¬ H ≤ B) :
     ∃ x ∈ H, x ∉ A ∧ x ∉ B := by
-  obtain ⟨a, ha, ha'⟩ := SetLike.not_le_iff_exists.1 hA
-  obtain ⟨b, hb, hb'⟩ := SetLike.not_le_iff_exists.1 hB
+  obtain ⟨a, ha, ha'⟩ := IsConcreteLE.not_le_iff_exists.1 hA
+  obtain ⟨b, hb, hb'⟩ := IsConcreteLE.not_le_iff_exists.1 hB
   by_cases h1 : a ∈ B
   · by_cases h2 : b ∈ A
     · exact ⟨a * b, H.mul_mem ha hb, fun h => ha' ((A.mul_mem_cancel_right h2).1 h),
@@ -252,7 +252,7 @@ private theorem ex_sub {Γ W : Type} [Group Γ] [TopologicalSpace Γ] [AddCommGr
     rw [mul_inv_cancel, h1] at h2
     rw [eq_neg_of_add_eq_zero_right h2.symm]
     exact P.neg_mem ha.2
-  · have h2 := hU.isOpenMap_subtype_val _ (hlc (P : Set W))
+  · have h2 := hU.isOpenMap_subtypeVal _ (hlc (P : Set W))
     convert h2 using 1
     ext u
     exact ⟨fun h => ⟨⟨u, h.1⟩, h.2, rfl⟩, fun ⟨v, hv, e⟩ => e ▸ ⟨v.2, hv⟩⟩
@@ -261,9 +261,9 @@ private theorem third (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
     (hF : F ≠ 0) (hlF : l ∣ F) (hM : M ∣ F) (hr : r ≠ 0) (ρ : Ω) (hρ : ρ ^ M = (r : Ω)) :
     ¬ fixMu ℚ Ω F ⊓ MulAction.stabilizer (G ℚ Ω) ρ ≤ fixMu ℚ Ω (F * l) := by
   intro hle
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hFl : F * l ≠ 0 := mul_ne_zero hF hl.ne_zero
-  haveI : NeZero (F * l) := ⟨hFl⟩
+  have : NeZero (F * l) := ⟨hFl⟩
   obtain ⟨-, -, -, hex, -, -, -, -, -, hmul⟩ := galBasic Ω (F * l) hFl
   have hnorm := (galBasic Ω F hF).1
   have hc1 : (1 + F).Coprime F := by simp
@@ -317,15 +317,15 @@ private theorem adm (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
     (hF : F ≠ 0) (hlev : F = N₀ * M) (hN : N₀.Coprime l) (hr : r.Prime) (hq : q.Prime) (hqT : ¬ q ∣ F * l * r)
     (ρ : Ω) (hρ : ρ ^ M = (r : Ω)) (A : ValuationSubring Ω) (hA : Over A q) (φ : G ℚ Ω) (hφ : IsFrob (F := ℚ) A q φ)
     (h1 : φ ∈ fixMu ℚ Ω F) (h2 : φ ρ = ρ) (h3 : φ ∉ fixMu ℚ Ω (F * l)) : AdmP l F r q := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero F := ⟨hF⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero F := ⟨hF⟩
   obtain ⟨-, -, -, hcop, -, -, hpows, -⟩ := placeBasic Ω
   have hno : ∀ k : ℕ, k ∣ F * l * r → ¬ Over A k := fun k hk =>
     hcop A q k ((Nat.Prime.coprime_iff_not_dvd hq).2 fun h => hqT (h.trans hk)) hA
   have hM0 : M ≠ 0 := fun h => hF (by rw [hlev, h, mul_zero])
   have hmod : q ≡ 1 [MOD F] := by
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω F
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω F
     have e := hpows A q F φ hφ (hno F ((dvd_mul_right F l).mul_right r)) ζ hζ.pow_eq_one
     rw [h1 ζ hζ.pow_eq_one] at e
     rw [hζ.eq_orderOf, ← (isOfFinOrder_iff_pow_eq_one.2 ⟨F, Nat.pos_of_ne_zero hF, hζ.pow_eq_one⟩).pow_eq_pow_iff_modEq,
@@ -367,10 +367,10 @@ theorem UpperTheory.V.ML.pick :
     ∀ ν c : G ℚ Ω → QO l O, IsNu (l ^ m) F n (dualChar l α) ν → IsNu (l ^ m) F n' α c → (∃ u ∈ fixMu ℚ Ω F, c u ≠ 0) →
     ∃ (q : ℕ) (A : ValuationSubring Ω) (φ : G ℚ Ω), AdmP l F r q ∧ ¬ q ∣ T ∧ Over A q ∧ IsFrob (F := ℚ) A q φ ∧ c φ ≠ 0 ∧ ∀ u ∈ fixMu ℚ Ω F, ∃ y : O, ν u = y • ν φ := by
   intro Ω _ _ _ l hl O _ _ _ _ _ N₀ m F r n n' T α hD hr hrF hT ν c hν hc ⟨u₁, hu₁, hcu₁⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsGalois ℚ Ω := inferInstance
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsGalois ℚ Ω := inferInstance
   have hlp := hl.out
   have hm0 : m ≠ 0 := by have := hD.pos; omega
   have hN0 : N₀ ≠ 0 := fun h => hlp.ne_one (by have := hD.cop; rwa [h, Nat.coprime_zero_left] at this)
@@ -397,7 +397,7 @@ theorem UpperTheory.V.ML.pick :
     exact hcu₁ ((h.pow m).smul_eq_zero.1 this)
   have hex1 : ∃ K : Subgroup (G ℚ Ω), IsOpen (K : Set (G ℚ Ω)) ∧ ¬ H ≤ K ∧
       ∀ φ ∈ U, φ ∉ K → ∀ u ∈ U, ∃ y : O, ν u = y • ν φ := by
-    haveI : CompactSpace U := isCompact_iff_compactSpace.1 (U.isClosed_of_isOpen hUo).isCompact
+    have : CompactSpace U := isCompact_iff_compactSpace.1 (U.isClosed_of_isOpen hUo).isCompact
     obtain ⟨_, ⟨u₀, rfl⟩, hmax⟩ := Set.Finite.exists_maximalFor (fun w : QO l O => Submodule.span O {w}) _
       hν.lc.range_finite ⟨_, ⟨1, rfl⟩⟩
     have hgen : ∀ u ∈ U, ∃ y : O, ν u = y • ν u₀ := fun u hu => by
@@ -537,12 +537,12 @@ private theorem chi_dvd (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
   have hl : l.Prime := Fact.out
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · simp
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow hn.ne' hl.one_lt⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow hn.ne' hl.one_lt⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have h1 : (1 : ZMod (l ^ n)) = modularCyclotomicCharacter Ω
       (HasEnoughRootsOfUnity.natCard_rootsOfUnity Ω (l ^ n)) (MulSemiringAction.toRingAut (G ℚ Ω) Ω g) := by
     apply modularCyclotomicCharacter.unique
@@ -764,7 +764,7 @@ theorem UpperTheory.V.ML.shtNu :
   refine ⟨⟨?_, ?_, ?_, ?_, ?_⟩, ?_, ?_⟩
   · intro u hu v _
     rw [hcoc, hkill u hu _ (hac _)]
-  · exact hlc.comp_continuous continuous_subtype_val
+  · exact hlc.comp_continuous continuous_subtypeVal
   · exact heqv
   · intro u _
     obtain ⟨b, hb⟩ := ha
@@ -822,7 +822,7 @@ private theorem cast_val {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     (((addVal O a).toNat : ℕ) : ℕ∞) = addVal O a := by
   have hne : IsDiscreteValuationRing.addVal O a ≠ ⊤ := by
     rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
-  exact ENat.coe_toNat hne
+  exact ENat.natCast_toNat hne
 
 private theorem annEx {O W X : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [AddCommGroup W] [Module O W]
     (U : Set X) (ν : X → W) : ∃ a : O, ∀ y : O, (∀ u ∈ U, y • ν u = 0) ↔ a ∣ y := by

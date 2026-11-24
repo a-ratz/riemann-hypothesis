@@ -132,7 +132,7 @@ theorem re_quad {k : ℕ} (N : Matrix (Fin k) (Fin k) ℂ) (hN : ∀ i j, (N i j
 theorem posDef_of_points {E : Type} [Field E] (φ : E →+* ℂ) {k : ℕ} (N : Matrix (Fin k) (Fin k) ℂ)
     (hN : N.IsHermitian) (hu : IsUnit N) (hNr : (∀ t : E, (φ t).im = 0) → ∀ i j, (N i j).im = 0)
     (hpt : ∀ x : Fin k → E, 0 ≤ (star (fun i => φ (x i)) ⬝ᵥ (N *ᵥ (fun i => φ (x i)))).re) : N.PosDef := by
-  haveI : CharZero E := RingHom.charZero φ
+  have : CharZero E := RingHom.charZero φ
   have hPSD : ∀ v : Fin k → ℂ, 0 ≤ (star v ⬝ᵥ (N *ᵥ v)).re := by
     by_cases hreal : ∀ t : E, (φ t).im = 0
     · have hNr' := hNr hreal
@@ -476,7 +476,7 @@ theorem stepA : StepA := by
     have hN' : (N : E) ≠ 0 := by exact_mod_cast hN.ne'
     ext i j
     simp [L, IsIntegralClosure.algebraMap_mk', hN']
-  haveI := isNoetherian_of_fg_of_noetherian _ hfg
+  have := isNoetherian_of_fg_of_noetherian _ hfg
   exact isIntegral_of_submodule_noetherian (Algebra.adjoin ℤ {γ}) (isNoetherian_of_le hle) γ
     (Algebra.subset_adjoin (Set.mem_singleton γ))
 
@@ -548,12 +548,12 @@ end PI.TensCpctDenWork
 open NumberField IsDedekindDomain TensorProduct PI.TensCpctDenWork in
 theorem PI.tensCpctDen_of (hA : PI.AdCpctDen) : PI.TensCpctDen := by
   intro F E _ _ _ _ _
-  letI := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  let := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
   intro C hC
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
     Algebra.TensorProduct.rightAlgebra
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
   set b := Module.finBasis F E with hbdef
   have hcont : ∀ i, Continuous (coordL (R := FiniteAdeleRing (𝓞 F) F) (b.coord i)) := fun i =>
     IsModuleTopology.continuous_of_linearMap _
@@ -743,16 +743,16 @@ theorem stepB_of (hI : IntRootProp) : StepB := by
   intro E _ _ p hp hc hnorm φ₀ μ hμ
   have h1 : eval₂ φ₀ μ p = 0 := by rw [← eval_map]; exact hμ
   obtain ⟨q, hq0, hirr, hqp, hqμ⟩ : ∃ q : E[X], q ≠ 0 ∧ Irreducible q ∧ q ∣ p ∧ eval₂ φ₀ μ q = 0 := by
-    letI : Algebra E ℂ := φ₀.toAlgebra
+    let : Algebra E ℂ := φ₀.toAlgebra
     have hμa : aeval μ p = 0 := by rw [aeval_def]; exact h1
     have hint_r : IsIntegral E μ := ⟨p, hp, h1⟩
     refine ⟨minpoly E μ, minpoly.ne_zero hint_r, minpoly.irreducible hint_r, minpoly.dvd E μ hμa, ?_⟩
     have h3 := minpoly.aeval E μ
     rw [aeval_def] at h3
     exact h3
-  haveI : Fact (Irreducible q) := ⟨hirr⟩
-  haveI : Module.Finite E (AdjoinRoot q) := Module.Finite.of_basis (AdjoinRoot.powerBasis hq0).basis
-  haveI : NumberField (AdjoinRoot q) := NumberField.of_module_finite E (AdjoinRoot q)
+  have : Fact (Irreducible q) := ⟨hirr⟩
+  have : Module.Finite E (AdjoinRoot q) := Module.Finite.of_basis (AdjoinRoot.powerBasis hq0).basis
+  have : NumberField (AdjoinRoot q) := NumberField.of_module_finite E (AdjoinRoot q)
   have hx : (p.map (algebraMap E (AdjoinRoot q))).IsRoot (AdjoinRoot.root q) := by
     show eval (AdjoinRoot.root q) (p.map (algebraMap E (AdjoinRoot q))) = 0
     rw [eval_map, AdjoinRoot.algebraMap_eq]
@@ -986,7 +986,7 @@ theorem td_of_inj {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 theorem tens_finite :
     letI : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
     Module.Finite K (E ⊗[F] K) := by
-  letI : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
   exact Module.Finite.equiv (R := K) (M := K ⊗[F] E) (N := E ⊗[F] K)
       { (TensorProduct.comm F K E) with
         map_smul' := fun c x => by
@@ -1001,19 +1001,19 @@ theorem tens_finite :
 theorem tens_topRing :
     letI := tensTop (F := F) (E := E) K
     IsTopologicalRing (E ⊗[F] K) := by
-  letI : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
-  letI := tensTop (F := F) (E := E) K
-  haveI : Module.Finite K (E ⊗[F] K) := tens_finite
-  haveI : IsModuleTopology K (E ⊗[F] K) := ⟨rfl⟩
+  let : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
+  let := tensTop (F := F) (E := E) K
+  have : Module.Finite K (E ⊗[F] K) := tens_finite
+  have : IsModuleTopology K (E ⊗[F] K) := ⟨rfl⟩
   exact IsModuleTopology.isTopologicalRing K (E ⊗[F] K)
 
 theorem tens_td [TotallyDisconnectedSpace K] :
     letI := tensTop (F := F) (E := E) K
     TotallyDisconnectedSpace (E ⊗[F] K) := by
-  letI : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
-  letI := tensTop (F := F) (E := E) K
-  haveI : Module.Finite K (E ⊗[F] K) := tens_finite
-  haveI : IsModuleTopology K (E ⊗[F] K) := ⟨rfl⟩
+  let : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
+  let := tensTop (F := F) (E := E) K
+  have : Module.Finite K (E ⊗[F] K) := tens_finite
+  have : IsModuleTopology K (E ⊗[F] K) := ⟨rfl⟩
   let e := (Module.finBasis K (E ⊗[F] K)).equivFun
   exact td_of_inj e (IsModuleTopology.continuous_of_linearMap e.toLinearMap) e.injective
 
@@ -1052,7 +1052,7 @@ theorem gl_topGroup {T : Type} [CommRing T] [TopologicalSpace T] [IsTopologicalR
 
 theorem gl_td {T : Type} [CommRing T] [TopologicalSpace T] [TotallyDisconnectedSpace T] :
     TotallyDisconnectedSpace (GL (Fin k) T) := by
-  haveI : TotallyDisconnectedSpace (Matrix (Fin k) (Fin k) T) :=
+  have : TotallyDisconnectedSpace (Matrix (Fin k) (Fin k) T) :=
     (inferInstance : TotallyDisconnectedSpace (Fin k → Fin k → T))
   exact td_of_inj (fun x : GL (Fin k) T => (x : Matrix (Fin k) (Fin k) T)) Units.continuous_val
     (fun a b hab => Units.ext hab)
@@ -1062,8 +1062,8 @@ theorem proG_order {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     (x : G) (hx : x ∈ Uw) (hfin : IsOfFinOrder x) : ∃ m : ℕ, orderOf x = g ^ m := by
   classical
   obtain ⟨hc, hidx⟩ := h
-  haveI : CompactSpace Uw := isCompact_iff_compactSpace.mp hc
-  haveI : T1Space Uw := inferInstance
+  have : CompactSpace Uw := isCompact_iff_compactSpace.mp hc
+  have : T1Space Uw := inferInstance
   let xu : Uw := ⟨x, hx⟩
   have hxu : orderOf xu = orderOf x := by
     exact Subgroup.orderOf_mk x hx
@@ -1077,11 +1077,11 @@ theorem proG_order {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     have := orderOf_le_of_pow_eq_one hj0 hj1
     omega
   obtain ⟨N, hN⟩ : ∃ N : OpenNormalSubgroup Uw, (N : Set Uw) ⊆ (↑Z : Set Uw)ᶜ := by
-    haveI : T2Space Uw := inferInstance
+    have : T2Space Uw := inferInstance
     obtain ⟨H, hH⟩ :=
       ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one (G := ProfiniteGrp.of Uw) hZ h1
     exact ⟨H, hH⟩
-  haveI hNn : N.toSubgroup.Normal := N.isNormal'
+  have hNn : N.toSubgroup.Normal := N.isNormal'
   obtain ⟨m, hm⟩ := hidx N.toSubgroup N.isOpen' hNn
   have hpow : xu ^ (g ^ m) ∈ N.toSubgroup := by
     rw [← QuotientGroup.eq_one_iff, QuotientGroup.mk_pow, ← hm]
@@ -1104,8 +1104,8 @@ theorem step_pro {T : Type} [CommRing T] [TopologicalSpace T] [IsTopologicalRing
     [TotallyDisconnectedSpace T] (g : ℕ) (hg : g.Prime) (Uw : Subgroup (GL (Fin k) T))
     (h : IsProG g Uw) (x : GL (Fin k) T) (hx : x ∈ Uw) (hfin : IsOfFinOrder x) :
     ∃ m : ℕ, orderOf x = g ^ m := by
-  haveI := gl_topGroup (k := k) (T := T)
-  haveI := gl_td (k := k) (T := T)
+  have := gl_topGroup (k := k) (T := T)
+  have := gl_td (k := k) (T := T)
   exact proG_order g hg Uw h x hx hfin
 
 end Steps

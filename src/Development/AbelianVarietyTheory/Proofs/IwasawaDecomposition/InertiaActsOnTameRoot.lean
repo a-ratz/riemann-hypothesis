@@ -79,7 +79,7 @@ theorem exists_mul_eq {R : Type} [CommRing R] [IsDedekindDomain R] (P : Ideal R)
   by_cases h0 : P = ⊥
   · refine ⟨b, a, ?_, Or.inr (mul_comm _ _)⟩
     rw [h0]; simpa using hb
-  · haveI : IsDiscreteValuationRing (Localization.AtPrime P) :=
+  · have : IsDiscreteValuationRing (Localization.AtPrime P) :=
       IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R h0 _
     have hinj : Function.Injective (algebraMap R (Localization.AtPrime P)) :=
       IsLocalization.injective _ P.primeCompl_le_nonZeroDivisors
@@ -110,7 +110,7 @@ theorem exists_denominator {L Ω : Type} [Field L] [NumberField L] [Field Ω] [A
   let f : 𝓞 L →+* A :=
     ((algebraMap L Ω).comp (algebraMap (𝓞 L) L)).codRestrict A (fun s => mem_of_integer A s)
   let P : Ideal (𝓞 L) := (IsLocalRing.maximalIdeal A).comap f
-  haveI : P.IsPrime := Ideal.comap_isPrime f _
+  have : P.IsPrime := Ideal.comap_isPrime f _
   have hle : ∀ s : 𝓞 L, A.valuation (algebraMap L Ω (s : L)) ≤ 1 :=
     fun s => (A.valuation_le_one_iff _).mpr (mem_of_integer A s)
   have hP : ∀ s : 𝓞 L, s ∉ P → A.valuation (algebraMap L Ω (s : L)) = 1 := by
@@ -158,7 +158,7 @@ theorem ram_le : ∀ {E L : Type} [Field E] [NumberField E] [Field L] [NumberFie
   rcases Nat.eq_zero_or_pos m with rfl | hm
   · exact Nat.zero_le _
   have hQ0 : Q ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot P.ne_bot Q
-  haveI : Q.IsMaximal := (inferInstance : Q.IsPrime).isMaximal hQ0
+  have : Q.IsMaximal := (inferInstance : Q.IsPrime).isMaximal hQ0
   have hunder : ∀ y : 𝓞 E, algebraMap (𝓞 E) (𝓞 L) y ∈ Q ↔ y ∈ P.asIdeal := fun y => by
     rw [Ideal.over_def Q P.asIdeal, Ideal.mem_under]
   have hϖP : ϖ ∈ P.asIdeal := (hunder ϖ).mp (hπm ▸ Q.pow_mem_of_mem hπQ m hm)
@@ -170,7 +170,7 @@ theorem ram_le : ∀ {E L : Type} [Field E] [NumberField E] [Field L] [NumberFie
       rw [hJ, pow_two]
       exact Ideal.mul_mono_right h
     exact h2 (Ideal.mem_span_singleton_self ϖ)
-  obtain ⟨s, hsJ, hsP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨s, hsJ, hsP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   have hprim : (Q ^ m).IsPrimary := by
     apply Ideal.isPrimary_of_isMaximal_radical
     rw [Ideal.radical_pow Q hm.ne', (inferInstance : Q.IsPrime).radical]
@@ -321,7 +321,7 @@ theorem exists_tau {E L : Type} [Field E] [NumberField E] [Field L] [NumberField
     have h1 : (τ₁ : L ≃ₐ[E] L) π = (τ₂ : L ≃ₐ[E] L) π := by
       have := congrArg Subtype.val h
       simp only [φ] at this
-      exact (div_left_inj' hπ0).mp this
+      exact (div_left_inj₀ hπ0).mp this
     have key := hgen ((τ₂ : L ≃ₐ[E] L)⁻¹ * τ₁) (by
         rw [AlgEquiv.mul_apply, h1]
         exact (τ₂ : L ≃ₐ[E] L).symm_apply_apply π) (fun η hη => by
@@ -341,8 +341,8 @@ open Polynomial in
 theorem main : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (P : HeightOneSpectrum (𝓞 E)), IsPlaceOver A P → ∀ (m : ℕ), 0 < m → ((m : ℕ) : 𝓞 E) ∉ P.asIdeal → ∀ (ϖ : 𝓞 E), ϖ ∈ P.asIdeal → ϖ ∉ P.asIdeal ^ 2 → ∀ π : Ω, π ^ m = algebraMap E Ω (ϖ : E) → ∀ ζ : Ω, ζ ^ m = 1 → ∃ σ ∈ Ine (F := E) A, σ π = ζ * π := by
   intro E Ω _ _ _ _ _ A P hA m hm hmP ϖ hϖ hϖ2 π hπ ζ hζ
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hm0 : m ≠ 0 := hm.ne'
   have hmv : ¬ A.valuation (m : Ω) < 1 := by
     have := (hA (m : 𝓞 E)).not.mpr hmP
@@ -355,11 +355,11 @@ theorem main : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E
   let f : E[X] := X ^ m - C (ϖ : E)
   have hf0 : f ≠ 0 := X_pow_sub_C_ne_zero hm _
   let M : IntermediateField E Ω := IntermediateField.adjoin E (f.rootSet Ω)
-  haveI : IsSplittingField E M f := IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-  haveI : FiniteDimensional E M := IsSplittingField.finiteDimensional M f
-  haveI : IsGalois E M := IsGalois.of_separable_splitting_field (p := f)
+  have : IsSplittingField E M f := IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
+  have : FiniteDimensional E M := IsSplittingField.finiteDimensional M f
+  have : IsGalois E M := IsGalois.of_separable_splitting_field (p := f)
     (separable_X_pow_sub_C _ (by exact_mod_cast hm0) hϖ0)
-  haveI : NumberField M := NumberField.of_module_finite E M
+  have : NumberField M := NumberField.of_module_finite E M
   have hroot : ∀ r : Ω, r ^ m = algebraMap E Ω ϖ → r ∈ M := fun r hr =>
     IntermediateField.subset_adjoin _ _ (by
       rw [mem_rootSet]
@@ -374,7 +374,7 @@ theorem main : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E
     have := M.div_mem h1 (hroot π hπ)
     rwa [mul_div_cancel_right₀ _ hπ0] at this
   let ζM : M := ⟨ζ, hζM⟩
-  haveI : (primeOf (L := M) A).LiesOver P.asIdeal := by
+  have : (primeOf (L := M) A).LiesOver P.asIdeal := by
     constructor
     ext x
     rw [Ideal.under_def, Ideal.mem_comap, mem_primeOf, ← hA x]

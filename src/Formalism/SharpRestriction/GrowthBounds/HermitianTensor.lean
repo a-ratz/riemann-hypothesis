@@ -121,7 +121,7 @@ private theorem isWeightedHomogeneous_colW_adjugate_genY {R : Type} [CommRing R]
     by_cases hp : p = a
     · subst hp; simp [Matrix.updateRow_apply, hs]; exact isWeightedHomogeneous_one _ _
     · have hsp : s p ≠ i := fun h => hp (s.injective (h.trans hs.symm))
-      simp only [Matrix.updateRow_apply, hsp, hp, if_false, genY, Matrix.of_apply]
+      simp only [Matrix.updateRow_apply, hsp, hp, ite_false, genY, Matrix.of_apply]
       have := isWeightedHomogeneous_X R (colW r r) (s p, p)
       simpa [colW] using this
   · obtain ⟨p, hp⟩ : ∃ p, s p = i := ⟨s.symm i, by simp⟩
@@ -386,9 +386,9 @@ private theorem leftAct_detY_eq_det_mul_detY {R : Type} [CommRing R] (r : ℕ) (
 
 theorem tauP : TauP := by
   intro O K _ _ _ _ _ hinj r N e α hr hα hαN heα hex
-  haveI : CharZero K := charZero_of_injective_algebraMap hinj
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
-  haveI : Infinite O := Infinite.of_injective (Nat.cast : ℕ → O) Nat.cast_injective
+  have : CharZero K := charZero_of_injective_algebraMap hinj
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : Infinite O := Infinite.of_injective (Nat.cast : ℕ → O) Nat.cast_injective
   obtain ⟨i0, hi0⟩ := hex
   have hD : N - e ≤ ∑ j : Fin r, (N - α j.rev) := by
     have := Finset.single_le_sum (f := fun j : Fin r => N - α j.rev) (fun j _ => Nat.zero_le _) (Finset.mem_univ i0.rev)

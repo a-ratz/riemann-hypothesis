@@ -116,10 +116,10 @@ theorem lat_moves_at_place : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
   have hl := hloc ⟨w, hw⟩
   simp only [GlobalTheory.FunObj.inBasis, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, MulAut.conj_inv_apply] at hl
   have hY := val_of_reGL_eq_inv_diagGL _ _ _ hl
-  simp only [Fin.coe_cast, topRank_eq G t w (Nat.zero_le _), map_mul, map_inv] at hY
+  simp only [Fin.val_cast, topRank_eq G t w (Nat.zero_le _), map_mul, map_inv] at hY
   have hrow := S.row t ht w hw 0 h0
   unfold GlobalTheory.FunObj.IsSumFrame at hrow
-  simp only [if_true] at hrow
+  simp only [ite_true] at hrow
   have hΛ : G.Λ (.grid D.R.m 0) = (G.rowDec 0 h0).lat (G.Λ (.top 0)) (stairId (G.pl.stA sc) (G.pl.stAbar sc) (D.R.m - 1 - 0)) :=
     G.sp.colLat D.R.m h0 le_rfl
   have hR : GlobalTheory.RowShape.rowN G 0 = (G.rowDec 0 h0).lat (G.Λ (.top 0)) (GlobalTheory.RowShape.rowId D 0) := by
@@ -423,7 +423,7 @@ theorem GlobalTheory.RowShape.latV_grid_iff_rowN_zero : ∀ {D : D7} {T : Type} 
       GlobalTheory.RowShape.rowId D 0 p * ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ^ (p.1 + 1) *
         (((G.pl.modulBar sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ^ (D.R.m - 1 - 0 - p.1))⁻¹ := by
     intro p
-    simp only [stairId, GlobalTheory.RowShape.rowId, GlobalTheory.RowShape.tiltSc, if_neg hodd, FractionalIdeal.spanSingleton_one,
+    simp only [stairId, GlobalTheory.RowShape.rowId, GlobalTheory.RowShape.tiltSc, ite_eq_right hodd, FractionalIdeal.spanSingleton_one,
       Places.stA, Places.stAbar, mul_pow, inv_pow, mul_inv, inv_inv, one_mul]
     ac_rfl
   have hA : ∀ x ∈ G.Λ (.grid D.R.m 0),

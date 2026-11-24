@@ -325,7 +325,7 @@ theorem projection_surjective : Function.Surjective D.p1 := by
   rfl
 
 theorem exists_gen : ∃ a : D.R, ∀ x : D.R, D.p2 x = 1 ↔ x ∈ Subgroup.zpowers a := by
-  haveI : IsCyclic (HGrp D.e) := (hostGroup D.e).2.2.2.2.2.1
+  have : IsCyclic (HGrp D.e) := (hostGroup D.e).2.2.2.2.2.1
   have hinj : Function.Injective (D.p1.comp D.p2.ker.subtype) := by
     intro x y hxy
     have hxy' : D.p1 x.1 = D.p1 y.1 := hxy
@@ -334,7 +334,7 @@ theorem exists_gen : ∃ a : D.R, ∀ x : D.R, D.p2 x = 1 ↔ x ∈ Subgroup.zpo
     have h2 : D.p2 (x.1 * y.1⁻¹) = 1 := by
       rw [map_mul, map_inv, MonoidHom.mem_ker.mp x.2, MonoidHom.mem_ker.mp y.2, inv_one, mul_one]
     exact Subtype.ext (mul_inv_eq_one.mp (D.eq_one_of h1 h2))
-  haveI : IsCyclic D.p2.ker := isCyclic_of_injective (D.p1.comp D.p2.ker.subtype) hinj
+  have : IsCyclic D.p2.ker := isCyclic_of_injective (D.p1.comp D.p2.ker.subtype) hinj
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := D.p2.ker)
   refine ⟨g.1, fun x => ⟨fun hx => ?_, fun hx => ?_⟩⟩
   · obtain ⟨k, hk⟩ := Subgroup.mem_zpowers_iff.mp (hg ⟨x, hx⟩)
@@ -435,7 +435,7 @@ theorem o_eq : D.frame.o = Nat.card D.ξ.range := by
 
 theorem twoGroup (h : ∃ j : ℕ, ∀ u, D.ξ u ^ 2 ^ j = 1) : D.frame.TwoGroup := by
   obtain ⟨j, hj⟩ := h
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hH : Nat.card (HGrp D.e) = 2 ^ D.e := (hostGroup D.e).2.2.2.2.2.2.1
   have hp : IsPGroup 2 D.R := by
     intro x
@@ -495,12 +495,12 @@ theorem art_snd (u : (ZMod (D.m * q * d))ˣ) :
 
 theorem art_ps (u : (ZMod (D.m * q * d))ˣ) :
     (((D.art hH u).1.1 : ℤˣ) : ℤ) = jacobiSym (((u : ZMod (D.m * q * d)).val : ℕ) : ℤ) q := by
-  haveI := D.neZeroN hH
+  have := D.neZeroN hH
   exact D7.sgnN_val hH.1 (D.q_dvd q d) u
 
 theorem art_ch (u : (ZMod (D.m * q * d))ˣ) :
     (((D.art hH u).1.2 : ℤˣ) : ℤ) = jacobiSym (((u : ZMod (D.m * q * d)).val : ℕ) : ℤ) d := by
-  haveI := D.neZeroN hH
+  have := D.neZeroN hH
   exact D7.sgnN_val hH.2.1 (D.d_dvd q d) u
 
 theorem art_ps_one (u : (ZMod (D.m * q * d))ˣ) {y : ℕ} (hu : (u : ZMod (D.m * q * d)).val ≡ y [MOD q])
@@ -521,7 +521,7 @@ theorem art_ch_one (u : (ZMod (D.m * q * d))ˣ) {y : ℕ} (hu : (u : ZMod (D.m *
 
 theorem art_snd_one (u : (ZMod (D.m * q * d))ˣ) (hu : (u : ZMod (D.m * q * d)).val ≡ 1 [MOD D.m]) :
     (D.art hH u).2 = D.w (D.art hH u).1.1 := by
-  haveI := D.neZeroN hH
+  have := D.neZeroN hH
   have h1 : ZMod.unitsMap (D.m_dvd q d) u = 1 := by
     apply Units.ext
     rw [D7.unitsMap_val, Units.val_one]
@@ -538,7 +538,7 @@ theorem art_eq_one (u : (ZMod (D.m * q * d))ˣ) (h1 : (D.art hH u).1.1 = 1) (h2 
 include hH in
 theorem eta_one (u : (ZMod (D.m * q * d))ˣ) (hu : (u : ZMod (D.m * q * d)).val ≡ 1 [MOD D.m]) :
     D.eta (ZMod.unitsMap (D.m_dvd q d) u) = 1 := by
-  haveI := D.neZeroN hH
+  have := D.neZeroN hH
   have h1 : ZMod.unitsMap (D.m_dvd q d) u = 1 := by
     apply Units.ext
     rw [D7.unitsMap_val, Units.val_one]

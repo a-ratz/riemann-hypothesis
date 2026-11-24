@@ -81,7 +81,7 @@ theorem psiF_f (e f : Fin r → S.V) (U U' : Matrix (Fin r) (Fin r) E) (hff : �
     psiF e f U U' (f j) = ∑ c, U' c j • f c := by
   rw [psiF_apply]
   simp only [hff, hef, zero_smul, Finset.sum_const_zero, add_zero, ite_smul, one_smul, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   abel
 
 theorem levi_mem (Λ : Submodule (𝓞 E) S.V) (aa : Fin r → FractionalIdeal (nonZeroDivisors (𝓞 E)) E)
@@ -271,10 +271,10 @@ theorem frameOpFull (D : D7) (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS ((Tu
     hBlo (Fin.castSucc i) (Fin.castSucc j) (Fin.castSucc_lt_castSucc_iff.mpr h)
   have hUd1 : ∀ i, U i i = 1 := fun i => hBd _
   have hdet : U.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i j h => hUlo i j h)]
+    rw [Matrix.det_of_isUpperTriangular (fun i j h => hUlo i j h)]
     exact Finset.prod_eq_one fun i _ => hUd1 i
-  haveI : Invertible U.det := by rw [hdet]; exact invertibleOne
-  haveI : Invertible U := Matrix.invertibleOfDetInvertible U
+  have : Invertible U.det := by rw [hdet]; exact invertibleOne
+  have : Invertible U := Matrix.invertibleOfDetInvertible U
   have hUbt : U.BlockTriangular id := fun i j h => hUlo i j h
   have hUibt : (U⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hUbt
   have hUiU : U⁻¹ * U = 1 := Matrix.nonsing_inv_mul U (by rw [hdet]; exact isUnit_one)
@@ -328,7 +328,7 @@ theorem frameOpFull (D : D7) (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS ((Tu
             ⟨c, show c.1 < j from lt_of_lt_of_le (Fin.lt_def.mp h) (Nat.lt_succ_iff.mp hi), rfl⟩)
         · subst h
           simp [hUE, hUd1]
-        · simp [hUE, hUlo c i h, if_neg h.ne']
+        · simp [hUE, hUlo c i h, ite_eq_right h.ne']
       have := hsub hx
       rw [hnL]
       exact this

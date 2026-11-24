@@ -60,7 +60,7 @@ private theorem tp_tr {R G : Type} [CommRing R] [Group G] {n : ℕ} (hn : 1 ≤ 
       | zero => simp
       | add a b ha hb => simp only [map_add (f := _), ha, hb]
       | single g r => ext i j : 2; simp [GDet.repAlg]
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   rw [GDet.tr, GDet.lam, h, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
   simp
 
@@ -134,8 +134,8 @@ private theorem tp_core {O R X G H : Type} [CommRing O] [CommRing R] [Algebra O 
     (hO : D.tr (MonoidAlgebra.single (φ s) 1 * (List.ofFn fun i => MonoidAlgebra.single (φ (g i)) (1 : R) -
       MonoidAlgebra.single 1 (a i)).prod) = 0) :
     ∑ k, M (φ s) k k • (∏ j ∈ Finset.univ.erase k, (M (φ (g j)) k k - x (a j))) • δ (a k) = 0 := by
-  letI : Module Oᵐᵒᵖ X := Module.compHom X ((RingHom.id O).fromOpposite mul_comm)
-  haveI : IsCentralScalar O X := ⟨fun _ _ => rfl⟩
+  let : Module Oᵐᵒᵖ X := Module.compHom X ((RingHom.id O).fromOpposite mul_comm)
+  have : IsCentralScalar O X := ⟨fun _ _ => rfl⟩
   have h1 : δ 1 = 0 := by
     have := hδ 1 1
     simpa using this

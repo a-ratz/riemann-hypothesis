@@ -124,7 +124,7 @@ theorem mem_normGroup_iff_pos {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) {w : I
   have hne : ∃ x, σ x ≠ x := by
     by_contra h
     push_neg at h
-    haveI := hcm.2.1
+    have := hcm.2.1
     refine (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex (InfinitePlace.mk τ.1)))
       (InfinitePlace.isReal_mk_iff.2 (ComplexEmbedding.isReal_iff.2 (RingHom.ext fun x => ?_)))
     exact (hcm.2.2.2 τ.1 x).symm.trans (by rw [h x])
@@ -164,8 +164,8 @@ theorem eta_eq_prod_sign : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
         ((‖piInf (B.emb w) ((idFF F E a : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E)‖ : ℝ) : ℂ) := by
   intro F E _ _ _ _ _ σ B hB η hη a ha
   have hcm := hB.cm
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
-  haveI := hcm.1
+  have : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
+  have := hcm.1
   rw [eq_signToCircle η hη, MonoidHom.comp_apply, normSign_eq_prod (finComp_eq_one ha), map_prod]
   rw [show ((∏ w : InfinitePlace F, signToCircle (eta F E w.Completion (infComp a w)) : Circle) : ℂ) =
       ∏ w : InfinitePlace F, ((signToCircle (eta F E w.Completion (infComp a w)) : Circle) : ℂ) from
@@ -183,7 +183,7 @@ theorem eta_eq_prod_sign : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   · have hneg : r < 0 := lt_of_le_of_ne (not_lt.1 hpos) hr0
     rw [eta_eq_neg_one_iff.2 (fun h => hpos (hx.1 h)), abs_of_neg hneg]
     change ((if (-1 : ℤˣ) = 1 then (1 : Circle) else -1 : Circle) : ℂ) = _
-    rw [if_neg (by decide)]
+    rw [ite_eq_right (by decide)]
     push_cast
     rw [div_neg, div_self (by exact_mod_cast hr0)]
 

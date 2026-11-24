@@ -115,8 +115,8 @@ theorem adFun_eq (hG : V.gram = 1) (hx : x₀ ∈ UAd D.sp.cm n) (hp : PtLaw S b
 
 theorem isAutFunDef_adFun (hθ : IsInfFam θ) (hG : V.gram = 1) (he : ∀ τ, embAt σ emb τ = tauE D (t τ)) (hx : x₀ ∈ UAd D.sp.cm n)
     (hp : PtLaw S b pt c) (hφ : φ ∈ S.Fi emb σ lam) : IsAutFunDef V (adFun θ V hn t emb σ S b pt c x₀ l φ) := by
-  haveI := valC_finiteDimensional emb σ lam
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have := valC_finiteDimensional emb σ lam
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hnr := fun g => near_ptOf (ST := ST) (SG := SG) (Q := Q) D.sp.cm c (mul_mem (finN_mem hn hG g) hx)
   refine isAutFunDef_of θ hn t hθ (Gr emb σ n) lam (fun g => valL S emb σ b (pt (ptOf ST SG Q c (finN V hn g * x₀))) φ)
     (fun g => valL_mem hφ _ _) (fun γ hγ g => ?_) ?_ (fun k hk g => by rw [map_mul, finN_of_inf hn hk, mul_one]) l

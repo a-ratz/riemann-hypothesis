@@ -142,14 +142,14 @@ theorem _root_.GlobalTheory.K4.isTopW_topW : ∀ (k K Ω F : Type) [Field k]
       (_root_.GlobalTheory.K4.topW (K := K) ζ x y η σ) := by
   intro k K Ω F _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ N ζ hN hζ hfix _ a b α β ha hb _ _ _ _ hα hβ
     x y hx hy η hcob hη _ σ
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : CharZero (RatFunc k) :=
+  have : NeZero N := ⟨hN.ne'⟩
+  have : CharZero (RatFunc k) :=
     charZero_of_injective_algebraMap (algebraMap k (RatFunc k)).injective
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.trans F K Ω
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.trans F K Ω
   set H := _root_.GlobalTheory.K4.geo F K Ω with hH
-  haveI : H.Normal := ⟨fun h hh g => _root_.GlobalTheory.K4.TopW.conj_mem_geo g hh⟩
+  have : H.Normal := ⟨fun h hh g => _root_.GlobalTheory.K4.TopW.conj_mem_geo g hh⟩
   obtain ⟨hhom, -, -⟩ := _root_.GlobalTheory.KEdge.edge_cup_props _ N H x y η hcob
   have hres := _root_.GlobalTheory.K4.TopSpec.continuous_res (F := F) (K := K) (Ω := Ω)
   have hmem : ∀ g : Ω ≃ₐ[K] Ω, AlgEquiv.restrictScalarsHom F g ∈ H :=

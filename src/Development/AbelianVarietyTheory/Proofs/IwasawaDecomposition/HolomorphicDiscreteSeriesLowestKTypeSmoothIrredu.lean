@@ -74,7 +74,7 @@ theorem smFn_coef (hσ : Formalism.QuantumDeterminants.IsCRepOn (Formalism.Quant
       obtain ⟨i, rfl⟩ := List.mem_ofFn.1 hv
       exact single_mem_UG (fun _ : Unit => Hm) _ (hX i) _
   simp only [Pi.mul_apply, hσ.2 _ (hu ()) _ (hmem _ ()), ContinuousLinearMap.comp_apply]
-  simp only [prod_single_apply, if_true]
+  simp only [prod_single_apply, ite_true]
   have h1 := hv k Xs hX
   exact (((innerSL ℂ l).comp (σ (u ()))).restrictScalars ℝ).contDiff.comp h1
 
@@ -147,7 +147,7 @@ theorem eq_zero_of_orth [CompleteSpace H] {q : ℕ} {x₀ : Mt n} {w : Fin n →
   have hcl : IsClosed (P : Set H) := by
     have : (P : Set H) = ⋂ g ∈ Formalism.QuantumDeterminants.UH Hm, {y | ⟪l, σ g y⟫_ℂ = 0} := by
       ext y
-      simp only [SetLike.mem_coe, hP, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, hP, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact isClosed_biInter fun g _ => isClosed_eq (by fun_prop) continuous_const
   have hone : (1 : Mt n) ∈ Formalism.QuantumDeterminants.UH Hm := by
@@ -239,7 +239,7 @@ theorem torus_wt {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel 
   rw [h3, hl (fun a => s () (e.symm a)) (diagonal_mem_Kset _ _), Fintype.prod_unique]
   congr 1
   rw [← e.sum_comp]
-  simp only [← Complex.exp_int_mul, ← Complex.exp_sum, Equiv.symm_apply_apply]
+  simp only [← Complex.exp_intCast_mul, ← Complex.exp_sum, Equiv.symm_apply_apply]
   congr 1
   push_cast
   rw [Finset.sum_mul]

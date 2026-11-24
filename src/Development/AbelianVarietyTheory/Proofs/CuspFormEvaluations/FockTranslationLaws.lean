@@ -182,7 +182,7 @@ theorem fock_translation_laws {ι : Type} [Fintype ι] (U : ℕ → EuclideanSpa
       simp [e]
   · intro a F v
     rw [hU, norm_mul, mul_pow, Complex.norm_exp, mul_comm (_ ^ 2) (‖F (v - a)‖ ^ 2), mul_assoc,
-      ← Real.exp_nat_mul, ← Real.exp_add]
+      ← Real.exp_natCast_mul, ← Real.exp_add]
     congr 2
     rw [← FockTranslation.herm_self_re v, ← FockTranslation.herm_self_re (v - a)]
     have e : (q * Real.pi * Hf v a - q * Real.pi * Hf a a / 2 : ℂ) =

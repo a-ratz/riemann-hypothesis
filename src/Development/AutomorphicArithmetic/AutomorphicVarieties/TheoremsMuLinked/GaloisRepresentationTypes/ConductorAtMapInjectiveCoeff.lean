@@ -129,7 +129,7 @@ end Transfer
 
 private theorem enough_of_le {l : ℕ} [Fact l.Prime] {c c' : Coef l} (h : c.O ≤ c'.O) (n : ℕ) [NeZero n]
     [HasEnoughRootsOfUnity c.O n] : HasEnoughRootsOfUnity c'.O n := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot c.O n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot c.O n
   exact ⟨⟨_, hζ.map_of_injective (f := Subalgebra.inclusion h) (Subalgebra.inclusion_injective h)⟩, inferInstance⟩
 
 private theorem main_big (hA : Aut.Sp4In) (hP : CohomologyHyp) (hM : LemmaM) (hM' : LemmaM') (hLP : LemmaP) (hN : Af.NumberSp4)

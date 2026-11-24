@@ -206,7 +206,7 @@ theorem eW_symm_cont {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesO
     Continuous (eW i dc hw).symm := by
   have h1 : Continuous (D.nbr i w hw).e.symm := (D.nbr i w hw).e_symm_cont
   have h2 : Continuous (MulEquiv.subgroupCongr (Dw_idx i dc hw)).symm :=
-    continuous_induced_rng.2 continuous_subtype_val
+    continuous_induced_rng.2 continuous_subtypeVal
   exact h2.comp h1
 
 theorem eW_inert {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i))

@@ -55,11 +55,11 @@ theorem hasType_of_mem_mult : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → SP
   | zero => intro κ _ h; simp
   | add x y _ _ hx hy =>
     intro κ hκ h
-    simp only [MultilinearMap.add_apply, Pi.add_apply]
+    simp only [add_apply, Pi.add_apply]
     rw [hx v κ hκ h, hy v κ hκ h, mul_add]
   | smul a x _ hx =>
     intro κ hκ h
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul]
+    simp only [smul_apply, Pi.smul_apply, smul_eq_mul]
     rw [hx v κ hκ h, mul_left_comm]
 
 end GlobalTheory

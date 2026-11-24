@@ -92,8 +92,8 @@ theorem theta_tmul {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A)) (U : T.O
      theta A B g U (c ⊗ₜ[A] b) = ((pullback.snd (str A B) g).app U).hom c *
        ((pullback.fst (str A B) g).appLE ⊤ ((pullback.snd (str A B) g) ⁻¹ᵁ U) (by simp)).hom
          ((Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom b)) := by
-  letI := (secAlg A g U).toAlgebra
-  letI : Algebra A Γ(pullback (str A B) g, (pullback.snd (str A B) g) ⁻¹ᵁ U) :=
+  let := (secAlg A g U).toAlgebra
+  let : Algebra A Γ(pullback (str A B) g, (pullback.snd (str A B) g) ⁻¹ᵁ U) :=
     (((pullback.snd (str A B) g).app U).hom.comp (secAlg A g U)).toAlgebra
   exact Algebra.TensorProduct.lift_tmul _ _ _ _ _
 
@@ -102,7 +102,7 @@ theorem kappa_apply {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A))
     (letI := (secAlg A g U).toAlgebra
      ∀ x : Γ(T, U) ⊗[A] B, kappa A B g I U x =
        (I.subschemeι.app ((pullback.snd (str A B) g) ⁻¹ᵁ U)).hom (theta A B g U x)) := by
-  letI := (secAlg A g U).toAlgebra
+  let := (secAlg A g U).toAlgebra
   intro x
   induction x using TensorProduct.inductionOn with
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), map_add (f := _), hx, hy]; rfl
@@ -122,7 +122,7 @@ theorem kappa_apply {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A))
 
 theorem theta_surjective {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A)) (U : T.Opens)
     (hU : IsAffineOpen U) : Function.Surjective (theta A B g U) := by
-  letI := (secAlg A g U).toAlgebra
+  let := (secAlg A g U).toAlgebra
   have hP := ReciprocityTheory.ChartRestriction.G.Out.GtBCPf.isPushout_appLE (IsPullback.of_hasPullback (str A B) g)
     inferInstance (isAffineOpen_top _) hU le_top (by simp)
   let R : CommRingCat.{0} := CommRingCat.of (Γ(T, U) ⊗[A] B)
@@ -167,7 +167,7 @@ theorem eq_of_ker_kappa_eq : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra
     (∀ U : T.affineOpens, RingHom.ker (GlobalTheory.HilbAff.kappa A B g I₁ U) =
       RingHom.ker (GlobalTheory.HilbAff.kappa A B g I₂ U)) → I₁ = I₂ := by
   intro A B _ _ _ T g I₁ I₂ h
-  haveI : IsAffineHom (pullback.snd (str A B) g) :=
+  have : IsAffineHom (pullback.snd (str A B) g) :=
     isAffineHom_isStableUnderBaseChange.of_isPullback (IsPullback.of_hasPullback (str A B) g)
       (inferInstance : IsAffineHom (str A B))
   let W : T.affineOpens → (pullback (str A B) g).affineOpens :=
@@ -175,7 +175,7 @@ theorem eq_of_ker_kappa_eq : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra
   refine Scheme.IdealSheafData.ext_of_iSup_eq_top W ?_ ?_
   · exact (pullback.snd (str A B) g).iSup_preimage_eq_top (iSup_affineOpens_eq_top T)
   · intro U
-    letI := (secAlg A g U).toAlgebra
+    let := (secAlg A g U).toAlgebra
     have key : ∀ I : (pullback (str A B) g).IdealSheafData,
         I.ideal (W U) = Ideal.map (theta A B g U) (RingHom.ker (kappa A B g I U)) := by
       intro I

@@ -52,8 +52,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 theorem UpperTheory.V.Ws.large₂.redOne :
     ∀ {l : ℕ} [Fact l.Prime] (c : Coef l) (m : ℕ), l.Coprime m → ∀ x : c.Oˣ, x ^ m = 1 → residue c.O (x : c.O) = 1 → x = 1 := by
   intro l _ c m hm x hx hres
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨-, -, -, -, -, -, -, -, hunit⟩ := dvrFacts l c.O
   have hmu : IsUnit ((m : ℕ) : c.O) :=
     hunit m ((Nat.Prime.coprime_iff_not_dvd (Fact.out : l.Prime)).1 hm)

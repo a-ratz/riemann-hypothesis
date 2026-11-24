@@ -101,14 +101,14 @@ private theorem dense_of_approx {F K : Type} [Field F] [Field K] [NumberField K]
   have ha0 : a ≠ 0 := by rintro rfl; simp at ha1
   obtain ⟨x, hx⟩ := H k a ha0
   refine ⟨_, hγ ?_, x, rfl⟩
-  rw [map_div₀, div_le_one₀ (zero_lt_iff.2 ha1), ha] at hx
-  simp only [Set.mem_setOf_eq]
+  rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ha1), ha] at hx
+  simp only [Set.mem_ofPred_eq]
   rw [Valuation.restrict_lt_iff_lt_embedding, ← hc, ← map_sub]
   have h1 : (Valued.v (algebraMap K (w.adicCompletion K) (f x - k)) : WithZero (Multiplicative ℤ)) =
       w.valuation K (f x - k) := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
   rw [h1]
   refine hx.trans_lt ?_
-  refine mul_lt_of_lt_one_right (zero_lt_iff.2 hc0) ?_
+  refine mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hc0) ?_
   rw [← WithZero.exp_zero, WithZero.exp_lt_exp]; norm_num
 
 private theorem surj_of_dense {F K : Type} [Field F] [NumberField F] [Field K] [NumberField K] (f : F →+* K)

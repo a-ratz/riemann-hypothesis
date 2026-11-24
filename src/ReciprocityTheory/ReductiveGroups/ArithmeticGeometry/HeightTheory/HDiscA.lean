@@ -91,23 +91,23 @@ theorem disc_at (hd : d.AxH 𝒜) (h : d.S1) (la : HeightOneSpectrum (𝓞 K)) :
         (algebraMap K (KTf K d.D d.N) ((unif la : 𝓞 K) : K)) ^ (((2 * n + t : ℕ) : ℤ) - 2 * N) *
           OpToKT d.D d.N la u := by
   classical
-  letI : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
-  letI : ∀ c, Algebra (Op d.D d.N la) (OmS (Ω c) d.D d.N) := fun c => d.algOp h la c
-  letI := algOpKT (K := K) d.D d.N la
-  haveI := Op_isDVR (K := K) d.D d.N la
-  haveI := isFractionRing_Op (K := K) d.D d.N la
+  let : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
+  let : ∀ c, Algebra (Op d.D d.N la) (OmS (Ω c) d.D d.N) := fun c => d.algOp h la c
+  let := algOpKT (K := K) d.D d.N la
+  have := Op_isDVR (K := K) d.D d.N la
+  have := isFractionRing_Op (K := K) d.D d.N la
   have hF := fun c => d.comp_facts hd h la c
-  haveI : ∀ c, IsScalarTower (Op d.D d.N la) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+  have : ∀ c, IsScalarTower (Op d.D d.N la) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
     fun c => (hF c).2.1
-  haveI : ∀ c, FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (hF c).2.2.1
-  haveI : ∀ c, Algebra.IsSeparable (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (hF c).2.2.2.1
+  have : ∀ c, FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (hF c).2.2.1
+  have : ∀ c, Algebra.IsSeparable (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (hF c).2.2.2.1
   let n : ∀ c, AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ) → ℤ := fun c w =>
     d.ord c (d.Wres c w) d.wF (hd.a4.choose c)
   choose g hg0 hgw hgiff using fun c => d.comp_g hd h la c (n c)
   have hset : d.AdmissibleOmegaFamiliesAtPrimeOfSection hd.a4.choose la =
       {y | ∀ c, g c * y c ∈ integralClosure (Op d.D d.N la) (OmS (Ω c) d.D d.N)} := by
     ext y
-    simp only [AdmissibleOmegaFamiliesAtPrimeOfSection, Set.mem_setOf_eq]
+    simp only [AdmissibleOmegaFamiliesAtPrimeOfSection, Set.mem_ofPred_eq]
     exact forall_congr' fun c => hgiff c (y c)
   have hb : ∀ k c, g c * d.bvecG hd.sel hd.a4.choose k c ∈
       integralClosure (Op d.D d.N la) (OmS (Ω c) d.D d.N) := fun k c =>
@@ -209,7 +209,7 @@ theorem disc_lattice (hd : d.AxH 𝒜) (h : d.S1) :
     intro la
     obtain ⟨n, t, N, hI, hN, u, hu, hDe⟩ := d.disc_at hd h la
     have hIL : d.IL h hd.sel hd.a4.choose la = (((d.htOf hd h).Ila la).toNat : ℝ) := rfl
-    refine ⟨by rw [hI]; exact ENat.coe_ne_top n, ?_, ?_⟩
+    refine ⟨by rw [hI]; exact ENat.natCast_ne_top n, ?_, ?_⟩
     · rw [hDe, algK_unif]
       exact mul_ne_zero (zpow_ne_zero _ ((map_ne_zero_iff _ (OpToKT_injective d.D d.N la)).mpr
         (unifOp_irreducible d.D d.N la).ne_zero))

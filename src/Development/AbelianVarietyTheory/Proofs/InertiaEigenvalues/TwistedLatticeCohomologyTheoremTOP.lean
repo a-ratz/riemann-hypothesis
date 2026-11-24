@@ -311,7 +311,7 @@ theorem psiRing : PsiRing R ψ := by
   · change ι _ = ι _
     rw [hψ, iota_gam hι, iota_gam hι, psi_gam, hψ]
   · ext y
-    simp only [Set.mem_image, Set.mem_setOf_eq, ← mem_Dp, ← mem_Dp_zero]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, ← mem_Dp, ← mem_Dp_zero]
     constructor
     · rintro ⟨x, hx, rfl⟩
       exact psiK_mem hι hψ h1 hx
@@ -520,7 +520,7 @@ theorem lemmaPsi : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacter
     refine Finset.sum_congr rfl fun m _ => ?_
     rw [hg, map_smul, Finsupp.smul_apply, h3, smul_eq_mul, mul_comm]
   ext z
-  simp only [FrobeniusBinomialReduction.kerPsi, Set.mem_image, Set.mem_setOf_eq, mem_sh_span]
+  simp only [FrobeniusBinomialReduction.kerPsi, Set.mem_image, Set.mem_ofPred_eq, mem_sh_span]
   constructor
   · rintro ⟨x, ⟨hx1, hx2⟩, rfl⟩
     refine ⟨fun i => ?_, by rw [map_sub, hcomm, hx2, map_zero, sub_zero]⟩
@@ -707,7 +707,7 @@ open GlobalTheory.AdmLoc GlobalTheory.TopSteps Formalism.WeaklyAdmissibleFiltrat
 theorem fSummand : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (S : TopSit P), tableLineDegreeTwo.BlochKatoJumpDimension (P.PD S.K) (LL := ↥S.LL.1) (O := S.O) (IK S.K) → S.CrysCalc → S.Vanish → S.FreeH → S.FSummand := by
   intro l _ P S hB hC hV hH
   obtain ⟨⟨-, -, -, hemb, -⟩, -⟩ := S.hyp
-  have : IsTopologicalAddGroup (tw S hC).V := IsModuleTopology.topologicalAddGroup ↥S.LL.1 (tw S hC).V
+  have : IsTopologicalAddGroup (tw S hC).V := IsModuleTopology.isTopologicalAddGroup ↥S.LL.1 (tw S hC).V
   have h := hB.1 (tw S hC).V (tw S hC).ρ (tw S hC).cont (tw_crysWith S hC).1
   exact fSummand_of_dim S hC hV hH (h.trans (congrArg _
     (finsum_multV_neg (P.PD S.K) S.emb hemb (bijective_maxUnramifiedSubfield_algebraMap S) _ (tw_crysWith S hC).2)))
@@ -834,11 +834,11 @@ theorem cls_eq_zero [IsDomain O] [IsDiscreteValuationRing O] {lam : O} (hl : Irr
       have : z = 0 := Subtype.ext (funext fun g => Subsingleton.elim _ _)
       rw [this, Submodule.Quotient.mk_zero]
     · obtain ⟨f, hfi, hf0⟩ := exists_res_inj hl X
-      haveI : Finite (O ⧸ Ideal.span {lam}) := Finite.of_injective f hfi
-      haveI : Finite (X ⧸ LinearMap.range f) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
+      have : Finite (O ⧸ Ideal.span {lam}) := Finite.of_injective f hfi
+      have : Finite (X ⧸ LinearMap.range f) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
       have hlt : Nat.card (X ⧸ LinearMap.range f) < n := by
         rw [← hn, Submodule.card_eq_card_quotient_mul_card (LinearMap.range f)]
-        haveI : Nontrivial (LinearMap.range f) :=
+        have : Nontrivial (LinearMap.range f) :=
           Submodule.nontrivial_iff_ne_bot.mpr (fun h => hf0 (LinearMap.range_eq_bot.mp h))
         have h1 : 1 < Nat.card (LinearMap.range f) := Finite.one_lt_card
         have h2 : 0 < Nat.card (X ⧸ LinearMap.range f) := Nat.card_pos
@@ -887,7 +887,7 @@ theorem isLocallyConstant_twCoef {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
     (hε : ∀ g, (Γ.ε g : O) = algebraMap ℤ_[l] O (χ g)) (c : ℕ)
     (Y : Type) [AddCommGroup Y] [Module O Y] [Finite Y] (m : O ⊗[O] Y) :
     IsLocallyConstant fun g => twCoef (Γ.Wchi c) Γ.χ₁ Y g m := by
-  haveI : Finite (O ⊗[O] Y) := Finite.of_equiv _ (TensorProduct.lid O Y).toEquiv.symm
+  have : Finite (O ⊗[O] Y) := Finite.of_equiv _ (TensorProduct.lid O Y).toEquiv.symm
   have hε' : ∀ g, Γ.ε g = Units.map (algebraMap ℤ_[l] O : ℤ_[l] →* O) (χ g) := fun g => Units.ext (hε g)
   have h1 : Continuous fun g : G => (((χ g) ^ (-((c : ℤ) - 1)) : ℤ_[l]ˣ) : ℤ_[l]) :=
     Units.continuous_val.comp (hc.zpow _)
@@ -899,7 +899,7 @@ theorem isLocallyConstant_twCoef {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
 theorem exists_eps {l : ℕ} [Fact l.Prime] {P : LocPrime l} (S : TopSit P) :
     ∃ χ : S.G → ℤ_[l]ˣ, Continuous χ ∧ ∀ g, (S.Γ.ε g : S.O) = algebraMap ℤ_[l] S.O (χ g) := by
   obtain ⟨χ, hχ, hc, -⟩ := GlobalTheory.Cyc.exists_integral_cyclotomicChar l P
-  refine ⟨fun g => χ g, hc.comp continuous_subtype_val, fun g => ?_⟩
+  refine ⟨fun g => χ g, hc.comp continuous_subtypeVal, fun g => ?_⟩
   apply Subtype.ext
   have h1 := S.hyp.2.1.2.2.2 g
   have h2 : ((P.PD S.K).χ g : ℚ_[l]) = (P.χQ g : ℚ_[l]) := P.PD_χ S.K g
@@ -1043,7 +1043,7 @@ theorem indep_cons [IsLocalRing O] {lam : O} (hl : Ideal.span {lam} = IsLocalRin
     simp only [map_add (f := _), map_smul, map_sum, hF, LinearMap.rTensor_tmul, map_zero] at h1
     simp only [Submodule.projectionOnto_apply_left, lid_tmul, smul_zero, zero_add, Module.Basis.coord_apply,
       Module.Basis.repr_self, Finsupp.single_apply, ite_smul, one_smul, zero_smul, smul_ite, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at h1
+      Finset.mem_univ, ite_true] at h1
     rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq_zero_iff_mem, ← h1, Algebra.smul_def, mul_one]
     rfl
 
@@ -1065,7 +1065,7 @@ theorem mem_range_of_bound [IsDomain O] [IsDiscreteValuationRing O] {lam : O} (h
       have e : C.subtype.rTensor X' (f.lTensor C y) = f.lTensor H (C.subtype.rTensor X y) := by
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply, LinearMap.rTensor_comp_lTensor,
           LinearMap.lTensor_comp_rTensor]
-      simp only [Set.mem_setOf_eq, e]
+      simp only [Set.mem_ofPred_eq, e]
       exact hmap X X' f _)
     (fun hfin y hy => by
       by_contra hne
@@ -1344,7 +1344,7 @@ theorem lc_reduction {G : Type} [Group G] [TopologicalSpace G] {Qp : Type} [Fiel
   have hT := GlobalTheory.Cyc.locLat_isOpen hO T
   obtain ⟨⟨_, _, _⟩, -⟩ := hO
   have hl : algebraMap O LL lam ≠ 0 := fun h => hlam (IsFractionRing.injective O LL (by rw [h, map_zero]))
-  haveI := IsModuleTopology.topologicalAddGroup LL T.V
+  have := IsModuleTopology.isTopologicalAddGroup LL T.V
   rw [IsLocallyConstant.iff_eventually_eq]
   intro g₀
   have hc : Continuous fun g => (algebraMap O LL lam)⁻¹ • (T.ρ g x - T.ρ g₀ x) :=
@@ -1508,8 +1508,8 @@ theorem freeH_of_vanish_euler : Formalism.GaloisCohomology.LocalEulerCharK →
   intro heul l _ P S hV
   obtain ⟨hs, ht, -, -, -⟩ := S.hyp
   obtain ⟨hDVR, -, -, hA, hF, hFr⟩ := GlobalTheory.CoefInt.integers_laws l S.LL
-  haveI := hDVR
-  haveI := hFr
+  have := hDVR
+  have := hFr
   exact GlobalTheory.FreeCoh.free_and_tensIso_gal S.Γ hs.2.2.2.2.2 hA hF
     (GlobalTheory.LocalIntegers.isOpen_integers l S.LL)
     (fun U hU => GlobalTheory.FreeCoh.pow_mul_mem_nhds S.LL S.Γ.lam hs.2.2.2.2.2 U hU)

@@ -98,9 +98,9 @@ theorem exists_decomp {W : Type*} [AddCommGroup W] [Module ℂ W] (ρ : Represen
     exact this hv
   set N : Submodule ℂ X := Y ⊓ M with hN
   have hNs : ∀ g, ∀ v ∈ N, π g v ∈ N := fun g v hv => ⟨hY g v hv.1, hM g v hv.2⟩
-  haveI : FiniteDimensional ℂ N := Submodule.finiteDimensional_inf_left Y M
+  have : FiniteDimensional ℂ N := Submodule.finiteDimensional_inf_left Y M
   set Y₂ : Submodule ℂ X := Y ⊓ Nᗮ with hY₂
-  haveI : FiniteDimensional ℂ Y₂ := Submodule.finiteDimensional_inf_left Y Nᗮ
+  have : FiniteDimensional ℂ Y₂ := Submodule.finiteDimensional_inf_left Y Nᗮ
   have hY₂s : ∀ g, ∀ v ∈ Y₂, π g v ∈ Y₂ := fun g v hv => ⟨hY g v hv.1, orthogonal_stable π hn hNs g hv.2⟩
   have hle : M ≤ Y₂ᗮ := by
     refine iSup₂_le fun T hT => ?_
@@ -136,7 +136,7 @@ theorem exists_average [TopologicalSpace K] [IsTopologicalGroup K] (π : K →* 
     have e' : π (s⁻¹ * u) F = F := e
     change π s F = π u F
     calc π s F = π s (π (s⁻¹ * u) F) := by rw [e']
-      _ = π u F := by rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel_left]
+      _ = π u F := by rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel_left]
   set O := hfin.toFinset with hO
   have hOm : ∀ f, f ∈ O ↔ ∃ u ∈ U, π u F = f := fun f => by simp [hO]
   have hO0 : (O.card : ℂ) ≠ 0 := by
@@ -207,7 +207,7 @@ def piFin : GL (Fin a) (Af E) →* (L2 (latticeGL E a) μ →L[ℂ] L2 (latticeG
 theorem piFin_piInf (u : GL (Fin a) (Af E)) (k : Kinf E a) (v : L2 (latticeGL E a) μ) :
     piFin E a μ u (piInf E a μ k v) = piInf E a μ k (piFin E a μ u v) := by
   have e := congrArg (fun g => R (latticeGL E a) μ g v) (infGL_comm (E := E) (a := a) (Unitary.toUnits k) u)
-  simp only [map_mul, ContinuousLinearMap.mul_apply] at e
+  simp only [map_mul, mul_apply_eq_comp] at e
   exact e.symm
 
 theorem finiteDimensional_span_inf {φ : Sm E a} (hφ : IsAutForm φ) (h : MemL2Quotient (latticeGL E a) μ φ.1) :
@@ -271,7 +271,7 @@ theorem mem_of_toL2_mem : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   have hfix : h.toL2 ∈ fixedBy μ U := fun u hu =>
     (right_translate_toL2 h _).trans (((h.mul_right _).toL2_eq_iff_ae_eq h).2 (.of_forall fun x => congrFun (congrArg Subtype.val hu.2) x))
   set Y₀ := Submodule.span ℂ (Set.range fun k : Kinf E a => piInf E a μ k h.toL2) with hY₀def
-  haveI : FiniteDimensional ℂ Y₀ := finiteDimensional_span_inf hφ h
+  have : FiniteDimensional ℂ Y₀ := finiteDimensional_span_inf hφ h
   have hY₀s : ∀ g, ∀ v ∈ Y₀, piInf E a μ g v ∈ Y₀ := span_orbit_stable _ _
   have hY₀ : Y₀ ≤ H ⊓ fixedBy μ U := span_inf_le hHs hH hfix
   have hF0Y : h.toL2 ∈ Y₀ := Submodule.subset_span ⟨1, by simp⟩
@@ -279,7 +279,7 @@ theorem mem_of_toL2_mem : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   let P : L2 (latticeGL E a) μ → Prop := fun v => v ∈ H ∧ ∀ u ∈ U, R (latticeGL E a) μ (finGL E a u) v = v
   let M : Submodule ℂ (L2 (latticeGL E a) μ) :=
     ⨆ (T : Y₀ →ₗ[ℂ] L2 (latticeGL E a) μ) (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P (T w)), LinearMap.range T
-  haveI hMf : FiniteDimensional ℂ M := _root_.GlobalTheory.CompanionTheory.IsoTypes.finiteDimensional_isotypic E a μ H hcusp hirr U hUo Y₀ ρ
+  have hMf : FiniteDimensional ℂ M := _root_.GlobalTheory.CompanionTheory.IsoTypes.finiteDimensional_isotypic E a μ H hcusp hirr U hUo Y₀ ρ
   have hMP : M ≤ H ⊓ fixedBy μ U := iSup₂_le fun T hT => by
     rintro _ ⟨w, rfl⟩
     exact hT.2 w
@@ -288,7 +288,7 @@ theorem mem_of_toL2_mem : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
       (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P (T w)) => LinearMap.range T) Y₀.subtype
       ⟨fun k w => rfl, fun w => hY₀ w.2⟩ le_rfl) ⟨⟨_, hF0Y⟩, rfl⟩
   let M' : Submodule ℂ (L2 (latticeGL E a) μ) := M ⊓ classes W μ
-  haveI : FiniteDimensional ℂ M' := Submodule.finiteDimensional_inf_left M _
+  have : FiniteDimensional ℂ M' := Submodule.finiteDimensional_inf_left M _
   have hpm : M'.starProjection h.toL2 ∈ M' := Submodule.starProjection_apply_mem _ _
   obtain ⟨m, hmdef⟩ : ∃ m, m = h.toL2 - M'.starProjection h.toL2 := ⟨_, rfl⟩
   have hmM : m ∈ M := hmdef ▸ M.sub_mem hF0M hpm.1
@@ -309,9 +309,9 @@ theorem mem_of_toL2_mem : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
       exact this hF'c
     have hF'U : F' ∈ fixedBy μ U := hF'f
     obtain ⟨ψ', rfl⟩ := (range_toL2ₗ hWm).ge hF'c
-    haveI := finiteDimensional_span_inf (hWa ψ' ψ'.2) (hWm ψ' ψ'.2)
+    have := finiteDimensional_span_inf (hWa ψ' ψ'.2) (hWm ψ' ψ'.2)
     obtain ⟨Y₁, hY₁⟩ : ∃ Y₁, Y₁ = Submodule.span ℂ (Set.range fun k : Kinf E a => piInf E a μ k (toL2ₗ μ W hWm ψ')) := ⟨_, rfl⟩
-    haveI : FiniteDimensional ℂ Y₁ := hY₁ ▸ this
+    have : FiniteDimensional ℂ Y₁ := hY₁ ▸ this
     have hY₁s : ∀ g, ∀ v ∈ Y₁, piInf E a μ g v ∈ Y₁ := hY₁ ▸ span_orbit_stable _ _
     have hY₁P : Y₁ ≤ H ⊓ fixedBy μ U := hY₁ ▸ span_inf_le hHs hF'H hF'U
     have hY₁c : Y₁ ≤ classes W μ := hY₁ ▸ Submodule.span_le.2 (by

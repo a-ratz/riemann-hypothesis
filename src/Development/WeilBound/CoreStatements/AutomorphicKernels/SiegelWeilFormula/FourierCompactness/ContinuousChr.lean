@@ -61,7 +61,7 @@ theorem continuous_chr {ψ : AddChar (AF F) ℂ} (hψ : Continuous ψ) {b : GL (
     Continuous fun β : nA σ Y b => ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T * β.1)))) := by
   have htr : Continuous (Algebra.trace (AF F) (AE F E)) :=
     IsModuleTopology.continuous_of_linearMap (R := AF F) (Algebra.trace (AF F) (AE F E))
-  exact hψ.comp ((htr.comp (continuous_const.matrix_mul continuous_subtype_val).matrix_trace).neg)
+  exact hψ.comp ((htr.comp (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace).neg)
 
 private theorem trace_inclR_eq_algebraMap_trace (e : E) :
     Algebra.trace (AF F) (AE F E) (inclR (AF F) e) = algebraMap F (AF F) (Algebra.trace F E e) := by
@@ -131,7 +131,7 @@ theorem lamBd : LamBd := by
   have hfin : lam 𝓖 < ⊤ := by
     rw [h1]
     exact ENNReal.one_lt_top
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
   have hint : ∀ f : G2 σ d.Y → ℂ, Continuous f → (∀ γ ∈ rat2 σ d.Y, ∀ g, f (γ * g) = f g) →
       Integrable (fun β => f (nb β * x) * χ β) (lam.restrict 𝓖) := by
     intro f hf hfi

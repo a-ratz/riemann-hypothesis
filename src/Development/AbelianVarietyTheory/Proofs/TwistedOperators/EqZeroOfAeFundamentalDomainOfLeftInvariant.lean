@@ -61,7 +61,7 @@ theorem eq_zero_of_ae_fundamentalDomain_of_leftInvariant
   have hUinv : ∀ g : Γ, g • U = U := by
     intro g
     ext x
-    simp only [Set.mem_smul_set_iff_inv_smul_mem, hUdef, Set.mem_setOf_eq, Subgroup.smul_def,
+    simp only [Set.mem_smul_set_iff_inv_smul_mem, hUdef, Set.mem_ofPred_eq, Subgroup.smul_def,
       smul_eq_mul]
     rw [hinv _ (Γ.inv_mem g.2)]
   have hU𝓕 : μ (U ∩ 𝓕) = 0 := by

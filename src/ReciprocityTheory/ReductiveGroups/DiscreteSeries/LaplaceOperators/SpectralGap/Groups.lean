@@ -73,7 +73,7 @@ theorem groups_sset_closed (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (hK : I
     refine Continuous.matrix_mul ?_ continuous_snd
     refine Continuous.matrix_mul ?_ continuous_const
     refine Continuous.matrix_mul continuous_const ?_
-    exact (continuous_subtype_val.comp continuous_fst).matrix_conjTranspose
+    exact (continuous_subtypeVal.comp continuous_fst).matrix_conjTranspose
   have e : Sset k r z = Prod.snd '' {p : UWset k r z × Mat k r |
       Hpk k r * ((p.1 : Mat k r))ᴴ * Hpk k r * p.2 ∈ Nset k r} := by
     ext s

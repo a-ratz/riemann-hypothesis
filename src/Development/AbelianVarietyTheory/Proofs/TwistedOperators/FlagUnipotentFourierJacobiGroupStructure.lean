@@ -102,7 +102,7 @@ theorem uc1 {m : ℕ} (u : GL (Fin ρ) (AE D)) (B : Mx D ρ m) : u.1 ⬝ ((u⁻�
 theorem exists_unit {T : Mx D ρ ρ} (hT : GlobalTheory.BesselChar.StrictUp T) : ∃ u ∈ UX D ρ, u.1 = 1 + T := by
   have hU : (1 + T).BlockTriangular id := Matrix.blockTriangular_one.add hT.tri
   have hdet : (1 + T).det = 1 := by
-    rw [Matrix.det_of_upperTriangular hU]
+    rw [det_of_isUpperTriangular hU]
     refine Finset.prod_eq_one fun i _ => ?_
     rw [Matrix.add_apply, hT i i le_rfl]; simp
   obtain ⟨u, hu1⟩ : ∃ u : GL (Fin ρ) (AE D), u.1 = 1 + T :=

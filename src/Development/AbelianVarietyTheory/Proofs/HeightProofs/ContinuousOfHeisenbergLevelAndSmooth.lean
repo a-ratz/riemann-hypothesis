@@ -91,8 +91,8 @@ theorem continuous_of_level_of_smooth (D : D7) (θ : InfFam D) (σ : (D.what₂.
     (hs : Sm (iotaW σ V W) f) : Continuous f := by
   obtain ⟨U, hUo, hU⟩ := hU
   have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
-  haveI : IsTopologicalAddGroup (WA V W) := Pi.topologicalAddGroup
-  haveI : ContinuousSub (WA V W) := IsTopologicalAddGroup.to_continuousSub
+  have : IsTopologicalAddGroup (WA V W) := Pi.isTopologicalAddGroup
+  have : ContinuousSub (WA V W) := IsTopologicalAddGroup.to_continuousSub
   refine continuous_iff_continuousAt.2 fun w => ?_
   let x : WA V W → RW V W := fun w' => piW θ V W (w' - w)
   let a : WA V W → WA V W := fun w' => w + iotaW σ V W (x w')

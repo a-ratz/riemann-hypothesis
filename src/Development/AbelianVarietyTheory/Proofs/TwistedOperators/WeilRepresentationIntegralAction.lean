@@ -65,7 +65,7 @@ variable (F : Type) [Field F] [NumberField F]
 
 theorem isCompact_integralFinite :
     IsCompact {b : FiniteAdeleRing (𝓞 F) F | ∀ v : HeightOneSpectrum (𝓞 F), b.1 v ∈ v.adicCompletionIntegers F} := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), CompactSpace (v.adicCompletionIntegers F : Set (v.adicCompletion F)) :=
+  have : ∀ v : HeightOneSpectrum (𝓞 F), CompactSpace (v.adicCompletionIntegers F : Set (v.adicCompletion F)) :=
     fun v => GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   have h := isCompact_range (RestrictedProduct.isEmbedding_structureMap
     (R := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
@@ -95,7 +95,7 @@ theorem isCompact_intAd : IsCompact (intAd F : Set (AF F)) := by
   have e : (intAd F : Set (AF F)) = (({0} : Set (InfiniteAdeleRing F)) ×ˢ
       {b : FiniteAdeleRing (𝓞 F) F | ∀ v : HeightOneSpectrum (𝓞 F), b.1 v ∈ v.adicCompletionIntegers F} : Set _) := by
     ext a
-    simp only [SetLike.mem_coe, Set.mem_prod, Set.mem_singleton_iff, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_prod, Set.mem_singleton_iff, Set.mem_ofPred_eq]
     show (evI F a = 0 ∧ ∀ v, evFin F v a ∈ v.adicCompletionIntegers F) ↔ _
     have h1 : evI F a = 0 ↔ a.1 = 0 := by
       simp only [evI]; exact (InfiniteAdeleRing.ringEquiv_mixedSpace F).map_eq_zero_iff
@@ -120,12 +120,12 @@ theorem isClosed_latHat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     (X : Spc F E n), X.L.IsLattice E → IsClosed ((latHat X : AddSubgroup (Fin n → AE F E)) : Set (Fin n → AE F E)) := by
   intro F E _ _ _ _ _ n X hL
   classical
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
   obtain ⟨s, hs⟩ := Submodule.FG.restrictScalars (R := ℤ) hL.fg
   let ψ : (s → AF F) →+ (Fin n → AE F E) :=
     { toFun := fun c => ∑ i, c i • incV F (i : Fin n → E)
@@ -265,7 +265,7 @@ variable (F) in
 def r0 (κ : Type) : (κ → AF F) → ℂ := fun x => g0 F κ (fun i => (x i).2)
 
 theorem standard_vector_mem_schwartz_bruhat (κ : Type) [Fintype κ] : g0 F κ ∈ SB (κ → FiniteAdeleRing (𝓞 F) F) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   have hc : IsCompact (intPts F κ) := isCompact_intPts κ
   have hW : IsClopen (intPts F κ) := ⟨hc.isClosed, isOpen_intPts κ⟩
   refine ⟨?_, HasCompactSupport.intro' hc hW.isClosed fun x hx => Set.indicator_of_notMem hx _⟩
@@ -314,20 +314,20 @@ theorem lintegral_tensor_at_standard_point (κ : Type) [Fintype κ] (μ : Measur
     ∫⁻ x, ‖tens (evI F) (⇑g) (r0 F κ) x‖ₑ ^ 2 ∂(Measure.map e (μ.prod ν)) =
       (∫⁻ y, ‖g y‖ₑ ^ 2 ∂μ) * ν (intPts F κ) := by
   rw [lintegral_map_equiv]
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
   have hpt : ∀ p : (κ → mixedEmbedding.mixedSpace F) × (κ → FiniteAdeleRing (𝓞 F) F),
       ‖tens (evI F) (⇑g) (r0 F κ) (e p)‖ₑ ^ 2 = ‖g p.1‖ₑ ^ 2 * (intPts F κ).indicator 1 p.2 := by
     intro p
     have h1 : (fun i => evI F (e p i)) = p.1 := funext fun i => by rw [he]; exact evI_splitEquiv κ p i
     have h2 : (fun i => (e p i).2) = p.2 := funext fun i => by rw [he]; rfl
-    simp only [tens, r0, h1, h2, g0, enorm_mul, mul_pow]
+    simp only [tens, r0, h1, h2, g0, eNorm_mul, mul_pow]
     congr 1
     by_cases hp : p.2 ∈ intPts F κ
     · simp [Set.indicator_of_mem hp]
     · simp [Set.indicator_of_notMem hp]
   simp_rw [hpt]
   have hm := lintegral_prod_mul (μ := μ) (ν := ν) (f := fun y => ‖g y‖ₑ ^ 2)
-    (g := (intPts F κ).indicator 1) (g.continuous.measurable.enorm.pow_const 2).aemeasurable
+    (g := (intPts F κ).indicator 1) (g.continuous.measurable.eNorm.pow_const 2).aemeasurable
     ((measurable_one.indicator (isOpen_intPts κ).measurableSet).aemeasurable)
   rw [lintegral_indicator_one (isOpen_intPts κ).measurableSet] at hm
   exact hm
@@ -343,16 +343,16 @@ theorem acts_norm_sq_eq : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
       ∫ x, ‖f₁ x‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := by
   intro F E _ _ _ _ _ σ n d X W M ψ χX χW om hW μ hμ h f f₁ hact
   have hU := (IsUWeilPair.isUSplitting hW).unit
-  haveI := hμ
+  have := hμ
   have hΦ := hact (r0 F (Fin n × Fin d)) (restriction_at_standard_point _ f)
-  letI mB : MeasurableSpace (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  letI mA : MeasurableSpace (Fin n × Fin d → AF F) := borel _
-  haveI : BorelSpace (Fin n × Fin d → AF F) := ⟨rfl⟩
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := inferInstance
+  let mB : MeasurableSpace (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  let mA : MeasurableSpace (Fin n × Fin d → AF F) := borel _
+  have : BorelSpace (Fin n × Fin d → AF F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := inferInstance
   let ν : Measure (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) := Measure.addHaar
   let H : ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F)) ≃ₜ
       (Fin n × Fin d → AF F) :=
@@ -361,8 +361,8 @@ theorem acts_norm_sq_eq : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
       continuous_invFun := continuous_splitEquiv_symm _ }
   let e := H.toMeasurableEquiv
   have he : ∀ p, e p = splitEquiv F (Fin n × Fin d) p := fun _ => rfl
-  haveI : SigmaFinite ν := inferInstance
-  haveI : SigmaFinite μ := inferInstance
+  have : SigmaFinite ν := inferInstance
+  have : SigmaFinite μ := inferInstance
   have hμ' : (Measure.map e (μ.prod ν)).IsAddHaarMeasure :=
     (splitEquiv F (Fin n × Fin d)).isAddHaarMeasure_map (μ.prod ν) (continuous_splitEquiv _)
       (continuous_splitEquiv_symm _)
@@ -378,7 +378,7 @@ theorem acts_norm_sq_eq : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
     integral_eq_lintegral_of_nonneg_ae (f := fun x => ‖f x‖ ^ 2) (Filter.Eventually.of_forall fun _ => by positivity)
       ((f.continuous.norm.pow 2 : Continuous fun x => ‖f x‖ ^ 2).aestronglyMeasurable)]
   congr 1
-  simp_rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  simp_rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   exact hl
 
 end GlobalTheory.ArchIsom

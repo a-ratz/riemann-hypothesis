@@ -323,7 +323,7 @@ theorem exists_det_one [IsNonarchimedeanLocalField F] [CharZero F] (L : LocE F E
   obtain ⟨s', ⟨hs0', hs1'⟩, hs'⟩ := (GlobalTheory.HL.FrameOnto.unipotent_onto L r k S).2.1 n' hn'
   have hd : ∀ B : Matrix (Fin (r + 1)) (Fin (r + 1)) E, (∀ i j, j < i → B i j = 0) →
       (∀ i, B i i = 1) → B.det = 1 := fun B b0 b1 => by
-    rw [Matrix.det_of_upperTriangular (fun i j h => b0 i j h)]
+    rw [Matrix.det_of_isUpperTriangular (fun i j h => b0 i j h)]
     simp [b1]
   refine ⟨s * A, s' * A', ?_, ?_, fun j => ?_, fun j => ?_⟩
   · rw [Matrix.det_mul, hd s hs0 hs1, hd A (fun i j h => (h0 i j h).1) (fun i => (h1 i).1), one_mul]
@@ -370,7 +370,7 @@ theorem encard_overlattices_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topo
       rw [Finset.sum_comm]
       simp only [← Finset.sum_smul, mul_comm (B⁻¹ _ _), ← Matrix.mul_apply,
         Matrix.mul_nonsing_inv B hBu, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     refine sup_le (Submodule.span_le.2 ?_) (Submodule.span_le.2 ?_)
     · rintro _ ⟨i, -, rfl⟩; exact hv (Sum.inr i)
     · rintro _ ⟨i, -, rfl⟩; exact hv (Sum.inl i)

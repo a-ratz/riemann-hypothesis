@@ -172,7 +172,7 @@ theorem exists_dvd_pow_mul {X : Scheme.{0}} {W : X.Opens} (hW : IsAffineOpen W) 
     have hd := h _ hy
     rw [gs_eq (𝟙 X) (hW.fromSpec y) W hy', gs_eq (𝟙 X) (hW.fromSpec y) W hy'] at hd
     have hl := hW.isLocalization_stalk' y hy'
-    letI : Algebra Γ(X, W) (X.presheaf.stalk (hW.fromSpec y)) := (X.presheaf.germ W _ hy').hom.toAlgebra
+    let : Algebra Γ(X, W) (X.presheaf.stalk (hW.fromSpec y)) := (X.presheaf.germ W _ hy').hom.toAlgebra
     have hl' : IsLocalization.AtPrime (X.presheaf.stalk (hW.fromSpec y)) P := hl
     have hm : algebraMap Γ(X, W) (X.presheaf.stalk (hW.fromSpec y)) a ∈
         (Ideal.span {b}).map (algebraMap Γ(X, W) (X.presheaf.stalk (hW.fromSpec y))) := by
@@ -332,7 +332,7 @@ open OmTest
 
 theorem Core.Theta.bTest {C : Core} (L : C.Law) (T : C.Theta) : T.BTest L := by
   intro p _ y τ E x hx
-  letI := L.grp
+  let := L.grp
   have h := L.test p y τ
   have hN := surjective_mulN_test T τ
   have e := mulN_comm h T.m

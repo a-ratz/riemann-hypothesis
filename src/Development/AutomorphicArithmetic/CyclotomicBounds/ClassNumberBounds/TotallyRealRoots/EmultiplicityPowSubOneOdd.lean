@@ -64,7 +64,7 @@ private theorem lte_not_dvd_of_dvd_sub_one {u : ℤ_[l]} (hu : (l : ℤ_[l]) ∣
   have h1 : (l : ℤ_[l]) ∣ 1 := by
     have := dvd_sub h hu
     rwa [sub_sub_cancel] at this
-  exact PadicInt.prime_p.not_unit (isUnit_of_dvd_one h1)
+  exact PadicInt.prime_p.not_isUnit (isUnit_of_dvd_one h1)
 
 private theorem lte_reduce {u : ℤ_[l]} (hu : (l : ℤ_[l]) ∣ u - 1)
     (h : ∀ k : ℕ, emultiplicity (l : ℤ_[l]) (u ^ l ^ k - 1) =
@@ -114,7 +114,7 @@ private theorem lte_two_step (hl : l = 2) {w : ℤ_[l]} (hw : (l : ℤ_[l]) ^ 2 
     have h3 := dvd_sub h hw
     rw [show (w + 1) - (w - 1) = ((2 : ℕ) : ℤ_[2]) * 1 by push_cast; ring, pow_two,
       mul_dvd_mul_iff_left hp.ne_zero] at h3
-    exact hp.not_unit (isUnit_of_dvd_one h3)
+    exact hp.not_isUnit (isUnit_of_dvd_one h3)
 
 theorem emultiplicity_pow_sub_one_sq {u : ℤ_[l]} (hu : (l : ℤ_[l]) ^ 2 ∣ u - 1) (n : ℕ) :
     emultiplicity (l : ℤ_[l]) (u ^ n - 1) =

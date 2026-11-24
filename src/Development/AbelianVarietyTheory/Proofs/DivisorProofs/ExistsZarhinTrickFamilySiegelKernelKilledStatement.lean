@@ -170,7 +170,7 @@ theorem sum_single_diag' (c : ℤ) : ∑ k : Fin 4 ⊕ Fin 4, single k k c = c �
   rw [Matrix.sum_apply]
   by_cases h : a = b
   · subst h; simp [single_apply]
-  · rw [Finset.sum_eq_zero (fun k _ => by rw [single_apply]; exact if_neg (fun hk => h (hk.1.symm.trans hk.2)))]
+  · rw [Finset.sum_eq_zero (fun k _ => by rw [single_apply]; exact ite_eq_right (fun hk => h (hk.1.symm.trans hk.2)))]
     simp [Matrix.one_apply, h]
 
 theorem sum_famM {d : ℕ} (hd : 0 < d) :
@@ -204,7 +204,7 @@ theorem sum_coef_famM {d : ℕ} {N : Matrix (Fin 4 ⊕ Fin 4) (Fin 4 ⊕ Fin 4) 
     ∑ t : (Fin 4 ⊕ Fin 4) × (Fin 4 ⊕ Fin 4), coef d N t.1 t.2 * famM d t p q = N p q := by
   simp only [famM_apply, mul_ite, mul_zero]
   rw [Fintype.sum_prod_type]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have hdiv : ∀ m j, (d : ℤ) * (N (Sum.inr m) (Sum.inl j) / d) = N (Sum.inr m) (Sum.inl j) :=
     fun m j => Int.mul_ediv_cancel' (hN m j)
   rcases q with j | j <;> rcases p with m | m <;>
@@ -254,7 +254,7 @@ theorem exists_spanning_family_posDef :
     exact SpanFam.span_fam_eq_top
   · rw [transpose_one, Matrix.map_add _ Int.cast_add, Matrix.map_one _ Int.cast_zero Int.cast_one]
     exact Matrix.PosDef.one.add Matrix.PosDef.one
-  · simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  · simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [← SpanFam.sum_fam_mul_bar hd]
     exact Equiv.sum_comp e.symm (fun t => SpanFam.fam d t * bar d (SpanFam.fam d t))
 
@@ -686,15 +686,15 @@ def dMap (d : ℕ) (act₁ : ord d → (Z₁ ⟶ Z₁)) (act₂ : ord d → (Z�
 
 theorem isMonHom_dMap (h₁ : IsRAct Z₁ act₁) (h₂ : IsRAct Z₂ act₂) (pr₁ : Z₁ ⟶ A) (inc₂ : A ⟶ Z₂)
     [IsMonHom pr₁] [IsMonHom inc₂] : IsMonHom (dMap d act₁ act₂ pr₁ inc₂) := by
-  haveI := h₁.1; haveI := h₂.1
+  have := h₁.1; have := h₂.1
   exact Finset.prod_induction _ (fun x => IsMonHom x)
-    (fun x y hx hy => by haveI := hx; haveI := hy; exact GlobalTheory.Serre.isMonHom_mul x y)
+    (fun x y hx hy => by have := hx; have := hy; exact GlobalTheory.Serre.isMonHom_mul x y)
     GlobalTheory.Serre.isMonHom_one (fun k _ => inferInstance)
 
 theorem dMap_lin (h₁ : IsRAct Z₁ act₁) (h₂ : IsRAct Z₂ act₂) (pr₁ : Z₁ ⟶ A) (inc₂ : A ⟶ Z₂)
     [IsMonHom pr₁] [IsMonHom inc₂] (o : ord d) :
     act₁ o ≫ dMap d act₁ act₂ pr₁ inc₂ = dMap d act₁ act₂ pr₁ inc₂ ≫ act₂ o := by
-  haveI := h₁.1; haveI := h₂.1
+  have := h₁.1; have := h₂.1
   unfold dMap
   rw [comp_prod', prod_comp']
   have L : ∀ k, act₁ o ≫ act₁ (lo d k) ≫ pr₁ ≫ inc₂ ≫ act₂ (up d k) =
@@ -716,7 +716,7 @@ theorem dMap_kill (h₁ : IsRAct Z₁ act₁) (h₂ : IsRAct Z₂ act₂) (pr₁
     [IsMonHom pr₁] [IsMonHom inc₁] [IsMonHom inc₂] (hpi₁ : pr₁ ≫ inc₁ = act₁ (idem d))
     (hker : ∀ (T : Over S) (x : T ⟶ A), x ≫ inc₁ ≫ act₁ (polUnit d) = 1 → x ≫ inc₂ ≫ act₂ (polUnit d) = 1)
     (T : Over S) (x : T ⟶ Z₁) (hx : x ≫ (𝟙 Z₁) ^ d = 1) : x ≫ dMap d act₁ act₂ pr₁ inc₂ = 1 := by
-  haveI := h₁.1; haveI := h₂.1
+  have := h₁.1; have := h₂.1
   unfold dMap
   rw [comp_prod']
   refine Finset.prod_eq_one fun k _ => ?_
@@ -736,7 +736,7 @@ theorem inc_dMap (h₁ : IsRAct Z₁ act₁) (h₂ : IsRAct Z₂ act₂) (pr₁ 
     (hip₁ : inc₁ ≫ pr₁ = 𝟙 A) (hpi₁ : pr₁ ≫ inc₁ = act₁ (idem d))
     (hip₂ : inc₂ ≫ pr₂ = 𝟙 A) (hpi₂ : pr₂ ≫ inc₂ = act₂ (idem d)) :
     inc₁ ≫ dMap d act₁ act₂ pr₁ inc₂ = ((𝟙 A) ^ d) ≫ inc₂ := by
-  haveI := h₁.1; haveI := h₂.1
+  have := h₁.1; have := h₂.1
   have hi : inc₁ = inc₁ ≫ act₁ (idem d) := by rw [← hpi₁, reassoc_of% hip₁]
   have hW : act₁ (idem d) ≫ pr₁ ≫ inc₂ ≫ act₂ (up d (Sum.inl 0)) = pr₁ ≫ inc₂ := by
     rw [zarhinOrderUpperMatrixUnit_inl_zero, ← hpi₂, ← hpi₁]; simp only [Category.assoc]; rw [reassoc_of% hip₁, reassoc_of% hip₂]
@@ -747,18 +747,18 @@ theorem inc_dMap (h₁ : IsRAct Z₁ act₁) (h₂ : IsRAct Z₂ act₂) (pr₁ 
           rw [h₁.2.2.1]; conv_lhs => rw [hi]
           simp only [Category.assoc]
       _ = inc₁ ≫ (act₁ (idem d) ≫ pr₁ ≫ inc₂ ≫ act₂ (up d (Sum.inl 0))) ^ (d : ℤ) := by
-          rw [idem_lo, if_pos rfl, act_zsmul' h₁, zpow_comp']
+          rw [idem_lo, ite_eq_left rfl, act_zsmul' h₁, zpow_comp']
       _ = ((𝟙 A) ^ d) ≫ inc₂ := by
           rw [hW, comp_zpow', reassoc_of% hip₁, zpow_natCast, npow_comp', Category.id_comp]
   · intro k _ hk
-    rw [hi, Category.assoc, ← Category.assoc (act₁ (idem d)), ← h₁.2.2.1, idem_lo, if_neg hk, act_zero' h₁,
+    rw [hi, Category.assoc, ← Category.assoc (act₁ (idem d)), ← h₁.2.2.1, idem_lo, ite_eq_right hk, act_zero' h₁,
       MonObj.one_comp, MonObj.comp_one]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem lin_of_dMap (h₁ : IsRAct Z₁ act₁) (h₂ : IsRAct Z₂ act₂) (pr₁ : Z₁ ⟶ A) (inc₂ : A ⟶ Z₂)
     [IsMonHom pr₁] [IsMonHom inc₂] (e : Z₁ ⟶ Z₂) [Epi ((𝟙 Z₁) ^ d)]
     (hf : ((𝟙 Z₁) ^ d) ≫ e = dMap d act₁ act₂ pr₁ inc₂) (o : ord d) : act₁ o ≫ e = e ≫ act₂ o := by
-  haveI := h₁.1
+  have := h₁.1
   rw [← cancel_epi ((𝟙 Z₁) ^ d), ← Category.assoc, mulA_comm, Category.assoc, hf, reassoc_of% hf,
     dMap_lin h₁ h₂]
 
@@ -923,7 +923,7 @@ theorem cancel_pow : ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A] [GrpObj B], 
   have hm := GlobalTheory.AbLaw.MulN.isMonHom_mulA A d
   have hsurj : Surjective (ReciprocityTheory.ChartRestriction.G.Out.mulA A d).left :=
     GlobalTheory.AbLaw.MulN.surjective_of_geomFibres _ fun K _ _ t ↦ by
-      letI : GrpObj ((Over.pullback t).obj A) := Functor.grpObjObj
+      let : GrpObj ((Over.pullback t).obj A) := Functor.grpObjObj
       exact (GlobalTheory.flat_and_surjective_of_isFinite_abelianEnd gi K _ (ReciprocityTheory.ChartRestriction.G.Out.TLinPf.isAb_pullback t A hA) _
         inferInstance
         (MorphismProperty.of_isPullback (P := @IsFinite) (GlobalTheory.AbLaw.MulN.isPullback_baseChange t _) hfin)).2
@@ -939,8 +939,8 @@ theorem isDual_of_isPerfect : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAb
   obtain ⟨D, _, Q, hD', -, q, q'⟩ := GlobalTheory.dualAbelianScheme S A hA
   obtain ⟨x, hx, e⟩ := GlobalTheory.BirigidLift.exists_hom q q'.additive hP.isLB a₁ a₂
   have ix : IsIso x := isIso_of_isIso_pullback hA hD' x fun Ω _ _ s ↦ by
-    letI : GrpObj ((Over.pullback s).obj A) := Functor.grpObjObj
-    letI : GrpObj ((Over.pullback s).obj D) := Functor.grpObjObj
+    let : GrpObj ((Over.pullback s).obj A) := Functor.grpObjObj
+    let : GrpObj ((Over.pullback s).obj D) := Functor.grpObjObj
     have f := isGrpPullback_pullback A s
     have d := isGrpPullback_pullback D s
     have hA₀ := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hA f
@@ -1031,7 +1031,7 @@ theorem lbIso_of_ordLinear : ∀ (h M d : ℕ), 0 < d → ∀ (S : Scheme.{0}) (
     have k := evc_ev hL₁ (fst z₁.A z₁.A) (snd z₁.A z₁.A ≫ u) hE a b
     rw [lift_fst, lift_snd_assoc] at k
     rw [← k, evc, evc, cc]
-  haveI hum : IsMonHom u :=
+  have hum : IsMonHom u :=
     isMonHom_of_classifying S z₁.A z₁.A z₁.A _ z₁.P hD (additive z₁).2 hP' addP's u hu
   have adj' : ∀ (a : ord d) (Y : Over S) (x y : Y ⟶ z₁.A),
       evc hP' (x ≫ act₁ a) y = evc hP' x (y ≫ act₁ (bar d a)) := by
@@ -1051,9 +1051,9 @@ theorem lbIso_of_ordLinear : ∀ (h M d : ℕ), 0 < d → ∀ (S : Scheme.{0}) (
         _ = evc hL₁ x ((y ≫ u) ≫ act₁ (bar d (bar d N))) := evc_adj z₁ ha₁ _ _ _
         _ = evc hL₁ x (y ≫ u ≫ act₁ N) := by rw [bar_bar hd, Category.assoc]
     exact step _ _ _
-  haveI := hi
-  haveI := hpr
-  haveI := he
+  have := hi
+  have := hpr
+  have := he
   obtain ⟨ψ, hψdef⟩ : ∃ ψ : c.A ⟶ c.A, ψ = inc₁ ≫ u ≫ pr₁ := ⟨_, rfl⟩
   have hincu : inc₁ ≫ u = ψ ≫ inc₁ := by
     calc inc₁ ≫ u = (inc₁ ≫ pr₁ ≫ inc₁) ≫ u := by rw [← Category.assoc inc₁ pr₁, hip, Category.id_comp]
@@ -1081,7 +1081,7 @@ theorem lbIso_of_ordLinear : ∀ (h M d : ℕ), 0 < d → ∀ (S : Scheme.{0}) (
       rw [MonObj.comp_mul (snd c.A c.A) (ψ * (𝟙 c.A)⁻¹) (𝟙 c.A), Category.comp_id]
     rw [e2, hψ] at e1
     exact left_eq_add.1 (e1.trans (add_comm _ _))
-  haveI : IsMonHom ψ := by rw [hψdef]; infer_instance
+  have : IsMonHom ψ := by rw [hψdef]; infer_instance
   have hψd : (𝟙 c.A ^ d) ≫ ψ = (𝟙 c.A ^ d) ≫ 𝟙 c.A := by
     rw [MonObj.pow_comp, Category.id_comp, Category.comp_id]
     rw [mul_pow, inv_pow, mul_inv_eq_one] at hw
@@ -1147,7 +1147,7 @@ theorem actPB_of_zRel : ∀ (h M d : ℕ), 1 ≤ h → 3 ≤ M → Odd M → 0 <
     hi₁ hp₁ hip₁ hpi₁ hi₂ hp₂ hip₂ hpi₂ hker
   have hLB := GlobalTheory.T.zarhinTrick_bundle_unique_of_order_linear_iso h M d hd S t c z₁ z₂ act₁ act₂ inc₁ pr₁ inc₂ e hdS hK hP₁ hP₂ hA₁ hA₂ hJ₁ hJ₂
     hi₁ hp₁ hip₁ hpi₁ hL₁ hL₂ he hinc hact
-  haveI := he
+  have := he
   refine ⟨e.hom.left, (e.hom ⊗ₘ e.hom).left, isGrpPullback_of_iso e, ⟨?_, ?_⟩, hLB, fun a => ?_, fun o => ?_⟩
   · rw [← Over.comp_left, ← Over.comp_left, tensorHom_fst]
   · rw [← Over.comp_left, ← Over.comp_left, tensorHom_snd]

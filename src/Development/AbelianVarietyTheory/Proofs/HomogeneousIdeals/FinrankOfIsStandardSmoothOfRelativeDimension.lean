@@ -472,21 +472,21 @@ section Smooth
 variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (ε : A →ₐ[R] R)
 
 lemma finite_of_kaehler [Module.Finite A Ω[A⁄R]] : Module.Finite R (AugCot ε) := by
-  letI : Algebra A R := (ε : A →+* R).toAlgebra
+  let : Algebra A R := (ε : A →+* R).toAlgebra
   exact Module.Finite.equiv (kaehlerEquiv ε (fun _ => rfl)).symm
 
 lemma projective_of_kaehler [Module.Projective A Ω[A⁄R]] : Module.Projective R (AugCot ε) := by
-  letI : Algebra A R := (ε : A →+* R).toAlgebra
+  let : Algebra A R := (ε : A →+* R).toAlgebra
   exact Module.Projective.of_equiv (kaehlerEquiv ε (fun _ => rfl)).symm
 
 lemma free_of_kaehler [Module.Free A Ω[A⁄R]] : Module.Free R (AugCot ε) := by
-  letI : Algebra A R := (ε : A →+* R).toAlgebra
+  let : Algebra A R := (ε : A →+* R).toAlgebra
   exact Module.Free.of_equiv (kaehlerEquiv ε (fun _ => rfl)).symm
 
 lemma finrank_eq_of_free [Nontrivial R] [Module.Free A Ω[A⁄R]] :
     Module.finrank R (AugCot ε) = Module.finrank A Ω[A⁄R] := by
-  letI : Algebra A R := (ε : A →+* R).toAlgebra
-  haveI : Nontrivial A := (ε : A →+* R).domain_nontrivial
+  let : Algebra A R := (ε : A →+* R).toAlgebra
+  have : Nontrivial A := (ε : A →+* R).domain_nontrivial
   rw [(kaehlerEquiv ε (fun _ => rfl)).finrank_eq, Module.finrank_baseChange]
 
 instance finite [Algebra.EssFiniteType R A] : Module.Finite R (AugCot ε) := finite_of_kaehler ε
@@ -496,7 +496,7 @@ instance projective [Algebra.FormallySmooth R A] : Module.Projective R (AugCot �
 
 lemma rankAtStalk_eq [Module.Finite A Ω[A⁄R]] [Module.Flat A Ω[A⁄R]] (p : PrimeSpectrum R) :
     Module.rankAtStalk (AugCot ε) p = Module.rankAtStalk Ω[A⁄R] (p.comap (ε : A →+* R)) := by
-  letI : Algebra A R := (ε : A →+* R).toAlgebra
+  let : Algebra A R := (ε : A →+* R).toAlgebra
   rw [Module.rankAtStalk_eq_of_equiv (kaehlerEquiv ε (fun _ => rfl)),
     Module.rankAtStalk_baseChange]
   rfl
@@ -515,16 +515,16 @@ lemma finrank_kaehler_of_isStandardSmoothOfRelativeDimension [Nontrivial A] (n :
 
 lemma finrank_of_isStandardSmoothOfRelativeDimension [Nontrivial R] (n : ℕ)
     [Algebra.IsStandardSmoothOfRelativeDimension n R A] : Module.finrank R (AugCot ε) = n := by
-  haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n (R := R) (S := A)
-  haveI : Nontrivial A := (ε : A →+* R).domain_nontrivial
+  have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n (R := R) (S := A)
+  have : Nontrivial A := (ε : A →+* R).domain_nontrivial
   rw [finrank_eq_of_free, finrank_kaehler_of_isStandardSmoothOfRelativeDimension n]
 
 lemma nonempty_basis_of_isStandardSmoothOfRelativeDimension (n : ℕ)
     [Algebra.IsStandardSmoothOfRelativeDimension n R A] :
     Nonempty (Module.Basis (Fin n) R (AugCot ε)) := by
-  haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n (R := R) (S := A)
+  have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n (R := R) (S := A)
   cases subsingleton_or_nontrivial R
-  · haveI := Module.subsingleton R (AugCot ε)
+  · have := Module.subsingleton R (AugCot ε)
     exact ⟨⟨LinearEquiv.ofSubsingleton _ _⟩⟩
   · exact ⟨Module.finBasisOfFinrankEq _ _ (finrank_of_isStandardSmoothOfRelativeDimension ε n)⟩
 
@@ -548,7 +548,7 @@ lemma smooth_of_locally
 lemma rankAtStalk_kaehler_of_locally
     (h : RingHom.Locally (RingHom.IsStandardSmoothOfRelativeDimension n) (algebraMap R A))
     (q : PrimeSpectrum A) : Module.rankAtStalk Ω[A⁄R] q = n := by
-  haveI := smooth_of_locally h
+  have := smooth_of_locally h
   obtain ⟨s, hs, H⟩ := h
   obtain ⟨t, hts, htq⟩ : ∃ t ∈ s, t ∉ q.asIdeal := by
     by_contra! hc
@@ -559,10 +559,10 @@ lemma rankAtStalk_kaehler_of_locally
   obtain ⟨q', rfl⟩ := hq
   have Ht := H t hts
   rw [← IsScalarTower.algebraMap_eq, RingHom.isStandardSmoothOfRelativeDimension_algebraMap] at Ht
-  haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n (R := R)
+  have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n (R := R)
     (S := Localization.Away t)
-  haveI : Nontrivial (Localization.Away t) := q'.nontrivial
-  haveI := Algebra.FormallyEtale.of_isLocalization (Rₘ := Localization.Away t) (Submonoid.powers t)
+  have : Nontrivial (Localization.Away t) := q'.nontrivial
+  have := Algebra.FormallyEtale.of_isLocalization (Rₘ := Localization.Away t) (Submonoid.powers t)
   rw [← Module.rankAtStalk_baseChange, Module.rankAtStalk_eq_of_equiv
     (KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale R A (Localization.Away t)),
     Module.rankAtStalk_eq_finrank_of_free,
@@ -572,13 +572,13 @@ lemma rankAtStalk_kaehler_of_locally
 lemma rankAtStalk_of_locally
     (h : RingHom.Locally (RingHom.IsStandardSmoothOfRelativeDimension n) (algebraMap R A))
     (p : PrimeSpectrum R) : Module.rankAtStalk (AugCot ε) p = n := by
-  haveI := smooth_of_locally h
+  have := smooth_of_locally h
   rw [rankAtStalk_eq, rankAtStalk_kaehler_of_locally h]
 
 lemma finrank_of_locally [IsLocalRing R]
     (h : RingHom.Locally (RingHom.IsStandardSmoothOfRelativeDimension n) (algebraMap R A)) :
     Module.finrank R (AugCot ε) = n := by
-  haveI := smooth_of_locally h
+  have := smooth_of_locally h
   have := rankAtStalk_of_locally ε h (IsLocalRing.closedPoint R)
   rwa [Module.rankAtStalk_eq_finrank_of_free] at this
 

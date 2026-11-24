@@ -124,7 +124,7 @@ private theorem lie_zero (hD : DecE) (hR : RedE) (N : MeasE E) (hfin : N.μ N.D 
   have cψ : ∀ z, Continuous fun h : G1 E => (lie E 2 X φ).1 (gl h * z) := fun z => (hD E P _ hψ).1.1.comp (cont_gl.mul continuous_const)
   have hz : y * infGL E 2 (c 0) = y := by rw [c0, map_one, mul_one]
   have h0m : (0 : ℝ) ∈ Set.Icc (-1 : ℝ) 1 := by norm_num
-  haveI : IsFiniteMeasure (N.μ.restrict N.D) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure (N.μ.restrict N.D) := ⟨by simpa using hfin⟩
   have hb := hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := N.μ.restrict N.D)
     (F := fun t h => φ.1 (gl h * (y * infGL E 2 (c t)))) (F' := fun t h => (lie E 2 X φ).1 (gl h * (y * infGL E 2 (c t))))
     (x₀ := (0 : ℝ)) (bound := fun _ => B) (s := Set.Ioo (-1) 1) (Ioo_mem_nhds (by norm_num) (by norm_num))

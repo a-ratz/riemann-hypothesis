@@ -111,12 +111,12 @@ private theorem pre_of_surj {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSp
     (p : Y.B →ₐ[Λ] B') (hp : Function.Surjective p) (j : B' →+* Y.A) (hj : ∀ b, j (p b) = algebraMap Y.B Y.A b)
     (hi : Function.Injective j) : ∃ Y' : Pre Φ a, Function.Injective (algebraMap Y'.B Y'.A) := by
   have hp' : Function.Surjective (p : Y.B →+* B') := hp
-  haveI : Nontrivial B' := j.domain_nontrivial
-  haveI : IsCO Λ B' := co_quot Λ Y.B B' p hp
-  letI : Algebra B' Y.A := j.toAlgebra
-  letI : Algebra Y.B B' := (p : Y.B →+* B').toAlgebra
-  haveI t1 : IsScalarTower Y.B B' Y.A := IsScalarTower.of_algebraMap_eq fun b => (hj b).symm
-  haveI t2 : IsScalarTower Λ B' Y.A := IsScalarTower.of_algebraMap_eq fun b => by
+  have : Nontrivial B' := j.domain_nontrivial
+  have : IsCO Λ B' := co_quot Λ Y.B B' p hp
+  let : Algebra B' Y.A := j.toAlgebra
+  let : Algebra Y.B B' := (p : Y.B →+* B').toAlgebra
+  have t1 : IsScalarTower Y.B B' Y.A := IsScalarTower.of_algebraMap_eq fun b => (hj b).symm
+  have t2 : IsScalarTower Λ B' Y.A := IsScalarTower.of_algebraMap_eq fun b => by
     rw [← p.commutes, IsScalarTower.algebraMap_apply Λ Y.B Y.A]
     exact (hj _).symm
   have hm : (maximalIdeal Y.B).map (p : Y.B →+* B') = maximalIdeal B' :=
@@ -126,7 +126,7 @@ private theorem pre_of_surj {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSp
   have hc : (algebraMap B' Y.A).comp (p : Y.B →+* B') = algebraMap Y.B Y.A := RingHom.ext hj
   have hr : (res Λ B' : B' →+* ResidueField Λ).comp (p : Y.B →+* B') =
       (res Λ Y.B : Y.B →+* ResidueField Λ) := RingHom.ext fun b => res_map (O := Λ) (R := Y.B) p b
-  haveI := Y.ft
+  have := Y.ft
   refine ⟨{ A := Y.A, B := B', ft := Algebra.FiniteType.of_restrictScalars_finiteType Y.B _ _
             P := Y.P, pair := Y.pair, cont := ?_, gen := adjoin_top_of_tower Y.gen
             cp := fun g => (Y.cp g).map (p : Y.B →+* B')
@@ -233,7 +233,7 @@ open IsLocalRing Polynomial UpperTheory.V.Alg UpperTheory.V.GradeZeroInterpolati
 private theorem cp_low {R : Type} [CommRing R] (M : M4 R) (σ : Equiv.Perm (Fin 4))
     (h : ∀ i j, i < j → M (σ i) (σ j) = 0) : M.charpoly = ∏ i, (X - C (M i i)) := by
   have h1 : (Matrix.reindex σ.symm σ.symm M).charpoly = M.charpoly := Matrix.charpoly_reindex _ _
-  rw [← h1, ← Matrix.charpoly_transpose, Matrix.charpoly_of_upperTriangular]
+  rw [← h1, ← Matrix.charpoly_transpose, Matrix.charpoly_of_isUpperTriangular]
   · simpa using Equiv.prod_comp σ fun i => X - C (M i i)
   · intro i j hij
     simpa using h j i hij
@@ -269,8 +269,8 @@ private theorem preLine_desc {Λ A T S : Type} [CommRing Λ] [CommRing A] [CommR
 theorem UpperTheory.V.Ws.sxPreLine :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] {Φ : Fr O Γ} {Λ : Type} [CommRing Λ] [IsLocalRing Λ] {a : O →+* Λ} (Y : Pre Φ a), Y.Line := by
   intro O Γ _ _ _ Φ Λ _ _ a Y Q hQ
-  haveI h0 : IsCO Λ (ResidueField Λ) := (co_res Λ).1
-  haveI hS : IsCO Λ (PowerSeries (ResidueField Λ)) := co_mvps Λ (ResidueField Λ) Unit
+  have h0 : IsCO Λ (ResidueField Λ) := (co_res Λ).1
+  have hS : IsCO Λ (PowerSeries (ResidueField Λ)) := co_mvps Λ (ResidueField Λ) Unit
   obtain ⟨h1, h2⟩ := sxResLift Q hQ
   obtain ⟨f, hf⟩ := Y.univ _ _ _ h1 h2
   let j : (ResidueField Λ)[X] →ₐ[Λ] PowerSeries (ResidueField Λ) :=
@@ -537,7 +537,7 @@ theorem UpperTheory.V.Ws.sxPairNear :
     fun g i => ?_, fun g i j hij ht => ?_, fun v i s => ?_⟩, rfl,
     ⟨hQ.pair.low, hQ.pair.flag, fun _ _ _ => rfl, fun v i s hs => hQ.pair.mu v s hs i⟩⟩
   · exact ((sxAdicMat (maximalIdeal R) (fun g => Q.r g) hQ.cont).2 (adj (Q.n v)) (Q.n v) i i N).comp_continuous
-      continuous_subtype_val
+      continuous_subtypeVal
   · exact (hr g i i).trans (hc.res.diag g i)
   · exact (res_eq_zero_iff Λ R _).1 ((hr g i j).trans (hτ g i j hij ht))
   · have h1 := (sxPdMap ((algebraMap Λ R).comp a) (res Λ R : R →+* ResidueField Λ) Q).1 v i s
@@ -567,12 +567,12 @@ theorem UpperTheory.V.Ws.sxPreOfCore :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] {Φ : Fr O Γ} {Λ : Type} [CommRing Λ] [IsLocalRing Λ] {a : O →+* Λ}, (∀ v, ∀ s ∈ Φ.Mu v, s ∈ Φ.Gv v) → Core Φ a → Nonempty (Pre Φ a) := by
   intro O Γ _ _ _ Φ Λ _ _ a hMu X
   obtain ⟨A, cA, aA, n, hft, hgen, hfl, huniv⟩ := sxChart X.D
-  letI aBA : Algebra X.B A := ((algebraMap X.A A).comp (algebraMap X.B X.A)).toAlgebra
-  letI aLA : Algebra Λ A := ((algebraMap X.A A).comp (algebraMap Λ X.A)).toAlgebra
+  let aBA : Algebra X.B A := ((algebraMap X.A A).comp (algebraMap X.B X.A)).toAlgebra
+  let aLA : Algebra Λ A := ((algebraMap X.A A).comp (algebraMap Λ X.A)).toAlgebra
   have hB : ∀ b, algebraMap X.B A b = algebraMap X.A A (algebraMap X.B X.A b) := fun _ => rfl
   have hL : ∀ b, algebraMap Λ A b = algebraMap X.A A (algebraMap Λ X.A b) := fun _ => rfl
-  haveI t1 : IsScalarTower X.B X.A A := IsScalarTower.of_algebraMap_eq hB
-  haveI t2 : IsScalarTower Λ X.B A := IsScalarTower.of_algebraMap_eq fun x => by
+  have t1 : IsScalarTower X.B X.A A := IsScalarTower.of_algebraMap_eq hB
+  have t2 : IsScalarTower Λ X.B A := IsScalarTower.of_algebraMap_eq fun x => by
     rw [hB, hL, ← IsScalarTower.algebraMap_apply Λ X.B X.A]
   let P : PD Φ.ι Γ A := ⟨mapRep (algebraMap X.A A) X.D.r, n⟩
   have hr : ∀ g, P.r g = (X.D.r g).map (algebraMap X.A A) := fun _ => rfl
@@ -821,7 +821,7 @@ theorem UpperTheory.V.Ws.sxGradD :
   let e : S → R := Sum.elim (fun x => D.r x.1 x.2.1 x.2.2 - algebraMap Λ R (c x.1 x.2.1 x.2.2))
     (fun x => D.ψ x.1 x.2.1 x.2.2 - algebraMap Λ R (a (Φ.χ x.2.1 x.2.2)))
   let w : S → ℤ × ℤ := Sum.elim (fun x => wt x.2.1 x.2.2) (fun _ => 0)
-  have hc : ∀ g i j, i ≠ j → c g i j = 0 := fun g i j h => if_neg h
+  have hc : ∀ g i j, i ≠ j → c g i j = 0 := fun g i j h => ite_eq_right h
   refine (coord_grading Λ (ℤ × ℤ) R S e w ?_ ?_ ?_).elim fun W ⟨u, hu, hW⟩ => ?_
   rotate_right
   · refine ⟨W, fun s => ?_, fun g i j => ?_, fun v i s => ?_, fun s => ?_⟩
@@ -954,11 +954,11 @@ theorem UpperTheory.V.Ws.sxCoprodOpt :
     ∀ {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] (T : Type) [Finite T] (A : Type) [CommRing A] [Algebra Λ A] [IsCO Λ A] (B : T → Type) [∀ t, CommRing (B t)] [∀ t, Algebra Λ (B t)] [∀ t, IsCO Λ (B t)], ∃ (R : Type) (_ : CommRing R) (_ : Algebra Λ R) (_ : IsCO Λ R) (i : A →ₐ[Λ] R) (j : ∀ t, B t →ₐ[Λ] R), ∀ (R' : Type) [CommRing R'] [Algebra Λ R'] [IsCO Λ R'] (fa : A →ₐ[Λ] R') (f : ∀ t, B t →ₐ[Λ] R'), ∃! g : R →ₐ[Λ] R', g.comp i = fa ∧ ∀ t, g.comp (j t) = f t := by
   intro Λ _ _ _ _ T _ A _ _ _ B _ _ _
   let F : Option T → Type := fun o => Option.elim o A B
-  letI iR : ∀ o, CommRing (F o) := fun o =>
+  let iR : ∀ o, CommRing (F o) := fun o =>
     match o with
     | none => (inferInstance : CommRing A)
     | some t => (inferInstance : CommRing (B t))
-  letI iA : ∀ o, Algebra Λ (F o) := fun o =>
+  let iA : ∀ o, Algebra Λ (F o) := fun o =>
     match o with
     | none => (inferInstance : Algebra Λ A)
     | some t => (inferInstance : Algebra Λ (B t))
@@ -1058,13 +1058,13 @@ private theorem phi_quot (l : ℕ) (M : Subgroup Γ) [M.Normal]
     PhiCond (Γ := Γ ⧸ M) l := by
   intro H hH
   have hc : Continuous (QuotientGroup.mk' M) := QuotientGroup.continuous_mk
-  haveI := h (H.comap (QuotientGroup.mk' M)) (hH.preimage hc) fun g hg => by
+  have := h (H.comap (QuotientGroup.mk' M)) (hH.preimage hc) fun g hg => by
     rw [Subgroup.mem_comap, QuotientGroup.mk'_apply, (QuotientGroup.eq_one_iff g).2 hg]
     exact H.one_mem
   let π := (QuotientGroup.mk' M).subgroupComap H
-  have hπ : Continuous π := (hc.comp continuous_subtype_val).subtype_mk _
+  have hπ : Continuous π := (hc.comp continuous_subtypeVal).subtype_mk _
   have hs : Function.Surjective π :=
-    (QuotientGroup.mk' M).subgroupComap_surjective_of_surjective H (QuotientGroup.mk'_surjective M)
+    (QuotientGroup.mk' M).subgroupComap_surjective H (QuotientGroup.mk'_surjective M)
   refine Finite.of_injective (β := {φ : H.comap (QuotientGroup.mk' M) →* Multiplicative (ZMod l) //
       IsOpen (φ.ker : Set (H.comap (QuotientGroup.mk' M))) ∧
         ∀ g : H.comap (QuotientGroup.mk' M), (g : Γ) ∈ M → φ g = 1})
@@ -1092,7 +1092,7 @@ private theorem kills_closure [IsTopologicalGroup Γ] {R : Type} [CommRing R] [A
         {g | Ideal.Quotient.mk (maximalIdeal R ^ n) (s.hom g a b) =
           Ideal.Quotient.mk (maximalIdeal R ^ n) ((1 : Matrix ι ι R) a b)} := by
       ext g
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
       constructor
       · intro hg a b n
         rw [hg]
@@ -1109,10 +1109,10 @@ end
 theorem UpperTheory.V.Ws.sxUnivKill :
     ∀ (l : ℕ) [Fact l.Prime] {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] [CharP (ResidueField Λ) l] {Γ ι : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] [Fintype ι] [DecidableEq ι] (rbar : Γ →* Matrix ι ι (ResidueField Λ)) (N : Set Γ), (∀ H : Subgroup Γ, IsOpen (H : Set Γ) → Subgroup.normalClosure N ≤ H → Finite {φ : H →* Multiplicative (ZMod l) // IsOpen (φ.ker : Set H) ∧ ∀ g : H, (g : Γ) ∈ (Subgroup.normalClosure N).topologicalClosure → φ g = 1}) → IsLocallyConstant rbar → (∀ n ∈ N, rbar n = 1) → ∃ (R : Type) (_ : CommRing R) (_ : Algebra Λ R) (_ : IsCO Λ R) (r : Lift Λ rbar R), Represents (killCond rbar N) r := by
   intro l _ Λ _ _ _ _ _ _ Γ ι _ _ _ _ _ _ _ rbar N hfin hloc hN
-  haveI : (Subgroup.normalClosure N).topologicalClosure.Normal := Subgroup.is_normal_topologicalClosure _
+  have : (Subgroup.normalClosure N).topologicalClosure.Normal := Subgroup.is_normal_topologicalClosure _
   have hKc : IsClosed ((Subgroup.normalClosure N).topologicalClosure : Set Γ) :=
     Subgroup.isClosed_topologicalClosure _
-  haveI : TotallyDisconnectedSpace (Γ ⧸ (Subgroup.normalClosure N).topologicalClosure) :=
+  have : TotallyDisconnectedSpace (Γ ⧸ (Subgroup.normalClosure N).topologicalClosure) :=
     (UpperTheory.V.AlgebraTools.totallyDisconnected_quot Γ _ hKc).1
   have hK : (Subgroup.normalClosure N).topologicalClosure ≤ rbar.ker := le_ker rbar hloc N hN
   let rq : Γ ⧸ (Subgroup.normalClosure N).topologicalClosure →* Matrix ι ι (ResidueField Λ) :=
@@ -1237,7 +1237,7 @@ private theorem rep_closed {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpa
 theorem UpperTheory.V.Ws.sxUnivRep :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] {Φ : Fr O Γ} (l : ℕ) [Fact l.Prime] {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] {a : O →+* Λ}, Φ.Std l a → ∃ (R : Type) (_ : CommRing R) (_ : Algebra Λ R) (_ : IsCO Λ R) (r : Lift Λ (Φ.splitRD ((residue Λ).comp a)).r R), Represents (fun R' _ _ _ s => Φ.IsRep ((algebraMap Λ R').comp a) s.hom) r := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a h
-  haveI := h.char
+  have := h.char
   have hd : ∀ g, (Φ.splitRD ((residue Λ).comp a)).r g =
       Matrix.diagonal fun i => ((residue Λ).comp a) (Φ.χ i g) := fun g => by
     show (Matrix.diagonal fun i => (Φ.χ i g : O)).map ((residue Λ).comp a) = _
@@ -1257,7 +1257,7 @@ theorem UpperTheory.V.Ws.sxUnivRep :
     rw [hd]
     simp only [h.ok.kill n hn, Matrix.diagonal_one]
   obtain ⟨R, _, _, _, r, hr⟩ := sxUnivKill l (Φ.splitRD ((residue Λ).comp a)).r Φ.N h.phi hlc hk
-  haveI := (co_res Λ).1
+  have := (co_res Λ).1
   let r₁ : Lift Λ (Φ.splitRD ((residue Λ).comp a)).r (ResidueField Λ) :=
     { hom := (Φ.splitRD ((residue Λ).comp a)).r
       cont := fun i j N => hlc.comp fun X => Ideal.Quotient.mk _ (X i j)
@@ -1292,8 +1292,8 @@ open IsLocalRing Polynomial UpperTheory.V.Alg UpperTheory.V.GradeZeroInterpolati
 theorem UpperTheory.V.Ws.sxUnivD :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] {Φ : Fr O Γ} (l : ℕ) [Fact l.Prime] {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] {a : O →+* Λ}, Φ.Std l a → ∃ (R : Type) (_ : CommRing R) (_ : Algebra Λ R) (_ : IsCO Λ R) (D : RD Φ R), Φ.RUniv a D := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hS
-  haveI := Φ.fin
-  haveI := hS.char
+  have := Φ.fin
+  have := hS.char
   obtain ⟨A, _, _, _, r, hr⟩ := UpperTheory.V.Ws.sxUnivRep l hS
   have hC : ∀ t : Φ.ι × Fin 4, ∃ (B : Type) (_ : CommRing B) (_ : Algebra Λ B) (_ : IsCO Λ B)
       (ψ : Φ.Gv t.1 →* B), AdicCont (maximalIdeal B) ψ ∧
@@ -1303,11 +1303,11 @@ theorem UpperTheory.V.Ws.sxUnivD :
             (∀ s : Φ.Gv t.1, res Λ R' (ψ' s) = residue Λ (a ((Φ.χ t.2) s))) →
               ∃! f : B →ₐ[Λ] R', ∀ s, f (ψ s) = ψ' s := by
     intro t
-    haveI : CompactSpace (Φ.Gv t.1) := isCompact_iff_compactSpace.mp (hS.closed t.1).isCompact
+    have : CompactSpace (Φ.Gv t.1) := isCompact_iff_compactSpace.mp (hS.closed t.1).isCompact
     let χ : Φ.Gv t.1 →* ResidueField Λ :=
       ((residue Λ).comp a).toMonoidHom.comp ((Units.coeHom O).comp ((Φ.χ t.2).comp (Φ.Gv t.1).subtype))
     have hlc : IsLocallyConstant χ :=
-      (hS.ok.lc t.2).comp_continuous continuous_subtype_val
+      (hS.ok.lc t.2).comp_continuous continuous_subtypeVal
     obtain ⟨B, i1, i2, i3, ψ, h1, h2, h3⟩ := UpperTheory.V.Ws.sxUnivChar l χ (hS.phiv t.1) hlc
     exact ⟨B, i1, i2, i3, ψ, h1, h2, fun R' _ _ _ ψ' h h' => h3 R' ψ' h h'⟩
   choose B iB1 iB2 iB3 ψ hψ1 hψ2 hψ3 using hC
@@ -1385,11 +1385,11 @@ open IsLocalRing Polynomial UpperTheory.V.Alg UpperTheory.V.GradeZeroInterpolati
 theorem UpperTheory.V.Ws.spaceEx :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] (Φ : Fr O Γ) (l : ℕ) [Fact l.Prime] {Λ : Type} [CommRing Λ] [IsDomain Λ] [IsDiscreteValuationRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] (a : O →+* Λ), Φ.Std l a → Nonempty (Space Φ a) := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hS
-  haveI : IsCO Λ (ResidueField Λ) := (co_res Λ).1
+  have : IsCO Λ (ResidueField Λ) := (co_res Λ).1
   obtain ⟨R, _, _, _, D, hU⟩ := sxUnivD l hS
   obtain ⟨W, hW⟩ := sxGradD hU
-  haveI : IsCO Λ (W.gr 0) := wPres_gr_zero_isCO_of_mem_maximalIdeal Λ (ℤ × ℤ) R W hW.max
-  haveI : IsScalarTower Λ (W.gr 0) W.A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsCO Λ (W.gr 0) := wPres_gr_zero_isCO_of_mem_maximalIdeal Λ (ℤ × ℤ) R W hW.max
+  have : IsScalarTower Λ (W.gr 0) W.A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨D', hD', hrep⟩ := sxSubRD a W.A D (fun g i j => W.part_le_A (hW.ent g i j))
     (fun v i s => W.part_le_A (hW.chr v i s)) hU.1.rep
   have hψ : ∀ v i s, (W.A.val (D'.ψ v i s) : R) = D.ψ v i s := by
@@ -1603,8 +1603,8 @@ theorem UpperTheory.V.Ws.spaceEx :
     have hlev : ∀ N : ℕ, ∃ f : W.A →ₐ[Λ] R' ⧸ maximalIdeal R' ^ (N + 1),
         D'.map (f : W.A →+* _) = Q.map (Ideal.Quotient.mk (maximalIdeal R' ^ (N + 1))) := by
       intro N
-      haveI : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
-      haveI : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
+      have : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
+      have : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
         co_quot Λ R' _ (Ideal.Quotient.mkₐ Λ _) (Ideal.Quotient.mkₐ_surjective Λ _)
       exact liftNilpotent _ _ (isNilpotent_maxIdeal_quotient_maxIdeal_pow_succ N)
         (sxNearMap (Ideal.Quotient.mkₐ Λ (maximalIdeal R' ^ (N + 1))) hQ)
@@ -1638,11 +1638,11 @@ theorem UpperTheory.V.Ws.spaceEx :
     have huniq : ∀ (N : ℕ) (f f' : W.A →ₐ[Λ] R' ⧸ maximalIdeal R' ^ (N + 1)),
         (∀ s, f (W.zA s) = f' (W.zA s)) → f = f' := by
       intro N f f' h
-      haveI : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
-      haveI : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
+      have : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
+      have : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
         co_quot Λ R' _ (Ideal.Quotient.mkₐ Λ _) (Ideal.Quotient.mkₐ_surjective Λ _)
       exact sxExtA W hG.max _ f f' h
-    haveI : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := Λ)
+    have : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := Λ)
     obtain ⟨F, hF⟩ := sxLimPt (Λ := Λ) (maximalIdeal R') W.zA y
       (fun N => ⟨fN N, fun s => hy s N (fN N) (hfN N)⟩) huniq
     have hcomp : ∀ N, (Ideal.Quotient.mkₐ Λ (maximalIdeal R' ^ (N + 1))).comp F = fN N := by
@@ -1707,7 +1707,7 @@ theorem UpperTheory.V.Ws.spaceEx :
   obtain ⟨Y⟩ := sxPreOfCore (fun v s hs => (hS.mu v s hs).1) C
   obtain ⟨hres, hlift⟩ := sxSplitRes hS
   obtain ⟨f, -⟩ := Y.univ (ResidueField Λ) _ _ hres hlift
-  haveI : Nontrivial Y.A := f.toRingHom.domain_nontrivial
+  have : Nontrivial Y.A := f.toRingHom.domain_nontrivial
   obtain ⟨Y', hinj⟩ := sxPreImage Y this
   exact ⟨Y'.toSpace hinj (sxPreLine Y')⟩
 end -- clump:auto

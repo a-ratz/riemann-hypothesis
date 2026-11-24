@@ -61,7 +61,7 @@ theorem CS_mono (ψ : 𝒪[k]ˣ →* ℂˣ) {c d : ℕ} (hc : c ∈ CS ψ) (hcd 
 
 theorem CS_inv (ψ : 𝒪[k]ˣ →* ℂˣ) : CS ψ⁻¹ = CS ψ := by
   ext c
-  simp only [CS, Set.mem_setOf_eq, MonoidHom.inv_apply, inv_eq_one]
+  simp only [CS, Set.mem_ofPred_eq, MonoidHom.inv_apply, inv_eq_one]
 
 theorem cond_one : cond (1 : 𝒪[k]ˣ →* ℂˣ) = 0 := by
   rw [cond_eq]

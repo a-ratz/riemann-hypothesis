@@ -58,7 +58,7 @@ noncomputable section
 
 theorem isAddTorsionFree_of_module (K V : Type*) [Field K] [CharZero K] [AddCommGroup V]
     [Module K V] : IsAddTorsionFree V := by
-  letI : HasUniqueDiv V := HasUniqueDiv.of_isTorsionFree K V
+  let : HasUniqueDiv V := HasUniqueDiv.of_isTorsionFree K V
   infer_instance
 
 theorem fg_of_fg_map_of_injective {A B : Type*} [AddCommGroup A] [AddCommGroup B]
@@ -193,7 +193,7 @@ theorem ComplementLattice.proof (h : HermitianForm F E W) [FiniteDimensional E W
     Module.Finite.iff_fg.2 ((Submodule.fg_iff_addSubgroup_fg _).2 hGfg)
   have : Module.Finite ℤ G := inferInstanceAs (Module.Finite ℤ G.toIntSubmodule)
   have hrank : finrank ℤ G ≤ finrank ℚ E * finrank E W := by
-    letI : Module ℚ W := Module.compHom W (algebraMap ℚ E)
+    let : Module ℚ W := Module.compHom W (algebraMap ℚ E)
     have : IsScalarTower ℚ E W := ⟨fun q e w => by
       change (q • e) • w = algebraMap ℚ E q • e • w
       rw [Algebra.smul_def, mul_smul]⟩

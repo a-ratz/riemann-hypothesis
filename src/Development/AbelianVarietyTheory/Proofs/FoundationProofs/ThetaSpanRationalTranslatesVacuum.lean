@@ -205,9 +205,9 @@ theorem theta_span : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), Crv D
   have hrat := fun x hx => GlobalTheory.ThetaInter.klat_rat hg.1 k (x := x) hx
   change e0 ∈ ThSp D _ (La0 D (tor0 D cc δ) N N') at he
   set A := La0 D (tor0 D cc δ) N N'
-  haveI : Finite (A ⧸ (subLa m A).addSubgroupOf A) :=
+  have : Finite (A ⧸ (subLa m A).addSubgroupOf A) :=
     GlobalTheory.ThetaInter.finite_quot l5 fun x hx => ⟨m, hm, x, hx, rfl⟩
-  letI : Fintype (A ⧸ (subLa m A).addSubgroupOf A) := Fintype.ofFinite _
+  let : Fintype (A ⧸ (subLa m A).addSubgroupOf A) := Fintype.ofFinite _
   have H := wLin_heis D (tor0 D cc δ) (N := N) (N' := N')
   have fix : ∀ x ∈ A, wLin D (tor0 D cc δ) x e0 = e0 := fun x hx => by
     show Wd D _ x e0 = e0

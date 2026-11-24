@@ -260,7 +260,7 @@ theorem finrank_Kunr : Module.finrank ℚ_[l] ↥(Kunr l a) = a := by
   have := GlobalTheory.TameFrob.finite_Wq l a
   have : IsScalarTower ℤ_[l] (Wq l a) ↥(Kunr l a) := IsScalarTower.of_algebraMap_eq fun u =>
     Subtype.ext (GlobalTheory.TameFrob.iotaO_algebraMap l a u).symm
-  rw [Algebra.IsAlgebraic.finrank_of_isFractionRing ℤ_[l] ℚ_[l] (Wq l a) ↥(Kunr l a), finrank_Wq]
+  rw [IsFractionRing.finrank_eq ℤ_[l] ℚ_[l] (Wq l a) ↥(Kunr l a), finrank_Wq]
 
 variable (K)
 
@@ -525,7 +525,7 @@ theorem UpperTheory.Gal.crystallineComparison.ptIdBC_of :
     intro x' e
     have hx : (x' ≫ h) ≫ f = β ≫ Spec.map (CommRingCat.ofHom σ) := by
       rw [Category.assoc, hp.w, ← Category.assoc, e]
-    simp only [Λ, dif_pos hx]
+    simp only [Λ, dite_eq_left hx]
     apply hp.hom_ext
     · exact hp.lift_fst _ _ _
     · rw [hp.lift_snd, e]
@@ -660,7 +660,7 @@ private theorem card_res_OK {l : ℕ} [Fact l.Prime] (K : FinExt l) [IsLocalRing
 private theorem dvd_pow_sub {R : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] {q : ℕ} (hq : q ≠ 0)
     (hc : Nat.card (IsLocalRing.ResidueField R) = q) {t : R} (ht : Irreducible t) (x : R) : t ∣ x ^ q - x := by
   have : Finite (IsLocalRing.ResidueField R) := Nat.finite_of_card_ne_zero (by rwa [hc])
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField R)
+  let := Fintype.ofFinite (IsLocalRing.ResidueField R)
   have h := FiniteField.pow_card (IsLocalRing.residue R x)
   rw [← Nat.card_eq_fintype_card, hc] at h
   rw [← Ideal.mem_span_singleton, ← ht.maximalIdeal_eq, ← IsLocalRing.residue_eq_zero_iff, map_sub, map_pow, h, sub_self]
@@ -690,11 +690,11 @@ theorem UpperTheory.Ru.crystallineComparison.congBC :
   subst hf
   have hpos : 0 < resDeg p w := Nat.pos_of_ne_zero fun h0 =>
     w.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 (by rw [hN, h0, pow_zero]))
-  haveI := Bw.Kw.2
+  have := Bw.Kw.2
   obtain ⟨hD, hV, -⟩ := CrystallineSemistableComparison.Pb.Kap.ok_dvr_pf (l := p) (K := Bw.Kw.1)
-  haveI := hD
-  haveI := hV
-  haveI : IsDiscreteValuationRing (Ow w) := (w.valuation E).valuationSubring_isDiscreteValuationRing
+  have := hD
+  have := hV
+  have : IsDiscreteValuationRing (Ow w) := (w.valuation E).valuationSubring_isDiscreteValuationRing
   obtain ⟨φ, hφ, hφi⟩ := UpperTheory.Gal.Seam.intMap E Ω p w A hA O Bw hB
   have hcard : Nat.card (IsLocalRing.ResidueField ↥(OK p Bw.Kw.1)) = p ^ resDeg p w := by
     rw [card_res_OK, GlobalTheory.AinfK.fK_eq_resDeg Bw hA hB]
@@ -876,7 +876,7 @@ open UpperTheory.Ru.crystallineComparison in
 theorem UpperTheory.Ru.crystallineComparison.crysCopy :
     UpperTheory.Ru.crystallineComparison.CrysCopy := by
   intro hC l _ P AI hT K M hM j a b
-  haveI := K.2
+  have := K.2
   obtain ⟨FreeQuotientRank⟩ := _root_.Formalism.BasicNotions.CmpTie.locTied6_F l P AI hT
   obtain ⟨T⟩ := hT
   have hadm := UpperTheory.Gal.Seam.isAdmP_of_isAdm FreeQuotientRank (hC l K.1 M hM.1 hM.2 j a b)
@@ -1188,7 +1188,7 @@ section -- clump:auto
 theorem UpperTheory.Gal.crystallineComparison.Br.annModel :
     UpperTheory.Gal.crystallineComparison.Br.AnnModel := by
   intro hF l _ P AI hT K _ _ f hf hc ϖ hϖ M hM n j T hr hP A hA V₀ _ _ i ρ hρ T₀ hT₀
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
   obtain ⟨B, e, heσ, heφ, hinj⟩ := UpperTheory.Gal.crystallineComparison.Br.pBTied l P AI hT K
   obtain ⟨N, hN⟩ := hF l K.1 f hf hc ϖ hϖ M hM n j T hr hP A hA B
   exact UpperTheory.Gal.crystallineComparison.Br.annDrop ℚ_[l] _ _ _ (UpperTheory.Gal.crystallineComparison.σCr P K) P.φB B.σ B.φ e heσ heφ hinj
@@ -1273,7 +1273,7 @@ private lemma desc_iso_of_pb {X Y Y' Z Z' : Scheme.{0}} {p : Z ⟶ Y} {p' : Z' �
       Sigma.desc (fun i => pullback.lift (z i ≫ b) (𝟙 X) (by rw [h i, Category.id_comp])) := by
     apply Sigma.hom_ext
     intro i
-    rw [Sigma.ι_desc_assoc, Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc]
     apply pullback.hom_ext
     · rw [Category.assoc, Q.isoPullback_hom_fst, pullback.lift_fst, pullback.lift_fst_assoc]
     · rw [Category.assoc, Q.isoPullback_hom_snd, pullback.lift_snd, pullback.lift_snd]
@@ -1641,7 +1641,7 @@ private theorem deg_bound {F L : Type*} [Field F] [Field L] [Algebra F L] {A : �
     | zero => exact ⟨0, fun _ _ => zero_mem _⟩
     | of i z =>
       rcases lt_or_ge i 0 with hi | hi
-      · haveI := hneg i hi
+      · have := hneg i hi
         refine ⟨0, fun _ _ => ?_⟩
         rw [Subsingleton.elim z 0, map_zero]
         exact zero_mem _
@@ -1791,7 +1791,7 @@ private theorem comp_facts {F L : Type*} [Field F] [Field L] [Algebra F L] {V D 
   refine ⟨?_, fun P hP z hz => ?_⟩
   · rw [hc]
     have h2 : Function.Injective (e.baseChange L) := by
-      rw [LinearMap.baseChange_eq_ltensor]
+      rw [LinearMap.baseChange_eq_lTensor]
       exact Module.Flat.lTensor_preserves_injective_linearMap e he
     exact hp.comp h2
   · have h3 : z ∈ LinearMap.range (e.baseChange L) := by
@@ -1879,7 +1879,7 @@ private theorem gal_inTot {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l
 theorem UpperTheory.Ru.crystallineComparison.geoLoc :
     UpperTheory.Ru.crystallineComparison.GeoLoc := by
   intro hF hCr l _ P AI hT K _ _ f hf hc H θ hN C hOn n ϑ hCg a ρ₁ hMat
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
   obtain ⟨hinj, hle, heq⟩ := UpperTheory.Gal.Seam.pieceIn_holds l K.1 (Om l) H θ hN C hOn
   have hSm : (mod C).Sm := ⟨goodOf l K.1 (mod C) C.smooth C.proj, C.smooth⟩
   have hfin : ∀ j, FiniteDimensional ℚ_[l] ((mod C).V j) := fun j => (UpperTheory.Gal.KunnethLefschetz.Top.etSide_sm_holds l K.1).fin (mod C) hSm j
@@ -1902,7 +1902,7 @@ theorem UpperTheory.Ru.crystallineComparison.geoLoc :
   obtain ⟨Tk, hTk⟩ : ∃ Tk : ∀ i : Fin N, ℕ → End ℚ_[l] (Fin (d i) → ℚ_[l]), ∀ (i : Fin N) (k : Fin (n + 1)),
       Tk i k = (β i).equivFun.toLinearMap ∘ₗ A k i ∘ₗ (β i).equivFun.symm.toLinearMap :=
     ⟨fun i k => if h : k ≤ n then (β i).equivFun.toLinearMap ∘ₗ A ⟨k, Nat.lt_succ_of_le h⟩ i ∘ₗ (β i).equivFun.symm.toLinearMap else 0,
-      fun i k => dif_pos (Nat.le_of_lt_succ k.2)⟩
+      fun i k => dite_eq_left (Nat.le_of_lt_succ k.2)⟩
   have hTv : ∀ (i : Fin N) (k : Fin (n + 1)) v, Tk i k ((β i).equivFun v) = (β i).equivFun (A k i v) := fun i k v => by
     rw [hTk]
     simp

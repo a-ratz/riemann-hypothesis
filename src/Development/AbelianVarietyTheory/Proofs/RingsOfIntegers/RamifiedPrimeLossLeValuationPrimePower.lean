@@ -57,7 +57,7 @@ theorem ramLoss_le_vLa_pPow (D : D7) (K : Type) [Field K] [NumberField K] (la : 
     unfold pPow
     exact mul_ne_zero (mul_ne_zero (pow_ne_zero _ D.host.QS_pos.ne') (pow_ne_zero _ hqp.ne_zero)) (pow_ne_zero _ hdp.ne_zero)
   have hl := Crude.resCharOf_prime la
-  haveI : Fact (resCharOf la).Prime := ⟨hl⟩
+  have : Fact (resCharOf la).Prime := ⟨hl⟩
   have ha' : (DF w : ℝ) ≤ a := by exact_mod_cast ha
   have hb' : (DF w : ℝ) / 2 ≤ b := Nat.ceil_le.1 hb
   have hD : (0 : ℝ) ≤ (DF w : ℝ) := Nat.cast_nonneg _
@@ -67,7 +67,7 @@ theorem ramLoss_le_vLa_pPow (D : D7) (K : Type) [Field K] [NumberField K] (la : 
   have hz : ∀ p ∈ D.host.condN.primeFactors, p ≠ resCharOf la →
       ((vLa la (p : K) : ℤ) : ℝ) * D.host.vdH p * (DF w : ℝ) / 2 = 0 := fun p hp hne => by
     have hpp := Nat.prime_of_mem_primeFactors hp
-    haveI : Fact p.Prime := ⟨hpp⟩
+    have : Fact p.Prime := ⟨hpp⟩
     rw [Crude.crv_vLa_natCast la hpp.ne_zero, Nat.padicValNat_def, multiplicity_primes hne.symm]; simp
   rw [ramLoss, hR]
   by_cases hm : resCharOf la ∈ D.host.condN.primeFactors

@@ -168,7 +168,7 @@ theorem uniformizerRatio_mul (σ τ : L ≃ₐ[K] L) :
     uniformizerRatio hϖ (σ * τ) = uniformizerRatio hϖ σ *
       Units.map (integerAlgEquiv K L σ : 𝒪[L] →* 𝒪[L]) (uniformizerRatio hϖ τ) := by
   rw [uniformizerRatio_eq_iff, map_mul, AlgEquiv.mul_apply, ← mul_uniformizerRatio hϖ τ, map_mul,
-    ← mul_uniformizerRatio hϖ σ, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, mul_assoc]
+    ← mul_uniformizerRatio hϖ σ, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, mul_assoc]
 
 theorem mem_lowerRamificationGroup_iff_uniformizerRatio {σ : L ≃ₐ[K] L}
     (hσ : σ ∈ lowerRamificationGroup K L 0) (n : ℕ) :
@@ -191,7 +191,7 @@ theorem map_mul_inv_mem {n : ℕ} {σ : L ≃ₐ[K] L} (hσ : σ ∈ lowerRamifi
   rw [mem_unitFiltration]
   have h : ((Units.map (integerAlgEquiv K L σ : 𝒪[L] →* 𝒪[L]) u * u⁻¹ : 𝒪[L]ˣ) : 𝒪[L]) - 1 =
       (integerAlgEquiv K L σ u - u) * ((u⁻¹ : 𝒪[L]ˣ) : 𝒪[L]) := by
-    rw [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, sub_mul, Units.mul_inv]
+    rw [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, sub_mul, Units.mul_inv]
   rw [h]
   exact Ideal.mul_mem_right _ _ (mem_lowerRamificationGroup_natCast_iff.mp hσ (u : 𝒪[L]))
 

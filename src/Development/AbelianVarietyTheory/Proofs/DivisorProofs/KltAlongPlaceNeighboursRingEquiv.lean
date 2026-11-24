@@ -103,8 +103,8 @@ theorem adjKlt_ringEquiv : ∀ {k K K' : Type} [Field k] [CharZero k] [Field K] 
         rw [← hfab, map_mul, e.apply_symm_apply]
   set E := Φ.symm E' with hEdef
   have hE : Φ E = E' := Φ.apply_symm_apply E'
-  haveI := hQ'.isLocalRing
-  haveI := hQ.isLocalRing
+  have := hQ'.isLocalRing
+  have := hQ.isLocalRing
   have hTQ' : T ≤ Q := fun f hf => (hQmem f).2 (hTQ (Subring.mem_map.2 ⟨f, hf, rfl⟩))
   have hmax' : Ideal.span {ψ t', ψ u'} = IsLocalRing.maximalIdeal Q := by
     have h1 := congrArg (Ideal.map ψ) hmax

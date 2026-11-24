@@ -166,7 +166,7 @@ theorem point_exp_eq_of_isometry_levels (hK : Known) {E : Type} [Field E] [Numbe
         (Fu.ex_diff i' P' hP').1, (Fu.ex_diff i' P' hP').2⟩, Fu.ex_ker i' P' hP', Fu.ex_lin i' P' hP',
         Fu.ex_weil i' P' hP', Fu.ex_eta i' P' hP', Fu.ex_etaA i' P' hP'⟩).2 ⟨gm, L, hiso, hM, hA', hL⟩
   obtain rfl : i = i' := Fu.disj i i' P P' hP hP' hu
-  letI : StarRing (𝓞 E) := H.starRing
+  let : StarRing (𝓞 E) := H.starRing
   exact GlobalTheory.ArcPts.exp_eq_of_matching_markings E H D l Xo σ g ty Fu i P P' gm L rfl hP hP' hiso hM hA' hL
 
 theorem flowTie_of_onOrbit : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (σ : c.F →+* ℂ) (r : ℕ) (U : Formalism.L2.PjFree.Unf Xo c σ r) (Uw : UnfWit U) (k : U.Comp) (ξ' : Fin r → E) (x : Frame (U.X k).Ψ r) (aC : ArcIn Dw l (RingHom.id c.F) ℂ σ) (Λ : GtAn₀ aC), Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → (U.X k).IsIso ξ' → x ∈ (U.X k).dom → letI := H.starRing; ∀ (gam : (Uw.F.Di (Uw.ik k)).La ≃ₗ[𝓞 E] Λ.A.La) (ξ : Module.Dual ℤ Λ.A.X), OnOrbit Uw k ξ' x Λ.A gam ξ → ξ ≠ 0 → Module.finrank (𝓞 E) Λ.A.X = 1 → (∀ v, Λ.Lifts (aC.eta v) (gam (Uw.F.t (Uw.ik k) v))) → (∀ v, Λ.Lifts (aC.etaA v) (gam (Uw.F.t (Uw.ik k) v))) → ∀ (O : Type) [CommRing O] (β : O →+* c.F), FlowTie Uw (aC.restrict β) k ξ' x := by
@@ -378,7 +378,7 @@ theorem tateIso_similar_zeta
     intro n
     rcases Nat.eq_zero_or_pos n with h | hn
     · exact ⟨1, fun h' => absurd h h'.ne'⟩
-    · haveI : NeZero n := ⟨hn.ne'⟩
+    · have : NeZero n := ⟨hn.ne'⟩
       obtain ⟨i, -, hi⟩ := (I'.ζ_prim n hn).eq_pow_of_mem_rootsOfUnity
         ((mem_rootsOfUnity _ _).2 (I.ζ_prim n hn).pow_eq_one)
       exact ⟨i, fun _ => hi.symm⟩
@@ -476,7 +476,7 @@ theorem exists_arcIn_input : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     have h₂ : (hermForm A.Hm a (A.F H.w0 a)).im = -(A.Ef (A.FLam H.w0 ⟨a, lam.le a.2⟩) ⟨a, lam.le a.2⟩ : ℤ) := by
       rw [h₁, neg_neg]; rfl
     generalize A.Ef (A.FLam H.w0 ⟨a, lam.le a.2⟩) ⟨a, lam.le a.2⟩ = n at h₂
-    rw [h₂, ← Complex.exp_neg_pi_mul_I, ← Complex.exp_int_mul]
+    rw [h₂, ← Complex.exp_neg_pi_mul_I, ← Complex.exp_intCast_mul]
     congr 1
     push_cast
     ring
@@ -1024,7 +1024,7 @@ theorem fj_le_slice (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ) (hP : X.IsSec la
   swap
   · have h0 : X.fj la ξ ν P x = 0 := by
       unfold Data.fj
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hall
       exact hf fun j => hall _ (hωp j)
     rw [h0, norm_zero, zero_mul]
@@ -1153,7 +1153,7 @@ theorem freqNonneg_of_thickBdd : OrbitThickSt → ∀ (E : Type) [Field E] [Numb
     · exact le_max_of_le_left h
     · exact le_max_of_le_right ((one_le_inv₀ (hq0 τ)).mpr h)
   have hqp : ∏ τ, q τ = 1 := by
-    simp only [q, Finset.prod_mul_distrib, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+    simp only [q, Finset.prod_mul_distrib, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
     exact mul_inv_cancel₀ hL0.ne'
   let y : X.Ψ → ℝ := fun τ => (q τ - 1) * X.tt ξ x τ
   have hty : ∀ τ, X.tt ξ x τ + y τ = q τ * X.tt ξ x τ := fun τ => by simp only [y]; ring
@@ -1220,7 +1220,7 @@ theorem half_plane_bound {g : ℂ → ℂ} {M C : ℝ} (hd : DifferentiableOn �
     (hM : ∀ z : ℂ, 0 ≤ z.re → ‖g z‖ ≤ M) (hC : ∀ y : ℝ, ‖g (y * I)‖ ≤ C) : ‖g 1‖ ≤ C := by
   refine PhragmenLindelof.right_half_plane_of_bounded_on_real (f := g) ?_ ⟨0, by norm_num, 0, ?_⟩ ?_ hC (by simp)
   · refine DifferentiableOn.diffContOnCl ?_
-    rw [Complex.closure_setOf_lt_re]
+    rw [closure_setOfPred_lt_re]
     exact hd
   · refine Asymptotics.IsBigO.of_bound M ?_
     refine Filter.Eventually.filter_mono inf_le_right ?_
@@ -1377,7 +1377,7 @@ theorem card_le_of_class {n M : ℕ} (hM : 0 < M) (cl : G → Fin n → ZMod M)
     (δ η : ℝ) (hη : 4 * δ ≤ (M : ℝ) ^ 2 * η) (hT : {v | Q v < η}.Finite) :
     {v | Q v < δ}.Finite ∧ {v | Q v < δ}.ncard ≤ M ^ n * {v | Q v < η}.ncard := by
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have h1 : ∀ a : Fin n → ZMod M, ∃ w, (∃ v, Q v < δ ∧ cl v = a) → Q w < δ ∧ cl w = a := by
     intro a
     by_cases h : ∃ v, Q v < δ ∧ cl v = a
@@ -1702,8 +1702,8 @@ theorem moderate_of_stepBound (hF : FlowMajSt) (E : Type) [Field E] [NumberField
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · refine ⟨φ 0, 0, fun x _ => ?_⟩
     rw [zero_mul, neg_zero, Real.rpow_zero, mul_one, Subsingleton.elim x 0]
-  haveI : Module.Finite (𝓞 E) X.Λ := Module.Finite.iff_fg.mpr X.Λ_fg
-  haveI : Module.Finite ℤ X.Λ := Module.Finite.trans (𝓞 E) X.Λ
+  have : Module.Finite (𝓞 E) X.Λ := Module.Finite.iff_fg.mpr X.Λ_fg
+  have : Module.Finite ℤ X.Λ := Module.Finite.trans (𝓞 E) X.Λ
   obtain ⟨n, hn⟩ := exists_class X.Λ
   obtain ⟨δ, hδ, horth⟩ := orth_threshold X hF
   obtain ⟨B, hB0, hB⟩ := GlobalTheory.FJZero.firstMinimum_bounded_on_domain X
@@ -1829,7 +1829,7 @@ theorem exists_input [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (Fracti
     (hξ : (U.X k).IsIso ξ') {x : Frame (U.X k).Ψ r} (hx : x ∈ (U.X k).dom) :
     ∃ a : ArcIn Dw l (RingHom.id c.F) ℂ σ, ∀ (O : Type) [CommRing O] (β : O →+* c.F),
       FlowTie Uw (a.restrict β) k ξ' x := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨hp, hq⟩ := GlobalTheory.ArcCM.Exist.one_le_of_isIso hU hξ
   obtain ⟨A, gam, ξ, jj, DB, tyB, eB, hO, hξ0, hrk, hdvd, -, hprim, -, hab, hDp, hDq⟩ :=
     _root_.GlobalTheory.AnAtFrame.exists_anArc_onOrbit E H Dw l Xo c σ r U Uw k ξ' x 0 0 hσ hU hξ hx

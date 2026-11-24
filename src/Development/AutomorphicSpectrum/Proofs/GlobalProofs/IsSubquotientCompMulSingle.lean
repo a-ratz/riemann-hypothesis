@@ -398,7 +398,7 @@ theorem jhMult_jac_multiProd (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFin
     jhMult τ (jac e' (multiProd e fun i => (p i).π)) = jhMult τ (piTensor fun i => (p i).π) := by
   classical
   let M := fun i : Fin 2 => Fin (d i)
-  haveI : Fintype (SizeMatrix M M) := Fintype.ofFinite _
+  have : Fintype (SizeMatrix M M) := Fintype.ofFinite _
   let b₀ : SizeMatrix M M := ⟨fun i j => if i = j then d i else 0, by
     refine ⟨fun i => ?_, fun j => ?_⟩
     · simp [M]

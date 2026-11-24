@@ -65,7 +65,7 @@ theorem linkIn_uniM_eq_of_form :
     have := List.length_pos_of_mem hv
     omega
   · ext w
-    simp only [linkIn, Set.mem_setOf_eq]
+    simp only [linkIn, Set.mem_ofPred_eq]
     refine and_congr_right fun hw => ?_
     have hpw : (τ ++ w).Perm (v :: (τ.erase v ++ w)) := hp.append_right w
     have hwfix : w.map (fun x => x - φ x • v) = w := by

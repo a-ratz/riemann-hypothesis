@@ -114,12 +114,12 @@ theorem eq_zero_of_avg_character_eq_zero : ∀ (E : Type) [Field E] [NumberField
     (ψ : AddChar (Ad E) ℂ), StdPsi ψ → ∀ Φ : (ι → Ad E) → ℂ, Per (ratV E ι) Φ →
     (∀ ξ : ι → E, avg (ratV E ι) (fun x => ψ (-dot ξ x) * Φ x) = 0) → Φ = 0 := by
   intro E _ _ ι _ ψ hψ Φ hΦ hco
-  letI : MeasurableSpace (ι → Ad E) := borel _
-  haveI : BorelSpace (ι → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (ι → Ad E) := borel _
+  have : BorelSpace (ι → Ad E) := ⟨rfl⟩
   have hL := isCoLat_ratV E ι
   obtain ⟨hd, K, hK, hcov⟩ := id hL
   obtain ⟨μ, 𝓕, hμ, h𝓕, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one (ι → Ad E) (ratV E ι) hL
-  haveI := hd
+  have := hd
   refine GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero (ι → Ad E) (ratV E ι) K hK hcov (ι → E)
     (fun ξ x => ψ (-dot ξ x)) (fun ξ => hψ.cont.comp (continuous_dot ξ).neg) ?_ ?_ ?_
     (fun ξ x => hψ.norm _) (hψ.forall_dot_eq_one_iff) μ 𝓕 hμ h𝓕 Φ hΦ.1 hΦ.2 ?_

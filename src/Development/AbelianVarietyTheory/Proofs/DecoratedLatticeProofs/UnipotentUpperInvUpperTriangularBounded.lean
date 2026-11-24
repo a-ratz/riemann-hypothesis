@@ -61,11 +61,11 @@ theorem unipotent_upper_inv_bounded : ∀ (N : ℕ) (C : ℝ), ∃ C' : ℝ, ∀
   intro n hd hl hb
   have htri : n.BlockTriangular id := fun i j h => hl i j h
   have hdet : n.det = 1 := by
-    rw [Matrix.det_of_upperTriangular htri]; simp [hd]
+    rw [det_of_isUpperTriangular htri]; simp [hd]
   have hu : IsUnit n.det := by rw [hdet]; exact isUnit_one
   refine ⟨n⁻¹, Matrix.nonsing_inv_mul n hu, Matrix.mul_nonsing_inv n hu, ?_, ?_⟩
   · intro i j h
-    letI := Matrix.invertibleOfIsUnitDet n hu
+    let := Matrix.invertibleOfIsUnitDet n hu
     exact Matrix.blockTriangular_inv_of_blockTriangular htri h
   · intro i j
     have hinv : n⁻¹ = n.adjugate := by rw [Matrix.inv_def, hdet]; simp

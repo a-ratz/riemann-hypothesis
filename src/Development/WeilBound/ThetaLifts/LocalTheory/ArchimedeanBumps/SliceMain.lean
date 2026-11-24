@@ -82,13 +82,13 @@ theorem exists_admissible_functional_adelic {κ : Type} [Fintype κ] (L : SInf F
     induction hΦ using Submodule.span_induction with
     | mem _ h => obtain ⟨f, g, -, rfl⟩ := h; exact ⟨g a • f, fun y => (mul_comm _ _).trans (pureA_ptA f g y a).symm⟩
     | zero => exact ⟨0, fun _ => rfl⟩
-    | add _ _ _ _ p q => obtain ⟨p, hp⟩ := p; obtain ⟨q, hq⟩ := q; exact ⟨p + q, fun y => by rw [SchwartzMap.add_apply, hp, hq]; rfl⟩
-    | smul c _ _ p => obtain ⟨p, hp⟩ := p; exact ⟨c • p, fun y => by rw [SchwartzMap.smul_apply, hp]; rfl⟩
+    | add _ _ _ _ p q => obtain ⟨p, hp⟩ := p; obtain ⟨q, hq⟩ := q; exact ⟨p + q, fun y => by rw [add_apply, hp, hq]; rfl⟩
+    | smul c _ _ p => obtain ⟨p, hp⟩ := p; exact ⟨c • p, fun y => by rw [smul_apply, hp]; rfl⟩
   choose s hs using ex
   let s' : schA F κ →ₗ[ℂ] SInf F κ :=
     { toFun := s
-      map_add' := fun a b => SchwartzMap.ext fun z => by rw [SchwartzMap.add_apply, hs, hs, hs]; rfl
-      map_smul' := fun c a => SchwartzMap.ext fun z => by rw [SchwartzMap.smul_apply, hs, hs]; rfl }
+      map_add' := fun a b => SchwartzMap.ext fun z => by rw [add_apply, hs, hs, hs]; rfl
+      map_smul' := fun c a => SchwartzMap.ext fun z => by rw [smul_apply, hs, hs]; rfl }
   obtain ⟨l, hl⟩ := LinearMap.exists_extend (L.toLinearMap ∘ₗ s')
   have h : ∀ f : SInf F κ, ∀ g ∈ SB (κ → Af F), l (pureA F f g) = g a * L f := fun f g hg => by
     have h1 := LinearMap.congr_fun hl ⟨_, pureA_mem' f hg⟩
@@ -137,7 +137,7 @@ theorem dom_int {ι : Type} [Fintype ι] (z : ℕ) : ∃ N : ℕ,
         gcongr; linarith
     calc _ ≤ (∏ _w : ι, (1 + ‖c‖) ^ 2) ^ z := by gcongr
       _ = _ := by rw [Finset.prod_const, Finset.card_univ, ← pow_mul, ← pow_mul, ← mul_assoc]
-  exact ⟨a + b, hi, integral_pos_of_integrable_nonneg_nonzero (x := 1) hc hi (fun c => by positivity) (by simp; positivity)⟩
+  exact ⟨a + b, hi, integral_pos_of_integrable_nonneg_ne_zero (x := 1) hc hi (fun c => by positivity) (by simp; positivity)⟩
 
 variable {n d n₁ d₁ : ℕ} {X : Spc F E n} {W : Spc F E d} {X₁ : Spc F E n₁} {W₁ : Spc F E d₁} {B : Base F E}
 
@@ -147,7 +147,7 @@ theorem xi_int {lift} (hL : IsLift σ B lift) (x : @Measure (idAt E (evI F)) (bo
   obtain ⟨z, rfl⟩ := Nat.exists_eq_add_of_le' hz
   obtain ⟨N, hi, hp⟩ := dom_int (ι := InfinitePlace F) z
   obtain ⟨κ, hκ, h⟩ := hL.haar x hx
-  letI : MeasurableSpace (idAt E (evI F)) := borel _
+  let : MeasurableSpace (idAt E (evI F)) := borel _
   refine ⟨N, ?_⟩
   have h1 := h fun c => (((∏ w, ‖c w‖ ^ 2) ^ (z + 1) / (1 + ‖c‖) ^ N : ℝ) : ℂ)
   have h2 : ∫ c : InfinitePlace F → ℂ, (((∏ w, ‖c w‖ ^ 2) ^ (z + 1) / (1 + ‖c‖) ^ N : ℝ) : ℂ) * ((∏ w, ‖c w‖ ^ 2 : ℝ) : ℂ)⁻¹ =
@@ -171,12 +171,12 @@ theorem kAt_cpt (hS : StabEx) (hB : B.IsGood σ) {r s} (hX : X.IsHerm σ B r s) 
     IsCompact (kAt K (evI F) : Set (UA σ X.J)) := by
   obtain ⟨K', -, -, h1, h2, -⟩ := hS F E σ B n X r s hB hX
   obtain rfl : K' = K := Subgroup.ext fun g => (h1 g).trans (hK g).symm
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  have hm : Continuous fun g : UA σ X.J => mat g - 1 := (Units.continuous_val.comp continuous_subtype_val).sub continuous_const
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have hm : Continuous fun g : UA σ X.J => mat g - 1 := (Units.continuous_val.comp continuous_subtypeVal).sub continuous_const
   have hc : IsClosed {g : UA σ X.J | realAd F 1 • (mat g - 1) = mat g - 1} := by
     refine isClosed_eq ?_ hm
     refine continuous_matrix fun i j => ?_
@@ -197,12 +197,12 @@ theorem k_ops (hS : StabEx) (hO : ArchOp) {K : Subgroup (UA σ X.J)} (hK : IsSta
         ∀ k f, q (T k f) ≤ p f := by
   have h1 : (1 : UA σ W.J) ∈ UAt σ W (evI F) := (atGrp σ W (evI F)).one_mem
   choose T hT hPol using fun k : kAt K (evI F) => hO F E σ B n d X W M χX χW om r s r' s' hP k.1 (mem_kAt.1 k.2).2 1 h1
-  haveI : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 (kAt_cpt hS hP.base hP.herm hK)
+  have : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 (kAt_cpt hS hP.base hP.herm hK)
   obtain ⟨g₀, hg, ⟨a, ha⟩, -⟩ := vac_fin hP.good
   have hw : ∀ f (l : SInf F (Fin n × Fin d) →L[ℂ] ℂ), Continuous fun k => l (T k f) := fun f l => by
     obtain ⟨l', hl, hl'⟩ := exists_admissible_functional_adelic ((g₀ a)⁻¹ • l) a
     have hc := (IsUWeilPair.isUSplitting hP.weil).cont l' hl _ (pureA_mem' f hg)
-    refine (hc.comp (continuous_subtype_val.prodMk (continuous_const (y := (1 : UA σ W.J))))).congr fun k => ?_
+    refine (hc.comp (continuous_subtypeVal.prodMk (continuous_const (y := (1 : UA σ W.J))))).congr fun k => ?_
     have := (hT k).1 f g₀ hg
     exact (congrArg l' this).trans (by
       rw [hl' _ _ hg]
@@ -255,25 +255,25 @@ theorem cone_core (hSt : StabEx) (hO : ArchOp) (hS : Slice) (hH : ArchHeis) (hU 
   obtain ⟨T, hT, -, hTc, hTb⟩ := k_ops hSt hO hK hP
   obtain ⟨cc, hcc, hcn, hce⟩ := shift_eq hc hL
   obtain ⟨N, hN⟩ := xi_int hL m.xi hm.xi z hz
-  letI : MeasurableSpace (idAt E (evI F)) := borel _
-  haveI : BorelSpace (idAt E (evI F)) := ⟨rfl⟩
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  let : MeasurableSpace (idAt E (evI F)) := borel _
+  have : BorelSpace (idAt E (evI F)) := ⟨rfl⟩
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
   obtain ⟨-, h2, -⟩ := PositivityTheory.ThKEst.lcsc_UA σ X.J
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : SecondCountableTopology (AE F E) := e0.secondCountableTopology
-  haveI : SecondCountableTopology (AE F E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology (AE F E)ˣ := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 (kAt_cpt hSt hP.base hP.herm hK)
-  haveI := hm.ki
-  haveI := hm.xi
-  haveI : IsFiniteMeasure m.ki := ⟨isCompact_univ.measure_lt_top⟩
-  haveI : SigmaFinite m.ki := IsFiniteMeasure.toSigmaFinite _
-  haveI : SFinite m.ki := MeasureTheory.instSFiniteOfSigmaFinite
+  have : SecondCountableTopology (AE F E) := e0.secondCountableTopology
+  have : SecondCountableTopology (AE F E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : SecondCountableTopology (AE F E)ˣ := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 (kAt_cpt hSt hP.base hP.herm hK)
+  have := hm.ki
+  have := hm.xi
+  have : IsFiniteMeasure m.ki := ⟨isCompact_univ.measure_lt_top⟩
+  have : SigmaFinite m.ki := IsFiniteMeasure.toSigmaFinite _
+  have : SFinite m.ki := MeasureTheory.instSFiniteOfSigmaFinite
   have hpos : ∀ t : idAt E (evI F), 0 < (∏ w, ‖piInf (B.emb w) (t.1 : AE F E)‖ ^ 2) ^ z / (1 + ‖fun w => piInf (B.emb w) (t.1 : AE F E)‖) ^ N :=
     fun t => div_pos (pow_pos (Finset.prod_pos fun w _ => pow_pos (norm_pos_iff.2 (pi_ne _ _)) 2) _) (by positivity)
-  haveI : SigmaFinite m.xi := by
+  have : SigmaFinite m.xi := by
     have h := hN.aefinStronglyMeasurable
     have h1 : m.xi.restrict h.sigmaFiniteSet = m.xi := by
       refine Measure.restrict_eq_self_of_ae_mem ?_
@@ -288,14 +288,14 @@ theorem cone_core (hSt : StabEx) (hO : ArchOp) (hS : Slice) (hH : ArchHeis) (hU 
     fun t => hL.abs _ ((hL.idAt _).1 t.2)
   have hwc : Continuous fun t : idAt E (evI F) => wt ν z t.1 := by
     simp only [wt, hab]
-    refine (continuous_subtype_val.comp (hν.comp continuous_subtype_val)).mul (Continuous.pow (Complex.continuous_ofReal.comp ?_) _)
-    exact continuous_finsetProd _ fun w _ => ((hL.cont w).comp (Units.continuous_val.comp continuous_subtype_val)).norm.pow 2
+    refine (continuous_subtypeVal.comp (hν.comp continuous_subtypeVal)).mul (Continuous.pow (Complex.continuous_ofReal.comp ?_) _)
+    exact continuous_finsetProd _ fun w _ => ((hL.cont w).comp (Units.continuous_val.comp continuous_subtypeVal)).norm.pow 2
   have hwn : ∀ t : idAt E (evI F), ‖wt ν z t.1‖ = (∏ w, ‖piInf (B.emb w) (t.1 : AE F E)‖ ^ 2) ^ z := fun t => by
     rw [wt, norm_mul, Circle.norm_coe, one_mul, norm_pow, Complex.norm_real, hab, Real.norm_of_nonneg (by positivity)]
   let G : kAt K (evI F) × idAt E (evI F) → SInf F (Fin n × Fin d) →L[ℂ] SInf F (Fin n₁ × Fin d₁) :=
     fun x => wt ν z x.2.1 • (A (cc x.2.1)).comp (T x.1)
   have hGc : ∀ f, Continuous fun x => G x f := fun f => by
-    have h1 := joint_cont (fun t : idAt E (evI F) => A (cc t.1)) (fun g => (hA g).comp (hcc.comp continuous_subtype_val))
+    have h1 := joint_cont (fun t : idAt E (evI F) => A (cc t.1)) (fun g => (hA g).comp (hcc.comp continuous_subtypeVal))
       (fun q hq => by
         obtain ⟨p, hp, h⟩ := hAd q 0 hq
         exact ⟨p, hp, fun c g => by simpa using h _ g⟩) _ (hTc f)

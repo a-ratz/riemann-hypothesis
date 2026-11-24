@@ -67,8 +67,8 @@ theorem fg_finrank_le {K : Type} [Field K] {D δ : ℕ} (x : Fin (D + 1) → K) 
       (∀ i, (T i).IsHomogeneous n) ∧ f = ∑ i, MvPolynomial.aeval x (T i) * w i) :
     H.FG ∧ Module.finrank ℤ H ≤ δ * (n + D).choose D := by
   obtain ⟨-, -, -, hrk, hfin⟩ := _root_.GlobalTheory.HSAmp.card_bounded_forms D n δ 0 le_rfl
-  haveI := hfin
-  haveI : Module.Free ℤ (MvPolynomial.homogeneousSubmodule (Fin (D + 1)) ℤ n) :=
+  have := hfin
+  have : Module.Free ℤ (MvPolynomial.homogeneousSubmodule (Fin (D + 1)) ℤ n) :=
     Module.free_of_finite_type_torsion_free'
   set Φ := polyComb x w n
   have hle : ∀ f ∈ H, f ∈ LinearMap.range Φ := by
@@ -81,7 +81,7 @@ theorem fg_finrank_le {K : Type} [Field K] {D δ : ℕ} (x : Fin (D + 1) → K) 
       map_add' := fun _ _ => rfl
       map_smul' := fun m f => by ext; simp }
   have hg : Function.Injective g := fun a b h => Subtype.ext (congrArg Subtype.val h :)
-  haveI : Module.Finite ℤ H := Module.Finite.of_injective g hg
+  have : Module.Finite ℤ H := Module.Finite.of_injective g hg
   refine ⟨(AddGroup.fg_iff_addSubgroup_fg H).1 (Module.Finite.iff_addGroup_fg.1 inferInstance), ?_⟩
   calc Module.finrank ℤ H ≤ Module.finrank ℤ (LinearMap.range Φ) := LinearMap.finrank_le_finrank_of_injective hg
     _ ≤ Module.finrank ℤ (Fin δ → MvPolynomial.homogeneousSubmodule (Fin (D + 1)) ℤ n) := LinearMap.finrank_range_le Φ

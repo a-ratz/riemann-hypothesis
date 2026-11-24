@@ -226,7 +226,7 @@ theorem continuousSMul_orbit (x₀ : X) : ContinuousSMul H (orbit H x₀) := by
     funext p
     rfl
   rw [this]
-  exact continuous_fst.smul (continuous_subtype_val.comp continuous_snd)
+  exact continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)
 
 
 omit [LocallyCompactSpace H] [T2Space H] [TotallyDisconnectedSpace H] [TotallyDisconnectedSpace X] in

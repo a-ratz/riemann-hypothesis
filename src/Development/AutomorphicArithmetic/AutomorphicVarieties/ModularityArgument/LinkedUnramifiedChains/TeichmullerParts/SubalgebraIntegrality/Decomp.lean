@@ -265,7 +265,7 @@ variable {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMF
   [IsAlgClosure L Ω]
 
 theorem unrOf (s : HidaSetting l L Ω) : GlobalTheory.BCT.Unr L := fun w => by
-  haveI : IsGalois (Lp L) L := inferInstance
+  have : IsGalois (Lp L) L := inferInstance
   have h := GlobalTheory.RayFromArtin.unramIn_of_ine (K := Lp L) (Ω := Ω) L (v := w.under (𝓞 (Lp L))) fun A hA σ hσ => by
     obtain ⟨g, rfl⟩ := s.unr A _ hA hσ
     ext x
@@ -277,9 +277,9 @@ theorem unrOf (s : HidaSetting l L Ω) : GlobalTheory.BCT.Unr L := fun w => by
     exact h τ ⟨w.asIdeal, w.isPrime, ⟨rfl⟩, hτ⟩
   have h1 := UpperTheory.V.CF.ineCard.1 (Lp L) L w
   rw [hb, Subgroup.card_bot] at h1
-  haveI := w.isPrime
-  haveI := w.isMaximal
-  haveI : (w.asIdeal.under (𝓞 (Lp L))).IsMaximal := Ideal.IsMaximal.under _ _
+  have := w.isPrime
+  have := w.isMaximal
+  have : (w.asIdeal.under (𝓞 (Lp L))).IsMaximal := Ideal.IsMaximal.under _ _
   exact Ideal.ramificationIdx_eq_one_iff.1 h1.symm
 
 theorem under_w (s : HidaSetting l L Ω) (v : Plc (Lp L)) : (s.w v).under (𝓞 (Lp L)) = v := by
@@ -320,13 +320,13 @@ variable {s n c}
 
 theorem Pc_notS {w : Plc L} (hw : w.under (𝓞 (Lp L)) ∉ s.S) : Pc s n c w = GlobalTheory.LFun.KGL w (n := n) := by
   unfold Pc
-  refine if_neg ?_
+  refine ite_eq_right ?_
   rintro ⟨v, hv, rfl⟩
   exact hw ((under_w s v).symm ▸ hv)
 
 theorem Pc_S {v : Plc (Lp L)} (hv : v ∈ s.S) : Pc s n c (s.w v) = Kc _ n c := by
   unfold Pc
-  exact if_pos ⟨v, hv, rfl⟩
+  exact ite_eq_left ⟨v, hv, rfl⟩
 
 theorem Kf_notS {w : Plc L} (hw : w.under (𝓞 (Lp L)) ∉ s.S) : Kf s n c w = GlobalTheory.BCT.KL n w := by
   unfold Kf GlobalTheory.BCT.KL
@@ -334,10 +334,10 @@ theorem Kf_notS {w : Plc L} (hw : w.under (𝓞 (Lp L)) ∉ s.S) : Kf s n c w = 
 
 theorem levFam (hfin : s.S.Finite) :
     GlobalTheory.BCT.IsLevelFam (fun w : GlobalTheory.BCT.Pl L => MonoidHom.id (GlobalTheory.BCT.UL n w)) (GlobalTheory.BCT.KL n) (Kf s n c) := by
-  refine ⟨fun w => ⟨(Pc_open s n c w).preimage continuous_subtype_val, fun k hk => Pc_le s n c w hk, fun k hk => hk⟩, ?_⟩
+  refine ⟨fun w => ⟨(Pc_open s n c w).preimage continuous_subtypeVal, fun k hk => Pc_le s n c w hk, fun k hk => hk⟩, ?_⟩
   filter_upwards [(hfin.image s.w).compl_mem_cofinite] with w hw
   unfold Kf GlobalTheory.BCT.KL Pc
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 theorem loc_of_glob (hU : GlobalTheory.BCT.Unr L) {k : finU (E := L) (n := n)} (hk : k ∈ GlobalTheory.BCT.globLev (Set.range s.w) (Kf s n c))
     (v : Plc (Lp L)) : cLoc (s.w v) (k : UA L n) ∈ Pc s n c (s.w v) :=
@@ -374,7 +374,7 @@ theorem goodOf {V : s.Lev} (hV : V.S' = s.S) (Q : QData V) {cf : Coef l} {m : �
     (hU : GlobalTheory.BCT.Unr L) (k : finU (E := L) (n := n)) (hk : k ∈ GlobalTheory.BCT.globLev (Set.range s.w) (Kf s n c)) :
     (∃ u : Ub n s, u ∈ UQ n Q ∧ (u : Ga l L n) = (away l L n).rangeRestrict (k : UA L n) ∧ τ₀ (toKT n s u) = 1) ∧
       (fun v : V.frame.Vl => cLoc (s.w v.1) (k : UA L n)) ∈ (hset Q τ₀).X.I.I1 b := by
-  haveI := Q_empty hV Q
+  have := Q_empty hV Q
   have hS : ∀ v ∈ s.S, cLoc (s.w v) (k : UA L n) ∈ Kc _ n c := fun v hv => by
     have := loc_of_glob hU hk v
     rwa [Pc_S hv] at this
@@ -483,13 +483,13 @@ private theorem fixOf {L : Type} [Field L] [NumberField L] [IsCMField L] (hU : G
     (h3 : π ⊓ GlobalTheory.PRep.fixed (GlobalTheory.BCT.RF L n) (GlobalTheory.BCT.globLev S K') ≠ ⊥) (w : GlobalTheory.BCT.Pl L) (hw : w ∈ S)
     (hs : IsSplitAt w) (τ : SmIrr (GLw n w)) (hc : Cp π w τ) :
     GlobalTheory.PRep.fixed (τ.ρ.comp (GlobalTheory.BCT.UL n w).subtype) (K' w) ≠ ⊥ := by
-  have hUL : GlobalTheory.BCT.UL n w = ⊤ := if_pos hs
+  have hUL : GlobalTheory.BCT.UL n w = ⊤ := ite_eq_left hs
   have hsurj : Function.Surjective (GlobalTheory.BCT.UL n w).subtype := fun g =>
     ⟨⟨g, hUL ▸ Subgroup.mem_top g⟩, rfl⟩
   let σ₁ : SmIrr (GlobalTheory.BCT.UL n w) :=
     { V := τ.V
       ρ := τ.ρ.comp (GlobalTheory.BCT.UL n w).subtype
-      smooth := fun v => (τ.smooth v).preimage continuous_subtype_val
+      smooth := fun v => (τ.smooth v).preimage continuous_subtypeVal
       irred := GlobalTheory.BCT.LocCompU.isIrreducible_comp_of_surjective τ.ρ _ hsurj τ.irred }
   obtain ⟨-, f, hf0, hfm, hf⟩ := hc
   let p : locU n w →* GlobalTheory.BCT.UL n w :=
@@ -564,7 +564,7 @@ private theorem mainStep {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [Numbe
   let J : UA L n →* Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) :=
     MonoidHom.prod (away l L n).rangeRestrict (Pi.monoidHom fun v : V.frame.Vl => cLoc (s.w v.1))
   obtain ⟨hinj, haut, htr, hsurj, hsur⟩ := UpperTheory.V.Hi.formU l L Ω s n hn V Q c m τ₀ ι lam d e ξ hξ J (fun _ => rfl)
-  haveI := e.finiteDimensional
+  have := e.finiteDimensional
   have hJinf : ∀ x ∈ infU L n, J x = 1 := fun x hx => by
     have h1 : ∀ w, cLoc w x = 1 := fun w => by
       have h2 : Matrix.GeneralLinearGroup.map (pFin L) x.1 = 1 := hx

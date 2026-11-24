@@ -269,7 +269,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
   refine ⟨μ, ?_, ?_, ?_⟩
   · have hker : (μ.ker : Set G) = {g | subQuot ⊤ P g (π0 v0) = π0 v0} := by
       ext g
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_setOf_eq, hμ]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_ofPred_eq, hμ]
       constructor
       · intro h
         rw [h]
@@ -337,7 +337,7 @@ private theorem inv_inj (hφ : ∀ t : I.T, (t : G) ∈ I.Tc c → φ t = 1) (hs
     [FiniteDimensional ℂ (fixd π (I.I1 c))] {v : M}
     (hv : v ∈ ⨅ j : ℕ, (I.eig π c φ).map (I.uOp π I.z ^ j)) (h0 : v ∈ I.jacKer π) : v = 0 := by
   have hE5 := eig_le I π c φ hφ
-  haveI : FiniteDimensional ℂ (I.eig π c φ) := Submodule.finiteDimensional_of_le hE5
+  have : FiniteDimensional ℂ (I.eig π c φ) := Submodule.finiteDimensional_of_le hE5
   have hst : ∀ w ∈ I.eig π c φ, I.uOp π I.z w ∈ I.eig π c φ :=
     ((uOpLevel G I ℂ M π c).2.2 φ hφ).1 I.z I.z_mem
   let f : I.eig π c φ →ₗ[ℂ] I.eig π c φ := (I.uOp π I.z).restrict hst
@@ -413,8 +413,8 @@ private theorem num (ω : Fin n → kˣ →* ℂˣ) {j : ℕ} (hj : j ≤ n) :
     intro f
     rw [Finset.sum_filter, Fin.sum_univ_eq_sum_range (fun i => if i < j then f i else 0) n]
     obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hj
-    rw [Finset.sum_range_add, Finset.sum_congr rfl (fun i hi => if_pos (Finset.mem_range.1 hi)),
-      Finset.sum_eq_zero (fun x _ => if_neg (by omega)), add_zero]
+    rw [Finset.sum_range_add, Finset.sum_congr rfl (fun i hi => ite_eq_left (Finset.mem_range.1 hi)),
+      Finset.sum_eq_zero (fun x _ => ite_eq_right (by omega)), add_zero]
   have hsumid : ∑ i ∈ Finset.univ.filter (fun i : Fin n => (i : ℕ) < j), (i : ℕ)
       = ∑ i ∈ Finset.range j, i := hsum (fun i => i)
   have hcard : (Finset.univ.filter (fun i : Fin n => (i : ℕ) < j)).card = j := by
@@ -468,7 +468,7 @@ theorem UpperTheory.V.Hi.ordB :
       exact ⟨eT k n i (y i), hφ0 i _ (hy' c ht i), rfl⟩
     obtain ⟨s, hs, e⟩ := e
     exact (Subtype.ext e : s = t) ▸ hs
-  haveI : FiniteDimensional ℂ (fixd π ((glIwa k n).I1 c)) := by
+  have : FiniteDimensional ℂ (fixd π ((glIwa k n).I1 c)) := by
     have hfix : fixd π ((glIwa k n).I1 c) = fixed π ((glIwa k n).I1 c) := by
       ext v
       exact ⟨fun h u => by simpa using h u u.2, fun h u hu => by simpa using h ⟨u, hu⟩⟩
@@ -500,7 +500,7 @@ theorem UpperTheory.V.Hi.ordB :
   have hl : HasFiniteLength (jacB π) :=
     (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).2
       ((H.loc.bz k).2.1 _ _ _ (points (Fin n)) _ π hπ (hasFiniteLength_of_isIrreducible hirr))
-  haveI := GlobalTheory.TorusEigenform.secondCountableTopology_units k
+  have := GlobalTheory.TorusEigenform.secondCountableTopology_units k
   obtain ⟨μ, hμs, hμ, l, hl0, hle⟩ := OrdB.exists_form (isSmooth_jacB hπ) hl fun h => hx0 (hinj x hx h)
   obtain ⟨ψ, hψ, rfl⟩ : ∃ ψ : Fin n → kˣ →* ℂˣ, (∀ i, IsSmoothChar (ψ i)) ∧ torusChar ψ = μ := by
     refine ⟨fun i => μ.comp (MonoidHom.mulSingle (fun _ => kˣ) i),
@@ -542,7 +542,7 @@ theorem UpperTheory.V.Hi.ordB :
     · simp [hy0]
     have hy1 : (⟨y, hy⟩ : E) ≠ 0 := fun h => hy0 (congrArg Subtype.val h)
     have : Nontrivial E := nontrivial_of_ne _ _ hy1
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hy1).1 (le_antisymm hE1 Module.finrank_pos) ⟨_, hEs t y hy⟩
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hy1).1 (le_antisymm hE1 Module.finrank_pos) ⟨_, hEs t y hy⟩
     have ha' : jacB π t y = a • y := (congrArg Subtype.val ha).symm
     rw [ha', OrdB.eq_of_gen ha' hy0 ((Submodule.mem_iInf _).1 (hgen hy) t)]
   obtain ⟨ω, rfl⟩ : ∃ ω : Fin n → kˣ →* ℂˣ, (fun i => ω i * absPow k (((n : ℂ) - 1) / 2)) = ψ :=
@@ -561,7 +561,7 @@ theorem UpperTheory.V.Hi.ordB :
     rw [h, MonoidHom.mul_apply, isUnram_absPow k _ _ u.2, mul_one]
   · refine le_trans (LinearMap.finrank_le_finrank_of_injective (f := p.restrict hpE) ?_) hE1
     exact (injective_iff_map_eq_zero _).2 fun v h => Subtype.ext (hinj v v.2 (congrArg Subtype.val h))
-  · haveI : FiniteDimensional ℂ (invPart π c φ) :=
+  · have : FiniteDimensional ℂ (invPart π c φ) :=
       Submodule.finiteDimensional_of_le (heig.trans (OrdB.eig_le _ π c φ hφ))
     exact Nat.pos_of_ne_zero fun h => hne (Submodule.finrank_eq_zero.1 h)
   · rw [← sub_eq_zero]
@@ -596,7 +596,7 @@ private theorem onto_inf {M : Type} [AddCommGroup M] [Module ℂ M] (T : Module.
     refine LinearMap.injective_iff_surjective.2 fun y => ?_
     obtain ⟨z, hz, e⟩ : (y : M) ∈ S.map T := hS.symm ▸ y.2
     exact ⟨⟨z, hz⟩, Subtype.ext e⟩
-  haveI : FiniteDimensional ℂ (Y ⊓ S : Submodule ℂ M) := Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional ℂ (Y ⊓ S : Submodule ℂ M) := Submodule.finiteDimensional_of_le inf_le_right
   have sur : Function.Surjective (T.restrict h2) := by
     refine LinearMap.injective_iff_surjective.1 fun a b e => Subtype.ext ?_
     have : T.restrict h1 ⟨a, a.2.2⟩ = T.restrict h1 ⟨b, b.2.2⟩ := Subtype.ext (Subtype.ext_iff.1 e :)
@@ -834,12 +834,12 @@ theorem UpperTheory.V.Hi.goodScalB : GlobalTheory.Mem.LiteralAutomorphy.LitN →
             H.opC ι lam d (.inr (v, j)) F = ((H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1)) • F := by
   intro hLit L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι x lam d ξ c0 sp hsp hgood Y K e he hne
   classical
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : IsCNL A := IsCNL.ofCO c.O A
   set S := H.OrdAt θ ι x.toRingHom lam ξ K e with hSdef
   have hSC : S ≤ H.ClAt θ ι x.toRingHom lam ξ K e := iSup_le fun _ => inf_le_left
-  haveI := hsp.fin K e he
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSC
+  have := hsp.fin K e he
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSC
   obtain ⟨F₀, hF₀, hF₀'⟩ := (Submodule.ne_bot_iff _).1 hne
 
   obtain ⟨hfin, -, hbij⟩ := ordFree _ _ _ H.X A H.m (H.τA A) θ hθ.cont (H.lev K) (hH.fin K) (hθ.free K)

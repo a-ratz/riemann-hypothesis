@@ -205,7 +205,7 @@ theorem weilToGK_frobUr (hj : Induces Bw) (σ : ↥(Weil h)) {a b : ℕ}
     have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
     have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
     have : NeZero m := ⟨h0.ne'⟩
-    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
     obtain ⟨i, -, hi⟩ := (hz.map_of_injective Bw.j.injective).eq_pow_of_pow_eq_one hc'
     rw [← map_pow] at hi
     have hx : A.valuation (z ^ i) ≤ 1 := by
@@ -308,7 +308,7 @@ theorem isSmooth_weilD (hj : Induces Bw) : IsSmooth (weilD Bw h P ρ) := by
   obtain ⟨K', hK'⟩ := exists_actD_eq_one (P := P) (ρ := ρ)
   have := K'.2
   have hc : Continuous fun σ : ↥(Ine (F := E) A) => (weilToGK Bw h (ineIncl h σ) : GQ l) :=
-    continuous_subtype_val.comp (Bw.e_cont.comp (continuous_subtype_val.subtype_mk _))
+    continuous_subtypeVal.comp (Bw.e_cont.comp (continuous_subtypeVal.subtype_mk _))
   refine .of_open ((IntermediateField.fixingSubgroup_isOpen K'.1).preimage hc) (by simp) fun σ hσ => ?_
   rw [weilD_ineIncl]
   refine hK' _ hσ fun c => ?_

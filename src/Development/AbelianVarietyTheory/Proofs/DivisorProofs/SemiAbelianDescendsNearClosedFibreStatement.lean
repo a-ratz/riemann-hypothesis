@@ -204,7 +204,7 @@ theorem Near.datum_chart {R : Type} [CommRing R] [IsLocalRing R] (S : Scheme.{0}
   cases j with
   | none => exact N.datum_pt hφ s y₁ y₂ z hy.symm h₁ h₂ hz₁ hz₂
   | some k =>
-  haveI := hφ.1
+  have := hφ.1
   rw [Near.chart_some] at hz₁ ⊢
   obtain ⟨x₀, e₁, e₂, e₃⟩ := hx k
   have hxo : (x k).left ≫ G'.hom = 𝟙 S := Over.w (x k)
@@ -301,12 +301,12 @@ namespace GlobalTheory.Div.DescendOpens
 
 theorem overlap_preimage_open : ∀ (B S X : Scheme.{0}) (π : S ⟶ B) (U : Over B) (J : Type) (e : J → (pullback U.hom π ⟶ X)), IsProper π → Surjective π → (∀ j, IsOpenImmersion (e j)) → (∀ (i j : J) (T : Scheme.{0}) (w₁ w₂ h₁ : T ⟶ pullback U.hom π), w₁ ≫ pullback.fst _ _ = w₂ ≫ pullback.fst _ _ → h₁ ≫ e j = w₁ ≫ e i → ∃ h₂ : T ⟶ pullback U.hom π, h₂ ≫ e j = w₂ ≫ e i ∧ h₂ ≫ pullback.fst _ _ = h₁ ≫ pullback.fst _ _) → ∀ i j : J, ∃ V : U.left.Opens, ∀ a : ↥(pullback U.hom π), pullback.fst U.hom π a ∈ V ↔ e i a ∈ Set.range (e j) := by
   intro B S X π U J e hP _ hO key i j
-  haveI := hP
-  haveI : UniversallyClosed (pullback.fst U.hom π) := inferInstance
+  have := hP
+  have : UniversallyClosed (pullback.fst U.hom π) := inferInstance
   set p := pullback.fst U.hom π with hp
   let W : Set ↥(pullback U.hom π) := (e i) ⁻¹' Set.range (e j)
   have hWo : IsOpen W := by
-    haveI := hO j
+    have := hO j
     exact (e i).continuous.isOpen_preimage _ (e j).isOpenEmbedding.isOpen_range
   have sat : ∀ a c : ↥(pullback U.hom π), p a = p c → a ∈ W → c ∈ W := by
     intro a c hac ha
@@ -498,7 +498,7 @@ theorem GlobalTheory.MumDescent.cocycle : ∀ (R : Type) [CommRing R] [IsDomain 
   have hw₀ : w₀ ≫ (V j k).ι = m₁ ≫ τ i j := IsOpenImmersion.lift_fac _ _ _
   have h3 : p' ≫ w₀ ≫ τ j k = c ≫ pP :=
     hτ j k _ b c (p' ≫ w₀) (hb.trans hc.symm) (by rw [Category.assoc, hw₀, h1])
-  haveI := hU
+  have := hU
   have heq : pullback.fst p' p' ≫ c ≫ pP = pullback.snd p' p' ≫ c ≫ pP := by
     rw [← h2, pullback.condition_assoc]
   obtain ⟨h₀, -, huniq⟩ := GlobalTheory.T.exists_descent_of_equalised_proper_cover_normal R S O.toScheme FinalForm.toScheme U.left π (O.ι ≫ U.hom) p'
@@ -922,7 +922,7 @@ theorem isPullback_of_openCover_target : ∀ (X G S B : Scheme.{0}) (β : X ⟶ 
   have sq : ∀ j, IsPullback (ψ' j) (p j) (pullback.fst g π) (ψ j) := fun j =>
     (IsPullback.of_bot (v₁₁ := ψ' j) (v₂₁ := pullback.snd g π) (by rw [hψ's]; exact hP j)
       (hψ'f j).symm (IsPullback.of_hasPullback g π)).flip
-  haveI : ∀ j, IsOpenImmersion (ψ' j) := fun j =>
+  have : ∀ j, IsOpenImmersion (ψ' j) := fun j =>
     MorphismProperty.of_isPullback (P := @IsOpenImmersion) (sq j).flip (hψ j)
   have hc : ∀ z : (pullback g π : Scheme), ∃ j y, ψ' j y = z := by
     intro z
@@ -936,7 +936,7 @@ theorem isPullback_of_openCover_target : ∀ (X G S B : Scheme.{0}) (β : X ⟶ 
     · rw [Category.assoc, hcf, hβ, hψ'f]
     · rw [Category.assoc, pullback.lift_snd, hf, hψ's]
   have loc : ∀ j, IsPullback (e j) (𝟙 (P j)) c (ψ' j) := fun j => by
-    haveI := he j
+    have := he j
     refine (IsOpenImmersion.isPullback (𝟙 (P j)) (e j) (ψ' j) c
       (by rw [hce, Category.id_comp]) ?_).flip
     ext x
@@ -954,7 +954,7 @@ theorem isPullback_of_openCover_target : ∀ (X G S B : Scheme.{0}) (β : X ⟶ 
     exact MorphismProperty.isomorphisms.infer_property _
   have hiso : (MorphismProperty.isomorphisms Scheme) c :=
     IsZariskiLocalAtTarget.of_openCover (Scheme.Cover.mkOfCovers J P ψ' hc) fun j => key j
-  haveI : IsIso c := hiso
+  have : IsIso c := hiso
   exact IsPullback.of_iso_pullback ⟨w⟩ (asIso c) (pullback.lift_fst _ _ _) (pullback.lift_snd _ _ _)
 
 end GlobalTheory.Mum
@@ -1104,8 +1104,8 @@ namespace GlobalTheory.MoveNear
 
 theorem exists_section_translate_mem : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (S : Scheme.{0}) (π : S ⟶ Sp R) (G' : Over S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (N : Near π G') (e : Sp R ⟶ N.U.left), e ≫ N.U.hom = 𝟙 _ → N.Pt (𝟙 S) (π ≫ e) (1 : Over.mk (𝟙 S) ⟶ G').left → ∀ (Ω : Type) [Field Ω] (s : Sp Ω ⟶ S) (g : Over.mk s ⟶ G'), IrreducibleSpace (pullback G'.hom s : Scheme.{0}) → closedPoint R ∉ Set.range (s ≫ π) → ∃ (a : Sp R ⟶ N.U.left) (x : Over.mk (𝟙 S) ⟶ G'), a ≫ N.U.hom = 𝟙 _ ∧ N.Pt (𝟙 S) (π ≫ a) x.left ∧ Set.range (g * (Over.homMk s (by simp) : Over.mk s ⟶ Over.mk (𝟙 S)) ≫ x).left ⊆ Set.range N.u := by
   intro R _ _ _ hR S π G' _ _ _ N e he hPt Ω _ s g hT hs
-  haveI := N.isOpen
-  haveI := hR.1
+  have := N.isOpen
+  have := hR.1
   let xR := s ≫ π
   let UΩ := pullback N.U.hom xR
   let T := pullback G'.hom s
@@ -1266,9 +1266,9 @@ theorem one_left_pullback {S T : Scheme.{0}} (f : T ⟶ S) (G : Over S) [GrpObj 
 
 theorem unit_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (S : Scheme.{0}) (π : S ⟶ Sp R), IsProper π → Surjective π → IsIntegral S → ∀ (G' : Over S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ N : Near π G', N.Law → Set.range (1 : Over.mk (𝟙 S) ⟶ G').left ⊆ Set.range N.u → ∃ e : Sp R ⟶ N.U.left, e ≫ N.U.hom = 𝟙 _ ∧ N.Pt (𝟙 S) (π ≫ e) (1 : Over.mk (𝟙 S) ⟶ G').left := by
   intro R _ _ _ hA S π hP hS hI G' _ _ hSA N hL hr
-  haveI : IsNoetherianRing R := hA.1
-  haveI : IsIntegrallyClosed R := hA.2.2.1
-  haveI := N.isOpen
+  have : IsNoetherianRing R := hA.1
+  have : IsIntegrallyClosed R := hA.2.2.1
+  have := N.isOpen
   have hone_w : (1 : Over.mk (𝟙 S) ⟶ G').left ≫ G'.hom = 𝟙 S := by
     simpa using Over.w (1 : Over.mk (𝟙 S) ⟶ G')
   let x₀ := IsOpenImmersion.lift N.u (1 : Over.mk (𝟙 S) ⟶ G').left hr
@@ -1537,7 +1537,7 @@ theorem smooth_of_charts_cover : ∀ (Y G U : Scheme.{0}) (J : Type) (ψ : J →
   intro Y G U J ψ g h ho hc hw hs
   let 𝒰 : G.OpenCover := Scheme.Cover.mkOfCovers J (fun _ => U) ψ (fun x => by
     obtain ⟨j, hj⟩ := hc x; exact ⟨j, hj⟩) ho
-  haveI : IsZariskiLocalAtSource @Smooth.{0} := HasRingHomProperty.instIsZariskiLocalAtSource
+  have : IsZariskiLocalAtSource @Smooth.{0} := HasRingHomProperty.instIsZariskiLocalAtSource
   refine IsZariskiLocalAtSource.of_openCover (P := @Smooth) 𝒰 ?_
   intro j
   have h2 : 𝒰.f j ≫ g = h := hw j
@@ -1546,9 +1546,9 @@ theorem smooth_of_charts_cover : ∀ (Y G U : Scheme.{0}) (J : Type) (ψ : J →
 theorem descends_near_closed_fibre : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (S : Scheme.{0}) (π : S ⟶ Sp R), IsProper π → Surjective π → IsIntegral S → ∀ (G' : Over S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ N : Near π G', N.Law → ∀ φ, N.Datum φ → ∃ (G : Over (Sp R)) (β : G'.left ⟶ G.left) (i : N.U ⟶ G), Smooth G.hom ∧ IsPullback β G'.hom G.hom π ∧ IsOpenImmersion i.left ∧ N.u ≫ β = pullback.fst _ _ ≫ i.left ∧ pullback.fst G'.hom (pullback.fst π π) ≫ β = φ.hom.left ≫ pullback.fst G'.hom (pullback.snd π π) ≫ β := by
   intro R _ _ _ hA S π hp hs hS G' _ _ hG N hL φ hφ
   obtain ⟨n, a, x, hx, hcov⟩ := GlobalTheory.T.finite_section_translates_cover_semiAbelian R hA S π hp hs hS G' hG N hL
-  haveI : IsNoetherianRing R := hA.1
-  haveI : IsIntegrallyClosed R := hA.2.2.1
-  haveI : Smooth N.U.hom := N.smooth
+  have : IsNoetherianRing R := hA.1
+  have : IsIntegrallyClosed R := hA.2.2.1
+  have : Smooth N.U.hom := N.smooth
   obtain ⟨G, β, ψ, hψ, hcovG, hpb, hφβ⟩ := GlobalTheory.T.exists_descent_of_charts_pulled_back_from_flat R S G'.left π G'.hom hp hs hS φ.hom.left (Over.w φ.hom)
     N.U inferInstance (Option (Fin n)) (N.chart x) (fun j => (GlobalTheory.T.chart_isOpenImmersion_over_base S π G' N n x j).1)
     (fun j => (GlobalTheory.T.chart_isOpenImmersion_over_base S π G' N n x j).2) (GlobalTheory.T.smoothNeighbourhood_translates_cover_group S π G' N n x hcov)

@@ -54,12 +54,12 @@ namespace GlobalTheory.L2InnerProductNonvanishing
 theorem integral_mul_star_ne_zero (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ]
     (f : SInf F κ) (hf : f ≠ 0) :
     (∫ x : κ → mixedEmbedding.mixedSpace F, f x * star (f x)) ≠ 0 := by
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
-  haveI hH : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure :=
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
+  have hH : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
-  haveI : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : FiniteDimensional ℝ (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)).HasTemperateGrowth :=
+  have : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : FiniteDimensional ℝ (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)).HasTemperateGrowth :=
     haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
     MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
   have hL2 : MeasureTheory.MemLp (f : (κ → mixedEmbedding.mixedSpace F) → ℂ) 2 MeasureTheory.volume := f.memLp 2 MeasureTheory.volume

@@ -179,11 +179,11 @@ theorem cyc_sub_one_mem [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (n : ℕ)
       ((cyclotomicCharacter Ω l s.toRingEquiv : ℤ_[l]) - 1) ∈ (idl l) ^ n := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact ⟨∅, fun _ _ => by simp⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero⟩
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   refine ⟨{ζ}, fun s hs => ?_⟩
   have h1 := cyclotomicCharacter.spec l (n := n) s.toRingEquiv ζ hζ.pow_eq_one
   have hsz : s.toRingEquiv ζ = ζ := hs ζ (Finset.mem_singleton_self ζ)

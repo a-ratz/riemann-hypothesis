@@ -69,7 +69,7 @@ theorem UpperTheory.Reformulated.B.Qi11.aux2 :
   by_contra h
   apply hx
   have hne : x ≠ v := h
-  simp only [Set.mem_setOf_eq, Pi.single_eq_of_ne hne]
+  simp only [Set.mem_ofPred_eq, Pi.single_eq_of_ne hne]
   exact zero_mem _
 
 noncomputable def UpperTheory.Reformulated.B.Qi11.sglV :
@@ -123,7 +123,7 @@ private theorem UpperTheory.Reformulated.B.Qi11.tendsto_cut {ι : Type*} {R : ι
     filter_upwards [Filter.eventually_ge_atTop ({i} : Finset ι)] with B hB
     have hi : i ∈ B := hB (Finset.mem_singleton_self i)
     show (0 : R i) = if i ∈ B then 0 else y i
-    rw [if_pos hi]
+    rw [ite_eq_left hi]
   have h1 : f = RestrictedProduct.inclusion R A hS ∘ g :=
     funext fun B => RestrictedProduct.ext _ _ fun i => hf B i
   have h2 : z = RestrictedProduct.inclusion R A hS o := RestrictedProduct.ext _ _ fun i => hz i

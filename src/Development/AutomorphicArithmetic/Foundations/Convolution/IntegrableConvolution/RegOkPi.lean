@@ -66,7 +66,7 @@ private theorem regOk_field (k : Type) [Field k] [TopologicalSpace k] [IsTopolog
       ⋂ i : ℕ, {y : GL (Fin n) k | (y : Matrix (Fin n) (Fin n) k).charpoly.coeff i =
         (γ : Matrix (Fin n) (Fin n) k).charpoly.coeff i} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · rintro ⟨x, rfl⟩ i
       have h := Matrix.charpoly_units_conj x⁻¹ (γ : Matrix (Fin n) (Fin n) k)
@@ -131,7 +131,7 @@ private theorem regOk_pi (I : Type) (k : I → Type) [∀ i, Field (k i)] [∀ i
   · have e : {y : GL (Fin n) (∀ i, k i) | ∃ x : GL (Fin n) (∀ i, k i), y = x⁻¹ * γ * x} =
         ⋂ i, (ev i) ⁻¹' {y : GL (Fin n) (k i) | ∃ x : GL (Fin n) (k i), y = x⁻¹ * ev i γ * x} := by
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
       constructor
       · rintro ⟨x, rfl⟩ i
         exact ⟨ev i x, by simp only [map_mul, map_inv]⟩

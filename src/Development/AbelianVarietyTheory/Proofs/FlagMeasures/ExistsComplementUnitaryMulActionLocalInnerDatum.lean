@@ -257,7 +257,7 @@ theorem exists_mulAction : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologica
   let sm : P.UW0 → Datum P → Datum P := fun g d => act (inU_of_mem g.2) d
   have key : ∀ (g : P.UW0) d d', Datum.Moves g.1 d d' ↔ sm g d = d' := fun g d d' =>
     ⟨fun h => moves_unique (inU_of_mem g.2) (moves_act _ d) h, fun h => h ▸ moves_act _ d⟩
-  letI act' : MulAction P.UW0 (Datum P) :=
+  let act' : MulAction P.UW0 (Datum P) :=
     { smul := sm
       one_smul := fun d => (key 1 d d).1 (moves_one d)
       mul_smul := fun g g' d => (key (g * g') d _).1
@@ -268,7 +268,7 @@ theorem exists_mulAction : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologica
     have hset : {g | g ∈ P.UW0 ∧ Datum.Moves g d d} =
         ((MulAction.stabilizer P.UW0 d).map P.UW0.subtype : Set (V ≃ₗ[E] V)) := by
       ext g
-      simp only [Set.mem_setOf_eq, SetLike.mem_coe, Subgroup.mem_map, MulAction.mem_stabilizer_iff,
+      simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Subgroup.mem_map, MulAction.mem_stabilizer_iff,
         Subgroup.coe_subtype]
       constructor
       · rintro ⟨hg, hm⟩

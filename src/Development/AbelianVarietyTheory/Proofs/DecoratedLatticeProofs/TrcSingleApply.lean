@@ -51,7 +51,7 @@ theorem trc_single_apply {D : D7} {V : HSp D} (b : GA D V) (ε : ℂ) (f : GA D 
   unfold trc
   by_cases hε : ε = 0
   · simp [hε]
-  · rw [Finsupp.support_single_ne_zero _ hε]
+  · rw [Finsupp.support_single _ hε]
     simp [GlobalTheory.MixPer.rTrans]
 end GlobalTheory.AdForm
 

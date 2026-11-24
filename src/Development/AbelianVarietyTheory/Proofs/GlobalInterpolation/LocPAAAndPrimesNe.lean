@@ -65,10 +65,10 @@ theorem UpperTheory.Ram.not_dvd_QS_of_notMem_sq :
     ∀ {φ : Formalism.HC.Frame} (H : Formalism.HC.HostAx φ), H.toHostRaw.Exact → ∀ (E' : Type) [Field E'] [NumberField E'] (_ : E' ≃+* H.E) (P : HeightOneSpectrum (𝓞 E')) (p : ℕ), p.Prime →
       (p : 𝓞 E') ∈ P.asIdeal → (p : 𝓞 E') ∉ P.asIdeal ^ 2 → ¬ p ∣ H.QS ∧ (H.QS : 𝓞 E') ∉ P.asIdeal := by
   intro φ H hex E' _ _ f P p hp hpP hpP2
-  haveI hPp : P.asIdeal.IsPrime := P.isPrime
+  have hPp : P.asIdeal.IsPrime := P.isPrime
   let g : 𝓞 H.E ≃+* 𝓞 E' := (NumberField.RingOfIntegers.mapRingEquiv f).symm
   let Q : Ideal (𝓞 H.E) := P.asIdeal.comap g
-  haveI : Q.IsPrime := Ideal.comap_isPrime g P.asIdeal
+  have : Q.IsPrime := Ideal.comap_isPrime g P.asIdeal
   have hndvd : ¬ p ∣ H.QS := by
     intro hdvd
     have hmem : ((p : ℕ) : 𝓞 H.E) ∈ Q := by
@@ -143,7 +143,7 @@ theorem locP_AA (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (𝓞 D.host.K)
     localization₂ P.asIdeal (ambOf s B χ cD).AA = localization₂ P.asIdeal (1 : Submodule (𝓞 X.E) X.E) := by
   let j : 𝓞 D.host.E →+* 𝓞 X.E := RingOfIntegers.mapRingHom (s.iE.symm : D.host.E →+* X.E)
   have hj : ∀ a : 𝓞 D.host.E, ((j a : 𝓞 X.E) : X.E) = s.iE.symm (a : D.host.E) := fun _ => rfl
-  haveI := P.isPrime
+  have := P.isPrime
   refine le_antisymm (localization_le_of_le_localization₂ P ?_) (localization_le_of_le_localization₂ P ?_)
   · obtain ⟨z, hz, hden⟩ := exists_den D (P.asIdeal.comap j) hl h2 hq (by rw [Ideal.mem_comap, map_natCast]; exact hP)
     refine Submodule.span_le.2 ?_

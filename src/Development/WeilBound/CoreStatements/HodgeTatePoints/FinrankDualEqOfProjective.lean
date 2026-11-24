@@ -62,7 +62,7 @@ theorem finrank_dual_eq_of_projective (A K : Type) [CommRing A] [IsDomain A] [Fi
     [IsFractionRing A K] (M : Type) [AddCommGroup M] [Module A M] [Module.Finite A M]
     [Module.Projective A M] : finrank A (Module.Dual A M) = finrank A M := by
   classical
-  haveI := Module.finitePresentation_of_projective A M
+  have := Module.finitePresentation_of_projective A M
   let S := nonZeroDivisors A
   let F := Localization S
   let f := LocalizedModule.mkLinearMap S M
@@ -109,8 +109,8 @@ theorem chart_sequence : ChartSequence := by
     · obtain ⟨u, hu⟩ := hu
       refine ⟨0, (↑u⁻¹ : A) ^ m • x, ?_⟩
       rw [map_zero, zero_add, smul_smul, ← mul_pow, ← hu, Units.mul_inv, one_pow, one_smul]
-    · haveI : Module.Finite A (D.omHT σ) := Module.Finite.iff_fg.mpr (PositivityTheory.HtPt.Gd.omHT_fg D σ)
-      haveI : Module.Finite A (D.omHT (σ.comp c.toRingHom)) :=
+    · have : Module.Finite A (D.omHT σ) := Module.Finite.iff_fg.mpr (PositivityTheory.HtPt.Gd.omHT_fg D σ)
+      have : Module.Finite A (D.omHT (σ.comp c.toRingHom)) :=
         Module.Finite.iff_fg.mpr (PositivityTheory.HtPt.Gd.omHT_fg D _)
       let q' : (Fin N → A) →ₗ[A] D.omHT σ :=
         (qLin D σ).codRestrict (D.omHT σ) (PositivityTheory.HtPt.Ga.q_mem D σ)

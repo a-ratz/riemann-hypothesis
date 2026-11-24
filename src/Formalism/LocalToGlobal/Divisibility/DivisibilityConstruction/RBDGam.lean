@@ -109,7 +109,7 @@ theorem log_card_le_unit_exponent {G : Type} [Fintype G] (L : SizeData₂ D) (hS
 private theorem four_n_le_cond (D : D7) : 4 * D.R.n ≤ D.host.QS * D.host.q * D.host.d := by
   have hN : D.host.QS * D.host.q * D.host.d ≠ 0 :=
     Nat.mul_ne_zero (Nat.mul_ne_zero D.host.QS_pos.ne' D.host.hyp.1.ne_zero) D.host.hyp.2.1.ne_zero
-  haveI : NeZero (D.host.QS * D.host.q * D.host.d) := ⟨hN⟩
+  have : NeZero (D.host.QS * D.host.q * D.host.d) := ⟨hN⟩
   have h1 : Nat.card D.R.toFrame.GG ≤ Nat.card (ZMod (D.host.QS * D.host.q * D.host.d))ˣ :=
     Nat.card_le_card_of_surjective _ D.host.der.art_surj
   have h2 : Nat.card (ZMod (D.host.QS * D.host.q * D.host.d))ˣ ≤ Nat.card (ZMod (D.host.QS * D.host.q * D.host.d)) :=

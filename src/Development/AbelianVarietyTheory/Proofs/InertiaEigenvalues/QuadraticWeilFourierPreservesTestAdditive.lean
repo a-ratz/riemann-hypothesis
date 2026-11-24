@@ -62,9 +62,9 @@ namespace GlobalTheory.JR.WeilQuad.FourierTest
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
 
 theorem finite_F_L [Unram F E] (A : Et F E) : Module.Finite F A.L := by
-  haveI : Module.Finite F E :=
+  have : Module.Finite F E :=
     Module.finite_of_finrank_pos (by rw [Unram.finrank_eq (F := F) (E := E)]; norm_num)
-  haveI : Module.Finite A.K A.L := Module.Finite.equiv A.push.symm.out.equiv
+  have : Module.Finite A.K A.L := Module.Finite.equiv A.push.symm.out.equiv
   exact Module.Finite.trans A.K A.L
 
 theorem star_smul_F (A : Et F E) (c : F) (y : A.L) : star (c • y) = c • star y := by
@@ -84,7 +84,7 @@ theorem beta_apply (A : Et F E) (x : A.K) (y' y : A.L) :
 
 theorem algMap_inj (A : Et F E) (hK : IsField A.K) (hL : IsField A.L) :
     Function.Injective (algebraMap A.K A.L) := by
-  haveI : Nontrivial A.L := ⟨hL.exists_pair_ne⟩
+  have : Nontrivial A.L := ⟨hL.exists_pair_ne⟩
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro k hk
   by_contra hne
@@ -110,8 +110,8 @@ theorem trace_algMap [Unram F E] (A : Et F E) (hK : IsField A.K) (hL : IsField A
 
 theorem beta_sepLeft [Unram F E] (A : Et F E) (hK : IsField A.K) (hL : IsField A.L) (x : A.Kˣ) :
     (beta A x).SeparatingLeft := by
-  haveI : Nontrivial A.K := ⟨hK.exists_pair_ne⟩
-  haveI : CharZero F := Unram.charZero (F := F) (E := E)
+  have : Nontrivial A.K := ⟨hK.exists_pair_ne⟩
+  have : CharZero F := Unram.charZero (F := F) (E := E)
   intro a ha
   by_contra hne
   have hsa : star a ≠ 0 := by
@@ -163,8 +163,8 @@ theorem GlobalTheory.JR.WeilQuad.fOp_isTest_add : ∀ (F E : Type) [Nontrivially
       ∀ φ' : A.L → ℂ, IsTest φ' → fOp A ψ x μ (φ + φ') = fOp A ψ x μ φ + fOp A ψ x μ φ' := by
   intro F E _ _ _ _ _ A ψ x μ ω h φ hφ
   obtain ⟨hK, hL, hψ, hsd, -⟩ := h
-  haveI := hsd.1
-  haveI := finite_F_L A
+  have := hsd.1
+  have := finite_F_L A
   have hker : A.kerL ψ (x : A.K) = fun a b => ψ (beta A x a b) := rfl
   have hint : ∀ f : A.L → ℂ, IsTest f → ∀ y, Integrable (fun y' => f y' * A.kerL ψ (x : A.K) y' y) μ := by
     intro f hf y

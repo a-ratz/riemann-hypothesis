@@ -68,7 +68,7 @@ variable {D : D7}
 
 theorem translate_mem (θ : InfFam D) {m n : ℕ} (x : Mx D m n) {φ : Mx D m n → ℂ} (hφ : φ ∈ schwartzA θ m n) :
     (fun z => φ (z + x)) ∈ schwartzA θ m n := by
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := Af D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := Af D.host.F)
   induction hφ using Submodule.span_induction with
   | mem φ h =>
     obtain ⟨f, g, hg, rfl⟩ := h

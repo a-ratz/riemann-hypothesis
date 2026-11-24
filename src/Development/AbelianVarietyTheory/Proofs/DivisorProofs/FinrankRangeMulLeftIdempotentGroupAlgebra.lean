@@ -65,7 +65,7 @@ namespace GlobalTheory.BadCount
 theorem finrank_range_mulLeft_idem : ∀ (K H : Type) [Field K] [CharZero K] [Group H] [Finite H] (a : MonoidAlgebra K H), a * a = a → ((finrank K (LinearMap.range (LinearMap.mulLeft K a)) : ℕ) : K) = (Nat.card H : K) * a.coeff 1 := by
   intro K H _ _ _ _ a ha
   classical
-  haveI : Fintype H := Fintype.ofFinite H
+  have : Fintype H := Fintype.ofFinite H
   have hi : IsIdempotentElem (LinearMap.mulLeft K a) := by
     change LinearMap.mulLeft K a * LinearMap.mulLeft K a = LinearMap.mulLeft K a
     refine LinearMap.ext fun x => ?_

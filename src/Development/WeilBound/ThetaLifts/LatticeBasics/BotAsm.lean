@@ -64,7 +64,7 @@ theorem eq_zero_of_right {U : Set ℂ} (hU : IsOpen U) (hd : ∀ z : ℂ, ∀ᶠ
     (hf : DifferentiableOn ℂ f (U ∩ {z | 0 < z.re})) {t : ℝ} (ht : ∀ z : ℂ, t < z.re → z ∈ U ∧ f z = 0) {s : ℂ} (hs : s ∈ U)
     (hs' : 0 < s.re) : f s = 0 := by
   have hc : (Uᶜ).Countable := by
-    haveI : DiscreteTopology (Uᶜ : Set ℂ) := discreteTopology_subtype_iff.2 fun x _ => by
+    have : DiscreteTopology (Uᶜ : Set ℂ) := discreteTopology_subtype_iff.2 fun x _ => by
       rw [Filter.inf_principal_eq_bot, compl_compl]; exact hd x
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   let ψ : ℂ → ℂ := fun w => (Real.exp w.re : ℂ) + w.im * Complex.I
@@ -110,8 +110,8 @@ theorem pair_ne_zero (hH : HgtEx) (hN : NormZeta) (hE : EulerProd) (hM : LocMeas
     (l3 : ∀ z : ℤ, -(d : ℤ) ≤ 2 * z → Λ z ≠ 0) : ∃ Φ ∈ PolData B M, M.I om Φ ≠ 0 := by
   obtain ⟨⟨K, a, hK, ha, -⟩, e, -, he'⟩ := hH F E σ B n X r s h.base (Or.inl h.herm)
   obtain ⟨f₀, p0, n0, i0⟩ := hI F E σ B _ _ _ _ _ _ _ _ _ _ _ _ h h0 P p hp
-  letI : MeasurableSpace (Fin n × Fin d → AF F) := borel _
-  haveI : BorelSpace (Fin n × Fin d → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (Fin n × Fin d → AF F) := borel _
+  have : BorelSpace (Fin n × Fin d → AF F) := ⟨rfl⟩
   let ν : Measure (Fin n × Fin d → AF F) := Measure.addHaar
   have hν : ν.IsAddHaarMeasure := inferInstance
   obtain ⟨Φ, pΦ, b1, b2, b3⟩ := hB F E σ B _ _ _ _ _ _ _ _ _ _ _ _ h h0 h0' hd.le he T hT uX uW f₀ p0 n0 i0 K a e hK ha he' ν hν
@@ -182,7 +182,7 @@ theorem nonZeroBottom_of_doubling_integral (hR : KReal) (hL : LInt2) (hH : HgtEx
     show (((X.ν _)⁻¹ : Circle) : ℂ) = _
     rw [Circle.coe_inv, rν x, h.geo.even.neg_one_pow, ite_self, inv_one]
   have hν' : IsHecke F E X.ν⁻¹ := ⟨hν.1.inv, fun x => by rw [MonoidHom.inv_apply, hν.2 x, inv_one]⟩
-  haveI := hr.nontriv
+  have := hr.nontriv
   exact ⟨pair_ne_zero hH hN hE hM hU hB hI hD (χW := X.ν⁻¹)
       ⟨h.base, h.geo.hV, h.geo.hW, h.geo.hM, c.heckeβ, hν', c.resβ, rν', e ▸ h.weil⟩ (by omega) (by omega) (by omega) (by omega)
       h.geo.even c.sub c.unrβ (fun w hw => (uν w hw).inv) (fun w hw hu => c.ram w hw (by simpa using hu.inv)) hr.quot l1' l2' l3',

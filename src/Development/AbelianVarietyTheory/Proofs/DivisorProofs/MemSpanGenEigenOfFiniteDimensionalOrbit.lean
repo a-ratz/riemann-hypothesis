@@ -107,7 +107,7 @@ theorem finrank_map_prod_le [FiniteDimensional ℂ N] (gs : List (End ℂ V))
     specialize ih hgs'
     set M := N.map gs.prod with hM
     have hMN : M ≤ N := map_prod_le G N hst gs hgs'
-    haveI : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le hMN
+    have : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le hMN
     have hc : Commute g gs.prod :=
       Commute.list_prod_right _ _ fun x hx => hcomm g hg x (hgs' x hx)
     have hMst : M.map g ≤ M := by
@@ -124,7 +124,7 @@ theorem finrank_map_prod_le [FiniteDimensional ℂ N] (gs : List (End ℂ V))
 include hcomm hst hnil in
 theorem map_prod_eq_bot [FiniteDimensional ℂ N] (gs : List (End ℂ V))
     (hgs : ∀ g ∈ gs, g ∈ G) (hlen : finrank ℂ N ≤ gs.length) : N.map gs.prod = ⊥ := by
-  haveI : FiniteDimensional ℂ (N.map gs.prod) :=
+  have : FiniteDimensional ℂ (N.map gs.prod) :=
     Submodule.finiteDimensional_of_le (map_prod_le G N hst gs hgs)
   rw [← Submodule.finrank_eq_zero]
   have := finrank_map_prod_le G N K hcomm hst hnil gs hgs
@@ -217,9 +217,9 @@ theorem mem_span_genEigen_of_finiteDimensional_orbit :
     have hNU : N ≤ U := by
       rintro _ ⟨y, _, rfl⟩
       exact y.2
-    haveI : FiniteDimensional ℂ N := Submodule.finiteDimensional_of_le hNU
+    have : FiniteDimensional ℂ N := Submodule.finiteDimensional_of_le hNU
     obtain ⟨χ', hχ'⟩ : ∃ χ' : End ℂ V → ℂ, ∀ z (hz : z ∈ A), χ' z = χ ⟨z, hz⟩ :=
-      ⟨fun y => if h : y ∈ A then χ ⟨y, h⟩ else 0, fun z hz => dif_pos hz⟩
+      ⟨fun y => if h : y ∈ A then χ ⟨y, h⟩ else 0, fun z hz => dite_eq_left hz⟩
     set G : Set (End ℂ V) := {g | ∃ z ∈ A, g = z - algebraMap ℂ _ (χ' z)} with hG
     have hGA : ∀ g ∈ G, g ∈ A := by
       rintro _ ⟨z, hz, rfl⟩

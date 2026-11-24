@@ -353,7 +353,7 @@ def iwasawaClosedSet : Set (unitaryGroup n 𝕜 × GL n 𝕜) :=
 
 theorem isClosed_iwasawaClosedSet : IsClosed (iwasawaClosedSet (n := n) (𝕜 := 𝕜)) := by
   have hc : Continuous (fun p : unitaryGroup n 𝕜 × GL n 𝕜 => (p.1 : Matrix n n 𝕜)ᴴ * p.2) :=
-    (continuous_subtype_val.comp continuous_fst).matrix_conjTranspose.mul
+    (continuous_subtypeVal.comp continuous_fst).matrix_conjTranspose.mul
       (Units.continuous_val.comp continuous_snd)
   have h1 : IsClosed (⋂ i, ⋂ j, {p : unitaryGroup n 𝕜 × GL n 𝕜 |
       j < i → ((p.1 : Matrix n n 𝕜)ᴴ * p.2) i j = 0}) := by

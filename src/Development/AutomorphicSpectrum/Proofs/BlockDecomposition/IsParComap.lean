@@ -64,7 +64,7 @@ def kj (j : G₁ →* G) {K₁ : Subgroup G₁} {K : Subgroup G} (h : K₁ ≤ K
 
 theorem kj_cont {j : G₁ →* G} (hj : Continuous j) {K₁ : Subgroup G₁} {K : Subgroup G}
     (h : K₁ ≤ K.comap j) : Continuous (kj j h) :=
-  Continuous.subtype_mk (hj.comp continuous_subtype_val) _
+  Continuous.subtype_mk (hj.comp continuous_subtypeVal) _
 
 variable {Γ K P : Subgroup G} {Γ₁ K₁ : Subgroup G₁} {j : G₁ →* G} {c : G → ℂ}
 
@@ -234,7 +234,7 @@ theorem hD_eq (hi : Iwa P K) {ρ : K →* (W →L[ℂ] W)} {s : P → G₁} (hs 
     have : (p : G) = (j x * k) * (k₀ : G)⁻¹ := eq_mul_inv_of_mul_eq h.symm
     rw [this]
     simp [mul_assoc]
-  rw [hF x (s p) (k * k₀⁻¹) h1 a, ← ContinuousLinearMap.mul_apply, ← map_mul]
+  rw [hF x (s p) (k * k₀⁻¹) h1 a, ← mul_apply_eq_comp, ← map_mul]
   congr 2
   group
 
@@ -250,14 +250,14 @@ theorem hD_cont [IsTopologicalGroup G] {T : Type} [TopologicalSpace T] (hK : IsC
   intro y₀
   rw [ContinuousAt, tendsto_iff_ultrafilter]
   intro U hU
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   obtain ⟨k₁, -, hk₁⟩ := isCompact_univ.ultrafilter_le_nhds
     (U.map fun y : T × G => kOf hi y.2) (by simp)
   have hk : Tendsto (fun y : T × G => kOf hi y.2) U (𝓝 k₁) := hk₁
   have hU' : Tendsto (fun y : T × G => y) U (𝓝 y₀) := hU
   have hqG : Tendsto (fun y : T × G => y.2 * ((kOf hi y.2 : K) : G)⁻¹) U (𝓝 (y₀.2 * (k₁ : G)⁻¹)) :=
     ((continuous_snd.tendsto y₀).comp hU').mul
-      (((continuous_subtype_val.tendsto k₁).comp hk).inv)
+      (((continuous_subtypeVal.tendsto k₁).comp hk).inv)
   have hqe : ∀ y : T × G, y.2 * ((kOf hi y.2 : K) : G)⁻¹ = (pOf hi y.2 : G) := by
     intro y
     exact mul_inv_eq_of_eq_mul (pk_spec hi y.2)
@@ -301,7 +301,7 @@ theorem hD_bdd [IsTopologicalGroup G] [LocallyCompactSpace G] {T : Type} (hK : I
       obtain ⟨U, hU, M, hM⟩ := hb x
       exact ⟨U, mem_nhdsWithin_of_mem_nhds hU, M, hM⟩
   obtain ⟨M, hM⟩ := hM
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   obtain ⟨B, hB⟩ := isCompact_univ.exists_bound_of_continuousOn hρ.continuousOn
   refine ⟨B * M, fun t ht g' hg' => ?_⟩
   have hq : (pOf hi g' : G) ∈ C₁ := by
@@ -347,7 +347,7 @@ theorem wall_desc [IsTopologicalGroup G] [LocallyCompactSpace G] [FiniteDimensio
       (secSp K₁ (P.comap j) (c ∘ j) (ρ.comp (kj j hKK))) R D Op H₁) :
     Wall Γ K P P c η η' β ρ (secSp K P c ρ) R D (fun z => cj (eL hLe) (eL hLe) (Op z))
       (fun z => hD hpar.iwa ρ s fun x => (H₁ z x).comp (eC hLe)) := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hsurj : ∀ g, ∃ (x : G₁) (k : K), g = j x * k := fun g =>
     ⟨s (pOf hpar.iwa g), kOf hpar.iwa g, by rw [hjs]; exact pk_spec _ g⟩
   have hsec : ∀ w ∈ secSp K P c ρ, ∀ x,

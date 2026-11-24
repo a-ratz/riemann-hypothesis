@@ -65,9 +65,9 @@ private theorem index_comap_dvd_index_of_commGroup {G G' : Type*} [CommGroup G] 
 
 private theorem index_range_sq_units_zmod_prime_dvd_two (p : ℕ) (hp : p.Prime) :
     ((powMonoidHom 2 : (ZMod p)ˣ →* (ZMod p)ˣ).range).index ∣ 2 := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   set S := (powMonoidHom 2 : (ZMod p)ˣ →* (ZMod p)ˣ).range
-  haveI : IsCyclic ((ZMod p)ˣ ⧸ S) :=
+  have : IsCyclic ((ZMod p)ˣ ⧸ S) :=
     isCyclic_of_surjective (QuotientGroup.mk' S) (QuotientGroup.mk'_surjective S)
   have hcard : Nat.card ((ZMod p)ˣ ⧸ S) ∣ 2 := by
     rw [← IsCyclic.exponent_eq_card]
@@ -81,11 +81,11 @@ private theorem index_range_sq_units_zmod_prime_dvd_two (p : ℕ) (hp : p.Prime)
 private theorem index_zpowers_neg_one_units_zmod_two_pow_dvd (e : ℕ) :
     (Subgroup.zpowers (-1 : (ZMod (2 ^ (e + 2)))ˣ)).index ∣ 2 ^ e := by
   have h4 : 2 ^ 2 ≤ 2 ^ (e + 2) := Nat.pow_le_pow_right (by norm_num) (by omega)
-  haveI : Fact (1 < 2 ^ (e + 2)) := ⟨by omega⟩
+  have : Fact (1 < 2 ^ (e + 2)) := ⟨by omega⟩
   have h := Subgroup.index_mul_card (Subgroup.zpowers (-1 : (ZMod (2 ^ (e + 2)))ˣ))
   rw [Nat.card_zpowers, ← orderOf_units, Units.val_neg, Units.val_one, orderOf_neg_one,
     ZMod.ringChar_zmod_n, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient,
-    Nat.totient_prime_pow_succ Nat.prime_two, if_neg (by omega)] at h
+    Nat.totient_prime_pow_succ Nat.prime_two, ite_eq_right (by omega)] at h
   have h' : 2 ^ (e + 1) * (2 - 1) = 2 ^ e * 2 := by ring
   rw [h'] at h
   rw [Nat.eq_of_mul_eq_mul_right (by norm_num) h]
@@ -93,7 +93,7 @@ private theorem index_zpowers_neg_one_units_zmod_two_pow_dvd (e : ℕ) :
 private theorem index_ker_toUnitHom_dvd_orderOf_dirichletCharacter (n : ℕ) [NeZero n] (χ : DirichletCharacter ℂ n) :
     (MulChar.toUnitHom χ).ker.index ∣ orderOf χ := by
   rw [Subgroup.index_ker]
-  haveI : IsCyclic (MulChar.toUnitHom χ).range := inferInstance
+  have : IsCyclic (MulChar.toUnitHom χ).range := inferInstance
   rw [← IsCyclic.exponent_eq_card]
   refine Monoid.exponent_dvd_of_forall_pow_eq_one fun x => ?_
   obtain ⟨_, u, rfl⟩ := x
@@ -119,7 +119,7 @@ theorem UpperTheory.V.HV.hostIndex :
       ∀ u : (ZMod h.N)ˣ, u ^ (2 ^ (h.ex + 1) * h.o) ∈ h.H := by
   intro h
   obtain ⟨hq1, hq1m, hd, hdm, hcop⟩ := h.pair
-  haveI := h.chi.ne
+  have := h.chi.ne
   have hq0 : h.q ≠ 0 := NeZero.ne _
   have hq12 : h.q1 ≠ 2 := by intro e; omega
   have hd2 : h.d ≠ 2 := by intro e; omega
@@ -132,7 +132,7 @@ theorem UpperTheory.V.HV.hostIndex :
   have hN0 : h.N ≠ 0 := by
     rw [hN]
     exact Nat.mul_ne_zero (Nat.lcm_ne_zero (by positivity) hq0) (Nat.mul_ne_zero hq1.ne_zero hd.ne_zero)
-  haveI : NeZero h.N := ⟨hN0⟩
+  have : NeZero h.N := ⟨hN0⟩
   have hfac : ∀ p, p.Prime → h.N.factorization p =
       max ((h.ex + 2) * (if p = 2 then 1 else 0)) (h.q.factorization p) +
         ((if p = h.q1 then 1 else 0) + (if p = h.d then 1 else 0)) := by

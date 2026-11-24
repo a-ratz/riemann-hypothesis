@@ -148,8 +148,8 @@ theorem isOpen_map_restrictScalars {K L Ω : Type} [Field K] [Field L] [Field Ω
     (N : Subgroup (Ω ≃ₐ[L] Ω)) (hN : IsOpen (N : Set (Ω ≃ₐ[L] Ω))) :
     IsOpen ((N.map (AlgEquiv.restrictScalarsHom K)) : Set (Ω ≃ₐ[K] Ω)) := by
   obtain ⟨E', hE', hsub⟩ := (krullTopology_mem_nhds_one_iff L Ω _).1 (hN.mem_nhds N.one_mem)
-  haveI : FiniteDimensional K E' := Module.Finite.trans L E'
-  haveI : FiniteDimensional K (E'.restrictScalars K) := this
+  have : FiniteDimensional K E' := Module.Finite.trans L E'
+  have : FiniteDimensional K (E'.restrictScalars K) := this
   refine Subgroup.isOpen_mono ?_ (IntermediateField.fixingSubgroup_isOpen (E'.restrictScalars K))
   intro g hg
   have hfix : ∀ x ∈ E', g x = x := fun x hx =>
@@ -166,10 +166,10 @@ open GlobalTheory.KLift in
 theorem GlobalTheory.KLift.exists_cm_lift : ∀ (Ω : Type) [Field Ω] (E : Type) [Field E] [NumberField E] [IsCMField E] [Algebra E Ω] [IsAlgClosure E Ω] (v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))), ∀ N : Subgroup (G E Ω), IsOpen (N : Set (G E Ω)) → ∃ T : Finset (HeightOneSpectrum (𝓞 (maximalRealSubfield E))), v ∉ T ∧ ∀ F₁ : IntermediateField (maximalRealSubfield E) Ω, FiniteDimensional (maximalRealSubfield E) F₁ → IsGalois (maximalRealSubfield E) F₁ → IsSolvable (F₁ ≃ₐ[maximalRealSubfield E] F₁) → (∀ φ : F₁ →+* ℂ, ComplexEmbedding.IsReal φ) → (∀ u ∈ T, ∀ A' : ValuationSubring Ω, IsPlaceOver A' u → Dec (F := maximalRealSubfield E) A' ≤ F₁.fixingSubgroup) → ∃ (M : Type) (_ : Field M) (_ : NumberField M) (_ : IsCMField M) (_ : Algebra M Ω) (_ : IsAlgClosure M Ω) (_ : Algebra E M) (_ : IsScalarTower E M Ω), SolvDisj M N ∧ (∀ g : G E Ω, (∀ x : M, g (algebraMap M Ω x) = algebraMap M Ω x) ↔ ∀ z ∈ F₁, g z = z) ∧ ∀ z ∈ F₁, ∃ x ∈ maximalRealSubfield M, algebraMap M Ω x = z := by
   intro Ω _ E _ _ _ _ _ v N hN
   classical
-  haveI hFE : Algebra.IsAlgebraic (maximalRealSubfield E) E := Algebra.IsAlgebraic.of_finite _ _
-  haveI : Algebra.IsAlgebraic (maximalRealSubfield E) Ω :=
+  have hFE : Algebra.IsAlgebraic (maximalRealSubfield E) E := Algebra.IsAlgebraic.of_finite _ _
+  have : Algebra.IsAlgebraic (maximalRealSubfield E) Ω :=
     Algebra.IsAlgebraic.trans (maximalRealSubfield E) E Ω
-  haveI hcF : IsAlgClosure (maximalRealSubfield E) Ω := ⟨IsAlgClosure.isAlgClosed E, inferInstance⟩
+  have hcF : IsAlgClosure (maximalRealSubfield E) Ω := ⟨IsAlgClosure.isAlgClosed E, inferInstance⟩
   obtain ⟨T, hvT, hT⟩ := GlobalTheory.T.finite_decompositionGroups_cover_openQuotient Ω (maximalRealSubfield E) v
     (N.map (AlgEquiv.restrictScalarsHom (maximalRealSubfield E))) (isOpen_map_restrictScalars N hN)
   refine ⟨T, hvT, ?_⟩
@@ -195,26 +195,26 @@ theorem GlobalTheory.KLift.exists_cm_lift : ∀ (Ω : Type) [Field Ω] (E : Type
         obtain ⟨k, rfl⟩ := Subgroup.mem_zpowers_iff.1 hf
         exact (MulAction.mem_fixedBy_zpowers_iff_mem_fixedBy (g := g)).2 (h z hz) k
       exact (IntermediateField.mem_fixedField_iff _ _).1 (hle x.2) g (Subgroup.mem_zpowers g)
-  haveI : Normal (maximalRealSubfield E) F₁ := hgal.to_normal
-  haveI : Normal E Ω := IsAlgClosure.normal E Ω
-  haveI : Normal (maximalRealSubfield E) Ω := IsAlgClosure.normal _ Ω
+  have : Normal (maximalRealSubfield E) F₁ := hgal.to_normal
+  have : Normal E Ω := IsAlgClosure.normal E Ω
+  have : Normal (maximalRealSubfield E) Ω := IsAlgClosure.normal _ Ω
   have hmap : ∀ σ : Ω →ₐ[E] Ω, ∀ z ∈ F₁, σ z ∈ F₁ := by
     intro σ z hz
     exact IntermediateField.normal_iff_forall_map_le.1 inferInstance
       (σ.restrictScalars (maximalRealSubfield E)) ((IntermediateField.mem_map _).2 ⟨z, hz, rfl⟩)
-  haveI hMn : Normal E M := by
+  have hMn : Normal E M := by
     refine IntermediateField.normal_iff_forall_map_le.2 fun σ => ?_
     show (IntermediateField.adjoin E (F₁ : Set Ω)).map σ ≤ IntermediateField.adjoin E (F₁ : Set Ω)
     rw [IntermediateField.adjoin_map]
     refine IntermediateField.adjoin_le_iff.2 ?_
     rintro _ ⟨z, hz, rfl⟩
     exact hF₁M _ (hmap σ z hz)
-  haveI hMfd : FiniteDimensional E M := by
+  have hMfd : FiniteDimensional E M := by
     let b := Module.finBasis (maximalRealSubfield E) F₁
     let S : Set Ω := Set.range (fun i => ((b i : F₁) : Ω))
-    haveI : Finite S := (Set.finite_range _).to_subtype
+    have : Finite S := (Set.finite_range _).to_subtype
     have hint : ∀ x ∈ S, IsIntegral E x := fun x _ => Algebra.IsIntegral.isIntegral x
-    haveI := IntermediateField.finiteDimensional_adjoin hint
+    have := IntermediateField.finiteDimensional_adjoin hint
     have hle : M ≤ IntermediateField.adjoin E S := by
       refine IntermediateField.adjoin_le_iff.2 ?_
       intro z hz
@@ -230,14 +230,14 @@ theorem GlobalTheory.KLift.exists_cm_lift : ∀ (Ω : Type) [Field Ω] (E : Type
         (IntermediateField.subset_adjoin E S ⟨i, rfl⟩)
     exact FiniteDimensional.of_injective (IntermediateField.inclusion hle).toLinearMap
       (IntermediateField.inclusion hle).toRingHom.injective
-  haveI : NumberField M := NumberField.of_module_finite E M
-  haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) _⟩
-  haveI : IsGalois E M := ⟨⟩
+  have : NumberField M := NumberField.of_module_finite E M
+  have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) _⟩
+  have : IsGalois E M := ⟨⟩
   have hCM : IsCMField M := (GlobalTheory.T.cm_subfields_compositum_closed Ω E).2.2 M (F₁ : Set Ω) (fun x hx φ => by
       have := hre x hx φ
       rw [Complex.star_def] at this
       exact Complex.conj_eq_iff_im.1 this) rfl
-  haveI : Group.IsSolvable (F₁ ≃ₐ[maximalRealSubfield E] F₁) := hsolv
+  have : Group.IsSolvable (F₁ ≃ₐ[maximalRealSubfield E] F₁) := hsolv
   have hsolvM : IsSolvable (M ≃ₐ[E] M) := by
     let ψ : (Ω ≃ₐ[E] Ω) →* (M ≃ₐ[E] M) := AlgEquiv.restrictNormalHom M
     let φ : (Ω ≃ₐ[E] Ω) →* (F₁ ≃ₐ[maximalRealSubfield E] F₁) :=
@@ -272,7 +272,7 @@ theorem GlobalTheory.KLift.exists_cm_lift : ∀ (Ω : Type) [Field Ω] (E : Type
     have hinj : Function.Injective ρ :=
       (QuotientGroup.kerLift_injective φ).comp ((QuotientGroup.quotientMulEquivOfEq hker).injective.comp
         (QuotientGroup.quotientKerEquivOfSurjective ψ hψ).symm.injective)
-    exact solvable_of_solvable_injective hinj
+    exact Group.isSolvable_of_isSolvable_injective hinj
   refine ⟨M, inferInstance, inferInstance, hCM, inferInstance, inferInstance, inferInstance,
     inferInstance, ⟨inferInstance, hsolvM, ?_⟩, hfix, ?_⟩
   · intro g
@@ -292,7 +292,7 @@ theorem GlobalTheory.KLift.exists_cm_lift : ∀ (Ω : Type) [Field Ω] (E : Type
   · intro z hz
     refine ⟨⟨z, hF₁M z hz⟩, ?_, rfl⟩
     intro φ
-    letI : Algebra M ℂ := φ.toAlgebra
+    let : Algebra M ℂ := φ.toAlgebra
     let ψ : Ω →ₐ[M] ℂ := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,

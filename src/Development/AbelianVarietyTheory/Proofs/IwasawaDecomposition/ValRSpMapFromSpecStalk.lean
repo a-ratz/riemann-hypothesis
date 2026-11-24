@@ -353,7 +353,7 @@ theorem mem_O_ratOf {y : Y.X} {g : Y.Fn} : g ∈ (ratOf Y).O y ↔ RegAt y g := 
 
 theorem val_ratOf {y : Y.X} {K : Type} [Field K] (ψ : Y.X.presheaf.stalk y →+* K) (a : Y.X.presheaf.stalk y) :
     (ratOf Y).val (spMap ψ ≫ Y.X.fromSpecStalk y) (algebraMap _ Y.X.functionField a) = ψ a := by
-  obtain ⟨U, hy, a, rfl⟩ := Y.X.presheaf.germ_exist a
+  obtain ⟨U, hy, a, rfl⟩ := Y.X.presheaf.exists_germ_eq a
   rw [algebraMap_germ hy, ← valF_fromSpecStalk (gen_mem hy) a, ← valR_spMap_fromSpecStalk ψ hy a]
   refine RatModel.val_valF (M := ratOf Y) ?_ a
   rintro _ ⟨w, rfl⟩
@@ -368,7 +368,7 @@ theorem spMap_stalkClosedPointTo {X : Scheme.{0}} {K : Type} [CommRing K] [IsLoc
 theorem map_algebraMap_stalk {B : GlobalTheory.ProjVar.Var F} {φ : B.Fn →ₐ[F] Y.Fn} {f : Y.X ⟶ B.X}
     (h : (ratOf B).IsHom (ratOf Y) φ f) (y : Y.X) (a : B.X.presheaf.stalk (f y)) :
     φ (algebraMap _ B.X.functionField a) = algebraMap _ Y.X.functionField ((f.stalkMap y).hom a) := by
-  obtain ⟨U, hy, a, rfl⟩ := B.X.presheaf.germ_exist a
+  obtain ⟨U, hy, a, rfl⟩ := B.X.presheaf.exists_germ_eq a
   rw [algebraMap_germ hy, ← valF_fromSpecStalk (gen_mem hy) a, Scheme.Hom.germ_stalkMap_apply,
     algebraMap_germ (U := f ⁻¹ᵁ U) hy, ← valF_fromSpecStalk (gen_mem (U := f ⁻¹ᵁ U) hy)]
   exact (h.valF_app ⟨_, hy⟩ a).symm

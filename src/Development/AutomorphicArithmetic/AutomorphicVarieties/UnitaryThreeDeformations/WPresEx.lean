@@ -81,8 +81,8 @@ namespace UpperTheory.V.UnitaryThreeInertia
 
 theorem isAdicComplete_of_pow_le {A : Type} [CommRing A] {K J : Ideal A} {N : ℕ} (h : J ^ N ≤ K) (hKJ : K ≤ J)
     [IsAdicComplete K A] : IsAdicComplete J A := by
-  haveI : IsHausdorff J A := GlobalTheory.NilpotentEval.isHausdorff_of_pow_le h
-  haveI : IsPrecomplete J A := GlobalTheory.NilpotentEval.isPrecomplete_of_pow_le h hKJ
+  have : IsHausdorff J A := GlobalTheory.NilpotentEval.isHausdorff_of_pow_le h
+  have : IsPrecomplete J A := GlobalTheory.NilpotentEval.isPrecomplete_of_pow_le h hKJ
   exact {}
 
 section CO
@@ -98,8 +98,8 @@ theorem algHom_mem_max {R' : Type} [CommRing R'] [Algebra O R'] [IsCO O R'] (f :
 theorem isCO_quot (I : Ideal R) (hI : I ≤ maximalIdeal R) {n : ℕ} (hn : maximalIdeal R ^ n ≤ I) :
     ∃ _ : IsCO O (R ⧸ I), maximalIdeal (R ⧸ I) ^ n ≤ ⊥ := by
   have hIt : I ≠ ⊤ := ne_top_of_le_ne_top (maximalIdeal.isMaximal R).ne_top hI
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hIt
-  haveI : IsLocalRing (R ⧸ I) := IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hIt
+  have : IsLocalRing (R ⧸ I) := IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   have hmap : (maximalIdeal R).map (Ideal.Quotient.mk I) ≤ maximalIdeal (R ⧸ I) := by
     refine IsLocalRing.le_maximalIdeal ?_
     intro htop
@@ -132,7 +132,7 @@ theorem isCO_quot (I : Ideal R) (hI : I ≤ maximalIdeal R) {n : ℕ} (hn : maxi
         exact hn hy
   refine ⟨{ complete := ?_, isLocalHom := ?_, res_surj := ?_ }, hpow⟩
   · exact isAdicComplete_of_pow_le (K := ⊥) hpow bot_le
-  · haveI := IsCO.isLocalHom (O := O) (R := R)
+  · have := IsCO.isLocalHom (O := O) (R := R)
     refine ⟨fun a ha => ?_⟩
     have hu : IsUnit (algebraMap O R a) := by
       by_contra hu
@@ -172,7 +172,7 @@ theorem isCO_powerSeries {n : ℕ} (hn : maximalIdeal R ^ n ≤ ⊥) : IsCO O (P
         obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.1 h1
         have := congrArg PowerSeries.constantCoeff hc
         simp at this))
-  · haveI := IsCO.isLocalHom (O := O) (R := R)
+  · have := IsCO.isLocalHom (O := O) (R := R)
     refine ⟨fun a ha => ?_⟩
     have h1 : IsUnit (algebraMap O R a) := by
       have := ha.map (PowerSeries.constantCoeff (R := R))
@@ -195,7 +195,7 @@ theorem max_le_of_gen {S : Type} (x : S → R) (hx : ∀ s, x s ∈ maximalIdeal
       (∀ s, f (x s) = f' (x s)) → f = f') :
     maximalIdeal R ≤ Ideal.span (Set.range x) ⊔ (maximalIdeal O).map (algebraMap O R) ⊔ maximalIdeal R ^ 2 := by
   set I := Ideal.span (Set.range x) ⊔ (maximalIdeal O).map (algebraMap O R) ⊔ maximalIdeal R ^ 2 with hIdef
-  haveI : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
   have hmO : (maximalIdeal O).map (algebraMap O R) ≤ maximalIdeal R := by
     rw [Ideal.map_le_iff_le_comap]
     intro a ha
@@ -233,11 +233,11 @@ theorem surjective_of_max_le [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Fi
     (h : maximalIdeal R ≤ Ideal.span (Set.range fun i => π (X i)) ⊔ (maximalIdeal O).map (algebraMap O R) ⊔
       maximalIdeal R ^ 2) : Function.Surjective π := by
   classical
-  haveI : IsHausdorff (maximalIdeal R) R := (IsCO.complete (O := O) (R := R)).toIsHausdorff
+  have : IsHausdorff (maximalIdeal R) R := (IsCO.complete (O := O) (R := R)).toIsHausdorff
   set J : Ideal R := Ideal.span (Set.range fun i => π (X i)) with hJ
   have hJm : J ≤ maximalIdeal R := Ideal.span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hz i)
   have hOm : (maximalIdeal O).map (algebraMap O R) ≤ maximalIdeal R := by
-    haveI := IsCO.isLocalHom (O := O) (R := R)
+    have := IsCO.isLocalHom (O := O) (R := R)
     rw [Ideal.map_le_iff_le_comap]
     intro a ha
     rw [Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
@@ -264,7 +264,7 @@ theorem surjective_of_max_le [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Fi
         simpa using Ideal.sub_mem _ h2 hm
       exact (maximalIdeal.isMaximal R).ne_top ((Ideal.eq_top_iff_one _).mpr h1)
     simpa [f] using hu.map (Ideal.Quotient.mk J)
-  haveI : IsHausdorff ((maximalIdeal O).map f) (R ⧸ J) := IsHausdorff.of_le_jacobson _ _ (by simpa only [Ideal.jacobson_bot] using hjac)
+  have : IsHausdorff ((maximalIdeal O).map f) (R ⧸ J) := IsHausdorff.of_le_jacobson _ _ (by simpa only [Ideal.jacobson_bot] using hjac)
   have hle : (J ⊔ (maximalIdeal O).map (algebraMap O R)).map (Ideal.Quotient.mk J) ≤
       (maximalIdeal O).map f := by
     rw [Ideal.map_sup, Ideal.map_quotient_self, bot_sup_eq, Ideal.map_map]
@@ -284,7 +284,7 @@ theorem surjective_of_max_le [IsAdicComplete (maximalIdeal O) O] {σ : Type} [Fi
   have hmapJ : (Ideal.span (Set.range (X : σ → MvPowerSeries σ O))).map (π : MvPowerSeries σ O →+* R) = J := by
     rw [Ideal.map_span, ← Set.range_comp]
     rfl
-  haveI : IsHausdorff ((Ideal.span (Set.range (X : σ → MvPowerSeries σ O))).map
+  have : IsHausdorff ((Ideal.span (Set.range (X : σ → MvPowerSeries σ O))).map
       (π : MvPowerSeries σ O →+* R)) R := by
     rw [hmapJ]
     exact GlobalTheory.NilpotentEval.isHausdorff_of_pow_le (K := maximalIdeal R) (N := 1) (by rw [pow_one]; exact hJm)
@@ -545,7 +545,7 @@ theorem wcomp_eq_of_nilp {A : Type} [CommRing A] [Algebra O A] (J : Ideal A) {n 
     rw [aeval_weight w (fun i => PowerSeries.C (ψ (X i))) t k (Pk k), mvPolynomial_aeval_powerSeries_C]
     intro d hd
     simp only [Pk]
-    rw [MvPolynomial.coeff_weightedHomogeneousComponent, if_neg hd]
+    rw [MvPolynomial.coeff_weightedHomogeneousComponent, ite_eq_right hd]
   have hψG : ψ G = ∑ k ∈ K, c k := by
 
     rw [hψe G, ← hP, ← hsum, map_sum]
@@ -589,7 +589,7 @@ theorem exists_wpres_of_coord {O R : Type} [CommRing O] [IsLocalRing O] [IsAdicC
         (∀ s, f' (x s) = ((t ^ w s : R'ˣ) : R') * f (x s)) → f' y = ((t ^ j : R'ˣ) : R') * f y) ∧
       ∀ f, W.π f = 0 → ∀ i, coeff (Finsupp.single i 1) f ∈ maximalIdeal O := by
   classical
-  haveI hcomp : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have hcomp : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   set N : Ideal R := Ideal.map (algebraMap O R) (maximalIdeal O) with hN
   have h5 := max_le_of_gen (O := O) x hx hgen
   have hfin : ∃ T : Finset S, maximalIdeal R ≤ Ideal.span (x '' ↑T) ⊔ N ⊔ maximalIdeal R ^ 2 := by
@@ -642,8 +642,8 @@ theorem exists_wpres_of_coord {O R : Type} [CommRing O] [IsLocalRing O] [IsAdicC
     | succ n =>
       obtain ⟨hQ, hQn⟩ := isCO_quot (O := O) (maximalIdeal R ^ (n + 1))
         (Ideal.pow_le_self n.succ_ne_zero) le_rfl
-      haveI := hQ
-      haveI hP := isCO_powerSeries (O := O) (R := R ⧸ maximalIdeal R ^ (n + 1)) hQn
+      have := hQ
+      have hP := isCO_powerSeries (O := O) (R := R ⧸ maximalIdeal R ^ (n + 1)) hQn
       let q : R →ₐ[O] R ⧸ maximalIdeal R ^ (n + 1) := Ideal.Quotient.mkₐ O _
       let f : R →ₐ[O] PowerSeries (R ⧸ maximalIdeal R ^ (n + 1)) :=
         (IsScalarTower.toAlgHom O (R ⧸ maximalIdeal R ^ (n + 1)) (PowerSeries (R ⧸ maximalIdeal R ^ (n + 1)))).comp q
@@ -672,7 +672,7 @@ theorem exists_wpres_of_coord {O R : Type} [CommRing O] [IsLocalRing O] [IsAdicC
   · intro j y
     constructor
     · rintro ⟨G, hG, rfl⟩ R' _ _ _ f f' t h
-      haveI : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
+      have : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
       have := algHom_weight wt (maximalIdeal R') (f.comp π) (f'.comp π) t
         (fun k => algHom_mem_max f (hz k)) (fun k => by simp only [AlgHom.comp_apply, hπX]; exact h k.1) hG
       simpa using this
@@ -862,7 +862,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_adapted :
   let w : {g // F.η g = 1} × Fin 3 × Fin 3 → ℤ := fun s => wt s.2.1 s.2.2
   have hpush : ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R →ₐ[O] R'), F.IsPt g₁ (push f u) := by
     intro R' _ _ _ f
-    haveI : IsLocalHom f := ⟨fun a ha => by_contra fun hn => algHom_mem_max f (x := a) hn ha⟩
+    have : IsLocalHom f := ⟨fun a ha => by_contra fun hn => algHom_mem_max f (x := a) hn ha⟩
     exact isPt_push F f g₁ u hu.pt
   have hiff : ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (f f' : R →ₐ[O] R') (t : R'ˣ),
       (∀ s, f' (x s) = ((t ^ w s : R'ˣ) : R') * f (x s)) ↔ push f' u = conjBy (tor R' t) (push f u) := by

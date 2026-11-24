@@ -104,7 +104,7 @@ theorem nondeg (hdet : IsUnit J.det) {x : ι → K} (h : ∀ z, hf σ J x z = 0)
         simp
       · simp [Pi.single_apply, hj]
     simp only [hf, hs, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at h1
+      Finset.mem_univ, ite_true] at h1
     simpa [Matrix.vecMul, dotProduct] using h1
   have h2 := congrArg (fun v => Matrix.vecMul v J⁻¹) hv
   simpa [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv J hdet] using h2
@@ -447,7 +447,7 @@ theorem gp [IsReduced K] (h2 : IsUnit (2 : K)) {δ : K} (hδ : IsUnit δ) (hσδ
   have h0 : IsUnit (0 : K) := by
     have := hu.mul hu
     rwa [hsq] at this
-  haveI := subsingleton_of_zero_eq_one (isUnit_zero_iff.mp h0)
+  have := subsingleton_of_zero_eq_one (isUnit_zero_iff.mp h0)
   exact h1 (isUnit_of_subsingleton x)
 
 end
@@ -1005,7 +1005,7 @@ theorem max_ideals_le_two {k K : Type*} [Field k] [CommRing K] [Algebra k K]
     (hrank : Module.finrank k K = 2) (m₀ m₁ m₂ : Ideal K) (h₀ : m₀.IsMaximal) (h₁ : m₁.IsMaximal)
     (h₂ : m₂.IsMaximal) : m₀ = m₁ ∨ m₀ = m₂ ∨ m₁ = m₂ := by
   classical
-  haveI : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
   by_contra hcon
   push_neg at hcon
   obtain ⟨h01, h02, h12⟩ := hcon
@@ -1037,8 +1037,8 @@ theorem max_ideals_le_two {k K : Type*} [Field k] [CommRing K] [Algebra k K]
 
 theorem locGen : LocGenStatement := by
   intro k K _ _ _ σ hσσ hfix hrank hred h2 N J hJ hdet e f hee hff hef
-  haveI : Nontrivial K := Module.nontrivial_of_finrank_pos (R := k) (by omega)
-  haveI : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
+  have : Nontrivial K := Module.nontrivial_of_finrank_pos (R := k) (by omega)
+  have : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
   have hfixU : ∀ x : K, σ.toRingHom x = x → x ≠ 0 → IsUnit x := by
     intro x hx hx0
     obtain ⟨c, rfl⟩ := (hfix _).mp hx

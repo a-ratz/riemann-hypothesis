@@ -650,7 +650,7 @@ theorem form_flat (A : ℝ) (x y : DVar X.Tau a b → ℂ) :
     matH (hSc X.Tau a b A⁻¹) x y = formV A D.what₂.Tau a b (s.flatV a b x) (s.flatV a b y) := by
   rw [formV_apply]
   show (∑ i, ∑ j, x i * hSc X.Tau a b A⁻¹ i j * conj (y j)) = _
-  simp only [hSc, Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hSc, Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [Fintype.sum_prod_type, ← Equiv.sum_comp s.iT.symm, Finset.sum_div]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Fintype.sum_prod_type, Finset.sum_div]
@@ -673,7 +673,7 @@ theorem hPow_hOne (L : PeriodPair) :
   by_cases h1 : w = w'
   · subst h1
     simp
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     by_cases h2 : w.2 = w'.2
     · have h3 : w.1 ≠ w'.1 := fun h => h1 (Prod.ext h h2)
       simp [h2, h3]
@@ -864,7 +864,7 @@ theorem isLat_comap {Λ' : AddSubgroup W} (h : IsLat Λ') : IsLat (Λ'.comap (g 
   · have := h.1
     let f : (Λ'.comap (g : V →ₗ[ℂ] W).toAddMonoidHom) → Λ' := fun x => ⟨g x.1, x.2⟩
     have hf : Continuous f :=
-      Continuous.subtype_mk (((g : V →ₗ[ℂ] W).continuous_of_finiteDimensional).comp continuous_subtype_val) _
+      Continuous.subtype_mk (((g : V →ₗ[ℂ] W).continuous_of_finiteDimensional).comp continuous_subtypeVal) _
     have hinj : Function.Injective f := by
       intro x y hxy
       exact Subtype.ext (g.injective (congrArg Subtype.val hxy))
@@ -1328,7 +1328,7 @@ theorem nonempty_tau : Nonempty X.Tau := by
   have h3 : 0 < @Fintype.card D.what₂.Tau D.what₂.instTau := by
     rw [D.what₂.card_Tau]
     exact h2
-  haveI : Nonempty D.what₂.Tau := (@Fintype.card_pos_iff _ D.what₂.instTau).mp h3
+  have : Nonempty D.what₂.Tau := (@Fintype.card_pos_iff _ D.what₂.instTau).mp h3
   exact s.iT.nonempty
 
 theorem laHyp_ambOf (hok : s.Ok) (hcc : Formalism.L2.Ker.Cd.TaylorLogMetric.IsCurveIdeal D cc) (hδ : Formalism.L2.Ker.Cd.TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) {a b : ℕ} (ha : Even a) (hb : Even b)

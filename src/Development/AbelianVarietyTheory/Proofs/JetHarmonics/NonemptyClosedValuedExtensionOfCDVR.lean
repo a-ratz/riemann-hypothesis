@@ -71,12 +71,12 @@ theorem nonempty_valExt :
     exact_mod_cast hx
   have hpO : ‖algebraMap v.integer C (p : v.integer)‖ < 1 := by
     rw [map_natCast, hCp']; exact hr1
-  haveI : Fact (¬ IsUnit (p : v.integer)) :=
+  have : Fact (¬ IsUnit (p : v.integer)) :=
     ⟨fun h => hpO.ne ((NormIntegers.isUnit_iff_norm_eq_one hO).1 h)⟩
-  haveI := NormIntegers.isAdicComplete_span_singleton hO hpO
-  haveI := NormIntegers.isLocalRing hO
+  have := NormIntegers.isAdicComplete_span_singleton hO hpO
+  have := NormIntegers.isLocalRing hO
   obtain ⟨j, hj⟩ := exists_padic_isometry (C := C) p hCp'
-  letI : Algebra ℤ_[p] v.integer :=
+  let : Algebra ℤ_[p] v.integer :=
     ((j.comp PadicInt.Coe.ringHom).codRestrict v.integer fun x =>
       hmem _ ((hj _).trans_le x.2)).toAlgebra
   have hf : ∀ a : T.V, ‖algebraMap T.Fr C (algebraMap T.V T.Fr a)‖ ≤ 1 := fun a => (hC _).2 ⟨a, rfl⟩

@@ -154,8 +154,8 @@ theorem exists_isPrimitiveRoot_of_isRay : ∀ {K H : Type} [Field K] [NumberFiel
   have hψL : ∀ x, ψ x ∈ L := hS L (fun w hw => hSL w (Finset.mem_insert_of_mem hw)) ψ
   have hzL : z ∈ L := hSL z (Finset.mem_insert_self _ _)
   have : NumberField L := {}
-  letI : Algebra H L := (ψ.codRestrict L hψL).toAlgebra
-  letI : Algebra K L := ((ψ.codRestrict L hψL).comp (algebraMap K H)).toAlgebra
+  let : Algebra H L := (ψ.codRestrict L hψL).toAlgebra
+  let : Algebra K L := ((ψ.codRestrict L hψL).comp (algebraMap K H)).toAlgebra
   have : IsScalarTower K H L := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have : IsGalois K L := IsGalois.tower_top_of_isGalois ℚ K L
   obtain ⟨x, hx⟩ := GlobalTheory.Mem.RayZeta.root_mem_rayField K H L _ n hn le_rfl hRF

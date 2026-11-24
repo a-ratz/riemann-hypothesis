@@ -176,7 +176,7 @@ theorem haar_measure_transport_invariant (hH : IsHaarLoc (StSet (Formalism.L2.SG
   · intro h0
     apply hne
     have h := congrArg (fun m : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS) => m Set.univ) h0
-    simp only [Measure.coe_zero, Pi.zero_apply] at h
+    simp only [FunLike.coe_zero, Pi.zero_apply] at h
     rw [hme.map_apply, Set.preimage_univ] at h
     exact Measure.measure_univ_eq_zero.1 h
 
@@ -191,7 +191,7 @@ theorem fin_g (ν : Measure (Formalism.REAL.UJ (X.B.I.ε v))) (hq : IsQuotLoc μ
     intro h0
     have h := hq (fun _ => 1) measurable_const
     rw [h0] at h
-    simp only [lintegral_const, Measure.coe_zero, Pi.zero_apply, mul_zero, lintegral_zero_measure] at h
+    simp only [lintegral_const, FunLike.coe_zero, Pi.zero_apply, mul_zero, lintegral_zero_measure] at h
     have : Formalism.REAL.muG (X.B.I.ε v) Set.univ = 0 := by simpa using h
     exact (isOpen_univ.measure_pos (Formalism.REAL.muG (X.B.I.ε v)) Set.univ_nonempty).ne' this
 

@@ -224,9 +224,9 @@ theorem th_pull_tauOf (w : HeightOneSpectrum (𝓞 X.K)) (hw : (Pr.T u : 𝓞 X.
     rfl
   rw [e]
   by_cases hs : seenC Pr u w
-  · rw [if_pos hs]
+  · rw [ite_eq_left hs]
     exact (tauOfC_spec hX hPr u w hw P).resolve_right (hs.not_bar hPr _ P)
-  · rw [if_neg hs]
+  · rw [ite_eq_right hs]
     refine (tauOfC_spec hX hPr u w hw P).resolve_left fun h => hs (seenC_of_one hPr (τ := tauOfC w P.1) ?_)
     rw [show pullW (tauOfC w P.1) w = P.1 from h]
     exact P.2
@@ -245,8 +245,8 @@ theorem valuation_pos_iff_mem_seen (hH : HostHyp d) (u : d.what₂.Word) (w : d.
       x ∈ (pullW (tauOfR d.hX d.hPr u (d.plEq w) v) (d.plEq w)).asIdeal := Iff.rfl
   rw [h1, th_pull_tauOf d.hX d.hPr u (d.plEq w) hT v]
   by_cases hs : seenC d.Pr u (d.plEq w)
-  · rw [if_pos hs, if_pos (decide_eq_true hs)]
-  · rw [if_neg hs, if_neg (by simpa using hs), conjIdeal_asIdeal]
+  · rw [ite_eq_left hs, ite_eq_left (decide_eq_true hs)]
+  · rw [ite_eq_right hs, ite_eq_right (by simpa using hs), conjIdeal_asIdeal]
 
 theorem th_seen (hH : HostHyp d) (u : d.what₂.Word) : AtTSeen (atTTied a hH u) := by
   intro w hw v x y hy

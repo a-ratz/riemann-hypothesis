@@ -218,7 +218,7 @@ theorem exists_heightOne (Q : Ideal (integralClosure O L)) (hQ : Q.IsMaximal) :
 
 theorem addv_mem_placesOver (v : HeightOneSpectrum (integralClosure O L)) :
     addv L v ∈ PlacesOver O L := by
-  rw [PlacesOver, Set.mem_setOf_eq, IsNormDiscrete]
+  rw [PlacesOver, Set.mem_ofPred_eq, IsNormDiscrete]
   refine ⟨⟨?_, ?_⟩, ?_⟩
   · intro a ha
     rw [addv_apply v ha]
@@ -232,7 +232,7 @@ theorem addv_mem_placesOver (v : HeightOneSpectrum (integralClosure O L)) :
     rw [addv_apply v hπ0, hπ, log_exp]
     simp
   · intro x
-    haveI := v.isMaximal
+    have := v.isMaximal
     have hcomap : v.asIdeal.comap (algebraMap O (integralClosure O L)) = maximalIdeal O := by
       apply IsLocalRing.eq_maximalIdeal
       first
@@ -260,9 +260,9 @@ theorem placesOver_bij : ∃ e : HeightOneSpectrum (integralClosure O L) ≃ Pla
     have h0 : ∀ b : integralClosure O L, 0 ≤ w (algebraMap (integralClosure O L) L b) := by
       intro b
       have hb : IsIntegral O (algebraMap (integralClosure O L) L b) := b.2
-      letI : Algebra O (vRing w) :=
+      let : Algebra O (vRing w) :=
         ((algebraMap O L).codRestrict (vRing w) (fun x => (hw.2 x).1)).toAlgebra
-      haveI : IsScalarTower O (vRing w) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+      have : IsScalarTower O (vRing w) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
       have hb' : IsIntegral (vRing w) (algebraMap (integralClosure O L) L b) := hb.tower_top
       obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hb'
       rw [← hy]
@@ -270,11 +270,11 @@ theorem placesOver_bij : ∃ e : HeightOneSpectrum (integralClosure O L) ≃ Pla
     let Qw : Ideal (integralClosure O L) :=
       { carrier := {b | 0 < w (algebraMap (integralClosure O L) L b)}
         add_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq, map_add (f := _)] at ha hb ⊢
           exact lt_of_lt_of_le (lt_min ha hb) (w.map_add _ _)
         zero_mem' := by simp
         smul_mem' := fun c b hb => by
-          simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, AddValuation.map_mul] at hb ⊢
+          simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, AddValuation.map_mul] at hb ⊢
           exact lt_of_lt_of_le hb (le_add_of_nonneg_left (h0 c)) }
     have hprime : Qw.IsPrime := by
       refine ⟨fun htop => ?_, fun {a b} hab => ?_⟩

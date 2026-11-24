@@ -140,7 +140,7 @@ theorem int_of_mul_Dinv (D : D7) {w : D.host.E} (hw : ∀ u ∈ Dinv D, w * u �
     intro i hi j hj
     obtain ⟨c, rfl⟩ := (mem_spanSingleton _).1 hi
     rw [smul_mul_assoc]
-    exact mem_coe.1 (Submodule.smul_mem _ c (mem_coe.2 (hw j hj)))
+    exact mem_coeToSubmodule.1 (Submodule.smul_mem _ c (mem_coeToSubmodule.2 (hw j hj)))
   have h2 := mul_le_mul_left hle (Dinv D)⁻¹
   rw [mul_assoc, mul_inv_cancel₀ h0, mul_one] at h2
   exact int_of_mem_one D (h2 (mem_spanSingleton_self _ w))
@@ -152,7 +152,7 @@ theorem mem_AA_of (hP : FactPrincipalDatum) (D : D7) {w : D.host.E}
     intro i hi j hj
     obtain ⟨c, rfl⟩ := (mem_spanSingleton _).1 hi
     rw [smul_mul_assoc, mul_comm w j]
-    exact mem_coe.1 (Submodule.smul_mem _ c (mem_coe.2 (mem_one_of_int D (hw j hj))))
+    exact mem_coeToSubmodule.1 (Submodule.smul_mem _ c (mem_coeToSubmodule.2 (mem_one_of_int D (hw j hj))))
   have h2 := mul_le_mul_left hle D.host.AA
   rw [mul_assoc, inv_mul_cancel₀ (AA_ne_zero hP D), mul_one, one_mul] at h2
   exact h2 (mem_spanSingleton_self _ w)
@@ -180,7 +180,7 @@ theorem int_of_xi (hP : FactPrincipalDatum) (D : D7) {w : D.host.E}
         congr 1
         ring
       rw [e]
-      exact mem_coe.1 (Submodule.smul_mem _ c (mem_coe.2 h1))
+      exact mem_coeToSubmodule.1 (Submodule.smul_mem _ c (mem_coeToSubmodule.2 h1))
     · intro x y hx hy
       show w * ((x + y) * n) ∈ Dinv D
       rw [add_mul, mul_add]

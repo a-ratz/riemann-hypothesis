@@ -166,7 +166,7 @@ theorem line_step (hθ : IsInfFam θ) (hψ : GlobalTheory.IndefiniteRowSideFullH
     have e1 : q.1.1 = q'.1.1 := congrArg Subtype.val hq
     have e2 : q.1.2 = q'.1.2 := huniq q.2.2 (e1 ▸ q'.2.2)
     exact Subtype.ext (Prod.ext e1 e2)
-  haveI : FiniteDimensional ℂ G := Module.Finite.of_injective fG hfG
+  have : FiniteDimensional ℂ G := Module.Finite.of_injective fG hfG
   let Uf : Submodule ℂ (WO W X → ℂ) := G.map (LinearMap.snd ℂ _ _)
   let Φt : ℝ → WO W X → ℂ := fun t => ωA (oneP θ W τ Y t, 1) Φ
   have hdat : ∀ t, IsDatum Γ.M ψ cA (om (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hO.JW (oneP θ W τ Y t), 1) ΦD) (Φt t) := by
@@ -440,7 +440,7 @@ theorem polynomial_vector_kFinite (fockFirst : _root_.GlobalTheory.FunPr.ThetaLo
   rw [← hr] at hf
   obtain ⟨T, rfl⟩ := hf
   obtain ⟨D, hD⟩ := exists_tensDeg T
-  haveI : FiniteDimensional ℂ (tensDeg F (a - Γ.p) Γ.p (a + a' - (Γ.p + Γ.q)) (Γ.p + Γ.q) D) :=
+  have : FiniteDimensional ℂ (tensDeg F (a - Γ.p) Γ.p (a + a' - (Γ.p + Γ.q)) (Γ.p + Γ.q) D) :=
     LinearMap.finiteDimensional_range _
   refine ⟨(tensDeg F _ _ _ _ D).map Φ, inferInstance, hr ▸ LinearMap.map_le_range, ⟨T, hD, rfl⟩, ?_⟩
   rintro k hk _ ⟨T', hT', rfl⟩
@@ -1005,8 +1005,8 @@ theorem prod_eq (hJ : V.J = (1 : D.host.E) • W.gram) {k : GlobalTheory.Indefin
       show (Eqv.matA D W _).map (Eqv.psiT D τ) = _
       rw [← Eqv.infMat_thetaC]
       by_cases e : τ = t
-      · subst e; rw [if_pos rfl, (hat τ 1).2.1, one_smul, (hZ τ).2]
-      · rw [if_neg e]; exact (hat t 1).2.2 τ e
+      · subst e; rw [ite_eq_left rfl, (hat τ 1).2.1, one_smul, (hZ τ).2]
+      · rw [ite_eq_right e]; exact (hat t 1).2.2 τ e
     rw [Eqv.infMat_thetaC]
     show φ _ = gsOf k τ
     rw [map_list_prod, List.map_map]
@@ -1132,7 +1132,7 @@ theorem projection_kInfty_invariant : _root_.GlobalTheory.FunPr.ThetaLocalInputs
   have hψ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsStd ψ := hO.psi ▸ hT.base.std
   obtain ⟨U, hUf, hUle, hΦU, hUst⟩ := _root_.GlobalTheory.T.kFinite_algebra_closed_under_derivation hP _ _ _ Bs _ _ Γ Xc om om' hT ΦD hΦD
   obtain ⟨l, hl, rfl⟩ := _root_.GlobalTheory.T.kInfinity_action_prod_lines hP D θ W Bs Γ.V _ _ hO.JW hθ hT.base hT.geo.hV k hk
-  haveI := hUf
+  have := hUf
   have key : ∀ l : List (D.what₂.Tau × Matrix (Fin W.rank) (Fin W.rank) ℂ),
       (∀ q ∈ l, q.2 ∈ lieAt W q.1 ∧ ∀ t : ℝ,
         GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hO.JW (oneP θ W q.1 q.2 t) ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig Γ.V Bs.emb) →

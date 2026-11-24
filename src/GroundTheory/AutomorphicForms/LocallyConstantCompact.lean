@@ -88,7 +88,7 @@ theorem range_finite_of_mem_locallyConstantCompactSupport {f : X → E}
     (hf : f ∈ locallyConstantCompactSupport X R E) : (range f).Finite := by
   have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hf.2
   have h1 : (range fun x : tsupport f => f x).Finite :=
-    (hf.1.comp_continuous continuous_subtype_val).range_finite
+    (hf.1.comp_continuous continuous_subtypeVal).range_finite
   refine (h1.insert 0).subset ?_
   rintro _ ⟨x, rfl⟩
   by_cases hx : x ∈ tsupport f

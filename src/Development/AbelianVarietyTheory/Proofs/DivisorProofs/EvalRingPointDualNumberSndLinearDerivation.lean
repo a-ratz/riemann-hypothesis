@@ -142,7 +142,7 @@ theorem evalPt_snd_sum {X : Scheme.{0}} {S K : Type} [CommRing S] [Field K] (G :
   let alg : S →+* L := algebraMap S L
   let fstR : DualNumber K →+* K := (TrivSqZeroExt.fstHom K K K).toRingHom
   let G' : Sp L ⟶ X := spMap alg ≫ G
-  haveI := liftAt_isLocalHom ψ θ h2
+  have := liftAt_isLocalHom ψ θ h2
   have hm : IsLocalRing.closedPoint L ∈ G' ⁻¹ᵁ O := by
     rw [← IsLocalRing.comap_closedPoint (fstR.comp (liftAt ψ θ h2))]
     have hmor : spMap (fstR.comp (liftAt ψ θ h2)) ≫ G' = spMap fstR ≫ spMap θ ≫ G := by

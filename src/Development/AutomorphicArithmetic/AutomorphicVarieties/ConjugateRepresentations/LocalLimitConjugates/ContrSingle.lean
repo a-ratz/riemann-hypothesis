@@ -181,11 +181,11 @@ theorem UpperTheory.V.Cj.H.kType :
       map_one' := LinearMap.ext fun X => Subtype.ext (by simp [adHerm])
       map_mul' := fun k l => LinearMap.ext fun X => Subtype.ext (by simp [adHerm, mul_assoc]) }
   have had : ∀ X, Continuous fun k => ad k X := fun X =>
-    Continuous.subtype_mk ((continuous_subtype_val.mul continuous_const).mul continuous_subtype_val.star) _
+    Continuous.subtype_mk ((continuous_subtypeVal.mul continuous_const).mul continuous_subtypeVal.star) _
   have hM : Continuous (Ξ.mat.comp (Unitary.toUnits : Kinf E a →* _)) := by
     refine continuous_matrix fun i j => continuous_iff_continuousAt.2 fun k => ?_
     have h := (differentiableAt_extGL (Ξ.reg i j) (x := toL (Unitary.toUnits k).val) (Unitary.toUnits k).isUnit).continuousAt
-    have h2 : Continuous fun l : Kinf E a => (toL (Unitary.toUnits l).val : Lie E a) := continuous_subtype_val
+    have h2 : Continuous fun l : Kinf E a => (toL (Unitary.toUnits l).val : Lie E a) := continuous_subtypeVal
     have h3 := ContinuousAt.comp (f := fun l : Kinf E a => (toL (Unitary.toUnits l).val : Lie E a)) h h2.continuousAt
     simp only [Function.comp_def, extGL_val] at h3
     exact h3

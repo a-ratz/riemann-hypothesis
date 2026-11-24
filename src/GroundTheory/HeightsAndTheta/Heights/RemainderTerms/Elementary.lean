@@ -128,7 +128,7 @@ theorem GeometricTail.intersectionNumber_baseChange : GeometricTail.Statement :=
 theorem exp_three_eighths_le : Real.exp (3 / 8) ≤ 1.5 := by
   have he := Real.exp_one_lt_d9
   have h8 : Real.exp (3 / 8) ^ 8 = Real.exp 1 ^ 3 := by
-    rw [← Real.exp_nat_mul, ← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
     norm_num
   by_contra hlt
   push Not at hlt

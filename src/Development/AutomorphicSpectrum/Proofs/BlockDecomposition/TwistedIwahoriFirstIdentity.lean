@@ -433,7 +433,7 @@ theorem UpperTheory.Reformulated.B.Qf33.aux4 :
   have h : ((x⁻¹ : GL n R) : Matrix n n R) = (x : Matrix n n R)⁻¹ := Matrix.coe_units_inv x
   change ((x⁻¹ : GL n R) : Matrix n n R).BlockTriangular _
   rw [h]
-  letI : Invertible (x : Matrix n n R) := x.invertible
+  let : Invertible (x : Matrix n n R) := x.invertible
   exact Matrix.blockTriangular_inv_of_blockTriangular hx
 
 noncomputable def UpperTheory.Reformulated.B.Qf33.parab :
@@ -945,9 +945,9 @@ open PositivityTheory.Lbc
 
 theorem isClosed_Nup {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (N : ℕ) : IsClosed (Nup k N : Set (GL (Fin N) k)) := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  haveI : T2Space k := inferInstance
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := inferInstance
   have hc : ∀ i j, Continuous fun g : GL (Fin N) k => (g : Matrix (Fin N) (Fin N) k) i j :=
     fun i j => Units.continuous_val.matrix_elem i j
   set e := stdBlocks (ones N) (sum_ones N) with he
@@ -958,7 +958,7 @@ theorem isClosed_Nup {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
         {g : GL (Fin N) k | (g : Matrix (Fin N) (Fin N) k) (e ⟨a, i⟩) (e ⟨a, j⟩) =
           (1 : Matrix (Bl (ones N) a) (Bl (ones N) a) k) i j} := by
     ext g
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
     exact mem_unipRad.trans (and_congr mem_parab_iff Iff.rfl)
   rw [hs]
   refine IsClosed.inter ?_ ?_
@@ -975,9 +975,9 @@ theorem killN : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [
   intro k _ _ _ _ N J θ l t hA hG b hb
   obtain ⟨hJo, hJc, hI, hθc, hl, hθl, hθJ, hθNu, hθNl, hθT⟩ := hA
   obtain ⟨htT, hdom, hstr⟩ := hG
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  haveI : T2Space k := inferInstance
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := inferInstance
   obtain ⟨s, hs, hd1, hd2, hd3⟩ := hdom 0 hl
   have hs' : torEmb k N s = t := by simpa using hs
   have d1 : ∀ n ∈ J ⊓ Nup k N, t * n * t⁻¹ ∈ J ⊓ Nup k N := by

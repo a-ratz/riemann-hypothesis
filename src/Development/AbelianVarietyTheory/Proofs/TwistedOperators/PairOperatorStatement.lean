@@ -123,7 +123,7 @@ theorem vanishing [Fintype n] [DecidableEq n] (q : Unif k) : Vanishing k n M q :
           (smul_up L q c x).symm⟩
     invariant_eq_zero π P v hv M' _ _ θ hθ := by
       classical
-      letI : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
+      let : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
 
       have scal : ∀ s : 𝒪[k]ˣ, ∃ g : GL n k, ∀ x : n → k, g • x = (s : 𝒪[k]) • x := by
         intro s
@@ -253,7 +253,7 @@ variable {χ}
 theorem sum_units_char [Fintype 𝓀[k]ˣ] (hχ : χ ≠ 1) (a : 𝓀[k]) [Decidable (a = 0)] :
     ∑ d : 𝓀[k]ˣ, χ (d * a) = (if a = 0 then (resCard k : ℂ) else 0) - 1 := by
   classical
-  letI : Fintype 𝓀[k] := Fintype.ofFinite _
+  let : Fintype 𝓀[k] := Fintype.ofFinite _
   have hsplit : ∀ f : 𝓀[k] → ℂ, ∑ d : 𝓀[k]ˣ, f d = ∑ x : 𝓀[k], f x - f 0 := by
     intro f
     rw [← Finset.sum_erase_add _ _ (Finset.mem_univ (0 : 𝓀[k])), add_sub_cancel_right]
@@ -272,7 +272,7 @@ theorem sum_units_char [Fintype 𝓀[k]ˣ] (hχ : χ ≠ 1) (a : 𝓀[k]) [Decid
 theorem Gs_mul_GsStar (hχ : χ ≠ 1) :
     (Gs χ * GsStar χ : Module.End ℂ (Form k n M)) = (resCard k : ℂ) • 1 - Nm := by
   classical
-  letI : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
+  let : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
   refine LinearMap.ext fun φ => funext fun P => ?_
   rw [Module.End.mul_apply, Gs_apply, LinearMap.sub_apply, Pi.sub_apply, Nm_apply, LinearMap.smul_apply,
     Pi.smul_apply, Module.End.one_apply]
@@ -293,7 +293,7 @@ theorem Gs_mul_GsStar (hχ : χ ≠ 1) :
   rw [Finset.sum_eq_single (1 : 𝓀[k]ˣ)]
   · simp
   · intro u _ hu
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h0
     apply hu
     ext
@@ -324,11 +324,11 @@ theorem FF_FFStar [Fintype n] (hχ : χ ≠ 1) (φ : Form k n M) :
   rw [FF_apply, Pi.sub_apply, Pi.smul_apply, tr'_apply]
   set L := P₁.ker with hL
   have : L.IsFullLattice k := by rw [hL]; infer_instance
-  letI : Fintype {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0} := Fintype.ofFinite _
-  letI : Fintype {x : Red L // x ≠ 0} := Fintype.ofFinite _
-  letI : Fintype (Module.Dual 𝓀[k] (Red L)) := Fintype.ofFinite _
-  letI : Fintype (Red L) := Fintype.ofFinite _
-  letI : Fintype 𝓀[k] := Fintype.ofFinite _
+  let : Fintype {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0} := Fintype.ofFinite _
+  let : Fintype {x : Red L // x ≠ 0} := Fintype.ofFinite _
+  let : Fintype (Module.Dual 𝓀[k] (Red L)) := Fintype.ofFinite _
+  let : Fintype (Red L) := Fintype.ofFinite _
+  let : Fintype 𝓀[k] := Fintype.ofFinite _
   obtain ⟨x₁, hx₁⟩ : ∃ x₁ : {x : Red L // x ≠ 0}, up L q x₁ = P₁ :=
     ⟨_, congrArg Subtype.val ((kerEquiv L q).apply_symm_apply ⟨P₁, hL.symm⟩)⟩
   rw [← hx₁, sum_withLat L, sum_withKer L q]
@@ -360,13 +360,13 @@ theorem FF_FFStar [Fintype n] (hχ : χ ≠ 1) (φ : Form k n M) :
       simp [resCard, Nat.card_eq_fintype_card]
     simp only [hiff, hcard]
   simp only [hinner, sub_smul, ite_smul, zero_smul, one_smul, Finset.sum_sub_distrib, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 
 variable (χ) in
 theorem FFStar_eq_U_GsStar {φ : Form k n M} (h : φ ∈ Mram k n M) : FFStar q χ φ = U q (GsStar χ φ) := by
   classical
-  letI : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
+  let : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
   funext P
   rw [FFStar_apply, U_apply]
   simp only [GsStar_apply]
@@ -431,7 +431,7 @@ theorem eq_zpow_smul {φ φ' : Form k n M} {r : ℕ} (h : (resCard k : ℂ) • 
 
 private theorem FF_eq_D_Gs_of_mem_Mram {φ : Form k n M} (h : φ ∈ Mram k n M) : FF q χ φ = D q (Gs χ φ) := by
   classical
-  letI : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
+  let : Fintype 𝓀[k]ˣ := Fintype.ofFinite _
   funext P₁
   rw [FF_apply, D_apply]
   simp only [Gs_apply]
@@ -544,8 +544,8 @@ theorem operatorIdentities [Fintype n] (hχ : χ ≠ 1) : OperatorIdentities k n
       funext x
       unfold phiOne
       by_cases hM : Maps P Q x
-      · rw [if_pos hM, if_pos ((maps_dia c).mpr hM)]
-      · rw [if_neg hM, if_neg fun h' => hM ((maps_dia c).mp h')]
+      · rw [ite_eq_left hM, ite_eq_left ((maps_dia c).mpr hM)]
+      · rw [ite_eq_right hM, ite_eq_right fun h' => hM ((maps_dia c).mp h')]
     twisted_class_sum ε φ L _ _ f := by
       rw [dia_apply, smul_ofDual, FFStar_ofDual]
       simp [LinearMap.smul_apply]

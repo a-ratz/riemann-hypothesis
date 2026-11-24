@@ -72,7 +72,7 @@ theorem finOrdExists_of (hΦ : DVR.PhiFunStatement) (hP : PhiPowStatement) : Fin
     have := hcp (fun i => (Φ ^ (i : ℕ)) (ss 0)) (by
       intro i
       rw [hΦr]
-      simp only [Fin.val_succ, Fin.coe_castSucc, pow_succ', Module.End.mul_apply])
+      simp only [Fin.val_succ, Fin.val_castSucc, pow_succ', Module.End.mul_apply])
     rw [isSmul_iff] at this
     simpa using this
   have key : ∀ n : ℕ, (hn : n ≤ k) → ss ⟨n, by omega⟩ = ζ ^ n • (Φ ^ n) (ss 0) := by

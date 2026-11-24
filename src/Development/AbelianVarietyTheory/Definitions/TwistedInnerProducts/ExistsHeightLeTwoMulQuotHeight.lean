@@ -260,7 +260,7 @@ private lemma exists_bruhat_function_of_positive_on_cosets {G : Type*} [Group G]
     refine ⟨x⁻¹, by simpa using hx, x * h, ⟨subset_tsupport _ hne, x, hx, h, h.2, rfl⟩, ?_⟩
     simp
   have hcont_h : ∀ x, Continuous fun h : H => f (x * h) :=
-    fun x => hf.comp (continuous_const.mul continuous_subtype_val)
+    fun x => hf.comp (continuous_const.mul continuous_subtypeVal)
   have hcs : ∀ x, HasCompactSupport fun h : H => f (x * h) := by
     intro x
     obtain ⟨S, hS, hSf⟩ := hsupp {x} isCompact_singleton
@@ -269,7 +269,7 @@ private lemma exists_bruhat_function_of_positive_on_cosets {G : Type*} [Group G]
   have hFpos : ∀ x, 0 < F x := by
     intro x
     obtain ⟨h, hh⟩ := hpos x
-    exact (hcont_h x).integral_pos_of_hasCompactSupport_nonneg_nonzero (hcs x)
+    exact (hcont_h x).integral_pos_of_hasCompactSupport_nonneg_ne_zero (hcs x)
       (fun h => hf0 _) hh
   have hFinv : ∀ x (h : H), F (x * h) = F x := by
     intro x h
@@ -286,7 +286,7 @@ private lemma exists_bruhat_function_of_positive_on_cosets {G : Type*} [Group G]
     obtain ⟨S, hS, hSf⟩ := hsupp K hK
     have hc : ContinuousOn F K :=
       continuousOn_integral_of_compact_support (f := fun x (h : H) => f (x * h)) hS
-        (hf.comp (continuous_fst.mul (continuous_subtype_val.comp continuous_snd))).continuousOn
+        (hf.comp (continuous_fst.mul (continuous_subtypeVal.comp continuous_snd))).continuousOn
         fun x h hx hh => hSf x hx h hh
     exact hc.continuousAt hKn
   refine ⟨fun x => f x / F x, hf.div hFcont fun x => (hFpos x).ne',
@@ -399,9 +399,9 @@ theorem IsCosetCutoff.isQuotMeasure [SFinite μ] [μ.IsMulLeftInvariant] [SFinit
   intro f hf
   have hb : Measurable fun x => (β x : ℝ≥0∞) := hβ.1.coe_nnreal_ennreal
   have hmul : Measurable fun p : G × T => (p.2 : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
   have hmul' : Measurable fun p : G × T => ((p.2⁻¹ : T) : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd.inv).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd.inv).mul measurable_fst
   have : μT.IsMulRightInvariant := by
     rw [← Measure.inv_eq_self μT]; infer_instance
   have hF : Measurable fun x => ∫⁻ t : T, f (t * x) ∂μT := (hf.comp hmul).lintegral_prod_right'
@@ -576,7 +576,7 @@ theorem continuous_infEmb_compInf (w : InfinitePlace F) (τ : EmbOver E w) :
 variable {n : Type} [Fintype n] [DecidableEq n]
 
 theorem continuous_opNorm : Continuous (opNorm : Matrix n n ℂ → ℝ≥0) :=
-  continuous_nnnorm.comp
+  continuous_nnNorm.comp
     (Matrix.toEuclideanCLM (n := n) (𝕜 := ℂ)).toAlgEquiv.toLinearEquiv.toLinearMap.continuous_of_finiteDimensional
 
 theorem continuous_htInf (w : InfinitePlace F) :
@@ -625,7 +625,7 @@ theorem continuous_heightGL : Continuous (heightGL F : GL n (AF F ⊗[F] E) → 
 
 theorem htInf_le_heightGL (g : GL n (AF F ⊗[F] E)) (w : InfinitePlace F) :
     htInf F w (bc (compInf F E w) g) ≤ heightGL F g :=
-  (Finset.single_le_prod' (f := fun w => htInf F w (bc (compInf F E w) g)) (fun _ _ => one_le_htOf _ _)
+  (Finset.single_le_prod (f := fun w => htInf F w (bc (compInf F E w) g)) (fun _ _ => one_le_htOf _ _)
     (Finset.mem_univ w)).trans (le_mul_of_one_le_right' (one_le_finprod' fun _ => one_le_htOf _ _))
 
 end GeneralLinearIntegers
@@ -685,9 +685,9 @@ theorem IsQuotIntL1.cutoff [SFinite μG] [μG.IsMulLeftInvariant] [SFinite μR] 
     Integrable (fun x => (β x : ℝ) • f x) μG ∧ z = ∫ x, (β x : ℝ) • f x ∂μG := by
   obtain ⟨F, h1, h2, h3, h4⟩ := h
   have hc : Measurable fun p : R × G => (p.1 : G) * p.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul measurable_snd
+    (measurable_subtypeVal.comp measurable_fst).mul measurable_snd
   have hc' : Measurable fun p : R × G => ((p.1⁻¹ : R) : G) * p.2 :=
-    (measurable_subtype_coe.comp measurable_fst.inv).mul measurable_snd
+    (measurable_subtypeVal.comp measurable_fst.inv).mul measurable_snd
   have hb : ∀ x, Integrable (fun t : R => (β ((t⁻¹ : R) * x) : ℝ)) μR ∧ ∫ t : R, (β ((t⁻¹ : R) * x) : ℝ) ∂μR = 1 :=
     fun x => integrable_of_lintegral_eq_one (hβ.1.comp (hc'.comp measurable_prodMk_right))
       (by rw [lintegral_inv_eq_self (μ := μR) (fun t : R => (β (t * x) : ℝ≥0∞)), hβ.2])
@@ -741,7 +741,7 @@ theorem isQuotIntL1_iff (hR : IsClosed (R : Set G)) (hm : Measurable f) :
       by rw [quotInt_eq_cutoff hR hβ hm hl, (h.cutoff hβ).2]⟩
   · rintro ⟨hl, hi, rfl⟩
     have hb := fun x => integrable_of_lintegral_eq_one (μ := μR) (b := fun t : R => β (t * x))
-      (hβ.1.comp (measurable_subtype_coe.mul_const x)) (hβ.2 x)
+      (hβ.1.comp (measurable_subtypeVal.mul_const x)) (hβ.2 x)
     have hb' := fun x => (hb x).2
     refine ⟨fun x => (β x : ℝ) • f x, (quotIntegrable_iff_cutoff hR hβ hm hl).1 hi, fun x => ?_, fun x => ?_,
       quotInt_eq_cutoff hR hβ hm hl⟩
@@ -779,7 +779,7 @@ theorem htInf_le_height (g : GA D V) (w : InfinitePlace D.host.F) :
   unfold height; exact_mod_cast htInf_le_heightGL _ _ w
 
 theorem continuous_height : Continuous (height V) :=
-  NNReal.continuous_coe.comp ((continuous_heightGL _).comp continuous_subtype_val)
+  NNReal.continuous_coe.comp ((continuous_heightGL _).comp continuous_subtypeVal)
 
 theorem exists_height_le_of_isCompact {K : Set (GA D V)} (hK : IsCompact K) : ∃ C, ∀ g ∈ K, height V g ≤ C := by
   obtain ⟨C, hC⟩ := hK.bddAbove_image (continuous_height V).continuousOn

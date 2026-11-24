@@ -239,7 +239,7 @@ theorem mulVec_cont (v : Fin (2 * r + k + 1) → ℂ) : Continuous (fun g : Mat 
 
 theorem uw_closed (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (UWset k r z) := by
   unfold UWset
-  simp only [Set.setOf_and, Set.setOf_forall, Set.setOf_mem_eq]
+  simp only [Set.ofPred_and, Set.ofPred_forall, Set.ofPred_mem_eq]
   have hc : ∀ v : Fin (2 * r + k + 1) → ℂ, IsClosed {g : Mat k r | g *ᵥ v = v} :=
     fun v => isClosed_eq (mulVec_cont v) continuous_const
   exact gv_closed.inter ((isClosed_iInter fun a => (hc _).inter (hc _)).inter (hc z))
@@ -248,7 +248,7 @@ theorem n_closed : IsClosed (Nset k r) := by
   unfold Nset
   have he : ∀ (i j : Fin (2 * r + k + 1)) (c : ℂ), IsClosed {g : Mat k r | g i j = c} :=
     fun i j c => isClosed_eq (continuous_id.matrix_elem i j) continuous_const
-  simp only [Set.setOf_and, Set.setOf_forall, Set.setOf_mem_eq]
+  simp only [Set.ofPred_and, Set.ofPred_forall, Set.ofPred_mem_eq]
   exact gv_closed.inter ((isClosed_iInter fun a => isClosed_iInter fun i => isClosed_iInter fun _ => he _ _ _).inter
     (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => isClosed_iInter fun _ =>
       isClosed_iInter fun _ => he _ _ _))
@@ -259,9 +259,9 @@ theorem psi_cont (z : Fin (2 * r + k + 1) → ℂ) : Continuous (fun m : Mat k r
       else (m *ᵥ z) (eI k r a)) := by
     refine continuous_finsetSum _ fun a _ => ?_
     by_cases h : (a : ℕ) + 1 < r
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       exact continuous_id.matrix_elem _ _
-    · simp only [dif_neg h]
+    · simp only [dite_eq_right h]
       show Continuous ((fun v : Fin (2 * r + k + 1) → ℂ => v (eI k r a)) ∘ fun m : Mat k r => m *ᵥ z)
       exact (continuous_apply (eI k r a)).comp (mulVec_cont z)
   exact Complex.continuous_exp.comp (continuous_const.mul (Complex.continuous_ofReal.comp

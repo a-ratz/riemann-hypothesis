@@ -177,7 +177,7 @@ theorem _root_.GlobalTheory.UnramOrder.card_coker_of_det_eq : ∀ {F : Type} [Fi
       map_mul' := by intro x y; ext; simp
       map_zero' := by ext; simp
       map_add' := by intro x y; ext; simp }
-  letI : Algebra 𝒪[F] L.O := φ.toAlgebra
+  let : Algebra 𝒪[F] L.O := φ.toAlgebra
   have hφ : ∀ r : 𝒪[F], ((algebraMap 𝒪[F] L.O r : L.O) : E) = algebraMap F E r := fun r => rfl
   let c : L.O →+* L.O :=
     { toFun := fun x => ⟨L.cj x, (hO x.1 x.2).1⟩
@@ -226,8 +226,8 @@ theorem _root_.GlobalTheory.UnramOrder.card_coker_of_det_eq : ∀ {F : Type} [Fi
     exact Submodule.add_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨0, rfl⟩))
       (Submodule.smul_mem _ _ (Submodule.subset_span ⟨1, rfl⟩))
   let bO := Module.Basis.mk hli hspan
-  haveI : Module.Free 𝒪[F] L.O := Module.Free.of_basis bO
-  haveI : Module.Finite 𝒪[F] L.O := Module.Finite.of_basis bO
+  have : Module.Free 𝒪[F] L.O := Module.Free.of_basis bO
+  have : Module.Finite 𝒪[F] L.O := Module.Finite.of_basis bO
   have hrank : Module.finrank 𝒪[F] L.O = 2 := by
     rw [Module.finrank_eq_card_basis bO, Fintype.card_fin]
   have hdetA : A.det = algebraMap 𝒪[F] L.O (ϖ ^ j * (u : 𝒪[F])) := by

@@ -77,10 +77,10 @@ private theorem pow_zero_of (B : H →L[ℂ] H) (m : ℕ) : ∀ x : H, ((B * sta
   | zero => exact fun x h => star_zero_of B x (by simpa using h)
   | succ m ih =>
     intro x h
-    rw [pow_succ, ContinuousLinearMap.mul_apply] at h
+    rw [pow_succ, mul_apply_eq_comp] at h
     have h1 := ih _ h
     have h2 : ((B * star B) * star (B * star B)) x = 0 := by
-      rw [hs, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, h1, map_zero]
+      rw [hs, mul_apply_eq_comp, mul_apply_eq_comp, h1, map_zero]
     have h3 := star_zero_of _ x h2
     rw [hs] at h3
     exact star_zero_of B x h3

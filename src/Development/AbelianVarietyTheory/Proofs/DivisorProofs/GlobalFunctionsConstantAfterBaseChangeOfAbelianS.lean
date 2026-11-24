@@ -64,7 +64,7 @@ theorem uConst_of_isAbelianScheme : ∀ (R : Type) [CommRing R] (A : Over (Sp R)
   have hsm : Smooth s' := MorphismProperty.of_isPullback hpb ‹_›
   have hpr : IsProper s' := MorphismProperty.of_isPullback hpb ‹_›
   have hgc : GeometricallyConnected s' := MorphismProperty.of_isPullback hpb ‹_›
-  haveI : GeometricallyIntegral s' :=
+  have : GeometricallyIntegral s' :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected X' _ s' hsm hgc
   have hiso : IsIso s'.appTop := GlobalTheory.GlobalFunctions.isIso_app GlobalTheory.FlatFibreInjective.injective_baseChange
     GlobalTheory.exists_noetherian_model_of_smooth s' ⊤

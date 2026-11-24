@@ -165,8 +165,8 @@ variable {D : D7}
 theorem vol_scale {V : HSp D} (v v' : GlobalTheory.Unf.Vol V) : ∃ s : ℂ, s ≠ 0 ∧ ∀ f : GA D V → ℂ, (∀ γ ∈ GQ V, ∀ x, f (γ * x) = f x) →
     ∫ x in v.𝓕, f x ∂v.μ = s * ∫ x in v'.𝓕, f x ∂v'.μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V
-  haveI := v.haar
-  haveI := v'.haar
+  have := v.haar
+  have := v'.haar
   refine ⟨((Measure.haarScalarFactor v.μ v'.μ : ℝ) : ℂ), ?_, fun f hf => GlobalTheory.RowVal.fd_int_scale v.haar v'.haar
     (Measure.isMulLeftInvariant_eq_smul v.μ v'.μ) v.fund v'.fund f hf⟩
   exact_mod_cast (Measure.haarScalarFactor_pos_of_isHaarMeasure v.μ v'.μ).ne'
@@ -1047,7 +1047,7 @@ theorem movedAt_big : Big fun ch => MovedAt ch := by
     have hz1 := ((hd1 d hd).2 i).2.2
     rw [GlobalTheory.T.movedFiniteDatum_eq_heisenbergCombination_vacuum large₂ F hS ch hIs t (.chi i D.R.m) (show DefPair D.R.m (Pair.chi (i : ℕ) D.R.m : Pair T) from ⟨i.2, rfl⟩) (d.2 i) ((c d).2 i) hz1 hvec ((hC d hd).2 i),
       hκ' i, comb_smul_heis]
-    simp only [dif_pos i.2, combR]
+    simp only [dite_eq_left i.2, combR]
 
 end GlobalTheory.RowVal
 

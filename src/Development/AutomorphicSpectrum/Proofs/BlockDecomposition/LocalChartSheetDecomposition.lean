@@ -139,7 +139,7 @@ theorem restrict_chernPart_of_coords [SecondCountableTopology (GlobalTheory.CxPt
   have hSc : T ∩ e.source ⊆ c.finChart.source := inter_subset_right.trans hsub
   have hA : MeasurableSet (e.target ∩ e.symm ⁻¹' T) := by
     have hm : Measurable (e.target.restrict e.symm) :=
-      (continuousOn_iff_continuous_restrict.1 e.continuousOn_symm).measurable
+      (continuousOn_iff_continuous_domRestrict.1 e.continuousOn_symm).measurable
     have := ht.subtype_image (hm hT)
     convert this using 1
     ext v

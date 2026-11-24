@@ -127,7 +127,7 @@ theorem isOpen_setK {U : Set (M2 n)} (hU : IsOpen U) (Kg : Type) [TopologicalSpa
   have himg := isClosedMap_snd_of_compactSpace (X := Kg) (Y := M2 n) _ hcl
   have heq : {x : M2 n | ∀ k, ι k * x ∈ U} = (Prod.snd '' {p : Kg × M2 n | ι p.1 * p.2 ∉ U})ᶜ := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_image, Prod.exists, exists_eq_right, not_exists, not_not]
+    simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_image, Prod.exists, exists_eq_right, not_exists, not_not]
   rw [heq]
   exact himg.isOpen_compl
 
@@ -160,12 +160,12 @@ private theorem det_one_add_of_support_blkA_blkB (j : ℕ) (P' : Matrix (Fin n) 
     obtain ⟨h1, h2⟩ := hP a a h
     simp [blkB] at h2
     exact h2 h1
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · simp [hd]
   · intro a b hab
     have hab' : (b : ℕ) < a := hab
     have hne : a ≠ b := fun h => by subst h; omega
-    simp only [Matrix.add_apply, Matrix.one_apply, hne, if_false, zero_add]
+    simp only [Matrix.add_apply, Matrix.one_apply, hne, ite_false, zero_add]
     by_contra h
     obtain ⟨h1, h2⟩ := hP a b h
     simp [blkA, blkB] at h1 h2
@@ -179,12 +179,12 @@ private theorem det_one_add_of_support_blkB_blkA (j : ℕ) (S' : Matrix (Fin n) 
     obtain ⟨h1, h2⟩ := hS a a h
     simp [blkB] at h1
     exact h1 h2
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [hd]
   · intro a b hab
     have hab' : (a : ℕ) < b := hab
     have hne : a ≠ b := fun h => by subst h; omega
-    simp only [Matrix.add_apply, Matrix.one_apply, hne, if_false, zero_add]
+    simp only [Matrix.add_apply, Matrix.one_apply, hne, ite_false, zero_add]
     by_contra h
     obtain ⟨h1, h2⟩ := hS a b h
     simp [blkA, blkB] at h1 h2

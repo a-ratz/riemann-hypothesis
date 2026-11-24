@@ -139,7 +139,7 @@ theorem exists_congr_mem {K : Type} [Field K] [NumberField K] (W : HeightOneSpec
   obtain ⟨γ, hγ⟩ := Valued.mem_nhds.1 hs
   have hc0 : MonoidWithZeroHom.ValueGroup₀.embedding γ.1 ≠ 0 := (_root_.map_ne_zero _).2 γ.ne_zero
   refine ⟨(WithZero.log (MonoidWithZeroHom.ValueGroup₀.embedding γ.1)).natAbs + 1, fun z hz => hsV (hγ ?_)⟩
-  rw [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+  rw [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
   have e : ((Units.map (algebraMap K (W.adicCompletion K)).toMonoidHom z : (W.adicCompletion K)ˣ) :
       W.adicCompletion K) - (1 : (W.adicCompletion K)ˣ) = algebraMap K (W.adicCompletion K) ((z : K) - 1) := by simp
   rw [e]
@@ -237,7 +237,7 @@ theorem res_art_eq_art_norm (E E' Ω : Type) [Field E] [NumberField E] [Field Ω
   obtain ⟨a, hap, hapos⟩ := GlobalTheory.FinPlaceApproxPos.approxpos_target E' TSK (fun u => if u = w' then (y : E') else 1) (P0 + m)
   have haW : w'.valuation E' (a - y) ≤ WithZero.exp (-((P0 : ℤ) + m)) := by
     have := hap w' hWT
-    rw [if_pos rfl] at this
+    rw [ite_eq_left rfl] at this
     exact valuation_le_of_exponent_le w' this (by push_cast; omega)
   have hz : w'.valuation E' (a / y - 1) ≤ WithZero.exp (-(P0 : ℤ)) :=
     valuation_div_sub_one_le w' y.ne_zero le_rfl haW
@@ -251,7 +251,7 @@ theorem res_art_eq_art_norm (E E' Ω : Type) [Field E] [NumberField E] [Field Ω
   have hauy : au = y * zu := by simp [zu]
   have hoth : ∀ u ∈ TSK, u ≠ w' → u.valuation E' (a - 1) ≤ WithZero.exp (-(P0 : ℤ)) := fun u hu hne => by
     have := hap u hu
-    rw [if_neg hne] at this
+    rw [ite_eq_right hne] at this
     exact valuation_le_of_exponent_le u this (by push_cast; omega)
 
   have F1 : ψ1 (locUnit E' w' au) = ψ1 (locUnit E' w' y) := by
@@ -355,8 +355,8 @@ theorem art_range_weil : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
 theorem exists_fixing_subgroup : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (ι : Ω →ₐ[E] Kbar w), IsLocEmb A w ι → ∀ L : IntermediateField (w.adicCompletion E) (Kbar w), Neutral.B1.IsFiniteAbelian (w.adicCompletion E) L → ∃ H : Subgroup (Weil h), H.FiniteIndex ∧ IsOpen {σ : Ine (F := E) A | ineIncl h σ ∈ H} ∧ (∀ (σ : Weil h) (g : GalLoc w), Lifts ι g σ → (σ ∈ H ↔ ∀ z ∈ L, g z = z)) ∧ ∀ a : Weil h →* (w.adicCompletion E)ˣ, IsLocalArtin h a → a.ker ≤ H := by
   intro E Ω _ _ _ _ _ A w h ι hι L hL
   obtain ⟨θ, hθ, -, hl⟩ := GlobalTheory.LocDec.decomposition_mulEquiv_galLoc E Ω A w h ι hι
-  haveI := hL.finiteDimensional
-  haveI := hL.isGalois
+  have := hL.finiteDimensional
+  have := hL.isGalois
   let ψ : Weil h →* GalLoc w := θ.toMonoidHom.comp (Subgroup.inclusion (Weil_le_Dec h))
   let r : Weil h →* (L ≃ₐ[w.adicCompletion E] L) := (AlgEquiv.restrictNormalHom L).comp ψ
   have hr : ∀ σ, σ ∈ r.ker ↔ ψ σ ∈ L.fixingSubgroup := fun σ => by
@@ -366,7 +366,7 @@ theorem exists_fixing_subgroup : ∀ (E Ω : Type) [Field E] [NumberField E] [Fi
         (fun σ : Ine (F := E) A => θ (Subgroup.inclusion (Ine_le_Dec A) σ)) ⁻¹' (L.fixingSubgroup : Set (GalLoc w)) :=
       Set.ext fun σ => hr _
     rw [e]
-    exact L.fixingSubgroup_isOpen.preimage (hθ.comp (continuous_subtype_val.subtype_mk _))
+    exact L.fixingSubgroup_isOpen.preimage (hθ.comp (continuous_subtypeVal.subtype_mk _))
   refine ⟨r.ker, inferInstance, hop, fun σ g hg => ?_, fun a ha σ hσ => ?_⟩
   · have e : θ.symm g = Subgroup.inclusion (Weil_le_Dec h) σ := by
       have := hl (θ.symm g)
@@ -376,7 +376,7 @@ theorem exists_fixing_subgroup : ∀ (E Ω : Type) [Field E] [NumberField E] [Fi
       show θ _ = g
       rw [← e, θ.apply_symm_apply]
     rw [hr, e2, IntermediateField.mem_fixingSubgroup_iff]
-  · letI : CommGroup (L ≃ₐ[w.adicCompletion E] L) :=
+  · let : CommGroup (L ≃ₐ[w.adicCompletion E] L) :=
       { (inferInstance : Group (L ≃ₐ[w.adicCompletion E] L)) with mul_comm := hL.comm }
     by_contra hne
     obtain ⟨χ, hχ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (L ≃ₐ[w.adicCompletion E] L) ℂ
@@ -414,13 +414,13 @@ theorem hasNormGroups_of_isLocalArtin : GlobalTheory.Published.GlobalArtinRecipr
   intro hG hC E Ω _ _ _ _ _ A w h ι a hι ha L hL σ g hg
   obtain ⟨H, hfin, hop, hH, hker⟩ := exists_fixing_subgroup E Ω A w h ι hι L hL
   obtain ⟨K, hK, hloc, hHK⟩ := GlobalTheory.T.exists_localExtension_of_finiteIndex_weilSubgroup E Ω A w h H hfin hop
-  haveI : NumberField K := NumberField.of_module_finite E K
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := E) K⟩
+  have : NumberField K := NumberField.of_module_finite E K
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := E) K⟩
   obtain ⟨W, h'⟩ := exists_place h K
   obtain ⟨ι', hι'⟩ := GlobalTheory.LocDict.exists_isLocEmb K Ω A W h'
   obtain ⟨f, b, hf, hb1, hb2, hfE, -, -, -, hNc, hNg⟩ := GlobalTheory.T.local_embeddings_tower_compatible E K Ω A w W h h' hloc ι ι' hι hι'
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have hLeq := GlobalTheory.T.local_embedding_weil_action_finite_extension E K Ω A w h ι hι L hL.finiteDimensional fun s g' hg' => (hH s g' hg').symm.trans (hHK s)
   have hN := GlobalTheory.T.completion_embedding_compatible_closures E K w W (fun x : K => ι (algebraMap K Ω x)) f b hf hb1
     (fun x => by rw [hb2, ι'.commutes, IsScalarTower.algebraMap_apply K (W.adicCompletion K)]) hfE

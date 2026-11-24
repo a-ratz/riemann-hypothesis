@@ -59,12 +59,12 @@ theorem isAlgebraic_of_norm_const {K Ω : Type} [Field K] [CharZero K] [Field Ω
     hw.polynomial_aeval_of_transcendental fun _ => Polynomial.transcendental _
       (by rw [Polynomial.natDegree_C_mul_X _ two_ne_zero]; exact one_ne_zero)
       (by rw [Polynomial.leadingCoeff_C_mul_X]; exact mem_nonZeroDivisors_of_ne_zero two_ne_zero)
-  letI : Algebra (MvPolynomial T K) Ω := (MvPolynomial.aeval fun i : T => (i : Ω)).toRingHom.toAlgebra
-  letI : Algebra (MvPolynomial T K) ℂ := (MvPolynomial.aeval fun i : T =>
+  let : Algebra (MvPolynomial T K) Ω := (MvPolynomial.aeval fun i : T => (i : Ω)).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial T K) ℂ := (MvPolynomial.aeval fun i : T =>
     Polynomial.aeval (P₀ i) (Polynomial.C (2 : K) * Polynomial.X)).toRingHom.toAlgebra
-  haveI : FaithfulSMul (MvPolynomial T K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hbas.1
-  haveI : FaithfulSMul (MvPolynomial T K) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hw2
-  haveI : Algebra.IsAlgebraic (MvPolynomial T K) Ω :=
+  have : FaithfulSMul (MvPolynomial T K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hbas.1
+  have : FaithfulSMul (MvPolynomial T K) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hw2
+  have : Algebra.IsAlgebraic (MvPolynomial T K) Ω :=
     haveI := hbas.isAlgebraic
     ⟨fun y => (IsAlgebraic.ringHom_of_comp_eq (f := hbas.1.aevalEquiv.symm.toRingHom) (g := RingHom.id Ω)
       (Algebra.IsAlgebraic.isAlgebraic y) hbas.1.aevalEquiv.symm.injective (RingHom.ext fun z => by
@@ -137,13 +137,13 @@ theorem exists_eq_smul_idem {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hσ : Good
       ⟨x.2, liesOn_frBor ht (liesOn_frMap hm (liesOn_genFr h Z))⟩
     have h1 := hw _ hi
     have h2 : rdU U (idem Z) k x = 1 := by
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dif_pos]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dite_eq_left]
       exact evR_idem (S := CAt σ) hz.2 (haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ); hL.test _ _)
     have h3 : evC h Z (idem Z) = 1 := evR_idem (liesOn_genFr h Z) (hL.test _ _)
     rw [h2, h3, map_one, mul_one] at h1
     rw [← hw g hg, h1]
     exact (congrArg norm (one_mul _)).trans (hb _ hz)
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨a, ha⟩ := hF Z _ (isAlgebraic_of_norm_const (K := c.F) (b := evC h Z g) P₀
     fun P => (key P).trans (key P₀).symm)
   refine ⟨a, sub_eq_zero.1 (GlobalTheory.Reg.sec_eq_zero_of_generic_values E H Dw l Xo c hL h (hA h) 0 0 _

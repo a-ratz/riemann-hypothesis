@@ -76,7 +76,7 @@ theorem exists_std {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ)
     ∃ ψ₀ : AddChar (AF D.host.F) ℂ, IsStdChar D ψ₀ (-1) ∧ ∃ a : D.host.F, a ≠ 0 ∧
       ∀ x, ψ x = ψ₀ (algebraMap D.host.F (AF D.host.F) a * x) := by
   obtain ⟨-, ψ₀, h₀⟩ := GlobalTheory.Ker.exists_infFam_and_stdChar D
-  haveI := D.sp.cm.totReal
+  have := D.sp.cm.totReal
   exact ⟨ψ₀, h₀, GlobalTheory.AdeleCharTwist.exists_mul_eq D.host.F ψ₀ ψ h₀.1 hψ⟩
 
 theorem isExpChar_of_isCharAF {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) : IsExpChar ψ := by
@@ -349,7 +349,7 @@ theorem heisO_rat {γ : WO S T} (h : γ ∈ ratL T S) {g : WO S T → ℂ} (hg :
 theorem isTheta_chi (hψ : IsCharAF D.host.F ψ) {γ : WO S T} (h : γ ∈ ratL T S) : IsThetaFunO 1 S T (chi ψ S T γ) := {
   quasi γ' w := by rw [chi_add, chi_rat hψ h (γ' := ratW T S γ') ⟨γ', rfl⟩, AddChar.one_apply]
   level := by
-    haveI := (GlobalTheory.AdelicMatrixLattice.lattice D T S).1
+    have := (GlobalTheory.AdelicMatrixLattice.lattice D T S).1
     let K : AddSubgroup (WO S T) :=
       { carrier := {w | ψ (pairA D.host.F 0 (symplOH S T w γ).2) = 1}
         zero_mem' := by
@@ -425,9 +425,9 @@ theorem smul_real' (c : AF D.host.F) {u : WO S T} (hu : u.map (finPart D) = 0) :
   ext i j; exact GlobalTheory.ThetaClosed.finPart_eInf_smul _
 
 theorem continuous_smul' (c : AF D.host.F) : Continuous fun u : WO S T => (c • u : WO S T) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI i1 : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
-  haveI : ContinuousConstSMul (AF D.host.F) (AE D) := @ContinuousSMul.continuousConstSMul _ _ _ _ _ i1
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have i1 : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
+  have : ContinuousConstSMul (AF D.host.F) (AE D) := @ContinuousSMul.continuousConstSMul _ _ _ _ _ i1
   refine continuous_pi fun i => continuous_pi fun j => ?_
   have h : Continuous fun u : WO S T => u i j := (continuous_apply j).comp (continuous_apply i)
   exact h.const_smul c

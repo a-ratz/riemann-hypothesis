@@ -221,7 +221,7 @@ theorem map_skew {H A Y : Type} [MeasurableSpace H] [MeasurableSpace A] [Measura
 theorem map_left_add (a : GL (Fin t) (AE D)) (ν : Measure (Mx D t n)) (hν : ν.IsAddHaarMeasure) (s : Mx D t n) :
     ν.map (fun U => mm a.1 U + s) = ((absA D (Matrix.GeneralLinearGroup.det a))⁻¹ ^ n : ℝ≥0) • ν := by
   obtain ⟨i1, i2, i3, i4, i5⟩ := top_mx (D := D) t n
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have hc : addEquivAddHaarChar (GlobalTheory.ModuLR.lrCE a (1 : GL (Fin n) (AE D))) = absA D (Matrix.GeneralLinearGroup.det a) ^ n := by
     have := GlobalTheory.ResidueEisenstein.ModMat.addEquivAddHaarChar_lrCE D.host.F D.host.E D.sp.cm.sig (isCMExt_host D) t n
       a (1 : GL (Fin n) (AE D))
@@ -241,11 +241,11 @@ theorem map_tau {d : HypDec B W t} (I : IkD d n) (μ : Measure (Mx D W.rank t)) 
   obtain ⟨-, j2, j3, j4, j5⟩ := top_mx (D := D) W.rank t
   obtain ⟨g1, g2, g3, -, g5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   have hB : BorelSpace (GA D W) := ⟨rfl⟩
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   obtain ⟨𝓕, hf⟩ := I.cov₁
   have hH := hf.1
   have hhaar := I.haar
-  haveI := GlobalTheory.RegSch.Ibp.isMulRightInvariant I.m
+  have := GlobalTheory.RegSch.Ibp.isMulRightInvariant I.m
   have hr : MeasurePreserving (fun h : GA D W => h * b) I.m I.m := measurePreserving_mul_right I.m b
   have hsm : Measurable (Function.uncurry fun (h : GA D W) (U : Mx D t n) => mm a.1 U + S h) := by
     have : Continuous (Function.uncurry fun (h : GA D W) (U : Mx D t n) => mm a.1 U + S h) :=

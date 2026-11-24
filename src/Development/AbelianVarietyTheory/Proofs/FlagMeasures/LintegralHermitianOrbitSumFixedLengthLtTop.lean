@@ -69,7 +69,7 @@ theorem exists_compact_reach {G X : Type} [Group G] [TopologicalSpace G] [IsTopo
   let O := MulAction.orbit G x0
   have : LocallyCompactSpace O := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have : ContinuousSMul G O := ⟨continuous_induced_rng.2
-    (continuous_smul.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))⟩
+    (continuous_smul.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))⟩
   let o0 : O := ⟨x0, MulAction.mem_orbit_self x0⟩
   have hopen : IsOpenMap (fun g : G => g • o0) := isOpenMap_smul_of_sigmaCompact o0
   have hK' : IsCompact (Subtype.val ⁻¹' K : Set O) :=
@@ -214,7 +214,7 @@ theorem lintegral_orbitSum_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [
     ext y
     refine ⟨?_, fun hy => GlobalTheory.AdelicWitt.witt_adelic F E σ hCM _ J x0 β hJ hβ hx0 y hy⟩
     rintro ⟨g, rfl⟩
-    rw [Set.mem_setOf_eq, ← GlobalTheory.AdelicWitt.qR_ratTup b (AF F) σ J x0 β hx0]
+    rw [Set.mem_ofPred_eq, ← GlobalTheory.AdelicWitt.qR_ratTup b (AF F) σ J x0 β hx0]
     exact congrArg (fun z => algebraMap F (AF F) (1 / 2) * Algebra.trace (AF F) (AF F ⊗[F] E) z)
       (GlobalTheory.StabOrbit.hR_act (AF F) σ J g _ _)
   have hcl : IsClosed (MulAction.orbit (HA (AF F) σ J) (ratTup (F := F) (AF F) x0)) := by
@@ -262,7 +262,7 @@ theorem lintegral_orbitSum_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [
   rw [← ENNReal.tsum_mul_left]
   refine ENNReal.tsum_le_tsum fun s => ?_
   by_cases hs : h⁻¹ • ratTup (F := F) (AF F) s.1 ∈ tsupport Φ
-  · rw [Set.indicator_of_mem hs, Pi.one_apply, mul_one, ← ofReal_norm_eq_enorm]
+  · rw [Set.indicator_of_mem hs, Pi.one_apply, mul_one, ← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hA _)
   · simp [image_eq_zero_of_notMem_tsupport hs]
 

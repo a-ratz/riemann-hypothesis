@@ -115,7 +115,7 @@ end
 theorem I_isPrime : ∀ {W B : Type} [CommRing W] [CommRing B] [Algebra ℚ B] (f : W →+* B) (ξ : W)
     (l M : ℕ) (m : ℕ), Lat.Hyp f ξ l m → (Lat.I f ξ l M).IsPrime := by
   intro W B _ _ _ f ξ l M m hyp
-  haveI := hyp.dom
+  have := hyp.dom
   have key : ∀ a : W, f a ∈ Lat.IB f ξ ↔ ξ ∣ a := by
     intro a
     refine ⟨fun ha => dvd_of_mem_IB f ξ l hyp ha, ?_⟩

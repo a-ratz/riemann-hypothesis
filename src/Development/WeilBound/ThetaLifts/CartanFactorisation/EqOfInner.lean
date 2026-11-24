@@ -126,7 +126,7 @@ theorem Impl.continuous {s : (l ⊕ l → ℝ) ≃ₗ[ℝ] (l ⊕ l → ℝ)} {S
       refine ⟨A' * GlobalTheory.RealWeil.dRho (s.symm w), fun f => ?_⟩
       have := Impl.dRho (s := s.toLinearMap) h hs (s.symm w) f
       simp only [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] at this
-      rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, ← this, h']
+      rw [mul_apply_eq_comp, mul_apply_eq_comp, ← this, h']
     · rintro A B ⟨A', h1⟩ ⟨B', h2⟩
       exact ⟨A' + B', fun f => by simp [h1, h2]⟩
     · rintro c A ⟨A', h1⟩

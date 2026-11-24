@@ -66,7 +66,7 @@ def polarizationOperator (K : Type) [Field K] {σ : Type} (v w : σ) : Module.En
 theorem polarization_monomial (v w : σ) (m : σ →₀ ℕ) (c : K) :
     polarizationOperator K v w (monomial m c) = monomial (m - Finsupp.single w 1 + Finsupp.single v 1) (c * (m w : K)) := by
   show X v * pderiv w (monomial m c) = _
-  rw [pderiv_monomial, X, monomial_mul, one_mul, add_comm (Finsupp.single v 1)]
+  rw [pderiv_monomial, X, monomial_mul_monomial, one_mul, add_comm (Finsupp.single v 1)]
 
 theorem polarization_commute (v w v' w' : σ) (h1 : w ≠ v') (h2 : w ≠ w') (h3 : w' ≠ v) :
     Commute (polarizationOperator K v w) (polarizationOperator K v' w') := by

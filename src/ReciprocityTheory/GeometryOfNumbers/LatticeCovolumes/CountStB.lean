@@ -241,7 +241,7 @@ theorem discrete_latE {E : Submodule (𝓞 K) V} (hE : E.FG) {r : ℕ} {v : Fin 
     exact AddSubgroup.mem_map_of_mem _ h1
   let g : latE hv.2.1 E → lat0 K r := fun y => ⟨n • (y : Fin r → mixedEmbedding.mixedSpace K), hmem y y.2⟩
   refine DiscreteTopology.of_continuous_injective (f := g) ?_ ?_
-  · exact Continuous.subtype_mk ((continuous_const_smul n).comp continuous_subtype_val) _
+  · exact Continuous.subtype_mk ((continuous_const_smul n).comp continuous_subtypeVal) _
   · intro a b hab
     have h1 : n • (a : Fin r → mixedEmbedding.mixedSpace K) = n • (b : Fin r → mixedEmbedding.mixedSpace K) :=
       congrArg Subtype.val hab

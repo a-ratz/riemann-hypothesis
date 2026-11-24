@@ -57,7 +57,7 @@ open Finset UpperTheory.V.Bern UpperTheory.V.B4 UpperTheory.V.B5
 theorem UpperTheory.V.B5.groupRingCharEval_stickelbergerTheta_eq_neg_genBernoulli :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] {N : ℕ} [NeZero N] {Γ : Type} [CommGroup Γ] (π : (ZMod N)ˣ →* Γ) (χ : Γ →* Ωˣ) (k : ℕ), 2 ≤ N → ev ℚ χ (thetaEl k π) = -genB k (dirOf π χ) / k := by
   intro Ω _ _ N _ Γ _ π χ k hN
-  haveI : Fact (1 < N) := ⟨hN⟩
+  have : Fact (1 < N) := ⟨hN⟩
   have hsum : ∀ f : ZMod N → Ω, (∀ x, ¬ IsUnit x → f x = 0) →
       ∑ x, f x = ∑ u : (ZMod N)ˣ, f u := by
     intro f hf

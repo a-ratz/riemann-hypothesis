@@ -148,9 +148,9 @@ private lemma real_case {Ω ι : Type} [MeasurableSpace Ω] [Fintype ι] (ν : M
     (h : ∀ t : ι → ℝ, ∫ ω, Complex.exp (((∑ i, t i * X ω i : ℝ) : ℂ) * Complex.I) * (f ω : ℂ) ∂ν = 0)
     (S : Set (ι → ℝ)) (hS : MeasurableSet S) :
     ∫ ω, S.indicator 1 (X ω) * (f ω : ℂ) ∂ν = 0 := by
-  haveI : IsFiniteMeasure (ν.withDensity fun ω => ENNReal.ofReal (f ω)) :=
+  have : IsFiniteMeasure (ν.withDensity fun ω => ENNReal.ofReal (f ω)) :=
     isFiniteMeasure_withDensity_ofReal hf.2
-  haveI : IsFiniteMeasure (ν.withDensity fun ω => ENNReal.ofReal (-f ω)) :=
+  have : IsFiniteMeasure (ν.withDensity fun ω => ENNReal.ofReal (-f ω)) :=
     isFiniteMeasure_withDensity_ofReal hf.neg.2
   have hEq : (ν.withDensity fun ω => ENNReal.ofReal (f ω)).map X
       = (ν.withDensity fun ω => ENNReal.ofReal (-f ω)).map X := by

@@ -84,7 +84,7 @@ theorem ball_isCompact_isOpen {E : Type} [Field E] [NumberField E] (w : Pl E) (m
 theorem exists_le_exp {E : Type} [Field E] [NumberField E] (w : Pl E) (x : w.adicCompletion E) :
     ∃ m : ℤ, Valued.v x ≤ WithZero.exp m := by
   by_cases hx : Valued.v x = 0
-  · exact ⟨0, by rw [hx]; exact zero_le'⟩
+  · exact ⟨0, by rw [hx]; exact zero_le⟩
   · exact ⟨WithZero.log (Valued.v x), (WithZero.exp_log hx).ge⟩
 
 theorem isCompact_closure_zpowers_iff {E : Type} [Field E] [NumberField E] [IsCMField E]
@@ -101,7 +101,7 @@ theorem isCompact_closure_zpowers_iff {E : Type} [Field E] [NumberField E] [IsCM
       intro p
       have hc : Continuous fun u : H =>
           (((u : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) p.1 p.2) :=
-        (Units.continuous_val.comp continuous_subtype_val).matrix_elem p.1 p.2
+        (Units.continuous_val.comp continuous_subtypeVal).matrix_elem p.1 p.2
       obtain ⟨m, hm⟩ := (hK.image hc).elim_directed_cover B
         (fun m => (ball_isCompact_isOpen w m).2)
         (by

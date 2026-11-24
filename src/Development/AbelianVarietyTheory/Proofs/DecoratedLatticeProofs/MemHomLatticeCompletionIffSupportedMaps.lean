@@ -82,7 +82,7 @@ theorem indicatorAdele_mem_integralAdeles' (F : Type) [Field F] [NumberField F] 
 theorem indicatorAdele_supported (F : Type) [Field F] [NumberField F] (P : HeightOneSpectrum (𝓞 F) → Prop) :
     ∀ v, ¬ P v → evalV F v (indP F P) = 0 := fun v hv => by
   classical
-  rw [evalV_indP, if_neg hv]
+  rw [evalV_indP, ite_eq_right hv]
 
 theorem compFin_eq_compAt (a : AE D) (v : Pl D) :
     GlobalTheory.AdelicU.compFin D.host.F D.host.E v a = compAt D v a := by
@@ -114,7 +114,7 @@ theorem mul_indP {P : Pl D → Prop} {a : AE D} (ha : a ∈ idAt D P) :
     have he : GlobalTheory.AdelicU.compFin D.host.F D.host.E v (pairA D.host.F 0 (indP D.host.F P) ⊗ₜ[D.host.F] (1 : D.host.E)) =
         evalV D.host.F v (indP D.host.F P) ⊗ₜ[D.host.F] (1 : D.host.E) := rfl
     by_cases hv : P v
-    · rw [he, evalV_indP, if_pos hv]
+    · rw [he, evalV_indP, ite_eq_left hv]
       exact mul_one _
     · rw [compFin_eq_compAt, hw v hv, zero_mul]
 
@@ -217,18 +217,18 @@ theorem exists_dualBasis (S : HSp D) {Λ : Submodule (𝓞 D.host.E) (Fin S.rank
       (algebraMap (𝓞 D.host.E) D.host.E b)⁻¹ hy''
     rw [smul_smul, inv_mul_cancel₀ hb0, one_smul] at this
     exact this
-  haveI hfin : Module.Finite O Λ := Module.Finite.iff_fg.2 hfg
+  have hfin : Module.Finite O Λ := Module.Finite.iff_fg.2 hfg
   have hcancel : ∀ (d : O) (x : V), d ≠ 0 → d • x = 0 → x = 0 := by
     intro d x hd h
     rw [← IsScalarTower.algebraMap_smul E d x] at h
     exact (smul_eq_zero.1 h).resolve_left (by simpa using hd)
-  haveI hflat : Module.Flat O Λ := by
+  have hflat : Module.Flat O Λ := by
     rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
     rintro x ⟨d, hd⟩
     have : (d : O) • (x : V) = 0 := congrArg Subtype.val hd
     exact Subtype.ext (hcancel d x (nonZeroDivisors.coe_ne_zero d) this)
-  haveI hfp : Module.FinitePresentation O Λ := Module.finitePresentation_of_finite _ _
-  haveI hproj : Module.Projective O Λ := Module.Flat.projective_of_finitePresentation
+  have hfp : Module.FinitePresentation O Λ := Module.finitePresentation_of_finite _ _
+  have hproj : Module.Projective O Λ := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, π, hπ⟩ := Module.Finite.exists_fin' O Λ
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property π LinearMap.id hπ
 
@@ -256,7 +256,7 @@ theorem exists_dualBasis (S : HSp D) {Λ : Submodule (𝓞 D.host.E) (Fin S.rank
     (isLocalizedModule_id (nonZeroDivisors O) V E).map_units
   have hunitE : ∀ x : nonZeroDivisors O, IsUnit (algebraMap O (Module.End O E) x) :=
     (isLocalizedModule_id (nonZeroDivisors O) E E).map_units
-  haveI hloc : IsLocalizedModule (nonZeroDivisors O) Λ.subtype := by
+  have hloc : IsLocalizedModule (nonZeroDivisors O) Λ.subtype := by
     refine ⟨hunitV, fun v => ?_, fun {x y} h => ⟨1, by simpa using Subtype.ext h⟩⟩
     obtain ⟨d, hd, hv⟩ := hden v
     exact ⟨(⟨d • v, hv⟩, ⟨d, mem_nonZeroDivisors_of_ne_zero hd⟩), rfl⟩
@@ -306,7 +306,7 @@ theorem exists_dualBasis (S : HSp D) {Λ : Submodule (𝓞 D.host.E) (Fin S.rank
   · have := congrFun (hid (Pi.single b 1)) a
     rw [Finset.sum_apply] at this
     simp only [Pi.smul_apply, smul_eq_mul, hw, Pi.single_apply, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true] at this
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true] at this
     simp only [hs'row]
     rw [this]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
@@ -408,8 +408,8 @@ theorem mem_latO_iff : ∀ (D : D7) (S T : HSp D) (LS : Lat S) (LT : Lat T), IsS
     rw [Finset.sum_comm]
     simp only [← Finset.mul_sum, ← TensorProduct.tmul_sum, hdual]
     rw [Finset.sum_eq_single j]
-    · rw [if_pos rfl]; exact (mul_indP (hP k j)).symm
-    · intro l _ hl; rw [if_neg hl, TensorProduct.tmul_zero, mul_zero]
+    · rw [ite_eq_left rfl]; exact (mul_indP (hP k j)).symm
+    · intro l _ hl; rw [ite_eq_right hl, TensorProduct.tmul_zero, mul_zero]
     · intro h; exact absurd (Finset.mem_univ j) h
   rw [hu]
   exact sum_mem fun i _ => rowMul_mem (hs' i) (hmap _ (hyv i))

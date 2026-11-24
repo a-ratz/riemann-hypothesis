@@ -63,7 +63,7 @@ theorem coefA_decomp {T : X →ₗ[ℂ] X} (hT : ∀ x y, inner ℂ (T x) y = in
     {F : Submodule ℂ X} (hFd : FiniteDimensional ℂ F) (hF : ∀ x ∈ F, T x ∈ F) {y : X} (hy : y ∈ F) :
     ∃ m : ℕ, ∃ b : Fin m → X, ∃ θ : Fin m → ℝ, y = ∑ i, b i ∧
       ∀ i, b i ∈ F ∧ T (b i) = (θ i : ℂ) • b i := by
-  haveI := hFd
+  have := hFd
   have hS : (T.restrict hF).IsSymmetric :=
     LinearMap.IsSymmetric.restrict_invariant (show T.IsSymmetric from hT) hF
   obtain ⟨n, hn⟩ : ∃ n, Module.finrank ℂ F = n := ⟨_, rfl⟩
@@ -112,7 +112,7 @@ theorem coefA_decompM {T : X →ₗ[ℂ] X} (hT : ∀ x y, inner ℂ (T x) y = i
 private theorem exists_mem_inner_eq_functional_of_finiteDim {Z : Type*} [NormedAddCommGroup Z] [InnerProductSpace ℂ Z]
     (L : Submodule ℂ Z) [FiniteDimensional ℂ L] (ψ : Z →ₗ[ℂ] ℂ) :
     ∃ f ∈ L, ∀ w ∈ L, inner ℂ f w = ψ w := by
-  haveI : CompleteSpace L := FiniteDimensional.complete ℂ L
+  have : CompleteSpace L := FiniteDimensional.completeSpace ℂ L
   refine ⟨(((InnerProductSpace.toDual ℂ L).symm
       (LinearMap.toContinuousLinearMap (ψ.comp L.subtype)) : L) : Z), Submodule.coe_mem _,
       fun w hw => ?_⟩
@@ -142,8 +142,8 @@ theorem coefA_toSum {T : X →ₗ[ℂ] X} (hT : ∀ x y, inner ℂ (T x) y = inn
   classical
   have hLZ : Submodule.span ℂ {y | y ∈ M' ∧ ∃ θ : ℝ, θ ≤ C ∧ T y = (θ : ℂ) • y} ≤ Z₀ :=
     Submodule.span_le.mpr (fun y ⟨hyM, θ, hθ, hTy⟩ => hlow y hyM θ hθ hTy)
-  haveI := hZ₀
-  haveI : FiniteDimensional ℂ
+  have := hZ₀
+  have : FiniteDimensional ℂ
       (Submodule.span ℂ {y | y ∈ M' ∧ ∃ θ : ℝ, θ ≤ C ∧ T y = (θ : ℂ) • y}) :=
     Submodule.finiteDimensional_of_le hLZ
   obtain ⟨z, hzL, hz⟩ := exists_mem_inner_eq_functional_of_finiteDim
@@ -164,7 +164,7 @@ theorem coefA_toSum {T : X →ₗ[ℂ] X} (hT : ∀ x y, inner ℂ (T x) y = inn
 theorem coefA_high {T : Y →ₗ[ℂ] Y} (hT : ∀ x y, inner ℂ (T x) y = inner ℂ x (T y))
     {L : Submodule ℂ Y} (hLd : FiniteDimensional ℂ L) (hL : ∀ x ∈ L, T x ∈ L) :
     ∃ C : ℝ, ∀ F ∈ L, ∀ u : Y, ∀ θ : ℝ, C < θ → T u = (θ : ℂ) • u → inner ℂ F u = 0 := by
-  haveI := hLd
+  have := hLd
   have hS : (T.restrict hL).IsSymmetric :=
     LinearMap.IsSymmetric.restrict_invariant (show T.IsSymmetric from hT) hL
   obtain ⟨n, hn⟩ : ∃ n, Module.finrank ℂ L = n := ⟨_, rfl⟩
@@ -226,8 +226,8 @@ theorem coefA_ofSum {T : X →ₗ[ℂ] X} (hT : ∀ x y, inner ℂ (T x) y = inn
       simp [Submodule.mem_inf, LinearMap.mem_ker, sub_eq_zero]
     have hEZ : M' ⊓ LinearMap.ker (T - (θ k : ℂ) • LinearMap.id) ≤ Z := fun y hy =>
       hZ y ((hmemE y).mp hy).1 ((hmemE y).mp hy).2
-    haveI := hZd
-    haveI : FiniteDimensional ℂ ↥(M' ⊓ LinearMap.ker (T - (θ k : ℂ) • LinearMap.id)) :=
+    have := hZd
+    have : FiniteDimensional ℂ ↥(M' ⊓ LinearMap.ker (T - (θ k : ℂ) • LinearMap.id)) :=
       Submodule.finiteDimensional_of_le hEZ
     obtain ⟨x, hxE, hxr⟩ := exists_inner_comp_eq_functional_of_injOn ι (fun y hy => hinj y ((hmemE y).mp hy).1)
       (innerₛₗ ℂ (b k))

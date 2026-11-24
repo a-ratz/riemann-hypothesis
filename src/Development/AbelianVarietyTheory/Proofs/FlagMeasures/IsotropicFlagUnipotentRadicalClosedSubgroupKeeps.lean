@@ -100,8 +100,8 @@ private lemma step_inv (g : Formalism.REAL.UJ ε) (V : Submodule ℂ (Fin n → 
 private lemma closed_step (V : Submodule ℂ (Fin n → ℂ)) (y : Fin n → ℂ) :
     IsClosed {g : Formalism.REAL.UJ ε | uMat g *ᵥ y - y ∈ V} := by
   have hc : Continuous fun g : Formalism.REAL.UJ ε => uMat g :=
-    Units.continuous_val.comp continuous_subtype_val
-  exact V.closed_of_finiteDimensional.preimage
+    Units.continuous_val.comp continuous_subtypeVal
+  exact V.isClosed_of_finiteDimensional.preimage
     ((hc.matrix_mulVec continuous_const).sub continuous_const)
 
 theorem flagN_subgroup_closed_keeps (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → ℕ)

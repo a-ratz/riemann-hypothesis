@@ -306,19 +306,19 @@ theorem good_rows {S : Finset (Pl D)} {e : AE D} {η : Fin a → Mx D 1 b → �
     Good S e (fun y : Mx D a b => ∏ i, η i (y.submatrix (fun _ => i) id)) := by
   intro y
   by_cases hy : IntOff S y
-  · rw [if_pos hy]
+  · rw [ite_eq_left hy]
     refine Finset.prod_congr rfl fun i _ => ?_
     have hi : IntOff S (y.submatrix (fun _ : Fin 1 => i) id) := fun v hv _ j => hy v hv i j
     have := h i (y.submatrix (fun _ : Fin 1 => i) id)
-    rw [if_pos hi] at this
+    rw [ite_eq_left hi] at this
     exact this
-  · rw [if_neg hy]
+  · rw [ite_eq_right hy]
     simp only [IntOff] at hy
     push Not at hy
     obtain ⟨v, hv, i, j, hij⟩ := hy
     refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
     have := h i (y.submatrix (fun _ : Fin 1 => i) id)
-    rw [if_neg (fun hi => hij (hi v hv 0 j))] at this
+    rw [ite_eq_right (fun hi => hij (hi v hv 0 j))] at this
     exact this
 
 theorem prod_nonneg_real {ι : Type} (s : Finset ι) (w : ι → ℂ) (h : ∀ i, 0 ≤ (w i).re ∧ (w i).im = 0) :
@@ -379,14 +379,14 @@ theorem xiP_cond {S : Finset (Pl D)} {e : AE D} (he : e * e = e) (hc : cA D e = 
       (¬ (IntOff S z.1 ∧ IntOff S z.2) → xiP V b₀ hn Φ η z * p z = 0) := by
   refine ⟨fun ⟨h1, h2⟩ => ?_, fun h => ?_⟩
   · have a1 := hΦ (jn hn z.1 z.2)
-    rw [if_pos ((intOff_jn hn _ _).2 ⟨h1, h2⟩), jn_smul] at a1
+    rw [ite_eq_left ((intOff_jn hn _ _).2 ⟨h1, h2⟩), jn_smul] at a1
     have a2 := hη (yv V b₀ z)
-    rw [if_pos (hy z h1 h2), ← yv_smul he hc] at a2
+    rw [ite_eq_left (hy z h1 h2), ← yv_smul he hc] at a2
     rw [hp]
     simp only [xiP]
     rw [a1, a2]
   · have a1 := hΦ (jn hn z.1 z.2)
-    rw [if_neg (fun hh => h ((intOff_jn hn _ _).1 hh))] at a1
+    rw [ite_eq_right (fun hh => h ((intOff_jn hn _ _).1 hh))] at a1
     simp [xiP, a1]
 
 
@@ -404,7 +404,7 @@ theorem cell_id {S : Finset (Pl D)} {e : AE D} (he : e * e = e) (hc : cA D e = e
       ∀ x : hermS D t e, ∫ z, xiP V b₀ hn Φ η z * pch ψ x.1.1 (qv V b₀ z) ∂P =
         ∫ z : XS D V.rank r t e, xiP V b₀ hn Φ η z.1 * pch ψ x.1.1 (qv V b₀ z.1) ∂σ := by
   have hx := continuous_xiP (b₀ := b₀) (hn := hn) hψ hΦc hηc
-  haveI : OpensMeasurableSpace (Mx D V.rank r × Mx D V.rank t) := BorelSpace.opensMeasurable
+  have : OpensMeasurableSpace (Mx D V.rank r × Mx D V.rank t) := BorelSpace.opensMeasurable
   constructor
   · have hc1 := xiP_cond (hn := hn) he hc hΦ hη hy (fun _ => 1) (fun _ => rfl)
     simp only [mul_one] at hc1
@@ -526,7 +526,7 @@ theorem eisMeas : IdemEx → BumpEx → Major → FixW → FixTh → ThProd → 
       · rw [← hfun]; exact hA1
       · rw [hA2, hfun]
     have hpchc : ∀ x : hermS D t e, Continuous fun z : XS D B.rank W.rank t e => pch ψ x.1.1 (qv B b₀ z.1) :=
-      fun x => (GlobalTheory.CompanionTheory.RCellCont.continuity_characters_projection hψ B b₀ x.1).2.2.2.1.comp continuous_subtype_val
+      fun x => (GlobalTheory.CompanionTheory.RCellCont.continuity_characters_projection hψ B b₀ x.1).2.2.2.1.comp continuous_subtypeVal
     have hyvc : Continuous fun z : Mx D B.rank W.rank × Mx D B.rank t => yv B b₀ z :=
       (GlobalTheory.CompanionTheory.RCellCont.continuity_characters_projection hψ B b₀ (0 : hermA D t)).2.1
     have hI1 : ∀ f ∈ algA (a := B.rank) θ hn S e, ∀ x : hermS D t e,
@@ -581,13 +581,13 @@ theorem eisMeas : IdemEx → BumpEx → Major → FixW → FixTh → ThProd → 
           · simp [GlobalTheory.CompanionTheory.EisE.xiP, h0]
           · have hio : IntOff S (jn hn z.1.1 z.1.2) := by
               by_contra hn'
-              exact h0 (by rw [hΦg (jn hn z.1.1 z.1.2), if_neg hn'])
+              exact h0 (by rw [hΦg (jn hn z.1.1 z.1.2), ite_eq_right hn'])
             obtain ⟨hi1, hi2⟩ := (GlobalTheory.CompanionTheory.EisE.intOff_jn hn z.1.1 z.1.2).1 hio
             have hiy := hyS z.1 hi1 hi2
             have hmem : e • yv B b₀ z.1 ∈ (fun X => e • yv B b₀ (GlobalTheory.CompanionTheory.EisE.cutc hn X)) '' tsupport Φ :=
               ⟨jn hn z.1.1 z.1.2, subset_tsupport _ h0, by simp only [GlobalTheory.CompanionTheory.EisE.cutc_jn]⟩
             have h1 : Ω 1 (yv B b₀ z.1) = 1 := by
-              rw [hΩg (yv B b₀ z.1), if_pos hiy]
+              rw [hΩg (yv B b₀ z.1), ite_eq_left hiy]
               exact hΩC _ hmem
             simp [GlobalTheory.CompanionTheory.EisE.xiP, h1]
         refine (key ⟨Φ, hΦm⟩ hΦg Ω hΩ hΩg 1 (fun y => (hΩnn y).2.2)).2.1.congr
@@ -624,9 +624,9 @@ theorem eisMeas : IdemEx → BumpEx → Major → FixW → FixTh → ThProd → 
         exact mul_nonneg hBd0 (hΩ₀nn y).1
       · have hio : IntOff S y := by
           by_contra hn'
-          exact h0 (by rw [hΩg y, if_neg hn'])
+          exact h0 (by rw [hΩg y, ite_eq_right hn'])
         have h1 : Ω₀ 1 y = 1 := by
-          rw [hΩ₀g y, if_pos hio]
+          rw [hΩ₀g y, ite_eq_left hio]
           exact hΩ₀C _ ⟨y, subset_tsupport _ h0, rfl⟩
         rw [h1, Complex.one_re, mul_one]
         exact hBd y
@@ -653,7 +653,7 @@ theorem eisMeas : IdemEx → BumpEx → Major → FixW → FixTh → ThProd → 
       have hgen : (fun z : XS D B.rank W.rank t e => Φ₁ (jn hn z.1.1 z.1.2)) ∈ algA (a := B.rank) θ hn S e :=
         Submodule.subset_span ⟨Φ₁, hΦ₁m, hΦ₁g, hΦ₁cs, rfl⟩
       refine ⟨fun z => GlobalTheory.CompanionTheory.EisE.xiP B b₀ hn Φ₁ (Ω 1) z.1,
-        (GlobalTheory.CompanionTheory.EisE.continuous_xiP hψ hΦ₁c hΩc).comp continuous_subtype_val, ?_, ?_⟩
+        (GlobalTheory.CompanionTheory.EisE.continuous_xiP hψ hΦ₁c hΩc).comp continuous_subtypeVal, ?_, ?_⟩
       · have h2 : HasCompactSupport ((fun z : XS D B.rank W.rank t e => Φ₁ (jn hn z.1.1 z.1.2)) *
             fun z => (starRingEnd ℂ) (Ω 1 (yv B b₀ z.1))) := (hRich.cc _ hgen).2.mul_right
         exact h2
@@ -684,8 +684,8 @@ theorem eisMeas : IdemEx → BumpEx → Major → FixW → FixTh → ThProd → 
               mul_le_mul_of_nonneg_right hk (mul_nonneg a0 b0)
     have hmain := hν₀eq (fun z => GlobalTheory.CompanionTheory.EisE.xiP B b₀ hn (Φ : Mx D B.rank n → ℂ) (Ω 1) z.1)
       (fun z => GlobalTheory.CompanionTheory.EisE.xiP B b₀ hn Φ₀ (Ω₀ 1) z.1)
-      ((GlobalTheory.CompanionTheory.EisE.continuous_xiP hψ hΦc hΩc).comp continuous_subtype_val)
-      ((GlobalTheory.CompanionTheory.EisE.continuous_xiP hψ hΦ₀c hΩ₀c).comp continuous_subtype_val)
+      ((GlobalTheory.CompanionTheory.EisE.continuous_xiP hψ hΦc hΩc).comp continuous_subtypeVal)
+      ((GlobalTheory.CompanionTheory.EisE.continuous_xiP hψ hΦ₀c hΩ₀c).comp continuous_subtypeVal)
       hf₀nn k1 j1 k2 j2 happrox
     rw [k3, hmain, integral_smul_nnreal_measure, hemb.integral_map]
     simp only [NNReal.smul_def, Real.coe_toNNReal c hc.le, Complex.real_smul]

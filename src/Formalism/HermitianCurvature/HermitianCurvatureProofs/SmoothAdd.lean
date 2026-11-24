@@ -67,13 +67,13 @@ section Smooth
 variable {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 theorem smooth_zero (σ : Mx k r → (H →L[ℂ] H)) : (0 : H) ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ := by
-  simp only [PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec, PI.UpqRep.SmoothOnH]
+  simp only [PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec, PI.UpqRep.SmoothOnH]
   intro g₀ _
   exact ⟨Set.univ, fun _ => 0, isOpen_univ, Set.mem_univ _, contDiffOn_const, fun g _ _ => map_zero (σ g)⟩
 
 theorem smooth_add {σ : Mx k r → (H →L[ℂ] H)} {v w : H} (hv : v ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ)
     (hw : w ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ) : v + w ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ := by
-  simp only [PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec, PI.UpqRep.SmoothOnH] at hv hw ⊢
+  simp only [PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec, PI.UpqRep.SmoothOnH] at hv hw ⊢
   intro g₀ hg₀
   obtain ⟨U, F, hU, hgU, hF, hFe⟩ := hv g₀ hg₀
   obtain ⟨V, G, hV, hgV, hG, hGe⟩ := hw g₀ hg₀
@@ -83,7 +83,7 @@ theorem smooth_add {σ : Mx k r → (H →L[ℂ] H)} {v w : H} (hv : v ∈ PI.Up
 
 theorem smooth_smul {σ : Mx k r → (H →L[ℂ] H)} (a : ℂ) {v : H} (hv : v ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ) :
     a • v ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ := by
-  simp only [PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec, PI.UpqRep.SmoothOnH] at hv ⊢
+  simp only [PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec, PI.UpqRep.SmoothOnH] at hv ⊢
   intro g₀ hg₀
   obtain ⟨U, F, hU, hgU, hF, hFe⟩ := hv g₀ hg₀
   refine ⟨U, fun g => a • F g, hU, hgU, hF.const_smul a, fun g hg hgH => ?_⟩

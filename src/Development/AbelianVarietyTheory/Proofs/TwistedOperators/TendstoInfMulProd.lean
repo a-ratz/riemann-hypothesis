@@ -91,7 +91,7 @@ theorem finite_bad {L : Type} [Field L] [NumberField L] (k : Lˣ) (N : ℕ) (hN 
       show 1 < P.valuation L ((k : L)⁻¹)
       rw [map_inv₀]
       have h0 : P.valuation L (k : L) ≠ 0 := by simp
-      exact one_lt_inv_iff₀.mpr ⟨zero_lt_iff.mpr h0, h'⟩
+      exact one_lt_inv_iff₀.mpr ⟨pos_iff_ne_zero.mpr h0, h'⟩
     · left
       exact h'
   · right

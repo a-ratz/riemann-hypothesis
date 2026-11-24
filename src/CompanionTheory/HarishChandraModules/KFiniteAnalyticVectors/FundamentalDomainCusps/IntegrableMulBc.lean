@@ -167,11 +167,11 @@ theorem selTw : SelTw := by
       map_add' := fun F F' => Subtype.ext (BoundedContinuousFunction.ext fun x => by
         show q s (F + F') x = q s F x + q s F' x
         rw [← integral_add (ki s F x) (ki s F' x)]
-        simp only [q, k, BoundedContinuousFunction.add_apply, add_mul, mul_add])
+        simp only [q, k, add_apply, add_mul, mul_add])
       map_smul' := fun c F => Subtype.ext (BoundedContinuousFunction.ext fun x => by
         show q s (c • (F : G →ᵇ ℂ)) x = c * q s F x
         rw [← integral_const_mul]
-        simp only [q, k, BoundedContinuousFunction.smul_apply, smul_eq_mul]
+        simp only [q, k, smul_apply, smul_eq_mul]
         exact integral_congr_ae (Eventually.of_forall fun y => by ring)) }
   have hφ0 : 0 ≤ ∫ y, ‖φ y‖ ∂μ := integral_nonneg fun _ => norm_nonneg _
   let Q : ℝ → (X →L[ℂ] X) := fun s => (Ql s).mkContinuous (∫ y, ‖φ y‖ ∂μ) fun F =>

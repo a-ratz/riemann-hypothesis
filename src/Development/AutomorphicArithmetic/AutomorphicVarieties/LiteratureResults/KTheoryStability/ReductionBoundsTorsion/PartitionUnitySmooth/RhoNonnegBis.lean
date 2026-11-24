@@ -105,8 +105,8 @@ private theorem exists_lipschitz_const_rho : ∃ K : ℝ, 0 ≤ K ∧ ∀ x y : 
 private theorem norm_inner_sq_le_of_posSemidef {n : Type} [Fintype n] (M : Matrix n n ℂ) (hM : M.PosSemidef)
     (u v : n → ℂ) :
     ‖star u ⬝ᵥ M *ᵥ v‖ ^ 2 ≤ (star u ⬝ᵥ M *ᵥ u).re * (star v ⬝ᵥ M *ᵥ v).re := by
-  letI := M.toSeminormedAddCommGroup hM
-  letI := M.toInnerProductSpace hM
+  let := M.toSeminormedAddCommGroup hM
+  let := M.toInnerProductSpace hM
   have h1 := inner_mul_inner_self_le (𝕜 := ℂ) u v
   have e : ∀ x y : n → ℂ, (inner ℂ x y : ℂ) = star x ⬝ᵥ M *ᵥ y := fun x y => by
     show (M *ᵥ y) ⬝ᵥ star x = _

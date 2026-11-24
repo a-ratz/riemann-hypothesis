@@ -64,8 +64,8 @@ variable {q : ℕ} [Fact q.Prime]
 theorem fwdDiff_tendsto_zero' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℚ_[q] E]
     [IsUltrametricDist E] (f : C(ℤ_[q], E)) :
     Tendsto (fun n => (fwdDiff (1 : ℤ_[q]))^[n] f 0) atTop (𝓝 0) := by
-  letI : Module ℤ_[q] E := Module.compHom E (algebraMap ℤ_[q] ℚ_[q])
-  haveI : IsBoundedSMul ℤ_[q] E := IsBoundedSMul.of_norm_smul_le fun r x =>
+  let : Module ℤ_[q] E := Module.compHom E (algebraMap ℤ_[q] ℚ_[q])
+  have : IsBoundedSMul ℤ_[q] E := IsBoundedSMul.of_norm_smul_le fun r x =>
     norm_smul_le (r : ℚ_[q]) x
   exact PadicInt.fwdDiff_tendsto_zero f
 
@@ -139,7 +139,7 @@ theorem exists_multiDiff (g : ℕ) :
       rw [Filter.eventually_cofinite]
       refine (hA.biUnion fun m _ => (hB m).image
         (fun n' => (Fin.cons m n' : Fin (g + 1) → ℕ))).subset fun n hn => ?_
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_image, not_lt] at hn ⊢
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_image, not_lt] at hn ⊢
       exact ⟨n 0, hn.trans (h1 _ _), Fin.tail n, hn, Fin.cons_self_tail n⟩
 
 noncomputable def binomC (k : ℕ) : C(ℤ_[q], ℂ_[q]) :=
@@ -216,7 +216,7 @@ theorem exists_measure_of_bounded_moments :
       · simp [fwdDiff_binomC]
       · intro m hm
         obtain ⟨i, hi⟩ := Function.ne_iff.mp hm
-        rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [fwdDiff_binomC, if_neg hi]), mul_zero]
+        rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [fwdDiff_binomC, ite_eq_right hi]), mul_zero]
     calc ‖c n‖ = ‖L.mkContinuous B₀ (hL B₀ hB₀) P‖ := by rw [← hv]; rfl
       _ ≤ _ := ContinuousLinearMap.le_opNorm _ _
       _ ≤ B * 1 := mul_le_mul hμ hP (norm_nonneg _) hB

@@ -153,7 +153,7 @@ private theorem cc_coeff_X [DecidableEq σ] (i j : σ) :
   rw [coeff_X]
   by_cases h : i = j
   · simp [h]
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     exact fun h' => h (Finsupp.single_left_injective one_ne_zero h')
 
 private theorem cc_expand [Fintype σ] (g : MvPowerSeries σ E) :
@@ -317,7 +317,7 @@ private theorem exists_columns_det_ne_zero_of_rows_linearIndependent {E τ κ : 
     rw [Matrix.finrank_span_range_col, Matrix.rank_eq_finrank_span_row, finrank_span_eq_card hl,
       Module.finrank_fintype_fun_eq_card]
   obtain ⟨ι, a, ha, hsa, hli⟩ := exists_linearIndependent' E l.col
-  haveI : Fintype ι := Fintype.ofInjective a ha
+  have : Fintype ι := Fintype.ofInjective a ha
   have hcard : Fintype.card ι = Fintype.card κ := by
     have h1 := finrank_span_eq_card hli
     rw [hsa, hspan, finrank_top, Module.finrank_fintype_fun_eq_card] at h1
@@ -325,7 +325,7 @@ private theorem exists_columns_det_ne_zero_of_rows_linearIndependent {E τ κ : 
   let eqv : κ ≃ ι := Fintype.equivOfCardEq hcard.symm
   refine ⟨a ∘ eqv, ?_⟩
   have hli' : LinearIndependent E (l.submatrix id (a ∘ eqv)).col := hli.comp eqv eqv.injective
-  rw [Matrix.linearIndependent_cols_iff_isUnit, Matrix.isUnit_iff_isUnit_det] at hli'
+  rw [Matrix.linearIndependent_col_iff_isUnit, Matrix.isUnit_iff_isUnit_det] at hli'
   exact hli'.ne_zero
 
 private theorem exists_perm_diag_ne_zero_of_det_ne_zero {E κ : Type} [Field E] [Fintype κ] [DecidableEq κ]
@@ -450,7 +450,7 @@ private theorem cc_series {E τ κ Y : Type} [Field E] [Fintype τ] [Fintype κ]
       simp only [hz', Finset.smul_sum, smul_smul]
       rw [Finset.sum_comm]
       simp only [← Finset.sum_smul, h, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
 
     rw [hzz, map_sum]
     simp [map_smul, hψz]
@@ -704,7 +704,7 @@ private lemma homog_ker {O K σ τ X : Type} [CommRing O] [CommRing K] [Algebra 
 
     rw [map_sub, map_sum]
     simp only [coeff_wcomp]
-    rw [Finset.sum_ite_eq, if_pos hm', sub_self]) n (Nat.lt_succ_self _)
+    rw [Finset.sum_ite_eq, ite_eq_left hm', sub_self]) n (Nat.lt_succ_self _)
 
   rw [map_sub, hf, zero_sub, map_neg, neg_eq_zero, map_sum, map_sum,
   Finset.sum_eq_single_of_mem j (Finset.mem_insert_self _ _)] at h1
@@ -723,7 +723,7 @@ theorem UpperTheory.V.Alg.chart_ker :
     have := H.const f
     rw [hf, map_zero] at this
     exact IsFractionRing.injective O (FractionRing O) (by rw [← this, map_zero])
-  haveI : IsDomain (MvPowerSeries τ (FractionRing O)) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (MvPowerSeries τ (FractionRing O)) := NoZeroDivisors.to_isDomain _
   refine ⟨RingHom.ker_isPrime _, ?_, hle, ?_, ?_⟩
   · refine homog_ker W.wt wt _ (fun i => ?_) (fun j f hf => H.graded j _ ⟨f, hf, rfl⟩)
     rw [AlgHom.comp_apply, H.const, W.origin_π]
@@ -940,7 +940,7 @@ theorem UpperTheory.exists_smooth_quotient_by_weighted_equations :
     rw [ho2, hpart2]
     exact hc2
   have hgr := chart_gr O X ((P ⧸ I) ⧸ J) W2 h2 τ' wt' φ'' hc3
-  haveI : J.IsPrime := hprime
+  have : J.IsPrime := hprime
   let q : P →ₐ[O] (P ⧸ I) ⧸ J := p2.comp p
   have hq : Function.Surjective q := hp2.comp hp
   have hpartq : ∀ j, W2.part j = (W.part j).map q.toLinearMap := by

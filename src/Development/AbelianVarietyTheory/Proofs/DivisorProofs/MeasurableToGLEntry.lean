@@ -143,8 +143,8 @@ theorem isOpenEmbedding_valGL :
 theorem measurable_comp_GL {X β : Type} [MeasurableSpace X] [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β]
     {F : GL (Fin n) ℂ → β} (hF : Continuous F) {γ : X → GL (Fin n) ℂ}
     (hγ : ∀ i j, Measurable fun x => (γ x : Matrix (Fin n) (Fin n) ℂ) i j) : Measurable fun x => F (γ x) := by
-  letI : MeasurableSpace (GL (Fin n) ℂ) := borel _
-  haveI : BorelSpace (GL (Fin n) ℂ) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) ℂ) := borel _
+  have : BorelSpace (GL (Fin n) ℂ) := ⟨rfl⟩
   have h : Measurable γ := (isOpenEmbedding_valGL.measurableEmbedding.measurable_comp_iff).1
     (Measurable.of_eval fun i => Measurable.of_eval fun j => hγ i j)
   exact hF.measurable.comp h

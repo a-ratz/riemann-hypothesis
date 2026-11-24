@@ -248,7 +248,7 @@ theorem card_aut_std (hφ : ∀ (φ : E →+* ℂ) (a : E), φ (star a) = starRi
     exact g.2.2.le ⟨_, Submodule.subset_span ⟨j, rfl⟩, rfl⟩
   choose a ha using hm
   have hq := card_quot_three (E := E)
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(3 : 𝓞 E)}) := Nat.finite_of_card_ne_zero (by rw [hq]; positivity)
+  have : Finite (𝓞 E ⧸ Ideal.span {(3 : 𝓞 E)}) := Nat.finite_of_card_ne_zero (by rw [hq]; positivity)
   have hinj : Function.Injective fun g j i => Ideal.Quotient.mk (Ideal.span {(3 : 𝓞 E)}) (a g j i) := by
     intro g g' h
     apply Subtype.ext
@@ -292,7 +292,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [StarRing 
   obtain ⟨N, ⟨hN, g, hg, e⟩, -⟩ := hs.2 (Formalism.MainNotions.StandardLattice.stdLat E n)
     ⟨isLattice_std n, fun p _ => ⟨1, one_mem _, Submodule.map_id _⟩⟩
   obtain ⟨hf, hc⟩ := card_aut_std hφ n
-  haveI : Nonempty (Formalism.ThetaLiftIndependence.autL (Formalism.MainNotions.StandardLattice.stdForm E n) (Formalism.MainNotions.StandardLattice.stdLat E n)) :=
+  have : Nonempty (Formalism.ThetaLiftIndependence.autL (Formalism.MainNotions.StandardLattice.stdForm E n) (Formalism.MainNotions.StandardLattice.stdLat E n)) :=
     ⟨⟨1, one_mem _, Submodule.map_id _⟩⟩
   have hp : 0 < Nat.card (Formalism.ThetaLiftIndependence.autL (Formalism.MainNotions.StandardLattice.stdForm E n) (Formalism.MainNotions.StandardLattice.stdLat E n)) := Nat.card_pos
   rw [hm s hs]
@@ -321,9 +321,9 @@ namespace GlobalTheory.CovTop.VolPush
 
 theorem meas_translate_eq : ∀ (D : D7) (V : HSp D) (θ : InfFam D) (A : Frames V) (m : ∀ ρ, Measure (Upq V ρ)) (rp : GA D V →* (∀ ρ, Upq V ρ)) (K : Subgroup (GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D))) (μ : Measure (GA D V)), V.SigOK → IsInfFam θ → IsFrames V A → (∀ ρ, IsMinf (m ρ)) → Continuous rp → IsRealPart V θ A rp → IsOpen {h : GA D V | finE V h ∈ K} → IsMeasLev V K μ → ∀ g ∈ GfC V, ∀ B : Set (∀ ρ, Upq V ρ), MeasurableSet B → μ {h | finE V (g⁻¹ * h) ∈ K ∧ rp h ∈ B} = Measure.pi m B := by
   intro D V θ A m rp K μ hV hθ hA hm hc hrp hK hμ g hg B hB
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI := hμ.1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have := hμ.1
   have h1 : rp g = 1 := GlobalTheory.CovTop.VolBox.rp_eq_one V θ A rp hV hA hrp g hg
   rw [← GlobalTheory.CovTop.VolBox.meas_level V θ A m rp K μ hV hθ hA hm hc hrp hK hμ B hB,
     ← measure_preimage_mul μ g⁻¹ {h | finE V h ∈ K ∧ rp h ∈ B}]
@@ -358,7 +358,7 @@ theorem exists_box {ι : Type} [Fintype ι] {X : ι → Type} [∀ i, Group (X i
     (m : ∀ i, Measure (X i)) (hm : ∀ i, (m i).IsHaarMeasure) :
     ∃ B : Set (∀ i, X i), MeasurableSet B ∧ Measure.pi m B ≠ 0 ∧ Measure.pi m B ≠ ⊤ := by
   choose K hK hK1 using fun i => exists_compact_mem_nhds (1 : X i)
-  haveI := hm
+  have := hm
   refine ⟨Set.univ.pi K, MeasurableSet.univ_pi fun i => (hK i).measurableSet, ?_, ?_⟩
   · rw [Measure.pi_pi]
     exact Finset.prod_ne_zero_iff.2 fun i _ => (MeasureTheory.Measure.measure_pos_of_mem_nhds (μ := m i) (hK1 i)).ne'
@@ -402,22 +402,22 @@ theorem low : VolSt → StabSt → NumSt → LowSt := by
   intro hv hs hn
   refine ⟨3, by norm_num, ?_⟩
   intro D Tu Cl t0 hC i P μ 𝓕 hF
-  letI : IsCMField D.host.E := D.host.isCMField_hostE
+  let : IsCMField D.host.E := D.host.isCMField_hostE
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hr : 2 ≤ D.R.r := Formalism.L2.Geo.two_le_r D
   have hV : (Wc D i).SigOK := D.sp.W_sig _
   have hsig := D.sp.W_sigval _ (Nat.le_add_left _ _) i.2
-  haveI : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI := hF.1.1
+  have : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have := hF.1.1
   obtain ⟨⟨θ, hθ⟩, H1⟩ := hF.1.2
   obtain ⟨⟨A, hA⟩, H2⟩ := H1 θ hθ
   obtain ⟨⟨m, hm⟩, -⟩ := H2 A hA
   obtain ⟨rp, hrpc, hrp⟩ := GlobalTheory.CovTop.VolUp.exists_realPart_hom D (Wc D i) θ A hV hθ hA
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
   obtain ⟨B, hBm, hB0, hBt⟩ := MainStatements.Tam.B.exists_box m (fun ρ => (hm ρ).1)
   have hKo : IsOpen {h : GA D (Wc D i) | finE (Wc D i) h ∈ GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.levW Cl i P} :=
     GlobalTheory.ParahoricCompact.isOpen_comap_lev _ _ _
@@ -514,7 +514,7 @@ theorem log_consts : 2 * Real.log 15 + 6 * (Real.log 3 + 2 * Real.log 2) ≤ 21 
     have := Real.exp_one_gt_d9
     linarith
   have h21 : Real.exp 1 ^ 21 = Real.exp 21 := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     norm_num
   rw [← h21]
   calc (15 : ℝ) ^ 2 * (3 * 2 ^ 2) ^ 6 ≤ 2.7 ^ 21 := by norm_num
@@ -713,7 +713,7 @@ theorem idx : IdxSt := by
   · intro g hg
     let g' : K1 := ⟨g, hg⟩
     have hex' : ∃ g'' : K1, τ g'' = τ g' := ⟨g', rfl⟩
-    have hσ : σ (τ g') = hex'.choose.1 := dif_pos hex'
+    have hσ : σ (τ g') = hex'.choose.1 := dite_eq_left hex'
     have hsτ : τ hex'.choose = τ g' := hex'.choose_spec
     set s' := hex'.choose with hs'
     refine ⟨s'.1, Finset.mem_image.2 ⟨τ g', Fintype.mem_piFinset.2 fun i => hτT g' i, hσ⟩, s'.2,
@@ -847,14 +847,14 @@ theorem sum_muF_le (hT : TubeSt) (D : D7) (V : HSp D) (r : ℕ) (hr : V.rank = r
       (fun τ => if h : τ ∈ (X k).Ψ then archM V (th k ⟨τ, h⟩) (gA k) else 1) (x0 k) (y k) (FF k) (FF' k)
       (hX'Gm k) (hX'p0 k) ?_ ?_ ?_ (hF k).1 (hy k) (hF k).2 (hFF' k)
     · intro τ hτ
-      simp only [dif_pos hτ]
+      simp only [dite_eq_left hτ]
       rw [hG k]
       exact GlobalTheory.T.archimedeanMatrix_unitaryGroup_preserves_gram D V τ _ (hth k ⟨τ, hτ⟩) (gA k)
     · intro γ hγ
       obtain ⟨γ', h1, h2⟩ := GlobalTheory.T.arithmeticGroup_conj_rational_principalCongruence D V Comp X dict Kf th M x1 hK hth hD (fun c => (hx1 c).1) hact hG k (gA k)
         (hgA k) (Λk k) (hΛk k).1 γ hγ
       refine ⟨γ', (hX'Γ k γ').2 (by rw [hG k]; exact h1), fun τ hτ => ?_⟩
-      simp only [dif_pos hτ]
+      simp only [dite_eq_left hτ]
       exact h2 τ hτ
     · intro γ' hγ'
       have h1 := (hX'Γ k γ').1 hγ'
@@ -862,7 +862,7 @@ theorem sum_muF_le (hT : TubeSt) (D : D7) (V : HSp D) (r : ℕ) (hr : V.rank = r
       obtain ⟨γ, hγ, h2⟩ := GlobalTheory.T.principalCongruence_conj_mem_arithmeticGroup D V Comp X dict Kf th M x1 hK hth hD (fun c => (hx1 c).1) hact hG k (gA k)
         (hgA k) (Λk k) (hΛk k).1 (hΛk k).2.2.2 γ' h1
       refine ⟨γ, hγ, fun τ hτ => ?_⟩
-      simp only [dif_pos hτ]
+      simp only [dite_eq_left hτ]
       exact h2 τ hτ
   have hdist := GlobalTheory.T.componentRepresentatives_injective_doubleCoset D V Comp X dict Kf th M gA hK hth hD (fun k => by rw [hgA k])
   have hΓ' : ∀ k γ, γ ∈ (X' k).Γ ↔ IsUStab (X' k).Gm (X' k).Λ γ ∧ ∀ x ∈ (X' k).Λ, ∃ z ∈ (X' k).Λ,

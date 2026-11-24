@@ -67,7 +67,7 @@ theorem mangoldt_pow (s : F[X] → ℂ) (f : F[X]) (m : ℕ) (hf : f.Monic) (hf'
     mangoldt s (f ^ m) = s f := by
   have : {g : F[X] | g.Monic ∧ Irreducible g ∧ ∃ k : ℕ, 0 < k ∧ f ^ m = g ^ k} = {f} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · rintro ⟨hg, hg', k, hk, h⟩
       exact mangoldtConv_eq_of_dvd_pow hf hf' hg hg' (n := m) (h ▸ dvd_pow_self g hk.ne')
@@ -79,7 +79,7 @@ theorem mangoldt_eq_zero (s : F[X] → ℂ) (P : F[X])
     (h : ¬ ∃ (f : F[X]) (m : ℕ), f.Monic ∧ Irreducible f ∧ 0 < m ∧ P = f ^ m) : mangoldt s P = 0 := by
   have : {g : F[X] | g.Monic ∧ Irreducible g ∧ ∃ k : ℕ, 0 < k ∧ P = g ^ k} = ∅ := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     rintro ⟨hg, hg', k, hk, h'⟩
     exact h ⟨g, k, hg, hg', hk, h'⟩
   rw [mangoldt, this, finsum_mem_empty]
@@ -117,7 +117,7 @@ theorem mangoldt_divisorSum_mul (s : F[X] → ℂ) (f Q : F[X]) (hf : f.Monic) (
     ← finsum_mem_insert _ hnot (mangoldtConv_finite_monicDivisors Q hQ)]
   refine finsum_mem_inter_support_eq _ _ _ ?_
   ext D
-  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_insert_iff, Function.mem_support]
+  simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_insert_iff, Function.mem_support]
   refine and_congr_left fun hD => ?_
   constructor
   · rintro ⟨hDm, hd⟩

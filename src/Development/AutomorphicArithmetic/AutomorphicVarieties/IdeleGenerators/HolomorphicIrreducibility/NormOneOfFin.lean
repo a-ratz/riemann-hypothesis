@@ -81,9 +81,9 @@ theorem UpperTheory.V.Sd.eisReg :
   obtain ⟨κ, ⟨g, hg⟩, hκ, -⟩ := hρ.above A hA
   obtain ⟨u, hu⟩ := GlobalTheory.CycDec.exists_unit_infinite_order l
   obtain ⟨σ, hσ, hσu⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l A hA u
-  haveI : IsGalois ℚ Ω := {}
-  haveI : Finite (G ℚ Ω ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
-  haveI : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : IsGalois ℚ Ω := {}
+  have : Finite (G ℚ Ω ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨n, hn, -, hnH⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (H := H) Subgroup.FiniteIndex.index_ne_zero σ
   have hs : σ ^ n ∈ Ine (F := ℚ) A := pow_mem hσ n
   let s : ↥(Dec (F := ℚ) A) := ⟨σ ^ n, Ine_le_Dec A hs⟩
@@ -125,7 +125,7 @@ private theorem norm_one_of_fin {l : ℕ} [Fact l.Prime] (a : (Qbar l)ˣ) (ha : 
 private theorem norm_cyc (l : ℕ) [Fact l.Prime] (F Ω : Type) [Field F] [Field Ω] [Algebra F Ω] (s : G F Ω) :
     ‖(cycBar F Ω l s : Qbar l)‖ = 1 := by
   have h : (cycBar F Ω l s : Qbar l) = algebraMap ℚ_[l] (Qbar l) ((ReciprocityTheory.Gal.cycZ F Ω l s : ℤ_[l]) : ℚ_[l]) := rfl
-  rw [h, norm_algebraMap', PadicInt.padic_norm_e_of_padicInt]
+  rw [h, norm_algebraMap', PadicInt.norm_coe]
   exact PadicInt.norm_units _
 
 theorem UpperTheory.V.Sd.sI :
@@ -154,9 +154,9 @@ theorem UpperTheory.V.Sd.sI :
   refine ⟨fun H hH hN ⟨s, hs, hc⟩ => ?_, fun ⟨s, hc⟩ H hH => ?_⟩
   · by_contra hI
     exact hc ((key H hH hN hI).1 s hs)
-  · haveI : IsGalois ℚ Ω := ⟨⟩
-    haveI : Finite (G ℚ Ω ⧸ H) := H.quotient_finite_of_isOpen hH
-    haveI : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  · have : IsGalois ℚ Ω := ⟨⟩
+    have : Finite (G ℚ Ω ⧸ H) := H.quotient_finite_of_isOpen hH
+    have : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     have hO : IsOpen (H.normalCore : Set (G ℚ Ω)) :=
       Subgroup.isOpen_of_isClosed_of_finiteIndex _ (H.normalCore_isClosed (H.isClosed_of_isOpen hH))
     refine irr_of_le ρ H.normalCore_le ?_

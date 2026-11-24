@@ -75,7 +75,7 @@ open NumberField
 theorem blockSphereProb_isProbabilityMeasure {B n : ℕ} (hn : 0 < n) :
     MeasureTheory.IsProbabilityMeasure (ReciprocityTheory.MultiplicativeHeights.blockSphereProb B n) := by
   unfold ReciprocityTheory.MultiplicativeHeights.blockSphereProb
-  haveI : MeasureTheory.IsProbabilityMeasure (ReciprocityTheory.MultiplicativeHeights.sphereProb n) := by
+  have : MeasureTheory.IsProbabilityMeasure (ReciprocityTheory.MultiplicativeHeights.sphereProb n) := by
     unfold ReciprocityTheory.MultiplicativeHeights.sphereProb
     have hne : ∃ x : EuclideanSpace ℂ (Fin n), x ≠ 0 :=
       ⟨EuclideanSpace.single ⟨0, hn⟩ 1, by simp⟩
@@ -93,7 +93,7 @@ theorem height_const_eq_zero {K : Type} [Field K] [NumberField K] {B n : ℕ} (h
     ReciprocityTheory.MultiplicativeHeights.h0 (MvPolynomial.C a : MvPolynomial (Fin B × Fin n) K) = 0 := by
   classical
   unfold ReciprocityTheory.MultiplicativeHeights.h0
-  haveI := blockSphereProb_isProbabilityMeasure (B := B) hn
+  have := blockSphereProb_isProbabilityMeasure (B := B) hn
   have hmean : ∀ σ : K →+* ℂ,
       ReciprocityTheory.MultiplicativeHeights.blockSphereMean B n (MvPolynomial.map σ (MvPolynomial.C a)) = Real.log ‖σ a‖ := by
     intro σ
@@ -105,7 +105,7 @@ theorem height_const_eq_zero {K : Type} [Field K] [NumberField K] {B n : ℕ} (h
     unfold ReciprocityTheory.MultiplicativeHeights.gaussAbs
     by_cases ha : a = 0
     · simp [ha]
-    · rw [MvPolynomial.support_C, if_neg ha, Finset.sup_singleton, MvPolynomial.coeff_C, if_pos rfl,
+    · rw [MvPolynomial.support_C, ite_eq_right ha, Finset.sup_singleton, MvPolynomial.coeff_C, ite_eq_left rfl,
         Real.coe_toNNReal (w a) (by exact w.1.nonneg a)]
   simp_rw [hgauss, hmean]
   by_cases ha : a = 0
@@ -174,7 +174,7 @@ variable (d : Data K ι Ω WT A)
 
 theorem height_one_prime_eq_span_gen (p : Ideal (KTp K d.D d.N)) (hp : p ∈ d.HtOne) :
     p = Ideal.span {d.gen p} := by
-  haveI := hp.1
+  have := hp.1
   have hpr : p.IsPrincipal := by
     obtain ⟨g, _, hg⟩ := ValUFD.heightOne_principal p hp.2
     exact ⟨⟨g, hg⟩⟩
@@ -235,8 +235,8 @@ theorem fZ_factor_positive_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (F : KTp
     have hO := finsum_mem_union
       (f := fun w => (d.fze h c w : ℤ) * WithTop.untopD 0 (w (d.rationalBaseRow c)))
       (Set.disjoint_sdiff_right : Disjoint (d.GoodP c p) (d.OverP c p \ d.GoodP c p)) hGfin
-      ((hOfin p hp).subset Set.diff_subset)
-    rw [Set.union_diff_cancel hGsub] at hO
+      ((hOfin p hp).subset Set.sdiff_subset)
+    rw [Set.union_sdiff_cancel hGsub] at hO
     beta_reduce at hO
     rw [hE, hNn, hgood, hO]
     linarith
@@ -382,7 +382,7 @@ theorem relation_section_identity (hd : d.AxH 𝒜) (c : ι) (i : Fin (d.D + 1))
         algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N)
           (-∑ k, MvPolynomial.X (Sum.inr (i, k)) * MvPolynomial.C (d.x c k)) := by
       rw [hX]
-      simp only [sImg, hS0, if_neg hi]
+      simp only [sImg, hS0, ite_eq_right hi]
     have hB : ∀ k : Fin d.N, d.sH c (MvPolynomial.X (i, (d.jc c).succAbove k)) =
         algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N)
           (MvPolynomial.X (Sum.inr (i, k))) := by
@@ -487,7 +487,7 @@ theorem ker_relation_map_ne_bot (hd : d.AxH 𝒜) (c : ι) : RingHom.ker (d.rela
     by_cases hj : j = d.jc c
     · subst hj
 
-      simp only [if_true, Fin.insertNth_apply_same, map_neg, map_sum, map_mul, MvPolynomial.rename_X,
+      simp only [ite_true, Fin.insertNth_apply_same, map_neg, map_sum, map_mul, MvPolynomial.rename_X,
       MvPolynomial.rename_C, g]
       congr 1
       have e1 := Finset.add_sum_erase Finset.univ (fun k => (MvPolynomial.X (i, k) :
@@ -498,7 +498,7 @@ theorem ker_relation_map_ne_bot (hd : d.AxH 𝒜) (c : ι) : RingHom.ker (d.rela
         (d.jc c)
       exact add_left_cancel (e1.trans e2)
     · obtain ⟨k', rfl⟩ := Fin.exists_succAbove_eq hj
-      simp only [if_neg hj, Fin.insertNth_apply_succAbove, MvPolynomial.rename_X, g]
+      simp only [ite_eq_right hj, Fin.insertNth_apply_succAbove, MvPolynomial.rename_X, g]
   have hφ : Function.Injective φ := by
     intro a b hab
     apply hinj

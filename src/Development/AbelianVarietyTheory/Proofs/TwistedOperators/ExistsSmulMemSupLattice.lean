@@ -62,14 +62,14 @@ theorem exists_prime_to_part {R : Type} [CommRing R] [IsDedekindDomain R] (p : H
     simpa [Ideal.span_singleton_eq_bot] using hd
   obtain ⟨n, J, hJ, hfac⟩ := WfDvdMonoid.max_power_factor hI p.irreducible
   rw [Ideal.dvd_iff_le] at hJ
-  obtain ⟨s, hsJ, hsp⟩ := SetLike.not_le_iff_exists.mp hJ
+  obtain ⟨s, hsJ, hsp⟩ := IsConcreteLE.not_le_iff_exists.mp hJ
   refine ⟨s, hsp, fun q hq => ?_⟩
   have hnle : ¬ p.asIdeal ^ n ≤ q.asIdeal := by
     intro h
     have := q.isPrime
     have h1 : p.asIdeal ≤ q.asIdeal := Ideal.IsPrime.le_of_pow_le h
     exact hq (HeightOneSpectrum.ext (p.isMaximal.eq_of_le q.isPrime.ne_top h1).symm)
-  obtain ⟨t, ht, htq⟩ := SetLike.not_le_iff_exists.mp hnle
+  obtain ⟨t, ht, htq⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
   refine ⟨t, htq, ?_⟩
   have : t * s ∈ Ideal.span {d} := by
     rw [hfac]; exact Ideal.mul_mem_mul ht hsJ

@@ -195,11 +195,11 @@ variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [F
 private theorem diag_fin (D : Raw Ω c) (hD : D.Good) (𝔞 : Amb l) [CharP 𝔞.V l] (r : G ℚ Ω →* M4 𝔞.V) (u : M4 𝔞.V)
     (hP : KPair D 𝔞 r u) (hd : DiagType r) (g : G ℚ Ω) (i : Fin 4) : IsOfFinOrder (r g i i) := by
   have hl : l.Prime := Fact.out
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   obtain ⟨f1, -, -, -, -, -, -, -, -, -, -, f12, -⟩ := facts D hD
   let U : Subgroup (G ℚ Ω) := D.rbar.ker ⊓ D.ψ.ker
   have hU : IsOpen (U : Set (G ℚ Ω)) := f12.inter hD.psi_open
-  haveI : Finite (G ℚ Ω ⧸ U) := U.quotient_finite_of_isOpen hU
+  have : Finite (G ℚ Ω ⧸ U) := U.quotient_finite_of_isOpen hU
   have hI : U.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hT : ∀ p ∈ D.T, p.Prime ∧ ∀ g ∈ D.Ip p, g ∈ U → r g ^ l ^ 2 = 1 := by
     intro p hp
@@ -247,9 +247,9 @@ open UpperTheory.V.Ws.DiagonalConstancy in
 theorem UpperTheory.V.Ws.diagConst :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ (𝔞 : Amb l), CharP 𝔞.K l → ∀ r, VPt D 𝔞 r → ∀ u, KPair D 𝔞 r u → DiagType r → ∀ x ∈ mono r 0, ∃ n : ℕ, 0 < n ∧ x ^ l ^ n = x := by
   intro Ω _ _ _ l _ c D hD 𝔞 hK r hV u hP hd x hx
-  haveI : CharP 𝔞.V l := 𝔞.toK.charP Subtype.val_injective l
+  have : CharP 𝔞.V l := 𝔞.toK.charP Subtype.val_injective l
   obtain ⟨-, R, i1, i2, i3, ρ, y, hρ, hy, -, hr⟩ := hV
-  letI : Algebra c.O 𝔞.K := (𝔞.toK.comp (𝔞.a c)).toAlgebra
+  let : Algebra c.O 𝔞.K := (𝔞.toK.comp (𝔞.a c)).toAlgebra
   let y' : R →ₐ[c.O] 𝔞.K :=
     { toRingHom := 𝔞.toK.comp y
       commutes' := fun a => congrArg 𝔞.toK (RingHom.congr_fun hy a) }

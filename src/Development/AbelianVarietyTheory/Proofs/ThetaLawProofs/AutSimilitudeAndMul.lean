@@ -133,7 +133,7 @@ theorem _root_.GlobalTheory.SimilTheta.aut_similitude_and_mul : ∀ (g m : ℕ) 
     have hV := sum_column_smul_add_tors_eq τ m hm al hal k n y c
     unfold _root_.GlobalTheory.SimilTheta.aut
     simp only [intCast_zsmul_vector, smul_dotProduct, dotProduct_smul, mulVec_smul, smul_eq_mul]
-    rw [← Complex.exp_sum, ← Complex.exp_add, ← Complex.exp_nat_mul, Complex.exp_eq_exp_iff_exists_int]
+    rw [← Complex.exp_sum, ← Complex.exp_add, ← Complex.exp_natCast_mul, Complex.exp_eq_exp_iff_exists_int]
     set K₀ : Fin g → ℂ := fun i => (k₀ i : ℂ)
     set N₀ : Fin g → ℂ := fun i => (n₀ i : ℂ)
     set Kc : Fin g → ℂ := fun i => (k c i : ℂ)
@@ -149,7 +149,7 @@ theorem _root_.GlobalTheory.SimilTheta.aut_similitude_and_mul : ∀ (g m : ℕ) 
       ring
     simp only [hterm]
     rw [← Finset.mul_sum, Finset.sum_sub_distrib, Finset.sum_sub_distrib, ← Finset.sum_mul, ← Finset.sum_mul,
-      ← dotProduct_sum, hV, sum_intCast_mul_column_eq_of_transpose_mul_eq_smul m al hal c c, if_pos rfl]
+      ← dotProduct_sum, hV, sum_intCast_mul_column_eq_of_transpose_mul_eq_smul m al hal c c, ite_eq_left rfl]
     have hs' : ∑ x, (al x c : ℂ) = m + 2 * s := by exact_mod_cast hs
     rw [hs']
     have hsym : Nc ⬝ᵥ τ *ᵥ N₀ = N₀ ⬝ᵥ τ *ᵥ Nc := by
@@ -166,7 +166,7 @@ theorem _root_.GlobalTheory.SimilTheta.aut_similitude_and_mul : ∀ (g m : ℕ) 
     obtain ⟨tb, htb⟩ := exists_int_two_mul_dotProduct_of_half_integral b hab.2 n₀
     unfold _root_.GlobalTheory.SimilTheta.aut
     simp only [intCast_zsmul_vector, smul_dotProduct, dotProduct_smul, mulVec_smul, smul_eq_mul]
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_exp_iff_exists_int]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_exp_iff_exists_int]
     obtain ⟨u, hu⟩ := Int.even_mul_pred_self (m : ℤ)
     have hmu : (m : ℂ) * (m - 1) = u + u := by exact_mod_cast hu
     refine ⟨-u * (ta - tb), ?_⟩

@@ -75,10 +75,10 @@ abbrev awayHom (R : Type) [CommRing R] {S : Type} [CommRing S] [Algebra R S] (g 
 theorem isAway_iff (ρ : S →ₐ[R] S') (g : S) : IsAway ρ g ↔
     IsUnit (ρ g) ∧ (∀ z, ∃ (N : ℕ) (a : S), z * ρ g ^ N = ρ a) ∧
       ∀ a, ρ a = 0 → ∃ N : ℕ, g ^ N * a = 0 := by
-  letI := (ρ : S →+* S').toAlgebra
+  let := (ρ : S →+* S').toAlgebra
   constructor
   · intro h
-    haveI : IsLocalization.Away g S' := h
+    have : IsLocalization.Away g S' := h
     refine ⟨IsLocalization.Away.algebraMap_isUnit g, fun z => IsLocalization.Away.surj g z,
       fun a ha => ?_⟩
     obtain ⟨N, hN⟩ := IsLocalization.Away.exists_of_eq (S := S') g (a := a) (b := 0)
@@ -124,9 +124,9 @@ theorem ker_fin (h : IsAway ρ g) {κ : Type} [Finite κ] {a : κ → S} (ha : �
 
 theorem lift (h : IsAway ρ g) (φ : S →ₐ[R] T) (hφ : IsUnit (φ g)) :
     ∃ ψ : S' →ₐ[R] T, ψ.comp ρ = φ := by
-  letI := (ρ : S →+* S').toAlgebra
-  haveI : IsLocalization.Away g S' := h
-  haveI : IsScalarTower R S S' := IsScalarTower.of_algebraMap_eq fun r => (ρ.commutes r).symm
+  let := (ρ : S →+* S').toAlgebra
+  have : IsLocalization.Away g S' := h
+  have : IsScalarTower R S S' := IsScalarTower.of_algebraMap_eq fun r => (ρ.commutes r).symm
   exact ⟨IsLocalization.Away.liftAlgHom g hφ,
     AlgHom.ext fun a => IsLocalization.Away.lift_eq g hφ a⟩
 
@@ -182,8 +182,8 @@ theorem swap (h : IsAway ρ g) {ρ₂ : S →ₐ[R] S''} {g' : S} (h₂ : IsAway
 
 theorem mem_map (h : IsAway ρ g) {J : Ideal S} {z : S'} (hz : z ∈ J.map ρ) :
     ∃ (N : ℕ) (a : S), a ∈ J ∧ z * ρ g ^ N = ρ a := by
-  letI := (ρ : S →+* S').toAlgebra
-  haveI : IsLocalization.Away g S' := h
+  let := (ρ : S →+* S').toAlgebra
+  have : IsLocalization.Away g S' := h
   obtain ⟨⟨a, ⟨_, N, rfl⟩⟩, e⟩ :=
     (IsLocalization.mem_map_algebraMap_iff (Submonoid.powers g) S').1 hz
   exact ⟨N, a, a.2, by rw [← map_pow]; exact e⟩
@@ -198,14 +198,14 @@ theorem pow_mul_mem (h : IsAway ρ g) {J : Ideal S} {c : S} (hc : ρ c ∈ J.map
   exact J.mul_mem_left _ ha
 
 theorem isOpenImmersion (h : IsAway ρ g) : IsOpenImmersion (spMap ρ).left := by
-  letI := (ρ : S →+* S').toAlgebra
-  haveI : IsLocalization.Away g S' := h
+  let := (ρ : S →+* S').toAlgebra
+  have : IsLocalization.Away g S' := h
   exact IsOpenImmersion.of_isLocalization (S := S') g
 
 theorem mem_range (h : IsAway ρ g) (p : PrimeSpectrum S) (hp : g ∉ p.asIdeal) :
     p ∈ Set.range (spMap ρ).left := by
-  letI := (ρ : S →+* S').toAlgebra
-  haveI : IsLocalization.Away g S' := h
+  let := (ρ : S →+* S').toAlgebra
+  have : IsLocalization.Away g S' := h
   have := PrimeSpectrum.localization_away_comap_range S' g
   have hp' : p ∈ (PrimeSpectrum.basicOpen g : Set (PrimeSpectrum S)) := hp
   rw [← this] at hp'
@@ -259,10 +259,10 @@ theorem away_glue (hs : Ideal.span (Set.range s) = ⊤) (q : ∀ i, A →ₐ[R] 
   have hc : ∀ i j : κ, pullback.fst ((awayCover hs q hq).f i) ((awayCover hs q hq).f j) ≫ (y i).left =
       pullback.snd _ _ ≫ (y j).left := by
     intro i j
-    letI := (q i : A →+* B i).toAlgebra
-    letI := (q j : A →+* B j).toAlgebra
-    haveI : IsScalarTower R A (B i) := IsScalarTower.of_algebraMap_eq fun r => ((q i).commutes r).symm
-    haveI : IsScalarTower R A (B j) := IsScalarTower.of_algebraMap_eq fun r => ((q j).commutes r).symm
+    let := (q i : A →+* B i).toAlgebra
+    let := (q j : A →+* B j).toAlgebra
+    have : IsScalarTower R A (B i) := IsScalarTower.of_algebraMap_eq fun r => ((q i).commutes r).symm
+    have : IsScalarTower R A (B j) := IsScalarTower.of_algebraMap_eq fun r => ((q j).commutes r).symm
     have := congrArg CommaMorphism.left (h i j (TensorProduct A (B i) (B j))
       Algebra.TensorProduct.includeLeft
       (Algebra.TensorProduct.includeRight.restrictScalars R)
@@ -318,7 +318,7 @@ theorem chart_inj (j : sp B ⟶ X) [IsOpenImmersion j.left] {φ φ' : B →ₐ[R
     (h : spMap φ ≫ j = spMap φ' ≫ j) : φ = φ' := by
   have h1 := congrArg CommaMorphism.left h
   simp only [Over.comp_left, cancel_mono, spMap_left] at h1
-  exact AlgHom.coe_ringHom_injective (congrArg CommRingCat.Hom.hom (Spec.map_injective h1))
+  exact AlgHom.toRingHom_injective (congrArg CommRingCat.Hom.hom (Spec.map_injective h1))
 
 theorem exists_chart_pt (j : sp B ⟶ X) [IsOpenImmersion j.left] (y : sp A ⟶ X)
     (h : Set.range y.left ⊆ Set.range j.left) : ∃ φ : B →ₐ[R] A, y = spMap φ ≫ j := by
@@ -368,13 +368,13 @@ theorem exists_local_chart (y : sp A ⟶ X) (m : Ideal A) (hm : m.IsPrime) :
   let p : (sp (R₀ := R) A).left := (⟨m, hm⟩ : PrimeSpectrum A)
   obtain ⟨B, j₀, hj₀, hmem, -⟩ := Scheme.exists_affine_mem_range_and_range_subset
     (X := X.left) (x := y.left p) (U := ⊤) trivial
-  letI : Algebra R B := (Spec.preimage (j₀ ≫ X.hom)).hom.toAlgebra
+  let : Algebra R B := (Spec.preimage (j₀ ≫ X.hom)).hom.toAlgebra
   let j : sp (R₀ := R) B ⟶ X := Over.homMk j₀ (Spec.map_preimage (j₀ ≫ X.hom)).symm
   obtain ⟨_, ⟨f, rfl⟩, hf, hsub⟩ := PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open
     (a := (⟨m, hm⟩ : PrimeSpectrum A)) (u := (y.left ⁻¹ᵁ j₀.opensRange).1) hmem
     (y.left ⁻¹ᵁ j₀.opensRange).2
   refine ⟨f, hf, B, inferInstance, inferInstance, j, hj₀, fun T _ _ φ hφ => ?_⟩
-  haveI : IsOpenImmersion j.left := hj₀
+  have : IsOpenImmersion j.left := hj₀
   refine exists_chart_pt j _ ?_
   rintro _ ⟨t, rfl⟩
   have : (spMap φ).left t ∈ (PrimeSpectrum.basicOpen f : Set (PrimeSpectrum A)) := by

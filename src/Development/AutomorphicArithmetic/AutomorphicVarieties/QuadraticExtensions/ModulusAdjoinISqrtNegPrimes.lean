@@ -84,8 +84,8 @@ def CardLe (P : Type) (n : ℕ) : Prop := Finite P ∧ Nat.card P ≤ n
 theorem CardLe.mono {P : Type} {n n' : ℕ} (h : CardLe P n) (hn : n ≤ n') : CardLe P n' := ⟨h.1, h.2.trans hn⟩
 
 theorem CardLe.of_injective {P Q : Type} {n : ℕ} (h : CardLe Q n) (f : P → Q) (hf : Function.Injective f) : CardLe P n := by
-  haveI := h.1
-  haveI : Finite P := Finite.of_injective f hf
+  have := h.1
+  have : Finite P := Finite.of_injective f hf
   exact ⟨inferInstance, (Nat.card_le_card_of_injective f hf).trans h.2⟩
 
 def CharOff {Γ : Type} [Group Γ] [TopologicalSpace Γ] (U : Subgroup Γ) (S : Set Γ) (l : ℕ) :
@@ -147,10 +147,10 @@ section
 variable (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
 
 theorem card_roots (m : ℕ) [NeZero m] : Nat.card (rootsOfUnity m Ω) = m := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
-  haveI : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne m)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
+  have : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne m)⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   exact hζ.card_rootsOfUnity
 
 def galChar (m : ℕ) [NeZero m] : G ℚ Ω →* (ZMod m)ˣ where

@@ -74,7 +74,7 @@ private theorem unip_mem_iff {n r : ℕ} (Y : UPos n r → 𝔸[K]) :
     have := p.2
     rw [e] at this
     omega
-  simp only [AdelicGLn.diagonal_apply, coe_unipGL, unipMatrix, Matrix.add_apply, blockEntry_apply, dif_pos p.2,
+  simp only [AdelicGLn.diagonal_apply, coe_unipGL, unipMatrix, Matrix.add_apply, blockEntry_apply, dite_eq_left p.2,
     Matrix.one_apply_ne hne, zero_add] at h1
   exact h1
 
@@ -123,12 +123,12 @@ private theorem kc_ex {n : ℕ} (μ : Measure (G1 K n)) [μ.IsHaarMeasure] (a : 
   have hint : ∀ z, IntegrableOn (fun X => kv μ a (unipOne (K := _) (n := _) r X * z)) (unipFundamentalDomain K n r)
       (unipMeasure K n r) := fun z =>
     ((hj.comp (continuous_id.prodMk continuous_const)).continuousOn.integrableOn_compact hC).mono_set hDC
-  haveI : IsFiniteMeasure ((unipMeasure K n r).restrict (unipFundamentalDomain K n r)) :=
+  have : IsFiniteMeasure ((unipMeasure K n r).restrict (unipFundamentalDomain K n r)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact (measure_mono hDC).trans_lt hC.measure_lt_top⟩
   refine ⟨fun z => ∫ X in unipFundamentalDomain K n r, kv μ a (unipOne (K := _) (n := _) r X * z) ∂unipMeasure K n r, ?_,
     fun φ z => ?_⟩
-  · haveI : SecondCountableTopology (G1 K n) := inferInstance
-    haveI : FirstCountableTopology (G1 K n) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  · have : SecondCountableTopology (G1 K n) := inferInstance
+    have : FirstCountableTopology (G1 K n) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
     refine continuous_iff_continuousAt.2 fun z₀ => ?_
     obtain ⟨V, hVc, hV⟩ := exists_compact_mem_nhds z₀
     obtain ⟨M, hM⟩ := (hC.prod hVc).exists_bound_of_continuousOn hj.continuousOn

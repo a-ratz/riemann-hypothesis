@@ -508,14 +508,14 @@ def withKer (L : Submodule 𝒪[k] (n → k)) : Finset (Pair k n) := (finite_ker
 theorem sum_withLat {M : Type*} [AddCommMonoid M] (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k]
     [Fintype {f : Module.Dual 𝓀[k] (Red L) // f ≠ 0}] (F : Pair k n → M) :
     ∑ P ∈ withLat L, F P = ∑ f, F (ofDual L f) := by
-  haveI : Fintype {P : Pair k n // P.lat = L} := Fintype.ofEquiv _ (latEquiv L)
+  have : Fintype {P : Pair k n // P.lat = L} := Fintype.ofEquiv _ (latEquiv L)
   rw [Finset.sum_subtype (withLat L) (p := fun P => P.lat = L) (fun _ => mem_withLat)]
   exact ((latEquiv L).sum_comp fun P => F P.1).symm
 
 theorem sum_withKer {M : Type*} [AddCommMonoid M] (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] (q : Unif k)
     [Fintype {x : Red L // x ≠ 0}] (F : Pair k n → M) :
     ∑ P ∈ withKer L, F P = ∑ x, F (up L q x) := by
-  haveI : Fintype {P : Pair k n // P.ker = L} := Fintype.ofEquiv _ (kerEquiv L q)
+  have : Fintype {P : Pair k n // P.ker = L} := Fintype.ofEquiv _ (kerEquiv L q)
   rw [Finset.sum_subtype (withKer L) (p := fun P => P.ker = L) (fun _ => mem_withKer)]
   exact ((kerEquiv L q).sum_comp fun P => F P.1).symm
 

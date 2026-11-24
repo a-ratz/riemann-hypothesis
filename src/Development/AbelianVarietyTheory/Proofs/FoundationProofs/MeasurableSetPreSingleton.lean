@@ -130,14 +130,14 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 
 theorem secondCountable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : SecondCountableTopology k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   open scoped Valued in
-  haveI : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
+  have : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
   exact secondCountable_of_proper
 
 theorem one_lt_resCard : 1 < resCard F := by
@@ -174,10 +174,10 @@ theorem isClosed_cell (c : 𝓀[F]) : IsClosed (cell c) := by
       exact ⟨z, rfl, (IsLocalRing.residue_eq_zero_iff _).2 hz⟩
   rw [this]
   have : T2Space F := by
-    letI := IsTopologicalAddGroup.rightUniformSpace F
-    haveI := isUniformAddGroup_of_addCommGroup (G := F)
+    let := IsTopologicalAddGroup.rightUniformSpace F
+    have := isUniformAddGroup_of_addCommGroup (G := F)
     infer_instance
-  exact ((IsNoetherianRing.isClosed_ideal 𝓂[F]).isCompact.image continuous_subtype_val).isClosed
+  exact ((IsNoetherianRing.isClosed_ideal 𝓂[F]).isCompact.image continuous_subtypeVal).isClosed
 
 theorem entries_injective {m n : Type} :
     Function.Injective (entries : Matrix m n 𝒪[F] → m → n → F) := fun A B h => by

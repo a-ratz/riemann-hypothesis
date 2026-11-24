@@ -87,7 +87,7 @@ theorem card_torsion_eq {K Ω Ω' : Type} [Field K] [Field Ω] [Field Ω'] [Alge
   obtain ⟨z'⟩ : Nonempty (Sp Ω') := inferInstance
   rw [(FinEt.card_points_eq_finrank (torsion A m).hom (spMap (algebraMap K Ω)) z).2,
     (FinEt.card_points_eq_finrank (torsion A m).hom (spMap (algebraMap K Ω')) z').2]
-  haveI : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   rw [Subsingleton.elim (spMap (algebraMap K Ω) z) (spMap (algebraMap K Ω') z')]
 
 theorem card_torsion_algClosed {K L : Type} [Field K] [Field L] [IsAlgClosed L] [Algebra K L]
@@ -95,7 +95,7 @@ theorem card_torsion_algClosed {K L : Type} [Field K] [Field L] [IsAlgClosed L] 
     {m : ℕ} (hm : (m : K) ≠ 0) :
     Nat.card {x : ptOver K L ⟶ A // x ^ m = 1} = m ^ (2 * g) := by
   let t : Sp L ⟶ Sp K := spMap (algebraMap K L)
-  letI : GrpObj ((Over.pullback t).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback t).obj A) := Functor.grpObjObj
   have hgp : IsGrpPullback ((Over.pullback t).obj A) A t (pullback.fst A.hom t) := isGrpPullback_pullback A t
   have hab : IsAbelianScheme ((Over.pullback t).obj A) := GlobalTheory.isAbelianScheme_pullback_obj t A hA
   have hdim : SmoothOfRelativeDimension g ((Over.pullback t).obj A).hom :=

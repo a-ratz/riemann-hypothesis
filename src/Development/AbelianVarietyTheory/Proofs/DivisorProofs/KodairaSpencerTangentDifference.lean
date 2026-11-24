@@ -174,12 +174,12 @@ theorem exists_linearCombination_eq :
     ∃ M : ι → K, g = (TrivSqZeroExt.map (Fintype.linearCombination K M)).toRingHom.comp R := by
   intro R₀ B K _ _ _ _ n hsm ι _ hcard R hR hinj g hgfst hg
   classical
-  haveI : Algebra.IsStandardSmooth R₀ B := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n
+  have : Algebra.IsStandardSmooth R₀ B := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth n
   let ρ : B →+* K := (TrivSqZeroExt.fstHom K K (ι → K)).toRingHom.comp R
-  letI : Algebra B K := ρ.toAlgebra
-  letI : Algebra R₀ K := (ρ.comp (algebraMap R₀ B)).toAlgebra
-  haveI : IsScalarTower R₀ B K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Nontrivial B := ρ.domain_nontrivial
+  let : Algebra B K := ρ.toAlgebra
+  let : Algebra R₀ K := (ρ.comp (algebraMap R₀ B)).toAlgebra
+  have : IsScalarTower R₀ B K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Nontrivial B := ρ.domain_nontrivial
   have hfin : Module.finrank B Ω[B⁄R₀] = n := by
     have := Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := R₀) (S := B) n
     rw [← Module.finrank_eq_rank] at this
@@ -267,7 +267,7 @@ theorem exists_dir_eq_of_smooth : ∀ (k₀ : Type) [Field k₀] (X : Scheme.{0}
   have cp : ∀ (M : Type) [AddCommGroup M] [Module K M] [Module Kᵐᵒᵖ M] [IsCentralScalar K M],
       Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom K K M).toRingHom) (IsLocalRing.closedPoint K) =
         IsLocalRing.closedPoint (TrivSqZeroExt K M) := fun M _ _ _ _ => by
-    haveI := hloc M
+    have := hloc M
     exact IsLocalRing.comap_closedPoint _
   obtain ⟨U, hU, V, hV, hxV, e, hstd⟩ := hs.exists_isStandardSmoothOfRelativeDimension
     ((Spec.map (CommRingCat.ofHom (TrivSqZeroExt.fstHom K K (ι → K)).toRingHom) ≫ Xι) (IsLocalRing.closedPoint K))
@@ -277,8 +277,8 @@ theorem exists_dir_eq_of_smooth : ∀ (k₀ : Type) [Field k₀] (X : Scheme.{0}
     rw [← cp]; have := hxV; rw [← hred] at this; exact this
   obtain ⟨R, rfl⟩ := _root_.GlobalTheory.spec_local_hom_factors_affineOpen X V hV _ Xι h1
   obtain ⟨g, rfl⟩ := _root_.GlobalTheory.spec_local_hom_factors_affineOpen X V hV _ x' h2
-  letI := (s.appLE U V e).hom.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension n Γ(Spec (CommRingCat.of k₀), U) Γ(X, V) := hstd
+  let := (s.appLE U V e).hom.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension n Γ(Spec (CommRingCat.of k₀), U) Γ(X, V) := hstd
   have key := IsAffineOpen.SpecMap_appLE_fromSpec s hU hV e
   have mono : ∀ {Y : Scheme.{0}} {W : Y.Opens} (hW : IsAffineOpen W) {A : Type} [CommRing A] (φ ψ : Γ(Y, W) →+* A),
       Spec.map (CommRingCat.ofHom φ) ≫ hW.fromSpec = Spec.map (CommRingCat.ofHom ψ) ≫ hW.fromSpec → φ = ψ := by

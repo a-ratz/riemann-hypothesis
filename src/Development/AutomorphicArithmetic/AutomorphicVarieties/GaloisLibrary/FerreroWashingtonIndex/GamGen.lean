@@ -118,8 +118,8 @@ theorem UpperTheory.V.FW.gamGen :
     rintro rfl
     have : l = 1 := by simpa [Nat.Coprime] using hf
     exact hl.one_lt.ne' this
-  haveI : NeZero (f * l ^ (ee l + d)) := ⟨Nat.mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
-  haveI : NeZero (f * l ^ ee l) := ⟨Nat.mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
+  have : NeZero (f * l ^ (ee l + d)) := ⟨Nat.mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
+  have : NeZero (f * l ^ ee l) := ⟨Nat.mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
   set x : ℤ := 1 + (f : ℤ) * (l : ℤ) ^ ee l with hxdef
   have hγx : (γ : ZMod (f * l ^ (ee l + d))) = ((x : ℤ) : ZMod (f * l ^ (ee l + d))) := by
     rw [hγ, hxdef]
@@ -178,7 +178,7 @@ theorem UpperTheory.V.FW.gamGen :
     ring
   have hmem : γ ∈ K := by
     rw [hK, MonoidHom.mem_ker, Units.ext_iff, ZMod.unitsMap_def, Units.coe_map, Units.val_one,
-      MonoidHom.coe_coe, hγ, map_add, map_one, map_mul, map_pow, map_natCast, map_natCast]
+      MonoidHom.coe_ofClass, hγ, map_add, map_one, map_mul, map_pow, map_natCast, map_natCast]
     have h0 : ((f * l ^ ee l : ℕ) : ZMod (f * l ^ ee l)) = 0 := ZMod.natCast_self _
     push_cast at h0
     rw [h0, add_zero]

@@ -108,7 +108,7 @@ theorem good_primes_properties (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
     apply hne
     refine finsum_mem_eq_zero_of_forall_eq_zero fun w hw => ?_
     have := hcon w hw
-    simp only [Set.mem_setOf_eq, not_and, not_not] at this
+    simp only [Set.mem_ofPred_eq, not_and, not_not] at this
     rw [this (hgoodI hp hw).1, mul_zero]
   · intro ta hta hta0
     let V : Set (AddValuation (Ω c) (WithTop ℤ)) :=
@@ -132,7 +132,7 @@ theorem good_primes_properties (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
       intro j
       by_contra h0
       exact hnot (Or.inr (Set.mem_iUnion.mpr ⟨j, hadm, h0⟩))
-    haveI : Nonempty {j // d.w j c ≠ 0} := ⟨⟨d.jc c, hd.w_base c⟩⟩
+    have : Nonempty {j // d.w j c ≠ 0} := ⟨⟨d.jc c, hd.w_base c⟩⟩
     unfold ordMM
     rw [h1, show (⨅ j : {j // d.w j c ≠ 0}, d.ord c (d.Wres c w) d.wL (d.w j c)) = 0 by
       simp only [h2, ciInf_const]]

@@ -96,7 +96,7 @@ theorem Tame.smul (a : ℂ) (h : Tame ψ θ j r S) : Tame ψ θ j r fun x => a �
   refine ⟨fun U x hx => ?_, ‖a‖₊ * c, fun μ 𝓕 d x hx => ?_⟩
   · rw [map_smul]
     exact Submodule.smul_mem _ a (hlev U x hx)
-  · rw [map_smul, sobO_smul, ENNReal.coe_mul, mul_assoc, enorm_eq_nnnorm]
+  · rw [map_smul, sobO_smul, ENNReal.coe_mul, mul_assoc, eNorm_eq_nnNorm]
     gcongr
     exact hc μ 𝓕 d x hx
 
@@ -158,7 +158,7 @@ private theorem dH_eq_sum_re_im_single {ι B : Type} [Fintype ι] [DecidableEq �
   have hv : v = ∑ k, ((v k).re • (Pi.single k (1 : ℂ) : ι → ℂ) + (v k).im • (Pi.single k Complex.I : ι → ℂ)) := by
     funext x
     simp only [Finset.sum_apply, Pi.add_apply, Pi.smul_apply, Pi.single_apply, smul_ite, smul_zero,
-      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true, Complex.real_smul, mul_one]
+      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Complex.real_smul, mul_one]
     exact (Complex.re_add_im (v x)).symm
   conv_lhs => rw [hv]
   unfold dH

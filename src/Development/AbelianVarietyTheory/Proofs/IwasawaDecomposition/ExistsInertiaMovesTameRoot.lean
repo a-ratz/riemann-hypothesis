@@ -165,7 +165,7 @@ theorem cong_on_adjoin : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteVal
     exact hvpos ϖ hϖ0 (by rw [hx, map_zero])
   set t := O.valuation x with ht
   have htl : O.valuation (algebraMap (FractionRing W) F ϖK) = t ^ l := by rw [← hx', map_pow]
-  have ht0 : 0 < t := zero_lt_iff.mpr (by simpa [ht] using hx0)
+  have ht0 : 0 < t := pos_iff_ne_zero.mpr (by simpa [ht] using hx0)
   have ht1 : t < 1 := by
     have := hϖlt
     rw [IsScalarTower.algebraMap_apply W (FractionRing W) F, ← hϖK, htl] at this
@@ -354,10 +354,10 @@ theorem exists_integral_quotient :
   have hle : ∀ i, v (b i) ≤ M := fun i => by
     by_cases hi : i ≤ n
     · exact hi0max i (Finset.mem_range.mpr (by omega))
-    · rw [hcoeff0 i (by omega), map_zero]; exact zero_le'
+    · rw [hcoeff0 i (by omega), map_zero]; exact zero_le
   have hM0 : M ≠ 0 := by
     intro h
-    have h1 : v (b n) = 0 := le_antisymm (h ▸ hle n) zero_le'
+    have h1 : v (b n) = 0 := le_antisymm (h ▸ hle n) zero_le
     rw [Valuation.zero_iff] at h1
     have h2 : p.leadingCoeff = 0 := (algebraMap (FractionRing W) F).injective (by rw [map_zero]; exact h1)
     exact hp0 (Polynomial.leadingCoeff_eq_zero.mp h2)
@@ -374,7 +374,7 @@ theorem exists_integral_quotient :
     · rw [hcoeff0 i (by omega), map_zero] at h
       exact hM0 h.symm
   have hbj : b j ≠ 0 := fun h => hM0 (by rw [← hjM, h, map_zero])
-  have hMpos : 0 < M := zero_lt_iff.mpr hM0
+  have hMpos : 0 < M := pos_iff_ne_zero.mpr hM0
   set c : ℕ → F := fun i => b i / b j with hc
   have hcle : ∀ i, v (c i) ≤ 1 := fun i => by
     simp only [c, map_div₀, hjM]
@@ -434,8 +434,8 @@ theorem exists_inertia_moves_root : ∀ (W : Type) [CommRing W] [IsDomain W] [Is
       IsPrimitiveRoot (σ π / π) k := by
   intro W _ _ _ _ _ F _ _ _ ϖ hϖ k hk
   let K := FractionRing W
-  letI : Algebra W F := ((algebraMap K F).comp (algebraMap W K)).toAlgebra
-  haveI : IsScalarTower W K F := .of_algebraMap_eq fun _ => rfl
+  let : Algebra W F := ((algebraMap K F).comp (algebraMap W K)).toAlgebra
+  have : IsScalarTower W K F := .of_algebraMap_eq fun _ => rfl
   have hk0 : k ≠ 0 := by
     rintro rfl
     exact not_isUnit_zero (M₀ := W) (by simpa using hk)
@@ -444,12 +444,12 @@ theorem exists_inertia_moves_root : ∀ (W : Type) [CommRing W] [IsDomain W] [Is
   obtain ⟨O, hO⟩ := (LocalSubring.range f).exists_le_valuationSubring
   obtain ⟨h1, hloc⟩ := (GlobalTheory.localSubring_range_le_valuationSubring_iff_isLocalHom f O).1 hO
   have h2 := ((GlobalTheory.localSubring_range_le_valuationSubring_iff f O).1 hO).2
-  haveI : CharZero K := inferInstance
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
-  haveI : IsAlgClosed F := IsAlgClosure.isAlgClosed K
+  have : CharZero K := inferInstance
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
+  have : IsAlgClosed F := IsAlgClosure.isAlgClosed K
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (f ϖ) (Nat.pos_of_ne_zero hk0)
-  haveI : NeZero (k : F) := ⟨by exact_mod_cast hk0⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F k
+  have : NeZero (k : F) := ⟨by exact_mod_cast hk0⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F k
   have hπ0 : π ≠ 0 := by
     rintro rfl
     rw [zero_pow hk0, eq_comm, map_eq_zero_iff f hf] at hπ
@@ -457,7 +457,7 @@ theorem exists_inertia_moves_root : ∀ (W : Type) [CommRing W] [IsDomain W] [Is
   have hmin := GlobalTheory.TameKummer.minpoly_eq K hϖ hk0 (ρ := π) hπ
   have hmin' := GlobalTheory.TameKummer.minpoly_eq K hϖ hk0 (ρ := ζ * π)
     (by rw [mul_pow, hζ.pow_eq_one, _root_.one_mul]; exact hπ)
-  haveI : IsGalois K F := {}
+  have : IsGalois K F := {}
   obtain ⟨g, hg⟩ := (Normal.minpoly_eq_iff_mem_orbit (F := K) F (x := ζ * π) (y := π)).1
     (hmin'.trans hmin.symm)
   change g π = ζ * π at hg
@@ -466,9 +466,9 @@ theorem exists_inertia_moves_root : ∀ (W : Type) [CommRing W] [IsDomain W] [Is
   have hc : SMulCommClass (F ≃ₐ[K] F) W F := ⟨fun g v x => by
     rw [← IsScalarTower.algebraMap_smul K v x, ← IsScalarTower.algebraMap_smul K v (g • x)]
     simp only [AlgEquiv.smul_def, Algebra.smul_def, _root_.map_mul, AlgEquiv.commutes]⟩
-  letI : TopologicalSpace S := ⊥
-  haveI : DiscreteTopology S := ⟨rfl⟩
-  haveI : ContinuousSMul (F ≃ₐ[K] F) S := by
+  let : TopologicalSpace S := ⊥
+  have : DiscreteTopology S := ⟨rfl⟩
+  have : ContinuousSMul (F ≃ₐ[K] F) S := by
     rw [continuousSMul_iff_stabilizer_isOpen]
     intro x
     have := stabilizer_isOpen_of_isIntegral (K := K) (x : F)
@@ -479,10 +479,10 @@ theorem exists_inertia_moves_root : ∀ (W : Type) [CommRing W] [IsDomain W] [Is
   let H := MulAction.stabilizer (F ≃ₐ[K] F) π
   have hH : IsClosed (H : Set (F ≃ₐ[K] F)) :=
     H.isClosed_of_isOpen (stabilizer_isOpen_of_isIntegral (K := K) π)
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
+  have : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
   let φ : W →+* O := f.codRestrict O h1
-  letI : Algebra W O := φ.toAlgebra
-  haveI : IsScalarTower W O F := .of_algebraMap_eq fun _ => rfl
+  let : Algebra W O := φ.toAlgebra
+  have : IsScalarTower W O F := .of_algebraMap_eq fun _ => rfl
   have hSO : ∀ b : F, IsIntegral W b → b ∈ O := by
     intro b hb
     obtain ⟨y, hy⟩ := (IsIntegrallyClosed.isIntegral_iff (R := O) (K := F)).mp hb.tower_top

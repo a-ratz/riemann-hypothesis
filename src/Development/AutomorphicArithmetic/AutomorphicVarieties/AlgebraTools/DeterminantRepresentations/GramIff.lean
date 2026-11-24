@@ -115,7 +115,7 @@ theorem UpperTheory.V.AlgebraTools.Det.gramIff :
     obtain ⟨s, hsr, hss, hli⟩ := exists_linearIndependent K (Set.range ρ)
     have hs_top : Submodule.span K s = ⊤ := hss.trans hspan
     let bs := Module.Basis.mk hli (by rw [Subtype.range_coe]; exact hs_top.ge)
-    haveI : Fintype s := (hli.setFinite).fintype
+    have : Fintype s := (hli.setFinite).fintype
     have hcs : Fintype.card (ι × ι) = Fintype.card s := hcard.trans (Module.finrank_eq_card_basis bs)
     let e : ι × ι ≃ s := Fintype.equivOfCardEq hcs
     have hmem : ∀ a, ∃ y, ρ y = (e a : Matrix ι ι K) := fun a => hsr (e a).2

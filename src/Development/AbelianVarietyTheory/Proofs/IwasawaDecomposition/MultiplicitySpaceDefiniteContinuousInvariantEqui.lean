@@ -60,10 +60,10 @@ theorem mult_equiv_update {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ 
   | zero => rfl
   | add T T' _ _ h h' =>
     funext z
-    simp only [MultilinearMap.add_apply, Pi.add_apply, h, h', rTr]
+    simp only [add_apply, Pi.add_apply, h, h', rTr]
   | smul r T _ h =>
     funext z
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, h, rTr]
+    simp only [smul_apply, Pi.smul_apply, h, rTr]
 
 theorem multT_cont_left_equiv :
     ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (π : D.what₂.Tau → Matrix.unitaryGroup (Fin V.rank) ℂ → Module.End ℂ (SmT M)) (J : Set (GA D V)) (χ : GA D V → ℂ), AllPlus M → (∀ τ, M.sm τ = ⊤) → Function.Injective (inclT M) → IsTensAct M π → ∀ L ∈ MultT θ M J χ, ∀ x, Continuous (L x) ∧ (∀ γ ∈ GQ V, ∀ h, L x (γ * h) = L x h) ∧ ∀ τ u, L (π τ u x) = rTr V (atTau θ V τ (unfr M τ u)) (L x) := by

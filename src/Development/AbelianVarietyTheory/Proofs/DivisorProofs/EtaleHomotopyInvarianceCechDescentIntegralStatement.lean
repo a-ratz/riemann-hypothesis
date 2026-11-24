@@ -76,7 +76,7 @@ theorem tensor_univ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (k : �
     ∃! φ : PiTensorProduct A (fun _ : Fin (k + 1) => B) →+* R,
       ∀ j, φ.comp (PiTensorProduct.singleAlgHom (R := A) (A := fun _ : Fin (k + 1) => B) j).toRingHom = g j := by
   classical
-  letI : Algebra A R := ((g 0).comp (algebraMap A B)).toAlgebra
+  let : Algebra A R := ((g 0).comp (algebraMap A B)).toAlgebra
   let g' : Fin (k + 1) → (B →ₐ[A] R) := fun j => ⟨g j, fun r => RingHom.congr_fun (hg j) r⟩
   refine ⟨(GlobalTheory.piTensorLift g').toRingHom, fun j => ?_, fun ψ hψ => ?_⟩
   · ext x
@@ -127,8 +127,8 @@ theorem spec_integral_surj (A B : Type) [CommRing A] [CommRing B] (φ : A →+* 
     (hk : RingHom.ker φ ≤ nilradical A) :
     IsIntegralHom (Spec.map (CommRingCat.ofHom φ)) ∧ Surjective (Spec.map (CommRingCat.ofHom φ)) := by
   refine ⟨IsIntegralHom.SpecMap_iff.2 hi, ⟨fun (x : PrimeSpectrum A) => ?_⟩⟩
-  letI := φ.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hi⟩
+  let := φ.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hi⟩
   have hle : (⊥ : Ideal B).comap (algebraMap A B) ≤ x.asIdeal := by
     rw [← RingHom.ker_eq_comap_bot]
     exact hk.trans (nilradical_le_prime x.asIdeal)
@@ -138,7 +138,7 @@ theorem spec_integral_surj (A B : Type) [CommRing A] [CommRing B] (φ : A →+* 
 
 theorem poly_isIntegral (A B : Type) [CommRing A] [CommRing B] (φ : A →+* B) (hi : φ.IsIntegral) :
     (Polynomial.mapRingHom φ).IsIntegral := by
-  letI := (Polynomial.mapRingHom φ).toAlgebra
+  let := (Polynomial.mapRingHom φ).toAlgebra
   have hC : ∀ b : B, IsIntegral (Polynomial A) (Polynomial.C b) := by
     intro b
     obtain ⟨f, hf, hfb⟩ := hi b

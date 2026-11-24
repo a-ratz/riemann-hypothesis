@@ -97,7 +97,7 @@ theorem extX_mul_jX (hx : ∀ u ∈ UX D ρ, x ⬝ u.1 = x) {n : GA D S} (hn : n
     rw [Matrix.add_apply, Matrix.one_apply_ne (ne_of_gt h), hM i j (le_of_lt h), add_zero]
   have hdiag : ∀ i, (1 + M) i i = 1 := fun i => by rw [Matrix.add_apply, Matrix.one_apply_eq, hM i i le_rfl, add_zero]
   have hu : IsUnit (1 + M) := (Matrix.isUnit_iff_isUnit_det _).2 (by
-    rw [Matrix.det_of_upperTriangular htri]; simp only [hdiag, Finset.prod_const_one]; exact isUnit_one)
+    rw [det_of_isUpperTriangular htri]; simp only [hdiag, Finset.prod_const_one]; exact isUnit_one)
   have hmem : hu.unit ∈ UX D ρ := fun i j => by
     refine ⟨fun h => ?_, ?_⟩
     · change (1 + M) i j = 0; exact htri h

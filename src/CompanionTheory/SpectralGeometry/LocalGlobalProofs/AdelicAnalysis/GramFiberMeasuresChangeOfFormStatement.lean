@@ -69,7 +69,7 @@ theorem fibre_map_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hR' := hR
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := hR'
   obtain ⟨hK1, hK2, hK3, hK4, -, -, -, hK8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI := hK8 n M
+  have := hK8 n M
   obtain ⟨hH1, hH2, hH3, hH4, hlift⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hcm R n
   obtain ⟨l, hlc, hl⟩ := hlift M J hJ
   obtain ⟨l', hlc', hl'⟩ := hlift M J' hJ'
@@ -96,7 +96,7 @@ theorem fibre_map_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hB : IsOpen B := by
     have hu := (_root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hcm R hR).isOpen_range
     have hd : Continuous fun S : HermR R σ n => (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det :=
-      Continuous.matrix_det continuous_subtype_val
+      Continuous.matrix_det continuous_subtypeVal
     have := hu.preimage hd
     convert this using 1
     ext S
@@ -135,7 +135,7 @@ theorem fibre_map_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     apply h0
     rw [← he] at ha
     have := congrArg (fun ρ : Measure _ => ρ Set.univ) ha
-    simp only [Measure.coe_zero, Pi.zero_apply] at this
+    simp only [FunLike.coe_zero, Pi.zero_apply] at this
     rw [Measure.map_apply e.continuous.measurable MeasurableSet.univ] at this
     simpa using this
   have hHaar : (a • μ).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul μ ha0

@@ -161,7 +161,7 @@ theorem toNat_emod_lt {q : ℕ} (hq : 0 < q) (x : ℤ) : (x % (q : ℤ)).toNat <
 
 theorem eq_of_cast_eq {q : ℕ} {i i' : ℕ} (hi : i < q) (hi' : i' < q)
     (h : (i : ZMod q) = (i' : ZMod q)) : i = i' := by
-  haveI : NeZero q := ⟨by omega⟩
+  have : NeZero q := ⟨by omega⟩
   rw [← ZMod.val_cast_of_lt hi, ← ZMod.val_cast_of_lt hi', h]
 
 end GlobalTheory.Hk.UDia

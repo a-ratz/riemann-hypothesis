@@ -399,9 +399,9 @@ theorem localLattice_eq_iff (Zd : LocDat D) (p : PlF D) {Λ₁ Λ₂ : Submodule
     (h₁ : Submodule.IsFullLattice D.host.E Λ₁) (h₂ : Submodule.IsFullLattice D.host.E Λ₂) :
     lattice₂ D Zd.M p Λ₁ = lattice₂ D Zd.M p Λ₂ ↔
       Formalism.HermitianLattices.Ext.L3.locF p.asIdeal Λ₁ = Formalism.HermitianLattices.Ext.L3.locF p.asIdeal Λ₂ := by
-  haveI := p.isPrime
-  letI := h₁
-  letI := h₂
+  have := p.isPrime
+  let := h₁
+  let := h₂
   have mem_iff {Λ : Submodule (𝓞 D.host.E) (VS D).V} [Submodule.IsFullLattice D.host.E Λ] (x : (VS D).V) :
       baseChange₂ D p x ∈ lattice₂ D Zd.M p Λ ↔ x ∈ Formalism.HermitianLattices.Ext.L3.locF p.asIdeal Λ :=
     baseChangeAt_mem_localLattice_iff Zd p (by infer_instance) x
@@ -427,7 +427,7 @@ variable {V : Type} [AddCommGroup V] [Module (𝓞 D.host.E) V]
 theorem loc_of_locF (p : PlF D) {P : Ideal (𝓞 D.host.E)} (hP : P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = p.asIdeal)
     (B : Submodule (𝓞 D.host.E) V) {x : V} (hx : x ∈ Formalism.HermitianLattices.Ext.L3.locF p.asIdeal B) :
     x ∈ PI.LatLocGlob.loc P B := by
-  haveI := p.isPrime
+  have := p.isPrime
   obtain ⟨t, ht, htx⟩ := (Formalism.HermitianLattices.Ext.L3.LocalSpans.mem_locF p.asIdeal B x).1 hx
   refine ⟨algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t, fun h => ht ?_, htx⟩
   rw [← hP]; exact h
@@ -436,12 +436,12 @@ theorem locF_of_loc (p : PlF D) (B : Submodule (𝓞 D.host.E) V) {x : V}
     (hx : ∀ P : Ideal (𝓞 D.host.E), P.IsMaximal → P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = p.asIdeal →
       x ∈ PI.LatLocGlob.loc P B) :
     x ∈ Formalism.HermitianLattices.Ext.L3.locF p.asIdeal B := by
-  haveI := p.isPrime
+  have := p.isPrime
   let I : Ideal (𝓞 D.host.E) :=
     { carrier := {a | a • x ∈ B}
-      add_mem' := fun {a c} ha hc => by simp only [Set.mem_setOf_eq, add_smul] at *; exact B.add_mem ha hc
+      add_mem' := fun {a c} ha hc => by simp only [Set.mem_ofPred_eq, add_smul] at *; exact B.add_mem ha hc
       zero_mem' := by simp
-      smul_mem' := fun c a ha => by simp only [Set.mem_setOf_eq, smul_eq_mul, mul_smul] at *; exact B.smul_mem c ha }
+      smul_mem' := fun c a ha => by simp only [Set.mem_ofPred_eq, smul_eq_mul, mul_smul] at *; exact B.smul_mem c ha }
   by_contra hnot
   have hle : I.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ p.asIdeal := by
     intro t ht
@@ -461,7 +461,7 @@ variable {V : Type} [AddCommGroup V] [Module (𝓞 D.host.E) V]
 theorem loc_locF (p : PlF D) {P : Ideal (𝓞 D.host.E)} (hPp : P.IsPrime)
     (hP : P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = p.asIdeal) (A : Submodule (𝓞 D.host.E) V) {x : V}
     (hx : x ∈ PI.LatLocGlob.loc P (Formalism.HermitianLattices.Ext.L3.locF p.asIdeal A)) : x ∈ PI.LatLocGlob.loc P A := by
-  haveI := p.isPrime
+  have := p.isPrime
   obtain ⟨s, hs, hsx⟩ := hx
   obtain ⟨t, ht, htx⟩ := (Formalism.HermitianLattices.Ext.L3.LocalSpans.mem_locF p.asIdeal A _).1 hsx
   refine ⟨algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t * s, fun h => (hPp.mem_or_mem h).elim (fun h1 => ht ?_) hs, ?_⟩
@@ -472,7 +472,7 @@ theorem loc_eq_of_locF_eq (p : PlF D) {P : Ideal (𝓞 D.host.E)} (hPp : P.IsPri
     (hP : P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = p.asIdeal) {A B : Submodule (𝓞 D.host.E) V}
     (h : Formalism.HermitianLattices.Ext.L3.locF p.asIdeal A = Formalism.HermitianLattices.Ext.L3.locF p.asIdeal B) :
     PI.LatLocGlob.loc P A = PI.LatLocGlob.loc P B := by
-  haveI := p.isPrime
+  have := p.isPrime
   have sub : ∀ {A B : Submodule (𝓞 D.host.E) V}, Formalism.HermitianLattices.Ext.L3.locF p.asIdeal A = Formalism.HermitianLattices.Ext.L3.locF p.asIdeal B →
       PI.LatLocGlob.loc P A ⊆ PI.LatLocGlob.loc P B := by
     intro A B hAB x hx
@@ -488,7 +488,7 @@ theorem comap_ne_bot {P : Ideal (𝓞 D.host.E)} (hP : P.IsMaximal) :
     P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≠ ⊥ := by
   have hne : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField D.host.E)
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
-  exact Ideal.comap_ne_bot_of_integral_mem ha0 ha (Algebra.IsIntegral.isIntegral (R := 𝓞 D.host.F) a)
+  exact Ideal.under_ne_bot_of_integral_mem ha0 ha (Algebra.IsIntegral.isIntegral (R := 𝓞 D.host.F) a)
 
 def plOf (P : Ideal (𝓞 D.host.E)) (hP : P.IsMaximal) : PlF D :=
   ⟨P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)), Ideal.comap_isPrime _ _, comap_ne_bot hP⟩
@@ -515,7 +515,7 @@ theorem latPatch_holds : Formalism.L2.SG.Pf.FrameGlobalPatching.LatPatch := by
   let M : Ideal (𝓞 D.host.E) → Set (VS D).V := fun P =>
     if hP : P.IsMaximal then PI.LatLocGlob.loc P (Λ' (plOf P hP)) else ∅
   have hMP : ∀ P (hP : P.IsMaximal), M P = PI.LatLocGlob.loc P (Λ' (plOf P hP)) := fun P hP => by
-    simp only [M, dif_pos hP]
+    simp only [M, dite_eq_left hP]
   have hexc : {P : Ideal (𝓞 D.host.E) | P.IsMaximal ∧ M P ≠ PI.LatLocGlob.loc P Λ₀}.Finite := by
     refine (hfin.biUnion fun p _ => finite_over p).subset ?_
     rintro P ⟨hPm, hne⟩
@@ -529,7 +529,7 @@ theorem latPatch_holds : Formalism.L2.SG.Pf.FrameGlobalPatching.LatPatch := by
   obtain ⟨L, ⟨hLfull, hLloc⟩, huniq⟩ := latLocGlob (𝓞 D.host.E) D.host.E (VS D).V Λ₀ (hfullΛ Λ₀ hΛ₀) M
     (fun P hP => ⟨Λ' (plOf P hP), hfullΛ _ (hΛ' _), hMP P hP⟩) hexc
   have hL : Submodule.IsFullLattice D.host.E L := by
-    letI := Submodule.IsLattice.of_fg D.host.E hLfull.1
+    let := Submodule.IsLattice.of_fg D.host.E hLfull.1
     exact ⟨hLfull.2⟩
   have hlocP : ∀ (p : PlF D) (P : Ideal (𝓞 D.host.E)), P.IsMaximal →
       P.comap (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) = p.asIdeal →
@@ -560,7 +560,7 @@ theorem latPatch_holds : Formalism.L2.SG.Pf.FrameGlobalPatching.LatPatch := by
         (∀ p : PlF D, Formalism.HermitianLattices.Ext.L3.locF p.asIdeal A = Formalism.HermitianLattices.Ext.L3.locF p.asIdeal B) → A ≤ B := by
       intro A B hB hAB x hx
       refine PI.UnitaryGroupMassFormula.UJClassMass.interLocF (F := D.host.F) B hB x fun v => ?_
-      haveI := v.isPrime
+      have := v.isPrime
       have h2 : x ∈ Formalism.HermitianLattices.Ext.L3.locF v.asIdeal B := by
         rw [← hAB v]
         exact (Formalism.HermitianLattices.Ext.L3.LocalSpans.mem_locF v.asIdeal A x).2

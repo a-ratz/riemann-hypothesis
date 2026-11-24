@@ -70,16 +70,16 @@ theorem isQuotInt_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   obtain ⟨bX, lX, sX, -, -, -, hXH, hXR⟩ := GlobalTheory.SplitWeil.volGL_haar k n ν
   obtain ⟨bG, lG, sG, -, -, -⟩ := GlobalTheory.SplitWeil.volGL_haar k (n ⊕ Fin c) ν
   obtain ⟨hN, -, hH, hRi, hconj⟩ := GlobalTheory.RootEx.VolN.volN_haar_and_modulus k n c p hp hpc ν
-  haveI : LocallyCompactSpace (N k n c p) := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaFinite (volN ν n c p) := Measure.IsHaarMeasure.sigmaFinite _
-  haveI : μX.IsMulRightInvariant := by
+  have : LocallyCompactSpace (N k n c p) := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaFinite (volN ν n c p) := Measure.IsHaarMeasure.sigmaFinite _
+  have : μX.IsMulRightInvariant := by
     rw [Measure.isMulLeftInvariant_eq_smul μX (volGL ν n)]
     infer_instance
   have hRm : ∀ (g : GL n k) (u : N k n c p), embX c g * (u : GL (n ⊕ Fin c) k) ∈ R k n c p :=
     fun g u => mul_mem (Subgroup.mem_sup_left ⟨g, rfl⟩) (Subgroup.mem_sup_right u.2)
   have hm : Continuous (fun z : GL n k × N k n c p => embX c z.1 * (z.2 : GL (n ⊕ Fin c) k)) :=
-    (GlobalTheory.QuotInt.continuous_embX.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    (GlobalTheory.QuotInt.continuous_embX.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   let S : GL (n ⊕ Fin c) k → Set (GL n k × N k n c p) :=
     fun h => {z | h⁻¹ * (embX c z.1 * (z.2 : GL (n ⊕ Fin c) k)) * h ∈ J}
   have hSo : ∀ h, IsOpen (S h) := fun h =>
@@ -160,7 +160,7 @@ theorem isQuotInt_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     have := GlobalTheory.QuotInt.sb_of_quot J hJ.1 hJ.2 (T.image (QuotientGroup.mk : GL (n ⊕ Fin c) k → GL (n ⊕ Fin c) k ⧸ J))
       (fun q => ∑ t ∈ T, if (t : GL (n ⊕ Fin c) k ⧸ J) = q then
         f t / (((volCell ν μX p J t).toReal : ℝ) : ℂ) else 0)
-      (fun q hq => Finset.sum_eq_zero fun t ht => if_neg fun e => hq (Finset.mem_image.2 ⟨t, ht, e⟩))
+      (fun q hq => Finset.sum_eq_zero fun t ht => ite_eq_right fun e => hq (Finset.mem_image.2 ⟨t, ht, e⟩))
     have hFeq : F = fun x : GL (n ⊕ Fin c) k => ∑ t ∈ T, if (t : GL (n ⊕ Fin c) k ⧸ J) = (x : GL (n ⊕ Fin c) k ⧸ J) then
         f t / (((volCell ν μX p J t).toReal : ℝ) : ℂ) else 0 := by
       funext x
@@ -212,14 +212,14 @@ theorem isQuotInt_cells : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     show (∑ t ∈ T, _) = _
     rw [Finset.sum_eq_single t₀]
     · intro t ht hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hmem
       exact hne (hT.1 (Finset.mem_coe.2 ht) (Finset.mem_coe.2 ht₀) ((hRinv y t hmem).symm.trans hy))
     · intro h
       exact absurd ht₀ h
   have hFoff : ∀ y, (∀ t ∈ T, DoubleCoset.mk (R k n c p) J y ≠ DoubleCoset.mk (R k n c p) J t) → F y = 0 := by
     intro y hy
-    exact Finset.sum_eq_zero fun t ht => if_neg fun hmem => hy t ht (hRinv y t hmem)
+    exact Finset.sum_eq_zero fun t ht => ite_eq_right fun hmem => hy t ht (hRinv y t hmem)
   have havg : ∀ x, f x = ∫ g, (∫ u : N k n c p, F (embX c g * (u : GL (n ⊕ Fin c) k) * x)
       ∂(volN ν n c p)) ∂μX := by
     intro x

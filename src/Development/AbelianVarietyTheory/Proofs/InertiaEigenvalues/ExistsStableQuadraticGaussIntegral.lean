@@ -124,11 +124,11 @@ theorem GlobalTheory.JR.WeilQuad.exists_stableGauss : ∀ (F E : Type) [Nontrivi
   intro F E _ _ _ _ hU A ψ x μ ω h u
   classical
   obtain ⟨-, -, hψ, hsd, -⟩ := h
-  haveI := hsd.1
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI := EtMeas.finite_L A
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
+  have := hsd.1
+  have : IsUltrametricDist F := hU.ultraF
+  have : LocallyCompactSpace F := hU.lcF
+  have := EtMeas.finite_L A
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
   set β := EtMeas.formL A ((u * x : A.Kˣ) : A.K) with hβ
   set f : A.L → ℂ := fun y => A.psiK ψ ((u : A.K) * x * A.NL y) with hf
   have htr : Continuous (Algebra.trace F A.K) := IsModuleTopology.continuous_of_linearMap _
@@ -212,9 +212,9 @@ theorem GlobalTheory.JR.WeilQuad.exists_stableGauss : ∀ (F E : Type) [Nontrivi
     rw [integral_const_mul, integral_indicator_char μ M hMo (fun m => ψ (β m y))
       (fun a b => by simp [map_add (f := _), AddChar.map_add_eq_mul])]
     by_cases hy : y ∈ N
-    · rw [if_pos ((hN y).1 hy), Set.indicator_of_mem (by exact hy), hiΛ, Set.indicator_of_mem (by exact hNΛ hy)]
+    · rw [ite_eq_left ((hN y).1 hy), Set.indicator_of_mem (by exact hy), hiΛ, Set.indicator_of_mem (by exact hNΛ hy)]
       ring
-    · rw [if_neg (fun h' => hy ((hN y).2 h')), Set.indicator_of_notMem (by exact hy), mul_zero]
+    · rw [ite_eq_right (fun h' => hy ((hN y).2 h')), Set.indicator_of_notMem (by exact hy), mul_zero]
   have h1 : ∫ m, ∫ y, g m y ∂μ ∂μ = (μ.real (M : Set A.L) : ℂ) * ∫ y in (Λ : Set A.L), f y ∂μ := by
     simp_rw [hA]
     rw [integral_mul_const, hiM, integral_indicator_const _ hMo.measurableSet]

@@ -227,7 +227,7 @@ theorem detD_detD_comp {ιA ιB : Type} [Fintype ιA] [DecidableEq ιA] [Fintype
         (fun T => (Equiv.Perm.sign τ : ℂ) * iteratedFDeriv ℂ (Fintype.card ιB) F (x₀ + LA T)
           (fun i => LB (Matrix.single ((Fintype.equivFin ιB).symm i) (τ ((Fintype.equivFin ιB).symm i)) 1))) 0 :=
       fun τ _ => contDiffAt_const.mul (hcd' τ)
-    rw [iteratedFDeriv_fun_sum_apply hcd, ContinuousMultilinearMap.sum_apply]
+    rw [iteratedFDeriv_fun_sum_apply hcd, sum_apply]
     refine Finset.sum_congr rfl (fun τ _ => ?_)
     have hfun : (fun T => (Equiv.Perm.sign τ : ℂ) * iteratedFDeriv ℂ (Fintype.card ιB) F (x₀ + LA T)
           (fun i => LB (Matrix.single ((Fintype.equivFin ιB).symm i) (τ ((Fintype.equivFin ιB).symm i)) 1))) =
@@ -235,7 +235,7 @@ theorem detD_detD_comp {ιA ιB : Type} [Fintype ιA] [DecidableEq ιA] [Fintype
           (fun i => LB (Matrix.single ((Fintype.equivFin ιB).symm i) (τ ((Fintype.equivFin ιB).symm i)) 1))) := by
       funext T
       simp
-    rw [hfun, iteratedFDeriv_const_smul_apply (hcd' τ), ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+    rw [hfun, iteratedFDeriv_const_smul_apply (hcd' τ), smul_apply, smul_eq_mul]
     congr 1
     exact (iteratedFDeriv_comp_add_clm_zero _ U hU (hΨ τ) x₀ hx LA _ _).trans
       (iteratedFDeriv_add_append_eq_iteratedFDeriv_apply _ _ F U hU hF x₀ hx _ _).symm
@@ -274,7 +274,7 @@ private theorem isOpen_dom_analytic_determinants : IsOpen (Dom n) := by
   have he : Dom n = {x : M2 n | (u1 x).det ≠ 0} ∩ {x : M2 n | (u2 x).det ≠ 0} ∩
       ({x : M2 n | x.det ≠ 0} ∩ (fun x => ub1 x) ⁻¹' {m | m.det ≠ 0}) := by
     ext x
-    simp only [Dom, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, isUnit_iff_ne_zero]
+    simp only [Dom, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, isUnit_iff_ne_zero]
     tauto
   rw [he]
   exact ((isOpen_ne_fun hc1 continuous_const).inter (isOpen_ne_fun hc2 continuous_const)).inter h4
@@ -374,7 +374,7 @@ private theorem iteratedFDeriv_succ_mul_eq_fderiv_of_mul_zero {F : M2 n → ℂ}
     (LinearMap.toContinuousLinearMap.toLinearMap ∘ₗ LinearMap.mul ℂ (M2 n)).toContinuousLinearMap
   have hcd : ContDiffAt ℂ ∞ F x := hF.contDiffAt (isOpen_dom_analytic_determinants.mem_nhds hx)
   have hΦ : DifferentiableAt ℂ (iteratedFDeriv ℂ m F) x :=
-    hcd.differentiableAt_iteratedFDeriv (WithTop.coe_lt_coe.mpr (ENat.coe_lt_top m))
+    hcd.differentiableAt_iteratedFDeriv (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top m))
   have hfd := hΦ.hasFDerivAt.continuousMultilinearMapCompContinuousLinearMap
     (g := fun _ : Fin m => fun y => Lm y) (fun _ => Lm.hasFDerivAt)
   have hfd2 := hfd.continuousMultilinear_apply_const (fun i => W i.succ)

@@ -143,7 +143,7 @@ theorem GlobalTheory.Poinc.Sep.Cmp.exists_zhAbove : ∀ (g n : ℕ) (F : SFam g 
   have hYp : IsProper Y.s := ((GlobalTheory.isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hO.proj).1
   have hsep : IsSeparated X₁.M.s := X₁.M.sep
   have hqp : IsProper q := by
-    haveI : IsProper (q ≫ X₁.M.s) := by rw [hq.inducedModelMorphism_comp_structureMap]; exact hYp
+    have : IsProper (q ≫ X₁.M.s) := by rw [hq.inducedModelMorphism_comp_structureMap]; exact hYp
     exact IsProper.of_comp q X₁.M.s
   exact ⟨Y, q, U₀, EE, ⟨G⟩, hO, hE, hq, hqp⟩
 end -- clump:auto
@@ -220,7 +220,7 @@ theorem spMap_stalkHom {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M :
 theorem isFractionRing_stalk {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (z : M.Z) :
     letI : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
     IsFractionRing (M.Z.presheaf.stalk z) Ω := by
-  letI : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
+  let : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
   have : FaithfulSMul (M.Z.presheaf.stalk z) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (M.stalkHom_injective z)
   refine IsFractionRing.of_field _ _ fun x => ?_
@@ -237,12 +237,12 @@ theorem exists_cdvr_thru {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [I
     ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsDiscreteValuationRing V) (φ : M.Z.presheaf.stalk z →+* V)
       (e : Ω →+* FractionRing V), IsAdicComplete (maximalIdeal V) V ∧ CharZero V ∧ IsLocalHom φ ∧
       jK V ≫ spMap φ ≫ M.Z.fromSpecStalk z = spMap e ≫ M.pt := by
-  letI : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
-  haveI := isFractionRing_stalk M z
-  haveI : CharZero (M.Z.presheaf.stalk z) := (M.stalkHom z).charZero
-  haveI := M.lft
-  haveI : IsLocallyNoetherian (Sp o) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of o)))
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  let : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
+  have := isFractionRing_stalk M z
+  have : CharZero (M.Z.presheaf.stalk z) := (M.stalkHom z).charZero
+  have := M.lft
+  have : IsLocallyNoetherian (Sp o) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of o)))
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨V₀, _, _, _, φ₀, ⟨hdvr, hcpl, hchar⟩, hinj₀, hmax⟩ :=
     GlobalTheory.ClosedPol.exists_cdvr (M.Z.presheaf.stalk z) (maximalIdeal _)
   have hl : IsLocalHom φ₀ := ((IsLocalRing.local_hom_tfae φ₀).out 1 5).2 hmax
@@ -263,9 +263,9 @@ theorem exists_uMem_thru : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matr
   intro g n F W Z i X₁ z₁ act hact Y πY hY y hy
   subst hy
   obtain ⟨U₀, EE, -, -, -, hhom, -⟩ := hY
-  haveI := X₁.imm
-  haveI : CharZero X₁.Ω₁ := X₁.ar.char
-  haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
+  have := X₁.imm
+  have : CharZero X₁.Ω₁ := X₁.ar.char
+  have : IsDedekindDomain X₁.o₁ := X₁.ar.ded
   obtain ⟨V₀, _, _, hdvr, φ₀, emb, hcpl, hchar, hl₀, hptY⟩ := exists_cdvr_thru Y y
   have hB : GlobalTheory.Mum.Base V₀ := ⟨⟨inferInstance, inferInstance, inferInstance, hcpl⟩, hchar⟩
   have hπ : Y.pt ≫ πY = X₁.M.pt := by
@@ -274,10 +274,10 @@ theorem exists_uMem_thru : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matr
   let s : X₁.M.Z.presheaf.stalk (πY y) →+* Y.Z.presheaf.stalk y := (πY.stalkMap y).hom
   have hs : spMap s ≫ X₁.M.Z.fromSpecStalk (πY y) = Y.Z.fromSpecStalk y ≫ πY :=
     Scheme.SpecMap_stalkMap_fromSpecStalk πY
-  haveI hsl : IsLocalHom s := inferInstanceAs (IsLocalHom (πY.stalkMap y).hom)
+  have hsl : IsLocalHom s := inferInstanceAs (IsLocalHom (πY.stalkMap y).hom)
   let y₀ : Sp (FractionRing V₀) ⟶ F.X := spMap emb ≫ spMap X₁.S.R.val.toRingHom ≫ X₁.u
   obtain ⟨T, f, fK, hf, hfl, hff, hfK, hTy⟩ := GlobalTheory.T.traitExistsAfterFiniteExtension_of_completeDVR g n _ (zetaAway n) F V₀ hB hdvr y₀
-  haveI := hfl
+  have := hfl
   let ψ : Y.Z.presheaf.stalk y →+* T.V := f.comp φ₀
   let ev : X₁.M.Z.presheaf.stalk (πY y) →+* T.V := ψ.comp s
   have hξ : (spMap ψ ≫ Y.Z.fromSpecStalk y) ≫ πY = spMap ev ≫ X₁.M.Z.fromSpecStalk (πY y) := by
@@ -305,7 +305,7 @@ theorem exists_uMem_thru : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matr
     simp only [y₀, Category.assoc]
   obtain ⟨hmono, hnn, -, -⟩ := GlobalTheory.T.siegelModuliTrait_periods_monomial_posDef g n _ (zetaAway n) F T
   have hCN : IsCN T.V := ⟨inferInstance, inferInstance, T.complete, inferInstance⟩
-  haveI hψ : IsLocalHom ψ := RingHom.isLocalHom_comp _ _
+  have hψ : IsLocalHom ψ := RingHom.isLocalHom_comp _ _
   obtain ⟨𝔪, -⟩ := GlobalTheory.T.exists_uniformised_member_of_refined_uniformisation g X₁.one_le n X₁.three_le X₁.odd F Z X₁.z i X₁.proj
     (fun x => ⟨X₁.normalZ.isDomain_stalk x, X₁.normalZ.isIntegrallyClosed_stalk x⟩) X₁.thetaSetup_structureMap_comp X₁.dense W X₁.e8
     X₁.thetaInt X₁ (πY y) act hact T.V
@@ -529,7 +529,7 @@ theorem torAt_char_eq_weil : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Ma
   intro g n F W Z i X₁ z₁ act
   refine ⟨1, ?_⟩
   intro V _ _ _ ev X _ m t δ 𝔪 τ c x hT hxo a mu hY
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hL : LL := GlobalTheory.firstFiveLaws
   have hG : GlobalFnsSt := hL.1.globalFns
@@ -557,12 +557,12 @@ theorem torAt_char_eq_weil : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Ma
     have e := unitOn_injective (GlobalTheory.CommutatorPairing.weilIs_unique hG 𝔪.A.isAb 𝔪.A.isLB W₂ W₃)
     rw [hp'y] at e
     have e' := congrArg Units.val e
-    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
       RingHom.coe_comp, Function.comp_apply, Units.val_pow_eq_pow_val, c₀, IsUnit.unit_spec] at e'
     rw [hτv] at e'
     rw [Units.val_one, one_smul]
-    haveI : IsDomain X₁.o₁ := X₁.ar.ded.toIsDomain
-    haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨by omega⟩
+    have : IsDomain X₁.o₁ := X₁.ar.ded.toIsDomain
+    have : NeZero (X₁.S.r * X₁.S.N) := ⟨by omega⟩
     have hzp := isPrimitiveRoot_map_of_isUnit_order ((algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).comp
       (𝔪.yK.comp (algebraMap X₁.o₁ X₁.S.R))) (by omega) hζ X₁.S.unit
     refine intCast_eq_of_zpow_eq hzp ?_
@@ -772,8 +772,8 @@ theorem GlobalTheory.Poinc.Sep.Spz.latTo_of_specializes : ∀ (g n : ℕ) (F : S
   have b₂ := base_of_uMem 𝔫₂
   obtain ⟨ρ, hρ⟩ := GlobalTheory.T.exists_torus_spread_over_trait_specialisation Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
     𝔫₂.U ξ₂ β₂ hβ₂ inferInstance (by
-      haveI := ArithBase.ded (o := X₁.o₁) (Ω := X₁.Ω₁)
-      haveI := Y.lft
+      have := ArithBase.ded (o := X₁.o₁) (Ω := X₁.Ω₁)
+      have := Y.lft
       exact LocallyOfFiniteType.isLocallyNoetherian Y.s) hsp
   have onto := GlobalTheory.T.torus_spread_lattice_map_surjective Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ
@@ -792,7 +792,7 @@ theorem GlobalTheory.Poinc.Sep.Spz.latTo_of_specializes : ∀ (g n : ℕ) (F : S
     rw [← pow_mul, ← sq]; exact X₁.S.prim.pow_eq_one
 
   have hy : πY (ξ₂ (closedPoint V₂)) = z₁ := by
-    haveI := 𝔫₂.loc
+    have := 𝔫₂.loc
     have : (ξ₂ ≫ πY) (closedPoint V₂) = z₁ := by
       rw [hξ₂]
       exact (congrArg (X₁.M.Z.fromSpecStalk z₁) (IsLocalRing.comap_closedPoint ev₂)).trans
@@ -983,11 +983,11 @@ theorem latTo_all (hact : IsAct X₁ act)
         ξ ≫ πY = spMap ev' ≫ X₁.M.Z.fromSpecStalk z₁ ∧ LatTo 𝔪 𝔫 := by
     intro V _ _ _ ev X _ m t δ 𝔪
     obtain ⟨V₁, _, _, _, _, j₁, hcn₁, hj₁, hl₁⟩ := GlobalTheory.T.exists_completeDVR_local_embedding_normal V 𝔪.cn
-    haveI := 𝔪.loc
-    haveI := hl₁
+    have := 𝔪.loc
+    have := hl₁
     obtain ⟨V₂, _, _, _, _, j₂, ξ, hcn₂, hj₂, hl₂, hξ⟩ :=
       GlobalTheory.T.exists_trait_lift_semiabelianExtensionModel g n F W Z i X₁ z₁ Y πY hY V₁ (j₁.comp ev) inferInstance hcn₁
-    haveI := hl₂
+    have := hl₂
     obtain ⟨m', t', δ', 𝔫, hyy⟩ :=
       GlobalTheory.T.member_baseChange_injective_local_complete_normal g n F W Z i X₁ z₁ act hact V ev X m t δ 𝔪 V₂ (j₂.comp j₁) hcn₂ (hj₂.comp hj₁) inferInstance
     exact ⟨V₂, inferInstance, inferInstance, inferInstance, inferInstance, (j₂.comp j₁).comp ev, m', t', δ', 𝔫, ξ, hξ,
@@ -1022,8 +1022,8 @@ theorem latTo_all (hact : IsAct X₁ act)
     | refl => exact Iff.rfl
     | symm _ _ _ ih => exact ih.symm
     | trans _ _ _ _ _ ih1 ih2 => exact ih1.trans ih2
-  haveI := 𝔫₀.loc
-  haveI := 𝔫₁.loc
+  have := 𝔫₀.loc
+  have := 𝔫₁.loc
   have c₀ : πY (ξ₀ (closedPoint W₀)) = z₁ := closed_over hξ₀
   have c₁ : πY (ξ₁ (closedPoint W₁)) = z₁ := closed_over hξ₁
   have P0 : P (ξ₀ (closedPoint W₀)) := by

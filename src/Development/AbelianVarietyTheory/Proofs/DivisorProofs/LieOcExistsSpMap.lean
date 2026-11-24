@@ -176,8 +176,8 @@ theorem represents_away (S : Scheme.{0}) (P : ∀ (R' : Type) [CommRing R'], (Sp
       Represents (fun (R' : Type) [CommRing R'] (h : Localization.Away a →+* R') ↦
         ptQ P V hV R' (h.comp (algebraMap Γ(S, V) (Localization.Away a)))) J' := by
   let ρ := (S.presheaf.map (homOfLE (S.basicOpen_le a)).op).hom
-  letI : Algebra Γ(S, V) Γ(S, S.basicOpen a) := ρ.toAlgebra
-  haveI : IsLocalization.Away a Γ(S, S.basicOpen a) := hV.isLocalization_basicOpen a
+  let : Algebra Γ(S, V) Γ(S, S.basicOpen a) := ρ.toAlgebra
+  have : IsLocalization.Away a Γ(S, S.basicOpen a) := hV.isLocalization_basicOpen a
   let e : Localization.Away a ≃ₐ[Γ(S, V)] Γ(S, S.basicOpen a) :=
     IsLocalization.algEquiv (Submonoid.powers a) (Localization.Away a) Γ(S, S.basicOpen a)
   refine ⟨J.map (e.symm : Γ(S, S.basicOpen a) →+* Localization.Away a), ?_⟩
@@ -641,7 +641,7 @@ theorem exists_affine_lieMatrix : ∀ (O : Type) [CommRing O] (S : Scheme.{0}) (
           ∀ (c : O) (v : ReciprocityTheory.ChartRestriction.G.PullbackSections.TanM (spMap f ≫ hU.fromSpec) A),
             e (ReciprocityTheory.ChartRestriction.G.PullbackSections.actR (x0 := spMap f ≫ hU.fromSpec) (S := R') act c v) = matAct M f c (e v) := by
   intro O _ S A _ _ hsm act z
-  haveI := hsm
+  have := hsm
   obtain ⟨U, hU, hzU, -, n, v₀, hv⟩ := GlobalTheory.exists_affine_lieBasis_baseChange S A z ⊤ trivial
   refine ⟨U, hU, hzU, n, ?_⟩
   have hfr := exists_frame hU v₀ hv
@@ -844,7 +844,7 @@ theorem exists_rank_ideal_of_idempotent : ∀ (A : Type) [CommRing A] (I : Type)
     have hnil : IsNilpotent (f x) := by
       rw [← mem_nilradical, nilradical_eq_sInf, Submodule.mem_sInf]
       intro (Q : Ideal T) hQ
-      haveI : Q.IsPrime := hQ
+      have : Q.IsPrime := hQ
       let k := AlgebraicClosure (FractionRing (T ⧸ Q))
       let h : T →+* k := (algebraMap (FractionRing (T ⧸ Q)) k).comp
         ((algebraMap (T ⧸ Q) (FractionRing (T ⧸ Q))).comp (Ideal.Quotient.mk Q))
@@ -942,7 +942,7 @@ theorem finrank_range_map_eq_rankAtStalk (A : Type) [CommRing A] (n : ℕ)
     Module.finrank k (LinearMap.range (P.map g).mulVecLin) =
       Module.rankAtStalk (LinearMap.range P.mulVecLin)
         (⟨RingHom.ker g, RingHom.ker_isPrime g⟩ : PrimeSpectrum A) := by
-  letI : Algebra A k := g.toAlgebra
+  let : Algebra A k := g.toAlgebra
   set e : (Fin n → A) →ₗ[A] (Fin n → A) := P.mulVecLin with he_def
   have he : e ∘ₗ e = e := by
     rw [he_def, ← Matrix.mulVecLin_mul, hP]
@@ -955,7 +955,7 @@ theorem finrank_range_map_eq_rankAtStalk (A : Type) [CommRing A] (n : ℕ)
     change e x.1 = x.1
     rw [← hy]
     exact LinearMap.congr_fun he y
-  haveI : Module.Projective A (LinearMap.range e) := Module.Projective.of_split i r hri
+  have : Module.Projective A (LinearMap.range e) := Module.Projective.of_split i r hri
 
   have hst := Module.rankAtStalk_baseChange (R := A) (M := LinearMap.range e) (S := k) ⊥
   rw [Module.rankAtStalk_eq_finrank_of_free] at hst
@@ -1649,7 +1649,7 @@ theorem lieMult_iff_finrank : ∀ (O : Type) [CommRing O] (S : Scheme.{0}) (G : 
     Module.Finite k (ReciprocityTheory.ChartRestriction.G.PullbackSections.TanM t G) →
       (LieMult act t τ m ↔ Module.finrank k (eigSub (ReciprocityTheory.ChartRestriction.G.PullbackSections.actR (x0 := t) (S := k) act) τ) = m) := by
   intro O _ S G _ _ act k _ t τ m hfin
-  haveI := hfin
+  have := hfin
   constructor
   · rintro ⟨v, hv, huniq⟩
     let b : Fin m → eigSub (actR (x0 := t) (S := k) act) τ := fun i =>
@@ -1813,7 +1813,7 @@ theorem lieHer_iff_mat {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRi
       rw [← Category.assoc, spMap_comp_spMap']
     rw [hx2]
     obtain ⟨e2, he2⟩ := hM k (h.comp (g.comp f))
-    haveI : Module.Finite k (ReciprocityTheory.ChartRestriction.G.PullbackSections.TanM (spMap (h.comp (g.comp f)) ≫ hU.fromSpec) A) :=
+    have : Module.Finite k (ReciprocityTheory.ChartRestriction.G.PullbackSections.TanM (spMap (h.comp (g.comp f)) ≫ hU.fromSpec) A) :=
       Module.Finite.equiv e2.symm
     rw [_root_.GlobalTheory.UPel.HT.LieLin.lieMult_iff_finrank _ _ _ _ _ _ _ _ inferInstance, finrank_eigSub_transport _ _ e2 he2]
 

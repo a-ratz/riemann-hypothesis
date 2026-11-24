@@ -62,7 +62,7 @@ namespace GlobalTheory.SwapPairing
 theorem weilIs_swap_eq : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj A] (P : LB (G2 A).left), IsAbelianScheme A → P.IsLB → LBIso P (P.pull (lift (snd A A) (fst A A)).left) → ∀ (n : ℤ) (T : Over S) (u v : T ⟶ A) (c c' : Γ(T.left, ⊤)ˣ), Out.WeilIs (G2 A) P n (lift 1 u) (lift v 1) c → Out.WeilIs (G2 A) P n (lift u 1) (lift 1 v) c' → c = c' := by
   intro S A _ _ P hA hP hiso n T u v c c' h h'
   let ψ : G2 A ⟶ G2 A := lift (snd A A) (fst A A)
-  haveI : IsMonHom ψ := inferInstanceAs (IsMonHom (lift (snd A A) (fst A A)))
+  have : IsMonHom ψ := inferInstanceAs (IsMonHom (lift (snd A A) (fst A A)))
   have hAA : IsAbelianScheme (G2 A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
   have hx : lift u 1 ≫ ψ = lift 1 u := by ext <;> simp [ψ]
   have hy : lift 1 v ≫ ψ = lift v 1 := by ext <;> simp [ψ]

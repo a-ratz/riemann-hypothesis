@@ -74,7 +74,7 @@ theorem exists_kFinCoef_torus_ne : BranchingSupport.Hyps → ∀ (k r : ℕ) (L 
       SmCW L m → (∃ x ∈ (rep L).TK, m x ≠ 0) →
       ∃ x₀ : L.Hs, (rep L).KFin x₀ ∧ m (L.σ (Formalism.MainNotions.FrameBoundFromBesselTorus.dM k r κ τ) x₀) ≠ 0 := by
     intro V _ _ _ m hm ⟨x, hxT, hx⟩
-    haveI := FiniteDimensional.complete ℂ V
+    have := FiniteDimensional.completeSpace ℂ V
     refine GlobalTheory.exists_kFin_ne_zero_of_cwCont hK k r L.ε L.lam (rep L) hDS V
       (fun v => m (L.σ (Formalism.MainNotions.FrameBoundFromBesselTorus.dM k r κ τ) v)) ?_ ?_ ?_ ?_
     · intro v hv w hw
@@ -123,7 +123,7 @@ theorem exists_kFinCoef_torus_ne : BranchingSupport.Hyps → ∀ (k r : ℕ) (L 
         intro u
         rw [← hinn _ hd x₀ (L.σ (Formalism.MainNotions.FrameBoundFromBesselTorus.dMi k r κ τ) u), hddi]
       ext w
-      simp only [Fin.sum_univ_one, ContinuousLinearMap.comp_apply, key, ContinuousLinearMap.smul_apply, hP, hQ, hX,
+      simp only [Fin.sum_univ_one, ContinuousLinearMap.comp_apply, key, smul_apply, hP, hQ, hX,
         map_smul, key2, inner_smul_right, smul_smul, mul_comm]
       exact congrArg (fun c : ℂ => c • ξ) (mul_comm _ _)
     · simp only [Fin.sum_univ_one]

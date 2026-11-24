@@ -101,7 +101,7 @@ theorem mono_unique {m m' : Equiv.Perm (Fin n) × (Fin n → Fˣ)} {u u' : GL (F
 theorem mem_unip_of {A : Matrix (Fin n) (Fin n) F} (hl : ∀ i j, j < i → A i j = 0) (hd : ∀ i, A i i = 1) :
     ∃ u ∈ unip F n, (u : Matrix (Fin n) (Fin n) F) = A := by
   have hdet : A.det ≠ 0 := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => hl i j hij)]
+    rw [Matrix.det_of_isUpperTriangular (fun i j hij => hl i j hij)]
     simp [hd]
   exact ⟨Matrix.GeneralLinearGroup.mkOfDetNeZero A hdet, ⟨fun i j hij => hl i j hij, hd⟩, rfl⟩
 

@@ -137,7 +137,7 @@ theorem unramifiedDegree_eq_one_of_mem_inertia : ∀ {l : ℕ} [Fact l.Prime] {E
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have : NeZero m := ⟨hm0⟩
   have : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.mpr hm0⟩
-  obtain ⟨ζ₀, h₀⟩ : ∃ z : Ω, IsPrimitiveRoot z m := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+  obtain ⟨ζ₀, h₀⟩ : ∃ z : Ω, IsPrimitiveRoot z m := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   have hj0 := h₀.map_of_injective Bw.j.injective
   obtain ⟨i, -, hi⟩ := hj0.eq_pow_of_pow_eq_one hζm
 

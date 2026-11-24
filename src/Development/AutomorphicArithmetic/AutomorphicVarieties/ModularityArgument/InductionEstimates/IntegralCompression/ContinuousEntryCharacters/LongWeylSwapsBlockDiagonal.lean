@@ -133,8 +133,8 @@ private theorem bd_cont : Continuous (fun p : U2 × U2 => bd p.1 p.2) := by
   rw [this]
   simp only [rx, reindex_apply]
   refine Continuous.matrix_submatrix ?_ _ _
-  exact Continuous.matrix_fromBlocks (continuous_subtype_val.comp continuous_fst) continuous_const
-    continuous_const (continuous_subtype_val.comp continuous_snd)
+  exact Continuous.matrix_fromBlocks (continuous_subtypeVal.comp continuous_fst) continuous_const
+    continuous_const (continuous_subtypeVal.comp continuous_snd)
 
 private theorem long_weyl_element_sq : w4 * w4 = 1 := by
   apply Subtype.ext
@@ -207,23 +207,23 @@ private theorem chi_inj (ν ν' : Fin (2 + 2) → ℤ) (h : ∀ θ, chi ν θ = 
 private noncomputable def hm : Measure U4 := Measure.haarMeasure ⊤
 
 private theorem hm_haar : Haar4 hm ∧ hm.IsOpenPosMeasure := by
-  haveI : hm.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
-  haveI : IsProbabilityMeasure hm := ⟨by
+  have : hm.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
+  have : IsProbabilityMeasure hm := ⟨by
     simpa [hm] using Measure.haarMeasure_self (G := U4) (K₀ := ⊤)⟩
-  haveI : hm.IsMulRightInvariant := by
+  have : hm.IsMulRightInvariant := by
     refine ⟨fun g => ?_⟩
-    haveI : (Measure.map (· * g) hm).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right hm g
-    haveI : IsProbabilityMeasure (Measure.map (· * g) hm) :=
+    have : (Measure.map (· * g) hm).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right hm g
+    have : IsProbabilityMeasure (Measure.map (· * g) hm) :=
       inferInstance
     exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure _ _
-  haveI : hm.IsInvInvariant := by
+  have : hm.IsInvInvariant := by
     refine ⟨?_⟩
-    haveI : hm.inv.IsHaarMeasure :=
+    have : hm.inv.IsHaarMeasure :=
       { lt_top_of_isCompact := fun K hK => by
           rw [Measure.inv_apply]; exact hK.inv.measure_lt_top
         toIsOpenPosMeasure := ⟨fun U hU hne => by
           rw [Measure.inv_apply]; exact hU.inv.measure_ne_zero hm (by simpa using hne)⟩ }
-    haveI : IsProbabilityMeasure hm.inv := by
+    have : IsProbabilityMeasure hm.inv := by
       rw [Measure.inv]; infer_instance
     exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure _ _
   exact ⟨⟨inferInstance, fun k => measurePreserving_mul_left hm k,

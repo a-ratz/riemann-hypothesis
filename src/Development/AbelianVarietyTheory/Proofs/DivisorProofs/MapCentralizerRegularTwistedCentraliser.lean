@@ -106,10 +106,10 @@ theorem commute_of_commute_reg (G : HTGroup p) (r : ℕ) (hr : 0 < r) (γ : Gp G
     obtain rfl : j = 0 := Subsingleton.elim _ _
     simp [Matrix.mul_apply, mul_comm]
   · change a.2 w * b.2 w = b.2 w * a.2 w
-    letI : Algebra (G.Fw w) (KQ p (G.Fw w) r) := Algebra.TensorProduct.leftAlgebra
-    haveI : FiniteDimensional ℚ_[p] (Qr p r) :=
+    let : Algebra (G.Fw w) (KQ p (G.Fw w) r) := Algebra.TensorProduct.leftAlgebra
+    have : FiniteDimensional ℚ_[p] (Qr p r) :=
       ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance hr
-    haveI : Module.Finite (G.Fw w) (KQ p (G.Fw w) r) :=
+    have : Module.Finite (G.Fw w) (KQ p (G.Fw w) r) :=
       inferInstanceAs (Module.Finite (G.Fw w) ((G.Fw w) ⊗[ℚ_[p]] Qr p r))
     have hw : ∀ x : Gr G r, Commute x (inclG G r γ) →
         Commute (x.2 w : Matrix (Fin G.n) (Fin G.n) (KQ p (G.Fw w) r))

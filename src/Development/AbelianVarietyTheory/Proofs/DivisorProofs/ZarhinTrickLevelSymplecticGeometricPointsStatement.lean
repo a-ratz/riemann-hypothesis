@@ -248,7 +248,7 @@ theorem weilIs_poincare_lev : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   have hAA : IsAbelianScheme (G2 c.A) := AbelianSchemeGerms.isAbelianScheme_tensor _ _ hA hA
   have hAB : IsAbelianScheme (c.A ⊗ B) := AbelianSchemeGerms.isAbelianScheme_tensor _ _ hA hB
   have hQ : Q.IsLB := hZ.2.1.isLB
-  haveI : IsMonHom la := hZ.2.2.2.1
+  have : IsMonHom la := hZ.2.2.2.1
   have tA : ∀ p, (toUnit (Over.mk x) ≫ c.lev p) ^ M = 1 := fun p => by
     rw [← GlobalTheory.SymLiftOdd.comp_pow', c.lev_tors]
     simp
@@ -352,8 +352,8 @@ theorem weilIs_formZ : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway
     AbelianSchemeGerms.isAbelianScheme_tensor _ _ (AbelianSchemeGerms.isAbelianScheme_powObj c.A hA 3)
       (AbelianSchemeGerms.isAbelianScheme_powObj B hB 3)
   have hQ : Q.IsLB := hZ.2.1.isLB
-  haveI : IsMonHom la := hZ.2.2.2.1
-  haveI : IsMonHom mu := hZ.2.2.2.2.1
+  have : IsMonHom la := hZ.2.2.2.1
+  have : IsMonHom mu := hZ.2.2.2.2.1
   have hL := pull_isLB (GlobalTheory.ZarhinFam.zarhinBundle_isLineBundle c.A B c.isLB hQ d mu)
     (lift (𝟙 (GlobalTheory.ZarhinFam.Zob c.A B)) (𝟙 (GlobalTheory.ZarhinFam.Zob c.A B))).left
   have tA : ∀ p, (toUnit (Over.mk x) ≫ c.lev p) ^ M = 1 := fun p => by
@@ -509,7 +509,7 @@ theorem inc_act_pa {T : Over S} (d : ℕ) (la : A ⟶ B) (mu : B ⟶ A) (y : T �
     y ≫ incZ A B ≫ actZ A B d la mu (oMat d k) ≫ pa A B i = if sig k = Sum.inl i then y else 1 := by
   rw [actZ, mkZ_pa]
   simp only [oMat_apply, Fin.prod_univ_four, comp_mul, GrpObj.comp_zpow, ← Category.assoc, incZ_pa]
-  simp only [true_and, if_true, Category.comp_id, reduceCtorEq, false_and, if_false, zero_div, zpow_zero,
+  simp only [true_and, ite_true, Category.comp_id, reduceCtorEq, false_and, ite_false, zero_div, zpow_zero,
     mul_one, Sum.inl.injEq, Fin.reduceEq, comp_one, one_zpow]
   split_ifs <;> simp
 
@@ -517,7 +517,7 @@ theorem inc_act_pb {T : Over S} (d : ℕ) (la : A ⟶ B) (mu : B ⟶ A) (y : T �
     y ≫ incZ A B ≫ actZ A B d la mu (oMat d k) ≫ pb A B j = if sig k = Sum.inr j then y ≫ la else 1 := by
   rw [actZ, mkZ_pb]
   simp only [oMat_apply, Fin.prod_univ_four, comp_mul, GrpObj.comp_zpow, ← Category.assoc, incZ_pa, incZ_pb]
-  simp only [true_and, if_true, Category.comp_id, reduceCtorEq, false_and, if_false, zero_div, zpow_zero,
+  simp only [true_and, ite_true, Category.comp_id, reduceCtorEq, false_and, ite_false, zero_div, zpow_zero,
     mul_one, one_mul, Sum.inl.injEq, Fin.reduceEq, comp_one, one_comp, one_zpow]
   split_ifs <;> simp
 
@@ -630,7 +630,7 @@ theorem kappaOK_mod (h M d : ℕ) (κ : Fin 8 → (Fin (8 * h) ⊕ Fin (8 * h) �
     (∀ a, (∀ k, ∃ b, κ k a = M • b) ↔ ∃ b, a = M • b) ∧
       ∀ cc : Fin 8 → (Fin h ⊕ Fin h → ℤ), ∃ a, ∀ k, ∃ b, κ k a = cc k + M • b := by
   refine ⟨kappaOK_dvd_iff hκ, ?_⟩
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   let f : (Fin (8 * h) ⊕ Fin (8 * h) → ZMod M) → (Fin 8 → Fin h ⊕ Fin h → ZMod M) :=
     fun x k j => ((κ k (fun i => ((x i).val : ℤ)) j : ℤ) : ZMod M)
   have hinj : Function.Injective f := by

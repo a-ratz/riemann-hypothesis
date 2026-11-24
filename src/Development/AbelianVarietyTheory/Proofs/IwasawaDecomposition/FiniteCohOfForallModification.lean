@@ -92,7 +92,7 @@ theorem eventually_subsingleton_cohOn [IsLocallyNoetherian X] (π : X' ⟶ X) [I
   let j := (π ⁻¹ᵁ V).ι
   let g : (π ⁻¹ᵁ V).toScheme ⟶ Sp Γ(X, V) := π ∣_ V ≫ hV.isoSpec.hom
   have : IsProper g := inferInstanceAs (IsProper (π ∣_ V ≫ hV.isoSpec.hom))
-  letI := algebraΓOfHom g
+  let := algebraΓOfHom g
   have hj : IsAmpleLB (L.pull j) := hL.pull_of_isImmersion j
   refine (hj.eventually_subsingleton_coh_twist (f := g) (fun _ => rfl) (E.restrict j)).mono fun n hn q hq => ?_
   have := hn q hq
@@ -118,7 +118,7 @@ theorem isFiniteQC_pushforward [IsLocallyNoetherian X] (π : X' ⟶ X) [IsProper
   let j := (π ⁻¹ᵁ V).ι
   let g : (π ⁻¹ᵁ V).toScheme ⟶ Sp Γ(X, V) := π ∣_ V ≫ hV.isoSpec.hom
   have : IsProper g := inferInstanceAs (IsProper (π ∣_ V ≫ hV.isoSpec.hom))
-  letI := algebraΓOfHom g
+  let := algebraΓOfHom g
   have hj : IsAmpleLB (L.pull j) := hL.pull_of_isImmersion j
   have hfin := hj.finite_coh (f := g) (fun _ => rfl) (E.restrict j) 0
   have hfin' := Module.Finite.equiv (cohOn.zeroEquiv Γ(X, V) (E.restrict j) ⊤)
@@ -159,9 +159,9 @@ theorem bijective_unit_app (π : X' ⟶ X) {U V : X.Opens} [IsIso (π ∣_ U)] (
     have := @IsIso.of_isIso_comp_right _ _ _ _ _ (π.appLE V (π ⁻¹ᵁ V) le_rfl)
       (X'.presheaf.map (eqToHom (π ⁻¹ᵁ V).ι_image_top).op) inferInstance h₁
     exact ConcreteCategory.bijective_of_isIso _
-  letI := appLEAlgebra π (le_refl (π ⁻¹ᵁ V))
-  letI := appLEModule π ((Scheme.Modules.pullback π).obj G) (le_refl (π ⁻¹ᵁ V))
-  haveI := appLE_isScalarTower π ((Scheme.Modules.pullback π).obj G) (le_refl (π ⁻¹ᵁ V))
+  let := appLEAlgebra π (le_refl (π ⁻¹ᵁ V))
+  let := appLEModule π ((Scheme.Modules.pullback π).obj G) (le_refl (π ⁻¹ᵁ V))
+  have := appLE_isScalarTower π ((Scheme.Modules.pullback π).obj G) (le_refl (π ⁻¹ᵁ V))
   have hB := isBaseChange_pullbackSections π G hV' hV le_rfl
   have h₁ : Function.Bijective (pullbackSections π G (le_refl (π ⁻¹ᵁ V))) := by
     let e := (TensorProduct.lid Γ(X, V) Γ(G, V)).symm ≪≫ₗ
@@ -209,8 +209,8 @@ theorem finite_coh_of_modification {R : Type} [CommRing R] [IsNoetherianRing R] 
     (ih : letI := algebraΓOfHom f
       ∀ E : X.Modules, IsFiniteQC E → VanishesSomewhere E → ∀ p, Module.Finite R (coh E p))
     (G : X.Modules) [IsFiniteQC G] : letI := algebraΓOfHom f; ∀ p, Module.Finite R (coh G p) := by
-  letI := algebraΓOfHom f
-  letI := algebraΓOfHom (π ≫ f)
+  let := algebraΓOfHom f
+  let := algebraΓOfHom (π ≫ f)
   obtain ⟨_, L, hL⟩ := isProper_and_exists_isAmpleLB_of_isProjOver hP
   have : IsProper π := .of_comp π f
   have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
@@ -272,7 +272,7 @@ theorem finite_coh_of_forall_modification {R : Type} [CommRing R] [IsNoetherianR
     (h : ∀ (Z : Scheme.{0}) [IsIntegral Z] (ι : Z ⟶ X) [IsClosedImmersion ι], ∃ (Z' : Scheme.{0}) (π : Z' ⟶ Z)
       (U : Z.Opens), IsProjOver (π ≫ ι ≫ f) ∧ (U : Set Z).Nonempty ∧ IsIso (π ∣_ U))
     (F : X.Modules) [IsFiniteQC F] : letI := algebraΓOfHom f; ∀ p, Module.Finite R (coh F p) := by
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace f
   have : AlgebraicGeometry.IsNoetherian X := {}
@@ -281,7 +281,7 @@ theorem finite_coh_of_forall_modification {R : Type} [CommRing R] [IsNoetherianR
   · have := cohOn.subsingleton_of_isZero hF ⊤ p
     infer_instance
   · have := isIntegral_red hZ
-    letI := algebraΓOfHom (redι Z ≫ f)
+    let := algebraΓOfHom (redι Z ≫ f)
     obtain ⟨Z', π, U, hP, hU, _⟩ := h _ (redι Z)
     have := finite_coh_of_modification (redι Z ≫ f) π hP hU (fun E hE hv q => by
       have := ih ((Scheme.Modules.pushforward (redι Z)).obj E)

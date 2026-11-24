@@ -376,7 +376,7 @@ theorem opAt_aeval {x : (Fin r → ℂ) × Mx k r} {a : Pr (RadSp k r z z' π π
     rw [map_add (f := _), map_add (f := _)]
     show (((Polynomial.aeval a p).1 Φ + (Polynomial.aeval a q).1 Φ : RadSp k r z z' π π') :
       Fn k r (Wq →L[ℂ] Wp)) x.1 x.2 = _
-    simp only [Submodule.coe_add, Pi.add_apply, ContinuousLinearMap.add_apply]
+    simp only [Submodule.coe_add, Pi.add_apply, add_apply]
     rw [hp Φ, hq Φ]
   | monomial n c hn =>
     intro Φ
@@ -409,7 +409,7 @@ theorem aeval_intertwine (φ : (Wq →L[ℂ] Wp) → (Wq →L[ℂ] Wp)) (hφa : 
     simp [Polynomial.aeval_C, Algebra.algebraMap_eq_smul_one, hφs]
   | add p q hp hq =>
     intro A
-    simp only [map_add (f := _), ContinuousLinearMap.add_apply, hp, hq, hφa]
+    simp only [map_add (f := _), add_apply, hp, hq, hφa]
   | monomial n c hn =>
     intro A
     have e1 : Polynomial.C c * Polynomial.X ^ (n + 1) = Polynomial.C c * Polynomial.X ^ n * Polynomial.X := by
@@ -417,7 +417,7 @@ theorem aeval_intertwine (φ : (Wq →L[ℂ] Wp) → (Wq →L[ℂ] Wp)) (hφa : 
     have e3 : ∀ K : (Wq →L[ℂ] Wp) →L[ℂ] (Wq →L[ℂ] Wp), Polynomial.aeval K (Polynomial.C c * Polynomial.X ^ n * Polynomial.X) =
         Polynomial.aeval K (Polynomial.C c * Polynomial.X ^ n) * K := fun K => by
       simp only [map_mul, Polynomial.aeval_X]
-    rw [e1, e3 M, e3 N, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, h, hn]
+    rw [e1, e3 M, e3 N, mul_apply_eq_comp, mul_apply_eq_comp, h, hn]
 
 end equiv
 
@@ -521,11 +521,11 @@ theorem spectral_operator_X : RDSOpX := by
     have hφs : ∀ (c : ℂ) A, φ (c • A) = c • φ A := fun c A => by
       simp only [hφ, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
     have hint : ∀ J, (s • xf g) (φ J) = φ ((s • xf (B.sgs p g)) J) := fun J => by
-      rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, hφs]
+      rw [smul_apply, smul_apply, hφs]
       exact congrArg (s • ·) (hfeq p hp g hgd J)
     have h2 := aeval_intertwine φ hφa hφs hint q A
     show cf g (φ A) = φ (cf (B.sgs p g) A)
-    simp only [hcf, ContinuousLinearMap.smul_apply]
+    simp only [hcf, smul_apply]
     rw [h2, hφs, Formalism.FourierDecayAlt.P.JCx1.needs.gf_sgs D hp g]
   ·
     intro ε hε m
@@ -577,7 +577,7 @@ theorem spectral_operator_X : RDSOpX := by
       have e3 : (s • X.QQ Y 1 1).1 Φ = s • X.t Y 1 1 Φ := by
         rw [Algebra.smul_def]
         rfl
-      rw [e3, Submodule.coe_smul, Pi.smul_apply, Pi.smul_apply, hfrad Φ x hx, ContinuousLinearMap.smul_apply,
+      rw [e3, Submodule.coe_smul, Pi.smul_apply, Pi.smul_apply, hfrad Φ x hx, smul_apply,
         smul_smul, smul_smul]
       have hne : ((GGl P.k P.r D.z D.z' x.2 : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hGGpos.ne'
       congr 1
@@ -620,7 +620,7 @@ theorem pbOp_loc {r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E
     pbOp l f₁ c = pbOp l f₂ c := by
   have hev : f₁ =ᶠ[nhds c] f₂ := by
     filter_upwards [(Formalism.FourierDecayAlt.P.Qx3.isOpen_OmX r).mem_nhds hc] with c' hc' using h c' hc'
-  simp only [pbOp, wirtBar, if_pos hc, hev.fderiv_eq]
+  simp only [pbOp, wirtBar, ite_eq_left hc, hev.fderiv_eq]
 
 theorem vABs_loc {r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] (Y : ℂ) :
     ∀ (i : ℕ) (f₁ f₂ : (Fin r → ℂ) → E), (∀ c ∈ OmX r, f₁ c = f₂ c) →
@@ -734,7 +734,7 @@ theorem spectral_adjoint_rho_action : RDSRhvR := by
     intro y hy
     have hxy : (x.1, y) ∈ DomR P.k P.r z z' := ⟨hx.1, hy.1, hy.2⟩
     rw [eA, (hch Φ (x.1, y) hxy).1]
-    simp only [crd, Q.cmp, if_true]
+    simp only [crd, Q.cmp, ite_true]
     exact (vABs_loc Y P.r _ _ (fun c' hc' => hΦ (c', y) ⟨hc', hy.1, hy.2⟩) x.1 hx.1).1
   have hB : ∀ y ∈ Glev P.k P.r (Fin.last P.r) ∩ Qx8.Dp P.k P.r z z',
       (((L.Bvr Y).1 Φ : RadSp P.k P.r z z' π π') : Fn P.k P.r (Wq →L[ℂ] Wp)) x.1 y =
@@ -742,7 +742,7 @@ theorem spectral_adjoint_rho_action : RDSRhvR := by
     intro y hy
     have hxy : (x.1, y) ∈ DomR P.k P.r z z' := ⟨hx.1, hy.1, hy.2⟩
     rw [eB, (hch Φ (x.1, y) hxy).2]
-    simp only [crd, Q.cmp, if_neg (show (1 : Fin 2) ≠ 0 by decide)]
+    simp only [crd, Q.cmp, ite_eq_right (show (1 : Fin 2) ≠ 0 by decide)]
     exact (vABs_loc Y P.r _ _ (fun c' hc' => hΦ (c', y) ⟨hc', hy.1, hy.2⟩) x.1 hx.1).2
   have e1 : (((RhvR L st Y).1 Φ : RadSp P.k P.r z z' π π') : Fn P.k P.r (Wq →L[ℂ] Wp)) x.1 x.2 =
       (((L.Dr).1 ((st.QQ Y 0 1).1 ((L.Avr Y).1 Φ) + (st.QQ Y 1 1).1 ((L.Bvr Y).1 Φ)) :

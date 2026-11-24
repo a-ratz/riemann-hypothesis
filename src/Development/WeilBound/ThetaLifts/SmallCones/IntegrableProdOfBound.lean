@@ -52,7 +52,7 @@ theorem integrable_prod_of_bound {G N : Type} [TopologicalSpace G] [MeasurableSp
     [TopologicalSpace N] [MeasurableSpace N] [BorelSpace N] (μ : Measure G) [SFinite μ] (ν : Measure N) [IsFiniteMeasure ν]
     {f : G × N → ℂ} (hf : Continuous f) {K : ℝ} (hK : ∀ u, ∫⁻ g, ‖f (g, u)‖ₑ ∂μ ≤ ENNReal.ofReal K) : Integrable f (μ.prod ν) := by
   refine ⟨hf.aestronglyMeasurable, ?_⟩
-  rw [HasFiniteIntegral, lintegral_prod_symm _ hf.enorm.measurable.aemeasurable]
+  rw [HasFiniteIntegral, lintegral_prod_symm _ hf.eNorm.measurable.aemeasurable]
   refine lt_of_le_of_lt (lintegral_mono hK) ?_
   rw [lintegral_const]
   exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (measure_lt_top _ _)
@@ -76,7 +76,7 @@ theorem ctFub_of (hU : UnipEx) (hT : ThetaBasic) (hG : GrpTop) (hE : EpsOf) : CT
       Integrable (fun x : UA σ X.J × unip σ W H' => theta om Φ x.1 (x.2.1 * h)) ((M.μ.restrict M.dom).prod (ν.restrict 𝓕)) := by
     intro ν 𝓕 h1 h
     have hf : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
-    have hcont : Continuous fun u : unip σ W H' => u.1 * h := continuous_subtype_val.mul continuous_const
+    have hcont : Continuous fun u : unip σ W H' => u.1 * h := continuous_subtypeVal.mul continuous_const
     obtain ⟨D, hD⟩ := b3 _ (hΩ.image hcont)
     refine ⟨@instSFiniteOfSigmaFinite _ _ _ (IsFiniteMeasure.toSigmaFinite _), integrable_prod_of_bound _ _ (K := |C| * (D : ℝ) ^ k)
       (t1.comp (continuous_fst.prodMk (hcont.comp continuous_snd))) fun u => ?_⟩

@@ -158,7 +158,7 @@ theorem Kset_compact (R : ℝ) : IsCompact (Kset X R) := by
         diagonal (fun a : Fin r => ((sgn X.p0 (a : ℕ) : ℝ) : ℂ))} ∩
         ⋂ a, ⋂ c, {w : Frame X.Ψ r | ‖w τ a c‖ ≤ R}) := by
       ext w
-      simp only [Kset, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+      simp only [Kset, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
     rw [this]
     refine isClosed_iInter fun τ => (isClosed_eq (cont_gram' X τ) continuous_const).inter
       (isClosed_iInter fun a => isClosed_iInter fun c => isClosed_le (by fun_prop) continuous_const)

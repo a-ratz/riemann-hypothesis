@@ -119,9 +119,9 @@ theorem card_quot_pow_smul_bounds : ∀ (O M : Type) [CommRing O] [IsDomain O] [
     have hle : Ideal.span {t ^ e i} ≤ Ideal.span {p i ^ e i} := by
       rw [Ideal.span_singleton_le_span_singleton]
       exact pow_dvd_pow_of_dvd (irreducible_dvd (hp i) ht htu) _
-    haveI := hfin (e i)
+    have := hfin (e i)
     exact Finite.of_surjective _ (Ideal.Quotient.factor_surjective hle)
-  haveI : Finite T := Finite.of_equiv _ (DirectSum.linearEquivFunOnFintype O ι _).toEquiv.symm
+  have : Finite T := Finite.of_equiv _ (DirectSum.linearEquivFunOnFintype O ι _).toEquiv.symm
 
   have hkill : ∀ x : T, ∃ a : O, a ≠ 0 ∧ a • x = 0 := by
     intro x
@@ -141,7 +141,7 @@ theorem card_quot_pow_smul_bounds : ∀ (O M : Type) [CommRing O] [IsDomain O] [
     simp [F]
   refine ⟨Nat.card T, Nat.card_pos, fun r => ?_⟩
   set I : Ideal O := Ideal.span {t ^ r}
-  haveI := hfin r
+  have := hfin r
   have hcard : Nat.card (M ⧸ (I • ⊤ : Submodule O M)) =
       Nat.card (O ⧸ I) ^ n * Nat.card (T ⧸ (I • ⊤ : Submodule O T)) := by
     rw [← Nat.card_congr (TensorProduct.quotTensorEquivQuotSMul M I).toEquiv,
@@ -151,7 +151,7 @@ theorem card_quot_pow_smul_bounds : ∀ (O M : Type) [CommRing O] [IsDomain O] [
       Nat.card_congr (TensorProduct.quotTensorEquivQuotSMul T I).toEquiv,
       card_quot_smul_top_of_flat']
     simp [F]
-  haveI : Finite (T ⧸ (I • ⊤ : Submodule O T)) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
+  have : Finite (T ⧸ (I • ⊤ : Submodule O T)) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
   have h1 : 1 ≤ Nat.card (T ⧸ (I • ⊤ : Submodule O T)) := Nat.card_pos
   have h2 : Nat.card (T ⧸ (I • ⊤ : Submodule O T)) ≤ Nat.card T :=
     Nat.card_le_card_of_surjective _ (Submodule.mkQ_surjective _)

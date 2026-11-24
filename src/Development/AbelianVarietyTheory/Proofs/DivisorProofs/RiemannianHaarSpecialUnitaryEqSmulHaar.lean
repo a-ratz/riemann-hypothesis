@@ -211,8 +211,8 @@ theorem hasStrictFDerivAt_torus_zero (E : Type) [Field E] [NumberField E] [IsCMF
   have hs := HasStrictFDerivAt.sum (u := Finset.univ) (fun c _ => hc c)
   refine (hs.congr_fderiv ?_).congr_of_eventuallyEq ?_
   · ext θ
-    simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.proj_apply, torusDer_apply,
-      ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, hAapp,
+    simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.proj_apply, torusDer_apply,
+      sum_apply, smul_apply, hAapp,
       angles_zero, Pi.zero_apply, Complex.ofReal_zero, mul_zero, Complex.exp_zero, one_smul, smul_eq_mul]
     rw [Matrix.mul_apply]
     simp only [Matrix.mul_diagonal]
@@ -452,7 +452,7 @@ theorem GlobalTheory.upperTriangular_signForm_diagonal : ∀ (r : ℕ) (b : Matr
     · subst hij; simp [hss]
     · simp [diagonal_apply_ne _ hij, one_apply_ne hij]
   have hbt : BlockTriangular b id := fun i j hij => hup i j hij
-  haveI : Invertible b := b.invertibleOfIsUnitDet hdet
+  have : Invertible b := b.invertibleOfIsUnitDet hdet
   have hinv : BlockTriangular b⁻¹ id := blockTriangular_inv_of_blockTriangular hbt
   have hright : bᵀ * (J * b.map (starRingEnd ℂ) * J) = 1 := by
     calc bᵀ * (J * b.map (starRingEnd ℂ) * J) = (bᵀ * J * b.map (starRingEnd ℂ)) * J := by
@@ -597,7 +597,7 @@ theorem volume_box (ι κ : Type) [Fintype ι] [Fintype κ] :
       ENNReal.ofReal ((2 * Real.pi) ^ (Fintype.card κ * Fintype.card ι)) := by
   have e : {θ : ι → κ → ℝ | ∀ i k, θ i k ∈ Set.Ioc (-Real.pi) Real.pi} =
       Set.univ.pi fun _ : ι => Set.univ.pi fun _ : κ => Set.Ioc (-Real.pi) Real.pi := by
-    ext θ; simp only [Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_implies]
+    ext θ; simp only [Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_implies]
   rw [e, volume_pi_pi]
   simp only [volume_pi_pi, Real.volume_Ioc, Finset.prod_const, Finset.card_univ]
   rw [ENNReal.ofReal_pow (by positivity), pow_mul, show Real.pi - -Real.pi = 2 * Real.pi by ring]
@@ -611,16 +611,16 @@ theorem exists_measurable_extend {α β : Type} [TopologicalSpace α] [PolishSpa
   have hφs : ∀ a ∈ s, φ (M a) = ψ a := by
     intro a ha
     have h : ∃ a' ∈ s, M a' = M a := ⟨a, ha, rfl⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
     rw [hinj h.choose_spec.1 ha h.choose_spec.2]
   have hφ0 : ∀ y, y ∉ M '' s → φ y = 0 := by
     intro y hy
     have h : ¬ ∃ a ∈ s, M a = y := fun ⟨a, ha, e⟩ => hy ⟨a, ha, e⟩
-    simp only [φ, dif_neg h]
+    simp only [φ, dite_eq_right h]
   refine ⟨φ, fun t ht => ?_, hφs, hφ0⟩
   have e : φ ⁻¹' t = M '' (s ∩ ψ ⁻¹' t) ∪ {y | y ∉ M '' s ∧ (0 : ℝ≥0∞) ∈ t} := by
     ext y
-    simp only [Set.mem_preimage, Set.mem_union, Set.mem_image, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_union, Set.mem_image, Set.mem_inter_iff, Set.mem_ofPred_eq]
     by_cases hy : y ∈ M '' s
     · obtain ⟨a, ha, rfl⟩ := hy
       rw [hφs a ha]
@@ -670,7 +670,7 @@ theorem haar_map_mul_right_of_compact {G : Type} [Group G] [TopologicalSpace G] 
     · rintro ⟨k, hk, u, hu, e⟩
       exact ⟨k, hk, u * g, T.mul_mem hu hg, by rw [← mul_assoc, e]⟩
   have h1 := congrArg (fun μ : Measure G => μ C) hm
-  rw [Measure.map_apply (measurable_mul_const g) hCm, hpre, Measure.smul_apply, ENNReal.smul_def,
+  rw [Measure.map_apply (measurable_mul_const g) hCm, hpre, smul_apply, ENNReal.smul_def,
     smul_eq_mul] at h1
   have hΔ : ((Measure.modularCharacterFun g : NNReal) : ℝ≥0∞) = 1 := by
     have h2 : (1 : ℝ≥0∞) * ν C = ((Measure.modularCharacterFun g : NNReal) : ℝ≥0∞) * ν C := by
@@ -688,9 +688,9 @@ theorem lintegral_box_translate (ι κ : Type) [Fintype ι] [Fintype κ] (f : (�
     (θ0 : ι → κ → ℝ) :
     ∫⁻ θ in {θ : ι → κ → ℝ | ∀ i k, θ i k ∈ Set.Ioc (-Real.pi) Real.pi}, f (θ0 + θ) =
       ∫⁻ θ in {θ : ι → κ → ℝ | ∀ i k, θ i k ∈ Set.Ioc (-Real.pi) Real.pi}, f θ := by
-  haveI hp : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
+  have hp : Fact (0 < 2 * Real.pi) := ⟨Real.two_pi_pos⟩
   let R : AddCircle (2 * Real.pi) → ℝ := fun u => (AddCircle.measurableEquivIoc (2 * Real.pi) (-Real.pi) u : ℝ)
-  have hR : Measurable R := measurable_subtype_coe.comp (AddCircle.measurableEquivIoc _ _).measurable
+  have hR : Measurable R := measurable_subtypeVal.comp (AddCircle.measurableEquivIoc _ _).measurable
   have hRθ : ∀ θ : ℝ, ∃ n : ℤ, R θ = θ + 2 * Real.pi * n := by
     intro θ
     refine ⟨-toIocDiv hp.out (-Real.pi) θ, ?_⟩
@@ -707,7 +707,7 @@ theorem lintegral_box_translate (ι κ : Type) [Fintype ι] [Fintype κ] (f : (�
   have hbox : {θ : ι → κ → ℝ | ∀ i k, θ i k ∈ Set.Ioc (-Real.pi) Real.pi} =
       Set.univ.pi fun _ : ι => Set.univ.pi fun _ : κ => Set.Ioc (-Real.pi) (-Real.pi + 2 * Real.pi) := by
     rw [show -Real.pi + 2 * Real.pi = Real.pi by ring]
-    ext θ; simp only [Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_implies]
+    ext θ; simp only [Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_implies]
   have hmeas : (volume : Measure (ι → κ → ℝ)).restrict
       {θ : ι → κ → ℝ | ∀ i k, θ i k ∈ Set.Ioc (-Real.pi) Real.pi} =
       Measure.pi fun _ : ι => Measure.pi fun _ : κ =>
@@ -729,10 +729,10 @@ theorem lintegral_box_translate (ι κ : Type) [Fintype ι] [Fintype κ] (f : (�
       fun k => AddCircle.measurePreserving_mk (2 * Real.pi) (-Real.pi)
   have hadd : ∀ θ, e (θ0 + θ) = e θ0 + e θ := by
     intro θ; funext i k; simp [e]
-  haveI : (volume : Measure (κ → AddCircle (2 * Real.pi))).IsAddLeftInvariant := by
+  have : (volume : Measure (κ → AddCircle (2 * Real.pi))).IsAddLeftInvariant := by
     rw [volume_pi]
     infer_instance
-  haveI : (volume : Measure (ι → κ → AddCircle (2 * Real.pi))).IsAddLeftInvariant := by
+  have : (volume : Measure (ι → κ → AddCircle (2 * Real.pi))).IsAddLeftInvariant := by
     rw [volume_pi]
     set_option synthInstance.maxSize 512 in
       infer_instance
@@ -833,7 +833,7 @@ theorem haar_chart_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     funext τ k
     have hk : (k : ℕ) < r := lt_of_lt_of_le k.isLt (Nat.sub_le r 1)
     have e1 := congrFun (congrFun (congrFun e τ) ⟨k, hk⟩) ⟨k, hk⟩
-    simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, k.isLt, dif_pos] at e1
+    simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, k.isLt, dite_eq_left] at e1
     obtain ⟨n, hn⟩ := Complex.exp_eq_exp_iff_exists_int.mp e1
     have hn' : θ τ k = θ' τ k + n * (2 * Real.pi) := by
       have := congrArg Complex.im hn
@@ -905,7 +905,7 @@ theorem haar_chart_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     have hK : IsCompact {θ : X.Ψ → Fin (r - 1) → ℝ | ∀ i k, θ i k ∈ Set.Icc (-Real.pi) Real.pi} := by
       have e : {θ : X.Ψ → Fin (r - 1) → ℝ | ∀ i k, θ i k ∈ Set.Icc (-Real.pi) Real.pi} =
           Set.univ.pi fun _ => Set.univ.pi fun _ => Set.Icc (-Real.pi) Real.pi := by
-        ext θ; simp only [Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_implies]
+        ext θ; simp only [Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_implies]
       rw [e]; exact isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_Icc
     have e : (T : Set (realSU X.Ψ X.Gm)) =
         t '' {θ : X.Ψ → Fin (r - 1) → ℝ | ∀ i k, θ i k ∈ Set.Icc (-Real.pi) Real.pi} := by
@@ -977,17 +977,17 @@ theorem haar_chart_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     rintro ⟨z, b⟩ ⟨-, hb⟩ ⟨z', b'⟩ ⟨-, hb'⟩ e
     obtain ⟨h1, h2⟩ := KU.cpt_inj X hx hb hb' e
     exact Prod.ext h1 h2
-  haveI hPol : PolishSpace (Frame X.Ψ r) := by
+  have hPol : PolishSpace (Frame X.Ψ r) := by
     show PolishSpace (X.Ψ → Fin r → Fin r → ℂ)
-    letI : NormedAddCommGroup (X.Ψ → Fin r → Fin r → ℂ) := inferInstance
-    haveI : CompleteSpace (X.Ψ → Fin r → Fin r → ℂ) := inferInstance
-    haveI : TopologicalSpace.SeparableSpace (X.Ψ → Fin r → Fin r → ℂ) := inferInstance
+    let : NormedAddCommGroup (X.Ψ → Fin r → Fin r → ℂ) := inferInstance
+    have : CompleteSpace (X.Ψ → Fin r → Fin r → ℂ) := inferInstance
+    have : TopologicalSpace.SeparableSpace (X.Ψ → Fin r → Fin r → ℂ) := inferInstance
     infer_instance
-  haveI hPol2 : PolishSpace (V (nd X) × Frame X.Ψ r) := by
+  have hPol2 : PolishSpace (V (nd X) × Frame X.Ψ r) := by
     show PolishSpace (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ))
-    letI : NormedAddCommGroup (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ)) := inferInstance
-    haveI : CompleteSpace (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ)) := inferInstance
-    haveI : TopologicalSpace.SeparableSpace (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ)) := inferInstance
+    let : NormedAddCommGroup (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ)) := inferInstance
+    have : CompleteSpace (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ)) := inferInstance
+    have : TopologicalSpace.SeparableSpace (V (nd X) × (X.Ψ → Fin r → Fin r → ℂ)) := inferInstance
     infer_instance
   obtain ⟨φ, hφm, hφM, hφ0⟩ := exists_measurable_extend M (Metric.ball (0 : V (nd X)) ρ ×ˢ Bor X.Ψ r)
     (measurableSet_ball.prod hBorm) hMc.continuousOn hMinj (fun p => ψ0 p.1) (hψ0m.comp measurable_fst)
@@ -1424,7 +1424,7 @@ theorem conj_inv_section_mul_entries_near_one : ∀ (E : Type) [Field E] [Number
   have hAc : ContinuousAt A 0 := by
     refine continuousAt_pi.2 fun τ => ?_
     have : ContinuousAt (fun z => (σ z)⁻¹) 0 := ContinuousAt.comp (f := σ) continuous_inv.continuousAt hσc
-    exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)).continuousAt.comp this
+    exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)).continuousAt.comp this
   have hA0 : A 0 = One := by
     funext τ
     simp only [A, One, hσ0, inv_one]
@@ -1490,7 +1490,7 @@ theorem phaseFrame_small_angles : ∀ (E : Type) [Field E] (Ψ : Finset (E →+*
     have hk := hθ τ (Fin.castLE (Nat.sub_le r 1) k)
     have hentry : phaseFrame θ τ (Fin.castLE (Nat.sub_le r 1) k) (Fin.castLE (Nat.sub_le r 1) k)
         = Complex.exp (Complex.I * (θ τ k : ℂ)) := by
-      simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, Fin.coe_castLE, k.isLt, dif_pos]
+      simp only [phaseFrame, Matrix.diagonal_apply_eq, angles, Fin.val_castLE, k.isLt, dite_eq_left]
     rw [hentry] at hk
     have := hcont (x := Complex.exp (Complex.I * (θ τ k : ℂ))) (by rwa [dist_eq_norm])
     rw [Complex.arg_one, Real.dist_eq, sub_zero] at this
@@ -1616,7 +1616,7 @@ theorem eq_chart_mul_of_near_one : ∀ (E : Type) [Field E] [NumberField E] [IsC
         rw [Matrix.det_mul, Matrix.det_nonsing_inv, Ring.inverse_eq_inv']
         exact mul_ne_zero (inv_ne_zero (hb' τ).1) (hb τ).1
       · show ((mat b' τ)⁻¹ * mat b τ) a c = 0
-        letI := Matrix.invertibleOfIsUnitDet _ hb'u
+        let := Matrix.invertibleOfIsUnitDet _ hb'u
         have h1 : (mat b' τ)⁻¹.BlockTriangular id :=
           Matrix.blockTriangular_inv_of_blockTriangular (fun a c h => (hb' τ).2 a c h)
         have h2 : (mat b τ).BlockTriangular id := fun a c h => (hb τ).2 a c h
@@ -1706,8 +1706,8 @@ theorem riemHaar_eq_smul (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
     obtain ⟨h4, h5⟩ := hDt w.2
     refine ⟨?_, fun τ a b hab => ?_, fun τ a => ?_⟩
     · rw [hDw]; exact (realLie X.Ψ X.Gm).add_mem h1 h4
-    · rw [e, Matrix.add_apply, h2 τ a b hab, h5, if_neg (ne_of_gt hab), add_zero]
-    · rw [e, Matrix.add_apply, h3, h5, if_pos rfl, zero_add]
+    · rw [e, Matrix.add_apply, h2 τ a b hab, h5, ite_eq_right (ne_of_gt hab), add_zero]
+    · rw [e, Matrix.add_apply, h3, h5, ite_eq_left rfl, zero_add]
   obtain ⟨hDinj, hriem⟩ := _root_.GlobalTheory.RiemConst.Jac.riemLie_eq_smul_map E r X x hr hx D hspec
   have hform := _root_.GlobalTheory.FibreVol.haar_chart_formula E r X x ν σ t ρ hr hx hν hfib hρ hσc hσB htx htmul htc hstab
   have hsurj := _root_.GlobalTheory.eq_chart_mul_of_near_one E r X x σ t ρ hx hρ hσ0 hσc hσB htx htmul htc hstab
@@ -1725,8 +1725,8 @@ theorem riemHaar_eq_smul (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
     simpa [Function.comp_def, hd0] using h2
   have hρ' : 0 < min ρ Real.pi := lt_min hρ Real.pi_pos
   have hQ0 : (fun w : ChartSp X => σ w.1 * t w.2) 0 = 1 := by simp [hσ0, ht0]
-  haveI : (volume : Measure (X.Ψ → Fin (r - 1) → ℝ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (ChartSp X)).IsAddHaarMeasure :=
+  have : (volume : Measure (X.Ψ → Fin (r - 1) → ℝ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (ChartSp X)).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure (volume : Measure (V (nd X))) (volume : Measure (X.Ψ → Fin (r - 1) → ℝ))
   have hlim := _root_.GlobalTheory.SUVol.DensChart.density_at_one X.Ψ r (realSU X.Ψ X.Gm) ν (ChartSp X) volume (fun w => σ w.1 * t w.2) D
     (fun w => ENNReal.ofReal (densF X x w.1 / (2 * Real.pi) ^ m)) a (min ρ Real.pi) hQD hQ0 hDinj hsurj htend
@@ -1750,7 +1750,7 @@ theorem riemHaar_eq_smul (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
       ((volume : Measure (ChartSp X)).map D) (tanBall X.Ψ r ε)) * K⁻¹) (𝓝[>] 0) (𝓝 1) := by
     refine hRdens.congr fun ε => ?_
     rw [show tangentHaar (realSU X.Ψ X.Gm) (riemLie X.Ψ X.Gm x) = riemHaar X.Ψ X.Gm x from rfl, hk, hriem]
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
     rw [div_eq_mul_inv, div_eq_mul_inv, ENNReal.mul_inv (Or.inl hK0) (Or.inl hKtop)]
     ring
   have e := tendsto_nhds_unique h1 h2
@@ -1768,7 +1768,7 @@ theorem riemHaar_eq_smul (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
     ring
   rw [hk, ← hkval]
   ext s _
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 end GlobalTheory.RiemConst
 end -- clump:auto

@@ -392,7 +392,7 @@ theorem cartan {p q : ℕ} (T : GrpData p q) (g : T.G) : ∃ k ∈ T.Kset, ∃ Y
     rcases a with a | a <;> exact a.elim0
 
 theorem isAddHaar_volume (p q : ℕ) : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := by
-  haveI : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   exact Measure.pi.isAddHaarMeasure _
 
 theorem haar_polar {p q : ℕ} (T : GrpData p q) :
@@ -410,7 +410,7 @@ theorem haar_polar {p q : ℕ} (T : GrpData p q) :
   have hdet : ∀ B : Fin p → Fin q → ℂ, LinearMap.det (sP (pY B)) = polJ (pY B) :=
     fun B => _root_.GlobalTheory.PolarU.det_sinhc_eq_polarJacobian p q _ (_root_.GlobalTheory.PolarU.SinhcPres.sAd_pY p q B)
   have hem : Measurable fun B : Fin p → Fin q → ℂ => T.expt (pY B) := (continuous_expt_pY T).measurable
-  haveI : IsLocallyFiniteMeasure
+  have : IsLocallyFiniteMeasure
       ((volume : Measure (Fin p → Fin q → ℂ)).withDensity fun B => ENNReal.ofReal (polJ (pY B))) :=
     IsLocallyFiniteMeasure.withDensity_ofReal hJc
   obtain ⟨c, hc, hf⟩ := _root_.GlobalTheory.Twist.lintegral_haar_eq_transversal T.G (Fin p → Fin q → ℂ) T.haar mK
@@ -418,8 +418,8 @@ theorem haar_polar {p q : ℕ} (T : GrpData p q) :
     (by
       intro h0
       rw [withDensity_eq_zero_iff hJm.aemeasurable] at h0
-      haveI := isAddHaar_volume p q
-      haveI : (ae (volume : Measure (Fin p → Fin q → ℂ))).NeBot :=
+      have := isAddHaar_volume p q
+      have : (ae (volume : Measure (Fin p → Fin q → ℂ))).NeBot :=
         ae_neBot.2 fun h => (isOpen_univ.measure_ne_zero (volume : Measure (Fin p → Fin q → ℂ)) Set.univ_nonempty) (by rw [h]; rfl)
       obtain ⟨B, hB⟩ := h0.exists
       exact absurd hB (by simpa using polJ_pos T B))

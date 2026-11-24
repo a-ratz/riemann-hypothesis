@@ -145,7 +145,7 @@ lemma prod_monomial_eq {ι τ : Type*} (t : Finset ι) (e : ι → τ →₀ ℕ
   induction t using Finset.induction_on with
   | empty => simp
   | insert i t hi ih =>
-    rw [Finset.prod_insert hi, Finset.sum_insert hi, Finset.prod_insert hi, ih, monomial_mul]
+    rw [Finset.prod_insert hi, Finset.sum_insert hi, Finset.prod_insert hi, ih, monomial_mul_monomial]
 
 def glue (p : S → (Fin k × Fin n →₀ ℕ)) : S × (Fin k × Fin n) →₀ ℕ :=
   ∑ t, (p t).mapDomain (Prod.mk t)
@@ -215,11 +215,11 @@ theorem fockR_block (F G : S → MvPolynomial (Fin k × Fin n) K) :
   simp_rw [fockR_monomial]
   by_cases h : p = q
   · subst h
-    simp only [if_true, glue_fact, Finset.prod_mul_distrib, Nat.cast_prod]
+    simp only [ite_true, glue_fact, Finset.prod_mul_distrib, Nat.cast_prod]
   · have h' : glue p ≠ glue q := fun e => h (glue_injective e)
-    rw [if_neg h']
+    rw [ite_eq_right h']
     obtain ⟨s, hs⟩ := Function.ne_iff.mp h
-    exact (Finset.prod_eq_zero (Finset.mem_univ s) (if_neg hs)).symm
+    exact (Finset.prod_eq_zero (Finset.mem_univ s) (ite_eq_right hs)).symm
 
 end block
 

@@ -421,7 +421,7 @@ theorem jumpIn_of_reads : ∀ {D : D7} (L : SizeData₂ D) (C₀ : ℝ) (i : D.n
   have hε := _root_.GlobalTheory.HTW.Rec.enl_locChi_epsU i w hw C hinc
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.HTW.Rec.twistedDuals_eq_tateDuals i w hw C r ρ π hε
   have hO := goodO_finExt_integers (D.nd.l i) C.LL
-  haveI : IsTopologicalRing ↥C.LL.1 := hO.2.2.2.1
+  have : IsTopologicalRing ↥C.LL.1 := hO.2.2.2.1
   have hsub := _root_.GlobalTheory.subWp_sub i w hw C r ρ π hS
   have hF : Formalism.MainNotions.LocalSituation.fontCore (Br.PD D.loc D.nbr i w hw) := hA (D.nd.l i) (D.nbr i w hw).Kw
   let A : GRep (Br.G D.nbr i w hw) ℚ_[D.nd.l i] ↥C.LL.1 ↥(OL C.LL) :=
@@ -481,7 +481,7 @@ theorem hcAt_eq_hc : ∀ (D : D7) (ρ : D.what₂.Tau) (g : D.R.GG), (((D.eTau �
     · unfold plc
       have h2 : (((D.eTau ρ : D.R.Psi) : D.R.GG) * D.R.cc).1.2 ≠ 1 := by
         simp [Formalism.HC.Frame.cc, c0, hm]
-      rw [if_neg h2, mul_comm, mul_assoc, cc_mul_self, mul_one]
+      rw [ite_eq_right h2, mul_comm, mul_assoc, cc_mul_self, mul_one]
   unfold hcAt
   have : (⟨plc g, plc_mem g⟩ : D.R.Psi) = D.eTau ρ := Subtype.ext hp
   rw [this, Equiv.symm_apply_apply]
@@ -549,13 +549,13 @@ theorem mem_twistedDualJumpsWithoutBlock_iff {R : Ranks} (P : HCParam R) (j : Fi
     u ∈ jT2 P j s ↔ (if s then -u - 1 else (R.t : ℤ) - 1 - (-u - 1)) ∈ cloud P j + lows P j := by
   unfold jT2 jW
   cases s
-  · simp only [Bool.false_eq_true, if_false, Multiset.map_map, Function.comp_def, Multiset.mem_map]
+  · simp only [Bool.false_eq_true, ite_false, Multiset.map_map, Function.comp_def, Multiset.mem_map]
     constructor
     · rintro ⟨x, hx, rfl⟩
       convert hx using 1; ring
     · intro h
       exact ⟨_, h, by ring⟩
-  · simp only [if_true, Multiset.mem_map]
+  · simp only [ite_true, Multiset.mem_map]
     constructor
     · rintro ⟨x, hx, rfl⟩
       convert hx using 1; ring
@@ -625,13 +625,13 @@ theorem rat_jump_sets_eq_int_multisets : ∀ (D : D7) (i : D.nd.Loc) (ρ : D.wha
       ring
   cases up
   · simp only [LJ.dualS, LJ.JJ, LJ.JW, LJ.cloudT, LJ.lowT, LJ.Jm, LJ.Jp, LJ.reflS, LJ.refl, LJ.cloudJ, LJ.lowJ,
-      LJ.blockJ, Set.mem_setOf_eq, Set.mem_union, Bool.false_eq_true, if_false, hsz, hc0]
+      LJ.blockJ, Set.mem_ofPred_eq, Set.mem_union, Bool.false_eq_true, ite_false, hsz, hc0]
     refine ⟨or_congr Iff.rfl ?_, by push_cast⟩
     have := hblk' (-a - 1)
     push_cast at this
     exact this
   · simp only [LJ.dualS, LJ.JJ, LJ.JW, LJ.cloudT, LJ.lowT, LJ.Jm, LJ.Jp, LJ.reflS, LJ.refl, LJ.cloudJ, LJ.lowJ,
-      LJ.blockJ, Set.mem_setOf_eq, Set.mem_union, if_true, hsz, hc0]
+      LJ.blockJ, Set.mem_ofPred_eq, Set.mem_union, ite_true, hsz, hc0]
     refine ⟨or_congr Iff.rfl ?_, by push_cast⟩
     have := hblk (-a - 1)
     push_cast at this
@@ -696,8 +696,8 @@ theorem hodgeTateJumps_coefficientExtension : ∀ {D : D7} (L : SizeData₂ D) (
   · intro a
     refine ((hπ ρ π hP.mem hP.dec a).2.2.2).trans ?_
     by_cases h : a ∈ jT2 (hcAt D g) (liftIdx D i) (pos (if ep = true then 1 else -1) g)
-    · rw [if_pos ((hs a).2.2 h), if_pos h]
-    · rw [if_neg (fun h' => h ((hs a).2.1 h')), if_neg h]
+    · rw [ite_eq_left ((hs a).2.2 h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h ((hs a).2.1 h')), ite_eq_right h]
 
 end GlobalTheory.HTW.Rec
 end -- clump:auto
@@ -867,7 +867,7 @@ theorem multV_ne_zero_of_jump (ρ : Representation LL G V) [Module.Finite LL ↥
     (τ : K →ₐ[Qp] LL) (a : ℤ) (h : IsJumpV PD ρ τ a) : multV PD ρ τ a ≠ 0 := by
   intro h0
   apply h
-  haveI : FiniteDimensional LL ↥(FildR PD ρ τ a) :=
+  have : FiniteDimensional LL ↥(FildR PD ρ τ a) :=
     Submodule.finiteDimensional_of_le (fildR_le_DdR PD ρ τ a)
   refine Submodule.eq_of_le_of_finrank_eq (fildR_succ_le PD ρ τ a) ?_
   unfold multV at h0
@@ -881,7 +881,7 @@ theorem jump_multV_ne_zero : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL
   let A : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) :=
     { V := T.V, ρ := T.ρ, cont := T.cont }
   obtain ⟨-, ⟨hfin, -⟩, -⟩ := hF ↥LL.1 ↥(OL LL) (_root_.GlobalTheory.HTW.Rec.goodO_finExt_integers l LL) A
-  haveI : Module.Finite ↥LL.1 ↥(DdR (P.PD K) T.ρ) := hfin
+  have : Module.Finite ↥LL.1 ↥(DdR (P.PD K) T.ρ) := hfin
   exact multV_ne_zero_of_jump (P.PD K) T.ρ τ u hJ
 
 end GlobalTheory.HTW.Rec
@@ -1020,7 +1020,7 @@ theorem exists_aut_comp {E : Type} [Field E] [NumberField E] [IsGalois ℚ E] {l
 
 theorem embeddings_orbit : ∀ {R : Ranks} (H : Host R) (l : ℕ) [Fact l.Prime], l ∉ H.small → l ≠ H.q → l ≠ H.d → ∀ (c : H.E →+* PadicAlgCl l) (K : Loc.FinExt l) (hc : ∀ x, c x ∈ K.1), (K.1 : Set (PadicAlgCl l)) ⊆ closure (Set.range c) → ∀ (P : Ideal (𝓞 H.E)) [P.IsPrime] [P.LiesOver (Ideal.span {(l : ℤ)})] (s : H.E ≃ₐ[ℚ] H.E), IsArithFrobAt ℤ s P → Module.finrank ℚ_[l] ↥K.1 = orderOf (H.galE s) ∧ ∀ τ : ↥K.1 →ₐ[ℚ_[l]] Loc.Om l, ∃! i : ZMod (orderOf (H.galE s)), ∀ x : H.E, τ ⟨c x, hc x⟩ = c ((s ^ i.val) x) := by
   intro R H l _ h2 hq hd c K hc hcl P _ _ s hs
-  haveI hG : IsGalois ℚ H.E := H.hostE_isGalois
+  have hG : IsGalois ℚ H.E := H.hostE_isGalois
   have hN0 : ¬ l ∣ H.condN := by
     rw [H.dvd_condN_iff_small Fact.out]; tauto
   have hF := H.der.frob l hN0
@@ -1028,8 +1028,8 @@ theorem embeddings_orbit : ∀ {R : Ranks} (H : Host R) (l : ℕ) [Fact l.Prime]
   obtain ⟨v, hvl, hv⟩ := _root_.GlobalTheory.LocPlace.exists_place_of_emb l H.E c
   have hp : l.Prime := Fact.out
   have hpz : Prime (l : ℤ) := Nat.prime_iff_prime_int.mp hp
-  haveI := v.isPrime
-  haveI hvo : v.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) :=
+  have := v.isPrime
+  have hvo : v.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) :=
     (Ideal.liesOver_span_iff v.isPrime.ne_top hpz).mpr (by simpa [placesOver] using hvl)
   have hsv : IsArithFrobAt ℤ s v.asIdeal := (H.frob_iff l hco v.asIdeal s).2 ((H.frob_iff l hco P s).1 hs)
   have hstab : MulAction.stabilizer (H.E ≃ₐ[ℚ] H.E) v.asIdeal = Subgroup.zpowers s := by
@@ -1041,7 +1041,7 @@ theorem embeddings_orbit : ∀ {R : Ranks} (H : Host R) (l : ℕ) [Fact l.Prime]
     (H.gal.orderOf_eq s).symm
   set N := orderOf (H.galE s) with hN
   have hNpos : 0 < N := hord ▸ orderOf_pos s
-  haveI : NeZero N := ⟨hNpos.ne'⟩
+  have : NeZero N := ⟨hNpos.ne'⟩
   refine ⟨?_, ?_⟩
   · have hK : K.1 = IntermediateField.adjoin ℚ_[l] (Set.range c) := _root_.GlobalTheory.padicAlgCl_finite_dense_eq_adjoin l H.E c K.1 hc K.2 hcl
     have hdeg := _root_.UpperTheory.HF.LocStab.finrank_adjoin_range_eq_card_stabilizer l H.E c v hv
@@ -1096,8 +1096,8 @@ theorem norm_int_le_one {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [NumberFie
 
 theorem exists_comp_of_normal {E L : Type} [Field E] [Field L] [CharZero E] [CharZero L]
     [Normal ℚ E] (φ ψ : E →+* L) : ∃ g : E ≃ₐ[ℚ] E, ∀ x, ψ x = φ (g x) := by
-  letI : Algebra E L := φ.toAlgebra
-  haveI : IsScalarTower ℚ E L := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra E L := φ.toAlgebra
+  have : IsScalarTower ℚ E L := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   refine ⟨AlgHom.restrictNormal' ψ.toRatAlgHom E, fun x => ?_⟩
   exact (AlgHom.restrictNormal_commutes ψ.toRatAlgHom E x).symm
 
@@ -1126,7 +1126,7 @@ theorem GlobalTheory.FrobPeriod.periodFrob_restrict : ∀ (D : D7) {l : ℕ} [Fa
   have hlN : ¬ l ∣ D.host.condN := fun h => by
     rcases (D.host.dvd_condN_iff_small Fact.out).1 h with h | h | h
     exacts [h2 h, hq h, hd h]
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   let c' : D.host.E →+* PadicAlgCl l := K.1.val.toRingHom.comp c
   have hK : ∀ z, c' z ∈ K0 K := fun z =>
     IntermediateField.mem_inf.2 ⟨(c z).2, _root_.GlobalTheory.HostKur.host_image_mem_Kur D.host l h2 hq hd c' z⟩
@@ -1136,7 +1136,7 @@ theorem GlobalTheory.FrobPeriod.periodFrob_restrict : ∀ (D : D7) {l : ℕ} [Fa
   let σ0 := (P.PD K).σ
   obtain ⟨g, hg⟩ := exists_comp_of_normal c0 ((σ0 : ↥(K0 K) →+* ↥(K0 K)).comp c0)
   obtain ⟨v, hvl, hv⟩ := _root_.GlobalTheory.LocPlace.exists_place_of_emb l D.host.E c'
-  haveI := liesOver_of_mem l v hvl
+  have := liesOver_of_mem l v hvl
   have hgl : ∀ z : 𝓞 D.host.E, g • z - z ^ l ∈ v.asIdeal := fun z => by
     refine (hv _).2 ?_
     have h := P.PD_σ K (c0 z) (by rw [hc0]; exact norm_int_le_one c' z)

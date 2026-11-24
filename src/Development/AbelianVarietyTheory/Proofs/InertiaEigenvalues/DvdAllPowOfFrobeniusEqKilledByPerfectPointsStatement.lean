@@ -128,8 +128,8 @@ theorem phiEq_dvd_all_pow : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R]
     rcases (Nat.dvd_prime hlp).1 (ringChar.dvd hl) with h1 | h1
     · exact absurd h1 CharP.ringChar_ne_one
     · exact h1
-  haveI : CharP R l := hchar ▸ ringChar.charP R
-  haveI : ExpChar R l := ExpChar.prime hlp
+  have : CharP R l := hchar ▸ ringChar.charP R
+  have : ExpChar R l := ExpChar.prime hlp
   choose C hC using fun i => hnil i (h + 1)
   set Cm := ∑ i, C i with hCm
   obtain ⟨k, hk⟩ : ∃ k, m + Cm < l ^ k := ⟨m + Cm, Nat.lt_pow_self hlp.one_lt⟩
@@ -191,9 +191,9 @@ theorem exists_valuationSubring_not_isUnit_and_nonZeroDivisors_ne_zero :
   obtain ⟨m, hm, hum⟩ := Ideal.exists_le_maximal (Ideal.span {u})
     (by rwa [Ne, Ideal.span_singleton_eq_top])
   have hum' : u ∈ m := hum (Ideal.mem_span_singleton_self u)
-  haveI := hm.isPrime
+  have := hm.isPrime
   obtain ⟨q, hq, hqm⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal S)) (J := m) bot_le
-  haveI hqp : q.IsPrime := hq.1.1
+  have hqp : q.IsPrime := hq.1.1
   let L := AlgebraicClosure (FractionRing (S ⧸ q))
   let g : S →+* L := ((algebraMap (FractionRing (S ⧸ q)) L).comp
     (algebraMap (S ⧸ q) (FractionRing (S ⧸ q)))).comp (Ideal.Quotient.mk q)
@@ -348,7 +348,7 @@ namespace GlobalTheory
 
 theorem perfectRing_valuationSubring_of_isAlgClosed (l : ℕ) [Fact l.Prime] {L : Type} [Field L]
     [IsAlgClosed L] (V : ValuationSubring L) [CharP V l] : PerfectRing V l := by
-  haveI : ExpChar V l := ExpChar.prime Fact.out
+  have : ExpChar V l := ExpChar.prime Fact.out
   refine PerfectRing.ofSurjective V l ?_
   intro v
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
@@ -357,7 +357,7 @@ theorem perfectRing_valuationSubring_of_isAlgClosed (l : ℕ) [Fact l.Prime] {L 
     rw [← V.valuation_le_one_iff]
     have hv : V.valuation (v : L) ≤ 1 := (V.valuation_le_one_iff _).2 v.2
     rw [← hy, map_pow] at hv
-    exact (pow_le_one_iff_of_nonneg (zero_le') hl0).1 hv
+    exact (pow_le_one_iff_of_nonneg (zero_le) hl0).1 hv
   refine ⟨⟨y, hyV⟩, ?_⟩
   apply Subtype.ext
   simp [frobenius_def, hy]
@@ -371,16 +371,16 @@ theorem s_points_kpt : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (u x
   rcases _root_.GlobalTheory.bounded_powers_or_exists_valuationSubring_dvd R u x M hu hrad with h | ⟨L, _, _, V, f, hfu, hfnu, hdvd⟩
   · exact h
   exfalso
-  haveI : CharP V l := (CharP.charP_iff_prime_eq_zero Fact.out).2 (by
+  have : CharP V l := (CharP.charP_iff_prime_eq_zero Fact.out).2 (by
     rw [← map_natCast f, hl, map_zero])
-  haveI : PerfectRing V l := perfectRing_valuationSubring_of_isAlgClosed l V
+  have : PerfectRing V l := perfectRing_valuationSubring_of_isAlgClosed l V
   obtain ⟨hdom, hpre, hne, hnu, hcomp⟩ := _root_.GlobalTheory.adicCompletion_valuationRing_props V (f u) hfu hfnu
   obtain ⟨hl', hbij⟩ := _root_.GlobalTheory.PerfectCompletion.perfect l V (f u)
   set O := AdicCompletion (Ideal.span {f u}) V
-  haveI : IsDomain O := hdom
-  haveI : ValuationRing O := { toPreValuationRing := hpre }
-  haveI : CharP O l := (CharP.charP_iff_prime_eq_zero Fact.out).2 hl'
-  haveI : PerfectRing O l := ⟨hbij⟩
+  have : IsDomain O := hdom
+  have : ValuationRing O := { toPreValuationRing := hpre }
+  have : CharP O l := (CharP.charP_iff_prime_eq_zero Fact.out).2 hl'
+  have : PerfectRing O l := ⟨hbij⟩
   let g : R →+* O := (algebraMap V O).comp f
   have hgx : g x = 0 := H O g hne hnu hcomp
   have hd : g x ∣ g u ^ M := by

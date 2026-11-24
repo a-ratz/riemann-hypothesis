@@ -118,7 +118,7 @@ theorem integrable_exp_neg_mul_of_sublevel_growth :
       _ = ENNReal.ofReal (u n) := by
           congr 1
           simp only [u]
-          rw [← Real.exp_nat_mul]
+          rw [← Real.exp_natCast_mul]
           have hE : Real.exp (|b| - b * n) * Real.exp (a * ((n : ℝ) + 1)) =
               Real.exp (|b| + a) * Real.exp (n * (a - b)) := by
             rw [← Real.exp_add, ← Real.exp_add]; ring_nf

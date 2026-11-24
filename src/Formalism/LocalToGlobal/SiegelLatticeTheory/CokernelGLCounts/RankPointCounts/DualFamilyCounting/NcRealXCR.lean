@@ -70,7 +70,7 @@ theorem refNX_haar {D : D7} (X : HidaSetting D) (u w : D.what₂.Word) :
   have hR := fun v : InfinitePlace X.B.I.F => refNg_isHaarLoc (nX X) (X.B.I.ε v) (eV X v) (ProductExactness.pV X v)
     (X.wfr u v) (ProductExactness.zV X u v) (ProductExactness.zV X w v) (ProductExactness.Tw_pos u) (fX_ee X v) (fX_ff X v) (fX_ef X v)
     (fX_ww X u v) (fX_ew X u v) (fX_fw X u v) (fX_ez X u v) (fX_fz X u v) (frame_real_z_z_eq_neg X u v) (fX_zw X u v) (fX_ez X w v)
-  haveI : ∀ v, SigmaFinite (refNX X u v) := fun v => (hR v).1
+  have : ∀ v, SigmaFinite (refNX X u v) := fun v => (hR v).1
   have hco : X.NinfU w = (ProductExactness.NinfG X w : Set X.B.I.Ginf) := (ProductExactness.NinfG_coe X w).symm
   refine ⟨inferInstance, ProductExactness.PiM.pi_ne_zero _ fun v => (hR v).2.1, ?_, ?_⟩
   · rw [hco, ProductExactness.NinfG, Subgroup.coe_pi]

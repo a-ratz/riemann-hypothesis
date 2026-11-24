@@ -85,7 +85,7 @@ theorem hasDSComp (h1 : IrredSt) (h2 : CompSt) : GlobalTheory.Published.Discrete
   have hmem : ∀ w, fa w ∈ CcArch D.sp.cm.sig V.gram w := hTD.2.2.2.2.2.1.mem
   have hfin : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
   obtain ⟨Q, hQ, hrep⟩ := GlobalTheory.T.pureTensorOperator_split_oneRealPlace D V μa μf μ hRP fa ff hmem hfin H π hπ.unitary (placeOf D τ)
-  haveI : (μa (placeOf D τ)).IsHaarMeasure := hRP.1 _
+  have : (μa (placeOf D τ)).IsHaarMeasure := hRP.1 _
   have hcont := continuous_of_mem_ccSmooth (continuous_archCoord _ _ _) (hmem (placeOf D τ))
   have hint : Integrable (fa (placeOf D τ)) (μa (placeOf D τ)) := hcont.integrable_of_hasCompactSupport (hmem _).1
   have hπw : IsUnitaryRep (π.comp (embArch D.sp.cm.sig V.gram (placeOf D τ))) :=
@@ -99,7 +99,7 @@ theorem hasDSComp (h1 : IrredSt) (h2 : CompSt) : GlobalTheory.Published.Discrete
   obtain ⟨c', hc', himp⟩ := GlobalTheory.T.discrete_series_test_function_trace hDS hHC hPC D V lam S M T U μa μf μ fa ff hTD τ δ.H δ.π δ.isIrr
   by_cases hc'0 : c' = 0
   · exfalso
-    haveI := δ.isIrr.complete
+    have := δ.isIrr.complete
     have hc'w : HasTrace (repOp δ.π (μa (placeOf D τ)) (fa (placeOf D τ))) 0 := hc'0 ▸ hc'
     have h0 := GlobalTheory.T.trace_integratedOp_mul_eq_zero_of_isotypic (GArch D.sp.cm.sig V.gram (placeOf D τ)) _ _ hint δ.H H δ.π _ δ.isIrr hπw hδ' Q hQ hc'w htc
     exact hc0 (hc.2.symm.trans (hrep ▸ h0))
@@ -113,7 +113,7 @@ theorem copyFinDS (h1 : IrredSt) (h2 : CompSt) (h4 : AdmSt) : GlobalTheory.Publi
   have hcopy := GlobalTheory.T.irreducibleUnitaryRep_eq_finiteSmoothPart_tensor_discreteSeries D V S M H π hπ hcomp hU
   have hadm := h4 D V S M μ H π hπ.unitary hcp hU
   have hirr := GlobalTheory.FinPartIrrAdm.irreducible hπ hcomp hU hadm
-  haveI : ν.IsHaarMeasure := hν.1
+  have : ν.IsHaarMeasure := hν.1
   have hfam : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
   obtain ⟨⟨c', hc'⟩, -⟩ := GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V ν ff hfam _ (finPartDSSm M hU) hadm
   have hπc' := GlobalTheory.T.test_data_haar_factorization D V lam S M T U μa μf μ fa ff hTD ν hν H π hπ _ (finPartDSSm M hU) hirr hadm hcopy c' hc'

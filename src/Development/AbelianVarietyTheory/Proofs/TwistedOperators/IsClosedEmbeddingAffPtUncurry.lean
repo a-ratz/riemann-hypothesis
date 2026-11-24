@@ -92,7 +92,7 @@ theorem affPt_of_free (p : ℕ) (x₀ : Matrix n n' k)
     (rs : {rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs}) :
     affPt p x₀ e rs.1.1 rs.1.2 = basePt c (0 : Matrix n n' k) rs.1.1 rs.1.2 + e rs := by
   obtain ⟨⟨r, s⟩, h⟩ := rs
-  simp only [affPt, Matrix.add_apply, Matrix.of_apply, dif_pos h]
+  simp only [affPt, Matrix.add_apply, Matrix.of_apply, dite_eq_left h]
   congr 1
   rcases r with r | r <;> rcases s with s | s
   · exact h.elim
@@ -115,7 +115,7 @@ theorem continuous_affPt_uncurry (p : ℕ) :
     simp only at this
     simp only [this]
     fun_prop
-  · simp only [affPt, Matrix.add_apply, Matrix.of_apply, dif_neg h, add_zero]
+  · simp only [affPt, Matrix.add_apply, Matrix.of_apply, dite_eq_right h, add_zero]
     rcases r with r | r <;> rcases s with s | s
     · exact continuous_fst.matrix_elem r s
     all_goals exact continuous_const
@@ -160,12 +160,12 @@ theorem integrable_opE_integrand (p : ℕ) {ψ : AddChar k Circle} (hψ : Contin
     [ν.IsAddHaarMeasure] {Φ : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ}
     (hΦ : Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k)) (x₀ : Matrix n n' k) :
     Integrable (fun e => Φ (affPt p x₀ e) * (ψ (-ch (affPt p x₀ e)) : ℂ)) (Measure.pi fun _ => ν) := by
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hc : Continuous fun e => affPt (c := c) p x₀ e :=
     (continuous_affPt_uncurry p).comp (Continuous.prodMk_right x₀)
   refine Continuous.integrable_of_hasCompactSupport ?_ ?_
-  · refine (hΦ.1.continuous.comp hc).mul (continuous_subtype_val.comp (hψ.comp (Continuous.neg ?_)))
+  · refine (hΦ.1.continuous.comp hc).mul (continuous_subtypeVal.comp (hψ.comp (Continuous.neg ?_)))
     exact continuous_finsetSum _ fun i _ => hc.matrix_elem _ _
   · refine HasCompactSupport.mul_right ?_
     have h2 := (comp_affPt_mem_SB p hΦ).2
@@ -179,7 +179,7 @@ omit [BorelSpace k] [DecidableEq n] [DecidableEq n'] in
 theorem opE_mem_SB (p : ℕ) (ψ : AddChar k Circle) (ν : Measure k)
     {Φ : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ}
     (hΦ : Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k)) : opE ψ ν p Φ ∈ SB (Matrix n n' k) := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   exact integral_mul_mem_SB _ _ (comp_affPt_mem_SB p hΦ)
     (fun e => (ψ (-ch (affPt p (0 : Matrix n n' k) e)) : ℂ))
 

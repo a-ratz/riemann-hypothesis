@@ -382,7 +382,7 @@ theorem restrictAtPoint_holds : RestrictAtPoint := by
         leviEmb _ (stdBlocks n h) g ∈ parab (w.adicCompletion E) (stdBlocks n h) := by
       apply mem_parab_iff.2
       intro a b i j hab
-      letI : DecidableEq (Fin c) := Classical.typeDecidableEq _
+      let : DecidableEq (Fin c) := Classical.typeDecidableEq _
       simp [leviEmb]
       exact Matrix.blockDiagonal'_apply_ne _ _ _ hab.ne'
     let Lp : parab (w.adicCompletion E) (stdBlocks n h) :=
@@ -422,7 +422,7 @@ theorem restrictAtPoint_holds : RestrictAtPoint := by
       generalize m * M' = g
       apply mem_parab_iff.2
       intro a b i j hab
-      letI : DecidableEq (Fin c) := Classical.typeDecidableEq _
+      let : DecidableEq (Fin c) := Classical.typeDecidableEq _
       simp [leviEmb]
       exact Matrix.blockDiagonal'_apply_ne _ _ _ hab.ne'
     have hconj : leviEmb (Ad E) (stdBlocks n h) (m * M') *

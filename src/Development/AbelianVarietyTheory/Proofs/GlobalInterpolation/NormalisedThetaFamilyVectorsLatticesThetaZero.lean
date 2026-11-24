@@ -97,7 +97,7 @@ theorem coef {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Formalism.L2.
     rw [e1]
     exact div_mem halg (hM₀Q _ (hM₀ α₀))
   have hcI : IsIntegral ℚ c := (mem_algebraicClosure_iff.1 hcQ).isIntegral
-  haveI := IntermediateField.adjoin.finiteDimensional hcI
+  have := IntermediateField.adjoin.finiteDimensional hcI
   refine ⟨M₀ ⊔ IntermediateField.adjoin ℚ {c}, inferInstance, fun α => ?_⟩
   rw [htay]
   exact mul_mem ((le_sup_right : IntermediateField.adjoin ℚ {c} ≤ _) (IntermediateField.mem_adjoin_simple_self ℚ c))

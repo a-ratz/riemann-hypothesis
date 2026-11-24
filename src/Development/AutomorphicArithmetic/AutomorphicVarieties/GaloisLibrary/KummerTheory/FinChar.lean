@@ -65,7 +65,7 @@ private theorem exists_valuationSubring_isPlaceOver (K Ω : Type) [Field K] [Num
     ⟨fun x y h => hf (congrArg Subtype.val h), f.rangeRestrict_surjective⟩
   let I : Ideal f.range := v.asIdeal.map e
   have hI : I ≠ ⊤ := by
-    haveI : (v.asIdeal.map e).IsPrime := Ideal.map_isPrime_of_equiv e
+    have : (v.asIdeal.map e).IsPrime := Ideal.map_isPrime_of_equiv e
     exact Ideal.IsPrime.ne_top this
   obtain ⟨V, hRV, hV⟩ := Ideal.image_subset_nonunits_valuationSubring I hI
   have hlt : ∀ y ∈ v.asIdeal, V.valuation (f y) < 1 := by
@@ -99,7 +99,7 @@ private theorem finite_above_of_ne_zero (K : Type) [Field K] [NumberField K] (N 
 theorem UpperTheory.V.Kum.finChar :
     ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] (n N : ℕ) (ζ : K), n ≠ 0 → N ≠ 0 → IsPrimitiveRoot ζ n → {φ : G K Ω → ZMod n | IsLocallyConstant φ ∧ (∀ a b, φ (a * b) = φ a + φ b) ∧ ∀ A : ValuationSubring Ω, ¬ A.valuation (N : Ω) < 1 → ∀ g ∈ Ine (F := K) A, φ g = 0}.Finite := by
   intro K Ω _ _ _ _ _ n N ζ hn hN hζ
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   let ζΩ := algebraMap K Ω ζ
   have hζΩ : IsPrimitiveRoot ζΩ n := hζ.map_of_injective (algebraMap K Ω).injective
   have hfix : ∀ (g : G K Ω) (x : K), g (algebraMap K Ω x) = algebraMap K Ω x :=
@@ -128,12 +128,12 @@ theorem UpperTheory.V.Kum.finChar :
     exact dvdOfIne K Ω n A v β a hA hβ
       (fun g hg' => by rw [hg, hine A hnot g hg', ZMod.val_zero, pow_zero, one_mul])
   choose! β a ha hβ hg using key
-  haveI hQ : Finite (↥(SelK (Above K N) n) ⧸ (powK K n).subgroupOf (SelK (Above K N) n)) := by
+  have hQ : Finite (↥(SelK (Above K N) n) ⧸ (powK K n).subgroupOf (SelK (Above K N) n)) := by
     apply Nat.finite_of_card_ne_zero
     rw [cardSel K _ n hn, cardSUnit K _ n (finite_above_of_ne_zero K N hN)]
     have h1 : Nat.card ↥(rootsOfUnity n K) ≠ 0 := Nat.card_pos.ne'
     have h2 : Nat.card {c : ClS (Above K N) // c ^ n = 1} ≠ 0 := by
-      haveI : Nonempty {c : ClS (Above K N) // c ^ n = 1} := ⟨⟨1, one_pow _⟩⟩
+      have : Nonempty {c : ClS (Above K N) // c ^ n = 1} := ⟨⟨1, one_pow _⟩⟩
       exact Nat.card_pos.ne'
     exact mul_ne_zero (mul_ne_zero (pow_ne_zero _ hn) h1) h2
   rw [← Set.finite_coe_iff]

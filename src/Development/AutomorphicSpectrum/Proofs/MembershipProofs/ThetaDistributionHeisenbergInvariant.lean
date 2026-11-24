@@ -379,13 +379,13 @@ private theorem exists_scale (v : HeightOneSpectrum R) (U : Set (v.adicCompletio
     rw [hg]; exact (map_ne_zero _).2 γ.ne_zero
   obtain ⟨b, hb⟩ := valuation_surjective K v (g * WithZero.exp (-1 : ℤ))
   have hlt : g * WithZero.exp (-1 : ℤ) < g := by
-    refine mul_lt_of_lt_one_right (zero_lt_iff.2 hg0) ?_
+    refine mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hg0) ?_
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp]; norm_num
   refine ⟨b, ?_, fun z hz => hγ ?_⟩
   · rintro rfl
     rw [map_zero] at hb
     exact mul_ne_zero hg0 WithZero.exp_ne_zero hb.symm
-  · rw [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding, map_mul]
+  · rw [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding, map_mul]
     have h1 : Valued.v (algebraMap K (v.adicCompletion K) b) = v.valuation K b :=
       valuedAdicCompletion_eq_valuation' v b
     rw [h1, hb]
@@ -401,11 +401,11 @@ private theorem compact_int [LocallyCompactSpace (FiniteAdeleRing R K)] :
     (R := fun v : HeightOneSpectrum R => v.adicCompletion K)
     (A := fun v : HeightOneSpectrum R => (v.adicCompletionIntegers K : Set (v.adicCompletion K)))
     (fun v => isOpen_int v)
-  haveI : LocallyCompactSpace (RestrictedProduct (fun v : HeightOneSpectrum R => v.adicCompletion K)
+  have : LocallyCompactSpace (RestrictedProduct (fun v : HeightOneSpectrum R => v.adicCompletion K)
     (fun v : HeightOneSpectrum R => (v.adicCompletionIntegers K : Set (v.adicCompletion K)))
     cofinite) := ‹LocallyCompactSpace (FiniteAdeleRing R K)›
-  haveI := hemb.locallyCompactSpace
-  haveI : ∀ v : HeightOneSpectrum R,
+  have := hemb.locallyCompactSpace
+  have : ∀ v : HeightOneSpectrum R,
       CompactSpace (v.adicCompletionIntegers K : Set (v.adicCompletion K)) := by
     intro v
     rw [← isCompact_iff_compactSpace]
@@ -413,8 +413,8 @@ private theorem compact_int [LocallyCompactSpace (FiniteAdeleRing R K)] :
       (fun w : HeightOneSpectrum R =>
         (⟨0, zero_mem _⟩ : (w.adicCompletionIntegers K : Set (w.adicCompletion K))))
     have h1 := (isOpenMap_eval v).image_mem_nhds hC0
-    have h2 := (isOpen_int (K := K) v).isOpenMap_subtype_val.image_mem_nhds h1
-    have h3 := (hC.image (continuous_apply v)).image continuous_subtype_val
+    have h2 := (isOpen_int (K := K) v).isOpenMap_subtypeVal.image_mem_nhds h1
+    have h3 := (hC.image (continuous_apply v)).image continuous_subtypeVal
     obtain ⟨b, hb0, hb⟩ := exists_scale v _ h2
     refine (h3.image (continuous_const_mul
       (algebraMap K (v.adicCompletion K) b⁻¹))).of_isClosed_subset
@@ -540,10 +540,10 @@ variable {F : Type*} [Field F] [NumberField F]
 private theorem adele_cover [LocallyCompactSpace (AdeleRing (RingOfIntegers F) F)] :
     ∃ K : Set (AdeleRing (RingOfIntegers F) F), IsCompact K ∧
       ∀ y, ∃ c : F, y - algebraMap F (AdeleRing (RingOfIntegers F) F) c ∈ K := by
-  haveI : LocallyCompactSpace
+  have : LocallyCompactSpace
       (InfiniteAdeleRing F × FiniteAdeleRing (RingOfIntegers F) F) :=
     ‹LocallyCompactSpace (AdeleRing (RingOfIntegers F) F)›
-  haveI : LocallyCompactSpace (FiniteAdeleRing (RingOfIntegers F) F) :=
+  have : LocallyCompactSpace (FiniteAdeleRing (RingOfIntegers F) F) :=
     (isOpenQuotientMap_snd (X := InfiniteAdeleRing F)).locallyCompactSpace
   obtain ⟨B, hB, hBc⟩ := infinite_cover (F := F)
   refine ⟨B ×ˢ _, hB.prod (compact_int (R := RingOfIntegers F) (K := F)), fun y => ?_⟩

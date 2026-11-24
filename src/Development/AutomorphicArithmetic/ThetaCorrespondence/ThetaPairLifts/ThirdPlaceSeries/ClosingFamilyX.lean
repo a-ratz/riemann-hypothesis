@@ -233,7 +233,7 @@ theorem length_le_of_forall_fg_length_le (O M : Type) [CommRing O] [AddCommGroup
   rw [Module.length_eq_height]
   refine Order.height_le_iff'.2 fun p _ => ?_
   have hx : ∀ i : Fin p.length, ∃ x ∈ p i.succ, x ∉ p i.castSucc :=
-    fun i => SetLike.exists_of_lt (p.step i)
+    fun i => IsConcreteLE.exists_of_lt (p.step i)
   choose x hx1 hx2 using hx
   set N : Submodule O M := Submodule.span O (Set.range x) with hN
   have hNfg : N.FG := Submodule.fg_span (Set.finite_range x)
@@ -299,11 +299,11 @@ theorem length_quotient_smul_range_le_finrank_mul : ∀ (O K : Type) [CommRing O
     congr 1
     ext q
     simp [hgs]
-  haveI : Module.Finite O N' := Module.Finite.iff_fg.mpr (Submodule.fg_span (s.finite_toSet.image g))
+  have : Module.Finite O N' := Module.Finite.iff_fg.mpr (Submodule.fg_span (s.finite_toSet.image g))
   let e : N' →ₗ[O] W := f ∘ₗ N'.subtype
   have he : Function.Injective e := hf.comp N'.injective_subtype
-  haveI : Module.IsTorsionFree K W := inferInstance
-  haveI : Module.IsTorsionFree O W :=
+  have : Module.IsTorsionFree K W := inferInstance
+  have : Module.IsTorsionFree O W :=
     Module.IsTorsionFree.comap (S := K) (algebraMap O K)
       (fun r hr => IsRegular.of_ne_zero (by
         intro h0
@@ -312,8 +312,8 @@ theorem length_quotient_smul_range_le_finrank_mul : ∀ (O K : Type) [CommRing O
         subst this
         exact (not_isRegular_zero (R := O)) hr))
       (fun r m => algebraMap_smul K r m)
-  haveI : Module.IsTorsionFree O N' := Function.Injective.moduleIsTorsionFree e he e.map_smul
-  haveI : Module.Free O N' := Module.free_of_finite_type_torsion_free'
+  have : Module.IsTorsionFree O N' := Function.Injective.moduleIsTorsionFree e he e.map_smul
+  have : Module.Free O N' := Module.free_of_finite_type_torsion_free'
   have hrank : Module.finrank O N' ≤ Module.finrank K W := by
     let b := Module.finBasis O N'
     have h1 : LinearIndependent O (e ∘ b) := b.linearIndependent.map' e (LinearMap.ker_eq_bot.mpr he)
@@ -516,8 +516,8 @@ theorem ambient_h1f_of_local_finiteness : Formalism.GaloisCohomology.LocalFinite
     EmbeddingTypes.H1fFiniteRankTorsion (D := D) i ρ π dc := by
   intro hLF D i ρ π dc hc _ w hw _ C L2 _ n
   obtain ⟨⟨_, hdvr, hfr⟩, -⟩ := GlobalTheory.Pass.goodO_ringOfIntegers (D.nd.l i) C.LL
-  haveI := hdvr
-  haveI := hfr
+  have := hdvr
+  have := hfr
   have hcont := _root_.GlobalTheory.TwistedDualLoc.continuous_and_integral D i w hw C.LL C.le ρ π hc
   have hfin := _root_.GlobalTheory.LocalH1Finiteness.finite_H1fV_matRep hLF (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL D.R.r
     (TruncatedSeriesCountingIdentities.locC C (T2O D.nd i ρ π)) hcont.1 hcont.2
@@ -549,9 +549,9 @@ theorem jointTB_of_jumpWindow : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc 
     (HW (D.nd.l i)).W_s _ 1 _ hs
   have hell : LocalSituation.ell (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 CL hs) = D.nd.l i :=
     (D.loc (D.nd.l i)).PD_p _
-  haveI : CharZero (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 CL hs).Qp :=
+  have : CharZero (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 CL hs).Qp :=
     inferInstanceAs (CharZero ℚ_[D.nd.l i])
-  haveI : FiniteDimensional (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 CL hs).Qp
+  have : FiniteDimensional (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 CL hs).Qp
       (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 CL hs).K := (D.nbr i w hw).Kw.2
   have hcard : Nat.card (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥CL.1) =
       Module.finrank ℚ_[D.nd.l i] ↥(D.nbr i w hw).Kw.1 :=

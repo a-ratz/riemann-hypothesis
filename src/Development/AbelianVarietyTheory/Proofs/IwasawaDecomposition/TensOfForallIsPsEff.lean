@@ -78,7 +78,7 @@ namespace GlobalTheory
 
 theorem exists_subsingleton_coh_twist_tens_lbPow : ∀ (k : Type) [Field k] {Y : Scheme.{0}} (f : Y ⟶ Sp k), IsProjOver f → ∀ (A N : LB Y), IsAmpleLB A → N.IsLB → ∀ (G : Y.Modules) [IsFiniteQC G] (B : ℕ), ∃ j₁ : ℕ, ∀ j m : ℕ, j₁ ≤ j → m < B → ∀ p, 0 < p → Subsingleton (coh (twist G (tens (lbPow A j) (lbPow N m))) p) := by
   intro k _ Y f hf A N hA hN G _ B
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have := (isProper_and_exists_isAmpleLB_of_isProjOver hf).1
   have H (m : Fin B) : ∃ q : ℕ, ∀ n ≥ q, ∀ p, 0 < p →
       Subsingleton (coh (twist (twist G (lbPow N m)) (lbPow A n)) p) :=
@@ -345,7 +345,7 @@ theorem TwistConeVanishing.of_generic (k : Type) [Field k] {V : Scheme.{0}} [IsI
   have hCf : IsFiniteQC (cokernel (cutHom G hM s)) := ((cut_by_regular_section.{0} G hM).1 s).2.2.1
   have hCs : support (cokernel (cutHom G hM s)) = support G \ ↑(Out.nonzeroLocus s) :=
     ((cut_by_regular_section.{0} G hM).1 s).2.2.2.1
-  haveI : IsFiniteQC (twistZ G (lbPow (tens (lbPow N 2) A) r) (-1)) :=
+  have : IsFiniteQC (twistZ G (lbPow (tens (lbPow N 2) A) r) (-1)) :=
     isFiniteQC_twist (isLB_lbZPow hM (-1))
   refine _root_.GlobalTheory.twistConeVanishing_of_cut A N hA.isLB hN.isLB r hr hM s G ⟨j₁, hj₁⟩ (h _ inferInstance ?_)
     (h _ hCf ?_)
@@ -363,14 +363,14 @@ theorem eventually_subsingleton_coh_ample_psEff : ∀ (k : Type) [Field k] (X : 
   refine devissage X (TwistConeVanishing A N) (fun _ h => .of_isZero hA.isLB hN h)
     (fun _ hS _ _ h₁ h₃ => .of_shortExact hA.isLB hN hS h₁ h₃) ?_ F hF
   intro Z hZ hsmall G hG
-  haveI := hG
-  haveI := isIntegral_red hZ
+  have := hG
+  have := isIntegral_red hZ
   have hAV : IsAmpleLB (A.pull (redι Z)) := hA.pull_of_isClosedImmersion _
   refine (_root_.GlobalTheory.twistConeVanishing_pull_iff_pushforward (redι Z) A N hA.isLB hN G).1 ?_
   refine TwistConeVanishing.of_generic k (redι Z ≫ f)
     (ProjSpace.isProjOver_comp_of_isClosedImmersion _ hf) _ _ hAV (hpe Z hZ) G ?_
   intro E hE hη
-  haveI := hE
+  have := hE
   have hE' : IsFiniteQC ((Scheme.Modules.pushforward (redι Z)).obj E) :=
     ProperFinite.isFiniteQC_pushforward (redι Z) hAV E
   refine (_root_.GlobalTheory.twistConeVanishing_pull_iff_pushforward (redι Z) A N hA.isLB hN E).2 (hsmall _ hE' ?_)
@@ -402,7 +402,7 @@ namespace GlobalTheory
 
 theorem IsAmpleLB.tens_of_forall_isPsEff : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k), IsProjOver f → ∀ A N : LB X, IsAmpleLB A → N.IsLB → (∀ Z : Closeds X, IsIrreducible (Z : Set X) → IsPsEff (N.pull (redι Z))) → IsAmpleLB (tens A N) := by
   intro k _ X f hf A N hA hN hpe
-  haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hf
+  have : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hf
   have hT : (tens A N).IsLB := isLB_tens hA.isLB hN
   refine isAmpleLB_of_subsingleton_coh_one X (tens A N) hT fun F hF => ?_
   obtain ⟨j₀, hj⟩ := eventually_subsingleton_coh_ample_psEff k X f hf A N hA hN hpe F hF

@@ -110,7 +110,7 @@ theorem isAdditive_swap_of_isDual (hB : IsAbelianScheme B) {P : LB (A ⊗ B).lef
     have e : (1 : 𝟙_ (Over S) ⟶ B ⊗ B) = lift (1 : 𝟙_ (Over S) ⟶ B) 1 := by
       ext <;> simp
     rw [← e1 (B ⊗ B), ← e1 B, e, hl]
-  haveI : IsMonHom m := GlobalTheory.rigidity_holds S (B ⊗ B) B (AbelianSchemeGerms.isAbelianScheme_tensor B B hB hB) hB m hη
+  have : IsMonHom m := GlobalTheory.rigidity_holds S (B ⊗ B) B (AbelianSchemeGerms.isAbelianScheme_tensor B B hB hB) hB m hη
   have hs : (swap P).IsLB := pull_isLB hP _
   refine (isAdditive_iff hs).2 fun Y b b' a ↦ ?_
   rw [evc_swap hP hs, evc_swap hP hs, evc_swap hP hs]

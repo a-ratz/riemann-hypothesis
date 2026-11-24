@@ -140,7 +140,7 @@ theorem dim_contra {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] (p : X �
     obtain ⟨R, hR, hRd⟩ := key p φ hφ hη (hV x) ⟨x, hxV x⟩
     rw [← dim_affine (hV x), ← hRd]
     exact hdim R hR
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover (fun x => (V x : Set X)) (fun x => (V x).isOpen)
     (fun x _ => Set.mem_iUnion.2 ⟨x, hxV x⟩)
   have hne : t.Nonempty := by

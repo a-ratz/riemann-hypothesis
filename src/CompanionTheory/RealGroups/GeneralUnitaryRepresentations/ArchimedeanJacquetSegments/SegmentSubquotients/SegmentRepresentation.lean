@@ -331,7 +331,7 @@ theorem stageP : StageP := by
   obtain ⟨z, hs, hz, hu⟩ := exists_unit_one_add_generator h2 hd σ' hσ'c
   have ht : ∑ a, (tcl σ (i + 2 + q) a).1 = (i + 2 + q) * d := sum_const_fin (i + 2 + q) d
   obtain ⟨n, xx, hdx, iz, hxz, he⟩ := classMain (tcl σ (i + 2 + q)) ht (tcl σ' 2) hpr z hs hz
-  haveI := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_prodIrr xx hdx
+  have := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_prodIrr xx hdx
   obtain ⟨T, hT, hTs⟩ := (he.trans (Emb.of' (consec_equiv σ (i + 2 + q) ht))).range
   refine ⟨T, hT, ?_⟩
   intro X _ _ π _ hsub w φ

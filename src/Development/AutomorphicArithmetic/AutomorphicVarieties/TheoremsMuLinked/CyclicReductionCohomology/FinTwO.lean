@@ -71,8 +71,8 @@ private theorem phi_sub (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] [
   intro K hK
   have hK' : IsOpen ((K.map H.subtype : Subgroup Γ) : Set Γ) := by
     rw [Subgroup.coe_map]
-    exact hH.isOpenMap_subtype_val _ hK
-  haveI := hΦ _ hK'
+    exact hH.isOpenMap_subtypeVal _ hK
+  have := hΦ _ hK'
   let e : K ≃* K.map H.subtype := K.equivMapOfInjective H.subtype H.subtype_injective
   have hc : Continuous (e.symm : K.map H.subtype → K) := by
     have hind : Topology.IsInducing (fun k : K => ((k : H) : Γ)) :=
@@ -85,7 +85,7 @@ private theorem phi_sub (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] [
       rw [← H.coe_subtype, ← h1]
       simp [e]
     rw [hfun]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   refine Finite.of_injective
     (β := {ψ : (K.map H.subtype) →* Multiplicative (ZMod l) // IsOpen (ψ.ker : Set (K.map H.subtype))})
     (fun φ => ⟨φ.1.comp e.symm.toMonoidHom, ?_⟩) ?_
@@ -102,12 +102,12 @@ private theorem phi_sub (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] [
 
 private theorem finite_addMonoidHom_zmod_of_finite (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] [Finite M] :
     Finite (M →+ ZMod l) := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   exact Finite.of_injective (fun f : M →+ ZMod l => (f : M → ZMod l)) DFunLike.coe_injective
 
 private theorem eq_zero_of_forall_hom_zmod_eq_zero_of_l_smul (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] (hl : ∀ m : M, l • m = 0)
     (m : M) (h : ∀ f : M →+ ZMod l, f m = 0) : m = 0 := by
-  letI : Module (ZMod l) M := AddCommGroup.zmodModule hl
+  let : Module (ZMod l) M := AddCommGroup.zmodModule hl
   let b := Module.Basis.ofVectorSpace (ZMod l) M
   apply b.repr.injective
   ext i
@@ -123,14 +123,14 @@ theorem UpperTheory.V.Pa.finZ :
     { carrier := {g | ∀ m, ρ g m = m}
       mul_mem' := by
         intro a b ha hb m
-        simp only [Set.mem_setOf_eq] at ha hb
+        simp only [Set.mem_ofPred_eq] at ha hb
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by
         intro m
         simp
       inv_mem' := by
         intro a ha m
-        simp only [Set.mem_setOf_eq] at ha
+        simp only [Set.mem_ofPred_eq] at ha
         have h1 := ha (ρ a⁻¹ m)
         rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply] at h1
         exact h1.symm }
@@ -140,9 +140,9 @@ theorem UpperTheory.V.Pa.finZ :
       simp [N]
     rw [hset]
     exact isOpen_iInter_of_finite (fun m => (hρ m).isOpen_fiber m)
-  haveI : Finite (Γ ⧸ N) := Subgroup.quotient_finite_of_isOpen N hN
-  haveI : Finite (M →+ ZMod l) := finite_addMonoidHom_zmod_of_finite l M
-  haveI := hΦ N hN
+  have : Finite (Γ ⧸ N) := Subgroup.quotient_finite_of_isOpen N hN
+  have : Finite (M →+ ZMod l) := finite_addMonoidHom_zmod_of_finite l M
+  have := hΦ N hN
   have z1 : ∀ z ∈ Zl ρ, z 1 = 0 := by
     intro z hz
     have h := ((mem_Zl ρ).1 hz).2 1 1
@@ -162,7 +162,7 @@ theorem UpperTheory.V.Pa.finZ :
       Multiplicative.ofAdd (f (z.1 k)) * Multiplicative.ofAdd (f (z.1 k'))
     rw [Subgroup.coe_mul, zN _ z.2 _ _ k.2, map_add (f := _), ofAdd_add]
   · have hlc : IsLocallyConstant (fun k : N => Multiplicative.ofAdd (f (z.1 k))) :=
-      (((mem_Zl ρ).1 z.2).1.comp_continuous continuous_subtype_val).comp _
+      (((mem_Zl ρ).1 z.2).1.comp_continuous continuous_subtypeVal).comp _
     rw [MonoidHom.coe_ker]
     exact hlc.isOpen_fiber 1
   · intro z z' h
@@ -203,12 +203,12 @@ private theorem fin_step {A : Type} [AddCommGroup A] (l : ℕ) (h1 : {a : A | l 
   | zero =>
     apply Set.Finite.subset (Set.finite_singleton 0)
     intro a ha
-    simp only [Set.mem_setOf_eq, pow_zero, one_smul] at ha
+    simp only [Set.mem_ofPred_eq, pow_zero, one_smul] at ha
     simp [ha]
   | succ j ih =>
     have hsub : {a : A | l ^ (j + 1) • a = 0} ⊆ (fun a => l • a) ⁻¹' {a : A | l ^ j • a = 0} := by
       intro a ha
-      simp only [Set.mem_setOf_eq, Set.mem_preimage] at ha ⊢
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage] at ha ⊢
       rw [smul_smul, ← pow_succ]; exact ha
     refine Set.Finite.subset (Set.Finite.preimage' ih ?_) hsub
     intro b _
@@ -218,7 +218,7 @@ private theorem fin_step {A : Type} [AddCommGroup A] (l : ℕ) (h1 : {a : A | l 
       intro a ha
       refine ⟨a - a0, ?_, by simp⟩
       simp only [Set.mem_preimage, Set.mem_singleton_iff] at ha ha0
-      simp only [Set.mem_setOf_eq, smul_sub, ha, ha0, sub_self]
+      simp only [Set.mem_ofPred_eq, smul_sub, ha, ha0, sub_self]
     · rw [Set.not_nonempty_iff_eq_empty] at hne
       rw [hne]; exact Set.finite_empty
 
@@ -229,11 +229,11 @@ theorem UpperTheory.V.Th.finZK :
   let M1 : Submodule R M :=
     { carrier := {m | l • m = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_add, ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun r {m} hm => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_comm, hm, smul_zero] }
   have hst : ∀ g, ∀ m ∈ M1, ρ g m ∈ M1 := by
     intro g m hm
@@ -272,12 +272,12 @@ theorem UpperTheory.V.Th.finZK :
       apply Subtype.ext; apply Subtype.ext; funext g
       have := congrFun (congrArg Subtype.val hab) g
       exact congrArg Subtype.val this
-    haveI : Finite ↥{a : Zl ρ | l • a = 0} := Finite.of_injective F hF
+    have : Finite ↥{a : Zl ρ | l • a = 0} := Finite.of_injective F hF
     exact Set.toFinite _
   have hk := fin_step l hl k
   have huniv : {a : Zl ρ | l ^ k • a = 0} = Set.univ := by
     ext a
-    simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
     apply Subtype.ext
     funext g
     simp [htors]
@@ -300,8 +300,8 @@ private theorem phiCond_of_isOpen_subgroup {Γ : Type} [Group Γ] [TopologicalSp
   let H' : Subgroup Γ := H.map K.subtype
   have hH' : IsOpen (H' : Set Γ) := by
     rw [Subgroup.coe_map]
-    exact hK.isOpenMap_subtype_val _ hH
-  haveI := h H' hH'
+    exact hK.isOpenMap_subtypeVal _ hH
+  have := h H' hH'
   let e : H ≃* H' := H.equivMapOfInjective K.subtype K.subtype_injective
   have hEq : ∀ x : H', (((e.symm x : K) : Γ)) = (x : Γ) := fun x => by
     conv_rhs => rw [← e.apply_symm_apply x]
@@ -309,7 +309,7 @@ private theorem phiCond_of_isOpen_subgroup {Γ : Type} [Group Γ] [TopologicalSp
   have hc : Continuous (fun x : H' => e.symm x) := by
     refine Topology.IsInducing.subtypeVal.continuous_iff.mpr ?_
     refine Topology.IsInducing.subtypeVal.continuous_iff.mpr ?_
-    exact continuous_subtype_val.congr (fun x => (hEq x).symm)
+    exact continuous_subtypeVal.congr (fun x => (hEq x).symm)
   refine Finite.of_injective
     (fun φ : {φ : H →* Multiplicative (ZMod l) // IsOpen (φ.ker : Set H)} =>
       (⟨φ.1.comp e.symm.toMonoidHom, by
@@ -332,11 +332,11 @@ theorem UpperTheory.V.Th.finTwO :
   have hLC := hlc rep (Or.inr hrep)
   have hKo : IsOpen (G0.η.ker : Set G0.Γ) := G0.η_open
   have hKc : IsClosed (G0.η.ker : Set G0.Γ) := Subgroup.isClosed_of_isOpen _ hKo
-  haveI : CompactSpace G0.G₀ := isCompact_iff_compactSpace.mp hKc.isCompact
+  have : CompactSpace G0.G₀ := isCompact_iff_compactSpace.mp hKc.isCompact
   let rep0 : Representation O G0.G₀ (Mm O n m) := rep.comp G0.η.ker.subtype
-  have hLC0 : LC rep0 := fun Z => (hLC Z).comp_continuous continuous_subtype_val
+  have hLC0 : LC rep0 := fun Z => (hLC Z).comp_continuous continuous_subtypeVal
   have hphi0 : PhiCond G0.G₀ l := phiCond_of_isOpen_subgroup l G0.η.ker hKo hphi
-  haveI : Finite (Om O m) := hfin
+  have : Finite (Om O m) := hfin
   have hZ := finZK l m O G0.G₀ (Mm O n m) rep0 hphi0 hLC0
     (fun Z => by
       ext i j

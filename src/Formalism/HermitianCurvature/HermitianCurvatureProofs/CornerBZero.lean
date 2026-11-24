@@ -188,8 +188,8 @@ theorem n_col (nn : B.Mat k (p + m)) (hn : nn ∈ Nset k (p + m)) (b : Fin p) (c
   rw [e] at h
   rw [h]
   by_cases hcb : c.val = b.val
-  · rw [if_pos (Fin.ext hcb), if_pos hcb]
-  · rw [if_neg (fun h' => hcb (congrArg Fin.val h')), if_neg hcb]
+  · rw [ite_eq_left (Fin.ext hcb), ite_eq_left hcb]
+  · rw [ite_eq_right (fun h' => hcb (congrArg Fin.val h')), ite_eq_right hcb]
 
 theorem zh_mul_N (g nn : B.Mat k (p + m)) (hn : nn ∈ Nset k (p + m)) :
     U.Zh k p m (g * nn) = U.Zh k p m g * Matrix.of (fun c b : Fin p => nn ⟨c.val, by omega⟩ ⟨b.val, by omega⟩) := by
@@ -203,20 +203,20 @@ theorem zh_mul_N (g nn : B.Mat k (p + m)) (hn : nn ∈ Nset k (p + m)) :
     have hcp : c.val < p := by
       by_contra hcp
       apply hc
-      rw [n_col nn hn b c (by omega), if_neg (by omega), mul_zero]
+      rw [n_col nn hn b c (by omega), ite_eq_right (by omega), mul_zero]
     exact ⟨⟨c.val, hcp⟩, Finset.mem_univ _, by simpa using hc, rfl⟩
   · intro c _ _; rfl
 
 theorem det_N_block (nn : B.Mat k (p + m)) (hn : nn ∈ Nset k (p + m)) :
     (Matrix.of (fun c b : Fin p => nn ⟨c.val, by omega⟩ ⟨b.val, by omega⟩)).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun c _ => ?_
     simp only [Matrix.of_apply]
-    rw [n_col nn hn c _ le_rfl, if_pos rfl]
+    rw [n_col nn hn c _ le_rfl, ite_eq_left rfl]
   · intro c b hcb
     have hcb' : b.val < c.val := hcb
     simp only [Matrix.of_apply]
-    rw [n_col nn hn b _ (le_of_lt hcb'), if_neg (by simp only; omega)]
+    rw [n_col nn hn b _ (le_of_lt hcb'), ite_eq_right (by simp only; omega)]
 
 theorem djU_mul_N (g nn : B.Mat k (p + m)) (hn : nn ∈ Nset k (p + m)) : U.DjU k p m (g * nn) = U.DjU k p m g := by
   unfold U.DjU
@@ -236,12 +236,12 @@ theorem djU_mul_UW (z : Fin (2 * (p + m) + k + 1) → ℂ) (g h : B.Mat k (p + m
     rw [← Formalism.FourierDecayAlt.P.PBM.mulVec_bvec_apply h ⟨b.val, by omega⟩ c, h1]
     unfold bvec
     by_cases hcb : c.val = b.val
-    · rw [if_pos hcb, Pi.single_apply, if_pos (Fin.ext hcb)]
-    · rw [if_neg hcb, Pi.single_apply, if_neg (fun h' => hcb (congrArg Fin.val h'))]
+    · rw [ite_eq_left hcb, Pi.single_apply, ite_eq_left (Fin.ext hcb)]
+    · rw [ite_eq_right hcb, Pi.single_apply, ite_eq_right (fun h' => hcb (congrArg Fin.val h'))]
   rw [Finset.sum_eq_single ⟨b.val, by omega⟩]
-  · rw [hcol, if_pos rfl, mul_one]
+  · rw [hcol, ite_eq_left rfl, mul_one]
   · intro c _ hc
-    rw [hcol, if_neg (fun h' => hc (Fin.ext h')), mul_zero]
+    rw [hcol, ite_eq_right (fun h' => hc (Fin.ext h')), mul_zero]
   · intro h'; exact absurd (Finset.mem_univ _) h'
 
 end djU
@@ -287,7 +287,7 @@ theorem fl_split (hGS : GaXiSplit) (hPR : PsiRight) (hPA : PsiRnAct) (hPM : PsiM
     rw [show B.sgs ((splitE σ).symm (x, y)).1 g = (Matrix.of x.1.1 : B.Mat k ρ)⁻¹ * (Matrix.of x.1.2 : B.Mat k ρ)⁻¹ * g *
       Matrix.of y.1.2 * Matrix.of y.1.1 from rfl]
     convert this using 1
-    simp only [sxL, if_pos (show GoodL Bj σ x from ⟨hh, hν⟩), PsiR, NR, of_levMt, Equiv.apply_symm_apply]
+    simp only [sxL, ite_eq_left (show GoodL Bj σ x from ⟨hh, hν⟩), PsiR, NR, of_levMt, Equiv.apply_symm_apply]
     rfl
 
   have hpi : B0.π' (Matrix.of (PsiR y).1)⁻¹ = Bj.π' (Matrix.of y.1.1)⁻¹ := by
@@ -309,7 +309,7 @@ theorem fl_split (hGS : GaXiSplit) (hPR : PsiRight) (hPA : PsiRnAct) (hPM : PsiM
     rfl
   unfold FL ellL KrI
   rw [hpt, hpi, hS, hN]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.compL_apply, ContinuousLinearMap.comp_smul,
+  simp only [smul_apply, ContinuousLinearMap.compL_apply, ContinuousLinearMap.comp_smul,
     ContinuousLinearMap.smul_comp, smul_smul, JF.xiP, cL, star_mul', ← hM]
   congr 1
   · simp only [splitE, MeasurableEquiv.symm_mk, MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk]

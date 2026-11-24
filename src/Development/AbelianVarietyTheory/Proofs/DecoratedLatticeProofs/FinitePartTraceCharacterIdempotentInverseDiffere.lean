@@ -76,7 +76,7 @@ theorem exists_nat_mem_mul_integral {E : Type} [Field E] [NumberField E]
   have hbot : (I : Submodule (𝓞 E) E) ≠ ⊥ := by
     intro h
     apply hI
-    exact FractionalIdeal.coeToSubmodule_injective (h.trans FractionalIdeal.coe_zero.symm)
+    exact FractionalIdeal.coeToSubmodule_injective (h.trans FractionalIdeal.coeToSubmodule_zero.symm)
   obtain ⟨x, hxI, hx0⟩ := (Submodule.ne_bot_iff _).1 hbot
   obtain ⟨j, hj⟩ := hint x hxI
   have hj' : (j : E) = (a : E) * x := by
@@ -129,7 +129,7 @@ theorem aeGen : ∀ (D : D7) (I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.
   refine ⟨hfin.toFinset, fun v hv => ⟨(N : 𝓞 D.host.F), ?_, ?_, ?_⟩⟩
   · intro hmem
     apply hv
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact hmem
   · have : (((N : 𝓞 D.host.F) : D.host.F) : D.host.E) = (N : D.host.E) := by push_cast; rfl
     rw [this]; exact hNI
@@ -176,7 +176,7 @@ theorem exists_gen_mul_of_isIntegral {R S : Type*} [CommRing R] [CommRing S] [Is
     have h4 : J * Q = J * ⊤ := by
       rw [Ideal.mul_top]; exact le_antisymm Ideal.mul_le_left h3
     exact hQ.ne_top (mul_left_cancel₀ hJ0 h4)
-  rw [SetLike.not_le_iff_exists] at key
+  rw [IsConcreteLE.not_le_iff_exists] at key
   obtain ⟨c, hcK, hcp⟩ := key
   rw [Ideal.mem_comap] at hcK
   refine ⟨y, hyJ, ?_, c, hcp, ?_⟩
@@ -201,10 +201,10 @@ theorem fracIdeal_locGen : ∀ (D : D7) (I : FractionalIdeal (nonZeroDivisors (�
       ((c : D.host.F) : D.host.E) * a ∈ I ∧
       ∀ b ∈ I, ∃ o : 𝓞 D.host.E, ((c : D.host.F) : D.host.E) * b = a * (o : D.host.E) := by
   intro D I hI v
-  letI : Algebra (𝓞 D.host.F) (𝓞 D.host.E) := (RingOfIntegers.mapRingHom D.host.F.subtype).toAlgebra
+  let : Algebra (𝓞 D.host.F) (𝓞 D.host.E) := (RingOfIntegers.mapRingHom D.host.F.subtype).toAlgebra
   have hφ : ∀ c : 𝓞 D.host.F, ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) c : 𝓞 D.host.E) : D.host.E) =
       ((c : D.host.F) : D.host.E) := fun c => rfl
-  haveI : Algebra.IsIntegral (𝓞 D.host.F) (𝓞 D.host.E) := Algebra.IsIntegral.tower_top (R := ℤ)
+  have : Algebra.IsIntegral (𝓞 D.host.F) (𝓞 D.host.E) := Algebra.IsIntegral.tower_top (R := ℤ)
   have hinj : Function.Injective (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) := by
     intro x y h
     have h' := congrArg (fun z : 𝓞 D.host.E => (z : D.host.E)) h
@@ -361,7 +361,7 @@ theorem gam_int (x : Pl D) (c : 𝓞 D.host.F) (hc : c ∉ x.asIdeal) : gam x c 
 
 theorem gam_supp (x : Pl D) (c : 𝓞 D.host.F) : ∀ w, ¬ (w = x) → evalV D.host.F w (gam x c) = 0 := by
   intro w hw
-  rw [gam, map_mul, evalV_indP, if_neg hw, mul_zero]
+  rw [gam, map_mul, evalV_indP, ite_eq_right hw, mul_zero]
 
 theorem coe_ne_zero (x : Pl D) (c : 𝓞 D.host.F) (hc : c ∉ x.asIdeal) : ((c : D.host.F) : D.host.E) ≠ 0 := by
   intro h
@@ -504,7 +504,7 @@ theorem trace_int_of_dual {d : D.host.E} (hd : d ∈ Dual D) (o : 𝓞 D.host.E)
   rw [← hn]; simp
 
 theorem mul_mem_dual {d : D.host.E} (hd : d ∈ Dual D) (o : 𝓞 D.host.E) : d * (o : D.host.E) ∈ Dual D := by
-  have h := FractionalIdeal.mem_coe.1 (Submodule.smul_mem _ o (FractionalIdeal.mem_coe.2 hd))
+  have h := FractionalIdeal.mem_coeToSubmodule.1 (Submodule.smul_mem _ o (FractionalIdeal.mem_coeToSubmodule.2 hd))
   rwa [Algebra.smul_def, mul_comm] at h
 
 theorem chi_tmul_dual {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {γ : Af D.host.F}
@@ -742,8 +742,8 @@ theorem exists_idele_AA : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
   have hloc := _root_.GlobalTheory.fracIdeal_locGen D D.host.AA hAA
   obtain ⟨S, hS⟩ := _root_.GlobalTheory.IdeleGen.aeGen D D.host.AA hAA
   let a : Pl D → D.host.E := fun v => if v ∈ S then (hloc v).choose else 1
-  have hpos : ∀ v ∈ S, a v = (hloc v).choose := fun v hv => if_pos hv
-  have ha : ∀ v ∉ S, a v = 1 := fun v hv => if_neg hv
+  have hpos : ∀ v ∈ S, a v = (hloc v).choose := fun v hv => ite_eq_left hv
+  have ha : ∀ v ∉ S, a v = 1 := fun v hv => ite_eq_right hv
   have h0 : ∀ v, a v ≠ 0 := fun v => by
     by_cases hv : v ∈ S
     · rw [hpos v hv]; exact (hloc v).choose_spec.1

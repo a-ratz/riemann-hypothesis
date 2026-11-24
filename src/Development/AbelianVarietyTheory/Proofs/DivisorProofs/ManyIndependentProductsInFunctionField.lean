@@ -293,16 +293,16 @@ theorem mem_pow_of_coeff_mem (a n : ℕ) :
         have : ∀ i, ¬ P i 0 := fun i h => h.1 rfl
         simp [this, coeff_zero_eq_constantCoeff_apply]
       · obtain ⟨i, hi⟩ := hexists d hd
-        rw [if_neg hd, zero_add, Finset.sum_eq_single i (fun j _ hj => by
-          rw [if_neg (fun h => hj (huniq _ _ _ h hi))]) (fun h => absurd (Finset.mem_univ i) h),
-          if_pos hi]
+        rw [ite_eq_right hd, zero_add, Finset.sum_eq_single i (fun j _ hj => by
+          rw [ite_eq_right (fun h => hj (huniq _ _ _ h hi))]) (fun h => absurd (Finset.mem_univ i) h),
+          ite_eq_left hi]
     rw [hdecomp]
     refine add_mem (C_mem_pow _ _ ?_) (Ideal.sum_mem _ fun i _ => ?_)
     · simpa [coeff_zero_eq_constantCoeff_apply] using hf 0
     · have hdvd : (X i : MvPowerSeries (Fin a) O) ∣ fi i := by
         rw [X_dvd_iff]
         intro m hm
-        rw [hfi, if_neg (fun h => h.1 hm)]
+        rw [hfi, ite_eq_right (fun h => h.1 hm)]
       obtain ⟨g, hg⟩ := hdvd
       rw [hg, pow_succ']
       refine Ideal.mul_mem_mul (X_mem_max i) (ih g fun d => ?_)
@@ -551,7 +551,7 @@ namespace GlobalTheory
 open GlobalTheory.ShiftHomomorphism in
 theorem branches_of_unramified_point : ∀ (D : ℕ) (P : Polynomial (MvPolynomial (Fin D) ℂ)) (c : Fin D → ℂ), P.Monic → (P.map (MvPolynomial.eval c)).Separable → ∃ (n : ℕ) (φ : Fin n → (AdjoinRoot P →ₐ[ℂ] MvPowerSeries (Fin D) ℂ)), (∀ u, (∀ j, φ j u = 0) → u = 0) ∧ ∀ j i, φ j (AdjoinRoot.of P (MvPolynomial.X i)) = MvPowerSeries.X i + MvPowerSeries.C (c i) := by
   intro D P c hP hsep
-  haveI : IsDomain (MvPowerSeries (Fin D) ℂ) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (MvPowerSeries (Fin D) ℂ) := NoZeroDivisors.to_isDomain _
   set ψ := shiftHom D c with hψ
   set Q := P.map ψ.toRingHom with hQ
   have hQm : Q.Monic := hP.map _
@@ -697,23 +697,23 @@ theorem exists_primitive_monic_separable_specialization :
   let F := FractionRing R
   let φ : R →ₐ[ℚ] K := MvPolynomial.aeval x
   have φinj : Function.Injective φ := hx.1
-  letI : Algebra R K := φ.toRingHom.toAlgebra
+  let : Algebra R K := φ.toRingHom.toAlgebra
   have hφ : ∀ r : R, algebraMap R K r = φ r := fun r => rfl
-  haveI : IsScalarTower ℚ R K := IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
-  haveI : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 φinj
-  letI : Algebra F K := FractionRing.liftAlgebra R K
-  haveI : IsScalarTower R F K := FractionRing.isScalarTower_liftAlgebra R K
-  haveI : CharZero F := RingHom.charZero (algebraMap F K)
-  haveI : Algebra.IsAlgebraic R K :=
+  have : IsScalarTower ℚ R K := IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  have : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 φinj
+  let : Algebra F K := FractionRing.liftAlgebra R K
+  have : IsScalarTower R F K := FractionRing.isScalarTower_liftAlgebra R K
+  have : CharZero F := RingHom.charZero (algebraMap F K)
+  have : Algebra.IsAlgebraic R K :=
     haveI := hx.isAlgebraic
     ⟨fun y => (IsAlgebraic.ringHom_of_comp_eq (f := hx.1.aevalEquiv.symm.toRingHom) (g := RingHom.id K)
       (Algebra.IsAlgebraic.isAlgebraic y) hx.1.aevalEquiv.symm.injective (RingHom.ext fun z => by
         obtain ⟨p, rfl⟩ := hx.1.aevalEquiv.surjective z
         simp [RingHom.algebraMap_toAlgebra, φ]))⟩
-  haveI : Algebra.IsAlgebraic F K := Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective R F)
+  have : Algebra.IsAlgebraic F K := Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective R F)
 
   let E := IntermediateField.adjoin F (Set.range e)
-  haveI : FiniteDimensional F E := IntermediateField.finiteDimensional_adjoin
+  have : FiniteDimensional F E := IntermediateField.finiteDimensional_adjoin
     (fun y _ => (Algebra.IsAlgebraic.isAlgebraic (R := F) y).isIntegral)
   obtain ⟨α, hα⟩ := Field.exists_primitive_element F E
   have hαE : F⟮(α : K)⟯ = E := by
@@ -968,7 +968,7 @@ theorem lexOrder_monomial_one' (a : Fin D →₀ ℕ) :
   · apply lexOrder_le_of_coeff_ne_zero; simp
   · rw [le_lexOrder_iff]
     intro d hd
-    rw [coeff_monomial, if_neg]
+    rw [coeff_monomial, ite_eq_right]
     rintro rfl
     exact lt_irrefl _ (WithTop.coe_lt_coe.mp hd)
 
@@ -1013,8 +1013,8 @@ variable {D n : ℕ} {A : Type} [CommRing A] [Algebra ℂ A]
 noncomputable def evalAt (k : ℕ) (u : A) : MvPowerSeries (Fin D) ℂ :=
   if h : k < n then φ ⟨k, h⟩ u else 0
 
-theorem evalAt_of_lt {k : ℕ} (h : k < n) (u : A) : evalAt φ k u = φ ⟨k, h⟩ u := dif_pos h
-theorem evalAt_of_not_lt {k : ℕ} (h : ¬ k < n) (u : A) : evalAt φ k u = 0 := dif_neg h
+theorem evalAt_of_lt {k : ℕ} (h : k < n) (u : A) : evalAt φ k u = φ ⟨k, h⟩ u := dite_eq_left h
+theorem evalAt_of_not_lt {k : ℕ} (h : ¬ k < n) (u : A) : evalAt φ k u = 0 := dite_eq_right h
 
 theorem evalAt_zero (k : ℕ) : evalAt φ k (0 : A) = 0 := by
   unfold evalAt; split_ifs <;> simp
@@ -1042,7 +1042,7 @@ theorem firstIdx_spec {u : A} (h : ∃ k, evalAt φ k u ≠ 0) :
     evalAt φ (firstIdx φ u) u ≠ 0 ∧ ∀ i < firstIdx φ u, evalAt φ i u = 0 := by
   classical
   unfold firstIdx
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact ⟨Nat.find_spec h, fun i hi => not_not.mp (Nat.find_min h hi)⟩
 
 theorem firstIdx_eq {u : A} {k : ℕ} (hk : evalAt φ k u ≠ 0) (hlt : ∀ i < k, evalAt φ i u = 0) :
@@ -1050,7 +1050,7 @@ theorem firstIdx_eq {u : A} {k : ℕ} (hk : evalAt φ k u ≠ 0) (hlt : ∀ i < 
   classical
   have h : ∃ k, evalAt φ k u ≠ 0 := ⟨k, hk⟩
   unfold firstIdx
-  rw [dif_pos h, Nat.find_eq_iff]
+  rw [dite_eq_left h, Nat.find_eq_iff]
   exact ⟨hk, fun i hi => not_not.mpr (hlt i hi)⟩
 
 theorem val_eq {u : A} {k : ℕ} (hk : evalAt φ k u ≠ 0) (hlt : ∀ i < k, evalAt φ i u = 0) :
@@ -1076,7 +1076,7 @@ theorem val_smul (c : ℂ) (u : A) (hc : c ≠ 0) : val φ (c • u) = val φ u 
     have h' : ¬ ∃ k, evalAt φ k (c • u) ≠ 0 := by simpa [this] using h
     have h'' : ¬ ∃ k, evalAt φ k u ≠ 0 := by simpa using h
     unfold val firstIdx
-    rw [dif_neg h', dif_neg h'', this]
+    rw [dite_eq_right h', dite_eq_right h'', this]
 
 theorem val_add (hinj : ∀ u : A, (∀ j, φ j u = 0) → u = 0) (u v : A) (hu : u ≠ 0) (hv : v ≠ 0)
     (hlt : val φ u < val φ v) : u + v ≠ 0 ∧ val φ (u + v) = val φ u := by
@@ -1305,7 +1305,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
     LinearIndependent ℤ v ∧ ∀ s, ∃ (u : Fin m → J) (a : Fin D → ℕ), (∀ i, a i < m) ∧
       v s = (∏ l, e (u l)) * ∏ i, x i ^ a i := by
   intro K _ _ D x hx J _ e he m hm
-  haveI : Algebra.IsAlgebraic ℤ ℚ := IsLocalization.isAlgebraic ℚ (nonZeroDivisors ℤ)
+  have : Algebra.IsAlgebraic ℤ ℚ := IsLocalization.isAlgebraic ℚ (nonZeroDivisors ℤ)
   have hxQ : IsTranscendenceBasis ℚ x := (Algebra.IsAlgebraic.isTranscendenceBasis_iff ℤ ℚ).1 hx
   have heQ : LinearIndependent ℚ e := (LinearIndependent.iff_fractionRing ℤ ℚ).1 he
   obtain ⟨P, ψ, g, c, hPm, hψ, hψx, hg, hge, hsep⟩ := _root_.GlobalTheory.PrimTransc.exists_primitive_monic_separable_specialization K D x hxQ J e
@@ -1331,13 +1331,13 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
   let w : (Fin m → J) × (Fin D → Fin m) → AdjoinRoot P := fun ub =>
     (∏ l, e' (ub.1 l)) * ∏ i, AdjoinRoot.of P (MvPolynomial.X i) ^ (ub.2 i : ℕ)
   obtain ⟨κ, a, ha, hspan, hind⟩ := exists_linearIndependent' ℚ w
-  haveI : Finite κ := Finite.of_injective a ha
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  have : Fintype κ := Fintype.ofFinite κ
   let xC : Fin D → AdjoinRoot PC := fun i => AdjoinRoot.of PC (MvPolynomial.X i)
   let F : Submodule ℂ (AdjoinRoot PC) := Submodule.span ℂ (Set.range fun j => τ (e' j))
   let G : Submodule ℂ (AdjoinRoot PC) := Submodule.span ℂ (Set.range fun k => τ (w (a k)))
-  haveI : Module.Finite ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
-  haveI : Module.Finite ℂ G := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
+  have : Module.Finite ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
+  have : Module.Finite ℂ G := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   have hτspan : ∀ u ∈ Submodule.span ℚ (Set.range (w ∘ a)), τ u ∈ G := by
     intro u hu
     induction hu using Submodule.span_induction with

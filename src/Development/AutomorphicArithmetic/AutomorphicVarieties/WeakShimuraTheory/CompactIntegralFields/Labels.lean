@@ -201,7 +201,7 @@ theorem UpperTheory.V.Ws.normal :
       (∀ i j, i ≠ j → g i j ∈ maximalIdeal C) → (∀ i j, i ≠ j → IsUnit (g i i - g j j)) → IsUnit ν →
       ∃ u : M4 C, IsGSp 1 u ∧ (∀ i j, (u - 1) i j ∈ maximalIdeal C) ∧ (adj u * g * u).IsDiag ∧ (IsBlock g → IsBlock u) := by
   intro C _ _ _ ν g h2u hg hoff hdiff hν
-  haveI : HenselianLocalRing C :=
+  have : HenselianLocalRing C :=
     { (inferInstance : IsLocalRing C) with
       is_henselian := fun f hf a₀ h₁ h₂ =>
         (IsAdicComplete.henselianRing C (maximalIdeal C)).is_henselian f hf a₀ h₁
@@ -473,8 +473,8 @@ theorem UpperTheory.V.Ws.Lab.exNorm :
           rw [Matrix.mul_smul, smul_smul, Units.mul_inv, one_smul]
       _ = (c : R) • (1 : M4 R) := by rw [h2]
   obtain ⟨S, _, _, _, f, P₁, hf, hc, hmap⟩ := hs
-  haveI := hf.complete
-  haveI := hf.loc
+  have := hf.complete
+  have := hf.loc
   have unitS : ∀ x : S, IsUnit (f x) ↔ IsUnit x := fun x => isUnit_map_iff f x
   have memS : ∀ x : S, x ∈ maximalIdeal S ↔ f x ∈ maximalIdeal 𝔞.V := by
     intro x

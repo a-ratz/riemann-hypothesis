@@ -113,15 +113,15 @@ theorem iInter_ballV (v : HeightOneSpectrum (𝓞 F)) : ⋂ n, ballV (F := F) v 
     simp [ballV]
 
 theorem nhdsNE_Fv (v : HeightOneSpectrum (𝓞 F)) : (𝓝[≠] (0 : Fv F v)).NeBot := by
-  letI : NontriviallyNormedField (v.adicCompletion F) :=
+  let : NontriviallyNormedField (v.adicCompletion F) :=
     Valued.toNontriviallyNormedField (v.adicCompletion F) (WithZero (Multiplicative ℤ))
   exact NormedField.nhdsNE_neBot (0 : v.adicCompletion F)
 
 theorem tendsto_real_ballV {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F v)} (hstd : IsStdV v lam) :
     Tendsto (fun n => lam.real (ballV v n)) atTop (𝓝 0) := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := hstd.1
-  haveI := nhdsNE_Fv v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := hstd.1
+  have := nhdsNE_Fv v
   have hfin : ∀ n, lam (ballV v n) ≠ ∞ := fun n =>
     ne_top_of_le_ne_top (by rw [hstd.2]; exact ENNReal.one_ne_top) (measure_mono (ballV_subset v n))
   have h := tendsto_measure_iInter_atTop (μ := lam) (s := ballV v)
@@ -132,9 +132,9 @@ theorem tendsto_real_ballV {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F
 
 theorem exists_sandwich : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)) (C : ℝ) (g : Fv F v → ℝ), IsStdV v lam → (∀ s, 0 ≤ g s) → GoodFac v lam C g → ∀ η : ℝ, 0 < η → ∃ ψm ψp : Fv F v → ℝ, Continuous ψm ∧ HasCompactSupport ψm ∧ Continuous ψp ∧ HasCompactSupport ψp ∧ (∀ s, 0 ≤ ψm s) ∧ (∀ s, s ≠ 0 → ψm s ≤ g s ∧ g s ≤ ψp s) ∧ 1 - η ≤ ∫ s, ψm s ∂lam ∧ ∫ s, ψp s ∂lam ≤ 1 + η := by
   intro F _ _ v lam C g hstd hg0 hg η hη
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := hstd.1
-  haveI := nhdsNE_Fv v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := hstd.1
+  have := nhdsNE_Fv v
   obtain ⟨hcont, hout, hint, -, hone⟩ := hg
   obtain ⟨K, hKdef⟩ : ∃ K : ℝ, K = 1 + |C| := ⟨_, rfl⟩
   have hK0 : 0 < K := by rw [hKdef]; positivity
@@ -209,7 +209,7 @@ theorem exists_sandwich : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOn
     simp [hsB, hout s hs]
   · intro s hs
     by_cases hsB : s ∈ B
-    · simp only [Set.indicator, Set.mem_compl_iff, hsB, not_true_eq_false, if_false, if_true, zero_add]
+    · simp only [Set.indicator, Set.mem_compl_iff, hsB, not_true_eq_false, ite_false, ite_true, zero_add]
       exact ⟨hg0 s, hgK s hs⟩
     · simp [Set.indicator, hsB]
   · rw [hIm]; linarith

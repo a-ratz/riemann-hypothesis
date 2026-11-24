@@ -59,7 +59,7 @@ variable {G : Type} [TopologicalSpace G] [Group G] [IsTopologicalGroup G]
 
 theorem prodSet_eq_mul (N H : Set G) : prodSet N H = N * H := by
   ext s
-  simp only [prodSet, Set.mem_setOf_eq, Set.mem_mul]
+  simp only [prodSet, mem_ofPred_eq, Set.mem_mul]
   constructor
   · rintro ⟨m, hm, h, hh, rfl⟩
     exact ⟨m, hm, h, hh, rfl⟩
@@ -106,7 +106,7 @@ theorem locPack_of (hE : HaarExist) (hC : ConjInv) (hS : SMeas) (hB : Bruhat) (h
     (mulMap μN μH) hPinv hPf hPpos hPright
   refine ⟨μN, μH, β, hNinv, hHinv, hPinv, hβm, hβ, ?_⟩
   intro F hF
-  haveI := hPf
+  have := hPf
   have hsf : SigmaFinite (mulMap μN μH) := by
     first
       | exact inferInstance

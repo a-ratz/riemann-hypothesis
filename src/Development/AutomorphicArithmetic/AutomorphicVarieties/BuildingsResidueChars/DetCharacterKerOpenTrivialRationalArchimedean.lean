@@ -71,7 +71,7 @@ theorem UpperTheory.detCharacter_ker_open_trivial_rational_archimedean :
   intro E _ _ _ n ν m hm h
   have h1 : ∀ x, ν.1 x ^ m = 1 := fun x => congrArg (fun ξ : HChar E => ξ.1 x) h
   refine ⟨isOpen_ker_of_pow _ ?_ hm fun g => h1 _, ?_, ?_⟩
-  · exact ν.2.1.comp (Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtype_val)
+  · exact ν.2.1.comp (Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtypeVal)
   · intro g hg
     obtain ⟨γ, hγ⟩ := Subgroup.mem_subgroupOf.1 hg
     rw [← hγ, chiDet_ratGL]

@@ -87,8 +87,8 @@ private theorem unitAt_of_ord_eq_zero_coheight_one {X : Scheme.{0}} [IsIntegral 
     (hufd : ∀ x : X, UniqueFactorizationMonoid (X.presheaf.stalk x)) {v : X}
     (hv : Order.coheight v = 1) {h : X.functionField} (h0 : h ≠ 0)
     (hord : Scheme.ord h v = 0) : UnitAt v h := by
-  haveI := hufd v
-  haveI : Ring.KrullDimLE 1 (X.presheaf.stalk v) := krullDimLE_of_coheight_le hv.le
+  have := hufd v
+  have : Ring.KrullDimLE 1 (X.presheaf.stalk v) := krullDimLE_of_coheight_le hv.le
   by_cases hF : IsField (X.presheaf.stalk v)
   · obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (A := X.presheaf.stalk v) h
     have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
@@ -108,7 +108,7 @@ private theorem unitAt_of_ord_eq_zero_coheight_one {X : Scheme.{0}} [IsIntegral 
         rw [← map_mul, hbb', map_one]
       rw [eq_div_iff (fun h' => hb0 (IsFractionRing.injective (X.presheaf.stalk v) X.functionField
         (by rw [h', map_zero]))), mul_assoc, mul_comm _ (algebraMap _ _ b), this, mul_one]
-  · haveI : IsDiscreteValuationRing (X.presheaf.stalk v) := by
+  · have : IsDiscreteValuationRing (X.presheaf.stalk v) := by
       have hmax : ∀ I : Ideal (X.presheaf.stalk v), I ≠ ⊥ → I.IsPrime → I.IsMaximal :=
         Ring.krullDimLE_one_iff_of_isPrime_bot.mp inferInstance
       have hne : IsLocalRing.maximalIdeal (X.presheaf.stalk v) ≠ ⊥ :=
@@ -144,8 +144,8 @@ private theorem unitAt_of_ord_eq_zero_on_generizations {X : Scheme.{0}} [IsInteg
     (h : (X.functionField)ˣ)
     (hord : ∀ v, v ⤳ y → Order.coheight v = 1 → Scheme.ord (h : X.functionField) v = 0) :
     UnitAt y (h : X.functionField) := by
-  haveI : GlobalTheory.IsNormalScheme X :=
-    ⟨fun x => inferInstance, fun x => by haveI := hufd x; infer_instance⟩
+  have : GlobalTheory.IsNormalScheme X :=
+    ⟨fun x => inferInstance, fun x => by have := hufd x; infer_instance⟩
   have key : ∀ g : (X.functionField)ˣ,
       (∀ v, v ⤳ y → Order.coheight v = 1 → Scheme.ord (g : X.functionField) v = 0) →
       RegAt y (g : X.functionField) := by
@@ -165,7 +165,7 @@ private theorem unitAt_of_ord_eq_zero_on_generizations {X : Scheme.{0}} [IsInteg
 open GlobalTheory.Discrepancy.MonoEqn in
 theorem GlobalTheory.Discrepancy.IsSncChart.isEqn_monomial : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp k) (n : ℕ) [SmoothOfRelativeDimension n q] (B : Closeds Y) (y : Y) (U : Y.Opens) (hy : y ∈ U) (z : Fin n → Γ(Y, U)) (J : Finset (Fin n)) (w : Fin n → Y) (u : Fin n → Y.functionFieldˣ), IsSncChart q n B y U hy z J w u → ∀ D : CartierDiv Y, D.supp ≤ B → D.IsEqn y (∏ j ∈ J, u j ^ D.mult (w j)) := by
   intro k _ _ Y _ _ q n _ B y U hy z J w u hc D hD
-  haveI : Smooth q := SmoothOfRelativeDimension.smooth n q
+  have : Smooth q := SmoothOfRelativeDimension.smooth n q
   have hufd : ∀ x : Y, UniqueFactorizationMonoid (Y.presheaf.stalk x) :=
     fun x => AbelianProjective.ufd_stalk (K := k) q x
   obtain ⟨h, hh⟩ := D.exists_isEqn y

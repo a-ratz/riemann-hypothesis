@@ -59,22 +59,22 @@ open Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Loca
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem glkC_pos (k g : ℕ) (hg : g.Prime) : 0 < glkC k g := by
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : NeZero g := ⟨hg.ne_zero⟩
   unfold glkC
   exact Nat.card_pos
 
 theorem ukC_pos (k g : ℕ) (hg : g.Prime) : 0 < ukC k g := by
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : NeZero g := ⟨hg.ne_zero⟩
   unfold ukC
   exact Nat.card_pos
 
 theorem ggC_pos (r k g : ℕ) (hg : g.Prime) : 0 < ggC r k g := by
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : NeZero g := ⟨hg.ne_zero⟩
   unfold ggC
   exact Nat.card_pos
 
 theorem nnC_pos (r k g : ℕ) (hg : g.Prime) : 0 < nnC r k g := by
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : NeZero g := ⟨hg.ne_zero⟩
   unfold nnC
   rw [Nat.card_pos_iff]
   refine ⟨⟨⟨1, ?_⟩⟩, inferInstance⟩

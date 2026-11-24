@@ -263,7 +263,7 @@ theorem siegel {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotall
   set f : AdelicGLn.AdelicGL E a → AdelicGLn.AdelicGL E a :=
     fun b => b * (diagUnits a (fun _ : Fin a => posIdele (K := E) (s b) (hspos b)))⁻¹ with hf
   have hmc : Continuous m :=
-    continuous_subtype_val.comp (IdeleGroup.continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
+    continuous_subtypeVal.comp (IdeleGroup.continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
   have hsc' : Continuous fun b => (⟨s b, hspos b⟩ : {r : ℝ // 0 < r}) :=
     Continuous.subtype_mk (hmc.rpow_const fun b => Or.inl (hmpos b).ne') _
   have hfc : Continuous f := continuous_id.mul ((continuous_diagUnits a).comp

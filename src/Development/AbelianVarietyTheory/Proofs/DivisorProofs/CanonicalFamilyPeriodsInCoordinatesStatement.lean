@@ -68,10 +68,10 @@ theorem comp_C_injective {W R σ : Type} [CommRing W] [IsLocalRing W] [CommRing 
     rw [RingHom.flat_algebraMap_iff]
     infer_instance
   have h := RingHom.Flat.comp hC hf
-  letI := (ψ.comp MvPolynomial.C).toAlgebra
-  haveI : Module.Flat W R := h
-  haveI : IsLocalHom (algebraMap W R) := hl
-  haveI := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := W) (B := R)
+  let := (ψ.comp MvPolynomial.C).toAlgebra
+  have : Module.Flat W R := h
+  have : IsLocalHom (algebraMap W R) := hl
+  have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := W) (B := R)
   exact FaithfulSMul.algebraMap_injective W R
 
 theorem prod_zpow_add {K Ix : Type} [Field K] [Fintype Ix] (c : Ix → K) (hc : ∀ k, c k ≠ 0) (A B C D : Ix → ℤ)

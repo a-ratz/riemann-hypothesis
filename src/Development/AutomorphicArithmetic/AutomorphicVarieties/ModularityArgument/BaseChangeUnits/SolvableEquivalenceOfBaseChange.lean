@@ -185,7 +185,7 @@ theorem exDownC (H : HypothesesH) (cyc : CycC) : ExDownC := by
   have hEig := UpperTheory.hecke_eigenvalue_basic_properties
   have hSign := UpperTheory.sign_at_infinity_of_parallel_weight UpperTheory.adelicSolution_parallel
   intro K M Ω _ _ _ _ _ _ _ _ _ _ _ _ _ _ hp l _ ι n hn r π sat' inf' hpol hreg hc' hbc hatt
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   obtain ⟨μ, χ, c, P, hμ, hs, hc, hP⟩ := hTo K Ω l ι n r hpol
   have huniq : ∀ w B B', sat' w B → sat' w B' → B = B' := by
@@ -279,11 +279,11 @@ theorem degOneC (hS : StepC) : ∀ (K M Ω : Type) [Field K] [NumberField K] [Fi
   obtain ⟨L, _, _, _, hL, hp, hlt⟩ := hC (max n (Module.finrank ℚ M))
   obtain ⟨M', _, _, _, _, _, f, _, hd, hadj⟩ := hA M Ω L hp (lt_of_le_of_lt (le_max_right _ _) hlt)
   have hM' : IsCMField M' := cm_of_rc M M' (hR L M M' f hL hadj (Or.inr hM))
-  letI : Algebra K M' := ((algebraMap M M').comp (algebraMap K M)).toAlgebra
-  haveI : IsScalarTower K M M' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K M' Ω := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra K M' := ((algebraMap M M').comp (algebraMap K M)).toAlgebra
+  have : IsScalarTower K M M' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K M' Ω := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply K M Ω, IsScalarTower.algebraMap_apply M M' Ω]; rfl
-  haveI : IsAlgClosure M' Ω :=
+  have : IsAlgClosure M' Ω :=
     { isAlgClosed := IsAlgClosure.isAlgClosed M
       isAlgebraic := Algebra.IsAlgebraic.tower_top (K := M) M' }
   have hbij : Function.Bijective (algebraMap K M) := by
@@ -291,7 +291,7 @@ theorem degOneC (hS : StepC) : ∀ (K M Ω : Type) [Field K] [NumberField K] [Fi
     have : (⊥ : Subalgebra K M) = ⊤ := Subalgebra.bot_eq_top_iff_finrank_eq_one.2 h1
     have hx : x ∈ (⊥ : Subalgebra K M) := this ▸ Algebra.mem_top
     exact Algebra.mem_bot.1 hx
-  haveI : IsGalois K M' :=
+  have : IsGalois K M' :=
     IsGalois.of_equiv_equiv (F := M) (E := M') (f := (RingEquiv.ofBijective (algebraMap K M) hbij).symm) (g := RingEquiv.refl M') (by
       ext x
       obtain ⟨y, rfl⟩ := hbij.2 x
@@ -310,7 +310,7 @@ theorem degOneC (hS : StepC) : ∀ (K M Ω : Type) [Field K] [NumberField K] [Fi
     rw [map_one, krullTopology_mem_nhds_one_iff] at hU
     obtain ⟨E, hE, hEU⟩ := hU
     obtain ⟨s, hs⟩ : E.FG := E.fg_of_fg_toSubalgebra ((Subalgebra.fg_iff_finiteType _).2 (inferInstanceAs (Algebra.FiniteType K E)))
-    haveI : FiniteDimensional M (IntermediateField.adjoin M (s : Set Ω)) :=
+    have : FiniteDimensional M (IntermediateField.adjoin M (s : Set Ω)) :=
       IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
     rw [Filter.mem_map, krullTopology_mem_nhds_one_iff]
     refine ⟨IntermediateField.adjoin M (s : Set Ω), inferInstance, fun σ hσ => hEU ?_⟩
@@ -328,12 +328,12 @@ private theorem trans_equi (hP : PolRes) (K E M Ω : Type) [Field K] [NumberFiel
     [Algebra M Ω] [IsScalarTower K M Ω] [IsAlgClosure K Ω]
     (h : ∀ [Algebra E Ω] [IsScalarTower K E Ω] [IsScalarTower E M Ω] [IsAlgClosure E Ω], Equi K Ω E ∧ Equi E Ω M) :
     Equi K Ω M := by
-  letI : Algebra E Ω := ((algebraMap M Ω).comp (algebraMap E M)).toAlgebra
-  haveI : IsScalarTower E M Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K E Ω := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra E Ω := ((algebraMap M Ω).comp (algebraMap E M)).toAlgebra
+  have : IsScalarTower E M Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K E Ω := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply K M Ω, IsScalarTower.algebraMap_apply K E M]; rfl
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) E⟩
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) E⟩
   obtain ⟨e1, e2⟩ := h
   intro l _ ι n hn r hr hirr hpol
   have hc : (r.comp (resG K E Ω)).comp (resG E M Ω) = r.comp (resG K M Ω) := rfl
@@ -364,7 +364,7 @@ private theorem solvable_equivalence_of_base_change (hS : StepC) (d : ℕ) :
     rw [← hmul]; exact lt_mul_of_one_lt_right p1 (by omega)
   have l2 : Module.finrank E M < d := by
     rw [← hmul]; exact lt_mul_of_one_lt_left p2 (by omega)
-  haveI : Group.IsSolvable (M ≃ₐ[K] M) := hsol
+  have : Group.IsSolvable (M ≃ₐ[K] M) := hsol
   have s1 : IsSolvable (E ≃ₐ[K] E) :=
     Group.isSolvable_of_surjective (AlgEquiv.restrictNormalHom_surjective (F := K) (K₁ := E) M)
   have s2 : IsSolvable (M ≃ₐ[E] M) :=

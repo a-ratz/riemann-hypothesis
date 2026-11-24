@@ -65,12 +65,12 @@ theorem exists_dual_hom : ∀ (Y : Scheme.{0}) (A G : Over Y) [GrpObj A] [IsComm
   have k : ∀ {T : Over Y} (a t : T ⟶ A), evc hE a t = evc hP (a ≫ χ) (t ≫ χ) := fun a t ↦ by
     rw [evc_ev hP _ _ hE, lift_fst_assoc, lift_snd_assoc]
   have b₁ : IsAdditive (ev P'' (fst A A ≫ χ) (snd A A ≫ χ)) := (isAdditive_iff hE).2 fun T a a' t ↦ by
-    haveI := hχ
+    have := hχ
     rw [k, k, k, MonObj.mul_comp]
     exact (isAdditive_iff hP).1 a₁ _ _ _ _
   have b₂ : IsAdditive (swap (ev P'' (fst A A ≫ χ) (snd A A ≫ χ))) :=
     (GlobalTheory.BirigidLift.isAdditive_swap_iff hE).2 fun T a t t' ↦ by
-      haveI := hχ
+      have := hχ
       rw [k, k, k, MonObj.mul_comp]
       exact (GlobalTheory.BirigidLift.isAdditive_swap_iff hP).1 a₂ _ _ _ _
   obtain ⟨x, hx, e⟩ := GlobalTheory.BirigidLift.exists_hom q q'.additive hE b₁ b₂

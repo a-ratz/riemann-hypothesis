@@ -120,10 +120,10 @@ theorem locVanish_of (hN : NilChange) (hQ : QuotVanish) : LocVanish := by
     rw [integral_const_mul, e2]
     suffices h : ∫ Y, g Y ∂ν = 0 by simp [h]
 
-    letI : MeasurableSpace (nilrad (img q⁻¹ W₁) (img q⁻¹ W₂)) := borel _
-    haveI : BorelSpace (nilrad (img q⁻¹ W₁) (img q⁻¹ W₂)) := ⟨rfl⟩
+    let : MeasurableSpace (nilrad (img q⁻¹ W₁) (img q⁻¹ W₂)) := borel _
+    have : BorelSpace (nilrad (img q⁻¹ W₁) (img q⁻¹ W₂)) := ⟨rfl⟩
     have hcn := continuous_conjNil q W₁ W₂
-    haveI : (ν.map (conjNil q W₁ W₂)).IsAddHaarMeasure :=
+    have : (ν.map (conjNil q W₁ W₂)).IsAddHaarMeasure :=
       (conjNil q W₁ W₂).isAddHaarMeasure_map ν hcn (continuous_conjNil_symm q W₁ W₂)
     have key := hV.2 (twConj (thC n) q d) (img q⁻¹ W₁) (img q⁻¹ W₂) (img_ne_bot _ hW1)
       (img_le_img _ hle) (by rw [perpD_twConj, h12]) (by rw [perpD_twConj, h21]) uOf
@@ -182,7 +182,7 @@ private theorem cptRight_lemma_2 {H : Type} [Group H] [TopologicalSpace H] [IsTo
     (κ : Measure H) [κ.IsHaarMeasure] : κ.IsMulRightInvariant := by
   constructor
   intro a
-  haveI := mapMulRight_lemma κ a
+  have := mapMulRight_lemma κ a
   have h := Measure.isMulLeftInvariant_eq_smul (κ.map (· * a)) κ
   have hu := congrArg (fun ν : Measure H => ν Set.univ) h
   simp only [Measure.map_apply (measurable_mul_const a) MeasurableSet.univ, Set.preimage_univ,
@@ -196,15 +196,15 @@ private theorem cptRight_lemma_2 {H : Type} [Group H] [TopologicalSpace H] [IsTo
 theorem haarQK : HaarQK := by
   unfold HaarQK
   intro G _ _ _ _ _ _ _ _ μ _ _ Q K hQ hK hQK νQ _ κ _
-  haveI : SecondCountableTopology K := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology Q := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace Q := hQ.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  haveI : κ.IsMulRightInvariant := cptRight_lemma_2 κ
+  have : SecondCountableTopology K := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology Q := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace Q := hQ.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : κ.IsMulRightInvariant := cptRight_lemma_2 κ
   have hνR : ∀ q0 : Q, ∃ c : NNReal, νQ.map (· * q0) = c • νQ := by
     intro q0
-    haveI := mapMulRight_lemma νQ q0
-    haveI : IsFiniteMeasureOnCompacts (νQ.map (· * q0)) := ⟨fun C hC => by
+    have := mapMulRight_lemma νQ q0
+    have : IsFiniteMeasureOnCompacts (νQ.map (· * q0)) := ⟨fun C hC => by
       rw [Measure.map_apply (measurable_mul_const q0) hC.measurableSet]
       exact ((Homeomorph.mulRight q0).isCompact_preimage.2 hC).measure_lt_top⟩
     exact ⟨_, Measure.isMulLeftInvariant_eq_smul (νQ.map (· * q0)) νQ⟩
@@ -365,7 +365,7 @@ theorem haarQK : HaarQK := by
   ext B hB
   have hk := key (B.indicator 1) (measurable_one.indicator hB)
   rw [lintegral_indicator_one hB, lintegral_indicator_one hB] at hk
-  rw [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul]
   calc μ B = μ B * ρ C * (ρ C)⁻¹ := by rw [mul_assoc, ENNReal.mul_inv_cancel hρC0 hρCt, mul_one]
     _ = μ C * ρ B * (ρ C)⁻¹ := by rw [hk]
     _ = μ C * (ρ C)⁻¹ * ρ B := by ring
@@ -459,7 +459,7 @@ theorem modInv_mul (m m' : M) : modInv N M (m * m') = modInv N M m * modInv N M 
 theorem map_conj (ν : Measure N) [ν.IsHaarMeasure] (m : M) :
     ν.map (conjCE N (m : Q)) = modInv N M m • ν := by
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : N)
-  haveI : ν.Regular := regular_of_isMulLeftInvariant hK ⟨1, mem_interior_iff_mem_nhds.2 hK1⟩
+  have : ν.Regular := regular_of_isMulLeftInvariant hK ⟨1, mem_interior_iff_mem_nhds.2 hK1⟩
     hK.measure_lt_top.ne
   have h := mulEquivHaarChar_smul_map ν (conjCE N (m : Q))
   have hc : ((mulEquivHaarChar (conjCE N (m : Q)) : ℝ≥0) : ℝ≥0∞) ≠ 0 := by
@@ -485,7 +485,7 @@ theorem measurable_modInv : Measurable (modInv N M) := by
   have he : modInv N M = fun m => ν (Prod.mk m ⁻¹' (F ⁻¹' interior K)) / ν (interior K) := by
     funext m
     have h := congrArg (fun μ : Measure N => μ (interior K)) (map_conj N M ν m)
-    simp only [Measure.smul_apply, smul_eq_mul] at h
+    simp only [smul_apply, smul_eq_mul] at h
     rw [map_apply (map_continuous _).measurable hs.measurableSet] at h
     have h3 : Prod.mk m ⁻¹' (F ⁻¹' interior K) = conjCE N (m : Q) ⁻¹' interior K := rfl
     rw [h3, h, ENNReal.mul_div_cancel_right hs0 hst]
@@ -536,12 +536,12 @@ theorem mulMap_injective {Q : Type} [Group Q] (N M : Subgroup Q) (hinf : N ⊓ M
 
 theorem haarNM : HaarNM := by
   intro Q _ _ _ _ _ _ _ _ νQ _ N M _ hNc hMc hdec hinf νN _ νM _
-  haveI : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace M := hMc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : SecondCountableTopology M := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : PolishSpace N := PI.VolStabS.TopoPolish.polish_of_lcsc N
-  haveI : PolishSpace M := PI.VolStabS.TopoPolish.polish_of_lcsc M
+  have : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace M := hMc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology M := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : PolishSpace N := PI.VolStabS.TopoPolish.polish_of_lcsc N
+  have : PolishSpace M := PI.VolStabS.TopoPolish.polish_of_lcsc M
   let φ : N × M → Q := fun p => (p.1 : Q) * (p.2 : Q)
   have φc : Continuous φ := by fun_prop
   have φemb : MeasurableEmbedding φ := φc.measurableEmbedding (mulMap_injective N M hinf)
@@ -549,10 +549,10 @@ theorem haarNM : HaarNM := by
   have hf : Measurable f := (measurable_modInv N M).comp measurable_snd
   let ρ : Measure (N × M) := (νN.prod νM).withDensity f
   let ν' : Measure Q := ρ.map φ
-  haveI : SigmaFinite ρ := SigmaFinite.withDensity_of_ne_top
+  have : SigmaFinite ρ := SigmaFinite.withDensity_of_ne_top
     (Filter.Eventually.of_forall fun p => modInv_ne_top N M p.2)
-  haveI : SigmaFinite ν' := φemb.sigmaFinite_map
-  haveI : ν'.IsMulLeftInvariant := ⟨fun q => by
+  have : SigmaFinite ν' := φemb.sigmaFinite_map
+  have : ν'.IsMulLeftInvariant := ⟨fun q => by
     obtain ⟨u, hu, m, hm, rfl⟩ := hdec q
     have hS1 : Measurable fun x : N => (⟨u, hu⟩ : N) * conjCE N m x :=
       (continuous_const.mul (map_continuous _)).measurable
@@ -578,7 +578,7 @@ theorem haarNM : HaarNM := by
     by_contra! h
     exact hν0 (by rw [← iUnion_spanningSets (ν' + νQ)]; exact measure_iUnion_null h)
   have hfin := measure_spanningSets_lt_top (ν' + νQ) n
-  rw [Measure.add_apply] at hfin
+  rw [add_apply] at hfin
   obtain ⟨h1, h2⟩ := ENNReal.add_lt_top.1 hfin
   have key := measure_eq_div_smul νQ ν' hn h1.ne
   have hc : νQ (spanningSets (ν' + νQ) n) / ν' (spanningSets (ν' + νQ) n) ≠ ∞ :=
@@ -650,7 +650,7 @@ theorem integral_eq_smul_integral_avg {G : Type} [Group G] [MeasurableSpace G] [
     ∫ g, F g * ((ρ g).toReal : ℂ) ∂μ =
       c.toReal • ∫ q : Q, F q * (((∫⁻ k : K, ρ ((q : G) * (k : G)) ∂κ).toReal : ℝ) : ℂ) ∂νQ := by
   have hm : Measurable (fun p : Q × K => (p.1 : G) * (p.2 : G)) :=
-    (measurable_subtype_coe.comp measurable_fst).mul (measurable_subtype_coe.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).mul (measurable_subtypeVal.comp measurable_snd)
   have hg : Measurable (fun g => F g * ((ρ g).toReal : ℂ)) :=
     hF.mul (Complex.measurable_ofReal.comp hρ.ennreal_toReal)
   subst hμ
@@ -666,7 +666,7 @@ theorem integral_eq_smul_integral_avg {G : Type} [Group G] [MeasurableSpace G] [
   refine integral_congr_ae ?_
   filter_upwards [Measure.ae_ae_of_ae_prod hfin'] with q hq
   have hmk : Measurable fun k : K => ρ ((q : G) * (k : G)) :=
-    hρ.comp (measurable_subtype_coe.const_mul _)
+    hρ.comp (measurable_subtypeVal.const_mul _)
   have e1 : ∀ k : K, F ((q : G) * (k : G)) = F q := fun k => hFK k k.2 _
   simp only [e1]
   rw [integral_const_mul, integral_complex_ofReal, integral_toReal hmk.aemeasurable hq]
@@ -680,12 +680,12 @@ def onQ (Q T : Subgroup G) (h : T ≤ Q) (t : T) : T.subgroupOf Q :=
   ⟨⟨t, h t.2⟩, Subgroup.mem_subgroupOf.2 t.2⟩
 
 theorem measurable_onQ (Q T : Subgroup G) (h : T ≤ Q) : Measurable (onQ Q T h) :=
-  (measurable_subtype_coe.subtype_mk).subtype_mk
+  (measurable_subtypeVal.subtype_mk).subtype_mk
 
 theorem isInvInvariant_map_onQ (Q T : Subgroup G) (h : T ≤ Q) (μT : Measure T) [μT.IsInvInvariant] :
     (μT.map (onQ Q T h)).IsInvInvariant := by
-  have hi : MeasurableInv T := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
-  have hi' : MeasurableInv (T.subgroupOf Q) := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
+  have hi : MeasurableInv T := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
+  have hi' : MeasurableInv (T.subgroupOf Q) := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
   refine ⟨?_⟩
   show Measure.map Inv.inv (μT.map (onQ Q T h)) = μT.map (onQ Q T h)
   rw [Measure.map_map measurable_inv (measurable_onQ Q T h)]
@@ -698,7 +698,7 @@ theorem normaliser_onQ {Q T : Subgroup G} (hTQ : T ≤ Q) {μT : Measure T} {σ 
     IsQuotNormaliser (T.subgroupOf Q) (μT.map (onQ Q T hTQ)) σ := by
   refine ⟨hσ, fun q => ?_⟩
   have hm : Measurable fun x : T.subgroupOf Q => σ ((x : Q) * q) :=
-    hσ.comp (measurable_subtype_coe.mul_const q)
+    hσ.comp (measurable_subtypeVal.mul_const q)
   rw [lintegral_map hm (measurable_onQ Q T hTQ)]
   exact h q
 
@@ -708,8 +708,8 @@ theorem normaliser_avg {Q K T : Subgroup G} (hTQ : T ≤ Q) (κ : Measure K) [SF
     IsQuotNormaliser (T.subgroupOf Q) (μT.map (onQ Q T hTQ))
       (fun q => ∫⁻ k : K, ρ ((q : G) * (k : G)) ∂κ) := by
   have hm : Measurable fun p : Q × K => ρ ((p.1 : G) * (p.2 : G)) :=
-    hρ.1.comp ((measurable_subtype_coe.comp measurable_fst).mul
-      (measurable_subtype_coe.comp measurable_snd))
+    hρ.1.comp ((measurable_subtypeVal.comp measurable_fst).mul
+      (measurable_subtypeVal.comp measurable_snd))
   refine normaliser_onQ hTQ hm.lintegral_prod_right' fun q => ?_
   rw [lintegral_lintegral_swap]
   · have key : ∀ k : K, ∫⁻ t : T, ρ (((⟨t, hTQ t.2⟩ * q : Q) : G) * (k : G)) ∂μT = 1 := fun k => by
@@ -717,8 +717,8 @@ theorem normaliser_avg {Q K T : Subgroup G} (hTQ : T ≤ Q) (κ : Measure K) [SF
       simpa [mul_assoc] using this
     simp only [key, lintegral_one, hκ]
   · have : Measurable fun p : T × K => ρ (((p.1 : G) * (q : G)) * (p.2 : G)) :=
-      hρ.1.comp (((measurable_subtype_coe.comp measurable_fst).mul_const _).mul
-        (measurable_subtype_coe.comp measurable_snd))
+      hρ.1.comp (((measurable_subtypeVal.comp measurable_fst).mul_const _).mul
+        (measurable_subtypeVal.comp measurable_snd))
     exact this.aemeasurable
 
 theorem normaliser_proj {Q T : Subgroup G} (hTQ : T ≤ Q) (N M : Subgroup Q) [hN : N.Normal]
@@ -727,7 +727,7 @@ theorem normaliser_proj {Q T : Subgroup G} (hTQ : T ≤ Q) (N M : Subgroup Q) [h
     {μT : Measure T} {ρ : G → ℝ≥0∞} (hρ : IsQuotNormaliser T μT ρ) :
     IsQuotNormaliser (T.subgroupOf Q) (μT.map (onQ Q T hTQ)) (fun q => ρ ((pr q : Q) : G)) := by
   refine normaliser_onQ hTQ
-    (hρ.1.comp (measurable_subtype_coe.comp (measurable_subtype_coe.comp hprm))) fun q => ?_
+    (hρ.1.comp (measurable_subtypeVal.comp (measurable_subtypeVal.comp hprm))) fun q => ?_
   obtain ⟨u, hu, m, hm, rfl⟩ := hdec q
   have key : ∀ t : T, ((pr ((⟨t, hTQ t.2⟩ : Q) * (u * m)) : Q) : G) = (t : G) * ((m : Q) : G) := by
     intro t
@@ -758,15 +758,15 @@ theorem absVanish_of (hQK : HaarQK) (hNM : HaarNM) : AbsVanish := by
   have hTM : ∀ t : T, (⟨t, hTQ t.2⟩ : Q) ∈ M := fun t => by
     obtain ⟨h, h'⟩ := hT t t.2
     exact h'
-  haveI : LocallyCompactSpace Q := hQ.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace M := hM.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology Q := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : SecondCountableTopology M := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : PolishSpace N := PI.VolStabS.TopoPolish.polish_of_lcsc N
-  haveI : PolishSpace M := PI.VolStabS.TopoPolish.polish_of_lcsc M
+  have : LocallyCompactSpace Q := hQ.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace M := hM.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology Q := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology N := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology M := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : PolishSpace N := PI.VolStabS.TopoPolish.polish_of_lcsc N
+  have : PolishSpace M := PI.VolStabS.TopoPolish.polish_of_lcsc M
   obtain ⟨νQ, _⟩ : ∃ ν : Measure Q, ν.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
   obtain ⟨νM, _⟩ : ∃ ν : Measure M, ν.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
   obtain ⟨κ, _, hκ⟩ : ∃ κ : Measure K, κ.IsHaarMeasure ∧ κ Set.univ = 1 :=
@@ -785,11 +785,11 @@ theorem absVanish_of (hQK : HaarQK) (hNM : HaarNM) : AbsVanish := by
   swap
   · exact integral_undef hint
   rw [integral_eq_smul_integral_avg μ Q K νQ κ c hc0 hct hμ F hF hFK ρ hρ.1 hfin hint]
-  haveI := isInvInvariant_map_onQ Q T hTQ μT
+  have := isInvInvariant_map_onQ Q T hTQ μT
   have hρ₁ := normaliser_avg (Q := Q) hTQ κ hκ hρ
   have hρ₂ := normaliser_proj hTQ N M hTM hnm pr hprm hpr hρ
   have e := GlobalTheory.CompanionTheory.QuotNorm.integral_normaliser_eq_of (μG := νQ) (F := fun q : Q => F q)
-    (hF.comp measurable_subtype_coe)
+    (hF.comp measurable_subtypeVal)
     (fun h hh g => hFT h (Subgroup.mem_subgroupOf.1 hh) g) hρ₁ hρ₂
   have z : ∫ q : Q, F q * ((ρ ((pr q : Q) : G)).toReal : ℂ) ∂νQ = 0 := by
     rw [hνQ]
@@ -898,7 +898,7 @@ theorem isClosed_flagStab (A B : Submodule ℂ (Fin n → ℂ)) :
 theorem isClosed_radQ (hW : W₁ ≤ W₂) :
     IsClosed (((uniRad hW).subgroupOf (flagStab W₁ W₂) : Subgroup (flagStab W₁ W₂)) : Set (flagStab W₁ W₂)) := by
   have h : Continuous fun q : flagStab W₁ W₂ => (q : GL (Fin n) ℂ).val - 1 :=
-    (Units.continuous_val.comp continuous_subtype_val).sub continuous_const
+    (Units.continuous_val.comp continuous_subtypeVal).sub continuous_const
   exact (GlobalTheory.CompanionTheory.LocVan.isClosed_nilrad W₁ W₂).preimage h
 
 def radHomeo (hW : W₁ ≤ W₂) : nilrad W₁ W₂ ≃ₜ (uniRad hW).subgroupOf (flagStab W₁ W₂) where
@@ -922,7 +922,7 @@ theorem map_nmul [MeasurableSpace (nilrad W₁ W₂)] [BorelSpace (nilrad W₁ W
     Measure.map (GlobalTheory.CompanionTheory.LocVan.nmul hW A) ν = ν := by
   let P : nilrad W₁ W₂ → nilrad W₁ W₂ := fun X => ⟨A.1 * X.1, GlobalTheory.CompanionTheory.LocVan.nil_mul_mem hW A.2 X.2⟩
   have hPc : Continuous P :=
-    Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtype_val) _
+    Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtypeVal) _
   have hsh : Measure.map (fun X => X + P X) ν = ν :=
     GlobalTheory.CompanionTheory.NilChangeVar.map_shear ν (GlobalTheory.CompanionTheory.NilChangeVar.nilrad2 W₁ W₂) P hPc
       (fun X => ⟨fun y => by
@@ -959,19 +959,19 @@ theorem isHaar_radHomeo [MeasurableSpace (GL (Fin n) ℂ)] [BorelSpace (GL (Fin 
     (hW : W₁ ≤ W₂) (ν : Measure (nilrad W₁ W₂)) [ν.IsAddHaarMeasure] :
     (ν.map (radHomeo hW)).IsHaarMeasure := by
   have hm := (radHomeo hW).measurable
-  haveI : IsFiniteMeasureOnCompacts (ν.map (radHomeo hW)) := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts (ν.map (radHomeo hW)) := ⟨fun K hK => by
     rw [(radHomeo hW).measurableEmbedding.map_apply]
     exact ((radHomeo hW).isCompact_preimage.2 hK).measure_lt_top⟩
-  haveI : (ν.map (radHomeo hW)).IsOpenPosMeasure :=
+  have : (ν.map (radHomeo hW)).IsOpenPosMeasure :=
     (radHomeo hW).continuous.isOpenPosMeasure_map (radHomeo hW).surjective
-  haveI : (ν.map (radHomeo hW)).IsMulLeftInvariant := ⟨fun a => by
+  have : (ν.map (radHomeo hW)).IsMulLeftInvariant := ⟨fun a => by
     obtain ⟨A, rfl⟩ := (radHomeo hW).surjective a
     have hc : (fun x => radHomeo hW A * x) ∘ (radHomeo hW) = (radHomeo hW) ∘ GlobalTheory.CompanionTheory.LocVan.nmul hW A :=
       funext fun X => (radHomeo_nmul hW A X).symm
     have hnm : Measurable (GlobalTheory.CompanionTheory.LocVan.nmul hW A) := by
       have : Continuous (GlobalTheory.CompanionTheory.LocVan.nmul hW A) := Continuous.subtype_mk
-        ((continuous_const.add continuous_subtype_val).add
-          (continuous_const.matrix_mul continuous_subtype_val)) _
+        ((continuous_const.add continuous_subtypeVal).add
+          (continuous_const.matrix_mul continuous_subtypeVal)) _
       exact this.measurable
     rw [Measure.map_map (measurable_const_mul _) hm, hc, ← Measure.map_map hm hnm, map_nmul hW ν A]⟩
   exact ⟨⟩
@@ -989,11 +989,11 @@ namespace GlobalTheory.CompanionTheory.QuotVan
 
 theorem quotVanish : QuotVanish := by
   intro n _ _ μ _ d μT _ W₁ W₂ hW _ _ ν _ F hs h₁ h₂ hF hFT hFK h0
-  haveI := GlobalTheory.CompanionTheory.LocVan.locallyCompact_GL n
-  haveI := GlobalTheory.CompanionTheory.LocVan.secondCountable_GL n
-  haveI := isMulRightInvariant_GL n μ
-  haveI : SigmaFinite μT := GlobalTheory.CompanionTheory.LocVan.sigmaFinite_twCent d μT
-  haveI : μT.IsInvInvariant := GlobalTheory.CompanionTheory.LocVan.invInvariant_twCent d μT fun a ha b hb => twCent_comm hs ha hb
+  have := GlobalTheory.CompanionTheory.LocVan.locallyCompact_GL n
+  have := GlobalTheory.CompanionTheory.LocVan.secondCountable_GL n
+  have := isMulRightInvariant_GL n μ
+  have : SigmaFinite μT := GlobalTheory.CompanionTheory.LocVan.sigmaFinite_twCent d μT
+  have : μT.IsInvInvariant := GlobalTheory.CompanionTheory.LocVan.invInvariant_twCent d μT fun a ha b hb => twCent_comm hs ha hb
   have hσ : ∀ x : ℂ, starRingEnd ℂ (starRingEnd ℂ x) = x := fun x => by simp
   have g₁ : img (d * thetaR (starRingEnd ℂ) n d) W₁ = W₁ := by
     rw [← GlobalTheory.CompanionTheory.FlagCent.perpD_perpD _ hσ, h₁, h₂]
@@ -1001,10 +1001,10 @@ theorem quotVanish : QuotVanish := by
     rw [← GlobalTheory.CompanionTheory.FlagCent.perpD_perpD _ hσ, h₂, h₁]
   obtain ⟨V₂, V₃, c₁, d₁, c₂, d₂, s₂, s₃⟩ :=
     exists_levi_spaces (d * thetaR (starRingEnd ℂ) n d) hs hW g₁ g₂
-  haveI := isHaar_radHomeo hW ν
+  have := isHaar_radHomeo hW ν
   refine absVanish μ (flagStab W₁ W₂) (uK n) (isClosed_flagStab W₁ W₂) (isCompact_uK n) ?_
     ((uniRad hW).subgroupOf (flagStab W₁ W₂)) ((flagStab V₂ V₃).subgroupOf (flagStab W₁ W₂))
-    (isClosed_radQ hW) ((isClosed_flagStab V₂ V₃).preimage continuous_subtype_val) ?_ ?_
+    (isClosed_radQ hW) ((isClosed_flagStab V₂ V₃).preimage continuous_subtypeVal) ?_ ?_
     (ν.map (radHomeo hW)) (twCent (thetaR (starRingEnd ℂ) n) d) ?_ μT F hF hFT
     (fun k hk x => hFK x k hk) ?_
   · intro g
@@ -1060,7 +1060,7 @@ theorem nilChange_of_flag : NilChange := by
   let Q : nilrad W₁ W₂ → nilrad W₁ W₂ := fun X =>
     ⟨quad d X.1, two_mem hle (quadratic_term_nilradical_mem d h1 h2 X.2).1 (quadratic_term_nilradical_mem d h1 h2 X.2).2⟩
   have hQc : Continuous Q :=
-    Continuous.subtype_mk ((continuous_quad d).comp continuous_subtype_val) _
+    Continuous.subtype_mk ((continuous_quad d).comp continuous_subtypeVal) _
   have hLF : ∀ y ∈ nilrad2 W₁ W₂, L y ∈ nilrad2 W₁ W₂ := fun y hy => by
     have hT := semilinear_term_nilradical_mem d h1 h2 hy.1 hy.2
     refine ⟨fun z => ?_, fun z hz => ?_⟩
@@ -1100,9 +1100,9 @@ namespace PositivityTheory.Rg.BcB.CV
 
 theorem quotVanishL : GlobalTheory.CompanionTheory.LocVan.QuotVanish := by
   intro n _ _ μ _ d μd _ W₁ W₂ hs _ hW h1 h2 F hF hT hK h0
-  letI : MeasurableSpace (nilrad W₁ W₂) := borel _
-  haveI : BorelSpace (nilrad W₁ W₂) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (nilrad W₁ W₂) := (nilrad W₁ W₂).closed_of_finiteDimensional.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  let : MeasurableSpace (nilrad W₁ W₂) := borel _
+  have : BorelSpace (nilrad W₁ W₂) := ⟨rfl⟩
+  have : LocallyCompactSpace (nilrad W₁ W₂) := (nilrad W₁ W₂).isClosed_of_finiteDimensional.isClosedEmbedding_subtypeVal.locallyCompactSpace
   refine GlobalTheory.CompanionTheory.QuotVan.quotVanish n μ d μd W₁ W₂ hW Measure.addHaar F hs h1 h2 hF hT hK fun q _ => ?_
   simp only [GlobalTheory.CompanionTheory.QuotVan.uOf_eq]
   exact h0 _ q

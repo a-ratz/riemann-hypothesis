@@ -256,13 +256,13 @@ end DegreeGrowth
 
 theorem finrank_totalDegree_image_growth : ∀ (K B : Type) [Field K] [CommRing B] [IsDomain B] [Algebra K B] (m g : ℕ) (r : Fin m → B), Function.Surjective (MvPolynomial.aeval r : MvPolynomial (Fin m) K →ₐ[K] B) → Algebra.trdeg K B = g → ∃ c C : ℕ, 1 ≤ c ∧ ∀ t : ℕ, 1 ≤ t → t ^ g ≤ c * Module.finrank K ((MvPolynomial.restrictTotalDegree (Fin m) K t).map (MvPolynomial.aeval r : MvPolynomial (Fin m) K →ₐ[K] B).toLinearMap) ∧ Module.finrank K ((MvPolynomial.restrictTotalDegree (Fin m) K t).map (MvPolynomial.aeval r : MvPolynomial (Fin m) K →ₐ[K] B).toLinearMap) ≤ C * t ^ g := by
   intro K B _ _ _ _ m g r hr hg
-  haveI : Algebra.FiniteType K B := Algebra.FiniteType.of_surjective _ hr
+  have : Algebra.FiniteType K B := Algebra.FiniteType.of_surjective _ hr
   obtain ⟨s, φ, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg K B
-  letI : Algebra (MvPolynomial (Fin s) K) B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K (MvPolynomial (Fin s) K) B :=
+  let : Algebra (MvPolynomial (Fin s) K) B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K (MvPolynomial (Fin s) K) B :=
     IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
-  haveI : Module.Finite (MvPolynomial (Fin s) K) B := hfin
-  haveI : FaithfulSMul (MvPolynomial (Fin s) K) B :=
+  have : Module.Finite (MvPolynomial (Fin s) K) B := hfin
+  have : FaithfulSMul (MvPolynomial (Fin s) K) B :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
   have hs : s = g := by
     have h := trdeg_add_eq K (MvPolynomial (Fin s) K) (A := B)

@@ -68,7 +68,7 @@ theorem multigraded_length_stable_dim_zero {p : ℕ} (hp : p.Prime) {W : Ideal (
     (hd : ringKrullDim (MRing ι ⧸ W) = ((0 + Fintype.card K : ℕ) : WithBot ℕ∞)) (b : K) :
     ∃ a₀ : ℕ, ∀ a : K → ℕ, (∀ k, a₀ ≤ a k) → lg W a = lg W (a - Pi.single b 1) := by
   obtain ⟨hWp, hWm, hWr⟩ := hW
-  haveI := hWp
+  have := hWp
   obtain ⟨i, hi⟩ := hWr b
   have hf : IsMultiHomog (X ⟨b, i⟩ : MRing ι) (Pi.single b 1) := isMultiHomog_X' b i
   have hJm : IsMultiHomogIdeal (W ⊔ Ideal.span {(X ⟨b, i⟩ : MRing ι)}) :=
@@ -79,7 +79,7 @@ theorem multigraded_length_stable_dim_zero {p : ℕ} (hp : p.Prime) {W : Ideal (
 
   have hirr : ∀ j, ∃ k, ∀ i', (X ⟨k, i'⟩ : MRing ι) ∈ q j := by
     intro j
-    haveI := (hj j).2.2.1
+    have := (hj j).2.2.1
     obtain ⟨W', hW'min, hW'le⟩ := Ideal.exists_minimalPrimes_le (hle j)
     have hnr := not_relevant_of_dim_zero hWm hd hf hi hW'min
     rw [IsRelevant] at hnr
@@ -165,7 +165,7 @@ theorem hasymp_base {p : ℕ} (hp : p.Prime) {L : ℝ} (hL : L = Real.log p) {W 
     rw [nsmul_eq_mul, ← map_natCast (Ideal.Quotient.mk (dehomI W i)) p, ← map_mul,
       Ideal.Quotient.eq_zero_iff_mem]
     exact Ideal.mul_mem_right y _ hpD
-  haveI : Finite (MRing ι ⧸ dehomI W i) :=
+  have : Finite (MRing ι ⧸ dehomI W i) :=
     Nat.finite_of_card_ne_zero (by rw [hD]; exact (card_mPiece_pos W _ hp0 hpW).ne')
   have hpow := natCard_eq_pow_length hp hA
   refine ⟨a₁, 0, le_refl 0, fun a ha => ?_⟩

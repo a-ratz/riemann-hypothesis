@@ -119,7 +119,7 @@ private lemma theta_one_coeff_mem_of_integral_den_one {Ω : Type} [Field Ω] [Al
   · rw [h, mul_zero]
     exact zero_mem A
   · refine mul_mem ?_ (hP r)
-    rw [one_mul, ← Rat.coe_int_num_of_den_eq_one (hden r h), map_intCast]
+    rw [one_mul, ← Rat.intCast_num_of_den_eq_one (hden r h), map_intCast]
     exact intCast_mem A _
 
 open scoped MatrixGroups in

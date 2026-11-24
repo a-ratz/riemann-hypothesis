@@ -267,12 +267,12 @@ theorem UpperTheory.exists_goodRoot_of_henselian_sepClosed_residue :
   have hqk : ((q : ResidueField A)) ≠ 0 := by
     rw [← map_natCast (residue A)]
     exact (residue_ne_zero_iff_isUnit _).2 hqu
-  haveI : NeZero (q : ResidueField A) := ⟨hqk⟩
+  have : NeZero (q : ResidueField A) := ⟨hqk⟩
   have hq0 : q ≠ 0 := by
     rintro rfl
     exact hqk (by simp)
-  haveI : NeZero q := ⟨hq0⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (ResidueField A) q
+  have : NeZero q := ⟨hq0⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (ResidueField A) q
   obtain ⟨a0, rfl⟩ := residue_surjective z
   have ha0 : IsUnit a0 := (residue_ne_zero_iff_isUnit _).1 (hz.ne_zero hq0)
   have hmon : (Polynomial.X ^ q - 1 : Polynomial A).Monic := by
@@ -331,7 +331,7 @@ theorem UpperTheory.isAffine_isLocalizationAway_of_range_eq_basicOpen :
     exact h
   let χ := IsOpenImmersion.isoOfRangeEq a (U.basicOpen t).ι hr
   have hfac : χ.hom ≫ (U.basicOpen t).ι = a := IsOpenImmersion.isoOfRangeEq_hom_fac a _ hr
-  haveI : IsAffine (U.basicOpen t) := (isAffineOpen_top U).basicOpen t
+  have : IsAffine (U.basicOpen t) := (isAffineOpen_top U).basicOpen t
   have hW : IsAffine W := IsAffine.of_isIso χ.hom
   have happ : ∀ r, a.appTop.hom r =
       χ.hom.appTop.hom (algebraMap Γ(U, ⊤) Γ(U.basicOpen t, ⊤) r) := by
@@ -479,8 +479,8 @@ theorem UpperTheory.isIntegral_sections_of_integralHom_over_affine_chart :
           IsIntegral (Subring.closure (Set.range ((Scheme.ΓSpecIso (CommRingCat.of A)).inv ≫ (ι ≫ u ≫ l).appTop).hom ∪
             {((ι ≫ u ≫ f).appLE O ⊤ h).hom τ})) x := by
   intro A _ P Z U L u l f hu hpb O hO τ hτ ι _ hι h x
-  haveI := hu
-  haveI : IsAffineHom f := MorphismProperty.of_isPullback (P := @IsAffineHom) hpb.flip inferInstance
+  have := hu
+  have : IsAffineHom f := MorphismProperty.of_isPullback (P := @IsAffineHom) hpb.flip inferInstance
   have hV : IsAffineOpen (f ⁻¹ᵁ O) := hO.preimage f
   have hW : u ⁻¹ᵁ (f ⁻¹ᵁ O) = ι ''ᵁ ⊤ := by
     apply SetLike.coe_injective
@@ -627,7 +627,7 @@ private theorem mul_res :
         (chartHom (A := ℤ) (n := 1) 0 (MvPolynomial.X 1)) *
       resR (inf_le_right : stdOpen ℤ 1 0 ⊓ stdOpen ℤ 1 1 ≤ stdOpen ℤ 1 1)
         (chartHom (A := ℤ) (n := 1) 1 (MvPolynomial.X 0)) = 1 := by
-  letI : CommRing (ringOn (projectiveSpace ℤ 1) (stdOpen ℤ 1 0 ⊓ stdOpen ℤ 1 1)) :=
+  let : CommRing (ringOn (projectiveSpace ℤ 1) (stdOpen ℤ 1 0 ⊓ stdOpen ℤ 1 1)) :=
     inferInstanceAs (CommRing Γ(projectiveSpace ℤ 1, stdOpen ℤ 1 0 ⊓ stdOpen ℤ 1 1))
   have h := ProjTwist.ratio_mul_ratio' (𝒜 := grading ℤ 1) (X_mem (A := ℤ) (n := 1) 0)
     (X_mem (A := ℤ) (n := 1) 1) (X_mem (A := ℤ) (n := 1) 0)
@@ -772,13 +772,13 @@ theorem UpperTheory.isAffine_isDomain_pullback_standard_opens :
   obtain ⟨aff, locA, kerA⟩ := UpperTheory.isAffine_isLocalizationAway_of_range_eq_basicOpen (pullback.fst ι₁ ι₂) _ ra
   obtain ⟨-, locB, kerB⟩ := UpperTheory.isAffine_isLocalizationAway_of_range_eq_basicOpen (pullback.snd ι₁ ι₂) _ rb
   refine ⟨aff, fun hne => ?_⟩
-  letI : Algebra A Γ(pullback ι₁ ι₂, ⊤) := (((Scheme.ΓSpecIso (CommRingCat.of A)).inv ≫ (pullback.fst ι₁ ι₂ ≫ ι₁ ≫ u ≫ l).appTop).hom).toAlgebra
-  haveI : IsIntegral Z := hZ.1
-  haveI : Nonempty U := ⟨pullback.fst ι₁ ι₂ hne.some⟩
-  haveI : Nonempty V := ⟨pullback.snd ι₁ ι₂ hne.some⟩
-  haveI : IsIntegral U := isIntegral_of_isOpenImmersion ι₁
-  haveI : IsIntegral V := isIntegral_of_isOpenImmersion ι₂
-  haveI : IsIntegral (pullback ι₁ ι₂) := isIntegral_of_isOpenImmersion (pullback.fst ι₁ ι₂ ≫ ι₁)
+  let : Algebra A Γ(pullback ι₁ ι₂, ⊤) := (((Scheme.ΓSpecIso (CommRingCat.of A)).inv ≫ (pullback.fst ι₁ ι₂ ≫ ι₁ ≫ u ≫ l).appTop).hom).toAlgebra
+  have : IsIntegral Z := hZ.1
+  have : Nonempty U := ⟨pullback.fst ι₁ ι₂ hne.some⟩
+  have : Nonempty V := ⟨pullback.snd ι₁ ι₂ hne.some⟩
+  have : IsIntegral U := isIntegral_of_isOpenImmersion ι₁
+  have : IsIntegral V := isIntegral_of_isOpenImmersion ι₂
+  have : IsIntegral (pullback ι₁ ι₂) := isIntegral_of_isOpenImmersion (pullback.fst ι₁ ι₂ ≫ ι₁)
   have ts := ts_eq (stdOpen 0) (stdOpen 1) τ σ hts _ _ h1 h2 (pullback.fst ι₁ ι₂) (pullback.snd ι₁ ι₂)
     (by rw [pullback.condition_assoc])
   have injA := inj_of _ _ (IsUnit.of_mul_eq_one _ ts) kerA
@@ -1012,28 +1012,28 @@ theorem UpperTheory.cohomology_punctured_affine_line : LateralTheory.E.StandardE
   unfold LateralTheory.E.StandardEtaleChartsMultivariableHensel.Heart
   intro q A _ _ hSH hq Z U V p hIL hZ ι₁ ι₂ h1 h2 hUa hVa hcov hs g
   obtain ⟨hHens, hsep⟩ := hSH
-  letI := hHens
-  haveI : NeZero q := ⟨fun h0 => by subst h0; simp at hq⟩
+  let := hHens
+  have : NeZero q := ⟨fun h0 => by subst h0; simp at hq⟩
   obtain ⟨ζ, hζ⟩ := UpperTheory.exists_goodRoot_of_henselian_sepClosed_residue A q hq
   by_cases hW : Nonempty ↥(pullback (fibMap p ι₁) (fibMap p ι₂))
   swap
   · refine ⟨0, 0, ?_⟩
     ext x
     exact (hW ⟨x⟩).elim
-  haveI := h1
-  haveI := h2
+  have := h1
+  have := h2
   obtain ⟨r, c, hrc, hr1, hr2⟩ := UpperTheory.exists_fiber_pullback_square_of_open_immersions A p ι₁ ι₂
   obtain ⟨hPaff, hP⟩ := UpperTheory.isAffine_isDomain_pullback_standard_opens A p hZ ι₁ ι₂ hs
-  haveI := hPaff
+  have := hPaff
   obtain ⟨hWaff, hrsurj, hrker⟩ := UpperTheory.closed_fiber_affine_surjective_ker_maximalIdeal A (pullback.fst ι₁ ι₂ ≫ ι₁ ≫ p) r c hrc
-  haveI := hWaff
+  have := hWaff
   obtain ⟨hdom, hinj1, hinj2, T, hTint, hTB, hTC, hB, hC⟩ := hP ⟨r.base hW.some⟩
   obtain ⟨hFUaff, -, hFUker⟩ := UpperTheory.closed_fiber_affine_surjective_ker_maximalIdeal A (ι₁ ≫ p) (pullback.fst (ι₁ ≫ p) (cpt A))
     (pullback.snd _ _) (IsPullback.of_hasPullback _ _)
   obtain ⟨hFVaff, -, hFVker⟩ := UpperTheory.closed_fiber_affine_surjective_ker_maximalIdeal A (ι₂ ≫ p) (pullback.fst (ι₂ ≫ p) (cpt A))
     (pullback.snd _ _) (IsPullback.of_hasPullback _ _)
-  haveI := hFUaff
-  haveI := hFVaff
+  have := hFUaff
+  have := hFVaff
   obtain ⟨ζW, hζW⟩ : ∃ z, st (r ≫ pullback.fst ι₁ ι₂ ≫ ι₁ ≫ p) ζ = z := ⟨_, rfl⟩
   have hgW : GoodRoot q ζW := hζW ▸ goodRoot_map_ringHom _ hζ
   have eqU : (pullback.fst (fibMap p ι₁) (fibMap p ι₂)).appTop.hom
@@ -1044,8 +1044,8 @@ theorem UpperTheory.cohomology_punctured_affine_line : LateralTheory.E.StandardE
     rw [← hζW, st_comp, ← reassoc_of% hr2, pullback.condition_assoc]
   obtain ⟨w, hwq, hw⟩ := (UpperTheory.scheme_roots_of_unity_eq_locallyConstant_powers _ q ζW hgW).1 g
   obtain ⟨w', rfl⟩ := hrsurj w
-  letI : Algebra A Γ(pullback ι₁ ι₂, ⊤) := (st (pullback.fst ι₁ ι₂ ≫ ι₁ ≫ p)).toAlgebra
-  haveI := hdom
+  let : Algebra A Γ(pullback ι₁ ι₂, ⊤) := (st (pullback.fst ι₁ ι₂ ≫ ι₁ ≫ p)).toAlgebra
+  have := hdom
   have toKer : ∀ y, y ∈ mm (⊤ : Subalgebra A Γ(pullback ι₁ ι₂, ⊤)) → r.appTop.hom y = 0 := by
     intro y hy
     unfold mm at hy

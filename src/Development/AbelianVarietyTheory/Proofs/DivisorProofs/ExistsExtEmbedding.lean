@@ -87,7 +87,7 @@ theorem aPl_last_pos (i : Fin D.R.m) (τ : D.what₂.Tau) : 0 < aPl D i (D.R.k +
     linarith
   have h2 := Int.floor_pos.2 h1
   unfold aPl
-  rw [if_pos hn, hlam]
+  rw [ite_eq_left hn, hlam]
   omega
 
 end GlobalTheory.PtStringTest
@@ -183,8 +183,8 @@ end LP
 
 theorem exists_ext_embedding {K LL : Type} [Field K] [NumberField K] [Field LL] [NumberField LL] [Algebra K LL]
     (σ₀ : K →+* ℂ) : ∃ σ : LL →+* ℂ, ∀ a, σ (algebraMap K LL a) = σ₀ a := by
-  letI : Algebra K ℂ := σ₀.toAlgebra
-  haveI : Algebra.IsAlgebraic K LL := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  let : Algebra K ℂ := σ₀.toAlgebra
+  have : Algebra.IsAlgebraic K LL := Algebra.IsAlgebraic.tower_top (K := ℚ) K
   exact ⟨(IsAlgClosed.lift : LL →ₐ[K] ℂ).toRingHom, fun a => (IsAlgClosed.lift : LL →ₐ[K] ℂ).commutes a⟩
 
 section Card

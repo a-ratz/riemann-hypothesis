@@ -129,7 +129,7 @@ theorem swap_eq {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (S T S' T' : HSp D) (e
       rw [hg, this, Matrix.transpose_transpose])
     rw [k, MulEquiv.apply_symm_apply]
   have k9 := congrFun (hω' g' h' f) 0
-  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, a1, a2, map_zero] at k9
+  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, a1, a2, map_zero] at k9
   simp only [← hL]
   rw [GlobalTheory.WeilUniq.weilDatum_unique D ψ hω.std S' T' χT χS ω₀ ω' hω₀ hw (g', h') _ th]
   exact k9

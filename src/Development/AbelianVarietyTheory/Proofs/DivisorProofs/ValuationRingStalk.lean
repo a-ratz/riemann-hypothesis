@@ -68,7 +68,7 @@ theorem valuationRing_stalk {K : Type} [Field K] {X : Scheme.{0}} [IsIntegral X]
     infer_instance
   · have h0 : Order.coheight x = 0 := by simpa using h
     have : Ring.KrullDimLE 0 (X.presheaf.stalk x) := krullDimLE_of_coheight_le h0.le
-    letI := (Ring.KrullDimLE.isField_of_isDomain (R := X.presheaf.stalk x)).toField
+    let := (Ring.KrullDimLE.isField_of_isDomain (R := X.presheaf.stalk x)).toField
     exact ValuationRing.of_field _
 
 end GlobalTheory.ProjHol

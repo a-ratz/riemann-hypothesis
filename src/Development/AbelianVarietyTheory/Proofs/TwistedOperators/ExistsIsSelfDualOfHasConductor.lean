@@ -106,10 +106,10 @@ theorem exists_isSelfDual_of_hasConductor (h : HasConductor ψ c) : ∃ ν : Mea
 theorem isUnitVol_iff_isSelfDual (h : HasConductor ψ 1) (ν : Measure k) : IsUnitVol ν ↔ IsSelfDual ψ ν := by
   constructor
   · intro hν
-    haveI := hν.1
+    have := hν.1
     exact isSelfDual_of_isUnitVol ν h hν
   · intro hsd
-    haveI : ν.IsAddHaarMeasure := hsd.1
+    have : ν.IsAddHaarMeasure := hsd.1
     have e := (isSelfDual_iff_vol h ν).1 hsd
     rw [nabs_one, mul_one] at e
     have hnn : 0 ≤ (ν (𝒪[k] : Set k)).toReal := ENNReal.toReal_nonneg

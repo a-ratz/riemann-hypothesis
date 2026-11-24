@@ -95,7 +95,7 @@ theorem height_add_ringKrullDim_quotient_of_finiteType (k : Type*) {A : Type*} [
     exact Order.height_le_height_apply_of_strictMono
       (fun P : PrimeSpectrum A => (⟨P.asIdeal.comap (algebraMap (MvPolynomial (Fin s) k) A),
         inferInstance⟩ : PrimeSpectrum _))
-      (fun P Q hPQ => Ideal.IsIntegral.comap_lt_comap (R := MvPolynomial (Fin s) k)
+      (fun P Q hPQ => Ideal.IsIntegral.under_lt_under (R := MvPolynomial (Fin s) k)
         (show P.asIdeal < Q.asIdeal from hPQ)) _
   rw [le_antisymm h2 h1,
     ReciprocityTheory.CA.ringKrullDim_quotient_eq_quotient_comap_of_isIntegral

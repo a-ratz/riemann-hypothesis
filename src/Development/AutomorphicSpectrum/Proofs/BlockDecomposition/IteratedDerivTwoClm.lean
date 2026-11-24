@@ -96,9 +96,9 @@ theorem waveA : WaveA := by
     refine ⟨contDiffOn_clm_apply hA.1 (hce t).1, fun g hg k => ?_⟩
     show A (g * k.1) (u t (g * k.1)) = E.ρ k⁻¹ (A g (u t g))
     rw [(hce t).2 g hg k, hA.2 g hg k]
-    simp only [ContinuousLinearMap.mul_apply]
+    simp only [mul_apply_eq_comp]
     have : E.ρ k (E.ρ k⁻¹ (u t g)) = u t g := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul]; simp
+      rw [← mul_apply_eq_comp, ← map_mul]; simp
     rw [this]
   · intro t g hg
     rw [iteratedDeriv_two_clm (A g) (hline g hg), heq t g hg]

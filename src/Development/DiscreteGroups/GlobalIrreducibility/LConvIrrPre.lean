@@ -134,7 +134,7 @@ theorem pi_inner (g : G) (u v : Hs B hB) : ⟪pi B hB ρ hinv g u, pi B hB ρ hi
   V.inner_map_map u v
 
 theorem inner_left (g : G) (v w : Hs B hB) : ⟪pi B hB ρ hinv g v, w⟫_ℂ = ⟪v, pi B hB ρ hinv g⁻¹ w⟫_ℂ := by
-  rw [← pi_inner B hB ρ hinv g v, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+  rw [← pi_inner B hB ρ hinv g v, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
 
 theorem star_pi (g : G) : star (pi B hB ρ hinv g) = pi B hB ρ hinv g⁻¹ := by
   rw [ContinuousLinearMap.star_eq_adjoint, eq_comm, ContinuousLinearMap.eq_adjoint_iff]

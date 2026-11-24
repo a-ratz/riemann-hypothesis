@@ -108,10 +108,10 @@ namespace PositivityTheory.KB.MeanLatticeAction
 variable {L : Type} [Field L] [NumberField L] {N : ℕ}
 
 theorem countable_latS : Countable (latS L N) := by
-  haveI : Countable (𝓞 L) := Finsupp.Countable.of_moduleFinite (R := ℤ)
-  haveI : Countable (Matrix (Fin N) (Fin N) (𝓞 L)) :=
+  have : Countable (𝓞 L) := Countable.of_moduleFinite (R := ℤ)
+  have : Countable (Matrix (Fin N) (Fin N) (𝓞 L)) :=
     inferInstanceAs (Countable (Fin N → Fin N → 𝓞 L))
-  haveI : Countable (Matrix.SpecialLinearGroup (Fin N) (𝓞 L)) := by
+  have : Countable (Matrix.SpecialLinearGroup (Fin N) (𝓞 L)) := by
     unfold Matrix.SpecialLinearGroup; infer_instance
   unfold latS
   exact (MonoidHom.pi fun w => Matrix.SpecialLinearGroup.map (embO (L := L) w)).rangeRestrict_surjective.countable
@@ -119,9 +119,9 @@ theorem countable_latS : Countable (latS L N) := by
 theorem mean_shift (d : Dom L N) {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : Sp L N → E)
     (hf : ∀ (g : latS L N) (x : Sp L N), f ((g : Sp L N) * x) = f x) (s : Sp L N) :
     ∫ y in d.D, f (y * s) ∂d.μ = ∫ y in d.D, f y ∂d.μ := by
-  haveI := d.haar
-  haveI := d.right
-  haveI : Countable (latS L N) := countable_latS
+  have := d.haar
+  have := d.right
+  have : Countable (latS L N) := countable_latS
   have hmp : MeasurePreserving (fun y : Sp L N => y * s) d.μ d.μ := measurePreserving_mul_right d.μ s
   have hemb : MeasurableEmbedding (fun y : Sp L N => y * s) := measurableEmbedding_mulRight s
   have hD' : IsFundamentalDomain (latS L N) ((fun y : Sp L N => y * s) ⁻¹' d.D) d.μ :=
@@ -144,7 +144,7 @@ private theorem fr_mul_eq_comp_actL_of_fixes_one {q : ℕ} (ω : Form (HS L N) q
   unfold fr
   rw [hc, ContinuousLinearMap.comp_apply, hu]
   ext v
-  simp only [ContinuousAlternatingMap.compContinuousLinearMap_apply, ContinuousLinearMap.coe_comp']
+  simp only [ContinuousAlternatingMap.compContinuousLinearMap_apply, ContinuousLinearMap.coe_comp]
   rfl
 
 private theorem fr_emb_mul_eq_of_fInv {q : ℕ} (ω : Form (HS L N) q) (hγ : ∀ γ, FInv ω (emb L N γ))
@@ -155,7 +155,7 @@ private theorem fr_emb_mul_eq_of_fInv {q : ℕ} (ω : Form (HS L N) q) (hγ : �
   unfold fr
   rw [hc, ContinuousLinearMap.comp_apply, ← hγ γ _ hp]
   ext v
-  simp only [ContinuousAlternatingMap.compContinuousLinearMap_apply, ContinuousLinearMap.coe_comp']
+  simp only [ContinuousAlternatingMap.compContinuousLinearMap_apply, ContinuousLinearMap.coe_comp]
   rfl
 
 private theorem exists_emb_eq_ofS_of_mem_latS (g : Sp L N) (hg : g ∈ latS L N) :
@@ -296,7 +296,7 @@ theorem sMean_of : SMean := by
   have hωb : ∀ z : Gp L N, ωb (actL z (one L N).1) = M.compContinuousLinearMap (actL z⁻¹) := by
     intro z
     have hx : ∃ x : Gp L N, actL x (one L N).1 = actL z (one L N).1 := ⟨z, rfl⟩
-    simp only [ωb, dif_pos hx]
+    simp only [ωb, dite_eq_left hx]
     have hy : actL hx.choose (one L N).1 = actL z (one L N).1 := hx.choose_spec
     generalize hx.choose = y at hy ⊢
     have hs1 : actL (y⁻¹ * z) (one L N).1 = (one L N).1 := by
@@ -486,7 +486,7 @@ namespace PositivityTheory.KB
 open PrimeModuloFree LargePrimeDiscriminant in
 theorem sBStarOdd_of : SBStarOdd := by
   intro hC hSep hBr hStab hSurj hWt L _ _ hTC k hk hkr l hl n hn
-  haveI : IsTotallyComplex L := hTC
+  have : IsTotallyComplex L := hTC
   obtain ⟨θ, hθs, hθ0, hθn⟩ := hBr k
   obtain ⟨τ, hτW, hτ⟩ := hWt L k hk
   have hcard : Fintype.card (InfinitePlace L) = nrComplexPlaces L := by
@@ -688,7 +688,7 @@ theorem swtOdd (hE : SEv) (hS : SStokes) (hF : FFT) (hG : AGood) (hWP : WPad) (h
           if ncyc x.1 = 1 then c x * Aev N x z else 0 := by
         intro x
         by_cases h : ncyc x.1 = 1
-        · simp only [h, true_and, if_true, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ]
+        · simp only [h, true_and, ite_true, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ]
           rw [Aev_comb hS hG hWI _ _ _ _ (hrw x h) z]
           ring
         · simp [h]
@@ -739,8 +739,8 @@ variable {L : Type} [Field L] [NumberField L]
 theorem tmC_relabel {N q : ℕ} (ρ c : Equiv.Perm (Fin q)) (w0 : InfinitePlace L) (Y : Fin q → HS L N) :
     tmC (c⁻¹ * ρ * c) (fun _ => w0) Y = tmC ρ (fun _ => w0) (Y ∘ ⇑c⁻¹) := by
   unfold tmC
-  rw [if_pos (fun _ => rfl), if_pos (fun _ => rfl)]
-  simp only [ContinuousMultilinearMap.sum_apply, ContinuousMultilinearMap.compContinuousLinearMap_apply,
+  rw [ite_eq_left (fun _ => rfl), ite_eq_left (fun _ => rfl)]
+  simp only [sum_apply, ContinuousMultilinearMap.compContinuousLinearMap_apply,
     ContinuousMultilinearMap.mkPiAlgebra_apply, LinearMap.coe_toContinuousLinearMap', Function.comp_apply]
   refine Fintype.sum_equiv (Equiv.arrowCongr c (Equiv.refl _)) _ _ (fun a => ?_)
   refine Fintype.prod_equiv c _ _ (fun i => ?_)
@@ -749,8 +749,8 @@ theorem tmC_relabel {N q : ℕ} (ρ c : Equiv.Perm (Fin q)) (w0 : InfinitePlace 
 theorem tmC_inv_star {N q : ℕ} (ρ : Equiv.Perm (Fin q)) (w0 : InfinitePlace L) (Y : Fin q → HS L N) :
     tmC ρ⁻¹ (fun _ => w0) Y = star (tmC ρ (fun _ => w0) Y) := by
   unfold tmC
-  rw [if_pos (fun _ => rfl), if_pos (fun _ => rfl)]
-  simp only [ContinuousMultilinearMap.sum_apply, ContinuousMultilinearMap.compContinuousLinearMap_apply,
+  rw [ite_eq_left (fun _ => rfl), ite_eq_left (fun _ => rfl)]
+  simp only [sum_apply, ContinuousMultilinearMap.compContinuousLinearMap_apply,
     ContinuousMultilinearMap.mkPiAlgebra_apply, LinearMap.coe_toContinuousLinearMap', star_sum, star_prod]
   refine Fintype.sum_equiv (Equiv.arrowCongr ρ (Equiv.refl _)) _ _ (fun b => ?_)
   refine Finset.prod_congr rfl (fun i _ => ?_)
@@ -788,7 +788,7 @@ theorem alt_zero' {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {q : ℕ
     (hf : ∀ v, f (v ∘ σ) = -f v) (hs : Equiv.Perm.sign σ = 1) :
     ContinuousMultilinearMap.alternatization f = 0 := by
   have h2 := alt_relabel f (-f) σ (fun v => by
-    rw [ContinuousMultilinearMap.neg_apply, hf, neg_neg])
+    rw [neg_apply, hf, neg_neg])
   rw [hs, map_neg] at h2
   ext v
   have h3 := congrArg (fun F => F v) h2
@@ -915,8 +915,8 @@ theorem wOneOdd : WOneOdd := by
     rw [zero_smul]
     have h0 : tmR (N := N) σ w ε = 0 := by
       ext v
-      simp only [tmR, tmC, if_neg hw, ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply,
-        ContinuousMultilinearMap.zero_apply, map_zero]
+      simp only [tmR, tmC, ite_eq_right hw, ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply,
+        zero_apply, map_zero]
     simp only [AT]
     rw [h0, map_zero]
 
@@ -978,7 +978,7 @@ theorem exists_principal (L : Type) [Field L] [NumberField L] (T : Set (HeightOn
 theorem finite_small (L : Type) [Field L] [NumberField L] (B : ℕ) :
     {v : HeightOneSpectrum (𝓞 L) | Ideal.absNorm v.asIdeal ≤ B}.Finite :=
   Set.Finite.preimage (f := fun v : HeightOneSpectrum (𝓞 L) => v.asIdeal)
-    (fun _ _ _ _ h => HeightOneSpectrum.ext h) (Ideal.finite_setOfPred_absNorm_le (S := 𝓞 L) B)
+    (fun _ _ _ _ h => HeightOneSpectrum.ext h) (Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 L) B)
 
 theorem exists_prime (L : Type) [Field L] [NumberField L] (B : ℕ) :
     ∃ π : 𝓞 L, Prime π ∧ B ≤ Ideal.absNorm (Ideal.span {π}) := by
@@ -1292,7 +1292,7 @@ theorem key (hPrime : SPrime) (hHecke : SHecke) (hHt : SHt) (hPU : SPU) (hMom : 
     lem_form hHt hPU hWhit hCen L hC k a N h1N (hPUa N h1N) c hcI hcd
   obtain ⟨_, _, ⟨c0, hc0, hc0le⟩, _⟩ := hHt L hC N h1N
   have hht0 : ∀ x, 0 ≤ ht x := fun x => hc0.le.trans (hc0le x)
-  haveI : IsFiniteMeasure (d.μ.restrict d.D) := isFiniteMeasure_restrict.2 d.fin.ne
+  have : IsFiniteMeasure (d.μ.restrict d.D) := isFiniteMeasure_restrict.2 d.fin.ne
   have hsq' : IntegrableOn (fun x => ‖fr ω' (ofS L N x)‖ ^ 2) d.D d.μ := by
     refine Integrable.mono' (hd.const_mul (K ^ 2)) ((lem_meas d hω'G.1).norm.pow 2)
       (Filter.Eventually.of_forall fun x => ?_)

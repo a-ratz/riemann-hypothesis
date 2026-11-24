@@ -101,9 +101,9 @@ theorem mem_H1ur_of_map (J : Subgroup Γ) (u : M' →ₗ[R] M) (hu : ∀ g m, u 
     (hinj : Function.Injective u) (hJ : ∀ g ∈ J, ∀ m, ρ g m = m) (x : H1 ρ')
     (hx : mapH1 ρ' ρ u continuous_of_discreteTopology hu x ∈ H1ur ρ J) : x ∈ H1ur ρ' J := by
   obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-  obtain ⟨m, hm⟩ := (mk_eq_zero_iff (ρ.comp J.subtype) (restrictCocycles1 ρ J.subtype continuous_subtype_val
+  obtain ⟨m, hm⟩ := (mk_eq_zero_iff (ρ.comp J.subtype) (restrictCocycles1 ρ J.subtype continuous_subtypeVal
     (cocycles1MapOfEquivariant ρ' ρ u continuous_of_discreteTopology hu z))).1 hx
-  refine (mk_eq_zero_iff (ρ'.comp J.subtype) (restrictCocycles1 ρ' J.subtype continuous_subtype_val z)).2 ⟨0, fun g => hinj ?_⟩
+  refine (mk_eq_zero_iff (ρ'.comp J.subtype) (restrictCocycles1 ρ' J.subtype continuous_subtypeVal z)).2 ⟨0, fun g => hinj ?_⟩
   have e : u (z.1 g.1) = ρ g.1 m - m := hm g
   rw [hJ g.1 g.2, sub_self] at e
   rw [map_zero, sub_self, map_zero]
@@ -141,16 +141,16 @@ theorem mem_selAll_bkCond {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Al
       (∀ v, v ∈ placesOver F l → resH1 ρ (Dec (F := F) (A.1 v)).subtype continuous_subtype_val x ∈ L v) ∧
       ∀ v, v ∉ placesOver F l → v ∉ S → resH1 ρ (Dec (F := F) (A.1 v)).subtype continuous_subtype_val x ∈
         H1ur (ρ.comp (Dec (F := F) (A.1 v)).subtype) ((Ine (F := F) (A.1 v)).subgroupOf (Dec (F := F) (A.1 v))) := by
-  refine (mem_Sel ρ (fun v => (Dec (F := F) (A.1 v)).subtype) (fun _ => continuous_subtype_val)
+  refine (mem_Sel ρ (fun v => (Dec (F := F) (A.1 v)).subtype) (fun _ => continuous_subtypeVal)
     (Formalism.GaloisCohomology.bkCond ρ A l S L) x).trans ?_
   unfold Formalism.GaloisCohomology.bkCond
   constructor
   · intro h
     refine ⟨fun v hv => ?_, fun v hv hv' => ?_⟩
     · have := h v
-      rwa [if_pos (show ((l : ℕ) : 𝓞 F) ∈ v.asIdeal from hv)] at this
+      rwa [ite_eq_left (show ((l : ℕ) : 𝓞 F) ∈ v.asIdeal from hv)] at this
     · have := h v
-      rwa [if_neg (show ¬ ((l : ℕ) : 𝓞 F) ∈ v.asIdeal from hv), if_neg hv'] at this
+      rwa [ite_eq_right (show ¬ ((l : ℕ) : 𝓞 F) ∈ v.asIdeal from hv), ite_eq_right hv'] at this
   · rintro ⟨h1, h2⟩ v
     split_ifs with a b
     · exact h1 v a
@@ -241,8 +241,8 @@ theorem inertia_trivial (h : Setup bkP i s κ Q) (B : Type) [AddCommGroup B] [Mo
 theorem map_eq_zero (h : NoInv i s κ) {B C : Type} [AddCommGroup B] [Module Λ B] [AddCommGroup C] [Module Λ C]
     (hC : Tors Λ C) (q : B →ₗ[Λ] C) (m : Fin D.R.r → B)
     (hm : ∀ g a, q ((repOn (Tgl i s) κ B g m - m) a) = 0) (a : Fin D.R.r) : q (m a) = 0 := by
-  letI : TopologicalSpace C := ⊥
-  haveI : DiscreteTopology C := ⟨rfl⟩
+  let : TopologicalSpace C := ⊥
+  have : DiscreteTopology C := ⟨rfl⟩
   have h1 : q.compLeft (Fin D.R.r) m ∈ H0 (repOn (Tgl i s) κ C) := by
     rw [mem_riemannRochSpace_iff_regularAt_everywhere]
     intro g
@@ -255,7 +255,7 @@ end HidaSetting
 
 theorem selmer_left_exact : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i) (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [Algebra (X.O0 i) Λ] (κ : GE N →* Λˣ) (Q : Finset (PlE D.host)), Setup bkP i s κ Q → NoInv i s κ → LocSat bkP i s κ → SelLeft bkP i s κ Q := by
   intro D N X bkP i s Λ _ _ _ κ Q hS hN hL B' B B'' _ _ _ _ _ _ _ _ _ _ _ _ hB hB'' f g hf hfg
-  haveI := hS.2.1
+  have := hS.2.1
   have hinj : Function.Injective (f.compLeft (Fin D.R.r)) := fun x y h => funext fun a => hf (congrFun h a)
   have hex : ∀ m, g.compLeft (Fin D.R.r) m = 0 → ∃ m', f.compLeft (Fin D.R.r) m' = m := fun m hm => by
     choose m' hm' using fun a => (hfg (m a)).1 (congrFun hm a)

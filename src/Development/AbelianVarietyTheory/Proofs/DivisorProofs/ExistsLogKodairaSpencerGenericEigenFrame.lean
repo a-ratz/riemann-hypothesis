@@ -99,13 +99,13 @@ theorem isFractionRing_and_const (E : Type) [Field E] [NumberField E] [IsCMField
     have := Spec.map_injective ((cancel_mono hU.fromSpec).1 key)
     exact congrArg CommRingCat.Hom.hom this
   subst hρe
-  haveI : Nonempty W := ⟨⟨_, hη⟩⟩
+  have : Nonempty W := ⟨⟨_, hη⟩⟩
   have hle : U.1 ≤ V.ι.opensRange := by rw [Scheme.Opens.opensRange_ι]; exact hUV
-  haveI : IsIso (V.ι.app U.1) := Scheme.Hom.isIso_app V.ι U.1 hle
+  have : IsIso (V.ι.app U.1) := Scheme.Hom.isIso_app V.ι U.1 hle
   have hFr : IsFractionRing Γ(X₀ TF.Y Z, W) (X₀ TF.Y Z).functionField :=
     functionField_isFractionRing_of_isAffineOpen _ W hW
   refine ⟨?_, ?_⟩
-  · letI := σ.toAlgebra
+  · let := σ.toAlgebra
     exact IsFractionRing.of_ringEquiv_left (asIso (V.ι.app U.1)).commRingCatIsoToRingEquiv (fun x => by
       show σ x = _
       simp only [σ, RingHom.comp_apply, Scheme.Hom.app_eq_appLE]
@@ -191,20 +191,20 @@ theorem symPair_mem_balanced {E : Type} [Field E] [NumberField E] [IsCMField E] 
     by_cases h2 : i = e ⟨(starRingEnd ℂ).comp P.1.1, P.2.2⟩ ∧ k = e ⟨P.1.1, P.2.1⟩
     · obtain ⟨rfl, rfl⟩ := h2
       simp only [Equiv.symm_apply_apply, embK_bar', sub_self, zero_mul]
-    · rw [if_neg h1, if_neg h2, add_zero, mul_zero]
+    · rw [ite_eq_right h1, ite_eq_right h2, add_zero, mul_zero]
 
 theorem exists_ext (k R K : Type) [CommRing k] [CommRing R] [Field K] (ρ : R →+* K) (α : k →+* K) (κ : k → R)
     (hfr : letI := ρ.toAlgebra; IsFractionRing R K) (hκ : ∀ a, ρ (κ a) = α a) (d : Derivation ℤ R R)
     (hd : ∀ a, d (κ a) = 0) :
     ∃ D : (letI := α.toAlgebra; Derivation k K K), ∀ r, D (ρ r) = ρ (d r) := by
-  letI := ρ.toAlgebra
+  let := ρ.toAlgebra
   obtain ⟨δ, hδ, hδρ⟩ := Formalism.L2.Pj.GenericSectionMinimum.IsDer.ofLoc (A := R) (B := K) (nonZeroDivisors R) (fun r => ρ (d r))
     (fun x y => by rw [map_add (f := _), map_add (f := _)]) (fun x y => by
       rw [Derivation.leibniz, map_add (f := _), smul_eq_mul, smul_eq_mul, map_mul, map_mul]; rfl)
   have hα : ∀ a, δ (α a) = 0 := fun a => by
     rw [← hκ a]
     exact (hδρ (κ a)).trans (by rw [hd, map_zero])
-  letI := α.toAlgebra
+  let := α.toAlgebra
   have hs : ∀ (a : k) (x : K), δ (a • x) = a • δ x := fun a x => by
     show δ (α a * x) = α a * δ x
     rw [hδ.mul, hα, mul_zero, add_zero]

@@ -465,12 +465,12 @@ theorem isoTyp_indep (a : NG.AlgWt L n) {ι : Type} (S : ι → Submodule ℂ (G
     (hS : ∀ i, NG.IsIrrRep a.ρ (S i)) (hinj : ∀ i j, NG.IsoRep (S i) (S j) → i = j) :
     iSupIndep fun i => NG.isoTyp a.ρ (S i) := by
   classical
-  haveI hW : FiniteDimensional ℂ a.W := a.alg.1
+  have hW : FiniteDimensional ℂ a.W := a.alg.1
   have hT := _root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n
   have hfin : ∀ N : ℕ, 0 < N → FiniteDimensional ℂ ↥(Submodule.span ℂ
       {f | f ∈ NG.AFall L n a.ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g}) := by
     intro M hM
-    haveI := GlobalTheory.AlgFormsFin.fixedForms_finite L n a.ρ hT hM
+    have := GlobalTheory.AlgFormsFin.fixedForms_finite L n a.ρ hT hM
     refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n a.ρ M) (Submodule.span_le.2 ?_)
     rintro f ⟨hf, hκ⟩
     exact ⟨hf.1, hκ⟩
@@ -731,7 +731,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (
     rw [HeightOneSpectrum.mem_adicCompletionIntegers]
     by_cases hab : a = b
     · subst hab; rw [Matrix.diagonal_apply_eq]; exact he a
-    · rw [Matrix.diagonal_apply_ne _ hab, map_zero]; exact zero_le'
+    · rw [Matrix.diagonal_apply_ne _ hab, map_zero]; exact zero_le
   have hle : ∀ (x : v.adicCompletion F), Valued.v x = 1 → ∀ i : Fin n,
       Valued.v (if (i : ℕ) < k then x else 1) ≤ 1 := by
     intro x hx i; split_ifs
@@ -1636,7 +1636,7 @@ theorem finsum_cosets {G W ι : Type} [Group G] [AddCommGroup W] (J : Subgroup G
   rw [finsum_eq_sum_of_support_subset _ hsupp, Finset.sum_image]
   · refine Finset.sum_congr rfl fun γ hγ => ?_
     have hc : ∃ y ∈ T, (y : G ⧸ J) = (x γ : G ⧸ J) := ⟨x γ, h1 γ hγ, rfl⟩
-    rw [dif_pos hc]
+    rw [dite_eq_left hc]
     obtain ⟨hy, he⟩ := hc.choose_spec
     exact (hF _ hy _ (h1 γ hγ) (QuotientGroup.eq.1 he) g).symm
   · intro γ hγ γ' hγ' e
@@ -1677,7 +1677,7 @@ namespace GlobalTheory.EigTransport
 
 theorem sum_single {M : Type} [AddCommGroup M] [Module ℂ M] (d : List ℤ) (G : List ℤ → M) :
     ∑ d' ∈ (Finsupp.single d (1 : ℂ)).support, (Finsupp.single d (1 : ℂ)) d' • G d' = G d := by
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
 end GlobalTheory.EigTransport
 
 namespace GlobalTheory.EigTransport
@@ -1749,7 +1749,7 @@ theorem transport_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ 
   let xi : Formalism.L2.Theta.GA D (Formalism.IndefR.Links.Vc D j) → Formalism.AUTREP.GAf D.host.E D.R.nV := fun γ =>
     if hγ : γ ∈ Formalism.L2.Theta.GfC (Formalism.IndefR.Links.Vc D j) then ((A.PV j).onto γ hγ).choose else 1
   have hxi : ∀ γ ∈ GlobalTheory.Hk3.rep (Formalism.IndefR.Links.Vc D j) sp.w (List.replicate k 1 ++ List.replicate (D.R.nV - k) 0), (A.PV j).ψ (xi γ) = γ := fun γ hγ => by
-    simp only [xi, dif_pos (hGf γ hγ)]
+    simp only [xi, dite_eq_left (hGf γ hγ)]
     exact ((A.PV j).onto γ (hGf γ hγ)).choose_spec
   have hT : ∀ x ∈ Formalism.AUTREP.tSet D.host.E D.R.nV sp ϖ k, TrivOutside {sp.v} x := fun x hx => hx.1
   suffices key : ∀ (m : ℕ) (e : j.1 + 1 = m) (p1 : 1 ≤ m) (p2 : m ≤ D.R.m),

@@ -201,7 +201,7 @@ theorem frames_tied {T : CDVR} {io : c.F →+* T.Fr} {y : IntFr Xo c T io} (C : 
         ∃ A, val (eL y.1 C.ch.d C.ch.x C.ch.B.A.act C.ch.e C.ch.wP m) r z J₁ = om C.I.w1 z J₁ J' p * A ∧
           val (eLG C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.actT C.eT C.wPT m)
             (r ≫ spMap (jetCoef (algebraMap T.V T.Fr) _ m)) z J₂ = om C.I.w2 z J₂ J' p * A := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨⟨-, hact, -⟩, x', hx₂, hx₁, ⟨e', he'⟩, wP', -, ⟨u₂, cu₂, mu₂⟩, u₁, cu₁, mu₁⟩ := C.gen
   obtain ⟨-, ⟨c₂, cc₂, mc₂⟩, c₁, cc₁, mc₁⟩ := he' m
   have hc := (isChart_iff y.1 _ _ _ _ _).1 C.ch.chart
@@ -356,7 +356,7 @@ theorem sv_of_tie {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
     sv Xo.univ.t hh ((ptSecT Xo.univ.t.G a).left ≫ (jBaseG xF (chD C.ch) m 1 ▷ Xo.univ.t.G).left) z J =
       gs (𝟙 _) z ⊤ (toΓ _ (psJet m f)) * (val (eL y.1 C.ch.d C.ch.x C.ch.B.A.act C.ch.e C.ch.wP m)
         (spMap (jetCoef (algebraMap T.Fr F) _ m)) z J ^ q).val := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨p, p₀, p₁, p₂, hp⟩ := frames_tied C m (spMap (jetCoef (algebraMap T.Fr F) (Fin 1 × Fin (chD C.ch)) m))
   obtain ⟨zF, z₁, z₂, hz⟩ := hf m
   have hLG : P.U.LG.L.IsLB := P.U.LG.isLB
@@ -391,10 +391,10 @@ open GermValuationJetHarmonics in
 
 theorem harmonic_value_of_tied_sections : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y) (P : PELUnif (maximalIdeal T.V) C.I.G) (τ : Frames P.U.LG.L (κ := Fin 1 × Fin (chD C.ch)) C.xT), τ.Gen → IsEL P C.xT C.actT C.eT C.wPT τ → ∀ (F : Type) [Field F] [CharZero F] [Algebra T.Fr F] [Algebra T.V F] [IsScalarTower T.V T.Fr F], letI := io.toAlgebra; letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra; ∀ (φ : T.Fr →ₐ[c.F] F), φ.toRingHom = algebraMap T.Fr F → ∀ (yF : FrPt Xo c F), FrMap φ y.1 yF → ∀ (q n : ℕ) (σ : Fin n → P.U.toUnifPre.SecGF F q) (hh : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (q : ℤ) (ptO Xo yF.x))) (f : Fin n → PS F 1 (chD C.ch)), (∀ i, SecTieF C.I P F yF.x q (σ i) (hh i)) → (∀ i, GermA P.U.toUnifPre (κ := Fin 1 × Fin (chD C.ch)) C.xT τ F q (σ i) (f i)) → ∀ (a : ((E →+* ℂ) × ℕ → ℕ)) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF (q : ℤ) (hh i) (colOf m i) = nabValN C.ch.B F (MvPowerSeries.map (algebraMap T.Fr F) C.ch.h) H.w0 q (boxSer f) (fun ℓ : LtN Dw n => ℓ.2.2) (fun (ℓ : LtN Dw n) i => algebraMap T.Fr F (C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩ i)) (MvPolynomial.map (algebraMap c.F F) Pp) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C P τ _ hτ F _ _ _ _ _
-  letI := io.toAlgebra
-  letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
+  let := io.toAlgebra
+  let : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
   intro φ hφ yF hy q n σ hh f ht hf a Pp hP
   obtain ⟨x', e', h₁, h₂, h₃, h₄, h₅⟩ := exists_chart_baseChange φ hy C.ch
   rw [hφ] at h₁ h₂ h₃ h₄ h₅

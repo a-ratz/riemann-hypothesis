@@ -199,8 +199,8 @@ theorem card_quot_smul_top [Module.Finite R M] [Module.Projective R M] (I : Idea
   let e : (M ⧸ I • (⊤ : Submodule R M)) ≃ₗ[R] I.ResidueField ⊗[R] M :=
     (TensorProduct.quotTensorEquivQuotSMul M I).symm ≪≫ₗ
       TensorProduct.congr ek.toLinearEquiv (LinearEquiv.refl R M)
-  haveI : Finite I.ResidueField := Finite.of_equiv _ ek.toEquiv
-  haveI : Finite (I.ResidueField ⊗[R] M) := Module.finite_of_finite I.ResidueField
+  have : Finite I.ResidueField := Finite.of_equiv _ ek.toEquiv
+  have : Finite (I.ResidueField ⊗[R] M) := Module.finite_of_finite I.ResidueField
   have hr : Module.finrank I.ResidueField (I.ResidueField ⊗[R] M) = Module.finrank R M :=
     Ideal.finrank_fiber_eq_finrank I
   refine ⟨Finite.of_equiv _ e.toEquiv.symm, ?_⟩
@@ -481,9 +481,9 @@ theorem fib_gen (I : Ideal (𝓞 E)) (g : ℕ) (hNP : NeatPrime I g (Dw.p + Dw.q
     (hx : X'.fromSpecResidueField x ≫ (ρ' g0).asIso.hom = X'.fromSpecResidueField x)
     (T : Scheme.{0}) (w : T ⟶ G'.left) (v : T ⟶ Spec (X'.residueField x))
     (hw : w ≫ G'.hom = v ≫ X'.fromSpecResidueField x) : w ≫ m g0 = w := by
-  haveI := hS.comm
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have := hS.comm
+  have := Dw.fin
+  have := Dw.proj
   have hcardI : Nat.card (𝓞 E ⧸ I) = g := by
     rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, hNP.2.1]
   have hIfin : Finite (𝓞 E ⧸ I) := Nat.finite_of_card_ne_zero (by rw [hcardI]; exact hNP.1.ne_zero)
@@ -495,7 +495,7 @@ theorem fib_gen (I : Ideal (𝓞 E)) (g : ℕ) (hNP : NeatPrime I g (Dw.p + Dw.q
   have hImax : I.IsMaximal :=
     (Ideal.isPrime_of_irreducible_absNorm (by rw [hNP.2.1]; exact hNP.1)).isMaximal hIne
   let K := AlgebraicClosure (X'.residueField x)
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap (X'.residueField x) K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap (X'.residueField x) K).injective
   let t : Sp K ⟶ X' := Spec.map (CommRingCat.ofHom (algebraMap (X'.residueField x) K)) ≫ X'.fromSpecResidueField x
   have ht : t ≫ (ρ' g0).asIso.hom = t := by simp only [t, Category.assoc, hx]
   let α := fibEnd G' (m g0) (hE.1 g0).1.w t ht
@@ -507,7 +507,7 @@ theorem fib_gen (I : Ideal (𝓞 E)) (g : ℕ) (hNP : NeatPrime I g (Dw.p + Dw.q
     rw [← Category.assoc, e'] at e
     exact e.trans e'
   let actT := OAct.pullback t G' act'
-  haveI hmon : IsMonHom α := isMonHom_fibEnd G' (m g0) (hE.1 g0) t ht
+  have hmon : IsMonHom α := isMonHom_fibEnd G' (m g0) (hE.1 g0) t ht
   have hact : ∀ a, actT.act a ≫ α = α ≫ actT.act a := fibEnd_act G' act' (m g0) _ (hE.2.1 g0) t ht
   have hiter : (fun f => f ≫ α)^[Nat.card Γ] (𝟙 _) = 𝟙 _ := by
     apply pull_ext
@@ -525,13 +525,13 @@ theorem fib_gen (I : Ideal (𝓞 E)) (g : ℕ) (hNP : NeatPrime I g (Dw.p + Dw.q
     rw [pushHom_pull_left, pushHom_pull_left, Over.comp_left, Category.assoc, fibEnd_fst, Category.assoc]
   let tor : (𝟙_ (Over (Sp K)) ⟶ (Over.pullback t).obj G') → Prop := fun z => ∀ a ∈ I, z ≫ actT.act a = 1
   have tor_one : tor 1 := fun a _ => by
-    haveI := actT.hom a
+    have := actT.hom a
     exact map_one (IsMonHom.monoidHom (actT.act a) _)
   have tor_mul : ∀ {z z'}, tor z → tor z' → tor (z * z') := fun {z z'} hz hz' a ha => by
-    haveI := actT.hom a
+    have := actT.hom a
     rw [MonObj.mul_comp, hz a ha, hz' a ha, _root_.mul_one]
   have tor_inv : ∀ {z}, tor z → tor z⁻¹ := fun {z} hz a ha => by
-    haveI := actT.hom a
+    have := actT.hom a
     have e := map_inv (IsMonHom.monoidHom (actT.act a) (𝟙_ (Over (Sp K)))) z
     refine e.trans ?_
     show (z ≫ actT.act a)⁻¹ = 1
@@ -566,7 +566,7 @@ theorem fib_gen (I : Ideal (𝓞 E)) (g : ℕ) (hNP : NeatPrime I g (Dw.p + Dw.q
     obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.TorsionCount.torsion_card (𝓞 E) Dw.La I l.Mb hImax hIfin (mb_ne_bot l)
     let f : setOf tor → {y : GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms.LevelMod Dw l // ∀ a ∈ I, a • y = 0} := fun z => ⟨e (β z.1), hEtors z.2⟩
     have hf : Function.Injective f := fun z z' h => Subtype.ext (hinj z.2 z'.2 (congrArg Subtype.val h))
-    haveI : Finite (setOf tor) := Finite.of_injective f hf
+    have : Finite (setOf tor) := Finite.of_injective f hf
     have hP : (setOf tor).Finite := Set.toFinite _
     refine ⟨hP.toFinset, ?_, fun z hz => hP.mem_toFinset.2 hz⟩
     rw [← Nat.card_eq_card_finite_toFinset hP]
@@ -613,7 +613,7 @@ end Helpers
 
 theorem GlobalTheory.EqvFib.fibre_trivial_of_fixed : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), 1 ≤ Dw.p + Dw.q → l.A = 1 → ∀ (I : Ideal (𝓞 E)) (g : ℕ), NeatPrime I g (Dw.p + Dw.q) → l.Mb ≤ I → ∀ (Γ : Type) [Group Γ] [Finite Γ] (ι : Γ →* LevelAut Dw l), (∀ γ, UnipAt I (ι γ)) → ∀ (X' : Scheme.{0}) [IsIntegral X'] (φ : X' ⟶ X₀ TF.Y Z) (ρ' : Γ →* Aut X'), GlobalTheory.IsNormalScheme X' → IsProjOver (φ ≫ s₀ TF.Y Z) → ∀ m : Γ → ((GlobalTheory.EqvAct.pullG TF Z φ).left ⟶ (GlobalTheory.EqvAct.pullG TF Z φ).left), GlobalTheory.EqvAct.IsEqvAct ρ' (GlobalTheory.EqvAct.pullG TF Z φ) (GlobalTheory.EqvAct.pullAct TF Z φ) m → GlobalTheory.EqvAct.TorsLevel I ι ρ' (GlobalTheory.EqvAct.pullG TF Z φ) (GlobalTheory.EqvAct.pullAct TF Z φ) m → ∀ γ (x : X'), X'.fromSpecResidueField x ≫ (ρ' γ).asIso.hom = X'.fromSpecResidueField x → ∀ (T : Scheme.{0}) (w : T ⟶ (GlobalTheory.EqvAct.pullG TF Z φ).left) (v : T ⟶ Spec (X'.residueField x)), w ≫ (GlobalTheory.EqvAct.pullG TF Z φ).hom = v ≫ X'.fromSpecResidueField x → w ≫ m γ = w := by
   intro E _ _ _ H Dw l Xo c TF Z _ _ I g hNP hMb Γ _ _ iota hU X' _ φ ρ' _ _ m hE hT g0 x hx T w v hw
-  haveI : CharZero (X'.residueField x) := by
+  have : CharZero (X'.residueField x) := by
     let q : Spec (X'.residueField x) ⟶ Sp c.F := X'.fromSpecResidueField x ≫ φ ≫ s₀ TF.Y Z
     exact charZero_of_injective_ringHom (Spec.preimage q).hom.injective
   exact GlobalTheory.EqvFib.fib_gen I g hNP hMb iota hU ρ' _ (IsSemiAbelian.pullback _ TF.Y.t.G TF.Y.t.semi) _ m hE hT g0 x
@@ -765,12 +765,12 @@ theorem exists_frPt_ptF {K : Type} [Field K] [Algebra c.F K] (t : Sp K ⟶ Xo.XF
 
 theorem restr_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c) (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A.Coprime l.M) (Γ : Type) [Group Γ] (ι : Γ →* LevelAut Dw l) (ρ : Γ →* Aut (V₀ TF.Y Z)), ActsBy ι ρ → ∀ γ : Γ, (ρ γ).asIso.hom ≫ i₀ TF.Y Z = i₀ TF.Y Z ≫ GlobalTheory.CompLevelStab.mvF hpq hA Xo c (ι γ)⁻¹ := by
   intro E _ _ _ H Dw l Xo c TF Z hpq hA Γ _ ι ρ hρ γ
-  haveI : IsSeparated Xo.s := Formalism.L2.Pj.sepX Xo
-  haveI : IsReduced (Xo.XF c) := GlobalTheory.TransitionUnique.isReduced_XF Xo c
+  have : IsSeparated Xo.s := Formalism.L2.Pj.sepX Xo
+  have : IsReduced (Xo.XF c) := GlobalTheory.TransitionUnique.isReduced_XF Xo c
   refine ext_of_fromSpecResidueField_eq _ _ (pullback.snd _ _) Set.univ dense_univ (fun x _ => ?_) ?_
   · let t : Spec ((V₀ TF.Y Z).residueField x) ⟶ Sp c.F :=
       (V₀ TF.Y Z).fromSpecResidueField x ≫ i₀ TF.Y Z ≫ pullback.snd _ _
-    letI : Algebra c.F ((V₀ TF.Y Z).residueField x) := (Spec.preimage t).hom.toAlgebra
+    let : Algebra c.F ((V₀ TF.Y Z).residueField x) := (Spec.preimage t).hom.toAlgebra
     obtain ⟨y, hy⟩ := exists_frPt_ptF (K := (V₀ TF.Y Z).residueField x)
       ((V₀ TF.Y Z).fromSpecResidueField x ≫ i₀ TF.Y Z) (by
         rw [Category.assoc]
@@ -819,7 +819,7 @@ theorem exists_isGrpPullback_extend : GlobalTheory.Published.SemiAbelianHomExten
   have h2 := ReciprocityTheory.ChartRestriction.G.Chart.isGrpPullback_factor σ' ℓ h1
   have : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
   obtain ⟨e, ⟨he, he'⟩, -⟩ := hext.existsUnique_iso_of_isGrpPullback hS hG hGσ hκ h2 (Iso.refl A)
-  haveI := he
+  have := he
   refine ⟨e.hom.left ≫ pullback.fst _ _, ?_, ?_⟩
   · exact ((isGrpPullback_of_iso e).comp (isGrpPullback_pullback G' σ')).congr (Category.id_comp _) rfl
   · rw [← Category.assoc, ← he']
@@ -1160,12 +1160,12 @@ theorem equivariant_action_ext : _root_.GlobalTheory.CovTop.PublishedHodgeBundle
   intro hP E _ _ _ H Dw l Xo c TF Z hpq hA1 Γ _ ι ρ hact X' _ φ ℓ ρ' hN hproj hℓ hℓφ hρ
   have hA : l.A.Coprime l.M := by rw [hA1]; exact Nat.coprime_one_left _
   obtain ⟨n, hn, hη⟩ := _root_.GlobalTheory.T.interior_equivariant_action_invariant hP E H Dw l Xo c TF Z hpq hA Γ ι ρ (_root_.GlobalTheory.LevelMoveRestr.restr_eq E H Dw l Xo c TF Z hpq hA Γ ι ρ hact)
-  haveI := hℓ
-  haveI : AlgebraicGeometry.IsNoetherian X' := isNoetherian_of_isProjOver hproj
+  have := hℓ
+  have : AlgebraicGeometry.IsNoetherian X' := isNoetherian_of_isProjOver hproj
   have hS : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X' := (isNormalScheme_iff_pred X').mp hN
   have hne : Nonempty (V₀ TF.Y Z) :=
     ⟨⟨genPt Z, (j_mem_barComp Z _).2 (CompSplitPfB.cspB_genPt_mem Z)⟩⟩
-  haveI : IsDominant ℓ := ⟨ℓ.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)⟩
+  have : IsDominant ℓ := ⟨ℓ.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)⟩
   have hG' : ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian (pullG TF Z φ) :=
     IsSemiAbelian.pullback _ _ TF.Y.t.semi
   have hcomp : j₀ TF.Y Z ≫ (barComp TF.Y Z).ι = ℓ ≫ φ ≫ (barComp TF.Y Z).ι := by

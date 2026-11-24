@@ -125,11 +125,11 @@ theorem mem_localization_of_mem_localLattice : ∀ (F E : Type) [Field F] [Numbe
   have hJ : ∀ s, s ∈ J ↔ s • x ∈ B := fun s => Iff.rfl
   have hJ0 : J.comap (algebraMap (𝓞 F) (𝓞 E)) ≠ ⊥ := by
     intro h
-    have := Ideal.eq_bot_of_comap_eq_bot h
+    have := Ideal.eq_bot_of_under_eq_bot h
     have h2 : ν ∈ J := hνx
     rw [this] at h2
     exact hν h2
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQ, hI⟩ := Ideal.eq_prime_pow_mul_coprime hJ0 v.asIdeal
   obtain ⟨d, hdQ, hdv⟩ : ∃ d ∈ Q, d ∉ v.asIdeal := by
     by_contra h
@@ -146,7 +146,7 @@ theorem mem_localization_of_mem_localLattice : ∀ (F E : Type) [Field F] [Numbe
   · obtain ⟨π, hπ, hπw⟩ : ∃ π ∈ v.asIdeal ^ (UniqueFactorizationMonoid.normalizedFactors (J.comap (algebraMap (𝓞 F) (𝓞 E)))).count v.asIdeal, π ∉ w.asIdeal := by
       by_contra h
       push_neg at h
-      haveI := w.isPrime
+      have := w.isPrime
       have h1 : v.asIdeal ≤ w.asIdeal := Ideal.IsPrime.le_of_pow_le h
       exact hw (HeightOneSpectrum.ext (v.isMaximal.eq_of_le w.isPrime.ne_top h1).symm)
     have h1 : π * d ∈ J.comap (algebraMap (𝓞 F) (𝓞 E)) := by
@@ -252,7 +252,7 @@ theorem locP_le_of_le' {R W : Type} [CommRing R] [AddCommGroup W] [Module R W] (
 
 theorem clsCrd_fin (D : D7) (u : D.what₂.Word) (i : ℕ) (hi : i ≤ D.R.m) (c : (D.mem u).C.cls i) :
     Module.Finite (𝓞 D.host.E) (clsCrd D u i hi c) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   exact Module.Finite.iff_fg.2 ((D.clsLat_lat u i c).fg.map _)
 
 private theorem span_eq_top_of_y_lat {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
@@ -285,7 +285,7 @@ theorem stepLevel_stab {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     (X : Fin n → E ⊗[F] FiniteAdeleRing (𝓞 F) F) :
     X ∈ Formalism.UG.latS (F := F) (FiniteAdeleRing (𝓞 F) F) (Formalism.UG.tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (Formalism.UG.intOE E) (Formalism.UG.intAd F)) lev.Lb ↔
       (κ : Matrix (Fin n) (Fin n) _) *ᵥ X ∈ Formalism.UG.latS (F := F) (FiniteAdeleRing (𝓞 F) F) (Formalism.UG.tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (Formalism.UG.intOE E) (Formalism.UG.intAd F)) lev.Lb := by
-  haveI := lev.Lb_fin
+  have := lev.Lb_fin
   have h : κ ∈ Formalism.UG.stabGL (Formalism.UG.latS (F := F) (FiniteAdeleRing (𝓞 F) F) (Formalism.UG.tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (Formalism.UG.intOE E) (Formalism.UG.intAd F)) lev.Lb) := by
     refine (GlobalTheory.LatticeStabLocal.mem_stabGL_adele_iff lev.Lb κ).2 fun v => ?_
     exact (Subgroup.mem_inf.1 (lev.Uloc_lev v (((lev.U_eq κ).1 hκ).2 v))).2

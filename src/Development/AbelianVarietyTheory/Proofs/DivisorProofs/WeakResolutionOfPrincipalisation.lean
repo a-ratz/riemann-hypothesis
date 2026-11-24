@@ -232,7 +232,7 @@ theorem isOpen_image {X Y : Scheme.{0}} (s : X ⟶ Y) {U : Y.Opens} [IsIso (s �
     · rintro ⟨x, ⟨hxA, hxU⟩, rfl⟩; exact ⟨⟨x, hxU⟩, hxA, rfl⟩
     · rintro ⟨z, hz, rfl⟩; exact ⟨z.1, ⟨hz, z.2⟩, rfl⟩
   rw [h2]
-  exact h1 _ (hA.preimage continuous_subtype_val)
+  exact h1 _ (hA.preimage continuous_subtypeVal)
 
 end GlobalTheory.SeqFirst
 
@@ -335,7 +335,7 @@ namespace GlobalTheory.NotCartier
 theorem ringKrullDim_stalk_le_one {X : Scheme.{0}} [IsLocallyNoetherian X] (J : X.IdealSheafData) (x : X)
     (hx : x ∈ J.support) (hmin : ∀ z ∈ J.support, z ⤳ x → z = x) (V : X.affineOpens) (hxV : x ∈ V.1)
     (hP : (J.ideal V).IsPrincipal) : ringKrullDim (X.presheaf.stalk x) ≤ 1 := by
-  haveI := IsLocallyNoetherian.component_noetherian V
+  have := IsLocallyNoetherian.component_noetherian V
   have hV : IsAffineOpen V.1 := V.2
   let p := hV.primeIdealOf ⟨x, hxV⟩
   let _ : Algebra Γ(X, V.1) (X.presheaf.stalk x) := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨x, hxV⟩
@@ -473,7 +473,7 @@ theorem weak_resolution : GlobalTheory.Published.Principalisation → ∀ (F : T
   let f := PSpace.str F (N + 2)
   have hif : i ≫ f = p := by simp [i, f, hℓs, hi₀p]
   have hsmf : SmoothOfRelativeDimension (N + 2) f := Adelic.smoothOfRelativeDimension_pspace F _
-  have : Smooth f := by haveI := hsmf; exact SmoothOfRelativeDimension.smooth (N + 2) f
+  have : Smooth f := by have := hsmf; exact SmoothOfRelativeDimension.smooth (N + 2) f
   have : IsLocallyNoetherian (PSpace F (N + 2)) := LocallyOfFiniteType.isLocallyNoetherian f
   obtain ⟨hne, hnc⟩ := _root_.GlobalTheory.NotCartier.ker_ne_bot_and_not_effCartier i (hℓd _)
   obtain ⟨Y', s, -, -, -, hseq, -, hE, -⟩ := hP F (N + 2) _ f inferInstance hsmf

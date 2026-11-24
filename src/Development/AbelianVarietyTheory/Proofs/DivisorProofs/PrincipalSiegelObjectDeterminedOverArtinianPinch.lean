@@ -86,9 +86,9 @@ theorem unit_lift (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f₂
     obtain ⟨b, hb⟩ := h₂ (g₁ a)
     obtain ⟨p, hp, -⟩ := Types.exists_of_isPullback (h.map (forget CommRingCat)) a b hb.symm
     exact ⟨p, hp⟩
-  haveI : Nontrivial R₁ := g₁.hom.domain_nontrivial
-  haveI : IsLocalRing R₁ := IsLocalRing.of_surjective' f₁.hom hf
-  haveI : IsLocalHom g₁.hom := IsLocalHom.of_surjective g₁.hom h₁
+  have : Nontrivial R₁ := g₁.hom.domain_nontrivial
+  have : IsLocalRing R₁ := IsLocalRing.of_surjective' f₁.hom hf
+  have : IsLocalHom g₁.hom := IsLocalHom.of_surjective g₁.hom h₁
   obtain ⟨s, rfl⟩ := h₁ r
   exact ⟨s, IsUnit.of_map g₁.hom s hr, rfl⟩
 
@@ -202,7 +202,7 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
     have e2 : l₂ ≫ (V₂.ι ≫ Y₂.hom) = (V₀.ι ≫ Y₀.hom) ≫ Spec.map g₂ := by
       simp only [l₂, Category.assoc, Scheme.Hom.resLE_comp_ι_assoc, hc₂]
     have hfl' : Flat (Over.mk (U.ι ≫ Y.hom)).hom := by
-      haveI := hfl
+      have := hfl
       show Flat (U.ι ≫ Y.hom)
       infer_instance
     have H : IsPushout l₁ l₂ k₁ k₂ :=
@@ -292,7 +292,7 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
   intro P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hs₁ hs₂ A' A _ _ A₁ A₂ A₀ _ _ _ j₁ j₂ k₁ k₂ i₁ i₂ φ hfl hj₁ hj₂ hk₁ hk₂
     hi₁ hi₂ hij hφ hjk₁ hjk₂
   have hY : Flat (A' ⊗ A').hom := by
-    haveI := hfl
+    have := hfl
     exact GlobalTheory.ExtUnique.flat_tensorObj A' A'
   have hw : φ ≫ A.hom = A'.hom := by simpa using hφ.w
   let Φ : A' ⟶ A := Over.homMk φ hw
@@ -467,7 +467,7 @@ theorem glue_hom : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) 
   have hw : φ ≫ Z.hom = Y.hom ≫ 𝟙 _ := poY.hom_ext
     (by rw [Category.comp_id, ← Category.assoc, poY.inl_desc, pk₁.w, pj₁.w])
     (by rw [Category.comp_id, ← Category.assoc, poY.inr_desc, pk₂.w, pj₂.w])
-  haveI : IsIso φ := ⟨ψ, h₁, h₂⟩
+  have : IsIso φ := ⟨ψ, h₁, h₂⟩
   exact ⟨φ, IsPullback.of_horiz_isIso ⟨hw⟩, poY.inl_desc _ _ _, poY.inr_desc _ _ _⟩
 
 section Tools

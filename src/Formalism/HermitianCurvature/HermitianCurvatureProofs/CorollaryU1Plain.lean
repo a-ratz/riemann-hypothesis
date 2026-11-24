@@ -330,7 +330,7 @@ theorem cC_bound {d Q o mm₀ : ℕ} {A₀ : ℝ} {φ : B.Mat k (j + ρ) → ℂ
     fun g₀ hg₀ => ⟨V, G', hVo, hg₀, hG'c, hG'eq⟩
   have hscale := cA_Dw_clm (E' := E) ((((w.map nz).prod : ℝ) : ℂ) • ContinuousLinearMap.id ℂ E) hVo
     (wL u ++ wR v) (fun x hx => ((cB_wP hu hv) x hx).1.1) (by simpa [wL, wR] using hGV) g hg hgV
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply] at hscale
+  simp only [smul_apply, ContinuousLinearMap.id_apply] at hscale
   have hsplit : Dw (wL u ++ wR (v ++ w.map nrm)) (fun g => φ g • f g) =
       Dw (wL u ++ wR v) (B.Rw (w.map nrm) (fun g => φ g • f g)) := by
     rw [show wR (v ++ w.map nrm) = wR v ++ wR (w.map nrm) from List.map_append,

@@ -58,7 +58,7 @@ theorem kMean_translate {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : D
   obtain ⟨⟨-, hmul⟩, -, hcont⟩ := hds.2.2.1
   have hmem : ∀ k : KG (M.ε τ), toMK k ∈ Formalism.MainNotions.S.UJset (M.ε τ) := fun k => (k : UJ (M.ε τ)).2
   have hcK : Continuous fun k : KG (M.ε τ) => M.σ τ (toMK k) w :=
-    (hcont w).comp_continuous (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)) hmem
+    (hcont w).comp_continuous (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)) hmem
   have hint : ∀ j, Integrable (fun k => c j k • M.σ τ (toMK k) w) (muK (M.ε τ)) := fun j =>
     ((hc.1 j).smul hcK).integrable_of_hasCompactSupport
       (isCompact_univ.of_isClosed_subset (isClosed_tsupport _) (Set.subset_univ _))

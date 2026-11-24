@@ -67,8 +67,8 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup Matrix.linftyOpNorm
 theorem hasDerivAt_exp_entry {n : ℕ} (X : Mat n) (t : ℝ) (i j : Fin n) :
     HasDerivAt (fun s : ℝ => (NormedSpace.exp (s • X) : Mat n) i j)
       ((NormedSpace.exp (t • X) * X : Mat n) i j) t := by
-  haveI : FiniteDimensional ℝ (Mat n) := inferInstanceAs (FiniteDimensional ℝ (Matrix (Fin n) (Fin n) ℂ))
-  haveI : CompleteSpace (Mat n) := FiniteDimensional.complete ℝ (Mat n)
+  have : FiniteDimensional ℝ (Mat n) := inferInstanceAs (FiniteDimensional ℝ (Matrix (Fin n) (Fin n) ℂ))
+  have : CompleteSpace (Mat n) := FiniteDimensional.completeSpace ℝ (Mat n)
   have h : HasDerivAt (fun s : ℝ => (NormedSpace.exp (s • X) : Mat n))
       (NormedSpace.exp (t • X) * X : Mat n) t := hasDerivAt_exp_smul_const X t
   let L : Mat n →L[ℝ] ℂ := LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ i j)

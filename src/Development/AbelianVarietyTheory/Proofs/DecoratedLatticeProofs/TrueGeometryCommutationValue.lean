@@ -119,7 +119,7 @@ def eta (μ : ℕ → kˣ →* ℂˣ) (m : ℕ) (δ : kˣ →* ℂˣ) (j : ℕ) 
 
 theorem eta_mul (μ : ℕ → kˣ →* ℂˣ) (m : ℕ) (δ : kˣ →* ℂˣ) {i : ℕ} (hi : i < m) :
     eta μ m δ (i + 1) * δ = μ (i + 1) := by
-  rw [eta, if_pos ⟨by omega, by omega⟩, inv_mul_cancel_right]
+  rw [eta, ite_eq_left ⟨by omega, by omega⟩, inv_mul_cancel_right]
 
 theorem eta_unram (μ : ℕ → kˣ →* ℂˣ) (m : ℕ) (δ : kˣ →* ℂˣ)
     (h : ∀ i, i < m → ∀ x : kˣ, valuation k (x : k) = 1 → μ (i + 1) x = δ x) (j : ℕ) : IsUnram (eta μ m δ j) := by
@@ -222,13 +222,13 @@ variable {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
 theorem muAt_unit (hP : P.1 ∉ Pr.vGs) (i : ℕ) {a : X.E} (ha : IsUnit (redP P.1 a)) :
     muAt Ch sel mu cst i P a = LocE.unitV (resChar (mu : Chr X.F X.E X.K) P.1)⁻¹ a := by
   unfold muAt
-  rw [if_neg hP]
+  rw [ite_eq_right hP]
   exact GlobalTheory.LastSteps.locChar_unit _ _ ha
 
 theorem muAt_q (hP : P.1 ∉ Pr.vGs) (i : ℕ) (hq : ((qOf P.1 : ℕ) : 𝓞 X.E) ∈ P.1.asIdeal) (h0 : 0 < qOf P.1) :
     muAt Ch sel mu cst i P ((qOf P.1 : ℕ) : X.E) = cst.muq (i + 1) P := by
   unfold muAt
-  rw [if_neg hP]
+  rw [ite_eq_right hP]
   exact locChar_q _ hq h0 _ _
 
 end Chain
@@ -290,7 +290,7 @@ theorem exists_twData : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars
         field_simp
       rw [e, map_mul, map_pow] at hi
       have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) ^ cst.D P :=
-        pow_pos (zero_lt_iff.mpr (by simp)) _
+        pow_pos (pos_iff_ne_zero.mpr (by simp)) _
       exact le_of_mul_le_mul_right (by rwa [one_mul]) h0
     rw [hψt a (i : ℤ) (cst.D P) hint, hL.weil P a (i : ℤ) ha hint]
   ·
@@ -399,7 +399,7 @@ theorem _root_.GlobalTheory.T.exists_completionTwistData_chainColumns : ∀ (X :
         field_simp
       rw [e, map_mul, map_pow] at hi
       have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) ^ cst.D P :=
-        pow_pos (zero_lt_iff.mpr (by simp)) _
+        pow_pos (pos_iff_ne_zero.mpr (by simp)) _
       exact le_of_mul_le_mul_right (by rwa [one_mul]) h0
     rw [hψt a (i : ℤ) (cst.D P) hint, hL.weil P a (i : ℤ) ha hint]
   · intro a u ha hr hu
@@ -523,7 +523,7 @@ def PiA (j : ℕ) : Type :=
 
 theorem piA_finite (hfin : ∀ j d h, (A j d h).Finite) (j : ℕ) : Finite (PiA G A j) := by
   by_cases hj : j ≤ G.s
-  · haveI := (hfin j (G.s - j) (by omega)).to_subtype
+  · have := (hfin j (G.s - j) (by omega)).to_subtype
     refine Finite.of_injective (fun x : PiA G A j => (⟨x.1 (G.s - j) (by omega), x.2 _ _⟩ : ↥(A j (G.s - j) (by omega)))) ?_
     intro x y e
     apply Subtype.ext; funext d h
@@ -536,7 +536,7 @@ def ChT (j : ℕ) : Type :=
     {o : Orb ((G.T δ hδ η).lev (G.s + 1) 0 rfl).J (twist_lev_le δ hδ η (G.s + 1) 0 rfl) (G.ϖ ^ M)⁻¹ (G.ϖ ^ M) // j = G.s + 1}
 
 theorem chT_finite (hfin : ∀ j d h, (A j d h).Finite) (j : ℕ) : Finite (ChT G δ hδ η A M j) := by
-  haveI := piA_finite G A hfin j; unfold ChT; infer_instance
+  have := piA_finite G A hfin j; unfold ChT; infer_instance
 
 def repT (j d : ℕ) (h : j + d = G.s) : ChT G δ hδ η A M j → GL (XIx (Fin D.R.k) (Fin D.R.t) j ⊕ Fin (d + 1)) G.k :=
   Sum.elim (fun x => x.1.1 d h) (fun o => False.elim (by have := o.2; omega))
@@ -553,7 +553,7 @@ def mT (j : ℕ) : Measure (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) :=
   haveI := G.unitVol.1; (Model.exists_haar G.ν (XIx (Fin D.R.k) (Fin D.R.t) j)).choose
 
 theorem mT_spec (j : ℕ) : (mT G j).IsHaarMeasure ∧ mT G j (KO G.k (XIx (Fin D.R.k) (Fin D.R.t) j) : Set _) = 1 := by
-  haveI := G.unitVol.1; exact (Model.exists_haar G.ν _).choose_spec
+  have := G.unitVol.1; exact (Model.exists_haar G.ν _).choose_spec
 
 def wtT (j : ℕ) (α : ChT G δ hδ η A M j) : ℂ :=
   if h : j ≤ G.s then
@@ -618,7 +618,7 @@ theorem repT_mem {D : D7} {c : Comm D} {v : VCom c} {B : GlobalTheory.Fam.Base c
 
 theorem exists_qExt : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheory.Fam.Base c) (PP : Formalism.L2.DIV.Pl D.host.E) (G : QGeo v B PP) (χ : ℕ → (AE D)ˣ →* Circle), c.Is → ∀ (δ : G.kˣ →* ℂˣ) (hδ : IsTame δ) (η : ℕ → G.kˣ →* ℂˣ), (∀ j, IsUnram (η j)) → (∀ j, j ≤ G.s + 1 → (ofSplit G.q).IsComp (χ j)⁻¹ (η (j + 1) * δ)) → ∀ A, (G.T δ hδ η).IsRepSystem A G.ψk G.ν → ∀ M : ℕ, (G.T δ hδ η).Adapted A (box _ (G.ϖ ^ M)⁻¹) (box _ (G.ϖ ^ M)) → ∃ E : QExt G χ, E.δ = δ ∧ E.η = η ∧ E.A = A ∧ E.M = M := by
   intro D c v B PP G χ hc δ hδ η hη hcomp A hA M hM
-  haveI := G.unitVol.1
+  have := G.unitVol.1
   have hs := G.hs
   have hreg : (G.T δ hδ η).Regular := Chain.ofTwist_regular _ _ _ _ _
   have hlaws : (G.T δ hδ η).Laws := Chain.ofTwist_laws _ _ _ hη _ _
@@ -678,8 +678,8 @@ theorem exists_qExt : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheory.F
     exact ⟨.inr ⟨⟨Quotient.mk _ (Submodule.Quotient.mk z), ⟨_, ⟨z, hz, rfl⟩, rfl⟩⟩, rfl⟩,
       Quotient.mk_out (s := orbSetoid _ (twist_lev_le δ hδ η (G.s + 1) 0 rfl) (G.ϖ ^ M)) _⟩
   ·
-    haveI := chT_finite G δ hδ η A M hfin (G.s + 1 + 1)
-    letI := Fintype.ofFinite (ChT G δ hδ η A M (G.s + 1 + 1))
+    have := chT_finite G δ hδ η A M hfin (G.s + 1 + 1)
+    let := Fintype.ofFinite (ChT G δ hδ η A M (G.s + 1 + 1))
     refine Fintype.card_eq_one_iff.2 ⟨.inl ⟨⟨fun d h => absurd h (by omega), fun d h => absurd h (by omega)⟩, by omega⟩, ?_⟩
     rintro (x | o)
     · exact congrArg Sum.inl (Subtype.ext (Subtype.ext (funext fun d => funext fun h => absurd h (by omega))))
@@ -719,7 +719,7 @@ theorem exists_qExt : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheory.F
         obtain ⟨hJ, hl⟩ := twist_lev_zero (s := G.s) (κ := Fin D.R.k) (t := Fin D.R.t) δ hδ η (G.s - 0 + 1) (by omega)
         exact (GlobalTheory.QPl.SphOne.isOneComb_sph_level G.k _ _ (ρ + 1) (by omega) (by omega) G.ψk G.cond.continuous G.cond G.ν G.unitVol _ hJ hl).1
       · unfold epsT
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         simp
     · have hP : (D.R.m - j) / 2 = ρ + 1 := by omega
       have H : ∃ e, IsOneComb G.ψk G.ν ((D.R.m - j) / 2) ((G.T δ hδ η).lev j (G.s - j + 1) (by omega))
@@ -734,11 +734,11 @@ theorem exists_qExt : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheory.F
         rw [hP]
         exact id
       unfold epsT
-      rw [if_neg hj0, dite_eq_left (by omega), dite_eq_left H]
+      rw [ite_eq_right hj0, dite_eq_left (by omega), dite_eq_left H]
   ·
     intro α
     unfold epsT
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
   ·
     intro j d h
     obtain rfl : d = G.s + 1 - j := by omega
@@ -881,7 +881,7 @@ def PiA (j : ℕ) : Type :=
 
 theorem piA_finite (hfin : ∀ j d h, (A j d h).Finite) (j : ℕ) : Finite (PiA G A j) := by
   by_cases hj : j ≤ G.s
-  · haveI := (hfin j (G.s - j) (by omega)).to_subtype
+  · have := (hfin j (G.s - j) (by omega)).to_subtype
     refine Finite.of_injective (fun x : PiA G A j => (⟨x.1 (G.s - j) (by omega), x.2 _ _⟩ : ↥(A j (G.s - j) (by omega)))) ?_
     intro x y e
     apply Subtype.ext; funext d h
@@ -894,7 +894,7 @@ def ChT (j : ℕ) : Type :=
     {o : Orb ((G.T δ hδ η).lev (G.s + 1) 0 rfl).J (G.T_le δ hδ η (G.s + 1) 0 rfl) (G.ϖ ^ M)⁻¹ (G.ϖ ^ M) // j = G.s + 1}
 
 theorem chT_finite (hfin : ∀ j d h, (A j d h).Finite) (j : ℕ) : Finite (ChT G δ hδ η A M j) := by
-  haveI := piA_finite G A hfin j; unfold ChT; infer_instance
+  have := piA_finite G A hfin j; unfold ChT; infer_instance
 
 def repT (j d : ℕ) (h : j + d = G.s) : ChT G δ hδ η A M j → GL (XIx (Fin D.R.k) (Fin D.R.t) j ⊕ Fin (d + 1)) G.k :=
   Sum.elim (fun x => x.1.1 d h) (fun o => False.elim (by have := o.2; omega))
@@ -911,7 +911,7 @@ def mT (j : ℕ) : Measure (GL (XIx (Fin D.R.k) (Fin D.R.t) j) G.k) :=
   haveI := G.unitVol.1; (Model.exists_haar G.ν (XIx (Fin D.R.k) (Fin D.R.t) j)).choose
 
 theorem mT_spec (j : ℕ) : (mT G j).IsHaarMeasure ∧ mT G j (KO G.k (XIx (Fin D.R.k) (Fin D.R.t) j) : Set _) = 1 := by
-  haveI := G.unitVol.1; exact (Model.exists_haar G.ν _).choose_spec
+  have := G.unitVol.1; exact (Model.exists_haar G.ν _).choose_spec
 
 def wtT (j : ℕ) (α : ChT G δ hδ η A M j) : ℂ :=
   if h : j ≤ G.s then
@@ -976,7 +976,7 @@ theorem repT_mem {D : D7} {c : Comm D} {v : VCom c} {B : GlobalTheory.Fam.Base c
 
 theorem exists_ext_of_reps : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheory.Fam.Base c) (PP : Formalism.L2.DIV.Pl D.host.E) (G : QGeo v B PP) (χ : ℕ → (AE D)ˣ →* Circle), c.Is → ∀ (δ : G.kˣ →* ℂˣ) (hδ : IsTame δ) (η : ℕ → G.kˣ →* ℂˣ), (∀ j, IsUnram (η j)) → (∀ j, j ≤ G.s + 1 → (ofSplit G.q).IsComp (χ j)⁻¹ (η (j + 1) * δ)) → ∀ A, (G.T δ hδ η).IsRepSystem A G.ψk G.ν → ∀ M : ℕ, (G.T δ hδ η).Adapted A (box _ (G.ϖ ^ M)⁻¹) (box _ (G.ϖ ^ M)) → ∃ E : QExt G χ, E.δ = δ ∧ E.η = η ∧ E.A = A ∧ E.M = M ∧ ∀ y, ∃ z ∈ box (XIx (Fin D.R.k) (Fin D.R.t) (G.s + 1)) (G.ϖ ^ E.M)⁻¹, Submodule.Quotient.mk z = E.cos y := by
   intro D c v B PP G χ hc δ hδ η hη hcomp A hA M hM
-  haveI := G.unitVol.1
+  have := G.unitVol.1
   have hs := G.hs
   have hreg : (G.T δ hδ η).Regular := Chain.ofTwist_regular _ _ _ _ _
   have hlaws : (G.T δ hδ η).Laws := Chain.ofTwist_laws _ _ _ hη _ _
@@ -1036,8 +1036,8 @@ theorem exists_ext_of_reps : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalT
     exact ⟨.inr ⟨⟨Quotient.mk _ (Submodule.Quotient.mk z), ⟨_, ⟨z, hz, rfl⟩, rfl⟩⟩, rfl⟩,
       Quotient.mk_out (s := orbSetoid _ (G.T_le δ hδ η (G.s + 1) 0 rfl) (G.ϖ ^ M)) _⟩
   ·
-    haveI := chT_finite G δ hδ η A M hfin (G.s + 1 + 1)
-    letI := Fintype.ofFinite (ChT G δ hδ η A M (G.s + 1 + 1))
+    have := chT_finite G δ hδ η A M hfin (G.s + 1 + 1)
+    let := Fintype.ofFinite (ChT G δ hδ η A M (G.s + 1 + 1))
     refine Fintype.card_eq_one_iff.2 ⟨.inl ⟨⟨fun d h => absurd h (by omega), fun d h => absurd h (by omega)⟩, by omega⟩, ?_⟩
     rintro (x | o)
     · exact congrArg Sum.inl (Subtype.ext (Subtype.ext (funext fun d => funext fun h => absurd h (by omega))))
@@ -1161,11 +1161,11 @@ theorem exists_qExt_cos : ∀ (D : D7) (c : Comm D) (v : VCom c) (B : GlobalTheo
   obtain ⟨E, rfl, rfl, rfl, rfl, -⟩ := GlobalTheory.QTw.Inh.exists_ext_of_reps D c v B PP G χ hc δ hδ η hη hμ A hA M hM
   classical
   let Ch' : ℕ → Type := fun j => if j = G.s + 1 then C else if G.s + 1 + 1 < j then Unit else E.Ch j
-  have eC : Ch' (G.s + 1) = C := if_pos rfl
+  have eC : Ch' (G.s + 1) = C := ite_eq_left rfl
   have eE : ∀ j, j ≤ G.s + 1 + 1 → j ≠ G.s + 1 → Ch' j = E.Ch j := fun j h1 h2 => by
-    simp only [Ch', if_neg h2, if_neg (not_lt.2 h1)]
+    simp only [Ch', ite_eq_right h2, ite_eq_right (not_lt.2 h1)]
   have eU : ∀ j, G.s + 1 + 1 < j → Ch' j = Unit := fun j h1 => by
-    simp only [Ch', if_neg (show j ≠ G.s + 1 by omega), if_pos h1]
+    simp only [Ch', ite_eq_right (show j ≠ G.s + 1 by omega), ite_eq_left h1]
   let fC : ∀ j, Fintype (Ch' j) := fun j => by
     simp only [Ch']; split_ifs <;> infer_instance
   let rep' : ∀ j d, j + d = G.s → Ch' j → GL (XIx (Fin D.R.k) (Fin D.R.t) j ⊕ Fin (d + 1)) G.k :=
@@ -1318,7 +1318,7 @@ theorem map_muAt (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hg : ∀ k, Pr.
       map_inv₀, map_inv₀, ht.muVal j P.1 hg', ← locK_unif (m0 j) P.1 ((ht.mu0 j).unr _ hg') q
         (hq' ▸ GlobalTheory.CharVal.val_natCast_of_notMem_sq (Ideal.absNorm_mem _) hlp.1.2), mul_inv]
     rfl
-  · rw [hm, if_neg hP, MonoidHom.inv_apply, Units.val_inv_eq_inv_val, map_inv₀, res_eq hX hPr hsel hg ht h j P hP x y c hx hc]
+  · rw [hm, ite_eq_right hP, MonoidHom.inv_apply, Units.val_inv_eq_inv_val, map_inv₀, res_eq hX hPr hsel hg ht h j P hP x y c hx hc]
 
 end General
 
@@ -1401,23 +1401,23 @@ theorem twNext_rep_eq_of_sameDC {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : C
           have hQP : Q = P := Subtype.ext hQP1
           rw [hQP]
           have e1 : (twNext Ch sel mu cst st).h d'' P = (twNext Ch sel mu cst st).h d' P := by
-            simp only [twNext, dif_pos hP, d'']
+            simp only [twNext, dite_eq_left hP, d'']
             rw [Function.update_self]
           rw [e1]; exact hs
         · have e1 : (twNext Ch sel mu cst st).h d'' Q = (twNext Ch sel mu cst st).h d Q := by
-            simp only [twNext, dif_pos hQ, d'']
+            simp only [twNext, dite_eq_left hQ, d'']
             rw [Function.update_of_ne e]
           rw [e1]; exact twDC_refl _ _ _ _
       · have e1 : (twNext Ch sel mu cst st).h d'' Q = (twNext Ch sel mu cst st).h d Q := by
-          simp only [twNext, dif_neg hQ]
+          simp only [twNext, dite_eq_right hQ]
         rw [e1]; exact twDC_refl _ _ _ _
     have hdd := hinj d d'' hall
     have hc : d.1 P₀ = d'.1 P₀ := by
       have := congrArg (fun x : (twNext Ch sel mu cst st).β => x.1 P₀) hdd
       simpa [d''] using this
-    simp only [twNext, dif_pos hP]
+    simp only [twNext, dite_eq_left hP]
     exact congrArg (fun D => twRep Ch sel mu cst st P₀ D.1) hc
-  · simp only [twNext, dif_neg hP]
+  · simp only [twNext, dite_eq_right hP]
 
 theorem idxProd_twIdx : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X Pr R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S₀ : Set ℕ) (mu : Tup X.F X.E X.K S₀) (cst : LocCst X (rowSG Pr sel mu)) (m2 : ℕ) (G : ChGlob X R.m), (twIdx Ch sel mu cst m2).Ok Ch sel mu cst G m2 → IdxProd sel mu cst (twIdx Ch sel mu cst m2) := by
   intro X Pr R Ch sel S₀ mu cst m2 G hok j b b' P hs
@@ -1430,16 +1430,16 @@ theorem idxProd_twIdx : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars
           SameDC (Pr := Pr) cst.sharp (i + 1) P.1 (st'.h b P) (st'.h b' P) → st'.h b P = st'.h b' P := by
         rintro st' rfl b b' hinj hs
         exact twNext_rep_eq_of_sameDC Ch sel mu cst _ hinj b b' P hs
-      exact key (twSt Ch sel mu cst m2 (i + 1)) (by rw [twSt, if_pos hi]) b b' (hok.inj i (by omega)) hs
+      exact key (twSt Ch sel mu cst m2 (i + 1)) (by rw [twSt, ite_eq_left hi]) b b' (hok.inj i (by omega)) hs
     · by_cases hi2 : i + 1 = m2 + 1
       · have key : ∀ st' : TwSt X Pr R (QE sel (mu : Chr X.F X.E X.K)) (i + 1), st' = twUnitSt _ (i + 1) →
             ∀ b b' : st'.β, st'.h b P = st'.h b' P := by
           rintro st' rfl b b'; rfl
-        exact key (twSt Ch sel mu cst m2 (i + 1)) (by rw [twSt, if_neg hi, if_pos hi2]) b b'
+        exact key (twSt Ch sel mu cst m2 (i + 1)) (by rw [twSt, ite_eq_right hi, ite_eq_left hi2]) b b'
       · have key : ∀ st' : TwSt X Pr R (QE sel (mu : Chr X.F X.E X.K)) (i + 1), st' = twEmptySt _ (i + 1) →
             ∀ b b' : st'.β, st'.h b P = st'.h b' P := by
           rintro st' rfl b; exact b.elim
-        exact key (twSt Ch sel mu cst m2 (i + 1)) (by rw [twSt, if_neg hi, if_neg hi2]) b b'
+        exact key (twSt Ch sel mu cst m2 (i + 1)) (by rw [twSt, ite_eq_right hi, ite_eq_right hi2]) b b'
 
 end GlobalTheory.TwBridge
 end -- clump:auto
@@ -1494,7 +1494,7 @@ theorem exists_int_sub_mem (N : ℕ) (hN : N ≠ 0) (J : Ideal (𝓞 K)) (hJ : I
   have hi : Function.Injective (Ideal.quotientMap J (Int.castRingHom (𝓞 K)) hle) :=
     Ideal.quotientMap_injective' fun r hr => Ideal.mem_span_singleton.2 (hinj r hr)
   have hc : Nat.card (𝓞 K ⧸ J) = N := by rw [← hJ, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 K ⧸ J) := Nat.finite_of_card_ne_zero (hc ▸ hN)
+  have : Finite (𝓞 K ⧸ J) := Nat.finite_of_card_ne_zero (hc ▸ hN)
   have hb := hi.bijective_of_nat_card_le (by
     rw [hc, Nat.card_congr (Int.quotientSpanNatEquivZMod N).toEquiv, Nat.card_zmod])
   obtain ⟨r, hr⟩ := hb.2 (Ideal.Quotient.mk J m)
@@ -1735,8 +1735,8 @@ theorem get_bij {Ch₀ : ℕ → Type} {A : TwDat I l Z u a Ch₀} (hA : A.Is) (
   refine ⟨fun β β' e => hA.chart_ext j (by omega) β β' ?_ ((h0 _).trans (h0 _).symm), fun b => ?_⟩
   · rw [← (A.b0 j β).of_get (by omega) (by omega), ← (A.b0 j β').of_get (by omega) (by omega)]
     exact congrArg (Idx.of · _) e
-  · haveI : NeZero (B.R.N j) := ⟨(B.R.N_pos j).ne'⟩
-    letI := B.fields.starE
+  · have : NeZero (B.R.N j) := ⟨(B.R.N_pos j).ne'⟩
+    let := B.fields.starE
     obtain ⟨p, -⟩ := exists_ptAt (R := B.R) I.sel (I.tup a) (I.cst a) (u := u) (j := j) (Formalism.L2.Col.DecoF.base _ _ _ _ _)
     refine ⟨A.chOf j ((I.stp u a j).cl (Idx.of b (by omega)) p), ?_⟩
     exact Idx.get_eq (congrArg Subtype.val (hA.rep j (by omega) _).1.symm) _
@@ -1813,7 +1813,7 @@ theorem res_of_tw (hI : I.Ok) {hP : PP ∈ Formalism.L2.Col.rowSG (B.primes X) I
     (hr.symm.trans h1.symm)
   refine Units.ext ((h.del _ x h3 h2 hx).trans ?_)
   rw [hξ z (Units.mk0 _ h0) r rfl hr, Units.val_inv_eq_inv_val]
-  exact congrArg _ ((congrArg _ (dif_pos h2)).trans h4)
+  exact congrArg _ ((congrArg _ (dite_eq_left h2)).trans h4)
 
 end Place
 

@@ -61,7 +61,7 @@ theorem _root_.GlobalTheory.laws5 (hG : _root_.ReciprocityTheory.ChartRestrictio
     hlin ιG' hG' ιA' hA'
   obtain ⟨x, ιD', h1, h2⟩ :=
     _root_.GlobalTheory.exists_oAct_of_isPullDeg hG R R' φ D.toPre D'.toPre hD O ιD
-  letI := x
+  let := x
   refine ⟨x, ιD', h1, h2, ?_, ?_⟩
   · apply _root_.GlobalTheory.PullLinear.oLinear_of_isPullUnif R R' I I' φ D D' hD A A' G G' bc hbc U U' hU O
       ιD ιD' ιA ιA' ιG ιG'

@@ -303,7 +303,7 @@ theorem theta_vanish_all_of_irreducible : GlobalTheory.Published.HoweDualityReal
     set F : ℝ → (WO W₁ X → ℂ) := fun t => ωB (1, oneP θ X τ Y t) Ψ with hF
     set V' := Submodule.span ℂ (Set.range F) with hV'
     have hV'le : V' ≤ V := Submodule.span_le.2 (by rintro _ ⟨t, rfl⟩; exact hV t)
-    haveI : FiniteDimensional ℂ V' := Submodule.finiteDimensional_of_le hV'le
+    have : FiniteDimensional ℂ V' := Submodule.finiteDimensional_of_le hV'le
     have hV'K : V' ≤ Kint := by
       refine Submodule.span_le.2 ?_
       rintro _ ⟨t, rfl⟩
@@ -320,7 +320,7 @@ theorem theta_vanish_all_of_irreducible : GlobalTheory.Published.HoweDualityReal
     have hmem : ∀ s : ℝ, s⁻¹ • (F (0 + s) - F 0) ∈ V' := fun s =>
       V'.smul_of_tower_mem _ (V'.sub_mem (Submodule.subset_span ⟨0 + s, rfl⟩) (Submodule.subset_span ⟨0, rfl⟩))
     have hΦ'V : Φ' ∈ V' :=
-      (Submodule.closed_of_finiteDimensional V').mem_of_tendsto hlim (Filter.Eventually.of_forall hmem)
+      (Submodule.isClosed_of_finiteDimensional V').mem_of_tendsto hlim (Filter.Eventually.of_forall hmem)
     exact hV'K hΦ'V
   rcases hm.irred.2 (K.map p') stf stl with hbot | htop
   · exfalso

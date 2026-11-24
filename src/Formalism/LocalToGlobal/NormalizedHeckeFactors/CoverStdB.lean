@@ -223,7 +223,7 @@ theorem jMt_injective (μ : D.what₂.Tup) (j : ℕ) : Function.Injective (D.wha
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL μ j)
   have hb := (D.what₂.jMt_basis μ j b).1
   have : Finite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL μ j)) := hb.finite
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL μ j))
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL μ j))
   refine (injective_iff_map_eq_zero (D.what₂.jMt μ j)).2 fun y hy => ?_
   have hsum := b.sum_repr y
 
@@ -249,14 +249,14 @@ theorem heckeStd_of_plain (T : NormalizedLocalCompatibility D M) (hP : HeckeStdP
   intro j w h1 h2 hw
   classical
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   by_cases hne : (D.nd.locs j w).Nonempty
   swap
   · have hsub : Subsingleton (T.B.V j w) := by
       by_contra hnt
       rw [not_subsingleton_iff_nontrivial] at hnt
       have h01 : (0 : Module.End (FractionRing (T.B.Oc j w)) (T.B.V j w)) ≠ 1 := zero_ne_one
-      haveI : Nontrivial (heckeAlg T.B j w) := ⟨⟨0, 1, fun h => h01 (congrArg Subtype.val h)⟩⟩
+      have : Nontrivial (heckeAlg T.B j w) := ⟨⟨0, 1, fun h => h01 (congrArg Subtype.val h)⟩⟩
       obtain ⟨I, hI⟩ := Ideal.exists_maximal (heckeAlg T.B j w)
       obtain ⟨i, hi, -⟩ := T.mx_all j w h1 h2 (hw.resolve_right hne) I hI
       exact hne ⟨i, hi⟩
@@ -280,10 +280,10 @@ theorem heckeStd_of_plain (T : NormalizedLocalCompatibility D M) (hP : HeckeStdP
     hP D.host.E D.R.nV (M (D.what₂.muTw w) j h1 h2).wt (M (D.what₂.muTw w) j h1 h2).J
       (M (D.what₂.muTw w) j h1 h2).χ (badPl D i0) (M (D.what₂.muTw w) j h1 h2).J_open hJ s ϖ k
       (hbad j w i0 hi0 v k s hvk hc) hu hvk.2.2.2.2.1 hvk.2.2.2.2.2
-  haveI := finite_chooseBasisIndex (D := D) j w
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
+  have := finite_chooseBasisIndex (D := D) j w
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
-  haveI : Module.Finite D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
+  have : Module.Finite D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
   have hb := T.B.iV_basis j w b
   let bV := Module.Basis.mk hb.1 hb.2.ge
   refine ⟨fun v k v' k' hvk hvk' => ?_, fun v k hvk μ hμ0 => ?_⟩
@@ -310,7 +310,7 @@ theorem heckeStd_of_plain (T : NormalizedLocalCompatibility D M) (hP : HeckeStdP
       rw [maxGenEigenspace_eq] at hμ0
       exact hasEigenvalue_of_hasGenEigenvalue hμ0
     have hroot := (hasEigenvalue_iff_isRoot_charpoly _ _).1 hev
-    haveI : Module.Finite (FractionRing (T.B.Oc j w)) (T.B.V j w) := hfd
+    have : Module.Finite (FractionRing (T.B.Oc j w)) (T.B.V j w) := hfd
     have hKpoly : (T.B.hK j w v k).charpoly = (T.B.hL j w v k).charpoly.map (T.B.ec j w) :=
       NCov.charpoly_transport (T.B.ec j w) (T.B.iV j w) b hb.1 hb.2 _ _ (fun x => T.B.hK_def j w v k x)
 

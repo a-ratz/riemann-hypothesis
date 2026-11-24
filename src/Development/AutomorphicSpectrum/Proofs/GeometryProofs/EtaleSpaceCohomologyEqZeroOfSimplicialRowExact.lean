@@ -102,7 +102,7 @@ theorem exists_diag (b : Fin r → E) (i : Fin r) {e : E} (he : e ∈ flagStep �
     rw [← Set.image_insert_eq]
     congr 1
     ext k
-    simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Fin.ext_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Fin.ext_iff]
     omega
   unfold flagStep at he
   rw [hs, Submodule.mem_span_insert] at he

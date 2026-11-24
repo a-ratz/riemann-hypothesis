@@ -140,7 +140,7 @@ theorem exists_linearEquiv_mulVec_of_charpoly (F E : Type) [Field F] [Field E] [
     rw [AdjoinRoot.powerBasis_dim] at h1
     exact h1.trans P.2.2.2.1
   have hpos : 0 < n := hdim ▸ Module.finrank_pos
-  haveI : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
   obtain ⟨v, hv⟩ := exists_ne (0 : Fin n → E)
   let f : Fld P →ₗ[E] (Fin n → E) :=
     { toFun := fun y => ψ y *ᵥ v

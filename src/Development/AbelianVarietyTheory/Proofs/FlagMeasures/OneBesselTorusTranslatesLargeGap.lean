@@ -126,7 +126,7 @@ theorem besselIntg_sum (L : LocBessel k r) {ι : Type} (s : Finset ι)
     besselIntg L (fun q => ∑ a ∈ s, F a q) g p = ∑ a ∈ s, besselIntg L (F a) g p := by
   ext η
 
-  simp [besselIntg, ContinuousLinearMap.sum_apply, map_sum, Finset.smul_sum]
+  simp [besselIntg, sum_apply, map_sum, Finset.smul_sum]
 
 end GlobalTheory.AmpTKOne
 end -- clump:auto
@@ -192,9 +192,9 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
     show ⟪w, w⟫_ℂ * ⟪y, y'⟫_ℂ / _ = _
     rw [this, one_mul, div_eq_inv_mul]
   have hfd := fdeg_ne_zero H L hDG hμ hw0
-  haveI : SigmaFinite μG := hμ.1
-  haveI : SigmaFinite μR := hR.1
-  haveI : SFinite (pairMeas L) := by
+  have : SigmaFinite μG := hμ.1
+  have : SigmaFinite μR := hR.1
+  have : SFinite (pairMeas L) := by
     have : SFinite L.μN := by unfold LocBessel.μN haarLie; infer_instance
     have : SigmaFinite L.μW := L.hμW.1.1
     have : SigmaFinite L.μW' := L.hμW'.1.1
@@ -202,7 +202,7 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
   have aG : ∀ᵐ y ∂μG, Matrix.of y ∈ UH (Hpk k r) := by rw [ae_iff]; exact hμ.2.2.1
   have aR : ∀ᵐ y ∂μR, Matrix.of y ∈ RStab k r γ := by rw [ae_iff]; exact hR.2.2.1
   have aν := ae_quot L hR hQ
-  haveI : SFinite ν := sfinite_of_lintegral ν (fun p => ‖pairMaj γ b p‖ₑ) hint.1.enorm
+  have : SFinite ν := sfinite_of_lintegral ν (fun p => ‖pairMaj γ b p‖ₑ) hint.1.eNorm
     (aν.mono fun p hp => by
       have : 0 < pairMaj γ b p :=
         Real.rpow_pos_of_pos (one_pos.trans_le (PI.PolynomialProperness.GN.gN_ge_one (point_mem L hγ hp))) _
@@ -229,7 +229,7 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
     conv_lhs => rw [← hinv]
     rw [lintegral_map (f := fun s => f fun i j => (Matrix.of (cj s) * Matrix.of x) i j) (mf.comp mc) mi]
     rfl
-  haveI : SFinite νR := sfinite_of_weil μG νR μR hR.2.1 a₂ m2 hW2
+  have : SFinite νR := sfinite_of_weil μG νR μR hR.2.1 a₂ m2 hW2
   have m1 : Measurable fun q : PairSp k r × Mt k r => stabAct γ (Matrix.of q.2) q.1 :=
     (measurable_fst.fst.fst.prodMk (meas_mul measurable_snd measurable_fst.fst.snd)).prodMk
       (measurable_fst.snd.fst.prodMk (meas_mul (mc.comp measurable_snd) measurable_fst.snd.snd))
@@ -265,7 +265,7 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
       hBe.1 (L.σ (γ * Matrix.of x) w) (hsmg _ (hG.mul_mem _ hγ _ hx) w hsm) v hv,
       hBe.2 (L.σ (Matrix.of x) w) (hsmg _ hx w hsm) v' hv']
     ext η
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_smul,
+    simp only [smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_smul,
       inner_smul_left, inner_conj_symm]
     congr 1
     ring
@@ -298,7 +298,7 @@ theorem oneAt : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (L : Formalism.MainNo
     ext η
     conv_lhs => rw [← e.sum_repr' η]
 
-    simp [ContinuousLinearMap.sum_apply, map_sum]
+    simp [sum_apply, map_sum]
   have hFe : ∀ g ∈ UH (Hpk k r), F g = ∑ i, ∑ j, coefF L (x i) (y i) (X i (e j)) (e j) g := by
     intro g hg
     rw [hF g hg]
@@ -540,7 +540,7 @@ theorem side_bessel (hH : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) 
     (hW : IsHaarOn (UWset k r z) μW) :
     ∃ l : L.Hs → Wp, (∀ x ∈ (GlobalTheory.AmpTK.rep L).sm, ∀ v ∈ (GlobalTheory.AmpTK.rep L).TK,
       Formalism.FourierDecayAlt.ThreeDimData.be z L.c π L.σ μW L.μN x v = (innerSL ℂ (l v)).smulRight (l x)) ∧ GlobalTheory.AmpTK.SmCW L l := by
-  haveI := FiniteDimensional.complete ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wp
   obtain ⟨μG, hG⟩ := GlobalTheory.SnMass.Inhab.exists_isHaarOn k r
   have hN := GlobalTheory.haarLie_isHaarOn_Nset k r L.κN hκ0 hκt.lt_top
   obtain ⟨νq, hq⟩ := GlobalTheory.exists_isQuotMeas_bessel_subgroup k r z μW L.μN μG hz hT hW hN hG
@@ -610,7 +610,7 @@ theorem exists_kFinCoef_torus_ne : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (L
       SmCW L m → (∃ x ∈ (rep L).TK, m x ≠ 0) →
       ∃ x₀ : L.Hs, (rep L).KFin x₀ ∧ m (L.σ (Formalism.MainNotions.FrameBoundFromBesselTorus.dM k r κ τ) x₀) ≠ 0 := by
     intro V _ _ _ m hm ⟨x, hxT, hx⟩
-    haveI := FiniteDimensional.complete ℂ V
+    have := FiniteDimensional.completeSpace ℂ V
     refine GlobalTheory.exists_kFin_ne_zero_of_cwCont hK k r L.ε L.lam (rep L) hDS V
       (fun v => m (L.σ (Formalism.MainNotions.FrameBoundFromBesselTorus.dM k r κ τ) v)) ?_ ?_ ?_ ?_
     · intro v hv w hw
@@ -659,7 +659,7 @@ theorem exists_kFinCoef_torus_ne : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (L
         intro u
         rw [← hinn _ hd x₀ (L.σ (Formalism.MainNotions.FrameBoundFromBesselTorus.dMi k r κ τ) u), hddi]
       ext w
-      simp only [Fin.sum_univ_one, ContinuousLinearMap.comp_apply, key, ContinuousLinearMap.smul_apply, hP, hQ, hX,
+      simp only [Fin.sum_univ_one, ContinuousLinearMap.comp_apply, key, smul_apply, hP, hQ, hX,
         map_smul, key2, inner_smul_right, smul_smul, mul_comm]
       exact congrArg (fun c : ℂ => c • ξ) (mul_comm _ _)
     · simp only [Fin.sum_univ_one]
@@ -776,16 +776,16 @@ theorem conj_mem_of_levi (A B n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k +
     have hea : ¬ mid k r (eI k r a) := by
       have := a.isLt; simp only [mid, eI]; omega
     rw [Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
-    · rw [hB1 _ _ hea, if_pos rfl, mul_one, Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
-      · rw [hn.2.1 a (eI k r a) (by simp [eI]), if_pos rfl, mul_one, hA1 _ _ hea]
+    · rw [hB1 _ _ hea, ite_eq_left rfl, mul_one, Matrix.mul_apply, Finset.sum_eq_single (eI k r a)]
+      · rw [hn.2.1 a (eI k r a) (by simp [eI]), ite_eq_left rfl, mul_one, hA1 _ _ hea]
       · intro l _ hl
         by_cases hla : a.val ≤ l.val
-        · rw [hn.2.1 a l hla, if_neg hl, mul_zero]
+        · rw [hn.2.1 a l hla, ite_eq_right hl, mul_zero]
         · have hlm : ¬ mid k r l := by have := a.isLt; simp only [mid]; omega
-          rw [hA1 i l hlm, if_neg (by rw [Fin.ext_iff]; omega), zero_mul]
+          rw [hA1 i l hlm, ite_eq_right (by rw [Fin.ext_iff]; omega), zero_mul]
       · simp
     · intro l _ hl
-      rw [hB1 _ _ hea, if_neg hl, mul_zero]
+      rw [hB1 _ _ hea, ite_eq_right hl, mul_zero]
     · simp
   · intro i j hj1 hj2 hi
     have hjm : mid k r j := ⟨hj1, hj2⟩
@@ -795,12 +795,12 @@ theorem conj_mem_of_levi (A B n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k +
       by_cases hm : mid k r m
       · congr 1
         rw [Matrix.mul_apply, Finset.sum_eq_single m]
-        · rw [hn.2.2 m m hm.1 hm.2 hm.1, if_pos rfl, mul_one]
+        · rw [hn.2.2 m m hm.1 hm.2 hm.1, ite_eq_left rfl, mul_one]
         · intro l _ hl
           by_cases hlr : r ≤ l.val
-          · rw [hn.2.2 l m hm.1 hm.2 hlr, if_neg hl, mul_zero]
+          · rw [hn.2.2 l m hm.1 hm.2 hlr, ite_eq_right hl, mul_zero]
           · have hlm : ¬ mid k r l := by simp only [mid]; omega
-            rw [hA1 i l hlm, if_neg (by rw [Fin.ext_iff]; omega), zero_mul]
+            rw [hA1 i l hlm, ite_eq_right (by rw [Fin.ext_iff]; omega), zero_mul]
         · simp
       · rw [hB3 m j hjm hm, mul_zero, mul_zero]
     rw [Finset.sum_congr rfl (fun m _ => key m), ← Matrix.mul_apply, hAB, Matrix.one_apply]
@@ -826,7 +826,7 @@ theorem cellQuot_props (c : Fin r → ℂ) (μ₁ μ : Matrix (Fin (k + 1)) (Fin
       · obtain ⟨s, rfl⟩ := mid_exists hi
         rw [jV_wI]
         simp only [Pi.single_apply, wI_inj.eq_iff]
-      · rw [jV_out _ hi, Pi.single_apply, if_neg (fun he : i = wI k r t => hi (he ▸ mid_wI t))]
+      · rw [jV_out _ hi, Pi.single_apply, ite_eq_right (fun he : i = wI k r t => hi (he ▸ mid_wI t))]
     have col : ((bigCell k r c μ₁)⁻¹ * bigCell k r c μ) m (wI k r t) =
         (((bigCell k r c μ₁)⁻¹ * bigCell k r c μ) *ᵥ Pi.single (wI k r t) 1) m := by
       rw [Matrix.mulVec_single_one]; rfl
@@ -1144,8 +1144,8 @@ theorem conv_good (k r : ℕ) (L : Formalism.MainNotions.S.LocBessel k r) (h : �
       rw [Matrix.diagonal_apply]
       show _ = if i = j then _ else _
       by_cases h : i = j
-      · rw [if_pos h, if_pos h, h]
-      · rw [if_neg h, if_neg h]
+      · rw [ite_eq_left h, ite_eq_left h, h]
+      · rw [ite_eq_right h, ite_eq_right h]
   have hR := GlobalTheory.AmpNorm.rStab_bigCell c μ₁ hc hg
   have hcd := GlobalTheory.CellAmp.Model.cellData_open L 0 _ hg hinv hG hmono hR
   exact GlobalTheory.CellMaj.cellConv k r L h 0 _ _ _ _ hκ hok hgap hcd hmono

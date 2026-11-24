@@ -200,7 +200,7 @@ theorem isClosed_UU (j : ℕ) : IsClosed {g : GA E k | UU j g} := by
       (⋂ i : Fin k, ⋂ c : Fin k, ⋂ (_ : (c : ℕ) < j),
         {g : GA E k | g.val i c = (1 : Matrix (Fin k) (Fin k) (Ad E)) i c})) := by
     ext g
-    simp only [UU, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [UU, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [e]
   exact IsClosed.inter (isClosed_iInter fun i => isClosed_iInter fun c => isClosed_iInter fun _ =>
       isClosed_eq (hc i c) continuous_const)

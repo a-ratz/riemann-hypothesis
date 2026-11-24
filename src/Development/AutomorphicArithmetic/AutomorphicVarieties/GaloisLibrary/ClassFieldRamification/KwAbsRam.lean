@@ -79,7 +79,7 @@ open scoped Pointwise
 private theorem mem_ker_iff {N d : ℕ} [NeZero N] (h : d ∣ N) (u : (ZMod N)ˣ) :
     u ∈ (ZMod.unitsMap h).ker ↔ (u : ZMod N).val ≡ 1 [MOD d] := by
   rw [MonoidHom.mem_ker, ZMod.unitsMap_def, Units.ext_iff, Units.coe_map, Units.val_one]
-  simp only [MonoidHom.coe_coe, ZMod.castHom_apply, ZMod.cast_eq_val]
+  simp only [MonoidHom.coe_ofClass, ZMod.castHom_apply, ZMod.cast_eq_val]
   rw [← Nat.cast_one, ZMod.natCast_eq_natCast_iff]
 
 private theorem ker_le_sup {N g d e : ℕ} [NeZero N] (hg : g ∣ N) (hd : d ∣ N) (he : e ∣ N)
@@ -107,7 +107,7 @@ private theorem ker_le_sup {N g d e : ℕ} [NeZero N] (hg : g ∣ N) (hd : d ∣
   have key : ZMod.unitsMap he (ZMod.unitOfCoprime k hkN) = ZMod.unitsMap he u := by
     ext
     rw [ZMod.unitsMap_def, Units.coe_map, Units.coe_map]
-    simp only [MonoidHom.coe_coe, ZMod.castHom_apply, ZMod.cast_eq_val]
+    simp only [MonoidHom.coe_ofClass, ZMod.castHom_apply, ZMod.cast_eq_val]
     rw [hvval, ZMod.natCast_eq_natCast_iff]
     exact ((Nat.mod_modEq k N).of_dvd he).trans hk2
   have hw : (ZMod.unitOfCoprime k hkN)⁻¹ * u ∈ (ZMod.unitsMap he).ker := by
@@ -204,15 +204,15 @@ theorem UpperTheory.V.CF.cycDescend :
     ∀ (a b : ℕ) [NeZero (a * b)] (C : Type) [Field C] [NumberField C] [IsCyclotomicExtension {a * b} ℚ C] (ζ : C) (F : IntermediateField ℚ C), a.Coprime b → IsPrimitiveRoot ζ (a * b) → (∀ p : ℕ, p.Prime → p ∣ b → UnramAt F p) → F ≤ ℚ⟮ζ ^ b⟯ := by
   intro a b _ C _ _ _ ζ F hab hζ hunr
   have hb0 : b ≠ 0 := right_ne_zero_of_mul (NeZero.ne (a * b))
-  haveI : IsGalois ℚ C := IsCyclotomicExtension.isGalois {a * b} ℚ C
+  have : IsGalois ℚ C := IsCyclotomicExtension.isGalois {a * b} ℚ C
   set χ := IsCyclotomicExtension.Rat.galEquivZMod (a * b) C with hχ
   have hcomm : ∀ σ τ : Gal(C/ℚ), τ * σ * τ⁻¹ = σ := by
     intro σ τ
     apply χ.injective
     rw [map_mul, map_mul, map_inv, mul_comm (χ τ), mul_assoc, mul_inv_cancel, mul_one]
-  haveI : F.fixingSubgroup.Normal := ⟨fun σ hσ τ => by rw [hcomm]; exact hσ⟩
+  have : F.fixingSubgroup.Normal := ⟨fun σ hσ τ => by rw [hcomm]; exact hσ⟩
   have hFF : fixedField F.fixingSubgroup = F := IsGalois.fixedField_fixingSubgroup F
-  haveI hgF : IsGalois ℚ F := by
+  have hgF : IsGalois ℚ F := by
     have h := IsGalois.of_fixedField_normal_subgroup F.fixingSubgroup
     rw [hFF] at h
     convert h
@@ -231,13 +231,13 @@ theorem UpperTheory.V.CF.cycDescend :
     refine iSup₂_le fun p hp => ?_
     have hpp : p.Prime := Nat.prime_of_mem_primeFactors hp
     have hpb : p ∣ b := Nat.dvd_of_mem_primeFactors hp
-    haveI : Fact p.Prime := ⟨hpp⟩
-    haveI : (Ideal.span {(p : ℤ)}).IsMaximal :=
+    have : Fact p.Prime := ⟨hpp⟩
+    have : (Ideal.span {(p : ℤ)}).IsMaximal :=
       PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hpp).irreducible
     obtain ⟨P, hPm, hPl⟩ :=
       Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 C) (Ideal.span {(p : ℤ)})
-    haveI := hPm
-    haveI := hPl
+    have := hPm
+    have := hPl
     have hpP : (p : 𝓞 C) ∈ P := by
       have h1 : (p : ℤ) ∈ Ideal.span {(p : ℤ)} := Ideal.mem_span_singleton_self _
       rw [Ideal.LiesOver.over (P := P) (p := Ideal.span {(p : ℤ)}), Ideal.under_def,
@@ -248,7 +248,7 @@ theorem UpperTheory.V.CF.cycDescend :
       exact (Nat.cast_ne_zero.mpr hpp.ne_zero) hpP⟩
     rw [← KStar.Ram.map_inertia_eq p P]
     exact Subgroup.map_mono (hin p hpp hpb w hpP)
-  rw [← IsGalois.fixedField_fixingSubgroup ℚ⟮ζ ^ b⟯, IntermediateField.le_iff_le]
+  rw [← IsGalois.fixedField_fixingSubgroup ℚ⟮ζ ^ b⟯, le_fixedField_iff_le_fixingSubgroup]
   intro σ hσ
   have hfix : σ (ζ ^ b) = ζ ^ b := (IntermediateField.mem_fixingSubgroup_iff _ σ).mp hσ _
     (IntermediateField.mem_adjoin_simple_self ℚ _)
@@ -304,9 +304,9 @@ theorem UpperTheory.V.CF.kwRam :
   have ha0 : a ≠ 0 := by rintro rfl; simp at hN
   have hb0 : b ≠ 0 := by rintro rfl; simp at hN
   have hab : a.Coprime b := Nat.Coprime.coprime_dvd_left ha (hb.pow_right n).symm
-  haveI : NeZero (a * b) := ⟨hN.ne'⟩
-  haveI : NeZero ((a * b : ℕ) : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
-  haveI : IsCyclotomicExtension {a * b} ℚ (CyclotomicField (a * b) ℚ) := by
+  have : NeZero (a * b) := ⟨hN.ne'⟩
+  have : NeZero ((a * b : ℕ) : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
+  have : IsCyclotomicExtension {a * b} ℚ (CyclotomicField (a * b) ℚ) := by
     convert CyclotomicField.isCyclotomicExtension (a * b) ℚ
     · rfl
   obtain ⟨ζ, hζ⟩ : ∃ z : CyclotomicField (a * b) ℚ, IsPrimitiveRoot z (a * b) :=
@@ -316,7 +316,7 @@ theorem UpperTheory.V.CF.kwRam :
   have hF : ∀ p : ℕ, p.Prime → p ∣ b → UnramAt F p := by
     intro p hp hpb
     have hpM : ¬ p ∣ M := fun h => hp.not_dvd_one (Nat.Coprime.gcd_eq_one hb ▸ Nat.dvd_gcd hpb h)
-    letI : Algebra F L := e.symm.toRingHom.toAlgebra
+    let : Algebra F L := e.symm.toRingHom.toAlgebra
     exact unramIff.2.2 F L p hp (hram p hp hpM)
   have hle := cycDescend a b (CyclotomicField (a * b) ℚ) ζ F hab hζ hF
   have hζb : IsPrimitiveRoot (ζ ^ b) a := by
@@ -324,9 +324,9 @@ theorem UpperTheory.V.CF.kwRam :
     rwa [Nat.mul_div_cancel a (Nat.pos_of_ne_zero hb0)] at h
   have hapos : 0 < a := Nat.pos_of_ne_zero ha0
   have hint : IsIntegral ℚ (ζ ^ b) := (hζb.isIntegral hapos).tower_top
-  haveI : NeZero (M ^ n) := ⟨pow_ne_zero _ hM.ne'⟩
-  haveI : NeZero ((M ^ n : ℕ) : ℚ) := ⟨by exact_mod_cast pow_ne_zero _ hM.ne'⟩
-  haveI : IsCyclotomicExtension {M ^ n} ℚ (CyclotomicField (M ^ n) ℚ) := by
+  have : NeZero (M ^ n) := ⟨pow_ne_zero _ hM.ne'⟩
+  have : NeZero ((M ^ n : ℕ) : ℚ) := ⟨by exact_mod_cast pow_ne_zero _ hM.ne'⟩
+  have : IsCyclotomicExtension {M ^ n} ℚ (CyclotomicField (M ^ n) ℚ) := by
     convert CyclotomicField.isCyclotomicExtension (M ^ n) ℚ
     · rfl
   obtain ⟨ω, hω⟩ : ∃ z : CyclotomicField (M ^ n) ℚ, IsPrimitiveRoot z (M ^ n) :=
@@ -358,12 +358,12 @@ theorem UpperTheory.V.CF.kwRamSub :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosed Ω] (L : IntermediateField ℚ Ω) [NumberField L] [IsAbelianGalois ℚ L] (M : ℕ), 0 < M → (∀ p : ℕ, p.Prime → ¬ p ∣ M → UnramAt L p) → ∃ (n : ℕ) (ζ : Ω), IsPrimitiveRoot ζ (M ^ n) ∧ L ≤ ℚ⟮ζ⟯ := by
   intro Ω _ _ _ L _ _ M hM hram
   obtain ⟨n, ⟨g⟩⟩ := kwRam L M hM hram
-  haveI : NeZero (M ^ n) := ⟨by positivity⟩
-  haveI : NeZero ((M ^ n : ℕ) : ℚ) := ⟨by exact_mod_cast (show M ^ n ≠ 0 by positivity)⟩
-  haveI : IsCyclotomicExtension {M ^ n} ℚ (CyclotomicField (M ^ n) ℚ) := by
+  have : NeZero (M ^ n) := ⟨by positivity⟩
+  have : NeZero ((M ^ n : ℕ) : ℚ) := ⟨by exact_mod_cast (show M ^ n ≠ 0 by positivity)⟩
+  have : IsCyclotomicExtension {M ^ n} ℚ (CyclotomicField (M ^ n) ℚ) := by
     convert CyclotomicField.isCyclotomicExtension (M ^ n) ℚ
     · rfl
-  haveI : NumberField (CyclotomicField (M ^ n) ℚ) :=
+  have : NumberField (CyclotomicField (M ^ n) ℚ) :=
     IsCyclotomicExtension.numberField {M ^ n} ℚ _
   have hgal : IsGalois ℚ L := IsAbelianGalois.toIsGalois
   obtain ⟨ξ, hξ⟩ : ∃ z : CyclotomicField (M ^ n) ℚ, IsPrimitiveRoot z (M ^ n) :=
@@ -404,13 +404,13 @@ private theorem abelian_ramification_cyclotomic_bound (Ω : Type) [Field Ω] [Ch
     (hI : ∀ A : ValuationSubring Ω, ¬ A.valuation (M : Ω) < 1 → Ine (F := ℚ) A ≤ V) :
     ∃ n : ℕ, ∀ g : G ℚ Ω, (∀ ζ : Ω, ζ ^ M ^ n = 1 → g ζ = ζ) → g ∈ V := by
   classical
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   set L : IntermediateField ℚ Ω := IntermediateField.fixedField V with hLdef
   have hVc : IsClosed (V : Set (G ℚ Ω)) := Subgroup.isClosed_of_isOpen V hV
   have hLV : L.fixingSubgroup = V :=
     InfiniteGalois.fixingSubgroup_fixedField ⟨V, hVc⟩
-  haveI : FiniteDimensional ℚ L := by
+  have : FiniteDimensional ℚ L := by
     rw [← InfiniteGalois.isOpen_iff_finite]
     rw [hLV]
     exact hV
@@ -422,7 +422,7 @@ private theorem abelian_ramification_cyclotomic_bound (Ω : Type) [Field Ω] [Ch
     have : g * v * g⁻¹ = (g * v * g⁻¹ * v⁻¹) * v := by group
     rw [this]
     exact V.mul_mem hcm hv
-  haveI : IsGalois ℚ L := by
+  have : IsGalois ℚ L := by
     have := (InfiniteGalois.normal_iff_isGalois L).1 (by rw [hLV]; exact hVn)
     convert this
   have hres : ∀ σ : G ℚ Ω, resTo ℚ L Ω σ = 1 ↔ σ ∈ V := by
@@ -439,7 +439,7 @@ private theorem abelian_ramification_cyclotomic_bound (Ω : Type) [Field Ω] [Ch
       have h2 : σ (algebraMap L Ω x) = algebraMap L Ω x := h x.1 x.2
       rw [h2] at this
       simpa using this
-  haveI : IsMulCommutative Gal(L/ℚ) := by
+  have : IsMulCommutative Gal(L/ℚ) := by
     refine ⟨⟨fun a b => ?_⟩⟩
     obtain ⟨g, rfl⟩ := resTo_surjective ℚ L Ω a
     obtain ⟨h, rfl⟩ := resTo_surjective ℚ L Ω b
@@ -452,7 +452,7 @@ private theorem abelian_ramification_cyclotomic_bound (Ω : Type) [Field Ω] [Ch
         = (resTo ℚ L Ω g * resTo ℚ L Ω h * (resTo ℚ L Ω g)⁻¹ * (resTo ℚ L Ω h)⁻¹) *
             (resTo ℚ L Ω h * resTo ℚ L Ω g) := by group
       _ = resTo ℚ L Ω h * resTo ℚ L Ω g := by rw [h1, one_mul]
-  haveI : IsAbelianGalois ℚ L := ⟨⟩
+  have : IsAbelianGalois ℚ L := ⟨⟩
   have hunr : ∀ p : ℕ, Nat.Prime p → ¬ p ∣ M → UnramAt L p := by
     intro p hp hpM
     rw [(unramIff.1 L p hp)]
@@ -491,7 +491,7 @@ private theorem abelian_ramification_cyclotomic_bound (Ω : Type) [Field Ω] [Ch
     hLζ.trans (IntermediateField.adjoin_simple_le_iff.2 hζS)
   have hgS : g ∈ S := hg ζ hζ.pow_eq_one
   rw [← hLV]
-  exact (IntermediateField.le_iff_le S L).1 hLS hgS
+  exact (le_fixedField_iff_le_fixingSubgroup S L).1 hLS hgS
 
 theorem UpperTheory.V.CF.kwAbsRam :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (V : Subgroup (G ℚ Ω)), IsOpen (V : Set (G ℚ Ω)) → commutator (G ℚ Ω) ≤ V → ∀ M : ℕ, 0 < M → (∀ A : ValuationSubring Ω, ¬ A.valuation (M : Ω) < 1 → Ine (F := ℚ) A ≤ V) → ∃ n : ℕ, ∀ g : G ℚ Ω, (∀ ζ : Ω, ζ ^ M ^ n = 1 → g ζ = ζ) → g ∈ V := by

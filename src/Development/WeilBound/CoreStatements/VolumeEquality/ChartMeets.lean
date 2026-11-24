@@ -195,7 +195,7 @@ theorem not_eventually_zero {σ : Type} [Fintype σ] {E : Type} [NormedAddCommGr
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   have htrans : Transcendental (Algebra.adjoin ℤ (Set.range x)) (Ideal.Quotient.mk P g) := by
     intro halg
-    obtain ⟨r, hr0, t, ht⟩ := halg.exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero hgbar)
+    obtain ⟨r, hr0, t, ht⟩ := halg.exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero hgbar)
     have ht' : (r : MvPolynomial σ ℤ ⧸ P) = Ideal.Quotient.mk P g * t := ht
     have hr : (r : MvPolynomial σ ℤ ⧸ P) ∈ (aeval (R := ℤ) x).range := by
       rw [← Algebra.adjoin_range_eq_range_aeval]
@@ -239,7 +239,7 @@ open GroundTheory.Heights₂.Heights.LowerBoundFree GlobalTheory.CompanionTheory
 theorem trdeg_of_arithVar {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {P : Ideal (MRing J)} {n : ℕ}
     (h : IsArithVar P (n + 1)) : Algebra.trdeg ℤ (MRing J ⧸ P) = ((n + Fintype.card K : ℕ) : Cardinal) := by
   obtain ⟨_, ⟨hP, _, _⟩, hhor, hdim⟩ := h
-  haveI := hP
+  have := hP
   have hinj : Function.Injective (algebraMap ℤ (MRing J ⧸ P)) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro a ha
@@ -263,7 +263,7 @@ theorem trdeg_of_arithVar {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintyp
 
 theorem chartMeets : ChartMeets := by
   intro X Ω _ _ ξ K _ J _ y n Bd χ U htie hspec harith hU
-  haveI : (mCoordIdeal y).IsPrime := harith.2.1.1
+  have : (mCoordIdeal y).IsPrime := harith.2.1.1
   have hhom : IsMultiHomogIdeal (mCoordIdeal y) := harith.2.1.2.1
   have hconv : ∀ (w : (k : K) × J k → ℂ) (f : MvPolynomial ((k : K) × J k) ℤ),
       aeval w f = MvPolynomial.eval w (MvPolynomial.map (Int.castRingHom ℂ) f) := by

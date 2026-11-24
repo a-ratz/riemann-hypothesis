@@ -226,7 +226,7 @@ theorem UpperTheory.V.Pa.Det.z1Fg :
         obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective _ x
         simp
         rfl }
-  haveI := finite_quotient_X_pow_one_smul_module_of_free (K := K) (M := M)
+  have := finite_quotient_X_pow_one_smul_module_of_free (K := K) (M := M)
   have hl' : ∀ m : M ⧸ (Ideal.span {(PowerSeries.X : PowerSeries K)} ^ 1 •
       (⊤ : Submodule (PowerSeries K) M)), l • m = 0 := by
     intro m
@@ -252,16 +252,16 @@ theorem UpperTheory.V.Pa.Det.z1Fg :
     show Submodule.mkQ _ (z.1 (g * h)) = Submodule.mkQ _ (z.1 g) + Submodule.mkQ _ (ρ g (z.1 h))
     rw [hz2, map_add (f := _)]
   have hS := Det.locallyConstant_cocycles_finite_of_phi l ρbar hΦ hl' hloc
-  haveI : Finite (Set.range Ψ) := (hS.subset hrange).to_subtype
-  haveI : Finite (C ⧸ Ideal.span {(PowerSeries.X : PowerSeries K)} • (⊤ : Submodule (PowerSeries K) C)) :=
+  have : Finite (Set.range Ψ) := (hS.subset hrange).to_subtype
+  have : Finite (C ⧸ Ideal.span {(PowerSeries.X : PowerSeries K)} • (⊤ : Submodule (PowerSeries K) C)) :=
     Finite.of_injective_finite_range hinj
-  haveI : Module.Finite (PowerSeries K)
+  have : Module.Finite (PowerSeries K)
       (C ⧸ Ideal.span {(PowerSeries.X : PowerSeries K)} • (⊤ : Submodule (PowerSeries K) C)) :=
     Module.Finite.of_finite
-  haveI := hH
+  have := hH
   have hCfin : Module.Finite (PowerSeries K) C :=
     (UpperTheory.V.abelian₂.nakayama (PowerSeries K) (Ideal.span {(PowerSeries.X : PowerSeries K)}) C).2 inferInstance
-  haveI := isNoetherian_of_isNoetherianRing_of_finite (PowerSeries K) C
+  have := isNoetherian_of_isNoetherianRing_of_finite (PowerSeries K) C
   have hfg : (Z.comap C.subtype).FG := IsNoetherian.noetherian _
   have := hfg.map C.subtype
   rwa [Submodule.map_comap_eq, Submodule.range_subtype, inf_eq_right.mpr hZC] at this

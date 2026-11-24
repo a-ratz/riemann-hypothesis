@@ -128,7 +128,7 @@ theorem UpperTheory.V.Z.Sym.So.detRoot :
   have hv : (ratGL L 2 γ₀).val = γ₀.val.map (algebraMap L (Ad L)) := rfl
   rw [hv, GlobalTheory.DefU.ClassFin.cT_map (algebraMap L (Ad L)) (IsCMField.complexConj L).toRingEquiv.toRingHom (conjAd L)
     (fun y => (conjAd_algebraMap y).symm), ← Matrix.map_mul] at hg
-  haveI hnt : Nontrivial (Ad L) := show Nontrivial (InfiniteAdeleRing L × FiniteAdeleRing (𝓞 L) L) from inferInstance
+  have hnt : Nontrivial (Ad L) := show Nontrivial (InfiniteAdeleRing L × FiniteAdeleRing (𝓞 L) L) from inferInstance
   have hUL : Formalism.UG.cT (IsCMField.complexConj L).toRingEquiv.toRingHom γ₀.val * γ₀.val = 1 := by
     ext i j
     have := congrFun₂ hg i j

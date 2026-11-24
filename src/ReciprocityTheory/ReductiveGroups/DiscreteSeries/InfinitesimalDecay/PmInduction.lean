@@ -214,8 +214,8 @@ theorem cns_ofSum_core (dual : Bool) {ε : Fin n → Bool} {μ lam' : Fin n → 
           (tensGrp dual (rreg ε) g (fun d => ((F d : smD ε (rreg ε)) : L2 ε)) c) := by
   obtain ⟨⟨h, hh, hth⟩, hgap, hP, hv, hpos, hW, hG⟩ := hok
   obtain ⟨⟨h', hh', hth'⟩, hgap', hP', hv', hpos', hW', hG'⟩ := hok'
-  haveI := Hlam_nontrivial hgap hP hv
-  haveI := Hlam_nontrivial hgap' hP' hv'
+  have := Hlam_nontrivial hgap hP hv
+  have := Hlam_nontrivial hgap' hP' hv'
   obtain ⟨w, hw⟩ := exists_ne (0 : Hlam ε Ψ T.w)
   obtain ⟨w', hw'⟩ := exists_ne (0 : Hlam ε Ψ' T'.w)
   obtain ⟨⟨ι, hι, -, -⟩, -⟩ := cc_gk dual hgap hP hv hgap' hP' hv' hh hth hh' hth' hpos hpos' hW hW' hG hG'

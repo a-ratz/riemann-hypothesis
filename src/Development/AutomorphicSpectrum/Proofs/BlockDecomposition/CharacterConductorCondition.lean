@@ -223,7 +223,7 @@ theorem exists_int_kernel {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F ψ) :
       have ha' : a = 0 := ha
       subst ha'
       simp [hn, h00])
-  haveI := af_nontrivial (F := F)
+  have := af_nontrivial (F := F)
   have hinj : Function.Injective fun β : 𝓞 F => algebraMap F (Af F) (β : F) :=
     (algebraMap F (Af F)).injective.comp RingOfIntegers.coe_injective
   obtain ⟨a, ⟨β₁, rfl⟩, b, ⟨β₂, rfl⟩, hab, hsub⟩ := exists_sub_mem_of_infinite hI

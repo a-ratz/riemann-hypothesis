@@ -178,7 +178,7 @@ private theorem mem_map_smul_of_maximalIdeal_pow_le {V A N : Type*} [CommRing V]
     exact top_le_iff.1 hk
   have hk1 : ¬ IsLocalRing.maximalIdeal V ^ (Nat.find hex - 1) ≤ J :=
     Nat.find_min hex (by omega)
-  obtain ⟨a, ha, haJ⟩ := SetLike.not_le_iff_exists.1 hk1
+  obtain ⟨a, ha, haJ⟩ := IsConcreteLE.not_le_iff_exists.1 hk1
   have hma : ∀ b ∈ IsLocalRing.maximalIdeal V, a * b ∈ J := by
     intro b hb
     apply hk

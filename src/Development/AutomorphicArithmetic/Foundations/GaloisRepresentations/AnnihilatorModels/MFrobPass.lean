@@ -97,7 +97,7 @@ private theorem frob_mid (hI : InfE) {p : ℕ} [Fact p.Prime] {D : Datum p} {R :
 theorem UpperTheory.Gal.crystallineComparison.Mod.frobPass_of :
     InfE → FrobPass := by
   intro hI p _ D R _ b N r f κ _ _ _ s o o' ψ hψ d hrep hcard
-  haveI := hψ
+  have := hψ
   have hp : Nat.Prime p := Fact.out
   have hone' : ∀ {X A B : Over (Sp κ)} [GrpObj A] [GrpObj B] (h : A ⟶ B) [IsMonHom h], (1 : X ⟶ A) ≫ h = 1 := by
     intro X A B _ _ h _

@@ -188,14 +188,14 @@ theorem tendsto_inner_of_dense {P : ℕ → (H →L[ℂ] H)} (hP : ∀ m, ‖P m
     rw [dist_eq_norm, dist_eq_norm, ← inner_sub_left]
     calc ‖⟪x - y, P m a'⟫_ℂ‖ ≤ ‖x - y‖ * ‖P m a'‖ := norm_inner_le_norm _ _
       _ ≤ ‖x - y‖ * ‖a'‖ := by gcongr; exact hb m a'
-      _ = ‖a'‖₊ * ‖x - y‖ := by rw [coe_nnnorm, mul_comm]
+      _ = ‖a'‖₊ * ‖x - y‖ := by rw [coe_nnNorm, mul_comm]
   have hlip2 : ∀ b' : H, UniformEquicontinuous (fun m (y : H) => ⟪b', P m y⟫_ℂ) := by
     intro b'
     refine LipschitzWith.uniformEquicontinuous _ ‖b'‖₊ fun m => LipschitzWith.of_dist_le_mul fun x y => ?_
     rw [dist_eq_norm, dist_eq_norm, ← inner_sub_right, ← map_sub]
     calc ‖⟪b', P m (x - y)⟫_ℂ‖ ≤ ‖b'‖ * ‖P m (x - y)‖ := norm_inner_le_norm _ _
       _ ≤ ‖b'‖ * ‖x - y‖ := by gcongr; exact hb m _
-      _ = ‖b'‖₊ * ‖x - y‖ := by rw [coe_nnnorm]
+      _ = ‖b'‖₊ * ‖x - y‖ := by rw [coe_nnNorm]
   have step1 : ∀ a' ∈ S, ∀ b' : H, Tendsto (fun m => ⟪b', P m a'⟫_ℂ) atTop (𝓝 (q b' a')) := by
     intro a' ha' b'
     have hf : Continuous fun x => q x a' := hq.comp (Continuous.prodMk_left a')

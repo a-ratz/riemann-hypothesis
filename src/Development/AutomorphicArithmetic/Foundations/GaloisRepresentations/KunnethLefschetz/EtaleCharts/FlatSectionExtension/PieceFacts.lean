@@ -49,19 +49,19 @@ private theorem e1 {K : Type} [CommRing K] {W Z Y T : Scheme.{0}} {q : Z ⟶ Spe
     {D : E.LineData Y} {d : ℕ} (B : Blow q i π D d) (j : T ⟶ Y) (p : B.ι × Fin d) :
     tI B j p ≫ eP B j = (oT B j p).ι := by
   unfold tI eP
-  rw [Sigma.ι_desc]
+  rw [Sigma.ι_comp_desc]
 
 private theorem e2 {K : Type} [CommRing K] {W Z Y T : Scheme.{0}} {q : Z ⟶ Spec (CommRingCat.of K)} {i : W ⟶ Z} {π : Y ⟶ Z}
     {D : E.LineData Y} {d : ℕ} (B : Blow q i π D d) (j : T ⟶ Y) (p : B.ι × Fin d) :
     tI B j p ≫ tauP B j = secOf B p.1 p.2 ((oT B j p).ι ≫ j) (oT_le B j p) := by
   unfold tI tauP
-  rw [Sigma.ι_desc]
+  rw [Sigma.ι_comp_desc]
 
 private theorem e3 {K : Type} [CommRing K] {W Z Y T : Scheme.{0}} {q : Z ⟶ Spec (CommRingCat.of K)} {i : W ⟶ Z} {π : Y ⟶ Z}
     {D : E.LineData Y} {d : ℕ} (B : Blow q i π D d) (j : T ⟶ Y) (r : T ⟶ W) (hw : j ≫ π = r ≫ i) (p : B.ι × Fin d) :
     tI B j p ≫ rhoP B j r hw = rhoC B j r hw p ≫ wI B p.1 := by
   unfold tI rhoP
-  rw [Sigma.ι_desc]
+  rw [Sigma.ι_comp_desc]
 
 theorem UpperTheory.Gal.KunnethLefschetz.G.PX.pieceFacts :
     ∀ {K : Type} [CommRing K] {W Z Y : Scheme.{0}} {q : Z ⟶ Spec (CommRingCat.of K)} {i : W ⟶ Z} {π : Y ⟶ Z} {D : E.LineData Y} {d : ℕ} (B : Blow q i π D d) {T : Scheme.{0}} (j : T ⟶ Y) (r : T ⟶ W) (hw : j ≫ π = r ≫ i) (v : Fin d → Γ(TP B j, ⊤)), IsV B j v → ∀ (p : B.ι × Fin d) {V : Scheme.{0}} (a₁ : V ⟶ (oT B j p : Scheme.{0})), ∃ h : ⊤ ≤ ((a₁ ≫ tI B j p) ≫ eP B j ≫ j) ⁻¹ᵁ (B.c p.1).C p.2, (a₁ ≫ tI B j p).appTop.hom ∘ v = uV B p.1 p.2 _ h ∧ (a₁ ≫ tI B j p) ≫ tauP B j = secOf B p.1 p.2 _ h ∧ (a₁ ≫ tI B j p) ≫ rhoP B j r hw = (a₁ ≫ rhoC B j r hw p) ≫ wI B p.1 := by

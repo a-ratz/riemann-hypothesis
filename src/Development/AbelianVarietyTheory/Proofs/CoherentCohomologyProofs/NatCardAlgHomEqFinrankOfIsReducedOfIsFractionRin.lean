@@ -166,7 +166,7 @@ theorem etale_of_isReduced_of_perfectField (K S : Type*) [Field K] [PerfectField
     [Algebra K S] [Module.Finite K S] [IsReduced S] : Algebra.Etale K S := by
   have : IsArtinianRing S := .of_finite K S
   have (I : MaximalSpectrum S) : Algebra.FormallyEtale K (S ⧸ I.asIdeal) := by
-    letI := Ideal.Quotient.field I.asIdeal
+    let := Ideal.Quotient.field I.asIdeal
     exact Algebra.FormallyEtale.of_isSeparable K (S ⧸ I.asIdeal)
   exact ⟨.of_equiv ((IsArtinianRing.equivPi S).restrictScalars K).symm,
     Algebra.FinitePresentation.of_finiteType.mp inferInstance⟩

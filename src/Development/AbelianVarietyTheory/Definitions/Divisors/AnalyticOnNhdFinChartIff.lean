@@ -372,7 +372,7 @@ variable (φ) in
 theorem logNormSec_locSec (s : B.ι → CxPts p σ → ℂ) (y : CxPts p σ) :
     logNormSec φ.locPot (φ.locSec s) y = 1 / 2 * Real.log (φ.nsq s y) := by
   have e : φ.nsq s y = (‖φ.locSec s y y‖ * Real.exp (-φ.locPot.φ y y)) ^ 2 := by
-    rw [mul_pow, ← Real.exp_nat_mul, locPot_φ, nsq, locSec_apply]
+    rw [mul_pow, ← Real.exp_natCast_mul, locPot_φ, nsq, locSec_apply]
     congr 2
     push_cast
     ring

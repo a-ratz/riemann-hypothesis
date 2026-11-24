@@ -122,8 +122,8 @@ variable {E : Type} [Field E] [NumberField E]
 theorem exists_conj_mem {a : ℕ} (ha : 1 ≤ a) (v : HeightOneSpectrum (𝓞 E)) (g : GL (Fin a) (v.adicCompletion E))
     (u : (v.adicCompletion E)ˣ) (hu : IsUnitAt v u) :
     ∃ h ∈ GlobalTheory.LFun.KGL v (n := a), g⁻¹ * h * g ∈ GlobalTheory.LFun.KGL v (n := a) ∧ GeneralLinearGroup.det h = u := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
   have hK : GlobalTheory.SplitWeil.KO (v.adicCompletion E) (Fin a) = GlobalTheory.LFun.KGL v (n := a) :=
     GlobalTheory.SmGL.SphCompletion.KO_completion v a
   obtain ⟨x, hx, y, hy, t, rfl⟩ := GlobalTheory.LocalCartan.exists_diagT (n := Fin a) g

@@ -154,13 +154,13 @@ theorem dualSel_of_smul_cob : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R
     have h1 := hy.2.2 v hv x hxc
     have h2 := cupB_right _ ((repOn (Tgl i s) κ Y).comp (DecV N v).subtype) ((repOn ρ κ⁻¹ Y').comp (DecV N v).subtype)
       (vecPair D.R.r β) (fun g => hP g.1) x.1 _ (fun g => e.compLeft _ (z g.1)) m' x.2.1 x.2.2
-      (hcm.comp continuous_subtype_val) (fun g => hz g.1) h1
+      (hcm.comp continuous_subtypeVal) (fun g => hz g.1) h1
     have h3 : (Submodule.Quotient.mk x₂ : H1 _) = Submodule.Quotient.mk (cocycles1MapOfEquivariant _ _ (f.compLeft (Fin D.R.r))
         continuous_of_discreteTopology (fun g m => repOn_map (Tgl i s) κ f g.1 m) x) := hxe.symm
     obtain ⟨w, hw⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.eq _).1 h3)
     refine cupB_left _ ((repOn (Tgl i s) κ Y₂).comp (DecV N v).subtype) ((repOn ρ κ⁻¹ Y₂').comp (DecV N v).subtype)
       (vecPair D.R.r β₂) (fun g => hP₂ g.1) (fun g => f.compLeft _ (x.1 g)) x₂.1 (fun g => z g.1) w
-      (hzc.comp continuous_subtype_val) (fun g h => hzz g.1 h.1) (fun g => ?_) ?_
+      (hzc.comp continuous_subtypeVal) (fun g h => hzz g.1 h.1) (fun g => ?_) ?_
     · rw [← hw g]
       exact (add_sub_cancel _ _).symm
     · obtain ⟨F, hF, h2⟩ := h2
@@ -354,10 +354,10 @@ theorem exists_not_cob : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.ho
   by_contra hcon
   have hcob : ∀ y : Z1 (repOn ρ κ⁻¹ A), DualSel bkP i s κ ρ β Q y → Cob (repOn ρ κ⁻¹ A) (fun g => c • y.1 g) :=
     fun y hy => by_contra fun h => hcon ⟨y, hy, h⟩
-  haveI : NeZero (X.l i ^ (nu X i + 1)) := ⟨pow_ne_zero _ (Fact.out : (X.l i).Prime).ne_zero⟩
-  letI : TopologicalSpace (Quo (c * t) Y) := ⊥
-  haveI : DiscreteTopology (Quo (c * t) Y) := ⟨rfl⟩
-  haveI : Finite (Quo (c * t) Y) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
+  have : NeZero (X.l i ^ (nu X i + 1)) := ⟨pow_ne_zero _ (Fact.out : (X.l i).Prime).ne_zero⟩
+  let : TopologicalSpace (Quo (c * t) Y) := ⊥
+  have : DiscreteTopology (Quo (c * t) Y) := ⟨rfl⟩
+  have : Finite (Quo (c * t) Y) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
   obtain ⟨β₂, hβ₂⟩ := exists_induced β hβ.1 (c * t)
   have hP := perf_induced β hβ (c * t) β₂ hβ₂
   obtain ⟨-, e1⟩ := hO Y A β hβ

@@ -94,9 +94,9 @@ private theorem moved_at_ram {Y Ω : Type} [Field Y] [NumberField Y] [Field Ω] 
     (h1 : p₁.Prime) (h2 : p₂.Prime) (hodd : 2 < p₁) (hlt : p₁ < p₂) (hu : ((p₁ : ℕ) : 𝓞 Y) ∈ u.asIdeal)
     (hu2 : ((p₁ : ℕ) : 𝓞 Y) ∉ u.asIdeal ^ 2) (x : Ω) (hx : x ^ 2 = ((-((p₁ * p₂ : ℕ) : ℤ) : ℤ) : Ω)) :
     ∃ τ ∈ Ine (F := Y) A, τ x ≠ x := by
-  haveI : Fact p₁.Prime := ⟨h1⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
+  have : Fact p₁.Prime := ⟨h1⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
   obtain ⟨Y0, hY0⟩ := IsAlgClosed.exists_pow_nat_eq ((p₁ : ℕ) : Ω) two_pos
   have hnd : ¬ p₁ ∣ 2 := fun h => by have := Nat.le_of_dvd two_pos h; omega
   obtain ⟨τ, hτ, hτY⟩ := GlobalTheory.TameKummerInertia.tame_kummer_surj Y Ω A u hA p₁ hu hu2 2 two_pos hnd Y0 (-1) hY0 (by norm_num)
@@ -217,7 +217,7 @@ private theorem unram_of_fix (L Ω : Type) [Field L] [NumberField L] [IsCMField 
     [IsAlgClosure L Ω] (w : HeightOneSpectrum (𝓞 L)) (A : ValuationSubring Ω) (hA : IsPlaceOver A w)
     (hfix : ∀ σ ∈ Ine (F := maximalRealSubfield L) A, ∀ z : L, σ (algebraMap L Ω z) = algebraMap L Ω z) :
     Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield L)) w.asIdeal := by
-  haveI : IsAlgClosure (maximalRealSubfield L) Ω := algClosure_real L Ω
+  have : IsAlgClosure (maximalRealSubfield L) Ω := algClosure_real L Ω
   have hAv : IsPlaceOver A (w.under (𝓞 (maximalRealSubfield L))) := fun x => by
     rw [IsScalarTower.algebraMap_apply (maximalRealSubfield L) L Ω]
     exact hA (algebraMap (𝓞 (maximalRealSubfield L)) (𝓞 L) x)

@@ -115,7 +115,7 @@ theorem lg_map {τ : Type} {f : MvPowerSeries τ (MaximalUnramifiedExtension l)}
 theorem of_closed_int {σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtension l} (hU : UnrOK (MaximalUnramifiedExtension l) l σ) {P : ℂ_[l] → Prop}
     (hc : IsClosed {z : ℂ_[l] | P z}) (hi : ∀ n : ℤ, P (n : ℂ_[l])) {x : MaximalUnramifiedExtension l} (hx : ‖x‖ ≤ 1)
     (hs : σ x = x) : P (x : ℂ_[l]) :=
-  BrC.of_closed_int hU (P := fun z : MaximalUnramifiedExtension l => P (z : ℂ_[l])) (hc.preimage continuous_subtype_val)
+  BrC.of_closed_int hU (P := fun z : MaximalUnramifiedExtension l => P (z : ℂ_[l])) (hc.preimage continuous_subtypeVal)
     (fun n => by simpa using hi n) hx hs
 
 theorem endInt {σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtension l} (hU : UnrOK (MaximalUnramifiedExtension l) l σ) {α : MaximalUnramifiedExtension l} (hα : ‖α‖ ≤ 1)

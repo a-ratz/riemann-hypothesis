@@ -66,7 +66,7 @@ variable {E : ℝ → ℂ} {C : ℝ}
 theorem mellin_indicator_eq (E : ℝ → ℂ) (s : ℂ) :
     mellin ((Set.Ioi (1 : ℝ)).indicator E) (-s) =
       ∫ t in Set.Ioi (1 : ℝ), E t * (t : ℂ) ^ (-s - 1) := by
-  rw [mellin, setIntegral_eq_of_subset_of_forall_diff_eq_zero measurableSet_Ioi
+  rw [mellin, setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi
     (s := Set.Ioi (1 : ℝ)) (fun t ht => Set.mem_Ioi.2 (zero_lt_one.trans (Set.mem_Ioi.1 ht)))]
   · refine setIntegral_congr_fun measurableSet_Ioi fun t ht => ?_
     simp only [smul_eq_mul, Set.indicator_of_mem ht]

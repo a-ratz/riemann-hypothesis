@@ -158,7 +158,7 @@ theorem norm_Tc_le {B : ℝ} (hB0 : 0 ≤ B)
     have h := hB t
     have hsq : (‖β t‖ * Real.exp (-(q * Real.pi) * ‖t‖ ^ 2 / 2)) ^ 2 =
         ‖β t‖ ^ 2 * Real.exp (-(q * Real.pi) * ‖t‖ ^ 2) := by
-      rw [mul_pow, ← Real.exp_nat_mul]; congr 2; push_cast; ring
+      rw [mul_pow, ← Real.exp_natCast_mul]; congr 2; push_cast; ring
     rw [← hsq] at h
     exact (pow_le_pow_iff_left₀ (by positivity) hB0 two_ne_zero).1 h
   calc _ ≤ Real.exp (q * Real.pi * ‖v‖ ^ 2 / 2) * Real.exp (-(q * Real.pi) * ‖uc (IR I) v - uQ X I c‖ ^ 2) * B :=

@@ -295,7 +295,7 @@ theorem exists_open_keep_cong : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (�
         ∃ l ∈ latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) (fun _ => True),
           actO S T x 1 u = u + N • l := by
   intro D S T ΛS ΛT hS hT N hN
-  haveI : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hev := eventually_keep_cong S T ΛS ΛT hS hT N hN
   have t1 : Tendsto (fun x : GA D S => ((x, 1) : GA D S × GA D T)) (𝓝 1) (𝓝 1) := by
     have := ((continuous_id.prodMk continuous_const : Continuous fun x : GA D S => ((x, (1 : GA D T))))).tendsto 1
@@ -572,7 +572,7 @@ theorem bnd_of_integral_over_prime : ∀ {E : Type} [Field E] [NumberField E] (p
   have hS : S.Finite := by
     have hsub : S ⊆ ⋃ i, ⋃ j, {Q | ¬ (A i j) Q ∈ Q.adicCompletionIntegers E} := by
       rintro Q ⟨i, j, h⟩
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
       exact ⟨i, j, fun hm => h ((HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).mp hm)⟩
     refine Set.Finite.subset (Set.finite_iUnion fun i => Set.finite_iUnion fun j => ?_) hsub
     exact Filter.eventually_cofinite.mp (A i j).2
@@ -673,7 +673,7 @@ theorem exists_pow_clears_denom_over :
   have hle : f (Q, i, j) ≤ d := le_trans (Finset.le_sup hmem) hd
   have hspec := Classical.choose_spec (exists_pow_mul_v_le_one_of_mem p hp Q hQ ((A i j) Q))
   have hfQ : f (Q, i, j) = Classical.choose (exists_pow_mul_v_le_one_of_mem p hp Q hQ ((A i j) Q)) := by
-    simp only [f, dif_pos hQ]
+    simp only [f, dite_eq_left hQ]
   exact hspec d (hfQ ▸ hle)
 
 end GlobalTheory.StdAtPrime
@@ -720,7 +720,7 @@ theorem map_fin_eq_of_isRat (D : D7) (ι : (Af D.host.F ⊗[D.host.F] D.host.E) 
   rw [hf]
   simp only [finHom, MonoidHom.comp_apply]
   rw [show matHom V γ = _ from hR]
-  simp only [Formalism.UG.bc, Matrix.GeneralLinearGroup.map, incA, inclR, Units.coe_map, MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply, RingHom.coe_coe, Matrix.GeneralLinearGroup.map_apply]
+  simp only [Formalism.UG.bc, Matrix.GeneralLinearGroup.map, incA, inclR, Units.coe_map, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply, RingHom.coe_coe, Matrix.GeneralLinearGroup.map_apply]
   change ι ((Algebra.TensorProduct.map (sndA D.host.F) (AlgHom.id D.host.F D.host.E)) (Algebra.TensorProduct.includeRight ((γ' : Matrix (Fin V.rank) (Fin V.rank) D.host.E) a b))) = algebraMap D.host.E _ ((γ' : Matrix (Fin V.rank) (Fin V.rank) D.host.E) a b)
   rw [Algebra.TensorProduct.includeRight_apply, Algebra.TensorProduct.map_tmul, map_one, AlgHom.id_apply]
   exact h1 _

@@ -100,7 +100,7 @@ theorem card_H1_eq_card_H0_mul_card_H2 (p : ℕ) [Fact p.Prime] (K : Intermediat
 theorem exists_prime_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) :
     ∃ p : ℕ, p.Prime ∧ ((p : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   have hmax := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
   have hfin : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 F ⧸ v.asIdeal)
   refine ⟨p, CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) p, ?_⟩
@@ -125,7 +125,7 @@ theorem localEulerChar_holds : ReciprocityTheory.Gal.LocalEulerChar := by
       ← Nat.card_congr (ReciprocityTheory.Neutral.Bridge.equivH2OfIso i rhoK rho hcomp).toEquiv]
     exact h
   · obtain ⟨p, hp, hpv⟩ := exists_prime_mem v
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     have hlp : l ≠ p := fun h => hl (h ▸ hpv)
     obtain ⟨K, hK, i0, -, -, -⟩ := GlobalTheory.DecLocal.decEquiv (p := p) (F := F) A (hval p hpv)
     let i : ↥(Dec (F := F) A) ≃ₜ* Formalism.GaloisCohomology.GK p K := i0

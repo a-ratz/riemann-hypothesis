@@ -104,7 +104,7 @@ theorem continuous_archM (V : HSp D) {τ : D.host.E →+* ℂ} {θ : Ainf D.host
     (hθ : Formalism.MainNotions.StandardLattice.IsInfEmb τ θ) : Continuous (archM V θ) := by
   have hm : Continuous fun g : GA D V =>
       ((matHom V g).1 : Matrix (Fin V.rank) (Fin V.rank) (AF D.host.F ⊗[D.host.F] D.host.E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   refine continuous_pi fun a => continuous_pi fun c => ?_
   exact (continuous_place hθ).comp (hm.matrix_elem a c)
 
@@ -130,7 +130,7 @@ theorem continuous_of_holAd {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {S :
     (U : Subgroup (GA D V)) (hU : IsOpen (U : Set (GA D V))) (hl : ∀ k ∈ U, k ∈ GfC V → ∀ g, φ (g * k) = φ g) :
     Continuous φ := by
   classical
-  haveI := topGroup V
+  have := topGroup V
   obtain ⟨L, hL1, -, hLc, hUG, hLa, -, hdec, hcomm, -⟩ := GlobalTheory.RealLift.exists_real_lift D θ V hθ
   have horth : ∀ τ, OrthFr (gramAt D V τ) (nNeg (M.ε τ)) (x0Mat M τ) := fun τ =>
     ((GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.2.2 hM).1
@@ -221,7 +221,7 @@ theorem holSec_of_isSec {E : Type} [Field E] [NumberField E] [IsCMField E] {n : 
       funext τ
       exact (Matrix.mul_assoc (A (e.symm τ)) (Matrix.of (x (e.symm τ))) (b (e.symm τ))).symm
     have hdet : ∀ ρ, (b ρ).det = ∏ a, b ρ a a := fun ρ =>
-      Matrix.det_of_upperTriangular (fun a c hac => (hb ρ).2 a c hac)
+      det_of_isUpperTriangular (fun a c hac => (hb ρ).2 a c hac)
     have hne : ∀ ρ a, b ρ a a ≠ 0 := by
       intro ρ a
       have := (hb ρ).1
@@ -330,7 +330,7 @@ theorem holForm_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.T
   · obtain ⟨γ', hγ', he⟩ := hl γ hγ g
     rw [adel_muPin, adel_muPin, he, hmul, hrat γ hγ, one_mul]
     exact congrArg _ (hinv _ γ' hγ' _ (hdom g))
-  · haveI := G.fin
+  · have := G.fin
     choose B hB using fun k => (hP k).2
     obtain ⟨B₀, hB₀⟩ := (Set.finite_range B).bddAbove
     obtain ⟨C, hC⟩ := G.cBdd

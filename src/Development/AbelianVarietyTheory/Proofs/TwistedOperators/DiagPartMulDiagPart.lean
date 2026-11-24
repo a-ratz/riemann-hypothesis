@@ -77,19 +77,19 @@ theorem diagPart_mul_diagPart (f : ι → ℕ) {A B : Matrix ι ι k} (hA : A.Bl
     simp only [Matrix.mul_apply, diagPart, Matrix.of_apply]
     refine Finset.sum_congr rfl fun t _ => ?_
     by_cases ht : f t = f s
-    · rw [if_pos (h.trans ht.symm)]
+    · rw [ite_eq_left (h.trans ht.symm)]
     · simp [ht]
   · have hrs : r ≠ s := fun e => h (e ▸ rfl)
     rw [Matrix.one_apply_ne hrs]
     simp only [Matrix.mul_apply, diagPart, Matrix.of_apply]
     refine Finset.sum_eq_zero fun t _ => ?_
     by_cases ht : f t = f s
-    · rw [if_neg (fun e => h (e.trans ht))]; simp
+    · rw [ite_eq_right (fun e => h (e.trans ht))]; simp
     · simp [ht]
 
 theorem blockTriangular_inv (f : ι → ℕ) (b : GL ι k) (hb : b.val.BlockTriangular f) :
     (b⁻¹).val.BlockTriangular f := by
-  letI : Invertible b.val := b.invertible
+  let : Invertible b.val := b.invertible
   rw [Matrix.coe_units_inv]
   exact Matrix.blockTriangular_inv_of_blockTriangular hb
 

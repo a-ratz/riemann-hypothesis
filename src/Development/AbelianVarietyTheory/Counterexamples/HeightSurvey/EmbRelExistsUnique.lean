@@ -55,11 +55,11 @@ open Matrix Formalism.UG
 
 theorem borel_NI (D : D7) (V : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.host.E) :
     BorelSpace (NI V C) := by
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
   infer_instance
 
 theorem topGroup_GA (D : D7) (V : HSp D) : IsTopologicalGroup (GA D V) := by
-  haveI : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (AF D.host.F) _
   exact inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
 

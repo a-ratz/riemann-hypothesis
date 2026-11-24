@@ -578,18 +578,18 @@ theorem DescNum.isPolFibre_of_isPullDeg {R R' : Type} [CommRing R] [IsDomain R] 
 
 theorem DescNum.epi_of_isPullback_field {K K' : Type} [Field K] [Field K'] (f : K →+* K') {X X' : Scheme.{0}} {φ : X' ⟶ X}
     {s' : X' ⟶ Sp K'} {s : X ⟶ Sp K} (h : IsPullback φ s' s (spMap f)) : Epi φ := by
-  letI := f.toAlgebra
-  haveI h₁ : Flat (spMap f) := by
+  let := f.toAlgebra
+  have h₁ : Flat (spMap f) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact (inferInstance : Module.Flat K K')
-  haveI h₂ : Surjective (spMap f) := ⟨fun p => ⟨(⊥ : PrimeSpectrum K'), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
-  haveI : Flat φ := MorphismProperty.of_isPullback (P := @Flat) h.flip h₁
-  haveI : Surjective φ := MorphismProperty.of_isPullback (P := @Surjective) h.flip h₂
+  have h₂ : Surjective (spMap f) := ⟨fun p => ⟨(⊥ : PrimeSpectrum K'), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
+  have : Flat φ := MorphismProperty.of_isPullback (P := @Flat) h.flip h₁
+  have : Surjective φ := MorphismProperty.of_isPullback (P := @Surjective) h.flip h₂
   exact Flat.epi_of_flat_of_surjective φ
 
 theorem exists_arcIn_numberField : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (c : Coeff l) (K : Type) [Field K] [NumberField K] [Algebra c.F K] (σ₁ : K →+* ℂ) (σ : c.F →+* ℂ) (B : GlobalTheory.CM.PAT H (Sp (𝓞 K))) (aC : ArcIn Dw l (RingHom.id c.F) ℂ σ) (φ : aC.D₀.P.A.left ⟶ B.pol.A.left) (n : ℕ), letI := H.starRing; σ₁.comp (algebraMap c.F K) = σ → 0 < n → IsPolFibre (σ₁.comp (algebraMap (𝓞 K) K)) B.pol aC.D₀.P φ → (∀ x, (aC.oa.onB.act x).left ≫ φ = φ ≫ (B.t.act.act x).left) → TauCan aC.D₀ n → ∃ (K₂ : Type) (_ : Field K₂) (_ : NumberField K₂) (_ : Algebra c.F K₂) (i : K →ₐ[c.F] K₂) (σ₂ : K₂ →+* ℂ) (a : ArcIn Dw l (RingHom.id c.F) K₂ (algebraMap c.F K₂)) (p : Out.IsPullDeg σ₂ a.D₀ aC.D₀) (ψ : a.D₀.P.A.left ⟶ B.pol.A.left), σ₂.comp (i : K →+* K₂) = σ₁ ∧ InBC σ₂ a aC p ∧ TauCan a.D₀ n ∧ IsPolFibre ((i : K →+* K₂).comp (algebraMap (𝓞 K) K)) B.pol a.D₀.P ψ ∧ ∀ x, (a.oa.onB.act x).left ≫ ψ = ψ ≫ (B.t.act.act x).left := by
   intro hK E _ _ _ H Dw l c K _ _ _ σ₁ σ B aC φ n hσ hn hφ hact htau
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨oa, hoa, -⟩ := GlobalTheory.LamF.exists_oAct_rosatiConj hK.laws E H (fun _ => rfl) K B
   obtain ⟨P, φP, hP⟩ := exists_isPolFibre hK.laws.polBaseChange (algebraMap (𝓞 K) K) B.pol
   obtain ⟨φ₁, hφ₁, e₁⟩ := PolFibre.cancel hP hφ
@@ -604,7 +604,7 @@ theorem exists_arcIn_numberField : Known → ∀ (E : Type) [Field E] [NumberFie
     rw [← e₁, ← e₂, ← e₃]; simp only [Category.assoc]
   generalize (prj q ≫ ψ₂) ≫ φP = ψ at hψ eψ
   obtain ⟨oB, hoB⟩ := polOActPull _ _ _ B.pol D₃.P ψ hψ.2.1 hψ.2.2 (𝓞 E) oa
-  letI : Algebra c.F K₃ := ((i₃.comp i₂).comp (algebraMap c.F K)).toAlgebra
+  let : Algebra c.F K₃ := ((i₃.comp i₂).comp (algebraMap c.F K)).toAlgebra
   let i : K →ₐ[c.F] K₃ := { i₃.comp i₂ with commutes' := fun _ => rfl }
   have hσ₃ : σ₃.comp (i₃.comp i₂) = σ₁ := by rw [← RingHom.comp_assoc, hi₃, hi₂]
   have hb : σ = σ₃.comp (algebraMap c.F K₃) := by rw [← hσ, ← hσ₃]; rfl
@@ -858,7 +858,7 @@ theorem eq_zero_of_rank_one {X : Type} [AddCommGroup X] [Module.Free ℤ X] [Mod
   have hdvd : ∀ s : 𝓞 E, s ≠ 0 → ∃ (n : ℕ) (t : 𝓞 E), n ≠ 0 ∧ (n : 𝓞 E) = t * s := fun s hs => by
     obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {s}))
     exact ⟨_, t, by simpa [Ideal.absNorm_eq_zero_iff] using hs, ht.symm⟩
-  haveI : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ _ _
   obtain ⟨x, hx⟩ : ∃ x, ξ x ≠ 0 := by
     by_contra h
     push Not at h
@@ -1028,7 +1028,7 @@ theorem exists_cmLat (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) {
 
 theorem exists_cmLat_abelianPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r) (Uw : UnfWit U) (k : U.Comp) (ξ' : Fin r → E) (x : Frame (U.X k).Ψ r) (Xx : DataX E r) (hX : Xx.toData = U.X k) (𝔄 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) (La : ℝ) (lam : Fin (r - 2) → Fin r → E), GoodEmb c σ → IsUnf U → (U.X k).IsIso ξ' → x ∈ (U.X k).dom → 𝔄 ≠ 0 → Xx.Λ = Submodule.span (𝓞 E) {v | ∃ a ∈ 𝔄, ∃ u ∈ Xx.L', v = a • u} → SplitData Xx ξ' La (hX ▸ x) lam → letI := H.starRing; ∀ (A : AnArc (𝓞 E)) (gam : (Uw.F.Di (Uw.ik k)).La ≃ₗ[𝓞 E] A.La) (ξ : Module.Dual ℤ A.X) (DB : Datum H) (tyB : Fin A.gB → (E →+* ℂ)) (eB : DB.La ≃+ A.abelian₂), OnOrbit Uw k ξ' x A gam ξ → Module.finrank (𝓞 E) A.X = 1 → DB.p = Dw.p - 1 → DB.q = Dw.q - 1 → ∀ hB : AbDat H A DB tyB eB, ∃ Z : GlobalTheory.CM.CMLat hB.2.2.2.2 DB.p DB.q, ∀ j (τ : E →+* ℂ), ‖τ (Z.hh j : E)‖ ≤ La ^ 2 := by
   intro E _ _ _ H Dw l Xo c _ _ σ r U Uw k ξ' x Xx hX 𝔄 La lam _ hU hξ hx h𝔄 hΛ hl
-  letI := H.starRing
+  let := H.starRing
   intro A gam ξ DB tyB eB hO hrk hp hq hB
   obtain ⟨hr, h2, -⟩ := hU
   obtain ⟨hp0, hΨ⟩ := h2 k
@@ -1475,7 +1475,7 @@ theorem exists_section (hT : Out.SecTwistSt) {K : Type} [Field K] (P : Out.PolAV
 
 theorem exists_cmIn : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (c : Coeff l) (K₁ : Type) [Field K₁] [NumberField K₁] [Algebra c.F K₁] (a : ArcIn Dw l (RingHom.id c.F) K₁ (algebraMap c.F K₁)) (ρ : 𝓞 K₁) (σ₁ : K₁ →+* ℂ) (X : GlobalTheory.CM.CMObj H K₁ ρ σ₁ (Dw.p - 1) (Dw.q - 1)) (ψ : a.D₀.P.A.left ⟶ X.B.pol.A.left) (n' : ℕ) (La c₁ : ℝ) (ξ : Module.Dual ℤ a.D₀.X) (ν₀ : E) (jj : ℤ), letI := H.starRing; 1 ≤ Dw.p → 1 ≤ Dw.q → 3 ≤ Dw.p + Dw.q → σ₁.comp (algebraMap c.F K₁) = c.F.val.toRingHom → σ₁ (ρ : K₁) = H.rt0 → (∀ j (τ : E →+* ℂ), ‖τ (X.hh j : E)‖ ≤ La ^ 2) → IsPolFibre (algebraMap (𝓞 K₁) K₁) X.B.pol a.D₀.P ψ → (∀ x, (a.oa.onB.act x).left ≫ ψ = ψ ≫ (X.B.t.act.act x).left) → 0 < n' → TauCan a.D₀ n' → Module.finrank (𝓞 E) a.D₀.X = 1 → ξ ≠ 0 → BetaAt ξ l.M' a.be ν₀ jj → ((Algebra.trace ℚ E ν₀ : ℚ) : ℝ) / 2 ≤ c₁ → ∃ (e : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → Out.GtPt a.D₀ (epsR K₁)) (th : a.D₀.P.L.Sec) (s : CMIn a e th jj n' La c₁), s.ξ = ξ ∧ s.ν₀ = ν₀ := by
   intro hK E _ _ _ H Dw l c K₁ _ _ _ a ρ σ₁ X ψ n' La c₁ ξ ν₀ jj hp hq hpq hσ hρ hLa hψ hact hn hτ hrk hξ hβ htr
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨th, hth⟩ := exists_section hK.laws2.secTwist a.D₀.P
   obtain ⟨v, hv⟩ := KeyPow.exists_isLieBasis a.D₀.P.A a.D₀.P.smoothDim
   have hf : 0 < Module.finrank ℚ E / 2 := by
@@ -1661,7 +1661,7 @@ theorem one_le_of_isIso {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coe
 theorem exists_cmIn_tie : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (r : ℕ) (U : Unf Xo c c.F.val.toRingHom r) (Uw : UnfWit U) (k : U.Comp) (ξ' : Fin r → E) (x : Frame (U.X k).Ψ r) (Xx : DataX E r) (hX : Xx.toData = U.X k) (𝔄 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) (La₀ La c₁ : ℝ) (lam : Fin (r - 2) → Fin r → E) (n' : ℕ) (ν₀ : E), IsUnf U → l.A = 1 → 3 ≤ r → (U.X k).IsIso ξ' → x ∈ (U.X k).dom → 𝔄 ≠ 0 → Xx.Λ = Submodule.span (𝓞 E) {v | ∃ a ∈ 𝔄, ∃ u ∈ Xx.L', v = a • u} → SplitData Xx ξ' La₀ (hX ▸ x) lam → La₀ ^ 2 ≤ La ^ 2 → 0 < n' → (∀ m ∈ (U.X k).Λp ξ', ∃ e : E, e • ξ' ∈ (U.X k).Λ ∧ (n' : ℂ) • (U.X k).aproj x ξ' ((U.X k).embV m) = (U.X k).embV (e • ξ')) → cc ν₀ = ν₀ → (∀ τ : E →+* ℂ, 0 ≤ (τ ν₀).re) → (∀ s : E, cc s = s → (∀ v ∈ (U.X k).Λ, ∃ u ∈ (U.X k).Λ, (transvMat (U.X k).Gm ξ' (s * (U.X k).κ0)).mulVec v - v = (l.M' : E) • u) → ∃ m : ℤ, Algebra.trace ℚ E (ν₀ * s) = m) → ((Algebra.trace ℚ E ν₀ : ℚ) : ℝ) / 2 ≤ c₁ → ∃ (K₁ : Type) (_ : Field K₁) (_ : NumberField K₁) (_ : Algebra c.F K₁) (em : K₁ →+* ℂ) (a : ArcIn Dw l (RingHom.id c.F) K₁ (algebraMap c.F K₁)) (e : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → Out.GtPt a.D₀ (epsR K₁)) (th : a.D₀.P.L.Sec) (jj : ℤ) (s : CMIn a e th jj n' La c₁), em.comp (algebraMap c.F K₁) = c.F.val.toRingHom ∧ s.ν₀ = ν₀ ∧ Comparison₂ Uw a em s.ξ k ξ' x := by
   intro hK E _ _ _ H Dw l Xo c _ _ r U Uw k ξ' x Xx hX 𝔄 La₀ La c₁ lam n' ν₀ hU hA hr hξ hx h𝔄 hΛ hS hLa hn hap hν hν₀
     hint htr
-  letI := H.starRing
+  let := H.starRing
   have hg : GoodEmb c c.F.val.toRingHom := rfl
   obtain ⟨hp, hq⟩ := one_le_of_isIso hU hξ
   have hpq : 3 ≤ Dw.p + Dw.q := hU.1 ▸ hr

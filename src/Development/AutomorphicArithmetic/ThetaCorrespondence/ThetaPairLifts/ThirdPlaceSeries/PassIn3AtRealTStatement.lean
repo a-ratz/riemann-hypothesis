@@ -119,8 +119,8 @@ private lemma natCast_smul_eq_trace_smul_one_of_commute {L G : Type} [Field L] [
     (ρ : Representation L G (Fin n → L)) (h1 : Module.finrank L (ρ.IntertwiningMap ρ) = 1)
     (T : Module.End L (Fin n → L)) (hT : ∀ g, T * ρ g = ρ g * T) :
     (n : L) • T = LinearMap.trace L _ T • 1 := by
-  haveI : Nontrivial (ρ.IntertwiningMap ρ) := Module.nontrivial_of_finrank_eq_succ h1
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (1 : ρ.IntertwiningMap ρ) one_ne_zero).1 h1
+  have : Nontrivial (ρ.IntertwiningMap ρ) := Module.nontrivial_of_finrank_eq_succ h1
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : ρ.IntertwiningMap ρ) one_ne_zero).1 h1
     ⟨T, fun g => hT g⟩
   have hT' : T = c • 1 := by
     have := congrArg Representation.IntertwiningMap.toLinearMap hc
@@ -206,7 +206,7 @@ private lemma trace_leftReg_mul_mulRight_eq_sum_coeff {K G : Type} [Field K] [Gr
   rw [Matrix.diag_apply, LinearMap.toMatrix_apply, MonoidAlgebra.basis_apply]
   simp only [_root_.GlobalTheory.MultOneRealised.leftReg, MonoidHom.coe_mk, OneHom.coe_mk, Module.End.mul_apply,
     LinearMap.mulLeft_apply, LinearMap.mulRight_apply, ← mul_assoc, MonoidAlgebra.single_mul_single, mul_one]
-  simp [MonoidAlgebra.basis, MonoidAlgebra.single_mul_apply, mul_assoc]
+  simp [MonoidAlgebra.basis, MonoidAlgebra.coeff_single_mul_apply, mul_assoc]
 
 
 open Module in
@@ -215,7 +215,7 @@ theorem _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one : ∀ (K : Ty
   intro K _ _ G _ _ χ hχ P _ ψ hsum
   classical
   obtain ⟨n₀, ρ, hirr, hch⟩ := hχ
-  haveI : CharZero (AlgebraicClosure K) :=
+  have : CharZero (AlgebraicClosure K) :=
     charZero_of_injective_algebraMap (algebraMap K (AlgebraicClosure K)).injective
   have hch' : ∀ g, LinearMap.trace (AlgebraicClosure K) _ (ρ g) =
       algebraMap K (AlgebraicClosure K) (χ g) := hch
@@ -281,7 +281,7 @@ theorem _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one : ∀ (K : Ty
     intro a b; rw [← hcl a (b * a)]; congr 2; group
   have hidem : f * f = f := by
     refine MonoidAlgebra.ext (Finsupp.ext fun g => ?_)
-    rw [MonoidAlgebra.mul_apply_left, Finsupp.sum_fintype _ _ (by simp)]
+    rw [MonoidAlgebra.coeff_mul_apply_left, Finsupp.sum_fintype _ _ (by simp)]
     simp only [hf]
     apply ι.injective
     have hinner : ∀ h k : G, ∑ y : G, ι (χ (h * y⁻¹)) * ι (χ (k * (y⁻¹ * g)⁻¹)) =
@@ -712,15 +712,15 @@ theorem edgeSum_sup_eq {κ : Type} [CommRing κ] {r k : ℕ} {g : GL (Fin r) κ}
   unfold edgeSum
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   by_cases h1 : supEdge i j <;> by_cases h2 : symEdge 0 k i j
-  · rw [if_pos h1, if_pos h2]
-  · rw [if_pos h1, if_neg h2]
+  · rw [ite_eq_left h1, ite_eq_left h2]
+  · rw [ite_eq_left h1, ite_eq_right h2]
     unfold supEdge at h1
     unfold symEdge at h2
     exact hg.2 i j (Nat.zero_le _) (by omega) (by omega)
   · unfold supEdge at h1
     unfold symEdge at h2
     omega
-  · rw [if_neg h1, if_neg h2]
+  · rw [ite_eq_right h1, ite_eq_right h2]
 
 theorem addCharHom_sym {κ : Type} [CommRing κ] {K : Type} [CommRing K] {r ρ k : ℕ} (ψ : AddChar κ K) (h : unipSym κ r ρ k) :
     (addCharHom ψ (symHom κ r ρ k) h : K) = ψ (edgeSum (symEdge ρ k) (h : GL (Fin r) κ)) := rfl
@@ -739,7 +739,7 @@ theorem place (H : PlaceBound) {κ : Type} [Field κ] [Finite κ] {K : Type} [Fi
       (Nat.card κ : ℝ) ^ k * (1 - 1 / (Nat.card κ : ℝ)) ≤ (n : ℝ) ∧
       (n : ℝ) ≤ (Nat.card κ : ℝ) ^ k * (1 + (2 * (r : ℝ) - 1) / (Nat.card κ : ℝ)) := by
   obtain ⟨d, b, σ, hσ, hθ⟩ := hθ
-  letI : Fintype κ := Fintype.ofFinite κ
+  let : Fintype κ := Fintype.ofFinite κ
   set φ : AddChar κ ℂ := s.toMonoidHom.compAddChar ψ with hφ
   have hφa : ∀ x, φ x = s (ψ x) := fun _ => rfl
   have hφ1 : φ ≠ 1 := fun e => hψ (by
@@ -770,7 +770,7 @@ theorem places (H : PlaceBound) {K : Type} [Field K] (s : K →+* ℂ) (Pg : Fin
   subst hc
   obtain ⟨θ, hθ, hχ⟩ := hχ
   have hfin : ∀ PP : ↥Pg, Finite (kP PP.1) := fun PP => finite_kP PP.1
-  letI : ∀ PP : ↥Pg, Fintype (unipCol (kP PP.1) r ρ (ρ + k)) := fun PP => Fintype.ofFinite _
+  let : ∀ PP : ↥Pg, Fintype (unipCol (kP PP.1) r ρ (ρ + k)) := fun PP => Fintype.ofFinite _
   have hrq : ∀ PP : ↥Pg, r ≤ Nat.card (kP PP.1) := fun PP => by
     have h1 : 0 < Pg.card := Finset.card_pos.2 ⟨PP.1, PP.2⟩
     have h2 : 1 ≤ 4 * f := by omega
@@ -1050,9 +1050,9 @@ theorem edgeSum_split {k : ℕ} (h : k + 1 ≤ r) (g : tailUnip F r k) (E : Fin 
       edgeSum (fun a b => E a b ∧ a.val < k) (g : GL (Fin r) F) := by
     unfold edgeSum
     refine Fintype.sum_of_injective (Fin.castLE h) (Fin.castLE_injective h) _ _ (fun a ha => ?_) (fun a => ?_)
-    · refine Finset.sum_eq_zero fun b _ => if_neg fun hb => ha ⟨⟨a.val, by omega⟩, rfl⟩
+    · refine Finset.sum_eq_zero fun b _ => ite_eq_right fun hb => ha ⟨⟨a.val, by omega⟩, rfl⟩
     · refine Fintype.sum_of_injective (Fin.castLE h) (Fin.castLE_injective h) _ _ (fun b hb => ?_) (fun b => ?_)
-      · refine if_neg fun hE => hb ⟨⟨b.val, by have := h2 _ _ hE.1; have := hE.2; omega⟩, rfl⟩
+      · refine ite_eq_right fun hE => hb ⟨⟨b.val, by have := h2 _ _ hE.1; have := hE.2; omega⟩, rfl⟩
       · rw [corner_apply]
         refine if_congr ⟨fun hE => ⟨(h1 _ _).1 hE, ?_⟩, fun hE => (h1 _ _).2 hE.1⟩ rfl rfl
         have := h2 _ _ ((h1 _ _).1 hE)
@@ -1067,9 +1067,9 @@ theorem edgeSum_split {k : ℕ} (h : k + 1 ≤ r) (g : tailUnip F r k) (E : Fin 
   refine Finset.sum_congr rfl fun b _ => ?_
   by_cases hE : E a b
   · by_cases ha : a.val < k
-    · rw [if_pos hE, if_neg (fun t : tailEdge k a b => absurd t.2 (by omega)), if_pos ⟨hE, ha⟩, zero_add]
-    · rw [if_pos hE, if_pos (show tailEdge k a b from ⟨h2 _ _ hE, by omega⟩), if_neg (fun t => ha t.2), add_zero]
-  · rw [if_neg hE, if_neg (fun t => hE (h3 _ _ t)), if_neg (fun t => hE t.1), add_zero]
+    · rw [ite_eq_left hE, ite_eq_right (fun t : tailEdge k a b => absurd t.2 (by omega)), ite_eq_left ⟨hE, ha⟩, zero_add]
+    · rw [ite_eq_left hE, ite_eq_left (show tailEdge k a b from ⟨h2 _ _ hE, by omega⟩), ite_eq_right (fun t => ha t.2), add_zero]
+  · rw [ite_eq_right hE, ite_eq_right (fun t => hE (h3 _ _ t)), ite_eq_right (fun t => hE t.1), add_zero]
 
 theorem mem_unip_iff {k : ℕ} (h : k + 1 ≤ r) (g : GL (Fin r) F) : g ∈ unip F r ↔
     ∃ hg : g ∈ tailUnip F r k, (corner h ⟨g, hg⟩ : GL (Fin (k + 1)) F) ∈ unip F (k + 1) := by
@@ -1200,8 +1200,8 @@ theorem finrank_eig_le [FiniteDimensional ℂ V] (τ : Representation ℂ G V) (
     (h1 : χ 1 = 1) (hx : ∀ b ∈ B, b ∉ A → ∃ a ∈ A, b⁻¹ * a * b ∈ A ∧ χ (b⁻¹ * a * b) ≠ χ a) :
     finrank ℂ (eig τ A χ) ≤ finrank ℂ (eig τ B χ) := by
   classical
-  haveI := Fintype.ofFinite A
-  haveI := Fintype.ofFinite B
+  have := Fintype.ofFinite A
+  have := Fintype.ofFinite B
   let f : eig τ A χ →ₗ[ℂ] eig τ B χ :=
     ((proj τ B χ).comp (eig τ A χ).subtype).codRestrict _ fun v => proj_mem τ B χ hB v
   refine LinearMap.finrank_le_finrank_of_injective (f := f) ?_
@@ -1324,7 +1324,7 @@ theorem edgeSum_single (Ed : Fin r → Fin r → Prop) [DecidableRel Ed] (g : GL
     (h0 : ∀ i j, Ed i j → (i ≠ p ∨ j ≠ q) → (g : Matrix (Fin r) (Fin r) F) i j = 0) :
     edgeSum Ed g = (g : Matrix (Fin r) (Fin r) F) p q := by
   unfold edgeSum
-  rw [Finset.sum_eq_single p, Finset.sum_eq_single q, if_pos h]
+  rw [Finset.sum_eq_single p, Finset.sum_eq_single q, ite_eq_left h]
   · intro j _ hj
     split_ifs with e
     · exact h0 _ _ e (Or.inr hj)
@@ -1635,8 +1635,8 @@ theorem columnMult : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
   unfold GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.levelMult
   rw [Nat.card_congr e]
   congr 1
-  haveI := GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.finite_boundedLevelClassGroupFamily R.Pg D.R.r
-  letI : Fintype (PsharpSym R.Pg D.R.r D.R.rS D.R.k ψ).H := Fintype.ofFinite _
+  have := GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.finite_boundedLevelClassGroupFamily R.Pg D.R.r
+  let : Fintype (PsharpSym R.Pg D.R.r D.R.rS D.R.k ψ).H := Fintype.ofFinite _
   refine Fintype.sum_equiv e _ _ fun x => ?_
   have h1 : R.eG x ∈ (R.levR F true).H := (hm x).2 x.2
   have h2 := (hmem _).1 h1
@@ -1705,8 +1705,8 @@ theorem passIn3_of_rows : ∀ (D : D7) [_root_.NumberField.IsTotallyComplex D.wh
   have hrec : R.toRealDat.grp_record := hC.base.grp.record
   have hirr : ∀ χ ∈ A3.A.X, IsAbsIrrChar χ := hOk.ok2.irr
   have hind := GlobalTheory.T.goodCharacter_placewise_cuspidal_parabolic_product D G Pl0 T A3.A Ks R.toRealDat hrec hser hirr
-  letI i0 : Fintype F.P0 := Fintype.ofFinite _
-  letI i1 : Fintype F.P1 := Fintype.ofFinite _
+  let i0 : Fintype F.P0 := Fintype.ofFinite _
+  let i1 : Fintype F.P1 := Fintype.ofFinite _
   have hone : ∀ χ ∈ A3.A.X, ∑ h : F.P0, χ (h : G) * (((F.ψ0 h)⁻¹ : D.what₂.LLˣ) : D.what₂.LL) = (Fintype.card F.P0 : D.what₂.LL) :=
     @GlobalTheory.RealOneVector.typeSum_base_eq_card D G _ _ Pl0 T A3.A Ks _ _ _ R.toRealDat F.lv2 hlev hind i0
   obtain ⟨S, iS, Ws, iA, iM, iF, τ, hgood, hchars, hm1⟩ :=
@@ -1748,7 +1748,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory
 theorem passIn3_at_realT_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : Formalism.MainNotions.G.Inst D L) (Gl : Formalism.MainNotions.G.LatInst D) (K : Formalism.MainNotions.G.Consts) (Y : DivX D) (cX : ExtraC) (ex : Extra D L hT Gi Gl K Y cX) (Rc : _root_.Formalism.L2.RecTAlt ex) (P : RowSideFamily ex) (Dcf : ∀ Zs : DefSub P.A3.fam3.amb3, DefCols (P.A3.side3 P.Ps P.ψs Zs)) (Spf : ∀ Zs : DefSub P.A3.fam3.amb3, SPer (Dcf Zs)) (Del h0 : ℕ) (c : ℝ) (S : _root_.Formalism.L2.SG.SpectralTiesReal.STiesRAlt Rc) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (Q : _root_.Formalism.IndefR.IndefiniteRealisation Rc P Dcf Spf (fun Zs => let z := Formalism.L2.DIV.ZscOfNum3 P.A3 P.P0 P.ψ0 (Formalism.L2.DIV.ofRecord D L Del h0) (Equiv.refl _) L.Nc Zs; { z with l6m := fun j => z.l6m j - c * z.l6u, l6u := 0 }) S Ks), IsTotallyComplex D.what₂.LL → Formalism.MainNotions.PrimeDegreeVariant.LevelRatioBound D → P.A3.fam3.Ok3 1 → PrimRows3 Q.Rl Q.F → ∀ C CH : ℝ, PassIn3 Q.Rl Q.F C CH := by
   intro D L hT Gi Gl K Y cX ex Rc P Dcf Spf Del h0 c S Ks _ _ _ Q hTC hadm hOk hP C CH
-  haveI : IsTotallyComplex D.what₂.LL := hTC
+  have : IsTotallyComplex D.what₂.LL := hTC
   exact GlobalTheory.passIn3_of_rows D P.Gp P.Pl0 P.I0 P.T P.A3 Ks Q.Rl Q.F C CH Q.charW hOk hP
     (fun k => ⟨_, Rc.T.n.types.O k, Rc.T.n.types.eSer_def k⟩) hadm rfl rfl
 end GlobalTheory

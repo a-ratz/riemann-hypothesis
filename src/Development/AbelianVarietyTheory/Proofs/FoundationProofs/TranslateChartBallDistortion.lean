@@ -89,7 +89,7 @@ theorem translate_chart_ball_distortion
     have h1 := hη2 (by rwa [dist_zero_right] : dist x 0 < η2)
     simp only [he0, hL1, dist_eq_norm] at h1
     have h2 := (L (e x) - ContinuousLinearMap.id ℝ M).le_opNorm v
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.id_apply] at h2
+    simp only [sub_apply, ContinuousLinearMap.id_apply] at h2
     exact h2.trans (mul_le_mul_of_nonneg_right h1.le (norm_nonneg v))
   have hU : e '' ball 0 η ∈ 𝓝 (1 : G) := hopen η hη0
   have hφ : Continuous (fun p : V × V => e p.1 * e p.2) :=

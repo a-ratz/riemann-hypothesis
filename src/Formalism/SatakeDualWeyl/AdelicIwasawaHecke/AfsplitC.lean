@@ -192,7 +192,7 @@ theorem afsplitU_mem (σ : E →ₐ[F] E) (J : Matrix n n E)
     (hk : k ∈ UPts σ J (FiniteAdeleRing (𝓞 F) F)) :
     afsplitU v h k ∈ UPts σ J (FiniteAdeleRing (𝓞 F) F) := by
   unfold UPts UJ at hh hk ⊢
-  simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq] at hh hk ⊢
+  simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq] at hh hk ⊢
   rw [afsplitU_coe]
   conv_lhs => rw [afsplitC_J v J]
   rw [afsplitC_cT, afsplitC_mul, afsplitC_mul, hh, hk, ← afsplitC_J]

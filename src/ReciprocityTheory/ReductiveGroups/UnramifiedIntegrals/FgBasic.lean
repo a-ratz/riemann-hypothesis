@@ -273,7 +273,7 @@ theorem divBy_expand_iff (x : K) (n : ℕ) (hn : n ≠ 0) (f : PowerSeries K) :
   constructor
   · intro h m
     have := h (n * m)
-    rwa [coeff_subst_X_pow_eq_ite_dvd' f hn, if_pos (dvd_mul_right n m),
+    rwa [coeff_subst_X_pow_eq_ite_dvd' f hn, ite_eq_left (dvd_mul_right n m),
       Nat.mul_div_cancel_left m (Nat.pos_of_ne_zero hn)] at this
   · intro h m
     rw [coeff_subst_X_pow_eq_ite_dvd' f hn]

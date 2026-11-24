@@ -144,7 +144,7 @@ private theorem exists_factor_zeros_differentiableOn_nonvanishing (f : ℂ → �
         intro hwZ
         exact hw1 (by simp [Finset.mem_erase, hwρ, hwZ])
       rw [hg]
-      simp only [if_neg hwZ]
+      simp only [ite_eq_right hwZ]
       exact hw2 hwρ
   refine ⟨g, ?_, ?_, ?_⟩
   · intro z hz
@@ -154,10 +154,10 @@ private theorem exists_factor_zeros_differentiableOn_nonvanishing (f : ℂ → �
       have hev : g =ᶠ[nhdsWithin z K] fun w => f w / P w := by
         filter_upwards [nhdsWithin_le_nhds (hopen.mem_nhds (by simpa using hzZ))] with w hw
         rw [hg]
-        simp only [if_neg (show w ∉ Z by simpa using hw)]
+        simp only [ite_eq_right (show w ∉ Z by simpa using hw)]
       refine ((hd z hz).div (hPd z).differentiableWithinAt (hPne z hzZ)).congr_of_eventuallyEq hev ?_
       rw [hg]
-      simp only [if_neg hzZ]
+      simp only [ite_eq_right hzZ]
       rfl
   · intro z hz
     have hPe : (∏ ρ ∈ Z, (z - ρ) ^ analyticOrderNatAt f ρ) = P z := by rw [hP]
@@ -165,7 +165,7 @@ private theorem exists_factor_zeros_differentiableOn_nonvanishing (f : ℂ → �
     by_cases hzZ : z ∈ Z
     · rw [hZ0 z hzZ, hPz z hzZ, zero_mul]
     · rw [hg]
-      simp only [if_neg hzZ]
+      simp only [ite_eq_right hzZ]
       rw [mul_div_cancel₀ _ (hPne z hzZ)]
   · intro ρ hρ
     rw [(hgk ρ hρ).self_of_nhds]

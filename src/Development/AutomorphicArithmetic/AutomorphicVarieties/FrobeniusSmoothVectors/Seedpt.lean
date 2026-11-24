@@ -147,7 +147,7 @@ private theorem one_le_td {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (
     ext k
     rw [Polynomial.coeff_map, Polynomial.coeff_zero, Ideal.Quotient.eq_zero_iff_mem]
     exact key Q hP k
-  haveI : Algebra.Transcendental (B ⧸ η.comap (algebraMap B A)) (A ⧸ η) := ⟨⟨_, htr⟩⟩
+  have : Algebra.Transcendental (B ⧸ η.comap (algebraMap B A)) (A ⧸ η) := ⟨⟨_, htr⟩⟩
   exact Cardinal.one_le_iff_pos.2 (trdeg_pos _ _)
 
 private theorem pair {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (𝒜 : ℤ → Submodule B A)
@@ -191,7 +191,7 @@ theorem UpperTheory.V.Fr.frobenius_corner_lift_two_to_three :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (p : Ideal S.B) (ξ : Ideal S.A), p.IsPrime → ξ.IsPrime → S.u.TI ξ → p ≤ S.π ξ → ∃ η : Ideal S.A, η.IsPrime ∧ S.IsHom η ∧ S.π η = p ∧ S.u.TI η ∧ S.td η = 1 := by
   intro l _ O _ _ _ _ F C₀ n hF hn S p ξ hp hξ hTI hle
   obtain ⟨hint, hgm, h0, -, -, -, hr⟩ := gr_A hF hn S
-  letI : GradedAlgebra S.gr := { hgm, hint.chooseDecomposition with }
+  let : GradedAlgebra S.gr := { hgm, hint.chooseDecomposition with }
   have hinj : Function.Injective (algebraMap S.B S.A) := by
     intro x y hxy
     apply Subtype.ext

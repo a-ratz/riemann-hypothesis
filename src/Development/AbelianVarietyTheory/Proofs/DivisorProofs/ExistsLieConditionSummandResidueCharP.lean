@@ -185,8 +185,8 @@ theorem idem_retract_coords : ∀ {C : Type} [CommRing C] [IsLocalRing C] (I : I
     (∀ j k, f j (b k) = if j = k then 1 else 0) ∧
     (∀ w ∈ LinearMap.range p, (∀ k, f k w = 0) → w = 0) := by
   intro C _ _ I hI W _ _ m s r hrs p hp
-  haveI : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
-  haveI : IsLocalRing (C ⧸ I) :=
+  have : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have : IsLocalRing (C ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   have hrs' : ∀ w, r (s w) = w := fun w => by simpa using LinearMap.congr_fun hrs w
   have hp' : ∀ w, p (p w) = p w := fun w => by simpa [Module.End.mul_apply] using LinearMap.congr_fun hp w
@@ -202,11 +202,11 @@ theorem idem_retract_coords : ∀ {C : Type} [CommRing C] [IsLocalRing C] (I : I
   have hπι : π ∘ₗ P.subtype = LinearMap.id := by
     ext ⟨x, y, rfl⟩
     simp [π, hqq]
-  haveI : Module.Projective (C ⧸ I) P := Module.Projective.of_split P.subtype π hπι
-  haveI : Module.Finite (C ⧸ I) P := Module.Finite.of_surjective π (by
+  have : Module.Projective (C ⧸ I) P := Module.Projective.of_split P.subtype π hπι
+  have : Module.Finite (C ⧸ I) P := Module.Finite.of_surjective π (by
     intro y; exact ⟨y, by simpa using LinearMap.congr_fun hπι y⟩)
-  haveI : Module.FinitePresentation (C ⧸ I) P := Module.finitePresentation_of_projective _ _
-  haveI : Module.Free (C ⧸ I) P := Module.free_of_flat_of_isLocalRing
+  have : Module.FinitePresentation (C ⧸ I) P := Module.finitePresentation_of_projective _ _
+  have : Module.Free (C ⧸ I) P := Module.free_of_flat_of_isLocalRing
   let β := Module.finBasis (C ⧸ I) P
   have mem : ∀ w, s (p w) ∈ P := fun w => ⟨s w, by simp [hq, hrs']⟩
   let f : Fin (Module.finrank (C ⧸ I) P) → W →ₗ[C] C ⧸ I := fun k =>
@@ -277,10 +277,10 @@ theorem quotient_retract_pi_quotient :
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property π LinearMap.id hπ
   let P : H →ₗ[C] M := Submodule.linearProjOfIsCompl M E' hc.symm
   let q : H →ₗ[C] H := M.subtype ∘ₗ P
-  have hPq : ∀ x, P (q x) = P x := fun x => Submodule.linearProjOfIsCompl_apply_left hc.symm (P x)
+  have hPq : ∀ x, P (q x) = P x := fun x => Submodule.projectionOnto_apply_left hc.symm (P x)
   have hqq : ∀ x, q (q x) = q x := fun x => congrArg Subtype.val (hPq x)
   have hqE : ∀ x ∈ E', q x = 0 := fun x hx => by
-    have h0 : P x = 0 := (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hc.symm).2 hx
+    have h0 : P x = 0 := (Submodule.projectionOnto_apply_eq_zero_iff hc.symm).2 hx
     show ((P x : M) : H) = 0
     rw [h0]; rfl
   have hxq : ∀ x, x - q x ∈ F := by
@@ -288,7 +288,7 @@ theorem quotient_retract_pi_quotient :
     rw [← hF]
     apply Submodule.mem_sup_left
     have h0 : P (x - q x) = 0 := by rw [map_sub, hPq, sub_self]
-    exact (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hc.symm).1 h0
+    exact (Submodule.projectionOnto_apply_eq_zero_iff hc.symm).1 h0
   have hσπ : ∀ x, π (σ x) = x := fun x => LinearMap.congr_fun hσ x
   let s0 : H →ₗ[C] (Fin n → C ⧸ I) :=
     (LinearMap.pi fun k => (Submodule.mkQ I) ∘ₗ LinearMap.proj k) ∘ₗ σ ∘ₗ q
@@ -483,8 +483,8 @@ theorem exists_eigen_coordinates_range_quot : ∀ {C : Type} [CommRing C] [IsLoc
       simp
     · have : f i' t' (b i t) = 0 := by
         obtain ⟨w, hw⟩ := hb i t
-        rw [← hfp, ← hw, hpp, if_neg hii, map_zero]
-      rw [this, if_neg]
+        rw [← hfp, ← hw, hpp, ite_eq_right hii, map_zero]
+      rw [this, ite_eq_right]
       intro h; exact hii (congrArg Sigma.fst h)
 
 end GlobalTheory
@@ -639,7 +639,7 @@ theorem eqLift_tensorModOf : ∀ {C : Type} [CommRing C] (I : Ideal C) {A : Type
   ∀ (χ : A →+* C) (l₀ : H →ₗ[C] C ⧸ I), (∀ a x, l₀ (σ a x) = Ideal.Quotient.mk I (χ a) * l₀ x) →
   ∃ l : H →ₗ[C] C, (∀ a x, l (σ a x) = χ a * l x) ∧ ∀ x, Ideal.Quotient.mk I (l x) = l₀ x := by
   intro C _ I A _ H _ _ σ hproj χ l₀ hl₀
-  letI mH : Module (C ⊗[ℤ] A) H := GlobalTheory.HTSummand.tensorModOf σ
+  let mH : Module (C ⊗[ℤ] A) H := GlobalTheory.HTSummand.tensorModOf σ
   let χt : C ⊗[ℤ] A →ₐ[ℤ] C := Algebra.TensorProduct.productMap (AlgHom.id ℤ C) χ.toIntAlgHom
   have hχt : ∀ (r : C) (a : A), χt (r ⊗ₜ[ℤ] a) = r * χ a := fun r a => by
     simp [χt, Algebra.TensorProduct.productMap_apply_tmul]
@@ -1033,7 +1033,7 @@ theorem GlobalTheory.HTSummand.Corep.mat_sum (n : ℕ) (α : Type) [CommRing α]
     rw [Finset.sum_eq_single a (fun b _ hb => by simp [Matrix.single_apply, hb]) (by simp)]
     simp [Matrix.single_apply]
   · exact Finset.sum_eq_zero fun x _ => by
-      simp only [Matrix.single_apply]; rw [if_neg]; rintro ⟨rfl, rfl⟩; exact h rfl
+      simp only [Matrix.single_apply]; rw [ite_eq_right]; rintro ⟨rfl, rfl⟩; exact h rfl
 
 theorem GlobalTheory.HTSummand.Corep.mat_sand (n : ℕ) (α : Type) [CommRing α] (i j z : Fin n) (M : Matrix (Fin n) (Fin n) α) :
     Matrix.single z i 1 * M * Matrix.single j z 1 = Matrix.scalar _ (M i j) * Matrix.single z z 1 := by
@@ -1050,7 +1050,7 @@ theorem GlobalTheory.HTSummand.Corep.exists_summand_lie_p : ∀ (p : ℕ) [Fact 
     have : (p : C) ^ k ∈ (maximalIdeal C) ^ k := Ideal.pow_mem_pow hp k
     rw [hk] at this; simpa using this
   obtain ⟨Ψ, hΨρ, hΨc, hΨN, hΨs⟩ := GlobalTheory.T.exists_matrixAction_of_padicOrderSplitting p D C k hk H ρ D.splitP.some
-  haveI : NeZero D.m := ⟨D.m_pos.ne'⟩
+  have : NeZero D.m := ⟨D.m_pos.ne'⟩
   let σ : 𝓞 D.F →+* Module.End C H := ρ.comp (algebraMap (𝓞 D.F) D.O)
   let χ : Fin D.a → 𝓞 D.F →+* C := fun i => tR.comp (b.t i)
   let E : Fin D.m → Fin D.m → Module.End C H := fun i j => Ψ (Matrix.single i j 1)

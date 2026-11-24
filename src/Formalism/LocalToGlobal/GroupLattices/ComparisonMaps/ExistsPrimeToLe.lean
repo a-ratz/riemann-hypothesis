@@ -77,7 +77,7 @@ theorem exists_prime_to_le (P : HeightOneSpectrum R) (d : R) (hd : d ≠ 0) :
   · by_cases hvd : v.asIdeal ∣ Ideal.span {d}
     · have hvS : v ∈ S := Finset.mem_union_left _ ((Set.Finite.mem_toFinset _).2 hvd)
       have h1 := hy v hvS
-      simp only [if_neg hv, sub_zero] at h1
+      simp only [ite_eq_right hv, sub_zero] at h1
       rw [v.intValuation_if_neg hd]
       exact (v.intValuation_le_pow_iff_mem y (n v)).2 h1
     · have h3 : v.intValuation d = 1 := by
@@ -125,7 +125,7 @@ theorem locWBack_proved (T : ∀ u : D.what₂.Word, Forms0 D u) : LocWBack T :=
         rw [val_nonneg_iff, hq, map_div₀, IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap,
           IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap]
         have hdv : (D.plEq w').intValuation d ≠ 0 := (D.plEq w').intValuation_ne_zero d hd0
-        rw [div_le_one₀ (zero_lt_iff.2 hdv)]
+        rw [div_le_one₀ (pos_iff_ne_zero.2 hdv)]
         exact hsv _ hne
       have hsx : s • x = q • (d • x) := by
         rw [key, key, smul_smul, hq, div_mul_cancel₀ _ hdne]

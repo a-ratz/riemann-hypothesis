@@ -156,7 +156,7 @@ theorem slope_sq_bot {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Mo
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] {N : (K →+* ℂ) → V → ℝ} (hN : HasGram N) :
     slope_sq N (⊥ : Submodule (𝓞 K) V) = -Real.log 2 + Real.log |(discr K : ℝ)| / (Module.finrank ℚ K : ℝ) := by
   unfold slope_sq
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   rw [dite_eq_left hN]
   exact muDef_bot _ _
 
@@ -210,14 +210,14 @@ theorem slope_sq_sub_le_of_different_smul {K K' V V' : Type} [Field K] [NumberFi
     rw [h5]
     exact h2
   classical
-  letI : StarRing K := starRingOfComm
-  letI : StarRing K' := starRingOfComm
-  haveI : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
-  haveI : Module.Finite K V := Module.Finite.of_basis b
-  haveI : Module.Finite K' V' := Module.Finite.of_basis b'
-  haveI : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
-  letI : Module (𝓞 K) V' := Module.compHom V' (algebraMap (𝓞 K) (𝓞 K'))
-  haveI : IsScalarTower (𝓞 K) (𝓞 K') V' := ⟨fun a s x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  let : StarRing K := starRingOfComm
+  let : StarRing K' := starRingOfComm
+  have : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
+  have : Module.Finite K V := Module.Finite.of_basis b
+  have : Module.Finite K' V' := Module.Finite.of_basis b'
+  have : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+  let : Module (𝓞 K) V' := Module.compHom V' (algebraMap (𝓞 K) (𝓞 K'))
+  have : IsScalarTower (𝓞 K) (𝓞 K') V' := ⟨fun a s x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
   let l : L →ₗ[𝓞 K] V' :=
     { toFun := fun x => ι x
       map_add' := fun x y => by simp
@@ -228,8 +228,8 @@ theorem slope_sq_sub_le_of_different_smul {K K' V V' : Type} [Field K] [NumberFi
   have hr : Set.range l = ι '' (L : Set V) := by
     ext y; simp [l]
   have hL : L.FG := by
-    haveI : Module.Finite (𝓞 K') M := Module.Finite.iff_fg.2 hM
-    haveI : Module.Finite (𝓞 K) M := Module.Finite.trans (𝓞 K') M
+    have : Module.Finite (𝓞 K') M := Module.Finite.iff_fg.2 hM
+    have : Module.Finite (𝓞 K) M := Module.Finite.trans (𝓞 K') M
     let l' : L →ₗ[𝓞 K] M :=
       { toFun := fun x => ⟨l x, hιM x x.2⟩
         map_add' := fun x y => Subtype.ext (l.map_add x y)
@@ -284,7 +284,7 @@ theorem slope_sq_sub_le_of_different_smul {K K' V V' : Type} [Field K] [NumberFi
       Nat.card (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := by
     rw [AddSubgroup.relIndex, hsub]; rfl
   rw [hidx] at i1 m1
-  haveI : Finite (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := Nat.finite_of_card_ne_zero i1
+  have : Finite (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := Nat.finite_of_card_ne_zero i1
   have hidx' := relIndex_span (S := 𝓞 K') l eL (he'.restrict_scalars' (𝓞 K'))
     (Nat.card (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) : 𝓞 K)
     (fun x hx => by

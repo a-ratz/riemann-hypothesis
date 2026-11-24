@@ -166,7 +166,7 @@ theorem conj_of_frob (hD : ∀ S : Set (HeightOneSpectrum (𝓞 E)), S.Finite �
     rcases Nat.eq_zero_or_pos a with ha | ha
     · subst ha
       simp [Matrix.trace]
-    · haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+    · have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
       rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, e]
   exact GlobalTheory.TraceConj.conj_of_trace_eq _ _ a r r' hs hs' htr
 

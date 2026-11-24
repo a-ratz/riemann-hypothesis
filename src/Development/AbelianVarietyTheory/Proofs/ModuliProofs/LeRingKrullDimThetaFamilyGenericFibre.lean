@@ -103,7 +103,7 @@ theorem exists_extension {o : Type} [CommRing o] {g n N' : ℕ} {I : Ideal (MvPo
   set ev := MvPolynomial.eval₂Hom (y.comp β) v with hev
   let e : (MvPolynomial (Ix g (N' ^ 2)) o ⧸ P) →+* FractionRing (R ⧸ q) :=
     Ideal.Quotient.lift P ev fun a ha => hle ha
-  haveI : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
+  have : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
   let L := Localization.AtPrime (RingHom.ker e)
   have hu : ∀ s : (RingHom.ker e).primeCompl, IsUnit (e s) := fun s => IsUnit.mk0 _ s.2
   let ψ : L →+* FractionRing (R ⧸ q) := IsLocalization.lift (M := (RingHom.ker e).primeCompl) hu
@@ -162,7 +162,7 @@ theorem exists_extension {o : Type} [CommRing o] {g n N' : ℕ} {I : Ideal (MvPo
     rw [RingHom.mem_ker] at hr
     rw [← hy0, ← hφy, RingHom.comp_apply, hr, map_zero]
   have hk2 : q ≤ RingHom.ker φ := hmin.2 ⟨RingHom.ker_isPrime φ, bot_le⟩ hk1
-  haveI : IsDomain L := IsLocalization.isDomain_localization (RingHom.ker e).primeCompl_le_nonZeroDivisors
+  have : IsDomain L := IsLocalization.isDomain_localization (RingHom.ker e).primeCompl_le_nonZeroDivisors
   obtain ⟨K, _, lam, j, hl, hj⟩ := exists_common_field q φ (le_antisymm hk1 hk2)
   rw [← hy] at hj
   have h6 := (Coord.secCoord_bc_scale_unique _ _ _ _ _ _ _ Y.isLB hv).1 _ j
@@ -183,7 +183,7 @@ theorem le_ringKrullDim_of_independent {o : Type} [CommRing o] [IsDomain o] {R :
   have hqp : q.IsPrime := hq.1.1
   let f : R →ₐ[o] FractionRing o ⊗[o] R := Algebra.TensorProduct.includeRight
   have hmin : q.comap f ∈ minimalPrimes R := by
-    letI : Algebra R (FractionRing o ⊗[o] R) := Algebra.TensorProduct.rightAlgebra
+    let : Algebra R (FractionRing o ⊗[o] R) := Algebra.TensorProduct.rightAlgebra
     have h1 := IsLocalization.minimalPrimes_map (Algebra.algebraMapSubmonoid R (nonZeroDivisors o))
       (FractionRing o ⊗[o] R) ⊥
     rw [Ideal.map_bot] at h1

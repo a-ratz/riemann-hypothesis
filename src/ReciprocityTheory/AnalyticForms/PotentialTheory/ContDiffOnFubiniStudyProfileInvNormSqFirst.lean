@@ -77,7 +77,7 @@ def projectiveLineNormSqDerivative : (Fin 1 → ℂ) →L[ℝ] ((Fin 1 → ℂ) 
 
 theorem dNormSq_apply (w v : Fin 1 → ℂ) :
     projectiveLineNormSqDerivative w v = 2 * ((w 0).re * (v 0).re + (w 0).im * (v 0).im) := by
-  simp only [projectiveLineNormSqDerivative, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+  simp only [projectiveLineNormSqDerivative, smul_apply, add_apply,
     ContinuousLinearMap.smulRight_apply, rea_apply, ima_apply, smul_eq_mul]
 
 theorem projLine_norm_sq_eq (z : ℂ) : ‖z‖ ^ 2 = z.re * z.re + z.im * z.im := by
@@ -96,7 +96,7 @@ theorem projLine_hasFDerivAt_normSq (w : Fin 1 → ℂ) :
   convert h2 using 1
   ext v
   rw [dNormSq_apply]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, rea_apply,
+  simp only [add_apply, smul_apply, smul_eq_mul, rea_apply,
     ima_apply]
   ring
 
@@ -122,7 +122,7 @@ theorem projLine_leviForm_radial {F : (Fin 1 → ℂ) → ℝ} {G G' : ℝ → �
   have hL : HasFDerivAt (fun w : Fin 1 → ℂ => projectiveLineNormSqDerivative w) projectiveLineNormSqDerivative y := projectiveLineNormSqDerivative.hasFDerivAt
   have h2 := (hc.smul hL).congr_of_eventuallyEq hfd
   rw [levi, h2.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.smulRight_apply, smul_eq_mul, dNormSq_apply, Pi.smul_apply, Complex.mul_re,
     Complex.mul_im, Complex.I_re, Complex.I_im]
   rw [projLine_norm_sq_eq (y 0), projLine_norm_sq_eq (v 0)]

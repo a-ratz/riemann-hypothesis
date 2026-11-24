@@ -270,7 +270,7 @@ theorem measurable_ringInverse [MeasurableSpace K] [BorelSpace K] (h : IsOpenEmb
     ext r
     simp [IsUnit]
   refine measurable_of_restrict_of_restrict_compl hU.measurableSet ?_ ?_
-  · exact (continuousOn_iff_continuous_restrict.1
+  · exact (continuousOn_iff_continuous_domRestrict.1
       (GlobalTheory.CompanionTheory.SW.KUnits.continuousOn_ringInverse h)).measurable
   · have : ({r : K | IsUnit r}ᶜ).domRestrict (Ring.inverse : K → K) = fun _ => 0 := by
       funext r
@@ -304,10 +304,10 @@ end Top
 theorem freeCell_props : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ n : ℕ, IsOpen (freeCell (R ⊗[F] E) M n) ∧ (∀ X ∈ freeCell (R ⊗[F] E) M n, LinearIndependent (R ⊗[F] E) X) ∧ (∀ X : Fin (n + 1) → Fin (M + 2) → R ⊗[F] E, LinearIndependent (R ⊗[F] E) X → gramR R σ (hypOne J) X = 0 → IsUnit (X 0 0) → X ∈ freeCell (R ⊗[F] E) M n) ∧ (∀ (x : Fin 1 → Fin (M + 2) → R ⊗[F] E) (a s : Fin 1 → Fin n → R ⊗[F] E) (Y : Fin n → Fin M → R ⊗[F] E), IsUnit (x 0 0) → LinearIndependent (R ⊗[F] E) Y → chartS R σ J x a s Y ∈ freeCell (R ⊗[F] E) M n) ∧ Measurable (fun p : (Fin 1 → Fin (M + 2) → R ⊗[F] E) × (Fin 1 → Fin n → R ⊗[F] E) × (Fin 1 → Fin n → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) => chartS R σ J p.1 p.2.1 p.2.2.1 p.2.2.2) := by
   intro F E _ _ _ _ _ σ hCM M J _ R _ _ _ _ _ hR n
   obtain ⟨iTR, iLC, iSC, iT2, -⟩ := id hR
-  haveI := iTR; haveI := iLC; haveI := iSC; haveI := iT2
+  have := iTR; have := iLC; have := iSC; have := iT2
   obtain ⟨kTR, kLC, kSC, kT2, ksig, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := kTR; haveI := kLC; haveI := kSC; haveI := kT2
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have := kTR; have := kLC; have := kSC; have := kT2
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hU := GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hCM R hR
   refine ⟨isOpen_freeCell hU (_root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hCM R hR n M),
     fun X hX => linearIndependent_of_yPart X hX.1 hX.2,

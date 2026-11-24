@@ -93,7 +93,7 @@ theorem isClosed_cell [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] (x 
         ⋂ i, {u : GL (Fin n) R | ((x⁻¹ * u * x : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) i i = 1}) := by
     ext u
     simp only [SetLike.mem_coe, mem_cell, mem_unipB, mem_unipBLower, Set.mem_inter_iff, Set.mem_iInter,
-      Set.mem_setOf_eq]
+      Set.mem_ofPred_eq]
   rw [e]
   refine ((isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => key _ continuous_id i j 0).inter
     (isClosed_iInter fun i => key _ continuous_id i i 1)).inter
@@ -109,7 +109,7 @@ theorem permRep_apply (w : Equiv.Perm (Fin n)) (i j : Fin n) :
   simp [Matrix.permMatrixHom, Equiv.Perm.permMatrix, PEquiv.toMatrix_apply, Equiv.Perm.inv_def, Equiv.symm_apply_eq]
 
 theorem isWeylRep_permRep (w : Equiv.Perm (Fin n)) : IsWeylRep w (permRep R w) := fun _ _ h => by
-  rw [permRep_apply, if_neg h]
+  rw [permRep_apply, ite_eq_right h]
 
 end Ring
 
@@ -141,12 +141,12 @@ namespace WeylCell
 theorem exists_haar {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {K N : Subgroup G}
     (ho : IsOpen (K : Set G)) (hc : IsCompact (K : Set G)) (hN : IsClosed (N : Set G))
     [MeasurableSpace N] [BorelSpace N] : ∃ μ : Measure N, μ.IsHaarMeasure ∧ μ (K.subgroupOf N) = 1 := by
-  have h1 : IsOpen (K.subgroupOf N : Set N) := ho.preimage continuous_subtype_val
+  have h1 : IsOpen (K.subgroupOf N : Set N) := ho.preimage continuous_subtypeVal
   have h2 : IsCompact (K.subgroupOf N : Set N) := hN.isClosedEmbedding_subtypeVal.isCompact_preimage hc
   let P : TopologicalSpace.PositiveCompacts N := ⟨⟨_, h2⟩, by
     rw [show interior ((⟨_, h2⟩ : TopologicalSpace.Compacts N).carrier) = (K.subgroupOf N : Set N) from h1.interior_eq]
     exact ⟨1, one_mem _⟩⟩
-  haveI : LocallyCompactSpace N := h2.locallyCompactSpace_of_mem_nhds_of_group (h1.mem_nhds (one_mem _))
+  have : LocallyCompactSpace N := h2.locallyCompactSpace_of_mem_nhds_of_group (h1.mem_nhds (one_mem _))
   exact ⟨Measure.haarMeasure P, inferInstance, Measure.haarMeasure_self⟩
 
 theorem exists_data_U {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] [CompleteSpace L] {ϖ : L}
@@ -165,7 +165,7 @@ theorem exists_data_U {L : Type} [Field L] [Valued L (WithZero (Multiplicative �
     rw [← map_inv, permRep_apply, permRep_apply, hw, apply_ite σ, map_one, map_zero]
     simp only [Fin.rev_inj, Equiv.Perm.eq_inv_iff_eq, eq_comm (a := j)]
   refine ⟨⟨φ, hφ, h1⟩, ⟨⟨_, hx⟩, ⟨hx, permRep _ w, ?_⟩, isWeylRep_permRep w⟩,
-    fun x _ _ => exists_haar ho hc ((isClosed_cell _).preimage continuous_subtype_val)⟩
+    fun x _ _ => exists_haar ho hc ((isClosed_cell _).preimage continuous_subtypeVal)⟩
   ext i j
   show (intL L).subtype ((permRep _ w).val i j) = (permRep L w).val i j
   simp only [permRep_apply, apply_ite (intL L).subtype, map_one, map_zero]

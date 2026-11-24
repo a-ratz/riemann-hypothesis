@@ -93,8 +93,8 @@ theorem sum_padicValNat_mul_le (v : ℕ → ℤ) (hv : ∀ a b, a ≠ 0 → b �
       intro _
       have : ∀ p ∈ s, (padicValNat p l : ℤ) * v p = if p = l then v l else 0 := by
         intro p hp
-        haveI := Fact.mk (hs p hp)
-        haveI := Fact.mk hl
+        have := Fact.mk (hs p hp)
+        have := Fact.mk hl
         split_ifs with h
         · subst h; simp [Nat.padicValNat_def, Nat.Prime.multiplicity_self]
         · simp [Nat.padicValNat_def, multiplicity_primes h]
@@ -107,7 +107,7 @@ theorem sum_padicValNat_mul_le (v : ℕ → ℤ) (hv : ∀ a b, a ≠ 0 → b �
       have hb := right_ne_zero_of_mul hab
       have : ∀ p ∈ s, (padicValNat p (a * b) : ℤ) * v p = (padicValNat p a : ℤ) * v p + (padicValNat p b : ℤ) * v p := by
         intro p hp
-        haveI := Fact.mk (hs p hp)
+        have := Fact.mk (hs p hp)
         rw [(show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) ha hb]; push_cast; ring
       rw [Finset.sum_congr rfl this, Finset.sum_add_distrib, hv a b ha hb]
       exact add_le_add (iha ha) (ihb hb)
@@ -118,7 +118,7 @@ theorem ram_sum_le_vV_discr (E : Type) [Field E] [NumberField E] (T : CDVR) (s :
     ∑ p ∈ s, (vV T.V (p : T.Fr) : ℝ) / e *
         ((padicValNat p (NumberField.discr E).natAbs : ℝ) / (Module.finrank ℚ E : ℝ)) * (X : ℝ) / 2 ≤
       (vV T.V (((NumberField.discr E).natAbs ^ X : ℕ) : T.Fr) : ℝ) / e := by
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   have hN : (NumberField.discr E).natAbs ≠ 0 := Int.natAbs_ne_zero.2 (NumberField.discr_ne_zero E)
   have h0 : ∀ a : ℕ, 0 ≤ vV T.V (a : T.Fr) := fun a => GlobalTheory.PlaceInt.HostChart.vV_nat_nonneg T a
   have h1 := sum_padicValNat_mul_le (fun a => vV T.V (a : T.Fr))

@@ -137,7 +137,7 @@ private theorem actM_pow_apply_mem_genSub {M : Type*} [AddCommGroup M] [Module �
     {v : M} (hv : v ∈ genSub E S) : ((actM E X) ^ m) v ∈ genSub E S := by
   have hE : ∀ a b, ∀ w ∈ genSub E S, E a b w ∈ genSub E S := by
     intro a b w hw
-    simp only [genSub, Submodule.mem_sInf, Set.mem_setOf_eq] at hw ⊢
+    simp only [genSub, Submodule.mem_sInf, Set.mem_ofPred_eq] at hw ⊢
     intro T hT
     exact hT.2 a b w (hw T hT)
   induction m with
@@ -205,7 +205,7 @@ theorem coefE_step (dual : Bool) (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedO
   have hR0 := hasSum_orbit_of_bound hσ hD hX y a' ha' 0 s (by simpa using hsum' s hs)
   have h1 : σ (NormedSpace.exp (((0 : ℝ) : ℂ) • X)) = 1 := by
     simp [NormedSpace.exp_zero, hσ.1.1]
-  simp only [h1, ContinuousLinearMap.one_apply] at hR0
+  simp only [h1, one_apply_eq_self] at hR0
   have hR := ((innerSL ℂ ((z : D) : H)).comp (σ h)).hasSum hR0
   have hterms : (fun m : ℕ => (s : ℂ) ^ m / (m.factorial : ℂ) *
       coefLam dual σ h (fun c => ((f c : D) : H))
@@ -273,7 +273,7 @@ theorem coefE_all (dual : Bool) (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn
 
   have hQ1 : CoefQ dual σ E V' ι f z 1 := by
     intro y hy
-    rw [coefE_tensGrp_one dual hσ, hσ.1.1, ContinuousLinearMap.one_apply]
+    rw [coefE_tensGrp_one dual hσ, hσ.1.1, one_apply_eq_self]
     simp only [← Submodule.coe_inner]
     exact (hz y hy).symm
 

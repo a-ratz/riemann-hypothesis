@@ -87,7 +87,7 @@ theorem neighbour_ne {Q : Subring K} (hQ : IsLocModel c Q) {t u : Q} {S E : Plac
     (hd : ringKrullDim Q = 2) (hS : S.IsPrimeOf Q) (ht : S.ord (t : K) = 1)
     (hu : E.ord (u : K) = 1) : E ≠ S := by
   rintro rfl
-  haveI := hQ.isLocalRing
+  have := hQ.isLocalRing
   have h0 : E.ord (0 : K) = 0 := by simp [Place.ord]
   have hle : IsLocalRing.maximalIdeal Q ≤
       (IsLocalRing.maximalIdeal E.ring).comap (incl hS.1) := by

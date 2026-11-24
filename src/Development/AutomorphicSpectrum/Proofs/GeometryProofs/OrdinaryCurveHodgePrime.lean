@@ -690,7 +690,7 @@ theorem leaf_abFactor (hZ : ZarhinStatement) (hD : HodgeTateDatumStatement) (p :
     ∃ cp : R, v (algebraMap R C cp) ^ (p - 1) = v (p : C) ∧ Leaf p cp M := by
   obtain ⟨A, _, L, hA, hL, hamp, T, N', _, pt, hpt, i, π, hiπ, -, rfl⟩ := hM
   obtain ⟨P, a, r, ha, hr, har⟩ := hZ C v R hv A L hA hL hamp
-  letI : Algebra ℤ_[p] R := (Av.zpLift p R hc).toAlgebra
+  let : Algebra ℤ_[p] R := (Av.zpLift p R hc).toAlgebra
   obtain ⟨⟨T'⟩, cp, hS, H, pt', hpt', hT⟩ := hD p C v R hv hp hc P
   obtain ⟨aN, haN⟩ := exists_hom hpt hpt' a
   obtain ⟨rN, hrN⟩ := exists_hom hpt' hpt r
@@ -800,7 +800,7 @@ theorem PositivityTheory.Xgn.test_leaf_lattice : GlobalTheory.CompanionTheory.Ar
   obtain ⟨χ', hχσ, hf⟩ := PositivityTheory.Xgn.TestLeafLattice.chi_add p RC v hv (σ τ) (χ τ) (hχ τ)
   obtain ⟨-, -, -, -, -, -, ⟨-, ⟨u, -, hw⟩, -⟩, -⟩ := hO
   obtain ⟨hC, -, hcompl, -⟩ := hT
-  haveI : CharZero C := charZero_of_injective_ringHom ((algebraMap Ω C).comp 𝔐.cst).injective
+  have : CharZero C := charZero_of_injective_ringHom ((algebraMap Ω C).comp 𝔐.cst).injective
   have hint : v.Integers RC := ⟨Subtype.val_injective, fun x => (hv _).1 x.2, fun r hr => ⟨⟨r, (hv _).2 hr⟩, rfl⟩⟩
   obtain ⟨cp, hcp, hleaf⟩ := PositivityTheory.Xgn.TestLeafLattice.leaf_abFactor hZ hD p C v RC hint hvp hcompl _ hab
   obtain ⟨t, ht⟩ := PositivityTheory.Xgn.TestLeafLattice.exists_ratio RC v hv p hw cp hcp
@@ -1305,12 +1305,12 @@ theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hAr hpq p _ hpS hfree hp2 hdisc b hb φ hφ A _ _ _ m _ hpm O _ _ _ _ _ _ _ t₀ Sg _ e φ' F _ _ _ pq sc w σ hOrb hSec G c' hc' P i hseq hBase C _ _ _ _ RC hT χ hχ
   classical
   obtain ⟨hAC, ⟨v, hv, hvp⟩, hcomp, hRC⟩ := id hT
-  haveI := hAC
-  haveI : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
-  haveI : CharZero C := (RingHom.charZero_iff (algebraMap Ω C).injective).1 inferInstance
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
+  have := hAC
+  have : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
+  have : CharZero C := (RingHom.charZero_iff (algebraMap Ω C).injective).1 inferInstance
+  have : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
     simp [Ideal.span_singleton_eq_bot, (Fact.out : p.Prime).ne_zero])
-  letI : Fintype (TestPt.NAdd E (D.p + D.q) p) := Fintype.ofFinite _
+  let : Fintype (TestPt.NAdd E (D.p + D.q) p) := Fintype.ofFinite _
   have hInt : v.Integers RC := ⟨Subtype.val_injective, fun x => (hv _).1 x.2, fun {x} h => ⟨⟨x, (hv _).2 h⟩, rfl⟩⟩
   have hw : algebraMap O C w = algebraMap Ω C (algebraMap O Ω w) := IsScalarTower.algebraMap_apply O Ω C w
   obtain ⟨hO1, -⟩ : (∃ u : O, IsUnit u ∧ w ^ (p - 1) = u * (p : O)) ∧ True := ⟨hOrb.2.2.2.2.2.2.1.2.1, trivial⟩
@@ -1334,8 +1334,8 @@ theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ
       simpa [map_mul] using this
     · show (if a = 0 then (0 : Ω) else 1) ∈ CR O y c'
       by_cases ha : a = 0
-      · simp only [ha, if_true]; exact zero_mem _
-      · simp only [ha, if_false]; exact one_mem _
+      · simp only [ha, ite_true]; exact zero_mem _
+      · simp only [ha, ite_false]; exact one_mem _
   have hBase' : ((chartD e b pq sc w P i).bc RC).Base RC p (algebraMap O C w) := by
     rw [hw]
     exact (_root_.GlobalTheory.CompanionTheory.Ar.Num.lattice_base_change_larger_ring (chartD e b pq sc w P i) (CR O y c') p (algebraMap O Ω w) _ hcd hBase C RC hRC).2

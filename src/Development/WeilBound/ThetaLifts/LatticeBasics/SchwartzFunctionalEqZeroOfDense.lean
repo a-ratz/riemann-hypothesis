@@ -92,7 +92,7 @@ theorem mulL_apply (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) : mulL L f x
 theorem mulL_pow_apply (L : V →L[ℝ] ℝ) (m : ℕ) (f : 𝓢(V, ℂ)) (x : V) : (mulL L ^ m) f x = (L x : ℂ) ^ m * f x := by
   induction m with
   | zero => simp
-  | succ m ih => rw [pow_succ', ContinuousLinearMap.mul_apply, mulL_apply, ih]; ring
+  | succ m ih => rw [pow_succ', mul_apply_eq_comp, mulL_apply, ih]; ring
 
 variable (L : V →L[ℝ] ℝ) {Q : V → ℂ} {w : ℝ}
 
@@ -177,7 +177,7 @@ theorem family_deriv (hQ : Q.HasTemperateGrowth) (hw : 0 < w) (hre : ∀ x, (Q x
         simp only [Complex.ofReal_zero, zero_mul, add_zero] at a2
         refine a2.congr_of_eventuallyEq (Eventually.of_forall fun t => ?_)
         simp [expo]
-      rw [h1.unique h2, SchwartzMap.smul_apply, mulL_apply, hG]
+      rw [h1.unique h2, smul_apply, mulL_apply, hG]
       simp only [Function.comp, smul_eq_mul]
       ring)
     T ((ContinuousLinearMap.toSpanSingleton ℂ (T (mulL L (G z)))).restrictScalars ℝ) (fun v => by simp)
@@ -545,7 +545,7 @@ theorem poly_mem {n : ℕ} (L : EuclideanSpace ℝ (Fin n) ≃L[ℝ] V)
     obtain ⟨G, hG, hGy⟩ := hR
     refine ⟨F + G, N.add_mem hF hG, fun y => ?_⟩
     have h : polE (P + R) (L.symm y) = polE P (L.symm y) + polE R (L.symm y) := by simp [polE]
-    rw [h, add_mul, SchwartzMap.add_apply, hFy, hGy]
+    rw [h, add_mul, add_apply, hFy, hGy]
   | mul_X P p hP =>
     obtain ⟨F, hF, hFy⟩ := hP
     let l : V →L[ℝ] ℝ := (EuclideanSpace.proj (𝕜 := ℝ) p).comp (L.symm : V →L[ℝ] EuclideanSpace ℝ (Fin n))

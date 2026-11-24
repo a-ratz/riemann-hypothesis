@@ -137,8 +137,8 @@ private theorem exists_covBy_relJacD {s : ℕ} {d t : Fin s → ℕ} {d' : ∀ a
   refine exists_covBy_of_split (fun (S T : Subrepresentation ρ) => IsSubquotient Θ (relJacD e' (subQuot S T)))
     ?_ ?_ ⊤ ⊥ bot_le ?_
   · rintro S ⟨R, f, hf⟩
-    haveI := subsingleton_subQuot_self S
-    haveI := Model.nontrivial_of_isIrreducible hΘ
+    have := subsingleton_subQuot_self S
+    have := Model.nontrivial_of_isIrreducible hΘ
     obtain ⟨u, hu⟩ := exists_ne (0 : U)
     obtain ⟨⟨v, hv⟩, rfl⟩ := hf u
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ v
@@ -353,7 +353,7 @@ theorem UpperTheory.Lit.Full.diag3 :
   intro hG hBZ k _ _ _ _ J ρ w N hd h0 h1 h2 h3
   classical
   let M := fun i : Fin 3 => Fin (w i).1
-  haveI : Fintype (SizeMatrix M M) := Fintype.ofFinite _
+  have : Fintype (SizeMatrix M M) := Fintype.ofFinite _
   let b₀ : SizeMatrix M M := ⟨fun i j => if i = j then (w i).1 else 0, by
     refine ⟨fun i => ?_, fun j => ?_⟩
     · simp [M]
@@ -388,8 +388,8 @@ theorem UpperTheory.Lit.Full.diag3 :
     · subst hij
       have r := hr i
       rw [Finset.sum_eq_single i (fun j _ hj => hz i j hj) (by simp)] at r
-      exact r.trans (if_pos rfl).symm
-    · exact (hz i j (Ne.symm hij)).trans (if_neg hij).symm
+      exact r.trans (ite_eq_left rfl).symm
+    · exact (hz i j (Ne.symm hij)).trans (ite_eq_right hij).symm
   · simp
 end -- clump:auto
 end -- clump:auto
@@ -432,7 +432,7 @@ private theorem quoMap_not_inj {ν : Representation ℂ G V} {X : Subrepresentat
 private theorem irr_of_atom {ν : Representation ℂ G V} {X : Subrepresentation ν} (h : IsAtom X) :
     X.toRepresentation.IsIrreducible := by
   obtain ⟨v, hv, h0⟩ := exists_ne_of_ne_bot h.1
-  haveI : Nontrivial (Subrepresentation X.toRepresentation) := ⟨⊥, ⊤, fun e => by
+  have : Nontrivial (Subrepresentation X.toRepresentation) := ⟨⊥, ⊤, fun e => by
     have h1 : (⟨v, hv⟩ : X.toSubmodule) ∈ (⊥ : Subrepresentation X.toRepresentation).toSubmodule := e ▸ trivial
     exact h0 (congrArg Subtype.val (show (⟨v, hv⟩ : X.toSubmodule) = 0 from h1))⟩
   refine ⟨fun S => ?_⟩
@@ -464,7 +464,7 @@ private theorem exists_min_quot (ψ : H →* G) (A : Representation ℂ H W) {μ
       Function.Surjective q ∧ IsSubquotient A (ν.comp ψ : Representation ℂ H U) ∧
       ∀ (Y : Type) [AddCommGroup Y] [Module ℂ Y] (τ : Representation ℂ G Y) (f : ν.IntertwiningMap τ),
         Function.Surjective f → IsSubquotient A (τ.comp ψ : Representation ℂ H Y) → Function.Injective f := by
-  haveI := ((hasFiniteLength_iff_wellFounded μ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded μ).1 hl).1
   let P : Subrepresentation μ → Prop := fun K => ∃ (U : Type) (_ : AddCommGroup U) (_ : Module ℂ U)
     (ν : Representation ℂ G U) (q : μ.IntertwiningMap ν), Function.Surjective q ∧
       IsSubquotient A (ν.comp ψ : Representation ℂ H U) ∧ q.ker = K
@@ -479,7 +479,7 @@ private theorem exists_min_quot (ψ : H →* G) (A : Representation ℂ H W) {μ
 
 private theorem wf_of_surj {μ : Representation ℂ G V} {ν : Representation ℂ G W} (hl : HasFiniteLength μ)
     (q : μ.IntertwiningMap ν) (hq : Function.Surjective q) : WellFoundedLT (Subrepresentation ν) := by
-  haveI := ((hasFiniteLength_iff_wellFounded μ).1 hl).2
+  have := ((hasFiniteLength_iff_wellFounded μ).1 hl).2
   refine StrictMono.wellFoundedLT (f := subComap q) fun S T h => lt_of_le_of_ne (subComap_mono q h.le) fun e => ?_
   refine h.not_ge fun w hw => ?_
   obtain ⟨v, rfl⟩ := hq w
@@ -566,8 +566,8 @@ private theorem exists_irr_quot {G V W : Type} [Group G] [TopologicalSpace G] [I
   classical
   obtain ⟨U, _, _, ν, q, hq, hν, hmin⟩ := exists_min_quot ψ A hl hA
   refine ⟨U, _, _, ν, q, hq, hν, ?_⟩
-  haveI := wf_of_surj hl q hq
-  haveI := Model.nontrivial_of_isIrreducible hAi
+  have := wf_of_surj hl q hq
+  have := Model.nontrivial_of_isIrreducible hAi
   have hνs : IsSmooth ν := (IsSubquotient.of_surjective q hq).isSmooth hs
   have hbt : (⊤ : Subrepresentation ν) ≠ ⊥ := by
     intro e
@@ -591,13 +591,13 @@ private theorem exists_irr_quot {G V W : Type} [Group G] [TopologicalSpace G] [I
   choose c hc using hcen
   let ω : GL (Fin b) k → ℂ := fun z => if h : z ∈ Subgroup.center (GL (Fin b) k) then c z h else 0
   have hων : GroundTheory.Automorphic.Parabolic.HasCentralChar (ν.comp ψ : Representation ℂ _ U) ω := fun z hz u => by
-    simp only [ω, dif_pos hz]
+    simp only [ω, dite_eq_left hz]
     exact hc z hz u
   have hωA : GroundTheory.Automorphic.Parabolic.HasCentralChar A ω := fun z hz =>
     scalar_of_subquot hν (hων z hz)
   have hsup := GlobalTheory.CompanionTheory.CuspNotInd.isSupercuspidal_of_isCuspidal hAc
   have hsm : IsSmooth (ν.comp ψ : Representation ℂ _ U) := isSmooth_comp hνs ψ hψ
-  haveI := hAi
+  have := hAi
   have hco := GroundTheory.Automorphic.Parabolic.isCompl_isotypicPart_isotypicKernel hAc.1 hsup hωA hsm hων
   let K : Subrepresentation ν := ⟨isotypicKernel A (ν.comp ψ : Representation ℂ _ U), fun g u hu => by
     obtain ⟨h, g', rfl, hg'⟩ := hdec g
@@ -738,7 +738,7 @@ private theorem inj_dichotomy {G V W V₁ V₂ : Type} [Group G] [AddCommGroup V
     (hσ : σ.IsIrreducible) (hι : Function.Injective ι) (hex : ∀ v, p v = 0 → ∃ u, ι u = v) (h : Inj σ ρ) :
     Inj σ ρ₁ ∨ Inj σ ρ₂ := by
   obtain ⟨f, hf⟩ := h
-  haveI := hσ
+  have := hσ
   rcases Representation.IsIrreducible.injective_or_eq_zero (p.comp f) with h1 | h1
   · exact Or.inr ⟨_, h1⟩
   · left
@@ -816,8 +816,8 @@ private theorem exists_covBy_inj {r t N : ℕ} (hN : r + t = N) {U V W : Type} [
   refine exists_covBy_of_split (fun (S T : Subrepresentation B) =>
     Inj π (ind₂ (stdSum hN) (extTensor A (subQuot S T)))) ?_ ?_ ⊤ ⊥ bot_le ?_
   · intro S hS
-    haveI := subsingleton_subQuot_self S
-    haveI := tensor_subsingleton_right (F := ℂ) (V := V)
+    have := subsingleton_subQuot_self S
+    have := tensor_subsingleton_right (F := ℂ) (V := V)
       (W := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule)
     exact not_isSubquotient_ind₂ _ _ hπ hS.isSubquotient
   · intro S M T hTM hMS hQ
@@ -973,7 +973,7 @@ private theorem eq_single_of_monomial {ι σ : Type*} (Ψ : (ι →₀ ℤ) ≃+
       exact hx (hU w x hw' hx0).symm
   have h2 : C w * AddMonoidAlgebra.coeff (Ψ (Finsupp.single w 1)) m = 1 := by
     have h3 := congrArg (fun p => AddMonoidAlgebra.coeff (Ψ p) m) h1
-    simp only [map_zsmul, ep, MvPolynomial.coeff_monomial, if_true, MvPolynomial.coeff_smul, smul_eq_mul] at h3
+    simp only [map_zsmul, ep, MvPolynomial.coeff_monomial, ite_true, MvPolynomial.coeff_smul, smul_eq_mul] at h3
     exact h3.symm
   have h4 : C w = 1 := by
     have := hnn w
@@ -992,7 +992,7 @@ private theorem occ_of_cls {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
   obtain rfl : n = N := by
     by_contra hne
     refine hw ?_
-    rw [clsGL, Finsupp.mapDomain_notin_range]
+    rw [clsGL, Finsupp.mapDomain_of_notMem_range]
     rintro ⟨c', h'⟩
     exact hne (congrArg Sigma.fst h').symm
   refine ⟨rfl, fun _ => ?_⟩
@@ -1021,7 +1021,7 @@ private theorem prod_X_monomial {σ : Type*} {h : ℕ} (Δ : Fin h → σ) (f : 
     (hf : ∀ i, f i = MvPolynomial.X (Δ i)) : ∃ m, ∏ i, f i = MvPolynomial.monomial m (1 : ℤ) := by
   refine Finset.prod_induction _ (fun p => ∃ m, p = MvPolynomial.monomial m (1 : ℤ)) ?_ ⟨0, rfl⟩ fun i _ => ?_
   · rintro _ _ ⟨a, rfl⟩ ⟨b, rfl⟩
-    exact ⟨a + b, by rw [MvPolynomial.monomial_mul, one_mul]⟩
+    exact ⟨a + b, by rw [MvPolynomial.monomial_mul_monomial, one_mul]⟩
   · exact ⟨_, hf i⟩
 
 private theorem occ_prodIrr {h N : ℕ} (z : Fin h → IrrGL (k := k)) (hd : ∑ i, (z i).1 = N)
@@ -1245,7 +1245,7 @@ private theorem isIrreducible_of_occurs (hBZ : GlobalTheory.Published.BernsteinZ
       1 ≤ jhMult ρ (jac e T.toRepresentation))
     (hjm : jhMult ρ (jac e π) ≤ 1) : π.IsIrreducible := by
   obtain ⟨hGT, hLT⟩ := (hasFiniteLength_iff_wellFounded _).1 hfl
-  haveI : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
+  have : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
   have hnt : (⊤ : Subrepresentation π) ≠ ⊥ := fun hb => by
     obtain ⟨u, hu⟩ := exists_ne (0 : V)
     have h1 : u ∈ (⊥ : Subrepresentation π) := hb ▸ trivial
@@ -1306,7 +1306,7 @@ private theorem isIrreducible_parInd_emb (hBZ : GlobalTheory.Published.Bernstein
     (hun : IsUnitarisable (parInd e ρ)) (f : (parInd e ρ).IntertwiningMap (parInd e' σ))
     (hf : Function.Injective f) (hjm : jhMult σ (jac e' (parInd e' σ)) ≤ 1) :
     (parInd e ρ).IsIrreducible := by
-  haveI := GlobalTheory.CompanionTheory.SocleJm.nontrivial_indSp e hρ hsρ
+  have := GlobalTheory.CompanionTheory.SocleJm.nontrivial_indSp e hρ hsρ
   have hsw : IsSmooth (parInd e' σ) := isSmooth_parInd _ _
   refine isIrreducible_of_occurs hBZ e' hσ (parInd e ρ) (isSmooth_parInd _ _)
     ((hBZ k).2.2.1 _ _ _ e _ ρ hsρ (hasFiniteLength_of_isIrreducible hρ)) hun (fun T v hv hv0 => ?_) ?_

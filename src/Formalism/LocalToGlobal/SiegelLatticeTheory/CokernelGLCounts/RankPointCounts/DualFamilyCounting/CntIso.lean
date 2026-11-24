@@ -96,7 +96,7 @@ theorem orbitFinite_of (hA : UnipotentIntegralIsGroup) (hB : OrbitReps) : OrbitF
   obtain ⟨n₀, hn₀, hk⟩ := hK F' hF'
   refine ⟨_, hk, ?_⟩
   ext F''
-  simp only [Set.mem_setOf_eq, NilradicalFlagMoved]
+  simp only [Set.mem_ofPred_eq, NilradicalFlagMoved]
   constructor
   · rintro ⟨hE, m, hm, he, hz⟩
     refine ⟨hE, n₀.trans m, htrans _ hn₀ _ hm, fun a => ?_, ?_⟩
@@ -180,7 +180,7 @@ theorem ci_EZ_map {D : Formalism.BasicNotions.D7} {β : (VS D).V ≃ₗ[D.host.E
     mapL β hβ F' ∈ EZ T' (mapF β hβ F0) (Formalism.HermitianLatticesTheory.gmap β Λ) Z := by
   have hlf : lf D (mapF β hβ F0) = mapL β hβ (lf D F0) := lflag_ext rfl rfl
   unfold EZ at h ⊢
-  rw [Set.mem_setOf_eq] at h ⊢
+  rw [Set.mem_ofPred_eq] at h ⊢
   rw [hlf]
   obtain ⟨⟨hL, ⟨ξ, hξ⟩, hG⟩, hA, hGen, hF, hZ⟩ := h
   have hG' : Gval (mapL β hβ (lf D F0)) (mapL β hβ F') ≠ 0 := by

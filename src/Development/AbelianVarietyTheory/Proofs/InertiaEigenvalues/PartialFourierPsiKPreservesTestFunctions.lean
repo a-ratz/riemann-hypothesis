@@ -150,6 +150,6 @@ theorem GlobalTheory.JR.Hyp.pt_isTest : ∀ (F E : Type) [NontriviallyNormedFiel
   obtain ⟨i, hi, hai⟩ := Set.mem_iUnion₂.1 (ht ha)
   refine Set.mem_iUnion₂.2 ⟨i, hi, subset_tsupport _ ?_⟩
   rw [hG] at hne
-  simp only [Set.mem_setOf_eq] at hai
+  simp only [Set.mem_ofPred_eq] at hai
   rw [Function.mem_support]
   rwa [hai] at hne

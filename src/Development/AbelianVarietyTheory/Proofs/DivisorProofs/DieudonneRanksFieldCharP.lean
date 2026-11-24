@@ -101,7 +101,7 @@ theorem range_rigExtMap_relFrob (G : PDivGroup p K) :
     have induct (P : (frobTwist h G).RigExt → Prop)
         (htmul : ∀ (r : K) y, P (r • (frobProj h G).rig y))
         (hadd : ∀ x y, P x → P y → P (x + y)) : P x := by
-      letI := (frobRing h).toAlgebra
+      let := (frobRing h).toAlgebra
       obtain ⟨y, rfl⟩ := (liftSemi_rig_bijective (R := K) K G h
         (.inl (@Module.Flat.of_free K K _ _ (_) (@Module.Free.of_divisionRing K K _ _ (_))))).2 x
       induction y using TensorProduct.inductionOn with

@@ -67,7 +67,7 @@ theorem exists_form (hv : v.Integers O) (G : PDivGroup p O) (ζ : (PDivGroup.mu 
     (hζ : Function.Bijective fun a : ℤ_[p] => a • ζ) :
     ∃ B : G.Tate →ₗ[ℤ_[p]] G.dual.Tate →ₗ[ℤ_[p]] ℤ_[p], (∀ s χ, pairing G O s χ = B s χ • ζ) ∧
       Function.Bijective B ∧ Function.Bijective B.flip := by
-  haveI := isIntegrallyClosedIn_of_integers hv
+  have := isIntegrallyClosedIn_of_integers hv
   let z := LinearEquiv.ofBijective (LinearMap.toSpanSingleton ℤ_[p] _ ζ) hζ
   refine ⟨(pairing G O).compr₂ z.symm.toLinearMap, fun s χ => (z.apply_symm_apply _).symm, ?_, ?_⟩
   · exact (LinearEquiv.congrRight (M := G.dual.Tate) z.symm).bijective.comp (G.pairing_bijective C)

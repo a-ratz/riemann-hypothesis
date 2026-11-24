@@ -162,8 +162,8 @@ theorem good_of_finrank_eq [Module.Finite K V] (n : ℕ) :
   · have l1 : ¬ S₁ ≤ S₂ := fun h => hE (Submodule.eq_of_le_of_finrank_eq h (h₁.trans h₂.symm))
     have l2 : ¬ S₂ ≤ S₁ := fun h =>
       hE (Submodule.eq_of_le_of_finrank_eq h (h₂.trans h₁.symm)).symm
-    obtain ⟨u, hu1, hu2⟩ := SetLike.not_le_iff_exists.1 l1
-    obtain ⟨v, hv2, hv1⟩ := SetLike.not_le_iff_exists.1 l2
+    obtain ⟨u, hu1, hu2⟩ := IsConcreteLE.not_le_iff_exists.1 l1
+    obtain ⟨v, hv2, hv1⟩ := IsConcreteLE.not_le_iff_exists.1 l2
     obtain ⟨φ, a1, a2⟩ := exists_dual _ _ hu2
     obtain ⟨ψ, b1, b2⟩ := exists_dual _ _ hv1
     have c1 := finrank_inf_ker S₁ φ u hu1 a1
@@ -622,7 +622,7 @@ theorem single_field (hK : IsRes i K) {ρ : GE N →* GL (Fin D.R.r) (X.O0 i)} (
   have hεc : ∀ g, algebraMap (X.O0 i) K ((eps0 X i (cConj X g) : (X.O0 i)ˣ) : X.O0 i) =
       algebraMap (X.O0 i) K ((eps0 X i g : (X.O0 i)ˣ) : X.O0 i) := fun g => by rw [eps_cj]
   by_cases hl : ResIso i s K
-  · rw [if_neg (nu_pos_of_resIso i s K hsd hl).ne']
+  · rw [ite_eq_right (nu_pos_of_resIso i s K hsd hl).ne']
     obtain ⟨A₁, hu, hA⟩ := hl
     obtain ⟨A, rfl⟩ := hu
     obtain ⟨R₀, hR⟩ := abs_two (ρ := red i K (Tgl i s)) (ρ' := red i K ρ) (cConj X) continuous_cj _ (pairing i s K hρ) hεc
@@ -730,8 +730,8 @@ theorem single (hsd : SelfDual i s) (h1 : SpanOdd i s) (h2 : SpanTwo i s) (h3 : 
         (∀ a, ∃ b g, g * φ b * g⁻¹ * (h a)⁻¹ ∈ U) → Corank bkP i s φ φ' (if nu X i = 0 then 0 else 1) := by
   by_cases hρ : ∃ ρ, IsDual i s ρ
   · obtain ⟨ρ, hρ⟩ := hρ
-    letI : TopologicalSpace (IsLocalRing.ResidueField (X.O0 i)) := ⊥
-    haveI : DiscreteTopology (IsLocalRing.ResidueField (X.O0 i)) := ⟨rfl⟩
+    let : TopologicalSpace (IsLocalRing.ResidueField (X.O0 i)) := ⊥
+    have : DiscreteTopology (IsLocalRing.ResidueField (X.O0 i)) := ⟨rfl⟩
     obtain ⟨R₀, hR⟩ := single_field bkP i s (IsLocalRing.ResidueField (X.O0 i))
       (fun x hx => (IsLocalRing.residue_eq_zero_iff x).2 hx) hρ hsd h1 h2 h3
     refine ⟨R₀, fun z hz L hL => ?_⟩
@@ -754,7 +754,7 @@ theorem chooseH : GlobalFiniteness → ∀ (D : Formalism.BasicNotions.D7) (N : 
   classical
   choose R hR using fun s : T => single bkP i s.1 (hT s.1 s.2).2.2.1 (H _ (hT s.1 s.2)).1 (H _ (hT s.1 s.2)).2.1
     (H _ (hT s.1 s.2)).2.2
-  haveI : Fintype T := Fintype.ofFinite T
+  have : Fintype T := Fintype.ofFinite T
   let e := Fintype.equivFin (Σ s : T, Fin (R s))
   refine ⟨Fintype.card (Σ s : T, Fin (R s)), fun z hz L ho hn hL => ?_⟩
   choose h U a1 a2 a3 a4 using fun s : T => hR s z hz L (hL s.1 s.2)

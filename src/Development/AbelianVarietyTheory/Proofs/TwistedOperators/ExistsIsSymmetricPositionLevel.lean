@@ -127,7 +127,7 @@ theorem exists_residue_char {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {�
     have h2 := (hϖ _).1 h1
     have h3 : ψ ((ϖ⁻¹ : kˣ) * ((y : k) - z)) = 1 := by
       refine hψ.eq_one ?_
-      have h0 : 0 < valuation k (ϖ : k) := by simp [zero_lt_iff]
+      have h0 : 0 < valuation k (ϖ : k) := by simp [pos_iff_ne_zero]
       simp only [cball, Set.mem_ofPred_eq, Units.val_one, map_one, map_mul, Units.val_inv_eq_inv_val, map_inv₀]
       rwa [inv_mul_le_one₀ h0]
     rw [show ((ϖ⁻¹ : kˣ) : k) * (y : k) = (ϖ⁻¹ : kˣ) * ((y : k) - z) + (ϖ⁻¹ : kˣ) * (z : k) by ring,

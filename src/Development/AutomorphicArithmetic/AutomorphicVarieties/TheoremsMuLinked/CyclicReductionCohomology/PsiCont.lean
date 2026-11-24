@@ -293,7 +293,7 @@ theorem UpperTheory.V.Th.locVO :
   refine ⟨∑ t, C t, fun m => ?_⟩
   refine And.imp_right (fun h2 => ?_) <| filt_ht (fun t : {p : Fin n × Fin n // p.1 ≤ p.2} => (t.1.2 : ℕ) - t.1.1)
     (fun t => crd y v m t.1.1 t.1.2) (P m) (fun β h => ?_) (fun t => (hC t m).1) fun t β h => ?_
-  · refine h2.trans ((Finset.prod_le_prod' fun t _ => (hC t m).2).trans (le_of_eq ?_))
+  · refine h2.trans ((Finset.prod_le_prod fun t _ => (hC t m).2).trans (le_of_eq ?_))
     rw [Finset.prod_pow_eq_pow_sum, Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, card_le', smul_eq_mul]
     congr 1
     ring

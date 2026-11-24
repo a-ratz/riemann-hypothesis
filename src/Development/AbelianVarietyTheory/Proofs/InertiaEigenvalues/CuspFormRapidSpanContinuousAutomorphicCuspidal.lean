@@ -74,8 +74,8 @@ theorem avg_eq_zero {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsT
   have hfun : (fun x => F (blkU (blkIxHomeo r x) * g)) = fun x => F (unip x * g) :=
     funext fun x => by rw [← blkU_comp_equiv]; rfl
   rw [hfun] at hper2 ⊢
-  letI : MeasurableSpace (BlockIx a r → Ad E) := borel _
-  haveI : BorelSpace (BlockIx a r → Ad E) := ⟨rfl⟩
+  let : MeasurableSpace (BlockIx a r → Ad E) := borel _
+  have : BorelSpace (BlockIx a r → Ad E) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, hF, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one _ (ratN E a r) (isCoLat_ratV E (BlockIx a r))
   obtain ⟨-, -, -, hint⟩ := _root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg _ _ (isCoLat_ratV E (BlockIx a r)) μ 𝓕 hμ hF _ hper2
   have hc' := hc r hr hra' μ 𝓕 hμ hF g

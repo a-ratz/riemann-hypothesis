@@ -100,7 +100,7 @@ theorem finite_quot {A₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsLattice K
     Module.Finite.of_restrictScalars_finite (𝓞 K) _ _
   have : Finite (↥A₀ ⧸ ((extP K 𝔭) ^ k • ⊤ : Submodule (𝓞 K) ↥A₀)) :=
     Module.finite_of_finite (𝓞 K ⧸ extP K 𝔭 ^ k)
-  haveI := h𝔭.isPrime
+  have := h𝔭.isPrime
   have ιMemPow {a : 𝓞 F} (ha : a ∈ 𝔭 ^ k) :
       algebraMap (𝓞 F) (𝓞 K) a ∈ extP K 𝔭 ^ k := by
     change algebraMap (𝓞 F) (𝓞 K) a ∈ Ideal.map (algebraMap (𝓞 F) (𝓞 K)) 𝔭 ^ k

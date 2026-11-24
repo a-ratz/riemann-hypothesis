@@ -291,7 +291,7 @@ theorem isRegularLocalRing_locAt_chart (P : Ideal (MvPolynomial (Σ k, ι k) ℂ
 
       simp only [map_add (f := _), map_sum, map_smul, map_zero, smul_eq_mul, v, Sum.elim_inl, Sum.elim_inr,
       hlamG, hlamX, mul_zero, Finset.sum_const_zero, zero_add, mul_ite, mul_one,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
       exact h
     have hg2 : ∑ i, g (Sum.inl i) • grad (G (a i)) = 0 := by
       simpa only [v, Sum.elim_inl, Sum.elim_inr, hK, zero_smul, Finset.sum_const_zero, add_zero]

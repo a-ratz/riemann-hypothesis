@@ -102,10 +102,10 @@ theorem frame_at_of_smooth [IsCommMonObj G] (hs : Smooth G.hom) (M : LieModel G 
     have := MonObj.comp_one (M := G) (Over.homMk x (by simp) : Over.mk x ⟶ Over.mk (𝟙 X))
     exact (congrArg (fun k : Over.mk x ⟶ G => k.left) this).symm
   obtain ⟨U, hU, W, hW, hx, e, hsm⟩ := Smooth.exists_isStandardSmooth G.hom (s p.1)
-  letI : Algebra Γ(X, U) Γ(G.left, W) := (G.hom.appLE U W e).hom.toAlgebra
-  haveI : Algebra.IsStandardSmooth Γ(X, U) Γ(G.left, W) := hsm
-  haveI : Nonempty W := ⟨⟨s p.1, hx⟩⟩
-  haveI : Nontrivial Γ(G.left, W) := inferInstance
+  let : Algebra Γ(X, U) Γ(G.left, W) := (G.hom.appLE U W e).hom.toAlgebra
+  have : Algebra.IsStandardSmooth Γ(X, U) Γ(G.left, W) := hsm
+  have : Nonempty W := ⟨⟨s p.1, hx⟩⟩
+  have : Nontrivial Γ(G.left, W) := inferInstance
   let c := Module.finBasis Γ(G.left, W) Ω[Γ(G.left, W)⁄Γ(X, U)]
   obtain ⟨d, w, hd⟩ := exists_isCoord c
   have hc : IsChart (A := Γ(X, U)) (B := Γ(G.left, W)) hW.fromSpec hU.fromSpec :=
@@ -268,14 +268,14 @@ variable {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {U : Set
 theorem finrank_eigSp (Z : CptOver Y U) (τ : E →+* ℂ) :
     Module.finrank Z.Ω (eigSp Z.ρ (Z.inc.comp (tauIn c τ))) = D.mult τ := by
   classical
-  letI : Algebra c.F Z.Ω := Z.inc.toAlgebra
+  let : Algebra c.F Z.Ω := Z.inc.toAlgebra
   let x : Sp Z.Ω ⟶ Xo.X := Z.ξ₀ ≫ pullback.fst _ _
   have hx0 : x ≫ Xo.s = Formalism.L2.Pj.sOf c Z.Ω := by
     show (Z.ξ₀ ≫ pullback.fst _ _) ≫ Xo.s = _
     rw [Category.assoc, pullback.condition, ← Category.assoc, Z.over_inc]
     show Spec.map _ ≫ Spec.map _ = Spec.map _
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
-  haveI hs : Smooth ((Over.pullback x).obj Xo.univ.t.G).hom := by
+  have hs : Smooth ((Over.pullback x).obj Xo.univ.t.G).hom := by
     have := Xo.univ.t.semi.smooth
     show Smooth (pullback.snd Xo.univ.t.G.hom x)
     infer_instance
@@ -363,7 +363,7 @@ open EigVb
 theorem isVBOn_eig_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ), (Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) → τ (H.rt : E) = H.rt0 → (Z.eig τ).IsVBOn Z.genFib D.p (eigSp Z.ρ (Z.inc.comp (tauIn c τ))) ∧ (Z.eig (ComplexEmbedding.conjugate τ)).IsVBOn Z.genFib D.q (eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ)))) ∧ (∀ x ∈ Z.genFib, ∃ g : ℕ, ∃ b : Fin g → Z.V, Z.M.lat.IsFrameAt b x ∧ ∀ σ' : E →+* ℂ, ∃ S : Finset (Fin g), Z.eig σ' x = Submodule.span (regAt _ x) (b '' S)) ∧ Z.genFib.Nonempty := by
   rintro E _ _ _ H D l Xo c O _ β Y U Z τ ⟨hinj, -, hfr⟩ hτ
   classical
-  haveI : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
+  have : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
   let σ : (E →+* ℂ) → (𝓞 E →+* Z.Ω) := fun s => Z.inc.comp (tauIn c s)
   let φ : (E →+* ℂ) → (E →+* Z.Ω) := fun s => Z.inc.comp (Formalism.L2.Pj.embF c s)
   have hφ : Function.Injective φ := by
@@ -381,7 +381,7 @@ theorem isVBOn_eig_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     obtain ⟨W, h, b, hb, hf⟩ := lat_isVB_of_smooth Y.t.semi.smooth Z.M p (Set.mem_univ _)
     exact ⟨W, h, b, hb, fun q _ hq => hf q (Set.mem_univ _) hq⟩
   have hst : ∀ p ∈ Z.genFib, ∀ a, ∀ e ∈ Z.M.lat p, Z.ρ a e ∈ Z.M.lat p := fun p _ a e he => by
-    haveI := Y.t.act.hom a
+    have := Y.t.act.hom a
     exact lat_stable Z.M _ (Z.ρ a) (Z.act a) p he
   have hreg : ∀ p ∈ Z.genFib, ∀ s a, σ s a ∈ regAt (Z.ξ₀ ≫ Y.j) p :=
     fun p hp s a => inc_mem_regAt Z hinj hfr p hp (tauIn c s a)
@@ -406,12 +406,12 @@ theorem isVBOn_eig_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     nlinarith [sq_nonneg r]
   refine ⟨?_, ?_, ?_, ?_⟩
   · have h := hV τ
-    have hr : Module.finrank Z.Ω (eigSp Z.ρ (σ τ)) = D.p := (finrank_eigSp Z τ).trans (if_pos hτ)
+    have hr : Module.finrank Z.Ω (eigSp Z.ρ (σ τ)) = D.p := (finrank_eigSp Z τ).trans (ite_eq_left hτ)
     rw [hr] at h
     exact h
   · have h := hV (ComplexEmbedding.conjugate τ)
     have hr : Module.finrank Z.Ω (eigSp Z.ρ (σ (ComplexEmbedding.conjugate τ))) = D.q :=
-      (finrank_eigSp Z _).trans (if_neg hne)
+      (finrank_eigSp Z _).trans (ite_eq_right hne)
     rw [hr] at h
     exact h
   · intro x hx

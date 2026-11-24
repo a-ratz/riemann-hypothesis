@@ -68,7 +68,7 @@ theorem measurable_ofComplex_hp : Measurable (ofComplex : ℂ → ℍ) := by
     funext w
     by_cases hw : 0 < w.im
     · simp [hw, ofComplex_apply_of_im_pos hw]
-    · simp only [Function.comp, hw, if_false]
+    · simp only [Function.comp, hw, ite_false]
       rw [ofComplex_apply_of_im_nonpos (not_lt.mp hw),
         ofComplex_apply_of_im_nonpos (le_refl _ : (0 : ℂ).im ≤ 0)]
   rw [h]
@@ -138,7 +138,7 @@ theorem restrict_strip_eq_map : (volume : Measure ℍ).restrict strip = Measure.
   have h2 : ptXY ⁻¹' strip ∩ Set.univ ×ˢ Set.Ioi 0 = Set.Ico 0 1 ×ˢ Set.Ioi 0 := by
     ext ⟨x, y⟩
     simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_prod, Set.mem_univ, true_and,
-      Set.mem_Ioi, Set.mem_Ico, strip, Set.mem_setOf_eq]
+      Set.mem_Ioi, Set.mem_Ico, strip, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨h, hy⟩
       rw [ptXY_re x y hy] at h

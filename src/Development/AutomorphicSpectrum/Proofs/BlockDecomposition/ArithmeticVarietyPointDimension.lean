@@ -286,7 +286,7 @@ theorem topologicalKrullDim_closure_eq (Y : Scheme.{0}) (f : Y ⟶ Spec (.of ℤ
   obtain ⟨q', hq'⟩ := (specializes_iff_mem_closure.mpr z.2).mem_open
     j'.isOpenEmbedding.isOpen_range ⟨y', hy⟩
   refine ⟨Subtype.val ⁻¹' Set.range j',
-    j'.isOpenEmbedding.isOpen_range.preimage continuous_subtype_val, ⟨y', hy⟩, ?_⟩
+    j'.isOpenEmbedding.isOpen_range.preimage continuous_subtypeVal, ⟨y', hy⟩, ?_⟩
   rw [← topologicalKrullDim_eq_of_isEmbedding (IsEmbedding.subtypeVal.comp IsEmbedding.subtypeVal)
     (Z := Set.range j' ∩ closure {j q})
     (by rw [Set.range_comp, Subtype.range_coe, Subtype.image_preimage_coe, Set.inter_comm])]

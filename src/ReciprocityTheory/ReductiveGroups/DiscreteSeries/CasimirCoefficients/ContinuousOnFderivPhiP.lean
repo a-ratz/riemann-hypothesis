@@ -88,14 +88,14 @@ lemma contDiff_lead (i : ℕ) : ContDiff ℂ 1 (fun z : 𝕄 => lead i z) := by
         ∑ σ : Equiv.Perm (Fin i), ((Equiv.Perm.sign σ : ℤ) : ℂ) *
           ∏ j, z (Fin.castLE h (σ j)) (Fin.castLE h j) := by
       funext z
-      simp only [lead, dif_pos h, Matrix.det_apply']
+      simp only [lead, dite_eq_left h, Matrix.det_apply']
       rfl
     rw [e]
     exact ContDiff.sum fun σ _ => contDiff_const.mul
       (contDiff_prod fun j _ => contDiff_apply_apply ℂ _ _)
   · have e : (fun z : 𝕄 => lead i z) = fun _ => 0 := by
       funext z
-      simp only [lead, dif_neg h]
+      simp only [lead, dite_eq_right h]
     rw [e]
     exact contDiff_const
 
@@ -133,7 +133,7 @@ def conjCLM (A B : Matrix (Fin n) (Fin n) ℂ) : 𝕄 →L[ℂ] 𝕄 :=
 variable {ε : Fin n → Bool} {Λ : Fin n → ℝ}
 
 lemma continuous_toMK' : Continuous fun k : KG ε => toMK k :=
-  (continuous_toM ε).comp continuous_subtype_val
+  (continuous_toM ε).comp continuous_subtypeVal
 
 lemma continuous_toMK_inv : Continuous fun k : KG ε => toMK k⁻¹ :=
   continuous_toMK'.comp continuous_inv
@@ -144,7 +144,7 @@ lemma continuous_conj :
     (continuous_toMK'.comp continuous_snd)
 
 lemma continuous_P (T : KType ε Λ) : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ := by
-  have h : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have h : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   exact (h.mul continuous_const).mul (h.comp continuous_inv)
 
 lemma toMK_inv_eq (k : KG ε) : toMK k⁻¹ = (toMK k)ᴴ := by
@@ -315,7 +315,7 @@ theorem psM_holo {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (�
     exact h.differentiableWithinAt
   · rw [show fderiv ℂ (psM T μ) z H =
         fderiv ℂ (fun x : Fin n → Fin n → ℂ => psM T μ x) z (Matrix.of.symm H) from rfl,
-      (Ps1.hasFDerivAt_psM T μ hz).fderiv, ContinuousLinearMap.smul_apply,
+      (Ps1.hasFDerivAt_psM T μ hz).fderiv, smul_apply,
       ContinuousLinearMap.integral_apply (Ps1.integrable_GintD T μ hz)]
     congr 1
     refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)

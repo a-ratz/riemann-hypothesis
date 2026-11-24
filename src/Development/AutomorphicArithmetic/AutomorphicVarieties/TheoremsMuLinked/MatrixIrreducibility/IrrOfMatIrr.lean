@@ -48,8 +48,8 @@ namespace UpperTheory.V.Th.Db
 
 theorem algClo (L Ω : Type) [Field L] [NumberField L] [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Algebra L Ω] :
     IsAlgClosure L Ω := by
-  haveI := IsAlgClosure.isAlgClosed ℚ (K := Ω)
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have := IsAlgClosure.isAlgClosed ℚ (K := Ω)
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   exact ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
 
 theorem algKL (K L Ω : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
@@ -74,20 +74,20 @@ theorem algKL (K L Ω : Type) [Field K] [NumberField K] [Field L] [NumberField L
   have key : ∀ x, algebraMap L Ω (φ x) = algebraMap K Ω x := by
     intro x
     exact congrArg Subtype.val (e.apply_symm_apply ⟨f x, hmem x⟩)
-  letI : Algebra K L := φ.toAlgebra
+  let : Algebra K L := φ.toAlgebra
   exact ⟨this, IsScalarTower.of_algebraMap_eq fun x => (key x).symm⟩
 
 theorem galKL (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L] (h : IsAbelianGalois ℚ L) :
     IsGalois K L ∧ IsSolvable (L ≃ₐ[K] L) := by
-  haveI : IsGalois ℚ L := h.toIsGalois
+  have : IsGalois ℚ L := h.toIsGalois
   refine ⟨IsGalois.tower_top_of_isGalois ℚ K L, ?_⟩
-  haveI : Group.IsSolvable (L ≃ₐ[ℚ] L) :=
-    isSolvable_of_comm fun a b => h.toIsMulCommutative.is_comm.comm a b
+  have : Group.IsSolvable (L ≃ₐ[ℚ] L) :=
+    Group.isSolvable_of_comm fun a b => h.toIsMulCommutative.is_comm.comm a b
   let f : (L ≃ₐ[K] L) →* (L ≃ₐ[ℚ] L) :=
     { toFun := fun σ => σ.restrictScalars ℚ
       map_one' := rfl
       map_mul' := fun _ _ => rfl }
-  exact solvable_of_solvable_injective (f := f) fun a b hab =>
+  exact Group.isSolvable_of_isSolvable_injective (f := f) fun a b hab =>
     AlgEquiv.ext fun x => DFunLike.congr_fun hab x
 
 theorem cc_sq {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] {σ : G F Ω}
@@ -101,7 +101,7 @@ theorem cc_sq {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] {σ : G F Ω}
 theorem irr_of_matIrr {Γ Γ' k : Type} [Group Γ] [Group Γ'] [Field k] {n : ℕ} (hn : 1 ≤ n) (U : Subgroup Γ)
     (a : Γ → Matrix (Fin n) (Fin n) k) (ha : U3.MatIrr U a) (φ : Γ' →* Γ) (hφ : U ≤ φ.range) (r : Γ' →* GL (Fin n) k)
     (hr : ∀ s, (r s).val = a (φ s)) : Af.IsIrr r := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   refine ⟨top_ne_bot, fun _ _ _ => trivial, fun W _ hW => ha W fun g hg v hv => ?_⟩
   obtain ⟨s, rfl⟩ := hφ hg
   rw [← hr]
@@ -109,8 +109,8 @@ theorem irr_of_matIrr {Γ Γ' k : Type} [Group Γ] [Group Γ'] [Field k] {n : �
 
 theorem locHom {l : ℕ} [Fact l.Prime] (c : Coef l) (A : Subalgebra c.O (PadicAlgCl l)) [IsDiscreteValuationRing A]
     [Module.Finite c.O A] : IsLocalHom (algebraMap c.O A) := by
-  haveI := c.dvr
-  haveI : FaithfulSMul c.O A := (faithfulSMul_iff_algebraMap_injective c.O A).2
+  have := c.dvr
+  have : FaithfulSMul c.O A := (faithfulSMul_iff_algebraMap_injective c.O A).2
     (fun x y hxy => Subtype.ext (congrArg (fun z : A => (z : PadicAlgCl l)) hxy))
   infer_instance
 

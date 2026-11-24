@@ -98,7 +98,7 @@ theorem dual_one [IsTotallyReal F] {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F �
     · exact hO v
     · exact (hO v).image (continuous_const.mul continuous_id)
   · filter_upwards [h2] with v hv
-    rw [if_pos hv]
+    rw [ite_eq_left hv]
   · have key : ∀ t ∈ v.adicCompletionIntegers F, psiV F ψ v (evalV F v y * t) = 1 := fun t ht => by
       have := hy (singleFin v t) fun u => by
         show evalV F u (singleFin v t) ∈ _
@@ -186,14 +186,14 @@ theorem coef_split [IsTotallyReal F] (hR : CoefReal) {ψ : AddChar (AF F) ℂ} (
         (1 + ‖x.1‖ + ‖y.1‖) ^ N ≤ C * (p f₁ * p f₂) ∧
         (coef F ψ μ (pureA F f₁ φ₁) (pureA F f₂ φ₂) (spl F κ x, spl F κ y) ≠ 0 → (x.2, y.2) ∈ K) := by
   have hψ := isCharAF hstd
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI : MeasurableSpace (κ → Af F) := borel _
-  haveI : BorelSpace (κ → Af F) := ⟨rfl⟩
-  letI : MeasurableSpace (κ → mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedSpace F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → Af F) := borel _
+  have : BorelSpace (κ → Af F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedSpace F) := ⟨rfl⟩
   let β : (κ → mixedSpace F) →ₗ[ℝ] (κ → mixedSpace F) →ₗ[ℝ] ℝ :=
     LinearMap.mk₂ ℝ (fun y u => -Algebra.trace ℝ (mixedSpace F) (u ⬝ᵥ y))
       (fun _ _ _ => by rw [dotProduct_add, map_add (f := _), neg_add]) (fun _ _ _ => by rw [dotProduct_smul, map_smul, smul_neg])
@@ -205,8 +205,8 @@ theorem coef_split [IsTotallyReal F] (hR : CoefReal) {ψ : AddChar (AF F) ℂ} (
   let ν' : Measure (κ → Af F) := Measure.addHaar
   obtain ⟨C, K, hK, hC⟩ := fin_bound ν' (fun y u : κ → Af F => ψ (fi F (u ⬝ᵥ y))) (fun _ _ => hψ.2.1 _)
     (fun _ _ _ => by rw [add_dotProduct, map_add (f := _), AddChar.map_add_eq_mul]) (dual_cpt hψ) h₁ h₂
-  haveI : (ν.prod ν').IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
-  haveI : (Measure.map (spl F κ) (ν.prod ν')).IsAddHaarMeasure :=
+  have : (ν.prod ν').IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : (Measure.map (spl F κ) (ν.prod ν')).IsAddHaarMeasure :=
     (spl F κ).isAddHaarMeasure_map (ν.prod ν') spl_cont spl_symm_cont
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, μ = c • Measure.map (spl F κ) (ν.prod ν') := ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   let e : ((κ → mixedSpace F) × (κ → Af F)) ≃ₜ (κ → AF F) := ⟨(spl F κ).toEquiv, spl_cont, spl_symm_cont⟩
@@ -313,7 +313,7 @@ open W
 
 theorem coefBd_of : CoefReal → CoefBd := by
   intro hR F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP μ hμ φ₁ h₁ φ₂ h₂ N
-  haveI := hP.base.cm.1
+  have := hP.base.cm.1
   obtain ⟨p, C, K, hp, hC, hK, h⟩ := coef_split hR hP.base.std μ hμ h₁ h₂ N
   obtain ⟨L, hL, hsz⟩ := sz_le B.emb M.co.e.symm.toLinearMap
   have hLN : 0 ≤ C * L ^ N := by positivity
@@ -331,7 +331,7 @@ theorem coefBd_of : CoefReal → CoefBd := by
   · rw [h0, norm_zero]
     exact mul_nonneg (mul_nonneg (apply_nonneg _ _) (apply_nonneg _ _)) (LatticeQuotientCompactness.maj_nonneg _ _ _ _)
   have s0 := LatticeQuotientCompactness.sz_nonneg B.emb (M.co.e.symm (spl F _ x, spl F _ y))
-  rw [maj, if_pos, ← div_eq_mul_inv, le_div_iff₀ (by positivity)]
+  rw [maj, ite_eq_left, ← div_eq_mul_inv, le_div_iff₀ (by positivity)]
   · have q := mul_nonneg (apply_nonneg p f₁) (apply_nonneg p f₂)
     calc _ ≤ _ * (L * (1 + ‖x.1‖ + ‖y.1‖)) ^ N := by gcongr; exact hsz x y
       _ = L ^ N * (_ * (1 + ‖x.1‖ + ‖y.1‖) ^ N) := by rw [mul_pow, mul_left_comm]

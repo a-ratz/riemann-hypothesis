@@ -131,7 +131,7 @@ theorem exists_bdryChart_at : Top.Given → ∀ (E : Type) [Field E] [NumberFiel
   have hall := 𝔐.all
   have hex : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, ∃ z : Sp ℂ ⟶ 𝔐.X, genPt 𝔐.ξ ⤳ centre z ∧ CoordsAt 𝔐.ξ y z (w u) := fun u hu =>
     (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y htie (w u)).1 (χ.mem _ (hgeo ρ₀ hρ₀ le_rfl u hu).1)
-  haveI : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨z₀⟩
+  have : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨z₀⟩
   choose! p hp₀ hp using hex
   have huniq : ∀ (z z' : Sp ℂ ⟶ 𝔐.X) (w' : (Σ k, J k) → ℂ), CoordsAt 𝔐.ξ y z w' → CoordsAt 𝔐.ξ y z' w' → z = z' := fun z z' w' h h' => by
     obtain ⟨e1, -, e3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X Ω 𝔐.ξ K J y htie ℂ
@@ -145,8 +145,8 @@ theorem exists_bdryChart_at : Top.Given → ∀ (E : Type) [Field E] [NumberFiel
     rw [this]
     exact hz₀
   have hhol : IsHolTo (Metric.ball 0 1) p := _root_.GlobalTheory.CompanionTheory.Ar.PeriodsHol.isHolTo_of_coordsAt_family 𝔐.X Ω 𝔐.ξ K J y htie hall n _ w p Metric.isOpen_ball hw hp
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
   obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ConstEmbedding.exists_embedding c.F 𝔐.X (𝔐.f ≫ Y.s) n p hhol
   have hint : ∀ u ∈ Flat.punct n a₀ 1, 𝔐.Interior (p u) := fun u hu => by
     have h1 := (hgeo ρ₀ hρ₀ le_rfl u hu.1).2.2

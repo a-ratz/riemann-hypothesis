@@ -219,7 +219,7 @@ theorem exists_denom_le_height (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host
   obtain ⟨d₁, hd₁, hle, hint⟩ := GlobalTheory.SmoothForms.denom_global (fun v => finHt V v g) (fun v => le_max_left _ _)
     (finHt_mulSupport_finite V g)
   have hH : (d₁ : NNReal) ≤ height θ V g :=
-    hle.trans (le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => le_max_left _ _))
+    hle.trans (le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => le_max_left _ _))
   refine ⟨d₁, hd₁, by exact_mod_cast hH, fun i j k => mem_intRing.2 fun v => ?_⟩
   have h1 : ‖evalV D.host.F v (finCoord D (finMat D.sp.cm.sig V.gram g i j) k)‖₊ ≤ finHt V v g :=
     (Finset.le_sup (f := fun p : Fin V.rank × Fin V.rank × Fin (Module.finrank D.host.F D.host.E) =>

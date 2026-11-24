@@ -57,22 +57,22 @@ theorem exists_finite_pid_subalgebra_div_padicInt :
   ∀ S : Finset Ω, (∀ s ∈ S, IsAlgebraic ℤ_[p] s) →
   ∃ R : Subalgebra ℤ_[p] Ω, Module.Finite ℤ_[p] R ∧ IsPrincipalIdealRing R ∧ ∀ s ∈ S, ∃ a ∈ R, ∃ b ∈ R, s = a / b := by
   intro p _ Ω _ _ hinj S hS
-  haveI : FaithfulSMul ℤ_[p] Ω := (faithfulSMul_iff_algebraMap_injective ℤ_[p] Ω).mpr hinj
-  letI : Algebra (FractionRing ℤ_[p]) Ω := FractionRing.liftAlgebra ℤ_[p] Ω
-  haveI : IsScalarTower ℤ_[p] (FractionRing ℤ_[p]) Ω := FractionRing.isScalarTower_liftAlgebra ℤ_[p] Ω
+  have : FaithfulSMul ℤ_[p] Ω := (faithfulSMul_iff_algebraMap_injective ℤ_[p] Ω).mpr hinj
+  let : Algebra (FractionRing ℤ_[p]) Ω := FractionRing.liftAlgebra ℤ_[p] Ω
+  have : IsScalarTower ℤ_[p] (FractionRing ℤ_[p]) Ω := FractionRing.isScalarTower_liftAlgebra ℤ_[p] Ω
   set L := IntermediateField.adjoin (FractionRing ℤ_[p]) (S : Set Ω) with hL
-  haveI : FiniteDimensional (FractionRing ℤ_[p]) L := by
+  have : FiniteDimensional (FractionRing ℤ_[p]) L := by
     apply IntermediateField.finiteDimensional_adjoin
     intro x hx
     exact ((hS x hx).extendScalars (IsFractionRing.injective ℤ_[p] (FractionRing ℤ_[p]))).isIntegral
-  haveI : Algebra.IsSeparable (FractionRing ℤ_[p]) L := inferInstance
-  haveI : IsDedekindDomain (integralClosure ℤ_[p] L) :=
+  have : Algebra.IsSeparable (FractionRing ℤ_[p]) L := inferInstance
+  have : IsDedekindDomain (integralClosure ℤ_[p] L) :=
     integralClosure.isDedekindDomain ℤ_[p] (FractionRing ℤ_[p]) L
-  haveI : Module.Finite ℤ_[p] (integralClosure ℤ_[p] L) :=
+  have : Module.Finite ℤ_[p] (integralClosure ℤ_[p] L) :=
     IsIntegralClosure.finite ℤ_[p] (FractionRing ℤ_[p]) L (integralClosure ℤ_[p] L)
   have hPID : IsPrincipalIdealRing (integralClosure ℤ_[p] L) := by
     apply IsPrincipalIdealRing.of_finite_primes
-    haveI := GlobalTheory.finite_maximalSpectrum_of_finite_of_isLocalRing ℤ_[p] (integralClosure ℤ_[p] L)
+    have := GlobalTheory.finite_maximalSpectrum_of_finite_of_isLocalRing ℤ_[p] (integralClosure ℤ_[p] L)
     apply ((Set.finite_range (fun M : MaximalSpectrum (integralClosure ℤ_[p] L) => M.asIdeal)).insert ⊥).subset
     intro I hI
     by_cases h : I = ⊥

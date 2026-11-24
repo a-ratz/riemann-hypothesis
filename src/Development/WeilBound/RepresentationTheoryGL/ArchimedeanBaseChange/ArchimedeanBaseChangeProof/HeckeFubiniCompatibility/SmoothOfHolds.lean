@@ -282,7 +282,7 @@ variable {ι : Type} [DecidableEq ι] {X : Type}
 
 def splitY (w : ι) (t : X) (z : {v // v ≠ w} → X) : ι → X := fun v => if h : v = w then t else z ⟨v, h⟩
 
-theorem splitY_self (w : ι) (t : X) (z : {v // v ≠ w} → X) : splitY w t z w = t := dif_pos rfl
+theorem splitY_self (w : ι) (t : X) (z : {v // v ≠ w} → X) : splitY w t z w = t := dite_eq_left rfl
 
 theorem splitY_ne (w : ι) (t : X) (z : {v // v ≠ w} → X) (v : {v // v ≠ w}) : splitY w t z v = z v := by
   simp [splitY, v.2]
@@ -292,8 +292,8 @@ theorem update_splitY_self (w : ι) (t t' : X) (z : {v // v ≠ w} → X) :
   funext v
   simp only [Function.update_apply, splitY]
   by_cases h : v = w
-  · rw [if_pos h, dif_pos h]
-  · rw [if_neg h]; simp [h]
+  · rw [ite_eq_left h, dite_eq_left h]
+  · rw [ite_eq_right h]; simp [h]
 
 theorem update_splitY_ne (w : ι) (t : X) (z : {v // v ≠ w} → X) (v : {v // v ≠ w}) (s : X) :
     Function.update (splitY w t z) v s = splitY w t (Function.update z v s) := by
@@ -301,13 +301,13 @@ theorem update_splitY_ne (w : ι) (t : X) (z : {v // v ≠ w} → X) (v : {v // 
   simp only [Function.update_apply, splitY]
   by_cases h : x = w
   · have h' : x ≠ (v : ι) := fun e => v.2 (e ▸ h)
-    rw [if_neg h', dif_pos h, dif_pos h]
-  · rw [dif_neg h, dif_neg h]
+    rw [ite_eq_right h', dite_eq_left h, dite_eq_left h]
+  · rw [dite_eq_right h, dite_eq_right h]
     by_cases h' : x = v
     · have : (⟨x, h⟩ : {v // v ≠ w}) = v := Subtype.ext h'
-      rw [if_pos h', if_pos this]
+      rw [ite_eq_left h', ite_eq_left this]
     · have : (⟨x, h⟩ : {v // v ≠ w}) ≠ v := fun e => h' (congrArg Subtype.val e)
-      rw [if_neg h', if_neg this]
+      rw [ite_eq_right h', ite_eq_right this]
 
 theorem splitY_one [One X] (w : ι) : splitY w (1 : X) (1 : {v // v ≠ w} → X) = 1 := by
   funext v
@@ -317,15 +317,15 @@ theorem continuous_splitY_left [TopologicalSpace X] (w : ι) (z : {v // v ≠ w}
     Continuous fun t : X => splitY w t z :=
   continuous_pi fun v => by
     by_cases h : v = w
-    · simp only [splitY, dif_pos h]; exact continuous_id
-    · simp only [splitY, dif_neg h]; exact continuous_const
+    · simp only [splitY, dite_eq_left h]; exact continuous_id
+    · simp only [splitY, dite_eq_right h]; exact continuous_const
 
 theorem continuous_splitY_right [TopologicalSpace X] (w : ι) (t : X) :
     Continuous fun z : {v // v ≠ w} → X => splitY w t z :=
   continuous_pi fun v => by
     by_cases h : v = w
-    · simp only [splitY, dif_pos h]; exact continuous_const
-    · simp only [splitY, dif_neg h]; exact continuous_apply _
+    · simp only [splitY, dite_eq_left h]; exact continuous_const
+    · simp only [splitY, dite_eq_right h]; exact continuous_apply _
 
 variable {Idx : ι → Type}
 
@@ -676,9 +676,9 @@ section Main
 theorem actVal (hMA : MultAlg) (hCF : CompatFub) (hTT : TensTest) : ActVal := by
   intro E _ _ _ a b D _ _ _ _ _ _ μa _ μb _ ν _ Ma Mb κ _ ka ka' kb kb' va va' vb vb' T T' ψ ψ' f χa χb hC hka hkb hψ
     hR hsm hEig hka' hkb' hψ'
-  haveI : BorelSpace (H E a b) := ⟨rfl⟩
-  haveI : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
-  haveI : IsFiniteMeasureOnCompacts D.μ := isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
+  have : BorelSpace (H E a b) := ⟨rfl⟩
+  have : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
+  have : IsFiniteMeasureOnCompacts D.μ := isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
   have hf : ∀ i, Continuous (f i) := hR.1
   have hTm := (hTT E a b μa μb Ma Mb κ ka' kb' va' vb' T' ψ' hka' hkb' hψ').1
   have heqa := fun v u I x => equiv_a D hka hkb hψ hR v u I x
@@ -710,17 +710,17 @@ theorem actVal (hMA : MultAlg) (hCF : CompatFub) (hTT : TensTest) : ActVal := by
     refine Finset.sum_eq_zero fun j _ => ?_
     simp only [tens, hFin_splitH, hψK _ _ _ hh, mul_zero, zero_mul]
   set ν' := ν.restrict K
-  haveI : IsFiniteMeasure ν' := isFiniteMeasure_restrict.2 hK.measure_lt_top.ne
+  have : IsFiniteMeasure ν' := isFiniteMeasure_restrict.2 hK.measure_lt_top.ne
   have hres : ∀ ya yb, ∫ h, F (splitH a b (ya, yb, h)) ∂ν = ∫ h, F (splitH a b (ya, yb, h)) ∂ν' :=
     fun ya yb => (setIntegral_eq_integral_of_forall_compl_eq_zero fun h hh => hQK ya yb h hh).symm
   simp_rw [hres]
   let A := Measure.pi fun _ : InfinitePlace E => μa
   let B := Measure.pi fun _ : InfinitePlace E => μb
-  haveI : SigmaFinite A := inferInstanceAs (SigmaFinite (Measure.pi fun _ : InfinitePlace E => μa))
-  haveI : SigmaFinite B := inferInstanceAs (SigmaFinite (Measure.pi fun _ : InfinitePlace E => μb))
-  haveI : IsFiniteMeasureOnCompacts A :=
+  have : SigmaFinite A := inferInstanceAs (SigmaFinite (Measure.pi fun _ : InfinitePlace E => μa))
+  have : SigmaFinite B := inferInstanceAs (SigmaFinite (Measure.pi fun _ : InfinitePlace E => μb))
+  have : IsFiniteMeasureOnCompacts A :=
     inferInstanceAs (IsFiniteMeasureOnCompacts (Measure.pi fun _ : InfinitePlace E => μa))
-  haveI : IsFiniteMeasureOnCompacts B :=
+  have : IsFiniteMeasureOnCompacts B :=
     inferInstanceAs (IsFiniteMeasureOnCompacts (Measure.pi fun _ : InfinitePlace E => μb))
   set Q : ((InfinitePlace E → G a) × (InfinitePlace E → G b)) × Hf E a b → ℂ :=
     fun q => F (splitH a b (q.1.1, q.1.2, q.2)) with hQdef
@@ -1625,7 +1625,7 @@ theorem continuousOn_uOf : ContinuousOn (uOf (E := E) (n := n)) (invSet E n) := 
   rw [continuousOn_iff_continuous_domRestrict]
   show Continuous fun x : invSet E n => uOf x.1
   have hv : Continuous fun x : invSet E n => (Matrix.of x.1 : Matrix (Fin n) (Fin n) (Cinf E)) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · have e : (Units.val ∘ fun x : invSet E n => uOf x.1) = fun x => Matrix.of x.1 :=
       funext fun x => uOf_val x.2

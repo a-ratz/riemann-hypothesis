@@ -192,7 +192,7 @@ theorem cabs_gen_eq_one_of_normPin : ∀ (E : Type) [Field E] [NumberField E] [I
       fr' q.1 (h *ᵥ z) = valAt' (F.ex i P z).left (O q.1 q.2) (ω q.1 q.2) * fr q.2 z :=
     frames_eq P.range hspan (fun q : Xo.univ.t.PP.L.ι × Xo.univ.t.PP.L.ι => {z | ⊤ ≤ (F.ex i P z).left ⁻¹ᵁ O q.1 q.2})
       (fun j => GlobalTheory.FamilyUnif_isOpen_ex F i P hp _) hcov2
-      (fun j a ha z hz => by rw [Set.mem_setOf_eq, hexp a ha]; exact hz)
+      (fun j a ha z hz => by rw [Set.mem_ofPred_eq, hexp a ha]; exact hz)
       (fun q z => valAt' (F.ex i P z).left (O q.1 q.2) (ω q.1 q.2) * fr q.2 z) (fun q z => fr' q.1 (h *ᵥ z))
       (fun q q' z => valAt' ((F.ex i P z).left ≫ ν.φ) (Xo.univ.t.PP.L.U q.1 ⊓ Xo.univ.t.PP.L.U q'.1)
         (Xo.univ.t.PP.L.g q.1 q'.1).val)
@@ -255,8 +255,8 @@ theorem cabs_gen_eq_one_of_normPin : ∀ (E : Type) [Field E] [NumberField E] [I
     have v1 := hv j z _ e1 e2 hj
     have v2 := hv j (z + a) _ (by rw [hexp a ha]; exact e1) e2 hj'
     exact normSq_periodic hH _ _ _ _ z a (hn j _ hj') (v2.symm.trans v1) (hm j a ha z hj)
-  haveI : Countable P.range := by
-    haveI := hp.2.2.1
+  have : Countable P.range := by
+    have := hp.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hinj : Function.Injective (fun z : Fin g → ℂ => h *ᵥ z) :=
     Matrix.mulVec_injective_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det h).2 hdet)
@@ -357,9 +357,9 @@ theorem exists_const_rdU_of_moveMatch : ∀ (E : Type) [Field E] [NumberField E]
       (∀ y y' : FrPt Xo c (CAt σ), FrMove ρ ν y y' → evR Xo c f' y = evR Xo c f y') → ∀ x : (U.X k).dom,
       Formalism.L2.PjFree.rdU U f' k x.1 = Formalism.L2.PjFree.toC (t₀ x : CAt σ) ^ n *
         Formalism.L2.PjFree.rdU U' f k' (lact δ (castFr h.psi x.1)) := fun w hD f hf f' hf' hv x => by
-    have v1 : Formalism.L2.PjFree.rdU U f' k x.1 = Formalism.L2.PjFree.toC (evR Xo c f' (U.un k x)) := dif_pos x.2
+    have v1 : Formalism.L2.PjFree.rdU U f' k x.1 = Formalism.L2.PjFree.toC (evR Xo c f' (U.un k x)) := dite_eq_left x.2
     have v2 : Formalism.L2.PjFree.rdU U' f k' (lact δ (castFr h.psi x.1)) =
-      Formalism.L2.PjFree.toC (evR Xo c f (U'.un k' ⟨_, h.mem_dom x.2⟩)) := dif_pos (h.mem_dom x.2)
+      Formalism.L2.PjFree.toC (evR Xo c f (U'.un k' ⟨_, h.mem_dom x.2⟩)) := dite_eq_left (h.mem_dom x.2)
     have v3 := (GlobalTheory.Frames.algebraic_laws GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c).2.2.2.2.2.2 (CAt σ)
         (inferInstanceAs (IsReduced ℂ)) w n f hf _ _ (y' x) (hb x)
     have v4 : Formalism.L2.PjFree.toC (wchar (ex Dw w n) (fun i => Option.elim i (t₀ x) (fun _ => 1)) : CAt σ) =
@@ -385,7 +385,7 @@ theorem exists_const_rdU_of_moveMatch : ∀ (E : Type) [Field E] [NumberField E]
     (fun i => (hU'.2.2.2.2.1 _ n i.2.1 _ i.2.2.1 k').1.comp ((GlobalTheory.Dict.Extend.differentiable_lact δ).comp
       (GlobalTheory.Dict.Pull.cast_diff h.psi)).differentiableOn fun x hx => h.mem_dom hx)
     (fun i x hx => by
-      rw [dif_pos hx]
+      rw [dite_eq_left hx]
       exact key _ i.2.1 _ i.2.2.1 _ i.2.2.2.1 i.2.2.2.2 ⟨x, hx⟩)
     (fun ⟨⟨w, f, f'⟩, hD, hf, hf', hv⟩ x hx => by
       obtain ⟨x₀, hx₀, ⟨b₀, hb₀, e₀⟩, -⟩ := hun1 k ⟨x, hx⟩
@@ -651,7 +651,7 @@ private lemma minpoly_eq {F E : Type} [Field F] [Field E] [Algebra F E] (t : E) 
     minpoly F t = X ^ 2 - C c := by
   symm
   refine minpoly.eq_of_irreducible_of_monic
-    (X_pow_sub_C_irreducible_of_prime Nat.prime_two hc) ?_ (monic_X_pow_sub_C c two_ne_zero)
+    (irreducible_X_pow_sub_C_of_prime Nat.prime_two hc) ?_ (monic_X_pow_sub_C c two_ne_zero)
   simp [ht]
 
 private lemma isInt {F E : Type} [Field F] [Field E] [Algebra F E] (t : E) (c : F)
@@ -940,7 +940,7 @@ theorem det_interp_pm {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
     (4 : ℤ) ∣ (LinearMap.toMatrix b b T).det - 1 := by
   have hsm : ∀ (a : 𝓞 E) (x : D.La), φ (a • x) = (a : E) • φ x := fun a x => by
     rw [map_smul]; rfl
-  haveI := D.fin
+  have := D.fin
   have hfg : (LinearMap.range φ).FG := by
     rw [LinearMap.range_eq_map]
     exact Module.Finite.fg_top.map φ

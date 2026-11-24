@@ -58,11 +58,11 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
 
 private theorem ex_root (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {M : ℕ} (hM : 0 < M) :
     ∃ ζ : Ω, IsPrimitiveRoot ζ M := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero (M : Ω) := ⟨by
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero (M : Ω) := ⟨by
     rw [← map_natCast (algebraMap ℚ Ω)]
     exact (map_ne_zero _).2 (by exact_mod_cast hM.ne')⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
 
 private theorem pow_emod_order_eq_pow_of_pow_eq_one {F : Type} [Field F] {z : F} {m : ℕ} (h : z ^ m = 1) (k : ℕ) :
     z ^ (k % m) = z ^ k := by
@@ -70,7 +70,7 @@ private theorem pow_emod_order_eq_pow_of_pow_eq_one {F : Type} [Field F] {z : F}
 
 private theorem cyc_spec {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) : ∀ z : Ω, z ^ M = 1 → s z = z ^ (cyc M s).val := by
   obtain ⟨ζ, h⟩ := ex_root Ω hM
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hsm : (s ζ) ^ M = 1 := by rw [← map_pow, h.pow_eq_one, map_one]
   obtain ⟨k, -, hk⟩ := h.eq_pow_of_pow_eq_one hsm
   have hex : ∃ y : ZMod M, ∀ z : Ω, z ^ M = 1 → s z = z ^ y.val := by
@@ -83,7 +83,7 @@ private theorem cyc_spec {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) : ∀ z 
 
 private theorem cyc_uniq {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) (n : ℕ) (h : ∀ z : Ω, z ^ M = 1 → s z = z ^ n) :
     cyc M s = n := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨ζ, hζ⟩ := ex_root Ω hM
   have e : ζ ^ (cyc M s).val = ζ ^ ((n : ZMod M)).val := by
     rw [← cyc_spec hM s ζ hζ.pow_eq_one, h ζ hζ.pow_eq_one, ZMod.val_natCast,
@@ -92,7 +92,7 @@ private theorem cyc_uniq {M : ℕ} (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) (n : ℕ
 
 private theorem cyc_mul {M : ℕ} (hM : 0 < M) (s t : Ω ≃ₐ[ℚ] Ω) : cyc M (s * t) = cyc M s * cyc M t := by
   rw [cyc_uniq hM (s * t) ((cyc M s).val * (cyc M t).val) ?_]
-  · haveI : NeZero M := ⟨hM.ne'⟩
+  · have : NeZero M := ⟨hM.ne'⟩
     rw [Nat.cast_mul, ZMod.natCast_zmod_val, ZMod.natCast_zmod_val]
   · intro z hz
     rw [AlgEquiv.mul_apply, cyc_spec hM t z hz, map_pow, cyc_spec hM s z hz, ← pow_mul]
@@ -102,8 +102,8 @@ private theorem cyc_one {M : ℕ} (hM : 0 < M) : cyc M (1 : Ω ≃ₐ[ℚ] Ω) =
 
 private theorem cyc_cast {k M : ℕ} (hk : 0 < k) (hM : 0 < M) (s : Ω ≃ₐ[ℚ] Ω) :
     ZMod.castHom (dvd_mul_left M k) (ZMod M) (cyc (k * M) s) = cyc M s := by
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : NeZero (k * M) := ⟨(Nat.mul_pos hk hM).ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
+  have : NeZero (k * M) := ⟨(Nat.mul_pos hk hM).ne'⟩
   rw [ZMod.castHom_apply, ZMod.cast_eq_val]
   symm
   apply cyc_uniq hM s
@@ -150,14 +150,14 @@ private theorem rt_ne {M : ℕ} (γ : SL(2, ℤ)) (x : Row M) (h : (2 : ZMod M) 
     _ = 0 := by rw [← Matrix.vecMul_vecMul, h1, Matrix.zero_vecMul]
 
 private theorem up_val {k M : ℕ} (hk : 0 < k) (hM : 0 < M) (x : Row M) (i : Fin 2) : (up k M x i).val = k * (x i).val := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   show ((k * (x i).val : ℕ) : ZMod (k * M)).val = k * (x i).val
   rw [ZMod.val_natCast, Nat.mod_eq_of_lt ((Nat.mul_lt_mul_left hk).2 (ZMod.val_lt _))]
 
 private theorem up_mul {k M : ℕ} (hk : 0 < k) (hM : 0 < M) (c : ZMod (k * M)) (a : ZMod M) :
     c * ((k * a.val : ℕ) : ZMod (k * M)) = ((k * (ZMod.castHom (dvd_mul_left M k) (ZMod M) c * a).val : ℕ) : ZMod (k * M)) := by
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : NeZero (k * M) := ⟨(Nat.mul_pos hk hM).ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
+  have : NeZero (k * M) := ⟨(Nat.mul_pos hk hM).ne'⟩
   obtain ⟨n, rfl⟩ : ∃ n : ℕ, (n : ZMod (k * M)) = c := ⟨c.val, ZMod.natCast_zmod_val c⟩
   rw [map_natCast]
   have e : ((n : ZMod M) * a).val = (n * a.val) % M := by
@@ -169,7 +169,7 @@ private theorem up_mul {k M : ℕ} (hk : 0 < k) (hM : 0 < M) (c : ZMod (k * M)) 
 
 private theorem up_ne {k M : ℕ} (hk : 0 < k) (hM : 0 < M) (x : Row M) (h : (2 : ZMod M) • x ≠ 0) :
     (2 : ZMod (k * M)) • up k M x ≠ 0 := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   intro h0
   apply h
   funext i
@@ -198,7 +198,7 @@ private theorem dn_ne {k M : ℕ} (x : Row (k * M)) (h : (2 : ZMod M) • dn k M
 theorem UpperTheory.V.Z.Kato.Sym.rowB :
     UpperTheory.V.Z.Kato.Sym.RowB := by
   intro Ω _ _ _ M hM
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hne : ∀ {N : ℕ} (x : Row N), (2 : ZMod N) • x ≠ 0 → x ≠ 0 := by
     intro N x hx h0
     apply hx
@@ -215,7 +215,7 @@ theorem UpperTheory.V.Z.Kato.Sym.rowB :
     rw [show (γ : Matrix (Fin 2) (Fin 2) ℤ).map (Int.castRingHom (ZMod M)) = 1 from e,
       Matrix.vecMul_one]
   · intro k hk
-    haveI : NeZero (k * M) := ⟨(Nat.mul_pos hk hM).ne'⟩
+    have : NeZero (k * M) := ⟨(Nat.mul_pos hk hM).ne'⟩
     refine ⟨?_, fun x y hxy => ⟨up_ne hk hM x hxy.1, up_ne hk hM y hxy.2⟩, ?_,
       fun x' y' hxy => ⟨dn_ne x' hxy.1, dn_ne y' hxy.2⟩, ?_, ?_, ?_⟩
     · intro x

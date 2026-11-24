@@ -62,10 +62,10 @@ open scoped TensorProduct
 private theorem exists_point {k R : Type} [Field k] [IsAlgClosed k] [CommRing R] [Algebra k R]
     [Algebra.FiniteType k R] (m : Ideal R) [m.IsMaximal] :
     ∃ φ : R →ₐ[k] k, ∀ r, φ r = 0 → r ∈ m := by
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType k (R ⧸ m) := inferInstance
-  haveI : Module.Finite k (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (R ⧸ m)
-  haveI : Algebra.IsIntegral k (R ⧸ m) := inferInstance
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType k (R ⧸ m) := inferInstance
+  have : Module.Finite k (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (R ⧸ m)
+  have : Algebra.IsIntegral k (R ⧸ m) := inferInstance
   let e : k ≃ₐ[k] (R ⧸ m) :=
     AlgEquiv.ofBijective (Algebra.ofId k (R ⧸ m)) IsAlgClosed.algebraMap_bijective_of_isIntegral
   refine ⟨e.symm.toAlgHom.comp (Ideal.Quotient.mkₐ k m), fun r hr => ?_⟩
@@ -82,7 +82,7 @@ private theorem dom_fg {k R A ι : Type} [Field k] [IsAlgClosed k] [CommRing R] 
   by_contra hcon
   push_neg at hcon
   obtain ⟨⟨i0, hi0, ha⟩, ⟨j0, hj0, hb⟩⟩ := hcon
-  haveI : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := k)
+  have : IsJacobsonRing R := isJacobsonRing_of_finiteType (A := k)
   have hab : a i0 * b j0 ≠ 0 := mul_ne_zero ha hb
   have hjac : (⊥ : Ideal R).jacobson = ⊥ :=
     IsJacobsonRing.out inferInstance Ideal.isRadical_bot_of_noZeroDivisors
@@ -96,7 +96,7 @@ private theorem dom_fg {k R A ι : Type} [Field k] [IsAlgClosed k] [CommRing R] 
     rw [Ideal.jacobson, Submodule.mem_sInf]
     rintro J ⟨-, hJ⟩
     exact hne J hJ
-  haveI := hm
+  have := hm
   obtain ⟨φ, hφ⟩ := exists_point (k := k) m
   have hφa : φ (a i0) ≠ 0 := fun h0 => hnm (m.mul_mem_right _ (hφ _ h0))
   have hφb : φ (b j0) ≠ 0 := fun h0 => hnm (m.mul_mem_left _ (hφ _ h0))
@@ -117,7 +117,7 @@ private theorem dom_tensor (k K L : Type) [Field k] [IsAlgClosed k] [Field K] [F
     [Algebra k L] : IsDomain (L ⊗[k] K) := by
   classical
   let e := Module.Basis.ofVectorSpace k K
-  haveI : Nontrivial (L ⊗[k] K) := inferInstance
+  have : Nontrivial (L ⊗[k] K) := inferInstance
   suffices hnz : NoZeroDivisors (L ⊗[k] K) from NoZeroDivisors.to_isDomain _
   refine ⟨fun {x y} hxy => ?_⟩
   let E := TensorProduct.equivFinsuppOfBasisRight (M := L) e
@@ -127,7 +127,7 @@ private theorem dom_tensor (k K L : Type) [Field k] [IsAlgClosed k] [Field K] [F
     rw [TensorProduct.equivFinsuppOfBasisRight_symm_apply, Finsupp.sum]
   let S : Finset L := (E x).support.image (E x) ∪ (E y).support.image (E y)
   let R := Algebra.adjoin k (S : Set L)
-  haveI : Algebra.FiniteType k R := Subalgebra.fg_iff_finiteType R |>.mp (Subalgebra.fg_adjoin_finset S)
+  have : Algebra.FiniteType k R := Subalgebra.fg_iff_finiteType R |>.mp (Subalgebra.fg_adjoin_finset S)
   have hmem : ∀ (z : L ⊗[k] K), (z = x ∨ z = y) → ∀ i, (E z) i ∈ R := by
     rintro z hz i
     by_cases hi : i ∈ (E z).support
@@ -177,25 +177,25 @@ private theorem gi (k L : Type) [Field k] [IsAlgClosed k] [Field L] [Algebra k L
   constructor
   rw [geometrically_iff_of_commRing]
   intro K _ _ Y fst snd h
-  haveI := dom_tensor k K L
+  have := dom_tensor k K L
   let e : Y ≅ Spec (CommRingCat.of (L ⊗[k] K)) := h.isoPullback ≪≫ pullbackSpecIso k L K
-  haveI : Nonempty Y := ⟨e.inv (Nonempty.some inferInstance)⟩
+  have : Nonempty Y := ⟨e.inv (Nonempty.some inferInstance)⟩
   exact isIntegral_of_isOpenImmersion e.hom
 
 theorem UpperTheory.isCurve_pullback_of_isCurve_baseChange :
     ∀ (k L : Type) [Field k] [IsAlgClosed k] [Field L] [Algebra k L] {C : Scheme.{0}} (c : C ⟶ Sp k), IsCurve c → IsCurve (pullback.snd c (Spec.map (CommRingCat.ofHom (algebraMap k L)))) := by
   intro k L _ _ _ _ C c hc
   obtain ⟨h1, h2, h3⟩ := hc
-  haveI := gi k L
+  have := gi k L
   set g := Spec.map (CommRingCat.ofHom (algebraMap k L)) with hg
   set p := pullback.fst c g with hp
-  haveI : GeometricallyIrreducible p := inferInstance
-  haveI : GeometricallyReduced p := inferInstance
-  haveI : Flat p := inferInstance
-  haveI : Finite (irreducibleComponents C) := by
+  have : GeometricallyIrreducible p := inferInstance
+  have : GeometricallyReduced p := inferInstance
+  have : Flat p := inferInstance
+  have : Finite (irreducibleComponents C) := by
     rw [irreducibleComponents_eq_singleton]
     infer_instance
-  haveI hred : IsReduced (pullback c g) :=
+  have hred : IsReduced (pullback c g) :=
     GeometricallyReduced.isReduced_of_flat_of_finite_irreducibleComponents p
   have hgen : GeneralizingMap p := Flat.generalizingMap p
   set η := genericPoint C
@@ -209,12 +209,12 @@ theorem UpperTheory.isCurve_pullback_of_isCurve_baseChange :
       exact hpq'
     obtain ⟨r, rfl⟩ := hmem
     exact ((genericPoint_specializes r).map (p.fiberι η).continuous).trans hq'
-  haveI hirr : IrreducibleSpace ↥(pullback c g) := by
+  have hirr : IrreducibleSpace ↥(pullback c g) := by
     rw [irreducibleSpace_def]
     have hcl : closure ({ξ} : Set ↥(pullback c g)) = Set.univ :=
       Set.eq_univ_of_forall fun q => specializes_iff_mem_closure.mp (hall q)
     rw [Set.top_eq_univ, ← hcl]
     exact isIrreducible_singleton.closure
-  haveI := smoothOfRelativeDimension_isStableUnderBaseChange 1
+  have := smoothOfRelativeDimension_isStableUnderBaseChange 1
   refine ⟨isIntegral_of_irreducibleSpace_of_isReduced _, inferInstance, ?_⟩
   exact MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension 1) (IsPullback.of_hasPullback c g) h3

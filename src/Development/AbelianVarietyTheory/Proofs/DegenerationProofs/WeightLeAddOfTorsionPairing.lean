@@ -398,8 +398,8 @@ end
 
 theorem finrank_le_of_weights : ∀ (𝕜 V : Type) [Field 𝕜] [CharZero 𝕜] [AddCommGroup V] [Module 𝕜 V] [FiniteDimensional 𝕜 V] (B : LinearMap.BilinForm 𝕜 V), B.Nondegenerate → (∀ x y, B y x = - B x y) → ∀ (S Φ : V ≃ₗ[𝕜] V) (q : ℕ), 2 ≤ q → IsNilpotent ((S : V →ₗ[𝕜] V) - 1) → (∀ x y, B (S x) (S y) = B x y) → (∀ x y, B (Φ x) (Φ y) = q * B x y) → Φ * S = S ^ q * Φ → ∀ (W : Submodule 𝕜 V) (P : Polynomial ℤ), (∀ β : ℂ, Polynomial.aeval β P = 0 → ‖β‖ < q) → (∀ x ∈ W, Φ x = (q : 𝕜) • x) → (∀ x, S x = x → Polynomial.aeval (Φ : V →ₗ[𝕜] V) P x ∈ W) → Module.finrank 𝕜 V ≤ Module.finrank 𝕜 (LinearMap.ker ((S : V →ₗ[𝕜] V) - 1)) + Module.finrank 𝕜 W := by
   intro 𝕜 V _ _ _ _ _ B hB _ S Φ q hq hS _ hΦ h W P hP hW hPW
-  letI : Module ℚ V := Module.compHom V (algebraMap ℚ 𝕜)
-  haveI : IsScalarTower ℚ 𝕜 V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℚ V := Module.compHom V (algebraMap ℚ 𝕜)
+  have : IsScalarTower ℚ 𝕜 V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   refine core B hB _ (Φ : V →ₗ[𝕜] V) (Φ.symm : V →ₗ[𝕜] V) q hq hS ?_ hΦ ?_ W
     (P.map (algebraMap ℤ ℚ)) ?_ hW ?_
   · ext x
@@ -479,7 +479,7 @@ theorem eq_zero_of_integral (l : ℕ) [hl : Fact l.Prime] (h3 : 3 ≤ l) {K : Ty
     [Algebra ℤ_[l] K] (μ : K) (hμ : IsIntegral ℤ_[l] μ) (m : ℕ) (hm : m ≠ 0)
     (h : (1 + l • μ) ^ m = 1) : μ = 0 := by
   let E := Algebra.adjoin ℤ_[l] ({μ} : Set K)
-  haveI : Module.Finite ℤ_[l] E := Module.Finite.iff_fg.mpr hμ.fg_adjoin_singleton
+  have : Module.Finite ℤ_[l] E := Module.Finite.iff_fg.mpr hμ.fg_adjoin_singleton
   let ψ : E := ⟨μ, Algebra.self_mem_adjoin_singleton _ _⟩
   have hl0 : l ≠ 0 := by omega
   have key : (1 : E) + l • ψ = 1 := by
@@ -600,8 +600,8 @@ theorem finrank_le_of_card (l : ℕ) [hl : Fact l.Prime] {T M : Type} [AddCommGr
     refine le_trans ?_ (hc (n + e))
     have htor : ∀ x, l ^ (n + e) • π (n + e) x = 0 := fun x => by
       rw [← map_nsmul, hker]; exact ⟨x, rfl⟩
-    haveI : Finite {x : H // l ^ (n + e) • x = 0} := by
-      haveI := hfin (n + e)
+    have : Finite {x : H // l ^ (n + e) • x = 0} := by
+      have := hfin (n + e)
       refine Finite.of_injective (β := {x : M // l ^ (n + e) • x = 0})
         (fun x => ⟨x.1.1, congrArg Subtype.val x.2⟩) ?_
       intro x y h
@@ -668,7 +668,7 @@ theorem finrank_le_ker_add (l : ℕ) [Fact l.Prime] {T : Type} [AddCommGroup T]
       finrank ℤ_[l] W := by
   let V := ℚ_[l] ⊗[ℤ_[l]] T
   let ι : T →ₗ[ℤ_[l]] V := TensorProduct.mk ℤ_[l] ℚ_[l] T 1
-  haveI hloc : IsLocalizedModule (ℤ_[l])⁰ ι := inferInstanceAs
+  have hloc : IsLocalizedModule (ℤ_[l])⁰ ι := inferInstanceAs
     (IsLocalizedModule (ℤ_[l])⁰ (TensorProduct.mk ℤ_[l] ℚ_[l] T 1))
   have hinj : Function.Injective ι :=
     (IsLocalizedModule.injective_iff_isRegular (ℤ_[l])⁰ ι).2 fun s =>
@@ -824,7 +824,7 @@ theorem le_add_of_pairing (M A : Type) [AddCommGroup M] [AddCommGroup A] (l q g 
     (hW : ∀ n, ∀ x ∈ W, l ^ n • x = 0 → Φ x = q • x)
     (hPW : ∀ n, ∀ x ∈ H, l ^ n • x = 0 →
       ∑ j ∈ Finset.range (P.natDegree + 1), P.coeff j • (Φ^[j] x) ∈ W) : g ≤ t + a := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨T, _, _, π, _, _, hrk, h1, h0, hs, hsurj, hker, hu⟩ :=
     GlobalTheory.exists_tateModule_of_card M l (2 * g) fun n => by rw [hM, mul_comm]
   obtain ⟨T', _, _, π', _, _, hrk', h1', h0', hs', -, -, hu'⟩ :=
@@ -938,8 +938,8 @@ theorem le_add_of_pairing (M A : Type) [AddCommGroup M] [AddCommGroup A] (l q g 
 
 theorem card_torsion_units (K : Type) [Field K] [IsAlgClosed K] (l : ℕ) (hl : (l : K) ≠ 0)
     (n : ℕ) : Nat.card {x : Additive Kˣ // l ^ n • x = 0} = l ^ n := by
-  haveI : NeZero ((l ^ n : ℕ) : K) := ⟨by rw [Nat.cast_pow]; exact pow_ne_zero _ hl⟩
-  haveI : NeZero (l ^ n) := NeZero.of_neZero_natCast K
+  have : NeZero ((l ^ n : ℕ) : K) := ⟨by rw [Nat.cast_pow]; exact pow_ne_zero _ hl⟩
+  have : NeZero (l ^ n) := NeZero.of_neZero_natCast K
   exact HasEnoughRootsOfUnity.natCard_rootsOfUnity K (l ^ n)
 
 end GlobalTheory.SS.Weight

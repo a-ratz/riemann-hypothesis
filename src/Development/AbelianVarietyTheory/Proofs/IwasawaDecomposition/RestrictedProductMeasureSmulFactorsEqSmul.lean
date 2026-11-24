@@ -107,7 +107,7 @@ theorem isProd_smul (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
   obtain ⟨⟨hi, hv, hs⟩, hf⟩ := h
   have key : ∀ v, ((r v • mv v) (latV b v)).toReal = r v * (mv v (latV b v)).toReal := by
     intro v
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal]
   refine ⟨⟨inferInstance, fun v => inferInstance, ?_⟩, ?_⟩
   · simp only [key]
     exact summable_scale _ r hs hr

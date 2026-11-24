@@ -175,10 +175,10 @@ theorem triv_of_triv_pull : ∀ (K : Type) [Field K] [IsAlgClosed K] (A A' B : O
     have f1' := evc_ev hQl (fst A C ≫ q) (snd A C) hR (fst A T) (snd A T ≫ (1 : T ⟶ C))
     simp only [lift_fst, lift_snd_assoc, lift_fst_assoc, lift_snd, Category.assoc] at f1 f1'
     rw [← f1, f1', MonObj.comp_one, evc_one_right hQl hQ.zero]))
-  haveI : IsSplitMono s := IsSplitMono.mk' ⟨r, hsr⟩
-  haveI : IsIso s := isIso_of_mono' hB hC hgB hgC s
+  have : IsSplitMono s := IsSplitMono.mk' ⟨r, hsr⟩
+  have : IsIso s := isIso_of_mono' hB hC hgB hgC s
   have hrinv : r = inv s := (IsIso.inv_eq_of_hom_inv_id hsr).symm
-  haveI : IsIso r := by rw [hrinv]; infer_instance
+  have : IsIso r := by rw [hrinv]; infer_instance
   have hc1 : c = 1 := (cancel_mono r).1 (hcr.trans h1r.symm)
   refine (cls_eq_zero_iff hM).1 ?_
   rw [(cls_eq_iff hM (pull_isLB hQl _)).2 hc, cls_ev hQl, hc1, MonObj.comp_one, evc_one_right hQl hQ.zero]
@@ -262,16 +262,16 @@ theorem exists_closed_subgroup_ker : ∀ (K : Type) [Field K] [IsAlgClosed K] (A
   have hN : Fam B (swap P) := ⟨hs, isDual_isAdditive_swap _ A B P hB hD⟩
   have hN' : Fam B (LB.triv (B ⊗ A).left) :=
     ⟨ht, (isAdditive_iff ht).2 fun _ _ _ _ ↦ by simp only [h0, add_zero]⟩
-  haveI := hA.smooth
-  haveI : IsLocallyNoetherian A.left := LocallyOfFiniteType.isLocallyNoetherian A.hom
+  have := hA.smooth
+  have : IsLocallyNoetherian A.left := LocallyOfFiniteType.isLocallyNoetherian A.hom
   obtain ⟨N, i, hi, hG⟩ := GlobalTheory.DualLocus.exists_closed_same (Sp K) B A hB (swap P) _ hN hN'
   have key : ∀ (T : Over (Sp K)) (x : T ⟶ A),
       evc hP (fst T B ≫ x) (snd T B) = 0 ↔ ∃ z : T ⟶ N, z ≫ i = x := fun T x ↦ by
     rw [← hG, same_iff hs ht, h0, evc_swap hP hs, evc_ker_iff]
   have hK : ∀ (T : Over (Sp K)) (z : T ⟶ N), evc hP (fst T B ≫ z ≫ i) (snd T B) = 0 :=
     fun T z ↦ (key T _).2 ⟨z, rfl⟩
-  haveI : Mono i.left := inferInstance
-  haveI : Mono i := Over.mono_of_mono_left i
+  have : Mono i.left := inferInstance
+  have : Mono i := Over.mono_of_mono_left i
   have hl : ∀ {T : Over (Sp K)} (x : T ⟶ A), evc hP (fst T B ≫ x) (snd T B) = 0 →
       ∃ z : T ⟶ N, z ≫ i = x := fun x h ↦ (key _ x).1 h
   obtain ⟨o, ho⟩ := hl (η[A] : 𝟙_ (Over (Sp K)) ⟶ A) (by
@@ -327,7 +327,7 @@ theorem memKL_of_triv_ev_left : ∀ (K : Type) [Field K] [IsAlgClosed K] (A B : 
     (P : LB (A ⊗ B).left) (L : LB A.left), IsAbelianScheme A → IsAbelianScheme B → IsDual A B P → L.IsLB →
     ∀ (T : Over (Sp K)) (x : T ⟶ A), Triv (ev P (fst T B ≫ x) (snd T B)) → GlobalTheory.MemKL A L x := by
   intro K _ _ A B _ _ P L hA _ hD hL T x hx
-  haveI := hA.comm
+  have := hA.comm
   have hP : (abelian₂ A L).IsLB := LB.isLB_linComb hL _ _
   have e : ∀ (Y : Over (Sp K)) (a b : Y ⟶ A), evc hP a b = lam (cls L hL) a b := fun Y a b ↦ by
     rw [evc, show cls _ hP = lam (cls L hL) (fst A A) (snd A A) from cls_cube_two hL _ _ hP, pull_lam, lift_fst,
@@ -1035,17 +1035,17 @@ namespace GlobalTheory.PoincareDescent
 
 theorem descend_torsor : ∀ (K : Type) [Field K] [IsAlgClosed K] (A A' B N : Over (Sp K)) [GrpObj A] [GrpObj A'] [GrpObj B] [GrpObj N] (P : LB (A ⊗ B).left) (i : N ⟶ A) (q : A ⟶ A'), IsAbelianScheme A → IsAbelianScheme A' → IsAbelianScheme B → P.IsLB → IsAdditive P → Triv (ev P (𝟙 A) (1 : A ⟶ B)) → IsMonHom i → IsMonHom q → IsFinite q.left → Flat q.left → Surjective q.left → IsPullback (fst A N) (fst A N * (snd A N ≫ i)) q q → Triv (ev P (fst N B ≫ i) (snd N B)) → ∃ P₀ : LB (A' ⊗ B).left, P₀.IsLB ∧ LBIso (ev P₀ (fst A B ≫ q) (snd A B)) P := by
   intro K _ _ A A' B N _ _ _ _ P i q hA hA' hB hP hadd hzero hi hq hfin hflat hsurj hsq hN
-  haveI : IsFinite q.left := hfin
-  haveI : Flat q.left := hflat
-  haveI : Surjective q.left := hsurj
+  have : IsFinite q.left := hfin
+  have : Flat q.left := hflat
+  have : Surjective q.left := hsurj
   have hpb := GlobalTheory.AbLaw.SecBC.isPullback_whisker (A := B) q
-  haveI : IsFinite (q ▷ B).left := MorphismProperty.of_isPullback hpb.flip hfin
-  haveI : Flat (q ▷ B).left := MorphismProperty.of_isPullback hpb.flip hflat
-  haveI : Surjective (q ▷ B).left := MorphismProperty.of_isPullback hpb.flip hsurj
-  haveI : IsLocallyNoetherian (A' ⊗ B).left := by
-    haveI := hA'.smooth
-    haveI := hB.smooth
-    haveI : LocallyOfFiniteType (A' ⊗ B).hom := by
+  have : IsFinite (q ▷ B).left := MorphismProperty.of_isPullback hpb.flip hfin
+  have : Flat (q ▷ B).left := MorphismProperty.of_isPullback hpb.flip hflat
+  have : Surjective (q ▷ B).left := MorphismProperty.of_isPullback hpb.flip hsurj
+  have : IsLocallyNoetherian (A' ⊗ B).left := by
+    have := hA'.smooth
+    have := hB.smooth
+    have : LocallyOfFiniteType (A' ⊗ B).hom := by
       show LocallyOfFiniteType (pullback.fst A'.hom B.hom ≫ A'.hom)
       infer_instance
     exact LocallyOfFiniteType.isLocallyNoetherian (A' ⊗ B).hom
@@ -1262,8 +1262,8 @@ theorem finite_of_factor {K : Type} [Field K] {N A H : Over (Sp K)} (i : N ⟶ A
     (hz : z ≫ j = i) (hi : IsClosedImmersion i.left) (hj : IsClosedImmersion j.left) (hH : IsFinite H.hom) :
     IsFinite N.hom := by
   have e : z.left ≫ j.left = i.left := by rw [← Over.comp_left, hz]
-  haveI : IsClosedImmersion (z.left ≫ j.left) := e ▸ hi
-  haveI : IsClosedImmersion z.left := IsClosedImmersion.of_comp z.left j.left
+  have : IsClosedImmersion (z.left ≫ j.left) := e ▸ hi
+  have : IsClosedImmersion z.left := IsClosedImmersion.of_comp z.left j.left
   have : N.hom = z.left ≫ H.hom := (Over.w z).symm
   rw [this]; infer_instance
 
@@ -1273,7 +1273,7 @@ theorem leftKer_eq_one : ∀ (K : Type) [Field K] [IsAlgClosed K] (A B : Over (S
   obtain ⟨L, H, _, j, hL, -, -, -, hcj, hH, hKL⟩ := GlobalTheory.T.exists_ample_kernel_finite_subgroupScheme K A hA
   obtain ⟨z, hz⟩ := (hKL N i).1 (GlobalTheory.T.mem_kernelOfLineBundle_of_dualPair_left_trivial K A B P L hA hB hP hL N i hNt)
   have hfin : IsFinite N.hom := finite_of_factor i j z hz hci hcj hH
-  haveI : Mono i.left := inferInstance
+  have : Mono i.left := inferInstance
   have hmono : Mono i := (Over.forget _).mono_of_mono_map (by simpa using (inferInstance : Mono i.left))
   obtain ⟨A', _, hA', q, hq, hqf, hqfl, hqs, hpb⟩ := GlobalTheory.T.exists_quotient_abelianVariety_finite_subgroupScheme K A hA N i hi hmono hfin
   have hgA' := GlobalTheory.T.smoothOfRelativeDimension_finite_surjective_abelianVariety K A A' g q hA hA' hqf hqs hgA

@@ -129,7 +129,7 @@ theorem hL_rename (p : MvPolynomial {v : TVar D N // v.1 ≠ 0} K) :
   induction p using MvPolynomial.induction_on with
   | C a => rw [MvPolynomial.rename_C, hL_C]
   | add p q hp hq => rw [map_add (f := _), map_add (f := _), hp, hq, map_add (f := _)]
-  | mul_X p n hp => rw [map_mul, map_mul, hp, MvPolynomial.rename_X, hL_X, dif_neg n.2, map_mul]
+  | mul_X p n hp => rw [map_mul, map_mul, hp, MvPolynomial.rename_X, hL_X, dite_eq_right n.2, map_mul]
 
 theorem hE_C (j0 : Fin (N + 1)) (r : Ω) :
     hE Ω D N j0 (MvPolynomial.C r) = MvPolynomial.C (MvPolynomial.C r) := by
@@ -212,7 +212,7 @@ theorem toFracY_injective : Function.Injective (toFracY A σ) := by
 theorem isFractionRing_toFracY :
     @IsFractionRing (MvPolynomial σ A) _ (FractionRing (MvPolynomial σ (FractionRing A))) _
       (toFracY A σ).toAlgebra := by
-  letI := (toFracY A σ).toAlgebra
+  let := (toFracY A σ).toAlgebra
   refine ⟨?_, ?_, ?_⟩
   · intro y
     refine IsUnit.mk0 _ (fun h => nonZeroDivisors.coe_ne_zero y (toFracY_injective ?_))
@@ -313,9 +313,9 @@ theorem finiteDimensional_of_liftY
     (hfin : letI := (VariableBasisExtension.liftY (L := L) (E := E) (σ := σ)).toAlgebra
       FiniteDimensional (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E))) :
     FiniteDimensional L E := by
-  letI : Algebra (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) :=
+  let : Algebra (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) :=
     (ReciprocityTheory.ChartRestriction.G.T0.VariableBasisExtension.liftY (L := L) (E := E) (σ := σ)).toAlgebra
-  haveI : FiniteDimensional (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) :=
+  have : FiniteDimensional (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) :=
     hfin
   have hbound : ∀ s : Finset E, LinearIndependent L (fun x : s => (x : E)) →
       s.card ≤ Module.finrank (FractionRing (MvPolynomial σ L)) (FractionRing (MvPolynomial σ E)) := by
@@ -373,15 +373,15 @@ noncomputable def eEX4 (c : ι) : OmS (Ω c) d.D d.N ≃+* FractionRing (MvPolyn
 theorem eLX4_algebraMap (P : KTp K d.D d.N) :
     d.eLX4 (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) P) =
       FractionFieldVariableLift.toFracY d.PolyRingPositiveRowsBase (Fin (d.N + 1)) (FractionFieldVariableLift.hL K d.D d.N P) := by
-  letI := (FractionFieldVariableLift.toFracY d.PolyRingPositiveRowsBase (Fin (d.N + 1))).toAlgebra
-  haveI := FractionFieldVariableLift.isFractionRing_toFracY (A := d.PolyRingPositiveRowsBase) (σ := Fin (d.N + 1))
+  let := (FractionFieldVariableLift.toFracY d.PolyRingPositiveRowsBase (Fin (d.N + 1))).toAlgebra
+  have := FractionFieldVariableLift.isFractionRing_toFracY (A := d.PolyRingPositiveRowsBase) (σ := Fin (d.N + 1))
   exact IsFractionRing.ringEquivOfRingEquiv_algebraMap (FractionFieldVariableLift.hL K d.D d.N) P
 
 theorem eEX4_algebraMap (c : ι) (P : MvPolynomial (SVar d.D d.N) (Ω c)) :
     d.eEX4 c (algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N) P) =
       FractionFieldVariableLift.toFracY (d.PolyRingPositiveRowsOmega c) (Fin (d.N + 1)) (FractionFieldVariableLift.hE (Ω c) d.D d.N (d.jc c) P) := by
-  letI := (FractionFieldVariableLift.toFracY (d.PolyRingPositiveRowsOmega c) (Fin (d.N + 1))).toAlgebra
-  haveI := FractionFieldVariableLift.isFractionRing_toFracY (A := d.PolyRingPositiveRowsOmega c) (σ := Fin (d.N + 1))
+  let := (FractionFieldVariableLift.toFracY (d.PolyRingPositiveRowsOmega c) (Fin (d.N + 1))).toAlgebra
+  have := FractionFieldVariableLift.isFractionRing_toFracY (A := d.PolyRingPositiveRowsOmega c) (σ := Fin (d.N + 1))
   exact IsFractionRing.ringEquivOfRingEquiv_algebraMap (FractionFieldVariableLift.hE (Ω c) d.D d.N (d.jc c)) P
 
 noncomputable def psiE (c : ι) : d.PolyRingPositiveRowsBase →+* d.FracFieldPositiveRowsOmega c :=
@@ -543,10 +543,10 @@ theorem finYX4 (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
     letI := (VariableBasisExtension.liftY (L := d.FracFieldPositiveRowsBase) (E := d.FracFieldPositiveRowsOmega c) (σ := Fin (d.N + 1))).toAlgebra
     FiniteDimensional (FractionRing (MvPolynomial (Fin (d.N + 1)) d.FracFieldPositiveRowsBase))
       (FractionRing (MvPolynomial (Fin (d.N + 1)) (d.FracFieldPositiveRowsOmega c))) := by
-  letI := d.algLE h c
-  letI := (VariableBasisExtension.liftY (L := d.FracFieldPositiveRowsBase) (E := d.FracFieldPositiveRowsOmega c) (σ := Fin (d.N + 1))).toAlgebra
-  letI := (d.KTtoS h c).toAlgebra
-  haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := by
+  let := d.algLE h c
+  let := (VariableBasisExtension.liftY (L := d.FracFieldPositiveRowsBase) (E := d.FracFieldPositiveRowsOmega c) (σ := Fin (d.N + 1))).toAlgebra
+  let := (d.KTtoS h c).toAlgebra
+  have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := by
     classical
     obtain ⟨e, -, -, hsp⟩ := hd.a4
     refine ⟨⟨Finset.univ.image (fun k : Fin d.del => algebraMap (Ω c) (OmS (Ω c) d.D d.N)
@@ -558,7 +558,7 @@ theorem finYX4 (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
         (ratio (Ω := Ω c) (d.thp (hd.sel k) c) (e c)) := by
       have h1 := hp c
       first
-        | (simp only [dif_pos (rfl : c = c)] at h1; exact h1)
+        | (simp only [dite_eq_left (rfl : c = c)] at h1; exact h1)
         | simpa using h1
     have hq0 := hq c
     have hKT : ∀ r : KTp K d.D d.N, d.KTtoS h c (algebraMap _ _ r) = d.sH c r := fun r => by
@@ -590,7 +590,7 @@ theorem decomp_block0 (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
         eL.symm (algebraMap (MvPolynomial (Fin (d.N + 1)) L)
             (FractionRing (MvPolynomial (Fin (d.N + 1)) L)) (MvPolynomial.C l)) =
           algebraMap (KTp K d.D d.N) (KTf K d.D d.N) P / algebraMap (KTp K d.D d.N) (KTf K d.D d.N) Q := by
-  letI := d.algLE h c
+  let := d.algLE h c
   refine ⟨d.FracFieldPositiveRowsBase, d.FracFieldPositiveRowsOmega c, inferInstance, inferInstance, inferInstance,
     FractionFieldVariableLift.finiteDimensional_of_liftY (σ := Fin (d.N + 1)) (d.finYX4 hd h c), d.eLX4, d.eEX4 c,
     fun q => d.fieldEquiv_compat_liftY h c q, fun r => ?_, fun l => ?_⟩

@@ -243,7 +243,7 @@ theorem exists_gen_char {G : Type} [CommGroup G] [Fintype G] [IsCyclic G] : ∃ 
   classical
   obtain ⟨x, hx⟩ := IsCyclic.exists_generator (α := G)
   have hN : 0 < Fintype.card G := Fintype.card_pos
-  haveI : NeZero (Fintype.card G) := ⟨hN.ne'⟩
+  have : NeZero (Fintype.card G) := ⟨hN.ne'⟩
   have hox : orderOf x = Fintype.card G := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hx, Nat.card_eq_fintype_card]
   have hζ := Complex.isPrimitiveRoot_exp (Fintype.card G) hN.ne'
@@ -269,12 +269,12 @@ section Fld
 variable {g : ℕ} [Fact g.Prime] {n : ℕ} {K : Type} [Field K] [Algebra (ZMod g) K]
 
 theorem fin_of (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) : Finite K := by
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (by rw [hr]; exact hn)
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (by rw [hr]; exact hn)
   exact Module.finite_of_finite (ZMod g)
 
 theorem natCard_K (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) : Nat.card K = g ^ n := by
-  haveI := fin_of hn hr
-  letI := Fintype.ofFinite K
+  have := fin_of hn hr
+  let := Fintype.ofFinite K
   rw [Nat.card_eq_fintype_card, Module.card_eq_pow_finrank (K := ZMod g), ZMod.card, hr]
 
 theorem pow_iter {z : K} {d : ℕ} (h : z ^ g ^ d = z) (k : ℕ) : z ^ g ^ (d * k) = z := by
@@ -284,15 +284,15 @@ theorem pow_iter {z : K} {d : ℕ} (h : z ^ g ^ d = z) (k : ℕ) : z ^ g ^ (d * 
 
 theorem pow_of_deg (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) (z : K)
     (hd : (minpoly (ZMod g) z).natDegree ≠ n) : ∃ p ∈ n.primeFactors, z ^ g ^ (n / p) = z := by
-  haveI : FiniteDimensional (ZMod g) K := Module.finite_of_finrank_pos (by rw [hr]; exact hn)
+  have : FiniteDimensional (ZMod g) K := Module.finite_of_finrank_pos (by rw [hr]; exact hn)
   have hint : IsIntegral (ZMod g) z := Algebra.IsIntegral.isIntegral z
   set d := (minpoly (ZMod g) z).natDegree with hd_def
   have hdpos : 0 < d := minpoly.natDegree_pos hint
   have hzd : z ^ g ^ d = z := by
     set F := IntermediateField.adjoin (ZMod g) {z}
     have hF : Module.finrank (ZMod g) F = d := IntermediateField.adjoin.finrank hint
-    haveI := fin_of hdpos hF
-    letI := Fintype.ofFinite F
+    have := fin_of hdpos hF
+    let := Fintype.ofFinite F
     have hc : Fintype.card F = g ^ d := by
       rw [← Nat.card_eq_fintype_card]
       exact natCard_K hdpos hF
@@ -310,8 +310,8 @@ theorem pow_of_deg (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) (z : K)
   exact pow_iter hzd (k / p)
 
 theorem unit_frob (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) (z : Kˣ) : z ^ g ^ n = z := by
-  haveI := fin_of hn hr
-  letI := Fintype.ofFinite K
+  have := fin_of hn hr
+  let := Fintype.ofFinite K
   have hc : Fintype.card K = g ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact natCard_K hn hr
@@ -491,8 +491,8 @@ private theorem exc (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) (e : ℕ)
       ∑ j ∈ range n, ((θ (z ^ g ^ j) : ℂˣ) : ℂ) = ∑ j ∈ range n, ((θ' (z ^ g ^ j) : ℂˣ) : ℂ)) :
     ∃ j < n, θ' = θ ^ g ^ j := by
   classical
-  haveI := fin_of hn hr
-  letI : Fintype Kˣ := Fintype.ofFinite Kˣ
+  have := fin_of hn hr
+  let : Fintype Kˣ := Fintype.ofFinite Kˣ
   by_contra hne
   have hdisj := disj_cj hn hr θ θ' hne
   obtain ⟨D, hD1, hD2, -⟩ := exists_D (K := K) (g := g) hn hr
@@ -539,8 +539,8 @@ private theorem main (hn : 0 < n) (hr : Module.finrank (ZMod g) K = n) (θ : Kˣ
         ∑ j ∈ range n, ((θ (z ^ g ^ j) : ℂˣ) : ℂ) = ∑ j ∈ range n, ((θ' (z ^ g ^ j) : ℂˣ) : ℂ)) →
       ∃ j < n, θ' = θ ^ g ^ j := by
   classical
-  haveI := fin_of hn hr
-  letI : Fintype Kˣ := Fintype.ofFinite Kˣ
+  have := fin_of hn hr
+  let : Fintype Kˣ := Fintype.ofFinite Kˣ
   have hg2 : 2 ≤ g := (Fact.out : g.Prime).two_le
   have hcard := card_unitsK (K := K) (g := g) hn hr
   obtain ⟨D, hD1, hD2, hDb⟩ := exists_D (K := K) (g := g) hn hr

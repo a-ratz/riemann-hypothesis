@@ -125,13 +125,13 @@ theorem exists_cols_det_ne_zero_of_mul {Ω : Type} [Field Ω] {n r : ℕ}
     · calc r = (R * u).rank := hrA.symm
         _ ≤ R.rank := Matrix.rank_mul_le_left _ _
   obtain ⟨K, a, ha, hspan, hli⟩ := exists_linearIndependent' Ω R.col
-  haveI : Fintype K := Fintype.ofInjective a ha
+  have : Fintype K := Fintype.ofInjective a ha
   have hcard : Fintype.card K = r := by
     rw [← finrank_span_eq_card hli, hspan, Matrix.finrank_span_range_col, hrR]
   let e : Fin r ≃ K := (Fintype.equivFinOfCardEq hcard).symm
   refine ⟨a ∘ e, ?_⟩
   have h3 : LinearIndependent Ω (R.submatrix id (a ∘ e)).col := hli.comp e e.injective
-  rw [Matrix.linearIndependent_cols_iff_isUnit] at h3
+  rw [linearIndependent_col_iff_isUnit] at h3
   exact isUnit_iff_ne_zero.mp ((Matrix.isUnit_iff_isUnit_det _).mp h3)
 
 theorem rank_minor_factorisation :
@@ -164,7 +164,7 @@ open Matrix
 
 theorem det_of_inCell {R : Type} [CommRing R] {n r : ℕ} (ix : Fin r ↪ Fin n) (u : Matrix (Fin n) (Fin r) R)
     (h : InCell ix u) : (u.submatrix ix id).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular (u.submatrix ix id) (fun i j hij => h.1 i j hij)]
+  rw [det_of_isLowerTriangular (u.submatrix ix id) (fun i j hij => h.1 i j hij)]
   simp [h.2]
 
 theorem rank_of_quasi_idem {L : Type} [Field L] {n : ℕ} (P : Matrix (Fin n) (Fin n) L) (N : L) (hN : N ≠ 0)
@@ -286,7 +286,7 @@ theorem loc_lift {K O A F L : Type} [Field K] [CommRing O] [IsDomain O] [Algebra
   set R₀ := Algebra.adjoin K (insert (i g)⁻¹ (Set.range i)) with hR₀
   have hm : ∀ a, i a ∈ R₀ := fun a => Algebra.subset_adjoin (Or.inr ⟨a, rfl⟩)
   let i₀ : A →+* R₀ := i.codRestrict R₀.toSubring hm
-  letI : Algebra A R₀ := i₀.toAlgebra
+  let : Algebra A R₀ := i₀.toAlgebra
   let S : Submonoid A := (IsUnit.submonoid R₀).comap i₀ ⊓ (IsUnit.submonoid L).comap f
   have hO : ∀ b : O, i₀ (α b) = algebraMap K R₀ (algebraMap O K b) := fun b => Subtype.ext (hi' b)
   have hK : ∀ b : O, b ≠ 0 → IsUnit (algebraMap O K b) := fun b hb =>
@@ -295,7 +295,7 @@ theorem loc_lift {K O A F L : Type} [Field K] [CommRing O] [IsDomain O] [Algebra
     (Subtype.ext (mul_inv_cancel₀ hg)), isUnit_iff_ne_zero.mpr hfg⟩
   have hbS : ∀ b : O, b ≠ 0 → α b ∈ S := fun b hb =>
     ⟨show IsUnit (i₀ (α b)) from hO b ▸ (hK b hb).map _, show IsUnit (f (α b)) from hf' b ▸ (hK b hb).map _⟩
-  haveI : IsLocalization S R₀ := by
+  have : IsLocalization S R₀ := by
     refine (isLocalization_iff S R₀).mpr ⟨fun y => y.2.1, fun z => ?_, fun {x y} h => ⟨1, ?_⟩⟩
     · obtain ⟨a, b, m, hb, h⟩ := loc_descr α i hi g hg z z.2
       exact ⟨⟨a, ⟨α b * g ^ m, S.mul_mem (hbS b hb) (S.pow_mem hgS m)⟩⟩, Subtype.ext h⟩

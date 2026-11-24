@@ -55,7 +55,7 @@ theorem UpperTheory.ConvolutionTheory.L1.infSplit :
   intro F E _ _ _ _ _ _ σ hσ m hm
   refine ⟨fun hF => ?_, fun p => ?_⟩
   · have h : ∀ v : InfinitePlace F, Nonempty (E →ₐ[F] v.Completion) := fun v => by
-      haveI : IsAlgClosed v.Completion :=
+      have : IsAlgClosed v.Completion :=
         IsAlgClosed.of_ringEquiv ℂ _
           (InfinitePlace.Completion.ringEquivComplexOfIsComplex (hF.isComplex v)).symm
       exact ⟨IsAlgClosed.lift⟩

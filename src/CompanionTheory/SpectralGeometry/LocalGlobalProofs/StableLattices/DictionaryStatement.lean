@@ -60,18 +60,18 @@ theorem exists_model_field {K A : Type} [NontriviallyNormedField K] [IsUltrametr
     [Field A] [Algebra K A] [FiniteDimensional K A] [TopologicalSpace A] [IsModuleTopology K A] :
     ∃ (L : Type) (_ : NontriviallyNormedField L) (_ : IsUltrametricDist L) (_ : ProperSpace L) (e : A ≃+* L),
       Continuous e ∧ Continuous e.symm ∧ ∀ (c : A ≃ₐ[K] A) (x : A), ‖e (c x)‖ = ‖e x‖ := by
-  haveI : CompleteSpace K := inferInstance
-  letI fL : Field (Cp A) := ‹Field A›
-  letI aL : Algebra K (Cp A) := ‹Algebra K A›
-  haveI : FiniteDimensional K (Cp A) := ‹FiniteDimensional K A›
-  haveI : Algebra.IsAlgebraic K (Cp A) := Algebra.IsAlgebraic.of_finite K (Cp A)
-  letI nL : NontriviallyNormedField (Cp A) := spectralNorm.nontriviallyNormedField K (Cp A)
-  letI mL : NormedAlgebra K (Cp A) := spectralNorm.normedAlgebra K (Cp A)
-  haveI uL : IsUltrametricDist (Cp A) := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm
+  have : CompleteSpace K := inferInstance
+  let fL : Field (Cp A) := ‹Field A›
+  let aL : Algebra K (Cp A) := ‹Algebra K A›
+  have : FiniteDimensional K (Cp A) := ‹FiniteDimensional K A›
+  have : Algebra.IsAlgebraic K (Cp A) := Algebra.IsAlgebraic.of_finite K (Cp A)
+  let nL : NontriviallyNormedField (Cp A) := spectralNorm.nontriviallyNormedField K (Cp A)
+  let mL : NormedAlgebra K (Cp A) := spectralNorm.normedAlgebra K (Cp A)
+  have uL : IsUltrametricDist (Cp A) := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm
     (isNonarchimedean_spectralNorm (K := K) (L := Cp A))
-  haveI pL : ProperSpace (Cp A) := FiniteDimensional.proper K (Cp A)
-  haveI : IsModuleTopology K (Cp A) := isModuleTopologyOfFiniteDimensional
-  haveI : ContinuousAdd A := IsModuleTopology.toContinuousAdd K A
+  have pL : ProperSpace (Cp A) := FiniteDimensional.proper K (Cp A)
+  have : IsModuleTopology K (Cp A) := isModuleTopologyOfFiniteDimensional
+  have : ContinuousAdd A := IsModuleTopology.toContinuousAdd K A
   let f : A ≃ₗ[K] Cp A := LinearEquiv.refl K A
   refine ⟨Cp A, nL, uL, pL, RingEquiv.refl A, IsModuleTopology.continuous_of_linearMap f.toLinearMap,
     IsModuleTopology.continuous_of_linearMap f.symm.toLinearMap, fun c x => ?_⟩
@@ -79,26 +79,26 @@ theorem exists_model_field {K A : Type} [NontriviallyNormedField K] [IsUltrametr
 
 theorem isField_tensor_of_no_algHom {F K E : Type} [Field F] [Field K] [Field E] [Algebra F K] [Algebra F E]
     (h2 : Module.finrank F E = 2) (hn : IsEmpty (E →ₐ[F] K)) : IsField (K ⊗[F] E) := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   have hA : Module.finrank K (K ⊗[F] E) = 2 := by rw [Module.finrank_baseChange, h2]
-  haveI : Nontrivial (K ⊗[F] E) := Module.nontrivial_of_finrank_pos (R := K) (by omega)
+  have : Nontrivial (K ⊗[F] E) := Module.nontrivial_of_finrank_pos (R := K) (by omega)
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[F] E)
   by_cases hb : m = ⊥
   · subst hb
     exact ((RingEquiv.quotientBot (K ⊗[F] E)).symm.toMulEquiv.isField
       ((Ideal.Quotient.maximal_ideal_iff_isField_quotient ⊥).1 hm))
   · exfalso
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     let φ : (K ⊗[F] E) →ₐ[K] (K ⊗[F] E) ⧸ m := Ideal.Quotient.mkₐ K m
     have hs : Function.Surjective φ := Ideal.Quotient.mkₐ_surjective K m
     have h3 := LinearMap.finrank_range_add_finrank_ker φ.toLinearMap
     rw [LinearMap.range_eq_top.2 hs, finrank_top, hA] at h3
     have hk : 0 < Module.finrank K (LinearMap.ker φ.toLinearMap) := by
       obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hb
-      haveI : Nontrivial (LinearMap.ker φ.toLinearMap) :=
+      have : Nontrivial (LinearMap.ker φ.toLinearMap) :=
         ⟨⟨⟨x, (Ideal.Quotient.eq_zero_iff_mem.2 hx)⟩, 0, fun e => hx0 (congrArg Subtype.val e)⟩⟩
       exact Module.finrank_pos
-    haveI : Module.Finite K ((K ⊗[F] E) ⧸ m) := Module.Finite.of_surjective φ.toLinearMap hs
+    have : Module.Finite K ((K ⊗[F] E) ⧸ m) := Module.Finite.of_surjective φ.toLinearMap hs
     have hq : 0 < Module.finrank K ((K ⊗[F] E) ⧸ m) := Module.finrank_pos
     have h1 : Module.finrank K ((K ⊗[F] E) ⧸ m) = 1 := by omega
     have hbj : Function.Bijective (Algebra.ofId K ((K ⊗[F] E) ⧸ m)) :=
@@ -190,7 +190,7 @@ theorem exists_equiv_UG {L : Type} [Field L] [TopologicalSpace L] (e : (Fv F v �
            right_inv := fun u => Subtype.ext (e1 _)
            map_mul' := fun g g' => Subtype.ext (by simp only [map_mul, Subgroup.coe_mul])
            continuous_toFun := (c1.comp hemb.continuous).subtype_mk _
-           continuous_invFun := hemb.continuous_iff.2 (c2.comp continuous_subtype_val) }⟩
+           continuous_invFun := hemb.continuous_iff.2 (c2.comp continuous_subtypeVal) }⟩
 
 end Dict
 
@@ -198,17 +198,17 @@ end Dict
 open GlobalTheory.LFun.InertChart in
 theorem stDict : CompanionTheory.Rg.Fl.StDict := by
   intro F E _ _ _ _ _ σ h n J hJ v
-  letI nf : NontriviallyNormedField (Fv F v) :=
+  let nf : NontriviallyNormedField (Fv F v) :=
     Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
-  haveI pf : ProperSpace (Fv F v) := properSpace_Fv v
-  haveI uf : IsUltrametricDist (Fv F v) := inferInstance
-  haveI cf : CharZero (Fv F v) := charZero_Fv
+  have pf : ProperSpace (Fv F v) := properSpace_Fv v
+  have uf : IsUltrametricDist (Fv F v) := inferInstance
+  have cf : CharZero (Fv F v) := charZero_Fv
   by_cases hs : Nonempty (E →ₐ[F] Fv F v)
   · obtain ⟨τ⟩ := hs
     exact ⟨Fv F v, nf, uf, pf, cf, Or.inl ⟨splitEquiv h hJ τ⟩⟩
   · have hf : IsField (Fv F v ⊗[F] E) := isField_tensor_of_no_algHom h.2.2.1 (not_nonempty_iff.1 hs)
-    haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; omega)
-    haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+    have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; omega)
+    have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
     obtain ⟨L, nL, uL, pL, e, he, he', hn⟩ := exists_model (K := Fv F v) (A := Fv F v ⊗[F] E) hf
     have hcc : ∀ x, σ (σ x) = x := conj_conj h
     have hss : ∀ y : Fv F v ⊗[F] E, sigR (Fv F v) σ (sigR (Fv F v) σ y) = y := sigR_sigR _ hcc

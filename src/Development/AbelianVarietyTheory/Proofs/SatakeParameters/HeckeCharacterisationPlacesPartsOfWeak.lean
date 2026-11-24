@@ -74,7 +74,7 @@ theorem conj_ne_of_two {D : D7} (P : HeightOneSpectrum (𝓞 D.host.E)) (h2 : ((
   exact (Formalism.BasicNotions.Examples₂.star_eq_conj D.host _).symm
 
 theorem exists_two (D : D7) : ∃ P : HeightOneSpectrum (𝓞 D.host.E), ((2 : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal := by
-  haveI : (Ideal.span {(2 : ℤ)}).IsMaximal :=
+  have : (Ideal.span {(2 : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp Nat.prime_two).irreducible
   obtain ⟨Q, hQ, hc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 D.host.E) (Ideal.span {(2 : ℤ)}) (by
     intro x hx

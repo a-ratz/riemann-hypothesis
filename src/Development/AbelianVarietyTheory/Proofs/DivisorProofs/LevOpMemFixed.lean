@@ -63,7 +63,7 @@ theorem out_eq_of_inv {M : Type} (H : Subgroup G) (F : G → M) (hF : ∀ g, ∀
 
 theorem finite_supp [TopologicalSpace G] [IsTopologicalGroup G] (H : Subgroup G) (hH : IsOpen (H : Set G))
     (f : G → ℂ) (hf : HasCompactSupport f) : {q : G ⧸ H | f q.out ≠ 0}.Finite := by
-  haveI := QuotientGroup.discreteTopology hH
+  have := QuotientGroup.discreteTopology hH
   have hc : IsCompact ((QuotientGroup.mk : G → G ⧸ H) '' tsupport f) :=
     hf.isCompact.image QuotientGroup.continuous_mk
   refine hc.finite_of_discrete.subset ?_
@@ -80,7 +80,7 @@ theorem levOp_apply (ρ : Representation ℂ G V) (K H : Subgroup G) (f : G → 
     (f := fun q : G ⧸ H => f q.out • (ρ q.out ∘ₗ A)) (hs.subset ?_)
   · simpa using this
   · intro q hq
-    simp only [Function.mem_support, ne_eq, Set.mem_setOf_eq] at hq ⊢
+    simp only [Function.mem_support, ne_eq, Set.mem_ofPred_eq] at hq ⊢
     intro h0
     exact hq (by rw [h0, zero_smul])
 
@@ -109,7 +109,7 @@ theorem levOp_mem_fixed [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Repres
   have hsupp : (Function.support fun q : G ⧸ H => F q.out).Finite := by
     refine hs.subset ?_
     intro q hq
-    simp only [Function.mem_support, ne_eq, Set.mem_setOf_eq, hFdef] at hq ⊢
+    simp only [Function.mem_support, ne_eq, Set.mem_ofPred_eq, hFdef] at hq ⊢
     intro h0
     exact hq (by rw [h0, zero_smul])
   rw [map_smul]
@@ -135,9 +135,9 @@ theorem finite_quot [TopologicalSpace G] [IsTopologicalGroup G] (K K' K'' : Subg
     (hK : IsCompact (K : Set G)) (h' : IsOpen (K' : Set G)) (h'' : IsOpen (K'' : Set G)) (hle : K' ≤ K) :
     Finite (K' ⧸ K''.subgroupOf K') := by
   have hc : IsCompact (K' : Set G) := hK.of_isClosed_subset (Subgroup.isClosed_of_isOpen K' h') hle
-  haveI : CompactSpace K' := isCompact_iff_compactSpace.mp hc
-  have ho : IsOpen ((K''.subgroupOf K' : Subgroup K') : Set K') := h''.preimage continuous_subtype_val
-  haveI := QuotientGroup.discreteTopology ho
+  have : CompactSpace K' := isCompact_iff_compactSpace.mp hc
+  have ho : IsOpen ((K''.subgroupOf K' : Subgroup K') : Set K') := h''.preimage continuous_subtypeVal
+  have := QuotientGroup.discreteTopology ho
   exact finite_of_compact_of_discrete
 
 theorem avgOp_apply (ρ : Representation ℂ G V) (K' K'' : Subgroup G) [Finite (K' ⧸ K''.subgroupOf K')] (u : V) :
@@ -180,7 +180,7 @@ theorem levOp_le [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Representatio
     · refine (hs'.prod (Set.finite_univ (α := K' ⧸ K''.subgroupOf K'))).subset ?_
       rintro ⟨q, j⟩ hp
       simp only [Function.mem_support, ne_eq, he] at hp
-      simp only [Set.mem_prod, Set.mem_setOf_eq, Set.mem_univ, and_true]
+      simp only [Set.mem_prod, Set.mem_ofPred_eq, Set.mem_univ, and_true]
       intro h0
       exact hp (by rw [h0, zero_smul])
   have hR : ∀ q : G ⧸ K', f q.out • ρ q.out (((K''.relIndex K' : ℕ) : ℂ)⁻¹ •
@@ -229,7 +229,7 @@ theorem avgOp_fix (ρ : Representation ℂ G V) (K' K'' : Subgroup G) [Finite (K
   rw [avgOp_apply]
   have h1 : ∀ j : K' ⧸ K''.subgroupOf K', ρ (j.out : G) u = u := fun j => hu _ (j.out).2
   simp only [h1]
-  haveI := Fintype.ofFinite (K' ⧸ K''.subgroupOf K')
+  have := Fintype.ofFinite (K' ⧸ K''.subgroupOf K')
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul]
   have h2 : (K''.relIndex K' : ℕ) = Fintype.card (K' ⧸ K''.subgroupOf K') := by
     rw [Subgroup.relIndex, Subgroup.index, Nat.card_eq_fintype_card]

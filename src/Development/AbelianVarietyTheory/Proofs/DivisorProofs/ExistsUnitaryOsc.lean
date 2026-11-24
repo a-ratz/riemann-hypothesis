@@ -195,7 +195,7 @@ private theorem exists_unitary_hom_extending_of_dense_isometric {G : Type} [Grou
     (hone : ∀ f ∈ D, T 1 f = f) (hmul : ∀ g g', ∀ f ∈ D, T (g * g') f = T g (T g' f)) :
     ∃ ω : G →* (H ≃ₗᵢ[ℂ] H), ∀ g, ∀ f ∈ D, ω g f = T g f := by
   have hdr : DenseRange (D.subtypeL : D → H) := by
-    simpa [DenseRange, Submodule.coe_subtypeL', Subtype.range_coe_subtype] using hD
+    simpa [DenseRange, Submodule.coe_subtypeL, Subtype.range_coe_subtype] using hD
   have hui : IsUniformInducing (D.subtypeL : D → H) := isUniformInducing_val _
   let L : G → D →L[ℂ] H := fun g =>
     LinearMap.mkContinuous
@@ -210,7 +210,7 @@ private theorem exists_unitary_hom_extending_of_dense_isometric {G : Type} [Grou
     refine hdr.induction_on (p := fun x => ‖E g x‖ = ‖x‖) x
       (isClosed_eq ((E g).continuous.norm) continuous_norm) ?_
     intro f
-    simp only [Submodule.coe_subtypeL', Submodule.coe_subtype]
+    simp only [Submodule.coe_subtypeL, Submodule.coe_subtype]
     rw [hE g f f.2, hnorm g f f.2]
   have heq : ∀ A B : H →L[ℂ] H, (∀ f ∈ D, A f = B f) → A = B := by
     intro A B h
@@ -366,7 +366,7 @@ theorem _root_.GlobalTheory.FockRep.exists_unitary_osc : ∀ (p q : ℕ) (H : Ty
     (fun g f hf => by
       simpa using hnormΦ H (ContinuousLinearMap.id ℂ H) (fun v f => by simp [hρE_apply]) g f hf)
     (fun f hf => hone f hf) (fun g g' f hf => hmul g g' f hf)
-  have hmc : Continuous fun g : ↥G => m g := Units.continuous_val.comp continuous_subtype_val
+  have hmc : Continuous fun g : ↥G => m g := Units.continuous_val.comp continuous_subtypeVal
   have hcontD : ∀ f ∈ D, Continuous fun g : ↥G => ω g f := by
     intro f hf
     have h := hcont ↥G id (_root_.GlobalTheory.RealWeil.UnitaryOsc.continuous_kL.comp hmc)
@@ -423,7 +423,7 @@ theorem _root_.GlobalTheory.FockRep.exists_unitary_osc : ∀ (p q : ℕ) (H : Ty
         Matrix.zero_mul, add_zero, zero_add, h1, h2', fromBlocks_one]
     have hiso : ∀ x, ‖k g x‖ = ‖x‖ := _root_.GlobalTheory.RealWeil.UnitaryOsc.norm_kL hgu
     have hP1 : ∫ u, _root_.GlobalTheory.RealWeil.gau u • ρE (k 1 u) v = v := by
-      simp only [map_one, ContinuousLinearMap.one_apply]
+      simp only [map_one, one_apply_eq_self]
       rw [← _root_.GlobalTheory.RealWeil.proj_apply hρE]
       exact hPv
     have h3 := hvac 1 g hiso v hsm_v hP1

@@ -114,7 +114,7 @@ theorem subgroup_eq_top_of_nhds_one :
     have hτ : ∀ y, inc y ≫ τ = (inc y₀ ≫ π)⁻¹ * (inc y ≫ π) := fun y => by
       rw [MonObj.comp_mul, ← Category.assoc, hin, Category.id_comp]
     have hcont : Continuous fun y : Pts p => (show Sp ℂ ⟶ G.left from (inc y ≫ τ).left) :=
-      (continuous_comp (C := ℂ) (X := pullback G.hom x) τ.left).comp continuous_subtype_val
+      (continuous_comp (C := ℂ) (X := pullback G.hom x) τ.left).comp continuous_subtypeVal
     have hN := (hopen.preimage hcont).mem_nhds (x := y₀) (by
       simp only [Set.mem_preimage, hτ, inv_mul_cancel]
       exact ⟨h1, h1O⟩)

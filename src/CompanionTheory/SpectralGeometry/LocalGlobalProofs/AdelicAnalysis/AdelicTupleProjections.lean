@@ -125,7 +125,7 @@ theorem latV_eq {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpect
       tupHomeo b n M ⁻¹' (Set.pi Set.univ fun _ => Set.pi Set.univ fun _ => Set.pi Set.univ fun _ =>
         (v.adicCompletionIntegers F : Set (Fv F v))) := by
   ext Y
-  simp only [latV, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies]
+  simp only [latV, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies]
   rfl
 
 theorem isCompact_latV {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) :
@@ -148,7 +148,7 @@ theorem projV_mem_latV_iff {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : Hei
     projV v X ∈ (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) ↔
       ∀ a i k, ((Algebra.TensorProduct.basis (Af F) b).repr (X a i) k) v ∈
         v.adicCompletionIntegers F := by
-  simp only [latV, Set.mem_setOf_eq, coord_projV]
+  simp only [latV, Set.mem_ofPred_eq, coord_projV]
 
 end Adelic
 
@@ -166,7 +166,7 @@ theorem isOpen_intOff {d n M : ℕ} (b : Module.Basis (Fin d) F E) (S : Finset (
         sndA F ((Algebra.TensorProduct.basis (AF F) b).repr (X a i) k)) ⁻¹'
         {x : Af F | ∀ v, v ∉ S → x v ∈ v.adicCompletionIntegers F} := by
     ext X
-    simp only [intOff, Set.mem_setOf_eq, projV_mem_latV_iff, coord_projFin, Set.mem_iInter,
+    simp only [intOff, Set.mem_ofPred_eq, projV_mem_latV_iff, coord_projFin, Set.mem_iInter,
       Set.mem_preimage]
     exact ⟨fun h a i k v hv => h v hv a i k, fun h v hv a i k => h a i k v hv⟩
   rw [hE]

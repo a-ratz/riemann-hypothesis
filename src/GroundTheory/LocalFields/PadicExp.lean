@@ -100,7 +100,7 @@ theorem expSeries_mul_sub_one_sub_mem {a d : ℤ} {x c : K} (hx : x ∈ valBall 
   have hxk := expTerm_mem p hx (k + 1 + 1)
   have hck := pow_mem_valBall hc (k + 1 + 1)
   refine valBall_antitone ?_ (mul_mem_valBall hck hxk)
-  have h0 := sub_one_mul_padicValNat_factorial_lt_of_ne_zero p (by omega : k + 1 + 1 ≠ 0)
+  have h0 := sub_one_mul_multiplicity_factorial_lt_of_ne_zero p (by omega : k + 1 + 1 ≠ 0)
   set v := padicValNat p (k + 1 + 1).factorial
   set e := absRamificationIndex (K := K)
   have hp2 : (2 : ℤ) ≤ p := by exact_mod_cast hp.out.two_le
@@ -254,7 +254,7 @@ theorem continuous_expSeries_valBall (n : ℕ)
   have hr : (absRamificationIndex (K := K) : ℤ) < (p - 1 : ℤ) * r :=
     sub_one_le_of_lt p hn (le_max_right _ _)
   have hopen := (isOpen_valBall r).preimage
-    (continuous_subtype_val.sub continuous_const : Continuous fun x : valBall (K := K) n ↦ (x : K) - x0)
+    (continuous_subtypeVal.sub continuous_const : Continuous fun x : valBall (K := K) n ↦ (x : K) - x0)
   filter_upwards [hopen.mem_nhds (by simp)] with x hx
   have hx' : (x : K) - x0 ∈ valBall (K := K) r := hx
   have hxn : (x : K) - x0 ∈ valBall (K := K) n := valBall_antitone (le_max_right _ _) hx'

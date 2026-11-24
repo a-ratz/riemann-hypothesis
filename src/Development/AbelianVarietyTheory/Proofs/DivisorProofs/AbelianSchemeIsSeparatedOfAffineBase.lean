@@ -56,7 +56,7 @@ namespace GlobalTheory
 theorem abelianScheme_left_isSeparated_of_affine :
     ∀ {R : Type} [CommRing R] (A : Over (Sp R)) [GrpObj A], IsAbelianScheme A → A.left.IsSeparated := by
   intro R _ A _ h
-  haveI : IsProper A.hom := h.proper
+  have : IsProper A.hom := h.proper
   refine ⟨?_⟩
   rw [← terminal.comp_from A.hom]
   infer_instance

@@ -121,8 +121,8 @@ theorem factor_upIdele (t : (Af K)ˣ) (w : HeightOneSpectrum (𝓞 E)) :
       (((Ideal.absNorm (w.under (𝓞 K)).asIdeal : ℕ) : ℝ) ^
           WithZero.log (Valued.v ((t : Af K) (w.under (𝓞 K))))) ^
         (w.asIdeal.ramificationIdx (𝓞 K) * w.asIdeal.inertiaDeg (𝓞 K)) := by
-  haveI := w.isMaximal
-  haveI := (w.under (𝓞 K)).isMaximal
+  have := w.isMaximal
+  have := (w.under (𝓞 K)).isMaximal
   have h1 : ((upIdele K E t : Af E) w) = finiteCompletionMap K E w ((t : Af K) (w.under (𝓞 K))) := rfl
   rw [h1, valued_finiteCompletionMap, WithZero.log_pow,
     Ideal.ramificationIdx'_eq_ramificationIdx _ _ (w.under (𝓞 K)).ne_bot,
@@ -148,11 +148,11 @@ theorem sum_fiber (v : HeightOneSpectrum (𝓞 K)) (s : Finset (HeightOneSpectru
       rw [← (Finset.mem_filter.mp hw).2]
       exact GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.liesOver_under K E w⟩ : v.asIdeal.primesOver (𝓞 E)))
     (fun q _ => (⟨q.1, q.2.1, by
-      haveI := q.2.2
+      have := q.2.2
       exact Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot q.1⟩ : HeightOneSpectrum (𝓞 E)))
     (fun _ _ => Finset.mem_univ _) (fun q _ => ?_) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
   have hq : (⟨q.1, q.2.1, by
-      haveI := q.2.2
+      have := q.2.2
       exact Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot q.1⟩ : HeightOneSpectrum (𝓞 E)).under (𝓞 K) = v :=
     HeightOneSpectrum.ext q.2.2.over.symm
   exact Finset.mem_filter.mpr ⟨hs _ hq, hq⟩

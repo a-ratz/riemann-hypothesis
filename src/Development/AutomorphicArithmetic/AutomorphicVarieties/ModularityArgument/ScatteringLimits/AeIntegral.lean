@@ -56,7 +56,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.ae_integral {W : Type} [NormedAddCommG
     have hm : AEStronglyMeasurable g (μ.prod (volume.restrict s)) :=
       hg.mono_ac (Measure.AbsolutelyContinuous.rfl.prod Measure.absolutelyContinuous_restrict)
     refine ⟨hm, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hm.enorm]
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hm.eNorm]
     have hb : ∀ᵐ t ∂μ, ∫⁻ x in s, ‖g (t, x)‖ₑ ≤ ‖G t‖ₑ * volume s ^ (1 / (1 : ℝ≥0∞).toReal - 1 / (2 : ℝ≥0∞).toReal) := by
       filter_upwards [h] with t ht
       have e : ∫⁻ x in s, ‖g (t, x)‖ₑ = eLpNorm (G t) 1 (volume.restrict s) := by
@@ -65,11 +65,11 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.ae_integral {W : Type} [NormedAddCommG
       rw [e]
       refine (eLpNorm_le_eLpNorm_mul_rpow_measure_univ (p := 1) (q := 2) (by norm_num)
         (Lp.aestronglyMeasurable (G t)).restrict).trans ?_
-      rw [Measure.restrict_apply_univ, Lp.enorm_def]
+      rw [Measure.restrict_apply_univ, Lp.eNorm_def]
       gcongr
       exact Measure.restrict_le_self
     refine (lintegral_mono_ae hb).trans_lt ?_
-    rw [lintegral_mul_const'' _ hG.1.enorm]
+    rw [lintegral_mul_const'' _ hG.1.eNorm]
     exact ENNReal.mul_lt_top hG.2 (ENNReal.rpow_lt_top_of_nonneg (by norm_num) hf.ne)
   refine ae_eq_of_forall_setIntegral_eq_of_sigmaFinite
     (fun s _ hf => integrableOn_Lp_of_measure_ne_top _ (by norm_num) hf.ne)

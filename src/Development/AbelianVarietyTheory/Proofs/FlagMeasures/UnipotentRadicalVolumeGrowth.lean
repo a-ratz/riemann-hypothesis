@@ -95,8 +95,8 @@ theorem measure_mul_le {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     (hT : MeasurableSet T) (h : ∀ s ∈ S, ∀ k ∈ K, s * k ∈ T) : ν S * μ K ≤ ν (K * K⁻¹) * μ T := by
   classical
   obtain ⟨-, hfc, hnull, hleft⟩ := hν
-  haveI : IsFiniteMeasureOnCompacts ν := hfc
-  haveI : SigmaFinite ν := inferInstance
+  have : IsFiniteMeasureOnCompacts ν := hfc
+  have : SigmaFinite ν := inferInstance
   have hKm : MeasurableSet K := hK.isClosed.measurableSet
   set E : Set (G × G) := {p | p.1 ∈ S ∧ p.1⁻¹ * p.2 ∈ K} with hEd
   have hE : MeasurableSet E :=
@@ -107,11 +107,11 @@ theorem measure_mul_le {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     have hsl : ∀ s, μ (Prod.mk s ⁻¹' E) = S.indicator (fun _ => μ K) s := by
       intro s
       by_cases hs : s ∈ S
-      · rw [Set.indicator_apply, if_pos hs, ← measure_preimage_mul μ s⁻¹ K]
+      · rw [Set.indicator_apply, ite_eq_left hs, ← measure_preimage_mul μ s⁻¹ K]
         congr 1
         ext x
         simp [hEd, hs]
-      · rw [Set.indicator_apply, if_neg hs]
+      · rw [Set.indicator_apply, ite_eq_right hs]
         have h0 : Prod.mk s ⁻¹' E = ∅ := by
           ext x
           simp [hEd, hs]
@@ -126,13 +126,13 @@ theorem measure_mul_le {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
           apply lintegral_mono
           intro g
           by_cases hg : g ∈ T
-          · rw [Set.indicator_apply, if_pos hg]
+          · rw [Set.indicator_apply, ite_eq_left hg]
             exact (le_of_eq (by rw [hEd]; rfl)).trans
               (measure_slice_le_measure_mul_inv (S := S) hnull hleft hK g)
-          · rw [Set.indicator_apply, if_neg hg]
+          · rw [Set.indicator_apply, ite_eq_right hg]
             have h0 : (fun s => (s, g)) ⁻¹' E = ∅ := by
               ext s
-              simp only [hEd, Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false,
+              simp only [hEd, Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false,
                 not_and]
               intro hs hk
               apply hg
@@ -167,7 +167,7 @@ theorem radical_volume_growth : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodu
     ∀ b : ℝ, 4 * n * rkR ε < b → Integrable (fun m : UJ ε => Real.exp (-(b * dOp (umat m)))) ν := by
   intro n ε W ν _ hν
   obtain ⟨hP, hM, hD⟩ := dOp_nonneg_subadditive_continuous ε
-  haveI : (muG ε).IsHaarMeasure := by
+  have : (muG ε).IsHaarMeasure := by
     first
     | infer_instance
     | (unfold muG; infer_instance)
@@ -185,7 +185,7 @@ theorem radical_volume_growth : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodu
       | exact hKc.measure_lt_top (μ := muG ε)
       | exact IsCompact.measure_lt_top hKc
     have hνKK : ν (K * K⁻¹) < ⊤ := by
-      haveI : IsFiniteMeasureOnCompacts ν := hν.2.1
+      have : IsFiniteMeasureOnCompacts ν := hν.2.1
       exact (hKc.mul hKc.inv).measure_lt_top
     obtain ⟨B, hB⟩ := hKc.bddAbove_image hD.continuousOn
     refine ⟨(ν (K * K⁻¹)).toReal * C * Real.exp (4 * n * rkR ε * max B 0) / (muG ε K).toReal,

@@ -89,7 +89,7 @@ theorem sum_fib {A B : Type} (m : A → B) (F : A → V) (F' : B → V) (c : B �
   obtain ⟨hcb, hcard⟩ := hc b hb'
   have hset : (↑(s.filter (fun a => m a = b)) : Set A) = {a | m a = b} := by
     ext a
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, s, Set.Finite.mem_toFinset, Function.mem_support]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, s, Set.Finite.mem_toFinset, Function.mem_support]
     constructor
     · exact fun h => h.2
     · intro h
@@ -271,7 +271,7 @@ theorem trace_blocks {Q : Type} [Fintype Q] [FiniteDimensional ℂ V] (E : Q →
     · subst hoo
       rw [LinearMap.proj_comp_single_same, LinearMap.comp_id]
     · rw [LinearMap.proj_comp_single_ne ℂ _ _ _ hoo, LinearMap.comp_zero, map_zero]
-  simp only [hterm, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [hterm, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem finsum_triv (Γ₀ : Subgroup Γ) (h0 : ∀ z ∈ Γ₀, ∀ y : Y, z • y = y) (k : Y → V) (hk : (Function.support k).Finite) :
     {b : orbitRel.Quotient Γ₀ Y | k b.out ≠ 0}.Finite ∧

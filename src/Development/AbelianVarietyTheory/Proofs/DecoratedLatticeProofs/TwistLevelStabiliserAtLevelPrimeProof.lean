@@ -482,7 +482,7 @@ theorem GlobalTheory.AdForm.comp_fixes_stdPair : ∀ {B : Base} {X : PreX B.toPr
         · exact Subring.one_mem _
         · exact Subring.zero_mem _)
       rwa [sub_add_cancel] at this
-    · exact h4.2 (by rw [Fin.coe_cast, ← hn]; exact hr)
+    · exact h4.2 (by rw [Fin.val_cast, ← hn]; exact hr)
 
   set M := (mt _ κ).map (p i).pr with hMdef
   set M' := (mt _ κ⁻¹).map (p i).pr with hM'def

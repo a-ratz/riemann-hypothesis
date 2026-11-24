@@ -119,7 +119,7 @@ private theorem isOpen_Kc {c : Pl F → ℕ} (hc : {w | c w ≠ 0}.Finite) : IsO
       ⋂ w ∈ {w | c w ≠ 0}, ((fun g : GF F => pLoc F w (g 1 0)) ⁻¹' mP w (c w) ∩
         (fun g : GF F => pLoc F w (g 1 1) - 1) ⁻¹' mP w (c w)) := by
     ext g
-    simp only [SetLike.mem_coe, mem_Kc, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_Kc, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq]
   have ct : ∀ w a b, Continuous fun g : GF F => pLoc F w (g a b) := fun w a b =>
     (show Continuous (pLoc F w) from RestrictedProduct.continuous_eval w).comp
       (Continuous.matrix_elem Units.continuous_val a b)
@@ -134,7 +134,7 @@ private theorem range_zc : ((zc F).range : Set (GF F)) =
   · rintro ⟨z, rfl⟩
     simp [zc]
   · rintro ⟨⟨h1, h2⟩, h3⟩
-    simp only [Set.mem_setOf_eq] at h1 h2 h3
+    simp only [Set.mem_ofPred_eq] at h1 h2 h3
     have hm : g 0 0 * (g⁻¹ : GF F) 0 0 = 1 := by
       have := congrFun (congrFun g.mul_inv 0) 0
       rw [Matrix.mul_apply, Fin.sum_univ_two, h1, zero_mul, add_zero] at this

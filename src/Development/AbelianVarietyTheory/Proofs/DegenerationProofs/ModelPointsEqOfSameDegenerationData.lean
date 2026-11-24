@@ -309,7 +309,7 @@ theorem eq_of_hasArcData : Laws → Laws2 → Laws3 → Laws4 → Laws5 → ∀ 
   have hinj : Function.Injective ((algebraMap (FractionRing R) F).comp (algebraMap R (FractionRing R))) :=
     (algebraMap (FractionRing R) F).injective.comp (IsFractionRing.injective R _)
   have hg : Function.Injective g := hinj.comp hf
-  letI : Algebra (FractionRing O') F := (IsFractionRing.lift (K := FractionRing O') hg).toAlgebra
+  let : Algebra (FractionRing O') F := (IsFractionRing.lift (K := FractionRing O') hg).toAlgebra
   have hF : ∀ x, algebraMap (FractionRing O') F (algebraMap O' _ x) =
       algebraMap (FractionRing R) F (algebraMap R _ (f x)) :=
     fun x => IsFractionRing.lift_algebraMap (K := FractionRing O') hg x

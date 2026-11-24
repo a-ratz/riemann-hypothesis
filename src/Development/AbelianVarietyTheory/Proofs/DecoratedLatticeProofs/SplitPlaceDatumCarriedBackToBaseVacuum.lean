@@ -142,7 +142,7 @@ theorem ind_nsmul_mem_of_ne_zero {G : Type} [AddCommGroup G] {χ : G → G → �
       rw [zero_add] at e0
       rw [g1 t ht, e0]
       simp [ind, ht, hΦ₁]
-    · simp only [Pi.smul_apply, ind, if_neg ht, smul_zero]
+    · simp only [Pi.smul_apply, ind, ite_eq_right ht, smul_zero]
       by_contra hne
       have hΦt : Φ₁ t ≠ 0 := fun hh => hne (g2 t hh)
       have hkt := s3 t hΦt

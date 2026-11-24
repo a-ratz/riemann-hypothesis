@@ -191,7 +191,7 @@ theorem lift_mem (e : ↥(GfC V) ≃* ↥(UPts (sigD D) (V.gram.reindex (finCong
 include hU hh in
 
 theorem reps_of_chart (hy : Function.Bijective (fun c => (Quotient.mk'' (y c) : Cls S))) : IsReps V U h := by
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
   obtain ⟨e, he⟩ := GlobalTheory.FinPartIso.exists_finIso D V n hn
   obtain ⟨r, hr⟩ := GlobalTheory.RatPtsEquiv.rat_equiv D V n hn
   have hmemU : ∀ (g : GfC V), g.1 ∈ U ↔ (e g).1 ∈ S.U := by
@@ -220,7 +220,7 @@ theorem reps_of_chart (hy : Function.Bijective (fun c => (Quotient.mk'' (y c) : 
       · rintro ⟨x, hx, rfl⟩; exact hx
       · intro hz; exact ⟨⟨z, ((S.U_eq z).1 hz).1⟩, hz, rfl⟩
     rw [hset]
-    exact hc.image (continuous_subtype_val.comp e.symm.continuous)
+    exact hc.image (continuous_subtypeVal.comp e.symm.continuous)
   · have : ((U.subgroupOf (GfC V) : Subgroup (GfC V)) : Set (GfC V)) = e ⁻¹' {x | x.1 ∈ S.U} := by
       ext g
       exact (Subgroup.mem_subgroupOf).trans (hmemU g)
@@ -284,7 +284,7 @@ theorem stabOrd_of_chart {stab : cl → Type} [∀ c, Group (stab c)]
       γ ∈ (stabI c).range ↔ bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) γ.1 ∈
         S.U.map (MulAut.conj (y c).1).toMonoidHom)
     (c : cl) : stabOrd U (h c) = Nat.card (stab c) := by
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
   obtain ⟨e, he⟩ := GlobalTheory.FinPartIso.exists_finIso D V n hn
   obtain ⟨r, hr⟩ := GlobalTheory.RatPtsEquiv.rat_equiv D V n hn
   have hΦγ : ∀ γ : GQ V, finHomN V hn γ.1 = bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) (r γ).1 :=

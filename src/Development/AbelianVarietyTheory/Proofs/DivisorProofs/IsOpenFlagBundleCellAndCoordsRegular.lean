@@ -57,7 +57,7 @@ theorem isOpen_setOf_mem_frames {F Ω ι : Type} [Field F] [Field Ω] [Algebra F
         ({_z : M.Z | (g τ).det ≠ 0} ∩ ({z : M.Z | (g τ).det⁻¹ ∈ M.O z} ∩
           {_z : M.Z | ∀ i j : Fin (m τ), (i : ℕ) < k τ → i < j → g τ i j = 0}))) := by
       ext z
-      simp only [Par, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+      simp only [Par, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
       rfl
     rw [this]
     exact isOpen_iInter_of_finite fun τ => (isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
@@ -82,7 +82,7 @@ theorem isOpen_inCell_and_regAt : ∀ (F : Type) [Field F] (X Y : Var F) (ι : T
   have h2 := (h τ).1 a b
   have hab' : a < b := hab
   have e : upM u τ a b = u ⟨τ, ⟨(b, a), hab⟩⟩ := by
-    simp only [upM, upU, Matrix.of_apply, dif_pos hab']
+    simp only [upM, upU, Matrix.of_apply, dite_eq_left hab']
   rw [e] at h2
   exact mem_O_ratOf.1 h2
 

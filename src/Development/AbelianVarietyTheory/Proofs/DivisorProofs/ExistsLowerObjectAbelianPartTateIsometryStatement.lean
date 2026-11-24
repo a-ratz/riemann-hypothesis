@@ -649,16 +649,16 @@ theorem exists_tateIso_of_perp {E : Type} [Field E] [NumberField E] [IsCMField E
   · split_ifs with hn
     · rw [map_smul, hlin n hn]
     · exact (hact c).symm
-  · simp only [if_pos hn]
+  · simp only [ite_eq_left hn]
     exact (hko n hn).1
-  · simp only [if_pos hn]
+  · simp only [ite_eq_left hn]
     exact (hko n hn).2
-  · simp only [if_pos hn, if_pos (Nat.mul_pos hn hm)]
+  · simp only [ite_eq_left hn, ite_eq_left (Nat.mul_pos hn hm)]
     exact htow n m hn hm _
-  · simp only [if_pos hn]
+  · simp only [ite_eq_left hn]
     exact hiso'' n hn w w'
   · show _ = if 0 < n then b n (s (f a)) else 1
-    rw [if_pos hn]
+    rw [ite_eq_left hn]
     obtain ⟨w, hw⟩ := ((hko n hn).2 _).1 (hpow n hn a)
     obtain ⟨c, hc⟩ := TorsIsometry.exists_eq_nsmul_of_dvd D'.EF D'.unimod n (f a - w) fun w' => by
       have h₁ := hiso' n hn a w'
@@ -720,7 +720,7 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
     (∀ n, I'.ζ n = I.ζ n) ∧ ∀ n, 0 < n → ∀ (a : GlobalTheory.LowDat.perp Dw Z) (q : QkPt P.D.toPre F n),
       QkPt.Equiv P.D.toPre F (I.ev n a) q → q.y = 0 → q.g.b = I'.ev n (f a) := by
   intro E _ _ _ H Dw D' Z f hf R _ _ _ hR t P F _ _ _ hrk I hI
-  letI := H.starRing
+  let := H.starRing
   have hB := P.D.tau_bimult
   have hL := GlobalTheory.firstFiveLaws
   have hG := hL.1.globalFns
@@ -751,7 +751,7 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
       have e : unitOn (c * c) = unitOn c * unitOn c := map_mul _ _ _
       exact mul_eq_left.1 (huniq n 1 y _ _ (e ▸ h₁) h))
     (fun n hn a a' => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       have h := (TorusExt.qkAdd_iff hB _ _ _).1
         ((TorusExt.qkAdd_iff_of_equiv hB (hq n hn a) (hq n hn a') (I.add n hn a a')).2 (hq n hn (a + a')))
       rw [← eq_of_equiv hB hn h (by
@@ -759,7 +759,7 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
         rw [hy, hy, hy, add_zero])]
       exact TorusExt.add_b _ _)
     (fun n hn c a => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       have h := (TorusExt.qkAct_iff hB hG P.oD _ _ _).1
         ((TorusExt.qkAct_iff_of_equiv hB hG P.oD (hq n hn a) (I.lin n hn c a)).2 (hq n hn (c • a)))
       rw [← eq_of_equiv hB hn h (by
@@ -767,18 +767,18 @@ theorem exists_gradedTateIso : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
         rw [hy, hy, smul_zero])]
       exact TorusExt.gtSmul_b hG P.oD _ _)
     (fun n hn a => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       exact b_pow hB _ (hy n hn a))
     (fun n m hn hm a => by
-      simp only [dif_pos hn, dif_pos (Nat.mul_pos hn hm)]
+      simp only [dite_eq_left hn, dite_eq_left (Nat.mul_pos hn hm)]
       obtain ⟨r, r₁, r₂, r₃⟩ := I.tower n m hn hm a
       exact b_tower hB hn (hq _ _ a) (hy _ _ a) r₁ r₂ r₃ (hq n hn a) (hy n hn a))
     (fun n hn a a' => by
-      simp only [dif_pos hn]
+      simp only [dite_eq_left hn]
       exact (UT.WeilAbelianPart.weilQkIs_iff_weilIs_abelianPart hL R _ hR.1 P.D F n hn _ _ (hy n hn a) (hy n hn a')
         _).1 (PhiOperatorCompare.weilQkIs_of_equiv hB (hq n hn a) (hq n hn a') (I.isom n hn a a')))
   refine ⟨I', h₁, fun n hn a r hr hr₀ => ?_⟩
-  rw [← h₂ n hn a, dif_pos hn, eq_of_equiv hB hn
+  rw [← h₂ n hn a, dite_eq_left hn, eq_of_equiv hB hn
     (TorusExt.equiv_trans hB (TorusExt.equiv_symm hB hr) (hq n hn a)) (hr₀.trans (hy n hn a).symm)]
 
 end GlobalTheory.LowDat.GradedTate
@@ -840,15 +840,15 @@ theorem exists_tateIso_toA : ∀ {E : Type} [Field E] [NumberField E] [IsCMField
       (fun n g g' z => Out.WeilIs P.A.A P.A.L n g g' (unitOn z)),
     (∀ n, J.ζ n = I.ζ n) ∧ ∀ n, 0 < n → ∀ a, P.ToA F n (I.ev n a) (J.ev n a) := by
   intro E _ _ _ H D R _ _ _ hR t P F _ _ _ I
-  letI := H.starRing
+  let := H.starRing
   have hA : AdmBase R (maximalIdeal R) := hR.1
   have h0 : CharZero R := hR.2
   have hT := GlobalTheory.FlatTors.torsionIso_holds E H R _ hA t P
   choose f f₁ f₂ f₃ f₄ f₅ f₆ using hT F
   obtain ⟨ev, ev0, evp⟩ : ∃ ev : ℕ → D.La → (TFK (R := R) F ⟶ P.A.A), (∀ a, ev 0 a = 1) ∧
       ∀ n (hn : 0 < n) a, ev n a = f n hn (I.ev n a) :=
-    ⟨fun n a => if hn : 0 < n then f n hn (I.ev n a) else 1, fun a => dif_neg (lt_irrefl 0),
-      fun n hn a => dif_pos hn⟩
+    ⟨fun n a => if hn : 0 < n then f n hn (I.ev n a) else 1, fun a => dite_eq_right (lt_irrefl 0),
+      fun n hn a => dite_eq_left hn⟩
   have add : ∀ n a b, ev n (a + b) = ev n a * ev n b := fun n a b => by
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · rw [ev0, ev0, ev0, _root_.one_mul]
@@ -1209,9 +1209,9 @@ theorem GlobalTheory.LowDat.level_points_compat : ∀ {E : Type} [Field E] [Numb
   ∀ (a : Dw.La) (x : TFK (R := R) F ⟶ C.P.A.A) (x' : TFK (R := R) F' ⟶ C.P.A.A),
     C.P.ToA F l.M' (I.ev l.M' a) x → C.P.ToA F' l.M' (I'.ev l.M' a) x' → x'.left = spMap σ.toRingHom ≫ x.left := by
   intro E _ _ _ H Dw l Xo c R _ _ _ hR C tK m1 m2 F F' _ _ _ _ _ _ σ I I' hI hI' a x x' hx hx'
-  haveI : CharZero R := hR.2
-  haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
+  have : CharZero R := hR.2
+  have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
   obtain ⟨J, hJζ, hJ⟩ := GlobalTheory.T.exists_tateIso_generic_abelian_of_uniformisation Dw R hR C.t C.P F I
   obtain ⟨J', hJζ', hJ'⟩ := GlobalTheory.T.exists_tateIso_generic_abelian_of_uniformisation Dw R hR C.t C.P F' I'
   obtain ⟨J₂, h₂⟩ := GlobalTheory.LowDat.exists_tateIso_ext Dw C.P.A _ σ.toRingHom _ _ (GlobalTheory.LowDat.spMap_comp_jFK σ) J
@@ -1392,7 +1392,7 @@ theorem abPartAct_isAdj (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   intro c
   have hr : RosatiAdj U.D.toPre.P.A U.D.toPre.P.L ((abPartAct U).act c) ((abPartAct U).act (star c)) := by
     have h : RosatiAdj U.D.toPre.P.A U.D.toPre.P.L ((abPartAct U).act c) ((abPartAct U).act (H.bar c)) := by
-      letI := H.starRing
+      let := H.starRing
       exact U.oD.onB.rosati c
     rw [← bar_eq_star H]
     exact h
@@ -1587,7 +1587,7 @@ theorem prim_of_gen {S : Scheme.{0}} (B : Over S) [GrpObj B] [IsCommMonObj B] (w
 
 theorem abPart_prim (P : PELUnif I t) :
     LBIso P.D.toPre.P.L (cubeLB P.D.toPre.P.A ![𝟙 _, (GlobalTheory.LocM.abPartAct P).act H.w0] P.D.toPre.P.L) := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨u, hu, -⟩ := P.w0
   exact prim_of_gen _ _ _ P.D.toPre.P.isLB P.D.toPre.rig P.D.toPre.rig_gen u hu
 
@@ -1626,7 +1626,7 @@ variable {R F}
 theorem section_ext {G : Over (Sp R)} [IsSeparated G.hom] {s s' : 𝟙_ (Over (Sp R)) ⟶ G}
     (h : toUnit (TF (R := R) F) ≫ s = toUnit (TF (R := R) F) ≫ s') : s = s' := by
   haveI : IsReduced (𝟙_ (Over (Sp R))).left := (inferInstance : IsReduced (Sp R))
-  haveI : IsDominant (jFK (R := R) F ≫ jK R) := ⟨dense_jFR R F⟩
+  have : IsDominant (jFK (R := R) F ≫ jK R) := ⟨dense_jFR R F⟩
   have e : (toUnit (TF (R := R) F)).left = jFK (R := R) F ≫ jK R :=
     (Category.comp_id _).symm.trans (Over.w (toUnit (TF (R := R) F)))
   refine Over.OverMorphism.ext (ext_of_isDominant_of_isSeparated G.hom ((Over.w _).trans (Over.w _).symm)
@@ -1640,7 +1640,7 @@ theorem exists_section [IsNoetherianRing R] [IsIntegrallyClosed R] [IsGalois (Fr
     (hσ : ∀ σ : F ≃ₐ[FractionRing R] F, spMap (σ : F →+* F) ≫ x.left = x.left) :
     ∃ s : 𝟙_ (Over (Sp R)) ⟶ G, toUnit _ ≫ s = x := by
   obtain ⟨y, hy⟩ := GlobalTheory.UnifDvrCompare.exists_point_of_fixed (F := FractionRing R) x.left hσ
-  haveI : Epi (spMap (algebraMap (FractionRing R) F)) := by
+  have : Epi (spMap (algebraMap (FractionRing R) F)) := by
     have h1 : Surjective (spMap (algebraMap (FractionRing R) F)) :=
       ⟨fun x => ⟨IsLocalRing.closedPoint F, Subsingleton.elim _ _⟩⟩
     exact Flat.epi_of_flat_of_surjective _
@@ -1648,18 +1648,18 @@ theorem exists_section [IsNoetherianRing R] [IsIntegrallyClosed R] [IsGalois (Fr
     rw [← cancel_epi (spMap (algebraMap (FractionRing R) F)), ← Category.assoc, hy]
     exact Over.w x)
   let u : TF (R := R) F ⟶ TK R := Over.homMk (jFK (R := R) F) rfl
-  haveI : Epi u := by
-    haveI : Epi u.left := inferInstanceAs (Epi (spMap (algebraMap (FractionRing R) F)))
+  have : Epi u := by
+    have : Epi u.left := inferInstanceAs (Epi (spMap (algebraMap (FractionRing R) F)))
     exact Over.epi_of_epi_left _
   have hu : u ≫ y' = x := Over.OverMorphism.ext hy
   have hy' : y' ^ n = 1 := by
     rw [← cancel_epi u, MonObj.comp_pow, hu, hx, MonObj.comp_one]
-  haveI : IsDominant (jK R) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical _).2 (by
+  have : IsDominant (jK R) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical _).2 (by
     show RingHom.ker (algebraMap R (FractionRing R)) ≤ _
     rw [(RingHom.injective_iff_ker_eq_bot _).1 (IsFractionRing.injective R _)]
     exact bot_le)⟩
-  haveI : IsPreimmersion (jK R) := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
-  haveI : Flat (jK R) := by
+  have : IsPreimmersion (jK R) := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
+  have : Flat (jK R) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.flat_algebraMap_iff.2 (IsLocalization.flat _ (nonZeroDivisors R))
   obtain ⟨s, hs, hs'⟩ := GlobalTheory.exists_section_of_pow_eq_one (GlobalTheory.Published.SemiAbelianHomExtension.isNormalScheme_spec R)
@@ -1715,8 +1715,8 @@ theorem detCond_generic (hR : GlobalTheory.Mum.Base R) (C : UChart.Fam Xo c R) (
     (m2 : SABMap tK Xo.univ.t (C.y ≫ pullback.fst _ _)) (F : Type) [Field F] [IsAlgClosed F]
     [Algebra (FractionRing R) F] :
     DetCond D' (GlobalTheory.LocM.abPartAct C.P) (jFK (R := R) F ≫ jK R) (lowF C F (baseKA (lowLevel l)).ρ) := by
-  haveI := hR.1.1
-  haveI := hR.2
+  have := hR.1.1
+  have := hR.2
   let β : KA l →+* F := (toF C F).comp (IntermediateField.inclusion c.le).toRingHom
   have hx : (jFK (R := R) F ≫ C.y ≫ pullback.fst _ _) ≫ Xo.s = spMap β := by
     rw [Category.assoc, Category.assoc, pullback.condition, reassoc_of% C.y_over]
@@ -1755,10 +1755,10 @@ theorem finrank_eq_of_detCond (D : Datum H) {S : Scheme.{0}} (P : PolAV S) (act 
         rw [← map_neg, ← hb]; rfl
       rw [e]
       by_cases hτ : τ H.rt = ρ
-      · refine ⟨by rw [if_pos hτ]; exact (h τ).1 hτ, ?_⟩
-        rw [if_pos hτ, if_neg (by rw [hτ]; exact h0.symm)]
-      · refine ⟨by rw [if_neg hτ]; exact (h τ).2 hτ, ?_⟩
-        rw [if_neg hτ, if_pos (by rw [(sq_eq_sq_iff_eq_or_eq_neg.1 hs).resolve_left hτ, neg_neg]), add_comm])
+      · refine ⟨by rw [ite_eq_left hτ]; exact (h τ).1 hτ, ?_⟩
+        rw [ite_eq_left hτ, ite_eq_right (by rw [hτ]; exact h0.symm)]
+      · refine ⟨by rw [ite_eq_right hτ]; exact (h τ).2 hτ, ?_⟩
+        rw [ite_eq_right hτ, ite_eq_left (by rw [(sq_eq_sq_iff_eq_or_eq_neg.1 hs).resolve_left hτ, neg_neg]), add_comm])
   have := D.fin
   have := D.proj
   have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
@@ -1776,7 +1776,7 @@ theorem b_eq_of_level (hR : GlobalTheory.Mum.Base R) (C : UChart.Fam Xo c R)
     (q : QkPt C.P.D.toPre F l.M') (q' : QkPt C.P.D.toPre F' l.M')
     (e : QkPt.Equiv _ F (I.ev l.M' a) q) (e' : QkPt.Equiv _ F' (I'.ev l.M' a) q') (hq : q.y = 0) (hq' : q'.y = 0) :
     q'.g.b.left = spMap σ.toRingHom ≫ q.g.b.left := by
-  haveI := hR.2
+  have := hR.2
   have hM : 0 < l.M' := (lowLevel l).A_pos
   have hT := GlobalTheory.FlatTors.torsionIso_holds E H R _ hR.1 C.t C.P
   obtain ⟨f, f₁, -, f₃, -⟩ := hT F l.M' hM
@@ -1849,13 +1849,13 @@ theorem exists_lowObj : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
       GlobalTheory.LowDat.XFLevel C tK m1 m2 F I → GlobalTheory.LowDat.FiltGraded C Z F I →
       ∃ I' : GlobalTheory.LowDat.LowTate C D' o' F, GlobalTheory.LowDat.LowGraded C Z D' f o' φB F I I' := by
   intro E _ _ _ H Dw l Xo c R _ _ _ hR C Z D' f hZ hlow hrk hp hq tK m1 m2 hI
-  letI := H.starRing
-  haveI := hR.1.1
-  haveI := hR.2
-  haveI : IsIntegrallyClosed R := hR.1.2.2.1
-  haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
+  let := H.starRing
+  have := hR.1.1
+  have := hR.2
+  have : IsIntegrallyClosed R := hR.1.2.2.1
+  have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
   let F0 := AlgebraicClosure (FractionRing R)
-  haveI : CharZero F0 := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F0).injective
+  have : CharZero F0 := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F0).injective
   obtain ⟨I0, hX0, hG0⟩ := hI F0
   rw [hrk] at hp hq
   have hdet0 := detCond_generic hR C D' hp hq tK m1 m2 F0
@@ -1870,7 +1870,7 @@ theorem exists_lowObj : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
   have hM : 0 < l.M' := (lowLevel l).A_pos
   have hunit : IsUnit (l.M' : R) := by
     simpa using (isUnit_iff_ne_zero.2 (Nat.cast_ne_zero.2 hM.ne') : IsUnit ((l.M' : ℕ) : c.F)).map C.b
-  haveI := C.P.D.toPre.P.isAb.proper
+  have := C.P.D.toPre.P.isAb.proper
   have hfix : ∀ (a : perp Dw Z) (σ : F0 ≃ₐ[FractionRing R] F0),
       spMap (σ : F0 →+* F0) ≫ (J0.ev l.M' (f a)).left = (J0.ev l.M' (f a)).left := by
     intro a σ
@@ -1908,7 +1908,7 @@ theorem exists_lowObj : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
         exact (J0.ker _ hM _).2 ⟨a, rfl⟩)
       geom := by
         intro k _ _ x β hx
-        haveI : CharZero k := charZero_of_injective_ringHom (f := β.comp (algebraMap ℚ (KA (lowLevel l))))
+        have : CharZero k := charZero_of_injective_ringHom (f := β.comp (algebraMap ℚ (KA (lowLevel l))))
           (RingHom.injective _)
         refine ⟨GlobalTheory.DetSpread.detCond_of_dense E H D' (Sp R) C.P.D.toPre.P.A C.P.D.toPre.P.g
           (GlobalTheory.LocM.abPartAct C.P) (KA (lowLevel l)) (lowS C) (baseKA (lowLevel l)).ρ C.P.D.toPre.P.smoothDim

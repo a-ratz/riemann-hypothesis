@@ -86,10 +86,10 @@ theorem exists_pow_card_eq {K L : Type} [Field K] [Fintype K] [Field L] [Algebra
     ∃ i : ℕ, ∀ x ∈ X, (σ : L → L) x = x ^ Fintype.card K ^ i := by
   classical
   let M : IntermediateField K L := adjoin K (X : Set L)
-  haveI : FiniteDimensional K M :=
+  have : FiniteDimensional K M :=
     finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
-  haveI : Finite M := Module.finite_of_finite K
-  haveI : Normal K M := inferInstance
+  have : Finite M := Module.finite_of_finite K
+  have : Normal K M := inferInstance
   obtain ⟨n, hn⟩ :=
     (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow K M).2 (σ.restrictNormal M)
   refine ⟨n.1, fun x hx => ?_⟩
@@ -210,11 +210,11 @@ theorem isProGen_iff_isUnit : ∀ (F Ω : Type) [Field F] [NumberField F] [Field
     set C := (Subgroup.zpowers (γ : G F Ω) ⊔ ineKer F A l).topologicalClosure with hC
     have hC' : IsClosed (C : Set (G F Ω)) := Subgroup.isClosed_topologicalClosure _
     let S : Subgroup (Ine (F := F) A) := C.subgroupOf _
-    have hS : IsClosed (S : Set (Ine (F := F) A)) := hC'.preimage continuous_subtype_val
+    have hS : IsClosed (S : Set (Ine (F := F) A)) := hC'.preimage continuous_subtypeVal
     have : CompactSpace S := isCompact_iff_compactSpace.1 hS.isCompact
     have hγS : γ ∈ S :=
       Subgroup.le_topologicalClosure _ (Subgroup.mem_sup_left (Subgroup.mem_zpowers _))
-    obtain ⟨τ, hτ⟩ := surjective_of_isUnit (t := t.comp S.subtype) (ht.comp continuous_subtype_val)
+    obtain ⟨τ, hτ⟩ := surjective_of_isUnit (t := t.comp S.subtype) (ht.comp continuous_subtypeVal)
       (σ := ⟨γ, hγS⟩) hu (t ⟨σ, hσ⟩)
     have h2 : t (τ.1⁻¹ * ⟨σ, hσ⟩) = 1 := by
       rw [map_mul, map_inv, ← hτ]; simp
@@ -302,7 +302,7 @@ theorem closure_frob_sup_Ine : ∀ (F Ω : Type) [Field F] [NumberField F] [Fiel
   obtain ⟨s, hs, hs'⟩ := hS'.isCompact.inter_iInter_nonempty
     (fun b : IntCl F Ω => {s : Dec (F := F) A | A.valuation (g.1 b - s.1 b) < 1})
     (fun b => (isClosed_setOf_apply (F := F) (b : Ω)
-      (fun t => A.valuation (g.1 b - t) < 1)).preimage continuous_subtype_val)
+      (fun t => A.valuation (g.1 b - t) < 1)).preimage continuous_subtypeVal)
     (fun X => by
       obtain ⟨i, hi⟩ := exists_pow_cong hA g.2 X
       refine ⟨φ ^ i, Subgroup.le_topologicalClosure _
@@ -341,7 +341,7 @@ theorem exists_degMod : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [
     have h3 := v.asIdeal.sub_mem (v.asIdeal.pow_mem_of_mem h1 M hM) h2
     rw [← Nat.cast_pow, hn] at h3
     exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 (by simpa using h3))
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω n
   have hζ1 : A.valuation ζ ≤ 1 := (valuation_eq_one_of_pow_eq_one A hn0 hζ.pow_eq_one).le
   let θ : Dec (F := F) A →* (ZMod n)ˣ := (hζ.autToPow F).comp (Dec (F := F) A).subtype
   have hθ : ∀ (g : Dec (F := F) A) (k : ℕ), (θ g : ZMod n) = k ↔ g.1 ζ = ζ ^ k := fun g k => by
@@ -367,7 +367,7 @@ theorem exists_degMod : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [
       rw [pow_one, Nat.cast_one] at this
       exact Units.ext_iff.trans this
     rw [e]
-    exact (isOpen_setOf_apply (F := F) ζ (fun t => t = ζ)).preimage continuous_subtype_val
+    exact (isOpen_setOf_apply (F := F) ζ (fun t => t = ζ)).preimage continuous_subtypeVal
   obtain ⟨φ₁, hφ₀⟩ := exists_isFrob hA
   let φ₀ : Dec (F := F) A := ⟨φ₁, hφ₀.1⟩
   have h3 : θ φ₀ ^ M = 1 := Units.ext (by
@@ -536,7 +536,7 @@ theorem exists_coprime_pow_of_mem_ineKer {F Ω : Type} [Field F] [NumberField F]
     ⟨fun w hw g => conj_mem_Wild (Ine_le_Dec A g.2) hw⟩
   let W := (Wild F A).subgroupOf (Ine (F := F) A) ⊔ H.subgroupOf (Ine (F := F) A)
   have hW : IsOpen (W : Set (Ine (F := F) A)) :=
-    Subgroup.isOpen_mono le_sup_right (ho.preimage continuous_subtype_val)
+    Subgroup.isOpen_mono le_sup_right (ho.preimage continuous_subtypeVal)
   have := Subgroup.quotient_finite_of_isOpen _ hW
   obtain ⟨γ, hγ⟩ := GlobalTheory.TameInertiaGen.exists_tameGenAt F Ω v A hA
   set g : Ine (F := F) A := ⟨γ, hγ.1⟩
@@ -643,7 +643,7 @@ theorem exists_hom {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F
       rw [((Units.isUnit u⁻¹).map (PadicInt.toZModPow k)).mul_right_eq_zero]
       exact this
     rw [e]
-    exact (isOpen_setOf_apply (F := F) _ (fun t => t = _)).preimage continuous_subtype_val
+    exact (isOpen_setOf_apply (F := F) _ (fun t => t = _)).preimage continuous_subtypeVal
   obtain ⟨M, hM, h1, h2, h3⟩ : ∃ M : ℕ, 0 < M ∧ κ (φ ^ M) = 0 ∧ a ^ M = 1 ∧ χ φ ^ M = 1 := by
     set x := rootOf Ω l (unifUnit v : F) k
     have hs : IsOpen ((MulAction.stabilizer (G F Ω) x : Subgroup (G F Ω)) : Set (G F Ω)) :=
@@ -674,7 +674,7 @@ theorem exists_hom {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F
       have e : ((χ.eqLocus (ψ.comp d) : Subgroup _) : Set (Dec (F := F) A)) =
           {g | (χ g : ZMod (l ^ k)) = (ψ (d g) : ZMod (l ^ k))} := Set.ext fun g => Units.ext_iff
       rw [e]
-      exact isClosed_eq ((continuous_cycMod l k).comp continuous_subtype_val)
+      exact isClosed_eq ((continuous_cycMod l k).comp continuous_subtypeVal)
         ((continuous_of_discreteTopology (f := fun s => (ψ s : ZMod (l ^ k)))).comp c1)
     have h4 : ⊤ ≤ χ.eqLocus (ψ.comp d) := by
       rw [← hd φ hφ]
@@ -825,7 +825,7 @@ theorem cycMod_eq_one (hA : IsPlaceOver A v) (hl : ((l : ℕ) : 𝓞 F) ∉ v.as
           {g | ((cycMod F Ω l n g.1 : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) = 1} :=
         Set.ext fun g => Units.ext_iff
       rw [e]
-      exact isClosed_eq ((continuous_cycMod l n).comp continuous_subtype_val) continuous_const
+      exact isClosed_eq ((continuous_cycMod l n).comp continuous_subtypeVal) continuous_const
   exact h4 (Subgroup.mem_top g)
 
 
@@ -839,7 +839,7 @@ theorem eq_zero_of_mem_ineKer (z : Z1 (trivDec F A l n)) {σ : Dec (F := F) A}
   have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨m, hm, h⟩ := exists_coprime_pow_of_mem_proKer
     ((homOf z).comp (Subgroup.inclusion (Ine_le_Dec A)))
-    ((isOpen_discrete {0}).preimage (z.2.1.comp (continuous_subtype_val.subtype_mk _)))
+    ((isOpen_discrete {0}).preimage (z.2.1.comp (continuous_subtypeVal.subtype_mk _)))
     (coe_mem_ineKer.1 (show ((⟨σ.1, ineKer_le_Ine A l hσ⟩ : Ine (F := F) A) : G F Ω) ∈ _ from hσ))
   have h1 : (m : ZMod (l ^ n)) * z.1 σ = 0 := by
     rw [← nsmul_eq_mul]; exact congrArg Multiplicative.toAdd h
@@ -957,7 +957,7 @@ theorem exists_kummer {ζ x : Ω} (hζ : IsPrimitiveRoot ζ (l ^ n)) (hx : IsUni
   have hc' : ∀ g : G F Ω, g x = ζ ^ (c (g x)).val * x := fun g =>
     hc _ (by rw [← map_pow, h, AlgEquiv.commutes])
   refine ⟨⟨fun g => c (g.1 x), continuous_def.2 fun s _ => (isOpen_setOf_apply (F := F) x
-    (fun t => c t ∈ s)).preimage continuous_subtype_val, fun g k => ?_⟩, fun g => hc' g.1⟩
+    (fun t => c t ∈ s)).preimage continuous_subtypeVal, fun g k => ?_⟩, fun g => hc' g.1⟩
   refine exponent_unique hζ h0 (hc' _) ?_
   have hg : g.1 ζ = ζ ^ (cycMod F Ω l n g.1 : ZMod (l ^ n)).val :=
     cyclotomicCharacter.spec (L := Ω) l (MulSemiringAction.toRingAut (G F Ω) Ω g.1) ζ hζ.pow_eq_one

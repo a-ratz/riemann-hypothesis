@@ -76,8 +76,8 @@ theorem single_conjT (a b : Fin n) (c : ℂ) :
   ext i j
   simp only [conjTranspose_apply, Matrix.single_apply]
   by_cases h : a = j ∧ b = i
-  · rw [if_pos h, if_pos ⟨h.2, h.1⟩]
-  · rw [if_neg h, if_neg (fun hh => h ⟨hh.2, hh.1⟩)]
+  · rw [ite_eq_left h, ite_eq_left ⟨h.2, h.1⟩]
+  · rw [ite_eq_right h, ite_eq_right (fun hh => h ⟨hh.2, hh.1⟩)]
     simp
 
 theorem single_negI (a b : Fin n) (c : ℂ) :
@@ -103,7 +103,7 @@ theorem sum_mem_of_stable (h : IsDerivK σ Kf) (R : Submodule ℂ V) [FiniteDime
     (hR : ∀ k, ∀ w ∈ R, σ k w ∈ R) (X : Matrix (Fin n) (Fin n) ℂ) (hX : Xᴴ = -X) {w : V} (hw : w ∈ R) :
     ∑ a, ∑ b, X a b • Kf a b w ∈ R := by
   have hd := deriv_expU h X hX w
-  have hcl : IsClosed (R : Set V) := Submodule.closed_of_finiteDimensional R
+  have hcl : IsClosed (R : Set V) := Submodule.isClosed_of_finiteDimensional R
   have ht := hasDerivAt_iff_tendsto_slope_zero.1 hd
   refine hcl.mem_of_tendsto ht (Filter.Eventually.of_forall fun s => ?_)
   have : s⁻¹ • (σ (expU X hX (0 + s)) w - σ (expU X hX 0) w) ∈ R.restrictScalars ℝ :=
@@ -115,11 +115,11 @@ theorem sum_single (w : V) (a b : Fin n) (c : ℂ) :
   rw [Finset.sum_eq_single a, Finset.sum_eq_single b]
   · simp
   · intro y _ hy
-    rw [Matrix.single_apply, if_neg (fun hh => hy hh.2.symm), zero_smul]
+    rw [Matrix.single_apply, ite_eq_right (fun hh => hy hh.2.symm), zero_smul]
   · simp
   · intro x _ hx
     refine Finset.sum_eq_zero fun y _ => ?_
-    rw [Matrix.single_apply, if_neg (fun hh => hx hh.1.symm), zero_smul]
+    rw [Matrix.single_apply, ite_eq_right (fun hh => hx hh.1.symm), zero_smul]
   · simp
 
 theorem entry_mem (h : IsDerivK σ Kf) (R : Submodule ℂ V) [FiniteDimensional ℂ R]
@@ -168,7 +168,7 @@ theorem weight_of_torus (h : IsDerivK σ Kf) (μ : Fin n → ℤ) {v : V}
           simp
         · simp [Matrix.single_apply, hc, Ne.symm hc]
       · rw [Matrix.diagonal_apply_ne _ hij, Matrix.smul_apply, Matrix.single_apply,
-          if_neg (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
+          ite_eq_right (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
     show NormedSpace.exp _ = _
     rw [e, Matrix.exp_diagonal]
     congr 1
@@ -178,8 +178,8 @@ theorem weight_of_torus (h : IsDerivK σ Kf) (μ : Fin n → ℤ) {v : V}
       fun s : ℝ => Complex.exp ((s : ℂ) * (Complex.I * ((μ a : ℝ) : ℂ))) • v := by
     funext s
     rw [hv _ _ (hk s), Finset.prod_eq_single a]
-    · simp only [if_true]
-      rw [← Complex.exp_int_mul]
+    · simp only [ite_true]
+      rw [← Complex.exp_intCast_mul]
       congr 2
       push_cast
       ring
@@ -260,7 +260,7 @@ theorem jt_indep {K : Fin n → Fin n → Module.End ℂ V} (hg : Formalism.REAL
     · subst hij
       exact Commute.refl _
     · have h' : ¬ j = i := fun h => hij h.symm
-      rw [if_neg hij, if_neg h', sub_zero] at h
+      rw [ite_eq_right hij, ite_eq_right h', sub_zero] at h
       exact sub_eq_zero.1 h
   exact Module.End.independent_iInf_maxGenEigenspace_of_forall_mapsTo (fun c => K c c)
     (fun i j φ => Module.End.mapsTo_maxGenEigenspace_of_comm (hc j i) φ)

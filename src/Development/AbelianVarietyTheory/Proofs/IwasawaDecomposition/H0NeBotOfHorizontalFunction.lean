@@ -172,7 +172,7 @@ theorem exists_extension (R : AnRead p σ' d) (π : Y ⟶ gen Z)
   obtain ⟨i, hi⟩ := R.cover y
   set c := R.chart i
   let T : Set (CxPts p σ') := S ∩ (fun z => z.1 ≫ π) ⁻¹' N'
-  have hT : IsOpen T := hS.inter (hN'.preimage ((Points.continuous_comp π).comp continuous_subtype_val))
+  have hT : IsOpen T := hS.inter (hN'.preimage ((Points.continuous_comp π).comp continuous_subtypeVal))
   have hTN (z) (hz : z ∈ T) : (a z).1 ∈ Subtype.val ⁻¹' N' := by
     rw [mem_preimage, ha z hz.1]; exact hz.2
   have hyT : y ∈ T := ⟨hy, by rw [mem_preimage, ← ha y hy]; exact hyN⟩

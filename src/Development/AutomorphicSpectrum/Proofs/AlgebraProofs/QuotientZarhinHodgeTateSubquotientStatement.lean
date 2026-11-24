@@ -201,7 +201,7 @@ theorem ev_injective (hinj : Function.Injective (algebraMap R C)) (A : HopfOrder
   have hu : IsUnit (β ⊗ₖ β) := by
     rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_kronecker]
     exact (hβ.pow _).mul (hβ.pow _)
-  have hli := Matrix.linearIndependent_cols_iff_isUnit.2 hu
+  have hli := Matrix.linearIndependent_col_iff_isUnit.2 hu
   have : FaithfulSMul R C := (faithfulSMul_iff_algebraMap_injective R C).2 hinj
   exact hli.restrict_scalars' R
 
@@ -358,10 +358,10 @@ theorem sub_closed : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClo
       ⟨fun k => ⟨_, hJ (hb k), rfl⟩, e⟩
       ⟨fun k => by
         by_cases hk : k = 0
-        · rw [if_pos hk]; exact ⟨g, hg, rfl⟩
-        · rw [if_neg hk]; exact Submodule.zero_mem _, by simp⟩
+        · rw [ite_eq_left hk]; exact ⟨g, hg, rfl⟩
+        · rw [ite_eq_right hk]; exact Submodule.zero_mem _, by simp⟩
     have h0 := congrFun hu 0
-    rw [if_pos rfl] at h0
+    rw [ite_eq_left rfl] at h0
     have : b 0 = g := by
       funext q
       obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective q
@@ -407,14 +407,14 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_finite_flat_subgroup : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], ∀ (T : TorsRep G p) (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N] (pt : N → (sp (R₀ := R) R ⟶ G)), IsTorsPts G p pt → ∀ K : AddSubgroup N, IsFinFlatSub G (T.A ⧸ vanIdeal T pt K) (spMap (Ideal.Quotient.mkₐ R (vanIdeal T pt K)) ≫ T.y) := by
   classical
   intro p _ C _ _ _ v R _ _ hv hp G _ _ T N _ _ _ pt hpt K
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
-  haveI : ValuationRing R := ValuationRing.iff_dvd_total.mpr ⟨fun a b => by
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have : ValuationRing R := ValuationRing.iff_dvd_total.mpr ⟨fun a b => by
     rcases le_total (v (algebraMap R C a)) (v (algebraMap R C b)) with h | h
     · exact Or.inr (hv.dvd_of_le h)
     · exact Or.inl (hv.dvd_of_le h)⟩
-  haveI : IsLocalRing R := ValuationRing.isLocalRing R
-  haveI : IsBezout R := ValuationRing.instIsBezout
-  haveI : Module.Finite R T.A := T.fin
+  have : IsLocalRing R := ValuationRing.isLocalRing R
+  have : IsBezout R := ValuationRing.instIsBezout
+  have : Module.Finite R T.A := T.fin
   set I : Ideal T.A := vanIdeal T pt (K : Set N) with hI
   have hpts : ∀ x : N, pt x ^ p = 1 := fun x => (hpt.range (pt x)).mpr ⟨x, rfl⟩
   choose ev hev using fun x : N => (T.univ R (pt x) (hpts x)).exists
@@ -452,10 +452,10 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_finite_flat_sub
     have h1 := congrArg (evbar k) hr
     rw [map_zero, Submonoid.smul_def, map_smul, smul_eq_mul] at h1
     exact (mul_eq_zero.mp h1).resolve_left (nonZeroDivisors.coe_ne_zero r)
-  haveI : Module.Flat R (T.A ⧸ I) := (Module.Flat.flat_iff_torsion_eq_bot_of_isBezout).mpr htors
-  haveI : Module.Finite R (T.A ⧸ I) :=
+  have : Module.Flat R (T.A ⧸ I) := (Module.Flat.flat_iff_torsion_eq_bot_of_isBezout).mpr htors
+  have : Module.Finite R (T.A ⧸ I) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ R I).toLinearMap (Ideal.Quotient.mkₐ_surjective R I)
-  haveI : Module.Free R (T.A ⧸ I) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free R (T.A ⧸ I) := Module.free_of_flat_of_isLocalRing
   have h0 : pt 0 = 1 := mul_left_cancel (a := pt 0) (by rw [_root_.mul_one, ← hpt.add, add_zero])
   have hneg : ∀ x, pt (-x) = (pt x)⁻¹ := fun x =>
     eq_inv_of_mul_eq_one_left (by rw [← hpt.add, neg_add_cancel, h0])
@@ -599,7 +599,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_homomorphism_compatible : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], ∀ (G' : Over (Spec (CommRingCat.of R))) [GrpObj G'] [IsCommMonObj G'], ∀ (T : TorsRep G p) (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N] (pt : N → (sp (R₀ := R) R ⟶ G)), IsTorsPts G p pt → ∀ (T' : TorsRep G' p) (N' : Type) [AddCommGroup N'] [Fintype N'] [DecidableEq N'] (pt' : N' → (sp (R₀ := R) R ⟶ G')), IsTorsPts G' p pt' → ∀ j : G ⟶ G', IsMonHom j → ∀ K : AddSubgroup N, (∀ (S : Type) [CommRing S] [Algebra R S] (z : sp (R₀ := R) S ⟶ G), z ≫ j = 1 ↔ ∃ φ : (T.A ⧸ vanIdeal T pt K) →ₐ[R] S, spMap φ ≫ (spMap (Ideal.Quotient.mkₐ R (vanIdeal T pt K)) ≫ T.y) = z) → ∀ jN : N →+ N', (∀ x, pt' (jN x) = pt x ≫ j) → jN.ker = K ∧ ∀ g ∈ torsFun C T pt, (∀ k ∈ jN.ker, g k = 0) → g ∈ (augIdeal (torsFun C T' pt')).map (LinearMap.funLeft R C (jN : N → N')) * torsFun C T pt := by
   intro p _ C _ _ _ v R _ _ hv _ G _ _ G' _ _ T N _ _ _ pt hpt T' N' _ _ _ pt' hpt' j hj K hK jN hjN
-  haveI := hj
+  have := hj
   classical
   have hinj : Function.Injective (algebraMap R C) := hv.hom_inj
   have hpow : ∀ x, (pt x) ^ p = 1 := fun x => (hpt.range _).2 ⟨x, rfl⟩
@@ -786,7 +786,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.torsion_points_isogeny_hopf_order : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], ∀ (G' : Over (Spec (CommRingCat.of R))) [GrpObj G'] [IsCommMonObj G'], ∀ (T : TorsRep G p) (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N] (pt : N → (sp (R₀ := R) R ⟶ G)), IsTorsPts G p pt → ∀ (T' : TorsRep G' p) (N' : Type) [AddCommGroup N'] [Fintype N'] [DecidableEq N'] (pt' : N' → (sp (R₀ := R) R ⟶ G')), IsTorsPts G' p pt' → ∀ j : G ⟶ G', IsMonHom j → ∃ (jN : N →+ N') (ψ : T'.A →ₐ[R] T.A), (∀ x, pt' (jN x) = pt x ≫ j) ∧ spMap ψ ≫ T'.y = T.y ≫ j ∧ ∀ g ∈ torsFun C T' pt', (fun x => g (jN x)) ∈ torsFun C T pt := by
   intro p _ C _ _ _ v R _ _ _ _ G _ _ G' _ _ T N _ _ _ pt hpt T' N' _ _ _ pt' hpt' j hj
-  haveI := hj
+  have := hj
   have hex : ∀ x : N, ∃ y : N', pt' y = pt x ≫ j := by
     intro x
     apply (hpt'.range _).1
@@ -868,14 +868,14 @@ theorem sub_abelianScheme : QuotientByFiniteFlatStatement → ZarhinStatement �
     [DecidableEq N] (pt : N → (sp (R₀ := R) R ⟶ A)), IsTorsPts A p pt →
     ∀ K : AddSubgroup N, GenAF p (torsFun C T pt) K := by
   intro hQ hZ hD p _ C _ _ _ v R _ _ hint hp hc A _ L hA hL hamp T N _ _ _ pt hpt K
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have hsub := GlobalTheory.T.torsion_points_finite_flat_subgroup p C v R hint hp A T N pt hpt K
   obtain ⟨A', _, L', q, hA', hL', hamp', hq, -, -, -, hker⟩ := hQ R A L hA hL hamp _ _ hsub
   obtain ⟨P, i, r, hi, hr, hir⟩ := hZ C v R hint A' L' hA' hL' hamp'
-  haveI : IsCommMonObj P.A := P.isAb.comm
-  haveI := hq
-  haveI := hi
-  haveI := hr
+  have : IsCommMonObj P.A := P.isAb.comm
+  have := hq
+  have := hi
+  have := hr
   have hj : ∀ (S : Type) [CommRing S] [Algebra R S] (z : sp (R₀ := R) S ⟶ A),
       z ≫ (q ≫ i) = 1 ↔ ∃ φ : (T.A ⧸ vanIdeal T pt K) →ₐ[R] S,
         spMap φ ≫ (spMap (Ideal.Quotient.mkₐ R (vanIdeal T pt K)) ≫ T.y) = z := by
@@ -887,7 +887,7 @@ theorem sub_abelianScheme : QuotientByFiniteFlatStatement → ZarhinStatement �
       rw [← h1, h, one_comp_monHom]
     · intro h
       rw [← Category.assoc, h, one_comp_monHom]
-  letI : Algebra ℤ_[p] R := (Av.zpLift p R hc).toAlgebra
+  let : Algebra ℤ_[p] R := (Av.zpLift p R hc).toAlgebra
   obtain ⟨⟨T'⟩, cp, -, -, pt', hpt', -⟩ := hD p C v R hint hp hc P
   have hjm : IsMonHom (q ≫ i) := inferInstance
   obtain ⟨jN, -, hjN, -, hpull⟩ := GlobalTheory.T.torsion_points_isogeny_hopf_order p C v R hint hp A P.A T N pt hpt T' _ pt' hpt'
@@ -943,8 +943,8 @@ namespace GlobalTheory.CompanionTheory.Ar.GR
 
 theorem tors_pts_finite : ∀ (R : Type) [CommRing R] [IsDomain R] (p : ℕ) (G : Over (Spec (CommRingCat.of R))) [GrpObj G] (T : TorsRep G p) (N : Type) [AddCommGroup N] (pt : N → (sp (R₀ := R) R ⟶ G)), IsTorsPts G p pt → Finite N := by
   intro R _ _ p G _ T N _ pt h
-  haveI := T.free
-  haveI := T.fin
+  have := T.free
+  have := T.fin
   have hx : ∀ x, ∃ φ : T.A →ₐ[R] R, spMap φ ≫ T.y = pt x := fun x =>
     (T.univ R (pt x) ((h.range _).2 ⟨x, rfl⟩)).exists
   choose f hf using hx
@@ -995,13 +995,13 @@ theorem subquotientStatement_of_quotient_zarhin_hodgeTate
   intro p _ C _ _ _ v R _ _ hv hp hc N _ M hM K
   obtain ⟨A, _, L, hA, hL, hamp, T, N', _, pt, hpt, i, π, hiπ, hst, rfl⟩ := hM
   classical
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
-  haveI : IsCommMonObj A := hA.comm
-  haveI : Finite N' := GlobalTheory.T.torsion_points_finite R p A T N' pt hpt
-  letI : Fintype N' := Fintype.ofFinite N'
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have : IsCommMonObj A := hA.comm
+  have : Finite N' := GlobalTheory.T.torsion_points_finite R p A T N' pt hpt
+  let : Fintype N' := Fintype.ofFinite N'
   have hi : Function.Injective i := Function.LeftInverse.injective (g := π) hiπ
-  haveI : Finite N := Finite.of_injective i hi
-  letI : Fintype N := Fintype.ofFinite N
+  have : Finite N := Finite.of_injective i hi
+  let : Fintype N := Fintype.ofFinite N
   obtain ⟨⟨AA, hAA⟩, -⟩ := GlobalTheory.T.torsion_points_hopf_order p C v R hv hp A T N' pt hpt
   have hgen := GlobalTheory.T.abelian_scheme_torsion_augmentation hQ hZ hH p C v R hv hp hc A L hA hL hamp T N' pt hpt (K.map i)
   have hret := _root_.GlobalTheory.CompanionTheory.Ar.GR.ret_hopf_factor p C v R hv hp N' AA N i π hiπ (by rw [hAA]; exact hst)

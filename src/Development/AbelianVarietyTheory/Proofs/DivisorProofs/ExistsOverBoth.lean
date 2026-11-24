@@ -91,7 +91,7 @@ theorem under_conjP (P : HeightOneSpectrum (𝓞 D.host.E)) :
   ext x
   show algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x ∈ (conjPrime₂ P).asIdeal ↔ algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x ∈ P.asIdeal
   have e : cO D.host.E (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x) = algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x := by
-    letI := D.host.isCMField_hostE
+    let := D.host.isCMField_hostE
     exact RingOfIntegers.ext (IsCMField.complexConj_apply_eq_self D.host.E (x : D.host.F))
   rw [mem_conjP, e]
 

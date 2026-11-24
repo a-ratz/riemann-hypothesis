@@ -139,7 +139,7 @@ private theorem loc_affine (T : Scheme.{0}) (P : ∀ V : Scheme.{0}, (V ⟶ T) �
     rintro V g ⟨W, f, h, ⟨i⟩, rfl⟩
     exact ⟨_, f, _, inferInstanceAs (IsAffine (T.affineCover.X i)), rfl⟩
   · rintro V g ⟨W, f, h, hW, rfl⟩
-    haveI : IsAffine W := hW
+    have : IsAffine W := hW
     exact hres h f (haff W h)
 
 private theorem eqv_of_iso {E E' : Spc} (f : E ⟶ E') [IsIso f] (F : Shv R) : Eqv R f F := by
@@ -251,7 +251,7 @@ theorem UpperTheory.tateTwist_affineLine_projection_equiv :
     ∀ (q : ℕ) [NeZero q] (E : Spc) (i : ℤ), Inv q E → Eqv _ (prod.snd : sch.obj A1 ⨯ E ⟶ E) (tw q i) := by
   intro q _ E i hE
   obtain ⟨-, hinj, hge, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)
-  haveI := hge
+  have := hge
   have hZ : ∀ {T' T : Scheme.{0}}, (T' ⟶ T) → IsUnit (q : Γ(T, ⊤)) → IsUnit (q : Γ(T', ⊤)) := fun g h => by
     simpa using h.map g.appTop.hom
   obtain ⟨Φ, hΦ, hform⟩ := UpperTheory.injectiveComplex_productSection_map_quasiIso (ZMod q) Pbf.A1 (res _ (tw q i)) (res _ (tw q i)) hinj hinj

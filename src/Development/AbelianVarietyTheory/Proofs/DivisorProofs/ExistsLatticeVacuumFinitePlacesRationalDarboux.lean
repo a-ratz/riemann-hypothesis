@@ -255,9 +255,9 @@ theorem exists_dotProduct_eq {K : Type} [NormedField K] [IsUltrametricDist K] {�
   have hNo : IsOpen (N : Set L) := by
     refine AddSubgroup.isOpen_mono (H₁ := U.addSubgroupOf L)
       (fun y hy => AddSubgroup.mem_addSubgroupOf.2 (hUM (AddSubgroup.mem_addSubgroupOf.1 hy))) ?_
-    exact (Metric.isOpen_ball (x := (0 : κ → K)) (ε := η)).preimage continuous_subtype_val
-  haveI : CompactSpace L := isCompact_iff_compactSpace.1 hL
-  haveI : Finite (L ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N hNo
+    exact (Metric.isOpen_ball (x := (0 : κ → K)) (ε := η)).preimage continuous_subtypeVal
+  have : CompactSpace L := isCompact_iff_compactSpace.1 hL
+  have : Finite (L ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N hNo
 
   let e : (κ → K) → AddChar L ℂ := fun a =>
     { toFun := fun y => ψ₀ (a ⬝ᵥ (y : κ → K))
@@ -305,7 +305,7 @@ theorem exists_dotProduct_eq_local : ∀ {F : Type} [Field F] [NumberField F] (v
     ∀ χ : (κ → Fv F v) → ℂ, (∀ y ∈ L, ∀ y' ∈ L, χ (y + y') = χ y * χ y') → (∀ y ∈ L, y ∈ L' → χ y = 1) →
     ∃ x₀ : κ → Fv F v, ∀ y ∈ L, χ y = ψ₀ (x₀ ⬝ᵥ y) := by
   intro F _ _ v κ _ ψ₀ hc hne L hL L' hL' χ hmul htriv
-  haveI : IsUltrametricDist (Fv F v) := inferInstance
+  have : IsUltrametricDist (Fv F v) := inferInstance
   exact exists_dotProduct_eq ψ₀ hc hne L hL L' hL' χ hmul htriv
 
 end GlobalTheory.CompactCharDual
@@ -583,7 +583,7 @@ theorem schr_vacFn : ∀ {K κ : Type} [CommRing K] [Invertible (2 : K)] [Fintyp
       rintro ⟨u', hu', he⟩
       refine hx ⟨u' - w, sub_mem hu' hw, ?_⟩
       rw [Prod.fst_sub, ← add_sub_assoc, ← he, add_sub_cancel_right]
-    simp only [vacFn, dif_neg hx, dif_neg hx', mul_zero]
+    simp only [vacFn, dite_eq_right hx, dite_eq_right hx', mul_zero]
 
 end GlobalTheory.HeisLatVac
 end -- clump:auto
@@ -768,7 +768,7 @@ theorem exists_vac_of_lattice : ∀ {F : Type} [Field F] [NumberField F] {W : Ty
   have hχ : ∀ γ ∈ Γ, χ (GlobalTheory.LatVac.locCo co v γ) = c γ := by
     intro γ hγ
     have h : ∃ γ' ∈ Γ, GlobalTheory.LatVac.locCo co v γ' = GlobalTheory.LatVac.locCo co v γ := ⟨γ, hγ, rfl⟩
-    simp only [χ, dif_pos h]
+    simp only [χ, dite_eq_left h]
     rw [hinj _ h.choose_spec.1 _ hγ h.choose_spec.2]
   have hcont : Continuous (GlobalTheory.LatVac.psiAt ψ v) := GlobalTheory.VacAny.continuous_psiV hψc v
   obtain ⟨φ, hSB, hne, heig⟩ := exists_local_vac v (GlobalTheory.LatVac.psiAt ψ v) hcont hψ1

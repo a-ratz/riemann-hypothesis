@@ -60,7 +60,7 @@ theorem finRep_exists_isPullback_spec {X Y : Scheme.{0}} (m : X ⟶ Y) [IsFinite
     ∃ (A : CommRingCat.{0}) (φ : O ⟶ A) (y : Spec A ⟶ X),
       φ.hom.Finite ∧ φ.hom.Flat ∧ IsPullback y (Spec.map φ) m u := by
   let N := Limits.pullback m u
-  haveI : IsAffine N := isAffine_of_isAffineHom (Limits.pullback.snd m u)
+  have : IsAffine N := isAffine_of_isAffineHom (Limits.pullback.snd m u)
   let f : Spec Γ(N, ⊤) ⟶ Spec O := N.isoSpec.inv ≫ Limits.pullback.snd m u
   have hf : Spec.map (Spec.preimage f) = f := Spec.map_preimage f
   refine ⟨Γ(N, ⊤), Spec.preimage f, N.isoSpec.inv ≫ Limits.pullback.fst m u, ?_, ?_, ?_⟩
@@ -87,11 +87,11 @@ theorem finRep_kernel_mul_finite_free :
   intro R₀ _ G _ _ O p hfin hflat _
   obtain ⟨A, φ, y, hφf, hφl, hpb⟩ := finRep_exists_isPullback_spec ((𝟙 G) ^ p : G ⟶ G).left
     (CommRingCat.of (O : Type)) (1 : sp (R₀ := R₀) (O : Type) ⟶ G).left
-  letI : Algebra (O : Type) A := φ.hom.toAlgebra
-  letI : Algebra R₀ A := (φ.hom.comp (algebraMap R₀ (O : Type))).toAlgebra
-  haveI : IsScalarTower R₀ (O : Type) A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Module.Finite (O : Type) A := hφf
-  haveI : Module.Flat (O : Type) A := hφl
+  let : Algebra (O : Type) A := φ.hom.toAlgebra
+  let : Algebra R₀ A := (φ.hom.comp (algebraMap R₀ (O : Type))).toAlgebra
+  have : IsScalarTower R₀ (O : Type) A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Module.Finite (O : Type) A := hφf
+  have : Module.Flat (O : Type) A := hφl
   have hpow : ∀ {T : Over (Spec (CommRingCat.of R₀))} (z : T ⟶ G),
       z.left ≫ ((𝟙 G) ^ p : G ⟶ G).left = (z ^ p).left := by
     intro T z

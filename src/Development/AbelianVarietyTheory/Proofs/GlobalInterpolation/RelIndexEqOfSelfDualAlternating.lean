@@ -95,7 +95,7 @@ theorem relIndex_le_of_selfDual (H : Type) [AddCommGroup H] (ω : H → H → �
     exact (hint _).2 ((h₁ x).1 x.2 y (AddSubgroup.mem_addSubgroupOf.1 hy))
   let ψ : Λ₁ → (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂ →+ UnitAddCircle) := fun x =>
     QuotientAddGroup.lift _ (φ x) (hφ x)
-  haveI : Fact ((0 : ℝ) < 1) := ⟨one_pos⟩
+  have : Fact ((0 : ℝ) < 1) := ⟨one_pos⟩
   let χ : Λ₁ → AddChar (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) Circle := fun x =>
     (AddCircle.toCircle_addChar (T := 1)).compAddMonoidHom (ψ x)
   have hχ : ∀ a b : Λ₁, χ a = χ b → ((a : H) - b) ∈ Λ₂ := by
@@ -107,8 +107,8 @@ theorem relIndex_le_of_selfDual (H : Type) [AddCommGroup H] (ω : H → H → �
         = AddCircle.toCircle (((ω b y : ℝ)) : UnitAddCircle) := h
     have h'' := AddCircle.injective_toCircle (T := 1) one_ne_zero h'
     rw [← hint, hsub, AddCircle.coe_sub, h'', sub_self]
-  haveI hG : Finite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Nat.finite_of_card_ne_zero hfin
-  haveI : Fintype (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Fintype.ofFinite _
+  have hG : Finite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Nat.finite_of_card_ne_zero hfin
+  have : Fintype (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Fintype.ofFinite _
   let f : (Λ₁ ⧸ Λ₂.addSubgroupOf Λ₁) → AddChar (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) ℂ := fun q =>
     AddChar.circleEquivComplex (χ q.out)
   have hf : Function.Injective f := by

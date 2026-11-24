@@ -64,16 +64,16 @@ theorem lastRow_mul_of_mem {h : GA E (m + 1)} (hh : h ∈ mirU (Ad E) (m + 1) m)
   funext j
   simp only [GlobalTheory.ZEul.lastRow, Units.val_mul, Matrix.mul_apply]
   rw [Finset.sum_eq_single (Fin.last m)]
-  · rw [(mem_mirU_last.1 hh) (Fin.last m), if_pos rfl, one_mul]
+  · rw [(mem_mirU_last.1 hh) (Fin.last m), ite_eq_left rfl, one_mul]
   · intro l _ hl
-    rw [(mem_mirU_last.1 hh) l, if_neg hl, zero_mul]
+    rw [(mem_mirU_last.1 hh) l, ite_eq_right hl, zero_mul]
   · simp
 
 
 omit [NumberField E] [_root_.NumberField.IsTotallyComplex E] in
 theorem det_blkU {R : Type} [CommRing R] {a k : ℕ} (y : UnipotentBlockColumnIndex a k k → R) : (blkU y : GL (Fin a) R).val.det = 1 := by
   have h := mem_mirU_zero.1 (blkU_mem_mirU 0 y)
-  rw [Matrix.det_of_upperTriangular (fun i j hij => h.1 i j hij)]
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => h.1 i j hij)]
   simp [h.2]
 
 omit [_root_.NumberField.IsTotallyComplex E] in
@@ -86,7 +86,7 @@ theorem detPow_blkU (x : ℝ) {k : ℕ} (y : UnipotentBlockColumnIndex (m + 1) k
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem isClosed_natLat (N : ℕ) : IsClosed (natLat E N) := by
-  haveI : T2Space (Af E) := inferInstanceAs (T2Space (RestrictedProduct _ _ _))
+  have : T2Space (Af E) := inferInstanceAs (T2Space (RestrictedProduct _ _ _))
   have e : natLat E N = (fun z => (N : Af E) * z) '' (GroundTheory.Global.integralFiniteAdeles (𝓞 E) E : Set (Af E)) := by
     ext y
     constructor

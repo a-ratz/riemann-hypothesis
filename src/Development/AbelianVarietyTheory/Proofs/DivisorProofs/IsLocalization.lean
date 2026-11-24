@@ -83,7 +83,7 @@ theorem mem_ker (σ : K →ₐ[ℂ] κ') (a : K ⊗[ℂ] κ') :
 theorem primeCompl_le (L : Type) [Field L] [Algebra (K ⊗[ℂ] κ') L] [IsFractionRing (K ⊗[ℂ] κ') L]
     (σ : K →ₐ[ℂ] κ') :
     (ker σ).primeCompl ≤ nonZeroDivisors (K ⊗[ℂ] κ') := by
-  haveI : IsDomain (K ⊗[ℂ] κ') :=
+  have : IsDomain (K ⊗[ℂ] κ') :=
     Function.Injective.isDomain (algebraMap (K ⊗[ℂ] κ') L) (IsFractionRing.injective _ L)
   intro a ha
   refine mem_nonZeroDivisors_of_ne_zero ?_

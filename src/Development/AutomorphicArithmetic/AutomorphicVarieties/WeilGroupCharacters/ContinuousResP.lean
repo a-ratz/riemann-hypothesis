@@ -81,7 +81,7 @@ private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
     have ha : a ∈ ((fun g : G => b⁻¹ * g) ⁻¹' (N : Set G))ᶜ := by
       intro h
       exact hxy (QuotientGroup.eq.2 h).symm
-    obtain ⟨C, hC, haC, hCsub⟩ := compact_exists_isClopen_in_isOpen hcl.isOpen_compl ha
+    obtain ⟨C, hC, haC, hCsub⟩ := exists_isClopen_mem_of_isOpen hcl.isOpen_compl ha
     refine ⟨QuotientGroup.mk '' C, ⟨?_, QuotientGroup.isOpenMap_coe _ hC.isOpen⟩, ⟨a, haC, rfl⟩, ?_⟩
     · rw [← (QuotientGroup.isQuotientMap_mk N).isClosed_preimage, QuotientGroup.preimage_image_mk_eq_mul]
       exact hN.mul_left_of_isCompact hC.isClosed.isCompact

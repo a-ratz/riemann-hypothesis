@@ -109,7 +109,7 @@ private theorem main (π : UnitaryRep G H) (m : Measure G) [m.IsMulLeftInvariant
     (W : Submodule ℂ H) (hW : ∀ v, v ∈ W ↔ ∀ j ∈ J, π j v = v) (x : G) (u v : H) :
     ⟪u, (∑ᶠ c ∈ {c : G ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * x)}, π c.out) (prj W v)⟫_ℂ =
       ∫ g, Set.indicator {g | ∃ a ∈ J, ∃ b ∈ J, g = a * x * b} 1 g * ⟪u, π g v⟫_ℂ ∂m := by
-  haveI : DiscreteTopology (G ⧸ J) := QuotientGroup.discreteTopology hJo
+  have : DiscreteTopology (G ⧸ J) := QuotientGroup.discreteTopology hJo
   set S : Set (G ⧸ J) := {c | ∃ k ∈ J, c = QuotientGroup.mk (k * x)} with hSdef
   have hSfin : S.Finite := by
     have e : S = (fun k : G => (QuotientGroup.mk (k * x) : G ⧸ J)) '' (J : Set G) := by
@@ -165,7 +165,7 @@ private theorem main (π : UnitaryRep G H) (m : Measure G) [m.IsMulLeftInvariant
     ext g
     by_cases hg : g ∈ D <;> simp [hg]
   rw [hind, integral_indicator hDm, hD, integral_biUnion_finset _ (fun c _ => (hPo c).measurableSet) ?_
-    (fun c _ => hPint c), finsum_mem_eq_finite_toFinset_sum _ hSfin, ContinuousLinearMap.sum_apply, inner_sum]
+    (fun c _ => hPint c), finsum_mem_eq_finite_toFinset_sum _ hSfin, sum_apply, inner_sum]
   · refine Finset.sum_congr rfl fun c _ => ?_
     rw [← setInt_shift m (fun g => ⟪u, π g v⟫_ℂ) c.out hJo.measurableSet (hPo c).measurableSet (hPmem c)]
     rw [UnitaryRep.inner_map_right, ← avg π m J hJ hJo hm W hW]

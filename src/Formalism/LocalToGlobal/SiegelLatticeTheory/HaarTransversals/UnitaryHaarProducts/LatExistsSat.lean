@@ -81,7 +81,7 @@ lemma latSpanV_succ {n : ℕ} (c : Fin (n + 1) → 𝓕) (v : Fin (n + 1) → V)
   rw [← Submodule.span_union]
   congr 1
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_union, Fin.exists_fin_succ', Fin.init]
+  simp only [Set.mem_ofPred_eq, Set.mem_union, Fin.exists_fin_succ', Fin.init]
 
 lemma latSpanV_zero (c : Fin 0 → 𝓕) (v : Fin 0 → V) : latSpanV c v = ⊥ := by
   unfold latSpanV
@@ -89,7 +89,7 @@ lemma latSpanV_zero (c : Fin 0 → 𝓕) (v : Fin 0 → V) : latSpanV c v = ⊥ 
   rintro _ ⟨i, -⟩
   exact i.elim0
 
-lemma fi_neg_mem {I : 𝓕} {x : E} (h : x ∈ I) : -x ∈ I := FractionalIdeal.mem_coe.1 (Submodule.neg_mem _ (FractionalIdeal.mem_coe.2 h))
+lemma fi_neg_mem {I : 𝓕} {x : E} (h : x ∈ I) : -x ∈ I := FractionalIdeal.mem_coeToSubmodule.1 (Submodule.neg_mem _ (FractionalIdeal.mem_coeToSubmodule.2 h))
 
 lemma fi_mul_mem {I J K : 𝓕} (hIJ : I * J = K) {x y : E} (hx : x ∈ I) (hy : y ∈ J) :
     x * y ∈ K := hIJ ▸ FractionalIdeal.mul_mem_mul hx hy
@@ -205,17 +205,17 @@ lemma coeffs (c1 c2 a : 𝓕) (h1 : c1 ≠ 0) (h2 : c2 ≠ 0) (ha : a ≠ 0) :
       _ = 1 := by rw [hg', mul_inv_cancel₀ hJ0c]
   have h1' : (1 : E) ∈ ((I0 : 𝓕) : Submodule (𝓞 E) E) ⊔
       ((FractionalIdeal.spanSingleton _ (algebraMap (𝓞 E) E g) * (J0 : 𝓕)⁻¹ : 𝓕) : Submodule (𝓞 E) E) := by
-    rw [← Submodule.add_eq_sup, ← FractionalIdeal.coe_add, hsum]
+    rw [← Submodule.add_eq_sup, ← FractionalIdeal.coeToSubmodule_add, hsum]
     exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
   obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.mem_sup.1 h1'
-  obtain ⟨z', hz', rfl⟩ := FractionalIdeal.mem_singleton_mul.1 (FractionalIdeal.mem_coe.1 hz)
+  obtain ⟨z', hz', rfl⟩ := FractionalIdeal.mem_singleton_mul.1 (FractionalIdeal.mem_coeToSubmodule.1 hz)
   have e1 : algebraMap (𝓞 E) E s * (algebraMap (𝓞 E) E s)⁻¹ = 1 := mul_inv_cancel₀ hs'
   have e2 : (algebraMap (𝓞 E) E t)⁻¹ * algebraMap (𝓞 E) E t = 1 := inv_mul_cancel₀ ht'
   refine ⟨algebraMap (𝓞 E) E s, (algebraMap (𝓞 E) E t)⁻¹ * algebraMap (𝓞 E) E g,
     -(algebraMap (𝓞 E) E t * z'), (algebraMap (𝓞 E) E s)⁻¹ * y, ?_, ?_, ?_, ?_, ?_⟩
   · rw [← inv_inv (a⁻¹ * c1), hIs, mul_inv, FractionalIdeal.spanSingleton_inv, inv_inv,
       FractionalIdeal.mem_singleton_mul]
-    exact ⟨1, FractionalIdeal.one_mem_inv_coe_ideal hI0b, (mul_one _).symm⟩
+    exact ⟨1, FractionalIdeal.one_mem_inv_coeIdeal hI0b, (mul_one _).symm⟩
   · rw [hJt, FractionalIdeal.mem_singleton_mul]
     exact ⟨_, (FractionalIdeal.mem_coeIdeal _).2 ⟨g, hgJ, rfl⟩, rfl⟩
   · apply fi_neg_mem
@@ -223,7 +223,7 @@ lemma coeffs (c1 c2 a : 𝓕) (h1 : c1 ≠ 0) (h2 : c2 ≠ 0) (ha : a ≠ 0) :
       FractionalIdeal.spanSingleton_inv, inv_inv, FractionalIdeal.mem_singleton_mul]
     exact ⟨z', hz', rfl⟩
   · rw [show a * c1⁻¹ = (a⁻¹ * c1)⁻¹ by rw [mul_inv, inv_inv], hIs, FractionalIdeal.mem_singleton_mul]
-    exact ⟨y, FractionalIdeal.mem_coe.1 hy, rfl⟩
+    exact ⟨y, FractionalIdeal.mem_coeToSubmodule.1 hy, rfl⟩
   · linear_combination hyz + y * e1 + algebraMap (𝓞 E) E g * z' * e2
 
 lemma rebase (c1 c2 a : 𝓕) (h1 : c1 ≠ 0) (h2 : c2 ≠ 0) (ha : a ≠ 0) (p q : V) :
@@ -272,7 +272,7 @@ lemma rebase (c1 c2 a : 𝓕) (h1 : c1 ≠ 0) (h2 : c2 ≠ 0) (ha : a ≠ 0) (p 
       (Submodule.mem_sup_right (mem_lineV _ _ (fi_mul_mem E4 hx hδ)))
 
 private lemma fg_of_le_lemma {M N : Submodule (𝓞 E) V} (hM : M.FG) (h : N ≤ M) : N.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian M hM
+  have := isNoetherian_of_fg_of_noetherian M hM
   have h1 : (Submodule.comap M.subtype N).FG := IsNoetherian.noetherian _
   have h2 := h1.map M.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.2 h] at h2
@@ -340,7 +340,7 @@ private lemma fi_exists_ne_lemma {R K : Type} [CommRing R] [Field K] [Algebra R 
   apply hI
   ext x
   rw [FractionalIdeal.mem_zero_iff]
-  exact ⟨h x, fun hx => hx ▸ FractionalIdeal.mem_coe.1 (Submodule.zero_mem _)⟩
+  exact ⟨h x, fun hx => hx ▸ FractionalIdeal.mem_coeToSubmodule.1 (Submodule.zero_mem _)⟩
 
 theorem satBasisV_holds :
   ∀ (E V : Type) [Field E] [NumberField E] [AddCommGroup V] [Module E V] [Module (𝓞 E) V]

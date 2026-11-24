@@ -57,8 +57,8 @@ open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX isPushout_sections)
 theorem isEtCoord_baseChange : ∀ (R R' : Type) [CommRing R] [CommRing R'] (φ : R →+* R') (X X' : Scheme.{0}) (f : X ⟶ Sp R) (f' : X' ⟶ Sp R') (π : X' ⟶ X) (U : X.Opens) (d : ℕ) (t : Fin d → Γ(X, U)), IsPullback π f' f (spMap φ) → IsAffineOpen U → IsEtCoord f U t → IsAffineOpen (π ⁻¹ᵁ U) ∧ IsEtCoord f' (π ⁻¹ᵁ U) (fun a => (π.app U).hom (t a)) := by
   intro R R' _ _ φ X X' f f' π U d t H hU ht
   refine ⟨GlobalTheory.TopForm.isAffineOpen_preimage_of_isPullback H hU, ?_⟩
-  letI := φ.toAlgebra
-  letI := MvPolynomial.algebraMvPolynomial (R := R) (S := R') (σ := Fin d)
+  let := φ.toAlgebra
+  let := MvPolynomial.algebraMvPolynomial (R := R) (S := R') (σ := Fin d)
   have h₁ := (CommRingCat.isPushout_of_isPushout R R' (MvPolynomial (Fin d) R) (MvPolynomial (Fin d) R')).flip
   have hx : (MvPolynomial.eval₂Hom (algX f U) t).Etale := ht
   have key : ∀ (W : X'.Opens) (hle : W ≤ π ⁻¹ᵁ U),

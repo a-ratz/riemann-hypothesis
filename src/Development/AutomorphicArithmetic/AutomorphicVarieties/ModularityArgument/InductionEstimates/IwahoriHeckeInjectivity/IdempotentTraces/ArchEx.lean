@@ -162,8 +162,8 @@ private theorem psiC_val (c : mixedSpace K ≃+* (ι → ℂ)) (hc : Continuous 
 
 private theorem continuous_toUnits (n : ℕ) :
     Continuous fun u : unitaryGroup (Fin n) ℂ => (Unitary.toUnits u : GL (Fin n) ℂ) := by
-  refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-  exact continuous_star.comp continuous_subtype_val
+  refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
+  exact continuous_star.comp continuous_subtypeVal
 
 private def mkCo (c : mixedSpace K ≃+* (ι → ℂ)) (hc : Continuous c) (hs : Continuous c.symm)
     (hu : ∀ (n : ℕ) (g : archGroup K n), g ∈ archCompact K n ↔
@@ -406,7 +406,7 @@ private theorem occ_abs (hu : ∀ a b, u (a * b) = u a * u b) (hc : Continuous u
   have hρcl : IsClosed (ρ : Set H) := by
     have e₀ : (ρ : Set H) = (τ : Set H) ∩ ⋂ t : ℝ, {x | R (u (tC t t)) x = c t • x} := by
       ext x
-      simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
       rfl
     rw [e₀]
     exact hcl.inter (isClosed_iInter fun t =>
@@ -448,7 +448,7 @@ private theorem un_cont (i : ι) : Continuous (C.un i) := by
   obtain ⟨-, -, hun, hc, -⟩ := UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.coLaws K ι C
   have h : C.un i = fun m => C.gl i (kC m : GL2C) := funext (hun i)
   rw [h]
-  exact (hc i).comp (continuous_subtype_val.comp continuous_kC)
+  exact (hc i).comp (continuous_subtypeVal.comp continuous_kC)
 
 end
 
@@ -497,9 +497,9 @@ theorem UpperTheory.finiteDimensional_span_maximalCompact_translates_of_fix :
     ∀ {K : Type} [Field K] [NumberField K] {n : ℕ} (D : TypeDat K n) (f : G1 K n → ℂ), Continuous f → D.Fix f → FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : KG K n => fun m => f (m * k))) := by
   intro K _ _ n D f hf hfix
   obtain ⟨-, -, 𝒜, hfd, -, hA⟩ := typeFin D
-  haveI := hfd
+  have := hfd
   obtain ⟨O, hO, hUO⟩ := D.isOpen
-  haveI : CompactSpace (KG K n) :=
+  have : CompactSpace (KG K n) :=
     isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 n).1
   let W : Subgroup (KG K n) := D.U.subgroupOf (KG K n)
   have hWo : IsOpen (W : Set (KG K n)) := by
@@ -507,8 +507,8 @@ theorem UpperTheory.finiteDimensional_span_maximalCompact_translates_of_fix :
       ext k
       exact ⟨fun h => ((hUO k).1 h).1, fun h => (hUO k).2 ⟨h, k.2⟩⟩
     rw [hW]
-    exact hO.preimage (continuous_subtype_val.comp continuous_subtype_val)
-  haveI : Finite (KG K n ⧸ W) := Subgroup.quotient_finite_of_isOpen W hWo
+    exact hO.preimage (continuous_subtypeVal.comp continuous_subtypeVal)
+  have : Finite (KG K n ⧸ W) := Subgroup.quotient_finite_of_isOpen W hWo
   let B := Module.finBasis ℂ 𝒜
   let x : G1 K n → 𝒜 := fun m => ⟨fun u : D.U => f (m * u), hA f hf hfix m⟩
   let c : Fin (Module.finrank ℂ 𝒜) × (KG K n ⧸ W) → G1 K n → ℂ :=
@@ -577,12 +577,12 @@ theorem UpperTheory.leviInducedSection_fixed_by_archIdempotent_and_level :
   intro K _ _ ρ hρ Ψ hΨ φ₁ φ₂ h₁ h₂ _ _ f hf
   obtain ⟨-, -, -, hlvc, -, -, -, -, -, -, hlvK, hcomp⟩ := blkLaws (K := K)
   obtain ⟨α, β, -, -, -, -, harc, hfin⟩ := UpperTheory.maximalCompact_unique_arch_finite_decomposition (K := K) (2 + 2)
-  haveI : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 (hcomp 2).1
+  have : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 (hcomp 2).1
   refine ⟨fun κ e he hfix g => ?_, fun U hU hfix u hu g => ?_⟩
-  · haveI := he.haar.prob
+  · have := he.haar.prob
     obtain ⟨X, m₁, m₂, t, k, hk, rfl⟩ := iwa g
     have harc1 : Continuous fun a : archCompact K (2 + 2) => arc1 a :=
-      continuous_archP.comp continuous_subtype_val
+      continuous_archP.comp continuous_subtypeVal
     have hfa : ∀ a : archCompact K (2 + 2), e a * f (nn X * lv m₁ m₂ t * k * arc1 a) =
         ∫ v₁ : KG K 2, ∫ v₂ : KG K 2, e a * (Ψ (lv (v₁ : G1 K 2) (v₂ : G1 K 2) 0 * (k * arc1 a)) *
           φ₁ (m₁ * (v₁ : G1 K 2)⁻¹) * φ₂ (m₂ * (v₂ : G1 K 2)⁻¹)) ∂ρ ∂ρ := by
@@ -704,8 +704,8 @@ private theorem lev_max (S : Finset (Pl K)) (U : ∀ w : Pl K, Subgroup (Gw n w)
   have h : finAt v (finEmb K n u) ∈ if v ∈ S then U v else GLnLocal.integralGL (v.adicCompletion K) n := hu v
   have h2 : finAt v (finEmb K n u) ∈ GLnLocal.integralGL (v.adicCompletion K) n := by
     by_cases hv : v ∈ S
-    · rw [if_pos hv] at h; exact (hU v).2 h
-    · rwa [if_neg hv] at h
+    · rw [ite_eq_left hv] at h; exact (hU v).2 h
+    · rwa [ite_eq_right hv] at h
   have e : finAt v (finEmb K n u) = AdelicGLn.finiteRestrictedEquiv K n u v := by
     show (AdelicGLn.finiteRestrictedEquiv K n (AdelicGLn.prodEquiv K n (finEmb K n u)).2) v = _
     rw [prodEquiv_finEmb]
@@ -720,7 +720,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.vecEx :
       ∃ (U : ∀ w : Pl K, Subgroup (Gw 2 w)) (φ : G1 K 2 → ℂ), Lev U ∧ φ ≠ 0 ∧ Rd τ φ ∧ (∃ B : ℝ, ∀ x, ‖φ x‖ ≤ B) ∧
         FixA C.κ₂ (C.p n q) φ ∧ FixF (levOn S U) φ := by
   intro K _ _ _ ι _ C μ _ τ hτ n q hn S hS
-  haveI : T2Space (G1 K 2) := by
+  have : T2Space (G1 K 2) := by
     set_option synthInstance.maxHeartbeats 100000 in
       infer_instance
   have hSum : IsSummand μ τ := ⟨hτ.le, hτ.closed, hτ.inv, hτ.ne, hτ.irr⟩
@@ -739,7 +739,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.vecEx :
       rw [← hPv]
       refine ⟨hτP τ hτ x hx.1, (mem_fixF' μ _ _).2 fun u hu => ?_⟩
       have h := DFunLike.congr_fun (hc (fin1 u) fun b => hcomm i b u).eq x
-      simp only [ContinuousLinearMap.mul_apply] at h
+      simp only [mul_apply_eq_comp] at h
       rw [← h, (mem_fixF' μ _ _).1 hx.2 u hu]) hn
   have hvτ : v ∈ τ := hvZ.1
   have hvF := (mem_fixF' μ _ _).1 hvZ.2
@@ -758,7 +758,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.vecEx :
   let A : Submodule ℂ (AdelicGLn.AdelicGL K 2 → ℂ) := Submodule.span ℂ
     (Set.range fun k : (maxCompact : Subgroup (AdelicGLn.AdelicGL K 2)) =>
       GroundTheory.Automorphic.rightTranslate (k : AdelicGLn.AdelicGL K 2) (Φ : AdelicGLn.AdelicGL K 2 → ℂ))
-  haveI hAfd : FiniteDimensional ℂ A := Φ.2.1.isKFinite
+  have hAfd : FiniteDimensional ℂ A := Φ.2.1.isKFinite
   have hAst : ∀ k ∈ (maxCompact : Subgroup (AdelicGLn.AdelicGL K 2)), ∀ f ∈ A, (fun g => f (g * k)) ∈ A := by
     intro k hk f hf
     have hle : A ≤ A.comap (LinearMap.funLeft ℂ ℂ fun g : AdelicGLn.AdelicGL K 2 => g * k) := by
@@ -769,12 +769,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.vecEx :
       simp [GroundTheory.Automorphic.rightTranslate, LinearMap.funLeft_apply, mul_assoc]
     exact hle hf
   let W : Submodule ℂ (cuspForms K 2) := Dp.formsIn μ τ ⊓ A.comap (cuspForms K 2).subtype
-  haveI hWfd : FiniteDimensional ℂ W := by
+  have hWfd : FiniteDimensional ℂ W := by
     let f : W →ₗ[ℂ] A := ((cuspForms K 2).subtype ∘ₗ W.subtype).codRestrict A fun x => x.2.2
     exact FiniteDimensional.of_injective f fun a b h =>
       Subtype.ext (Subtype.ext (congrArg (fun z : A => (z : AdelicGLn.AdelicGL K 2 → ℂ)) h))
   let Y : Submodule ℂ (LL μ) := W.map (Dp.clsL μ)
-  haveI hYfd : FiniteDimensional ℂ Y := inferInstance
+  have hYfd : FiniteDimensional ℂ Y := inferInstance
   have hcen : ∀ ψ ∈ W, ψ ∈ centralCuspForms K 2 := fun ψ h => h.1.1
   have hYσ : ∀ (k : archCompact K 2), ∀ y ∈ Y, rightRegularRep (Gam K 2) μ (arc1 k) y ∈ Y := by
     rintro k _ ⟨ψ, hψ, rfl⟩
@@ -931,7 +931,7 @@ private theorem un_cont {K : Type} [Field K] [NumberField K] {ι : Type} [Fintyp
       simp only [Pi.mulSingle_eq_same]
       exact continuous_id
     · simpa [Pi.mulSingle_eq_of_ne hj] using continuous_const
-  exact continuous_archP.comp (continuous_subtype_val.comp ((C.Φ 2).symm.continuous.comp h))
+  exact continuous_archP.comp (continuous_subtypeVal.comp ((C.Φ 2).symm.continuous.comp h))
 
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.lineInj :
     ∀ (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (ι : Type) [Fintype ι] (C : Co K ι) (μ₂ : Measure (G1 K 2)) [μ₂.IsHaarMeasure] (τ₁ τ₂ : Submodule ℂ (L2 μ₂)), Pair μ₂ τ₁ τ₂ →
@@ -1016,7 +1016,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.lineInj :
     intro m₁ m₂ h a
     have hc : Continuous fun k : ι → U4 => f (lv m₁ m₂ 0 * fin1 h * arc1 ((C.Φ (2 + 2)).symm k)) := by
       refine hf.cont.comp (continuous_const.mul ?_)
-      exact continuous_archP.comp (continuous_subtype_val.comp (C.Φ (2 + 2)).symm.continuous)
+      exact continuous_archP.comp (continuous_subtypeVal.comp (C.Φ (2 + 2)).symm.continuous)
     have hr : RFix (Measure.pi fun _ : ι => μ) (fun k => ∏ i, e i (k i))
         fun k : ι → U4 => f (lv m₁ m₂ 0 * fin1 h * arc1 ((C.Φ (2 + 2)).symm k)) := by
       intro g
@@ -1296,7 +1296,7 @@ private theorem compress_scalar (R : UnitaryRep G H) (τ : Submodule ℂ H) (hcl
   have memD : ∀ {x}, x ∈ D ↔ x ∈ τ ∧ P x = x := by
     intro x
     simp only [hD, Submodule.mem_inf, LinearMap.mem_ker, ContinuousLinearMap.coe_coe,
-      ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply, sub_eq_zero]
+      sub_apply, one_apply_eq_self, sub_eq_zero]
     exact and_congr_right fun _ => eq_comm
   have hDcl : IsClosed (D : Set H) := by
     have : (D : Set H) = (τ : Set H) ∩ {x | P x = x} := by
@@ -1332,7 +1332,7 @@ private theorem compress_scalar (R : UnitaryRep G H) (τ : Submodule ℂ H) (hcl
     apply Subtype.ext
     have hx := (memD.1 x.2).2
     have := DFunLike.congr_fun h.eq (x : H)
-    simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, hx, hP2] at this
+    simp only [mul_apply_eq_comp, ContinuousLinearMap.comp_apply, hx, hP2] at this
     exact this
   have hirrD : ∀ U : Submodule ℂ D, IsClosed (U : Set D) →
       (∀ s ∈ Set.range cp, ∀ v ∈ U, s v ∈ U) → U = ⊥ ∨ U = ⊤ := by
@@ -1413,8 +1413,8 @@ private theorem places {X ι : Type*} [Group X] (R : UnitaryRep G H) (τ : Submo
     have e : Q i ∘L R (gl i b * h) ∘L Q i = (Q i ∘L R (gl i b) ∘L Q i) * R h := by
       ext1 v
       have := DFunLike.congr_fun hq.eq v
-      simp only [ContinuousLinearMap.mul_apply] at this
-      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, UnitaryRep.map_mul_apply, this]
+      simp only [mul_apply_eq_comp] at this
+      simp only [mul_apply_eq_comp, ContinuousLinearMap.comp_apply, UnitaryRep.map_mul_apply, this]
     rw [e]
     refine Commute.mul_right (hPc i a b) ?_
     show Commute (Q i * (R (gl i a) * Q i)) (R h)
@@ -1448,7 +1448,7 @@ private theorem places {X ι : Type*} [Group X] (R : UnitaryRep G H) (τ : Submo
       have hq : Commute (Q i) (R (l.map fun i => gl i (a i)).prod) := hPh i _ hpc
       have hy' : Q i (R (l.map fun i => gl i (a i)).prod y) = R (l.map fun i => gl i (a i)).prod y := by
         have := DFunLike.congr_fun hq.eq y
-        simp only [ContinuousLinearMap.mul_apply] at this
+        simp only [mul_apply_eq_comp] at this
         rw [this, hyl i List.mem_cons_self]
       have hyτ : R (l.map fun i => gl i (a i)).prod y ∈ τ := hinv _ _ hy
       rw [List.map_cons, List.prod_cons, UnitaryRep.map_mul_apply]
@@ -1501,10 +1501,10 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.rankInf :
   refine ⟨hid n q, hex, fun g => ?_⟩
   obtain ⟨a, ha⟩ := hprod g
   let π : UnitaryRep (archCompact K 2) (LL μ) :=
-    R.compHom ((archP K 2).comp (archCompact K 2).subtype) (continuous_archP.comp continuous_subtype_val)
+    R.compHom ((archP K 2).comp (archCompact K 2).subtype) (continuous_archP.comp continuous_subtypeVal)
   have hE : ∀ v, pOp μ C.κ₂ (C.p n q) v = RI.avg C.κ₂ π (C.p n q) v := fun _ => rfl
   have hk := (hid n q).haar
-  haveI := hk.prob
+  have := hk.prob
   have Einner : ∀ u v, ⟪u, pOp μ C.κ₂ (C.p n q) v⟫_ℂ = ⟪pOp μ C.κ₂ (C.p n q) u, v⟫_ℂ := fun u v => by
     rw [hE, hE]
     exact RI.avg_inner hk.left (hid n q).cont (hid n q).star u v
@@ -1668,11 +1668,11 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.extPi :
     ∀ (ι : Type) [Fintype ι] (μ : Measure U4) (e : ι → U4 → ℂ) n q n' q' (x : ι → U4), Haar4 μ →
       (∀ i, Ext μ (e i) (n i) (q i) (n' i) (q' i) (x i)) → ExtP μ e n q n' q' x := by
   intro ι _ μ e n q n' q' x hμ hE
-  haveI : IsProbabilityMeasure μ := hμ.prob
-  haveI : μ.IsMulLeftInvariant := ⟨fun g => (hμ.left g).map_eq⟩
-  haveI : μ.IsMulRightInvariant := ⟨fun g => (hμ.right g).map_eq⟩
+  have : IsProbabilityMeasure μ := hμ.prob
+  have : μ.IsMulLeftInvariant := ⟨fun g => (hμ.left g).map_eq⟩
+  have : μ.IsMulRightInvariant := ⟨fun g => (hμ.right g).map_eq⟩
   obtain ⟨-, -, -, -, hbd, -, -, -, -, -, -, hcpt, -⟩ := u4
-  haveI : CompactSpace U4 := hcpt
+  have : CompactSpace U4 := hcpt
   have hb1 : Continuous fun m : U2 => bd m 1 := hbd.comp (continuous_id.prodMk continuous_const)
   have hb2 : Continuous fun m : U2 => bd 1 m := hbd.comp (continuous_const.prodMk continuous_id)
   have hcontS : ∀ (Φ : (ι → U4) → ℂ), Continuous Φ → ∀ (i : ι) (k : ι → U4),

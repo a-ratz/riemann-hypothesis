@@ -148,7 +148,7 @@ theorem exists_kMap_onto : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [Norme
   let φ : H →ₗ[ℂ] H := S'.subtype ∘ₗ f ∘ₗ S.projectionOnto C hC
   have hφ : ∀ u (hu : u ∈ S), φ u = g u hu := by
     intro u hu
-    have := Submodule.linearProjOfIsCompl_apply_left hC ⟨u, hu⟩
+    have := Submodule.projectionOnto_apply_left hC ⟨u, hu⟩
     change ((f (S.projectionOnto C hC ((⟨u, hu⟩ : S) : H)) : S') : H) = _
     rw [this]
     rfl
@@ -515,9 +515,9 @@ theorem exists_torus_weight_vector : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Ty
     exact (continuous_const.inner h1).div_const _
   have hχ2 : ∀ a, χ (Pi.single a (2 * Real.pi)) = 1 := by
     intro a; apply hχeq
-    simp only [hT, dT_two_pi, hrep.1, ContinuousLinearMap.one_apply, one_smul]
+    simp only [hT, dT_two_pi, hrep.1, one_apply_eq_self, one_smul]
   have hχ0 : χ 0 = 1 := by
-    apply hχeq; simp only [hT, dT_zero, hrep.1, ContinuousLinearMap.one_apply, one_smul]
+    apply hχeq; simp only [hT, dT_zero, hrep.1, one_apply_eq_self, one_smul]
 
   have hcoord : ∀ a, ∃ m : ℤ, ∀ t : ℝ, χ (Pi.single a t) = Complex.exp (((m * t : ℝ) : ℂ) * Complex.I) := by
     intro a
@@ -939,17 +939,17 @@ theorem ktype_highest_weight : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [N
     obtain ⟨φ, hφK, hφS⟩ := _root_.GlobalTheory.KStableGraph.exists_kMap_onto n ε H ρ S S' (orbSpan ε ρ (w + w')) hKS hKS' hUK hirr hirr' hbot hUT hUS
       hUS' hUne
     have hperp : IsKStableOn ε ρ Sᗮ := orth_kstable n ε H ρ hrep hcont hiso S hKS
-    haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+    have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
     let B : H →L[ℂ] H := (LinearMap.toContinuousLinearMap (φ ∘ₗ S.subtype)).comp S.orthogonalProjection
     have hB : ∀ u, B u = φ (S.orthogonalProjection u : H) := fun u => rfl
     have hPself : ∀ s ∈ S, (S.orthogonalProjection s : H) = s := fun s hs =>
-      congrArg Subtype.val (Submodule.orthogonalProjection_mem_subspace_eq_self (⟨s, hs⟩ : S))
+      congrArg Subtype.val (Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (⟨s, hs⟩ : S))
     have hPcomm : ∀ k ∈ Formalism.REAL.Kset ε, ∀ u, (S.orthogonalProjection (ρ k u) : H) = ρ k (S.orthogonalProjection u) := by
       intro k hk u
       have hsplit : u = (S.orthogonalProjection u : H) + (u - S.orthogonalProjection u) := by abel
       have hperpm : u - (S.orthogonalProjection u : H) ∈ Sᗮ := Submodule.sub_starProjection_mem_orthogonal (K := S) u
       conv_lhs => rw [hsplit, map_add (f := _), map_add (f := _)]
-      rw [Submodule.orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero (hperp k hk _ hperpm),
+      rw [Submodule.orthogonalProjectionOnto_apply_of_mem_orthogonal (hperp k hk _ hperpm),
         add_zero, hPself _ (hKS k hk _ (S.orthogonalProjection u).2)]
     refine ⟨B, fun k hk u => ?_, ?_⟩
     · rw [hB, hB, hPcomm k hk u, hφK k hk _ (S.orthogonalProjection u).2]

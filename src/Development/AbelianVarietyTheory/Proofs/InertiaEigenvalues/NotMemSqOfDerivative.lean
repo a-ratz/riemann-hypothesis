@@ -78,7 +78,7 @@ theorem not_mem_sq_of_derivative : ∀ (E E' : Type) [Field E] [NumberField E] [
     rw [hfd]
     exact Ideal.mul_mem_right _ _ ((Ideal.dvd_iff_le.1 h) hmem)
 
-  haveI := p.isMaximal
+  have := p.isMaximal
   have hnle : ¬ p.asIdeal.map (algebraMap (𝓞 E) (𝓞 E')) ≤ P.asIdeal ^ 2 := by
     intro hle
     have h := pow_sub_one_dvd_differentIdeal (𝓞 E) (p := p.asIdeal) P.asIdeal 2 p.ne_bot

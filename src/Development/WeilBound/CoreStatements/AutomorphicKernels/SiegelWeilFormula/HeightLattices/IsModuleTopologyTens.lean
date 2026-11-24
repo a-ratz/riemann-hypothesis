@@ -92,8 +92,8 @@ theorem OE_eq_image (v : HeightOneSpectrum (𝓞 F)) :
 
 theorem OE_isCompact (v : HeightOneSpectrum (𝓞 F)) : IsCompact (OE E v : Set (v.adicCompletion F ⊗[F] E)) := by
   rw [OE_eq_image]
-  haveI := isModuleTopology_tens (E := E) v
-  haveI : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have := isModuleTopology_tens (E := E) v
+  have : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
   refine (isCompact_univ_pi fun _ => Formalism.L2.S.S7.AdeleLC.isCompact_integers v).image ?_
   refine continuous_finsetSum _ fun j _ => ?_
   have hc : Continuous fun a : v.adicCompletion F => a ⊗ₜ[F] ((RingOfIntegers.basis E j : 𝓞 E) : E) := by
@@ -101,14 +101,14 @@ theorem OE_isCompact (v : HeightOneSpectrum (𝓞 F)) : IsCompact (OE E v : Set 
         fun a => a • ((1 : v.adicCompletion F) ⊗ₜ[F] ((RingOfIntegers.basis E j : 𝓞 E) : E)) := by
       funext a; rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
     rw [this]
-    haveI : ContinuousSMul (v.adicCompletion F) (v.adicCompletion F ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
+    have : ContinuousSMul (v.adicCompletion F) (v.adicCompletion F ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
     exact (continuous_id (X := v.adicCompletion F)).smul
       (continuous_const (y := ((1 : v.adicCompletion F) ⊗ₜ[F] ((RingOfIntegers.basis E j : 𝓞 E) : E))))
   exact hc.comp (continuous_apply j)
 
 theorem OE_isOpen (v : HeightOneSpectrum (𝓞 F)) : IsOpen (OE E v : Set (v.adicCompletion F ⊗[F] E)) := by
-  haveI := isModuleTopology_tens (E := E) v
-  haveI : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have := isModuleTopology_tens (E := E) v
+  have : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
   obtain ⟨s, b, hb⟩ := FiniteDimensional.exists_is_basis_integral (𝓞 F) F E
   set B := Algebra.TensorProduct.basis (v.adicCompletion F) b
   have hcont : Continuous B.equivFun := IsModuleTopology.continuous_of_linearMap B.equivFun.toLinearMap

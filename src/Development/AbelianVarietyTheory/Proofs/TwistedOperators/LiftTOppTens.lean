@@ -89,14 +89,14 @@ theorem nu_top_eq {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridDat
   have h2 := hM'.top
   unfold Vol.IsAt at h1 h2
   have hz : Node.neg D.R.m (Node.top 0) = 0 := rfl
-  rw [if_pos hz] at h1 h2
-  haveI := h1.1.1
-  haveI := h2.1.1
+  rw [ite_eq_left hz] at h1 h2
+  have := h1.1.1
+  have := h2.1.1
   have e := Measure.isMulLeftInvariant_eq_smul (M.ν (.top 0)) (M'.ν (.top 0))
   have a1 := GlobalTheory.Mass.Levels.measure_comap_finE h1.1
   have a2 := GlobalTheory.Mass.Levels.measure_comap_finE h2.1
   have hc : Measure.haarScalarFactor (M.ν (.top 0)) (M'.ν (.top 0)) = 1 := by
-    rw [e, Measure.smul_apply, a2] at a1
+    rw [e, smul_apply, a2] at a1
     simpa using a1
   rw [e, hc, one_smul]
 
@@ -117,7 +117,7 @@ theorem bplus_indep : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G :
   have hf1 := (hM.top.haar_fund).2
   have hf2 := hM'.top.haar_fund
   rw [nu_top_eq hM hM'] at hf1 ⊢
-  haveI := hf2.1
+  have := hf2.1
   set d := G.rowDec 0 (by have := D.R.two_le_m; omega)
   have e0 : ∀ h, embTop G h = stabilizerEmbedding d h := fun h => rfl
   have e1 : stabilizerEmbedding d 1 = 1 := by
@@ -254,7 +254,7 @@ theorem bplus_fsum {M₀ : Vol G} (h₀ : M₀.IsRow) (hM : M.Is t) {φ : Fn G (
     have hemb_cont : Continuous (embTop G) := hemb.symm ▸ hc
     exact GlobalTheory.RowBplus.integrable_of_haar hQ G.besTop.e_iso d.isom hA
       (((hφ.2.comp continuous_fst).mul
-        (hF.2.comp ((continuous_subtype_val.comp continuous_snd).mul (hemb_cont.comp continuous_fst)))).mul
+        (hF.2.comp ((continuous_subtypeVal.comp continuous_snd).mul (hemb_cont.comp continuous_fst)))).mul
         ((GlobalTheory.BesselChar.besChar_continuous W.ψ W.ψ_std.1 G.besTop).comp continuous_snd).star)
       hμ hfd hM.isRow.unip
   have hterms := fun i (hi : i ∈ s) => hconv (f i) (hf i hi)

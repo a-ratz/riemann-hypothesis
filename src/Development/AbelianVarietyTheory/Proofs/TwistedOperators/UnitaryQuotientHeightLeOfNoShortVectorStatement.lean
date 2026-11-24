@@ -158,7 +158,7 @@ theorem vFin_seen_le_one (V : HSp D) {a : GA D V} (ha : a ∈ GinfC V) {u : Fin 
   rw [hx]
   have key := absFin_tmul_le (F := D.host.F) (E := D.host.E) (v := v) (1 : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv D.host.F v)
     (⟨u i, hu i⟩ : 𝓞 D.host.E)
-  rw [nnnorm_one] at key
+  rw [nnNorm_one] at key
   exact key
 
 private theorem infEmb_compInf_eq_theta (V : HSp D) (fr : UI.Frames D V) (w : InfinitePlace D.host.F)
@@ -243,7 +243,7 @@ theorem vInf_seen_le (V : HSp D) (fr : UI.Frames D V) (y : (UI.instV fr).Ginf) (
       ((∑ i, ∑ j, ‖fr.P w i j‖) * ‖vec (UI.instV fr) y u‖).toNNReal := by
     unfold vInf
     refine Finset.sup_le fun p _ => ?_
-    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ hc0]
+    rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal _ hc0]
     exact key p.1 p.2
   calc (vInf w (seen V (UI.brg fr (y, 1)) u) : ℝ)
       ≤ (((∑ i, ∑ j, ‖fr.P w i j‖) * ‖vec (UI.instV fr) y u‖).toNNReal : ℝ) := NNReal.coe_le_coe.mpr hsup

@@ -95,7 +95,7 @@ theorem exists_isOpen_isCompact : ∀ (F : Type) [Field F] [NumberField F] (n : 
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite))
   obtain ⟨U, hUo, hUc⟩ := GlobalTheory.GLIntegral.exists_isOpen_isCompact F n
-  refine ⟨U.subgroupOf _, hUo.preimage continuous_subtype_val, ?_⟩
+  refine ⟨U.subgroupOf _, hUo.preimage continuous_subtypeVal, ?_⟩
   exact (isClosed_zeroLocusGL S (FiniteAdeleRing (𝓞 F) F)).isClosedEmbedding_subtypeVal.isCompact_preimage hUc
 
 end GlobalTheory.LocusOpenCompact
@@ -148,7 +148,7 @@ theorem continuous_locMap {R R' : Type} [CommRing R] [Algebra ℚ R] [Topologica
     [Algebra ℚ R'] [TopologicalSpace R'] (f : R →ₐ[ℚ] R') (hf : Continuous f) :
     Continuous (locMap hS f) := by
   refine Continuous.subtype_mk ?_ _
-  refine (Continuous.units_map _ ?_).comp continuous_subtype_val
+  refine (Continuous.units_map _ ?_).comp continuous_subtypeVal
   exact Continuous.matrix_map continuous_id hf
 
 theorem lid_starT {D : Type} [Ring D] [Algebra ℚ D] (σ : D →+* Dᵐᵒᵖ) (x : ℚ ⊗[ℚ] D) :
@@ -214,8 +214,8 @@ theorem classes_finite : (∀ (D : Type) [Ring D] [Algebra ℚ D] [FiniteDimensi
             ∃ s ∈ S, ∃ u ∈ U, z = GlobalTheory.TorCls.dg D p γ * s * u := by
   intro hbr hB D _ _ _ σ β y p _
   obtain ⟨N, S, hS, φ, hiso, hnat, hcont⟩ := hbr D σ β y
-  letI : TopologicalSpace (AfP p ⊗[ℚ] D) := moduleTopology (AfP p) (AfP p ⊗[ℚ] D)
-  letI : TopologicalSpace (ℚ_[p] ⊗[ℚ] D) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] D)
+  let : TopologicalSpace (AfP p ⊗[ℚ] D) := moduleTopology (AfP p) (AfP p ⊗[ℚ] D)
+  let : TopologicalSpace (ℚ_[p] ⊗[ℚ] D) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] D)
   intro U hUO
   obtain ⟨O, hO, h1O, hOU⟩ := hUO
   have hsplit : ∃ (π₁ : FiniteAdeleRing (𝓞 ℚ) ℚ →ₐ[ℚ] AfP p)

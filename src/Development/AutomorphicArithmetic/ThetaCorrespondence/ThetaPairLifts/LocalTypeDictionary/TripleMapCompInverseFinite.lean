@@ -490,7 +490,7 @@ theorem ev_mem_adm' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ
   intro g _
   refine ⟨g (fun i => (x i).2) • (BoundedContinuousFunction.evalCLM ℂ (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (x i).1)).comp
     (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (κ → mixedEmbedding.mixedSpace F) ℂ), fun f => ?_⟩
-  simp only [LinearMap.proj_apply, GlobalTheory.WeilM.pureA, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
+  simp only [LinearMap.proj_apply, GlobalTheory.WeilM.pureA, FunLike.coe_smul, ContinuousLinearMap.coe_comp,
     Function.comp_apply, Pi.smul_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     BoundedContinuousFunction.evalCLM_apply, smul_eq_mul]
   rw [mul_comm]

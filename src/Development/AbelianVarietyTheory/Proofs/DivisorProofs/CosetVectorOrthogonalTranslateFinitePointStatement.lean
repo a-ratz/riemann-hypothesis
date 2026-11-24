@@ -158,18 +158,18 @@ theorem hO_rowMat (S T : HSp D) (hS : S.gram = 1) (hT : T.gram = 1) (r : D.host.
       incA D (star (-(r⁻¹ * if p.1 = o + a.1 then 1 else 0))) * f a := by
     intro a
     rw [Finset.sum_eq_single p]
-    · have : rowMat S T p f p a = f a := if_pos rfl
+    · have : rowMat S T p f p a = f a := ite_eq_left rfl
       rw [this]
       exact cA_fin_mul _ _ (hf a)
     · intro c _ hc
-      have : rowMat S T p f c a = 0 := if_neg hc
+      have : rowMat S T p f c a = 0 := ite_eq_right hc
       rw [this, mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   rw [Finset.sum_congr rfl fun a _ => h1 a, Finset.sum_eq_single j]
-  · rw [if_pos hp, mul_one, star_neg, RingHom.map_neg, neg_mul]
+  · rw [ite_eq_left hp, mul_one, star_neg, RingHom.map_neg, neg_mul]
   · intro a _ ha
     have : ¬ p.1 = o + a.1 := fun h => ha (Fin.ext (by omega))
-    rw [if_neg this, mul_zero, neg_zero, star_zero, RingHom.map_zero, zero_mul]
+    rw [ite_eq_right this, mul_zero, neg_zero, star_zero, RingHom.map_zero, zero_mul]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem actO_rowMat (S T : HSp D) (g : GA D S) (p : Fin T.rank) (i : Fin S.rank) (σ : AE D) :
@@ -182,15 +182,15 @@ theorem actO_rowMat (S T : HSp D) (g : GA D S) (p : Fin T.rank) (i : Fin S.rank)
   funext c a
   rw [Matrix.mul_apply]
   by_cases hc : c = p
-  · have e : ∀ k, rowMat S T p (Pi.single i σ) c k = (Pi.single i σ : Fin S.rank → AE D) k := fun k => if_pos hc
-    have e' : rowMat S T p (fun a => σ * mt S g⁻¹ i a) c a = σ * mt S g⁻¹ i a := if_pos hc
+  · have e : ∀ k, rowMat S T p (Pi.single i σ) c k = (Pi.single i σ : Fin S.rank → AE D) k := fun k => ite_eq_left hc
+    have e' : rowMat S T p (fun a => σ * mt S g⁻¹ i a) c a = σ * mt S g⁻¹ i a := ite_eq_left hc
     rw [e', Finset.sum_eq_single i]
     · rw [e, Pi.single_eq_same]
     · intro k _ hk
       rw [e, Pi.single_eq_of_ne hk, zero_mul]
     · intro h; exact absurd (Finset.mem_univ _) h
-  · have e : ∀ k, rowMat S T p (Pi.single i σ) c k = 0 := fun k => if_neg hc
-    have e' : rowMat S T p (fun a => σ * mt S g⁻¹ i a) c a = 0 := if_neg hc
+  · have e : ∀ k, rowMat S T p (Pi.single i σ) c k = 0 := fun k => ite_eq_right hc
+    have e' : rowMat S T p (fun a => σ * mt S g⁻¹ i a) c a = 0 := ite_eq_right hc
     rw [e']
     exact Finset.sum_eq_zero fun k _ => by rw [e, zero_mul]
 
@@ -200,11 +200,11 @@ theorem two_smul_rowMat (S T : HSp D) (p : Fin T.rank) (i : Fin S.rank) (σ : AE
   show 2 • (if c = p then (Pi.single i σ : Fin S.rank → AE D) a else 0) =
     if c = p then (Pi.single i (2 * σ) : Fin S.rank → AE D) a else 0
   by_cases hc : c = p
-  · rw [if_pos hc, if_pos hc]
+  · rw [ite_eq_left hc, ite_eq_left hc]
     by_cases ha : a = i
     · rw [ha, Pi.single_eq_same, Pi.single_eq_same, two_nsmul, two_mul]
     · rw [Pi.single_eq_of_ne ha, Pi.single_eq_of_ne ha, nsmul_zero]
-  · rw [if_neg hc, if_neg hc, nsmul_zero]
+  · rw [ite_eq_right hc, ite_eq_right hc, nsmul_zero]
 
 theorem hatPt_rowMat (S T : HSp D) (r : D.host.E) (I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) (p : Fin T.rank)
     (f : Fin S.rank → AE D) (h0 : ∀ a, infPart D (f a) = 0) (h1 : ∀ a, InHat I (algebraMap D.host.E (FA D) r * fe D (f a))) :
@@ -377,7 +377,7 @@ theorem count_conj (D : D7) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : (cP w)
   have h' : (D.host.conj • 𝔞 : Ideal (𝓞 D.host.E)) ≠ 0 := fun e => h (by
     have := congrArg (fun I : Ideal (𝓞 D.host.E) => D.host.conj⁻¹ • I) e
     simpa using this)
-  rw [FractionalIdeal.count_coe _ _ h', FractionalIdeal.count_coe _ _ h]
+  rw [FractionalIdeal.count_coeIdeal _ _ h', FractionalIdeal.count_coeIdeal _ _ h]
   congr 1
   refine eq_of_forall_le_iff fun k => ?_
   rw [← Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.2 h') (cP w).associates_irreducible,
@@ -579,8 +579,8 @@ theorem exists_finPt_sub_mem : ∀ {D : D7} (S T : HSp D) (r : D.host.E) (I : Fr
   ∀ U : AddSubgroup (WO S T), IsOpen (U : Set (WO S T)) → ∀ u : WO S T, HatPt r I u →
   ∃ z : Matrix (Fin T.rank) (Fin S.rank) D.host.E, (∀ i j, z i j ∈ I) ∧ u - finPt (S := S) (T := T) rfl rfl r z ∈ U := by
   intro D S T r I hr hI U hU u hu
-  haveI hg : IsTopologicalAddGroup (WO S T) := inferInstance
-  haveI : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
+  have hg : IsTopologicalAddGroup (WO S T) := inferInstance
+  have : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
   let Φ : (Fin T.rank → Fin S.rank → FA D) → WO S T := fun y =>
     Matrix.of fun i j => lift D (algebraMap D.host.E (FA D) r⁻¹ * y i j)
   have hΦ : Continuous Φ := continuous_matrix fun i j =>
@@ -1054,7 +1054,7 @@ namespace GlobalTheory.CosetOrth.Cong
 
 theorem count_coe_ne_zero_iff {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) {J : Ideal (𝓞 E)}
     (hJ : J ≠ ⊥) : FractionalIdeal.count E w (J : FractionalIdeal (𝓞 E)⁰ E) ≠ 0 ↔ J ≤ w.asIdeal := by
-  rw [FractionalIdeal.count_coe E w hJ, Nat.cast_ne_zero, Associates.count_ne_zero_iff_dvd hJ w.irreducible,
+  rw [FractionalIdeal.count_coeIdeal E w hJ, Nat.cast_ne_zero, Associates.count_ne_zero_iff_dvd hJ w.irreducible,
     Ideal.dvd_iff_le]
 
 theorem val_le_one_of_mul_eq_one {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) {n : ℕ}
@@ -1158,7 +1158,7 @@ theorem inHat_of_inv_cong : ∀ {D : D7}, (∀ w : HeightOneSpectrum (𝓞 D.hos
     intro w hw
     refine integral_of_cong y w fun i j => (hcong w hw i j).trans_lt ?_
     have h1 := (count_coe_ne_zero_iff w h0').2 hw
-    have h2 := FractionalIdeal.count_coe_nonneg D.host.E w (D.host.conj • 𝔪)
+    have h2 := FractionalIdeal.count_coeIdeal_nonneg D.host.E w (D.host.conj • 𝔪)
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp]
     omega
   have key : ∀ w : HeightOneSpectrum (𝓞 D.host.E), ∀ i j, Valued.v (finMat y i j w) ≤ 1 ∧ Valued.v (finMat y⁻¹ i j w) ≤ 1 ∧
@@ -1188,7 +1188,7 @@ theorem inHat_of_inv_cong : ∀ {D : D7}, (∀ w : HeightOneSpectrum (𝓞 D.hos
           Matrix.one_apply]
         by_cases hij : i = j
         · subst hij; simp
-        · rw [if_neg hij, if_neg (Ne.symm hij)]; simp
+        · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij)]; simp
       rw [e1, e2, ← hv]
       exact (Valuation.map_neg _ _).symm
     · have hint : Valued.v (finMat y i j w) ≤ 1 ∧ Valued.v (finMat y⁻¹ i j w) ≤ 1 := by
@@ -1659,7 +1659,7 @@ theorem heis_two_hatPt {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {r : D.hos
 theorem mem_YYl_skew {𝔪 : Ideal (𝓞 D.host.E)} {a d : ℕ} {z : Matrix (Fin d) (Fin a) D.host.E}
     (hz : ∀ i j, z i j ∈ skewId D 𝔪) : z ∈ YYl D (stdL D a) (skewLat D 𝔪 d) := by
   refine Submodule.subset_span ⟨1, ?_, _, Submodule.subset_span fun x hx i _ => ?_, (one_smul _ _).symm⟩
-  · refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
+  · refine FractionalIdeal.one_mem_inv_coeIdeal fun h => ?_
     have h2 := D.host.𝔟_spec.2
     rw [h, Ideal.smul_bot, sup_bot_eq] at h2
     exact bot_ne_top h2
@@ -1671,7 +1671,7 @@ theorem mem_YYl_skew {𝔪 : Ideal (𝓞 D.host.E)} {a d : ℕ} {z : Matrix (Fin
 
 theorem count_coe_eq_zero_iff {E : Type} [Field E] [NumberField E] {𝔞 : Ideal (𝓞 E)} (h : 𝔞 ≠ ⊥) (w : HeightOneSpectrum (𝓞 E)) :
     FractionalIdeal.count E w (𝔞 : FractionalIdeal (𝓞 E)⁰ E) = 0 ↔ ¬ 𝔞 ≤ w.asIdeal := by
-  rw [FractionalIdeal.count_coe E w h, Nat.cast_eq_zero, ← Ideal.dvd_iff_le,
+  rw [FractionalIdeal.count_coeIdeal E w h, Nat.cast_eq_zero, ← Ideal.dvd_iff_le,
     ← Associates.count_ne_zero_iff_dvd h w.irreducible, not_not]
 
 theorem place_facts {𝔪 : Ideal (𝓞 D.host.E)} {Sf : Finset (FinPl D)} (hG : GoodMod D 𝔪 Sf)
@@ -1686,7 +1686,7 @@ theorem place_facts {𝔪 : Ideal (𝓞 D.host.E)} {Sf : Finset (FinPl D)} (hG :
   · rw [skewId, div_eq_mul_inv, FractionalIdeal.count_mul D.host.E w (FractionalIdeal.coeIdeal_ne_zero.2 hG.1)
       (inv_ne_zero (FractionalIdeal.coeIdeal_ne_zero.2 hc)), FractionalIdeal.count_inv,
       (count_coe_eq_zero_iff hG.1 w).2 h0, zero_add]
-  · have h1 := FractionalIdeal.count_coe_nonneg D.host.E w (D.host.conj • 𝔪)
+  · have h1 := FractionalIdeal.count_coeIdeal_nonneg D.host.E w (D.host.conj • 𝔪)
     have h2 := (count_coe_eq_zero_iff hc w).not.2 (not_not.2 hw)
     omega
   · have hq : ((D.host.QS * D.host.q : ℕ) : 𝓞 D.host.E) ∉ w.asIdeal := by

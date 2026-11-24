@@ -493,12 +493,12 @@ theorem stepCols_ne {N j : ℕ} (i : Fin N) (hj : j ≤ N) : stepCols N j i ≠ 
   by_cases c : (i : ℕ) + 1 ≤ j
   · have hlt : N - j < N := by omega
     have hm : (⟨N - j, hlt⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_pos c]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left c]
       omega
     rw [e] at hm
     simp at hm
   · have hm : (⟨0, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_neg c]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right c]
       omega
     rw [e] at hm
     simp at hm
@@ -514,10 +514,10 @@ theorem read_minor {κ : Type} [Fintype κ] {N : ℕ} (P : Finset (Fin N) → Pr
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun I _ => Finset.sum_congr rfl fun m _ => by ring
   rw [e, Finset.sum_eq_single I']
-  · rw [hAB I' I' hI' hI', if_pos rfl, one_mul]
+  · rw [hAB I' I' hI' hI', ite_eq_left rfl, one_mul]
   · intro I _ hne
     by_cases hI : P I
-    · rw [hAB I' I hI' hI, if_neg hne.symm, zero_mul]
+    · rw [hAB I' I hI' hI, ite_eq_right hne.symm, zero_mul]
     · rw [hμ I hI, mul_zero]
   · simp
 
@@ -869,7 +869,7 @@ theorem lowerUni_mul_transv {A : Matrix (Fin N) (Fin N) R} (hA : IsLowerUni A) {
 
 theorem minor_lowerUni {A : Matrix (Fin N) (Fin N) R} (hA : IsLowerUni A) (S : Finset (Fin N)) :
     minorIJ A S S = 1 := by
-  rw [MinorCalc.minorIJ_eq_det A S S _ rfl rfl, det_of_lowerTriangular]
+  rw [MinorCalc.minorIJ_eq_det A S S _ rfl rfl, det_of_isLowerTriangular]
   · exact Finset.prod_eq_one fun i _ => hA.1 _
   · intro x y hxy
     exact hA.2 _ _ ((S.orderEmbOfFin rfl).strictMono hxy)
@@ -907,7 +907,7 @@ def ptOf (M : FlagModel y Ψ N j) (ψ : M.Ω →+* L) (G : Ψ → Matrix (Fin N)
   else ∑ I, ψ (M.coef q I) * minorIJ (G (stepOf M q.1 h).1) I (stepCols N j (stepOf M q.1 h).2)
 
 theorem ptOf_base (M : FlagModel y Ψ N j) (ψ : M.Ω →+* L) (G : Ψ → Matrix (Fin N) (Fin N) L)
-    (q : Σ k, baseIdx ι M.blk k) : ptOf M ψ G ⟨q.1.1, q.2⟩ = ψ (M.x q) := dif_pos q.1.2
+    (q : Σ k, baseIdx ι M.blk k) : ptOf M ψ G ⟨q.1.1, q.2⟩ = ψ (M.x q) := dite_eq_left q.1.2
 
 theorem ptOf_step (M : FlagModel y Ψ N j) (ψ : M.Ω →+* L) (G : Ψ → Matrix (Fin N) (Fin N) L)
     (p : Ψ × Fin N) (k : K) (hp : M.blk p = some k) (m : ι k) :
@@ -1143,8 +1143,8 @@ theorem graph_alt {M : FlagModel y Ψ N j} {M' : FlagModel y' Ψ N j} (Cv : Flag
       imageZ inrV Pt = mCoordIdeal (M'.wCo (τ, a) k₀' ca cb RatFunc.X) ∧
       ∀ z ∈ mcPts (mCoordIdeal (M'.wCo (τ, a) k₀' ca cb RatFunc.X)),
         ∀ w ∈ mcPts (mCoordIdeal (M.wCo (τ, a) k₀ ca cb RatFunc.X)), RelW Cv k₀ k₀' z w → pairV w z ∈ mcPts Pt := by
-  haveI : CharZero Φ' := charZero_of_injective_algebraMap (algebraMap M'.Ω Φ').injective
-  haveI : CharZero (RatFunc Φ') := charZero_of_injective_algebraMap (algebraMap Φ' (RatFunc Φ')).injective
+  have : CharZero Φ' := charZero_of_injective_algebraMap (algebraMap M'.Ω Φ').injective
+  have : CharZero (RatFunc Φ') := charZero_of_injective_algebraMap (algebraMap Φ' (RatFunc Φ')).injective
   obtain ⟨G, hG⟩ := exists_genLow M'
   have hG₀ := hG.flag₀
   have hG₁ := hG.flag₁ τ S.hcb (Pts.same_summand S.hb S.hab S.hca S.hcb)

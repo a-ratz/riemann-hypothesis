@@ -102,7 +102,7 @@ theorem heis_mixS : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
       simp only [heisO, symplOH_zero_left, AddChar.map_zero_eq_one, one_mul, zero_add]
     rcases Nat.eq_zero_or_pos ρ with rfl | hρ
     · have hz := (GlobalTheory.T.wittDecomposition_mixedCoords_rank_zero D ψ).1 S S₀ T d v.μ v.𝓕 v.covol f
-      haveI : Subsingleton (Matrix (Fin T.rank) (Fin 0) D.host.E) := ⟨fun a b => Matrix.ext fun _ j => j.elim0⟩
+      have : Subsingleton (Matrix (Fin T.rank) (Fin 0) D.host.E) := ⟨fun a b => Matrix.ext fun _ j => j.elim0⟩
       have h1 : ∀ x : Matrix (Fin T.rank) (Fin 0) D.host.E, (_root_.I195MixedCoordinates_5a743adb4eaabe3d936622f8.source d) T ψ v.μ v.𝓕 f (rat x) w = f (d.ext0 T w) :=
         fun x => congrFun (hz (rat x)) w
       rw [show (fun x : Matrix (Fin T.rank) (Fin 0) D.host.E => (_root_.I195MixedCoordinates_5a743adb4eaabe3d936622f8.source d) T ψ v.μ v.𝓕 f (rat x) w) =

@@ -313,7 +313,7 @@ theorem monomial_smul_mem (hM : IsMultigrading ι M piece) (d : (Σ k, ι k) →
     intro m x hx
     have e : (monomial (Finsupp.single v n + d) (1 : F) : MRing ι F) =
         (X v : MRing ι F) ^ n * monomial d (1 : F) := by
-      rw [X_pow_eq_monomial, monomial_mul, one_mul]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, one_mul]
     rw [e, mul_smul]
     have h := X_pow_smul_mem hM v n _ _ (ih m x hx)
     convert h using 2
@@ -405,7 +405,7 @@ theorem isPrime_of_forms_ordered {σ L : Type*} [AddCommMonoid L] [LinearOrder L
     (h : ∀ a b : MvPolynomial σ F, (∃ i, IsWeightedHomogeneous w a i) →
       (∃ j, IsWeightedHomogeneous w b j) → a * b ∈ q → a ∈ q ∨ b ∈ q) :
     q.IsPrime := by
-  letI := weightedGradedAlgebra F w
+  let := weightedGradedAlgebra F w
   have hH : q.IsHomogeneous (weightedHomogeneousSubmodule F w) := by
     intro i r hr
     have e : (DirectSum.decompose (weightedHomogeneousSubmodule F w) r i : MvPolynomial σ F) =
@@ -421,8 +421,8 @@ theorem isPrime_of_forms (q : Ideal (MRing ι F)) (hq : IsMultiHomogIdeal q) (hn
       (∃ j, IsWeightedHomogeneous (blockWeight ι) b j) → a * b ∈ q → a ∈ q ∨ b ∈ q) :
     q.IsPrime := by
   classical
-  letI : LinearOrder K := LinearOrder.lift' (Fintype.equivFin K) (Fintype.equivFin K).injective
-  haveI : WellFoundedLT K := Finite.to_wellFoundedLT
+  let : LinearOrder K := LinearOrder.lift' (Fintype.equivFin K) (Fintype.equivFin K).injective
+  have : WellFoundedLT K := Finite.to_wellFoundedLT
   have hw : ∀ d : (Σ k, ι k) →₀ ℕ, Finsupp.weight (fun v => toLex (blockWeight ι v)) d =
       toLex (Finsupp.weight (blockWeight ι) d) := by
     intro d
@@ -502,8 +502,8 @@ theorem exists_chain [Module.Finite (MRing ι F) M] (hM : IsMultigrading ι M pi
           N j.succ = N j.castSucc ⊔ Submodule.span (MRing ι F) {x j} ∧
           (q j).IsPrime ∧ IsMultiHomogIdeal (q j) ∧
           ∀ s : MRing ι F, s • x j ∈ N j.castSucc ↔ s ∈ q j := by
-  haveI : IsNoetherian (MRing ι F) M := inferInstance
-  haveI : WellFoundedGT (Submodule (MRing ι F) M) := isNoetherian_iff'.mp inferInstance
+  have : IsNoetherian (MRing ι F) M := inferInstance
+  have : WellFoundedGT (Submodule (MRing ι F) M) := isNoetherian_iff.mp inferInstance
   intro N₀
   induction N₀ using WellFoundedGT.induction with
   | _ N₀ ih =>
@@ -533,11 +533,11 @@ end MultigradedFiltration
 theorem MultigradedFiltration.proof : MultigradedFiltration.Statement.{u, v} := by
   intro F _ K _ _ ι _ M _ _ _ _ _ piece hM
   classical
-  letI := hM.internal.chooseDecomposition
+  let := hM.internal.chooseDecomposition
   obtain ⟨n, N, x, c, q, h0, hl, hj⟩ :=
     MultigradedFiltration.exists_chain hM ⊥ MultigradedFiltration.isGradedSub_bot
   refine ⟨n, N, x, c, q, h0, hl, hj, fun W hW => ?_⟩
-  haveI : W.IsPrime := hW.1.1
+  have : W.IsPrime := hW.1.1
   convert GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.HilbertSamuel.card_eq_length_of_filtration N x q h0 hl
     (fun j => (hj j).2.1) (fun j => (hj j).2.2.1) (fun j => (hj j).2.2.2.2) W hW using 1
   rfl

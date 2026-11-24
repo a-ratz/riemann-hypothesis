@@ -224,8 +224,8 @@ lemma mem_graphOf (hM : M.OK) (g : SplitG M.L) (hg : M.split = some g) (Λ : Sub
 
 theorem isTermW_iff : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r k : ℕ) (P : LocNG.FPair H r), ∀ (S : Frames M.L r k) (c : Coord P S), ∀ (d : LocNG.Datum P) (n n' : V ≃ₗ[E] V) (Λ : Submodule M.L.O V), LocNG.IsTermOver P d ⟨Λ, fun b => n (P.A.f b), fun b => n' (P.B.f b), P.A.T, P.B.T⟩ ∧ n ∈ P.A.N ∧ n' ∈ P.B.N ∧ Λ = LocNG.img n (P.A.LamStd d.L) ∧ Λ = LocNG.img n' (P.B.LamStd d.L') ↔ S.IsTermW (c.dat d) (c.lat Λ) (c.grp n) (c.grp n') := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P S c d n n' Λ
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   obtain ⟨hth, hN, hN', -⟩ := GlobalTheory.HL.CoordUnip.transport M hM H r k P S c
   obtain ⟨-, iA, -, sA⟩ := _root_.GlobalTheory.HL.CoordInnerFst.transport M hM H r k P S c
   obtain ⟨-, iB, -, sB⟩ := _root_.GlobalTheory.HL.CoordInnerSnd.transport M hM H r k P S c

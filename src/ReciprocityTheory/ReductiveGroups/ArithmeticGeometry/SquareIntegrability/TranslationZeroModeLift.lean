@@ -99,7 +99,7 @@ theorem Uh_add (X : PT E) (q : ℕ) {a b : Vsp X.dim} (ha : a ∈ X.L) (hb : b �
       ((Real.cos (Real.pi * k) : ℝ) : ℂ) ^ q := by
     have : -(q * Real.pi * (2 * (k : ℂ) * Complex.I)) / 2 = q * (-((Real.pi * k : ℝ) : ℂ) * Complex.I) := by
       push_cast; ring
-    rw [this, Complex.exp_nat_mul, Complex.exp_mul_I]
+    rw [this, exp_natCast_mul, Complex.exp_mul_I]
     congr 1
     rw [Complex.cos_neg, Complex.sin_neg, ← Complex.ofReal_cos, ← Complex.ofReal_sin, hsin]
     simp

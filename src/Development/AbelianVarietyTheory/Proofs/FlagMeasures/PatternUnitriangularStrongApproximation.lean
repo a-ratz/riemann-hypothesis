@@ -85,7 +85,7 @@ variable {R : Type} [CommRing R]
 
 theorem det_eq_one {m : ℕ} (I : Fin m → Fin m → Prop) (hI : ∀ i j, I i j → i < j)
     (s : Matrix (Fin m) (Fin m) R) (hs : ∀ i j, ¬ I i j → s i j = if i = j then 1 else 0) : s.det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [Matrix.det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     rw [hs i i (fun h => lt_irrefl i (hI i i h))]
     simp
@@ -113,9 +113,9 @@ theorem GlobalTheory.HL.pattern_strong_approx : ∀ {F E : Type} [Field F] [Numb
   have hcl : ∀ p, ∃ a : ((A.loc p).Fp)ˣ, (IsIntM (A.L p) (s p) → a = 1) ∧
       ∀ i j, algebraMap (A.loc p).Fp (A.loc p).Ep (a : (A.loc p).Fp) * (s p)⁻¹ i j ∈ (A.L p).O := by
     intro p
-    haveI := (A.loc p).lf
-    haveI : Module.Free (A.loc p).Fp (A.loc p).Ep := (A.loc p).free
-    haveI : Module.Finite (A.loc p).Fp (A.loc p).Ep := Module.finite_of_finrank_eq_succ (A.loc p).rank
+    have := (A.loc p).lf
+    have : Module.Free (A.loc p).Fp (A.loc p).Ep := (A.loc p).free
+    have : Module.Finite (A.loc p).Fp (A.loc p).Ep := Module.finite_of_finrank_eq_succ (A.loc p).rank
     by_cases h : IsIntM (A.L p) (s p)
     · refine ⟨1, fun _ => rfl, fun i j => ?_⟩
       rw [Units.val_one, map_one, one_mul, hinv p]
@@ -129,7 +129,7 @@ theorem GlobalTheory.HL.pattern_strong_approx : ∀ {F E : Type} [Field F] [Numb
     apply (hc.union hsint).subset
     intro p hp
     by_contra hno
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hno
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hno
     obtain ⟨⟨u, hu⟩, hint⟩ := hno
     exact hp ⟨u, by simp [d, hc'1 p hint, hu]⟩
   have hap := (_root_.GlobalTheory.HL.StrongApprox.strong_approx_additive A d hd).2.1
@@ -148,10 +148,10 @@ theorem GlobalTheory.HL.pattern_strong_approx : ∀ {F E : Type} [Field F] [Numb
       rw [← he]
       show (A.loc p).ιE (t k l) - s p k l = (A.loc p).ιE (x k l) - s p k l
       rw [ht]
-      simp only [hkl, if_true]
+      simp only [hkl, ite_true]
     · refine ⟨0, (A.L p).O.zero_mem, ?_⟩
       rw [Matrix.sub_apply, Matrix.map_apply, hs p k l hkl, mul_zero]
-      simp only [ht, hkl, if_false]
+      simp only [ht, hkl, ite_false]
       split_ifs <;> simp
   choose o ho hoeq using hD
   have hunit : (s p)⁻¹ * s p = 1 :=

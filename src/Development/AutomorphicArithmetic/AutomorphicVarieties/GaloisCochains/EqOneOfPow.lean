@@ -125,9 +125,9 @@ theorem UpperTheory.V.GC.cl :
   let Uc : ClosedSubgroup (G F Ω) := ⟨U, U.isClosed_of_isOpen hUo⟩
   set E : IntermediateField F Ω := IntermediateField.fixedField (Uc : Subgroup (G F Ω)) with hE
   have hEU : E.fixingSubgroup = U := InfiniteGalois.fixingSubgroup_fixedField Uc
-  haveI : FiniteDimensional F E := (InfiniteGalois.isOpen_iff_finite E).1 (by rw [hEU]; exact hUo)
-  haveI : NumberField E := inferInstance
-  haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
+  have : FiniteDimensional F E := (InfiniteGalois.isOpen_iff_finite E).1 (by rw [hEU]; exact hUo)
+  have : NumberField E := inferInstance
+  have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
   have hgal : UpperTheory.V.Base.galOf F E Ω = U := by
     rw [← hEU]
     ext σ
@@ -159,9 +159,9 @@ theorem UpperTheory.V.GC.cl :
     by_cases hPb : P = ⊥
     · have hall : ∀ y : Ω, y ∈ Av := by
         intro y
-        haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-        haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-        haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
+        have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+        have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+        have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
         have halg : IsAlgebraic ℤ y := by
           rw [IsFractionRing.isAlgebraic_iff ℤ ℚ Ω]
           exact Algebra.IsAlgebraic.isAlgebraic y
@@ -190,7 +190,7 @@ theorem UpperTheory.V.GC.cl :
         apply Subtype.ext
         simp [hτ1]
       rw [this, map_one]
-    · haveI : P.IsPrime := Ideal.comap_isPrime φ (IsLocalRing.maximalIdeal Av)
+    · have : P.IsPrime := Ideal.comap_isPrime φ (IsLocalRing.maximalIdeal Av)
       let v : HeightOneSpectrum (𝓞 F) := ⟨P, inferInstance, hPb⟩
       have hA : IsPlaceOver Av v := fun x => (hP x).symm
       by_cases hvS : v ∈ S
@@ -232,7 +232,7 @@ theorem UpperTheory.V.GC.cl :
             mul_inv_cancel_right]
           have h := hχI (u, true) s hsI
           simpa [UpperTheory.V.Fr.Frame.loc2] using h
-      · haveI := hL.g.normal
+      · have := hL.g.normal
         set n := K.index with hn
         have hK : τ ^ n ∈ K := K.pow_index_mem τ
         have hI : τ ^ n ∈ Ine Av := (Ine Av).pow_mem hτA n
@@ -273,7 +273,7 @@ theorem UpperTheory.V.GC.cl :
       apply j.injective
       simp only [AlgEquiv.mul_apply, AlgEquiv.one_apply]
       have := hj (σ x)
-      simp only [AlgEquiv.coe_toRingEquiv, RingEquiv.coe_toEquiv, AlgEquiv.coe_ringEquiv] at this hj
+      simp only [AlgEquiv.coe_toRingEquiv, RingEquiv.coe_toEquiv, AlgEquiv.coe_toRingEquiv] at this hj
       rw [this, hj, Complex.conj_conj]
     have : ψ σ = χ (f (σ * σ)) := by
       simp [ψ, pow_two]

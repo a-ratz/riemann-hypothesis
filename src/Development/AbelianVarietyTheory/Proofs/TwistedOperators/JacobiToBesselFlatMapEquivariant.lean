@@ -99,17 +99,17 @@ theorem embA_bx (B : BesL D σ) (h : GA D B.A) : mt B.V (embA B.d B.o h) ⬝ bx 
 
 theorem pX_bx (B : BesL D σ) (i : Fin σ) (k : Fin (σ + 1)) : (B.d.pX ⬝ bx B) i k = if k = Fin.castSucc i then 1 else 0 := by
   refine Fin.lastCases ?_ (fun j => ?_) k
-  · rw [mul_bx_last, Matrix.mulVec_mulVec, B.d.pX_j0, Matrix.zero_mulVec, if_neg (Fin.castSucc_lt_last i).ne']
+  · rw [mul_bx_last, Matrix.mulVec_mulVec, B.d.pX_j0, Matrix.zero_mulVec, ite_eq_right (Fin.castSucc_lt_last i).ne']
     rfl
   · rw [mul_bx_cs, B.d.pX_jX, Matrix.one_apply]
     by_cases h : i = j
     · subst h; simp
-    · rw [if_neg h, if_neg (fun e => h (Fin.castSucc_injective _ e).symm)]
+    · rw [ite_eq_right h, ite_eq_right (fun e => h (Fin.castSucc_injective _ e).symm)]
 
 theorem pX_bx_mul (B : BesL D σ) (U : Mx D (σ + 1) (σ + 1)) (i : Fin σ) (k : Fin (σ + 1)) :
     (B.d.pX ⬝ (bx B ⬝ U)) i k = U (Fin.castSucc i) k := by
   rw [← Matrix.mul_assoc, Matrix.mul_apply]
-  simp only [pX_bx, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [pX_bx, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem simpleSum_eq_upSum (B : BesL D σ) {n : GA D B.V} {U : Mx D (σ + 1) (σ + 1)} (e : mt B.V n ⬝ bx B = bx B ⬝ U) :
     simpleSum B.d (vecB B.o B.ζ) n = upSum U := by
@@ -289,8 +289,8 @@ theorem flFB_om (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacL D (σ + 1)
   have hx0 := rat_bxRat B
   set x := bxRat B
   obtain ⟨k1, k2, k3⟩ := GlobalTheory.UnitU.topology D (σ + 1)
-  haveI : BorelSpace (UX D (σ + 1)) := ⟨rfl⟩
-  haveI : SFinite s.vU.ν := sFinite_of_haar k1 k2 _ s.vU.unit.1
+  have : BorelSpace (UX D (σ + 1)) := ⟨rfl⟩
+  have : SFinite s.vU.ν := sFinite_of_haar k1 k2 _ s.vU.unit.1
   have hstd := s.weil.std
   set p : GA D J.W × GA D B.V := (J.d.emb0 g, embA B.d B.o h) with hp
   let F : (WO J.W B.V → ℂ) → UX D (σ + 1) → WO J.W₀ B.V₀ → ℂ := fun Φ u w =>
@@ -304,7 +304,7 @@ theorem flFB_om (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacL D (σ + 1)
     have e := evalAt_eq ψ σ J B s om₁ hom₁ Ψ hΨ g 1 (one_mem _) h (bx B ⬝ u.1.1)
     rw [one_mul, ← map_inv, ← Matrix.mul_assoc, embA_bx] at e
     rw [hF, hF, map_smul, ← e]
-  have hv : Continuous (fun u : UX D (σ + 1) => u.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hv : Continuous (fun u : UX D (σ + 1) => u.1.1) := Units.continuous_val.comp continuous_subtypeVal
   have hc : ∀ q, Continuous fun r : UX D (σ + 1) × WO J.W₀ B.V₀ => F (s.om q Ψ) r.1 r.2 := fun q => by
     have c := (GlobalTheory.MixCont.mixed_coords_continuous D ψ J.W J.W₀ B.V B.V₀ _ _ J.d B.d s.vS s.vT _ _ s.om s.weil Ψ hΨ).2
     have c2 : Continuous fun r : UX D (σ + 1) × WO J.W₀ B.V₀ =>

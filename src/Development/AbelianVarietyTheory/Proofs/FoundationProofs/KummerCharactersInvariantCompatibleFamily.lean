@@ -194,7 +194,7 @@ theorem GlobalTheory.KZ.H3.uhp_root : ∀ (h : ℂ → ℂ) (m : ℕ), 0 < m →
   have hc0 : cen 0 ∈ Hs := closedBall_sub 0 (Metric.mem_closedBall_self (rad_pos 0).le)
   obtain ⟨k0, hk0⟩ := hord (cen 0) hc0
   have hnt : ¬ ∀ᶠ z in nhds (cen 0), h z = 0 := by
-    rw [← analyticOrderAt_eq_top, hk0]; exact ENat.coe_ne_top _
+    rw [← analyticOrderAt_eq_top, hk0]; exact ENat.natCast_ne_top _
   obtain ⟨z0, hz0h, hz0D⟩ := ((Filter.not_eventually.1 hnt).and_eventually
     (Metric.ball_mem_nhds (cen 0) (rad_pos 0))).exists
   obtain ⟨w0, hw0⟩ := IsAlgClosed.exists_pow_nat_eq (h z0) hm
@@ -232,12 +232,12 @@ theorem GlobalTheory.KZ.H3.uhp_root : ∀ (h : ℂ → ℂ) (m : ℕ), 0 < m →
     have hev : R =ᶠ[nhds z] r' (N z hz) := by
       filter_upwards [Metric.isOpen_ball.mem_nhds hzk] with w hw
       have hwH : w ∈ Hs := closedBall_sub _ (Metric.ball_subset_closedBall hw)
-      simp only [R, dif_pos hwH]
+      simp only [R, dite_eq_left hwH]
       exact agree _ _ w (hN w hwH) hw
     exact (((hr'd _).differentiableAt (Metric.isOpen_ball.mem_nhds hzk)).congr_of_eventuallyEq
       hev).differentiableWithinAt
   · intro z hz
-    simp only [R, dif_pos hz]
+    simp only [R, dite_eq_left hz]
     exact hr'p _ z (hN z hz)
 end -- clump:auto
 end -- clump:auto
@@ -405,7 +405,7 @@ namespace GlobalTheory.KZ.H3
 theorem exp_val_natCast (m k : ℕ) (hm : 0 < m) :
     Complex.exp (2 * Real.pi * Complex.I * (((k : ZMod m).val : ℕ) : ℂ) / (m : ℂ)) =
     Complex.exp (2 * Real.pi * Complex.I * (k : ℂ) / (m : ℂ)) := by
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   rw [ZMod.val_natCast]
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
   have hk : 2 * Real.pi * Complex.I * (k : ℂ) / (m : ℂ) =
@@ -456,7 +456,7 @@ theorem kum_of_isRoot : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : Ω →
     if h : δ ∈ CongruenceSubgroup.Gamma M then ((key δ h).choose : ZMod (l ^ n)) else 0
   refine ⟨χ, f, a, b, M, hM, hx, ⟨ha, hb, hb0, hab0⟩, fun δ hδ z hz => ?_⟩
   have hc : ((l : ℂ) ^ n) = ((l ^ n : ℕ) : ℂ) := by push_cast; rfl
-  simp only [χ, dif_pos hδ]
+  simp only [χ, dite_eq_left hδ]
   rw [hc, exp_val_natCast (l ^ n) _ hm]
   exact (key δ hδ).choose_spec z hz
 
@@ -507,7 +507,7 @@ namespace GlobalTheory.KZ.H3
 theorem exp_pow_reduce (l n v : ℕ) (hl : l ≠ 0) :
     Complex.exp (2 * Real.pi * Complex.I * (v : ℂ) / ((l : ℂ) ^ (n + 1))) ^ l =
       Complex.exp (2 * Real.pi * Complex.I * ((v % l ^ n : ℕ) : ℂ) / ((l : ℂ) ^ n)) := by
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have hl' : (l : ℂ) ≠ 0 := by exact_mod_cast hl
   have hv : (v : ℂ) = ((v % l ^ n : ℕ) : ℂ) + (l : ℂ) ^ n * ((v / l ^ n : ℕ) : ℂ) := by
     exact_mod_cast (Nat.mod_add_div v (l ^ n)).symm
@@ -522,8 +522,8 @@ theorem kum_succ_reduce : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : Ω �
       Kum X l n x (fun δ => ZMod.castHom (pow_dvd_pow l (Nat.le_succ n)) (ZMod (l ^ n)) (χ δ)) := by
   intro Ω _ _ ε X l _ n x χ ⟨f, a, b, M, hM, hx, ⟨ha, hb, hb0, hab⟩, hrel⟩
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : NeZero (l ^ (n + 1)) := ⟨pow_ne_zero _ hl0⟩
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl0⟩
+  have : NeZero (l ^ (n + 1)) := ⟨pow_ne_zero _ hl0⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl0⟩
   refine ⟨f, fun z => a z ^ l, fun z => b z ^ l, M, hM, ?_, ⟨ha.pow l, hb.pow l, ?_, ?_⟩, ?_⟩
   · have h := AdicCompletion.transitionMap_comp_eval_apply (idl l) (X.Kl l) (Nat.le_succ n) x
     change x.val n = _
@@ -622,7 +622,7 @@ theorem kum_hom : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : Ω →+* ℂ
   obtain ⟨f, a, b, M, hM, -, hr, hrel⟩ := hK
   refine ⟨M, hM, fun δ hδ δ' hδ' => ?_⟩
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  haveI : NeZero (l ^ n) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   set E : ZMod (l ^ n) → ℂ := fun v => Complex.exp (2 * Real.pi * Complex.I * (v.val : ℂ) / ((l : ℂ) ^ n)) with hE
   obtain ⟨hda, hdb, hb0, -⟩ := id hr
   set g := ofSL δ
@@ -819,12 +819,12 @@ theorem kum_near : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : Ω →+* �
     · exact sub_eq_zero.1 h
     · exact absurd h hne
 
-  haveI : NeZero (l ^ n) := ⟨hm.ne'⟩
+  have : NeZero (l ^ n) := ⟨hm.ne'⟩
   have hprim := Complex.isPrimitiveRoot_exp (l ^ n) hm.ne'
   have ex : ∀ v : ℕ, Complex.exp (2 * Real.pi * Complex.I * (v : ℂ) / ((l : ℂ) ^ n)) =
       (Complex.exp (2 * Real.pi * Complex.I / ((l ^ n : ℕ) : ℂ))) ^ v := by
     intro v
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     push_cast
     ring

@@ -120,7 +120,7 @@ theorem mfact_mul_coeff_mvExp_linear [Fintype σ] (y : σ → C) (m : σ →₀ 
     rw [Finsupp.degree_apply]; rfl
   rw [mvExp_coeff_apply, hL, Finset.sum_eq_single m.degree]
   · rw [← MvPolynomial.coe_pow, MvPolynomial.coeff_coe,
-      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, if_pos hdeg]
+      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, ite_eq_left hdeg]
     have hs : mfact m * m.multinomial = m.degree.factorial := by
       rw [Finsupp.multinomial_eq, Finsupp.degree_apply, ← Nat.multinomial_spec]; rfl
     have hs' : (mfact m : C) * (m.multinomial : C) = (m.degree.factorial : C) := by exact_mod_cast hs
@@ -129,7 +129,7 @@ theorem mfact_mul_coeff_mvExp_linear [Fintype σ] (y : σ → C) (m : σ →₀ 
     rfl
   · intro k _ hk
     rw [← MvPolynomial.coe_pow, MvPolynomial.coeff_coe,
-      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, if_neg (by rw [hdeg]; exact Ne.symm hk), zero_div]
+      MvPolynomial.coeff_linearCombination_X_pow_of_fintype, ite_eq_right (by rw [hdeg]; exact Ne.symm hk), zero_div]
   · intro h
     exact absurd (Finset.self_mem_range_succ _) h
 
@@ -269,7 +269,7 @@ theorem eq_mvExp_of_additive : ∀ (C : Type) [Field C] [CharZero C] (κ : Type)
         Finset.sum_range_succ', Finset.mul_sum, add_mul, Finset.sum_mul]
       have h0 : MvPowerSeries.coeff (m + Finsupp.single w 1)
           ((∑ x, (coeff (Finsupp.single x 1) U) • (X x : MvPowerSeries κ C)) ^ 0) = 0 := by
-        rw [pow_zero, coeff_one, if_neg]
+        rw [pow_zero, coeff_one, ite_eq_right]
         intro h
         have := DFunLike.congr_fun h w
         simp at this
@@ -336,7 +336,7 @@ theorem subst_ex_eq_mvExp (hY : RLaw Y V) (χ : MvPowerSeries κ C) (h0 : consta
     (hχ : subst (addP Y (gp C κ (0 : Fin 2)) (gp C κ 1)) χ =
       subst (gp C κ (0 : Fin 2)) χ * subst (gp C κ (1 : Fin 2)) χ) :
     subst Y.ex χ = mvExp (∑ i : κ, coeff (Finsupp.single i 1) χ • (X i : MvPowerSeries κ C)) := by
-  haveI := hY.charZero
+  have := hY.charZero
   have hex := hasSubst_of_constantCoeff_zero hY.exc
   have hlg := hasSubst_of_constantCoeff_zero (lg_const hY)
   have hlin : ∀ i, coeff (Finsupp.single i 1) χ = coeff (Finsupp.single i 1) (subst Y.ex χ) := by
@@ -384,7 +384,7 @@ namespace GlobalTheory.RowLaw
 open MvPowerSeries GlobalTheory.RowLaw.GermRing GlobalTheory.RowLaw.CharGerm in
 theorem upG_mvExp_char_mem_intGerm : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I : Fin 2 → Type) [∀ g, Fintype (I g)] (κ : Type) [Fintype κ] (X : RawChart C d I κ), RLaw X V → ∀ (H : ∀ g, X.CartHyp V g) (χ : MvPowerSeries κ C), IntS V χ → MvPowerSeries.constantCoeff χ = 1 → MvPowerSeries.subst (addP X (gp C κ (0 : Fin 2)) (gp C κ 1)) χ = MvPowerSeries.subst (gp C κ (0 : Fin 2)) χ * MvPowerSeries.subst (gp C κ (1 : Fin 2)) χ → ∀ (g : Fin 2) (S : ∀ g, Sys (RawChart.cart (H g))) (t : ∀ g, I g → MvPowerSeries (I g) C), (∀ g, (S g).IsT (t g)) → upG g (mvExp (∑ x : I g, (∑ i, MvPowerSeries.coeff (Finsupp.single i 1) χ * X.u g x i) • (MvPowerSeries.X x : MvPowerSeries (I g) C))) ∈ IntGerm V t := by
   intro C _ V d _ I _ κ _ Y hY H χ hi h0 hχ g S t ht
-  haveI := hY.charZero
+  have := hY.charZero
   rw [intGerm_eq_expInt C V d I κ Y hY H S t ht]
   have hg : ∀ x, constantCoeff (gp C κ g x) = 0 := fun x => constantCoeff_X _
   refine ⟨subst (gp C κ g) χ, intS_subst hg (fun _ => intS_X _) hi, ?_⟩

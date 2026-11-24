@@ -181,7 +181,7 @@ theorem dZb_sub {f g : ℂ → ℂ} {w : ℂ} (hf : DifferentiableAt ℝ f w) (h
     NF.dZb (fun x => f x - g x) w = NF.dZb f w - NF.dZb g w := by
   simp only [NF.dZb]
   rw [show (fun x => f x - g x) = f - g from rfl, (hf.hasFDerivAt.sub hg.hasFDerivAt).fderiv]
-  simp only [ContinuousLinearMap.sub_apply]
+  simp only [sub_apply]
   ring
 
 theorem dzQ_one (P : M.Par) (hTT : 0 ≤ P.TT) : dzQ P (1 : MA.SmQ P.r P.TT) = 0 := by
@@ -555,7 +555,7 @@ theorem exists_br {ζ : ℂ} (hζ : ζ ≠ 0) : ∃ s, ζ ∈ brD s := by
   by_cases h : ζ ∈ Complex.slitPlane
   · exact ⟨true, by simpa [brD] using h⟩
   · refine ⟨false, ?_⟩
-    simp only [brD, Bool.false_eq_true, ↓reduceIte, Set.mem_setOf_eq]
+    simp only [brD, Bool.false_eq_true, ↓reduceIte, mem_ofPred_eq]
     rw [Complex.mem_slitPlane_iff] at h ⊢
     push_neg at h
     left
@@ -567,7 +567,7 @@ theorem exists_br {ζ : ℂ} (hζ : ζ ≠ 0) : ∃ s, ζ ∈ brD s := by
 
 theorem hasDerivAt_br (s : Bool) {ζ : ℂ} (hs : ζ ∈ brD s) : HasDerivAt (br s) ζ⁻¹ ζ := by
   cases s
-  · simp only [brD, Bool.false_eq_true, ↓reduceIte, Set.mem_setOf_eq] at hs
+  · simp only [brD, Bool.false_eq_true, ↓reduceIte, mem_ofPred_eq] at hs
     have e1 : br false = fun z : ℂ => Complex.log (-z) + Real.pi * I := by
       funext z
       simp [br]
@@ -673,7 +673,7 @@ theorem fderiv_uu_apply (hTT : 0 ≤ TT) (hα : ContDiffOn ℝ ((⊤ : ℕ∞) :
   rw [hev.fderiv_eq, (hasFDerivAt_ug hTT hα hcurv s hs hζ).fderiv]
   have hb : α ζ * ζ * (ζ⁻¹ * v) = α ζ * v := by field_simp
   simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.mul_apply',
-    ContinuousLinearMap.smul_apply, Complex.ofRealCLM_apply, om_apply, bet, exp_br s hne,
+    smul_apply, Complex.ofRealCLM_apply, om_apply, bet, exp_br s hne,
     smul_eq_mul, hu, hb]
 
 theorem wZ_uu (hTT : 0 ≤ TT) (hα : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) α (An TT))
@@ -896,16 +896,16 @@ theorem radial_constant_of_point_and_line (hPt : GTKPt) (hLine : GTKLine) : GTRC
     funext q
     simp only [rawR, Pi.smul_apply, smul_eq_mul]
     rw [hQ.2.2.2 f Φ q, GTK.hs_comp_sum]
-    simp only [hinQ, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hinQ, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring
   symm
   refine (Finset.sum_eq_single ρ ?_ ?_).trans ?_
   · intro b _ hb
-    rw [if_neg (Ne.symm hb)]
+    rw [ite_eq_right (Ne.symm hb)]
     rfl
   · intro hρ
     exact absurd (Finset.mem_univ ρ) hρ
-  · rw [if_pos rfl, hR, toSm_smul_hermitian_curvature]
+  · rw [ite_eq_left rfl, hR, toSm_smul_hermitian_curvature]
     rfl
 
 end
@@ -948,7 +948,7 @@ theorem frameG_exists {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k
     intro i hi
     rw [ha, Pi.smul_apply, inWb_bvec_wI _ i hi, smul_zero]
   have haa : herm (Hpk k r) a a = ((-(Tz k r z) : ℝ) : ℂ) := by
-    rw [ha, herm_smul_left', herm_smul_right', herm_wI, if_pos rfl, if_pos rfl]
+    rw [ha, herm_smul_left', herm_smul_right', herm_wI, ite_eq_left rfl, ite_eq_left rfl]
     have : star (s : ℂ) = s := Complex.conj_ofReal s
     rw [this]
     push_cast
@@ -1097,8 +1097,8 @@ theorem first_weight_half_integral {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
   rw [hπ1] at hop
   set A : Wp →L[ℂ] Wp := ∑ c, ((θ c : ℂ) * Complex.I) • ecOp π (unitB (Hpk P.k P.r) Bs c c) with hA
   have hAv : A v = ((2 * Real.pi : ℂ) * Complex.I * ν c0) • v := by
-    rw [hA, ContinuousLinearMap.sum_apply, Finset.sum_eq_single c0]
-    · rw [ContinuousLinearMap.smul_apply]
+    rw [hA, sum_apply, Finset.sum_eq_single c0]
+    · rw [smul_apply]
       have h1 : ecOp π (unitB (Hpk P.k P.r) Bs c0 c0) v = ν c0 • v := hHW.1 c0
       rw [h1, smul_smul]
       simp [hθ]
@@ -1112,7 +1112,7 @@ theorem first_weight_half_integral {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
     have : (1 - Complex.exp ((2 * Real.pi : ℂ) * Complex.I * ν c0)) • v = 0 := by
       rw [sub_smul, one_smul]
       have := hexp
-      simp only [ContinuousLinearMap.one_apply] at this
+      simp only [one_apply_eq_self] at this
       rw [← this, sub_self]
     rcases smul_eq_zero.1 this with h | h
     · exact hne1 (sub_eq_zero.1 h).symm
@@ -1465,7 +1465,7 @@ theorem coeff_all : ∀ {m : ℕ} (B : Fin m → A),
     specialize ih (fun l => B l.succ)
     have hdeg : (List.ofFn fun l : Fin m => (X + C (B l.succ) : A[X])).prod.natDegree ≤ m := by
       have := natDegree_prodP (fun _ : Fin m => True) (fun l => B l.succ)
-      simp only [if_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one] at this
+      simp only [ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul, mul_one] at this
       simpa [prodP, fac] using this
     rw [List.ofFn_succ, List.prod_cons]
     set Q := (List.ofFn fun l : Fin m => (X + C (B l.succ) : A[X])).prod with hQ
@@ -1533,9 +1533,9 @@ theorem quadratic_top_algebra_holds : QTopAlg := by
         congr 1
         congr 1
         funext l
-        rw [if_pos (show lin 1 l from rfl)]
+        rw [ite_eq_left (show lin 1 l from rfl)]
       rw [e1, (coeff_all (B 1)).2 hn]
-      simp only [B, Equiv.Perm.one_apply, if_true]
+      simp only [B, Equiv.Perm.one_apply, ite_true]
 
       rw [Finset.sum_add_distrib, add_comm, ← map_sum]
       congr 1
@@ -1688,7 +1688,7 @@ theorem gTRTopAct_of_cut (hQ : QTop) : GTRTopAct := by
       ∀ j ∈ Finset.range (P.k + 2), ((c j Φ : RadSp P.k P.r z z' π π') : Fn P.k P.r (Wq →L[ℂ] Wp)) x.1 x.2 = a j := by
     intro Φ x hx a ha j hj
     have hj' : j < P.k + 2 := Finset.mem_range.1 hj
-    have e1 : c j = ∑ i : Fin (P.k + 2), W ⟨j, hj'⟩ i • X.t ((i : ℕ) : ℂ) 0 0 := dif_pos hj'
+    have e1 : c j = ∑ i : Fin (P.k + 2), W ⟨j, hj'⟩ i • X.t ((i : ℕ) : ℂ) 0 0 := dite_eq_left hj'
     rw [e1, LinearMap.sum_apply, Submodule.coe_sum, Finset.sum_apply, Finset.sum_apply]
     simp only [LinearMap.smul_apply, Submodule.coe_smul, Pi.smul_apply]
     exact interp (P.k + 2) W hW (fun Y => ((X.t Y 0 0 Φ : RadSp P.k P.r z z' π π') : Fn P.k P.r (Wq →L[ℂ] Wp)) x.1 x.2)

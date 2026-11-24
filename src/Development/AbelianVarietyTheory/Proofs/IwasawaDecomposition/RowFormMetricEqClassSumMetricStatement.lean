@@ -128,7 +128,7 @@ theorem pairB_conj_cls_eq : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (hX :
   obtain ⟨g, rfl⟩ := ((rowS I a).cls_eq_iff _ _).1 h
   have hF := (F.2 d').2 g
   have hG := (G.2 d').2 g
-  letI := (rowS I a).actD
+  let := (rowS I a).actD
   erw [hF, hG]
   rw [map_conj_smul, LinearMap.map_smul, LinearMap.map_smul, LinearMap.smul_apply]
   rw [pairB_rhoC hX, smul_eq_mul, smul_eq_mul, ← mul_assoc, mul_comm (B.embLL _)]

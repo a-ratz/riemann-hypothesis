@@ -134,7 +134,7 @@ theorem UpperTheory.Reformulated.B.DiagonalizeTwoByTwo.diagE :
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' M) α hα v fun i =>
       ⟨Module.End.mem_eigenspace_iff.2 (by simpa using hv i), hv0 i⟩
   have hu : IsUnit (Matrix.of v).transpose :=
-    Matrix.linearIndependent_cols_iff_isUnit.1 hli
+    Matrix.linearIndependent_col_iff_isUnit.1 hli
   refine ⟨hu.unit, ?_⟩
   rw [IsUnit.unit_spec]
   ext j i
@@ -222,13 +222,13 @@ private lemma minor_neE {κ : Type} [Field κ] {n : ℕ} (Y : Matrix (Fin n) (Fi
     have h1 := congrFun hv' ⟨i, hi⟩
     simp only [mulVec, dotProduct, submatrix_apply, Pi.zero_apply] at h1 ⊢
     refine Eq.trans ?_ h1
-    rw [← Finset.sum_subset (Finset.subset_univ S) (by intro x _ hx; rw [dif_neg hx, mul_zero]),
+    rw [← Finset.sum_subset (Finset.subset_univ S) (by intro x _ hx; rw [dite_eq_right hx, mul_zero]),
       ← Finset.sum_coe_sort S]
-    exact Finset.sum_congr rfl fun x _ => by rw [dif_pos x.2]) (by intro i hi; exact dif_neg hi)
+    exact Finset.sum_congr rfl fun x _ => by rw [dite_eq_left x.2]) (by intro i hi; exact dite_eq_right hi)
   apply hv
   ext ⟨j, hj⟩
   have h3 := congrFun this j
-  simp only [dif_pos hj] at h3
+  simp only [dite_eq_left hj] at h3
   exact h3
 
 private lemma minor_blkE {κ : Type} [Field κ] (M : Matrix (Fin 2) (Fin 2) κ) (w : κ) (h0 : M 0 0 ≠ 0) (h1 : M 1 1 ≠ 0)
@@ -359,7 +359,7 @@ private lemma strong_of {G κ : Type} [Group G] [TopologicalSpace G] [IsTopologi
     (r : G →* GL (Fin m) κ) (hc : LinClosed (gm r))
     (hirr : ∀ U : Subgroup G, IsOpen (U : Set G) → MatIrr (U ⊓ G') (gm r)) :
     StrongIrr (r.comp (V ⊓ G').subtype) := by
-  refine strongIrrOfOpen _ κ m _ (fun f => (hc f).preimage continuous_subtype_val) ?_
+  refine strongIrrOfOpen _ κ m _ (fun f => (hc f).preimage continuous_subtypeVal) ?_
   intro U hU W hW
   obtain ⟨O, hO, hOU⟩ := isOpen_induced_iff.1 hU
   have h1 : (1 : G) ∈ O := by
@@ -490,7 +490,7 @@ private lemma charpoly_flag {H k : Type} [Group H] [CommRing k] {n : ℕ} (r : H
     (W.mat r s).charpoly = ∏ i, (X - C ((κ i s : kˣ) : k)) := by
   obtain ⟨g, hg⟩ := h
   obtain ⟨h1, h2⟩ := hg s
-  have h3 := Matrix.charpoly_of_upperTriangular ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
+  have h3 := charpoly_of_isUpperTriangular ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
     (fun i j hij => h1 i j hij)
   simp only [h2] at h3
   rw [← h3, Units.val_mul, Units.val_mul, Matrix.coe_units_inv, Matrix.charpoly_units_conj]
@@ -501,7 +501,7 @@ end UpperTheory.V.Pr
 theorem UpperTheory.V.Pr.nice_specialization_twist_satisfies_third_condition :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (n : ℕ) (T : UpperTheory.V.Pr.Setup F n) (x : Ideal T.S.A) (L : T.S.Loc x) (y : UpperTheory.V.W.Point T.r) (j : L.R →ₐ[O] y.A), IsLocalHom j → UpperTheory.V.Pr.Nice L.ρ (RingHom.ker j) → UpperTheory.V.W.mat y.ρ = T.K.tw (L.ρ.map (j : L.R →+* y.A)) → y.ψ = T.K.twψ (L.ρ.map (j : L.R →+* y.A)) → y.N3 := by
   intro l _ O _ _ _ _ _ F n T x L y j hj hnice hρ hψ U hU hne
-  haveI : CompactSpace T.G.G₀ :=
+  have : CompactSpace T.G.G₀ :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ T.G.η_open).isCompact
   let r : T.G.G₀ →* GL (Fin n) y.Fb := W.pushRep (algebraMap y.Fr y.Fb) y.ρF
   have hr : ∀ g, gm r g = (W.mat y.ρF g).map (algebraMap y.Fr y.Fb) := fun g => rfl

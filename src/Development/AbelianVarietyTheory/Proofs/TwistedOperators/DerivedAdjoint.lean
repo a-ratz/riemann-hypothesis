@@ -115,7 +115,7 @@ theorem derived_adjoint : ∀ (p q : ℕ) (T : GrpData p q) (πU : URep T) (M : 
       exact inner_map T πU _ (j x) (j y)
     rw [hconst] at h1
     have h0 := h1.unique (hasDerivAt_const (0 : ℝ) (inner ℂ (j x) (j y)))
-    simp only [zero_smul, T.expt_zero, map_one, ContinuousLinearMap.one_apply] at h0
+    simp only [zero_smul, T.expt_zero, map_one, one_apply_eq_self] at h0
     linear_combination h0
 
   have adj_of_mem : ∀ Y ∈ upq p q, adjZ Y = -Y := by

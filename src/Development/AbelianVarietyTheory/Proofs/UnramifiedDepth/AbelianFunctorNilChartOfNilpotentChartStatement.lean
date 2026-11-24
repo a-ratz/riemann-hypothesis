@@ -103,23 +103,23 @@ theorem bxChart_of_nilChart : ∀ (R₀ : Type) [CommRing R₀] (G : Over (Spec 
     fun R S s π σ hπσ hσ hπ x hx => ?_, fun R s a b ha hb' => ?_⟩, fun f α A hr hA R s a ha => ?_⟩
   · apply (hb R).1
     rw [hY, h0]
-    letI := s.1.toRingHom.toAlgebra
+    let := s.1.toRingHom.toAlgebra
     have : X' R s 0 = 1 := hX.zero R
     rw [this, map_one]
   · apply (hb R').1
     apply Over.OverMorphism.ext
     rw [hn, Over.comp_left, hYl, hYl]
-    letI := s.1.toRingHom.toAlgebra
-    letI := (f.comp s).1.toRingHom.toAlgebra
+    let := s.1.toRingHom.toAlgebra
+    let := (f.comp s).1.toRingHom.toAlgebra
     let f' : (R : Type) →ₐ[(O : Type)] (R' : Type) := ⟨f.1.toRingHom, fun _ => rfl⟩
     have := congrArg (fun z => z.left ≫ φ) (hX.nat R R' f' a ha)
     exact (Category.assoc _ _ _).symm.trans this
-  · letI := s.1.toRingHom.toAlgebra
+  · let := s.1.toRingHom.toAlgebra
     refine hX.inj R a b ha hb' ((hPb R s).1 ?_)
     exact (hY R s a).symm.trans ((congrArg (e R) hab).trans (hY R s b))
   · obtain ⟨z, hz⟩ := (hPb R s).2 (e R x)
-    letI := s.1.toRingHom.toAlgebra
-    letI := (π.comp s).1.toRingHom.toAlgebra
+    let := s.1.toRingHom.toAlgebra
+    let := (π.comp s).1.toRingHom.toAlgebra
     let ρ : (R : Type) →ₐ[(O : Type)] (S : Type) := ⟨π.1.toRingHom, fun _ => rfl⟩
     let σ' : (S : Type) →ₐ[(O : Type)] (R : Type) :=
       ⟨σ.1.toRingHom, fun r => congrArg (fun u : LHom O R => u.1 r) hσ⟩
@@ -136,12 +136,12 @@ theorem bxChart_of_nilChart : ∀ (R₀ : Type) [CommRing R₀] (G : Over (Spec 
     refine ⟨a, ha, (hb R).1 ?_⟩
     rw [hY, ← hz, hza]
   · apply (hb R).1
-    letI := s.1.toRingHom.toAlgebra
+    let := s.1.toRingHom.toAlgebra
     rw [hm, hY, hY, hY, ← map_mul]
     exact congrArg (P R s) (hX.law R a b ha hb')
   · apply (hb R).1
     apply Over.OverMorphism.ext
-    letI := s.1.toRingHom.toAlgebra
+    let := s.1.toRingHom.toAlgebra
     rw [← hA s (Y R s a) (X' R s a) (hYl R s a).symm, hYl]
     exact congrArg (fun z => z.left ≫ φ) (hr.2 R a ha)
 

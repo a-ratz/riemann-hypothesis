@@ -75,8 +75,8 @@ private theorem loc_bd (w : Pl E) {C : Set (GL (Fin n) (w.adicCompletion E))} (h
   have hc : Continuous (locHeight : GL (Fin n) (w.adicCompletion E) → ℝ) := by
     unfold locHeight
     refine continuous_const.max (NNReal.continuous_coe.comp (Continuous.finset_sup_apply (fun p _ => Continuous.max ?_ ?_)))
-    · exact (Units.continuous_val.matrix_elem _ _).nnnorm
-    · exact (Units.continuous_coe_inv.matrix_elem _ _).nnnorm
+    · exact (Units.continuous_val.matrix_elem _ _).nnNorm
+    · exact (Units.continuous_coe_inv.matrix_elem _ _).nnNorm
   obtain ⟨B, hB⟩ := (hC.image hc).bddAbove
   exact ⟨max 1 B, le_max_left _ _, fun g hg => (hB ⟨g, hg, rfl⟩).trans (le_max_right _ _)⟩
 
@@ -155,5 +155,5 @@ theorem UpperTheory.height_bounded_on_support_of_compact_test_functions :
     rw [hW, not_or] at hc'
     by_cases hq : w.under (𝓞 F) = q
     · simp [hq]
-    · simp only [ne_eq, hq, not_false_eq_true, if_true]
+    · simp only [ne_eq, hq, not_false_eq_true, ite_true]
       exact locHeight_eq_one_of_mem_integralGL (hx w hc'.1 hc'.2 hq)

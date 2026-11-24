@@ -114,7 +114,7 @@ theorem UpperTheory.Reformulated.B.Qh13.ec_field :
       (IntermediateField.subset_adjoin _ _ ⟨i, rfl⟩)
   have hc : IsClosed (K : Set (PadicAlgCl l)) :=
     haveI : FiniteDimensional ℚ_[l] K.toSubalgebra.toSubmodule := hK
-    K.toSubalgebra.toSubmodule.closed_of_finiteDimensional
+    K.toSubalgebra.toSubmodule.isClosed_of_finiteDimensional
   refine ⟨K, hK, fun x => ?_⟩
   exact (IsDedekindDomain.HeightOneSpectrum.denseRange_algebraMap L w).induction_on x
     (hc.preimage hj) hf
@@ -148,7 +148,7 @@ private theorem ec_intIff {l : ℕ} [Fact l.Prime] (x : PadicAlgCl l) : IsIntegr
 private theorem ec_le {L : Type} [Field L] [NumberField L] {l : ℕ} [Fact l.Prime] {w : W.Plc L} (j : W.Emb l w)
     (x : 𝒪[w.adicCompletion L]) : ‖j.1 (x : w.adicCompletion L)‖ ≤ 1 := by
   have hc : Continuous fun y : 𝒪[w.adicCompletion L] => ‖j.1 (y : w.adicCompletion L)‖ :=
-    (j.2.comp continuous_subtype_val).norm
+    (j.2.comp continuous_subtypeVal).norm
   obtain ⟨B, hB⟩ := (isCompact_range hc).bddAbove
   by_contra hx
   obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt B (not_le.1 hx)
@@ -159,7 +159,7 @@ private theorem ec_le {L : Type} [Field L] [NumberField L] {l : ℕ} [Fact l.Pri
 private theorem ec_lt {L : Type} [Field L] [NumberField L] {l : ℕ} [Fact l.Prime] {w : W.Plc L} (j : W.Emb l w)
     (x : 𝒪[w.adicCompletion L]) (hx : x ∈ maximalIdeal 𝒪[w.adicCompletion L]) :
     ‖j.1 (x : w.adicCompletion L)‖ < 1 := by
-  haveI : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have h1 : valuation (w.adicCompletion L) (x : w.adicCompletion L) < 1 :=
     Valuation.Integer.not_isUnit_iff_valuation_lt_one.1 hx
@@ -270,7 +270,7 @@ private theorem ofBasis {G : Type} [Group G] (I : Iwa G) (O Ω : Type) [CommRing
             cont_Nm := fun k => (hc k).imp fun c h y hy i j => by
               simpa only [hξ, σ.injective.eq_iff] using h y (.inl hy) (σ i) (σ j)
             continuous_torusCharacter := fun k => (hc k).imp fun c h t ht => by
-              simpa only [hχ, if_true] using h t (.inr ht) k0 k0
+              simpa only [hχ, ite_true] using h t (.inr ht) k0 k0
             central := fun t ht i j => by
               rw [hξ, hχ, hZ _ t.2 ht]
               simp only [σ.injective.eq_iff] }, ⟨b'.equivFun.symm, fun g x => ?_⟩, hχ⟩
@@ -303,8 +303,8 @@ theorem UpperTheory.V.Hi.wtRep :
       ∃ R : WtRep (iwS n S) c'.O ℂ, IsAlgWt ι lam R.ξ ∧ ∀ (t : (iwS n S).Tf) (y : ∀ v, Fin n → ((S v).adicCompletion L)ˣ), (∀ v, (t : GV n S) v = diagT _ (Fin n) (y v)) → (R.χ t : ℂ) = ι (∏ v, ∏ i, algPow (S v) (lowW lam i) (y v i : (S v).adicCompletion L)) := by
   intro L _ _ l _ n V _ S ι lam c
   classical
-  haveI : ∀ v, Finite (W.Emb l (S v)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
-  letI : ∀ v, Fintype (W.Emb l (S v)) := fun v => Fintype.ofFinite _
+  have : ∀ v, Finite (W.Emb l (S v)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
+  let : ∀ v, Fintype (W.Emb l (S v)) := fun v => Fintype.ofFinite _
   obtain ⟨c', hc, hc'⟩ : ∃ c' : Coef l, c.O ≤ c'.O ∧ ∀ e ∈ (Finset.univ : Finset (Emb l S)),
       ∀ x : 𝒪[(S e.1).adicCompletion L], e.2.1 (x : (S e.1).adicCompletion L) ∈ c'.O := by
     induction (Finset.univ : Finset (Emb l S)) using Finset.induction_on with
@@ -316,7 +316,7 @@ theorem UpperTheory.V.Hi.wtRep :
       rcases Finset.mem_insert.1 he' with rfl | he'
       exacts [h₂' x, h₂ (h₁' e' he' x)]
   refine ⟨c', hc, ?_⟩
-  letI : Algebra c'.O ℂ := (ι.toRingHom.comp (algebraMap c'.O (Qbar l))).toAlgebra
+  let : Algebra c'.O ℂ := (ι.toRingHom.comp (algebraMap c'.O (Qbar l))).toAlgebra
   have hinj : Function.Injective (algebraMap c'.O ℂ) := ι.injective.comp Subtype.val_injective
   let ψ : ∀ e : Emb l S, (S e.1).adicCompletion L →+* ℂ := fun e => ι.toRingHom.comp e.2.1
   let φ : ∀ e : Emb l S, 𝒪[(S e.1).adicCompletion L] →+* c'.O := fun e =>
@@ -376,22 +376,22 @@ theorem UpperTheory.V.Hi.wtRep :
     refine (Finset.prod_congr rfl fun e _ => h2 e).trans ?_
     rw [Finset.prod_mul_distrib, Fintype.prod_boole]
     by_cases hij : i = j
-    · rw [if_pos hij, if_pos (congrFun hij), one_mul]
-    · rw [if_neg hij, if_neg fun h => hij (funext h), zero_mul]
+    · rw [ite_eq_left hij, ite_eq_left (congrFun hij), one_mul]
+    · rw [ite_eq_right hij, ite_eq_right fun h => hij (funext h), zero_mul]
   have hPw : ∀ (g : GV n S) (a : V → Fin n → ℤ), (∀ v, Antitone (a v)) → (∀ v, g v = upow _ n (a v)) → ∀ i j,
       ∃ x, (A g k0 k0)⁻¹ * A g i j = algebraMap c'.O ℂ x ∧
         ((∃ e, ∑ s, a e.1 s * μ e (k0 e) s < ∑ s, a e.1 s * μ e (j e) s) → x ∈ maximalIdeal c'.O) := by
     intro g a ha hg i j
     by_cases hij : i = j
     swap
-    · exact ⟨0, by rw [hDiag g _ hg i j, if_neg hij, mul_zero, map_zero], fun _ => zero_mem _⟩
+    · exact ⟨0, by rw [hDiag g _ hg i j, ite_eq_right hij, mul_zero, map_zero], fun _ => zero_mem _⟩
     let p : ∀ v, 𝒪[(S v).adicCompletion L] := fun v =>
       ⟨unif ((S v).adicCompletion L), ((GlAx.unif_spec (k := (S v).adicCompletion L)).trans_lt uniformizer_lt_one).le⟩
     have hp : ∀ v, p v ∈ maximalIdeal _ ^ 1 := fun v => (GlAx.mem_pow 1 _).2 (by
       rw [Nat.cast_one, zpow_one]; exact GlAx.unif_spec.le)
     have hp0 : ∀ e : Emb l S, ψ e (p e.1) ≠ 0 := fun e => (_root_.map_ne_zero _).2 (Units.ne_zero _)
     refine ⟨∏ e, φ e (p e.1) ^ (∑ s, a e.1 s * μ e (j e) s - ∑ s, a e.1 s * μ e (k0 e) s).toNat, ?_, ?_⟩
-    · rw [hDiag g _ hg, hDiag g _ hg, if_pos rfl, if_pos hij, ← Finset.prod_inv_distrib, ← Finset.prod_mul_distrib, map_prod]
+    · rw [hDiag g _ hg, hDiag g _ hg, ite_eq_left rfl, ite_eq_left hij, ← Finset.prod_inv_distrib, ← Finset.prod_mul_distrib, map_prod]
       refine Finset.prod_congr rfl fun e _ => ?_
       have h1 : ∀ m : Fin n → ℤ, ∏ s, ψ e ((unif ((S e.1).adicCompletion L) ^ a e.1 s : _ˣ) : (S e.1).adicCompletion L) ^ m s =
           ψ e (p e.1) ^ ∑ s, a e.1 s * m s := fun m => by
@@ -425,7 +425,7 @@ theorem UpperTheory.V.Hi.wtRep :
       simp only [A, h2, h3, one_zpow, Finset.prod_const_one, Fintype.prod_boole, ← funext_iff])
     (fun x hx j hj => by
       choose y hy using fun v => hx v trivial
-      rw [hDiag x y (fun v => (hy v).symm), if_neg hj.symm])
+      rw [hDiag x y (fun v => (hy v).symm), ite_eq_right hj.symm])
     (fun i j hj => by
       obtain ⟨x, hx, hx'⟩ := hPw (iwS n S).z (fun _ s => (n : ℤ) - 1 - (s : ℕ)) (fun _ => GlAx.z_anti) (fun _ => rfl) i j
       obtain ⟨e, he⟩ := Function.ne_iff.1 hj
@@ -436,7 +436,7 @@ theorem UpperTheory.V.Hi.wtRep :
       exacts [(hy v trivial).2, (hy v trivial).2]⟩)
     (fun x hx hZ i j => by
       choose y hy using fun v => hx v trivial
-      rw [hDiag x y (fun v => (hy v).symm), hDiag x y (fun v => (hy v).symm), if_pos rfl]
+      rw [hDiag x y (fun v => (hy v).symm), hDiag x y (fun v => (hy v).symm), ite_eq_left rfl]
       refine if_congr Iff.rfl (Finset.prod_congr rfl fun e _ => ?_) rfl
       have h1 : x e.1 ∈ Subgroup.center _ := Subgroup.mem_center_iff.2 fun g => by
         simpa using congrFun (Subgroup.mem_center_iff.1 hZ (Pi.mulSingle e.1 g)) e.1
@@ -454,7 +454,7 @@ theorem UpperTheory.V.Hi.wtRep :
       simp only [h2, prod_zpow_const h3]
       rw [le_antisymm h4 (by linarith)])
   refine ⟨R, hR, fun t y hy => ?_⟩
-  rw [hχ, hDiag _ y hy, if_pos rfl, Fintype.prod_sigma, map_prod]
+  rw [hχ, hDiag _ y hy, ite_eq_left rfl, Fintype.prod_sigma, map_prod]
   refine Finset.prod_congr rfl fun v _ => ?_
   rw [Finset.prod_comm, map_prod]
   refine Finset.prod_congr rfl fun i _ => ?_

@@ -159,8 +159,8 @@ theorem local_zero (V : Scheme.{0}) [IsAffine V] (m : (twF q 1).obj Γ(V, ⊤))
     rw [comp_appTop_apply', comp_appTop_apply', ha, map_pow]
   obtain ⟨W, k, hWa, hk, ⟨w, hw⟩, hP⟩ := ((GlobalTheory.T.etaleLocally_iff_affine_etale_point_cover V _ hst).1 hL) v
   refine ⟨W, k, hWa, hk, ⟨w, hw⟩, ?_⟩
-  haveI : Nonempty (⊤ : W.Opens) := ⟨⟨w, trivial⟩⟩
-  haveI : Nontrivial Γ(W, ⊤) := Scheme.component_nontrivial W ⊤
+  have : Nonempty (⊤ : W.Opens) := ⟨⟨w, trivial⟩⟩
+  have : Nontrivial Γ(W, ⊤) := Scheme.component_nontrivial W ⊤
   let φ := k.appTop.hom
   let ζ₁ : Prim q Γ(W, ⊤) := Prim.map φ ζ₀
   have hmap : ((twF q 1).map k.appTop).hom ((twRel q 1 Γ(V, ⊤)).mkQ f) =

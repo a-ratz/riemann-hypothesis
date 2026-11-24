@@ -94,7 +94,7 @@ private theorem continuous_matrix_of_Mt : Continuous (fun x : Mt k r => (Matrix.
   continuous_matrix (fun i j => (continuous_apply j).comp (continuous_apply i))
 
 theorem continuous_mat : Continuous (fun g : SG hU => mat g) := by
-  exact continuous_matrix_of_Mt.comp continuous_subtype_val
+  exact continuous_matrix_of_Mt.comp continuous_subtypeVal
 
 instance : ContinuousMul (SG hU) := by
   refine ⟨Continuous.subtype_mk ?_ _⟩
@@ -114,7 +114,7 @@ theorem measurableSet_U (hU : IsClosedSubgroup U) : MeasurableSet {x : Mt k r | 
   exact (hU.closed.preimage continuous_matrix_of_Mt).measurableSet
 
 theorem me_val (hU : IsClosedSubgroup U) : MeasurableEmbedding (fun g : SG hU => g.1) := by
-  exact MeasurableEmbedding.subtype_coe (measurableSet_U hU)
+  exact MeasurableEmbedding.subtypeVal (measurableSet_U hU)
 
 def nu (hU : IsClosedSubgroup U) (μ : Measure (Mt k r)) : Measure (SG hU) := μ.comap (fun g : SG hU => g.1)
 
@@ -132,7 +132,7 @@ theorem nu_left {μ : Measure (Mt k r)} (hμ : IsHaarOn U μ) : (nu hU μ).IsMul
     (continuous_const.mul continuous_matrix_of_Mt : Continuous fun x : Mt k r => (mat g * Matrix.of x : Mat k r))
   have hm : Measurable (fun x : SG hU => g * x) := by
     refine Measurable.subtype_mk ?_
-    exact hc.measurable.comp measurable_subtype_coe
+    exact hc.measurable.comp measurable_subtypeVal
   have hval : (fun g : SG hU => g.1) ∘ (fun x : SG hU => g * x) = lmulM (mat g) ∘ (fun g : SG hU => g.1) := rfl
   have hmap : ((nu hU μ).map (fun x : SG hU => g * x)).map (fun g : SG hU => g.1)
       = (nu hU μ).map (fun g : SG hU => g.1) := by

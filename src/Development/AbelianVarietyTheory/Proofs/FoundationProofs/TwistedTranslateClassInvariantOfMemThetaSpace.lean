@@ -50,7 +50,7 @@ namespace GlobalTheory.ThetaConj
 
 theorem ee_intCast_half (n : ℤ) : ee ((n : ℝ) / 2) = (-1 : ℂ) ^ n := by
   unfold ee
-  rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+  rw [← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring

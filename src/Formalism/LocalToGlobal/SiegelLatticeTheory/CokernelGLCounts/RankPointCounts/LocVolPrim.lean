@@ -135,7 +135,7 @@ theorem corr_mul {A B A' B'} (h : CorrFI ι A B) (h' : CorrFI ι A' B') : CorrFI
     · intro x x' hx hx'
       show ι (x + x') ∈ B * B'
       rw [map_add (f := _)]
-      exact FractionalIdeal.mem_coe.1 (add_mem (FractionalIdeal.mem_coe.2 hx) (FractionalIdeal.mem_coe.2 hx'))
+      exact FractionalIdeal.mem_coeToSubmodule.1 (add_mem (FractionalIdeal.mem_coeToSubmodule.2 hx) (FractionalIdeal.mem_coeToSubmodule.2 hx'))
   · intro hy
     have key : ι.symm (ι y) ∈ A * A' := by
       refine FractionalIdeal.mul_induction_on (C := fun t => ι.symm t ∈ A * A') hy ?_ ?_
@@ -146,7 +146,7 @@ theorem corr_mul {A B A' B'} (h : CorrFI ι A B) (h' : CorrFI ι A' B') : CorrFI
       · intro x x' hx hx'
         show ι.symm (x + x') ∈ A * A'
         rw [map_add (f := _)]
-        exact FractionalIdeal.mem_coe.1 (add_mem (FractionalIdeal.mem_coe.2 hx) (FractionalIdeal.mem_coe.2 hx'))
+        exact FractionalIdeal.mem_coeToSubmodule.1 (add_mem (FractionalIdeal.mem_coeToSubmodule.2 hx) (FractionalIdeal.mem_coeToSubmodule.2 hx'))
     rwa [RingEquiv.symm_apply_apply] at key
 
 theorem corr_pow {A B} (h : CorrFI ι A B) : ∀ k : ℕ, CorrFI ι (A ^ k) (B ^ k)

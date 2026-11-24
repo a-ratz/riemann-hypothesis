@@ -151,9 +151,9 @@ theorem UpperTheory.V.ML.kolHom :
   refine ⟨hmul, ?_, key⟩
   rw [IsLocallyConstant.iff_eventually_eq]
   intro x
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral ℚ (opP δ a Y₀) := (Algebra.IsAlgebraic.isAlgebraic _).isIntegral
-  haveI := IntermediateField.adjoin.finiteDimensional hint
+  have := IntermediateField.adjoin.finiteDimensional hint
   let H : Set (G ℚ Ω) := (fixMu ℚ Ω (F * n) : Set (G ℚ Ω)) ∩
     ((IntermediateField.adjoin ℚ {opP δ a Y₀}).fixingSubgroup : Set (G ℚ Ω))
   have hHo : IsOpen H := gb.2.1.inter (IntermediateField.fixingSubgroup_isOpen _)
@@ -169,7 +169,7 @@ theorem UpperTheory.V.ML.kolHom :
       (by rw [e, ZMod.val_zero, pow_zero, one_mul])
     simpa using e0
   have hS : IsOpen {w : fixMu ℚ Ω F | (x : G ℚ Ω)⁻¹ * w ∈ H} :=
-    hHo.preimage (continuous_const.mul continuous_subtype_val)
+    hHo.preimage (continuous_const.mul continuous_subtypeVal)
   have hx : x ∈ {w : fixMu ℚ Ω F | (x : G ℚ Ω)⁻¹ * w ∈ H} := by
     show (x : G ℚ Ω)⁻¹ * x ∈ H
     rw [inv_mul_cancel]

@@ -72,7 +72,7 @@ lemma nonzeroIndexPlaces_adelicDataResized_eq (d : ℕ) (y : ℂ) (F : ℂ → �
 lemma fac_mul (d : ℕ) (α : ℂ) (m : ℕ) (hm : (m : ℂ) = α * conj α) (y z : ℂ) :
     fac d (α * y) (α * z) = fac d y z ^ m := by
   simp only [fac]
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   rw [hm, ← Complex.mul_conj, ← Complex.mul_conj]
   simp only [h1, map_mul]

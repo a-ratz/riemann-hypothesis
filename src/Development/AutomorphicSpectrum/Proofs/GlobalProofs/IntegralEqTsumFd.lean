@@ -151,7 +151,7 @@ theorem summable_fd {ι : C →+ V} (hι : Function.Injective ι) {μ : Measure 
   have hs := ENNReal.summable_toReal hfin
   have h2 := ((ι.ofInjective hι).toEquiv.summable_iff).2 hs
   refine h2.congr fun c => ?_
-  rw [integral_norm_eq_lintegral_enorm (hh.comp_add_right (ι c)).integrableOn.aestronglyMeasurable]
+  rw [integral_norm_eq_lintegral_eNorm (hh.comp_add_right (ι c)).integrableOn.aestronglyMeasurable]
   have : ∀ x, ((ι.ofInjective hι).toEquiv c : ι.range) +ᵥ x = x + ι c := fun x => by
     show ι c + x = x + ι c
     exact add_comm _ _

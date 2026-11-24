@@ -318,7 +318,7 @@ theorem qForm_count : ∀ α γ l θ₁ θ₂ x : ℝ, 1 ≤ α → 1 ≤ γ →
   have hset : {v : ℤ × ℤ | qForm α γ l θ₁ θ₂ v ≤ x}
       = ↑((Finset.range n).biUnion (fun i : ℕ => (F (k0 + i)).image (fun m => (m, k0 + (i : ℤ))))) := by
     ext ⟨m, k⟩
-    simp only [Set.mem_setOf_eq, Finset.coe_biUnion, Finset.coe_image, Set.mem_iUnion,
+    simp only [Set.mem_ofPred_eq, Finset.coe_biUnion, Finset.coe_image, Set.mem_iUnion,
       Set.mem_image, Finset.mem_coe, Prod.mk.injEq, qForm]
     constructor
     · intro hq
@@ -524,10 +524,10 @@ theorem place_unique [_root_.NumberField.IsTotallyComplex K] (h2 : Module.finran
 
 theorem normSq_eq [_root_.NumberField.IsTotallyComplex K] (h2 : Module.finrank ℚ K = 2) (φ : K →+* ℂ) (x : 𝓞 K) :
     ‖φ (x : K)‖ ^ 2 = (Ideal.absNorm (Ideal.span {x}) : ℝ) := by
-  haveI : Subsingleton (InfinitePlace K) := ⟨place_unique h2⟩
+  have : Subsingleton (InfinitePlace K) := ⟨place_unique h2⟩
   have hprod := InfinitePlace.prod_eq_abs_norm (x : K)
   rw [Fintype.prod_subsingleton _ (InfinitePlace.mk φ), InfinitePlace.apply,
-    InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.2
+    InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.2
       (IsTotallyComplex.isComplex _))] at hprod
   rw [hprod, Ideal.absNorm_span_singleton, Nat.cast_natAbs, Int.cast_abs,
     ← Algebra.coe_norm_int]
@@ -903,7 +903,7 @@ theorem aRay_eq_ncard_qForm : ∀ (K : Type) [Field K] [NumberField K] (d M : �
     omega
   obtain ⟨B, hBc, hB0, hBg⟩ := D.cls_surj g⁻¹
   obtain ⟨E0', hE0'⟩ := gen_bij hNtop D g B hBc hB0 hBg
-  haveI hU : Unique {u : (𝓞 K)ˣ // (u : 𝓞 K) - 1 ∈ Ideal.span {(M : 𝓞 K)}} :=
+  have hU : Unique {u : (𝓞 K)ˣ // (u : 𝓞 K) - 1 ∈ Ideal.span {(M : 𝓞 K)}} :=
     { default := ⟨1, by simp⟩
       uniq := fun u => Subtype.ext (unit_eq_one h2 hM u.1 u.2) }
   obtain ⟨x₀, hx₀B, hx₀N⟩ : ∃ x₀ ∈ B, x₀ - 1 ∈ Ideal.span {(M : 𝓞 K)} := by
@@ -1032,7 +1032,7 @@ theorem aRay_eq_ncard_qForm : ∀ (K : Type) [Field K] [NumberField K] (d M : �
         {v : ℤ × ℤ | qForm (‖f₁‖ ^ 2 / Nr) (((starRingEnd ℂ) f₁ * f₂).im ^ 2 / (‖f₁‖ ^ 2 * Nr))
           l θ₁ θ₂ v = n} := by
       ext I
-      simp only [idealsIn, Set.mem_setOf_eq, Set.mem_image, Function.comp_apply]
+      simp only [idealsIn, Set.mem_ofPred_eq, Set.mem_image, Function.comp_apply]
       constructor
       · rintro ⟨_, hIc, hIn, hIg⟩
         refine ⟨Φ.symm ⟨I, hIc, hIg⟩, ?_, by simp⟩

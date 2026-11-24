@@ -124,7 +124,7 @@ theorem trdeg_quotient_eq_of_mem_minimalPrimes_span (R : Type u) [CommRing R] [I
       have : φ (MvPolynomial.C ϖ) ∈ q' := this
       simpa using this
     · have : q'.map (Ideal.Quotient.mk q) = ⊥ := by
-        refine Ideal.eq_bot_of_comap_eq_bot (R := MvPolynomial (Fin s) k) (eq_bot_iff.mpr ?_)
+        refine Ideal.eq_bot_of_under_eq_bot (R := MvPolynomial (Fin s) k) (eq_bot_iff.mpr ?_)
         intro y hy
         obtain ⟨r, rfl⟩ := MvPolynomial.map_surjective _ hk y
         have hy : g (MvPolynomial.map (algebraMap R k) r) ∈ q'.map (Ideal.Quotient.mk q) := hy

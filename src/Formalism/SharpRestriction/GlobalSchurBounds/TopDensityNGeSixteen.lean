@@ -283,7 +283,7 @@ theorem frob_spec (p : ℕ) (hp : p.Prime) :
     ⟨σ0, P, hP, hL, ((fieldFacts D p hp P hP hL σ0).2).2 (by
       rw [hσ0, Equiv.apply_symm_apply, sub_self]; exact AddSubgroup.zero_mem _)⟩
   unfold frob
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   obtain ⟨P', hP', hL', hF⟩ := hex.choose_spec
   exact ((fieldFacts D p hp P' hP' hL' _).2).1 hF
 
@@ -366,7 +366,7 @@ theorem primitive_reading_exists : adm10 D := fun ψ => ⟨_, reads0 D ψ⟩
 
 theorem prim_spec (ψ : Chr D) : Reads D ψ (prim D ψ) := by
   unfold prim
-  rw [dif_pos (primitive_reading_exists D ψ)]
+  rw [dite_eq_left (primitive_reading_exists D ψ)]
   exact (primitive_reading_exists D ψ).choose_spec
 
 theorem primitiveCharacter_chi0_eq_one_iff (ψ : Chr D) : (chi0 D ψ).primitiveCharacter = 1 ↔ ψ = 1 := by
@@ -414,9 +414,9 @@ theorem GPsi_eq (φ : AddChar (MM D) ℂ) (y : ℝ) :
   unfold characterSumData.GPsi Gc gChi
   by_cases h : φ = 0
   · have h1 : (prim D (cOf D φ)).2 = 1 := (prim_one_iff D _).2 ((cOf_eq_one_iff D φ).2 h)
-    rw [if_pos h, if_pos h1, G_eq_Gz]
+    rw [ite_eq_left h, ite_eq_left h1, G_eq_Gz]
   · have h1 : (prim D (cOf D φ)).2 ≠ 1 := fun h' => h ((cOf_eq_one_iff D φ).1 ((prim_one_iff D _).1 h'))
-    rw [if_neg h, if_neg h1]
+    rw [ite_eq_right h, ite_eq_right h1]
     unfold sumLamChi ell Lp
     congr 1
     refine Finset.sum_congr rfl (fun n hn => ?_)
@@ -441,8 +441,8 @@ theorem cOf_chC : cOf D characterSumData.chC = chC D := by
   have h2 : ((chC D g : ℂˣ) : ℂ) = (((g.1.2 : ℤˣ) : ℤ) : ℂ) := rfl
   rw [h2]
   by_cases hg : g ∈ D.R.Psi
-  · rw [if_pos (show (tE D g).1.1 = 0 from (inPhi_iff D g).2 hg), (Formalism.HC.Frame.mem_Psi_iff g).1 hg]; simp
-  · rw [if_neg (show ¬ (tE D g).1.1 = 0 from fun h => hg ((inPhi_iff D g).1 h))]
+  · rw [ite_eq_left (show (tE D g).1.1 = 0 from (inPhi_iff D g).2 hg), (Formalism.HC.Frame.mem_Psi_iff g).1 hg]; simp
+  · rw [ite_eq_right (show ¬ (tE D g).1.1 = 0 from fun h => hg ((inPhi_iff D g).1 h))]
     have : g.1.2 = -1 := (Int.units_eq_one_or g.1.2).resolve_left hg
     rw [this]; simp
 
@@ -458,8 +458,8 @@ theorem cOf_psC : cOf D ThickSetMeanBounds.psC = psC D := by
   rw [h2]
   have h3 : (tE D g).1.2 = 0 ↔ g.1.1 = 1 := LHost.sgn2_toAdd_eq_zero_iff g.1.1
   by_cases hg : g.1.1 = 1
-  · rw [if_pos (h3.2 hg), hg]; simp
-  · rw [if_neg (fun h => hg (h3.1 h))]
+  · rw [ite_eq_left (h3.2 hg), hg]; simp
+  · rw [ite_eq_right (fun h => hg (h3.1 h))]
     have : g.1.1 = -1 := (Int.units_eq_one_or g.1.1).resolve_left hg
     rw [this]; simp
 
@@ -707,7 +707,7 @@ def MatReal_at (D : D7) (sg de eB : ℝ) : Prop :=
 
 theorem cc_full (D : D7) (hRR : D.RRFull) :
     D.div.RR.dualL.FG ∧ Submodule.span D.what₂.LL (D.div.RR.dualL : Set (Module.Dual D.what₂.LL D.div.RR.V)) = ⊤ := by
-  haveI : FiniteDimensional D.what₂.LL D.div.RR.V := Module.Finite.of_basis D.div.RR.b
+  have : FiniteDimensional D.what₂.LL D.div.RR.V := Module.Finite.of_basis D.div.RR.b
   exact ⟨Formalism.HN.DualPolygon.dualLat_fg D.div.RR.L hRR.2, Formalism.HN.DualPolygon.dualLat_span D.div.RR.L hRR.1 hRR.2⟩
 
 theorem frameReal_at_of (D : D7) (sg de eB : ℝ) (hRR : D.RRFull) (hNu : D.NuFull)
@@ -1097,7 +1097,7 @@ theorem opMat_KD (D : D7) (u u' : D.what₂.Word) (i : Fin (D.duS u)) (j : Fin (
     opMat D (S.KD D u u') i j = (((S.c0 D.s u * S.c0 D.s u') ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) *
       inner ℂ (D.s.Pu u (eC D u i)) (D.s.Pu u' (eC D u' j)) := by
   unfold opMat S.KD S.Kmat
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, ContinuousLinearMap.comp_apply,
+  rw [smul_apply, inner_smul_right, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.adjoint_inner_right]
 
 theorem kp_eq (D : D7) (f : OrthonormalBasis (RowIx D) ℂ D.s.HH) (ε : ℂ →+* ℂ) (hε : IsIdOrConj ε)
@@ -1112,7 +1112,7 @@ theorem kp_eq (D : D7) (f : OrthonormalBasis (RowIx D) ℂ D.s.HH) (ε : ℂ →
 theorem opMat_sub_id (D : D7) (u : D.what₂.Word) (A : D.s.Cu u →L[ℂ] D.s.Cu u) (ε : ℂ →+* ℂ) :
     (opMat D (A - ContinuousLinearMap.id ℂ (D.s.Cu u))).map ε = (opMat D A).map ε - 1 := by
   ext i j
-  simp only [Matrix.map_apply, Matrix.sub_apply, opMat, ContinuousLinearMap.sub_apply, ContinuousLinearMap.id_apply,
+  simp only [Matrix.map_apply, Matrix.sub_apply, opMat, sub_apply, ContinuousLinearMap.id_apply,
     inner_sub_right, map_sub]
   congr 1
   rw [orthonormal_iff_ite.mp (eC D u).orthonormal i j, Matrix.one_apply]
@@ -1195,8 +1195,8 @@ theorem rows_orthonormal (D : D7) (V : D.what₂.EE ≃ₗᵢ[ℂ] D.what₂.EE)
   intro k k'
   rw [sEE_inner, V.inner_map_map, orthonormal_iff_ite.mp (oE D).orthonormal k' k]
   by_cases h : k = k'
-  · rw [if_pos h, if_pos h.symm]
-  · rw [if_neg h, if_neg (fun h' => h h'.symm)]
+  · rw [ite_eq_left h, ite_eq_left h.symm]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h h'.symm)]
 
 theorem Drows_le (D : D7) : D.what₂.Drows ≤ D.what₂.Dall := by
   have h := (rows_orthonormal D (LinearIsometryEquiv.refl ℂ _)).linearIndependent.fintype_card_le_finrank
@@ -1221,8 +1221,8 @@ theorem exists_rowBasis (D : D7) (V : D.what₂.EE ≃ₗᵢ[ℂ] D.what₂.EE) 
     show inner ℂ (D.sEE (V (oE D k))) (D.sEE (V (oE D k'))) = _
     rw [h0 k k']
     by_cases h : k = k'
-    · subst h; rw [if_pos rfl, if_pos rfl]
-    · rw [if_neg h, if_neg (fun h' => h (Sum.inl_injective (congrArg Subtype.val h')))]
+    · subst h; rw [ite_eq_left rfl, ite_eq_left rfl]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h (Sum.inl_injective (congrArg Subtype.val h')))]
   obtain ⟨f, hf⟩ := hv.exists_orthonormalBasis_extension_of_card_eq hcard
   exact ⟨f, fun k => by rw [hf (Sum.inl k) ⟨k, rfl⟩]; rfl⟩
 
@@ -1363,8 +1363,8 @@ theorem hs_neg_id (D : D7) (u : D.what₂.Word) :
   have h : ∀ l, inner ℂ ((0 - ContinuousLinearMap.id ℂ (D.s.Cu u)) (stdOrthonormalBasis ℂ (D.s.Cu u) l))
       ((0 - ContinuousLinearMap.id ℂ (D.s.Cu u)) (stdOrthonormalBasis ℂ (D.s.Cu u) l)) = (1 : ℂ) := by
     intro l
-    simp only [zero_sub, ContinuousLinearMap.neg_apply, ContinuousLinearMap.id_apply, inner_neg_neg]
-    rw [orthonormal_iff_ite.mp (stdOrthonormalBasis ℂ (D.s.Cu u)).orthonormal l l, if_pos rfl]
+    simp only [zero_sub, neg_apply, ContinuousLinearMap.id_apply, inner_neg_neg]
+    rw [orthonormal_iff_ite.mp (stdOrthonormalBasis ℂ (D.s.Cu u)).orthonormal l l, ite_eq_left rfl]
   simp only [h]
   rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, finrank_Cu]
   simp
@@ -1442,7 +1442,7 @@ theorem dall_pos {D : D7} (u : D.what₂.Word) (e0 : ℝ) (he : e0 < 1) (hd : 0 
   by_contra hcon
   have h0 : D.what₂.Dall = 0 := by omega
   have hfr : Module.finrank ℂ D.s.HH = 0 := by rw [D.s_HH, h0]
-  haveI : Subsingleton D.s.HH := Module.finrank_zero_iff.mp hfr
+  have : Subsingleton D.s.HH := Module.finrank_zero_iff.mp hfr
   have hK : S.KD D u u = 0 := by
     apply ContinuousLinearMap.ext
     intro x

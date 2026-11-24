@@ -175,7 +175,7 @@ theorem IsRegSS.exists_intertwiner [IsArtinianRing A] [TopologicalSpace A] [IsTo
 
 theorem isClosed_charpoly_eq [TopologicalSpace A] [IsTopologicalRing A] [T2Space A] (P : A[X]) :
     IsClosed {N : Matrix n n A | N.charpoly = P} := by
-  simp only [Polynomial.ext_iff, setOf_forall]
+  simp only [Polynomial.ext_iff, ofPred_forall]
   refine isClosed_iInter fun i => isClosed_eq ?_ continuous_const
   have : (fun N : Matrix n n A => N.charpoly.coeff i) =
       fun N => MvPolynomial.eval (fun p : n × n => N p.1 p.2) ((Matrix.charpoly.univ A n).coeff i) :=
@@ -192,7 +192,7 @@ variable {k : Type} [NontriviallyNormedField k] [CompleteSpace k]
 theorem eventually_exists_sq_normed {V : Type} [NormedAddCommGroup V] [NormedSpace k V] [FiniteDimensional k V]
     (h2 : (2 : k) ≠ 0) (B : V →ₗ[k] V →ₗ[k] V) {e : V} (hl : ∀ v, B e v = v) (hr : ∀ v, B v e = v) :
     ∀ᶠ l in 𝓝 e, ∃ z, B z z = l := by
-  have := FiniteDimensional.complete k V
+  have := FiniteDimensional.completeSpace k V
   let B' : V →L[k] V →L[k] V :=
     LinearMap.toContinuousLinearMap ((LinearMap.toContinuousLinearMap : (V →ₗ[k] V) ≃ₗ[k] _).toLinearMap ∘ₗ B)
   let D : V ≃L[k] V := (LinearEquiv.smulOfNeZero k V 2 h2).toContinuousLinearEquiv
@@ -367,7 +367,7 @@ theorem eventually_isConj_UJ (h2 : (2 : k) ≠ 0) (hk : ∀ (c : k) a, σ (c •
     rw [← hs, mul_assoc, ← hu.mul_right_inj (b := s u * u), mul_one]
   obtain ⟨Y, hY, h1, hi⟩ := hg.exists_intertwiner
   have hc : Tendsto (fun h : Formalism.UG.UJ σ J => Y h.1.1) (𝓝 g) (𝓝 1) :=
-    (hY.comp (Units.continuous_val.comp continuous_subtype_val)).tendsto' _ _ h1
+    (hY.comp (Units.continuous_val.comp continuous_subtypeVal)).tendsto' _ _ h1
   filter_upwards [hc.eventually (eventually_exists_unitary h2 s hm hss (mul_eq_one_comm.1 ((hU _).1 g.2)))]
     with h hh e
   obtain ⟨u, hu1, hu2⟩ := hh _ ((hU _).1 h.2) (hi _ e)
@@ -380,7 +380,7 @@ theorem isClosed_class_UJ (h2 : (2 : k) ≠ 0) (hk : ∀ (c : k) a, σ (c • a)
   have hsub : (range fun x : Formalism.UG.UJ σ J => x⁻¹ * g * x) ⊆ {h | h.1.1.charpoly = g.1.1.charpoly} :=
     fun h ⟨x, hx⟩ => hx ▸ charpoly_conj_GL g.1 x.1
   have e : g'.1.1.charpoly = g.1.1.charpoly := closure_minimal hsub
-    ((isClosed_charpoly_eq _).preimage (Units.continuous_val.comp continuous_subtype_val)) hg'
+    ((isClosed_charpoly_eq _).preimage (Units.continuous_val.comp continuous_subtypeVal)) hg'
   obtain ⟨_, ⟨x, rfl⟩, hx⟩ := ((mem_closure_iff_frequently.1 hg').and_eventually
     (eventually_isConj_UJ k h2 hk hσ hJ hd (g := g') (by rwa [IsRegSS, e]))).exists
   obtain ⟨c, hc⟩ := isConj_iff.1 (hx ((hsub ⟨x, rfl⟩).trans e.symm))

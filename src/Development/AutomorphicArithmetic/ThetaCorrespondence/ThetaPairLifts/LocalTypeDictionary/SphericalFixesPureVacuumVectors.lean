@@ -216,7 +216,7 @@ theorem extract (n d : ℕ) (X : Spc F E n) (W : Spc F E d) (v : GlobalTheory.In
   have hfg : b₀.FG := hL.fg.map _
   let 𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E := ⟨b₀, FractionalIdeal.isFractional_of_fg hfg⟩
   have hmem : ∀ b, b ∈ 𝔟 ↔ ∃ x ∈ X.L, x i₀ = b := fun b => by
-    rw [← FractionalIdeal.mem_coe]; exact Submodule.mem_map
+    rw [← FractionalIdeal.mem_coeToSubmodule]; exact Submodule.mem_map
   have hne : 𝔟 ≠ 0 := by
     intro h0
     have hle : Submodule.span E (X.L : Set (Fin n → E)) ≤ LinearMap.ker (LinearMap.proj (R := E) (φ := fun _ : Fin n => E) i₀) := by
@@ -229,12 +229,12 @@ theorem extract (n d : ℕ) (X : Spc F E n) (W : Spc F E d) (v : GlobalTheory.In
     have := hle (Submodule.mem_top (x := Pi.single i₀ (1 : E)))
     simp at this
   have hone : (1 : E) ∈ ((𝔟⁻¹ * 𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) := by
-    rw [inv_mul_cancel₀ hne, FractionalIdeal.mem_coe]; exact FractionalIdeal.one_mem_one _
+    rw [inv_mul_cancel₀ hne, FractionalIdeal.mem_coeToSubmodule]; exact FractionalIdeal.one_mem_one _
   have hle : ((𝔟⁻¹ * 𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) ≤ coefSub W v q := by
-    rw [FractionalIdeal.coe_mul, Submodule.mul_le]
+    rw [FractionalIdeal.coeToSubmodule_mul, Submodule.mul_le]
     intro c hc b hb
-    rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_inv_iff hne] at hc
-    rw [FractionalIdeal.mem_coe, hmem] at hb
+    rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_inv_iff hne] at hc
+    rw [FractionalIdeal.mem_coeToSubmodule, hmem] at hb
     obtain ⟨x, hx, rfl⟩ := hb
     have hc' : ∀ x ∈ X.L, ∃ o : 𝓞 E, (o : E) = c * x i₀ := by
       intro x hx
@@ -281,7 +281,7 @@ theorem _root_.GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice : 
     (∀ x ∈ X.L, Matrix.vecMulVec (fun i => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F) (x i)) q ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV X W v) →
     q ∈ GlobalTheory.InertSph.latAt W v := by
   intro F E _ _ _ _ _ n d X W v q hn hL h
-  letI := hL
+  let := hL
   exact GlobalTheory.LatExtract.main F E n d X W v q hn inferInstance h
 end -- clump:auto
 end -- clump:auto
@@ -343,7 +343,7 @@ theorem ev_mem_adm {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
   intro g _
   refine ⟨g (fun i => (x i).2) • (BoundedContinuousFunction.evalCLM ℂ (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (x i).1)).comp
     (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (κ → mixedEmbedding.mixedSpace F) ℂ), fun f => ?_⟩
-  simp only [LinearMap.proj_apply, GlobalTheory.WeilM.pureA, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
+  simp only [LinearMap.proj_apply, GlobalTheory.WeilM.pureA, FunLike.coe_smul, ContinuousLinearMap.coe_comp,
     Function.comp_apply, Pi.smul_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     BoundedContinuousFunction.evalCLM_apply, smul_eq_mul]
   rw [mul_comm]
@@ -386,11 +386,11 @@ theorem GlobalTheory.SphGlob.fixes_pure : ∀ (F E : Type) [Field F] [NumberFiel
   have hcut : ∀ v, v ∉ S → loc (idem F v) (idem_mul_self v) k ∈ GlobalTheory.InertSph.KAt σ W v := by
     intro v hv
     refine loc_mem_KAt F E σ d W v k fun z hz => ⟨?_, ?_⟩
-    · refine GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice F E n d X W v _ hn (by letI := hXL; infer_instance) fun x hx => ?_
+    · refine GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice F E n d X W v _ hn (by let := hXL; infer_instance) fun x hx => ?_
       have h0 := GlobalTheory.InertSphStab.vecMulVec_mem X W v hx hz
       rw [← GlobalTheory.InertSphStab.vecMulVec_mul_transpose]
       exact (hlat v hv _).2 h0
-    · refine GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice F E n d X W v _ hn (by letI := hXL; infer_instance) fun x hx => ?_
+    · refine GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice F E n d X W v _ hn (by let := hXL; infer_instance) fun x hx => ?_
       have h0 := GlobalTheory.InertSphStab.vecMulVec_mem X W v hx hz
       refine (hlat v hv _).1 ?_
       rw [GlobalTheory.InertSphStab.vecMulVec_mul_transpose, Matrix.mulVec_mulVec, mat_mul_inv, Matrix.one_mulVec]
@@ -473,7 +473,7 @@ theorem _root_.GlobalTheory.T.latticeStabilizers_fix_vacua_fixes_pureTensor : �
       (∀ w, φ w ∈ GlobalTheory.WeilM.SB (Fin n × Fin d → Fv F w)) → (∀ w, w ∉ S → φ w = M.vac w) →
       om (1, k) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ := by
   intro F E _ _ _ _ _ σ n d X W M ψ χX χW om S hn hXL
-  letI := hXL
+  let := hXL
   exact GlobalTheory.SphGlob.fixes_pure F E σ n d X W M ψ χX χW om S hn inferInstance
 end -- clump:auto
 end -- clump:auto
@@ -862,7 +862,7 @@ theorem dbl_eigen (σ : E →ₐ[F] E) {n d : ℕ} (X : Spc F E n) (Y : Spc F E 
     intro f hf l hl ξ
     have h : ∃ γ ∈ Λ, GlobalTheory.LatVac.locCo dd v γ = l := AddSubgroup.mem_map.mp hl
     have key := local_identity v dd ψ h.choose f _ (hAt _ h.choose_spec.1) RD hRest.1 (hf _ h.choose_spec.1) x₀ hx₀ ξ
-    simp only [χ, dif_pos h]
+    simp only [χ, dite_eq_left h]
     rw [h.choose_spec.2] at key
     exact key
   obtain ⟨c, hc0, hcb⟩ := GlobalTheory.LatBound.locCo_latAtV_bounded X Y v M.co hX hY
@@ -937,10 +937,10 @@ theorem eigen_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     { carrier := {g | omd g S = S}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hD : ∀ p ∈ GlobalTheory.DblVac.KD σ G.W v, p ∈ GlobalTheory.DblVac.PDiag σ G.W → p ∈ H := fun p hp hpd => by
@@ -1090,7 +1090,7 @@ theorem vacuum_fixed_at_cofinitely_many_places : _root_.GlobalTheory.FunPr.Theta
   intro _ F E _ _ _ _ _ σ B a a' G X om om' hT
   classical
   refine ⟨(bad_finite F).toFinset ∪ X.T, fun v hv k hk => ?_⟩
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or] at hv
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or] at hv
   obtain ⟨⟨hd, h6⟩, hvT⟩ := hv
   have hψ := GlobalTheory.StdCharUnrF.psiUnr_of_not_le F B.ψ hT.base.std v hd
   obtain ⟨h2, h3⟩ := two_three_of_six v h6

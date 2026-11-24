@@ -75,7 +75,7 @@ theorem exists_decI {r s : ℕ} (x : GA E (r + s)) :
   obtain ⟨b, hb, k, hy⟩ := GlobalTheory.IwasawaAdelic.exists_upper_mul_unitary_inf E (r + s)
     (Matrix.GeneralLinearGroup.map (pInf E) x)
   have hb' : (((b⁻¹ : GL (Fin (r + s)) (Cinf E))) : Matrix (Fin (r + s)) (Fin (r + s)) (Cinf E)).BlockTriangular id := by
-    letI : Invertible (b : Matrix (Fin (r + s)) (Fin (r + s)) (Cinf E)) := Units.invertible b
+    let : Invertible (b : Matrix (Fin (r + s)) (Fin (r + s)) (Cinf E)) := Units.invertible b
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular hb
   obtain ⟨xi, mi, hbi⟩ := IwaFin.exists_unip_mul_lev r s b

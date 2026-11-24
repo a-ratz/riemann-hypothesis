@@ -132,11 +132,11 @@ theorem exists_idem (S : Finset (HeightOneSpectrum (𝓞 E))) {a : 𝓞 E} (ha :
     · exact h2 Q hQ (le_sup_left.trans hle)
   obtain ⟨u, hu, r, hr, hur⟩ := Submodule.mem_sup.1 (hsup ▸ Submodule.mem_top : (1 : 𝓞 E) ∈ J₁ ⊔ J₂)
   refine ⟨r, fun P hP => ?_, fun Q hQ => ?_⟩
-  · obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.1 (h1 P hP)
+  · obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.1 (h1 P hP)
     refine ⟨s, hs', Ideal.mem_span_singleton.1 ?_⟩
     rw [hJ, show s * (r - 1) = (-u) * s by rw [← hur]; ring]
     exact Ideal.mul_mem_mul (J₁.neg_mem hu) hs
-  · obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.1 (h2 Q hQ)
+  · obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.1 (h2 Q hQ)
     refine ⟨s, hs', Ideal.mem_span_singleton.1 ?_⟩
     rw [hJ]
     exact Ideal.mul_mem_mul hs hr

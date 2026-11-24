@@ -298,7 +298,7 @@ theorem smoothFamily_orbit [CompleteSpace H] {ε : Fin n → Bool} {σ : Matrix 
     sigma_mem hP h hσ hw (k : Formalism.REAL.UJ ε).2
   refine ⟨fun k => Submodule.smul_mem _ _ (hm k), fun l hl => ?_⟩
   simp only [fun k => word_smul (gram_unit hP h) (isURepOn_trRep hP h hσ) hl (e k) (hm k)]
-  exact he.smul ((continuous_word_translate n ε H σ P G hP h hσ l hl w hw).comp continuous_subtype_val)
+  exact he.smul ((continuous_word_translate n ε H σ P G hP h hσ l hl w hw).comp continuous_subtypeVal)
 
 end GlobalTheory.SmoothAverage
 

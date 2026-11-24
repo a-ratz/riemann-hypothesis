@@ -88,7 +88,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.HolDict
 
 theorem UpT.diag_ne_zero {n : ℕ} {b : Mt n} (hb : UpT b) (a : Fin n) : b a a ≠ 0 := by
-  have hdet : b.det = ∏ i, b i i := Matrix.det_of_upperTriangular (fun i j hij => hb.2 i j hij)
+  have hdet : b.det = ∏ i, b i i := det_of_isUpperTriangular (fun i j hij => hb.2 i j hij)
   have h := hb.1
   rw [hdet, Finset.prod_ne_zero_iff] at h
   exact h a (Finset.mem_univ a)

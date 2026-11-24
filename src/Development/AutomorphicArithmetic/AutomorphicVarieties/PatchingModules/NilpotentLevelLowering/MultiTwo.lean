@@ -163,10 +163,10 @@ private theorem exists_mvPolynomial_action_extending_inc (R B M V : Type) [CommR
       | monomial e' c =>
         have h1 : MvPolynomial.monomial (e + e') (1 : R) =
             MvPolynomial.monomial e 1 * MvPolynomial.monomial e' 1 := by
-          rw [MvPolynomial.monomial_mul, one_mul]
+          rw [MvPolynomial.monomial_mul_monomial, one_mul]
         have h2 : MvPolynomial.monomial e r = r • MvPolynomial.monomial e (1 : R) := by
           rw [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
-        rw [MvPolynomial.map_monomial, MvPolynomial.monomial_mul, hG, hG, mul_smul, hinc]
+        rw [MvPolynomial.map_monomial, MvPolynomial.monomial_mul_monomial, hG, hG, mul_smul, hinc]
         generalize inc (c • m) = v
         rw [h1, h2]
         simp only [map_smul, map_mul, Module.End.mul_apply, LinearMap.smul_apply]

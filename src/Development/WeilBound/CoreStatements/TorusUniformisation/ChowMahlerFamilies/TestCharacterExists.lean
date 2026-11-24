@@ -57,10 +57,10 @@ namespace PositivityTheory.Xgn.TestCharacter
 
 theorem emb_pow (p : ℕ) [Fact p.Prime] {F k : Type} [Field F] [Fintype F] [CharP F p] [Field k]
     (f g : F →+* k) : ∃ n : ℕ, ∀ a, g a = f a ^ p ^ n := by
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
-  letI : Algebra F k := f.toAlgebra
-  letI : Algebra (ZMod p) k := (f.comp (algebraMap (ZMod p) F)).toAlgebra
-  haveI : IsScalarTower (ZMod p) F k := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra F k := f.toAlgebra
+  let : Algebra (ZMod p) k := (f.comp (algebraMap (ZMod p) F)).toAlgebra
+  have : IsScalarTower (ZMod p) F k := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let g' : F →ₐ[ZMod p] k :=
     { g with
       commutes' := fun r => by
@@ -162,7 +162,7 @@ theorem overC (p : ℕ) [Fact p.Prime] {O : Type} [CommRing O] [IsLocalRing O] {
       intro h; rw [h, map_zero] at ha; exact zero_ne_one ha
     refine IsUnit.of_mul_eq_one ⟨(a : C)⁻¹, (hv _).2 (by rw [map_inv₀, ha, inv_one])⟩ ?_
     exact Subtype.ext (mul_inv_cancel₀ h0)
-  haveI : IsLocalRing RC := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
+  have : IsLocalRing RC := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
     rcases ((hv _).1 a.2).eq_or_lt with h | h
     · exact Or.inl (hunit a h)
     · exact Or.inr (hunit _ (v.map_one_sub_of_lt h))
@@ -187,7 +187,7 @@ theorem overC (p : ℕ) [Fact p.Prime] {O : Type} [CommRing O] [IsLocalRing O] {
   have hdiff : ∀ τ a (o : O), IsLocalRing.residue O o = σ τ a →
       χ' τ a - algebraMap O RC o ∈ IsLocalRing.maximalIdeal RC := fun τ a o ho =>
     hnu _ (hχ τ a o ho).2
-  haveI : IsLocalHom (algebraMap O RC) := ⟨fun o ho => by
+  have : IsLocalHom (algebraMap O RC) := ⟨fun o ho => by
     by_contra hno
     have h1 := hdiff τ₀ 0 o (by rw [map_zero, IsLocalRing.residue_eq_zero_iff]; exact hno)
     rw [map_zero, zero_sub, neg_mem_iff] at h1
@@ -215,7 +215,7 @@ theorem inj_loc {A Ω O : Type} [CommRing A] [Field Ω] [Algebra A Ω] [IsIntegr
 
 theorem exists_lift {A Ω T : Type} [CommRing A] [Field Ω] [Algebra A Ω] [IsIntegralClosure A ℤ Ω]
     [CommRing T] [Algebra.IsIntegral ℤ T] (f : T →+* Ω) : ∃ g : T →+* A, ∀ t, algebraMap A Ω (g t) = f t := by
-  letI : Algebra T Ω := f.toAlgebra
+  let : Algebra T Ω := f.toAlgebra
   exact ⟨(IsIntegralClosure.lift ℤ A Ω (S := T) : T →ₐ[ℤ] A), fun t => IsIntegralClosure.algebraMap_lift ℤ A Ω t⟩
 
 end PositivityTheory.Xgn.TestCharacter

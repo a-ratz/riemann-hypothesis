@@ -86,8 +86,8 @@ private theorem eq_or_eq_of_comp_eq_of_finrank_two {F E : Type} [Field F] [Numbe
     (ρ α β : E →+* ℂ) (hρ : ρ.comp (algebraMap F E) = ψ) (hα : α.comp (algebraMap F E) = ψ)
     (hβ : β.comp (algebraMap F E) = ψ) (hαβ : α ≠ β) : ρ = α ∨ ρ = β := by
   classical
-  letI : Algebra F ℂ := ψ.toAlgebra
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  let : Algebra F ℂ := ψ.toAlgebra
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   let mk : ∀ γ : E →+* ℂ, γ.comp (algebraMap F E) = ψ → E →ₐ[F] ℂ := fun γ hγ =>
     { toRingHom := γ
       commutes' := fun a => (congrArg (fun f : F →+* ℂ => f a) hγ : _) }

@@ -124,7 +124,7 @@ theorem injective_of_isIntegral {B B' Ω : Type*} [CommRing B] [Nontrivial B] [C
     [IsDomain B'] [CommRing Ω] [Algebra B B'] [Algebra.IsIntegral B B'] (ψ : B' →+* Ω)
     (h : Function.Injective (ψ.comp (algebraMap B B'))) : Function.Injective ψ := by
   have : RingHom.ker ψ = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := B)
+    apply Ideal.eq_bot_of_under_eq_bot (R := B)
     rw [Ideal.under_def, RingHom.comap_ker]
     exact (RingHom.injective_iff_ker_eq_bot _).mp h
   exact (RingHom.injective_iff_ker_eq_bot ψ).mpr this

@@ -64,13 +64,13 @@ theorem isTor_iff {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {F : Type}
 theorem gt_onto_divisible_kernel : LL → AllD fun {R} _ _ {I} D F _ _ => (∀ b : TF (R := R) F ⟶ D.toPre.P.A, ∃ g : GtPtF D.toPre F, g.b = b) ∧ (∀ n, 1 ≤ n → ∀ g : GtPtF D.toPre F, ∃ g', GtPtF.IsNsmul n g' g) ∧ (∀ t, ∃! g : GtPtF D.toPre F, IsTor t g) ∧ (∀ g : GtPtF D.toPre F, g.b = 1 → ∃! t, IsTor t g) ∧ ∀ t t' (g g' g'' : GtPtF D.toPre F), IsTor t g → IsTor t' g' → (g.IsAdd g' g'' ↔ IsTor (t * t') g'') := by
   intro hL R _ _ _ I hA D F _ _ _
   refine ⟨exists_lift, fun n hn g => ?_, fun t => ?_, fun g hb => ?_, fun t t' g g' g'' h h' => ?_⟩
-  · letI := gtGroup D.toPre F
+  · let := gtGroup D.toPre F
     exact (exists_nsmul_eq hL.1.mulN (Or.inl hA.1) (by omega) g).imp fun _ e => (isNsmul_iff_eq _ _ _).2 e.symm
   · exact ⟨_, (isTor_iff _ _).2 (isTorusPtF_torusPt t), fun g h => (isTorusPtF_iff_eq g t).1 ((isTor_iff _ _).1 h)⟩
   · obtain ⟨t, ht⟩ := exists_isTorusPtF_of_b hb
     refine ⟨t, (isTor_iff _ _).2 ht, fun t' ht' => MonoidHom.ext fun χ => Units.ext ?_⟩
     exact congrFun (((isTor_iff _ _).1 ht').fun_unique ht) χ.toAdd
-  · letI := gtGroup D.toPre F
+  · let := gtGroup D.toPre F
     have a := ((isTor_iff _ _).1 h).add ((isTor_iff _ _).1 h')
     rw [isTor_iff]
     exact (isAdd_iff_eq _ _ _).trans ⟨fun e => e ▸ a, fun e => e.unique a⟩

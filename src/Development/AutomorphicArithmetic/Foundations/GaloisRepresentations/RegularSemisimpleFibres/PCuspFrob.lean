@@ -67,7 +67,7 @@ private theorem count_le (q m c c' i k : ℕ) (hq : 0 < q) (hm : 0 < m)
       ((Finset.range m).filter fun j => c * q ^ j ≡ k [MOD q ^ m - 1]).card := by
   apply Finset.card_le_card_of_injOn (fun j => (j + i) % m)
   · intro j hj
-    simp only [Finset.coe_filter, Finset.mem_range, Set.mem_setOf_eq] at hj ⊢
+    simp only [Finset.coe_filter, Finset.mem_range, Set.mem_ofPred_eq] at hj ⊢
     refine ⟨Nat.mod_lt _ hm, ?_⟩
     calc c * q ^ ((j + i) % m) ≡ c * q ^ (j + i) [MOD q ^ m - 1] :=
           ((pow_mod_modEq q m hq hm (j + i)).symm).mul_left _
@@ -75,7 +75,7 @@ private theorem count_le (q m c c' i k : ℕ) (hq : 0 < q) (hm : 0 < m)
       _ ≡ c' * q ^ j [MOD q ^ m - 1] := h.symm.mul_right _
       _ ≡ k [MOD q ^ m - 1] := hj.2
   · intro a ha b hb hab
-    simp only [Finset.coe_filter, Finset.mem_range, Set.mem_setOf_eq] at ha hb
+    simp only [Finset.coe_filter, Finset.mem_range, Set.mem_ofPred_eq] at ha hb
     have h' : a ≡ b [MOD m] := Nat.ModEq.add_right_cancel' i hab
     unfold Nat.ModEq at h'
     rwa [Nat.mod_eq_of_lt ha.1, Nat.mod_eq_of_lt hb.1] at h'

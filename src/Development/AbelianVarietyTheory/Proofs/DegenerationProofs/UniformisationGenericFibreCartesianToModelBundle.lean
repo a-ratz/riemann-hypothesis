@@ -86,8 +86,8 @@ theorem exists_isoData : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) 
   have hi : U.gen.inv.left ≫ U.gen.hom.left = 𝟙 _ := by rw [← Over.comp_left, U.gen.inv_hom_id, Over.id_left]
   have hi' : U.gen.hom.left ≫ U.gen.inv.left = 𝟙 _ := by rw [← Over.comp_left, U.gen.hom_inv_id, Over.id_left]
   obtain ⟨w, hw, key⟩ := exists_iso_section U.gen.inv.left hi w₀ hw₀
-  haveI := U.gen_hom
-  haveI : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
+  have := U.gen_hom
+  have : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
   have hp₁ : IsGrpPullback A.A ((Over.pullback (jK R)).obj G) (𝟙 _) U.gen.inv.left := isGrpPullback_of_iso U.gen.symm
   have hp₂ := isGrpPullback_pullback G (jK R)
   have hp : IsGrpPullback A.A G (jK R) (U.gen.inv.left ≫ pullback.fst G.hom (jK R)) :=

@@ -185,7 +185,7 @@ theorem mem_orad_pullA {τ : Y' ≃+ Y} (hτ : ∀ (a : O) (y : Y'), τ (a • y
 theorem map_orad_pullA {τ : Y' ≃+ Y} (hτ : ∀ (a : O) (y : Y'), τ (a • y) = σ a • τ y) (β : LinearMap.BilinForm ℤ Y) :
     (orad (O := O) (pullA τ β)).toAddSubgroup.map (τ : Y' →+ Y) = (orad (O := O) β).toAddSubgroup := by
   ext y
-  simp only [AddSubgroup.mem_map, Submodule.mem_toAddSubgroup, AddMonoidHom.coe_coe]
+  simp only [AddSubgroup.mem_map, Submodule.mem_toAddSubgroup, AddMonoidHom.coe_ofClass]
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact (mem_orad_pullA hτ β x).1 hx

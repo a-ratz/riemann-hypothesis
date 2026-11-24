@@ -75,11 +75,11 @@ theorem finite_units_submodule {B B' : Type} [CommRing B] [CommRing B'] [Algebra
     (hn : ∀ b' : B', (n : B') * b' ∈ (algebraMap B B').range) :
     Finite (Submodule B B')ˣ := by
   set C : Submodule ℤ B' := (Ideal.span {(n : ℤ)}) • (⊤ : Submodule ℤ B') with hCdef
-  haveI : NeZero n := ⟨hn0⟩
-  haveI : Finite (ℤ ⧸ Ideal.span {(n : ℤ)}) :=
+  have : NeZero n := ⟨hn0⟩
+  have : Finite (ℤ ⧸ Ideal.span {(n : ℤ)}) :=
     Finite.of_equiv _ (Int.quotientSpanNatEquivZMod n).symm.toEquiv
-  haveI : Finite (B' ⧸ C) := Submodule.finite_quotient_smul _ Module.Finite.fg_top
-  haveI : Finite (Submodule ℤ (B' ⧸ C)) :=
+  have : Finite (B' ⧸ C) := Submodule.finite_quotient_smul _ Module.Finite.fg_top
+  have : Finite (Submodule ℤ (B' ⧸ C)) :=
     Finite.of_injective (fun N => (N : Set (B' ⧸ C))) SetLike.coe_injective
   have hC : ∀ I : (Submodule B B')ˣ, C ≤ (I : Submodule B B').restrictScalars ℤ := by
     intro I
@@ -103,9 +103,9 @@ theorem isOfFinOrder_of_isOfFinOrder_mapRingHom : ∀ (B B' : Type) [CommRing B]
     (∀ b' : B', (n : B') * b' ∈ φ.range) → ∀ M : CommRing.Pic B,
     IsOfFinOrder (CommRing.Pic.mapRingHom φ M) → IsOfFinOrder M := by
   intro B B' _ _ _ φ n hφ hn0 hn M hM
-  letI : Algebra B B' := φ.toAlgebra
-  haveI : FaithfulSMul B B' := (faithfulSMul_iff_algebraMap_injective B B').mpr hφ
-  haveI := finite_units_submodule (B := B) (B' := B') n hn0 (fun b' => hn b')
+  let : Algebra B B' := φ.toAlgebra
+  have : FaithfulSMul B B' := (faithfulSMul_iff_algebraMap_injective B B').mpr hφ
+  have := finite_units_submodule (B := B) (B' := B') n hn0 (fun b' => hn b')
   obtain ⟨k, hk, hpow⟩ := hM.exists_pow_eq_one
   have e : CommRing.Pic.mapRingHom φ = CommRing.Pic.mapAlgebra B B' :=
     CommRing.Pic.mapRingHom_algebraMap

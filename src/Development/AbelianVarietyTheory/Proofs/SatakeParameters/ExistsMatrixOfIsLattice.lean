@@ -200,7 +200,7 @@ theorem exists_basis : ∀ {D : D7} (V : HSp D) (e : Formalism.L2.Theta.AE D) (v
       simp only [map_smul, Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, map_mul]
       exact Submodule.smul_mem _ (φ c) ha
   have : Submodule.IsFullLattice (Fv D.host.F v) M := by
-    haveI : Submodule.IsLattice (Fv D.host.F v) M :=
+    have : Submodule.IsLattice (Fv D.host.F v) M :=
       Submodule.IsLattice.of_fg _ (Submodule.fg_span (Set.finite_range _))
     refine ⟨?_⟩
     rw [eq_top_iff, ← (Pi.basisFun (Fv D.host.F v) (Fin V.rank)).span_eq, Submodule.span_le]

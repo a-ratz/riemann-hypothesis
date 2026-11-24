@@ -42,8 +42,8 @@ open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.Conjuga
 theorem UpperTheory.solvable_auxiliary_galois_extension :
     UpperTheory.V.Af.Sol.ExistsCompositumWithPrimeDegreeGalois := by
   intro M Ω _ _ _ _ _ L _ _ _ hp hlt
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed M
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap M Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed M
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap M Ω).injective
   obtain ⟨α, hα⟩ := Field.exists_primitive_element ℚ L
   have hαi : IsIntegral ℚ α := Algebra.IsIntegral.isIntegral α
   set P := minpoly ℚ α with hPdef
@@ -90,16 +90,16 @@ theorem UpperTheory.solvable_auxiliary_galois_extension :
     · rw [IntermediateField.adjoin_simple_le_iff]
       exact IntermediateField.subset_adjoin M _ ((hroot β).2 hβroot)
   have hgal0 : IsGalois M (IntermediateField.adjoin M (Q.rootSet Ω)) := by
-    haveI := hSF
+    have := hSF
     exact IsGalois.of_separable_splitting_field hsep
   have hgal : IsGalois M (IntermediateField.adjoin M {β}) := heq ▸ hgal0
   have hβQ : IsIntegral ℚ β := hαi.map φ
   have hβM : IsIntegral M β := hβQ.tower_top
-  haveI hfdM : FiniteDimensional M (IntermediateField.adjoin M {β}) :=
+  have hfdM : FiniteDimensional M (IntermediateField.adjoin M {β}) :=
     IntermediateField.adjoin.finiteDimensional hβM
-  haveI hfdQ : FiniteDimensional ℚ (IntermediateField.adjoin M {β}) :=
+  have hfdQ : FiniteDimensional ℚ (IntermediateField.adjoin M {β}) :=
     Module.Finite.trans M (IntermediateField.adjoin M {β})
-  haveI hnf : NumberField (IntermediateField.adjoin M {β}) := {}
+  have hnf : NumberField (IntermediateField.adjoin M {β}) := {}
   let f : L →+* IntermediateField.adjoin M {β} := (φ : L →+* Ω).codRestrict _ hrange
   have hfin : Module.finrank M (IntermediateField.adjoin M {β}) = (minpoly M β).natDegree :=
     IntermediateField.adjoin.finrank hβM

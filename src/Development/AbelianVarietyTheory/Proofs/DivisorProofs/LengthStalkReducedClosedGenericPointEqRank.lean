@@ -52,10 +52,10 @@ theorem length_stalk_pushforward {X Y : Scheme.{0}} (i : Y ⟶ X) [IsClosedImmer
       Module.length (Y.presheaf.stalk y) (F.presheaf.stalk y :) := by
   let G := (Scheme.Modules.pushforward i).obj F
   let φ := i.stalkMap y
-  letI : Algebra (X.presheaf.stalk (i y)) (Y.presheaf.stalk y) := φ.hom.toAlgebra
-  letI : Module (X.presheaf.stalk (i y)) (F.presheaf.stalk y :) :=
+  let : Algebra (X.presheaf.stalk (i y)) (Y.presheaf.stalk y) := φ.hom.toAlgebra
+  let : Module (X.presheaf.stalk (i y)) (F.presheaf.stalk y :) :=
     Module.compHom _ (algebraMap (X.presheaf.stalk (i y)) (Y.presheaf.stalk y))
-  haveI : IsScalarTower (X.presheaf.stalk (i y)) (Y.presheaf.stalk y) (F.presheaf.stalk y :) :=
+  have : IsScalarTower (X.presheaf.stalk (i y)) (Y.presheaf.stalk y) (F.presheaf.stalk y :) :=
     IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let Ψ : (G.presheaf.stalk (i y) :) →+ (F.presheaf.stalk y :) :=
     (F.presheaf.stalkPushforward _ i.base y).hom
@@ -68,8 +68,8 @@ theorem length_stalk_pushforward {X Y : Scheme.{0}} (i : Y ⟶ X) [IsClosedImmer
     ConcreteCategory.bijective_of_isIso (F.presheaf.stalkPushforward _ i.base y)
   have hsmul (a : X.presheaf.stalk (i y)) (m : (G.presheaf.stalk (i y) :)) :
       Ψ (a • m) = φ.hom a • Ψ m := by
-    obtain ⟨U₁, hU₁, r, rfl⟩ := X.presheaf.germ_exist a
-    obtain ⟨U₂, hU₂, s, rfl⟩ := G.presheaf.germ_exist m
+    obtain ⟨U₁, hU₁, r, rfl⟩ := X.presheaf.exists_germ_eq a
+    obtain ⟨U₂, hU₂, s, rfl⟩ := G.presheaf.exists_germ_eq m
     have hU : i y ∈ U₁ ⊓ U₂ := ⟨hU₁, hU₂⟩
     rw [← TopCat.Presheaf.germ_res_apply X.presheaf (homOfLE (inf_le_left : U₁ ⊓ U₂ ≤ U₁)) _ hU,
       ← TopCat.Presheaf.germ_res_apply G.presheaf (homOfLE (inf_le_right : U₁ ⊓ U₂ ≤ U₂)) _ hU]

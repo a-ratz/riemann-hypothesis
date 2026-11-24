@@ -77,9 +77,9 @@ theorem sum_inv_card_stab (hle : J' ≤ J) (hN : J'.relIndex J ≠ 0) {Cl : Type
       ((Nat.card (Bridge.stab ι J a) : ℕ) : ℂ)⁻¹ := by
   let X := J ⧸ J'.subgroupOf J
   have hX : Nat.card X = J'.relIndex J := rfl
-  haveI : Finite X := Nat.finite_of_card_ne_zero (hX ▸ hN)
-  letI : Fintype X := Fintype.ofFinite X
-  letI : MulAction (Bridge.stab ι J a) X := MulAction.compHom X (toLev ι J a)
+  have : Finite X := Nat.finite_of_card_ne_zero (hX ▸ hN)
+  let : Fintype X := Fintype.ofFinite X
+  let : MulAction (Bridge.stab ι J a) X := MulAction.compHom X (toLev ι J a)
   have hsm : ∀ (s : Bridge.stab ι J a) (u : J), s • (u : X) = ((toLev ι J a s * u : J) : X) := fun _ _ => rfl
   choose idx hidx hu using fun h => (hy h)
   have hi : ∀ h k, idx h = k ↔ ∃ γ, ∃ w ∈ J', h = ι γ * y k * w := by
@@ -110,7 +110,7 @@ theorem sum_inv_card_stab (hle : J' ≤ J) (hN : J'.relIndex J ≠ 0) {Cl : Type
     refine Finset.card_eq_sum_card_fiberwise fun x _ => ?_
     obtain ⟨u, rfl⟩ := QuotientGroup.mk_surjective x
     obtain ⟨γ, w, hw, e⟩ := (hf u _).1 rfl
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
     refine ⟨γ⁻¹, u * w⁻¹, J.mul_mem u.2 (J.inv_mem (hle hw)), ?_⟩
     rw [map_inv, mul_assoc, ← mul_assoc a, e]; group
   have key : ∀ k, (∃ γ, ∃ u ∈ J, y k = ι γ * a * u) →
@@ -121,7 +121,7 @@ theorem sum_inv_card_stab (hle : J' ≤ J) (hN : J'.relIndex J ≠ 0) {Cl : Type
     have h1 : MulAction.orbit (Bridge.stab ι J a) x₀ = ↑(Finset.univ.filter fun x => f x = k) := by
       ext x
       obtain ⟨u, rfl⟩ := QuotientGroup.mk_surjective x
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
       rw [hf, MulAction.mem_orbit_iff]
       constructor
       · rintro ⟨s, hs⟩
@@ -198,7 +198,7 @@ theorem integral_eq_sum_of_le {G H : Type} [Group G] [Group H] [TopologicalSpace
     have := GlobalTheory.InnerClassSum.finite_stab_of_measure ν Γ (J.comap π) h𝓖 (h1 ▸ one_ne_zero)
       (h1 ▸ ENNReal.one_ne_top) (σ z)
     refine Set.Finite.subset this fun γ hγ => ?_
-    rw [Set.mem_setOf_eq, Subgroup.mem_comap, map_mul, map_mul, map_inv, hσ]
+    rw [Set.mem_ofPred_eq, Subgroup.mem_comap, map_mul, map_mul, map_inv, hσ]
     exact (Bridge.mem_stab _).1 hγ
   let r : Setoid Cl :=
     { r := fun k l => ∃ γ, ∃ u ∈ J, π (h k) = ι γ * π (h l) * u
@@ -224,7 +224,7 @@ theorem integral_eq_sum_of_le {G H : Type} [Group G] [Group H] [TopologicalSpace
   simp only [hΦ] at key
   rw [key, ← Finset.sum_fiberwise Finset.univ (Quotient.mk r)]
   refine Finset.sum_congr rfl fun i _ => ?_
-  haveI := hfin (π (h i.out))
+  have := hfin (π (h i.out))
   rw [← sum_inv_card_stab ι J J' hle hN _ hy, Finset.sum_mul]
   refine Finset.sum_congr (Finset.filter_congr fun k _ => (hq k i).symm) fun k hk => ?_
   obtain ⟨γ, u, hu, e⟩ := (hq k i).1 (Finset.mem_filter.1 hk).2
@@ -232,10 +232,10 @@ theorem integral_eq_sum_of_le {G H : Type} [Group G] [Group H] [TopologicalSpace
 
 theorem integral_eq_classSum_of_le : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : Formalism.L2.DIV.LevDat D.host.E ℂ V.rank) (ν : Measure (GA D V)) (𝓕 : Set (GA D V)), V.IsPosDef → V.SigOK → IsMeasDef V (Formalism.L2.DIV.lev D.sp.cm V.gram β L) ν 𝓕 → (∀ k, k ∈ Formalism.L2.DIV.lev D.sp.cm V.gram β L ↔ k ∈ Formalism.L2.DIV.lev D.sp.cm V.gram β (Lev.flag1L L)) → ∀ (J' : Subgroup (Bridge.Gf V)) (Cl : Type) [Fintype Cl] (h : Cl → GA D V), J' ≤ (levEnv V β L).J → J'.relIndex (levEnv V β L).J ≠ 0 → Bridge.IsReps (Bridge.ratF V) J' (fun k => fin V (h k)) → (∀ k, h k ∈ GfC V) → ∀ Φ : GA D V → ℂ, (∀ γ ∈ GQ V, ∀ x, Φ (γ * x) = Φ x) → (∀ u : GA D V, fin V u ∈ (levEnv V β L).J → ∀ x, Φ (x * u) = Φ x) → ∫ x in 𝓕, Φ x ∂ν = ∑ k, ((J'.relIndex (levEnv V β L).J : ℕ) : ℂ)⁻¹ * ((Nat.card (Bridge.stab (Bridge.ratF V) J' (fin V (h k))) : ℕ) : ℂ)⁻¹ * Φ (h k) := by
   intro D V β L ν 𝓕 _ _ hν hL J' Cl _ h hle hN hy _ Φ hl hr
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
-  haveI := hν.1.1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
+  have := hν.1.1
   have hK : (levEnv V β L).J.comap (finHom V).rangeRestrict =
       (Formalism.L2.DIV.lev D.sp.cm V.gram β L).comap (Lev.finE V) := by
     ext g

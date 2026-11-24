@@ -221,18 +221,18 @@ theorem free_of_exact [IsDomain O] [ValuationRing O] [Module.Free O D] [Module.F
     (hπ : Surjective π) :
     (Module.Free O X ∧ Module.Finite O X) ∧
       (Module.Free O (Module.Dual O Y) ∧ Module.Finite O (Module.Dual O Y)) := by
-  haveI : Module.Finite O (Module.Dual O Y) := Module.Finite.of_surjective π hπ
-  haveI : Module.Flat O (Module.Dual O Y) := by
+  have : Module.Finite O (Module.Dual O Y) := Module.Finite.of_surjective π hπ
+  have : Module.Flat O (Module.Dual O Y) := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     rintro y ⟨⟨a, ha⟩, hy⟩
     refine LinearMap.ext fun w => ?_
     exact (mul_eq_zero.1 (LinearMap.congr_fun hy w)).resolve_left (nonZeroDivisors.ne_zero ha)
-  haveI : Module.Free O (Module.Dual O Y) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O (Module.Dual O Y) := Module.free_of_flat_of_isLocalRing
   obtain ⟨s, hs⟩ := Module.projective_lifting_property π LinearMap.id hπ
   have hs' : ∃ l, π ∘ₗ l = LinearMap.id := ⟨s, hs⟩
   obtain ⟨t, ht⟩ : ∃ l, l ∘ₗ ι = LinearMap.id := ((he.split_tfae hι hπ).out 1 2).1 hs'
-  haveI : Module.Finite O X := Module.Finite.of_surjective t fun x => ⟨ι x, LinearMap.congr_fun ht x⟩
-  haveI : Module.Projective O X := Module.Projective.of_split ι t ht
+  have : Module.Finite O X := Module.Finite.of_surjective t fun x => ⟨ι x, LinearMap.congr_fun ht x⟩
+  have : Module.Projective O X := Module.Projective.of_split ι t ht
   exact ⟨⟨Module.free_of_flat_of_isLocalRing, inferInstance⟩, inferInstance, inferInstance⟩
 
 theorem map_padic_smul {p : ℕ} [Fact p.Prime] [IsHausdorff (span {(p : A)}) M] {N : Type*}
@@ -338,17 +338,17 @@ theorem Published.PrismaticDieudonneHodgeAt.covariant {C : Type} [Field C] [IsAl
     (hε : IsPrimitiveRoot (root ε).untilt p) (h : Published.PrismaticDieudonneHodgeAt ε) :
     CovariantDieudonneAt ε := by
   obtain ⟨M, D, φ, r, ι, π, hadd, hM, hφ, nφ, hr, nr, hex, nι, nπ, ⟨ec, hec⟩, ⟨em, hem⟩, hff⟩ := h
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
-  haveI : IsAdicComplete (span {(p : Ainf p O)}) (Ainf p O) := WittVector.isAdicCompleteIdealSpanP
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
+  have : IsAdicComplete (span {(p : Ainf p O)}) (Ainf p O) := WittVector.isAdicCompleteIdealSpanP
   have hξ : xi ε ≠ 0 := fun h0 =>
     one_ne_zero (ReciprocityTheory.PGsh.Ainf.xi_nzd p O hv ε hε 1 ((one_mul _).trans h0))
   have hξ' : (WittVector.frobenius (xi ε) : Ainf p O) ≠ 0 := fun h0 =>
     hξ (frobenius_injective (h0.trans (map_zero _).symm))
   have inj : ∀ G, Injective (φ G) := fun G => by
-    haveI := (hM G).1
-    haveI := (hM G).2.1
+    have := (hM G).1
+    have := (hM G).2.1
     exact injective_of_smul_mem_range frobenius_injective (φ G) hξ' (hφ G)
   choose s hs using hφ
   let ψ : ∀ G : PDivGroup p O, M.obj (op G) →ₛₗ[phiInv p O] M.obj (op G) := fun G =>
@@ -402,7 +402,7 @@ theorem Published.PrismaticDieudonneHodgeAt.covariant {C : Type} [Field C] [IsAl
       rw [← (hex G.dual).2.1 x, LinearMap.comp_apply, map_eq_zero_iff _ (hπ G).1],
       (hπ G).2.comp (hex _).2.2⟩
   have k1 : ∀ G : PDivGroup p O, Injective (ψ G) ∧ ∀ m, ∃ n, ψ G n = xi ε • m := fun G => by
-    haveI := (hM G).1
+    have := (hM G).1
     refine ⟨fun x y hxy => ?_, fun m => ⟨φ G m, inj _ ?_⟩⟩
     · have := congrArg (φ G) hxy
       rw [hψ, hψ] at this
@@ -433,8 +433,8 @@ theorem Published.PrismaticDieudonneHodgeAt.covariant {C : Type} [Field C] [IsAl
     fun G G' f => nψ _ _ (dualHom G G' f), fun G => hr G.dual,
     fun G G' f => nr _ _ (dualHom G G' f), hex', fun G G' f => nι _ _ (dualHom G G' f),
     k2, fun G => ?_, b ≪≫ₗ em, ec, u⁻¹, k3, k4, fun ζ h0' h' hζ m => ?_⟩
-  · haveI := (hM G.dual).1
-    haveI := (hM G.dual).2.1
+  · have := (hM G.dual).1
+    have := (hM G.dual).2.1
     obtain ⟨h1, h2, h3⟩ := free_of_reduction (ReciprocityTheory.PGsh.Ainf.theta_surj p O hv)
       (ReciprocityTheory.PGsh.Ainf.theta_xi p O hv ε hε) (r G.dual) (hr _).1 fun m => ((hr _).2 m).1
     exact ⟨⟨h1, h2, h3.trans (hM G.dual).2.2⟩,

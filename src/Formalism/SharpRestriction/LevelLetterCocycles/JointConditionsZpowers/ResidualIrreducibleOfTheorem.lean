@@ -102,7 +102,7 @@ theorem placesOver_finite_joint_conditions_zpowers (E : Type) [Field E] [NumberF
     rwa [Ne, Ideal.span_singleton_eq_bot]
   refine (Ideal.finite_factors hI).subset ?_
   intro v hv
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 
@@ -129,7 +129,7 @@ private theorem charpoly_eq_of_frob_on_split_places (D : D7) {k : Type} [Field k
       obtain ⟨hk1, hk2⟩ := Subgroup.mem_inf.mp hk
       rw [MonoidHom.mem_ker] at hk1 hk2
       apply hg0
-      simpa only [Set.mem_setOf_eq, map_mul, hk1, hk2, mul_one] using hgk
+      simpa only [Set.mem_ofPred_eq, map_mul, hk1, hk2, mul_one] using hgk
     · refine isOpenMap_mul_left g0 _ ?_
       rw [Subgroup.coe_inf]
       exact ho.inter ho'

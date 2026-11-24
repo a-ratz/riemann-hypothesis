@@ -80,8 +80,8 @@ theorem continuous_of_affine (h1 : ValueRules) (X : Over (Sp ℂ)) (U : X.left.O
   have hpU : (σ w).left (default : PrimeSpectrum ℂ) ∈ U := ((h1 _ (σ w).left).1 U).1 (hσ w)
   have hpV : (σ w).left (default : PrimeSpectrum ℂ) ∈ V := ((h1 _ (σ w).left).1 V).1 hwV
   obtain ⟨g, hgV, hpg⟩ := hU.exists_basicOpen_le ⟨_, hpV⟩ hpU
-  letI := (X.left.presheaf.map (homOfLE <| X.left.basicOpen_le g).op).hom.toAlgebra
-  haveI := hU.isLocalization_basicOpen g
+  let := (X.left.presheaf.map (homOfLE <| X.left.basicOpen_le g).op).hom.toAlgebra
+  have := hU.isLocalization_basicOpen g
   obtain ⟨⟨a, _, ⟨n, rfl⟩⟩, ha⟩ := IsLocalization.surj (Submonoid.powers g) (resG X.left hgV f)
   simp only [RingHom.algebraMap_toAlgebra] at ha
 
@@ -119,7 +119,7 @@ theorem exists_compact_of_affine (h1 : ValueRules) (h2 : AffinePoints) (X : Over
     (hs : Function.Surjective (MvPolynomial.eval₂Hom c r)) :
     ∃ C : Set (𝟙_ (Over (Sp ℂ)) ⟶ X), @IsCompact _ (pointTopology X) C ∧
       ∀ x : 𝟙_ (Over (Sp ℂ)) ⟶ X, ⊤ ≤ x.left ⁻¹ᵁ U → (∀ j, ‖valAt' x.left U (r j)‖ ≤ 1) → x ∈ C := by
-  letI := pointTopology X
+  let := pointTopology X
   have hXw : ∀ x : 𝟙_ (Over (Sp ℂ)) ⟶ X, x.left ≫ X.hom = 𝟙 _ := fun x => by
     simpa using Over.w x
   set K : Set (Fin n → ℂ) := {z | (∀ j, ‖z j‖ ≤ 1) ∧
@@ -148,10 +148,10 @@ theorem exists_compact_of_affine (h1 : ValueRules) (h2 : AffinePoints) (X : Over
   choose σ hσ hσu using hex
   have hσc : Continuous σ := continuous_of_affine h1 X U hU σ (fun z => (hσ z).1) (fun f => by
     obtain ⟨p, rfl⟩ := hs f
-    refine ((MvPolynomial.continuous_eval p).comp continuous_subtype_val).congr fun z => ?_
+    refine ((MvPolynomial.continuous_eval p).comp continuous_subtypeVal).congr fun z => ?_
     rw [(hσ z).2, he]
     rfl)
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   refine ⟨Set.range σ, isCompact_range hσc, fun x hx hle => ?_⟩
   obtain ⟨ex, hex⟩ := (h1 _ x.left).2.1 U hx
   have hcomp : ex.comp (MvPolynomial.eval₂Hom c r) = MvPolynomial.eval (fun j => valAt' x.left U (r j)) := by
@@ -170,13 +170,13 @@ theorem exists_compact_of_affine (h1 : ValueRules) (h2 : AffinePoints) (X : Over
 
 theorem continuous_comp (h1 : ValueRules) {X Y : Over (Sp ℂ)} (φ : X ⟶ Y) :
     @Continuous _ _ (pointTopology X) (pointTopology Y) (fun x => x ≫ φ) := by
-  letI := pointTopology X
+  let := pointTopology X
   refine continuous_generateFrom_iff.2 ?_
   rintro S ⟨U, f, O, hO, rfl⟩
   apply TopologicalSpace.isOpen_generateFrom_of_mem
   refine ⟨φ.left ⁻¹ᵁ U, (φ.left.app U).hom f, O, hO, ?_⟩
   ext x
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, Over.comp_left]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, Over.comp_left]
   rw [(h1 _ x.left).2.2.2.1 _ φ.left U f]
   exact Iff.rfl
 
@@ -191,7 +191,7 @@ theorem compact_of_sections (h1 : ValueRules) (h2 : AffinePoints) (X : Over (Sp 
         ∃ c : ℂ →+* Γ(X.left, Out.nonzeroLocus (s i)), (∀ a, c a = constFn X.hom _ a) ∧
           Function.Surjective (MvPolynomial.eval₂Hom c r)) :
     @CompactSpace _ (pointTopology X) := by
-  letI := pointTopology X
+  let := pointTopology X
   choose hA r hr c hc hsurj using H
   have hC := fun i => exists_compact_of_affine h1 h2 X _ (hA i) (r i) (c i) (hc i) (hsurj i)
   choose C hCc hCmem using hC
@@ -235,7 +235,7 @@ theorem compactSpace_points_polAV : (∀ (X : Scheme.{0}) (x : Sp ℂ ⟶ X), (�
   unfold Out.RelAmple at h9
   obtain ⟨N, hN, M, s, hcov, hh⟩ := h9 ⊤ (AlgebraicGeometry.isAffineOpen_top _)
   let X' : Over (Sp ℂ) := Over.mk ((A.hom ∣_ ⊤) ≫ (⊤ : (Sp ℂ).Opens).ι)
-  haveI : IsIso (⊤ : (Sp ℂ).Opens).ι := by
+  have : IsIso (⊤ : (Sp ℂ).Opens).ι := by
     rw [← Scheme.topIso_hom]
     infer_instance
   have hψ : Function.Surjective (((⊤ : (Sp ℂ).Opens).ι.app ⊤).hom.comp
@@ -258,8 +258,8 @@ theorem compactSpace_points_polAV : (∀ (X : Scheme.{0}) (x : Sp ℂ ⟶ X), (�
       rw [MvPolynomial.coe_eval₂Hom, MvPolynomial.coe_eval₂Hom]
       exact (MvPolynomial.eval₂_map _ _ _ _).symm
   let φ : X' ⟶ A := Over.homMk (A.hom ⁻¹ᵁ ⊤).ι (morphismRestrict_ι _ _).symm
-  letI := pointTopology X'
-  letI := pointTopology A
+  let := pointTopology X'
+  let := pointTopology A
   have hsurj : Function.Surjective (fun y : 𝟙_ (Over (Sp ℂ)) ⟶ X' => y ≫ φ) := by
     intro x
     have hr : Set.range x.left.base ⊆ Set.range (A.hom ⁻¹ᵁ ⊤).ι.base := by

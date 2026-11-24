@@ -77,35 +77,35 @@ theorem isIndEtale_of_etale_atPrime (R C : Type) [CommRing R] [CommRing C] (P : 
     (Cocone.mk _ (GlobalTheory.IndEtaleLoc.toLoc (s := s0) (M := M) L))
     (GlobalTheory.IndEtaleLoc.isColimitToLoc L hs0) C
   let Re : Type := Localization.Away j.e
-  letI : Algebra R Re := (inferInstance : Algebra (D0.obj j.j) (Localization.Away j.e))
-  letI : Algebra Re L := (GlobalTheory.IndEtaleLoc.leg L j).toAlgebra
-  letI : Algebra Re Aj := instA
-  haveI : Algebra.Etale Re Aj := hAj
+  let : Algebra R Re := (inferInstance : Algebra (D0.obj j.j) (Localization.Away j.e))
+  let : Algebra Re L := (GlobalTheory.IndEtaleLoc.leg L j).toAlgebra
+  let : Algebra Re Aj := instA
+  have : Algebra.Etale Re Aj := hAj
   let e0 : R := j.e
   have he0 : e0 ∈ M := j.mem
-  haveI : IsLocalization (Submonoid.powers e0) Re :=
+  have : IsLocalization (Submonoid.powers e0) Re :=
     (inferInstance : IsLocalization (Submonoid.powers j.e) (Localization.Away j.e))
-  haveI : IsScalarTower R Re L := IsScalarTower.of_algebraMap_eq (fun r =>
+  have : IsScalarTower R Re L := IsScalarTower.of_algebraMap_eq (fun r =>
     (GlobalTheory.IndEtaleLoc.leg_algebraMap (s := s0) (M := M) L j r).symm)
-  haveI hLoc : IsLocalization (M.map (algebraMap R Re)) L :=
+  have hLoc : IsLocalization (M.map (algebraMap R Re)) L :=
     IsLocalization.isLocalization_of_submonoid_le Re L (Submonoid.powers e0) M
       (Submonoid.powers_le.2 he0)
   let e' : L ⊗[Re] Aj ≃ₐ[L] C := e
-  letI rA : Algebra Aj (L ⊗[Re] Aj) := Algebra.TensorProduct.rightAlgebra
-  haveI hT : IsLocalization (Algebra.algebraMapSubmonoid Aj (M.map (algebraMap R Re)))
+  let rA : Algebra Aj (L ⊗[Re] Aj) := Algebra.TensorProduct.rightAlgebra
+  have hT : IsLocalization (Algebra.algebraMapSubmonoid Aj (M.map (algebraMap R Re)))
       (L ⊗[Re] Aj) := IsLocalization.tensorRight _ _
-  letI : Algebra Aj C := (e'.toRingHom.comp (algebraMap Aj (L ⊗[Re] Aj))).toAlgebra
+  let : Algebra Aj C := (e'.toRingHom.comp (algebraMap Aj (L ⊗[Re] Aj))).toAlgebra
   let eA : L ⊗[Re] Aj ≃ₐ[Aj] C := AlgEquiv.ofRingEquiv (f := e'.toRingEquiv) (fun _ => rfl)
-  haveI hCloc : IsLocalization (Algebra.algebraMapSubmonoid Aj (M.map (algebraMap R Re))) C :=
+  have hCloc : IsLocalization (Algebra.algebraMapSubmonoid Aj (M.map (algebraMap R Re))) C :=
     IsLocalization.isLocalization_of_algEquiv _ eA
-  letI : Algebra R Aj := ((algebraMap Re Aj).comp (algebraMap R Re)).toAlgebra
-  haveI : IsScalarTower R Re Aj := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.Etale R Re :=
+  let : Algebra R Aj := ((algebraMap Re Aj).comp (algebraMap R Re)).toAlgebra
+  have : IsScalarTower R Re Aj := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.Etale R Re :=
     (Algebra.Etale.of_isLocalizationAway j.e : Algebra.Etale (D0.obj j.j) (Localization.Away j.e))
-  haveI : Algebra.Etale R Aj := Algebra.Etale.comp R Re Aj
-  letI : Algebra R C := ((algebraMap L C).comp (algebraMap R L)).toAlgebra
-  haveI : IsScalarTower R L C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower R Aj C := IsScalarTower.of_algebraMap_eq (fun r => by
+  have : Algebra.Etale R Aj := Algebra.Etale.comp R Re Aj
+  let : Algebra R C := ((algebraMap L C).comp (algebraMap R L)).toAlgebra
+  have : IsScalarTower R L C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower R Aj C := IsScalarTower.of_algebraMap_eq (fun r => by
     have key : ((1 : L) ⊗ₜ[Re] algebraMap Re Aj (algebraMap R Re r)) =
         algebraMap L (L ⊗[Re] Aj) (algebraMap R L r) := by
       rw [Algebra.TensorProduct.algebraMap_apply, IsScalarTower.algebraMap_apply R Re L]
@@ -126,8 +126,8 @@ theorem indEt_of_indEt_atPrime : ∀ (B O : Type) [CommRing B] [CommRing O] (P :
       MorphismProperty.isFinitelyPresentable.{0} CommRingCat.{0} := by
     intro X Y f hf
     refine CommRingCat.isFinitelyPresentable_hom f ?_
-    letI := f.hom.toAlgebra
-    haveI : Algebra.Etale X Y := hf
+    let := f.hom.toAlgebra
+    have : Algebra.Etale X Y := hf
     exact RingHom.finitePresentation_algebraMap.2 inferInstance
   unfold IndEt GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale
   rw [← MorphismProperty.ind_ind hp]
@@ -135,8 +135,8 @@ theorem indEt_of_indEt_atPrime : ∀ (B O : Type) [CommRing B] [CommRing O] (P :
   refine ⟨J, inferInstance, inferInstance, D,
     (Functor.const J).map (CommRingCat.ofHom (algebraMap B (Localization.AtPrime P))) ≫ t, s, hs,
     fun i => ⟨?_, ?_⟩⟩
-  · letI : Algebra (Localization.AtPrime P) (D.obj i) := (t.app i).hom.toAlgebra
-    haveI : Algebra.Etale (Localization.AtPrime P) (D.obj i) := (hj i).1
+  · let : Algebra (Localization.AtPrime P) (D.obj i) := (t.app i).hom.toAlgebra
+    have : Algebra.Etale (Localization.AtPrime P) (D.obj i) := (hj i).1
     exact isIndEtale_of_etale_atPrime B (D.obj i) P
   · have h2 := (hj i).2
     show CommRingCat.ofHom (algebraMap B (Localization.AtPrime P)) ≫ t.app i ≫ s.app i = _

@@ -61,13 +61,13 @@ theorem cyc_char_continuous {p : ℕ} [hp : Fact p.Prime] {K : IntermediateField
       ∀ h ∈ H, ((ε' h : Oˣ) : O) - 1 ∈ Ideal.span {(p : O) ^ k} := by
     intro k
     have hN : 0 < p ^ k := pow_pos hp.out.pos k
-    haveI : NeZero ((p ^ k : ℕ) : PadicAlgCl p) := ⟨by exact_mod_cast hN.ne'⟩
+    have : NeZero ((p ^ k : ℕ) : PadicAlgCl p) := ⟨by exact_mod_cast hN.ne'⟩
     obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic (p ^ k) (PadicAlgCl p))
       (Polynomial.degree_cyclotomic_pos (p ^ k) (PadicAlgCl p) hN).ne'
     have hpr : IsPrimitiveRoot ζ (p ^ k) := Polynomial.isRoot_cyclotomic_iff.1 hζ
     have hint : IsIntegral K ζ :=
       IsIntegral.of_pow hN (by rw [hpr.pow_eq_one]; exact isIntegral_one)
-    haveI := IntermediateField.adjoin.finiteDimensional hint
+    have := IntermediateField.adjoin.finiteDimensional hint
     refine ⟨(IntermediateField.adjoin K {ζ}).fixingSubgroup,
       IntermediateField.fixingSubgroup_isOpen _, fun h hh => ?_⟩
     have hfix : h ζ = ζ := hh ⟨ζ, IntermediateField.mem_adjoin_simple_self K ζ⟩

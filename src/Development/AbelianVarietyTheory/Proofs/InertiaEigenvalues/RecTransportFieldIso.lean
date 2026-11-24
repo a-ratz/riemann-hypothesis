@@ -705,7 +705,7 @@ theorem eq_of_induced : BrauerDegreeZero → ∀ (E Ω : Type) [Field E] [Number
         exact ⟨σ, rfl⟩
       have : ((G : Set (Module.End ℂ (Fin n → ℂ))ˣ)) = Set.range u := MonoidHom.coe_range u
       exact Set.finite_coe_iff.mpr (this ▸ hr)
-    letI : Fintype G := Fintype.ofFinite G
+    let : Fintype G := Fintype.ofFinite G
     let π : Weil h →* G := u.rangeRestrict
     have hπs : Function.Surjective π := MonoidHom.rangeRestrict_surjective u
     let ρG : Representation ℂ G (Fin n → ℂ) := (Units.coeHom _).comp G.subtype
@@ -751,7 +751,7 @@ theorem eq_of_induced : BrauerDegreeZero → ∀ (E Ω : Type) [Field E] [Number
       intro i
       let H' := (H i).comap π
       have hidx : (H i).index = H'.index := (Subgroup.index_comap_of_surjective _ hπs).symm
-      haveI : H'.FiniteIndex := ⟨by rw [← hidx]; exact Subgroup.index_ne_zero_of_finite⟩
+      have : H'.FiniteIndex := ⟨by rw [← hidx]; exact Subgroup.index_ne_zero_of_finite⟩
       have hop : IsOpen {σ : Ine (F := E) A | ineIncl h σ ∈ H'} := by
         have hle : (π.comp (ineIncl h)).ker ≤ H'.comap (ineIncl h) := by
           intro σ hσ
@@ -916,7 +916,7 @@ theorem isTateEps_transport : ∀ (k k' : Type) [Field k] [ValuativeRel k] [Topo
   have hfilt : ∀ (x : kˣ) (b : ℕ), u x ∈ unitFilt k' b ↔ x ∈ unitFilt k b := by
     intro x b
     obtain ⟨p, hp, hp'⟩ := hunif b
-    simp only [unitFilt, Set.mem_setOf_eq]
+    simp only [unitFilt, Set.mem_ofPred_eq]
     have e1 : valuation k' ((u x : k'ˣ) : k') = 1 ↔ valuation k (x : k) = 1 := by
       rw [← ord_eq_zero_iff, ← ord_eq_zero_iff, hord]
     have e2 : valuation k' (((u x : k'ˣ) : k') - 1) ≤ uniformizer k' ^ b ↔
@@ -997,7 +997,7 @@ theorem trace_map_of_adjoin_range_eq_top_of_finrank_eq : ∀ (E L E' L' : Type) 
   set n := Module.finrank E L
   let b : Module.Basis (Fin n) E L := Module.finBasis E L
   have hpos : 0 < Module.finrank E' L' := by rw [hrank]; exact Module.finrank_pos
-  haveI : FiniteDimensional E' L' := Module.finite_of_finrank_pos hpos
+  have : FiniteDimensional E' L' := Module.finite_of_finrank_pos hpos
   let v : Fin n → L' := fun k => jL (b k)
   have hexp : ∀ w : L, jL w = ∑ k, j (b.repr w k) • v k := by
     intro w
@@ -1094,8 +1094,8 @@ noncomputable section
 theorem GlobalTheory.LocLanglands.exists_isLocalExt_transport : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (E' Ω' : Type) [Field E'] [NumberField E'] [Field Ω'] [Algebra E' Ω'] [IsAlgClosure E' Ω'] (A' : ValuationSubring Ω') (w' : HeightOneSpectrum (𝓞 E')) (h' : IsPlaceOver A' w') (φ : Ω ≃+* Ω') (j : E →+* E') (c : Weil h ≃* Weil h'), (∀ x, φ (algebraMap E Ω x) = algebraMap E' Ω' (j x)) → (∀ σ, WeilRel φ σ (c σ)) → ∀ L : IntermediateField E Ω, FiniteDimensional E L → IsLocalExt L h → ∃ (L' : IntermediateField E' Ω') (jL : L →+* L'), FiniteDimensional E' L' ∧ IsLocalExt L' h' ∧ Module.finrank E' L' = Module.finrank E L ∧ (∀ x : L, φ (x : Ω) = (jL x : Ω')) ∧ Algebra.adjoin E' (Set.range jL) = ⊤ := by
   intro E Ω _ _ _ _ _ A w h E' Ω' _ _ _ _ _ A' w' h' φ j c hφ hc L hL hloc
   classical
-  haveI := IsAlgClosure.isAlgebraic (R := E) (K := Ω)
-  haveI := IsAlgClosure.isAlgebraic (R := E') (K := Ω')
+  have := IsAlgClosure.isAlgebraic (R := E) (K := Ω)
+  have := IsAlgClosure.isAlgebraic (R := E') (K := Ω')
 
   obtain ⟨α, rfl⟩ : ∃ α : Ω, E⟮α⟯ = L := by
     obtain ⟨α₀, hα₀⟩ := Field.exists_primitive_element E L
@@ -1168,8 +1168,8 @@ theorem GlobalTheory.LocLanglands.exists_isLocalExt_transport : ∀ (E Ω : Type
     apply le_antisymm
     · calc m'.natDegree ≤ (p.map j).natDegree := natDegree_le_of_dvd hdvd hqne
         _ = p.natDegree := natDegree_map j
-    · haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-      haveI : IsAlgClosed Ω' := IsAlgClosure.isAlgClosed E'
+    · have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+      have : IsAlgClosed Ω' := IsAlgClosure.isAlgClosed E'
       have hsep : p.Separable := (minpoly.irreducible hint).separable
       have hnd : (p.aroots Ω).Nodup := nodup_roots (hsep.map)
       have hm'ne : m' ≠ 0 := minpoly.ne_zero hint'
@@ -1233,8 +1233,8 @@ namespace GlobalTheory.LocLanglands.EpsUnique
 
 theorem index_eq_finrank : ∀ (K L Ω : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] [Algebra L Ω] [Algebra K L] [IsScalarTower K L Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)) (h : IsPlaceOver A v), IsLocalExt L h → ∀ H : Subgroup (Weil h), (∀ σ : Weil h, σ ∈ H ↔ ∀ x : L, (σ : G K Ω) (algebraMap L Ω x) = algebraMap L Ω x) → H.index = Module.finrank K L := by
   intro K L Ω _ _ _ _ _ _ _ _ _ _ A v h hL H hH
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Normal K Ω := IsAlgClosure.normal K Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Normal K Ω := IsAlgClosure.normal K Ω
   let f : Weil h → (L →ₐ[K] Ω) := fun σ => (σ : G K Ω).toAlgHom.comp (IsScalarTower.toAlgHom K L Ω)
   have hf : ∀ σ τ : Weil h, f σ = f τ ↔ σ⁻¹ * τ ∈ H := fun σ τ => by
     rw [hH, AlgHom.ext_iff]
@@ -1256,7 +1256,7 @@ theorem induces_of_eigenvector : ∀ (K L Ω : Type) [Field K] [NumberField K] [
   intro K L Ω _ _ _ _ _ _ _ _ _ _ _ A v v' h h' r hr hs n b u ξ hn hu hsp
   have hu0 : u ≠ 0 := by
     rintro rfl
-    haveI : Nonempty (Fin n) := ⟨⟨0, hn ▸ Module.finrank_pos⟩⟩
+    have : Nonempty (Fin n) := ⟨⟨0, hn ▸ Module.finrank_pos⟩⟩
     refine bot_ne_top (α := Submodule ℂ (Fin n → ℂ)) (hsp ▸ (Submodule.span_eq_bot.2 ?_).symm)
     rintro _ ⟨σ, rfl⟩
     simp
@@ -1328,7 +1328,7 @@ theorem exists_addChar (L : Type) [Field L] [NumberField L] [Algebra L Ω] [IsAl
   refine ⟨ψ.compAddMonoidHom T, hc.comp hT, fun h0 => h1 ?_, fun z => by simp [hT']⟩
   ext x
   refine (HeightOneSpectrum.denseRange_algebraMap E w).induction_on (p := fun x => (ψ x : ℂ) = (1 : AddChar _ Circle) x) x
-    (isClosed_eq (continuous_subtype_val.comp hc) (by simpa using continuous_const)) fun a => ?_
+    (isClosed_eq (continuous_subtypeVal.comp hc) (by simpa using continuous_const)) fun a => ?_
   obtain ⟨z, rfl⟩ := Algebra.trace_surjective E L a
   have := DFunLike.congr_fun h0 (algebraMap L _ z)
   simp only [AddChar.compAddMonoidHom_apply, hT', AddChar.one_apply] at this
@@ -1347,8 +1347,8 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 theorem addChar_transport (hP : PlaceIso A w A' w' φ j i) {ψ : AddChar (w.adicCompletion E) Circle}
     {ψ' : AddChar (w'.adicCompletion E') Circle} (hc : Continuous ψ) (h1 : ψ ≠ 1) (hψ : ∀ x, ψ' (i x) = ψ x) :
     Continuous ψ' ∧ ψ' ≠ 1 := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  haveI : CharZero (w'.adicCompletion E') := charZero_of_injective_algebraMap (algebraMap E' _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w'.adicCompletion E') := charZero_of_injective_algebraMap (algebraMap E' _).injective
   refine ⟨?_, fun h0 => h1 ?_⟩
   · have : (ψ' : _ → Circle) = ψ ∘ i.symm := funext fun x => by simp [← hψ]
     rw [this]
@@ -1369,8 +1369,8 @@ theorem eps_char (hG : GlobalArtinReciprocity) (hC : ChevalleyUnits) (hL : Local
   obtain ⟨χ, hχ, rfl⟩ := ha.factor ξ hξ
   obtain ⟨χ', hχ', rfl⟩ := ha'.factor ξ' hξ'
   obtain ⟨c, hcr, -⟩ := GlobalTheory.T.place_over_transport_ring_iso E Ω A w h E' Ω' A' w' h' φ j i hP
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  haveI : CharZero (w'.adicCompletion E') := charZero_of_injective_algebraMap (algebraMap E' _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w'.adicCompletion E') := charZero_of_injective_algebraMap (algebraMap E' _).injective
   refine Units.ext ((GlobalTheory.T.tate_epsilon_transport _ _ i hP.cont ψ ψ' χ χ' _ hψ (fun x => ?_) (hε.char E w h ψ hc h1 a ha χ hχ)).unique
     (hε'.char E' w' h' ψ' hc' h1' a' ha' χ' hχ'))
   obtain ⟨σ, rfl⟩ := ha.surj x
@@ -1398,10 +1398,10 @@ theorem eps_ind (hG : GlobalArtinReciprocity) (hC : ChevalleyUnits) (hLL : Local
   obtain ⟨L, hfin, hL, hHL⟩ := GlobalTheory.T.exists_localExtension_of_finiteIndex_weilSubgroup E Ω A w h H hH hHo
   obtain ⟨L', jL, hfin', hL', hdeg, hφ, hadj⟩ :=
     GlobalTheory.T.weil_group_transport E Ω A w h E' Ω' A' w' h' φ j c hP.ext (fun σ => (hcr σ _).2 rfl) L hfin hL
-  haveI : NumberField L := NumberField.of_module_finite E L
-  haveI : NumberField L' := NumberField.of_module_finite E' L'
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) L⟩
-  haveI : IsAlgClosure L' Ω' := ⟨IsAlgClosure.isAlgClosed E', Algebra.IsAlgebraic.tower_top (K := E') L'⟩
+  have : NumberField L := NumberField.of_module_finite E L
+  have : NumberField L' := NumberField.of_module_finite E' L'
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) L⟩
+  have : IsAlgClosure L' Ω' := ⟨IsAlgClosure.isAlgClosed E', Algebra.IsAlgebraic.tower_top (K := E') L'⟩
   obtain ⟨v, hv⟩ := exists_place h L
   obtain ⟨v', hv'⟩ := exists_place h' L'
   have hj : ∀ x, jL (algebraMap E L x) = algebraMap E' L' (j x) := fun x =>

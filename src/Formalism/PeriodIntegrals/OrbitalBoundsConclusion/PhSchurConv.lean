@@ -81,7 +81,7 @@ theorem coef_inv {G : Type} [Group G] [TopologicalSpace G]
     {σ : G → (H →L[ℂ] H)} (hU : IsURep σ) (g : G) (w : H) :
     ⟪w, σ g⁻¹ w⟫_ℂ = star ⟪w, σ g w⟫_ℂ := by
   rw [star_inner, ← inner_map hU g w (σ g⁻¹ w), ← map_mul_apply hU, mul_inv_cancel, hU.1,
-    ContinuousLinearMap.one_apply]
+    one_apply_eq_self]
 
 theorem coef_conv {G : Type} [Group G] [TopologicalSpace G]
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -92,7 +92,7 @@ theorem coef_conv {G : Type} [Group G] [TopologicalSpace G]
   symm
   calc ⟪σ (g * x) w, σ y w⟫_ℂ = ⟪σ (g * x)⁻¹ (σ (g * x) w), σ (g * x)⁻¹ (σ y w)⟫_ℂ := (inner_map hU _ _ _).symm
     _ = ⟪w, σ (x⁻¹ * g⁻¹ * y) w⟫_ℂ := by
-      rw [← map_mul_apply hU, ← map_mul_apply hU, inv_mul_cancel, hU.1, ContinuousLinearMap.one_apply,
+      rw [← map_mul_apply hU, ← map_mul_apply hU, inv_mul_cancel, hU.1, one_apply_eq_self,
         mul_inv_rev]
 
 end PI.UnitaryGroupMassFormula.PhSchurConv.Main
@@ -118,7 +118,7 @@ theorem schur_orthogonality_idempotent : PI.PhSchurConv.SchurConv := by
   · unfold PI.PhSchurConv.PhConv
     refine ⟨?_, ?_, ?_⟩
     · simp only [PI.PhSchurConv.coefM]
-      rw [h1, ContinuousLinearMap.one_apply, inner_self_eq_norm_sq_to_K, hw]
+      rw [h1, one_apply_eq_self, inner_self_eq_norm_sq_to_K, hw]
       simp
     · intro g
       simp only [PI.PhSchurConv.phOf, PI.PhSchurConv.coefM]

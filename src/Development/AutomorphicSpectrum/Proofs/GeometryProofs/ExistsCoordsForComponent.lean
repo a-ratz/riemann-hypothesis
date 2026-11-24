@@ -197,7 +197,7 @@ theorem inter_isVBOn_char0 {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     (M.lat.inter (eigSp ρ (cst.comp (labelEmb c s)))).IsVBOn {q | ∀ r : ℕ, r.Prime → ¬ InFibre ξ r q}
       (Module.finrank Ω (eigSp ρ (cst.comp (labelEmb c s)))) (eigSp ρ (cst.comp (labelEmb c s))) := by
   classical
-  haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  have : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   have hl := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
   have hinj : Function.Injective fun s : CMType H ⊕ CMType H => cst.comp (labelEmb c s) := by
     intro s s' h
@@ -211,7 +211,7 @@ theorem inter_isVBOn_char0 {E : Type} [Field E] [NumberField E] [IsCMField E] {H
   · intro p _
     exact hvb p trivial |>.imp fun U h => ⟨h.1, h.2.imp fun b hb => ⟨hb.1, fun q _ hq => hb.2 q trivial hq⟩⟩
   · intro p _ a e he
-    haveI := t.act.hom
+    have := t.act.hom
     exact SatModel.lat_stable M t.act.act ρ hact p a e he
   · intro p hp s a
     have hf := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hg p).2.1
@@ -297,8 +297,8 @@ theorem isIntegrallyClosed_of_snc {K : Type} [Fintype K] {J : K → Type} [∀ k
     exact u.2
   let S : Subalgebra ℚ Ω := Algebra.adjoin ℚ (insert (f l)⁻¹ (Set.range r))
   obtain ⟨hsmooth, -⟩ := hsm l hfl0 S rfl
-  haveI := hsmooth
-  haveI : IsIntegrallyClosed S := GlobalTheory.isIntegrallyClosed_of_smooth ℚ S
+  have := hsmooth
+  have : IsIntegrallyClosed S := GlobalTheory.isIntegrallyClosed_of_smooth ℚ S
   have hSle : S ≤ A := Algebra.adjoin_le (by
     rintro _ (rfl | ⟨p, rfl⟩)
     · exact hfinv
@@ -318,11 +318,11 @@ theorem isIntegrallyClosed_of_snc {K : Type} [Fintype K] {J : K → Type} [∀ k
       map_mul' := fun _ _ => rfl
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
-  letI : Algebra S (regAt ξ q) := φ.toAlgebra
+  let : Algebra S (regAt ξ q) := φ.toAlgebra
   let P : Ideal S := (IsLocalRing.maximalIdeal (regAt ξ q)).comap (algebraMap S (regAt ξ q))
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   have hP : ∀ s : S, s ∉ P ↔ IsUnit (algebraMap S (regAt ξ q) s) := fun s => IsLocalRing.notMem_maximalIdeal
-  haveI : IsLocalization.AtPrime (regAt ξ q) P :=
+  have : IsLocalization.AtPrime (regAt ξ q) P :=
     { map_units := fun s => (hP s).1 s.2
       surj := fun z => by
         obtain ⟨s, hs, hsu, hsa⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.regAt_iff_exists_chart_fraction X Ω ξ ℤ _ _ htie c q ⟨hc0, hc⟩ z.1).1 z.2

@@ -201,7 +201,7 @@ theorem value_descends (hC : ChartIndepSt2) {E : Type} [Field E] [NumberField E]
   have hN := GlobalTheory.LevelMapsAnyRank.levelMaps Dw
   have hWD := (GlobalTheory.Frames.algebraic_laws hL.secBaseChange E H Dw d.l₂ d.Xo₂ d.c₂).2.2.1
   have hAT := GlobalTheory.Frames.allTest_of_secBaseChange hL.secBaseChange E H Dw d.l₂ d.Xo₂ d.c₂
-  haveI : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
   obtain ⟨hval, hnat⟩ := GlobalTheory.T.shortThetaValue_existsUnique_natural_of_laws hL hC E H Dw d.l₂ d.Xo₂ d.c₂ d.nab₂ hnab n Λ N hU hTr hLv a P hP
     (fun q => d.eF (w q)) β
   have hinv := GlobalTheory.EquivariantLiftInvariance.cover_product_indep_of_lift hC E H Dw l Xo c n d hlev hA ⟨_, hnab⟩ ψ₀ hψ₀ w hw₀ Λ N hU hTr hLv a P hP β
@@ -218,13 +218,13 @@ theorem value_descends (hC : ChartIndepSt2) {E : Type} [Field E] [NumberField E]
   obtain ⟨hov1, hov2, -⟩ := GlobalTheory.T.framedPoints_lift_to_levelCover hL E H Dw l Xo c n { d with r := r, m := m }
   obtain ⟨S, _, φ, j, x₂, f1, f2, f3, hj, hx, hx'⟩ :=
     exists_cover_point d.hF.symm r rF h1 h2 p.R y.x y.x_over
-  letI : Algebra p.R S := φ.toAlgebra
-  letI : Algebra c.F S := (φ.comp (algebraMap c.F p.R)).toAlgebra
-  letI : Algebra d.c₂.F S := j.toAlgebra
-  haveI : Module.Finite p.R S := f1
-  haveI : Algebra.Smooth p.R S := f2
-  haveI : Module.FaithfullyFlat p.R S := f3
-  haveI := isReduced_of_smooth_algebra p.R S
+  let : Algebra p.R S := φ.toAlgebra
+  let : Algebra c.F S := (φ.comp (algebraMap c.F p.R)).toAlgebra
+  let : Algebra d.c₂.F S := j.toAlgebra
+  have : Module.Finite p.R S := f1
+  have : Algebra.Smooth p.R S := f2
+  have : Module.FaithfullyFlat p.R S := f3
+  have := isReduced_of_smooth_algebra p.R S
   have hS : ∀ a : c.F, algebraMap d.c₂.F S (d.eF a) = algebraMap c.F S a := fun a =>
     RingHom.congr_fun hj a
   let φa : p.R →ₐ[c.F] S := { φ with commutes' := fun _ => rfl }
@@ -259,8 +259,8 @@ theorem value_descends (hC : ChartIndepSt2) {E : Type} [Field E] [NumberField E]
         (∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a) ∧ χa.toRingHom = χ ∧
         FrMap χa y z ∧ FrOver d z₂ z ∧ ShortValAt d.Xo₂ d.c₂ d.nab₂ (fun q => d.eF (w q)) Λ β N P z₂ v := by
     intro k _ _ χ
-    letI i1 : Algebra c.F k := (χ.comp (algebraMap c.F p.R)).toAlgebra
-    letI i2 : Algebra d.c₂.F k := ((algebraMap c.F k).comp d.eF.symm.toRingEquiv.toRingHom).toAlgebra
+    let i1 : Algebra c.F k := (χ.comp (algebraMap c.F p.R)).toAlgebra
+    let i2 : Algebra d.c₂.F k := ((algebraMap c.F k).comp d.eF.symm.toRingEquiv.toRingHom).toAlgebra
     have hk : ∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a := fun a =>
       congrArg (algebraMap c.F k) (d.eF.symm_apply_apply a)
     let χa : p.R →ₐ[c.F] k := { χ with commutes' := fun _ => rfl }
@@ -395,8 +395,8 @@ theorem isThClsD_mem_cusp : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartI
     ⟨hsec, fun σ hσ => Formalism.L2.PjFree.holCusp_mem_holSub _ _ fun k => ?_⟩
   have hu := hU σ hσ
   obtain ⟨W⟩ := nonempty_uw hu
-  letI : Algebra c.F ℂ := σ.toAlgebra
-  letI A₂ : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
+  let A₂ : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
   have halg : ∀ t : c.F, algebraMap d.c₂.F ℂ (d.eF t) = algebraMap c.F ℂ t := fun t => by
     change σ (d.eF.symm (d.eF t)) = σ t
     rw [AlgEquiv.symm_apply_apply]

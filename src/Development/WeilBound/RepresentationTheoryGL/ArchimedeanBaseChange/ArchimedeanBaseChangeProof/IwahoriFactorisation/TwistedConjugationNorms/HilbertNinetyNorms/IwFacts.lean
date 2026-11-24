@@ -152,7 +152,7 @@ theorem lo_entries {N : ℕ} {t n : GL (Fin N) k} {d : Fin N → k}
     exact val_conj_lo _ _ _ r
 
 theorem ratio_lt_one {a b : ValueGroupWithZero k} (h : a < b) : a / b < 1 :=
-  (div_lt_one₀ (lt_of_le_of_lt zero_le' h)).2 h
+  (div_lt_one₀ (lt_of_le_of_lt zero_le h)).2 h
 
 theorem exists_contract {N : ℕ} {d : Fin N → k} (hd : ∀ i, d i ≠ 0)
     (hinc : ∀ i j : Fin N, i < j → valuation k (d i) < valuation k (d j))
@@ -167,14 +167,14 @@ theorem exists_contract {N : ℕ} {d : Fin N → k} (hd : ∀ i, d i ≠ 0)
       have h2 : valuation k (d p.1) / valuation k (d p.2) ≠ 0 :=
         div_ne_zero ((Valuation.ne_zero_iff _).2 (hd _)) ((Valuation.ne_zero_iff _).2 (hd _))
       obtain ⟨m, hm⟩ := GlobalTheory.CompanionTheory.CongruenceBasis.exists_pow_succ_lt h2 h1 hγ
-      exact ⟨m + 1, fun _ r' hr' => lt_of_le_of_lt (pow_le_pow_of_le_one zero_le' h1.le hr') hm⟩
+      exact ⟨m + 1, fun _ r' hr' => lt_of_le_of_lt (pow_le_pow_of_le_one zero_le h1.le hr') hm⟩
     · exact ⟨0, fun h => absurd h hp⟩
   choose f hf using h
   exact ⟨Finset.univ.sup f, fun i j hij => hf (i, j) hij _ (Finset.le_sup (Finset.mem_univ _))⟩
 
 theorem levi_comm {N : ℕ} (s x : Levi k (Bl (ones N))) : s * x = x * s := by
   funext a
-  haveI : Subsingleton (Fin (ones N a)) := by
+  have : Subsingleton (Fin (ones N a)) := by
     show Subsingleton (Fin 1)
     infer_instance
   apply Units.ext
@@ -200,7 +200,7 @@ theorem sub_one_le {N : ℕ} {x : GL (Fin N) k} {γ : ValueGroupWithZero k}
   by_cases h : i = j
   · subst h
     rw [h1, Matrix.one_apply_eq, sub_self, map_zero]
-    exact zero_le'
+    exact zero_le
   · rw [Matrix.one_apply_ne h, sub_zero]
     exact h2 i j h
 
@@ -322,7 +322,7 @@ theorem up_conj_int {n : ℕ} {t m : GL (Fin n) k} {d : Fin n → k}
     exact (mul_le_of_le_one_left' (ratio_lt_one (hinc i j h)).le).trans (iw_entry_le hm i j)
   · rw [e1, map_one]
   · rw [e0 i j h, map_zero]
-    exact zero_le'
+    exact zero_le
 
 theorem lo_conj_int {n : ℕ} {t m : GL (Fin n) k} {d : Fin n → k}
     (ht : (t : Matrix (Fin n) (Fin n) k) = Matrix.diagonal d)
@@ -392,7 +392,7 @@ theorem iw_up_contract {n : ℕ} {t : GL (Fin n) k} {d : Fin n → k}
   · rw [e2]
     exact (mul_le_of_le_one_right' (iw_entry_le hm.1 i j)).trans (hr i j h).le
   · rw [e0 i j h, map_zero]
-    exact zero_le'
+    exact zero_le
 
 theorem iw_lo_contract {n : ℕ} {t : GL (Fin n) k} {d : Fin n → k}
     (ht : (t : Matrix (Fin n) (Fin n) k) = Matrix.diagonal d)
@@ -407,7 +407,7 @@ theorem iw_lo_contract {n : ℕ} {t : GL (Fin n) k} {d : Fin n → k}
   refine sub_one_le e1 fun i j hij => ?_
   rcases lt_or_gt_of_ne hij with h | h
   · rw [e0 i j h, map_zero]
-    exact zero_le'
+    exact zero_le
   · rw [e2]
     exact (mul_le_of_le_one_right' (iw_entry_le hm.1 i j)).trans (hr j i h).le
 
@@ -495,12 +495,12 @@ theorem unif_val_lt_one (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (hϖ : ordL (ϖ
 
 theorem tdiag_incrV (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (hϖ : ordL (ϖ : w.adicCompletion E) = 1) (n : ℕ)
     (y : Fin n → ℤ) (hy : StrictAnti y) : IncrV (w.adicCompletion E) n (tdiag ϖ y) := by
-  haveI := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion E) _)
+  have := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion E) _)
   have hlt : valuation (w.adicCompletion E) (ϖ : w.adicCompletion E) < 1 :=
     (ValuativeRel.isEquiv (Valued.v : Valuation (w.adicCompletion E) _)
       (valuation _)).lt_one_iff_lt_one.1 (unif_val_lt_one w ϖ hϖ)
   have hpos : 0 < valuation (w.adicCompletion E) (ϖ : w.adicCompletion E) := by
-    rw [zero_lt_iff, ne_eq, map_eq_zero]
+    rw [pos_iff_ne_zero, ne_eq, map_eq_zero]
     exact ϖ.ne_zero
   refine diagT_incrV n _ (fun i j hij => ?_)
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
@@ -510,7 +510,7 @@ theorem iw_tor_TO (w : Pl E) (n : ℕ) (κ : GLw n w) (hκ : κ ∈ iwGL n w ⊓
     κ ∈ TO n w := by
   obtain ⟨hoff, hdiag⟩ := iw_tor_entries n κ hκ
   refine ⟨hoff, fun i => ?_⟩
-  haveI := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion E) _)
+  have := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion E) _)
   exact (ValuativeRel.isEquiv (Valued.v : Valuation (w.adicCompletion E) _)
     (valuation _)).eq_one_iff_eq_one.2 (hdiag i)
 

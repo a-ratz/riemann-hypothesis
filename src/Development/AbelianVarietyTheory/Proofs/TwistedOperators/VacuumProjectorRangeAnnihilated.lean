@@ -72,9 +72,9 @@ private theorem hasFDerivAt_gau {V : Type} [NormedAddCommGroup V]
   rw [hf]
   refine h3.congr_fderiv ?_
   ext y
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, Function.comp_apply,
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, Function.comp_apply,
     Complex.ofRealCLM_apply, innerSL_apply_apply, smul_eq_mul, nsmul_eq_mul,
-    ContinuousLinearMap.coe_smul', Pi.smul_apply]
+    FunLike.coe_smul, Pi.smul_apply]
   push_cast
   ring
 
@@ -86,7 +86,7 @@ theorem _root_.GlobalTheory.Mem.Lift.VacAnn.fderiv_gau_apply {V : Type} [NormedA
     fderiv ℝ (_root_.GlobalTheory.RealWeil.gau : V → ℂ) w v =
       -(Real.pi : ℂ) * ⟪w, v⟫ * _root_.GlobalTheory.RealWeil.gau w := by
   rw [(hasFDerivAt_gau w).fderiv]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [smul_apply, ContinuousLinearMap.comp_apply,
     Complex.ofRealCLM_apply, innerSL_apply_apply, smul_eq_mul]
   ring
 

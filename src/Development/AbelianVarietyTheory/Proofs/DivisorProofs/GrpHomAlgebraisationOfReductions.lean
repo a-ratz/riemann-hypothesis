@@ -88,11 +88,11 @@ theorem grpHom_algebraise : GlobalTheory.Published.FormalAlgebraisation.Morphism
     (fun e => by rw [Category.assoc, (hb e).1.w, ← Category.assoc, Over.w])
     (fun e => by rw [← Category.assoc, hc, Category.assoc, hδ])
   refine ⟨g, isMonHom_of_fst_mul_snd g ?_, hg, hu⟩
-  haveI : IsProper (A ⊗ A).hom := by
+  have : IsProper (A ⊗ A).hom := by
     change IsProper (pullback.fst A.hom A.hom ≫ A.hom)
     infer_instance
   refine H.hom_ext hI fun e => ?_
-  haveI := hf e
+  have := hf e
   let T : Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))) :=
     Over.mk (pullback.snd (A ⊗ A).hom (thick R I e))
   let P : Over.mk (T.hom ≫ thick R I e) ⟶ A ⊗ A :=

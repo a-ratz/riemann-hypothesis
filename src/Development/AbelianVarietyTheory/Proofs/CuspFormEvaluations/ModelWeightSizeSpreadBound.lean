@@ -93,7 +93,7 @@ theorem sum_row_le (r p0 : ℕ) (hp : p0 ≤ r) (u v : ℕ → ℕ) :
           = ∑ i ∈ Finset.image (fun j : Fin r => (j : ℕ) - p0) (Finset.univ.filter (fun j : Fin r => p0 ≤ (j : ℕ))), u i := by
             refine (Finset.sum_image ?_).symm
             intro a ha b hb hab
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha hb
+            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at ha hb
             dsimp only at hab
             exact Fin.ext (by omega)
       _ ≤ ∑ i ∈ Finset.range r, u i := by
@@ -108,7 +108,7 @@ theorem sum_row_le (r p0 : ℕ) (hp : p0 ≤ r) (u v : ℕ → ℕ) :
           = ∑ i ∈ Finset.image (fun j : Fin r => p0 - 1 - (j : ℕ)) (Finset.univ.filter (fun j : Fin r => ¬ p0 ≤ (j : ℕ))), v i := by
             refine (Finset.sum_image ?_).symm
             intro a ha b hb hab
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha hb
+            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at ha hb
             dsimp only at hab
             exact Fin.ext (by omega)
       _ ≤ ∑ i ∈ Finset.range r, v i := by
@@ -233,14 +233,14 @@ theorem sum_wtA_le {D : D7} {j : ℕ} (w : WeightFamilies.Wt D j) (m : ℕ) :
           intro i _ hi
           rw [Finset.mem_range]
           by_contra hc
-          exact hi (dif_neg hc)
+          exact hi (dite_eq_right hc)
       _ = ∑ i, g i := by
           rw [Finset.sum_range]
           simp
   rw [Finset.sum_congr rfl (fun τ _ => Finset.sum_comm), Finset.sum_comm]
   refine Finset.sum_le_sum (fun t _ => ?_)
   rw [Finset.sum_comm]
-  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   exact add_le_add (key _ _) (key _ _)
 
 theorem laU_wtA_size : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j : ℕ) (_hj : InR D j) (w : WeightFamilies.Wt D j) (σ : T.Q.c.F →+* ℂ), GoodEmb T.Q.c σ → ∀ k : (T.U j σ).Comp, (∑ τ, ((T.U j σ).X k).spread (laU (T.U j σ) (wtA w) w.n k) τ) ≤ (WeightAlgebra.DF w : ℝ) + D.R.f * w.n ∧ (∑ τ, ∑ i, |((laU (T.U j σ) (wtA w) w.n k τ i : ℤ) : ℝ)|) ≤ (WeightAlgebra.DF w : ℝ) + D.R.f * D.R.r * w.n / 2 := by

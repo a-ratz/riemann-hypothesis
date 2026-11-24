@@ -118,7 +118,7 @@ theorem gen_mem {D : D7} (V : HSp D) (K : Matrix (Fin V.rank) (Fin V.rank) (Glob
     simp only [ψ, AddMonoidHom.mk'_apply, Matrix.mulVec_smul, smul_sub]
   have h1 : (1 : D.host.E) ∈ ((D.host.AA : Submodule (𝓞 D.host.E) D.host.E) *
       ((D.host.AA⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : Submodule (𝓞 D.host.E) D.host.E)) := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hA]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hA]
     exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
   have key := Submodule.mul_induction_on (C := fun t : D.host.E => ψ (fun i => c ⊗ₜ[D.host.F] (t * x i)) ∈
       GlobalTheory.AdLat.hat D.host.F ((I • GlobalTheory.Member.latC V : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)) :

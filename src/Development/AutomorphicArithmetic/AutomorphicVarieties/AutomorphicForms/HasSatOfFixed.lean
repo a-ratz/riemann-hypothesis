@@ -76,7 +76,7 @@ private lemma core {G W V : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     {v : V} (hv : v ≠ 0) (hfix : ∀ u ∈ U, τ u v = v) :
     ∃ x : W, x ≠ 0 ∧ ∀ u ∈ U, σ u x = x := by
   classical
-  haveI : CompactSpace U := isCompact_iff_compactSpace.mp hU
+  have : CompactSpace U := isCompact_iff_compactSpace.mp hU
   have hvt : v ∈ ⨆ f : {f : W →ₗ[ℂ] V // ∀ (g : G) (x : W), f (σ g x) = τ g (f x)},
       LinearMap.range (f : W →ₗ[ℂ] V) := by rw [hsup]; trivial
   obtain ⟨c, hc, hcs⟩ := (Submodule.mem_iSup_iff_exists_finsupp _ _).mp hvt
@@ -86,20 +86,20 @@ private lemma core {G W V : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
        { carrier := {h : U | σ (h : G) y = y}
          mul_mem' := by
            intro a b ha hb
-           simp only [Set.mem_setOf_eq] at ha hb ⊢
+           simp only [Set.mem_ofPred_eq] at ha hb ⊢
            simp [map_mul, Module.End.mul_apply, ha, hb]
          one_mem' := by simp
          inv_mem' := by
            intro a ha
-           simp only [Set.mem_setOf_eq] at ha ⊢
+           simp only [Set.mem_ofPred_eq] at ha ⊢
            have : σ ((a : G)⁻¹) (σ (a : G) y) = y := by
              rw [← Module.End.mul_apply, ← map_mul]; simp
            rw [ha] at this
            simpa using this }
-      isOpen' := (hsm y).preimage continuous_subtype_val }
+      isOpen' := (hsm y).preimage continuous_subtypeVal }
   let K : OpenSubgroup U := c.support.inf (fun i => stab (x i))
-  haveI : Finite (U ⧸ (K : Subgroup U)) := Subgroup.quotient_finite_of_isOpen _ K.isOpen
-  haveI := Fintype.ofFinite (U ⧸ (K : Subgroup U))
+  have : Finite (U ⧸ (K : Subgroup U)) := Subgroup.quotient_finite_of_isOpen _ K.isOpen
+  have := Fintype.ofFinite (U ⧸ (K : Subgroup U))
   have hK : ∀ i ∈ c.support, ∀ k ∈ (K : Subgroup U), σ ((k : U) : G) (x i) = x i := by
     intro i hi k hk
     have hle : K ≤ stab (x i) := Finset.inf_le hi

@@ -73,7 +73,7 @@ theorem univFrame_classifies_unique : Out.SecBaseChangeSt → ∀ (E : Type) [Fi
   have h3 : a.comp π = a'.comp π := by
     have h4 := Spec.map_injective h2
     have h5 := congrArg CommRingCat.Hom.hom h4
-    exact AlgHom.coe_ringHom_injective h5
+    exact AlgHom.toRingHom_injective h5
   obtain ⟨b, -, hb⟩ := _root_.GlobalTheory.Frames.univFrame_classifies hS E H Dw l Xo c R A y₀ π X s u hu T z (a.comp π) (key a ha)
   exact (hb a ⟨rfl, ha⟩).trans (hb a' ⟨h3.symm, ha'⟩).symm
 

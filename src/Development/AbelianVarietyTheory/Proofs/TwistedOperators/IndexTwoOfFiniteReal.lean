@@ -311,7 +311,7 @@ theorem indexTwo_real : IndexTwo ℝ := by
     exact Real.isSquare_iff.2 (mul_pos_of_neg_of_neg h1 h2).le
 
 theorem indexTwo_of_isAlgClosed (B : Type) [Field B] [IsAlgClosed B] : IndexTwo B :=
-  fun d hd => absurd (IsAlgClosed.exists_eq_mul_self d) hd
+  fun d hd => absurd (IsAlgClosed.isSquare d) hd
 
 theorem indexTwo_of_finite_real (B : Type) [Field B] [Algebra ℝ B] [Algebra.IsAlgebraic ℝ B] :
     IndexTwo B := by
@@ -323,18 +323,18 @@ theorem indexTwo_infinite (F : Type) [Field F] (w : InfinitePlace F) (B : Type) 
     [Algebra w.Completion B] [FiniteDimensional w.Completion B] : IndexTwo B := by
   rcases w.isReal_or_isComplex with hw | hw
   · let e := InfinitePlace.Completion.ringEquivRealOfIsReal hw
-    letI : Algebra ℝ w.Completion := (e.symm : ℝ →+* w.Completion).toAlgebra
-    letI : Algebra ℝ B := ((algebraMap w.Completion B).comp (e.symm : ℝ →+* w.Completion)).toAlgebra
-    haveI : IsScalarTower ℝ w.Completion B := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : Algebra.IsAlgebraic ℝ w.Completion := ⟨fun x => by
+    let : Algebra ℝ w.Completion := (e.symm : ℝ →+* w.Completion).toAlgebra
+    let : Algebra ℝ B := ((algebraMap w.Completion B).comp (e.symm : ℝ →+* w.Completion)).toAlgebra
+    have : IsScalarTower ℝ w.Completion B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : Algebra.IsAlgebraic ℝ w.Completion := ⟨fun x => by
       have : x = algebraMap ℝ w.Completion (e x) := (e.symm_apply_apply x).symm
       rw [this]
       exact isAlgebraic_algebraMap _⟩
-    haveI : Algebra.IsAlgebraic ℝ B := Algebra.IsAlgebraic.trans ℝ w.Completion B
+    have : Algebra.IsAlgebraic ℝ B := Algebra.IsAlgebraic.trans ℝ w.Completion B
     exact indexTwo_of_finite_real B
   · let e := InfinitePlace.Completion.ringEquivComplexOfIsComplex hw
-    haveI : IsAlgClosed w.Completion := IsAlgClosed.of_ringEquiv ℂ _ e.symm
-    haveI : IsAlgClosed B := IsAlgClosed.of_ringEquiv w.Completion _
+    have : IsAlgClosed w.Completion := IsAlgClosed.of_ringEquiv ℂ _ e.symm
+    have : IsAlgClosed B := IsAlgClosed.of_ringEquiv w.Completion _
       (RingEquiv.ofBijective (algebraMap w.Completion B)
         (IsAlgClosed.algebraMap_bijective_of_isIntegral))
     exact indexTwo_of_isAlgClosed B
@@ -387,7 +387,7 @@ theorem nm_norm [Algebra A B] [FiniteDimensional A B] {d : A} {x : B}
 theorem nm_iff [CharZero A] [Algebra A B] [FiniteDimensional A B] (hB : IndexTwo B)
     (h : NormsEscape A B) {d : A} (hd : d ≠ 0) {x : B} (hx : x ≠ 0) :
     Nm (algebraMap A B d) x ↔ Nm d (Algebra.norm A x) := by
-  haveI : CharZero B := charZero_of_injective_algebraMap (algebraMap A B).injective
+  have : CharZero B := charZero_of_injective_algebraMap (algebraMap A B).injective
   refine ⟨nm_norm, fun hn => ?_⟩
   by_cases hs : IsSquare (algebraMap A B d)
   · exact Nm.of_isSquare_left two_ne_zero ((map_ne_zero _).2 hd) hs x
@@ -436,7 +436,7 @@ theorem normsEscape_of_odd [Algebra A B] (hA : IndexTwo A) (hodd : Odd (Module.f
 theorem exists_sqrt_basis (A B : Type) [Field A] [Field B] [CharZero A] [Algebra A B]
     (hr : Module.finrank A B = 2) : ∃ (δ : A) (e : Module.Basis (Fin 2) A B),
       ¬ IsSquare δ ∧ e 0 = 1 ∧ e 1 * e 1 = algebraMap A B δ := by
-  haveI : Algebra.IsQuadraticExtension A B := ⟨hr⟩
+  have : Algebra.IsQuadraticExtension A B := ⟨hr⟩
   have hcard : Nat.card (B ≃ₐ[A] B) = 2 := (IsGalois.card_aut_eq_finrank A B).trans hr
   obtain ⟨σ, hσ, hall⟩ := (Nat.card_eq_two_iff' (1 : B ≃ₐ[A] B)).1 hcard
   have hσσ : σ * σ = 1 := by
@@ -453,7 +453,7 @@ theorem normsEscape_of_two [CharZero A] [Algebra A B] (hA : IndexTwo A)
     (hr : Module.finrank A B = 2) : NormsEscape A B := by
   intro d hd
   obtain ⟨δ, e, hδ, h0, h1⟩ := exists_sqrt_basis A B hr
-  haveI : FiniteDimensional A B := Module.Finite.of_basis e
+  have : FiniteDimensional A B := Module.Finite.of_basis e
   by_contra hall
   push Not at hall
   have hδ0 : δ ≠ 0 := fun h => hδ (h ▸ IsSquare.zero)
@@ -518,11 +518,11 @@ theorem normsEscape_of_pow_two (M : Type) [Field M] [Algebra A M] [FiniteDimensi
       exact IntermediateField.fixedField_le hle
     have hn' : Module.finrank K' M = 2 ^ (n + 1) := by
       rw [IntermediateField.finrank_fixedField_eq_card, hH]
-    letI : Algebra K' K := (IntermediateField.inclusion hK').toRingHom.toAlgebra
-    letI : Module.Free K' K := Module.Free.of_divisionRing K' K
-    haveI : IsScalarTower A K' K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : IsScalarTower K' K M := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : FiniteDimensional K' K := Module.Finite.of_restrictScalars_finite A K' K
+    let : Algebra K' K := (IntermediateField.inclusion hK').toRingHom.toAlgebra
+    let : Module.Free K' K := Module.Free.of_divisionRing K' K
+    have : IsScalarTower A K' K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : IsScalarTower K' K M := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : FiniteDimensional K' K := Module.Finite.of_restrictScalars_finite A K' K
     have h2 : Module.finrank K' K = 2 := by
       have := Module.finrank_mul_finrank K' K M
       rw [hn, hn', pow_succ'] at this
@@ -532,18 +532,18 @@ theorem normsEscape_of_pow_two (M : Type) [Field M] [Algebra A M] [FiniteDimensi
       have hpos : 0 < Module.finrank A K' := Module.finrank_pos
       rw [h2, hm] at this
       omega
-    haveI : CharZero K' := charZero_of_injective_algebraMap (algebraMap A K').injective
+    have : CharZero K' := charZero_of_injective_algebraMap (algebraMap A K').injective
     exact NormsEscape.trans (hA K') (ih _ hlt K' _ rfl hn') (normsEscape_of_two (hA K') h2)
 
 theorem normsEscape (B : Type) [Field B] [Algebra A B] [FiniteDimensional A B] :
     NormsEscape A B := by
   let M := IntermediateField.normalClosure A B (AlgebraicClosure B)
-  haveI : IsGalois A M := {}
-  haveI : FiniteDimensional B M := Module.Finite.of_restrictScalars_finite A B M
-  haveI : IsGalois B M := IsGalois.tower_top_of_isGalois A B M
+  have : IsGalois A M := {}
+  have : FiniteDimensional B M := Module.Finite.of_restrictScalars_finite A B M
+  have : IsGalois B M := IsGalois.tower_top_of_isGalois A B M
   let P : Sylow 2 (M ≃ₐ[B] M) := default
   let C := IntermediateField.fixedField (P : Subgroup (M ≃ₐ[B] M))
-  obtain ⟨n, hn⟩ := IsPGroup.iff_card.1 P.isPGroup'
+  obtain ⟨n, hn⟩ := IsPGroup.iff_card.1 P.isPGroup
   have hC : Module.finrank C M = 2 ^ n := by
     rw [IntermediateField.finrank_fixedField_eq_card, hn]
   have hodd : Odd (Module.finrank B C) := by
@@ -583,7 +583,7 @@ theorem baseChangeAt (F E K L A : Type) [Field F] [CharZero F] [Field E] [Field 
     (hL : Module.finrank K L = 2) (hgen : Algebra.adjoin K (Set.range (algebraMap E L)) = ⊤)
     (hA : ∀ (B : Type) [Field B] [Algebra A B] [FiniteDimensional A B], IndexTwo B) :
     BaseChangeAt F E K L A := by
-  haveI : CharZero A := charZero_of_injective_algebraMap (algebraMap F A).injective
+  have : CharZero A := charZero_of_injective_algebraMap (algebraMap F A).injective
   obtain ⟨δ, e, hδ, h0, h1⟩ := exists_sqrt_basis F E hE
   have hδ0 : δ ≠ 0 := fun h => hδ (h ▸ IsSquare.zero)
   have hli : LinearIndependent K ![(1 : L), algebraMap E L (e 1)] := by

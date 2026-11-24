@@ -205,11 +205,11 @@ theorem addAwayImageS_eq_smul {g : FiniteAdeleRing (𝓞 K) K → ℝ≥0∞}
   set c := Measure.addHaarScalarFactor (addAwayImageS S g) (haarS S)
   have hU : addAwayImageS S g (intS S) = (c : ℝ≥0∞) := by
     conv_lhs => rw [h]
-    rw [Measure.smul_apply, haarS_intS, ENNReal.smul_def, smul_eq_mul, mul_one]
+    rw [smul_apply, haarS_intS, ENNReal.smul_def, smul_eq_mul, mul_one]
   rw [hU]
   conv_lhs => rw [h]
   ext A _
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 end AtS
 

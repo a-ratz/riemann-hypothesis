@@ -92,7 +92,7 @@ private theorem upCycI (hP : Af.Hypotheses₂) (hL : CyclicBaseChangeLiftRankTwo
     (π : CuspSub F 2) (hr : Continuous r) (hreg : (CG.mk π).IsRegAlg) (hatt : AttC ι r π) (hirr : IsIrr (r.comp (galEmb F E Ω))) :
     ∃ P : CuspSub E 2, (CG.mk P).IsRegAlg ∧ AttC ι (r.comp (galEmb F E Ω)) P ∧
       ∀ (τ : E →+* ℂ) m, π.HasInfChar (τ.comp (algebraMap F E)) m → P.HasInfChar τ m := by
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
   rcases hL F E hp π hreg with ⟨η, hη, hT⟩ | ⟨P, hinf, hbc⟩
   · obtain ⟨δ, hδ1, -, hiso, hres⟩ := UpperTheory.V.Sd.selfTwGal hP F Ω l ι 2 r (CG.mk π).HasSat
       (fun _ _ _ h h' => h.unique h') hr hatt η _ hp.pos hη.2.1 hη.1 hT
@@ -121,7 +121,7 @@ private theorem exists_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivia
     simpa using M.mul_mem h1 hn⟩
   refine ⟨M, hn, ?_⟩
   obtain ⟨p, hp, hd⟩ := Nat.exists_prime_and_dvd (n := Nat.card (Γ ⧸ M)) (mt Subgroup.index_eq_one.1 hM.1)
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' p hd
   have h1 : (Subgroup.zpowers g).comap (QuotientGroup.mk' M) = ⊤ := by
     refine hM.2 _ (lt_of_le_of_ne (fun x hx => ?_) fun e => ?_)
@@ -171,17 +171,17 @@ theorem UpperTheory.V.Z.Bc.upSolI_of :
   intro r π hc hreg ha hi
   by_cases h1 : Module.finrank F E = 1
   · exact up_one F E Ω h1 l ι 2 r π hreg ha hi
-  haveI : Nontrivial (E ≃ₐ[F] E) := by
+  have : Nontrivial (E ≃ₐ[F] E) := by
     rw [← Finite.one_lt_card_iff_nontrivial, IsGalois.card_aut_eq_finrank]
     have := Module.finrank_pos (R := F) (M := E)
     omega
   obtain ⟨M, hM, hp⟩ := exists_prime_index (E ≃ₐ[F] E)
   let K := IntermediateField.fixedField M
-  haveI : IsGalois F K := IsGalois.of_fixedField_normal_subgroup M
-  haveI : IsTotallyComplex K := isTotallyComplex_of_algebra F K
-  haveI : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure K Ω := closure_tower K E Ω
-  haveI : Group.IsSolvable (E ≃ₐ[K] E) :=
+  have : IsGalois F K := IsGalois.of_fixedField_normal_subgroup M
+  have : IsTotallyComplex K := isTotallyComplex_of_algebra F K
+  have : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure K Ω := closure_tower K E Ω
+  have : Group.IsSolvable (E ≃ₐ[K] E) :=
     Group.isSolvable_of_isSolvable_injective (f := AlgEquiv.restrictScalarsHom F) (AlgEquiv.restrictScalars_injective F)
   have hdeg : Module.finrank F K = M.index := by
     have h2 := Module.finrank_mul_finrank F K E

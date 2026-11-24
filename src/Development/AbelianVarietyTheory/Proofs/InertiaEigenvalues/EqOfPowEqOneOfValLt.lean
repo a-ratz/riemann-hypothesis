@@ -76,7 +76,7 @@ theorem val_root_eq_one {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {n : �
     {x : Ω} (hx : x ^ n = 1) : A.valuation x = 1 := by
   have h : A.valuation x ^ n = 1 := by rw [← map_pow, hx, map_one]
   rcases lt_trichotomy (A.valuation x) 1 with h' | h' | h'
-  · exact absurd h (pow_lt_one₀ zero_le' h' hn0).ne
+  · exact absurd h (pow_lt_one₀ zero_le h' hn0).ne
   · exact h'
   · exact absurd h (one_lt_pow₀ h' hn0).ne'
 
@@ -150,7 +150,7 @@ theorem eq_of_tameChar : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
   have hvζ : A.valuation ζ = 1 := by
     have hp : A.valuation ζ ^ n = 1 := by rw [← map_pow, hζn, map_one]
     rcases lt_trichotomy (A.valuation ζ) 1 with hl | he | hg
-    · exact absurd hp (pow_lt_one₀ zero_le' hl hn0).ne
+    · exact absurd hp (pow_lt_one₀ zero_le hl hn0).ne
     · exact he
     · exact absurd hp (one_lt_pow₀ hg hn0).ne'
 
@@ -197,7 +197,7 @@ theorem eq_of_tameChar : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
     nlinarith
 
   have hint : IsIntegral E π := Algebra.IsIntegral.isIntegral π
-  haveI : FiniteDimensional E (IntermediateField.adjoin E {π}) :=
+  have : FiniteDimensional E (IntermediateField.adjoin E {π}) :=
     IntermediateField.adjoin.finiteDimensional hint
   have hHo : IsOpen ((IntermediateField.adjoin E {π}).fixingSubgroup : Set (Formalism.ConjugateSelfDual.G E Ω)) :=
     IntermediateField.fixingSubgroup_isOpen _
@@ -217,7 +217,7 @@ theorem eq_of_tameChar : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
     intro c
     rw [← isOpen_compl_iff]
     refine hopen _ fun τ hτ g hg => ?_
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hτ ⊢
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hτ ⊢
     rwa [hfixH τ g hg]
   let T : Set (Formalism.ConjugateSelfDual.G E Ω) := ⋃ a ∈ Finset.range n, {τ | r τ = r γ ^ a ∧ τ π = ζ ^ a * π}
   have hTc : IsClosed T := by

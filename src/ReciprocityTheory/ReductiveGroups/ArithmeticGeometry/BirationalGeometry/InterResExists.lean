@@ -173,7 +173,7 @@ theorem resExists_of_projLogRes (hL : ReciprocityTheory.AnForm.R.ProjLogResC) (h
       rw [Finset.prod_empty] at hm
       have hm0 : m = 0 := by
         by_contra hne
-        rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm hne)] at hm
+        rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm hne)] at hm
         exact hm rfl
       subst hm0
       simp
@@ -218,7 +218,7 @@ theorem resExists_of_projLogRes (hL : ReciprocityTheory.AnForm.R.ProjLogResC) (h
       omega
     · obtain ⟨m, hm⟩ := MvPolynomial.ne_zero_iff.mp hne
       have := key m (MvPolynomial.mem_support_iff.mpr hm) v.1
-      rw [if_pos rfl] at this
+      rw [ite_eq_left rfl] at this
       omega
 
   have isMultiHomog_det_pderiv {s c : ℕ} (G : Fin s → MRing ι) (hG : ∀ i, ∃ a, IsMultiHomog (G i) a)

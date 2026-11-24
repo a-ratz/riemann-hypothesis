@@ -802,7 +802,7 @@ theorem cell_volume_mul_coef : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ (s : 
   let f : (GlobalTheory.CellMass.rowN ch.G j).subgroupOf (GfC (ch.G.V (.grid D.R.m j))) →* GA D (ch.G.V (.grid D.R.m j)) :=
     (GfC (ch.G.V (.grid D.R.m j))).subtype.comp ((GlobalTheory.CellMass.rowN ch.G j).subgroupOf (GfC (ch.G.V (.grid D.R.m j)))).subtype
   have hf : Topology.IsClosedEmbedding f := sp.clB.isClosedEmbedding_subtypeVal.comp
-    (((isClosed_rowN ch.G hi).preimage continuous_subtype_val).isClosedEmbedding_subtypeVal)
+    (((isClosed_rowN ch.G hi).preimage continuous_subtypeVal).isClosedEmbedding_subtypeVal)
   have hset : ∀ c (hc : c ∈ GfC (ch.G.V (.grid D.R.m j))), (((cj (latGrp ch.G j) c).comap f : Subgroup _) : Set _) =
       {n : (GlobalTheory.CellMass.rowN ch.G j).subgroupOf (GfC (ch.G.V (.grid D.R.m j))) |
         (⟨c, hc⟩ : GfC (ch.G.V (.grid D.R.m j)))⁻¹ * n.1 * ⟨c, hc⟩ ∈ (latGrp ch.G j).subgroupOf _} := fun c hc => Set.ext fun n =>
@@ -810,7 +810,7 @@ theorem cell_volume_mul_coef : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ (s : 
   have hop : ∀ c ∈ GfC (ch.G.V (.grid D.R.m j)), IsOpen (((cj (latGrp ch.G j) c).comap f : Subgroup _) :
       Set ((GlobalTheory.CellMass.rowN ch.G j).subgroupOf (GfC (ch.G.V (.grid D.R.m j))))) := fun c hc => by
     rw [hset c hc]
-    exact sp.opn.preimage ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+    exact sp.opn.preimage ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
   have hcp : ∀ c, IsCompact (((cj (latGrp ch.G j) c).comap f : Subgroup _) :
       Set ((GlobalTheory.CellMass.rowN ch.G j).subgroupOf (GfC (ch.G.V (.grid D.R.m j))))) := fun c => by
     refine hf.isCompact_preimage (K := (cj (latGrp ch.G j) c : Set (GA D (ch.G.V (.grid D.R.m j))))) ?_
@@ -834,7 +834,7 @@ theorem cell_volume_mul_coef : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ (s : 
   have key := idxRatio_row hS.core.lev ch.S.toGridChoice (Set.mem_univ t) hi hj hj' (hlat t j hm.1 hj) s β hδ hb₀ hr
   rw [← eb] at key
   rw [← hset, ← real_mul_idxRatio la (hop _ hb₀.1) (hcp _) (hop _ hbj) (hcp _), key, GlobalTheory.RowWt.colCoef]
-  simp only [dif_pos hj']
+  simp only [dite_eq_left hj']
 
 end GlobalTheory.SymmetricJacobianSignature
 end -- clump:auto
@@ -1012,7 +1012,7 @@ theorem finiteIndex_subgroupOf (H L : Subgroup G) (hH : IsOpen (H : Set G))
     (hL : IsCompact (L : Set G)) : (H.subgroupOf L).FiniteIndex := by
   have : CompactSpace L := isCompact_iff_compactSpace.mp hL
   have ho : IsOpen ((H.subgroupOf L : Subgroup L) : Set L) :=
-    hH.preimage continuous_subtype_val
+    hH.preimage continuous_subtypeVal
   have : Finite (L ⧸ H.subgroupOf L) := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.finiteIndex_of_finite_quotient
 
@@ -1070,7 +1070,7 @@ theorem comap_open_compact (R Q : Subgroup X) (hR : IsClosed (R : Set X))
     (hQo : IsOpen (Q : Set X)) (hQc : IsCompact (Q : Set X)) :
     IsOpen ((Q.comap R.subtype : Subgroup R) : Set R) ∧
       IsCompact ((Q.comap R.subtype : Subgroup R) : Set R) :=
-  ⟨hQo.preimage continuous_subtype_val, hR.isClosedEmbedding_subtypeVal.isCompact_preimage hQc⟩
+  ⟨hQo.preimage continuous_subtypeVal, hR.isClosedEmbedding_subtypeVal.isCompact_preimage hQc⟩
 
 theorem map_open_compact {Y : Type*} [Group Y] [TopologicalSpace Y] [IsTopologicalGroup Y]
     (A : Subgroup X) (π : X →* Y) (σ : Y →* X) (hπ : Continuous π) (hσ : Continuous σ)
@@ -1284,8 +1284,8 @@ theorem finite_split {X Y : Type} [Group X] [TopologicalSpace X] [Group Y] [Topo
       map_mul' := fun y y' => Subtype.ext (Subtype.ext (map_mul s _ _)) }
   have hπ : ∀ r, (π r).1 = p ⟨r.1.1, hRf r⟩ := fun r => rfl
   refine ⟨π, σ, ?_, ?_, ?_, ?_, ?_⟩
-  · exact (hp.comp ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)).subtype_mk _
-  · exact ((hs.comp continuous_subtype_val).subtype_mk _).subtype_mk _
+  · exact (hp.comp ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)).subtype_mk _
+  · exact ((hs.comp continuous_subtypeVal).subtype_mk _).subtype_mk _
   · intro y
     apply Subtype.ext
     rw [hπ]
@@ -1393,9 +1393,9 @@ theorem rowGrp_finite_semidirect : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype 
     exact GlobalTheory.Mem.TrueRecord.isClosed_NFlag _ (isIsoSub_e d)
   refine ⟨?_, ?_, ?_, sp.opn, ?_, ?_⟩
   · rw [Subgroup.coe_subgroupOf]
-    exact sp.clR.preimage continuous_subtype_val
+    exact sp.clR.preimage continuous_subtypeVal
   · rw [Subgroup.coe_subgroupOf]
-    exact hNc.preimage continuous_subtype_val
+    exact hNc.preimage continuous_subtypeVal
   · intro x hx
     rw [Subgroup.mem_subgroupOf] at hx ⊢
     rw [rowGrp_eq]

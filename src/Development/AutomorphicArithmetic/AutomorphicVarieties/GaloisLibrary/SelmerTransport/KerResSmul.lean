@@ -61,8 +61,8 @@ theorem UpperTheory.Reformulated.B.Qi36.aux :
   intro R Q M _ _ _ _ π H f hf hH
   by_cases h0 : H.index = 0
   · exact ⟨0, fun g => by simp [h0]⟩
-  haveI : Finite (Q ⧸ H) := Nat.finite_of_card_ne_zero h0
-  letI : Fintype (Q ⧸ H) := Fintype.ofFinite _
+  have : Finite (Q ⧸ H) := Nat.finite_of_card_ne_zero h0
+  let : Fintype (Q ⧸ H) := Fintype.ofFinite _
   have key : ∀ a b : Q, (a : Q ⧸ H) = (b : Q ⧸ H) → f a = f b := by
     intro a b hab
     have hm : a⁻¹ * b ∈ H := QuotientGroup.eq.mp hab

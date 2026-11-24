@@ -119,19 +119,19 @@ theorem UpperTheory.V.Z.J.hostUnlE :
     Af.HypothesesH → UnlEndLogNorm → ∀ (K : Type) [Field K] [NumberField K] [IsCMField K], IsQi K → ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Algebra K Ω] [IsAlgClosure K Ω] (l : ℕ) [Fact l.Prime] (c : Coef l) (N : ℕ) [NeZero N] (e : ℕ) (ψ : DirichletCharacter c.O N) (o₁ : ℕ), HostData l e ψ o₁ → ∀ (S : Finset Pl) (A : S → ValuationSubring Ω) (F : Frame c.O (Formalism.ConjugateSelfDual.G ℚ Ω) (Gam Ω S) S), IsHostFrame Ω c e ψ S A F → ∀ (g₁ : Gam Ω S), F.Marked g₁ → ∀ r : Gam Ω S →* GG (m := 3) (R := PadicAlgCl l), F.IsCharZeroPt g₁ r → U3.TypeI F.η r → ∀ ρ : G K Ω →* GL (Fin 3) (Qbar l), (∀ s : G K Ω, (ρ s).val = (r (toGS Ω _ (s.restrictScalars ℚ))).mat) → Unl l N ![(e : ℤ), 0, -(e : ℤ)] ρ := by
   intro hH hU K _ _ _ hK Ω _ _ _ _ _ l hl c N _ e ψ o₁ hd S A F hF g₁ hg r hr hI ρ hρ
   have hN := hH.litN
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI hcl := isClosed_NS Ω (S : Set Pl)
-  haveI : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have hcl := isClosed_NS Ω (S : Set Pl)
+  have : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
   have ok := hostFrame_ok Ω c e ψ o₁ hd S A F hF
   obtain ⟨hmu, -, -, -⟩ := isCharZeroPt_basic F ok g₁ hg r hr
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := by
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := by
     open Formalism.GaloisCohomology UpperTheory.V.Base in
     exact (dvrFacts l c.O).2.2.1
-  haveI : CharP (ResidueField c.O) l := by
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   obtain ⟨σ, hσ, hσc⟩ := hF.cc
   have hv : (A F.vl).valuation (l : Ω) < 1 := by simpa using (hF.isOver F.vl (l : 𝓞 ℚ)).2 hF.vl
   have hfr := Fr.host_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩
@@ -161,7 +161,7 @@ theorem UpperTheory.V.Z.J.hostUnlE :
     rw [MonoidHom.mem_ker, UnitaryThreeInertia.eta4, Chr.dirG, MonoidHom.comp_apply, h5, map_one]
   have hk : Pr.LinkHyp c N e (UnitaryThreeInertia.eta4 Ω) σ (A F.vl) (l * N) :=
     ⟨hd.e_pos, dvd_rfl, mul_ne_zero hl.out.ne_zero (NeZero.ne N), hram, hv, hσ⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hlev := UnitaryThreeInertia.levelAt_of_pt Ω c e ψ o₁ hd S A F hF K hK g₁ hg r hr ρ hρ
   have hopen := UnitaryThreeInertia.matIrr_open Ω c e ψ o₁ hd S A F hF g₁ hg r hr hI
   obtain ⟨B, _, _, t, r', hr', ht⟩ := hr

@@ -188,14 +188,14 @@ private theorem det_shift {n : ℕ} (hn : 0 < n) {b : ℂ} (hb : b ≠ 0) (S : M
       have h4 : (e.symm g).1 0 = g 0 := by
         simpa using perEquiv_symm (hn := hn) (hb := hb) g 0
       rw [hl, finRotate_last]
-      simp only [wt, if_true]
+      simp only [wt, ite_true]
       rw [← h4, ← h3]
       congr 1
       simp
     · have hlt : (i : ℕ) < m := by omega
       have h5 : finRotate (m + 1) i = ⟨(i : ℕ) + 1, by omega⟩ := finRotate_of_lt hlt
       have h6 : ((i : ℕ) : ℤ) + 1 = (((⟨(i : ℕ) + 1, by omega⟩ : Fin (m + 1)) : ℕ) : ℤ) := by simp
-      have h7 : wt ⟨(i : ℕ) + 1, by omega⟩ = 1 := if_neg fun h0 => by
+      have h7 : wt ⟨(i : ℕ) + 1, by omega⟩ = 1 := ite_eq_right fun h0 => by
         have := congrArg Fin.val h0
         simp at this
       rw [h5, h6, perEquiv_symm, h7, one_mul]
@@ -217,7 +217,7 @@ private theorem ineIncl_cj (φ : Weil h) (m : ℤ) (t : Ine (F := E) A) :
 private theorem continuous_cj (φ : Weil h) (m : ℤ) : Continuous (cj φ m) := by
   refine Continuous.subtype_mk ?_ _
   show Continuous fun t : Ine (F := E) A => ((φ ^ m : Weil h) : G E Ω) * (t : G E Ω) * (((φ ^ m : Weil h) : G E Ω))⁻¹
-  exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+  exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
 
 private theorem eta_cj {φ : Weil h} {η : ℤ → (Ine (F := E) A →* ℂˣ)}
     (h1 : ∀ (j : ℤ) (t t' : Ine (F := E) A), ineIncl h t' = φ * ineIncl h t * φ⁻¹ → η j t' = η (j + 1) t)
@@ -371,7 +371,7 @@ theorem UpperTheory.Zero.LLC.indEx :
   obtain ⟨b, hbdef⟩ : ∃ b, b = (-1 : ℂ) ^ (n - 1) * c := ⟨_, rfl⟩
   rw [← hbdef] at hb
   let e := perEquiv n hn hb
-  haveI : FiniteDimensional ℂ (per n b) := Module.Finite.equiv e.symm
+  have : FiniteDimensional ℂ (per n b) := Module.Finite.equiv e.symm
   have hsm := isSmooth_inducedParam (b := b) hφ h1 h2 hn h0
   let a0 : WDRep h (per n b) :=
     { ρ := rho0 hφ b h1 h2
@@ -394,7 +394,7 @@ theorem UpperTheory.Zero.LLC.indEx :
     show (rho0 hφ b h1 h2 (φ ^ m) (e.symm g)).1 ((i : ℕ) : ℤ) = _
     rw [rho_zpow]
   refine ⟨WD.mk a, ⟨n, a, rfl, ?_⟩, by simp, ?_, fun t => ?_, fun hw => ⟨n, a, rfl, fun σ hσ => ?_⟩⟩
-  · haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  · have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     have : Nontrivial (Subrepresentation a.ρ) := ⟨⊥, ⊤, fun h' => by
       have := congrArg Subrepresentation.toSubmodule h'
       exact bot_ne_top (α := Submodule ℂ (Fin n → ℂ)) this⟩

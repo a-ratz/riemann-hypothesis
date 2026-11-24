@@ -102,12 +102,12 @@ theorem continuous_blockX : Continuous (blockX d) :=
   continuous_const.matrix_mul ((continuous_mt S).matrix_mul continuous_const)
 
 theorem isClosed_stabX : IsClosed (stabX d : Set (GA D S)) := by
-  haveI := (lattice_Mx D S.rank ρ).2.2.2.1
+  have := (lattice_Mx D S.rank ρ).2.2.2.1
   exact isClosed_eq ((continuous_mt S).matrix_mul continuous_const) continuous_const
 
 theorem isClosed_flagN : IsClosed (flagN d : Set (GA D S)) := by
-  haveI := (lattice_Mx D S.rank ρ).2.2.2.1
-  haveI := (lattice_Mx D S₀.rank S₀.rank).2.2.2.1
+  have := (lattice_Mx D S.rank ρ).2.2.2.1
+  have := (lattice_Mx D S₀.rank S₀.rank).2.2.2.1
   have e : (flagN d : Set (GA D S)) = (blockX d ⁻¹' GlobalTheory.UnitU.uniSet D ρ) ∩
       ({g | mt S g ⬝ d.jX = d.jX ⬝ blockX d g} ∩ {g | d.p0 ⬝ (mt S g ⬝ d.j0) = 1}) := by
     ext g
@@ -144,7 +144,7 @@ theorem exists_proj_lv : ∃ p : flagN d → UX D ρ, Continuous p ∧
   choose n₀ hn₀ p hp using fun g : flagN d => exists_rad_lv d g.2
   have hb : ∀ g, (p g).1.1 = blockX d g.1 := fun g => by rw [hp g, blockX_mul_lv d (hn₀ g)]
   refine ⟨p, (GlobalTheory.UnitU.isClosedEmbedding_val D ρ).isInducing.continuous_iff.2 ?_, fun u n hm => ?_⟩
-  · exact ((continuous_blockX d).comp continuous_subtype_val).congr fun g => (hb g).symm
+  · exact ((continuous_blockX d).comp continuous_subtypeVal).congr fun g => (hb g).symm
   · exact Subtype.ext (Units.ext ((hb _).trans (blockX_mul_lv d n.2 u)))
 
 theorem rat_lv (n : GA D S) (hn : n ∈ radX d) (u : UX D ρ) : n * lv d u ∈ GQ S ↔ n ∈ GQ S ∧ u ∈ UXQ D ρ := by
@@ -186,7 +186,7 @@ theorem jac_measure : ∀ (D : D7) (ρ : ℕ) (J : JacLev D ρ) (vU : VolU D ρ)
   have l2 : SecondCountableTopology (radX J.d) := TopologicalSpace.Subtype.secondCountableTopology _
   have l3 : LocallyCompactSpace (flagN J.d) := (isClosed_flagN J.d).locallyCompactSpace
   have l4 : SecondCountableTopology (flagN J.d) := TopologicalSpace.Subtype.secondCountableTopology _
-  have hlv : Continuous (lv J.d) := J.d.continuous_levi.comp continuous_subtype_val
+  have hlv : Continuous (lv J.d) := J.d.continuous_levi.comp continuous_subtypeVal
   have hs := J.d.continuous_embed
   have e1 : ∫⁻ r : jacGrp J.d, F r ∂J.μR = ∫⁻ h, ∫⁻ n, F (n.1 * J.d.emb0 h) ∂J.vN.ν ∂J.v0.μ :=
     lintegral_semiMeas (flagN J.d) J.d.emb0 hs J.v0.μ J.vN.ν F hF
@@ -201,7 +201,7 @@ theorem jac_measure : ∀ (D : D7) (ρ : ℕ) (J : JacLev D ρ) (vU : VolU D ρ)
     simp only [mul_assoc, J.d.wittHyperbolic_anisotropic_commute_levi]
     rfl
   have hm : Measurable fun q : (GA D J.W₀ × UX D ρ) × radX J.d => F (q.2.1 * lv J.d q.1.2 * J.d.emb0 q.1.1) :=
-    hF.comp (Continuous.measurable (((continuous_subtype_val.comp continuous_snd).mul
+    hF.comp (Continuous.measurable (((continuous_subtypeVal.comp continuous_snd).mul
       (hlv.comp (continuous_snd.comp continuous_fst))).mul (hs.comp (continuous_fst.comp continuous_fst))))
   rw [e1]
   simp only [e2, e3]

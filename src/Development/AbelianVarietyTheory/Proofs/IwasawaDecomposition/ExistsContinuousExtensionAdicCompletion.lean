@@ -73,9 +73,9 @@ theorem _root_.GlobalTheory.exists_continuous_extension_adicCompletion (E : Type
   let b := Module.finBasis ℚ E
   let K : IntermediateField ℚ_[l] (PadicAlgCl l) :=
     IntermediateField.adjoin ℚ_[l] (Set.range fun i => τ (b i))
-  haveI : FiniteDimensional ℚ_[l] K :=
+  have : FiniteDimensional ℚ_[l] K :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
   have hmem : ∀ x, τ x ∈ K := by
     intro x
 
@@ -104,13 +104,13 @@ theorem _root_.GlobalTheory.exists_continuous_extension_adicCompletion (E : Type
       exact (map_ne_zero _).2 (pow_ne_zero n hπ0)
     rw [Filter.Eventually, Valued.mem_nhds_zero]
     refine ⟨Units.mk0 _ hy, fun x hx => ?_⟩
-    simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx ⊢
+    simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx ⊢
     have hz : v.valuation E (WithVal.equiv (v.valuation E) x) < v.valuation E (π ^ n) := hx
     have hπn : v.valuation E (π ^ n) ≠ 0 := by
       rw [map_pow, hπ]; exact pow_ne_zero _ (WithZero.coe_ne_zero)
     have hq : v.valuation E (WithVal.equiv (v.valuation E) x / π ^ n) < 1 := by
       rw [map_div₀]
-      exact (div_lt_one₀ (zero_lt_iff.2 hπn)).2 hz
+      exact (div_lt_one₀ (pos_iff_ne_zero.2 hπn)).2 hz
     have hτq := (h _).1 hq
     rw [map_div₀, map_pow, norm_div, norm_pow, div_lt_one (pow_pos hπpos n)] at hτq
     rw [dist_zero_right]
@@ -127,7 +127,7 @@ theorem _root_.GlobalTheory.exists_continuous_extension_adicCompletion (E : Type
       map_add' := fun _ _ => rfl }
   have hφ : Continuous φ := uniformContinuous_comap.continuous
   refine ⟨(algebraMap K (PadicAlgCl l)).comp (ext.comp φ), ?_, ?_⟩
-  · exact continuous_subtype_val.comp (UniformSpace.Completion.continuous_extension.comp hφ)
+  · exact continuous_subtypeVal.comp (UniformSpace.Completion.continuous_extension.comp hφ)
   · ext x
     simp only [RingHom.comp_apply, HeightOneSpectrum.algebraMap_adicCompletion, Function.comp_apply]
     change ((ext ((WithVal.equiv (v.valuation E)).symm (algebraMap E E x) : (v.valuation E).Completion) : K) :

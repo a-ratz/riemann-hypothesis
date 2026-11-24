@@ -101,7 +101,7 @@ theorem exists_sub_mem_dual {F F' : HermLattice K i} (hlt : F'.lattice < F.latti
     (hcov : ∀ N : Submodule (𝓞 K) (Fin i → K), F'.lattice ≤ N → N ≤ F.lattice → N = F'.lattice ∨ N = F.lattice)
     {φc φ : Fin i → K} (hc : φc ∈ dualLattice F') (hc' : φc ∉ dualLattice F) (hφ : φ ∈ dualLattice F') :
     ∃ l : 𝓞 K, φ - (algebraMap (𝓞 K) K l) • φc ∈ dualLattice F := by
-  obtain ⟨y, hyF, hy⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨y, hyF, hy⟩ := IsConcreteLE.exists_of_lt hlt
   have hle := hlt.le
   let 𝔪 : Ideal (𝓞 K) := Submodule.comap (LinearMap.toSpanSingleton (𝓞 K) (Fin i → K) y) F'.lattice
   have hmem : ∀ μ : 𝓞 K, μ ∈ 𝔪 ↔ μ • y ∈ F'.lattice := fun μ => Iff.rfl

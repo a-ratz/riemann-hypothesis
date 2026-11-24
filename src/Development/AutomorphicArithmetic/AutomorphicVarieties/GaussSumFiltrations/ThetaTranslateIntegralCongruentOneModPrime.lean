@@ -118,7 +118,7 @@ theorem gen_by_translations_inversions : ∀ (F : Type) [Field F] [NumberField F
   set S := (Ideal.finite_factors hI).toFinset with hS
   have hmem : ∀ w : HeightOneSpectrum (𝓞 F), ((p : ℕ) : 𝓞 F) ∈ w.asIdeal → w ∈ S := by
     intro w hw
-    rw [hS, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+    rw [hS, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
     exact hw
   obtain ⟨τ, hτ⟩ := IsDedekindDomain.exists_forall_sub_mem_ideal (s := S) (fun w => w.asIdeal) (fun _ => 1)
     (fun w _ => w.prime) (fun i _ j _ hij h => hij (HeightOneSpectrum.ext h))
@@ -137,14 +137,14 @@ theorem gen_by_translations_inversions : ∀ (F : Type) [Field F] [NumberField F
     simp only [pow_one] at hτw
     rw [hsd]
     by_cases h1 : w.valuation F (c / δ) = 1
-    · rw [if_pos h1, sub_zero] at hτw
+    · rw [ite_eq_left h1, sub_zero] at hτw
       have htlt : w.valuation F t < 1 := (w.valuation_lt_one_iff_mem τ).mpr hτw
       have : w.valuation F (t * a) < 1 := by
         rw [map_mul]
         calc w.valuation F t * w.valuation F a ≤ w.valuation F t * 1 := mul_le_mul' le_rfl (hA w hw)
           _ < 1 := by rw [mul_one]; exact htlt
       rw [Valuation.map_add_eq_of_lt_left _ (h1 ▸ this), h1]
-    · rw [if_neg h1] at hτw
+    · rw [ite_eq_right h1] at hτw
       have hclt : w.valuation F (c / δ) < 1 := lt_of_le_of_ne (hC w hw) h1
       have hav : w.valuation F a = 1 := by
         by_contra hne
@@ -228,11 +228,11 @@ theorem absNorm_coprime_of_away {p : ℕ} (hp : p.Prime) (J : Ideal (𝓞 F))
     exact hJ ⟨M, hM.isPrime, hM0⟩ hpM (le_sup_left.trans hle)
   obtain ⟨a, ha, z, hz, haz⟩ := Submodule.mem_sup.1 ((Ideal.eq_top_iff_one _).1 hsup)
   obtain ⟨b, rfl⟩ := Ideal.mem_span_singleton'.1 hz
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hn0 : Ideal.absNorm J ≠ 0 := fun h => hJ0 (Ideal.absNorm_eq_zero_iff.1 h)
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hn0
-  haveI : Finite (𝓞 F ⧸ J) := Nat.finite_of_card_ne_zero hn0
-  letI : Fintype (𝓞 F ⧸ J) := Fintype.ofFinite _
+  have : Finite (𝓞 F ⧸ J) := Nat.finite_of_card_ne_zero hn0
+  let : Fintype (𝓞 F ⧸ J) := Fintype.ofFinite _
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hdvd
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card] at hdvd
@@ -488,7 +488,7 @@ theorem exists_place (F : Type) [Field F] [NumberField F] (p : ℕ) (hp : p.Prim
     intro h
     have h1 : IsUnit (algebraMap ℤ (𝓞 F) (p : ℤ)) := by simpa using h
     have h2 : IsUnit (p : ℤ) := isUnit_of_map_unit _ _ h1
-    exact (Nat.prime_iff_prime_int.mp hp).not_unit h2
+    exact (Nat.prime_iff_prime_int.mp hp).not_isUnit h2
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal (Ideal.span {((p : ℕ) : 𝓞 F)}) (by
     rwa [Ne, Ideal.span_singleton_eq_top])
   have hmem : ((p : ℕ) : 𝓞 F) ∈ M := hle (Ideal.subset_span rfl)
@@ -511,7 +511,7 @@ theorem norm_et {F : Type} [Field F] [NumberField F] {p : ℕ} [Fact p.Prime] (�
   set q : ℚ := Algebra.trace ℚ F x with hq
   have h : et x ^ q.den = 1 := by
     unfold et
-    rw [← Complex.exp_nat_mul, ← hq]
+    rw [← Complex.exp_natCast_mul, ← hq]
     have h1 : (q.den : ℂ) * (q : ℂ) = (q.num : ℂ) := by exact_mod_cast Rat.den_mul_eq_num q
     have : (q.den : ℂ) * (2 * Real.pi * Complex.I * (q : ℂ)) = (q.num : ℂ) * (2 * Real.pi * Complex.I) := by
       rw [← h1]; ring
@@ -694,7 +694,7 @@ theorem good_wT : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Pri
     · simp
   · have e0 : wT G (p - 1) t (N : F) c T Φ 0 = wC (p - 1) t (N : F) c * (Φ 0 + ∑ x ∈ T.erase 0, Φ x) := by
       unfold wT
-      rw [if_pos (by simpa using (dualL F G).zero_mem), Finset.add_sum_erase _ _ h0]
+      rw [ite_eq_left (by simpa using (dualL F G).zero_mem), Finset.add_sum_erase _ _ h0]
       congr 1
       refine Finset.sum_congr rfl fun x _ => ?_
       simp [BF, et]
@@ -748,7 +748,7 @@ theorem et_pow_den_eq_one {F : Type} [Field F] [NumberField F] (y : F) :
     et y ^ (Algebra.trace ℚ F y).den = 1 := by
   unfold et
   set q : ℚ := Algebra.trace ℚ F y
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have h : ((q.den : ℕ) : ℂ) * (q : ℂ) = (q.num : ℂ) := by
     have := Rat.den_mul_eq_num q
     exact_mod_cast congrArg (Rat.cast : ℚ → ℂ) this
@@ -966,7 +966,7 @@ theorem th_congr_one : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F
   · subst hξ
     have hz : hfs.toFinset = {0} := by
       ext x
-      simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Finset.mem_singleton]
+      simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Finset.mem_singleton]
       constructor
       · rintro ⟨-, hx⟩
         by_contra hne
@@ -977,17 +977,17 @@ theorem th_congr_one : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F
         simp [reAt] at h2
       · rintro rfl
         exact ⟨zero_mem _, by simp [QF, BF]⟩
-    rw [hz, Finset.sum_singleton, if_pos rfl, map_sub, map_one]
+    rw [hz, Finset.sum_singleton, ite_eq_left rfl, map_sub, map_one]
     exact h0
-  · rw [if_neg hξ, sub_zero]
+  · rw [ite_eq_right hξ, sub_zero]
     apply _root_.GlobalTheory.T.norm_sum_free_orbits_le_inv_prime p ι (κ → F) (fun x => S.map Int.cast *ᵥ x) hfs.toFinset Φ
     · intro x hx
-      simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx ⊢
       exact ⟨((hact x).2.2.2 _).2 hx.1, ((hQ x x).2).trans hx.2⟩
     · intro x _
       exact (hact x).1
     · intro x hx h
-      simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx
+      simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx
       apply hξ
       rw [← hx.2, (hact x).2.1 h]
       simp [QF, BF]
@@ -1034,8 +1034,8 @@ theorem theta_translates_integral_one : ∀ (F : Type) [Field F] [NumberField F]
     simp [aL, AddSubgroup.mem_map]
   have hone : ∀ x y : κ → F, (x ∈ LL F κ ↔ y ∈ LL F κ) → oneL x = oneL y := fun x y h => by
     by_cases hy : y ∈ LL F κ
-    · rw [oneL, oneL, if_pos hy, if_pos (h.2 hy)]
-    · rw [oneL, oneL, if_neg hy, if_neg fun hx => hy (h.1 hx)]
+    · rw [oneL, oneL, ite_eq_left hy, ite_eq_left (h.2 hy)]
+    · rw [oneL, oneL, ite_eq_right hy, ite_eq_right fun hx => hy (h.1 hx)]
 
   have hgood1 : Good ι S (oneL (F := F) (κ := κ)) := by
     have hS := (GlobalTheory.HilbertThetaSeries.IsoP.isometry_order_p F p Fact.out κ G S t hL).2.1
@@ -1054,7 +1054,7 @@ theorem theta_translates_integral_one : ∀ (F : Type) [Field F] [NumberField F]
     · intro x
       unfold oneL; split_ifs <;> simp
     · have h0 : (0 : κ → F) ∈ LL F κ := (LL F κ).zero_mem
-      simp only [oneL, h0, if_true, map_one, sub_self, norm_zero]
+      simp only [oneL, h0, ite_true, map_one, sub_self, norm_zero]
       positivity
 
   have hW : ∀ (c : Fˣ) (Φ : (κ → F) → ℂ), Good ι S Φ → PUnit p ((c : F) / δ) →

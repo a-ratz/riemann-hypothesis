@@ -140,7 +140,7 @@ theorem prod_pow_mem_mul {V ι : Type} [CommRing V] [Fintype ι] (t : ι → V) 
 
 theorem pow_le_span {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] [IsPrincipalIdealRing V] {t : V}
     (ht : t ∈ maximalIdeal V) (ht0 : t ≠ 0) (b : ℕ) : ∃ j, maximalIdeal V ^ j ≤ Ideal.span {t ^ b} := by
-  haveI : IsDiscreteValuationRing V :=
+  have : IsDiscreteValuationRing V :=
     { not_a_field' := fun h => ht0 (by rw [h] at ht; exact ht) }
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
   obtain ⟨n, hn⟩ := IsDiscreteValuationRing.associated_pow_irreducible (pow_ne_zero b ht0) hϖ
@@ -248,7 +248,7 @@ theorem GlobalTheory.Poinc.approx_of_vsys : ∀ (O : Type) [CommRing O] [Module.
         (maximalIdeal A ^ e).map (Φ.ev y₀) ≤ maximalIdeal (Φ.V y₀) ^ e := by
       refine sup_le (Ideal.pow_le_pow_right (le_max_left _ _)) ?_
       rw [Ideal.map_pow]
-      haveI := Φ.ev_loc y₀
+      have := Φ.ev_loc y₀
       exact Ideal.pow_right_mono (Ideal.map_le_iff_le_comap.2 fun x hx => map_nonunit _ _ hx) e
     have hmT : Φ.monoT y₀ a = ∏ j, Φ.t y₀ j ^ (lin W a (Φ.δ y₀ j)).toNat := prod_mono W _ _ (hq y₀) a
     have hSa' := hrem hSa

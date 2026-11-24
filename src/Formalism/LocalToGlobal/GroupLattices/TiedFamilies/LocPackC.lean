@@ -57,11 +57,11 @@ abbrev nFr (D : D7) (p : ℕ) : ℕ := orderOf (zH D.R.toFrame (hP D p))
 theorem nFr_spec (D : D7) {T p : ℕ} (hg : GIdx D.host T p) : 2 ≤ nFr D p ∧ Even (nFr D p) := by
   obtain ⟨hp, -, -, hz, -, -⟩ := hg
   have hne : (Formalism.MainNotions.G.frobSet D p).Nonempty := by
-    haveI : Fact p.Prime := ⟨hp⟩
-    haveI : (Ideal.span {(p : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
+    have : Fact p.Prime := ⟨hp⟩
+    have : (Ideal.span {(p : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
     obtain ⟨P, hPm, hPl⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 D.host.E)
       (Ideal.span {(p : ℤ)})
-    haveI : IsGalois ℚ D.host.E := D.host.galois
+    have : IsGalois ℚ D.host.E := D.host.galois
     obtain ⟨σ, hσ⟩ := IsArithFrobAt.exists_of_isInvariant (R := ℤ) (G := D.host.E ≃ₐ[ℚ] D.host.E) P
     exact ⟨_, P, hPm.isPrime, hPl, σ, hσ, rfl⟩
   obtain ⟨P, hP1, hP2, σ, hσ, hgal⟩ := Classical.epsilon_spec hne

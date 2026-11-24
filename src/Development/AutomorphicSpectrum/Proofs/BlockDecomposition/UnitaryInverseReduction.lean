@@ -281,7 +281,7 @@ theorem hasSum_series : ∀ (q : ℕ), 2 ≤ q → ∀ z : ℂ, ‖z‖ < 1 →
     funext j
     rcases j with _ | n
     · simp [ha, hb]
-    · simp only [ha, hb, Nat.succ_ne_zero, if_false, Nat.add_sub_cancel]
+    · simp only [ha, hb, Nat.succ_ne_zero, ite_false, Nat.add_sub_cancel]
       rw [pow_succ]; ring
   rw [hfun]
   have h1 : (1 : ℂ) - z ^ 2 ≠ 0 := by
@@ -316,9 +316,9 @@ theorem level_sets {X : Type} [MeasurableSpace X] (μ : Measure X) (f : X → �
     (hV0 : ∀ j, 0 ≤ V j) :
     Measurable f ∧ ∀ j, μ (f ⁻¹' {j}) = ENNReal.ofReal (V j - if j = 0 then 0 else V (j - 1)) := by
   have hset : ∀ i : ℕ, f ⁻¹' {i + 1} = {x | f x ≤ i + 1} \ {x | f x ≤ i} := by
-    intro i; ext x; simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_diff, Set.mem_setOf_eq]; omega
+    intro i; ext x; simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_sdiff, Set.mem_ofPred_eq]; omega
   have hset0 : f ⁻¹' {0} = {x | f x ≤ 0} := by
-    ext x; simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq]; omega
+    ext x; simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq]; omega
   refine ⟨measurable_to_countable' fun j => ?_, fun j => ?_⟩
   · rcases j with _ | i
     · rw [hset0]; exact hmeas 0
@@ -326,9 +326,9 @@ theorem level_sets {X : Type} [MeasurableSpace X] (μ : Measure X) (f : X → �
   · rcases j with _ | i
     · rw [hset0, hV]; simp
     · have hsub : {x | f x ≤ i} ⊆ {x | f x ≤ i + 1} := fun x hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢; omega
-      rw [hset, measure_diff hsub (hmeas i).nullMeasurableSet (by rw [hV]; exact ENNReal.ofReal_ne_top),
-        hV, hV, if_neg (Nat.succ_ne_zero i), Nat.add_sub_cancel, ENNReal.ofReal_sub _ (hV0 i)]
+        simp only [Set.mem_ofPred_eq] at hx ⊢; omega
+      rw [hset, measure_sdiff hsub (hmeas i).nullMeasurableSet (by rw [hV]; exact ENNReal.ofReal_ne_top),
+        hV, hV, ite_eq_right (Nat.succ_ne_zero i), Nat.add_sub_cancel, ENNReal.ofReal_sub _ (hV0 i)]
 
 theorem sums_over_levels {X : Type} [MeasurableSpace X] (μ : Measure X) (f : X → ℕ) (hf : Measurable f)
     (w : ℕ → ℝ) (hw0 : ∀ j, 0 ≤ w j) (hw : ∀ j, μ (f ⁻¹' {j}) = ENNReal.ofReal (w j))
@@ -342,7 +342,7 @@ theorem sums_over_levels {X : Type} [MeasurableSpace X] (μ : Measure X) (f : X 
     simp_rw [hmap]
     rw [← hr.tsum_eq, ENNReal.ofReal_tsum_of_nonneg (fun j => mul_nonneg (norm_nonneg _) (hw0 j)) hr.summable]
     congr 1; funext j
-    rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm]
   have hI : Integrable (fun x => c (f x)) μ := by
     refine ⟨(measurable_from_nat.comp hf).aestronglyMeasurable, ?_⟩
     rw [HasFiniteIntegral, hL]; exact ENNReal.ofReal_lt_top
@@ -408,7 +408,7 @@ theorem _root_.GlobalTheory.WeylCell.WeylUnipotentShell.integral_depth_cell : �
     hs'.unique (Complex.hasSum_ofReal.2 hr)
   obtain ⟨h1, h2, h3⟩ := sums_over_levels μ f hf w hw0 hlv c _ hs _ hr
   refine ⟨h2, h3, ?_⟩
-  rw [h1, heq, ← ofReal_norm_eq_enorm, Complex.norm_real,
+  rw [h1, heq, ← ofReal_norm, Complex.norm_real,
     Real.norm_of_nonneg (tsum_nonneg fun j => mul_nonneg (norm_nonneg _) (hw0 j))]
 end -- clump:auto
 end -- clump:auto
@@ -528,13 +528,13 @@ theorem integral_conj_diag_cellU_last :
     fun_prop
   let e : cellU y ≃ᵐ cellU y := (Homeomorph.mk κ.toEquiv hc hc').toMeasurableEquiv
   have he : ∀ u : cellU y, ((e u : cellU y) : GU σ n) = t⁻¹ * u * t := fun u => rfl
-  haveI : (μ.map e).IsHaarMeasure := MulEquiv.isHaarMeasure_map μ κ hc hc'
-  haveI : LocallyCompactSpace (cellU y) :=
+  have : (μ.map e).IsHaarMeasure := MulEquiv.isHaarMeasure_map μ κ hc hc'
+  have : LocallyCompactSpace (cellU y) :=
     (hsh 0).2.1.locallyCompactSpace_of_mem_nhds_of_group ((hsh 0).1.mem_nhds (hsh 0).2.2.1)
   have hpre : ∀ j : ℤ, e ⁻¹' shellU k y j = shellU k y (j - 2 * o) := by
     intro j
     ext u
-    simp only [Set.mem_preimage, shellU, Set.mem_setOf_eq, he, hcv]
+    simp only [Set.mem_preimage, shellU, Set.mem_ofPred_eq, he, hcv]
     rw [WithZero.exp_sub, le_div_iff₀' (WithZero.exp_pos)]
   have hq0 : (q : ℝ) ≠ 0 := by positivity
   have hnorm : ‖(q : ℂ) ^ (-4 * o)‖ = (q : ℝ) ^ (-4 * o) := by
@@ -549,7 +549,7 @@ theorem integral_conj_diag_cellU_last :
     · exact Set.eq_univ_of_forall fun u => Set.mem_iUnion.2 ⟨_, mem_shellU_depth k y u⟩
     · rw [e.map_apply, hpre]
       have h2 : ((2 * a : ℕ) : ℤ) - 2 * o = ((2 * b : ℕ) : ℤ) := by push_cast; rw [hb]; ring
-      rw [h2, hvol, hvol, ← ofReal_norm_eq_enorm, hnorm, ← ENNReal.ofReal_natCast q,
+      rw [h2, hvol, hvol, ← ofReal_norm, hnorm, ← ENNReal.ofReal_natCast q,
         ← ENNReal.ofReal_pow (Nat.cast_nonneg q), ← ENNReal.ofReal_pow (Nat.cast_nonneg q),
         ← ENNReal.ofReal_mul (by positivity)]
       congr 1
@@ -562,7 +562,7 @@ theorem integral_conj_diag_cellU_last :
       rw [hb]; ring
   refine ⟨fun F => ?_, fun F => ?_⟩
   · have h := integral_map_equiv (μ := μ) e (fun u : cellU y => F (u : GU σ n))
-    rw [key, integral_smul_measure, toReal_enorm, hnorm, Complex.real_smul] at h
+    rw [key, integral_smul_measure, toReal_eNorm, hnorm, Complex.real_smul] at h
     simp only [he] at h
     rw [← h]
     push_cast
@@ -643,7 +643,7 @@ theorem mem_shell_iff {X : Type} {H : ℕ → Set X} (hmono : Monotone H) (j : �
   cases j with
   | zero => simp [shell]
   | succ j =>
-    simp only [shell, Set.mem_diff]
+    simp only [shell, Set.mem_sdiff]
     constructor
     · rintro ⟨h1, h2⟩
       exact ⟨h1, fun i hi hx => h2 (hmono (Nat.lt_succ_iff.1 hi) hx)⟩
@@ -692,7 +692,7 @@ theorem integral_geom_on_shells {X : Type} [MeasurableSpace X] (μ : Measure X) 
     | zero => simp [hSdef, shell, shellMass, hμ]
     | succ j =>
       show μ (H (j + 1) \ H j) = _
-      rw [measure_diff (hmono (Nat.le_succ j)) (hH j).nullMeasurableSet
+      rw [measure_sdiff (hmono (Nat.le_succ j)) (hH j).nullMeasurableSet
           (by rw [hμ]; exact ENNReal.pow_ne_top (by simp)),
         hμ, hμ, shellMass, ENNReal.ofReal_sub _ (by positivity), ENNReal.ofReal_pow (by positivity),
         ENNReal.ofReal_pow (by positivity), ENNReal.ofReal_natCast]
@@ -729,15 +729,15 @@ theorem integral_geom_on_shells {X : Type} [MeasurableSpace X] (μ : Measure X) 
     have hterm : ∀ j, ∫⁻ x in S j, ‖F x‖ₑ ∂μ = ENNReal.ofReal (‖shellVal q a j‖ * shellMass q j) := by
       intro j
       rw [setLIntegral_congr_fun (hSm j) (fun x hx => by rw [hSF j x hx]), setLIntegral_const, hSμ,
-        ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm_eq_enorm]
+        ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm]
     simp_rw [hterm]
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun j => mul_nonneg (norm_nonneg _) (shellMass_nonneg q hq j))
-      hreal.summable, hreal.tsum_eq, ← hsC, ← ofReal_norm_eq_enorm, Complex.norm_real,
+      hreal.summable, hreal.tsum_eq, ← hsC, ← ofReal_norm, Complex.norm_real,
       Real.norm_of_nonneg hs0]
   have hint : Integrable F μ := by
     refine ⟨hmeas, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, hL]
-    exact enorm_lt_top
+    rw [hasFiniteIntegral_iff_eNorm, hL]
+    exact eNorm_lt_top
   refine ⟨hint, ?_, hL⟩
   have h1 := hasSum_integral_iUnion hSm hSd hint.integrableOn
   rw [hSU, Measure.restrict_univ] at h1
@@ -839,7 +839,7 @@ theorem transv_mem_GU (σ : L →+* L) {n : ℕ} (i j : Fin n) (hij : i ≠ j) (
   · obtain ⟨rfl, rfl⟩ := h
     simp [hij, hij.symm, hc, sub_eq_add_neg]
   · have h' : ¬ (r = j ∧ p = i) := fun h' => h ⟨h'.2.symm, h'.1.symm⟩
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
     by_cases hpr : p = r
     · subst hpr; simp
     · simp [hpr, Ne.symm hpr]
@@ -938,13 +938,13 @@ theorem value_rankOne : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplica
     by_cases h : i = a ∧ j = a'
     · obtain ⟨rfl, rfl⟩ := h
       simp [Matrix.single_apply, haa', hb]
-    · rw [hu i j h, Matrix.add_apply, Matrix.single_apply, if_neg (fun h' => h ⟨h'.1.symm, h'.2.symm⟩), add_zero]
+    · rw [hu i j h, Matrix.add_apply, Matrix.single_apply, ite_eq_right (fun h' => h ⟨h'.1.symm, h'.2.symm⟩), add_zero]
   have hσb : σ b = -b := by
     have h := (GlobalTheory.LGrp.mem_GU_iff σ n (u : GL (Fin n) L)).1 u.2 a a'
     rw [hra, ← ha', ← hb, hU, transv_inv_val] at h
     simpa [Matrix.single_apply, haa'] using h.symm
   by_cases hv : Valued.v b ≤ 1
-  · rw [if_pos hv]
+  · rw [ite_eq_left hv]
     have huK : u ∈ KU σ n := by
       rw [← SetLike.mem_coe, GlobalTheory.LFun.IntPtsUnitary.coe_KU]
       show (u : GL (Fin n) L) ∈ GLint (Fin n) (intL L)
@@ -952,9 +952,9 @@ theorem value_rankOne : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplica
     have h := hφ 1 1 (y⁻¹ * u) (isBorelU_one σ n) (mul_mem (inv_mem hy) huK)
     rw [one_mul, one_mul] at h
     rw [h, chiDeltaU_one, hφ1, one_mul]
-  · rw [if_neg hv]
+  · rw [ite_eq_right hv]
     push_neg at hv
-    have hb0 : b ≠ 0 := fun h => by rw [h, map_zero] at hv; exact not_lt_of_ge zero_le' hv
+    have hb0 : b ≠ 0 := fun h => by rw [h, map_zero] at hv; exact not_lt_of_ge zero_le hv
     set c := b⁻¹ with hc
     have hvc : Valued.v c ≤ 1 := ((Valuation.one_lt_val_iff _ hb0).1 hv).le
     have hσc : σ c = -c := by rw [hc, map_inv₀, hσb, inv_neg]
@@ -967,7 +967,7 @@ theorem value_rankOne : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplica
     have e : Pb * 1 * κ = y⁻¹ * u := by rw [hPb]; group
     have hyK : (y : GL (Fin n) L) ∈ GLint (Fin n) (intL L) := hy.2
     have hyiw := IsWeylRep.inv hyw
-    have hs : simpleU k = Equiv.swap a a' := by unfold simpleU; rw [if_neg hk]
+    have hs : simpleU k = Equiv.swap a a' := by unfold simpleU; rw [ite_eq_right hk]
     set M : Matrix (Fin n) (Fin n) L := (1 + Matrix.single a a' b) * (1 - Matrix.single a' a c) with hMdef
     have hM : ∀ l j, M l j = (1 : Matrix (Fin n) (Fin n) L) l j + (if a = l ∧ a' = j then b else 0)
         - (if a' = l ∧ a = j then c else 0) - (if a = l ∧ a = j then 1 else 0) := by
@@ -999,21 +999,21 @@ theorem value_rankOne : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplica
         ordL ((((Pb : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i i) = 0 := by
       intro i h1 h2
       rw [hP, Equiv.swap_apply_of_ne_of_ne h1 h2, hM]
-      simp only [Matrix.one_apply_eq, if_neg (fun h : a = i ∧ a' = i => h1 h.1.symm),
-        if_neg (fun h : a' = i ∧ a = i => h2 h.1.symm), if_neg (fun h : a = i ∧ a = i => h1 h.1.symm)]
+      simp only [Matrix.one_apply_eq, ite_eq_right (fun h : a = i ∧ a' = i => h1 h.1.symm),
+        ite_eq_right (fun h : a' = i ∧ a = i => h2 h.1.symm), ite_eq_right (fun h : a = i ∧ a = i => h1 h.1.symm)]
       have := hunit i
       rw [Equiv.swap_apply_of_ne_of_ne h1 h2] at this
       simpa using this
     have hdiag_a : ordL ((((Pb : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) a a) = -ordL b := by
       rw [hP, Equiv.swap_apply_left, hM]
-      simp only [Matrix.one_apply, if_neg haa'.symm, if_neg (fun h : a = a' ∧ a' = a => haa' h.1),
-        if_pos (⟨rfl, rfl⟩ : a' = a' ∧ a = a), if_neg (fun h : a = a' ∧ a = a => haa' h.1)]
+      simp only [Matrix.one_apply, ite_eq_right haa'.symm, ite_eq_right (fun h : a = a' ∧ a' = a => haa' h.1),
+        ite_eq_left (⟨rfl, rfl⟩ : a' = a' ∧ a = a), ite_eq_right (fun h : a = a' ∧ a = a => haa' h.1)]
       have hy0 : (((y : GL (Fin n) L)⁻¹ : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) a a' ≠ 0 := by
         have := monomial_entry_ne_zero hyiw a
         rwa [inv_inv, hs, Equiv.swap_apply_left] at this
       have hc0 : c ≠ 0 := inv_ne_zero hb0
       have e2 : ((0 : L) + 0 - if True ∧ True then c else 0) - (if a = a' ∧ True then 1 else 0) = -c := by
-        rw [if_pos ⟨trivial, trivial⟩, if_neg (fun h => haa' h.1)]; ring
+        rw [ite_eq_left ⟨trivial, trivial⟩, ite_eq_right (fun h => haa' h.1)]; ring
       rw [e2, P.fIwasawa_ordL_mul _ _ hy0 (neg_ne_zero.2 hc0), ordL_neg, hc, ordL_inv hb0]
       have := hunit a
       rw [Equiv.swap_apply_left] at this
@@ -1244,7 +1244,7 @@ theorem value_point : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
     omega
   show φ (y⁻¹ * u) = (α k / (q : ℂ) ^ 2) ^ depthU k u
   unfold depthU cornerU
-  have hs : simpleU k = Equiv.swap (lo k) (lo k).rev := by unfold simpleU; rw [if_neg hk]
+  have hs : simpleU k = Equiv.swap (lo k) (lo k).rev := by unfold simpleU; rw [ite_eq_right hk]
   set a : Fin n := lo k with ha
   set a' : Fin n := a.rev with ha'
   have hav : a.val = k.val := rfl
@@ -1270,14 +1270,14 @@ theorem value_point : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
     by_cases h3 : a = i ∧ a' = j
     · obtain ⟨rfl, rfl⟩ := h3
       simp [ham.symm, hma', haa', hc]
-    rw [if_neg h1, if_neg h2, if_neg h3, add_zero, add_zero, add_zero]
+    rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, add_zero, add_zero, add_zero]
     rcases lt_trichotomy i j with h | rfl | h
-    · rw [if_neg h.ne]
+    · rw [ite_eq_right h.ne]
       refine hu3 i j h ?_
-      simp only [Fin.lt_iff_val_lt_val, Fin.ext_iff] at h h1 h2 h3 ⊢
+      simp only [Fin.lt_def, Fin.ext_iff] at h h1 h2 h3 ⊢
       omega
-    · rw [if_pos rfl]; exact hu2 i
-    · rw [if_neg h.ne']; exact hu1 i j h
+    · rw [ite_eq_left rfl]; exact hu2 i
+    · rw [ite_eq_right h.ne']; exact hu1 i j h
   obtain ⟨hσd, hσb, hσc⟩ := (heis_mem_GU_iff σ ham hma' haa' ha'.symm hrm b d c).1 (hU ▸ u.2)
   obtain ⟨hvd, hvb⟩ := v_sq_le hσ hσb hσc
   clear_value b d c
@@ -1297,7 +1297,7 @@ theorem value_point : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
         omega
     rw [h, chiDeltaU_one, hφ1, one_mul, h0, pow_zero]
   push Not at hv
-  have hc0 : c ≠ 0 := fun h => by rw [h, map_zero] at hv; exact not_lt_of_ge zero_le' hv
+  have hc0 : c ≠ 0 := fun h => by rw [h, map_zero] at hv; exact not_lt_of_ge zero_le hv
   have he0 : σ c ≠ 0 := (map_ne_zero σ).2 hc0
   have hvc0 : Valued.v c ≠ 0 := (map_ne_zero _).2 hc0
   have hbc : Valued.v b ≤ Valued.v c := by
@@ -1315,8 +1315,8 @@ theorem value_point : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
   let κ : GU σ n := ⟨_, hℓ⟩
   have hκ : κ ∈ KU σ n := mem_KU_of_int hσ κ fun s t => by
     refine v_heisM_le _ _ _ ?_ ?_ ?_ s t
-    · rw [map_div₀, Valuation.map_neg]; exact div_le_one_of_le₀ hbc zero_le'
-    · rw [map_div₀, Valuation.map_neg, hσ, hvd]; exact div_le_one_of_le₀ hbc zero_le'
+    · rw [map_div₀, Valuation.map_neg]; exact div_le_one_of_le₀ hbc zero_le
+    · rw [map_div₀, Valuation.map_neg, hσ, hvd]; exact div_le_one_of_le₀ hbc zero_le
     · rw [map_inv₀, hσ]; exact inv_le_one_of_one_le₀ hv.le
   set Pb : GU σ n := y⁻¹ * u * κ with hPb
   have e : Pb * 1 * κ⁻¹ = y⁻¹ * u := by rw [hPb]; group
@@ -1426,15 +1426,15 @@ theorem cellU_haar_rightInv : ∀ (L : Type) [Field L] [Valued L (WithZero (Mult
         ∫⁻ u : cellU y, F ((u * p : cellU y) : GU σ n) ∂μ = ∫⁻ u : cellU y, F (u : GU σ n) ∂μ) := by
   intro L _ _ _ ϖ σ q hU n k hk hn y hy hw _ _ μ _ _ p
   have hS := _root_.GlobalTheory.WeylCell.WeylUnipotentShell.shellU_open_compact_subgroup L ϖ σ q hU n k hk hn y hy hw
-  haveI : LocallyCompactSpace (cellU y) :=
+  have : LocallyCompactSpace (cellU y) :=
     (hS.1 0).2.1.locallyCompactSpace_of_mem_nhds_of_group ((hS.1 0).1.mem_nhds (hS.1 0).2.2.1)
   let e : cellU y ≃ᵐ cellU y := (Homeomorph.mulRight p).toMeasurableEquiv
   have he : ∀ u, e u = u * p := fun _ => rfl
   let ν : Measure (cellU y) := μ.map e
-  haveI : ν.IsMulLeftInvariant := by
+  have : ν.IsMulLeftInvariant := by
     have : ν = μ.map (fun x => x * p) := rfl
     rw [this]; exact isMulLeftInvariant_map_mul_right p
-  haveI : IsFiniteMeasureOnCompacts ν := by
+  have : IsFiniteMeasureOnCompacts ν := by
     refine ⟨fun K hK => ?_⟩
     show μ.map e K < ⊤
     rw [e.map_apply]
@@ -1489,11 +1489,11 @@ theorem simpleU_rev_and_sq : ∀ (n : ℕ) (k : Fin (n / 2)), (∀ i, simpleU k 
   · refine ⟨fun i => ?_, ?_⟩
     · have hi := i.isLt
       simp only [Equiv.Perm.mul_apply, Equiv.swap_apply_def]
-      split_ifs at * <;> simp only [Fin.ext_iff, Fin.val_rev, lo, Fin.coe_castLE] at * <;> omega
+      split_ifs at * <;> simp only [Fin.ext_iff, Fin.val_rev, lo, Fin.val_castLE] at * <;> omega
     · have hnd : [lo k, lo (⟨k.val + 1, h⟩ : Fin (n / 2)), (lo k).rev,
           (lo (⟨k.val + 1, h⟩ : Fin (n / 2))).rev].Nodup := by
         simp only [List.nodup_cons, List.mem_cons, List.not_mem_nil, or_false, List.nodup_nil,
-          and_true, Fin.ext_iff, Fin.val_rev, lo, Fin.coe_castLE, not_false_eq_true]
+          and_true, Fin.ext_iff, Fin.val_rev, lo, Fin.val_castLE, not_false_eq_true]
         omega
       have hc := (Equiv.Perm.disjoint_swap_swap hnd).commute
       rw [hc.symm.mul_mul_mul_comm, Equiv.swap_mul_self, Equiv.swap_mul_self, mul_one]
@@ -1538,14 +1538,14 @@ theorem spherical_even (h : IsUnramInv ϖ σ q) (k : Fin (n / 2)) (hk : ¬ k.val
     rw [zpow_natCast] at this; exact this
   have hmono : Monotone H := by
     intro i j hij u hu
-    simp only [H, Set.mem_setOf_eq] at hu ⊢
+    simp only [H, Set.mem_ofPred_eq] at hu ⊢
     exact le_trans hu (WithZero.coe_le_coe.2 (Multiplicative.ofAdd_le.2 (by exact_mod_cast hij)))
   have hcov : ⋃ j, H j = Set.univ := by
     refine Set.eq_univ_of_forall fun u => Set.mem_iUnion.2 ?_
     show ∃ j : ℕ, Valued.v ((((u : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev) ≤ _
     induction Valued.v ((((u : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev)
       using WithZero.recZeroCoe with
-    | zero => exact ⟨0, zero_le'⟩
+    | zero => exact ⟨0, zero_le⟩
     | coe a =>
       refine ⟨(Multiplicative.toAdd a).toNat, WithZero.coe_le_coe.2 ?_⟩
       show Multiplicative.toAdd a ≤ ((Multiplicative.toAdd a).toNat : ℤ)
@@ -1557,17 +1557,17 @@ theorem spherical_even (h : IsUnramInv ϖ σ q) (k : Fin (n / 2)) (hk : ¬ k.val
     _root_.GlobalTheory.GKUnitaryRankOne.value_rankOne L ϖ σ q h n k hk hn (fun i => (α i : ℂ)) φ hφ hφ1 y hyK hy u (hshape u)
   have hF0 : ∀ x ∈ H 0, φ (y⁻¹ * x) = 1 := by
     intro x hx
-    rw [hval x, if_pos]
+    rw [hval x, ite_eq_left]
     simpa [H] using hx
   have hF : ∀ j x, x ∈ H (j + 1) → x ∉ H j → φ (y⁻¹ * x) = ((α k : ℂ) / q) ^ (j + 1) := by
     intro j x hx1 hx0
     have hv : Valued.v ((((x : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev) =
         ((Multiplicative.ofAdd (((j + 1 : ℕ)) : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
-      simp only [H, Set.mem_setOf_eq, not_le] at hx1 hx0
+      simp only [H, Set.mem_ofPred_eq, not_le] at hx1 hx0
       revert hx1 hx0
       induction Valued.v ((((x : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev)
         using WithZero.recZeroCoe with
-      | zero => intro _ h0; exact absurd h0 (not_lt.2 zero_le')
+      | zero => intro _ h0; exact absurd h0 (not_lt.2 zero_le)
       | coe a =>
         intro h1 h0
         have h1' : Multiplicative.toAdd a ≤ ((j + 1 : ℕ) : ℤ) := WithZero.coe_le_coe.1 h1
@@ -1582,7 +1582,7 @@ theorem spherical_even (h : IsUnramInv ϖ σ q) (k : Fin (n / 2)) (hk : ¬ k.val
       rw [hv, ← WithZero.coe_one, WithZero.coe_le_coe]
       show ¬ (((j + 1 : ℕ) : ℤ) ≤ 0)
       omega
-    rw [hval x, if_neg hnot, hord, neg_neg, zpow_natCast, zpow_neg, zpow_natCast, div_pow, div_eq_mul_inv]
+    rw [hval x, ite_eq_right hnot, hord, neg_neg, zpow_natCast, zpow_neg, zpow_natCast, div_pow, div_eq_mul_inv]
   obtain ⟨hInt1, hI1, -⟩ := _root_.GlobalTheory.integral_geometric_shells μ q hq2 (α k : ℂ) hαk H hHm hmono hcov hHμ (fun x => φ (y⁻¹ * x)) hF0 hF
   refine ⟨hInt1, ?_⟩
   rw [hI1]
@@ -1630,7 +1630,7 @@ theorem cSimpleU_ne_zero (hq : 2 ≤ q) (k : Fin (n / 2)) (hk : ¬ k.val + 1 < n
   have hq2n : ‖((q : ℂ) ^ 2)⁻¹‖ ≤ 1 := by
     rw [norm_inv, norm_pow, hnq]
     exact inv_le_one_of_one_le₀ (one_le_pow₀ hq1.le)
-  simp only [cSimpleU, dif_neg hk]
+  simp only [cSimpleU, dite_eq_right hk]
   split_ifs with hn
   · exact div_ne_zero (key _ (hmul _ hqn)) (key _ hαk)
   · refine div_ne_zero (mul_ne_zero (key _ (hmul _ hq2n)) ?_) (key _ hz2)
@@ -1727,7 +1727,7 @@ theorem integrable_cell (h : IsUnramInv ϖ σ q) (k : Fin (n / 2)) (hk : ¬ k.va
     rw [hψ b κ hb, e2, norm_mul, mul_comm]
     exact mul_le_mul_of_nonneg_right ((hC κ hκ).trans (le_max_left _ _)) (norm_nonneg _)
   refine (hI.norm.const_mul (max C 0)).mono'
-    (hcont.comp (continuous_const.mul continuous_subtype_val)).aestronglyMeasurable
+    (hcont.comp (continuous_const.mul continuous_subtypeVal)).aestronglyMeasurable
     (Filter.Eventually.of_forall fun u => hb _)
 
 end Cell
@@ -1739,10 +1739,10 @@ theorem invStepU : PositivityTheory.SphericalProduct.InvStepU := by
   have hact : actU j χ = Function.update χ j (χ j)⁻¹ := by simp [actU, hk]
   rw [← hact]
   obtain ⟨-, ⟨y, hyK, hyw⟩, hμex⟩ := exists_data_U h n χ (simpleU j) (_root_.GlobalTheory.simpleU_rev_and_sq n j).1
-  letI : MeasurableSpace (cellU y) := borel _
-  haveI : BorelSpace (cellU y) := ⟨rfl⟩
+  let : MeasurableSpace (cellU y) := borel _
+  have : BorelSpace (cellU y) := ⟨rfl⟩
   obtain ⟨μ, hμH, hμ⟩ := hμex y
-  haveI := hμH
+  have := hμH
   have hlaw : ∀ (v : V) (b g : GU σ n), IsBorelU b →
       (f v).1 (b * g) = chiDeltaU q (fun i => (χ i : ℂ)) b * (f v).1 g := fun v b g hb => (f v).2 b g hb
   have htr : ∀ (g : GU σ n) (v : V) (x : GU σ n), (f (ρ g v)).1 x = (f v).1 (x * g) := fun g v x => by

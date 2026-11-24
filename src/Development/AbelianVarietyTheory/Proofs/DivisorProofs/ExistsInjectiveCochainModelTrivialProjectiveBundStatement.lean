@@ -1200,9 +1200,9 @@ theorem _root_.GlobalTheory.natFam_extend_of_injective : ∀ (R : Type) [CommRin
   have hfval : Mono f.hom := (sheafToPresheaf _ _).map_mono f
   have hinj : ∀ V, Function.Injective (f.hom.app V).hom := fun V =>
     (ModuleCat.mono_iff_injective _).1 ((NatTrans.mono_iff_mono_app f.hom).1 hfval V)
-  haveI : Injective G.obj :=
+  have : Injective G.obj :=
     Injective.injective_of_adjoint (sheafificationAdjunction Scheme.etaleTopology _) G
-  haveI : Mono (_root_.GlobalTheory.NatFamExt.finPMap P f.hom) := by
+  have : Mono (_root_.GlobalTheory.NatFamExt.finPMap P f.hom) := by
     rw [NatTrans.mono_iff_mono_app]
     intro V
     rw [ModuleCat.mono_iff_injective]
@@ -1487,7 +1487,7 @@ theorem Jcx_isStrictlyGE (R : Type) [CommRing R] (q N : ℕ) (I : Cx R) (hI : I.
   have hpre : IsZero (cotPre R q N I n) := by
     refine Functor.isZero _ (fun U => ?_)
     have h := cochain_chains_subsingleton (sch.obj U.unop ⨯ fibQ q N) I hI n hn
-    letI : Subsingleton ((cotPre R q N I n).obj U) := h
+    let : Subsingleton ((cotPre R q N I n).obj U) := h
     exact ModuleCat.isZero_of_subsingleton _
   exact (presheafToSheaf Scheme.etaleTopology.{0} _).map_isZero hpre
 

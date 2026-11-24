@@ -1235,10 +1235,10 @@ section Norms
 variable {F : Type} [Field F] [NumberField F]
 
 theorem isPrimePow_absNorm (v : HeightOneSpectrum (𝓞 F)) : IsPrimePow (Ideal.absNorm v.asIdeal) := by
-  haveI := v.isMaximal
-  letI := Ideal.Quotient.field v.asIdeal
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
-  letI := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
+  have := v.isMaximal
+  let := Ideal.Quotient.field v.asIdeal
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  let := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
   exact FiniteField.isPrimePow_card _
 
@@ -1278,7 +1278,7 @@ theorem leaves_of_sum {K : Type} [Field K] [NumberField K] [StarRing K] {Bs : De
     have e2 : (O.ee C b O.sv0 : ℝ) * Real.log (O.qq O.sv0) ≤ O.PPF C b + Real.log (O.qq O.sv0) := by
       have h := Nat.floor_le (div_nonneg hP0 hlq.le)
       rw [le_div_iff₀ hlq] at h
-      simp only [FunData.ee, if_true]
+      simp only [FunData.ee, ite_true]
       push_cast
       linarith
     rw [e1]
@@ -1573,7 +1573,7 @@ theorem sqRatio_mem_of {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory.C
   have hr := hS.rationalSums (fun t P g => hlam.2.choose_spec.choose_spec.choose_spec.choose_spec.2.2.1 t P g) hi'
   have hrat := GlobalTheory.ConstRatio.ratIn_of_definite hI (GlobalTheory.ConstRatio.posDef_of_std hX.std) (GlobalTheory.ConstRatio.posDef_of_std hX.std')
     (GlobalTheory.ConstRatio.posDef_of_std hX.stdW) hlam hr μ₀
-  haveI : Nonempty T := ⟨μ₀⟩
+  have : Nonempty T := ⟨μ₀⟩
   have hcst : X.IsConst W.ψ W.θ lam := hlam.isConst
 
   obtain ⟨Λ, hΛ, hΛne⟩ := hLN i j t

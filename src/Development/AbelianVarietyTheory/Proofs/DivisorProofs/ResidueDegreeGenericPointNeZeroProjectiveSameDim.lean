@@ -57,11 +57,11 @@ theorem residueDegree_ne_zero_of_map_genericPoint : ∀ (k : Type) [Field k] (X 
   intro k _ X Y _ _ p q D hp hq hX hY π hπ hη
   obtain ⟨N, i, hi, hcomp⟩ := hp
   obtain ⟨M, j, hj, hcomp'⟩ := hq
-  haveI : IsProper (PSpace.str k N) := isProper_str k N
-  haveI : IsProper (PSpace.str k M) := isProper_str k M
-  haveI : IsProper p := by rw [← hcomp]; infer_instance
-  haveI : IsProper (π ≫ p) := by rw [hπ, ← hcomp']; infer_instance
-  haveI : IsProper π := IsProper.of_comp π p
+  have : IsProper (PSpace.str k N) := isProper_str k N
+  have : IsProper (PSpace.str k M) := isProper_str k M
+  have : IsProper p := by rw [← hcomp]; infer_instance
+  have : IsProper (π ≫ p) := by rw [hπ, ← hcomp']; infer_instance
+  have : IsProper π := IsProper.of_comp π p
   have hcl : IsClosed (Set.range π) := π.isClosedMap.isClosed_range
   have hsurj : Surjective π := ⟨fun x => by
     have : genericPoint X ∈ Set.range π := ⟨_, hη⟩

@@ -79,7 +79,7 @@ def uOf {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} (X : nilrad W₁ W₂) : GL 
 
 theorem continuous_uOf {W₁ W₂ : Submodule ℂ (Fin n → ℂ)} :
     Continuous (uOf : nilrad W₁ W₂ → GL (Fin n) ℂ) := by
-  have h : Continuous fun X : nilrad W₁ W₂ => X.1 := continuous_subtype_val
+  have h : Continuous fun X : nilrad W₁ W₂ => X.1 := continuous_subtypeVal
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · exact continuous_const.add h
   · have : Continuous fun X : nilrad W₁ W₂ => (1 - X.1 + X.1 * X.1 : Matrix (Fin n) (Fin n) ℂ) :=
@@ -240,11 +240,11 @@ theorem conjNil_val (q : GL (Fin n) ℂ) (W₁ W₂ : Submodule ℂ (Fin n → �
 
 theorem continuous_conjNil (q : GL (Fin n) ℂ) (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) :
     Continuous (conjNil q W₁ W₂) :=
-  Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+  Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
 
 theorem continuous_conjNil_symm (q : GL (Fin n) ℂ) (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) :
     Continuous (conjNil q W₁ W₂).symm :=
-  Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const) _
+  Continuous.subtype_mk ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const) _
 
 theorem uOf_conjNil (q : GL (Fin n) ℂ) (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) (X : nilrad W₁ W₂) :
     uOf (conjNil q W₁ W₂ X) = q⁻¹ * uOf X * q := by

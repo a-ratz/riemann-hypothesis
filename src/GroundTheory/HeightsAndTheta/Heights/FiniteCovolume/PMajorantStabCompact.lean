@@ -93,7 +93,7 @@ theorem MajorantStabCompact.proof (h : HermitianForm F E W) (v : Basis ι E W) :
     refine isClosed_iInter fun w => isClosed_eq ?_ continuous_const
     have hg : Continuous fun g : archUnitary h v =>
         (((g : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ)) :=
-      Units.continuous_val.comp ((continuous_apply w).comp continuous_subtype_val)
+      Units.continuous_val.comp ((continuous_apply w).comp continuous_subtypeVal)
     exact ((hg.matrix_map Complex.continuous_conj).matrix_transpose.matrix_mul
       continuous_const).matrix_mul hg
   refine hcpt.of_isClosed_subset hclosed ?_

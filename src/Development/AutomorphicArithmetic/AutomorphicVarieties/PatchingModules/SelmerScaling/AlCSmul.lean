@@ -121,9 +121,9 @@ private theorem UpperTheory.V.Pa.dual_functionals_finite_separating_surjective {
     have ht : Module.IsTorsionBySet R (N ⧸ P) (K : Set R) :=
       (Module.isTorsionBySet_quotient_iff P _).2 fun x r hr =>
         Submodule.smul_mem_smul hr Submodule.mem_top
-    letI : Module (R ⧸ K) (N ⧸ P) := ht.module
+    let : Module (R ⧸ K) (N ⧸ P) := ht.module
     let e := RingHom.quotientKerEquivOfSurjective hs
-    letI : Module F (N ⧸ P) := Module.compHom (N ⧸ P) (e.symm : F →+* R ⧸ K)
+    let : Module F (N ⧸ P) := Module.compHom (N ⧸ P) (e.symm : F →+* R ⧸ K)
     have hcomp : ∀ (b : R) (q : N ⧸ P), φ b • q = b • q := by
       intro b q
       show (e.symm (φ b)) • q = b • q
@@ -141,7 +141,7 @@ private theorem UpperTheory.V.Pa.dual_functionals_finite_separating_surjective {
     exact hf (hy μ hμ)
   refine ⟨hfin, hkill, ?_⟩
   intro ξ
-  haveI := hfin
+  have := hfin
   let ev : N → Module.Dual F L := fun y =>
     { toFun := fun μ => (μ : N →+ F) y
       map_add' := fun _ _ => rfl
@@ -177,8 +177,8 @@ theorem UpperTheory.V.Pa.laDual :
   have hs : Function.Surjective S.rF := fun c => by
     obtain ⟨o, ho⟩ := S.oo_surj c
     exact ⟨_, ho⟩
-  haveI := S.U.fin
-  haveI hN : Module.Finite S.Bh S.U.N :=
+  have := S.U.fin
+  have hN : Module.Finite S.Bh S.U.N :=
     Module.Finite.of_surjective (Submodule.projectionOnto S.U.N 1 S.U.compl.symm)
       (Submodule.projectionOnto_surjective S.U.compl.symm)
   obtain ⟨h1, h2, h3⟩ := UpperTheory.V.Pa.dual_functionals_finite_separating_surjective S.rF hs S.La (fun μ => Iff.rfl)
@@ -373,9 +373,9 @@ private theorem UpperTheory.V.Pa.exists_dual_functional_complement {R F N V : Ty
 theorem UpperTheory.V.Pa.dualEx :
     ∀ (l : ℕ) [Fact l.Prime] (S : Ctx l), SelmerSpannedByKappaLaurent S.h S.k → ∃ m : Fin S.k.g → S.U.N, S.DualM m ∧ Submodule.span S.Bh (Set.range m) = ⊤ := by
   intro l _ S hK3
-  haveI := S.d6
-  haveI := S.U.fin
-  haveI : Module.Finite S.Bh S.U.N := inferInstance
+  have := S.d6
+  have := S.U.fin
+  have : Module.Finite S.Bh S.U.N := inferInstance
   let Bs : Submodule S.F (S.G.G₀ → Matrix (Fin S.n) (Fin S.n) S.F) :=
     { carrier := BdM S.h S.x S.F
       add_mem' := by
@@ -426,16 +426,16 @@ private theorem exists_semilinear_functional_nonzero {O B F M : Type} [CommRing 
     [Module B M] (φ : O →+* B) (f : O →+* F) (hf : Function.Surjective f)
     (hM : ∀ o ∈ maximalIdeal O, ∀ m : M, φ o • m = 0) (q : M) (hq : q ≠ 0) :
     ∃ Φ : M →+ F, (∀ o m, Φ (φ o • m) = f o * Φ m) ∧ Φ q ≠ 0 := by
-  letI : Module O M := Module.compHom M φ
-  haveI hmax : (RingHom.ker f).IsMaximal := RingHom.ker_isMaximal_of_surjective f hf
+  let : Module O M := Module.compHom M φ
+  have hmax : (RingHom.ker f).IsMaximal := RingHom.ker_isMaximal_of_surjective f hf
   have hker : RingHom.ker f = maximalIdeal O := IsLocalRing.eq_maximalIdeal hmax
   have hT : Module.IsTorsionBySet O M (RingHom.ker f) := by
     rintro m ⟨o, ho⟩
     exact hM o (hker ▸ ho) m
-  letI : Field (O ⧸ RingHom.ker f) := Ideal.Quotient.field _
-  letI : Module (O ⧸ RingHom.ker f) M := hT.module
-  haveI : Module.Free (O ⧸ RingHom.ker f) M := Module.Free.of_divisionRing _ _
-  haveI : Module.Projective (O ⧸ RingHom.ker f) M := Module.Projective.of_free
+  let : Field (O ⧸ RingHom.ker f) := Ideal.Quotient.field _
+  let : Module (O ⧸ RingHom.ker f) M := hT.module
+  have : Module.Free (O ⧸ RingHom.ker f) M := Module.Free.of_divisionRing _ _
+  have : Module.Projective (O ⧸ RingHom.ker f) M := Module.Projective.of_free
   obtain ⟨Ψ, hΨ⟩ := Module.Projective.exists_dual_ne_zero (O ⧸ RingHom.ker f) hq
   let e := RingHom.quotientKerEquivOfSurjective hf
   refine ⟨(e : (O ⧸ RingHom.ker f) →+* F).toAddMonoidHom.comp Ψ.toAddMonoidHom, fun o m => ?_, ?_⟩
@@ -492,7 +492,7 @@ private theorem C_smul_mem_w2 {n : ℕ} {A X : Type} [CommRing A] [CommRing X] [
     (c : X) (M : Matrix (Fin n) (Fin n) (DD X e)) (hM : M ∈ W2 n A X e a) :
     (DD.C c : DD X e) • M ∈ W2 n A X e a := by
   simp only [W2, blkMat, ddPart, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-    Set.mem_setOf_eq] at hM ⊢
+    Set.mem_ofPred_eq] at hM ⊢
   intro i j
   obtain ⟨h1, h2⟩ := hM i j
   refine ⟨fun hij => ?_, fun hij => ?_⟩
@@ -758,7 +758,7 @@ theorem UpperTheory.V.Pa.linAlg :
     rw [← hrow a ha i]
     refine Finset.sum_congr rfl fun j _ => ?_
     simp only [Pi.basisFun_apply, Pi.single_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, hXκ]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, hXκ]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.SelmerScaling.LinAlg =====
@@ -824,7 +824,7 @@ theorem UpperTheory.V.Pa.pres :
     · subst hj
       simp
     · simp [Pi.single_apply, hj, hz]
-  haveI := hfin
+  have := hfin
   obtain ⟨X, c, hXspan, hcind, hrel⟩ := linAlg S.F S.Tp S.k.g D0 U hA hB
   choose Xb hXm hXv using fun k => hlift (X k)
   choose cO hcO using fun (p : Fin S.k.g × Fin S.k.g) (a : Fin D0) => S.oo_surj (c p a)

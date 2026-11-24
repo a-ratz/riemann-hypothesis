@@ -249,8 +249,8 @@ theorem val_mem {j : ℕ} (F : Arr V n j) (hF : F ∈ arrV0 ε E u j) (α : Fin 
     F α ∈ kSpan ε E u := by
   have h := (mem_arrV0_iff_forall_mem_kSpan ε E u F).mp hF α
   by_cases hc : ∀ i, ε (α i).1 ≠ ε (α i).2
-  · rwa [if_pos hc] at h
-  · rw [if_neg hc, Submodule.mem_bot] at h
+  · rwa [ite_eq_left hc] at h
+  · rw [ite_eq_right hc, Submodule.mem_bot] at h
     rw [h]
     exact Submodule.zero_mem _
 
@@ -261,10 +261,10 @@ theorem mapArr_mem (hι : ∀ c d, ε c = ε d → ∀ x ∈ kSpan ε E u, ι (E
   rw [mapArr_apply]
   have h := hF α
   by_cases hc : ∀ i, ε (α i).1 ≠ ε (α i).2
-  · rw [if_pos hc] at h ⊢
+  · rw [ite_eq_left hc] at h ⊢
     rw [kSpan_map ε E E' ι u hι]
     exact Submodule.mem_map_of_mem h
-  · rw [if_neg hc, Submodule.mem_bot] at h ⊢
+  · rw [ite_eq_right hc, Submodule.mem_bot] at h ⊢
     rw [h, map_zero]
 
 theorem mapArr_arrE (hι : ∀ c d, ε c = ε d → ∀ x ∈ kSpan ε E u, ι (E c d x) = E' c d (ι x))
@@ -342,7 +342,7 @@ theorem uniqAlg : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V
         rw [mem_arrV0_iff_forall_mem_kSpan]
         intro α
         by_cases h : α = α0
-        · rw [h, if_pos hc0]
+        · rw [h, ite_eq_left hc0]
           simpa [F] using hz
         · simp [F, h]
       have hθ : thetaA E' _ (mapArr ι n _ F) = jmW E' α0 (ι z) := by
@@ -444,11 +444,11 @@ theorem rd_local {f f' : Matrix (Fin n) (Fin n) ℂ → ℂ} {U : Set (Matrix (F
     (h : ∀ x ∈ U, inUJ ε x → f x = f' x) {X : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X)
     {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ U) (hgJ : inUJ ε g) : Rd X f g = Rd X f' g := by
   have he : Continuous (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ) := by
-    letI R : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-    letI A : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-    letI G : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := NonUnitalNormedRing.toNormedAddCommGroup
-    letI S : NormedSpace ℂ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.toNormedSpace _
-    have C := FiniteDimensional.complete ℂ (Matrix (Fin n) (Fin n) ℂ)
+    let R : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let A : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+    let G : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := NonUnitalNormedRing.toNormedAddCommGroup
+    let S : NormedSpace ℂ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.toNormedSpace _
+    have C := FiniteDimensional.completeSpace ℂ (Matrix (Fin n) (Fin n) ℂ)
     exact continuous_iff_continuousAt.2 fun x => (@NormedSpace.exp_analytic ℂ _ _ _ _ R A C x).continuousAt
   have hc : Continuous (fun t : ℝ => g * NormedSpace.exp ((t : ℂ) • X)) :=
     continuous_const.mul (he.comp (Complex.continuous_ofReal.smul continuous_const))
@@ -762,7 +762,7 @@ end Main
 
 theorem germ_jet_zero : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (V : Submodule ℂ H) (E : Fin n → Fin n → Module.End ℂ V) (lam : Fin n → ℝ) (g₀ : ℝ) (u : V), IsURepOn (UJset ε) σ → IsDer ε σ V E → KHighest ε E (LamOf ε lam) u → FiniteDimensional ℂ (kSpan ε E u) → (∀ a b : Fin n, a < b → ε a ≠ ε b → g₀ ≤ lam a - lam b) → 2 * (n : ℝ) < g₀ → ∀ F : Matrix (Fin n) (Fin n) ℂ → (H →ₗ[ℂ] H), (∀ g ∈ UJset ε, ∀ x ∈ (kSpan ε E u).map V.subtype, F g x ∈ (kSpan ε E u).map V.subtype ∧ ∀ k₁ ∈ Kset ε, ∀ k₂ ∈ Kset ε, F (k₁ * g * k₂) x = σ k₁ (F g (σ k₂ x))) → (∀ x ∈ (kSpan ε E u).map V.subtype, ∀ y : H, SmoothOnG ε (fun g => ⟪y, F g x⟫_ℂ)) → (∀ G ∈ Vminus ε E (LamOf ε lam) u, ∀ y : H, ∀ᶠ g : UJ ε in nhds 1, ∑ a, ∑ b, Eab ε a b (fun z => ⟪y, F z (at1 G a b : V)⟫_ℂ) (umat g) = 0) → (∀ x ∈ (kSpan ε E u).map V.subtype, F 1 x = 0) → ∀ (w : List (Fin n × Fin n)), ∀ x ∈ (kSpan ε E u).map V.subtype, ∀ y : H, Eword ε w (fun g => ⟪y, F g x⟫_ℂ) 1 = 0 := by
   intro n ε H _ _ _ σ V E lam g₀ u hσ hD hK hfd hgap hg F hF hs hmin h1
-  haveI : FiniteDimensional ℂ (kSpan ε E u) := hfd
+  have : FiniteDimensional ℂ (kSpan ε E u) := hfd
   have hK1 : (1 : Matrix (Fin n) (Fin n) ℂ) ∈ Kset ε := by
     show (1 : Matrix (Fin n) (Fin n) ℂ) ∈ Matrix.unitaryGroup (Fin n) ℂ ∧ 1 * Jm ε = Jm ε * 1
     exact ⟨one_mem _, by simp⟩

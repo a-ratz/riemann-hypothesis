@@ -64,7 +64,7 @@ theorem isNoetherianRing_graded {R : Type} [CommRing R] (I : Ideal R) (hI : I.FG
     rcases n with _ | n
     · simpa using ha
     · simp
-  letI : Algebra (R ⧸ I) (reesAlgebra I ⧸ reesShiftIdeal I) :=
+  let : Algebra (R ⧸ I) (reesAlgebra I ⧸ reesShiftIdeal I) :=
     (Ideal.Quotient.lift I (algebraMap R _) hker).toAlgebra
   have : IsScalarTower R (R ⧸ I) (reesAlgebra I ⧸ reesShiftIdeal I) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl

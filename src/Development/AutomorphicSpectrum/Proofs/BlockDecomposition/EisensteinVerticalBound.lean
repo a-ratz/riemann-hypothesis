@@ -74,7 +74,7 @@ theorem hgt_mul {K : Subgroup (G2 σ Y)} {a : G2 σ Y → ℝ} (ha : IsHgt K a) 
 theorem exists_nhd_one {K : Subgroup (G2 σ Y)} {a : G2 σ Y → ℝ} (hK : IsCompact (K : Set (G2 σ Y))) (ac : Continuous a)
     (ha : IsHgt K a) (a0 : ∀ x, 0 < a x) :
     ∃ W : Set (G2 σ Y), IsOpen W ∧ (1 : G2 σ Y) ∈ W ∧ ∀ g, ∀ u ∈ W, a g / 2 ≤ a (g * u) ∧ a (g * u) ≤ 2 * a g := by
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   have hn : IsOpen ((fun y : G2 σ Y × G2 σ Y => a (y.1 * y.2)) ⁻¹' Set.Ioo (1 / 2) 2) :=
     isOpen_Ioo.preimage (ac.comp continuous_mul)
   have hs : (K : Set (G2 σ Y)) ×ˢ ({1} : Set (G2 σ Y)) ⊆ (fun y : G2 σ Y × G2 σ Y => a (y.1 * y.2)) ⁻¹' Set.Ioo (1 / 2) 2 := by
@@ -112,7 +112,7 @@ theorem rpow_le_of_near {A B : ℝ} (hA : 0 < A) (h1 : A / 2 ≤ B) (h2 : B ≤ 
 
 theorem eis_half_plane : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), B.IsGood σ → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → ∃ t₀ : ℝ, ∀ (t : ℝ) (Ê : ℂ → G2 σ Y → ℂ), t₀ ≤ t → (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) → (∀ s : ℂ, t < s.re → (fun x => Ê s x) ∈ modFun σ Y) ∧ ContinuousOn (fun y : ℂ × G2 σ Y => Ê y.1 y.2) ({s : ℂ | t < s.re} ×ˢ Set.univ) ∧ ∀ c c' : ℝ, t < c → ∃ (C : ℝ) (N : ℕ), ∀ s : ℂ, c ≤ s.re → s.re ≤ c' → ∀ x, ‖Ê s x‖ ≤ C * (ht2 x : ℝ) ^ N := by
   intro F E _ _ _ _ _ σ B n Y r s hB hn hY b K a hb hK ha χ s₁ f hf
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨ac, a0⟩ := _root_.GlobalTheory.CompanionTheory.Iwasawa.height_continuous_pos F E σ B n Y r s hB hn hY b K a hb hK ha
   have kc := _root_.GlobalTheory.CompanionTheory.StdK.isCompact_K F E σ B n Y r s hB hn hY b K a hb hK ha
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.EisTerm.flat_norm_le_height_rpow K a kc ha a0 χ s₁ f hf

@@ -138,7 +138,7 @@ theorem fib_of_ratio (μ : Measure V) (ν : Measure X) [ν.IsAddHaarMeasure]
   have hQ'U : Q ∩ G ⁻¹' S n₀ ⊆ U := fun x hx => hNbU x (hn₀ hx.2).1
   have hS0B : S n₀ ⊆ B := fun z hz => (hn₀ hz).2
   have hfr : frontier (Q ∩ G ⁻¹' S n₀) = ∅ := by
-    rw [frontier, hQ'cl.closure_eq, hQ'o.interior_eq, Set.diff_self]
+    rw [frontier, hQ'cl.closure_eq, hQ'o.interior_eq, Set.sdiff_self]
   have hφc : Continuous ((Q ∩ G ⁻¹' S n₀).indicator (1 : V → ℝ)) := by
     rw [← Set.piecewise_eq_indicator]
     exact continuous_one.piecewise (fun a ha => by rw [hfr] at ha; simp at ha) continuous_zero

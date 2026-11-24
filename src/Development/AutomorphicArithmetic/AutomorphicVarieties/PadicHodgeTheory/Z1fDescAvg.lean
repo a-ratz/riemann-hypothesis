@@ -50,7 +50,7 @@ private theorem z1fDesc_avg {k G W : Type} [Field k] [CharZero k] [Group G] [Add
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → W := fun g => f g - (a g x - x) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
     intro g h
@@ -93,7 +93,7 @@ theorem UpperTheory.V.Loc.z1fDesc :
   intro l _ G _ _ _ φ A _ _ V _ _ _ _ _ _ _ _ _ ρ H _ _ c hc
   constructor
   · rintro ⟨-, x, hx⟩
-    exact ⟨⟨hc.1.comp continuous_subtype_val, fun g h => hc.2 g h⟩, x, fun h => hx h⟩
+    exact ⟨⟨hc.1.comp continuous_subtypeVal, fun g h => hc.2 g h⟩, x, fun h => hx h⟩
   · rintro ⟨-, x, hx⟩
     refine ⟨hc, ?_⟩
     refine z1fDesc_avg (k := ℚ_[l]) (fun g => (actC φ ρ g).restrictScalars ℚ_[l]) ?_

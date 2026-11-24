@@ -142,7 +142,7 @@ theorem ArcWit.baseChange (hC : Out.CubePullSt) (hP : Out.PolBaseChangeSt) (hU :
           ((hD.e.hom.left ≫ pullback.fst W.P.D.toPre.P.A.hom (Out.specOf g)) ≫ W.φ)),
         W'.φ = (hD.e.hom.left ≫ pullback.fst W.P.D.toPre.P.A.hom (Out.specOf g)) ≫ W.φ ∧ HEq W'.w w' ∧
           Tri W.w hD.w w' := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨PP', cub, sym, adj, prim, m₁, hm₁⟩ := sabPull hC (spMap g) W.t
   let t' : SAB H (Sp R') := ⟨(Over.pullback (spMap g)).obj W.t.G, IsSemiAbelian.pullback _ W.t.G W.t.semi,
     OAct.pullback _ W.t.G W.t.act, PP', cub, sym, adj, prim⟩
@@ -254,7 +254,7 @@ theorem ArcWit.baseChange (hC : Out.CubePullSt) (hP : Out.PolBaseChangeSt) (hU :
     rw [← Category.assoc, e₁, Category.assoc, s4 x, Category.assoc]; rfl
   · show (D'.toPre.c (xe'.symm (W.e y))).left ≫ Φ ≫ W.φ = spMap (g.comp f) ≫ (a.D₀.c y).left
     rw [← Category.assoc, hD.c_pr, hxe, Category.assoc, s5 y, spMap_comp, Category.assoc]
-  · letI : Algebra (FractionRing R) F := ((algebraMap (FractionRing R') F).comp gam).toAlgebra
+  · let : Algebra (FractionRing R) F := ((algebraMap (FractionRing R') F).comp gam).toAlgebra
     have hF : ∀ r : R, algebraMap (FractionRing R) F (algebraMap R (FractionRing R) r) =
         algebraMap (FractionRing R') F (algebraMap R' (FractionRing R') (g r)) := fun r =>
       congrArg (algebraMap (FractionRing R') F) (hgam r)

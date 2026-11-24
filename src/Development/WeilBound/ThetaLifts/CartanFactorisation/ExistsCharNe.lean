@@ -64,10 +64,10 @@ open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.IndefiniteRowSideFullH
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
 
 theorem exists_sb_one : ∃ g ∈ SB (κ → Af F), g 0 = 1 := by
-  haveI : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI := nonarch_finiteAdeleRing (F := F)
-  haveI : NonarchimedeanAddGroup (κ → Af F) := nonarch_pi
+  have : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have := nonarch_finiteAdeleRing (F := F)
+  have : NonarchimedeanAddGroup (κ → Af F) := nonarch_pi
   obtain ⟨K, hK, hK0⟩ := exists_compact_mem_nhds (0 : κ → Af F)
   obtain ⟨V, hV⟩ := NonarchimedeanAddGroup.is_nonarchimedean K hK0
   have hc : IsCompact (V : Set (κ → Af F)) := hK.of_isClosed_subset V.isClosed hV
@@ -120,7 +120,7 @@ theorem apply_pure {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (S : Module.End �
     {g₀ : (κ → Af F) → ℂ} (h₀ : g₀ ∈ SB (κ → Af F)) (h₁ : g₀ 0 = 1) {g : (κ → Af F) → ℂ} (hg : g ∈ SB (κ → Af F)) :
     S (pureA F f g) = pureA F (slice F (S (pureA F f g₀)) 0) g := by
   classical
-  haveI : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   let L : ((κ → Af F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ) :=
     { toFun := fun g => pureA F f g
       map_add' := fun a b => funext fun x => by simp [pureA, mul_add]
@@ -224,22 +224,22 @@ theorem lintegral_eq {S : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ}
       ∀ φ ∈ schA F κ, ∫⁻ x, ‖S φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) {f f' : SInf F κ}
     (h : ∀ g ∈ SB (κ → Af F), S (pureA F f g) = pureA F f' g) : ∫⁻ x, ‖f' x‖ₑ ^ 2 = ∫⁻ x, ‖f x‖ₑ ^ 2 := by
   obtain ⟨g, hg, h₁⟩ := exists_sb_one (F := F) (κ := κ)
-  haveI := HaarSplit.volume_isAddHaar F κ
-  haveI : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : LocallyCompactSpace (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : SecondCountableTopology (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  letI mY : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  letI mA : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → AdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI : SigmaCompactSpace (κ → FiniteAdeleRing (𝓞 F) F) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have := HaarSplit.volume_isAddHaar F κ
+  have : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : LocallyCompactSpace (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : SecondCountableTopology (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  let mY : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  let mA : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → AdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have : SigmaCompactSpace (κ → FiniteAdeleRing (𝓞 F) F) := sigmaCompactSpace_of_locallyCompact_secondCountable
   set ν : Measure (κ → FiniteAdeleRing (𝓞 F) F) := Measure.addHaar with hν
-  haveI : SFinite ν := inferInstance
-  haveI : MeasurableAdd (κ → mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
-  haveI : MeasurableAdd (κ → FiniteAdeleRing (𝓞 F) F) := ContinuousAdd.measurableAdd
-  haveI : ν.IsAddHaarMeasure := by rw [hν]; infer_instance
-  haveI : ((volume : Measure (κ → mixedEmbedding.mixedSpace F)).prod ν).IsAddHaarMeasure :=
+  have : SFinite ν := inferInstance
+  have : MeasurableAdd (κ → mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
+  have : MeasurableAdd (κ → FiniteAdeleRing (𝓞 F) F) := ContinuousAdd.measurableAdd
+  have : ν.IsAddHaarMeasure := by rw [hν]; infer_instance
+  have : ((volume : Measure (κ → mixedEmbedding.mixedSpace F)).prod ν).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure (volume : Measure (κ → mixedEmbedding.mixedSpace F)) ν
   have hμH : Measure.IsAddHaarMeasure ((volume.prod ν).map (HaarSplit.splitE F κ)) :=
     (HaarSplit.splitE F κ).isAddHaarMeasure_map _ (HaarSplit.continuous_splitE F κ) (HaarSplit.continuous_splitE_symm F κ)
@@ -254,9 +254,9 @@ theorem lintegral_eq {S : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ}
     have h1 : ∫⁻ y, ‖g y * g y‖ₑ ∂ν < ⊤ :=
       ((hgc.mul hgc).integrable_of_hasCompactSupport (hg.2.mul_left (f := g))).2
     refine ne_of_lt (lt_of_le_of_lt (le_of_eq (lintegral_congr fun y => ?_)) h1)
-    rw [enorm_mul, sq]
+    rw [eNorm_mul, sq]
   have hC0 : ∫⁻ y, ‖g y‖ₑ ^ 2 ∂ν ≠ 0 := fun h0 => by
-    rw [lintegral_eq_zero_iff (hgc.measurable.enorm.pow_const 2)] at h0
+    rw [lintegral_eq_zero_iff (hgc.measurable.eNorm.pow_const 2)] at h0
     have h2 : g =ᵐ[ν] 0 := h0.mono fun y hy => by simpa using hy
     have := congrFun ((hgc.ae_eq_iff_eq ν continuous_zero).1 h2) 0
     simp [h₁] at this
@@ -265,10 +265,10 @@ theorem lintegral_eq {S : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ}
     rw [hint]
     have e1 : ∀ p, ‖pureA F a g (HaarSplit.splitE F κ p)‖ₑ ^ 2 = ‖a p.1‖ₑ ^ 2 * ‖g p.2‖ₑ ^ 2 := by
       intro p
-      rw [HaarSplit.pureA_splitE, enorm_mul, mul_pow]
+      rw [HaarSplit.pureA_splitE, eNorm_mul, mul_pow]
     simp_rw [e1]
-    rw [lintegral_prod_mul (a.continuous.measurable.enorm.pow_const 2).aemeasurable
-      (hgc.measurable.enorm.pow_const 2).aemeasurable]
+    rw [lintegral_prod_mul (a.continuous.measurable.eNorm.pow_const 2).aemeasurable
+      (hgc.measurable.eNorm.pow_const 2).aemeasurable]
   have := hU _ hμH _ (pureA_mem f hg)
   rw [h g hg, hp, hp] at this
   exact (ENNReal.mul_left_inj hC0 hC).1 this
@@ -278,14 +278,14 @@ theorem exists_adm (L : SInf F κ →L[ℂ] ℂ) : ∃ l ∈ (adeleClass F).adm 
   choose s hs using fun Φ : schA F κ => exists_schwartz_slice Φ.1 Φ.2 0
   let s' : schA F κ →ₗ[ℂ] SInf F κ :=
     { toFun := s
-      map_add' := fun a b => SchwartzMap.ext fun z => by rw [SchwartzMap.add_apply, hs, hs, hs]; rfl
-      map_smul' := fun c a => SchwartzMap.ext fun z => by rw [SchwartzMap.smul_apply, hs, hs]; rfl }
+      map_add' := fun a b => SchwartzMap.ext fun z => by rw [add_apply, hs, hs, hs]; rfl
+      map_smul' := fun c a => SchwartzMap.ext fun z => by rw [smul_apply, hs, hs]; rfl }
   obtain ⟨l, hl⟩ := LinearMap.exists_extend (L.toLinearMap ∘ₗ s')
   have h : ∀ f : SInf F κ, ∀ g ∈ SB (κ → Af F), l (pureA F f g) = g 0 * L f := fun f g hg => by
     have h1 := LinearMap.congr_fun hl ⟨_, pureA_mem f hg⟩
     have h2 : s ⟨_, pureA_mem f hg⟩ = g 0 • f := SchwartzMap.ext fun z => by
       rw [hs]
-      simp only [SchwartzMap.smul_apply, smul_eq_mul, slice, pureA, RingEquiv.apply_symm_apply]
+      simp only [smul_apply, smul_eq_mul, slice, pureA, RingEquiv.apply_symm_apply]
       exact mul_comm _ _
     refine h1.trans ?_
     show L (s _) = _

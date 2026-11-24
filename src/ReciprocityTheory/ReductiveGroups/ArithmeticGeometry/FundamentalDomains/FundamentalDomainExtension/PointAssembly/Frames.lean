@@ -167,7 +167,7 @@ theorem opN_smul {m n : ℕ} (t : ℂ) (A : Matrix (Fin m) (Fin n) ℂ) :
         s = √(∑ i, ‖Matrix.mulVec (t • A) v i‖ ^ 2) / √(∑ j, ‖v j‖ ^ 2)} =
       ‖t‖ • {s | ∃ v : Fin n → ℂ, v ≠ 0 ∧ s = √(∑ i, ‖Matrix.mulVec A v i‖ ^ 2) / √(∑ j, ‖v j‖ ^ 2)} := by
     ext s
-    simp only [Set.mem_setOf_eq, Set.mem_smul_set, smul_eq_mul]
+    simp only [Set.mem_ofPred_eq, Set.mem_smul_set, smul_eq_mul]
     constructor
     · rintro ⟨v, hv, rfl⟩
       exact ⟨_, ⟨v, hv, rfl⟩, by rw [key, mul_div_assoc]⟩
@@ -226,7 +226,7 @@ theorem borel_flag_translate {E : Type} [Field E] [NumberField E] [IsCMField E] 
     · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨c, hc⟩, rfl⟩)
     · have ha := a.isLt
       have hz : b τ c (Fin.castLE X.p0_le a) = 0 :=
-        (hb τ).2 c (Fin.castLE X.p0_le a) (by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE]; omega)
+        (hb τ).2 c (Fin.castLE X.p0_le a) (by rw [Fin.lt_def, Fin.val_castLE]; omega)
       rw [hz, zero_smul]
       exact Submodule.zero_mem _
   refine (Submodule.eq_of_le_of_finrank_eq hle ?_).symm

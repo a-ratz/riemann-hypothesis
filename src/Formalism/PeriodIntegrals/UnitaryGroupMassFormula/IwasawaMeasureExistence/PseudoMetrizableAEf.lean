@@ -109,7 +109,7 @@ theorem char_eq_of_map' (μ : Measure A) [μ.IsAddHaarMeasure] (φ : A ≃ₜ+ A
   have hpos : 0 < μ K := MeasureTheory.Measure.measure_pos_of_mem_nhds μ hKn
   have hfin : μ K ≠ ⊤ := hK.measure_lt_top.ne
   have h2 := congrArg (fun ν : Measure A => ν K) h1
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   have h3 : μ K * ((addEquivAddHaarChar φ * c : ℝ≥0) : ℝ≥0∞) = μ K * 1 := by
     rw [mul_one, mul_comm]
     exact_mod_cast h2
@@ -138,12 +138,12 @@ theorem char_pi {ι : Type} [Fintype ι] [DecidableEq ι] (φ : ι → A ≃ₜ+
     calc μ.map (φ i) = (c i)⁻¹ • (c i • μ.map (φ i)) := by
           rw [smul_smul, inv_mul_cancel₀ (hc0 i), one_smul]
       _ = (c i)⁻¹ • μ := by rw [h1]
-  haveI : ∀ i, SigmaFinite (μ.map (φ i)) := fun i => by rw [hmap i]; infer_instance
+  have : ∀ i, SigmaFinite (μ.map (φ i)) := fun i => by rw [hmap i]; infer_instance
   have hbox : ∀ d : ι → ℝ≥0, Measure.pi (fun i => d i • μ) = (∏ i, d i) • Measure.pi (fun _ : ι => μ) := by
     intro d
     refine (Measure.pi_eq (μ := fun i => d i • μ) (μ' := (∏ i, d i) • Measure.pi (fun _ : ι => μ)) fun s hs => ?_)
-    rw [Measure.smul_apply, Measure.pi_pi]
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, Measure.pi_pi]
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
     rw [Finset.prod_mul_distrib]
     push_cast
     rfl

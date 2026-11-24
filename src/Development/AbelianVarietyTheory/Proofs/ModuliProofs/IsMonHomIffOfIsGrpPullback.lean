@@ -59,7 +59,7 @@ namespace GlobalTheory.FieldBaseChange
 
 theorem flat_spMap {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) : Flat (spMap i) := by
   rw [Flat.SpecMap_iff]
-  letI := i.toAlgebra
+  let := i.toAlgebra
   exact (inferInstance : Module.Flat K₀ K)
 
 theorem surjective_spMap {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) : Surjective (spMap i) := by

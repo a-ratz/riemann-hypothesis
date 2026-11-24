@@ -170,9 +170,9 @@ theorem opOf_trunc (n k : ℕ) (d : ℕ → List ℤ) (z : ℕ → ℂ) (u : M) 
   refine (Finset.sum_congr rfl fun j hj => ?_).trans
     (Finset.sum_subset (Finset.range_subset_range.2 (by omega)) fun j hj hj' => ?_)
   · rw [Finset.mem_range] at hj
-    rw [if_pos (by omega), LinearMap.smul_apply]
+    rw [ite_eq_left (by omega), LinearMap.smul_apply]
   · rw [Finset.mem_range] at hj hj'
-    rw [if_neg (by omega), zero_smul, LinearMap.zero_apply]
+    rw [ite_eq_right (by omega), zero_smul, LinearMap.zero_apply]
 
 end
 
@@ -194,7 +194,7 @@ theorem match_split : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D
   have fix : VacFix ψ om P := by
     intro f hf k hk k' hk'
     obtain ⟨e, he⟩ := exists_isIdemAt hP
-    obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt
+    obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt
       (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
     have h0 : (ϖ : D.host.E) ≠ 0 := fun h => h2 (by
       rw [show ϖ = 0 from Subtype.ext h]; exact zero_mem _)

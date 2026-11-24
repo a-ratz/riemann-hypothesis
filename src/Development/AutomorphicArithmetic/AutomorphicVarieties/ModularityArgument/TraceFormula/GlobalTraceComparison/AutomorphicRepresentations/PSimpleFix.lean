@@ -190,10 +190,10 @@ private theorem avg_dc (ρ : Representation ℂ G V) (N : Subgroup G) (hNo : IsO
 private theorem avg_level (ρ : Representation ℂ G V) (N M M' : Subgroup G) (hNo : IsOpen (N : Set G))
     (hNc : IsCompact (N : Set G)) (hMo : IsOpen (M : Set G)) (hM'o : IsOpen (M' : Set G)) (hMN : M ≤ N)
     (hle : M' ≤ M) (v : V) (hv : v ∈ fixed ρ M) : avgOp ρ N M' v = avgOp ρ N M v := by
-  haveI h1 := finite_quot N N M' hNc hNo hM'o le_rfl
-  haveI h2 := finite_quot N N M hNc hNo hMo le_rfl
-  haveI h3 := finite_quot N M M' hNc hMo hM'o hMN
-  haveI h4 := finite_quot N N (Mg N 1) hNc hNo (isOpen_Mg N hNo 1) le_rfl
+  have h1 := finite_quot N N M' hNc hNo hM'o le_rfl
+  have h2 := finite_quot N N M hNc hNo hMo le_rfl
+  have h3 := finite_quot N M M' hNc hMo hM'o hMN
+  have h4 := finite_quot N N (Mg N 1) hNc hNo (isOpen_Mg N hNo 1) le_rfl
   have hH := hecke_dc N hNc 1
   have hHM : IsHecke M ((dc N 1).indicator 1) := ⟨hH.1, fun k hk y => hH.2 k (hMN hk) y⟩
   have hvM' : v ∈ fixed ρ M' := by
@@ -243,7 +243,7 @@ private theorem core (ρ : Representation ℂ G V) (N : Subgroup G) (hNo : IsOpe
     refine Submodule.span_induction (p := fun v _ => ∃ M : Subgroup G, IsOpen (M : Set G) ∧ M ≤ N ∧
       v ∈ fixed ρ M ∧ avgOp ρ N M v ∈ W) ?_ ?_ ?_ ?_ hv
     · rintro _ ⟨g, rfl⟩
-      haveI := finite_quot N N (Mg N g) hNc hNo (isOpen_Mg N hNo g) le_rfl
+      have := finite_quot N N (Mg N g) hNc hNo (isOpen_Mg N hNo g) le_rfl
       refine ⟨Mg N g, isOpen_Mg N hNo g, inf_le_left, fixed_Mg ρ N g x hxN, ?_⟩
       show avgOp ρ N (Mg N g) (ρ g x) ∈ W
       rw [avg_dc ρ N hNo hNc g x hxN]
@@ -266,7 +266,7 @@ private theorem core (ρ : Representation ℂ G V) (N : Subgroup G) (hNo : IsOpe
       exact W.smul_mem c hw
   intro z hz
   obtain ⟨M, ho, hl, -, hw⟩ := hp z (hO ▸ Submodule.mem_top)
-  haveI := finite_quot N N M hNc hNo ho le_rfl
+  have := finite_quot N N M hNc hNo ho le_rfl
   rwa [avgOp_fix ρ N M z hz] at hw
 
 end

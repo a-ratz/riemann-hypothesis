@@ -67,9 +67,9 @@ private theorem ext_dense {W D B : Type} [Group W] [Group D] [TopologicalSpace D
     refine closure_minimal ?_ (isCompact_univ.prod hC).isClosed
     rintro _ ⟨σ, rfl⟩
     exact ⟨trivial, hχ σ⟩
-  haveI : CompactSpace Γ := isCompact_iff_compactSpace.1 hΓ
+  have : CompactSpace Γ := isCompact_iff_compactSpace.1 hΓ
   let p : Γ →* D := (MonoidHom.fst D B).comp Γ.subtype
-  have hp : Continuous p := continuous_fst.comp continuous_subtype_val
+  have hp : Continuous p := continuous_fst.comp continuous_subtypeVal
   have hmem : ∀ σ, (i σ, χ σ) ∈ Γ := fun σ => Subgroup.le_topologicalClosure _ ⟨σ, rfl⟩
   have hinj : Function.Injective p := by
     rw [injective_iff_map_eq_one]
@@ -93,12 +93,12 @@ private theorem ext_dense {W D B : Type} [Group W] [Group D] [TopologicalSpace D
   let e : Γ ≃* D := MulEquiv.ofBijective p ⟨hinj, hsurj⟩
   have he : Continuous e.symm := Continuous.continuous_symm_of_equiv_compact_to_t2 (f := e.toEquiv) hp
   refine ⟨((MonoidHom.snd D B).comp Γ.subtype).comp e.symm.toMonoidHom,
-    ⟨continuous_snd.comp (continuous_subtype_val.comp he), fun σ => ?_⟩, ?_⟩
+    ⟨continuous_snd.comp (continuous_subtypeVal.comp he), fun σ => ?_⟩, ?_⟩
   · have : e.symm (i σ) = ⟨_, hmem σ⟩ := e.symm_apply_eq.2 rfl
     show (e.symm (i σ)).1.2 = _
     rw [this]
   · rintro κ ⟨hκ, H⟩
-    refine DFunLike.coe_injective (hi.equalizer hκ (continuous_snd.comp (continuous_subtype_val.comp he)) ?_)
+    refine DFunLike.coe_injective (hi.equalizer hκ (continuous_snd.comp (continuous_subtypeVal.comp he)) ?_)
     funext σ
     have : e.symm (i σ) = ⟨_, hmem σ⟩ := e.symm_apply_eq.2 rfl
     show κ (i σ) = (e.symm (i σ)).1.2
@@ -125,7 +125,7 @@ private def ballSub (l : ℕ) [Fact l.Prime] (ε : ℝ) (hε : 0 < ε) : Subgrou
 private theorem exists_compact {l : ℕ} [Fact l.Prime] (u : (Qbar l)ˣ) (hu : ‖(u : Qbar l)‖ = 1) :
     ∃ C : Subgroup (Qbar l)ˣ, IsCompact (C : Set (Qbar l)ˣ) ∧ u ∈ C ∧ ∀ x ∈ C, ‖(x : Qbar l)‖ = 1 := by
   let L : IntermediateField ℚ_[l] (Qbar l) := IntermediateField.adjoin ℚ_[l] {(u : Qbar l)}
-  haveI : FiniteDimensional ℚ_[l] L := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral _)
+  have : FiniteDimensional ℚ_[l] L := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral _)
   let C : Subgroup (Qbar l)ˣ :=
     { carrier := {x | (x : Qbar l) ∈ L ∧ ‖(x : Qbar l)‖ = 1}
       one_mem' := ⟨by simpa using L.one_mem, by simp⟩
@@ -133,9 +133,9 @@ private theorem exists_compact {l : ℕ} [Fact l.Prime] (u : (Qbar l)ˣ) (hu : �
       inv_mem' := fun hx => ⟨by simpa using L.inv_mem hx.1, by simp [hx.2]⟩ }
   refine ⟨C, ?_, ⟨IntermediateField.mem_adjoin_simple_self _ _, hu⟩, fun x hx => hx.2⟩
   rw [Units.isEmbedding_val₀.isCompact_iff]
-  haveI : FiniteDimensional ℚ_[l] L.toSubmodule := inferInstanceAs (FiniteDimensional ℚ_[l] L)
-  haveI : ProperSpace L.toSubmodule := FiniteDimensional.proper ℚ_[l] _
-  convert (isCompact_sphere (0 : L.toSubmodule) 1).image continuous_subtype_val using 1
+  have : FiniteDimensional ℚ_[l] L.toSubmodule := inferInstanceAs (FiniteDimensional ℚ_[l] L)
+  have : ProperSpace L.toSubmodule := FiniteDimensional.proper ℚ_[l] _
+  convert (isCompact_sphere (0 : L.toSubmodule) 1).image continuous_subtypeVal using 1
   ext x
   constructor
   · rintro ⟨y, hy, rfl⟩
@@ -148,9 +148,9 @@ private theorem exists_compact {l : ℕ} [Fact l.Prime] (u : (Qbar l)ˣ) (hu : �
 theorem UpperTheory.V.Loc.laExists :
     GlobalArtinReciprocity → ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} (h : IsPlaceOver A w) (a : Weil h →* (w.adicCompletion F)ˣ), IsLocalArtin h a → ∀ ξ : (w.adicCompletion F)ˣ →* (Qbar l)ˣ, Continuous ξ → (∀ x, ‖(ξ x : Qbar l)‖ = 1) → ∃! κ : ↥(Dec (F := F) A) →* (Qbar l)ˣ, Continuous κ ∧ ∀ σ : Weil h, κ (Subgroup.inclusion (Weil_le_Dec h) σ) = ξ (a σ) := by
   intro _ F Ω _ _ _ _ _ l _ A w h a ha ξ hξ hn
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI := compactSpace_Ine (E := F) A
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have := compactSpace_Ine (E := F) A
   let χ := ξ.comp a
   have hI : Continuous fun τ : Ine (F := F) A => χ (ineIncl h τ) := hξ.comp ha.cont
   obtain ⟨C, hC, huC, hC1⟩ := exists_compact (χ (frob h)) (hn _)
@@ -178,12 +178,12 @@ theorem UpperTheory.V.Loc.laExists :
     have hH : ∀ x ∈ H, x ∈ V := fun x hx => hVV (hεV (by simpa [dist_eq_norm] using hx.2))
     have hop : IsOpen {x : (Qbar l)ˣ | ‖(x : Qbar l) - 1‖ < ε} :=
       isOpen_lt ((Units.continuous_val.sub continuous_const).norm) continuous_const
-    haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC
+    have : CompactSpace C := isCompact_iff_compactSpace.1 hC
     have hHC : IsOpen ((H.subgroupOf C : Subgroup C) : Set C) := by
-      convert hop.preimage (continuous_subtype_val (p := (· ∈ C))) using 1
+      convert hop.preimage (continuous_subtypeVal (p := (· ∈ C))) using 1
       ext x
       exact ⟨fun hx => hx.2, fun hx => ⟨hC1 _ x.2, hx⟩⟩
-    haveI := (H.subgroupOf C).quotient_finite_of_isOpen hHC
+    have := (H.subgroupOf C).quotient_finite_of_isOpen hHC
     obtain ⟨N, hN, -, hNH⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
       (Subgroup.index_ne_zero_of_finite (H := H.subgroupOf C)) ⟨_, huC⟩
     have hNH' : χ (frob h) ^ N ∈ H := hNH
@@ -192,12 +192,12 @@ theorem UpperTheory.V.Loc.laExists :
     obtain ⟨U, hU, hUM⟩ := hM
     obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff F Ω U).1 hU
     have hEo : IsOpen (E.fixingSubgroup : Set (G F Ω)) := E.fixingSubgroup_isOpen
-    haveI := E.fixingSubgroup.quotient_finite_of_isOpen hEo
+    have := E.fixingSubgroup.quotient_finite_of_isOpen hEo
     obtain ⟨m, hm, -, hmE⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
       (Subgroup.index_ne_zero_of_finite (H := E.fixingSubgroup)) (frob h : G F Ω)
     obtain ⟨ζ, hζ⟩ := GlobalTheory.exists_fixed_dvd_deg F Ω A w h (m * N) (Nat.mul_pos hm hN)
     have hζo : IsOpen (MulAction.stabilizer (G F Ω) ζ : Set (G F Ω)) := stabilizer_isOpen_of_isIntegral ζ
-    refine ⟨_, continuous_subtype_val.continuousAt.preimage_mem_nhds
+    refine ⟨_, continuous_subtypeVal.continuousAt.preimage_mem_nhds
       ((hEo.inter hζo).mem_nhds ⟨E.fixingSubgroup.one_mem, (MulAction.stabilizer (G F Ω) ζ).one_mem⟩), fun σ hσ => hH _ ?_⟩
     obtain ⟨k, hk⟩ := hζ σ hσ.2
     obtain ⟨τ, hτ⟩ := exists_eq_zpow_mul deg_frob σ

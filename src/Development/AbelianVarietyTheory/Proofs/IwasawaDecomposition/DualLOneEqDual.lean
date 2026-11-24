@@ -56,7 +56,7 @@ theorem GlobalTheory.Mem.Col2.TC.dualL_one_eq_dual {E : Type} [Field E] [NumberF
   have hset : dualSet σ (1 : Matrix (Fin n) (Fin n) E) L = (Formalism.HermitianLatticesTheory.dual (hStd E n) L : Set _) := by
     ext y
     rw [SetLike.mem_coe, hmem]
-    simp only [dualSet, Set.mem_setOf_eq]
+    simp only [dualSet, Set.mem_ofPred_eq]
     refine forall₂_congr fun x _ => ?_
     have : hform σ (1 : Matrix (Fin n) (Fin n) E) x y = ∑ k, star (x k) * y k := by
       simp [hform, Matrix.one_apply, hσ]

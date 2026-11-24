@@ -144,12 +144,12 @@ theorem fibres (laws : Laws) (hU : USt) (R : Type) [CommRing R] [IsDomain R] [Is
       obtain ⟨E⟩ := hG.fibres Ω (q ≫ spMap φ)
       let em := (Functor.mapMonNatIso (Over.pullbackComp q (spMap φ)) ≪≫ Functor.mapMonCompIso).app (Mon.mk G)
       let e : (Over.pullback (q ≫ spMap φ)).obj G ≅ (Over.pullback q).obj ((Over.pullback (spMap φ)).obj G) := (Mon.forget _).mapIso em
-      haveI : IsMonHom e.hom := by
+      have : IsMonHom e.hom := by
         show IsMonHom em.hom.hom
         infer_instance
-      letI := E.grpB
-      haveI := E.q_hom
-      haveI := E.i_hom
+      let := E.grpB
+      have := E.q_hom
+      have := E.i_hom
       exact ⟨{ X := E.X
                addCommGroup := E.addCommGroup
                free := E.free
@@ -177,7 +177,7 @@ theorem fibres (laws : Laws) (hU : USt) (R : Type) [CommRing R] [IsDomain R] [Is
 
 theorem isAdmissibleCompleteLocalDomainPrime_of_completeNormal {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (hB : Base R) : admitted R (maximalIdeal R) := by
   refine ⟨hB.1, hB.1.2.2.2, hB.2, (maximalIdeal.isMaximal R).isPrime, ?_⟩
-  letI := Ideal.Quotient.field (maximalIdeal R)
+  let := Ideal.Quotient.field (maximalIdeal R)
   infer_instance
 
 end GlobalTheory.Mum.PreUnifEven
@@ -191,7 +191,7 @@ theorem GlobalTheory.Mum.exists_preU_even : ∀ (R : Type) [CommRing R] [IsDomai
   have hU := GlobalTheory.uniformisation_dvr_unconditional
   have hR := GlobalTheory.Mum.PreUnifEven.isAdmissibleCompleteLocalDomainPrime_of_completeNormal hB
   have hP : IsPrincipalIdealRing (R ⧸ maximalIdeal R) := by
-    letI := Ideal.Quotient.field (maximalIdeal R)
+    let := Ideal.Quotient.field (maximalIdeal R)
     infer_instance
   obtain ⟨T⟩ := GlobalTheory.Mum.PreUnifEven.nonempty_towerR_of_even P hs Q₀ P₀ hlev hev
   have hI : maximalIdeal R ≠ ⊤ := hR.2.2.2.1.ne_top

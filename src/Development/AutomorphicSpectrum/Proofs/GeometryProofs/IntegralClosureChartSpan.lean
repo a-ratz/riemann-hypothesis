@@ -145,7 +145,7 @@ theorem exists_twisted_gens : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω]
     intro c
     by_cases hc : x c = 0
     · exact ⟨0, Fin.elim0, fun k => k.elim0, fun h => absurd hc h⟩
-    · haveI := hfin c hc
+    · have := hfin c hc
       obtain ⟨N, s, hs⟩ := Module.Finite.exists_fin (R := chRing o x c) (M := integralClosure (chRing o x c) Ω)
       refine ⟨N, fun k => ((s k : integralClosure (chRing o x c) Ω) : Ω),
         fun k => ⟨hc, (s k).2⟩, fun _ a ha => ?_⟩

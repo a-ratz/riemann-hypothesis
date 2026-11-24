@@ -171,9 +171,9 @@ open GlobalTheory.HeckeFamilyMatrices.SsD in
 theorem diamond_genEigen_eigen : ∀ (N l k : ℕ), 5 ≤ N → l.Prime → ¬ l ∣ N → 3 ≤ k → ∀ (d : ZMod N) (σ : SL(2, ℤ)), IsDiam N l d σ →
   ∀ (f : ModularForm (Lev N l) (k : ℤ)) (c : ℂ) (n : ℕ), (fun F => DdF (k : ℤ) σ F - c • F)^[n] ⇑f = 0 → DdF (k : ℤ) σ ⇑f = c • ⇑f := by
   intro N l k hN hl _ _ d σ _ f c n hn
-  haveI : NeZero N := ⟨by omega⟩
-  haveI : NeZero l := ⟨hl.ne_zero⟩
-  haveI : (Lev N l).FiniteIndex := by unfold Lev; infer_instance
+  have : NeZero N := ⟨by omega⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
+  have : (Lev N l).FiniteIndex := by unfold Lev; infer_instance
   obtain ⟨m, hm, hmem⟩ := exists_pow_mem (Lev N l) σ
   have hfix : (slashEnd (k : ℤ) σ ^ m) ⇑f = ⇑f := by
     rw [slashEnd_pow]
@@ -388,7 +388,7 @@ theorem decomp_of_congr : ∀ (M q : ℕ) (P : SL(2, ℤ)) (A : Matrix (Fin 2) (
 theorem card_dvd_col_eq_one : ∀ (q : ℕ) (σ γ : SL(2, ℤ)), q.Prime →
   (Finset.univ.filter fun i : Fin (q + 1) => (q : ℤ) ∣ (tqFam q σ i * mat γ) 0 0 ∧ (q : ℤ) ∣ (tqFam q σ i * mat γ) 1 0).card = 1 := by
   intro q σ γ hq
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hd : γ 0 0 * γ 1 1 - γ 0 1 * γ 1 0 = 1 := by
     have := γ.2; rwa [Matrix.det_fin_two] at this
   have hlt : ∀ i : Fin (q + 1), (i : ℕ) < q → (((q : ℤ) ∣ (tqFam q σ i * mat γ) 0 0 ∧
@@ -402,7 +402,7 @@ theorem card_dvd_col_eq_one : ∀ (q : ℕ) (σ γ : SL(2, ℤ)), q.Prime →
       (q : ℤ) ∣ (tqFam q σ i * mat γ) 1 0) ↔ ((γ 1 0 : ℤ) : ZMod q) = 0) := by
     intro i hi
     rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
-    simp only [tqFam, hi, if_false, Matrix.mul_assoc, dvd_col_SL_mul]
+    simp only [tqFam, hi, ite_false, Matrix.mul_assoc, dvd_col_SL_mul]
     simp [dg, Matrix.mul_apply, Fin.sum_univ_two]
   rw [Finset.card_eq_one]
   by_cases hc : ((γ 1 0 : ℤ) : ZMod q) = 0
@@ -446,7 +446,7 @@ theorem tendsto_slash_upper : ∀ (k : ℤ) (F : ℍ → ℂ) (c : ℂ) (g b d :
   have hd' : (0 : ℝ) < d := by exact_mod_cast hd
   set β := toGL !![g, b; 0, d] with hβ
   have hv : ∀ i j, (β : Matrix (Fin 2) (Fin 2) ℝ) i j = ((!![g, b; 0, d] : Matrix (Fin 2) (Fin 2) ℤ) i j : ℝ) := by
-    intro i j; simp only [hβ, toGL, hdet, dif_neg, not_false_eq_true]; rfl
+    intro i j; simp only [hβ, toGL, hdet, dite_eq_right, not_false_eq_true]; rfl
   have hD : β.det.val = (g : ℝ) * d := by
     simp [Matrix.det_fin_two, hv]
   have hpos : 0 < β.det.val := by rw [hD]; positivity
@@ -459,7 +459,7 @@ theorem tendsto_slash_upper : ∀ (k : ℤ) (F : ℍ → ℂ) (c : ℂ) (g b d :
       Complex.normSq_intCast]
     field_simp
   refine (((hF.comp hmap).const_mul (((g * d : ℤ) : ℂ) ^ (k - 1) * ((d : ℤ) : ℂ) ^ (-k)))).congr (fun τ => ?_)
-  rw [ModularForm.slash_apply, hden, hD, abs_of_pos (mul_pos hg' hd'), UpperHalfPlane.σ, if_pos hpos]
+  rw [ModularForm.slash_apply, hden, hD, abs_of_pos (mul_pos hg' hd'), UpperHalfPlane.σ, ite_eq_left hpos]
   simp
   ring
 
@@ -469,9 +469,9 @@ theorem lev_finiteIndex (N l : ℕ) [NeZero N] [NeZero l] : (Lev N l).FiniteInde
 theorem tendsto_slash_valueAtInfty (N l : ℕ) (k : ℤ) (hN : 0 < N) (hl : 0 < l) (f : ModularForm (Lev N l) k)
     (γ : SL(2, ℤ)) :
     Tendsto (⇑f ∣[k] γ) atImInfty (𝓝 (valueAtInfty (⇑f ∣[k] γ))) := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
-  haveI := lev_finiteIndex N l
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
+  have := lev_finiteIndex N l
   have : ((ConjAct.toConjAct (γ : GL (Fin 2) ℝ)⁻¹) • (Lev N l : Subgroup (GL (Fin 2) ℝ))).IsArithmetic := by
     simpa [(show Rat.castHom ℝ = algebraMap ℚ ℝ by rfl), map_inv, map_mapGL]
       using! Subgroup.IsArithmetic.conj (Lev N l : Subgroup (GL (Fin 2) ℝ)) (mapGL ℚ γ)⁻¹
@@ -587,8 +587,8 @@ theorem tq_sum_tendsto (N l : ℕ) (k : ℤ) (q : ℕ) (hq : q.Prime) (hN : 0 < 
   let u : Fin (q + 1) → SL(2, ℤ) := fun i => if (i : ℕ) < q then ModularGroup.T ^ ((i : ℕ) : ℤ) else σ
   have hu : ∀ i, u i ∈ Lev N l := fun i => by
     by_cases h : (i : ℕ) < q
-    · simp only [u, h, if_true]; exact T_zpow_mem_lev N l _
-    · simp only [u, h, if_false]; exact hσ
+    · simp only [u, h, ite_true]; exact T_zpow_mem_lev N l _
+    · simp only [u, h, ite_false]; exact hσ
   have hdet : ∀ i, (tqFam q σ i).det = q := fun i => by
     by_cases h : (i : ℕ) < q
     · simp [tqFam, h, Matrix.det_fin_two_of]
@@ -596,9 +596,9 @@ theorem tq_sum_tendsto (N l : ℕ) (k : ℤ) (q : ℕ) (hq : q.Prime) (hN : 0 < 
   have hqM' : (N : ℤ) * l ∣ (q : ℤ) - 1 := by exact_mod_cast hqM
   have hcong : ∀ i a b, ((N * l : ℕ) : ℤ) ∣ tqFam q σ i a b - mat (u i) a b := fun i a b => by
     by_cases h : (i : ℕ) < q
-    · simp only [tqFam, u, h, if_true, mat, ModularGroup.coe_T_zpow]
+    · simp only [tqFam, u, h, ite_true, mat, ModularGroup.coe_T_zpow]
       fin_cases a <;> fin_cases b <;> simp [hqM']
-    · simp only [tqFam, u, h, if_false]
+    · simp only [tqFam, u, h, ite_false]
       fin_cases a <;> fin_cases b <;>
         simp [mat, dg, Matrix.mul_apply, Fin.sum_univ_two, ← mul_sub_one, Dvd.dvd.mul_left hqM']
   have hdec := fun i => slash_decomp N l k q hq hM hqM f (tqFam q σ i) (u i) (hu i) (hdet i) (hcong i) γ
@@ -612,12 +612,12 @@ theorem tq_sum_tendsto (N l : ℕ) (k : ℤ) (q : ℕ) (hq : q.Prime) (hN : 0 < 
     by_cases h : P i
     · have := tendsto_slash_upper k _ c q (b i) 1 (by exact_mod_cast hq.pos) one_pos hF
       simp only [P] at h
-      simp only [v, P, h, and_self, if_true]
+      simp only [v, P, h, and_self, ite_true]
       convert this using 2
       push_cast; simp
     · have := tendsto_slash_upper k _ c 1 (b i) q one_pos (by exact_mod_cast hq.pos) hF
       simp only [P] at h
-      simp only [v, P, h, if_false]
+      simp only [v, P, h, ite_false]
       convert this using 2
       push_cast
       rw [one_mul, ← zpow_add₀ hq0, show k - 1 + -k = -1 by ring, zpow_neg_one]
@@ -667,9 +667,9 @@ theorem tq_sub_smul_cuspForm : ∀ (N l k : ℕ), 5 ≤ N → l.Prime → ¬ l �
   let G : ModularForm (Lev N l) (k : ℤ) := f' - ((1 : ℂ) + (q : ℂ) ^ (k - 1)) • f
   have hG : ⇑G = TqF (k : ℤ) q σ ⇑f - ((1 : ℂ) + (q : ℂ) ^ (k - 1)) • ⇑f := by
     simp [G, hf']
-  haveI : NeZero N := ⟨hN0.ne'⟩
-  haveI : NeZero l := ⟨hl0.ne'⟩
-  haveI := lev_finiteIndex N l
+  have : NeZero N := ⟨hN0.ne'⟩
+  have : NeZero l := ⟨hl0.ne'⟩
+  have := lev_finiteIndex N l
   refine ⟨{ toSlashInvariantForm := G.toSlashInvariantForm, holo' := G.holo', zero_at_cusps' := ?_ }, hG⟩
   intro c hc
   rw [Subgroup.IsArithmetic.isCusp_iff_isCusp_SL2Z] at hc
@@ -738,7 +738,7 @@ theorem integrand_cont (f : ℍ → ℂ) (hf : Continuous f) (τ : ℍ) :
   intro t ht
   rw [Set.uIcc_of_le zero_le_one] at ht
   have := τ.im_pos
-  simp only [Set.mem_setOf_eq, Complex.add_im, Complex.I_im, Complex.mul_im, Complex.ofReal_re,
+  simp only [Set.mem_ofPred_eq, Complex.add_im, Complex.I_im, Complex.mul_im, Complex.ofReal_re,
     Complex.sub_im, Complex.ofReal_im, zero_mul, add_zero, UpperHalfPlane.coe_im]
   rcases eq_or_lt_of_le ht.1 with h | h
   · rw [← h]; norm_num
@@ -1038,7 +1038,7 @@ theorem GlobalTheory.HeckeFamilyMatrices.hecke_semisimple_at_newform : ∀ (k : 
   have hle : Lev N l ≤ CongruenceSubgroup.Gamma1 N := inf_le_left
   have hpos : 0 < N * l := Nat.mul_pos (by omega) hl.pos
   have hfi : (Lev N l).FiniteIndex := by
-    haveI : NeZero (N * l) := ⟨hpos.ne'⟩
+    have : NeZero (N * l) := ⟨hpos.ne'⟩
     exact Subgroup.finiteIndex_of_le (gamma_le_lev N l)
   obtain ⟨f, h, hfh⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.EichlerShimura.exists_per_add_cj_per N (N * l) (Lev N l) k hN hpos (gamma_le_lev N l) hle hodd hk z hz
   obtain ⟨rT, rU, rD⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.CosetReps.dcReps_level N l hN hl hlN

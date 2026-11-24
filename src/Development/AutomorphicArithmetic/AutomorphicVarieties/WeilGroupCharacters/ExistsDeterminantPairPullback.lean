@@ -79,7 +79,7 @@ private theorem tr_zero (D : GDet n A G) (hn : 1 ≤ n) : D.tr 0 = 0 := by
     congr 1
     simp [MonoidAlgebra.one_def]
   unfold GDet.tr GDet.lam
-  rw [h1, Polynomial.coeff_X_pow, if_neg (by omega), mul_zero]
+  rw [h1, Polynomial.coeff_X_pow, ite_eq_right (by omega), mul_zero]
 
 private theorem tr_dim_zero (D : GDet 0 A G) (y : MonoidAlgebra A G) : D.tr y = -1 := by
   have h1 : ∀ x, D.D (Polynomial A) x = D.D (Polynomial A) 0 := fun x => by
@@ -124,7 +124,7 @@ private theorem mu_map {l : ℕ} [Fact l.Prime] {G H : Type} [Group G] [Topologi
 
 variable {l : ℕ} [Fact l.Prime] {F' F : GFrame l} (h : FHom F' F)
 
-private theorem continuous_pullback_projection : Continuous h.π₀ := (h.π_cont.comp (continuous_subtype_val : Continuous (fun x : F'.G₀ => (x : F'.Γ)))).subtype_mk _
+private theorem continuous_pullback_projection : Continuous h.π₀ := (h.π_cont.comp (continuous_subtypeVal : Continuous (fun x : F'.G₀ => (x : F'.Γ)))).subtype_mk _
 
 private theorem pullback_projection_frobenius (v) (g) : h.π₀ (F'.φ v g) = F.φ (h.vl v) (h.gv v g) := Subtype.ext (h.hφ v g).symm
 

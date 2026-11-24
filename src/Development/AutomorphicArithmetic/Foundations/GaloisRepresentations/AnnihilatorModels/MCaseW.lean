@@ -58,7 +58,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.caseW_of :
     Nat.finite_of_card_ne_zero (by rw [hstd.card]; exact pow_ne_zero _ hpp.ne_zero)
   have hq : ∀ a : O, β a ^ (p ^ f) = β a := by
     intro a
-    letI := Fintype.ofFinite (IsLocalRing.ResidueField O)
+    let := Fintype.ofFinite (IsLocalRing.ResidueField O)
     have h1 : (IsLocalRing.residue O a) ^ (p ^ f) = IsLocalRing.residue O a := by
       rw [← hstd.card, Nat.card_eq_fintype_card]
       exact FiniteField.pow_card _

@@ -163,7 +163,7 @@ theorem big_cell_eq : BigCellEq := by
     refine ⟨inferInstance, Measure.dirac_ne_zero, ?_, ?_⟩
     · have hset : {x : Mt D.R.k D.R.rS | Matrix.of x ∉ ({1} : Set (Matrix _ _ ℂ))} = {one}ᶜ := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, Set.mem_compl_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, Set.mem_compl_iff]
         refine not_congr ⟨fun h => ?_, fun h => by rw [h]; rfl⟩
         funext i j
         exact congrFun (congrFun h i) j
@@ -217,8 +217,8 @@ theorem big_cell_eq : BigCellEq := by
     refine ⟨Equiv.refl _, fun a => if h : a.val < D.R.rS then q.1 ⟨a.val, h⟩ else
       herm (Hpk D.R.k D.R.rS) (Matrix.mulVec (bigCell D.R.k D.R.rS q.1 (μsec q.2)) W.z') W.z, fun a => ?_, ?_⟩
     · by_cases h : a.val < D.R.rS
-      · simp only [dif_pos h]; exact hc _
-      · simp only [dif_neg h]
+      · simp only [dite_eq_left h]; exact hc _
+      · simp only [dite_eq_right h]
         have hz0 := (Formalism.QuantumDeterminants.bigCellMinors _ _ _ _ q.1 (μsec q.2) hz hz').2.2 hc
         have hζ0 : q.2 ≠ 0 := by
           intro e; rw [e, Complex.normSq_zero] at hζ'

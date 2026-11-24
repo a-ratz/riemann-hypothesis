@@ -145,7 +145,7 @@ theorem map_baseUnitsEquiv_range_norm :
         (fixingOpenSubgroup L : Subgroup (Ω ≃ₐ[K] Ω))).range.map
       (baseUnitsEquiv (K := K) (Ω := Ω) : fixedModule Ωˣ (⊤ : Subgroup (Ω ≃ₐ[K] Ω)) →* Kˣ) =
       (normUnits K L).range := by
-  haveI : (L.fixingSubgroup.subgroupOf ⊤).FiniteIndex :=
+  have : (L.fixingSubgroup.subgroupOf ⊤).FiniteIndex :=
     inferInstanceAs (((fixingOpenSubgroup L : Subgroup (Ω ≃ₐ[K] Ω)).subgroupOf
       ((⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)) : Subgroup (Ω ≃ₐ[K] Ω))).FiniteIndex)
   ext y
@@ -206,7 +206,7 @@ theorem localReciprocity_symm_mk_of_le_maximalUnramifiedExtension
     (hL : L ≤ maximalUnramifiedExtension K Ω) (x : Kˣ) :
     (localReciprocity L).symm (x : Kˣ ⧸ (normUnits K L).range) =
       Group.Abelianization.of (unramifiedFrobenius K Ω L) ^ ord (x : K) := by
-  haveI := isDiscreteModule_units (K := K) (Ω := Ω)
+  have := isDiscreteModule_units (K := K) (Ω := Ω)
   set σ := (maximalUnramifiedExtensionFrobenius K Ω).liftNormal Ω with hσdef
   have hσ : σ.restrictNormal (maximalUnramifiedExtension K Ω) =
       maximalUnramifiedExtensionFrobenius K Ω := AlgEquiv.restrict_liftNormal _ _

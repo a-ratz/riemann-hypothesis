@@ -109,7 +109,7 @@ theorem gr_isGenAt : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Com
     exact one_ne_zero this
   have hmono : flagStep Ω b (i : ℕ) ≤ flagStep Ω b ((i : ℕ) + 1) :=
     Submodule.span_mono (Set.image_mono (fun k hk => by
-      simp only [Set.mem_setOf_eq] at hk ⊢
+      simp only [Set.mem_ofPred_eq] at hk ⊢
       omega))
   have hb0i : b₀ i ∈ flagStep Ω b ((i : ℕ) + 1) := by
     rw [hflag]

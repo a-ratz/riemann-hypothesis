@@ -96,7 +96,7 @@ theorem kapNew_eq (S : RealDat3 D A3 Ks) {κ : ℝ} (h : KapFixed S κ) : kapNew
   obtain ⟨t, p, hp, hl⟩ := h.2
   exact Lift.IsKap.unique h'.choose_spec.1 h.1 t p hp hl
 
-theorem kapNew_of_not (S : RealDat3 D A3 Ks) (h : ¬ ∃ κ, KapFixed S κ) : kapNew S = S.kap := dif_neg h
+theorem kapNew_of_not (S : RealDat3 D A3 Ks) (h : ¬ ∃ κ, KapFixed S κ) : kapNew S = S.kap := dite_eq_right h
 
 theorem kapNew_of_scal (S : RealDat3 D A3 Ks) (h : S.scal_kap) : kapNew S = S.kap := by
   by_cases h' : ∃ κ, KapFixed S κ

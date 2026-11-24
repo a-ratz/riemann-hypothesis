@@ -196,10 +196,10 @@ theorem exists_finset : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   intro E _ _ _ H Dw l Xo c O _ β Y SS RM Sys Fx Og Fr
   classical
   obtain ⟨S₁, hS₁f, hS₁⟩ := exists_const_set Og.𝔐.cst
-  haveI : CompactSpace Og.𝔐.X := compactSpace_of_tie Og.𝔐.all Og.𝔐.tie
+  have : CompactSpace Og.𝔐.X := compactSpace_of_tie Og.𝔐.all Og.𝔐.tie
   have hfr := fun s => exists_frame_set Og.𝔐.all (Og.𝔐.V s) (Og.Fl.b s) (Og.Fl.sub s)
   choose S₄ hS₄f hS₄ using hfr
-  letI := Small.cstAlg Og
+  let := Small.cstAlg Og
   obtain ⟨t, φ, yq, hφ, -⟩ := Fr.exists_spread
   let M : RootIx Dw × ((k : RM.K) → RM.ι k) → RM.Ω :=
     fun p => (∏ k, RM.y ⟨k, p.2 k⟩ ^ RM.xdeg p.1 k) * Og.e p.1

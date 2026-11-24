@@ -158,7 +158,7 @@ theorem mem_realLevSet_iff {D : D7} {W : HSp D} {K : Subgroup (GA D W)} (hK : K 
 theorem integral_eq_sum_cosets : ∀ (D : D7) (W : HSp D) (ν : Measure (GA D W)) (K : Subgroup (GA D W)), ν.IsHaarMeasure → K ≤ GfC W → IsOpen {g : GfC W | (g : GA D W) ∈ K} → ∀ Φ : GA D W → ℂ, Integrable Φ ν → MeasurableSet {h : GA D W | ∃ u ∈ GinfC W, ∃ k ∈ K, h = u * k} ∧ HasSum (fun q : GfC W ⧸ K.subgroupOf (GfC W) => ∫ h in {h : GA D W | ∃ u ∈ GinfC W, ∃ k ∈ K, h = u * k}, Φ (((Quotient.out q : GfC W) : GA D W) * h) ∂ν) (∫ g, Φ g ∂ν) := by
   intro D W ν K hν hKf hKo Φ hΦ
   obtain ⟨i0, -, i2, -, i4, -⟩ := GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D W
-  haveI := i0; haveI := i2; haveI := i4
+  have := i0; have := i2; have := i4
   set K' := K.subgroupOf (GfC W) with hK'
   set C : Set (GA D W) := {h : GA D W | ∃ u ∈ GinfC W, ∃ k ∈ K, h = u * k} with hCdef
   have hK'o : IsOpen (K' : Set (GfC W)) := hKo
@@ -180,7 +180,7 @@ theorem integral_eq_sum_cosets : ∀ (D : D7) (W : HSp D) (ν : Measure (GA D W)
     exact Set.disjoint_left.2 fun g h1 h2 => hne (((hmem q g).1 h1).trans ((hmem q' g).1 h2).symm)
   have hU : (⋃ q, s q) = Set.univ := Set.eq_univ_of_forall fun g => Set.mem_iUnion.2 ⟨_, (hmem _ g).2 rfl⟩
 
-  haveI : Countable (GfC W ⧸ K') := by
+  have : Countable (GfC W ⧸ K') := by
     have hpd : (Set.univ : Set (GfC W ⧸ K')).PairwiseDisjoint
         (fun q => (fun x => (Quotient.out q : GfC W)⁻¹ * x) ⁻¹' (K' : Set (GfC W))) := by
       intro q _ q' _ hne
@@ -268,7 +268,7 @@ theorem integral_lowCoefSq_pos : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
     have e : ∀ ρ, ⟪((v ρ : (R.MW i (sg0 D A)).sm ρ) : (R.MW i (sg0 D A)).H ρ), (R.MW i (sg0 D A)).rep ρ (infMat D.sp.cm.sig (Wc D i).gram (R.θ ρ) 1)
         ((v ρ : (R.MW i (sg0 D A)).sm ρ) : (R.MW i (sg0 D A)).H ρ)⟫_ℂ = 1 := by
       intro ρ
-      rw [GlobalTheory.PointAtPlaceHom.infMat_one, GlobalTheory.DualCoef.rep_one, ContinuousLinearMap.one_apply,
+      rw [GlobalTheory.PointAtPlaceHom.infMat_one, GlobalTheory.DualCoef.rep_one, one_apply_eq_self,
         inner_self_eq_norm_sq_to_K, hv ρ]
       simp
     simp [e]
@@ -285,12 +285,12 @@ theorem integral_lowCoefSq_pos : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (
     exact (levW R i).one_mem
   set U : Set (GA D (Wc D i)) := {h | (1 : ℝ) / 2 < lowCoefSq R i v h} ∩ O with hU
   have hUo : IsOpen U := (isOpen_lt continuous_const hc).inter hOo
-  have h1U : (1 : GA D (Wc D i)) ∈ U := ⟨by rw [Set.mem_setOf_eq, h1]; norm_num, h1O⟩
+  have h1U : (1 : GA D (Wc D i)) ∈ U := ⟨by rw [Set.mem_ofPred_eq, h1]; norm_num, h1O⟩
   have hUs : U ⊆ Function.support (lowCoefSq R i v) ∩ realLev R i := by
     intro h hh
     refine ⟨?_, hOs hh.2⟩
     have := hh.1
-    rw [Set.mem_setOf_eq] at this
+    rw [Set.mem_ofPred_eq] at this
     rw [Function.mem_support]
     linarith
   have hpos : 0 < R.νW i U := hUo.measure_pos _ ⟨1, h1U⟩
@@ -570,7 +570,7 @@ theorem exists_basis_vec (R : RealDat D A Ks) (i : Fin D.R.m) (t : T) (μ : Meas
     rw [e]
     simp [thetaIP]
   have hn : 0 < Module.finrank ℂ (R.cV i).W := by
-    haveI : Nontrivial (R.cV i).W := ⟨⟨w, 0, hw0⟩⟩
+    have : Nontrivial (R.cV i).W := ⟨⟨w, 0, hw0⟩⟩
     exact Module.finrank_pos
   have hwn : ‖w‖ ≠ 0 := norm_ne_zero_iff.2 hw0
   obtain ⟨b, hb⟩ := Orthonormal.exists_orthonormalBasis_extension_of_card_eq (𝕜 := ℂ) (E := (R.cV i).W)
@@ -580,7 +580,7 @@ theorem exists_basis_vec (R : RealDat D A Ks) (i : Fin D.R.m) (t : T) (μ : Meas
       rintro ⟨a, ha⟩ ⟨c, hc⟩
       rw [Set.mem_singleton_iff] at ha hc
       subst ha hc
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       show ⟪((‖w‖⁻¹ : ℝ) : ℂ) • w, ((‖w‖⁻¹ : ℝ) : ℂ) • w⟫_ℂ = 1
       rw [inner_self_eq_norm_sq_to_K, norm_smul, Complex.norm_real, Real.norm_eq_abs, abs_inv, abs_norm,
         inv_mul_cancel₀ hwn]

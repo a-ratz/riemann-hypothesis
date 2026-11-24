@@ -679,11 +679,11 @@ theorem main_alt_alt : ∀ (D : D7) (P : Pend D), GlobalTheory.TypeLeaf.SerLoc D
       rw [P.eSer_eq k, atPlace_sum, onMt_sum _ _ _ _ hc, LinearMap.sum_apply] at h1
       obtain ⟨τ, -, hτ⟩ := Finset.exists_ne_zero_of_sum_ne_zero h1
       by_cases hlab : (P.lz k).lab τ = s ⟨k, v⟩
-      · rw [if_pos hlab] at hτ
+      · rw [ite_eq_left hlab] at hτ
         exact ⟨τ, (P.kty_spec i PI k v τ).2 ⟨F, hF, hτ⟩, hlab⟩
       · exfalso
         apply hτ
-        rw [if_neg hlab, atPlace_zero]
+        rw [ite_eq_right hlab, atPlace_zero]
         unfold NTypes.onMt
         rw [dite_eq_left (Subalgebra.zero_mem _)]
         have e0 : (⟨0, Subalgebra.zero_mem _⟩ : ↥(Subalgebra.center ℂ (MonoidAlgebra ℂ (G0g D.nd)))) = 0 := rfl
@@ -1082,7 +1082,7 @@ theorem inertia_of_pair [FiniteDimensional LL V] [FiniteDimensional LL U] [Finit
       intro h
       rw [← act_pairB PC.PD hm, (mem_Dpcris PC _ _).1 hx, (mem_Dpcris PC _ _).1 hy.1]
     rw [hW.2.2] at h1
-    refine SetLike.le_def.1 (iSup₂_le fun w hw z hz => ?_) h1
+    refine IsConcreteLE.le_iff.1 (iSup₂_le fun w hw z hz => ?_) h1
     refine Submodule.mem_iSup_of_mem (w * a⁻¹) (Submodule.mem_iSup_of_mem ((hS _).2 ⟨w, hw, a, ha, rfl⟩) ?_)
     refine (mem_eig _ _ _).2 fun g => ?_
     have h2 : actVB PC.PD τ g z = _ := (mem_eig _ _ _).1 hz.2 g
@@ -1155,8 +1155,8 @@ theorem pcrisTensorL_of_tied : ∀ (L : LocTheory) (A : ∀ (l : ℕ) [Fact l.Pr
   intro L AI hT l _ K K' LL h hN hF hS A A' Sig Sig' hA hI
   obtain ⟨T⟩ := hT l
   obtain ⟨C, hfit⟩ := GlobalTheory.MemLoc.FitsEx.exists_fits l (L l) (AI l) T
-  haveI := LL.2
-  haveI := isDomain_of_tied T K
+  have := LL.2
+  have := isDomain_of_tied T K
   have hf : FracInv (pc (L l) h hN hF hS).PD' := fun b b' hb hg =>
     fracInv hfit (GlobalTheory.MemLoc.TensorInj.tensorInj l C) K' b b' hb fun g => by
       obtain ⟨g, rfl⟩ := (GKinEquiv h).surjective g
@@ -1317,7 +1317,7 @@ theorem sum_two_mul_Icc (r : ℕ) : ∑ a ∈ Finset.Icc 1 r, 2 * a = r * (r + 1
 
 theorem padicValNat_pow_sub_one_le (g g' a : ℕ) (hg : g.Prime) (hg' : 2 ≤ g') (hgg : g' ≤ g ^ 2)
     (ha : 1 ≤ a) : padicValNat g (g' ^ a - 1) ≤ 2 * a := by
-  haveI : Fact g.Prime := ⟨hg⟩
+  have : Fact g.Prime := ⟨hg⟩
   have h1 : 1 < g' ^ a := Nat.one_lt_pow (by omega) (by omega)
   have hpos : 0 < g' ^ a - 1 := by omega
   have hle : g ^ padicValNat g (g' ^ a - 1) ≤ g' ^ a - 1 := Nat.le_of_dvd hpos (_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _))
@@ -1335,8 +1335,8 @@ theorem val_card_le (g g' r f : ℕ) (hg : g.Prime) (hg' : g'.Prime) (hne : g �
     (hgg : g' ≤ g ^ 2) :
     padicValNat g (Nat.card (Matrix.GeneralLinearGroup (Fin r) (ZMod g)) ^ f *
       Nat.card (Matrix.GeneralLinearGroup (Fin r) (ZMod g')) ^ f) ≤ 2 * f * r ^ 2 := by
-  haveI : Fact g.Prime := ⟨hg⟩
-  haveI : Fact g'.Prime := ⟨hg'⟩
+  have : Fact g.Prime := ⟨hg⟩
+  have : Fact g'.Prime := ⟨hg'⟩
   have h0 : ∀ q : ℕ, [Fact q.Prime] → Nat.card (Matrix.GeneralLinearGroup (Fin r) (ZMod q)) ≠ 0 :=
     fun q _ => Nat.card_pos.ne'
   obtain ⟨h1, h2⟩ := Formalism.IrreducibleCountingLemmas.WindowSums.padicValCardGeneralLinear g g' r hne

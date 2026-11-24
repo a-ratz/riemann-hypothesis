@@ -173,7 +173,7 @@ theorem prod_indicator (n r : ℕ) (hr : r ≤ n) (E : ℝ) :
       = if (i : ℕ) < r then E ^ (n - r) else 1 := by
     intro i
     by_cases hi : (i : ℕ) < r
-    · simp only [hi, true_and, if_true]
+    · simp only [hi, true_and, ite_true]
       rw [Finset.prod_ite, Finset.prod_const, Finset.prod_const_one, mul_one, card_ge n r hr]
     · simp [hi]
   simp only [inner]
@@ -196,7 +196,7 @@ theorem factor_le (d : ℕ) (C β t : ℝ) (p : Prop) [Decidable p]
   rw [mul_pow] at hpow
   have hE' : (if p then Real.exp t else 1) ^ d = (if p then Real.exp ((d : ℝ) * t) else 1) := by
     split_ifs
-    · rw [← Real.exp_nat_mul]
+    · rw [← Real.exp_natCast_mul]
     · simp
   rw [hE'] at hpow
   calc C * (1 + β * (if p then Real.exp t else 1)) ^ d
@@ -231,7 +231,7 @@ theorem prod_entrywise_le : ∀ (n r d : ℕ), r ≤ n → ∀ (C β t : ℝ), 0
         exact factor_le d C β t _ hC hβ ht
   refine step.trans (le_of_eq ?_)
   simp only [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
-  rw [prod_indicator n r hr, ← Real.exp_nat_mul, ← pow_mul]
+  rw [prod_indicator n r hr, ← Real.exp_natCast_mul, ← pow_mul]
   have hp : (((1 + β) ^ d) ^ n) ^ n = (1 + β) ^ (d * (n * n)) := by
     rw [← pow_mul, ← pow_mul]
   have : (((r * (n - r) : ℕ) : ℝ)) * ((d : ℝ) * t) = (d : ℝ) * ((r : ℝ) * ((n : ℝ) - r)) * t := by
@@ -446,10 +446,10 @@ theorem exists_inf_bound (r : ℕ) {D : Set (UPos n r → 𝔸[K])} {Q : Set (Ad
       exact hm (infAt_unip_inv_eq_zero w r Y m j h)
     rw [← Real.exp_sub, hLdef]
     by_cases hij : (i : ℕ) < r ∧ r ≤ (j : ℕ)
-    · rw [if_pos hij]
+    · rw [ite_eq_left hij]
       refine Real.exp_le_exp.2 ?_
       split_ifs <;> linarith
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       refine Real.exp_le_one_iff.2 ?_
       rcases hl' with rfl | ⟨h1, h2⟩ <;> rcases hm' with rfl | ⟨h3, h4⟩ <;> split_ifs <;>
         first | linarith | (exfalso; omega)

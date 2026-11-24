@@ -78,8 +78,8 @@ theorem flat_quotientMap {P B : Type} [CommRing P] [CommRing B] [Algebra P B] [M
 theorem flat_of_surjective_ker {A A' B : Type} [CommRing A] [CommRing A'] [CommRing B] (f : A →+* B) (hf : f.Flat)
     (π : A →+* A') (hπ : Function.Surjective π) (a : A) (hker : RingHom.ker π = Ideal.span {a})
     (g : A' →+* B ⧸ Ideal.span {f a}) (hg : ∀ r, g (π r) = Ideal.Quotient.mk _ (f r)) : g.Flat := by
-  letI : Algebra A B := f.toAlgebra
-  haveI : Module.Flat A B := hf
+  let : Algebra A B := f.toAlgebra
+  have : Module.Flat A B := hf
   have hJ : (Ideal.span {a}).map (algebraMap A B) = Ideal.span {f a} := by
     rw [Ideal.map_span, Set.image_singleton]; rfl
   let e₁ : (A ⧸ Ideal.span {a}) ≃+* A' :=

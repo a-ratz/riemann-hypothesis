@@ -89,7 +89,7 @@ theorem flCol_one [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circle) (ν
     (Φ : Matrix (n ⊕ Fin 0) (n' ⊕ Fin (0 + 1)) k → ℂ) (x : Matrix n (n' ⊕ Unit) k) :
     GlobalTheory.LocFlat.flCol ψ ν 1 Φ x = Φ (withCol x.toCols₁ fun r => x r (Sum.inr ())) := by
   classical
-  haveI hE : IsEmpty {rs : (n ⊕ Fin 0) × (n' ⊕ Fin (0 + 1)) // Free 1 rs} := ⟨by
+  have hE : IsEmpty {rs : (n ⊕ Fin 0) × (n' ⊕ Fin (0 + 1)) // Free 1 rs} := ⟨by
     rintro ⟨⟨r | r, s | s⟩, h⟩
     · exact h
     · have := s.2
@@ -152,7 +152,7 @@ theorem splitLocalPlace_isModel_wittExtendByZero_rankZero (ψ : AddChar (AF D.ho
     (hF : ∀ r a, F.β r (Sum.inl a) = (d.i₀.map p.pr * F₀.β) r a) (Tm) (hT : p.IsModel ψ F FT Tm) :
     ∃ T₀, p.IsModel ψ F₀ FT T₀ ∧ (∀ Φ : SB (Matrix Z (n ⊕ Fin 0) k), ∃ Ψ : SB (Matrix Z n k), ∀ x, Ψ.1 x = Φ.1 (fromCols x 0)) ∧
       ∀ Φ Ψ, (∀ x, Ψ.1 x = Φ.1 (fromCols x 0)) → (fun w => Tm Φ (d.ext0 T w)) = T₀ Ψ := by
-  haveI := t2Space k
+  have := t2Space k
   have c1 : Continuous fun z : Matrix Z (n ⊕ Fin 0) k => z.toCols₁ := by
     refine continuous_matrix fun i j => ?_
     exact continuous_id.matrix_elem i (Sum.inl j)
@@ -258,7 +258,7 @@ theorem one_place (hc : c.Is) (hv : v.Is) (G : GLoc v) (j : ℕ) (h : j + 2 * 0 
   have b₁' : flatBF s₁ (T₁ O₁) = U₁ O₁' := hfl O₁ O₁' (by
     have := (GlobalTheory.LocFlat.flat_contr_intIndicator G.k G.S.ψ G.ν G.S.cond G.unitVol (XIx (Fin D.R.k) (Fin D.R.t) (G.s + 1))
       (XIx (Fin D.R.k) (Fin D.R.t) G.s) Unit 0 (0 + 1)).1
-    rw [if_neg (by omega)] at this
+    rw [ite_eq_right (by omega)] at this
     exact this.symm)
   have b₂ := hext Φ₂ Ψ₂ hΨ₂
   have b₂' := hext O₂ O₂' fun x => by
@@ -269,7 +269,7 @@ theorem one_place (hc : c.Is) (hv : v.Is) (G : GLoc v) (j : ℕ) (h : j + 2 * 0 
       · exact hx r q
       · exact q.elim0
     classical
-    simp only [O₂, O₂', Set.indicator_apply, Set.mem_setOf_eq, hx]
+    simp only [O₂, O₂', Set.indicator_apply, Set.mem_ofPred_eq, hx]
   have key := GlobalTheory.LastTwoSteps.gLast D (_root_.GlobalTheory.LastKerLoc.lastLoc D) GlobalTheory.SymChain.atMostOne_holds G.k G.ν G.unitVol (ofSplit G.q) G.s D.R.k G.S
     (Fin D.R.t) c.ψ hc.std G.char 0 (c.B G.s 0 h) (c.X (G.s + 1)) (c.X (G.s + 1 + 1)) c.T c.Lz (c.oT (G.s + 1 + 1) h) (v.τ G.s h)
     hr hτ (G.sc G.s) G.z₀ hsc (G.tau h) (G.FX G.s (by omega)) F₀ (G.FX (G.s + 1) le_rfl) G.FT G.FM hF₀ G.last

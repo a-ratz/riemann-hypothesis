@@ -120,7 +120,7 @@ theorem UpperTheory.isotypic_separates_and_embeds_into_invariant_subspace :
     have := h2 ⟨y, hy⟩
     simp only [hc, LinearMap.range_zero, iSup_bot, Submodule.mem_bot] at this
     exact hy0 (congrArg Subtype.val this)
-  haveI := σ.irred
+  have := σ.irred
   have hi : Function.Injective f.1 := by
     let F : σ.ρ.IntertwiningMap π := ⟨f.1, fun g => LinearMap.ext (f.2 g)⟩
     rcases Representation.IsIrreducible.injective_or_eq_zero F with hi | hz

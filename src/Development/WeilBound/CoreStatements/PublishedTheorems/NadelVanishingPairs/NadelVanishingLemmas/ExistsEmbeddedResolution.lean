@@ -108,7 +108,7 @@ theorem unitAt_div_of_ideal_eq {Y : Scheme.{0}} [IsIntegral Y] (J : Y.IdealSheaf
   let Wa : Y.affineOpens := ⟨Y.basicOpen h, U.2.basicOpen h⟩
   have hWU : Wa.1 ≤ U.1 := hhW.trans inf_le_left
   have hWV : Wa.1 ≤ V.1 := hhW.trans inf_le_right
-  haveI : Nonempty Wa.1 := ⟨⟨_, hxh⟩⟩
+  have : Nonempty Wa.1 := ⟨⟨_, hxh⟩⟩
   have e1 : J.ideal Wa = Ideal.span {resG Y hWU f} := by
     rw [← Scheme.IdealSheafData.map_ideal _ (U := Wa) (V := U) hWU, hf, Ideal.map_span, Set.image_singleton]
     rfl
@@ -130,7 +130,7 @@ theorem exists_cartierDiv_of_effCartier : ∀ (Y : Scheme.{0}) [IsIntegral Y] (J
   choose U f hyU hnzd hid using hJ
   have hne : ∀ y, fnOf (U y).1 (gen_mem (hyU y)) (f y) ≠ 0 := by
     intro y h
-    haveI : Nonempty (U y).1 := ⟨⟨y, hyU y⟩⟩
+    have : Nonempty (U y).1 := ⟨⟨y, hyU y⟩⟩
     have h0 : f y = 0 := fnOf_injective _ _ (h.trans (map_zero _).symm)
     exact nonZeroDivisors.ne_zero (hnzd y) h0
   let v : ∀ y : Y, Y.functionFieldˣ := fun y => Units.mk0 _ (hne y)
@@ -394,7 +394,7 @@ theorem exists_eff_isGenerated : ∀ (Y₀ Y₁ : Scheme.{0}) [IsNoetherian Y₀
       fun z hz => Set.mem_iInter.1 hz PUnit.unit
     obtain ⟨U', f, hyU', hfnzd, hspan⟩ := hEff y
     have hf : fnOf U'.1 (gen_mem hyU') f ≠ 0 := by
-      haveI : Nonempty U'.1 := ⟨⟨y, hyU'⟩⟩
+      have : Nonempty U'.1 := ⟨⟨y, hyU'⟩⟩
       intro h0
       rw [← map_zero (fnOf U'.1 (gen_mem hyU'))] at h0
       exact nonZeroDivisors.ne_zero hfnzd (fnOf_injective _ _ h0)
@@ -471,7 +471,7 @@ theorem exists_pullCart_agree : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁
   have hc : ∀ w, t w ∈ U → c (t w) = H.mult w := by
     intro w hw
     have h : ∃ w', t w' = t w ∧ t w ∈ U := ⟨w, rfl, hw⟩
-    simp only [c, dif_pos h]
+    simp only [c, dite_eq_left h]
     have e := h.choose_spec
     rw [hinj _ _ (by rw [e.1]; exact hw) hw e.1]
   have hsupp : Function.support c ⊆ t '' Function.support H.mult := by
@@ -479,7 +479,7 @@ theorem exists_pullCart_agree : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁
     by_cases h : ∃ w, t w = z ∧ z ∈ U
     · obtain ⟨w, rfl, hw⟩ := h
       exact ⟨w, by simpa [hc w hw] using hz, rfl⟩
-    · exact (hz (by simp only [c]; exact dif_neg h)).elim
+    · exact (hz (by simp only [c]; exact dite_eq_right h)).elim
   have hfin : (Function.support c).Finite := (H.finite_support_mult.image _).subset hsupp
   have hcod : ∀ z, c z ≠ 0 → Order.coheight z = 1 := by
     intro z hz
@@ -488,7 +488,7 @@ theorem exists_pullCart_agree : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁
       rw [hc w hw] at hz
       rw [← (_root_.GlobalTheory.Discrepancy.MultIso.coheight_eq_and_mult_pullCart Y₀ Y₁ t U hU w hw).1]
       exact CartierDiv.coheight_eq_one_of_mult_ne_zero hz
-    · exact (hz (by simp only [c]; exact dif_neg h)).elim
+    · exact (hz (by simp only [c]; exact dite_eq_right h)).elim
   obtain ⟨H₀, hH₀⟩ := _root_.GlobalTheory.Cartier.CartierDiv.exists_mult_eq_of_locallyFactorial Y₀ (fun x => AbelianProjective.ufd_stalk q x) c hfin hcod
   refine ⟨H₀, fun y hy hmem => ?_⟩
   have : GlobalTheory.IsNormalScheme Y₁ := (isNormalScheme_iff Y₁).mpr fun x =>
@@ -527,7 +527,7 @@ private theorem exists_pow_eq_mul_of_mem_maximalIdeal_dim_le_one {R : Type} [Com
     ∃ N : ℕ, ∃ b : R, a ^ N = p * b := by
   by_cases hpu : IsUnit p
   · exact ⟨0, ↑hpu.unit⁻¹, by simp⟩
-  · haveI : Ring.KrullDimLE 1 R := Ring.krullDimLE_iff.mpr (by exact_mod_cast hR)
+  · have : Ring.KrullDimLE 1 R := Ring.krullDimLE_iff.mpr (by exact_mod_cast hR)
     have hmax : ∀ P : Ideal R, P.IsPrime → p ∈ P → P = IsLocalRing.maximalIdeal R := by
       intro P hP hpP
       rcases IsLocalRing.Ring.KrullDimLE.eq_bot_or_eq_top (⟨P, hP⟩ : PrimeSpectrum R) with h | h
@@ -611,7 +611,7 @@ private theorem eq_of_mem_supp_specializes_coheight_one {X : Scheme.{0}} [IsInte
 
 private theorem finite_coheight_one_inter_supp {X : Scheme.{0}} [IsIntegral X] [IsLocallyNoetherian X] [CompactSpace X] (D : CartierDiv X) :
     {z : X | Order.coheight z = 1 ∧ z ∈ D.supp}.Finite := by
-  haveI : IsNoetherian X := ⟨⟩
+  have : IsNoetherian X := ⟨⟩
   obtain ⟨S, hSirr, hSeq⟩ := TopologicalSpace.NoetherianSpace.exists_finset_irreducible D.supp
   refine Set.Finite.subset (S.finite_toSet.biUnion fun k _ => (show {x : X | IsGenericPoint x (k : Set X)}.Subsingleton
     from fun x hx y hy => hx.eq hy).finite) ?_
@@ -717,11 +717,11 @@ open GlobalTheory.AmpleUpstairs in
 theorem exists_ample_pull_sub_eff : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁ : Scheme.{0}) [IsIntegral Y₀] [IsIntegral Y₁] [IsLocallyNoetherian Y₀] [IsLocallyNoetherian Y₁] (q : Y₀ ⟶ Sp k) (n : ℕ) (t : Y₁ ⟶ Y₀) [IsDominant t] [SmoothOfRelativeDimension n q] [SmoothOfRelativeDimension n (t ≫ q)], IsProjOver q → IsProjOver (t ≫ q) → ∀ I : Y₀.IdealSheafData, IsIso (t ∣_ I.support.compl) → FinalTheorems.EffCartier (I.comap t) → ∀ (A : LB Y₀) (hA : IsAmpleLB A), ∃ (c : ℕ) (E : CartierDiv Y₁) (A₁ : LB Y₁) (hA₁ : IsAmpleLB A₁), 0 < c ∧ E.Eff ∧ E.supp ≤ (I.comap t).support ∧ c • CechPic.pull t (cls A hA.isLB) = cls A₁ hA₁.isLB + toPic E := by
   intro k _ _ Y₀ Y₁ _ _ _ _ q n t _ _ _ hq ht I hiso hI A hA
   obtain ⟨-, L₁, hL₁⟩ := isProper_and_exists_isAmpleLB_of_isProjOver ht
-  haveI : CompactSpace Y₁ := hL₁.compactSpace
-  haveI : CompactSpace Y₀ := hA.compactSpace
-  haveI : IsNoetherian Y₀ := {}
-  haveI : Smooth (t ≫ q) := SmoothOfRelativeDimension.smooth n _
-  haveI : GlobalTheory.IsNormalScheme Y₁ := GlobalTheory.ModifSections.isNormalScheme_of_smooth (t ≫ q)
+  have : CompactSpace Y₁ := hL₁.compactSpace
+  have : CompactSpace Y₀ := hA.compactSpace
+  have : IsNoetherian Y₀ := {}
+  have : Smooth (t ≫ q) := SmoothOfRelativeDimension.smooth n _
+  have : GlobalTheory.IsNormalScheme Y₁ := GlobalTheory.ModifSections.isNormalScheme_of_smooth (t ≫ q)
   obtain ⟨H, hH⟩ := toPic_surjective (cls L₁ hL₁.isLB)
   obtain ⟨H₀, hH₀⟩ := _root_.GlobalTheory.PullDiv.exists_pullCart_agree k Y₀ Y₁ q n t ht I.support.compl hiso H
   obtain ⟨E₀, hE₀, hsE₀, hgen⟩ := _root_.GlobalTheory.TwistBelow.exists_eff_isGenerated Y₀ Y₁ t I hI A hA
@@ -798,9 +798,9 @@ end GlobalTheory.LogResStep
 open GlobalTheory.LogResStep in
 theorem GlobalTheory.exists_logRes_ample : GlobalTheory.Published.Principalisation → ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (n : ℕ) (η : RatForms p n) (m : ℕ) (G : CartierDiv X), η ≠ 0 → ∀ (Y₀ : Scheme.{0}) [IsIntegral Y₀] (s₀ : Y₀ ⟶ X) [IsDominant s₀], SmoothOfRelativeDimension n (s₀ ≫ p) → IsProjOver (s₀ ≫ p) → Function.Bijective (functionFieldMap s₀) → ∀ (Z : Closeds Y₀), Z ≠ ⊤ → ∀ (A : LB Y₀) (hA : IsAmpleLB A), ∃ (Y : Scheme.{0}) (_ : IsIntegral Y) (t : Y ⟶ Y₀) (_ : IsDominant t) (K : CartierDiv Y) (B : Closeds Y), IsLogRes p n η m G (t ≫ s₀) K B ∧ (∀ y, t y ∈ Z → y ∈ B) ∧ ∃ (c : ℕ) (E : CartierDiv Y) (A₁ : LB Y) (hA₁ : IsAmpleLB A₁), 0 < c ∧ E.Eff ∧ E.supp ≤ B ∧ c • CechPic.pull t (cls A hA.isLB) = cls A₁ hA₁.isLB + toPic E := by
   intro hP k _ _ X _ p n η m G hη Y₀ _ s₀ _ hsm hproj hbij Z hZ A hA
-  haveI : SmoothOfRelativeDimension n (s₀ ≫ p) := hsm
-  haveI : Smooth (s₀ ≫ p) := SmoothOfRelativeDimension.smooth n _
-  haveI : IsLocallyNoetherian Y₀ := LocallyOfFiniteType.isLocallyNoetherian (s₀ ≫ p)
+  have : SmoothOfRelativeDimension n (s₀ ≫ p) := hsm
+  have : Smooth (s₀ ≫ p) := SmoothOfRelativeDimension.smooth n _
+  have : IsLocallyNoetherian Y₀ := LocallyOfFiniteType.isLocallyNoetherian (s₀ ≫ p)
 
   set η₀ := EtaleKlt.ratPull p s₀ n η with hη₀def
   have hη₀ : η₀ ≠ 0 := fun h =>
@@ -819,15 +819,15 @@ theorem GlobalTheory.exists_logRes_ample : GlobalTheory.Published.Principalisati
     rw [← hIsupp, h]
     simp
   obtain ⟨Y, t, hYi, hsmY, hprojY, -, hiso, heff, hsnc⟩ := hP k n Y₀ (s₀ ≫ p) inferInstance hsm hproj I hI
-  haveI := hYi
+  have := hYi
   have hne := Principalise.nonempty_compl_support hI
-  haveI : IsDominant t := _root_.GlobalTheory.Discrepancy.isDominant_of_isIso_restrict Y₀ Y t I.support.compl hne hiso
-  haveI : SmoothOfRelativeDimension n (t ≫ s₀ ≫ p) := hsmY
-  haveI : SmoothOfRelativeDimension n ((t ≫ s₀) ≫ p) := by rw [Category.assoc]; exact hsmY
-  haveI : Smooth (t ≫ s₀ ≫ p) := SmoothOfRelativeDimension.smooth n _
+  have : IsDominant t := _root_.GlobalTheory.Discrepancy.isDominant_of_isIso_restrict Y₀ Y t I.support.compl hne hiso
+  have : SmoothOfRelativeDimension n (t ≫ s₀ ≫ p) := hsmY
+  have : SmoothOfRelativeDimension n ((t ≫ s₀) ≫ p) := by rw [Category.assoc]; exact hsmY
+  have : Smooth (t ≫ s₀ ≫ p) := SmoothOfRelativeDimension.smooth n _
   have hsmY' : SmoothOfRelativeDimension n ((t ≫ s₀) ≫ p) := by rw [Category.assoc]; exact hsmY
   have hprojY' : IsProjOver ((t ≫ s₀) ≫ p) := by rw [Category.assoc]; exact hprojY
-  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (t ≫ s₀ ≫ p)
+  have : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (t ≫ s₀ ≫ p)
   have hcomp := _root_.GlobalTheory.Discrepancy.pull_comp k X Y₀ Y p s₀ t
   have hbt := _root_.GlobalTheory.Discrepancy.functionFieldMap_bijective_of_isIso_restrict Y₀ Y t I.support.compl hne hiso
   have hbij' : Function.Bijective (functionFieldMap (t ≫ s₀)) := by

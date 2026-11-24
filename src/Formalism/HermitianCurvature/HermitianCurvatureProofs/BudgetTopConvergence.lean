@@ -182,7 +182,7 @@ theorem derivBoundOfDecay : DerivBoundOfDecay := by
   have hZ0 : Z ≠ 0 := by
     rintro rfl
     apply hdet
-    haveI : Nonempty (Fin s) := ⟨⟨0, by omega⟩⟩
+    have : Nonempty (Fin s) := ⟨⟨0, by omega⟩⟩
     simp only [G.detM]
     exact Matrix.det_zero
   have hpos : 0 < ‖Z‖ := norm_pos_iff.mpr hZ0

@@ -134,8 +134,8 @@ theorem sndFn_der (a b : Γ((TM O M).left, ⊤)) :
     letI := (isChart O M).algebra; letI := topModule O M
     sndFn O M (a * b) = (isChart O M).aug (sec_hom _) a • sndFn O M b +
       (isChart O M).aug (sec_hom _) b • sndFn O M a := by
-  letI := (isChart O M).algebra
-  letI := topModule O M
+  let := (isChart O M).algebra
+  let := topModule O M
   rw [sndFn_apply, sndFn_apply, sndFn_apply, map_mul, TrivSqZeroExt.snd_mul, op_smul_eq_smul]
   change _ = (toO O ((sec (zeroSec O M)).appLE ⊤ ⊤ le_top a) • (toTsze O M b).snd : M) +
     toO O ((sec (zeroSec O M)).appLE ⊤ ⊤ le_top b) • (toTsze O M a).snd
@@ -153,8 +153,8 @@ def kappa : Γ(conormal (sec (zeroSec O M)), ⊤) →+ M :=
 
 theorem kappa_d (b : Γ((TM O M).left, ⊤)) :
     kappa O M (d (sec_hom (zeroSec O M)) le_top b) = (toTsze O M b).snd := by
-  letI := (isChart O M).algebra
-  letI := topModule O M
+  let := (isChart O M).algebra
+  let := topModule O M
   change (AugCot.lift ((isChart O M).aug (sec_hom _)) (sndFn O M) (sndFn_der O M))
     (((isChart O M).augCotEquiv (sec_hom _)).symm (d (sec_hom (zeroSec O M)) le_top b)) = _
   rw [← (isChart O M).augCotEquiv_d (sec_hom _) b, LinearEquiv.symm_apply_apply, AugCot.lift_d]

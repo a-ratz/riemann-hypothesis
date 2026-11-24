@@ -109,7 +109,7 @@ theorem mem_Bz_of_mem (hZ : CR Z) {a : Matrix (Fin n) (Fin n) k} (ha : a ∈ Z) 
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem eq_zero_of_nilp (hZ : CR Z) {a : Matrix (Fin n) (Fin n) k} (ha : a ∈ Z) (h : IsNilpotent a) : a = 0 := by
-  haveI := hZ.2
+  have := hZ.2
   obtain ⟨m, hm⟩ := h
   have h' : IsNilpotent (⟨a, ha⟩ : Z) := ⟨m, Subtype.ext (by simpa using hm)⟩
   exact congrArg Subtype.val (IsNilpotent.eq_zero h')
@@ -479,16 +479,16 @@ theorem orb_subset_UU {p : Sp k n} (hp : p.2 ≠ 0) : orb Z p ⊆ UU := by
 theorem exists_open_orbit (T : Finset (Sp k n)) (hT : ∀ p ∈ T, p.2 ≠ 0) (D : Set (Sp k n)) (hD : IsClosed D)
     (hDinv : ∀ h ∈ Gz Z, ∀ q ∈ D, act h q ∈ D) (hcov : D ∩ UU ⊆ ⋃ p ∈ T, orb Z p) (hne : (D ∩ UU).Nonempty) :
     ∃ p₀ ∈ T, orb Z p₀ ⊆ D ∧ IsClosed (D \ orb Z p₀) := by
-  letI := actU Z
-  haveI : ContinuousSMul (GzS Z) (UU : Set (Sp k n)) :=
+  let := actU Z
+  have : ContinuousSMul (GzS Z) (UU : Set (Sp k n)) :=
     ⟨Continuous.subtype_mk (continuous_act.comp (Continuous.prodMap
-      (continuous_subtype_val : Continuous (fun g : GzS Z => (g : GL (Fin n) k))) continuous_subtype_val)) _⟩
-  haveI : SecondCountableTopology (GL (Fin n) k) := inferInstance
-  haveI : SigmaCompactSpace (GL (Fin n) k) := inferInstance
-  haveI : SigmaCompactSpace (GzS Z) := isClosed_GzS.sigmaCompactSpace
-  haveI : LocallyCompactSpace (UU : Set (Sp k n)) := isOpen_UU.locallyCompactSpace
+      (continuous_subtypeVal : Continuous (fun g : GzS Z => (g : GL (Fin n) k))) continuous_subtypeVal)) _⟩
+  have : SecondCountableTopology (GL (Fin n) k) := inferInstance
+  have : SigmaCompactSpace (GL (Fin n) k) := inferInstance
+  have : SigmaCompactSpace (GzS Z) := isClosed_GzS.sigmaCompactSpace
+  have : LocallyCompactSpace (UU : Set (Sp k n)) := isOpen_UU.locallyCompactSpace
   set Z' : Set (UU : Set (Sp k n)) := {u | u.1 ∈ D}
-  have hZ' : IsClosed Z' := hD.preimage continuous_subtype_val
+  have hZ' : IsClosed Z' := hD.preimage continuous_subtypeVal
   obtain ⟨q₀, hq₀D, hq₀U⟩ := hne
   have hZne : Z'.Nonempty := ⟨⟨q₀, hq₀U⟩, hq₀D⟩
   have hinv : ∀ h : GzS Z, ∀ x ∈ Z', h • x ∈ Z' := fun h x hx => hDinv h.1 h.2 x.1 hx

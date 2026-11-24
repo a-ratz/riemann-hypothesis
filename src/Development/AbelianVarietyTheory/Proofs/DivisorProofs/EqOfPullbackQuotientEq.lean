@@ -70,7 +70,7 @@ theorem eq_of_eq_on_quotient {R : Type} [CommRing R] (I : Ideal R) (hI : I ≤ n
     (hfg : pullback.fst B.hom (spMap (Ideal.Quotient.mk I)) ≫ f.left =
       pullback.fst B.hom (spMap (Ideal.Quotient.mk I)) ≫ g.left)
     (hη : η[B] ≫ f = η[B] ≫ g) : f = g := by
-  haveI := hB.proper
+  have := hB.proper
   let π := spMap (Ideal.Quotient.mk I)
   let c : B ⟶ B' := f * g⁻¹
   let j := pullback.fst B.hom π

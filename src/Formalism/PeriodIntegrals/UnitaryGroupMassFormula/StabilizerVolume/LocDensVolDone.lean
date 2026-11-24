@@ -233,7 +233,7 @@ theorem ev_dualH [Algebra.IsSeparable F E] (σ : E →ₐ[F] E) (hσ : ∀ x, σ
   ext T
   constructor
   · intro hT
-    rw [Set.mem_setOf_eq] at hT
+    rw [Set.mem_ofPred_eq] at hT
     rw [SetLike.mem_coe, mem_hermO_iff, ← hD]
     intro X hX
     rw [← pairHerm_iota v σ hσ X T]
@@ -244,7 +244,7 @@ theorem ev_dualH [Algebra.IsSeparable F E] (σ : E →ₐ[F] E) (hσ : ∀ x, σ
     exact (add_mem (hS _ h1) h2) k
   · intro hT
     rw [SetLike.mem_coe, mem_hermO_iff, ← hD] at hT
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     intro S hS
     set c : Fv F v := algebraMap F (Fv F v) (1 / 2) with hc
     let X : Fin a → Fin a → Fv F v ⊗[F] E := fun p q =>
@@ -286,7 +286,7 @@ theorem isCompact_hermO (σ : E →ₐ[F] E) (a : ℕ) :
     isOpen_set_pi Set.finite_univ fun _ _ => isOpen_set_pi Set.finite_univ fun _ _ =>
       isOpen_latA v b
   rw [e]
-  exact ⟨hcl.isCompact_preimage hKc, hKo.preimage continuous_subtype_val⟩
+  exact ⟨hcl.isCompact_preimage hKc, hKo.preimage continuous_subtypeVal⟩
 
 theorem smul_hermO (σ : E →ₐ[F] E) (a : ℕ) :
     ∀ s ∈ v.adicCompletionIntegers F, ∀ S ∈ (hermO b v σ a : Set (HermR (Fv F v) σ a)),
@@ -342,7 +342,7 @@ open NumberField IsDedekindDomain MeasureTheory Topology Filter Formalism.MainNo
 
 theorem volAA_of (hC : CondAA) : VolAA := by
   intro F E _ _ _ _ _ σ hCM M J hJ _ _ a _ _ X0 hT _ ψ hψ d b
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
 
   have hσσ : ∀ x, σ (σ x) = x := by
     intro x
@@ -352,9 +352,9 @@ theorem volAA_of (hC : CondAA) : VolAA := by
   filter_upwards [hC F ψ hψ, ev_dual b σ hσσ J hJ.2 (a := a), ev_dualH b σ hσσ a]
     with v hv hL hH
 
-  haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
-  haveI : SecondCountableTopology (Fv F v) := by
-    haveI : TopologicalSpace.SeparableSpace (Fv F v) :=
+  have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
+  have : SecondCountableTopology (Fv F v) := by
+    have : TopologicalSpace.SeparableSpace (Fv F v) :=
       ⟨⟨_, Set.countable_range (algebraMap F (Fv F v)),
         HeightOneSpectrum.denseRange_algebraMap (K := F) (v := v)⟩⟩
     exact UniformSpace.secondCountable_of_separable _

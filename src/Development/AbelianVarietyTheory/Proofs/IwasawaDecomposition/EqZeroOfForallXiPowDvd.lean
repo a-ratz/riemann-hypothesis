@@ -105,7 +105,7 @@ theorem xi_sat {e : Per.Fl l} (he : IsEps e) (n : ℕ) (a : Per.Ainf l)
     (mul_eq_zero.1 h1.symm).resolve_left (pow_ne_zero _ (xi_coeff_zero_ne he))
   obtain ⟨d, rfl⟩ := Ideal.mem_span_singleton.1
     ((WittVector.mem_span_p_iff_coeff_zero_eq_zero c).2 h2)
-  refine ⟨d, mul_left_cancel₀ (WittVector.p_nonzero l (Per.Fl l)) ?_⟩
+  refine ⟨d, mul_left_cancel₀ (WittVector.p_ne_zero l (Per.Fl l)) ?_⟩
   rw [hc]; ring
 
 end GlobalTheory.MemLoc.XiHaus

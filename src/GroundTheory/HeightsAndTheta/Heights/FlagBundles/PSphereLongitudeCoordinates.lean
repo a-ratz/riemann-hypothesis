@@ -205,11 +205,11 @@ lemma SphereLongitudeCoordinates.radial (g : ℝ → ℝ≥0∞) (hg : Measurabl
               have e : ρ ^ 2 < 1 - c ^ 2 ↔ ρ ∈ Iio w := by
                 rw [mem_Iio, hwdef, Real.lt_sqrt (le_of_lt hρ)]
               by_cases h : ρ ^ 2 < 1 - c ^ 2
-              · rw [if_pos h, indicator_of_mem (e.1 h), ← mul_assoc,
+              · rw [ite_eq_left h, indicator_of_mem (e.1 h), ← mul_assoc,
                   ← ENNReal.ofReal_mul (le_of_lt hρ)]
                 congr 2
                 ring
-              · rw [if_neg h, indicator_of_notMem (fun h' => h (e.2 h'))]
+              · rw [ite_eq_right h, indicator_of_notMem (fun h' => h (e.2 h'))]
                 simp
           _ = (∫⁻ ρ in Ioi (0 : ℝ),
               (Iio w).indicator (fun ρ => ENNReal.ofReal (ρ ^ 2 / w ^ 3)) ρ) * g c :=
@@ -269,11 +269,11 @@ lemma SphereLongitudeCoordinates.cone_volume {s : Set E3} (hs : MeasurableSet s)
       s.indicator 1 (spherePoint (z / Real.sqrt (p.1 ^ 2 + z ^ 2)) p.2) else 0
     by_cases h1 : p.1 ^ 2 + z ^ 2 < 1 <;>
       by_cases h2 : spherePoint (z / Real.sqrt (p.1 ^ 2 + z ^ 2)) p.2 ∈ s
-    · rw [if_pos h1, indicator_of_mem (hmem.2 ⟨h1, h2⟩), indicator_of_mem h2]
+    · rw [ite_eq_left h1, indicator_of_mem (hmem.2 ⟨h1, h2⟩), indicator_of_mem h2]
       rfl
-    · rw [if_pos h1, indicator_of_notMem (fun h => h2 (hmem.1 h).2), indicator_of_notMem h2]
-    · rw [if_neg h1, indicator_of_notMem (fun h => h1 (hmem.1 h).1)]
-    · rw [if_neg h1, indicator_of_notMem (fun h => h1 (hmem.1 h).1)]
+    · rw [ite_eq_left h1, indicator_of_notMem (fun h => h2 (hmem.1 h).2), indicator_of_notMem h2]
+    · rw [ite_eq_right h1, indicator_of_notMem (fun h => h1 (hmem.1 h).1)]
+    · rw [ite_eq_right h1, indicator_of_notMem (fun h => h1 (hmem.1 h).1)]
   have hK : Measurable fun p : ℝ × ℝ => ENNReal.ofReal p.1 * ∫⁻ z, H (p, z) :=
     (by fun_prop : Measurable fun p : ℝ × ℝ => ENNReal.ofReal p.1).mul hH.lintegral_prod_right'
   have step : volume C =
@@ -329,7 +329,7 @@ lemma SphereLongitudeCoordinates.spherePoint_add_two_pi (c φ : ℝ) :
 lemma SphereLongitudeCoordinates.toSphere_preimage {s : Set E3} (hs : MeasurableSet s) :
     (volume : Measure E3).toSphere ((↑) ⁻¹' s) =
       ∫⁻ φ in Ioc 0 (2 * Real.pi), ∫⁻ c in Icc (-1 : ℝ) 1, s.indicator 1 (spherePoint c φ) := by
-  rw [Measure.toSphere_apply' _ (measurable_subtype_coe hs), finrank_euclideanSpace_fin,
+  rw [Measure.toSphere_apply' _ (measurable_subtypeVal hs), finrank_euclideanSpace_fin,
     SphereLongitudeCoordinates.cone_eq]
   push_cast
   rw [SphereLongitudeCoordinates.cone_volume hs]
@@ -358,7 +358,7 @@ lemma SphereLongitudeCoordinates.toSphere_map :
         (fun p : ℝ × ℝ => spherePoint p.1 p.2) := by
   have hc := SphereLongitudeCoordinates.continuous_spherePoint
   ext s hs
-  rw [Measure.map_apply measurable_subtype_coe hs,
+  rw [Measure.map_apply measurable_subtypeVal hs,
     SphereLongitudeCoordinates.toSphere_preimage hs, ← lintegral_indicator_one hs,
     lintegral_map (measurable_one.indicator hs) hc.measurable, Measure.volume_eq_prod,
     ← Measure.prod_restrict]
@@ -374,7 +374,7 @@ theorem SphereLongitudeCoordinates.proof : SphereLongitudeCoordinates.Statement 
   have huniv : (volume : Measure E3).toSphere univ = ENNReal.ofReal (4 * Real.pi) := by
     have := congrArg (fun μ : Measure E3 => μ univ) hM
     beta_reduce at this
-    rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, preimage_univ,
+    rw [Measure.map_apply measurable_subtypeVal MeasurableSet.univ, preimage_univ,
       Measure.map_apply hc.measurable MeasurableSet.univ, preimage_univ,
       Measure.restrict_apply_univ] at this
     rw [this, Measure.volume_eq_prod, Measure.prod_prod, Real.volume_Icc, Real.volume_Ioc,
@@ -383,7 +383,7 @@ theorem SphereLongitudeCoordinates.proof : SphereLongitudeCoordinates.Statement 
     ring
   unfold SphereLongitudeCoordinates.Statement sphereMeasure
   rw [Measure.map_smul, hM, huniv]
-  exact measurable_subtype_coe.aemeasurable
+  exact measurable_subtypeVal.aemeasurable
 
 end
 

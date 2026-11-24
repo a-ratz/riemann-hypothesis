@@ -89,7 +89,7 @@ theorem exists_frame {S : Type} [CommRing S] [Algebra c.F S] (z : Formalism.L2.P
         IsEigFrame Xo.univ.t.act x ((ψ.comp (algebraMap c.F S)).comp (tauIn c τ)) v := by
   subst hx
   subst h
-  letI : Algebra c.F F := (ψ.comp (algebraMap c.F S)).toAlgebra
+  let : Algebra c.F F := (ψ.comp (algebraMap c.F S)).toAlgebra
   let ψa : S →ₐ[c.F] F := { ψ with commutes' := fun _ => rfl }
   have htan : ∀ i, Formalism.L2.Pj.IsTanAt (spMap ψ ≫ z.x) (spMap (Formalism.L2.Pj.dualMap ψ) ≫ z.u τ i) :=
     fun i => GlobalTheory.Frames.EigenBaseChange.isTanAt_baseChange ψ (z.tan τ i)

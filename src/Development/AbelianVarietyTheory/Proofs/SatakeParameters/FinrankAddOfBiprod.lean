@@ -224,8 +224,8 @@ theorem multV_add (e : V ≃ₗ[LL] (V' × V''))
   obtain ⟨h1, h2, h3, h4⟩ := equivariant_inl_inr_of_prod_equiv e he
   have key : ∀ b, finrank LL (FildR PD ρ τ b) =
       finrank LL (FildR PD ρ' τ b) + finrank LL (FildR PD ρ'' τ b) := fun b => by
-    haveI := finite_fildR PD (ρ := ρ') τ b
-    haveI := finite_fildR PD (ρ := ρ'') τ b
+    have := finite_fildR PD (ρ := ρ') τ b
+    have := finite_fildR PD (ρ := ρ'') τ b
     exact finrank_add_tensor e _ _ _ (fildR_map PD _ h1 τ b) (fildR_map PD _ h2 τ b)
       (fildR_map PD _ h3 τ b) (fildR_map PD _ h4 τ b)
   simp only [multV, key]

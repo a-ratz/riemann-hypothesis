@@ -67,7 +67,7 @@ theorem card_torsion_of_ev {La Q : Type} [AddCommGroup La] [Module.Free ℤ La] 
     (ev : La → Q) (ℓ : ℕ) (hℓ : 0 < ℓ) (hadd : ∀ x y, ev (x + y) = ev x * ev y)
     (hker : ∀ x, ev x = 1 ↔ ∃ y, x = ℓ • y) (honto : ∀ q, q ^ ℓ = 1 ↔ ∃ x, ev x = q) :
     Nat.card {q : Q // q ^ ℓ = 1} = ℓ ^ Module.finrank ℤ La := by
-  haveI : NeZero ℓ := ⟨by omega⟩
+  have : NeZero ℓ := ⟨by omega⟩
   let f : La →+ Additive Q := AddMonoidHom.mk' (fun x => Additive.ofMul (ev x)) fun x y => by
     rw [hadd]; rfl
   let r := Module.finrank ℤ La
@@ -126,7 +126,7 @@ theorem relDim {D : Datum p} {R : Type} [CommRing R] {b : Base D R} {N : ℕ} {S
   let β : R →+* k := (Spec.preimage (x ≫ s)).hom
   have hβ : x ≫ s = spMap β := (Spec.map_preimage (x ≫ s)).symm
   let B := (Over.pullback x).obj o.A
-  letI : GrpObj B := Functor.grpObjObj
+  let : GrpObj B := Functor.grpObjObj
   have hB : IsAbelianScheme B := GlobalTheory.isAbelianScheme_pullback_obj x o.A o.ab
   obtain ⟨m, hm⟩ := GlobalTheory.AbVarRelDim.exists_relDim k B hB
   let z' : Sp k ⟶ pullback o.A.hom x := pullback.lift z (𝟙 _) (Category.id_comp _).symm
@@ -140,8 +140,8 @@ theorem relDim {D : Datum p} {R : Type} [CommRing R] {b : Base D R} {N : ℕ} {S
     have := (b.unit (p + 1) hℓp).map β
     rw [map_natCast, h0] at this
     exact not_isUnit_zero this
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   obtain ⟨I, -⟩ := o.geom k x β hβ
   have c1 := card_torsion_of_ev (I.ev (p + 1)) (p + 1) (by omega) (I.add (p + 1)) (I.ker (p + 1) (by omega) hℓp)
     (I.onto (p + 1) (by omega) hℓp)

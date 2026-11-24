@@ -153,7 +153,7 @@ theorem gIdil_of_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hAux
   have hav : ∀ f : UA σ d.A.J → ℂ, (⨍ h in d.D, f h ∂d.μ) = ∫ h, f h ∂ν := fun f => rfl
   have hc : (d.μ.restrict d.D Set.univ)⁻¹ ≠ ⊤ := by
     rw [ENNReal.inv_ne_top, Measure.restrict_apply_univ]; exact hμ0
-  haveI : IsFiniteMeasure (d.μ.restrict d.D) := isFiniteMeasure_restrict.mpr hμT
+  have : IsFiniteMeasure (d.μ.restrict d.D) := isFiniteMeasure_restrict.mpr hμT
   have hI : ∀ Φ ∈ d.sch, ∀ x, d.I Φ x =
       ∫ h, ∑' Xr : Matrix (Fin d.m) (Fin d.n) E, d.T (d.om x Φ) (mat h⁻¹ * incM F Xr) ∂ν := by
     intro Φ hΦ x
@@ -345,7 +345,7 @@ theorem fam_eq_L_pf_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R
   rw [hn, ← hdet, div_self hunit.ne_zero, _root_.one_zpow, one_mul, hdet]
   simp only [fam, fP, evX, map_one, one_mul, gs]
   congr 1
-  · rw [← Complex.ofReal_pow, ← Real.exp_nat_mul, Complex.ofReal_exp]
+  · rw [← Complex.ofReal_pow, ← Real.exp_natCast_mul, Complex.ofReal_exp]
     congr 1
     push_cast
     rw [Finset.mul_sum, Finset.mul_sum]
@@ -361,7 +361,7 @@ theorem fam_eq_L_pf_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R
       rfl
     erw [he]
     rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, Complex.ofReal_mul, mul_pow,
-      Complex.ofReal_exp, ← Complex.exp_nat_mul, mul_comm]
+      Complex.ofReal_exp, ← Complex.exp_natCast_mul, mul_comm]
     congr 2
     push_cast
     ring
@@ -884,7 +884,7 @@ theorem mZ_place_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : I
     have hVb : (V' * (_root_.PositivityTheory.SiegelWeilFormula.KK.firstFrameColumns d)ᵀ).map (piInf (d.B.emb w)) = V * ((d.b.1.map (d.B.emb w).1).toCols₁)ᵀ := by
       rw [_root_.PositivityTheory.SiegelWeilFormula.KK.map_mul_incM_T_k]
       have := hV w
-      rw [if_pos rfl] at this
+      rw [ite_eq_left rfl] at this
       rw [show V'.map (piInf (d.B.emb w)) = d.cw w V' from rfl, this]
       rfl
     rw [hX, hVb]
@@ -893,7 +893,7 @@ theorem mZ_place_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : I
     have hVb : (V' * (_root_.PositivityTheory.SiegelWeilFormula.KK.firstFrameColumns d)ᵀ).map (piInf (d.B.emb w')) = 0 := by
       rw [_root_.PositivityTheory.SiegelWeilFormula.KK.map_mul_incM_T_k]
       have := hV w'
-      rw [if_neg hw'] at this
+      rw [ite_eq_right hw'] at this
       rw [show V'.map (piInf (d.B.emb w')) = d.cw w' V' from rfl, this, Matrix.zero_mul]
     rw [hVb]
     simp
@@ -945,8 +945,8 @@ theorem var_span'_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : 
       trace (xᵀ * Matrix.of fun b j => if j = k.2.1 then c * fi k.1 b else 0) = c * (fi * x) k.1 k.2.1 := fun c x => by
     simp only [trace, diag_apply, Matrix.mul_apply, transpose_apply, of_apply, mul_ite, mul_zero]
     rw [Finset.sum_eq_single k.2.1 (fun j _ hj => by simp [hj]) (by simp)]
-    simp only [if_pos rfl, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun b _ => by simp only [if_true]; ring
+    simp only [ite_eq_left rfl, Finset.mul_sum]
+    exact Finset.sum_congr rfl fun b _ => by simp only [ite_true]; ring
   obtain ⟨Z₁, h1, e1⟩ := key (Matrix.of fun b j => if j = k.2.1 then 1 * fi k.1 b else 0)
   obtain ⟨Z₂, h2, e2⟩ := key (Matrix.of fun b j => if j = k.2.1 then (-Complex.I) * fi k.1 b else 0)
   have hl : ∀ X, evX (MvPolynomial.X k) (R.loc w X) =

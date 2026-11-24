@@ -98,9 +98,9 @@ theorem sig_conj (hc : CMData F E) (τ : E →+* ℂ) : τ.comp (hc.sig : E →+
 
 theorem exists_above (hc : CMData F E) (ι : F →+* ℝ) :
     ∃ τ : E →+* ℂ, τ.comp (algebraMap F E) = (algebraMap ℝ ℂ).comp ι := by
-  letI : Algebra F ℂ := ((algebraMap ℝ ℂ).comp ι).toAlgebra
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hc.deg2]; norm_num)
-  haveI : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
+  let : Algebra F ℂ := ((algebraMap ℝ ℂ).comp ι).toAlgebra
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hc.deg2]; norm_num)
+  have : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
   let φ : E →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

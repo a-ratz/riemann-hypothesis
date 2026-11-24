@@ -225,9 +225,9 @@ theorem be_apply_isBes : Hyps → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) → 
   obtain ⟨hlin, -⟩ := GlobalTheory.T.bessel_gap_pairing hH k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hS
   have heq := GlobalTheory.T.bessel_integral_equivariant_of_gap hH k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hS v hv
   refine ⟨fun w hw w' hw' => ?_, fun a w hw => ?_, fun g hg m hm w hw => ?_, ‖ξ‖ * C, Ws, hWs, fun w hw => ?_⟩
-  · simp only [(hlin v hv w hw w' hw' 0).1, ContinuousLinearMap.add_apply]
-  · simp only [(hlin v hv w hw w hw a).2, ContinuousLinearMap.smul_apply]
-  · simp only [heq w hw g hg m hm, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply]
+  · simp only [(hlin v hv w hw w' hw' 0).1, add_apply]
+  · simp only [(hlin v hv w hw w hw a).2, smul_apply]
+  · simp only [heq w hw g hg m hm, smul_apply, ContinuousLinearMap.comp_apply]
   · refine (ContinuousLinearMap.le_opNorm _ _).trans ?_
     rw [mul_comm, mul_assoc]
     exact mul_le_mul_of_nonneg_left (hC w hw) (norm_nonneg _)

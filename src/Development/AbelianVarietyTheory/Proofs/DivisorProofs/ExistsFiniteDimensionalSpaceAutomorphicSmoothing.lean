@@ -188,7 +188,7 @@ theorem measurePreserving_conjKinf (ν : Measure (Lie E a)) [ν.IsAddHaarMeasure
   have hpre : conjKinf k ⁻¹' B = B := by
     ext x; simp [B, frobSq_conjKinf]
   have h1 := congrArg (fun m : Measure (Lie E a) => m B) e
-  simp only [Measure.map_apply (conjKinf k).continuous.measurable hBo.measurableSet, hpre, Measure.smul_apply,
+  simp only [Measure.map_apply (conjKinf k).continuous.measurable hBo.measurableSet, hpre, smul_apply,
     smul_eq_mul] at h1
   have hc := (ENNReal.mul_eq_right hpos hfin).1 h1.symm
   rw [e, hc, one_smul]
@@ -384,7 +384,7 @@ theorem exists_finite_space : GlobalTheory.Published.AutomorphicFormsFiniteGL �
       ∃ h : smoothing ν α φ.1 ∈ Sm E a, (⟨smoothing ν α φ.1, h⟩ : Sm E a) ∈ V := by
   intro hP E _ _ _ a ν _ φ hφ
   let w0 : spanK E a φ := ⟨φ, self_mem_spanK φ⟩
-  haveI := _root_.GlobalTheory.AutGrowth.KilledFin.finiteDimensional_mapsJ hP E a φ hφ (stabL φ) hφ.level
+  have := _root_.GlobalTheory.AutGrowth.KilledFin.finiteDimensional_mapsJ hP E a φ hφ (stabL φ) hφ.level
   refine ⟨(mapsJ φ (stabL φ)).map (LinearMap.applyₗ w0), inferInstance, ?_, fun α hα hK =>
     ⟨GlobalTheory.T.realLieSmoothing_mem_smoothAdelicFunctions E a ν α hα φ.1 φ.2, smoothMap ν hα _, smoothMap_mem ν hα hK hφ, rfl⟩⟩
   rintro _ ⟨T, hT, rfl⟩

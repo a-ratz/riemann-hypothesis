@@ -150,7 +150,7 @@ theorem rk_fildR_lo (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ 
 theorem rk_fildR_hi (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] :
     ∃ hi : ℤ, ∀ a, hi ≤ a → FildR PD ρ τ a = ⊥ := by
   classical
-  haveI hfd : ∀ a, FiniteDimensional LL ↥(FildR PD ρ τ a) := fun a =>
+  have hfd : ∀ a, FiniteDimensional LL ↥(FildR PD ρ τ a) := fun a =>
     Submodule.finiteDimensional_of_le (inf_le_left : FildR PD ρ τ a ≤ DdRE PD ρ τ)
   obtain ⟨a0, ha0⟩ : ∃ a0 : ℤ, ∀ a, finrank LL ↥(FildR PD ρ τ a0) ≤ finrank LL ↥(FildR PD ρ τ a) := by
     have hS : (Set.range fun a : ℤ => finrank LL ↥(FildR PD ρ τ a)).Nonempty := ⟨_, 0, rfl⟩

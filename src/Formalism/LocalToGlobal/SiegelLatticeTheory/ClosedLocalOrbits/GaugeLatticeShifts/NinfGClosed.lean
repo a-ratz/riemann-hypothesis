@@ -72,7 +72,7 @@ theorem haarSub_isHaarS (G : Subgroup (Formalism.REAL.UJ ε)) (hG : IsClosed (G 
     IsHaarS (G : Set (Formalism.REAL.UJ ε)) (haarSub G hG) := by
   have : LocallyCompactSpace G := hG.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hemb := hG.isClosedEmbedding_subtypeVal
-  have hι : Measurable (Subtype.val : G → Formalism.REAL.UJ ε) := measurable_subtype_coe
+  have hι : Measurable (Subtype.val : G → Formalism.REAL.UJ ε) := measurable_subtypeVal
   have hfin : IsFiniteMeasureOnCompacts (haarSub G hG) := by
     refine ⟨fun K hK => ?_⟩
     rw [haarSub, Measure.map_apply hι hK.measurableSet]
@@ -152,7 +152,7 @@ theorem NinfG_coe (u : D.what₂.Word) : (NinfG X u : Set X.B.I.Ginf) =
     Ninf X.B.I (fun a => crdOf X.B.I X.ιE X.bas (X.eX a)) (crdOf X.B.I X.ιE X.bas (X.zu u)) := by
   ext g
   unfold Ninf
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   show (∀ v ∈ (Set.univ : Set (InfinitePlace X.B.I.F)), g v ∈ NGv X u v) ↔ _
   simp only [Set.mem_univ, true_implies]
   exact Iff.rfl
@@ -162,7 +162,7 @@ theorem HinfG_coe (u : D.what₂.Word) : (HinfG X u : Set X.B.I.Ginf) =
       Set.range (fun a => crdOf X.B.I X.ιE X.bas (X.fY a)) ∪ {crdOf X.B.I X.ιE X.bas (X.zu u)}) := by
   ext g
   unfold Hset
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   show (∀ v ∈ (Set.univ : Set (InfinitePlace X.B.I.F)), g v ∈ HGv X u v) ↔ _
   simp only [Set.mem_univ, true_implies]
   refine forall_congr' fun v => ?_
@@ -186,7 +186,7 @@ theorem HinfG_closed (u : D.what₂.Word) : IsClosed (HinfG X u : Set X.B.I.Ginf
 
 theorem muN_eq (u : D.what₂.Word) : ∃ κ : ℝ≥0∞, κ ≠ 0 ∧ κ ≠ ∞ ∧ X.muN u = κ • Measure.pi (muNv X u) := by
   obtain ⟨hσ, h0, hc, hi⟩ := X.muN_haar u
-  haveI := hσ
+  have := hσ
   have hv : ∀ v, IsHaarS (NGv X u v : Set (Formalism.REAL.UJ (X.B.I.ε v))) (muNv X u v) :=
     fun v => haarSub_isHaarS _ _
   have hc' : X.muN u (NinfG X u : Set X.B.I.Ginf)ᶜ = 0 := by rw [NinfG_coe]; exact hc
@@ -204,7 +204,7 @@ theorem muN_eq (u : D.what₂.Word) : ∃ κ : ℝ≥0∞, κ ≠ 0 ∧ κ ≠ �
 
 theorem muH_eq (u : D.what₂.Word) : ∃ κ : ℝ≥0∞, κ ≠ 0 ∧ κ ≠ ∞ ∧ X.muH u = κ • Measure.pi (muHv X u) := by
   obtain ⟨hσ, h0, hc, hi⟩ := X.muH_haar u
-  haveI := hσ
+  have := hσ
   have hv : ∀ v, IsHaarS (HGv X u v : Set (Formalism.REAL.UJ (X.B.I.ε v))) (muHv X u v) :=
     fun v => haarSub_isHaarS _ _
   have hc' : X.muH u (HinfG X u : Set X.B.I.Ginf)ᶜ = 0 := by rw [HinfG_coe]; exact hc

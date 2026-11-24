@@ -150,7 +150,7 @@ theorem UpperTheory.Reformulated.B.DYhd6.main :
     simp [Module.algebraMap_end_apply]
   have hbc : ∀ (b : B) (c : ℂ) (x : V), b • (c • x) = c • (b • x) := fun b c x =>
     (b : Module.End ℂ V).map_smul c x
-  haveI hsimple : IsSimpleModule B V :=
+  have hsimple : IsSimpleModule B V :=
     { exists_pair_ne := ⟨⊥, ⊤, bot_ne_top⟩
       eq_bot_or_eq_top := fun N => by
         let N' : Submodule ℂ V :=
@@ -237,7 +237,7 @@ theorem isAlgebraic_of_rank_le {D : Type} [DivisionRing D] [Algebra ℂ D]
         have ha' : (a : D) ≠ 0 := fun h0 => ha (Subtype.ext h0)
         refine ⟨⟨(a : D)⁻¹, (hS _).2 fun g hg => ?_⟩, Subtype.ext (mul_inv_cancel₀ ha')⟩
         exact (Commute.inv_right₀ ((hS a).1 a.2 g hg : Commute g a)).eq }
-  letI : Field S := hF.toField
+  let : Field S := hF.toField
   have hx' : IsAlgebraic ℂ (⟨x, hx⟩ : S) := by
     by_contra ht
     have h1 := (Transcendental.linearIndependent_sub_inv (F := ℂ) (E := S) ht).cardinal_le_rank

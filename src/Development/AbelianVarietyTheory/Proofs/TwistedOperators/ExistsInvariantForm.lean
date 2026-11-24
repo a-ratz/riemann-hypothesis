@@ -88,7 +88,7 @@ theorem exists_invariant_form (G W : Type) [Group G] [TopologicalSpace G] [IsTop
     intro w
     have hc : Continuous fun h : H => l₀ (σ ((h : G)⁻¹) w) :=
       (((isLocallyConstant_orbit hσ w).comp_continuous
-        (continuous_subtype_val.inv : Continuous fun h : H => (h : G)⁻¹)).comp l₀).continuous
+        (continuous_subtypeVal.inv : Continuous fun h : H => (h : G)⁻¹)).comp l₀).continuous
     exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   let a : Module.Dual ℂ W :=
     { toFun := fun w => ∫ h : H, l₀ (σ ((h : G)⁻¹) w) ∂η

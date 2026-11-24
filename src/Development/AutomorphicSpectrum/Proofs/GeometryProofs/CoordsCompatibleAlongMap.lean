@@ -73,7 +73,7 @@ theorem isLocalization_of_mem_iff (C L : Subalgebra ℚ Ω) (hCL : C ≤ L) (P :
     (h : ∀ a : Ω, a ∈ L ↔ ∃ s : C, s ∉ P ∧ (s : Ω) * a ∈ C) :
     letI : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
     IsLocalization.AtPrime L P := by
-  letI : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
+  let : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
   have hne : ∀ s : C, s ∉ P → (s : Ω) ≠ 0 := fun s hs h0 =>
     hs (by rw [show s = 0 from Subtype.ext h0]; exact P.zero_mem)
   refine ⟨?_, ?_, ?_⟩
@@ -94,18 +94,18 @@ theorem isLocalization_of_mem_iff (C L : Subalgebra ℚ Ω) (hCL : C ≤ L) (P :
 theorem formallySmooth_of_mem_iff (C L : Subalgebra ℚ Ω) (hCL : C ≤ L) (P : Ideal C) [P.IsPrime]
     (h : ∀ a : Ω, a ∈ L ↔ ∃ s : C, s ∉ P ∧ (s : Ω) * a ∈ C) [Algebra.FormallySmooth ℚ C] :
     Algebra.FormallySmooth ℚ L := by
-  letI : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ C L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsLocalization.AtPrime L P := isLocalization_of_mem_iff C L hCL P h
-  haveI : Algebra.FormallySmooth C L := Algebra.FormallySmooth.of_isLocalization P.primeCompl
+  let : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
+  have : IsScalarTower ℚ C L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsLocalization.AtPrime L P := isLocalization_of_mem_iff C L hCL P h
+  have : Algebra.FormallySmooth C L := Algebra.FormallySmooth.of_isLocalization P.primeCompl
   exact Algebra.FormallySmooth.comp ℚ C L
 
 theorem formallySmooth_atPrime_of_mem_iff (C L : Subalgebra ℚ Ω) (hCL : C ≤ L) (P : Ideal C) [P.IsPrime]
     (h : ∀ a : Ω, a ∈ L ↔ ∃ s : C, s ∉ P ∧ (s : Ω) * a ∈ C) [Algebra.FormallySmooth ℚ L] :
     Algebra.FormallySmooth ℚ (Localization.AtPrime P) := by
-  letI : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ C L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsLocalization.AtPrime L P := isLocalization_of_mem_iff C L hCL P h
+  let : Algebra C L := (Subalgebra.inclusion hCL).toRingHom.toAlgebra
+  have : IsScalarTower ℚ C L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsLocalization.AtPrime L P := isLocalization_of_mem_iff C L hCL P h
   exact Algebra.FormallySmooth.of_equiv
     ((IsLocalization.algEquiv P.primeCompl L (Localization.AtPrime P)).restrictScalars ℚ)
 
@@ -189,7 +189,7 @@ theorem isLocalRing_regAt (gen : IsCptGen ξ) (p : Cpt ξ) : IsLocalRing (regAt 
 
 theorem exists_prime_of_point (tie : CoordTie ℤ ξ x) (hc : InChart ξ x c p) (hp : p ∈ genFib ξ) :
     ∃ P : Ideal (chRing ℚ x c), P.IsPrime ∧ ∀ s : chRing ℚ x c, s ∉ P ↔ unitAt ξ p (s : Ω) := by
-  haveI := isLocalRing_regAt tie.gen p
+  have := isLocalRing_regAt tie.gen p
   let f : chRing ℚ x c →+* regAt ξ p :=
     RingHom.codRestrict (algebraMap (chRing ℚ x c) Ω) (regAt ξ p) fun s => chQ_mem_regAt tie hc hp s.2
   refine ⟨Ideal.comap f (IsLocalRing.maximalIdeal _), inferInstance, fun s => ?_⟩
@@ -259,8 +259,8 @@ theorem formallySmooth_atPrime {κ₁ κ₂ : Type} {x₁ : κ₁ → Ω} {x₂ 
   obtain ⟨P₁, hP₁, hu₁⟩ := exists_prime_of_point tie₁ hc' hqg
   let L : Subalgebra ℚ Ω := regAlg ξ₁ q fun r => chQ_mem_regAt tie₁ hc' hqg (Subalgebra.algebraMap_mem _ r)
   have hL : ∀ a, a ∈ L ↔ a ∈ regAt ξ₁ q := fun _ => Iff.rfl
-  haveI := sm c' hc'.1
-  haveI : Algebra.FormallySmooth ℚ L := by
+  have := sm c' hc'.1
+  have : Algebra.FormallySmooth ℚ L := by
     refine formallySmooth_of_mem_iff (chRing ℚ x₁ c') L (fun a ha => chQ_mem_regAt tie₁ hc' hqg ha) P₁ fun a => ?_
     rw [hL, mem_regAt_iff tie₁ hc' hqg]
     constructor
@@ -283,9 +283,9 @@ theorem smooth_chRing {κ₁ κ₂ : Type} [Finite κ₂] {x₁ : κ₁ → Ω} 
     (sm : ∀ c, x₁ c ≠ 0 → Algebra.FormallySmooth ℚ (chRing ℚ x₁ c))
     (iso : ∀ q ∈ genFib ξ₁, IsoAt ξ₂ g (RingHom.id Ω) q) {c : κ₂} (hc : x₂ c ≠ 0) :
     Algebra.Smooth ℚ (chRing ℚ x₂ c) := by
-  haveI : Algebra.FiniteType ℚ (chRing ℚ x₂ c) :=
+  have : Algebra.FiniteType ℚ (chRing ℚ x₂ c) :=
     (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨_, Set.finite_range _, rfl⟩)
-  haveI : Algebra.FinitePresentation ℚ (chRing ℚ x₂ c) := Algebra.FinitePresentation.of_finiteType.1 this
+  have : Algebra.FinitePresentation ℚ (chRing ℚ x₂ c) := Algebra.FinitePresentation.of_finiteType.1 this
   refine ⟨?_, inferInstance⟩
   rw [← Algebra.smoothLocus_eq_univ_iff]
   refine Set.eq_univ_of_forall fun P => ?_

@@ -178,7 +178,7 @@ end Gen
 
 theorem norm_integral (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hφ : IsUnrExt K K' d φ) (hd : 0 < d) (z : K'.O) :
     ∃ a : K.O, algebraMap K.O K.E a = @Algebra.norm K.E K'.E _ _ φ.toAlgebra (algebraMap K'.O K'.E z) := by
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   obtain ⟨w, hw⟩ := GlobalTheory.T.exists_integral_basis_unramifiedInvolutionExt K K' d φ hφ hd
   have hwj : ∀ j, ∃ c : K'.O, algebraMap K'.O K'.E c = w j := by
     intro j
@@ -203,9 +203,9 @@ theorem norm_integral (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hφ : IsUnrEx
 theorem normval : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → 0 < d →
     ∀ y : K'.E, val K.O (@Algebra.norm K.E K'.E _ _ φ.toAlgebra y) = d * val K'.O y := by
   intro K K' d φ hφ hd y
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   have hfr : Module.finrank K.E K'.E = d := hφ.2.2.2.2
-  haveI : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (hfr ▸ hd)
+  have : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (hfr ▸ hd)
   by_cases hy : y = 0
   · subst hy
     rw [Algebra.norm_zero]
@@ -294,7 +294,7 @@ theorem det_traceGram_blockMatrix {E E' : Type} [Field E] [Field E'] [Algebra E 
       = blockDiagonal (fun _ : Fin n => D) * Λ * blockDiagonal (fun _ : Fin n => C) := by
     ext ⟨k, i⟩ ⟨l, j⟩
     simp only [Matrix.mul_apply, Fintype.sum_prod_type, blockDiagonal_apply, ite_mul, mul_ite, zero_mul,
-      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, of_apply, hΛ]
+      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, of_apply, hΛ]
     rw [mul_assoc, htr]
     simp only [hrep, hC, Module.Basis.toMatrix_apply, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
@@ -629,11 +629,11 @@ theorem eta_overExt : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt 
   intro K K' d φ hU hd B ψ hψ hσ x _
   have hd0 : 0 < d := hd.pos
   obtain ⟨w, hw0, hwv⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_basis_trace_conj_unit K K' d φ hU hd0
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  haveI : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (by rw [hU.2.2.2.2]; exact hd0)
-  letI : Algebra K'.E B.A := ψ.toAlgebra
-  haveI : IsScalarTower K.E K'.E B.A := IsScalarTower.of_algebraMap_eq fun e => (hψ e).symm
-  haveI : Module.Finite K'.E B.A := (overExt φ B ψ hψ hσ).fd
+  let : Algebra K.E K'.E := φ.toAlgebra
+  have : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (by rw [hU.2.2.2.2]; exact hd0)
+  let : Algebra K'.E B.A := ψ.toAlgebra
+  have : IsScalarTower K.E K'.E B.A := IsScalarTower.of_algebraMap_eq fun e => (hψ e).symm
+  have : Module.Finite K'.E B.A := (overExt φ B ψ hψ hσ).fd
   set u := Module.finBasis K'.E B.A with hu
   set H : Matrix (Fin (Module.finrank K'.E B.A)) (Fin (Module.finrank K'.E B.A)) K'.E :=
     Matrix.of fun i j => Algebra.trace K'.E B.A ((x : B.A) * u i * B.σ (u j)) with hH

@@ -53,12 +53,12 @@ theorem exists_pow_smul_eq_res : ∀ {k R S : Type} [Field k] [CommRing R] [Comm
     (n : (logSub ((algebraMap R S).comp φ) (J.map (algebraMap R S))).restrictScalars R),
     ∃ x : logSub φ J × Submonoid.powers f, x.2 • n = res (S := S) f φ J x.1 := by
   intro k R S _ _ _ _ f _ φ hφ J n
-  letI : Algebra k R := φ.toAlgebra
-  haveI : Algebra.FiniteType k R := hφ
-  haveI : Algebra.FinitePresentation k R := Algebra.FinitePresentation.of_finiteType.mp inferInstance
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing k R
-  letI : Algebra k S := ((algebraMap R S).comp φ).toAlgebra
-  haveI : IsScalarTower k R S := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra k R := φ.toAlgebra
+  have : Algebra.FiniteType k R := hφ
+  have : Algebra.FinitePresentation k R := Algebra.FinitePresentation.of_finiteType.mp inferInstance
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing k R
+  let : Algebra k S := ((algebraMap R S).comp φ).toAlgebra
+  have : IsScalarTower k R S := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hn0 : ∀ c : k, n.1 (algebraMap R S (φ c)) = 0 := fun c => n.2.1 c
   have hnJ : ∀ y ∈ J.map (algebraMap R S), n.1 y ∈ J.map (algebraMap R S) := n.2.2
   let gl : R →ₗ[k] S :=

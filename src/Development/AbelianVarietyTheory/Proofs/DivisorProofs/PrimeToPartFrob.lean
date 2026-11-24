@@ -99,7 +99,7 @@ theorem theta_gen_pow (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < d)
 
 theorem exists_pow (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < d) {z : Fbar p} (hz : z ^ (p ^ d - 1) = 1) :
     ∃ n : ℕ, z = L.gen d ^ n := by
-  haveI : NeZero (p ^ d - 1) := ⟨(sub_pos' hd).ne'⟩
+  have : NeZero (p ^ d - 1) := ⟨(sub_pos' hd).ne'⟩
   have hprim : IsPrimitiveRoot (L.gen d) (p ^ d - 1) := L.gen_order d hd ▸ IsPrimitiveRoot.orderOf _
   obtain ⟨n, -, hn⟩ := hprim.eq_pow_of_pow_eq_one hz
   exact ⟨n, hn.symm⟩
@@ -133,7 +133,7 @@ theorem labels_base (L : GlobalTheory.GLq.LabelDatum p) {N : ℕ} (hN : 0 < N) (
       Tor p 1 →* (ZMod p)ˣ)) (algebraMap (ZMod p) (Fbar p) (a : ZMod p)) := by
     refine ⟨base_pow a, fun u => ?_⟩
     obtain ⟨v, rfl⟩ := (MulEquiv.ofBijective (toTorOne p) (toTorOne_bijective p)).surjective u
-    rw [MonoidHom.comp_apply, MonoidHom.coe_coe, MulEquiv.symm_apply_apply, ← h v]
+    rw [MonoidHom.comp_apply, MonoidHom.coe_ofClass, MulEquiv.symm_apply_apply, ← h v]
     rfl
   have h2 := labels_norm_pow L hN 1 (one_dvd N) _ _ 1 h1
   rw [pow_one, pow_one] at h2
@@ -234,7 +234,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem bb_eq (p r : ℕ) : BB p r = Formalism.CyclotomicNorms.BB r p := by
   ext l
-  simp only [BB, Formalism.CyclotomicNorms.BB, Formalism.CyclotomicNorms.Exc, Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff, ← pow_mul, mul_comm 4]
+  simp only [BB, Formalism.CyclotomicNorms.BB, Formalism.CyclotomicNorms.Exc, Set.mem_ofPred_eq, Set.mem_union, Set.mem_singleton_iff, ← pow_mul, mul_comm 4]
   refine or_congr_right ⟨fun ⟨h, a, h1, h2, h3⟩ => ⟨a, h1, h2, h, h3⟩, fun ⟨a, h1, h2, h, h3⟩ => ⟨h, a, h1, h2, h3⟩⟩
 
 theorem primeToPart_frob (l i : ℕ) (z : Fbar p) (a : ZMod p) :

@@ -237,7 +237,7 @@ def finiteFourier (f : 𝔸ᶠ[K] → ℂ) (y : 𝔸ᶠ[K]) : ℂ :=
 
 theorem continuous_finiteAdelicChar_mul (y : 𝔸ᶠ[K]) :
     Continuous fun x : 𝔸ᶠ[K] ↦ (finiteAdelicChar K (x * y) : ℂ) :=
-  continuous_subtype_val.comp (continuous_finiteAdelicChar.comp (continuous_mul_const y))
+  continuous_subtypeVal.comp (continuous_finiteAdelicChar.comp (continuous_mul_const y))
 
 theorem integrable_mul_finiteAdelicChar {f : 𝔸ᶠ[K] → ℂ} (hf : Integrable f (finiteAdeleMeasure K))
     (y : 𝔸ᶠ[K]) :

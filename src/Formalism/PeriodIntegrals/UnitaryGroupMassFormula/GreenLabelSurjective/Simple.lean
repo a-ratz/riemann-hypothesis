@@ -60,7 +60,7 @@ def repHomLin (A B : Rep ℂ G) : (A ⟶ B) ≃ₗ[ℂ] A.ρ.IntertwiningMap B.�
 
 theorem simple_of_irr {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (σ : Representation ℂ G W) [σ.IsIrreducible] : Simple (FDRep.of σ) := by
-  haveI : NeZero (Nat.card G : ℂ) := ⟨Nat.cast_ne_zero.mpr Nat.card_pos.ne'⟩
+  have : NeZero (Nat.card G : ℂ) := ⟨Nat.cast_ne_zero.mpr Nat.card_pos.ne'⟩
   rw [FDRep.simple_iff_end_is_rank_one]
   rw [← (FDRep.forget₂HomLinearEquiv _ _).finrank_eq, (repHomLin _ _).finrank_eq]
   exact Representation.IsIrreducible.finrank_intertwiningMap_self (ρ := σ)
@@ -68,7 +68,7 @@ theorem simple_of_irr {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensio
 theorem nontrivial_of_simple (V : FDRep ℂ G) (h : Simple V) : Nontrivial V := by
   by_contra hn
   rw [not_nontrivial_iff_subsingleton] at hn
-  apply CategoryTheory.id_nonzero V
+  apply id_ne_zero V
   first
     | (ext x; exact Subsingleton.elim _ _)
     | (apply Action.Hom.ext; ext x; exact Subsingleton.elim _ _)

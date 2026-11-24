@@ -220,7 +220,7 @@ theorem exists_smoothOfRelativeDimension_of_hodgeDeRham : GlobalTheory.Published
   refine ⟨G.height / 2, GlobalTheory.FibreDim.smoothOfRelativeDimension_of_forall_field R A _ hs fun k _ _ ↦ ?_⟩
   have hk : IsNilpotent (p : k) := by simpa using hp.map (algebraMap R k)
   have hk0 : (p : k) = 0 := hk.eq_zero
-  letI : GrpObj ((Over.pullback (spMap (algebraMap R k))).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback (spMap (algebraMap R k))).obj A) := Functor.grpObjObj
   have h := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_pullback A (spMap (algebraMap R k))
   have hAk : IsAbelianScheme ((Over.pullback (spMap (algebraMap R k))).obj A) :=
     GlobalTheory.isAbelianScheme_pullback_obj _ A hA
@@ -285,7 +285,7 @@ namespace GlobalTheory.PtExt
 theorem isLieImage_iff_lieCorr : GlobalTheory.Published.AbelianHodgeDeRham → ∀ (p : ℕ) [Fact p.Prime]  (R : Type) [CommRing R], IsNilpotent (p : R) → ∀ (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (G : PDivGroup p R) (t : G.TorsionTower A) (E : primDR A ≃ₗ[R] ((G.cocycles × G.omega) ⧸ _root_.LinearMap.range (G.cob.prod (_root_.LinearMap.codRestrict G.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (G.A i))).domRestrict G.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n))))))), (∀ c, IsCan t c (E c)) → ∀ (h : HdR A) (v : epsR R ⟶ A), IsLieImage h v ↔ t.LieCorr (G.lieUnivToLie (E.symm.dualMap h)) v := by
   intro hHdR p _ R _ hnil A _ g hA hsm G t E hE h v
   obtain ⟨N, hN⟩ := hnil
-  haveI := isAdicComplete_span_natCast_of_isNilpotent p R ⟨N, hN⟩
+  have := isAdicComplete_span_natCast_of_isNilpotent p R ⟨N, hN⟩
 
   have key : ∀ (β : Form (A.hom ≫ 𝟙 _)) (hβ : Form.cl _ β ∈ primDR A) (w : G.omega),
       IsCan t ⟨_, hβ⟩ (G.rigOfOmega w) → G.lieUnivToLie (E.symm.dualMap h) w = h ⟨_, hβ⟩ := by
@@ -298,7 +298,7 @@ theorem isLieImage_iff_lieCorr : GlobalTheory.Published.AbelianHodgeDeRham → �
   · rintro ⟨hv, hh⟩
     obtain ⟨x', hx', -⟩ := t.existsUnique_lieCorr hv
     obtain ⟨ψ, hψ⟩ := T.exists_hodgeFiltration_to_pDivOmega_linearMap p R N hN A hA G t
-    haveI : Module.Finite R G.omega := .equiv (LinearEquiv.ofBijective _
+    have : Module.Finite R G.omega := .equiv (LinearEquiv.ofBijective _
       (PDivGroup.omegaLevel_bijective_of_pow_eq_zero p R N hN G N le_rfl)).symm
     have hs := surjective_of_range_sup_smul_top_eq_top R _ _ ψ
       (T.primitive_hodge_to_omega_span_mod_maximal hHdR p R N hN A g hA hsm G t ψ hψ)

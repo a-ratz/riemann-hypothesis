@@ -168,7 +168,7 @@ theorem ker_conj_diagonal_eq_span (P : GL (Fin n) K) (d : Fin n → K) (S : Fins
     by_cases hj : j = i.1
     · subst hj
       rw [(hd _).2 i.2, zero_mul]
-    · rw [if_neg hj, mul_zero]
+    · rw [ite_eq_right hj, mul_zero]
 
 theorem exists_eigvec (γ : Matrix (Fin n) (Fin n) K) (t : K) (ht : γ.charpoly.eval t = 0) :
     ∃ x : Fin n → K, x ≠ 0 ∧ γ *ᵥ x = t • x := by
@@ -191,7 +191,7 @@ theorem exists_diagonalize (γ : Matrix (Fin n) (Fin n) K) (u : Fin n → K) (hu
     exact hx i
   let M : Matrix (Fin n) (Fin n) K := Matrix.of fun k i => x i k
   have hcol : M.col = x := by funext j k; rfl
-  have hM : IsUnit M := Matrix.linearIndependent_cols_iff_isUnit.1 (by rw [hcol]; exact hli)
+  have hM : IsUnit M := linearIndependent_col_iff_isUnit.1 (by rw [hcol]; exact hli)
   refine ⟨hM.unit, ?_⟩
   rw [IsUnit.unit_spec]
   ext k i
@@ -217,10 +217,10 @@ theorem det_submatrix_rev (A : Matrix (Fin n) (Fin n) K) (hA : ∀ i j, j ≠ Fi
     simp only [Matrix.mul_diagonal, Matrix.submatrix_apply, Equiv.Perm.permMatrix, PEquiv.toMatrix_apply,
       Equiv.toPEquiv_apply, Option.mem_def, Option.some.injEq]
     by_cases h : (revOn S hS) i = j
-    · rw [if_pos h, one_mul]
+    · rw [ite_eq_left h, one_mul]
       subst h
       simp [revOn, Fin.rev_rev]
-    · rw [if_neg h, zero_mul]
+    · rw [ite_eq_right h, zero_mul]
       apply hA
       intro hj
       apply h
@@ -234,10 +234,10 @@ theorem det_rev (A : Matrix (Fin n) (Fin n) K) (hA : ∀ i j, j ≠ Fin.rev i �
     simp only [Matrix.mul_diagonal, Equiv.Perm.permMatrix, PEquiv.toMatrix_apply,
       Equiv.toPEquiv_apply, Option.mem_def, Option.some.injEq, Fin.revPerm_apply]
     by_cases h : Fin.rev i = j
-    · rw [if_pos h, one_mul]
+    · rw [ite_eq_left h, one_mul]
       subst h
       rw [Fin.rev_rev]
-    · rw [if_neg h, zero_mul]
+    · rw [ite_eq_right h, zero_mul]
       exact hA i j (fun hj => h hj.symm)
   conv_lhs => rw [e]
   rw [Matrix.det_mul, Matrix.det_permutation, Matrix.det_diagonal]
@@ -339,7 +339,7 @@ theorem kapSign_eq_one_of_vals (hU : Unr E) (w : Pl E) (n : ℕ) (γ : GLw n w) 
   have hUn : ((γ.val.map (cj w))ᵀ) * γ.val = 1 := by
     have h := hγ
     unfold UL at h
-    rw [if_neg hs] at h
+    rw [ite_eq_right hs] at h
     have h2 : cT (cj w) (γ : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * 1 *
         (γ : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = 1 := h
     rw [Matrix.mul_one] at h2
@@ -462,7 +462,7 @@ theorem kapSign_eq_one_of_vals (hU : Unr E) (w : Pl E) (n : ℕ) (γ : GLw n w) 
     exact ker_conj_diagonal_eq_span P _ S fun i => by simp [hSdef]
   have hli : LinearIndependent (w.adicCompletion E)
       (fun i : S => fun k => (P : Matrix (Fin n) (Fin n) (w.adicCompletion E)) k i.1) := by
-    have h := (Matrix.linearIndependent_cols_iff_isUnit.2 P.isUnit).comp (fun i : S => i.1) Subtype.val_injective
+    have h := (linearIndependent_col_iff_isUnit.2 P.isUnit).comp (fun i : S => i.1) Subtype.val_injective
     exact h
   set B := Module.finBasis (w.adicCompletion E) V₁
   have hBli : LinearIndependent (w.adicCompletion E) (fun i => ((B i : V₁) : Fin n → w.adicCompletion E)) :=

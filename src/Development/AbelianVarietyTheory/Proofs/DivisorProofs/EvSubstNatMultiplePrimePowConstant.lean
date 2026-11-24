@@ -98,7 +98,7 @@ end GlobalTheory.EvRes
 open GlobalTheory.EvRes in
 theorem GlobalTheory.QLog.Chart.ev_res_counit : ∀ (p : ℕ) (O : Type) [CommRing O] [IsAdicComplete (Ideal.span {(p : O)}) O] (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d), ∀ n, (∀ f, G.res n (c.ev (n + 1) f) = c.ev n f ∧ Coalgebra.counit (R := O) (c.ev n f) = constantCoeff f) ∧ ∀ s, Algebra.TensorProduct.lift (Bialgebra.counitAlgHom O (G.A n)) (Bialgebra.counitAlgHom O (G.A n)) (fun _ _ => Commute.all _ _) (c.ev₂ n s) = constantCoeff s := by
   intro p O _ _ G d c n
-  haveI : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) :=
+  have : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) :=
     FinProjComplete.isAdicComplete_of_finite_projective p O (G.A n)
   refine ⟨fun f => ⟨?_, ?_⟩, fun s => ?_⟩
   · exact comp_eval_eq p (G.res n : G.A (n + 1) →ₐ[O] G.A n) (c.x (n + 1)) (c.ev (n + 1))

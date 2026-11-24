@@ -87,7 +87,7 @@ theorem opE_om_rowE : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
     Φ.1 (affPt (q.val + 1) x₀ e + rowM n c (q.val + 1) u) * (ψ (-ch (affPt (q.val + 1) x₀ e)) : ℂ) with hf_def
   have hf : Continuous f := by
     refine (hΦ.1.continuous.comp (hA.add continuous_const)).mul ?_
-    exact continuous_subtype_val.comp (hψ.comp (hch.comp hA).neg)
+    exact continuous_subtypeVal.comp (hψ.comp (hch.comp hA).neg)
   have hS : Continuous (sRow (n := n) (n' := n') q u) := by
     refine continuous_pi fun i => ?_
     rcases i with ⟨⟨r, s | s⟩, hi⟩

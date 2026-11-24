@@ -152,7 +152,7 @@ theorem exists_conj (hc : CMData (maximalRealSubfield E) E) (V : Formalism.Basic
         y ∈ GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.latLoc (F := maximalRealSubfield E) V v ↔
           (HA.mat (Fv (maximalRealSubfield E) v) hc.sig V.gram (γ v)).1.mulVec y ∈
             GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.latLoc (F := maximalRealSubfield E) (GlobalTheory.VolRatioCompare.reLat V L h1 h2) v := by
-  haveI : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) :=
+  have : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) :=
     Formalism.L2.Pj.unramBridge_holds E fun P hP => by
       obtain ⟨θ, t, e1, e2⟩ := hc.cmUnram.2.2 P hP
       refine ⟨θ, ?_⟩

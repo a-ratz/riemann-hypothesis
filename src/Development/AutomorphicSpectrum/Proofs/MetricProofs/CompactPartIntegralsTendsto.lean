@@ -220,7 +220,7 @@ theorem cpt_integrableOn [CompactSpace X] (A : FinHolAtlas e X) (P : ChartPartit
   have hCc := cptSet_compact A P hK j
   obtain ⟨L, hL⟩ := hCc.exists_bound_of_continuousOn
     (hc.mono (cptSet_subset A P hKU j))
-  haveI : IsFiniteMeasure (volume.restrict (cptSet A P K j)) :=
+  have : IsFiniteMeasure (volume.restrict (cptSet A P K j)) :=
     ⟨by simpa using hCc.measure_lt_top⟩
   refine Integrable.of_bound (cpt_aesm A P Φ hK hKU j hc hG) (B * L)
     (ae_restrict_of_forall_mem hCc.measurableSet fun y hy => ?_)
@@ -259,7 +259,7 @@ theorem cpt_meas {U S : Set X} (hU : IsOpen U) (hS : MeasurableSet S) (hSU : S �
     funext x
     by_cases hx : x ∈ S
     · rw [Set.indicator_of_mem hx, Set.indicator_of_mem hx, Set.piecewise_eq_of_mem _ _ _ (hSU hx)]
-    · simp only [Set.indicator_apply, hx, if_false]
+    · simp only [Set.indicator_apply, hx, ite_false]
   rw [h2]
   exact h1.indicator hS
 

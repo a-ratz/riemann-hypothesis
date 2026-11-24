@@ -76,7 +76,7 @@ private theorem length_stalk_pt {V : Scheme.{0}} {Ω : Type} [Field Ω] (s : gp 
       Subsingleton.elim _ _
     rw [e]
     exact (inferInstance : Field (Spec (CommRingCat.of Ω)).functionField).toIsField
-  haveI := (IsOpenImmersion.iff_isIso_stalkMap.mp ‹IsOpenImmersion s›).2 (IsLocalRing.closedPoint Ω)
+  have := (IsOpenImmersion.iff_isIso_stalkMap.mp ‹IsOpenImmersion s›).2 (IsLocalRing.closedPoint Ω)
   have hV : IsField (V.presheaf.stalk (pt s)) :=
     MulEquiv.isField hK (asIso (s.stalkMap (IsLocalRing.closedPoint Ω))).commRingCatIsoToRingEquiv.toMulEquiv
   exact length_self_of_isField _ hV

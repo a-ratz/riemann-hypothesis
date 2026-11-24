@@ -70,8 +70,8 @@ theorem exists_pos_mul_lt_of_finite {ι : Type*} {T : Set ι} (hT : T.Finite) (A
 
 theorem exists_pos_kltAt_add_smul : GlobalTheory.Published.Principalisation → ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] (p : X ⟶ Sp ℂ) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (Δ : X → ℚ) (m : ℕ) (G : CartierDiv X) (B : X → ℚ), 0 < m → IsLogCanonicalMultiple p n Δ m G → (∀ y, KltAt p n Δ y) → IsQCart B → ∃ c : ℚ, 0 < c ∧ ∀ y, KltAt p n (Δ + c • B) y := by
   intro hP X _ _ _ p n hproj hn Δ m G B hm hG hklt hB
-  haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hproj
-  haveI : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hproj).1
+  have : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hproj
+  have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hproj).1
   obtain ⟨η, hη, hGη⟩ := hG
   obtain ⟨m', D₀, hm', -, rfl⟩ := hB
   obtain ⟨S, hS, hSt⟩ := _root_.GlobalTheory.PairStep.finite_test_divisors hP X p n hproj hn η m G D₀ hη hm

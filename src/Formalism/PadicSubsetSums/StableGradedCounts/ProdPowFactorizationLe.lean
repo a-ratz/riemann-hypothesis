@@ -71,7 +71,7 @@ private theorem prod_pow_factorization_le (s : Finset ℕ) (n : ℕ) (hn : n ≠
     ∏ l ∈ s, l ^ n.factorization l ≤ n := by
   classical
   calc ∏ l ∈ s, l ^ n.factorization l ≤ ∏ l ∈ s ∪ n.primeFactors, l ^ n.factorization l := by
-        apply Finset.prod_le_prod_of_subset_of_one_le' Finset.subset_union_left
+        apply Finset.prod_le_prod_of_subset_of_one_le Finset.subset_union_left
         intro l hl _
         rcases Finset.mem_union.1 hl with h | h
         · exact Nat.one_le_pow _ _ (hs l h).pos
@@ -114,11 +114,11 @@ private theorem lte_val (g δ l : ℕ) (hg : 2 ≤ g) (h4 : 4 ∣ g - 1) (hδ : 
     have n1 : g ^ δ - 1 ≠ 0 := by
       have : g ^ 1 ≤ g ^ δ := Nat.pow_le_pow_right (by omega) hδ
       simp at this; omega
-    rw [← padicValNat_eq_emultiplicity n1, ← padicValNat_eq_emultiplicity (by omega : g - 1 ≠ 0),
-      ← padicValNat_eq_emultiplicity (by omega : δ ≠ 0)] at key
+    rw [← multiplicity_eq_emultiplicity n1, ← multiplicity_eq_emultiplicity (by omega : g - 1 ≠ 0),
+      ← multiplicity_eq_emultiplicity (by omega : δ ≠ 0)] at key
     simp only [Nat.padicValNat_def]
     exact_mod_cast key
-  · have := padicValNat.pow_sub_pow (p := l) hodd (x := g) (y := 1) (by omega) hd hlg (n := δ) (by omega)
+  · have := Nat.multiplicity_pow_sub_pow (p := l) hodd (x := g) (y := 1) (by omega) hd hlg (n := δ) (by omega)
     simpa [Nat.padicValNat_def] using this
 
 theorem prime_power_order_count : PrimePowerOrderCount := by

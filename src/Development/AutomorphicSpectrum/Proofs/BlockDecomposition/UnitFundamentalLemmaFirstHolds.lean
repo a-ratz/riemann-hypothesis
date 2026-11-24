@@ -78,13 +78,13 @@ theorem exists_doubleCoset_reps {G : Type*} [Group G] (H K : Subgroup G) (A : Se
   have hf : ∀ q, Quotient.mk s (f q) = q := by
     intro q
     by_cases hq : ∃ a ∈ A, (Quotient.mk s a) = q
-    · simp only [f, dif_pos hq]; exact hq.choose_spec.2
-    · simp only [f, dif_neg hq]; exact Quotient.out_eq q
+    · simp only [f, dite_eq_left hq]; exact hq.choose_spec.2
+    · simp only [f, dite_eq_right hq]; exact Quotient.out_eq q
   refine ⟨Set.range f, ?_, ?_, ?_⟩
   · intro a ha
     have hq : ∃ a' ∈ A, Quotient.mk s a' = Quotient.mk s a := ⟨a, ha, rfl⟩
     refine ⟨Quotient.mk s a, ?_⟩
-    simp only [f, dif_pos hq]
+    simp only [f, dite_eq_left hq]
     exact hA _ hq.choose_spec.1 _ ha (Quotient.exact hq.choose_spec.2)
   · intro g
     exact ⟨f (Quotient.mk s g), ⟨_, rfl⟩, Quotient.exact (hf (Quotient.mk s g))⟩
@@ -373,7 +373,7 @@ theorem isUnitIntegral_of_incl (hO : ∀ a : k, algebraMap k E a ∈ intO E ↔ 
   rw [map_inv₀] at e2
   have hv0 : ValuativeRel.valuation k ((γ : Matrix (Fin n) (Fin n) k).charpoly.coeff 0) ≠ 0 :=
     (Valuation.ne_zero_iff _).2 ha0
-  exact le_antisymm e1 ((inv_le_one₀ (zero_lt_iff.2 hv0)).1 e2)
+  exact le_antisymm e1 ((inv_le_one₀ (pos_iff_ne_zero.2 hv0)).1 e2)
 
 theorem quotLIntegral_zero' {G : Type*} [Group G] [MeasurableSpace G] (μG : Measure G)
     (H : Subgroup G) (μH : Measure H) (F : G → ℝ≥0∞) (hF : ∀ g, F g = 0) :
@@ -463,9 +463,9 @@ theorem unit_fundamental_lemma_nonintegral (hD : D0a) (hL2 : L2) (hun : IsUnrami
 open ValuativeRel in
 theorem t2Space_of_nonarchimedeanLocalField (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
     [IsNonarchimedeanLocalField F] : T2Space F := by
-  letI := IsTopologicalAddGroup.rightUniformSpace F
-  haveI := isUniformAddGroup_of_addCommGroup (G := F)
-  letI : (Valued.v (R := F)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace F
+  have := isUniformAddGroup_of_addCommGroup (G := F)
+  let : (Valued.v (R := F)).RankOne :=
     { hom' := IsRankLeOne.nonempty.some.emb (R := F).comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -473,8 +473,8 @@ theorem t2Space_of_nonarchimedeanLocalField (F : Type) [Field F] [ValuativeRel F
 
 theorem t2Space_general_linear_group (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
     [IsNonarchimedeanLocalField F] (n : ℕ) : T2Space (GL (Fin n) F) := by
-  haveI := t2Space_of_nonarchimedeanLocalField F
-  haveI : T2Space (Matrix (Fin n) (Fin n) F) := inferInstanceAs (T2Space (Fin n → Fin n → F))
+  have := t2Space_of_nonarchimedeanLocalField F
+  have : T2Space (Matrix (Fin n) (Fin n) F) := inferInstanceAs (T2Space (Fin n → Fin n → F))
   exact (Units.isEmbedding_embedProduct (M := Matrix (Fin n) (Fin n) F)).t2Space
 
 theorem unit_fundamental_lemma_integral (hD : D0a) (hT : T0) (hA1 : A1) (hA2 : A2) (hA3 : A3) (hN4 : N4) (hL3 : L3)
@@ -534,7 +534,7 @@ theorem unit_fundamental_lemma_integral (hD : D0a) (hT : T0) (hA1 : A1) (hA2 : A
       ext t
       exact Subgroup.mem_centralizer_singleton_iff
     rw [e]
-    haveI := t2Space_general_linear_group k n
+    have := t2Space_general_linear_group k n
     exact isClosed_eq (continuous_id.mul continuous_const) (continuous_const.mul continuous_id)
   have hcommE : ∀ a ∈ twCent (sigmaGL σ) δ, ∀ b ∈ twCent (sigmaGL σ) δ, a * b = b * a := by
     intro a ha b hb

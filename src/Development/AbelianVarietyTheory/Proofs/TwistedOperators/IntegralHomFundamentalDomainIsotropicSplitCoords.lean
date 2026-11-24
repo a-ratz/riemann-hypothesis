@@ -147,7 +147,7 @@ theorem integral_fundamentalDomain_eq_iterated : ∀ (D : D7) (V V' W : HSp D) (
     rw [h0, zero_smul] at hc
     exact (NeZero.ne μV) hc
   have hac : m ≪ μV := fun s hs0 => by
-    rw [hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hs0
+    rw [hc, smul_apply, ENNReal.smul_def, smul_eq_mul] at hs0
     exact (mul_eq_zero.1 hs0).resolve_left (by simpa using hc0)
   have hFm : IsAddFundamentalDomain (ratL W V) 𝓕V m := hFV.mono hac
   have hemeas : Measurable e := e.continuous.measurable

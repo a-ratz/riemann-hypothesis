@@ -94,9 +94,9 @@ theorem I_act (hT : ThetaBasic) (p : IsPair B M χ χ' o r s r' s') (c : Cpt σ 
     (g : UA σ Y.J) : M.I o (o (g, 1) Φ) = M.I o Φ := by
   funext h
   obtain ⟨-, t2, -⟩ := (hT F E σ B _ _ _ _ _ _ _ _ _ _ _ _ p).1 Φ hΦ
-  haveI := c.cnt
-  haveI := p.good.haar
-  haveI := c.right _ p.good.haar
+  have := c.cnt
+  have := p.good.haar
+  have := c.right _ p.good.haar
   have e : ∀ x, theta o (o (g, 1) Φ) x h = theta o Φ (x * g) h := fun x => by
     rw [theta, theta, ← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one]
   simp only [Model.I, e]

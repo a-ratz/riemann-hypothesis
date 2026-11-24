@@ -76,7 +76,7 @@ theorem Intw.smul {S : Sch l →L[ℂ] Sch l} {p q p' q' : Eu l} (hS : Intw S p 
     Intw (c • S) p q p' q' := fun f g h => by
   funext x
   have := congrFun (hS f g h) x
-  simp only [rf, ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, smul_eq_mul] at this ⊢
+  simp only [rf, smul_apply, smul_apply, smul_eq_mul] at this ⊢
   rw [this]
   ring
 
@@ -108,7 +108,7 @@ theorem ph_apply (S : Eu l →L[ℝ] Eu l) (f : Sch l) (x : Eu l) :
 
 theorem ph_mul (S T : Eu l →L[ℝ] Eu l) : ph S * ph T = ph (S + T) := by
   ext f x
-  simp only [ContinuousLinearMap.mul_apply, ph_apply, ← mul_assoc, ← Complex.exp_add, ContinuousLinearMap.add_apply,
+  simp only [mul_apply_eq_comp, ph_apply, ← mul_assoc, ← Complex.exp_add, add_apply,
     inner_add_right]
   congr 2
   push_cast
@@ -169,7 +169,7 @@ theorem iso_dil {B : Eu l →L[ℝ] Eu l} (hB : IsUnit B) {c : ℝ} (hc : c ^ 2 
       B.continuous.aemeasurable (f.continuous.norm.rpow_const fun _ => Or.inr (by norm_num)).aestronglyMeasurable
     rw [Measure.map_linearMap_addHaar_eq_smul_addHaar _ hd, integral_smul_measure,
       ENNReal.toReal_ofReal (abs_nonneg _)] at h1
-    simp only [ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, dil_apply hB, norm_smul, norm_real, Real.rpow_two,
+    simp only [smul_apply, smul_apply, dil_apply hB, norm_smul, norm_real, Real.rpow_two,
       mul_pow, Real.norm_eq_abs, sq_abs, hc, integral_const_mul] at h1 ⊢
     erw [← h1]
     rw [smul_eq_mul, ← mul_assoc, ← abs_mul, ContinuousLinearMap.det, mul_inv_cancel₀ hd, abs_one, one_mul]
@@ -184,12 +184,12 @@ theorem fouInv_apply (f : Sch l) : fouInv l f = 𝓕⁻ f := rfl
 
 theorem fou_mul_fouInv : fou l * fouInv l = 1 := by
   ext1 f
-  rw [ContinuousLinearMap.mul_apply, fou_apply, fouInv_apply, FourierTransform.fourier_fourierInv_eq]
+  rw [mul_apply_eq_comp, fou_apply, fouInv_apply, FourierTransform.fourier_fourierInv_eq]
   rfl
 
 theorem fouInv_mul_fou : fouInv l * fou l = 1 := by
   ext1 f
-  rw [ContinuousLinearMap.mul_apply, fou_apply, fouInv_apply, FourierTransform.fourierInv_fourier_eq]
+  rw [mul_apply_eq_comp, fou_apply, fouInv_apply, FourierTransform.fourierInv_fourier_eq]
   rfl
 
 theorem isUnit_fou : IsUnit (fou l) := ⟨⟨_, _, fou_mul_fouInv, fouInv_mul_fou⟩, rfl⟩
@@ -199,7 +199,7 @@ theorem isUnit_fouInv : IsUnit (fouInv l) := ⟨⟨_, _, fouInv_mul_fou, fou_mul
 theorem iso_fou : Iso (fou l) := fun f => norm_fourier_toL2_eq f
 
 theorem iso_fouInv : Iso (fouInv l) := fun f => by
-  rw [← iso_fou (fouInv l f), ← ContinuousLinearMap.mul_apply, fou_mul_fouInv, ContinuousLinearMap.one_apply]
+  rw [← iso_fou (fouInv l f), ← mul_apply_eq_comp, fou_mul_fouInv, one_apply_eq_self]
 
 theorem intw_fou (p q : Eu l) : Intw (fou l) p q (-q) p := fun f g h => by
   funext x
@@ -252,7 +252,7 @@ theorem intw_big {A Ai B C D : Eu l →L[ℝ] Eu l} (h : IsUnit Ai) (h1 : ∀ x,
       real_inner_comm _ (B q)]
     rfl
   have hT : ∀ x y, ⟪x, (-(Ai * B)) y⟫ = ⟪y, (-(Ai * B)) x⟫ := fun x y => by
-    simp only [ContinuousLinearMap.neg_apply, inner_neg_right, ContinuousLinearMap.mul_apply (f := Ai), ← hr,
+    simp only [neg_apply, inner_neg_right, mul_apply_eq_comp (f := Ai), ← hr,
       inner_sub_left]
     rw [← hBD, real_inner_comm (B x) (D y), real_inner_comm (B y), real_inner_comm (B x), hS]
   have e : C p + D q = D q - (C * Ai) (B q) + (C * Ai) (A p + B q) := by

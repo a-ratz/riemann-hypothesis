@@ -170,7 +170,7 @@ theorem pushL_surjective [IsLocalRing R] (φ : G ⟶ G') [IsMonHom φ] [Smooth �
     have hy : y.fst = 0 := hy
     rw [Ideal.mem_bot]
     ext <;> simp [hx, hy]
-  haveI : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective _ hπ
+  have : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective _ hπ
   have hη : (η[G] : _ ⟶ G).left ≫ φ.left = spMap π ≫ (tv m).left := by
     rw [← Over.comp_left, IsMonHom.one_hom]
     exact (RayBasis.isTangent_pt m).symm
@@ -186,7 +186,7 @@ theorem pushL_surjective [IsLocalRing R] (φ : G ⟶ G') [IsMonHom φ] [Smooth �
     simp only [l', Category.assoc, hl]
     rw [← Scheme.topIso_hom, Iso.inv_hom_id_assoc]
   have h₂ : spMap π ≫ l' = (η[G] : _ ⟶ G).left := by
-    haveI : IsIso (spMap π ⁻¹ᵁ ⊤).ι := inferInstanceAs (IsIso (Sp R).topIso.hom)
+    have : IsIso (spMap π ⁻¹ᵁ ⊤).ι := inferInstanceAs (IsIso (Sp R).topIso.hom)
     rw [← cancel_epi (spMap π ⁻¹ᵁ ⊤).ι, ← hl', ← morphismRestrict_ι_assoc]
     simp only [l']
     rw [← Scheme.topIso_hom, Iso.hom_inv_id_assoc]
@@ -229,7 +229,7 @@ theorem isInv_pbT (φ : G ⟶ G') [IsMonHom φ] {v : TanM (𝟙 (Sp R)) G} {d : 
   rw [← sub_eq_zero]
   refine Adjust.eq_zero_of_valR_points _ _ fun S _ x hx => ?_
   obtain ⟨ψ', hψ'⟩ := Spec.map_surjective (R := CommRingCat.of R) (S := CommRingCat.of S) (x ≫ G.hom)
-  letI : Algebra R S := ψ'.hom.toAlgebra
+  let : Algebra R S := ψ'.hom.toAlgebra
   have hψ : x ≫ G.hom = spMap (algebraMap R S) := hψ'.symm
   let z : sp (R₀ := R) S ⟶ G := Over.homMk x hψ
   let z' : sp (R₀ := R) (DualNumber S) ⟶ G := Chart.spMap (SqZero.inlS R S) ≫ z
@@ -285,8 +285,8 @@ theorem pbT_id {Z : Scheme.{0}} {U : Z.Opens} (s : Γ(Z, U)) : pbT (𝟙 Z) s U 
 
 theorem exists_dlg_eq_pbT : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (Dd : DegData R (maximalIdeal R)) (O : Type) [CommRing O] [StarRing O] [Module O Dd.toPre.X] (oa : Dd.toPre.OAct O) (Y : Ray oa) (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.H)) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (v a) (dd a)) → ∃ (g : ℕ) (w : Fin g → TanM (𝟙 (Sp R)) Dd.toPre.P.A) (dd' : Fin g → Fld Dd.toPre.P.A.left) (M : Fin n → Fin g → R) (N : Fin g → Fin n → R), (∀ a, IsInv Dd.toPre.P.A (w a) (dd' a)) ∧ (∀ u : TanM (𝟙 (Sp R)) Dd.toPre.P.A, ∃ cf : Fin g → R, u = ∑ a, cf a • w a) ∧ (∀ a a', ∑ b, N a b * M b a' = if a = a' then 1 else 0) ∧ ∀ (b : Fin n) (i i' : Dd.toPre.P.L.ι) (W : Y.H.left.Opens), W ≤ Y.q.left ⁻¹ᵁ (Dd.toPre.P.L.U i ⊓ Dd.toPre.P.L.U i') → dlg Y.H Y.q.left Dd.toPre.P.L (dd b) i i' W = pbT Y.q.left (∑ a, constFn Dd.toPre.P.A.hom _ (M b a) * dlg Dd.toPre.P.A (𝟙 _) Dd.toPre.P.L (dd' a) i i' (Dd.toPre.P.L.U i ⊓ Dd.toPre.P.L.U i')) W := by
   intro R _ _ _ _ _ _ Dd O _ _ _ oa Y n v dd hdd
-  haveI : IsMonHom Y.q := Y.q_linear.isMonHom
-  haveI : Smooth Y.q.left := Y.smooth_q
+  have : IsMonHom Y.q := Y.q_linear.isMonHom
+  have : Smooth Y.q.left := Y.smooth_q
   obtain ⟨g, ⟨w⟩⟩ := RayBasis.exists_basis (G := Dd.toPre.P.A) Dd.toPre.P.isAb.smooth
   choose dd' hdd' using fun a => RayBasis.exists_isInv (w a)
   choose u hu using fun a => pushL_surjective Y.q (w a)

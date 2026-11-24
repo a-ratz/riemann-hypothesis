@@ -317,8 +317,8 @@ theorem acyc_of_cover (hCx : CxSt) (hHt : HtpySt) (hQ : QCalcSt) (hFub : FubiniS
     Acyc s v.monotone.functor.op W.1 (fun T ↦ hle T.unop) := by
   obtain ⟨T, hT⟩ := exists_finite_cover v W hcov
   let Q : Set P := infClosure (T : Set P)
-  letI : SemilatticeInf Q := Subtype.semilatticeInf (fun x y hx hy ↦ infClosed_infClosure hx hy)
-  haveI : Finite Q := (T.finite_toSet.infClosure).to_subtype
+  let : SemilatticeInf Q := Subtype.semilatticeInf (fun x y hx hy ↦ infClosed_infClosure hx hy)
+  have : Finite Q := (T.finite_toSet.infClosure).to_subtype
   let vQ : Q →o X.affineOpens := ⟨fun q ↦ v q.1, fun a b h ↦ v.monotone h⟩
   have hleQ : ∀ a, (vQ a).1 ≤ W.1 := fun a ↦ hle a.1
   have hinfQ : ∀ a b, (vQ (a ⊓ b)).1 = (vQ a).1 ⊓ (vQ b).1 := fun a b ↦ hinf a.1 b.1
@@ -388,7 +388,7 @@ theorem resSys_qiso (hCx : CxSt) (hHt : HtpySt) (hQ : QCalcSt) (hFub : FubiniSt)
 end Meet
 
 theorem isAffineOpen_inf (hs : IsSeparated s) (U V : X.affineOpens) : IsAffineOpen (U.1 ⊓ V.1) := by
-  haveI : X.IsSeparated := ⟨by
+  have : X.IsSeparated := ⟨by
     rw [← Limits.terminal.comp_from s]
     infer_instance⟩
   exact U.2.inf V.2

@@ -117,9 +117,9 @@ theorem exists_generates {F : Type} [Field F] (Y : GlobalTheory.ProjVar.Var F) (
     add_zero (0 : Y.Dv) ▸ Y.mul_mem_riemannRochSpace_add _ _ _ _ hst hg
   have hinj : Function.Injective L := fun a b e =>
     Subtype.ext (mul_left_cancel₀ (mul_ne_zero hs0 ht0) (congrArg Subtype.val e))
-  letI : FiniteDimensional F (Y.H0 0) := by
+  let : FiniteDimensional F (Y.H0 0) := by
     have := finite_coh_of_isProjOver Y.algebraMap_Γ (structureModule Y.X) Y.isProjOver 0
-    haveI : Module.Finite F Γ(Y.X, ⊤) := .equiv ((coh.zeroUnitEquiv Y.X).restrictScalars F)
+    have : Module.Finite F Γ(Y.X, ⊤) := .equiv ((coh.zeroUnitEquiv Y.X).restrictScalars F)
     let f : Γ(Y.X, ⊤) →ₗ[F] Y.Fn := (IsScalarTower.toAlgHom F Γ(Y.X, ⊤) Y.Fn).toLinearMap
     have hf : ∀ a, f a ∈ Y.H0 0 := fun a =>
       GlobalTheory.ProjVar.Var.mem_riemannRochSpace_iff_regularAt_everywhere.2 fun x =>

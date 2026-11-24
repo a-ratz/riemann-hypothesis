@@ -61,7 +61,7 @@ theorem span_image_sup_eq_top {R M J : Type} [CommRing R] [AddCommGroup M] [Modu
     Submodule.mem_map_of_mem (by rw [h]; exact Submodule.mem_top)
   rw [Submodule.map_sup, Submodule.map_span, Set.image_image, Submodule.map_smul''] at h1
   have h2 : φ b ∈ Submodule.span R ((fun i => φ (x i)) '' s) ⊔ (K • ⊤ : Submodule R M) :=
-    SetLike.le_def.1 (sup_le_sup le_rfl (Submodule.smul_mono le_rfl le_top)) h1
+    IsConcreteLE.le_iff.1 (sup_le_sup le_rfl (Submodule.smul_mono le_rfl le_top)) h1
   have := sub_mem h2 (Submodule.mem_sup_right hb)
   rwa [sub_sub_cancel] at this
 

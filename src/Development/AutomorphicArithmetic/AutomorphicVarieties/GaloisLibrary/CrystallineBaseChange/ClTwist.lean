@@ -73,7 +73,7 @@ private theorem tG_det (N : ℕ) (u : ℤ) : (tG N u).det.val = 1 := by
 
 private theorem tG_σ (N : ℕ) (u : ℤ) (c : ℂ) : σ (tG N u) c = c := by
   have : 0 < (tG N u).det.val := by rw [tG_det]; exact one_pos
-  rw [σ, if_pos this]; rfl
+  rw [σ, ite_eq_left this]; rfl
 
 private theorem tG_apply (N : ℕ) (u : ℤ) (k : ℤ) (f : ℍ → ℂ) (z : ℍ) :
     (f ∣[k] tG N u) z = f (((u : ℝ) / N) +ᵥ z) := by
@@ -164,7 +164,7 @@ theorem UpperTheory.V.Br.clTwist :
   intro N k _ χ ψ f hf
   obtain ⟨c, hc1, hc2⟩ := tw_coeffs ψ
   have hch := tw_char k χ ψ hc2 hf
-  haveI : NeZero (N * N) := ⟨mul_ne_zero (NeZero.ne N) (NeZero.ne N)⟩
+  have : NeZero (N * N) := ⟨mul_ne_zero (NeZero.ne N) (NeZero.ne N)⟩
   have h1 : (1 : ℝ) ∈ (Gamma1 N : Subgroup (GL (Fin 2) ℝ)).strictPeriods := by simp
   have h2 : (1 : ℝ) ∈ (Gamma1 (N * N) : Subgroup (GL (Fin 2) ℝ)).strictPeriods := by simp
   have hsum : ∀ τ : ℍ, HasSum (fun m => coef f m • Function.Periodic.qParam 1 τ ^ m) (f τ) := fun τ =>
@@ -174,7 +174,7 @@ theorem UpperTheory.V.Br.clTwist :
     { toFun := tw N k c f
       slash_action_eq' := fun A hA => by
         obtain ⟨A, hA, rfl⟩ := hA
-        have h := hch A (Gamma1_in_Gamma0 _ hA)
+        have h := hch A (Gamma1_le_Gamma0 _ hA)
         rw [((Gamma1_mem _ A).1 hA).2.1, map_one, one_smul] at h
         exact h
       holo' := by
@@ -208,8 +208,8 @@ theorem UpperTheory.V.Br.clTwist :
   have e2 : ZMod.stdAddChar (u * (m : ZMod N)) * Function.Periodic.qParam 1 τ ^ m =
       Function.Periodic.qParam 1 (((((u.val : ℤ) : ℝ) / N) +ᵥ τ : ℍ) : ℂ) ^ m := by
     have : u * (m : ZMod N) = ((u.val * m : ℤ) : ZMod N) := by simp
-    rw [this, ZMod.stdAddChar_coe, Function.Periodic.qParam, Function.Periodic.qParam, ← Complex.exp_nat_mul,
-      ← Complex.exp_nat_mul, ← Complex.exp_add, coe_vadd]
+    rw [this, ZMod.stdAddChar_coe, Function.Periodic.qParam, Function.Periodic.qParam, ← Complex.exp_natCast_mul,
+      ← Complex.exp_natCast_mul, ← Complex.exp_add, coe_vadd]
     congr 1
     push_cast
     ring

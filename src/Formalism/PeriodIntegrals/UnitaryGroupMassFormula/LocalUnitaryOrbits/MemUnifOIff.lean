@@ -83,7 +83,7 @@ theorem mem_unifO_iff {ϖ : Fv F v} (hϖ : IsUnif v ϖ) (x : v.adicCompletionInt
       rw [hv]; exact le_ofAdd_neg_one_of_lt_one_local_unitary_orbits hx
     have hmem : (x : Fv F v) / ϖ ∈ v.adicCompletionIntegers F := by
       rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀]
-      exact div_le_one_of_le₀ hle zero_le'
+      exact div_le_one_of_le₀ hle zero_le
     refine ⟨⟨_, hmem⟩, ?_⟩
     simp only
     field_simp

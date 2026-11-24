@@ -209,7 +209,7 @@ theorem lineMap_injective : Function.Injective (lineMap (k := k) (ι := ι)) := 
     rw [mul_smul, ← h', smul_smul, inv_mul_cancel₀ d.ne_zero, one_smul]
   subst hl
   have hd : d = d' := by
-    obtain ⟨j, hj⟩ := Function.ne_iff.1 l.rep_nonzero
+    obtain ⟨j, hj⟩ := Function.ne_iff.1 l.rep_ne_zero
     have := congrFun h' j
     simp only [Pi.smul_apply, smul_eq_mul] at this
     exact Units.ext (mul_right_cancel₀ hj this)
@@ -226,7 +226,7 @@ noncomputable def lineEquiv : kˣ × Projectivization k (ι → k) ≃ {ξ : ι 
   Equiv.ofBijective lineMap ⟨lineMap_injective, lineMap_surjective⟩
 
 theorem countable_proj : Countable (Projectivization k (ι → k)) := by
-  haveI : Countable k := countable_numberField k
+  have : Countable k := countable_numberField k
   exact ((lineEquiv (k := k) (ι := ι)).injective.comp (Prod.mk_right_injective (1 : kˣ))).countable
 
 theorem summable_norm_col {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
@@ -290,12 +290,12 @@ noncomputable def Gc (F : (ι → 𝔸[k]) → ℂ) (ω : HeckeCharacter k) (z :
 theorem integrable_Gc {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
     (ω : HeckeCharacter k) {z : ℂ} (hz : 1 < z.re) (l : Projectivization k (ι → k)) :
     Integrable (Gc F ω z l) (ideleMeasure k) :=
-  integrable_globalZetaIntegrand (line_mem_schwartzBruhat hF l.rep_nonzero) ω hz
+  integrable_globalZetaIntegrand (line_mem_schwartzBruhat hF l.rep_ne_zero) ω hz
 
 theorem continuous_Gc {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
     (ω : HeckeCharacter k) (z : ℂ) (l : Projectivization k (ι → k)) : Continuous (Gc F ω z l) :=
   continuous_zetaIntegrand
-    (continuous_of_mem_schwartzBruhat (line_mem_schwartzBruhat hF l.rep_nonzero)) ω z
+    (continuous_of_mem_schwartzBruhat (line_mem_schwartzBruhat hF l.rep_ne_zero)) ω z
 
 theorem Gc_diagonal_mul (F : (ι → 𝔸[k]) → ℂ) (ω : HeckeCharacter k) (z : ℂ)
     (l : Projectivization k (ι → k)) (d : kˣ) (x : IdeleGroup k) :
@@ -330,9 +330,9 @@ theorem exists_bound (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ}
   have hnorm : ∀ x, ‖G x‖ = ρ x := fun x ↦ by
     rw [hGρ, Complex.norm_real, Real.norm_of_nonneg (hρ0 x)]
   have hφ : Continuous fun u : normOneSubgroup k ↦ (scalC (u : IdeleGroup k) : GL ι 𝔸[k]) :=
-    continuous_scalC.comp continuous_subtype_val
+    continuous_scalC.comp continuous_subtypeVal
   have hφ' : Continuous fun u : normOneSubgroup k ↦ (scalC (u : IdeleGroup k)⁻¹ : GL ι 𝔸[k]) :=
-    continuous_scalC.comp (continuous_inv.comp continuous_subtype_val)
+    continuous_scalC.comp (continuous_inv.comp continuous_subtypeVal)
   have hE := isCompact_closure_normOneFundamentalDomain k
   obtain ⟨M₁, h₁⟩ := _root_.GlobalTheory.CompanionTheory.EisThCDecay.exists_norm_thetaC_sub_le w hG (hE.image hφ) r
   obtain ⟨M₀, h₀⟩ := _root_.GlobalTheory.CompanionTheory.EisThCDecay.exists_norm_thetaC_sub_le w (adelicFourierPi_mem_schwartzBruhatPi hG) (hE.image hφ') 0
@@ -395,7 +395,7 @@ theorem integrable_exp_neg_abs_log {δ : ℝ} (hδ : 0 < δ) :
     Integrable (fun t : {x : ℝ // 0 < x} ↦ Real.exp (-(δ * |Real.log t|))) posRealMeasure := by
   have hc : Continuous fun t : {x : ℝ // 0 < x} ↦ Real.exp (-(δ * |Real.log t|)) := by
     have : Continuous fun t : {x : ℝ // 0 < x} ↦ Real.log t :=
-      continuous_subtype_val.log fun r ↦ r.2.ne'
+      continuous_subtypeVal.log fun r ↦ r.2.ne'
     fun_prop
   rw [posRealMeasure_eq_map_expPos,
     integrable_map_measure hc.aestronglyMeasurable measurable_expPos.aemeasurable]
@@ -441,7 +441,7 @@ theorem sum_integral_norm_le (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ
   have hδ2 : δ ≤ z.re - Fintype.card ι := min_le_left _ _
   obtain ⟨M, hM0, hM⟩ := exists_bound w hF r
   set E := normOneFundamentalDomain k with hE
-  haveI : IsFiniteMeasure ((normOneMeasure k).restrict E) :=
+  have : IsFiniteMeasure ((normOneMeasure k).restrict E) :=
     ⟨by simpa using normOneMeasure_normOneFundamentalDomain_lt_top k⟩
   set V : ℝ := ((normOneMeasure k).restrict E).real Set.univ with hV
   set ρ : {x : ℝ // 0 < x} → ℝ := fun t ↦ M * Real.exp (-(δ * |Real.log t|)) with hρ
@@ -508,21 +508,21 @@ theorem integrable_tsum_Gc (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ}
     (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι)) (ω : HeckeCharacter k) {z : ℂ}
     (hz : (Fintype.card ι : ℝ) < z.re) (hz1 : 1 < z.re) :
     Integrable (fun x ↦ ∑' l : Projectivization k (ι → k), Gc F ω z l x) (ideleMeasure k) := by
-  haveI := countable_proj (k := k) (ι := ι)
+  have := countable_proj (k := k) (ι := ι)
   have hs := summable_integral_norm_Gc w hF ω hz hz1
   have hint := integrable_Gc hF ω hz1
   have hmeas : ∀ c, AEMeasurable (fun x ↦ ‖Gc F ω z c x‖ₑ) (ideleMeasure k) := fun c ↦
-    (hint c).aemeasurable.enorm
+    (hint c).aemeasurable.eNorm
   have hlin : ∫⁻ x, ∑' c, ‖Gc F ω z c x‖ₑ ∂ideleMeasure k ≠ ⊤ := by
     rw [lintegral_tsum hmeas]
     have : ∀ c, ∫⁻ x, ‖Gc F ω z c x‖ₑ ∂ideleMeasure k =
         ENNReal.ofReal (∫ x, ‖Gc F ω z c x‖ ∂ideleMeasure k) := fun c ↦
-      (ofReal_integral_norm_eq_lintegral_enorm (hint c)).symm
+      (ofReal_integral_norm_eq_lintegral_eNorm (hint c)).symm
     simp_rw [this]
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun c ↦ integral_nonneg fun _ ↦ norm_nonneg _) hs]
     exact ENNReal.ofReal_ne_top
   refine ⟨(Measurable.tsum fun c ↦ (continuous_Gc hF ω z c).measurable).aestronglyMeasurable, ?_⟩
-  exact lt_of_le_of_lt (lintegral_mono fun x ↦ enorm_tsum_le_tsum_enorm)
+  exact lt_of_le_of_lt (lintegral_mono fun x ↦ eNorm_tsum_le_tsum_eNorm)
     (lt_top_iff_ne_top.2 hlin)
 
 theorem integrableOn_thetaC_mul {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
@@ -533,7 +533,7 @@ theorem integrableOn_thetaC_mul {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwa
   have hE := isCompact_closure_normOneFundamentalDomain k
   have hφ : Continuous fun u : normOneSubgroup k ↦
       (scalC (a * (u : IdeleGroup k)) : GL ι 𝔸[k]) :=
-    continuous_scalC.comp (continuous_const.mul continuous_subtype_val)
+    continuous_scalC.comp (continuous_const.mul continuous_subtypeVal)
   have hθ : ContinuousOn (thetaC F) ((fun u : normOneSubgroup k ↦
       (scalC (a * (u : IdeleGroup k)) : GL ι 𝔸[k])) '' closure (normOneFundamentalDomain k)) := by
     obtain ⟨v, hv, hb⟩ := _root_.GlobalTheory.CompanionTheory.EisRkNBound.exists_summable_bound_thetaC hF (hE.image hφ)
@@ -544,7 +544,7 @@ theorem integrableOn_thetaC_mul {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwa
       (closure (normOneFundamentalDomain k)) :=
     hθ.comp hφ.continuousOn (Set.mapsTo_image _ _)
   have h2 : Continuous fun u : normOneSubgroup k ↦ (ω.toIdele (u : IdeleGroup k) : ℂ) :=
-    continuous_subtype_val.comp (ω.continuous_toIdele.comp continuous_subtype_val)
+    continuous_subtypeVal.comp (ω.continuous_toIdele.comp continuous_subtypeVal)
   exact ((h1.mul h2.continuousOn).integrableOn_compact hE).mono_set subset_closure
 
 theorem integrableOn_char (ω : HeckeCharacter k) :
@@ -552,7 +552,7 @@ theorem integrableOn_char (ω : HeckeCharacter k) :
       (normOneFundamentalDomain k) (normOneMeasure k) := by
   have hE := isCompact_closure_normOneFundamentalDomain k
   have h2 : Continuous fun u : normOneSubgroup k ↦ (ω.toIdele (u : IdeleGroup k) : ℂ) :=
-    continuous_subtype_val.comp (ω.continuous_toIdele.comp continuous_subtype_val)
+    continuous_subtypeVal.comp (ω.continuous_toIdele.comp continuous_subtypeVal)
   exact (h2.continuousOn.integrableOn_compact hE).mono_set subset_closure
 
 theorem inner_eq (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ}
@@ -581,7 +581,7 @@ theorem inner_eq (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ}
     ring
   simp only [hpt]
   rw [integral_const_mul, integral_sub (integrableOn_thetaC_mul hF ω _)
-    ((integrableOn_char ω).const_mul _), integral_const_mul, thetaCFun, dif_pos t.2]
+    ((integrableOn_char ω).const_mul _), integral_const_mul, thetaCFun, dite_eq_left t.2]
   simp only [thetaCInt, thetaCConst, volChar]
   ring
 
@@ -613,7 +613,7 @@ theorem lines_eq_mellin (w : InfinitePlace k) (ω : HeckeCharacter k) {F : (ι �
       ∑' l : Projectivization k (ι → k), lineZeta F ω z (ratV l.rep) =
         mellin (fun x ↦ thetaCFun w F ω x - thetaCConst F ω)
           (z + (archExponent w ω : ℂ) * Complex.I) := by
-  haveI := countable_proj (k := k) (ι := ι)
+  have := countable_proj (k := k) (ι := ι)
   have hsum := summable_integral_norm_Gc w hF ω hz hz1
   have hsec : ∀ l : Projectivization k (ι → k), lineZeta F ω z (ratV l.rep) =
       ∫ x, Gc F ω z l x ∂ideleMeasure k := fun l ↦ rfl
@@ -644,7 +644,7 @@ theorem mellin_eq_zero_of_isEmpty [IsEmpty ι] (w : InfinitePlace k) (F : (ι �
       (thetaCFun w F ω t - thetaCConst F ω) = ∫ t in Set.Ioi (0 : ℝ), (0 : ℂ) := by
     refine setIntegral_congr_fun measurableSet_Ioi fun x hx ↦ ?_
     have hx' : (0 : ℝ) < x := hx
-    simp only [thetaCFun, dif_pos hx', thetaCInt, hθ, thetaCConst, volChar]
+    simp only [thetaCFun, dite_eq_left hx', thetaCInt, hθ, thetaCConst, volChar]
     rw [integral_const_mul, sub_self, smul_zero]
   rw [h0]
   simp
@@ -661,8 +661,8 @@ theorem epstein_eq_mellin {k : Type} [Field k] [NumberField k] {ι : Type} [Fint
         mellin (fun x ↦ thetaCFun w (ltr m⁻¹ Ψ) ω x - thetaCConst (ltr m⁻¹ Ψ) ω)
           (z + (archExponent w ω : ℂ) * Complex.I) := by
   rcases isEmpty_or_nonempty ι with hι | hι
-  · haveI : IsEmpty (Projectivization k (ι → k)) :=
-      ⟨fun l ↦ l.rep_nonzero (Subsingleton.elim _ _)⟩
+  · have : IsEmpty (Projectivization k (ι → k)) :=
+      ⟨fun l ↦ l.rep_ne_zero (Subsingleton.elim _ _)⟩
     rw [mellin_eq_zero_of_isEmpty, epstein, tsum_empty]
     exact ⟨Summable.of_finite, rfl⟩
   · have hz1 : 1 < z.re := by

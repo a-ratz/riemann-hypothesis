@@ -170,7 +170,7 @@ theorem finrank_inf_restrictScalars_of_le_span {M : Submodule R V} (hM : M.FG)
     ext x
     simp
   rw [Submodule.map_comap_eq, hr, inf_comm] at e
-  rw [← e.finrank_eq, Module.finrank, Module.finrank, Submodule.IsLattice.rank' K]
+  rw [← e.finrank_eq, Module.finrank, Module.finrank, Submodule.IsFullLattice.rank_eq K]
 
 end Span
 
@@ -345,10 +345,10 @@ theorem finrank_iInf_ker_semilinear {L M W X ι κ : Type} [Field L] [Field M] [
     (a : ι → W →ₗ[L] W) (a' : ι → X →ₗ[M] X) (h : ∀ i w, a' i (Φ w) = Φ (a i w)) :
     finrank L (⨅ i, LinearMap.ker (a i) : Submodule L W) =
       finrank M ((⨅ i, LinearMap.ker (a' i)) ⊓ Submodule.span M (Set.range Φ) : Submodule M X) := by
-  haveI := Module.Finite.of_basis b
-  letI : Algebra L M := σ.toAlgebra
-  letI : Module L X := Module.compHom X σ
-  haveI : IsScalarTower L M X := ⟨fun x y z => mul_smul (σ x) y z⟩
+  have := Module.Finite.of_basis b
+  let : Algebra L M := σ.toAlgebra
+  let : Module L X := Module.compHom X σ
+  have : IsScalarTower L M X := ⟨fun x y z => mul_smul (σ x) y z⟩
   let U := Submodule.span M (Set.range Φ)
   let f : W →ₗ[L] U :=
     { toFun := fun w => ⟨Φ w, Submodule.subset_span ⟨w, rfl⟩⟩
@@ -357,7 +357,7 @@ theorem finrank_iInf_ker_semilinear {L M W X ι κ : Type} [Field L] [Field M] [
   have hU : U = Submodule.span M (Set.range fun k => Φ (b k)) := by
     refine le_antisymm (Submodule.span_le.2 ?_) (Submodule.span_mono (by rintro _ ⟨k, rfl⟩; exact ⟨_, rfl⟩))
     rintro _ ⟨w, rfl⟩
-    haveI := Fintype.ofFinite κ
+    have := Fintype.ofFinite κ
 
     rw [← b.sum_repr w, map_sum]
     exact Submodule.sum_mem _ fun k _ => by
@@ -482,7 +482,7 @@ theorem finrank_eq {K L F M C W V G G' Γ : Type} [Field K] [Field L] [Field F] 
   have h2 := finrank_iInf_ker_semilinear Φ bW hind (fun o : Option Q => o.elim (∑ g, (eC g * ((chi g)⁻¹ : Lˣ)) • ρ g) a)
     (fun o => o.elim (Representation.asAlgebraHom (R.comp s : Representation M G' (M ⊗[F] V)) e) a') (by
       rintro (_ | γ) w
-      · haveI := Fintype.ofEquiv G c.toEquiv
+      · have := Fintype.ofEquiv G c.toEquiv
         simp only [Option.elim]
 
         rw [Representation.asAlgebraHom_def, MonoidAlgebra.lift_apply, Finsupp.sum_fintype _ _ (fun _ => by simp),
@@ -733,7 +733,7 @@ theorem rep_data {T : CoreJ D} (hT : LawsJ T) {j : ℕ} (hj : InR D j) (Y : Deep
     simp only [Ranks.sigW]
     omega
   have hA' : Y.d.l₂.A.Coprime Y.d.l₂.M := by rw [hY.lev.2]; exact Nat.coprime_one_left _
-  have hKC : GlobalTheory.LevDesc.KeepsCusp Y.U (wtZ a n) := keeps_of_good hT hpq Y hY ((Int.even_coe_nat _).2 hD.2)
+  have hKC : GlobalTheory.LevDesc.KeepsCusp Y.U (wtZ a n) := keeps_of_good hT hpq Y hY ((Int.even_natCast _).2 hD.2)
   obtain ⟨π, q1, q2, q3⟩ := pull_data D T j Y e o hT hj hY a n hD G lev hact hk θ h1
   have hτ := GlobalTheory.LevDesc.coe_cuspRep Y.U (wtZ a n) hpq hA' hKC
   exact ⟨π, _, hτ, q1, fun γ v => (q2 γ v).imp fun hv h => Subtype.ext ((hτ γ _).trans h),

@@ -112,13 +112,13 @@ theorem UpperTheory.V.Alg.coprod :
       rfl
     rw [this]
     exact coprod_homog wt _ (fun p => c p.1 p.2) fun p => hr _ _ _ (hg p.1 p.2)
-  haveI : IsCO O (MvPowerSeries σ O) := co_mvps O O σ
-  haveI : Nontrivial (MvPowerSeries σ O ⧸ J) :=
+  have : IsCO O (MvPowerSeries σ O) := co_mvps O O σ
+  have : Nontrivial (MvPowerSeries σ O ⧸ J) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top hJm)
   let π := Ideal.Quotient.mkₐ O J
   have hπ : Function.Surjective π := Ideal.Quotient.mkₐ_surjective O J
   have hk : RingHom.ker π = J := Ideal.Quotient.mkₐ_ker O J
-  haveI hR : IsCO O (MvPowerSeries σ O ⧸ J) := co_quot O (MvPowerSeries σ O) _ π hπ
+  have hR : IsCO O (MvPowerSeries σ O ⧸ J) := co_quot O (MvPowerSeries σ O) _ π hπ
   let i : ∀ v, B v →ₐ[O] MvPowerSeries σ O ⧸ J := fun v =>
     (Ideal.Quotient.liftₐ (RingHom.ker (WB v).π) (π.comp (r v)) fun g hg =>
       Ideal.Quotient.eq_zero_iff_mem.2 (hJ v g hg)).comp
@@ -126,7 +126,7 @@ theorem UpperTheory.V.Alg.coprod :
   have hi : ∀ v g, i v ((WB v).π g) = π (r v g) := fun v g => by
     have : (Ideal.quotientKerAlgEquivOfSurjective (WB v).surj).symm ((WB v).π g) = Ideal.Quotient.mk _ g := by
       rw [AlgEquiv.symm_apply_eq]; rfl
-    simp only [i, AlgHom.comp_apply, AlgEquiv.coe_algHom]
+    simp only [i, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
     erw [this]
     rfl
   refine ⟨_, inferInstance, inferInstance, hR, i, ⟨σ, wt, π, hπ, by rw [hk]; exact hJh⟩, Equiv.refl _, ?_,

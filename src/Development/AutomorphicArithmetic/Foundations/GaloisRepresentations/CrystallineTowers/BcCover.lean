@@ -142,8 +142,8 @@ private abbrev tB (g : H.Γ) : pullback (H.s g ≫ H.q) (spf τ) ⟶ pullback H.
 private abbrev aB (δ : C.Δ) : pullback H.q (spf τ) ⟶ pullback H.q (spf τ) := bcMap (spf τ) (C.a δ) (a_q C δ)
 
 private theorem a_spl : Splits (piK' τ φ C hφ) (piK' τ φ C hφ) (aB τ C) := by
-  haveI := C.finπ
-  haveI := C.etπ
+  have := C.finπ
+  have := C.etπ
   have h0 := splits_bc.1 (piK C) (piK C) C.Δ C.a (pullback.fst H.q (spf τ)) C.spl
   have hσ : ∀ δ, aB τ C δ ≫ piK' τ φ C hφ = piK' τ φ C hφ := by
     intro δ

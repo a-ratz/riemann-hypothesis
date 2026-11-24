@@ -88,7 +88,7 @@ theorem laurentVar_map {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) :
   have h := Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (laurentMap f))
   have h2 := congrArg (fun φ => φ.hom (LaurentPolynomial.T 1)) h
   simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at h2
-  simp only [laurentVar, laurentVarUnit, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [laurentVar, laurentVarUnit, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   rw [← h2, laurentMap_T]
 
 theorem isUnit_gamma (q : ℕ) (A : Type) [CommRing A] (hq : IsUnit (q : A)) :

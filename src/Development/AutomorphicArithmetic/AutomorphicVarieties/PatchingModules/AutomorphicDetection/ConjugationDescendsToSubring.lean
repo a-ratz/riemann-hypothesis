@@ -463,7 +463,7 @@ private theorem span_range_fromBlocks_submatrix_eq_ev {K Γ : Type} [Field K] [M
     Submodule.span K (Set.range fun g => (Matrix.fromBlocks (ρ₁ g) 0 0 (ρ₂ g)).submatrix
       ((finCongr hn).trans finSumFinEquiv.symm) ((finCongr hn).trans finSumFinEquiv.symm)) = Ev K K n a := by
   set τ := (finCongr hn).trans finSumFinEquiv.symm with hτ
-  haveI i3 : ∀ s : Bool, Nonempty (Fin (cond s a b)) := fun s => by
+  have i3 : ∀ s : Bool, Nonempty (Fin (cond s a b)) := fun s => by
     cases s
     · exact ⟨⟨0, hb⟩⟩
     · exact ⟨⟨0, ha⟩⟩
@@ -607,7 +607,7 @@ private theorem eps_eq_one_of_mem_G' {l : ℕ} [Fact l.Prime] (F : GFrame l) (O 
     simpa only [GFrame.G', MonoidHom.mem_ker, MonoidHom.coe_comp, Subgroup.coe_subtype, Function.comp_apply] using hg
   ext
   simp only [GFrame.eps, MonoidHom.coe_comp, Subgroup.coe_subtype, Function.comp_apply, Units.coe_map,
-    MonoidHom.coe_coe, RingHom.coe_comp]
+    MonoidHom.coe_ofClass, RingHom.coe_comp]
   rw [h]
   simp
 
@@ -889,7 +889,7 @@ private theorem closed_of_comb {A G ι : Type} [CommRing A] [IsDomain A] [IsLoca
   have hset : {g | ψ g = 1} =
       ⋂ N : ℕ, {g | Ideal.Quotient.mk (maximalIdeal A ^ N) (∑ a, c a * ρ a g - (b : A)) = 0} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Ideal.Quotient.eq_zero_iff_mem, key]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Ideal.Quotient.eq_zero_iff_mem, key]
     constructor
     · intro h N
       rw [h]
@@ -921,8 +921,8 @@ theorem UpperTheory.V.Pa.Det.psiMu :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] {n : ℕ} {r : Resid F O n} (x : Point r) (v : F.Vl) (i : Fin n) (g : F.Gv v), g ∈ F.mu v → x.ψ v i g = 1 := by
   intro l _ F O _ _ _ n r x v i g hg
   have hl : (l : x.K) = 0 := char_of_padic ((algebraMap O x.K).comp (algebraMap ℤ_[l] O))
-  haveI : CharP x.K l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hl
-  haveI : CharP (PowerSeries x.K) l :=
+  have : CharP x.K l := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hl
+  have : CharP (PowerSeries x.K) l :=
     charP_of_injective_algebraMap (algebraMap x.K (PowerSeries x.K)).injective l
   obtain ⟨P, hP⟩ := x.flag v
   have hclosed : IsClosed {s : F.Gv v | ((x.ψ v i s : (PowerSeries x.K)ˣ) : PowerSeries x.K) = 1} := by
@@ -933,7 +933,7 @@ theorem UpperTheory.V.Pa.Det.psiMu :
       exact (x.cont ab.1 ab.2 N).comp_continuous (F.φ_cont v)
     · intro s
       have hs := (hP s).2 i
-      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at hs
+      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass] at hs
       rw [← hs]
       simp only [pushRep, mat, MonoidHom.comp_apply, Units.coeHom_apply, Units.val_mul, Matrix.mul_apply,
         Finset.sum_mul, Fintype.sum_prod_type, Matrix.GeneralLinearGroup.map_apply]
@@ -942,10 +942,10 @@ theorem UpperTheory.V.Pa.Det.psiMu :
       ring
   have hker : (commutator (F.Gv v)).topologicalClosure ≤ (x.ψ v i).ker := by
     apply Subgroup.topologicalClosure_minimal
-    · exact Abelianization.commutator_subset_ker (x.ψ v i)
+    · exact Group.Abelianization.commutator_le_ker (x.ψ v i)
     · convert hclosed using 1
       ext s
-      rw [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_setOf_eq, Units.val_eq_one]
+      rw [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_ofPred_eq, Units.val_eq_one]
   obtain ⟨k, hk⟩ := CommGroup.mem_primaryComponent.mp (Subgroup.mem_comap.mp hg)
   have hgk : g ^ l ^ k ∈ (commutator (F.Gv v)).topologicalClosure := by
     rw [← QuotientGroup.eq_one_iff]
@@ -1008,7 +1008,7 @@ private theorem eventually_sub_mem_maxIdeal_pow_of_const_mul {Γ K' : Type} [Top
   apply PowerSeries.coeff_of_lt_order
   by_cases h3 : (f y - f x).order = ⊤
   · rw [h3]
-    exact ENat.coe_lt_top m
+    exact ENat.natCast_lt_top m
   · obtain ⟨r, hr⟩ := ENat.ne_top_iff_exists.1 h3
     rw [← hr] at h1 ⊢
     have h4 : N + k ≤ k + r := by exact_mod_cast h1
@@ -1091,7 +1091,7 @@ theorem UpperTheory.V.Pa.Det.sqExt :
     rw [PowerSeries.isUnit_iff_constantCoeff] at hf ⊢
     simpa using hf
   · classical
-    letI inst : Module (PowerSeries K) (PowerSeries K) :=
+    let inst : Module (PowerSeries K) (PowerSeries K) :=
       (PowerSeries.expand 2 two_ne_zero (R := K)).toRingHom.toAlgebra.toModule
     have hs : Submodule.span (PowerSeries K) ({1, PowerSeries.X} : Set (PowerSeries K)) = ⊤ := by
       rw [eq_top_iff]
@@ -1123,7 +1123,7 @@ theorem UpperTheory.V.Pa.Det.exists_integral_block_iwasawa_decomposition :
     ∀ {A F : Type} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [Field F] [Algebra A F] [IsFractionRing A F] {n : ℕ} (bl ty : Fin n → Bool) (g : GL (Fin n) F), (∀ i j, bl i ≠ ty j → g i j = 0) → ∃ (w : GL (Fin n) A) (b : GL (Fin n) F), (∀ i j, j < i → b i j = 0) ∧ GeneralLinearGroup.map (algebraMap A F) w = g * b ∧ ∀ i j, bl i ≠ ty j → w i j = 0 := by
   intro A F _ _ _ _ _ _ n bl ty g hg
   obtain ⟨k, b0, hb0, hgkb⟩ := GlobalTheory.ValIwasawa.iwasawa A F n g
-  haveI : Invertible (b0 : Matrix (Fin n) (Fin n) F) := Units.invertible b0
+  have : Invertible (b0 : Matrix (Fin n) (Fin n) F) := Units.invertible b0
   have hctri : ((b0 : Matrix (Fin n) (Fin n) F)⁻¹).BlockTriangular id :=
     Matrix.blockTriangular_inv_of_blockTriangular hb0
   set c : Matrix (Fin n) (Fin n) F := (b0 : Matrix (Fin n) (Fin n) F)⁻¹ with hcdef
@@ -1162,7 +1162,7 @@ theorem UpperTheory.V.Pa.Det.exists_integral_block_iwasawa_decomposition :
     · rfl
     · exact map_zero _
   have hdetc : c'.det = c.det := by
-    rw [Matrix.det_of_upperTriangular hc'tri, Matrix.det_of_upperTriangular hctri]
+    rw [det_of_isUpperTriangular hc'tri, det_of_isUpperTriangular hctri]
     refine Finset.prod_congr rfl fun i _ => ?_
     simp [c']
   have hcunit : IsUnit c.det := by
@@ -1287,11 +1287,11 @@ theorem UpperTheory.V.Pa.Det.flagF :
       simp only [hE, Units.val_mul, mul_assoc, Units.inv_mul_cancel_left]
       rw [← mul_assoc (r s : Matrix (Fin n) (Fin n) F), hce, mul_assoc]
   obtain ⟨U, hU, hU1, hEU⟩ := flagF_diagonalise E hEt hEE
-  have hdet : U.det ≠ 0 := by rw [det_of_upperTriangular hU]; simp [hU1]
+  have hdet : U.det ≠ 0 := by rw [det_of_isUpperTriangular hU]; simp [hU1]
   obtain ⟨u, rfl⟩ : ∃ u : GL (Fin n) F, (u : Matrix (Fin n) (Fin n) F) = U :=
     ⟨GeneralLinearGroup.mkOfDetNeZero U hdet, rfl⟩
   have hUi : ((u⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).BlockTriangular id := by
-    letI := u.invertible
+    let := u.invertible
     rw [Matrix.coe_units_inv]
     exact blockTriangular_inv_of_blockTriangular hU
   refine ⟨g⁻¹ * u, fun j => decide (E j j = 1), fun i j hij => ?_, fun s => ?_⟩
@@ -1347,7 +1347,7 @@ private theorem flagBasis_conj {F : Type} [Field F] {n : ℕ} (b t : GL (Fin n) 
   have hbm : (b : Matrix (Fin n) (Fin n) F).BlockTriangular id := fun i j h => hb i j h
   have htm : (t : Matrix (Fin n) (Fin n) F).BlockTriangular id := fun i j h => ht i j h
   have hbi : ((b⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).BlockTriangular id := by
-    letI := b.invertible
+    let := b.invertible
     rw [Matrix.coe_units_inv]
     exact blockTriangular_inv_of_blockTriangular hbm
   have hdiag : ∀ i, ((b⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) i i *
@@ -1365,13 +1365,13 @@ theorem UpperTheory.V.Pa.Det.flagBasis :
   intro K H _ _ n a r ψ hev hinj hflag
   set ι := algebraMap (PowerSeries K) (FractionRing (PowerSeries K)) with hι
   have hιi : Function.Injective ι := IsFractionRing.injective _ _
-  haveI : Infinite (FractionRing (PowerSeries K)) := by
+  have : Infinite (FractionRing (PowerSeries K)) := by
     refine Infinite.of_injective (fun m : ℕ => ι (PowerSeries.X ^ m)) ?_
     intro m k hmk
     have h := congrArg (fun p => PowerSeries.coeff (R := K) m p) (hιi hmk)
-    simp only [PowerSeries.coeff_X_pow, if_true] at h
+    simp only [PowerSeries.coeff_X_pow, ite_true] at h
     by_contra hne
-    rw [if_neg hne] at h
+    rw [ite_eq_right hne] at h
     exact one_ne_zero h
   have hev' : ∀ g, mat (pushRep ι r) g ∈ Ev (FractionRing (PowerSeries K)) (FractionRing (PowerSeries K)) n a := by
     intro g
@@ -1419,7 +1419,7 @@ open Matrix IsLocalRing UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Pa
 private theorem UpperTheory.V.Pa.Det.resSq_fin {K K' : Type} [Field K] [Field K'] [Algebra K K']
     [Module.Finite K K'] : (PowerSeries.map (algebraMap K K')).Finite := by
   classical
-  letI := (PowerSeries.map (algebraMap K K')).toAlgebra
+  let := (PowerSeries.map (algebraMap K K')).toAlgebra
   let b := Module.finBasis K K'
   show Module.Finite (PowerSeries K) (PowerSeries K')
   refine ⟨⟨Finset.univ.image (fun i => PowerSeries.C (b i)), ?_⟩⟩
@@ -1441,7 +1441,7 @@ private theorem UpperTheory.V.Pa.Det.resSq_field (K : Type) [Field K] [Finite K]
     ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : Module.Finite K K'),
       ∀ a : K, IsSquare (algebraMap K K' a) := by
   classical
-  letI := Fintype.ofFinite K
+  let := Fintype.ofFinite K
   let p : Polynomial K := ∏ a : K, (Polynomial.X ^ 2 - Polynomial.C a)
   have hp : p ≠ 0 := Finset.prod_ne_zero_iff.mpr fun a _ =>
     Polynomial.X_pow_sub_C_ne_zero (by norm_num) a
@@ -1461,7 +1461,7 @@ theorem UpperTheory.V.Pa.Det.resSq :
     ∀ {K : Type} [Field K] [Finite K], ∃ (K' : Type) (_ : Field K') (_ : Finite K') (j : PowerSeries K →+* PowerSeries K'), Function.Injective j ∧ IsLocalHom j ∧ j.Finite ∧ ∀ c : (PowerSeries K)ˣ, IsSquare (residue (PowerSeries K') (j c)) := by
   intro K _ _
   obtain ⟨K', _, _, _, hsq⟩ := UpperTheory.V.Pa.Det.resSq_field K
-  haveI : Finite K' := Module.finite_of_finite K
+  have : Finite K' := Module.finite_of_finite K
   have hcc : ∀ φ : PowerSeries K, PowerSeries.constantCoeff (PowerSeries.map (algebraMap K K') φ) =
       algebraMap K K' (PowerSeries.constantCoeff φ) := by
     intro φ
@@ -1494,7 +1494,7 @@ open Matrix IsLocalRing UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Pa
 theorem UpperTheory.V.Pa.Det.solBase :
     ∀ {F F' ι : Type} [Field F] [Field F'] (f : F →+* F') {n : ℕ} (e : ι → F) (r : ι → Matrix (Fin n) (Fin n) F), (∀ X : Matrix (Fin n) (Fin n) F, (∀ i, e i • (r i * X) = X * r i) → X = 0) → ∀ X : Matrix (Fin n) (Fin n) F', (∀ i, f (e i) • ((r i).map f * X) = X * (r i).map f) → X = 0 := by
   intro F F' ι _ _ f n e r h X hX
-  letI : Algebra F F' := f.toAlgebra
+  let : Algebra F F' := f.toAlgebra
   have hs : ∀ (x : F) (y : F'), f x * y = x • y := fun x y => (Algebra.smul_def x y).symm
   let b := Module.Basis.ofVectorSpace F F'
   have key : ∀ k, (Matrix.of fun a c => b.repr (X a c) k) = 0 := by
@@ -1593,7 +1593,7 @@ theorem UpperTheory.V.Pa.Det.spanInt :
   rw [← map_smul] at e
   have e' := hinj e
   obtain ⟨s, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hd
-    (PowerSeries.X_irreducible (R := K))
+    (PowerSeries.irreducible_X (R := K))
   refine ⟨s, ?_⟩
   have : (PowerSeries.X : PowerSeries K) ^ s • Z = (↑u⁻¹ : PowerSeries K) • w := by
     rw [← e', smul_smul, Units.inv_mul_cancel_left]
@@ -1708,7 +1708,7 @@ private theorem chi_ofRep {G : Type} [Group G] (ρ : G →* Matrix (Fin n) (Fin 
 private theorem map_ofRep {G : Type} [Group G] (ρ : G →* Matrix (Fin n) (Fin n) R)
     (f : R →+* S) : (GDet.ofRep ρ).map f = GDet.ofRep (f.mapMatrix.toMonoidHom.comp ρ) := by
   refine GDet.ext fun C _ _ x => ?_
-  letI : Algebra R C := ((algebraMap S C).comp f).toAlgebra
+  let : Algebra R C := ((algebraMap S C).comp f).toAlgebra
   change (GDet.repAlg ρ C x).det = (GDet.repAlg _ C x).det
   congr 2
 
@@ -1823,7 +1823,7 @@ theorem UpperTheory.V.Pa.norm :
   obtain ⟨h1, hT, h3, h4⟩ : x.N1 ∧ (x.TypeI ∨ x.TypeE) ∧ x.N3 ∧ x.N4 :=
     hx.elim (fun h => ⟨h.1, .inl h.2.1, h.2.2⟩) fun h => ⟨h.1, .inr h.2.1, h.2.2⟩
   obtain ⟨K', _, _, j, f, a, T, ρ', jinj, jloc, jfin, hf, ha1, han, haI, hρ, hP, hev, hspan⟩ := core x hl hn hT
-  letI : Algebra ℤ_[l] K' := ((PowerSeries.constantCoeff : PowerSeries K' →+* K').comp
+  let : Algebra ℤ_[l] K' := ((PowerSeries.constantCoeff : PowerSeries K' →+* K').comp
     (j.comp ((algebraMap O x.A).comp (algebraMap ℤ_[l] O)))).toAlgebra
   have hch : CharP K' l := (Det.zlUniq l).1 (algebraMap ℤ_[l] K')
   have hl0 : (l : PowerSeries K') = 0 := by

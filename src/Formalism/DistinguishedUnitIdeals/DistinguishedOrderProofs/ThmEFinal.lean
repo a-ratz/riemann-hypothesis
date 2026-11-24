@@ -292,23 +292,23 @@ lemma Fy_const (v : Fin r → LL) :
   · subst hi
     have := cf_Fy_nat (LL := LL) (Ks := Ks) lam (fun k => PowerSeries.C (algebraMap LL Ks (v k))) 0
     rw [Nat.cast_zero] at this
-    rw [this, if_pos rfl, TensorProduct.tmul_sum]
+    rw [this, ite_eq_left rfl, TensorProduct.tmul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [PowerSeries.coeff_zero_C, TensorProduct.tmul_smul, algebraMap_smul]
-  · rw [if_neg hi]
+  · rw [ite_eq_right hi]
     rcases lt_or_gt_of_ne hi with h | h
     · exact cf_Fy_neg lam _ h
     · obtain ⟨n, rfl⟩ := Int.eq_ofNat_of_zero_le h.le
       rw [cf_Fy_nat]
       refine Finset.sum_eq_zero fun k _ => ?_
-      rw [PowerSeries.coeff_C, if_neg (by omega), zero_smul]
+      rw [PowerSeries.coeff_C, ite_eq_right (by omega), zero_smul]
 
 lemma cst_mem_wp {W : Submodule LL D} {d : D} (hd : d ∈ W) : cstD Ks d ∈ Xi Ks (Wp W) := by
   intro i
   rw [cf_cst]
   split_ifs with h
   · subst h
-    simp only [Wp, lt_irrefl, if_false]
+    simp only [Wp, lt_irrefl, ite_false]
     exact Submodule.tmul_mem_baseChange_of_mem 1 hd
   · exact Submodule.zero_mem _
 
@@ -526,7 +526,7 @@ theorem core_mp (hϖ : Irreducible ϖ) (hI : LinearIndependent LL lam)
     have h4 := h (i : ℤ)
     rw [FA, cf_Fy_nat] at h4
     simp only [St] at h4
-    rw [if_pos (by exact_mod_cast hi), Submodule.baseChange_bot, Submodule.mem_bot] at h4
+    rw [ite_eq_left (by exact_mod_cast hi), Submodule.baseChange_bot, Submodule.mem_bot] at h4
     exact coeffs_zero lam hI _ h4 k
   have h2 : ∀ l, PowerSeries.X ^ m' ∣ ρ (ex (LinearMap.id - π) y l) := by
     intro l
@@ -537,7 +537,7 @@ theorem core_mp (hϖ : Irreducible ϖ) (hI : LinearIndependent LL lam)
     have h4 : cf (FA LL lam ρ y) (i : ℤ) ∈ W.baseChange Ks := by
       have h5 := h (i : ℤ)
       simp only [St] at h5
-      rw [if_pos (show (i : ℤ) < (m' : ℤ) by exact_mod_cast hi)] at h5
+      rw [ite_eq_left (show (i : ℤ) < (m' : ℤ) by exact_mod_cast hi)] at h5
       split_ifs at h5
       · rw [Submodule.baseChange_bot, Submodule.mem_bot] at h5
         rw [h5]
@@ -791,12 +791,12 @@ theorem factV {O : Type} [CommRing O] [IsLocalRing O] {ℓ : ℕ} {u x : Oˣ} (h
 theorem val_mul_pow (ℓ E : ℕ) [Fact ℓ.Prime] {i : ℤ} (hi : i ≠ 0) :
     padicValInt ℓ (i * ((ℓ ^ E : ℕ) : ℤ)) = E + padicValInt ℓ i := by
   have h2 : ((ℓ ^ E : ℕ) : ℤ) ≠ 0 := by exact_mod_cast pow_ne_zero _ (Fact.out : ℓ.Prime).ne_zero
-  rw [padicValInt.mul hi h2, padicValInt.of_nat, padicValNat.prime_pow, add_comm]
+  rw [padicValInt.mul hi h2, padicValInt.of_nat, Nat.multiplicity_prime_pow, add_comm]
 
 theorem ppevalVal {O : Type} [CommRing O] (u : Oˣ) (ℓ E : ℕ) (JS : Finset ℤ) (hp : ℓ.Prime)
     (hV : FactVval u ℓ) :
     ∃ ε : Oˣ, (G.PPoly u ℓ E JS).eval 1 = (ε : O) * (ℓ : O) ^ kapExp ℓ E JS := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hf : ∀ i ∈ JS.erase 0, ∃ ε : Oˣ, (1 : O) - ((u ^ (i * ((ℓ ^ E : ℕ) : ℤ)) : Oˣ) : O) =
       (ε : O) * (ℓ : O) ^ (1 + E + padicValInt ℓ i) := by
     intro i hi

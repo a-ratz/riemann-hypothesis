@@ -82,7 +82,7 @@ def resB (W : Submodule ℂ (smD ε σ)) (hW : IsKStableSub ε (smE ε σ) W) (a
 
 theorem resB_apply {W : Submodule ℂ (smD ε σ)} (hW : IsKStableSub ε (smE ε σ) W) {a b : Fin n} (h : ε a = ε b)
     (x : W) : ((resB W hW a b x : W) : smD ε σ) = smE ε σ a b x := by
-  simp [resB, dif_pos h]
+  simp [resB, dite_eq_left h]
 
 theorem kRel_resB (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ) {W : Submodule ℂ (smD ε σ)}
     (hW : IsKStableSub ε (smE ε σ) W) : Formalism.REAL.KRel ε (resB W hW) := by
@@ -106,7 +106,7 @@ theorem kUnit_resB (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotion
     (hW : IsKStableSub ε (smE ε σ) W) : Formalism.REAL.KUnit ε (resB W hW) := by
   intro a b hab x y
   have hU := isInfUnitary_of_isDerivedOn hσ (isDerivedOn_smE hσ) a b (x : smD ε σ) (y : smD ε σ)
-  rw [adjSign, if_pos hab, one_mul] at hU
+  rw [adjSign, ite_eq_left hab, one_mul] at hU
   simp only [Submodule.coe_inner, resB_apply hW hab, resB_apply hW hab.symm]
   exact hU
 
@@ -124,7 +124,7 @@ theorem hasSum_actM_pow_div_factorial (hσ : Formalism.MainNotions.S.IsURepOn (F
     ring
   have hsum := hasSum_orbit_of_bound hσ hD hZ.1 x (fun m => C ^ m * ‖x‖) (fun m => hC x hx m) 0 1 hs
   rw [exp_zero_smul, hσ.1.1] at hsum
-  simpa only [Complex.ofReal_one, one_smul, ContinuousLinearMap.one_apply, sub_zero] using hsum
+  simpa only [Complex.ofReal_one, one_smul, one_apply_eq_self, sub_zero] using hsum
 
 theorem intertwiner_actM_pow_comm {W W' : Submodule ℂ (smD ε σ)} (hW : IsKStableSub ε (smE ε σ) W)
     (hW' : IsKStableSub ε (smE ε σ) W') (φ : W →ₗ[ℂ] W')

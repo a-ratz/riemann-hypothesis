@@ -298,7 +298,7 @@ theorem eq_zero_tateCompactCohomologyRes_of_two_nsmul (n : ℕ)
   refine eq_zero_tateCompactCohomologyRes_coind_of_two_nsmul φ ψ n W (hW W) _
     (Rep.res (W : Subgroup G).subtype M) le_rfl (fun m => h2 m) ?_
   intro w
-  obtain ⟨k, hk⟩ := P.isPGroup' ⟨QuotientGroup.mk' K₀ (w : G), w.2⟩
+  obtain ⟨k, hk⟩ := P.isPGroup ⟨QuotientGroup.mk' K₀ (w : G), w.2⟩
   refine ⟨k, ?_⟩
   have hk' : (w : G) ^ 2 ^ k ∈ K₀ := by
     rw [← QuotientGroup.eq_one_iff, QuotientGroup.mk_pow]

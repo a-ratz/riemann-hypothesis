@@ -64,8 +64,8 @@ private theorem rs_dvd {l : ℕ} [Fact l.Prime] (n : ℕ) (a : ℤ_[l]) :
 private theorem rs_cls (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [hl : Fact l.Prime] (k : ℕ)
     [NeZero (l ^ k)] (σ : Formalism.ConjugateSelfDual.G ℚ Ω) (h : PadicInt.toZModPow k (cycZ ℚ Ω l σ : ℤ_[l]) = 1) :
     UpperTheory.V.Chr.cls ℚ Ω (l ^ k) σ = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   refine (UpperTheory.V.Chr.clsFacts ℚ Ω (l ^ k)).2.2.1 σ 1 fun ζ hζ => ?_
   have key := cyclotomicCharacter.spec (L := Ω) l (n := k)
     (MulSemiringAction.toRingAut (Formalism.ConjugateSelfDual.G ℚ Ω) Ω σ) ζ hζ
@@ -83,7 +83,7 @@ private theorem rs_unit {l : ℕ} [hl : Fact l.Prime] {O : Type} [CommRing O] [I
   have hl0 : ((l : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
     exact (IsLocalRing.mem_maximalIdeal _).2 hO
-  haveI : CharP (IsLocalRing.ResidueField O) l :=
+  have : CharP (IsLocalRing.ResidueField O) l :=
     ringChar.of_eq (CharP.ringChar_of_prime_eq_zero hl.out hl0)
   rw [map_sub, map_one] at h
   rw [map_sub, map_pow, map_one]
@@ -95,9 +95,9 @@ private theorem rs_unit {l : ℕ} [hl : Fact l.Prime] {O : Type} [CommRing O] [I
 theorem UpperTheory.V.UnitaryThreeInertia.rig_sub :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] (c : Coef l) {N : ℕ} [NeZero N] (e : ℕ) (ψ : DirichletCharacter c.O N) (o₁ : ℕ), HostData l e ψ o₁ → ∀ (S : Finset Pl) (A : S → ValuationSubring Ω) (F : Frame c.O (Formalism.ConjugateSelfDual.G ℚ Ω) (Gam Ω S) S), IsHostFrame Ω c e ψ S A F → ∃ H : Subgroup (F.D F.vl), H.Normal ∧ IsOpen (H : Set (F.D F.vl)) ∧ H ≤ (F.ηv F.vl).ker ∧ (∀ s ∈ H, s ∈ F.Iv F.vl → F.Ψv F.vl s = UpperTheory.V.Base.chiO ℚ Ω l c.O (s : Formalism.ConjugateSelfDual.G ℚ Ω) ^ (e : ℤ)) ∧ ∃ g ∈ H, IsUnit ((F.Ψv F.vl g : c.O) ^ 2 - 1) ∧ ‖((cycZ ℚ Ω l (g : Formalism.ConjugateSelfDual.G ℚ Ω) : ℤ_[l]ˣ) : ℤ_[l]) - 1‖ < 1 := by
   intro Ω iF iC iA l hl c N iN e ψ o₁ hD S A F hF
-  haveI := c.dvr
-  haveI := c.fin
-  haveI : NeZero (l ^ N.factorization l) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have := c.dvr
+  have := c.fin
+  have : NeZero (l ^ N.factorization l) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   obtain ⟨x, hx1, hx2, hx3⟩ :=
     UpperTheory.V.UnitaryThreeInertia.exists_sigma Ω c e ψ o₁ hD S A F hF F.vl (Set.mem_insert _ _)
   have hη : ∀ s : F.D F.vl, F.ηv F.vl s = UpperTheory.V.UnitaryThreeInertia.eta4 Ω (s : Formalism.ConjugateSelfDual.G ℚ Ω) :=
@@ -107,7 +107,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_sub :
     fun s => DFunLike.congr_fun hF.Ψ _
   have hO : ¬ IsUnit (l : c.O) := by
     intro hu
-    haveI := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+    have := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
     have h1 : IsUnit (algebraMap ℤ_[l] c.O (l : ℤ_[l])) := by rwa [map_natCast]
     have h2 := isUnit_of_map_unit (algebraMap ℤ_[l] c.O) _ h1
     rw [PadicInt.isUnit_iff, PadicInt.norm_p, inv_eq_one] at h2
@@ -120,7 +120,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_sub :
     have hK : IsOpen (K : Set (Formalism.ConjugateSelfDual.G ℚ Ω)) :=
       (UpperTheory.V.Chr.clsFacts ℚ Ω 4).1.inter (UpperTheory.V.Chr.clsFacts ℚ Ω N).1
     refine Subgroup.isOpen_mono (H₁ := K.comap (F.D F.vl).subtype) ?_
-      (by rw [Subgroup.coe_comap]; exact hK.preimage continuous_subtype_val)
+      (by rw [Subgroup.coe_comap]; exact hK.preimage continuous_subtypeVal)
     intro s hs
     have hs' := Subgroup.mem_inf.1 (Subgroup.mem_comap.1 hs)
     have h4 : UpperTheory.V.Chr.cls ℚ Ω 4 (s : Formalism.ConjugateSelfDual.G ℚ Ω) = 1 := hs'.1

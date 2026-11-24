@@ -87,8 +87,8 @@ theorem dual_pull : ∀ (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+* Ω'
   have hω'' := hω' hr
   let hb : Module.Basis (Fin r) Ω (Module.Dual Ω W) := Module.Basis.mk hli hsp.ge
   have hbb : ∀ k, hb k = b k := fun k => Module.Basis.mk_apply hli hsp.ge k
-  haveI : Module.Finite Ω (Module.Dual Ω W) := Module.Finite.of_basis hb
-  haveI : Module.Finite Ω W := Module.finite_dual_iff Ω |>.1 inferInstance
+  have : Module.Finite Ω (Module.Dual Ω W) := Module.Finite.of_basis hb
+  have : Module.Finite Ω W := Module.finite_dual_iff Ω |>.1 inferInstance
   let c : Module.Basis (Fin r) Ω W := hb.dualBasis.map (Module.evalEquiv Ω W).symm
   have hbc : ∀ l k, b l (c k) = if l = k then 1 else 0 := by
     intro l k

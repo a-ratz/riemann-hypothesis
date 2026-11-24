@@ -137,7 +137,7 @@ theorem exists_injective_of_jac₂ : ∀ (k : Type) [Field k] [ValuativeRel k] [
       ∃ ψ : π.IntertwiningMap (prod₂ σ ρ), Function.Injective ψ := by
   intro k _ _ _ _ a b V W W' _ _ _ _ _ _ π σ ρ hs hπ φ hφ
   refine ⟨frobMap hs φ, ?_⟩
-  haveI := hπ
+  have := hπ
   refine (Representation.IsIrreducible.injective_or_eq_zero (frobMap hs φ)).resolve_right fun h0 => hφ ?_
   ext v
   show φ (Submodule.Quotient.mk v) = 0

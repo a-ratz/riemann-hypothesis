@@ -171,7 +171,7 @@ theorem val_unit_of_rel (v : HeightOneSpectrum (𝓞 F)) (k : ℕ) {t q r : v.ad
           rw [map_mul, map_pow]
           calc Valued.v (k : v.adicCompletion F) ^ 2 * Valued.v r ≤ 1 * 1 := by
                 gcongr
-                exact pow_le_one₀ zero_le' hk
+                exact pow_le_one₀ zero_le hk
             _ = 1 := one_mul 1
       _ < 1 := by rw [mul_one]; exact hm
   have hprod : Valued.v ((-(k : v.adicCompletion F) * t) * (-(k : v.adicCompletion F) * q)) = 1 := by
@@ -260,17 +260,17 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
   let dg : ∀ v : HeightOneSpectrum (𝓞 D.host.F), v.adicCompletion D.host.F :=
     fun v => if P v then (-(k : v.adicCompletion D.host.F) * evalV D.host.F v (T yv))⁻¹ else 1
   have heg : ∀ v, eg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [eg, hv, if_true, if_false] <;> [exact one_mem _; exact zero_mem _]
+    by_cases hv : P v <;> simp only [eg, hv, ite_true, ite_false] <;> [exact one_mem _; exact zero_mem _]
   have hfg : ∀ v, fg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [fg, hv, if_true, if_false]
+    by_cases hv : P v <;> simp only [fg, hv, ite_true, ite_false]
     · exact zero_mem _
     · exact mem_of_val (by rw [map_inv₀, hMone v hv, inv_one])
   have hcg : ∀ v, cg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [cg, hv, if_true, if_false]
+    by_cases hv : P v <;> simp only [cg, hv, ite_true, ite_false]
     · exact mem_of_val (hunit v hv).le
     · exact one_mem _
   have hdg : ∀ v, dg v ∈ v.adicCompletionIntegers D.host.F := fun v => by
-    by_cases hv : P v <;> simp only [dg, hv, if_true, if_false]
+    by_cases hv : P v <;> simp only [dg, hv, ite_true, ite_false]
     · exact mem_of_val (by rw [map_inv₀, hunit v hv, inv_one])
     · exact one_mem _
   set e := mkAf eg heg
@@ -279,16 +279,16 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
   set d := mkAf dg hdg
   have hcd : c * d = 1 := GlobalTheory.SplitHeckeLabel.af_ext fun v => by
     rw [map_mul, map_one, evalV_mkAf, evalV_mkAf]
-    by_cases hv : P v <;> simp only [cg, dg, hv, if_true, if_false, mul_one]
+    by_cases hv : P v <;> simp only [cg, dg, hv, ite_true, ite_false, mul_one]
     refine mul_inv_cancel₀ fun h0 => ?_
     have := hunit v hv; rw [h0, map_zero] at this; exact zero_ne_one this
   have hef : e + (M : Af D.host.F) * f = 1 := GlobalTheory.SplitHeckeLabel.af_ext fun v => by
     rw [map_add (f := _), map_mul, map_one, map_natCast, evalV_mkAf, evalV_mkAf]
-    by_cases hv : P v <;> simp only [eg, fg, hv, if_true, if_false, mul_zero, add_zero, zero_add]
+    by_cases hv : P v <;> simp only [eg, fg, hv, ite_true, ite_false, mul_zero, add_zero, zero_add]
     exact mul_inv_cancel₀ (hMne v hv)
   have hce : c = e * (-(k : Af D.host.F) * T yv) + (M : Af D.host.F) * f := GlobalTheory.SplitHeckeLabel.af_ext fun v => by
     rw [map_add (f := _), map_mul, map_mul, map_mul, map_neg, map_natCast, map_natCast, evalV_mkAf, evalV_mkAf, evalV_mkAf]
-    by_cases hv : P v <;> simp only [eg, fg, cg, hv, if_true, if_false, mul_zero, add_zero, zero_add, one_mul, zero_mul]
+    by_cases hv : P v <;> simp only [eg, fg, cg, hv, ite_true, ite_false, mul_zero, add_zero, zero_add, one_mul, zero_mul]
     exact (mul_inv_cancel₀ (hMne v hv)).symm
   have E1 : ι e + (M : Af D.host.F ⊗[D.host.F] D.host.E) * ι f = 1 := by
     have := congrArg ι hef; rwa [map_add, map_mul, map_natCast, map_one] at this
@@ -736,7 +736,7 @@ private lemma valued_algebraMap_adicCompletion_eq_valuation (K : Type) [Field K]
 private lemma exp_neg_one_mul_lt_of_ne_zero {x : WithZero (Multiplicative ℤ)} (hx : x ≠ 0) : WithZero.exp (-1 : ℤ) * x < x := by
   have h : WithZero.exp (-1 : ℤ) < 1 := by
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp]; norm_num
-  simpa using mul_lt_mul_of_pos_right h (zero_lt_iff.2 hx)
+  simpa using mul_lt_mul_of_pos_right h (pos_iff_ne_zero.2 hx)
 
 theorem exists_units_approx :
     ∀ (L : Type) [Field L] [NumberField L] (R : Finset (HeightOneSpectrum (𝓞 L)))
@@ -817,7 +817,7 @@ theorem exists_units_approx :
       (algebraMap (𝓞 L) L (t P) - algebraMap (𝓞 L) L y) / D := by
     rw [htP P hP]; field_simp
   have hDv : P.valuation L D ≠ 0 := (Valuation.ne_zero_iff _).2 hD
-  rw [e, map_div₀, Valuation.map_sub_swap, div_le_iff₀ (zero_lt_iff.2 hDv)]
+  rw [e, map_div₀, Valuation.map_sub_swap, div_le_iff₀ (pos_iff_ne_zero.2 hDv)]
   calc _ ≤ WithZero.exp (-1 : ℤ) * P.valuation L (algebraMap (𝓞 L) L (t P)) := hy' P hP
     _ = _ := by rw [htP P hP, map_mul]; ac_rfl
 
@@ -943,7 +943,7 @@ theorem mem_of_infPart {k : Type} [Field k] (σ : k →+* ℂ) (δ : Formalism.L
     have hzv : Valued.v zP = Valued.v (algebraMap D.host.E (P.adicCompletion D.host.E) (k : D.host.E)) := by
       refine (Valuation.map_eq_of_sub_lt _ ?_).symm
       rw [Valuation.map_sub_swap]
-      exact (hk P hR).trans_lt (mul_lt_of_lt_one_left (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (hz0 P))) hlt)
+      exact (hk P hR).trans_lt (mul_lt_of_lt_one_left (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (hz0 P))) hlt)
     have hkinv : algebraMap D.host.E (P.adicCompletion D.host.E) ((k⁻¹ : D.host.Eˣ) : D.host.E) *
         algebraMap D.host.E (P.adicCompletion D.host.E) (k : D.host.E) = 1 := by
       rw [← map_mul, Units.inv_mul, map_one]
@@ -1032,7 +1032,7 @@ theorem exists_principal_root {D : D7} (V : HSp D) (γ : GA D V) (hγ : γ ∈ G
     rw [← GlobalTheory.DetRootRows.det_bc, h0]; rfl
   generalize γ₀.1.det = d at hdet
   have hc : ∀ e : D.host.E, cA D (incA D e) = incA D (star e) := fun e => rfl
-  haveI : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
+  have : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
   have hn : star d * d = 1 := by
     have := det_conj_mul V γ
     apply GlobalTheory.DetRootRows.inclR_injective (F := D.host.F) (AF D.host.F)

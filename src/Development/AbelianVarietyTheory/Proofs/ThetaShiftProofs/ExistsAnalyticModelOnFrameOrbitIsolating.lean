@@ -208,7 +208,7 @@ theorem pairE_ne_zero [Module.Finite ℤ X] [Module.Free ℤ X] (hξ : ξ ≠ 0)
     have := trace_pairE ξ x a
     rw [h0, zero_mul, map_zero] at this
     exact_mod_cast this.symm
-  haveI : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) X
+  have : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) X
   ext y
   have hli : ¬ LinearIndependent (𝓞 E) ![x, y] := by
     intro h
@@ -714,7 +714,7 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor (hermForm eTwoPi)
 open Complex
 
 theorem exp_pi_I_int (n : ℤ) : Complex.exp (Real.pi * I * ((n : ℝ) : ℂ)) = (-1) ^ n := by
-  rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul, mul_comm]; simp
+  rw [← Complex.exp_pi_mul_I, ← exp_intCast_mul, mul_comm]; simp
 
 variable {W : Type} [AddCommGroup W] [Module ℂ W] [Module ℝ W] [IsScalarTower ℝ ℂ W] [FiniteDimensional ℂ W]
   {S : W →ₗ[ℂ] W →ₗ⋆[ℂ] ℂ} {O : Type} [CommRing O] [StarRing O]
@@ -1008,7 +1008,7 @@ theorem _root_.GlobalTheory.ComplementTypes.types (E : Type) [Field E] [NumberFi
       Fintype.card_subtype, Finset.card_filter, Finset.card_filter, Fintype.sum_sum_type,
       Fintype.sum_prod_type]
     simp only [t, Sum.elim_inl, Sum.elim_inr, hc1, Finset.sum_ite_eq', Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
+      Finset.mem_univ, ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
       mul_one]
     congr 1
   have hd : (2 : ℝ) ≤ H.d := by exact_mod_cast H.d_prime.two_le
@@ -1519,7 +1519,7 @@ lemma exists_quot {La : Type} [AddCommGroup La] [Module (𝓞 E) La] [Module.Fin
       rw [← hcj, (mul_eq_zero.1 this).resolve_left (neg_ne_zero.2 X.ξ0_ne)]
       simp
   have hy := f.surjective_rangeRestrict
-  haveI : Module.Finite ℤ (LinearMap.range f) := Module.Finite.trans (𝓞 E) _
+  have : Module.Finite ℤ (LinearMap.range f) := Module.Finite.trans (𝓞 E) _
   have hle : f.rangeRestrict.toAddMonoidHom.ker ≤ (-EF t).toAddMonoidHom.ker := fun v hv => by
     simpa using (hk v).1 hv t ⟨1, (one_smul _ _).symm⟩
   let ξ : LinearMap.range f →+ ℤ := f.rangeRestrict.toAddMonoidHom.liftOfSurjective hy ⟨_, hle⟩
@@ -1533,7 +1533,7 @@ lemma exists_quot {La : Type} [AddCommGroup La] [Module (𝓞 E) La] [Module.Fin
     rw [h1, neg_mul, map_neg] at h2
     simpa using h2.symm)
   refine ⟨LinearMap.range f, f.rangeRestrict, ξ.toIntLinearMap, hy, inferInstance, inferInstance, ?_, hξ0, hξ, hf0, hk⟩
-  haveI : Nontrivial (LinearMap.range f) := by
+  have : Nontrivial (LinearMap.range f) := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     exact hξ0 (LinearMap.ext fun a => by rw [Subsingleton.elim a 0]; simp)
@@ -1544,7 +1544,7 @@ lemma exists_quot {La : Type} [AddCommGroup La] [Module (𝓞 E) La] [Module.Fin
 
 theorem exists_anArc_onOrbit : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r) (Uw : UnfWit U) (k : U.Comp) (ξ' : Fin r → E) (x : Frame (U.X k).Ψ r) (n' : ℕ) (ν₀ : E), GoodEmb c σ → IsUnf U → (U.X k).IsIso ξ' → x ∈ (U.X k).dom → (∀ m ∈ (U.X k).Λp ξ', ∃ e : E, e • ξ' ∈ (U.X k).Λ ∧ (n' : ℂ) • (U.X k).aproj x ξ' ((U.X k).embV m) = (U.X k).embV (e • ξ')) → cc ν₀ = ν₀ → (∀ τ : E →+* ℂ, 0 ≤ (τ ν₀).re) → (∀ s : E, cc s = s → (∀ v ∈ (U.X k).Λ, ∃ u ∈ (U.X k).Λ, (transvMat (U.X k).Gm ξ' (s * (U.X k).κ0)).mulVec v - v = (l.M' : E) • u) → ∃ m : ℤ, Algebra.trace ℚ E (ν₀ * s) = m) → letI := H.starRing; ∃ (A : AnArc (𝓞 E)) (gam : (Uw.F.Di (Uw.ik k)).La ≃ₗ[𝓞 E] A.La) (ξ : Module.Dual ℤ A.X) (jj : ℤ) (DB : Datum H) (tyB : Fin A.gB → (E →+* ℂ)) (eB : DB.La ≃+ A.abelian₂), OnOrbit Uw k ξ' x A gam ξ ∧ ξ ≠ 0 ∧ Module.finrank (𝓞 E) A.X = 1 ∧ (∀ y y', (2 * l.M' : ℤ) ∣ A.be y y') ∧ BetaAt ξ l.M' A.be ν₀ jj ∧ PrimAn H A ∧ (∀ y, n' • A.ct y ∈ A.abelian₂) ∧ AbDat H A DB tyB eB ∧ DB.p = Dw.p - 1 ∧ DB.q = Dw.q - 1 := by
   intro E _ _ _ H Dw l Xo c _ _ σ r U Uw k ξ' x n' ν₀ hσ hU hξ' hx hn hν hν' hint
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨t, rfl⟩ : ∃ t, (Uw.φ k t : Fin r → E) = ξ' := ⟨(Uw.φ k).symm ⟨ξ', hξ'.1⟩, by simp⟩
   have hfin := (Uw.F.Di (Uw.ik k)).fin
   have hP := Uw.period k ⟨x, hx⟩

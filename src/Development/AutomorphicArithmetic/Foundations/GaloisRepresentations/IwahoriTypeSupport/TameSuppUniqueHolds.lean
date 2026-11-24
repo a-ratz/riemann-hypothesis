@@ -84,7 +84,7 @@ theorem UpperTheory.Gal.TypesAndIwahori.finTri :
     intro a b i j hba
     exact hh _ _ (GlobalTheory.CompanionTheory.BlockIndex.stdBlocks_lt_of_lt d hd hba i j)
   refine ⟨hp, fun a => ?_⟩
-  rw [Matrix.GeneralLinearGroup.val_det_apply, Matrix.det_of_upperTriangular]
+  rw [Matrix.GeneralLinearGroup.val_det_apply, det_of_isUpperTriangular]
   · apply Finset.prod_congr rfl
     intro j _
     exact leviProj_apply R (stdBlocks d hd) ⟨h, hp⟩ a j j
@@ -133,7 +133,7 @@ theorem UpperTheory.Gal.TypesAndIwahori.grpFacts :
       rw [pow_one] at hu
       have hr : unitRes k u = 1 := by
         ext
-        simp only [unitRes, Units.coe_map, MonoidHom.coe_coe, Units.val_one]
+        simp only [unitRes, Units.coe_map, MonoidHom.coe_ofClass, Units.val_one]
         have hz : IsLocalRing.residue 𝒪[k] ((u : 𝒪[k]) - 1) = 0 := (IsLocalRing.residue_eq_zero_iff _).2 hu
         rw [map_sub, map_one, sub_eq_zero] at hz
         exact hz
@@ -290,7 +290,7 @@ theorem UpperTheory.Gal.TypesAndIwahori.typeToIw :
           have h1 := congrArg Units.val (hu (stdBlocks d hd ⟨a, j⟩))
           simp only [val_diagT, diagonal_apply_eq]
           rw [← h1]
-          simp only [unitIncl, Units.coe_map, MonoidHom.coe_coe]
+          simp only [unitIncl, Units.coe_map, MonoidHom.coe_ofClass]
           refine lt_of_eq_of_lt (congrArg (valuation k) (sub_eq_zero.2 rfl)) ?_
           simp)
       rw [hx]

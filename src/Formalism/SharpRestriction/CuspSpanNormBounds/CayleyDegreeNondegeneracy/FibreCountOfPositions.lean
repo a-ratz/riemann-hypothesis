@@ -131,13 +131,13 @@ theorem c3eqv_Xsp_eq : Xsp F = Xflag F r := by
   unfold Xsp Xflag Formalism.MainNotions.S.FlagG.X Formalism.MainNotions.S.FlagG.Xa
   congr 1
   ext v
-  simp only [Set.mem_range, Set.mem_image, Set.mem_setOf_eq, Fin.is_lt, true_and]
+  simp only [Set.mem_range, Set.mem_image, Set.mem_ofPred_eq, Fin.is_lt, true_and]
 
 variable {F} {Λ : Submodule (𝓞 E) S.V}
 
 theorem c3eqv_N_flag {n : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ F) (j : ℕ) : ∀ x ∈ Xflag F j, n x ∈ Xflag F j := by
   unfold NLam at hn
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   obtain ⟨_, h1, _⟩ := hn
   intro x hx
   cases j with
@@ -159,7 +159,7 @@ theorem c3eqv_N_orth {n : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ F) : ∀ x ∈ 
   have hX := c3eqv_N_X hn
   have h' := hn
   unfold NLam at h'
-  simp only [Set.mem_setOf_eq] at h'
+  simp only [Set.mem_ofPred_eq] at h'
   unfold IsAutLam at h'
   exact fun x hx => c3eqv_orth_map h'.1.1 _ _ (c3eqv_symm_mem n _ hX) hx
 
@@ -169,7 +169,7 @@ theorem c3eqv_NLam_trans {n m : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ F) (hm : 
   have hn' := hn
   have hm' := hm
   unfold NLam at hn' hm' ⊢
-  simp only [Set.mem_setOf_eq] at hn' hm' ⊢
+  simp only [Set.mem_ofPred_eq] at hn' hm' ⊢
   unfold IsAutLam at hn' hm' ⊢
   obtain ⟨⟨hni, hng⟩, hn1, hn2⟩ := hn'
   obtain ⟨⟨hmi, hmg⟩, hm1, hm2⟩ := hm'
@@ -196,7 +196,7 @@ theorem c3eqv_NLam_symm {n : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ F) : n.symm 
   have hno := c3eqv_N_orth hn
   have hn' := hn
   unfold NLam at hn' ⊢
-  simp only [Set.mem_setOf_eq] at hn' ⊢
+  simp only [Set.mem_ofPred_eq] at hn' ⊢
   unfold IsAutLam at hn' ⊢
   obtain ⟨⟨hni, hng⟩, hn1, hn2⟩ := hn'
   refine ⟨⟨c3eqv_isom_symm hni, ?_⟩, ?_, ?_⟩

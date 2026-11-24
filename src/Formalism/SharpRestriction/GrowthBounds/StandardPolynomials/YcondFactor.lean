@@ -80,7 +80,7 @@ theorem HomW.one (φ : MonH X →+ ℕ) : HomW φ 0 (1 : RHH O X) := by
   rw [mem_support_iff, coeff_one] at hm
   by_cases h : 0 = m
   · rw [← h, map_zero]
-  · rw [if_neg h] at hm; exact absurd rfl hm
+  · rw [ite_eq_right h] at hm; exact absurd rfl hm
 
 theorem HomW.pow {φ : MonH X →+ ℕ} {d : ℕ} {P : RHH O X} (hP : HomW φ d P) (u : ℕ) : HomW φ (u * d) (P ^ u) := by
   induction u with
@@ -121,7 +121,7 @@ theorem mono_sum {ι : Type} (s : Finset ι) (n : ι → ℕ) (a : ι → MonH X
   induction s using Finset.induction_on with
   | empty => simp
   | insert i s hi ih =>
-    rw [Finset.sum_insert hi, Finset.prod_insert hi, ← ih, monomial_pow, one_pow, monomial_mul, one_mul]
+    rw [Finset.sum_insert hi, Finset.prod_insert hi, ← ih, monomial_pow, one_pow, monomial_mul_monomial, one_mul]
 
 theorem hom_total (φ : MonH X →+ ℕ) {κ : Type} [Fintype κ] (sg : κ → RHH O X) (d : κ → ℕ) (h : ∀ a, HomW φ (d a) (sg a))
     {sgR : RHH O X} {dR : ℕ} (hR : HomW φ dR sgR) (mult u : κ → ℕ) (M : MonH X) :
@@ -163,7 +163,7 @@ theorem ycond_factor (D : Formalism.BasicNotions.D7) {K : Type} [Field K] [CharZ
           exact Finset.single_le_sum (f := fun c => m (i, c)) (fun _ _ => Nat.zero_le _) (Finset.mem_univ 0)
         have hm0' : (m (i, 0) : ℤ) ≤ (dr i : ℤ) := by exact_mod_cast hm0
         by_cases hv : LL.vec i = true
-        · simp only [hv, if_true]
+        · simp only [hv, ite_true]
           split_ifs <;> simp
         · simp only [hv]
           split_ifs <;> simp <;> omega

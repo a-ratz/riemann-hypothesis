@@ -74,7 +74,7 @@ private theorem exists_nil {ρ : Representation ℂ G V} (hl : HasFiniteLength �
     (hxc : ∀ t, ∃ m : ℕ, ((ρ t - algebraMap ℂ (Module.End ℂ V) (c t)) ^ m) x = 0) :
     ∃ N : Subrepresentation ρ, N ≠ ⊤ ∧
       ∀ t, ∃ m : ℕ, ∀ v, ((ρ t - algebraMap ℂ (Module.End ℂ V) (c t)) ^ m) v ∈ N.toSubmodule := by
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨N, hN, hmax⟩ := (wellFounded_gt (α := Subrepresentation ρ)).has_min {N | x ∉ N.toSubmodule}
     ⟨⊥, fun h => hx ((Submodule.mem_bot ℂ).1 h)⟩
   refine ⟨N, fun h => hN (by rw [h]; trivial), fun t => ?_⟩
@@ -117,7 +117,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
     (hxc : ∀ t, ∃ m : ℕ, ((ρ t - algebraMap ℂ (Module.End ℂ V) (χ t : ℂ)) ^ m) x = 0) :
     IsSmoothChar χ ∧ ∃ l : V →ₗ[ℂ] ℂ, l ≠ 0 ∧ ∀ g v, l (ρ g v) = (χ g : ℂ) * l v := by
   obtain ⟨T, hT, hnil⟩ := exists_nil hl hx hxc
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, hTM⟩ := (eq_top_or_exists_le_coatom T).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=
@@ -191,7 +191,7 @@ theorem UpperTheory.V.AlgebraTools.jqEmbed :
           LinearMap.smul_apply, Module.End.one_apply, map_smul, MonoidHom.mul_apply, Units.val_mul,
           mul_comm (χ t : ℂ), mul_smul, ← smul_sub, smul_smul, pow_succ]
     exact ⟨m, by rw [h1, hm, map_zero, smul_zero]⟩
-  haveI := GlobalTheory.TorusEigenform.secondCountableTopology_units k
+  have := GlobalTheory.TorusEigenform.secondCountableTopology_units k
   obtain ⟨hs, l, hl0, hle⟩ := exists_form (isSmooth_jacB hπ) hl hx hxc
   have htc : torusChar (fun i => (χ * δ).comp (MonoidHom.mulSingle (fun _ => kˣ) i)) = χ * δ :=
     MonoidHom.ext fun t => by

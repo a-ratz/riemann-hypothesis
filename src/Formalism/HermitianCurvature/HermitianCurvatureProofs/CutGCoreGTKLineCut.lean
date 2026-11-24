@@ -127,7 +127,7 @@ theorem fib_iff_fibAt {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : 
     X ∈ NF.Fib k r z z' μsec π π' ζ ↔ X ∈ FibAt k r z z' π π' (NF.muZ k r μsec ζ) := by
   first
   | exact Iff.rfl
-  | (simp only [NF.Fib, FibAt, Set.mem_setOf_eq, NF.Stab, Prod.forall]
+  | (simp only [NF.Fib, FibAt, Set.mem_ofPred_eq, NF.Stab, Prod.forall]
      constructor
      · intro h a ha b hb hab
        exact h a b ⟨ha, hb, hab⟩
@@ -137,7 +137,7 @@ theorem fib_iff_fibAt {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : 
 theorem fibAt_smul {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {π : Q.Mx k r → (Wp →L[ℂ] Wp)}
     {π' : Q.Mx k r → (Wq →L[ℂ] Wq)} {g : Q.Mx k r} {X : Wq →L[ℂ] Wp} (hX : X ∈ FibAt k r z z' π π' g) (c : ℂ) :
     c • X ∈ FibAt k r z z' π π' g := by
-  simp only [FibAt, Set.mem_setOf_eq] at hX ⊢
+  simp only [FibAt, Set.mem_ofPred_eq] at hX ⊢
   intro h hh h' hh' hg
   rw [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, hX h hh h' hh' hg]
 
@@ -146,7 +146,7 @@ theorem capEig_smul {P : M.Par} {π' : Q.Mx P.k P.r → (Wq →L[ℂ] Wq)}
     (hX : CapEig (Wp := Wp) P π' Fr ρ X) (c : ℂ) : CapEig P π' Fr ρ (c • X) := by
   unfold CapEig at hX ⊢
   intro Y v
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, hX Y v, smul_comm]
+  rw [smul_apply, smul_apply, hX Y v, smul_comm]
 
 end asm
 

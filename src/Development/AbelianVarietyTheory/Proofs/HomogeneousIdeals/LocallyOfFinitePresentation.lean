@@ -176,8 +176,8 @@ theorem exists_algHom_retract (hir : i ≫ r = 𝟙 X) (hr : r ≫ f = g)
     ∃ (s : Γ(X, U) →ₐ[Γ(S, W)] Γ(Y, V)) (p : Γ(Y, V) →ₐ[Γ(S, W)] Γ(X, U)),
       s.toRingHom = (r.appLE U V hVU).hom ∧ p.toRingHom = (i.appLE V U hUV).hom ∧
         p.comp s = AlgHom.id _ _ ) := by
-  letI := (f.appLE W U hUW).hom.toAlgebra
-  letI := (g.appLE W V hVW).hom.toAlgebra
+  let := (f.appLE W U hUW).hom.toAlgebra
+  let := (g.appLE W V hVW).hom.toAlgebra
   refine ⟨⟨(r.appLE U V hVU).hom, fun a ↦ ?_⟩, ⟨(i.appLE V U hUV).hom, fun a ↦ ?_⟩, rfl, rfl, ?_⟩
   · exact congr($(base_appLE_comp_retraction hr hVU hUW hVW).hom a)
   · exact congr($(base_appLE_comp_section (section_comp hir hr) hUV hUW hVW).hom a)
@@ -216,8 +216,8 @@ theorem of_hasRingHomProperty (P : MorphismProperty Scheme.{u})
   refine HasRingHomProperty.of_iSup_eq_top (fun x ↦ ⟨U x, hU x⟩) ?_ fun x ↦ ?_
   · exact eq_top_iff.mpr fun x _ ↦ Opens.mem_iSup.mpr ⟨x, hxU x⟩
   · obtain ⟨s, p, -, -, h⟩ := exists_algHom_retract hir hr (W := ⊤) (hUV x) (hVU x) le_top le_top
-    letI := (f.appLE ⊤ (U x) le_top).hom.toAlgebra
-    letI := (g.appLE ⊤ (V x) le_top).hom.toAlgebra
+    let := (f.appLE ⊤ (U x) le_top).hom.toAlgebra
+    let := (g.appLE ⊤ (V x) le_top).hom.toAlgebra
     exact hQ s p h (HasRingHomProperty.appLE P g hg ⟨⊤, isAffineOpen_top S⟩ ⟨V x, hV x⟩ le_top)
 
 variable (hir : i ≫ r = 𝟙 X) (hr : r ≫ f = g)

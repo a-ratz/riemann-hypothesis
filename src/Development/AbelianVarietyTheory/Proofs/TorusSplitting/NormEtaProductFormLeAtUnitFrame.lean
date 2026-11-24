@@ -124,7 +124,7 @@ theorem evR_eq {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {σ
     (ev : LatMod Dw (R ^ 4) → (ptO Xo y.x ⟶ Xo.univ.t.G)) (w : LatMod Dw (R ^ 4) → CAt σ)
     (hev : IsFullLev Xo (R ^ 4) y.x ev) (hw : ∀ q, IsNullVal Xo c (R ^ 2) y (ev q) (w q)) :
     evR Xo c f y = etaExpr (R ^ 4) cf xs w := by
-  haveI : _root_.IsReduced (CAt σ) := inferInstanceAs (_root_.IsReduced ℂ)
+  have : _root_.IsReduced (CAt σ) := inferInstanceAs (_root_.IsReduced ℂ)
   have h₁ := (GlobalTheory.T.etaProductRule_value_eq_productForm_of_testRing E H Dw l Xo c R hR J n cf xs f hf (CAt σ) y (hA _ y)).1
   have h₂ : EtaValAt Xo c R cf xs y (etaExpr (R ^ 4) cf xs w) :=
     ⟨CAt σ, inferInstance, inferInstance, AlgHom.id c.F _, y, ev, w,
@@ -190,10 +190,10 @@ theorem norm_productForm_le_at_unit_frame : ∀ (E : Type) [Field E] [NumberFiel
     rw [hpt]
     exact GlobalTheory.T.norm_nullVal_eq_norm_theta_alt E H Dw l Xo c σ _ _ Uw.F (Uw.ik k) (Uw.Pm k x) Hm χl fr θ (U.un k x) hP hAH hy hfn (R ^ 2) hR2
       (ev q) _ (w q) (htors q) (ha q).1 (hw q)
-  haveI : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R h1R).1
-  haveI := Fintype.ofFinite (LevGrp Dw (R ^ 4))
+  have : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R h1R).1
+  have := Fintype.ofFinite (LevGrp Dw (R ^ 4))
   have hval : rdU U f k x.1 = ∏ g : LevGrp Dw (R ^ 4), ∑ j, (cf j : ℂ) * ∏ b, toC (w (g (xs j b))) := by
-    have e₁ : rdU U f k x.1 = toC (evR Xo c f (U.un k x)) := dif_pos x.2
+    have e₁ : rdU U f k x.1 = toC (evR Xo c f (U.un k x)) := dite_eq_left x.2
     rw [e₁, ArchPt.evR_eq hA hR hf (U.un k x) ev w hev hw, etaExpr, finprod_eq_prod_of_fintype]
     rfl
   obtain ⟨P, hq, hR0', hm'⟩ := hrun T hr (hdim m hm)

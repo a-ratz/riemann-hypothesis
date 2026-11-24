@@ -87,7 +87,7 @@ theorem mt_one_eq (V : HSp D) : Formalism.L2.Theta.mt V 1 = 1 := by
   unfold Formalism.L2.Theta.mt; rw [map_one]; rfl
 
 theorem continuous_mt_eq (V : HSp D) : Continuous (Formalism.L2.Theta.mt V) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem actO_actO_inv {S T : HSp D} (g : GA D S) (h : GA D T) (x : WO S T) :
     Formalism.IndefR.Datum.actO S T g h (Formalism.IndefR.Datum.actO S T g⁻¹ h⁻¹ x) = x := by
@@ -201,7 +201,7 @@ theorem UpperTheory.Lit.Rallis.ThetaDens.om_compact_sobCont : ∀ (D : D7) (ψ :
   let U' : AddSubgroup (WO S T) :=
     { carrier := {u | ∀ x ∈ K, Formalism.IndefR.Datum.actO S T x.1⁻¹ x.2⁻¹ u ∈ U}
       add_mem' := fun {a b} ha hb x hx => by
-        rw [Set.mem_setOf_eq] at ha hb
+        rw [Set.mem_ofPred_eq] at ha hb
         show Formalism.IndefR.Datum.actO S T x.1⁻¹ x.2⁻¹ (a + b) ∈ U
         rw [actO_add']; exact U.add_mem (ha x hx) (hb x hx)
       zero_mem' := fun x _ => by
@@ -289,7 +289,7 @@ open GlobalTheory
 
 theorem sup_le_sobO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ θ : InfFam D, IsInfFam θ → ∀ S T : HSp D, ∀ (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ U : AddSubgroup (WO S T), IsOpen (U : Set (WO S T)) → ∃ (d : ℕ) (C : ℝ≥0), ∀ f ∈ thetaLevel ψ S T U, ∀ w, ‖f w‖ₑ ≤ C * sobO ψ θ μ 𝓕 d f := by
   intro D ψ hψ θ hθ S T μ 𝓕 hm U hU
-  haveI : LocallyCompactSpace (WO S T) := (GlobalTheory.MixModel.lattice_Mx D T.rank S.rank).2.1
+  have : LocallyCompactSpace (WO S T) := (GlobalTheory.MixModel.lattice_Mx D T.rank S.rank).2.1
   obtain ⟨K₀, hK₀n, hK₀U, hK₀c⟩ := local_compact_nhds (hU.mem_nhds U.zero_mem)
   obtain ⟨C, hC⟩ := GlobalTheory.LevelSupBound.pointwise (S := S) (T := T) hψ hθ hK₀n hK₀c
   refine ⟨Module.finrank ℝ (GlobalTheory.FockCompare.RW T S), C, fun f hf w => ?_⟩
@@ -465,7 +465,7 @@ theorem wordAct_heisDer_sub {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsS
 
 theorem sobO_sub_tendsto_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ θ : InfFam D, IsInfFam θ → ∀ S T : HSp D, ∀ (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ (u : ℕ → WO S T → ℂ) (f : WO S T → ℂ), IsThetaFunO ψ S T f → (∀ j, IsThetaFunO ψ S T (u j)) → (∀ l : List (D.what₂.Tau × Fin T.rank × Fin S.rank × Bool), TendstoUniformly (fun j => GlobalTheory.Size.wordAct (GlobalTheory.Size.heisDer ψ θ) l (u j)) (GlobalTheory.Size.wordAct (GlobalTheory.Size.heisDer ψ θ) l f) Filter.atTop) → ∀ d, Filter.Tendsto (fun j => sobO ψ θ μ 𝓕 d (u j - f)) Filter.atTop (nhds 0) := by
   intro D ψ hψ θ hθ S T μ 𝓕 hμ u f hf hu hl d
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   have key : ∀ l : List (D.what₂.Tau × Fin T.rank × Fin S.rank × Bool), Filter.Tendsto
       (fun j => GlobalTheory.Size.l2O μ 𝓕 (GlobalTheory.Size.wordAct (GlobalTheory.Size.heisDer ψ θ) l (u j - f))) Filter.atTop (nhds 0) := by
     intro l
@@ -659,8 +659,8 @@ theorem contDiff_of_class_tendstoLocallyUniformly : ∀ {E : Type} [NormedAddCom
     ext x
     conv_lhs => rw [← hc x]
 
-    simp only [map_sum, map_smul, (h y).2, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply]
+    simp only [map_sum, map_smul, (h y).2, sum_apply,
+    smul_apply, ContinuousLinearMap.smulRight_apply]
     refine Finset.sum_congr rfl fun a _ => ?_
     simp only [Complex.real_smul, smul_eq_mul]
     ring
@@ -917,15 +917,15 @@ theorem exists_bound_of_complete {E : Type} [AddCommGroup E] [Module ℂ E] (p :
     (q : Seminorm ℂ E) (hq : ∀ (u : ℕ → E) (x : E), (∀ d, Tendsto (fun j => p d (u j - x)) atTop (𝓝 0)) →
       ∀ y : ℝ, (∀ j, q (u j) ≤ y) → q x ≤ y) :
     ∃ (d : ℕ) (C : ℝ≥0), ∀ x, q x ≤ C * p d x := by
-  letI t : TopologicalSpace E := (SeminormFamily.moduleFilterBasis (𝕜 := ℂ) p).topology
+  let t : TopologicalSpace E := (SeminormFamily.moduleFilterBasis (𝕜 := ℂ) p).topology
   have hp : WithSeminorms p := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup E := hp.topologicalAddGroup
-  letI : UniformSpace E := IsTopologicalAddGroup.rightUniformSpace E
-  haveI : IsUniformAddGroup E := isUniformAddGroup_of_addCommGroup
-  haveI : ContinuousSMul ℂ E := hp.continuousSMul
-  haveI : FirstCountableTopology E := hp.firstCountableTopology
-  haveI : (𝓤 E).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
-  haveI : CompleteSpace E := by
+  have : IsTopologicalAddGroup E := hp.isTopologicalAddGroup
+  let : UniformSpace E := IsTopologicalAddGroup.rightUniformSpace E
+  have : IsUniformAddGroup E := isUniformAddGroup_of_addCommGroup
+  have : ContinuousSMul ℂ E := hp.continuousSMul
+  have : FirstCountableTopology E := hp.firstCountableTopology
+  have : (𝓤 E).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : CompleteSpace E := by
     refine UniformSpace.complete_of_cauchySeq_tendsto fun u hu => ?_
     rw [cauchySeq_iff_tendsto, uniformity_eq_comap_nhds_zero, tendsto_comap_iff] at hu
     obtain ⟨x, hx⟩ := hcomp u fun d ε hε => by
@@ -936,7 +936,7 @@ theorem exists_bound_of_complete {E : Type} [AddCommGroup E] [Module ℂ E] (p :
       simpa using this
     refine ⟨x, (hp.tendsto_nhds u x).2 fun d ε hε => ?_⟩
     exact (hx d).eventually (gt_mem_nhds hε)
-  haveI : BarrelledSpace ℂ E := inferInstance
+  have : BarrelledSpace ℂ E := inferInstance
   have hlsc : LowerSemicontinuous q := by
     rw [lowerSemicontinuous_iff_isClosed_preimage]
     intro y
@@ -951,7 +951,7 @@ theorem exists_bound_of_complete {E : Type} [AddCommGroup E] [Module ℂ E] (p :
     | refl => exact le_rfl
     | step _ ih => exact ih.trans (hmono _ x)
   refine ⟨s.sup id, C, fun x => (hle x).trans ?_⟩
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul]
   refine mul_le_mul_of_nonneg_left ?_ C.2
   exact Seminorm.finset_sup_apply_le (apply_nonneg _ _) fun i hi => hmono' _ _ _ (Finset.le_sup (f := id) hi)
 
@@ -975,7 +975,7 @@ theorem le_mul_sobO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
         (GlobalTheory.Size.sobO_add_le hψ hθ f.2.1 g.2.1 d))
     (fun c f => by
       show (sobO ψ θ μ 𝓕 d (c • (f : WO S T → ℂ))).toReal = _
-      rw [GlobalTheory.Size.sobO_smul, ENNReal.toReal_mul, toReal_enorm])
+      rw [GlobalTheory.Size.sobO_smul, ENNReal.toReal_mul, toReal_eNorm])
   have hp : ∀ d (f : E), p d f = (sobO ψ θ μ 𝓕 d (f : WO S T → ℂ)).toReal := fun _ _ => rfl
   let q : Seminorm ℂ E := Seminorm.of (fun f => (N f).toReal)
     (fun f g => by
@@ -983,7 +983,7 @@ theorem le_mul_sobO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
       exact ENNReal.toReal_mono (ENNReal.add_ne_top.2 ⟨hfin f f.2, hfin g g.2⟩) (hadd f f.2 g g.2))
     (fun c f => by
       show (N (c • (f : WO S T → ℂ))).toReal = _
-      rw [hsmul c f f.2, ENNReal.toReal_mul, toReal_enorm])
+      rw [hsmul c f f.2, ENNReal.toReal_mul, toReal_eNorm])
   have hq : ∀ f : E, q f = (N f).toReal := fun _ => rfl
   obtain ⟨d, C, hC⟩ := exists_bound_of_complete p
     (fun d f => by
@@ -1066,8 +1066,8 @@ theorem tendsto_enorm_of_le {v : ℕ → ℂ} {a : ℂ} {s : ℕ → ℝ≥0∞}
     simpa using ENNReal.Tendsto.const_mul (a := (C : ℝ≥0∞)) hs (Or.inr ENNReal.coe_ne_top)
   have h2 : Filter.Tendsto (fun j => edist (v j) a) Filter.atTop (nhds 0) :=
     tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds h1 (fun _ => zero_le)
-      (fun j => by simpa [edist_eq_enorm_sub] using h j)
-  exact (continuous_enorm.tendsto a).comp (tendsto_iff_edist_tendsto_0.2 h2)
+      (fun j => by simpa [eDist_eq_eNorm_sub] using h j)
+  exact (continuous_eNorm.tendsto a).comp (tendsto_iff_edist_tendsto_0.2 h2)
 
 theorem sobBdd_absThetaInt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ θ : InfFam D, IsInfFam θ → ∀ (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ m : Measure (GA D T), m.IsHaarMeasure → ∀ Z : (WO S T → ℂ) → WO S T → ℂ, (∀ f f', IsThetaFunO ψ S T f → IsThetaFunO ψ S T f' → Z (f + f') = Z f + Z f') → (∀ (c : ℂ) f, IsThetaFunO ψ S T f → Z (c • f) = c • Z f) → Sobolev₂ ψ θ μ 𝓕 μ 𝓕 Z → (∀ f, IsThetaFunO ψ S T f → ∀ x, om (x, 1) (Z f) = Z (om (x, 1) f)) → (∀ f, IsThetaFunO ψ S T f → Integrable (descend (GQ T) fun h => thetaKO om 1 h (Z f)) (autMeasure T m)) → SobBdd ψ θ μ 𝓕 fun f x => ∫⁻ q, ‖descend (GQ T) (fun h => thetaKO om x h (Z f)) q‖ₑ ∂autMeasure T m := by
   intro D ψ S T χS χT om hom θ hθ μ 𝓕 hc m _ Z hadd hsm hZ hcomm hint U hU K hK
@@ -1092,17 +1092,17 @@ theorem sobBdd_absThetaInt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T 
   obtain ⟨d, C, hN⟩ := UpperTheory.Lit.Rallis.T.lsc_seminorm_thetaFunctionsLevel_le_sobolev D ψ hom.std θ hθ S T μ 𝓕 hc U' hU'
     (fun f => ∫⁻ q, ‖descend (GQ T) (fun h => thetaKO om 1 h (Z f)) q‖ₑ ∂autMeasure T m)
     (fun f hf g hg => by
-      rw [← lintegral_add_left' (hint f hf.1).1.enorm]
+      rw [← lintegral_add_left' (hint f hf.1).1.eNorm]
       refine lintegral_mono fun q => ?_
       simp only [GlobalTheory.AutomorphicL2Unitary.descend, thetaKO, hadd f g hf.1 hg.1, map_add (f := _), Pi.add_apply]
-      exact enorm_add_le _ _)
+      exact eNorm_add_le _ _)
     (fun c f hf => by
-      rw [← lintegral_const_mul' _ _ enorm_ne_top]
+      rw [← lintegral_const_mul' _ _ eNorm_ne_top]
       refine lintegral_congr fun q => ?_
-      simp only [GlobalTheory.AutomorphicL2Unitary.descend, thetaKO, hsm c f hf.1, map_smul, Pi.smul_apply, enorm_smul])
+      simp only [GlobalTheory.AutomorphicL2Unitary.descend, thetaKO, hsm c f hf.1, map_smul, Pi.smul_apply, eNorm_smul])
     (fun f hf => (hint f hf.1).2.ne)
     (fun u hu f hf ht => by
-      refine le_trans (lintegral_mono fun q => ?_) (lintegral_liminf_le' fun j => (hint _ (hu j).1).1.enorm)
+      refine le_trans (lintegral_mono fun q => ?_) (lintegral_liminf_le' fun j => (hint _ (hu j).1).1.eNorm)
       obtain ⟨d, C, hp⟩ := pt (Quotient.out q)
       refine (tendsto_enorm_of_le C (ht d) fun j => ?_).liminf_eq.ge
       refine le_of_eq_of_le ?_ (hp _ (sub_mem (hu j) hf))

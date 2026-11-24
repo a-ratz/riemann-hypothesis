@@ -204,7 +204,7 @@ private lemma det_even_submatrix_homotopy_product_eq_one (deg : Ix → ℕ) (D h
       exact hdiag _ _ (by rw [i.2, j.2])
     rw [this, Matrix.det_submatrix_equiv_self, Matrix.det_transpose]
     exact det_one_add_sub_mul_degree_submatrix_eq_one deg D h₁ h₂ hD hDD h₁d h₂d h₁c h₂c d
-  · haveI : IsEmpty {i : {p // Even (deg p)} // deg i.1 = d} :=
+  · have : IsEmpty {i : {p // Even (deg p)} // deg i.1 = d} :=
       ⟨fun i => hd (by rw [← i.2]; exact i.1.2)⟩
     exact Matrix.det_isEmpty
 

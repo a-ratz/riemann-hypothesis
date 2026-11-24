@@ -81,7 +81,7 @@ theorem lie_skew : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.
     funext fun t => inner_R_R _ μ _ _ _
   rw [hconst] at d3
   have h := d3.unique (hasDerivAt_const (0 : ℝ) _)
-  simp only [hγ0, map_one, ContinuousLinearMap.one_apply] at h
+  simp only [hγ0, map_one, one_apply_eq_self] at h
   exact eq_neg_of_add_eq_zero_left ((add_comm _ _).trans h)
 
 end GlobalTheory.CompanionTheory.LieSkew

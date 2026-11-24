@@ -78,7 +78,7 @@ theorem isClosed_logCone (c : ℝ) : IsClosed {s : Fin r → ℝ | (fun i => Rea
       (⋂ i : Fin r, ⋂ j : Fin r, ⋂ (_ : j.val = i.val + 1), {s : Fin r → ℝ | c * Real.exp (s j) ≤ Real.exp (s i)}) ∩
         ⋂ i : Fin r, ⋂ (_ : i.val + 1 = r), {s : Fin r → ℝ | c ≤ Real.exp (s i)} := by
     ext s
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     exact ⟨fun h => ⟨h.2.1, h.2.2⟩, fun h => ⟨fun i => Real.exp_pos _, h.1, h.2⟩⟩
   rw [e]
   exact IsClosed.inter (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>

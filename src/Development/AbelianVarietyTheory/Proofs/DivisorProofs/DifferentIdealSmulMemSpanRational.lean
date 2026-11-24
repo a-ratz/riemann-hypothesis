@@ -61,10 +61,10 @@ theorem exists_trace_dual_system (K L : Type) [Field K] [NumberField K] [Field L
     ∃ (m : ℕ) (ω : Fin m → 𝓞 L) (η : Fin m → L),
       (∀ i, η i ∈ Submodule.traceDual (𝓞 K) K (1 : Submodule (𝓞 L) L)) ∧
       ∀ t : L, t = ∑ i, algebraMap K L (Algebra.trace K L (η i * t)) * (ω i : L) := by
-  haveI : Module.FinitePresentation (𝓞 K) (𝓞 L) := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 K) (𝓞 L) := Module.Flat.projective_of_finitePresentation
+  have : Module.FinitePresentation (𝓞 K) (𝓞 L) := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 K) (𝓞 L) := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, F, G, -, -, hFG⟩ := Module.Finite.exists_comp_eq_id_of_projective (𝓞 K) (𝓞 L)
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 L) (nonZeroDivisors (𝓞 K))) L :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 L) (nonZeroDivisors (𝓞 K))) L :=
     IsIntegralClosure.isLocalization (𝓞 K) K L (𝓞 L)
   have hbc : IsBaseChange K (IsScalarTower.toAlgHom (𝓞 K) (𝓞 L) L).toLinearMap :=
     IsLocalizedModule.isBaseChange (nonZeroDivisors (𝓞 K)) K _

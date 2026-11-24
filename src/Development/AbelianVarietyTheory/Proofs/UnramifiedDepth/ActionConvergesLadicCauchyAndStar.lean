@@ -159,7 +159,7 @@ theorem exists_ge (V : VF C) (x : C) : ∃ c : ℝ, V.Ge c x := by
 theorem exists_low (V : VF C) [Finite τ] {ι : Type} [Finite ι] (D : ℕ) (f : ι → MvPowerSeries τ C) :
     ∃ c : ℝ, ∀ i, Low V D c (f i) := by
   have hfin : {μ : τ →₀ ℕ | μ.degree ≤ D}.Finite := Finsupp.finite_of_degree_le D
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   choose c hc using fun p : ι × {μ : τ →₀ ℕ | μ.degree ≤ D} => exists_ge V (coeff p.2.1 (f p.1))
   obtain ⟨m, hm⟩ := (Set.finite_range c).bddBelow
   exact ⟨m, fun i μ hμ => (hc (i, ⟨μ, hμ⟩)).mono (hm ⟨_, rfl⟩)⟩

@@ -68,7 +68,7 @@ theorem psiF_meas (X : Data E r) (x0 : Frame X.Ψ r) (bb : ℝ) {la : Wt X.Ψ r}
   have h1 : Measurable (X.dom.indicator P) :=
     ReciprocityTheory.ChartRestriction.G.AR.Up.PairUnfoldPf.meas_indC (X := X) hP.1.continuousOn
   unfold psiF
-  exact ((h1.enorm.pow_const 2).mul hW.1).div (ENNReal.measurable_ofReal.comp (meas_kaY X x0 bb))
+  exact ((h1.eNorm.pow_const 2).mul hW.1).div (ENNReal.measurable_ofReal.comp (meas_kaY X x0 bb))
 
 theorem psiF_rmul (X : Data E r) {x0 : Frame X.Ψ r} (hx0 : IsOrth X x0) (bb : ℝ) {la : Wt X.Ψ r}
     {P : Frame X.Ψ r → ℂ} {W : Frame X.Ψ r → ℝ≥0∞} (hP : IsBEq X la P) (hW : IsMetricW X la W) :
@@ -82,11 +82,11 @@ theorem psiF_rmul (X : Data E r) {x0 : Frame X.Ψ r} (hx0 : IsOrth X x0) (bb : �
   rw [Set.indicator_of_mem hm, Set.indicator_of_mem hy, hP.2 y hy b hb, hW.2.1 y hy b hb,
     kaY_rmul X hx0 hy hb bb]
   congr 1
-  rw [enorm_mul, mul_pow]
-  have hne : ‖bchar la b‖ₑ ^ 2 ≠ 0 := pow_ne_zero _ (enorm_ne_zero.2 (bchar_ne X la hb))
-  have htop : ‖bchar la b‖ₑ ^ 2 ≠ ⊤ := ENNReal.pow_ne_top enorm_ne_top
+  rw [eNorm_mul, mul_pow]
+  have hne : ‖bchar la b‖ₑ ^ 2 ≠ 0 := pow_ne_zero _ (eNorm_ne_zero.2 (bchar_ne X la hb))
+  have htop : ‖bchar la b‖ₑ ^ 2 ≠ ⊤ := ENNReal.pow_ne_top eNorm_ne_top
   have hof : ENNReal.ofReal (‖bchar la b‖ ^ 2) = ‖bchar la b‖ₑ ^ 2 := by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   rw [hof, ENNReal.div_eq_inv_mul]
   calc ‖bchar la b‖ₑ ^ 2 * ‖P y‖ₑ ^ 2 * ((‖bchar la b‖ₑ ^ 2)⁻¹ * W y)
       = (‖bchar la b‖ₑ ^ 2 * (‖bchar la b‖ₑ ^ 2)⁻¹) * (‖P y‖ₑ ^ 2 * W y) := by ring

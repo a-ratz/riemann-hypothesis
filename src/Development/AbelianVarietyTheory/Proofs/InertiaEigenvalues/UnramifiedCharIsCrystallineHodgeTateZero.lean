@@ -77,10 +77,10 @@ variable {l : ℕ} [Fact l.Prime]
 theorem val_mem_OL (K LL : FinExt l) (μ : ↥(GK K) →* (↥LL.1)ˣ)
     (hμ : Continuous fun g => ((μ g : (↥LL.1)ˣ) : ↥LL.1)) (g : ↥(GK K)) :
     ((μ g : (↥LL.1)ˣ) : ↥LL.1) ∈ OL LL := by
-  haveI := GlobalTheory.UnramifiedCrys.compactSpace_GK K
+  have := GlobalTheory.UnramifiedCrys.compactSpace_GK K
   let d : ↥(GK K) →* Om l :=
     ((LL.1.val : ↥LL.1 →ₐ[ℚ_[l]] Om l) : ↥LL.1 →* Om l).comp ((Units.coeHom ↥LL.1).comp μ)
-  have hd : Continuous d := continuous_subtype_val.comp hμ
+  have hd : Continuous d := continuous_subtypeVal.comp hμ
   exact (GlobalTheory.Per.Val.mem_OL_iff LL _).2 (norm_eq_one_of_compact d hd g).le
 
 def unitLat (K LL : FinExt l) (μ : ↥(GK K) →* (↥LL.1)ˣ)
@@ -101,7 +101,7 @@ theorem isCrys_and_multV_eq : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI 
   refine ⟨hc, fun τ b => ?_⟩
   obtain ⟨hcomp, -⟩ := GlobalTheory.Per.Components.components_finrank l P AI T K LL ↥LL.1 (charRep μ)
   obtain ⟨hfd, -, hdr⟩ := hcomp τ
-  haveI := hfd
+  have := hfd
   set_option synthInstance.maxHeartbeats 200000 in
   have hdim : finrank ↥LL.1 ↥(DdRE (P.PD K) (charRep μ) τ) = 1 := by
     rw [hdr (GlobalTheory.Per.CrisDR.isDR_of_isCrys l P AI T K LL ↥LL.1 (charRep μ) hc).1, finrank_self]

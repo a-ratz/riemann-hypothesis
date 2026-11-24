@@ -91,7 +91,7 @@ theorem isIsom_uMat (g : Formalism.REAL.UJ ε) : IsIsom ε (Formalism.MainNotion
 
 theorem famSc_castSucc (sc : ℝ) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) (a : Fin r) :
     famSc sc e z (Fin.castSucc a) = (((sc : ℂ) ^ (r - a.1))⁻¹) • e a := by
-  simp only [famSc, fam, Fin.snoc_castSucc, Fin.coe_castSucc]
+  simp only [famSc, fam, Fin.snoc_castSucc, Fin.val_castSucc]
 
 theorem famSc_last' (sc : ℝ) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) : famSc sc e z (Fin.last r) = z := by
   simp only [famSc, fam, Fin.snoc_last, Fin.val_last, Nat.sub_self, pow_zero, inv_one, one_smul]
@@ -117,12 +117,12 @@ theorem hJ_famSc (sc : ℝ) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) (T
   | last =>
     induction b using Fin.lastCases with
     | last =>
-      rw [famSc_last', if_pos ⟨rfl, rfl⟩, hzz]
+      rw [famSc_last', ite_eq_left ⟨rfl, rfl⟩, hzz]
     | cast b' =>
       rw [famSc_last', famSc_castSucc, hJ_smul_right_eq_mul, hJ_eq_conj_hJ_swap, hez, map_zero, mul_zero,
-        if_neg (fun h => (Fin.castSucc_lt_last b').ne h.2)]
+        ite_eq_right (fun h => (Fin.castSucc_lt_last b').ne h.2)]
   | cast a' =>
-    rw [famSc_castSucc, hJ_smul_left_eq_conj_mul, if_neg (fun h => (Fin.castSucc_lt_last a').ne h.1)]
+    rw [famSc_castSucc, hJ_smul_left_eq_conj_mul, ite_eq_right (fun h => (Fin.castSucc_lt_last a').ne h.1)]
     induction b using Fin.lastCases with
     | last => rw [famSc_last', hez, mul_zero]
     | cast b' => rw [famSc_castSucc, hJ_smul_right_eq_mul, hee, mul_zero, mul_zero]
@@ -171,7 +171,7 @@ theorem diagDC_core (sc : ℝ) (e : Fin r → Fin n → ℂ) (z z' : Fin n → �
     rw [Matrix.diagonal_apply, hδ]
     by_cases hab : a = b
     · subst hab; simp
-    · rw [if_neg hab, if_neg (fun h => hab (h.1.trans h.2.symm))]
+    · rw [ite_eq_right hab, ite_eq_right (fun h => hab (h.1.trans h.2.symm))]
   have hA : ∀ a b, hJ ε (famSc sc e z a) (famSc sc e z b) = Matrix.diagonal α a b := fun a b => by
     rw [hJ_famSc ε sc e z (T : ℂ) hee hez hzz a b]
     exact hdiag _ α hα a b
@@ -196,14 +196,14 @@ theorem diagDC_core (sc : ℝ) (e : Fin r → Fin n → ℂ) (z z' : Fin n → �
     intro i
     rw [hcc, hα, hγ]
     by_cases hi : i = Fin.last r
-    · rw [if_pos hi, if_pos hi, hi]
+    · rw [ite_eq_left hi, ite_eq_left hi, hi]
       intro h0
       have h1' : ((T * T' - ‖c (Fin.last r)‖ ^ 2 : ℝ) : ℂ) = 0 := by
         push_cast
         linear_combination h0
       have := Complex.ofReal_eq_zero.mp h1'
       linarith
-    · rw [if_neg hi, if_neg hi, zero_mul, zero_sub, neg_ne_zero]
+    · rw [ite_eq_right hi, ite_eq_right hi, zero_mul, zero_sub, neg_ne_zero]
       exact pow_ne_zero 2 (Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr (hc i)))
   have hΔi : ∀ i, (α i * γ i - c i * conj (c i)) * (α i * γ i - c i * conj (c i))⁻¹ = 1 :=
     fun i => mul_inv_cancel₀ (hΔ i)

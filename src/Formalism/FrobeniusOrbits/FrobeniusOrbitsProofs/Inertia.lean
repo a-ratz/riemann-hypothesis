@@ -264,7 +264,7 @@ theorem sub_h (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ) (hp 
     (hp2 : p ≠ 2) (P : Ideal (𝓞 (hostE ζ a b))) [P.IsPrime] [P.LiesOver (span {(p : ℤ)})]
     (σ : hostE ζ a b ≃ₐ[ℚ] hostE ζ a b) (hσ : ∀ x : 𝓞 (hostE ζ a b), σ • x - x ∈ P) :
     (galE e ζ a b σ).2 = 1 := by
-  haveI := (layer_galois hqd h).1
+  have := (layer_galois hqd h).1
   have hinj : Function.Injective (algebraMap (𝓞 (hostE ζ a b)) (𝓞 L)) := by
     intro x y hxy
     have h1 := congrArg (fun z : 𝓞 L => (z : L)) hxy
@@ -273,9 +273,9 @@ theorem sub_h (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ) (hp 
     exact h1
   obtain ⟨Q, -, hQp, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral P (⊥ : Ideal (𝓞 L))
     (by rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]; exact bot_le)
-  haveI := hQp
-  haveI : Q.LiesOver P := ⟨hQc.symm⟩
-  haveI : Q.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans Q P _
+  have := hQp
+  have : Q.LiesOver P := ⟨hQc.symm⟩
+  have : Q.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans Q P _
   set τ : Gal(L/ℚ) := σ.liftNormal L with hτ
   have hστ : ∀ x : hostE ζ a b, ((σ x : hostE ζ a b) : L) = τ x :=
     fun x => (σ.liftNormal_commutes L x).symm
@@ -313,7 +313,7 @@ theorem sup (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ)
     (hI : ∀ τ : Gal(L/ℚ), galMap h.1 a b τ = g → ∀ (Q : Ideal (𝓞 L)) [Q.IsPrime]
       [Q.LiesOver (span {(p : ℤ)})], ∀ y : 𝓞 L, τ • y - y ∈ Q) :
     ∀ x : 𝓞 (hostE ζ a b), σ • x - x ∈ P := by
-  haveI := (layer_galois hqd h).1
+  have := (layer_galois hqd h).1
   have hinj : Function.Injective (algebraMap (𝓞 (hostE ζ a b)) (𝓞 L)) := by
     intro x y hxy
     have h1 := congrArg (fun z : 𝓞 L => (z : L)) hxy
@@ -322,9 +322,9 @@ theorem sup (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ)
     exact h1
   obtain ⟨Q, -, hQp, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral P (⊥ : Ideal (𝓞 L))
     (by rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]; exact bot_le)
-  haveI := hQp
-  haveI : Q.LiesOver P := ⟨hQc.symm⟩
-  haveI : Q.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans Q P _
+  have := hQp
+  have : Q.LiesOver P := ⟨hQc.symm⟩
+  have : Q.LiesOver (span {(p : ℤ)}) := Ideal.LiesOver.trans Q P _
   set τ1 : Gal(L/ℚ) := σ.liftNormal L with hτ1
   have hστ1 : ∀ x : hostE ζ a b, ((σ x : hostE ζ a b) : L) = τ1 x :=
     fun x => (σ.liftNormal_commutes L x).symm
@@ -379,7 +379,7 @@ theorem hostInertia : HostInertia := by
   have hn : 1 ≤ e + 2 := by omega
   refine ⟨?_, ?_, ?_⟩
   · intro P _ _
-    haveI : P.LiesOver (span {((2 : ℕ) : ℤ)}) := by simpa using ‹P.LiesOver (span {(2 : ℤ)})›
+    have : P.LiesOver (span {((2 : ℕ) : ℤ)}) := by simpa using ‹P.LiesOver (span {(2 : ℤ)})›
     constructor
     · intro hall
       have h1 := sign_one (aE ζ a b) ((galE e ζ a b σ).1.1) σ hsa hqd.1 hq4 h.2.1 Nat.prime_two
@@ -457,9 +457,9 @@ theorem hostUnramEF : HostUnramEF := by
   have hq4 : q % 4 = 3 := by have := hH.2.2.1; omega
   have hd4 : d % 4 = 3 := by have := hH.2.2.2.1; omega
   have hspec := hostGalSpec e q d hqd L ζ a b h σ
-  have hI0 : P.under ℤ ≠ ⊥ := fun h0 => hP0 (Ideal.eq_bot_of_comap_eq_bot h0)
-  haveI : (P.under ℤ).IsPrime := by haveI := hP; exact Ideal.comap_isPrime _ _
-  haveI := hP
+  have hI0 : P.under ℤ ≠ ⊥ := fun h0 => hP0 (eq_bot_of_under_eq_bot h0)
+  have : (P.under ℤ).IsPrime := by have := hP; exact Ideal.comap_isPrime _ _
+  have := hP
   set g := Submodule.IsPrincipal.generator (P.under ℤ) with hgdef
   have hgspan : Ideal.span {g} = P.under ℤ := Submodule.IsPrincipal.span_singleton_generator _
   have hg0 : g ≠ 0 := by
@@ -468,7 +468,7 @@ theorem hostUnramEF : HostUnramEF := by
     rw [← hgspan, h0, Ideal.span_singleton_eq_bot.2 rfl]
   have hgp : Prime g := (Ideal.span_singleton_prime hg0).1 (by rw [hgspan]; infer_instance)
   have hp : g.natAbs.Prime := Int.prime_iff_natAbs_prime.1 hgp
-  haveI : P.LiesOver (span {((g.natAbs : ℕ) : ℤ)}) :=
+  have : P.LiesOver (span {((g.natAbs : ℕ) : ℤ)}) :=
     ⟨(Ideal.span_singleton_eq_span_singleton.2 (Int.associated_natAbs g).symm).trans hgspan⟩
   by_cases hpq : g.natAbs = q
   · have hs := sign_one (bE ζ a b) ((galE e ζ a b σ).1.2) σ hspec.2.1 hqd.2.1 hd4 h.2.2.1 hp

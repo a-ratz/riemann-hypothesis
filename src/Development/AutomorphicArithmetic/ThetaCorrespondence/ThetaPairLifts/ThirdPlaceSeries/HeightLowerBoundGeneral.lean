@@ -711,7 +711,7 @@ theorem depthOn_le (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) {cst a : ℝ} {G
     {T : CDVR} {io : c.F →+* T.Fr} {e : ℕ} (ho : OverLa la T.V io e) {y : IntFr Xo c T io} (hy : y.IsAlg)
     {φ : ℝ} (hφ : HasPhi y φ) {Z : Comp Xo c} (hZ : letI := io.toAlgebra; LiesOn Z y.1) :
     depthOn U Z G (fun f => nval T.V e (evI y f)) ≤ (((vLa la (q : c.F) : ℝ) * a + cst * φ / e : ℝ) : EReal) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hb := (refExp_vp_le_iff U).1 ha ⟨la, hla⟩ T io e ho y hy φ hφ
   rw [← EReal.coe_add] at hb
   have hm := vLa_pos hq hla
@@ -765,7 +765,7 @@ theorem exists_bound (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) {a : ℕ → �
   have hf1 : evI y' f ≠ 0 := fun h => hf0 (by
     show nval T.V e₀ (evI y f) = ⊤
     rw [← (hv f hf.1.1.1).2, h, nval_zero])
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   have hZ : LiesOn Z y'.1 := by
     by_contra h
     exact hf1 (hf.2 _ _ ((liesOff_iff Z y'.1).2 h))

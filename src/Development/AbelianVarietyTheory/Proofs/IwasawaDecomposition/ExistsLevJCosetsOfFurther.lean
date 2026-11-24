@@ -128,7 +128,7 @@ theorem setOf_sub_mem_eq_iff {V : Type} [AddCommGroup V] {A : Type} [Ring A] [Mo
     exact hb
   · intro h
     ext z
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro hz
       have := add_mem hz h
@@ -239,7 +239,7 @@ theorem GlobalTheory.Mem.Col2.TC.typeRead_core : ∀ {B : Base} {X : PreX B.toPr
   obtain ⟨c, rfl⟩ := H.onto β0
   have hm2 := B.R.two_le_m
   have hmj : B.R.m - 1 + 1 = B.R.m := by omega
-  haveI : NeZero (B.R.N (B.R.m - 1)) := ⟨by unfold Ranks.N; have := B.R.m_add_three_le_k; omega⟩
+  have : NeZero (B.R.N (B.R.m - 1)) := ⟨by unfold Ranks.N; have := B.R.m_add_three_le_k; omega⟩
   have hX := (base_fields_primes_ok B X).1
   have hPr := (base_fields_primes_ok B X).2.1
   obtain ⟨wOf, hwOf, hwP, -⟩ := GlobalTheory.Mem.TypePrimes.primes_over_places B.fields (B.primes X) B.sp.cm hPr
@@ -261,7 +261,7 @@ theorem GlobalTheory.Mem.Col2.TC.typeRead_core : ∀ {B : Base} {X : PreX B.toPr
     ext y
     rw [← F.levJ_Lb h1 (chOf0 _ c)]
     refine (H.lb _ y).trans (Iff.trans ?_ (rll_mem_baseLb _ _ y).symm)
-    simp only [baseL, Set.mem_setOf_eq]
+    simp only [baseL, Set.mem_ofPred_eq]
     have hl : (lastIdx (B.R.N (B.R.m - 1))).1 + 1 = B.R.N (B.R.m - 1) := by
       have := NeZero.pos (B.R.N (B.R.m - 1)); simp only [lastIdx]; omega
     constructor
@@ -387,7 +387,7 @@ theorem GlobalTheory.Mem.Col2.TC.chartLev_off_type : ∀ {B : Base} {X : PreX B.
   intro B X I hI hP l Z u Ch0 chOf0 F hF h1 β0 v hv x
   have hi : B.R.m - 1 ≤ (I.rec7 l Z).R.m := Nat.sub_le _ _
   have hgram : gramN (I.rec7 l Z) (B.R.m - 1) hi = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 (B.R.m - 1) hi).1
-  haveI : NeZero ((I.rec7 l Z).R.N (B.R.m - 1)) := ⟨by
+  have : NeZero ((I.rec7 l Z).R.N (B.R.m - 1)) := ⟨by
     have := (I.rec7 l Z).R.m_add_three_le_k
     simp only [Ranks.N]; omega⟩
   let s : 𝓞 (I.rec7 l Z).host.E →+* 𝓞 (I.rec7 l Z).host.E := RingOfIntegers.mapRingHom (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E)
@@ -426,7 +426,7 @@ theorem GlobalTheory.Mem.Col2.TC.chartLev_off_type : ∀ {B : Base} {X : PreX B.
 
 theorem GlobalTheory.Mem.Col2.TC.chartLev_stab_vec : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) {Ch0 : ℕ → Type} {chOf0 : ∀ i, ((I.rec7 l Z).mem u).C.cls i → Ch0 i} (F : FormsTiedSym (I.rec7 l Z) u Ch0 chOf0), I.StdF l Z u F → (∀ j v h, F.glevJ.fr j v h = 1) → ∀ (h1 : 1 ≤ B.R.m - 1) (β0 : Ch0 (B.R.m - 1)), ∃ w : ∀ (j : Fin 2) (v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F)), ((I.rec7 l Z).host.g j : 𝓞 (I.rec7 l Z).host.F) ∈ v.asIdeal → Fin (B.R.N (B.R.m - 1)) → kv (I.rec7 l Z).host.F v, ∀ (v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F)) x, x ∈ (F.ch (B.R.m - 1) h1 (succ_pred_m B.R) β0).lev.Uloc v ↔ (x ∈ F.levJ.Uloc v ∧ ∀ j (hv : ((I.rec7 l Z).host.g j : 𝓞 (I.rec7 l Z).host.F) ∈ v.asIdeal), redM (I.rec7 l Z).host.F v (F.gl.mat j v hv (F.glevJ.fr j v hv) x) *ᵥ w j v hv = w j v hv) := by
   intro B X I hI hP l Z u Ch0 chOf0 F hF hfr h1 β0
-  haveI : NeZero ((I.rec7 l Z).R.N (B.R.m - 1)) := ⟨by
+  have : NeZero ((I.rec7 l Z).R.N (B.R.m - 1)) := ⟨by
     have := (I.rec7 l Z).R.m_add_three_le_k
     simp only [Ranks.N]; omega⟩
   obtain ⟨w, hw⟩ := GlobalTheory.T.level_mem_chartLevel_iff_reduction_fixes_typePrime I hI hP l Z u F hF hfr h1 β0
@@ -564,13 +564,13 @@ theorem ulocQ_pos (H0 : Formalism.L2.Herm.StepLevel hc S gp T f) (Q : Finset (He
     (W : ∀ v, v ∈ Q → Subgroup (GL (Fin S.rank) (E ⊗[F] v.adicCompletion F))) {v : HeightOneSpectrum (𝓞 F)} (h : v ∈ Q) :
     ulocQ H0 Q W v = W v h := by
   unfold ulocQ
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem ulocQ_neg (H0 : Formalism.L2.Herm.StepLevel hc S gp T f) (Q : Finset (HeightOneSpectrum (𝓞 F)))
     (W : ∀ v, v ∈ Q → Subgroup (GL (Fin S.rank) (E ⊗[F] v.adicCompletion F))) {v : HeightOneSpectrum (𝓞 F)} (h : v ∉ Q) :
     ulocQ H0 Q W v = H0.Uloc v := by
   unfold ulocQ
-  exact dif_neg h
+  exact dite_eq_right h
 
 def uQ (H0 : Formalism.L2.Herm.StepLevel hc S gp T f) (Q : Finset (HeightOneSpectrum (𝓞 F)))
     (W : ∀ v, v ∈ Q → Subgroup (GL (Fin S.rank) (E ⊗[F] v.adicCompletion F))) :
@@ -640,7 +640,7 @@ theorem assemble {G : Type} [Group G] {Ch : Type} [Finite Ch] {Qt : Type} [Finit
       (∀ y y', yG y = yG y' → yQ y = yQ y' → y = y') ∧ (∀ (κ : G) y, zQ κ = 1 → yQ (κ • y) = yQ y) := by
   classical
   have hfq : ∀ β q, Finite (Wq q ⧸ Kc β q) := fun β q => by
-    haveI := hfi β q
+    have := hfi β q
     infer_instance
 
   let fQ : ∀ β, G ⧸ H β → ∀ q, Wq q ⧸ Kc β q := fun β c =>

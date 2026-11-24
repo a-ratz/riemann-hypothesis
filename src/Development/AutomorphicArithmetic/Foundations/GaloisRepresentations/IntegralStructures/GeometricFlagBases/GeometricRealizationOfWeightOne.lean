@@ -294,7 +294,7 @@ theorem finitely_many_marked_classes_degree_one_of_regular (hI : ∀ (p : ℕ) [
       refine finsum_congr fun q => ?_
       have : f ((Quotient.out q).1⁻¹ * P.toAf x t hx P.self * (Quotient.out q).1) =
           f₀ ((Quotient.out q).1⁻¹ * P.toAf x t hx P.self * (Quotient.out q).1) := by
-        simp only [f₀, if_pos (regAf_pair G P x t hx _)]
+        simp only [f₀, ite_eq_left (regAf_pair G P x t hx _)]
       rw [this]
     unfold Pair.term
     split_ifs <;> simp only [key]
@@ -628,7 +628,7 @@ theorem finite_supp_cent (ι : Γ →* H) (hι : Function.Injective ι) (K : Sub
     fun wd => DoubleCoset.mk _ K (ι (cj wd.1) * Quotient.out wd.2)
   refine ((hW.prod (Set.finite_univ (α := D))).image g).subset ?_
   intro q hq
-  simp only [Set.mem_setOf_eq] at hq
+  simp only [Set.mem_ofPred_eq] at hq
   set x := Quotient.out q
   obtain ⟨h, hh, k, hk, hd⟩ := DoubleCoset.mk_out_eq_mul ι.range K x
   obtain ⟨γ₀, rfl⟩ := hh
@@ -642,7 +642,7 @@ theorem finite_supp_cent (ι : Γ →* H) (hι : Function.Injective ι) (K : Sub
   have hF : F₀ ((Quotient.out d)⁻¹ * ι w * Quotient.out d) ≠ 0 := by
     rw [hconj, hbi k hk _ (K.inv_mem hk)] at hq; exact hq
   have hwW : w ∈ W := by
-    simp only [W, Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [W, Set.mem_iUnion, Set.mem_ofPred_eq]
     refine ⟨d, QuotientGroup.mk ((Quotient.out d)⁻¹ * ι w * Quotient.out d), ?_, rfl⟩
     simp only [Function.mem_support]
     obtain ⟨k', hk'⟩ := QuotientGroup.mk_out_eq_mul K ((Quotient.out d)⁻¹ * ι w * Quotient.out d)
@@ -652,7 +652,7 @@ theorem finite_supp_cent (ι : Γ →* H) (hι : Function.Injective ι) (K : Sub
     rw [this]; exact hF
   refine ⟨(w, d), ⟨hwW, Set.mem_univ _⟩, ?_⟩
   have hex : ∃ γ : Γ, γ⁻¹ * y * γ = w := ⟨γ₀⁻¹, by simp [w]⟩
-  have hcj : cj w = hex.choose := dif_pos hex
+  have hcj : cj w = hex.choose := dite_eq_left hex
   have hcs := hex.choose_spec
   set γw := hex.choose
 
@@ -680,7 +680,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem toAfF_injective (G : HTGroup p) (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ)
     (hx : Triv G (AfP p) β x t) : Function.Injective (GlobalTheory.LKCx.toAfF G β x t hx) := by
-  haveI := GlobalTheory.LKMid.finiteAdeleRingAway_nontrivial p
+  have := GlobalTheory.LKMid.finiteAdeleRingAway_nontrivial p
   intro a b h
   have h0 := congrArg Subtype.val h
   have h1 := congrArg Prod.fst h0
@@ -691,12 +691,12 @@ theorem toAfF_injective (G : HTGroup p) (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ
   have e1 : (a : G.Cˣ × ℚˣ).1 = (b : G.Cˣ × ℚˣ).1 := by
     apply Units.ext
     have := congrArg Units.val h1
-    simp only [Units.coe_map, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, MonoidHom.coe_ofClass] at this
     exact Algebra.TensorProduct.includeRight_injective (algebraMap ℚ (AfP p)).injective this
   have e2 : (a : G.Cˣ × ℚˣ).2 = (b : G.Cˣ × ℚˣ).2 := by
     apply Units.ext
     have := congrArg Units.val h2
-    simp only [Units.coe_map, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, MonoidHom.coe_ofClass] at this
     exact (algebraMap ℚ (AfP p)).injective this
   exact Subtype.ext (Prod.ext e1 e2)
 
@@ -765,7 +765,7 @@ theorem GlobalTheory.LKDef.DForm.centSum_eq_zero_of_orbK : ∀ (p : ℕ) [Fact p
   have hstab := GlobalTheory.T.definiteForm_stabilizer_finite_away_from_p p G ha L K' hf'.1 B
   have hfin : ∀ x : G.GAf × Gr G 1, ((Γ' ⊓ K.map (MulAut.conj x).toMonoidHom : Subgroup (G.GAf × Gr G 1)) : Set (G.GAf × Gr G 1)).Finite := by
     intro x
-    haveI := hstab x
+    have := hstab x
     exact (Set.toFinite ((GlobalTheory.LKLoc.locPart B.emb.range K x : Subgroup (G.GAf × Gr G 1)) : Set (G.GAf × Gr G 1))).subset
       (SetLike.coe_subset_coe.2 (inf_le_inf_right _ hrange))
   have hsupp := finite_supp_cent B.emb hι K F₀ y hbi (GlobalTheory.T.finite_doubleCoset_definiteHermitianForm_level p G ha L K' hf'.1 B) hstab
@@ -1115,19 +1115,19 @@ theorem markWeightedFixedPoint_definitePair_odd_of_counts : GlobalTheory.LKDef.M
             exact Polynomial.nodup_roots (P.reg.2.map)
           have hinj := Multiset.inj_on_of_nodup_map hnd
           rw [Finset.sum_eq_single j]
-          · rw [if_pos ⟨hi, hj ▸ hμ⟩]
+          · rw [ite_eq_left ⟨hi, hj ▸ hμ⟩]
             beta_reduce
             rw [hj]
           · intro i _ hij
-            rw [if_neg]
+            rw [ite_eq_right]
             rintro ⟨-, hi'⟩
             exact hij (hinj i (Finset.mem_univ_val i) j (Finset.mem_univ_val j)
               ((Pair.mark_unique p G P _ _ ha hi' hμ).trans hj.symm))
           · intro h; exact absurd (Finset.mem_univ _) h
         · rw [h0 P hm hi, mul_zero]
-          exact (Finset.sum_eq_zero fun i _ => if_neg fun h => hi h.1).symm
+          exact (Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hi h.1).symm
       · rw [dite_eq_right hm]
-        exact (Finset.sum_eq_zero fun i _ => if_neg fun h => hm ⟨_, h.2⟩).symm
+        exact (Finset.sum_eq_zero fun i _ => ite_eq_right fun h => hm ⟨_, h.2⟩).symm
     · intro i _
       refine hF.subset fun q hq => ?_
       rw [Function.mem_support] at hq
@@ -1150,10 +1150,10 @@ theorem markWeightedFixedPoint_definitePair_odd_of_counts : GlobalTheory.LKDef.M
   · refine finsum_congr fun q => ?_
     set Q : DPair G := Quot.out q
     by_cases hi : Irreducible Q.pol
-    · simp only [if_pos hi]
+    · simp only [ite_eq_left hi]
       rw [← Finset.sum_mul, rootSum, hsel Q.pol (hmon _) Q.reg.1, Multiset.map_map]
       rfl
-    · simp only [if_neg hi, Finset.sum_const_zero]
+    · simp only [ite_eq_right hi, Finset.sum_const_zero]
   · intro i _
     refine hD.subset fun q hq => ?_
     rw [Function.mem_support] at hq

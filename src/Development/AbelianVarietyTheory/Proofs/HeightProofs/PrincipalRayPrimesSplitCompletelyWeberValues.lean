@@ -91,9 +91,9 @@ namespace GlobalTheory.WeberSplit
 theorem isCyclotomic_of_root {k K : Type} [Field k] [Field K] [Algebra k K] (h2 : Module.finrank k K = 2) {n : ℕ}
     [NeZero n] (hirr : Irreducible (cyclotomic n k))
     (hn : n.totient = 2) {ζ : K} (hζ : IsPrimitiveRoot ζ n) : IsCyclotomicExtension {n} k K := by
-  haveI : NeZero ((n : ℕ) : K) := hζ.neZero'
-  haveI : NeZero ((n : ℕ) : k) := ⟨fun h => NeZero.ne ((n : ℕ) : K) (by rw [← map_natCast (algebraMap k K), h, map_zero])⟩
-  haveI : FiniteDimensional k K := Module.finite_of_finrank_eq_succ h2
+  have : NeZero ((n : ℕ) : K) := hζ.neZero'
+  have : NeZero ((n : ℕ) : k) := ⟨fun h => NeZero.ne ((n : ℕ) : K) (by rw [← map_natCast (algebraMap k K), h, map_zero])⟩
+  have : FiniteDimensional k K := Module.finite_of_finrank_eq_succ h2
   have hint : IsIntegral k ζ := IsIntegral.of_finite k ζ
   have hmin : cyclotomic n k = minpoly k ζ := hζ.minpoly_eq_cyclotomic_of_irreducible hirr
   have hfr : Module.finrank k k⟮ζ⟯ = 2 := by
@@ -144,8 +144,8 @@ theorem g₂_ne_zero (hd : discr K < -4) : L.g₂ ≠ 0 := by
   have haK : IsPrimitiveRoot a 3 := by
     rw [← ha] at hm
     exact IsPrimitiveRoot.coe_submonoidClass_iff.mp hm
-  haveI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  haveI : IsCyclotomicExtension {3} ℚ K :=
+  have : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  have : IsCyclotomicExtension {3} ℚ K :=
     isCyclotomic_of_root h2 (cyclotomic.irreducible_rat (by norm_num))
       (by rw [Nat.totient_prime Nat.prime_three] <;> norm_num) haK
   have hdisc := IsCyclotomicExtension.Rat.discr_prime 3 K
@@ -165,7 +165,7 @@ theorem g₃_ne_zero (hd : discr K < -4) : L.g₃ ≠ 0 := by
     rw [← ha] at hm
     exact IsPrimitiveRoot.coe_submonoidClass_iff.mp hm
   have haK : IsPrimitiveRoot a (2 ^ 2) := by norm_num; exact haK4
-  haveI : IsCyclotomicExtension {2 ^ 2} ℚ K :=
+  have : IsCyclotomicExtension {2 ^ 2} ℚ K :=
     isCyclotomic_of_root h2 (cyclotomic.irreducible_rat (by norm_num))
       (by rw [Nat.totient_prime_pow Nat.prime_two (by norm_num)] <;> norm_num) haK
   have hdisc := IsCyclotomicExtension.Rat.discr_prime_pow 2 2 K
@@ -217,11 +217,11 @@ private lemma ncard_primes_over_eq_of_ringEquiv_comp {A B C : Type} [CommRing A]
   refine Set.ncard_congr (fun Q _ => (⟨Q.asIdeal.map (e : B →+* C), ?_, ?_⟩ : HeightOneSpectrum C))
     ?_ ?_ ?_
   · rw [Ideal.map_comap_of_equiv]
-    haveI := Q.isPrime
+    have := Q.isPrime
     exact Ideal.comap_isPrime _ _
   · exact (Ideal.map_eq_bot_iff_of_injective e.injective).not.mpr Q.ne_bot
   · intro Q hQ
-    simp only [Set.mem_setOf_eq] at hQ ⊢
+    simp only [Set.mem_ofPred_eq] at hQ ⊢
     rw [← hQ]
     ext a
     simp only [Ideal.mem_comap]
@@ -233,14 +233,14 @@ private lemma ncard_primes_over_eq_of_ringEquiv_comp {A B C : Type} [CommRing A]
     simp only [back] at h'
     exact HeightOneSpectrum.ext h'
   · intro Q hQ
-    simp only [Set.mem_setOf_eq] at hQ
+    simp only [Set.mem_ofPred_eq] at hQ
     have hp : (Q.asIdeal.map (e.symm : C →+* B)).IsPrime := by
       rw [Ideal.map_comap_of_equiv]
-      haveI := Q.isPrime
+      have := Q.isPrime
       exact Ideal.comap_isPrime _ _
     refine ⟨⟨Q.asIdeal.map (e.symm : C →+* B), hp,
       (Ideal.map_eq_bot_iff_of_injective e.symm.injective).not.mpr Q.ne_bot⟩, ?_, ?_⟩
-    · simp only [Set.mem_setOf_eq]
+    · simp only [Set.mem_ofPred_eq]
       rw [← hQ]
       ext a
       simp only [Ideal.mem_comap]
@@ -325,7 +325,7 @@ theorem frob_congr {K N : Type} [Field K] [Field N] [Algebra K N] (ι : N →+* 
     rw [e, map_mul, hd1, one_mul] at h0
     exact h0
   have hdvd : (p : ℤ) ∣ d ^ p - d := by
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     push_cast
     rw [ZMod.pow_card, sub_self]
@@ -364,17 +364,17 @@ theorem eq_zero_of_valuation_lt_one {N : Type} [Field N] (ι : N →+* ℂ)
 theorem exists_isGalois (K M : Type) [Field K] [NumberField K] [Field M] [NumberField M] [Algebra K M] [Algebra M ℂ] :
     ∃ (N : Type) (_ : Field N) (_ : NumberField N) (_ : Algebra K N) (_ : Algebra M N),
       IsScalarTower K M N ∧ IsGalois K N ∧ ∃ ι : N →+* ℂ, ∀ x : M, ι (algebraMap M N x) = algebraMap M ℂ x := by
-  letI : Algebra K ℂ := ((algebraMap M ℂ).comp (algebraMap K M)).toAlgebra
-  haveI : IsScalarTower K M ℂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra K ℂ := ((algebraMap M ℂ).comp (algebraMap K M)).toAlgebra
+  have : IsScalarTower K M ℂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨α, hα⟩ := Field.exists_primitive_element K M
   let f := minpoly K α
   let N : IntermediateField K ℂ := IntermediateField.adjoin K (f.rootSet ℂ)
-  haveI hS : f.IsSplittingField K N :=
+  have hS : f.IsSplittingField K N :=
     IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-  haveI : FiniteDimensional K N := Polynomial.IsSplittingField.finiteDimensional N f
-  haveI : Normal K N := Normal.of_isSplittingField f
-  haveI : NumberField N := NumberField.of_module_finite K N
-  haveI : IsGalois K N := ⟨⟩
+  have : FiniteDimensional K N := Polynomial.IsSplittingField.finiteDimensional N f
+  have : Normal K N := Normal.of_isSplittingField f
+  have : NumberField N := NumberField.of_module_finite K N
+  have : IsGalois K N := ⟨⟩
   let φ : M →ₐ[K] ℂ := IsScalarTower.toAlgHom K M ℂ
   have hroot : φ α ∈ f.rootSet ℂ := by
     rw [Polynomial.mem_rootSet]
@@ -386,8 +386,8 @@ theorem exists_isGalois (K M : Type) [Field K] [NumberField K] [Field M] [Number
       (Set.singleton_subset_iff.mpr (IntermediateField.subset_adjoin K _ hroot))
   have hmem : ∀ x : M, φ x ∈ N := fun x => hle ⟨x, trivial, rfl⟩
   let ψ : M →+* N := (φ : M →+* ℂ).codRestrict N hmem
-  letI : Algebra M N := ψ.toAlgebra
-  haveI : IsScalarTower K M N := IsScalarTower.of_algebraMap_eq (fun k => Subtype.ext rfl)
+  let : Algebra M N := ψ.toAlgebra
+  have : IsScalarTower K M N := IsScalarTower.of_algebraMap_eq (fun k => Subtype.ext rfl)
   exact ⟨N, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     (N.val : N →+* ℂ), fun x => rfl⟩
 
@@ -612,12 +612,12 @@ theorem weierstrassP_mul_congr_pow_of_pos : ∀ (L : PeriodPair) (W : ValuationS
     rintro rfl
     simp only [norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow] at hN
     exact hp.ne_zero (by exact_mod_cast hN.symm)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   set ρ := IsLocalRing.residue W with hρ
   have hpk : (p : IsLocalRing.ResidueField W) = 0 := by
     rw [← map_natCast ρ, residue_eq_zero_iff']
     simpa using hpW
-  haveI : CharP (IsLocalRing.ResidueField W) p := (CharP.charP_iff_prime_eq_zero hp).mpr hpk
+  have : CharP (IsLocalRing.ResidueField W) p := (CharP.charP_iff_prime_eq_zero hp).mpr hpk
   have hcop : ∀ m : ℕ, 0 < m → (m : ℂ)⁻¹ ∈ W → p.Coprime m := by
     intro m hm hmW
     rw [hp.coprime_iff_not_dvd, ← CharP.cast_eq_zero_iff (IsLocalRing.ResidueField W) p,
@@ -965,7 +965,7 @@ theorem splits_completely_of_three_le : ∀ (K : IntermediateField ℚ ℂ) [Num
     (fun h => hJ1 (by
       have e : ι (j - 1) = J - 1 := by rw [map_sub, hj, map_one]
       rw [← e, hz (j - 1) (hdi _ (by simp)) (e ▸ h), map_zero]))
-  have : Countable N := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable N := Countable.of_moduleFinite (R := ℚ)
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq N ι (ι.comp σ.toRingEquiv.toRingHom)
   have hτ' : ∀ x, τ (ι x) = ι (σ x) := hτ
   have key : (σ : N →ₐ[K] N).comp (IsScalarTower.toAlgHom K M N) = IsScalarTower.toAlgHom K M N := by

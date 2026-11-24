@@ -82,7 +82,7 @@ theorem UpperTheory.V.Lit.Dr.retract :
       simp only [w, Set.indicator_of_mem hp, Set.indicator_of_mem hp']
       exact pullEquiv Γ V S d G hY l ⟨hgauge, hinv⟩ q η hη γ s p hp
     · have hback : (G.ρ γ) ((G.ρ γ⁻¹) p) = p := by
-        rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
+        rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]
         rfl
       have hp' : (G.ρ γ⁻¹) p ∉ G.Y := by
         intro h

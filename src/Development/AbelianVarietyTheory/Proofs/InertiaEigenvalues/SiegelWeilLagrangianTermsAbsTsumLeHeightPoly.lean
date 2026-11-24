@@ -102,7 +102,7 @@ theorem entry_le_opNorm {n : Type} [Fintype n] [DecidableEq n] (y : Matrix n n �
     change ∑ k, y i k * (EuclideanSpace.single j (1 : ℂ)) k = _
     simp
   rw [h3] at h2
-  rw [PiLp.nnnorm_single, nnnorm_one, mul_one] at h1
+  rw [PiLp.nnNorm_single, nnNorm_one, mul_one] at h1
   exact (show ‖y i j‖₊ ≤ _ from h2).trans h1
 
 theorem absE_le_heightGL {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) (n : ℕ) :
@@ -111,8 +111,8 @@ theorem absE_le_heightGL {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) (n : ℕ) :
   refine ⟨∏ _w : InfinitePlace F, ((n.factorial : ℝ≥0) * 2 ^ n) ^ 2, fun x u hu => ?_⟩
   rw [absE_apply, heightGL, mul_pow _ _ (2 * n), ← mul_assoc, ← Finset.prod_pow, ← Finset.prod_mul_distrib,
     finprod_pow (finite_mulSupport_htFin F x)]
-  refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_)
-    (finprod_le_finprod' (finite_mulSupport_absEv u) ?_ fun v => ?_)
+  refine mul_le_mul' (Finset.prod_le_prod fun w _ => ?_)
+    (finprod_le_finprod (finite_mulSupport_absEv u) ?_ fun v => ?_)
   · obtain ⟨τ⟩ : Nonempty (EmbOver E w) := inferInstance
     rw [absEw_eq_sq hσ τ, mul_comm 2 n, pow_mul, ← mul_pow]
     refine pow_le_pow_left' ?_ 2
@@ -126,15 +126,15 @@ theorem absE_le_heightGL {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) (n : ℕ) :
         ← RingHom.map_det, ← hu]
       rfl
     rw [e, Matrix.det_apply]
-    refine (nnnorm_sum_le _ _).trans ((Finset.sum_le_card_nsmul _ _ ((2 * H) ^ n) fun s _ => ?_).trans (le_of_eq ?_))
+    refine (nnNorm_sum_le _ _).trans ((Finset.sum_le_card_nsmul _ _ ((2 * H) ^ n) fun s _ => ?_).trans (le_of_eq ?_))
     · have : ‖Equiv.Perm.sign s • ∏ i, leviMat finSumFinEquiv ((x.1.map (compInf F E w)).map (infEmb τ)) (s i) i‖₊ =
           ∏ i, ‖leviMat finSumFinEquiv ((x.1.map (compInf F E w)).map (infEmb τ)) (s i) i‖₊ := by
-        rw [← nnnorm_prod]
+        rw [← nnNorm_prod]
         rcases Int.units_eq_one_or (Equiv.Perm.sign s) with h | h <;> simp [h]
       rw [this]
       refine (Finset.prod_le_pow_card _ _ (2 * H) fun i _ => ?_).trans (by simp)
       rw [two_mul]
-      exact (nnnorm_add_le _ _).trans (add_le_add (hent _ _) (hent _ _))
+      exact (nnNorm_add_le _ _).trans (add_le_add (hent _ _) (hent _ _))
     · simp [Fintype.card_perm, mul_pow, mul_assoc]
   · exact (finite_mulSupport_htFin F x).subset fun v hv h => hv (by simp only [h, one_pow])
   · have e : (unitFin F E v u).1 = (leviMat finSumFinEquiv (x.1.map (compFin F E v))).det := by
@@ -162,7 +162,7 @@ variable {D : D7}
 theorem hgt_mul_le (A : HSp D) (a : GL (Fin A.rank) (AE D)) (ha : IsMaj A a) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x y : GA D (dblSp A),
       (hgt A a (x * y) : ℝ) ≤ hgt A a x * (C * GlobalTheory.Grow.height (dblSp A) y ^ (2 * A.rank)) := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   have hI := GlobalTheory.Core.Rk.IP.hasIwasawa_Khat D A a ha
   have hK := isCompact_Khat A a
   obtain ⟨C, hC⟩ := absE_le_heightGL (isCMExt_host D) A.rank
@@ -307,7 +307,7 @@ theorem tsum_lagTerm_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W : H
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero.swSec, GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero.evZero]
     rw [e1, map_mul, Module.End.mul_apply, hmove, map_smul]
     simp only [Pi.smul_apply, smul_eq_mul]
-    rw [integral_const_mul, enorm_mul, ← ofReal_norm ((_ : Circle) : ℂ), Circle.norm_coe, ENNReal.ofReal_one,
+    rw [integral_const_mul, eNorm_mul, ← ofReal_norm ((_ : Circle) : ℂ), Circle.norm_coe, ENNReal.ofReal_one,
       one_mul]
     congr 2
     funext y

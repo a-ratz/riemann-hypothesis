@@ -60,8 +60,8 @@ theorem isCell_transfer {φ : InvFun O} (m1 m2 : Module O X) (f1 : letI := m1; M
   have hZ : ∀ β : LinearMap.BilinForm ℤ X, (letI := m1; letI := f1; φ.evalZ β) = (letI := m2; letI := f2; φ.evalZ β) :=
     fun β => hφ _
   obtain ⟨N, ℓ, hN, h1, h2, h3⟩ := hs
-  letI := m2
-  letI := f2
+  let := m2
+  let := f2
   refine ⟨fun i => (hbal _).1 (hm i), hn, fun c hc => ?_, N, ℓ, hN, fun i => ?_, fun β hβ hp => ?_, fun β hβ hp he => ?_⟩
   · rw [← hφ]
     simp only [← hZ]
@@ -126,8 +126,8 @@ theorem eval_twist_of_isTwInv {φ : InvFun (𝓞 E)} (hφ : IsTwInv H φ) (τ : 
     ext i
     simp
   have hs : Function.Surjective g := hr.comp fun a => ⟨fun i => τ.symm (a i), funext fun i => τ.apply_symm_apply _⟩
-  letI : Module (𝓞 E) X := Module.compHom _ τ.toRingHom
-  letI := hf
+  let : Module (𝓞 E) X := Module.compHom _ τ.toRingHom
+  let := hf
   exact (φ.eval_eq (r := ⟨g.toAddHom, hg⟩) hs _).symm
 
 
@@ -152,11 +152,11 @@ theorem depthSet_twist_subset {ψ w : InvFun (𝓞 E)} (hψ : IsTwInv H ψ) (hw 
     simp only [hτdef, RingEquiv.apply_symm_apply] at this
     exact this
   have hf' : letI := Module.compHom X₁ τ.toRingHom; Module.Finite (𝓞 E) X₁ := by
-    letI := Module.compHom X₁ τ.toRingHom
+    let := Module.compHom X₁ τ.toRingHom
     exact Module.Finite.of_surjective (⟨g.toAddHom, hg⟩ : (Fin n → 𝓞 E) →ₗ[𝓞 E] X₁) hs
   have hd' := isStarDepth_transfer H.bar i2 (Module.compHom X₁ τ.toRingHom) i3 hf' (mem_balForms_twist H τ)
     (eval_twist_of_isTwInv H hψ τ hτ hf') (eval_twist_of_isTwInv H hw τ hτ hf') hd
-  letI := Module.compHom X₁ τ.toRingHom
+  let := Module.compHom X₁ τ.toRingHom
   exact ⟨X₁, i1, _, hf', ⟨g.toAddHom, hg⟩, B₁, hs, hrad, hgB, hd'⟩
 
 theorem isTwInv_starDepth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (ψ w : InvFun (𝓞 E)),

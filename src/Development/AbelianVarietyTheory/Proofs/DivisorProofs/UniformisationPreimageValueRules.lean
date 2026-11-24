@@ -61,7 +61,7 @@ theorem pre_val_rules : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.l
     fun U V h z hz ↦ top_le_preimage_mono _ h hz, fun K W z ↦ ?_, fun U z hz ↦ ?_,
     fun U V h b z hz ↦ valAt'_map (u.ex z).left (homOfLE h).op b hz, fun U z hz ↦ ?_,
     fun U b z ↦ top_le_preimage_basicOpen_iff _ U b, fun z ↦ le_top (α := (Sp ℂ).Opens)⟩
-  · simp only [pre, Set.mem_setOf_eq, ex_add_lattice]
+  · simp only [pre, Set.mem_ofPred_eq, ex_add_lattice]
   · simp only [val, ex_add_lattice]
   · ext z
     exact top_le_preimage_inf _ U V

@@ -57,7 +57,7 @@ theorem eLpNorm_sq_le_add {α : Type} [MeasurableSpace α] {μ : Measure α} (h�
     simp only [ENNReal.rpow_ofNat] at e
     rw [e]
     refine lintegral_congr fun a => ?_
-    rw [Real.enorm_eq_ofReal_abs, ← ENNReal.ofReal_pow (abs_nonneg _), sq_abs]
+    rw [Real.eNorm_eq_ofReal_abs, ← ENNReal.ofReal_pow (abs_nonneg _), sq_abs]
   rw [key, key]
   calc ∫⁻ a, ENNReal.ofReal (f a ^ 2) ∂μ ≤ ∫⁻ a, ENNReal.ofReal (g a ^ 2) + ENNReal.ofReal C ∂μ :=
         lintegral_mono fun a => by

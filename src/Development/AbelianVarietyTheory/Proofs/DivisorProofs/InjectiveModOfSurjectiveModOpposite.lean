@@ -51,7 +51,7 @@ namespace GlobalTheory.LowFilt
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 
 theorem datum_finite_int (D : Datum H) : Module.Finite ℤ D.La := by
-  haveI := D.fin
+  have := D.fin
   exact Module.Finite.trans (𝓞 E) D.La
 
 theorem datum_isTorsionFree_int (D : Datum H) : Module.IsTorsionFree ℤ D.La := by
@@ -66,13 +66,13 @@ theorem datum_isTorsionFree_int (D : Datum H) : Module.IsTorsionFree ℤ D.La :=
   exact hk.2 hx
 
 theorem sub_free_finite (D : Datum H) (Z : Submodule (𝓞 E) D.La) : Module.Free ℤ Z ∧ Module.Finite ℤ Z := by
-  haveI := datum_finite_int D
-  haveI := datum_isTorsionFree_int D
-  haveI : IsNoetherian ℤ D.La := isNoetherian_of_isNoetherianRing_of_finite ℤ D.La
+  have := datum_finite_int D
+  have := datum_isTorsionFree_int D
+  have : IsNoetherian ℤ D.La := isNoetherian_of_isNoetherianRing_of_finite ℤ D.La
   let f : Z →ₗ[ℤ] D.La := Z.subtype.toAddMonoidHom.toIntLinearMap
   have hf : Function.Injective f := Subtype.val_injective
-  haveI : Module.Finite ℤ Z := Module.Finite.of_injective f hf
-  haveI : Module.IsTorsionFree ℤ Z := hf.moduleIsTorsionFree f (fun r m => f.map_smul r m)
+  have : Module.Finite ℤ Z := Module.Finite.of_injective f hf
+  have : Module.IsTorsionFree ℤ Z := hf.moduleIsTorsionFree f (fun r m => f.map_smul r m)
   exact ⟨inferInstance, inferInstance⟩
 
 theorem IsOpp.finrank_int_eq {D : Datum H} {Z Z' : Submodule (𝓞 E) D.La} (h : IsOpp D Z Z') :

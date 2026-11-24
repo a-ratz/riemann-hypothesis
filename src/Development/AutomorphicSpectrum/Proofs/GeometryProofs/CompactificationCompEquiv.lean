@@ -136,7 +136,7 @@ theorem exists_two_emb {K Ω : Type} [Field K] [CharZero K] [Countable K] [Field
     (σ : K →+* ℂ) (a : Ω) (ha : IsAlgebraic K a) (hne : a ∉ (algebraMap K Ω).range) :
     letI := σ.toAlgebra
     ∃ φ₁ φ₂ : Ω →ₐ[K] ℂ, φ₁ a ≠ φ₂ a := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have hi : IsIntegral K a := ha.isIntegral
   have hirr := minpoly.irreducible hi
   have hdeg : 2 ≤ (minpoly K a).natDegree := by
@@ -154,7 +154,7 @@ theorem exists_two_emb {K Ω : Type} [Field K] [CharZero K] [Countable K] [Field
   obtain ⟨ψ₁, ψ₂, hψ⟩ := exists_pair_ne (K⟮a⟯ →ₐ[K] ℂ)
   have hext : ∀ ψ : K⟮a⟯ →ₐ[K] ℂ, ∃ φ : Ω →ₐ[K] ℂ, φ a = ψ (IntermediateField.AdjoinSimple.gen K a) := by
     intro ψ
-    letI : Algebra K⟮a⟯ ℂ := ψ.toRingHom.toAlgebra
+    let : Algebra K⟮a⟯ ℂ := ψ.toRingHom.toAlgebra
     have : FaithfulSMul K⟮a⟯ Ω :=
       (faithfulSMul_iff_algebraMap_injective _ _).2 (algebraMap K⟮a⟯ Ω).injective
     have : FaithfulSMul K⟮a⟯ ℂ :=

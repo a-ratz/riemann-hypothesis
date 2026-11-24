@@ -108,9 +108,9 @@ theorem val_frac {X : Scheme.{0}} {G : Over X} [GrpObj G] [IsCommMonObj G] (hsm 
     (hj₀ : ∀ v, (M.pt (j₀ v)).left = Spec.map (CommRingCat.ofHom (dualMap φ)) ≫ (M₀.pt v).left)
     (u₀ : Module.Dual R L) (u : Module.Dual Ω Li) (hu : ∀ v, u (j₀ v) = φ (u₀ v))
     (e : Li) (he : e ∈ M.lat ⟨x z, hz⟩) : ∃ r s : R, s ∉ z.asIdeal ∧ φ s * u e = φ r := by
-  haveI : z.asIdeal.IsPrime := PrimeSpectrum.isPrime z
-  letI alg : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk z) := StructureSheaf.stalkAlgebra R z
-  haveI loc : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk z) z.asIdeal :=
+  have : z.asIdeal.IsPrime := PrimeSpectrum.isPrime z
+  let alg : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk z) := StructureSheaf.stalkAlgebra R z
+  have loc : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk z) z.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk R z
   have hun : ∀ s : z.asIdeal.primeCompl, IsUnit (φ s) := by
     intro s

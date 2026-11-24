@@ -238,8 +238,8 @@ theorem schr_fin_fix (F : Type) [Field F] [NumberField F] [Invertible (2 : AF F)
     (hψ : Continuous ψ) {κ : Type} [Fintype κ] (Φ : (κ → AF F) → ℂ) (hΦ : Φ ∈ GlobalTheory.WeilM.schA F κ) :
     ∃ K : OpenAddSubgroup (κ → Af F), ∀ a ∈ K, ∀ b ∈ K,
       GlobalTheory.WeilM.schr ψ ((fun i => pairA F 0 (a i)), (fun i => pairA F 0 (b i))) Φ = Φ := by
-  haveI := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := F)
-  haveI : NonarchimedeanAddGroup (κ → Af F) := GlobalTheory.HeisSchA.nonarch_pi
+  have := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := F)
+  have : NonarchimedeanAddGroup (κ → Af F) := GlobalTheory.HeisSchA.nonarch_pi
   induction hΦ using Submodule.span_induction with
   | mem Φ h =>
     obtain ⟨f, g, hg, rfl⟩ := h
@@ -315,7 +315,7 @@ theorem thetaTr_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
         ∀ Φ ∈ GlobalTheory.WeilM.schA D.host.F κ, ∃ U : AddSubgroup (Formalism.IndefR.Datum.WO S T), IsOpen (U : Set (Formalism.IndefR.Datum.WO S T)) ∧
           ∀ u ∈ U, u.map (infPart D) = 0 → Formalism.IndefR.Datum.heisO ψ S T u (GlobalTheory.WeilSchrodinger.thetaTr D.host.F co ψ Φ) = GlobalTheory.WeilSchrodinger.thetaTr D.host.F co ψ Φ := by
   intro D ψ hψ S T JA JB ξ hA hB κ _ co _ Φ hΦ
-  haveI : IsModuleTopology (AF D.host.F) (Formalism.IndefR.Datum.WO S T) :=
+  have : IsModuleTopology (AF D.host.F) (Formalism.IndefR.Datum.WO S T) :=
     inferInstanceAs (IsModuleTopology (AF D.host.F) (Fin T.rank → Fin S.rank → AE D))
   obtain ⟨K, hK⟩ := schr_fin_fix D.host.F ψ hψ.1.1 Φ hΦ
   have hcont : Continuous co.e := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap

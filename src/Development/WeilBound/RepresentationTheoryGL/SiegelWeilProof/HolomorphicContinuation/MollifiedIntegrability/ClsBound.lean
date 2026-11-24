@@ -101,19 +101,19 @@ theorem dirC_add {f g : E n → ℂ} {y : E n} (hf : DifferentiableAt ℝ f y) (
     (w : Fin n → Fin n → ℂ) : dirC (fun x => f x + g x) w y = dirC f w y + dirC g w y := by
   have h : HasFDerivAt (fun x => f x + g x) _ y := hf.hasFDerivAt.add hg.hasFDerivAt
   rw [dirC_of h, dirC_of hf.hasFDerivAt, dirC_of hg.hasFDerivAt]
-  simp only [ContinuousLinearMap.add_apply]; ring
+  simp only [add_apply]; ring
 
 theorem dirC_mul {f g : E n → ℂ} {y : E n} (hf : DifferentiableAt ℝ f y) (hg : DifferentiableAt ℝ g y)
     (w : Fin n → Fin n → ℂ) : dirC (fun x => f x * g x) w y = f y * dirC g w y + g y * dirC f w y := by
   have h : HasFDerivAt (fun x => f x * g x) _ y := hf.hasFDerivAt.mul hg.hasFDerivAt
   rw [dirC_of h, dirC_of hf.hasFDerivAt, dirC_of hg.hasFDerivAt]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]; ring
+  simp only [add_apply, smul_apply, smul_eq_mul]; ring
 
 theorem dirC_comp {g : ℂ → ℂ} {g' : ℂ} {f : E n → ℂ} {y : E n} (hg : HasDerivAt g g' (f y))
     (hf : DifferentiableAt ℝ f y) (w : Fin n → Fin n → ℂ) : dirC (fun x => g (f x)) w y = g' * dirC f w y := by
   have h := hg.comp_hasFDerivAt y hf.hasFDerivAt
   rw [show (fun x => g (f x)) = g ∘ f from rfl, dirC_of h, dirC_of hf.hasFDerivAt]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]; ring
+  simp only [smul_apply, smul_eq_mul]; ring
 
 theorem contDiff_eval {ι : Type} (φ : ι → E n → ℂ) (hφ : ∀ i, ContDiff ℝ (⊤ : ℕ∞) (φ i)) (R : MvPolynomial ι ℂ) :
     ContDiff ℝ (⊤ : ℕ∞) (fun y => MvPolynomial.eval (fun i => φ i y) R) := by
@@ -148,7 +148,7 @@ theorem dirC_eval {ι : Type} [Fintype ι] [DecidableEq ι] (φ : ι → E n →
       · simp [hx]; ring
     simp only [map_mul, MvPolynomial.eval_X]
     rw [dirC_mul (hd p) (hdi j), hp]
-    simp only [hs, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hs, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [Finset.mul_sum, add_comm]
     congr 1
     exact Finset.sum_congr rfl fun x _ => by ring
@@ -185,7 +185,7 @@ theorem mul_single_apply' (M : Matrix (Fin n) (Fin n) ℂ) (a c k l : Fin n) :
 theorem entry_mul_single_mul (M : Matrix (Fin n) (Fin n) ℂ) (a b k l : Fin n) :
     (M * Matrix.single l k (1 : ℂ) * M) a b = M a l * M k b := by
   rw [Matrix.mul_apply]
-  simp only [mul_single_apply', ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [mul_single_apply', ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem contDiff_det_of {M : E n → Matrix (Fin n) (Fin n) ℂ} (h : ∀ a b, ContDiff ℝ (⊤ : ℕ∞) (fun y => M y a b)) :
     ContDiff ℝ (⊤ : ℕ∞) (fun y => (M y).det) := by
@@ -212,7 +212,7 @@ theorem dirC_sum {ι : Type} (s : Finset ι) {f : ι → E n → ℂ} {y : E n} 
     have := HasFDerivAt.sum (u := s) fun i _ => (hf i).hasFDerivAt
     rwa [Finset.sum_fn] at this
   rw [dirC_of h]
-  simp only [ContinuousLinearMap.sum_apply, dirC]
+  simp only [sum_apply, dirC]
   rw [Finset.mul_sum, ← Finset.sum_add_distrib]
 
 theorem diffAt_of {f : E n → ℂ} (h : ContDiff ℝ (⊤ : ℕ∞) f) (y : E n) : DifferentiableAt ℝ f y :=
@@ -560,7 +560,7 @@ theorem dirC_cls {s : ℂ} (hs : s = 1 ∨ s = -1) (z : ℂ) (p q : ℕ) (R : Mv
     dirC_pow (diffAt_of (contDiff_detV hs) y) q _ (-(Complex.I * s * vM s y k l)) (by rw [dirC_detV hs]; ring),
     dirC_evUV hs]
   simp only [cls, dR, evUV_eq, map_add (f := _), map_mul, map_sub, eval_C, eval_X, ent]
-  simp only [Bool.false_eq_true, if_false, if_true]
+  simp only [Bool.false_eq_true, ite_false, ite_true]
   ring
 
 theorem norm_eval_le {σ : Type} (x : σ → ℂ) (hx : ∀ i, ‖x i‖ ≤ 1) (R : MvPolynomial σ ℂ) :

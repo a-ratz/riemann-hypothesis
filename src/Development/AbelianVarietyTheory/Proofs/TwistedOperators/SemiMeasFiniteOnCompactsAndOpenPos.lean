@@ -74,19 +74,19 @@ theorem exists_mul_of_mem_sup_range {G H : Type} [Group G] [Group H] (N : Subgro
 theorem semiMeas_finite_on_compacts_and_open_pos : ∀ {G H : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [T2Space G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [LocallyCompactSpace H] [T2Space H] [SecondCountableTopology H] [MeasurableSpace H] [BorelSpace H] (N : Subgroup G) (s : H →* G), IsClosed (N : Set G) → Continuous s → (∀ n ∈ N, ∀ h, s h * n * (s h)⁻¹ ∈ N) → (∃ p : (N ⊔ s.range : Subgroup G) → H, Continuous p ∧ ∀ (h : H) (n : N), p ⟨n.1 * s h, mul_mem (Subgroup.mem_sup_left n.2) (Subgroup.mem_sup_right ⟨h, rfl⟩)⟩ = h) → ∀ (μ : Measure H) (ν : Measure N), μ.IsHaarMeasure → ν.IsHaarMeasure → (∀ h, ν.map (fun n : N => s h * n.1 * (s h)⁻¹) = ν.map Subtype.val) → IsFiniteMeasureOnCompacts (semiMeas N s μ ν) ∧ (semiMeas N s μ ν).IsOpenPosMeasure := by
   intro G H _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ N s hN hs hnorm hp μ ν hμ hν _
   obtain ⟨p, hpc, hps⟩ := hp
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := inferInstanceAs (SecondCountableTopology (N : Set G))
-  haveI : IsFiniteMeasureOnCompacts ν := inferInstance
-  haveI : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : SigmaFinite ν := sigmaFinite_of_locallyFinite
-  haveI : μ.IsOpenPosMeasure := inferInstance
-  haveI : ν.IsOpenPosMeasure := inferInstance
-  haveI : (μ.prod ν).IsOpenPosMeasure := inferInstance
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := inferInstanceAs (SecondCountableTopology (N : Set G))
+  have : IsFiniteMeasureOnCompacts ν := inferInstance
+  have : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : SigmaFinite ν := sigmaFinite_of_locallyFinite
+  have : μ.IsOpenPosMeasure := inferInstance
+  have : ν.IsOpenPosMeasure := inferInstance
+  have : (μ.prod ν).IsOpenPosMeasure := inferInstance
 
   let φ : H × N → (N ⊔ s.range : Subgroup G) := fun q =>
     ⟨q.2.1 * s q.1, mul_mem (Subgroup.mem_sup_left q.2.2) (Subgroup.mem_sup_right ⟨q.1, rfl⟩)⟩
   have hφc : Continuous φ :=
-    ((continuous_subtype_val.comp continuous_snd).mul (hs.comp continuous_fst)).subtype_mk _
+    ((continuous_subtypeVal.comp continuous_snd).mul (hs.comp continuous_fst)).subtype_mk _
   have hmemN : ∀ k : (N ⊔ s.range : Subgroup G), (k : G) * (s (p k))⁻¹ ∈ N := by
     intro k
     obtain ⟨n, hn, h, hk⟩ := exists_mul_of_mem_sup_range N s hnorm k.2
@@ -99,7 +99,7 @@ theorem semiMeas_finite_on_compacts_and_open_pos : ∀ {G H : Type} [Group G] [T
     exact hn
   let ψ : (N ⊔ s.range : Subgroup G) → H × N := fun k => (p k, ⟨(k : G) * (s (p k))⁻¹, hmemN k⟩)
   have hψc : Continuous ψ :=
-    hpc.prodMk ((continuous_subtype_val.mul (hs.comp hpc).inv).subtype_mk _)
+    hpc.prodMk ((continuous_subtypeVal.mul (hs.comp hpc).inv).subtype_mk _)
   have hψφ : ∀ q, ψ (φ q) = q := by
     rintro ⟨h, n⟩
     have h1 : p (φ (h, n)) = h := hps h n

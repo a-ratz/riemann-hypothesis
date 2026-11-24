@@ -145,7 +145,7 @@ theorem UpperTheory.V.Fr.gpos :
     have := i.2
     omega
   have h1 : S.u.ee ≤ L.im ⊥ := ((UpperTheory.V.Fr.loc_rho hF (Or.inr rfl) S x L).2.2.1 ⊥).2.2.1 h0
-  haveI := hmax.isPrime
+  have := hmax.isPrime
   obtain ⟨s, hs, hs0⟩ := ann_ideal x S.u.ee (IsNoetherian.noetherian _) fun a ha => by
     have := ann_of_flat (L.ι : S.A →+* L.R) hfl (a := a) (h1 ha)
     rwa [L.lies] at this
@@ -309,7 +309,7 @@ theorem UpperTheory.V.CA.g_detrad :
   · intro r hr
     rw [heq, RingHom.mem_ker] at hr
     simpa [phi] using hr
-  · letI := MvPolynomial.gradedAlgebra (σ := (Fin (n + 1) × Fin (n + 1)) ⊕ Fin (n + 1)) (R := R)
+  · let := MvPolynomial.gradedAlgebra (σ := (Fin (n + 1) × Fin (n + 1)) ⊕ Fin (n + 1)) (R := R)
     have hI : I.IsHomogeneous (MvPolynomial.homogeneousSubmodule _ R) := by
       apply Ideal.homogeneous_span
       rintro x (⟨a, rfl⟩ | rfl)
@@ -344,7 +344,7 @@ private theorem UpperTheory.V.CA.exists_part {R σ : Type} [CommRing R] [Finite 
     ∃ g : MvPolynomial σ R, ∀ m : σ →₀ ℕ,
       g.coeff m = if m.degree ≤ d then MvPowerSeries.coeff m F else 0 := by
   classical
-  haveI : Fintype σ := Fintype.ofFinite σ
+  have : Fintype σ := Fintype.ofFinite σ
   set D : σ →₀ ℕ := Finsupp.equivFunOnFinite.symm (fun _ => d) with hD
   refine ⟨∑ m ∈ Finset.Iic D, MvPolynomial.monomial m
     (if m.degree ≤ d then MvPowerSeries.coeff m F else 0), fun m => ?_⟩
@@ -355,7 +355,7 @@ private theorem UpperTheory.V.CA.exists_part {R σ : Type} [CommRing R] [Finite 
   · have hm : m ∈ Finset.Iic D := by
       refine Finset.mem_Iic.mpr (Finsupp.le_def.mpr fun i => (Finsupp.le_degree i m).trans (h.trans ?_))
       simp [hD]
-    rw [if_pos hm]
+    rw [ite_eq_left hm]
   · simp [h]
 
 theorem UpperTheory.V.CA.g_hommem :
@@ -395,8 +395,8 @@ theorem UpperTheory.V.CA.g_hommem :
         ext m
         rw [hsumco]
         by_cases hm : m.degree ≤ d
-        · rw [if_pos hm]
-        · rw [if_neg hm, hg, if_neg hm]
+        · rw [ite_eq_left hm]
+        · rw [ite_eq_right hm, hg, ite_eq_right hm]
       rw [hgeq]
       refine Ideal.sum_mem _ fun k hk => h k _ fun m => ?_
       have hk' : k ≤ d := Nat.lt_succ_iff.mp (Finset.mem_range.mp hk)
@@ -445,12 +445,12 @@ theorem UpperTheory.V.CA.g_hommem :
         ext m
         rw [hsumco, hg, smul_eq_mul]
         by_cases hm : m.degree ≤ d
-        · rw [if_pos hm, if_pos hm, MvPowerSeries.coeff_mul, MvPolynomial.coeff_mul]
+        · rw [ite_eq_left hm, ite_eq_left hm, MvPowerSeries.coeff_mul, MvPolynomial.coeff_mul]
           refine Finset.sum_congr rfl fun p hp => ?_
           have hpm : p.1 + p.2 = m := Finset.HasAntidiagonal.mem_antidiagonal.mp hp
           have hdeg : p.1.degree + p.2.degree = m.degree := by rw [← map_add (f := _), hpm]
-          rw [hTa, hTx, if_pos (by omega), if_pos (by omega)]
-        · rw [if_neg hm, if_neg hm]
+          rw [hTa, hTx, ite_eq_left (by omega), ite_eq_left (by omega)]
+        · rw [ite_eq_right hm, ite_eq_right hm]
       rw [hgeq]
       exact Ideal.sum_mem _ fun k _ => hP _ (P.mul_mem_left Ta hTxP) k
   · intro hQ
@@ -487,8 +487,8 @@ theorem UpperTheory.V.CA.g_hommem :
     have hcoefF : ∀ m : σ →₀ ℕ,
         AddMonoidAlgebra.coeff (∑ i, c m.degree i • h i) m = MvPowerSeries.coeff m F := by
       intro m
-      rw [hc, MvPolynomial.coeff_homogeneousComponent, if_pos rfl,
-        Classical.choose_spec (htr F m.degree) m, if_pos le_rfl]
+      rw [hc, MvPolynomial.coeff_homogeneousComponent, ite_eq_left rfl,
+        Classical.choose_spec (htr F m.degree) m, ite_eq_left le_rfl]
     let C : ↥s × Fin (D + 1) → MvPowerSeries σ R := fun i p =>
       AddMonoidAlgebra.coeff (c (p.degree + i.2.val) i) p
     have hFeq : F = ∑ i, C i * MvPolynomial.coeToMvPowerSeries.ringHom (σ := σ) (R := R) (h i) := by
@@ -507,7 +507,7 @@ theorem UpperTheory.V.CA.g_hommem :
       · rw [← h2, hdeg]
       · have h0 : AddMonoidAlgebra.coeff (h i) p.2 = 0 := by
           show AddMonoidAlgebra.coeff (MvPolynomial.homogeneousComponent i.2.val i.1.val) p.2 = 0
-          rw [MvPolynomial.coeff_homogeneousComponent, if_neg h2]
+          rw [MvPolynomial.coeff_homogeneousComponent, ite_eq_right h2]
         rw [h0, mul_zero, mul_zero]
     rw [hFeq]
     exact Ideal.sum_mem _ fun i _ => Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ (hhP i))
@@ -814,10 +814,10 @@ private theorem UpperTheory.V.Fr.detsec_ker (O : Type) [CommRing O] [IsLocalRing
     rintro _ ⟨s, rfl⟩
     simp [RingHom.mem_ker, hC, hX]
   refine le_antisymm (fun G hG => ?_) h1
-  haveI := co_mvps O R σ
-  haveI : Nontrivial (MvPowerSeries σ R ⧸ K) :=
+  have := co_mvps O R σ
+  have : Nontrivial (MvPowerSeries σ R ⧸ K) :=
     Ideal.Quotient.nontrivial_iff.2 fun h => RingHom.ker_ne_top _ (top_le_iff.1 (h ▸ h1))
-  haveI := co_quot O _ _ (Ideal.Quotient.mkₐ O K) (Ideal.Quotient.mkₐ_surjective O K)
+  have := co_quot O _ _ (Ideal.Quotient.mkₐ O K) (Ideal.Quotient.mkₐ_surjective O K)
   let c : R →ₐ[O] MvPowerSeries σ R :=
     { (MvPowerSeries.C : R →+* MvPowerSeries σ R) with commutes' := fun _ => MvPowerSeries.algebraMap_apply.symm }
   let f : R →ₐ[O] MvPowerSeries σ R ⧸ K := (Ideal.Quotient.mkₐ O K).comp c
@@ -839,10 +839,10 @@ private theorem UpperTheory.V.Fr.detsec_sec (O : Type) [CommRing O] [IsDomain O]
     (I : Ideal (MvPowerSeries σ R)) (hI : I.radical.IsPrime) (b D : ℕ) (f : Fin b → R) (hf : ∀ i, f i ∈ maximalIdeal R)
     (hd : ((D + 1 + (Fintype.card σ + b) : ℕ) : WithBot ℕ∞) ≤ ringKrullDim (MvPowerSeries σ R ⧸ I.radical)) :
     Chained (Ideal.span (Set.range f) ⊔ I.map (F : MvPowerSeries σ R →+* R)) D := by
-  haveI := co_mvps O R σ
-  haveI : Nontrivial (MvPowerSeries σ R ⧸ I) :=
+  have := co_mvps O R σ
+  have : Nontrivial (MvPowerSeries σ R ⧸ I) :=
     Ideal.Quotient.nontrivial_iff.2 fun h => hI.ne_top (by rw [h, Ideal.radical_top])
-  haveI hco := co_quot O _ _ (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
+  have hco := co_quot O _ _ (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
   have hF : Function.Surjective (F : MvPowerSeries σ R →+* R) := fun x => ⟨MvPowerSeries.C x, hC x⟩
   let e : σ ⊕ Fin b → MvPowerSeries σ R :=
     Sum.elim (fun s => MvPowerSeries.X s - MvPowerSeries.C (a s)) fun i => MvPowerSeries.C (f i)
@@ -895,7 +895,7 @@ private theorem UpperTheory.V.Fr.detsec_num (x : WithBot ℕ∞) (y : ℕ∞) (D
     induction x using ENat.recTopCoe with
     | top => exact le_top
     | coe x =>
-      lift y to ℕ using ne_top_of_le_ne_top (ENat.coe_ne_top _) h2
+      lift y to ℕ using ne_top_of_le_ne_top (ENat.natCast_ne_top _) h2
       have h5 : y ≤ g + 1 := by exact_mod_cast h2
       have h6 : y + x = D + 1 + b + (g + 1) + c := by exact_mod_cast h3
       have h7 : D + 1 + (c + b) ≤ x := by omega
@@ -907,8 +907,8 @@ private theorem UpperTheory.V.Fr.detsec_gen (O : Type) [CommRing O] [IsDomain O]
     (hd : ringKrullDim R = (D + 1 + b + (g + 1) : ℕ)) (hf : ∀ i, f i ∈ maximalIdeal R)
     (hM : ∀ i j, M i j ∈ maximalIdeal R) (hm : ∀ j, m j ∈ maximalIdeal R) :
     Chained (Ideal.span (Set.range f ∪ Set.range (M *ᵥ m) ∪ {M.det})) D := by
-  haveI := co_mvps O R ((Fin (g + 1) × Fin (g + 1)) ⊕ Fin (g + 1))
-  haveI : IsDomain (MvPowerSeries ((Fin (g + 1) × Fin (g + 1)) ⊕ Fin (g + 1)) R) := NoZeroDivisors.to_isDomain _
+  have := co_mvps O R ((Fin (g + 1) × Fin (g + 1)) ⊕ Fin (g + 1))
+  have : IsDomain (MvPowerSeries ((Fin (g + 1) × Fin (g + 1)) ⊕ Fin (g + 1)) R) := NoZeroDivisors.to_isDomain _
   let v : (Fin (g + 1) × Fin (g + 1)) ⊕ Fin (g + 1) → R := Sum.elim (fun p => M p.1 p.2) m
   have hv : ∀ s, v s ∈ maximalIdeal R := by
     rintro (p | j)
@@ -932,8 +932,8 @@ private theorem UpperTheory.V.Fr.detsec_gen (O : Type) [CommRing O] [IsDomain O]
 theorem UpperTheory.V.Fr.detsec :
     ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O] (a b g D : ℕ) (f : Fin b → MvPowerSeries (Fin a ⊕ Fin (g + 1)) O) (M : Matrix (Fin (g + 1)) (Fin (g + 1)) (MvPowerSeries (Fin a ⊕ Fin (g + 1)) O)), a = b + D → (∀ i, MvPowerSeries.constantCoeff (f i) ∈ maximalIdeal O) → (∀ i j, MvPowerSeries.constantCoeff (M i j) ∈ maximalIdeal O) → Chained (Ideal.span (Set.range f ∪ Set.range (M *ᵥ fun j => MvPowerSeries.X (.inr j)) ∪ {M.det})) D := by
   intro O _ _ _ _ a b g D f M hab hf hM
-  haveI := co_mvps O O (Fin a ⊕ Fin (g + 1))
-  haveI : IsDomain (MvPowerSeries (Fin a ⊕ Fin (g + 1)) O) := NoZeroDivisors.to_isDomain _
+  have := co_mvps O O (Fin a ⊕ Fin (g + 1))
+  have : IsDomain (MvPowerSeries (Fin a ⊕ Fin (g + 1)) O) := NoZeroDivisors.to_isDomain _
   have hm : ∀ x : MvPowerSeries (Fin a ⊕ Fin (g + 1)) O, MvPowerSeries.constantCoeff x ∈ maximalIdeal O →
       x ∈ maximalIdeal (MvPowerSeries (Fin a ⊕ Fin (g + 1)) O) := fun x hx hu =>
     hx (MvPowerSeries.isUnit_iff_constantCoeff.1 hu)
@@ -990,25 +990,25 @@ theorem UpperTheory.V.Fr.oddm :
         rw [Finsupp.single_le_iff]
         omega
       rw [Finset.sum_eq_single (S.min' hS)]
-      · rw [if_pos (hle _ hj0), if_pos, tsub_add_cancel_of_le (hle _ hj0)]
+      · rw [ite_eq_left (hle _ hj0), ite_eq_left, tsub_add_cancel_of_le (hle _ hj0)]
         intro k hk
         by_contra hne
         have := hmin k (by simpa [Finsupp.tsub_apply, Finsupp.single_apply, ne_of_gt hk] using hne)
         exact absurd hk (not_lt.mpr this)
       · intro j _ hj
         by_cases hjl : Finsupp.single (Sum.inr j : Fin a ⊕ Fin g) 1 ≤ n
-        · rw [if_pos hjl]
+        · rw [ite_eq_left hjl]
           have hnj : n (Sum.inr j) ≠ 0 := by
             have := hjl (Sum.inr j)
             simp at this
             omega
           have hlt : S.min' hS < j := lt_of_le_of_ne (hmin j hnj) (Ne.symm hj)
-          rw [if_neg]
+          rw [ite_eq_right]
           intro hall
           have := hall _ hlt
           simp [Finsupp.tsub_apply, Finsupp.single_apply, Ne.symm (ne_of_lt hlt)] at this
           exact hj0 this
-        · rw [if_neg hjl]
+        · rw [ite_eq_right hjl]
       · intro h
         exact absurd (Finset.mem_univ _) h
     · push_neg at hex
@@ -1016,7 +1016,7 @@ theorem UpperTheory.V.Fr.oddm :
         intro j hj
         have := hj (Sum.inr j)
         simp [hex j] at this
-      simp only [hz, if_false, Finset.sum_const_zero]
+      simp only [hz, ite_false, Finset.sum_const_zero]
       apply hG
       rw [Finsupp.weight_apply, Finsupp.sum, Finset.sum_eq_zero]
       · decide
@@ -1070,7 +1070,7 @@ theorem UpperTheory.Reformulated.B.SpanOfVariable.span_X :
     have hd : MvPowerSeries.X a ∣ f - g := by
       rw [MvPowerSeries.X_dvd_iff]
       intro n hn
-      rw [map_sub, hg, if_pos hn, sub_self]
+      rw [map_sub, hg, ite_eq_left hn, sub_self]
     have hfg : f - g ∈ I := I.mem_of_dvd hd (hX a (Finset.mem_insert_self a s))
     have := I.add_mem hfg hgI
     rwa [sub_add_cancel] at this
@@ -1306,7 +1306,7 @@ theorem UpperTheory.V.Fr.thick :
   have hm j : E.p (MvPowerSeries.X (.inr j)) ∈ L.ρ.ee := E.ee ▸ Ideal.subset_span ⟨j, rfl⟩
   obtain ⟨D, hD, h0, j, hj⟩ := der_ex E.p E.surj (Ideal.Quotient.mk P) E.Fe M (hG ▸ E.ker) E.even
     (fun j => Ideal.Quotient.eq_zero_iff_mem.2 (hT.2.2 (hm j))) (Ideal.Quotient.eq_zero_iff_mem.2 hM)
-  haveI : IsLocalHom (algebraMap O L.R) := ⟨fun a ha => by
+  have : IsLocalHom (algebraMap O L.R) := ⟨fun a ha => by
     by_contra hn
     have h1 : algebraMap O L.O' a ∈ maximalIdeal L.O' := L.unr ▸ Ideal.mem_map_of_mem _ hn
     rw [IsScalarTower.algebraMap_apply O L.O' L.R] at ha
@@ -1449,9 +1449,9 @@ theorem UpperTheory.V.Fr.sharp3 :
   · obtain ⟨N, N', p, f, hN, hp, hk⟩ := pres hF (Or.inr rfl) S x L
     have hch : Chained (⊥ : Ideal L.R) (3 * F.d + 1) := by
       refine chained_of_comap p.toRingHom hp _ _ ?_
-      haveI hco : IsCO L.O' (MvPowerSeries (Fin N) L.O') := co_mvps L.O' L.O' (Fin N)
-      haveI : IsNoetherianRing (MvPowerSeries (Fin N) L.O') := hco.toIsNoetherian
-      haveI : IsAdicComplete (maximalIdeal (MvPowerSeries (Fin N) L.O')) (MvPowerSeries (Fin N) L.O') :=
+      have hco : IsCO L.O' (MvPowerSeries (Fin N) L.O') := co_mvps L.O' L.O' (Fin N)
+      have : IsNoetherianRing (MvPowerSeries (Fin N) L.O') := hco.toIsNoetherian
+      have : IsAdicComplete (maximalIdeal (MvPowerSeries (Fin N) L.O')) (MvPowerSeries (Fin N) L.O') :=
         hco.complete
       have h1 := c1ch (MvPowerSeries (Fin N) L.O') N' (3 * F.d + 1) f
         (by rw [nilradical_eq_zero]; exact Ideal.isPrime_bot) ⟨L.O', L.cO, L.dO, L.vO, inferInstance, _, hco⟩

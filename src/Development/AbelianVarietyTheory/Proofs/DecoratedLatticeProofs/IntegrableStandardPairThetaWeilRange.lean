@@ -77,12 +77,12 @@ theorem integrable_theta : GlobalTheory.Published.WeilThetaConvergence → ∀ (
       have := (quasiMeasurePreserving_mk (Γ := GQ V) (μ := ν)).ae hae
       filter_upwards [this] with h hh
       rwa [(GlobalTheory.SiegelFormula.leftInv_absTheta V φ.1).descend_mk] at hh
-    haveI := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
-    haveI : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) :=
+    have := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
+    have : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) :=
       inferInstanceAs (Countable (Fin V.rank → Fin n → D.host.E))
     have hsum : ∀ᵐ h ∂ν, Summable fun ξ : Matrix (Fin V.rank) (Fin n) D.host.E =>
         φ.1 (GlobalTheory.SiegelFormula.invPt V h ξ) :=
-      hae'.mono fun h hh => Summable.of_enorm hh.ne
+      hae'.mono fun h hh => Summable.of_eNorm hh.ne
     have hlim := aestronglyMeasurable_of_tendsto_ae (μ := ν)
       (Filter.atTop : Filter (Finset (Matrix (Fin V.rank) (Fin n) D.host.E)))
       (f := fun F h => ∑ ξ ∈ F, φ.1 (GlobalTheory.SiegelFormula.invPt V h ξ))
@@ -92,7 +92,7 @@ theorem integrable_theta : GlobalTheory.Published.WeilThetaConvergence → ∀ (
     exact hlim.congr (Filter.Eventually.of_forall fun h => (hterm h).symm)
   · refine lt_of_le_of_lt (lintegral_mono fun q => ?_) hfin
     simp only [GlobalTheory.AutomorphicL2Unitary.descend, GlobalTheory.SiegelFormula.absTheta]
-    exact enorm_tsum_le_tsum_enorm
+    exact eNorm_tsum_le_tsum_eNorm
 
 end GlobalTheory.StdThetaInt
 

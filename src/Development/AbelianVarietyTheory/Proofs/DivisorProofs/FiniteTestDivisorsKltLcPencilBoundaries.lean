@@ -272,12 +272,12 @@ theorem exists_resolution_supp : GlobalTheory.Published.Principalisation → ∀
         (fun ω => @dite ℤ (∃ a, F.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (ratPull p s n η) = 0) := by
   intro hP X _ _ p n hp hdim η G D₀ hη
   obtain ⟨W, s₁, U, hW, hsm₁, hpr₁, hU, hiso₁⟩ := GlobalTheory.WeakRes.weak_resolution hP ℂ X p n hp hdim
-  haveI := hW
-  haveI : IsDominant s₁ := isDominant_of_isIso_restrict X W s₁ U hU hiso₁
+  have := hW
+  have : IsDominant s₁ := isDominant_of_isIso_restrict X W s₁ U hU hiso₁
   have hbij₁ := functionFieldMap_bijective_of_isIso_restrict X W s₁ U hU hiso₁
-  haveI := hsm₁
-  haveI := SmoothOfRelativeDimension.smooth n (s₁ ≫ p)
-  haveI : IsLocallyNoetherian W := LocallyOfFiniteType.isLocallyNoetherian (s₁ ≫ p)
+  have := hsm₁
+  have := SmoothOfRelativeDimension.smooth n (s₁ ≫ p)
+  have : IsLocallyNoetherian W := LocallyOfFiniteType.isLocallyNoetherian (s₁ ≫ p)
   have hη₁ : ratPull p s₁ n η ≠ 0 := fun h =>
     hη ((ratPull_bijective_of_birational ℂ X W p s₁ hbij₁ n).1 (h.trans (map_zero _).symm))
   obtain ⟨K₁, hK₁⟩ := (exists_isDivOfForm_and_toPic ℂ W (s₁ ≫ p) n _ hη₁).1
@@ -298,14 +298,14 @@ theorem exists_resolution_supp : GlobalTheory.Published.Principalisation → ∀
     rw [hIs] at this
     exact hgZ this
   obtain ⟨Y, s₂, hY, hsm, hpr, -, hiso₂, -, hsnc⟩ := hP ℂ n W (s₁ ≫ p) hW hsm₁ hpr₁ I hI
-  haveI := hY
-  haveI := hsm
-  haveI := SmoothOfRelativeDimension.smooth n (s₂ ≫ s₁ ≫ p)
-  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (s₂ ≫ s₁ ≫ p)
+  have := hY
+  have := hsm
+  have := SmoothOfRelativeDimension.smooth n (s₂ ≫ s₁ ≫ p)
+  have : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (s₂ ≫ s₁ ≫ p)
   have hne : ((I.support.compl : W.Opens) : Set W).Nonempty := ⟨genericPoint W, by
     change genericPoint W ∉ (I.support : Set W)
     rw [hIs]; exact hgZ⟩
-  haveI : IsDominant s₂ := isDominant_of_isIso_restrict W Y s₂ _ hne hiso₂
+  have : IsDominant s₂ := isDominant_of_isIso_restrict W Y s₂ _ hne hiso₂
   have hbij₂ := functionFieldMap_bijective_of_isIso_restrict W Y s₂ _ hne hiso₂
   let B : Closeds Y := (I.comap s₂).support
   have hB : ∀ y, y ∈ B ↔ s₂ y ∈ Z := by
@@ -317,7 +317,7 @@ theorem exists_resolution_supp : GlobalTheory.Published.Principalisation → ∀
 
   have hsm' : SmoothOfRelativeDimension n ((s₂ ≫ s₁) ≫ p) := by rw [Category.assoc]; exact hsm
   have hpr' : IsProjOver ((s₂ ≫ s₁) ≫ p) := by rw [Category.assoc]; exact hpr
-  haveI := hsm'
+  have := hsm'
   have hbij : Function.Bijective (functionFieldMap (s₂ ≫ s₁)) := by
     rw [functionFieldMap_comp_dominant s₁ s₂]
     exact hbij₂.comp hbij₁
@@ -507,13 +507,13 @@ namespace GlobalTheory.PairStep
 
 theorem finite_test_divisors : GlobalTheory.Published.Principalisation → ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℂ) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (η : RatForms p n) (m : ℕ) (G D₀ : CartierDiv X), η ≠ 0 → 0 < m → ∃ S : Set (DivOver p), S.Finite ∧ ∀ (x : X) (g f : X.functionFieldˣ) (c : ℚ), G.IsEqn x g → D₀.IsEqn x f → ((∀ E ∈ S, E.Through x → -1 < discrep E η m g - c * E.ord f) → ∀ E : DivOver p, E.Through x → -1 < discrep E η m g - c * E.ord f) ∧ ((∀ E ∈ S, E.Through x → -1 ≤ discrep E η m g - c * E.ord f) → ∀ E : DivOver p, E.Through x → -1 ≤ discrep E η m g - c * E.ord f) := by
   intro hP X _ _ p n hproj hn η m G D₀ hη hm
-  haveI : LocallyOfFiniteType p := by
+  have : LocallyOfFiniteType p := by
     obtain ⟨h1, -⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hproj
     infer_instance
   obtain ⟨Y, hYi, hYn, s, hsd, B, hsm, hprop, hbij, hfin, hη', hchart, hG, hD, hK⟩ :=
     _root_.GlobalTheory.ResPairSupp.exists_resolution_supp hP X p n hproj hn η G D₀ hη
-  haveI := SmoothOfRelativeDimension.smooth n (s ≫ p)
-  haveI : GlobalTheory.IsNormalScheme Y := isNormalScheme_of_smooth (s ≫ p)
+  have := SmoothOfRelativeDimension.smooth n (s ≫ p)
+  have : GlobalTheory.IsNormalScheme Y := isNormalScheme_of_smooth (s ≫ p)
   have hnY : topologicalKrullDim Y = n := GlobalTheory.NadelApp.topologicalKrullDim_eq_of_smooth Y (s ≫ p) n
   set S : Set (DivOver p) := ⋃ v ∈ {v : Y | v ∈ B ∧ Order.coheight v = 1},
     {E : DivOver p | ∀ f, f ∈ E.ring ↔ RegAt v (functionFieldMap s f)} with hSdef

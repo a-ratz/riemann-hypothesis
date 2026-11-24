@@ -398,8 +398,8 @@ theorem one_bij (hL : OneLow) (hR : OneRes) {R : Type} [CommRing R] {ι : Type} 
       obtain ⟨y, hy⟩ := hex _ h0
       refine ⟨r y, hin' ?_⟩
       rw [hg, show P.aug y = ψ 0 ((A.coh n).aug z) from hy.trans (one_smul R _), hφψ]
-  · haveI := hX n hn
-    haveI := hz n hn
+  · have := hX n hn
+    have := hz n hn
     exact ⟨fun x y _ => Subsingleton.elim x y, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
 
 section Abstract
@@ -512,7 +512,7 @@ end Chart
 theorem away_of_equiv {R R' S S' : Type} [CommRing R] [CommRing R'] [CommRing S] [CommRing S'] [Algebra R S] [Algebra R' S']
     (e₁ : R ≃+* R') (e₂ : S ≃+* S') (h : ∀ x, e₂ (algebraMap R S x) = algebraMap R' S' (e₁ x)) (x : R)
     (hx : IsLocalization.Away (e₁ x) S') : IsLocalization.Away x S := by
-  haveI := hx
+  have := hx
   constructor; constructor
   · rintro ⟨_, n, rfl⟩
     refine (isUnit_map_iff e₂ _).1 ?_
@@ -550,25 +550,25 @@ theorem glue_rings {K : Type} [CommRing K] {ι : Type} (A : Type) [CommRing A] [
       (∀ (T : Finset ι) (hT : T.Nonempty) g, b T hT (res (Finset.empty_subset T) (base.symm g)) = τ T hT g) := by
   classical
   let Rf : Finset ι → CommAlgCat.{0} K := fun S => if S.Nonempty then CommAlgCat.of K (B S) else CommAlgCat.of K A
-  let b : ∀ S : Finset ι, S.Nonempty → (Rf S ≃ₐ[K] B S) := fun S hS => eqvOf (if_pos hS)
-  let bA : ∀ S : Finset ι, ¬ S.Nonempty → (Rf S ≃ₐ[K] A) := fun S hS => eqvOf (if_neg hS)
+  let b : ∀ S : Finset ι, S.Nonempty → (Rf S ≃ₐ[K] B S) := fun S hS => eqvOf (ite_eq_left hS)
+  let bA : ∀ S : Finset ι, ¬ S.Nonempty → (Rf S ≃ₐ[K] A) := fun S hS => eqvOf (ite_eq_right hS)
   let res : ∀ {S T : Finset ι}, S ⊆ T → (Rf S →ₐ[K] Rf T) := fun {S T} h =>
     if hS : S.Nonempty then ((b T (hS.mono h)).symm : B T →ₐ[K] Rf T).comp ((ρ h).comp (b S hS : Rf S →ₐ[K] B S))
     else if hT : T.Nonempty then ((b T hT).symm : B T →ₐ[K] Rf T).comp ((τ T hT).comp (bA S hS : Rf S →ₐ[K] A))
     else ((bA T hT).symm : A →ₐ[K] Rf T).comp (bA S hS : Rf S →ₐ[K] A)
   have r1 : ∀ {S T : Finset ι} (h : S ⊆ T) (hS : S.Nonempty) (y : Rf S), res h y = (b T (hS.mono h)).symm (ρ h (b S hS y)) := by
     intro S T h hS y
-    simp only [res, dif_pos hS]
+    simp only [res, dite_eq_left hS]
     rfl
   have r2 : ∀ {S T : Finset ι} (h : S ⊆ T) (hS : ¬ S.Nonempty) (hT : T.Nonempty) (y : Rf S),
       res h y = (b T hT).symm (τ T hT (bA S hS y)) := by
     intro S T h hS hT y
-    simp only [res, dif_neg hS, dif_pos hT]
+    simp only [res, dite_eq_right hS, dite_eq_left hT]
     rfl
   have r3 : ∀ {S T : Finset ι} (h : S ⊆ T) (hS : ¬ S.Nonempty) (hT : ¬ T.Nonempty) (y : Rf S),
       res h y = (bA T hT).symm (bA S hS y) := by
     intro S T h hS hT y
-    simp only [res, dif_neg hS, dif_neg hT]
+    simp only [res, dite_eq_right hS, dite_eq_right hT]
     rfl
   have h0 : ¬ (∅ : Finset ι).Nonempty := Finset.not_nonempty_empty
   refine ⟨Rf, res, bA ∅ h0, b, ?_, ?_, ?_, ?_⟩
@@ -636,7 +636,7 @@ theorem chart_exists (K : Type) [Field K] (W Z Y : Scheme.{0}) (q : Z ⟶ Spec (
     rw [← CommRingCat.comp_apply, ← Functor.map_comp]
     rfl
   · intro k
-    letI : Algebra (Sec q V) (R {k}) := ((res (Finset.empty_subset {k})).toRingHom.comp base.symm.toRingHom).toAlgebra
+    let : Algebra (Sec q V) (R {k}) := ((res (Finset.empty_subset {k})).toRingHom.comp base.symm.toRingHom).toAlgebra
     intro y
     have hk : ({k} : Finset (Fin d)).Nonempty := Finset.singleton_nonempty k
     obtain ⟨p, hp⟩ := (chart_pres c k).1 (b {k} hk y)
@@ -646,7 +646,7 @@ theorem chart_exists (K : Type) [Field K] (W Z Y : Scheme.{0}) (q : Z ⟶ Spec (
       (secPull q π (inf_le_pre c hk)).toRingHom (b {k} hk).toRingEquiv (fun a => hb2 {k} hk a) _ _
       (fun j => AlgEquiv.apply_symm_apply _ _) p
   · intro k
-    letI : Algebra (Sec q V) (R {k}) := ((res (Finset.empty_subset {k})).toRingHom.comp base.symm.toRingHom).toAlgebra
+    let : Algebra (Sec q V) (R {k}) := ((res (Finset.empty_subset {k})).toRingHom.comp base.symm.toRingHom).toAlgebra
     have hk : ({k} : Finset (Fin d)).Nonempty := Finset.singleton_nonempty k
     refine Eq.trans ?_ (chart_pres c k).2
     ext p
@@ -658,10 +658,10 @@ theorem chart_exists (K : Type) [Field K] (W Z Y : Scheme.{0}) (q : Z ⟶ Spec (
     refine Iff.trans ?_ (Eq.congr_left hp)
     exact (map_eq_zero_iff _ (b {k} hk).injective).symm
   · intro S k hk
-    letI : Algebra (R {k}) (R S) := (res (Finset.singleton_subset_iff.2 hk)).toRingHom.toAlgebra
+    let : Algebra (R {k}) (R S) := (res (Finset.singleton_subset_iff.2 hk)).toRingHom.toAlgebra
     have hk1 : ({k} : Finset (Fin d)).Nonempty := Finset.singleton_nonempty k
     have hS : S.Nonempty := ⟨k, hk⟩
-    letI : Algebra (Sec (π ≫ q) (({k} : Finset (Fin d)).inf c.C)) (Sec (π ≫ q) (S.inf c.C)) :=
+    let : Algebra (Sec (π ≫ q) (({k} : Finset (Fin d)).inf c.C)) (Sec (π ≫ q) (S.inf c.C)) :=
       (secRes (π ≫ q) (Finset.inf_mono (Finset.singleton_subset_iff.2 hk))).toRingHom.toAlgebra
     refine away_of_equiv (S' := Sec (π ≫ q) (S.inf c.C)) (b {k} hk1).toRingEquiv (b S hS).toRingEquiv
       (fun x => hb1 {k} S _ hk1 hS x) _ ?_

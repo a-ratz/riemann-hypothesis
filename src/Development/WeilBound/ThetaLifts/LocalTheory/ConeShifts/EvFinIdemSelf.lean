@@ -182,8 +182,8 @@ theorem partU_sub_one {a : AF F} (ha : a * a = a) (g : UA σ J) : mat (partU ha 
   rw [mat_partU, smul_sub, sub_smul, one_smul]; abel
 
 theorem tendsto_partU (g : UA σ J) : Tendsto (fun S => partU (aS_mul_self S) g) atTop (𝓝 g) := by
-  haveI : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
   have key : ∀ m : Matrix (Fin n) (Fin n) (AE F E),
       Tendsto (fun S => aS F S • m + (1 - aS F S) • (1 : Matrix (Fin n) (Fin n) (AE F E))) atTop (𝓝 m) := fun m => by
     have := (tendsto_aS.smul (tendsto_const_nhds (x := m))).add

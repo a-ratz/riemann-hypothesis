@@ -90,7 +90,7 @@ theorem section_orth_cpt_zero : KerUniq → ∀ (n : ℕ) [MeasurableSpace (G n)
     (∀ y ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ, A (y * k₂.1) = E.ρ k₂⁻¹ (A y)) →
     (∀ h ∈ CE E, Cpt h → ∫ y : G n, ⟪A y.val, h y.val⟫_ℂ ∂μ = 0) → ∀ y ∈ GLs n, A y = 0 := by
   intro hK n _ _ μ _ E A hA hEq hOrth y hy
-  haveI : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   let e : E.V := A y
   let κ : Mat n → (E.V →L[ℂ] E.V) := fun z => (innerSL ℂ (A z)).smulRight e
   have hκ : ∀ z v, κ z v = ⟪A z, v⟫_ℂ • e := fun z v => by simp [κ]
@@ -101,7 +101,7 @@ theorem section_orth_cpt_zero : KerUniq → ∀ (n : ℕ) [MeasurableSpace (G n)
   have hequi : ∀ z ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ, κ (z * k₂.1) = κ z * E.ρ k₂ := by
     intro z hz k₂
     ext v
-    rw [ContinuousLinearMap.mul_apply, hκ, hκ, hEq z hz k₂, inner_rho_inv]
+    rw [mul_apply_eq_comp, hκ, hκ, hEq z hz k₂, inner_rho_inv]
   have hact : ∀ f ∈ CE E, Cpt f → (∀ z ∈ GLs n, z ∉ GLs n → f z = 0) → act μ E κ f 1 = 0 := by
     intro f hf hc _
     have h0 := hOrth f hf hc

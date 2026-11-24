@@ -90,7 +90,7 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     (hv : Ideal.map (algebraMap O A) (maximalIdeal O) ≤ P) :
     ∃ a s : A, s ∉ P ∧ f * algebraMap A (FractionRing A) s = algebraMap A (FractionRing A) a := by
   classical
-  haveI hAN : IsNoetherianRing A := by
+  have hAN : IsNoetherianRing A := by
     first
     | infer_instance
     | exact Algebra.FiniteType.isNoetherianRing O A
@@ -126,7 +126,7 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     rw [map_mul, map_mul] at h'
     apply mul_left_cancel₀ hbK
     linear_combination (algebraMap A (FractionRing A) s) * hab' - h'
-  haveI hVal : ValuationRing (Localization.AtPrime P) := regVert_valuationRing P hP
+  have hVal : ValuationRing (Localization.AtPrime P) := regVert_valuationRing P hP
   have hmaxL : maximalIdeal (Localization.AtPrime P) =
       P.map (algebraMap A (Localization.AtPrime P)) := by
     first
@@ -176,7 +176,7 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     rintro Q ⟨hJQ, hQ⟩
     have hϖQ : algebraMap A (Localization.AtPrime P) (algebraMap O A ϖ) ∈ Q :=
       hJQ (Ideal.mem_span_singleton_self _)
-    haveI := hQ
+    have := hQ
     have hQ0P : Q.comap (algebraMap A (Localization.AtPrime P)) ≤ P := by
       intro x hx
       by_contra hxP
@@ -198,7 +198,7 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
       | exact IsLocalization.map_under P.primeCompl (Localization.AtPrime P) Q
     rw [hQeq] at hmc
     exact (hmaxL.trans hmc).le
-  haveI hLN : IsNoetherianRing (Localization.AtPrime P) := by
+  have hLN : IsNoetherianRing (Localization.AtPrime P) := by
     first
     | infer_instance
   have hfg : (maximalIdeal (Localization.AtPrime P)).FG := by
@@ -226,19 +226,19 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
   have hs0 : s ≠ 0 := fun h => hsP (h ▸ P.zero_mem)
   have hpow : Submonoid.powers s ≤ nonZeroDivisors A :=
     powers_le_nonZeroDivisors_of_noZeroDivisors hs0
-  haveI hBdom : IsDomain (Localization.Away s) := by
+  have hBdom : IsDomain (Localization.Away s) := by
     first
     | infer_instance
     | exact IsLocalization.isDomain_localization hpow
-  haveI hBft : Algebra.FiniteType O (Localization.Away s) := by
+  have hBft : Algebra.FiniteType O (Localization.Away s) := by
     have h1 : Algebra.FiniteType A (Localization.Away s) := by
-      haveI := IsLocalization.Away.finitePresentation (S := Localization.Away s) s
+      have := IsLocalization.Away.finitePresentation (S := Localization.Away s) s
       infer_instance
     first
     | exact Algebra.FiniteType.trans (inferInstance : Algebra.FiniteType O A) h1
     | infer_instance
-  haveI hBfl : Module.Flat O (Localization.Away s) := by
-    haveI : Module.Flat A (Localization.Away s) := by
+  have hBfl : Module.Flat O (Localization.Away s) := by
+    have : Module.Flat A (Localization.Away s) := by
       first
       | infer_instance
     first
@@ -248,7 +248,7 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     rw [Set.disjoint_left]
     rintro x ⟨k, rfl⟩ hk
     exact hsP (Ideal.IsPrime.mem_of_pow_mem inferInstance k hk)
-  haveI hPB : (P.map (algebraMap A (Localization.Away s))).IsPrime := by
+  have hPB : (P.map (algebraMap A (Localization.Away s))).IsPrime := by
     first
     | exact IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers s)
         (Localization.Away s) P inferInstance hdisj
@@ -308,11 +308,11 @@ theorem reg_vertical_e {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
     rw [← IsScalarTower.algebraMap_apply O A (Localization.Away s)]
     exact φ.commutes ϖ
   rw [hϖV] at hϖU
-  haveI : Algebra.IsIntegral O V := by
+  have : Algebra.IsIntegral O V := by
     first
     | infer_instance
   have hmaxV : (maximalIdeal V).comap (algebraMap O V) = maximalIdeal O := by
-    haveI hmx : ((maximalIdeal V).comap (algebraMap O V)).IsMaximal := by
+    have hmx : ((maximalIdeal V).comap (algebraMap O V)).IsMaximal := by
       first
       | exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal V)
       | infer_instance
@@ -501,7 +501,7 @@ private theorem hdvr_lemma {A : Type} [CommRing A] [IsDomain A] [IsNoetherianRin
     (hno : ¬ ∃ a s : A, s ∉ P ∧ f * algebraMap A (FractionRing A) s = algebraMap A (FractionRing A) a) :
     ∃ a s : A, a ∈ P ∧ s ∉ P ∧ f⁻¹ * algebraMap A (FractionRing A) s = algebraMap A (FractionRing A) a := by
   classical
-  haveI := ReciprocityTheory.ChartRestriction.G.T0.regVert_valuationRing P hP
+  have := ReciprocityTheory.ChartRestriction.G.T0.regVert_valuationRing P hP
   obtain ⟨a0, b0, hb0, rfl⟩ := IsFractionRing.div_surjective (A := A) f
   have hb0' : algebraMap A (FractionRing A) b0 ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb0
@@ -554,12 +554,12 @@ theorem key_centre {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRi
       ∃ v : V, φ a = v * φ b)
     (qq : Ideal A) [qq.IsPrime] (hqq : qq ⊔ Ideal.map (algebraMap O A) (maximalIdeal O) ≠ ⊤) :
     ∃ a s : A, s ∉ qq ∧ f * algebraMap A (FractionRing A) s = algebraMap A (FractionRing A) a := by
-  haveI : IsNoetherianRing A := by
+  have : IsNoetherianRing A := by
     first
     | exact Algebra.FiniteType.isNoetherianRing O A
     | infer_instance
   refine Formalism.L2.Pj.RegB.mem_loc_of_heightOne qq f (fun P hP h1 hle => ?_)
-  haveI := hP
+  have := hP
   by_cases hv : Ideal.map (algebraMap O A) (maximalIdeal O) ≤ P
   · exact Formalism.L2.Pj.RegA.reg_vertical_e f e he hf P h1 hv
   · refine ReciprocityTheory.ChartRestriction.G.T0.reg_horizontal P hv ?_ e he f (hdvr_lemma P h1 f) hf

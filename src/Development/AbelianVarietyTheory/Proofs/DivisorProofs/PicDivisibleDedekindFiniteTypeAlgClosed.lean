@@ -132,7 +132,7 @@ theorem classGroup_nthPower_of_codim_one_mod : ∀ (k A : Type) [Field k] [IsAlg
     hP₀ne (h.eq_of_le hP₀.ne_top bot_le).symm
   have hjac : ∀ x : A, x ≠ 0 → ∃ Q : Ideal A, Q.IsMaximal ∧ x ∉ Q := by
     intro x hx
-    haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := k) (B := A)
+    have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := k) (B := A)
     have hj : (⊥ : Ideal A).jacobson = ⊥ :=
       IsJacobsonRing.out' _ (Ideal.isPrime_bot).isRadical
     by_contra hne
@@ -166,7 +166,7 @@ theorem classGroup_nthPower_of_codim_one_mod : ∀ (k A : Type) [Field k] [IsAlg
       have hx' : x = ⊤ := Ideal.isUnit_iff.mp hx
       subst hx'
       have e1 : (⟨⊤, h⟩ : nonZeroDivisors (Ideal A)) = 1 := Subtype.ext Ideal.one_eq_top.symm
-      haveI : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+      have : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
       rw [e1, map_one, map_one, Module.finrank_zero_of_subsingleton, pow_zero]
     · intro a p ha hp ih h
       have hpne : p ≠ ⊥ := hp.ne_zero
@@ -231,7 +231,7 @@ theorem degree_count_generates : ∀ (k A : Type) [Field k] [IsAlgClosed k] [Com
     rw [← Ideal.zero_eq_bot] at hM hM' ⊢
     exact mul_ne_zero hM hM'
   have htop : Module.finrank k (A ⧸ (⊤ : Ideal A)) = 0 := by
-    haveI : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+    have : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
     exact Module.finrank_zero_of_subsingleton
   have hpow : ∀ (M : Ideal A) (n : ℕ), M.IsMaximal → Module.finrank k (A ⧸ M ^ n) = n := by
     intro M n hM
@@ -307,8 +307,8 @@ namespace GlobalTheory.CurveCompletionG
 theorem residue_exists (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [Algebra k A]
     [Algebra.FiniteType k A] (Q : Ideal A) (hQ : Q.IsMaximal) (c : A) :
     ∃ a : k, c - algebraMap k A a ∈ Q := by
-  letI := Ideal.Quotient.field Q
-  haveI : Module.Finite k (A ⧸ Q) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ Q)
+  let := Ideal.Quotient.field Q
+  have : Module.Finite k (A ⧸ Q) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ Q)
   obtain ⟨a, ha⟩ := (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := k) (K := A ⧸ Q)).2
     (Ideal.Quotient.mk Q c)
   refine ⟨a, ?_⟩
@@ -522,8 +522,8 @@ theorem exists_completion_embedding : ∀ (k A : Type) [Field k] [IsAlgClosed k]
       ∀ (m : ℕ) (φ : PowerSeries k), ∃ u : A,
         (PowerSeries.X : PowerSeries k) ^ m ∣ φ - σ u := by
   intro k A _ _ _ _ _ _ Q hQ hQ0
-  haveI : Q.IsPrime := hQ.isPrime
-  obtain ⟨π, hπ1, hπ2⟩ := SetLike.exists_of_lt (Ideal.pow_succ_lt_pow hQ0 1)
+  have : Q.IsPrime := hQ.isPrime
+  obtain ⟨π, hπ1, hπ2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_succ_lt_pow hQ0 1)
   have hπ : π ∈ Q := by simpa using hπ1
   have hnot := pow_not_mem hQ0 hπ hπ2
   have hex := exists_approx (k := k) hπ (residue_exists k A Q hQ) (pow_le_span_sup hQ0 hπ hπ2)
@@ -549,7 +549,7 @@ theorem exists_completion_embedding : ∀ (k A : Type) [Field k] [IsAlgClosed k]
     have h2 : (PowerSeries.X : PowerSeries k) ^ m ∣ φ - (PowerSeries.trunc m φ : PowerSeries k) := by
       rw [PowerSeries.X_pow_dvd_iff]
       intro n hn
-      rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hn, sub_self]
+      rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, ite_eq_left hn, sub_self]
     have := dvd_sub h2 h1
     rwa [sub_sub_sub_cancel_right] at this
 
@@ -581,7 +581,7 @@ theorem isLocalization_fractionRing_of_finite_polynomial (k A : Type) [Field k] 
       exists_of_eq := fun {x y} hxy => ⟨1, by rw [IsFractionRing.injective A (FractionRing A) hxy]⟩ }
   obtain ⟨⟨a, b⟩, hab⟩ := IsLocalization.surj (nonZeroDivisors A) z
   have hb0 : (b : A) ≠ 0 := nonZeroDivisors.ne_zero b.2
-  have hne := Ideal.comap_ne_bot_of_integral_mem (R := k[X]) hb0 (Ideal.mem_span_singleton_self (b : A))
+  have hne := Ideal.under_ne_bot_of_integral_mem (R := k[X]) hb0 (Ideal.mem_span_singleton_self (b : A))
     (Algebra.IsIntegral.isIntegral _)
   obtain ⟨p, hpI, hp0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.mp hpI
@@ -606,7 +606,7 @@ theorem exists_finrank_quotient_span_mod_eq_one :
     rw [IsScalarTower.algebraMap_eq k[X] A L]
     exact (IsFractionRing.injective A L).comp hinjA
   have : FaithfulSMul k[X] L := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinjL
-  letI : Algebra (RatFunc k) L := RatFunc.liftAlgebra k L
+  let : Algebra (RatFunc k) L := RatFunc.liftAlgebra k L
   have : IsLocalization (Algebra.algebraMapSubmonoid A (nonZeroDivisors k[X])) L :=
     isLocalization_fractionRing_of_finite_polynomial k A
   have : Module.Finite (RatFunc k) L :=
@@ -688,16 +688,16 @@ theorem main : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDedeki
   have hδN : δ * N ≠ 0 := mul_ne_zero hδ0 hN
   have hfin : {a : k | (δ * N).eval a = 0}.Finite :=
     ((δ * N).roots.toFinset.finite_toSet).subset (fun a ha => by
-      simp only [Set.mem_setOf_eq] at ha
+      simp only [Set.mem_ofPred_eq] at ha
       simp [Polynomial.mem_roots hδN, ha])
   have hinf : {a : k | (δ * N).eval a ≠ 0}.Infinite := by
     have := hfin.infinite_compl
-    simpa [Set.compl_setOf] using this
+    simpa [Set.compl_ofPred] using this
   obtain ⟨F, hFS, hFcard⟩ := hinf.exists_subset_card_eq s
   have hF : ∀ a ∈ F, δ.eval a ≠ 0 ∧ N.eval a ≠ 0 := by
     intro a ha
     have := hFS ha
-    simp only [Set.mem_setOf_eq, eval_mul] at this
+    simp only [Set.mem_ofPred_eq, eval_mul] at this
     exact ⟨left_ne_zero_of_mul this, right_ne_zero_of_mul this⟩
   set q : k[X] := ∏ a ∈ F, (X - C a) with hq
   have hqm : q.Monic := monic_prod_of_monic _ _ (fun a _ => monic_X_sub_C a)
@@ -781,7 +781,7 @@ theorem exists_deg_lt_two_correction_simple :
       P₀.IsMaximal → ∃ p : Fin n → k[X], (∀ i, (p i).degree < (2 : ℕ)) ∧
         w + ∑ i, p i • b i ∈ P₀ ∧ w + ∑ i, p i • b i ∉ P₀ ^ 2 := by
   intro k A _ _ _ _ _ _ _ _ _ n b P₀ w hP
-  haveI : Algebra.FiniteType k A := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
+  have : Algebra.FiniteType k A := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
   obtain ⟨φ, hφ⟩ := ((GlobalTheory.DedekindCodimG.dedekind_finiteType_codim k A).2.1 P₀ hP).2
   set α : k := φ (algebraMap k[X] A X) with hα
   have hC : algebraMap k[X] A (C α) = algebraMap k A α := by
@@ -801,7 +801,7 @@ theorem exists_deg_lt_two_correction_simple :
     exact mul_ne_zero (X_sub_C_ne_zero α) hi h4
   have hbot : P₀ ≠ ⊥ := fun h => hne (by rw [h] at hlin; simpa using hlin)
   have hlt := Ideal.pow_lt_self P₀ hbot hP.ne_top 2 le_rfl
-  obtain ⟨π, hπP, hπ2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨π, hπP, hπ2⟩ := IsConcreteLE.exists_of_lt hlt
   set q : k[X] := (X - C α) ^ 2 with hq
   have hmon : q.Monic := (monic_X_sub_C α).pow 2
   have hqdeg : q.degree = (2 : ℕ) := by
@@ -1017,10 +1017,10 @@ theorem hasse_mul (l : ℕ) (φ ψ : PowerSeries R) :
   set g : R[X] := PowerSeries.trunc M ψ
   have hf : ∀ m < M, PowerSeries.coeff m φ = PowerSeries.coeff m (f : PowerSeries R) := by
     intro m hm
-    rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hm]
+    rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc, ite_eq_left hm]
   have hg : ∀ m < M, PowerSeries.coeff m ψ = PowerSeries.coeff m (g : PowerSeries R) := by
     intro m hm
-    rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hm]
+    rw [Polynomial.coeff_coe, PowerSeries.coeff_trunc, ite_eq_left hm]
   have hpoly : hasse l ((f : PowerSeries R) * (g : PowerSeries R)) =
       ∑ p ∈ Finset.range (l + 1), hasse p (f : PowerSeries R) * hasse (l - p) (g : PowerSeries R) := by
     rw [← Polynomial.coe_mul, hasse_coe, hasseDeriv_mul,
@@ -1482,22 +1482,22 @@ theorem formal_deformation : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRin
   · intro i i' hii'
     have hle : ¬ Q i' ≤ Q i := fun h =>
       hii' (hQinj ((hQmax i').eq_of_le (hQmax i).ne_top h)).symm
-    obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp hle
+    obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp hle
     refine ⟨u, ?_⟩
     rw [hunit, map_sub, hcc, hcc, (hQσ i' u).mp hu', sub_zero]
     exact fun h => hu ((hQσ i u).mpr h)
   · intro i
     have hle : ¬ P₀ ≤ Q i := fun h => hQP i (hP₀.eq_of_le (hQmax i).ne_top h).symm
-    obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp hle
+    obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp hle
     refine ⟨u, ?_⟩
     rw [hunit, map_sub, hcc, (hPσ u).mp hu', sub_zero]
     exact fun h => hu ((hQσ i u).mpr h)
   · intro i
-    obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp (hDQ i)
+    obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp (hDQ i)
     refine ⟨u, hu', ?_⟩
     rw [hunit, hcc]
     exact fun h => hu ((hQσ i u).mpr h)
-  · obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp hDP
+  · obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp hDP
     refine ⟨u, hu', ?_⟩
     rw [hunit]
     exact fun h => hu ((hPσ u).mpr h)
@@ -1679,7 +1679,7 @@ theorem exists_classGroup_mk0_eq_mul_pow_reduced :
         a ∉ P → ∀ h : P ∈ nonZeroDivisors (Ideal A), ∃ d : ClassGroup A,
           ClassGroup.mk0 ⟨P, h⟩ = ClassGroup.mk0 ⟨P₀, h₀⟩ * d ^ N := by
   intro k A _ _ _ _ _ _ _ _ _ hred N hN hNk P₀ hP₀ h₀
-  haveI : Algebra.FiniteType k A :=
+  have : Algebra.FiniteType k A :=
     Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
   obtain ⟨r, V, D, Q, f₀, hset, hdeg⟩ := GlobalTheory.PicDiv.linear_system_setup k A hred N P₀ (by omega) hP₀
   have hform := GlobalTheory.PicDiv.FormalDeformHasse.formal_deformation k A N (Fin r) V D P₀ Q f₀ hN hNk hP₀ hset
@@ -1727,8 +1727,8 @@ theorem injective_of_finite_not_field (k B : Type) [Field k] [IsAlgClosed k] [Co
     have := IsAlgClosed.degree_eq_one_of_irreducible k (minpoly.irreducible hint)
     exact Polynomial.natDegree_eq_of_degree_eq_some this
   obtain ⟨r, hr⟩ := (minpoly.natDegree_eq_one_iff).mp hdeg
-  letI : Algebra k[X] B := (Polynomial.aeval y).toRingHom.toAlgebra
-  haveI : Module.Finite k[X] B := hfin
+  let : Algebra k[X] B := (Polynomial.aeval y).toRingHom.toAlgebra
+  have : Module.Finite k[X] B := hfin
   have hsmul : ∀ (q : k[X]) (b : B), q • b = (q.eval r) • b := by
     intro q b
     rw [Algebra.smul_def, Algebra.smul_def]
@@ -1747,7 +1747,7 @@ theorem injective_of_finite_not_field (k B : Type) [Field k] [IsAlgClosed k] [Co
     rw [eq_top_iff]
     intro b _
     exact key b (by rw [hs]; trivial)
-  haveI : Module.Finite k B := ⟨⟨s, hk⟩⟩
+  have : Module.Finite k B := ⟨⟨s, hk⟩⟩
   exact hB ((Algebra.IsIntegral.isField_iff_isField (algebraMap k B).injective).mp (Field.toIsField k))
 
 end GlobalTheory.PicDiv
@@ -1778,14 +1778,14 @@ theorem pic_divisible : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] 
   · have : q = 1 := by omega
     subst this; exact ⟨c, pow_one c⟩
   obtain ⟨y, hfin, hred⟩ := GlobalTheory.T.exists_separable_normalization_reduced_fibers k B hfield
-  letI : Algebra k[X] B := (Polynomial.aeval y).toRingHom.toAlgebra
+  let : Algebra k[X] B := (Polynomial.aeval y).toRingHom.toAlgebra
   have hmap : ∀ p : k[X], algebraMap k[X] B p = Polynomial.aeval y p := fun p => rfl
-  haveI : IsScalarTower k k[X] B := IsScalarTower.of_algebraMap_eq (fun c => by
+  have : IsScalarTower k k[X] B := IsScalarTower.of_algebraMap_eq (fun c => by
     rw [hmap, Polynomial.algebraMap_eq, Polynomial.aeval_C])
-  haveI : Module.Finite k[X] B := hfin
+  have : Module.Finite k[X] B := hfin
   have hinj : Function.Injective (algebraMap k[X] B) := injective_of_finite_not_field k B y hfin hfield
-  haveI : Module.IsTorsionFree k[X] B := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj
-  haveI : Module.Free k[X] B := Module.free_of_finite_type_torsion_free'
+  have : Module.IsTorsionFree k[X] B := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj
+  have : Module.Free k[X] B := Module.free_of_finite_type_torsion_free'
   have hred' : (∃ δ : k[X], δ ≠ 0 ∧ ∀ α : k, δ.eval α ≠ 0 → ∀ Q : Ideal B, Q.IsMaximal → algebraMap k[X] B (X - C α) ∉ Q ^ 2) := by
     obtain ⟨δ, hδ0, hδ⟩ := hred
     refine ⟨δ, hδ0, fun α hα Q hQ => ?_⟩

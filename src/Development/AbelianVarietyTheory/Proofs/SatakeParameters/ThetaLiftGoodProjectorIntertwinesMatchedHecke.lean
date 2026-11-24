@@ -229,7 +229,7 @@ theorem mult_eq_of_unit {V : HSp D} {S : D.what₂.Tau → SPar} {θ : InfFam D}
     (hU' : U' ∈ Mult θ M J χ) (v : M.Vec) (hv : ∀ τ, ‖(v τ : M.H τ)‖ = 1) (h : U v = U' v) : U = U' := by
   have h0 := GlobalTheory.multT_eq_zero_of_apply_eq_zero θ M J χ μ 𝓕 hθ hμ h𝓕 hS (PiTensorProduct.lift (U - U'))
     ⟨U - U', sub_mem hU hU', rfl⟩ (PiTensorProduct.tprod ℂ v) (fun e => ?_) (by
-      rw [PiTensorProduct.lift.tprod, MultilinearMap.sub_apply, h, sub_self])
+      rw [PiTensorProduct.lift.tprod, sub_apply, h, sub_self])
   · exact sub_eq_zero.1 (PiTensorProduct.lift.injective (h0.trans (map_zero _).symm))
   · have h1 := GlobalTheory.tprodInnerFun_tprod v v
     rw [e, map_zero, Finset.prod_eq_one fun τ _ => ?_] at h1

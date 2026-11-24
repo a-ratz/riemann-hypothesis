@@ -115,7 +115,7 @@ private theorem rows_leadMinor_aux_lemma {E : Type*} [CommRing E] {n l : ℕ} (h
         have h1 := hrange q hq
         have h0 := i.isLt
         have h2 : Fin.castLE hl i < q := by
-          rw [Fin.lt_iff_val_lt_val, hval]
+          rw [Fin.lt_def, hval]
           omega
         simp only [hP0 _ _ h2, zero_mul]
       · intro q
@@ -127,29 +127,29 @@ private theorem rows_leadMinor_aux_lemma {E : Type*} [CommRing E] {n l : ℕ} (h
       have h1 := hrange p hp
       have h0 := j.isLt
       have h2 : Fin.castLE hl j < p := by
-        rw [Fin.lt_iff_val_lt_val, hval]
+        rw [Fin.lt_def, hval]
         omega
       simp only [hR0 _ _ h2, mul_zero]
     · intro p
       rfl
   rw [key, Matrix.det_mul, Matrix.det_mul]
   have dP : (P.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular]
+    rw [Matrix.det_of_isLowerTriangular]
     · simp [hP1]
     · intro i j hij
       have hij' : i < j := OrderDual.toDual_lt_toDual.mp hij
       simp only [Matrix.submatrix_apply]
       apply hP0
-      rw [Fin.lt_iff_val_lt_val, hval, hval]
-      exact Fin.lt_iff_val_lt_val.mp hij'
+      rw [Fin.lt_def, hval, hval]
+      exact Fin.lt_def.mp hij'
   have dR : (R.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [Matrix.det_of_isUpperTriangular]
     · simp [hR1]
     · intro i j hij
       simp only [Matrix.submatrix_apply]
       apply hR0
-      rw [Fin.lt_iff_val_lt_val, hval, hval]
-      exact Fin.lt_iff_val_lt_val.mp hij
+      rw [Fin.lt_def, hval, hval]
+      exact Fin.lt_def.mp hij
   rw [dP, dR, one_mul, mul_one]
 
 theorem rows_leadMinor_inv {Z Z₂ : GramM D} (h : ZEquiv Z Z₂) (l : ℕ) : leadMinorE Z₂ l = leadMinorE Z l := by
@@ -691,8 +691,8 @@ theorem rows_chRatio_eq (hrd : 0 < D.host.rdE) (t : D.s.Term u u') (τ : D.what�
   unfold chRatio onePlusChSh
   have h := rows_Dr_zero_iff Y hrd t τ
   by_cases h0 : Dr (X.fl t) (X.fl' t) = 0
-  · rw [if_pos (h.2 h0), if_pos h0]
-  · rw [if_neg (fun h1 => h0 (h.1 h1)), if_neg h0, rows_ch_eq Y hrd t τ, rows_sh_eq Y hrd t τ]
+  · rw [ite_eq_left (h.2 h0), ite_eq_left h0]
+  · rw [ite_eq_right (fun h1 => h0 (h.1 h1)), ite_eq_right h0, rows_ch_eq Y hrd t τ, rows_sh_eq Y hrd t τ]
 
 theorem rows_ch_conj (T T' : ℕ) (F : LFlag (D.sp.Y 0) D.R.rS (T : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (T' : D.host.E))
     (φ : D.host.E →+* ℂ) : Lat.ch T T' F F' (ComplexEmbedding.conjugate φ) = Lat.ch T T' F F' φ := by
@@ -999,7 +999,7 @@ theorem rowsT_small (hS : Cnt.Stand D u u') (hrd : 0 < D.host.rdE) (t t' : D.s.T
               chSh (Tu D u) (Tu D u') (X.fl t) (X.fl' t') (embS D τ)) = 0 := by
         refine Finset.prod_eq_zero (Finset.mem_univ τ0) ?_
         unfold invSh
-        rw [if_pos h0, if_pos h0'']
+        rw [ite_eq_left h0, ite_eq_left h0'']
         ring
       rw [this] at hB
       linarith
@@ -1011,7 +1011,7 @@ theorem rowsT_small (hS : Cnt.Stand D u u') (hrd : 0 < D.host.rdE) (t t' : D.s.T
       refine Finset.prod_congr rfl fun τ _ => ?_
       have h0'' : Dr (X.fl t) (X.fl' t') ≠ 0 := by rw [e]; exact h0'
       rw [← e]
-      simp only [chSh, invSh, if_pos h0, if_neg h0'']
+      simp only [chSh, invSh, ite_eq_left h0, ite_eq_right h0'']
       ring
   · by_cases h0' : Dr (X.fl t') (X.fl' t') = 0
     · left
@@ -1021,7 +1021,7 @@ theorem rowsT_small (hS : Cnt.Stand D u u') (hrd : 0 < D.host.rdE) (t t' : D.s.T
       rw [← D.what₂.card_Tau]
       refine rowsT_small_one _ _ _ _ hT hT' hg (fun τ => rowsT_sh_pos Y hrd t hG hrel h0 τ) (hB.trans (le_of_eq ?_))
       refine Finset.prod_congr rfl fun τ _ => ?_
-      simp only [chSh, invSh, if_neg h0, if_pos h0'']
+      simp only [chSh, invSh, ite_eq_right h0, ite_eq_left h0'']
       ring
     · have h0'' : Dr (X.fl t) (X.fl' t') ≠ 0 := by rw [e]; exact h0'
       have key := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.smallTerm D.what₂.Tau
@@ -1037,7 +1037,7 @@ theorem rowsT_small (hS : Cnt.Stand D u u') (hrd : 0 < D.host.rdE) (t t' : D.s.T
           have p1 := (rowsT_sh_pos Y hrd t hG hrel h0 τ).ne'
           have p2 := (rowsT_sh_pos Y hrd t' hG' hrel' h0' τ).ne'
           rw [← e] at p2 ⊢
-          simp only [chSh, invSh, if_neg h0, if_neg h0'']
+          simp only [chSh, invSh, ite_eq_right h0, ite_eq_right h0'']
           field_simp)))
       rw [D.what₂.card_Tau] at key
       rcases key with k1 | k2
@@ -1117,14 +1117,14 @@ theorem rowsT_Mt_small {C δ C₁ C₂ : ℝ} (hrd : 0 < D.host.rdE) (t : D.s.Te
       min (nuV (Tr D u) (Y.W τ).z (Y.W τ).z' (Y.γ t τ)) (Tr D u') * tvPr D τ u' * G * κ := by
     intro τ
     unfold ampMinF
-    rw [if_neg fun h => hD ((rows_Dr_zero_iff Y hrd t τ).1 h)]
+    rw [ite_eq_right fun h => hD ((rows_Dr_zero_iff Y hrd t τ).1 h)]
     refine rowsT_min_le (hν τ) (htv τ) hG0 hκ0 ((hlow τ).trans (le_of_eq ?_)) hKκ
     unfold tvPr
     rw [mul_div_cancel₀ _ hT'.ne']
   have nn : ∀ τ, 0 ≤ ampMinF D C δ τ u u' (Y.W τ).z (Y.W τ).z' (Y.γ t τ) := by
     intro τ
     unfold ampMinF
-    rw [if_neg fun h => hD ((rows_Dr_zero_iff Y hrd t τ).1 h)]
+    rw [ite_eq_right fun h => hD ((rows_Dr_zero_iff Y hrd t τ).1 h)]
     exact le_min zero_le_one (by have := hν τ; have := htv τ; positivity)
   have P := Finset.prod_le_prod₀ (s := Finset.univ) (fun τ _ => nn τ) (fun τ _ => each τ)
   rw [Finset.prod_mul_distrib, Finset.prod_mul_distrib, Finset.prod_mul_distrib, Finset.prod_const, Finset.prod_const,

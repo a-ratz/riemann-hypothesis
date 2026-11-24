@@ -133,7 +133,7 @@ theorem under_under (F K L : Type) [Field F] [NumberField F] [Field K] [NumberFi
     [Algebra F K] [Algebra K L] [Algebra F L]
     (h : ∀ x : F, algebraMap K L (algebraMap F K x) = algebraMap F L x) (w : HeightOneSpectrum (𝓞 L)) :
     (w.under (𝓞 K)).under (𝓞 F) = w.under (𝓞 F) := by
-  haveI : IsScalarTower F K L := IsScalarTower.of_algebraMap_eq fun x => (h x).symm
+  have : IsScalarTower F K L := IsScalarTower.of_algebraMap_eq fun x => (h x).symm
   exact HeightOneSpectrum.ext (Ideal.under_under w.asIdeal)
 
 theorem ideleConj_mem_levT (E : Type) [Field E] [NumberField E] [IsCMField E]
@@ -257,7 +257,7 @@ theorem exists_isSplitAt_under_ne : ∀ (E : Type) [Field E] [NumberField E] [Is
     · exact ⟨b, fun e => hab (h.trans e.symm), HeightOneSpectrum.ext hb⟩
     · exact ⟨a, h, HeightOneSpectrum.ext ha⟩
 
-  haveI hPmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
+  have hPmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
   have hinj : Function.Injective (algebraMap ℤ (𝓞 E)) := (algebraMap ℤ (𝓞 E)).injective_int
   obtain ⟨Q, hQmax, hQ⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 E)
@@ -330,7 +330,7 @@ theorem finPart_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hc : ∀ w : HeightOneSpectrum (𝓞 E), (ideleMap (maximalRealSubfield E) E b).val.2 w =
       finiteCompletionMap (maximalRealSubfield E) E w (b.val.2 (w.under (𝓞 (maximalRealSubfield E)))) := fun w => rfl
   have hs : ∀ v : HeightOneSpectrum (𝓞 (maximalRealSubfield E)), ∃ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 (maximalRealSubfield E)) = v := fun v => by
-    haveI := v.isPrime
+    have := v.isPrime
     obtain ⟨⟨P, hP, hP'⟩⟩ := (inferInstance : Nonempty (v.asIdeal.primesOver (𝓞 E)))
     exact ⟨⟨P, hP, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P⟩, HeightOneSpectrum.ext hP'.over.symm⟩
 
@@ -825,7 +825,7 @@ theorem unrAt_under_of_compNorm : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   intro E _ _ _ χ w _ hur hχ x hx
   have he : w.asIdeal.ramificationIdx (𝓞 (maximalRealSubfield E)) = 1 :=
     Ideal.ramificationIdx_eq_one w.asIdeal (𝓞 (maximalRealSubfield E))
-  haveI : w.asIdeal.LiesOver (w.under (𝓞 (maximalRealSubfield E))).asIdeal := ⟨rfl⟩
+  have : w.asIdeal.LiesOver (w.under (𝓞 (maximalRealSubfield E))).asIdeal := ⟨rfl⟩
   have hxm : x ∈ (Submonoid.ofClass ((w.under (𝓞 (maximalRealSubfield E))).adicCompletionIntegers
       (maximalRealSubfield E))).units := by
     unfold IsUnitAt at hx

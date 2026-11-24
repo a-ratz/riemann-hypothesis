@@ -110,7 +110,7 @@ theorem maj_mt_le {θ : InfFam D} (hθ : IsInfFam θ) (T : HSp D) (n : ℕ) {K :
       have e : u - P (k, k0) = (mt T k ⬝ ((mt T k⁻¹ ⬝ u : Mx D T.rank n) - k0) : Mx D T.rank n) := by
         rw [Matrix.mul_sub, hu]
       rw [e, Matrix.map_mul, hkx, Matrix.mul_zero]
-    simp only [maj, if_pos hb, if_pos hb']
+    simp only [maj, ite_eq_left hb, ite_eq_left hb']
     have hs := realSize_mul_le θ (mt T k) (mt T k⁻¹ ⬝ u : Mx D T.rank n)
     rw [hu] at hs
     have hck : realSize θ (mt T k) ≤ |c| := (hc ⟨k, hk, rfl⟩).trans (le_abs_self c)
@@ -124,7 +124,7 @@ theorem maj_mt_le {θ : InfFam D} (hθ : IsInfFam θ) (T : HSp D) (n : ℕ) {K :
     have hB : 0 < (1 + realSize θ u) ^ N := by positivity
     rw [inv_eq_one_div, ← div_eq_mul_inv, div_le_div_iff₀ hA hB, one_mul, ← mul_pow]
     exact pow_le_pow_left₀ (by positivity) hle N
-  · have e : maj θ K₀ N (mt T k⁻¹ ⬝ u) = 0 := by simp only [maj, if_neg hb]
+  · have e : maj θ K₀ N (mt T k⁻¹ ⬝ u) = 0 := by simp only [maj, ite_eq_right hb]
     rw [e]
     exact mul_nonneg (by positivity) (maj_nonneg θ _ N u)
 
@@ -166,13 +166,13 @@ theorem projK_theta_sch : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A B : H
   obtain ⟨x, y, rfl⟩ := GlobalTheory.Core.Rk.SchwInj.exists_extX_add_extY A B w
   obtain ⟨b, hb, hb'⟩ := exists_summable_bound hθ B A.rank hK (h1 φ hφ) x
   obtain ⟨-, -⟩ := Formalism.IndefR.Eqv.ae_facts D
-  haveI : BorelSpace (GA D B) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (GA D B) := (Formalism.IndefR.Eqv.ga_facts D B).1
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin B.rank) (Fin A.rank) D.host.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
+  have : BorelSpace (GA D B) := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D B) := (Formalism.IndefR.Eqv.ga_facts D B).1
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin B.rank) (Fin A.rank) D.host.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
   have hc := (GlobalTheory.Core.Rk.SchInt.sch_continuous_integrable D ψ hψ A B ν 𝓨 hν φ hφ).1
   have hmt : Continuous fun k : K => mt B (k : GA D B)⁻¹ :=
-    (GlobalTheory.MixModel.continuous_mt B).comp continuous_subtype_val.inv
+    (GlobalTheory.MixModel.continuous_mt B).comp continuous_subtypeVal.inv
   have hn : ∀ a, ‖ψ a‖ = 1 := hψ.1.2.1
   have key := hasSum_integral_of_dominated_convergence (μ := νK)
     (F := fun (ξ : Matrix (Fin B.rank) (Fin A.rank) D.host.E) (k : K) =>

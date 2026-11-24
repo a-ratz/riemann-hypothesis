@@ -77,7 +77,7 @@ theorem toInf_eq_one_iff (V : HSp D) (g : GA D V) : GlobalTheory.AutMult.toInf V
 theorem pushforward_haar_real : ∀ D : D7, LevFacts D → ForStage D fun c _ s => MeasurableSet (intOff c s) ∧ MeasurableSet {g : GA D s.V | Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L} ∧ {g : GA D s.V | Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L} ⊆ intOff c s ∧ (∀ g : GA D s.V, Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L → ∃ b : GinfC s.V, ∃ κ ∈ Lev.levG s.V s.β s.L, g = (b : GA D s.V) * κ) ∧ ∃ mR : Measure (GinfC s.V), mR.IsHaarMeasure ∧ ∀ (f : GinfC s.V → ℂ) (F : GA D s.V → ℂ), Integrable f mR → (∀ (b : GinfC s.V), ∀ κ ∈ Lev.levG s.V s.β s.L, F ((b : GA D s.V) * κ) = f b) → IntegrableOn F {g : GA D s.V | Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L} s.ν ∧ ∫ g in {g : GA D s.V | Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L}, F g ∂s.ν = ∫ b, f b ∂mR := by
   intro D hL c hc j hj s hs
   obtain ⟨h1, -, h3, -, -, -⟩ := hL c hc j hj s hs
-  haveI := hs.haar
+  have := hs.haar
   set V := s.V
   set K := Lev.levG s.V s.β s.L
   let A : Subgroup (GA D V) := (Formalism.L2.DIV.lev D.sp.cm V.gram s.β s.L).comap (Lev.finE V)
@@ -90,7 +90,7 @@ theorem pushforward_haar_real : ∀ D : D7, LevFacts D → ForStage D fun c _ s 
     obtain ⟨U, hU, hUK⟩ := h1
     let Lf : Subgroup (GfC V) := K.subgroupOf (GfC V)
     have hLf : IsOpen (Lf : Set (GfC V)) := by
-      refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtype_val)
+      refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) (fun k hk => ?_) (hU.preimage continuous_subtypeVal)
       exact (hUK k hk k.2).1
     have e : (A : Set (GA D V)) = GlobalTheory.AutMult.toFin V ⁻¹' (Lf : Set (GfC V)) := by
       ext g
@@ -114,7 +114,7 @@ theorem pushforward_haar_real : ∀ D : D7, LevFacts D → ForStage D fun c _ s 
 
   have hker : {g : GA D V | g ∈ A ∧ GlobalTheory.AutMult.toInf V g = 1} = (K : Set (GA D V)) := by
     ext g
-    simp only [Set.mem_setOf_eq, toInf_eq_one_iff]
+    simp only [Set.mem_ofPred_eq, toInf_eq_one_iff]
     exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
   have hKc : IsCompact (K : Set (GA D V)) :=
     GlobalTheory.T.isCompact_finite_adelic_subgroup_integral_open D V s.Λ hs.selfDual K inf_le_left h3 (by
@@ -126,7 +126,7 @@ theorem pushforward_haar_real : ∀ D : D7, LevFacts D → ForStage D fun c _ s 
     rw [Subgroup.subtype_apply, finE_of_mem_ginfC V b.2]; exact one_mem _
   have hHaar : (Measure.map (GlobalTheory.AutMult.toInf V) (s.ν.restrict (A : Set (GA D V)))).IsHaarMeasure :=
     _root_.GlobalTheory.ChainOnto.map_restrict_isHaar (GA D V) (GinfC V) s.ν A (GinfC V).subtype (GlobalTheory.AutMult.toInf V) hAopen
-      continuous_subtype_val (GlobalTheory.AutMult.continuous_toInf V) hpi hiA (hker ▸ hKc)
+      continuous_subtypeVal (GlobalTheory.AutMult.continuous_toInf V) hpi hiA (hker ▸ hKc)
   refine ⟨hIopen.measurableSet, hAopen.measurableSet, hAint, fun g hg => ?_, ?_⟩
   · exact ⟨GlobalTheory.AutMult.toInf V g, GlobalTheory.AutMult.toFin V g, hfinK g hg, (GlobalTheory.AutMult.toInf_mul_toFin g).symm⟩
   refine ⟨_, hHaar, fun f F hf hF => ?_⟩

@@ -719,7 +719,7 @@ theorem thetaVector_eq_sum_heisenberg_of_core_without_chain : ∀ (D : D7) (G : 
   by_cases hw : w ∈ latO (Vc D i) (Wc D i) (R.ΛV i : Set (Fin (Vc D i).rank → D.host.E))
       (R.ΛW i : Set (Fin (Wc D i).rank → D.host.E)) (fun _ => True) ∧ IsHalf (cA D e) w
   swap
-  · rw [halfInd, if_neg hw, zero_mul, if_neg]
+  · rw [halfInd, ite_eq_right hw, zero_mul, ite_eq_right]
     rintro ⟨h1, h2⟩
     have hN : ∀ PP ∈ R.Pg ∪ R.Q t, ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal := fun PP hPP h =>
       (hP PP (Finset.mem_union.1 hPP)).2 (by rw [Nat.cast_mul]; exact Ideal.mul_mem_left _ _ h)
@@ -740,7 +740,7 @@ theorem thetaVector_eq_sum_heisenberg_of_core_without_chain : ∀ (D : D7) (G : 
     rw [hfr]
     have : Ideal.span {(l.M : 𝓞 D.host.E)} ≤ l.Mb := l.prod ▸ Ideal.mul_le_left
     exact GlobalTheory.PlaceVec.redM_add_nsmul PP ((hP PP hPP).1 (this (Ideal.subset_span rfl))) (hφ x).1 (hint u hu)
-  rw [halfInd, if_pos hw, one_mul, if_pos ⟨hw.2, hw' ▸ hint w hw.1⟩,
+  rw [halfInd, ite_eq_left hw, one_mul, ite_eq_left ⟨hw.2, hw' ▸ hint w hw.1⟩,
     GlobalTheory.PlaceVec.omegaK_congr _ fun PP h => hred PP (Or.inl h),
     GlobalTheory.PlaceVec.omegaQ_congr _ _ _ _ fun PP h => hred PP (Or.inr h), ← (hφ x).2, RingHom.id_apply, ← inversion l φ x]
   refine Finset.sum_congr rfl fun q _ => congrArg _ ?_
@@ -749,7 +749,7 @@ theorem thetaVector_eq_sum_heisenberg_of_core_without_chain : ∀ (D : D7) (G : 
     Matrix.ext fun a b => by simp only [Matrix.of_apply]; ring
   refine Eq.trans ?_ (char_eq (Y := Matrix.of fun a b => ((ε : ℤ) : D.host.E) * ι (cSep l • levRep (q b)) a / (l.M : D.host.E))
     hvac.1 hS hT (GlobalTheory.PlaceVec.idemSum_infPart he) hw.2 hu hwM ((hlat _).2 fun b => ?_)).symm
-  · rw [hY, hRat_std hV.1 _ _ _ (by rw [star_div₀, star_intCast, star_natCast]), ← Complex.exp_int_mul]
+  · rw [hY, hRat_std hV.1 _ _ _ (by rw [star_div₀, star_intCast, star_natCast]), ← exp_intCast_mul]
     congr 1
     have h1 : ∀ c : ℚ, ∀ z : D.host.E, Algebra.trace ℚ D.host.E (D.host.xi0 * ((c : D.host.E) * z)) =
         c * Algebra.trace ℚ D.host.E (D.host.xi0 * z) := fun c z => by
@@ -801,7 +801,7 @@ theorem moved_datum_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
   rw [hδ t l φ hφ hP e he, map_smul]
   by_cases hfin : Finite (Fin (Vc D i).rank → LevQ Dw l)
   swap
-  · haveI := not_finite_iff_infinite.1 hfin
+  · have := not_finite_iff_infinite.1 hfin
     rw [Nat.card_eq_zero_of_infinite, Nat.cast_zero, _root_.inv_zero, zero_smul, zero_smul]
   rw [map_finsum _ (Set.toFinite _)]
   congr 1
@@ -873,8 +873,8 @@ theorem thetaKO_eq_short_series_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fin
   choose p hp using fun q => exists_finOf (Vc D i) (Wc D i) (rank_Wc i) ((δ : ℤ) • Y q)
   have hdat := hδ t l₂ φ hφ hl bad N h k Λ mk hbad ⟨hh, e, Ps, he, hPs, hsupp⟩ hΛ htriv hlev hmk Y (fun q => (p q).1)
     (fun q => (p q).2) hY hp
-  haveI := finite_levQ Dw l₂
-  letI : Fintype (Fin (Vc D i).rank → LevQ Dw l₂) := Fintype.ofFinite _
+  have := finite_levQ Dw l₂
+  let : Fintype (Fin (Vc D i).rank → LevQ Dw l₂) := Fintype.ofFinite _
   obtain ⟨hhs, hks, -, hlat, hV1, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs h k
   obtain ⟨-, -, hmv, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs 1 k
   rw [show fin (Vc D i) 1 = 1 from map_one _, hV1] at hmv
@@ -997,7 +997,7 @@ theorem coefMap_norm_equivariant_basis_nc : ∀ (D : D7) (G : Type) [Group G] [F
     have hγE : Matrix.nonsingInvUnit γE.val hu = γE := Units.ext rfl
     have hemb : (fun τ => embF O.c' (tauE D τ)) = fun τ => O.jL.comp (labLL D τ) :=
       funext fun τ => (embV_eq_embF O.c' O.jL hσ τ).symm
-    rw [rhoM, dif_pos hu, hγE, hemb]
+    rw [rhoM, dite_eq_left hu, hγE, hemb]
     exact GlobalTheory.AdTh.CoefExt.equivariant (W := (R.cV i).W) hE ((R.cV i).ρ γ) (Formalism.L2.DIV.rhoVr (labLL D) (lamV D i) γE) _
       (GlobalTheory.AdTh.CoefExt.up_rhoVr O.jL (lamV D i) (labLL D) γE) (h1 γ γE hγ) v
 
@@ -1141,8 +1141,8 @@ theorem io_eq_phase_smul_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fintype G]
     exact congrArg (fun T : Module.End ℂ _ => T _) (map_one (R.ωP i A.μ0))
   have hn₁ : ‖(R.cV i).ρ g⁻¹ (χ • w₀)‖ = 1 := by
     rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), hc.2.1, ← norm_eq_sqrt_re_inner, norm_smul, hχ, hw₀, mul_one]
-  haveI := hc.2.2.2.1
-  haveI : FiniteDimensional O.c'.F (VsV D i O.c'.F) := Module.Finite.of_basis (Formalism.L2.DIV.bVV O.c'.F (lamV D i))
+  have := hc.2.2.2.1
+  have : FiniteDimensional O.c'.F (VsV D i O.c'.F) := Module.Finite.of_basis (Formalism.L2.DIV.bVV O.c'.F (lamV D i))
   have main : ∀ lt : LtN (T.Q.Dw ((i : ℕ) + 1)) (Vc D i).rank → FVar D (Wc D i).rank (Vc D i).rank, IsLt lt →
       ∃ a : ℂ, a • (R.cV i).ρ g⁻¹ (χ • w₀) = O.c0' O.hw ∧ ∀ t v, R.ptP i t (R.ioP i (PiTensorProduct.tprod ℂ u₀) (O.c0' v)) =
         a • PT t (toF O.c' lt (O.io v)) := fun lt hl => by
@@ -1159,9 +1159,9 @@ theorem io_eq_phase_smul_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fintype G]
       refine toF_pG O.c' hl hty i1 _ _ _ _ _ (fun τ => by rw [hsig, d1]) (fun τ => by rw [hsig, d2]) (fun τ k hk => ?_)
         fun τ k hk => ?_
       · rw [d1] at hk
-        exact (w3 τ k).1.trans ((dif_pos hk).trans ((hT.kap i τ).1 ⟨k, hk⟩))
+        exact (w3 τ k).1.trans ((dite_eq_left hk).trans ((hT.kap i τ).1 ⟨k, hk⟩))
       · rw [d2] at hk
-        exact (w3 τ k).2.trans ((dif_pos hk).trans ((hT.kap i τ).2.1 ⟨k, hk⟩))
+        exact (w3 τ k).2.trans ((dite_eq_left hk).trans ((hT.kap i τ).2.1 ⟨k, hk⟩))
     obtain ⟨a, ha, ha'⟩ := proportional ((R.cV i).ρ.comp (GQ (Vc D i)).subtype) _ r1 (fun γ hγ => hγ) r2 A₀ (PT A.μ0 ∘ₗ B₀)
       (fun γ => by
         obtain ⟨γE, a, k, h1, h2, h3, h4, h5, h6⟩ := rat_parts hθ hP.std γ
@@ -1288,7 +1288,7 @@ theorem class_scalar_value_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fintype 
     (fun Q hQ x => by
       rw [Formalism.L2.Host.HChar.resFin_mul, Formalism.L2.Host.HChar.resFin_mul, Formalism.L2.Host.HChar.resFin_inv,
         (R.C.isMu0 i).triv.1, (hL.xi_triv (tup t)).1, R.C.isEta.res.1, Formalism.L2.Host.etaFin, above_eq,
-        Finset.card_pair hQ.symm, if_neg (by norm_num), inv_one, one_mul, one_mul])
+        Finset.card_pair hQ.symm, ite_eq_right (by norm_num), inv_one, one_mul, one_mul])
   rw [← hbar] at c1 c3
   rw [← hLh] at c3
   obtain ⟨q, q0, q1, q2⟩ := (hO.ep t).2 (O.Lh t k) cc g.1 g.2.1 g.2.2 c1 c3
@@ -1328,7 +1328,7 @@ theorem letters_eq_fockVars_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fintype
   have hP := hT.laws.pins
   have hm : ∀ τ, τ ∉ X.Ψ → (T.Q.Dw ((i : ℕ) + 1)).mult τ ≤ X.p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_neg fun h : τ (T.Q.H.rt : D.host.E) = T.Q.H.rt0 => hτ ((hM.psi τ).2 (ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.exists_tau_of_inPsi T.Q hP.1 τ h)), hp]
+    rw [ite_eq_right fun h : τ (T.Q.H.rt : D.host.E) = T.Q.H.rt0 => hτ ((hM.psi τ).2 (ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.exists_tau_of_inPsi T.Q hP.1 τ h)), hp]
   obtain ⟨h1, h2⟩ := Dic.letter Dc (fun τ => RingHom.ext fun _ => rfl) hm ℓ
   obtain ⟨g1, g2, g3⟩ := hv (Dc.eL ℓ)
   refine ⟨g2.trans h1, ?_⟩
@@ -1380,7 +1380,7 @@ theorem cover_value_core_nc : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
   obtain ⟨a, ha⟩ := hrat γ' hγ'
   have hv := hval k γ' ⟨hγ', h2, h3⟩
   rw [(hO.tuple t).xi _ _ (hmul _ _ _ _ ha hxk), map_mul, (hR.lev.xi (tup t)).1.2 a, _root_.one_mul] at hv
-  exact (evR_eq_of_point _ hlev.2.2.2.2.2.2.2.1 _ y₂ hpt).trans ((dif_pos hd).symm.trans hv)
+  exact (evR_eq_of_point _ hlev.2.2.2.2.2.2.2.1 _ y₂ hpt).trans ((dite_eq_left hd).symm.trans hv)
 
 end GlobalTheory.AdTh.CoverVal
 
@@ -1532,7 +1532,7 @@ theorem exact_identity_core_nc (hC : GlobalTheory.Hk3.CoreNoChain R F) (hT : Tie
     ring
   have had := ad_value_core_nc hC hT O hP hka hδ t h J' hR y xs hpl g' γ hγ _ g Dc hX hp hrt _ hon hinv (hbas _) hΛ mk₂ ha₂ v _ hv
     (hfr ▸ hrd') Y hY
-  have hrdU : rdU (unfO O) f (O.dict g').1 (O.dict g').2 = _ := (dif_pos hx).trans hgeo
+  have hrdU : rdU (unfO O) f (O.dict g').1 (O.dict g').2 = _ := (dite_eq_left hx).trans hgeo
   have e1 := congrArg (clsSum (inC O.c') ((unfO O).X (O.dict g').1) Dc.hr Dc.bas Dc.idx Dc.eL (O.w t) (O.La t) (O.Nc t) (O.gam t)
     (O.vol t) (O.ep t) (fun j => O.io (xs j)) ((unfO O).X (O.dict g').1).Λ v Y) hfr
   rw [had.trans (congrArg (fun z => _ * z) e1.symm), hrdU]
@@ -1545,7 +1545,7 @@ theorem lieFac_eq_inv_sqrt_two_pi_pow {E : Type} [Field E] [NumberField E] [IsCM
   have h : 0 < 2 * Real.pi * x := by positivity
   have e : (Real.sqrt (2 * Real.pi * x))⁻¹ = Real.exp (-(Real.log (2 * Real.pi * x) / 2)) := by
     rw [Real.exp_neg, ← Real.log_sqrt h.le, Real.exp_log (Real.sqrt_pos.2 h)]
-  rw [e, ← Real.exp_nat_mul, lieFac, GlobalTheory.PtId.degW]
+  rw [e, ← Real.exp_natCast_mul, lieFac, GlobalTheory.PtId.degW]
   congr 1
   push_cast
   ring

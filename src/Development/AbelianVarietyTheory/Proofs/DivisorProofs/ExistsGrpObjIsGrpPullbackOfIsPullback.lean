@@ -58,9 +58,9 @@ namespace GlobalTheory.AbCoh
 
 theorem exists_grpObj_isGrpPullback_of_isPullback : ∀ (R R' : Type) [CommRing R] [CommRing R'] (σ : R →+* R') (A : Over (Sp R)) [GrpObj A] (X' : Scheme.{0}) (s' : X' ⟶ Sp R') (φ : X' ⟶ A.left), IsPullback φ s' A.hom (spMap σ) → ∃ _ : GrpObj (Over.mk s' : Over (Sp R')), IsGrpPullback (Over.mk s' : Over (Sp R')) A (spMap σ) φ ∧ (IsAbelianScheme A → IsAbelianScheme (Over.mk s' : Over (Sp R'))) ∧ ∀ g, SmoothOfRelativeDimension g A.hom → SmoothOfRelativeDimension g s' := by
   intro R R' _ _ σ A _ X' s' φ h
-  letI : GrpObj ((Over.pullback (spMap σ)).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback (spMap σ)).obj A) := Functor.grpObjObj
   let e : Over.mk s' ≅ (Over.pullback (spMap σ)).obj A := Over.isoMk h.isoPullback h.isoPullback_hom_snd
-  letI I : GrpObj (Over.mk s') := GrpObj.ofIso e.symm
+  let I : GrpObj (Over.mk s') := GrpObj.ofIso e.symm
   have : IsMonHom e.symm.hom := CategoryTheory.isMonHom_ofIso e.symm
   have : IsMonHom e.hom := inferInstanceAs (IsMonHom e.symm.inv)
   have hP : IsGrpPullback (Over.mk s' : Over (Sp R')) A (spMap σ) φ :=

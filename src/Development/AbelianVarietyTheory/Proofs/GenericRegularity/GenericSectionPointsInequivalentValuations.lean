@@ -184,7 +184,7 @@ theorem gauss_one (htr : Algebra.trdeg K Ω = D) (x : Fin N → Ω) (j0 : Fin N)
       (∀ β ∈ (aeval (subst x j0) P).support,
         w (ι ((aeval (subst x j0) P).coeff α)) ≤ w (ι ((aeval (subst x j0) P).coeff β))) →
       w (eval₂ ι u P) = w (ι ((aeval (subst x j0) P).coeff α)) := by
-  letI : Algebra Ω F := ι.toAlgebra
+  let : Algebra Ω F := ι.toAlgebra
   have hu : ∀ p, u p ∈ vRing w := fun p => by
     have := h1 (X p)
     rw [eval₂_X] at this
@@ -354,7 +354,7 @@ variable {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) 
 theorem exists_adapted (x : Fin N → Ω) (hx : ∃ k, x k ≠ 0) (v : AddValuation Ω (WithTop ℤ)) :
     ∃ j0, x j0 ≠ 0 ∧ ∀ k, 0 ≤ v (x k / x j0) := by
   obtain ⟨k0, hk0⟩ := hx
-  haveI : Nonempty (Fin N) := ⟨k0⟩
+  have : Nonempty (Fin N) := ⟨k0⟩
   obtain ⟨j0, -, hj⟩ := Finset.univ.exists_min_image (fun k => v (x k)) Finset.univ_nonempty
   have hne : x j0 ≠ 0 := by
     intro h

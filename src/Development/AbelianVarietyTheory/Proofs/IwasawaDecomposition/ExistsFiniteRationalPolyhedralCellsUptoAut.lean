@@ -581,8 +581,8 @@ theorem exists_cells : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have LPsd : ∀ (O : Type) [CommRing O] [Module.Finite ℤ O] [Module.Free ℤ O] (bar : O → O) (X : Type) [AddCommGroup X] [Module O X], psdCone (bar := bar) (X := X) ⊆ psdCone (bar := (id : ℤ → ℤ)) (X := X) := _root_.GlobalTheory.PolFan.psdCone_subset_psdCone_int
 
   obtain ⟨hfin, hproj, hrk⟩ := LG E X
-  haveI := hfin
-  haveI := hproj
+  have := hfin
+  have := hproj
   have hφX : IsPolFanOn (id : ℤ → ℤ) φs X := hφ X (by rw [hrk]; exact (Nat.mul_le_mul_left _ hq).trans hg)
   obtain ⟨N, hN, hD⟩ := LN X φs hφX
   obtain ⟨n, r, hr⟩ := Module.Finite.exists_fin' ℤ X
@@ -647,7 +647,7 @@ theorem exists_cells : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   choose a0 ha0F ha0 using fun (M : 𝓜) y => hFmin j M.1 y _ hBP
   let d : Fin (s j) × (∀ M : 𝓜, ∀ y : Fin n → ZMod (M.1 + 1), ↥(F j M.1 y)) := (kk, fun M y => ⟨a0 M y, ha0F M y⟩)
   obtain ⟨c', hc', hBc⟩ := hγc j d _ hB' hkk fun M hM y => by
-    simp only [toA, d, dif_pos hM]
+    simp only [toA, d, dite_eq_left hM]
     exact ha0 ⟨M, hM⟩ y
   exact ⟨e, _, γ j d, c', hγ j d, fun i => Set.mem_iUnion.2 ⟨j, Set.mem_iUnion.2 ⟨d, i, rfl⟩⟩, hc', hBc⟩
 

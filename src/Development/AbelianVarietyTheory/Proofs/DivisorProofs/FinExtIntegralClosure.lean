@@ -60,13 +60,13 @@ theorem finExt_integralClosure [IsLocalRing R] (hR : Base R) [FiniteDimensional 
     [IsGalois (FractionRing R) E] :
     letI := (baseMap R E).toAlgebra
     ∃ _ : IsLocalRing (integralClosure R E), FinExt (algebraMap R (integralClosure R E)) := by
-  letI := (baseMap R E).toAlgebra
-  haveI : IsScalarTower R (FractionRing R) E := IsScalarTower.of_algebraMap_eq' rfl
+  let := (baseMap R E).toAlgebra
+  have : IsScalarTower R (FractionRing R) E := IsScalarTower.of_algebraMap_eq' rfl
   obtain ⟨⟨hN, -, hI, hC⟩, -⟩ := hR
   set R₂ := integralClosure R E
-  haveI : Module.Finite R R₂ := IsIntegralClosure.finite R (FractionRing R) E R₂
-  haveI : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_isAdicComplete R
-  haveI : IsLocalRing R₂ := GlobalTheory.TameKummer.isLocalRing_of_finite R R₂
+  have : Module.Finite R R₂ := IsIntegralClosure.finite R (FractionRing R) E R₂
+  have : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_isAdicComplete R
+  have : IsLocalRing R₂ := GlobalTheory.TameKummer.isLocalRing_of_finite R R₂
   refine ⟨inferInstance, ⟨IsNoetherianRing.of_finite R R₂, inferInstance,
     integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing R),
     GlobalTheory.CompleteFiniteExtension.isAdicComplete_of_finite_local R R₂⟩, ?_, ?_⟩

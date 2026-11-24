@@ -542,8 +542,8 @@ theorem triang_strong (C : Type) [Field C] (v : Valuation C NNReal) (R : Type) [
     ∃ d : Fin n → R, (∀ i c, c ∈ Ideal.span {d i} ↔ ∃ l ∈ L, (∀ j, j < i → l j = 0) ∧ l i = c) ∧
       HasLen v R ((Fin n → R) ⧸ L) (∏ i, v (algebraMap R C (d i))) := by
   classical
-  haveI : IsDomain R := hv.hom_inj.isDomain
-  haveI : ValuationRing R := ValuationRing.of_integers v hv
+  have : IsDomain R := hv.hom_inj.isDomain
+  have : ValuationRing R := ValuationRing.of_integers v hv
   obtain ⟨m, w, hw⟩ := Submodule.fg_iff_exists_fin_generating_family.1 hL
   let ψ : (Fin m → R) →ₗ[R] (Fin n → R) := Fintype.linearCombination R w
   have hψ : LinearMap.range ψ = L := by rw [Fintype.range_linearCombination, hw]
@@ -614,7 +614,7 @@ theorem triang_strong (C : Type) [Field C] (v : Valuation C NNReal) (R : Type) [
       intro l hl
       exact hind n l hl fun j hj => by omega
   have hdet : X.det = ∏ i, d i := by
-    rw [Matrix.det_of_lowerTriangular X (fun j i h => hu0 i j h)]
+    rw [Matrix.det_of_isLowerTriangular X (fun j i h => hu0 i j h)]
     exact Finset.prod_congr rfl fun i _ => hud i
   have := Smith.hasLen_coker_det hv X
   rw [hrange, hdet, map_prod, map_prod] at this
@@ -741,7 +741,7 @@ theorem sum_cut (l : Fin n × Fin f → R) : ∑ s, cut s l = l := by
   simp [cut, Finset.sum_apply]
 
 theorem cut_supp (s : Fin f) (l : Fin n × Fin f → R) : ∀ j, j.2 ≠ s → cut s l j = 0 :=
-  fun _ h => if_neg h
+  fun _ h => ite_eq_right h
 
 theorem proj_Phi [Fintype F] [DecidableEq F] [IsDomain R] (h0 : (Fintype.card Fˣ : C) ≠ 0)
     (hinj : ∀ s t : Fin f, σ ^ p ^ (s : ℕ) = σ ^ p ^ (t : ℕ) → s = t)
@@ -781,8 +781,8 @@ theorem exists_Phi (p : ℕ) [Fact p.Prime] {C : Type} [Field C] [IsAlgClosed C]
 
 theorem aflatT : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable F AA.carrier → ∀ σ : MulChar F R, IsFund p σ → ∀ (n : ℕ) (b : Module.Basis (Fin n) F N), (afLatT p f b σ AA.carrier).FG ∧ Nonempty (AFQuot p AA.carrier ≃ₗ[R] ((Fin n × Fin f → R) ⧸ afLatT p f b σ AA.carrier)) ∧ (∀ l ∈ afLatT p f b σ AA.carrier, ∀ s : Fin f, (fun j => if j.2 = s then l j else 0) ∈ afLatT p f b σ AA.carrier) ∧ ∀ (i : Fin n) (s : Fin f) (c : R), c ∈ idealD p AA.carrier (flagSub b i) (b i) (σ ^ p ^ (s : ℕ)) ↔ ∃ l ∈ afLatT p f b σ AA.carrier, (∀ j, j.2 ≠ s → l j = 0) ∧ (∀ j, j < i → l (j, s) = 0) ∧ l (i, s) = c := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hc N _ _ _ _ AA hst σ hσ n b
-  haveI : IsDomain R := hv.hom_inj.isDomain
-  haveI : ValuationRing R := ValuationRing.of_integers v hv
+  have : IsDomain R := hv.hom_inj.isDomain
+  have : ValuationRing R := ValuationRing.of_integers v hv
   obtain ⟨h0, w, hw⟩ := exists_inv_card hv hp hc
   have hinj := hv.hom_inj
   have hdist := fund_pow_inj p v R hv hp F f hc σ hσ
@@ -878,7 +878,7 @@ theorem aflatT : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
       simpa [cut] using this
     let l2 : Fin n × Fin f → R := fun j =>
       if j.2 = s then (if j.1 < i then 0 else if j.1 = i then c else l j) else 0
-    refine ⟨l2, ?_, fun j hj => if_neg hj, fun j hj => by simp [l2, hj], by simp [l2]⟩
+    refine ⟨l2, ?_, fun j hj => ite_eq_right hj, fun j hj => by simp [l2, hj], by simp [l2]⟩
     have e4 : cut s l - l2 ∈ afLatT p f b σ AA.carrier := by
       refine mem_afLatT_of_p hinj _ _ ?_
       rintro ⟨j, t⟩
@@ -931,8 +931,8 @@ theorem flag_D : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
     · rintro ⟨l, hl, -, h2, h3⟩
       exact ⟨ρ s l, Submodule.mem_map_of_mem hl, h2, h3⟩
     · rintro ⟨_, ⟨l, hl, rfl⟩, h2, h3⟩
-      exact ⟨_, hgr l hl s, fun j hj => if_neg hj, fun j hj => (if_pos rfl).trans (h2 j hj),
-        (if_pos rfl).trans h3⟩
+      exact ⟨_, hgr l hl s, fun j hj => ite_eq_right hj, fun j hj => (ite_eq_left rfl).trans (h2 j hj),
+        (ite_eq_left rfl).trans h3⟩
   · let θ : (Fin n × Fin f → R) →ₗ[R] ((s : Fin f) → (Fin n → R) ⧸ L.map (ρ s)) :=
       LinearMap.pi fun s => Submodule.mkQ _ ∘ₗ ρ s
     have hsurj : Function.Surjective θ := by
@@ -1027,7 +1027,7 @@ lemma span_eq_of_le_of_v_eq (hv : v.Integers R) {c d : R} (hc : c ≠ 0)
 lemma hasLen_le_one' (hv : v.Integers R) {M : Type} [AddCommGroup M] [Module R M] {x : NNReal}
     (h : HasLen v R M x) : x ≤ 1 := by
   obtain ⟨m, c, -, rfl⟩ := h
-  exact Finset.prod_le_one' fun i _ => hv.map_le_one _
+  exact Finset.prod_le_one fun i _ => hv.map_le_one _
 
 end Val
 
@@ -1155,7 +1155,7 @@ theorem flagStatement_holds : FlagStatement := by
       intro i
       rw [← hSc i]
       have hle := _root_.GlobalTheory.CompanionTheory.Relay.non_fundamental_eigen_le_square_augmentation p C v R hv hp F f hf (S i) (hSF i) χ hχ
-      haveI : Subsingleton (OmType (S i).carrier χ) := by
+      have : Subsingleton (OmType (S i).carrier χ) := by
         refine Submodule.Quotient.subsingleton_iff.2 (eq_top_iff.2 ?_)
         intro x _
         exact hle x.2
@@ -1198,7 +1198,7 @@ theorem flagStatement_holds : FlagStatement := by
   have hxN : (∏ t, ∏ s : Fin f, v (algebraMap R C (c t s))) ^ (Fintype.card N * (p - 1)) =
       cN ^ 2 := by
     have hq : p ^ f ≠ 0 := pow_ne_zero _ hpp.ne_zero
-    refine (pow_left_inj₀ zero_le' zero_le' hq).1 ?_
+    refine (pow_left_inj₀ zero_le zero_le hq).1 ?_
     calc ((∏ t, ∏ s : Fin f, v (algebraMap R C (c t s))) ^ (Fintype.card N * (p - 1))) ^ p ^ f
         = (∏ t, (∏ s : Fin f, v (algebraMap R C (c t s))) ^ (p ^ f * (p - 1))) ^ Fintype.card N := by
           rw [Finset.prod_pow, ← pow_mul, ← pow_mul]

@@ -55,7 +55,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem phiA_mem_range (A : LocAt F E n G) (hI : LocInt A) (hS : SplAlg A) (v : Fin G.P.nV)
     {x : AfE F E} (hx : x ∈ RInt F E) : phiA A v x ∈ (algebraMap (G.P.W v) (G.P.Qq v)).range := by
-  haveI := (G.P.setting v).frac_alt
+  have := (G.P.setting v).frac_alt
   have key : RInt F E ≤ (algebraMap (G.P.W v) (G.P.Qq v)).range.comap (phiA A v) := by
     show Subring.closure _ ≤ _
     rw [Subring.closure_le]
@@ -81,7 +81,7 @@ theorem phiA_mem_range (A : LocAt F E n G) (hI : LocInt A) (hS : SplAlg A) (v : 
 
 theorem phiA_intU (A : LocAt F E n G) (hI : LocInt A) (hS : SplAlg A) (v : Fin G.P.nV) {k : (AfE F E)ˣ}
     (hk : k ∈ intU F E) : ∃ u : (G.P.W v)ˣ, phiA A v (k : AfE F E) = algebraMap (G.P.W v) (G.P.Qq v) u := by
-  haveI := (G.P.setting v).frac_alt
+  have := (G.P.setting v).frac_alt
   obtain ⟨a, ha⟩ := phiA_mem_range A hI hS v (x := (k : AfE F E)) hk.1
   obtain ⟨b, hb⟩ := phiA_mem_range A hI hS v (x := ((k⁻¹ : (AfE F E)ˣ) : AfE F E)) hk.2
   have hab : a * b = 1 := by
@@ -91,7 +91,7 @@ theorem phiA_intU (A : LocAt F E n G) (hI : LocInt A) (hS : SplAlg A) (v : Fin G
 
 theorem ordA_mul (A : LocAt F E n G) (v : Fin G.P.nV) (x y : (AfE F E)ˣ) :
     ordA A v (x * y) = ordA A v x + ordA A v y := by
-  haveI := (G.P.setting v).frac_alt
+  have := (G.P.setting v).frac_alt
   have hp := (G.P.setting v).p_unif
   obtain ⟨a, u, ha⟩ := exists_eq_unit_mul_zpow₂ hp (x.isUnit.map (phiA A v)).ne_zero
   obtain ⟨b, u', hb⟩ := exists_eq_unit_mul_zpow₂ hp (y.isUnit.map (phiA A v)).ne_zero
@@ -102,7 +102,7 @@ theorem ordA_mul (A : LocAt F E n G) (v : Fin G.P.nV) (x y : (AfE F E)ˣ) :
 
 theorem ordP_unit (v : Fin G.P.nV) (u : (G.P.W v)ˣ) :
     ordP (G.P.W v) p (algebraMap (G.P.W v) (G.P.Qq v) u) = 0 := by
-  haveI := (G.P.setting v).frac_alt
+  have := (G.P.setting v).frac_alt
   have := ordP_eq (Qq := G.P.Qq v) (G.P.setting v).p_unif 0 u
   simpa using this
 

@@ -101,7 +101,7 @@ theorem exists_rep (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h.No
     { B := h.flip
       herm := fun x y => hs.eq y x
       nondeg := fun x hx => hn.2 x hx }
-  letI : Submodule.IsLattice K Λ := hL
+  let : Submodule.IsLattice K Λ := hL
   have hfull : Submodule.IsFullLattice K Λ := ⟨span_eq_top_of_unimodular h hs hn hL hU⟩
   have hH : GlobalTheory.HermLat.IsUnimod H Λ := (GlobalTheory.HermLat.isUnimod_iff H Λ).2 ⟨⟨hL.fg, hfull.span_eq_top⟩, hU⟩
   have hx : ∀ x : ↥(Λ ⊓ GlobalTheory.HermLat.rs (𝓞 K) U), IsIntegral ℤ (f x) := fun x =>
@@ -167,7 +167,7 @@ theorem perp_lattice (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h.
       exact (LinearIndependent.iff_fractionRing _ _).mp hli
   have hle1 : Λ.comap (ι.restrictScalars (𝓞 K)) ≤ L := fun w hw =>
     (hmem w).2 ⟨0, X.zero_mem, by rw [add_zero]; exact hw⟩
-  letI : Submodule.IsLattice K Λ := hL
+  let : Submodule.IsLattice K Λ := hL
   have hfull : Submodule.IsFullLattice K Λ := ⟨span_eq_top_of_unimodular h hs hn hL hU⟩
   have hspan : Submodule.span K ((Λ.comap (ι.restrictScalars (𝓞 K)) : Submodule (𝓞 K) W) : Set W) = ⊤ := by
     apply eq_top_iff.mpr
@@ -182,7 +182,7 @@ theorem perp_lattice (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h.
     have : (s : 𝓞 K) • w ∈ Submodule.span K ((Λ.comap (ι.restrictScalars (𝓞 K)) : Submodule (𝓞 K) W) : Set W) := Submodule.subset_span hmem'
     rw [← algebraMap_smul K] at this
     exact (Submodule.smul_mem_iff _ hs0).1 this
-  letI : Submodule.IsLattice K (Λ.comap (ι.restrictScalars (𝓞 K))) := hL1
+  let : Submodule.IsLattice K (Λ.comap (ι.restrictScalars (𝓞 K))) := hL1
   have hL1full : Submodule.IsFullLattice K (Λ.comap (ι.restrictScalars (𝓞 K))) := ⟨hspan⟩
   have hst : ∀ r : 𝓞 K, star (algebraMap (𝓞 K) K r) ∈ Set.range (algebraMap (𝓞 K) K) := fun r =>
     Submodule.mem_one.1 (GlobalTheory.UnimodQuot.star_mem_one (Submodule.mem_one.2 ⟨r, rfl⟩))
@@ -192,8 +192,8 @@ theorem perp_lattice (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h.
       exact (dualBasic_mem_dual _ _ _).2 fun y hy => hI y (hle1 hy) w hw
     · intro s hs hli
       exact (LinearIndependent.iff_fractionRing _ _).mp hli
-  letI : Submodule.IsLattice K L := hLat
-  letI : Submodule.IsFullLattice K (Λ.comap (ι.restrictScalars (𝓞 K))) := hL1full
+  let : Submodule.IsLattice K L := hLat
+  let : Submodule.IsFullLattice K (Λ.comap (ι.restrictScalars (𝓞 K))) := hL1full
   refine ⟨Submodule.IsFullLattice.of_le K hle1, hI, ?_⟩
   have dec : ∀ l, (∀ x ∈ X, h x l = 0) → ∃ w, ∃ x ∈ X, l = ι w + (-(h z l) * (T : K)⁻¹) • z + x := by
     intro l hl

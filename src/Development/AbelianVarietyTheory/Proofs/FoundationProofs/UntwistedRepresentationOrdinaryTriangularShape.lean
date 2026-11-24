@@ -137,11 +137,11 @@ private theorem cont_kills {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [Alge
   have hS : {ζ : Ω | ζ ^ M = 1} = ((Polynomial.nthRoots M (1 : Ω)).toFinset : Set Ω) := by
     ext ζ
     simp [Polynomial.mem_nthRoots (by omega : 0 < M)]
-  haveI : Finite ↥{ζ : Ω | ζ ^ M = 1} := by
+  have : Finite ↥{ζ : Ω | ζ ^ M = 1} := by
     rw [hS]
     infer_instance
   let E := IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ M = 1}
-  haveI : FiniteDimensional ℚ E :=
+  have : FiniteDimensional ℚ E :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine cont_of_ker φ (E.fixingSubgroup : Set (G ℚ Ω)) E.fixingSubgroup_isOpen E.fixingSubgroup.one_mem ?_
   intro s hs
@@ -154,7 +154,7 @@ theorem UpperTheory.V.X.Kato.twCont :
   intro l _ Ω _ _ _ n W hW M hM φ hφ j
   have hc1 : Continuous fun s : G ℚ Ω => ((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l]) :=
     (Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l)
-  have hc2 : Continuous fun x : ℤ_[l] => (x : ℚ_[l]) := continuous_subtype_val
+  have hc2 : Continuous fun x : ℤ_[l] => (x : ℚ_[l]) := continuous_subtypeVal
   have hcyc : Continuous (cycBar ℚ Ω l) := by
     apply cont_units
     exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (hc2.comp hc1)
@@ -192,7 +192,7 @@ theorem unifCont : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
       (∀ x ∈ E0, s' x = x) → ‖f (s * s') - f s‖ < δ := by
   intro Ω _ _ _ E _ f hf δ hδ
   classical
-  haveI : CompactSpace (Ω ≃ₐ[ℚ] Ω) := inferInstance
+  have : CompactSpace (Ω ≃ₐ[ℚ] Ω) := inferInstance
   have key : ∀ x : Ω ≃ₐ[ℚ] Ω, ∃ V ∈ nhds (1 : Ω ≃ₐ[ℚ] Ω), ∀ a ∈ V, ∀ b ∈ V, ‖f (x * a * b) - f x‖ < δ / 2 := by
     intro x
     have hc : Continuous fun p : (Ω ≃ₐ[ℚ] Ω) × (Ω ≃ₐ[ℚ] Ω) => f (x * p.1 * p.2) :=
@@ -260,8 +260,8 @@ theorem frobPlace : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] (q : ℕ), q.Pri
     ∃ (w : HeightOneSpectrum (𝓞 ℚ)) (A : ValuationSubring Ω), normV w = q ∧ IsPlaceOver A w ∧
       IsFrob (F := ℚ) A (normV w) s := by
   intro Ω _ _ q hq s hs
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : Fact q.Prime := ⟨hq⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   obtain ⟨V, hqV, hV⟩ := hs
   have hval : V.valuation (q : Ω) < 1 := (ValuationSubring.mem_nonunits_iff V).1 hqV
   have hover : IsPlaceOver V (ReciprocityTheory.Neutral.Cmp.ratPrime q) := fun x => by
@@ -284,7 +284,7 @@ theorem frobPlace : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] (q : ℕ), q.Pri
     have hinvV : y⁻¹ ∈ V := (V.valuation_le_one_iff _).1 hinv.le
     have h1 := (hV y⁻¹ hinvV).2
     have h2 : V.valuation (y⁻¹ ^ q) < 1 := by
-      rw [map_pow]; exact pow_lt_one₀ zero_le' hinv hq.ne_zero
+      rw [map_pow]; exact pow_lt_one₀ zero_le hinv hq.ne_zero
     have h3 : V.valuation (s y⁻¹) < 1 := by
       have := Valuation.map_add_lt V.valuation h1 h2
       rwa [sub_add_cancel] at this
@@ -405,8 +405,8 @@ theorem untw_cont [IsAlgClosure ℚ Ω] (e : ℕ) (W : R2 Ω l) (χ : G ℚ Ω �
 theorem root_eq {p M n : ℕ} (hp : p.Prime) (hM : ¬ p ∣ M) (V : ValuationSubring Ω) (hV : V.valuation (p : Ω) < 1)
     (s : G ℚ Ω) (hs : ∀ x, V.valuation x ≤ 1 → V.valuation (s x - x ^ n) < 1) {ζ : Ω} (hζ : ζ ^ M = 1) :
     s ζ = ζ ^ n := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : Fact p.Prime := ⟨hp⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hM0 : M ≠ 0 := fun h => hM (h ▸ dvd_zero p)
   have hN : ¬ V.valuation (M : Ω) < 1 := fun h => by
     have := (ReciprocityTheory.Neutral.Cmp.valuation_intCast_lt_one_iff V hV (M : ℤ)).1 (by simpa using h)
@@ -430,10 +430,10 @@ theorem det_mul_eq_one_on_inertia [IsAlgClosure ℚ Ω] (ι : Qbar l ≃+* ℂ) 
     {A : ValuationSubring Ω} (hA : OverL l A) {s : G ℚ Ω} (hs : s ∈ Ine (F := ℚ) A) :
     ((χ s : Qbar l)⁻¹) ^ 2 * (dt W s : Qbar l) = 1 := by
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero g.M := ⟨g.pos.ne'⟩
-  haveI : NeZero ((g.M : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr g.pos.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero g.M := ⟨g.pos.ne'⟩
+  have : NeZero ((g.M : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr g.pos.ne'⟩
   set η : G ℚ Ω → Qbar l := fun t => ((χ t : Qbar l)⁻¹) ^ 2 * (dt W t : Qbar l) with hη
   have hc : Continuous η := by
     have h := (Units.continuous_val.comp (untw_cont 0 W χ hW hχ)).matrix_det
@@ -442,7 +442,7 @@ theorem det_mul_eq_one_on_inertia [IsAlgClosure ℚ Ω] (ι : Qbar l ≃+* ℂ) 
   show η s = 1
   by_contra hne
   obtain ⟨E0, hE0⟩ := unifCont η hc ‖1 - η s‖ (norm_pos_iff.2 (sub_ne_zero.2 (Ne.symm hne)))
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω g.M
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω g.M
   obtain ⟨S0, hS0⟩ := frob_trace_det ι e W g χ hatt
   obtain ⟨s', q, hs', hq, hqS, hF⟩ := exists_fixing_mul_frobAt s (insert ζ E0) (insert l (S0 ∪ g.M.primeFactors))
   simp only [Finset.mem_insert, Finset.mem_union, not_or, Nat.mem_primeFactors] at hqS

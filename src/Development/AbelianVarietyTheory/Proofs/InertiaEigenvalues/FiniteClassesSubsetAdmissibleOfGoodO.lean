@@ -173,8 +173,8 @@ theorem isLocallyConstant_comp {G N : Type} [TopologicalSpace G] [AddCommGroup N
     (hs : Submodule.span LL (T : Set V) = ⊤) {c : O} (hc : algebraMap O LL c ≠ 0) (q : ↥T →ₗ[O] N)
     (hN : ∀ y : N, c • y = 0) (z : G → ↥T) (hz : Continuous fun g => (z g : V)) :
     IsLocallyConstant fun g => q (z g) := by
-  haveI : ContinuousSMul LL V := IsModuleTopology.toContinuousSMul LL V
-  haveI : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup LL V
+  have : ContinuousSMul LL V := IsModuleTopology.toContinuousSMul LL V
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup LL V
   have hT' := isOpen_of_fg hO T hT hs
   rw [IsLocallyConstant.iff_exists_open]
   intro g
@@ -330,8 +330,8 @@ theorem admissible_of_surjective {Γ : GalData G Qp LL O} {t : ℕ} {Ut : ZMod n
     (π : Representation O G M) (p : ↥T.L.T →ₗ[O] M) (hp : Function.Surjective p)
     (hg : ∀ g x, p (latRep T.L g x) = π g (p x)) {c : O} (hc : c ≠ 0) (hM : ∀ y : M, c • y = 0) :
     Admissible PD emb Γ t Ut π := by
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
   let L₂ : Lattice (O := O) T.ρ :=
     { T := (LinearMap.ker p).map T.L.T.subtype
       stable := by
@@ -465,9 +465,9 @@ theorem cyclic_mem_adm (hext : GlobalTheory.IndefiniteRowSideFullHecke.Crystalli
     exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _))
   refine ⟨a, hX, ha, _, rfl, ?_⟩
   obtain ⟨T, hT, e, he, hg⟩ := exists_full hext htw Γ hlam D hD hε z hz
-  haveI : Module.Finite O ↥Γ.T₀.L.T := Module.Finite.iff_fg.mpr Γ.T₀.L.fg
-  haveI : Finite (↥Γ.T₀.L.T ⊗[O] (O ⧸ Ideal.span {Γ.lam ^ a})) := by
-    haveI : Finite ((O ⧸ Ideal.span {Γ.lam ^ a}) ⊗[O] ↥Γ.T₀.L.T) :=
+  have : Module.Finite O ↥Γ.T₀.L.T := Module.Finite.iff_fg.mpr Γ.T₀.L.fg
+  have : Finite (↥Γ.T₀.L.T ⊗[O] (O ⧸ Ideal.span {Γ.lam ^ a})) := by
+    have : Finite ((O ⧸ Ideal.span {Γ.lam ^ a}) ⊗[O] ↥Γ.T₀.L.T) :=
       Module.finite_of_finite (O ⧸ Ideal.span {Γ.lam ^ a})
     exact Finite.of_equiv _ (TensorProduct.comm O _ _).toEquiv
   let q : ↥Γ.T₀.L.T →ₗ[O] ↥Γ.T₀.L.T ⊗[O] (O ⧸ Ideal.span {Γ.lam ^ a}) := (TensorProduct.mk O _ _).flip 1
@@ -505,7 +505,7 @@ theorem finite_subset_adm (hO : IsOpen (Set.range (algebraMap O LL)))
   obtain ⟨A, hA⟩ := hA
   obtain ⟨a, ha, hX⟩ := exists_pow_smul_eq_zero hlam.not_isUnit X
   have h0 := pow_ne_zero a hlam.ne_zero
-  haveI := hfin _ h0
+  have := hfin _ h0
   rintro c ⟨y, hy⟩
   have key : ((tensAmb Γ.T₀.L Γ.χ₁ X).comp ((latticeFiniteCohomology PD (twLattice Γ.T₀.L Γ.χ₁⁻¹)).subtype.rTensor X)) y ∈
       A.map (toAmb (twCoef Γ.W₀ Γ.χ₁ X)) := by
@@ -552,7 +552,7 @@ end Main
 theorem finite_quotient (l : ℕ) [Fact l.Prime] (LL : FinExt l) (c : ↥(OL LL)) (hc : c ≠ 0) :
     Finite (↥(OL LL) ⧸ Ideal.span {c}) := by
   have h1 : (Ideal.span {c}).comap (algebraMap ℤ_[l] ↥(OL LL)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hc (Ideal.mem_span_singleton_self c) (integralClosure.isIntegral c)
+    Ideal.under_ne_bot_of_integral_mem hc (Ideal.mem_span_singleton_self c) (integralClosure.isIntegral c)
   obtain ⟨m, hm⟩ := PadicInt.ideal_eq_span_pow_p h1
   have h2 : Ideal.span {((l : ℕ) : ↥(OL LL)) ^ m} ≤ Ideal.span {c} := by
     rw [Ideal.span_singleton_le_iff_mem]
@@ -560,7 +560,7 @@ theorem finite_quotient (l : ℕ) [Fact l.Prime] (LL : FinExt l) (c : ↥(OL LL)
       rw [hm]
       exact Ideal.mem_span_singleton_self _
     rwa [Ideal.mem_comap, map_pow, map_natCast] at h3
-  haveI := (GlobalTheory.LocalIntegers.good_integers l LL).2 m
+  have := (GlobalTheory.LocalIntegers.good_integers l LL).2 m
   exact Finite.of_surjective _ (Ideal.Quotient.factor_surjective h2)
 
 theorem finAdm : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (S : TopSit P),

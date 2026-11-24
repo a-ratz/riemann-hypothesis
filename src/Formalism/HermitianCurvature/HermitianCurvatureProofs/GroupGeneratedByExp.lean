@@ -171,7 +171,7 @@ theorem trotter (X Y : 𝔸) :
     exact mul_le_mul_of_nonneg_left (norm_add_le _ _) hni
   rw [hb]
   refine (norm_pow_sub_pow_le hq ha hb' n).trans (le_of_eq ?_)
-  rw [← Real.exp_nat_mul, show (n : ℝ) * ((n : ℝ)⁻¹ * s) = s by field_simp, norm_smul, Real.norm_of_nonneg hn0.le]
+  rw [← Real.exp_natCast_mul, show (n : ℝ) * ((n : ℝ)⁻¹ * s) = s by field_simp, norm_smul, Real.norm_of_nonneg hn0.le]
   ring
 
 end Banach
@@ -191,7 +191,7 @@ variable {k r : ℕ} {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [Fini
 
 theorem group_eq_exp (φ : ℝ → (W →L[ℂ] W)) (A : W →L[ℂ] W) (h0 : φ 0 = 1)
     (hA : ∀ t, HasDerivAt φ ((φ t).comp A) t) (t : ℝ) : φ t = NormedSpace.exp (t • A) := by
-  have hcW : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have hcW : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   let _ : NormedAlgebra ℚ (W →L[ℂ] W) := NormedAlgebra.restrictScalars ℚ ℂ (W →L[ℂ] W)
   have hE : ∀ s : ℝ, HasDerivAt (fun u : ℝ => NormedSpace.exp (u • (-A)))
       ((-A) * NormedSpace.exp (s • (-A))) s := fun s => hasDerivAt_exp_smul_const' (𝕂 := ℝ) (-A) s

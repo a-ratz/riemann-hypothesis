@@ -125,7 +125,7 @@ theorem exists_cgTrue_charSide : ∀ hL : RecTExists, GlobalTheory.Published.Aut
     (hE : IsEmpty D.nd.Loc) (T : GlobalTheory.RowTie.WDTie D.nd D.naut) (cf : CharFrame D), (∀ k v, cf.P.Div k (D.naut.plGw k v)) →
     ∃ K : CGK D.naut, Nonempty (CGTrueT hL (setCG D hE K) (wdCG hE K T)) ∧ Nonempty (CharSide (setCG D hE K) (cfCG hE K cf)) := by
   intro hL _ D hE T cf hP
-  haveI := host_isCMField D.host
+  have := host_isCMField D.host
   obtain ⟨η, η', e1, e2, h1, h2, h3, h4⟩ := etaLawsT hL D cf.isEta
   refine ⟨trueKT hL D T η η' h1 h2 h3 h4, ⟨trueCGT hL D hE T η η' h1 h2 h3 h4⟩, ⟨
     { e1 := (Equiv.subtypeUnivEquiv (fun π => ⟨Nat.one_pos, goodAll_one π⟩)).trans (CGu.equivChar D.host.E)

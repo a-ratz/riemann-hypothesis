@@ -256,7 +256,7 @@ private theorem lvl_le {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuati
 theorem UpperTheory.order_level_injective_of_smul_eq :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → ∀ (π : O) (n : ℕ) (e : Oˣ) (h : O) (x : Etau K τ), Cond π n e h x → ∀ (w : (Etau K τ)ˣ) (m m' : ℕ), PS.ml w (PK.Ord (O := O) (yy π m x)) = PK.Ord (O := O) (yy π m' x) → m = m' := by
   intro O K _ _ _ _ _ Δ τ L hD π n e h x hc w m m' hw
-  haveI := L.frac
+  have := L.frac
   have hx : x.im ≠ 0 := hc.gen.im_ne
   have hsq : ∀ j : ℕ, yy π j x * yy π j x = algebraMap O (Etau K τ) (π ^ j * π ^ j * e) := by
     intro j
@@ -332,7 +332,7 @@ theorem gen_ord {y : Etau K τ} (hy : IsIntegral O y) : PS.Gen O τ (Ord O y) 1 
 variable [IsDomain O] [IsDiscreteValuationRing O] {Δ : K}
 
 theorem nU_Gu (L : IsLoc O Δ) {u : (Etau K τ)ˣ} (hu : u ∈ Gu O τ) : ∃ v : Oˣ, algebraMap O K v = (PS.nU u : K) := by
-  haveI := L.frac
+  have := L.frac
   have key : ∀ w : (Etau K τ)ˣ, IsIntegral O (w : Etau K τ) → ∃ b : O, algebraMap O K b = (PS.nU w : K) := fun w hw =>
     int_down (τ := τ) L _ (by
       rw [PS.nU_val, algebraMap_norm_eq_mul_star]; exact hw.mul (PS.star_int hw))
@@ -377,7 +377,7 @@ private theorem evenVal_mul_pi_pow_iff_exists_sq_unit (L : IsLoc O Δ) {π : O} 
     EvenVal O (t * algebraMap O K (π ^ (n + m))) ↔
       ∃ r : Kˣ, ∃ w : Oˣ, t * (r : K) ^ 2 * algebraMap O K (π ^ m) =
         algebraMap O K w * algebraMap O K (π ^ n) := by
-  haveI := L.frac
+  have := L.frac
   have hP : algebraMap O K π ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective O K)).mpr hπ
   have hPn : algebraMap O K π ^ n ≠ 0 := pow_ne_zero _ hP
@@ -403,7 +403,7 @@ private theorem exists_unit_eq_div_of_same_scaling (L : IsLoc O Δ) {π : O} (h�
     (hrw : (t : K) * (r : K) ^ 2 * algebraMap O K (π ^ m) = algebraMap O K w * algebraMap O K (π ^ n))
     (hw' : (t : K) * (r' : K) ^ 2 * algebraMap O K (π ^ m) = algebraMap O K w' * algebraMap O K (π ^ n)) :
     ∃ v : Oˣ, algebraMap O K v = ((r' / r : Kˣ) : K) := by
-  haveI := L.frac
+  have := L.frac
   have hPn : algebraMap O K (π ^ n) ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective O K)).mpr (pow_ne_zero _ hπ)
   have e1 : algebraMap O K w' * (r : K) ^ 2 = algebraMap O K w * (r' : K) ^ 2 := by
@@ -438,7 +438,7 @@ theorem gs_count (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {π : O} {n : ℕ} {e
       if EvenVal O ((t : K) * algebraMap O K (π ^ (n + m))) then (Hu O (yy π m x)).relIndex (Gu O τ) else 0 := by
     intro m hm
     by_cases hev : EvenVal O ((t : K) * algebraMap O K (π ^ (n + m)))
-    · rw [if_pos hev]
+    · rw [ite_eq_left hev]
       obtain ⟨r, w, hrw⟩ := (evenVal_mul_pi_pow_iff_exists_sq_unit L hπ (t : K) n m).1 hev
       rw [← ncard_unit_translates_order_eq_relIndex O K τ (PS.sc τ r) (yy π m x)]
       congr 1
@@ -453,12 +453,12 @@ theorem gs_count (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {π : O} {n : ℕ} {e
         rw [hS, ← mul_assoc, ← map_mul, mul_div_cancel]
       · rintro ⟨u, hu, hS⟩
         exact ⟨hS ▸ ml_sc_mul_mem_gs_of_val_eq L hτ C t r hu m hm ⟨w, hrw⟩, _, hS⟩
-    · rw [if_neg hev]
+    · rw [ite_eq_right hev]
       have hfinite : {S | S ∈ PS.Gs O τ (t : K) 1 ∧ ∃ w : (Etau K τ)ˣ, S = PS.ml w (Ord O (yy π m x))}.Finite :=
         hfin.subset (fun S hS => hS.1)
       rw [Set.ncard_eq_zero hfinite]
       ext S
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨hG, w0, hw0⟩
       obtain ⟨m', r', u', hu', hm', ⟨w', hw'⟩, hS⟩ := hlev S hG
       have hmm : m = m' := eq_of_ml_ord_yy_eq L hτ C (hw0.symm.trans hS)

@@ -91,7 +91,7 @@ theorem l2_norm_scaling {νq : Measure (Formalism.QuantumDeterminants.Mt k r)} (
     rw [← lintegral_const_mul' (ENNReal.ofReal (‖a‖ ^ 2) ^ 2) _ (ENNReal.pow_ne_top ENNReal.ofReal_ne_top)]
     refine lintegral_congr_ae (hae.mono fun x hx => ?_)
     dsimp only
-    rw [hx, nnnorm_smul, ENNReal.coe_mul, mul_pow, hc]
+    rw [hx, nnNorm_smul, ENNReal.coe_mul, mul_pow, hc]
   have hre : (⟪a, ⟪a, a⟫_ℂ • a⟫_ℂ).re = ‖a‖ ^ 4 := by
     rw [inner_smul_right, hinner, ← Complex.ofReal_mul, Complex.ofReal_re]
     ring

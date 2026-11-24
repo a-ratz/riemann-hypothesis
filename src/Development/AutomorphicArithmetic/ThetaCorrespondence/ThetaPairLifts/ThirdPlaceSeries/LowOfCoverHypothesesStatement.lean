@@ -70,7 +70,7 @@ namespace GlobalTheory.HalfRankSub
 
 theorem fg_of_le_fg {R M : Type} [CommRing R] [IsNoetherianRing R] [AddCommGroup M] [Module R M]
     {L X : Submodule R M} (hL : L.FG) (hX : X ≤ L) : X.FG := by
-  haveI : IsNoetherian R L := isNoetherian_of_fg_of_noetherian L hL
+  have : IsNoetherian R L := isNoetherian_of_fg_of_noetherian L hL
   have h1 : (X.comap L.subtype).FG := IsNoetherian.noetherian _
   have h2 := h1.map L.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hX] at h2
@@ -149,7 +149,7 @@ end
 
 theorem descent : ∀ (K V W : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [AddCommGroup W] [Module K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W] (NA : (K →+* ℂ) → V → ℝ) (NB : (K →+* ℂ) → W → ℝ) (A : Submodule (𝓞 K) V) (B : Submodule (𝓞 K) W) (n : ℕ) (φ : Fin n → V →ₗ[K] W) (P Λ ε t : ℝ), HasGram NA → HasGram NB → A.FG → B.FG → A ≠ ⊥ → (∀ h, ∀ f ∈ A, φ h f ∈ B) → (∀ f, (∀ h, φ h f = 0) → f = 0) → (∀ σ f, ∑ h, NB σ (φ h f) ^ 2 ≤ Real.exp (2 * P) * NA σ f ^ 2) → (∃ s : Set W, s ⊆ (B : Set W) ∧ (∀ y ∈ s, ∀ σ, NB σ y ≤ Real.exp Λ) ∧ (B : Set W) ⊆ (Submodule.span K s : Set W)) → 0 ≤ Λ → 0 ≤ ε → (n : ℝ) * Formalism.HN.rkK B ≤ (1 + ε) * Formalism.HN.rkK A → t ≤ slope_sq NA A - 2 * P → t - ε * (|t| + 2 * Λ) ≤ slope_sq NB B := by
   intro K V W _ _ _ _ _ _ _ _ _ _ _ NA NB A B n φ P Λ ε t hA hB hAfg hBfg hA0 hint hinj hnorm hs hΛ hε hrk ht
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨⟨p, ⟨b, X⟩, hGA⟩⟩ := hA
   obtain ⟨⟨q, ⟨b', X'⟩, hGB⟩⟩ := hB
   change IsGram b X NA at hGA
@@ -186,7 +186,7 @@ theorem descent : ∀ (K V W : Type) [Field K] [NumberField K] [_root_.NumberFie
     refine htMap_le_of_points b X bn Xn hX hXn Φ hΦ0 P fun v f => ?_
     have n0 : 0 ≤ Formalism.HermitianLatticesTheory.normAt b X v f := Real.sqrt_nonneg _
     refine abs_le_of_sq_le_sq' ?_ (by positivity) |>.2
-    rw [hbn, hXndef, normAt_pi_sq b' X' hX', mul_pow, ← Real.exp_nat_mul, (hGA v).2]
+    rw [hbn, hXndef, normAt_pi_sq b' X' hX', mul_pow, ← Real.exp_natCast_mul, (hGA v).2]
     simp only [(hGB v).2]
     exact_mod_cast hnorm v.embedding f
   have hmm : -(2 * Λ) ≤ muMinDef bn Xn Bn := by
@@ -214,7 +214,7 @@ theorem descent : ∀ (K V W : Type) [Field K] [NumberField K] [_root_.NumberFie
   have hd := Formalism.ExtensionFiltration.descentSlope K V _ (Fin n → W) _ b X bn Xn hX hXn Φ A Bn hAfg hBnfg hA0 hΦinj hΦle
   rw [p2] at hd
   have hle : rkK A ≤ rkK Bn := by
-    haveI : Module.Finite K (Fin n → W) := Module.Finite.of_basis bn
+    have : Module.Finite K (Fin n → W) := Module.Finite.of_basis bn
     rw [← Formalism.BranchingDeterminantCap.OrthogonalSumAlt.rkK_map Φ hΦinj A]
     exact Submodule.finrank_mono (Submodule.span_mono hΦle)
   have hpos : 0 < rkK A := Nat.pos_of_ne_zero (Formalism.ExtensionFiltration.HermitianIdempotentFrameLemmas.rkK_ne_zero b A hA0)

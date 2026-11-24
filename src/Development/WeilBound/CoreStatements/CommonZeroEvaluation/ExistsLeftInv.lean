@@ -182,8 +182,8 @@ theorem vV_diag_eq {g : Matrix (Fin n) (Fin r) K} {C C' : Matrix (Fin r) (Fin r)
   have hdetC' : IsUnit C'.det := by
     rw [Matrix.det_of_isUpperTriangular hC']
     exact Ne.isUnit (Finset.prod_ne_zero_iff.mpr fun i _ => h0' i)
-  letI := C.invertibleOfIsUnitDet hdetC
-  letI := C'.invertibleOfIsUnitDet hdetC'
+  let := C.invertibleOfIsUnitDet hdetC
+  let := C'.invertibleOfIsUnitDet hdetC'
   have hCi : (C⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hC
   have hCi' : (C'⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hC'
   obtain ⟨X, hX⟩ : ∃ X, X = C⁻¹ * C' := ⟨_, rfl⟩
@@ -272,7 +272,7 @@ theorem tend_val (s : S) : Tend V ψ (fun ψ' => ψ' s) (ψ s) := by
   intro c hc
   refine mem_closeF_lemma {s} (vV V c + 1).toNat fun ψ' h => ?_
   show valV V (ψ' s - ψ s) < valV V c
-  have hc0 : 0 < valV V c := zero_lt_iff.mpr (valV_ne_zero hc)
+  have hc0 : 0 < valV V c := pos_iff_ne_zero.mpr (valV_ne_zero hc)
   by_cases hd : ψ' s - ψ s = 0
   · rw [hd, map_zero]
     exact hc0
@@ -295,7 +295,7 @@ theorem tend_const (b : K) : Tend V ψ (fun _ => b) b := by
   exact Filter.Eventually.of_forall fun _ => by
     show valV V (b - b) < valV V c
     rw [sub_self, map_zero]
-    exact zero_lt_iff.mpr (valV_ne_zero hc)
+    exact pos_iff_ne_zero.mpr (valV_ne_zero hc)
 
 theorem Tend.mul_const {a : (S →+* K) → K} {b : K} (h : Tend V ψ a b) (d : K) :
     Tend V ψ (fun ψ' => a ψ' * d) (b * d) := by
@@ -304,9 +304,9 @@ theorem Tend.mul_const {a : (S →+* K) → K} {b : K} (h : Tend V ψ a b) (d : 
   · exact Filter.Eventually.of_forall fun ψ' => by
       show valV V (a ψ' * d - b * d) < valV V c
       rw [hd, mul_zero, mul_zero, sub_self, map_zero]
-      exact zero_lt_iff.mpr (valV_ne_zero hc)
+      exact pos_iff_ne_zero.mpr (valV_ne_zero hc)
   · filter_upwards [h (c / d) (div_ne_zero hc hd)] with ψ' h1
-    have hvd : 0 < valV V d := zero_lt_iff.mpr (valV_ne_zero hd)
+    have hvd : 0 < valV V d := pos_iff_ne_zero.mpr (valV_ne_zero hd)
     have e : a ψ' * d - b * d = (a ψ' - b) * d := by ring
     rw [e, map_mul]
     have e2 : valV V c = valV V (c / d) * valV V d := by rw [← map_mul, div_mul_cancel₀ c hd]
@@ -348,17 +348,17 @@ theorem Tend.div {a a' : (S →+* K) → K} {b b' : K} (h : Tend V ψ a b) (h' :
     have e3 : valV V c = valV V (c * b') / valV V b' := by
       rw [map_mul, mul_div_assoc, div_self hvb, mul_one]
     rw [e3]
-    exact (div_lt_div_iff_of_pos_right (zero_lt_iff.mpr hvb)).mpr h1
+    exact (div_lt_div_iff_of_pos_right (pos_iff_ne_zero.mpr hvb)).mpr h1
   · by_cases hb0 : b = 0
     · rw [hb0, zero_mul, zero_div, neg_zero, map_zero]
-      exact zero_lt_iff.mpr (valV_ne_zero hc)
+      exact pos_iff_ne_zero.mpr (valV_ne_zero hc)
     · rw [Valuation.map_neg, map_div₀, map_mul, map_mul, ha']
-      have hpos : 0 < valV V b' * valV V b' := zero_lt_iff.mpr (mul_ne_zero hvb hvb)
+      have hpos : 0 < valV V b' * valV V b' := pos_iff_ne_zero.mpr (mul_ne_zero hvb hvb)
       have e4 : valV V c = valV V c * valV V b' * valV V b' / (valV V b' * valV V b') := by
         rw [mul_assoc, mul_div_assoc, div_self (mul_ne_zero hvb hvb), mul_one]
       rw [e4]
       refine (div_lt_div_iff_of_pos_right hpos).mpr (lt_of_lt_of_le ?_ hbt)
-      exact mul_lt_mul_of_pos_left h3 (zero_lt_iff.mpr (valV_ne_zero hb0))
+      exact mul_lt_mul_of_pos_left h3 (pos_iff_ne_zero.mpr (valV_ne_zero hb0))
 
 theorem eventually_ne {h : S} (hh : ψ h ≠ 0) : ∀ᶠ ψ' in closeF V ψ, ψ' h ≠ 0 := by
   filter_upwards [tend_val h (ψ h) hh] with ψ' h1 h0

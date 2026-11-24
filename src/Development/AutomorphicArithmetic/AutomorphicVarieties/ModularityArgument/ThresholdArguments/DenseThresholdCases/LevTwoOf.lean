@@ -221,9 +221,9 @@ private theorem unit_card (l : ℕ) [hl : Fact l.Prime] (L : Type) [Field L] [Nu
   have h1 : residue O (normV w : O) = 0 := (residue_eq_zero_iff _).2 hn
   rw [map_natCast, CharP.cast_eq_zero_iff (ResidueField O) l] at h1
   have hmax := w.isMaximal
-  letI : Field (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.field _
   have hfin : Finite (𝓞 L ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 L ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 L ⧸ w.asIdeal)
   have h2 : l ∣ Fintype.card (𝓞 L ⧸ w.asIdeal) := by
     rw [← Nat.card_eq_fintype_card]; exact h1
   have h3 := (prime_dvd_char_iff_dvd_card (R := 𝓞 L ⧸ w.asIdeal) l).2 h2

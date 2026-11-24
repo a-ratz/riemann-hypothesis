@@ -75,7 +75,7 @@ theorem b_mem (hd : d.AxH 𝒜) (h : d.S1) (la : HeightOneSpectrum (𝓞 K)) (k 
   obtain ⟨a, ha⟩ : ∃ a : Ω c, d.thp (hd.sel k) c = a • hd.a4.choose c := by
     have he0' : (⟨hd.a4.choose c, heF⟩ : 𝒜 c d.wF) ≠ 0 := by
       intro h0; exact he0 (congrArg Subtype.val h0)
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ he0').mp (hd.finrank_one c d.wF)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ he0').mp (hd.finrank_one c d.wF)
       ⟨_, hthpF⟩
     exact ⟨a, (congrArg Subtype.val ha).symm⟩
   have hb : d.bvecG hd.sel hd.a4.choose k c = algebraMap (Ω c) (OmS (Ω c) d.D d.N) a := by
@@ -96,7 +96,7 @@ theorem b_mem (hd : d.AxH 𝒜) (h : d.S1) (la : HeightOneSpectrum (𝓞 K)) (k 
 theorem b_linIndep (hd : d.AxH 𝒜) (h : d.S1) :
     letI : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
     LinearIndependent (KTf K d.D d.N) (d.bvecG hd.sel hd.a4.choose) := by
-  letI : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
+  let : ∀ c, Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := fun c => (d.KTtoS h c).toAlgebra
   classical
   obtain ⟨-, hind, -⟩ := hd.a4.choose_spec
   rw [Fintype.linearIndependent_iff]

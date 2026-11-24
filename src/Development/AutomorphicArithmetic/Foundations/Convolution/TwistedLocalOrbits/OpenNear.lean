@@ -91,7 +91,7 @@ private theorem eq_zero_of_le_pow {x c R : ValueGroupWithZero E} (hc : c < 1) (h
     exact hx (by simpa using h 0)
   obtain ⟨m, hm⟩ := exists_pow_lt₀ hc (Units.mk0 (x / R) (div_ne_zero hx hR))
   have := h m
-  rw [Units.val_mk0, lt_div_iff₀ (zero_lt_iff.mpr hR)] at hm
+  rw [Units.val_mk0, lt_div_iff₀ (pos_iff_ne_zero.mpr hR)] at hm
   exact absurd this (not_le.mpr hm)
 
 private theorem fix_ex {ι κ : Type} (f : Matrix ι κ E → Matrix ι κ E) (c R : ValueGroupWithZero E) (hc : c < 1)
@@ -275,7 +275,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.openNear :
   have sS : ∀ Y Z, S (Y - Z) = S Y - S Z := fun Y Z => by ext i j; simp [S]
   obtain ⟨Y, bY, hY⟩ := fix_ex
     (fun Y => X + A * X + K Y * (A + X + A * X) - U Y * S Y - A * U Y - A * S Y - A * (U Y * S Y))
-    (r / w) (ρ * w) ((div_lt_one₀ (zero_lt_iff.mpr hw0)).mpr hr)
+    (r / w) (ρ * w) ((div_lt_one₀ (pos_iff_ne_zero.mpr hw0)).mpr hr)
     (fun Y hY => by
       have hUS : Bd (ρ * w) (U Y * S Y) := (((bU' hY).mono hρ).mul (bS' hY)).mono hrρ
       exact (((((bX.add (bA1.mul_one_left bX)).add (((bK' hY).mul' bB).mono hrρ)).sub hUS).sub

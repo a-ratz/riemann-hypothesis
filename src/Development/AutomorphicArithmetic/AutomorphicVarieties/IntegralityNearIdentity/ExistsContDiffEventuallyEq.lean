@@ -95,7 +95,7 @@ theorem conj_of_roots {K : Type} [Field K] {n : ℕ} (d : Fin n → K) (hd : Fun
       (Matrix.toLin' (N : Matrix (Fin n) (Fin n) K)) d hd v fun i => ⟨?_, hv0 i⟩
     rw [Module.End.mem_eigenspace_iff, Matrix.toLin'_apply, hv i]
   have hP : IsUnit (Matrix.of v).transpose := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     exact hli
   obtain ⟨g, hg⟩ := hP
   refine ⟨g, ?_⟩

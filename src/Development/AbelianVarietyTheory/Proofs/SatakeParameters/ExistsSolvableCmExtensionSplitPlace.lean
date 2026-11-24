@@ -72,13 +72,13 @@ theorem mem_dec_congr {K K' Ω : Type} [Field K] [Field K'] [Field Ω] [Algebra 
 theorem exists_cm_solvable_split : ∀ (Ω : Type) [Field Ω] (E : Type) [Field E] [NumberField E] [IsCMField E] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w), ∀ N : Subgroup (G E Ω), IsOpen (N : Set (G E Ω)) → ∃ (M : Type) (_ : Field M) (_ : NumberField M) (_ : IsCMField M) (_ : Algebra M Ω) (_ : IsAlgClosure M Ω) (_ : Algebra E M) (_ : IsScalarTower E M Ω), SolvDisj M N ∧ (∀ g ∈ Dec (F := E) A, ∀ x : M, g (algebraMap M Ω x) = algebraMap M Ω x) ∧ ∀ g ∈ Dec (F := maximalRealSubfield M) A, ∀ x : M, g (algebraMap M Ω x) = algebraMap M Ω x := by
   intro Ω _ E _ _ _ _ _ A w h N hN
   let F := maximalRealSubfield E
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans _ E Ω⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans _ E Ω⟩
 
   obtain ⟨x₀, hx₀, hx₀0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot w.ne_bot
   let v : HeightOneSpectrum (𝓞 F) :=
     { asIdeal := w.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E))
       isPrime := Ideal.IsPrime.comap _
-      ne_bot := Ideal.comap_ne_bot_of_integral_mem hx₀0 hx₀ (Algebra.IsIntegral.isIntegral x₀) }
+      ne_bot := Ideal.under_ne_bot_of_integral_mem hx₀0 hx₀ (Algebra.IsIntegral.isIntegral x₀) }
   have hv : IsPlaceOver A v := by
     intro x
     show _ ↔ algebraMap (𝓞 F) (𝓞 E) x ∈ w.asIdeal
@@ -88,7 +88,7 @@ theorem exists_cm_solvable_split : ∀ (Ω : Type) [Field Ω] (E : Type) [Field 
 
   let φ := IsScalarTower.toAlgHom F E Ω
   let K : IntermediateField F Ω := φ.fieldRange
-  haveI : FiniteDimensional F K := LinearEquiv.finiteDimensional (AlgEquiv.ofInjectiveField φ).toLinearEquiv
+  have : FiniteDimensional F K := LinearEquiv.finiteDimensional (AlgEquiv.ofInjectiveField φ).toLinearEquiv
   have hK : ∀ g : G F Ω, g ∈ K.fixingSubgroup ↔ ∀ x : E, g (algebraMap E Ω x) = algebraMap E Ω x := by
     intro g
     rw [IntermediateField.mem_fixingSubgroup_iff]
@@ -98,10 +98,10 @@ theorem exists_cm_solvable_split : ∀ (Ω : Type) [Field Ω] (E : Type) [Field 
   let V : Subgroup (Dec (F := F) A) := K.fixingSubgroup.subgroupOf (Dec (F := F) A)
   have hVo : IsOpen (V : Set (Dec (F := F) A)) := by
     rw [Subgroup.coe_subgroupOf]
-    exact K.fixingSubgroup_isOpen.preimage continuous_subtype_val
-  haveI : Fact (Nat.card (E ≃ₐ[F] E)).Prime :=
+    exact K.fixingSubgroup_isOpen.preimage continuous_subtypeVal
+  have : Fact (Nat.card (E ≃ₐ[F] E)).Prime :=
     ⟨by rw [IsGalois.card_aut_eq_finrank, Algebra.IsQuadraticExtension.finrank_eq_two F E]; exact Nat.prime_two⟩
-  haveI : IsCyclic (E ≃ₐ[F] E) := isCyclic_of_prime_card rfl
+  have : IsCyclic (E ≃ₐ[F] E) := isCyclic_of_prime_card rfl
   have habel : ∀ σ τ : E ≃ₐ[F] E, σ * τ = τ * σ := fun σ τ => (IsCyclic.commGroup).mul_comm σ τ
   have hcomm : commutator (Dec (F := F) A) ≤ V := by
     rw [commutator_def, Subgroup.commutator_le]
@@ -118,7 +118,7 @@ theorem exists_cm_solvable_split : ∀ (Ω : Type) [Field Ω] (E : Type) [Field 
     rfl
   obtain ⟨F₁, hF₁fin, hF₁ab, hF₁real, hF₁dec, hF₁T⟩ := GlobalTheory.T.exists_abelian_totallyReal_ext_prescribedCompletion Ω F A v hv V hVo hcomm T hvT
   obtain ⟨M, iM, nM, cM, aM, acM, aEM, tM, hSD, hfix, hsub⟩ :=
-    hlift F₁ hF₁fin inferInstance (isSolvable_of_comm fun a b => hF₁ab.toIsMulCommutative.is_comm.comm a b) hF₁real hF₁T
+    hlift F₁ hF₁fin inferInstance (Group.isSolvable_of_comm fun a b => hF₁ab.toIsMulCommutative.is_comm.comm a b) hF₁real hF₁T
   have hkey : ∀ g : G F Ω, g ∈ Dec (F := F) A → (∀ z ∈ F₁, g z = z) →
       ∀ x : E, g (algebraMap E Ω x) = algebraMap E Ω x := by
     intro g hg hz

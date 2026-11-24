@@ -70,7 +70,7 @@ theorem trace_eq_add (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : �
     (hfin : Module.finrank F E = 2) (x : E) :
     algebraMap F E (Algebra.trace F E x) = x + σ x := by
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   let σ' : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext fun y => hinv y) (AlgHom.ext fun y => hinv y)
   have hσ' : ∀ y, σ' y = σ y := fun y => rfl
   have hne : (1 : E ≃ₐ[F] E) ≠ σ' := by
@@ -84,14 +84,14 @@ theorem trace_eq_add (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : �
     rw [← hfin]
     calc Nat.card (E ≃ₐ[F] E) ≤ Nat.card (E →ₐ[F] E) :=
           Nat.card_le_card_of_injective (fun f => (f : E →ₐ[F] E))
-            (fun f g h => AlgEquiv.coe_algHom_injective h)
+            (fun f g h => AlgEquiv.coe_toAlgHom_injective h)
       _ ≤ Module.finrank F E := card_algHom_le_finrank F E E
   have huniv : (Finset.univ : Finset (E ≃ₐ[F] E)) = {1, σ'} := by
     symm
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
     rw [Finset.card_pair hne, Finset.card_univ, ← Nat.card_eq_fintype_card]
     exact hle
-  haveI hgal : IsGalois F E := by
+  have hgal : IsGalois F E := by
     apply IsGalois.of_card_aut_eq_finrank
     rw [hfin]
     apply le_antisymm hle
@@ -134,7 +134,7 @@ theorem mul_mem {x y : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) (hy : y ∈ 
 
 theorem trace_mem {x : Fv F v ⊗[F] E} (hx : x ∈ OEv (E := E) v) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) x ∈ v.adicCompletionIntegers F := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hgen : ∀ a : 𝓞 E, Algebra.trace (Fv F v) (Fv F v ⊗[F] E) (inclR (F := F) (Fv F v) (a : E)) ∈
       v.adicCompletionIntegers F := by
     intro a
@@ -172,7 +172,7 @@ theorem trace_v (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : ∃ x,
     (hfin : Module.finrank F E = 2) (w : Fv F v ⊗[F] E) :
     algebraMap (Fv F v) (Fv F v ⊗[F] E) (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) w) =
       w + sigR (Fv F v) σ w := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   have h1 : ∀ e : E, algebraMap (Fv F v) (Fv F v ⊗[F] E)
       (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) ((1 : Fv F v) ⊗ₜ e)) =
       (1 : Fv F v) ⊗ₜ e + (1 : Fv F v) ⊗ₜ σ e := by

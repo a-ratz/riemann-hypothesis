@@ -126,7 +126,7 @@ theorem exists_antideriv (k : K) (q : MvPolynomial K ℚ) : ∃ P : MvPolynomial
       refine (totalDegree_mul _ _).trans ?_
       omega
     · have hmono : monomial α (q.coeff α) = monomial (α.erase k) (q.coeff α) * X k ^ (α k) := by
-        rw [X_pow_eq_monomial, monomial_mul, mul_one, add_comm, Finsupp.single_add_erase]
+        rw [X_pow_eq_monomial, monomial_mul_monomial, mul_one, add_comm, Finsupp.single_add_erase]
       have hsh : eval (x - Pi.single k 1) (monomial (α.erase k) (q.coeff α)) =
           eval x (monomial (α.erase k) (q.coeff α)) := by
         simp only [eval_monomial]

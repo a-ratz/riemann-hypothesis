@@ -176,7 +176,7 @@ lemma eq_of_zeta_pow {G : Type} [CommGroup G] {κ : Type} [Fintype κ] (ζ : ℕ
   rw [← PadicInt.ext_of_toZModPow]
   intro n
   rcases n with _ | n
-  · haveI : Subsingleton (ZMod (p ^ 0)) := by rw [pow_zero]; infer_instance
+  · have : Subsingleton (ZMod (p ^ 0)) := by rw [pow_zero]; infer_instance
     exact Subsingleton.elim _ _
   · have h1 := h n
     rw [pow_eq_pow_iff_modEq, ← (hζ n).eq_orderOf, ← ZMod.natCast_eq_natCast_iff] at h1

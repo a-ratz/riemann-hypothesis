@@ -112,7 +112,7 @@ theorem UpperTheory.V.Base.inflUnique :
       show ((Ψ (Ψ.symm u) : galOf k E Ω) : G k Ω) = u
       rw [Ψ.apply_symm_apply]
     rw [hc]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   have hEk : ∀ σ : G E Ω, LDataCardLeFinrank.qzG k Ω l e (galEmb k E Ω σ) = LDataCardLeFinrank.qzG E Ω l e σ := by
     intro σ
     have hχ : (cycZ k Ω l ^ (-e)).comp (galEmb k E Ω) = cycZ E Ω l ^ (-e) := by
@@ -201,7 +201,7 @@ private theorem exists_continuous_mulEquiv_of_map_embedding {G G' : Type} [Group
   have he : ∀ u' : U', ((e u' : U) : G) = φ u' := fun _ => rfl
   refine ⟨e, he, ?_, ?_⟩
   · change Continuous (fun u' : U' => (⟨φ u', hmem u'⟩ : U))
-    exact (hφ.continuous.comp continuous_subtype_val).subtype_mk _
+    exact (hφ.continuous.comp continuous_subtypeVal).subtype_mk _
   · rw [Topology.IsEmbedding.subtypeVal.isInducing.continuous_iff, hφ.isInducing.continuous_iff]
     have hc : (⇑φ ∘ Subtype.val ∘ ⇑e.symm) = (Subtype.val : U → G) := by
       funext u
@@ -209,7 +209,7 @@ private theorem exists_continuous_mulEquiv_of_map_embedding {G G' : Type} [Group
       rw [e.apply_symm_apply] at this
       exact this.symm
     rw [hc]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
 
 theorem UpperTheory.V.Base.selTransport :
     ∀ (R G M : Type) [CommRing R] [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup M] [Module R M]
@@ -345,7 +345,7 @@ private theorem resU_resH1_subtype_eq {R G M : Type} [CommRing R] [Group G] [Top
     resU ρ h (resH1 ρ U.subtype continuous_subtype_val x) = resH1 ρ U'.subtype continuous_subtype_val x := by
   induction x using Submodule.Quotient.induction_on with
   | H z =>
-    obtain ⟨z', hz', hz'u⟩ := resU_mk ρ h (restrictCocycles1 ρ U.subtype continuous_subtype_val z)
+    obtain ⟨z', hz', hz'u⟩ := resU_mk ρ h (restrictCocycles1 ρ U.subtype continuous_subtypeVal z)
     simp only [resH1, Submodule.mapQ_apply] at hz' ⊢
     rw [hz']
     congr 1
@@ -374,8 +374,8 @@ private theorem mem_shaAbs_iff_resH1_whole_mem_locSel {E Ω : Type} [Field E] [N
       resH1 ρ (⊤ : Subgroup (G E Ω)).subtype continuous_subtype_val x ∈ LocSel ρ ⊤ (shaFam E Ω l) := by
   subst hS
   have key : ∀ D : Subgroup (G E Ω),
-      resU ρ (LocSel._proof_1 ⊤ D) (resH1 ρ (⊤ : Subgroup (G E Ω)).subtype continuous_subtype_val x) = 0 ↔
-        resH1 ρ D.subtype continuous_subtype_val x = 0 := by
+      resU ρ (LocSel._proof_1 ⊤ D) (resH1 ρ (⊤ : Subgroup (G E Ω)).subtype continuous_subtypeVal x) = 0 ↔
+        resH1 ρ D.subtype continuous_subtypeVal x = 0 := by
     intro D
     rw [resU_resH1_subtype_eq]
     exact ⟨resH1_eq_zero_of_le ρ (le_inf le_top le_rfl) x, resH1_eq_zero_of_le ρ inf_le_right x⟩
@@ -435,7 +435,7 @@ private theorem sha_exists_cocycle_lift_whole {E Ω : Type} [Field E] [NumberFie
   have hinj := resH1_injective_of_surjective (qzTw D e) _ (continuous_toGS Ω _) hsurj
   have hmapS := LDataCardLeFinrank.shaInfl E Ω D.S D.A D.hA ℤ_[l] (QZ l) (qzTw D e) (qzTw_contAction D e)
   have hbij := resH1_subtype_whole_bijective_sha (MonoidHom.comp (qzTw D e) (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 E)))))
-  have hEq : Submodule.map (resH1 _ (⊤ : Subgroup (G E Ω)).subtype continuous_subtype_val)
+  have hEq : Submodule.map (resH1 _ (⊤ : Subgroup (G E Ω)).subtype continuous_subtypeVal)
       (LDataCardLeFinrank.ShaAbs (MonoidHom.comp (qzTw D e) (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 E))))) (D.S : Set _)) =
       LocSel (MonoidHom.comp (qzTw D e) (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 E))))) ⊤ (shaFam E Ω l) := by
     ext y
@@ -448,9 +448,9 @@ private theorem sha_exists_cocycle_lift_whole {E Ω : Type} [Field E] [NumberFie
   refine ⟨((Submodule.equivMapOfInjective _ hinj (Sha D e)).trans (LinearEquiv.ofEq _ _ hmapS)).trans
     (((LinearEquiv.ofBijective _ hbij).submoduleMap _).trans (LinearEquiv.ofEq _ _ hEq)), ?_⟩
   intro x z hz
-  refine ⟨restrictCocycles1 _ _ continuous_subtype_val (restrictCocycles1 _ _ (continuous_toGS Ω _) z), ?_, fun σ => rfl⟩
+  refine ⟨restrictCocycles1 _ _ continuous_subtypeVal (restrictCocycles1 _ _ (continuous_toGS Ω _) z), ?_, fun σ => rfl⟩
   change (resH1 (MonoidHom.comp (qzTw D e) (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 E))))) (⊤ : Subgroup (G E Ω)).subtype
-      continuous_subtype_val) ((resH1 (qzTw D e) (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 E)))) (continuous_toGS Ω _)) x.1) = _
+      continuous_subtypeVal) ((resH1 (qzTw D e) (toGS Ω (D.S : Set (HeightOneSpectrum (𝓞 E)))) (continuous_toGS Ω _)) x.1) = _
   rw [hz]
   rfl
 
@@ -473,7 +473,7 @@ theorem UpperTheory.V.Base.shaModel :
       exact u.2
     exact hu
   let ψ : galOf k E Ω → G E Ω := fun u => hemb.toHomeomorph.symm ⟨u.1, hr u⟩
-  have hψc : Continuous ψ := hemb.toHomeomorph.symm.continuous.comp (continuous_subtype_val.subtype_mk _)
+  have hψc : Continuous ψ := hemb.toHomeomorph.symm.continuous.comp (continuous_subtypeVal.subtype_mk _)
   have hψ : ∀ u, galEmb k E Ω (ψ u) = u := fun u =>
     congrArg Subtype.val (hemb.toHomeomorph.apply_symm_apply ⟨u.1, hr u⟩)
   have hψm : ∀ u v, ψ (u * v) = ψ u * ψ v := fun u v => hemb.injective (by rw [map_mul, hψ, hψ, hψ]; rfl)

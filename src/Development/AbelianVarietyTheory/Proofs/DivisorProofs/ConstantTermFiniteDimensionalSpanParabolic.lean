@@ -208,11 +208,11 @@ theorem eigencharacters_finite_of_commuting_annihilated :
     · intro χ₁ h₁ χ₂ h₂ hf
       exact hdet χ₁ h₁ χ₂ h₂ fun t ht => congrFun hf ⟨t, ht⟩
   · intro ψ hψ χ' u hu hu0 he
-    refine ⟨fun z => if z ∈ A then χ' z else 0, ⟨fun z hz => if_neg hz,
-      ⟨u, hu0, fun z hz => by simp only [if_pos hz]; exact he z hz⟩, fun t ht => ?_⟩,
-      fun z hz => (if_pos hz).symm⟩
+    refine ⟨fun z => if z ∈ A then χ' z else 0, ⟨fun z hz => ite_eq_right hz,
+      ⟨u, hu0, fun z hz => by simp only [ite_eq_left hz]; exact he z hz⟩, fun t ht => ?_⟩,
+      fun z hz => (ite_eq_left hz).symm⟩
     have htA : t ∈ A := Algebra.subset_adjoin ht
-    simp only [if_pos htA]
+    simp only [ite_eq_left htA]
 
     have hker : u ∈ LinearMap.ker (Polynomial.aeval t (p t)) := by
       refine (Submodule.span_le.mpr ?_) hu
@@ -389,7 +389,7 @@ theorem powSpan_finite (t : Module.End ℂ V) (d : ℕ) (N : Submodule ℂ V) [F
     simp [Φ, LinearMap.sum_apply, Pi.single_apply]
     rw [Finset.sum_eq_single ⟨i, hi⟩ (fun b _ hb => by simp [hb]) (by simp)]
     simp
-  haveI : FiniteDimensional ℂ (LinearMap.range Φ) := inferInstance
+  have : FiniteDimensional ℂ (LinearMap.range Φ) := inferInstance
   refine ⟨Submodule.finiteDimensional_of_le hle, ?_⟩
   calc Module.finrank ℂ (powSpan t d N) ≤ Module.finrank ℂ (LinearMap.range Φ) :=
         Submodule.finrank_mono hle
@@ -460,7 +460,7 @@ theorem GlobalTheory.killed_span_adjoin_finrank_le :
         · exact GlobalTheory.KilledFin.powSpan_stable t u _ N
             (fun n hn => GlobalTheory.KilledFin.span_adjoin_apply_stable _ ψ u
               (Algebra.subset_adjoin hu) n hn) (htcomm u hu) v hv) ψ hψK
-    haveI := hK.1
+    have := hK.1
     refine ⟨Submodule.finiteDimensional_of_le hle, ?_⟩
     rw [Finset.prod_insert htT]
     calc _ ≤ Module.finrank ℂ (GlobalTheory.KilledFin.powSpan t (p t).natDegree N) :=
@@ -592,7 +592,7 @@ theorem centre_orbit_finite : ∀ (E : Type) [Field E] [NumberField E] [_root_.N
     have h : ∃ τ u, t = cap τ u := hT t ht
     have key : ∀ τ u, t = cap τ u → Polynomial.aeval t (q τ u) ψ = 0 := by
       rintro τ u rfl; exact hψ τ u
-    simp only [p, dif_pos h]
+    simp only [p, dite_eq_left h]
     exact key _ _ h.choose_spec.choose_spec
   have hc : ∀ s ∈ T, ∀ t ∈ T, Commute s t := fun s hs t ht =>
     GlobalTheory.AutGrowth.KilledFin.Zalg_commute (hZ ▸ Algebra.subset_adjoin hs) (hZ ▸ Algebra.subset_adjoin ht)
@@ -655,7 +655,7 @@ theorem constTerm_zalg : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     ∀ z ∈ Zalg E a, ∀ c : Sm E a, c.1 = (fun g : GA E a => ∫ x in 𝓕, φ.1 (unip x * g) ∂μ) →
       (z c).1 = fun g : GA E a => ∫ x in 𝓕, (z φ).1 (unip x * g) ∂μ := by
   intro E _ _ _ a r _ _ μ 𝓕 hH hF h1 φ hl ho z hz c hc
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by simp [h1]⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by simp [h1]⟩
   let CT : Sm E a → GA E a → ℂ := fun ψ g => ∫ x, ψ.1 (unip x * g) ∂(μ.restrict 𝓕)
   let S : Subalgebra ℂ (Module.End ℂ (Sm E a)) :=
     { carrier := {z | ∀ ψ, Good ψ → Good (z ψ) ∧ ∀ c : Sm E a, c.1 = CT ψ → (z c).1 = CT (z ψ)}
@@ -741,8 +741,8 @@ namespace GlobalTheory.CuspRep
 
 theorem constTerm_unip_invariant : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a r : ℕ) [MeasurableSpace (BlockIx a r → Ad E)] [BorelSpace (BlockIx a r → Ad E)] (μ : Measure (BlockIx a r → Ad E)) (𝓕 : Set (BlockIx a r → Ad E)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratN E a r) 𝓕 μ → ∀ f : GA E a → ℂ, (∀ γ g, f (ratGL E a γ * g) = f g) → ∀ (y : BlockIx a r → Ad E) (g : GA E a), ∫ x in 𝓕, f (unip x * (unip y * g)) ∂μ = ∫ x in 𝓕, f (unip x * g) ∂μ := by
   intro E _ _ _ a r _ _ μ 𝓕 hμ h𝓕 f hf y g
-  haveI : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-  haveI : Countable (ratN E a r) := by
+  have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
+  have : Countable (ratN E a r) := by
     have : ((ratN E a r : AddSubgroup _) : Set (BlockIx a r → Ad E)) = Set.range
         (AddMonoidHom.compLeft (algebraMap E (Ad E)).toAddMonoidHom (BlockIx a r)) := AddMonoidHom.coe_range _
     change Countable (((ratN E a r : AddSubgroup _) : Set (BlockIx a r → Ad E)))
@@ -839,7 +839,7 @@ theorem lieD_single_blkGL (hr : r ≤ a) (f : Sm E a)
           have hne : k ≠ l := fun e => hkl (by rw [e])
           have hs : Matrix.single i j x k l = 0 := by
             rw [Matrix.single_apply]
-            rw [if_neg]
+            rw [ite_eq_right]
             rintro ⟨e1, e2⟩
             exact hkl (by rw [← e1, ← e2]; exact hij)
           change (1 : Matrix (Fin a) (Fin a) (Cinf E)) k l + t • Matrix.single i j x k l = 0
@@ -1197,20 +1197,20 @@ theorem sliceTwoCentre : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
   let M' : Submodule ℂ (Sm E a) :=
     { carrier := {f | ∀ (x : BlockIx a r → Ad E) (g : GA E a), f.1 (unip x * g) = f.1 g}
       add_mem' := fun {f f'} hf hf' x g => by
-        simp only [Set.mem_setOf_eq] at hf hf'
+        simp only [Set.mem_ofPred_eq] at hf hf'
         simp [hf x g, hf' x g]
       zero_mem' := fun x g => rfl
       smul_mem' := fun c f hf x g => by
-        simp only [Set.mem_setOf_eq] at hf
+        simp only [Set.mem_ofPred_eq] at hf
         simp [hf x g] }
   let K : Submodule ℂ (Sm E a) :=
     { carrier := {f | ∀ (m₁ : GA E r) (m₂ : GA E (a - r)), f.1 (GlobalTheory.LeviGA.blkGL hra (m₁, m₂)) = 0}
       add_mem' := fun {f f'} hf hf' m₁ m₂ => by
-        simp only [Set.mem_setOf_eq] at hf hf'
+        simp only [Set.mem_ofPred_eq] at hf hf'
         simp [hf m₁ m₂, hf' m₁ m₂]
       zero_mem' := fun m₁ m₂ => rfl
       smul_mem' := fun c f hf m₁ m₂ => by
-        simp only [Set.mem_setOf_eq] at hf
+        simp only [Set.mem_ofPred_eq] at hf
         simp [hf m₁ m₂] }
   have hq : ∀ τ : E →+* ℂ, ∃ q : ℂ → Polynomial ℂ, (∀ u, q u ≠ 0) ∧ ∀ v ∈ M',
       (∀ u, Polynomial.aeval (Formalism.REAL.qdet (Eop τ) u) (Q τ u) v = 0) → ∀ u,

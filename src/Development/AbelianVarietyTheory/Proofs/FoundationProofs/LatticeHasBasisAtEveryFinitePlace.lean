@@ -120,7 +120,7 @@ theorem basisAtEx :
       (M : Submodule (𝓞 K) (Fin n → K)), Submodule.IsFullLattice K M →
       ∀ w : HeightOneSpectrum (𝓞 K), ∃ B : GL (Fin n) K, Formalism.L2.DIV.IsBasisAt w M B := by
   intro K _ _ d L hL w
-  haveI := w.isPrime
+  have := w.isPrime
   have : IsDiscreteValuationRing (locRing w) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 K) w.ne_bot (locRing w)
   set N : Submodule (locRing w) (Fin d → K) := Submodule.span (locRing w) (L : Set (Fin d → K))
@@ -151,7 +151,7 @@ theorem basisAtEx :
   let e := Fintype.equivFinOfCardEq hcard
   have hli' : LinearIndependent K (v ∘ e.symm) := hli.comp _ e.symm.injective
   let P : Matrix (Fin d) (Fin d) K := Matrix.of fun a j => (v ∘ e.symm) j a
-  have hP : IsUnit P := Matrix.linearIndependent_cols_iff_isUnit.mp hli'
+  have hP : IsUnit P := Matrix.linearIndependent_col_iff_isUnit.mp hli'
   refine ⟨hP.unit, ?_⟩
   have hcol : Formalism.L2.DIV.colLat hP.unit = Submodule.span (𝓞 K) (Set.range (v ∘ e.symm)) := rfl
   unfold Formalism.L2.DIV.IsBasisAt

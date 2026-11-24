@@ -122,7 +122,7 @@ private theorem F_bd (r s N : ℕ) : ∃ C : ℝ, 0 ≤ C ∧ ∀ (φ : AdelicGL
       (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left (ht_zt t) h2) (height_pos _).le)) h1) (height_pos _).le)
   refine (hC φ B hB hφ _).trans ((mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (height_pos _).le h3 N)
     (mul_nonneg hC0 hB)).trans_eq ?_)
-  rw [Real.exp_nat_mul, pow_mul (Real.exp |t|) _ N]
+  rw [Real.exp_natCast_mul, pow_mul (Real.exp |t|) _ N]
   simp only [mul_pow]
   ring
 

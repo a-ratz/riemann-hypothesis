@@ -76,7 +76,7 @@ theorem ofS_cont : Continuous (ofS L N) := by
   simp only [MonoidHom.coe_comp, Function.comp_def, MonoidHom.pi_apply, Pi.evalMonoidHom_apply]
   rw [Units.continuous_iff]
   have hv : Continuous fun a : Sp L N => ((a w : Matrix.SpecialLinearGroup (Fin N) ℂ) : Matrix (Fin N) (Fin N) ℂ) :=
-    continuous_subtype_val.comp (continuous_apply w)
+    continuous_subtypeVal.comp (continuous_apply w)
   refine ⟨hv, ?_⟩
   have hi : ∀ A : Matrix.SpecialLinearGroup (Fin N) ℂ,
       ((SpecialLinearGroup.toGL A)⁻¹ : GL (Fin N) ℂ).val = Matrix.adjugate (A : Matrix (Fin N) (Fin N) ℂ) := by
@@ -172,7 +172,7 @@ private theorem mn_compContinuousLinearMap_actL {k : ℕ} (S : Subgroup (Gm L N)
     (mn S F).compContinuousLinearMap (actL e) = mn S fun c => (F c).compContinuousLinearMap (actL e) := by
   unfold mn
   by_cases hfin : Finite (Quotient (QuotientGroup.rightRel S))
-  · haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
+  · have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
     simp only [finsum_eq_sum_of_fintype]
     ext v
     simp [ContinuousAlternatingMap.compContinuousLinearMap_apply]
@@ -279,7 +279,7 @@ private theorem continuousOn_Hk_of_continuousOn {k : ℕ} (q : GK L N) {ω : For
     exact (ContinuousAlternatingMap.compContinuousLinearMapCLM (actL g)).continuous.comp_continuousOn ha
   unfold Hk mn
   by_cases hfin : Finite (Quotient (QuotientGroup.rightRel (Sg q)))
-  · haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (Sg q)))
+  · have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (Sg q)))
     simp only [finsum_eq_sum_of_fintype]
     exact ContinuousOn.const_smul (continuousOn_finsetSum _ fun c _ => hpb _) ((((Sg q).index : ℕ) : ℝ)⁻¹)
   · have hinf : Infinite (Gm L N ⧸ Sg q) := by

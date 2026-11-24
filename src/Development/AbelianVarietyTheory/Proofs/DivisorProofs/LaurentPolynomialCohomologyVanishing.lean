@@ -103,7 +103,7 @@ namespace GlobalTheory.StrictHensFactor
 theorem exists_factor_strictHenselisation : ∀ (A C B : Type) [CommRing A] [IsLocalRing A] [CommRing C] [Algebra A C] [CommRing B] [HenselianLocalRing B] [IsSepClosed (ResidueField B)] [Algebra A B] [IsLocalHom (algebraMap A B)] (u : C →ₐ[A] B), ∃ (D : Type) (_ : CommRing D) (_ : IsLocalRing D) (_ : Algebra A D) (c : C →ₐ[A] D) (w : D →ₐ[A] B), w.comp c = u ∧ ∃ (P : Ideal C) (_ : P.IsPrime) (φ : Localization.AtPrime P →+* D), GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ ∧ φ.comp (algebraMap C (Localization.AtPrime P)) = (c : C →+* D) ∧ P.comap (algebraMap A C) = maximalIdeal A := by
   intro A C B _ _ _ _ _ _ _ _ _ u
   set P : Ideal C := (maximalIdeal B).comap (u : C →+* B) with hP
-  haveI hPp : P.IsPrime := Ideal.comap_isPrime _ _
+  have hPp : P.IsPrime := Ideal.comap_isPrime _ _
   let L := Localization.AtPrime P
   have hu : ∀ y : P.primeCompl, IsUnit ((u : C →+* B) y) := by
     intro y
@@ -112,7 +112,7 @@ theorem exists_factor_strictHenselisation : ∀ (A C B : Type) [CommRing A] [IsL
     exact this ((IsLocalRing.mem_maximalIdeal _).2 hy)
   let b : L →+* B := IsLocalization.lift hu
   have hb : b.comp (algebraMap C L) = (u : C →+* B) := IsLocalization.lift_comp hu
-  haveI hbloc : IsLocalHom b := by
+  have hbloc : IsLocalHom b := by
     refine ⟨fun x hx => ?_⟩
     obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective P.primeCompl x
     rw [IsLocalization.AtPrime.isUnit_mk'_iff]
@@ -134,7 +134,7 @@ theorem exists_factor_strictHenselisation : ∀ (A C B : Type) [CommRing A] [IsL
   obtain ⟨g, hg⟩ := GlobalTheory.NCyc.StrictLocLift.exists_ringHom_of_isStrictHenselisation
     (algebraMap L S) hstrict b
   let cR : C →+* S := (algebraMap L S).comp (algebraMap C L)
-  letI algAS : Algebra A S := (cR.comp (algebraMap A C)).toAlgebra
+  let algAS : Algebra A S := (cR.comp (algebraMap A C)).toAlgebra
   let c : C →ₐ[A] S := { cR with commutes' := fun a => rfl }
   have hgc : g.comp cR = (u : C →+* B) := by
     rw [← RingHom.comp_assoc, hg, hb]
@@ -173,7 +173,7 @@ theorem exists_noetherian_sh_factor : ∀ (R A : Type) [CommRing R] [IsNoetheria
   intro R A _ _ _ hA b
   obtain ⟨hH, hsep⟩ := hA
   let p : Ideal R := (maximalIdeal A).comap b
-  haveI : p.IsPrime := Ideal.comap_isPrime _ _
+  have : p.IsPrime := Ideal.comap_isPrime _ _
   let Rp := Localization.AtPrime p
   have hunit : ∀ y : p.primeCompl, IsUnit (b y) := by
     intro y
@@ -181,8 +181,8 @@ theorem exists_noetherian_sh_factor : ∀ (R A : Type) [CommRing R] [IsNoetheria
     exact y.2 ((mem_maximalIdeal _).2 h)
   let b' : Rp →+* A := IsLocalization.lift (M := p.primeCompl) hunit
   have hb' : b'.comp (algebraMap R Rp) = b := IsLocalization.lift_comp hunit
-  letI : Algebra Rp A := b'.toAlgebra
-  haveI hloc : IsLocalHom (algebraMap Rp A) := by
+  let : Algebra Rp A := b'.toAlgebra
+  have hloc : IsLocalHom (algebraMap Rp A) := by
     refine ⟨fun x hx => ?_⟩
     obtain ⟨⟨r, s⟩, rfl⟩ := IsLocalization.mk'_surjective p.primeCompl x
     rw [IsLocalization.AtPrime.isUnit_mk'_iff]
@@ -197,10 +197,10 @@ theorem exists_noetherian_sh_factor : ∀ (R A : Type) [CommRing R] [IsNoetheria
     _root_.GlobalTheory.StrictHensFactor.exists_factor_strictHenselisation Rp Rp A
       (Algebra.ofId Rp A)
   obtain ⟨D, _, _, _, c, w, hwc, P, _, φ, hφ, _, _⟩ := hfactor
-  haveI : IsNoetherianRing Rp := IsLocalization.isNoetherianRing p.primeCompl Rp inferInstance
-  haveI : IsNoetherianRing (Localization.AtPrime P) :=
+  have : IsNoetherianRing Rp := IsLocalization.isNoetherianRing p.primeCompl Rp inferInstance
+  have : IsNoetherianRing (Localization.AtPrime P) :=
     IsLocalization.isNoetherianRing P.primeCompl _ inferInstance
-  letI : Algebra (Localization.AtPrime P) D := φ.toAlgebra
+  let : Algebra (Localization.AtPrime P) D := φ.toAlgebra
   have hD : IsNoetherianRing D :=
     GlobalTheory.StalkNoeth.isNoetherianRing_of_indEt (Localization.AtPrime P) D hφ.2.2.2
   refine ⟨D, inferInstance, hD, ⟨hφ.1, hφ.2.1⟩, (c : Rp →+* D).comp (algebraMap R Rp), (w : D →+* A), ?_⟩
@@ -332,7 +332,7 @@ theorem exists_preimage (u : A) (x : LaurentPolynomial A) : ∃ s y, lmap (sub u
     rfl
 
 theorem cocone_isColimit (u : A) : Nonempty (IsColimit (cocone u)) := by
-  haveI : ReflectsColimitsOfShape (Finset A) (forget CommRingCat.{0}) :=
+  have : ReflectsColimitsOfShape (Finset A) (forget CommRingCat.{0}) :=
     reflectsColimitsOfShape_of_reflectsIsomorphisms
   refine ⟨isColimitOfReflects (forget CommRingCat.{0}) ?_⟩
   refine Types.FilteredColimit.isColimitOf _ _ ?_ ?_
@@ -364,16 +364,16 @@ theorem GlobalTheory.EtC.laurent_vanishing_of_noetherian : ∀ (q : ℕ) [NeZero
   have hqL : IsUnit (q : LaurentPolynomial A) := by
     have := hq.map (LaurentPolynomial.C : A →+* LaurentPolynomial A); simpa using this
   obtain ⟨j, y, hy⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (diag u) (cocone u) hc n i).1 x hqL
-  haveI : Algebra.FiniteType ℤ (sub u j) := (Subalgebra.fg_iff_finiteType _).1 (sub_fg u j)
-  haveI : IsNoetherianRing (sub u j) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have : Algebra.FiniteType ℤ (sub u j) := (Subalgebra.fg_iff_finiteType _).1 (sub_fg u j)
+  have : IsNoetherianRing (sub u j) := Algebra.FiniteType.isNoetherianRing ℤ _
   obtain ⟨C, _, hCn, hCsh, f, g, hfg⟩ := GlobalTheory.T.exists_noetherian_sh_factorization (sub u j) A hA (sub u j).val.toRingHom
-  haveI := hCn
+  have := hCn
   have hqS : IsUnit (q : sub u j) := by
     refine isUnit_iff_exists_inv.2 ⟨⟨u, mem_sub u j (Finset.mem_insert_self u j)⟩, ?_⟩
     apply Subtype.ext
     simp [u]
   have hqC : IsUnit (q : C) := by have := hqS.map f; simpa using this
-  haveI := hN C hCsh hqC n i hn
+  have := hN C hCsh hqC n i hn
   have e : (cocone u).ι.app j = CommRingCat.ofHom ((lmap g).comp (lmap f)) := by
     rw [← lmap_comp, hfg]; rfl
   rw [← hy, e]
@@ -530,9 +530,9 @@ theorem laurent_subsingleton (T : Type) [CommRing T] [Subsingleton T] : Subsingl
 
 theorem gmPhi_bijective_of_subsingleton (q : ℕ) (T : Type) [CommRing T] [Subsingleton T] (i : ℤ) :
     Function.Bijective (gmPhi q T i) := by
-  haveI := ht_subsingleton q T 0 (i - 1)
-  haveI := laurent_subsingleton T
-  haveI := ht_subsingleton q (LaurentPolynomial T) 1 i
+  have := ht_subsingleton q T 0 (i - 1)
+  have := laurent_subsingleton T
+  have := ht_subsingleton q (LaurentPolynomial T) 1 i
   exact ⟨fun a b _ => Subsingleton.elim a b, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
 
 theorem gmPhi_bijective_of_equiv (h6 : DivisorNaturality) (q : ℕ) [NeZero q] {T T' : Type} [CommRing T] [CommRing T']
@@ -668,7 +668,7 @@ theorem pull_cast {q : ℕ} {E E' : Spc} (f : E ⟶ E') {n i n' i' : ℤ} (hn : 
 theorem laurentVar_map {B C : Type} [CommRing B] [CommRing C] (f : B →+* C) :
     Units.map (Spec.map (CommRingCat.ofHom (laurentMap f))).appTop.hom.toMonoidHom (laurentVar B) = laurentVar C := by
   ext
-  simp only [laurentVar, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [laurentVar, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   have h := congrArg (fun g => g.hom (LaurentPolynomial.T 1 : LaurentPolynomial B))
     (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (laurentMap f)))
   simp only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply, CommRingCat.hom_ofHom] at h
@@ -684,7 +684,7 @@ theorem rowOne_bijective : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH 
     Function.Bijective (rowOne A A' q i k) := by
   intro q _ A _ hA hq A' _ _ hfin k i
   obtain ⟨e0, e, h1, h2⟩ := GlobalTheory.T.laurentCechNerve_level_spec_tensorPower A A' k
-  haveI := hfin
+  have := hfin
   have hT : Module.Finite A (PiTensorProduct A (fun _ : Fin (k + 1) => A')) := inferInstance
   have hr1 := GlobalTheory.T.laurentKummerCupProductMap_bijective_finite_strictHenselian q A hA hq (PiTensorProduct A (fun _ : Fin (k + 1) => A')) hT i
   have hmap1 := congrArg (fun f => disc.map f) h1
@@ -949,7 +949,7 @@ theorem GlobalTheory.EtC.vanish_of_rowExact : ∀ (R : Type) [CommRing R] (F : S
           zero_comp, smul_zero, add_zero] at e
         change _ = ((Cochain.ofHom ((chains R).map g)).comp z.1 (zero_add _)).v _ _ _ at e
         rw [Cochain.zero_cochain_comp_v, Cochain.ofHom_v] at e
-        haveI : IsIso (((chains R).map g).f (-((0 : ℕ) : ℤ))) := by
+        have : IsIso (((chains R).map g).f (-((0 : ℕ) : ℤ))) := by
           have h := chainsXIso_nat (R := R) g 0
           rw [← Iso.eq_comp_inv] at h
           rw [h]
@@ -1460,9 +1460,9 @@ theorem _root_.GlobalTheory.EtC.SpecMapPullbackFunctoriality.laurent_C_pull_bije
   · intro T T' _ _ _ _ a h
     exact laurentConstant_of_ringEquiv q a.toRingEquiv h
   · intro T _ _ hT0 i
-    haveI := _root_.GlobalTheory.EtC.LaurentFinite.laurent_subsingleton T
-    haveI := subsingleton_cohomology_of_subsingleton_ring q T i 0
-    haveI := subsingleton_cohomology_of_subsingleton_ring q (LaurentPolynomial T) i 0
+    have := _root_.GlobalTheory.EtC.LaurentFinite.laurent_subsingleton T
+    have := subsingleton_cohomology_of_subsingleton_ring q T i 0
+    have := subsingleton_cohomology_of_subsingleton_ring q (LaurentPolynomial T) i 0
     exact ⟨fun a b _ => Subsingleton.elim a b, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
   · intro T₁ T₂ _ _ _ _ _ _ h₁ h₂
     exact laurentConstant_prod q T₁ T₂ h₁ h₂
@@ -1516,7 +1516,7 @@ theorem cechC_pull_bijective : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A],
     Function.Bijective (pull _ (disc.map ((cechC A A').app (op ⦋k⦌))) (tw q i) 0) := by
   intro q _ A _ hA hq A' _ _ hfin k i
   obtain ⟨e0, e, h1, -⟩ := GlobalTheory.T.laurentCechNerve_level_spec_tensorPower A A' k
-  haveI := hfin
+  have := hfin
   have hT : Module.Finite A (PiTensorProduct A (fun _ : Fin (k + 1) => A')) := inferInstance
   have hr0 := GlobalTheory.T.laurentC_pullback_bijective_finite_strictlyHenselian q A hA hq (PiTensorProduct A (fun _ : Fin (k + 1) => A')) hT i
   have hmap := congrArg (fun f => disc.map f) h1
@@ -1713,7 +1713,7 @@ theorem rowExact_base (q : ℕ) [NeZero q] (A : Type) [CommRing A] (hA : SH A) (
   obtain ⟨hI, hS⟩ := spec_integral_surj (algebraMap A A') hint hker
   have hB := @GlobalTheory.EtC.b4 q _ _ (baseHom A A') hI hS (isUnit_gamma q A hq) j
   refine GlobalTheory.T.simplicialSpectralRowExact_zero_of_acyclic (ZMod q) (tw q j) _ (fun k s hs => GlobalTheory.T.cech_cohomology_vanishes_positive q A hA hq A' inferInstance k s j hs) (fun m hm => ?_) p
-  haveI : Subsingleton (H (ZMod q) (sch.obj (Spec (CommRingCat.of A))) (tw q j) m) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) A hA (tw q j) m hm
+  have : Subsingleton (H (ZMod q) (sch.obj (Spec (CommRingCat.of A))) (tw q j) m) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) A hA (tw q j) m hm
   exact ⟨fun a b => by
     obtain ⟨a', rfl⟩ := (hB m).2 a
     obtain ⟨b', rfl⟩ := (hB m).2 b
@@ -1727,7 +1727,7 @@ theorem gm_vanishing_step : ∀ (q : ℕ) [NeZero q] (n : ℤ), 2 ≤ n → (∀
   suffices h : ∀ x : Ht q (sp (LaurentPolynomial A)) n i, x = 0 from ⟨fun x y => by rw [h x, h y]⟩
   intro x
   obtain ⟨A', _, _, hfin, hker, hx⟩ := GlobalTheory.T.laurent_cohomology_finite_killing q A hA hq n i hn x
-  haveI := hfin
+  have := hfin
   have hint : (algebraMap A A').IsIntegral := fun x => Algebra.IsIntegral.isIntegral x
   obtain ⟨hI', hS'⟩ := spec_integral_surj _ (laurentMap_isIntegral _ hint) (laurentMap_ker _ hker)
   have hqL : IsUnit (q : LaurentPolynomial A) := by simpa using hq.map (LaurentPolynomial.C : A →+* LaurentPolynomial A)
@@ -1753,7 +1753,7 @@ theorem gm_vanishing_step : ∀ (q : ℕ) [NeZero q] (n : ℤ), 2 ≤ n → (∀
       rw [pull_cast, (GlobalTheory.T.cup_chern_kummer_pullback_naturality q).1, cechC_face,
         ← pull_comp (ZMod q) (disc.map ((cech (laurentHom A A')).δ j)) (augK A A' k), aug_face]
     · intro y _
-      haveI := GlobalTheory.T.laurentCechNerve_level_cohomology_subsingleton q N IH A hA hq A' hfin (p + 1) _ i h2 (by omega)
+      have := GlobalTheory.T.laurentCechNerve_level_cohomology_subsingleton q N IH A hA hq A' hfin (p + 1) _ i h2 (by omega)
       exact ⟨0, by rw [map_zero]; exact Subsingleton.elim _ _⟩
 
 end GlobalTheory.EtC.GmStep

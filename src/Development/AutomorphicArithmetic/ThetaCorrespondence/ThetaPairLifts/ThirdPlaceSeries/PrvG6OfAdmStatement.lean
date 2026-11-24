@@ -148,7 +148,7 @@ def matRep {V : Type} [AddCommGroup V] [Module K V] {m : ℕ} (ρ : Γ →* Modu
 theorem matRep_val {V : Type} [AddCommGroup V] [Module K V] {m : ℕ} (ρ : Γ →* Module.End K V)
     (b : Module.Basis (Fin m) K V) (g : Γ) :
     ((matRep ρ b g : GL _ _) : Matrix (Fin m) (Fin m) K) = LinearMap.toMatrix b b (ρ g) := by
-  simp only [matRep, MonoidHom.coe_toHomUnits, MonoidHom.comp_apply, MonoidHom.coe_coe]
+  simp only [matRep, MonoidHom.coe_toHomUnits, MonoidHom.comp_apply, MonoidHom.coe_ofClass]
   rfl
 
 theorem matRep_mulVec {V : Type} [AddCommGroup V] [Module K V] {m : ℕ} (ρ : Γ →* Module.End K V)
@@ -1492,7 +1492,7 @@ theorem sixth_weight_purity_alt_alt : _root_.GlobalTheory.StringRepresentationDe
     rw [Set.not_nonempty_iff_eq_empty] at h
     rw [h, closure_empty] at hne
     exact hne
-  simp only [Set.mem_union, not_or, Finset.mem_coe, Set.mem_setOf_eq, not_not] at hw
+  simp only [Set.mem_union, not_or, Finset.mem_coe, Set.mem_ofPred_eq, not_not] at hw
   have hl := hw.1.1.1.1
   have hwo : SplitOut D.nd i w := ⟨hsp, hl, hw.1.1.1.2, hw.1.1.2⟩
   have huπ := hw.1.2

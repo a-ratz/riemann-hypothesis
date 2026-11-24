@@ -70,7 +70,7 @@ theorem isRadical_span_of_ncard_primesOver : ∀ (E : Type) [Field E] [NumberFie
     (Ideal.primesOver (Ideal.span {(p : ℤ)}) (𝓞 E)).ncard = Module.finrank ℚ E →
     (Ideal.span {(p : 𝓞 E)}).IsRadical := by
   intro E _ _ p hp hcard
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   set P : Ideal ℤ := Ideal.span {(p : ℤ)} with hP
   have hPmax : P.IsMaximal := Int.ideal_span_isMaximal_of_prime p
   have hP0 : P ≠ ⊥ := by
@@ -87,7 +87,7 @@ theorem isRadical_span_of_ncard_primesOver : ∀ (E : Type) [Field E] [NumberFie
   have hge : ∀ q ∈ (Finset.univ : Finset (P.primesOver (𝓞 E))),
       1 ≤ q.1.ramificationIdx ℤ * q.1.inertiaDeg ℤ := by
     intro q _
-    haveI : q.1.IsPrime := q.2.1
+    have : q.1.IsPrime := q.2.1
     exact Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (Ideal.ramificationIdx_pos (R := ℤ) q.1).ne'
       (Ideal.inertiaDeg_pos q.1 ℤ).ne')
   have hone : ∀ q : P.primesOver (𝓞 E), q.1.ramificationIdx ℤ = 1 := by

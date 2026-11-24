@@ -366,7 +366,7 @@ theorem eLat_eq (L : Submodule ℤ E) (c : ℝ) :
 
 theorem t_EuclidFrame : EuclidFrame := by
   intro E _ _ _ L c hd hs
-  haveI : IsZLattice ℝ (S6.frameLat E L c) := ⟨hs⟩
+  have : IsZLattice ℝ (S6.frameLat E L c) := ⟨hs⟩
   rw [eLat_eq E L c]
   refine ⟨?_, ?_, ?_⟩
   · infer_instance

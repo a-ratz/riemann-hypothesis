@@ -146,7 +146,7 @@ private theorem exists_fin : ∃ p : UA L n → finU (E := L) (n := n), Continuo
   refine ⟨fun x => ⟨⟨finGL L n (Matrix.GeneralLinearGroup.map (pFin L) x.1),
     GlobalTheory.SplitPts.finGL_mem_UA _ fun u => GlobalTheory.SplitPts.comp_eq x u⟩, MonoidHom.mem_ker.2 (pInf_finGL _)⟩,
     Continuous.subtype_mk (Continuous.subtype_mk
-      (hfin.comp (GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtype_val)) _) _, ?_, fun x u => ?_⟩
+      (hfin.comp (GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtypeVal)) _) _, ?_, fun x u => ?_⟩
   · refine Subtype.ext (Subtype.ext ?_)
     change finGL L n (Matrix.GeneralLinearGroup.map (pFin L) 1) = 1
     rw [map_one, map_one]
@@ -191,7 +191,7 @@ private theorem cont_multi {ι X : Type} [Finite ι] [TopologicalSpace X] {M : �
     [∀ i, Module ℂ (M i)] [∀ i, FiniteDimensional ℂ (M i)] (m : MultilinearMap (RingHom.id ℂ) M ℂ) (y : ∀ i, X → M i)
     (hy : ∀ i (ℓ : Module.Dual ℂ (M i)), Continuous fun x => ℓ (y i x)) : Continuous fun x => m fun i => y i x := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   let b := fun i => Module.finBasis ℂ (M i)
   have e : (fun x => m fun i => y i x) = fun x => ∑ r : ∀ i, Fin (Module.finrank ℂ (M i)),
       (∏ i, (b i).coord (r i) (y i x)) • m fun i => b i (r i) := by
@@ -227,7 +227,7 @@ private theorem cont_cEmb {E : Type} [Field E] [NumberField E] [IsCMField E] {n 
     (InfinitePlace.Completion.isometryEquivComplexOfIsComplex (IsTotallyComplex.isComplex w)).continuous.comp
       ((continuous_apply w).comp continuous_fst)
   exact (Continuous.units_map _ (continuous_id.matrix_map h1)).comp
-    ((Continuous.units_map _ (continuous_id.matrix_map h2)).comp continuous_subtype_val)
+    ((Continuous.units_map _ (continuous_id.matrix_map h2)).comp continuous_subtypeVal)
 
 private theorem aut_coef {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} {X : Type} [AddCommGroup X]
     [Module ℂ X] [FiniteDimensional ℂ X] (R : UA E n →* Module.End ℂ X) (F : UA E n → X)
@@ -249,7 +249,7 @@ private theorem aut_coef {E : Type} [Field E] [NumberField E] [IsCMField E] {n :
   · intro γ hγ g
     rw [hrat γ hγ g, ← Module.End.mul_apply, ← map_mul, mul_inv_rev, inv_mul_cancel_right]
   · refine GlobalTheory.CuspRep.isOpen_stab_of_mem_nhds ((RU E n).comp (finU (E := E) (n := n)).subtype) _ ?_
-    filter_upwards [(continuous_subtype_val.tendsto (1 : finU (E := E) (n := n))).eventually hsm] with k hk
+    filter_upwards [(continuous_subtypeVal.tendsto (1 : finU (E := E) (n := n))).eventually hsm] with k hk
     funext g
     change ℓ (R (g * (k : UA E n))⁻¹ (F (g * k))) = ℓ (R g⁻¹ (F g))
     rw [hk g, mul_inv_rev, map_mul, hfin _ ((finU (E := E) (n := n)).inv_mem k.2), one_mul]
@@ -325,10 +325,10 @@ theorem UpperTheory.V.Hi.formU :
   let J' : UA L n →* Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) :=
     MonoidHom.prod (away l L n).rangeRestrict (Pi.monoidHom fun v : V.frame.Vl => cLoc (s.w v.1))
   obtain rfl : J = J' := funext hJ
-  haveI : FiniteDimensional ℂ (⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res)) :=
+  have : FiniteDimensional ℂ (⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res)) :=
     e.finiteDimensional
-  haveI : Finite V.frame.Vl := @Finite.of_fintype _ V.frame.finV
-  haveI : ∀ v : V.frame.Vl, Finite (W.Emb l (s.w v.1)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
+  have : Finite V.frame.Vl := @Finite.of_fintype _ V.frame.finV
+  have : ∀ v : V.frame.Vl, Finite (W.Emb l (s.w v.1)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
   have hsp : ∀ v : V.frame.Vl, IsSplitAt (s.w v.1) := fun v => w_split V v
   have hl : ∀ u : Plc L, ((l : ℕ) : 𝓞 L) ∈ u.asIdeal ↔ ((l : ℕ) : 𝓞 (Lp L)) ∈ (u.under (𝓞 (Lp L))).asIdeal := fun u => by
     change _ ↔ algebraMap (𝓞 (Lp L)) (𝓞 L) (l : 𝓞 (Lp L)) ∈ u.asIdeal
@@ -336,7 +336,7 @@ theorem UpperTheory.V.Hi.formU :
   have hsurj : Function.Surjective fun k : finU (E := L) (n := n) => J' k := by
     rintro ⟨a, b⟩
     obtain ⟨x, rfl⟩ := (away l L n).rangeRestrict_surjective a
-    haveI := V.frame.finV
+    have := V.frame.finV
     obtain ⟨k, h1, h2⟩ := exists_adjust (fun v : V.frame.Vl => s.w v.1) hsp
       (fun v v' h => Subtype.ext ((w_under s v.1).symm.trans (h.trans (w_under s v'.1)))) x b Finset.univ
     refine ⟨k, Prod.ext (Subtype.ext (funext fun u => h1 u.1 fun v h => u.2 ?_)) (funext fun v => h2 v (Finset.mem_univ v))⟩
@@ -365,7 +365,7 @@ theorem UpperTheory.V.Hi.formU :
     | smul_tprod r f =>
       simp only [map_smul]
       refine Continuous.const_smul ?_ r
-      haveI := fd_sq n
+      have := fd_sq n
       have h := cont_multi (ℓ.compMultilinearMap (PiTensorProduct.tprod ℂ))
         (fun (y : Emb l (fun v : V.frame.Vl => s.w v.1)) (g : UA L n) =>
           GlobalTheory.Branching.sqRep ℂ n (lam y.res) (cEmb (ι.toRingHom.comp y.res) g) (f y))

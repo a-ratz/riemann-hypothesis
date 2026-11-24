@@ -249,7 +249,7 @@ theorem abstract {S R A F : Type} [CommRing S] [CommRing A] [IsDomain A] [CommRi
     ext i j
     have := congrFun (hC j) i
     simp only [mulVec, dotProduct, Pi.single_apply, apply_ite ev, map_one, map_zero, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     rw [this]; rfl
   obtain rfl : n = d := le_antisymm hnd hdn
   refine ⟨Y, fun h => ?_, fun y => ⟨hall y, fun ⟨c, hc⟩ => hc ▸ hY c⟩⟩
@@ -276,7 +276,7 @@ variable {l : ℕ} [hl : Fact l.Prime] {K : FinExt l} (bk : BK K)
 
 theorem lim_S (f : ℕ → bk.S) (hf : ∀ k, (l : bk.S) ^ k ∣ f (k + 1) - f k) :
     ∃ z, ∀ k, (l : bk.S) ^ k ∣ z - f k := by
-  haveI : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
   have hC : ∀ k, (l : bk.S) ^ k = C ((l : Wq l bk.a) ^ k) := fun k => by rw [map_pow, map_natCast]
   have : ∀ i, ∃ z, ∀ k, (l : Wq l bk.a) ^ k ∣ z - coeff i (f k) := fun i =>
     lim_of_complete _ _ fun k => by
@@ -288,7 +288,7 @@ theorem lim_S (f : ℕ → bk.S) (hf : ∀ k, (l : bk.S) ^ k ∣ f (k + 1) - f k
   exact ⟨PowerSeries.mk q, PowerSeries.ext fun i => by rw [map_sub, coeff_mk, hq, hC, coeff_C_mul, coeff_mk]⟩
 
 theorem sep_A (x : Ainf l) (hx : ∀ k : ℕ, (l : Ainf l) ^ k ∣ x) : x = 0 := by
-  haveI : IsAdicComplete (Ideal.span {(l : Ainf l)}) (Ainf l) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Ainf l)}) (Ainf l) := WittVector.isAdicCompleteIdealSpanP
   refine IsHausdorff.haus' (I := Ideal.span {(l : Ainf l)}) x fun k => ?_
   rw [Ideal.span_singleton_pow, smul_eq_mul, Ideal.mul_top, SModEq.zero, Ideal.mem_span_singleton]
   exact hx k
@@ -338,7 +338,7 @@ theorem mem_range_eo (m : ℕ) : ∀ (o : OCb l) (r : (Fq l bk.a)⟦X⟧), bk.fl
 
 theorem exists_pow_mul (x : Cb l) : ∃ (c : ℕ) (o : OCb l),
     algebraMap (OCb l) (Cb l) bk.flat ^ c * x = algebraMap (OCb l) (Cb l) o := by
-  haveI := GlobalTheory.FrobInt.valuationRing_tilt l
+  have := GlobalTheory.FrobInt.valuationRing_tilt l
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := OCb l) x
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have : ∃ c, b ∣ bk.flat ^ c := by

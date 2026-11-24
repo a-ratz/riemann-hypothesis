@@ -105,7 +105,7 @@ theorem _root_.GlobalTheory.CellAmp.Model.cellData_open {k r : ℕ} (L : _root_.
     rw [_root_.GlobalTheory.CellAmp.Model.ell_one _ _ _ L.hz.1, _root_.GlobalTheory.CellAmp.Model.ell_one _ _ _ L.hz'.1]
   · refine ⟨inferInstance, Measure.dirac_ne_zero, ?_, ?_⟩
     · rw [hR, Measure.dirac_apply]
-      simp only [Set.mem_singleton_iff, Set.indicator_apply, Set.mem_setOf_eq]
+      simp only [Set.mem_singleton_iff, Set.indicator_apply, Set.mem_ofPred_eq]
       rw [hone]
       simp
     · intro s hs

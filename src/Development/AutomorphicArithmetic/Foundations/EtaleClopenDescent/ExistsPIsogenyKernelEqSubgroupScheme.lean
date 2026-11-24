@@ -436,7 +436,7 @@ private theorem two_locus (Y : Scheme.{0}) (A B₁ B₂ B' : Over Y) [GrpObj A] 
   let Bf : Bool → Over Y := fun i => match i with
     | false => B₁
     | true => B₂
-  letI gB : ∀ i, GrpObj (Bf i) := fun i => match i with
+  let gB : ∀ i, GrpObj (Bf i) := fun i => match i with
     | false => inferInstanceAs (GrpObj B₁)
     | true => inferInstanceAs (GrpObj B₂)
   let ff : ∀ i, A ⟶ Bf i := fun i => match i with
@@ -607,9 +607,9 @@ theorem exists_isPIsog_pull {c : ℕ} {T Y : Scheme.{0}} {s₁ : T ⟶ Sp R} {s 
     rw [hψ, Over.comp_left, Category.assoc]
   have ext' : ∀ {Z : Over T} (f g : Z ⟶ o₁'.A), f.left ≫ m'.φ = g.left ≫ m'.φ → f = g :=
     fun f g hfg => Over.OverMorphism.ext (m'.cart.1.hom_ext hfg (by rw [Over.w f, Over.w g]))
-  haveI := hq₁.1
-  haveI := hq₁.2.1
-  haveI := he
+  have := hq₁.1
+  have := hq₁.2.1
+  have := he
   refine ⟨ψ₁ ≫ e.hom, hψ, h.1, inferInstance, ?_, ?_, ?_, e.inv ≫ ψ₁', inferInstance, ?_, ?_⟩
   · intro c'
     apply ext'
@@ -733,7 +733,7 @@ private theorem core (D : Datum p) {A : Type} [CommRing A] (hp : IsUnit ((p : �
       ((b₁.ρ : R₁) : A) = ρ ∧ ∀ i c, ((b₁.t i c : R₁) : A) = t i c := by
   classical
   obtain ⟨f⟩ := exists_ratHom (units_of hp hu)
-  letI : Algebra ℚ A := f.toAlgebra
+  let : Algebra ℚ A := f.toAlgebra
 
   obtain ⟨G, hG⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℤ (𝓞 D.F)).FG)
 
@@ -752,8 +752,8 @@ private theorem core (D : Datum p) {A : Type} [CommRing A] (hp : IsUnit ((p : �
     (Finset.univ.biUnion fun ij : Fin D.a × Fin D.a => (w ij).support.image (w ij)))
   let B : Subalgebra ℚ A := Algebra.adjoin ℚ (T : Set A)
   have hfg : B.FG := Subalgebra.fg_adjoin_finset T
-  haveI : Algebra.FiniteType ℚ B := (Subalgebra.fg_iff_finiteType B).mp hfg
-  haveI hN : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℚ B
+  have : Algebra.FiniteType ℚ B := (Subalgebra.fg_iff_finiteType B).mp hfg
+  have hN : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℚ B
   have hTB : ∀ a ∈ T, a ∈ B := fun a ha => Algebra.subset_adjoin (by exact_mod_cast ha)
   have hρB : ρ ∈ B := hTB _ (Finset.mem_insert_self _ _)
   have htB : ∀ i c, t i c ∈ B := by
@@ -853,10 +853,10 @@ theorem UpperTheory.exists_section_of_etale_clopen_geomPoint_unique :
   intro S Y hfin het W hWo hWc hex huniq
   let U : Y.left.Opens := ⟨W, hWo⟩
   have hrange : Set.range U.ι.base = W := U.range_ι
-  haveI : IsClosedImmersion U.ι :=
+  have : IsClosedImmersion U.ι :=
     IsClosedImmersion.of_isPreimmersion _ (by rw [hrange]; exact hWc)
-  haveI : IsFinite (U.ι ≫ Y.hom) := inferInstance
-  haveI : Etale (U.ι ≫ Y.hom) := inferInstance
+  have : IsFinite (U.ι ≫ Y.hom) := inferInstance
+  have : Etale (U.ι ≫ Y.hom) := inferInstance
   have hiso : IsIso (U.ι ≫ Y.hom) := by
     rw [GlobalTheory.FinEt.isIso_iff_bijective_algClosed]
     intro k _ _
@@ -1049,7 +1049,7 @@ private theorem UpperTheory.exists_stable_maximal_isotropic_torsion_subgroup_ge 
     rw [he g g' hg hg']
     exact ⟨fun h => (hinj (hone.trans h)).symm, fun h => by rw [h]; exact hone.symm⟩
   let M := TjExists.torsSub o (𝟙_ (Over (Sp k))) c
-  haveI : Finite M := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+  have : Finite M := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
   have hM0 : ∀ x : M, x = 0 ↔ x.1.toMul = 1 := fun x => ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩
   have hkill : ∀ (v : Ideal (𝓞 D.F)) (x : M), (∀ a ∈ v, a • x = 0) ↔ KilledBy o v x.1.toMul :=
     fun v x => forall₂_congr fun a _ => hM0 (a • x)
@@ -1095,7 +1095,7 @@ private theorem UpperTheory.exists_stable_maximal_isotropic_torsion_subgroup_ge 
 theorem UpperTheory.exists_isogeny_with_kernel_subgroup :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → IsUnit ((p : ℕ) : R) → D.m = 1 → ∀ (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ), w.IsMaximal → uIdeal D r ≤ w → (∃ e : ℕ, c = p ^ e ∧ (0 < j → 0 < e)) → ∀ (k : Type) [Field k] [IsAlgClosed k] (σ : Sp k ⟶ Sp R) (o : Obj b N σ) (H₀ : Subgroup (𝟙_ (Over (Sp k)) ⟶ o.A)), (∀ a : D.O, ∀ h ∈ H₀, h ≫ o.act.act a ∈ H₀) → (∀ h ∈ H₀, KilledBy o w h) → Nat.card H₀ = Ideal.absNorm w ^ j → ∃ (o' : Obj b N σ) (ψ : o.A ⟶ o'.A), IsPIsog c o o' ψ ∧ IsTj r w j o o' ψ ∧ ∀ h : 𝟙_ (Over (Sp k)) ⟶ o.A, (h ≫ ψ = 1 ∧ ∃ e : ℕ, KilledBy o (uIdeal D r ^ e) h) ↔ h ∈ H₀ := by
   intro p _ D R _ _ b N _ _ hp hm r w j c hw hu hc k _ _ s o H₀ stab₀ hk₀ hcard₀
-  haveI := TjExists.charZero_of_base b hp s
+  have := TjExists.charZero_of_base b hp s
   obtain ⟨ex, hce, hje⟩ := hc
   have hc₀ : ∀ h ∈ H₀, h ^ c = 1 := by
     intro h hh
@@ -1116,13 +1116,13 @@ theorem UpperTheory.exists_isogeny_with_kernel_subgroup :
     rw [hce, Nat.cast_pow]
     exact pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
   have hfin : Finite H := by
-    haveI := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+    have := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
     exact Finite.of_injective (fun h : H => (⟨h.1, hpow h.1 h.2⟩ : {g : 𝟙_ (Over (Sp k)) ⟶ o.A // g ^ c = 1}))
       fun a a' h => Subtype.ext (Subtype.mk.inj h)
   have hinj : ∀ (κ : Type) [Field κ] (x : Sp κ ⟶ Sp k) (h h' : 𝟙_ (Over (Sp k)) ⟶ o.A),
       toUnit (Over.mk x) ≫ h = toUnit (Over.mk x) ≫ h' → h = h' := fun κ _ x h h' e => by
-    haveI : Nonempty (Over.mk x).left := inferInstanceAs (Nonempty (PrimeSpectrum κ))
-    haveI := GlobalTheory.PointQuot.epi_toUnit (Over.mk x)
+    have : Nonempty (Over.mk x).left := inferInstanceAs (Nonempty (PrimeSpectrum κ))
+    have := GlobalTheory.PointQuot.epi_toUnit (Over.mk x)
     exact (cancel_epi _).1 e
   have hfree : ∀ (κ : Type) [Field κ] (x : Sp κ ⟶ Sp k) (h : 𝟙_ (Over (Sp k)) ⟶ o.A),
       toUnit (Over.mk x) ≫ h = 1 ↔ h = 1 := fun κ _ x h =>
@@ -1226,8 +1226,8 @@ theorem UpperTheory.repData_geometric_points_of_subData :
   intro p _ D R _ _ b N hN hNp hpu hm r w j c hw hr hj hc S _ s o Rd Sd k _ _ x
   obtain ⟨ox, ⟨m⟩⟩ := IsogRep.exists_pull x o (s' := x ≫ s) rfl
   have hp' : IsGrpPullback ox.A o.A x m.φ := m.cart
-  letI := Sd.grp
-  haveI := Sd.hom
+  let := Sd.grp
+  have := Sd.hom
   let Ksub : Subgroup (Over.mk x ⟶ o.A) := (IsMonHom.monoidHom Sd.i (Over.mk x)).range
   let H₀ : Subgroup (𝟙_ (Over (Sp k)) ⟶ ox.A) := Ksub.comap (secEquiv hp').toMonoidHom
   have memH : ∀ h, h ∈ H₀ ↔ InSub Sd.i (secEquiv hp' h) := fun h => Iff.rfl
@@ -1244,9 +1244,9 @@ theorem UpperTheory.repData_geometric_points_of_subData :
     rw [← secEquiv_comp hp' hp' _ _ (m.act _) h, ← map_one (secEquiv hp')] at hk
     exact (secEquiv hp').injective hk
   have hcard : Nat.card H₀ = Ideal.absNorm w ^ j := by
-    haveI := Sd.mono
-    haveI := Sd.fin
-    haveI := Sd.et
+    have := Sd.mono
+    have := Sd.fin
+    have := Sd.et
     have hmem : ∀ z : Over.mk x ⟶ Sd.K, (secEquiv hp').symm (z ≫ Sd.i) ∈ H₀ := fun z => by
       rw [memH, MulEquiv.apply_symm_apply]
       exact ⟨z, rfl⟩

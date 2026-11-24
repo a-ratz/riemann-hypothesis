@@ -126,7 +126,7 @@ theorem isAdicComplete_of_finite_projective [IsAdicComplete (Ideal.span {a}) S] 
     IsAdicComplete (Ideal.span {a}) N := by
   obtain ⟨k, f, hf⟩ := Module.Finite.exists_fin' S N
   obtain ⟨s, hs⟩ := Module.projective_lifting_property f LinearMap.id hf
-  haveI := isAdicComplete_fin_pi a k
+  have := isAdicComplete_fin_pi a k
   exact isAdicComplete_of_retraction a s f hs
 
 end AdicAux

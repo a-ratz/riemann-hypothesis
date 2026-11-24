@@ -180,7 +180,7 @@ theorem oneVector_of_whittaker (R : RealDat D A Ks) (F : Face D A) (hW : GlobalT
 
   rw [map_natCast, ← Nat.card_congr e, ← h, typeSum, map_sum]
   unfold GlobalTheory.IndefiniteRowSideFullHecke.CuspidalInducedCharacter.lvlSum
-  letI := GlobalTheory.IndefiniteRowSideFullHecke.CuspidalInducedCharacter.fintypeH (R.levR F false)
+  let := GlobalTheory.IndefiniteRowSideFullHecke.CuspidalInducedCharacter.fintypeH (R.levR F false)
   refine (Fintype.sum_equiv e _ _ fun x => ?_).symm
   rw [map_mul]
   rfl

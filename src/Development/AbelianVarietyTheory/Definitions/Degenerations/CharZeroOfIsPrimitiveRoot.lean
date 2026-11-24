@@ -280,7 +280,7 @@ theorem charZero_of_isPrimitiveRoot {K : Type} [Field K] {ζ : ℕ → Kˣ} (h :
     CharZero K :=
   charZero_of_inj_zero fun n hn => by
     by_contra h0
-    haveI : NeZero n := ⟨h0⟩
+    have : NeZero n := ⟨h0⟩
     exact (IsPrimitiveRoot.coe_units_iff.2 (h n (Nat.pos_of_ne_zero h0))).neZero'.out hn
 
 theorem Full.charZero {D : Datum H} {K : Type} [Field K] (o : Full D K) : CharZero K :=

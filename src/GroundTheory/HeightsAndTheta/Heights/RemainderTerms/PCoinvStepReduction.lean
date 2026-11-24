@@ -117,7 +117,7 @@ theorem CoinvStepReduction.proof : CoinvStepReduction.Statement := by
     rw [hsum]
     have hm : monomial (e₀ + Finsupp.single (b, k) ((k : ℕ) + 1)) (1 : K) =
         monomial e₀ 1 * X (b, k) ^ ((k : ℕ) + 1) := by
-      rw [X_pow_eq_monomial, monomial_mul, one_mul]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, one_mul]
     have hdiff : monomial (e₀ + Finsupp.single (b, k) ((k : ℕ) + 1)) (1 : K) - P =
         monomial e₀ 1 * (X (b, k) ^ ((k : ℕ) + 1) +
           ∑ j ∈ range ((k : ℕ) + 1), rename φ (c j) * X (b, k) ^ j) := by

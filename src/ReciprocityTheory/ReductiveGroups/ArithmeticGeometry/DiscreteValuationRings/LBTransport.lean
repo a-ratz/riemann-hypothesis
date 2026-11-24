@@ -89,7 +89,7 @@ lemma units_glue {Y : Scheme.{0}} (W : Y.Opens) {ι : Type} (V : ι → Y.Opens)
     rw [e1, e2]
   refine ⟨⟨g, g', h1, by rw [mul_comm]; exact h1⟩, fun i => ?_⟩
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   exact hg i
 
 section Regroup
@@ -263,7 +263,7 @@ lemma units_ext_cover {Y : Scheme.{0}} (W : Y.Opens) {ι : Type} (V : ι → Y.O
     intro i j
     have e1 := congrArg Units.val (res_res' (hle i) (inf_le_left : V i ⊓ V j ≤ V i) a)
     have e2 := congrArg Units.val (res_res' (hle j) (inf_le_right : V i ⊓ V j ≤ V j) a)
-    simp only [res, Units.coe_map, MonoidHom.coe_coe] at e1 e2 ⊢
+    simp only [res, Units.coe_map, MonoidHom.coe_ofClass] at e1 e2 ⊢
     rw [e1, e2]
   obtain ⟨g, -, hu⟩ := sec_glue W V hle hcov (fun i => ((res (hle i) a : Γ(Y, V i)ˣ) : Γ(Y, V i))) hv
   have ea := hu a.val (fun i => rfl)

@@ -134,7 +134,7 @@ private theorem one_side {T : ℝ} (hT : 0 ≤ T) (k : ℕ) {K : ℝ → ℝ →
     · rw [Measure.prod_restrict, ae_restrict_iff' hS]
       exact Eventually.of_forall fun p hp => hbd p.1 ⟨hp.1.1.le, hp.1.2⟩ p.2 hp.2
   have hf : ContinuousOn (fun y => ∫ t in (0 : ℝ)..T, K t y) (Set.Ioi 0) := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have h2 : Continuous (Function.uncurry fun (y : Set.Ioi (0 : ℝ)) (t : ℝ) => K t y) := by
       refine hc.comp_continuous (f := fun p : Set.Ioi (0 : ℝ) × ℝ => (p.2, (p.1 : ℝ))) (by fun_prop) fun p => ⟨Set.mem_univ _, p.1.2⟩
     exact intervalIntegral.continuous_parametric_intervalIntegral_of_continuous' h2 0 T
@@ -269,11 +269,11 @@ private theorem cont_rot : Continuous rot := by
   fin_cases i <;> fin_cases j <;> simp <;> fun_prop
 
 private theorem cont_iy : ContinuousOn iy {0}ᶜ := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have h : Continuous fun y : ({0}ᶜ : Set ℝ) => (⟨fun _ => (y : ℝ), fun _ => (y : ℝ)⁻¹, funext fun _ => mul_inv_cancel₀ y.2,
       funext fun _ => inv_mul_cancel₀ y.2⟩ : (TR.Rinf ℚ)ˣ) := by
-    refine Units.continuous_iff.2 ⟨continuous_pi fun _ => continuous_subtype_val, continuous_pi fun _ => ?_⟩
-    exact continuous_subtype_val.inv₀ fun y => y.2
+    refine Units.continuous_iff.2 ⟨continuous_pi fun _ => continuous_subtypeVal, continuous_pi fun _ => ?_⟩
+    exact continuous_subtypeVal.inv₀ fun y => y.2
   refine ((TR.continuous_infId ℚ).comp h).congr fun y => ?_
   change _ = iy y.1
   rw [iy, dite_eq_right (show (y : ℝ) ≠ 0 from y.2)]
@@ -296,7 +296,7 @@ private theorem cont_Wo (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} (hc : Co
   have hCp : IsCompact (Set.univ.pi fun _ : Fin 2 => C) := isCompact_univ_pi fun _ => hC
   have hfin : adeleMeasurePi ℚ (FS2 ℚ) < ⊤ :=
     (measure_mono (show FS2 ℚ ⊆ Set.univ.pi fun _ : Fin 2 => C from fun x hx i hi => hEC (hx i hi))).trans_lt hCp.measure_lt_top
-  haveI : IsFiniteMeasure ((adeleMeasurePi ℚ).restrict (FS2 ℚ)) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure ((adeleMeasurePi ℚ).restrict (FS2 ℚ)) := ⟨by simpa using hfin⟩
   have hn : Continuous fun u : Fin 2 → A ℚ => nE D u :=
     continuous_gl.comp (continuous_nU.comp ((AdeleBaseChange.continuous_adeleMap.comp (continuous_apply 0)).add
       ((AdeleBaseChange.continuous_adeleMap.comp (continuous_apply 1)).mul continuous_const)))
@@ -327,11 +327,11 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.hol_of :
     fin_cases i <;> simp <;> fun_prop
   refine two_side (T := 2 * Real.pi) (by positivity) k hq
     (H := fun t y => Wo D φ (em E (aE (iy y) * rot t)) * ((χ.1 (iy y) : ℂˣ) : ℂ)) ?_ ?_
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     have hi : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => iy x.1.2 :=
-      cont_iy.comp_continuous (continuous_snd.comp continuous_subtype_val) fun x => x.2.2
+      cont_iy.comp_continuous (continuous_snd.comp continuous_subtypeVal) fun x => x.2.2
     have hr : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => rot x.1.1 :=
-      cont_rot.comp (continuous_fst.comp continuous_subtype_val)
+      cont_rot.comp (continuous_fst.comp continuous_subtypeVal)
     have hh : Continuous fun x : ↥((Set.univ ×ˢ {0}ᶜ : Set (ℝ × ℝ))) => em E (aE (iy x.1.2) * rot x.1.1) :=
       cont_em.comp ((continuous_aE.comp hi).mul hr)
     exact (cont_Wo D hA.cont hA.bdd hh).mul (Units.continuous_val.comp (χ.2.1.comp hi))

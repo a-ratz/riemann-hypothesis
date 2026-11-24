@@ -80,7 +80,7 @@ theorem UpperTheory.V.Pr.globProp :
     obtain ⟨x, hxC, hxG, hxB⟩ := isPreconnected_closed_iff.mp hM.conn G B hGc hBc hcov hG' hB'
     obtain ⟨z, hzGB, hzCl⟩ := hM.jac (G ∩ B) (hGc.inter hBc) ⟨x, ⟨hxG, hxB⟩, hxC⟩
     rw [hG, hB] at hzGB
-    simp only [Set.mem_inter_iff, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hzGB
+    simp only [Set.mem_inter_iff, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hzGB
     obtain ⟨⟨Y, ⟨hY, hYg⟩, hzY⟩, ⟨Y', ⟨hY', hY'n⟩, hzY'⟩⟩ := hzGB
     exact hY'n (hM.loc z hzCl Y Y' hY hY' hzY hzY' hYg)
   intro x hx

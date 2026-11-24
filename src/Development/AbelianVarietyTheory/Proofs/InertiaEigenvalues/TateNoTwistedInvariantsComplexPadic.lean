@@ -190,7 +190,7 @@ theorem full (ζ : ℕ → Om l) (χ : GQ l →* ℤ_[l]ˣ) (cZ0 : ζ 0 = 1) (cZ
           rw [← h', zpow_neg, ← hc, h, inv_one]
       simpa using this
     have hcn : ‖c‖ = 1 := by
-      rw [hc, norm_zpow, PadicInt.padic_norm_e_of_padicInt, PadicInt.norm_units, one_zpow]
+      rw [hc, norm_zpow, PadicInt.norm_coe, PadicInt.norm_units, one_zpow]
     have hd : 0 < ‖c - 1‖ := norm_pos_iff.2 (sub_ne_zero.2 hc1)
     obtain ⟨y, hy, hxy⟩ := happ (min ε (‖c - 1‖ * ε / 2)) (lt_min hε (by positivity))
     obtain ⟨b, hb1, hb2⟩ := estimate ζ χ cZ0 cZs cZ1 cχ (m + 1) (Nat.le_add_left 1 m) g hg c y₀ y hm' hy

@@ -62,8 +62,8 @@ theorem map_split_eq {X Y₁ Y₂ : Type} [MeasurableSpace X] [MeasurableSpace Y
     (e : K₁ × K₂ → K) (he : Measurable e) (hse : ∀ p, s (e p : X) = ((p.1 : Y₁), (p.2 : Y₂)))
     (μ₁ : Measure K₁) (μ₂ : Measure K₂) [SFinite μ₁] [SFinite μ₂] :
     (((μ₁.prod μ₂).map e).map Subtype.val).map s = (μ₁.map Subtype.val).prod (μ₂.map Subtype.val) := by
-  rw [Measure.map_map measurable_subtype_coe he, Measure.map_map hs (measurable_subtype_coe.comp he),
-    Measure.map_prod_map μ₁ μ₂ measurable_subtype_coe measurable_subtype_coe]
+  rw [Measure.map_map measurable_subtypeVal he, Measure.map_map hs (measurable_subtypeVal.comp he),
+    Measure.map_prod_map μ₁ μ₂ measurable_subtypeVal measurable_subtypeVal]
   congr 1
   funext p
   exact hse p

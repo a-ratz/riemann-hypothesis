@@ -69,7 +69,7 @@ theorem measurable_chart_prod {φ : GA E a → ℂ} (hφ : Continuous φ) :
     · rw [Set.piecewise_eq_of_mem _ _ _ hp]
     · rw [Set.piecewise_eq_of_notMem _ _ _ hp]
       have hp' : ¬ IsUnit (Matrix.of p.2) := fun h => hp ⟨trivial, h⟩
-      exact dif_neg hp'
+      exact dite_eq_right hp'
   rw [e]
   exact (GlobalTheory.ConstTermSmooth.continuousOn_chart hφ).measurable_piecewise continuousOn_const
     (isOpen_univ.prod isOpen_invSet).measurableSet
@@ -114,9 +114,9 @@ theorem pet_kerInf_left {ω : HChar E} (hω : ω.IsUnitary) {F ψ : GA E a → �
     {γ : X → GL (Fin a) (Cinf E)} (hk : IsRapidInf ν k γ) :
     pet (latticeGL E a) μ (kerInf ν k γ F) ψ =
       ∫ x, k x * pet (latticeGL E a) μ (fun g => F (g * infGL E a (γ x))) ψ ∂ν := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have hD := isFundamentalDomain_stdDom (latticeGL E a) μ
-  haveI : IsFiniteMeasure (μ.restrict (stdDom (latticeGL E a))) :=
+  have : IsFiniteMeasure (μ.restrict (stdDom (latticeGL E a))) :=
     ⟨by rw [Measure.restrict_apply_univ, ← quotMeasure_univ hD]; exact measure_lt_top _ _⟩
   obtain ⟨C, hC⟩ := h.2.2.2
   obtain ⟨D, hD'⟩ := h'.2.2.2

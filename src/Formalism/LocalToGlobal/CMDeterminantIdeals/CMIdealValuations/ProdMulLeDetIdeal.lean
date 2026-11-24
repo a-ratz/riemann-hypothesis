@@ -149,7 +149,7 @@ theorem detSub_isFractional {m : ℕ} (L : MLat K m) (hM : L.M.FG) : IsFractiona
 
 theorem detIdeal_coe {m : ℕ} (L : MLat K m) (h : IsFractional (𝓞 K)⁰ L.detSub) :
     (L.detIdeal : Submodule (𝓞 K) K) = L.detSub := by
-  have e : L.detIdeal = ⟨L.detSub, h⟩ := dif_pos h
+  have e : L.detIdeal = ⟨L.detSub, h⟩ := dite_eq_left h
   rw [e]
   rfl
 
@@ -166,7 +166,7 @@ theorem exists_det_ne {m : ℕ} (M : Submodule (𝓞 K) (Fin m → K))
   refine ⟨fun i => (e.symm i : Fin m → K), fun i => hs (e.symm i).2, ?_⟩
   have hli' : LinearIndependent K (fun i => (e.symm i : Fin m → K)) := hli.comp _ e.symm.injective
   have : IsUnit (Matrix.of fun i => (e.symm i : Fin m → K)) :=
-    Matrix.linearIndependent_rows_iff_isUnit.1 hli'
+    Matrix.linearIndependent_row_iff_isUnit.1 hli'
   exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
 
 end A2

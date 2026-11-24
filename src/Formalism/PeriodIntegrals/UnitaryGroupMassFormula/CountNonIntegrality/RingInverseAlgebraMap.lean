@@ -56,7 +56,7 @@ open Classical ValuativeRel
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem star_coeF (D : Formalism.BasicNotions.D7) (t : D.host.F) : star (t : D.host.E) = t := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   first
   | exact (NumberField.IsCMField.complexConj_eq_self_iff _).mpr t.2
   | exact (NumberField.IsCMField.complexConj_eq_self_iff (K := D.host.E) (t : D.host.E)).mpr t.2
@@ -86,8 +86,8 @@ theorem val_resChar_lt (D : Formalism.BasicNotions.D7) (p : PlF D) :
 
 theorem locDiff_of (hT : TrDual) (hA : DualApprox) (hS : PowSmall) : LocDiff := by
   intro D δ M hag p
-  haveI := (D.s.atP p).lf
-  haveI := (D.s.atP p).ellPrime
+  have := (D.s.atP p).lf
+  have := (D.s.atP p).ellPrime
   have hδ : δ p ≠ 0 := (hag p).2.1
   have hz := hT D δ M hag p
   obtain ⟨k, hk⟩ := hS (D.s.atP p).Fp (δ p) ((Loc.resChar p : ℕ) : (D.s.atP p).Fp) (val_resChar_lt D p)

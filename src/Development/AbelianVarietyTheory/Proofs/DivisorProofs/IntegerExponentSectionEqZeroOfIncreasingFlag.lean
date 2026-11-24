@@ -115,7 +115,7 @@ theorem isReduced_poly [IsReduced R] : IsReduced (Polynomial R) :=
     exact IsReduced.eq_zero _ (Polynomial.isNilpotent_iff.1 hP i)⟩
 
 theorem isReduced_laurent [IsReduced R] : IsReduced (LaurentPolynomial R) := by
-  haveI := isReduced_poly (R := R)
+  have := isReduced_poly (R := R)
   refine ⟨fun q ⟨k, hk⟩ => ?_⟩
   obtain ⟨n, f, hf⟩ := exists_T_pow q
   have h1 : Polynomial.toLaurent (f ^ k) = 0 := by rw [map_pow, hf, mul_pow, hk, zero_mul]
@@ -131,7 +131,7 @@ theorem trunc_T_mul_aeval (m : ℤ) (hm : 0 < m) (P : Polynomial R) :
   | add p q hp hq => rw [map_add (f := _), mul_add, map_add (f := _), hp, hq, add_zero]
   | monomial k a =>
     rw [Polynomial.aeval_monomial, T_pow, ← C_eq_algebraMap, mul_left_comm, ← T_add, trunc_C_mul_T]
-    rw [if_neg (by push_cast; omega)]
+    rw [ite_eq_right (by push_cast; omega)]
 
 theorem unit_zpow_eq_laurent_T_of_eq_T_one (V : (LaurentPolynomial R)ˣ) (hV : (V : LaurentPolynomial R) = T 1) (n : ℤ) :
     ((V ^ n : (LaurentPolynomial R)ˣ) : LaurentPolynomial R) = T n := by
@@ -265,9 +265,9 @@ theorem eq_zero_of_lt (Xo : Moduli Dw l) (c : Coeff l) (e : Ix Dw → ℤ) (τ :
   funext p y0
   show f p y0 = 0
   have hne : i ≠ j := hij.ne
-  haveI := isReduced_tring p
-  haveI : IsReduced (Polynomial p.R) := isReduced_poly
-  haveI : IsReduced (LaurentPolynomial p.R) := isReduced_laurent
+  have := isReduced_tring p
+  have : IsReduced (Polynomial p.R) := isReduced_poly
+  have : IsReduced (LaurentPolynomial p.R) := isReduced_laurent
 
   obtain ⟨r1, χ1, hχ1, hC1, hX1⟩ :=
     exists_tring_inj p (IsScalarTower.toAlgHom c.F p.R (Polynomial p.R)) (fun _ : Unit => Polynomial.X)
@@ -346,7 +346,7 @@ theorem eq_zero_of_lt (Xo : Moduli Dw l) (c : Coeff l) (e : Ix Dw → ℤ) (τ :
         simp only [upd, Function.update_self, triM_diag hne, t, Option.some.injEq, Sigma.mk.inj_iff, heq_eq_eq,
           true_and]
         split_ifs <;> simp [ux]
-      · simp only [upd, Function.update_of_ne h, t, Option.some.injEq, Sigma.mk.inj_iff, h, false_and, if_false,
+      · simp only [upd, Function.update_of_ne h, t, Option.some.injEq, Sigma.mk.inj_iff, h, false_and, ite_false,
           Units.val_one, Matrix.one_apply_eq]
     · have : ((t none : (r2.R)ˣ) : r2.R) = 1 := by simp [t]
       rw [this]; exact hct

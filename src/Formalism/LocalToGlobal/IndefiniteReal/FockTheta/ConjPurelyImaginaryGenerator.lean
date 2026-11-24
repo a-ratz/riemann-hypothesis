@@ -884,7 +884,7 @@ theorem dRhoLin (D : D7) : DRhoLin D := by
     simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     rw [dRho_eq hψ hLine τ z x hdg, dRho_eq hψ hLine τ z x (hdf hf x), dRho_eq hψ hLine τ z x (hdf hg x), hG,
       fderiv_add (hdf hf x) ((hdf hg x).const_smul c), fderiv_const_smul (hdf hg x)]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, Pi.add_apply, Pi.smul_apply]
+    simp only [add_apply, smul_apply, smul_eq_mul, Pi.add_apply, Pi.smul_apply]
     ring
 
 end Formalism.IndefR.Fock.DRho

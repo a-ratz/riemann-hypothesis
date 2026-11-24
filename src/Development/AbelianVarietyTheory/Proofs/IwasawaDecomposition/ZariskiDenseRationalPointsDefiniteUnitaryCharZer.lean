@@ -212,7 +212,7 @@ theorem exists_unit_norm_one_det_ne_zero (L : Type) [Field L] [NumberField L] [I
     intro σ
     exact (Finset.finite_toSet _).preimage σ.injective.injOn
   have hS : (f ⁻¹' B).Finite := hB.preimage hfinj.injOn
-  obtain ⟨t, ht⟩ := (Set.infinite_univ (α := ℚ)).diff hS |>.nonempty
+  obtain ⟨t, ht⟩ := (Set.infinite_univ (α := ℚ)).sdiff hS |>.nonempty
   refine ⟨f t, hfu t, fun σ hσ => ht.2 ?_⟩
   simp only [Set.mem_preimage, B, Set.mem_iUnion]
   refine ⟨σ, ?_⟩

@@ -98,18 +98,18 @@ theorem cellSum_dosetInd (hU : IsUnramInv ϖ σ q) (t : GU σ n) (ε : Fin (n / 
   have key : ∀ x : GU σ n ⧸ KU σ n, ∀ [Decidable (Cell ϖ ε x)],
       (if Cell ϖ ε x then dosetInd ℂ (KU σ n) t x.out else 0) = if x ∈ hf.toFinset then 1 else 0 := by
     intro x _
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     by_cases h1 : Cell ϖ ε x
     · by_cases h2 : dosetInd ℂ (KU σ n) t x.out = 0
       · simp [h1, h2]
-      · rw [if_pos h1, if_pos ⟨h1, h2⟩]
+      · rw [ite_eq_left h1, ite_eq_left ⟨h1, h2⟩]
         unfold dosetInd at h2 ⊢
         exact Set.indicator_of_mem (Set.mem_of_indicator_ne_zero h2) _
     · simp [h1]
   unfold cellSum
   rw [finsum_congr fun x => @key x _, finsum_eq_sum_of_support_subset (s := hf.toFinset) _ (fun x hx => by
     by_contra h
-    exact hx (if_neg h)), Finset.sum_congr rfl fun x hx => if_pos hx]
+    exact hx (ite_eq_right h)), Finset.sum_congr rfl fun x hx => ite_eq_left hx]
   simp only [Finset.sum_const, nsmul_eq_mul, mul_one, ne_eq, Nat.cast_eq_zero, Finset.card_eq_zero]
   refine Finset.ne_empty_of_mem (a := (QuotientGroup.mk t : GU σ n ⧸ KU σ n)) ?_
   rw [Set.Finite.mem_toFinset]

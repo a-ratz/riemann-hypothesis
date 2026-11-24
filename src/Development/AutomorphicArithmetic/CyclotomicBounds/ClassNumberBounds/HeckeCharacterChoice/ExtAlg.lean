@@ -88,7 +88,7 @@ theorem IsDiv.exists_extension {G A : Type*} [CommGroup G] [CommGroup A] (hA : I
       simp only at hy
       rw [hy]
       rfl
-  letI : DivisibleBy (Additive A) ℤ := divisibleByOfSMulRightSurj _ _ hsurj
+  let : DivisibleBy (Additive A) ℤ := divisibleByOfSMulRightSurj _ _ hsurj
   obtain ⟨h, hh⟩ := (Module.Baer.of_divisible (Additive A)).extension_property_addMonoidHom
     (MonoidHom.toAdditive H.subtype) Subtype.val_injective (MonoidHom.toAdditive f)
   refine ⟨MonoidHom.toAdditive.symm h, fun x => ?_⟩

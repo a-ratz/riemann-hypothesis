@@ -331,7 +331,7 @@ theorem finite_torsion_centralizer : ∀ (E : Type) [Field E] [NumberField E] (n
   {g : GL (Fin n) E | g * N = N * g ∧ IsOfFinOrder g}.Finite := by
   intro E _ _ n N hsep
   let M := N.val.charpoly.SplittingField
-  haveI : NumberField M := NumberField.of_module_finite E M
+  have : NumberField M := NumberField.of_module_finite E M
   let f : E →+* M := algebraMap E M
   let A : Matrix (Fin n) (Fin n) M := N.val.map f
   have hA : A.charpoly = N.val.charpoly.map f := charpoly_map _ _
@@ -924,7 +924,7 @@ def toGLH (H : Matrix (Fin n) (Fin n) E) : HH H →* GL (Fin n) (Af E) :=
 theorem continuous_toGLH (H : Matrix (Fin n) (Fin n) E) : Continuous (toGLH H) := by
   have h1 : Continuous (GeneralLinearGroup.map (AEq (E := E)) : GL (Fin n) _ → GL (Fin n) (Af E)) :=
     Continuous.units_map _ (continuous_id.matrix_map continuous_finAdEquiv)
-  exact h1.comp continuous_subtype_val
+  exact h1.comp continuous_subtypeVal
 
 theorem exists_toGLH (H : Matrix (Fin n) (Fin n) E) (y : GL (Fin n) (Af E))
     (hy : y ∈ UJ (conjFin (cc E)) (H.map (algebraMap E (Af E)))) : ∃ t : HH H, toGLH H t = y := by
@@ -983,7 +983,7 @@ theorem emb_hform_pos (H : Matrix (Fin n) (Fin n) E) (φ : E →+* ℂ) (hp : (H
 theorem isTotDef (H : Matrix (Fin n) (Fin n) E) (hp : ∀ τ : E →+* ℂ, (H.map τ).PosDef) :
     IsTotDef (sg E) H := by
   refine ⟨inferInstance, fun ι => Or.inl fun x hx => ?_⟩
-  letI : Algebra (Fr E) ℂ := (Complex.ofRealHom.comp ι).toAlgebra
+  let : Algebra (Fr E) ℂ := (Complex.ofRealHom.comp ι).toAlgebra
   let τ : E →ₐ[Fr E] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1008,10 +1008,10 @@ theorem exists_compact_cover (H : Matrix (Fin n) (Fin n) E) (hnd : Formalism.Mai
     ∃ C : Set (GL (Fin n) (Af E)), IsCompact C ∧
       ∀ g ∈ UJ (conjFin (cc E)) (H.map (algebraMap E (Af E))),
         ∃ γ ∈ UJ ((sg E : E →ₐ[Fr E] E) : E →+* E) H, ∃ k ∈ C, g = ratF E n γ * k := by
-  haveI := GlobalTheory.Mass.topGroup_fin (sg E) H
+  have := GlobalTheory.Mass.topGroup_fin (sg E) H
   have hK := GlobalTheory.Mass.isCompact_stdLevel (sg E) H hnd.2
   have hf := GlobalTheory.Mass.finiteClasses_unitary isCMExt hnd hd hK (GlobalTheory.Mass.isOpen_stdLevel (sg E) H)
-  haveI := hf.1
+  have := hf.1
   refine ⟨⋃ q : ClassSet (GlobalTheory.Mass.ratIn (AFr E) (sg E) H) (GlobalTheory.Mass.stdLevel (sg E) H),
     toGLH H '' ((fun k => Quotient.out q * k) '' (GlobalTheory.Mass.stdLevel (sg E) H : Set (HH H))),
     isCompact_iUnion fun q => (hK.image (continuous_const.mul continuous_id)).image (continuous_toGLH H), fun g hg => ?_⟩
@@ -1027,7 +1027,7 @@ theorem exists_compact_cover (H : Matrix (Fin n) (Fin n) E) (hnd : Formalism.Mai
 
 omit [IsCMField E] in
 theorem algebraMap_injective (E : Type) [Field E] [NumberField E] : Function.Injective (algebraMap E (Af E)) := by
-  haveI : Nontrivial (Af E) := by
+  have : Nontrivial (Af E) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     exact (Formalism.UG.evalV E ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩).toRingHom.domain_nontrivial
@@ -1038,7 +1038,7 @@ theorem finite_rat_coset (H : Matrix (Fin n) (Fin n) E) (hnd : Formalism.MainNot
     {t : HH H | t ∈ GlobalTheory.Mass.ratIn (AFr E) (sg E) H ∧ g⁻¹ * t ∈ GlobalTheory.Mass.stdLevel (sg E) H}.Finite := by
   have hK := GlobalTheory.Mass.isCompact_stdLevel (sg E) H hnd.2
   have hf := GlobalTheory.Mass.finiteClasses_unitary isCMExt hnd hd hK (GlobalTheory.Mass.isOpen_stdLevel (sg E) H)
-  haveI := hf.2 1
+  have := hf.2 1
   have h0 : (Subtype.val '' stabAt (GlobalTheory.Mass.ratIn (AFr E) (sg E) H) (GlobalTheory.Mass.stdLevel (sg E) H) 1).Finite :=
     (Set.toFinite _).image _
   by_cases hne : ∃ t₀ : HH H, t₀ ∈ GlobalTheory.Mass.ratIn (AFr E) (sg E) H ∧ g⁻¹ * t₀ ∈ GlobalTheory.Mass.stdLevel (sg E) H
@@ -1054,9 +1054,9 @@ theorem finite_rat_coset (H : Matrix (Fin n) (Fin n) E) (hnd : Formalism.MainNot
 theorem finite_rat_compact (H : Matrix (Fin n) (Fin n) E) (hnd : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsHermND (sg E) H)
     (hd : IsTotDef (sg E) H) (X : Set (GL (Fin n) (Af E))) (hX : IsCompact X) :
     {γ : GL (Fin n) E | γ ∈ UJ ((sg E : E →ₐ[Fr E] E) : E →+* E) H ∧ ratF E n γ ∈ X}.Finite := by
-  haveI := GlobalTheory.Mass.topGroup_fin (sg E) H
-  haveI : Module.Finite (Fr E) E := Module.Finite.of_restrictScalars_finite ℚ (Fr E) E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField (Fr E)
+  have := GlobalTheory.Mass.topGroup_fin (sg E) H
+  have : Module.Finite (Fr E) E := Module.Finite.of_restrictScalars_finite ℚ (Fr E) E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField (Fr E)
   let D : Set (Af E) := ⋃ i, ⋃ j, (fun x : GL (Fin n) (Af E) => x.val i j) '' X
   have hD : IsCompact D := isCompact_iUnion fun i => isCompact_iUnion fun j =>
     hX.image ((Units.continuous_val.matrix_elem i j))
@@ -1124,7 +1124,7 @@ theorem selberg {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   let rep : G → G := fun f => if h : ∃ γ ∈ Γ, γ⁻¹ * n₀ * γ = f then h.choose else 1
   have hrep : ∀ f, (∃ γ ∈ Γ, γ⁻¹ * n₀ * γ = f) → rep f ∈ Γ ∧ (rep f)⁻¹ * n₀ * rep f = f := by
     intro f h
-    simp only [rep, dif_pos h]
+    simp only [rep, dite_eq_left h]
     exact h.choose_spec
   refine ⟨⋃ f ∈ (Γ : Set G) ∩ _, (fun c => rep f * c) '' C, hF.isCompact_biUnion fun f _ =>
     hC.image (by fun_prop), ?_⟩
@@ -1151,7 +1151,7 @@ abbrev gam1 (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (δ : G
   (ratF E n).range ⊓ twCent (thF E n) (ratF E n δ)
 
 theorem algebraMap_inj (E : Type) [Field E] [NumberField E] : Function.Injective (algebraMap E (Af E)) := by
-  haveI : Nontrivial (Af E) := by
+  have : Nontrivial (Af E) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     exact (Formalism.UG.evalV E ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩).toRingHom.domain_nontrivial
@@ -1229,7 +1229,7 @@ theorem mem_gam {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ} (
 
 theorem ratFin : PositivityTheory.Rg.BcB.G8.Fin.RatFin := by
   intro E _ _ _ _ a b δ₁ δ₂ h₁ h₂
-  haveI : T2Space (Af E) :=
+  have : T2Space (Af E) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 E) => v.adicCompletion E)
       (fun v => (v.adicCompletionIntegers E : Set (v.adicCompletion E))) Filter.cofinite))
   obtain ⟨⟨C₁, hC₁, hc₁⟩, hf₁, ht₁⟩ := factor E a δ₁ h₁
@@ -1275,7 +1275,7 @@ theorem ratFin : PositivityTheory.Rg.BcB.G8.Fin.RatFin := by
     obtain ⟨k, hk, e⟩ := isOfFinOrder_iff_pow_eq_one.1 hfo
     have e' : p.1 ^ k = 1 ∧ p.2 ^ k = 1 := Prod.ext_iff.1 e
     exact ⟨⟨hp'.1, isOfFinOrder_iff_pow_eq_one.2 ⟨k, hk, e'.1⟩⟩, hp'.2, isOfFinOrder_iff_pow_eq_one.2 ⟨k, hk, e'.2⟩⟩
-  haveI : T2Space (Gf E a b) := by
+  have : T2Space (Gf E a b) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
   have hmain := _root_.GlobalTheory.CompanionTheory.CountClosedComm.main (Gf E a b) ((Kf E a).prod (Kf E b)) T (gam δ₁ δ₂)

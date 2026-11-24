@@ -95,7 +95,7 @@ theorem det_corner_blocks_ne {K : Type} [Field K] {r : ℕ} (a d : K) (B C : Mat
     exact zero_ne_one this
   rw [← hJ, Matrix.det_mul]
   refine mul_ne_zero ?_ hJd
-  haveI : Invertible B := Matrix.invertibleOfIsUnitDet B (isUnit_iff_ne_zero.mpr hB)
+  have : Invertible B := Matrix.invertibleOfIsUnitDet B (isUnit_iff_ne_zero.mpr hB)
   rw [Matrix.det_fromBlocks₁₁, Matrix.invOf_eq_nonsing_inv, corner_mul]
   have hsub : C - (Matrix.of fun i j => cor r i j (d * B⁻¹ (Fin.last r) (Fin.last r) * a)) =
       C + Matrix.of fun i j => cor r i j (-(d * B⁻¹ (Fin.last r) (Fin.last r) * a)) := by

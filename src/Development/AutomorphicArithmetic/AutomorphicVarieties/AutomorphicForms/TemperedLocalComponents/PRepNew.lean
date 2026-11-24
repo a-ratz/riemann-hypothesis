@@ -135,10 +135,10 @@ private theorem arFact_agree (e e' a b : ℕ → ℂ) (ha : Rec e a) (hb : Rec e
       have hlt' : t < p * t := by have := hpp.two_le; nlinarith
       have hbt := ih t (by nlinarith) ht
         (fun q hq hqd => hsub q hq (dvd_mul_of_dvd_right hqd p))
-      rw [if_pos (dvd_mul_right p t), hdt] at h1 h2
+      rw [ite_eq_left (dvd_mul_right p t), hdt] at h1 h2
       rw [hbt, hb', hp p hpp, ← hep] at h2
       linear_combination h2 - h1
-    · rw [if_neg hpd, mul_zero, add_zero] at h1 h2
+    · rw [ite_eq_right hpd, mul_zero, add_zero] at h1 h2
       rw [hb', hp p hpp] at h2
       rw [h2, h1]
 
@@ -165,8 +165,8 @@ theorem UpperTheory.V.Af.Rs.arFact :
       have ht : 1 ≤ t := Nat.pos_of_ne_zero (by rintro rfl; simp at hn'')
       have hdt : p * t / p = t := Nat.mul_div_cancel_left t hpp.pos
       have h2 := hb.2 p hpp (p * t) hn''
-      rw [if_pos (dvd_mul_right p t), hdt, hap, zero_mul] at h1
-      rw [if_pos (dvd_mul_right p t), hdt, hbp, zero_mul] at h2
+      rw [ite_eq_left (dvd_mul_right p t), hdt, hap, zero_mul] at h1
+      rw [ite_eq_left (dvd_mul_right p t), hdt, hbp, zero_mul] at h2
       have hA : a (p * (p * t)) = -(e p * a t) := by linear_combination h1
       have hB : b (p * (p * t)) = -(e' p * b t) := by linear_combination h2
       have hat : a t ≠ 0 := by
@@ -186,7 +186,7 @@ theorem UpperTheory.V.Af.Rs.arFact :
           _ = ‖a n₁‖ * ((p * m : ℕ) : ℝ) ^ r := by push_cast; ring
     · exfalso
       apply han
-      rw [if_neg hpd, mul_zero, add_zero, hap, zero_mul] at h1
+      rw [ite_eq_right hpd, mul_zero, add_zero, hap, zero_mul] at h1
       exact h1
 end -- clump:auto
 end -- clump:auto
@@ -203,10 +203,10 @@ theorem UpperTheory.V.Af.Rs.charEq2 :
   rw [Filter.eventually_cofinite] at hev
   obtain ⟨B, hB⟩ := hev.bddAbove
   obtain ⟨L, hL⟩ : ∃ L, L = N * M * B.factorial := ⟨_, rfl⟩
-  haveI : NeZero L := ⟨by
+  have : NeZero L := ⟨by
     rw [hL]
     exact Nat.mul_ne_zero (Nat.mul_ne_zero (NeZero.ne N) (NeZero.ne M)) (Nat.factorial_ne_zero B)⟩
-  haveI : NeZero (L * L) := ⟨Nat.mul_ne_zero (NeZero.ne L) (NeZero.ne L)⟩
+  have : NeZero (L * L) := ⟨Nat.mul_ne_zero (NeZero.ne L) (NeZero.ne L)⟩
   have hNL : N ∣ L := ⟨M * B.factorial, by rw [hL]; ring⟩
   have hML : M ∣ L := ⟨N * B.factorial, by rw [hL]; ring⟩
   obtain ⟨χ1, g1, hg1⟩ := hDep k N L hk hNL χ g
@@ -215,13 +215,13 @@ theorem UpperTheory.V.Af.Rs.charEq2 :
       (starRingEnd ℂ) (h.a p) * ψ p = h.a p) := by
     intro p hp hpL
     by_contra hbad
-    have hle : p ≤ B := hB (by simp only [Set.mem_setOf_eq]; exact fun H => hbad (H hp))
+    have hle : p ≤ B := hB (by simp only [Set.mem_ofPred_eq]; exact fun H => hbad (H hp))
     exact hpL (hL ▸ Dvd.dvd.mul_left (Nat.dvd_factorial hp.pos hle) _)
   have hcore := hCore k (L * L) hk χ1 χ2 g1 h1 ?_ ?_
   · rw [Filter.eventually_cofinite]
     apply ((Finset.range (L + 1)).finite_toSet).subset
     intro p hp
-    simp only [Set.mem_setOf_eq] at hp
+    simp only [Set.mem_ofPred_eq] at hp
     by_cases hpL : p ∣ L
     · simp only [Finset.coe_range, Set.mem_Iio]
       exact Nat.lt_succ_of_le (Nat.le_of_dvd (Nat.pos_of_ne_zero (NeZero.ne L)) hpL)
@@ -314,7 +314,7 @@ theorem UpperTheory.V.Af.Rs.clsEx :
     ψ (h.choose.1 : ZMod L) * F (h.choose.2 • z) else 0, ?_⟩
   intro n γ z
   have h : ∃ p : ℕ × SL(2, ℤ), cls L ((p.1 : ℤ) • row p.2) = cls L ((n : ℤ) • row γ) := ⟨(n, γ), rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact clsEx_key L ψ F hF n _ γ _ h.choose_spec z
 end -- clump:auto
 end -- clump:auto
@@ -706,7 +706,7 @@ private theorem bounded_petersson_weight (H : ℍ → ℂ) (B a : ℝ) (ha : 0 <
       mul_le_mul (hB z) (pow_le_pow_left₀ ht.le h 3) (by positivity) hB0
     linarith
   · have hz := hA z ((le_max_left _ _).trans h)
-    simp only [Set.mem_setOf_eq] at hz
+    simp only [Set.mem_ofPred_eq] at hz
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at hz
     have hexp : (a * z.im) ^ 3 / 6 ≤ Real.exp (a * z.im) := by
       have := Real.pow_div_factorial_le_exp (a * z.im) (by positivity) 3
@@ -1077,7 +1077,7 @@ private lemma vol_strip (hV : VolMap) :
   have h2 : (fun p : ℝ × ℝ => pt p.1 p.2) ⁻¹' strip ∩ univ ×ˢ Ioi 0 = Ico 0 1 ×ˢ Ioi 0 := by
     ext ⟨x, y⟩
     simp only [mem_inter_iff, mem_preimage, mem_prod, mem_univ, true_and, mem_Ioi, mem_Ico, strip,
-      mem_setOf_eq]
+      mem_ofPred_eq]
     constructor
     · rintro ⟨h, hy⟩
       rw [pt_re x y hy] at h
@@ -1157,7 +1157,7 @@ private lemma UpperTheory.V.Af.Rs.stripInt_maj (A B s : ℝ) (hs : 1 < s) :
     refine h1'.congr_fun ?_ measurableSet_Ioc
     intro y hy
     have hy0 : 0 < y := hy.1
-    simp only [if_pos hy.2]
+    simp only [ite_eq_left hy.2]
     rw [Real.rpow_sub hy0, Real.rpow_two, mul_div_assoc]
   · have h2 : IntegrableOn (fun y : ℝ => y ^ (-2 : ℝ)) (Ioi 1) :=
       integrableOn_Ioi_rpow_of_lt (by norm_num) zero_lt_one
@@ -1166,7 +1166,7 @@ private lemma UpperTheory.V.Af.Rs.stripInt_maj (A B s : ℝ) (hs : 1 < s) :
     intro y hy
     have hy1 : (1:ℝ) < y := hy
     have hy0 : 0 < y := by linarith
-    simp only [if_neg (not_le.mpr hy1)]
+    simp only [ite_eq_right (not_le.mpr hy1)]
     rw [Real.rpow_neg hy0.le, Real.rpow_two, div_eq_mul_inv]
 
 theorem UpperTheory.V.Af.Rs.stripInt :
@@ -1320,8 +1320,8 @@ theorem UpperTheory.V.Af.Rs.unfM :
   unfold UpperTheory.V.Af.Rs.FdFin at hFin
   unfold UpperTheory.V.Af.Rs.FdCount at hCount
   obtain ⟨hfdm, -⟩ := hFin
-  haveI : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
-  haveI : Countable SL(2, ℤ) :=
+  have : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
+  have : Countable SL(2, ℤ) :=
     inferInstanceAs (Countable {A : Matrix (Fin 2) (Fin 2) ℤ // A.det = 1})
   ext s hs
   rw [Measure.sum_apply _ hs]
@@ -1356,7 +1356,7 @@ theorem UpperTheory.V.Af.Rs.unfM :
     fun z => (Equiv.inv SL(2, ℤ)).tsum_eq
       (fun γ => ModularGroup.fd.indicator (fun _ => (1 : ℝ≥0∞)) (γ • z))
   simp_rw [hre]
-  rw [lintegral_congr_ae (ae_restrict_of_ae hCount), setLIntegral_const, Measure.smul_apply]
+  rw [lintegral_congr_ae (ae_restrict_of_ae hCount), setLIntegral_const, smul_apply]
   first
     | rw [two_mul, two_nsmul]
     | rw [smul_eq_mul]
@@ -1502,7 +1502,7 @@ theorem UpperTheory.V.Af.Rn.noLow :
     UpperTheory.V.Sd.Wc.CentChar → UpperTheory.V.Af.Rn.NoLow := by
   intro hC π hπ
   obtain ⟨N, ψ, ν, hN, hν, φ, hφ, h0, hlow, hfix⟩ := levelVec 0 π hπ
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   obtain ⟨ω, hω, -⟩ := hC ℚ (π.twist ν)
   have hc := fun z g => hω z φ hφ g
   obtain ⟨χ, hχ⟩ := charOf N hN ω φ h0 hlow.one hfix hc

@@ -231,7 +231,7 @@ theorem setIntegral_eq_zero (L : AddSubgroup (Ψ → ℝ)) [Countable L] {D : Se
     (hA : Summable fun i => ‖A i‖) (ν : ι → Ψ → ℝ)
     (hs : ∀ s, HasSum (fun i => A i * expo (ν i) s) (f s)) (hν : ∀ i, A i ≠ 0 → ν i ≠ 0) :
     ∫ s in D, f s = 0 := by
-  haveI : IsFiniteMeasure (volume.restrict D) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure (volume.restrict D) := ⟨by simpa using hfin⟩
   obtain ⟨v, hv⟩ := exists_expo_ne_one ν
   have hint : ∀ i (c : ℂ), Integrable (fun s => c * expo (ν i) s) (volume.restrict D) := fun i c =>
     Integrable.of_bound (continuous_const.mul (continuous_expo _)).aestronglyMeasurable ‖c‖
@@ -278,7 +278,7 @@ theorem fj_eq_zero_of_hasSum_ne (X : Data E r) (la : Wt X.Ψ r) (ξ : Fin r → 
     (hper : ∀ p ∈ X.periods la, ∀ s : X.Ψ → ℝ,
       Q (X.flow ξ (fun τ => ((s + p) τ : ℂ)) x) = Q (X.flow ξ (fun τ => (s τ : ℂ)) x))
     (μ : X.Ψ → ℝ) (hν : ∀ i, A i ≠ 0 → ν i ≠ μ) : X.fj la ξ μ Q x = 0 := by
-  haveI := PeriodLatticeCountable.periods_countable X la
+  have := PeriodLatticeCountable.periods_countable X la
   unfold Data.fj
   split_ifs with hf h
   · obtain ⟨-, hD, -, hfin⟩ := h.choose_spec
@@ -326,7 +326,7 @@ theorem fj_eq_zero_of_hasSum_ne (X : Data E r) (la : Wt X.Ψ r) (ξ : Fin r → 
 theorem firstMinimum_eq_zero_of_rank_zero (X : Data E 0) (x : Frame X.Ψ 0) : X.la1 x = 0 := by
   have h : {t | ∃ v ∈ X.Λ, v ≠ 0 ∧ t = ∑ τ, X.c τ * X.maj x τ (Data.emb τ.1 v)} = ∅ := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     rintro ⟨v, -, hv, -⟩
     exact hv (Subsingleton.elim _ _)
   unfold Data.la1 Data.firstMinimumSq
@@ -406,7 +406,7 @@ theorem bounded_of_moderate_nonneg (X : Data E r) (la : Wt X.Ψ r) (P : Frame X.
       by_contra hf
       apply hne
       unfold Data.fj
-      rw [if_neg hf]
+      rw [ite_eq_right hf]
     refine ⟨⟨h0, hfreq⟩, ?_⟩
     have hgt : 0 < ∑ τ, ν τ := by
       refine lt_of_le_of_ne (Finset.sum_nonneg fun τ _ => h0 τ) fun hz => hne ?_

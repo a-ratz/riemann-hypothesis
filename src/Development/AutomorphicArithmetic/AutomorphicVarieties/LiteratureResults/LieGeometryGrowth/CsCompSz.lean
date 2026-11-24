@@ -53,7 +53,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.compSz :
   intro g f x b hf hg hc hb i hi
   have hb0 : 0 ≤ b := hb.nonneg
   have hk : ((k : ℕ) : WithTop ℕ∞) ≤ ∞ := by exact_mod_cast le_top
-  have hne : ((k : ℕ) : WithTop ℕ∞) ≠ ∞ := by exact_mod_cast ENat.coe_ne_top k
+  have hne : ((k : ℕ) : WithTop ℕ∞) ≠ ∞ := by exact_mod_cast ENat.natCast_ne_top k
   have hf' := (hf.of_le hk).eventually hne
   have hg' := (hg.of_le hk).eventually hne
   obtain ⟨t, ht, hto, hxt⟩ := eventually_nhds_iff.1 hg'

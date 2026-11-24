@@ -112,21 +112,21 @@ theorem Em_mulVec {m h : ℕ} (w : Fin h → R) (j : Fin m) :
   · rw [Finset.sum_eq_single ⟨j, hj⟩]
     · simp
     · intro b _ hb
-      rw [if_neg (fun e => hb (Fin.ext e)), zero_mul]
+      rw [ite_eq_right (fun e => hb (Fin.ext e)), zero_mul]
     · intro hn
       exact absurd (Finset.mem_univ _) hn
   · apply Finset.sum_eq_zero
     intro b _
     have := b.isLt
-    rw [if_neg (by omega), zero_mul]
+    rw [ite_eq_right (by omega), zero_mul]
 
 theorem Em_castLE {m h : ℕ} (hmh : m ≤ h) : (Em R m h).submatrix id (Fin.castLE hmh) = 1 := by
   ext j k
-  simp only [Em, Matrix.submatrix_apply, Matrix.of_apply, id_eq, Fin.coe_castLE, Matrix.one_apply]
+  simp only [Em, Matrix.submatrix_apply, Matrix.of_apply, id_eq, Fin.val_castLE, Matrix.one_apply]
   by_cases hjk : j = k
   · subst hjk
     simp
-  · rw [if_neg (fun e => hjk (Fin.ext e.symm)), if_neg hjk]
+  · rw [ite_eq_right (fun e => hjk (Fin.ext e.symm)), ite_eq_right hjk]
 
 end general
 

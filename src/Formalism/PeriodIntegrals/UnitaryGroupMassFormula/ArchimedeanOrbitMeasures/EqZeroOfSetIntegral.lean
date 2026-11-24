@@ -69,7 +69,7 @@ theorem ae_fib (hfib : IsFibreFamily μ f ι U ν B fib) {f' : V → X}
     ∀ᵐ v ∂(fib b), f' v = b := by
   rw [ae_iff]
   refine measure_mono_null (fun v hv => ?_) (hfib.1 b)
-  simp only [mem_setOf_eq] at hv
+  simp only [mem_ofPred_eq] at hv
   simp only [mem_compl_iff, mem_inter_iff, mem_preimage, mem_singleton_iff, not_and]
   intro h1 _
   exact hv (hι (by rw [← hff', h1]))
@@ -220,10 +220,10 @@ variable {V : Type} [TopologicalSpace V] [T2Space V] [LocallyCompactSpace V]
 
 theorem cover (U : Set V) (hU : IsOpen U) : ∃ W : ℕ → Set V,
     (∀ n, IsOpen (W n) ∧ IsCompact (closure (W n)) ∧ closure (W n) ⊆ U) ∧ ⋃ n, W n = U := by
-  haveI : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
   let E := CompactExhaustion.choice U
   have h : ∀ n, ∃ W, IsOpen W ∧ Subtype.val '' E n ⊆ W ∧ closure W ⊆ U ∧ IsCompact (closure W) :=
-    fun n => exists_open_between_and_isCompact_closure ((E.isCompact n).image continuous_subtype_val)
+    fun n => exists_open_between_and_isCompact_closure ((E.isCompact n).image continuous_subtypeVal)
       hU (by rintro _ ⟨u, -, rfl⟩; exact u.2)
   choose W hW1 hW2 hW3 hW4 using h
   refine ⟨W, fun n => ⟨hW1 n, hW4 n, hW3 n⟩,
@@ -236,12 +236,12 @@ theorem approx (O : Set V) (hO : IsOpen O) : ∃ φ : ℕ → V → ℝ,
     (∀ k, Continuous (φ k) ∧ HasCompactSupport (φ k) ∧ tsupport (φ k) ⊆ O) ∧
     (∀ k x, 0 ≤ φ k x ∧ φ k x ≤ 1) ∧ (∀ x, Monotone fun k => φ k x) ∧
     ∀ x, ⨆ k, ENNReal.ofReal (φ k x) = O.indicator 1 x := by
-  haveI : LocallyCompactSpace O := hO.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace O := hO.isOpenEmbedding_subtypeVal.locallyCompactSpace
   let E := CompactExhaustion.choice O
   have h : ∀ k, ∃ g : C(V, ℝ), EqOn g 1 (Subtype.val '' E k) ∧ IsCompact (tsupport g) ∧
       tsupport g ⊆ Subtype.val '' interior (E (k + 1)) ∧ ∀ x, g x ∈ Icc (0 : ℝ) 1 := fun k =>
-    exists_continuousMap_one_of_isCompact_subset_isOpen ((E.isCompact k).image continuous_subtype_val)
-      (hO.isOpenMap_subtype_val _ isOpen_interior) (image_mono (E.subset_interior_succ k))
+    exists_continuousMap_one_of_isCompact_subset_isOpen ((E.isCompact k).image continuous_subtypeVal)
+      (hO.isOpenMap_subtypeVal _ isOpen_interior) (image_mono (E.subset_interior_succ k))
   choose g hg1 hgc hgs hg01 using h
   have hsubO : ∀ k, tsupport (g k) ⊆ O :=
     fun k => (hgs k).trans (by rintro _ ⟨u, -, rfl⟩; exact u.2)

@@ -147,7 +147,7 @@ theorem exists_pole (w : Pl D.host.E) : ∃ u : D.host.E, ¬ IsIntegral ℤ u �
   · obtain ⟨p, hp⟩ := w.intValuation_exists_uniformizer
     have h2 := h1 p ((w.intValuation_lt_one_iff_mem p).1 (by
       rw [hp, ← WithZero.exp_zero, WithZero.exp_lt_exp]; omega)) w
-    rw [hp, WithZero.exp_neg, mul_inv_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), one_mul] at h2
+    rw [hp, WithZero.exp_neg, mul_inv_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), one_mul] at h2
     exact h2
   · obtain ⟨p, hp, hp'⟩ := Set.not_subset.1 fun h : (w.asIdeal : Set (𝓞 D.host.E)) ⊆ Q.asIdeal =>
       hQ (GlobalTheory.IdemSupport.eq_of_le h).symm
@@ -376,7 +376,7 @@ theorem isGood_of_notMem {μ₀ : T} (hL : L.Is μ₀) {G : GridData L sc} (W : 
         refine ⟨fun h => l2 fun x hx hx' => by
           rw [← hun h x hx, hμ.tame w x hx hx', hL.xi_tame t w x hx hx', one_mul], condLE_loc l1 ?_⟩
         have := (depthAt_w G a).2
-        rw [← b, Places.depth, if_neg fun e : _ = G.pl.v0 => G.ch.basePlace_not_mem_chiGridBadPlaces (e ▸ a1)] at this
+        rw [← b, Places.depth, ite_eq_right fun e : _ = G.pl.v0 => G.ch.basePlace_not_mem_chiGridBadPlaces (e ▸ a1)] at this
         exact this.ge
     · have hχ := G.ch.unr _ i1 i2 w a
       refine ⟨fun h => (hL.Q_ram t w).2 (.inl c) fun x hx => ?_, condLE_of_isUnram _ _ (isUnram_loc.2 hχ)⟩

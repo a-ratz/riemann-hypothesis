@@ -97,7 +97,7 @@ theorem exists_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     apply hle
     have : (1 : E) ∈ ((I' * I'⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) := by
       rw [hone]; exact (FractionalIdeal.mem_one_iff _).mpr ⟨1, map_one _⟩
-    rwa [FractionalIdeal.coe_mul] at this
+    rwa [FractionalIdeal.coeToSubmodule_mul] at this
   obtain ⟨y₀, hy₀, hL'⟩ := h1
   exact ⟨y₀, hy₀, fun z hz => hL' _ (hmemI z hz)⟩
 

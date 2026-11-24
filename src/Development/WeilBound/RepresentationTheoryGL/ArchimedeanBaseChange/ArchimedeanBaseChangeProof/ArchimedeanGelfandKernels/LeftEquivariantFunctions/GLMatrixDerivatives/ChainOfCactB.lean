@@ -139,8 +139,8 @@ theorem hasFDerivAt_int {W : Type} [NormedAddCommGroup W] [NormedSpace ℝ W] [F
     {Φ : H × Z → W} (hO : IsOpen O) (hOZ : IsOpen OZ) (hιc : Continuous ι) (hι : ∀ y, ι y ∈ OZ)
     (hΦ : ContDiffOn ℝ ∞ Φ (O ×ˢ OZ)) (hS : LocSupp O ι Φ) {x₀ : H} (hx₀ : x₀ ∈ O) :
     HasFDerivAt (fun x => ∫ y : Γ, Φ (x, ι y) ∂μ) (∫ y : Γ, pd Φ (x₀, ι y) ∂μ) x₀ := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℝ W
-  haveI : ProperSpace H := FiniteDimensional.proper ℝ H
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℝ W
+  have : ProperSpace H := FiniteDimensional.proper ℝ H
   obtain ⟨U, hUo, hxU, hUO, K, hK, hKz⟩ := hS x₀ hx₀
   obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.1 hUo x₀ hxU
   have hcb : closedBall x₀ (r / 2) ⊆ U := (closedBall_subset_ball (by linarith)).trans hrU
@@ -278,7 +278,7 @@ theorem locSupp_Psi {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {k : M
   intro x₀ hx₀
   obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.1 isOpen_GLs x₀ hx₀
   have hcb : closedBall x₀ (r / 2) ⊆ GLs n := (closedBall_subset_ball (by linarith)).trans hrU
-  haveI : ProperSpace (Mat n) := FiniteDimensional.proper ℝ (Mat n)
+  have : ProperSpace (Mat n) := FiniteDimensional.proper ℝ (Mat n)
   obtain ⟨M, hM⟩ := (isCompact_closedBall x₀ (r / 2)).exists_bound_of_continuousOn
     (contDiffOn_lg.continuousOn.mono hcb)
   refine ⟨ball x₀ (r / 2), isOpen_ball, mem_ball_self (by linarith), ball_subset_closedBall.trans hcb,

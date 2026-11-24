@@ -119,7 +119,7 @@ theorem exists_top_frac {A K G : Type} [CommRing A] [IsDomain A] [ValuationRing 
     (ho : ∀ (x a : A) (g₀ : G), a ≠ 0 → ∀ᶠ g in 𝓝 g₀, ¬ (τ g x - τ g₀ x ∣ a)) :
     ∃ t : TopologicalSpace K, letI := t
       T2Space K ∧ IsTopologicalRing K ∧ Continuous fun p : G × K => σ p.1 p.2 := by
-  letI V : Valued K (ValuationRing.ValueGroup A K) := Valued.mk' (ValuationRing.valuation A K)
+  let V : Valued K (ValuationRing.ValueGroup A K) := Valued.mk' (ValuationRing.valuation A K)
   have hle : ∀ x y : K, Valued.v x ≤ Valued.v y ↔ ∃ c : A, algebraMap A K c * y = x := by
     intro x y
     change (∃ c : A, c • y = x) ↔ _
@@ -181,7 +181,7 @@ theorem continuous_peval [IsTopologicalRing R] {k : ℕ} (φ : MvPolynomial (Fin
 theorem isTopologicalRing_witt [IsTopologicalRing R] :
     letI := wittTop p R
     IsTopologicalRing (WittVector p R) := by
-  letI := wittTop p R
+  let := wittTop p R
   have hc : Continuous (WittVector.coeff : WittVector p R → ℕ → R) := continuous_induced_dom
   have h2 : Continuous fun x : WittVector p R × WittVector p R => ![x.1.coeff, x.2.coeff] := by
     refine continuous_pi fun i => ?_
@@ -206,7 +206,7 @@ theorem isTopologicalRing_witt [IsTopologicalRing R] :
 theorem t2Space_wittVector_product [T2Space R] :
     letI := wittTop p R
     T2Space (WittVector p R) := by
-  letI := wittTop p R
+  let := wittTop p R
   exact T2Space.of_injective_continuous (f := (WittVector.coeff : WittVector p R → ℕ → R))
     (fun x y h => WittVector.ext fun n => congrFun h n) continuous_induced_dom
 
@@ -214,7 +214,7 @@ theorem continuous_map_witt {G : Type} [TopologicalSpace G] (σ : G → (R →+*
     (h : Continuous fun q : G × R => σ q.1 q.2) :
     letI := wittTop p R
     Continuous fun q : G × WittVector p R => WittVector.map (σ q.1) q.2 := by
-  letI := wittTop p R
+  let := wittTop p R
   have hc : Continuous (WittVector.coeff : WittVector p R → ℕ → R) := continuous_induced_dom
   refine continuous_induced_rng.2 (continuous_pi fun n => ?_)
   simp only [Function.comp_apply, WittVector.map_coeff]
@@ -223,7 +223,7 @@ theorem continuous_map_witt {G : Type} [TopologicalSpace G] (σ : G → (R →+*
 theorem continuous_padicInt_witt [CharP R p] (f : ℤ_[p] →+* WittVector p R) :
     letI := wittTop p R
     Continuous f := by
-  letI := wittTop p R
+  let := wittTop p R
   refine continuous_induced_rng.2 (continuous_pi fun n => ?_)
   refine IsLocallyConstant.continuous ((IsLocallyConstant.iff_eventually_eq _).2 fun x => ?_)
   have hp : (0 : ℝ) < (p : ℝ) ^ (-((n + 1 : ℕ) : ℤ)) :=
@@ -295,15 +295,15 @@ theorem exists_top_tensor [TopologicalSpace R] [TopologicalSpace W] [IsTopologic
       Continuous (fun q : G × ((O ⊗[R] W) ⊗[O] T) => TensorProduct.map
         (Algebra.TensorProduct.map (AlgHom.id O O) (σ q.1)).toLinearMap (ρ q.1) q.2) ∧
       Topology.IsEmbedding (fun t : T => (1 : O ⊗[R] W) ⊗ₜ[O] t) := by
-  letI τ : TopologicalSpace ((O ⊗[R] W) ⊗[O] T) :=
+  let τ : TopologicalSpace ((O ⊗[R] W) ⊗[O] T) :=
     TopologicalSpace.induced (coords W O b) inferInstance
   have h0 : Continuous (coords W O b) := continuous_induced_dom
-  haveI h2 : T2Space ((O ⊗[R] W) ⊗[O] T) :=
+  have h2 : T2Space ((O ⊗[R] W) ⊗[O] T) :=
     T2Space.of_injective_continuous (coords W O b).injective h0
   have h1 : ∀ (t : T) i, coords W O b ((1 : O ⊗[R] W) ⊗ₜ[O] t) i = algebraMap R W (b.repr t i) := by
     intro t i
     rw [Algebra.TensorProduct.one_def, coords_tmul, one_smul, Algebra.algebraMap_eq_smul_one]
-  refine ⟨τ, h2, Topology.IsInducing.topologicalAddGroup (coords W O b) ⟨rfl⟩, ?_, ?_⟩
+  refine ⟨τ, h2, IsInducing.isTopologicalAddGroup (coords W O b) ⟨rfl⟩, ?_, ?_⟩
   · refine continuous_induced_rng.2 (continuous_pi fun i => ?_)
     simp only [Function.comp_apply, coords_map]
     refine continuous_finsetSum _ fun j _ => ?_
@@ -371,7 +371,7 @@ theorem exists_top_Cb (AI : LocAinf l P) :
     ∃ t : TopologicalSpace (Cb l), letI := t
       T2Space (Cb l) ∧ IsTopologicalRing (Cb l) ∧
         Continuous fun q : GQ l × Cb l => autCb l (AI.actT q.1) q.2 := by
-  haveI := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).2
+  have := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).2
   refine exists_top_frac (fun g => AI.actT g) (fun g => autCb l (AI.actT g))
     (fun g a => autCb_alg l _ a) fun x a g₀ ha => ?_
   obtain ⟨n, hn⟩ : ∃ n, PreTilt.coeff n a ≠ 0 := by
@@ -403,8 +403,8 @@ theorem exists_top_lat {G L O W : Type} [Group G] [TopologicalSpace G] [Field L]
         TWact (Algebra.TensorProduct.map (AlgHom.id O O) (σ q.1)) T q.1 q.2) ∧
       Topology.IsEmbedding (fun t : ↥T.L.T => (1 : O ⊗[ℤ_[l]] W) ⊗ₜ[O] t) ∧
       CompactSpace ↥T.L.T ∧ ∀ U ∈ nhds (0 : ↥T.L.T), ∃ k : ℕ, ∀ t : ↥T.L.T, l ^ k • t ∈ U := by
-  letI := Module.compHom ↥T.L.T (algebraMap ℤ_[l] O)
-  haveI : IsScalarTower ℤ_[l] O ↥T.L.T := ⟨fun c a x => by
+  let := Module.compHom ↥T.L.T (algebraMap ℤ_[l] O)
+  have : IsScalarTower ℤ_[l] O ↥T.L.T := ⟨fun c a x => by
     rw [Algebra.smul_def, mul_smul]; rfl⟩
   obtain ⟨d, ⟨b⟩⟩ := GlobalTheory.Cyc.exists_basis_lat (R := ℤ_[l]) T
   have hemb : Topology.IsInducing (algebraMap ℤ_[l] ℚ_[l]) := Topology.IsInducing.subtypeVal
@@ -412,20 +412,20 @@ theorem exists_top_lat {G L O W : Type} [Group G] [TopologicalSpace G] [Field L]
     intro i
     obtain ⟨φ, hφ⟩ := GlobalTheory.Cyc.exists_form_lat hc T b i
     have h1 : Continuous φ := GlobalTheory.Cyc.continuous_form_of_moduleTopology (L := L) φ
-    exact hemb.continuous_iff.2 ((h1.comp continuous_subtype_val).congr hφ)
+    exact hemb.continuous_iff.2 ((h1.comp continuous_subtypeVal).congr hφ)
   have hρ : ∀ i j, Continuous fun g : G => b.repr (T.actT g (b j)) i := fun i j =>
     hemb.continuous_iff.2 (GlobalTheory.Cyc.continuous_coord_lat hc T b (b j) i)
   have hs : ∀ t : ↥T.L.T, Continuous fun c : ℤ_[l] => c • t := by
     intro t
     refine continuous_induced_rng.2 ?_
-    haveI : ContinuousSMul L T.V := IsModuleTopology.toContinuousSMul _ _
+    have : ContinuousSMul L T.V := IsModuleTopology.toContinuousSMul _ _
     have h1 : Continuous fun c : ℤ_[l] =>
         algebraMap ℚ_[l] L (algebraMap ℤ_[l] ℚ_[l] c) • (t : T.V) :=
       ((continuous_algebraMap ℚ_[l] L).comp hemb.continuous).smul continuous_const
     refine h1.congr fun c => ?_
     rw [← hc, algebraMap_smul]
     rfl
-  haveI : ContinuousAdd ↥T.L.T := T.L.T.toAddSubmonoid.continuousAdd
+  have : ContinuousAdd ↥T.L.T := T.L.T.toAddSubmonoid.continuousAdd
   obtain ⟨hcpt, hU⟩ := compact_of_basis b hs
   obtain ⟨τ, a1, a2, a3, a4⟩ := exists_top_tensor (O := O) (W := W) b hb hW hi σ hσ
     (fun g => T.actT g) hρ
@@ -444,23 +444,23 @@ theorem exists_top_WCb (AI : LocAinf l P) :
 open GlobalTheory.HWL in
 theorem exists_weakTop : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)), ∃ τ : TopologicalSpace (TW (RW LL) T), letI := τ; T2Space (TW (RW LL) T) ∧ IsTopologicalAddGroup (TW (RW LL) T) ∧ Continuous (fun p : ↥(GK K) × TW (RW LL) T => TWact (AI.gRW LL (p.1 : GQ l)) T p.1 p.2) ∧ Topology.IsEmbedding (fun t : ↥T.L.T => (1 : RW LL) ⊗ₜ[↥(OL LL)] t) ∧ CompactSpace ↥T.L.T ∧ ∀ U ∈ nhds (0 : ↥T.L.T), ∃ k : ℕ, ∀ t : ↥T.L.T, l ^ k • t ∈ U := by
   intro l _ P AI K LL T
-  haveI := LL.2
-  haveI : Module.Free ℤ_[l] ↥(OL LL) :=
+  have := LL.2
+  have : Module.Free ℤ_[l] ↥(OL LL) :=
     (GlobalTheory.Per.integers_completeDVR l LL).elim fun _ h => h.2.2.2.1
-  haveI : Module.Finite ℤ_[l] ↥(OL LL) :=
+  have : Module.Finite ℤ_[l] ↥(OL LL) :=
     (GlobalTheory.Per.integers_completeDVR l LL).elim fun _ h => h.2.2.2.2.1
   have hc : ∀ c : ℤ_[l], algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) c) =
       algebraMap ℚ_[l] ↥LL.1 (algebraMap ℤ_[l] ℚ_[l] c) := fun c =>
     (IsScalarTower.algebraMap_apply ℤ_[l] ↥(OL LL) ↥LL.1 c).symm.trans
       (IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] ↥LL.1 c)
-  letI t : TopologicalSpace (WCb l) := (exists_top_WCb AI).choose
+  let t : TopologicalSpace (WCb l) := (exists_top_WCb AI).choose
   have ht := (exists_top_WCb AI).choose_spec
-  haveI : T2Space (WCb l) := ht.1
-  haveI : IsTopologicalRing (WCb l) := ht.2.1
+  have : T2Space (WCb l) := ht.1
+  have : IsTopologicalRing (WCb l) := ht.2.1
   have hW := ht.2.2.1
   have ha := ht.2.2.2
   have hp : Continuous fun q : ↥(GK K) × WCb l => (((q.1 : GQ l), q.2) : GQ l × WCb l) :=
-    (continuous_subtype_val.comp continuous_fst).prodMk continuous_snd
+    (continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd
   have hσ := ha.comp hp
   have hi : Function.Injective (algebraMap ℤ_[l] (WCb l)) := zlW_injective (Cb l)
   have key := exists_top_lat (G := ↥(GK K)) (L := ↥LL.1) (O := ↥(OL LL)) (W := WCb l) hc hW hi

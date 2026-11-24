@@ -57,7 +57,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 
 theorem UpperTheory.V.Z.Sym.Loc.h90L : UpperTheory.V.Z.Sym.Loc.NormOneIsCoboundaryUnramifiedQuadratic := by
   intro O K _ _ _ _ _ Δ L β hβ
-  haveI := L.frac
+  have := L.frac
   have h2 := L.two_ne
   have h0 : Δ ≠ 0 := by
     obtain ⟨u, s, hs, e⟩ := L.even

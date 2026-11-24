@@ -118,9 +118,9 @@ private lemma third {n : ℕ} (hn : 0 < n) [Module.Finite ℤ M] (g : M →+ M)
     obtain ⟨z, rfl⟩ := (memN y).1 hy
     exact (memN _).2 ⟨g z, (map_nsmul g n z).symm⟩
   let G := QuotientAddGroup.map N N g hle
-  haveI : AddGroup.FG M := Module.Finite.iff_addGroup_fg.1 inferInstance
-  haveI : Finite (M ⧸ N) := by
-    apply AddCommGroup.finite_of_fg_torsion
+  have : AddGroup.FG M := Module.Finite.iff_addGroup_fg.1 inferInstance
+  have : Finite (M ⧸ N) := by
+    apply AddCommGroup.finite_of_fg_isAddTorsion
     intro u
     obtain ⟨y, rfl⟩ := QuotientAddGroup.mk_surjective u
     rw [isOfFinAddOrder_iff_nsmul_eq_zero]
@@ -146,7 +146,7 @@ end Form
 
 theorem adj : UpperTheory.Gal.FiniteEtaleModels.O.Adj := by
   intro q _ D e
-  haveI := D.finLa
+  have := D.finLa
   obtain ⟨e', he', perf⟩ := D.perfP
   have hc : e'.Coprime (q ^ e) := Nat.Coprime.pow_right e he'
   have hn : 0 < q ^ e := pow_pos (Fact.out : Nat.Prime q).pos e

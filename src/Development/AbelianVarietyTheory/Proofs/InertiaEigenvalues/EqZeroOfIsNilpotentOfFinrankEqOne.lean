@@ -80,9 +80,9 @@ theorem GlobalTheory.PotCrysRankOne.isPotCrystalline_of_deRham_character : DeRha
         fun g : ↥(Dec (F := E) A) => Matrix.diagonal fun _ : Fin 1 => ((μ (g : G E Ω) : (Qbar l)ˣ) : Qbar l) := by
       funext g; rfl
     rw [e]
-    exact Continuous.matrix_diagonal (continuous_pi fun _ => (Units.continuous_val.comp hμ).comp continuous_subtype_val)
+    exact Continuous.matrix_diagonal (continuous_pi fun _ => (Units.continuous_val.comp hμ).comp continuous_subtypeVal)
   obtain ⟨LL', r', hm, hp⟩ := hB.isPstAt T Bw _ hc hd
-  haveI := hp.finite
+  have := hp.finite
   obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex l
   have h1 : Module.finrank ℂ (WDSpace P ι (Bw.repE LL' r')) = 1 := by
     rw [GlobalTheory.Pst.LetterDim.finrank_wdSpace l P ι _ LL' _ _ hp, Module.finrank_fin_fun]

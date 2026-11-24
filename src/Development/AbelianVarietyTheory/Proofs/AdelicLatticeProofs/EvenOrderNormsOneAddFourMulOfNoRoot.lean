@@ -82,7 +82,7 @@ theorem _root_.GlobalTheory.QNorm.evenNorms_one_add_four_mul :
       have ht0 : t ≠ 0 := by
         rintro h
         rw [h, map_zero] at ht
-        exact not_lt_of_ge zero_le' ht
+        exact not_lt_of_ge zero_le ht
       have hlt : w (t - ρ) < w (t ^ 2) := by
         calc w (t - ρ) ≤ max (w t) (w ρ) := Valuation.map_sub w t ρ
           _ = w t := max_eq_left (hρ.trans ht.le)

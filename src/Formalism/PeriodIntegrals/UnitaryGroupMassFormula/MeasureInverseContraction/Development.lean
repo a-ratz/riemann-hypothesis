@@ -86,12 +86,12 @@ def HaarOn (N : Subgroup G) (μ : Measure G) : Prop :=
 
 theorem map_comap_subgroup (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Measure G)
     (hc : μ (H : Set G)ᶜ = 0) : (μ.comap ((↑) : H → G)).map ((↑) : H → G) = μ := by
-  have hemb : MeasurableEmbedding ((↑) : H → G) := MeasurableEmbedding.subtype_coe hH.measurableSet
+  have hemb : MeasurableEmbedding ((↑) : H → G) := MeasurableEmbedding.subtypeVal hH.measurableSet
   ext s hs
   rw [Measure.map_apply hemb.measurable hs, hemb.comap_apply, Set.image_preimage_eq_inter_range]
   have hr : Set.range ((↑) : H → G) = (H : Set G) := by ext x; simp
   rw [hr]
-  have h1 := measure_inter_add_diff (μ := μ) s hH.measurableSet
+  have h1 := measure_inter_add_sdiff (μ := μ) s hH.measurableSet
   have h2 : μ (s \ (H : Set G)) = 0 := measure_mono_null (fun x hx => hx.2) hc
   rw [h2, add_zero] at h1
   exact h1
@@ -100,7 +100,7 @@ private theorem abs_inv_lemma (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν :
     (hνc : ν (S : Set G)ᶜ = 0) (hνi : ∀ s ∈ S, ν.map (fun x => s * x) = ν) :
     (ν.comap (Subtype.val : S → G)).IsMulLeftInvariant := by
   have hemb : MeasurableEmbedding (Subtype.val : S → G) :=
-    MeasurableEmbedding.subtype_coe hS.measurableSet
+    MeasurableEmbedding.subtypeVal hS.measurableSet
   have hmc : (ν.comap (Subtype.val : S → G)).map Subtype.val = ν := map_comap_subgroup S hS ν hνc
   refine ⟨fun s => ?_⟩
   have h1 : ((ν.comap (Subtype.val : S → G)).map (fun x : S => s * x)).map Subtype.val = ν := by
@@ -117,7 +117,7 @@ private theorem abs_inv_lemma (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν :
 private theorem abs_scal_lemma_2 (S : Subgroup G) [LocallyCompactSpace S] (la : Measure S)
     [SigmaFinite la] [la.IsMulLeftInvariant] (h0 : la ≠ 0) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ la = c • (haar : Measure S) := by
-  haveI : SecondCountableTopology S := inferInstanceAs (SecondCountableTopology (S : Set G))
+  have : SecondCountableTopology S := inferInstanceAs (SecondCountableTopology (S : Set G))
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : S)
   have hKpos : 0 < (haar : Measure S) K :=
     lt_of_lt_of_le (isOpen_interior.measure_pos haar ⟨1, mem_interior_iff_mem_nhds.mpr hK1⟩)
@@ -132,7 +132,7 @@ private theorem abs_scal_lemma_2 (S : Subgroup G) [LocallyCompactSpace S] (la : 
       intro i
       have h1 : ((⊤ : ℝ≥0∞) • (haar : Measure S)) (spanningSets la i) < ⊤ := by
         rw [← heq]; exact measure_spanningSets_lt_top la i
-      rw [Measure.smul_apply, smul_eq_mul] at h1
+      rw [smul_apply, smul_eq_mul] at h1
       by_contra hne
       rw [ENNReal.top_mul hne] at h1
       exact lt_irrefl _ h1
@@ -143,13 +143,13 @@ private theorem abs_scal_lemma_2 (S : Subgroup G) [LocallyCompactSpace S] (la : 
 theorem haarOn_props (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Measure G) (hμ : HaarOn H μ) :
     (∀ K : Set G, IsCompact K → μ K < ⊤) ∧
       ∀ U : Set G, IsOpen U → (U ∩ (H : Set G)).Nonempty → 0 < μ U := by
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨hσ, h0, hc, hi⟩ := hμ
   have hemb : MeasurableEmbedding (Subtype.val : H → G) :=
-    MeasurableEmbedding.subtype_coe hH.measurableSet
+    MeasurableEmbedding.subtypeVal hH.measurableSet
   have hmc := map_comap_subgroup H hH μ hc
-  haveI := abs_inv_lemma H hH μ hc hi
-  haveI : SigmaFinite (μ.comap (Subtype.val : H → G)) :=
+  have := abs_inv_lemma H hH μ hc hi
+  have : SigmaFinite (μ.comap (Subtype.val : H → G)) :=
     SigmaFinite.of_map _ hemb.measurable.aemeasurable (by rw [hmc]; exact hσ)
   have hne : μ.comap (Subtype.val : H → G) ≠ 0 := by
     intro h; apply h0; rw [← hmc, h, Measure.map_zero]
@@ -158,15 +158,15 @@ theorem haarOn_props (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Measure 
     rw [← hmc, hceq, Measure.map_smul c hemb.measurable.aemeasurable]
   constructor
   · intro K hK
-    rw [hμeq, Measure.smul_apply, Measure.map_apply hemb.measurable hK.isClosed.measurableSet,
+    rw [hμeq, smul_apply, Measure.map_apply hemb.measurable hK.isClosed.measurableSet,
       smul_eq_mul]
     exact ENNReal.mul_lt_top hct.lt_top
       ((hH.isClosedEmbedding_subtypeVal.isCompact_preimage hK).measure_lt_top)
   · intro U hU hne'
-    rw [hμeq, Measure.smul_apply, Measure.map_apply hemb.measurable hU.measurableSet, smul_eq_mul]
+    rw [hμeq, smul_apply, Measure.map_apply hemb.measurable hU.measurableSet, smul_eq_mul]
     obtain ⟨x, hxU, hxH⟩ := hne'
     have hpos : 0 < (haar : Measure H) (Subtype.val ⁻¹' U) :=
-      (hU.preimage continuous_subtype_val).measure_pos haar ⟨⟨x, hxH⟩, hxU⟩
+      (hU.preimage continuous_subtypeVal).measure_pos haar ⟨⟨x, hxH⟩, hxU⟩
     exact ENNReal.mul_pos hc0 hpos.ne'
 
 theorem pull (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν : Measure G) (hνc : ν (S : Set G)ᶜ = 0)
@@ -175,26 +175,26 @@ theorem pull (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν : Measure G) (hνc
       IsFiniteMeasureOnCompacts (ν.comap (Subtype.val : S → G)) ∧
       (ν.comap (Subtype.val : S → G)).map Subtype.val = ν := by
   have hemb : MeasurableEmbedding (Subtype.val : S → G) :=
-    MeasurableEmbedding.subtype_coe hS.measurableSet
-  haveI := hνf
+    MeasurableEmbedding.subtypeVal hS.measurableSet
+  have := hνf
   refine ⟨abs_inv_lemma S hS ν hνc hνi, ⟨fun K hK => ?_⟩, map_comap_subgroup S hS ν hνc⟩
   rw [hemb.comap_apply]
-  exact (hK.image continuous_subtype_val).measure_lt_top
+  exact (hK.image continuous_subtypeVal).measure_lt_top
 
 theorem haar_unique (S : Subgroup G) (hS : IsClosed (S : Set G)) (μ m : Measure G) (hμ0 : μ ≠ 0)
     (hμc : μ (S : Set G)ᶜ = 0) (hμi : ∀ s ∈ S, μ.map (fun x => s * x) = μ) (hμf : IsFiniteMeasureOnCompacts μ)
     (hmc : m (S : Set G)ᶜ = 0) (hmi : ∀ s ∈ S, m.map (fun x => s * x) = m) (hmf : IsFiniteMeasureOnCompacts m) :
     ∃ c : ℝ≥0∞, c ≠ ∞ ∧ m = c • μ := by
-  haveI : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology S := inferInstanceAs (SecondCountableTopology (S : Set G))
+  have : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology S := inferInstanceAs (SecondCountableTopology (S : Set G))
   obtain ⟨hμL, hμF, hμM⟩ := pull S hS μ hμc hμi hμf
   obtain ⟨hmL, hmF, hmM⟩ := pull S hS m hmc hmi hmf
-  haveI := hμL; haveI := hμF; haveI := hmL; haveI := hmF
+  have := hμL; have := hμF; have := hmL; have := hmF
   obtain ⟨a, ea⟩ : ∃ a : ℝ≥0, μ.comap (Subtype.val : S → G) = a • (haar : Measure S) :=
     ⟨_, isMulLeftInvariant_eq_smul _ _⟩
   obtain ⟨b, eb⟩ : ∃ b : ℝ≥0, m.comap (Subtype.val : S → G) = b • (haar : Measure S) :=
     ⟨_, isMulLeftInvariant_eq_smul _ _⟩
-  have hval : Measurable (Subtype.val : S → G) := measurable_subtype_coe
+  have hval : Measurable (Subtype.val : S → G) := measurable_subtypeVal
   have hμ' : μ = a • (haar : Measure S).map Subtype.val := by
     calc μ = (μ.comap (Subtype.val : S → G)).map Subtype.val := hμM.symm
       _ = (a • (haar : Measure S)).map Subtype.val := by rw [ea]
@@ -207,7 +207,7 @@ theorem haar_unique (S : Subgroup G) (hS : IsClosed (S : Set G)) (μ m : Measure
   refine ⟨((b / a : ℝ≥0) : ℝ≥0∞), ENNReal.coe_ne_top, ?_⟩
   rw [hm', hμ']
   ext s hs
-  simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def]
+  simp only [smul_apply, smul_eq_mul, ENNReal.smul_def]
   rw [← mul_assoc, ← ENNReal.coe_mul, div_mul_cancel₀ b ha0]
 
 theorem haarOn_unique (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ ν : Measure G} (hμ : HaarOn N μ)
@@ -232,7 +232,7 @@ theorem exists_K (N : Subgroup G) (hN : IsClosed (N : Set G)) (μ : Measure G) (
 theorem smul_cancel {μ : Measure G} {K : Set G} (hK0 : 0 < μ K) (hKt : μ K < ⊤) {c d : ℝ≥0∞}
     (h : c • μ = d • μ) : c = d := by
   have h' := congrArg (fun ν : Measure G => ν K) h
-  simp only [Measure.smul_apply, smul_eq_mul] at h'
+  simp only [smul_apply, smul_eq_mul] at h'
   have h'' := congrArg (· / μ K) h'
   simpa [ENNReal.mul_div_cancel_right hK0.ne' hKt.ne] using h''
 
@@ -242,7 +242,7 @@ theorem haarOn_map (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : Measure G}
   obtain ⟨hσ, h0, hc, hi⟩ := hμ
   have hφm : Measurable φ := by rw [← he]; exact e.measurable
   refine ⟨?_, ?_, ?_, ?_⟩
-  · haveI := hσ
+  · have := hσ
     have h1 := e.toMeasurableEquiv.sigmaFinite_map (μ := μ)
     rw [Homeomorph.toMeasurableEquiv_coe, he] at h1
     exact h1
@@ -331,7 +331,7 @@ theorem rightInv_of_contract (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : 
   have hBt : μ S ≠ ⊤ := (hfin S hSc).ne
   have hbound : ∀ g ∈ C, ∀ e : ℝ≥0∞, μ.map (fun x => x * g) = e • μ → e * μ K ≤ μ S := by
     intro g hg e he
-    have h1 : μ.map (fun x => x * g) K = e * μ K := by rw [he, Measure.smul_apply, smul_eq_mul]
+    have h1 : μ.map (fun x => x * g) K = e * μ K := by rw [he, smul_apply, smul_eq_mul]
     rw [Measure.map_apply (measurable_mul_const g) hK.isClosed.measurableSet] at h1
     rw [← h1]
     apply measure_mono
@@ -373,7 +373,7 @@ theorem invInv_of_right (N : Subgroup G) (hN : IsClosed (N : Set G)) {μ : Measu
     (hR : ∀ n ∈ N, μ.map (fun x => x * n) = μ) : μ.map (fun x => x⁻¹) = μ := by
   have hinv : HaarOn N (μ.map (fun x => x⁻¹)) := by
     refine ⟨?_, ?_, ?_, ?_⟩
-    · haveI := hμ.1
+    · have := hμ.1
       have h1 := (Homeomorph.inv G).toMeasurableEquiv.sigmaFinite_map (μ := μ)
       simpa using h1
     · intro h; exact hμ.2.1 ((Measure.map_eq_zero_iff measurable_inv.aemeasurable).mp h)

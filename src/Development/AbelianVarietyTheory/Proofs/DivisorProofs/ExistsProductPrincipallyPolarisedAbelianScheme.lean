@@ -105,12 +105,12 @@ theorem exists_sum_polAV : ∀ (S : Scheme.{0}) (P₁ P₂ : PolAV S), ∃ (P : 
   let M : LB (P.A ⊗ P'.A).left := extLB P.L P'.L p.left q.left
   have hM : M.IsLB := isLB_tens (pull_isLB P.isLB p.left) (pull_isLB P'.isLB q.left)
   have eM : cls M hM = pull p.left (cls P.L P.isLB) + pull q.left (cls P'.L P'.isLB) := rfl
-  haveI := P.isAb.proper
-  haveI := P'.isAb.proper
-  haveI := hB.proper
+  have := P.isAb.proper
+  have := P'.isAb.proper
+  have := hB.proper
   have hdim : SmoothOfRelativeDimension (P.g + P'.g) (P.A ⊗ P'.A).hom := by
-    haveI := P.smoothDim
-    haveI : SmoothOfRelativeDimension P'.g (pullback.fst P.A.hom P'.A.hom) :=
+    have := P.smoothDim
+    have : SmoothOfRelativeDimension P'.g (pullback.fst P.A.hom P'.A.hom) :=
       (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback
         (IsPullback.of_hasPullback _ _).flip P'.smoothDim
     rw [add_comm]

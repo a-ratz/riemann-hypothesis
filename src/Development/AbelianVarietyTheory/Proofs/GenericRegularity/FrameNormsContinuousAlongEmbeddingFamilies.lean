@@ -89,7 +89,7 @@ theorem abs_fn_frBor (hU : ∀ σ, Formalism.L2.PjFree.GoodEmb c σ → Formalis
   · have hg : Formalism.L2.PjFree.GoodEmb c ((starRingEnd ℂ).comp σ) := by
       have := Formalism.L2.PjFree.goodEmb_goodOf c σ
       unfold Formalism.L2.PjFree.goodOf at this
-      rwa [if_neg hσ] at this
+      rwa [ite_eq_right hσ] at this
     obtain ⟨z, hz⟩ := exists_frMap_along (conjAlg σ) y
     obtain ⟨z', hz'⟩ := exists_frMap_along (conjAlg σ) y'
     have hb' := frBorBC _ _ (conjAlg σ) t y y' z z' hb hz hz'
@@ -120,11 +120,11 @@ theorem nrmAlong_of_fnPin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     intro Z sg G f _ _ X _ W Q hQ hQc
     have ha : Atlas h := (GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).2.2.2 h
     obtain ⟨C, ψ, z, t, hz, hb⟩ := ha (Om Z) (genFr h Z)
-    letI : Algebra c.F C.R := C.R.algebra
-    haveI := C.sm
+    let : Algebra c.F C.R := C.R.algebra
+    have := C.sm
     have hsg : ∀ x : W, sgOf (Q x) = sg := fun x => hQ x x.2
     choose w hw using fun x : W => exists_frMap_along (algOver sg (Q x) (hsg x)) z
-    have hQ' : ∀ a, Continuous (fun x : W => Q x a) := fun a => continuousOn_iff_continuous_restrict.1 (hQc a)
+    have hQ' : ∀ a, Continuous (fun x : W => Q x a) := fun a => continuousOn_iff_continuous_domRestrict.1 (hQc a)
     have hcont := GlobalTheory.FrameNorm.fn_continuousOn_smooth E H Dw l Xo c r U hU xR fn hx hp sg C.R C.y W Set.univ
       (fun x => (algOver sg (Q x) (hsg x)).comp ψ) w (fun (a : C.R) => (hQ' (ψ a)).continuousOn)
       (fun x _ => frMap_trans _ _ _ ψ _ C.y z (w x) hz (hw x))
@@ -134,7 +134,7 @@ theorem nrmAlong_of_fnPin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
         funext fun x => abs_fn_generic hU hp hb sg (Q x) (hsg x) (hw x) (hyP Z (Q x)) i
       rw [e]
       exact (hQ' _).norm.mul (continuousOn_univ.1 (hcont i))
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     show Continuous (fun x : W => ‖Q x (f.coeff G)‖ * ∏ i, |fn _ (yP Z (Q x)) i| ^ (-exZ Dw G i))
     refine (hQ' _).norm.mul (continuous_finsetProd _ fun i _ => ?_)
     exact (hfn i).zpow₀ _ fun x => Or.inl (abs_ne_zero.2 (hne _ _ _))

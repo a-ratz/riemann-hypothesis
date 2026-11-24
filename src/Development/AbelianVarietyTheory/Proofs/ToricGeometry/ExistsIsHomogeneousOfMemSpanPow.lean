@@ -293,7 +293,7 @@ theorem const_of_isIntegral {ι : Type} (θ : ι → E → ℂ) {f : E → ℂ} 
     rw [Polynomial.IsRoot, Polynomial.eval_map]
     simpa using h2
   refine hf.apply_eq_apply_of_bounded (Set.Finite.isBounded ?_) z 0
-  refine (Polynomial.finite_setOf_isRoot (hP.map φ).ne_zero).subset ?_
+  refine (Polynomial.finite_setOfPred_isRoot (hP.map φ).ne_zero).subset ?_
   rintro _ ⟨x, rfl⟩
   exact hroot x
 
@@ -342,21 +342,21 @@ theorem exists_succ_le_mul_of_integral {ι : Type} [Finite ι] (R : ℕ → Subm
     have := hdiff d f hf
     unfold homog
     fun_prop
-  haveI : NoZeroDivisors A := ⟨fun {a b} hab =>
+  have : NoZeroDivisors A := ⟨fun {a b} hab =>
     (entire_mul_eq_zero (hd _ (hAR a.2)) (hd _ (hAR b.2)) (congrArg Subtype.val hab)).imp
       Subtype.ext Subtype.ext⟩
-  haveI : NoZeroDivisors B := ⟨fun {a b} hab =>
+  have : NoZeroDivisors B := ⟨fun {a b} hab =>
     (entire_mul_eq_zero (hd _ ((hB _).1 a.2)) (hd _ ((hB _).1 b.2))
       (congrArg Subtype.val hab)).imp Subtype.ext Subtype.ext⟩
-  haveI : IsDomain A := NoZeroDivisors.to_isDomain _
-  haveI : Nontrivial B := ⟨⟨0, 1, fun h => zero_ne_one (congrArg Subtype.val h)⟩⟩
-  haveI : IsDomain B := NoZeroDivisors.to_isDomain _
-  haveI : Algebra.FiniteType ℂ A :=
+  have : IsDomain A := NoZeroDivisors.to_isDomain _
+  have : Nontrivial B := ⟨⟨0, 1, fun h => zero_ne_one (congrArg Subtype.val h)⟩⟩
+  have : IsDomain B := NoZeroDivisors.to_isDomain _
+  have : Algebra.FiniteType ℂ A :=
     (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨_, Set.finite_range _, rfl⟩)
   set_option synthInstance.maxHeartbeats 200000 in
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2
     fun a b hab => Subtype.ext (congrArg (Subtype.val : B → (ℂ × E → ℂ)) hab)
-  haveI : Algebra.IsIntegral A B := Algebra.IsIntegral.adjoin (by
+  have : Algebra.IsIntegral A B := Algebra.IsIntegral.adjoin (by
     rintro _ ⟨d, f, hf, rfl⟩
     exact (hint d f hf).1)
   have hfrac : ∀ F ∈ B, ∃ a a' : A, a' ≠ 0 ∧ (a' : ℂ × E → ℂ) * F = a := by
@@ -451,7 +451,7 @@ theorem theta_ring_generated_in_degree_one :
     refine exists_isHomogeneous_of_mem_span_pow (fun (c : Fin g → Fin (3 * (e + 1))) z =>
       theta (fun i => ((c i : ℕ) : ℝ) / (3 * (e + 1) : ℕ)) 0 (((3 * (e + 1) : ℕ) : ℂ) • z)
         (((3 * (e + 1) : ℕ) : ℂ) • τ)) (j + 1) ?_
-    refine SetLike.le_def.1 (pow_le_pow_left' ?_ (j + 1)) (hpow j h1)
+    refine IsConcreteLE.le_iff.1 (pow_le_pow_left' ?_ (j + 1)) (hpow j h1)
     exact fun u hu => hspan g τ hτ (3 * (e + 1)) (by omega) u hu
 
 end GlobalTheory

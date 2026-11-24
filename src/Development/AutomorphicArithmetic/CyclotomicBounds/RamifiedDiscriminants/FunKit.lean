@@ -115,8 +115,8 @@ theorem sum_padicValNat_log_le {n : ℕ} (hn : n ≠ 0) (S : Finset ℕ) (hS : �
 theorem sum_log_le_of_dvd {n : ℕ} (hn : n ≠ 0) (S : Finset ℕ) (hS : ∀ l ∈ S, l.Prime ∧ l ∣ n) :
     ∑ l ∈ S, Real.log l ≤ Real.log n := by
   refine le_trans (Finset.sum_le_sum fun l hl => ?_) (sum_padicValNat_log_le hn S fun l hl => (hS l hl).1)
-  haveI := Fact.mk (hS l hl).1
-  have h1 : (1 : ℝ) ≤ padicValNat l n := by exact_mod_cast (by simpa only [Nat.padicValNat_def] using one_le_padicValNat_of_dvd hn (hS l hl).2)
+  have := Fact.mk (hS l hl).1
+  have h1 : (1 : ℝ) ≤ padicValNat l n := by exact_mod_cast (by simpa only [Nat.padicValNat_def] using one_le_multiplicity_of_dvd hn (hS l hl).2)
   have := Real.log_natCast_nonneg l
   nlinarith
 

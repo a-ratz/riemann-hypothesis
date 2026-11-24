@@ -102,7 +102,7 @@ theorem deltaHalf_eq_one_of_single {β : Type} [Fintype β] [LinearOrder β] {n 
       rw [hs _ (by simp), hs _ (by simp), sub_zero]
     rw [hm]
     simp
-  · haveI : IsEmpty (Fin (n a)) := ⟨fun x => absurd x.2 (by have := x.2; have := h0 a ha; omega)⟩
+  · have : IsEmpty (Fin (n a)) := ⟨fun x => absurd x.2 (by have := x.2; have := h0 a ha; omega)⟩
     have : Matrix.GeneralLinearGroup.det (g a) = 1 := by
       ext
       simp [Matrix.det_isEmpty]

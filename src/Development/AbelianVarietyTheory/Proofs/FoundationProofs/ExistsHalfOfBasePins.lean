@@ -199,7 +199,7 @@ theorem exists_coverLevel {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
             A_pos := Nat.one_pos }, ⟨dvd_mul_right _ _, Ideal.mul_le_left, hA.dvd⟩, rfl, hc, rfl, hI, rfl⟩
   · obtain ⟨G, hG, hGA⟩ := hK
     refine fromK_of_gen ⟨{a | a ∈ l.Mb ∧ a ∈ Algebra.adjoin ℤ {H.w0}} * G, ?_, ?_⟩
-    · rw [← Ideal.span_mul_span', ← l.fromK, ← hG]
+    · rw [← Ideal.span_mul_span, ← l.fromK, ← hG]
     · intro x hx
       obtain ⟨a, ha, b, hb, rfl⟩ := Set.mem_mul.1 hx
       exact Subalgebra.mul_mem _ ha.2 (hGA hb)
@@ -262,7 +262,7 @@ theorem coverHalf_spec {Q : Finset (Pl D.host.E)} (hQ : IsTwistPlaces D.host.g Q
     refine Finset.prod_induction _
       (fun J => ∃ G : Set (𝓞 D.host.E), J = Ideal.span G ∧ G ⊆ Algebra.adjoin ℤ {w0E D}) ?_ ?_ ?_
     · rintro _ _ ⟨G, rfl, hG⟩ ⟨G', rfl, hG'⟩
-      refine ⟨G * G', Ideal.span_mul_span' _ _, fun x hx => ?_⟩
+      refine ⟨G * G', Ideal.span_mul_span _ _, fun x hx => ?_⟩
       obtain ⟨a, ha, b, hb, rfl⟩ := Set.mem_mul.1 hx
       exact Subalgebra.mul_mem _ (hG ha) (hG' hb)
     · exact ⟨{1}, by simp, fun x hx => by rw [Set.mem_singleton_iff.1 hx]; exact Subalgebra.one_mem _⟩

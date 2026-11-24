@@ -78,7 +78,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_injective_fderiv {E F : Type}
     {U : Set E} (hU : IsOpen U) (hne : U.Nonempty) {f : E → F}
     (hf : ∀ z ∈ U, ContDiffAt ℂ 1 f z) (hc : ∀ z ∈ U, {z' ∈ U | f z' = f z}.Countable) :
     ∃ z ∈ U, Function.Injective (fderiv ℂ f z) := by
-  haveI := FiniteDimensional.complete ℂ E
+  have := FiniteDimensional.completeSpace ℂ E
   set rk : E → ℕ := fun z => Module.finrank ℂ (LinearMap.range (fderiv ℂ f z : E →ₗ[ℂ] F))
   have hbdd : BddAbove (rk '' U) := ⟨Module.finrank ℂ F, by
     rintro _ ⟨z, -, rfl⟩; exact Submodule.finrank_le _⟩
@@ -88,7 +88,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_injective_fderiv {E F : Type}
   by_contra hinj
   set L := fderiv ℂ f z₀
   set W := LinearMap.range (L : E →ₗ[ℂ] F)
-  haveI := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ W
   obtain ⟨P₀, hP₀⟩ := LinearMap.exists_leftInverse_of_injective W.subtype W.ker_subtype
   set P : F →L[ℂ] W := LinearMap.toContinuousLinearMap P₀
   have hPL : ∀ x, P (L x) = ⟨L x, x, rfl⟩ := fun x => by
@@ -140,7 +140,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_injective_fderiv {E F : Type}
     simpa using hv'
 
   set K := LinearMap.ker ((P.comp L : E →L[ℂ] W) : E →ₗ[ℂ] W)
-  haveI : Nontrivial K := by
+  have : Nontrivial K := by
     rw [Submodule.nontrivial_iff_ne_bot]
     intro hK
     apply hinj
@@ -261,7 +261,7 @@ theorem _root_.GlobalTheory.CountableFibres.exists_independent_ratios :
       ∃ (a₀ : I) (a : Fin d → I), (∃ z ∈ B, θ z a₀ ≠ 0) ∧ ∀ F : MvPolynomial (Fin d) ℂ,
         (∀ z ∈ B, θ z a₀ ≠ 0 → MvPolynomial.eval (fun i => θ z (a i) / θ z a₀) F = 0) → F = 0 := by
   intro d I _ B θ hB _ hBne hdiff hfib
-  haveI := Fintype.ofFinite I
+  have := Fintype.ofFinite I
   have hO : _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStatement := _root_.ReciprocityTheory.AnForm.Osgood.osgood
   unfold _root_.ReciprocityTheory.AnForm.Osgood.OsgoodStatement at hO
   have hAn : ∀ a, AnalyticOnNhd ℂ (fun z => θ z a) B := fun a => hO d B _ hB (hdiff a)
@@ -294,8 +294,8 @@ theorem _root_.GlobalTheory.CountableFibres.exists_independent_ratios :
 
   set v : I → Module.Dual ℂ (Fin d → ℂ) := fun b => (LinearMap.proj b).comp (D : (Fin d → ℂ) →ₗ[ℂ] I → ℂ)
   obtain ⟨κ, c, hc, hspan, hli⟩ := exists_linearIndependent' ℂ v
-  haveI : Finite κ := Finite.of_injective c hc
-  haveI := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective c hc
+  have := Fintype.ofFinite κ
   have hkill : ∀ y, (∀ k, v (c k) y = 0) → y = 0 := by
     intro y hy
     have hle : Submodule.span ℂ (Set.range (v ∘ c)) ≤ LinearMap.ker (Module.Dual.eval ℂ _ y) := by

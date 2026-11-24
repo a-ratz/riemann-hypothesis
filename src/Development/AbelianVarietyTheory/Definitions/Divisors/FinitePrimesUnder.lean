@@ -106,7 +106,7 @@ theorem mem_hatId_top {x : AE D} (h : x ∈ OhE D) : x ∈ hatId D ⊤ :=
 theorem pt_unitBlock_mem (δ : ℂ) (o a d : ℕ) : pt D (tor0 D ⊤ δ) δ (unitBlock D o a d) ∈ La0 D (tor0 D ⊤ δ) a d := by
   refine AddSubgroup.subset_closure ⟨δ, AddSubgroup.subset_closure ⟨1, trivial, by simp⟩, _, ?_, rfl⟩
   refine Submodule.subset_span ⟨1, ?_, _, Submodule.subset_span fun x hx i _ => ?_, (one_smul _ _).symm⟩
-  · refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
+  · refine FractionalIdeal.one_mem_inv_coeIdeal fun h => ?_
     have h2 := D.host.𝔟_spec.2
     rw [h, Ideal.smul_bot, sup_bot_eq] at h2
     exact bot_ne_top h2

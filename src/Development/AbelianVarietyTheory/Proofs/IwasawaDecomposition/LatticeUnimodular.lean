@@ -92,7 +92,7 @@ theorem exists_gen_dInv (j : ℕ) (P : Ideal (𝓞 E)) [hP : P.IsPrime] :
   · obtain ⟨c, h1, h2, h3⟩ := exists_local_gen (I := dInv E j)
       (fun e => by simpa [e] using Iota.one_mem_dInv (E := E) j) hP.ne_top
     exact ⟨c, h1, h2, fun k => absurd h k, h3⟩
-  · obtain ⟨s, hs, hn⟩ := SetLike.not_le_iff_exists.1 (mt Ideal.dvd_iff_le.2 h)
+  · obtain ⟨s, hs, hn⟩ := IsConcreteLE.not_le_iff_exists.1 (mt Ideal.dvd_iff_le.2 h)
     refine ⟨1, one_ne_zero, Iota.one_mem_dInv j, fun _ => rfl, fun x hx =>
       ⟨s ^ j, fun k => hn (hP.mem_of_pow_mem j k), ?_⟩⟩
     have h0 : ((differentIdeal ℤ (𝓞 E) : Ideal (𝓞 E)) : FractionalIdeal (𝓞 E)⁰ E) ≠ 0 :=

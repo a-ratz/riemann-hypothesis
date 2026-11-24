@@ -112,7 +112,7 @@ theorem exists_frobenius_and_exponent_modEq (l : ℕ) [Fact l.Prime] :
     have h1 := hgt n hn
     have : NeZero (l ^ n - 1) := ⟨by omega⟩
     have : NeZero ((l ^ n - 1 : ℕ) : Om l) := inferInstance
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ n - 1)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ n - 1)
     have h2 : ζ ^ l ^ n = ζ := by
       conv_lhs => rw [← Nat.sub_add_cancel h1.le, pow_succ, hζ.pow_eq_one, one_mul]
     have h3 := h ζ h2

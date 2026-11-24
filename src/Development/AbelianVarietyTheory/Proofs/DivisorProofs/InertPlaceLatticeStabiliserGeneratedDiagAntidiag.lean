@@ -758,8 +758,8 @@ theorem exists_frame_unimod : ∀ {F E : Type} [Field F] [NumberField F] [Field 
   intro F E _ _ _ _ _ σ B d W r s _hB hW v w hw
   have hc := isConjAt_conjW σ hw
   obtain ⟨t, ht0, hsd⟩ := selfDual_scaled σ B W r s hW hw
-  haveI := hW.lat
-  obtain ⟨a, ha⟩ := InertChart.exists_isFrameAt (L := W.L) hw (Submodule.IsLattice.fg E W.L) Submodule.IsLattice.span_eq_top
+  have := hW.lat
+  obtain ⟨a, ha⟩ := InertChart.exists_isFrameAt (L := W.L) hw (Submodule.IsLattice.fg E W.L) Submodule.IsFullLattice.span_eq_top
   have hdet : (algebraMap F E t • W.Jᵀ).det ≠ 0 := by
     rw [Matrix.det_smul, Matrix.det_transpose]
     exact mul_ne_zero (pow_ne_zero _ ((map_ne_zero _).2 ht0)) (GlobalTheory.FinUniq.det_ne_zero_skew hW)
@@ -1134,7 +1134,7 @@ theorem GlobalTheory.InertCellLocal.bigCell_local_step : (∀ {O : Type} [CommRi
     rcases Nat.eq_zero_or_pos d with hd | hd
     · subst hd; ext i; exact i.elim0
     · have hδ0 : δ ≠ 0 := by
-        haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+        have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
         rintro rfl; apply hdet; rw [zero_smul]; exact Matrix.det_zero
       rw [Matrix.mul_smul, Matrix.smul_mul, ← smul_add] at hK
       exact (smul_eq_zero.mp hK).resolve_left hδ0

@@ -50,8 +50,8 @@ open MvPolynomial MeasureTheory ReciprocityTheory.AnForm.M
 
 theorem resBridge : ResBridgeStatement := by
   intro K _ ι _ P J e R Ψ L A s hP hΨ hL hA hs
-  haveI := R.compact
-  haveI := R.t2
+  have := R.compact
+  have := R.t2
 
   have key := pushForward_null R.A (fun j => potOf R (L j))
     (fun j => potOf_isPotential R (L j) (hL j)) (brQ R Ψ) (brBad R Ψ)
@@ -59,7 +59,7 @@ theorem resBridge : ResBridgeStatement := by
     (fun x hx j hj => by
       by_contra h
       apply hx
-      simp only [brBad, Set.mem_union, Set.mem_setOf_eq]
+      simp only [brBad, Set.mem_union, Set.mem_ofPred_eq]
       exact Or.inr ⟨j, hj, h⟩)
     (brFib_finite (R := R) (Ψ := Ψ) hP hΨ) _ (brIntegrable R L A s hP hL hA hs)
   rw [key]

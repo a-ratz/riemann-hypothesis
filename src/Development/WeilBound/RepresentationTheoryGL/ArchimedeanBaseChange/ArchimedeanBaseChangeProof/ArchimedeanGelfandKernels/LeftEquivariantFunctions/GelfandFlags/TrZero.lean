@@ -48,11 +48,11 @@ theorem trZero : TrZero := by
   intro V _ _ _ B T e i c hc hei heB hTe
   let t : (V →L[ℂ] V) → ℂ := fun A => LinearMap.trace ℂ V (A : V →ₗ[ℂ] V)
   have tadd : ∀ A A' : V →L[ℂ] V, t (A + A') = t A + t A' := fun A A' => by
-    simp only [t, ContinuousLinearMap.coe_add, map_add (f := _)]
+    simp only [t, ContinuousLinearMap.toLinearMap_add, map_add (f := _)]
   have tneg : ∀ A : V →L[ℂ] V, t (-A) = -t A := fun A => by
-    simp only [t, ContinuousLinearMap.coe_neg, map_neg]
+    simp only [t, ContinuousLinearMap.toLinearMap_neg, map_neg]
   have tsmul : ∀ (a : ℂ) (A : V →L[ℂ] V), t (a • A) = a * t A := fun a A => by
-    simp only [t, ContinuousLinearMap.coe_smul, map_smul, smul_eq_mul]
+    simp only [t, ContinuousLinearMap.toLinearMap_smul, map_smul, smul_eq_mul]
   have tcomm : ∀ A A' : V →L[ℂ] V, t (A * A') = t (A' * A) := fun A A' =>
     LinearMap.trace_mul_comm ℂ (A : V →ₗ[ℂ] V) (A' : V →ₗ[ℂ] V)
   set X := B * T with hXdef

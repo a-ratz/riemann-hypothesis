@@ -364,9 +364,9 @@ namespace GlobalTheory.LiftKur
 
 theorem exists_gal_fix_Kur_map : ∀ (l : ℕ) [Fact l.Prime] (x y : Om l), Polynomial.aeval y (minpoly ↥(MaximalUnramifiedExtension l) x) = 0 → ∃ g : GQ l, (∀ z ∈ MaximalUnramifiedExtension l, g z = z) ∧ g x = y := by
   intro l _ x y hy
-  haveI : Algebra.IsAlgebraic ↥(MaximalUnramifiedExtension l) (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) ↥(MaximalUnramifiedExtension l)
-  haveI : IsAlgClosure ↥(MaximalUnramifiedExtension l) (Om l) := ⟨inferInstance, inferInstance⟩
-  haveI : Normal ↥(MaximalUnramifiedExtension l) (Om l) := IsAlgClosure.normal _ _
+  have : Algebra.IsAlgebraic ↥(MaximalUnramifiedExtension l) (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) ↥(MaximalUnramifiedExtension l)
+  have : IsAlgClosure ↥(MaximalUnramifiedExtension l) (Om l) := ⟨inferInstance, inferInstance⟩
+  have : Normal ↥(MaximalUnramifiedExtension l) (Om l) := IsAlgClosure.normal _ _
   have hx : IsIntegral ↥(MaximalUnramifiedExtension l) x := Algebra.IsIntegral.isIntegral x
   have hmin : minpoly ↥(MaximalUnramifiedExtension l) x = minpoly ↥(MaximalUnramifiedExtension l) y :=
     (minpoly.eq_of_irreducible_of_monic (minpoly.irreducible hx) hy (minpoly.monic hx))
@@ -396,8 +396,8 @@ open GlobalTheory.MemLoc GlobalTheory.MemLoc.FrobLaws
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (F : FinExt l), Normal ℚ_[l] ↥F.1 → ∀ g : GQ l, (∀ x ∈ F.1, x ≠ 0 → ‖g x - x‖ < ‖x‖) → ∃ s : ℕ, ∀ x ∈ F.1, (g ^ l ^ s) x = x := by
   intro l _ F hF g hg
-  haveI := F.2
-  haveI : Normal ℚ_[l] ↥F.1 := hF
+  have := F.2
+  have : Normal ℚ_[l] ↥F.1 := hF
   have hpow : ∀ (i : ℕ) (x : Om l), x ∈ F.1 → x ≠ 0 → ‖(g ^ i) x - x‖ < ‖x‖ := by
     intro i x hx hx0
     induction i with
@@ -763,10 +763,10 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
     obtain ⟨M0, hM0, hlM0, hM0χ⟩ := chi_trivial LL χ hχo hχc
     have hM : 0 < M0 * e := Nat.mul_pos hM0 he0
     have hlM : ¬ l ∣ M0 * e := fun h => ((Nat.Prime.dvd_mul hp).1 h).elim hlM0 hle
-    haveI : NeZero (M0 * e) := ⟨hM.ne'⟩
+    have : NeZero (M0 * e) := ⟨hM.ne'⟩
     obtain ⟨ρ, hρ⟩ := IsAlgClosed.exists_pow_nat_eq (-(l : Om l)) hM
     obtain ⟨ζ, hζ⟩ : ∃ ζ : Om l, IsPrimitiveRoot ζ (M0 * e) :=
-      HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (M0 * e)
+      HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (M0 * e)
     obtain ⟨σ, hσ, hσρ⟩ := exists_inertia hM ρ ζ hρ hζ.pow_eq_one
     have hρ0 : ρ ≠ 0 := by
       rintro rfl
@@ -1194,14 +1194,14 @@ theorem GlobalTheory.GoodLatt.main : GlobalTheory.Published.FontaineBcris → �
   have hopen : ∀ χ ∈ Sig, IsOpen ((res χ).ker : Set ↥(IK (Formalism.MainNotions.ElementDenominator.qlExt l))) := by
     intro χ hχ
     have hK'open : IsOpen ((GK K' : Subgroup (GQ l)) : Set (GQ l)) := by
-      haveI : FiniteDimensional ℚ_[l] K'.1 := K'.2
+      have : FiniteDimensional ℚ_[l] K'.1 := K'.2
       exact IntermediateField.fixingSubgroup_isOpen K'.1
     refine Subgroup.isOpen_mono (H₁ := (GK K').comap
       ((GK (Formalism.MainNotions.ElementDenominator.qlExt l)).subtype.comp (IK (Formalism.MainNotions.ElementDenominator.qlExt l)).subtype)) ?_ ?_
     · intro x hx
       rw [MonoidHom.mem_ker, hres]
       exact hH χ hχ _ hx
-    · exact hK'open.preimage (continuous_subtype_val.comp continuous_subtype_val)
+    · exact hK'open.preimage (continuous_subtypeVal.comp continuous_subtypeVal)
   have hcop' : ∀ χ ∈ Sig, Nat.Coprime (orderOf (res χ)) l := by
     intro χ hχ
     refine Nat.Coprime.coprime_dvd_left (orderOf_dvd_of_pow_eq_one ?_) (hcop χ hχ)

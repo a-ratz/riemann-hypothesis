@@ -205,7 +205,7 @@ theorem exists_isUnit_conj_mul_eq {R : Type} [CommRing R] [HenselianLocalRing R]
     [Finite (ResidueField R)] (σ : R →+* R) (hσ : ∀ x, σ (σ x) = x) (x₀ : R)
     (hx : IsUnit (σ x₀ - x₀)) (c : R) (hc : IsUnit c) (hfix : σ c = c) :
     ∃ s : R, IsUnit s ∧ σ s * s = c := by
-  haveI : IsLocalHom σ := ⟨fun a h => by simpa [hσ] using h.map σ⟩
+  have : IsLocalHom σ := ⟨fun a h => by simpa [hσ] using h.map σ⟩
   let τ : ResidueField R →+* ResidueField R := ResidueField.map σ
   have hτ : ∀ y, τ (residue R y) = residue R (σ y) := fun y => ResidueField.map_residue σ y
   have hτ2 : ∀ x, τ (τ x) = x := by
@@ -249,7 +249,7 @@ theorem exists_unit_norm_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨-, hinv, hval, hns, -⟩ := _root_.GlobalTheory.ConjAtPlace.main E hU w
   obtain ⟨-, ⟨ϖ, q, hI, -⟩, -, -⟩ := hns hw
   obtain ⟨-, -, -, -, ⟨x₀, hx₀, hx⟩, hq, hcard⟩ := hI
-  haveI : HenselianLocalRing (w.adicCompletionIntegers E) := by
+  have : HenselianLocalRing (w.adicCompletionIntegers E) := by
     open HeightOneSpectrum WithZero Filter Topology in
     let Ov := w.adicCompletionIntegers E
     let Kv := w.adicCompletion E
@@ -294,7 +294,7 @@ theorem exists_unit_norm_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
       intro x hx
       have hx' : r < Valued.v x := not_le.mp hx
-      have hx0 : Valued.v x ≠ 0 := (lt_of_le_of_lt zero_le' hx').ne'
+      have hx0 : Valued.v x ≠ 0 := (lt_of_le_of_lt zero_le hx').ne'
       have hmem : {y : Kv | Valued.v y = Valued.v x} ∈ 𝓝 x := by
         first
         | exact Valuation.loc_const hx0
@@ -350,7 +350,7 @@ theorem exists_unit_norm_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         rw [← Valuation.map_neg, neg_sub]; exact hg n k hk
       exact { toIsHausdorff := h1, toIsPrecomplete := h2 }
 
-    haveI : HenselianLocalRing Ov := by
+    have : HenselianLocalRing Ov := by
       have := adicInt_isAdicComplete 
       have : HenselianRing Ov (maximalIdeal Ov) := inferInstance
       refine ⟨fun f hf a₀ h₁ h₂ => ?_⟩

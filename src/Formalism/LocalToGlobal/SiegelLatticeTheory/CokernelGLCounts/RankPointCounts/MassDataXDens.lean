@@ -93,7 +93,7 @@ theorem densNonnegAll_holds : Formalism.L2.SG.PoincareAmplitudeLowerBounds.DensN
   · unfold supDens
     apply Real.sSup_nonneg
     intro d hd
-    simp only [densSet, Set.mem_setOf_eq] at hd
+    simp only [densSet, Set.mem_ofPred_eq] at hd
     obtain ⟨Z, -, rfl⟩ := hd
     exact tprod_nonneg fun p => densP_nonneg _ _ _ _ _ _ _
   · exact tprod_nonneg fun p => alpD_nonneg u u' p

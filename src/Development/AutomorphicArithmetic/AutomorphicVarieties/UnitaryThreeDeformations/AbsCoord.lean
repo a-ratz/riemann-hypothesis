@@ -263,7 +263,7 @@ private theorem lin_zA {O : Type} [CommRing O] {σ : Type} [Fintype σ] (wt : σ
   rw [this, Finset.sum_eq_single i]
   · simp [coeff_X]
   · intro b _ hb
-    rw [coeff_X, if_neg, zero_smul]
+    rw [coeff_X, ite_eq_right, zero_smul]
     intro h
     exact hb (Finsupp.single_left_injective one_ne_zero h)
   · simp
@@ -358,7 +358,7 @@ theorem UpperTheory.smoothPt_weightedGradedAlgebra_basePoint :
     refine ⟨(WPres.free O wt).zA i, ?_, fun i' hi => ?_⟩
     · rw [hφ, hz, coeff_index_single_self_X, map_one]
       exact one_ne_zero
-    · rw [hφ, hz, coeff_index_single_X, if_neg hi, map_zero]
+    · rw [hφ, hz, coeff_index_single_X, ite_eq_right hi, map_zero]
   · intro f h0 h1
     refine (UpperTheory.mem_satSq_iff_constantCoeff_and_linearCoeff_eq_zero O σ wt f).2 ⟨by rw [← weightedSeriesOrigin_apply, h0], fun i => hinj ?_⟩
     rw [← hφ, h1, map_zero]
@@ -431,7 +431,7 @@ private theorem span_of_ann {O : Type} [CommRing O] [IsDomain O] {σ : Type} [Fi
     refine Finset.sum_eq_zero fun i _ => ?_
     by_cases hi : p i
     · have h3 := he i
-      simp only [e, hi, if_true] at h3
+      simp only [e, hi, ite_true] at h3
       rw [h3, smul_zero]
     · rw [hw i hi, map_zero, zero_smul]
   rw [Submodule.mem_span_range_iff_exists_fun] at hmem
@@ -458,7 +458,7 @@ theorem UpperTheory.spansCot_of_linear_terms_nondegenerate :
         SpansCot (x0 O wt) (Fgr O wt) j F := by
   intro O _ _ σ _ wt j κ _ F hF hx hd
   classical
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   have hco : ∀ f ∈ Fgr O wt j, ∀ i, ¬ (wt i = j) → coeff (Finsupp.single i 1) (ser f) = 0 := by
     intro f hf i hi
     rw [mem_Fgr] at hf
@@ -610,7 +610,7 @@ theorem coord_count (hM : LemmaM) (hM' : LemmaM') (O : Type) [CommRing O] [IsDom
     intro ξ ξ' h1
     exact forall_congr' fun j => imp_congr_right fun _ => (zero_iff W ξ ξ' h1 j).symm
   have hW : IsWRing (Fgr O W.wt) (x0 O W.wt) := by
-    haveI : IsCO O (MvPowerSeries W.σ O) := co_mvps O O W.σ
+    have : IsCO O (MvPowerSeries W.σ O) := co_mvps O O W.σ
     exact isWRing O (MvPowerSeries W.σ O) (WPres.free O W.wt)
       (fun g hg => by
         have hg0 : g = 0 := hg
@@ -641,7 +641,7 @@ theorem coord_count (hM : LemmaM) (hM' : LemmaM') (O : Type) [CommRing O] [IsDom
   have hb0 := hb 0
   simp only [show (1 : ℤ) ≠ -1 by norm_num, show (2 : ℤ) ≠ -1 by norm_num, show (-2 : ℤ) ≠ -1 by norm_num,
     show (0 : ℤ) ≠ -1 by norm_num, show ¬((-2 : ℤ) = 1 ∨ (-2 : ℤ) = 2) by norm_num,
-    show ¬((0 : ℤ) = 1 ∨ (0 : ℤ) = 2) by norm_num, true_or, or_true, if_true, if_false] at hb1 hb2 hbm1 hbm2 hb0
+    show ¬((0 : ℤ) = 1 ∨ (0 : ℤ) = 2) by norm_num, true_or, or_true, ite_true, ite_false] at hb1 hb2 hbm1 hbm2 hb0
   obtain ⟨Q, hQ, hQrel⟩ := exists_weighted_equations_presenting_ker O R W h b f hf hker (Nat.card {i // W.wt i = -1}) (Nat.card {i // W.wt i = -2})
     (Nat.card {i // W.wt i = 1} - 1) (Nat.card {i // W.wt i = 2} - 1) (Nat.card {i // W.wt i = 0})
     (by omega) (by omega) (by omega) (by omega) (by omega) hbz
@@ -666,7 +666,7 @@ theorem coord_count (hM : LemmaM) (hM' : LemmaM') (O : Type) [CommRing O] [IsDom
     · exact spansCot_of_linear_terms_nondegenerate O W.σ W.wt 0 _ Q.Z (fun k => (Q.hZ k).1) (fun k => (Q.hZ k).2)
         (fun d hd hk => m1 0 le_rfl d hd ((hQrel O d).2.2 hd hk))
   have hM2 : M2 (Fgr O W.wt) Q.ideal := by
-    haveI := m2
+    have := m2
     unfold M2
     rw [hQ]
     let eq := Ideal.quotientKerAlgEquivOfSurjective (toA_surjective W)
@@ -765,7 +765,7 @@ theorem coord_count (hM : LemmaM) (hM' : LemmaM') (O : Type) [CommRing O] [IsDom
     have e := hdist _ (T'.equivFin.symm i).2 _ (T'.equivFin.symm i').2 ⟨t, hs⟩
     exact T'.equivFin.symm.injective (Subtype.ext e)
   · intro c hc M _ _ d hd hsupp hrel
-    rw [ENat.coe_toNat hne]
+    rw [ENat.natCast_toNat hne]
     exact length_le_cotLen_of_injective_tangent_map hM' O W.σ W.wt (-1) (by norm_num) _ Q.F Q.hF c hc M d hd hsupp
       (fun μ k => hrel μ _ (hFker k))
   · have hterm : ∀ ξ : T', ((P ξ).comp (Subalgebra.inclusion hle)) ⟨a, le_iSup W.part 0 ha⟩ = ξ.1 aF := by

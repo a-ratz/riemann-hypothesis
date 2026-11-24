@@ -71,8 +71,8 @@ theorem exists_tensor_equiv_of_semilinear :
     Submodule.span Ω (Set.range j) = ⊤ →
     ∃ Φ : TensorProduct Ω₀ Ω V ≃ₗ[Ω] V', ∀ e, Φ (TensorProduct.mk Ω₀ Ω V 1 e) = j e := by
   intro Ω₀ Ω _ _ _ V V' _ _ _ _ j hsemi hind hspan
-  letI : Module Ω₀ V' := Module.compHom V' (algebraMap Ω₀ Ω)
-  haveI : IsScalarTower Ω₀ Ω V' := ⟨fun a b x => by
+  let : Module Ω₀ V' := Module.compHom V' (algebraMap Ω₀ Ω)
+  have : IsScalarTower Ω₀ Ω V' := ⟨fun a b x => by
     change (a • b) • x = algebraMap Ω₀ Ω a • (b • x)
     rw [Algebra.smul_def, mul_smul]⟩
   let jl : V →ₗ[Ω₀] V' :=

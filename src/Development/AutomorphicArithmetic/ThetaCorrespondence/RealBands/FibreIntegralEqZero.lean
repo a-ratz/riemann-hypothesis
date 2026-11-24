@@ -486,14 +486,14 @@ theorem isClosedEmbedding_atP : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → �
         fun p : GlobalTheory.FibreAtTau.atP θ V C τ => P * infMat D.sp.cm.sig V.gram (θ τ) ((p : NI V C) : GA D V) * P⁻¹ := funext fun p => hE _
     rw [e]
     exact (continuous_const.matrix_mul ((GlobalTheory.Mem.VolExists.continuous_infMat V.gram (hθ τ)).comp
-      (continuous_subtype_val.comp continuous_subtype_val))).matrix_mul continuous_const
+      (continuous_subtypeVal.comp continuous_subtypeVal))).matrix_mul continuous_const
   have hcont : Continuous f := by
     refine Topology.IsInducing.subtypeVal.continuous_iff.2 (Units.continuous_iff.2 ⟨hval, ?_⟩)
     exact ((continuous_const.matrix_mul hval.matrix_conjTranspose).matrix_mul continuous_const).congr
       fun p => (GlobalTheory.FibreAtTauEmb.inv_val_UJ (f p)).symm
   have hψc : Continuous ψ :=
     (GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ V τ).comp_continuous
-      ((continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul continuous_const)
+      ((continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul continuous_const)
       (fun u => GlobalTheory.FibreAtTauEmb.conj_mem_UH hP hPG u)
   have hind : Topology.IsInducing f := by
     refine Topology.IsInducing.of_comp hcont hψc ?_
@@ -570,7 +570,7 @@ namespace GlobalTheory.FibreAtTau
 theorem isClosed_cmp_eq_one {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) {r : ℕ}
     (C : Matrix (Fin V.rank) (Fin r) D.host.E) (τ : D.what₂.Tau) :
     IsClosed {p : NI V C | cmp θ τ (p : GA D V) = 1} :=
-  isClosed_eq ((GlobalTheory.Cusp.KinfCompact.continuous_realMat hθ V τ).comp continuous_subtype_val)
+  isClosed_eq ((GlobalTheory.Cusp.KinfCompact.continuous_realMat hθ V τ).comp continuous_subtypeVal)
     continuous_const
 
 theorem isClosed_atP_and_isClosed_offP : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (τ : D.what₂.Tau), IsClosed (GlobalTheory.FibreAtTau.atP θ V C τ : Set (NI V C)) ∧ IsClosed (GlobalTheory.FibreAtTau.offP θ V C τ : Set (NI V C)) := by
@@ -581,7 +581,7 @@ theorem isClosed_atP_and_isClosed_offP : ∀ (D : D7) (θ : InfFam D), IsInfFam 
       ext p
       simp only [SetLike.mem_coe, mem_atP, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [e]
-    exact ((GlobalTheory.Cusp.KinfCompact.isClosed_realPts V).preimage continuous_subtype_val).inter
+    exact ((GlobalTheory.Cusp.KinfCompact.isClosed_realPts V).preimage continuous_subtypeVal).inter
       (isClosed_iInter fun τ' => isClosed_iInter fun _ => isClosed_cmp_eq_one hθ V C τ')
   · have e : (offP θ V C τ : Set (NI V C)) = {p : NI V C | cmp θ τ (p : GA D V) = 1} := by
       ext p
@@ -987,8 +987,8 @@ theorem fibre_integral_eq_zero : GlobalTheory.Published.DiscreteSeriesCoefficien
   refine ⟨atP θ V C τ, offP θ V C τ, (L_closed θ hθ V C τ).1, (L_closed θ hθ V C τ).2, (L_comm θ hθ V C τ).1,
     L_decomp θ hθ V C hC τ, (L_comm θ hθ V C τ).2, ?_⟩
   intro ν hν q hq x y
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : BorelSpace (Formalism.REAL.UJ (M.ε τ)) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (Formalism.REAL.UJ (M.ε τ)) := ⟨rfl⟩
   obtain ⟨E, hE⟩ := L_hom θ hθ V S M τ
   obtain ⟨W, hW, hemb, hrange⟩ := L_emb θ hθ V S M τ C hC E hE
   obtain ⟨R, hR⟩ := L_factor θ hθ V S M K v a τ C q hq x y
@@ -1097,8 +1097,8 @@ theorem fibre_integral_eq_zero : ∀ (D : D7) (θ : InfFam D), IsInfFam θ →
   refine ⟨atP θ V C τ, offP θ V C τ, (L_closed θ hθ V C τ).1, (L_closed θ hθ V C τ).2, (L_comm θ hθ V C τ).1,
     L_decomp θ hθ V C hC τ, (L_comm θ hθ V C τ).2, ?_⟩
   intro ν hν q hq x y
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : BorelSpace (Formalism.REAL.UJ (M.ε τ)) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (Formalism.REAL.UJ (M.ε τ)) := ⟨rfl⟩
   obtain ⟨E, hE⟩ := L_hom θ hθ V S M τ
   obtain ⟨W, hW, hemb, hrange⟩ := L_emb θ hθ V S M τ C hC E hE
   obtain ⟨R, hR⟩ := L_factor θ hθ V S M K v a τ C q hq x y

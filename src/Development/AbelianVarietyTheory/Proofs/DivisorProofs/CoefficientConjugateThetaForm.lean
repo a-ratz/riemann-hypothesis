@@ -117,7 +117,7 @@ theorem exists_real_model (V : HSp D) (θ : InfFam D) (c : CoefA V) (lam : D.wha
       ∀ u ∈ GinfC V, ∀ v, c.ρ u (e v) = e (rhoK lam (invTrK fun τ => realGL θ V u (l.symm τ)) v) := by
   obtain ⟨e, he⟩ : ∃ e : VV ℂ lam ≃ₗ[ℂ] c.W, ∀ v, e (mapVV σ lam v) = c0 v := exists_scalarExt σ lam c0 h2 h3
   refine ⟨e, fun u hu v => ?_⟩
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hlab : ∀ τ x, σ (labLL D τ x) = tauE D (l.symm τ) x := fun τ x => by
     have := DFunLike.congr_fun (hl (l.symm τ)) x
     rwa [Equiv.apply_symm_apply] at this
@@ -365,7 +365,7 @@ theorem weights_label (D : D7) (i : Fin D.R.m) (τ : D.what₂.Tau) (p q : ℕ) 
         exact_mod_cast this
       rw [h2]
       unfold wtK
-      rw [if_pos (by simp)]
+      rw [ite_eq_left (by simp)]
       simp
     · have h1 := A.kap_minus c
       rw [hsq, eS, he] at h1
@@ -376,7 +376,7 @@ theorem weights_label (D : D7) (i : Fin D.R.m) (τ : D.what₂.Tau) (p q : ℕ) 
         exact_mod_cast this
       rw [h2]
       unfold wtK
-      rw [if_neg (by simp)]
+      rw [ite_eq_right (by simp)]
       have h3 : (Wc D i).rank - 1 - ((Fin.cast hn (finSumFinEquiv (Sum.inr c)) : Fin (Wc D i).rank) : ℕ) =
           qS D i τ - 1 - c := by
         simp only [finSumFinEquiv_apply_right, Fin.val_cast, Fin.val_natAdd]
@@ -392,13 +392,13 @@ theorem weights_label (D : D7) (i : Fin D.R.m) (τ : D.what₂.Tau) (p q : ℕ) 
     unfold wtU thetaWt
     by_cases c1 : (j : ℕ) < pS D i τ
     · have ht := D.R.three_m_lt_t
-      rw [if_pos c1, if_pos c1, if_neg (by omega)]
+      rw [ite_eq_left c1, ite_eq_left c1, ite_eq_right (by omega)]
       ring
-    · rw [if_neg c1, if_neg c1]
+    · rw [ite_eq_right c1, ite_eq_right c1]
       by_cases c2 : (j : ℕ) < pS D i τ + D.R.t
-      · rw [if_pos c2, if_neg (by omega)]
+      · rw [ite_eq_left c2, ite_eq_right (by omega)]
         ring
-      · rw [if_neg c2, if_pos (by omega)]
+      · rw [ite_eq_right c2, ite_eq_left (by omega)]
         have h3 : (Vc D i).rank - 1 - (j : ℕ) = qS D i τ - 1 - (j - (pS D i τ + D.R.t)) := by
           omega
         rw [h3]

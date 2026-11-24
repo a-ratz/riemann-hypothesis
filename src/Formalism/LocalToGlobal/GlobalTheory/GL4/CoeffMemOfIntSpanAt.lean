@@ -201,8 +201,8 @@ theorem gM_unit (c : (D.mem u).C.cls 0) (y : Fin (D.R.N 0) → (D.sp.X 0).V) (hl
   classical
   have hn : Fintype.card (Fin (D.R.N 0)) = finrank D.host.E (D.sp.X 0).V := by
     rw [Fintype.card_fin, (D.sp.X 0).rank_eq, D.sp.rank0, Ranks.N_zero]
-  haveI : Nonempty (Fin (D.R.N 0)) := ⟨⟨0, rank_zero_pos D⟩⟩
-  haveI : FiniteDimensional D.host.E (D.sp.X 0).V :=
+  have : Nonempty (Fin (D.R.N 0)) := ⟨⟨0, rank_zero_pos D⟩⟩
+  have : FiniteDimensional D.host.E (D.sp.X 0).V :=
     Module.finite_of_finrank_pos (by rw [← hn]; exact Fintype.card_pos)
   have hspan := hli.span_eq_top_of_card_eq_finrank hn
   let Φ : (D.sp.X 0).V →ₗ[D.host.E] (Fin (D.R.N 0) → D.host.E) := LinearMap.pi fun a => (D.sp.X 0).hT (y a)
@@ -221,7 +221,7 @@ theorem gM_unit (c : (D.mem u).C.cls 0) (y : Fin (D.R.N 0) → (D.sp.X 0).V) (hl
     rw [Module.finrank_fin_fun, ← hn, Fintype.card_fin]
   have hsurj := (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hfin).1 hinj
   rw [← Matrix.isUnit_iff_isUnit_det]
-  refine Matrix.linearIndependent_rows_iff_isUnit.1 ?_
+  refine Matrix.linearIndependent_row_iff_isUnit.1 ?_
   rw [Fintype.linearIndependent_iff]
   intro t ht b
   obtain ⟨z, hz⟩ := hsurj (Pi.single b 1)

@@ -60,7 +60,7 @@ theorem exists_letter_of_jump : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D
   have hC3 := (GlobalTheory.NL.CompD.component_tied (D.locT l) K LL T hc hc0 hC τ ι hComp.2.2 _ hemb).2.2.1
   have hlt : FildR ((D.loc l).PD K) T.ρ τ (a + 1) < FildR ((D.loc l).PD K) T.ρ τ a :=
     lt_of_le_of_ne (GlobalTheory.DeRhamCompare.FildR_succ_le _ _ τ a) hJ
-  obtain ⟨w, hwa, hwa1⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨w, hwa, hwa1⟩ := IsConcreteLE.exists_of_lt hlt
   obtain ⟨d, hd, hdw⟩ := hC3 w hwa.1
   refine ⟨d, hd, ?_, ?_⟩
   · have : ιV ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V) d =

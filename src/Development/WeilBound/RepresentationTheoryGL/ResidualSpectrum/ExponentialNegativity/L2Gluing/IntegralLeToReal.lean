@@ -80,7 +80,7 @@ theorem countable_subgroupClosure {G : Type*} [Group G] (s : Set G) (hs : s.Coun
     ((Subgroup.closure s : Subgroup G) : Set G).Countable := by
   open scoped Pointwise in
   have ht : (s ∪ s⁻¹).Countable := hs.union (by simpa using hs.image (·⁻¹))
-  haveI : Countable ↥(s ∪ s⁻¹) := ht.to_subtype
+  have : Countable ↥(s ∪ s⁻¹) := ht.to_subtype
   have h : ((Subgroup.closure s : Subgroup G) : Set G)
       = Set.range (FreeMonoid.lift ((↑) : ↥(s ∪ s⁻¹) → G)) := by
     have h1 : ((Subgroup.closure s : Subgroup G) : Set G)
@@ -92,10 +92,10 @@ theorem countable_subgroupClosure {G : Type*} [Group G] (s : Set G) (hs : s.Coun
 
 theorem countable_lat (K : Type) [Field K] [NumberField K] (n : ℕ) :
     Countable (PositivityTheory.Rg.Rs.An.lat K n) := by
-  haveI : Countable K := GroundTheory.Global.countable_numberField K
-  haveI : Countable (Matrix (Fin n) (Fin n) K) :=
+  have : Countable K := GroundTheory.Global.countable_numberField K
+  have : Countable (Matrix (Fin n) (Fin n) K) :=
     inferInstanceAs (Countable (Fin n → Fin n → K))
-  haveI : Countable (GL (Fin n) K) := Units.val_injective.countable
+  have : Countable (GL (Fin n) K) := Units.val_injective.countable
   have h1 : (Set.range (AdelicGLn.diagonal K n)).Countable := Set.countable_range _
   have h2 : ((Subgroup.zpowers (PositivityTheory.Rg.Rs.An.tor K fun _ : Fin n => (1 : ℝ)) :
       Subgroup (AdelicGLn.AdelicGL K n)) : Set (AdelicGLn.AdelicGL K n)).Countable := by
@@ -137,7 +137,7 @@ theorem integral_norm_sq_le_toReal_lintegral_enorm_sq {α : Type} [MeasurableSpa
     congr 1
     apply lintegral_congr
     intro x
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   · rw [integral_undef h]
     exact ENNReal.toReal_nonneg
 
@@ -184,17 +184,17 @@ theorem enorm_mean_sq_mul_le {α : Type} [MeasurableSpace α] (ν : Measure α) 
   by_cases htop : ν s = ⊤
   · simp [Measure.real, htop]
   by_cases hf : IntegrableOn f s ν
-  · have hcs := lintegral_enorm_sq_le (ν.restrict s) (fun x => ‖f x‖ₑ) hf.1.enorm
+  · have hcs := lintegral_enorm_sq_le (ν.restrict s) (fun x => ‖f x‖ₑ) hf.1.eNorm
     rw [Measure.restrict_apply_univ] at hcs
-    have hz : ‖∫ x in s, f x ∂ν‖ₑ ≤ ∫⁻ x in s, ‖f x‖ₑ ∂ν := enorm_integral_le_lintegral_enorm _
+    have hz : ‖∫ x in s, f x ∂ν‖ₑ ≤ ∫⁻ x in s, ‖f x‖ₑ ∂ν := eNorm_integral_le_lintegral_eNorm _
     have hc : ‖((ν.real s : ℝ) : ℂ)⁻¹‖ₑ = (ν s)⁻¹ := by
       have hne : ((ν.real s : ℝ) : ℂ) ≠ 0 := by
         simp [Measure.real, ENNReal.toReal_eq_zero_iff, h0, htop]
-      rw [enorm_inv hne]
+      rw [eNorm_inv hne]
       congr 1
-      rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg measureReal_nonneg,
+      rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg measureReal_nonneg,
         Measure.real, ENNReal.ofReal_toReal htop]
-    rw [enorm_mul, hc]
+    rw [eNorm_mul, hc]
     calc ((ν s)⁻¹ * ‖∫ x in s, f x ∂ν‖ₑ) ^ 2 * ν s
         ≤ ((ν s)⁻¹ * ∫⁻ x in s, ‖f x‖ₑ ∂ν) ^ 2 * ν s := by gcongr
       _ = ((ν s)⁻¹) ^ 2 * (∫⁻ x in s, ‖f x‖ₑ ∂ν) ^ 2 * ν s := by rw [mul_pow]
@@ -230,7 +230,7 @@ theorem tendsto_setLIntegral_diff_compactCovering
     ((isCompact_compactCovering α k).isClosed.measurableSet).compl
   have hrew : ∀ k : ℕ, ∫⁻ x in F \ compactCovering α k, h x ∂μ = m (compactCovering α k)ᶜ := by
     intro k
-    rw [hm, withDensity_apply h (hmeas k), Measure.restrict_restrict (hmeas k), Set.diff_eq,
+    rw [hm, withDensity_apply h (hmeas k), Measure.restrict_restrict (hmeas k), Set.sdiff_eq,
       Set.inter_comm]
   have huniv : m Set.univ < ⊤ := by
     rw [hm, withDensity_apply h MeasurableSet.univ, Measure.restrict_univ]
@@ -314,7 +314,7 @@ theorem swap (μ : Measure (AdelicGLn.AdelicGL K n)) [μ.IsHaarMeasure] (φ : Ad
   have hcont : Measurable fun p : AdelicGLn.AdelicGL K n × (UPos n r → AdeleRing (𝓞 K) K) =>
       ‖φ (unipGL p.2 * (An.aR K n r t * p.1))‖ₑ ^ 2 :=
     (hφ.comp ((continuous_unipGL.comp continuous_snd).mul
-      (continuous_const.mul continuous_fst))).measurable.enorm.pow_const 2
+      (continuous_const.mul continuous_fst))).measurable.eNorm.pow_const 2
   have key : (∫⁻ g in Q, ‖An.ctn r φ (An.aR K n r t * g)‖ₑ ^ 2 ∂μ) * unipMeasure K n r (unipFundamentalDomain K n r)
       ≤ (∫⁻ x in sset K n r t D Q, ‖φ x‖ₑ ^ 2 ∂μ) * unipMeasure K n r (unipFundamentalDomain K n r) := by
     calc (∫⁻ g in Q, ‖An.ctn r φ (An.aR K n r t * g)‖ₑ ^ 2 ∂μ) * unipMeasure K n r (unipFundamentalDomain K n r)
@@ -375,7 +375,7 @@ theorem l2glue_holds : An.L2DecayOfCountEscape := by
   intro hCount hEsc K _ _ n r hr hrn μ _ φ F hφ hinv hF hfin Q hQ
   obtain ⟨D, hD, hD0⟩ := exists_isCompact_superset_unipFundamentalDomain (K := K) (n := n) (r := r)
   obtain ⟨C, hC⟩ := l2glue.count_le hCount hr hrn hD hQ
-  have hhm : Measurable fun x : AdelicGLn.AdelicGL K n => ‖φ x‖ₑ ^ 2 := hφ.measurable.enorm.pow_const 2
+  have hhm : Measurable fun x : AdelicGLn.AdelicGL K n => ‖φ x‖ₑ ^ 2 := hφ.measurable.eNorm.pow_const 2
   have hρ : 0 ≤ An.rho K n r := by
     unfold An.rho
     have : (r : ℝ) ≤ n := by exact_mod_cast hrn.le

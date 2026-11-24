@@ -93,7 +93,7 @@ theorem exists_tensor (ι : V →ₗ[ℂ] H) (β : V →ₛₗ[starRingEnd ℂ] 
     (h : ∀ y, (∀ e ∈ E, ⟪ι y, ι e⟫_ℂ = 0) → β y = 0) : ∃ t : A ⊗[ℂ] V, ∀ y, contr ι y t = β y := by
 
   set F : Submodule ℂ H := E.map ι with hF
-  haveI : FiniteDimensional ℂ F := by rw [hF]; infer_instance
+  have : FiniteDimensional ℂ F := by rw [hF]; infer_instance
   let b := stdOrthonormalBasis ℂ F
   have hpre : ∀ k, ∃ e : V, e ∈ E ∧ ι e = (b k : H) := fun k => Submodule.mem_map.mp (b k).2
   choose e heE he using hpre

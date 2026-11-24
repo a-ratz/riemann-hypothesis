@@ -58,8 +58,8 @@ theorem exists_rows_linearIndependent_of_le_rank {K m n : Type} [Field K] [Finty
     ∃ S : Fin ρ → m, LinearIndependent K (M.submatrix S id).row := by
   classical
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' K M.row
-  haveI : Finite κ := Finite.of_injective a ha
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  let : Fintype κ := Fintype.ofFinite κ
   have hκ : Fintype.card κ = M.rank := by
     rw [← finrank_span_eq_card hli, hsp, ← Matrix.rank_eq_finrank_span_row]
   have hle : Fintype.card (Fin ρ) ≤ Fintype.card κ := by rw [hκ, Fintype.card_fin]; exact h
@@ -77,7 +77,7 @@ theorem exists_submatrix_det_ne_zero_of_le_rank :
   have hZt : ρ ≤ (Y.submatrix S id)ᵀ.rank := by rw [Matrix.rank_transpose, hZ]
   obtain ⟨τ, hτ⟩ := exists_rows_linearIndependent_of_le_rank ρ (Y.submatrix S id)ᵀ hZt
   refine ⟨S, τ, ?_⟩
-  have hu := (Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hτ)
+  have hu := (Matrix.isUnit_iff_isUnit_det _).1 (linearIndependent_row_iff_isUnit.1 hτ)
   have e : (Y.submatrix S id)ᵀ.submatrix τ id = (Y.submatrix S τ)ᵀ := by ext i j; rfl
   rw [e, Matrix.det_transpose] at hu
   exact hu.ne_zero

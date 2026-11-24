@@ -87,7 +87,7 @@ theorem finsum_ord_pull_eq_finrank_mul : ∀ (k F E : Type) [Field k] [IsAlgClos
   have hsupp : (Function.support fun p => ord p (algebraMap F E (φ (ρ p)))) ⊆ ↑hT.toFinset := by
     intro p hp
     simp only [Function.mem_support] at hp
-    simp only [Set.Finite.coe_toFinset, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_preimage, Set.mem_ofPred_eq]
     intro h; apply hp; rw [hkey, h, mul_zero]
   rw [finsum_eq_sum_of_support_subset _ hsupp]
   rw [finsum_eq_sum_of_support_subset _ (s := hφ.toFinset) (by intro v hv; simpa using hv)]
@@ -104,8 +104,8 @@ theorem finsum_ord_pull_eq_finrank_mul : ∀ (k F E : Type) [Field k] [IsAlgClos
   rw [← (hfib v).2, finsum_mem_eq_finite_toFinset_sum _ (hfib v).1]
   congr 1
   ext p
-  simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_setOf_eq]
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hv
+  simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_ofPred_eq]
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hv
   constructor
   · exact fun h => h.2
   · intro h; exact ⟨h ▸ hv, h⟩
@@ -150,7 +150,7 @@ theorem res_mono {ρ : Place k E → Place k F} (hρ : IsRes ρ) (p : Place k E)
     (h : (ρ p).1 x ≤ (ρ p).1 y) : p.1 (algebraMap F E x) ≤ p.1 (algebraMap F E y) := by
   by_cases hy : y = 0
   · subst hy
-    have h0 : (ρ p).1 x = 0 := le_antisymm (by simpa using h) zero_le'
+    have h0 : (ρ p).1 x = 0 := le_antisymm (by simpa using h) zero_le
     have hx : x = 0 := (Valuation.zero_iff _).1 h0
     simp [hx]
   · have h1 : (ρ p).1 (x * y⁻¹) ≤ 1 := by
@@ -224,7 +224,7 @@ theorem adm_pullAd_and_deg_mul_finrank : ∀ (k F E : Type) [Field k] [IsAlgClos
         · exact (_root_.GlobalTheory.Nef.finite_support_and_sum_ord_eq_zero k F hFF (w i) hi).1.subset fun v hv => hv.2
       refine hS.subset fun v hv => ?_
       by_contra hc
-      simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq, not_or, not_exists, not_and,
+      simp only [Set.mem_union, Set.mem_iUnion, Set.mem_ofPred_eq, not_or, not_exists, not_and,
         not_not] at hc
       obtain ⟨hu, hw1⟩ := hc
       apply hv
@@ -245,12 +245,12 @@ theorem adm_pullAd_and_deg_mul_finrank : ∀ (k F E : Type) [Field k] [IsAlgClos
     rw [finsum_congr hpo, hP.2 φ hfin, finsum_congr hvo]
   have hlines : ∀ b : ℝ, LinesLE g b → LinesLE (pullAd ρ g) (b * Module.finrank F E) := by
     intro b hb E' _ _ _ _ _ ρ' hρ' w hw
-    letI : Algebra F E' := ((algebraMap E E').comp (algebraMap F E)).toAlgebra
-    haveI : IsScalarTower F E E' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : IsScalarTower k F E' := IsScalarTower.of_algebraMap_eq fun x => by
+    let : Algebra F E' := ((algebraMap E E').comp (algebraMap F E)).toAlgebra
+    have : IsScalarTower F E E' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : IsScalarTower k F E' := IsScalarTower.of_algebraMap_eq fun x => by
       rw [RingHom.algebraMap_toAlgebra, RingHom.comp_apply, ← IsScalarTower.algebraMap_apply k F E,
         ← IsScalarTower.algebraMap_apply k E E']
-    haveI : FiniteDimensional F E' := Module.Finite.trans E E'
+    have : FiniteDimensional F E' := Module.Finite.trans E E'
     have hres : IsRes (fun p => ρ (ρ' p)) := fun p x => (hρ' p (algebraMap F E x)).trans (hρ (ρ' p) x)
     have heq : pullAd ρ' (pullAd ρ g) = pullAd (fun p => ρ (ρ' p)) g := by
       funext p; ext i j; rfl

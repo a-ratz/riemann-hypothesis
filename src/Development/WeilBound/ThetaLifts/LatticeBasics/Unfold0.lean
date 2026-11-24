@@ -108,18 +108,18 @@ theorem Law.eis_inv (h : Law χ z f) (hχ : IsHecke F E χ) (hJ : Aniso σ Y.J) 
   simpa [mul_assoc] using this
 
 theorem countable_ratU : Countable (ratU σ Y.J) := by
-  haveI : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
-  haveI : Countable (GL (Fin n) E) := Units.val_injective.countable
+  have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have : Countable (GL (Fin n) E) := Units.val_injective.countable
   exact (Set.countable_range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))).preimage
     Subtype.val_injective
 
 theorem unfold0 : Unfold0 := by
   intro F E _ _ _ _ _ σ B n Y r s hB hY h0 χ e hχ he f Ê z _ _ hs hf μ D hμ hD hi φ hφ h
   have hJ := aniso_of hB hY h0
-  haveI := countable_ratU (σ := σ) (Y := Y)
-  haveI : BorelSpace (UA σ Y.J) := ⟨rfl⟩
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := countable_ratU (σ := σ) (Y := Y)
+  have : BorelSpace (UA σ Y.J) := ⟨rfl⟩
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨C, hC⟩ := hφ.2.2 0
   let k : UA σ Y.J → ℂ := fun g => f (e (1, g)) * (detInv χ g * φ (h * g))
   have ik : Integrable k μ := hi.mul_bdd (c := C)

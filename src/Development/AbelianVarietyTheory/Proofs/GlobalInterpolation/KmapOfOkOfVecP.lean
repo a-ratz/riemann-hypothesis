@@ -177,7 +177,7 @@ private theorem span_eq_top_of_isSdLat {E : Type} [Field E] [NumberField E] [Sta
 
 theorem ordSub_eq_ordDet {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} {N : Submodule (𝓞 E) (Sp E n)}
     (hN : IsSdLat N) (w : HeightOneSpectrum (𝓞 E)) : GlobalTheory.Mem.Chr.ordSub w (GlobalTheory.Mem.Chr.detSub N) = ordDet w N := by
-  letI : Submodule.IsLattice E N := hN.1
+  let : Submodule.IsLattice E N := hN.1
   have hfull : Submodule.IsFullLattice E N := ⟨span_eq_top_of_isSdLat hN⟩
   apply ordSub_detSub_eq hfull
   apply GlobalTheory.CharValCompare.isFr_frameAt
@@ -218,9 +218,9 @@ theorem inv_val_detIdl : ∀ (X : Fields) (n : ℕ) (sel : HeightOneSpectrum (�
       by_cases hv : sel v ∈ SB ∨ conjPrime₂ (sel v) ∈ SB
       · have hv' : ∃ P ∈ SB, P.asIdeal.under (𝓞 X.F) = v.asIdeal :=
           hv.elim (fun h => ⟨_, h, (hsp _).2 (Or.inl rfl)⟩) fun h => ⟨_, h, (hsp _).2 (Or.inr rfl)⟩
-        rw [if_pos hv']
+        rw [ite_eq_left hv']
         simp only [hg, GlobalTheory.CharValCompare.conjP_conjP]
-        rw [if_pos hv, if_pos hv.symm]
+        rw [ite_eq_left hv, ite_eq_left hv.symm]
         simp
       · have hv' : ¬ ∃ P ∈ SB, P.asIdeal.under (𝓞 X.F) = v.asIdeal := by
           rintro ⟨P, hP, e⟩
@@ -229,9 +229,9 @@ theorem inv_val_detIdl : ∀ (X : Fields) (n : ℕ) (sel : HeightOneSpectrum (�
         obtain ⟨ha, hb⟩ := not_or.1 hv
         obtain ⟨u1, s1⟩ := hU _ ha hb
         obtain ⟨u2, -⟩ := hU _ hb (by rwa [GlobalTheory.CharValCompare.conjP_conjP])
-        rw [if_neg hv']
+        rw [ite_eq_right hv']
         simp only [hg, GlobalTheory.CharValCompare.conjP_conjP]
-        rw [if_neg hv, if_neg fun h => hv (Or.symm h), GlobalTheory.OrdDetConj.ordDet_conjP hN,
+        rw [ite_eq_right hv, ite_eq_right fun h => hv (Or.symm h), GlobalTheory.OrdDetConj.ordDet_conjP hN,
           GlobalTheory.HeckeSplit.val_eq_inv_of_split X.F X.E χ v _ _ hT u1 u2 (Ne.symm hc) hm, pow_toNat_mul,
           Units.val_zpow_eq_zpow_val, map_zpow₀, s1, Units.val_inv_eq_inv_val, Units.val_zpow_eq_zpow_val, inv_zpow]
   have hinj : Function.Injective sel := fun v w h => HeightOneSpectrum.ext (by rw [← hsel v, h, hsel w])
@@ -319,10 +319,10 @@ theorem jetC_sum {ι : Type} [Fintype ι] {a b : ℕ} (cD : ι → ℂ) {I : Typ
     funext z; simp
   unfold jetC derivAt0
   rw [e, iteratedFDeriv_sum (f := fun i => c i • G i) (fun i _ => (hG i _).const_smul (c i))]
-  simp only [Finset.sum_apply, ContinuousMultilinearMap.sum_apply, Finset.mul_sum]
+  simp only [Finset.sum_apply, sum_apply, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [iteratedFDeriv_const_smul_apply (hG i _).contDiffAt]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem map_kerOf (A : Amb X) {a b : ℕ} (Sa SB : Finset (HeightOneSpectrum (𝓞 X.E))) {cA cB : ℕ} (hA : 0 < cA) (hB : 0 < cB)
@@ -456,10 +456,10 @@ theorem map_muAtT (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hg : ∀ k, Pr
   refine GlobalTheory.LocCharComp.locChar_eq_locK X.E X.K σ P.1 (m0 j * ξ)⁻¹ _ _ hlp.1.2 (fun q hq' => ?_) (fun x y c hx hc => ?_) a
   · rw [hm, ← hq q hq']
     by_cases hP : P.1 ∈ Pr.vGs
-    · rw [if_pos hP, hG j.1 j.2 P hP q hq', Units.val_inv_eq_inv_val, map_inv₀]
+    · rw [ite_eq_left hP, hG j.1 j.2 P hP q hq', Units.val_inv_eq_inv_val, map_inv₀]
     · have hg' : ∀ k, ((Pr.g k : ℕ) : 𝓞 X.E) ∉ P.1.asIdeal := fun k =>
         GlobalTheory.ColPeriod.natCast_notMem_of_ne (hPr.g_prime k) hlp.1.1 (fun h => hlp.2 hP (h ▸ hg k)) P.1 (Ideal.absNorm_mem _)
-      rw [if_neg hP, muqT, dite_eq_left j.2, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_inv₀,
+      rw [ite_eq_right hP, muqT, dite_eq_left j.2, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_inv₀,
         ht.muVal j P.1 hg', ← locK_eq_val (m0 j) P.1 ((ht.mu0 j).unr _ hg') q
           (hq' ▸ GlobalTheory.CharVal.val_natCast_of_notMem_sq (Ideal.absNorm_mem _) hlp.1.2)]
   · rw [hm]
@@ -472,11 +472,11 @@ theorem map_muAtT (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hg : ∀ k, Pr
         rw [show (sel (P.1.under (𝓞 X.F))).under (𝓞 X.F) = P.1.under (𝓞 X.F) from HeightOneSpectrum.ext (hsel _),
           (GlobalTheory.Mem.ReadTwist.plc_under_eq_iff (F := X.F) P.1 (hPr.g_prime k)).2 gk] at h1
         exact h1 (hg k)
-      rw [if_pos hP, GlobalTheory.NormOneUnit.locK_unr hun (hu x y c hx hc), (ht.mu0 j).atg ⟨P.1, hP⟩ x y c hx hc, chiP, dite_eq_left hP, chiAt, extChi,
+      rw [ite_eq_left hP, GlobalTheory.NormOneUnit.locK_unr hun (hu x y c hx hc), (ht.mu0 j).atg ⟨P.1, hP⟩ x y c hx hc, chiP, dite_eq_left hP, chiAt, extChi,
         dite_eq_left j.2, Units.val_inv_eq_inv_val, map_inv₀, inv_inv, Units.val_one, inv_one, mul_one]
     · have hg' : ∀ k, ((Pr.g k : ℕ) : 𝓞 X.E) ∉ P.1.asIdeal := fun k =>
         GlobalTheory.ColPeriod.natCast_notMem_of_ne (hPr.g_prime k) hlp.1.1 (fun h => hlp.2 hP (h ▸ hg k)) P.1 (Ideal.absNorm_mem _)
-      rw [if_neg hP, GlobalTheory.NormOneUnit.locK_unr ((ht.mu0 j).unr _ hg') (hu x y c hx hc), MonoidHom.inv_apply, Units.val_inv_eq_inv_val,
+      rw [ite_eq_right hP, GlobalTheory.NormOneUnit.locK_unr ((ht.mu0 j).unr _ hg') (hu x y c hx hc), MonoidHom.inv_apply, Units.val_inv_eq_inv_val,
         map_inv₀, GlobalTheory.NormOneUnit.resChar_eq h hta P.1 c y x hx hc.symm, Units.val_one, inv_one, one_mul]
 
 theorem map_muInvDet (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hg : ∀ k, Pr.g k ∈ S) (ht : Ch.Tied σ e m0 eta)

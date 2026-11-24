@@ -170,7 +170,7 @@ theorem exists_completed_point {R : Type} [CommRing R] [IsNoetherianRing R] (I :
     have : Flat (Spec.map φ) := by rw [hφ]; exact Flat.comp _ _
     exact Flat.SpecMap_iff.1 this
   obtain ⟨B, _, ψ, hB, hψ, hs⟩ := exists_completion (I.map φ.hom)
-  letI : Algebra R B := (ψ.comp φ.hom).toAlgebra
+  let : Algebra R B := (ψ.comp φ.hom).toAlgebra
   have hBc : IsAdicComplete (I.map (algebraMap R B)) B := by
     rw [Ideal.map_map] at hB; exact hB
   let g' : Spec (CommRingCat.of B) ⟶ G'.left := Spec.map (CommRingCat.ofHom ψ) ≫ hV'.fromSpec

@@ -125,13 +125,13 @@ theorem coe_localChar (χ : HeckeCharacter K) (v : HeightOneSpectrum (𝓞 K))
 theorem continuous_localChar (χ : HeckeCharacter K) (v : HeightOneSpectrum (𝓞 K)) :
     Continuous (localChar χ v) := by
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · exact continuous_subtype_val.comp (χ.localComponent v).continuous
+  · exact continuous_subtypeVal.comp (χ.localComponent v).continuous
   · have h : (fun a ↦ (((localChar χ v a)⁻¹ : ℂˣ) : ℂ)) =
         fun a ↦ ((χ.localComponent v a⁻¹ : Circle) : ℂ) := by
       funext a
       rw [← map_inv, coe_localChar]
     rw [h]
-    exact continuous_subtype_val.comp ((χ.localComponent v).continuous.comp continuous_inv)
+    exact continuous_subtypeVal.comp ((χ.localComponent v).continuous.comp continuous_inv)
 
 theorem modulus_adicCompletion (v : HeightOneSpectrum (𝓞 K)) (x : v.adicCompletion K) :
     (LocalField.modulus x : ℝ) = ‖x‖ := by

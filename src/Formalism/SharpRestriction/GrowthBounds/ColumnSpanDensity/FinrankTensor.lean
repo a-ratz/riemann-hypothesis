@@ -81,7 +81,7 @@ theorem prodA (m A : ℕ) :
   | zero => simp
   | succ m ih =>
     rw [Fin.prod_univ_castSucc]
-    simp only [Fin.coe_castSucc, Fin.val_last]
+    simp only [Fin.val_castSucc, Fin.val_last]
     rw [ih, choose_add_succ_succ_eq_choose_mul_div]
     ring
 
@@ -116,7 +116,7 @@ private theorem weylDim_cons_eq_prod_mul (n : ℕ) (a : ℤ) (lam : Fin n → �
   · rw [Fin.prod_univ_succ]
     simp only [lt_self_iff_false, ↓reduceIte, one_mul]
     refine Finset.prod_congr rfl fun j _ => ?_
-    rw [if_pos (Fin.succ_pos j)]
+    rw [ite_eq_left (Fin.succ_pos j)]
     simp only [Fin.cons_zero, Fin.cons_succ, Fin.val_succ, Fin.val_zero]
     push_cast
     congr 1 <;> ring
@@ -135,19 +135,19 @@ private theorem weylDim_snoc_eq_mul_prod (n : ℕ) (lam : Fin n → ℤ) (b : �
       weylDim n lam * ∏ i : Fin n, (((lam i - b : ℤ) : ℚ) + (n : ℚ) - ((i : ℕ) : ℚ)) / ((n : ℚ) - ((i : ℕ) : ℚ)) := by
   unfold weylDim
   have h1 : ∀ g : Fin (n + 1) → ℚ, (∏ j : Fin (n + 1), if Fin.last n < j then g j else 1) = 1 :=
-    fun g => Finset.prod_eq_one fun j _ => if_neg (not_lt.mpr (Fin.le_last j))
+    fun g => Finset.prod_eq_one fun j _ => ite_eq_right (not_lt.mpr (Fin.le_last j))
   rw [Fin.prod_univ_castSucc, h1, mul_one, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
-  rw [Fin.prod_univ_castSucc, if_pos (Fin.castSucc_lt_last i)]
+  rw [Fin.prod_univ_castSucc, ite_eq_left (Fin.castSucc_lt_last i)]
   congr 1
   · refine Finset.prod_congr rfl fun j _ => ?_
-    simp only [Fin.snoc_castSucc, Fin.coe_castSucc, Fin.castSucc_lt_castSucc_iff]
-  · simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
+    simp only [Fin.snoc_castSucc, Fin.val_castSucc, Fin.castSucc_lt_castSucc_iff]
+  · simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.val_castSucc, Fin.val_last]
 
 theorem weylDim_hwt_eq (m A B : ℕ) : weylDim (m + 2) (hwt m A B) = (dimHar (m + 1) A B : ℚ) := by
   unfold hwt
   rw [weylDim_cons_eq_prod_mul, weylDim_snoc_eq_mul_prod, weylDim_const, one_mul, Fin.prod_univ_castSucc]
-  simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
+  simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.val_castSucc, Fin.val_last]
   push_cast
   try simp only [sub_zero, zero_sub, neg_neg, sub_neg_eq_add, zero_add]
   rw [prodA m A, prodB m B]
@@ -183,7 +183,7 @@ theorem weylDim_cov (m d : ℕ) :
     weylDim (m + 2) (Fin.cons (d : ℤ) (Fin.snoc (fun _ : Fin m => (d : ℤ)) 0)) = (dimPol (m + 1) d : ℚ) := by
   unfold dimPol
   rw [weylDim_cons_eq_prod_mul, weylDim_snoc_eq_mul_prod, weylDim_const, one_mul, Fin.prod_univ_castSucc]
-  simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
+  simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.val_castSucc, Fin.val_last]
   push_cast
   try simp only [sub_self, zero_add, sub_zero]
   have h1 : (∏ j : Fin m, (((j : ℕ) : ℚ) + 1) / (((j : ℕ) : ℚ) + 1)) = 1 :=

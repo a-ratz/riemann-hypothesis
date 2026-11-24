@@ -62,8 +62,8 @@ private theorem repOn_apply {O M : Type} [Ring O] [AddCommGroup M] [Module O M] 
 theorem UpperTheory.exists_rational_equiv_of_rank :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (Y : PLat D.O D.inv), Function.Surjective (algebraMap (𝓞 D.F) D.O) → Module.finrank ℤ Y.La = Module.finrank ℤ D.La → ∃ e : (ℚ ⊗[ℤ] Y.La) ≃ₗ[ℚ] VQ D, ∀ (c : D.O) (u : ℚ ⊗[ℤ] Y.La), e ((DistribSMul.toLinearMap ℤ Y.La c).baseChange ℚ u) = actQ D c (e u) := by
   intro p _ D Y hs hr
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   have hfin : Module.finrank ℚ (ℚ ⊗[ℤ] Y.La) = Module.finrank ℚ (VQ D) := by
     rw [Module.finrank_baseChange, Module.finrank_baseChange, hr]
   obtain ⟨e, he⟩ := exists_equiv_of_finrank (F := D.F)

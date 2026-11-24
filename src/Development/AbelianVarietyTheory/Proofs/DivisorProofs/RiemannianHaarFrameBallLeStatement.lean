@@ -129,9 +129,9 @@ theorem frBall_subset_chartExp_image : ∀ (E : Type) [Field E] [NumberField E] 
         {X : realLie Ψ G | ∀ τ, ‖cj X.1 τ‖ < ρ})
       refine (isOpen_lt continuous_norm continuous_const).inter ?_
       change IsOpen {X : realLie Ψ G | ∀ τ, ‖cj X.1 τ‖ < ρ}
-      rw [Set.setOf_forall]
+      rw [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun τ =>
-        isOpen_lt ((continuous_apply τ).comp (hcj.comp continuous_subtype_val)).norm continuous_const
+        isOpen_lt ((continuous_apply τ).comp (hcj.comp continuous_subtypeVal)).norm continuous_const
     · refine ⟨by simpa using hδ, fun τ => ?_⟩
       have e : cj (0 : realLie Ψ G).1 τ = 0 := by
         change (mat x τ)⁻¹ * (0 : Matrix (Fin r) (Fin r) ℂ) * mat x τ = 0
@@ -170,7 +170,7 @@ theorem frBall_subset_chartExp_image : ∀ (E : Type) [Field E] [NumberField E] 
   have hAτ : ‖A τ‖ < ε := lt_of_le_of_lt (norm_le_pi_norm A τ) hA
   rw [he] at hY
   calc ‖((mat x τ)⁻¹ * Matrix.of (X.1 τ) * mat x τ) a b‖ = ‖cj X.1 τ a b‖ := rfl
-    _ ≤ ‖cj X.1 τ‖ := Matrix.norm_entry_le_entrywise_sup_norm _
+    _ ≤ ‖cj X.1 τ‖ := norm_apply_le_norm _
     _ ≤ 2 * ‖A τ‖ := hY
     _ < 2 * ε := by linarith
 
@@ -272,10 +272,10 @@ theorem GlobalTheory.SUVol.Degenerate.riemHaar_le_one : ∀ (E : Type) [Field E]
     · right
       have : r ^ 2 ≤ 1 := by omega
       nlinarith
-  haveI := realSU_subsingleton Ψ G h
-  haveI : CompactSpace (realSU Ψ G) := Finite.compactSpace
+  have := realSU_subsingleton Ψ G h
+  have : CompactSpace (realSU Ψ G) := Finite.compactSpace
   set K := (realLie Ψ G).comap (fromFrame x) with hK
-  haveI hKs : Subsingleton K := by
+  have hKs : Subsingleton K := by
     refine ⟨fun Y Y' => ?_⟩
     have hz : ∀ Y : K, Y = 0 := fun Y => by
       apply Subtype.ext
@@ -316,7 +316,7 @@ theorem GlobalTheory.SUVol.Degenerate.riemHaar_le_one : ∀ (E : Type) [Field E]
     exact ENNReal.div_le_div_right (hν _) _
   show riemHaar Ψ G x S ≤ 1
   unfold riemHaar tangentHaar
-  rw [Measure.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul]
   calc _ ≤ (1 / μ Set.univ) * μ Set.univ :=
         mul_le_mul' hlim (measure_mono (Set.subset_univ S))
     _ = 1 := ENNReal.div_mul_cancel hu0 hut
@@ -366,8 +366,8 @@ private theorem permJ' {r : ℕ} (p q : ℕ) (e : Fin p ⊕ Fin q ≃ Fin r) :
   ext a b
   simp [Matrix.mul_apply, permM, Equiv.apply_eq_iff_eq_symm_apply, diagonal_apply, Formalism.UG.Jpq]
   by_cases hab : a = b
-  · subst hab; rw [if_pos rfl]; rcases e.symm a with i | i <;> simp
-  · rw [if_neg hab]
+  · subst hab; rw [ite_eq_left rfl]; rcases e.symm a with i | i <;> simp
+  · rw [ite_eq_right hab]
     have h := e.symm.injective.ne hab
     revert h
     generalize e.symm a = i
@@ -457,19 +457,19 @@ theorem boxEnt_norm_sq_eq {r : ℕ} (d : Fin r → ℝ) (hd : ∀ a, d a = 1 ∨
   · refine ⟨(a, b), (b, a), ?_, ?_⟩
     · intro e; simp only [Prod.mk.injEq] at e; exact h.ne e.1
     · rintro ⟨a', b'⟩
-      simp only [boxEnt, if_pos h, Prod.mk.injEq]
+      simp only [boxEnt, ite_eq_left h, Prod.mk.injEq]
       split_ifs <;> (try simp only [norm_neg, norm_mul, hdd, Complex.norm_I, norm_one, norm_zero]) <;> first | (norm_num; done) | (rename_i h1 h2; exact absurd (h1.1.symm.trans h2.1) h.ne)
   · subst h
     have haz : a ≠ z := fun e => hab (by rw [e])
     refine ⟨(a, a), (z, z), ?_, ?_⟩
     · intro e; simp only [Prod.mk.injEq] at e; exact haz e.1
     · rintro ⟨a', b'⟩
-      simp only [boxEnt, lt_irrefl, if_false, Prod.mk.injEq]
+      simp only [boxEnt, lt_irrefl, ite_false, Prod.mk.injEq]
       split_ifs <;> simp_all
   · refine ⟨(b, a), (a, b), ?_, ?_⟩
     · intro e; simp only [Prod.mk.injEq] at e; exact h.ne e.1
     · rintro ⟨a', b'⟩
-      simp only [boxEnt, if_neg (not_lt.2 h.le), if_pos h, Prod.mk.injEq]
+      simp only [boxEnt, ite_eq_right (not_lt.2 h.le), ite_eq_left h, Prod.mk.injEq]
       split_ifs <;> (try simp only [norm_neg, norm_mul, hdd, Complex.norm_I, norm_one, norm_zero]) <;> first | (norm_num; done) | (rename_i h1 h2; exact absurd (h1.1.symm.trans h2.1) h.ne)
 
 theorem norm_boxVec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (Ψ : Finset (E →+* ℂ)) (d : Ψ → Fin r → ℝ) (z : Fin r), (∀ τ a, d τ a = 1 ∨ d τ a = -1) → ∀ k, ‖boxVec d z k‖ = √2 := by
@@ -484,7 +484,7 @@ theorem norm_boxVec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
       intro p
       rw [← hPn p]
       simp [boxVec]
-    simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [this, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     norm_num
   · intro τ' _ hτ'
     apply Finset.sum_eq_zero
@@ -512,12 +512,12 @@ theorem sum_boxEnt_diag {r : ℕ} (d : Fin r → ℝ) (z a b : Fin r) (h : (a, b
   · refine Finset.sum_eq_zero fun c _ => ?_
     have h1 : ¬ (c = a ∧ c = b) := fun hc => hab.ne (hc.1.symm.trans hc.2)
     have h2 : ¬ (c = b ∧ c = a) := fun hc => hab.ne (hc.2.symm.trans hc.1)
-    simp only [boxEnt, if_pos hab, if_neg h1, if_neg h2]
+    simp only [boxEnt, ite_eq_left hab, ite_eq_right h1, ite_eq_right h2]
   · subst hab
     have haz : a ≠ z := fun hz => h (by rw [hz])
     have : ∀ c, boxEnt d z a a c c = (if c = a then Complex.I else 0) + (if c = z then -Complex.I else 0) := by
       intro c
-      simp only [boxEnt, lt_irrefl, if_false, and_self]
+      simp only [boxEnt, lt_irrefl, ite_false, and_self]
       by_cases h1 : c = a
       · subst h1
         simp [haz]
@@ -526,14 +526,14 @@ theorem sum_boxEnt_diag {r : ℕ} (d : Fin r → ℝ) (z a b : Fin r) (h : (a, b
   · refine Finset.sum_eq_zero fun c _ => ?_
     have h1 : ¬ (c = a ∧ c = b) := fun hc => hab.ne' (hc.1.symm.trans hc.2)
     have h2 : ¬ (c = b ∧ c = a) := fun hc => hab.ne' (hc.2.symm.trans hc.1)
-    simp only [boxEnt, if_pos hab, if_neg hab.not_gt, if_neg h1, if_neg h2]
+    simp only [boxEnt, ite_eq_left hab, ite_eq_right hab.not_gt, ite_eq_right h1, ite_eq_right h2]
 
 theorem boxEnt_skew {r : ℕ} (d : Fin r → ℝ) (hd : ∀ a, d a = 1 ∨ d a = -1) (z a b a' b' : Fin r) :
     boxEnt d z a b b' a' * (d b' : ℂ) + (d a' : ℂ) * (starRingEnd ℂ) (boxEnt d z a b a' b') = 0 := by
   rcases lt_trichotomy a b with hab | hab | hab
   · have hne := hab.ne
     have hne' := hab.ne'
-    simp only [boxEnt, if_pos hab]
+    simp only [boxEnt, ite_eq_left hab]
     by_cases h1 : a' = a ∧ b' = b
     · obtain ⟨rfl, rfl⟩ := h1
       rcases hd a' with h | h <;> rcases hd b' with h' | h' <;> simp [hne, hne', h, h']
@@ -542,24 +542,24 @@ theorem boxEnt_skew {r : ℕ} (d : Fin r → ℝ) (hd : ∀ a, d a = 1 ∨ d a =
         rcases hd a' with h | h <;> rcases hd b' with h' | h' <;> simp [hne, hne', h, h']
       · have h1' : ¬ (b' = b ∧ a' = a) := fun hc => h1 hc.symm
         have h2' : ¬ (b' = a ∧ a' = b) := fun hc => h2 hc.symm
-        simp only [if_neg h1, if_neg h2, if_neg h1', if_neg h2']
+        simp only [ite_eq_right h1, ite_eq_right h2, ite_eq_right h1', ite_eq_right h2']
         simp
   · subst hab
-    simp only [boxEnt, lt_irrefl, if_false]
+    simp only [boxEnt, lt_irrefl, ite_false]
     by_cases h1 : a' = a ∧ b' = a
     · obtain ⟨rfl, rfl⟩ := h1
       simp [mul_comm]
     · have h1' : ¬ (b' = a ∧ a' = a) := fun hc => h1 hc.symm
-      simp only [if_neg h1, if_neg h1']
+      simp only [ite_eq_right h1, ite_eq_right h1']
       by_cases h2 : a' = z ∧ b' = z
       · obtain ⟨rfl, rfl⟩ := h2
         simp [mul_comm]
       · have h2' : ¬ (b' = z ∧ a' = z) := fun hc => h2 hc.symm
-        simp only [if_neg h2, if_neg h2']
+        simp only [ite_eq_right h2, ite_eq_right h2']
         simp
   · have hne := hab.ne
     have hne' := hab.ne'
-    simp only [boxEnt, if_pos hab, if_neg hab.not_gt]
+    simp only [boxEnt, ite_eq_left hab, ite_eq_right hab.not_gt]
     by_cases h1 : a' = a ∧ b' = b
     · obtain ⟨rfl, rfl⟩ := h1
       rcases hd a' with h | h <;> rcases hd b' with h' | h' <;> simp [hne, hne', h, h']
@@ -568,7 +568,7 @@ theorem boxEnt_skew {r : ℕ} (d : Fin r → ℝ) (hd : ∀ a, d a = 1 ∨ d a =
         rcases hd a' with h | h <;> rcases hd b' with h' | h' <;> simp [hne, hne', h, h']
       · have h1' : ¬ (b' = b ∧ a' = a) := fun hc => h1 hc.symm
         have h2' : ¬ (b' = a ∧ a' = b) := fun hc => h2 hc.symm
-        simp only [if_neg h1, if_neg h2, if_neg h1', if_neg h2']
+        simp only [ite_eq_right h1, ite_eq_right h2, ite_eq_right h1', ite_eq_right h2']
         simp
 
 theorem skewCond_boxVec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (Ψ : Finset (E →+* ℂ))
@@ -577,13 +577,13 @@ theorem skewCond_boxVec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   by_cases hτ : τ = k.1
   · have he : ∀ a b, boxVec d z k (τ, a, b) = boxEnt (d τ) z k.2.1.1 k.2.1.2 a b := by
       intro a b
-      simp only [boxVec, if_pos hτ]
+      simp only [boxVec, ite_eq_left hτ]
       rw [hτ]
     simp only [he]
     exact ⟨sum_boxEnt_diag _ _ _ _ k.2.2, fun a b => boxEnt_skew _ (hd τ) _ _ _ _ _⟩
   · have he : ∀ a b, boxVec d z k (τ, a, b) = 0 := by
       intro a b
-      simp only [boxVec, if_neg hτ]
+      simp only [boxVec, ite_eq_right hτ]
     simp [he]
 
 end GlobalTheory.CovTop.VolUp.FrameBox
@@ -619,16 +619,16 @@ theorem boxCoord_boxVec (E : Type) [Field E] [NumberField E] [IsCMField E] (r : 
   swap
   · split_ifs <;> simp_all
   subst hτ
-  simp only [true_and, if_true]
+  simp only [true_and, ite_true]
   clear hjk
   split_ifs with h1 h1' h3 h3 h3 h3 h3 h3
-  all_goals simp only [LinearMap.coe_comp, Function.comp_apply, Complex.reLm_coe, Complex.imLm_coe, entryL, LinearMap.restrictScalars_apply, ContinuousLinearMap.coe_coe, EuclideanSpace.proj, PiLp.toLp_apply, PiLp.proj_apply, boxEnt, if_true]
+  all_goals simp only [LinearMap.coe_comp, Function.comp_apply, Complex.reLm_coe, Complex.imLm_coe, entryL, LinearMap.restrictScalars_apply, ContinuousLinearMap.coe_coe, EuclideanSpace.proj, PiLp.toLp_apply, PiLp.proj_apply, boxEnt, ite_true]
   all_goals rcases lt_trichotomy a b with h2 | rfl | h2
-  all_goals (try simp only [lt_irrefl, if_false])
-  all_goals (try simp only [h2, not_lt_of_gt h2, if_true, if_false])
+  all_goals (try simp only [lt_irrefl, ite_false])
+  all_goals (try simp only [h2, not_lt_of_gt h2, ite_true, ite_false])
   all_goals clear _hd
   all_goals (split_ifs with e1 e2 <;> (try obtain ⟨rfl, rfl⟩ := h1') <;> (try obtain ⟨rfl, rfl⟩ := e1) <;> (try obtain ⟨rfl, rfl⟩ := e2) <;> (try simp))
-  all_goals (try (simp only [Fin.lt_iff_val_lt_val, Fin.ext_iff, Prod.ext_iff, ne_eq, Prod.mk.injEq] at *; omega))
+  all_goals (try (simp only [Fin.lt_def, Fin.ext_iff, Prod.ext_iff, ne_eq, Prod.mk.injEq] at *; omega))
   all_goals exact absurd ⟨rfl, rfl⟩ h3
 
 end GlobalTheory.CovTop.VolUp.FrameBox
@@ -739,8 +739,8 @@ theorem riemLie_frameBox_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     intro g j
 
     simp only [Submodule.coe_sum, Submodule.coe_smul, map_sum, map_smul, w, hdual, smul_eq_mul, mul_ite, mul_one, mul_zero]
-    rw [Fintype.sum_eq_single j (fun k hk => by rw [if_neg (Ne.symm hk)])]
-    rw [if_pos rfl]
+    rw [Fintype.sum_eq_single j (fun k hk => by rw [ite_eq_right (Ne.symm hk)])]
+    rw [ite_eq_left rfl]
   have hli : LinearIndependent ℝ w := by
     rw [Fintype.linearIndependent_iff]
     intro g hg j
@@ -773,7 +773,7 @@ theorem riemLie_frameBox_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     simp_rw [h2]; exact hc.symm
   set S := {X : Ψ → Fin r → Fin r → ℂ | ∀ τ a b, ‖((mat x τ)⁻¹ * Matrix.of (X τ) * mat x τ) a b‖ < t} with hS_def
   have hSo : IsOpen S := by
-    simp only [hS_def, Set.setOf_forall]
+    simp only [hS_def, Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun τ => isOpen_iInter_of_finite fun a => isOpen_iInter_of_finite fun b => isOpen_lt ?_ continuous_const
     have : Continuous fun X : Ψ → Fin r → Fin r → ℂ => Matrix.of (X τ) := continuous_apply τ
     exact (((continuous_const.matrix_mul this).matrix_mul continuous_const).matrix_elem a b).norm
@@ -874,7 +874,7 @@ theorem tangentHaar_le_two_mul_lam : ∀ (E : Type) [Field E] [NumberField E] [I
     (tendsto_iff_comap.1 ((continuous_matR Ψ G).tendsto 1))
       (eventually_mem_image Ψ G hG (ball_mem_nhds 0 hε))
 
-  haveI : ProperSpace (realLie Ψ G) := FiniteDimensional.proper_real _
+  have : ProperSpace (realLie Ψ G) := FiniteDimensional.proper_real _
   obtain ⟨δ₀, hδ₀, hinj⟩ : ∃ δ₀ : ℝ, 0 < δ₀ ∧ InjOn (chartExp Ψ G hG) (closedBall 0 δ₀) := by
     obtain ⟨s, hs, ha⟩ := hd.approximates_deriv_on_nhds (c := 1 / 2) (Or.inr (by norm_num))
     obtain ⟨δ, hδ, hsub⟩ := nhds_basis_closedBall.mem_iff.1 hs
@@ -894,7 +894,7 @@ theorem tangentHaar_le_two_mul_lam : ∀ (E : Type) [Field E] [NumberField E] [I
   have hνS : ∀ S : Set (realLie Ψ G), MeasurableSet S →
       ν S = μ (chartExp Ψ G hG '' (S ∩ closedBall 0 δ₀)) := by
     intro S hS
-    rw [hν, Measure.map_apply measurable_subtype_coe hS, hemb.comap_apply]
+    rw [hν, Measure.map_apply measurable_subtypeVal hS, hemb.comap_apply]
     congr 1
     ext g
     constructor
@@ -904,7 +904,7 @@ theorem tangentHaar_le_two_mul_lam : ∀ (E : Type) [Field E] [NumberField E] [I
       exact ⟨⟨x, hx.2⟩, hx.1, rfl⟩
   have hνsub : ∀ S : Set (realLie Ψ G), MeasurableSet S → S ⊆ closedBall 0 δ₀ →
       ν S = μ (chartExp Ψ G hG '' S) := fun S hS h => by rw [hνS S hS, inter_eq_left.2 h]
-  haveI : IsFiniteMeasure ν := by
+  have : IsFiniteMeasure ν := by
     refine ⟨?_⟩
     rw [hνS _ MeasurableSet.univ, univ_inter]
     exact ((isCompact_closedBall _ _).image he).measure_lt_top
@@ -973,7 +973,7 @@ theorem tangentHaar_le_two_mul_lam : ∀ (E : Type) [Field E] [NumberField E] [I
 
   have hνt : ∀ ε : ℝ, 0 < ε → (lam.map Subtype.val) (tanBall Ψ r ε) = lam (ball 0 ε) := by
     intro ε hε
-    rw [Measure.map_apply measurable_subtype_coe, preimage_tanBall Ψ G hε]
+    rw [Measure.map_apply measurable_subtypeVal, preimage_tanBall Ψ G hε]
     rw [show tanBall Ψ r ε = ball (0 : Ψ → Fin r → Fin r → ℂ) ε by
       ext X; rw [mem_ball_zero_iff, pi_norm_lt_iff hε]; simp only [pi_norm_lt_iff hε]; rfl]
     exact measurableSet_ball
@@ -1143,7 +1143,7 @@ theorem exists_lam (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x
     exact congrFun (congrFun (hτ τ) a) b
   let φ : W ≃L[ℝ] realLie Ψ G := (LinearEquiv.ofBijective Φ ⟨hinj, hsurj⟩).toContinuousLinearEquiv
   refine ⟨(stdOrthonormalBasis ℝ W).toBasis.addHaar.map φ, φ.isAddHaarMeasure_map _, ?_⟩
-  rw [Measure.map_map measurable_subtype_coe φ.continuous.measurable]
+  rw [Measure.map_map measurable_subtypeVal φ.continuous.measurable]
   rfl
 
 theorem riemHaar_frBall_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (κ : Type) (p q : κ → ℕ) (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (x : Frame Ψ r) (σ : κ ≃ Ψ) (A : ∀ ρ, Matrix (Fin (p ρ) ⊕ Fin (q ρ)) (Fin r) ℂ) (e : ∀ ρ, Fin (p ρ) ⊕ Fin (q ρ) ≃ Fin r), 1 ≤ r → IsIdent p q Ψ G x σ A e → ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ ε : ℝ, 0 < ε → ε < ε₀ → riemHaar Ψ G x (frBall Ψ G x ε) ≤ ENNReal.ofReal ((8 * ε) ^ (Ψ.card * (r ^ 2 - 1))) := by
@@ -1173,7 +1173,7 @@ theorem riemHaar_frBall_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     intro τ a b
     exact ((continuous_const.matrix_mul (continuous_apply τ)).matrix_mul continuous_const).matrix_elem a b
   have hSm : MeasurableSet S := by
-    simp only [hS, Set.setOf_forall]
+    simp only [hS, Set.ofPred_forall]
     exact MeasurableSet.iInter fun τ => MeasurableSet.iInter fun a => MeasurableSet.iInter fun b =>
       measurableSet_lt (hcont τ a b).norm.measurable measurable_const
   set s : Set (realLie Ψ G) := {X : realLie Ψ G | ‖X‖ < δ ∧ ∀ τ a b,
@@ -1181,7 +1181,7 @@ theorem riemHaar_frBall_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hs' : s = Metric.ball 0 δ ∩ Subtype.val ⁻¹' S := by
     ext X; simp [hs, hS, mem_ball_zero_iff]
   have hsm : MeasurableSet s := by
-    rw [hs']; exact measurableSet_ball.inter (measurable_subtype_coe hSm)
+    rw [hs']; exact measurableSet_ball.inter (measurable_subtypeVal hSm)
   have hsb : s ⊆ Metric.ball 0 δ := by rw [hs']; exact Set.inter_subset_left
   have h1 : riemHaar Ψ G x (frBall Ψ G x ε) ≤ 2 * lam s := by
     calc riemHaar Ψ G x (frBall Ψ G x ε)
@@ -1189,7 +1189,7 @@ theorem riemHaar_frBall_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
           unfold riemHaar; rw [← hmap]; exact measure_mono (hcov ε hε hεε)
       _ ≤ 2 * lam s := hup s hsm hsb
   have h2 : lam s ≤ riemLie Ψ G x S := by
-    rw [← hmap, Measure.map_apply measurable_subtype_coe hSm, hs']
+    rw [← hmap, Measure.map_apply measurable_subtypeVal hSm, hs']
     exact measure_mono Set.inter_subset_right
   have h3 := GlobalTheory.T.riemannianLieMeasure_frameBox_le E r κ p q Ψ G x σ A e hr hI (2 * ε) (by positivity)
   have h4 : 2 * lam s ≤ 2 * ENNReal.ofReal ((3 * (2 * ε)) ^ (Ψ.card * (r ^ 2 - 1))) := by

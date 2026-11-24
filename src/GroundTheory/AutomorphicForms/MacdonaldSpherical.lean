@@ -142,7 +142,7 @@ theorem zonalSpherical_mul_right (z : Fin n → ℂˣ) (g : GL (Fin n) F) {k : G
 
 theorem zonalSpherical_mul_left (z : Fin n → ℂˣ) {k : GL (Fin n) F} (hk : k ∈ integralGL F n)
     (g : GL (Fin n) F) : zonalSpherical μ z (k * g) = zonalSpherical μ z g := by
-  haveI := Measures.isMulRightInvariant_GL F n μ
+  have := Measures.isMulRightInvariant_GL F n μ
   simp only [zonalSpherical]
   congr 1
   have h := integral_mul_right_eq_self (μ := μ)

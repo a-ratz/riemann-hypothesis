@@ -156,14 +156,14 @@ section
 variable {K K' : Type} [Field K] [Field K'] [Algebra ℂ K] [Algebra ℂ K'] (j2 : K →ₐ[ℂ] K')
 
 private theorem pullback_kahler_smul_alg (b : K) (w : DR ℂ K) : pr2L j2 (b • w) = j2 b • pr2L j2 w := by
-  letI : Algebra K K' := j2.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
+  let : Algebra K K' := j2.toRingHom.toAlgebra
+  have : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
   exact mapDR_smul' (L := K') b w
 
 private theorem pullback_kahler_omegaBounded {B : Subalgebra ℂ K} {B' : Subalgebra ℂ K'} (h : ∀ b ∈ B, j2 b ∈ B') (q : ℕ)
     {w : DR ℂ K} (hw : w ∈ omB ℂ K B q) : pr2L j2 w ∈ omB ℂ K' B' q := by
-  letI : Algebra K K' := j2.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
+  let : Algebra K K' := j2.toRingHom.toAlgebra
+  have : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
   exact mapDR_om (L := K') h q hw
 end
 

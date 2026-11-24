@@ -134,8 +134,8 @@ theorem exists_principal_extension : ∀ (K : Type) [Field K] [NumberField K] (I
   have hdeg : p.degree ≠ 0 := by
     rw [Polynomial.degree_X_pow_sub_C (Nat.pos_of_ne_zero hh)]
     exact_mod_cast hh
-  haveI : FiniteDimensional ℚ p.SplittingField := FiniteDimensional.trans ℚ K p.SplittingField
-  haveI : NumberField p.SplittingField := NumberField.mk
+  have : FiniteDimensional ℚ p.SplittingField := FiniteDimensional.trans ℚ K p.SplittingField
+  have : NumberField p.SplittingField := NumberField.mk
   obtain ⟨z, hz⟩ := (Polynomial.SplittingField.splits p).exists_eval_eq_zero
     (by rwa [Polynomial.degree_map])
   have hz' : z ^ h = algebraMap K p.SplittingField (c : K) := by

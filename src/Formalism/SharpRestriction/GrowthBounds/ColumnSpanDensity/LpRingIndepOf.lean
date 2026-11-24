@@ -723,11 +723,11 @@ theorem restRSIso_of (hW : WittIdent) (hO : RestOIso) : RestRSIso := by
   intro p n' R₁ R₂
   have s₁ := R₁.std.1
   have s₂ := R₂.std.1
-  haveI : Fact (Nat.Prime p) := ⟨s₁.prime⟩
-  haveI := s₁.frac_alt
-  haveI := s₂.frac_alt
-  haveI := s₁.frac_O
-  haveI := s₂.frac_O
+  have : Fact (Nat.Prime p) := ⟨s₁.prime⟩
+  have := s₁.frac_alt
+  have := s₂.frac_alt
+  have := s₁.frac_O
+  have := s₂.frac_O
   obtain ⟨φ₁, h₁⟩ := hW p n' R₁.W R₁.Qq R₁.O R₁.Kf R₁.ι R₁.σ R₁.jO R₁.w s₁
   obtain ⟨φ₂, h₂⟩ := hW p n' R₂.W R₂.Qq R₂.O R₂.Kf R₂.ι R₂.σ R₂.jO R₂.w s₂
   obtain ⟨φO, hj, hw⟩ := hO p n' R₁ R₂ (φ₁.symm.trans φ₂)

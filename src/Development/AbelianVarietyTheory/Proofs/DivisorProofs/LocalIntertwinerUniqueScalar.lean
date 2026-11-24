@@ -112,7 +112,7 @@ theorem vlat_small {ψ : AddChar K ℂ} {x₀ : K} (hx₀ : ψ x₀ ≠ 1) {W : 
   set s := r * a with hs
   have hvs : ValuativeRel.valuation K s < γ := by
     rw [hs, map_mul, ha]
-    exact mul_lt_of_lt_one_left (zero_lt_iff.2 hγ) hr1
+    exact mul_lt_of_lt_one_left (pos_iff_ne_zero.2 hγ) hr1
   have hs0 : s ≠ 0 := by
     intro h0
     rw [h0, map_zero] at hvs
@@ -127,12 +127,12 @@ theorem vlat_small {ψ : AddChar K ℂ} {x₀ : K} (hx₀ : ψ x₀ ≠ 1) {W : 
   have hYs : ∀ i, ValuativeRel.valuation K (Y i) ≤ ValuativeRel.valuation K s := by
     intro i
     have := dualBall_subset hx₀ (div_ne_zero hx00 hs0) (hY i)
-    rwa [Set.mem_setOf_eq, hxs] at this
+    rwa [Set.mem_ofPred_eq, hxs] at this
   have hmem : s⁻¹ • Y ∈ B := by
     intro i _
-    simp only [Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, map_mul, map_inv₀]
+    simp only [Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul, map_mul, map_inv₀]
     have hv0 : ValuativeRel.valuation K s ≠ 0 := by simpa using hs0
-    rw [inv_mul_le_iff₀ (zero_lt_iff.2 hv0), mul_one]
+    rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv0), mul_one]
     exact hYs i
   have := hsub hvs (s⁻¹ • Y) hmem
   rwa [smul_smul, mul_inv_cancel₀ hs0, one_smul] at this
@@ -161,7 +161,7 @@ variable {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup
 
 theorem exists_cover (U : AddSubgroup V) (hU : IsOpen (U : Set V)) {f : V → ℂ} (hf : HasCompactSupport f) :
     ∃ S : Finset (V ⧸ U), ∀ Y, f Y ≠ 0 → (QuotientAddGroup.mk Y : V ⧸ U) ∈ S := by
-  haveI := QuotientAddGroup.discreteTopology hU
+  have := QuotientAddGroup.discreteTopology hU
   have hfin : ((QuotientAddGroup.mk : V → V ⧸ U) '' tsupport f).Finite :=
     (hf.isCompact.image QuotientAddGroup.continuous_mk).finite_of_discrete
   exact ⟨hfin.toFinset, fun Y hY => hfin.mem_toFinset.2 ⟨Y, subset_tsupport f hY, rfl⟩⟩
@@ -341,9 +341,9 @@ theorem form_eq_loc (ψ : AddChar K ℂ) (hψc : Continuous ψ) {x₀ : K} (hx�
         R (((vlat (κ := κ) ψ t : AddSubgroup (κ → K)) : Set (κ → K)).indicator 1) x *
           conj (R (((vlat (κ := κ) ψ t : AddSubgroup (κ → K)) : Set (κ → K)).indicator 1) x)) *
         ∑ q ∈ S, f q.out * conj (g q.out) := by
-  letI : MeasurableSpace (κ → K) := borel _
-  haveI : BorelSpace (κ → K) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (κ → K) := borel _
+  have : BorelSpace (κ → K) := ⟨rfl⟩
+  have := hμ
   have hI : ∀ f ∈ SB (κ → K), ∀ g ∈ SB (κ → K), Integrable (fun x => R f x * conj (R g x)) μ :=
     fun f hf g hg => GlobalTheory.PolarSB.integrable_mul_conj μ (hR f hf) (hR g hg)
   have hinvar : ∀ w, ∀ f ∈ SB (κ → K), ∀ g ∈ SB (κ → K),

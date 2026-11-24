@@ -353,8 +353,8 @@ theorem linearIndependent_of_span (hS : SecBaseChangeAnySt) {R : Type} [CommRing
     obtain ⟨v, hv⟩ := (hfu.pow n).exists_left_inv
     have h2 := Submodule.smul_mem _ v h1
     rwa [smul_smul, map_pow, hv, one_smul] at h2
-  haveI : Module.Free Γ((overRes W).left, ⊤) (SecM P.A P.L N (overRes W)) := Module.Free.of_basis c
-  haveI : Module.Finite Γ((overRes W).left, ⊤) (SecM P.A P.L N (overRes W)) := Module.Finite.of_basis c
+  have : Module.Free Γ((overRes W).left, ⊤) (SecM P.A P.L N (overRes W)) := Module.Free.of_basis c
+  have : Module.Finite Γ((overRes W).left, ⊤) (SecM P.A P.L N (overRes W)) := Module.Finite.of_basis c
   have hfr : Fintype.card κ = Module.finrank Γ((overRes W).left, ⊤) (SecM P.A P.L N (overRes W)) := by
     rw [Module.finrank_eq_card_basis c, hcard, Fintype.card_fin]
   have hli := linearIndependent_of_top_le_span_of_card_eq_finrank hspanW hfr
@@ -369,8 +369,8 @@ theorem linearIndependent_of_span (hS : SecBaseChangeAnySt) {R : Type} [CommRing
 theorem exists_monomial_matrices_of_indep : ∀ (o A M : Type) [CommRing o] [CommRing A] [Nontrivial A] [AddCommGroup M] [Module A M] (f : o →+* A), Function.Injective f → ∀ (g m r N : ℕ), N = m ^ 2 → 1 ≤ m → 1 ≤ r → ∀ (ζ : o) (q : ℕ), 1 ≤ q → ζ ^ q = 1 → ∀ (u : (Fin g ⊕ Fin g → ZMod (r * N)) → M →ₗ[A] M) (s₀ : M), (∀ a, r • a = 0 → ∀ v, u a v = v) → (∀ a b, ∃ e : ℕ, ∀ v, u a (u b v) = f (ζ ^ e) • u (a + b) v) → (∀ a b, r • eStd g _ a b = 0 → ∀ v, u a (u b v) = u (a + b) v) → (∀ a, (r * m) • a = 0 → u a s₀ = s₀) → Submodule.span A (Set.range fun a => u a s₀) = ⊤ → (∀ t : (Fin g ⊕ Fin g → ZMod m) → M, ⊤ ≤ Submodule.span A (Set.range t) → LinearIndependent A t) → ∃ (J : Type) (_ : Fintype J) (ρ : (Fin g ⊕ Fin g → ZMod (r * N)) → Matrix J J o) (s : Module.Basis J A M) (i₀ : J), Fintype.card J = N ^ g ∧ s i₀ = s₀ ∧ (∀ a, r • a = 0 → ρ a = 1) ∧ (∀ a b, ∃ k : ℕ, ρ a * ρ b = ζ ^ k • ρ (a + b)) ∧ (∀ a b, r • eStd g _ a b = 0 → ρ a * ρ b = ρ (a + b)) ∧ (∀ a i, u a (s i) = ∑ l, f (ρ a l i) • s l) ∧ ∀ i, ∃ a, ∃ e : ℕ, ∀ l, ρ a l i₀ = if l = i then ζ ^ e else 0 := by
   intro o A M _ _ _ _ _ f hf g m r N hN hm hr ζ q hq hζ u s₀ h1 h2 h3 h4 h5 H
   subst hN
-  haveI : NeZero m := ⟨by omega⟩
-  haveI : NeZero (r * m ^ 2) := ⟨by positivity⟩
+  have : NeZero m := ⟨by omega⟩
+  have : NeZero (r * m ^ 2) := ⟨by positivity⟩
   have hd : m ∣ r * m ^ 2 := ⟨r * m, by ring⟩
   let π : (Fin g ⊕ Fin g → ZMod (r * m ^ 2)) → (Fin g ⊕ Fin g → ZMod m) :=
     fun a i => ZMod.castHom hd (ZMod m) (a i)
@@ -435,9 +435,9 @@ theorem exists_monomial_matrices_of_indep : ∀ (o A M : Type) [CommRing o] [Com
     rw [LinearMap.toMatrix_apply, hb, hE, ← hb, map_smul, Module.Basis.repr_self]
     rw [Matrix.map_apply, Finsupp.smul_apply, smul_eq_mul]
     by_cases h : l = π a + i
-    · have : ρ a l i = ζ ^ E a i := if_pos h
+    · have : ρ a l i = ζ ^ E a i := ite_eq_left h
       rw [this, h, Finsupp.single_eq_same, _root_.mul_one]
-    · have : ρ a l i = 0 := if_neg h
+    · have : ρ a l i = 0 := ite_eq_right h
       rw [this, Finsupp.single_eq_of_ne h, mul_zero, map_zero]
   have hinj : Function.Injective (fun X : Matrix (Fin g ⊕ Fin g → ZMod m) (Fin g ⊕ Fin g → ZMod m) o => X.map f) := Matrix.map_injective hf
   have hmul : ∀ a c, (ρ a * ρ c).map f = LinearMap.toMatrix b b (u a ∘ₗ u c) := by
@@ -490,13 +490,13 @@ theorem GlobalTheory.ThetaSBasis.exists_real_of_secBasis : ∀ (o Ω : Type) [Co
   intro o Ω _ _ _ _ R fg frac P n k j ze hp ho hk hj hu hS th hth lev
   obtain ⟨hL, hL₂⟩ := GlobalTheory.abelianSchemeLaws_all
   have hgen : IsGenSec P.A P.L 1 th := isGenSec_of_isSecBasis P hth
-  haveI := isNoetherian_of_fg fg
-  haveI : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
+  have := isNoetherian_of_fg fg
+  have : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
   have hn2 : 2 ≤ n := hp.two_le
   have hn1 : 1 ≤ n := by omega
   have hm1 : 1 ≤ n ^ k := Nat.one_le_pow _ _ hn1
   have hr1 : 1 ≤ n ^ j := Nat.one_le_pow _ _ hn1
-  haveI : NeZero (n ^ k) := ⟨by omega⟩
+  have : NeZero (n ^ k) := ⟨by omega⟩
   have hN2 : 2 ≤ (n ^ k) ^ 2 := by
     have : n ^ 1 ≤ n ^ k := Nat.pow_le_pow_right hn1 (by omega)
     nlinarith
@@ -505,7 +505,7 @@ theorem GlobalTheory.ThetaSBasis.exists_real_of_secBasis : ∀ (o Ω : Type) [Co
   have hMo : Odd (n ^ j * (n ^ k) ^ 2) := hM ▸ ho.pow
   let f : o →+* Γ((baseOver (Sp R)).left, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom.comp (algebraMap o R)
   have hf : Function.Injective f := fn_injective.comp (algebraMap_injective R)
-  haveI : Nontrivial Γ((baseOver (Sp R)).left, ⊤) := (fn_injective (R := R)).nontrivial
+  have : Nontrivial Γ((baseOver (Sp R)).left, ⊤) := (fn_injective (R := R)).nontrivial
   have un : ∀ q e : ℕ, q = n ^ e → IsUnit (q : Γ(Sp R, ⊤)) := fun q e hq => by
     have := (hu.pow e).map f
     rw [map_pow, map_natCast] at this

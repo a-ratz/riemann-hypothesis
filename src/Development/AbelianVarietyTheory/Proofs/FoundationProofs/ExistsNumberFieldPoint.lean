@@ -129,9 +129,9 @@ theorem point_ext {Z : Comp Xo c} {L S : Type} [CommRing L] [CommRing S] {j : c.
 theorem framesOn_nonempty {r : ℕ} {σ : c.F →+* ℂ} {U : Unf Xo c σ r} (hU : IsUnf U) (Z : Comp Xo c) :
     (framesOn U Z).Nonempty := by
   obtain ⟨L, _, _, j, g, hg, hZ⟩ := exists_numberField_point Z
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
-  letI : Algebra c.F L := j.toAlgebra
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Algebra c.F L := j.toAlgebra
   let k : L →ₐ[c.F] CAt σ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -154,7 +154,7 @@ theorem valOn_nonempty (hE : IntFrExt Xo c) (Z : Comp Xo c) (w : HeightOneSpectr
   obtain ⟨T', i, r, hr, hi, hfin', y, hy⟩ := hE T (k.comp j) hfin ((spMap k ≫ g) ≫ prX Xo c)
     (letI := (k.comp j).toAlgebra; prX_over h1)
   obtain ⟨h3, h4⟩ := point_ext h1 h2 i
-  letI := (i.comp (k.comp j)).toAlgebra
+  let := (i.comp (k.comp j)).toAlgebra
   have h5 : ptF y.1 = spMap i ≫ spMap k ≫ g := ptF_eq h3 (hy.trans (Category.assoc _ _ _).symm)
   exact ⟨_, PtV.mk w (ho.bc i hr hi) y ⟨hfin', fun p => h5 ▸ h4 p⟩ () trivial, rfl⟩
 
@@ -165,7 +165,7 @@ theorem hasPts (hpq : 1 ≤ Dw.p + Dw.q) (hg : ∀ p : ℕ, p.Prime → l.GoodAt
   obtain ⟨⟨-, -, -, -, hA, -⟩, h⟩ := GlobalTheory.Exist.frame_laws_of_moduli E H Dw l Xo c
   refine ⟨fun σ => ⟨framesOn_nonempty (hU _ (goodEmb_goodOf c σ)) Z, fun z _ hz => ?_⟩,
     valOn_nonempty ((h hpq).2.2 hg).1 Z⟩
-  haveI : _root_.IsReduced (CAt (goodOf c σ)) := inferInstanceAs (_root_.IsReduced ℂ)
+  have : _root_.IsReduced (CAt (goodOf c σ)) := inferInstanceAs (_root_.IsReduced ℂ)
   exact hA _ _
 
 end GlobalTheory.FlatLine

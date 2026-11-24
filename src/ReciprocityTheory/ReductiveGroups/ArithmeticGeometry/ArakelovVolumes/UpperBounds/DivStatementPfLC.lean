@@ -75,7 +75,7 @@ theorem cpt_zero' (x0 : Frame X.Ψ r) : cpt X x0 0 = x0 := by
   rfl
 
 theorem nmat_zero_mem : nmat X (0 : V (nd X)) ∈ Bor X.Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq]
+  simp only [Bor, Set.mem_ofPred_eq]
   intro τ
   refine ⟨?_, fun a c hca => ?_⟩
   · rw [nmat_zero']; simp

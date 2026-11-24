@@ -141,10 +141,10 @@ private theorem jv_model {l : ℕ} [hl : Fact l.Prime] {G : Type} [Group G] [Top
     ∃ (Q : GL (Fin n) (PadicAlgCl l)) (r₀ : G →* GL (Fin n) c.O),
       ∀ g, r g * Q = Q * pushRep (algebraMap c.O (PadicAlgCl l)) r₀ g := by
   classical
-  letI : Algebra c.O E :=
+  let : Algebra c.O E :=
     ((algebraMap c.O (PadicAlgCl l)).codRestrict E (fun a => ((hc a).1 a.2).1)).toAlgebra
   have hφ : ∀ a : c.O, ((algebraMap c.O E a : E) : PadicAlgCl l) = a := fun a => rfl
-  haveI := isFractionRing_coef_of_mem_iff_norm_le_one E c hc hφ
+  have := isFractionRing_coef_of_mem_iff_norm_le_one E c hc hφ
   let ι : E →+* PadicAlgCl l := algebraMap E (PadicAlgCl l)
   have hι : ∀ e : E, ι e = (e : PadicAlgCl l) := fun e => rfl
   have hinjM : Function.Injective (ι.mapMatrix : Matrix (Fin n) (Fin n) E →+* _) := by
@@ -282,8 +282,8 @@ private theorem exists_finiteDimensional_ge_forall_coef_integer_mem {l : ℕ} [F
       ∀ x : c.O, (x : PadicAlgCl l) ∈ E := by
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := c.O)
   set S : Set (PadicAlgCl l) := (fun t : c.O => (t : PadicAlgCl l)) '' (s : Set c.O)
-  haveI : Finite S := Set.Finite.image _ s.finite_toSet
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
+  have : Finite S := Set.Finite.image _ s.finite_toSet
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine ⟨K ⊔ IntermediateField.adjoin ℚ_[l] S, inferInstance, le_sup_left, fun x => ?_⟩
   have hx : x ∈ Submodule.span ℤ_[l] (s : Set c.O) := by
@@ -316,7 +316,7 @@ private theorem resid_h4_lemma_6 {l : ℕ} [Fact l.Prime] (c c' : Coef l) (hle :
     (ht : (t : PadicAlgCl l) = y a) :
     haveI := isLocalHom_inclusion_coef_of_le c c' hle
     residue c'.O t = ResidueField.map (Subalgebra.inclusion hle).toRingHom (Alg.res c.O R a) := by
-  haveI := isLocalHom_inclusion_coef_of_le c c' hle
+  have := isLocalHom_inclusion_coef_of_le c c' hle
   obtain ⟨b, hb⟩ := IsLocalRing.residue_surjective (Alg.res c.O R a)
   have hres : ∀ x : R, ResidueField.map (algebraMap c.O R) (Alg.res c.O R x) = residue R x := by
     intro x
@@ -364,12 +364,12 @@ private theorem jv_local {p l : ℕ} [Fact p.Prime] [hl : Fact l.Prime] (hpl : p
   have hle : c.O ≤ c'.O := fun x hx => (hc' x).2 ⟨hcE ⟨x, hx⟩, norm_coe_coef_integer_le_one c ⟨x, hx⟩⟩
   obtain ⟨Q, r₀, hQ⟩ := jv_model E c' hc' ρ hρe (fun g i j => hKE (hK g i j))
   obtain ⟨hcomp, hfin, hlmem, -, -, -⟩ := abelian₂.dvr_finite l c'.O
-  haveI := hcomp
-  haveI := hfin
-  haveI : CharP (ResidueField c'.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
+  have := hcomp
+  have := hfin
+  have : CharP (ResidueField c'.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
     rw [← map_natCast (residue c'.O)]
     exact (residue_eq_zero_iff _).2 hlmem)
-  haveI := isLocalHom_inclusion_coef_of_le c c' hle
+  have := isLocalHom_inclusion_coef_of_le c c' hle
   have hconj : ∀ g, pushRep (algebraMap c'.O (PadicAlgCl l)) r₀ g = Q⁻¹ * ρ g * Q := by
     intro g
     rw [mul_assoc, hQ g, ← mul_assoc, inv_mul_cancel, one_mul]
@@ -437,15 +437,15 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
   intro g hg
   change g ∈ Subgroup.map V.pr (Ine (s.A s.v0)) at hg
   obtain ⟨d, hd, rfl⟩ := hg
-  haveI : Fact s.p.Prime := ⟨s.p_prime⟩
+  have : Fact s.p.Prime := ⟨s.p_prime⟩
   have hpv : ((s.p : ℕ) : 𝓞 (Lp L)) ∈ s.v0.asIdeal := by
     have hcard : Nat.card (𝓞 (Lp L) ⧸ s.v0.asIdeal) = s.p := s.norm_v0_eq_one
-    haveI : Finite (𝓞 (Lp L) ⧸ s.v0.asIdeal) :=
+    have : Finite (𝓞 (Lp L) ⧸ s.v0.asIdeal) :=
       Nat.finite_of_card_ne_zero (by rw [hcard]; exact s.p_prime.ne_zero)
-    letI := Fintype.ofFinite (𝓞 (Lp L) ⧸ s.v0.asIdeal)
+    let := Fintype.ofFinite (𝓞 (Lp L) ⧸ s.v0.asIdeal)
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ← hcard, Nat.card_eq_fintype_card]
     exact Nat.cast_card_eq_zero _
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
   obtain ⟨j, hj⟩ := (Loc.decEmb (F := Lp L) (Ω := Ω) (v := s.p)).1 (s.A s.v0) s.v0 (s.hA s.v0) hpv
   obtain ⟨-, φ, hφo, -, -, hIne, hcyc, -⟩ := (Loc.decEmb (F := Lp L) (Ω := Ω) (v := s.p)).2 j
   have hDr : Dec (Loc.placeJ j) ≤ (resP L Ω).range := hj ▸ s.19 s.v0 (Or.inr (Or.inr rfl))
@@ -466,8 +466,8 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
       rfl
   have hψc : Continuous ψ0 := by
     apply continuous_induced_rng.2
-    exact ((continuous_toGS Ω V.S').comp continuous_subtype_val).congr (fun t => (hψ0 t).symm)
-  haveI : CompactSpace ↥(Dec (Loc.placeJ j)) :=
+    exact ((continuous_toGS Ω V.S').comp continuous_subtypeVal).congr (fun t => (hψ0 t).symm)
+  have : CompactSpace ↥(Dec (Loc.placeJ j)) :=
     isCompact_iff_compactSpace.1 (isClosed_Dec (F := Lp L) (Loc.placeJ j)).isCompact
   have hD0 : ∀ x : ↥(Dec (Loc.placeJ j)), ψ0 x ∈ V.frame.D0 := by
     intro x
@@ -498,7 +498,7 @@ theorem UpperTheory.V.Hi.point_rep_unramified_at_auxiliary_place {l : ℕ} [Fact
     have hε1 : (V.frame.ε (V.pr e1).1 : ℤ_[l]ˣ) = cycZ (Lp L) Ω l (resP L Ω e1) :=
       DFunLike.congr_fun V.hε (resP L Ω e1)
     simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, Subgroup.coe_subtype, hε1,
-      MonoidHom.coe_coe, RingHom.comp_apply, Units.val_one, IsLocalRing.ResidueField.algebraMap_eq]
+      MonoidHom.coe_ofClass, RingHom.comp_apply, Units.val_one, IsLocalRing.ResidueField.algebraMap_eq]
     change ((residue c.O).comp (algebraMap ℤ_[l] c.O)) ((V.frame.ε (V.pr e1).1 : ℤ_[l]ˣ) : ℤ_[l]) = 1
     rw [hε1, RingHom.comp_apply]
     exact hcon
@@ -563,8 +563,8 @@ open UpperTheory.V.W
 private theorem jr_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -575,8 +575,8 @@ private theorem jr_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 private theorem jr_isTeich {l : ℕ} [hl : Fact l.Prime] {F : GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t ∧ ∀ i g, r.chib i g = 1 → t i g = 1 := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm

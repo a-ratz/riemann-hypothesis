@@ -173,12 +173,12 @@ namespace GlobalTheory.HSAmp
 
 theorem gram_posDef_and_l2_le_sup_bound : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → GenSmooth p D → ∀ (P : Pair p) (ω : ∀ σ, VolDens p σ D) (a b : ℤ) (ι : Type) [Fintype ι] [DecidableEq ι] (f : ι → X.functionField), (∀ i, f i ∈ P.H a b) → LinearIndependent ℤ f → IsFam (fun σ => (ω σ).meas) (vals P a b f) ∧ (gram (fun σ => (ω σ).meas) (vals P a b f)).PosDef ∧ ∀ (c : ι → ℂ) (M : ℝ), (∀ σ y, cmb (vals P a b f) c σ y ≤ M) → l2 (fun σ => (ω σ).meas) (vals P a b f) c ≤ (∑ᶠ σ, ((ω σ).meas Set.univ).toReal) * M := by
   intro k _ X _ p D hX hG P ω a b ι _ _ f hf hli
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
+  have : Finite (k →+* ℂ) := hX.finite_emb
   have hfin := fun σ => _root_.GlobalTheory.HSAmp.volDens_meas_finite_openPos k X p D hX hG σ (ω σ)
   obtain ⟨hprod, hnu⟩ := _root_.GlobalTheory.HSAmp.continuous_val_and_bounded k X p D hX P a b
   have hfam : IsFam (fun σ => (ω σ).meas) (vals P a b f) := by
     refine ⟨inferInstance, fun σ i j => ?_⟩
-    haveI := (hfin σ).1
+    have := (hfin σ).1
     obtain ⟨C₁, hC₁⟩ := (hnu (f i) (hf i)).2
     obtain ⟨C₂, hC₂⟩ := (hnu (f j) (hf j)).2
     refine Integrable.of_bound (hprod σ _ (hf i) _ (hf j)).aestronglyMeasurable (C₁ * C₂)
@@ -203,14 +203,14 @@ theorem gram_posDef_and_l2_le_sup_bound : ∀ (k : Type) [CommRing k] (X : Schem
     rw [e]
     exact Complex.continuous_re.comp (continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
       continuous_const.mul (hprod σ _ (hf i) _ (hf j)))
-  haveI : Fintype (k →+* ℂ) := Fintype.ofFinite _
+  have : Fintype (k →+* ℂ) := Fintype.ofFinite _
   refine ⟨hfam, _root_.GlobalTheory.HSAmp.gram_posDef (k →+* ℂ) (fun σ => CxPts p σ) ι (fun σ => (ω σ).meas) (vals P a b f) hfam
     fun c hc => ?_, fun c M hM => ?_⟩
   · rw [l2, finsum_eq_sum_of_fintype] at hc
     have hz := (Finset.sum_eq_zero_iff_of_nonneg fun σ _ =>
       integral_nonneg fun y => sq_nonneg ‖∑ i, c i * vals P a b f σ y i‖).1 hc
     refine _root_.GlobalTheory.HSAmp.linearIndependent_vals k X p D hX P a b ι f hf hli c fun σ y => ?_
-    haveI := (hfin σ).2
+    have := (hfin σ).2
     have hae := (integral_eq_zero_iff_of_nonneg (fun y => sq_nonneg ‖∑ i, c i * vals P a b f σ y i‖)
       ((hl2.2 c).1 σ)).1 (hz σ (Finset.mem_univ _))
     have hall := (Continuous.ae_eq_iff_eq _ (hcont c σ) continuous_const).1 hae
@@ -218,7 +218,7 @@ theorem gram_posDef_and_l2_le_sup_bound : ∀ (k : Type) [CommRing k] (X : Schem
     exact norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 hy)
   · rw [l2, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Finset.sum_mul]
     refine Finset.sum_le_sum fun σ _ => ?_
-    haveI := (hfin σ).1
+    have := (hfin σ).1
     calc ∫ y, cmb (vals P a b f) c σ y ∂(ω σ).meas ≤ ∫ _y, M ∂(ω σ).meas :=
           integral_mono ((hl2.2 c).1 σ) (integrable_const M) fun y => hM σ y
       _ = ((ω σ).meas Set.univ).toReal * M := by

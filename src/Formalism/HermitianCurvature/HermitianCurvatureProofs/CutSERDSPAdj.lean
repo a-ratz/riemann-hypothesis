@@ -119,7 +119,7 @@ theorem psiL_one_near (n : ℕ) (c : ℂ) (hc : c ≠ 0) (h : |Real.log ‖c‖|
     ((Real.continuousAt_log (norm_ne_zero_iff.2 hc)).comp continuous_norm.continuousAt).abs
   have h1 : ∀ᶠ w in 𝓝 c, |Real.log ‖w‖| < (n:ℝ) + 1 := hcont.eventually_lt continuousAt_const h
   filter_upwards [isOpen_ne.mem_nhds hc, h1] with w hw hw1
-  simp only [psiL, if_neg hw]
+  simp only [psiL, ite_eq_right hw]
   apply bumpR.one_of_mem_closedBall
   have hpos : (0:ℝ) < (n:ℝ) + 1 := by positivity
   rw [Metric.mem_closedBall, Real.dist_eq, sub_zero, abs_div, abs_of_pos hpos, div_le_iff₀ hpos]
@@ -372,7 +372,7 @@ def hsB : (Wq →L[ℂ] Wp) →L[ℝ] (Wq →L[ℂ] Wp) →L[ℝ] ℂ :=
 theorem hsB_apply (A C : Wq →L[ℂ] Wp) : hsB A C = B.hsInner A C := rfl
 
 theorem hs_sub_left (A A' C : Wq →L[ℂ] Wp) : B.hsInner (A - A') C = B.hsInner A C - B.hsInner A' C := by
-  simp only [hsInner_eq_sum, ContinuousLinearMap.sub_apply, inner_sub_right, Finset.sum_sub_distrib]
+  simp only [hsInner_eq_sum, sub_apply, inner_sub_right, Finset.sum_sub_distrib]
 
 theorem int_hs_of_cpt {a b : ℂ → (Wq →L[ℂ] Wp)} (ha : Continuous a) (hac : HasCompactSupport a)
     (hU : tsupport a ⊆ {c | c ≠ 0}) (hb : ContinuousOn b {c | c ≠ 0}) :
@@ -430,7 +430,7 @@ theorem dZbv_inv_smul {Bf : ℂ → (Wq →L[ℂ] Wp)} {c : ℂ} (hc : c ≠ 0) 
   have hs : HasFDerivAt (fun w => (w⁻¹ : ℂ) • Bf w) _ c := hinv.smul h.hasFDerivAt
   unfold dZbv
   rw [hs.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
     ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.toSpanSingleton_apply]
   set a : ℂ := -(c ^ 2)⁻¹ with ha
   have hI : (1 : ℂ) • a + Complex.I * (Complex.I • a) = 0 := by
@@ -509,7 +509,7 @@ theorem dZv_smul {φ : ℂ → ℂ} {A : ℂ → (Wq →L[ℂ] Wp)} {c : ℂ} (h
   have h : HasFDerivAt (fun w => φ w • A w) _ c := hφ.hasFDerivAt.smul hA.hasFDerivAt
   unfold dZv NF.dZ
   rw [h.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply]
+  simp only [add_apply, smul_apply, ContinuousLinearMap.smulRight_apply]
   module
 
 theorem pLogAdjHS (A Bf : ℂ → (Wq →L[ℂ] Wp)) (hA : ContDiffOn ℝ 1 A {c | c ≠ 0})
@@ -677,7 +677,7 @@ theorem site_p_adj_g (X : ActualOps k r z z' π π') (Φ Ψ : RadSp k r z z' π 
     rw [X.op_apply, hd.1]
     show pOp l fΦ (Function.update c l t) = _
     unfold pOp
-    rw [if_pos (update_mem_OmX hc l ht), Function.update_self]
+    rw [ite_eq_left (update_mem_OmX hc l ht), Function.update_self]
   have hpΨ : ∀ t : ℂ, t ≠ 0 → (X.op l 3 Ψ : Fn k r (Wq →L[ℂ] Wp)) (Function.update c l t) g =
       conj t • dZbv Bf t := by
     intro t ht
@@ -686,7 +686,7 @@ theorem site_p_adj_g (X : ActualOps k r z z' π π') (Φ Ψ : RadSp k r z z' π 
     rw [X.op_apply, hd.2]
     show pbOp l fΨ (Function.update c l t) = _
     unfold pbOp
-    rw [if_pos (update_mem_OmX hc l ht), Function.update_self]
+    rw [ite_eq_left (update_mem_OmX hc l ht), Function.update_self]
     rfl
   have e1 : (fun t : ℂ => B.hsInner ((X.op l 0 Φ : Fn k r (Wq →L[ℂ] Wp)) (Function.update c l t) g)
       ((Ψ : Fn k r (Wq →L[ℂ] Wp)) (Function.update c l t) g) / ((‖t‖ ^ 2 : ℝ) : ℂ)) =

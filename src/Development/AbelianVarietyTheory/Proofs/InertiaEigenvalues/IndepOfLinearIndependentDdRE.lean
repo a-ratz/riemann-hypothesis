@@ -125,7 +125,7 @@ private theorem eq_zero_of_sum_smul_invariant_eq_zero_of_card_support_le {G E M 
       exact h0
     have h1 := hind c' hinv hsum' i₀
     rw [hone] at h1
-    haveI : Nontrivial E := ⟨hE.exists_pair_ne⟩
+    have : Nontrivial E := ⟨hE.exists_pair_ne⟩
     exact one_ne_zero h1
 
 theorem indep_of_invariant_isField {G E M ι : Type} [CommRing E] (hE : IsField E) [AddCommGroup M]
@@ -272,9 +272,9 @@ theorem indep_of_linearIndependent_DdRE {G : Type} [Group G] {Qp K₀ K : Type} 
     intro i X
     rw [mul_comm, sm_mul_inertia_eigenvalues, hfix]
 
-  letI : Algebra K LL := τ.toRingHom.toAlgebra
-  haveI : IsScalarTower Qp K LL := IsScalarTower.of_algebraMap_eq (fun q => (τ.commutes q).symm)
-  haveI : FiniteDimensional K LL := Module.Finite.of_restrictScalars_finite Qp K LL
+  let : Algebra K LL := τ.toRingHom.toAlgebra
+  have : IsScalarTower Qp K LL := IsScalarTower.of_algebraMap_eq (fun q => (τ.commutes q).symm)
+  have : FiniteDimensional K LL := Module.Finite.of_restrictScalars_finite Qp K LL
   obtain ⟨n, l, hgen, hlind⟩ : ∃ (n : ℕ) (l : Fin n → LL),
       (∀ a : LL, ∃ c : Fin n → K, a = ∑ j, τ (c j) * l j) ∧
         (∀ c : Fin n → K, ∑ j, τ (c j) * l j = 0 → ∀ j, c j = 0) := by

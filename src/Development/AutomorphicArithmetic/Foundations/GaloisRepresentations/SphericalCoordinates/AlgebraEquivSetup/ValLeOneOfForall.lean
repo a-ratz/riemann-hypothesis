@@ -389,6 +389,6 @@ theorem pPInt : PInt := by
       simpa using this
     rw [map_inv₀] at a2
     refine le_antisymm a1 ?_
-    exact (inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _)))).1 a2
+    exact (inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _)))).1 a2
 
 end UpperTheory.Gal.W2.Seed

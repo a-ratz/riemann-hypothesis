@@ -152,7 +152,7 @@ theorem dec_gN_sigLam (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv₀ 
       rw [S7.hs_kmulVG]
       have h2 : S7.hs (NormedSpace.exp X) ≤ (Real.sqrt n * Real.exp s) ^ 2 := by
         have e2 : Real.exp s ^ 2 = Real.exp (2 * s) := by
-          rw [← Real.exp_nat_mul]; norm_num
+          rw [← Real.exp_natCast_mul]; norm_num
         have := S7.hs_exp_leVG X
         rw [← hsdef] at this
         rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg n), e2]

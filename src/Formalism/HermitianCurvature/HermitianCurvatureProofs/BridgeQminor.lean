@@ -113,9 +113,9 @@ theorem bridge_fold (hC : HC Eop) (hL : HL Eop) (hA : HA Eop) (hS : HS Eop)
     intro f hf g hg
     have hP := rep_prod_lemma_3 hΛ ts
     have hf' : CkOn ((1 + ts.length : ℕ) : ℕ∞) (GV k r) f :=
-      ckOn_mono_lemma_4 (ENat.coe_le_coe.mpr (by simp only [List.length_cons]; omega)) hf
+      ckOn_mono_lemma_4 (ENat.natCast_le_natCast.mpr (by simp only [List.length_cons]; omega)) hf
     have hfs : CkOn ((ts.length : ℕ) : ℕ∞) (GV k r) f :=
-      ckOn_mono_lemma_4 (ENat.coe_le_coe.mpr (by simp only [List.length_cons]; omega)) hf
+      ckOn_mono_lemma_4 (ENat.natCast_le_natCast.mpr (by simp only [List.length_cons]; omega)) hf
     have hφ : CkOn 1 (GV k r) (ev Eop ((ts.map fun t => Tm Λ t.1 t.2.1 t.2.2).prod) f) := by
       simpa using ev_ck (Eop := Eop) hC hP 1 f hf'
     have hI := ih f hfs
@@ -260,7 +260,7 @@ theorem ev_LMR (hC : HC Eop) (hL : HL Eop) (hA : HA Eop) (hS : HS Eop) (hG : HGl
   have hψ : CkOn (((L.take i).length + 2 : ℕ) : ℕ∞) (GV k r) (ev Eop (L.drop ((i : ℕ) + 2)).prod f) :=
     ev_ck (Eop := Eop) hC hRt _ f hf3
   have hψ2 : CkOn 2 (GV k r) (ev Eop (L.drop ((i : ℕ) + 2)).prod f) := by
-    have := ev_ck (Eop := Eop) hC hRt 2 f (ckOn_mono_lemma_4 (ENat.coe_le_coe.mpr (by omega)) hf3)
+    have := ev_ck (Eop := Eop) hC hRt 2 f (ckOn_mono_lemma_4 (ENat.natCast_le_natCast.mpr (by omega)) hf3)
     simpa using this
   have hz : ∀ g' ∈ GV k r,
       ev Eop (Md (Lf k r E) a b σ i) (ev Eop (L.drop ((i : ℕ) + 2)).prod f) g' = 0 := by

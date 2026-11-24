@@ -187,7 +187,7 @@ theorem set_of_coords_inj {M : ℕ} (b : Module.Basis (Fin M) E V) {A A' : Set (
   ext x
   have h1 : b.equivFun.symm x ∈ {v : V | b.equivFun v ∈ A} ↔ b.equivFun.symm x ∈ {v : V | b.equivFun v ∈ A'} := by
     rw [e]
-  simpa only [Set.mem_setOf_eq, LinearEquiv.apply_symm_apply] using h1
+  simpa only [Set.mem_ofPred_eq, LinearEquiv.apply_symm_apply] using h1
 
 end Sets
 

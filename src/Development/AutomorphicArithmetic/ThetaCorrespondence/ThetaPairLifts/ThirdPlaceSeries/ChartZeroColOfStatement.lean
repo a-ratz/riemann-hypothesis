@@ -164,9 +164,9 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem relIndex_KO_ne_zero {n : Type} [Fintype n] [DecidableEq n] {J : Subgroup (GL n k)}
     (hJ : J ≤ KO k n) (ho : IsOpen (J : Set (GL n k))) : J.relIndex (KO k n) ≠ 0 := by
-  haveI : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 SplitFlip.isCompact_KO
-  haveI : Finite ((KO k n) ⧸ J.subgroupOf (KO k n)) :=
-    Subgroup.quotient_finite_of_isOpen _ (ho.preimage continuous_subtype_val)
+  have : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 SplitFlip.isCompact_KO
+  have : Finite ((KO k n) ⧸ J.subgroupOf (KO k n)) :=
+    Subgroup.quotient_finite_of_isOpen _ (ho.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 theorem N_one_apply_inl {n : Type} [Fintype n] [DecidableEq n] {c : ℕ} {u : GL (n ⊕ Fin c) k}
@@ -369,7 +369,7 @@ theorem redAt_eq_one_of_congAt {F E : Type} [Field F] [NumberField F] [Field E] 
     rw [mul_left_comm, ← mul_assoc (iA F E (_ ^ D)), ← map_mul, mul_inv_cancel₀ (pow_ne_zero _ hq), map_one, one_mul]
   have k2 := congrArg (resS F P) key
   rw [map_mul, map_mul, map_pow, resS_oToS, resS_oToS, hqm, zero_pow (by omega), zero_mul] at k2
-  haveI := P.isPrime
+  have := P.isPrime
   have k3 := (mul_eq_zero.1 k2).resolve_left (fun h0 => hs (Ideal.Quotient.eq_zero_iff_mem.1 h0))
   rw [Matrix.sub_apply, map_sub, sub_eq_zero] at k3
   show resS F P (y.1 a b) = (1 : Matrix (Fin n) (Fin n) (kP P)) a b
@@ -467,7 +467,7 @@ open GlobalTheory.Fam.ChiZero GlobalTheory.Mem.Col2.MemChart
 theorem chi_zero_std : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (C : Formalism.L2.Forms.ColsTiedSym (I.rec7 l Z)), I.StdC l Z C → ∀ (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : GlobalTheory.AdForm.TwDat I l Z u a Ch), A.Is → ∀ (β : Ch 0), A.kb 0 β = TC.kStd X u (B.R.N 0) → ∀ (x : (A.K 0 (Nat.zero_le _) β).lev.U) (x' : (C.forms u).to0.cls0.lev.U), x.1 = x'.1 → (A.K 0 (Nat.zero_le _) β).lev.chi x = (C.forms u).to0.cls0.lev.chi x' := by
   intro B X I hI hP l Z C hC u a Ch A hA β hβ x x' hxx
   have hPr := l.pr
-  haveI : NeZero (B.R.N 0) := ⟨(B.R.N_pos 0).ne'⟩
+  have : NeZero (B.R.N 0) := ⟨(B.R.N_pos 0).ne'⟩
   obtain ⟨c, rfl⟩ := hA.chOf_onto 0 (Nat.zero_le _) β
   have hR := hA.reads 0 (Nat.zero_le _)
   obtain ⟨n, hn, hfin⟩ := hA.fin 0 (Nat.zero_le _) (A.chOf 0 c)
@@ -544,7 +544,7 @@ theorem eq_zero_of_le_pow {γ t : WithZero (Multiplicative ℤ)} (hγ : γ < 1) 
   by_cases hγ0 : γ = 0
   · have := h 1
     rw [hγ0, pow_one] at this
-    exact ht (le_antisymm this zero_le')
+    exact ht (le_antisymm this zero_le)
   have hg : γ.log < 0 := by
     rw [← WithZero.exp_lt_exp, WithZero.exp_log hγ0]
     simpa using hγ
@@ -572,9 +572,9 @@ theorem exists_smallAt_subset (Q : Finset (HeightOneSpectrum (𝓞 E))) {V : Set
       V ∈ 𝓝 (0 : E ⊗[F] FiniteAdeleRing (𝓞 F) F)) :
     ∃ d : ℕ, SmallAt (F := F) Q d ⊆ V := by
   classical
-  letI := Formalism.BasicNotions.tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  haveI := Formalism.L2.Col.rlt_topRing (F := F) (E := E)
-  haveI := Formalism.L2.Col.adeles_t2Space (F := F) (E := E)
+  let := Formalism.BasicNotions.tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  have := Formalism.L2.Col.rlt_topRing (F := F) (E := E)
+  have := Formalism.L2.Col.adeles_t2Space (F := F) (E := E)
   obtain ⟨β, hβ0, hβ⟩ : ∃ β : 𝓞 E, β ≠ 0 ∧ ∀ P ∈ Q, β ∈ P.asIdeal := by
     choose f hf hf0 using fun P : HeightOneSpectrum (𝓞 E) => Submodule.exists_mem_ne_zero_of_ne_bot P.ne_bot
     exact ⟨∏ P ∈ Q, f P, Finset.prod_ne_zero_iff.2 fun P _ => hf0 P, fun P hP =>
@@ -615,11 +615,11 @@ theorem exists_smallAt_subset (Q : Finset (HeightOneSpectrum (𝓞 E))) {V : Set
       · have h0 : Valued.v (adAt F w x) = 0 := eq_zero_of_le_pow (hbw w hw) fun m => by
           obtain ⟨y, hy, hxy⟩ := Set.mem_iInter.1 hx m
           rw [← hxy]
-          simp only [c, map_mul, map_pow, he, if_pos hw, one_mul]
+          simp only [c, map_mul, map_pow, he, ite_eq_left hw, one_mul]
           exact mul_le_of_le_one_right' (hint y hy w)
         exact (Valuation.zero_iff _).1 h0
       · obtain ⟨y, hy, rfl⟩ := Set.mem_iInter.1 hx 0
-        simp only [c, map_mul, he, if_neg hw, zero_mul]
+        simp only [c, map_mul, he, ite_eq_right hw, zero_mul]
     rw [this]
     exact hV
   obtain ⟨m, hm⟩ := exists_subset_nhds_of_isCompact hKa.directed_ge hKc (mem_nhdsSet_iff_forall.2 hK0)
@@ -638,9 +638,9 @@ theorem exists_smallAt_subset (Q : Finset (HeightOneSpectrum (𝓞 E))) {V : Set
   refine ⟨e * ι b⁻¹ ^ m * a, (mem_rInt_iff F E _).2 fun w => ?_, ?_⟩
   · show Valued.v (adAt F w _) ≤ 1
     by_cases hw : w ∈ Q
-    · simp only [map_mul, map_pow, he, hinv, if_pos hw, one_mul, map_inv₀, inv_pow, map_one]
+    · simp only [map_mul, map_pow, he, hinv, ite_eq_left hw, one_mul, map_inv₀, inv_pow, map_one]
       have hv : 0 < Valued.v (adAt F w (ι b)) ^ m :=
-        pow_pos (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (hbne w))) m
+        pow_pos (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (hbne w))) m
       rw [inv_mul_le_one₀ hv]
       refine (ha.2 w hw).trans ?_
       have : WithZero.exp (-((m * D : ℕ) : ℤ)) = WithZero.exp (-(D : ℤ)) ^ m := by
@@ -649,13 +649,13 @@ theorem exists_smallAt_subset (Q : Finset (HeightOneSpectrum (𝓞 E))) {V : Set
         push_cast
         ring
       rw [this]
-      exact pow_le_pow_left₀ zero_le' (hD w hw) m
+      exact pow_le_pow_left₀ zero_le (hD w hw) m
     · rw [map_mul, ha.1 w hw, mul_zero, map_zero]
-      exact zero_le'
+      exact zero_le
   · refine PtExist.ad_ext fun w => ?_
     simp only [c, map_mul, map_pow, he, hinv]
     by_cases hw : w ∈ Q
-    · rw [if_pos hw, one_mul, one_mul, ← mul_assoc, ← mul_pow, mul_inv_cancel₀ (hbne w), one_pow, one_mul]
+    · rw [ite_eq_left hw, one_mul, one_mul, ← mul_assoc, ← mul_pow, mul_inv_cancel₀ (hbne w), one_pow, one_mul]
     · rw [ha.1 w hw, mul_zero, mul_zero]
 
 end GlobalTheory.LevelApprox
@@ -692,8 +692,8 @@ theorem mem_U_of_near_one : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
       GlobalTheory.Mem.ColAd.Sm Valued.v (WithZero.exp (-(d : ℤ))) (GlobalTheory.Mem.ColAd.locM w z⁻¹ - 1)) → z ∈ S.U := by
   intro F E _ _ _ _ _ σ n J T f bad S Q
   classical
-  letI := Formalism.BasicNotions.tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  haveI := Formalism.L2.Col.rlt_topRing (F := F) (E := E)
+  let := Formalism.BasicNotions.tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  have := Formalism.L2.Col.rlt_topRing (F := F) (E := E)
   let A : ℕ → Set (GL (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) := fun d => {z | (∀ w ∉ Q, locM w z = 1) ∧
     ∀ w ∈ Q, Sm Valued.v (WithZero.exp (-(d : ℤ))) (locM w z - 1) ∧ Sm Valued.v (WithZero.exp (-(d : ℤ))) (locM w z⁻¹ - 1)}
   have hexp : Antitone fun d : ℕ => WithZero.exp (-(d : ℤ)) := fun a b h =>
@@ -780,13 +780,13 @@ theorem exists_K1_element_local_support : ∀ (F E : Type) [Field F] [NumberFiel
       have ho := hoff P.1 (Or.inl P.2)
       rw [c3 _ ho.1 ho.2, ← hp.deco]
       simp only [decoRaw]
-      rw [if_pos (le_locP _ _ hv), e]
+      rw [ite_eq_left (le_locP _ _ hv), e]
       exact PtExist.hasRes_redA _ ((mem_globLat g v).1 hv i)
     · rw [← hN] at hv
       have ho := hoff P.1 (Or.inr P.2)
       rw [c3 _ ho.1 ho.2, ← hp.deco]
       simp only [decoRaw]
-      rw [if_pos (le_locP _ _ hv)]
+      rw [ite_eq_left (le_locP _ _ hv)]
       exact PtExist.hasRes_redA _ ((mem_globLat g v).1 hv i)
     · rw [c2 _ P.2, ptFr_of_mem p (hQ P.1 P.2).2.1 P.2]
       rfl
@@ -826,7 +826,7 @@ theorem conj_small {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     rw [Matrix.one_apply, Matrix.one_apply]
     by_cases hij : i = j
     · subst hij; simp
-    · rw [if_neg hij, if_neg (Ne.symm hij), map_zero]
+    · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij), map_zero]
   have key : (locM (conjPrime₂ P) z - 1) i j = adAt F (conjPrime₂ P) (Formalism.UG.sigR (CMData.sig hc) (FiniteAdeleRing (𝓞 F) F)
       (((z⁻¹ : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) j i - (1 : Matrix (Fin n) (Fin n) (AfE F E)) j i)) := by
     rw [map_sub, ← e, ← e1, map_sub, Matrix.sub_apply]
@@ -847,7 +847,7 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE
 
 theorem val_lt_one_le {γ : WithZero (Multiplicative ℤ)} (h : γ < 1) : γ ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne γ 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [← WithZero.exp_log h0, WithZero.exp_le_exp]
     omega
@@ -856,7 +856,7 @@ theorem dep_le {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum (𝓞
     dep P d ≤ WithZero.exp (-(d : ℤ)) := by
   unfold dep
   rw [map_pow]
-  calc _ ≤ (WithZero.exp (-1 : ℤ)) ^ d := pow_le_pow_left₀ zero_le' (val_lt_one_le val_qOf_lt) d
+  calc _ ≤ (WithZero.exp (-1 : ℤ)) ^ d := pow_le_pow_left₀ zero_le (val_lt_one_le val_qOf_lt) d
     _ = WithZero.exp (-(d : ℤ)) := by
       rw [← WithZero.exp_nsmul]
       congr 1
@@ -1068,7 +1068,7 @@ theorem right_lev (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I
   obtain ⟨k, hR⟩ := (hC u).ends 0 (Nat.zero_le _) (Or.inl rfl)
   have hyE := (hC u).yE 0 (Nat.zero_le _) (Or.inl rfl)
   obtain ⟨c, -⟩ := hR.onto ()
-  haveI : NeZero (B.R.N 0) := ⟨(B.R.N_pos 0).ne'⟩
+  have : NeZero (B.R.N 0) := ⟨(B.R.N_pos 0).ne'⟩
   have hQ : QE I.sel (I.tup I.mu0 : Chr B.fields.F B.fields.E B.fields.K) = ∅ := ColIn.twistPrimes_reference_tuple_eq_empty I
   obtain ⟨p0, hp0, -⟩ := hR.k_std ()
   have hk : k () ∈ UAd B.sp.cm (B.R.N 0) := hp0.uni
@@ -1422,8 +1422,8 @@ theorem mram_iff_ramT : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : 
       rw [LinearMap.sum_apply, Finset.sum_apply]
       exact Finset.sum_congr rfl fun x _ => ((I.rec7 l Z).fm u).rhoT_dil v x ψ₀ c'
     rw [eR c]
-    letI := (I.atT l u a).FvFin v
-    letI := (I.atT l u a).FvDec v
+    let := (I.atT l u a).FvFin v
+    let := (I.atT l u a).FvDec v
     rw [finsum_eq_sum_of_fintype]
     refine Fintype.sum_equiv (Equiv.refl _) _ _ fun s => ?_
     show (I.atIn u a).dilT B.fields.emb B.embLL 0 v s (I.eCls0 l u a c)
@@ -1564,7 +1564,7 @@ theorem chartZero_colOf_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre}
       exact Finset.prod_eq_one fun i _ => (hone i).2 _
     have he : (J t).eps 0 α₀ = Finsupp.single 1 1 := by
       unfold _root_.GlobalTheory.Fam.QuadraticExtensionData.eps
-      rw [if_pos (Or.inr rfl), hw1, one_smul]
+      rw [ite_eq_left (Or.inr rfl), hw1, one_smul]
       apply conv_single_one_of_forall
       intro x hx
       rw [List.mem_ofFn] at hx

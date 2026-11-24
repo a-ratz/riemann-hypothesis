@@ -90,7 +90,7 @@ theorem phz_tg (p : (κ → AF F) × (κ → AF F)) : (phz F p).HasTemperateGrow
     have h := tg_exp.comp (((-(2 * Real.pi)) • ContinuousLinearMap.id ℝ ℝ).hasTemperateGrowth)
     convert h using 1
     funext s
-    simp only [Function.comp_apply, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_id',
+    simp only [Function.comp_apply, FunLike.coe_smul, ContinuousLinearMap.coe_id',
       Pi.smul_apply, id_eq, smul_eq_mul]
     push_cast
     congr 1 <;> ring
@@ -148,7 +148,7 @@ theorem rho_adm (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) {l : ((κ → AF F) �
   have htr : Function.HasTemperateGrowth (fun y : κ → mixedEmbedding.mixedSpace F => y + arc F p.1) := by
     fun_prop
   have hanti : AntilipschitzWith 1 (fun y : κ → mixedEmbedding.mixedSpace F => y + arc F p.1) :=
-    (IsometryEquiv.addRight (arc F p.1)).isometry.antilipschitz
+    (IsometryEquiv.addRight (arc F p.1)).isometry.antilipschitzWith
   let S : 𝓢(κ → mixedEmbedding.mixedSpace F, ℂ) →L[ℂ] 𝓢(κ → mixedEmbedding.mixedSpace F, ℂ) :=
     (SchwartzMap.smulLeftCLM ℂ (phz F p)).comp (SchwartzMap.compCLMOfAntilipschitz ℂ htr hanti)
   refine ⟨T0.comp S, fun f => ?_⟩

@@ -78,7 +78,7 @@ theorem chart_eq_of_val {V : Type} [CommRing V] [IsDomain V] {X : Scheme.{0}} {L
   · have hx' : x ∈ LB.wchart L φ' j := hx
     have hxe : x ∈ jK V ⁻¹ᵁ LB.wchart L φ j := wchart_le_preimage L (jK V) φ φ' hφ j hx'
     unfold res pullU
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     refine Eq.symm ((gs_res _ x _ hx _).trans ((gs_pull (𝟙 _) (jK V) x _ hxe _).trans
       ((gs_unit (𝟙 _ ≫ jK V) x _ hxe _).trans ?_)))
     exact congrArg Units.val (val_of e _ x J j h2).symm
@@ -96,10 +96,10 @@ theorem hasVal_fracMap {V V' : Type} [CommRing V] [IsDomain V] [CommRing V'] [Is
     intro w m
     have h1 := Units.coe_map (algebraMap V' (FractionRing V') : V' →* FractionRing V') (w ^ m)
     rw [map_zpow, Units.val_zpow_eq_zpow_val, Units.coe_map] at h1
-    simpa only [MonoidHom.coe_coe] using h1.symm
+    simpa only [MonoidHom.coe_ofClass] using h1.symm
   rw [map_mul, map_zpow₀, ArcPull.fracMap_algebraMap, ArcPull.fracMap_algebraMap, hϖ, Units.val_mul, map_mul,
     map_mul, map_pow, key, mul_zpow, ← zpow_natCast, ← zpow_mul]
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   ring
 
 theorem gs_scal_spMap {K K' : Type} [CommRing K] [CommRing K'] (f : K →+* K') (z : Spec (CommRingCat.of K')) (c : K) :

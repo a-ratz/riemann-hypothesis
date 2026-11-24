@@ -70,7 +70,7 @@ theorem exists_fundamental_cocycle_loc (hT : Formalism.GaloisCohomology.LocalTat
   have hχc : Continuous fun g => (χZ g : ℤ_[l]) := by
     rw [continuous_iff_coe]
     simp only [hχZ]
-    exact hcyc.continuous.comp (continuous_subtype_val.comp hΦ1)
+    exact hcyc.continuous.comp (continuous_subtypeVal.comp hΦ1)
   obtain ⟨c, hc⟩ := exists_gen_all hχc fun r => by
     have : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     exact exists_gen hχc

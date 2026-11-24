@@ -277,7 +277,7 @@ theorem no_kernel {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℝ W] [F
     [MeasurableSpace W] [BorelSpace W] (μ : Measure W) (χ : W → W → ℂ) (hμ : SelfDual μ χ)
     (hadd : ∀ x x' y, χ (x + x') y = χ x y * χ x' y) (hT : ST.TestExP μ χ) (t : W) (ht0 : t ≠ 0)
     (ht : ∀ y, χ t y = 1) : False := by
-  haveI := hμ.1
+  have := hμ.1
   obtain ⟨Φ, hc, hs, hI, z, hz⟩ := hT
 
   have htr : ∀ y, ∫ x, Φ (x - t) * χ x y ∂μ = ∫ x, Φ x * χ x y ∂μ := by
@@ -327,7 +327,7 @@ def MatNDH : Prop := ∀ {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (ψ 
 theorem matNDH_holds : MatNDH := by
   classical
   intro D X u' ψ hT μinf νinf fibInf hP hdet0
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have hS := hP.2.2.1
   have hpc := continuous_psiInfP ψ hS
   obtain ⟨v, hv0, hv⟩ := Matrix.exists_mulVec_eq_zero_iff.2 hdet0
@@ -346,7 +346,7 @@ theorem matNDH_holds : MatNDH := by
   have hμ : SelfDual μinf (fun x y : TupI X => psiInf X.B.I.F ψ (BR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J x y)) :=
     hP.2.2.2.2.1
   have hμ' := selfDual_transport μinf _ (tupCoord X) (tupCoord_add X) hμ
-  haveI := hμ'.1
+  have := hμ'.1
   have hadd : ∀ x x' y : EuclideanSpace ℝ (KapI X), (fun x y : EuclideanSpace ℝ (KapI X) => psiInf X.B.I.F ψ (BR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J ((tupCoord X).symm x) ((tupCoord X).symm y))) (x + x') y = (fun x y : EuclideanSpace ℝ (KapI X) => psiInf X.B.I.F ψ (BR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J ((tupCoord X).symm x) ((tupCoord X).symm y))) x y * (fun x y : EuclideanSpace ℝ (KapI X) => psiInf X.B.I.F ψ (BR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J ((tupCoord X).symm x) ((tupCoord X).symm y))) x' y := by
     intro x x' y
     simp only [tupCoord_symm_add, BR_add_leftP, psiInf_addP]
@@ -368,7 +368,7 @@ theorem matNDH_holds : MatNDH := by
 open Classical in
 theorem densMu_holds : DensMu := by
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have hdet : IsUnit (LinearMap.det (Alin X)) := by
     rw [det_Alin]; exact isUnit_iff_ne_zero.2 (matNDH_holds X u' ψ hT μinf νinf fibInf hP)
   let A : EuclideanSpace ℝ (KapI X) ≃L[ℝ] EuclideanSpace ℝ (KapI X) := (LinearMap.equivOfIsUnitDet hdet).toContinuousLinearEquiv
@@ -393,14 +393,14 @@ theorem densMu_holds : DensMu := by
     push_cast
     ring_nf
   rw [hχ] at hμ'
-  haveI := hν.1
+  have := hν.1
   have hB : ST.IsBichar (fun x y : EuclideanSpace ℝ (KapI X) => ((𝐞 ⟪x, A y⟫ : Circle) : ℂ)) :=
     { addL := fun x x' y => by simp only [inner_add_left, AddChar.map_add_eq_mul, Circle.coe_mul]
       addR := fun x y y' => by simp only [map_add (f := _), inner_add_right, AddChar.map_add_eq_mul, Circle.coe_mul]
       norm1 := fun x y => Circle.norm_coe _
-      contL := fun y => (continuous_subtype_val.comp Real.continuous_fourierChar).comp
+      contL := fun y => (continuous_subtypeVal.comp Real.continuous_fourierChar).comp
         (continuous_id.inner continuous_const)
-      contR := fun x => (continuous_subtype_val.comp Real.continuous_fourierChar).comp
+      contR := fun x => (continuous_subtypeVal.comp Real.continuous_fourierChar).comp
         (continuous_const.inner A.continuous) }
   obtain ⟨Φ, hc, hs, hI, z, hz⟩ := ST.testEx_bichar (ENNReal.ofReal (Real.sqrt |(matI X).det|) • (volume : Measure (EuclideanSpace ℝ (KapI X)))) hB
   exact SelfDual.eq_of_test hν hμ' Φ hc hs hI z hz

@@ -60,7 +60,7 @@ theorem finite_image_of_factor {α β γ : Type} (S : Set α) (f : α → β) (g
     (h : ∀ x ∈ S, ∀ y ∈ S, f x = f y → g x = g y) : (g '' S).Finite := by
   rcases S.eq_empty_or_nonempty with rfl | ⟨x0, _⟩
   · simp
-  haveI : Nonempty α := ⟨x0⟩
+  have : Nonempty α := ⟨x0⟩
   refine (Set.finite_range fun t => g (Function.invFunOn f S t)).subset ?_
   rintro _ ⟨x, hx, rfl⟩
   refine ⟨f x, ?_⟩
@@ -70,7 +70,7 @@ theorem finite_image_of_factor {α β γ : Type} (S : Set α) (f : α → β) (g
 theorem cont_pos {W : Type} [AddCommGroup W] (W0 : AddSubgroup W) (S : Set W) (h : IsCO W0 S)
     (hS : S.Nonempty) : 0 < cont W0 S := by
   unfold cont
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   obtain ⟨h1, h2, -, h4⟩ := h.choose_spec
   refine mul_pos ?_ (div_pos ?_ ?_)
   · exact_mod_cast (Set.ncard_pos h4).2 (hS.image _)
@@ -186,7 +186,7 @@ theorem vE_unit (L : LocE F E) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) (u : (𝒪[
 
 theorem exists_pow_mul_mem (L : LocE F E) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) (x : E) :
     ∃ n : ℕ, algebraMap F E ((ϖ : F) ^ n) * x ∈ L.O := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
   have h1 : IsAlgebraic F x := Algebra.IsAlgebraic.isAlgebraic x
   have h2 : IsAlgebraic 𝒪[F] x := (IsFractionRing.isAlgebraic_iff 𝒪[F] F E).2 h1
   obtain ⟨r, hr, hi⟩ := h2.exists_integral_multiple
@@ -286,7 +286,7 @@ theorem horb_isCO (L : LocE F E) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) {m i : �
       ((QuotientAddGroup.mk : _ → _ ⧸ A) '' S).Finite := by
     intro c S hS
     let I : Ideal L.O := Ideal.span {y : L.O | (y : E) = algebraMap F E ((ϖ : F) ^ (c + j))}
-    haveI : Finite (L.O ⧸ I) := by
+    have : Finite (L.O ⧸ I) := by
       apply Nat.finite_of_card_ne_zero
       rw [hcard]
       exact pow_ne_zero _ (by omega)
@@ -298,13 +298,13 @@ theorem horb_isCO (L : LocE F E) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) {m i : �
       have h := congrFun (congrFun hXY a) b
       have h1 : algebraMap F E ((ϖ : F) ^ c) * X a b ∈ L.O := (hS X hX).2 a b
       have h2 : algebraMap F E ((ϖ : F) ^ c) * Y a b ∈ L.O := (hS Y hY).2 a b
-      simp only [dif_pos h1, dif_pos h2] at h
+      simp only [dite_eq_left h1, dite_eq_left h2] at h
       have h3 := Ideal.Quotient.eq.1 h.symm
       have hI : I = Ideal.span {(⟨_, pow_mem' L ϖ (c + j)⟩ : L.O)} := by
         simp only [I]
         congr 1
         ext y
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, Subtype.ext_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, Subtype.ext_iff]
       rw [hI, Ideal.mem_span_singleton'] at h3
       obtain ⟨d, hd⟩ := h3
       refine ⟨d, d.2, (hpu c).mul_left_cancel ?_⟩

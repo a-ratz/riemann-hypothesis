@@ -48,8 +48,8 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 
 theorem UpperTheory.V.Z.Sym.Loc.sqrtO : UpperTheory.V.Z.Sym.Loc.SqrtO := by
   intro O K _ _ _ _ _ Δ hL x r₀ hr hx
-  haveI := hL.compl
-  haveI := IsAdicComplete.henselianRing O (IsLocalRing.maximalIdeal O)
+  have := hL.compl
+  have := IsAdicComplete.henselianRing O (IsLocalRing.maximalIdeal O)
   have hmon : (Polynomial.X ^ 2 - Polynomial.C x : Polynomial O).Monic :=
     Polynomial.monic_X_pow_sub_C x two_ne_zero
   have h0 : Polynomial.eval r₀ (Polynomial.X ^ 2 - Polynomial.C x) ∈ IsLocalRing.maximalIdeal O := by

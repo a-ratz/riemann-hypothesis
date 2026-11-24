@@ -90,7 +90,7 @@ theorem ampleCub_pull {S : Scheme.{0}} {N G : Over S} [GrpObj N] [GrpObj G] (ν 
 
 theorem exists_ampleCub_of_iso : ∀ (S : Scheme.{0}) (G G' : Over S) [GrpObj G] [GrpObj G'] (e : G ≅ G'), IsMonHom e.hom → ∀ L' : LB G'.left, AmpleCub G' L' → ∃ L : LB G.left, AmpleCub G L := by
   intro S G G' _ _ e he L' h
-  haveI : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget S).map e.hom))
+  have : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget S).map e.hom))
   exact ⟨_, ampleCub_pull e.hom h⟩
 
 end GlobalTheory.SS.AmpIso

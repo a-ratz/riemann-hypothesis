@@ -114,9 +114,9 @@ private theorem open_kernel_killing_roots_of_unity {Ω : Type} [Field Ω] [CharZ
   have hfin : {ζ : Ω | ζ ^ w = 1}.Finite := by
     refine (nthRoots w (1 : Ω)).finite_toSet.subset fun ζ hζ => ?_
     exact (mem_nthRoots (Nat.pos_of_ne_zero hw)).2 hζ
-  haveI : Finite {ζ : Ω | ζ ^ w = 1} := hfin
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ w = 1}) :=
+  have : Finite {ζ : Ω | ζ ^ w = 1} := hfin
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ w = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ w = 1}).fixingSubgroup) (fun g hg => ?_)
     (IntermediateField.fixingSubgroup_isOpen _)
@@ -129,8 +129,8 @@ theorem UpperTheory.theta_unramified_of_kills_roots_of_unity :
   have h1 : ∀ A, Raw.Away {w} A → Ine (F := ℚ) A ≤ θ.ker := fun A hA g hg =>
     hk g fun ζ hζ => inertia_fixes_prime_to_roots A hw.ne_zero (hA w (Finset.mem_singleton_self w)) hg hζ
   refine ⟨h1, fun F hF => ?_⟩
-  haveI : NeZero l := ⟨hl.out.ne_zero⟩
-  haveI : NeZero (l : Qbar l) := ⟨Nat.cast_ne_zero.2 hl.out.ne_zero⟩
+  have : NeZero l := ⟨hl.out.ne_zero⟩
+  have : NeZero (l : Qbar l) := ⟨Nat.cast_ne_zero.2 hl.out.ne_zero⟩
   have hc : Nat.card (rootsOfUnity l (Qbar l)) = Nat.card (Multiplicative (ZMod l)) := by
     rw [HasEnoughRootsOfUnity.natCard_rootsOfUnity]; simp
   let e := mulEquivOfCyclicCardEq hc
@@ -170,7 +170,7 @@ theorem UpperTheory.V.Z.Win.Birth.autOf4W (hne : AlNe) :
       intro z hz
       have hz' : z ∈ T.F ⊔ T.K := T.hL ▸ hz
       have hle : T.F ⊔ T.K ≤ IntermediateField.fixedField (Subgroup.zpowers (resQ T.F x)) := by
-        rw [sup_le_iff, IntermediateField.le_iff_le, IntermediateField.le_iff_le, Subgroup.zpowers_le,
+        rw [sup_le_iff, IntermediateField.le_fixedField_iff_le_fixingSubgroup, IntermediateField.le_fixedField_iff_le_fixingSubgroup, Subgroup.zpowers_le,
           Subgroup.zpowers_le]
         refine ⟨?_, x.2.1⟩
         rw [IntermediateField.mem_fixingSubgroup_iff]
@@ -191,7 +191,7 @@ theorem UpperTheory.V.Z.Win.Birth.autOf4W (hne : AlNe) :
     refine hn (IntermediateField.fixingSubgroup_le hle ?_)
     rw [T.hL, IntermediateField.fixingSubgroup_sup]
     exact ⟨(IntermediateField.mem_fixingSubgroup_iff _ _).2 fun y hy => g.commutes ⟨y, hy⟩, hg.1⟩
-  haveI : Algebra.IsQuadraticExtension ℚ T.K := { finrank_eq_two' := T.degK }
+  have : Algebra.IsQuadraticExtension ℚ T.K := { finrank_eq_two' := T.degK }
   have hK : IsAbelianGalois ℚ T.K := IsAbelianGalois.of_isCyclic ℚ T.K
   have hLa : IsAbelianGalois ℚ T.L := by
     have h := @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ T.F T.K
@@ -234,9 +234,9 @@ private theorem toB_chi (c : Coef l) (g : G ℚ Ω) : toB (chiO ℚ Ω l c.O) g 
   ext
   rfl
 private theorem cont_emb (E : Type) [Field E] [NumberField E] [Algebra E Ω] : Continuous (galEmb ℚ E Ω) := by
-  haveI : FaithfulSMul E Ω := (faithfulSMul_iff_algebraMap_injective E Ω).2 (algebraMap E Ω).injective
-  haveI : Module.IsTorsionFree E Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) E⟩
+  have : FaithfulSMul E Ω := (faithfulSMul_iff_algebraMap_injective E Ω).2 (algebraMap E Ω).injective
+  have : Module.IsTorsionFree E Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) E⟩
   exact (galEmbTop ℚ E Ω).1.continuous
 private theorem cont_res (F : IntermediateField ℚ Ω) [NumberField F] : Continuous (resQ F) := cont_emb F
 private theorem cont_delta (d : UpperTheory.V.Cu.Dat Ω l) : Continuous (toB d.δ) := by
@@ -263,9 +263,9 @@ theorem UpperTheory.V.Cu.tower_is_initial_of_ok :
     have e : toB d.δ g ^ 2 = cycBar ℚ Ω l g ^ j := this.trans (congrArg (· ^ j) (toB_chi d.c g))
     show (toB d.δ g)⁻¹ ^ 2 * cycBar ℚ Ω l g ^ j = 1
     rw [← e, inv_pow, inv_mul_cancel]
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : Finite (G ℚ Ω ⧸ φ.ker) := Subgroup.quotient_finite_of_isOpen _ (Subgroup.isOpen_mono hle hU)
-  haveI : φ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : Finite (G ℚ Ω ⧸ φ.ker) := Subgroup.quotient_finite_of_isOpen _ (Subgroup.isOpen_mono hle hU)
+  have : φ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   refine ⟨hi, _, ((toB d.δ).comp (resQ T.L))⁻¹, π, -j, φ.ker.index, fun i => ?_,
     hW Ω l d T U j hU hj, ((cont_delta d).comp (cont_res T.L)).inv, Nat.pos_of_ne_zero Subgroup.FiniteIndex.index_ne_zero,
     ⟨(d.k : ℤ) - 1 + d.m, by simp <;> ring⟩, fun A _ s _ => ?_, _root_.UpperTheory.V.Z.Win.Birth.mkReg' h1 (autOf4W hne Ω l d T hT hok hi hrw π h1 h2), h2⟩

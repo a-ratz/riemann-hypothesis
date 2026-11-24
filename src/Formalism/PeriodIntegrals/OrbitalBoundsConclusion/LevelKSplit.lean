@@ -498,7 +498,7 @@ theorem heisenberg_parabolic (F E : Type) [Field F] [NumberField F] [Field E] [A
       exact AlgHom.commutes _ _
   have hcy : Continuous fun y : Fin r → PI.LevelKSplit.W.NC.Wp (Af F) σ J P =>
       fun a => (y a : Fin M → Af F ⊗[F] E) :=
-    continuous_pi fun a => continuous_subtype_val.comp (continuous_apply a)
+    continuous_pi fun a => continuous_subtypeVal.comp (continuous_apply a)
   refine ⟨fun y => sHG hJ H hh (y := fun a => (y a : Fin M → Af F ⊗[F] E)) (fun a => (y a).2),
     ?_, continuous_yH P, fun y => sHG_mem hJ H hh _, fun g hg => ?_, fun y z hz a => ?_,
     centre_le_unipotent_radical hJ H hh, fun z hz g hg => Z_comm hJ H hh hz hg, fun y y' => ?_,
@@ -608,7 +608,7 @@ theorem cfun_cinv (H : CoordHyp N A N1 Z Lev sH yQ) (n : N) : cfun H (cinv H n) 
   group
 
 theorem continuous_cm (H : CoordHyp N A N1 Z Lev sH yQ) : Continuous (cm H) :=
-  Continuous.subtype_mk ((H.cLev.comp continuous_subtype_val).inv.mul continuous_subtype_val) _
+  Continuous.subtype_mk ((H.cLev.comp continuous_subtypeVal).inv.mul continuous_subtypeVal) _
 
 def cHomeo (H : CoordHyp N A N1 Z Lev sH yQ) : (A × (Q × Z)) ≃ₜ N where
   toFun := cfun H
@@ -639,7 +639,7 @@ theorem coord_skew (H : CoordHyp N A N1 Z Lev sH yQ) (n0 : N) :
     simpa using this
   let mf : A → N1 := fun u => ⟨(u : G)⁻¹ * n1 * u, hmf u⟩
   have cmf : Continuous mf := Continuous.subtype_mk
-    ((continuous_subtype_val.inv.mul continuous_const).mul continuous_subtype_val) _
+    ((continuous_subtypeVal.inv.mul continuous_const).mul continuous_subtypeVal) _
   let t : A → Q := fun u => yQ (mf u)
   have ct : Continuous t := H.cyQ.comp cmf
   let zm : A → G := fun u => (sH (t u))⁻¹ * (mf u : G)
@@ -652,7 +652,7 @@ theorem coord_skew (H : CoordHyp N A N1 Z Lev sH yQ) (n0 : N) :
     have ct1 : Continuous (fun p : A × Q => t p.1) := ct.comp continuous_fst
     refine (((H.csH.comp ct1).mul (H.csH.comp continuous_snd)).mul
       (H.csH.comp (ct1.add continuous_snd)).inv).mul ?_
-    exact (H.csH.comp ct1).inv.mul (continuous_subtype_val.comp (cmf.comp continuous_fst))
+    exact (H.csH.comp ct1).inv.mul (continuous_subtypeVal.comp (cmf.comp continuous_fst))
   refine ⟨a0, t, c, ct, cc, fun u y z => ?_⟩
   apply Subtype.ext
   show (n0 : G) * ((u : G) * sH y * (z : G)) = (Lev n0 * u) * sH (y + t u) * (k (u, y) * zm u * z)
@@ -728,7 +728,7 @@ theorem ncoord_of_parts (hH : HeisP F E σ M J) (hL : LevP F E σ M J) : NCoord 
       cLev := cLev
       csH := csH
       cyQ := continuous_pi fun a => Continuous.subtype_mk
-        ((continuous_apply a).comp (cyH.comp continuous_subtype_val)) _
+        ((continuous_apply a).comp (cyH.comp continuous_subtypeVal)) _
       lev_mem := fun n hn => (hLev n hn).1
       lev_rest := fun n hn => (hLev n hn).2
       triv := hAN1
@@ -1184,7 +1184,7 @@ theorem map_eq_of_split (p : V →+ V) (hp : Continuous p) (hpp : ∀ v, p (p v)
     (f : W → W) (hf : ∀ w, (f w : V) = g w) (μ : Measure W) (hμ : μ.IsAddHaarMeasure) :
     μ.map f = μ := by
   classical
-  haveI := hμ
+  have := hμ
   set U : AddSubgroup V := p.ker with hUdef
   have hWc : IsClosed (W : Set V) := by
     have e : (W : Set V) = {v | p v = v} := Set.ext fun v => hW v
@@ -1194,25 +1194,25 @@ theorem map_eq_of_split (p : V →+ V) (hp : Continuous p) (hpp : ∀ v, p (p v)
     have e : (U : Set V) = {v | p v = 0} := Set.ext fun v => by simp [hUdef, AddMonoidHom.mem_ker]
     rw [e]
     exact isClosed_eq hp continuous_const
-  haveI : LocallyCompactSpace W := hWc.locallyCompactSpace
-  haveI : LocallyCompactSpace U := hUc.locallyCompactSpace
-  haveI : BorelSpace W := Subtype.borelSpace (fun x => x ∈ (W : Set V))
-  haveI : BorelSpace U := Subtype.borelSpace (fun x => x ∈ (U : Set V))
-  haveI : SecondCountableTopology W := TopologicalSpace.Subtype.secondCountableTopology (W : Set V)
-  haveI : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set V)
-  haveI : BorelSpace (W × U) := Prod.borelSpace
+  have : LocallyCompactSpace W := hWc.locallyCompactSpace
+  have : LocallyCompactSpace U := hUc.locallyCompactSpace
+  have : BorelSpace W := Subtype.borelSpace (fun x => x ∈ (W : Set V))
+  have : BorelSpace U := Subtype.borelSpace (fun x => x ∈ (U : Set V))
+  have : SecondCountableTopology W := TopologicalSpace.Subtype.secondCountableTopology (W : Set V)
+  have : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology (U : Set V)
+  have : BorelSpace (W × U) := Prod.borelSpace
   have hpW : ∀ w : W, p w = w := fun w => (hW w).1 w.2
   have hfc : Continuous f := by
     apply continuous_induced_rng.2
     have e : (Subtype.val ∘ f : W → V) = fun w : W => g (w : V) := funext hf
     rw [e]
-    exact hg.comp continuous_subtype_val
+    exact hg.comp continuous_subtypeVal
   let Φ : W × U →+ V := W.subtype.comp (AddMonoidHom.fst W U) + U.subtype.comp (AddMonoidHom.snd W U)
   have hΦ : ∀ x : W × U, Φ x = (x.1 : V) + (x.2 : V) := fun x => rfl
   have hΦc : Continuous Φ := by
     have e : (Φ : W × U → V) = fun x => (x.1 : V) + (x.2 : V) := funext hΦ
     rw [e]
-    exact (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
+    exact (continuous_subtypeVal.comp continuous_fst).add (continuous_subtypeVal.comp continuous_snd)
   let Ψ : V → W × U := fun v => (⟨p v, (hW _).2 (hpp v)⟩,
     ⟨v - p v, by simp [hUdef, AddMonoidHom.mem_ker, map_sub, hpp]⟩)
   have hΨc : Continuous Ψ :=
@@ -1239,7 +1239,7 @@ theorem map_eq_of_split (p : V →+ V) (hp : Continuous p) (hpp : ∀ v, p (p v)
       continuous_toFun := hΦc, continuous_invFun := hΨc }
   let ν : Measure U := Measure.addHaar
   set P : Measure (W × U) := μ.prod ν with hP
-  haveI hPH : P.IsAddHaarMeasure := by rw [hP]; infer_instance
+  have hPH : P.IsAddHaarMeasure := by rw [hP]; infer_instance
   have hHaar : (P.map Φ).IsAddHaarMeasure :=
     Measure.isAddHaarMeasure_map P Φ hΦc hΦs e.isClosedEmbedding.tendsto_cocompact
   have hmap := hV _ hHaar
@@ -1287,7 +1287,7 @@ theorem h_e_pXv (H : D.Hyp) (b : Fin r) (v : n → A) : D.h (D.e b) (D.pXv v) = 
 
   rw [← Dat.hL_apply, Dat.pXv, LinearMap.sum_apply, map_sum]
   simp only [LinearMap.smulRight_apply, map_smul, smul_eq_mul, Dat.hL_apply, H.ef, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem h_f_pX (H : D.Hyp) (b : Fin r) (v : n → A) : D.h (D.f b) (D.pX v) = D.h (D.f b) v := by
   have hfe : ∀ a, D.h (D.f b) (D.e a) = if b = a then 1 else 0 := by
@@ -1295,11 +1295,11 @@ theorem h_f_pX (H : D.Hyp) (b : Fin r) (v : n → A) : D.h (D.f b) (D.pX v) = D.
     rw [Dat.h_symm H (D.e a) (D.f b), H.ef]
     by_cases hab : a = b
     · subst hab; simp
-    · rw [if_neg hab, if_neg (Ne.symm hab), map_zero]
+    · rw [ite_eq_right hab, ite_eq_right (Ne.symm hab), map_zero]
 
   rw [← Dat.hL_apply, Dat.pX, LinearMap.sum_apply, map_sum]
   simp only [LinearMap.smulRight_apply, map_smul, smul_eq_mul, Dat.hL_apply, hfe, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem h_f_pXv (H : D.Hyp) (b : Fin r) (v : n → A) : D.h (D.f b) (D.pXv v) = 0 := by
 
@@ -1404,13 +1404,13 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] [FiniteD
   {σ : E →ₐ[F] E} {M : ℕ} {J : Matrix (Fin M) (Fin M) E} {r : ℕ} {P : Frame E M r} {T : F}
 
 theorem sc_tens : SecondCountableTopology (Af F ⊗[F] E) := by
-  haveI := PI.LevelKSplit.W.SC.finite_adeles_secondCountable F
+  have := PI.LevelKSplit.W.SC.finite_adeles_secondCountable F
   infer_instance
 
 theorem wp_map (hσσ : ∀ x, σ (σ x) = x) (hJ : IsHermND σ J) (hP : P.IsStd σ J T)
     (hV : PI.LevelKSplit.W.CD.ModV F E σ M J) {h : HA (Af F) σ J} (hh : h ∈ Hsub (Af F) σ J P)
     (μ : Measure (Wp (Af F) σ J P)) (hμ : μ.IsAddHaarMeasure) : μ.map (linWp hh) = μ := by
-  haveI := sc_tens (F := F) (E := E)
+  have := sc_tens (F := F) (E := E)
   have H := datR_hyp (R := Af F) hσσ hJ hP
   have hfix : ∀ i, lin (Af F) σ J h (ratV (F := F) (Af F) (tupH P i)) = ratV (F := F) (Af F) (tupH P i) :=
     fun i => congrFun (MulAction.mem_stabilizer_iff.mp hh) i
@@ -1451,12 +1451,12 @@ namespace PI.VolSemiDirect.W
 theorem subgroup_locally_compact_holds : SubLCSC := by
   intro X _ _ Γ K hX hK hΓc hΓd
   obtain ⟨hlc, hsc, ht2, htg⟩ := hX
-  haveI := hlc
-  haveI := hsc
-  haveI := ht2
-  haveI := htg
-  haveI := hΓc
-  haveI := hΓd
+  have := hlc
+  have := hsc
+  have := ht2
+  have := htg
+  have := hΓc
+  have := hΓd
   let f : ratG Γ K → Γ := fun x => ⟨(x : K).1, (Subgroup.mem_inf.1 ((Subgroup.mem_subgroupOf).1 x.2)).1⟩
   refine ⟨⟨hK.isClosedEmbedding_subtypeVal.locallyCompactSpace, Topology.IsEmbedding.subtypeVal.secondCountableTopology,
     inferInstance, inferInstance⟩, ?_, ?_⟩
@@ -1469,9 +1469,9 @@ theorem subgroup_locally_compact_holds : SubLCSC := by
     exact hf.countable
   · have hcont : Continuous f := by
       apply Continuous.subtype_mk
-      exact continuous_subtype_val.comp continuous_subtype_val
+      exact continuous_subtypeVal.comp continuous_subtypeVal
     have hemb : Topology.IsEmbedding f := by
-      apply Topology.IsEmbedding.of_comp hcont continuous_subtype_val
+      apply Topology.IsEmbedding.of_comp hcont continuous_subtypeVal
       show Topology.IsEmbedding (fun x : ratG Γ K => ((x : K) : X))
       exact Topology.IsEmbedding.subtypeVal.comp Topology.IsEmbedding.subtypeVal
     exact hemb.discreteTopology
@@ -1590,11 +1590,11 @@ theorem conjNH_of (hC : NCoord F E σ M J) (hV : PI.LevelKSplit.W.CD.ModV F E σ
     exact Measure.IsHaarMeasure.mk
   · intro f hf
     have hF : Measurable fun n : Nsub (Af F) σ J P => f (h * (n : HA (Af F) σ J) * h⁻¹) :=
-      hf.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const).measurable
+      hf.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const).measurable
     have hF0 : Measurable fun n : Nsub (Af F) σ J P => f (n : HA (Af F) σ J) :=
-      hf.comp continuous_subtype_val.measurable
+      hf.comp continuous_subtypeVal.measurable
     have hlinm : Measurable (linWp hh) :=
-      (((LinearMap.continuous_on_pi (lin (Af F) σ J h)).comp continuous_subtype_val).subtype_mk
+      (((LinearMap.continuous_on_pi (lin (Af F) σ J h)).comp continuous_subtypeVal).subtype_mk
         _).measurable
     let Lq : (Fin r → Wp (Af F) σ J P) → (Fin r → Wp (Af F) σ J P) := fun y a => linWp hh (y a)
     have hLq : MeasurePreserving Lq μQ μQ :=
@@ -1613,7 +1613,7 @@ theorem conjNH_of (hC : NCoord F E σ M J) (hV : PI.LevelKSplit.W.CD.ModV F E σ
           rw [he, e2]
       _ = ∫⁻ p, f (Ψ p : HA (Af F) σ J) ∂ρ :=
           hT.lintegral_comp (show Measurable fun p => f (Ψ p : HA (Af F) σ J) from
-            hf.comp (continuous_subtype_val.comp Ψ.continuous).measurable)
+            hf.comp (continuous_subtypeVal.comp Ψ.continuous).measurable)
 
 theorem normal_conjugation_hypothesis : NCAsm F E σ M J := fun hC hV => conjNH_of hC hV
 
@@ -1786,7 +1786,7 @@ theorem isClosed_Asub (hJ : IsHermND σ J) (hinv : ∀ x, σ (σ x) = x) (P : Fr
           (⋂ b, {g : HA (Af F) σ J | lin (Af F) σ J g⁻¹ (ratV (F := F) (Af F) (P.f b)) ∈
             spanR (F := F) (Af F) P.f Set.univ}))) := by
     ext g
-    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     exact mem_Asub
   rw [e]
   refine (PI.LevelKSplit.W.ExC.closed_SNH hJ hinv P T hP).2.1.inter

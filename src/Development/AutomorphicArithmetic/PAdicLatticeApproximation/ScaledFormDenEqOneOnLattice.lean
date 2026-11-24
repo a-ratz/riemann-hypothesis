@@ -51,11 +51,11 @@ theorem UpperTheory.scaled_form_den_eq_one_on_lattice :
   have hu' : u ∈ X.M ∧ X.r u ∈ LaHat D := by
     unfold UpperTheory.Gal.W2.Wit.Sys.lat at hu
     simpa only [AddSubgroup.mem_mk, AddSubgroup.mem_comap, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-      Set.mem_setOf_eq] using hu
+      Set.mem_ofPred_eq] using hu
   have hw' : w ∈ X.M ∧ X.r w ∈ LaHat D := by
     unfold UpperTheory.Gal.W2.Wit.Sys.lat at hw
     simpa only [AddSubgroup.mem_mk, AddSubgroup.mem_comap, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-      Set.mem_setOf_eq] using hw
+      Set.mem_ofPred_eq] using hw
   have hint : IsIntAf (algebraMap ℚ (AfP p) (X.s * X.B u w)) := by
     rw [X.form u w]
     exact AdelicSim.isInt_mul X.ε_int (AdelicSim.formInt D hu'.2 hw'.2)

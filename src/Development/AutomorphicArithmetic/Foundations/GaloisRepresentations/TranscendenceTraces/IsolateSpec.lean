@@ -64,11 +64,11 @@ theorem pt_eq {Ω : Type} [Field Ω] {X : Scheme.{0}} (x : gp Ω ⟶ X) (t : gp 
 theorem fib_bijOn {V U Z S : Scheme.{0}} {v : V ⟶ Z} {r : V ⟶ U} {p : Z ⟶ S} {u : U ⟶ S} (h : IsPullback v r p u)
     {Ω : Type} [Field Ω] (x : gp Ω ⟶ U) : Set.BijOn (fun z => z ≫ v) (fib r x) (fib p (x ≫ u)) := by
   refine ⟨fun z hz => ?_, fun z hz z' hz' he => ?_, fun y hy => ?_⟩
-  · simp only [fib, Set.mem_setOf_eq] at hz ⊢
+  · simp only [fib, Set.mem_ofPred_eq] at hz ⊢
     rw [Category.assoc, h.w, ← Category.assoc, hz]
-  · simp only [fib, Set.mem_setOf_eq] at hz hz'
+  · simp only [fib, Set.mem_ofPred_eq] at hz hz'
     exact h.hom_ext he (hz.trans hz'.symm)
-  · simp only [fib, Set.mem_setOf_eq] at hy
+  · simp only [fib, Set.mem_ofPred_eq] at hy
     exact ⟨h.lift y x hy, by simp [fib], by simp⟩
 
 theorem Sq.To.isPullback {Z S : Scheme.{0}} {p : Z ⟶ S} {A B : Sq p} (t : A.To B) : IsPullback t.k A.r B.r t.g :=

@@ -74,14 +74,14 @@ theorem exists_integral_basis_linear_coordinates :
     ∀ (V K C : Type) [CommRing V] [IsDomain V] [IsPrincipalIdealRing V] [Field K] [Algebra V K] [IsFractionRing V K] [Field C] [Algebra K C] (R : Subring C), (∀ x : V, algebraMap K C (algebraMap V K x) ∈ R) → ∀ s : Finset C, (∀ x ∈ s, x ∈ R) → ∃ (r : ℕ) (c : Fin r → C) (φ : Fin r → (C →ₗ[K] K)), (∀ j, c j ∈ R) ∧ ∀ x ∈ s, (∀ j, φ j x ∈ (algebraMap V K).range) ∧ x = ∑ j, algebraMap K C (φ j x) * c j := by
   intro V K C _ _ _ _ _ _ _ _ R hR s hs
   classical
-  letI : Algebra V C := ((algebraMap K C).comp (algebraMap V K)).toAlgebra
-  haveI : IsScalarTower V K C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra V C := ((algebraMap K C).comp (algebraMap V K)).toAlgebra
+  have : IsScalarTower V K C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hinj : Function.Injective (algebraMap V C) :=
     (algebraMap K C).injective.comp (IsFractionRing.injective V K)
-  haveI : FaithfulSMul V C := (faithfulSMul_iff_algebraMap_injective V C).2 hinj
+  have : FaithfulSMul V C := (faithfulSMul_iff_algebraMap_injective V C).2 hinj
   let M : Submodule V C := Submodule.span V (s : Set C)
-  haveI : Module.Finite V M := Module.Finite.span_of_finite V s.finite_toSet
-  haveI : Module.Free V M := inferInstance
+  have : Module.Finite V M := Module.Finite.span_of_finite V s.finite_toSet
+  have : Module.Free V M := inferInstance
   have hMR : ∀ x ∈ M, x ∈ R := by
     intro x hx
     induction hx using Submodule.span_induction with

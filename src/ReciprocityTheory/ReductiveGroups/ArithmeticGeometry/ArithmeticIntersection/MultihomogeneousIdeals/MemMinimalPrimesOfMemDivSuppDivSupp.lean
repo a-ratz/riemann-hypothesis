@@ -128,7 +128,7 @@ theorem not_lt_lt_of_mem_minimalPrimes {V W W' : Ideal (MRingOver F ι)} [V.IsPr
     cases a with
     | top => simp at h3
     | coe a => norm_cast at h3 ⊢; omega
-  haveI : IsDomain (MRingOver F ι ⧸ V) := Ideal.Quotient.isDomain V
+  have : IsDomain (MRingOver F ι ⧸ V) := Ideal.Quotient.isDomain V
   rw [Ideal.height_eq_zero_iff_eq_bot] at h0
   apply hVW'.ne
   apply le_antisymm hVW'.le
@@ -142,12 +142,12 @@ theorem not_mem_of_mem_divSupp_swap {V W : Ideal (MRingOver F ι)} {n : ℕ} {f 
     (hfV : f ∉ V) (htV : t ∉ V) (hft : ∀ W ∈ divSupp V f, t ∉ W) (hW : W ∈ divSupp V t) :
     f ∉ W := by
   intro hfW
-  haveI hVp : V.IsPrime := hV.1.1
+  have hVp : V.IsPrime := hV.1.1
   have hWp : W.IsPrime := hW.1.isPrime
   have hle : V ⊔ Ideal.span {f} ≤ W :=
     sup_le (le_sup_left.trans hW.1.1.2) (Ideal.span_le.mpr (by simpa using hfW))
   obtain ⟨W', hW', hW'W⟩ := Ideal.exists_minimalPrimes_le hle
-  haveI : W'.IsPrime := hW'.isPrime
+  have : W'.IsPrime := hW'.isPrime
   have hVW' : V < W' := lt_of_le_of_ne (le_sup_left.trans hW'.1.2) fun he =>
     hfV (he ▸ hW'.1.2 (le_sup_right (a := V) (Ideal.subset_span rfl)))
   rcases hW'W.lt_or_eq with hlt | heq
@@ -162,7 +162,7 @@ namespace DivisorCycleSwap
 theorem not_lt_of_dim_eq {R : Type*} [CommRing R] {P Q : Ideal R} [hP : P.IsPrime] [Q.IsPrime]
     (hlt : P < Q) {d : ℕ} (hPd : ringKrullDim (R ⧸ P) = (d : WithBot ℕ∞))
     (hQd : ringKrullDim (R ⧸ Q) = (d : WithBot ℕ∞)) : False := by
-  obtain ⟨z, hzQ, hzP⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨z, hzQ, hzP⟩ := IsConcreteLE.exists_of_lt hlt
   have hz : Ideal.Quotient.mk P z ∈ nonZeroDivisors (R ⧸ P) :=
     mem_nonZeroDivisors_of_ne_zero (by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem])
   have h1 := ringKrullDim_quotient_succ_le_of_nonZeroDivisor hz
@@ -213,7 +213,7 @@ theorem sum_ratDiv_eq (V Z : Ideal (MRingOver F ι)) (f t : MRingOver F ι) :
 
 theorem cast_multAt {J W : Ideal (MRingOver F ι)} [hW : W.IsPrime] (hJ : W ∈ J.minimalPrimes) :
     ((multAt J W : ℕ) : ℕ∞) = lenAt J W := by
-  rw [multAt_eq J W hW, ENat.coe_toNat (locLen_ne_top hJ), lenAt_eq]
+  rw [multAt_eq J W hW, ENat.natCast_toNat (locLen_ne_top hJ), lenAt_eq]
   rfl
 
 theorem mem_minimalPrimes_sup_of_le {V W Z : Ideal (MRingOver F ι)} {f t : MRingOver F ι}
@@ -244,8 +244,8 @@ theorem mem_minimalPrimes_of_mem_divSupp_divSupp {V W Z : Ideal (MRingOver F ι)
   have hQ'd : Q' ∈ divSupp W' t := ⟨hQ', isRelevant_of_le hZ.2 (hQ'Q.trans hQZ)⟩
   have h1 := isProjVarF_of_mem_divSupp (n := n + 1) hV hf hfV hW'd
   have h2 := isProjVarF_of_mem_divSupp h1 ht (hft W' hW'd) hQ'd
-  haveI := hQ'.1.1
-  haveI := hZ.1.1.1
+  have := hQ'.1.1
+  have := hZ.1.1.1
   exact not_lt_of_dim_eq (hQ'Q.trans_lt hlt) h2.2 hZd.2
 
 theorem sum_eq_zero_of_not {V Z : Ideal (MRingOver F ι)} {n : ℕ} {f t : MRingOver F ι}
@@ -296,14 +296,14 @@ theorem sum_eq_finsum {V Z : Ideal (MRingOver F ι)} [V.IsPrime] [hZp : Z.IsPrim
   · intro p hp
     have hm := (h.height_eq_one_iff hVZ hex hfV p.asIdeal).mp hp
     have hle := h.comap_le p.asIdeal
-    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     exact ⟨⟨hm, isRelevant_of_le hZr hle⟩, hle⟩
   · intro p _ p' _ e
     exact PrimeSpectrum.ext (h.eq_of_comap_eq e)
   · intro W hW
-    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hW
+    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hW
     obtain ⟨p, hp, hpW⟩ := hex W hW.1.1.1.1 (le_sup_left.trans hW.1.1.1.2) hW.2
-    haveI := hp
+    have := hp
     exact ⟨⟨p, hp⟩, (h.height_eq_one_iff hVZ hex hfV p).mpr (hpW ▸ hW.1.1), hpW⟩
   · intro p hp
     have hm := (h.height_eq_one_iff hVZ hex hfV p.asIdeal).mp hp
@@ -325,15 +325,15 @@ theorem swap_coeff {V Z : Ideal (MRingOver F ι)} {n : ℕ} {f t : MRingOver F �
     (ratDiv V f 1).sum (fun W m => m * ratDiv W t 1 Z) =
       (ratDiv V t 1).sum (fun W m => m * ratDiv W f 1 Z) := by
   classical
-  haveI : V.IsPrime := hV.1.1
+  have : V.IsPrime := hV.1.1
   have hft' : ∀ W ∈ divSupp V t, f ∉ W := fun W hW =>
     not_mem_of_mem_divSupp_swap (n := n + 1) hV hf ht hfV htV hft hW
   rw [sum_ratDiv_eq, sum_ratDiv_eq, Nat.cast_inj]
   by_cases hZ : IsRelevant Z ∧ Z ∈ (V ⊔ Ideal.span {f} ⊔ Ideal.span {t}).minimalPrimes
   · obtain ⟨hZr, hZm⟩ := hZ
-    haveI : Z.IsPrime := hZm.1.1
+    have : Z.IsPrime := hZm.1.1
     have hVZ : V ≤ Z := le_sup_left.trans (le_sup_left.trans hZm.1.2)
-    haveI : (Z.map (Ideal.Quotient.mk V)).IsPrime :=
+    have : (Z.map (Ideal.Quotient.mk V)).IsPrime :=
       Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hVZ)
     have hZm' : Z ∈ (V ⊔ Ideal.span {t} ⊔ Ideal.span {f}).minimalPrimes := by
       rwa [sup_right_comm]

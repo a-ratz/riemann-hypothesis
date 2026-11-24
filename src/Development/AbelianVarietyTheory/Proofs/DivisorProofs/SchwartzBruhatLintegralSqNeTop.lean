@@ -59,9 +59,9 @@ theorem schwartzBruhat_memL2_inner_self : ∀ {k : Type} [Field k] [ValuativeRel
       (f ≠ 0 → ∫⁻ y, ‖f y‖ₑ ^ 2 ∂μ ≠ 0) ∧
       ∀ g ∈ GlobalTheory.WeilM.SB (Fin n × Fin d → k), Integrable (fun y => f y * (starRingEnd ℂ) (g y)) μ := by
   intro k _ _ _ _ n d μ hμ f hf
-  letI : MeasurableSpace (Fin n × Fin d → k) := borel _
-  haveI : BorelSpace (Fin n × Fin d → k) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (Fin n × Fin d → k) := borel _
+  have : BorelSpace (Fin n × Fin d → k) := ⟨rfl⟩
+  have := hμ
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
   have hfc : Continuous f := hf.1.continuous
   have hint : ∀ g ∈ GlobalTheory.WeilM.SB (Fin n × Fin d → k), Integrable (fun y => f y * (starRingEnd ℂ) (g y)) μ := by
@@ -71,9 +71,9 @@ theorem schwartzBruhat_memL2_inner_self : ∀ {k : Type} [Field k] [ValuativeRel
       (hf.2.mul_right (f' := fun y => (starRingEnd ℂ) (g y)))
   have hpt : ∀ y, ‖f y * (starRingEnd ℂ) (f y)‖ₑ = ‖f y‖ₑ ^ 2 := by
     intro y
-    rw [enorm_mul, pow_two]
+    rw [eNorm_mul, pow_two]
     congr 1
-    simp [enorm_eq_nnnorm]
+    simp [eNorm_eq_nnNorm]
   have hfin : ∫⁻ y, ‖f y‖ₑ ^ 2 ∂μ ≠ ⊤ := by
     have := (hint f hf).2
     unfold HasFiniteIntegral at this
@@ -92,13 +92,13 @@ theorem schwartzBruhat_memL2_inner_self : ∀ {k : Type} [Field k] [ValuativeRel
     congr 1
     apply lintegral_congr
     intro y
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   · intro hne
     obtain ⟨x, hx⟩ : ∃ x, f x ≠ 0 := by
       by_contra h
       push_neg at h
       exact hne (funext h)
-    have hmeas : Measurable fun y => ‖f y‖ₑ ^ 2 := (hfc.measurable.enorm).pow_const 2
+    have hmeas : Measurable fun y => ‖f y‖ₑ ^ 2 := (hfc.measurable.eNorm).pow_const 2
     rw [← pos_iff_ne_zero, lintegral_pos_iff_support hmeas]
     have hsupp : Function.support (fun y => ‖f y‖ₑ ^ 2) = f ⁻¹' {0}ᶜ := by
       ext y

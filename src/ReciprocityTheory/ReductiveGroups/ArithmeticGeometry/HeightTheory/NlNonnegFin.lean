@@ -123,7 +123,7 @@ variable (d : Data K ι Ω WT A)
 
 theorem gen_ne_zero_of_mem_htOne {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : d.gen p ≠ 0 := by
   obtain ⟨hpr, hh⟩ := hp
-  haveI := hpr
+  have := hpr
   obtain ⟨g, hg, hpg⟩ := ValUFD.heightOne_principal p hh
   have hPr : p.IsPrincipal := ⟨⟨g, hpg⟩⟩
   unfold gen
@@ -929,7 +929,7 @@ theorem b_mem_p (hd : d.AxH 𝒜) (h : d.S1) {p : Ideal (KTp K d.D d.N)} (hp : p
   obtain ⟨a, ha⟩ : ∃ a : Ω c, d.thp (hd.sel k) c = a • hd.a4.choose c := by
     have he0' : (⟨hd.a4.choose c, heF⟩ : 𝒜 c d.wF) ≠ 0 := by
       intro h0; exact he0 (congrArg Subtype.val h0)
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ he0').mp (hd.finrank_one c d.wF)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ he0').mp (hd.finrank_one c d.wF)
       ⟨_, hthpF⟩
     exact ⟨a, (congrArg Subtype.val ha).symm⟩
   have hb : d.bvecG hd.sel hd.a4.choose k c = algebraMap (Ω c) (OmS (Ω c) d.D d.N) a := by
@@ -980,9 +980,9 @@ theorem de_local (hd : d.AxH 𝒜) (h : d.S1) {p : Ideal (KTp K d.D d.N)} (hp : 
     intro k c w hw
     rw [← hOver c] at hw
     by_cases hg : w ∈ d.GoodP c p
-    · simp only [n, if_pos hg]
+    · simp only [n, ite_eq_left hg]
       exact d.b_mem_p hd h hp k c w hg
-    · simp only [n, if_neg hg, WithTop.coe_zero, add_zero]
+    · simp only [n, ite_eq_right hg, WithTop.coe_zero, add_zero]
       have hz : ∀ a : Ω c, a ≠ 0 → d.Wres c w a = 0 := fun a ha =>
         by_contra fun hne => hg ⟨hw, a, ha, hne⟩
       change 0 ≤ d.Wres c w _
@@ -1001,9 +1001,9 @@ theorem de_local (hd : d.AxH 𝒜) (h : d.S1) {p : Ideal (KTp K d.D d.N)} (hp : 
     simp only [Set.indicator_apply, n]
     by_cases hg : w ∈ d.GoodP c p
     · have hg1 : w ∈ d.OverP c p := hg.1
-      simp only [hg, hg1, if_true]
+      simp only [hg, hg1, ite_true]
       rfl
-    · simp only [hg, if_false, mul_zero, ite_self]
+    · simp only [hg, ite_false, mul_zero, ite_self]
   open IsDedekindDomain IsLocalRing Module in
   have disc_local {R F : Type} [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R] [Field F]
         [Algebra R F] [IsFractionRing R F] {ι : Type} [Fintype ι] [DecidableEq ι]
@@ -1180,7 +1180,7 @@ private theorem gen_ne_zero_of_mem_htOne_heightData {p : Ideal (KTp K d.D d.N)} 
       | exact ENat.not_lt_zero _ h2
   have hprin : p.IsPrincipal := ⟨⟨q, hspan.symm⟩⟩
   haveI := hprin
-  simp only [Data.gen, dif_pos hprin]
+  simp only [Data.gen, dite_eq_left hprin]
   intro h0
   exact hne ((Submodule.IsPrincipal.eq_bot_iff_generator_eq_zero p).mpr h0)
 
@@ -1328,14 +1328,14 @@ theorem om_is_poly (hd : d.AxH 𝒜) (h : d.S1) :
         simp only [nP]
         rw [finsum_mem_def]
         refine finsum_eq_zero_of_forall_eq_zero fun w => ?_
-        rw [Set.indicator_apply, if_neg (fun hw => hno ⟨w, hw⟩)])) bb u,
+        rw [Set.indicator_apply, ite_eq_right (fun hw => hno ⟨w, hw⟩)])) bb u,
       Finset.prod_mul_distrib, HDiscOmL.prod_zpow hκ]
   have hEb : ∀ bb : Fin (d.D + 1), 2 * Eb bb =
       ((if bb = 0 then 0 else 2 * (d.aG h d.wF hd.a4.choose).toNat : ℕ) : ℤ) := by
     intro bb
     by_cases hbb : bb = 0
     · simp [hEb, hbb]
-    · simp only [hEb, hbb, if_false]
+    · simp only [hEb, hbb, ite_false]
       rw [Nat.cast_mul, Int.toNat_of_nonneg (d.aG_frame_nonneg hd h)]
       rfl
   intro s hs bb
@@ -1466,7 +1466,7 @@ theorem disc_global (hd : d.AxH 𝒜) (h : d.S1) (hI2be : d.HeightIntegralBoundE
     have h1 := ReciprocityTheory.MultiplicativeHeights.Closed.sphere_height_lower_bound K (d.D + 1) (d.N + 1) _ Om (Nat.succ_pos _) hOm0 hOmH
     have ht : ((d.aG h d.wF hd.a4.choose).toNat : ℝ) = (d.aG h d.wF hd.a4.choose : ℝ) := by
       exact_mod_cast Int.toNat_of_nonneg haG0
-    simp only [Fin.sum_univ_succ, Fin.succ_ne_zero, eq_self_iff_true, if_true, if_false,
+    simp only [Fin.sum_univ_succ, Fin.succ_ne_zero, eq_self_iff_true, ite_true, ite_false,
       ite_true, ite_false, Nat.cast_zero, zero_mul, zero_add, Finset.sum_const,
       Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, Nat.cast_mul, Nat.cast_ofNat] at h1
     rw [ht] at h1
@@ -1606,7 +1606,7 @@ theorem disc_one (hd : d.AxH 𝒜) (h : d.S1) (hI2et : d.HeightIntegralEstimateT
       intro h0; apply hla; rw [h0, zero_mul]
   have hle : (∑ᶠ la, 2 * (d.IL h hd.sel hd.a4.choose la * logNorm la)) ≤
       ∑ᶠ la, ((d.gOrd la (d.De hd h) : ℝ) + 2 * d.NlaG h d.wF hd.a4.choose la) * logNorm la :=
-    finsum_le_finsum' hf1 hf2 fun la => by
+    finsum_le_finsum hf1 hf2 fun la => by
       have := (hloc la).2
       have := hl la
       nlinarith

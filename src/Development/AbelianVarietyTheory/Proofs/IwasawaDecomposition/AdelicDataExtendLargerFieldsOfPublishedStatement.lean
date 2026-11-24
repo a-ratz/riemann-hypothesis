@@ -603,10 +603,10 @@ theorem exists_lidx_eq_mul (K K' : Type) [Field K] [NumberField K] [Field K'] [N
   have hPm' := P'.isMaximal
   let O := Localization.AtPrime P.asIdeal
   let O' := Localization.AtPrime P'.asIdeal
-  letI : Algebra O K := IsLocalization.localizationAlgebraOfSubmonoidLe O K P.asIdeal.primeCompl
+  let : Algebra O K := IsLocalization.localizationAlgebraOfSubmonoidLe O K P.asIdeal.primeCompl
     (nonZeroDivisors (𝓞 K)) P.asIdeal.primeCompl_le_nonZeroDivisors
   have : IsScalarTower (𝓞 K) O K := IsLocalization.localization_isScalarTower_of_submonoid_le O K _ _ _
-  letI : Algebra O' K' := IsLocalization.localizationAlgebraOfSubmonoidLe O' K' P'.asIdeal.primeCompl
+  let : Algebra O' K' := IsLocalization.localizationAlgebraOfSubmonoidLe O' K' P'.asIdeal.primeCompl
     (nonZeroDivisors (𝓞 K')) P'.asIdeal.primeCompl_le_nonZeroDivisors
   have : IsScalarTower (𝓞 K') O' K' := IsLocalization.localization_isScalarTower_of_submonoid_le O' K' _ _ _
   have : IsFractionRing O K := IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.asIdeal.primeCompl O K
@@ -615,7 +615,7 @@ theorem exists_lidx_eq_mul (K K' : Type) [Field K] [NumberField K] [Field K'] [N
   have : IsScalarTower (𝓞 K) O' K' := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply (𝓞 K) (𝓞 K') O', ← IsScalarTower.algebraMap_apply (𝓞 K') O' K',
       ← IsScalarTower.algebraMap_apply]
-  letI : Algebra O O' := Localization.AtPrime.algebraOfLiesOver P.asIdeal P'.asIdeal
+  let : Algebra O O' := Localization.AtPrime.algebraOfLiesOver P.asIdeal P'.asIdeal
   have : Localization.AtPrime.IsLiesOverAlgebra P.asIdeal P'.asIdeal := inferInstance
   have : IsScalarTower (𝓞 K) O O' := inferInstance
   have : IsLocalHom (algebraMap O O') := inferInstance
@@ -645,7 +645,7 @@ theorem exists_lidx_eq_mul (K K' : Type) [Field K] [NumberField K] [Field K'] [N
       rw [pow_one] at h4
       exact_mod_cast h4
     rw [h3, mul_one, LinearMap.id_coe, Set.image_id, Set.image_id] at h2
-    rw [h1, h2, ENat.toNat_mul, ENat.toNat_coe]
+    rw [h1, h2, ENat.toNat_mul, ENat.toNat_natCast]
   intro A B
   have hinj := Formalism.BasicNotions.FBC.liftBaseChange_injective_top (A := 𝓞 K) (IsFractionRing.injective (𝓞 K') K') ψ _ hψ
   have hinf := span_image_inf _ hinj A B
@@ -663,7 +663,7 @@ theorem lidx_ne_zero_iff : ∀ (K K' : Type) [Field K] [NumberField K] [Field K'
       (Submodule.span (𝓞 K') ((fun x : Fin d → K => Matrix.mulVec G fun k => φ (x k)) '' (A : Set (Fin d → K))))
       (Submodule.span (𝓞 K') ((fun x : Fin d → K => Matrix.mulVec G fun k => φ (x k)) '' (B : Set (Fin d → K)))) ≠ 0) := by
   intro K K' _ _ _ _ φ d d' G hG P P' hP A B _ _
-  letI : Algebra K K' := φ.toAlgebra
+  let : Algebra K K' := φ.toAlgebra
   have : P'.asIdeal.LiesOver P.asIdeal := ⟨Ideal.ext fun x => hP x (algebraMap (𝓞 K) (𝓞 K') x) rfl⟩
   let ψ : (Fin d → K) →ₗ[K] (Fin d' → K') :=
     (G.mulVecLin.restrictScalars K) ∘ₗ (Algebra.linearMap K K').compLeft (Fin d)

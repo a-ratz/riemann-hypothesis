@@ -279,15 +279,15 @@ theorem FinCd2.of_comp (e : G ≃ₜ* G') {rho : Representation R G' M} (h : Fin
     FinCd2 rho := by
   obtain ⟨h0, h1, h2, h3⟩ := h
   refine ⟨?_, ?_, ?_, fun n hn => ?_⟩
-  · haveI := h0
+  · have := h0
     exact Nat.finite_of_card_ne_zero (by rw [← card_H0_comp_equiv e rho]; exact Nat.card_pos.ne')
-  · haveI := h1
+  · have := h1
     exact Nat.finite_of_card_ne_zero (by rw [← card_H1_comp_equiv e rho]; exact Nat.card_pos.ne')
-  · haveI := h2
+  · have := h2
     exact Nat.finite_of_card_ne_zero (by rw [← card_H2_comp_equiv e rho]; exact Nat.card_pos.ne')
   · obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
     obtain ⟨f⟩ := nonempty_Hn_comp_equiv e rho m
-    haveI := h3 (m + 1) hn
+    have := h3 (m + 1) hn
     exact f.symm.subsingleton
 
 theorem DualityFor.of_comp (e : G ≃ₜ* G') (χ : G' →* Rˣ) {rho : Representation R G' M} (hrho : ContAction rho)

@@ -230,7 +230,7 @@ theorem fdModel_of (hD : DegPsi) (hS : HlamStable) (hF : FormF) (hN : PsiNorm) (
     exact hd
   · have e := hF n ε lam T (PsiM T μ) hl hP hDS 1 h1 v v'
     rw [hP.2.1, (rreg_isURepOn ε).1.1] at e
-    simp only [ContinuousLinearMap.one_apply] at e
+    simp only [one_apply_eq_self] at e
     rw [Submodule.coe_inner, hC]
     push_cast at e ⊢
     exact e
@@ -289,7 +289,7 @@ theorem gapNorm_of (hD : DegPsi) : GapNorm := by
     (fun v => ⟨uniformisationL2 ε (PsiM T μ) T.w v, datumEmbedding_mem_Hlam hP v⟩) C (dimVlam lam) (muCD ε) hC0 (fun v v' => ?_) (fun g v v' => ?_) hd
   · have e := G2.formulaF_sigLam hgap' hP hw h1 v v'
     rw [hP.2.1] at e
-    simp only [ContinuousLinearMap.one_apply] at e
+    simp only [one_apply_eq_self] at e
     rw [← e, (G2.sigLam_isURepOn hgap' hP hw).1.1]
     rfl
   · exact G2.formulaF_sigLam hgap' hP hw (umat_mem_UJset ε g) v v'
@@ -326,7 +326,7 @@ theorem op_norm {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) (k 
     rw [← @inner_self_eq_norm_sq ℂ, ← @inner_self_eq_norm_sq ℂ]
     congr 1
     rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.star_eq_adjoint,
-      ← ContinuousLinearMap.mul_apply, hs, ContinuousLinearMap.one_apply]
+      ← mul_apply_eq_comp, hs, one_apply_eq_self]
   have := h
   nlinarith [norm_nonneg (T.op k v), norm_nonneg v, sq_nonneg (‖T.op k v‖ - ‖v‖), sq_nonneg (‖T.op k v‖ + ‖v‖)]
 
@@ -349,7 +349,7 @@ theorem prod_cpair (ε : Fin n → Bool) (f : Fin n → Fin n → ℝ) :
 theorem kNull_of (hW : MomW) (hP : CoefPow) : KNull := by
   intro n ε lam hl T TD
   classical
-  haveI : CompactSpace (KG ε) := compactSpace_KG ε
+  have : CompactSpace (KG ε) := compactSpace_KG ε
   set F : ℝ := (∏ i ∈ range (pOf ε), (i.factorial : ℝ)) * ∏ i ∈ range (qOf ε), (i.factorial : ℝ) with hF
   have hFpos : 0 < F := by positivity
   let α : CPair ε → ℝ := fun p => lam p.1.1 - lam p.1.2 + (nab ε p.1.1 p.1.2 : ℝ)
@@ -499,7 +499,7 @@ theorem formF_of (hS : HlamStable) (hZ : KmapZero) : FormF := by
     intro k
     show inner ℂ (T.op k (Ψ g v - q)) T.w *
       (inner ℂ T.w (Ψ (S7.toMK k * g) v) - inner ℂ T.w (Ψ (S7.toMK k) q)) = _
-    rw [hΨk k g hg, hΨk1 k, ContinuousLinearMap.mul_apply, ← inner_sub_right, ← map_sub,
+    rw [hΨk k g hg, hΨk1 k, mul_apply_eq_comp, ← inner_sub_right, ← map_sub,
       ← inner_conj_symm, Complex.conj_mul', Complex.ofReal_pow]
   have hI : ∫ k, ‖inner ℂ T.w (T.op k (Ψ g v - q))‖ ^ 2 ∂(dk ε) = 0 := by
     have e2 : ((∫ k, ‖inner ℂ T.w (T.op k (Ψ g v - q))‖ ^ 2 ∂(dk ε) : ℝ) : ℂ) = 0 := by
@@ -732,7 +732,7 @@ theorem pl_opNorm_le {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V
 theorem square_integrable_of_norm : PsiNorm → PositivityTheory.RgDs.ExplicitFunctionSquareIntegrable := by
   intro hN n ε lam T μ hl hμ ν hν
   have hfin := hN n ε lam hl T μ hμ
-  haveI : (show Measure (UJ ε) from muCD ε).IsHaarMeasure := muCD_isHaar ε
+  have : (show Measure (UJ ε) from muCD ε).IsHaarMeasure := muCD_isHaar ε
   set f : UJ ε → (T.V →L[ℂ] T.V) := fun g => PsiM T μ (toM g) with hf
   have hcont : Continuous f :=
     (psiM_continuousOn T μ hμ).comp_continuous (continuous_toM ε) (fun g => g.2)
@@ -943,7 +943,7 @@ theorem hsOp_op_mul {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
     hsOp (T.op k * A) = hsOp A := by
   unfold hsOp
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [ContinuousLinearMap.mul_apply, KType_norm_op_apply]
+  rw [mul_apply_eq_comp, KType_norm_op_apply]
 
 theorem hsPol : HsPol := by
   apply _root_.CompanionTheory.RgFd.hsPol <;> assumption

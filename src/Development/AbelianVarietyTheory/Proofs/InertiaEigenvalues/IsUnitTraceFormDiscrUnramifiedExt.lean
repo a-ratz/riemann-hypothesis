@@ -62,14 +62,14 @@ theorem isUnit_discr_of_isMaximal_map {R S : Type} [CommRing R] [IsLocalRing R] 
     [Finite (ResidueField R)] {ι : Type} [Fintype ι] [DecidableEq ι] (b : Module.Basis ι R S)
     (hmax : (Ideal.map (algebraMap R S) (maximalIdeal R)).IsMaximal) :
     IsUnit (Algebra.discr R b) := by
-  haveI : Module.Free R S := Module.Free.of_basis b
-  haveI : Module.Finite R S := Module.Finite.of_basis b
-  letI := Ideal.Quotient.field (maximalIdeal R)
-  letI := Ideal.Quotient.field (Ideal.map (algebraMap R S) (maximalIdeal R))
-  haveI : Finite (R ⧸ maximalIdeal R) := ‹Finite (ResidueField R)›
-  haveI : Module.Finite (R ⧸ maximalIdeal R) (S ⧸ Ideal.map (algebraMap R S) (maximalIdeal R)) :=
+  have : Module.Free R S := Module.Free.of_basis b
+  have : Module.Finite R S := Module.Finite.of_basis b
+  let := Ideal.Quotient.field (maximalIdeal R)
+  let := Ideal.Quotient.field (Ideal.map (algebraMap R S) (maximalIdeal R))
+  have : Finite (R ⧸ maximalIdeal R) := ‹Finite (ResidueField R)›
+  have : Module.Finite (R ⧸ maximalIdeal R) (S ⧸ Ideal.map (algebraMap R S) (maximalIdeal R)) :=
     Module.Finite.of_basis (basisQuotient b)
-  haveI : Algebra.IsSeparable (R ⧸ maximalIdeal R) (S ⧸ Ideal.map (algebraMap R S) (maximalIdeal R)) :=
+  have : Algebra.IsSeparable (R ⧸ maximalIdeal R) (S ⧸ Ideal.map (algebraMap R S) (maximalIdeal R)) :=
     inferInstance
   have h1 : Ideal.Quotient.mk (maximalIdeal R) (Algebra.discr R b) =
       Algebra.discr (R ⧸ maximalIdeal R) (basisQuotient b) := by
@@ -96,7 +96,7 @@ theorem discr_trace_isUnit :
          ∃ u : K.O, IsUnit u ∧
            algebraMap K.O K.E u = (Matrix.of fun k m => Algebra.trace K.E K'.E (w k * w m)).det) := by
   intro K K' d φ _ π π' hππ' hm hm'
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   intro w hw
   have hj : Function.Injective (algebraMap K'.O K'.E) := IsFractionRing.injective K'.O K'.E
   have hi : Function.Injective (algebraMap K.O K.E) := IsFractionRing.injective K.O K.E
@@ -119,7 +119,7 @@ theorem discr_trace_isUnit :
   have hι : ∀ a, algebraMap K'.O K'.E (ι a) = φ (algebraMap K.O K.E a) := by
     intro a
     exact congrArg Subtype.val (e.apply_symm_apply ((φ.comp (algebraMap K.O K.E)).codRestrict _ hlift a))
-  letI : Algebra K.O K'.O := ι.toAlgebra
+  let : Algebra K.O K'.O := ι.toAlgebra
   have hsm : ∀ (a : K.O) (y : K'.O),
       algebraMap K'.O K'.E (a • y) = algebraMap K.O K.E a • algebraMap K'.O K'.E y := by
     intro a y

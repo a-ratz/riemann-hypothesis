@@ -158,7 +158,7 @@ private theorem mu_eqE [Module.Free A M] {I : Type} (g : I → B)
     (e : Module.End A M) (N : ℕ) (hN : (N : C) ≠ 0) (E : Module.End C W) (hE : ∀ m, (N : C) • sp (e m) = E (sp m)) :
     muE lam M hs e y = Module.finrank C ↥(Z ⊓ LinearMap.ker (E - (N : Module.End C W))) := by
   unfold muE
-  letI : Algebra A K := (y.comp lam).toRingHom.toAlgebra
+  let : Algebra A K := (y.comp lam).toRingHom.toAlgebra
   have hK : ∀ a, algebraMap A K a = y (lam a) := fun _ => rfl
   obtain ⟨Ψ, ht, hk, hi, hr⟩ := UpperTheory.Reformulated.B.Ra9.exists_semi M ι sp hsm hind
   have joint_gen :
@@ -318,8 +318,8 @@ theorem UpperTheory.V.Z.Desc.V0.muZE :
     UpperTheory.V.Z.J.D.LocSp → MuZE := by
   intro hL L Ω _ _ _ _ _ l _ n c H hA A _ _ _ θ hθ ι x lam d ξ c0 sp hsp hTr K a₀ _ B _ _ j f hf _ hs hB z hz G _ K₀ K₁ β a N hNK hIE hU
     e he
-  haveI := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a₀).2.1
-  haveI := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a₀).2.2
+  have := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a₀).2.1
+  have := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a₀).2.2
   have hN : (N : ℂ) ≠ 0 := by
     intro h0
     have h1 : N = 0 := by exact_mod_cast h0

@@ -112,9 +112,9 @@ private theorem ng_O {l : ℕ} [Fact l.Prime] {c : Coef l} (β : Bas c) (x : Qba
 
 private theorem ng_dvd {l m : ℕ} [Fact l.Prime] (x : (ZMod (l ^ (m + 1)))ˣ) (hx : red l m x = 1) :
     ((l : ℤ) ^ m) ∣ (((x : ZMod (l ^ (m + 1))).val : ℕ) : ℤ) - 1 := by
-  haveI : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
+  have : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
   have h := congrArg Units.val hx
-  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, ZMod.castHom_apply, Units.val_one] at h
+  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, ZMod.castHom_apply, Units.val_one] at h
   rw [ZMod.cast_eq_val] at h
   have : (((((x : ZMod (l ^ (m + 1))).val : ℕ) : ℤ) - 1 : ℤ) : ZMod (l ^ m)) = 0 := by
     rw [Int.cast_sub, Int.cast_natCast, h, Int.cast_one, sub_self]
@@ -122,7 +122,7 @@ private theorem ng_dvd {l m : ℕ} [Fact l.Prime] (x : (ZMod (l ^ (m + 1)))ˣ) (
 
 private theorem ng_pow {l m : ℕ} [Fact l.Prime] (hm : 1 ≤ m) (x : (ZMod (l ^ (m + 1)))ˣ) (hx : red l m x = 1) :
     x ^ l = 1 := by
-  haveI : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
+  have : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
   have h1 := ng_dvd x hx
   have h2 : ((l : ℕ) : ℤ) ∣ (((x : ZMod (l ^ (m + 1))).val : ℕ) : ℤ) - 1 := (dvd_pow_self _ (by omega)).trans h1
   have h3 := mul_dvd_mul (dvd_geom_sum₂_self h2) h1
@@ -140,7 +140,7 @@ private theorem ng_ndvd {l m : ℕ} [Fact l.Prime] (x : (ZMod (l ^ (m + 1)))ˣ) 
   exact (Fact.out : l.Prime).one_lt.ne' this
 
 private theorem ng_un {l m : ℕ} [Fact l.Prime] (x : (ZMod (l ^ (m + 1)))ˣ) : un _ (ng_ndvd x) (m + 1) = x := by
-  haveI : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
+  have : NeZero (l ^ (m + 1)) := ⟨(pow_pos (Fact.out : l.Prime).pos _).ne'⟩
   ext
   simp [un]
 
@@ -163,7 +163,7 @@ private theorem ng_unit {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (u : Ω
   constructor
   · rintro ⟨h1, h2, h3⟩
     rw [← A.valuation_le_one_iff] at h1 h3
-    rw [map_inv₀, inv_le_one₀ (by simpa [zero_lt_iff] using h2)] at h3
+    rw [map_inv₀, inv_le_one₀ (by simpa [pos_iff_ne_zero] using h2)] at h3
     exact le_antisymm h1 h3
   · intro h
     refine ⟨(A.valuation_le_one_iff _).1 h.le, ?_, (A.valuation_le_one_iff _).1 (by simp [h])⟩
@@ -172,9 +172,9 @@ private theorem ng_unit {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (u : Ω
 
 private theorem ng_enough (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (i : ℕ) :
     HasEnoughRootsOfUnity Ω (l ^ i) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero ((l ^ i : ℕ) : Ω) := ⟨by exact_mod_cast (pow_pos (Fact.out : l.Prime).pos i).ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero ((l ^ i : ℕ) : Ω) := ⟨by exact_mod_cast (pow_pos (Fact.out : l.Prime).pos i).ne'⟩
   infer_instance
 
 private theorem ng_root {Ω : Type} [Field Ω] [Algebra ℚ Ω] {N l : ℕ} (s : G ℚ Ω) (v : Ω) (hv : v ≠ 0)
@@ -200,10 +200,10 @@ private theorem ng_fix {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [Algebra 
     s (∏ x ∈ (Finset.univ.filter fun x : (ZMod (l ^ (m + 1)))ˣ => red l m x = 1), pv Pi (ζ (m + 1) ^ (x : ZMod (l ^ (m + 1))).val)) =
       ∏ x ∈ (Finset.univ.filter fun x : (ZMod (l ^ (m + 1)))ˣ => red l m x = 1), pv Pi (ζ (m + 1) ^ (x : ZMod (l ^ (m + 1))).val) := by
   have hlp : l.Prime := Fact.out
-  haveI : NeZero (l ^ (m + 1)) := ⟨(pow_pos hlp.pos _).ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hlp.ne_zero⟩
+  have : NeZero (l ^ (m + 1)) := ⟨(pow_pos hlp.pos _).ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hlp.ne_zero⟩
   have hz : ζ (m + 1) ^ l ^ (m + 1) = 1 := (hζ (m + 1)).1.pow_eq_one
   obtain ⟨y, hyd⟩ : ∃ y, y = cycMod ℚ Ω l (m + 1) s := ⟨_, rfl⟩
   have hy : red l m y = 1 := by
@@ -230,9 +230,9 @@ private theorem ng_kum {l : ℕ} [Fact l.Prime] (hl : l ≠ 2) {Ω : Type} [Fiel
       ((∏ x ∈ (Finset.univ.filter fun x : (ZMod (l ^ (m + 1)))ˣ => red l m x = 1), pv (P i) (ζ (m + 1) ^ (x : ZMod (l ^ (m + 1))).val)) *
         (pv (P' i) (ζ m))⁻¹) s 0 := by
   have hlp : l.Prime := Fact.out
-  haveI := ng_enough l Ω
-  haveI : NeZero (l ^ n) := ⟨(pow_pos hlp.pos _).ne'⟩
-  haveI : NeZero (l ^ (m + 1)) := ⟨(pow_pos hlp.pos _).ne'⟩
+  have := ng_enough l Ω
+  have : NeZero (l ^ n) := ⟨(pow_pos hlp.pos _).ne'⟩
+  have : NeZero (l ^ (m + 1)) := ⟨(pow_pos hlp.pos _).ne'⟩
   obtain ⟨hsI, hsc⟩ := hs
   have hc1 : cycMod ℚ Ω l (m + 1) s = 1 := hsc
   have hc0 : cycMod ℚ Ω l m s = 1 := by
@@ -312,7 +312,7 @@ theorem UpperTheory.Kd.C7.pNormGal :
     UpperTheory.Kd.C7.SNormGal := by
   intro l _ hl Ω _ _ _ A hA c β ζ hζ Z hZ m n hn1 hnm P P' hP hP' i
   have hlp : l.Prime := Fact.out
-  haveI := ng_enough l Ω
+  have := ng_enough l Ω
   have hm : 1 ≤ m := hn1.trans hnm
   obtain ⟨U, hU⟩ : ∃ U, U = ∏ x ∈ (Finset.univ.filter fun x : (ZMod (l ^ (m + 1)))ˣ => red l m x = 1), pv (P i) (ζ (m + 1) ^ (x : ZMod (l ^ (m + 1))).val) := ⟨_, rfl⟩
   rw [← hU]
@@ -437,8 +437,8 @@ private theorem nl_card (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (hm : 1 ≤ m) :
   classical
   obtain ⟨k, rfl⟩ : ∃ k, m = k + 1 := ⟨m - 1, by omega⟩
   have hl0 : l ≠ 0 := hl.out.ne_zero
-  haveI : NeZero (l ^ (k + 1 + 1)) := ⟨pow_ne_zero _ hl0⟩
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl0⟩
+  have : NeZero (l ^ (k + 1 + 1)) := ⟨pow_ne_zero _ hl0⟩
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl0⟩
   have hdvd : l ^ (k + 1) ∣ l ^ (k + 1 + 1) := pow_dvd_pow l (Nat.le_succ _)
   have hsurj : Function.Surjective (red l (k + 1)) := ZMod.unitsMap_surjective hdvd
   have hc := (red l (k + 1)).ker.card_mul_index
@@ -490,8 +490,8 @@ theorem UpperTheory.Kd.C7.pNormLev :
   classical
   have hlp : l.Prime := hl.out
   have hl0 : 0 < l := hlp.pos
-  haveI : IsAdicComplete (Ideal.span {(l : Φ.R)}) Φ.R := Φ.fl.complete
-  have hu : (l : Φ.R) ∈ nonunits Φ.R := Φ.fl.prime.not_unit
+  have : IsAdicComplete (Ideal.span {(l : Φ.R)}) Φ.R := Φ.fl.complete
+  have hu : (l : Φ.R) ∈ nonunits Φ.R := Φ.fl.prime.not_isUnit
   let ψ : Polynomial (R0 A) →+* PowerSeries Φ.R :=
     (Polynomial.eval₂RingHom PowerSeries.C (1 + PowerSeries.X)).comp (Polynomial.mapRingHom Φ.i0)
   have hψ : ∀ F, Φ.ser F = ψ F := fun F => rfl
@@ -523,8 +523,8 @@ theorem UpperTheory.Kd.C7.pNormLev :
   let e : Fin l ≃ {x : (ZMod (l ^ (m + 1)))ˣ // red l m x = 1} := (Fintype.equivFinOfCardEq hcard).symm
   let w : Fin l → Ω := fun k => ζ (m + 1) ^ (((e k : (ZMod (l ^ (m + 1)))ˣ) : ZMod (l ^ (m + 1))).val)
   have hprim := (hζ (m + 1)).1
-  haveI : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hlp.ne_zero⟩
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hlp.ne_zero⟩
+  have : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hlp.ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hlp.ne_zero⟩
   have hmodpow : ∀ a : ℕ, ζ (m + 1) ^ a = ζ (m + 1) ^ (a % l ^ (m + 1)) := by
     intro a
     conv_lhs => rw [← Nat.mod_add_div a (l ^ (m + 1)), pow_add, pow_mul, hprim.pow_eq_one, one_pow, mul_one]
@@ -648,14 +648,14 @@ theorem trace_basis_pow {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (p 
     by_cases h : (i : ℕ) + j < p
     · rw [← hb ⟨_, h⟩, b.repr_self, Finsupp.single_apply]
       by_cases hi : (i : ℕ) = 0
-      · rw [if_pos hi, if_pos (Fin.ext (by simp only [Fin.val_mk]; omega))]
-      · rw [if_neg hi, if_neg (fun h' => hi (by have := congrArg Fin.val h'; simp only [Fin.val_mk] at this; omega))]
+      · rw [ite_eq_left hi, ite_eq_left (Fin.ext (by simp only [Fin.val_mk]; omega))]
+      · rw [ite_eq_right hi, ite_eq_right (fun h' => hi (by have := congrArg Fin.val h'; simp only [Fin.val_mk] at this; omega))]
     · have e : x ^ ((i : ℕ) + j) = y • b ⟨(i : ℕ) + j - p, by omega⟩ := by
         rw [hb, Algebra.smul_def, ← hx, ← pow_add]
         congr 1
         simp only [Fin.val_mk]
         omega
-      rw [e, map_smul, b.repr_self, Finsupp.smul_apply, Finsupp.single_apply, if_neg, smul_zero, if_neg]
+      rw [e, map_smul, b.repr_self, Finsupp.smul_apply, Finsupp.single_apply, ite_eq_right, smul_zero, ite_eq_right]
       · omega
       · simp only [Fin.ext_iff]
         omega
@@ -673,7 +673,7 @@ theorem trace_eq_p_mul {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (p :
   rw [Finset.sum_eq_single ⟨0, hp⟩]
   · simp [mul_comm]
   · intro j _ hj
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h0
     exact hj (Fin.ext h0)
   · intro h
@@ -699,7 +699,7 @@ theorem normOp_congr_of_basis (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.Pri
     (h₁ h₂ r : PowerSeries R) (k : ℕ) (hk : 1 ≤ k) (hu : IsUnit h₂)
     (he : h₁ = h₂ + (p : PowerSeries R) ^ k * r) :
     ∃ r' : PowerSeries R, normOp p h₁ = normOp p h₂ + (p : PowerSeries R) ^ (k + 1) * r' := by
-  letI inst : Algebra (PowerSeries R) (PowerSeries R) := (phi (R := R) p hp.out.pos).toRingHom.toAlgebra
+  let inst : Algebra (PowerSeries R) (PowerSeries R) := (phi (R := R) p hp.out.pos).toRingHom.toAlgebra
   have hx : (1 + X : PowerSeries R) ^ p = algebraMap (PowerSeries R) (PowerSeries R) (1 + X) := by
     rw [RingHom.algebraMap_toAlgebra]
     exact (phi_one_add_X (R := R) p hp.out.pos).symm
@@ -858,7 +858,7 @@ theorem lev_basis : ∀ (R : Type) [CommRing R] (p m : ℕ) [hp : Fact p.Prime],
     ∃ b : Module.Basis (Fin (Nat.totient (p ^ m))) R (lev R p m), ∀ i, b i = ev R p m ((1 + X) ^ (i : ℕ)) := by
   intro R _ p m hp hc
   rcases subsingleton_or_nontrivial R with hs | hs
-  · haveI : Subsingleton (lev R p m) := Module.subsingleton R _
+  · have : Subsingleton (lev R p m) := Module.subsingleton R _
     exact ⟨Module.Basis.ofRepr (LinearEquiv.ofSubsingleton _ _), fun i => Subsingleton.elim _ _⟩
   let pb := AdjoinRoot.powerBasis' (Polynomial.cyclotomic.monic (p ^ m) R)
   have hd : pb.dim = Nat.totient (p ^ m) := by
@@ -895,7 +895,7 @@ theorem one_add_X_pow_sub_one_ne_zero [Nontrivial R] (N : ℕ) (hN : 1 ≤ N) :
     ((1 + X : PowerSeries R) ^ N - 1) ≠ 0 := by
   intro h
   have := congrArg (coeff N) h
-  rw [map_sub, coeff_one_add_X_pow, Nat.choose_self, coeff_one, if_neg (by omega)] at this
+  rw [map_sub, coeff_one_add_X_pow, Nat.choose_self, coeff_one, ite_eq_right (by omega)] at this
   simp at this
 
 theorem cyc_succ (p n : ℕ) (hp : p.Prime) :
@@ -921,7 +921,7 @@ theorem cancel_prime [IsDomain R] {q : R} (hq : Prime q) {f : PowerSeries R}
     (hf : PowerSeries.map (Ideal.Quotient.mk (Ideal.span {q})) f ≠ 0)
     {B s t : PowerSeries R} (m : ℕ)
     (h : C q * B = C q ^ (m + 1) * s + f * t) : ∃ t', B = C q ^ m * s + f * t' := by
-  haveI : (Ideal.span {q}).IsPrime := (Ideal.span_singleton_prime hq.ne_zero).2 hq
+  have : (Ideal.span {q}).IsPrime := (Ideal.span_singleton_prime hq.ne_zero).2 hq
   have hCq : PowerSeries.map (Ideal.Quotient.mk (Ideal.span {q})) (C q) = 0 := by
     rw [PowerSeries.map_C, Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton_self q), map_zero]
   have ht : PowerSeries.map (Ideal.Quotient.mk (Ideal.span {q})) t = 0 := by
@@ -978,7 +978,7 @@ theorem X_mul_mem_span_of_levels (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.
       rw [map_natCast]
       linear_combination (-B) * hu - u * hAB + (u * X) * hg
     have hf : PowerSeries.map (Ideal.Quotient.mk (Ideal.span {(p : R)})) (cyc R p (n + 1)) ≠ 0 := by
-      haveI : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hpR.ne_zero).2 hpR
+      have : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hpR.ne_zero).2 hpR
       intro h0
       have h1 := congrArg (PowerSeries.map (Ideal.Quotient.mk (Ideal.span {(p : R)}))) (om_succ (R := R) p n hp.out)
       rw [map_mul, h0, zero_mul] at h1
@@ -1048,7 +1048,7 @@ namespace GlobalTheory.ColEx
 
 theorem unit_of_ev : ∀ (R : Type) [CommRing R] (p n : ℕ) [Fact p.Prime], IsAdicComplete (Ideal.span {(p : R)}) R → ∀ g : PowerSeries R, IsUnit (ev R p n g) → IsUnit g := by
   intro R _ p n hp hR g hg
-  haveI := hR
+  have := hR
   obtain ⟨w, hw⟩ := hg.exists_right_inv
   obtain ⟨g', rfl⟩ := Ideal.Quotient.mk_surjective w
   rw [← map_mul, ← map_one (ev R p n), Ideal.Quotient.eq] at hw
@@ -1136,7 +1136,7 @@ theorem ev_of_mem_pow : ∀ (R : Type) [CommRing R] (p m N : ℕ) [Fact p.Prime]
 
 theorem lev_sep : ∀ (R : Type) [CommRing R] (p m : ℕ) [Fact p.Prime], IsAdicComplete (Ideal.span {(p : R)}) R → ∀ x : lev R p m, (∀ N : ℕ, ∃ y : PowerSeries R, x = ev R p m ((p : PowerSeries R) ^ N * y)) → x = 0 := by
   intro R _ p m _ hR x hx
-  haveI := hR
+  have := hR
   obtain ⟨b, -⟩ := _root_.GlobalTheory.Col.lev_basis R p m hR
   apply b.repr.injective
   rw [map_zero]
@@ -1158,8 +1158,8 @@ namespace GlobalTheory.Col
 theorem exists_coleman_series : ∀ (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.Prime] (σ : R ≃+* R), FrobLift R p σ → ∀ u : ∀ m : ℕ, (lev R p (m + 1))ˣ, (∀ m : ℕ, nrm p (m + 1) (by omega) ((u (m + 1) : lev R p (m + 2))) = (u m : lev R p (m + 1))) → ∃ f : (PowerSeries R)ˣ, ∀ m : ℕ, ev R p (m + 1) (PowerSeries.map (((σ.symm : R ≃+* R) : R →+* R) ^ (m + 1)) (f : PowerSeries R)) = u m := by
   intro R _ p hp σ hF u hu
   have hR := hF.complete
-  haveI : IsAdicComplete (Ideal.span {(p : R)}) R := hF.complete
-  haveI : IsAdicComplete ((Ideal.span {(p : R)}).comap (constantCoeff (R := R))) (PowerSeries R) :=
+  have : IsAdicComplete (Ideal.span {(p : R)}) R := hF.complete
+  have : IsAdicComplete ((Ideal.span {(p : R)}).comap (constantCoeff (R := R))) (PowerSeries R) :=
     GlobalTheory.ChartRing.isAdicComplete_comap_constantCoeff _
   set J : Ideal (PowerSeries R) := (Ideal.span {(p : R)}).comap (constantCoeff (R := R)) with hJ
 
@@ -1481,7 +1481,7 @@ private theorem colNm_apply {R : Type} [CommRing R] (p : ℕ) [Fact p.Prime] (h 
 private theorem nrm_congr {R : Type} [CommRing R] (p m n : ℕ) [Fact p.Prime] (hm : 1 ≤ m) (x y : lev R p (m + 1))
     (h : x - y ∈ Ideal.span {(p : lev R p (m + 1)) ^ n}) :
     nrm p m hm x - nrm p m hm y ∈ Ideal.span {(p : lev R p m) ^ n} := by
-  letI := (up (R := R) p m hm).toAlgebra
+  let := (up (R := R) p m hm).toAlgebra
   obtain ⟨z, hz⟩ := Ideal.mem_span_singleton'.1 h
   have := norm_congr ((p : lev R p m) ^ n) y z
   rw [map_pow, map_natCast, mul_comm, hz, add_sub_cancel] at this
@@ -1503,12 +1503,12 @@ private theorem all_levels (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.Prime]
     ∃ f : PowerSeries R, IsUnit f ∧ ∀ m, 1 ≤ m → ∃ w : PowerSeries R, IsUnit w ∧
       ev R p m (PowerSeries.map (((σ.symm : R ≃+* R) : R →+* R) ^ m) f) = ev R p m (g m * w ^ p ^ (m - c)) := by
   have hR := hF.complete
-  haveI : IsAdicComplete (Ideal.span {(p : R)}) R := hF.complete
-  haveI : IsAdicComplete ((Ideal.span {(p : R)}).comap (PowerSeries.constantCoeff (R := R))) (PowerSeries R) :=
+  have : IsAdicComplete (Ideal.span {(p : R)}) R := hF.complete
+  have : IsAdicComplete ((Ideal.span {(p : R)}).comap (PowerSeries.constantCoeff (R := R))) (PowerSeries R) :=
     GlobalTheory.ChartRing.isAdicComplete_comap_constantCoeff _
   set J : Ideal (PowerSeries R) := (Ideal.span {(p : R)}).comap (PowerSeries.constantCoeff (R := R)) with hJ
   have hJp : J.IsPrime := by
-    haveI : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hF.prime.ne_zero).2 hF.prime
+    have : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hF.prime.ne_zero).2 hF.prime
     exact Ideal.comap_isPrime _ _
   have hpJ : (p : PowerSeries R) ∈ J := by
     rw [hJ, Ideal.mem_comap, map_natCast]; exact Ideal.subset_span rfl

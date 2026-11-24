@@ -134,7 +134,7 @@ theorem lift_of_residue : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     · show spMap (gm.comp (inB P' x0 hu)) ≫ P'.u.left = spMap (IsLocalRing.residue S) ≫ y ≫ (torsion.ι G' q).left ≫ π
       rw [← GlobalTheory.HTMap.spc_assoc, hgm, ← aH_left_π P' x0 hu hg.1, ← jH_ι P' x0 hu hg.1 h, Over.comp_left,
         ← Category.assoc, ← Category.assoc, hs0, Category.assoc, Category.assoc]
-  letI : Algebra O S := o.toAlgebra
+  let : Algebra O S := o.toAlgebra
   have hβ : β0.comp P'.str = (algebraMap O S).comp x0 := hβ0.1
   refine ⟨(ptOf P' x0 hu β0 hβ).left, ?_⟩
   let b : T ⟶ torsion G' q := Over.homMk ((ptOf P' x0 hu β0 hβ).left ≫ (jH P' x0 hu hg.1 h).left) (by
@@ -363,11 +363,11 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {X : Sc
   {O : Type} [CommRing O] (x0 : R →+* O) (hu : IsUnit (x0 P'.f))
 
 theorem finite_Bt : Module.Finite O (Bt P' x0 hu) := by
-  haveI := P'.fin.finite
+  have := P'.fin.finite
   exact inferInstanceAs (Module.Finite (OL P' x0 hu) (OL P' x0 hu ⊗[Localization.Away P'.f] P'.B))
 
 theorem free_Bt : Module.Free O (Bt P' x0 hu) := by
-  haveI := P'.fin.free
+  have := P'.fin.free
   exact inferInstanceAs (Module.Free (OL P' x0 hu) (OL P' x0 hu ⊗[Localization.Away P'.f] P'.B))
 
 end
@@ -375,10 +375,10 @@ end
 theorem isOpenImmersion_jH : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X) (R : Type) [CommRing R] (ξ : Sp R ⟶ X) (p : ℕ) [Fact p.Prime] (n : ℕ) [StarRing (𝓞 E)] (P' : GlobalTheory.HTMap.FP t ξ (p ^ n)) (x0 : R →+* 𝓞_ℂ_[p]) (hu : IsUnit (x0 P'.f)) (P : PtP E p) (π : P.G.left ⟶ t.G.left) (hg : IsGrpPullback P.G t.G (spMap x0 ≫ ξ) π) (h : aH P' x0 hu hg.1 ^ (p ^ n) = 1), IsOpenImmersion (jH P' x0 hu hg.1 h).left := by
   intro E _ _ _ H X t R _ ξ p _ n _ P' x0 hu P π hg h
   set j := jH P' x0 hu hg.1 h
-  haveI := P.semi.separated
-  haveI := P.semi.smooth
+  have := P.semi.separated
+  have := P.semi.smooth
   have hm : Mono j.left := by
-    haveI := GlobalTheory.T.mono_finite_part_pullback P' x0 hu hg.1
+    have := GlobalTheory.T.mono_finite_part_pullback P' x0 hu hg.1
     have e : j.left ≫ (torsion.ι P.G (p ^ n)).left = (aH P' x0 hu hg.1).left := by
       rw [← Over.comp_left, jH_ι]
     exact mono_of_mono_fac e
@@ -395,8 +395,8 @@ theorem isOpenImmersion_jH : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     MorphismProperty.of_isPullback (P := @LocallyOfFinitePresentation) H0 h3
   have hZsep : IsSeparated (torsion P.G (p ^ n)).hom :=
     MorphismProperty.of_isPullback (P := @IsSeparated) H0 h4
-  haveI := finite_Bt P' x0 hu
-  haveI := free_Bt P' x0 hu
+  have := finite_Bt P' x0 hu
+  have := free_Bt P' x0 hu
   have hHfin : IsFinite (Hs P' x0 hu).hom := by
     change IsFinite (Spec.map (CommRingCat.ofHom (algebraMap 𝓞_ℂ_[p] (Bt P' x0 hu))))
     rw [IsFinite.SpecMap_iff]
@@ -404,7 +404,7 @@ theorem isOpenImmersion_jH : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hHlfp : LocallyOfFinitePresentation (Hs P' x0 hu).hom := by
     change LocallyOfFinitePresentation (Spec.map (CommRingCat.ofHom (algebraMap 𝓞_ℂ_[p] (Bt P' x0 hu))))
     rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation)]
-    haveI : Module.FinitePresentation 𝓞_ℂ_[p] (Bt P' x0 hu) := Module.finitePresentation_of_projective _ _
+    have : Module.FinitePresentation 𝓞_ℂ_[p] (Bt P' x0 hu) := Module.finitePresentation_of_projective _ _
     exact RingHom.finitePresentation_algebraMap.2 (Algebra.FinitePresentation.of_finitePresentation _ _)
   have hc : j.left ≫ (torsion P.G (p ^ n)).hom = (Hs P' x0 hu).hom := Over.w j
   have : IsFinite (j.left ≫ (torsion P.G (p ^ n)).hom) := by rw [hc]; exact hHfin
@@ -415,7 +415,7 @@ theorem isOpenImmersion_jH : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     GlobalTheory.TangentCrit.locallyOfFinitePresentation_of_comp j.left (torsion P.G (p ^ n)).hom
   refine isOpenImmersion_of_stalk j.left fun x => ?_
   obtain ⟨s, hs⟩ := residue_lift j.left x
-  haveI : IsLocalRing ((torsion P.G (p ^ n)).left.presheaf.stalk (j.left x)) :=
+  have : IsLocalRing ((torsion P.G (p ^ n)).left.presheaf.stalk (j.left x)) :=
     LocallyRingedSpace.isLocalRing _ _
   exact GlobalTheory.T.finite_part_pow_eq_one_local P' x0 hu hg h ((torsion P.G (p ^ n)).left.presheaf.stalk (j.left x)) (hS := this)
     ((torsion P.G (p ^ n)).left.fromSpecStalk (j.left x)) ⟨s, hs⟩

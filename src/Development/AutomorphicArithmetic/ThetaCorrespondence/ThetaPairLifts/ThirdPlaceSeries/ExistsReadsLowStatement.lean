@@ -177,7 +177,7 @@ theorem exists_mv {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z : 
   have R := hA.reads i hi
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   have hgr : gramN (I.rec7 l Z) i hi = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 i hi).1
   have hB := basePi_of_ok hX hPr u
   have hLb : (A.K i hi β).lev.Lb = baseLb B.fields.E (B.R.N i) ((B.primes X).vT u) := by
@@ -194,7 +194,7 @@ theorem exists_mv {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z : 
     have e : ((diaT (Pr := B.primes X) u P : (𝓞 B.fields.E ⧸ P.1.asIdeal)ˣ) : 𝓞 B.fields.E ⧸ P.1.asIdeal) =
         Ideal.Quotient.mk P.1.asIdeal (B.fields.conjO (X.piT u)) := by
       unfold diaT
-      rw [dif_pos hu]
+      rw [dite_eq_left hu]
       rfl
     rw [e]
     exact R.k_T β P r j hr
@@ -248,7 +248,7 @@ theorem isPtOf_move (S : Set (HeightOneSpectrum (𝓞 F))) {g k k₁ : GL (Fin n
     rw [hm, map_mul, map_inv, hS v hv, inv_one, one_mul]
   have em2 : ∀ v ∉ S, bc (prV (E := E) v) m = 1 := fun v hv => by
     rw [hm, map_mul, map_inv, hS' v hv, inv_mul_cancel]
-  haveI := GlobalTheory.TwU.MoveOff.stdLat_finite (E := E) n
+  have := GlobalTheory.TwU.MoveOff.stdLat_finite (E := E) n
   have hks : k⁻¹ ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
       (tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)) (Formalism.L2.Col.stdLat E n)) := hkl
   have hms : m⁻¹ ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
@@ -293,7 +293,7 @@ theorem std_move' (k w : GL (Fin n) (AfE F E)) (hwU : w ∈ Formalism.L2.Herm.Us
     fun P => absurd P.2 (Finset.notMem_empty _), fun P => absurd P.2 (Finset.notMem_empty _)⟩, hN⟩
   have hl := hp.lat
   rw [hN] at hl ⊢
-  haveI := GlobalTheory.TwU.MoveOff.stdLat_finite (E := E) n
+  have := GlobalTheory.TwU.MoveOff.stdLat_finite (E := E) n
   have hs : k⁻¹ ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
       (tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)) (Formalism.L2.Col.stdLat E n)) := hl
   have key : (w⁻¹ * k)⁻¹ ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
@@ -434,13 +434,13 @@ theorem mvEl_spec (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : 
   by_cases h : i = B.R.m
   · have hs := (exists_mv hI hP A hA i hi β (offPl I u a) (offPl_finite I u a) fun _ hv => hv.2.1).choose_spec
     have e : mvEl hI hP A hA i hi β =
-        (exists_mv hI hP A hA i hi β (offPl I u a) (offPl_finite I u a) fun _ hv => hv.2.1).choose := if_pos h
+        (exists_mv hI hP A hA i hi β (offPl I u a) (offPl_finite I u a) fun _ hv => hv.2.1).choose := ite_eq_left h
     rw [e]
     refine ⟨fun v => ?_, hs.2, fun _ => hs.1, fun h' => absurd h h'⟩
     by_cases hv : v ∈ offPl I u a
     · exact Or.inl (hs.1 v hv)
     · exact Or.inr (hs.2 v hv)
-  · have e : mvEl hI hP A hA i hi β = 1 := if_neg h
+  · have e : mvEl hI hP A hA i hi β = 1 := ite_eq_right h
     rw [e]
     exact ⟨fun v => Or.inr (map_one _), fun v _ => map_one _, fun h' => absurd h' h, fun _ => rfl⟩
 
@@ -482,12 +482,12 @@ def mvW (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : A.Is) (i :
   if hi : i ≤ B.R.m then mvLift hI hP A hA i hi β else 1
 
 theorem mvG_eq (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : A.Is) (i : ℕ) (hi : i ≤ B.R.m) (β : Ch i) :
-    mvG hI hP A hA i β = mvB hI hP A hA i hi β := dif_pos hi
+    mvG hI hP A hA i β = mvB hI hP A hA i hi β := dite_eq_left hi
 
 theorem mvW_spec (hI : I.Ok) (hP : TC.Pins B X) (A : TwDat I l Z u a Ch) (hA : A.Is) (i : ℕ) (hi : i ≤ B.R.m) (β : Ch i) :
     mvW hI hP A hA i β ∈ GfC _ ∧
       finM _ (rankN (I.rec7 l Z) i hi) (mvW hI hP A hA i β) = (mvEl hI hP A hA i hi β).1.1 := by
-  have e : mvW hI hP A hA i β = mvLift hI hP A hA i hi β := dif_pos hi
+  have e : mvW hI hP A hA i β = mvLift hI hP A hA i hi β := dite_eq_left hi
   rw [e]
   exact mvLift_spec hI hP A hA i hi β
 

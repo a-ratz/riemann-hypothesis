@@ -556,7 +556,7 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
   obtain ⟨a, h1, h2⟩ := _root_.GlobalTheory.NL.InvX.main D HW F l K s LL h T hT N₁ hfree hbc hφ hφinv
   obtain ⟨nb⟩ := GlobalTheory.NL.N_basis D HW F l K s LL h T hT
   obtain ⟨r₁, ⟨b₁⟩⟩ := basis_of_freeA _ T hfree
-  haveI : Nontrivial ((HW l).W K s LL h).EE := ((HW l).W K s LL h).EE_inj.nontrivial
+  have : Nontrivial ((HW l).W K s LL h).EE := ((HW l).W K s LL h).EE_inj.nontrivial
   have hr : r₁ = Module.finrank ↥(OL LL) ↥T.L.T := by
     have e := (hbc.basis b₁).indexEquiv ((((HW l).W K s LL h).N_base T hT).basis nb)
     set_option synthInstance.maxHeartbeats 200000 in

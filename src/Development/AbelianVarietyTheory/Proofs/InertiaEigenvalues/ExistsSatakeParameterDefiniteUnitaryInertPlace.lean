@@ -163,8 +163,8 @@ variable {L : Type} [Field L] [TopologicalSpace L] [IsTopologicalRing L] {n : �
 
 theorem continuous_toAnti (b : GL (Fin n) L) (hb : cT s b.1 * b.1 = antiJ L n) :
     Continuous (toAnti b hb) ∧ Continuous (toAnti b hb).symm :=
-  ⟨((continuous_const.mul (continuous_subtype_val.comp continuous_id)).mul continuous_const).subtype_mk _,
-    ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _⟩
+  ⟨((continuous_const.mul (continuous_subtypeVal.comp continuous_id)).mul continuous_const).subtype_mk _,
+    ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _⟩
 
 end ChartTop
 
@@ -174,7 +174,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 theorem continuous_cLoc (w : HeightOneSpectrum (𝓞 E)) : Continuous (cLoc (E := E) (n := n) w) :=
   (Continuous.units_map _ (continuous_id.matrix_map
-    ((RestrictedProduct.continuous_eval w).comp (continuous_snd : Continuous (pFin E))))).comp continuous_subtype_val
+    ((RestrictedProduct.continuous_eval w).comp (continuous_snd : Continuous (pFin E))))).comp continuous_subtypeVal
 
 theorem cLoc_infU (w : HeightOneSpectrum (𝓞 E)) (y : infU E n) : cLoc w (y : UA E n) = 1 := by
   have h : (y.1.1.val).map (pFin E) = 1 := congrArg Units.val y.2
@@ -227,10 +227,10 @@ theorem finiteDimensional_typeU [TopologicalSpace H] (hπ : IsAutRepU π) {j : H
     (K' : Subgroup H) (hK' : IsOpen (K' : Set H)) :
     FiniteDimensional ℂ ↥(typeU π w L C ⊓ fixed (pull π hπ.stable j) K') := by
   let jp : finU (E := E) (n := n) →* finU (E := E) (n := n) := ((j.comp p).comp (finU (E := E) (n := n)).subtype).codRestrict (finU (E := E) (n := n)) fun k => hjf _
-  have hjp : Continuous jp := (hjc.comp (hpc.comp continuous_subtype_val)).subtype_mk _
+  have hjp : Continuous jp := (hjc.comp (hpc.comp continuous_subtypeVal)).subtype_mk _
   let L' : Subgroup (finU (E := E) (n := n)) := L ⊓ K'.comap (p.comp (finU (E := E) (n := n)).subtype) ⊓ L.comap jp
   have ho : IsOpen (L' : Set (finU (E := E) (n := n))) :=
-    (hL.inter (hK'.preimage (hpc.comp continuous_subtype_val))).inter (hL.preimage hjp)
+    (hL.inter (hK'.preimage (hpc.comp continuous_subtypeVal))).inter (hL.preimage hjp)
   have := hfin L' ho
   refine FiniteDimensional.of_injective ((π.subtype ∘ₗ (typeU π w L C ⊓ fixed (pull π hπ.stable j) K').subtype).codRestrict
     (Submodule.span ℂ {ψ : UA E n → ℂ | (∀ γ ∈ ratU E n, ∀ g, ψ (γ * g) = ψ g) ∧

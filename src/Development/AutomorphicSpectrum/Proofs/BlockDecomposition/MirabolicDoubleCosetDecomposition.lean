@@ -89,7 +89,7 @@ theorem exists_row {ι : Type} [Fintype ι] [DecidableEq ι] (s : ι → Prop) (
         intro e
         exact hrj (by simpa using congrArg (Equiv.swap c j) e)
       simp only [T, Matrix.updateRow_ne hne, Matrix.one_apply]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       by_cases hrc : r = c
       · subst hrc

@@ -94,9 +94,9 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
 theorem isCompact_intL [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ σ q) :
     IsCompact (intL L : Set L) := by
   obtain ⟨-, -, -, hϖ, -, hq, hcard⟩ := h
-  haveI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
+  have : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
     ⟨ϖ, by rw [hϖ]; exact WithZero.coe_ne_zero, by rw [hϖ, ← WithZero.coe_one, ne_eq, WithZero.coe_inj]; decide⟩
-  letI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
+  let : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne _ (e := 2) (by norm_num)
   have hp := (Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField
     (K := L)).2 ⟨(Valued.isClosed_integer L).completeSpace_coe,
@@ -114,7 +114,7 @@ theorem isOpen_isCompact_KU : ∀ (L : Type) [Field L] [Valued L (WithZero (Mult
       IsOpen (KU σ n : Set (GU σ n)) ∧ IsCompact (KU σ n : Set (GU σ n)) := by
   intro L _ _ _ ϖ σ q n h
   rw [coe_KU]
-  refine ⟨(isOpen_GLint _ (Valued.isOpen_integer L)).preimage continuous_subtype_val, ?_⟩
+  refine ⟨(isOpen_GLint _ (Valued.isOpen_integer L)).preimage continuous_subtypeVal, ?_⟩
   have hc : IsClosed (GU σ n : Set (GL (Fin n) L)) :=
     isClosed_eq (((Units.continuous_val.matrix_map (GlobalTheory.LGrp.continuous_of_unramInv h)).matrix_transpose.matrix_mul
       continuous_const).matrix_mul Units.continuous_val) continuous_const

@@ -96,7 +96,7 @@ private theorem prod_bound {ω : Set (AdelicGLn.AdelicGL E a)} (hω : IsCompact 
       b * Reduction.diagUnits a (fun i => Reduction.posIdele (K := E) (ρ i) (hρ i)) * kk ∈ Reduction.normOneGL (K := E) (n := a) →
       ∏ i, ρ i ≤ c ∧ (∏ i, ρ i)⁻¹ ≤ c := by
   have hdc : Continuous fun g : AdelicGLn.AdelicGL E a => (Reduction.detModule E a g : ℝ) :=
-    continuous_subtype_val.comp Reduction.continuous_detModule
+    continuous_subtypeVal.comp Reduction.continuous_detModule
   obtain ⟨M₁, hM₁⟩ := hω.bddAbove_image hdc.continuousOn
   obtain ⟨M₂, hM₂⟩ := hω.bddAbove_image (hdc.inv₀ fun g => (Reduction.detModule E a g).2.ne').continuousOn
   refine ⟨max 1 (max M₁ M₂), le_max_left _ _, fun b hb ρ hρ kk hkk hx => ?_⟩

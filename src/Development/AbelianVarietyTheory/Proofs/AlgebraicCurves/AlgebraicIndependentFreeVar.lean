@@ -72,8 +72,8 @@ theorem _root_.GlobalTheory.existsUnique_ringHom_OmS :
       ∃! P : _root_.ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N →+* L, (∀ a : Ω, P (algebraMap Ω (_root_.ReciprocityTheory.ChartRestriction.G.T0.OmS Ω D N) a) = φ a) ∧
         ∀ p, P (_root_.ReciprocityTheory.ChartRestriction.G.T0.sImg j₀ x p) = τ p := by
   intro K Ω L _ _ _ _ _ D N j₀ x τ φ hD hτ hrel
-  letI : Algebra Ω L := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K Ω L := IsScalarTower.of_algebraMap_eq fun a => (φ.commutes a).symm
+  let : Algebra Ω L := φ.toRingHom.toAlgebra
+  have : IsScalarTower K Ω L := IsScalarTower.of_algebraMap_eq fun a => (φ.commutes a).symm
   have hΩ : ∀ a : Ω, algebraMap Ω L a = φ a := fun _ => rfl
 
   let g : _root_.ReciprocityTheory.ChartRestriction.G.T0.SVar D N → L := fun v => τ (_root_.GlobalTheory.SectionPoint.freeVarIndex j₀ v)

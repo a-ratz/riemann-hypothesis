@@ -61,15 +61,15 @@ private theorem module_finite_z1_padicInt (l : ℕ) [Fact l.Prime] {k G : Type} 
     [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] (χ ψ : G →* kˣ) (hΦ : PhiCond (Γ := G) l)
     (hχ : IsOpen (χ.ker : Set G)) (hψ : IsOpen (ψ.ker : Set G)) : Finite (Z1 χ ψ) := by
   classical
-  letI := ZMod.algebra k l
-  haveI : Module.Finite (ZMod l) k := Module.Finite.of_finite
+  let := ZMod.algebra k l
+  have : Module.Finite (ZMod l) k := Module.Finite.of_finite
   let N : Subgroup G := χ.ker ⊓ ψ.ker
   have hNo : IsOpen (N : Set G) := by
     show IsOpen ((χ.ker ⊓ ψ.ker : Subgroup G) : Set G)
     rw [Subgroup.coe_inf]
     exact hχ.inter hψ
-  haveI : Finite (G ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
-  haveI := hΦ N hNo
+  have : Finite (G ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
+  have := hΦ N hNo
   let b := Module.finBasis (ZMod l) k
   have mem : ∀ a ∈ Z1 χ ψ, IsLocallyConstant a ∧
       ∀ g h : G, a (g * h) = (χ g : k) * a h + a g * (ψ h : k) := fun a ha => ha
@@ -86,7 +86,7 @@ private theorem module_finite_z1_padicInt (l : ℕ) [Fact l.Prime] {k G : Type} 
   have hφo : ∀ a (ha : a ∈ Z1 χ ψ) i, IsOpen ((φ a ha i).ker : Set N) := by
     intro a ha i
     have hlc : IsLocallyConstant (fun x : N => b.repr (a x) i) :=
-      ((mem a ha).1.comp_continuous continuous_subtype_val).comp (fun y => b.repr y i)
+      ((mem a ha).1.comp_continuous continuous_subtypeVal).comp (fun y => b.repr y i)
     have e : ((φ a ha i).ker : Set N) = {x | (fun x : N => b.repr (a x) i) x = 0} := by
       ext x
       simp [φ, MonoidHom.mem_ker]
@@ -117,7 +117,7 @@ theorem UpperTheory.V.CA.exists_multFree_of_phiCond_of_injective_chars :
     ∀ (l : ℕ) [Fact l.Prime] {n : ℕ} {k G : Type} [Field k] [Finite k] [CharP k l] [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] [TotallyDisconnectedSpace G] (χ : Fin n → G →* kˣ), PhiCond (Γ := G) l → (∀ i, IsOpen ((χ i).ker : Set G)) → Function.Injective χ → ∃ h, MultFree χ h := by
   intro l _ n k G _ _ _ _ _ _ _ _ χ hΦ hopen hinj
   refine ⟨∑ i, ∑ j, Module.finrank k (Z1 (χ i) (χ j)), hopen, hinj, fun i j _ => ?_⟩
-  haveI := module_finite_z1_padicInt l (χ i) (χ j) hΦ (hopen i) (hopen j)
+  have := module_finite_z1_padicInt l (χ i) (χ j) hΦ (hopen i) (hopen j)
   refine ⟨inferInstance, ?_⟩
   calc Module.finrank k (Z1 (χ i) (χ j)) ≤ ∑ j', Module.finrank k (Z1 (χ i) (χ j')) :=
         Finset.single_le_sum (f := fun j' => Module.finrank k (Z1 (χ i) (χ j')))

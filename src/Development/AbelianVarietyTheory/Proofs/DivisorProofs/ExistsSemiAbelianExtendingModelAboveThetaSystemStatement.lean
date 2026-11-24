@@ -71,7 +71,7 @@ theorem GlobalTheory.GSep.exists_zhAbove : ∀ (X₁ : GlobalTheory.GSep.GSet), 
   have hYp : IsProper Y.s := ((GlobalTheory.isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hO.proj).1
   have hsep : IsSeparated X₁.M.s := X₁.M.sep
   have hqp : IsProper q := by
-    haveI : IsProper (q ≫ X₁.M.s) := by rw [hq.inducedModelMorphism_comp_structureMap]; exact hYp
+    have : IsProper (q ≫ X₁.M.s) := by rw [hq.inducedModelMorphism_comp_structureMap]; exact hYp
     exact IsProper.of_comp q X₁.M.s
   exact ⟨Y, q, U₀, EE, ⟨G⟩, hO, hE, hq, hqp⟩
 end -- clump:auto

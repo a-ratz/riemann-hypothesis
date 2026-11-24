@@ -64,7 +64,7 @@ theorem UpperTheory.prod_CMType_embeddings_root_of_unity_eq_one :
       (∀ σ : H.E →+* ℂ, ∃! i, σ = φ i ∨ σ = ComplexEmbedding.conjugate (φ i)) → (∀ i j, φ i H.sqd = φ j H.sqd) →
       ∀ z : H.E, (∃ m : ℕ, 0 < m ∧ z ^ m = 1) → ∏ i, φ i z = 1 := by
   intro R H I _ φ hu hs z hz
-  haveI : IsGalois ℚ H.E := H.galois
+  have : IsGalois ℚ H.E := H.galois
   obtain ⟨i₀, -, -⟩ := hu H.φ₀
   have hfix : ∀ g : R.Psi, H.sigmaOf (g : R.GG) H.sqd = H.sqd := fun g => by
     refine (H.galE_mem_Psi_iff _).1 ?_

@@ -96,7 +96,7 @@ private theorem chiInf_pos {χ : HChar E} {n : (E →+* ℂ) → ℤ} (h : IsAlg
     ((TR.chiInf χ u : ℂˣ) : ℂ) = ∏ φ : E →+* ℂ, ((u.val (InfinitePlace.mk φ) : ℝ) : ℂ) ^ n φ := by
   have hc : ∀ v, Continuous fun u : (TR.Rinf E)ˣ => u.val v := fun v => (continuous_apply v).comp Units.continuous_val
   have ho : IsOpen {u : (TR.Rinf E)ˣ | ∀ v, 0 < u.val v} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun v => isOpen_lt continuous_const (hc v)
   have hcl : IsClosed {u : (TR.Rinf E)ˣ |
       ((TR.chiInf χ u : ℂˣ) : ℂ) = ∏ φ : E →+* ℂ, ((u.val (InfinitePlace.mk φ) : ℝ) : ℂ) ^ n φ} :=
@@ -117,7 +117,7 @@ private theorem expo_intR {χ : HChar E} {n : (E →+* ℂ) → ℤ} (h : IsAlgP
   classical
   refine ⟨∑ φ : E →+* ℂ, if InfinitePlace.mk φ = v then n φ else 0, TR.expo_eq_of_exp χ v _ fun t => ?_⟩
   rw [chiInf_pos h _ fun w => Real.exp_pos _]
-  simp only [TR.expU_val, Complex.ofReal_exp, ← Complex.exp_int_mul]
+  simp only [TR.expU_val, Complex.ofReal_exp, ← Complex.exp_intCast_mul]
   rw [← Complex.exp_sum, Int.cast_sum, Finset.sum_mul]
   refine congrArg _ (Finset.sum_congr rfl fun φ _ => ?_)
   split_ifs with e

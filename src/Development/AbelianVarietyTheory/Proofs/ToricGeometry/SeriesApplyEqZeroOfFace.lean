@@ -305,10 +305,10 @@ theorem _root_.GlobalTheory.LocalCube.exists_third_difference :
       ‖f ((2 : ℂ) • x) + D φ x - 3 * f x - f (-x)‖ < 2 * π := by
     have h2x : (fun x : Fin 3 → Fin g → ℂ => f ((2 : ℂ) • x)) =O[𝓝 0] fun x => ‖x‖ ^ 3 := by
       have := isBigO_norm_cube_comp_clm hfO ((2 : ℂ) • ContinuousLinearMap.id ℂ (Fin 3 → Fin g → ℂ))
-      simpa only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply] using this
+      simpa only [smul_apply, ContinuousLinearMap.id_apply] using this
     have hnx : (fun x : Fin 3 → Fin g → ℂ => f (-x)) =O[𝓝 0] fun x => ‖x‖ ^ 3 := by
       have := isBigO_norm_cube_comp_clm hfO (-ContinuousLinearMap.id ℂ (Fin 3 → Fin g → ℂ))
-      simpa only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.id_apply] using this
+      simpa only [neg_apply, ContinuousLinearMap.id_apply] using this
     have h3 : (fun x : Fin 3 → Fin g → ℂ => 3 * f x) =O[𝓝 0] fun x => ‖x‖ ^ 3 :=
       hfO.const_mul_left 3
     have hO : (fun x => f ((2 : ℂ) • x) + D φ x - 3 * f x - f (-x)) =O[𝓝 0]
@@ -328,9 +328,9 @@ theorem _root_.GlobalTheory.LocalCube.exists_third_difference :
             ((((-1 : ℤ) ^ (3 - I.card) : ℤ)) : ℂ) * (L + φ (∑ a ∈ I, x a))) := by
       rw [Complex.exp_sum]
       refine Finset.prod_congr rfl fun I _ => ?_
-      rw [Complex.exp_int_mul, ← hM, hx4 I]
+      rw [exp_intCast_mul, ← hM, hx4 I]
     rw [hprod, hx2, hx3, hx1, ← hL'] at hx
-    rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add,
+    rw [← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add,
       ← Complex.exp_add] at hx
     obtain ⟨n, hn⟩ := Complex.exp_eq_exp_iff_exists_int.1 hx
     have hsum : ∑ I : Finset (Fin 3),
@@ -370,7 +370,7 @@ theorem _root_.GlobalTheory.LocalCube.exists_third_difference :
       cexp (D k x) := by
     simp only [D]
     rw [Complex.exp_sum]
-    exact Finset.prod_congr rfl fun I _ => (Complex.exp_int_mul _ _).symm
+    exact Finset.prod_congr rfl fun I _ => (exp_intCast_mul _ _).symm
   rw [hx1, ← hL', hprod2, ← Complex.exp_add]
   have hfx : f x - D k x = 0 := hx
   congr 1

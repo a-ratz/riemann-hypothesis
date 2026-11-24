@@ -95,7 +95,7 @@ theorem exists_global [CompactSpace X] [QuasiSeparatedSpace X] (hL : L.IsLB) (a 
       fun i j => by
         change resG X _ (resG X _ _) = _ * resG X _ (resG X _ _)
         rw [GlobalTheory.LB.resG_resG, GlobalTheory.LB.resG_resG, GlobalTheory.LB.coord_rel s i j _ _ le_rfl, GlobalTheory.LB.resG_self]⟩
-  haveI := GlobalTheory.LB.isQuasicoherent_toMod hL
+  have := GlobalTheory.LB.isQuasicoherent_toMod hL
   obtain ⟨n, t, ht⟩ := QCoh.Qcqs.exists_pow_smul_eq_res_of_qcqs (GlobalTheory.LB.toMod L)
     isCompact_univ isQuasiSeparated_univ a le_top rfl
     (((GlobalTheory.LB.toMod L).presheaf.map (homOfLE hV).op ((GlobalTheory.LB.secOnEquiv _ _).symm ⟨θ, hθ⟩)))

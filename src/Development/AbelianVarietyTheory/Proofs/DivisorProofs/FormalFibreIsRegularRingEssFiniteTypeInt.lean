@@ -289,7 +289,7 @@ theorem isRegularRing_tensor_of_fibre_localRings :
           (Q.map (algebraMap S T)).map (algebraMap T (Localization.AtPrime n)))) →
       IsRegularRing (T ⊗[S] K) := by
   intro S T K _ _ _ _ _ _ Q hQ hfrac hreg
-  haveI : Q.IsPrime := hQ ▸ RingHom.ker_isPrime (algebraMap S K)
+  have : Q.IsPrime := hQ ▸ RingHom.ker_isPrime (algebraMap S K)
   let φ : Q.ResidueField →ₐ[S] K := Ideal.ResidueField.liftₐ Q (Algebra.ofId S K) hQ.ge (by
     intro x hx
     simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff, isUnit_iff_ne_zero]
@@ -305,23 +305,23 @@ theorem isRegularRing_tensor_of_fibre_localRings :
   let e : Q.ResidueField ≃ₐ[S] K := AlgEquiv.ofBijective φ ⟨φ.toRingHom.injective, hsurj⟩
   let E : Q.Fiber T ≃ₐ[S] T ⊗[S] K :=
     (Algebra.TensorProduct.congr e AlgEquiv.refl).trans (Algebra.TensorProduct.comm S K T)
-  haveI : IsNoetherianRing (Q.Fiber T) := by
-    letI : Algebra T (Q.Fiber T) := Algebra.TensorProduct.rightAlgebra
+  have : IsNoetherianRing (Q.Fiber T) := by
+    let : Algebra T (Q.Fiber T) := Algebra.TensorProduct.rightAlgebra
     let Sp := Localization (Algebra.algebraMapSubmonoid T Q.primeCompl)
-    haveI : IsNoetherianRing Sp :=
+    have : IsNoetherianRing Sp :=
       IsLocalization.isNoetherianRing (Algebra.algebraMapSubmonoid T Q.primeCompl) Sp inferInstance
     exact isNoetherianRing_of_ringEquiv _ (Ideal.Fiber.algEquivAux₁ Q (S := T)).toRingEquiv.symm
-  haveI : IsRegularRing (Q.Fiber T) := by
+  have : IsRegularRing (Q.Fiber T) := by
     rw [isRegularRing_iff]
     intro q hq
     let n : Ideal T := q.comap (Algebra.TensorProduct.includeRight : T →ₐ[S] Q.Fiber T)
-    haveI : n.IsPrime := Ideal.comap_isPrime _ _
+    have : n.IsPrime := Ideal.comap_isPrime _ _
     have hn : n.comap (algebraMap S T) = Q := by
       change Ideal.comap (algebraMap S T) (Ideal.comap
         ((Algebra.TensorProduct.includeRight : T →ₐ[S] Q.Fiber T) : T →+* Q.Fiber T) q) = Q
       rw [Ideal.comap_comap, AlgHom.comp_algebraMap]
       exact (Ideal.over_def q Q).symm
-    haveI := hreg n hn
+    have := hreg n hn
     exact IsRegularLocalRing.of_ringEquiv (Ideal.Fiber.algEquivAux₂ Q q).toRingEquiv.symm
   exact IsRegularRing.of_ringEquiv E.toRingEquiv
 
@@ -431,15 +431,15 @@ theorem regularFibre_of_liftedPartialDerivations :
   obtain ⟨F, hF⟩ := (Algebra.essFiniteType_iff (R := MvPolynomial σ Λ) (S := K)).1 inferInstance
   let φ : MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ) →ₐ[MvPolynomial σ Λ] K :=
     MvPolynomial.aeval (fun z : ↥(F : Set K) => (z : K))
-  letI : Algebra (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) K := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower (MvPolynomial σ Λ) (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) K :=
+  let : Algebra (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) K := φ.toRingHom.toAlgebra
+  have : IsScalarTower (MvPolynomial σ Λ) (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) K :=
     IsScalarTower.of_algebraMap_eq (fun x => (φ.commutes x).symm)
-  letI : Algebra (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) (MvPolynomial (↥(F : Set K)) B) :=
+  let : Algebra (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) (MvPolynomial (↥(F : Set K)) B) :=
     (MvPolynomial.map (algebraMap (MvPolynomial σ Λ) B)).toAlgebra
   have hC : ∀ x, algebraMap (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) K (MvPolynomial.C x) =
       algebraMap (MvPolynomial σ Λ) K x := fun x => MvPolynomial.aeval_C _ _
   set Q := RingHom.ker (algebraMap (MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ)) K) with hQdef
-  haveI : Q.IsPrime := RingHom.ker_isPrime _
+  have : Q.IsPrime := RingHom.ker_isPrime _
   have hfrac : ∀ y : K, ∃ a b : MvPolynomial (↥(F : Set K)) (MvPolynomial σ Λ), b ∉ Q ∧
       y * algebraMap _ K b = algebraMap _ K a := by
     intro y
@@ -517,13 +517,13 @@ theorem isRegularRing_adicCompletion_tensor_of_mvPolynomial :
   let S₀ := MvPolynomial (Fin n) Λ
   let R := Localization.AtPrime P
   let B := AdicCompletion (maximalIdeal R) R
-  haveI : IsRegularLocalRing R := inferInstance
-  haveI : IsRegularLocalRing B := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion R
-  haveI : IsRegularRing B := GlobalTheory.isRegularRing_of_isRegularLocalRing B
-  letI : Algebra S₀ K := ((algebraMap R K).comp (algebraMap S₀ R)).toAlgebra
-  haveI : IsScalarTower S₀ R K := .of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.EssFiniteType S₀ R := Algebra.EssFiniteType.of_isLocalization R P.primeCompl
-  haveI : Algebra.EssFiniteType S₀ K := Algebra.EssFiniteType.comp S₀ R K
+  have : IsRegularLocalRing R := inferInstance
+  have : IsRegularLocalRing B := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion R
+  have : IsRegularRing B := GlobalTheory.isRegularRing_of_isRegularLocalRing B
+  let : Algebra S₀ K := ((algebraMap R K).comp (algebraMap S₀ R)).toAlgebra
+  have : IsScalarTower S₀ R K := .of_algebraMap_eq fun _ => rfl
+  have : Algebra.EssFiniteType S₀ R := Algebra.EssFiniteType.of_isLocalization R P.primeCompl
+  have : Algebra.EssFiniteType S₀ K := Algebra.EssFiniteType.comp S₀ R K
   have hC : ∀ a : Λ, algebraMap S₀ K (MvPolynomial.C a) = 0 → a = 0 := by
     intro a ha
     apply hinj a
@@ -565,14 +565,14 @@ theorem formalFibre_isRegularRing_of_essFiniteType :
   intro Λ _ _ _ _ R K _ _ _ _ _ _ _ hK
   obtain ⟨n, P, hP, φ, hφ⟩ := _root_.GlobalTheory.exists_surj_localization_mvPolynomial_of_essFiniteType Λ R
   let R₀ := Localization.AtPrime P
-  letI : Algebra R₀ R := φ.toRingHom.toAlgebra
-  letI : Algebra R₀ K := ((algebraMap R K).comp φ.toRingHom).toAlgebra
-  haveI : IsScalarTower R₀ R K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsNoetherianRing R₀ := IsLocalization.isNoetherianRing P.primeCompl _ inferInstance
+  let : Algebra R₀ R := φ.toRingHom.toAlgebra
+  let : Algebra R₀ K := ((algebraMap R K).comp φ.toRingHom).toAlgebra
+  have : IsScalarTower R₀ R K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsNoetherianRing R₀ := IsLocalization.isNoetherianRing P.primeCompl _ inferInstance
   have hsurj : Function.Surjective (algebraMap R₀ R) := hφ
-  haveI : Algebra.FiniteType R₀ R := Algebra.FiniteType.of_surjective (Algebra.ofId R₀ R) hsurj
-  haveI : Algebra.EssFiniteType R₀ R := inferInstance
-  haveI : Algebra.EssFiniteType R₀ K := Algebra.EssFiniteType.comp R₀ R K
+  have : Algebra.FiniteType R₀ R := Algebra.FiniteType.of_surjective (Algebra.ofId R₀ R) hsurj
+  have : Algebra.EssFiniteType R₀ R := inferInstance
+  have : Algebra.EssFiniteType R₀ K := Algebra.EssFiniteType.comp R₀ R K
   have hK₀ : ∀ a : Λ, algebraMap R₀ K (algebraMap Λ R₀ a) = 0 → a = 0 := by
     intro a ha
     apply hK a
@@ -608,30 +608,30 @@ theorem formalFibre_isRegularRing_of_essFiniteType_int :
   rcases CharP.char_is_prime_or_zero K (ringChar K) with hp | h0
   ·
     set p := ringChar K with hpdef
-    haveI : Fact p.Prime := ⟨hp⟩
-    haveI : IsNoetherianRing R := Algebra.EssFiniteType.isNoetherianRing ℤ R
+    have : Fact p.Prime := ⟨hp⟩
+    have : IsNoetherianRing R := Algebra.EssFiniteType.isNoetherianRing ℤ R
     have hpK : algebraMap R K (p : R) = 0 := by
       rw [map_natCast]; exact CharP.cast_eq_zero K p
     have hnu : ((p : ℕ) : R) ∈ nonunits R := fun hu => by
       have := hu.map (algebraMap R K); rw [hpK] at this; exact not_isUnit_zero this
     let I : Ideal R := Ideal.span {((p : ℕ) : R)}
-    haveI : CharP (R ⧸ I) p := CharP.quotient R p hnu
+    have : CharP (R ⧸ I) p := CharP.quotient R p hnu
     have hI : I ≠ ⊤ := by
       exact fun h => hnu (Ideal.span_singleton_eq_top.mp h)
-    haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
-    haveI : IsLocalRing (R ⧸ I) :=
+    have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+    have : IsLocalRing (R ⧸ I) :=
       IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
     have hker : I ≤ RingHom.ker (algebraMap R K) := by
       rw [Ideal.span_le, Set.singleton_subset_iff]; exact hpK
-    letI : Algebra (R ⧸ I) K := (Ideal.Quotient.lift I (algebraMap R K) hker).toAlgebra
-    haveI : IsScalarTower R (R ⧸ I) K := IsScalarTower.of_algebraMap_eq fun x => rfl
-    haveI : Algebra.EssFiniteType R (R ⧸ I) :=
+    let : Algebra (R ⧸ I) K := (Ideal.Quotient.lift I (algebraMap R K) hker).toAlgebra
+    have : IsScalarTower R (R ⧸ I) K := IsScalarTower.of_algebraMap_eq fun x => rfl
+    have : Algebra.EssFiniteType R (R ⧸ I) :=
       Algebra.EssFiniteType.of_surjective (Ideal.Quotient.mkₐ R I) Ideal.Quotient.mk_surjective
-    haveI : Algebra.EssFiniteType ℤ (R ⧸ I) := Algebra.EssFiniteType.comp ℤ R (R ⧸ I)
-    letI : Algebra (ZMod p) (R ⧸ I) := ZMod.algebra (R ⧸ I) p
-    haveI : Algebra.EssFiniteType (ZMod p) (R ⧸ I) := Algebra.EssFiniteType.of_comp ℤ (ZMod p) (R ⧸ I)
-    haveI : Algebra.EssFiniteType (R ⧸ I) K := Algebra.EssFiniteType.of_comp R (R ⧸ I) K
-    haveI := perfectField_fractionRing_zmod p
+    have : Algebra.EssFiniteType ℤ (R ⧸ I) := Algebra.EssFiniteType.comp ℤ R (R ⧸ I)
+    let : Algebra (ZMod p) (R ⧸ I) := ZMod.algebra (R ⧸ I) p
+    have : Algebra.EssFiniteType (ZMod p) (R ⧸ I) := Algebra.EssFiniteType.of_comp ℤ (ZMod p) (R ⧸ I)
+    have : Algebra.EssFiniteType (R ⧸ I) K := Algebra.EssFiniteType.of_comp R (R ⧸ I) K
+    have := perfectField_fractionRing_zmod p
     have hinj : ∀ a : ZMod p, algebraMap (R ⧸ I) K (algebraMap (ZMod p) (R ⧸ I) a) = 0 → a = 0 :=
       fun a ha => ((algebraMap (R ⧸ I) K).comp (algebraMap (ZMod p) (R ⧸ I))).injective
         (by simpa using ha)
@@ -639,8 +639,8 @@ theorem formalFibre_isRegularRing_of_essFiniteType_int :
     obtain ⟨e⟩ := _root_.GlobalTheory.adicCompletion_tensor_quotient_ringEquiv R (R ⧸ I) K Ideal.Quotient.mk_surjective
     exact IsRegularRing.of_ringEquiv e
   ·
-    haveI : CharP K 0 := by rw [← h0]; exact ringChar.charP K
-    haveI : CharZero K := CharP.charP_to_charZero K
+    have : CharP K 0 := by rw [← h0]; exact ringChar.charP K
+    have : CharZero K := CharP.charP_to_charZero K
     refine _root_.GlobalTheory.formalFibre_isRegularRing_of_essFiniteType ℤ R K ?_
     intro a ha
     rw [eq_intCast (algebraMap ℤ R), map_intCast] at ha

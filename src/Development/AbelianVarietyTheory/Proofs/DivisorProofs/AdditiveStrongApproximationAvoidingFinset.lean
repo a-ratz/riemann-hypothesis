@@ -103,7 +103,7 @@ theorem exists_small_of_finitePlace (F : Type) [Field F] [NumberField F] (p : He
   refine ⟨a, ha0, hlt, fun v hv => ?_⟩
   have hnle : ¬ p.asIdeal ^ k ≤ v.asIdeal := fun hle =>
     hv (HeightOneSpectrum.ext (p.isMaximal.eq_of_le v.isPrime.ne_top (v.isPrime.le_of_pow_le hle)).symm)
-  obtain ⟨b, hb, hbv⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨b, hb, hbv⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have ha' : a ∈ ((p.asIdeal ^ k : Ideal (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F)⁻¹ := by
     simpa [I] using ha
   have hab := (FractionalIdeal.mem_inv_iff hJ).1 ha' (algebraMap (𝓞 F) F b)
@@ -196,7 +196,7 @@ theorem exists_small_adele (F : Type) [Field F] [NumberField F] (S₁ : Finset (
       rfl
     rw [e]
     by_cases hv : v ∈ S₂
-    · rw [hε.2.2.1 v hv, sub_self, zero_mul, map_zero]; exact zero_le'
+    · rw [hε.2.2.1 v hv, sub_self, zero_mul, map_zero]; exact zero_le
     · rw [hε.2.2.2 v hv, sub_zero, one_mul, HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
       exact h2 v hv
 

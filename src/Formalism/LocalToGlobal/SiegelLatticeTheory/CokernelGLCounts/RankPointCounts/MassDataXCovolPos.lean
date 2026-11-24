@@ -87,7 +87,7 @@ theorem volH_pos {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (w : D.wh
 
 theorem muHpp_pos {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (hK : X.LevelSubgroupCharacter) (w : D.what₂.Word) :
     0 < ((X.measW w).μHf (Subtype.val ⁻¹' K2u X hb w)).toReal := by
-  haveI hHaar : (X.measW w).μHf.IsHaarMeasure := (X.measW_norm w).2.2.1
+  have hHaar : (X.measW w).μHf.IsHaarMeasure := (X.measW_norm w).2.2.1
   obtain ⟨hO, h1, hsub⟩ := conjugated_level_open_one_mem (X := X) (hb := hb) (hK := hK) (u := w)
   have hHc := (closed_SNH_X (X := X) (u := w)).2.2
   have hKc := hHc.isClosedEmbedding_subtypeVal.isCompact_preimage (kCompactOpen_holds X).1
@@ -96,7 +96,7 @@ theorem muHpp_pos {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (hK : X.
   have hfin : (X.measW w).μHf (Subtype.val ⁻¹' K2u X hb w) < ⊤ :=
     lt_of_le_of_lt (measure_mono (Set.preimage_mono hsub)) hKf
   have hpos : (X.measW w).μHf (Subtype.val ⁻¹' K2u X hb w) ≠ 0 :=
-    ((hO.preimage continuous_subtype_val).measure_pos _ ⟨1, h1⟩).ne'
+    ((hO.preimage continuous_subtypeVal).measure_pos _ ⟨1, h1⟩).ne'
   exact ENNReal.toReal_pos hpos hfin.ne
 
 section Main

@@ -109,8 +109,8 @@ theorem isExcisionNbhd_away_of_isUnit_mod : ∀ (B A' : Type) [CommRing B] [Comm
     rw [one_pow] at hc
     rw [hc]
     exact Ideal.mul_mem_right _ _ ht
-  haveI : Algebra.Etale A' (Localization.Away σ) := Algebra.Etale.of_isLocalizationAway σ
-  haveI : Algebra.Etale B (Localization.Away σ) := Algebra.Etale.comp B A' (Localization.Away σ)
+  have : Algebra.Etale A' (Localization.Away σ) := Algebra.Etale.of_isLocalizationAway σ
+  have : Algebra.Etale B (Localization.Away σ) := Algebra.Etale.comp B A' (Localization.Away σ)
   refine ⟨inferInstance, ?_, ?_⟩
   · intro x
     obtain ⟨⟨a', m⟩, hx⟩ := IsLocalization.mk'_surjective (Submonoid.powers σ) x
@@ -186,16 +186,16 @@ theorem finite_maximalSpectrum_of_field (B : Type) [CommRing B] (S : Submonoid B
     [FormallyUnramified B A'] [FiniteType B A'] (R : Type) [CommRing R] [Algebra A' R]
     [IsLocalization (algebraMapSubmonoid A' S) R] [Algebra B R] [IsScalarTower B A' R] :
     Finite (MaximalSpectrum R) := by
-  letI : Algebra K R := localizationAlgebra S A'
-  haveI : IsScalarTower B K R := isScalarTower_localizationAlgebra S A'
-  haveI : FormallyEtale A' R := FormallyEtale.of_isLocalization (algebraMapSubmonoid A' S)
-  haveI : FormallyUnramified B R := FormallyUnramified.comp B A' R
-  haveI : FormallyUnramified K R := FormallyUnramified.of_restrictScalars B K R
-  haveI : EssFiniteType A' R := EssFiniteType.of_isLocalization R (algebraMapSubmonoid A' S)
-  haveI : EssFiniteType B R := EssFiniteType.comp B A' R
-  haveI : EssFiniteType K R := EssFiniteType.of_comp B K R
-  haveI : Module.Finite K R := FormallyUnramified.finite_of_free K R
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite K R
+  let : Algebra K R := localizationAlgebra S A'
+  have : IsScalarTower B K R := isScalarTower_localizationAlgebra S A'
+  have : FormallyEtale A' R := FormallyEtale.of_isLocalization (algebraMapSubmonoid A' S)
+  have : FormallyUnramified B R := FormallyUnramified.comp B A' R
+  have : FormallyUnramified K R := FormallyUnramified.of_restrictScalars B K R
+  have : EssFiniteType A' R := EssFiniteType.of_isLocalization R (algebraMapSubmonoid A' S)
+  have : EssFiniteType B R := EssFiniteType.comp B A' R
+  have : EssFiniteType K R := EssFiniteType.of_comp B K R
+  have : Module.Finite K R := FormallyUnramified.finite_of_free K R
+  have : IsArtinianRing R := IsArtinianRing.of_finite K R
   infer_instance
 
 theorem isField_localization (B : Type) [CommRing B] [IsDedekindDomain B] (f : B)
@@ -205,13 +205,13 @@ theorem isField_localization (B : Type) [CommRing B] [IsDedekindDomain B] (f : B
       (Ideal.Quotient.mk (Ideal.span {f})).toMonoidHom ⊔ Submonoid.powers f)) := by
   set S : Submonoid B := (IsUnit.submonoid (B ⧸ Ideal.span {f})).comap
       (Ideal.Quotient.mk (Ideal.span {f})).toMonoidHom ⊔ Submonoid.powers f with hS
-  haveI : IsDomain (Localization S) :=
+  have : IsDomain (Localization S) :=
     IsLocalization.isDomain_localization (le_nonZeroDivisors_of_noZeroDivisors h0)
 
   have hbot : ∀ Q : Ideal (Localization S), Q.IsPrime → Q = ⊥ := by
     intro Q hQ
     set p := Q.comap (algebraMap B (Localization S)) with hp
-    haveI : p.IsPrime := Ideal.comap_isPrime _ Q
+    have : p.IsPrime := Ideal.comap_isPrime _ Q
     have hdisj : ∀ s ∈ S, s ∉ p := by
       intro s hs hsp
       exact hQ.ne_top (Ideal.eq_top_of_isUnit_mem _ hsp
@@ -233,7 +233,7 @@ theorem isField_localization (B : Type) [CommRing B] [IsDedekindDomain B] (f : B
     rw [← IsLocalization.map_under S (Localization S) Q]
     change Ideal.map _ p = ⊥
     rw [hp0, Ideal.map_bot]
-  haveI : Ring.KrullDimLE 0 (Localization S) := by
+  have : Ring.KrullDimLE 0 (Localization S) := by
     rw [Ring.krullDimLE_zero_iff]
     intro I hI
     obtain ⟨m, hm, -⟩ := Ideal.exists_le_maximal (⊥ : Ideal (Localization S)) bot_ne_top
@@ -254,14 +254,14 @@ theorem subsingleton_pic_localization : ∀ (B : Type) [CommRing B] [IsDedekindD
   by_cases h0 : (0 : B) ∈ S
   · have h0' : (0 : A') ∈ Algebra.algebraMapSubmonoid A' S :=
       Submonoid.mem_map.2 ⟨0, h0, map_zero _⟩
-    letI := IsLocalization.uniqueOfZeroMem
+    let := IsLocalization.uniqueOfZeroMem
       (S := Localization (Algebra.algebraMapSubmonoid A' S)) h0'
-    haveI : IsEmpty (MaximalSpectrum (Localization (Algebra.algebraMapSubmonoid A' S))) :=
+    have : IsEmpty (MaximalSpectrum (Localization (Algebra.algebraMapSubmonoid A' S))) :=
       ⟨fun m => m.isMaximal.ne_top (by
         rw [Ideal.eq_top_iff_one, Subsingleton.elim (1 : Localization _) 0]
         exact m.asIdeal.zero_mem)⟩
     infer_instance
-  · letI : Field (Localization S) := (isField_localization B f h0).toField
+  · let : Field (Localization S) := (isField_localization B f h0).toField
     exact finite_maximalSpectrum_of_field B S (Localization S) A'
       (Localization (Algebra.algebraMapSubmonoid A' S))
 
@@ -597,7 +597,7 @@ theorem exists_kummer_on_finer_nbhd : ∀ (q : ℕ) [NeZero q] (k B : Type) [Fie
   intro q _ k B _ _ _ _ _ _ hq f _ A' _ _ hA' w
   have hqB : IsUnit (q : B) := by simpa using hq.map (algebraMap k B)
   have hqA : IsUnit (q : A') := by simpa using hqB.map (algebraMap B A')
-  haveI : Algebra.Etale B A' := hA'.1
+  have : Algebra.Etale B A' := hA'.1
   set SB : Submonoid B := (IsUnit.submonoid (B ⧸ Ideal.span {f})).comap
     (Ideal.Quotient.mk (Ideal.span {f})).toMonoidHom ⊔ Submonoid.powers f with hSB
   set M : Submonoid A' := Algebra.algebraMapSubmonoid A' SB with hM
@@ -605,7 +605,7 @@ theorem exists_kummer_on_finer_nbhd : ∀ (q : ℕ) [NeZero q] (k B : Type) [Fie
   let φf : Localization.Away (algebraMap B A' f) →+* Localization M :=
     IsLocalization.Away.lift (algebraMap B A' f) (IsLocalization.map_units (Localization M) (⟨(algebraMap B A' f), hfM⟩ : M))
   have hφf : φf.comp (algebraMap A' _) = algebraMap A' (Localization M) := IsLocalization.Away.lift_comp _ _
-  haveI := GlobalTheory.T.subsingleton_pic_etale_localization_unitsModulo B f A'
+  have := GlobalTheory.T.subsingleton_pic_etale_localization_unitsModulo B f A'
   have hqL : IsUnit (q : Localization M) := by simpa using hqA.map (algebraMap A' (Localization M))
   obtain ⟨u, hu⟩ := GlobalTheory.T.exists_unit_kummer_eq_of_picard_torsionFree q (Localization M) hqL (fun c _ => Subsingleton.elim _ _) (pull _ (spMap φf) _ _ w)
   let u₀ : (Localization M)ˣ := Units.map (Scheme.ΓSpecIso (CommRingCat.of (Localization M))).hom.hom.toMonoidHom u
@@ -738,8 +738,8 @@ theorem unit_isPow_on_excisionNbhd : ∀ (k B : Type) [Field k] [IsAlgClosed k] 
     rw [hεdef]
     linear_combination e1 + (algebraMap B C' n' * Di) * e2 - (algebraMap B C' n' * algebraMap B C' bd) * hDi1
   obtain ⟨C, _, _, hC, x, hx⟩ := GlobalTheory.T.exists_excisionNbhd_with_root_of_isUnit C' (algebraMap B C' g) q hqC ε (algebraMap B C' r) hε hεr
-  letI : Algebra B C := ((algebraMap C' C).comp (algebraMap B C')).toAlgebra
-  haveI : IsScalarTower B C' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra B C := ((algebraMap C' C).comp (algebraMap B C')).toAlgebra
+  have : IsScalarTower B C' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   refine ⟨C, inferInstance, inferInstance, GlobalTheory.T.isExcisionNbhd_trans' B C' C g hC' hC, ?_⟩
   set L := Localization.Away (algebraMap B C (f * g))
   set ψ : B →+* L := (algebraMap C L).comp (algebraMap B C) with hψ
@@ -953,7 +953,7 @@ theorem artinian_quot {I : Ideal B} (hI : I ≠ ⊥) : IsArtinianRing (B ⧸ I) 
 theorem exists_split (f b : B) (hb : b ≠ 0) :
     ∃ (N : ℕ) (Q : Ideal B), Ideal.span {b} = (Ideal.span {b} ⊔ Ideal.span {f ^ N}) * Q ∧
       Q ⊔ Ideal.span {f} = ⊤ := by
-  haveI := artinian_quot (I := Ideal.span {b}) (by simpa using hb)
+  have := artinian_quot (I := Ideal.span {b}) (by simpa using hb)
   obtain ⟨N, y, hy⟩ := IsArtinian.exists_pow_succ_smul_dvd
     (Ideal.Quotient.mk (Ideal.span {b}) f) (1 : B ⧸ Ideal.span {b})
   obtain ⟨y', rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -1208,10 +1208,10 @@ theorem unit_eq_mul_qth_power_near_zeroLocus : ∀ (k B : Type) [Field k] [IsAlg
     have := hq.map ((algebraMap B (Localization.Away a)).comp (algebraMap k B)); rwa [map_natCast] at this
   obtain ⟨A₃, _, _, hA₃, x, hx⟩ := GlobalTheory.T.exists_excisionNbhd_with_root_of_isUnit (Localization.Away a) (algebraMap B (Localization.Away a) f)
     (j + 1) hqu _ _ hεu hcong'
-  letI : Algebra B A₃ := RingHom.toAlgebra ((algebraMap (Localization.Away a) A₃).comp (algebraMap B (Localization.Away a)))
-  letI : Algebra A₂ A₃ := RingHom.toAlgebra ((algebraMap (Localization.Away a) A₃).comp (algebraMap A₂ (Localization.Away a)))
-  haveI t1 : IsScalarTower B (Localization.Away a) A₃ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI t3 : IsScalarTower B A₂ A₃ := IsScalarTower.of_algebraMap_eq (fun z => by
+  let : Algebra B A₃ := RingHom.toAlgebra ((algebraMap (Localization.Away a) A₃).comp (algebraMap B (Localization.Away a)))
+  let : Algebra A₂ A₃ := RingHom.toAlgebra ((algebraMap (Localization.Away a) A₃).comp (algebraMap A₂ (Localization.Away a)))
+  have t1 : IsScalarTower B (Localization.Away a) A₃ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have t3 : IsScalarTower B A₂ A₃ := IsScalarTower.of_algebraMap_eq (fun z => by
     show algebraMap (Localization.Away a) A₃ (algebraMap B (Localization.Away a) z) =
       algebraMap (Localization.Away a) A₃ (algebraMap A₂ (Localization.Away a) (algebraMap B A₂ z))
     rw [IsScalarTower.algebraMap_apply B A₂ (Localization.Away a) z])
@@ -1312,7 +1312,7 @@ theorem kummer_divisor_step : ∀ (q : ℕ) (k B : Type) [Field k] [IsAlgClosed 
       exact IsLocalization.Away.algebraMap_isUnit (S := Localization.Away (algebraMap B (Localization.Away e) f)) (algebraMap B (Localization.Away e) f)
     have hu := (c.isUnit.map φ).mul hx
     rw [← hc'] at hu
-    haveI := subsingleton_of_zero_eq_one (isUnit_zero_iff.mp hu)
+    have := subsingleton_of_zero_eq_one (isUnit_zero_iff.mp hu)
     exact Subsingleton.elim _ _
   · obtain ⟨g, hg0, hfg, u, n, d, t, n', d', hn, hd, hn', hd', h1, h2⟩ := GlobalTheory.T.smoothAffineCurve_divisor_unit_decomposition k B q hq f hf b₁ hb m
     exact ⟨g, hfg, u, GlobalTheory.T.unit_eq_mul_pow_on_etaleExcisionNbhd_zeroLocus k B q hq f hf A₂ hA c b₁ m e he hc g hfg u n d hn hd h1,
@@ -1367,7 +1367,7 @@ theorem kum_spMap (q : ℕ) [NeZero q] {A B : Type} [CommRing A] [CommRing B] (�
   have h2 : (Spec.map (CommRingCat.ofHom φ)).appTop = (Scheme.ΓSpecIso (CommRingCat.of A)).hom ≫ CommRingCat.ofHom φ ≫
       (Scheme.ΓSpecIso (CommRingCat.of B)).inv := by
     rw [← Category.assoc, ← h]; simp
-  simp only [gU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [gU, Units.coe_map, MonoidHom.coe_ofClass]
   rw [h2]
   simp only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply, CommRingCat.hom_ofHom]
   simp
@@ -1397,8 +1397,8 @@ theorem of_steps (L1 : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClo
   have hcc : gU _ c₀ = c := by
     ext; simp [c₀, gU]
   obtain ⟨g, hfg, u, ⟨A₃, _, _, _, _, hA₃, hg, v, hv⟩, C, _, _, hC, v', hv'⟩ := L2 q k B hq f hf A₂ hA₂ c₀
-  letI : Algebra A' A₃ := ((algebraMap A₂ A₃).comp (algebraMap A' A₂)).toAlgebra
-  haveI : IsScalarTower B A' A₃ := IsScalarTower.of_algebraMap_eq (fun b => by
+  let : Algebra A' A₃ := ((algebraMap A₂ A₃).comp (algebraMap A' A₂)).toAlgebra
+  have : IsScalarTower B A' A₃ := IsScalarTower.of_algebraMap_eq (fun b => by
     show algebraMap B A₃ b = algebraMap A₂ A₃ (algebraMap A' A₂ (algebraMap B A' b))
     rw [← IsScalarTower.algebraMap_apply B A' A₂, ← IsScalarTower.algebraMap_apply B A₂ A₃])
   have hkB : ∀ (R : Type) [CommRing R] [Algebra B R], IsUnit (q : R) := fun R _ _ =>

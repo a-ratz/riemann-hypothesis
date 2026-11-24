@@ -78,12 +78,12 @@ namespace GlobalTheory
 theorem unit_pow_dvd_sub_one_of_finite {R : Type} [CommRing R] (g : R)
     [Finite (R ⧸ Ideal.span {g})] :
     ∃ m : ℕ, 0 < m ∧ ∀ ε : Rˣ, g ∣ (ε : R) ^ m - 1 := by
-  haveI : Finite (R ⧸ Ideal.span {g})ˣ := Finite.of_injective (fun u => (u : R ⧸ Ideal.span {g})) (fun _ _ h => Units.ext h)
+  have : Finite (R ⧸ Ideal.span {g})ˣ := Finite.of_injective (fun u => (u : R ⧸ Ideal.span {g})) (fun _ _ h => Units.ext h)
   refine ⟨Nat.card (R ⧸ Ideal.span {g})ˣ, Nat.card_pos, fun ε => ?_⟩
   have h := pow_card_eq_one' (G := (R ⧸ Ideal.span {g})ˣ) (x := Units.map (Ideal.Quotient.mk _).toMonoidHom ε)
   have h2 : Ideal.Quotient.mk (Ideal.span {g}) ((ε : R) ^ Nat.card (R ⧸ Ideal.span {g})ˣ - 1) = 0 := by
     have := congrArg Units.val h
-    simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_one] at this
+    simp only [Units.val_pow_eq_pow_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_one] at this
     rw [map_sub, map_pow, this, map_one, sub_self]
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at h2
   exact h2
@@ -112,7 +112,7 @@ theorem eq_one_of_approx_by_congruent_units : ChevalleyUnits → ∀ (E : Type) 
     intro n
     set g : 𝓞 E := (q : 𝓞 E) ^ (n + 1) with hgdef
     have hg0 : g ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hq0)
-    haveI : Finite (𝓞 E ⧸ Ideal.span {g}) := by
+    have : Finite (𝓞 E ⧸ Ideal.span {g}) := by
       refine (Ideal.absNorm_ne_zero_iff _).1 ?_
       rw [Ne, Ideal.absNorm_eq_zero_iff, Ideal.span_singleton_eq_bot]; exact hg0
     obtain ⟨m, hm, hmg⟩ := unit_pow_dvd_sub_one_of_finite g
@@ -139,7 +139,7 @@ theorem eq_one_of_approx_by_congruent_units : ChevalleyUnits → ∀ (E : Type) 
       exact (pow_ne_zero _ (by have hq0' : (q : 𝓞 E) ≠ 0 := Nat.cast_ne_zero.2 hq0; rw [hγdef]; exact w.intValuation_ne_zero _ hq0')) this.symm
     obtain ⟨k, hkv, hkw⟩ := hap a ha0 t ht0
     rw [hvt] at hkw
-    have hγn : γ ^ (n + 1) < 1 := pow_lt_one₀ zero_le' hγ (Nat.succ_ne_zero n)
+    have hγn : γ ^ (n + 1) < 1 := pow_lt_one₀ zero_le hγ (Nat.succ_ne_zero n)
 
     have hwk : w.valuation E (k : E) = 1 := by
       rw [← hE, ← hx]
@@ -416,7 +416,7 @@ theorem valuation_eq_one_of_approx : ∀ (E : Type) [Field E] [NumberField E] (w
   have ht0 : x * x ≠ 0 := mul_ne_zero hx0 hx0
   have htx : Valued.v (x * x) < Valued.v x := by
     rw [map_mul]
-    calc Valued.v x * Valued.v x < 1 * Valued.v x := mul_lt_mul_of_pos_right hlt (zero_lt_iff.2 hxpos)
+    calc Valued.v x * Valued.v x < 1 * Valued.v x := mul_lt_mul_of_pos_right hlt (pos_iff_ne_zero.2 hxpos)
       _ = Valued.v x := one_mul _
 
   have hw_eq : ∀ k : E, Valued.v (algebraMap E (w.adicCompletion E) k - x) ≤ Valued.v (x * x) →

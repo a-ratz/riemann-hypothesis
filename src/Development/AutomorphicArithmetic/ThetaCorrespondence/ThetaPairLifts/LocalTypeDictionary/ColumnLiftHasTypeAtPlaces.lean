@@ -257,8 +257,8 @@ theorem dual_frame : ∀ {G H : Type} [Mul G] [NormedAddCommGroup H] [InnerProdu
   set W := Submodule.span ℂ (ρ '' K) with hWdef
   have hWt : Submodule.span ℂ (Set.range ((↑) : t → (H →ₗ[ℂ] H))) = W := by
     rw [Subtype.range_coe]; exact hsp
-  haveI : Finite t := hli.finite
-  letI : Fintype t := Fintype.ofFinite t
+  have : Finite t := hli.finite
+  let : Fintype t := Fintype.ofFinite t
   let b0 : Basis t ℂ W := (Basis.span hli).map (LinearEquiv.ofEq _ _ hWt)
   let e := Fintype.equivFin t
   let b : Basis (Fin (Fintype.card t)) ℂ W := b0.reindex e
@@ -289,7 +289,7 @@ theorem dual_frame : ∀ {G H : Type} [Mul G] [NormedAddCommGroup H] [InnerProdu
       intro i
 
       simp only [A', comp_sum', LinearMap.comp_smul, map_sum, map_smul, hdual, smul_eq_mul,
-      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hvan : ∀ C ∈ W, LinearMap.trace ℂ H (C ∘ₗ A') = LinearMap.trace ℂ H (C ∘ₗ A) := by
       intro C hC
       have h1 := congrArg Subtype.val (b.sum_repr ⟨C, hC⟩)
@@ -330,7 +330,7 @@ theorem expand_pi_of_expand_each {ι : Type} [Fintype ι] [DecidableEq ι] {X : 
       apply Finset.sum_eq_zero
       intro j _
       exact absurd j.2 (by omega)
-    haveI : IsEmpty (∀ i, Fin (m i)) := ⟨fun J => by have := (J i0).2; omega⟩
+    have : IsEmpty (∀ i, Fin (m i)) := ⟨fun J => by have := (J i0).2; omega⟩
     rw [h1, Finset.univ_eq_empty, Finset.sum_empty]
   push_neg at hm
   let j0 : ∀ i, Fin (m i) := fun i => ⟨0, Nat.pos_of_ne_zero (hm i)⟩
@@ -719,7 +719,7 @@ theorem sum_prod_update_regroup : ∀ {ι : Type} [Fintype ι] [DecidableEq ι] 
     rw [hrest, hk, Function.update_self, Function.update_self]
     ring
   by_cases hm : m i₀ = 0
-  · haveI : IsEmpty (∀ i, Fin (m i)) := ⟨fun J => by
+  · have : IsEmpty (∀ i, Fin (m i)) := ⟨fun J => by
       have h := J i₀
       rw [hm] at h
       exact h.elim0⟩
@@ -753,7 +753,7 @@ theorem cusp_forms_decompose_definite_unitary : _root_.GlobalTheory.FunPr.ThetaL
       ∃ (n : ℕ) (F : Fin n → N.Cusp θ) (w : Fin n → SmT N.M), φ = ∑ i, (F i).1 (w i) := by
   intro hP D θ N hθ hs hd φ hφ
   obtain ⟨hAut, -, hType⟩ := hφ
-  haveI hfd : ∀ τ, FiniteDimensional ℂ (N.M.H τ) := fun τ => GlobalTheory.DefiniteEnd.finiteDimensional_model hs hd N.M τ
+  have hfd : ∀ τ, FiniteDimensional ℂ (N.M.H τ) := fun τ => GlobalTheory.DefiniteEnd.finiteDimensional_model hs hd N.M τ
   have hmulK : ∀ τ, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ), ∀ h ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ),
       g * h ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ) := fun τ g hg h hh => GlobalTheory.PointAtPlaceHom.mul_mem_UH hg hh
   have hρ : ∀ τ, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ), ∀ h ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ),
@@ -802,7 +802,7 @@ theorem cusp_forms_decompose_definite_unitary : _root_.GlobalTheory.FunPr.ThetaL
       (fun τ => ℓ a τ (J τ))).smulRight (fun x => F x (fun τ => k τ (J τ)))
   have hT : ∀ a (v : ∀ τ, N.M.sm τ) (x : GA D N.V), T a v x = ∑ J : (∀ τ, Fin (m τ)), (∏ τ, ℓ a τ (J τ) (v τ)) * F x (fun τ => k τ (J τ)) := by
     intro a v x
-    simp only [T, MultilinearMap.sum_apply, Finset.sum_apply, MultilinearMap.smulRight_apply,
+    simp only [T, sum_apply, Finset.sum_apply, MultilinearMap.smulRight_apply,
       MultilinearMap.compLinearMap_apply, MultilinearMap.mkPiAlgebra_apply, Pi.smul_apply, smul_eq_mul]
   have hMult : ∀ a, IsMultMap θ N.M ∅ 1 (T a) := by
     intro a

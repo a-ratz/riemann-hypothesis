@@ -74,11 +74,11 @@ theorem finrank_V (B : NLocBase D M) (j : ℕ) (w : D.what₂.places.Pl) :
     FiniteDimensional (FractionRing (B.Oc j w)) (B.V j w) ∧
       finrank (FractionRing (B.Oc j w)) (B.V j w) = finrank D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := by
   have := finite_chooseBasisIndex (D := D) j w
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
   have hb := B.iV_basis j w b
   let bV := Module.Basis.mk hb.1 hb.2.ge
-  haveI : Module.Finite D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
+  have : Module.Finite D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
   refine ⟨Module.Finite.of_basis bV, ?_⟩
   rw [Module.finrank_eq_card_basis bV, Module.finrank_eq_card_basis b]
 
@@ -112,7 +112,7 @@ theorem sum_finrank_eq_of (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : 
       finrank D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := by
   classical
   obtain ⟨hfd, hrk⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   rw [← hrk]
   obtain ⟨hS, hsplit, hint⟩ := hg
   have hinj := IsFractionRing.injective (T.B.Oc j w) (FractionRing (T.B.Oc j w))

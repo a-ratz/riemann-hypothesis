@@ -74,7 +74,7 @@ theorem henselian_of_sections {R : Type} [CommRing R] [IsLocalRing R]
     · change IsUnit (aeval (residue R a₀) (derivative f))
       rw [e]; exact h₂.map (residue R)
   let ψ := P.lift (residue R a₀) hP
-  haveI : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
+  have : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
   have hq : (RingHom.ker ψ).comap (algebraMap R P.Ring) = maximalIdeal R := by
     ext r
     simp only [Ideal.mem_comap, RingHom.mem_ker, AlgHom.commutes, ResidueField.algebraMap_eq,
@@ -97,7 +97,7 @@ theorem isSepClosed_of_sections {R : Type} [CommRing R] [IsLocalRing R]
   refine IsSepClosed.of_exists_root _ fun g hm hirr hsep => ?_
   obtain ⟨f, hf, -, hfm⟩ := lifts_and_natDegree_eq_and_monic
     ((mem_lifts g).2 (map_surjective _ residue_surjective g)) hm
-  haveI : Fact (Irreducible g) := ⟨hirr⟩
+  have : Fact (Irreducible g) := ⟨hirr⟩
   let P : StandardEtalePair R := ⟨f, hfm, derivative f, 1, 0, 1, by simp⟩
   have e : ∀ p : R[X], aeval (AdjoinRoot.root g) p =
       AdjoinRoot.mk g (p.map (residue R)) := fun p => by
@@ -112,7 +112,7 @@ theorem isSepClosed_of_sections {R : Type} [CommRing R] [IsLocalRing R]
       obtain ⟨a, b, hab⟩ := hsep
       exact hirr.not_isUnit (isUnit_of_dvd_one ⟨a + b * c, by rw [← hab, hc]; ring⟩)
   let ψ := P.lift (AdjoinRoot.root g) hP
-  haveI : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
+  have : (RingHom.ker ψ).IsPrime := RingHom.ker_isPrime ψ
   have hq : (RingHom.ker ψ).comap (algebraMap R P.Ring) = maximalIdeal R := by
     ext r
     simp only [Ideal.mem_comap, RingHom.mem_ker, AlgHom.commutes]
@@ -135,13 +135,13 @@ theorem sections_of_henselian_sepClosed {R : Type} [CommRing R] [IsLocalRing R]
     (hq : q.comap (algebraMap R A) = maximalIdeal R) :
     ∃ s : A →ₐ[R] R, (maximalIdeal R).comap s.toRingHom = q := by
   let S := Localization.AtPrime q
-  haveI : IsLocalHom (algebraMap R S) := ⟨fun r hr => by
+  have : IsLocalHom (algebraMap R S) := ⟨fun r hr => by
     rw [IsScalarTower.algebraMap_apply R A S, IsLocalization.AtPrime.isUnit_to_map_iff S q] at hr
     exact (notMem_maximalIdeal).mp fun h => hr (by
       have : r ∈ q.comap (algebraMap R A) := hq ▸ h
       exact this)⟩
-  haveI : Algebra.FormallyUnramified R S := Algebra.FormallyUnramified.comp R A S
-  haveI : Algebra.EssFiniteType R S := Algebra.EssFiniteType.comp R A S
+  have : Algebra.FormallyUnramified R S := Algebra.FormallyUnramified.comp R A S
+  have : Algebra.EssFiniteType R S := Algebra.EssFiniteType.comp R A S
   have hsurj := IsSepClosed.algebraMap_surjective (ResidueField R) (ResidueField S)
   let e : ResidueField R ≃ₐ[ResidueField R] ResidueField S :=
     AlgEquiv.ofBijective (Algebra.ofId _ _) ⟨fun a b h => (algebraMap (ResidueField R) (ResidueField S)).injective h, hsurj⟩
@@ -155,7 +155,7 @@ theorem sections_of_henselian_sepClosed {R : Type} [CommRing R] [IsLocalRing R]
   rw [Ideal.mem_comap, ← residue_eq_zero_iff, ← ResidueField.algebraMap_eq]
   change algebraMap R (ResidueField R) (s x) = 0 ↔ x ∈ q
   rw [hx]
-  simp only [φ, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe,
+  simp only [φ, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass,
     IsScalarTower.coe_toAlgHom', ResidueField.algebraMap_eq]
   change e.symm (residue S (algebraMap A S x)) = 0 ↔ x ∈ q
   rw [map_eq_zero_iff _ e.symm.injective, residue_eq_zero_iff,

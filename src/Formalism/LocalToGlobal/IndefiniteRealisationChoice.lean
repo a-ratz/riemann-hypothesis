@@ -61,7 +61,7 @@ namespace Formalism.L2.G.ServJoint
 theorem carrier_sum {O : Type} [CommRing O] {φ : O →+* ℂ} {V : Type} [AddCommGroup V] [Module ℂ V] (M : Rows.OLat O φ V)
     {ι : Type} (S : Finset ι) (f : ι → V) (h : ∀ i ∈ S, f i ∈ M.carrier) : ∑ i ∈ S, f i ∈ M.carrier := by
   classical
-  simp only [Rows.OLat.carrier, Set.mem_setOf_eq] at h ⊢
+  simp only [Rows.OLat.carrier, Set.mem_ofPred_eq] at h ⊢
   induction S using Finset.induction_on with
   | empty => exact ⟨0, by simp⟩
   | @insert a S ha ih =>
@@ -76,7 +76,7 @@ theorem carrier_sum {O : Type} [CommRing O] {φ : O →+* ℂ} {V : Type} [AddCo
 theorem gen_mem_carrier {O : Type} [CommRing O] {φ : O →+* ℂ} {V : Type} [AddCommGroup V] [Module ℂ V] (M : Rows.OLat O φ V)
     {v : V} (hv : v ∈ M.gen) : v ∈ M.carrier := by
   classical
-  simp only [Rows.OLat.carrier, Set.mem_setOf_eq]
+  simp only [Rows.OLat.carrier, Set.mem_ofPred_eq]
   refine ⟨fun w => if w = v then 1 else 0, ?_⟩
   rw [Finset.sum_eq_single v (fun b _ hb => by simp [hb]) (fun h => absurd hv h)]
   simp

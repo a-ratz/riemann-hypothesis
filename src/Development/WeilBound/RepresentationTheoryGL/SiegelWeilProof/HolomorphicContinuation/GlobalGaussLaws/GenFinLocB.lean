@@ -165,7 +165,7 @@ theorem caseA (hF : LocRedField) (σ : R →+* R) (hσ : ∀ a, σ (σ a) = a) (
     (hfix : 𝔪.comap σ = 𝔪) (horb : ∀ 𝔫 : Ideal R, 𝔫.IsMaximal → 𝔫 = 𝔪 ∨ 𝔫 = 𝔪.comap σ)
     (g : Matrix (Fin (n + n)) (Fin (n + n)) R) (hg : Uni σ g) (hgu : IsUnit g.det) :
     ∃ I : Finset (Fin n), IsUnit (blkDm (g * wIm I)).det := by
-  letI : Field (R ⧸ 𝔪) := Ideal.Quotient.field 𝔪
+  let : Field (R ⧸ 𝔪) := Ideal.Quotient.field 𝔪
   have hle : 𝔪 ≤ 𝔪.comap σ := hfix.symm ▸ le_refl _
   let σb : R ⧸ 𝔪 →+* R ⧸ 𝔪 := Ideal.quotientMap 𝔪 σ hle
   have hπσ : ∀ x, Ideal.Quotient.mk 𝔪 (σ x) = σb (Ideal.Quotient.mk 𝔪 x) := fun x => (Ideal.quotientMap_mk ..).symm

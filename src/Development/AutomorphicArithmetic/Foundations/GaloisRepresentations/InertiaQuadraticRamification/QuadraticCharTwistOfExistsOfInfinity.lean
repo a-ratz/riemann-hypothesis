@@ -249,7 +249,7 @@ theorem exists_completionEquiv_of_he (h : IsPlaceOver A v) (h' : IsPlaceOver A w
     rw [GroundTheory.Global.finrank_adicCompletion v w, he, inertiaDeg_eq_one h h' hloc]
   have hbij : Function.Bijective (algebraMap (v.adicCompletion K) (w.adicCompletion F)) := by
     refine ⟨(algebraMap (v.adicCompletion K) (w.adicCompletion F)).injective, fun y => ?_⟩
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (K := v.adicCompletion K) (1 : w.adicCompletion F)
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (K := v.adicCompletion K) (1 : w.adicCompletion F)
       one_ne_zero).1 hfin y
     exact ⟨c, by rw [← hc, Algebra.algebraMap_eq_smul_one]⟩
   let ι := RingEquiv.ofBijective (algebraMap (v.adicCompletion K) (w.adicCompletion F)) hbij
@@ -283,7 +283,7 @@ namespace UpperTheory.Gal.UnramifiedFromSplittingCriterion
 theorem isOpen_fixGrp (F Ω K : Type) [Field F] [Field Ω] [Field K] [Algebra F Ω] [Algebra K Ω] [Algebra F K]
     [IsScalarTower F K Ω] [FiniteDimensional F K] : IsOpen (fixGrp F Ω K : Set (G F Ω)) := by
   let φ := IsScalarTower.toAlgHom F K Ω
-  haveI : FiniteDimensional F φ.fieldRange := LinearEquiv.finiteDimensional (AlgEquiv.ofInjectiveField φ).toLinearEquiv
+  have : FiniteDimensional F φ.fieldRange := LinearEquiv.finiteDimensional (AlgEquiv.ofInjectiveField φ).toLinearEquiv
   refine Subgroup.isOpen_mono (fun g hg x => ?_) φ.fieldRange.fixingSubgroup_isOpen
   exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg _ ⟨x, rfl⟩
 
@@ -311,7 +311,7 @@ theorem quadraticCharTwist_of_exists_of_infinity (h1 : Quad0Ex) (h2 : InfOf) : Q
 
 theorem splitIso_holds : SplitIso := by
   intro K M Ω _ _ _ _ _ _ _ _ _ _ A v w hv hw h
-  haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) M⟩
+  have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) M⟩
   obtain ⟨i, h1, -, h2, h3⟩ := PositivityTheory.Pf1.LocalLanglands.HeckeKernelConditions.RamifiedPlaceLift.exists_completionEquiv_of_he hv hw (fun σ => h _ (GlobalTheory.WeilDeligne.Weil_le_Dec hv σ.2))
     (GlobalTheory.InertFixVal.ramificationIdx_eq_one A v w hv hw fun σ hσ => h σ (Ine_le_Dec A hσ)).2
   exact ⟨i, h1, h2, h3⟩

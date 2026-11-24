@@ -83,9 +83,9 @@ theorem expCrit_D (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     Formalism.MainNotions.WachCoordinates.AtCaseA fun l _ K LL h => Formalism.MainNotions.RamifiedCoefficientChains.Sh.ExpCrit ((HW l).W K 1 LL h.2.2) := by
   intro l _ K LL hA' h5
   have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
-  haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
-  haveI := hCpl l LL
+  have := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
+  have : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+  have := hCpl l LL
   have h1 := hA.1 l K 1 LL hA'.2.2
   have h11 := hA.2.2.2.2.2.2.2.2.2.2.1 l K LL
   have hP9 : Formalism.MainNotions.DeltaInvariantLattices.P9 D HW F := fun l _ K s LL h => (hA.1 l K s LL h).2.2.2.2.2.2.2.2.1

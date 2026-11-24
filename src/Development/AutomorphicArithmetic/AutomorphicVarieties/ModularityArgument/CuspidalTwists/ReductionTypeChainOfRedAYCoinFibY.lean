@@ -147,7 +147,7 @@ private theorem ch_core4 (hRA : RedA) (hYC : YCoin) (hFY : FibY) {O Γ : Type} [
     {P Q : Ideal R} (hPQ : Ch.Adj R (N + 1) P Q) (hP : J ≤ P.comap ((f : X.A →+* R).comp (algebraMap X.B X.A))) :
     J ≤ Q.comap ((f : X.A →+* R).comp (algebraMap X.B X.A)) := by
   classical
-  haveI := hS.char
+  have := hS.char
   let φ : X.B →+* R := (f : X.A →+* R).comp (algebraMap X.B X.A)
   have hφ : ∀ t : Λ, φ (algebraMap Λ X.B t) = algebraMap Λ R t := fun t => by
     show f (algebraMap X.B X.A _) = _
@@ -163,12 +163,12 @@ private theorem ch_core4 (hRA : RedA) (hYC : YCoin) (hFY : FibY) {O Γ : Type} [
   let A : {S // S ∈ redTypes ∧ S ≠ yY} → Ideal R := fun S => redIdeal S.1 (X.P.map (f : X.A →+* R)).r
   let B : {t : Φ.ι × Fin 4 × Fin 4 // t.2.1 ≠ t.2.2} → Ideal R := fun t =>
     J.map φ ⊔ Ideal.span {algebraMap Λ R ϖ} ⊔ Ideal.span ((fun s => φ (X.ψ t.1.1 t.1.2.1 s - X.ψ t.1.1 t.1.2.2 s)) '' U t.1.1)
-  haveI : Finite {S // S ∈ redTypes ∧ S ≠ yY} :=
+  have : Finite {S // S ∈ redTypes ∧ S ≠ yY} :=
     Set.Finite.to_subtype (show Set.Finite {S | S ∈ redTypes ∧ S ≠ yY} from
       (List.finite_toSet redTypes).subset (by intro S h; exact h.1))
   have hb : ∀ t, ∀ q : Ideal R, q.IsPrime → B t ≤ q → (∀ S, ¬ A S ≤ q) → ringKrullDim (R ⧸ q) < N := by
     intro t q hq hle hr
-    haveI := hq
+    have := hq
     have hq0 : ∀ z, ((algebraMap (R ⧸ q) (FractionRing (R ⧸ q))).comp (Ideal.Quotient.mk q)) z = 0 ↔ z ∈ q := fun z => by
       rw [RingHom.comp_apply, map_eq_zero_iff _ (IsFractionRing.injective (R ⧸ q) (FractionRing (R ⧸ q))),
         Ideal.Quotient.eq_zero_iff_mem]
@@ -201,7 +201,7 @@ private theorem ch_core4 (hRA : RedA) (hYC : YCoin) (hFY : FibY) {O Γ : Type} [
   have hJp : ∀ b ∈ J, φ b ∈ p := fun b hb => hIp (Ideal.mem_sup_left (hP hb))
   have hYp : ¬ redIdeal yY (X.P.map (f : X.A →+* R)).r ≤ p := by
     intro hle
-    haveI := hp
+    have := hp
     obtain ⟨v⟩ := hne
     have hq0 : ∀ z ∈ p, ((algebraMap (R ⧸ p) (FractionRing (R ⧸ p))).comp (Ideal.Quotient.mk p)) z = 0 := fun z hz => by
       rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem.2 hz, map_zero]
@@ -245,7 +245,7 @@ private theorem ch_core4 (hRA : RedA) (hYC : YCoin) (hFY : FibY) {O Γ : Type} [
       exact hYp
     · exact hA ⟨S, hS', hSY⟩
   obtain ⟨K, _, _, _, j, hj, hj0⟩ := Ch.curve l Λ R p hp hdim (hm p hϖp)
-  haveI : Q.IsPrime := hPQ.2.1.1.1
+  have : Q.IsPrime := hPQ.2.1.1.1
   refine hp1 K (j.comp f) (fun b hb => hj0 _ ?_) (fun b hb => (hj _).2 (hJp b hb)) (fun v i i' hi => ?_)
     (Ch.irr hS.ok hc hdef.1 ((algebraMap (PowerSeries K) (FractionRing (PowerSeries K))).comp (j : R →+* PowerSeries K)) p
       (fun x hx => (hj x).1 ((map_eq_zero_iff _ (IsFractionRing.injective _ _)).1 hx)) hirr)

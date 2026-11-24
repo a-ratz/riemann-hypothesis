@@ -66,9 +66,9 @@ private theorem contTwist {Γ k : Type} [Group Γ] [TopologicalSpace Γ] [IsTopo
 theorem UpperTheory.V.Z.Win.Birth.awChain_of_printsH :
     _root_.UpperTheory.V.Af.HypothesesH' → UpperTheory.V.Z.Win.Birth.AwChain := by
   intro hH F E M Ω _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hE l _ ι r κ hr hPR hκ hirr
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
-  haveI : Fact ((2 : ℕ) = 2) := ⟨rfl⟩
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
+  have : Fact ((2 : ℕ) = 2) := ⟨rfl⟩
   have hirrE : IsIrr (r.comp (galEmb F E Ω)) :=
     ⟨hirr.1, fun _ _ _ => Submodule.mem_top, fun W hW hI => hirr.2.2 W hW fun g v hv => hI (galEmb E M Ω g) v hv⟩
   have hW := UpperTheory.V.Z.Win.Birth.awReal F E Ω hE l ι r hr hirrE hPR

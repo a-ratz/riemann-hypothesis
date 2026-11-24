@@ -56,7 +56,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.lat :
         ∀ (c : K) (d m : EL Δ τ) (S : Set (Sp Δ τ)), IsFix O c d m S → ∀ y₀ : (EL Δ τ)ˣ,
         IsLat O τ {a : Etau K τ | ((0, (y₀ : EL Δ τ) * ofE Δ a) : Sp Δ τ) ∈ S} := by
   intro O K _ _ _ _ _ Δ τ L c d m S hS y₀
-  haveI := L.frac
+  have := L.frac
   have e1 : ∀ (r : O) (a : Etau K τ), ofE Δ (algebraMap O K r • a) =
       algebraMap (Lsq K Δ) (EL Δ τ) (algebraMap K (Lsq K Δ) (algebraMap O K r)) * ofE Δ a := by
     intro r a
@@ -111,7 +111,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.lat :
     rw [hs]
     exact Iff.rfl
   have hfg : ((Submodule.span O (s : Set (Sp Δ τ))).comap φ).FG := by
-    haveI : IsNoetherian O (Submodule.span O (s : Set (Sp Δ τ))) :=
+    have : IsNoetherian O (Submodule.span O (s : Set (Sp Δ τ))) :=
       isNoetherian_of_fg_of_noetherian _ ⟨s, rfl⟩
     apply Submodule.fg_of_fg_map_injective φ hinj
     have hle : ((Submodule.span O (s : Set (Sp Δ τ))).comap φ).map φ ≤ Submodule.span O (s : Set (Sp Δ τ)) :=

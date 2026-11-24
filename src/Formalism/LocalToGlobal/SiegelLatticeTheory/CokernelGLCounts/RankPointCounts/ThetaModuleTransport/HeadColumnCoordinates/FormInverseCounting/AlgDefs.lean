@@ -401,7 +401,7 @@ theorem coordL_holds : CoordL := by
     have g2 := graph_transport (Psi H hg₁).toEquiv (Psi H hg₂).toEquiv θ.toEquiv φ'
       (PcL' H hg₁) (PcL' H hg₂) (Gam' H t₁) (Gam' H t₂) _ _ (gam_image' H hg₁) (gam_image' H hg₂)
       hPc' (gam_sep' H hg₁ hg₂ rfl φ' hz' ho')
-    simp only [Theta, ThetaC, Set.mem_setOf_eq]
+    simp only [Theta, ThetaC, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨-, -, hI, hG, -⟩
       obtain ⟨a, b⟩ := hG hsplit

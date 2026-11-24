@@ -104,7 +104,7 @@ theorem weilIs_eq_one : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
     rfl
 
   have hpt : ∀ {N : LB T.left} (hN : N.IsLB), cls N hN = 0 := fun {N} hN => by
-    haveI : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum k))
+    have : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum k))
     obtain ⟨p⟩ : Nonempty T.left := inferInstanceAs (Nonempty (PrimeSpectrum k))
     obtain ⟨i, hi⟩ := exists_chart hN p
     exact (cls_eq_zero_iff hN).2

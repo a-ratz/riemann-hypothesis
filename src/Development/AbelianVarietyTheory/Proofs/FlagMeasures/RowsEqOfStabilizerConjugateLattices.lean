@@ -267,7 +267,7 @@ theorem fixedFrameOfWord_isotropicSpan_eq (X : HidaSetting D) (u : D.what₂.Wor
   unfold Formalism.HermitianLatticeCounting.S6.FlagD.X Formalism.HermitianLatticeCounting.S6.FlagD.Xa
   congr 1
   ext v
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
   constructor
   · rintro ⟨b, hb, rfl⟩
     refine ⟨b, ?_⟩

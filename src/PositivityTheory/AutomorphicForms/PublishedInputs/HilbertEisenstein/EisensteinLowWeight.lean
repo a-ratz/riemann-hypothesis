@@ -209,7 +209,7 @@ theorem thetaS_curve (c : HeightOneSpectrum (𝓞 F) → ℕ) (g : GA F 2) (a : 
     ring
   · have h2 := (integrable_count_iff).1 (hI.apply_continuousLinearMap X)
     refine Summable.of_norm (h2.congr fun ξ => ?_)
-    simp only [hD, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [hD, smul_apply, smul_eq_mul]
   · have e : (fun s => thetaS (Phi c) (Matrix.GeneralLinearGroup.scalar (Fin 2) a * g *
         UpperTheory.V.TR.infGL F 2 (k s))) = fun s => Srow c g a (UpperTheory.V.TR.toL (k s).val) :=
       funext fun s => thetaS_eq_Srow c g a (k s)
@@ -656,7 +656,7 @@ theorem omega_eu (ω : HChar F) (hω : IsOfFinOrder ω) (v : InfinitePlace F) (s
     rw [Units.val_pow_eq_pow_val, Pi.pow_apply]
     simp only [eu, atv]
     split_ifs
-    · rw [← Real.exp_nat_mul]
+    · rw [← Real.exp_natCast_mul]
       congr 1
       field_simp
     · simp

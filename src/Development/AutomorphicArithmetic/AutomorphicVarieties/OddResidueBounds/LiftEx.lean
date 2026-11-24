@@ -50,10 +50,10 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.Odd.liftEx :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (N : ℕ) [NeZero N], (∀ b : (ZMod N)ˣ, ∃ σ : Ω ≃+* Ω, CycLift N b σ) ∧ ∀ σ : Ω ≃+* Ω, ∃ b : (ZMod N)ˣ, CycLift N b σ := by
   intro E Ω _ _ _ _ _ N _
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
   have hN : NeZero (N : Ω) := ⟨by exact_mod_cast NeZero.ne N⟩
   have hpos : 0 < N := NeZero.pos N
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic N Ω) (Polynomial.degree_cyclotomic_pos N Ω hpos).ne'

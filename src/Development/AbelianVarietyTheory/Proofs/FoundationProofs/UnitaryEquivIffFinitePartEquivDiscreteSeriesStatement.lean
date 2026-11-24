@@ -76,10 +76,10 @@ theorem isUnitEquiv_iff_nonempty_equiv_of_isCopyFinDS : ∀ (D : D7) (V : HSp D)
   have hTm := mem_homTensorPi.1 hT
   have hTm' := mem_homTensorPi.1 hT'
   have hδ : ∀ τ, IsIrrUnitary (dsRep M τ) := isIrrUnitary_dsRep M
-  haveI : σ.IsIrreducible := hσ
-  haveI : σ'.IsIrreducible := hσ'
-  haveI : Nontrivial W := IsSimpleModule.nontrivial (MonoidAlgebra ℂ (GfC V)) σ.asModule
-  haveI : Nontrivial W' := IsSimpleModule.nontrivial (MonoidAlgebra ℂ (GfC V)) σ'.asModule
+  have : σ.IsIrreducible := hσ
+  have : σ'.IsIrreducible := hσ'
+  have : Nontrivial W := IsSimpleModule.nontrivial (MonoidAlgebra ℂ (GfC V)) σ.asModule
+  have : Nontrivial W' := IsSimpleModule.nontrivial (MonoidAlgebra ℂ (GfC V)) σ'.asModule
   constructor
   · rintro ⟨A, hA⟩
     have hAs : ∀ g x, A.symm (π' g x) = π g (A.symm x) := fun g x => by

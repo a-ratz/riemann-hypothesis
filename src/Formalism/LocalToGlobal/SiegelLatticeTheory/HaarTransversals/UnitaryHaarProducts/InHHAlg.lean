@@ -158,7 +158,7 @@ theorem level_subgroup_eq_support (hK : X.LevelSubgroupCharacter) (hKL : X.Level
   constructor
   · intro hx
     have hx' : x ∈ K2set X.B.I X.B.g X.e0 X.z0 X.bw := hx
-    rw [if_pos hx']
+    rw [ite_eq_left hx']
     have hn : ‖X.chi2 x‖ = 1 := hK.2.2.2.2 x hx
     have hvol : (X.B.μf X.K2).toReal ≠ 0 := ENNReal.toReal_ne_zero.2 ⟨hKL.2.2.1.ne', hKL.2.2.2.ne⟩
     have hc : star (X.chi2 x) ≠ 0 := by
@@ -167,7 +167,7 @@ theorem level_subgroup_eq_support (hK : X.LevelSubgroupCharacter) (hKL : X.Level
   · intro hx
     by_contra hnot
     have hnot' : x ∉ K2set X.B.I X.B.g X.e0 X.z0 X.bw := hnot
-    rw [if_neg hnot'] at hx
+    rw [ite_eq_right hnot'] at hx
     exact hx rfl
 
 theorem level_subgroup_isClopen (hK : X.LevelSubgroupCharacter) (hKL : X.LevelSubgroupNormalized) : IsClopen X.K2 := by
@@ -260,7 +260,7 @@ def Usp (m : ℕ) : Submodule (X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) (VA X.B.I) :=
 
 theorem usp_mono {m m' : ℕ} (h : m ≤ m') : Usp X m ≤ Usp X m' := by
   unfold Usp
-  exact Submodule.span_mono (by rintro _ ⟨b, hb, rfl⟩; exact ⟨b, by simp only [Set.mem_setOf_eq] at hb ⊢; omega, rfl⟩)
+  exact Submodule.span_mono (by rintro _ ⟨b, hb, rfl⟩; exact ⟨b, by simp only [Set.mem_ofPred_eq] at hb ⊢; omega, rfl⟩)
 
 theorem usp_range : Submodule.span (X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) (Set.range fun b => incl X.B.I (X.eR b)) =
     Usp X D.R.rS := by
@@ -277,9 +277,9 @@ theorem hA_f_usp (a : Fin D.R.rS) : ∀ y ∈ Usp X a.1, hA X.B.I (incl X.B.I (X
   have key : Usp X a.1 ≤ LinearMap.ker (hAlin X (incl X.B.I (X.fR a))) := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨b, hb, rfl⟩
-    simp only [Set.mem_setOf_eq] at hb
+    simp only [Set.mem_ofPred_eq] at hb
     simp only [SetLike.mem_coe, LinearMap.mem_ker, hAlin_apply, hA_f_e]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact lt_irrefl _ hb
   simpa only [LinearMap.mem_ker, hAlin_apply] using key hy
@@ -292,7 +292,7 @@ theorem nfin_sub_le {n : X.B.I.Gf} (hn : n ∈ X.NfinU u) (m : ℕ) :
   have key : Usp X m ≤ (Usp X (m - 1)).comap (X.B.I.fmat n - 1).mulVecLin := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨b, hb, rfl⟩
-    simp only [Set.mem_setOf_eq] at hb
+    simp only [Set.mem_ofPred_eq] at hb
     simp only [SetLike.mem_coe, Submodule.mem_comap, Matrix.mulVecLin_apply]
     exact usp_mono X (show b.1 ≤ m - 1 by omega) (hn.1 b)
   simpa only [Submodule.mem_comap, Matrix.mulVecLin_apply] using key hy
@@ -349,7 +349,7 @@ theorem nfin_ca_mul {n n' : X.B.I.Gf} (hn : n ∈ X.NfinU u) (hn' : n' ∈ X.Nfi
   have hv0 : hA X.B.I (incl X.B.I (X.fR a)) (incl X.B.I (nxt X.eR (X.zR u) a)) = 0 := by
     unfold Formalism.L2.SG.HidaSetting.nxt
     split_ifs with h
-    · rw [hA_f_e, if_neg]
+    · rw [hA_f_e, ite_eq_right]
       intro h'
       have := congrArg Fin.val h'
       simp at this
@@ -401,11 +401,11 @@ def UnipotentConjugateInLevel : Prop :=
     (X.xu u)⁻¹ * n * X.xu u ∈ X.K2 ∧ X.chi2 ((X.xu u)⁻¹ * n * X.xu u) = X.psiFinU u n
 
 theorem kset_mul {a b : X.B.I.Gf} (ha : a ∈ X.B.I.Kset) (hb : b ∈ X.B.I.Kset) : a * b ∈ X.B.I.Kset := by
-  simp only [AutInst.Kset, Set.mem_setOf_eq, Subgroup.coe_mul] at ha hb ⊢
+  simp only [AutInst.Kset, Set.mem_ofPred_eq, Subgroup.coe_mul] at ha hb ⊢
   exact Subgroup.mul_mem _ ha hb
 
 theorem kset_inv {a : X.B.I.Gf} (ha : a ∈ X.B.I.Kset) : a⁻¹ ∈ X.B.I.Kset := by
-  simp only [AutInst.Kset, Set.mem_setOf_eq, Subgroup.coe_inv] at ha ⊢
+  simp only [AutInst.Kset, Set.mem_ofPred_eq, Subgroup.coe_inv] at ha ⊢
   exact Subgroup.inv_mem _ ha
 
 theorem levelDec_of (hK : X.LevelSubgroupCharacter) (hS : KsetSplit X u) (hN : UnipotentConjugateInLevel X u) : LevelDec X u := by
@@ -439,7 +439,7 @@ def SpL (m : ℕ) : Submodule R (Fin n → R) := Submodule.span R (e '' {b | b.1
 
 theorem spL_mono {m m' : ℕ} (h : m ≤ m') : SpL e m ≤ SpL e m' := by
   unfold SpL
-  exact Submodule.span_mono (by rintro _ ⟨b, hb, rfl⟩; exact ⟨b, by simp only [Set.mem_setOf_eq] at hb ⊢; omega, rfl⟩)
+  exact Submodule.span_mono (by rintro _ ⟨b, hb, rfl⟩; exact ⟨b, by simp only [Set.mem_ofPred_eq] at hb ⊢; omega, rfl⟩)
 
 theorem spL_range : Submodule.span R (Set.range e) = SpL e r := by
   unfold SpL
@@ -460,7 +460,7 @@ theorem sub_one_mulVec_mem_SpL_pred_of_C1 {M : Matrix (Fin n) (Fin n) R} (hM : C
   have key : SpL e m ≤ (SpL e (m - 1)).comap (M - 1).mulVecLin := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨b, hb, rfl⟩
-    simp only [Set.mem_setOf_eq] at hb
+    simp only [Set.mem_ofPred_eq] at hb
     simp only [SetLike.mem_coe, Submodule.mem_comap, Matrix.mulVecLin_apply]
     exact spL_mono e (show b.1 ≤ m - 1 by omega) (hM b)
   simpa only [Submodule.mem_comap, Matrix.mulVecLin_apply] using key hy
@@ -718,7 +718,7 @@ theorem exists_compact_nhds_level (hK : X.LevelSubgroupCharacter) (hKL : X.Level
       0 < X.B.μf C ∧ X.B.μf C < ⊤ := by
   have := hR.1
   have := hR.2.2.1
-  haveI : T2Space X.B.I.Gf :=
+  have : T2Space X.B.I.Gf :=
     T2Space.of_injective_continuous (f := fun x : X.B.I.Gf => ((1 : X.B.I.Ginf), x))
       (fun a b h => (Prod.mk.inj h).2) (continuous_const.prodMk continuous_id)
   have := X.B.haar
@@ -749,14 +749,14 @@ theorem phReprod_of (hK : X.LevelSubgroupCharacter) (hKL : X.LevelSubgroupNormal
   have hreal : ‖Ph X u hK T y‖ₑ ≤ (a : ℝ≥0∞) *
       ∫⁻ z in Ωi, ‖Ph X u hK T (y * (z, 1))‖ₑ ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) := by
     rw [← ph_conv X u hK hWD α hrep T y]
-    refine (enorm_integral_le_lintegral_enorm _).trans ?_
+    refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
     rw [← setLIntegral_eq_of_support_subset (s := Ωi)]
     · rw [← lintegral_const_mul' _ _ ENNReal.coe_ne_top]
       refine lintegral_mono fun z => ?_
-      rw [enorm_mul]
+      rw [eNorm_mul]
       gcongr
-      have h1 : ‖α z‖₊ ≤ a := by rw [← NNReal.coe_le_coe, coe_nnnorm]; exact hbd z
-      rw [enorm_eq_nnnorm]; exact ENNReal.coe_le_coe.2 h1
+      have h1 : ‖α z‖₊ ≤ a := by rw [← NNReal.coe_le_coe, coe_nnNorm]; exact hbd z
+      rw [eNorm_eq_nnNorm]; exact ENNReal.coe_le_coe.2 h1
     · intro z hz
       by_contra hzΩ
       apply hz
@@ -765,7 +765,7 @@ theorem phReprod_of (hK : X.LevelSubgroupCharacter) (hKL : X.LevelSubgroupNormal
       simp [this]
 
   have hmeas : Measurable fun ω : X.B.I.GA => ‖Ph X u hK T (y * ω)‖ₑ :=
-    ((hM T).comp (continuous_const.mul continuous_id).measurable).enorm
+    ((hM T).comp (continuous_const.mul continuous_id).measurable).eNorm
   have hfin : ∫⁻ ω in Ωi ×ˢ C, ‖Ph X u hK T (y * ω)‖ₑ ∂(X.B.I.muA X.B.μf) =
       X.B.μf C * ∫⁻ z in Ωi, ‖Ph X u hK T (y * (z, 1))‖ₑ ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) := by
     unfold AutInst.muA
@@ -776,9 +776,9 @@ theorem phReprod_of (hK : X.LevelSubgroupCharacter) (hKL : X.LevelSubgroupNormal
     have e1 : y * (z, κ) = y * (z, 1) * (1, κ) := by
       rw [mul_assoc]; congr 1; ext <;> simp
     simp only
-    rw [e1, ph_right_K X u hK hWD T _ κ (hCK hκ), enorm_mul]
+    rw [e1, ph_right_K X u hK hWD T _ κ (hCK hκ), eNorm_mul]
     have hn : ‖X.chi2 κ‖ₑ = 1 := by
-      rw [enorm_eq_nnnorm]; simp [← NNReal.coe_eq_one, hK.2.2.2.2 κ (hCK hκ)]
+      rw [eNorm_eq_nnNorm]; simp [← NNReal.coe_eq_one, hK.2.2.2.2 κ (hCK hκ)]
     rw [hn, one_mul]
   rw [hfin]
   calc ‖Ph X u hK T y‖ₑ ≤ (a : ℝ≥0∞) * ∫⁻ z in Ωi, ‖Ph X u hK T (y * (z, 1))‖ₑ ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) := hreal
@@ -797,7 +797,7 @@ theorem level_character_eq_conj_idempotent (hKL : X.LevelSubgroupNormalized) (κ
   have hκ' : κ ∈ K2set X.B.I X.B.g X.e0 X.z0 X.bw := hκ
   have hvol : (X.B.μf X.K2).toReal ≠ 0 := ENNReal.toReal_ne_zero.2 ⟨hKL.2.2.1.ne', hKL.2.2.2.ne⟩
   have hv : ((X.B.μf X.K2).toReal : ℂ) ≠ 0 := by exact_mod_cast hvol
-  rw [X.e_eq κ, if_pos hκ', star_div₀, star_star]
+  rw [X.e_eq κ, ite_eq_left hκ', star_div₀, star_star]
   have hs : star (((X.B.μf (K2set X.B.I X.B.g X.e0 X.z0 X.bw)).toReal : ℝ) : ℂ) =
       (((X.B.μf X.K2).toReal : ℝ) : ℂ) := Complex.conj_ofReal _
   rw [hs, div_mul_cancel₀ _ hv]

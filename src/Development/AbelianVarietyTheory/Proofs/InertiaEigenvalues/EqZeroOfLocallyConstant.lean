@@ -155,7 +155,7 @@ theorem HfD_eq_unramified : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp K�
       intro h
       have := congrFun (congrArg Subtype.val h) g₀
       exact hg₀ (by simpa using this)
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hne).mp hdim ⟨z, hz⟩
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne).mp hdim ⟨z, hz⟩
     refine ⟨a, fun g => ?_⟩
     have := congrFun (congrArg Subtype.val ha) g
     rw [← smul_eq_mul, map_smul]

@@ -115,14 +115,14 @@ theorem isLocallyConstant_of_periodic (L : Submodule 𝒪[k] (n → k)) [L.IsFul
 
 private theorem secondCountableTopology_localField' (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] : SecondCountableTopology K := by
-  letI : UniformSpace K := IsTopologicalAddGroup.rightUniformSpace K
-  haveI : IsUniformAddGroup K := isUniformAddGroup_of_addCommGroup
+  let : UniformSpace K := IsTopologicalAddGroup.rightUniformSpace K
+  have : IsUniformAddGroup K := isUniformAddGroup_of_addCommGroup
   obtain ⟨r⟩ := (IsRankLeOne.nonempty : Nonempty (ValuativeRel.RankLeOneStruct K))
-  letI : (Valued.v (R := K) (Γ₀ := ValueGroupWithZero K)).RankOne :=
+  let : (Valued.v (R := K) (Γ₀ := ValueGroupWithZero K)).RankOne :=
     { hom' := r.emb.comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := r.strictMono.comp MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
-  letI : NontriviallyNormedField K := Valued.toNontriviallyNormedField K (ValueGroupWithZero K)
-  haveI : ProperSpace K := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace K
+  let : NontriviallyNormedField K := Valued.toNontriviallyNormedField K (ValueGroupWithZero K)
+  have : ProperSpace K := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace K
   exact secondCountable_of_proper
 
 variable [MeasurableSpace k] [BorelSpace k]
@@ -130,13 +130,13 @@ variable [MeasurableSpace k] [BorelSpace k]
 theorem integrable_of_periodic (μ : Measure (n → k)) [μ.IsAddHaarMeasure] (q : Unif k)
     (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] {g : (n → k) → ℂ}
     (hg : ∀ η ξ, InDual L ξ → g (η + ξ) = g η) (hs : ∀ η, g η ≠ 0 → InDual L (q.1 • η)) : Integrable g μ := by
-  haveI := secondCountableTopology_localField' k
+  have := secondCountableTopology_localField' k
   have hlc := isLocallyConstant_of_periodic L hg
   have hK : IsCompact {η : n → k | InDual L (q.1 • η)} := by
     have h2 : {η : n → k | InDual L (q.1 • η)} =
         (Homeomorph.smulOfNeZero ((q.1 : 𝒪[k]) : k) q.ne_zero) ⁻¹' {η | InDual L η} := by
       ext η
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, Homeomorph.smulOfNeZero_apply, Algebra.smul_def]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, Homeomorph.smulOfNeZero_apply, Algebra.smul_def]
       rfl
     rw [h2, Homeomorph.isCompact_preimage]
     exact (dual_compact_open L).1
@@ -156,8 +156,8 @@ theorem dualInd_add (L : Submodule 𝒪[k] (n → k)) (η ξ : n → k) (hξ : I
     dualInd L (η + ξ) = dualInd L η := by
   unfold dualInd
   by_cases h : InDual L η
-  · rw [if_pos (inDual_add h hξ), if_pos h]
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_left (inDual_add h hξ), ite_eq_left h]
+  · rw [ite_eq_right h, ite_eq_right]
     intro h'
     apply h
     simpa using inDual_sub h' hξ
@@ -167,7 +167,7 @@ theorem dualInd_supp (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (η : n → 
   unfold dualInd at h
   by_cases hd : InDual L η
   · exact inDual_smul hd q.1
-  · exact absurd (if_neg hd) h
+  · exact absurd (ite_eq_right hd) h
 
 theorem cosetInd_add (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (f : Module.Dual 𝓀[k] (Red L)) (η ξ : n → k)
     (hξ : InDual L ξ) : cosetInd q L f (η + ξ) = cosetInd q L f η := by
@@ -184,8 +184,8 @@ theorem cosetInd_add (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (f : Module.
       have h := inDual_add hd hξ
       rwa [show η - q.inv • F + ξ = η + ξ - q.inv • F by abel] at h
   by_cases h : ∃ F : n → k, Lifts L F f ∧ InDual L (η - q.inv • F)
-  · rw [if_pos (e.2 h), if_pos h]
-  · rw [if_neg (fun h' => h (e.1 h')), if_neg h]
+  · rw [ite_eq_left (e.2 h), ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h (e.1 h')), ite_eq_right h]
 
 theorem inDual_of_lifts {L : Submodule 𝒪[k] (n → k)} {F : n → k} {f : Module.Dual 𝓀[k] (Red L)} (h : Lifts L F f) :
     InDual L F := by
@@ -208,7 +208,7 @@ theorem cosetInd_supp (q : Unif k) (L : Submodule 𝒪[k] (n → k)) (f : Module
       rw [smul_sub, hq, sub_add_cancel]
     rw [h3]
     exact inDual_add (inDual_smul hd q.1) (inDual_of_lifts hF)
-  · exact absurd (if_neg hc) h
+  · exact absurd (ite_eq_right hc) h
 
 theorem inner_add (χ : AddChar k Circle) (hχ : HasConductor χ 1) {e : k} (he : e = 1 ∨ e = -1)
     [MeasurableSpace k] (μ : Measure (n → k)) (L : Submodule 𝒪[k] (n → k)) {a : (n → k) → ℂ}
@@ -289,7 +289,7 @@ namespace GlobalTheory.FinPl.Comm
 theorem mainDatum_mem_SB (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (n n' : Type) [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] (q : Unif k) (χ : AddChar 𝓀[k] ℂ)
     (ε : 𝓀[k]ˣ) (P : Pair k n') (Q : Pair k n) : mainDatum q χ ε P Q ∈ SB (Matrix n n' k) := by
-  letI := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red P.ker) // f ≠ 0}
+  let := Fintype.ofFinite {f : Module.Dual 𝓀[k] (Red P.ker) // f ≠ 0}
   have h : mainDatum q χ ε P Q = ∑ f' : {f : Module.Dual 𝓀[k] (Red P.ker) // f ≠ 0},
       χ (-((ε : 𝓀[k]) * f'.1 (qvec q P))) • phiOne (ofDual P.ker f') Q := by
     funext x
@@ -411,7 +411,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
   {n : Type} [Fintype n] [DecidableEq n]
 
 theorem charInd_mem' (χ : AddChar 𝓀[k] ℂ) (Q : Pair k n) : charInd χ Q ∈ SB (n → k) := by
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
   refine ⟨(IsLocallyConstant.iff_exists_open _).2 fun y => ?_,
     HasCompactSupport.intro (Comm.isCompact_lat Q.lat) fun y hy => ?_⟩
   · by_cases hy : y ∈ Q.lat
@@ -420,12 +420,12 @@ theorem charInd_mem' (χ : AddChar 𝓀[k] ℂ) (Q : Pair k n) : charInd χ Q �
       have hz' : Q.HasVal z (Q.ev y) := by
         have := (GlobalTheory.LatPair.Pair.mem_ker.1 hz).add (GlobalTheory.LatPair.Pair.hasVal_ev hy)
         simpa using this
-      simp only [charInd, vecInd, if_pos hz'.mem, if_pos hy, hz'.ev_eq]
+      simp only [charInd, vecInd, ite_eq_left hz'.mem, ite_eq_left hy, hz'.ev_eq]
     · refine ⟨(Q.lat : Set (n → k))ᶜ, (Comm.isCompact_lat Q.lat).isClosed.isOpen_compl, hy, fun z hz => ?_⟩
       have hz' : z ∉ Q.lat := hz
-      simp only [charInd, vecInd, if_neg hz', if_neg hy, mul_zero]
+      simp only [charInd, vecInd, ite_eq_right hz', ite_eq_right hy, mul_zero]
   · have hy' : y ∉ Q.lat := hy
-    simp only [charInd, vecInd, if_neg hy', mul_zero]
+    simp only [charInd, vecInd, ite_eq_right hy', mul_zero]
 
 theorem inDual_vecMul {L : Submodule 𝒪[k] (n → k)} {g : GL n k} (hg : g • L = L) (η : n → k) :
     InDual L (η ᵥ* g.val) ↔ InDual L η := by
@@ -538,16 +538,16 @@ namespace GlobalTheory.FinPl.Vertex
 open Classical in
 theorem vertexGlued (D : D7) : VertexGlued D := by
   intro k _ _ _ _ p q ψ χ hχ hIs
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
-  haveI := secondCountable k
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
+  have := secondCountable k
   obtain ⟨e, he, HC⟩ := _root_.GlobalTheory.FinPl.contraction_all D k p ψ χ hIs
   obtain ⟨ν, hν, -⟩ := exists_isUnitVol k
   let ε : 𝓀[k]ˣ := if e = 1 then 1 else -1
   have hεe : (e = 1 ∧ ε = 1) ∨ (e = -1 ∧ ε = -1) := by
     by_cases h1 : e = 1
-    · exact Or.inl ⟨h1, if_pos h1⟩
-    · exact Or.inr ⟨he.resolve_left h1, if_neg h1⟩
+    · exact Or.inl ⟨h1, ite_eq_left h1⟩
+    · exact Or.inr ⟨he.resolve_left h1, ite_eq_right h1⟩
   refine ⟨ε, ?_, ?_⟩
   · rcases hεe with ⟨-, h⟩ | ⟨-, h⟩
     · exact Or.inl h

@@ -48,7 +48,7 @@ namespace GlobalTheory.RowEx
 
 theorem exists_nf_of_finite (S : Set ℂ) (hS : S.Finite) (hi : ∀ z ∈ S, IsIntegral ℚ z) :
     ∃ M : IntermediateField ℚ ℂ, FiniteDimensional ℚ M ∧ S ⊆ Set.range (algebraMap M ℂ) := by
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   refine ⟨IntermediateField.adjoin ℚ S, IntermediateField.finiteDimensional_adjoin hi, fun z hz => ?_⟩
   exact ⟨⟨z, IntermediateField.subset_adjoin ℚ S hz⟩, rfl⟩
 
@@ -72,7 +72,7 @@ namespace GlobalTheory.RowEx
 
 theorem nfRoot : NFRoot := by
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hs ch _ _ => ?_⟩⟩
-  haveI : Finite T := hs.fin
+  have : Finite T := hs.fin
   classical
   set G := ch.G
   set S := ch.S.toGridChoice

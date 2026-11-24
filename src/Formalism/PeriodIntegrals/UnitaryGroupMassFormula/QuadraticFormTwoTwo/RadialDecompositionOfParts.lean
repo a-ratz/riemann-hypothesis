@@ -372,8 +372,8 @@ private theorem herm_bvec_eq_zero_of_inWb {w : Fin (2 * r + k + 1) → ℂ} (hw 
   · push_neg at hi
     have h0 : Hpk k r i j = 0 := by
       unfold Hpk
-      rw [if_neg (by omega), if_neg (by omega),
-        if_neg (by rintro ⟨_, _, h⟩; have := congrArg Fin.val h; omega)]
+      rw [ite_eq_right (by omega), ite_eq_right (by omega),
+        ite_eq_right (by rintro ⟨_, _, h⟩; have := congrArg Fin.val h; omega)]
     simp [h0]
 
 theorem ad_unitB_lie {g : Mx k r} {m : ℕ} {Bs : Fin m → Fin (2 * r + k + 1) → ℂ}
@@ -412,7 +412,7 @@ theorem ad_RZ_point {F : Mx k r → (Wq →L[ℂ] Wp)} (hF : F ∈ AdK k r z π 
       _ = Hpk k r := by rw [hgi]; simp
   obtain ⟨⟨h1, h2⟩, hk1, hk2⟩ := ad_unitB_lie (z := z) (g := g) hBs a b
   simp only [RZ, EcRep]
-  rw [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  rw [add_apply, smul_apply,
     ad_rd_point hF hg hgi hgi' hgU hginv h1 hk1 v, ad_rd_point hF hg hgi hgi' hgU hginv h2 hk2 v,
     ad_unitB_conj hgH hgi', (ad_hpart_conj hgH hgi' _).1, (ad_hpart_conj hgH hgi' _).2]
 
@@ -456,8 +456,8 @@ theorem left_ad (hz : inWb k r z) (hz' : inWb k r z') (hD : IsDom k r z z' (Fin.
     rw [mul_one, hπ'1] at e
     simpa [ContinuousLinearMap.one_def] using e
   unfold capR capRep qmF
-  simp only [Finset.sum_apply, ContinuousLinearMap.sum_apply, Pi.smul_apply,
-    ContinuousLinearMap.smul_apply]
+  simp only [Finset.sum_apply, sum_apply, Pi.smul_apply,
+    smul_apply]
   refine Finset.sum_congr rfl fun σ _ => ?_
   congr 1
   rw [List.ofFn_eq_map, List.ofFn_eq_map]
@@ -469,7 +469,7 @@ theorem left_ad (hz : inWb k r z) (hz' : inWb k r z') (hD : IsDom k r z z' (Fin.
     · exact adK_smul hx _
     · exact adK_zero
   · intro j x hx
-    simp only [Pi.add_apply, ContinuousLinearMap.add_apply]
+    simp only [Pi.add_apply, add_apply]
     rw [ad_RZ_point hx hg hgi hgi' hgU hginv hBs _ _ v]
     split_ifs <;> simp
 
@@ -508,7 +508,7 @@ theorem sv_exp_uw {z : Fin (2 * r + k + 1) → ℂ} {X : Mx k r} (hX : inLieW k 
 
 theorem sv_uw_glev {z : Fin (2 * r + k + 1) → ℂ} {h g : Mx k r} (hh : h ∈ UWset k r z)
     (hg : g ∈ Glev k r (Fin.last r)) : h * g ∈ Glev k r (Fin.last r) := by
-  simp only [UWset, Glev, UH, Set.mem_setOf_eq] at hh hg ⊢
+  simp only [UWset, Glev, UH, Set.mem_ofPred_eq] at hh hg ⊢
   obtain ⟨hh1, hh2, -⟩ := hh
   obtain ⟨hg1, hg2⟩ := hg
   refine ⟨?_, fun a ha => ⟨?_, ?_⟩⟩
@@ -905,7 +905,7 @@ theorem spec_iter {ι : Type*} (𝓕 : Set (X → (Wq →L[ℂ] Wp))) (G : Set X
       exact hA _ h1
     · intro g hg σ v hv
       rw [Function.iterate_succ_apply']
-      simp only [ContinuousLinearMap.smul_apply]
+      simp only [smul_apply]
       rw [heig _ h1 g hg σ v hv Y₀, h2 g hg σ v hv]
       simp only [smul_smul]
       congr 1
@@ -969,7 +969,7 @@ theorem spec_abstract {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ W
     refine Submodule.iSup_induction (S g) (motive := fun v => J g v = ∑ σ, dec σ g v)
       (htop g hg v) ?_ ?_ ?_
     · intro τ w hw
-      simp only [hkey _ g hg τ w hw, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [hkey _ g hg τ w hw, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     · simp
     · intro x y hx hy
       simp only [map_add (f := _), hx, hy, Finset.sum_add_distrib]
@@ -992,8 +992,8 @@ theorem spec_abstract {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ W
     · intro τ w hw
       by_cases hστ : σ = τ
       · subst hστ
-        exact ⟨w, hw, by rw [hkey σ g hg σ w hw, if_pos rfl]⟩
-      · exact ⟨0, zero_mem _, by rw [hkey σ g hg τ w hw, if_neg hστ, map_zero]⟩
+        exact ⟨w, hw, by rw [hkey σ g hg σ w hw, ite_eq_left rfl]⟩
+      · exact ⟨0, zero_mem _, by rw [hkey σ g hg τ w hw, ite_eq_right hστ, map_zero]⟩
     · exact ⟨0, zero_mem _, by rw [map_zero, map_zero]⟩
     · rintro x y ⟨w₁, hw₁, h₁⟩ ⟨w₂, hw₂, h₂⟩
       exact ⟨w₁ + w₂, add_mem hw₁ hw₂, by rw [map_add (f := _), map_add (f := _), h₁, h₂]⟩

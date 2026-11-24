@@ -502,7 +502,7 @@ theorem exists_lift (hG : GlobalFnsSt) (hB : D.TauBimult) (oa : D.OAct O) (a : O
     ∃ (p' : QkPt D F k) (p₁ : QkPt D F (k * N)), QkPt.Equiv D F p p' ∧ GtAct oa a p₁.g p'.g ∧
       p₁.y = star a • p'.y ∧ ∀ b : O, QkPt.Equiv D F (qkZero hB F k) (qkSmul hB hG oa b p) →
         QkPt.Equiv D F (qkZero hB F (k * N)) (qkSmul hB hG oa b p₁) := by
-  letI := gtModule hG oa F
+  let := gtModule hG oa F
   have hs : ∀ (c : O) (g : GtPtF D F), gtSmul hG oa c g = c • g := fun _ _ => rfl
   have hι : ∀ (c : O) (y : D.X), iota hB F (c • y) = c • iota hB F y := iota_smul hG oa hB
   have hp : (k : O) • p.g = iota hB F p.y := by rw [Nat.cast_smul_eq_nsmul]; exact qk_nsmul hB p
@@ -598,7 +598,7 @@ namespace GlobalTheory
 open ThetaGenerators TorusExt in
 theorem operator_on_pullback_eq_sum : Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (t : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t), P.TorsionIso → letI := H.starRing; ∀ (a a' : 𝓞 E) (N N' : ℕ), 1 ≤ N → 1 ≤ N' → Nat.Coprime N N' → a * star a = (N : 𝓞 E) → a' * star a' = (N' : 𝓞 E) → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (θ' s : Fam P.D.toPre F (1 * N')) (θ₂ s₂ t₀ h : Fam P.D.toPre F (1 * N' * N)), θ' ≠ 0 → PullAl P.D F P.oD a (1 * N') N θ' θ₂ → PullAl P.D F P.oD a (1 * N') N s s₂ → ∀ (m : ℕ) (c : Fin m → F) (p : Fin m → QkPt P.D.toPre F (1 * N')) (x : Fin m → (TFK (R := V) F ⟶ P.A.A)) (w : ∀ i, LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F (p i).g.b) (DegPre.lineε (1 * N')))) (ζ : Fin m → F) (tt : Fin m → Fam P.D.toPre F (1 * N')), ((∀ i, P.ToA F (1 * N') (p i) (x i)) ∧ (∀ i, x i ≫ P.oA.act (star (a')) = 1) ∧ (∀ i, (w i).IsGen ∧ ζ i ≠ 0 ∧ FinOrd P.D F (1 * N') (p i) (w i) (ζ i)) ∧ (∀ i, ∃ t' : Fam P.D.toPre F (1 * N'), PhiRel P.D.toPre F (1 * N') (p i) (w i) θ' t' ∧ Fam.IsSmul P.D.toPre F (ζ i) t' (tt i)) ∧ s = ∑ i, c i • tt i) → ∀ (p₀ : QkPt P.D.toPre F (1 * N' * N)) (x₀ : TFK (R := V) F ⟶ P.A.A) (w₀ : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F p₀.g.b) (DegPre.lineε (1 * N' * N)))) (ζ₀ : F), P.ToA F (1 * N' * N) p₀ x₀ → x₀ ≫ P.oA.act (star a) = 1 → w₀.IsGen → ζ₀ ≠ 0 → FinOrd P.D F (1 * N' * N) p₀ w₀ ζ₀ → PhiRel P.D.toPre F (1 * N' * N) p₀ w₀ s₂ t₀ → Fam.IsSmul P.D.toPre F ζ₀ t₀ h → ∃ (p₂ : Fin m → QkPt P.D.toPre F (1 * N' * N)) (x₂ : Fin m → (TFK (R := V) F ⟶ P.A.A)) (w₂ : ∀ i, LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F (p₂ i).g.b) (DegPre.lineε (1 * N' * N)))) (ζ₂ : Fin m → F) (t₂ : Fin m → Fam P.D.toPre F (1 * N' * N)), (∀ i, P.ToA F (1 * N' * N) (p₂ i) (x₂ i)) ∧ (∀ i, x₂ i ≫ P.oA.act (star (a' * a)) = 1) ∧ (∀ i, (w₂ i).IsGen ∧ ζ₂ i ≠ 0 ∧ FinOrd P.D F (1 * N' * N) (p₂ i) (w₂ i) (ζ₂ i)) ∧ (∀ i, ∃ t' : Fam P.D.toPre F (1 * N' * N), PhiRel P.D.toPre F (1 * N' * N) (p₂ i) (w₂ i) θ₂ t' ∧ Fam.IsSmul P.D.toPre F (ζ₂ i) t' (t₂ i)) ∧ h = ∑ i, c i • t₂ i := by
   intro hL E _ _ _ H V _ _ _ t P hT
-  letI := H.starRing
+  let := H.starRing
   intro a a' N N' hN hN' hco haa _ F _ _ _ θ' s θ₂ s₂ t₀ h hθ hθ₂ hs₂ m c p x w ζ tt ⟨hx, hxa, hw, htt, hs⟩
     p₀ x₀ w₀ ζ₀ hx₀ hxa₀ hw₀ hζ₀ hf₀ ht₀ hh
   have hG := hL.globalFns
@@ -684,7 +684,7 @@ namespace GlobalTheory
 open OneGenerator in
 theorem descent_one_generator : Laws → Laws2 → Laws4 → TwistBaseChangeStatement → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (t : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t), P.TorsionIso → letI := H.starRing; ∀ (a a' : 𝓞 E) (g g' : ℕ), 1 ≤ g → 1 ≤ g' → Nat.Coprime g g' → a * star a = (g : 𝓞 E) → a' * star a' = (g' : 𝓞 E) → ∀ (F : Type) [Field F] [Algebra (FractionRing V) F] [IsAlgClosed F] (θ : Fam P.D.toPre F 1) (θα : Fam P.D.toPre F (1 * g')), PullAl P.D F P.oD a' 1 g' θ θα → ∀ (pb : QkPt P.D.toPre F (1 * g')) (wb : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F pb.g.b) (DegPre.lineε (1 * g')))) (ζb : F) (xb : TFK (R := V) F ⟶ P.A.A) (tb₀ tb : Fam P.D.toPre F (1 * g')), P.ToA F (1 * g') pb xb → xb ≫ P.oA.act (star a') = 1 → wb.IsGen → ζb ≠ 0 → FinOrd P.D F (1 * g') pb wb ζb → PhiRel P.D.toPre F (1 * g') pb wb θα tb₀ → Fam.IsSmul P.D.toPre F ζb tb₀ tb → ∀ (p : QkPt P.D.toPre F (1 * g' * g)) (w : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F p.g.b) (DegPre.lineε (1 * g' * g)))) (ζ : F) (x : TFK (R := V) F ⟶ P.A.A), w.IsGen → ζ ≠ 0 → FinOrd P.D F (1 * g' * g) p w ζ → P.ToA F (1 * g' * g) p x → x ≫ P.oA.act (star a) = 1 → ∀ (s₂ t₀ r : Fam P.D.toPre F (1 * g' * g)), PullAl P.D F P.oD a (1 * g') g tb s₂ → PhiRel P.D.toPre F (1 * g' * g) p w s₂ t₀ → Fam.IsSmul P.D.toPre F ζ t₀ r → ∃ (θα₂ : Fam P.D.toPre F (1 * (g' * g))) (p₂ : QkPt P.D.toPre F (1 * (g' * g))) (w₂ : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F p₂.g.b) (DegPre.lineε (1 * (g' * g))))) (ζ₂ : F) (x₂ : TFK (R := V) F ⟶ P.A.A) (r₀ r₂ : Fam P.D.toPre F (1 * (g' * g))), PullAl P.D F P.oD (a * a') 1 (g' * g) θ θα₂ ∧ P.ToA F (1 * (g' * g)) p₂ x₂ ∧ x₂ ≫ P.oA.act (star (a * a')) = 1 ∧ w₂.IsGen ∧ ζ₂ ≠ 0 ∧ FinOrd P.D F (1 * (g' * g)) p₂ w₂ ζ₂ ∧ PhiRel P.D.toPre F (1 * (g' * g)) p₂ w₂ θα₂ r₀ ∧ Fam.IsSmul P.D.toPre F ζ₂ r₀ r₂ ∧ HEq r r₂ := by
   intro hL _ _ _ V _ _ _ _ E _ _ _ H t P hT
-  letI := H.starRing
+  let := H.starRing
   intro a a' g g' hg hg' hco haa haa' F _ _ _ θ θα hθ pb wb ζb xb tb₀ tb hxb hxba hwb hζb hfb hΦb hsb
     p w ζ x hw hζ hf hx hxa s₂ t₀ r hs₂ hΦ hr
   have hk : 1 ≤ 1 * g' := by omega
@@ -776,7 +776,7 @@ theorem descent_cast (hL : Laws) (hL2 : Laws2) (hL4 : Laws4) (hT : TwistBaseChan
       PullAl P.D F P.oD (a * a') 1 (g' * g) θ θα₂ ∧ P.ToA F (1 * (g' * g)) p₂ x₂ ∧
       x₂ ≫ P.oA.act (star (a * a')) = 1 ∧ w₂.IsGen ∧ ζ₂ ≠ 0 ∧ FinOrd P.D F (1 * (g' * g)) p₂ w₂ ζ₂ ∧
       PhiRel P.D.toPre F (1 * (g' * g)) p₂ w₂ θα₂ r₀ ∧ Fam.IsSmul P.D.toPre F ζ₂ r₀ r₂ ∧ HEq r r₂ := by
-  letI := H.starRing
+  let := H.starRing
   intro a a' g g' k e
   subst e
   exact descent_one_generator hL hL2 hL4 hT V E H t P hP a a' g g'
@@ -784,7 +784,7 @@ theorem descent_cast (hL : Laws) (hL2 : Laws2) (hL4 : Laws4) (hT : TwistBaseChan
 theorem descentIdF_of_laws :
     Laws → Laws2 → Laws3 → Laws4 → Laws5 → TwistBaseChangeStatement → DescentIdF := by
   intro hL hL2 hL3 hL4 hL5 hT E _ _ _ H Dw l Xo c n
-  letI := H.starRing
+  let := H.starRing
   intro T io y _ C P _ g g' hg hg' hne _ _ π π' hπ hπ' _ _ _ F _ _ _ _ _ _ v ϖ _ _ Q _ D' A' G' gr cm pD pA pG U' PU
     md oD' hx hoD oA' hoA θ θα hθ pb wb ζb xb tb₀ tb hxb hxba hwb hζb hfb hΦb hsb p w ζ x hw hζ hf hpx hxπ
     s₂ t₀ r hs₂ hΦ hr

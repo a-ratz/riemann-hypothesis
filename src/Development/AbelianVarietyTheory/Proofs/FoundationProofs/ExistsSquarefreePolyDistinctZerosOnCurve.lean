@@ -74,16 +74,16 @@ theorem reduced_fibres_almost_all (k A : Type) [Field k] [IsAlgClosed k] [CharZe
     [Module.Finite k[X] A] [Module.Free k[X] A] :
     ∃ δ : k[X], δ ≠ 0 ∧ ∀ α : k, δ.eval α ≠ 0 → ∀ Q : Ideal A, Q.IsMaximal →
       algebraMap k[X] A (X - C α) ∉ Q ^ 2 := by
-  haveI : Module.IsTorsionFree k[X] A := inferInstance
-  haveI : FaithfulSMul k[X] A := inferInstance
-  haveI : Algebra.IsSeparable (FractionRing k[X]) (FractionRing A) := inferInstance
+  have : Module.IsTorsionFree k[X] A := inferInstance
+  have : FaithfulSMul k[X] A := inferInstance
+  have : Algebra.IsSeparable (FractionRing k[X]) (FractionRing A) := inferInstance
   have hD := differentIdeal_ne_bot (A := k[X]) (B := A)
   obtain ⟨d, hd, hd0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hD
-  have hc := Ideal.comap_ne_bot_of_integral_mem hd0 hd (Algebra.IsIntegral.isIntegral (R := k[X]) d)
+  have hc := Ideal.under_ne_bot_of_integral_mem hd0 hd (Algebra.IsIntegral.isIntegral (R := k[X]) d)
   obtain ⟨δ, hδ, hδ0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
   refine ⟨δ, hδ0, fun α hα Q hQ hmem => hα ?_⟩
   set p : Ideal k[X] := Ideal.span {X - C α} with hpdef
-  haveI hpmax : p.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible (irreducible_X_sub_C α)
+  have hpmax : p.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible (irreducible_X_sub_C α)
   have hp0 : p ≠ ⊥ := by
     rw [hpdef, Ne, Ideal.span_singleton_eq_bot]; exact X_sub_C_ne_zero α
   have hP : Q ^ 2 ∣ p.map (algebraMap k[X] A) := by
@@ -164,16 +164,16 @@ theorem main : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CharZero k] [CommRing
   have hδN : δ * N ≠ 0 := mul_ne_zero hδ0 hN
   have hfin : {a : k | (δ * N).eval a = 0}.Finite :=
     ((δ * N).roots.toFinset.finite_toSet).subset (fun a ha => by
-      simp only [Set.mem_setOf_eq] at ha
+      simp only [Set.mem_ofPred_eq] at ha
       simp [Polynomial.mem_roots hδN, ha])
   have hinf : {a : k | (δ * N).eval a ≠ 0}.Infinite := by
     have := hfin.infinite_compl
-    simpa [Set.compl_setOf] using this
+    simpa [Set.compl_ofPred] using this
   obtain ⟨F, hFS, hFcard⟩ := hinf.exists_subset_card_eq s
   have hF : ∀ a ∈ F, δ.eval a ≠ 0 ∧ N.eval a ≠ 0 := by
     intro a ha
     have := hFS ha
-    simp only [Set.mem_setOf_eq, eval_mul] at this
+    simp only [Set.mem_ofPred_eq, eval_mul] at this
     exact ⟨left_ne_zero_of_mul this, right_ne_zero_of_mul this⟩
   set q : k[X] := ∏ a ∈ F, (X - C a) with hq
   have hqm : q.Monic := monic_prod_of_monic _ _ (fun a _ => monic_X_sub_C a)

@@ -125,12 +125,12 @@ theorem exists_prim {m : ℕ} (c : Fin m → 𝓞 K) (hc : c ≠ 0) (𝔭 : Idea
       obtain ⟨o, ho, hop⟩ := H t hint_r i
       show (LinearMap.toSpanSingleton (𝓞 K) K t) (c i) ∈
         (((𝔪 : Ideal (𝓞 K)) : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K)
-      rw [LinearMap.toSpanSingleton_apply, FractionalIdeal.mem_coe, FractionalIdeal.mem_coeIdeal]
+      rw [LinearMap.toSpanSingleton_apply, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_coeIdeal]
       refine ⟨o, hp𝔪 hop, ?_⟩
       rw [Algebra.smul_def, mul_comm]
       exact ho
     have hyS := hS hy
-    rw [Submodule.mem_comap, LinearMap.toSpanSingleton_apply, FractionalIdeal.mem_coe,
+    rw [Submodule.mem_comap, LinearMap.toSpanSingleton_apply, FractionalIdeal.mem_coeToSubmodule,
       Algebra.smul_def] at hyS
     exact hyS
   first
@@ -173,12 +173,12 @@ theorem card_quot_le (𝔭 : Ideal (𝓞 K)) [h𝔭 : 𝔭.IsMaximal] (n : ℕ)
     (hdep : ∀ y : Fin (n + 1) → M, ∃ c : Fin (n + 1) → 𝓞 K, c ≠ 0 ∧ ∑ i, c i • y i = 0) :
     Nat.card (M ⧸ 𝔭 • (⊤ : Submodule (𝓞 K) M)) ≤ Nat.card (𝓞 K ⧸ 𝔭) ^ n := by
   classical
-  letI : Field (𝓞 K ⧸ 𝔭) := Ideal.Quotient.field 𝔭
+  let : Field (𝓞 K ⧸ 𝔭) := Ideal.Quotient.field 𝔭
   have hbot : 𝔭 ≠ ⊥ := by
     first
     | exact Ring.ne_bot_of_isMaximal_of_not_isField h𝔭 (NumberField.RingOfIntegers.not_isField K)
-  haveI : Finite (𝓞 K ⧸ 𝔭) := finite_quotient_of_ne_bot 𝔭 hbot
-  haveI : Module.Finite (𝓞 K ⧸ 𝔭) (M ⧸ 𝔭 • (⊤ : Submodule (𝓞 K) M)) :=
+  have : Finite (𝓞 K ⧸ 𝔭) := finite_quotient_of_ne_bot 𝔭 hbot
+  have : Module.Finite (𝓞 K ⧸ 𝔭) (M ⧸ 𝔭 • (⊤ : Submodule (𝓞 K) M)) :=
     Module.Finite.of_restrictScalars_finite (𝓞 K) _ _
   refine card_le_card_pow_of_not_linearIndependent n ?_
   intro v hv
@@ -281,13 +281,13 @@ private theorem relIndex_smul_eq_card_quotient_smul (I : Ideal (𝓞 K)) (N : Su
 theorem relIndex_smul_ne_zero (N : Submodule (𝓞 K) M) (hN : N.FG) (d : 𝓞 K) (hd : d ≠ 0) :
     (Ideal.span {d} • N).toAddSubgroup.relIndex N.toAddSubgroup ≠ 0 := by
   rw [relIndex_smul_eq_card_quotient_smul]
-  haveI : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.mpr hN
+  have : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.mpr hN
   have hb : Ideal.span {d} ≠ ⊥ := by
     rwa [Ne, Ideal.span_singleton_eq_bot]
-  haveI : Finite (𝓞 K ⧸ Ideal.span {d}) := finite_quotient_of_ne_bot _ hb
-  haveI : Module.Finite (𝓞 K ⧸ Ideal.span {d}) (N ⧸ Ideal.span {d} • (⊤ : Submodule (𝓞 K) N)) :=
+  have : Finite (𝓞 K ⧸ Ideal.span {d}) := finite_quotient_of_ne_bot _ hb
+  have : Module.Finite (𝓞 K ⧸ Ideal.span {d}) (N ⧸ Ideal.span {d} • (⊤ : Submodule (𝓞 K) N)) :=
     Module.Finite.of_restrictScalars_finite (𝓞 K) _ _
-  haveI : Finite (N ⧸ Ideal.span {d} • (⊤ : Submodule (𝓞 K) N)) :=
+  have : Finite (N ⧸ Ideal.span {d} • (⊤ : Submodule (𝓞 K) N)) :=
     Module.finite_of_finite (𝓞 K ⧸ Ideal.span {d})
   exact Nat.card_pos.ne'
 
@@ -392,8 +392,8 @@ theorem fg_smul (I : Ideal (𝓞 K)) (N : Submodule (𝓞 K) M) (hN : N.FG) : (I
 
 theorem relIndex_prime_le (𝔭 : Ideal (𝓞 K)) [𝔭.IsMaximal] (n : ℕ) (N : Submodule (𝓞 K) M) (hN : N.FG)
     (hD : HDep n N) : (𝔭 • N).toAddSubgroup.relIndex N.toAddSubgroup ≤ Ideal.absNorm 𝔭 ^ n := by
-  haveI : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.mpr hN
-  haveI : NoZeroSMulDivisors (𝓞 K) N := ⟨fun {c x} h => by
+  have : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.mpr hN
+  have : NoZeroSMulDivisors (𝓞 K) N := ⟨fun {c x} h => by
     have h' : c • (x : M) = 0 := by simpa using congrArg Subtype.val h
     rcases smul_eq_zero.mp h' with h0 | h0
     · exact Or.inl h0
@@ -426,7 +426,7 @@ private theorem relIndex_smul_le_absNorm_pow_of_hDep (n k : ℕ) : ∀ (𝔞 : I
       rw [Submodule.top_smul, AddSubgroup.relIndex_self]
       exact Nat.one_le_pow _ _ (Nat.pos_of_ne_zero (by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact h𝔞))
     · obtain ⟨𝔭, h𝔭max, h𝔞𝔭⟩ := Ideal.exists_le_maximal 𝔞 htop
-      haveI := h𝔭max
+      have := h𝔭max
       obtain ⟨𝔟, rfl⟩ := Ideal.dvd_iff_le.mpr h𝔞𝔭
       have h𝔭0 : 𝔭 ≠ ⊥ := by
         rintro rfl
@@ -841,7 +841,7 @@ instance nzsd : NoZeroSMulDivisors (𝓞 D.host.E) (VS D).V :=
     · right; exact h⟩
 
 theorem fg_of_le {N L : Submodule (𝓞 D.host.E) (VS D).V} (h : N ≤ L) (hL : L.FG) : N.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian L hL
+  have := isNoetherian_of_fg_of_noetherian L hL
   have h1 : (N.comap L.subtype).FG := IsNoetherian.noetherian _
   have h2 : (N.comap L.subtype).map L.subtype = N := by
     rw [Submodule.map_comap_subtype, inf_eq_right.mpr h]

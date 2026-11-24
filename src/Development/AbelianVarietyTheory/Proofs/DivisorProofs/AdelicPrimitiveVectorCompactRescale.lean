@@ -113,7 +113,7 @@ theorem eq_zero_of_geom : ∀ (q : ℕ) [NeZero q] (R : Type) [CommRing R], IsUn
           V.fromSpecResidueField v
       have h0 := hgeo (AlgebraicClosure (V.residueField v)) (ψ ≫ g)
       rw [res_comp, h, res_nsmul, (GlobalTheory.T.tateTwist_sections_locally_generated q j).2.2.2.1] at h0
-      haveI : Nonempty (Spec (CommRingCat.of (AlgebraicClosure (V.residueField v)))) := inferInstance
+      have : Nonempty (Spec (CommRingCat.of (AlgebraicClosure (V.residueField v)))) := inferInstance
       obtain ⟨k, rfl⟩ := (GlobalTheory.T.tateTwist_sections_locally_generated q j).2.2.1 _ _ _ h0
       rw [h]
       exact q_dvd_nsmul _ k

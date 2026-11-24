@@ -101,7 +101,7 @@ theorem leviElement_nset (p : Matrix (Fin j) (Fin j) ℂ) (hp : Formalism.Double
     · have : x = y := Fin.ext h.symm
       subst this; simp [hp.2]
     · have hne : x ≠ y := fun e => by subst e; omega
-      rw [if_neg hne]
+      rw [ite_eq_right hne]
       exact hp.1 (show y < x from h)
   · intro i c hc1 hc2 hi
     obtain ⟨x, rfl⟩ := (eB k j ρ).surjective i
@@ -123,7 +123,7 @@ def muOf (γ : B.Mat k 0) : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ := Matrix.rei
 theorem hb_eq (k : ℕ) : Hb k = Matrix.reindex (eW k) (eW k) (Hpk k 0) := by
   ext i j
   simp only [Hb, Hpk, eW, Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.diagonal_apply, finCongr_symm,
-    finCongr_apply, Fin.coe_cast, Fin.ext_iff, Fin.val_last]
+    finCongr_apply, Fin.val_cast, Fin.ext_iff, Fin.val_last]
   split_ifs <;> first | rfl | omega
 
 theorem muOf_mem (γ : B.Mat k 0) (hγ : γ ∈ B.GV k 0) : (muOf γ)ᴴ * Hb k * muOf γ = Hb k := by

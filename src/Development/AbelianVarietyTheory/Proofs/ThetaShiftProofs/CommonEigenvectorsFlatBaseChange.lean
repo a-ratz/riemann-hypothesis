@@ -124,11 +124,11 @@ theorem exists_matrix [IsNoetherianRing A] {I : Type} {g : ℕ} (D : I → Matri
       zero_mem' := by simp
       add_mem' := by
         intro X Y hX hY
-        simp only [Set.mem_setOf_eq] at hX hY ⊢
+        simp only [Set.mem_ofPred_eq] at hX hY ⊢
         rw [Matrix.map_add _ (map_add _), Matrix.vecMul_add, hX, hY, add_zero]
       smul_mem' := by
         intro r X hX
-        simp only [Set.mem_setOf_eq] at hX ⊢
+        simp only [Set.mem_ofPred_eq] at hX ⊢
         have : (r • X).map (algebraMap A B) = algebraMap A B r • X.map (algebraMap A B) := by
           ext i j; simp
         rw [this, Matrix.vecMul_smul, hX, smul_zero] }

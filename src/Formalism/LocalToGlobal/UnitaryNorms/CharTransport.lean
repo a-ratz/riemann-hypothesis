@@ -242,7 +242,7 @@ theorem valued_le_one_iff (j : E ≃+* L) (w : HeightOneSpectrum (𝓞 E)) (y : 
 theorem valued_eq_one_iff_both_le_one {K : Type} [Field K] [Valued K (WithZero (Multiplicative ℤ))] (z : K) (hz : z ≠ 0) :
     Valued.v z = 1 ↔ Valued.v z ≤ 1 ∧ Valued.v z⁻¹ ≤ 1 := by
   have h0 : Valued.v z ≠ 0 := (Valuation.ne_zero_iff _).2 hz
-  rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 h0)]
+  rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h0)]
   exact ⟨fun h => ⟨h.le, h.ge⟩, fun h => le_antisymm h.1 h.2⟩
 
 theorem valued_eq_one_iff (j : E ≃+* L) (w : HeightOneSpectrum (𝓞 E)) (y : w.adicCompletion E) :

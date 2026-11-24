@@ -82,7 +82,7 @@ theorem UpperTheory.Reformulated.B.Qi4.extendPt :
       ∃ (x : T →ₐ[O] K),
         P ≤ RingHom.ker x ∧ ∀ (a : Λ), (x : T → K) ((Algebra.algebraMap Λ T : Λ → T) a) = (y : Λ → K) a := by
   intro O Λ T K _ _ _ _ _ _ _ _ _ _ _ P y hP
-  haveI hprime : (RingHom.ker y).IsPrime := RingHom.ker_isPrime y
+  have hprime : (RingHom.ker y).IsPrime := RingHom.ker_isPrime y
   obtain ⟨Q, hPQ, hQ, hQc⟩ :=
     Ideal.exists_ideal_over_prime_of_isIntegral (RingHom.ker y) P hP
   change Q.comap (algebraMap Λ T) = RingHom.ker y at hQc
@@ -97,18 +97,18 @@ theorem UpperTheory.Reformulated.B.Qi4.extendPt :
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective a
     rw [Ideal.Quotient.eq_zero_iff_mem, hQc]
     exact ha
-  letI : Algebra (Λ ⧸ Q.comap (algebraMap Λ T)) K := ybar.toAlgebra
-  haveI : FaithfulSMul (Λ ⧸ Q.comap (algebraMap Λ T)) K :=
+  let : Algebra (Λ ⧸ Q.comap (algebraMap Λ T)) K := ybar.toAlgebra
+  have : FaithfulSMul (Λ ⧸ Q.comap (algebraMap Λ T)) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : FaithfulSMul (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
+  have : FaithfulSMul (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 Ideal.algebraMap_quotient_injective
-  haveI : Module.IsTorsionFree (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
+  have : Module.IsTorsionFree (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
     FaithfulSMul.to_isTorsionFree _ _
-  haveI : Module.IsTorsionFree (Λ ⧸ Q.comap (algebraMap Λ T)) K :=
+  have : Module.IsTorsionFree (Λ ⧸ Q.comap (algebraMap Λ T)) K :=
     FaithfulSMul.to_isTorsionFree _ _
-  haveI hint : Algebra.IsIntegral (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
+  have hint : Algebra.IsIntegral (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
     Algebra.IsIntegral.quotient
-  haveI : Algebra.IsAlgebraic (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
+  have : Algebra.IsAlgebraic (Λ ⧸ Q.comap (algebraMap Λ T)) (T ⧸ Q) :=
     Algebra.IsIntegral.isAlgebraic
   let z : (T ⧸ Q) →ₐ[Λ ⧸ Q.comap (algebraMap Λ T)] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -195,12 +195,12 @@ private theorem ls_core {A T K ι ι' : Type} [CommRing A] [IsLocalRing A] [IsNo
       1 - e ∈ (maximalIdeal A).map (algebraMap A T) ⊔
         Ideal.span (Set.range fun i => t (j i) - algebraMap A T (a (j i))) := by
   classical
-  haveI : Algebra.IsIntegral A T := Algebra.IsIntegral.of_finite A T
-  haveI : IsNoetherian A T := isNoetherian_of_isNoetherianRing_of_finite A T
+  have : Algebra.IsIntegral A T := Algebra.IsIntegral.of_finite A T
+  have : IsNoetherian A T := isNoetherian_of_isNoetherianRing_of_finite A T
   obtain ⟨e, he, hen, he1, -, -⟩ := _root_.UpperTheory.Reformulated.B.Qe2.locAbs A T ι t a htop
   set T0 := Algebra.adjoin A (Set.range (fun i => t (j i))) with hT0
   have t0mem : ∀ i, t (j i) ∈ T0 := fun i => Algebra.subset_adjoin ⟨i, rfl⟩
-  haveI : Module.Finite A T0 := Module.Finite.of_injective T0.val.toLinearMap Subtype.val_injective
+  have : Module.Finite A T0 := Module.Finite.of_injective T0.val.toLinearMap Subtype.val_injective
   have hset : Set.range (fun i => (⟨t (j i), t0mem i⟩ : T0)) =
       ((↑) : T0 → T) ⁻¹' Set.range (fun i => t (j i)) := by
     ext ⟨y, hy⟩
@@ -248,10 +248,10 @@ private theorem ls_core {A T K ι ι' : Type} [CommRing A] [IsLocalRing A] [IsNo
     rw [nilradical_eq_sInf, Ideal.mem_sInf] at hnil
     push_neg at hnil
     obtain ⟨P, hP, hfP⟩ := hnil
-    haveI : P.IsPrime := hP
+    have : P.IsPrime := hP
     obtain ⟨Q, hQ, hQP⟩ := Ideal.exists_minimalPrimes_le (I := ⊥) (J := P) bot_le
     have hfQ : f ∉ Q := fun h => hfP (hQP h)
-    haveI hQp : Q.IsPrime := hQ.1.1
+    have hQp : Q.IsPrime := hQ.1.1
     have hQA : Ideal.comap (algebraMap A T) Q ≤ RingHom.ker x.toIntAlgHom := by
       intro b hb
       rw [Ideal.mem_comap] at hb
@@ -383,10 +383,10 @@ private theorem ls_mem {A M ι : Type} [CommRing A] [IsLocalRing A] [AddCommGrou
 theorem UpperTheory.V.Hi.levelUR2LocSub :
     ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (A M ι ι' : Type) [CommRing A] [Algebra c.O A] [Alg.IsCO c.O A] [IsDomain A] [AddCommGroup M] [Module A M] (Y : Submodule A M) [Module.Finite A Y] [Module.Free A Y] (op : ι → Module.End A M) [Fact (CommOn Y op)] (j : ι' → ι) (a : ι → c.O) (x : A →ₐ[c.O] Qbar l), (∀ z : heckeAlg Y op →+* Qbar l, z.comp (algebraMap A _) = x.toRingHom → (∀ i, ‖z (heckeGen Y op (j i)) - algebraMap c.O (Qbar l) (a (j i))‖ < 1) → ∀ i, ‖z (heckeGen Y op i) - algebraMap c.O (Qbar l) (a i)‖ < 1) → locPart Y (fun i => op (j i)) (fun i => algebraMap c.O A (a (j i))) = locPart Y op fun i => algebraMap c.O A (a i) := by
   intro l _ c A M ι ι' _ _ _ _ _ _ Y _ _ op _ j a x hH
-  haveI := Alg.IsCO.toIsLocalRing c.O (R := A)
-  haveI : IsNoetherianRing A := Alg.IsCO.toIsNoetherian (O := c.O)
-  haveI : IsAdicComplete (maximalIdeal A) A := Alg.IsCO.complete (O := c.O)
-  haveI : Module.Finite A (heckeAlg Y op) :=
+  have := Alg.IsCO.toIsLocalRing c.O (R := A)
+  have : IsNoetherianRing A := Alg.IsCO.toIsNoetherian (O := c.O)
+  have : IsAdicComplete (maximalIdeal A) A := Alg.IsCO.complete (O := c.O)
+  have : Module.Finite A (heckeAlg Y op) :=
     Module.IsNoetherian.finite A (Subalgebra.toSubmodule (heckeAlg Y op))
   let ρ : heckeAlg Y op →+* Module.End A Y := (heckeAlg Y op).val.toRingHom
   let u : ι → heckeAlg Y op := fun i => heckeGen Y op i - algebraMap A _ (algebraMap c.O A (a i))

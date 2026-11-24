@@ -170,7 +170,7 @@ theorem notMem_of_mem_QE (hsel : IsSel X sel) {P : HeightOneSpectrum (𝓞 X.E)}
   have h6 : ringChar (𝓞 X.F ⧸ v.asIdeal) ∣ l := by
     rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact h5
-  haveI := v.isPrime
+  have := v.isPrime
   rcases (Nat.dvd_prime hl).1 h6 with h7 | h7
   · exact absurd h7 CharP.ringChar_ne_one
   · change ringChar (𝓞 X.F ⧸ v.asIdeal) ∈ S

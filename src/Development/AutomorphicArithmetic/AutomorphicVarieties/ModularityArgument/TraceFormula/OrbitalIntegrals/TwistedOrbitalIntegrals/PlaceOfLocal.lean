@@ -107,11 +107,11 @@ private theorem key (hT : GLTop) (hC : ExtCont) (hCC : CentComm) (hH : HaarComm)
   by_cases hex : ∃ ρ, PositivityTheory.Rg.Tf.Geo.IsNormAlong id
       (fun t : Subgroup.centralizer {γ} => mapGL n ι (t : GL (Fin n) k)) ν ρ
   · have hρ := (y2 ν fun g => hex.choose (mapGL n (e.symm : E →+* S) g)).1.2 (by simp only [hl]; exact hex.choose_spec)
-    haveI : MeasurableInv (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) k)) :=
-      ⟨(measurable_subtype_coe.inv).subtype_mk⟩
+    have : MeasurableInv (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) k)) :=
+      ⟨(measurable_subtypeVal.inv).subtype_mk⟩
     have k1 := hA _ _ (mE.map (mapGL n (e : S →+* E))) ν
       ((incl : GL (Fin n) k →* GL (Fin n) E).comp (Subgroup.centralizer {γ}).subtype)
-      (d1.measurable.comp measurable_subtype_coe) Φ hΦc.measurable
+      (d1.measurable.comp measurable_subtypeVal) Φ hΦc.measurable
       (fun t g => congrArg φ (twConj_mul_left _ _ (hS ▸ ⟨t, t.2, rfl⟩) g)) _ hρ
     refine Eq.trans ?_ k1.symm
     rw [(y2 ν _).2, PositivityTheory.Rg.Tf.Geo.quotInt, dite_eq_left hex]
@@ -121,8 +121,8 @@ private theorem key (hT : GLTop) (hC : ExtCont) (hCC : CentComm) (hH : HaarComm)
 theorem UpperTheory.V.Z.Tf.Orb.placeOfLocal :
     UpperTheory.V.Z.Tf.Orb.GLTop → UpperTheory.V.Z.Tf.Orb.ExtCont → UpperTheory.V.Z.Tf.Orb.CentComm → UpperTheory.V.Z.Tf.Orb.HaarComm → UpperTheory.V.Z.Tf.Orb.TwCentImg → UpperTheory.V.Z.Tf.Orb.GeoOfMatch → UpperTheory.V.Z.Tf.Orb.GeoTransport → UpperTheory.V.Z.Tf.Orb.AlongIndep → UpperTheory.V.Z.Tf.Orb.PlaceOfLocal := by
   intro hT hC hCC hH hI hG hX hA F E _ _ _ _ _ _ σ hσ v w hw i1 i2 i3 i4 s hs hr h1 h2 n _ _ _ _ mE mF hE hF _ _
-  letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
-  haveI : CharZero (v.adicCompletion F) := algebraRat.charZero _
+  let : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
+  have : CharZero (v.adicCompletion F) := algebraRat.charZero _
   let e : CompletionsOver E v ≃+* w.1.adicCompletion E := RingEquiv.piUnique fun u : PlacesOver E v => u.1.adicCompletion E
   have he : Continuous e := continuous_apply w
   have he' : Continuous e.symm := (Homeomorph.piUnique fun u : PlacesOver E v => u.1.adicCompletion E).symm.continuous

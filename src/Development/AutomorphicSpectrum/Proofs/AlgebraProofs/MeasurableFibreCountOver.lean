@@ -57,7 +57,7 @@ variable {m n : ℕ}
 
 theorem isClosed_linProj_meets_compact {K : Set (EuclideanSpace ℂ (Fin n))} (hK : IsCompact K) :
     IsClosed {p : (Fin m → Fin n → ℂ) × EuclideanSpace ℂ (Fin m) | ∃ y ∈ K, linProj p.1 y = p.2} := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have hc : Continuous (fun q : ((Fin m → Fin n → ℂ) × EuclideanSpace ℂ (Fin m)) × K =>
       linProj q.1.1 (q.2 : EuclideanSpace ℂ (Fin n))) := by
     unfold linProj
@@ -76,7 +76,7 @@ theorem isClosed_linProj_meets_compact {K : Set (EuclideanSpace ℂ (Fin n))} (h
 
 theorem isSigmaCompact_of_isOpen_euclidean {U : Set (EuclideanSpace ℂ (Fin n))} (hU : IsOpen U) :
     IsSigmaCompact U := by
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   exact isSigmaCompact_iff_sigmaCompactSpace.mpr inferInstance
 
 theorem measurableSet_linProj_meets {S U : Set (EuclideanSpace ℂ (Fin n))} (hS : IsSigmaCompact S)
@@ -154,7 +154,7 @@ theorem measurableSet_natCast_le_encard_ptsOver {S : Set (EuclideanSpace ℂ (Fi
     (hS : IsSigmaCompact S) (N : ℕ) :
     MeasurableSet {p : (Fin m → Fin n → ℂ) × EuclideanSpace ℂ (Fin m) |
       (N : ℕ∞) ≤ (ptsOver S p.1 p.2).encard} := by
-  haveI : Countable (countableBasis (EuclideanSpace ℂ (Fin n))) :=
+  have : Countable (countableBasis (EuclideanSpace ℂ (Fin n))) :=
     (countable_countableBasis (EuclideanSpace ℂ (Fin n))).to_subtype
   have hEq : {p : (Fin m → Fin n → ℂ) × EuclideanSpace ℂ (Fin m) |
       (N : ℕ∞) ≤ (ptsOver S p.1 p.2).encard} =
@@ -177,7 +177,7 @@ theorem measurable_cntOver : ∀ (n m : ℕ) (S : Set (EuclideanSpace ℂ (Fin n
       fun p => ⨆ N : ℕ, {p : (Fin m → Fin n → ℂ) × EuclideanSpace ℂ (Fin m) |
         (N : ℕ∞) ≤ (ptsOver S p.1 p.2).encard}.indicator (fun _ => (N : ℝ≥0∞)) p := by
     funext p
-    simp only [cntOver, Set.indicator_apply, Set.mem_setOf_eq]
+    simp only [cntOver, Set.indicator_apply, Set.mem_ofPred_eq]
     generalize (ptsOver S p.1 p.2).encard = e
     induction e using ENat.recTopCoe with
     | top => simp [ENNReal.iSup_natCast]

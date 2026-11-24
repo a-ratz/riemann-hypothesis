@@ -202,7 +202,7 @@ theorem UpperTheory.V.Bern.b_termdiff :
       ((differentiable_const _).mul ((hb _ h2).sub (hb _ h3)))).differentiableOn
   · intro n s hs
     obtain ⟨hre, hball⟩ := hs
-    simp only [Set.mem_setOf_eq] at hre
+    simp only [Set.mem_ofPred_eq] at hre
     rw [mem_ball_zero_iff] at hball
     have ha : (0 : ℝ) < (n : ℝ) + x := by positivity
     have hre2 : -2 ≤ s.re := by linarith
@@ -375,7 +375,7 @@ theorem UpperTheory.V.Bern.b_lprim :
   intro N _ χ k hk
   refine ⟨UpperTheory.V.Bern.b_lval χ k hk, ?_⟩
   unfold UpperTheory.V.Bern.Lprim UpperTheory.V.Bern.Bprim
-  haveI : NeZero χ.conductor := ⟨DirichletCharacter.conductor_ne_zero χ⟩
+  have : NeZero χ.conductor := ⟨DirichletCharacter.conductor_ne_zero χ⟩
   exact UpperTheory.V.Bern.b_lval _ k hk
 end -- clump:auto
 end -- clump:auto
@@ -474,11 +474,11 @@ theorem UpperTheory.V.Bern.b_fe :
   have he1 : Complex.exp ((Real.pi : ℂ) * Complex.I * ((m + 1 : ℕ) : ℂ) / 2) = Complex.I ^ (m + 1) := by
     rw [show (Real.pi : ℂ) * Complex.I * ((m + 1 : ℕ) : ℂ) / 2
         = ((m + 1 : ℕ) : ℂ) * ((Real.pi : ℂ) / 2 * Complex.I) by ring,
-      Complex.exp_nat_mul, Complex.exp_pi_div_two_mul_I]
+      Complex.exp_natCast_mul, Complex.exp_pi_div_two_mul_I]
   have he2 : Complex.exp (-(Real.pi : ℂ) * Complex.I * ((m + 1 : ℕ) : ℂ) / 2) = (-Complex.I) ^ (m + 1) := by
     rw [show -(Real.pi : ℂ) * Complex.I * ((m + 1 : ℕ) : ℂ) / 2
         = ((m + 1 : ℕ) : ℂ) * (-(Real.pi : ℂ) / 2 * Complex.I) by ring,
-      Complex.exp_nat_mul, Complex.exp_neg_pi_div_two_mul_I]
+      Complex.exp_natCast_mul, Complex.exp_neg_pi_div_two_mul_I]
   have hGam : Complex.Gamma ((m + 1 : ℕ) : ℂ) = (m.factorial : ℂ) := by
     rw [Nat.cast_succ, Complex.Gamma_nat_eq_factorial]
   have h2pi : (2 * (Real.pi : ℂ)) = ((2 * Real.pi : ℝ) : ℂ) := by push_cast; ring
@@ -539,7 +539,7 @@ open Finset UpperTheory.V.Bern
 theorem UpperTheory.V.Bern.b_nzC :
     ∀ {N : ℕ} [NeZero N] (χ : DirichletCharacter ℂ N) (k : ℕ), 1 ≤ k → χ (-1) = (-1) ^ k → Bprim k χ ≠ 0 ∧ (2 ≤ k → genB k χ ≠ 0) := by
   intro N _ χ k hk hpar
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   have hprim := χ.primitiveCharacter_isPrimitive
   have hpar' : χ.primitiveCharacter (-1) = (-1) ^ k := by rw [(b_parity k χ).2, hpar]
   have hne1 : χ.primitiveCharacter⁻¹ ≠ 1 ∨ (k : ℂ) ≠ 1 := by

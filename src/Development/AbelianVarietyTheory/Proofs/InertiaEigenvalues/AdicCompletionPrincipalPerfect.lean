@@ -123,7 +123,7 @@ theorem perfect : ∀ (l : ℕ) [Fact l.Prime] (V : Type) [CommRing V] [CharP V 
   refine ⟨h0, ?_⟩
   rcases subsingleton_or_nontrivial C with hC | hC
   · exact ⟨fun _ _ _ => Subsingleton.elim _ _, fun y => ⟨y, Subsingleton.elim _ _⟩⟩
-  haveI : CharP C l := (CharP.charP_iff_prime_eq_zero hl.out).mpr h0
+  have : CharP C l := (CharP.charP_iff_prime_eq_zero hl.out).mpr h0
   have hl0 : l ≠ 0 := hl.out.ne_zero
   have hle : ∀ n : ℕ, n ≤ l * n := fun n => Nat.le_mul_of_pos_left n hl.out.pos
   refine ⟨fun y z hyz => ?_, fun y => ?_⟩

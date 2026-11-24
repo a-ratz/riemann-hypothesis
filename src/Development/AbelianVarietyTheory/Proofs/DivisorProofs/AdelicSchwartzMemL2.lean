@@ -52,7 +52,7 @@ theorem schA_memLp_two : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [F
     ∀ μ : MeasureTheory.Measure (κ → AdeleRing (𝓞 F) F), μ.IsAddHaarMeasure →
     ∀ Φ ∈ GlobalTheory.WeilM.schA F κ, MeasureTheory.MemLp Φ 2 μ := by
   intro F _ _ κ _
-  letI : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
+  let : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
   intro μ hμ Φ hΦ
   obtain ⟨n, g, f, hg, rfl⟩ := GlobalTheory.ThetaSobolevBase.exists_sumPure hΦ
   classical

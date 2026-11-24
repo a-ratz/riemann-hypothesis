@@ -82,7 +82,7 @@ theorem uniform_majorant {g : (κ → FiniteAdeleRing (𝓞 F) F) → ℂ} (hg :
   set Kf : Set (κ → FiniteAdeleRing (𝓞 F) F) := (fun p => p.1 - finV F p.2) '' (tsupport g ×ˢ Kκ)
   have hKf : IsCompact Kf := (hg.2.isCompact.prod hKκ).image (continuous_fst.sub ((continuous_finV F).comp continuous_snd))
   obtain ⟨N, hN, hKN⟩ := exists_nat_mul_integral_of_isCompact F hKf
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   set k := Module.finrank ℤ (denomLattice F κ N) + 1
   set S : Set (κ → F) := {η | (fun i => mixedEmbedding F (η i)) ∈ denomLattice F κ N}
   have hw : Summable (S.indicator fun η => ((1 + ‖(fun i => mixedEmbedding F (η i))‖) ^ k)⁻¹) := by
@@ -211,15 +211,15 @@ theorem exists_admitted_eq_diagonalLagrangian_thetaIntegral_alt : ∀ (F E : Typ
   set Cm : Matrix (Fin (nT + nT)) (Fin nT) (AF F ⊗[F] E) :=
     (diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id with hCm
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : Countable (ratLF F E nS nT) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : Countable (ratLF F E nS nT) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hfin : ν 𝓕 < ⊤ :=
     GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WOF F E nS nT) (ratLF F E nS nT) hK hKc ν h𝓕
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
-  haveI : IsModuleTopology (AF F) (Matrix (Fin (nT + nT)) (Fin nS) (AE F E)) :=
+  have : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have : IsModuleTopology (AF F) (Matrix (Fin (nT + nT)) (Fin nS) (AE F E)) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin (nT + nT) → Fin nS → AE F E))
   have hce : Continuous co.e := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hCu : Continuous fun u : WOF F E nS nT => Cm * u := continuous_const.matrix_mul continuous_id
   have hcont : ∀ Φ ∈ schA F κ, Continuous fun u : WOF F E nS nT => thetaTr F co B.ψ Φ (Cm * u) :=
     fun Φ hΦ => ((schA_cont F B.ψ hψ.1 hψ.2.1 hΦ).2.comp hce).comp hCu

@@ -139,8 +139,8 @@ private theorem kills_of_jac {n : ℕ} {k R : Type} [Field k] [Ring R] [Algebra 
   have hu : IsUnit P := by
     by_contra hnu
     obtain ⟨M, hM, hPM⟩ := exists_max_ideal_of_mem_nonunits hnu
-    letI := Ideal.Quotient.field M
-    haveI : Module.Finite k (MvPolynomial (Fin m) k ⧸ M) := finite_of_finite_type_of_isJacobsonRing _ _
+    let := Ideal.Quotient.field M
+    have : Module.Finite k (MvPolynomial (Fin m) k ⧸ M) := finite_of_finite_type_of_isJacobsonRing _ _
     obtain ⟨v, hv⟩ := left_inv_of_jac (A := k) (fun i => Ideal.Quotient.mkₐ k M (MvPolynomial.X i))
       (fun i => h i * x) (fun i => Ideal.mul_mem_left _ _ hx)
     have h1 := congrArg (D.D _) hv
@@ -177,7 +177,7 @@ theorem UpperTheory.V.CA.d_rad :
     refine kills_of_jac _ _ ?_
     let f : E →+* ResidueField A ⊗[A] E :=
       (Algebra.TensorProduct.includeRight : E →ₐ[A] ResidueField A ⊗[A] E).toRingHom
-    haveI : RingHomSurjective f := ⟨fun t => by
+    have : RingHomSurjective f := ⟨fun t => by
       induction t with
       | add a b ha hb =>
         obtain ⟨a, rfl⟩ := ha
@@ -204,7 +204,7 @@ open TensorProduct IsLocalRing Polynomial UpperTheory.V.W UpperTheory.V.Alg Uppe
 private theorem fss_scalar {k E M : Type} [Field k] [IsAlgClosed k] [Ring E] [Algebra k E] [AddCommGroup M]
     [Module k M] [Module E M] [IsScalarTower k E M] [IsSimpleModule E M]
     (h : ∀ x : E, ∃ p : k[X], p.Monic ∧ aeval x p = 0) (φ : Module.End E M) : ∃ c : k, ∀ v, φ v = c • v := by
-  haveI := IsSimpleModule.nontrivial E M
+  have := IsSimpleModule.nontrivial E M
   obtain ⟨v, hv⟩ := exists_ne (0 : M)
   obtain ⟨r, hr⟩ := IsSimpleModule.toSpanSingleton_surjective E hv (φ v)
   replace hr : r • v = φ v := hr
@@ -273,7 +273,7 @@ private theorem fss_count {n : ℕ} {k E : Type} [Field k] [IsAlgClosed k] [Ring
     (h : ∀ x : E, ∃ p : k[X], p.Monic ∧ p.natDegree ≤ n ∧ aeval x p = 0) (m : ℕ → Ideal E)
     (hm : ∀ i, IsCoatom (m i)) (hinj : Function.Injective fun i => Module.annihilator E (E ⧸ m i)) : False := by
   classical
-  haveI : ∀ i, IsSimpleModule E (E ⧸ m i) := fun i => isSimpleModule_iff_isCoatom.2 (hm i)
+  have : ∀ i, IsSimpleModule E (E ⧸ m i) := fun i => isSimpleModule_iff_isCoatom.2 (hm i)
   let a : ℕ ↪ k := Infinite.natEmbedding k
   let M := ∀ i : Fin (n + 1), E ⧸ m i
   have hz : ∀ (φ : Module.End E M) (i j : Fin (n + 1)) (x : E ⧸ m i), i ≠ j → φ (Pi.single i x) j = 0 := by
@@ -323,15 +323,15 @@ private theorem fss_alg {n : ℕ} {k E : Type} [Field k] [IsAlgClosed k] [Ring E
   let S : Set (Ideal E) := {P | ∃ m : Ideal E, IsCoatom m ∧ Module.annihilator E (E ⧸ m) = P}
   have hS : ∀ P : S, ∃ m : Ideal E, IsCoatom m ∧ Module.annihilator E (E ⧸ m) = P := fun P => P.2
   choose m hm hm' using hS
-  haveI : Finite S := by
+  have : Finite S := by
     by_contra hinf
     rw [not_finite_iff_infinite] at hinf
     let e := Infinite.natEmbedding S
     refine fss_count h (fun i => m (e i)) (fun i => hm _) fun i j hij => e.injective (Subtype.ext ?_)
     rw [← hm', ← hm']
     exact hij
-  haveI : ∀ P, IsSimpleModule E (E ⧸ m P) := fun i => isSimpleModule_iff_isCoatom.2 (hm i)
-  haveI : ∀ P, Module.Finite k (E ⧸ m P) := fun i => fss_fin h
+  have : ∀ P, IsSimpleModule E (E ⧸ m P) := fun i => isSimpleModule_iff_isCoatom.2 (hm i)
+  have : ∀ P, Module.Finite k (E ⧸ m P) := fun i => fss_fin h
   let f : E →ₗ[k] ∀ P : S, Module.End k (E ⧸ m P) :=
     LinearMap.pi fun P => (Algebra.lsmul k k (E ⧸ m P) (A := E)).toLinearMap
   refine Module.Finite.of_injective f ((injective_iff_map_eq_zero f).2 fun x hx => ?_)
@@ -353,11 +353,11 @@ theorem UpperTheory.V.CA.d_faithful_ss :
     have h1 := (d_ker _ _).1.1 ((d_rad D hCH x).2 hx)
     have h2 : D.Kills x := by
       intro S _ _ y
-      letI : Algebra (ResidueField k) S :=
+      let : Algebra (ResidueField k) S :=
         (Ideal.Quotient.lift (maximalIdeal k) (algebraMap k S) fun a ha => by
           rw [IsLocalRing.maximalIdeal_eq_bot, Ideal.mem_bot] at ha
           rw [ha, map_zero]).toAlgebra
-      haveI : IsScalarTower k (ResidueField k) S := .of_algebraMap_eq fun _ => rfl
+      have : IsScalarTower k (ResidueField k) S := .of_algebraMap_eq fun _ => rfl
       obtain ⟨z, rfl⟩ : ∃ z, Det.cancel k E (ResidueField k) S z = y := by
         induction y with
         | tmul s e => exact ⟨s ⊗ₜ (1 ⊗ₜ e), by simp [Det.cancel_tmul]⟩
@@ -371,9 +371,9 @@ theorem UpperTheory.V.CA.d_faithful_ss :
     have h4 := (d_ker D x).1.2 h2
     rw [hD] at h4
     simpa using h4
-  haveI := fss_alg (n := n) (k := k) (E := E)
+  have := fss_alg (n := n) (k := k) (E := E)
     (fun x => ⟨D.chi x, (d_chi D x).2.2.2.2.1, (d_chi D x).2.2.2.2.2.1, ((d_chS D k).2.2 hCH).2 x⟩) hj
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite k E
+  have : IsArtinianRing E := IsArtinianRing.of_finite k E
   exact ⟨inferInstance, IsArtinianRing.isSemisimpleRing_iff_jacobson.2 hj⟩
 end -- clump:auto
 end -- clump:auto

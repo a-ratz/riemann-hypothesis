@@ -229,7 +229,7 @@ theorem FiniteOrd.proof : FiniteOrd.Statement := by
     Order.krullDim_le_of_strictMono
       (fun p : PrimeSpectrum B ↦
         (⟨Ideal.comap (algebraMap R B) p.asIdeal, inferInstance⟩ : PrimeSpectrum R))
-      (fun p q hpq ↦ Ideal.IsIntegral.comap_lt_comap (R := R) (A := B) hpq)
+      (fun p q hpq ↦ Ideal.IsIntegral.under_lt_under (R := R) (A := B) hpq)
   have hS : ringKrullDim (Localization.AtPrime 𝔫.asIdeal) ≤ 1 := by
     rw [IsLocalization.AtPrime.ringKrullDim_eq_height 𝔫.asIdeal (Localization.AtPrime 𝔫.asIdeal)]
     refine Ideal.height_le_ringKrullDim_of_isPrime.trans (hB.trans ?_)
@@ -297,7 +297,7 @@ theorem ker_eq {k L : Type} [Field k] [CommRing L] (hL : IsField L) [Algebra k L
     (hQ : ∀ q ∈ Q, aeval x q = 0) :
     RingHom.ker (aeval x : MvPolynomial (Fin n) k →ₐ[k] L) = Q := by
   classical
-  letI : Field L := hL.toField
+  let : Field L := hL.toField
   obtain ⟨j₀, hj₀⟩ : ∃ j, x j ≠ 0 := by
     by_contra h
     push Not at h

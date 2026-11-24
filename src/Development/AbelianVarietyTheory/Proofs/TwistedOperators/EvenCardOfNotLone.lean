@@ -120,7 +120,7 @@ theorem exists_field (p : Place F) : ∃ (A : Type) (_ : Field A) (_ : CharZero 
     (∀ δ : Fˣ, nrm p δ = normSub φ (δ : F)) ∧ sqr p = sqSub φ ∧
     ∀ d x y : A, d ≠ 0 → x ≠ 0 → y ≠ 0 → ¬ Nm d x → ¬ Nm d y → Nm d (x * y) := by
   rcases p with v | σ
-  · haveI : CharZero (v.adicCompletion F) :=
+  · have : CharZero (v.adicCompletion F) :=
       charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
     refine ⟨v.adicCompletion F, inferInstance, inferInstance, algebraMap F (v.adicCompletion F),
       fun δ => rfl, rfl, ?_⟩
@@ -180,20 +180,20 @@ theorem neg_mem_nrm (p : Place F) (b : Fˣ) : -b ∈ nrm p b := mem_nrm_of_eq p 
 theorem hs_comm (p : Place F) (a b : Fˣ) : hs p a b = hs p b a := by
   unfold hs
   by_cases h : a ∈ nrm p b
-  · rw [if_pos h, if_pos (nrm_symm h)]
-  · rw [if_neg h, if_neg (fun h' => h (nrm_symm h'))]
+  · rw [ite_eq_left h, ite_eq_left (nrm_symm h)]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h (nrm_symm h'))]
 
 theorem hs_mul_left (p : Place F) (a a' b : Fˣ) : hs p (a * a') b = hs p a b * hs p a' b := by
   unfold hs
   by_cases h : a ∈ nrm p b <;> by_cases h' : a' ∈ nrm p b
-  · rw [if_pos h, if_pos h', if_pos (mul_mem h h'), mul_one]
-  · rw [if_pos h, if_neg h', if_neg, one_mul]
+  · rw [ite_eq_left h, ite_eq_left h', ite_eq_left (mul_mem h h'), mul_one]
+  · rw [ite_eq_left h, ite_eq_right h', ite_eq_right, one_mul]
     intro hm
     exact h' (by simpa using mul_mem (inv_mem h) hm)
-  · rw [if_neg h, if_pos h', if_neg, mul_one]
+  · rw [ite_eq_right h, ite_eq_left h', ite_eq_right, mul_one]
     intro hm
     exact h (by simpa using mul_mem hm (inv_mem h'))
-  · rw [if_neg h, if_neg h', if_pos (mul_mem_nrm_of_not h h')]
+  · rw [ite_eq_right h, ite_eq_right h', ite_eq_left (mul_mem_nrm_of_not h h')]
     decide
 
 theorem hs_mul_right (p : Place F) (a b b' : Fˣ) : hs p a (b * b') = hs p a b * hs p a b' := by
@@ -743,10 +743,10 @@ theorem even_card_of_not_lone {a b : Fˣ} (L : Finset (Place F)) (hL : ∀ p, p 
         (fun p hp hpq => sqr_le_nrm q b (hc2 p hp q hq (Ne.symm hpq)))
       rw [← hs_eq_one_iff, hs_mul_left]
       by_cases hqL : q ∈ L
-      · rw [if_pos hqL] at h
+      · rw [ite_eq_left hqL] at h
         rw [h, hs_eq_neg_one_iff.2 ((hL q).1 hqL)]
         simp
-      · rw [if_neg hqL] at h
+      · rw [ite_eq_right hqL] at h
         rw [h, hs_eq_one_iff.2 (not_not.1 (mt (hL q).2 hqL))]
         simp
     have he : ∏ p ∈ L, c p = a⁻¹ * (a * ∏ p ∈ L, c p) := by group
@@ -784,10 +784,10 @@ theorem prod_hs_of_not_lone (a b : Fˣ) (T : Finset (Place F)) (hT : ∀ p ∈ T
     have h := hP q
     rw [← hs_eq_one_iff, hs_mul_left]
     by_cases hqΛ : q ∈ hfin.toFinset
-    · rw [if_pos hqΛ] at h
+    · rw [ite_eq_left hqΛ] at h
       rw [h, hs_eq_neg_one_iff.2 ((hΛ q).1 hqΛ).1]
       simp
-    · rw [if_neg hqΛ] at h
+    · rw [ite_eq_right hqΛ] at h
       have ha : a ∈ nrm q b := by
         by_contra ha
         exact hqΛ ((hΛ q).2 ⟨ha, hq⟩)
@@ -797,7 +797,7 @@ theorem prod_hs_of_not_lone (a b : Fˣ) (T : Finset (Place F)) (hT : ∀ p ∈ T
     intro q hq
     have h := hP q
     have hqΛ : q ∉ hfin.toFinset := fun h' => hq ((hΛ q).1 h').2
-    rw [if_neg hqΛ] at h
+    rw [ite_eq_right hqΛ] at h
     rw [hs_mul_left, h, mul_one]
   have hfin' := finite_not_mem_nrm (a * ∏ p ∈ hfin.toFinset, c p) b
   have hL' : ∀ p, p ∈ hfin'.toFinset ↔ a * ∏ p ∈ hfin.toFinset, c p ∉ nrm p b :=
@@ -996,8 +996,8 @@ theorem relIndex_sq_le {G : Type} [CommGroup G] (B : G →* G →* ℤˣ) (W U :
     intro h0
     rw [h0, mul_zero] at hsplit
     exact hW0 hsplit
-  haveI : H.FiniteIndex := ⟨hH0⟩
-  letI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : H.FiniteIndex := ⟨hH0⟩
+  let : Fintype (G ⧸ H) := Fintype.ofFinite _
 
   have hkill : ∀ f ∈ U.map B, H ≤ f.ker := by
     rintro f ⟨x, hx, rfl⟩
@@ -1022,8 +1022,8 @@ theorem relIndex_sq_le {G : Type} [CommGroup G] (B : G →* G →* ℤˣ) (W U :
     exact hψ h'
   have hli : LinearIndependent ℚ (fun f : U.map B => ((g f : (G ⧸ H) →* ℚ) : G ⧸ H → ℚ)) :=
     (linearIndependent_monoidHom (G ⧸ H) ℚ).comp g hg
-  haveI : Finite (U.map B) := hli.finite_of_isNoetherian
-  letI : Fintype (U.map B) := Fintype.ofFinite _
+  have : Finite (U.map B) := hli.finite_of_isNoetherian
+  let : Fintype (U.map B) := Fintype.ofFinite _
   have hcard : Fintype.card (U.map B) ≤ Fintype.card (G ⧸ H) := by
     have h' := hli.fintype_card_le_finrank
     rwa [Module.finrank_fintype_fun_eq_card] at h'
@@ -1106,13 +1106,13 @@ theorem not_lone (p₀ : Place F) : ¬ Lone p₀ := by
   have hxW : x ∈ W := (hmemW x).2 fun q hq hql => by
     have hqp : q ≠ p₀ := fun h => hql (h ▸ hlone)
     have h := hx q hq
-    rw [if_neg hqp, mul_one] at h
+    rw [ite_eq_right hqp, mul_one] at h
     exact h
   have hxL : x ∉ locSq F S := by
     intro h
     have h1 := (mem_locSq_iff.1 h) p₀ hp₀
     have h2 := hx p₀ hp₀
-    rw [if_pos rfl] at h2
+    rw [ite_eq_left rfl] at h2
     apply hb
     have he : b = x⁻¹ * (x * b) := by group
     rw [he]
@@ -1289,7 +1289,7 @@ theorem productFormula : ∀ (K L : Type) [Field K] [NumberField K] [Field L] [N
     · exact Finset.prod_congr rfl fun v _ => hfin v
     · intro v hv
       rw [Function.mem_mulSupport, hfin v] at hv
-      simp only [Sf, Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Sf, Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_preimage, Set.mem_ofPred_eq]
       intro hm
       exact hv (hs_eq_one_iff.2 hm)
   rw [etaProd, hfp, prod_eta_infinite e h0 h1 t]

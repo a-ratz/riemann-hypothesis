@@ -88,7 +88,7 @@ theorem dim_eq_field {k O M : Type} [Field k] [CommRing O] [IsDomain O] [AddComm
   let τ : O →+* k := e.symm.toRingHom.comp (Module.toModuleEnd k (Serre.Lie a))
   have hτ : Serre.Lie.eig a τ = ⊤ := eq_top_iff.2 fun u _ => Serre.Lie.mem_eig_iff.2 fun x =>
     (LinearMap.congr_fun (e.apply_symm_apply (Module.toModuleEnd k (Serre.Lie a) x)) u).symm
-  letI : Algebra O k := τ.toAlgebra
+  let : Algebra O k := τ.toAlgebra
   have e' := t.lieEquivScalar b (N := k)
     ((Serre.Lie.basis a hv).equivFun ≪≫ₗ LinearEquiv.funUnique (Fin 1) k k).symm hτ
   rw [← finrank_fibre O M k, e'.finrank_eq, Module.finrank_eq_card_basis (Serre.Lie.basis b hw),

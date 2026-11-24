@@ -157,7 +157,7 @@ namespace GlobalTheory.KeyEq
 theorem normalAt_scale :
     ∀ (P : Out.PolAV (Sp ℂ)) (hg rig hr th hth v hv th' hth' v' hv') (a : ℂ) (N : Matrix (Fin P.g) (Fin P.g) ℂ), (∀ i, LB.Sec.f th' i = constFn P.A.hom _ a * LB.Sec.f th i) → (∀ i, IsLieComb (N i) v (v' i)) → a ≠ 0 ∧ N.det ≠ 0 ∧ ∀ (τ M : Matrix (Fin P.g) (Fin P.g) ℂ) (α β : Fin P.g → ℂ) (c : ℂ), NormalAt ⟨P, hg, rig, hr, th, hth, v, hv⟩ τ M α β c → NormalAt ⟨P, hg, rig, hr, th', hth', v', hv'⟩ τ (N * M) α β (a * c) := by
   intro P hg rig hr th hth v hv th' hth' v' hv' a N ha hN
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨-, -, -, -, bas⟩ := GlobalTheory.LieComb.lieComb_algebra ℂ P.A P.g v hv.1
   refine ⟨?_, ((bas N v' hv hN).1 hv').ne_zero, ?_⟩
   · rintro rfl
@@ -271,7 +271,7 @@ theorem thetaChar_half (hs : τ.IsSymm) {a b a' b' : Fin g → ℂ} {m n : Fin g
   have e3 : (fun i => (n i : ℂ)) ⬝ᵥ (fun i => (m i : ℂ)) = ((n ⬝ᵥ m : ℤ) : ℂ) := by simp [dotProduct]
   refine ⟨cexp (-(Real.pi * I) * (((fun i => (n i : ℂ)) ⬝ᵥ τ.mulVec (fun i => (n i : ℂ))) / 4 + q / 2 +
     ((n ⬝ᵥ m : ℤ) : ℂ) / 2 - p)), ?_, fun z => ?_⟩
-  · rw [← Complex.exp_nat_mul]
+  · rw [← exp_natCast_mul]
     refine Complex.exp_eq_exp_iff_exists_int.2 ⟨4 * p - 2 * q - 2 * (n ⬝ᵥ m), ?_⟩
     generalize n ⬝ᵥ m = r
     push_cast
@@ -404,7 +404,7 @@ theorem frame_law {s : L.Sec} {θ e : (Fin g → ℂ) → ℂ} (hθ : Differenti
     rw [h2]
     ring
   · exact he.continuousOn.mul (hc.comp (continuous_add_const l).continuousOn
-      (fun w hw => by rw [Set.mem_setOf_eq, hper]; exact hw))
+      (fun w hw => by rw [Set.mem_ofPred_eq, hper]; exact hw))
 
 theorem isLift_double (z : Fin g → ℂ) :
     IsLift u (K := Fin 2) ![((𝟙 A) ^ 2).left, 𝟙 A.left] (u.ex z).left ![z + z, z] := fun k => by
@@ -512,7 +512,7 @@ theorem normalForm_translate : Out.Laws → ThetaUnifAV → ∀ (x x' : KeyIn �
   intro _ _ x x' g h u τ a b a' b' m n ν hab hab' ⟨hs, hp, hΛ, hrig, hth, hv⟩ ha hb hT
   have hL := x.P.isLB
   have hL' := x'.P.isLB
-  haveI := x.P.isAb.comm
+  have := x.P.isAb.comm
   obtain ⟨hθ, hθ0⟩ := LevelDict.isLevel_thetaChar hs hp hab
   obtain ⟨d, hd8, hd⟩ := thetaChar_half hs hab hab' ha hb
   generalize hz₀ : frac τ 2 m n = z₀ at hd hT
@@ -527,7 +527,7 @@ theorem normalForm_translate : Out.Laws → ThetaUnifAV → ∀ (x x' : KeyIn �
       fun k => funext fun i => by simp
     rw [e, e]
     congr 1
-    · rw [pow_one, pow_one, ← Complex.exp_nat_mul]
+    · rw [pow_one, pow_one, ← exp_natCast_mul]
       refine Complex.exp_eq_exp_iff_exists_int.2 ⟨q - p, ?_⟩
       simp only [dotProduct_add, add_dotProduct, Matrix.mulVec_add, hp, hq]
       push_cast
@@ -577,7 +577,7 @@ theorem normalForm_translate : Out.Laws → ThetaUnifAV → ∀ (x x' : KeyIn �
     rw [frAt, h1, ← _root_.mul_assoc, mul_comm] at e5
     obtain ⟨p, hp⟩ := exists_int_dot hab.1 m
     obtain ⟨q, hq⟩ := exists_int_dot hab.2 n
-    rw [show lam ^ 8 = (lam ^ 4) ^ 2 by ring, mul_right_cancel₀ n2 e5, hd8, mul_pow, pow_one, ← Complex.exp_nat_mul,
+    rw [show lam ^ 8 = (lam ^ 4) ^ 2 by ring, mul_right_cancel₀ n2 e5, hd8, mul_pow, pow_one, ← exp_natCast_mul,
       hp, hq]
     congr 1
     refine Complex.exp_eq_exp_iff_exists_int.2 ⟨p - q, ?_⟩
@@ -745,8 +745,8 @@ theorem val_of_isTrl : Out.Laws → ThetaUnifAV → ∀ (x x' : KeyIn ℂ) (p : 
   rintro hL hU x x' p ν t ⟨φ, hg, w, mu, rp, hp, hφ, hw, hmu, hrp, hvv, hth, r₁, r₂, r₃⟩
     ⟨τ, M, a, b, c, hab, hc, hN, rfl⟩
   have hM := det_ne_zero_of_normalAt hU x hN
-  haveI := x.P.isAb.comm
-  haveI := hφ
+  have := x.P.isAb.comm
+  have := hφ
   obtain ⟨v₀, hb₀, hv₀, hv₁⟩ := exists_basis_div x.basis M hM
   obtain ⟨th₀, e₀, -, hle⟩ := exists_sec_div x.P.A.hom (mul_inv_cancel₀ hc) x.th
   obtain ⟨th₀', e₀', e₁', hle'⟩ := exists_sec_div x'.P.A.hom (mul_inv_cancel₀ hc) x'.th
@@ -1443,11 +1443,11 @@ theorem known_of_point (hL : Out.Laws) (hT : ThetaUnifAV) {K F : Type} [Field K]
     exact LBIso.trans y'.P.isLB (LB.isLB_pull y.P.isLB _) (LB.isLB_pull z.P.isLB _) hi k.symm
 
 theorem epi_spMap {k Ω : Type} [Field k] [Field Ω] (σ : k →+* Ω) : Epi (spMap σ) := by
-  letI := σ.toAlgebra
-  haveI : Flat (spMap σ) := by
+  let := σ.toAlgebra
+  have : Flat (spMap σ) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.flat_algebraMap_iff.2 inferInstance
-  haveI : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
+  have : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
 
 theorem exists_polPB {R R' : Type} [CommRing R] [CommRing R'] (P : Out.PolAV (Sp R)) (f : R →+* R') :
@@ -1513,13 +1513,13 @@ theorem potKnown_of_lamIs : Out.Laws → ThetaUnifAV → ∀ (K : Type) [Field K
   intro hL hT K _ _ y P e he hl hk
   let Ω := AlgebraicClosure K
   obtain ⟨p, X, ψ, w, hp, h₂, hψ, hw, hi⟩ := exists_point hL (algebraMap K Ω) y.P P e hl
-  haveI := y.P.isAb.smooth
-  haveI := P.isAb.proper
+  have := y.P.isAb.smooth
+  have := P.isAb.proper
   obtain ⟨K₁, p₁, hp₁, _⟩ : ∃ (K₁ : IntermediateField K Ω) (p₁ : Sp K₁ ⟶ y.P.A.left),
       spMap (algebraMap K₁ Ω) ≫ p₁ = p ∧ FiniteDimensional K K₁ := by
     obtain ⟨s, p₁, hp₁⟩ := exists_finset_point y.P.A.hom p hp
     exact ⟨_, p₁, hp₁, IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x⟩
-  haveI := epi_spMap (algebraMap K₁ Ω)
+  have := epi_spMap (algebraMap K₁ Ω)
   have c₁ : spMap (algebraMap K Ω) = spMap (algebraMap K₁ Ω) ≫ spMap (algebraMap K K₁) :=
     spMap_comp (algebraMap K K₁) (algebraMap K₁ Ω)
   have q₁ : p₁ ≫ y.P.A.hom = spMap (algebraMap K K₁) := by
@@ -1540,16 +1540,16 @@ theorem potKnown_of_lamIs : Out.Laws → ThetaUnifAV → ∀ (K : Type) [Field K
     IsPullback.of_right (by rw [π₁, ← c₁]; exact hψ) π₂ hψ₁
   have πw : π ≫ w₁ = w := (hw₁.comp π).unique hw (by rw [← Category.assoc, π₂, Category.assoc, hp₁])
     (by rw [← Category.assoc, π₁])
-  haveI : IsProper X₁.hom := MorphismProperty.of_isPullback (P := @IsProper) hψ₁ inferInstance
+  have : IsProper X₁.hom := MorphismProperty.of_isPullback (P := @IsProper) hψ₁ inferInstance
   obtain ⟨s', hs'⟩ := lbIso_descends_to_subfield_containing_finset K₁ Ω (algebraMap K₁ Ω) X₁ X π (P.L.pull ψ₁)
     (y.P.L.pull w₁) hπ inferInstance inferInstance (LB.isLB_pull P.isLB _) (LB.isLB_pull y.P.isLB _)
     ((lbIso_pull_both π P.isLB y.P.isLB).2 (by rw [π₁, πw]; exact hi))
   let K₂ := IntermediateField.adjoin K₁ (s' : Set Ω)
-  haveI : FiniteDimensional K₁ K₂ :=
+  have : FiniteDimensional K₁ K₂ :=
     IntermediateField.finiteDimensional_adjoin fun x _ =>
       (Algebra.IsIntegral.isIntegral (R := K) x).tower_top
-  haveI : NumberField K₁ := NumberField.of_module_finite K K₁
-  haveI : NumberField K₂ := NumberField.of_module_finite K₁ K₂
+  have : NumberField K₁ := NumberField.of_module_finite K K₁
+  have : NumberField K₂ := NumberField.of_module_finite K₁ K₂
   let X₂ : Over (Sp K₂) := Over.mk (pullback.snd X₁.hom (spMap (algebraMap K₁ K₂)))
   let χ : X₂.left ⟶ X₁.left := pullback.fst _ _
   have hχ : IsPullback χ X₂.hom X₁.hom (spMap (algebraMap K₁ K₂)) := IsPullback.of_hasPullback _ _

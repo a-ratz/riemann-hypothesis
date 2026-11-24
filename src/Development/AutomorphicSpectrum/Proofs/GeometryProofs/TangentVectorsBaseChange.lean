@@ -94,7 +94,7 @@ theorem mem_eigSp_comp (hρ : ∀ a u, ρ' a (f ∘ u) = f ∘ ρ a u) (w : Fin 
 
 theorem linIndep_comp {ι ι' : Type} [Finite ι'] (u : ι → ι' → F) :
     LinearIndependent F' (fun k => f ∘ u k) ↔ LinearIndependent F u := by
-  letI : Algebra F F' := f.toAlgebra
+  let : Algebra F F' := f.toAlgebra
   exact linearIndependent_algebraMap_comp_iff
 
 theorem comp_mem_span {ι : Type} (g : ι → Fin N → F) (w : Fin N → F) (hw : w ∈ Submodule.span F (Set.range g)) :
@@ -283,7 +283,7 @@ private theorem isTanAt_base_change_iff {S : Scheme.{0}} (G : Over S) [GrpObj G]
     apply RingHom.ext
     intro a
     simp [dualMap]
-  haveI := EigenspaceComposition.epi_spMap f
+  have := EigenspaceComposition.epi_spMap f
   show _ = (1 : Over.mk x' ⟶ G).left ↔ _ = (1 : Over.mk x ⟶ G).left
   rw [EigenspaceComposition.one_left', EigenspaceComposition.one_left', hw, ← Category.assoc, key, Category.assoc]
   simp only [Over.mk_hom, hx, Category.assoc]

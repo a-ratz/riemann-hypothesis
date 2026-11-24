@@ -154,7 +154,7 @@ theorem UpperTheory.Gal.W2.Seed.pKNIff :
           rw [Matrix.sub_apply, map_sub, hw1, Matrix.sub_apply]
           rfl
         rw [map_mul, h3, e, map_mul, map_inv₀]
-        exact (inv_mul_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h2))).2 h1
+        exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h2))).2 h1
       · apply ν.injective
         rw [hactM, hC, map_add (f := _), map_nsmul, ν.apply_symm_apply, Matrix.add_mulVec, Matrix.one_mulVec,
           Matrix.smul_mulVec, Nat.cast_smul_eq_nsmul]

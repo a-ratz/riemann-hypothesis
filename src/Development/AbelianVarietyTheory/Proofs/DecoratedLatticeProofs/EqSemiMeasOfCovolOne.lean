@@ -64,7 +64,7 @@ variable {N : Type} [Group N] [TopologicalSpace N] [IsTopologicalGroup N] [Local
 theorem map_eq_self_of_fd (Γ : Subgroup N) [Countable Γ] (ν : Measure N) [ν.IsHaarMeasure] {𝓝 : Set N}
     (h𝓝 : IsFundamentalDomain Γ 𝓝 ν) (hfin : ν 𝓝 ≠ ⊤) (φ : N ≃ₜ N) [(ν.map φ).IsMulLeftInvariant] (e : Γ → Γ)
     (he : Bijective e) (hφ : ∀ (g : Γ) (x : N), φ ((e g).1 * x) = g.1 * φ x) : ν.map φ = ν := by
-  haveI : IsFiniteMeasureOnCompacts (ν.map φ) := Measure.IsFiniteMeasureOnCompacts.map ν φ
+  have : IsFiniteMeasureOnCompacts (ν.map φ) := Measure.IsFiniteMeasureOnCompacts.map ν φ
   have hc := Measure.isMulLeftInvariant_eq_smul (ν.map φ) ν
   set c := Measure.haarScalarFactor (ν.map φ) ν
   have hq : Measure.QuasiMeasurePreserving φ ν ν :=
@@ -74,7 +74,7 @@ theorem map_eq_self_of_fd (Γ : Subgroup N) [Countable Γ] (ν : Measure N) [ν.
   have h0 : ν 𝓝 ≠ 0 := h𝓝.measure_ne_zero (NeZero.ne ν)
   have hmap : (ν.map φ) 𝓝 = ν (φ ⁻¹' 𝓝) := MeasurableEquiv.map_apply φ.toMeasurableEquiv 𝓝
   have h1 : (c : ℝ≥0∞) * ν 𝓝 = 1 * ν 𝓝 := by
-    calc (c : ℝ≥0∞) * ν 𝓝 = (c • ν) 𝓝 := by simp [Measure.smul_apply]
+    calc (c : ℝ≥0∞) * ν 𝓝 = (c • ν) 𝓝 := by simp [smul_apply]
       _ = (ν.map φ) 𝓝 := by rw [hc]
       _ = 1 * ν 𝓝 := by rw [one_mul]; exact hmap.trans hm
   have hc1 : c = 1 := by
@@ -84,11 +84,11 @@ theorem map_eq_self_of_fd (Γ : Subgroup N) [Countable Γ] (ν : Measure N) [ν.
 
 theorem rightInv_of_fd (Γ : Subgroup N) [Countable Γ] (ν : Measure N) [ν.IsHaarMeasure] {𝓝 : Set N}
     (h𝓝 : IsFundamentalDomain Γ 𝓝 ν) (hfin : ν 𝓝 ≠ ⊤) : ν.IsMulRightInvariant := ⟨fun n₀ => by
-  haveI : (ν.map (Homeomorph.mulRight n₀)).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right ν n₀
+  have : (ν.map (Homeomorph.mulRight n₀)).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right ν n₀
   exact map_eq_self_of_fd Γ ν h𝓝 hfin (Homeomorph.mulRight n₀) id bijective_id fun g x => mul_assoc _ _ _⟩
 
 theorem invInv_of_rightInv (ν : Measure N) [ν.IsHaarMeasure] [ν.IsMulRightInvariant] : ν.IsInvInvariant := by
-  haveI : IsFiniteMeasureOnCompacts ν.inv := Measure.IsFiniteMeasureOnCompacts.map ν (Homeomorph.inv N)
+  have : IsFiniteMeasureOnCompacts ν.inv := Measure.IsFiniteMeasureOnCompacts.map ν (Homeomorph.inv N)
   have hc := Measure.isMulLeftInvariant_eq_smul ν.inv ν
   generalize Measure.haarScalarFactor ν.inv ν = c at hc
   obtain ⟨K⟩ : Nonempty (TopologicalSpace.PositiveCompacts N) := inferInstance
@@ -99,7 +99,7 @@ theorem invInv_of_rightInv (ν : Measure N) [ν.IsHaarMeasure] [ν.IsMulRightInv
     rw [mul_smul, ← hc, ← h, ← hc, Measure.inv_inv]
   have h3 : ((c * c : ℝ≥0) : ℝ≥0∞) * ν K = 1 * ν K := by
     rw [one_mul]; conv_rhs => rw [h2]
-    simp [Measure.smul_apply]
+    simp [smul_apply]
   have h4 : c * c = 1 := by exact_mod_cast (ENNReal.mul_left_inj h0 hf).1 h3
   have h5 : c = 1 := by
     have : (c : ℝ) * c = 1 := by exact_mod_cast h4
@@ -109,8 +109,8 @@ theorem invInv_of_rightInv (ν : Measure N) [ν.IsHaarMeasure] [ν.IsMulRightInv
 
 theorem eq_smul_of_rightInv (κ l : Measure N) [κ.IsHaarMeasure] [κ.IsMulRightInvariant] [l.IsMulRightInvariant]
     [IsFiniteMeasureOnCompacts l] : ∃ c : ℝ≥0, l = c • κ := by
-  haveI := invInv_of_rightInv κ
-  haveI : IsFiniteMeasureOnCompacts l.inv := Measure.IsFiniteMeasureOnCompacts.map l (Homeomorph.inv N)
+  have := invInv_of_rightInv κ
+  have : IsFiniteMeasureOnCompacts l.inv := Measure.IsFiniteMeasureOnCompacts.map l (Homeomorph.inv N)
   have hc := Measure.isMulLeftInvariant_eq_smul l.inv κ
   refine ⟨Measure.haarScalarFactor l.inv κ, ?_⟩
   generalize Measure.haarScalarFactor l.inv κ = c at hc
@@ -204,9 +204,9 @@ theorem exists_homeo (hs : Continuous s)
              ext
              simp [mk]
            continuous_toFun :=
-             Continuous.subtype_mk ((continuous_subtype_val.comp continuous_snd).mul (hs.comp continuous_fst)) _
+             Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_snd).mul (hs.comp continuous_fst)) _
            continuous_invFun :=
-             hpc.prodMk (Continuous.subtype_mk (continuous_subtype_val.mul (hs.comp hpc).inv) _) }, rfl⟩
+             hpc.prodMk (Continuous.subtype_mk (continuous_subtypeVal.mul (hs.comp hpc).inv) _) }, rfl⟩
 
 end Two
 
@@ -225,13 +225,13 @@ include hN in
 theorem map_cj_of_mem (Γ : Subgroup G) [Countable Γ] (ν : Measure N) [ν.IsHaarMeasure] {𝓝 : Set N}
     (h𝓝 : IsFundamentalDomain (Γ.subgroupOf N) 𝓝 ν) (hfin : ν 𝓝 ≠ ⊤) {δ : H} (hδ : s δ ∈ Γ) :
     ν.map (cj N s hnorm δ) = ν := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI := countable_subgroupOf Γ N
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have := countable_subgroupOf Γ N
   have hm : ∀ {δ : H}, s δ ∈ Γ → ∀ g : Γ.subgroupOf N, cj N s hnorm δ g.1 ∈ Γ.subgroupOf N := fun hδ g =>
     mul_mem (mul_mem hδ g.2) (inv_mem hδ)
   have hδ' : s δ⁻¹ ∈ Γ := by rw [map_inv]; exact inv_mem hδ
-  haveI : (ν.map (cj N s hnorm δ).toHomeomorph).IsMulLeftInvariant :=
+  have : (ν.map (cj N s hnorm δ).toHomeomorph).IsMulLeftInvariant :=
     ((cj N s hnorm δ).isHaarMeasure_map ν).toIsMulLeftInvariant
   refine map_eq_self_of_fd (Γ.subgroupOf N) ν h𝓝 hfin (cj N s hnorm δ).toHomeomorph (fun g => ⟨_, hm hδ' g⟩) ?_ ?_
   · refine bijective_iff_has_inverse.2 ⟨fun g => ⟨_, hm hδ g⟩, fun g => ?_, fun g => ?_⟩ <;>
@@ -248,8 +248,8 @@ include hN hs in
 theorem map_cj_of_cocompact (Γ : Subgroup G) [Countable Γ] (ν : Measure N) [ν.IsHaarMeasure] {𝓝 : Set N}
     (h𝓝 : IsFundamentalDomain (Γ.subgroupOf N) 𝓝 ν) (hfin : ν 𝓝 ≠ ⊤) {K : Set H} (hK : IsCompact K)
     (hcov : ∀ h, ∃ δ, s δ ∈ Γ ∧ δ * h ∈ K) (h : H) : ν.map (cj N s hnorm h) = ν := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   let χ : H →* ℝ≥0 :=
     { toFun := fun h => mulEquivHaarChar (cj N s hnorm h)
       map_one' := by
@@ -291,10 +291,10 @@ theorem map_cj_of_cocompact (Γ : Subgroup G) [Countable Γ] (ν : Measure N) [�
 include hN hs hnorm in
 theorem semiMeas_rightInv (μ : Measure H) (ν : Measure N) [μ.IsHaarMeasure] [ν.IsHaarMeasure] [μ.IsMulRightInvariant]
     [ν.IsMulRightInvariant] : (semiMeas N s μ ν).IsMulRightInvariant := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   have hφ : Measurable (mk N s) :=
-    (Continuous.subtype_mk ((continuous_subtype_val.comp continuous_snd).mul (hs.comp continuous_fst)) _ :
+    (Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_snd).mul (hs.comp continuous_fst)) _ :
       Continuous (mk N s)).measurable
   refine ⟨fun g => ?_⟩
   obtain ⟨⟨h₀, n₀⟩, rfl⟩ := mk_surjective N s hnorm g
@@ -317,22 +317,22 @@ theorem semiMeas_haar_inv (hp : ∃ p : (N ⊔ s.range : Subgroup G) → H, Cont
     (hcov : ∀ h, ∃ δ ∈ Λ, δ * h ∈ K) (μ : Measure H) [μ.IsHaarMeasure] {𝓕 : Set H} (h𝓕 : IsFundamentalDomain Λ 𝓕 μ)
     (ν : Measure N) [ν.IsHaarMeasure] {𝓝 : Set N} (h𝓝 : IsFundamentalDomain (Γ.subgroupOf N) 𝓝 ν) (hfin : ν 𝓝 ≠ ⊤) :
     (semiMeas N s μ ν).IsHaarMeasure ∧ (semiMeas N s μ ν).IsInvInvariant := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology (N ⊔ s.range : Subgroup G) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI := countable_subgroupOf Γ N
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (N ⊔ s.range : Subgroup G) := TopologicalSpace.Subtype.secondCountableTopology _
+  have := countable_subgroupOf Γ N
   obtain ⟨e, -⟩ := exists_homeo N s hnorm hs hp
-  haveI : LocallyCompactSpace (N ⊔ s.range : Subgroup G) := e.symm.isClosedEmbedding.locallyCompactSpace
+  have : LocallyCompactSpace (N ⊔ s.range : Subgroup G) := e.symm.isClosedEmbedding.locallyCompactSpace
   have hc : ∀ h, ν.map (fun n : N => s h * n.1 * (s h)⁻¹) = ν.map Subtype.val := fun h => by
     conv_rhs => rw [← map_cj_of_cocompact N s hN hs hnorm Γ ν h𝓝 hfin hK
       (fun h => let ⟨δ, h1, h2⟩ := hcov h; ⟨δ, hΛ δ h1, h2⟩) h]
-    exact (Measure.map_map measurable_subtype_coe (map_continuous (cj N s hnorm h)).measurable).symm
-  haveI := semiMeas_isMulLeftInvariant N s hN hs hnorm hp μ ν inferInstance inferInstance hc
+    exact (Measure.map_map measurable_subtypeVal (map_continuous (cj N s hnorm h)).measurable).symm
+  have := semiMeas_isMulLeftInvariant N s hN hs hnorm hp μ ν inferInstance inferInstance hc
   obtain ⟨i1, i2⟩ := semiMeas_finite_on_compacts_and_open_pos N s hN hs hnorm hp μ ν inferInstance inferInstance hc
-  haveI : (semiMeas N s μ ν).IsHaarMeasure := {}
-  haveI := rightInv_of_fd Λ μ h𝓕 (fd_ne_top Λ hK hcov μ h𝓕)
-  haveI := rightInv_of_fd _ ν h𝓝 hfin
-  haveI := semiMeas_rightInv N s hN hs hnorm μ ν
+  have : (semiMeas N s μ ν).IsHaarMeasure := {}
+  have := rightInv_of_fd Λ μ h𝓕 (fd_ne_top Λ hK hcov μ h𝓕)
+  have := rightInv_of_fd _ ν h𝓝 hfin
+  have := semiMeas_rightInv N s hN hs hnorm μ ν
   exact ⟨inferInstance, invInv_of_rightInv _⟩
 
 
@@ -345,19 +345,19 @@ theorem eq_semiMeas_of_covolOne
     (h𝓝 : IsFundamentalDomain (Γ.subgroupOf N) 𝓝 ν) (h𝓝1 : ν 𝓝 = 1) (κ : Measure (N ⊔ s.range : Subgroup G))
     [κ.IsHaarMeasure] {𝓡 : Set (N ⊔ s.range : Subgroup G)} (h𝓡 : IsFundamentalDomain (Γ.subgroupOf (N ⊔ s.range)) 𝓡 κ)
     (h𝓡1 : κ 𝓡 = 1) : κ = semiMeas N s μ ν := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology (N ⊔ s.range : Subgroup G) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI := countable_subgroupOf Γ N
-  haveI := countable_subgroupOf Γ (N ⊔ s.range)
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (N ⊔ s.range : Subgroup G) := TopologicalSpace.Subtype.secondCountableTopology _
+  have := countable_subgroupOf Γ N
+  have := countable_subgroupOf Γ (N ⊔ s.range)
   obtain ⟨e, he⟩ := exists_homeo N s hnorm hs hp
-  haveI : LocallyCompactSpace (N ⊔ s.range : Subgroup G) := e.symm.isClosedEmbedding.locallyCompactSpace
-  haveI := rightInv_of_fd Λ μ h𝓕 (by rw [h𝓕1]; exact ENNReal.one_ne_top)
-  haveI := rightInv_of_fd _ ν h𝓝 (by rw [h𝓝1]; exact ENNReal.one_ne_top)
-  haveI := rightInv_of_fd _ κ h𝓡 (by rw [h𝓡1]; exact ENNReal.one_ne_top)
-  haveI := semiMeas_rightInv N s hN hs hnorm μ ν
+  have : LocallyCompactSpace (N ⊔ s.range : Subgroup G) := e.symm.isClosedEmbedding.locallyCompactSpace
+  have := rightInv_of_fd Λ μ h𝓕 (by rw [h𝓕1]; exact ENNReal.one_ne_top)
+  have := rightInv_of_fd _ ν h𝓝 (by rw [h𝓝1]; exact ENNReal.one_ne_top)
+  have := rightInv_of_fd _ κ h𝓡 (by rw [h𝓡1]; exact ENNReal.one_ne_top)
+  have := semiMeas_rightInv N s hN hs hnorm μ ν
   have hsm : semiMeas N s μ ν = (μ.prod ν).map e := by rw [he]; rfl
-  haveI : IsFiniteMeasureOnCompacts (semiMeas N s μ ν) := by
+  have : IsFiniteMeasureOnCompacts (semiMeas N s μ ν) := by
     rw [hsm]; exact Measure.IsFiniteMeasureOnCompacts.map _ e
   obtain ⟨c, hc⟩ := eq_smul_of_rightInv κ (semiMeas N s μ ν)
   have hΛ : ∀ δ ∈ Λ, s δ ∈ Γ := fun δ hδ => by simpa using (hrat 1 (one_mem _) δ).2 ⟨one_mem _, hδ⟩
@@ -423,7 +423,7 @@ theorem eq_semiMeas_of_covolOne
     rw [hc]
     exact Measure.absolutelyContinuous_smul (μ := κ) (c := (c : ℝ≥0∞)) (by exact_mod_cast hc0)
   have hc1 : c = 1 := by
-    rw [hc, Measure.smul_apply, hκA, ENNReal.smul_def, smul_eq_mul, mul_one] at hA1
+    rw [hc, smul_apply, hκA, ENNReal.smul_def, smul_eq_mul, mul_one] at hA1
     exact_mod_cast hA1
   rw [hc, hc1, one_smul]
 
@@ -432,11 +432,11 @@ omit [LocallyCompactSpace G] [T2Space G] [IsTopologicalGroup H] [LocallyCompactS
 include hs in
 theorem lintegral_semiMeas (μ : Measure H) (ν : Measure N) [SFinite ν] (F : G → ℝ≥0∞) (hF : Measurable F) :
     ∫⁻ r : (N ⊔ s.range : Subgroup G), F r ∂(semiMeas N s μ ν) = ∫⁻ h, ∫⁻ n, F (n.1 * s h) ∂ν ∂μ := by
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   have hφ : Measurable (mk N s) :=
-    (Continuous.subtype_mk ((continuous_subtype_val.comp continuous_snd).mul (hs.comp continuous_fst)) _ :
+    (Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_snd).mul (hs.comp continuous_fst)) _ :
       Continuous (mk N s)).measurable
-  have hF' : Measurable fun r : (N ⊔ s.range : Subgroup G) => F r := hF.comp measurable_subtype_coe
+  have hF' : Measurable fun r : (N ⊔ s.range : Subgroup G) => F r := hF.comp measurable_subtypeVal
   change ∫⁻ r : (N ⊔ s.range : Subgroup G), F r ∂((μ.prod ν).map (mk N s)) = _
   rw [lintegral_map hF' hφ]
   exact lintegral_prod _ (hF'.comp hφ).aemeasurable
@@ -452,8 +452,8 @@ theorem lintegral_of_covolOne (R : Subgroup G) (hR : N ⊔ s.range = R)
     [κ.IsHaarMeasure] {𝓡 : Set R} (h𝓡 : IsFundamentalDomain (Γ.subgroupOf R) 𝓡 κ)
     (h𝓡1 : κ 𝓡 = 1) (F : G → ℝ≥0∞) (hF : Measurable F) : ∫⁻ r : R, F r ∂κ = ∫⁻ h, ∫⁻ n, F (n.1 * s h) ∂ν ∂μ := by
   subst hR
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨p, h1, h2⟩ := hp
   rw [eq_semiMeas_of_covolOne N s hN hs hnorm ⟨p, h1, fun h n => h2 h n _⟩ Γ Λ hrat μ h𝓕 h𝓕1 ν h𝓝 h𝓝1 κ h𝓡 h𝓡1,
     lintegral_semiMeas N s hs μ ν F hF]

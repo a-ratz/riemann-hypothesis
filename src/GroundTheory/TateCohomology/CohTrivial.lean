@@ -912,7 +912,7 @@ theorem cohTrivial_of_sylow (A : Rep ℤ G)
     have : Fact p.Prime := ⟨hp⟩
     obtain ⟨P, q, hPq⟩ := h p hp
     let _ : Fintype (P : Subgroup G) := Fintype.ofFinite _
-    exact ⟨P, cohTrivial_of_isZero_of_isZero P.isPGroup' _ q (hPq).1 (hPq).2⟩
+    exact ⟨P, cohTrivial_of_isZero_of_isZero P.isPGroup _ q (hPq).1 (hPq).2⟩
 
   have hp_sub : ∀ (p : ℕ), p.Prime → ∀ (U : Subgroup G) [Fintype U], IsPGroup p U →
       TateAcyclic (res U.subtype A) := by
@@ -937,7 +937,7 @@ theorem cohTrivial_of_sylow (A : Rep ℤ G)
   refine ⟨T, T.not_dvd_index, fun {_} => ?_⟩
   let _ : Fintype ((T : Subgroup S).map S.subtype) := Fintype.ofFinite _
   refine ((tateAcyclic_res_res_iff A S T _ rfl).2 ?_) n
-  exact hp_sub p hp _ (T.isPGroup'.map S.subtype)
+  exact hp_sub p hp _ (T.isPGroup.map S.subtype)
 
 theorem cohTrivial_of_forall_subgroup (A : Rep ℤ G) (q : ℤ)
     (h : ∀ (S : Subgroup G) [Fintype S], IsZero (tateCohomology (res S.subtype A) q) ∧

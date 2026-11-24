@@ -84,8 +84,8 @@ theorem poissonDecay_of (hD : DualIsLattice (V := V)) (h1 : LatticeSummableDecay
     PoissonDecay (V := V) := by
   intro Λ _ _ f hf b hb hfO hFO x
   obtain ⟨hdd, hdz⟩ := hD Λ
-  haveI := hdd
-  haveI : IsZLattice ℝ (dual Λ) := hdz
+  have := hdd
+  have : IsZLattice ℝ (dual Λ) := hdz
 
   have hphase : (fun v : V => (𝓕 f : V → ℂ) v * Complex.exp (2 * Real.pi * Complex.I * (⟪v, x⟫ : ℝ)))
       =O[cocompact V] (fun v => ‖v‖ ^ (-b)) := by

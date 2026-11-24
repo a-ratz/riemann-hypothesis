@@ -58,8 +58,8 @@ private theorem UpperTheory.tensor_rat_injective_of_free {L : Type} [AddCommGrou
 theorem UpperTheory.finite_free_of_bounded_denominators_lattice :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (X : UpperTheory.Gal.W2.Wit.Sys D), (∃ d : ℕ, 0 < d ∧ ∀ w ∈ X.lat, ∃ a : D.La, d • w = (1 : ℚ) ⊗ₜ[ℤ] a) → Module.Finite ℤ X.lat ∧ Module.Free ℤ X.lat := by
   intro p _ D X ⟨d, hd, h⟩
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let ι : D.La →ₗ[ℤ] VQ D := TensorProduct.mk ℤ ℚ D.La (1 : ℚ)
   have hι : Function.Injective ι := UpperTheory.tensor_rat_injective_of_free
   let g : X.lat →ₗ[ℤ] VQ D := (d : ℤ) • (X.lat.toIntSubmodule.subtype)

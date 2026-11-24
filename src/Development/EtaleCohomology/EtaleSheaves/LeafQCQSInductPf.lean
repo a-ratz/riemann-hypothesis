@@ -133,7 +133,7 @@ lemma glue_step {X : Scheme.{0}} (f : X ⟶ S) (hf : FP f) (U : X.Opens) (L' : L
     · exact TopologicalSpace.Opens.mem_sup.mpr (Or.inl hx)
     · exact TopologicalSpace.Opens.mem_sup.mpr (Or.inr ((mem_V L' x).mpr ⟨u, hu, hx⟩))
   refine hG f hf U _ hUV ?_ ?_ ?_
-  · haveI : IsAffine U := hU
+  · have : IsAffine U := hU
     exact hA _ inferInstance (fp_res f hf U hU.isCompact)
   · refine hV (cov_pull _ L' hL' (fun u hu => ?_) (fun x hx => (mem_V L' x).mp hx))
     exact le_iSup₂ (f := fun u (_ : u ∈ L') => u) u hu
@@ -222,7 +222,7 @@ lemma stepB : ∀ (n : ℕ) {X : Scheme.{0}} (f : X ⟶ S) (L : List X.Opens), L
       have hWc : IsCompact (W : Set X) :=
         QuasiSeparatedSpace.inter_isCompact _ _ U.2 hU.isCompact (⨆ u ∈ L', u : X.Opens).2 hVc
       obtain ⟨L2, h1, h2, h3⟩ := exists_list W hWc
-      haveI : IsAffine U := hU
+      have : IsAffine U := hU
       have : W.toScheme.IsSeparated := sep_of (X.homOfLE (inf_le_left : W ≤ U))
       exact stepA P hA hG _ (W.ι ≫ f) (L2.map (W.ι ⁻¹ᵁ ·)) rfl (fp_res f hf W hWc) this
         (cov_pull W L2 h1 h2 h3)

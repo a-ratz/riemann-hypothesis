@@ -349,7 +349,7 @@ theorem vl_mem_delAtr_iff (hpw : Function.Surjective pw) (J : Matrix (Fin n) (Fi
   · intro h w' Bd hBd
     obtain ⟨w, rfl⟩ := hpw w'
     have : Fact (Pl.resChar w).Prime := ⟨Pl.resChar_prime w⟩
-    letI : Submodule.IsFullLattice E M := hM
+    let : Submodule.IsFullLattice E M := hM
     obtain ⟨B, hB⟩ := Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.LocB.exists_isLocBasis (Pl.resChar w) E M hM.fg Submodule.IsFullLattice.span_eq_top
     obtain ⟨P, hP, hPe⟩ := h w B hB
     obtain ⟨G, hG, rfl⟩ := vl_exists_of_mem_intSpan Pl pw hval s w lam lam' hn hP

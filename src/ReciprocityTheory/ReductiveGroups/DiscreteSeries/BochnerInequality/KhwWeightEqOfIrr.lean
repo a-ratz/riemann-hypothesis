@@ -205,7 +205,7 @@ theorem kirrPs_le (hA : IsGlRep A) (hV : IsKIrrHW ε A Λ V) {u : X} (hu : u ∈
     Submodule.span_le.2 (by
       rintro _ ⟨l, hl, rfl⟩
       refine Submodule.mem_iSup_of_mem ((kirrPs k (kirrWt ν l) : ℝ) : ℂ)
-        (Submodule.mem_iSup_of_mem (Set.mem_setOf.2 ⟨_, kirrPs_wt k ν l hl, rfl⟩) ?_)
+        (Submodule.mem_iSup_of_mem (Set.mem_ofPred.2 ⟨_, kirrPs_wt k ν l hl, rfl⟩) ?_)
       rw [Module.End.mem_eigenspace_iff]
       exact kirrH_apply k (kirrWord_wt hA hν.1 l))
   have hwS := hle (by rw [hspan]; exact hw)

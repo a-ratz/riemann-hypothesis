@@ -89,12 +89,12 @@ theorem exists_zero_coord {F : Type*} [Field F] (h2 : (2 : F) ≠ 0) {ι : Type*
         simp [hij, hi]
       · by_cases h2 : k = j
         · subst h2
-          simp only [h1, if_false, if_true]
+          simp only [h1, ite_false, ite_true]
           ring
-        · simp only [h1, h2, if_false]
+        · simp only [h1, h2, ite_false]
           ring
     simp only [this, Finset.sum_add_distrib, ← Finset.mul_sum, h, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [ht]
     field_simp
     ring
@@ -285,12 +285,12 @@ theorem isotropic_five_of_localField (K : Type*) [Field K] [ValuativeRel K] [Top
   refine exists_zero_five_of_valuation h2 w (fun γ => ?_) (fun x hx => ?_) (fun c hc => ?_) a
   · obtain ⟨x, hx⟩ := valuation_surjective (e.symm γ)
     exact ⟨x, by rw [hw, hx]; simp⟩
-  · letI := IsTopologicalAddGroup.rightUniformSpace K
-    haveI := isUniformAddGroup_of_addCommGroup (G := K)
+  · let := IsTopologicalAddGroup.rightUniformSpace K
+    have := isUniformAddGroup_of_addCommGroup (G := K)
     have h4 : (4 : K) ≠ 0 := by
       rw [show (4 : K) = 2 * 2 by norm_num]; exact mul_ne_zero h2 h2
     have hu : valuation K ((x - 1) / 4) < 1 := by
-      rw [map_div₀, div_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h4))]
+      rw [map_div₀, div_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h4))]
       exact (hlt _ _).1 hx
     let u : 𝒪[K] := ⟨(x - 1) / 4, hu.le⟩
     have hum : u ∈ 𝓂[K] := (hmax u).2 hu
@@ -329,7 +329,7 @@ theorem congr_iff_adicCompletion (F : Type) [Field F] [NumberField F]
     (hG' : ∀ a b, σ (G' a b) = G' b a) (hd : G.det ≠ 0) (hd' : G'.det ≠ 0) :
     (∃ P : Matrix (Fin r) (Fin r) L, P.det ≠ 0 ∧ G' = Pᵀ * G * P.map σ) ↔
       ∃ x : L, G.det / G'.det = x * σ x := by
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   exact congr_iff_of_five two_ne_zero (isotropic_adicCompletion_of_five_le F v (by simp)) σ hσ
     hG hG' hd hd'

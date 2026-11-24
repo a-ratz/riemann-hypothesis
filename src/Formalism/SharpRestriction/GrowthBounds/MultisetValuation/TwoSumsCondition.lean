@@ -89,9 +89,9 @@ theorem th_wt_AA (vp : K') (hvp : vp ^ (p ^ 2 - 1) = (p : K')) {x y : Fin 2} (hx
   by_cases hd : d = Finsupp.single x 1 + Finsupp.single y p
   · have hx : d x = (p ^ 2) ^ 0 := by rw [hd]; simp [hxy.symm]
     have hy : d y = p * (p ^ 2) ^ 0 := by rw [hd]; simp [hxy]
-    rw [if_pos hd, Formalism.InvariantFactorPaths.G7.coeff_AA_of K' hp2 le_rfl hx hy]
+    rw [ite_eq_left hd, Formalism.InvariantFactorPaths.G7.coeff_AA_of K' hp2 le_rfl hx hy]
     exact ⟨0, (Rp p K' vp).zero_mem, by simp⟩
-  · rw [if_neg hd, sub_zero]
+  · rw [ite_eq_right hd, sub_zero]
     by_cases h : MvPowerSeries.coeff d (AA K' p x y) = 0
     · exact ⟨0, (Rp p K' vp).zero_mem, by rw [h]; simp⟩
     · obtain ⟨i, j, hij, hx, hy⟩ := Formalism.InvariantFactorPaths.G7.coeff_AA_ne_zero h
@@ -297,7 +297,7 @@ theorem th_mu_int (K' : Type) [Field K'] [Algebra (K0 p) K'] (vp : K') (hvp : vp
 private theorem pow_mul_inv_factorial_mem_Rp (K' : Type) [Field K'] [Algebra (K0 p) K'] (vp : K')
     (hvp : vp ^ (p ^ 2 - 1) = (p : K')) (k : ℕ) :
     (vp ^ (p + 1)) ^ k * ((k.factorial : ℕ) : K')⁻¹ ∈ Rp p K' vp := by
-  haveI := charZero_K' p K'
+  have := charZero_K' p K'
   have hpK : (p : K') ≠ 0 := Nat.cast_ne_zero.mpr hp.out.ne_zero
   have hvR : vp ∈ Rp p K' vp := Subring.subset_closure (Or.inr rfl)
   have hv : (p - 1) * padicValNat p k.factorial ≤ k := by
@@ -361,7 +361,7 @@ private theorem atPi_sub {σ K : Type} [Field K] (vp : K) (f g : MvPowerSeries �
 
 theorem gcCondition_of_twoSums (hT : TwoSumsCondition p) : RestGc p := by
   intro hp5 c hc n' r0 r1 hn hev B K' _ _ vp hvp μ h0 h1
-  haveI := charZero_K' p K'
+  have := charZero_K' p K'
   obtain ⟨u, hu, Y, hY, hsum⟩ := hT hp5 c hc n' r0 r1 hn hev B K' vp hvp μ h0 h1
   have hpK : (p : K') ≠ 0 := Nat.cast_ne_zero.mpr hp.out.ne_zero
   have hwR : ∀ w : WW p, wK' p K' w ∈ Rp p K' vp := fun w => Subring.subset_closure (Or.inl ⟨w, rfl⟩)

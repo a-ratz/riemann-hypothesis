@@ -85,9 +85,9 @@ theorem eq_sum_trace {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDimen
 theorem isCompact_isOpen_integralClosure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ v : HeightOneSpectrum (𝓞 F), IsCompact (integralClosure (v.adicCompletionIntegers F) (Fv F v ⊗[F] E) : Set (Fv F v ⊗[F] E)) ∧ IsOpen (integralClosure (v.adicCompletionIntegers F) (Fv F v ⊗[F] E) : Set (Fv F v ⊗[F] E)) := by
   intro F E _ _ _ _ _ σ h v
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h.2.2.1
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h.2.2.1
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
   obtain ⟨s, b, hb⟩ := FiniteDimensional.exists_is_basis_integral (𝓞 F) F E
   have hb' : ∀ i, IsIntegral (v.adicCompletionIntegers F) ((1 : Fv F v) ⊗ₜ[F] b i) := by
     intro i

@@ -202,7 +202,7 @@ theorem gsRootsLocalMor_hom_apply (v : S) (ζ : Additive (rootsOfUnity n (maxUnr
 
 theorem bijective_gsRootsLocalMor [NeZero n] (hμ : ∀ ζ : ℚ̄, ζ ^ n = 1 → ζ ∈ K.1) (v : S) :
     Function.Bijective (gsRootsLocalMor S ιs n v).hom := by
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot ℚ̄ n
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot ℚ̄ n
   have hzS : z ∈ maxUnramifiedOutside K.1 ℚ̄ S := by
     obtain ⟨x, rfl⟩ : ∃ x : K.1, (x : ℚ̄) = z := ⟨⟨z, hμ z hz.pow_eq_one⟩, rfl⟩
     exact (maxUnramifiedOutside K.1 ℚ̄ S).algebraMap_mem x

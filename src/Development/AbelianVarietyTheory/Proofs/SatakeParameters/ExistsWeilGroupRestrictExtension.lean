@@ -80,15 +80,15 @@ theorem normV_eq_pow {K L : Type} [Field K] [NumberField K] [Field L] [NumberFie
     (hc : v'.asIdeal.comap (algebraMap (𝓞 K) (𝓞 L)) = v.asIdeal) :
     ∃ f : ℕ, normV v' = normV v ^ f := by
   classical
-  haveI := v.isMaximal
-  haveI := v'.isMaximal
-  letI : Field (𝓞 K ⧸ v.asIdeal) := Ideal.Quotient.field _
-  letI : Field (𝓞 L ⧸ v'.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 K ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI : Finite (𝓞 L ⧸ v'.asIdeal) := v'.asIdeal.finiteQuotientOfFreeOfNeBot v'.ne_bot
-  letI : Fintype (𝓞 K ⧸ v.asIdeal) := Fintype.ofFinite _
-  letI : Fintype (𝓞 L ⧸ v'.asIdeal) := Fintype.ofFinite _
-  letI : Algebra (𝓞 K ⧸ v.asIdeal) (𝓞 L ⧸ v'.asIdeal) :=
+  have := v.isMaximal
+  have := v'.isMaximal
+  let : Field (𝓞 K ⧸ v.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 L ⧸ v'.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 K ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have : Finite (𝓞 L ⧸ v'.asIdeal) := v'.asIdeal.finiteQuotientOfFreeOfNeBot v'.ne_bot
+  let : Fintype (𝓞 K ⧸ v.asIdeal) := Fintype.ofFinite _
+  let : Fintype (𝓞 L ⧸ v'.asIdeal) := Fintype.ofFinite _
+  let : Algebra (𝓞 K ⧸ v.asIdeal) (𝓞 L ⧸ v'.asIdeal) :=
     (Ideal.quotientMap v'.asIdeal (algebraMap (𝓞 K) (𝓞 L)) hc.ge).toAlgebra
   refine ⟨Module.finrank (𝓞 K ⧸ v.asIdeal) (𝓞 L ⧸ v'.asIdeal), ?_⟩
   simp only [normV, Nat.card_eq_fintype_card]

@@ -72,13 +72,13 @@ theorem goodChar_of_hasConductor (χ : AddChar k Circle) (c : kˣ) (hχ : HasCon
         by_cases hx : x = 0
         · have h0 : ValuativeRel.valuation k y = 0 := by
             rw [hx, map_zero] at hy
-            exact le_antisymm hy zero_le'
+            exact le_antisymm hy zero_le
           rw [(Valuation.zero_iff _).1 h0, AddChar.map_zero_eq_one]
         · have hmem : x⁻¹ * y ∈ 𝒪[k] := by
             rw [Valuation.mem_integer_iff, map_mul]
             calc ValuativeRel.valuation k x⁻¹ * ValuativeRel.valuation k y
                 ≤ ValuativeRel.valuation k x⁻¹ * ValuativeRel.valuation k x :=
-                  mul_le_mul_of_nonneg_left hy zero_le'
+                  mul_le_mul_of_nonneg_left hy zero_le
               _ = 1 := by rw [← map_mul, inv_mul_cancel₀ hx, map_one]
           have h1 := H _ hmem
           rwa [mul_inv_cancel_left₀ hx] at h1
@@ -87,14 +87,14 @@ theorem goodChar_of_hasConductor (χ : AddChar k Circle) (c : kˣ) (hχ : HasCon
         rw [map_mul]
         calc ValuativeRel.valuation k x * ValuativeRel.valuation k y
             ≤ ValuativeRel.valuation k x * 1 :=
-              mul_le_mul_of_nonneg_left ((Valuation.mem_integer_iff _ _).1 hy) zero_le'
+              mul_le_mul_of_nonneg_left ((Valuation.mem_integer_iff _ _).1 hy) zero_le
           _ = ValuativeRel.valuation k x := mul_one _
     rw [key, hχ x, Valuation.mem_integer_iff, map_mul]
     constructor
     · intro hle
       calc ValuativeRel.valuation k ((c⁻¹ : kˣ) : k) * ValuativeRel.valuation k x
           ≤ ValuativeRel.valuation k ((c⁻¹ : kˣ) : k) * ValuativeRel.valuation k (c : k) :=
-            mul_le_mul_of_nonneg_left hle zero_le'
+            mul_le_mul_of_nonneg_left hle zero_le
         _ = 1 := by rw [← map_mul, Units.inv_mul, map_one]
     · intro hle
       calc ValuativeRel.valuation k x
@@ -104,7 +104,7 @@ theorem goodChar_of_hasConductor (χ : AddChar k Circle) (c : kˣ) (hχ : HasCon
             ValuativeRel.valuation k (((c⁻¹ : kˣ) : k) * x) := map_mul _ _ _
         _ ≤ ValuativeRel.valuation k (c : k) * 1 := by
             rw [map_mul]
-            exact mul_le_mul_of_nonneg_left hle zero_le'
+            exact mul_le_mul_of_nonneg_left hle zero_le
         _ = ValuativeRel.valuation k (c : k) := mul_one _
   · obtain ⟨γ, hγ⟩ := (IsValuativeTopology.mem_nhds_zero_iff U).1 hU
     obtain ⟨δ, hδ0, hδ1⟩ := ValuativeRel.IsNontrivial.exists_lt_one (R := k)
@@ -124,9 +124,9 @@ theorem goodChar_of_hasConductor (χ : AddChar k Circle) (c : kˣ) (hχ : HasCon
     show ValuativeRel.valuation k (z * ϖ * y) < γ
     rw [map_mul, map_mul, hz, hϖ]
     calc (γ : ValuativeRel.ValueGroupWithZero k) * δ * ValuativeRel.valuation k y
-        ≤ γ * δ * 1 := mul_le_mul_of_nonneg_left hy' zero_le'
+        ≤ γ * δ * 1 := mul_le_mul_of_nonneg_left hy' zero_le
       _ = γ * δ := mul_one _
-      _ < γ * 1 := mul_lt_mul_of_pos_left hδ1 (zero_lt_iff.2 γ.ne_zero)
+      _ < γ * 1 := mul_lt_mul_of_pos_left hδ1 (pos_iff_ne_zero.2 γ.ne_zero)
       _ = γ := mul_one _
   · by_cases hx : ValuativeRel.valuation k x ≤ 1
     · exact ⟨1, by simp, by simpa [Valuation.mem_integer_iff] using hx⟩
@@ -144,8 +144,8 @@ theorem exists_goodChar :
       (∃ ψ : AddChar k ℂ, GoodChar ψ 𝒪[k] 1) ∧
       ∀ ψ : AddChar k ℂ, Continuous ψ → (∀ x, ‖ψ x‖ = 1) → ψ ≠ 1 → ∃ u : kˣ, GoodChar ψ 𝒪[k] u := by
   intro k _ _ _ _
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   refine ⟨?_, fun ψ hψc hψn hψ1 => ?_⟩
   · obtain ⟨-, ⟨χ, -, -, hχ⟩, -⟩ := GlobalTheory.SplitWeil.conductor_exists k
     exact ⟨_, goodChar_of_hasConductor χ 1 hχ⟩

@@ -103,9 +103,9 @@ theorem BK.exists_Ep_eq_X_pow_add {l : ℕ} [Fact l.Prime] {K : FinExt l} (bk : 
     intro i
     rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow]
     rcases lt_trichotomy i bk.Ep.natDegree with hi | hi | hi
-    · rw [if_neg hi.ne, sub_zero]; exact bk.dvd_coeff i hi
-    · rw [if_pos hi, hi, bk.monic.coeff_natDegree, sub_self]; exact dvd_zero _
-    · rw [if_neg hi.ne', Polynomial.coeff_eq_zero_of_natDegree_lt hi, sub_zero]; exact dvd_zero _
+    · rw [ite_eq_right hi.ne, sub_zero]; exact bk.dvd_coeff i hi
+    · rw [ite_eq_left hi, hi, bk.monic.coeff_natDegree, sub_self]; exact dvd_zero _
+    · rw [ite_eq_right hi.ne', Polynomial.coeff_eq_zero_of_natDegree_lt hi, sub_zero]; exact dvd_zero _
   obtain ⟨q, hq⟩ := h
   exact ⟨q, by rw [← hq]; ring⟩
 

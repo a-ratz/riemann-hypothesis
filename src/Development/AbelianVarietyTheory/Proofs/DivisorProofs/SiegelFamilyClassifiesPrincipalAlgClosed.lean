@@ -370,7 +370,7 @@ theorem altLagr : ∀ (R : Type) [CommRing R] (I : Ideal R) (D : Type) [AddCommG
   let P : D →ₗ[R] D := F.subtype ∘ₗ Submodule.linearProjOfIsCompl F N hFN
   have hPF : ∀ x, P x ∈ F := fun x => (Submodule.linearProjOfIsCompl F N hFN x).2
   have hPx : ∀ x ∈ F, P x = x := fun x hx =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hFN ⟨x, hx⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hFN ⟨x, hx⟩)
   let B : D →ₗ[R] D →ₗ[R] R := φ.compl₁₂ P P
   have hB : ∀ x y, B x y = φ (P x) (P y) := fun x y => rfl
   have hBI : ∀ x y, B x y ∈ I := fun x y => hF _ (hPF x) _ (hPF y)
@@ -394,9 +394,9 @@ theorem altLagr : ∀ (R : Type) [CommRing R] (I : Ideal R) (D : Type) [AddCommG
     intro i j
     simp only [M]
     rcases lt_trichotomy i j with h | rfl | h
-    · rw [if_pos h, if_neg (lt_asymm h), sub_zero]
-    · rw [if_neg (lt_irrefl _), sub_zero, hBalt]
-    · rw [if_neg (lt_asymm h), if_pos h, zero_sub, hBskew, neg_neg]
+    · rw [ite_eq_left h, ite_eq_right (lt_asymm h), sub_zero]
+    · rw [ite_eq_right (lt_irrefl _), sub_zero, hBalt]
+    · rw [ite_eq_right (lt_asymm h), ite_eq_left h, zero_sub, hBskew, neg_neg]
   let β : D →ₗ[R] D →ₗ[R] R :=
     ∑ i, ∑ j, M i j • (LinearMap.mul R R).compl₁₂ ((LinearMap.proj i).comp s) ((LinearMap.proj j).comp s)
   have hβ : ∀ x y, β x y = ∑ i, ∑ j, M i j * (s x i * s y j) := by
@@ -475,7 +475,7 @@ theorem altLagr_univ {R : Type} [CommRing R] [IsLocalRing R] (I : Ideal R) {D : 
     (hFN : IsCompl F N) (iso : ∀ x ∈ F, ∀ y ∈ F, φ x y ∈ I) :
     ∃ E N' : Submodule R D, IsCompl E N' ∧ (∀ x ∈ E, ∀ y ∈ E, φ x y = 0) ∧
       E ⊔ I • (⊤ : Submodule R D) = F ⊔ I • (⊤ : Submodule R D) := by
-  haveI : Module.Free R D := Module.free_of_flat_of_isLocalRing
+  have : Module.Free R D := Module.free_of_flat_of_isLocalRing
   let ε := (Module.finBasis R D).equivFun
   let ψ : (Fin (Module.finrank R D) → R) →ₗ[R] (Fin (Module.finrank R D) → R) →ₗ[R] R :=
     φ.compl₁₂ ε.symm.toLinearMap ε.symm.toLinearMap
@@ -522,7 +522,7 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
   have ADC : GlobalTheory.Published.AbelianDualCrystal := GlobalTheory.abelianDualCrystal_of_dualAbelianScheme ADD
   have GD : GlobalTheory.Published.GrothendieckDeformation :=
     GlobalTheory.Published.grothendieckDeformation_of_lifting ADR _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers
-  haveI := hY₀.comm
+  have := hY₀.comm
   obtain ⟨g₀, hg₀⟩ := GlobalTheory.AbelianDim.exists_relDim R₀ Y₀ hY₀
   obtain ⟨A', _, i', h', hA'⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine R (RingHom.ker π) hI0 R₀ π hπ rfl Y₀ hY₀
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim R A' hA'
@@ -538,13 +538,13 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
   obtain ⟨bij, ⟨N0, hN0⟩, hAdm⟩ := HC g Y₀ A' i' h' hA' hg
   let e := LinearEquiv.ofBijective (crysToDR κ h') (HC.crysToDR_bijective h' hA' hg)
   have ee : ∀ xA, crysToDR κ h' (e.symm xA) = xA := e.apply_symm_apply
-  letI : Algebra R R₀ := π.toAlgebra
+  let : Algebra R R₀ := π.toAlgebra
   have hBC := (ADR.2.2.1 R A' g hA' hg R₀ Y₀ i' h').1
   obtain ⟨hfinA, hprojA, -⟩ := ADR.1.prim hA' hg
-  haveI := hfinA
-  haveI := hprojA
-  haveI : Module.Finite R (Crys κ (spMap π) Y₀) := Module.Finite.equiv e.symm
-  haveI : Module.Projective R (Crys κ (spMap π) Y₀) := Module.Projective.of_equiv e.symm
+  have := hfinA
+  have := hprojA
+  have : Module.Finite R (Crys κ (spMap π) Y₀) := Module.Finite.equiv e.symm
+  have : Module.Projective R (Crys κ (spMap π) Y₀) := Module.Projective.of_equiv e.symm
 
   let red : Crys κ (spMap π) Y₀ →ₛₗ[π] HdR Y₀ := hBC.bcMap.comp (crysToDR κ h')
   have hm : ∀ x, (crysRedMor κ rfl Y₀).Corr x (red x) := fun x ↦
@@ -660,7 +660,7 @@ open GlobalTheory.Mum
 
 theorem GlobalTheory.Mum.exists_lift_of_lam_lift_sq : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [CommRing R₀] [IsLocalRing R₀] (π : R →+* R₀), Function.Surjective π → RingHom.ker π ^ 2 = ⊥ → ∀ (Y₀ : Over (Sp R₀)) [GrpObj Y₀] (Y : Over (Sp R)) [GrpObj Y] (i : Y₀.left ⟶ Y.left) (l : (Y₀ ⊗ Y₀).left ⟶ (Y ⊗ Y).left), IsAbelianScheme Y₀ → IsAbelianScheme Y → IsGrpPullback Y₀ Y (spMap π) i → IsSquare i l → ∀ (L₀ : LB Y₀.left) (Q : LB (Y ⊗ Y).left), L₀.IsLB → Q.IsLB → GlobalTheory.AbDual.IsAdditive Q → GlobalTheory.AbDual.IsAdditive (GlobalTheory.AbDual.swap Q) → LBIso (Q.pull l) (abelian₂ Y₀ L₀) → ∃ L : LB Y.left, L.IsLB ∧ LBIso L₀ (L.pull i) := by
   intro R R₀ _ _ _ _ _ π hπ hI Y₀ _ Y _ i l hY₀ hY hgp hsq L₀ Q hL₀ hQ _ _ hΛ
-  haveI : IsCommMonObj Y₀ := hY₀.comm
+  have : IsCommMonObj Y₀ := hY₀.comm
   obtain ⟨L, hL, hiso⟩ := GlobalTheory.T.exists_lineBundle_lift_squareZero_of_mumfordBundle R R₀ π hπ (by rw [hI]; rfl) Y Y₀ i l hY hgp hsq Q L₀
     hQ hL₀ (LBIso.symm hΛ)
   exact ⟨L, hL, LBIso.symm hiso⟩
@@ -786,7 +786,7 @@ theorem GlobalTheory.SqStep.exists_lift : ∀ (R R₀ : Type) [CommRing R] [IsLo
   obtain ⟨Y, _, i, l, Q, hY, hpb, hsqr, hQ, a₁, a₂, hQi⟩ :=
     GlobalTheory.T.exists_abelianScheme_lift_with_principal_lineBundle R R₀ π hπ hsq Y₀ hY₀ L₀ hL₀ hamp hK
   obtain ⟨L, hL, hLi⟩ := GlobalTheory.T.exists_lineBundle_lift_of_mumfordBundle_lift_sqZero R R₀ π hπ hsq Y₀ Y i l hY₀ hY hpb hsqr L₀ Q hL₀ hQ a₁ a₂ hQi
-  haveI : Smooth Y.hom := hY.smooth
+  have : Smooth Y.hom := hY.smooth
   have hamp' : RelAmple Y L :=
     GlobalTheory.AmpleThickening.relAmple_of_sq_zero R R₀ π hπ hsq Y Y₀ i hpb.1 inferInstance L L₀ hL hL₀ hLi hamp
   exact ⟨Y, inferInstance, L, i, hY, hL, hamp',
@@ -1039,8 +1039,8 @@ theorem exists_lift : ∀ (K : Type) [Field K] [IsAlgClosed K] (V : Type) [CommR
   have hIc : IsAdicComplete I R₁ := _root_.GlobalTheory.isAdicComplete_of_le_of_isNoetherianRing R₁ I (maximalIdeal R₁) (le_maximalIdeal hItop) hc
   have hne : ∀ e : ℕ, I ^ (e + 1) ≠ ⊤ := fun e h =>
     hItop (top_le_iff.1 (h ▸ Ideal.pow_le_self (Nat.succ_ne_zero e)))
-  haveI hnt : ∀ e : ℕ, Nontrivial (R₁ ⧸ I ^ (e + 1)) := fun e => Ideal.Quotient.nontrivial_iff.2 (hne e)
-  haveI hloc : ∀ e : ℕ, IsLocalRing (R₁ ⧸ I ^ (e + 1)) := fun e =>
+  have hnt : ∀ e : ℕ, Nontrivial (R₁ ⧸ I ^ (e + 1)) := fun e => Ideal.Quotient.nontrivial_iff.2 (hne e)
+  have hloc : ∀ e : ℕ, IsLocalRing (R₁ ⧸ I ^ (e + 1)) := fun e =>
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   let St : ℕ → Type 1 := fun e => Σ Y : Over (Sp (R₁ ⧸ I ^ (e + 1))), Σ _ : GrpObj Y,
     {L : LB Y.left // IsAbelianScheme Y ∧ L.IsLB ∧ RelAmple Y L ∧ KTriv Y L}
@@ -1079,23 +1079,23 @@ theorem exists_lift : ∀ (K : Type) [Field K] [IsAlgClosed K] (V : Type) [CommR
             smooth := MorphismProperty.of_isPullback (P := @Smooth) G₀.1 hA.smooth
             proper := MorphismProperty.of_isPullback (P := @IsProper) G₀.1 hA.proper
             geomConnected := MorphismProperty.of_isPullback (P := @GeometricallyConnected) G₀.1 hA.geomConnected }
-  haveI := hA.proper
+  have := hA.proper
   have ha₀ : RelAmple Y₀ (L.pull g₀) := GlobalTheory.AmpleBaseChange.relAmple_of_isPullback hL haL G₀.1
   have hK₀ : KTriv Y₀ (L.pull g₀) := by
     obtain ⟨w, hw⟩ : LBIso (L.pull g₀) (L.pull g₀) := (GlobalTheory.CechPic.cls_eq_iff hL₀ hL₀).1 rfl
     exact kTriv_pull G₀ hL hL₀ ((isGen_iff w).1 hw) hKL
   let y₀ : St 0 := ⟨Y₀, inferInstance, L.pull g₀, hA₀, hL₀, ha₀, hK₀⟩
   let Y : ∀ n : ℕ, St n := fun n => Nat.rec (motive := fun n => St n) y₀ (fun n y => nx n y) n
-  letI : ∀ e, GrpObj (Y e).1 := fun e => (Y e).2.1
+  let : ∀ e, GrpObj (Y e).1 := fun e => (Y e).2.1
   obtain ⟨B, _, M, b, hB, hM, haM, hb, -, hiso⟩ := GlobalTheory.AlgGroup.exists_abelianScheme_of_tower R₁ I hItop hIc hc
     (fun e => (Y e).1) (fun e => β e (Y e)) (fun e => (Y e).2.2.2.1) (fun e => hβ e (Y e))
     (fun e => (Y e).2.2.1) (fun e => (Y e).2.2.2.2.1) (fun e => hLβ e (Y e)) (Y 0).2.2.2.2.2.1
-  haveI : IsCommMonObj B := hB.comm
+  have : IsCommMonObj B := hB.comm
   let φ : A.left ⟶ Y₀.left := pullback.lift (𝟙 _) (A.hom ≫ t)
     (by rw [Category.id_comp, Category.assoc, hts, Category.comp_id])
   have hφ₁ : φ ≫ g₀ = 𝟙 _ := pullback.lift_fst _ _ _
   have hφ₂ : φ ≫ Y₀.hom = A.hom ≫ t := pullback.lift_snd _ _ _
-  haveI : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
+  have : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
   have n₀ : IsGrpPullback A A (t ≫ s) (φ ≫ g₀) :=
     (isGrpPullback_of_iso (Iso.refl A)).congr hts.symm hφ₁.symm
   have hcan : IsGrpPullback A Y₀ t φ := IsGrpPullback.cancel G₀ n₀ hφ₂
@@ -1143,12 +1143,12 @@ namespace GlobalTheory.TorsLiftComplete
 
 theorem existsUnique_torsion_lift : ∀ (V K : Type) [CommRing V] [IsLocalRing V] [IsNoetherianRing V] [Field K] (n : ℕ), IsAdicComplete (IsLocalRing.maximalIdeal V) V → IsUnit (n : V) → ∀ π : V →+* K, Function.Surjective π → ∀ (A₀ : Over (Sp K)) [GrpObj A₀] [IsCommMonObj A₀] (A : Over (Sp V)) [GrpObj A] [IsCommMonObj A] (i : A₀.left ⟶ A.left), IsAbelianScheme A → IsGrpPullback A₀ A (spMap π) i → ∀ s₀ : 𝟙_ (Over (Sp K)) ⟶ A₀, s₀ ^ n = 1 → ∃! s : 𝟙_ (Over (Sp V)) ⟶ A, s ^ n = 1 ∧ s₀.left ≫ i = spMap π ≫ s.left := by
   intro V K _ _ _ _ n hc hn π hπ A₀ _ _ A _ _ i hA hpb s₀ hs₀
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal V) V := hc
-  haveI : HenselianLocalRing V := GlobalTheory.henselianLocalRing_of_henselianRing V
-  haveI : Smooth A.hom := hA.smooth
+  have : IsAdicComplete (IsLocalRing.maximalIdeal V) V := hc
+  have : HenselianLocalRing V := GlobalTheory.henselianLocalRing_of_henselianRing V
+  have : Smooth A.hom := hA.smooth
   have hn' : IsUnit (n : Γ(Sp V, ⊤)) := by
     simpa using hn.map (Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom
-  haveI := GlobalTheory.GrpTangent.etale_id_pow A hn'
+  have := GlobalTheory.GrpTangent.etale_id_pow A hn'
   let T' : Over (Sp K) := 𝟙_ (Over (Sp K))
   let T : Over (Sp V) := Over.mk (T'.hom ≫ spMap π)
   have hwi : i ≫ A.hom = A₀.hom ≫ spMap π := hpb.1.w
@@ -1269,7 +1269,7 @@ theorem surj (htors : ∀ a, f a ^ n = 1) (hcard : Nat.card {x : G // x ^ n = 1}
   have hFi : Function.Injective F := fun c c' e => inj f hadd hker (congrArg Subtype.val e)
   have hne : Nat.card {x : G // x ^ n = 1} ≠ 0 := by
     rw [hcard]; exact pow_ne_zero _ (NeZero.ne n)
-  haveI : Finite {x : G // x ^ n = 1} := Nat.finite_of_card_ne_zero hne
+  have : Finite {x : G // x ^ n = 1} := Nat.finite_of_card_ne_zero hne
   have hle : Nat.card {x : G // x ^ n = 1} ≤ Nat.card (J → ZMod n) := by
     rw [hcard, Nat.card_eq_fintype_card, Fintype.card_fun, ZMod.card]
   obtain ⟨c, hc⟩ := (hFi.bijective_of_nat_card_le hle).2 ⟨x, hx⟩
@@ -1284,7 +1284,7 @@ namespace GlobalTheory.LevLift
 theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type) [Field K] [IsAlgClosed K] (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsNoetherianRing V], IsAdicComplete (IsLocalRing.maximalIdeal V) V → ∀ (βV : cycAway n →+* V) (π : V →+* K), Function.Surjective π → ∀ (c : SiegPre g n (zetaAway n) (spMap (π.comp βV))), c.Principal → ∀ (AV : Over (Sp V)) [GrpObj AV] [IsCommMonObj AV] (φ : c.A.left ⟶ AV.left) (φ₂ : (G2 c.A).left ⟶ (G2 AV).left) (PV : LB (G2 AV).left), IsAbelianScheme AV → IsGrpPullback c.A AV (spMap π) φ → IsSquare φ φ₂ → PV.IsLB → (∃ t : (PV.pull (lift (1 : AV ⟶ AV) (𝟙 AV)).left).Gen, t.IsGen) → (∃ t : (PV.pull (lift (𝟙 AV) (1 : AV ⟶ AV)).left).Gen, t.IsGen) → LBIso PV (PV.pull (lift (snd AV AV) (fst AV AV)).left) → Out.RelAmple AV (PV.pull (lift (𝟙 AV) (𝟙 AV)).left) → (∀ (T : Over (Sp V)) (x : T ⟶ AV), (∃ t : (PV.pull (lift (snd AV T ≫ x) (fst AV T)).left).Gen, t.IsGen) → x = 1) → LBIso c.P (PV.pull φ₂) → ∃ lev : (Fin g ⊕ Fin g → ℤ) → (𝟙_ (Over (Sp V)) ⟶ AV), (∀ a b, lev (a + b) = lev a * lev b) ∧ (∀ a, lev a ^ n = 1) ∧ (∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ Sp V) (β : cycAway n →+* k) (z : kˣ), x ≫ spMap βV = spMap β → (z : k) = β (zetaAway n) → (∀ a, (toUnit (Over.mk x) ≫ lev a = 1 ↔ ∃ b, a = n • b)) ∧ (∀ g' : Over.mk x ⟶ AV, g' ^ n = 1 → ∃ a, toUnit _ ≫ lev a = g') ∧ ∀ a b, Out.WeilIs AV (PV.pull (lift (𝟙 AV) (𝟙 AV)).left) n (toUnit (Over.mk x) ≫ lev a) (toUnit _ ≫ lev b) (unitOn (z ^ (2 * omegaStd a b)))) ∧ ∀ a, (c.lev a).left ≫ φ = spMap π ≫ (lev a).left := by
   intro g n hn3 hnodd K _ _ V _ _ _ _ hcV βV π hπ c hcP AV _ _ φ φ₂ PV hAV hφ hsq hPV hr₁ hr₂ hsym hamp hkerV hiso
   have hn0 : n ≠ 0 := by omega
-  haveI : NeZero n := ⟨hn0⟩
+  have : NeZero n := ⟨hn0⟩
   have hnR : IsUnit (n : V) := by simpa using (isUnit_natCast hn0).map βV
   have hnΓ : IsUnit (n : Γ(Sp V, ⊤)) := by
     have := hnR.map (Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom
@@ -1332,7 +1332,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
   have inj : ∀ (T : Over (Sp V)) [Nonempty T.left] (s s' : 𝟙_ (Over (Sp V)) ⟶ AV), s ^ n = 1 → s' ^ n = 1 →
       toUnit T ≫ s = toUnit T ≫ s' → s = s' := fun T _ s s' hs hs' h =>
     GlobalTheory.LevSpread.eq_of_comp_eq AV hAV hnΓ (𝟙_ _) s s' hs hs' T (toUnit T) h
-  haveI : Nonempty T₁.left := inferInstanceAs (Nonempty (Sp K))
+  have : Nonempty T₁.left := inferInstanceAs (Nonempty (Sp K))
   have hadd : ∀ a a', σ (a + a') = σ a * σ a' := fun a a' =>
     inj T₁ _ _ (hσn _) (by rw [mul_pow, hσn, hσn, _root_.mul_one])
       (by rw [MonObj.comp_mul, hσx, hσx, hσx, c.lev_add, map_mul])
@@ -1345,7 +1345,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
   obtain ⟨g1, g2, g3⟩ := c.geom (AlgebraicClosure K) x₀ ((iK.comp π).comp βV)
     (Units.map ((iK.comp π).comp βV).toMonoidHom ζU) (by rw [← Spec.map_comp]; rfl) rfl
   let T₀ : Over (Sp V) := Over.mk ((Over.mk x₀).hom ≫ spMap π)
-  haveI : Nonempty T₀.left := inferInstanceAs (Nonempty (Sp (AlgebraicClosure K)))
+  have : Nonempty T₀.left := inferInstanceAs (Nonempty (Sp (AlgebraicClosure K)))
   have push : ∀ a, GlobalTheory.ObjPull.pushEquiv hφ (Over.mk x₀) (toUnit _ ≫ c.lev a) = toUnit T₀ ≫ σ a := fun a => by
     apply Over.OverMorphism.ext
     rw [GlobalTheory.ObjPull.pushEquiv_left, Over.comp_left, Over.comp_left, Category.assoc, hcomp,
@@ -1355,7 +1355,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
     rw [← one_iff T₀, ← push, map_eq_one_iff _ (GlobalTheory.ObjPull.pushEquiv hφ _).injective]
     exact g1 a
 
-  haveI : ConnectedSpace (Sp V) := GlobalTheory.AbelianDim.connectedSpace_spec_of_isLocalRing V
+  have : ConnectedSpace (Sp V) := GlobalTheory.AbelianDim.connectedSpace_spec_of_isLocalRing V
   obtain ⟨d, hd⟩ := GlobalTheory.AbelianDim.exists_relDim_of_connected AV hAV
   have kerAt : ∀ (T : Over (Sp V)) [Nonempty T.left] a, toUnit T ≫ σ a = 1 ↔ ∃ b, a = n • b := fun T _ a => by
     rw [one_iff T]; exact hker a
@@ -1384,7 +1384,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
     exact (congrArg CommRingCat.Hom.hom (Spec.map_injective e)).symm
   have hzU : z = Units.map ρ.toMonoidHom ζR := Units.ext (by rw [hz, hβ]; rfl)
   subst hzU
-  haveI : Nonempty (Over.mk (spMap ρ)).left := inferInstanceAs (Nonempty (Sp k))
+  have : Nonempty (Over.mk (spMap ρ)).left := inferInstanceAs (Nonempty (Sp k))
   refine ⟨fun a => kerAt _ a, fun gg hg => ?_, fun a a' => ?_⟩
   · have cardk := GlobalTheory.TorsionCover.card_torsion AV hAV hd (spMap ρ) (GlobalTheory.TorsionCover.natCast_ne_zero hnΓ (spMap ρ))
     exact surj (fun a => toUnit (Over.mk (spMap ρ)) ≫ σ a) (addAt _) (kerAt _) (torsAt _)

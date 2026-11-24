@@ -312,7 +312,7 @@ theorem exists_pairModel {p : U ⟶ Sp V} (h : HasModel p) (a : T ⟶ U) [IsOpen
     ∃ (R : Type) (_ : CommRing R) (f : R →+* V), Algebra.FiniteType ℤ R ∧ Nonempty (PairModel (spMap f) p a) := by
   classical
   obtain ⟨k, _, f, X₀, p₀, φ, hk, _, _, _, hφ⟩ := h
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have hφ' : IsPullback φ p p₀ (spMap (algebraMap k V)) := hφ
   obtain ⟨s, O, hO, hs⟩ := exists_preimage_eq (bcDiagram p₀ V) (bcCone p₀ V) (isLimitBcCone p₀ V)
     (a ≫ hφ'.isoPullback.hom).opensRange (isCompact_range (Scheme.Hom.continuous _))
@@ -365,7 +365,7 @@ theorem hasModel_of_two {X W : Scheme.{0}} (q : X ⟶ Sp V) [QuasiSeparated q] (
   obtain ⟨R₁, _, f₁, h₁, ⟨M₁⟩⟩ := exists_pairModel hU (pullback.fst u v)
   obtain ⟨R₂, _, f₂, h₂, ⟨N₁⟩⟩ := exists_pairModel hW (pullback.snd u v)
   obtain ⟨k, _, f, g₁, g₂, hk, e₁, e₂⟩ := exists_common_level f₁ f₂ h₁ h₂
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨M⟩ : Nonempty (PairModel (spMap (algebraMap k V)) (u ≫ q) (pullback.fst u v)) := ⟨M₁.baseChange _ _ e₁⟩
   obtain ⟨N⟩ : Nonempty (PairModel (spMap (algebraMap k V)) (v ≫ q) (pullback.snd u v)) := ⟨N₁.baseChange _ _ e₂⟩
   have hN := N.hτ.paste_vert N.hφ
@@ -394,12 +394,12 @@ theorem hasModel_of_isAffine {X : Scheme.{0}} (q : X ⟶ Sp V) [IsAffine X] [Loc
   have h1 : LocallyOfFinitePresentation (Spec.map ψ) := by rw [hψ]; infer_instance
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation)] at h1
   let A : Type := Γ(X, ⊤)
-  letI : Algebra V A := ψ.hom.toAlgebra
-  haveI : Algebra.FinitePresentation V A := h1
+  let : Algebra V A := ψ.hom.toAlgebra
+  have : Algebra.FinitePresentation V A := h1
   let P := Algebra.Presentation.ofFinitePresentation V A
   let k : Subalgebra ℤ V := Algebra.adjoin ℤ P.coeffs
   have hk : Algebra.FiniteType ℤ k := Algebra.FiniteType.adjoin_of_finite P.finite_coeffs
-  haveI : P.HasCoeffs k := ⟨fun x hx => ⟨⟨x, Algebra.subset_adjoin hx⟩, rfl⟩⟩
+  have : P.HasCoeffs k := ⟨fun x hx => ⟨⟨x, Algebra.subset_adjoin hx⟩, rfl⟩⟩
   let e := P.tensorModelOfHasCoeffsEquiv k
   have h := (CommRingCat.isPushout_tensorProduct k V (P.ModelOfHasCoeffs k)).flip
   have h' : IsPushout (CommRingCat.ofHom (algebraMap k (P.ModelOfHasCoeffs k)))

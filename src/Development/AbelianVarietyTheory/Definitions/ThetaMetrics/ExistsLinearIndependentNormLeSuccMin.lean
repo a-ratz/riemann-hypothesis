@@ -94,7 +94,7 @@ variable {N N' : V → ℝ} {S S' : Set V} {i j : ℕ} {r : ℝ}
 theorem mem_succMinRadii_iff :
     r ∈ succMinRadii K N S i ↔
       0 ≤ r ∧ ∃ v : Fin i → V, LinearIndependent K v ∧ ∀ j, v j ∈ S ∧ N (v j) ≤ r := by
-  simp only [succMinRadii, Set.mem_setOf_eq, natCast_le_rank_span_iff]
+  simp only [succMinRadii, Set.mem_ofPred_eq, natCast_le_rank_span_iff]
 
 theorem bddBelow_succMinRadii : BddBelow (succMinRadii K N S i) := ⟨0, fun _ h => h.1⟩
 

@@ -159,10 +159,10 @@ private lemma index_sup_map_le_lemma_2 {W₁ W₂ : Submodule K V} {A₁ A₁' :
     rw [← Submodule.Quotient.mk_add]
     congr 1
     exact Subtype.ext hab
-  haveI : Finite ((A₁' ⧸ Submodule.comap A₁'.subtype A₁) ×
+  have : Finite ((A₁' ⧸ Submodule.comap A₁'.subtype A₁) ×
       (A₂' ⧸ Submodule.comap A₂'.subtype A₂)) := Nat.finite_of_card_ne_zero hn
-  haveI : Finite (Y ⧸ Z) := Finite.of_surjective G hG
-  haveI : Nonempty (Y ⧸ Z) := ⟨0⟩
+  have : Finite (Y ⧸ Z) := Finite.of_surjective G hG
+  have : Nonempty (Y ⧸ Z) := ⟨0⟩
   exact ⟨Nat.card_le_card_of_surjective G hG, Nat.card_ne_zero.2 ⟨inferInstance, inferInstance⟩⟩
 
 open NumberField Matrix in
@@ -420,7 +420,7 @@ theorem orbMass_stabilizer_le : ∀ (K V : Type) [Field K] [NumberField K] [Star
   have hp1 := hRes_pd h hp U
   have hs2 := hRes_symm h hs (perp h U)
   have hp2 := hRes_pd h hp (perp h U)
-  letI act : MulAction (MulAction.stabilizer (isom h) U)
+  let act : MulAction (MulAction.stabilizer (isom h) U)
       (Submodule (𝓞 K) U × Submodule (𝓞 K) (perp h U)) :=
     { smul := fun γ p => ((φ γ).1 • p.1, (φ γ).2 • p.2)
       one_smul := fun p => by
@@ -442,7 +442,7 @@ theorem orbMass_stabilizer_le : ∀ (K V : Type) [Field K] [NumberField K] [Star
   have memB : ∀ M, M ∈ B ↔ IsIntLat (hRes h (perp h U)) M ∧
       1 ≤ discN (hRes h (perp h U)) M ∧ discN (hRes h (perp h U)) M ≤ n * N₀ := by
     intro M
-    simp only [hB, Set.mem_iUnion, Finset.mem_Icc, latsDisc, Set.mem_setOf_eq]
+    simp only [hB, Set.mem_iUnion, Finset.mem_Icc, latsDisc, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨i, hi, h1, rfl⟩
       exact ⟨h1, hi⟩
@@ -476,8 +476,8 @@ theorem orbMass_stabilizer_le : ∀ (K V : Type) [Field K] [NumberField K] [Star
       exact k3
   have fY : ∀ p ∈ A ×ˢ B, Finite (MulAction.stabilizer (MulAction.stabilizer (isom h) U) p) := by
     rintro p ⟨h1, h2⟩
-    haveI := fA _ h1
-    haveI := fB _ h2
+    have := fA _ h1
+    have := fB _ h2
     refine Finite.of_injective
       (β := MulAction.stabilizer (isom (hRes h U)) p.1 ×
         MulAction.stabilizer (isom (hRes h (perp h U))) p.2)

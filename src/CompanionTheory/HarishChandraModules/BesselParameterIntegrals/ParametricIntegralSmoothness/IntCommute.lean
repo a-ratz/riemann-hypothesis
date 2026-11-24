@@ -147,7 +147,7 @@ end Group
 theorem isSm_integral (hG : IsMatGroup G) (h : RepOn G σ) {v : H} (hv : IsSm G σ v)
     {μ : Measure (MtM n)} (hμ : IsHaarOnM G μ) {f : MtM n → ℂ} (hf : Continuous f)
     (hc : HasCompactSupport f) : IsSm G σ (∫ g, f g • σ (Matrix.of g) v ∂μ) := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun _ hK => Quot.IsHaarOnM.lt_top_of_isCompact hG hμ hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun _ hK => Quot.IsHaarOnM.lt_top_of_isCompact hG hμ hK⟩
   obtain ⟨F, hF, hFv⟩ := SmOn.exists_contDiff hv hG.1
   have hae : ∀ᵐ g ∂μ, Matrix.of g ∈ G := hμ.2.2.1
   have h1 := contDiff_integral_param (P := Mat n) (E := MtM n) (μ := μ) hf hc

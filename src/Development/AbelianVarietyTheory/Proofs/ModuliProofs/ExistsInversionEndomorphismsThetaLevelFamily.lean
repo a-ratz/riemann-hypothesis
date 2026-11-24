@@ -71,7 +71,7 @@ theorem lab_comp {o : Type} [CommRing o] {S : Scheme.{0}} {g k : ℕ} [NeZero k]
     (t : TObj g k J b s) {Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ} {κ : ℕ} (ht : t.Shape Mat κ)
     (i : Option J) (h : Ix g k) :
     t.lab h ≫ (i.elim (𝟙 t.A)⁻¹ t.act : t.A ⟶ t.A) = t.lab (labMap k Mat i h) := by
-  haveI := t.ab.comm
+  have := t.ab.comm
   cases i with
   | none =>
     simp only [Option.elim, labMap]
@@ -83,7 +83,7 @@ theorem lab_comp {o : Type} [CommRing o] {S : Scheme.{0}} {g k : ℕ} [NeZero k]
     simp
   | some j =>
     simp only [Option.elim, labMap]
-    haveI := t.hom j
+    have := t.hom j
     have e : t.lab h ≫ t.act j = ∏ c, (t.pt c ≫ t.act j) ^ (h c).val := by
       rw [TObj.lab, linComb_eq_prod]
       have := map_prod (IsMonHom.monoidHom (t.act j) (Out.baseOver S)) (fun c => t.pt c ^ (h c).val) Finset.univ
@@ -157,7 +157,7 @@ theorem cut_fibre {o R K : Type} [CommRing o] [CommRing R] [Field K] {g N m : �
     exact e ▸ this
   have H := hcut (fun h a => x (p h a)) (fun h a => x (p (labMap (N ^ 2) Mat i h) a)) _ rfl
     (fun h => ⟨hpt h, by rw [lab_comp t ht]; exact hpt _⟩)
-  haveI : IsIso (snd (Over.mk (𝟙 (Sp K))) t.A).left :=
+  have : IsIso (snd (Over.mk (𝟙 (Sp K))) t.A).left :=
     inferInstanceAs (IsIso (pullback.snd (𝟙 (Sp K)) t.A.hom))
   have hs : (snd (Over.mk (𝟙 (Sp K))) t.A).left ≫ t.A.hom = (fst (Over.mk (𝟙 (Sp K))) t.A).left :=
     (pullback.condition (f := 𝟙 (Sp K)) (g := t.A.hom)).symm.trans (Category.comp_id _)
@@ -176,7 +176,7 @@ theorem exists_endomorphisms : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Typ
   intro hL hL2 g J _ Mat κ n hn hodd
   obtain ⟨j₀, hj₀⟩ := _root_.GlobalTheory.GraphCut.cutBy_graphIdeal hL hL2 g J Mat κ n hn hodd
   refine ⟨j₀, fun j hj o _ b R _ _ _ β v Z I M th sc p hvd hPF hfib => ?_⟩
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)⟩
   obtain ⟨hrep, hsm, -, hp⟩ := hPF
   have hprop := (_root_.GlobalTheory.ZM.projRep_projective_ample R _ I Z M th hrep).2.1
   have hsm' : Smooth Z.hom := SmoothOfRelativeDimension.smooth g _

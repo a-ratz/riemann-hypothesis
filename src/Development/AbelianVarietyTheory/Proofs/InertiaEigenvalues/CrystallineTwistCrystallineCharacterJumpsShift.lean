@@ -87,7 +87,7 @@ theorem multV_of_equiv {ρ : Representation LL G V} {ρ' : Representation LL G V
 theorem multV_of_le_one (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL)
     [FiniteDimensional LL (DdRE PD ρ τ)] (h1 : finrank LL (DdRE PD ρ τ) ≤ 1) {b : ℤ}
     (hb : IsJumpV PD ρ τ b) (a : ℤ) : multV PD ρ τ a = if a = b then 1 else 0 := by
-  haveI : ∀ a, FiniteDimensional LL (FildR PD ρ τ a) := fun a =>
+  have : ∀ a, FiniteDimensional LL (FildR PD ρ τ a) := fun a =>
     Submodule.finiteDimensional_of_le (S₂ := DdRE PD ρ τ) inf_le_left
   have anti : Antitone (FildR PD ρ τ) := fun a a' haa =>
     inf_le_inf_left _ (GlobalTheory.Cmp.SmallJumps.filV_anti PD haa)
@@ -103,14 +103,14 @@ theorem multV_of_le_one (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL)
   rcases lt_trichotomy a b with h | h | h
   · have := mono (a + 1) b (by omega)
     have := mono a (a + 1) (by omega)
-    rw [if_neg h.ne]
+    rw [ite_eq_right h.ne]
     omega
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     omega
   · have := mono (b + 1) a (by omega)
     have := mono a (a + 1) (by omega)
-    rw [if_neg h.ne']
+    rw [ite_eq_right h.ne']
     omega
 
 def transport (e : V ≃ₗ[LL] V') (ρ' : Representation LL G V') : Representation LL G V where

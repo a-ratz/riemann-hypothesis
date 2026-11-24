@@ -74,7 +74,7 @@ theorem uniformisationL2_injective (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv�
     Function.Injective (uniformisationL2 ε Ψ v₀) := by
   have hmem : ∀ g : Formalism.REAL.UJ ε, Formalism.MainNotions.S.umat g ∈ UJset ε := fun g => g.2
   have hum : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hΨu : Continuous (fun g : Formalism.REAL.UJ ε => Ψ (Formalism.MainNotions.S.umat g)) :=
     (dinj_continuousOn_of_smoothOnGV hP.2.2.1).comp_continuous hum hmem
   have hfc : ∀ v, Continuous (fun g : Formalism.REAL.UJ ε => jfun Ψ v₀ v (Formalism.MainNotions.S.umat g)) := by
@@ -89,14 +89,14 @@ theorem uniformisationL2_injective (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv�
     have h2 := ((innerSL ℂ v₀).comp (ContinuousLinearMap.apply ℂ T.V v)).comp_memLp' h0
     refine MemLp.ae_eq (Filter.Eventually.of_forall fun g => ?_) h2
     simp [jfun] <;> rfl
-  haveI : (Formalism.REAL.muG ε).IsOpenPosMeasure := by unfold Formalism.REAL.muG; infer_instance
+  have : (Formalism.REAL.muG ε).IsOpenPosMeasure := by unfold Formalism.REAL.muG; infer_instance
   have hz : ∀ v, uniformisationL2 ε Ψ v₀ v = 0 ↔
       ∀ g : Formalism.REAL.UJ ε, jfun Ψ v₀ v (Formalism.MainNotions.S.umat g) = 0 := by
     intro v
     have hm := hML v
     have e1 : uniformisationL2 ε Ψ v₀ v = hm.toLp _ := by
       unfold uniformisationL2 toL2
-      exact dif_pos hm
+      exact dite_eq_left hm
     rw [e1, Lp.eq_zero_iff_ae_eq_zero]
     constructor
     · intro h g
@@ -123,7 +123,7 @@ theorem uniformisationL2_injective (hP : IsPsiFor ε lam T Ψ) {v₀ : T.V} (hv�
   have hne : uniformisationL2 ε Ψ v₀ v₀ ≠ 0 := by
     intro h0
     have h6 : jfun Ψ v₀ v₀ 1 = 0 := (hz v₀).1 h0 1
-    simp only [jfun, hP.2.1, ContinuousLinearMap.one_apply] at h6
+    simp only [jfun, hP.2.1, one_apply_eq_self] at h6
     exact hv₀ (inner_self_eq_zero.mp h6)
   have hker : ∀ v, v ∈ LinearMap.ker (dinj_jLin hP v₀) ↔
       ∀ g : Formalism.REAL.UJ ε, jfun Ψ v₀ v (Formalism.MainNotions.S.umat g) = 0 :=

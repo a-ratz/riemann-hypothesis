@@ -898,9 +898,9 @@ theorem gamma_lemma_of_crystalline (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D
   have hT₂ : IsCrys ((D.loc l).PD K) T₂.ρ := hset.2.2.2.2.2.1.2.1
   have hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP ((HW l).W K 1 LL hg) :=
     (Formalism.MainNotions.LiftingTheory.frame_p9A ((HW l).W K 1 LL hg) h9W hCA T₂ hT₂).1
-  haveI : CharZero ↥(OL LL) := Formalism.MainNotions.UnusedSlot80.levg_charZero LL
-  letI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) :=
+  have : CharZero ↥(OL LL) := Formalism.MainNotions.UnusedSlot80.levg_charZero LL
+  let : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+  have : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) :=
     Formalism.MainNotions.CrystallineLiftingInputs.OL.OL_complete_max (D.loc l) LL
   have hlm : (((((D.loc l).PD K).p : ℕ)) : ↥(OL LL)) ∈ IsLocalRing.maximalIdeal ↥(OL LL) := by
     rw [(D.loc l).PD_p K]; exact Formalism.MainNotions.CrystallineLiftingInputs.OL.l_mem_max (D.loc l) LL

@@ -73,15 +73,15 @@ open scoped Valued in
 theorem exists_dvd_norm_sub_X (hU : IsUnramInv ϖ σ q) (f : Polynomial (intL L)) (hf : f.Monic)
     (hfc : f.map (intConj hU.2.1) = f) (h0 : IsUnit (f.coeff 0)) :
     ∃ p : Polynomial (intL L), f ∣ p * p.map (intConj hU.2.1) - Polynomial.X := by
-  haveI := P.fSatake_nontriv hU
-  letI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
+  have := P.fSatake_nontriv hU
+  let : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne _ (e := 2) (by norm_num)
   obtain ⟨hσσ, hσ, h3, h4, ⟨x, hx1, hx2⟩, hq, hcard⟩ := hU
   let A := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring
-  haveI : IsDiscreteValuationRing A := (Valued.v : Valuation L _).valuationSubring_isDiscreteValuationRing
-  haveI : Finite (A ⧸ IsLocalRing.maximalIdeal A) :=
+  have : IsDiscreteValuationRing A := (Valued.v : Valuation L _).valuationSubring_isDiscreteValuationRing
+  have : Finite (A ⧸ IsLocalRing.maximalIdeal A) :=
     Nat.finite_of_card_ne_zero (ne_of_eq_of_ne hcard (pow_ne_zero _ (by omega)))
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal A) A := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal A) A := by
     refine NormIntegers.isAdicComplete_of_fg (C := L) ⟨?_, ?_, ?_⟩
       (IsNoetherian.noetherian _) (IsLocalRing.maximalIdeal.isMaximal _).ne_top
     · exact FaithfulSMul.algebraMap_injective _ _

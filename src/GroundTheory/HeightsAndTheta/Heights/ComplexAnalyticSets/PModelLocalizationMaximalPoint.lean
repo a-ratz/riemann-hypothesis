@@ -117,7 +117,7 @@ theorem ModelLocalizationMaximalPoint.proof : ModelLocalizationMaximalPoint.Stat
     rw [hPQ']
     exact IsLocalization.under_map_of_isPrime_disjoint (normalModelSubmonoid M q) L hQ'prime hdisj
   have hQ'max : Q'.IsMaximal := by
-    letI : Q'.IsPrime := hQ'prime
+    let : Q'.IsPrime := hQ'prime
     exact Ideal.isMaximal_of_isIntegral_of_isMaximal_under Q' (hQ'm ▸ hm)
 
   let N := P.comap ((algebraMap R' L).comp (Ideal.Quotient.mk M.ideal))

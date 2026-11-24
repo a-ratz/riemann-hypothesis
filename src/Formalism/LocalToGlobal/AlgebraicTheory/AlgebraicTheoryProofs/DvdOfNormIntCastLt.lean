@@ -144,7 +144,7 @@ theorem norm_root (ι : ℂ ≃+* ℂ_[p]) (x : ℂ) (m : ℕ) (hm : 0 < m) (hx 
 theorem norm_exp_piI (ι : ℂ ≃+* ℂ_[p]) (y : ℝ) (m : ℕ) (hm : 0 < m) (k : ℤ) (hy : (m : ℝ) * y = k) :
     ‖ι (Complex.exp ((Real.pi : ℂ) * Complex.I * (y : ℂ)))‖ = 1 := by
   apply norm_root ι _ (2 * m) (by omega)
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have hy' : (m : ℂ) * (y : ℂ) = (k : ℂ) := by
     have h0 := congrArg Complex.ofReal hy
     push_cast at h0
@@ -179,7 +179,7 @@ theorem dvd_of_norm_intCast_lt (T : ℤ) (h : ‖(T : ℂ_[p])‖ < 1) : (p : �
 
 private theorem norm_two_omegaK_sub_one_and_norm_omegaK_le (dK : ℕ) (hp2 : p ≠ 2) (hpd : ¬ p ∣ dK) (ι : ℂ ≃+* ℂ_[p]) :
     ‖ι (2 * omegaK dK - 1)‖ = 1 ∧ ‖ι (omegaK dK)‖ ≤ 1 := by
-  haveI := PadicComplex.isUltrametricDist p
+  have := PadicComplex.isUltrametricDist p
   have hp : p.Prime := Fact.out
   have hone : ∀ d : ℕ, ¬ p ∣ d → ‖(d : ℂ_[p])‖ = 1 := by
     intro d hd
@@ -210,7 +210,7 @@ private theorem norm_two_omegaK_sub_one_and_norm_omegaK_le (dK : ℕ) (hp2 : p �
 
 private theorem norm_int_add_int_mul_omegaK_le_one (dK : ℕ) (hp2 : p ≠ 2) (hpd : ¬ p ∣ dK) (ι : ℂ ≃+* ℂ_[p]) (a b : ℤ) :
     ‖ι ((a : ℂ) + b * omegaK dK)‖ ≤ 1 := by
-  haveI := PadicComplex.isUltrametricDist p
+  have := PadicComplex.isUltrametricDist p
   have hw := (norm_two_omegaK_sub_one_and_norm_omegaK_le dK hp2 hpd ι).2
   rw [map_add (f := _), map_mul, map_intCast, map_intCast]
   refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (norm_intCast_le a) ?_)
@@ -219,7 +219,7 @@ private theorem norm_int_add_int_mul_omegaK_le_one (dK : ℕ) (hp2 : p ≠ 2) (h
 
 theorem norm_pi_one (dK : ℕ) (hp2 : p ≠ 2) (hpd : ¬ p ∣ dK) (ι : ℂ ≃+* ℂ_[p]) (π : ℂ) (hq : IsQInt dK π)
     (hpp : π * conj π = p) (hlt : ‖ι (conj π)‖ < 1) : ‖ι π‖ = 1 := by
-  haveI := PadicComplex.isUltrametricDist p
+  have := PadicComplex.isUltrametricDist p
   have hp : p.Prime := Fact.out
   obtain ⟨hn, -⟩ := norm_two_omegaK_sub_one_and_norm_omegaK_le dK hp2 hpd ι
   obtain ⟨m, n, hπ⟩ := hq

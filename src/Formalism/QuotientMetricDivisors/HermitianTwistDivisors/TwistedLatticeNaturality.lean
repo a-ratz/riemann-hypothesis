@@ -122,7 +122,7 @@ theorem shift_vw_pow (w : HeightOneSpectrum (𝓞 K)) (a : K) (ha : a ≠ 0) (n 
 theorem shift_idx_smulLat (w : HeightOneSpectrum (𝓞 K)) (N : Submodule (𝓞 K) (Fin d → K))
     (hN : Submodule.IsFullLattice K N) (a : K) (ha : a ≠ 0) :
     idx w N (smulLat a N) = (d : ℤ) * vw w a := by
-  letI := hN
+  let := hN
   obtain ⟨f, hf, hl⟩ := semilocal_basis_exists K d N inferInstance w
   have h1 : Formalism.HermitianLatticesTheory.localization₂ w.asIdeal (Submodule.span (𝓞 K) (Set.range f)) =
       Formalism.HermitianLatticesTheory.localization₂ w.asIdeal N := by
@@ -218,8 +218,8 @@ theorem shift_slope_mu :
               Formalism.HN.muDef (Pi.basisFun K (Fin d)) X N +
                 2 * ∑ᶠ w : HeightOneSpectrum (𝓞 K), lw w * (σ w : ℝ)) := by
   intro K _ _ _ _ d X hX N N' hN hN' σ hσ
-  letI := hN
-  letI := hN'
+  let := hN
+  let := hN'
   obtain ⟨hfin, hlcv⟩ := idxLcv_of covolume_via_basis K d X hX N N' inferInstance inferInstance
   have key : ∀ w, lw w * (idx w N N' : ℝ) = -(d : ℝ) * (lw w * (σ w : ℝ)) := fun w => by
     rw [shift_index_formula K d N N' hN w (σ w) (hσ w)]
@@ -450,7 +450,7 @@ theorem shift_count_le_vw (I : FractionalIdeal (𝓞 K)⁰ K) (w : HeightOneSpec
   have hv : vw w b = FractionalIdeal.count K w I + FractionalIdeal.count K w (J : FractionalIdeal (𝓞 K)⁰ K) := by
     show FractionalIdeal.count K w (FractionalIdeal.spanSingleton (𝓞 K)⁰ b) = _
     rw [e, FractionalIdeal.count_mul K w hI hJ0]
-  have hnn := FractionalIdeal.count_coe_nonneg K w J
+  have hnn := FractionalIdeal.count_coeIdeal_nonneg K w J
   omega
 
 theorem shift_mem_ideal_loc (I : FractionalIdeal (𝓞 K)⁰ K) (hI : I ≠ 0) (w : HeightOneSpectrum (𝓞 K))
@@ -484,7 +484,7 @@ theorem shift_mem_ideal_loc (I : FractionalIdeal (𝓞 K)⁰ K) (hI : I ≠ 0) (
     rw [FractionalIdeal.spanSingleton_mul_le_iff]
     intro z hz
     have h5 := htJ z hz
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_one]
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_one]
     exact h5
   have h3 : FractionalIdeal.spanSingleton (𝓞 K)⁰ ((t : K) * a) ≤ I := by
     have h4 : FractionalIdeal.spanSingleton (𝓞 K)⁰ ((t : K) * a) =
@@ -526,7 +526,7 @@ theorem localizationAt_fractionalIdeal_smul_eq_smul (I : FractionalIdeal (𝓞 K
 
 theorem shift_smulLat_lattice (a : K) (ha : a ≠ 0) (N : Submodule (𝓞 K) (Fin d → K))
     (hN : Submodule.IsFullLattice K N) : Submodule.IsFullLattice K (smulLat a N) := by
-  letI : Submodule.IsLattice K (smulLat a N) := Submodule.IsLattice.of_fg K (hN.fg.map _)
+  let : Submodule.IsLattice K (smulLat a N) := Submodule.IsLattice.of_fg K (hN.fg.map _)
   constructor
   have hset : ((smulLat a N : Submodule (𝓞 K) (Fin d → K)) : Set (Fin d → K)) =
       (LinearMap.lsmul K (Fin d → K) a) '' (N : Set (Fin d → K)) := by
@@ -564,7 +564,7 @@ theorem shift_idealSmul_lattice (I : FractionalIdeal (𝓞 K)⁰ K) (hI : I ≠ 
       isNoetherian_submodule.mp hnoe _ hle
     rw [shift_smulLat_eq_map _ hcK] at hfg
     exact Submodule.fg_of_fg_map_injective _ (shiftEquiv d (c : K) hcK).injective hfg
-  letI := Submodule.IsLattice.of_fg K hidealFg
+  let := Submodule.IsLattice.of_fg K hidealFg
   constructor
   obtain ⟨b, hb, hb0⟩ := FractionalIdeal.exists_ne_zero_mem_isInteger hI
   have hbK : (b : K) ≠ 0 := shift_coe_ne_zero hb
@@ -635,7 +635,7 @@ private theorem vw_eq_zero_of_not_mem_asIdeal {K : Type} [Field K] [NumberField 
     exact ht0
   have hv : vw w (t : K) =
       ((Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {t})).factors : ℤ) := by
-    rw [← FractionalIdeal.count_coe K w hI, FractionalIdeal.coeIdeal_span_singleton]
+    rw [← FractionalIdeal.count_coeIdeal K w hI, FractionalIdeal.coeIdeal_span_singleton]
     simp [vw]
   have hnd : ¬ (w.asIdeal ∣ Ideal.span {t}) := by
     rw [Ideal.dvd_span_singleton]

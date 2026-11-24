@@ -71,8 +71,8 @@ theorem integral_unfold_fundamentalDomain : ∀ (V : Type) [NormedAddCommGroup V
   · have : AEMeasurable (fun z => ∑' y : Λ, g (z + y)) (μ.restrict Fd) :=
       AEMeasurable.tsum fun y => (hm y).aemeasurable
     exact this.aestronglyMeasurable
-  · refine lt_of_le_of_lt (lintegral_mono fun z => enorm_tsum_le_tsum_enorm) ?_
-    rw [lintegral_tsum fun y => (hm y).enorm]
+  · refine lt_of_le_of_lt (lintegral_mono fun z => eNorm_tsum_le_tsum_eNorm) ?_
+    rw [lintegral_tsum fun y => (hm y).eNorm]
     exact hfin.lt_top
   · rw [integral_tsum hm hfin, hFd.integral_eq_tsum'' g hg]
     simp only [hv]

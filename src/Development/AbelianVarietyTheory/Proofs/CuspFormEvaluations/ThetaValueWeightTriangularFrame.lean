@@ -97,7 +97,7 @@ theorem basis_of_triangular {T : Type} [Fintype T] {r : T → ℕ} {S : Type} [C
     ∃! a : (Σ τ : T, Fin (r τ)) → S, ∀ e, ∑ ℓ, a ℓ * (∑ j, cf ℓ.1 ℓ.2 j * u ⟨ℓ.1, j⟩ e) = v e := by
   classical
   have hdet : ∀ τ, IsUnit (Matrix.of (cf τ)).det := fun τ => by
-    rw [Matrix.det_of_lowerTriangular (Matrix.of (cf τ)) (fun i j hij => h0 τ i j (by simpa using hij))]
+    rw [Matrix.det_of_isLowerTriangular (Matrix.of (cf τ)) (fun i j hij => h0 τ i j (by simpa using hij))]
     exact IsUnit.prod_iff.2 fun i _ => h1 τ i
   have key : ∀ (a : (Σ τ : T, Fin (r τ)) → S) e, ∑ ℓ, a ℓ * (∑ j, cf ℓ.1 ℓ.2 j * u ⟨ℓ.1, j⟩ e) =
       ∑ ℓ : (Σ τ : T, Fin (r τ)), Matrix.vecMul (fun i => a ⟨ℓ.1, i⟩) (Matrix.of (cf ℓ.1)) ℓ.2 * u ℓ e := by
@@ -188,7 +188,7 @@ theorem sum_eq (hC : ChartIndepSt2) [StarRing (𝓞 E)] (nab : NabV Xo c) (hnab 
         ∏ b, nab (⟨y.x, ho, u', h1, h2, h3, s', h4⟩ : FrPt Xo c S) k (F b) (colOf m b) =
       (∏ ℓ : Lt1 Dw, cf ℓ.1 ℓ.2 ℓ.2 ^ a (ℓ.1, ℓ.2)) *
         ∑ m ∈ P.support, algebraMap c.F S (P.coeff m) * ∏ b, nab y k (F b) (colOf m b) := by
-  letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
+  let : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
   set y' : FrPt Xo c S := ⟨y.x, ho, u', h1, h2, h3, s', h4⟩ with hy'
   obtain ⟨C, hex, hpin⟩ := hnab.2 S y
   obtain ⟨C', hex', hpin'⟩ := hnab.2 S y'
@@ -509,7 +509,7 @@ private theorem frBor_units_map_of_frMap {S T : Type} [CommRing S] [Algebra c.F 
     dsimp only [Reframe.pt] at k1 ⊢
     rw [hg i, map_mul, k0] at k1
     rw [appLE_id]
-    simp only [CommRingCat.hom_id, RingHom.id_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [CommRingCat.hom_id, RingHom.id_apply, Units.coe_map, MonoidHom.coe_ofClass]
     rw [← k1]
     congr 1
     have nat := congrArg (fun q => CommRingCat.Hom.hom q (t none : S))

@@ -82,7 +82,7 @@ variable {k : Type} [Field k] {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [M
 theorem exists_unit_zpow {c : k⸨X⸩} (hc : c ≠ 0) :
     ∃ (a : ℤ) (u : (k⟦X⟧)ˣ), c = ((u : k⟦X⟧) : k⸨X⸩) * vv k ^ a := by
   obtain ⟨a, u, h⟩ := IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible
-    (R := k⟦X⟧) (K := k⸨X⸩) PowerSeries.X_irreducible hc
+    (R := k⟦X⟧) (K := k⸨X⸩) PowerSeries.irreducible_X hc
   refine ⟨a, u, ?_⟩
   rw [h, Units.smul_def, Algebra.smul_def, vv_eq_coe_X]
   rfl
@@ -488,11 +488,11 @@ theorem exists_simple_quotient {k G : Type} [Field k] [Group G] (B : Ob k G) (hB
     ∃ (A C : Ob k G) (f : (Fin A.m → k) →ₗ[k] (Fin B.m → k)) (p : (Fin B.m → k) →ₗ[k] (Fin C.m → k)),
       IsHom A B f ∧ IsHom B C p ∧ Function.Injective f ∧ Function.Surjective p ∧ Function.Exact f p ∧
       IsSimpleModule (MonoidAlgebra k G) C.ρ.asModule ∧ A.m < B.m := by
-  haveI : Nonempty (Fin B.m) := ⟨⟨0, Nat.pos_of_ne_zero hB⟩⟩
-  haveI : Nontrivial B.ρ.asModule := B.ρ.asModuleEquiv.toEquiv.nontrivial
+  have : Nonempty (Fin B.m) := ⟨⟨0, Nat.pos_of_ne_zero hB⟩⟩
+  have : Nontrivial B.ρ.asModule := B.ρ.asModuleEquiv.toEquiv.nontrivial
   have hfl := finiteLength_asModule B.ρ
     (isFiniteLength_iff_isNoetherian_isArtinian.mpr ⟨inferInstance, inferInstance⟩)
-  haveI := (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).1
+  have := (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).1
   obtain ⟨S, hS, -⟩ := (eq_top_or_exists_le_coatom (⊥ : Submodule (MonoidAlgebra k G) B.ρ.asModule)).resolve_left
     bot_ne_top
   let S' : Submodule k (Fin B.m → k) := (S.restrictScalars k).comap B.ρ.asModuleEquiv.symm.toLinearMap
@@ -523,7 +523,7 @@ theorem exists_simple_quotient {k G : Type} [Field k] [Group G] (B : Ob k G) (hB
       change _ ↔ eC (S'.mkQ (B.ρ.asModuleEquiv x)) = 0
       rw [LinearEquiv.map_eq_zero_iff, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       exact Iff.rfl
-    haveI := isSimpleModule_iff_isCoatom.mpr hS
+    have := isSimpleModule_iff_isCoatom.mpr hS
     exact IsSimpleModule.congr ((Submodule.quotEquivOfEq _ _ hk).trans (q.quotKerEquivOfSurjective hq)).symm
   · have h1 : S' ≠ ⊤ := by
       intro h
@@ -553,7 +553,7 @@ theorem ModTh.exists_simple_pieces : ∀ {k G : Type} [Field k] [Group G] {l n :
   | _ B ih =>
   intro N hN
   by_cases hB : B.m = 0
-  · haveI : IsEmpty (Fin B.m) := ⟨fun a => by have := a.2; omega⟩
+  · have : IsEmpty (Fin B.m) := ⟨fun a => by have := a.2; omega⟩
     refine ⟨0, Fin.elim0, fun a => a.elim0, fun a => a.elim0, fun a => a.elim0, ?_, fun i x => ?_⟩
     · exact SameSS.of_equiv (isFiniteLength_iff_isNoetherian_isArtinian.mpr ⟨inferInstance, inferInstance⟩)
         (LinearEquiv.ofSubsingleton _ _) fun _ _ => Subsingleton.elim _ _
@@ -770,7 +770,7 @@ theorem sum_eq_of_counts {k ι : Type} [Field k] [DecidableEq k] {l : ℕ} [Char
     · intro y hy hne
       rw [Finset.mem_Icc] at hy
       have := hc i hi'
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h'
       exact hne (eq_of_cast_eq (l := l) h' (by rw [abs_lt]; omega)).symm
     · intro h'
@@ -860,14 +860,14 @@ theorem model_chr_eq : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.
           refine Finset.sum_congr rfl fun a _ => ?_
           cases hc : c a with
           | none =>
-            simp only [ne_eq, not_true_eq_false, if_false]
+            simp only [ne_eq, not_true_eq_false, ite_false]
             by_contra hne
             obtain ⟨A', j', p', q1, q2, q3, q4⟩ := hnone a hc
             obtain ⟨u, hu, hux⟩ := _root_.GlobalTheory.Models.ModTh.sen_model_subquot_mem_U F M h1 h2 h3 A' (C a) j' p' (L a) q1 q2 q3 q4 (hmod a) i y
               (Ne.symm hne)
             exact hU u hu hux
           | some e' =>
-            rw [(hκ a e' hc i).2.2.2, resCount_single, if_pos (by simp)]
+            rw [(hκ a e' hc i).2.2.2, resCount_single, ite_eq_left (by simp)]
             simp [cc, hc]
         have e2 : resCount (Dt.Ut i) (Dt.w i) (y : k) = resCount (block (Dt.w i) Dt.t) (Dt.w i) (y : k) := by
           unfold resCount
@@ -921,7 +921,7 @@ theorem model_chr_eq : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.
     sen ((F.D P.1).γ i) (P.2 i) ((e : ℤ) : k)) ha₀
   simp only at hsen0
   rw [(hκ a₀ e' he' i).2.2.2, (hκ₀ i).2.2.2.2, hzero i a₀ haS, resCount_single, resCount_single, ← hee,
-    if_pos (by simp)] at hsen0
+    ite_eq_left (by simp)] at hsen0
   have h0 : κ₀ i = 0 := by
     split_ifs at hsen0 with h
     have hT := h1 i

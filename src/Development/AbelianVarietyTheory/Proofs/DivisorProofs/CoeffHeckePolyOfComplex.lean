@@ -208,7 +208,7 @@ theorem gelf_rTr (hκ : κ ∈ GfC V) (τ : D.what₂.Tau) (k : ℕ) (φ : GA D 
   exact this
 
 theorem isAutFunSm_rTr (hκ : κ ∈ GfC V) {φ : GA D V → ℂ} (h : IsAutFunSm θ V φ) : IsAutFunSm θ V (rTr V κ φ) := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine ⟨⟨fun γ hγ g => ?_, ?_, h.cont.comp (continuous_mul_const κ)⟩, fun k τs Xs hX g => ?_, ?_, ?_⟩
   · simp only [rTr, mul_assoc, h.left γ hγ]
   · obtain ⟨U, hU, e⟩ := h.level
@@ -359,7 +359,7 @@ theorem LocRep.comm (hβ : IsBaseFrame V β Λ N) {P P' : Pl D.host.E} (hP : Off
 theorem exists_hecke (hβ : IsBaseFrame V β Λ N) {P : Pl D.host.E} (hP : OffLevel L N P) {k : ℕ} (hk : k ≤ V.rank) :
     ∃ α A A', IsHeckeAt V P k α ∧ LocRep (levG V β L) P α⁻¹ A ∧ LocRep (levG V β L) P α A' := by
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt P hP.1
-  obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
+  obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
   obtain ⟨α, hα⟩ := ((GlobalTheory.T.involution_spherical_hecke_anti V P e he).2.2 ϖ h1 h2).1 k hk
   obtain ⟨⟨A', hA'⟩, A, hA⟩ := exists_locRep hβ hP he hα.2.1
   exact ⟨α, A, A', ⟨e, ϖ, he, h1, h2, hα⟩, hA, hA'⟩
@@ -397,7 +397,7 @@ theorem exists_isMultIP (h : HM.Is U fun T T' => c * ipM M μ 𝓕 T T') (x y : 
       simp
     · by_contra hn
       have := h.2.2 z z
-      simp only [ipM, dif_neg hn, mul_zero] at this
+      simp only [ipM, dite_eq_right hn, mul_zero] at this
       exact hz (inner_self_eq_zero.1 this)
   obtain ⟨a, ha⟩ := hd x
   obtain ⟨b, hb⟩ := hd y
@@ -421,10 +421,10 @@ theorem inner_hecke (hχ : ∀ k ∈ levG V β L, levChi V β L k = 1) (hμ : μ
     (hA' : IsDC (levG V β L) x⁻¹ A') (hc : A.card = A'.card) {t t' : Module.End ℂ HM.H}
     (ht : ∀ y, HM.e (t y) = heckeOn M A (HM.e y)) (ht' : ∀ y, HM.e (t' y) = heckeOn M A' (HM.e y)) (y y' : HM.H) :
     ⟪t y, y'⟫_ℂ = ⟪y, t' y'⟫_ℂ := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
-  haveI := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D V μ hμ
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
+  have := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D V μ hμ
   have hm : ∀ z, HM.e z ∈ Mult θ M (levS V β L) (levChi V β L) := fun z => hU (h.2.1 ▸ LinearMap.mem_range_self _ z)
   have ha : ∀ z v, IsAutFun V (HM.e z v) := fun z v =>
     (((GlobalTheory.MultMem.mem_mult_iff _ _ _ _ _ _ _ _).1 (hm z)).aut v).toIsAutFun

@@ -79,10 +79,10 @@ theorem _root_.GlobalTheory.isGrpPullback_of_fpqc (S S' S'' : Scheme.{0}) (a : S
       (Iso.refl _) (Iso.refl _) (by simp [IsIso.eq_inv_comp, hc₁]) (by simp [IsIso.eq_inv_comp, hc₂])
       (by simp) (by simp)
   · intro T x y x₀ y₀ hx hy
-    haveI := hf
-    haveI := hs
+    have := hf
+    have := hs
     let p : pullback T.hom π ⟶ T.left := pullback.fst T.hom π
-    haveI : Epi p := Flat.epi_of_flat_of_surjective _
+    have : Epi p := Flat.epi_of_flat_of_surjective _
     let T'' : Over S'' := Over.mk (pullback.snd T.hom π)
     let q : Over.mk (T''.hom ≫ π) ⟶ T := Over.homMk p (by simp [p, T'', pullback.condition])
     let q₀ : Over.mk (T''.hom ≫ π ≫ a) ⟶ Over.mk (T.hom ≫ a) :=

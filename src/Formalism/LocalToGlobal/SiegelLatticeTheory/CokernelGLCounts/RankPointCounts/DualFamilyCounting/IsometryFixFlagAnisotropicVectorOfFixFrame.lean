@@ -335,7 +335,7 @@ include hA in
 theorem nOrb_eq_of {x y : X} (hy : y ∈ nOrb N A x) : nOrb N A y = nOrb N A x := by
   obtain ⟨-, n, hn, rfl⟩ := hy
   ext z
-  simp only [nOrb, Set.mem_setOf_eq]
+  simp only [nOrb, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hz, m, hm, rfl⟩
     exact ⟨hz, m * n, N.mul_mem hm hn, mul_smul m n x⟩
@@ -347,7 +347,7 @@ include hA hN in
 theorem image_nOrb (h : H) {x : X} (hx : x ∈ A) :
     (fun y => h • y) '' nOrb N A x = nOrb N A (h • x) := by
   ext z
-  simp only [nOrb, Set.mem_image, Set.mem_setOf_eq]
+  simp only [nOrb, Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨y, ⟨hy, n, hn, rfl⟩, rfl⟩
     refine ⟨hA h _ hy, h * n * h⁻¹, hN.conj_mem n hn h, ?_⟩
@@ -407,7 +407,7 @@ theorem card_stab_q (t : X) (ht : t ∈ A) :
     letI := MulAction.compHom (nOrbs N A) (qHom N A hA)
     Nat.card (MulAction.stabilizer (H ⧸ N) (⟨nOrb N A t, t, ht, rfl⟩ : nOrbs N A)) =
       Nat.card (MulAction.stabilizer H t) := by
-  letI := MulAction.compHom (nOrbs N A) (qHom N A hA)
+  let := MulAction.compHom (nOrbs N A) (qHom N A hA)
   have hsm : ∀ h : H, ((h : H ⧸ N) • (⟨nOrb N A t, t, ht, rfl⟩ : nOrbs N A)).1 = nOrb N A (h • t) := by
     intro h
     show (qHom N A hA (h : H ⧸ N) (⟨nOrb N A t, t, ht, rfl⟩ : nOrbs N A)).1 = _
@@ -462,7 +462,7 @@ theorem count [Finite (H ⧸ N)] (T : Finset X) (hTA : ∀ t ∈ T, t ∈ A)
     (nOrbs N A).Finite ∧
     ((nOrbs N A).ncard : ℝ) / (Nat.card (H ⧸ N) : ℝ) =
       ∑ t ∈ T, ((Nat.card (MulAction.stabilizer H t) : ℕ) : ℝ)⁻¹ := by
-  letI := MulAction.compHom (nOrbs N A) (qHom N A hA)
+  let := MulAction.compHom (nOrbs N A) (qHom N A hA)
   have hsm : ∀ (h : H) (x : X) (hx : x ∈ A),
       ((h : H ⧸ N) • (⟨nOrb N A x, x, hx, rfl⟩ : nOrbs N A)).1 = nOrb N A (h • x) := by
     intro h x hx
@@ -492,7 +492,7 @@ theorem count [Finite (H ⧸ N)] (T : Finset X) (hTA : ∀ t ∈ T, t ∈ A)
     have h2 := huniq t2.1 ⟨t2.2, 1, one_smul _ _⟩
     exact Subtype.ext (h1.trans h2.symm)
   have hOinj : Function.Injective O := fun t1 t2 e => hrel t1 t2 1 (by rw [one_smul]; exact e)
-  haveI := hfin
+  have := hfin
   have key := Formalism.HermitianLattices.Ext.L3.sum_inv_card_stab (G := H ⧸ N) (X := nOrbs N A) Set.univ
     (fun _ _ _ => Set.mem_univ _) (Finset.univ.image O) (fun _ _ => Set.mem_univ _) (by
       intro P _
@@ -910,7 +910,7 @@ theorem card_quot (u : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)) (Λ : S
       exact (hφβ x _).symm
   have hfin : (autLz D F0 Λ).Finite :=
     _root_.automorphism_lattice_finite D (D.sp.Y_sig 0) (D.mem u).A.T (D.mem u).A.T_prime.pos F0 Λ hΛ
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   exact ⟨Finite.of_injective f hinj, Nat.card_eq_of_bijective f ⟨hinj, hsurj⟩⟩
 
 end Formalism.L2.SG.Pf.Cnt.StabilizerQuotient
@@ -955,7 +955,7 @@ theorem row_count (u u' : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (Tn u)) (Λ 
     wRow D F0 Λ * ((cntE (Tn u') F0 Λ Z).toNat : ℝ) =
       ∑ t ∈ Tr, ((Nat.card (MulAction.stabilizer (Hsub (F0 := F0) Λ) t) : ℕ) : ℝ)⁻¹ := by
   obtain ⟨hfin, hcard⟩ := card_quot u F0 Λ hΛ
-  haveI := hfin
+  have := hfin
   have hA : ∀ (h : Hsub (F0 := F0) Λ), ∀ x ∈ EZ (Tn u') F0 Λ Z, h • x ∈ EZ (Tn u') F0 Λ Z := by
     intro h x hx
     have := ez_smul h.1 hx
@@ -1326,7 +1326,7 @@ theorem rowsGroupoid_of (hM : MMChar) : RowsGroupoid := by
     obtain ⟨Λ, ⟨hΛr, γ, hγ, hγΛ⟩, -⟩ := hrows.2 Λ' (hsrow Λ' h).1
     obtain ⟨c, hc⟩ := class_red u F0 (hrows.1 Λ hΛr) (hsrow Λ' h).1 hγ hγΛ
     exact ⟨Λ, hΛr, c, hc⟩
-  haveI : Nonempty (G0 F0) := ⟨1⟩
+  have : Nonempty (G0 F0) := ⟨1⟩
   choose! b hb c hc using hbase
   set tm : Submodule (𝓞 D.host.E) (VS D).V → LFlag (VS D) D.R.rS (Tn u') := fun Λ' => (c Λ')⁻¹ • F' with htm
   have htm_mem : ∀ Λ' ∈ s, tm Λ' ∈ EZ (Tn u') F0 (b Λ') Z := by

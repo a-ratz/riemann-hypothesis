@@ -225,7 +225,7 @@ theorem relIndex_tupLat_hermLat : ∀ {F : Type} [Field F] [ValuativeRel F] [Top
   have hord := (GlobalTheory.UnramOrder.order_facts L ϖ hϖ).2.2.2.2.2.1 j
   have hset : ({y : L.O | (y : E) = algebraMap F E ((ϖ : F) ^ j)} : Set L.O) = {sO} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, Subtype.ext_iff, hsO]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, Subtype.ext_iff, hsO]
   rw [hset] at hord
   have hqO : (DistribSMul.toAddMonoidHom L.O sO).range.index = resQ ϖ ^ (2 * j) := by
     rw [index_range_smul_eq_card_quotient, hord]
@@ -660,8 +660,8 @@ theorem exists_residues {p : E} (hp : p ∈ L.O)
     ext y; simp [Subtype.ext_iff]
   rw [hs] at hfin
   set I : Ideal L.O := Ideal.span {(⟨p, hp⟩ : L.O)} with hI
-  haveI : Finite (L.O ⧸ I) := Nat.finite_of_card_ne_zero hfin
-  haveI := Fintype.ofFinite (L.O ⧸ I)
+  have : Finite (L.O ⧸ I) := Nat.finite_of_card_ne_zero hfin
+  have := Fintype.ofFinite (L.O ⧸ I)
   choose s hs using Ideal.Quotient.mk_surjective (I := I)
   have key : ∀ (u : L.O) (q : L.O ⧸ I), (∃ c ∈ L.O, (u : E) - s q = p * c) ↔ q = Ideal.Quotient.mk I u := by
     intro u q

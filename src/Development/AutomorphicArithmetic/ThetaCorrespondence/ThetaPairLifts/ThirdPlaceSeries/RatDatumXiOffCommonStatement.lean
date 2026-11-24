@@ -152,7 +152,7 @@ theorem fn_eq {p : DecoF E n ST SG Q} {k : GL (Fin n) (AfE F E)} (h : IsPtOf hc 
   choose ρ hρ hv using hrow
   refine ⟨∑ i, ρ i * x i, ?_, ?_⟩
 
-  · simp only [map_sum, map_mul, hρ, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  · simp only [map_sum, map_mul, hρ, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
   · simp only [Col2.pullV, Matrix.mulVec, dotProduct, map_sum, map_mul, adAt_inclE]
     rw [← Finset.sum_sub_distrib]
@@ -270,7 +270,7 @@ theorem phit_local {a b : ℕ} {ST SG SG' : Finset (HeightOneSpectrum (𝓞 E))}
       d'.f P x = Ideal.Quotient.mk P.1.asIdeal (t * c))
     (x : Formalism.L2.Col.HomE E a b) :
     (∀ y ∈ d.at P.1, x y ∈ d'.at P.1 ∧ d'.f P (x y) = d.f P y) ↔ ColCond P.1 t x := by
-  haveI := P.1.isPrime
+  have := P.1.isPrime
   have hle : ∀ y ∈ Formalism.L2.Col.stdLat E a, y ∈ d.at P.1 := fun y hy =>
     (phit_mem_loc P.1 _ _).2 ⟨1, (Ideal.ne_top_iff_one _).1 P.1.isPrime.ne_top, by rw [hN, one_smul]; exact hy⟩
   have hxs : ∀ (s : 𝓞 E) (y : Fin a → E), x (s • y) = s • x y := fun s y => x.map_smul_of_tower s y
@@ -599,7 +599,7 @@ theorem hasVal_col_iff (hψ : ∀ c, (ψ c : k) = φ (algebraMap (𝓞 E) E c))
       rw [← Finset.mul_prod_erase Finset.univ s (Finset.mem_univ q), map_mul, map_mul, hc]
       ring
     refine ⟨∏ q, s q, ?_, fun q => c q * ∏ q' ∈ Finset.univ.erase q, s q', hc', fun q hq => ?_⟩
-    · haveI := P.isPrime
+    · have := P.isPrime
       rw [Ideal.IsPrime.prod_mem_iff]
       rintro ⟨q, -, hq⟩
       exact hs q hq
@@ -882,10 +882,10 @@ theorem datJ_cons : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
   have hprod : (J.map fun j => Ψ j (rd (α j) (β j) (t - (p i).e • t))).prod = (J.map fun j => Ψ j (rd (α j) (β j) t)).prod := by
     congr 1
     exact List.map_congr_left fun j hj => by rw [hrdj j hj]
-  simp only [datJ, tens, extFun, if_pos hself, hrdi, List.map_cons, List.prod_cons]
+  simp only [datJ, tens, extFun, ite_eq_left hself, hrdi, List.map_cons, List.prod_cons]
   by_cases h : IsHalf (eSum p J) (t - (p i).e • t)
-  · rw [if_pos (hhalf.2 h), if_pos h, hprod, mul_comm]
-  · rw [if_neg (fun h' => h (hhalf.1 h')), if_neg h, zero_mul]
+  · rw [ite_eq_left (hhalf.2 h), ite_eq_left h, hprod, mul_comm]
+  · rw [ite_eq_right (fun h' => h (hhalf.1 h')), ite_eq_right h, zero_mul]
 
 end GlobalTheory.FinPl.PutIn
 end
@@ -966,7 +966,7 @@ theorem orth_and_eq_eSum : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [T
   · refine (GlobalTheory.PlaceModelSum.eq_or_mul_eq_zero (p i).split (p j).split).resolve_left fun h => hij ?_
     exact q.injective (Subtype.ext (GlobalTheory.PlaceVec.isIdemAt_inj (hq i) (h ▸ hq j)))
   · obtain ⟨⟨es, hes, rfl⟩, -⟩ := he
-    haveI : Fintype ι := Fintype.ofList J hP.all
+    have : Fintype ι := Fintype.ofList J hP.all
     have h1 : ∀ i, es (q i).1 = (p i).e := fun i =>
       GlobalTheory.SplitHeckeAdj.idem_unique D.sp.X' (hq i) (hes _ (q i).2)
     have h2 : J.toFinset = Finset.univ := Finset.eq_univ_of_forall fun i => List.mem_toFinset.2 (hP.all i)
@@ -1060,8 +1060,8 @@ theorem datJ_nil (p : ι → SplitPt D k) {S T : HSp D} (α : ∀ i, Frame (p i)
     rw [this]; exact zero_mem _
   unfold datJ halfInd
   by_cases ht : IsHalf (0 : AE D) t
-  · rw [if_pos (by simpa [eSum] using ht), if_pos ⟨h0 ht, ht⟩]; rfl
-  · rw [if_neg (by simpa [eSum] using ht), if_neg fun h => ht h.2]
+  · rw [ite_eq_left (by simpa [eSum] using ht), ite_eq_left ⟨h0 ht, ht⟩]; rfl
+  · rw [ite_eq_right (by simpa [eSum] using ht), ite_eq_right fun h => ht h.2]
 
 theorem datJ_SB (p : ι → SplitPt D k) {S T : HSp D} (α : ∀ i, Frame (p i) S n') (β : ∀ i, Frame (p i) T n)
     (Ψ : ι → Matrix n n' k → ℂ) (LS : Lat S) (LT : Lat T) (hSD : IsSelfDualC S LS) (hTD : IsSelfDualC T LT)
@@ -1141,7 +1141,7 @@ theorem ratDatum_of_overAll : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k]
     have hh : IsHalf (eSum p J) (γ.map fun a => eSum p J * incA D a) := fun i j => by
       rw [Matrix.map_apply, ← mul_assoc, hid]
     unfold datJ
-    rw [if_pos hh]
+    rw [ite_eq_left hh]
     congr 1
     refine List.map_congr_left fun i hi => ?_
     congr 1
@@ -1246,10 +1246,10 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Fam
 theorem ratDatum_dT_levelPrime_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ t (J : _root_.GlobalTheory.Fam.QuadraticExtensionData a t), J.Reads → ∀ eT, IsIdemSum eT ((B.primes X).vT u) → ∀ j (hj : j + 1 ≤ B.R.m) (α : J.Ch₀ j) (γ : J.Ch₀ (j + 1)), IsRatDatum (_root_.GlobalTheory.Fam.pk_z W).ψ _ _ eT (fun z => B.embLL (Formalism.L2.Col.phiT B.fields.K (J.A.p0 j α).1.1.deco.1 (J.A.p0 (j + 1) γ).1.1.deco.1 (GlobalTheory.QTw.homOf I l Z j hj z))) (a.g.vac j) (comb (_root_.GlobalTheory.Fam.pk_z W).ψ _ _ (a.v.dT j) (a.g.vac j)) := by
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hAll u a ha hTr t J hJ eT heT j hj α γ
-  letI : Field a.k := a.fld
-  letI : ValuativeRel a.k := a.val
-  letI : TopologicalSpace a.k := a.top
-  letI : IsNonarchimedeanLocalField a.k := a.loc
+  let : Field a.k := a.fld
+  let : ValuativeRel a.k := a.val
+  let : TopologicalSpace a.k := a.top
+  let : IsNonarchimedeanLocalField a.k := a.loc
   have hS := ha.shape
   have hP : (fun v => v ∈ a.v.tP) = (fun v => ∃ i, v = (a.o.p i).v) := funext fun x => propext (hS.pre.tP x)
   have hPl : GlobalTheory.FinPl.Places a.o.p a.o.I (fun v => ∃ i, v = (a.o.p i).v) :=

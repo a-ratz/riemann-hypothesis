@@ -117,11 +117,11 @@ theorem flat_of_ideals : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteVal
     rw [Spec.map_comp, hσ, Scheme.SpecMap_stalkMap_fromSpecStalk_assoc]
     exact (Scheme.SpecMap_stalkMap_fromSpecStalk (j ≫ f)).symm
   let S := (Spec (CommRingCat.of V)).presheaf.stalk ((j ≫ f) h)
-  letI : Algebra V S := StructureSheaf.stalkAlgebra V ((j ≫ f) h)
+  let : Algebra V S := StructureSheaf.stalkAlgebra V ((j ≫ f) h)
   have : ((j ≫ f) h).asIdeal.IsPrime := PrimeSpectrum.isPrime (R := V) _
   have : IsLocalization.AtPrime S ((j ≫ f) h).asIdeal := StructureSheaf.IsLocalization.to_stalk V _
-  letI : Algebra V (H.presheaf.stalk h) := (σ ≫ j.stalkMap h).hom.toAlgebra
-  letI : Algebra S (H.presheaf.stalk h) := ((j ≫ f).stalkMap h).hom.toAlgebra
+  let : Algebra V (H.presheaf.stalk h) := (σ ≫ j.stalkMap h).hom.toAlgebra
+  let : Algebra S (H.presheaf.stalk h) := ((j ≫ f).stalkMap h).hom.toAlgebra
   have : IsScalarTower V S (H.presheaf.stalk h) := IsScalarTower.of_algebraMap_eq' (congrArg (·.hom) e)
   exact (Module.flat_iff_of_isLocalization S ((j ≫ f) h).asIdeal.primeCompl (H.presheaf.stalk h)).2 fl
 
@@ -134,16 +134,16 @@ theorem height_of_etale_mvPolynomial (K B : Type*) [Field K] [CommRing B] (g : �
     exact hm.ne_top (Subsingleton.elim _ _)
   refine le_antisymm (Ideal.height_le_ringKrullDim_of_isPrime.trans
     (SmoothDim.ringKrullDim_of_etale_mvPolynomial K B g).le) ?_
-  letI : Algebra K B := ((algebraMap (MvPolynomial (Fin g) K) B).comp
+  let : Algebra K B := ((algebraMap (MvPolynomial (Fin g) K) B).comp
     (algebraMap K (MvPolynomial (Fin g) K))).toAlgebra
-  haveI : IsScalarTower K (MvPolynomial (Fin g) K) B := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.FiniteType K B := Algebra.FiniteType.trans
+  have : IsScalarTower K (MvPolynomial (Fin g) K) B := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.FiniteType K B := Algebra.FiniteType.trans
     (S := MvPolynomial (Fin g) K) inferInstance inferInstance
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing K B
-  haveI hp := SmoothDim.isMaximal_under_of_finiteType K (MvPolynomial (Fin g) K) B m
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing K B
+  have hp := SmoothDim.isMaximal_under_of_finiteType K (MvPolynomial (Fin g) K) B m
   have h1 := ReciprocityTheory.CA.height_add_ringKrullDim_quotient_mvPolynomial_field K g
     (m.under (MvPolynomial (Fin g) K))
-  letI := Ideal.Quotient.field (m.under (MvPolynomial (Fin g) K))
+  let := Ideal.Quotient.field (m.under (MvPolynomial (Fin g) K))
   rw [ringKrullDim_eq_zero_of_field, add_zero] at h1
   rw [← h1, WithBot.coe_le_coe, Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown
     (m.under (MvPolynomial (Fin g) K)) m]
@@ -162,7 +162,7 @@ theorem localization_of_isStandardSmooth {V R A : Type} [CommRing V] [IsNoetheri
     exact MorphismProperty.of_isPushout
       (P := RingHom.toMorphismProperty (@RingHom.IsStandardSmoothOfRelativeDimension g))
       (NilpotentLift.isPushout_quotient_map (Ideal.span {ϖ}) (CommRingCat.ofHom ρ)).flip hρ
-  letI := ρ.toAlgebra
+  let := ρ.toAlgebra
   have : Algebra.IsStandardSmoothOfRelativeDimension g V R := hρ
   have : Algebra.IsStandardSmooth V R := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth g
   have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing V R
@@ -170,13 +170,13 @@ theorem localization_of_isStandardSmooth {V R A : Type} [CommRing V] [IsNoetheri
   · have h₁ : IsSMulRegular R ϖ := Module.Flat.isSMulRegular_of_nonZeroDivisors h₀
     refine IsLocalization.map_nonZeroDivisors_le n.primeCompl A ⟨ρ ϖ, ?_, rfl⟩
     exact mem_nonZeroDivisors_iff_left.2 fun x hx => h₁.right_eq_zero_of_smul hx
-  letI := Ideal.Quotient.field (Ideal.span {ϖ})
+  let := Ideal.Quotient.field (Ideal.span {ϖ})
   set J := (Ideal.span {ϖ}).map ρ with hJ
   obtain ⟨φ, -, hφ⟩ := hq.exists_etale_mvPolynomial
   have hJ' : J = Ideal.span {ρ ϖ} := by rw [hJ, Ideal.map_span, Set.image_singleton]
   have hJn : RingHom.ker (Ideal.Quotient.mk J) ≤ n := by
     rwa [Ideal.mk_ker, hJ', Ideal.span_singleton_le_iff_mem]
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : Algebra.Etale (MvPolynomial (Fin g) (V ⧸ Ideal.span {ϖ})) (R ⧸ J) := hφ.toAlgebra
   have : IsRegularRing (R ⧸ J) := isRegularRing_of_etale (MvPolynomial (Fin g) (V ⧸ Ideal.span {ϖ})) _
   have hm : (n.map (Ideal.Quotient.mk J)).IsMaximal :=
@@ -184,7 +184,7 @@ theorem localization_of_isStandardSmooth {V R A : Type} [CommRing V] [IsNoetheri
   have hle : J ≤ (Ideal.span {algebraMap R A (ρ ϖ)}).comap (algebraMap R A) := by
     rw [hJ', Ideal.span_singleton_le_iff_mem]
     exact Ideal.mem_span_singleton_self _
-  letI : Algebra (R ⧸ J) (A ⧸ Ideal.span {algebraMap R A (ρ ϖ)}) := (Ideal.quotientMap _ _ hle).toAlgebra
+  let : Algebra (R ⧸ J) (A ⧸ Ideal.span {algebraMap R A (ρ ϖ)}) := (Ideal.quotientMap _ _ hle).toAlgebra
   have hl := IsLocalization.of_surjective n.primeCompl A (S' := A ⧸ Ideal.span {algebraMap R A (ρ ϖ)})
     (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective rfl
     (by rw [Ideal.mk_ker, Ideal.mk_ker, hJ', Ideal.map_span, Set.image_singleton])
@@ -223,12 +223,12 @@ theorem stalk_of_smooth : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteVa
     rw [← hσ, ← hW.fromSpecStalk_eq_fromSpecStalk hxW, Spec.map_comp, Spec.map_comp, IsAffineOpen.fromSpecStalk,
       Category.assoc, ← IsAffineOpen.SpecMap_appLE_fromSpec f hU hW e, IsAffineOpen.fromSpec_top,
       Scheme.isoSpec_Spec_inv]
-  letI : Algebra Γ(X, W) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hxW⟩
+  let : Algebra Γ(X, W) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hxW⟩
   have hl : IsLocalization.AtPrime (X.presheaf.stalk x) (hW.primeIdealOf ⟨x, hxW⟩).asIdeal :=
     hW.isLocalization_stalk ⟨x, hxW⟩
-  haveI := hW.primeIdealOf_isMaximal_of_isClosed ⟨x, hxW⟩ hx
+  have := hW.primeIdealOf_isMaximal_of_isClosed ⟨x, hxW⟩ hx
   have hs : algebraMap Γ(X, W) (X.presheaf.stalk x) (ρ.hom ϖ) = σ ϖ := congrArg (fun q => q.hom ϖ) hc
-  haveI : (Ideal.span {ϖ}).IsMaximal := hϖ.maximalIdeal_eq ▸ IsLocalRing.maximalIdeal.isMaximal V
+  have : (Ideal.span {ϖ}).IsMaximal := hϖ.maximalIdeal_eq ▸ IsLocalRing.maximalIdeal.isMaximal V
   rw [← hs]
   refine localization_of_isStandardSmooth (mem_nonZeroDivisors_of_ne_zero hϖ.ne_zero) hρ
     (hW.primeIdealOf ⟨x, hxW⟩).asIdeal ?_

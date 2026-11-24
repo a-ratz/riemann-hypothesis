@@ -87,7 +87,7 @@ theorem unitC_of_finite_character : ∀ (E : Type) [Field E] [NumberField E] [Is
       sub_self]
   unfold GlobalTheory.Dict.UnitC
   intro A y
-  letI := A
+  let := A
   obtain ⟨p, φ, y₀, hy⟩ := hAT ℂ y
   have hev : Formalism.L2.Pj.evR d.Xo₂ d.c₂ d.cδ y = φ (d.cδ p y₀) := by
     unfold Formalism.L2.Pj.evR Formalism.L2.Pj.evalAt

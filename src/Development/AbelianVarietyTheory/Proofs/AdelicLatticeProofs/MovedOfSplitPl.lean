@@ -61,7 +61,7 @@ theorem exists_subfamily {α : Type} (r : α → α → Prop) (hr : Equivalence 
     ∃ (m : ℕ) (ι : Fin m → Fin m₀), ∀ g i, r g (f i) → ∃! j, r g (f (ι j)) := by
   classical
   let s : Setoid (Fin m₀) := ⟨fun i j => r (f i) (f j), ⟨fun _ => hr.refl _, hr.symm, hr.trans⟩⟩
-  haveI : Fintype (Quotient s) := Fintype.ofFinite _
+  have : Fintype (Quotient s) := Fintype.ofFinite _
   let e := Fintype.equivFin (Quotient s)
   refine ⟨_, fun j => (e.symm j).out, fun g i hg => ⟨e (Quotient.mk s i), ?_, fun j hj => ?_⟩⟩
   · simp only [Equiv.symm_apply_apply]

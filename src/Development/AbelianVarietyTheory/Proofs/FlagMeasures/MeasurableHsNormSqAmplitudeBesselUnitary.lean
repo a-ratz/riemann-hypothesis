@@ -56,9 +56,9 @@ theorem stronglyMeasurable_indicator_of_continuousOn {X W : Type} [TopologicalSp
     [OpensMeasurableSpace X] [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteDimensional ℂ W] {S : Set X}
     (hS : MeasurableSet S) {f : X → W} (hf : ContinuousOn f S) : StronglyMeasurable (S.indicator f) := by
   classical
-  haveI : ProperSpace W := FiniteDimensional.proper ℂ W
-  letI : MeasurableSpace W := borel W
-  haveI : BorelSpace W := ⟨rfl⟩
+  have : ProperSpace W := FiniteDimensional.proper ℂ W
+  let : MeasurableSpace W := borel W
+  have : BorelSpace W := ⟨rfl⟩
   have := hf.measurable_piecewise (g := fun _ => (0 : W)) continuousOn_const hS
   have h2 : S.indicator f = S.piecewise f fun _ => (0 : W) := by
     funext x; by_cases hx : x ∈ S <;> simp [hx]
@@ -75,7 +75,7 @@ theorem continuous_hsNormSq {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProduct
 
 theorem measurable_hsNormSq_ampJ : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] [CompleteSpace Wp] {Wq : Type} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (μG : Measure (Mt k r)) (c : ℝ) (Φ : Mat k r → Wp) (Φ' : Mat k r → Wq), IsHaarOn (GG k r) μG → ContinuousOn Φ (GG k r) → ContinuousOn Φ' (GG k r) → Measurable (Set.indicator {x : Mt k r | Matrix.of x ∈ GG k r} fun γ => hsNormSq (ampJ μG c Φ Φ' (Matrix.of γ))) := by
   intro k r Wp _ _ _ _ Wq _ _ _ μG c Φ Φ' hH hΦ hΦ'
-  haveI : SigmaFinite μG := hH.1
+  have : SigmaFinite μG := hH.1
   have hcl : IsClosed {x : Mat k r | xᴴ * Hpk k r * x = Hpk k r} :=
     isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul
       continuous_id) continuous_const

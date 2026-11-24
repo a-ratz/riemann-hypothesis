@@ -90,9 +90,9 @@ theorem continuous_withVal (w : HeightOneSpectrum (𝓞 E)) (f : E →+* Om l)
     exact pow_ne_zero n hy0 ((WithVal.equiv (w.valuation E)).symm.map_eq_zero_iff.1 h)
   have h0 : Valued.v.restrict x0 ≠ 0 := by simp [hx0']
   filter_upwards [Valued.mem_nhds_zero.2 ⟨Units.mk0 _ h0, subset_rfl⟩] with z hz
-  simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hz
+  simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hz
   have hz' : w.valuation E (WithVal.equiv (w.valuation E) z) < w.valuation E (y ^ n) := hz
-  have hv : 0 < w.valuation E (y ^ n) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (pow_ne_zero n hy0))
+  have hv : 0 < w.valuation E (y ^ n) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (pow_ne_zero n hy0))
   have hu : w.valuation E (WithVal.equiv (w.valuation E) z / y ^ n) ≤ 1 := by
     rw [map_div₀]
     exact (div_le_one₀ hv).2 hz'.le
@@ -134,8 +134,8 @@ theorem existsUnique_continuous_induced : ∀ {E Ω : Type} [Field E] [NumberFie
   have hc := continuous_withVal w f h1 (y : E) (by simpa using hy0) ((hlt y).2 hyw)
   have hcg : Continuous (g.comp (WithVal.equiv (w.valuation E)).toRingHom) :=
     Topology.IsInducing.subtypeVal.continuous_iff.2 hc
-  haveI : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2
-  haveI : CompleteSpace ↥LL'.1 := FiniteDimensional.complete ℚ_[l] ↥LL'.1
+  have : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2
+  have : CompleteSpace ↥LL'.1 := FiniteDimensional.completeSpace ℚ_[l] ↥LL'.1
   let ext : w.adicCompletion E →+* ↥LL'.1 :=
     (UniformSpace.Completion.extensionHom _ hcg).comp (HeightOneSpectrum.adicCompletion.equiv E w).toRingHom
   have hextc : Continuous ext := UniformSpace.Completion.continuous_extension.comp
@@ -144,10 +144,10 @@ theorem existsUnique_continuous_induced : ∀ {E Ω : Type} [Field E] [NumberFie
     UniformSpace.Completion.extensionHom_coe _ hcg (WithVal.toVal _ k)
   have hval : ∀ x : E, ((ext (algebraMap E _ x) : ↥LL'.1) : Om l) = f x := fun x =>
     congrArg (Subtype.val) (hext x)
-  refine ⟨⟨(algebraMap ↥LL'.1 (Om l)).comp ext, continuous_subtype_val.comp hextc⟩, fun x => (hval x), ?_⟩
+  refine ⟨⟨(algebraMap ↥LL'.1 (Om l)).comp ext, continuous_subtypeVal.comp hextc⟩, fun x => (hval x), ?_⟩
   rintro ⟨j', hj'c⟩ hj'
   refine Subtype.ext (DFunLike.coe_injective ((HeightOneSpectrum.denseRange_algebraMap E w).equalizer hj'c
-    (continuous_subtype_val.comp hextc) (funext fun x => ?_)))
+    (continuous_subtypeVal.comp hextc) (funext fun x => ?_)))
   exact (hj' x).trans (hval x).symm
 
 end GlobalTheory.CompanionTheory.EmbUniq

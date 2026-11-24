@@ -56,14 +56,14 @@ open GlobalTheory.ArcPull ReciprocityTheory.ChartRestriction.G.DVR
 
 theorem pelOK_of_isPullDeg : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dm : Datum H) (D : DegData R (maximalIdeal R)) [Module (𝓞 E) D.toPre.X] (o : letI := H.starRing; D.toPre.OAct (𝓞 E)), PelOK Dm D.toPre o → ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (φ : R →+* R'), Function.Injective φ → ∀ D' : DegData R' (maximalIdeal R'), Nonempty (IsPullDeg φ D.toPre D'.toPre) → ∃ (_ : Module (𝓞 E) D'.toPre.X) (o' : letI := H.starRing; D'.toPre.OAct (𝓞 E)), PelOK Dm D'.toPre o' := by
   intro R _ _ _ hR E _ _ _ H Dm D _ o hP R' _ _ _ φ hφ D' ⟨hD⟩
-  letI := H.starRing
+  let := H.starRing
   have hG : GlobalFnsSt := GlobalTheory.firstFiveLaws.1.globalFns
-  letI inst : Module (𝓞 E) D'.toPre.X := hD.xe.module (𝓞 E)
+  let inst : Module (𝓞 E) D'.toPre.X := hD.xe.module (𝓞 E)
   have hx : ∀ (a : 𝓞 E) y, hD.xe (a • y) = a • hD.xe y := fun a y => hD.xe.apply_symm_apply _
   obtain ⟨o', ho⟩ := ArcPull.exists_oAct hD hG hφ o hx
   obtain ⟨hpq, hp1, hw, hF⟩ := hP
   refine ⟨inst, o', hpq, hp1, ArcPull.traceFormTwistIso_of_pullback hD hφ hx ho hw, fun F _ _ _ => ?_⟩
-  letI : Algebra (FractionRing R) F := ((algebraMap (FractionRing R') F).comp (ArcPull.fracMap hφ)).toAlgebra
+  let : Algebra (FractionRing R) F := ((algebraMap (FractionRing R') F).comp (ArcPull.fracMap hφ)).toAlgebra
   have hc : ArcPull.Compat φ F := fun x =>
     congrArg (algebraMap (FractionRing R') F) (ArcPull.fracMap_algebraMap hφ x)
   obtain ⟨hL, hT⟩ := hF F

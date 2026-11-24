@@ -135,7 +135,7 @@ theorem exists_split_finiteAdele {κ : Type} [Finite κ] (a : κ → Af F) :
   classical
   let S := ⋃ k, {v : HeightOneSpectrum (𝓞 F) | a k v ∉ v.adicCompletionIntegers F}
   have hS : S.Finite := Set.finite_iUnion fun k => Filter.eventually_cofinite.1 (a k).2
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   let p : Af F →ₐ[F] (∀ v : S, v.1.adicCompletion F) :=
     { toFun := fun x v => x v.1
       map_one' := rfl
@@ -148,7 +148,7 @@ theorem exists_split_finiteAdele {κ : Type} [Finite κ] (a : κ → Af F) :
       filter_upwards [hS.compl_mem_cofinite] with v hv
       rw [dite_eq_right hv]
       exact zero_mem _⟩
-  have hs : ∀ y, p (s y) = y := fun y => funext fun v => dif_pos v.2
+  have hs : ∀ y, p (s y) = y := fun y => funext fun v => dite_eq_left v.2
   have hs1 : ∀ v, s 1 v = if v ∈ S then 1 else 0 := fun v => by
     show dite _ _ _ = _
     split_ifs <;> rfl
@@ -184,9 +184,9 @@ theorem exists_split_tensor (σ : E →ₐ[F] E) {δ : E} (hδ : δ ≠ 0) (hσ�
   choose a ha using fun k => exists_sum_tmul (x k)
   obtain ⟨R, _, _, p, e, hR, hp, hpe, hker, hint⟩ :=
     exists_split_finiteAdele (κ := κ × _) fun q => a q.1 q.2
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsArtinianRing (R ⊗[F] E) := IsArtinianRing.of_finite R _
-  letI : Algebra ℚ (R ⊗[F] E) := ((inclR (F := F) R).comp (algebraMap ℚ E)).toAlgebra
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsArtinianRing (R ⊗[F] E) := IsArtinianRing.of_finite R _
+  let : Algebra ℚ (R ⊗[F] E) := ((inclR (F := F) R).comp (algebraMap ℚ E)).toAlgebra
   refine ⟨R ⊗[F] E, inferInstance, sigR R σ, (Algebra.TensorProduct.map p (AlgHom.id F E)).toRingHom,
     e ⊗ₜ 1, fun y => ?_, Algebra.TensorProduct.map_surjective _ _ hp Function.surjective_id, ?_, fun y hy => ?_, ?_,
     generic_of_semilocal (δ := inclR R δ) (hδ.isUnit.map _) ?_, fun k => ?_⟩
@@ -215,17 +215,17 @@ theorem exists_split_tensor (σ : E →ₐ[F] E) {δ : E} (hδ : δ ≠ 0) (hσ�
 theorem isUnimodularLC_finiteAdele (σ : E →ₐ[F] E) (hss : ∀ x, σ (σ x) = x) {δ : E} (hδ : δ ≠ 0)
     (hσδ : σ δ = -δ) {n : ℕ} {J : Matrix (Fin n) (Fin n) E} (hJ : IsHermND σ J) :
     IsUnimodularLC (HA (Af F) σ J) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   obtain ⟨h⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Af F)
-  haveI : T2Space (Af F ⊗[F] E) := h.isEmbedding.t2Space
+  have : T2Space (Af F ⊗[F] E) := h.isEmbedding.t2Space
   obtain ⟨_, _, _⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_HA (Af F) σ n J
-  haveI : BorelSpace (HA (Af F) σ J) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (HA (Af F) σ J) := inferInstanceAs (IsTopologicalGroup (HR (Af F) σ J))
+  have : BorelSpace (HA (Af F) σ J) := ⟨rfl⟩
+  have : IsTopologicalGroup (HA (Af F) σ J) := inferInstanceAs (IsTopologicalGroup (HR (Af F) σ J))
   refine ⟨inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     ⟨Measure.haar, inferInstance⟩, fun μ _ => ?_⟩
   have hσ := GlobalTheory.AdelicUnitaryTop.continuous_sigR (Af F) σ
@@ -287,7 +287,7 @@ theorem isDiscreteWithDomains_inf_subgroupOf {G : Type} [Group G] [TopologicalSp
   have hf : Function.Injective f := fun a b h =>
     Subtype.ext (Subtype.ext (congrArg (fun z : Γ => (z : G)) h))
   have hc : Continuous f :=
-    (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+    (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   have : Countable ((Γ ⊓ S).subgroupOf S) := hf.countable
   have : DiscreteTopology ((Γ ⊓ S).subgroupOf S) := DiscreteTopology.of_continuous_injective hc hf
   have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology (S : Set G)
@@ -414,8 +414,8 @@ end
 
 theorem normaliseSubgroupClause : NormaliseSubgroupClause := by
   intro G _ _ _ _ _ _ _ _ H _ _ hH _ _ dg _ μ hμ
-  haveI : LocallyCompactSpace H := hH.locallyCompactSpace
-  haveI : SecondCountableTopology H :=
+  have : LocallyCompactSpace H := hH.locallyCompactSpace
+  have : SecondCountableTopology H :=
     inferInstanceAs (SecondCountableTopology (H : Set G))
   have key : ∀ (ν ν' : Measure H) [ν.IsHaarMeasure] [ν'.IsHaarMeasure],
       QuotientFormula H dg ν μ → QuotientFormula H dg ν' μ → ν' = ν := by
@@ -439,7 +439,7 @@ theorem normaliseSubgroupClause : NormaliseSubgroupClause := by
     Measure.isMulLeftInvariant_eq_smul dg dg₀
   have hpos : Measure.haarScalarFactor dg dg₀ ≠ 0 :=
     (Measure.haarScalarFactor_pos_of_isHaarMeasure dg dg₀).ne'
-  haveI hν : (Measure.haarScalarFactor dg dg₀ • (Measure.haar : Measure H)).IsHaarMeasure :=
+  have hν : (Measure.haarScalarFactor dg dg₀ • (Measure.haar : Measure H)).IsHaarMeasure :=
     Measure.IsHaarMeasure.nnreal_smul _ hpos
   have h₁ : QuotientFormula H dg
       (Measure.haarScalarFactor dg dg₀ • (Measure.haar : Measure H)) μ := by
@@ -472,8 +472,8 @@ theorem normaliseQuotientClause : NormaliseQuotientClause := by
   have hcpos : 0 < c := haarScalarFactor_pos_of_isHaarMeasure dg dg₀
   have hdg : dg = c • dg₀ := isMulLeftInvariant_eq_smul dg dg₀
   have hR : IsInvariantRadon H (c • μ₀) := by
-    haveI := hμ₀.finiteOnCompacts
-    haveI := hμ₀.invariant
+    have := hμ₀.finiteOnCompacts
+    have := hμ₀.invariant
     refine ⟨?_, inferInstance, ⟨fun g s hs => ?_⟩⟩
     · intro h
       apply hμ₀.ne_zero
@@ -728,13 +728,13 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem exists_homeomorph (h : IsCMExt F E σ) {I : Type} [Fintype I] {τ : I → (E →+* ℂ)} (hτ : IsCMFam τ)
     {θ : I → (Ainf F ⊗[F] E →+* ℂ)} (hθ : ∀ ρ, IsInfEmb (τ ρ) (θ ρ)) :
     ∃ Φ : (Ainf F ⊗[F] E) ≃ₜ (I → ℂ), ∀ z ρ, Φ z ρ = θ ρ z := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Ainf F) (Ainf F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Ainf F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Ainf F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_infiniteAdele F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Ainf F) (Ainf F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Ainf F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Ainf F) _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_infiniteAdele F
   obtain ⟨e₀⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Ainf F)
-  haveI : LocallyCompactSpace (Ainf F ⊗[F] E) := e₀.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Ainf F ⊗[F] E) := e₀.secondCountableTopology
+  have : LocallyCompactSpace (Ainf F ⊗[F] E) := e₀.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (Ainf F ⊗[F] E) := e₀.secondCountableTopology
   have hb := infEmb_bijective h hτ hθ
   let Θ : Ainf F ⊗[F] E →+ (I → ℂ) := (Pi.ringHom θ).toAddMonoidHom
   have hΘ : Continuous Θ := continuous_pi fun ρ => infEmb_continuous (hθ ρ)
@@ -783,10 +783,10 @@ theorem realOrbit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   refine ⟨⟨fun g _ i => Φ.symm fun ρ => (N ρ *ᵥ v g ρ) i, fun g => (key _ (v g)).2 rfl⟩, fun pt hpt => ?_⟩
   have hpt' : ∀ g, pt g = fun _ i => Φ.symm fun ρ => (N ρ *ᵥ v g ρ) i := fun g => (key _ (v g)).1 (hpt g)
   refine ⟨?_, fun g g' hg => ?_, fun h t ht => ?_⟩
-  · haveI : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
-    haveI : BorelSpace (UpqT P Q) := ⟨rfl⟩
-    haveI : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
-    haveI : SecondCountableTopology (UpqT P Q) :=
+  · have : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
+    have : BorelSpace (UpqT P Q) := ⟨rfl⟩
+    have : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
+    have : SecondCountableTopology (UpqT P Q) :=
       (GlobalTheory.UpqUnimodular.modelEquiv P Q).toHomeomorph.secondCountableTopology
     rw [show pt = _ from funext hpt']
     refine Measurable.of_eval fun _ => Measurable.of_eval fun i => Continuous.measurable ?_
@@ -1181,11 +1181,11 @@ theorem lintegral_tsum_orbit_unfold (G G' V X : Type) [Group G] [Group G'] [Meas
     (hcr : ∀ y, y ∈ Set.range c ↔ ∃ γ ∈ Γ, γ • x = y) (u : G → ℝ≥0∞) (hu : Measurable u)
     (Φ : V → ℝ≥0∞) (hΦ : ∀ h : G, Φ (h⁻¹ • x) = ∫⁻ g, u ((φ g)⁻¹ * h) ∂μ') :
     ∫⁻ h in 𝓕, ∑' i, Φ (h⁻¹ • c i) ∂μ = μ' 𝓕' * ∫⁻ h, u h ∂μ := by
-  haveI : MeasurableConstSMul Γ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
-  haveI : MeasurableConstSMul Γ' G' := ⟨fun γ => measurable_const_mul (γ : G')⟩
-  haveI : SMulInvariantMeasure Γ G μ :=
+  have : MeasurableConstSMul Γ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
+  have : MeasurableConstSMul Γ' G' := ⟨fun γ => measurable_const_mul (γ : G')⟩
+  have : SMulInvariantMeasure Γ G μ :=
     ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
-  haveI : SMulInvariantMeasure Γ' G' μ' :=
+  have : SMulInvariantMeasure Γ' G' μ' :=
     ⟨fun γ s _ => measure_preimage_mul μ' (γ : G') s⟩
   have hex : ∀ i, ∃ γ ∈ Γ, γ • x = c i := fun i => (hcr _).1 ⟨i, rfl⟩
   choose γ hγ hγx using hex
@@ -1501,8 +1501,8 @@ theorem rational_orbit {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     exact (hd _ _).symm.trans (h1.trans hxx)
 
 theorem unramified_host (D : D7) : UnramifiedAtFinite D.host.F D.host.E := by
-  letI := D.host.cmStar
-  haveI := D.host.isCMField_hostE
+  let := D.host.cmStar
+  have := D.host.isCMField_hostE
   have hU : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) :=
     Formalism.L2.Pj.unramBridge_holds D.host.E fun P hP => by
       obtain ⟨θ, t, ht, hθ⟩ := D.sp.cm.cmUnram.2.2 P hP

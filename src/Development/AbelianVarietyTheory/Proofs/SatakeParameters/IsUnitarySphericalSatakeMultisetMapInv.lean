@@ -297,7 +297,7 @@ theorem exists_matrix_of_isLattice' {R K : Type} [CommRing R] [IsDomain R] [IsPr
 
 theorem exists_glMap_std_eq (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] [IsFractionRing O K] (r : ℕ) (L : Lat O K r) :
     ∃ h : GL (Fin r) K, glMap h (std O K r).1 = L.1 := by
-  haveI := L.2
+  have := L.2
   obtain ⟨B, hB⟩ := exists_matrix_of_isLattice' (R := O) (K := K) L.1
   refine ⟨B, ?_⟩
   ext x

@@ -199,7 +199,7 @@ theorem measure_ball_eq_lintegral_upperDens : ∀ (V : Type) [NormedAddCommGroup
     filter_upwards [Filter.eventually_lt_of_limsup_lt h0, self_mem_nhdsWithin] with r hr hr0
     have hpos : l (Metric.closedBall x r) ≠ 0 := (Metric.measure_closedBall_pos l x hr0).ne'
     have hfin : l (Metric.closedBall x r) ≠ ⊤ := measure_closedBall_lt_top.ne
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     exact ((ENNReal.div_lt_iff (Or.inl hpos) (Or.inl hfin)).1 hr).le
 
   have hle : ∀ s ⊆ U, ν s ≤ ((C : ℝ≥0) • l) s := fun s hs =>
@@ -351,12 +351,12 @@ theorem exists_haarOn (k r : ℕ) : ∃ νh : Measure (Mt k r), IsHaarOn (UWb k 
   refine ⟨μ.map inc, inc_memb.sigmaFinite_map, ?_, ?_, fun s hs => ?_⟩
   · intro h
     have := congrArg (fun m : Measure (Mt k r) => m Set.univ) h
-    simp only [inc_memb.map_apply, Set.preimage_univ, Measure.coe_zero, Pi.zero_apply] at this
+    simp only [inc_memb.map_apply, Set.preimage_univ, FunLike.coe_zero, Pi.zero_apply] at this
     exact (IsOpen.measure_pos μ isOpen_univ Set.univ_nonempty).ne' this
   · rw [inc_memb.map_apply]
     have : (inc : Gp k r → Mt k r) ⁻¹' {x | Matrix.of x ∉ UWb k r} = ∅ := by
       ext x
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
       exact inc_mem x
     rw [this, measure_empty]
   · let a : Gp k r := ⟨s, hs⟩
@@ -396,7 +396,7 @@ theorem haarDens : HaarDens := by
   have hν : ∀ A : Set (lieE (UWb k r)), MeasurableSet A → ν A = νh (φ '' (A ∩ Metric.ball 0 δ₀)) := by
     intro A hA
     simp only [ν]
-    rw [Measure.map_apply measurable_subtype_coe hA, hψ.comap_apply]
+    rw [Measure.map_apply measurable_subtypeVal hA, hψ.comap_apply]
     congr 1
     rw [Set.inter_comm, ← Subtype.image_preimage_coe, Set.image_image]
     rfl
@@ -409,7 +409,7 @@ theorem haarDens : HaarDens := by
       (hcpt _ ((isCompact_closedBall (0 : lieE (UWb k r)) δ₀).image hc) (by
         rintro _ ⟨X, -, rfl⟩
         exact hmem X))
-  haveI : IsFiniteMeasure ν := ⟨by
+  have : IsFiniteMeasure ν := ⟨by
     rw [hν _ MeasurableSet.univ, Set.univ_inter]
     exact hfin⟩
   have hposh : ∀ ρ : ℝ, 0 < ρ → νh (φ '' Metric.ball 0 ρ) ≠ 0 := by
@@ -571,7 +571,7 @@ theorem hypM_eq (k : ℕ) (T' : ℝ) (E : Set ((Fin k → ℂ) × ℂ)) (hE : Me
   have hmeas : Measurable (hypPar k T') := (continuous_hypPar k T').measurable
   have hP : MeasurableSet (hypPar k T' ⁻¹' E) := hmeas hE
   unfold hypM
-  rw [Measure.smul_apply, Measure.map_apply hmeas hE, smul_eq_mul]
+  rw [smul_apply, Measure.map_apply hmeas hE, smul_eq_mul]
   congr 1
   rw [Measure.prod_apply hP, Measure.prod_apply (hP.inter (MeasurableSet.univ.prod measurableSet_Ioc))]
   refine lintegral_congr (fun y => ?_)
@@ -660,7 +660,7 @@ private lemma exp_opGen_conjTranspose_mul_diagonal_mul (k r : ℕ) (q : TrE k) (
     by_cases hj : sgn k r j = 0
     · obtain ⟨h1, h2⟩ := hz j i hj
       simp [h1, h2]
-    simp only [if_neg hi, if_neg hj]
+    simp only [ite_eq_right hi, ite_eq_right hj]
     exact hent i j
 
 theorem exp_form (k r : ℕ) (q : TrE k) :
@@ -696,14 +696,14 @@ theorem form_eq (k r : ℕ) (v : Fin (2 * r + k + 1) → ℂ) :
     intro i hi
     have : sgn k r i = 0 := by
       unfold sgn
-      rw [if_neg, if_neg]
+      rw [ite_eq_right, ite_eq_right]
       · intro h; exact hi ⟨⟨i.val - r, by omega⟩, by ext; simp [wI]; omega⟩
       · rintro ⟨h1, h2⟩; exact hi ⟨⟨i.val - r, by omega⟩, by ext; simp [wI]; omega⟩
     simp [this]
   have h1 : ∀ j : Fin k, sgn k r (wI k r j.castSucc) = 1 := by
-    intro j; unfold sgn; rw [if_pos]; simp [wI]
+    intro j; unfold sgn; rw [ite_eq_left]; simp [wI]
   have h2 : sgn k r (wI k r (Fin.last k)) = -1 := by
-    unfold sgn; rw [if_neg, if_pos] <;> simp [wI]
+    unfold sgn; rw [ite_eq_right, ite_eq_left] <;> simp [wI]
   rw [hs, Fin.sum_univ_castSucc, h2]
   simp only [h1, opCo]
   push_cast
@@ -810,12 +810,12 @@ theorem opVec_wI (p : (Fin k → ℂ) × ℂ) (m : Fin (k + 1)) : opVec k r p (w
   by_cases h : m.val < k
   · rw [dite_eq_left (by simp only; omega), dite_eq_left h]
     exact congrArg p.1 (Fin.ext (by simp))
-  · rw [dite_eq_right (by simp only; omega), dite_eq_right h, if_pos (by simp only; omega)]
+  · rw [dite_eq_right (by simp only; omega), dite_eq_right h, ite_eq_left (by simp only; omega)]
 
 theorem opVec_inWb (p : (Fin k → ℂ) × ℂ) : inWb k r (opVec k r p) := by
   intro i hi
   unfold opVec
-  rw [dite_eq_right (by omega), if_neg (by omega)]
+  rw [dite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem opCo_opVec (p : (Fin k → ℂ) × ℂ) : opCo k r (opVec k r p) = p := by
   refine Eq.trans ?_ (ofW_toW p)
@@ -901,7 +901,7 @@ theorem entry_bound {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hμ : μᴴ *
     intro j
     refine Fin.lastCases le_rfl (fun j => ?_) j
     have h := col hμ' (Fin.last k)
-    simp only [conjTranspose_apply, if_true, Complex.star_def, Complex.normSq_conj] at h
+    simp only [conjTranspose_apply, ite_true, Complex.star_def, Complex.normSq_conj] at h
     have := Finset.single_le_sum (f := fun l : Fin k => Complex.normSq (μ (Fin.last k) l.castSucc))
       (fun l _ => Complex.normSq_nonneg _) (Finset.mem_univ j)
     linarith
@@ -973,10 +973,10 @@ theorem pull_compact (ν : Measure (Mt k r)) (hG : IsGaugeOn k r (UWb k r) ν) {
     (hK : IsCompact K) : pull ν K ≠ ⊤ := by
   obtain ⟨ρ, h0, ht⟩ := gauge_ball ν hG
   obtain ⟨⟨hσ, hne, hc, hl⟩, -⟩ := hG
-  haveI : LocallyCompactSpace (Gp k r) := inc_closedEmbedding.locallyCompactSpace
-  haveI : T2Space (Gp k r) := inc_closedEmbedding.isEmbedding.t2Space
-  haveI := pull_sigmaFinite ν
-  haveI := pull_left ν hl
+  have : LocallyCompactSpace (Gp k r) := inc_closedEmbedding.locallyCompactSpace
+  have : T2Space (Gp k r) := inc_closedEmbedding.isEmbedding.t2Space
+  have := pull_sigmaFinite ν
+  have := pull_left ν hl
   have key := measure_eq_div_smul (Measure.haar : Measure (Gp k r)) (pull ν) (s := inc ⁻¹' bBall k r ρ)
     (by rw [pull_apply ν hc]; exact h0.ne') (by rw [pull_apply ν hc]; exact ht.ne)
   set c := (Measure.haar : Measure (Gp k r)) (inc ⁻¹' bBall k r ρ) / pull ν (inc ⁻¹' bBall k r ρ)
@@ -985,7 +985,7 @@ theorem pull_compact (ν : Measure (Mt k r)) (hG : IsGaugeOn k r (UWb k r) ν) {
     rw [h, zero_smul] at key
     exact NeZero.ne _ key
   have h1 : (Measure.haar : Measure (Gp k r)) K ≠ ⊤ := hK.measure_lt_top.ne
-  rw [key, Measure.smul_apply, smul_eq_mul] at h1
+  rw [key, smul_apply, smul_eq_mul] at h1
   intro htop
   rw [htop, ENNReal.mul_top hc0] at h1
   exact h1 rfl
@@ -994,7 +994,7 @@ theorem orbRepY : OrbRepY := by
   intro k r T' hk hT νg hG Q hQ hS hC
   by_cases hQ0 : Q = 0
   · exact ⟨0, ENNReal.zero_ne_top, by rw [hQ0, zero_smul]⟩
-  haveI : IsFiniteMeasureOnCompacts Q := ⟨fun C h => hC C h⟩
+  have : IsFiniteMeasureOnCompacts Q := ⟨fun C h => hC C h⟩
   obtain ⟨R, hR⟩ : ∃ R : ℕ, Q (Metric.closedBall 0 R) ≠ 0 := by
     by_contra h
     push Not at h
@@ -1007,9 +1007,9 @@ theorem orbRepY : OrbRepY := by
   have hU := unimodW k r νg hk hG
   have hfin := fun K => pull_compact νg hG (K := K)
   obtain ⟨⟨hσ, hne, hc, hl⟩, -⟩ := hG
-  haveI := pull_sigmaFinite νg
-  haveI := pull_left νg hl
-  haveI := pull_right νg hc hU
+  have := pull_sigmaFinite νg
+  have := pull_left νg hl
+  have := pull_right νg hc hU
   have hom := (continuous_opOrb (k := k) (r := r) T').measurable
   have htr : ∀ᵐ x ∂Q, ∃ g : Gp k r, act g (pt k T') = x := by
     have : ∀ᵐ x ∂Q, x ∈ hypS k T' := hS
@@ -1028,7 +1028,7 @@ theorem orbRepY : OrbRepY := by
   have hbt : b ≠ ⊤ := by
     open scoped Pointwise in
     obtain ⟨K, hK, hKm⟩ := orbit_proper (k := k) (r := r) hT R
-    haveI : T2Space (Gp k r) := inc_closedEmbedding.isEmbedding.t2Space
+    have : T2Space (Gp k r) := inc_closedEmbedding.isEmbedding.t2Space
     refine ne_top_of_le_ne_top (hfin K⁻¹ hK.inv) ?_
     rw [← lintegral_indicator_one hK.inv.measurableSet]
     refine lintegral_mono fun g => ?_
@@ -1045,7 +1045,7 @@ theorem orbRepY : OrbRepY := by
     · exact hR h
   refine ⟨Q C / b, (ENNReal.div_lt_top hRt hb0).ne, ?_⟩
   ext E hE
-  rw [Measure.smul_apply, smul_eq_mul, div_eq_mul_inv, mul_right_comm, mul_comm (Q C), key E hE, mul_assoc,
+  rw [smul_apply, smul_eq_mul, div_eq_mul_inv, mul_right_comm, mul_comm (Q C), key E hE, mul_assoc,
     ENNReal.mul_inv_cancel hb0 hbt, mul_one]
 
 end GlobalTheory.HypOrbitUnique
@@ -1073,16 +1073,16 @@ variable {k r : ℕ}
 theorem opVec_inWb (p : (Fin k → ℂ) × ℂ) : inWb k r (opVec k r p) := by
   intro i hi
   unfold opVec
-  rw [dif_neg (by omega), if_neg (by omega)]
+  rw [dite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem wbPart_opVec (p : (Fin k → ℂ) × ℂ) : wbPart k r (opVec k r p) = toW k p := by
   funext m
   have := m.isLt
   unfold wbPart opVec toW wI
   by_cases h : m.val < k
-  · rw [dif_pos (by simp only; omega), dif_pos h]
+  · rw [dite_eq_left (by simp only; omega), dite_eq_left h]
     exact congrArg p.1 (Fin.ext (by simp))
-  · rw [dif_neg (by simp only; omega), dif_neg h, if_pos (by simp only; omega)]
+  · rw [dite_eq_right (by simp only; omega), dite_eq_right h, ite_eq_left (by simp only; omega)]
 
 theorem opCo_eq (v : Fin (2 * r + k + 1) → ℂ) : opCo k r v = ofW k (wbPart k r v) := rfl
 
@@ -1110,13 +1110,13 @@ theorem continuous_opVec : Continuous (opVec k r) := by
   refine continuous_pi fun i => ?_
   unfold opVec
   by_cases h : r ≤ i.val ∧ i.val < r + k
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     exact (continuous_apply _).comp continuous_fst
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     by_cases h' : i.val = r + k
-    · simp only [if_pos h']
+    · simp only [ite_eq_left h']
       exact continuous_snd
-    · simp only [if_neg h']
+    · simp only [ite_eq_right h']
       exact continuous_const
 
 theorem continuous_opCo : Continuous (opCo k r) :=

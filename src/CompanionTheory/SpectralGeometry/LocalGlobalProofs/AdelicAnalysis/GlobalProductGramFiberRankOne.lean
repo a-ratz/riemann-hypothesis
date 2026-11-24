@@ -157,7 +157,7 @@ theorem exists_box (x : Af F) {W : Set (Af F)} (hW : W ∈ 𝓝 x) :
     {y | y - x v ∈ u v ∧ y - x v ∈ (v.adicCompletionIntegers F : Set (Fv F v))}
     else (v.adicCompletionIntegers F : Set (Fv F v)), fun v => ?_, fun v hv => ?_, fun y hy => ?_⟩
   · by_cases hv : v ∈ hT.toFinset ∪ hx.toFinset
-    · simp only [if_pos hv]
+    · simp only [ite_eq_left hv]
       have hc : Continuous (fun y : Fv F v => y - x v) := continuous_id.sub continuous_const
       have h0 : x v - x v = 0 := sub_self _
       have hO : (v.adicCompletionIntegers F : Set (Fv F v)) ∈ 𝓝 (0 : Fv F v) :=
@@ -165,19 +165,19 @@ theorem exists_box (x : Af F) {W : Set (Af F)} (hW : W ∈ 𝓝 x) :
       exact Filter.inter_mem
         (hc.continuousAt.preimage_mem_nhds (by rw [h0]; exact hu v))
         (hc.continuousAt.preimage_mem_nhds (by rw [h0]; exact hO))
-    · simp only [if_neg hv]
+    · simp only [ite_eq_right hv]
       have hxv : x v ∈ v.adicCompletionIntegers F := by
         by_contra hc
         exact hv (Finset.mem_union_right _ (hx.mem_toFinset.2 hc))
       exact (isOpen_int F v).mem_nhds hxv
-  · simp only [if_neg hv]
+  · simp only [ite_eq_right hv]
   · have hint : ∀ v, y v - x v ∈ v.adicCompletionIntegers F := fun v => by
       by_cases hv : v ∈ hT.toFinset ∪ hx.toFinset
       · have := hy v
-        simp only [if_pos hv] at this
+        simp only [ite_eq_left hv] at this
         exact this.2
       · have h1 := hy v
-        simp only [if_neg hv] at h1
+        simp only [ite_eq_right hv] at h1
         have hxv : x v ∈ v.adicCompletionIntegers F := by
           by_contra hc
           exact hv (Finset.mem_union_right _ (hx.mem_toFinset.2 hc))
@@ -186,7 +186,7 @@ theorem exists_box (x : Af F) {W : Set (Af F)} (hW : W ∈ 𝓝 x) :
     have hzz : zz ∈ T.pi t := fun v hv => by
       have hv' : v ∈ hT.toFinset ∪ hx.toFinset := Finset.mem_union_left _ (hT.mem_toFinset.2 hv)
       have := hy v
-      simp only [if_pos hv'] at this
+      simp only [ite_eq_left hv'] at this
       exact hut v _ this.1
     have := hsub hzz
     have hy' : x + mk zz = y := by
@@ -358,7 +358,7 @@ local instance instSCf : SecondCountableTopology (Af F) := (_root_.GlobalTheory.
 theorem nice_nbhd {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F v)} (h : IsStdV v lam)
     {s : Fv F v} {n : Set (Fv F v)} (hn : n ∈ 𝓝 s) :
     ∃ V : Set (Fv F v), IsOpen V ∧ V ⊆ n ∧ 0 < lam V ∧ lam V < ⊤ := by
-  haveI := h.1
+  have := h.1
   obtain ⟨K, hK, hKn, hKc⟩ := local_compact_nhds hn
   refine ⟨interior K, isOpen_interior, interior_subset.trans hKn, ?_, ?_⟩
   · exact isOpen_interior.measure_pos lam ⟨s, mem_interior_iff_mem_nhds.2 hK⟩
@@ -368,7 +368,7 @@ theorem sA_cpt_open (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {d M : ℕ}
     (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) {a : ℕ} (ha : 0 < a) :
     IsCompact (sA (M := M) b v a) ∧ IsOpen (sA (M := M) b v a) := by
   obtain ⟨hTR, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Fv F v)
-  haveI := hTR
+  have := hTR
   have hlat := (_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 M).2.2.2.1 v
   have hcont : ∀ c : Fv F v ⊗[F] E, Continuous
       (fun (X : Fin 1 → Fin M → Fv F v ⊗[F] E) (p : Fin 1) (i : Fin M) => c * X p i) := fun c =>
@@ -445,7 +445,7 @@ theorem box_meas (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v))
   rw [e1, (measurePreserving_funUnique lf Unit).measure_preimage_equiv] at key
   rw [key]
   refine Finset.prod_congr rfl fun v _ => ?_
-  haveI := (hlam v).1
+  have := (hlam v).1
   exact (measurePreserving_funUnique (lam v) Unit).measure_preimage_equiv (V v)
 
 theorem box_tuple (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)
@@ -460,12 +460,12 @@ theorem box_tuple (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (J : Mat
       qF (Fv F v) σ J X ∈ v.adicCompletionIntegers F) :
     coordW (Af F) b lf 1 M {X | (∀ v, projV v X ∈ sA b v a) ∧ qF (Af F) σ J X ∈ box S V} =
       ∏ v ∈ S, coordW (Fv F v) b (lam v) 1 M (sA b v a ∩ {X | qF (Fv F v) σ J X ∈ V v}) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have hq : ∀ (X : Fin 1 → Fin M → Af F ⊗[F] E) v, (qF (Af F) σ J X) v = qF (Fv F v) σ J (projV v X) :=
     fun X v => map_qF σ J (evalV F v) X
   have hmeas : ∀ v, MeasurableSet (sA (M := M) b v a ∩ {X | qF (Fv F v) σ J X ∈ V v}) := fun v => by
     obtain ⟨-, -, -, -, -, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Fv F v)
-    haveI := hB 1 M
+    have := hB 1 M
     exact ((sA_cpt_open σ hcm b v ha).2.inter ((hV v).preimage (qF_cont σ hcm J v))).measurableSet
   rw [← _root_.GlobalTheory.CompanionTheory.SW.WBox.coordW_box F E σ hcm d b lam hlam lf hlf hlf1 1 M S _ hmeas]
   congr 1
@@ -489,7 +489,7 @@ theorem box_tuple (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (J : Mat
 theorem hasProd_fibre_mass : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), (∀ v, IsStdV v (lam v)) → ∀ (m : ∀ v : HeightOneSpectrum (𝓞 F), HermR (Fv F v) σ 1 → Measure (Fin 1 → Fin M → Fv F v ⊗[F] E)), (∀ v, IsGramFib (Fv F v) σ J 1 (coordW (Fv F v) b (lam v) 1 M) (coordHerm (Fv F v) σ b (lam v) 1) (m v)) → ∀ (lf : Measure (Af F)), lf.IsAddHaarMeasure → lf {x | ∀ v, x v ∈ v.adicCompletionIntegers F} = 1 → ∀ a : ℕ, 0 < a → ∀ D : Af F → ℝ, Continuous D → (∀ y, 0 ≤ D y) → (∀ U : Set (Af F), MeasurableSet U → coordW (Af F) b lf 1 M {X | (∀ v, projV v X ∈ {X : (Fin 1 → Fin M → Fv F v ⊗[F] E) | (fun p i => (a : Fv F v ⊗[F] E) * X p i) ∈ latV b v}) ∧ algebraMap F (Af F) (1 / 2) * Algebra.trace (Af F) (Af F ⊗[F] E) (gramR (Af F) σ J X 0 0) ∈ U} = ∫⁻ y in U, ENNReal.ofReal (D y) ∂lf) → ∀ β : F, β ≠ 0 → HasProd (fun v => (m v (hermScal (Fv F v) σ (algebraMap F _ β)) {X : (Fin 1 → Fin M → Fv F v ⊗[F] E) | (fun p i => (a : Fv F v ⊗[F] E) * X p i) ∈ latV b v}).toReal) (D (algebraMap F (Af F) β)) := by
   intro F E _ _ _ _ _ σ hcm M J hJ d b lam hlam m hm lf hlf hlf1 a ha D hDc hD0 hUD β hβ
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have hUD' : ∀ U : Set (Af F), MeasurableSet U →
       coordW (Af F) b lf 1 M {X | (∀ v, projV v X ∈ sA b v a) ∧ qF (Af F) σ J X ∈ U} =
         ∫⁻ y in U, ENNReal.ofReal (D y) ∂lf := hUD

@@ -87,17 +87,17 @@ theorem modTop : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
 theorem finiteFE : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
 
 theorem topRing : IsTopologicalRing (AEF F E) := by
-  haveI := finiteFE (F := F) (E := E)
-  haveI := modTop (F := F) (E := E)
+  have := finiteFE (F := F) (E := E)
+  have := modTop (F := F) (E := E)
   exact IsModuleTopology.isTopologicalRing (AF F) (AEF F E)
 
 def sigLin (σ : E →ₐ[F] E) : AEF F E →ₗ[AF F] AEF F E :=
   TensorProduct.AlgebraTensorModule.map (LinearMap.id : AF F →ₗ[AF F] AF F) σ.toLinearMap
 
 theorem continuous_cAF (σ : E →ₐ[F] E) : Continuous (cAF σ) := by
-  haveI := finiteFE (F := F) (E := E)
-  haveI := modTop (F := F) (E := E)
-  haveI := topRing (F := F) (E := E)
+  have := finiteFE (F := F) (E := E)
+  have := modTop (F := F) (E := E)
+  have := topRing (F := F) (E := E)
   have h := IsModuleTopology.continuous_of_linearMap (sigLin σ)
   have e : (sigLin σ : AEF F E → AEF F E) = cAF σ := by
     funext x
@@ -115,9 +115,9 @@ theorem continuous_cAF (σ : E →ₐ[F] E) : Continuous (cAF σ) := by
 theorem continuous_symplOHF (σ : E →ₐ[F] E) {nS nT : ℕ} (JS : Matrix (Fin nS) (Fin nS) E)
     (JT : Matrix (Fin nT) (Fin nT) E) (ξ : E) {X : Type} [TopologicalSpace X] {x y : X → WOF F E nS nT}
     (hx : Continuous x) (hy : Continuous y) : Continuous fun t => symplOHF σ JS JT ξ (x t) (y t) := by
-  haveI := finiteFE (F := F) (E := E)
-  haveI := modTop (F := F) (E := E)
-  haveI := topRing (F := F) (E := E)
+  have := finiteFE (F := F) (E := E)
+  have := modTop (F := F) (E := E)
+  have := topRing (F := F) (E := E)
   have hy' : ∀ i j, Continuous fun t => cAF σ (y t i j) := fun i j =>
     (continuous_cAF σ).comp ((continuous_apply j).comp ((continuous_apply i).comp hy))
   have hx' : ∀ i j, Continuous fun t => x t i j := fun i j =>
@@ -251,10 +251,10 @@ theorem continuous_of_level_real : ∀ (F E : Type) [Field F] [NumberField F] [F
         ∀ w : Formalism.IndefR.DatumF.WOF F E nS nT, ContDiff ℝ ∞ fun x => g (w + L x)) →
       Continuous g := by
   intro F E _ _ _ _ _ σ B _ nS nT JS JT _ _ ξ₀ _ _ hstd g hU hsm
-  haveI := finiteFE (F := F) (E := E)
-  haveI := modTop (F := F) (E := E)
-  haveI := topRing (F := F) (E := E)
-  haveI : IsTopologicalAddGroup (AEF F E) := IsTopologicalRing.to_topologicalAddGroup
+  have := finiteFE (F := F) (E := E)
+  have := modTop (F := F) (E := E)
+  have := topRing (F := F) (E := E)
+  have : IsTopologicalAddGroup (AEF F E) := IsTopologicalRing.isTopologicalAddGroup
   obtain ⟨U, hUo, hUf⟩ := hU
   let φ := (Module.finBasis ℝ (Fin nT × Fin nS × Fin (Module.finrank F E) → mixedEmbedding.mixedSpace F)).equivFunL
   let L : (Fin _ → ℝ) →+ WOF F E nS nT := (realCh F E nS nT).comp φ.symm.toLinearEquiv.toAddMonoidHom

@@ -197,12 +197,12 @@ theorem exists_isSplitBasis_plane : ∀ (F E : Type) [Field F] [NumberField F] [
     by_cases h0 : i.1 = i₀
     · convert hunit x hx using 1; funext r; simp [hM, colMat, h0]
     by_cases h1 : i.1 = i₁
-    · convert hunit y hy using 1; funext r; simp only [hM, colMat, if_neg h0, if_pos h1]
+    · convert hunit y hy using 1; funext r; simp only [hM, colMat, ite_eq_right h0, ite_eq_left h1]
     by_cases h2 : unskip i₀ i₁ i.1 < n₁
     · have : (fun r => M r i) = ι.map τ *ᵥ (β₁.1 *ᵥ Pi.single ⟨_, h2⟩ 1) := by
         funext r
         rw [Matrix.mulVec_mulVec, Matrix.mulVec_single_one]
-        simp only [hM, colMat, if_neg h0, if_neg h1, dif_pos h2, Matrix.transpose_apply]
+        simp only [hM, colMat, ite_eq_right h0, ite_eq_right h1, dite_eq_left h2, Matrix.transpose_apply]
         rfl
       rw [this]
       refine hImg _ ((hβ₁ _).1 fun k => ?_)
@@ -216,7 +216,7 @@ theorem exists_isSplitBasis_plane : ∀ (F E : Type) [Field F] [NumberField F] [
   have hR : ∀ z : Fin (n₁ + 2) → E, (fun r => τ (z r)) ∈ LinearMap.range M.mulVecLin := by
     intro z
     have hz : z ∈ Submodule.span E (L : Set (Fin (n₁ + 2) → E)) := by
-      letI := hL
+      let := hL
       rw [Submodule.IsFullLattice.span_eq_top]
       trivial
     induction hz using Submodule.span_induction with

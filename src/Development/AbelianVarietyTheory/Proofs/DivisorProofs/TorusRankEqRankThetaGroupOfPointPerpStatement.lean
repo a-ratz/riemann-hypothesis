@@ -201,13 +201,13 @@ theorem genFibre : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [Ari
     rw [Category.id_comp, Category.assoc, hxu]
     show Spec.map _ ≫ Spec.map _ = _
     rw [← Spec.map_comp]; rfl
-  haveI := U.gen_hom
-  haveI : IsMonHom U.gen.symm.hom := by show IsMonHom U.gen.inv; infer_instance
+  have := U.gen_hom
+  have : IsMonHom U.gen.symm.hom := by show IsMonHom U.gen.inv; infer_instance
   have hA := ((isGrpPullback_of_iso U.gen.symm).comp
     (isGrpPullback_pullback ((Over.pullback ξ).obj Zh.G) (jK V))).comp (isGrpPullback_pullback Zh.G ξ)
   have hB := (isGrpPullback_pullback ((Over.pullback Zh.u₀).obj ρ.P.A) y).comp Zh.cart
   obtain ⟨e, he, hφ⟩ := grpPullback_iso (hA.congr e₂ rfl) hB
-  haveI := he
+  have := he
   have hC := (isGrpPullback_of_iso e).comp ((isGrpPullback_pullback ((Over.pullback Zh.u₀).obj ρ.P.A) y).comp
     (isGrpPullback_pullback ρ.P.A Zh.u₀))
   refine ⟨_, hC.congr e₃ rfl, ?_⟩
@@ -321,7 +321,7 @@ theorem supI_closedPoint_eq : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
     rw [RatModel.valLoc_valF ξ hs hz f]
     exact hemb U f hz
   ext a
-  simp only [supI, Set.mem_setOf_eq]
+  simp only [supI, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨ha, hb⟩
     refine ⟨ha, fun b => ⟨RatModel.valLoc ξ z hs ⟨_, hb b⟩, ?_⟩⟩
@@ -372,7 +372,7 @@ theorem closure_least_val : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible V
   obtain ⟨v, hv, -⟩ := GlobalTheory.ValClosure.exists_valuation_closure V ϖ hϖ
   obtain ⟨s, hs, hcos⟩ := GlobalTheory.ThetaDvr.Scale.exists_scale hL hL₂ o Ω S ρ V hc yK A φ hcart hlb G D U hG hy yy hyy hyq ϖ hϖ v hv
-  haveI : CharZero (FractionRing V) := charZero_of_injective_algebraMap (IsFractionRing.injective V (FractionRing V))
+  have : CharZero (FractionRing V) := charZero_of_injective_algebraMap (IsFractionRing.injective V (FractionRing V))
   obtain ⟨a₀, ha₀⟩ := GlobalTheory.ThetaGeneric.exists_th_ne_zero hL hL₂ o Ω S ρ (FractionRing V) yK
   set iK := algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V)) with hiK
   have hiKinj : Function.Injective iK := iK.injective
@@ -427,7 +427,7 @@ theorem labelMap : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [Ari
       rw [Pi.smul_apply, nsmul_eq_mul, ZMod.natCast_self, zero_mul]; rfl
     rw [← map_pow, ← ofAdd_nsmul, this, ofAdd_zero, map_one]
   choose P hP using fun a => honto _ (htors a)
-  letI := TorusExt.gtGroup D.toPre (AlgebraicClosure (FractionRing V))
+  let := TorusExt.gtGroup D.toPre (AlgebraicClosure (FractionRing V))
   have hB := D.tau_bimult
   open GlobalTheory.TorusExt ReciprocityTheory.ChartRestriction.G.DVR in
   let iotaLocal : D.toPre.X →+ GtPtF D.toPre (AlgebraicClosure (FractionRing V)) := AddMonoidHom.mk'
@@ -556,7 +556,7 @@ theorem leastValuation_labels : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algeb
   rw [← clos o Ω S ρ V hV _ A φ cart lb _ D U semi hy yy hs he]
   congr 1
   ext a
-  simp only [Set.mem_setOf_eq, RingHom.comp_apply, map_ne_zero]
+  simp only [Set.mem_ofPred_eq, RingHom.comp_apply, map_ne_zero]
   rfl
 
 theorem tt_equiv_fin_of_unif : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Zh : ZHOut ρ M U₀ EE), S.Big → S.Over₀ M U₀ → S.IsEE M U₀ EE → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (IsLocalRing.maximalIdeal V) V → ∀ (ξ : Sp V ⟶ M.Z), (∃ w, ξ w = genericPoint M.Z) → ∀ [IsCommMonObj ((Over.pullback ξ).obj Zh.G)] (D : DegData V (IsLocalRing.maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (IsLocalRing.maximalIdeal V) D A ((Over.pullback ξ).obj Zh.G)), LBIso U.LG.L (Zh.L.L.pull (pullback.fst Zh.G.hom ξ)) → (∀ y, PsiUnitOn D.toPre y (ξ ⁻¹' abLocus Zh.G)) → Nonempty (S.TT M (ξ (IsLocalRing.closedPoint V)) ≃+ (Fin (Module.finrank ℤ D.toPre.X) → ZMod (S.r * S.N))) := by

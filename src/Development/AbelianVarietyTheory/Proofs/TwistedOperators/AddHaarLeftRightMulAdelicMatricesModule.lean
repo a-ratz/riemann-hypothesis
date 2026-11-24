@@ -141,13 +141,13 @@ namespace GlobalTheory.ModuLR
 
 theorem finiteIntegers_compact_secondCountable_t2 : ∀ (F : Type) [Field F] [NumberField F] (S : Finset (HeightOneSpectrum (𝓞 F))), CompactSpace (OPart F S) ∧ SecondCountableTopology (OPart F S) ∧ T2Space (OPart F S) := by
   intro F _ _ S
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F
-  haveI := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
-  haveI : ∀ v : {v : HeightOneSpectrum (𝓞 F) // v ∉ S}, CompactSpace (v.1.adicCompletionIntegers F) :=
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F
+  have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have : ∀ v : {v : HeightOneSpectrum (𝓞 F) // v ∉ S}, CompactSpace (v.1.adicCompletionIntegers F) :=
     fun v => GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v.1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (v.adicCompletion F) :=
+  have : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (v.adicCompletion F) :=
     fun v => secondCountable_of_proper
-  haveI : ∀ v : {v : HeightOneSpectrum (𝓞 F) // v ∉ S}, SecondCountableTopology (v.1.adicCompletionIntegers F) :=
+  have : ∀ v : {v : HeightOneSpectrum (𝓞 F) // v ∉ S}, SecondCountableTopology (v.1.adicCompletionIntegers F) :=
     fun v => TopologicalSpace.Subtype.secondCountableTopology _
   exact ⟨inferInstance, inferInstance, inferInstance⟩
 
@@ -205,7 +205,7 @@ theorem continuous_jSP : Continuous (jSP F S) := by
         = fun p => ((p.2 ⟨v, h⟩ : v.adicCompletionIntegers F) : v.adicCompletion F) := by
       funext p; simp [jSP, h]
     show Continuous (fun p : SPart F S × OPart F S => ((jSP F S p : _) : ∀ w : HeightOneSpectrum (𝓞 F), w.adicCompletion F) v)
-    rw [this]; exact continuous_subtype_val.comp ((continuous_apply _).comp continuous_snd)
+    rw [this]; exact continuous_subtypeVal.comp ((continuous_apply _).comp continuous_snd)
 
 theorem continuous_jSPinv : Continuous (jSPinv F S) := by
   have hc : Continuous (fun x : Πʳ v : HeightOneSpectrum (𝓞 F), [v.adicCompletion F, (v.adicCompletionIntegers F : Set (v.adicCompletion F))]_[𝓟 ((S : Set (HeightOneSpectrum (𝓞 F)))ᶜ)] =>

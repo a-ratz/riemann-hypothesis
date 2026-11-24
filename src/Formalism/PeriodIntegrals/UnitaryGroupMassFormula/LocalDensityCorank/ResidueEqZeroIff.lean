@@ -279,7 +279,7 @@ theorem tau_zero (e : E ≃ₐ[F] F × F) {V : Type} [AddCommGroup V] [Module E 
 theorem one_sum {n : ℕ} (u w : Fin n → F) :
     ∑ k, ∑ l, u k * (((1 : Matrix (Fin n) (Fin n) 𝒪[F]) k l : 𝒪[F]) : F) * w l = u ⬝ᵥ w := by
   simp only [Matrix.one_apply, apply_ite (fun z : 𝒪[F] => (z : F)), OneMemClass.coe_one, ZeroMemClass.coe_zero,
-    mul_ite, ite_mul, mul_one, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, dotProduct]
+    mul_ite, ite_mul, mul_one, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, dotProduct]
 
 theorem coord_of_basis (M : Loc.Model F E) (hl : IsNonarchimedeanLocalField F)
     (e : E ≃ₐ[F] F × F) (he : ∀ x, e (M.L.cj x) = (e x).swap)
@@ -462,9 +462,9 @@ theorem coord_of_basis (M : Loc.Model F E) (hl : IsNonarchimedeanLocalField F)
 
 theorem adapted_coords_self_dual : CoordData := by
   intro F E _ _ _ _ _ _ _ M hl _ e he V _ _ H Λ hΛ
-  haveI := H.free
-  haveI := H.fin
-  haveI : Nontrivial E := e.toEquiv.nontrivial
+  have := H.free
+  have := H.fin
+  have : Nontrivial E := e.toEquiv.nontrivial
   exact coord_of_basis M hl e he V H Λ hΛ (Module.finBasis E V)
 
 end Main
@@ -664,7 +664,7 @@ theorem card_fibre {K V U : Type} [Field K] [Fintype K] [AddCommGroup V] [Module
       invFun := fun y => ⟨y.1 + x0, by rw [map_add (f := _), LinearMap.mem_ker.mp y.2, zero_add, hx0]⟩
       left_inv := fun x => Subtype.ext (sub_add_cancel _ _)
       right_inv := fun y => Subtype.ext (add_sub_cancel_right _ _) }
-  haveI : Finite V := Module.finite_of_finite K
+  have : Finite V := Module.finite_of_finite K
   rw [Nat.card_congr e, Module.natCard_eq_pow_finrank (K := K), Nat.card_eq_fintype_card]
 
 
@@ -679,8 +679,8 @@ theorem card_fibre_compl {K V U : Type} [Field K] [Fintype K] [AddCommGroup V] [
         Fintype.card K ^ finrank K (LinearMap.ker φ) -
           Fintype.card K ^ (k - finrank K (span K (Set.range (fun j => φ (z j)))))
       else Fintype.card K ^ finrank K (LinearMap.ker φ) := by
-  haveI : Finite V := Module.finite_of_finite K
-  haveI : Fintype V := Fintype.ofFinite V
+  have : Finite V := Module.finite_of_finite K
+  have : Fintype V := Fintype.ofFinite V
 
   let ψ : (Fin k → K) →ₗ[K] U :=
     { toFun := fun c => φ (∑ j, c j • z j)
@@ -756,8 +756,8 @@ theorem fiber_card {K V U : Type} [Field K] [Fintype K] [AddCommGroup V] [Module
       ∏ i ∈ Finset.range (k - Module.finrank K (Submodule.span K (Set.range g))),
         (Fintype.card K ^ Module.finrank K (LinearMap.ker φ) - Fintype.card K ^ i) := by
   classical
-  haveI : Finite V := Module.finite_of_finite K
-  haveI : Fintype V := Fintype.ofFinite V
+  have : Finite V := Module.finite_of_finite K
+  have : Fintype V := Fintype.ofFinite V
   induction k with
   | zero =>
     have h1 : Nat.card {z : Fin 0 → V // LinearIndependent K z ∧ ∀ j, φ (z j) = g j} = 1 := by
@@ -818,7 +818,7 @@ theorem fiber_card {K V U : Type} [Field K] [Fintype K] [AddCommGroup V] [Module
       ring
     · have hspan : Module.finrank K (span K (Set.range g)) = r + 1 := by
         rw [hrange, Submodule.span_insert]
-        haveI : FiniteDimensional K (span K (Set.range gk)) :=
+        have : FiniteDimensional K (span K (Set.range gk)) :=
           FiniteDimensional.span_of_finite K (Set.finite_range _)
         have hx0 : g (Fin.last k) ≠ 0 := fun h0 => hmem (h0 ▸ Submodule.zero_mem _)
         have hdis : span K {g (Fin.last k)} ⊓ span K (Set.range gk) = ⊥ := by
@@ -1051,7 +1051,7 @@ theorem count_split_gen (F E : Type) [Field F] [ValuativeRel F] [TopologicalSpac
         (Ph.map (IsLocalRing.residue 𝒪[F]))
         (Matrix.of fun i j => resF F ((e (G₀ ((Fintype.equivFin ι).symm j)
           ((Fintype.equivFin ι).symm i))).1)) : ℝ) := by
-  haveI := hl
+  have := hl
   obtain ⟨hπa, hπL, hdet, hform⟩ := hπ
   have hlift : ∀ c : 𝓀[F], liftF F c ∈ 𝒪[F] := fun c =>
     ((IsLocalRing.residue_surjective c).choose).2
@@ -1097,7 +1097,7 @@ theorem count_split_gen (F E : Type) [Field F] [ValuativeRel F] [TopologicalSpac
           (Matrix.of fun i j => resF F ((e (G₀ ((Fintype.equivFin ι).symm j)
             ((Fintype.equivFin ι).symm i))).1)) i j} := by
     ext ⟨X, Y⟩
-    simp only [Set.mem_range, Set.mem_setOf_eq]
+    simp only [Set.mem_range, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨v, hv⟩
       rw [hg] at hv
@@ -1154,9 +1154,9 @@ theorem diag_red (F E : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [C
   rw [Matrix.of_apply, Matrix.diagonal_apply, Matrix.diagonal_apply]
   by_cases h : i = j
   · subst h
-    rw [if_pos rfl, if_pos rfl, AlgEquiv.commutes]
+    rw [ite_eq_left rfl, ite_eq_left rfl, AlgEquiv.commutes]
     exact hc _
-  · rw [if_neg (fun h' => h ((Fintype.equivFin ι).symm.injective h').symm), if_neg h, map_zero]
+  · rw [ite_eq_right (fun h' => h ((Fintype.equivFin ι).symm.injective h').symm), ite_eq_right h, map_zero]
     exact h0
 
 theorem residue_eq_zero_iff' (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -1194,8 +1194,8 @@ theorem dens_diag_split (F E : Type) [Field F] [ValuativeRel F] [TopologicalSpac
     H.dens ϖ Λ (Matrix.diagonal (fun i => algebraMap F E (a i : F))) =
       Formalism.L2.SG.DensExact.densProd (Nat.card 𝓀[F]) 1 (Module.finrank E V) (Fintype.card ι)
         (Finset.univ.filter fun i => ϖ ∣ a i).card := by
-  haveI := hl
-  haveI : Fintype 𝓀[F] := Fintype.ofFinite _
+  have := hl
+  have : Fintype 𝓀[F] := Fintype.ofFinite _
   have hdiagO : ∀ i j, (Matrix.diagonal fun i => algebraMap F E (a i : F)) i j ∈ M.L.O := by
     intro i j
     rw [hO, Matrix.diagonal_apply]
@@ -1212,9 +1212,9 @@ theorem dens_diag_split (F E : Type) [Field F] [ValuativeRel F] [TopologicalSpac
     rw [Matrix.diagonal_apply, Matrix.diagonal_apply]
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact (hcjfix _ (by rw [AlgEquiv.commutes]; rfl)).symm
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
       exact (hcjfix 0 (by rw [map_zero]; rfl)).symm
   have hcnt := count_split_gen F E M hl e hes hO V H Λ π Ph hπ ϖ hϖ ι _ hdiagO hdiagH
   rw [diag_red F E e ι a] at hcnt

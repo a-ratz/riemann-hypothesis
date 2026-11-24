@@ -240,7 +240,7 @@ theorem block (hv : v.Integers R) {ι κ' : Type} [Fintype ι] [DecidableEq ι] 
       intro l'
 
       simp only [hy, map_sum, map_smul, hℓβ, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [e1]
     have := congrFun (congrFun hPP l) j
     rw [Matrix.mul_apply, Matrix.one_apply] at this
@@ -257,7 +257,7 @@ theorem block (hv : v.Integers R) {ι κ' : Type} [Fintype ι] [DecidableEq ι] 
   have hKlam : ∀ j, K (lam j) = fun l => Pi' l j := by
     intro j; funext l
     rw [hKapp, hlamdot]
-    simp only [hℓβ, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hℓβ, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   set cvec : κ' → Fin n → R := fun k m => (γ m : κ' → R) k with hcvec
   have hKrow : ∀ k, K ((Φ * ε) k) = Mᵀ *ᵥ cvec k := by
     intro k; funext l
@@ -293,7 +293,7 @@ theorem block (hv : v.Integers R) {ι κ' : Type} [Fintype ι] [DecidableEq ι] 
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.sum_mul]
       rw [Finset.sum_comm]
       simp only [mul_assoc, ← Finset.mul_sum, hgsc, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [hz, mulVec_sum]
     exact Submodule.sum_mem _ fun k _ => by
       rw [mulVec_smul]
@@ -443,10 +443,10 @@ variable {C : Type} [Field C] {v : Valuation C NNReal} {R : Type} [CommRing R] [
 
 theorem free_fin (hv : v.Integers R) {α : Type} [Fintype α] (S : Submodule R (α → R)) (hS : S.FG) :
     Module.Free R S ∧ Module.Finite R S := by
-  haveI := isLocal_of_integers hv
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
-  haveI : ValuationRing R := ValuationRing.of_integers v hv
-  haveI hfin : Module.Finite R S := Module.Finite.iff_fg.2 hS
+  have := isLocal_of_integers hv
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have : ValuationRing R := ValuationRing.of_integers v hv
+  have hfin : Module.Finite R S := Module.Finite.iff_fg.2 hS
 
   have htor : Submodule.torsion R S = ⊥ := by
     rw [eq_bot_iff]
@@ -461,7 +461,7 @@ theorem free_fin (hv : v.Integers R) {α : Type} [Fintype α] (S : Submodule R (
       simpa [Submonoid.smul_def] using this
     have ha0 : (a : R) ≠ 0 := nonZeroDivisors.coe_ne_zero a
     simpa [ha0] using h1
-  haveI : Module.Flat R S := (Module.Flat.flat_iff_torsion_eq_bot_of_isBezout).2 htor
+  have : Module.Flat R S := (Module.Flat.flat_iff_torsion_eq_bot_of_isBezout).2 htor
   exact ⟨Module.free_of_flat_of_isLocalRing, hfin⟩
 
 theorem fg_range {α β : Type} [Fintype α] [Fintype β] (A : Matrix β α R) :
@@ -474,10 +474,10 @@ theorem finrank_split (hv : v.Integers R) {α : Type} [Fintype α] [DecidableEq 
     (hsum : ∑ i, P i = 1) :
     ∑ i, Module.finrank R (LinearMap.range (Matrix.mulVecLin (P i))) = Fintype.card α := by
   classical
-  haveI := isLocal_of_integers hv
+  have := isLocal_of_integers hv
   have hfr := fun i => free_fin hv _ (fg_range (P i))
-  haveI : ∀ i, Module.Free R (LinearMap.range (Matrix.mulVecLin (P i))) := fun i => (hfr i).1
-  haveI : ∀ i, Module.Finite R (LinearMap.range (Matrix.mulVecLin (P i))) := fun i => (hfr i).2
+  have : ∀ i, Module.Free R (LinearMap.range (Matrix.mulVecLin (P i))) := fun i => (hfr i).1
+  have : ∀ i, Module.Finite R (LinearMap.range (Matrix.mulVecLin (P i))) := fun i => (hfr i).2
   have hPP : ∀ i j (w : α → R), P i *ᵥ (P j *ᵥ w) = if i = j then P i *ᵥ w else 0 := by
     intro i j w
     rw [Matrix.mulVec_mulVec, horth]
@@ -525,19 +525,19 @@ theorem elementary_divisor_statement : EigenElementaryDivisorStatement := by
   intro p _ g C _ _ _ v R _ _ _ O _ _ σ cp hS H U X hX
   classical
   have hv := hS.integers
-  haveI := htd_domain hS
-  haveI := isLocal_of_integers hv
+  have := htd_domain hS
+  have := isLocal_of_integers hv
   have hcp0 := htd_cp_ne hS
   have hEu : IsUnit (H.E.map (algebraMap ℤ_[p] R)).det := (htd_E H).2.2
-  have hTT : ∀ i, U.εT i * U.εT i = U.εT i := fun i => by rw [U.εT_orth i i, if_pos rfl]
-  have hLL : ∀ i, U.εL i * U.εL i = U.εL i := fun i => by rw [U.εL_orth i i, if_pos rfl]
+  have hTT : ∀ i, U.εT i * U.εT i = U.εT i := fun i => by rw [U.εT_orth i i, ite_eq_left rfl]
+  have hLL : ∀ i, U.εL i * U.εL i = U.εL i := fun i => by rw [U.εL_orth i i, ite_eq_left rfl]
   have hbt_r : ∀ i, bt2 H U * U.εT i = U.εL i * H.Bt * U.εT i := by
     intro i
     unfold bt2
     rw [Matrix.sum_mul, Finset.sum_eq_single i]
     · rw [Matrix.mul_assoc, hTT]
     · intro j _ hj
-      rw [Matrix.mul_assoc, U.εT_orth j i, if_neg hj, Matrix.mul_zero]
+      rw [Matrix.mul_assoc, U.εT_orth j i, ite_eq_right hj, Matrix.mul_zero]
     · intro h; exact absurd (Finset.mem_univ i) h
   have hbt_l : ∀ i, U.εL i * bt2 H U = U.εL i * H.Bt * U.εT i := by
     intro i
@@ -545,7 +545,7 @@ theorem elementary_divisor_statement : EigenElementaryDivisorStatement := by
     rw [Matrix.mul_sum, Finset.sum_eq_single i]
     · simp only [← Matrix.mul_assoc, hLL]
     · intro j _ hj
-      simp only [← Matrix.mul_assoc, U.εL_orth i j, if_neg (Ne.symm hj), Matrix.zero_mul]
+      simp only [← Matrix.mul_assoc, U.εL_orth i j, ite_eq_right (Ne.symm hj), Matrix.zero_mul]
     · intro h; exact absurd (Finset.mem_univ i) h
   have hLt : ∀ j, (U.εL j)ᵀ * H.Ht = H.Ht * U.εT (U.cj j) := by
     intro j
@@ -660,9 +660,9 @@ theorem elementary_divisor_statement : EigenElementaryDivisorStatement := by
     simp only [Pq, Matrix.fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add]
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl, ← Matrix.transpose_mul, hLL, hLL]
+      rw [ite_eq_left rfl, ← Matrix.transpose_mul, hLL, hLL]
     · have hc : U.cj j ≠ U.cj i := fun e => h (U.cj.injective e).symm
-      rw [if_neg h, ← Matrix.transpose_mul, U.εL_orth, if_neg hc, U.εL_orth, if_neg h, Matrix.transpose_zero,
+      rw [ite_eq_right h, ← Matrix.transpose_mul, U.εL_orth, ite_eq_right hc, U.εL_orth, ite_eq_right h, Matrix.transpose_zero,
         Matrix.fromBlocks_zero]
   have hPsum : ∑ i, Pq i = 1 := by
     have hsL : ∑ i, (U.εL (U.cj i))ᵀ = ∑ i, (U.εL i)ᵀ := Equiv.sum_comp U.cj (fun j => (U.εL j)ᵀ)
@@ -682,7 +682,7 @@ theorem elementary_divisor_statement : EigenElementaryDivisorStatement := by
   have hle : ∀ i, Module.finrank R (LinearMap.range (Matrix.mulVecLin (U.εT i))) ≤
       Module.finrank R (qE U.εL i (U.cj i)) := by
     intro i
-    haveI : Module.Finite R (qE U.εL i (U.cj i)) := by
+    have : Module.Finite R (qE U.εL i (U.cj i)) := by
       rw [← hQrange i]
       exact Module.Finite.iff_fg.2 (fg_range _)
     let f : LinearMap.range (Matrix.mulVecLin (U.εT i)) →ₗ[R] qE U.εL i (U.cj i) :=
@@ -731,9 +731,9 @@ theorem elementary_divisor_statement : EigenElementaryDivisorStatement := by
       rw [horth i l l']
       simp only [Sigma.mk.inj_iff, heq_eq_eq, true_and]
     · have hne : (⟨i, l⟩ : Σ i, Fin (n i)) ≠ ⟨i', l'⟩ := fun hh => h (congrArg Sigma.fst hh)
-      rw [if_neg hne]
+      rw [ite_eq_right hne]
       show lam i l ⬝ᵥ y i' l' = 0
-      rw [← hlam i l, ← hy i' l', ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, U.εT_orth, if_neg h]
+      rw [← hlam i l, ← hy i' l', ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, U.εT_orth, ite_eq_right h]
       simp
   have himg : ∀ i, Finset.univ.filter (fun j => (e j).1 = i) =
       Finset.univ.image (fun l : Fin (n i) => e.symm ⟨i, l⟩) := by
@@ -780,7 +780,7 @@ theorem elementary_divisor_statement : EigenElementaryDivisorStatement := by
     rw [hspan i]
     congr 1
     ext w
-    simp only [Set.mem_range, Set.mem_image, Set.mem_setOf_eq, Matrix.of_apply]
+    simp only [Set.mem_range, Set.mem_image, Set.mem_ofPred_eq, Matrix.of_apply]
     constructor
     · rintro ⟨l, rfl⟩
       exact ⟨e.symm ⟨i, l⟩, by simp, hal ⟨i, l⟩⟩

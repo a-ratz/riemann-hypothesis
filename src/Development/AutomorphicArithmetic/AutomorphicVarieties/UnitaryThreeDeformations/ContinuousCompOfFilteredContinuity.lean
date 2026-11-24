@@ -214,8 +214,8 @@ private theorem canon_wpart {O R Γ : Type} [CommRing O] [IsLocalRing O] [CommRi
       GeneralLinearGroup.map (f' : R →+* R') h =
         tor R' t * GeneralLinearGroup.map (f : R →+* R') h * tor R' t⁻¹ := by
     intro R' _ _ _ f f' t e
-    haveI := local_of_co f
-    haveI := local_of_co f'
+    have := local_of_co f
+    have := local_of_co f'
     have c1 := canon_map.1 (f' : R →+* R') _ h hc
     have c2 := canon_map.2 _ _ t (canon_map.1 (f : R →+* R') _ h hc)
     have e1 : (tor R' t).val * ((u x).mat.map (f : R →+* R')) * (tor R' t⁻¹).val
@@ -274,12 +274,12 @@ private theorem continuous_comp_of_filtered_continuity {l : ℕ} [Fact l.Prime] 
     (φ : M →ₗ[ℤ_[l]] PadicAlgCl l) (f : Γ → M) (hf : ∀ n g₀, ∀ᶠ g in nhds g₀, f g - f g₀ ∈ N n) :
     Continuous fun g => φ (f g) := by
   obtain ⟨k, π, hπ⟩ := Module.Finite.exists_fin' ℤ_[l] M
-  haveI : ContinuousSMul ℤ_[l] (PadicAlgCl l) := ⟨by
+  have : ContinuousSMul ℤ_[l] (PadicAlgCl l) := ⟨by
     have : (fun p : ℤ_[l] × PadicAlgCl l => p.1 • p.2) = fun p => (p.1 : ℚ_[l]) • p.2 := by
       funext p
       exact (algebraMap_smul ℚ_[l] p.1 p.2).symm
     rw [this]
-    exact (continuous_subtype_val.comp continuous_fst).smul continuous_snd⟩
+    exact (continuous_subtypeVal.comp continuous_fst).smul continuous_snd⟩
   have hc : Continuous (φ ∘ₗ π) := LinearMap.continuous_on_pi _
   have hcl : ∀ n, IsClosed {x | π x ∈ N n} := fun n => by
     refine AddSubgroup.isClosed_of_isOpen ((N n).comap π.toAddMonoidHom) (AddSubgroup.isOpen_of_mem_nhds _ (g := 0) ?_)
@@ -321,9 +321,9 @@ private theorem cont_sub {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
     (φ : M →ₗ[O] PadicAlgCl l) (f : Γ → M)
     (hf : ∀ n : ℕ, IsLocallyConstant fun g => Ideal.Quotient.mk (maximalIdeal R ^ n) (f g : R)) :
     Continuous fun g => φ (f g) := by
-  letI : Module ℤ_[l] M := Module.compHom M (algebraMap ℤ_[l] O)
-  haveI : IsScalarTower ℤ_[l] O M := IsScalarTower.of_compHom ℤ_[l] O M
-  haveI : Module.Finite ℤ_[l] M := Module.Finite.trans O M
+  let : Module ℤ_[l] M := Module.compHom M (algebraMap ℤ_[l] O)
+  have : IsScalarTower ℤ_[l] O M := IsScalarTower.of_compHom ℤ_[l] O M
+  have : Module.Finite ℤ_[l] M := Module.Finite.trans O M
   have hloc := (UpperTheory.V.Base.dvrFacts l O).2.2.1
   have hlm : algebraMap O R (algebraMap ℤ_[l] O l) ∈ maximalIdeal R := fun h =>
     PadicInt.irreducible_p.not_isUnit (IsLocalHom.map_nonunit _ (IsLocalHom.map_nonunit _ h))
@@ -364,7 +364,7 @@ private theorem euler {O A K : Type} [CommRing O] [CommRing A] [Algebra O A] [Co
     (𝒜 : ℤ → Submodule O A) [SetLike.GradedMonoid 𝒜] (h𝒜 : DirectSum.IsInternal 𝒜)
     (ξ : A →ₐ[O] K) (D : A →ₗ[O] K) (hD : D ∈ PtDer ξ K) (a : K) (s : Set A) (hs : Algebra.adjoin O s = ⊤)
     (h : ∀ x ∈ s, ∃ j, x ∈ 𝒜 j ∧ D x = a * j * ξ x) : ∀ j, ∀ x ∈ 𝒜 j, D x = a * j * ξ x := by
-  letI : GradedAlgebra 𝒜 := { toDecomposition := h𝒜.chooseDecomposition }
+  let : GradedAlgebra 𝒜 := { toDecomposition := h𝒜.chooseDecomposition }
   let t0 : Multiplicative ℤ →* DualNumber K :=
     { toFun := fun j => 1 + TrivSqZeroExt.inr (a * (j.toAdd : ℤ))
       map_one' := by simp
@@ -511,7 +511,7 @@ private theorem cob_lie {K Γ : Type} [CommRing K] [Group Γ] (r : Γ →* GG (m
   have e : ∀ X, cob r X g * (r g).mat = X * (r g).mat - (r g).mat * X := fun X => by
     show (X - (r g).adFun X) * _ = _
     unfold GG.adFun GG.mat
-    rw [if_pos hg, Matrix.sub_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
+    rw [ite_eq_left hg, Matrix.sub_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
   rw [e, Matrix.smul_mul, Matrix.mul_smul, Matrix.sub_apply, Matrix.smul_apply, Matrix.smul_apply,
     Matrix.diagonal_mul, Matrix.mul_diagonal, wt]
   simp only [smul_eq_mul, Int.cast_sub]
@@ -573,7 +573,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.tangent_eq_orbit :
     split_ifs <;> simp [hD1]
   have hcont : ∀ φ : Sring (O := O) u →ₗ[O] PadicAlgCl l, Continuous fun g => (uS g).mat.map φ := fun φ => by
     refine continuous_matrix fun a b => ?_
-    haveI := hfinj (wt a b)
+    have := hfinj (wt a b)
     have := cont_sub (wpart O u (wt a b))
       (φ ∘ₗ Submodule.inclusion (p' := Subalgebra.toSubmodule (Sring (O := O) u)) fun x hx => mem_Sring u hx)
       (fun g => ⟨_, entry_mem u g a b⟩) fun n => (hu.pt.cont n).comp fun X => X a b
@@ -642,7 +642,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.tangent_eq_orbit :
   rw [hy'] at hnc
   obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1
     ((normCoc_cob_iff r F.c g₁ X (isUnit_iff_ne_zero.2 two_ne_zero) ((hrr _).trans hF.ηc) ((hrr _).trans hg.1) hn hzu).1 hnc)
-  letI : SetLike.GradedMonoid fun j => (wpart O u j).comap (Sring (O := O) u).val.toLinearMap :=
+  let : SetLike.GradedMonoid fun j => (wpart O u j).comap (Sring (O := O) u).val.toLinearMap :=
     { one_mem := (SetLike.GradedOne.one_mem : (1 : R) ∈ wpart O u 0)
       mul_mem := fun _ _ _ _ ha hb => (SetLike.GradedMul.mul_mem ha hb : _ ∈ wpart O u _) }
   refine ⟨a, fun j x hx => euler (fun j => (wpart O u j).comap (Sring (O := O) u).val.toLinearMap)

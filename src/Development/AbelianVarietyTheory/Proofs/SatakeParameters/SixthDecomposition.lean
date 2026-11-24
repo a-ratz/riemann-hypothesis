@@ -320,7 +320,7 @@ theorem cont_epsQU : Continuous fun g => ((epsQU N A i g : (Qbar (N.l i))ˣ) : Q
   rw [e]
   have h1 : Continuous fun g => ((cycZ (F := H.E) (Ω := N.Om) (N.l i) g : ℤ_[N.l i]ˣ) : ℤ_[N.l i]) :=
     Units.continuous_val.comp (continuous_cycZ H.E N.Om (N.l i))
-  have h2 : Continuous fun z : ℤ_[N.l i] => (z : ℚ_[N.l i]) := continuous_subtype_val
+  have h2 : Continuous fun z : ℤ_[N.l i] => (z : ℚ_[N.l i]) := continuous_subtypeVal
   exact (continuous_algebraMap ℚ_[N.l i] (Qbar (N.l i))).comp (h2.comp h1)
 
 theorem epsQU_inv_val (g : G H.E N.Om) :

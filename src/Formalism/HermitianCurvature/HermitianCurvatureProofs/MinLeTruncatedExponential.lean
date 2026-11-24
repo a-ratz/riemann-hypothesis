@@ -179,7 +179,7 @@ theorem stepOne : StepOne := by
     exact hb.trans (mul_le_mul_of_nonneg_left (hmax w' hw') (mn_nonneg hΛ K (norm_nonneg _)))
   have hM : 0 ≤ M := by
     have h0 := hbd 0
-    simp only [norm_zero, mn, if_true, one_mul] at h0
+    simp only [norm_zero, mn, ite_true, one_mul] at h0
     exact (norm_nonneg _).trans h0
   have key : ∀ x : ℝ, 0 < x → Λ ≤ x → ‖φ c‖ ≤ 3 / π * x ^ 2 * M := by
     intro x hx hΛx
@@ -245,7 +245,7 @@ theorem stepUp : StepUp := by
     have hmn := mn_nonneg hΛ0.le K (norm_nonneg σ)
     have hle : ‖NP p nn F (b + s - 2) w (h ++ [(s - 1, t)]) (h ++ [(s - 1, (t⁻¹ + σ)⁻¹)])‖ ≤
         mn Λ K ‖σ‖ * Mb := hN.trans (mul_le_mul_of_nonneg_left (by linarith) hmn)
-    rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm]
+    rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm]
     exact ENNReal.ofReal_le_ofReal hle
   have hdual : ∀ σ, InDual ω₁ ω₂ σ → σ ∈ Set.range (fun a : GaussianInt => (Λ : ℂ) * GaussianInt.toComplex a) := by
     intro σ hσ

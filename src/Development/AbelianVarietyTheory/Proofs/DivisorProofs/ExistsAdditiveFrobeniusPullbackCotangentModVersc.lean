@@ -79,7 +79,7 @@ theorem exists_primitive_dUnit_eq : ∀ (p : ℕ) [Fact p.Prime] (K H : Type) [F
     have himg : f '' {φ | cobOne K (CartierDual K (CartierDual K H)) φ = 0} ⊆
         {b : H | cobOne K H b = 0} := by
       rintro _ ⟨φ, hφ, rfl⟩
-      simp only [Set.mem_setOf_eq] at hφ ⊢
+      simp only [Set.mem_ofPred_eq] at hφ ⊢
       show cobOne K H ((e.symm : CartierDual K (CartierDual K H) →ₐc[K] H) φ) = 0
       rw [← pullTwo_cobOne, hφ, map_zero]
     rw [eq_top_iff]

@@ -431,7 +431,7 @@ theorem GlobalTheory.StdVacuum.eventually_isVac_indicator : ∀ {F E : Type} [Fi
   intro F E _ _ _ _ _ σ B n d X Y r s r' s' hB hX hY M hrat
   classical
   obtain ⟨θ, hθ⟩ := GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hB.cm
-    (by haveI := hB.unram; infer_instance)
+    (by have := hB.unram; infer_instance)
   choose yf zf hyz using hrat
   obtain ⟨sX, hsX⟩ := hX.lat.fg.restrictScalars (R := ℤ)
   obtain ⟨sY, hsY⟩ := hY.lat.fg.restrictScalars (R := ℤ)

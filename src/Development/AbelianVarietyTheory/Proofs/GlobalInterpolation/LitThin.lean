@@ -704,7 +704,7 @@ theorem _root_.GlobalTheory.SpacedDetected.card_spaced_detected_le : ∃ C : ℝ
         have := (Finset.mem_Ioc.mp hn).1
         exact_mod_cast (show n ≠ 0 by omega)
       rw [ha]
-      simp only [if_pos hn]
+      simp only [ite_eq_left hn]
       rw [neg_add, Complex.cpow_add _ _ hn0]
       ring
     set H : (Σ N : ℕ, DirichletCharacter ℂ (N + 1)) → ℝ := fun x =>
@@ -731,7 +731,7 @@ theorem _root_.GlobalTheory.SpacedDetected.card_spaced_detected_le : ∃ C : ℝ
           rw [Finset.sum_sigma]
           apply Finset.sum_congr rfl
           intro q _
-          rw [finsum_mem_eq_toFinset_sum, Set.toFinset_setOf]
+          rw [finsum_mem_eq_toFinset_sum, Set.toFinset_ofPred]
       _ ≤ C₂ * ∑ n ∈ Finset.Icc 1 (Q ^ 6), ((Q : ℝ) ^ 2 * Tm + n) * ‖a n‖ ^ 2 :=
           hls Q (Q ^ 6) a Tm (by omega) hTm1
       _ ≤ C₂ * (3 * K ^ 2 * 80 * (Q : ℝ) ^ ((1 : ℝ) / 8)) := by

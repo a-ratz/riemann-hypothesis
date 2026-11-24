@@ -1427,7 +1427,7 @@ theorem two_le_finrank_of_isotropic [FiniteDimensional E W] (h : HermitianForm F
   by_contra hlt
   have hpos : 0 < finrank E W := Module.finrank_pos_iff_exists_ne_zero.mpr ⟨x₀, hne⟩
   have h1 : finrank E W = 1 := by omega
-  have hspan := (finrank_eq_one_iff_of_nonzero' x₀ hne).mp h1
+  have hspan := (finrank_eq_one_iff_of_ne_zero' x₀ hne).mp h1
   apply hne
   apply h.nonsingular.1
   rw [map_zero]
@@ -1459,7 +1459,7 @@ theorem UnfoldingIntegral.proof (h : HermitianForm F E W) (v : Basis ι E W)
       rintro _ ⟨γ, -, rfl⟩
       exact ⟨(γ : h.unitaryGroup), γ.2, rfl⟩
     exact DiscreteTopology.of_continuous_injective (f := Subgroup.inclusion hle)
-      (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective hle)
+      (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective hle)
   obtain ⟨FD, -, hFD⟩ := h₃ μ _ hdisc
   obtain ⟨c, hc0, hctop, hc⟩ := h₁ M μ D La x₀ hLa hx₀ hne hiso
   set y := vecAt v x₀ with hy

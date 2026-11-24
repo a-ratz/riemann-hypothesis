@@ -71,7 +71,7 @@ theorem zp_neg (z : ℤ_[p]) : zp Ω (-z) = - zp Ω z := by
   rw [← zpHom_apply, map_neg, zpHom_apply]
 
 theorem zpHom_injective (hc : IsClo p Ω) : Function.Injective (zpHom (p := p) (Ω := Ω)) := by
-  haveI := Basic.charZero_of_isClo hc
+  have := Basic.charZero_of_isClo hc
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro m hm
   by_contra h0
@@ -85,17 +85,17 @@ theorem exists_coords (hc : IsClo p Ω) {ι : Type} [Fintype ι] (E : ι → Ω)
     ∃ (κ : Type) (_ : Fintype κ) (f : κ → Ω) (M : ι → κ → ℤ_[p]),
       (∀ k, E k = ∑ i, zp Ω (M k i) * f i) ∧
       ∀ v : ι → ℤ_[p], ∑ k, zp Ω (v k) * E k = 0 → ∀ i, ∑ k, v k * M k i = 0 := by
-  letI : Algebra ℤ_[p] Ω := (zpHom (p := p) (Ω := Ω)).toAlgebra
+  let : Algebra ℤ_[p] Ω := (zpHom (p := p) (Ω := Ω)).toAlgebra
   have hsm : ∀ (m : ℤ_[p]) (x : Ω), m • x = zp Ω m * x := fun m x => by
     rw [Algebra.smul_def, RingHom.algebraMap_toAlgebra, zpHom_apply]
-  haveI : NoZeroSMulDivisors ℤ_[p] Ω := ⟨fun {m x} hmx => by
+  have : NoZeroSMulDivisors ℤ_[p] Ω := ⟨fun {m x} hmx => by
     rw [hsm] at hmx
     rcases mul_eq_zero.1 hmx with h0 | h0
     · left; exact zpHom_injective hc (by rw [zpHom_apply, h0, map_zero])
     · right; exact h0⟩
   let S : Submodule ℤ_[p] Ω := Submodule.span ℤ_[p] (Set.range E)
-  haveI : Module.Finite ℤ_[p] S := Module.Finite.span_of_finite _ (Set.finite_range E)
-  haveI : Module.Free ℤ_[p] S := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ_[p] S := Module.Finite.span_of_finite _ (Set.finite_range E)
+  have : Module.Free ℤ_[p] S := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis ℤ_[p] S
   have hE : ∀ k, E k ∈ S := fun k => Submodule.subset_span ⟨k, rfl⟩
   refine ⟨Module.Free.ChooseBasisIndex ℤ_[p] S, inferInstance, fun i => (b i : Ω),

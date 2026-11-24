@@ -63,7 +63,7 @@ theorem UpperTheory.V.Ws.H5.twMapUniq :
   have hψ : ∀ v i, pushCh (f' : B.B →+* R) (B.u.ψ v i) = pushCh (f : B.B →+* R) (B.u.ψ v i) := by
     intro v i
     ext g
-    simp only [pushCh, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [pushCh, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
     exact (hf'.2 v i g).trans (hf.2 v i g).symm
   have hp' : B.u.Maps (f' : B.B →+* R) p.D p.ψ := by
     unfold Pair.Maps at hp ⊢

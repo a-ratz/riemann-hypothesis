@@ -117,7 +117,7 @@ theorem exists_matrix {Xo : Moduli D l} {S F : Type} [CommRing S] [Field F] (ψ 
   choose cf h1 h2 h3 using h
   refine ⟨Matrix.of fun i j => ψ (cf i j), fun i => ?_, ?_⟩
   · exact isComb_of_isCombAt ψ hx (h3 i) hv (hv' i)
-  · rw [Matrix.det_of_lowerTriangular]
+  · rw [Matrix.det_of_isLowerTriangular]
     · exact Finset.prod_congr rfl fun i _ => by simp [h1]
     · intro i j hij
       have : i < j := hij

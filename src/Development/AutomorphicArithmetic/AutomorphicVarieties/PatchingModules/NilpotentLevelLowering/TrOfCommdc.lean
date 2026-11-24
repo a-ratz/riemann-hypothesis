@@ -84,10 +84,10 @@ private theorem trOf_split (t : Fin n → kˣ) : ∃ b : Fin n → kˣ, Dom b �
   have hm : ∀ r, V (w r) ≤ V m := by
     intro r
     rw [hVprod]
-    exact Finset.single_le_prod' (fun r _ => hw1 r) (Finset.mem_univ r)
+    exact Finset.single_le_prod (fun r _ => hw1 r) (Finset.mem_univ r)
   have hm1 : 1 ≤ V m := by
     rw [hVprod]
-    exact Finset.one_le_prod' (fun r _ => hw1 r)
+    exact Finset.one_le_prod (fun r _ => hw1 r)
   have key : ∀ i j, V (t i) ≤ V m * V (t j) := fun i j =>
     (hwt i j).trans (mul_le_mul_left (hm (i, j)) _)
   refine ⟨fun i => m ^ (i : ℕ), ?_, ?_⟩

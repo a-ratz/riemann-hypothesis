@@ -91,8 +91,8 @@ theorem isInertAt_under [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞
     (h : ∀ x : 𝓞 E, IsCMField.ringOfIntegersComplexConj E x ∈ P.asIdeal → x ∈ P.asIdeal) :
     Formalism.UG.IsInertAt (maximalRealSubfield E) E (P.under (𝓞 (maximalRealSubfield E))) P := by
   classical
-  haveI := P.isPrime
-  haveI : Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) P.asIdeal :=
+  have := P.isPrime
+  have : Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) P.asIdeal :=
     Algebra.unramified_iff_forall.1 inferInstance ⟨P.asIdeal, P.isPrime⟩
   set v := P.under (𝓞 (maximalRealSubfield E)) with hv
   have hva : v.asIdeal = P.asIdeal.under (𝓞 (maximalRealSubfield E)) := rfl
@@ -103,7 +103,7 @@ theorem isInertAt_under [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞
   have hle : (P.asIdeal.under (𝓞 (maximalRealSubfield E))).map
       (algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E)) ≤ P.asIdeal := Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (P.asIdeal.under (𝓞 (maximalRealSubfield E))) P.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 (maximalRealSubfield E))) P.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 (maximalRealSubfield E))) P.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff P.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 (maximalRealSubfield E))
         (P.asIdeal.under (𝓞 (maximalRealSubfield E))) P.asIdeal).1 ‹_›).2
@@ -149,7 +149,7 @@ theorem exists_isUnramInv [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
       rw [← show Ideal.map _ v.asIdeal = P.asIdeal from h, Ideal.absNorm_algebraMap,
         ← Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield E) E]
       congr 1
-      exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E)
+      exact (IsFractionRing.finrank_eq (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E)
         (𝓞 E) E).symm
     rw [← hN]
     exact Formalism.UG.P.tjcosets_card_residue P

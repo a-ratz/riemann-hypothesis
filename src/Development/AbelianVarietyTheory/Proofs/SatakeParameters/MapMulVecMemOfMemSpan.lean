@@ -68,7 +68,7 @@ theorem mapRep_mapRep {Γ A B C : Type} [Group Γ] [CommRing A] [CommRing B] [Co
   simp [mapRep]
 
 theorem exists_finite_field {K : Type} [Field K] (S : Set (AlgebraicClosure K)) (hS : S.Finite) : ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : FiniteDimensional K K') (f : K' →+* AlgebraicClosure K), (∀ x : K, f (algebraMap K K' x) = algebraMap K (AlgebraicClosure K) x) ∧ S ⊆ Set.range f := by
-  haveI := hS.to_subtype
+  have := hS.to_subtype
   have hfd : FiniteDimensional K (IntermediateField.adjoin K S) :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   exact ⟨IntermediateField.adjoin K S, inferInstance, inferInstance, hfd, (IntermediateField.adjoin K S).val.toRingHom,

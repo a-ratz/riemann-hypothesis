@@ -54,9 +54,9 @@ namespace GlobalTheory.UPel.HT.Hecke
 theorem heckeSub_finite_free : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : Base D R) (g : D.La →ₗ[D.O] D.La) (k N : ℕ), 0 < k → 0 < N → k.Coprime p → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b (N * k) s), Finite (GlobalTheory.UPel.HT.Hecke.heckeSub o g N) ∧ ∀ (κ : Type) [Field κ] [IsAlgClosed κ] (x : Sp κ ⟶ S) (h : 𝟙_ (Over S) ⟶ o.A), h ∈ GlobalTheory.UPel.HT.Hecke.heckeSub o g N → toUnit (Over.mk x) ≫ h = 1 → h = 1 := by
   intro p _ D R _ b g k N hk hN hkp hNp S s o
   refine ⟨?_, ?_⟩
-  · haveI := D.finLa
+  · have := D.finLa
     let K : Submodule ℤ D.La := LinearMap.range ((k : ℤ) • LinearMap.id)
-    haveI : Finite (D.La ⧸ K) := by
+    have : Finite (D.La ⧸ K) := by
       apply Module.finite_of_fg_torsion
       intro q
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective K q

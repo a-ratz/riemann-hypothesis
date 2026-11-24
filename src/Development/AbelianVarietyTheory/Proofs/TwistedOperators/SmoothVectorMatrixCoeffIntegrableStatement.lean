@@ -93,15 +93,15 @@ theorem integral_translate_le {G : Type} [Group G] [TopologicalSpace G] [IsTopol
     (hd : ∀ h t, HasDerivAt (fun t => f (γ t * h)) (D (γ t * h)) t) (s : ℝ) :
     ∫ h, ‖f (γ s * h) - f h‖ ∂μ ≤ |s| * ∫ h, ‖D h‖ ∂μ := by
   have hmeas : Measurable fun p : G × ℝ => ‖D (γ p.2 * p.1)‖ₑ :=
-    (hc.comp (continuous_snd.prodMk continuous_fst)).measurable.enorm
+    (hc.comp (continuous_snd.prodMk continuous_fst)).measurable.eNorm
   have hpt : ∀ h, ‖f (γ s * h) - f h‖ₑ ≤ ∫⁻ t in Set.uIoc (0:ℝ) s, ‖D (γ t * h)‖ₑ := by
     intro h
     have hcont : Continuous fun t => D (γ t * h) := hc.comp (continuous_id.prodMk continuous_const)
     have hF : ∫ t in (0:ℝ)..s, D (γ t * h) = f (γ s * h) - f (γ 0 * h) :=
       intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hd h t) (hcont.intervalIntegrable 0 s)
     rw [h0, one_mul] at hF
-    rw [← hF, ← ofReal_norm_eq_enorm, intervalIntegral.norm_integral_eq_norm_integral_uIoc, ofReal_norm_eq_enorm]
-    exact enorm_integral_le_lintegral_enorm _
+    rw [← hF, ← ofReal_norm, intervalIntegral.norm_integral_eq_norm_integral_uIoc, ofReal_norm]
+    exact eNorm_integral_le_lintegral_eNorm _
   have hswap : ∫⁻ h, (∫⁻ t in Set.uIoc (0:ℝ) s, ‖D (γ t * h)‖ₑ) ∂μ =
       ∫⁻ t in Set.uIoc (0:ℝ) s, ∫⁻ h, ‖D (γ t * h)‖ₑ ∂μ :=
     lintegral_lintegral_swap hmeas.aemeasurable
@@ -114,11 +114,11 @@ theorem integral_translate_le {G : Type} [Group G] [TopologicalSpace G] [IsTopol
   have hDfin : ∫⁻ h, ‖D h‖ₑ ∂μ ≠ ⊤ := ne_of_lt hD.2
   by_cases hI : Integrable (fun h => ‖f (γ s * h) - f h‖) μ
   · rw [integral_eq_lintegral_of_nonneg_ae (Filter.Eventually.of_forall fun _ => norm_nonneg _)
-        hI.aestronglyMeasurable, integral_norm_eq_lintegral_enorm hD.aestronglyMeasurable,
+        hI.aestronglyMeasurable, integral_norm_eq_lintegral_eNorm hD.aestronglyMeasurable,
       ← ENNReal.toReal_ofReal (abs_nonneg s), ← ENNReal.toReal_mul]
     refine ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hDfin) ?_
     calc ∫⁻ h, ENNReal.ofReal ‖f (γ s * h) - f h‖ ∂μ = ∫⁻ h, ‖f (γ s * h) - f h‖ₑ ∂μ := by
-          simp only [ofReal_norm_eq_enorm]
+          simp only [ofReal_norm]
       _ ≤ ∫⁻ h, (∫⁻ t in Set.uIoc (0:ℝ) s, ‖D (γ t * h)‖ₑ) ∂μ := lintegral_mono hpt
       _ = ENNReal.ofReal |s| * ∫⁻ h, ‖D h‖ₑ ∂μ := by
           rw [hswap]
@@ -397,7 +397,7 @@ theorem lip_core : ∀ (m N : ℕ) (e : Option (Fin m) ≃ Fin N) (ε : Fin N �
     exact H1
   have hcD : Continuous fun p : ℝ × Formalism.REAL.UJ ε' => D (γ p.1 * p.2) := by
     have hum : Continuous fun h : Formalism.REAL.UJ ε' => Formalism.MainNotions.S.umat h :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hg : Continuous fun p : ℝ × Formalism.REAL.UJ ε' =>
         GlobalTheory.PackLoc.embOpt e (NormedSpace.exp (p.1 • c⁻¹ • X) * Formalism.MainNotions.S.umat p.2) :=
       (continuous_embOpt e).comp (((continuous_exp_real_smul' (c⁻¹ • X)).comp continuous_fst).mul (hum.comp continuous_snd))

@@ -122,7 +122,7 @@ namespace GlobalTheory.Mum.QuotEq
 
 theorem eq_of_ker_le_of_reduction : ∀ (A κ : Type) [CommRing A] [CommRing κ] (π : A →+* κ), Function.Surjective π → IsNilpotent (RingHom.ker π) → ∀ (G B : Over (Sp A)) [GrpObj G] [GrpObj B], IsAbelianScheme B → ∀ (q₁ q₂ : G ⟶ B), IsMonHom q₁ → IsMonHom q₂ → Flat q₁.left → Surjective q₁.left → QuasiCompact q₁.left → (∀ (T : Over (Sp A)) (x : T ⟶ G), x ≫ q₁ = 1 → x ≫ q₂ = 1) → pullback.fst G.hom (spMap π) ≫ q₁.left = pullback.fst G.hom (spMap π) ≫ q₂.left → q₁ = q₂ := by
   intro A κ _ _ π hπ hnil G B _ _ hB q₁ q₂ h₁ h₂ hfl hsu hqc hker hκ
-  haveI := h₁; haveI := h₂; haveI := hfl; haveI := hsu; haveI := hqc
+  have := h₁; have := h₂; have := hfl; have := hsu; have := hqc
   obtain ⟨d, hd⟩ := GlobalTheory.ExtensionRigidity.exists_factor q₁ q₂ (fun W a b h => by
     have e : (a * b⁻¹) ≫ q₁ = 1 := by
       rw [MonObj.mul_comp, GrpObj.inv_comp, h, mul_inv_cancel]
@@ -132,7 +132,7 @@ theorem eq_of_ker_le_of_reduction : ∀ (A κ : Type) [CommRing A] [CommRing κ]
   have hη : η[B] ≫ d = η[B] := by
     calc η[B] ≫ d = (η[G] ≫ q₁) ≫ d := by rw [IsMonHom.one_hom q₁]
       _ = η[B] := by rw [Category.assoc, hd, IsMonHom.one_hom q₂]
-  haveI hdm : IsMonHom d := GlobalTheory.rigidity_holds (Sp A) B B hB hB d hη
+  have hdm : IsMonHom d := GlobalTheory.rigidity_holds (Sp A) B B hB hB d hη
   let qκ : pullback G.hom (spMap π) ⟶ pullback B.hom (spMap π) :=
     pullback.lift (pullback.fst G.hom (spMap π) ≫ q₁.left) (pullback.snd G.hom (spMap π))
       (by rw [Category.assoc, Over.w, pullback.condition])
@@ -142,9 +142,9 @@ theorem eq_of_ker_le_of_reduction : ∀ (A κ : Type) [CommRing A] [CommRing κ]
     refine IsPullback.of_bot ?_ hq₁.symm (IsPullback.of_hasPullback B.hom (spMap π))
     rw [pullback.lift_snd, Over.w]
     exact IsPullback.of_hasPullback G.hom (spMap π)
-  haveI : Flat qκ := MorphismProperty.of_isPullback hsq hfl
-  haveI : Surjective qκ := MorphismProperty.of_isPullback hsq hsu
-  haveI : QuasiCompact qκ := MorphismProperty.of_isPullback hsq hqc
+  have : Flat qκ := MorphismProperty.of_isPullback hsq hfl
+  have : Surjective qκ := MorphismProperty.of_isPullback hsq hsu
+  have : QuasiCompact qκ := MorphismProperty.of_isPullback hsq hqc
   have hfib : pullback.fst B.hom (spMap π) ≫ d.left = pullback.fst B.hom (spMap π) := by
     rw [← cancel_epi qκ, reassoc_of% hq₁, ← Over.comp_left, hd, ← hκ, hq₁]
   have hP := isGrpPullback_pullback B (spMap π)
@@ -286,8 +286,8 @@ theorem splitTorus_hom_eq_of_nilpotent : ∀ (A κ : Type) [CommRing A] [IsLocal
     i₁ = i₂ := by
   intro A κ _ _ _ π hπ hJ X _ H _ _ i₁ i₂ h₁ h₂ h
   set J := RingHom.ker π
-  haveI : IsMonHom i₂⁻¹ := inferInstance
-  haveI hf : IsMonHom (i₁ * i₂⁻¹) := GlobalTheory.Serre.isMonHom_mul _ _
+  have : IsMonHom i₂⁻¹ := inferInstance
+  have hf : IsMonHom (i₁ * i₂⁻¹) := GlobalTheory.Serre.isMonHom_mul _ _
   set r : Sp (A ⧸ J) ⟶ Sp A := Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))
   let e : A ⧸ J ≃+* κ := RingHom.quotientKerEquivOfSurjective hπ
   have hr : r = spMap e.symm.toRingHom ≫ spMap π := by
@@ -363,7 +363,7 @@ theorem exists_artinian {k K O : Type} [Field k] [Field K] [Algebra k K] [Finite
     ∃ (A : Type) (_ : CommRing A) (_ : IsLocalRing A) (_ : IsArtinianRing A) (a' b' : K →+* A) (ψ : A →+* O)
       (τ : K ≃ₐ[k] K), ψ.comp a' = a ∧ ψ.comp b' = b ∧ a'.comp (algebraMap k K) = b'.comp (algebraMap k K) ∧
       (residue A).comp b' = ((residue A).comp a').comp (τ : K →+* K) := by
-  letI : Algebra k O := (a.comp (algebraMap k K)).toAlgebra
+  let : Algebra k O := (a.comp (algebraMap k K)).toAlgebra
   let a₁ : K →ₐ[k] O := { a with commutes' := fun _ => rfl }
   let b₁ : K →ₐ[k] O := { b with commutes' := fun r => (RingHom.congr_fun h r).symm }
   let f := Algebra.TensorProduct.productMap a₁ b₁
@@ -378,7 +378,7 @@ theorem exists_artinian {k K O : Type} [Field k] [Field K] [Algebra k K] [Finite
   let a' : K →ₐ[k] A := f.rangeRestrict.comp Algebra.TensorProduct.includeLeft
   let b' : K →ₐ[k] A := f.rangeRestrict.comp Algebra.TensorProduct.includeRight
   let r : A →ₐ[k] ResidueField A := IsScalarTower.toAlgHom k A _
-  letI : Algebra K (ResidueField A) := (r.comp a').toRingHom.toAlgebra
+  let : Algebra K (ResidueField A) := (r.comp a').toRingHom.toAlgebra
   have : IsScalarTower k K (ResidueField A) := .of_algebraMap_eq fun x => ((r.comp a').commutes x).symm
   refine ⟨A, _, ‹_›, inferInstance, a', b', A.val, (r.comp b').restrictNormal' K, ?_, ?_, ?_, ?_⟩
   · ext x; simp [a', f, a₁]
@@ -571,9 +571,9 @@ theorem nonempty_tq_of_normal [FiniteDimensional k K] [Normal k K] [Module.Free 
     refine ⟨A, _, a, b, spMap ψ, ?_, ?_, agree_artinian hB₀ hG hB q i H hinv a b τ hab hτ⟩
     · rw [← spMap_comp, ha]; rfl
     · rw [← spMap_comp, hb]; rfl
-  haveI h₁ : Flat (spMap (algebraMap k K)) := inferInstance
-  haveI h₂ : Surjective (spMap (algebraMap k K)) := inferInstance
-  haveI h₃ : QuasiCompact (spMap (algebraMap k K)) := inferInstance
+  have h₁ : Flat (spMap (algebraMap k K)) := inferInstance
+  have h₂ : Surjective (spMap (algebraMap k K)) := inferInstance
+  have h₃ : QuasiCompact (spMap (algebraMap k K)) := inferInstance
   have hT := isPullback_bcMap (spMap (algebraMap k K)) X
   obtain ⟨⟨g₁, g₂⟩, g₃⟩ := ExtDescent.fpqc_of_isPullback hG.1
   obtain ⟨⟨t₁, t₂⟩, t₃⟩ := ExtDescent.fpqc_of_isPullback hT
@@ -633,15 +633,15 @@ theorem nonempty_tq {R R' : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [Com
     (hinv : ∀ σ, a.act σ ≫ β = β) : Nonempty (GlobalTheory.UU.TQ (thickObj R (maximalIdeal R) 0 G) D'.toPre.X) := by
   have hp : maximalIdeal R ^ (0 + 1) = maximalIdeal R := pow_one _
   have hp' : maximalIdeal R' ^ (0 + 1) = maximalIdeal R' := pow_one _
-  haveI : (maximalIdeal R ^ (0 + 1)).IsMaximal := by rw [hp]; infer_instance
-  haveI : (maximalIdeal R' ^ (0 + 1)).IsMaximal := by rw [hp']; infer_instance
-  letI := Ideal.Quotient.field (maximalIdeal R ^ (0 + 1))
-  letI := Ideal.Quotient.field (maximalIdeal R' ^ (0 + 1))
+  have : (maximalIdeal R ^ (0 + 1)).IsMaximal := by rw [hp]; infer_instance
+  have : (maximalIdeal R' ^ (0 + 1)).IsMaximal := by rw [hp']; infer_instance
+  let := Ideal.Quotient.field (maximalIdeal R ^ (0 + 1))
+  let := Ideal.Quotient.field (maximalIdeal R' ^ (0 + 1))
   let α : R ⧸ maximalIdeal R ^ (0 + 1) →+* R' ⧸ maximalIdeal R' ^ (0 + 1) :=
     Ideal.quotientMap _ ρ (by
       rw [hp, hp']; exact Ideal.map_le_iff_le_comap.1 (ResidueGalois.map_maximalIdeal_le ρ hfin.to_isIntegral))
   have hα : α.comp (Ideal.Quotient.mk _) = (Ideal.Quotient.mk _).comp ρ := Ideal.quotientMap_comp_mk _
-  letI := α.toAlgebra
+  let := α.toAlgebra
   have hfd : FiniteDimensional (R ⧸ maximalIdeal R ^ (0 + 1)) (R' ⧸ maximalIdeal R' ^ (0 + 1)) := by
     have : (α.comp (Ideal.Quotient.mk _)).Finite := by
       rw [hα]; exact (RingHom.Finite.of_surjective _ Ideal.Quotient.mk_surjective).comp hfin
@@ -649,7 +649,7 @@ theorem nonempty_tq {R R' : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [Com
   obtain ⟨hn, haut⟩ : Normal (R ⧸ maximalIdeal R ^ (0 + 1)) (R' ⧸ maximalIdeal R' ^ (0 + 1)) ∧
       ∀ τ : (R' ⧸ maximalIdeal R' ^ (0 + 1)) ≃ₐ[R ⧸ maximalIdeal R ^ (0 + 1)] (R' ⧸ maximalIdeal R' ^ (0 + 1)),
         ∃ σ : Gal ρ, ∀ x, Ideal.Quotient.mk _ (σ.1 x) = τ (Ideal.Quotient.mk _ x) := by
-    letI := ρ.toAlgebra
+    let := ρ.toAlgebra
     have := hgal.1
     have : Algebra.IsInvariant R R' (Gal ρ) := ⟨fun x hx => hgal.2 x fun σ hσ => hx ⟨σ, hσ⟩⟩
     have : SMulCommClass (Gal ρ) R R' := ⟨fun σ r x => by
@@ -1106,7 +1106,7 @@ theorem isPullUnif_of_lbIso : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
     GlobalTheory.abelianSchemeLaws_all.1.ample
   obtain ⟨hD₂, hlev, -⟩ := h6 R' (maximalIdeal R') hR' D'' D' A'' A' G' hsa' U'' U' wL₀ g₀ m₀
   have hs := specOf_id R'
-  haveI mR : IsMonHom (Iso.refl G').hom := by show IsMonHom (𝟙 _); infer_instance
+  have mR : IsMonHom (Iso.refl G').hom := by show IsMonHom (𝟙 _); infer_instance
   obtain ⟨bc₀, -, hbc₀⟩ := grpPullback_iso ((isGrpPullback_of_iso (Iso.refl G')).congr hs.symm rfl)
     (isGrpPullback_pullback G' (Out.specOf (RingHom.id R')))
   have hbc₀' : bc₀.hom.left ≫ pullback.fst G'.hom (Out.specOf (RingHom.id R')) = 𝟙 _ := hbc₀
@@ -1553,8 +1553,8 @@ namespace GlobalTheory.Mum
 theorem dense_of_closedFibre_sub : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (G : Over (Sp R)) [GrpObj G],
     IsSemiAbelian G → ∀ O : G.left.Opens, (∀ g : G.left, G.hom g = closedPoint R → g ∈ O) → Dense (O : Set G.left) := by
   intro R _ _ _ G _ hG O hO
-  haveI := hG.smooth
-  haveI := hG.geomConnected
+  have := hG.smooth
+  have := hG.geomConnected
   let g₀ : G.left := (1 : Over.mk (𝟙 (Sp R)) ⟶ G).left (closedPoint R)
   have hg₀ : G.hom g₀ = closedPoint R := by
     have := Over.w (1 : Over.mk (𝟙 (Sp R)) ⟶ G)
@@ -1580,13 +1580,13 @@ theorem comp_eq_of_near {R R' : Type} [CommRing R] [IsLocalRing R] [CommRing R']
     (hg : g ≫ G'.hom = G'.hom ≫ spMap (Gal.hom σ))
     (hinv : ∀ (T : Scheme.{0}) (s : T ⟶ Sp R') (u : T ⟶ N.U.left) (x : T ⟶ G'.left), N.Pt s u x →
       N.Pt (s ≫ spMap (Gal.hom σ)) u (x ≫ g)) : g ≫ β = β := by
-  haveI := hG'.smooth
-  haveI := N.isOpen
+  have := hG'.smooth
+  have := N.isOpen
   have hred : IsReduced G'.left := GlobalTheory.isReduced_of_smooth_of_isReduced G'.hom
   have hd := dense_of_closedFibre_sub R' G' hG' N.u.opensRange (fun x hx => by
     obtain ⟨y, hy⟩ := N.all x (by rw [hx]; exact spMap_closedPoint_of_finite ρ hf)
     exact ⟨y, hy⟩)
-  haveI : IsDominant N.u := ⟨by simpa [DenseRange] using hd⟩
+  have : IsDominant N.u := ⟨by simpa [DenseRange] using hd⟩
   have hσ : spMap (Gal.hom σ) ≫ spMap ρ = spMap ρ := by
     unfold spMap
     rw [← Spec.map_comp]

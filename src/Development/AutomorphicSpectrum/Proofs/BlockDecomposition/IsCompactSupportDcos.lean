@@ -90,15 +90,15 @@ theorem isCompact_support_dcos (w : Pl E) (a : ℕ) (t : GLw a w) :
     (hI.prod hI).image ((continuous_fst.mul continuous_const).mul continuous_snd)
   convert hS using 1
   ext g
-  simp only [Set.mem_setOf_eq, dcos, Set.mem_image, Set.mem_prod, SetLike.mem_coe, Prod.exists]
+  simp only [Set.mem_ofPred_eq, dcos, Set.mem_image, Set.mem_prod, SetLike.mem_coe, Prod.exists]
   constructor
   · intro h
     by_contra hn
-    refine h (if_neg ?_)
+    refine h (ite_eq_right ?_)
     rintro ⟨x, hx, y, hy, rfl⟩
     exact hn ⟨x, y, ⟨hx, hy⟩, rfl⟩
   · rintro ⟨x, y, ⟨hx, hy⟩, rfl⟩
-    rw [if_pos ⟨x, hx, y, hy, rfl⟩]
+    rw [ite_eq_left ⟨x, hx, y, hy, rfl⟩]
     exact one_ne_zero
 
 end GlobalTheory.CompanionTheory.IwFacts

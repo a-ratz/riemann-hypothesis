@@ -89,7 +89,7 @@ theorem isClosed_vecFixGroup (h : HermitianForm F E W) (v : Basis ι E W) (x₀ 
     simp [mem_vecFixGroup]
   rw [this]
   refine isClosed_iInter fun w => isClosed_eq ?_ continuous_const
-  exact (Units.continuous_val.comp ((continuous_apply w).comp continuous_subtype_val)).matrix_mulVec
+  exact (Units.continuous_val.comp ((continuous_apply w).comp continuous_subtypeVal)).matrix_mulVec
     continuous_const
 
 instance locallyCompactSpace_vecFixGroup (h : HermitianForm F E W) (v : Basis ι E W) (x₀ : W) :

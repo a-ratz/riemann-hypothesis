@@ -145,7 +145,7 @@ def Em (s : SplitPlace L) (δ : L) : AL L := ιs s (1 / 2) - tt δ * ιs s (1 / 
 section Idem
 
 theorem two_ne (s : SplitPlace L) : (2 : s.v.adicCompletion L⁺) ≠ 0 := by
-  haveI : CharZero (s.v.adicCompletion L⁺) := algebraRat.charZero _
+  have : CharZero (s.v.adicCompletion L⁺) := algebraRat.charZero _
   exact two_ne_zero
 
 theorem F1 (s : SplitPlace L) (δ : L) (d : L⁺) (hd : δ * δ = algebraMap L⁺ L d) (hr : s.i δ ≠ 0) : ιs s (1 / 2) * ιs s (1 / 2) + tt δ * tt δ * (ιs s (1 / (2 * s.i δ)) * ιs s (1 / (2 * s.i δ)))

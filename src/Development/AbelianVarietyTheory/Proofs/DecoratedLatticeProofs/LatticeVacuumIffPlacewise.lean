@@ -287,7 +287,7 @@ namespace GlobalTheory.LatLevel
 
 theorem smul_mem_open_of_vanish : ∀ (D : D7) (S T : HSp D) (LS : Set (Fin S.rank → D.host.E)) (LT : Set (Fin T.rank → D.host.E)) (P : Pl D → Prop) (U : AddSubgroup (WO S T)), IsOpen (U : Set (WO S T)) → ∀ u ∈ latO S T LS LT P, ∃ s : Finset (Pl D), ∀ γ ∈ intAf D.host.F, (∀ v ∈ s, evalV D.host.F v γ = 0) → pairA D.host.F 0 γ • u ∈ U := by
   intro D S T LS LT P U hU u _hu
-  letI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  let : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have hg : Continuous fun β : Af D.host.F => (pairA D.host.F 0 β) • u := by
     have h1 : Continuous fun β : Af D.host.F => pairA D.host.F 0 β :=
       continuous_const.prodMk continuous_id

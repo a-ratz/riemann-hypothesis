@@ -606,7 +606,7 @@ theorem UpperTheory.Reformulated.B.MultiDimensional.multi_dim :
     _ = ∏ p : P, ∑ n ∈ s.image (fun y : P → ℤ => y p), g p n :=
         (Finset.prod_univ_sum _ _).symm
     _ ≤ ∏ p : P, ∑' (n : ℤ), g p n :=
-        Finset.prod_le_prod' fun p _ => ENNReal.sum_le_tsum _
+        Finset.prod_le_prod fun p _ => ENNReal.sum_le_tsum _
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.MultiDimensional =====
@@ -715,7 +715,7 @@ theorem tsum_le_prod_of_injOn {S P : Type} [Fintype P] (m : S → P → ℤ) (b 
         (by refine' _root_.le_trans _ (_root_.tsum_comp_le_tsum_of_injective hinj' _); exact _root_.le_rfl)
     _ ≤ ∏ p, ∑' n, g p n := multi_dim g
     _ ≤ ∏ p, ENNReal.ofReal (1 + 2 * b p) :=
-        Finset.prod_le_prod' fun p _ => one_dim (b p) (hb p)
+        Finset.prod_le_prod fun p _ => one_dim (b p) (hb p)
 
 end GlobalTheory.CompanionTheory.Count
 end -- clump:auto
@@ -778,7 +778,7 @@ theorem lattice_sum {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
   have he : ∀ ξ : Matrix (Fin n) (Fin 1) E, ξ.map (fun x => (1 : Af F) ⊗ₜ[F] x) ∈ L → ∀ i,
       ((e ξ i : 𝓞 E) : E) = ((d * d : ℕ) : E) * (R * ξ) i 0 := fun ξ hξ i => by
     have h := hint ξ hξ i
-    simp only [e, dif_pos h]
+    simp only [e, dite_eq_left h]
     exact h.choose_spec.symm
   let κ := Module.Free.ChooseBasisIndex ℤ (𝓞 E)
   let m : Matrix (Fin n) (Fin 1) E → ι × κ → ℤ := fun ξ p => (RingOfIntegers.basis E).repr (e ξ p.1) p.2
@@ -844,7 +844,7 @@ theorem count_main : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp 
   intro D θ hθ V r Xf Yf hW c hc L hL
   have hCM := GlobalTheory.AdelicU.isCMExt_host D
   have hf2 : Module.finrank ℚ D.host.E = 2 * Module.finrank ℚ D.host.F := by
-    haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+    have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
     rw [← Module.finrank_mul_finrank ℚ D.host.F D.host.E, hCM.2.2.1, mul_comm]
   set Rx := Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) Xf * V.gram with hRx
   set Ry := Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) Yf * V.gram with hRy
@@ -1092,7 +1092,7 @@ theorem finite_compare (V : HSp D) (n : ℕ)
       ∀ y ∈ C₁, ∀ x : Mx D V.rank n,
         g (fun i j => finPart D ((HMul.hMul (Formalism.L2.Theta.mt V y⁻¹) x : Mx D V.rank n) i j)) ≠ 0 →
         ∀ j, (Matrix.of fun i' (_ : Fin 1) => finPart D (x i' j)) ∈ L := by
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
   have hS : IsCompact (tsupport g) := hg.2
   let Φ : GA D V × (Fin V.rank → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) →
       (Fin V.rank → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) :=
@@ -1132,7 +1132,7 @@ theorem schwartz_translate_majorant : ∀ (D : D7) (θ : InfFam D), IsInfFam θ 
   refine ⟨C * |G|, L, hL, fun y hy x => ?_⟩
   by_cases h0 : g (fun i j => finPart D ((HMul.hMul (Formalism.L2.Theta.mt V y⁻¹) x : Mx D V.rank n) i j)) = 0
   · have e : ∀ a : ℂ, ‖a * g (fun i j => finPart D ((HMul.hMul (Formalism.L2.Theta.mt V y⁻¹) x : Mx D V.rank n) i j))‖ₑ = 0 := fun a => by
-      rw [h0, mul_zero, enorm_zero]
+      rw [h0, mul_zero, eNorm_zero]
     exact (e _).le.trans zero_le
   · have hm := hLx y hy x h0
     have hb := hf _ _ (hPx y hy x)
@@ -1141,7 +1141,7 @@ theorem schwartz_translate_majorant : ∀ (D : D7) (θ : InfFam D), IsInfFam θ 
       rw [Set.indicator_of_mem (hm j)]
       positivity
     rw [← ENNReal.ofReal_prod_of_nonneg fun j _ => hterm j,
-      ← ENNReal.ofReal_mul (mul_nonneg hC (abs_nonneg G)), ← ofReal_norm_eq_enorm]
+      ← ENNReal.ofReal_mul (mul_nonneg hC (abs_nonneg G)), ← ofReal_norm]
     refine ENNReal.ofReal_le_ofReal ?_
     simp only [Set.indicator_of_mem (hm _), mul_one]
     rw [norm_mul]

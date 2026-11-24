@@ -97,7 +97,7 @@ theorem secFun_of : PtEx → SecFun := by
   have key : ∀ (u : U) {Ω : Type} [Field Ω] (x : gp Ω ⟶ U), pt x ∈ Set.range (g u) →
       Sec.res x y = c u • Sec.res x (twGen i ζ) := by
     intro u Ω _ x hx
-    haveI := hge u
+    have := hge u
     exact res_eq_of_range (g u) y (twGen i ζ) (c u) (hc u) x hx
   have uniq : ∀ (u u' : U) {Ω : Type} [Field Ω] (x : gp Ω ⟶ U),
       pt x ∈ Set.range (g u) → pt x ∈ Set.range (g u') → c u % q = c u' % q := by

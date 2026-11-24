@@ -337,7 +337,7 @@ theorem exists_finsupp_heckeVec (S : Subring ℂ) {G : Type} [Group G] {K : Subg
     · refine Finset.sum_congr rfl fun c _ => ?_
       rw [opHom_apply, opOf_single]
     · intro c hc
-      simp only [s, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+      simp only [s, Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
       exact fun h0 => hc (by simp [h0])
 
 end GlobalTheory.Cong.SphOpsProof

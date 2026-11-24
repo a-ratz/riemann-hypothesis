@@ -123,15 +123,15 @@ theorem Models.Cpt.exists_above_isIso_of_overring : ∀ (E : Type) [Field E] [Nu
   obtain ⟨⟨_, _⟩, -, hF⟩ := hβ
   obtain ⟨⟨_, -⟩, -, hF'⟩ := hβ'
   have inj' : Function.Injective β' := by
-    letI := β'.toAlgebra
+    let := β'.toAlgebra
     exact IsFractionRing.injective O' F
   have hbx : ∀ x, β' (b x) = β x := fun x => congrArg (fun f : O →+* F => f x) hb
   have inj : Function.Injective β := by
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact IsFractionRing.injective O F
   have injb : Function.Injective b := fun x y e => inj (by rw [← hbx, ← hbx, e])
   have hS : SurjectiveOnStalks (spMap b) := by
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact (HasRingHomProperty.Spec_iff (P := @SurjectiveOnStalks)).2
       (surjectiveOnStalks_of_dedekind_overring β' b inj' hbx)
   have hFl : Flat (spMap b) := by

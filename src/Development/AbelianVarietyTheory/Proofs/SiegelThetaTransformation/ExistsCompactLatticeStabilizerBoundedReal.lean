@@ -64,10 +64,10 @@ theorem exists_compact_of_entries {F E : Type} [Field F] [Field E] [Algebra F E]
     (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) (hJ : J.det ≠ 0)
     (C : Set (R ⊗[F] E)) (hC : IsCompact C) :
     ∃ K : Set (HA R σ J), IsCompact K ∧ ∀ h : HA R σ J, (∀ i j, (HA.mat R σ J h).1 i j ∈ C) → h ∈ K := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) R
-  haveI : T2Space (R ⊗[F] E) := e.isEmbedding.t2Space
+  have : T2Space (R ⊗[F] E) := e.isEmbedding.t2Space
   have hc : IsClosed (HR R σ J : Set (GL (Fin M) (R ⊗[F] E))) := by
     have hv : Continuous fun g : GL (Fin M) (R ⊗[F] E) => (g : Matrix (Fin M) (Fin M) (R ⊗[F] E)) :=
       Units.continuous_val
@@ -130,8 +130,8 @@ theorem det_gram_ne_zero {E : Type} [Field E] [NumberField E] [StarRing E] (S : 
 theorem exists_compact_adele (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ))
     (hθ : IsInfFam θ) (R : ℝ) (C : Set (Af D.host.F ⊗[D.host.F] D.host.E)) (hC : IsCompact C) :
     ∃ K : Set (AE D), IsCompact K ∧ ∀ z : AE D, finPart D z ∈ C → (∀ ρ, ‖θ ρ (infPart D z)‖ ≤ R) → z ∈ K := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) _
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) _
   obtain ⟨s, hs⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨e, he, -, hc⟩ := GlobalTheory.AdSplit.exists_adele_equiv D.host.F D.host.E
   let j : Af D.host.F ⊗[D.host.F] D.host.E → AE D := fun w => e.symm (0, w)
@@ -209,8 +209,8 @@ theorem exists_compact_stab : ∀ (D : D7) (V : HSp D) (θ : D.what₂.Tau → (
   obtain ⟨C, hC, hCe⟩ := exists_compact_entries D.host.F D.host.E L (V.standardTuple_isLattice.fg.map _) hsp
   rw [hL] at hCe
   obtain ⟨C', hC', hCe'⟩ := exists_compact_adele D θ hθ R C hC
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
   obtain ⟨K, hK, hKe⟩ := exists_compact_of_entries (AF D.host.F) D.sp.cm.sig V.gram (det_gram_ne_zero V) C' hC'
   exact ⟨K, hK, fun h h1 h2 => hKe h fun i j =>
     hCe' _ (hCe _ (fun y hy => (h1 y).1 hy) i j) fun ρ => h2 ρ i j⟩

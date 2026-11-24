@@ -114,14 +114,14 @@ theorem flagCoord_measEquiv : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypD
       ∀ p, (e p : GA D V) = d.nC p.1 * (d.nB p.2.1 * d.levi p.2.2.1) := by
   intro D V V₀ ρ d
   obtain ⟨Φ, hΦ⟩ := GlobalTheory.T.exists_homeomorph_wittFlagCoordinates D V V₀ ρ d
-  haveI : SecondCountableTopology (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.1
-  haveI : SecondCountableTopology (Mx D ρ ρ) := (lattice_Mx D ρ ρ).2.2.1
-  haveI : SecondCountableTopology (UX D ρ) := (GlobalTheory.UnitU.topology D ρ).2.1
-  haveI : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : BorelSpace (skewA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (skewA D ρ) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : SecondCountableTopology (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.1
+  have : SecondCountableTopology (Mx D ρ ρ) := (lattice_Mx D ρ ρ).2.2.1
+  have : SecondCountableTopology (UX D ρ) := (GlobalTheory.UnitU.topology D ρ).2.1
+  have : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (skewA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (skewA D ρ) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
   refine ⟨((coordFlip D ρ V₀.rank).trans (Φ.trans (Homeomorph.inv (flagN d)))).toMeasurableEquiv, fun p => ?_⟩
   change (((Φ (coordFlip D ρ V₀.rank p))⁻¹ : flagN d) : GA D V) = _
   rw [Subgroup.coe_inv, hΦ, coordFlip_apply]
@@ -204,7 +204,7 @@ theorem isCoLat_skew :
     have hinj : Function.Injective φ := fun a b h =>
       Subtype.ext (Subtype.ext (by simpa [φ] using congrArg Subtype.val h))
     have hcont : Continuous φ :=
-      ((continuous_subtype_val.comp continuous_subtype_val)).subtype_mk _
+      ((continuous_subtypeVal.comp continuous_subtypeVal)).subtype_mk _
     exact DiscreteTopology.of_continuous_injective hcont hinj
   · let P : Mx D ρ ρ → skewA D ρ := fun x => ⟨skewPart D ρ x, skewPart_mem x⟩
     have hP : Continuous P := continuous_skewPart.subtype_mk _
@@ -218,14 +218,14 @@ theorem isCoLat_skew :
 theorem exists_haar_covol_one : ∀ (D : D7) (ρ : ℕ), ∃ (lC : Measure (skewA D ρ)) (𝓒 : Set (skewA D ρ)), lC.IsAddHaarMeasure ∧ SFinite lC ∧ IsAddFundamentalDomain ((ratMx D ρ ρ).addSubgroupOf (skewA D ρ)) 𝓒 lC ∧ lC 𝓒 = 1 := by
   intro D ρ
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D ρ ρ
-  haveI : IsTopologicalAddGroup (Mx D ρ ρ) := i1
-  haveI : LocallyCompactSpace (Mx D ρ ρ) := i2
-  haveI : SecondCountableTopology (Mx D ρ ρ) := i3
-  haveI : T2Space (Mx D ρ ρ) := i4
-  haveI : SecondCountableTopology (skewA D ρ) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (skewA D ρ) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (skewA D ρ) := (isClosed_skewA (D := D) (ρ := ρ)).locallyCompactSpace
+  have : IsTopologicalAddGroup (Mx D ρ ρ) := i1
+  have : LocallyCompactSpace (Mx D ρ ρ) := i2
+  have : SecondCountableTopology (Mx D ρ ρ) := i3
+  have : T2Space (Mx D ρ ρ) := i4
+  have : SecondCountableTopology (skewA D ρ) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (skewA D ρ) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : LocallyCompactSpace (skewA D ρ) := (isClosed_skewA (D := D) (ρ := ρ)).locallyCompactSpace
   obtain ⟨μ, 𝓕, hμ, hF, h1⟩ :=
     GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one (skewA D ρ) _ isCoLat_skew
   exact ⟨μ, 𝓕, hμ, inferInstance, hF, h1⟩
@@ -397,7 +397,7 @@ namespace GlobalTheory.LeftUniQmp
 theorem qmp_left_uni : ∀ (D : D7) (ρ n : ℕ) (μ : Measure (Mx D ρ n)), μ.IsAddHaarMeasure → ∀ u : UX D ρ, Measure.QuasiMeasurePreserving (fun b : Mx D ρ n => u.1.1 ⬝ b) μ μ := by
   intro D ρ n μ hμ u
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D ρ n
-  haveI : BorelSpace (Mx D ρ n) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ n) := ⟨rfl⟩
   have hc : Continuous (fun b : Mx D ρ n => u.1.1 ⬝ b) := continuous_const.matrix_mul continuous_id
   have hc' : Continuous (fun b : Mx D ρ n => (u.1⁻¹).1 ⬝ b) := continuous_const.matrix_mul continuous_id
   let T : Mx D ρ n ≃+ Mx D ρ n :=
@@ -410,7 +410,7 @@ theorem qmp_left_uni : ∀ (D : D7) (ρ n : ℕ) (μ : Measure (Mx D ρ n)), μ.
         show u.1.1 ⬝ ((u.1⁻¹).1 ⬝ b) = b
         rw [← Matrix.mul_assoc, Units.mul_inv, Matrix.one_mul]
       map_add' := fun a b => Matrix.mul_add _ _ _ }
-  haveI : (μ.map T).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ T hc hc'
+  have : (μ.map T).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ T hc hc'
   refine ⟨hc.measurable.aemeasurable, ?_⟩
   have e := Measure.isAddLeftInvariant_eq_smul (μ.map T) μ
   show μ.map T ≪ μ
@@ -468,7 +468,7 @@ theorem skewConj_addArg {D : D7} {ρ : ℕ} (a : Mx D ρ ρ) (c d : skewA D ρ) 
   simp only [skewConj, AddSubgroup.coe_add, Matrix.mul_add, Matrix.add_mul]
 
 theorem continuous_skewConj_arg {D : D7} {ρ : ℕ} (a : Mx D ρ ρ) : Continuous (skewConj a : skewA D ρ → skewA D ρ) := by
-  have h1 : Continuous fun c : skewA D ρ => (a ⬝ c.1 : Mx D ρ ρ) := continuous_const.matrix_mul continuous_subtype_val
+  have h1 : Continuous fun c : skewA D ρ => (a ⬝ c.1 : Mx D ρ ρ) := continuous_const.matrix_mul continuous_subtypeVal
   have h2 : Continuous fun c : skewA D ρ => (a ⬝ c.1 ⬝ adj a : Mx D ρ ρ) := h1.matrix_mul continuous_const
   exact Continuous.subtype_mk h2 _
 
@@ -584,7 +584,7 @@ theorem null_first [mA.IsAddLeftInvariant] {α : A → A} (hα : Measure.QuasiMe
   refine measure_mono_null (t := {p : A × (B × U) | α p.1 ≠ α' p.1} ∪ {p : A × (B × U) | α' p.1 + φ p.2.1 ∈ N}) (fun p hp => ?_) ?_
   · by_cases he : α p.1 = α' p.1
     · apply Or.inr
-      simpa only [Set.mem_setOf_eq, ← he] using hp
+      simpa only [Set.mem_ofPred_eq, ← he] using hp
     · exact Or.inl he
   apply measure_union_null hbad
   have hα' : MeasureTheory.QuasiMeasurePreserving α' mA mA := (MeasureTheory.QuasiMeasurePreserving.congr hα hαeq)
@@ -628,7 +628,7 @@ theorem isFundamentalDomain_three [mA.IsAddLeftInvariant] (ΓA : AddSubgroup A) 
     refine measure_mono_null (t := {p : A × (B × U) | β u p.2.1 ≠ β' p.2.1} ∪ {p | α u p.1 + κ b' (β' p.2.1) ∈ N}) (fun p hp => ?_) ?_
     · by_cases he : β u p.2.1 = β' p.2.1
       · apply Or.inr
-        simpa only [Set.mem_setOf_eq, ← he] using hp
+        simpa only [Set.mem_ofPred_eq, ← he] using hp
       · exact Or.inl he
     exact measure_union_null hbad (null_first (hα u) ((hκ b').comp (MeasureTheory.QuasiMeasurePreserving.aemeasurable (hβ u)).measurable_mk) hN)
   refine ⟨?_, ?_, ?_⟩
@@ -716,27 +716,27 @@ theorem act_coords {D : D7} {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (
 
 theorem fundDomain_coords : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDec V V₀ ρ) (vb : VolM D ρ V₀.rank) (vU : VolU D ρ) (e : skewA D ρ × (Mx D ρ V₀.rank × UX D ρ) ≃ᵐ flagN d), (∀ p, (e p : GA D V) = d.nC p.1 * (d.nB p.2.1 * d.levi p.2.2.1)) → ∀ (lC : Measure (skewA D ρ)) (𝓒 : Set (skewA D ρ)) (𝓤 : Set (UX D ρ)), lC.IsAddHaarMeasure → SFinite lC → IsAddFundamentalDomain ((ratMx D ρ ρ).addSubgroupOf (skewA D ρ)) 𝓒 lC → IsFundamentalDomain (UXQ D ρ) 𝓤 vU.ν → IsFundamentalDomain (NFlagQ V d.e) (e '' (𝓒 ×ˢ (vb.𝓕 ×ˢ 𝓤))) ((lC.prod (vb.μ.prod vU.ν)).map e) := by
   intro D V V₀ ρ d vb vU e he lC 𝓒 𝓤 hlC _ hC hU
-  haveI : IsTopologicalAddGroup (Mx D ρ ρ) := (lattice_Mx D ρ ρ).1
-  haveI : SecondCountableTopology (Mx D ρ ρ) := (lattice_Mx D ρ ρ).2.2.1
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).1
-  haveI : LocallyCompactSpace (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.1
-  haveI : SecondCountableTopology (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.1
-  haveI : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
-  haveI : DiscreteTopology (ratMx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.2.2.1
-  haveI : Countable (ratMx D ρ V₀.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : BorelSpace (skewA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (skewA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : IsTopologicalAddGroup (skewA D ρ) := inferInstance
-  haveI hca : ContinuousAdd (skewA D ρ) := IsTopologicalAddGroup.toContinuousAdd
-  haveI : MeasurableAdd₂ (skewA D ρ) := @ContinuousAdd.measurableMul₂ (skewA D ρ) _ _ _ _ _ hca
+  have : IsTopologicalAddGroup (Mx D ρ ρ) := (lattice_Mx D ρ ρ).1
+  have : SecondCountableTopology (Mx D ρ ρ) := (lattice_Mx D ρ ρ).2.2.1
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).1
+  have : LocallyCompactSpace (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.1
+  have : SecondCountableTopology (Mx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.1
+  have : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
+  have : DiscreteTopology (ratMx D ρ V₀.rank) := (lattice_Mx D ρ V₀.rank).2.2.2.2.1
+  have : Countable (ratMx D ρ V₀.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (skewA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (skewA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : IsTopologicalAddGroup (skewA D ρ) := inferInstance
+  have hca : ContinuousAdd (skewA D ρ) := IsTopologicalAddGroup.toContinuousAdd
+  have : MeasurableAdd₂ (skewA D ρ) := @ContinuousAdd.measurableMul₂ (skewA D ρ) _ _ _ _ _ hca
   obtain ⟨u1, u2, u3⟩ := GlobalTheory.UnitU.topology D ρ
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : Countable (UXQ D ρ) := (GlobalTheory.UnitU.rational D ρ).1
-  haveI := vU.unit.1
-  haveI := vb.covol.1
-  haveI : SigmaFinite vb.μ := inferInstance
-  haveI : SigmaFinite vU.ν := inferInstance
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : Countable (UXQ D ρ) := (GlobalTheory.UnitU.rational D ρ).1
+  have := vU.unit.1
+  have := vb.covol.1
+  have : SigmaFinite vb.μ := inferInstance
+  have : SigmaFinite vU.ν := inferInstance
   have hκ : ∀ b' : Mx D ρ V₀.rank, Measurable (cComm V₀ b') := by
     intro b'
     have : ContinuousSub (Mx D ρ ρ) := IsTopologicalAddGroup.to_continuousSub
@@ -838,7 +838,7 @@ theorem eq_of_rightInvariant_of_fundamentalDomain {G : Type} [Group G] [Topologi
     (h1 : ν.IsHaarMeasure) (h2 : IsFundamentalDomain Γ 𝓝 ν) (h3 : ν 𝓝 = 1) (k0 : SigmaFinite m) (k1 : m.IsMulRightInvariant)
     (k2 : IsFundamentalDomain Γ 𝓕 m) (k3 : m 𝓕 = 1) : m = ν := by
   open scoped Pointwise in
-  haveI : ν.IsMulRightInvariant := GlobalTheory.UnitU.isMulRightInvariant_of_fundamentalDomain Γ ν h2
+  have : ν.IsMulRightInvariant := GlobalTheory.UnitU.isMulRightInvariant_of_fundamentalDomain Γ ν h2
     (by rw [h3]; exact one_ne_zero) (by rw [h3]; exact ENNReal.one_ne_top)
   have hinv : ν.inv 𝓝⁻¹ = 1 := by rw [Measure.inv_apply, inv_inv, h3]
   have e1 := measure_eq_div_smul m.inv ν.inv (s := 𝓝⁻¹) (by rw [hinv]; exact one_ne_zero) (by rw [hinv]; exact ENNReal.one_ne_top)
@@ -847,13 +847,13 @@ theorem eq_of_rightInvariant_of_fundamentalDomain {G : Type} [Group G] [Topologi
   have e2 : m = κ • ν := by
     ext s -
     have := congrArg (fun μ : Measure G => μ s⁻¹) e1
-    simpa only [Measure.inv_apply, inv_inv, Measure.smul_apply] using this
+    simpa only [Measure.inv_apply, inv_inv, smul_apply] using this
   have hκ0 : κ ≠ 0 := by
     intro h0
     rw [h0, zero_smul] at e2
     rw [e2] at k3
     simp at k3
-  haveI : m.IsMulLeftInvariant := by rw [e2]; infer_instance
+  have : m.IsMulLeftInvariant := by rw [e2]; infer_instance
   have h2' : IsFundamentalDomain Γ 𝓝 m := h2.mono (by rw [e2]; exact Measure.smul_absolutelyContinuous)
   have h4 : m 𝓝 = 1 := (h2'.measure_eq k2).trans k3
   have hk1 : κ = 1 := by rw [hκ]; exact h4
@@ -866,17 +866,17 @@ theorem volN_eq_map_coords : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDe
   obtain ⟨hU, 𝓤, hU𝓤, hU1⟩ := vU.unit
   obtain ⟨hb, hbF, hb1⟩ := vb.covol
   obtain ⟨u1, u2, u3⟩ := GlobalTheory.UnitU.topology D ρ
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
   obtain ⟨-, m2, m3, m4, -⟩ := lattice_Mx D ρ V₀.rank
   obtain ⟨-, n2, n3, n4, -⟩ := lattice_Mx D ρ ρ
-  haveI := vN.unit.1
+  have := vN.unit.1
   have hcl : IsClosed (skewA D ρ : Set (Mx D ρ ρ)) := isClosed_eq continuous_adj continuous_neg
-  haveI : LocallyCompactSpace (skewA D ρ) := hcl.locallyCompactSpace
-  haveI : SecondCountableTopology (skewA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaFinite lC := inferInstance
-  haveI : SigmaFinite vb.μ := inferInstance
-  haveI : SigmaFinite vU.ν := inferInstance
-  haveI hm : SigmaFinite ((lC.prod (vb.μ.prod vU.ν)).map e) := e.sigmaFinite_map
+  have : LocallyCompactSpace (skewA D ρ) := hcl.locallyCompactSpace
+  have : SecondCountableTopology (skewA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaFinite lC := inferInstance
+  have : SigmaFinite vb.μ := inferInstance
+  have : SigmaFinite vU.ν := inferInstance
+  have hm : SigmaFinite ((lC.prod (vb.μ.prod vU.ν)).map e) := e.sigmaFinite_map
   have hR := GlobalTheory.T.isMulRightInvariant_map_wittFlagCoordinates_haar D V V₀ ρ d vb vU e he lC hC hCs
   have hF := GlobalTheory.T.isFundamentalDomain_flagUnipotent_coords D V V₀ ρ d vb vU e he lC 𝓒 𝓤 hC hCs hCF hU𝓤
   have h1 : (lC.prod (vb.μ.prod vU.ν)).map e (e '' (𝓒 ×ˢ (vb.𝓕 ×ˢ 𝓤))) = 1 := by
@@ -1068,7 +1068,7 @@ theorem layers_integral : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDec V
   refine ⟨e '' (𝓒 ×ˢ (vb.𝓕 ×ˢ Set.univ)), ?_, ?_⟩
   · rw [hν]; exact GlobalTheory.T.wittFlagUnipotentFixer_fundamentalDomain_layers D V V₀ ρ d e he lC 𝓒 hH hS hF vb vU.ν sb su
   · intro f hf hinv
-    have hg : Measurable fun p => f (e p : GA D V) := hf.comp (measurable_subtype_coe.comp e.measurable)
+    have hg : Measurable fun p => f (e p : GA D V) := hf.comp (measurable_subtypeVal.comp e.measurable)
     let g : Mx D ρ V₀.rank × UX D ρ → ENNReal := fun q => f (e (0, q) : GA D V)
     have hgm : Measurable g := hg.comp (measurable_const.prodMk measurable_id)
     have hge : ∀ q, g q = f (d.nB q.1 * d.levi q.2.1) := fun q => by

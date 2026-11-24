@@ -100,9 +100,9 @@ theorem exists_EF_one {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
     have := D.rank
     rw [Module.finrank_zero_of_subsingleton] at this
     omega
-  haveI := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.IsTorsionFree ℤ D.La := by
+  have := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.IsTorsionFree ℤ D.La := by
     refine ⟨fun r hr a b hab => D.unimod.1 ?_⟩
     have hr0 : r ≠ 0 := hr.ne_zero
     ext y
@@ -117,8 +117,8 @@ theorem exists_EF_one {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
 
 theorem subsingleton_La {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (D : Datum H)
     (hpq : D.p + D.q = 0) : Subsingleton D.La := by
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   have h := D.rank
   rw [hpq] at h
   exact Module.finrank_zero_iff.1 h
@@ -175,7 +175,7 @@ def ex {k : Type} [Field k] (i : Ω →+* k) : Over.mk (spMap i) ⟶ Over.mk (�
 
 theorem eq_of_ex {k : Type} [Field k] (i : Ω →+* k) {y y' : Over.mk (𝟙 (Sp Ω)) ⟶ G'} (h : ex i ≫ y = ex i ≫ y') :
     y = y' := by
-  haveI := epi_sp i
+  have := epi_sp i
   apply Over.OverMorphism.ext
   rw [← cancel_epi (spMap i)]
   exact congrArg (fun z => z.left) h
@@ -292,7 +292,7 @@ theorem push_one {S S' : Scheme.{0}} {G' : Over S'} {G : Over S} [GrpObj G'] [Gr
 
 theorem tors_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n : ℕ} (hn : 0 < n)
     (hpq : D.p + D.q = 0) (g : Over.mk ξ ⟶ t.G) (hg : g ^ n = 1) : g = 1 := by
-  haveI := subsingleton_La D hpq
+  have := subsingleton_La D hpq
   let i := algebraMap Ω (AlgebraicClosure Ω)
   obtain ⟨I⟩ := exists_tate o i
   have hp := m.cart
@@ -303,7 +303,7 @@ theorem tors_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n : 
     rw [add_zero] at this
     exact left_eq_mul.1 this
   have ha1 : a = 1 := by rw [← hc, Subsingleton.elim c 0, h0]
-  haveI := epi_sp i
+  have := epi_sp i
   apply Over.OverMorphism.ext
   rw [← cancel_epi (spMap i)]
   have h2 : GenWeilModel.ext i ≫ g = GenWeilModel.ext i ≫ 1 := by
@@ -316,7 +316,7 @@ theorem genWeil_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n
   have triv := tors_trivial o t m hn hpq
   have hW := GlobalTheory.PairingLawZeroCounterexample.laws.1
   refine { finite := ?_, mul_left := ?_, mul_right := ?_, perfect := ?_, nondeg := ?_, weil := ?_ }
-  · haveI : Subsingleton {x : Over.mk ξ ⟶ t.G // x ^ n = 1} :=
+  · have : Subsingleton {x : Over.mk ξ ⟶ t.G // x ^ n = 1} :=
       ⟨fun a b => Subtype.ext ((triv _ a.2).trans (triv _ b.2).symm)⟩
     exact Finite.of_subsingleton
   · intros; simp
@@ -378,11 +378,11 @@ theorem fullTorsion_frac {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶
 
 theorem htOm_eq_htLat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (B : Type) [CommRing B] (b : Base l B) (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Sp Ω ⟶ X) (s : Sp Ω ⟶ Sp B) (o : Obj D l b s) (t : SAB H X) (_ : SABMap o.t t ξ) (V : Type) [AddCommGroup V] [Module Ω V] (M : LieModel t.G ξ V) (n : ℕ) (q : Cpt ξ), IsCptGen ξ → 0 < n → FullTorsion t.G ξ n → IsIntegrallyClosed (X.presheaf.stalk q.1) → IsNoetherianRing (X.presheaf.stalk q.1) → M.IsHTFormAt n q 0 ∧ (0 < D.p + D.q → ∃ ζ : Ω, IsPrimitiveRoot ζ n) ∧ M.htOm t.PP.L n q = M.htLat n q := by
   intro E _ _ _ H D l B _ b X Ω _ _ ξ s o t m V _ _ M n q hξ hn hfull hic hno
-  haveI := t.semi
-  haveI := hic
-  haveI := hno
-  haveI hd : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain (genMap ξ q)
-  haveI hc : CharZero (X.presheaf.stalk q.1) := ⟨fun a b h => Nat.cast_injective (R := Ω) (by
+  have := t.semi
+  have := hic
+  have := hno
+  have hd : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain (genMap ξ q)
+  have hc : CharZero (X.presheaf.stalk q.1) := ⟨fun a b h => Nat.cast_injective (R := Ω) (by
     rw [← map_natCast (genMap ξ q), h, map_natCast])⟩
   have hft := fullTorsion_frac hξ q hfull
   obtain ⟨T, _, _, Γ', i, htor⟩ := @_root_.GlobalTheory.CompanionTheory.Ar.TorsQF.torsion_qfGroup (X.presheaf.stalk q.1) _ hd _ hc X t.G _ (X.fromSpecStalk q.1) n t.semi hn hft
@@ -394,7 +394,7 @@ theorem htOm_eq_htLat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
         (by rwa [Category.id_comp]) (by simpa using hroot h)
       rwa [Category.id_comp] at this
   obtain ⟨e, hw⟩ := hw
-  haveI := t.semi.separated
+  have := t.semi.separated
   refine ⟨?_, hroot, (LieModel.htLat_eq_htOm hξ M t.PP.L hn.ne' hfull hw q ⟨hd, T, _, Γ', i, htor⟩).symm⟩
   have := HTTie.core_smul (hξ.inj q) (HTTie.hk_stalk ξ q) M Γ' i htor (w := 0)
     (fun e' v _ _ => ⟨0, by simp⟩)

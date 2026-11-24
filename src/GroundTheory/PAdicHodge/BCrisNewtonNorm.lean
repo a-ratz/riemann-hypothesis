@@ -357,7 +357,7 @@ theorem coeff_teich (c : L) (n : ℕ) : T.coeff (T.teich c) n = if n = 0 then c 
 theorem coeff_π_pow_mul_teich (k : ℕ) (c : L) (n : ℕ) :
     T.coeff (T.π ^ k * T.teich c) n = if n = k then c else 0 := by
   rcases lt_or_ge n k with h | h
-  · rw [T.coeff_π_pow_mul_of_lt _ h, if_neg (by omega)]
+  · rw [T.coeff_π_pow_mul_of_lt _ h, ite_eq_right (by omega)]
   · obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_le' h
     rw [T.coeff_π_pow_mul_add, coeff_teich]
     split_ifs <;> first | rfl | omega
@@ -596,7 +596,7 @@ theorem convergesAt_of_eventually {a : ℤ → L} {ρ : ℝ} (hρ0 : 0 < ρ) (hn
   obtain ⟨N2, hN2⟩ := h (ε / 2) (by positivity)
   refine Filter.eventually_cofinite.2 ((Set.finite_Ico N1 N2).subset fun n hn => ?_)
   have hw : 0 ≤ ‖a n‖ * ρ ^ n := mul_nonneg (norm_nonneg _) (zpow_pos hρ0 n).le
-  rw [Set.mem_setOf_eq, dist_zero_right, Real.norm_eq_abs, abs_of_nonneg hw, not_lt] at hn
+  rw [Set.mem_ofPred_eq, dist_zero_right, Real.norm_eq_abs, abs_of_nonneg hw, not_lt] at hn
   refine ⟨?_, ?_⟩
   · by_contra hc
     push_neg at hc
@@ -631,15 +631,15 @@ theorem coeff_tail_iterate (x : Γ) (k m : ℕ) : T.coeff (T.tail^[k] x) m = T.c
 theorem finSum_ite_eq (a : ℕ → L) {N n : ℕ} (h : N ≤ n) :
     T.finSum (fun j => if j < N then a j else 0) n = T.finSum a N := by
   induction n, h using Nat.le_induction with
-  | base => exact T.finSum_congr fun i hi => if_pos hi
-  | succ n hNn ih => rw [finSum_succ, ih, if_neg (by omega), T.teich_zero, mul_zero, add_zero]
+  | base => exact T.finSum_congr fun i hi => ite_eq_left hi
+  | succ n hNn ih => rw [finSum_succ, ih, ite_eq_right (by omega), T.teich_zero, mul_zero, add_zero]
 
 theorem coeff_finSum (a : ℕ → L) (N i : ℕ) :
     T.coeff (T.finSum a N) i = if i < N then a i else 0 := by
   refine T.coeff_eq_of_mem (a := fun j => if j < N then a j else 0) ?_ i le_rfl
   rcases le_total (i + 1) N with h | h
   · have e : T.finSum (fun j => if j < N then a j else 0) (i + 1) = T.finSum a (i + 1) :=
-      T.finSum_congr fun j hj => if_pos (by omega)
+      T.finSum_congr fun j hj => ite_eq_left (by omega)
     rw [e]; exact T.finSum_sub_finSum_mem a h
   · rw [T.finSum_ite_eq a h, sub_self]; exact zero_mem _
 
@@ -841,10 +841,10 @@ theorem gaussNorm_lowIndex_zcoeff_mul {x y : Γ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
     ⟨_, (Int.toNat_of_nonneg hl0nn).symm⟩
   have hwk0 : ‖T.coeff x k0‖ * ρ ^ (k0 : ℤ) = gx := by
     have := hi0; rw [hk0] at this
-    simp only [domSet, Set.mem_setOf_eq, T.zcoeff_natCast] at this; exact this
+    simp only [domSet, Set.mem_ofPred_eq, T.zcoeff_natCast] at this; exact this
   have hwl0 : ‖T.coeff y l0‖ * ρ ^ (l0 : ℤ) = gy := by
     have := hl0; rw [hl0'] at this
-    simp only [domSet, Set.mem_setOf_eq, T.zcoeff_natCast] at this; exact this
+    simp only [domSet, Set.mem_ofPred_eq, T.zcoeff_natCast] at this; exact this
   have hlt_x : ∀ i < k0, ‖T.coeff x i‖ * ρ ^ (i : ℤ) < gx := fun i hi => by
     have := weight_lt_of_lt_lowIndex hρ0 hx hx0' (n := i) (by rw [hk0]; exact_mod_cast hi)
     rwa [T.zcoeff_natCast] at this
@@ -940,7 +940,7 @@ theorem gaussNorm_lowIndex_zcoeff_mul {x y : Γ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
       (hn.trans (T.weight_natCast_le hc n))
   refine ⟨hg, ?_⟩
   have hmem : (n : ℤ) ∈ domSet (T.zcoeff (x * y)) ρ := by
-    simp only [domSet, Set.mem_setOf_eq, T.zcoeff_natCast]
+    simp only [domSet, Set.mem_ofPred_eq, T.zcoeff_natCast]
     exact le_antisymm (T.weight_natCast_le hc n) (hg ▸ hn)
   rw [hk0, hl0']
   refine le_antisymm ?_ ?_
@@ -949,7 +949,7 @@ theorem gaussNorm_lowIndex_zcoeff_mul {x y : Γ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
     push_neg at hcon
     have hj := lowIndex_mem hρ0 hc hxyn
     set j := lowIndex (T.zcoeff (x * y)) ρ
-    simp only [domSet, Set.mem_setOf_eq] at hj
+    simp only [domSet, Set.mem_ofPred_eq] at hj
     rcases lt_or_ge j 0 with hj0 | hj0
     · rw [T.zcoeff_of_neg _ hj0, norm_zero, zero_mul, hg] at hj
       linarith [mul_pos hgx hgy]
@@ -1022,7 +1022,7 @@ theorem zcoeff_π_pow_mul (M : ℕ) (z : Γ) (j : ℤ) : T.zcoeff (T.π ^ M * z)
 theorem zcoeff_one : T.zcoeff 1 = Pi.single 0 1 := by
   funext n
   rcases lt_or_ge n 0 with hn | hn
-  · rw [T.zcoeff_of_neg _ hn, Pi.single_apply, if_neg hn.ne]
+  · rw [T.zcoeff_of_neg _ hn, Pi.single_apply, ite_eq_right hn.ne]
   · lift n to ℕ using hn
     rw [zcoeff_natCast, ← T.teich_one, coeff_teich, Pi.single_apply]
     simp
@@ -1060,7 +1060,7 @@ theorem convergesAt_pi_single (n₀ : ℤ) (c : L) (ρ : ℝ) : ConvergesAt (Pi.
 theorem zcoeff_π_pow_mul_teich (N : ℕ) (c : L) : T.zcoeff (T.π ^ N * T.teich c) = Pi.single (N : ℤ) c := by
   funext n
   rcases lt_or_ge n 0 with hn | hn
-  · rw [T.zcoeff_of_neg _ hn, Pi.single_apply, if_neg (by omega)]
+  · rw [T.zcoeff_of_neg _ hn, Pi.single_apply, ite_eq_right (by omega)]
   · lift n to ℕ using hn
     rw [zcoeff_natCast, coeff_π_pow_mul_teich, Pi.single_apply]
     simp
@@ -1242,7 +1242,7 @@ def teichLift : TeichLift p K♭ (WittVector p K♭) where
 theorem teichLift_red (x : WittVector p K♭) : (teichLift K p).red x = x.coeff 0 := rfl
 
 theorem teich_eq (a : K♭) : (teichLift K p).teich a = teichmuller p a := by
-  haveI := (teichLift K p).isAdicComplete
+  have := (teichLift K p).isAdicComplete
   rw [← sub_eq_zero]
   refine IsHausdorff.haus' (I := (teichLift K p).I) _ fun n => ?_
   rw [SModEq.zero, Ideal.smul_eq_mul, Ideal.mul_top, (teichLift K p).I_pow]

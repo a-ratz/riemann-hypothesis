@@ -232,7 +232,7 @@ theorem norm_det_inv_eq_one {k : ℕ} {m : Matrix (Fin (k + 1)) (Fin (k + 1)) �
 theorem inv_factorial_le (s : ℕ) (hs : 1 ≤ s) : 1 / (s.factorial : ℝ) ≤ (Real.exp 1 / s) ^ s := by
   have h := Real.pow_div_factorial_le_exp (s : ℝ) (Nat.cast_nonneg s) s
   have hs' : (0 : ℝ) < s := by exact_mod_cast hs
-  rw [div_pow, ← Real.exp_nat_mul, mul_one, le_div_iff₀ (by positivity)]
+  rw [div_pow, ← Real.exp_natCast_mul, mul_one, le_div_iff₀ (by positivity)]
   calc _ = (s : ℝ) ^ s / s.factorial := by ring
     _ ≤ _ := h
 

@@ -47,8 +47,8 @@ open UpperTheory.ConvolutionTheory.R2
 theorem UpperTheory.ConvolutionTheory.R2.M.cdMeas :
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (t : (A F)ˣ), MeasurePreserving (cD t) M₀.μ M₀.μ := by
   intro F _ _ M₀ t
-  haveI := M₀.haar
-  haveI := M₀.right
+  have := M₀.haar
+  have := M₀.right
   have hm : ∀ s : (A F)ˣ, Measurable (cD s : G1 F → G1 F) := fun s => (M.continuous_cD s).measurable
   let e : G1 F ≃ₜ* G1 F :=
     { toFun := cD t
@@ -58,7 +58,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.cdMeas :
       map_mul' := M.cD_mul t
       continuous_toFun := M.continuous_cD t
       continuous_invFun := M.continuous_cD t⁻¹ }
-  haveI : (M₀.μ.map (cD t)).IsHaarMeasure := e.isHaarMeasure_map M₀.μ
+  have : (M₀.μ.map (cD t)).IsHaarMeasure := e.isHaarMeasure_map M₀.μ
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, M₀.μ.map (cD t) = c • M₀.μ :=
     ⟨_, Measure.isMulLeftInvariant_eq_smul (M₀.μ.map (cD t)) M₀.μ⟩
   have h2 : M₀.μ.map (cD (t * t)) = M₀.μ := by

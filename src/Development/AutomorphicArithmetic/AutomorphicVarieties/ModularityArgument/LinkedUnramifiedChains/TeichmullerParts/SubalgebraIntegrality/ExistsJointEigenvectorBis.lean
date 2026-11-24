@@ -51,11 +51,11 @@ private theorem exists_joint_eigenvector_bis {E J : Type} [AddCommGroup E] [Modu
   induction d with
   | zero =>
     intro S hSW hd h0 _ _
-    haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSW
+    have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSW
     exact absurd (Submodule.finrank_eq_zero.1 (Nat.le_zero.1 hd)) h0
   | succ d ih =>
     intro S hSW hd h0 hS hG
-    haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSW
+    have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSW
     by_cases hall : ∀ i, ∀ s ∈ S, (T i - μ i • (1 : Module.End ℂ E)) s = 0
     · obtain ⟨G, hG1, hG2⟩ := (Submodule.ne_bot_iff _).1 h0
       refine ⟨G, hSW hG1, hG2, fun i => ?_⟩
@@ -189,7 +189,7 @@ private theorem abs_main {l : ℕ} [Fact l.Prime] {A M J E : Type} [CommRing A] 
   obtain ⟨hLC, -, hLfin, ⟨Z, hdis, hsup, hZst⟩, hLfree⟩ := AlgebraTools.AnnihilatorQuotientFinite.locFree A M J Y op a hC
   have hLY : locPart Y op a ≤ Y := inf_le_left
   have hZY : Z ≤ Y := hsup ▸ le_sup_right
-  haveI : Module.Free A (locPart Y op a) := hLfree inferInstance
+  have : Module.Free A (locPart Y op a) := hLfree inferInstance
   let f : (locPart Y op a × Z) →ₗ[A] Y := (Submodule.inclusion hLY).coprod (Submodule.inclusion hZY)
   have hfb : Function.Bijective f := by
     constructor
@@ -218,9 +218,9 @@ private theorem abs_main {l : ℕ} [Fact l.Prime] {A M J E : Type} [CommRing A] 
     ext v
     have h1 : Submodule.inclusion hZY v = g (0, v) := Subtype.ext (hgr v).symm
     simp [pr, h1]
-  haveI hZfin : Module.Finite A Z := Module.Finite.of_surjective pr fun v => ⟨_, LinearMap.congr_fun hpr v⟩
-  haveI : Module.Projective A Z := Module.Projective.of_split _ _ hpr
-  haveI hZfree : Module.Free A Z := Module.free_of_flat_of_isLocalRing
+  have hZfin : Module.Finite A Z := Module.Finite.of_surjective pr fun v => ⟨_, LinearMap.congr_fun hpr v⟩
+  have : Module.Projective A Z := Module.Projective.of_split _ _ hpr
+  have hZfree : Module.Free A Z := Module.free_of_flat_of_isLocalRing
   have hboth : ∀ (κ κ' : Type) (bL : Module.Basis κ A (locPart Y op a)) (bZ : Module.Basis κ' A Z),
       LinearIndependent ℂ (Sum.elim (fun i => sp (bL i)) (fun j => sp (bZ j))) := by
     intro κ κ' bL bZ
@@ -251,7 +251,7 @@ private theorem abs_main {l : ℕ} [Fact l.Prime] {A M J E : Type} [CommRing A] 
     have := (linearIndependent_sum.1 (hboth _ _ bL0 bZ0)).2.2
     rw [hspanL, hspanZ]
     simpa [Function.comp_def] using this
-  haveI : FiniteDimensional ℂ E2 := by
+  have : FiniteDimensional ℂ E2 := by
     rw [hspanZ]
     exact FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   have hst : ∀ (P : Submodule A M), P ≤ Y → (∀ i, ∀ y ∈ P, op i y ∈ P) → ∀ i,
@@ -298,7 +298,7 @@ private theorem abs_main {l : ℕ} [Fact l.Prime] {A M J E : Type} [CommRing A] 
     by_contra hne
     obtain ⟨G, hG, hG0, hGe⟩ := joint_vec E2 opC hst2 hcm μ F2 h2 hne hg2
     have hCZ : CommOn Z op := ⟨hZst, fun i j y hy => hC.2 i j y (hZY hy)⟩
-    haveI : Fact (CommOn (locPart Z op a) op) := ⟨(AlgebraTools.AnnihilatorQuotientFinite.locFree A M J Z op a hCZ).1⟩
+    have : Fact (CommOn (locPart Z op a) op) := ⟨(AlgebraTools.AnnihilatorQuotientFinite.locFree A M J Z op a hCZ).1⟩
     have h5 := (Up.eigPt Z op hCZ e x hx1 hx2 sp haddZ hsmZ hindZ opC (fun i f hf => hop i f (hZY hf)) G hG hG0 μ hGe a hμ).1
     refine h5 ((Submodule.eq_bot_iff _).2 fun y hy => ?_)
     exact Submodule.disjoint_def.1 hdis _ (locPart_sub Z Y hZY op a hy) hy.1
@@ -433,8 +433,8 @@ private theorem abs_cong {l : ℕ} [Fact l.Prime] {A M J : Type} [CommRing A] [I
 theorem UpperTheory.V.Z.J.D.locSp :
     LocSp := by
   intro L Ω _ _ _ _ _ l _ n c H hA A _ _ _ θ hθ ι x lam d ξ c0 sp hsp K a hF hfree hfin z hz
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨hC, hfi, hfr, -⟩ := hiComm L Ω l n c H hA A θ hθ K
   have hx2 : ∀ b ∈ maximalIdeal A, ‖x.toRingHom b‖ < 1 := Up.normLt x
   have hx1 : ∀ b, ‖x.toRingHom b‖ ≤ 1 := by
@@ -446,7 +446,7 @@ theorem UpperTheory.V.Z.J.D.locSp :
     have h2 : x.toRingHom b = x.toRingHom (b - algebraMap c.O A o) + x (algebraMap c.O A o) := by simp
     rw [h2]
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hx2 _ ho).le h1)
-  haveI hF' : Fact (CommOn (locPart (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) fun i => algebraMap c.O A (a i)) (H.op A)) := hF
+  have hF' : Fact (CommOn (locPart (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) fun i => algebraMap c.O A (a i)) (H.op A)) := hF
   have hcong : ∀ i, ‖ι.symm (ι (z (H.gen θ a K i))) - x.toRingHom (algebraMap c.O A (a i))‖ < 1 := by
     intro i
     rw [RingEquiv.symm_apply_apply]

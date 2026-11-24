@@ -152,10 +152,10 @@ theorem val_det_eq {ι : Type} [Fintype ι] [DecidableEq ι] {X' X : Submodule (
   have hAB : A = b.toMatrix c * B * c'.toMatrix b' := by
     rw [← key b b' A hA, ← key c c' B hB, basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix]
   have u1 : IsUnit (b.toMatrix c).det := by
-    letI := b.invertibleToMatrix c
+    let := b.invertibleToMatrix c
     exact Matrix.isUnit_det_of_invertible _
   have u2 : IsUnit (c'.toMatrix b').det := by
-    letI := c'.invertibleToMatrix b'
+    let := c'.invertibleToMatrix b'
     exact Matrix.isUnit_det_of_invertible _
   rw [hAB, Matrix.det_mul, Matrix.det_mul, Subring.coe_mul, Subring.coe_mul, v.map_mul,
     v.map_mul, v_unit v u1, v_unit v u2, zero_add, add_zero]
@@ -193,16 +193,16 @@ namespace GlobalTheory.LenMap
 theorem relLen_map_iff : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop ℝ)) (M M' : Type) [AddCommGroup M] [Module (Int0 v) M] [AddCommGroup M'] [Module (Int0 v) M'], (∀ (c : Int0 v) (x : M), c ≠ 0 → c • x = 0 → x = 0) → (∀ (c : Int0 v) (x : M'), c ≠ 0 → c • x = 0 → x = 0) → ∀ (f : M →ₗ[Int0 v] M') (X' X : Submodule (Int0 v) M), X' ≤ X → X ⊓ LinearMap.ker f ≤ X' → Module.Finite (Int0 v) X → Module.Finite (Int0 v) X' → ∀ r : ℝ, (RelLen v X' X r ↔ RelLen v (X'.map f) (X.map f) r) := by
   intro C _ v M M' _ _ _ _ htM htM' f X' X hle hker hX hX' r
   classical
-  haveI := isTorsionFree_submodule htM' (X.map f)
-  haveI := isTorsionFree_submodule htM' (X'.map f)
-  haveI := isTorsionFree_submodule htM (X ⊓ LinearMap.ker f)
-  haveI : Module.Finite (Int0 v) (X.map f) := Module.Finite.map X f
-  haveI : Module.Finite (Int0 v) (X'.map f) := Module.Finite.map X' f
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X.map f)
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X'.map f)
+  have := isTorsionFree_submodule htM' (X.map f)
+  have := isTorsionFree_submodule htM' (X'.map f)
+  have := isTorsionFree_submodule htM (X ⊓ LinearMap.ker f)
+  have : Module.Finite (Int0 v) (X.map f) := Module.Finite.map X f
+  have : Module.Finite (Int0 v) (X'.map f) := Module.Finite.map X' f
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X.map f)
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := X'.map f)
   let g : X →ₗ[Int0 v] X.map f := f.submoduleMap X
   have hg : Function.Surjective g := f.submoduleMap_surjective X
-  haveI : Module.FinitePresentation (Int0 v) (X.map f) := Module.finitePresentation_of_projective _ _
+  have : Module.FinitePresentation (Int0 v) (X.map f) := Module.finitePresentation_of_projective _ _
   have hfg : (LinearMap.ker g).FG := Module.FinitePresentation.fg_ker g hg
   have hK : (LinearMap.ker g).map X.subtype = X ⊓ LinearMap.ker f := by
     ext x
@@ -214,10 +214,10 @@ theorem relLen_map_iff : ∀ (C : Type) [Field C] (v : AddValuation C (WithTop �
       simpa [g] using this
     · rintro ⟨hx, hfx⟩
       exact ⟨⟨x, hx⟩, Subtype.ext (by simpa [g] using hfx), rfl⟩
-  haveI : Module.Finite (Int0 v) ↥(X ⊓ LinearMap.ker f) := by
+  have : Module.Finite (Int0 v) ↥(X ⊓ LinearMap.ker f) := by
     rw [Module.Finite.iff_fg, ← hK]
     exact hfg.map _
-  haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := ↥(X ⊓ LinearMap.ker f))
+  have := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := ↥(X ⊓ LinearMap.ker f))
   have hK' : X' ⊓ LinearMap.ker f = X ⊓ LinearMap.ker f :=
     le_antisymm (inf_le_inf_right _ hle) (le_inf hker inf_le_right)
   obtain ⟨q, ⟨d⟩⟩ : ∃ q : ℕ, Nonempty (Basis (Fin q) (Int0 v) ↥(X ⊓ LinearMap.ker f)) :=

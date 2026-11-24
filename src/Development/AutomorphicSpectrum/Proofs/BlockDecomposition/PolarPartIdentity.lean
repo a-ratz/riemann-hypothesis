@@ -128,7 +128,7 @@ end Homog
 theorem integrable_th {ψ : AddChar (AF D.host.F) ℂ} {χ' : (AE D)ˣ →* Circle} {θ : InfFam D} (hθ : IsInfFam θ)
     {b₀ : HermE D ρ} (m : Meas D ρ p) {Ω : G D p → Mx D ρ p → ℂ} (hΩ : IsTh ψ χ' θ b₀ m.μ Ω) :
     Integrable (Ω 1) m.μ := by
-  haveI := m.hμ.1
+  have := m.hμ.1
   exact GlobalTheory.CompanionTheory.WSum.integrable_schwartzA_haar D θ hθ ρ p m.μ _ (hΩ.mem 1)
 
 theorem hecke_mul_inv {χ χ' : (AE D)ˣ →* Circle} (h : IsHeckeChar D χ) (h' : IsHeckeChar D χ') :

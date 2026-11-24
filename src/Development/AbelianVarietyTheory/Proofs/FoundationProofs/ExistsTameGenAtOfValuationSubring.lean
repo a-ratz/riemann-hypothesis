@@ -243,7 +243,7 @@ theorem isClosed_preimage [IsAlgClosure E Ω] (A : ValuationSubring Ω) {r : Ω�
     IsClosed (tameChar (E := E) A hN hr ⁻¹' s) := by
   have h := (isClosed_setOf_apply (F := E) (r : Ω)
     (fun t => ∃ u : Ωˣ, (u : Ω) = t / r ∧ QuotientGroup.mk u ∈ s)).preimage
-      (continuous_subtype_val (p := fun σ : G E Ω => σ ∈ Ine (F := E) A))
+      (continuous_subtypeVal (p := fun σ : G E Ω => σ ∈ Ine (F := E) A))
   convert h using 1
   ext σ
   constructor
@@ -283,7 +283,7 @@ theorem exists_tameGenAt_of_valuationSubring [IsAlgClosure E Ω] (A : ValuationS
   set C : Subgroup (G E Ω) :=
     Subgroup.closure (insert γ.1 {σ : G E Ω | ∀ y : Ω, y ≠ 0 → A.valuation (σ y / y - 1) < 1}) with hC
   have h1 : h.1 ∈ C.topologicalClosure := by
-    refine closure_mono ?_ (image_closure_subset_closure_image continuous_subtype_val ⟨h, hh, rfl⟩)
+    refine closure_mono ?_ (image_closure_subset_closure_image continuous_subtypeVal ⟨h, hh, rfl⟩)
     rintro _ ⟨_, ⟨k, rfl⟩, rfl⟩
     exact zpow_mem (Subgroup.subset_closure (Set.mem_insert _ _) : γ.1 ∈ C) k
   have h2 : h.1⁻¹ * σ ∈ C := by

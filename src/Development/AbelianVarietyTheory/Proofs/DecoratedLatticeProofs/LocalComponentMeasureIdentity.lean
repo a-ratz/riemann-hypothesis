@@ -114,7 +114,7 @@ namespace GlobalTheory.Fam
 
 theorem finite_levelPlaces_or_tuplePlaces : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : RealPack ex), PkHyp W → Set.Finite {PP : Pl D.host.E | PP ∈ (pk W).Pg ∨ QAll W PP} := by
   intro D L hT Gi Gl Kc Yd cX ex W h
-  haveI : Finite W.P.T := h.fin
+  have : Finite W.P.T := h.fin
   have hU : {PP : Pl D.host.E | PP ∈ (pk W).Pg ∨ QAll W PP} =
       ((pk W).Pg : Set (Pl D.host.E)) ∪ ⋃ t, ((pk W).Q t : Set (Pl D.host.E)) := by
     ext PP
@@ -376,7 +376,7 @@ theorem exists_shape_integral_in_normal_frames : ∀ {D : D7} {L : SizeData₂ D
     rw [e, h0, mul_zero, map_zero] at v2
     exact zero_ne_one v2
   let I := {PP : Pl D.host.E // PP ∈ (pk W).Pg ∨ QAll W PP}
-  haveI : Finite I := hfin.to_subtype
+  have : Finite I := hfin.to_subtype
   have hinj : ∀ i i' : I, (l i.1 i.2).q.v = (l i'.1 i'.2).q.v → i = i' := by
     intro i i' e
     rw [(l i.1 i.2).under, (l i'.1 i'.2).under] at e
@@ -426,7 +426,7 @@ theorem exists_shape_integral_in_normal_frames : ∀ {D : D7} {L : SizeData₂ D
   let G' : Finset (GlobalTheory.FinPl.Pl D) := hfin.toFinset.image (fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))
   have hG' : ∀ x, x ∈ G' ↔ ∃ PP, (PP ∈ (pk W).Pg ∨ QAll W PP) ∧ (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) = x := by
     intro x
-    simp only [G', Finset.mem_image, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [G', Finset.mem_image, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   have hdisj' : Disjoint G' v.tP := by
     rw [Finset.disjoint_left]
     intro x hx hxT

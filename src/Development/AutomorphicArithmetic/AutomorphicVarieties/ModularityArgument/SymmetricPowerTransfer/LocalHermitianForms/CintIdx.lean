@@ -104,7 +104,7 @@ theorem int_denom (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) :
     ∃ c : O, c ≠ 0 ∧ ∀ x : Etau K τ, IsIntegral O x →
       ∃ a b : O, algebraMap O K c * x.re = algebraMap O K a ∧ algebraMap O K c * x.im = algebraMap O K b := by
   classical
-  haveI := h.frac
+  have := h.frac
   have inj : Function.Injective (algebraMap K (Etau K τ)) := fun r s hrs => by
     simpa using congrArg QuadraticAlgebra.re hrs
   have down : ∀ y : K, IsIntegral O (algebraMap K (Etau K τ) y) → ∃ a : O, algebraMap O K a = y := by
@@ -174,7 +174,7 @@ theorem finite_quot_span (h : IsLoc O Δ) {m : O} (hm : m ≠ 0) : Finite (O ⧸
   obtain ⟨n, hn⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hne hϖ
   have hmax : IsLocalRing.maximalIdeal O = Ideal.span {ϖ} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ
-  haveI : Finite (O ⧸ Ideal.span {ϖ}) := by
+  have : Finite (O ⧸ Ideal.span {ϖ}) := by
     have := h.fin
     rw [← hmax]
     exact this
@@ -186,7 +186,7 @@ theorem cint_relIndex_ne_zero (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {m : O} 
     (hH : ∀ z ∈ Cint O τ, ∀ r : Etau K τ, IsIntegral O r → quo z = 1 + algebraMap O K m • r → z ∈ H) :
     H.relIndex (Cint O τ) ≠ 0 := by
   classical
-  haveI := h.frac
+  have := h.frac
   obtain ⟨c, hc, hcx⟩ := int_denom h hτ
   obtain ⟨p, q, hq, hpq⟩ := IsFractionRing.div_surjective (A := O) τ
   have hq0 : q ≠ 0 := nonZeroDivisors.ne_zero hq
@@ -196,7 +196,7 @@ theorem cint_relIndex_ne_zero (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {m : O} 
   have eτ : τ * algebraMap O K q = algebraMap O K p := by
     rw [← hpq, div_mul_cancel₀ _ hQq]
   have hM0 : c * m * q ≠ 0 := mul_ne_zero (mul_ne_zero hc hm) hq0
-  haveI : Finite (O ⧸ Ideal.span {c * m * q}) := finite_quot_span h hM0
+  have : Finite (O ⧸ Ideal.span {c * m * q}) := finite_quot_span h hM0
   have hint : ∀ z : Cint O τ, IsIntegral O (quo z.1) ∧ IsIntegral O (quo z.1⁻¹) := fun z => z.2
   let A : Cint O τ → O := fun z => Classical.choose (hcx _ (hint z).1)
   let B : Cint O τ → O := fun z => Classical.choose (Classical.choose_spec (hcx _ (hint z).1))
@@ -267,7 +267,7 @@ theorem intE_fg (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) :
     (Subalgebra.toSubmodule (integralClosure O (Etau K τ))).FG := by
   classical
   obtain ⟨c, hc, hcx⟩ := int_denom h hτ
-  haveI := h.frac
+  have := h.frac
   have hQc : algebraMap O K c ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (mem_nonZeroDivisors_of_ne_zero hc)
   refine Submodule.FG.of_le (Submodule.fg_span (R := O) (Set.toFinite

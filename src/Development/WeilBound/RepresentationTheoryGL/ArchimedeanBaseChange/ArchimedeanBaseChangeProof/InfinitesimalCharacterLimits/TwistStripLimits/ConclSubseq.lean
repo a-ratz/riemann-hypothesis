@@ -157,7 +157,7 @@ theorem emb_of_isoV {V V' : Submodule ℂ (Sm E N)} (hV : _root_.GlobalTheory.Cu
   obtain ⟨T, hT⟩ := h
   obtain ⟨C, hC⟩ := Submodule.exists_isCompl V
   let p := Submodule.linearProjOfIsCompl V C hC
-  have hp : ∀ φ (hφ : φ ∈ V), p φ = ⟨φ, hφ⟩ := fun φ hφ => Submodule.linearProjOfIsCompl_apply_left hC ⟨φ, hφ⟩
+  have hp : ∀ φ (hφ : φ ∈ V), p φ = ⟨φ, hφ⟩ := fun φ hφ => Submodule.projectionOnto_apply_left hC ⟨φ, hφ⟩
   refine ⟨V'.subtype ∘ₗ T.toLinearMap ∘ₗ p, fun φ hφ => by simp, fun φ hφ h0 => ?_, fun o φ hφ => ?_⟩
   · simp only [LinearMap.comp_apply, hp φ hφ, Submodule.subtype_apply, LinearEquiv.coe_coe,
       ZeroMemClass.coe_eq_zero, LinearEquiv.map_eq_zero_iff] at h0
@@ -268,9 +268,9 @@ theorem caseA (hFD : FinDisc) {N : ℕ} (hN : 0 < N) {K : Subgroup (GL (Fin N) (
     (hWΩ : W ∈ Ω N) (hKΘ : K ∈ Θ N) {R : ℝ} (hRep : RepAll E) {V : ℕ → Submodule ℂ (Sm E N)}
     (hVd : ∀ k, IsDiscrete (V k)) (hVt : ∀ k, HasType K W (V k)) (hVb : ∀ k, InfBdd R (V k)) {ε : ℝ} (hε : 0 < ε)
     (hfr : ∃ᶠ k in atTop, Gap ε (V k)) : Concl Ω Θ V := by
-  letI : MeasurableSpace (GA E N) := borel _
-  haveI : BorelSpace (GA E N) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (GA E N) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  let : MeasurableSpace (GA E N) := borel _
+  have : BorelSpace (GA E N) := ⟨rfl⟩
+  have : LocallyCompactSpace (GA E N) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
   obtain ⟨V₀, hV₀⟩ := hFD E N Measure.haar K W R ε hK hW hε (hRep N Measure.haar K W R hK hW)
   have hfr' : ∃ᶠ k in atTop, ∃ V' ∈ V₀, IsoV (V k) V' :=
     hfr.mono fun k hk => hV₀ (V k) (hVd k) (hVt k) (hVb k) hk

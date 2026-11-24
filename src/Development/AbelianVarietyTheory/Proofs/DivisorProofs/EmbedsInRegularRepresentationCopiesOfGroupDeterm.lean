@@ -137,8 +137,8 @@ theorem embReg_of_groupDet : ∀ (K Γ R : Type) [Field K] [Group Γ] [Finite Γ
       simpa [Ψ] using this)
     funext h
     exact Subtype.ext (congrFun h0 h)
-  haveI : Module.Finite K (H → I) := Module.Finite.of_injective Ψ hΨ
-  haveI : Module.Finite K I :=
+  have : Module.Finite K (H → I) := Module.Finite.of_injective Ψ hΨ
+  have : Module.Finite K I :=
     Module.Finite.of_surjective (LinearMap.proj (R := K) (φ := fun _ : H => I) 1) (fun x => ⟨fun _ => x, rfl⟩)
   have hle := LinearMap.finrank_le_finrank_of_injective hΨ
   rw [Module.finrank_pi_fintype, Finset.sum_const, Finset.card_univ, smul_eq_mul] at hle
@@ -163,7 +163,7 @@ theorem embReg_of_groupDet : ∀ (K Γ R : Type) [Field K] [Group Γ] [Finite Γ
   · intro h v i
     apply MonoidAlgebra.ext
     ext k
-    rw [MonoidAlgebra.single_mul_apply, one_mul, hj, hj]
+    rw [MonoidAlgebra.coeff_single_mul_apply, one_mul, hj, hj]
     have : T k (ρ h v) = T (h⁻¹ * k) v := by
       apply Subtype.ext
       rw [hT, hT, hρ]

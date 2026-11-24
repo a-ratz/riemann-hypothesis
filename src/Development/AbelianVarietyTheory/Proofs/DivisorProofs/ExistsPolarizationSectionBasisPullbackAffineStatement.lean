@@ -86,7 +86,7 @@ theorem eq_zero_of_smul_eq_zero (hS : SecBaseChangeAnySt) {S : Scheme.{0}} (P : 
     simp [I, LinearMap.toSpanSingleton_apply, smul_eq_mul]
   have key : ∀ p : T.left, ∃ g ∈ I, p ∈ T.left.basicOpen g := fun p => by
     obtain ⟨V, hV, b, hb⟩ := hS S P 1 le_rfl (T.hom p)
-    haveI hq : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
+    have hq : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
     obtain ⟨g, hg, hp⟩ := (isAffineOpen_top T.left).exists_basicOpen_le (V := T.hom ⁻¹ᵁ V) ⟨p, hV⟩ trivial
     let W := T.left.basicOpen g
     let l : overRes W ⟶ overRes (T := baseOver S) V := Over.homMk
@@ -95,7 +95,7 @@ theorem eq_zero_of_smul_eq_zero (hS : SecBaseChangeAnySt) {S : Scheme.{0}} (P : 
         rintro _ ⟨y, rfl⟩
         exact hg y.2)) ((congrArg (_ ≫ ·) (Category.comp_id _)).trans (IsOpenImmersion.lift_fac _ _ _))
     have hW : IsAffineOpen W := (isAffineOpen_top _).basicOpen g
-    haveI : IsAffine (overRes W).left := hW
+    have : IsAffine (overRes W).left := hW
     obtain ⟨c, -⟩ := exists_basis P 1 b hb (overRes W) l
     let σ := (overResι W).left.appTop.hom
     let k₀ : Fin (1 ^ P.g) := @default _ hq.toInhabited
@@ -157,8 +157,8 @@ open GlobalTheory.SecBasisPull GlobalTheory.ThetaReal in
 theorem GlobalTheory.SecBasisPull.exists_secBasis_pull : ∀ {R R' : Type} [CommRing R] [CommRing R'] (P : PolAV (Sp R)) (P' : PolAV (Sp R')) (f : R →+* R') (ψ : P'.A.left ⟶ P.A.left), IsGrpPullback P'.A P.A (spMap f) ψ → LBIso P'.L (P.L.pull ψ) → ∀ th : LB.Sec (LPow P.A P.L 1 (baseOver (Sp R))), IsSecBasis _ (fun _ : Fin 1 => th) → ∃ th' : LB.Sec (LPow P'.A P'.L 1 (baseOver (Sp R'))), IsSecBasis _ (fun _ : Fin 1 => th') := by
   intro R R' _ _ P P' f ψ hp hw th hth
   obtain ⟨-, hL₂⟩ := GlobalTheory.abelianSchemeLaws_all
-  haveI : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
-  haveI : IsAffine (baseOver (Sp R')).left := inferInstanceAs (IsAffine (Sp R'))
+  have : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
+  have : IsAffine (baseOver (Sp R')).left := inferInstanceAs (IsAffine (Sp R'))
   have hgen : IsGenSec P.A P.L 1 th := fun s => by
     obtain ⟨r, hr, -⟩ := hth s
     exact ⟨r 0, fun j => (hr j).trans (Fin.sum_univ_one _)⟩

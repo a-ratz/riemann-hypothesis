@@ -94,7 +94,7 @@ theorem conjBessel_isTh : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
   have hC := GlobalTheory.T.flag_unipotent_bessel_character_laws D ψ hψ.1 B.V B.V₀ B.A B.L ρ B.d B.o B.ζ 1
   set z := vecB B.o B.ζ with hz
   refine ⟨?_, ?_, ?_, ?_⟩
-  · exact continuous_star.comp ((hC.1 z).comp continuous_subtype_val)
+  · exact continuous_star.comp ((hC.1 z).comp continuous_subtypeVal)
   · intro γ hγ hγN n hn
     rw [psiBes_mul B.d ψ 1 z hγN hn, hC.2.1 z γ hγ, one_mul]
   · intro c n hn

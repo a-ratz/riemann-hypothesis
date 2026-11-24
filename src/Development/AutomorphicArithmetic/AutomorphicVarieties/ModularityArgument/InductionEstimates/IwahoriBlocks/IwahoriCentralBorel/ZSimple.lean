@@ -187,16 +187,16 @@ variable {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (G1 K n)) 
 
 private theorem integrable_orbit {κ : Measure (archCompact K n)} {e : archCompact K n → ℂ} (hI : IdemA κ e) (v : L2 μ) :
     Integrable (fun k => e k • rightRegularRep (Gam K n) μ (arc1 k) v) κ := by
-  haveI := hI.haar.prob
-  haveI : CompactSpace (archCompact K n) := (levLaws (K := K) n ∅).2.2.2.2.1
+  have := hI.haar.prob
+  have : CompactSpace (archCompact K n) := (levLaws (K := K) n ∅).2.2.2.2.1
   have hc : Continuous fun k : archCompact K n => e k • rightRegularRep (Gam K n) μ (arc1 k) v :=
     hI.cont.smul (((rightRegularRep (Gam K n) μ).continuous_orbit v).comp (levLaws (K := K) n ∅).2.2.2.1)
   exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
 private theorem exists_clm {κ : Measure (archCompact K n)} {e : archCompact K n → ℂ} (hI : IdemA κ e) :
     ∃ T : L2 μ →L[ℂ] L2 μ, ∀ v, T v = pOp μ κ e v := by
-  haveI := hI.haar.prob
-  haveI : CompactSpace (archCompact K n) := (levLaws (K := K) n ∅).2.2.2.2.1
+  have := hI.haar.prob
+  have : CompactSpace (archCompact K n) := (levLaws (K := K) n ∅).2.2.2.2.1
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hI.cont.continuousOn
   let T : L2 μ →ₗ[ℂ] L2 μ :=
     { toFun := pOp μ κ e
@@ -380,16 +380,16 @@ private lemma orbit_finite [IsTopologicalGroup G] (π : UnitaryRep G H) {L L' : 
     refine ⟨(fun y => x⁻¹ * y) ⁻¹' (L' : Set G), hL'.preimage (by fun_prop), by simp, fun y hy => ?_⟩
     have : y = x * (x⁻¹ * y) := by simp
     rw [this, UnitaryRep.map_mul_apply, hm _ hy]
-  haveI : CompactSpace (L : Set G) := isCompact_iff_compactSpace.1 hL
+  have : CompactSpace (L : Set G) := isCompact_iff_compactSpace.1 hL
   rw [Set.image_eq_range]
-  exact (hlc.comp_continuous continuous_subtype_val).range_finite
+  exact (hlc.comp_continuous continuous_subtypeVal).range_finite
 
 private lemma mem_of_closure (π : UnitaryRep G H) (L : Subgroup G) (M E : Submodule ℂ H) [FiniteDimensional ℂ E]
     (hst : ∀ u ∈ L, ∀ m ∈ M, π u m ∈ M) (hfin : ∀ m ∈ M, ((fun u => π u m) '' (L : Set G)).Finite)
     (hE : ∀ m ∈ M, (∀ u ∈ L, π u m = m) → m ∈ E) {v : H} (hv : v ∈ closure (M : Set H))
     (hfix : ∀ u ∈ L, π u v = v) : v ∈ M := by
-  haveI : FiniteDimensional ℂ ↥(M ⊓ E) := Submodule.finiteDimensional_of_le inf_le_right
-  have hcl : IsClosed ((M ⊓ E : Submodule ℂ H) : Set H) := Submodule.closed_of_finiteDimensional _
+  have : FiniteDimensional ℂ ↥(M ⊓ E) := Submodule.finiteDimensional_of_le inf_le_right
+  have hcl : IsClosed ((M ⊓ E : Submodule ℂ H) : Set H) := Submodule.isClosed_of_finiteDimensional _
   suffices h : v ∈ closure ((M ⊓ E : Submodule ℂ H) : Set H) by
     rw [hcl.closure_eq] at h
     exact h.1
@@ -438,8 +438,8 @@ variable {K : Type} [Field K] [NumberField K] {n : ℕ}
 private lemma continuous_pOp (μ : Measure (G1 K n)) [μ.IsHaarMeasure] {κ : Measure (archCompact K n)}
     {p : archCompact K n → ℂ} (hp : IdemA κ p) : Continuous (pOp μ κ p) := by
   obtain ⟨-, -, -, harc, hcs, -⟩ := levLaws (K := K) n ∅
-  haveI := hcs
-  haveI := hp.haar.prob
+  have := hcs
+  have := hp.haar.prob
   have hi : ∀ v, Integrable (fun k => p k • rightRegularRep (Gam K n) μ (arc1 k) v) κ := fun v =>
     (hp.cont.smul (((rightRegularRep (Gam K n) μ).continuous_orbit v).comp harc)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
@@ -534,7 +534,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.xSimple 
       refine le_antisymm hQ fun φ hφ => ?_
       obtain ⟨-, -, -, U, hU, hφU⟩ := (hX _ _).1 hφ
       obtain ⟨hsur, E, hE, hEU⟩ := hJU U hU
-      haveI : FiniteDimensional ℂ ↥(E.comap (Xs μ τ κ p (im w)).subtype) :=
+      have : FiniteDimensional ℂ ↥(E.comap (Xs μ τ κ p (im w)).subtype) :=
         FiniteDimensional.of_injective
           (((Xs μ τ κ p (im w)).subtype.domRestrict (E.comap (Xs μ τ κ p (im w)).subtype)).codRestrict E fun a => a.2)
           fun a b h => Subtype.ext (Subtype.ext (congrArg (fun z : E => (z : G1 K 2 → ℂ)) h))
@@ -565,13 +565,13 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.xSimple 
       add_mem' := fun ha hb u hu g => by simp [ha u hu g, hb u hu g]
       zero_mem' := fun u hu g => rfl
       smul_mem' := fun c _ ha u hu g => by simp [ha u hu g] }
-  haveI : FiniteDimensional ℂ ↥(E.comap (Xs μ τ κ p (im w)).subtype) :=
+  have : FiniteDimensional ℂ ↥(E.comap (Xs μ τ κ p (im w)).subtype) :=
     FiniteDimensional.of_injective
           (((Xs μ τ κ p (im w)).subtype.domRestrict (E.comap (Xs μ τ κ p (im w)).subtype)).codRestrict E fun a => a.2)
           fun a b h => Subtype.ext (Subtype.ext (congrArg (fun z : E => (z : G1 K 2 → ℂ)) h))
-  haveI : FiniteDimensional ℂ F :=
+  have : FiniteDimensional ℂ F :=
     Submodule.finiteDimensional_of_le (S₂ := E.comap (Xs μ τ κ p (im w)).subtype) fun ψ hψ => hEU _ ψ.2 hψ
-  haveI : Nontrivial F := ⟨⟨⟨φ, hφU⟩, 0, fun h => hφ0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial F := ⟨⟨⟨φ, hφU⟩, 0, fun h => hφ0 (congrArg Subtype.val h)⟩⟩
   have hTF : ∀ ψ ∈ F, T ψ ∈ F := by
     intro ψ hψ u hu x
     obtain ⟨g, hg, hg'⟩ := hdec U u hu
@@ -953,7 +953,7 @@ variable {K : Type} [Field K] [NumberField K]
 
 private lemma pInt (μ : Measure (G1 K 2)) [μ.IsHaarMeasure] {κ : Measure (archCompact K 2)} {p : archCompact K 2 → ℂ}
     (hp : IdemA κ p) (v : L2 μ) : Integrable (fun k => p k • rightRegularRep (Gam K 2) μ (arc1 k) v) κ := by
-  haveI := hp.haar.prob
+  have := hp.haar.prob
   obtain ⟨-, -, -, harc, hcpt, -⟩ := levLaws (K := K) 2 ∅
   have hc : Continuous fun k => p k • rightRegularRep (Gam K 2) μ (arc1 k) v :=
     hp.cont.smul (((rightRegularRep (Gam K 2) μ).continuous_orbit v).comp harc)
@@ -961,7 +961,7 @@ private lemma pInt (μ : Measure (G1 K 2)) [μ.IsHaarMeasure] {κ : Measure (arc
 
 private lemma pClm (μ : Measure (G1 K 2)) [μ.IsHaarMeasure] {κ : Measure (archCompact K 2)} {p : archCompact K 2 → ℂ}
     (hp : IdemA κ p) : ∃ P : L2 μ →L[ℂ] L2 μ, ∀ v, P v = pOp μ κ p v := by
-  haveI := hp.haar.prob
+  have := hp.haar.prob
   obtain ⟨-, -, -, harc, hcpt, -⟩ := levLaws (K := K) 2 ∅
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hp.cont.continuousOn
   let P : L2 μ →ₗ[ℂ] L2 μ :=
@@ -1019,7 +1019,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.xOcc :
       ∃ (σ : SmIrr (Gw 2 (w i))) (f : σ.V →ₗ[ℂ] (G1 K 2 → ℂ)), Occurs μ τ (w i) σ ∧ f ≠ 0 ∧ (∀ v, f v ∈ Xs μ τ κ p (im w)) ∧
         ∀ g v, f (σ.ρ g v) = rS ι (Pi.mulSingle i g) (f v) := by
   intro K _ _ _ μ _ τ κ p hτ hp r w ι hw hι hX i
-  haveI : T2Space (G1 K 2) := by
+  have : T2Space (G1 K 2) := by
     set_option synthInstance.maxHeartbeats 100000 in
       infer_instance
   obtain ⟨hmem, hmem2⟩ := xMem μ τ κ p hp
@@ -1034,8 +1034,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.xOcc :
     (hJ2 u ⟨φ, hφ⟩ ⟨φ, hφ⟩ (fun x => (hfix u hu x).symm)).symm
   have hSum : IsSummand μ τ :=
     ⟨hτ.le, hτ.closed, fun g v hv => hτ.inv g v hv, hτ.ne, fun V' h1 h2 h3 => hτ.irr V' h1 h2 fun g v hv => h3 g v hv⟩
-  letI : MeasurableSpace (Gw 2 (w i)) := borel _
-  haveI : BorelSpace (Gw 2 (w i)) := ⟨rfl⟩
+  let : MeasurableSpace (Gw 2 (w i)) := borel _
+  have : BorelSpace (Gw 2 (w i)) := ⟨rfl⟩
   let K₀ : TopologicalSpace.PositiveCompacts (Gw 2 (w i)) :=
     ⟨⟨U (w i), (hU (w i)).1.1⟩, ⟨1, mem_interior_iff_mem_nhds.2 ((hU (w i)).1.2.mem_nhds (U (w i)).one_mem)⟩⟩
   obtain ⟨⟨σ, hσ⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds K 2 μ τ (w i) (Measure.haarMeasure K₀) hSum
@@ -1178,12 +1178,12 @@ open scoped TensorProduct Classical
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.schurSm :
     ∀ {K : Type} [Field K] [NumberField K] (n : ℕ) (w : Pl K) {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ (Gw n w) V), GlobalTheory.PRep.IsSmooth ρ → ρ.IsIrreducible → Schur ρ := by
   intro K _ _ n w V _ _ ρ hs hi T hT
-  haveI := hi
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion K)) :=
+  have := hi
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion K)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → w.adicCompletion K))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion K))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (w.adicCompletion K))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (Gw n w) :=
+  have : SecondCountableTopology (Gw n w) :=
     Units.isEmbedding_embedProduct.secondCountableTopology
   have hsm : GroundTheory.Automorphic.IsSmooth ρ := fun v => hs v
   let φ : Representation.IntertwiningMap ρ ρ :=
@@ -1242,7 +1242,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.locDat :
     change (leviTwo (w.adicCompletion K) (Fin 2) (Fin 2)).symm (leviProj _ _ _) = g
     rw [leviProj_leviEmb, MulEquiv.symm_apply_apply]
   have hR := irr_twist _ (lev₂ w) hsurj (dl w) hT.1 (hT.2 (schurSm 2 w σ₂.ρ σ₂.smooth σ₂.irred))
-  haveI : CharZero (w.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+  have : CharZero (w.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
   have hI : (smInd (PW w) (rhoW w σ₁ σ₂)).IsIrreducible :=
     UpperTheory.Lit.Mix.twoAt_charZero (w.adicCompletion K) 2 2 _ _ σ₁.ρ σ₂.ρ σ₁.smooth σ₁.irred u₁ σ₂.smooth σ₂.irred u₂
   refine ⟨⟨_, ⟨GlobalTheory.SplitFlip.isCompact_KO, GlobalTheory.SplitFlip.isOpen_KO⟩, fun g => ?_⟩, fun N hN => ?_, hR.1, hR.2, hI,
@@ -1795,12 +1795,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.finIwa :
   · by_cases hv : v ∈ im w
     · obtain ⟨l, -, rfl⟩ := Finset.mem_image.1 hv
       beta_reduce
-      rw [if_pos hv]
+      rw [ite_eq_left hv]
       change GM.cf (w l) u ∈ U (w l)
       rw [hu l]
       exact one_mem _
     · beta_reduce
-      rw [if_neg hv]
+      rw [ite_eq_right hv]
       change GM.cf v u ∈ _
       rw [hu1 v hv]
       exact hc.2 v

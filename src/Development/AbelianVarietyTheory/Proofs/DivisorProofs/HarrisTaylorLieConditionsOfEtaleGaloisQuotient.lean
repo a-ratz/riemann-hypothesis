@@ -86,8 +86,8 @@ theorem existsUnique_dual_lift {R' : Type} [CommRing R'] {A B : Over S} [GrpObj 
 
 theorem lie_of_etale : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : Base D R) (M : ℕ) (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b M s) (A' : Over S) [GrpObj A'] [IsCommMonObj A'] (act' : OActN D.O A') (ψ : o.A ⟶ A') (Ga : Type) [Group Ga] (ρ : Ga → (o.A.left ⟶ o.A.left)), IsAbelianScheme A' → IsMonHom ψ → GlobalTheory.ZM.IsGaloisCover Ga ρ ψ.left → (∀ c' : D.O, o.act.act c' ≫ ψ = ψ ≫ act'.act c') → (∀ (R' : Type) [CommRing R'] (β : R →+* R') (x : Sp R' ⟶ S), x ≫ s = spMap β → ∀ v : epsPtR x ⟶ A', IsTanScal act' x (algebraMap (𝓞 D.F) D.O D.ω) (β b.ρ) v → ∃ w : Fin D.a → (epsPtR x ⟶ A'), (∀ i, ∀ c : 𝓞 D.F, IsTanScal act' x (algebraMap (𝓞 D.F) D.O c) (β (b.t i c)) (w i)) ∧ v = (List.ofFn w).prod) ∧ (∀ (κ : Type) [Field κ] [IsAlgClosed κ] (x : Sp κ ⟶ S) (β : R →+* κ), x ≫ s = spMap β → ∀ i, LieMult (act'.toF D) x (β.comp (b.t i)) D.m) := by
   intro p _ D R _ b M S s o A' _ _ act' ψ Ga _ ρ _hab hψ hG hact
-  haveI := hψ
-  haveI : Etale ψ.left := hG.etale
+  have := hψ
+  have : Etale ψ.left := hG.etale
   refine ⟨?_, ?_⟩
   · intro R' _ β x hx v hv
     obtain ⟨l, ⟨hl₁, hl₂⟩, -⟩ := existsUnique_dual_lift ψ x v.left hv.1
@@ -99,7 +99,7 @@ theorem lie_of_etale : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Da
       have hh : spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫ (spMap (epsScaleR (β b.ρ)) ≫ v.left) =
           (1 : Over.mk x ⟶ A').left := by
         rw [← Category.assoc, fst_spMap_epsScaleR, hv.1]
-      haveI := o.act.hom (algebraMap (𝓞 D.F) D.O D.ω)
+      have := o.act.hom (algebraMap (𝓞 D.F) D.O D.ω)
       refine (existsUnique_dual_lift ψ x _ hh).unique ⟨?_, ?_⟩ ⟨?_, ?_⟩
       · show _ ≫ l ≫ (o.act.act _).left = _
         rw [← Category.assoc, hl₁]

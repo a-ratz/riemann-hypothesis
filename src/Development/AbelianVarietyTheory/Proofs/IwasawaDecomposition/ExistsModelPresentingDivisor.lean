@@ -61,9 +61,9 @@ namespace GlobalTheory.ShFam.Pad
 variable {F : Type} [Field F] [NumberField F]
 
 theorem residueCharacteristic_prime (v : HeightOneSpectrum (𝓞 F)) : (resP v).Prime := by
-  haveI := v.isMaximal
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have := v.isMaximal
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
   exact CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) _
 
 theorem residueCharacteristic_mem (v : HeightOneSpectrum (𝓞 F)) : ((resP v : ℕ) : 𝓞 F) ∈ v.asIdeal := by
@@ -105,7 +105,7 @@ theorem log_w_eq (p : ℕ) [hp : Fact p.Prime] {v : HeightOneSpectrum (𝓞 F)} 
 
 theorem ioOf_spec : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (ε : Ext v), ∃ hp : (resP v).Prime, haveI := Fact.mk hp; (∀ a, ‖ioOf (resP v) ε a‖ ≤ 1 ↔ a ∈ ε.O) ∧ ∀ a, Real.log (ε.w a) = (-Real.log (ε.w (resP v)) / Real.log (resP v)) * Real.log ‖ioOf (resP v) ε a‖ := fun _ _ _ v ε =>
   ⟨residueCharacteristic_prime v, by
-    haveI := Fact.mk (residueCharacteristic_prime v)
+    have := Fact.mk (residueCharacteristic_prime v)
     exact ⟨ioOf_le_one_iff _ (residueCharacteristic_mem v) ε, log_w_eq _ ε _ (ioOf_le_one_iff _ (residueCharacteristic_mem v) ε)⟩⟩
 
 end GlobalTheory.ShFam.Pad
@@ -220,7 +220,7 @@ theorem lgCopy_eq (w : Sym E →₀ ℤ) (v : HeightOneSpectrum (𝓞 F)) (ε : 
       (eqn (divOf C (expo Dw w)) (below y.1))⁻¹ : C.Y.Fnˣ) : C.Y.Fn))) +
       ∑ a ∈ w.support, (w a : ℝ) * symLog C a.1 a.2.2 v ε y := by
   obtain ⟨hp, -⟩ := GlobalTheory.ShFam.Pad.ioOf_spec F v ε
-  simp only [lgCopy, symLog, dif_pos hp]
+  simp only [lgCopy, symLog, dite_eq_left hp]
   refine congrArg₂ (fun a b : ℝ => a + b) rfl ?_
   refine (mul_finsupp_sum _ _ _).trans ?_
   refine Finset.sum_congr rfl fun a _ => ?_

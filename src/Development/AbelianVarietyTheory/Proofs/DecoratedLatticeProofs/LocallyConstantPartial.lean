@@ -216,8 +216,8 @@ theorem exists_integral_split {G X Y : Type} [AddCommGroup G] [TopologicalSpace 
     ∃ c : ℂ, ∀ (u : X → ℂ) (v : Y → ℂ), Integrable u μ → Integrable v ν →
       Integrable (fun z => u (e z).1 * v (e z).2) m ∧
         ∫ z, u (e z).1 * v (e z).2 ∂m = c * ((∫ x, u x ∂μ) * ∫ y, v y ∂ν) := by
-  haveI : (μ.prod ν).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μ ν
-  haveI : (m.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map m
+  have : (μ.prod ν).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μ ν
+  have : (m.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map m
   have h := Measure.isAddLeftInvariant_eq_smul (m.map e) (μ.prod ν)
   have he : MeasurableEmbedding e := e.toHomeomorph.measurableEmbedding
   refine ⟨((Measure.addHaarScalarFactor (m.map e) (μ.prod ν) : ℝ) : ℂ), fun u v hu hv => ⟨?_, ?_⟩⟩

@@ -127,7 +127,7 @@ theorem genIdxH_map (i : U →ₗ[K] V) (hi : Function.Injective i) (A B : Submo
   have hRK : Function.Injective (algebraMap (𝓞 K) K) := IsFractionRing.injective (𝓞 K) K
   unfold genIdxH
   refine finprod_congr fun P => ?_
-  haveI := P.isPrime
+  have := P.isPrime
   rw [lidx_map hRK i hi]
 
 theorem mem_dual (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) (x : V) :

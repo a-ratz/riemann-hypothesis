@@ -505,7 +505,7 @@ theorem strong_approx_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hconst : unipFlag σ J Cc d = unipRad σ J Cc := by rw [hdd]; exact unipFlag_const Cc 0
   refine ⟨Subtype.val '' (f ⁻¹' ((fun x => (x, MulOpposite.op (adjA σ J x))) '' K')),
     (hf.isCompact_preimage' (hK'.image (continuous_id.prodMk (MulOpposite.continuous_op.comp hcont))) ?_).image
-      continuous_subtype_val, fun m hm => ?_⟩
+      continuous_subtypeVal, fun m hm => ?_⟩
   · rintro _ ⟨x, hx, rfl⟩
     exact ⟨lift x (k1 x hx), rfl⟩
   · rw [← hconst] at hm

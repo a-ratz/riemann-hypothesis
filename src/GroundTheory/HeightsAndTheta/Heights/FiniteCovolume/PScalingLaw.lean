@@ -93,7 +93,7 @@ theorem continuous_len_inv_smul {h : HermitianForm F E W} {v : Basis ι E W} (M 
     (y : InfinitePlace E → ι → ℂ) : Continuous fun g : archUnitary h v => M.len (g⁻¹ • y) := by
   have hw : ∀ w, Continuous fun g : archUnitary h v => (g⁻¹ • y) w := fun w =>
     (Units.continuous_val.comp ((continuous_apply w).comp
-      (continuous_subtype_val.comp continuous_inv))).matrix_mulVec continuous_const
+      (continuous_subtypeVal.comp continuous_inv))).matrix_mulVec continuous_const
   unfold Majorant.len
   refine Real.continuous_sqrt.comp (continuous_finsetSum _ fun w _ => ?_)
   exact Complex.continuous_re.comp
@@ -186,7 +186,7 @@ theorem ScalingLaw.proof (h : HermitianForm F E W) (v : Basis ι E W) [FiniteDim
         rw [archEmbed_smul_vecAt]
         exact congrArg (vecAt v) (MulAction.mem_stabilizer_iff.1 hε)
       have hb' := (inv_smul_eq_iff.2 hb.symm).symm
-      simp only [belowIndicator, Set.indicator_apply, Set.mem_setOf_eq, _root_.mul_inv_rev, mul_smul,
+      simp only [belowIndicator, Set.indicator_apply, Set.mem_ofPred_eq, _root_.mul_inv_rev, mul_smul,
         ← hb', Pi.one_apply]
     rw [h₃ μ Γ _ hle FD FD₀ hFD hFD₀ _ (measurable_belowIndicator M (vecAt v y) t) hinv,
       belowIndicator, lintegral_indicator_one (measurableSet_below M _ t),
@@ -245,7 +245,7 @@ theorem ScalingLaw.proof (h : HermitianForm F E W) (v : Basis ι E W) [FiniteDim
     refine Finset.sum_congr rfl fun o ho => ?_
     rw [tsum_orbit_eq_tsum_quotient (vecAt v (Y o)) o (hYo o ho) _ (stabilizer_vecAt h v La (Y o))]
     refine tsum_congr fun q => ?_
-    simp only [belowIndicator, Set.indicator_apply, Set.mem_setOf_eq, _root_.mul_inv_rev, inv_inv,
+    simp only [belowIndicator, Set.indicator_apply, Set.mem_ofPred_eq, _root_.mul_inv_rev, inv_inv,
       mul_smul]
     rfl
   have hm : ∀ t : ℝ, 0 < t → massBelow M μ FD VV t =
@@ -254,7 +254,7 @@ theorem ScalingLaw.proof (h : HermitianForm F E W) (v : Basis ι E W) [FiniteDim
     rw [massBelow, lintegral_congr fun g => hcount g t, MeasureTheory.lintegral_finsetSum]
     · exact Finset.sum_congr rfl fun o ho => hCeq (Y o) (hSV (hYS o ho)) t ht
     · intro o ho
-      letI := hQc ((vecStabGroup h v La (Y o)).subgroupOf Γ)
+      let := hQc ((vecStabGroup h v La (Y o)).subgroupOf Γ)
       exact Measurable.tsum fun q =>
         (measurable_belowIndicator M _ t).comp (measurable_const_mul _)
   refine ⟨FD, hFD, fun t ht => ⟨?_, fun θ hθ => ?_⟩⟩

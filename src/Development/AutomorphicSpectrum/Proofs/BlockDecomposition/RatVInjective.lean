@@ -81,7 +81,7 @@ theorem ratV_injective : Function.Injective (ratV F : (Fin n → E) → Fin n �
   intro u v h
   funext i
   obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
-  haveI : Nontrivial (AF F) := (evInf F w : AF F →+* w.Completion).domain_nontrivial
+  have : Nontrivial (AF F) := (evInf F w : AF F →+* w.Completion).domain_nontrivial
   exact Algebra.TensorProduct.includeRight_injective (algebraMap F (AF F)).injective (congrFun h i)
 
 variable {σ J}

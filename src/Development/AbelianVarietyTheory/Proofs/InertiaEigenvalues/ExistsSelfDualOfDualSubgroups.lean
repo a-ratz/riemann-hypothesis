@@ -64,9 +64,9 @@ theorem _root_.GlobalTheory.JR.AbsInv.exists_nhds_invariant {f : V → ℂ}
   obtain ⟨hlc, hcs⟩ := hf'
   have hK : IsCompact (tsupport f) := hcs
   have hfin : (f '' tsupport f).Finite := by
-    haveI : CompactSpace (tsupport f) := isCompact_iff_compactSpace.mp hK
+    have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.mp hK
     have hloc : IsLocallyConstant (f ∘ ((↑) : tsupport f → V)) :=
-      hlc.comp_continuous continuous_subtype_val
+      hlc.comp_continuous continuous_subtypeVal
     have := hloc.range_finite
     rwa [Set.range_comp, Subtype.range_coe] at this
   have hW : ∀ c : ℂ, ∃ W ∈ 𝓝 (0 : V), c ≠ 0 → {x | f x = c} + W ⊆ {x | f x = c} := by
@@ -309,10 +309,10 @@ theorem _root_.GlobalTheory.JR.AbsInv.exists_selfDual (B : V → V → ℂ)
     rw [hc, Ne, ENNReal.ofReal_eq_zero, not_le]
     exact inv_pos.2 hr0
   have hct : c ≠ ⊤ := hc ▸ ENNReal.ofReal_ne_top
-  haveI : (c • ν).IsAddHaarMeasure := Measure.IsAddHaarMeasure.smul ν hc0 hct
+  have : (c • ν).IsAddHaarMeasure := Measure.IsAddHaarMeasure.smul ν hc0 hct
   have hreal : ∀ A : Set V, (c • ν).real A = r⁻¹ * ν.real A := by
     intro A
-    rw [measureReal_def, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, hc,
+    rw [measureReal_def, smul_apply, smul_eq_mul, ENNReal.toReal_mul, hc,
       ENNReal.toReal_ofReal (inv_nonneg.2 hr0.le), measureReal_def]
   have hone : (c • ν).real M₀ * (c • ν).real N₀ = 1 := by
     rw [hreal, hreal]

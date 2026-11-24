@@ -205,8 +205,8 @@ theorem continuous_form_left (Q : Matrix α α E) (w' : Matrix α (ν ⊕ ν) E)
 
 theorem heisFun_mem {ψ : AddChar F ℂ} (hψ : Continuous ψ) (Q : Matrix α α E) (w : Matrix α (ν ⊕ ν) E)
     {φ : Matrix α ν E → ℂ} (hφ : φ ∈ SB (Matrix α ν E)) : heisFun c ψ Q w φ ∈ SB (Matrix α ν E) := by
-  haveI := IsModuleTopology.topologicalAddGroup F E
-  haveI := GlobalTheory.WeilM.nonarch_field F
+  have := IsModuleTopology.isTopologicalAddGroup F E
+  have := GlobalTheory.WeilM.nonarch_field F
   have h1 := (GlobalTheory.WeilM.isLocallyConstant_addChar ψ hψ).comp_continuous
     ((continuous_form_left c Q (fromCols 0 w.toCols₂)).add (continuous_const
       (y := 2⁻¹ * form c Q (fromCols w.toCols₁ 0) (fromCols 0 w.toCols₂))))

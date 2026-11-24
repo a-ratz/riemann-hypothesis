@@ -68,9 +68,9 @@ theorem GlobalTheory.CompanionTheory.MixZ.volume_chart_zeroSet_fnOf : ∀ (X : S
   · have ht : c.e.target = ∅ := by rw [← c.e.image_source_eq_target, hs, Set.image_empty]
     simp [ht]
   have sectionFrameQuotient := mem_ptsIn.1 (c.source_subset hy0)
-  haveI : Nonempty c.U := ⟨⟨_, sectionFrameQuotient⟩⟩
+  have : Nonempty c.U := ⟨⟨_, sectionFrameQuotient⟩⟩
   have hgU : genericPoint X ∈ c.U := gen_mem sectionFrameQuotient
-  haveI := functionField_isFractionRing_of_isAffineOpen X c.U c.affine
+  have := functionField_isFractionRing_of_isAffineOpen X c.U c.affine
   obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (A := Γ(X, c.U)) (fnOf W h g)
   have hal : ∀ t : Γ(X, c.U), algebraMap Γ(X, c.U) X.functionField t = fnOf c.U hgU t :=
     fun _ => rfl

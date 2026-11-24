@@ -78,7 +78,7 @@ theorem haar_of_proper {p q n : ℕ} (T : GrpData p q) (ε : Fin n → Bool) (μ
     refine Filter.hasBasis_cocompact.tendsto_right_iff.2 fun K hK => ?_
     have hK' : IsCompact (π ⁻¹' K) := hp.isCompact_preimage hK
     exact hK'.compl_mem_cocompact
-  haveI hν : (Measure.map π T.haar).IsHaarMeasure := Measure.isHaarMeasure_map T.haar π hc hs ht
+  have hν : (Measure.map π T.haar).IsHaarMeasure := Measure.isHaarMeasure_map T.haar π hc hs ht
   refine ⟨Measure.haarScalarFactor (Measure.map π T.haar) μ,
     (Measure.haarScalarFactor_pos_of_isHaarMeasure _ _).ne', hp.isClosedMap.isQuotientMap hc hs,
     hc.measurable, ?_⟩

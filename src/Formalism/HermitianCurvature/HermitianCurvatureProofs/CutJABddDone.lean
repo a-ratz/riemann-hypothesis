@@ -471,7 +471,7 @@ theorem dLR_smulc (A : F) (u w : List (B.Mat k r)) (f : B.Mat k r → ℂ) :
   let L : ℂ →L[ℝ] F := ((ContinuousLinearMap.id ℂ ℂ).smulRight A).restrictScalars ℝ
   let L' : F →L[ℝ] ℂ := ((((‖A‖ : ℝ) : ℂ))⁻¹ • ℓ).restrictScalars ℝ
   have hL : ∀ y, L' (L y) = y := fun y => by
-    simp only [L, L', ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smul_apply,
+    simp only [L, L', ContinuousLinearMap.coe_restrictScalars', smul_apply,
       ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, map_smul, hℓ, smul_eq_mul]
     field_simp
     norm_cast
@@ -512,7 +512,7 @@ theorem scal_real (S : C.HidaSetting E Wp Wq) (T : ∀ v : Fin S.f, D.LevTower S
     (fun g => conj (φ g) • ContinuousLinearMap.id ℂ (Wq (S.pl v) →L[ℂ] Wp (S.pl v)))
     (fun ρ π q => if ρ = π then evD (D.parOf S v) q β else 0) _ hFr ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ ?_
   · intro x A B'
-    simp only [B.hsInner, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply,
+    simp only [B.hsInner, smul_apply, ContinuousLinearMap.id_apply,
       P.TBBx2.Tri.hsVec_smul, inner_smul_left, inner_smul_right, Complex.conj_conj]
   · intro g₀ hg₀
     obtain ⟨U, φ', hU, hg, hφ', he⟩ := hφ.1 g₀ hg₀
@@ -525,10 +525,10 @@ theorem scal_real (S : C.HidaSetting E Wp Wq) (T : ∀ v : Fin S.f, D.LevTower S
         show conj (φ g) • _ = φ' g • _
         rw [show conj (φ g) = φ' g from he g hgU hgG]⟩
   · intro p hp g _ X
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, hinv p hp g,
+    simp only [smul_apply, ContinuousLinearMap.id_apply, hinv p hp g,
       ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_comp]
   · intro p hp g _ X
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, hinv p hp g,
+    simp only [smul_apply, ContinuousLinearMap.id_apply, hinv p hp g,
       ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_comp]
   · intro ε hε m
     obtain ⟨C, hC⟩ := hφ.2 ε hε m
@@ -543,7 +543,7 @@ theorem scal_real (S : C.HidaSetting E Wp Wq) (T : ∀ v : Fin S.f, D.LevTower S
     exact (norm_smul_le _ _).trans ((mul_le_of_le_one_right (norm_nonneg _) ContinuousLinearMap.norm_id_le).trans
       (hC u w hu hw hl g hg hG))
   · intro q hq ρ π
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, P.TBBx2.Tri.hsVec_smul,
+    simp only [smul_apply, ContinuousLinearMap.id_apply, P.TBBx2.Tri.hsVec_smul,
       inner_smul_right, (hFr.2 q.2 hq.2).2.1 ρ π, hval q hq]
     split_ifs <;> simp
   · intro ρ π

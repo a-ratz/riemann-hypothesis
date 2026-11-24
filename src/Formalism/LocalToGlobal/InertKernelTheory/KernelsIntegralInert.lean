@@ -209,7 +209,7 @@ theorem matH_hOne (L : PeriodPair) (n : Type) [Fintype n] [DecidableEq n] :
 theorem stdH_apply' (L : PeriodPair) {N : Type*} [Fintype N] [DecidableEq N] (z w : N → ℂ) :
     Formalism.L2.Th1.H.stdH L N z w = ∑ i, z i * ((Formalism.L2.Th1.F.area L : ℝ) : ℂ)⁻¹ * conj (w i) := by
   simp only [Formalism.L2.Th1.H.stdH, matH, LinearMap.mk₂'ₛₗ_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul,
-    mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem ne_zero_of_coprime {n p : ℕ} (hp : p.Prime) (h : Nat.Coprime n p) : n ≠ 0 := by
   rintro rfl
@@ -566,7 +566,7 @@ theorem not_sq_padic (d p : ℕ) [Fact p.Prime] (hj : jacobiSym (-(d : ℤ)) p =
 theorem exists_aut_neg (d p : ℕ) [Fact p.Prime] (hj : jacobiSym (-(d : ℤ)) p = -1) (β : PadicAlgCl p)
     (hβ : β ^ 2 = -(d : PadicAlgCl p)) : ∃ τ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p, τ β = -β := by
   have hirr : Irreducible (Polynomial.X ^ 2 - Polynomial.C (-(d : ℚ_[p]))) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two (fun b hb => not_sq_padic d p hj b hb)
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two (fun b hb => not_sq_padic d p hj b hb)
   have hmon : (Polynomial.X ^ 2 - Polynomial.C (-(d : ℚ_[p]))).Monic :=
     Polynomial.monic_X_pow_sub_C _ two_ne_zero
   have h1 := minpoly.eq_of_irreducible_of_monic (x := β) hirr (by simp [hβ]) hmon
@@ -611,7 +611,7 @@ theorem conjugation_extension_inert : ConjExt := by
   let L : D.host.E →+* ℂ_[p] := lam.comp (D.host.φ₀.codRestrict Qbar.toSubring (fun z => phi0_algebraic D z))
   have hL : ∀ x, L x = lamC lam (D.host.φ₀ x) := by
     intro x
-    simp only [lamC, dif_pos (phi0_algebraic D x)]
+    simp only [lamC, dite_eq_left (phi0_algebraic D x)]
     rfl
   set b : D.host.E := D.host.sqd with hbdef
   have hb2 : b ^ 2 = -(D.host.d : D.host.E) := Formalism.BasicNotions.Examples₂.bE_sq D.host
@@ -998,7 +998,7 @@ theorem frameONB_of (hLB : LocBasisMM) (hRC : RatCoord) (hFC : FixConj) : FrameO
           e.sum_comp (fun m => Bb τ m * (if i' = x.1 then Q m x.2 else 0))
         rw [h3]
         by_cases h : i' = x.1
-        · simp only [h, if_true]
+        · simp only [h, ite_true]
           exact hBQ τ x.2
         · simp [h]
       rw [h1, h2, hcross x i' τ, sub_self]
@@ -1043,14 +1043,14 @@ theorem frameONB_of (hLB : LocBasisMM) (hRC : RatCoord) (hFC : FixConj) : FrameO
     intro τ τ''
     have h := congrFun (congrFun (hmain.symm.trans hA2) (0, τ)) (0, τ'')
     rw [Matrix.sum_apply, Matrix.one_apply, Finset.sum_eq_single (0 : Fin 4)] at h
-    · simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.of_apply, if_true,
+    · simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.of_apply, ite_true,
         Prod.mk.injEq, true_and] at h
       rw [← h, Finset.sum_comm]
       try simp only [Finset.sum_mul]
     · intro i' _ hi'
       have hne : ¬ i' = ((0 : Fin 4), τ).1 := hi'
       have hne' : ¬ i' = ((0 : Fin 4), τ'').1 := hi'
-      simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.of_apply, hne, hne', if_false,
+      simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.of_apply, hne, hne', ite_false,
         map_zero, mul_zero, zero_mul, Finset.sum_const_zero]
     · intro h0
       exact absurd (Finset.mem_univ _) h0
@@ -1172,7 +1172,7 @@ theorem transOne (hComb : CombFact) (hPair : PairFact) (hWA : WeakApprox) (hPT :
     (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E))
     (hA : admitted D N N' L L') (t : VC D N N') (ht : TorsPrime D p (La D B.tor L L') t) :
     IntS D B.tor p lam L L' (pSer D lam (U D B.tor t (B.eNat χ N N' L L'))) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨γ, γ', M, M', hAM, hE, hE', rfl, rfl⟩ := hWA D p hp hin N N' L L' hA
   have hEq : Formalism.MainNotions.TaylorLogMetric.eq22 D B.tor χ (B.eNat χ) := Formalism.L2.PairingIndexBounds.Eq.SqG.eulerProduct_eq_of_curve_ideal B hcc hδ χ hχ
   obtain ⟨h1, -, -⟩ := hEq
@@ -1313,11 +1313,11 @@ theorem atLogVA_blk {r : ℕ} (v : Fin r → (D.what₂.Tau × Fin m' × Fin m �
   simp only [atLogVA, map_sum, map_mul, AlgHom.commutes]
   rw [sum_eIdx, Finset.sum_eq_single (I, J)]
   · refine Finset.sum_congr rfl fun k' _ => ?_
-    rw [rename_psubst _ (MvPowerSeries.constantCoeff_X k'), MvPowerSeries.rename_X, hv₄, if_pos rfl]
+    rw [rename_psubst _ (MvPowerSeries.constantCoeff_X k'), MvPowerSeries.rename_X, hv₄, ite_eq_left rfl]
     rfl
   · intro P _ hne
     refine Finset.sum_eq_zero fun k' _ => ?_
-    rw [hv₄, if_neg hne]
+    rw [hv₄, ite_eq_right hne]
     simp
   · simp
 
@@ -1393,7 +1393,7 @@ theorem isLocONB_blk (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]
     by_cases h : P = P'
     · subst h; simp
     · have : ¬ (P.1 = P'.1 ∧ P.2 = P'.2) := fun h' => h (Prod.ext h'.1 h'.2)
-      rw [if_neg this, if_neg h, lamC_phi_zero]
+      rw [ite_eq_right this, ite_eq_right h, lamC_phi_zero]
 
 theorem fourProd_main : FourProd := by
   intro D cc δ B hcc hδ p _ hp5 hin lam σ r v hσ hv H
@@ -1647,7 +1647,7 @@ theorem inv_ePhi1 (he1 : PowerSeries.constantCoeff (ePhi1 g.lam g.abelian₂ g.C
 theorem ePh_eq (he1 : PowerSeries.constantCoeff (ePhi1 g.lam g.abelian₂ g.C g.wq) = 1) (hp : p ≠ 2) (r : ℕ) :
     ePh g.lam g.abelian₂ g.C g.wq r = Formalism.MainNotions.TaylorLogMetric.expMv (∑ i : Fin r, g.phAt (Xv i)) := by
   unfold ePh
-  rw [if_neg hp, expMv_sum Finset.univ (fun i : Fin r => (g.phAt (Xv i) : MvPowerSeries (Fin r) ℂ_[p]))
+  rw [ite_eq_right hp, expMv_sum Finset.univ (fun i : Fin r => (g.phAt (Xv i) : MvPowerSeries (Fin r) ℂ_[p]))
     (fun i => PowerSeries.constantCoeff_subst_eq_zero (by simp) _ (ph0 g))]
   exact Finset.prod_congr rfl fun i _ => inv_ePhi1 g he1 (by simp)
 

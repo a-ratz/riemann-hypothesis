@@ -118,9 +118,9 @@ theorem besselOp_mem : besselOp l ∈ weylAlg l :=
 theorem weightOp_apply (f : Sch l) (x : EuclideanSpace ℝ l) :
     weightOp l f x = ((1 + ‖x‖ ^ 2 : ℝ) : ℂ) * f x := by
   have hπ : (π : ℂ) ≠ 0 := by simp [Real.pi_ne_zero]
-  simp only [weightOp, ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.mul_apply, ContinuousLinearMap.one_apply, SchwartzMap.sub_apply, SchwartzMap.smul_apply,
-    SchwartzMap.sum_apply, dRho_single_inr, smul_eq_mul, EuclideanSpace.real_norm_sq_eq]
+  simp only [weightOp, sub_apply, smul_apply, sum_apply,
+    mul_apply_eq_comp, one_apply_eq_self, sub_apply, smul_apply,
+    sum_apply, dRho_single_inr, smul_eq_mul, EuclideanSpace.real_norm_sq_eq]
   push_cast
   rw [add_mul, one_mul, Finset.mul_sum, Finset.sum_mul, sub_eq_add_neg, ← Finset.sum_neg_distrib]
   congr 1
@@ -134,7 +134,7 @@ theorem weightOp_pow_apply (k : ℕ) (f : Sch l) (x : EuclideanSpace ℝ l) :
   induction k with
   | zero => simp
   | succ k ih =>
-    rw [pow_succ', ContinuousLinearMap.mul_apply, weightOp_apply, ih]
+    rw [pow_succ', mul_apply_eq_comp, weightOp_apply, ih]
     push_cast
     ring
 
@@ -156,15 +156,15 @@ theorem fourierInv_besselOp (f : Sch l) : 𝓕⁻ (besselOp l f) = weightOp l (�
   have h := fourierInv_dRho_inl (l := l)
   simp only [hF] at h ⊢
 
-  simp only [besselOp, weightOp, ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
-  ContinuousLinearMap.sum_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.one_apply, map_sub, map_smul,
+  simp only [besselOp, weightOp, sub_apply, smul_apply,
+  sum_apply, mul_apply_eq_comp, one_apply_eq_self, map_sub, map_smul,
   map_sum, h, map_neg, neg_neg]
 
 theorem fourierInv_besselOp_pow (k : ℕ) (f : Sch l) : 𝓕⁻ ((besselOp l ^ k) f) = (weightOp l ^ k) (𝓕⁻ f) := by
   induction k with
   | zero => simp
   | succ k ih =>
-    rw [pow_succ', pow_succ', ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, fourierInv_besselOp, ih]
+    rw [pow_succ', pow_succ', mul_apply_eq_comp, mul_apply_eq_comp, fourierInv_besselOp, ih]
 
 theorem exists_norm_toLp_one_le :
     ∃ (N : ℕ) (C : ℝ), 0 ≤ C ∧ ∀ f : Sch l, ‖f.toLp 1 volume‖ ≤ C * ‖((weightOp l ^ N) f).toLp 2 volume‖ := by
@@ -200,7 +200,7 @@ theorem exists_norm_apply_le :
   rw [FourierTransform.fourier_fourierInv_eq] at h1
   refine h1.trans ((h _).trans (le_of_eq ?_))
   rw [← fourierInv_besselOp_pow, ← norm_fourier_toL2_eq, FourierTransform.fourier_fourierInv_eq,
-    ContinuousLinearMap.smul_apply, ← toLpCLM_apply (𝕜 := ℂ), ← toLpCLM_apply (𝕜 := ℂ), map_smul, norm_smul,
+    smul_apply, ← toLpCLM_apply (𝕜 := ℂ), ← toLpCLM_apply (𝕜 := ℂ), map_smul, norm_smul,
     norm_real, Real.norm_of_nonneg hC]
 
 theorem norm_multilinear_le {n : ℕ} (m : ContinuousMultilinearMap ℝ (fun _ : Fin n => EuclideanSpace ℝ l) ℂ) :
@@ -361,8 +361,8 @@ theorem omS_dRho
   have key : ∀ φ : Sch l, inner ℂ (φ.toLp 2 volume) ((omS g (dRho w f)).toLp 2 volume) =
       inner ℂ (φ.toLp 2 volume) ((dRho ((pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) *ᵥ w) (omS g f)).toLp 2 volume) := fun φ => by
     have e : ∀ v : L2 l, inner ℂ ((omS g⁻¹ φ).toLp 2 volume) v = inner ℂ (φ.toLp 2 volume) (om g v) := fun v => by
-      rw [← (om g).inner_map_map, h4, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-        ContinuousLinearMap.one_apply]
+      rw [← (om g).inner_map_map, h4, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+        one_apply_eq_self]
     have d1 := hasDerivAt_inner_rho w (omS g⁻¹ φ) f
     have d2 := hasDerivAt_inner_rho ((pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) *ᵥ w) φ (omS g f)
     simp only [e, h3, h4, mulVec_smul] at d1
@@ -384,10 +384,10 @@ theorem toLp_dRho_omS
       ((-(Matrix.J l ℝ * (pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ)ᵀ * Matrix.J l ℝ)) *ᵥ w) = w := by
     rw [mulVec_mulVec, mul_neg, ← Matrix.mul_assoc, ← Matrix.mul_assoc,
       SymplecticGroup.mem_iff.1 (pr g).2, J_squared, neg_neg, one_mulVec]
-  rw [ContinuousLinearMap.mul_apply]
+  rw [mul_apply_eq_comp]
   conv_lhs => rw [← h1, ← omS_dRho h3 h4, dRho_eq_sum]
 
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, map_sum, map_smul]
+  simp only [sum_apply, smul_apply, map_sum, map_smul]
 
 theorem contDiff_toLp_omS
     (h3 : ∀ (g : G) (w : l ⊕ l → ℝ) (f : L2 l),
@@ -400,7 +400,7 @@ theorem contDiff_toLp_omS
   revert f
   refine weylAlg_induction (P := fun A => ∀ f, ContDiff ℝ ∞ fun t => schwartzToL2 l (A (omS (γ t) f))) ?_ ?_ ?_ ?_ ?_ hA
   · intro f
-    simpa only [h4, ContinuousLinearMap.one_apply, schwartzToL2_apply] using h5 f
+    simpa only [h4, one_apply_eq_self, schwartzToL2_apply] using h5 f
   · intro A w ih f
     simp only [toLp_dRho_omS h3 h4, coe_smul]
     refine ContDiff.sum fun a _ => ContDiff.fun_smul ?_ (ih _)
@@ -408,19 +408,19 @@ theorem contDiff_toLp_omS
     exact ContDiff.sum fun b _ => ContDiff.mul (ContDiff.neg (ContDiff.sum fun c _ => ContDiff.mul
       (ContDiff.sum fun d _ => contDiff_const.mul (hγ _ _)) contDiff_const)) contDiff_const
   · intro f
-    simp only [ContinuousLinearMap.zero_apply]
+    simp only [zero_apply]
     exact contDiff_const
   · intro A B hA hB f
-    simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+    simp only [add_apply, map_add (f := _)]
     exact (hA f).add (hB f)
   · intro c A hA f
-    simp only [ContinuousLinearMap.smul_apply, map_smul]
+    simp only [smul_apply, map_smul]
     exact (hA f).const_smul c
 
 theorem hasDerivAt_exp_apply (X : Matrix (l ⊕ l) (l ⊕ l) ℝ) (a b : l ⊕ l) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp (t • X) a b) (X a b) 0 := by
-  letI := Matrix.linftyOpNormedRing (n := l ⊕ l) (α := ℝ)
-  letI := Matrix.linftyOpNormedAlgebra (n := l ⊕ l) (R := ℝ) (α := ℝ)
+  let := Matrix.linftyOpNormedRing (n := l ⊕ l) (α := ℝ)
+  let := Matrix.linftyOpNormedAlgebra (n := l ⊕ l) (R := ℝ) (α := ℝ)
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
   rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
   exact (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℝ a b)).hasFDerivAt.comp_hasDerivAt 0 h
@@ -438,7 +438,7 @@ theorem hasDerivAt_toLp_omS
   refine weylAlg_induction
     (P := fun A => ∀ f, HasDerivAt (fun t => schwartzToL2 l (A (omS (γ t) f))) (schwartzToL2 l (A (quad X f))) 0) ?_ ?_ ?_ ?_ ?_ hA
   · intro f
-    simpa only [h4, ContinuousLinearMap.one_apply, schwartzToL2_apply] using h6 f
+    simpa only [h4, one_apply_eq_self, schwartzToL2_apply] using h6 f
   · intro A w ih f
     simp only [toLp_dRho_omS h3 h4, hγ, coe_smul]
     have hJ : Matrix.J l ℝ * Xᵀ * Matrix.J l ℝ = X := by
@@ -457,23 +457,23 @@ theorem hasDerivAt_toLp_omS
     refine (HasDerivAt.fun_sum fun a _ => (hd a).fun_smul (ih (dRho (Pi.single a 1) f))).congr_deriv ?_
     have e : dRho w * quad X = quad X * dRho w - dRho (X *ᵥ w) := by
       rw [← quad_comm hX, sub_sub_cancel]
-    rw [ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply (dRho w), e, dRho_eq_sum w,
+    rw [mul_apply_eq_comp, ← mul_apply_eq_comp (dRho w), e, dRho_eq_sum w,
       dRho_eq_sum (X *ᵥ w)]
 
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, map_sum,
+    simp only [sum_apply, smul_apply, map_sum,
     map_smul, ofReal_neg, ofReal_zero, zero_smul, NormedSpace.exp_zero, transpose_one, mul_one, J_squared, neg_neg, one_mulVec,
-    h0, map_one, ContinuousLinearMap.one_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.mul_apply,
+    h0, map_one, one_apply_eq_self, sub_apply, mul_apply_eq_comp,
     map_sub, neg_smul, ← sub_eq_add_neg, Finset.sum_sub_distrib]
     simp only [coe_smul]
     rfl
   · intro f
-    simp only [ContinuousLinearMap.zero_apply, map_zero]
+    simp only [zero_apply, map_zero]
     exact hasDerivAt_const _ _
   · intro A B hA hB f
-    simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+    simp only [add_apply, map_add (f := _)]
     exact (hA f).add (hB f)
   · intro c A hA f
-    simp only [ContinuousLinearMap.smul_apply, map_smul]
+    simp only [smul_apply, map_smul]
     exact (hA f).const_smul c
 
 theorem metaplectic_schwartz_smooth [TopologicalSpace G]

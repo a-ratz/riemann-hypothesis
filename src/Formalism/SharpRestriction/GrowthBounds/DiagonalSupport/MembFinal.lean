@@ -126,7 +126,7 @@ theorem exists_posU (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ)
     obtain ⟨u, hu, hux⟩ := List.mem_iff_getElem.mp ((Finset.mem_sort (· ≤ ·)).mpr hxL)
     refine ⟨u, by omega, ?_⟩
     unfold posU llPos
-    rw [if_pos (by omega), List.getD_eq_getElem _ _ hu, hux]
+    rw [ite_eq_left (by omega), List.getD_eq_getElem _ _ hu, hux]
   · have key : ∃ i, i < r ∧ Fr.fr j i = x := by
       by_contra hne
       push_neg at hne
@@ -146,11 +146,11 @@ theorem exists_posU (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ)
     obtain ⟨i, hi, hix⟩ := key
     refine ⟨N + i, by omega, ?_⟩
     unfold posU
-    rw [if_neg (by omega), Nat.add_sub_cancel_left, hix]
+    rw [ite_eq_right (by omega), Nat.add_sub_cancel_left, hix]
 
 theorem posU_even (hV : Fr.Valid L₁ N₁) (j : ℤ) (N u : ℕ) (h1 : N ≤ u) (h2 : u < N + r) : Even (posU Fr N j u) := by
   unfold posU
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   exact (hV.2.2.2.2.1 j (u - N) (by omega)).2
 
 theorem posU_letter (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ) (hN : N = (Fr.LLset j).card) (u : ℕ)
@@ -168,14 +168,14 @@ theorem posU_letter (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ)
       exact hx.1.1
   unfold posU
   rcases Nat.lt_or_ge u N with hu' | hu'
-  · rw [if_pos hu']
+  · rw [ite_eq_left hu']
     apply hmemLL
     unfold llPos
     have hlen : u < ((Fr.LLset j).sort (· ≤ ·)).length := by rw [Finset.length_sort]; omega
     rw [List.getD_eq_getElem _ _ hlen]
     exact (Finset.mem_sort _).mp (List.getElem_mem _)
   · have hu'' : u = N := le_antisymm hu hu'
-    rw [if_neg (by omega), hu'', Nat.sub_self]
+    rw [ite_eq_right (by omega), hu'', Nat.sub_self]
     have hg := hV.2.2.2.1 (j - 1)
     rw [sub_add_cancel] at hg
     refine ⟨?_, ?_⟩
@@ -201,7 +201,7 @@ theorem threshold_ge_even_position (h : Even (posU Fr (nL j) (segZ j) u)) :
     (ka j (u + 1) 0 : ℝ) + mS + slU Fr p deg Y k nL j u ≤ thStar Fr p deg Y k mS nL K ka j u := by
   unfold thStar slU
   dsimp only
-  rw [if_pos h]
+  rw [ite_eq_left h]
   exact le_max_of_le_right (le_max_left _ _)
 
 theorem threshold_ge_odd_position (h : ¬ Even (posU Fr (nL j) (segZ j) u)) :
@@ -209,7 +209,7 @@ theorem threshold_ge_odd_position (h : ¬ Even (posU Fr (nL j) (segZ j) u)) :
   unfold thStar slU
   dsimp only
   have hc : 1 ≤ u + 1 ∧ ¬ Even (posU Fr (nL j) (segZ j) u) := ⟨by omega, h⟩
-  rw [add_tsub_cancel_right, if_pos hc]
+  rw [add_tsub_cancel_right, ite_eq_left hc]
   exact le_max_of_le_right (le_max_right _ _)
 
 end Th
@@ -265,21 +265,21 @@ theorem deg_mul (A : MvPolynomial (ℤ × Fin r) O) (B : MvPolynomial (ℤ × Fi
   · have e1 := Finsupp.mapDomain_apply_of_injective hinj1 ua (x, c)
     simp only at e1
     have e2 : Finsupp.mapDomain (fun v : ℤ × Fin K => (v.1, Fin.natAdd r v.2)) ub (x, Fin.castAdd K c) = 0 := by
-      apply Finsupp.mapDomain_notin_range
+      apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨⟨y, d⟩, hyd⟩
       simp only [Prod.mk.injEq] at hyd
       have h5 := congrArg Fin.val hyd.2
-      simp only [Fin.coe_natAdd, Fin.coe_castAdd] at h5
+      simp only [Fin.val_natAdd, Fin.val_castAdd] at h5
       omega
     rw [Finsupp.add_apply, e1, e2, add_zero]
   · have e1 := Finsupp.mapDomain_apply_of_injective hinj2 ub (x, c)
     simp only at e1
     have e2 : Finsupp.mapDomain (fun v : ℤ × Fin r => (v.1, Fin.castAdd K v.2)) ua (x, Fin.natAdd r c) = 0 := by
-      apply Finsupp.mapDomain_notin_range
+      apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨⟨y, d⟩, hyd⟩
       simp only [Prod.mk.injEq] at hyd
       have h5 := congrArg Fin.val hyd.2
-      simp only [Fin.coe_natAdd, Fin.coe_castAdd] at h5
+      simp only [Fin.val_natAdd, Fin.val_castAdd] at h5
       omega
     rw [Finsupp.add_apply, e1, e2, zero_add]
 
@@ -335,7 +335,7 @@ theorem Mx_even {L₁ N₁' : ℕ} (hV : Fr.Valid L₁ N₁') (hnL : ∀ j, Dt.n
   have hc := Classical.choose_spec hex
   have heq : Classical.choose hex = u := hinj _ _ hc.1 hu hc.2
   unfold Mx
-  rw [dite_eq_left hex, if_pos he, heq]
+  rw [dite_eq_left hex, ite_eq_left he, heq]
 
 theorem Mx_odd {L₁ N₁' : ℕ} (hV : Fr.Valid L₁ N₁') (hnL : ∀ j, Dt.nL j = (Fr.LLset (segZ j)).card) (j : ZMod J) (u : ℕ)
     (hu : u < Dt.nL j + r) (he : ¬ Even (pU p O Fr Dt j u)) :
@@ -352,7 +352,7 @@ theorem Mx_odd {L₁ N₁' : ℕ} (hV : Fr.Valid L₁ N₁') (hnL : ∀ j, Dt.nL
   have hc := Classical.choose_spec hex
   have heq : Classical.choose hex = u := hinj _ _ hc.1 hu hc.2
   unfold Mx
-  rw [dite_eq_left hex, if_neg he, heq]
+  rw [dite_eq_left hex, ite_eq_right he, heq]
 
 theorem cond_at {TT : Finset (Fin n')} {L₁ L₂ : ℕ} {d : Fin n' → ℕ}
     (hM : MFH p Fr TT L₁ L₂ N₁ G' deg d Y (r + K) cP) (hnL : ∀ j, Dt.nL j = (Fr.LLset (segZ j)).card)
@@ -476,7 +476,7 @@ theorem back_rename (j : ZMod J) (X : MvPolynomial ((ZMod J × ℤ) × Fin n) O)
   refine congrArg (fun f => (rename (R := O) f) Y) ?_
   funext v
   obtain ⟨⟨⟨a, b⟩, c⟩, hv⟩ := v
-  simp only [Set.mem_setOf_eq] at hv
+  simp only [Set.mem_ofPred_eq] at hv
   subst hv
   rfl
 
@@ -869,8 +869,8 @@ theorem homComp_rename (f : κ × Fin n → ι × Fin n) (δ : ι → ℕ) (G : 
       intro mo _
       by_cases hm : Finsupp.mapDomain f mo = a
       · have hP : ∀ i, multideg (Finsupp.mapDomain f mo) i = δ i := by rw [hm]; exact h
-        rw [if_pos hP]
-      · simp only [hm, if_false, ite_self]
+        rw [ite_eq_left hP]
+      · simp only [hm, ite_false, ite_self]
     · apply Finset.sum_eq_zero
       intro mo _
       by_cases hm : Finsupp.mapDomain f mo = a
@@ -922,7 +922,7 @@ theorem asm_support (rho : TL J nL r × Fin (r + K) → ℕ) (A : MvPolynomial (
     intro bp _
     apply Finset.sum_congr rfl
     intro bn _
-    rw [monomial_mul, monomial_mul, one_mul, bigM_eq]
+    rw [monomial_mul_monomial, monomial_mul_monomial, one_mul, bigM_eq]
   rw [e] at h
   obtain ⟨bp, hbp, h2⟩ := Finset.mem_biUnion.mp (MvPolynomial.support_sum h)
   obtain ⟨bn, hbn, h3⟩ := Finset.mem_biUnion.mp (MvPolynomial.support_sum h2)
@@ -1055,11 +1055,11 @@ theorem normDeg_bigM (hinj : Function.Injective fun x : TL J nL r => posOf n' (p
   intro x _
   rw [Fin.sum_univ_add]
   by_cases he : Even (posOf n' (posTL Fr x)).val
-  · simp only [isNormal_pl, isNormal_no, he, not_true_eq_false, if_false, if_true, Finset.sum_const_zero,
+  · simp only [isNormal_pl, isNormal_no, he, not_true_eq_false, ite_false, ite_true, Finset.sum_const_zero,
       zero_add, hno, Finset.sum_add_distrib, ← Finset.mul_sum]
     rw [← h2 x]
     rfl
-  · simp only [isNormal_pl, isNormal_no, he, not_false_eq_true, if_false, if_true, Finset.sum_const_zero,
+  · simp only [isNormal_pl, isNormal_no, he, not_false_eq_true, ite_false, ite_true, Finset.sum_const_zero,
       add_zero, hpl, Finset.sum_add_distrib, ← Finset.mul_sum]
     rw [← h1 x]
     rfl
@@ -1221,14 +1221,14 @@ theorem labO_apply (hinj : Function.Injective fun x : TL J nL r => posOf n' (pos
   · rw [Finset.sum_eq_single c]
     · simp
     · intro c' _ hc'
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hc' (Prod.ext_iff.mp h).2
     · intro h; exact absurd (Finset.mem_univ c) h
   · intro x _ hx
     apply Finset.sum_eq_zero
     intro c' _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hx (hinj (Prod.ext_iff.mp h).1)
   · intro h; exact absurd (Finset.mem_univ y) h
@@ -1244,7 +1244,7 @@ theorem labO_support (rho : TL J nL r × Fin (r + K) → ℕ) (v : Fin n' × Fin
   intro x _
   apply Finset.sum_eq_zero
   intro c _
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   exact hne x (Prod.ext_iff.mp h).1.symm
 
@@ -1388,29 +1388,29 @@ theorem pj_mono_mul (j : ι) (q : MvPolynomial σ O →ₗ[O] MvPolynomial σ O)
     ext v
     simp only [Finsupp.filter_apply, Finsupp.add_apply]
     by_cases hv : π v = j
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       have : b v = 0 := by
         by_contra h
         exact hb v (Finsupp.mem_support_iff.2 h) hv
       rw [this, add_zero]
-    · rw [if_neg hv]
+    · rw [ite_eq_right hv]
       by_contra h
       exact hv (ha v (Finsupp.mem_support_iff.2 (Ne.symm h)))
   have h2 : (a + b).filter (fun v => π v ≠ j) = b := by
     ext v
     simp only [Finsupp.filter_apply, Finsupp.add_apply]
     by_cases hv : π v = j
-    · rw [if_neg (not_not.2 hv)]
+    · rw [ite_eq_right (not_not.2 hv)]
       have : b v = 0 := by
         by_contra h
         exact hb v (Finsupp.mem_support_iff.2 h) hv
       exact this.symm
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       have : a v = 0 := by
         by_contra h
         exact hv (ha v (Finsupp.mem_support_iff.2 h))
       rw [this, zero_add]
-  rw [monomial_mul, pj_monomial, h1, h2]
+  rw [monomial_mul_monomial, pj_monomial, h1, h2]
   have e : monomial a ca = ca • monomial a (1 : O) := by rw [smul_monomial, smul_eq_mul, mul_one]
   have e' : monomial b cb = cb • monomial b (1 : O) := by rw [smul_monomial, smul_eq_mul, mul_one]
   rw [e, e', map_smul, smul_mul_smul_comm, mul_comm ca cb, mul_smul]
@@ -1473,7 +1473,7 @@ theorem projection_mem_partial_span (X : ι → Submodule O (MvPolynomial σ O))
       conv_lhs => rw [← support_sum_monomial_coeff M]
       rw [Finset.mul_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
-      rw [mul_left_comm, monomial_mul, mul_one, Finsupp.filter_add_filter_not]
+      rw [mul_left_comm, monomial_mul_monomial, mul_one, Finsupp.filter_add_filter_not]
 
     rw [hsum, map_sum]
     refine Submodule.sum_mem _ fun b hb => ?_
@@ -1597,21 +1597,21 @@ theorem offT_eq_zero (m : ι × Fin n →₀ ℕ) (h : ∀ i, i ∉ T → multid
   ext v
   rw [offT, Finsupp.filter_apply]
   by_cases hv : v.1 ∉ T
-  · rw [if_pos hv]
+  · rw [ite_eq_left hv]
     have h1 := h v.1 hv
     unfold multideg at h1
     have h2 : m (v.1, v.2) ≤ ∑ c : Fin n, m (v.1, c) :=
       Finset.single_le_sum (f := fun c : Fin n => m (v.1, c)) (fun _ _ => Nat.zero_le _) (Finset.mem_univ v.2)
     rw [h1] at h2
     exact Nat.le_zero.1 h2
-  · rw [if_neg hv]
+  · rw [ite_eq_right hv]
     rfl
 
 theorem multideg_onT (mo : ι × Fin n →₀ ℕ) (i : ι) (hi : i ∉ T) : multideg (onT T mo) i = 0 := by
   unfold multideg
   apply Finset.sum_eq_zero
   intro c _
-  rw [onT, Finsupp.filter_apply, if_neg hi]
+  rw [onT, Finsupp.filter_apply, ite_eq_right hi]
 
 end Sl
 
@@ -1629,7 +1629,7 @@ theorem slice_sum : F = ∑ M ∈ F.support.image (offT T), sliceT T F M * monom
     intro M _
     rw [sliceT, Finset.sum_mul]
     refine Finset.sum_congr rfl fun mo hmo => ?_
-    rw [monomial_mul, mul_one, ← (Finset.mem_filter.1 hmo).2, onT_add_offT]
+    rw [monomial_mul_monomial, mul_one, ← (Finset.mem_filter.1 hmo).2, onT_add_offT]
   rw [Finset.sum_congr rfl h1,
     Finset.sum_fiberwise_of_maps_to (fun mo hmo => Finset.mem_image_of_mem (offT T) hmo)]
   exact F.as_sum
@@ -1668,7 +1668,7 @@ theorem twist_slice_coeff (hST : S ⊆ T) (M : ι × Fin n →₀ ℕ) (hM : M �
     refine Finset.sum_congr rfl fun M' hM' => ?_
     rw [map_mul, twistSub_monomial_off LL S j M' fun v hv hvS => hoff M' hM' v hv (hST hvS)]
   rw [hsum, coeff_sum, Finset.sum_eq_single M]
-  · rw [coeff_mul_monomial', if_pos le_add_self, add_tsub_cancel_right, mul_one]
+  · rw [coeff_mul_monomial', ite_eq_left le_add_self, add_tsub_cancel_right, mul_one]
   · intro M' hM' hne
     rw [coeff_mul_monomial']
     split_ifs with hle

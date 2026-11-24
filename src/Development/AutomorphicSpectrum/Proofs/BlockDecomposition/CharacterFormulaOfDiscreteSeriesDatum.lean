@@ -273,7 +273,7 @@ theorem formulaF_of (hP : IsPsiFor ε lam T Ψ)
     intro k
     show inner ℂ (T.op k (Ψ g v - q)) T.w *
       (inner ℂ T.w (Ψ (S7.toMK k * g) v) - inner ℂ T.w (Ψ (S7.toMK k) q)) = _
-    rw [hΨk k g hg, hΨk1 k, ContinuousLinearMap.mul_apply, ← inner_sub_right, ← map_sub,
+    rw [hΨk k g hg, hΨk1 k, mul_apply_eq_comp, ← inner_sub_right, ← map_sub,
       ← inner_conj_symm, Complex.conj_mul', Complex.ofReal_pow]
   have hI : ∫ k, ‖inner ℂ T.w (T.op k (Ψ g v - q))‖ ^ 2 ∂(dk ε) = 0 := by
     have e2 : ((∫ k, ‖inner ℂ T.w (T.op k (Ψ g v - q))‖ ^ 2 ∂(dk ε) : ℝ) : ℂ) = 0 := by

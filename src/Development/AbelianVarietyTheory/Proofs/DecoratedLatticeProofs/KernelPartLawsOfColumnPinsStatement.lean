@@ -196,7 +196,7 @@ theorem kmap_val {B : Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC
 
 theorem kernel_classSum : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : TwDat I l Z u a Ch), A.Is → ∀ (i : ℕ) (hi : i + 1 ≤ B.R.m) (hab : B.R.N i ≤ B.R.N (i + 1)) (φ : ColT I l u a i) (Fc : (I.chain l u a).cls i → PY (I.rec7 l Z).what₂.Tau (B.R.N i)), (∀ c y, φ c y = evalAt y.1 (Fc c) * ∏ τ, (y.1 τ).det ^ (-(I.chain l u a).sSharp i τ)) → ∀ c' y', (I.chain l u a).K i φ c' y' = ∑ᶠ c, ((Nat.card ((I.chain l u a).stab i c) : ℕ) : ℂ)⁻¹ * A.abelian₂ i c c' (subY hab y'.1 (Fc c)) * ∏ τ, (y'.1 τ).det ^ (-(I.chain l u a).sDiv i τ) := by
   intro B X I _ _ l Z u a Ch A _ i _ hab φ Fc hφ c' y'
-  haveI : Fintype ((I.chain l u a).cls i) := (I.chain l u a).clsFin i
+  have : Fintype ((I.chain l u a).cls i) := (I.chain l u a).clsFin i
   unfold ColumnChain.K Formalism.ThetaLiftIndependence.kerOpM
   rw [finsum_eq_sum_of_fintype, Finset.sum_apply]
   refine Finset.sum_congr (congrArg (@Finset.univ _) (Subsingleton.elim _ _)) fun c _ => ?_
@@ -252,7 +252,7 @@ theorem kval : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), 
     have hb : h.choose = β := hinj (h.choose_spec.symm.trans c.2)
     have gen : ∀ β' (hβ' : A.chOf j c.1 = ι j β'), β' = β → Fv β' ⟨c.1, hβ'⟩ = Fv β c := by
       rintro β' hβ' rfl; rfl
-    simp only [Fc, dif_pos h]
+    simp only [Fc, dite_eq_left h]
     exact gen _ _ hb
   have hFc : ∀ c y, φ c y = evalAt y.1 (Fc c) * ∏ τ, (y.1 τ).det ^ (-(I.chain l u a).sSharp j τ) := by
     intro c y
@@ -260,15 +260,15 @@ theorem kval : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), 
     · obtain ⟨β, hβ⟩ := h
       rw [hFcEq β ⟨c, hβ⟩]
       exact hval β ⟨c, hβ⟩ ⟨y.1, y.2⟩
-    · have h0 : Fc c = 0 := by simp only [Fc, dif_neg h]
+    · have h0 : Fc c = 0 := by simp only [Fc, dite_eq_right h]
       rw [h0, show φ c y = 0 by rw [hram c (fun ⟨β, hβ⟩ => h ⟨β, hβ.symm⟩)]; rfl]
       have hz : KJInf.evalAt y.1 (0 : PY (I.rec7 l Z).what₂.Tau (B.R.N j)) = 0 := map_zero (MvPolynomial.eval _)
       rw [hz, zero_mul]
   have key := GlobalTheory.T.trueChainKernel_eq_classSum_jets I hOk hPins l Z u a Ch₀ A hP.is j hj1 hab φ Fc hFc a'.1 ⟨y'.1, y'.2⟩
   have e0 : (clsKL R g P r k tl s J A ι).val (j + 1) γ ((tupOf R P u g t r k tl).K j φ) a' y' = (I.chain l u a).K j φ a'.1 ⟨y'.1, y'.2⟩ := rfl
   rw [e0, key]
-  letI := (I.chain l u a).clsFin j
-  letI : Fintype ((tupOf R P u g t r k tl).Ch j) := (tupOf R P u g t r k tl).fin j
+  let := (I.chain l u a).clsFin j
+  let : Fintype ((tupOf R P u g t r k tl).Ch j) := (tupOf R P u g t r k tl).fin j
   rw [finsum_eq_sum_of_fintype]
   symm
   refine (Fintype.sum_sigma (fun x : (Σ β : (tupOf R P u g t r k tl).Ch j, (clsKL R g P r k tl s J A ι).cl j β) =>
@@ -283,7 +283,7 @@ theorem kval : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), 
     rfl
   · intro c hc
     have h : ¬ ∃ β, A.chOf j c = ι j β := fun ⟨β, hβ⟩ => hc ⟨⟨β, c, hβ⟩, rfl⟩
-    have h0 : Fc c = 0 := by simp only [Fc, dif_neg h]
+    have h0 : Fc c = 0 := by simp only [Fc, dite_eq_right h]
     rw [h0]
     erw [map_zero (subY hab _), map_zero, mul_zero, zero_mul]
   · rintro ⟨β, c⟩
@@ -754,9 +754,9 @@ theorem odd_absNorm {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum 
     Odd (Ideal.absNorm P.asIdeal) := by
   rw [← Nat.not_even_iff_odd, even_iff_two_dvd]
   intro h2
-  haveI := P.isPrime
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have := P.isPrime
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at h2
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 E ⧸ P.asIdeal) 2 h2
   have h0 : x ≠ 0 := by
@@ -1047,7 +1047,7 @@ theorem clsKL_is : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B 
     have h1 := GlobalTheory.T.thetaKernelIdentity_at_every_tuple I hOk hPins l Z u a Ch₀ k.Ch A ι _ _ _ _ _ _ _ _ _ _ _ hX hP j hj (s j) hs.2 α γ a₁ a₂ P'
     have hx1 := hX.xs j (Nat.le_of_succ_le hj)
     have hx2 := hX.xs (j + 1) hj
-    simp only [Tup.ker, KerDat.pt, realOf, clsKL, tupOf, commOf, hx1.1, hx1.2.1, hx2.1, hx2.2.1, if_neg hs.1]
+    simp only [Tup.ker, KerDat.pt, realOf, clsKL, tupOf, commOf, hx1.1, hx1.2.1, hx2.1, hx2.2.1, ite_eq_right hs.1]
     exact h1
   case forms =>
     refine ⟨fun j hj β => ?_, fun j hj β => ?_, fun j hj φ hφ β c => ?_, fun j hj φ hφ β y γ hγ c k₁ hk κ y' htr => ?_⟩

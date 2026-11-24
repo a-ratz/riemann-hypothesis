@@ -275,7 +275,7 @@ theorem transUnif_factor (u : HolUnif A M g) {Hm : Matrix (Fin g) (Fin g) ℂ} {
   have e3 := hF.2.2 l (J PUnit.unit ⟨{0, 1}⟩) (z + w) c3
   rw [transUnif_fr, transUnif_fr, prod_ulift_finset_fin_two_eq, prod_ulift_finset_fin_two_eq]
   simp only [shiftVec, expo]
-  simp only [Finset.notMem_empty, if_false, Finset.mem_singleton, Finset.mem_insert, Finset.card_empty,
+  simp only [Finset.notMem_empty, ite_false, Finset.mem_singleton, Finset.mem_insert, Finset.card_empty,
     Finset.card_singleton]
   norm_num
   rw [e1, e3, add_dotProduct, show z + l + w = z + w + l by abel]
@@ -301,7 +301,7 @@ theorem gen_div_eq {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (B : LB X) (t : B.Gen) (h
     valAt' x (B.U j) (t.s j).val / a = valAt' x (B.U j') (t.s j').val / b := by
   have hm := (top_le_preimage_inf _ _ _).2 ⟨hj, hj'⟩
   have e := congrArg (fun c : Γ(X, B.U j ⊓ B.U j')ˣ => valAt' x _ c.val) (ht j j')
-  simp only [res, Units.coe_map, Units.val_mul, MonoidHom.coe_coe] at e
+  simp only [res, Units.coe_map, Units.val_mul, MonoidHom.coe_ofClass] at e
   rw [valAt'_mul, valAt'_map _ _ _ hm, valAt'_map _ _ _ hm] at e
   have n3 : valAt' x (B.U j ⊓ B.U j') (B.g j j').val ≠ 0 := by
     obtain ⟨f, hf⟩ := (valAt'_rules _ x).2.1 _ hm

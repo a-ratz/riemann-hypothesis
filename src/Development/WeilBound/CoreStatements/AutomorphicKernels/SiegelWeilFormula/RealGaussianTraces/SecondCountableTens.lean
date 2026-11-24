@@ -108,7 +108,7 @@ theorem isUnit_iff_th (σ : E →ₐ[F] E) (ψ : AddChar (AF F) ℂ) {ι : Type}
 theorem exists_thHomeo (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF F) ℂ) {ι : Type} [Fintype ι]
     (θ : ι → (Ainf F ⊗[F] E →+* ℂ)) (l : ι → ℝ) (hP : IsPlaces σ ψ θ l) :
     ∃ e : (Ainf F ⊗[F] E) ≃ₜ+ (ι → ℂ), ∀ z i, e z i = θ i z := by
-  haveI : IsTotallyReal F := hCM.1
+  have : IsTotallyReal F := hCM.1
   obtain ⟨k, e, he⟩ := GlobalTheory.SiegelWeilConvCompare.exists_coord_tens F E
   let Θ : (Ainf F ⊗[F] E) →+ (ι → ℂ) :=
     { toFun := fun z i => θ i z
@@ -284,7 +284,7 @@ theorem exists_hermHomeo (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddCh
     simp only [fwd, hinv]
     have hm : Continuous fun S : HermR (Ainf F) σ n =>
         (A i).1 * (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).map (θ i) * ((A i).1)ᴴ :=
-      (continuous_const.matrix_mul ((continuous_subtype_val).matrix_map (hP.cont i))).matrix_mul continuous_const
+      (continuous_const.matrix_mul ((continuous_subtypeVal).matrix_map (hP.cont i))).matrix_mul continuous_const
     have he : Continuous fun S : HermR (Ainf F) σ n =>
         ((A i).1 * (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).map (θ i) * ((A i).1)ᴴ) a b :=
       (continuous_apply b).comp ((continuous_apply a).comp hm)
@@ -340,13 +340,13 @@ theorem exists_map_eq_smul {G W : Type} [AddCommGroup G] [TopologicalSpace G]
     [MeasurableSpace W] [BorelSpace W] (vol : Measure W) [vol.IsAddHaarMeasure]
     (μ : Measure G) [μ.IsAddHaarMeasure] (e : G ≃ₜ+ W) :
     ∃ c : ℝ≥0, 0 < c ∧ μ.map e = c • vol := by
-  haveI : ContinuousAdd G := by
+  have : ContinuousAdd G := by
     refine ⟨?_⟩
     have h : (fun p : G × G => p.1 + p.2) = fun p => e.symm (e p.1 + e p.2) := by
       funext p; rw [← map_add (f := _), ContinuousAddEquiv.symm_apply_apply]
     rw [h]
     exact e.symm.continuous.comp ((e.continuous.comp continuous_fst).add (e.continuous.comp continuous_snd))
-  haveI : (μ.map e).IsAddHaarMeasure :=
+  have : (μ.map e).IsAddHaarMeasure :=
     Measure.isAddHaarMeasure_map μ (e : G →+ W) e.continuous e.surjective
       e.toHomeomorph.isClosedEmbedding.tendsto_cocompact
   refine ⟨Measure.addHaarScalarFactor (μ.map e) vol,

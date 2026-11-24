@@ -232,13 +232,13 @@ theorem map_injective {κ : Type} :
 
 theorem germIs_unique (C : IntegralChartA3 Xo c T io y) (k : ℕ) (F : SecN Xo (xOf y) k) (f f' : PS T.V 1 (chD C.ch))
     (h : GermIs C k F f) (h' : GermIs C k F f') : f = f' := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   exact map_injective (isGermFun_holds E H Dw l Xo c T.Fr y.1 _ _ _ _ _ k F _ _ h h')
 
 theorem germIs_smul (C : IntegralChartA3 Xo c T io y) (k : ℕ) (F F' : SecN Xo (xOf y) k) (r : T.V) (f : PS T.V 1 (chD C.ch))
     (hs : ∀ j, F'.f j = liftFun Xo.univ.t.G _ (T := ptO Xo (xOf y)) (toΓ T.Fr (algebraMap T.V T.Fr r)) * F.f j)
     (h : GermIs C k F f) : GermIs C k F' (r • f) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have e : MvPowerSeries.map (algebraMap T.V T.Fr) (r • f) =
       algebraMap T.V T.Fr r • MvPowerSeries.map (algebraMap T.V T.Fr) f := by
     ext n
@@ -253,7 +253,7 @@ theorem germIs_smul (C : IntegralChartA3 Xo c T io y) (k : ℕ) (F F' : SecN Xo 
 theorem exists_germIs (hFT : ReciprocityTheory.ChartRestriction.G.PullbackSections.FrameTieSt Xo c) (C : IntegralChartA3 Xo c T io y)
     (hC : FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT) (k : ℕ) (F : SecN Xo (xOf y) k) (hF : Regular C k F) :
     ∃ f, GermIs C k F f := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨σ, σt, hT1, hT2⟩ := hF
   obtain ⟨x', hx1, hx2, eL', heL'⟩ := hFT T io y C
   obtain ⟨σ', hσ'⟩ := exists_sec_id C.I.G (k : ℤ) σ (Over.mk (𝟙 (Sp T.V)))

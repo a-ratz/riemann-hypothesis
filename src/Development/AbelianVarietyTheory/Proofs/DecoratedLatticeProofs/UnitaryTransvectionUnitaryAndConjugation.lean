@@ -165,8 +165,8 @@ theorem form_vecX {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (a : Fin ρ
 
 theorem form_transv (S : HSp D) (w v : VA S) (hw : form S w w = 0) (hv : form S w v = 0) (x y : VA S) :
     form S (transv S w v x) (transv S w v y) = form S x y := by
-  letI := starRingA D
-  letI := invTwo D
+  let := starRingA D
+  let := invTwo D
   exact (GlobalTheory.eichlerTransvection_unitary_inverse_conj (AE D) (Fin S.rank) (gA S) (adj_gA S) (form S)
     (fun _ _ => rfl) (transv S) (fun _ _ _ => rfl)).1 w v hw hv x y
 

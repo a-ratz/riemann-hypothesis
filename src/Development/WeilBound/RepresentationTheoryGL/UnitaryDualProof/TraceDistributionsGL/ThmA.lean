@@ -262,7 +262,7 @@ theorem phiNear : PhiNear k := by
   funext w
   by_cases hw : w - eN k n ∈ box (Fin (n + 1)) s
   · have hP := htU (hst hw)
-    simp only [Set.mem_setOf_eq, add_sub_cancel] at hP
+    simp only [Set.mem_ofPred_eq, add_sub_cancel] at hP
     obtain ⟨hl, hc⟩ := hP
     have hw0 : w ≠ 0 := by
       intro h
@@ -270,11 +270,11 @@ theorem phiNear : PhiNear k := by
       simp [h]
     have hmem : w ∈ {w : Vc k n | w - eN k n ∈ box (Fin (n + 1)) s} := hw
     rw [Set.indicator_of_mem hmem]
-    simp only [phi, if_neg hw0, Set.indicator_of_mem hmem, Pi.one_apply, mul_one]
+    simp only [phi, ite_eq_right hw0, Set.indicator_of_mem hmem, Pi.one_apply, mul_one]
     have hex : ∃ s : GL (Fin (n + 1)) k, ∀ j, (s : Mx k n) (Fin.last n) j = w j :=
       ⟨sw w hl, sw_last w hl⟩
     have hsec : ∀ j, ((sec w : GL (Fin (n + 1)) k) : Mx k n) (Fin.last n) j = w j := by
-      simp only [sec, dif_pos hex]
+      simp only [sec, dite_eq_left hex]
       exact hex.choose_spec
     have hrow : ∀ M : Mx k n, eLast k n ᵥ* M = M (Fin.last n) := by
       intro M
@@ -406,7 +406,7 @@ def cjHomeo (g : GL (Fin (n + 1)) k) : Mx k n ≃ₜ Mx k n where
 
 theorem slice_snd_mem {F : Mx k n × Vc k n → ℂ} (hF : F ∈ SB (Mx k n × Vc k n)) (w : Vc k n) :
     (fun y => F (y, w)) ∈ SB (Mx k n) := by
-  haveI := t2Space k
+  have := t2Space k
   refine ⟨hF.1.comp_continuous (f := fun y => (y, w)) (by fun_prop),
     HasCompactSupport.intro (IsCompact.image hF.2 continuous_fst) fun y hy => ?_⟩
   exact image_eq_zero_of_notMem_tsupport fun h => hy ⟨_, h, rfl⟩
@@ -425,7 +425,7 @@ theorem phi_eq_of_row {Λ : (Mx k n → ℂ) →ₗ[ℂ] ℂ} (hP : PInvX Λ) {F
     (s : GL (Fin (n + 1)) k) {w : Vc k n} (hs : ∀ j, (s : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.last n) j = w j)
     (hw : w ≠ 0) : phi Λ F w = Λ (fun x => F (cj s⁻¹ x, w)) := by
   unfold phi
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
   set t := (sec w : GL (Fin (n + 1)) k) with ht
   have htr := sec_row hs
   have hp : s * t⁻¹ ∈ Mir k n := by
@@ -459,7 +459,7 @@ theorem phi_eventually_eq {Λ : (Mx k n → ℂ) →ₗ[ℂ] ℂ} (hP : PInvX Λ
   have hM0 : Mf w₀ = 1 := by simp [Mf]
   obtain ⟨W, hW1, hW⟩ := (eventually_actP_eq hF).exists_mem
   have hE : IsOpenEmbedding (Units.val : GL (Fin (n + 1)) k → Matrix (Fin (n + 1)) (Fin (n + 1)) k) := by
-    haveI := t2Space k
+    have := t2Space k
     refine ⟨?_, ?_⟩
     · refine Units.isEmbedding_val_mk' (f := Inv.inv) ?_ ?_
       · intro A hA
@@ -591,7 +591,7 @@ theorem exists_smul_shell {s : kˣ} {r : k} (hr0 : r ≠ 0) (hr1 : valuation k r
     funext j
     have := hi j (Finset.mem_univ j)
     rw [h, map_zero] at this
-    simpa using le_antisymm this zero_le'
+    simpa using le_antisymm this zero_le
   refine ⟨s * (Units.mk0 (w i) hwi)⁻¹, ?_, ?_⟩
   · intro j _
     show valuation k (((s * (Units.mk0 (w i) hwi)⁻¹ : kˣ) : k) * w j) ≤ valuation k (s : k)
@@ -607,13 +607,13 @@ theorem exists_smul_shell {s : kˣ} {r : k} (hr0 : r ≠ 0) (hr1 : valuation k r
     change valuation k (((s * (Units.mk0 (w i) hwi)⁻¹ : kˣ) : k) * w i) ≤ valuation k (((s * Units.mk0 r hr0 : kˣ)) : k) at this
     simp only [Units.val_mul, Units.val_inv_eq_inv_val, Units.val_mk0] at this
     rw [mul_assoc, inv_mul_cancel₀ hwi, mul_one, map_mul] at this
-    have hs : 0 < valuation k (s : k) := by simp [zero_lt_iff]
+    have hs : 0 < valuation k (s : k) := by simp [pos_iff_ne_zero]
     have := lt_of_le_of_lt this (by rw [mul_comm]; exact mul_lt_of_lt_one_left hs hr1)
     exact lt_irrefl _ this
 
 theorem finite_range_phi {Λ : (Mx k n → ℂ) →ₗ[ℂ] ℂ} (hP : PInvX Λ) {F : Mx k n × Vc k n → ℂ}
     (hF : F ∈ SB (Mx k n × Vc k n)) : (Set.range (phi Λ F)).Finite := by
-  haveI := GlobalTheory.SplitWeil.t2Space (k := k)
+  have := GlobalTheory.SplitWeil.t2Space (k := k)
   obtain ⟨s, hs⟩ := exists_box_phi_smul hP hF
   obtain ⟨r, hr, hr1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   have hr0 : r ≠ 0 := by simpa using hr
@@ -649,8 +649,8 @@ variable {n : ℕ} [MeasurableSpace k] [BorelSpace k]
 
 theorem measurable_phi {Λ : (Mx k n → ℂ) →ₗ[ℂ] ℂ} (hP : PInvX Λ) {F : Mx k n × Vc k n → ℂ}
     (hF : F ∈ SB (Mx k n × Vc k n)) : Measurable (phi Λ F) := by
-  haveI := GlobalTheory.SplitWeil.t2Space (k := k)
-  haveI := GlobalTheory.SplitWeil.secondCountable (k := k)
+  have := GlobalTheory.SplitWeil.t2Space (k := k)
+  have := GlobalTheory.SplitWeil.secondCountable (k := k)
   intro S _
   have hU : IsOpen (phi Λ F ⁻¹' S ∩ {w | w ≠ 0}) := by
     rw [isOpen_iff_mem_nhds]
@@ -680,8 +680,8 @@ variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem phiInt : PhiInt k := by
   intro _ _ ν _ n Λ hP F hF
-  haveI := GlobalTheory.SplitWeil.t2Space (k := k)
-  haveI := GlobalTheory.SplitWeil.secondCountable (k := k)
+  have := GlobalTheory.SplitWeil.t2Space (k := k)
+  have := GlobalTheory.SplitWeil.secondCountable (k := k)
   obtain ⟨M, hM⟩ := ((finite_range_phi hP hF).image norm).bddAbove
   have hM' : ∀ w, ‖phi Λ F w‖ ≤ M := fun w => hM ⟨_, ⟨w, rfl⟩, rfl⟩
   set Q := Prod.snd '' tsupport F with hQdef
@@ -807,8 +807,8 @@ theorem formD_equiv [μ.IsMulRightInvariant] (hinv : ∀ g v w, B₀ (ρ g v) (�
     rw [hcoe]
     exact biInv_conj g hKf
   rw [DF_eq μ hρ hpos hinv _ _ hKc hKo hKf, DF_eq μ hρ hpos hinv _ _ hK'c hK'o hK'f]
-  haveI := hρ.2 _ hKc hKo
-  haveI := hρ.2 _ hK'c hK'o
+  have := hρ.2 _ hKc hKo
+  have := hρ.2 _ hK'c hK'o
   have hR : rN μ hρ hpos hK'c hK'o B (biTranslL g g (⟨f, hf⟩ : testFn G)) =
       (conjEquiv (ρ := ρ) g (K : Subgroup G)).conj
         (rN μ hρ hpos hKc hKo ((B ∘ₗ ρ g).compl₂ (ρ g)) ⟨f, hf⟩) := by
@@ -1201,8 +1201,8 @@ variable [MeasurableSpace k] [BorelSpace k]
 theorem integrable_slice (ν : Measure k) [ν.IsAddHaarMeasure] {T : Type} [TopologicalSpace T] {n : Type} [Fintype n]
     {ψ : AddChar k Circle} {c : kˣ} (hψ : HasConductor ψ c) {F : T × (n → k) → ℂ} (hF : F ∈ SB (T × (n → k)))
     (z : T × (n → k)) : Integrable (fun x => F (z.1, x) * (ψ (x ⬝ᵥ z.2) : ℂ)) (Measure.pi fun _ => ν) := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   have hs := slice_mem_SB hF z.1
   have h2 : IsLocallyConstant fun x : n → k => ((ψ (x ⬝ᵥ z.2) : Circle) : ℂ) :=
     (hψ.isLocallyConstant.comp_continuous (continuous_id.dotProduct continuous_const)).comp _
@@ -1507,12 +1507,12 @@ theorem cutFun_mem (U : Set k) (hU : IsClopen U) (h0 : (0 : k) ∉ U) (ψ : SB (
     · have h2 : ∀ᶠ x' in 𝓝 x, (x'.val).det ∈ U :=
         hdet.continuousAt.preimage_mem_nhds (hU.isOpen.mem_nhds hx)
       filter_upwards [h2, h1 x] with x' hx' h'
-      simp only [cutFun, if_pos hx, if_pos hx', h']
+      simp only [cutFun, ite_eq_left hx, ite_eq_left hx', h']
     · have h2 : ∀ᶠ x' in 𝓝 x, (x'.val).det ∈ Uᶜ :=
         hdet.continuousAt.preimage_mem_nhds (hU.isClosed.isOpen_compl.mem_nhds hx)
       filter_upwards [h2] with x' hx'
       have hx'' : (x'.val).det ∉ U := hx'
-      simp only [cutFun, if_neg hx, if_neg hx'']
+      simp only [cutFun, ite_eq_right hx, ite_eq_right hx'']
   · have hK : IsCompact (tsupport ψ.1 ∩ (fun A : Matrix (Fin m) (Fin m) k => A.det) ⁻¹' U) :=
       ψ.2.2.isCompact.inter_right (hU.isClosed.preimage continuous_id.matrix_det)
     have hKr : tsupport ψ.1 ∩ (fun A : Matrix (Fin m) (Fin m) k => A.det) ⁻¹' U ⊆
@@ -1557,7 +1557,7 @@ theorem exists_clopen_local (C : Set k) (hC : IsCompact C) (h0 : (0 : k) ∉ C) 
       zero_mem' := by
         show valuation k 0 < γ
         rw [map_zero]
-        exact zero_lt_iff.2 hγ
+        exact pos_iff_ne_zero.2 hγ
       neg_mem' := fun {a} ha => by
         show valuation k (-a) < γ
         rw [Valuation.map_neg]
@@ -1642,12 +1642,12 @@ theorem cutL_mem {n : ℕ} (U : Set k) (hU : IsClopen U) (h0 : (0 : k) ∉ U) {�
     · have h2 : ∀ᶠ x' in nhds x, (x'.val).det ∈ U :=
         hdet.continuousAt.preimage_mem_nhds (hU.isOpen.mem_nhds hx)
       filter_upwards [h2, h1 x] with x' hx' h'
-      simp only [cutL_apply, if_pos hx, if_pos hx', h']
+      simp only [cutL_apply, ite_eq_left hx, ite_eq_left hx', h']
     · have h2 : ∀ᶠ x' in nhds x, (x'.val).det ∈ Uᶜ :=
         hdet.continuousAt.preimage_mem_nhds (hU.isClosed.isOpen_compl.mem_nhds hx)
       filter_upwards [h2] with x' hx'
       have hx'' : (x'.val).det ∉ U := hx'
-      simp only [cutL_apply, if_neg hx, if_neg hx'']
+      simp only [cutL_apply, ite_eq_right hx, ite_eq_right hx'']
   · have hK : IsCompact (tsupport ψ ∩ (fun A : Mx k n => A.det) ⁻¹' U) :=
       hψ.2.isCompact.inter_right (hU.isClosed.preimage continuous_id.matrix_det)
     have hKr : tsupport ψ ∩ (fun A : Mx k n => A.det) ⁻¹' U ⊆
@@ -1716,7 +1716,7 @@ theorem thmA_of_core : CoreX k → ThmT k → ThmA k := open Topology Filter in 
   let ext : Mx k n → ℂ := fun y => if h : IsUnit y then φ.1 h.unit else 0
   have ext_val (u : GL (Fin (n + 1)) k) : ext u.val = φ.1 u := by
     dsimp [ext]
-    rw [dif_pos u.isUnit, IsUnit.unit_of_val_units]
+    rw [dite_eq_left u.isUnit, IsUnit.unit_of_val_units]
   have ext_mem : ext ∈ SB (Mx k n) := by
     have hK : IsCompact (Units.val '' tsupport φ.1) := φ.2.2.isCompact.image hE.continuous
     have hKc : IsClosed (Units.val '' tsupport φ.1) := hK.isClosed

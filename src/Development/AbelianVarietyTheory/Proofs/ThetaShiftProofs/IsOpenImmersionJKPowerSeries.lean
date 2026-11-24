@@ -55,7 +55,7 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 theorem isOpenImmersion_jK_powerSeries (k : Type) [Field k] : IsOpenImmersion (Out.jK (PowerSeries k)) := by
-  have hX : Irreducible (PowerSeries.X : PowerSeries k) := PowerSeries.X_irreducible
+  have hX : Irreducible (PowerSeries.X : PowerSeries k) := PowerSeries.irreducible_X
   have : IsLocalization.Away (PowerSeries.X : PowerSeries k) (FractionRing (PowerSeries k)) := by
     refine (IsLocalization.iff_of_le_of_exists_dvd (Submonoid.powers (PowerSeries.X : PowerSeries k))
       (nonZeroDivisors (PowerSeries k)) (powers_le_nonZeroDivisors_of_noZeroDivisors hX.ne_zero)

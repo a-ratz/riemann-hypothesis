@@ -173,7 +173,7 @@ theorem uniformContinuous_galoisCompletionMap (σ : L ≃ₐ[K] L) (w w' : Heigh
   rw [← map_sub, ← map_sub] at hp
   rw [← map_sub]
   simp only [galoisCompletionMap, RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
-    RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv]
+    RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv]
   rwa [norm_algebraMap_smul]
 
 def galHom (σ : L ≃ₐ[K] L) (w w' : HeightOneSpectrum (𝓞 L)) (h : w' = σ • w) :

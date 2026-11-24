@@ -131,7 +131,7 @@ theorem thetaCharOff_eq {g n : ℕ} (S : Finset (Fin g)) (e : Fin n ≃ {k // k 
   classical
   let ε : {m : Fin g → ℤ // ∀ k ∈ S, m k = 0} ≃ (Fin n → ℤ) :=
     { toFun := fun m i => m.1 (e i).1
-      invFun := fun m => ⟨fun k => if h : k ∈ S then 0 else m (e.symm ⟨k, h⟩), fun k hk => dif_pos hk⟩
+      invFun := fun m => ⟨fun k => if h : k ∈ S then 0 else m (e.symm ⟨k, h⟩), fun k hk => dite_eq_left hk⟩
       left_inv := fun m => Subtype.ext (funext fun k => by
         by_cases h : k ∈ S
         · simp [h, m.2 k h]
@@ -386,7 +386,7 @@ theorem mean_eq {n g : ℕ} {τ : Matrix (Fin n) (Fin n) ℂ} {c₁ c₂ : Fin n
   have hinv : ∀ (l : Λ.toAddSubgroup) (z : Fin n → ℂ), ‖θ (l +ᵥ z)‖ ^ 2 * Real.exp (-Real.pi * (hermForm Hm (l +ᵥ z) (l +ᵥ z)).re) =
       ‖θ z‖ ^ 2 * Real.exp (-Real.pi * (hermForm Hm z z).re) := fun l z => by
     have : l +ᵥ z = z + (⟨l.1, l.2⟩ : Λ) := add_comm _ _
-    rw [this, hθ, AppellHumbertTrivial.re_hermForm_add_self hH, norm_mul, norm_mul, hχ, Complex.norm_exp, _root_.one_mul, mul_pow, ← Real.exp_nat_mul,
+    rw [this, hθ, AppellHumbertTrivial.re_hermForm_add_self hH, norm_mul, norm_mul, hχ, Complex.norm_exp, _root_.one_mul, mul_pow, ← Real.exp_natCast_mul,
       mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
     congr 2
     simp

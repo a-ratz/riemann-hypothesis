@@ -191,7 +191,7 @@ theorem pt_of_tests {U : Set ℂ} (hU : IsOpen U) {H : ℂ → ℂ} (hH : Contin
   apply measure_mono_null _ hae
   intro x hx
   have := hball x hx
-  simp only [Set.mem_setOf_eq, not_forall, exists_prop]
+  simp only [Set.mem_ofPred_eq, not_forall, exists_prop]
   exact ⟨this.2, this.1⟩
 
 end

@@ -96,7 +96,7 @@ theorem exists_monic_simple_root_generator_residue : ∀ (O R' Ω : Type) [CommR
       ∀ r : R', ∃ q : Polynomial O, u' r = (q.map (u'.comp φ')).eval β := by
   intro O R' Ω _ _ _ _ _ φ u hφ hur hker
   obtain ⟨-, hmax, hfin⟩ := hφ
-  haveI : IsLocalHom φ := by
+  have : IsLocalHom φ := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have h1 : φ a ∈ maximalIdeal R' := hmax ▸ Ideal.mem_map_of_mem φ ((mem_maximalIdeal a).2 hna)
@@ -109,10 +109,10 @@ theorem exists_monic_simple_root_generator_residue : ∀ (O R' Ω : Type) [CommR
   have hur' : (ResidueField.map φ).FormallyUnramified := by
     rw [← hcomp] at hur
     exact RingHom.FormallyUnramified.of_comp hur
-  letI := (ResidueField.map φ).toAlgebra
-  haveI : FiniteDimensional (ResidueField O) (ResidueField R') := hfin'
-  haveI : Algebra.FormallyUnramified (ResidueField O) (ResidueField R') := hur'
-  haveI : Algebra.IsSeparable (ResidueField O) (ResidueField R') :=
+  let := (ResidueField.map φ).toAlgebra
+  have : FiniteDimensional (ResidueField O) (ResidueField R') := hfin'
+  have : Algebra.FormallyUnramified (ResidueField O) (ResidueField R') := hur'
+  have : Algebra.IsSeparable (ResidueField O) (ResidueField R') :=
     Algebra.FormallyUnramified.isSeparable _ _
   let ι : ResidueField R' →+* Ω := Ideal.Quotient.lift (maximalIdeal R') u
     (fun a ha => by rwa [← RingHom.mem_ker, hker])
@@ -167,7 +167,7 @@ theorem exists_regular_completion :
         RingHom.ker uC = maximalIdeal C ∧ uC.comp c = u := by
   intro R₁ Ω _ _ _ u hu
   set C := AdicCompletion (maximalIdeal R₁) R₁
-  haveI : IsRegularLocalRing C := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion R₁
+  have : IsRegularLocalRing C := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion R₁
   have hbij := AdicCompletion.residueField_map_bijective_of_fg (R := R₁)
     (maximalIdeal R₁).fg_of_isNoetherianRing
   let e : ResidueField R₁ ≃+* ResidueField C :=
@@ -220,7 +220,7 @@ include hM hirr
 
 theorem map_maximalIdeal_isMaximal :
     ((maximalIdeal A).map (algebraMap A (AdjoinRoot M))).IsMaximal := by
-  haveI : Fact (Irreducible (M.map (residue A))) := ⟨hirr⟩
+  have : Fact (Irreducible (M.map (residue A))) := ⟨hirr⟩
   have hR : IsField (AdjoinRoot (M.map (residue A))) := Field.toIsField _
   rw [AdjoinRoot.algebraMap_eq]
   exact Ideal.Quotient.maximal_of_isField _
@@ -259,7 +259,7 @@ theorem isAdicComplete [IsLocalRing (AdjoinRoot M)] [IsAdicComplete (maximalIdea
     IsAdicComplete (maximalIdeal (AdjoinRoot M)) (AdjoinRoot M) := by
   have : Module.Finite A (AdjoinRoot M) := .of_basis (AdjoinRoot.powerBasis' hM).basis
   rw [← maximalIdeal_eq M hM hirr, IsAdicComplete.map_algebraMap_iff]
-  haveI : IsPrecomplete (maximalIdeal A) (AdjoinRoot M) :=
+  have : IsPrecomplete (maximalIdeal A) (AdjoinRoot M) :=
     ReciprocityTheory.ChartRestriction.G.Semi.Nb.isPrecomplete_of_basis _ (AdjoinRoot.powerBasis' hM).basis
   exact { toIsHausdorff := inferInstance, toIsPrecomplete := inferInstance }
 
@@ -277,7 +277,7 @@ theorem exists_extension : ∀ (A Ω : Type) [CommRing A] [IsRegularLocalRing A]
   let ub : ResidueField A →+* Ω := Ideal.Quotient.lift (maximalIdeal A) u
     (fun x hx => (RingHom.mem_ker).1 (hker ▸ hx))
   have hub : ∀ x, ub (residue A x) = u x := fun x => rfl
-  letI : Algebra (ResidueField A) Ω := ub.toAlgebra
+  let : Algebra (ResidueField A) Ω := ub.toAlgebra
   have hpu : p.map u = (p.map (residue A)).map ub := by
     rw [Polynomial.map_map]; congr 1
   have hint : IsIntegral (ResidueField A) α := by
@@ -289,12 +289,12 @@ theorem exists_extension : ∀ (A Ω : Type) [CommRing A] [IsRegularLocalRing A]
   obtain ⟨M, hMm, -, hM⟩ := lifts_and_natDegree_eq_and_monic ((mem_lifts _).2 ⟨q, hq⟩)
     (minpoly.monic hint)
   have hirr : Irreducible (M.map (residue A)) := hMm ▸ minpoly.irreducible hint
-  haveI := isLocalRing M hM hirr
-  haveI : Module.Finite A (AdjoinRoot M) := .of_basis (AdjoinRoot.powerBasis' hM).basis
-  haveI : Module.Free A (AdjoinRoot M) := .of_basis (AdjoinRoot.powerBasis' hM).basis
-  haveI : IsNoetherianRing (AdjoinRoot M) := isNoetherian_of_tower A inferInstance
-  haveI := isLocalHom M hM hirr
-  haveI : IsRegularLocalRing (AdjoinRoot M) :=
+  have := isLocalRing M hM hirr
+  have : Module.Finite A (AdjoinRoot M) := .of_basis (AdjoinRoot.powerBasis' hM).basis
+  have : Module.Free A (AdjoinRoot M) := .of_basis (AdjoinRoot.powerBasis' hM).basis
+  have : IsNoetherianRing (AdjoinRoot M) := isNoetherian_of_tower A inferInstance
+  have := isLocalHom M hM hirr
+  have : IsRegularLocalRing (AdjoinRoot M) :=
     GroundTheory.Arith.SchemeCoh.IsRegularLocalRing.of_flat_of_map_maximalIdeal (maximalIdeal_eq M hM hirr)
   have hev : M.eval₂ u α = 0 := by
     have h1 : M.eval₂ u α = (M.map (residue A)).eval₂ ub α := by
@@ -349,9 +349,9 @@ theorem lTensor_injective_of_smul_le (I : Ideal A) [hI : I.IsMaximal]
     obtain ⟨x, rfl⟩ := N.mkQ_surjective x
     change N.mkQ (a.1 • x) = 0
     exact (Submodule.Quotient.mk_eq_zero N).mpr (hN (Submodule.smul_mem_smul a.2 trivial))
-  letI : Module (A ⧸ I) (F ⧸ N) := htors.module
-  haveI : IsScalarTower A (A ⧸ I) (F ⧸ N) := htors.isScalarTower
-  letI : Field (A ⧸ I) := Ideal.Quotient.field I
+  let : Module (A ⧸ I) (F ⧸ N) := htors.module
+  have : IsScalarTower A (A ⧸ I) (F ⧸ N) := htors.isScalarTower
+  let : Field (A ⧸ I) := Ideal.Quotient.field I
   have h2 : Function.Injective ((ker p).subtype.lTensor (F ⧸ N)) := by
     have h3 : Function.Injective
         ((AlgebraTensorModule.lTensor (A ⧸ I) (A ⧸ I) (ker p).subtype).lTensor (F ⧸ N)) :=
@@ -619,11 +619,11 @@ theorem ring_part (R R₀ R' O Ω : Type) [CommRing R] [IsNoetherianRing R] [Com
     ∃ (E : Type) (_ : CommRing E) (_ : IsRegularLocalRing E) (_ : IsDomain E) (a : R₀ →+* E) (b : R' →+* E)
       (v : E →+* Ω), a.Flat ∧ b.Flat ∧ a.comp ρ = b.comp (φ'.comp (algebraMap R O)) ∧
       RingHom.ker v = maximalIdeal E ∧ v.comp a = u ∧ v.comp b = u' ∧ (RingHom.ker u).map a = maximalIdeal E := by
-  haveI : IsNoetherianRing O := IsLocalization.isNoetherianRing p.primeCompl O inferInstance
-  haveI hq : (RingHom.ker u).IsPrime := RingHom.ker_isPrime u
+  have : IsNoetherianRing O := IsLocalization.isNoetherianRing p.primeCompl O inferInstance
+  have hq : (RingHom.ker u).IsPrime := RingHom.ker_isPrime u
   let R₁ := Localization.AtPrime (RingHom.ker u)
-  haveI : IsRegularRing R₀ := isRegularRing_of_isRegularLocalRing R₀
-  haveI : IsRegularLocalRing R₁ := IsRegularRing.isRegularLocalRing_localization _
+  have : IsRegularRing R₀ := isRegularRing_of_isRegularLocalRing R₀
+  have : IsRegularLocalRing R₁ := IsRegularRing.isRegularLocalRing_localization _
   have h1 : ∀ s : p.primeCompl, IsUnit (((algebraMap R₀ R₁).comp ρ) s) := by
     intro s
     have hs : IsUnit (u (ρ s)) := by
@@ -648,10 +648,10 @@ theorem ring_part (R R₀ R' O Ω : Type) [CommRing R] [IsNoetherianRing R] [Com
     rw [RingHom.flat_algebraMap_iff]; exact IsLocalization.flat R₁ (RingHom.ker u).primeCompl
   have fl1 : φ₁.Flat := by
     have hf : (φ₁.comp (algebraMap R O)).Flat := by rw [e1]; exact hρ.comp fl0
-    letI : Algebra O R₁ := φ₁.toAlgebra
-    letI : Algebra R R₁ := (φ₁.comp (algebraMap R O)).toAlgebra
-    haveI : IsScalarTower R O R₁ := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : Module.Flat R R₁ := hf
+    let : Algebra O R₁ := φ₁.toAlgebra
+    let : Algebra R R₁ := (φ₁.comp (algebraMap R O)).toAlgebra
+    have : IsScalarTower R O R₁ := IsScalarTower.of_algebraMap_eq' rfl
+    have : Module.Flat R R₁ := hf
     exact (Module.flat_iff_of_isLocalization O p.primeCompl R₁).mpr this
   have lo : IsLocalHom φ₁ := by
     refine ⟨fun z hz => ?_⟩
@@ -677,8 +677,8 @@ theorem gen_part {X S : Scheme.{0}} {j : X ⟶ S} {A : Over X} [GrpObj A] {x : S
       l ≫ pullback.fst _ _ = pullback.fst ((Over.pullback (spMap a)).obj C.G).hom (jK E) ≫ pullback.fst C.G.hom (spMap a) ∧
       IsGrpPullback ((Over.pullback (jK E)).obj ((Over.pullback (spMap a)).obj C.G)) A y (l ≫ C.α) := by
   have hi : Function.Injective a := by
-    letI : Algebra C.R E := a.toAlgebra
-    haveI : Module.Flat C.R E := ha
+    let : Algebra C.R E := a.toAlgebra
+    have : Module.Flat C.R E := ha
     exact FaithfulSMul.algebraMap_injective C.R E
   have hi' : Function.Injective ((algebraMap E (FractionRing E)).comp a) :=
     (IsFractionRing.injective E (FractionRing E)).comp hi
@@ -715,9 +715,9 @@ theorem ring_setup (σ : Setup) (x x' : Sp σ.R) (Ω : Type) [Field Ω] (u : (σ
       (b : (σ.C x').R →+* E) (v : E →+* Ω), a.Flat ∧ b.Flat ∧ a.comp (σ.ρ x) = b.comp (σ.ρ x') ∧
       RingHom.ker v = maximalIdeal E ∧ v.comp a = u ∧ v.comp b = u' ∧ (RingHom.ker u).map a = maximalIdeal E := by
   let z : Sp σ.R := (σ.C x').ξ (closedPoint (σ.C x').R)
-  haveI : z.asIdeal.IsPrime := z.isPrime
-  letI : Algebra σ.R ((Sp σ.R).presheaf.stalk z) := (StructureSheaf.toStalk σ.R z).hom.toAlgebra
-  haveI : IsLocalization.AtPrime ((Sp σ.R).presheaf.stalk z) z.asIdeal := StructureSheaf.IsLocalization.to_stalk σ.R z
+  have : z.asIdeal.IsPrime := z.isPrime
+  let : Algebra σ.R ((Sp σ.R).presheaf.stalk z) := (StructureSheaf.toStalk σ.R z).hom.toAlgebra
+  have : IsLocalization.AtPrime ((Sp σ.R).presheaf.stalk z) z.asIdeal := StructureSheaf.IsLocalization.to_stalk σ.R z
   have e : (Scheme.stalkClosedPointTo (σ.C x').ξ).hom.comp (algebraMap σ.R ((Sp σ.R).presheaf.stalk z)) = σ.ρ x' := by
     apply spinj
     rw [← spc, ← σ.hρ x']
@@ -742,7 +742,7 @@ open CommonChart
 theorem setup_common : ∀ σ : Setup, σ.Common := by
   intro σ x x' Ω _ u u' hk huu
   obtain ⟨E, _, _, _, a, b, v, fa, fb, hab, hv, hva, hvb, hma⟩ := ring_setup σ x x' Ω u u' hk huu
-  haveI : IsIntegrallyClosed E := (isDomain_and_isIntegrallyClosed_of_isRegularLocalRing E).2
+  have : IsIntegrallyClosed E := (isDomain_and_isIntegrallyClosed_of_isRegularLocalRing E).2
   obtain ⟨ya, la, hya, hla, pa⟩ := gen_part (σ.C x) a fa
   obtain ⟨yb, lb, hyb, hlb, pb⟩ := gen_part (σ.C x') b fb
   have hy : yb = ya := by
@@ -752,17 +752,17 @@ theorem setup_common : ∀ σ : Setup, σ.Common := by
   have sa := IsSemiAbelian.pullback (spMap a) _ (σ.C x).semi
   have sb := IsSemiAbelian.pullback (spMap b) _ (σ.C x').semi
   obtain ⟨F, hF, eF⟩ := iso_extend _ _ sa sb e
-  haveI := sa
-  haveI : IsIntegral ((Over.pullback (spMap a)).obj (σ.C x).G).left := isIntegral_left_of_isSemiAbelian _
+  have := sa
+  have : IsIntegral ((Over.pullback (spMap a)).obj (σ.C x).G).left := isIntegral_left_of_isSemiAbelian _
   have ga := isGrpPullback_pullback (σ.C x).G (spMap a)
   have gb := ((isGrpPullback_of_iso F).comp (isGrpPullback_pullback (σ.C x').G (spMap b))).congr
     (Category.id_comp _) rfl
-  haveI : Flat (spMap a) := by
+  have : Flat (spMap a) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]; exact fa
-  haveI : Flat (spMap b) := by
+  have : Flat (spMap b) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]; exact fb
-  haveI : Flat (pullback.fst (σ.C x).G.hom (spMap a)) := inferInstance
-  haveI : Flat (F.hom.left ≫ pullback.fst (σ.C x').G.hom (spMap b)) :=
+  have : Flat (pullback.fst (σ.C x).G.hom (spMap a)) := inferInstance
+  have : Flat (F.hom.left ≫ pullback.fst (σ.C x').G.hom (spMap b)) :=
     MorphismProperty.of_isPullback (P := @Flat) gb.1.flip inferInstance
   obtain ⟨θa, ha⟩ := @exists_ff _ ((Over.pullback (spMap a)).obj (σ.C x).G).left _ _
     (pullback.fst (σ.C x).G.hom (spMap a)) inferInstance
@@ -770,7 +770,7 @@ theorem setup_common : ∀ σ : Setup, σ.Common := by
   refine ⟨E, _, inferInstance, inferInstance, a, b, v, (Over.pullback (spMap a)).obj (σ.C x).G, inferInstance,
     inferInstance, _, _, θa, θb, fa, fb, hab, hv, hva, hvb, hma, sa, ga, gb,
     ⟨_, Category.comp_id _, ha⟩, ⟨_, Category.comp_id _, hb⟩, ?_⟩
-  haveI := sa.smooth
+  have := sa.smooth
   obtain ⟨t, ht⟩ := gp_factor ((Over.pullback (spMap a)).obj (σ.C x).G).hom
   let m := pullback.lift _ _ ht.symm
   have hm : m ≫ pullback.fst _ _ = gp _ := pullback.lift_fst _ _ _
@@ -780,7 +780,7 @@ theorem setup_common : ∀ σ : Setup, σ.Common := by
     rw [← eF]; exact pullback.lift_fst _ _ _
   have e₂ := ff_eq σ x' θb (m ≫ e.hom.left ≫ lb) (by
     rw [Category.assoc, Category.assoc, hlb, reassoc_of% hE, ← Category.assoc, hm, hb])
-  haveI : Mono (gp σ.A.left) := by unfold gp; infer_instance
+  have : Mono (gp σ.A.left) := by unfold gp; infer_instance
   apply spinj
   rw [← cancel_mono (gp σ.A.left), ← e₁, ← e₂, Category.assoc, Category.assoc, Category.assoc, hee]
 

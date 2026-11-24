@@ -107,7 +107,7 @@ private theorem galOf_cont {A B : Type*} [CommRing A] [Algebra F A] [CommRing B]
   exact continuous_finsetSum _ fun i _ => continuous_const.mul (hm.comp (hc i))
 
 private theorem galAd_cont (σ : E ≃ₐ[F] E) : Continuous (galAd σ) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   refine galOf_cont (adeleTensorEquiv F E) σ (Module.finBasis F E) (coord (Module.finBasis F E))
     (continuous_coord _) (adeleTensorEquiv_symm_apply _) ?_
   have h : (fun a : 𝔸[F] => adeleTensorEquiv F E ((1 : E) ⊗ₜ a)) = adeleMap F E := by
@@ -117,7 +117,7 @@ private theorem galAd_cont (σ : E ≃ₐ[F] E) : Continuous (galAd σ) := by
   exact continuous_adeleMap
 
 private theorem galInf_cont (σ : E ≃ₐ[F] E) : Continuous (galInf σ) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   refine galOf_cont (GroundTheory.Global.InfinitePlace.tensorInfiniteAdeleRingEquiv (K := F) (L := E)) σ
     (Module.finBasis F E) (GroundTheory.Global.InfinitePlace.adeleCoord (Module.finBasis F E))
     (GroundTheory.Global.InfinitePlace.continuous_adeleCoord _) (fun y => ?_) ?_
@@ -240,7 +240,7 @@ theorem UpperTheory.adelicBound_of_centralizer_localization :
   have hm := (hN F E σ hσ n hn).2.2
   set d : GL (Fin n) (InfiniteAdeleRing E) →* {r : ℝ // 0 < r} := (detModule E n).comp (emb E n) with hd
   have hdc : Continuous fun y => (d y : ℝ) :=
-    continuous_subtype_val.comp (continuous_detModule.comp (continuous_emb E n))
+    continuous_subtypeVal.comp (continuous_detModule.comp (continuous_emb E n))
   have hdz : ∀ s : ℝ, (d (pI E n (zA E n s)) : ℝ) = Real.exp s := fun s => by
     simp only [hd, MonoidHom.comp_apply, hz]
     rw [zA, detModule_centralSection hn]
@@ -553,7 +553,7 @@ theorem UpperTheory.euler_product_support_finite :
     refine ((Filter.eventually_cofinite.1 (hR.ae g)).union S.finite_toSet).subset ?_
     intro v hv
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, Finset.mem_coe, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, Finset.mem_coe, not_or, not_not] at hc
     exact hv ((hS v hc.2 _).1 (hKA v _ hc.1))
   obtain ⟨W, hW⟩ : ∃ W : Set G, W = {g | ∀ v ∉ S, ∃ t, ∃ y ∈ K v, p v g = jv v t * y} := ⟨_, rfl⟩
   have hmem : ∀ g, g ∈ W ↔ ∀ v ∉ S, ∃ t, ∃ y ∈ K v, p v g = jv v t * y := by
@@ -637,7 +637,7 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
   unfold HaarEx
   intro V G _ _ _ _ _ _ _ _ Gi _ _ _ _ _ _ _ _ Gv _ _ _ _ _ _ _ _ q p K hR μ μi m hμ hμi hm S
   classical
-  haveI : ∀ v, (m v).IsHaarMeasure := hm
+  have : ∀ v, (m v).IsHaarMeasure := hm
   have cf : Continuous (prS q p S) := by
     have h : ⇑(prS q p S) = fun g => (q g, fun v : S => p v g) := rfl
     rw [h]
@@ -648,18 +648,18 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
     obtain ⟨g, h1, h2⟩ := hR.surj gi (fun v => if hv : v ∈ S then gv ⟨v, hv⟩ else 1) (by
       filter_upwards [S.finite_toSet.compl_mem_cofinite] with v hv
       have hv' : v ∉ S := by simpa using hv
-      rw [dif_neg hv']
+      rw [dite_eq_right hv']
       exact one_mem _)
     refine ⟨g, ?_, ?_⟩
     · intro v hv
-      rw [h2, dif_neg hv]
+      rw [h2, dite_eq_right hv]
       exact one_mem _
     · rw [prS_apply, h1]
       congr 1
       funext v
-      rw [h2, dif_pos v.2]
+      rw [h2, dite_eq_left v.2]
   obtain ⟨ν, hν⟩ : ∃ ν, ν = (μ.restrict (US p K S : Set G)).map (prS q p S) := ⟨_, rfl⟩
-  haveI inv : ν.IsMulLeftInvariant := by
+  have inv : ν.IsMulLeftInvariant := by
     refine ⟨fun h => ?_⟩
     obtain ⟨u, hu, rfl⟩ := hs h
     ext A hA
@@ -672,7 +672,7 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
       simp only [Set.mem_inter_iff, Set.mem_preimage, map_mul, SetLike.mem_coe,
         Subgroup.mul_mem_cancel_left _ hu]
     rw [hset, measure_preimage_mul]
-  haveI fin : IsFiniteMeasureOnCompacts ν := by
+  have fin : IsFiniteMeasureOnCompacts ν := by
     refine ⟨fun D hD => ?_⟩
     rw [hν, Measure.map_apply mf hD.measurableSet, Measure.restrict_apply (mf hD.measurableSet)]
     let C : ∀ v, Set (Gv v) := fun v =>
@@ -680,22 +680,22 @@ theorem UpperTheory.exists_haarMeasure_adelicGL :
     have hC : ∀ v, IsCompact (C v) := by
       intro v
       by_cases hv : v ∈ S
-      · simp only [C, dif_pos hv]
+      · simp only [C, dite_eq_left hv]
         exact hD.image (by fun_prop)
-      · simp only [C, dif_neg hv]
+      · simp only [C, dite_eq_right hv]
         exact hR.cpt v
     have hW := hR.prop (Prod.fst '' D) C (hD.image continuous_fst) hC (by
       filter_upwards [S.finite_toSet.compl_mem_cofinite] with v hv
       have hv' : v ∉ S := by simpa using hv
-      simp only [C, dif_neg hv']
+      simp only [C, dite_eq_right hv']
       exact subset_rfl)
     refine lt_of_le_of_lt (measure_mono ?_) hW.measure_lt_top
     rintro g ⟨h1, h2⟩
     refine ⟨⟨_, h1, rfl⟩, fun v => ?_⟩
     by_cases hv : v ∈ S
-    · simp only [C, dif_pos hv]
+    · simp only [C, dite_eq_left hv]
       exact ⟨_, h1, rfl⟩
-    · simp only [C, dif_neg hv]
+    · simp only [C, dite_eq_right hv]
       exact h2 v hv
   have e := Measure.isMulLeftInvariant_eq_smul ν (μi.prod (Measure.pi fun v : S => m v))
   refine ⟨Measure.haarScalarFactor ν (μi.prod (Measure.pi fun v : S => m v)), ?_, ?_⟩
@@ -833,7 +833,7 @@ private theorem UpperTheory.restricted_product_measure_set
   rw [← h2]
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_prod, Set.mem_pi,
+  simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_prod, Set.mem_pi,
     Set.mem_univ, true_imp_iff]
   constructor
   · rintro ⟨ha, hb⟩
@@ -901,10 +901,10 @@ open MeasureTheory
 theorem UpperTheory.haar_quotient_subgroup :
     QSub := by
   intro G _ _ _ _ _ _ _ _ T _ _ _ _ _ _ _ _ H hH μ j ν hp Φ hΦ hi
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
   obtain ⟨ρ₀, -, hρ₀, -⟩ := normEx H T μ j ν hp
-  have hemb : MeasurableEmbedding (Subtype.val : H → G) := MeasurableEmbedding.subtype_coe hH.measurableSet
+  have hemb : MeasurableEmbedding (Subtype.val : H → G) := MeasurableEmbedding.subtypeVal hH.measurableSet
   have hinj : Function.Injective (Subtype.val : H → G) := Subtype.val_injective
   have hex : ∃ ρ, IsNormAlong (fun x : H => (x : G)) (fun t => (j t : G)) ν ρ := by
     refine ⟨Function.extend Subtype.val (fun x : H => (ρ₀ x : ENNReal)) 0,
@@ -918,7 +918,7 @@ theorem UpperTheory.haar_quotient_subgroup :
   unfold quotInt
   rw [dite_eq_left hex]
   have hn : IsNrm j ν (fun x : H => hex.choose (x : G)) :=
-    ⟨hex.choose_spec.1.comp measurable_subtype_coe, fun x => by
+    ⟨hex.choose_spec.1.comp measurable_subtypeVal, fun x => by
       simpa only [Subgroup.coe_mul] using hex.choose_spec.2 x⟩
   exact ((quotEq H T μ j ν hp Φ hΦ hi _ hn).2.2).symm
 end -- clump:auto
@@ -1040,10 +1040,10 @@ private theorem inv_all {P : Type} [Group P] [MeasurableSpace P] [MeasurableInv 
 theorem UpperTheory.local_unimodular_of_exists_haar_measure :
     HaarEx → UniLoc := by
   intro hH V G _ _ _ _ _ _ _ _ Gi _ _ _ _ _ _ _ _ Gv _ _ _ _ _ _ _ _ q p K hRP μ μi m hμ hμi hm
-  haveI := hμ.1
-  haveI := hμ.2
-  haveI := hμi
-  haveI := fun v => hm v
+  have := hμ.1
+  have := hμ.2
+  have := hμi
+  have := fun v => hm v
   have key : ∀ (S : Finset V) (A : Set Gi) (B : ∀ v : S, Set (Gv v)),
       μi A⁻¹ * ∏ v : S, m v (B v)⁻¹ = μi A * ∏ v : S, m v (B v) := by
     intro S A B
@@ -1060,7 +1060,7 @@ theorem UpperTheory.local_unimodular_of_exists_haar_measure :
     have hset : (A ×ˢ Set.pi Set.univ B)⁻¹ = A⁻¹ ×ˢ Set.pi Set.univ (fun v => (B v)⁻¹) := by
       ext ⟨x, y⟩
       simp [Set.mem_prod, Set.mem_pi, Set.mem_inv]
-    rw [hE', hset, Measure.smul_apply, Measure.smul_apply, Measure.prod_prod, Measure.prod_prod,
+    rw [hE', hset, smul_apply, smul_apply, Measure.prod_prod, Measure.prod_prod,
       Measure.pi_pi, Measure.pi_pi, ENNReal.smul_def, ENNReal.smul_def, smul_eq_mul, smul_eq_mul] at h1
     exact (ENNReal.mul_right_inj (by exact_mod_cast ha) ENNReal.coe_ne_top).1 h1
   have hinv : ∀ A : Set Gi, μi A⁻¹ = μi A := by
@@ -1144,14 +1144,14 @@ theorem UpperTheory.orbitalSideBaseField_of_absoluteConvergence :
     Set.isClosed_centralizer _
   have hcF : ∀ v : Pl F, IsClosed ((TF γ v : Subgroup (GL (Fin n) (v.adicCompletion F))) :
       Set (GL (Fin n) (v.adicCompletion F))) := fun v => Set.isClosed_centralizer _
-  haveI : LocallyCompactSpace (TA γ) := hcA.locallyCompactSpace
-  haveI : LocallyCompactSpace (TI γ) := hcI.locallyCompactSpace
-  haveI : ∀ v : Pl F, LocallyCompactSpace (TF γ v) := fun v => (hcF v).locallyCompactSpace
-  haveI : SecondCountableTopology (TA γ) :=
+  have : LocallyCompactSpace (TA γ) := hcA.locallyCompactSpace
+  have : LocallyCompactSpace (TI γ) := hcI.locallyCompactSpace
+  have : ∀ v : Pl F, LocallyCompactSpace (TF γ v) := fun v => (hcF v).locallyCompactSpace
+  have : SecondCountableTopology (TA γ) :=
     TopologicalSpace.Subtype.secondCountableTopology ((TA γ : Subgroup (GA F n)) : Set (GA F n))
-  haveI : SecondCountableTopology (TI γ) := TopologicalSpace.Subtype.secondCountableTopology
+  have : SecondCountableTopology (TI γ) := TopologicalSpace.Subtype.secondCountableTopology
     ((TI γ : Subgroup (GL (Fin n) (InfiniteAdeleRing F))) : Set (GL (Fin n) (InfiniteAdeleRing F)))
-  haveI : ∀ v : Pl F, SecondCountableTopology (TF γ v) := fun v => TopologicalSpace.Subtype.secondCountableTopology
+  have : ∀ v : Pl F, SecondCountableTopology (TF γ v) := fun v => TopologicalSpace.Subtype.secondCountableTopology
     ((TF γ v : Subgroup (GL (Fin n) (v.adicCompletion F))) : Set (GL (Fin n) (v.adicCompletion F)))
   have hR := hRP F n
   have hRT := hRC _ _ _ _ (pI F n) (pF F n) (KF F n) hR (AdelicGLn.diagonal F n γ)
@@ -1244,15 +1244,15 @@ theorem UpperTheory.orbitalSideExtension_of_absoluteConvergence :
   obtain ⟨t1, t2, t3, -⟩ := hTC F n γ hγ
   have hG := hRPE F E n
   have hT := hRPC _ _ _ _ (pI F n) (pF F n) (KF F n) (hRPF F n) (AdelicGLn.diagonal F n γ)
-  haveI : LocallyCompactSpace (TA γ) := (cent_closed _).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace (TI γ) := (cent_closed _).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : ∀ v : Pl F, LocallyCompactSpace (TF γ v) :=
+  have : LocallyCompactSpace (TA γ) := (cent_closed _).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (TI γ) := (cent_closed _).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : ∀ v : Pl F, LocallyCompactSpace (TF γ v) :=
     fun v => (cent_closed _).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (TA γ) :=
+  have : SecondCountableTopology (TA γ) :=
     TopologicalSpace.Subtype.secondCountableTopology ((TA γ : Subgroup (GA F n)) : Set (GA F n))
-  haveI : SecondCountableTopology (TI γ) :=
+  have : SecondCountableTopology (TI γ) :=
     TopologicalSpace.Subtype.secondCountableTopology ((TI γ : Subgroup _) : Set (GL (Fin n) (InfiniteAdeleRing F)))
-  haveI : ∀ v : Pl F, SecondCountableTopology (TF γ v) := fun v =>
+  have : ∀ v : Pl F, SecondCountableTopology (TF γ v) := fun v =>
     TopologicalSpace.Subtype.secondCountableTopology ((TF γ v : Subgroup _) : Set (GL (Fin n) (v.adicCompletion F)))
   obtain ⟨uI, uV⟩ := hUL (Pl F) (GA E n) _ _ (pI E n) (fun v => pE E n v) (fun v => KE E n v) hG μ μi m hμ hμi hm
   have hZ : Continuous (zA E n) :=
@@ -1325,11 +1325,11 @@ theorem UpperTheory.restrictedProduct_centralizer_adelicGL :
     · rw [map_mul, map_mul]; exact comm.1 (h2 v)
   refine
     { cq := ?_, cp := ?_, opn := ?_, cpt := ?_, ae := ?_, opnU := ?_, ext := ?_, surj := ?_, prop := ?_ }
-  · exact Continuous.subtype_mk (h.cq.comp continuous_subtype_val) _
+  · exact Continuous.subtype_mk (h.cq.comp continuous_subtypeVal) _
   · intro v
-    exact Continuous.subtype_mk ((h.cp v).comp continuous_subtype_val) _
+    exact Continuous.subtype_mk ((h.cp v).comp continuous_subtypeVal) _
   · intro v
-    exact (h.opn v).preimage continuous_subtype_val
+    exact (h.opn v).preimage continuous_subtypeVal
   · intro v
     have hc : IsClosed ((Subgroup.centralizer ({p v g} : Set (Gv v)) : Subgroup (Gv v)) : Set (Gv v)) := by
       have : ((Subgroup.centralizer ({p v g} : Set (Gv v)) : Subgroup (Gv v)) : Set (Gv v))
@@ -1341,7 +1341,7 @@ theorem UpperTheory.restrictedProduct_centralizer_adelicGL :
   · intro t
     exact h.ae t
   · intro S
-    exact (h.opnU S).preimage continuous_subtype_val
+    exact (h.opnU S).preimage continuous_subtypeVal
   · intro a b h1 h2
     exact Subtype.ext (h.ext _ _ (congrArg Subtype.val h1) fun v => congrArg Subtype.val (h2 v))
   · intro gi gv hv
@@ -1482,7 +1482,7 @@ theorem UpperTheory.restrictedProduct_finite_adelicGL :
     have h2 := (phi K n).isCompact_preimage.2 h
     convert h2 using 1
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_prod, phi_fst, phi_snd]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_prod, phi_fst, phi_snd]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AdelicQuotients.RestrictedProductFiniteAdelicGL =====
@@ -1600,7 +1600,7 @@ theorem UpperTheory.splitCentralizer_of_splitEquiv :
         ((IsEmbedding.of_comp_iff (IsEmbedding.subtypeVal : IsEmbedding (Subtype.val : TA γ → GA F n))).1
           (show IsEmbedding ((Subtype.val : G1 F n → GA F n) ∘ (Subtype.val : Subgroup.centralizer {γ₁} → G1 F n)) from
             IsEmbedding.subtypeVal.comp IsEmbedding.subtypeVal))
-        (continuous_detModule.comp continuous_subtype_val)
+        (continuous_detModule.comp continuous_subtypeVal)
         (continuous_centralSection.subtype_mk _)
         (fun s => detModule_centralSection hn s)
         (fun s g => Subtype.ext (centralSection_mul_comm s _))
@@ -1726,7 +1726,7 @@ theorem UpperTheory.twistedNorm_central_of_baseChange_compat :
       = ⟨Real.exp s, Real.exp_pos s⟩ := by
     apply Subtype.ext
     have : ((⟨Real.exp (s / Module.finrank F E), Real.exp_pos _⟩ ^ Module.finrank F E : {r : ℝ // 0 < r}) : ℝ) = Real.exp (s / Module.finrank F E) ^ Module.finrank F E := rfl
-    rw [this, ← Real.exp_nat_mul, mul_div_cancel₀ _ hl]
+    rw [this, ← Real.exp_natCast_mul, mul_div_cancel₀ _ hl]
   have hz : pI E n (zA E n s) =
       mapGL n (infMap F E) (pI F n (zA F n (s / Module.finrank F E))) := by
     rw [← c3, hB F E n, e1]
@@ -1838,12 +1838,12 @@ private theorem main (hGl : Glob) (hC : HaarConst) (hX : HaarEx) (hRF : RPF) (hR
   have hsep : IsRegSemisimple γ := hirr.separable
   obtain ⟨ν', hν', hGF, hGE⟩ := hG γ γ₁ hγ₁ hsep ν hν
   obtain ⟨hs1, hs2, hs3⟩ := hS F n γ hsep
-  haveI : LocallyCompactSpace (TA γ) := lc_cent _
-  haveI : LocallyCompactSpace (TI γ) := lc_cent _
-  haveI : ∀ v, LocallyCompactSpace (TF γ v) := fun v => lc_cent _
-  haveI : SecondCountableTopology (TA γ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology (TI γ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : ∀ v, SecondCountableTopology (TF γ v) := fun v => TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (TA γ) := lc_cent _
+  have : LocallyCompactSpace (TI γ) := lc_cent _
+  have : ∀ v, LocallyCompactSpace (TF γ v) := fun v => lc_cent _
+  have : SecondCountableTopology (TA γ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (TI γ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : ∀ v, SecondCountableTopology (TF γ v) := fun v => TopologicalSpace.Subtype.secondCountableTopology _
   have hT := fun S' => hX _ _ _ _ _ _ _ (hRC _ _ _ _ _ _ _ (hRF F n) (AdelicGLn.diagonal F n γ)) ν' Measure.haar
     (fun _ => Measure.haar) hν' inferInstance (fun _ => inferInstance) S'
   have hcF := (hKF F n hn γ hsep)

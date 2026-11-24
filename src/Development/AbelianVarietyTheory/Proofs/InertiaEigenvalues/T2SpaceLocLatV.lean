@@ -50,7 +50,7 @@ theorem onT_exact {T Y Z : LocLat G Qp LL O} {ι : LatHom T.L Y.L} {π : LatHom 
 theorem lTensor_inj {T Y Z : LocLat G Qp LL O} {ι : LatHom T.L Y.L} {π : LatHom Y.L Z.L}
     (h : IsSESLat (Qp := Qp) ι π) (R : Type) [AddCommGroup R] [Module O R] :
     Function.Injective ((onT ι).lTensor R) := by
-  haveI := Z.L.free
+  have := Z.L.free
   obtain ⟨s, hs⟩ := Module.projective_lifting_property (onT π) LinearMap.id (onT_surj h)
   have h3 := ((onT_exact h).split_tfae (onT_inj h) (onT_surj h)).out 1 2
   obtain ⟨r, hr⟩ := h3.1 ⟨s, hs⟩
@@ -111,8 +111,8 @@ theorem generic [T2Space LL] [IsTopologicalRing LL] (E : EtTie W RA RW inclR φR
   obtain ⟨c', hc', hval⟩ := E.cl_def T pr b hφ
   rw [← hc']
   congr 1
-  haveI := Yt.L.free
-  haveI := t2Space_locLat_V T
+  have := Yt.L.free
+  have := t2Space_locLat_V T
   have hone : Function.Injective fun y : ↥Yt.L.T => (1 : RW) ⊗ₜ[O] y := by
     have := Module.Flat.rTensor_preserves_injective_linearMap (M := ↥Yt.L.T)
       (Algebra.linearMap O RW) hinj
@@ -137,13 +137,13 @@ theorem generic [T2Space LL] [IsTopologicalRing LL] (E : EtTie W RA RW inclR φR
   let M : Submonoid ↥W.GKs :=
     { carrier := {g | (c' : ↥W.GKs → T.V) g = (c : ↥W.GKs → T.V) g}
       mul_mem' := fun {a a'} ha ha' => by
-        simp only [Set.mem_setOf_eq] at ha ha' ⊢
+        simp only [Set.mem_ofPred_eq] at ha ha' ⊢
         rw [c'.2.1.2, c.2.1.2, ha, ha']
       one_mem' := by
         have e1 := c'.2.1.2 1 1
         have e2 := c.2.1.2 1 1
         simp only [mul_one, map_one, Module.End.one_apply, left_eq_add] at e1 e2
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         rw [e1, e2] }
   have hM := hdense M (isClosed_eq c'.2.1.1 c.2.1.1)
     (fun g hg => by
@@ -169,7 +169,7 @@ theorem zlW_inj (R : Type) [CommRing R] [Nontrivial R] [CharP R l] : Function.In
     (WittVector.equiv l).symm.injective
 
 theorem algebraMap_RW_inj (LL : FinExt l) : Function.Injective (algebraMap ↥(OL LL) (RW LL)) := by
-  haveI : Module.IsTorsionFree ℤ_[l] ↥(OL LL) := by
+  have : Module.IsTorsionFree ℤ_[l] ↥(OL LL) := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]
     intro a b hab
     have h := congrArg (fun x : ↥(OL LL) => (x : ↥LL.1)) hab
@@ -278,8 +278,8 @@ end GlobalTheory.Cyc.DictKs
 
 theorem GlobalTheory.Cyc.dict_ext_Ks : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW), adm9 D HW F → ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let S := sit D.loc HW l (D.locA l) K s LL h; let E : S.Comparison₂ := ((F l).E K s LL h).tie; ∀ (T Yt Z : LocLat S.G S.Qp S.LL S.O) (ι : LatHom T.L Yt.L) (π : LatHom Yt.L Z.L), IsSESLat (Qp := S.Qp) ι π → (∀ g x, Z.ρ g x = x) → ∀ (yt : ↥Yt.L.T) (z : ↥Z.L.T) (e : S.W.DD Yt), (z : Z.V) = π.f yt → E.jD Z (S.W.map π e) = (1 : S.RW) ⊗ₜ[S.O] z → ∀ pr : ↥(S.W.divisibleCocycles T), S.W.map ι (pr : S.W.DD T × S.W.DD T).1 = S.W.φD Yt e - e → S.W.map ι (pr : S.W.DD T × S.W.DD T).2 = S.W.γ Yt e - e → ∀ c : ↥(latticeCocycles (resLat T S.W.GKs)), (∀ g : ↥S.W.GKs, ι.f ((c : ↥S.W.GKs → T.V) g) = Yt.ρ (g : S.G) yt - yt) → S.W.cl T pr = Submodule.Quotient.mk c := by
   intro D HW F _ l _ K s LL h S E T Yt Z ι π hS _ yt z e hz he pr h1 h2 c hc
-  haveI : T2Space S.LL := inferInstanceAs (T2Space ↥LL.1)
-  haveI : IsTopologicalRing S.LL := inferInstanceAs (IsTopologicalRing ↥LL.1)
+  have : T2Space S.LL := inferInstanceAs (T2Space ↥LL.1)
+  have : IsTopologicalRing S.LL := inferInstanceAs (IsTopologicalRing ↥LL.1)
   exact GlobalTheory.Cyc.DictKs.generic E (GlobalTheory.Cyc.DictKs.algebraMap_RW_inj LL)
     (GlobalTheory.Cyc.DictKs.dense_gen (D.loc l) (D.locA l) K s LL h _ ((HW l).W_s K s LL h))
     T Yt Z ι π hS yt z e hz he pr h1 h2 c hc

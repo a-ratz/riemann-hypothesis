@@ -167,7 +167,7 @@ theorem apply_eq_of_range_subset_affine {K : Type} [Field K] {F Z : Scheme.{0}} 
   have e : l ≫ W.ι = h := IsOpenImmersion.lift_fac _ _ _
   have e' : l = F.toSpecΓ ≫ Spec.map l.appTop ≫ W.toScheme.isoSpec.inv := by
     rw [← Scheme.toSpecΓ_naturality_assoc, Scheme.toSpecΓ_isoSpec_inv, Category.comp_id]
-  letI := (isField_of_universallyClosed K q).toField
+  let := (isField_of_universallyClosed K q).toField
   have hab : F.toSpecΓ a = F.toSpecΓ b :=
     Subsingleton.elim (α := PrimeSpectrum Γ(F, ⊤)) _ _
   rw [← e, e']

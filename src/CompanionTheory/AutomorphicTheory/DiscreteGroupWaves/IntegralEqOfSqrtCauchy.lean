@@ -192,9 +192,9 @@ theorem integral_eq_of_sqrt_cauchy {α : Type*} [MeasurableSpace α] {μ : Measu
       linarith
     have hae : ∀ᵐ x ∂μ, ‖q n x - v x‖ₑ = liminf (fun m => ‖q n x - q m x‖ₑ) atTop := by
       filter_upwards [hlim] with x hx
-      exact ((continuous_enorm.tendsto _).comp (tendsto_const_nhds.sub hx)).liminf_eq.symm
+      exact ((continuous_eNorm.tendsto _).comp (tendsto_const_nhds.sub hx)).liminf_eq.symm
     rw [lintegral_congr_ae hae]
-    refine (lintegral_liminf_le' fun m => ((hq n).1.sub (hq m).1).enorm).trans ?_
+    refine (lintegral_liminf_le' fun m => ((hq n).1.sub (hq m).1).eNorm).trans ?_
     calc liminf (fun m => ∫⁻ x, ‖q n x - q m x‖ₑ ∂μ) atTop
         ≤ liminf (fun _ : ℕ => ENNReal.ofReal η) atTop :=
           liminf_le_liminf (eventually_atTop.2 ⟨N, hnm⟩)
@@ -210,7 +210,7 @@ theorem integral_eq_of_sqrt_cauchy {α : Type*} [MeasurableSpace α] {μ : Measu
   obtain ⟨N, hN⟩ := key (η / 2) (by linarith)
   refine ⟨N, fun n hn => ?_⟩
   rw [dist_eq_norm, ← integral_sub (hq n) hvi]
-  have h1 := (enorm_integral_le_lintegral_enorm (fun x => q n x - v x)).trans (hN n hn)
+  have h1 := (eNorm_integral_le_lintegral_eNorm (fun x => q n x - v x)).trans (hN n hn)
   rw [← ofReal_norm, ENNReal.ofReal_le_ofReal_iff (by linarith)] at h1
   linarith
 

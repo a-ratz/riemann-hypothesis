@@ -118,7 +118,7 @@ theorem fix_stable (hL : IsLevi Γ K Q Γ' K' π ι c₀) (ρ : K →* (W →L[�
   rw [hc] at h2
   have h3 : ρ r (ρ u w) = ρ u (ρ (u⁻¹ * r * u) w) := by
     have : r * u = u * (u⁻¹ * r * u) := by group
-    rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul, this]
+    rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, ← map_mul, this]
   rw [h3, ← map_smul, h2]
 
 def resRep (hL : IsLevi Γ K Q Γ' K' π ι c₀) (ρ : K →* (W →L[ℂ] W)) :
@@ -137,7 +137,7 @@ theorem resRep_coe (hL : IsLevi Γ K Q Γ' K' π ι c₀) (ρ : K →* (W →L[�
     (v : fixSp K Q π c₀ ρ) : ((resRep hL ρ m v : fixSp K Q π c₀ ρ) : W) = ρ (kι hL m) v := rfl
 
 theorem kι_cont (hL : IsLevi Γ K Q Γ' K' π ι c₀) : Continuous (kι hL) :=
-  Continuous.subtype_mk (continuous_subtype_val.comp (hL.contι.comp continuous_subtype_val)) _
+  Continuous.subtype_mk (continuous_subtypeVal.comp (hL.contι.comp continuous_subtypeVal)) _
 
 theorem resRep_cont [FiniteDimensional ℂ W] (hL : IsLevi Γ K Q Γ' K' π ι c₀)
     {ρ : K →* (W →L[ℂ] W)} (hρ : Continuous ρ) : Continuous (resRep hL ρ) := by
@@ -180,7 +180,7 @@ theorem am_move (hL : IsLevi Γ K Q Γ' K' π ι c₀) (ρ : K →* (W →L[ℂ]
   rw [am_apply, am_apply, c₀_mul hL]
   have h1 : ρ (r⁻¹ * k)⁻¹ ((resRep hL ρ m⁻¹ v : fixSp K Q π c₀ ρ) : W) = ρ k⁻¹ (ρ s (v : W)) := by
     rw [resRep_coe, map_inv (kι hL) m, hs]
-    rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul]
+    rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, ← map_mul]
     congr 2
     group
   rw [h1]
@@ -246,7 +246,7 @@ variable [IsTopologicalGroup G]
 theorem am_cont (hL : IsLevi Γ K Q Γ' K' π ι c₀) {ρ : K →* (W →L[ℂ] W)} (hρ : Continuous ρ) :
     Continuous fun y : Q × K => am ρ c₀ π y.1 y.2 := by
   have h1 : Continuous fun q : Q => c₀ q :=
-    continuousOn_iff_continuous_restrict.1 hL.par.ch.cont
+    continuousOn_iff_continuous_domRestrict.1 hL.par.ch.cont
   unfold am
   refine (h1.comp continuous_fst).smul ?_
   exact (hρ.comp (continuous_inv.comp continuous_snd)).clm_comp continuous_const
@@ -263,14 +263,14 @@ theorem ext_cont {T : Type} [TopologicalSpace T] (hK : IsCompact (K : Set G))
   intro y₀
   rw [ContinuousAt, tendsto_iff_ultrafilter]
   intro U hU
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   obtain ⟨k₁, -, hk₁⟩ := isCompact_univ.ultrafilter_le_nhds
     (U.map fun y : T × G => kOf hL y.2) (by simp)
   have hk : Tendsto (fun y : T × G => kOf hL y.2) U (𝓝 k₁) := hk₁
   have hU' : Tendsto (fun y : T × G => y) U (𝓝 y₀) := hU
   have hqG : Tendsto (fun y : T × G => y.2 * ((kOf hL y.2 : K) : G)⁻¹) U (𝓝 (y₀.2 * (k₁ : G)⁻¹)) :=
     ((continuous_snd.tendsto y₀).comp hU').mul
-      (((continuous_subtype_val.tendsto k₁).comp hk).inv)
+      (((continuous_subtypeVal.tendsto k₁).comp hk).inv)
   have hqe : ∀ y : T × G, y.2 * ((kOf hL y.2 : K) : G)⁻¹ = (qOf hL y.2 : G) := by
     intro y
     exact mul_inv_eq_of_eq_mul (qk_spec hL y.2)
@@ -289,7 +289,7 @@ theorem ext_cont {T : Type} [TopologicalSpace T] (hK : IsCompact (K : Set G))
 
 theorem am_bound (hK : IsCompact (K : Set G)) (hL : IsLevi Γ K Q Γ' K' π ι c₀)
     {ρ : K →* (W →L[ℂ] W)} (hρ : Continuous ρ) : ∃ B : ℝ, ∀ (q : Q) (k : K), ‖am ρ c₀ π q k‖ ≤ B := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   obtain ⟨B, hB⟩ := isCompact_univ.exists_bound_of_continuousOn hρ.continuousOn
   refine ⟨B * ‖(fixSp K Q π c₀ ρ).subtypeL‖, fun q k => ?_⟩
   unfold am
@@ -426,7 +426,7 @@ theorem sec_pull (hL : IsLevi Γ K Q Γ' K' π ι c₀) (hP : IsPull Q P P' π c
   have h3 : ((resRep hL ρ m⁻¹ v : fixSp K Q π c₀ ρ) : W) = ρ (kι hL m)⁻¹ (v : W) := by
     rw [resRep_coe, map_inv]
   have h4 : ρ (kι hL m * k)⁻¹ (v : W) = ρ k⁻¹ (ρ (kι hL m)⁻¹ (v : W)) := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_rev]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_rev]
   rw [Submodule.coe_smul, h3, h4, map_smul, smul_smul]
 
 theorem rep_mul {x g : G} (hx : x ∈ Q) (q : Q) (k : K) (h : g = (q : G) * k) :
@@ -524,7 +524,7 @@ theorem mem_secSp_iff (hL : IsLevi Γ K Q Γ' K' π ι c₀) (hP : IsPull Q P P'
     have h3 := congrArg Subtype.val (hw m hrπ)
     have h3' : c' m • ρ (kι hL m) w = w := h3
     have h4 : ρ r w = ρ s (ρ (kι hL m) w) := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, hs]
+      rw [← mul_apply_eq_comp, ← map_mul, hs]
       simp
     rw [hP.ch ⟨r, hrQ⟩ hrπ, h4, mul_smul]
     have h5 : c' (π ⟨r, hrQ⟩) • ρ s (ρ (kι hL m) w) = ρ s (c' m • ρ (kι hL m) w) := by
@@ -578,13 +578,13 @@ theorem isPar_pull [IsTopologicalGroup G] (hL : IsLevi Γ K Q Γ' K' π ι c₀)
     have h1 := hP.ch ⟨γ, hp1⟩ hp2
     simp only at h1
     rw [h1, hL.par.ch.rat γ hγ.1 hp1, h.ch.rat _ (hL.πΓ ⟨γ, hp1⟩ hγ.1) hp2, one_mul]
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     have hin : Continuous fun p : P => (⟨p, hPQ p.2⟩ : Q) :=
-      Continuous.subtype_mk continuous_subtype_val _
+      Continuous.subtype_mk continuous_subtypeVal _
     have hc₀ : Continuous fun q : Q => c₀ q :=
-      continuousOn_iff_continuous_restrict.1 hL.par.ch.cont
+      continuousOn_iff_continuous_domRestrict.1 hL.par.ch.cont
     have hc' : Continuous fun q : P' => c' q :=
-      continuousOn_iff_continuous_restrict.1 h.ch.cont
+      continuousOn_iff_continuous_domRestrict.1 h.ch.cont
     have hπ : Continuous fun p : P => (⟨π ⟨p, hPQ p.2⟩, ((hP.mem _).1 p.2).2⟩ : P') :=
       Continuous.subtype_mk (hL.contπ.comp hin) _
     refine ((hc₀.comp hin).mul (hc'.comp hπ)).congr (fun p => ?_)
@@ -667,7 +667,7 @@ theorem wall_pull [IsTopologicalGroup G] [LocallyCompactSpace G] [FiniteDimensio
     (hE : ∀ z (g : G') (k : K') (w : L'), H' z (g * k) w = resRep hL ρ k⁻¹ (H' z g w)) :
     Wall (Γ ⊓ Q) K P₁ P₂ c η₁ η₂ β ρ L R D (fun z => cj (corrE hLL) (corrE hC₂) (Op' z))
       (hOf hL ρ (corrE hLL) H') := by
-  haveI : CompleteSpace (fixSp K Q π c₀ ρ) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (fixSp K Q π c₀ ρ) := FiniteDimensional.completeSpace ℂ _
   have hle : ∀ w : L, (w : W) ∈ secSp K P₁ c ρ := by
     intro w
     obtain ⟨h1, h2⟩ := (hLL w).1 w.2

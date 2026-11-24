@@ -104,7 +104,7 @@ theorem flat_of_divisibility : ∀ (q : ℕ) [NeZero q] (M : Type 1) [AddCommGro
     (∀ d e : ℕ, d * e = q → ∀ x : M, d • x = 0 → ∃ y : M, x = e • y) →
       Module.Flat (ULift.{1} (ZMod q)) M := by
   intro q _ M _ _ hdiv
-  haveI : IsPrincipalIdealRing (ULift.{1} (ZMod q)) :=
+  have : IsPrincipalIdealRing (ULift.{1} (ZMod q)) :=
     IsPrincipalIdealRing.of_surjective
       ((ULift.ringEquiv (R := ZMod q)).symm.toRingHom.comp (Int.castRingHom (ZMod q)))
       (by

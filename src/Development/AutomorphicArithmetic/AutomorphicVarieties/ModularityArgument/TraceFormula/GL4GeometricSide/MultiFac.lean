@@ -165,7 +165,7 @@ private theorem inner_invol {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDi
     have h2 := fun z => LinearMap.congr_fun hc z
     simp only [zero_smul, LinearMap.zero_apply, Module.End.mul_apply, LinearEquiv.coe_coe] at h2
     rw [← h2, ← h2]
-  obtain ⟨d, hd⟩ := IsAlgClosed.exists_eq_mul_self c⁻¹
+  obtain ⟨d, hd⟩ := IsAlgClosed.isSquare c⁻¹
   have h3 : (d • T.toLinearMap) * (d • T.toLinearMap) = 1 := by
     rw [smul_mul_smul_comm, ← hc, ← hd, smul_smul, inv_mul_cancel₀ hc0, one_smul]
   refine ⟨d • T.toLinearMap, h3, fun x => ?_⟩

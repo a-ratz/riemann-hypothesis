@@ -116,7 +116,7 @@ theorem sub_contAction {G V : Type u} [Group G] [TopologicalSpace G] [AddCommGro
     [TopologicalSpace V] {ρ : Representation O G V} (h : ContAction ρ) (L : Submodule O V)
     (hL : StableUnder ρ L) : ContAction (ρ.subrepresentation L hL) := by
   have hc : Continuous (fun p : G × L => ρ p.1 (p.2 : V)) :=
-    h.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))
+    h.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))
   exact Continuous.subtype_mk hc _
 
 theorem pairKO_cont {V V' : Type u} [AddCommGroup V] [Module O V] [TopologicalSpace V]
@@ -131,7 +131,7 @@ theorem pairKO_cont {V V' : Type u} [AddCommGroup V] [Module O V] [TopologicalSp
   have hq : IsOpenQuotientMap (Prod.map T.mkQ (id : dualLat b T → dualLat b T)) :=
     hm.prodMap IsOpenQuotientMap.id
   rw [hq.isQuotientMap.continuous_iff]
-  exact toKO_cont.comp (hb.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))
+  exact toKO_cont.comp (hb.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))
 
 end Top
 

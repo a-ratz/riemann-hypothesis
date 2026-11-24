@@ -105,7 +105,7 @@ theorem exists_large_sq {F : Type} [Field F] [NumberField F] (v : HeightOneSpect
   obtain ⟨c, hc⟩ := GlobalTheory.LocalQuad.isSquare_of_valued_sub_one_lt F v
     (1 + ((M : ℕ) : v.adicCompletion F) ^ k / algebraMap F (v.adicCompletion F) (a i)) (by
       rw [add_sub_cancel_left, map_div₀, map_pow]
-      exact (div_lt_iff₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (hA i)))).2 (hk2 i))
+      exact (div_lt_iff₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (hA i)))).2 (hk2 i))
   refine ⟨c, ?_⟩
   rw [← hc, map_add (f := _), map_natCast]
   have := hA i

@@ -74,7 +74,7 @@ lemma entry_cd (a b : Fin (2 * r + k + 1)) : ContDiff ℝ ∞ (fun g : Mx k r =>
   exact (contDiff_apply ℝ (fun _ => ℂ) b).comp (contDiff_apply ℝ (fun _ => (Fin (2 * r + k + 1) → ℂ)) a)
 
 lemma inv_glev {g : Mx k r} (hg : g ∈ Glev k r i) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
-  simp only [Glev, UH, Set.mem_setOf_eq] at hg
+  simp only [Glev, UH, Set.mem_ofPred_eq] at hg
   apply Matrix.inv_eq_left_inv
   calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
     _ = 1 := by rw [hg.1, Formalism.QuantumDeterminants.GBasic.Hpk_sq]
@@ -225,12 +225,12 @@ lemma one_mem_Nlev : (1 : Mx k r) ∈ Nlev k r i := by
 
 private lemma mul_mem_Slev_of_mem_UWset_of_mem_Nlev {z : (Fin (2 * r + k + 1) → ℂ)} {h m : Mx k r} (hh : h ∈ UWset k r z)
     (hm : m ∈ Nlev k r i) : h * m ∈ Slev k r z i := by
-  simp only [Slev, Set.mem_setOf_eq]
+  simp only [Slev, Set.mem_ofPred_eq]
   exact ⟨h, hh, m, hm, rfl⟩
 
 theorem qnTPres_of (hT : TInvariant) : TPreservesFF := by
   intro Wp Wq _ _ _ _ k r z z' π π' i D Y p q hz hz' hDom J hJ
-  simp only [FFl, Set.mem_setOf_eq] at hJ ⊢
+  simp only [FFl, Set.mem_ofPred_eq] at hJ ⊢
   obtain ⟨hs, hL, hR, hW⟩ := hJ
   have hD : IsOpen D := hDom.1
   refine ⟨tl_smooth hD z z' Y p q J hs, ?_, ?_, ?_⟩
@@ -241,10 +241,10 @@ theorem qnTPres_of (hT : TInvariant) : TPreservesFF := by
     have hloc : ∀ x ∈ Glev k r i ∩ D,
         J (n * x) = (psi k r z cStd n • ContinuousLinearMap.id ℂ (Wq →L[ℂ] Wp)) (J x) := by
       intro x hx
-      rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+      rw [smul_apply, ContinuousLinearMap.id_apply]
       exact hL x hx n hn
     rw [← e, tl_local hD z z' Y p q _ _ hloc g hg, tl_clm hD z z' Y p q _ J hs g hg,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+      smul_apply, ContinuousLinearMap.id_apply]
   · intro g hg n hn
     have e := hT (Wq →L[ℂ] Wp) k r z z' i D J Y p q hz hz' hDom hs (1 * 1) (mul_mem_Slev_of_mem_UWset_of_mem_Nlev (one_mem_UW z) one_mem_Nlev)
       (1 * n) (mul_mem_Slev_of_mem_UWset_of_mem_Nlev (one_mem_UW z') hn) g hg
@@ -252,10 +252,10 @@ theorem qnTPres_of (hT : TInvariant) : TPreservesFF := by
     have hloc : ∀ x ∈ Glev k r i ∩ D,
         J (x * n) = (psi k r z' cStd n • ContinuousLinearMap.id ℂ (Wq →L[ℂ] Wp)) (J x) := by
       intro x hx
-      rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+      rw [smul_apply, ContinuousLinearMap.id_apply]
       exact hR x hx n hn
     rw [← e, tl_local hD z z' Y p q _ _ hloc g hg, tl_clm hD z z' Y p q _ J hs g hg,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+      smul_apply, ContinuousLinearMap.id_apply]
   · intro g hg h hh h' hh'
     have e := hT (Wq →L[ℂ] Wp) k r z z' i D J Y p q hz hz' hDom hs (h * 1) (mul_mem_Slev_of_mem_UWset_of_mem_Nlev hh one_mem_Nlev)
       (h' * 1) (mul_mem_Slev_of_mem_UWset_of_mem_Nlev hh' one_mem_Nlev) g hg

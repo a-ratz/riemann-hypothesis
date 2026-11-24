@@ -72,7 +72,7 @@ theorem muPi_eq (β : ℂ) (ι : Type) [Fintype ι] :
     muPi β ι = (Real.toNNReal (‖β‖ / (2 * Real.pi))) ^ Fintype.card ι • (volume : Measure (ι → ℂ)) := by
   unfold muPi
   refine Measure.pi_eq fun s hs => ?_
-  simp only [mu, Measure.smul_apply, volume_pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
+  simp only [mu, smul_apply, volume_pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
 instance (β : ℂ) (ι : Type) [Fintype ι] : IsFiniteMeasureOnCompacts (muPi β ι) := by

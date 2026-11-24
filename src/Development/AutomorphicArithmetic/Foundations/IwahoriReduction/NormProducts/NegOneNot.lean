@@ -167,7 +167,7 @@ private lemma vand (l : ℕ) [Fact l.Prime] (w : ℕ) : ∃ (c : ℕ) (E : Fin (
   rw [h3, ← h1]
   by_cases hii : i = i'
   · subst hii
-    simp only [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one, if_true]
+    simp only [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one, ite_true]
     exact (Units.inv_mul_eq_iff_eq_mul _).2 h2
   · simp [Matrix.smul_apply, Matrix.one_apply_ne hii, hii]
 
@@ -332,7 +332,7 @@ private theorem valuation_eq_one_of_valuationSubring_eq_one {R L : Type*} [CommR
   rw [Valuation.mem_valuationSubring_iff] at h1 h2
   rw [map_inv₀] at h2
   have hv0 : v.valuation L y ≠ 0 := by simpa using hy0
-  exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.mpr hv0)).mp h2)
+  exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.mpr hv0)).mp h2)
 
 private theorem ringOfIntegers_mem_of_polynomial_mem (k K : Type) [Field k] [Field K] [Algebra k[X] K]
     [Algebra (RatFunc k) K] [IsScalarTower k[X] (RatFunc k) K] (B : ValuationSubring K)
@@ -414,7 +414,7 @@ theorem UpperTheory.Kd.K4.cdAbs :
   have hJ : ((Ju : FractionalIdeal (nonZeroDivisors (FunctionField.ringOfIntegers k K)) K) :
       Submodule (FunctionField.ringOfIntegers k K) K) ^ (m * m') =
         (FunctionField.ringOfIntegers k K) ∙ (f / x⁻¹ ^ m) := by
-    rw [← FractionalIdeal.coe_pow, ← FractionalIdeal.coe_spanSingleton (nonZeroDivisors _), pow_mul',
+    rw [← FractionalIdeal.coeToSubmodule_pow, ← FractionalIdeal.coeToSubmodule_spanSingleton (nonZeroDivisors _), pow_mul',
       ← hxJ, mul_pow, hIm, FractionalIdeal.spanSingleton_pow,
       FractionalIdeal.spanSingleton_mul_spanSingleton, inv_pow, div_inv_eq_mul]
   have hw : f / x⁻¹ ^ m ≠ 0 := div_ne_zero hf (pow_ne_zero _ (inv_ne_zero hx))
@@ -444,7 +444,7 @@ theorem UpperTheory.Kd.K4.faith :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), ∀ (H' : Subgroup SL(2, ℤ)) (M : ℕ), 0 < M → CongruenceSubgroup.Gamma M ≤ H' → ∀ γ : SL(2, ℤ), (∀ f ∈ lev X H', X.sl (ofSL γ) f = f) → γ ∈ H' ∨ -γ ∈ H' := by
   intro Ω _ _ _ ε X H' M hM hle γ hγ
   have hfin : Finite (H'.map (GlobalTheory.KZ.FracGen.rhoF X M)) := by
-    haveI := GlobalTheory.KZ.FracGen.finite_range X M hM
+    have := GlobalTheory.KZ.FracGen.finite_range X M hM
     have hr : H'.map (GlobalTheory.KZ.FracGen.rhoF X M) ≤ (GlobalTheory.KZ.FracGen.rhoF X M).range := by
       rintro _ ⟨δ, -, rfl⟩
       exact ⟨δ, rfl⟩
@@ -600,9 +600,9 @@ variable {A B : Type*} (K L : Type*) [CommRing A] [CommRing B] [IsDedekindDomain
 
 private theorem inertia_one (hres : ∀ P : Ideal B, P.IsMaximal → ∀ b : B, ∃ a : A, b - algebraMap A B a ∈ P)
     (P : Ideal B) [hP : P.IsMaximal] [(P.under A).IsMaximal] : P.inertiaDeg A = 1 := by
-  letI : Field (A ⧸ P.under A) := Ideal.Quotient.field _
+  let : Field (A ⧸ P.under A) := Ideal.Quotient.field _
   have h1 : Module.finrank (A ⧸ P.under A) (B ⧸ P) = 1 := by
-    refine (finrank_eq_one_iff_of_nonzero' (1 : B ⧸ P) one_ne_zero).2 fun w => ?_
+    refine (finrank_eq_one_iff_of_ne_zero' (1 : B ⧸ P) one_ne_zero).2 fun w => ?_
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective w
     obtain ⟨a, ha⟩ := hres P hP b
     refine ⟨Ideal.Quotient.mk _ a, ?_⟩
@@ -631,7 +631,7 @@ private theorem core {m : ℕ} (hC : ∀ c : ClassGroup B, ∃ d, c = d ^ m)
   have hunM : ∀ P ∈ s, (un P).IsMaximal ∧ un P ≠ 0 := fun P hP => by
     have := hsM P hP
     refine ⟨Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := A) P, fun h0 => (hsP P hP).2 ?_⟩
-    exact Ideal.eq_bot_of_comap_eq_bot h0
+    exact Ideal.eq_bot_of_under_eq_bot h0
   have hch : ∀ P ∈ s, ch (un P) ∈ S ∧ un (ch (un P)) = un P := fun P hP =>
     Function.invFunOn_pos ⟨P, hsP P hP, rfl⟩
   have hrel : ∀ P ∈ s, Rel K L m P (ch (un P)) := by
@@ -818,8 +818,8 @@ private theorem mem_of_int {R L : Type*} [CommRing R] [Field L] [Algebra R L] (W
 private theorem res_of (k B : Type*) [Field k] [IsAlgClosed k] [CommRing B] [Algebra k B]
     [Algebra.FiniteType k B] (P : Ideal B) (hP : P.IsMaximal) (b : B) :
     ∃ c : k, b - algebraMap k B c ∈ P := by
-  letI := Ideal.Quotient.field P
-  haveI : Module.Finite k (B ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ P)
+  let := Ideal.Quotient.field P
+  have : Module.Finite k (B ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ P)
   obtain ⟨c, hc⟩ := (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := k) (K := B ⧸ P)).2
     (Ideal.Quotient.mk P b)
   exact ⟨c, Ideal.Quotient.eq.1 hc.symm⟩
@@ -833,49 +833,49 @@ theorem UpperTheory.Kd.K4.nsAbs :
       ∃ f' : K', f' ≠ 0 ∧ Algebra.norm K f' = f ∧
         ∀ B : ValuationSubring K', (∀ p : k[X], algebraMap k[X] K' p ∈ B) → ∃ c : K', c ≠ 0 ∧ B.valuation (f' / c ^ m) = 1 := by
   intro k K _ _ _ _ _ _ _ _ K' _ _ _ _ _ _ m f hm hf0 hf
-  letI : Algebra (RatFunc k) K' := ((algebraMap K K').comp (algebraMap (RatFunc k) K)).toAlgebra
-  haveI : IsScalarTower (RatFunc k) K K' := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower k[X] (RatFunc k) K' := .of_algebraMap_eq fun p => by
+  let : Algebra (RatFunc k) K' := ((algebraMap K K').comp (algebraMap (RatFunc k) K)).toAlgebra
+  have : IsScalarTower (RatFunc k) K K' := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower k[X] (RatFunc k) K' := .of_algebraMap_eq fun p => by
     rw [IsScalarTower.algebraMap_apply k[X] K K', IsScalarTower.algebraMap_apply k[X] (RatFunc k) K]
     rfl
-  haveI : FiniteDimensional (RatFunc k) K' := .trans (RatFunc k) K K'
-  haveI : Algebra.IsSeparable (RatFunc k) K := Algebra.IsAlgebraic.isSeparable_of_perfectField
-  haveI : Algebra.IsSeparable (RatFunc k) K' := Algebra.IsAlgebraic.isSeparable_of_perfectField
-  haveI : Module.IsTorsionFree k[X] K := .trans_faithfulSMul k[X] (RatFunc k) K
-  haveI : Module.IsTorsionFree k[X] K' := .trans_faithfulSMul k[X] (RatFunc k) K'
+  have : FiniteDimensional (RatFunc k) K' := .trans (RatFunc k) K K'
+  have : Algebra.IsSeparable (RatFunc k) K := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : Algebra.IsSeparable (RatFunc k) K' := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : Module.IsTorsionFree k[X] K := .trans_faithfulSMul k[X] (RatFunc k) K
+  have : Module.IsTorsionFree k[X] K' := .trans_faithfulSMul k[X] (RatFunc k) K'
   let A := FunctionField.ringOfIntegers k K
   let B := FunctionField.ringOfIntegers k K'
-  haveI : IsDedekindDomain A := IsIntegralClosure.isDedekindDomain k[X] (RatFunc k) K _
-  haveI : IsDedekindDomain B := IsIntegralClosure.isDedekindDomain k[X] (RatFunc k) K' _
-  haveI : IsFractionRing A K := IsIntegralClosure.isFractionRing_of_finite_extension k[X] (RatFunc k) K _
-  haveI : IsFractionRing B K' := IsIntegralClosure.isFractionRing_of_finite_extension k[X] (RatFunc k) K' _
+  have : IsDedekindDomain A := IsIntegralClosure.isDedekindDomain k[X] (RatFunc k) K _
+  have : IsDedekindDomain B := IsIntegralClosure.isDedekindDomain k[X] (RatFunc k) K' _
+  have : IsFractionRing A K := IsIntegralClosure.isFractionRing_of_finite_extension k[X] (RatFunc k) K _
+  have : IsFractionRing B K' := IsIntegralClosure.isFractionRing_of_finite_extension k[X] (RatFunc k) K' _
   have hAB : ∀ a : A, algebraMap K K' (algebraMap A K a) ∈ B := fun a =>
     IsIntegral.algebraMap (R := k[X]) (A := K) (B := K') a.2
-  letI : Algebra A B := (((algebraMap K K').comp (algebraMap A K)).codRestrict B hAB).toAlgebra
-  haveI : IsScalarTower A K K' := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower A B K' := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower k[X] A K' := .of_algebraMap_eq fun p =>
+  let : Algebra A B := (((algebraMap K K').comp (algebraMap A K)).codRestrict B hAB).toAlgebra
+  have : IsScalarTower A K K' := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower A B K' := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower k[X] A K' := .of_algebraMap_eq fun p =>
     IsScalarTower.algebraMap_apply k[X] K K' p
-  haveI : Algebra.IsIntegral k[X] A := inferInstanceAs (Algebra.IsIntegral k[X] (integralClosure k[X] K))
+  have : Algebra.IsIntegral k[X] A := inferInstanceAs (Algebra.IsIntegral k[X] (integralClosure k[X] K))
   have hinjB : Function.Injective (algebraMap B K') := IsFractionRing.injective B K'
-  haveI : IsIntegralClosure B A K' := ⟨hinjB, fun {x} =>
+  have : IsIntegralClosure B A K' := ⟨hinjB, fun {x} =>
     ⟨fun hx => ⟨⟨x, isIntegral_trans (R := k[X]) (A := A) x hx⟩, rfl⟩, by
       rintro ⟨b, rfl⟩
       exact IsIntegral.tower_top (R := k[X]) (A := A) b.2⟩⟩
-  haveI : Module.Finite A B := IsIntegralClosure.finite A K K' B
+  have : Module.Finite A B := IsIntegralClosure.finite A K K' B
   have hinjAB : Function.Injective (algebraMap A B) := fun x y hxy => by
     apply IsFractionRing.injective A K
     apply (algebraMap K K').injective
     exact congrArg (fun b : B => (b : K')) hxy
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinjAB
-  haveI : Module.IsTorsionFree A B := inferInstance
-  haveI : CharZero (FractionRing A) :=
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinjAB
+  have : Module.IsTorsionFree A B := inferInstance
+  have : CharZero (FractionRing A) :=
     charZero_of_injective_ringHom (f := ((algebraMap A (FractionRing A)).comp (algebraMap k[X] A)).comp
       (algebraMap k k[X])) (RingHom.injective _)
-  letI : Algebra k B := ((algebraMap k[X] B).comp (algebraMap k k[X])).toAlgebra
-  haveI : IsScalarTower k k[X] B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Module.Finite k[X] B := IsIntegralClosure.finite k[X] (RatFunc k) K' _
-  haveI : Algebra.FiniteType k B := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
+  let : Algebra k B := ((algebraMap k[X] B).comp (algebraMap k k[X])).toAlgebra
+  have : IsScalarTower k k[X] B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Module.Finite k[X] B := IsIntegralClosure.finite k[X] (RatFunc k) K' _
+  have : Algebra.FiniteType k B := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
   have hres : ∀ P : Ideal B, P.IsMaximal → ∀ b : B, ∃ a : A, b - algebraMap A B a ∈ P := by
     intro P hP b
     obtain ⟨c, hc⟩ := res_of k B P hP b
@@ -919,7 +919,7 @@ private theorem val_one_iff {K : Type} [Field K] (A : ValuationSubring K) (x : K
     rw [← A.valuation_le_one_iff] at h1 h2
     rw [map_inv₀] at h2
     have h3 : A.valuation x ≠ 0 := by simpa using h0
-    exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 h3)).1 h2)
+    exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 h3)).1 h2)
 
 private theorem val_comap {K : Type} [Field K] (F : Subfield K) (W : ValuationSubring K) (x : F) :
     (W.comap F.subtype).valuation x = 1 ↔ W.valuation (x : K) = 1 := by
@@ -999,7 +999,7 @@ private theorem fd_tower (k K K' : Type) [Field k] [Field K] [Field K'] [Algebra
     simp only [RingHom.comp_apply]
     rw [← IsScalarTower.algebraMap_apply (Polynomial k) (RatFunc k) K', ← IsScalarTower.algebraMap_apply (Polynomial k) (RatFunc k) K,
       ← IsScalarTower.algebraMap_apply (Polynomial k) K K']
-  haveI : IsScalarTower (RatFunc k) K K' := IsScalarTower.of_algebraMap_eq' e
+  have : IsScalarTower (RatFunc k) K K' := IsScalarTower.of_algebraMap_eq' e
   exact Module.Finite.of_restrictScalars_finite (RatFunc k) _ _
 
 section
@@ -1114,13 +1114,13 @@ private theorem abs_step {k L Γ : Type} [Field k] [IsAlgClosed k] [CharZero k] 
     ∃ f' : F', f' ≠ 0 ∧ (∀ B : ValuationSubring F', (∀ p : Polynomial k, algebraMap (Polynomial k) F' p ∈ B) →
       ∃ c : F', c ≠ 0 ∧ B.valuation (f' / c ^ (m * m')) = 1) ∧
       ∃ h : L, h ≠ 0 ∧ ∏ i, a (δ i) (f' : L) = (f : L) * h ^ m := by
-  letI : Algebra F F' := (Subfield.inclusion hle).toAlgebra
+  let : Algebra F F' := (Subfield.inclusion hle).toAlgebra
   have ha : ∀ x : F, ((algebraMap F F' x : F') : L) = x := fun _ => rfl
-  haveI : IsScalarTower (Polynomial k) F F' := IsScalarTower.of_algebraMap_eq fun p => Subtype.ext <| by
+  have : IsScalarTower (Polynomial k) F F' := IsScalarTower.of_algebraMap_eq fun p => Subtype.ext <| by
     rw [ha]
     exact (hc p).symm
-  haveI : FiniteDimensional F F' := fd_tower k F F'
-  haveI := (gal_surj' a a1 am hn hF hF' ha).1
+  have : FiniteDimensional F F' := fd_tower k F F'
+  have := (gal_surj' a a1 am hn hF hF' ha).1
   obtain ⟨h, hh0, hh⟩ := UpperTheory.Kd.K4.cdAbs k F m m' f hm hm' hf0 hf
   obtain ⟨f', hf'0, hN, hf'⟩ := UpperTheory.Kd.K4.nsAbs k F F' (m * m') (f / h ^ m) (Nat.mul_pos hm hm')
     (div_ne_zero hf0 (pow_ne_zero _ hh0)) hh
@@ -1133,8 +1133,8 @@ theorem UpperTheory.Kd.K4.step :
       (∀ γ ∈ H, ∀ δ ∈ H', γ * δ * γ⁻¹ ∈ H') → ∀ (ι : Type) [Fintype ι] (δ : ι → SL(2, ℤ)), IsTr H' H δ → ∀ f : X.K, LUnH X H m f →
       ∃ f' : X.K, LUnH X H' (m * m') f' ∧ ∃ h : X.K, h ≠ 0 ∧ ∏ i, X.sl (ofSL (δ i)) f' = f * h ^ m := by
   intro Ω _ _ _ ε X H H' M m m' hM hm hm' hΓ hle hneg hn ι _ δ hδ f hf
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain ⟨hf0, hfH, hfW⟩ := hf
   have hF0 : (⟨f, hfH⟩ : lev X H) ≠ 0 := fun e => hf0 (congrArg Subtype.val e)
   have hfaith : ∀ γ ∈ H, (∀ g ∈ lev X H', X.sl (ofSL γ) g = g) → γ ∈ H' := fun γ hγ hfix =>
@@ -1219,7 +1219,7 @@ private theorem St.next [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (l : ℕ) [hl : 
     (n : ℕ) (hn : 1 ≤ n) (t : X.Fn l) (ht : St X l N w lam n t) : ∃ t', St X l N w lam (n + 1) t' ∧ CgF X l n t' t := by
   obtain ⟨H, M, ι, _, γ, a, x, hM, hMH, hH, hγ, ha, hx, rfl⟩ := ht
   have hl0 : 0 < l := hl.out.pos
-  haveI : NeZero (l ^ (n + 1)) := ⟨(pow_pos hl0 _).ne'⟩
+  have : NeZero (l ^ (n + 1)) := ⟨(pow_pos hl0 _).ne'⟩
   obtain ⟨κ, _, δ, hδ⟩ := exTr H (CongruenceSubgroup.Gamma (l ^ (n + 1)))
   have hM' : CongruenceSubgroup.Gamma (M * l ^ (n + 1)) ≤ H ⊓ CongruenceSubgroup.Gamma (l ^ (n + 1)) :=
     le_inf ((gamma_le (dvd_mul_right _ _)).trans hMH) (gamma_le (dvd_mul_left _ _))

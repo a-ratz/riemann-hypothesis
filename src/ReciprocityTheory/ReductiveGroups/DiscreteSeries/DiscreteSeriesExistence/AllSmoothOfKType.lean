@@ -212,7 +212,7 @@ theorem all_smooth_of_kType {n : ℕ} {ε : Fin n → Bool} {lam : Fin n → ℝ
       rw [hbot]
       infer_instance
     exact Subsingleton.elim _ _
-  have hcl : IsClosed ((smD ε σ : Submodule ℂ T.V) : Set T.V) := Submodule.closed_of_finiteDimensional _
+  have hcl : IsClosed ((smD ε σ : Submodule ℂ T.V) : Set T.V) := Submodule.isClosed_of_finiteDimensional _
   rcases hirr (smD ε σ) hcl hinv with h | h
   · exact absurd h hne
   · have hv : v ∈ smD ε σ := by

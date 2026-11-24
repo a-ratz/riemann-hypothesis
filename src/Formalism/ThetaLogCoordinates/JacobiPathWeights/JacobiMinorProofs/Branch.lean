@@ -81,8 +81,8 @@ theorem nthElt_lt_iff {n : ℕ} (A : Finset (Fin n)) (a x : ℕ) (hx : x ≤ n) 
       unfold cnt
       rw [Finset.filter_insert]
       by_cases h : m.val < x
-      · rw [if_pos h, if_pos h, Finset.card_insert_of_notMem (fun h' => hms (Finset.mem_filter.1 h').1)]
-      · rw [if_neg h, if_neg h, Nat.add_zero]
+      · rw [ite_eq_left h, ite_eq_left h, Finset.card_insert_of_notMem (fun h' => hms (Finset.mem_filter.1 h').1)]
+      · rw [ite_eq_right h, ite_eq_right h, Nat.add_zero]
     have hzero : ¬ m.val < x → cnt s x = 0 := by
       intro h
       unfold cnt
@@ -97,15 +97,15 @@ theorem nthElt_lt_iff {n : ℕ} (A : Finset (Fin n)) (a x : ℕ) (hx : x ≤ n) 
     rcases a with _ | k
     · rw [List.map_cons, List.getD_cons_zero]
       by_cases h : m.val < x
-      · rw [if_pos h]
+      · rw [ite_eq_left h]
         constructor <;> intro <;> omega
-      · rw [if_neg h, hzero h]
+      · rw [ite_eq_right h, hzero h]
         constructor <;> intro <;> omega
     · rw [List.map_cons, List.getD_cons_succ, ih k]
       by_cases h : m.val < x
-      · rw [if_pos h]
+      · rw [ite_eq_left h]
         constructor <;> intro <;> omega
-      · rw [if_neg h, hzero h]
+      · rw [ite_eq_right h, hzero h]
         constructor <;> intro <;> omega
 
 def Dom {n : ℕ} (A B : Finset (Fin n)) : Prop := ∀ x, cnt B x ≤ cnt A x
@@ -255,7 +255,7 @@ theorem gtBox_anti {n : ℕ} {μ : Fin (n + 1) → ℤ} {κ : Fin n → ℤ} (h�
   rcases eq_or_lt_of_le hij with hij' | hlt
   · rw [hij']
   · have hlt' : i.val < j.val := hlt
-    have hle : i.succ ≤ j.castSucc := Fin.le_def.2 (by simp only [Fin.val_succ, Fin.coe_castSucc]; omega)
+    have hle : i.succ ≤ j.castSucc := Fin.le_def.2 (by simp only [Fin.val_succ, Fin.val_castSucc]; omega)
     exact le_trans (hκ j).2 (le_trans (hμ hle) (hκ i).1)
 
 theorem heights_of_gtBox {n : ℕ} {μ : Fin (n + 1) → ℤ} {κ : Fin n → ℤ} (hμ : Antitone μ)
@@ -346,7 +346,7 @@ theorem exists_shape {n : ℕ} {μ : Fin (n + 1) → ℤ} (hμ : Antitone μ) (h
     intro i c hic
     by_contra hc
     have h4 : ¬ (i.castSucc).val < colHeight μ c := fun h' => hc ((le_iff_lt_colHeight_of_antitone hμ c i.castSucc).2 h')
-    rw [Fin.coe_castSucc] at h4
+    rw [Fin.val_castSucc] at h4
     have h5 := h1 c
     omega
   have hne : ∀ i : Fin n, ((Finset.Icc (μ i.succ) (μ i.castSucc)).filter fun c => i.val < h c).Nonempty :=
@@ -451,7 +451,7 @@ theorem card_of_existsUnique {α β : Type*} (s : Finset β) (P : α → Prop) (
           hu a _ _ hPa (h a hPa).choose_spec.1 hb (h a hPa).choose_spec.2 hQa
         subst hbb
         rfl }
-  haveI hF : ∀ b : s, Finite {a // P a ∧ Q b.1 a} := fun b => fin b.1 b.2
+  have hF : ∀ b : s, Finite {a // P a ∧ Q b.1 a} := fun b => fin b.1 b.2
   refine ⟨Finite.of_equiv _ e.symm, ?_⟩
   rw [Nat.card_congr e, Nat.card_sigma]
   exact Finset.sum_coe_sort s (fun b => Nat.card {a // P a ∧ Q b a})
@@ -474,7 +474,7 @@ theorem tab_count (n : ℕ) : ∀ μ : Fin n → ℤ, Antitone μ →
         show cnt (T (c + 1)) x ≤ cnt (T c) x
         rw [e (T (c + 1))]
         simp [cnt]
-    haveI : Unique {T : ℤ → Finset (Fin 0) // TabP μ T} :=
+    have : Unique {T : ℤ → Finset (Fin 0) // TabP μ T} :=
       { default := ⟨fun _ => ∅, hall _⟩
         uniq := fun T => Subtype.ext (funext fun c => e _) }
     exact ⟨inferInstance, by rw [Nat.card_unique]; rfl⟩
@@ -511,7 +511,7 @@ theorem tab_count (n : ℕ) : ∀ μ : Fin n → ℤ, Antitone μ →
     have hfin : ∀ κ ∈ gtBox μ, Finite {T : ℤ → Finset (Fin (n + 1)) //
         TabP μ T ∧ ∀ c, (restr (T c)).card = colHeight κ c} := by
       intro κ hκ
-      haveI := (ih κ (gtBox_anti hμ hκ)).1
+      have := (ih κ (gtBox_anti hμ hκ)).1
       exact Finite.of_equiv _ (fibEquiv hμ hκ).symm
     obtain ⟨hF, hN⟩ := card_of_existsUnique (gtBox μ) (fun T => TabP μ T)
       (fun κ T => ∀ c, (restr (T c)).card = colHeight κ c) hex huniq hfin
@@ -526,7 +526,7 @@ end Branch
 theorem standard_count_gt : StdCountGT := by
   intro n μ hμ
   obtain ⟨hF, hN⟩ := Branch.tab_count n μ hμ
-  haveI := hF
+  have := hF
   exact ⟨Finite.of_equiv _ (Branch.stdEquiv μ).symm, (Nat.card_congr (Branch.stdEquiv μ)).trans hN⟩
 
 end Formalism.InvariantFactorPaths.GelfandTsetlinBases

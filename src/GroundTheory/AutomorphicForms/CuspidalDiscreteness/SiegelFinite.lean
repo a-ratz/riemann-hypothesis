@@ -178,7 +178,7 @@ theorem exists_natCast_conj_unipGL_mem (U : Subgroup (AdelicGLn.integralFiniteGL
 
   set U' : Set (AdelicGLn.FiniteAdelicGL K n) :=
     Subtype.val '' (U : Set (AdelicGLn.integralFiniteGL K n))
-  have hU' : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtype_val _ hU
+  have hU' : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtypeVal _ hU
   have h1U' : (1 : AdelicGLn.FiniteAdelicGL K n) ∈ U' := ⟨1, U.one_mem, rfl⟩
 
   set Cf : Set (AdelicGLn.FiniteAdelicGL K n) :=

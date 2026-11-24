@@ -89,7 +89,7 @@ theorem closure_image_mem_nhds [BaireSpace F] (T : E →L[ℂ] F) (hT : Function
     simp only [map_smul, smul_smul, mul_inv_cancel₀ hne, one_smul]
   have hcl : ∀ n : ℕ, IsClosed (((n + 1 : ℕ) : ℂ) • A) := fun n =>
     isClosed_closure.smul_of_ne_zero (by exact_mod_cast Nat.succ_ne_zero n)
-  haveI : Nonempty F := ⟨0⟩
+  have : Nonempty F := ⟨0⟩
   obtain ⟨n, y, hy⟩ := nonempty_interior_of_iUnion_of_closed hcl hcov
   have hne : ((n + 1 : ℕ) : ℂ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero n
   rw [interior_smul₀ hne] at hy
@@ -130,7 +130,7 @@ theorem exists_halving [(𝓝 (0 : E)).IsCountablyGenerated] {U₀ : Set E} (h :
       ∀ v ∈ half S, -v ∈ half S := by
     intro S hS
     obtain ⟨h1, h2⟩ := Classical.choose_spec (exists_nhds_zero_half hS)
-    simp only [half, dif_pos hS]
+    simp only [half, dite_eq_left hS]
     refine ⟨inter_mem h1 (neg_mem_nhds_zero E h1), fun v hv w hw => h2 v hv.1 w hw.1, ?_⟩
     rintro v ⟨hv1, hv2⟩
     exact ⟨hv2, by simpa using hv1⟩
@@ -171,7 +171,7 @@ theorem image_mem_nhds [CompleteSpace E] [(𝓝 (0 : E)).IsCountablyGenerated] [
   let step : ℕ → F → E := fun k r => if hr : r ∈ V k then Classical.choose (pick k r hr) else 0
   have hstep : ∀ k r, r ∈ V k → step k r ∈ U k ∧ r - T (step k r) ∈ V (k + 1) := by
     intro k r hr
-    simp only [step, dif_pos hr]
+    simp only [step, dite_eq_left hr]
     exact Classical.choose_spec (pick k r hr)
   let r : ℕ → F := fun n => Nat.rec y (fun n rn => rn - T (step (n + 2) rn)) n
   have hr : ∀ n, r n ∈ V (n + 2) := by
@@ -257,8 +257,8 @@ theorem exists_inverse [CompleteSpace E] [(𝓝 (0 : E)).IsCountablyGenerated] [
 
 theorem baireSpace_of_complete (X : Type*) [UniformSpace X] [AddGroup X] [IsUniformAddGroup X]
     [(𝓝 (0 : X)).IsCountablyGenerated] [CompleteSpace X] : BaireSpace X := by
-  haveI := IsUniformAddGroup.uniformity_countably_generated (α := X)
-  letI := UniformSpace.pseudoMetricSpace X
+  have := IsUniformAddGroup.uniformity_countably_generated (α := X)
+  let := UniformSpace.pseudoMetricSpace X
   infer_instance
 
 theorem schwartz_exists_inverse : ∀ (V W : Type) [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -378,13 +378,13 @@ theorem schwartz_exists_inverse : ∀ (V W : Type) [NormedAddCommGroup V] [Norme
       rw [iteratedFDeriv_sub', iteratedFDeriv_limMap hu]
       exact hN j hj x
     
-    haveI : CompleteSpace (SchwartzMap X ℂ) := by
-      haveI : (uniformity (SchwartzMap X ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+    have : CompleteSpace (SchwartzMap X ℂ) := by
+      have : (uniformity (SchwartzMap X ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
       exact UniformSpace.complete_of_cauchySeq_tendsto fun u hu => ⟨limMap u hu, tendsto_limMap hu⟩
     exact inferInstance
-  letI : CompleteSpace (SchwartzMap W ℂ) := complete W
-  letI : CompleteSpace (SchwartzMap V ℂ) := complete V
-  haveI : BaireSpace (SchwartzMap W ℂ) := baireSpace_of_complete _
+  let : CompleteSpace (SchwartzMap W ℂ) := complete W
+  let : CompleteSpace (SchwartzMap V ℂ) := complete V
+  have : BaireSpace (SchwartzMap W ℂ) := baireSpace_of_complete _
   exact exists_inverse T hT
 
 end FrechetOpenMapping

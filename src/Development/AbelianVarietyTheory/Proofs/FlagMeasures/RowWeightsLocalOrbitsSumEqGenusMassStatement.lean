@@ -306,8 +306,8 @@ open GlobalTheory.HL GlobalTheory.LocOver.OrbitUniq
 
 theorem orbit_over_unique : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r : ℕ), ∀ (k : ℕ) (P : FPair H r), Module.finrank E V = k + 2 * r + 1 → P.RelG (theta M) → ∀ (d d' : Datum P) (t : Term V M r), Over P d t → Over P d' t → Datum.Rel d d' := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P hrk hP d d' t h1 h2
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   obtain ⟨S, ⟨c⟩⟩ := CoordExist.exists_coord M hM H r k P hrk hP
   have he := (orbit_reps_over M hM H r P).1
   obtain ⟨g1, hg1, d1, hd1, ht1⟩ := h1
@@ -866,7 +866,7 @@ theorem inGen_of_gRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
     have a0 := ((hiff p) ⟨g0, hg0⟩ (d p) (y p)).1 hm0
     have a1 := ((hiff p) ⟨g1, hg1⟩ (y p) (y' p)).1 hm1
     refine ⟨g1 * g0, mul_mem hg1 hg0, ((hiff p) ⟨g1 * g0, mul_mem hg1 hg0⟩ (d p) (y' p)).2 ?_⟩
-    letI := act p
+    let := act p
     let a : (FP p).UW0 := ⟨g1, hg1⟩
     let b : (FP p).UW0 := ⟨g0, hg0⟩
     have hm : (a * b) • d p = a • (b • d p) := mul_smul a b (d p)
@@ -1422,7 +1422,7 @@ theorem inGen_symm_of {D : D7} {Z : LocDat D} {FP : ∀ p : PlF D, LocNG.FPair (
   apply (h.2.union h'.2).subset
   intro p hp
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   exact hp (by rw [hc.1, hc.2])
 
 theorem weights_add_up_to_mass_of
@@ -1455,7 +1455,7 @@ theorem weights_add_up_to_mass_of
   rw [← ENNReal.tsum_fiberwise _ φ]
   refine tsum_congr fun o => ?_
   by_cases ho : InGen d o.out
-  · rw [if_pos ho]
+  · rw [ite_eq_left ho]
     have hIG01 : InGen y₀ o.out := inGen_symm_of (hRelEqv D Z FP) hIG₀ ho
     obtain ⟨Λ₁, hLO₁, hloc⟩ := GlobalTheory.T.genusFamily_carried_by_lattice_in_localOrbits D X Y u u' F F' w hw hG Z FP hB hR Λ₀ y₀ o.out hLO₀ hIG01
     obtain ⟨t₁, hTG₁⟩ := GlobalTheory.T.exists_rowTerm_of_local_completions_terms D X Y u u' F F' w hw hG Z FP hB hR Λ₁ o.out hLO₁
@@ -1493,7 +1493,7 @@ theorem weights_add_up_to_mass_of
       obtain ⟨t, hTG, hkey⟩ := hcarry _ hb
       rw [hω b.1 t hkey, hwt t Λ₁ hTG hRefl]
     rw [tsum_congr hconst, ENNReal.tsum_set_const, ← Subtype.val_injective.encard_image, hfib, hmass, hStab]
-  · rw [if_neg ho]
+  · rw [ite_eq_right ho]
     refine ENNReal.tsum_eq_zero.2 fun b => (ho ?_).elim
     have hb : φ b.1 = o := b.2
     rw [← hb]
@@ -1547,7 +1547,7 @@ theorem rel_symm (hM : M.OK) (hk : Module.finrank E V = k + 2 * r + 1)
   obtain ⟨g, hg, hm⟩ := h
   have e1 : act.smul ⟨g, hg⟩ d = d' := (hmv ⟨g, hg⟩ d d').1 hm
   refine ⟨((⟨g, hg⟩ : P.UW0)⁻¹ : P.UW0).1, ((⟨g, hg⟩ : P.UW0)⁻¹ : P.UW0).2, (hmv _ d' d).2 ?_⟩
-  letI := act
+  let := act
   rw [← e1]
   change ((⟨g, hg⟩ : P.UW0)⁻¹ : P.UW0) • ((⟨g, hg⟩ : P.UW0) • d) = d
   exact inv_smul_smul _ d
@@ -1563,7 +1563,7 @@ theorem rel_trans (hM : M.OK) (hk : Module.finrank E V = k + 2 * r + 1)
   have e2 : act.smul ⟨g', hg'⟩ b = c := (hmv ⟨g', hg'⟩ b c).1 hm'
   refine ⟨((⟨g', hg'⟩ : P.UW0) * ⟨g, hg⟩ : P.UW0).1, ((⟨g', hg'⟩ : P.UW0) * ⟨g, hg⟩ : P.UW0).2,
     (hmv _ a c).2 ?_⟩
-  letI := act
+  let := act
   rw [← e2, ← e1]
   change ((⟨g', hg'⟩ : P.UW0) * ⟨g, hg⟩) • a = (⟨g', hg'⟩ : P.UW0) • ((⟨g, hg⟩ : P.UW0) • a)
   exact mul_smul _ _ a
@@ -1591,9 +1591,9 @@ private theorem full_of_local_span (D : D7) (Z : LocDat D) (Λ : LV D)
     Submodule.IsFullLattice D.host.E Λ := by
   let A := GlobalTheory.HL.placesOf Z
   let L := GlobalTheory.Unfold.LatLoc.cL Λ
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
-  haveI := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
+  have := (A.loc p).lf
+  have := (A.loc p).char0
+  have := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
   have hc : Submodule.IsFullLattice D.host.E L := by
     refine { toIsLattice := GlobalTheory.Unfold.LatLoc.isLattice_map _ _ hΛ, span_eq_top := ?_ }
     by_contra hne
@@ -1671,9 +1671,9 @@ theorem rows_mass_genus : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
         have hfin := ((GlobalTheory.T.hermitianLattice_local_global_principle D (zOf Y)).1 Λ Λ₀ hfull hfull0).1
         refine ((Fm.P.finite_toSet).union hfin).subset ?_
         intro p hp
-        simp only [Set.mem_setOf_eq] at hp
+        simp only [Set.mem_ofPred_eq] at hp
         by_contra hno
-        simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hno
+        simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hno
         obtain ⟨hpP, hlat⟩ := hno
         obtain ⟨τ0, hτ0o, hτ0l⟩ := hτ0 p hpP
         obtain ⟨τ, hτo, hτl⟩ := hy.2 p

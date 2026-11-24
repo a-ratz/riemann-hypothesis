@@ -132,7 +132,7 @@ theorem GlobalTheory.BSP.approxRoot_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (
       zero_add, Polynomial.map_C, Polynomial.eval_C, map_pow f, map_natCast f] at h
     rw [Polynomial.derivative_map]
     exact isUnit_of_mul_isUnit_right (h ▸ (isUnit_l_BdRp l).pow c)
-  haveI : Nontrivial (Per.BdRp l) := (Per.θD l).domain_nontrivial
+  have : Nontrivial (Per.BdRp l) := (Per.θD l).domain_nontrivial
   have hx : ((bk.Ep.map f).scaleRoots ((l : Per.BdRp l) ^ m)).eval (e q) ∈ Ideal.span {e bk.E} ^ n := by
     have h1 : (bk.Ep.map f).scaleRoots ((l : Per.BdRp l) ^ m) =
         (bk.Ep.scaleRoots ((l : Wq l bk.a) ^ m)).map f := by

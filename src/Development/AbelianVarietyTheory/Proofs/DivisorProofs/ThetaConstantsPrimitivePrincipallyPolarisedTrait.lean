@@ -63,11 +63,11 @@ namespace GlobalTheory.UMin
 theorem exists_embed_integral {V W K : Type} [CommRing V] [IsDomain V] [CommRing W] [IsDomain W] [Field K]
     [IsAlgClosed K] (g : V →+* W) (hg : g.IsIntegral) (hgi : Function.Injective g) (j : V →+* K)
     (hj : Function.Injective j) : ∃ j' : W →+* K, j'.comp g = j ∧ Function.Injective j' := by
-  letI := g.toAlgebra
-  letI := j.toAlgebra
-  haveI : Algebra.IsIntegral V W := ⟨hg⟩
-  haveI : Module.IsTorsionFree V W := Module.isTorsionFree_iff_algebraMap_injective.2 hgi
-  haveI : Module.IsTorsionFree V K := Module.isTorsionFree_iff_algebraMap_injective.2 hj
+  let := g.toAlgebra
+  let := j.toAlgebra
+  have : Algebra.IsIntegral V W := ⟨hg⟩
+  have : Module.IsTorsionFree V W := Module.isTorsionFree_iff_algebraMap_injective.2 hgi
+  have : Module.IsTorsionFree V K := Module.isTorsionFree_iff_algebraMap_injective.2 hj
   let f : W →ₐ[V] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -78,18 +78,18 @@ theorem exists_embed_integral {V W K : Type} [CommRing V] [IsDomain V] [CommRing
   have hk : (RingHom.ker f.toRingHom).comap (algebraMap V W) = ⊥ := by
     rw [RingHom.comap_ker, hc]
     exact (RingHom.injective_iff_ker_eq_bot j).1 hj
-  exact (RingHom.injective_iff_ker_eq_bot _).2 (Ideal.eq_bot_of_comap_eq_bot hk)
+  exact (RingHom.injective_iff_ker_eq_bot _).2 (Ideal.eq_bot_of_under_eq_bot hk)
 
 theorem prim_descend {V W K K' : Type} [CommRing V] [CommRing W] [Field K] [Field K'] (g : V →+* W)
     (hg : g.IsIntegral) (i : V →+* K) (k : K →+* K') (i' : W →+* K') (h : i'.comp g = k.comp i) {J : Type}
     (c : J → K) (hp : Prim i' (fun a => k (c a))) : Prim i c := by
   have up : ∀ x : K', i'.IsIntegralElem x → (k.comp i).IsIntegralElem x := by
     intro x hx
-    letI := g.toAlgebra
-    letI := i'.toAlgebra
-    letI := (k.comp i).toAlgebra
-    haveI : Algebra.IsIntegral V W := ⟨hg⟩
-    haveI : IsScalarTower V W K' := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun h a).symm
+    let := g.toAlgebra
+    let := i'.toAlgebra
+    let := (k.comp i).toAlgebra
+    have : Algebra.IsIntegral V W := ⟨hg⟩
+    have : IsScalarTower V W K' := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun h a).symm
     exact isIntegral_trans (R := V) (A := W) x hx
   have down : ∀ y : K, (k.comp i).IsIntegralElem (k y) → i.IsIntegralElem y := by
     rintro y ⟨p, hm, he⟩
@@ -136,8 +136,8 @@ theorem spMap_comp_eq' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f 
 theorem prim_of_polFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) (t : SAB H S) (g : ℕ) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ (χ : Sp V ⟶ S), PolFib t.G t.PP.L g (jK V ≫ χ) → ∀ (σ : SecAt t.G t.PP.L χ), NZ t.G t.PP.L χ σ → ∀ (m N : ℕ), Odd m → 3 ≤ m → IsUnit (m : V) → ∀ (K : Type) [Field K] (i : V →+* K) (pt : Fin N → (Over.mk (spMap i ≫ χ) ⟶ t.G)) (c : Fin N → K), Function.Injective i → ThList t.G t.PP.L t.PP.rig m (spMap i ≫ χ) (SecAt.pull t.G t.PP.L σ i) pt c → Prim i c := by
   intro E _ _ _ H S t g V _ _ _ hV χ hpf σ hσ m N hm hm3 hmu K _ i pt c hi hT
   obtain ⟨hd, hc, h0⟩ := (GlobalTheory.LN.cDvr_iff V).1 hV
-  haveI := hd
-  haveI := h0
+  have := hd
+  have := h0
   obtain ⟨t₁, ⟨m₁⟩⟩ : ∃ t₁ : SAB H (Sp V), Nonempty (SABMap t₁ t χ) := by
     obtain ⟨PP₁, cub₁, sym₁, adj₁, prim₁, m', -⟩ := sabPull Out.CubePf.cubePull χ t
     exact ⟨_, ⟨m'⟩⟩

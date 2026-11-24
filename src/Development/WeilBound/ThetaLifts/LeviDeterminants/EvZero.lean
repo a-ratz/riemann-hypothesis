@@ -248,7 +248,7 @@ theorem exists_modelS {B : Base F E} {r s r' s' : ℕ} (hB : B.IsGood σ) (hX : 
     (fun u hu => ⟨funext fun k => by simp [p, (hI u hu).1], (hI u hu).2⟩) fun v c => by
       by_cases h : G v
       · show (if G v then S v else φa v) _ = _
-        rw [if_pos h, h.2]
+        rw [ite_eq_left h, h.2]
         refine Set.indicator_eq_indicator ⟨fun hx i => ?_, fun hx i => ?_⟩ rfl
         · simpa using hx (ε.symm (.inr i))
         · obtain ⟨i, rfl⟩ := ε.symm.surjective i
@@ -256,7 +256,7 @@ theorem exists_modelS {B : Base F E} {r s r' s' : ℕ} (hB : B.IsGood σ) (hX : 
           · rw [glue_inl]; exact zero_mem _
           · rw [glue_inr]; exact hx i
       · show (if G v then S v else φa v) _ = _
-        rw [if_neg h, hφb]
+        rw [ite_eq_right h, hφb]
   refine ⟨ε, Ma, e, p, q, ⟨hr, fun v => ?_, ?_, hM.haar, hM.dom⟩, hco, fun z h => funext fun k => by simp [p, h],
     fun z h => funext fun k => by simp [q, h], he⟩
   · show Model.IsVac _ _ _ (if G v then S v else φa v)
@@ -264,7 +264,7 @@ theorem exists_modelS {B : Base F E} {r s r' s' : ℕ} (hB : B.IsGood σ) (hX : 
     · exact h.1
     · exact hφa v
   · filter_upwards [GlobalTheory.VacIndic.eventually_isVac_indicator B hB X W r s r' s' hX hW co hr, hM₁.std] with v h1 h2
-    exact if_pos ⟨h1, h2⟩
+    exact ite_eq_left ⟨h1, h2⟩
 
 end PositivityTheory.ThKF0
 end -- clump:auto
@@ -434,7 +434,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem tr_evI (h : IsTotallyReal F) (a : AF F) : Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F a) =
     ∑ w : InfinitePlace F, (InfinitePlace.Completion.extensionEmbedding w (a.1 w)).re := by
   classical
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (h.isReal w.1)⟩
   rw [evI, Algebra.trace_prod_apply, PI.ProdFormulaE.Tr.trace_pi, PI.ProdFormulaE.Tr.trace_pi,
     InfiniteAdeleRing.ringEquiv_mixedSpace_apply]
@@ -698,7 +698,7 @@ theorem dop_add' {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] (a : V) (
 theorem dop_neg {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     dop (-a) (-L) f = -dop a L f := by
   ext x
-  simp only [SchwartzMap.neg_apply, dop_apply, map_neg, ContinuousLinearMap.neg_apply]
+  simp only [neg_apply, dop_apply, map_neg, neg_apply]
   push_cast
   ring
 
@@ -939,7 +939,7 @@ theorem ai (z : Matrix (Fin n) (Fin d₁) (AE F E)) : aOf Ma (z * (incM F H.ι)�
 
 theorem li (z : Matrix (Fin n) (Fin d₁) (AE F E)) (a y) : lOf Ma (z * (incM F H.ι)ᵀ) (glue ε a y) = lOf M₁ z y := by
   unfold lOf
-  rw [h.i, glue_map ε (evI F), evI_fun_zero, lin_glue, lin_zero, ContinuousLinearMap.zero_apply, zero_add]
+  rw [h.i, glue_map ε (evI F), evI_fun_zero, lin_glue, lin_zero, zero_apply, zero_add]
 
 theorem cx (a) : ∃ q, aOf Ma (Matrix.vecMulVec a (incV F H.x)) = 0 ∧
     ∀ t y, lOf Ma (Matrix.vecMulVec a (incV F H.x)) (glue ε t y) = linForm q t := by
@@ -948,7 +948,7 @@ theorem cx (a) : ∃ q, aOf Ma (Matrix.vecMulVec a (incV F H.x)) = 0 ∧
   · unfold aOf
     rw [hq, evI_fun_zero]
   · unfold lOf
-    rw [hq, glue_map ε (evI F), evI_fun_zero, lin_glue, lin_zero, ContinuousLinearMap.zero_apply, add_zero]
+    rw [hq, glue_map ε (evI F), evI_fun_zero, lin_glue, lin_zero, zero_apply, add_zero]
 
 theorem cy (b) : ∃ p, aOf Ma (Matrix.vecMulVec b (incV F H.y)) = glue ε p 0 ∧ lOf Ma (Matrix.vecMulVec b (incV F H.y)) = 0 := by
   obtain ⟨p, hp⟩ := h.y b
@@ -985,7 +985,7 @@ theorem onto (hW : W.IsSkew σ B r' s') (hH : H.IsAdapted σ B W W₁ i₀ i₁)
 theorem gs_slice (hH : H.IsAdapted σ B W W₁ i₀ i₁) {e f g} (hf : Gs B Ma e f) (hg : ∀ y, g y = f (glue ε 0 y)) : Gs B M₁ e g :=
   fun z z' hz hz' hr => by
     ext y
-    rw [SchwartzMap.smul_apply, ← h.slice hg, ← h.slice hg, hf _ _ (at_mul' hz _) (at_mul' hz' _) (rel_iota hH hr)]
+    rw [smul_apply, ← h.slice hg, ← h.slice hg, hf _ _ (at_mul' hz _) (at_mul' hz' _) (rel_iota hH hr)]
     rfl
 
 theorem map_le (hB : B.IsGood σ) (hW : W.IsSkew σ B r' s') (hH : H.IsAdapted σ B W W₁ i₀ i₁)
@@ -1001,7 +1001,7 @@ theorem map_le (hB : B.IsGood σ) (hW : W.IsSkew σ B r' s') (hH : H.IsAdapted �
       have key := hf _ _ (at_pure hb _) (at_pure ha _) hr
       refine ⟨_, fun y => (slice_ode ε f t (Real.pi * linForm q t) (fun c y => ?_) y).trans (by rw [hT])⟩
       have := DFunLike.congr_fun key (glue ε (c • t) y)
-      simp only [Dp, SchwartzMap.smul_apply, dop_apply, hq, hq', hp, hl, map_zero, map_smul, ContinuousLinearMap.zero_apply,
+      simp only [Dp, smul_apply, dop_apply, hq, hq', hp, hl, map_zero, map_smul, zero_apply,
         smul_eq_mul] at this
       push_cast at this ⊢
       linear_combination Complex.I * this + (fderiv ℝ f (glue ε (c • t) y) (glue ε t 0) +
@@ -1091,7 +1091,7 @@ theorem exists_lift (hB : B.IsGood σ) (hX : X.IsHerm σ B r s) (hW : W.IsSkew �
   have hy : H.y ≠ 0 := fun h0 => by simpa [h0, form, dotProduct, Matrix.mulVec] using hH.xy
   obtain ⟨f, f0, f1, f2⟩ := exists_gauss_box ε Q hs (fun t ht => by
     obtain ⟨p, h1, h2⟩ := omega_pure hB hX hW (b t) hy (hr t)
-    rw [omega_co Ma, hp, hq', (h.cy _).choose_spec.2, ContinuousLinearMap.zero_apply, sub_zero] at h1
+    rw [omega_co Ma, hp, hq', (h.cy _).choose_spec.2, zero_apply, sub_zero] at h1
     have h3 : ∃ w, (fun i => piInf (B.emb w) (b t i)) ≠ 0 := by
       by_contra! h4
       have h5 : b t = 0 := funext fun i => GlobalTheory.CompanionTheory.CMAdele.eq_zero_of_piInf σ hB.cm B.emb _
@@ -1111,7 +1111,7 @@ theorem exists_lift (hB : B.IsGood σ) (hX : X.IsHerm σ B r s) (hW : W.IsSkew �
     ext x
     obtain ⟨t, y, rfl⟩ := exists_glue ε x
     have h6 : linForm q' t = Q t p' := (sym (hr t) h1 (hp t) h2 (hq' t) h5).trans (hs p' t)
-    simp only [Dp, SchwartzMap.smul_apply, dop_apply, h2, h3, h4, h5, h6, f2, map_zero, ContinuousLinearMap.zero_apply, smul_eq_mul]
+    simp only [Dp, smul_apply, dop_apply, h2, h3, h4, h5, h6, f2, map_zero, zero_apply, smul_eq_mul]
     push_cast
     ring
   refine ⟨f, fun u u' hu hu' hrel => ?_, f0⟩
@@ -1128,8 +1128,8 @@ theorem exists_lift (hB : B.IsGood σ) (hX : X.IsHerm σ B r s) (hW : W.IsSkew �
     obtain ⟨t, y, rfl⟩ := exists_glue ε x
     obtain ⟨c, hc⟩ := f1 t
     have h1 := DFunLike.congr_fun (hg z z' hz hz' r2) y
-    rw [SchwartzMap.smul_apply, h.slice (g := c • g) (fun y => (hc y).symm), h.slice (g := c • g) (fun y => (hc y).symm), Dp, Dp,
-      dop_smul, dop_smul, SchwartzMap.smul_apply, SchwartzMap.smul_apply, smul_comm]
+    rw [smul_apply, h.slice (g := c • g) (fun y => (hc y).symm), h.slice (g := c • g) (fun y => (hc y).symm), Dp, Dp,
+      dop_smul, dop_smul, smul_apply, smul_apply, smul_comm]
     exact congrArg _ h1
   rw [Dp_add, Dp_add, Dp_add, Dp_add, K _ _ r3, k2, smul_add, smul_add]
   congr 2
@@ -1181,7 +1181,7 @@ theorem exists_adapted_model_evaluation : ∀ (F E : Type) [Field F] [NumberFiel
   intro F E _ _ _ _ _ σ B n d d₁ r s r' s' i₀ i₁ X W W₁ H' M M₁ hB hX hW hM hH hM₁
   obtain ⟨κ₀, x, ε, Ma, e, T, hMa, hEv, h1, h2, h3, hT, ev, hev, hpure⟩ :=
     exists_model0 F E σ B n d d₁ r s r' s' i₀ i₁ X W W₁ H' M M₁ hB hX hW hM hH hM₁
-  haveI := x
+  have := x
   have hA : Adp H' ε Ma M₁ := Adp.mk h1 h2 h3
   exact ⟨Ma, e, hMa, hEv, T, ev,
     hA.map_eq hB hX hW hH (T : SInf F (Fin n × Fin d) →ₗ[ℂ] SInf F (Fin n × Fin d₁)) hT, hev, hpure⟩

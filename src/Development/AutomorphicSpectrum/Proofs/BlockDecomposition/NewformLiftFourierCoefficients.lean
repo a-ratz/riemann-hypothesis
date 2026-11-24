@@ -84,7 +84,7 @@ theorem trans_bdd (hb : ∃ C : ℝ, ∀ g, ‖φ g‖ ≤ C) (A B : G2) :
 
 theorem trans_integrable (hS : Set0 μ 𝓕 mK 𝓓) (hc : Continuous φ) (hb : ∃ C : ℝ, ∀ g, ‖φ g‖ ≤ C) (A B : G2) :
     Integrable (fun g => φ (g * A) * conj (φ (g * B))) (μ.restrict (𝓕 ∩ band)) := by
-  haveI : IsFiniteMeasure (μ.restrict (𝓕 ∩ band)) := ⟨by simpa using hS.vol⟩
+  have : IsFiniteMeasure (μ.restrict (𝓕 ∩ band)) := ⟨by simpa using hS.vol⟩
   obtain ⟨C, hC⟩ := trans_bdd hb A B
   exact Integrable.of_bound (trans_cont hc A B).aestronglyMeasurable C (ae_of_all _ hC)
 
@@ -253,7 +253,7 @@ end Local
 
 theorem wr_ne (k : ℕ) : WR k (-1) ≠ 0 := by
   unfold WR
-  rw [if_pos (by simp)]
+  rw [ite_eq_left (by simp)]
   exact Complex.ofReal_ne_zero.2 (mul_ne_zero (pow_ne_zero _ (by simp)) (Real.exp_ne_zero _))
 
 theorem wh_zero (g : G2) : Wh 0 g = 0 := by

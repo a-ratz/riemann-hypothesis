@@ -109,7 +109,7 @@ theorem exists_linear_separation {σ : Type} [Fintype σ] (I : Ideal (MvPolynomi
   set S : Set (σ → ℂ) := (fun h : MvPolynomial σ ℂ => fun j => eval w (pderiv j h)) '' (I : Set _) with hS
   obtain ⟨b, hbS, hspan, hli⟩ := exists_linearIndependent ℂ S
   have hbfin : b.Finite := hli.setFinite
-  haveI : Fintype b := hbfin.fintype
+  have : Fintype b := hbfin.fintype
   have hex : ∀ t : b, ∃ f ∈ I, (fun j => eval w (pderiv j f)) = (t : σ → ℂ) := fun t => by
     obtain ⟨f, hf, h⟩ := hbS t.2
     exact ⟨f, hf, h⟩

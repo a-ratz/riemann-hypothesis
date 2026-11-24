@@ -96,7 +96,7 @@ private theorem under_eq {p : HeightOneSpectrum (𝓞 K)} (w : PlacesOver L p) :
   exact w.2.over.symm
 
 private theorem nonempty_over (p : HeightOneSpectrum (𝓞 K)) : Nonempty (PlacesOver L p) := by
-  haveI := p.isMaximal
+  have := p.isMaximal
   obtain ⟨P, hPm, hP⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 L) p.asIdeal
   exact ⟨⟨⟨P, hPm.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot p.ne_bot P⟩, hP⟩⟩
 

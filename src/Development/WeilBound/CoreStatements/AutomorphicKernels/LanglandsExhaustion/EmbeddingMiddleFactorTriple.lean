@@ -270,14 +270,14 @@ theorem mid_sub {V : Type} [AddCommGroup V] [Module ℂ V] {P : Representation �
   have hne : S₀ ≠ ⊥ := by
     intro h0
     subst h0
-    haveI : Subsingleton (↥(⊥ : Subrepresentation P).toSubmodule) := by
+    have : Subsingleton (↥(⊥ : Subrepresentation P).toSubmodule) := by
       refine ⟨fun a b => Subtype.ext ?_⟩
       have ha : (a : V) = 0 := (Submodule.mem_bot ℂ).1 a.2
       have hb : (b : V) = 0 := (Submodule.mem_bot ℂ).1 b.2
       rw [ha, hb]
-    haveI := hzero (σ := (⊥ : Subrepresentation P).toRepresentation) inferInstance
-    haveI : Subsingleton x.rep.V := ⟨fun a b => hf₀ (Subsingleton.elim _ _)⟩
-    haveI := x.rep.irr
+    have := hzero (σ := (⊥ : Subrepresentation P).toRepresentation) inferInstance
+    have : Subsingleton x.rep.V := ⟨fun a b => hf₀ (Subsingleton.elim _ _)⟩
+    have := x.rep.irr
     refine not_subsingleton (Subrepresentation x.rep.ρ) ⟨fun a b => Subrepresentation.ext (Submodule.ext fun v => ?_)⟩
     rw [Subsingleton.elim v 0]
     exact iff_of_true a.toSubmodule.zero_mem b.toSubmodule.zero_mem

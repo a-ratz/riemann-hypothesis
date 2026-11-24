@@ -156,11 +156,11 @@ theorem eq_of_finite_of_closed_fibres {X Y : Type*} [TopologicalSpace X] {B : Se
   have hl : IsLocallyConstant fun b : B => c b := fun s => by
     have e : ((fun b : B => c b) ⁻¹' s)ᶜ = ⋃ k ∈ C \ s, (Subtype.val ⁻¹' closure {b' ∈ B | c b' = k} : Set B) := by
       ext b
-      simp only [mem_compl_iff, mem_preimage, mem_iUnion, mem_diff, exists_prop]
+      simp only [mem_compl_iff, mem_preimage, mem_iUnion, Set.mem_sdiff, exists_prop]
       exact ⟨fun hb => ⟨c b, ⟨hc b b.2, hb⟩, subset_closure ⟨b.2, rfl⟩⟩,
         fun ⟨k, hk, hb⟩ => (h k hk.1 b b.2 hb).symm ▸ hk.2⟩
     rw [← isClosed_compl_iff, e]
-    exact (hC.subset diff_subset).isClosed_biUnion fun k _ => isClosed_closure.preimage continuous_subtype_val
+    exact (hC.subset sdiff_subset).isClosed_biUnion fun k _ => isClosed_closure.preimage continuous_subtypeVal
   exact fun b hb b' hb' => hl.apply_eq_of_preconnectedSpace ⟨b, hb⟩ ⟨b', hb'⟩
 
 theorem frequently_ne_zero_of_entire {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensional ℂ E]

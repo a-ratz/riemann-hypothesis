@@ -56,7 +56,7 @@ variable {K L : Type} [Field K] [Field L] (σ : K →+* L)
 
 theorem exists_coords : ∃ (ι : Type) (e : ι → L) (c : ι → L →+ K), (∀ i k a, c i (σ k * a) = k * c i a) ∧
     ∀ a, ∃ T : Finset ι, ∀ T' : Finset ι, T ⊆ T' → ∑ i ∈ T', e i * σ (c i a) = a := by
-  letI : Algebra K L := σ.toAlgebra
+  let : Algebra K L := σ.toAlgebra
   let b := Module.Basis.ofVectorSpace K L
   refine ⟨_, b, fun i => (b.coord i).toAddMonoidHom, fun i k a => ?_, fun a => ⟨(b.repr a).support, fun T' hT => ?_⟩⟩
   · exact (b.coord i).map_smul k a

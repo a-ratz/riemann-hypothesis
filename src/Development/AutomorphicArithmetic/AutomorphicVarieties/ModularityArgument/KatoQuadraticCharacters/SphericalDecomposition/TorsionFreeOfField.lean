@@ -66,7 +66,7 @@ private theorem cofinite_notMem (N : ℕ) (hN : N ≠ 0) :
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors h0).subset fun w hw => ?_)
-  simp only [Set.mem_setOf_eq, not_not] at hw
+  simp only [Set.mem_ofPred_eq, not_not] at hw
   exact Ideal.dvd_span_singleton.2 hw
 
 private theorem mem_of_normV_dvd {N : ℕ} {w : HeightOneSpectrum (𝓞 ℚ)} (h : normV w ∣ N) :

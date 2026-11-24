@@ -65,9 +65,9 @@ theorem valuation_sqrt_absNorm_eq_one :
     rw [hNdef, Ne, Ideal.absNorm_eq_zero_iff]; exact P.ne_bot
   have hpN : ¬ p ∣ N := by
     intro hdvd
-    haveI : Finite (𝓞 K ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (hNcard ▸ hN0)
-    haveI : Fact p.Prime := ⟨hp⟩
-    letI : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field _
+    have : Finite (𝓞 K ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (hNcard ▸ hN0)
+    have : Fact p.Prime := ⟨hp⟩
+    let : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field _
     obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 K ⧸ P.asIdeal) p (hNcard ▸ hdvd)
     have hx0 : x ≠ 0 := by
       rintro rfl; rw [addOrderOf_zero] at hx; exact hp.one_lt.ne' hx.symm
@@ -101,7 +101,7 @@ theorem valuation_sqrt_absNorm_eq_one :
   have h2 : A.valuation ((Real.sqrt N : ℝ) : ℂ) ^ 2 = 1 := by
     rw [← map_pow, hsq, hvN]
   rcases lt_trichotomy (A.valuation ((Real.sqrt N : ℝ) : ℂ)) 1 with h | h | h
-  · exact absurd h2 (pow_lt_one₀ zero_le' h two_ne_zero).ne
+  · exact absurd h2 (pow_lt_one₀ zero_le h two_ne_zero).ne
   · exact h
   · exact absurd h2 (one_lt_pow₀ h two_ne_zero).ne'
 

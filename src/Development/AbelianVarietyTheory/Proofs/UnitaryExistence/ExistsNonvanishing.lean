@@ -142,8 +142,8 @@ theorem exists_basisOn (hS : SecBaseChangeSt) [IsLocallyNoetherian S] (P : PolAV
   have hq : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
   let T : Over S := overRes (T := baseOver S) V
   have hT : T.hom = V.ι := Category.comp_id _
-  haveI : IsOpenImmersion T.hom := by rw [hT]; exact inferInstanceAs (IsOpenImmersion V.ι)
-  haveI : IsOpenImmersion (snd T P.A).left := inferInstanceAs (IsOpenImmersion (pullback.snd T.hom P.A.hom))
+  have : IsOpenImmersion T.hom := by rw [hT]; exact inferInstanceAs (IsOpenImmersion V.ι)
+  have : IsOpenImmersion (snd T P.A).left := inferInstanceAs (IsOpenImmersion (pullback.snd T.hom P.A.hom))
   have hr : ∀ g : P.A.left, P.A.hom g ∈ V → g ∈ Set.range (snd T P.A).left := fun g hg => by
     rw [range_snd, hT]
     exact ⟨⟨_, hg⟩, rfl⟩
@@ -245,8 +245,8 @@ theorem exists_affine (H : IsBasisOn A L V θ) {W W₀ : S.Opens} (hW : IsAffine
       gs (𝟙 _) g _ (s i) = gs A.hom g W a * gs (𝟙 _) g _ (θ i) := by
   let q : Spec (CommRingCat.of Γ(S, W)) ⟶ S := hW.fromSpec
   let T : Over S := Over.mk q
-  haveI : IsOpenImmersion T.hom := inferInstanceAs (IsOpenImmersion hW.fromSpec)
-  haveI : IsOpenImmersion (snd T A).left := inferInstanceAs (IsOpenImmersion (pullback.snd T.hom A.hom))
+  have : IsOpenImmersion T.hom := inferInstanceAs (IsOpenImmersion hW.fromSpec)
+  have : IsOpenImmersion (snd T A).left := inferInstanceAs (IsOpenImmersion (pullback.snd T.hom A.hom))
   have hz : ∀ z, A.hom ((snd T A).left z) ∈ W := fun z => by
     rw [← Scheme.Hom.comp_apply, w_snd, Scheme.Hom.comp_apply]; exact fromSpec_le hW trivial
   have le : ∀ j : Fin 1 → L.ι, (LPow A L (1 : ℕ) T).U j ≤ (snd T A).left ⁻¹ᵁ (A.hom ⁻¹ᵁ W₀ ⊓ L.U (j 0)) :=
@@ -293,8 +293,8 @@ theorem exists_nonvanishing [Smooth A.hom] (H : IsBasisOn A L V θ) (y : S) (hy 
   let q : Spec (CommRingCat.of (S.residueField y)) ⟶ S := S.fromSpecResidueField y
   let T : Over S := Over.mk q
   have hq : Set.range q = {y} := S.range_fromSpecResidueField y
-  haveI : Smooth (fst T A).left := inferInstanceAs (Smooth (pullback.fst T.hom A.hom))
-  haveI : IsReduced (T ⊗ A).left :=
+  have : Smooth (fst T A).left := inferInstanceAs (Smooth (pullback.fst T.hom A.hom))
+  have : IsReduced (T ⊗ A).left :=
     isReduced_scheme_of_smooth_of_isIntegrallyClosed (S.residueField y) (fst T A).left
   have hz : ∀ z, A.hom ((snd T A).left z) = y := fun z => by
     rw [← Scheme.Hom.comp_apply, w_snd, Scheme.Hom.comp_apply]
@@ -314,8 +314,8 @@ theorem pushInvertible : Out.SecBaseChangeSt →
     ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : Out.PolAV S), PushInvertible P.A P.L := by
   intro hS S _ P x
   obtain ⟨V, hV, θ, hθ, H⟩ := exists_basisOn hS P x
-  haveI := P.smoothDim
-  haveI : Smooth P.A.hom := SmoothOfRelativeDimension.smooth P.g _
+  have := P.smoothDim
+  have : Smooth P.A.hom := SmoothOfRelativeDimension.smooth P.g _
   refine ⟨V, hV, θ, hθ, fun W hW s hs => ?_, exists_nonvanishing H⟩
   have e : ∀ (a : Γ(S, W)) (g : P.A.left) i, P.A.hom g ∈ W → g ∈ P.L.U i →
       gs (𝟙 _) g _ ((P.A.hom.appLE W (P.A.hom ⁻¹ᵁ W ⊓ P.L.U i) inf_le_left).hom a *

@@ -159,7 +159,7 @@ lemma rep_skew (hσ : IsURepOn (UJset ε) σ) {u v : H} (hu : SmoothOnGV ε (fun
   rw [e] at h
   have h0 := h.unique (hasDerivAt_const _ _)
   simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1,
-    ContinuousLinearMap.one_apply] at h0
+    one_apply_eq_self] at h0
   linear_combination h0
 
 lemma rep_unit (hσ : IsURepOn (UJset ε) σ) {u v : H} (hu : SmoothOnGV ε (fun g => σ g u))

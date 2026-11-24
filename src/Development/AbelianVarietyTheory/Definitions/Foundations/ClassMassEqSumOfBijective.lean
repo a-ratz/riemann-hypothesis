@@ -81,8 +81,8 @@ theorem one_mem_stabAt (Γ K : Subgroup G) (g : G) : (1 : Γ) ∈ stabAt Γ K g 
 theorem FiniteClasses.stabOrder_pos (h : FiniteClasses Γ K) (c : ClassSet Γ K) : 0 < stabOrder Γ K c := by
   induction c using Quotient.inductionOn' with
   | h g =>
-    haveI := h.2 g
-    haveI : Nonempty (stabAt Γ K g) := ⟨⟨1, one_mem_stabAt Γ K g⟩⟩
+    have := h.2 g
+    have : Nonempty (stabAt Γ K g) := ⟨⟨1, one_mem_stabAt Γ K g⟩⟩
     exact Nat.card_pos (α := stabAt Γ K g)
 
 theorem classMass_eq_sum [Fintype (ClassSet Γ K)] :
@@ -101,8 +101,8 @@ theorem classMass_eq_finsum_out (Γ K : Subgroup G) :
 
 theorem FiniteClasses.inv_card_le (h : FiniteClasses Γ K) (g : G) :
     ((Nat.card (stabAt Γ K g) : ℝ))⁻¹ ≤ classMass Γ K := by
-  haveI := h.1
-  haveI := Fintype.ofFinite (ClassSet Γ K)
+  have := h.1
+  have := Fintype.ofFinite (ClassSet Γ K)
   rw [classMass_eq_sum, ← stabOrder_mk]
   exact Finset.single_le_sum (f := fun c => ((stabOrder Γ K c : ℝ))⁻¹) (fun _ _ => by positivity)
     (Finset.mem_univ _)
@@ -112,7 +112,7 @@ theorem FiniteClasses.classMass_pos (h : FiniteClasses Γ K) : 0 < classMass Γ 
 
 theorem classMass_of_isNeat [Finite (ClassSet Γ K)] (h : IsNeat Γ K) :
     classMass Γ K = Nat.card (ClassSet Γ K) := by
-  haveI := Fintype.ofFinite (ClassSet Γ K)
+  have := Fintype.ofFinite (ClassSet Γ K)
   have : ∀ c, stabOrder Γ K c = 1 := fun c => by
     induction c using Quotient.inductionOn' with
     | h g => change Nat.card (stabAt Γ K g) = 1; rw [h g]; simp
@@ -120,8 +120,8 @@ theorem classMass_of_isNeat [Finite (ClassSet Γ K)] (h : IsNeat Γ K) :
 
 theorem FiniteClasses.of_le (h : FiniteClasses Γ K) (hle : K' ≤ K) (hi : K'.relIndex K ≠ 0) :
     FiniteClasses Γ K' := by
-  haveI := h.1
-  haveI : Finite (K ⧸ K'.subgroupOf K) := Nat.finite_of_card_ne_zero hi
+  have := h.1
+  have : Finite (K ⧸ K'.subgroupOf K) := Nat.finite_of_card_ne_zero hi
   refine ⟨Finite.of_surjective (fun p : ClassSet Γ K × (K ⧸ K'.subgroupOf K) =>
     (DoubleCoset.mk Γ K' (p.1.out * (p.2.out : K)) : ClassSet Γ K')) fun c => ?_, fun g => ?_⟩
   · induction c using Quotient.inductionOn' with
@@ -132,21 +132,21 @@ theorem FiniteClasses.of_le (h : FiniteClasses Γ K) (hle : K' ≤ K) (hi : K'.r
       refine ((@DoubleCoset.eq _ _ Γ K' _ _).2 ⟨γ, hγ, (k' : K), k'.2, ?_⟩).symm
       simp only [e, e', Subgroup.coe_mul, Subgroup.coe_inv]
       group
-  · haveI := h.2 g
+  · have := h.2 g
     exact Finite.of_injective (fun x : stabAt Γ K' g => (⟨x.1, hle x.2⟩ : stabAt Γ K g))
       fun x y e => Subtype.ext (congrArg (fun z : stabAt Γ K g => z.1) e)
 
 theorem FiniteClasses.of_ge (h : FiniteClasses Γ K') (hle : K' ≤ K) (hi : K'.relIndex K ≠ 0) :
     FiniteClasses Γ K := by
-  haveI := h.1
-  haveI : Finite (K ⧸ K'.subgroupOf K) := Nat.finite_of_card_ne_zero hi
+  have := h.1
+  have : Finite (K ⧸ K'.subgroupOf K) := Nat.finite_of_card_ne_zero hi
   refine ⟨Finite.of_surjective (fun c : ClassSet Γ K' => (DoubleCoset.mk Γ K c.out : ClassSet Γ K)) fun c => ?_,
     fun g => ?_⟩
   · induction c using Quotient.inductionOn' with
     | h g =>
       obtain ⟨γ, hγ, k, hk, e⟩ := DoubleCoset.mk_out_eq_mul Γ K' g
       exact ⟨DoubleCoset.mk Γ K' g, ((@DoubleCoset.eq _ _ Γ K _ _).2 ⟨γ, hγ, k, hle hk, e⟩).symm⟩
-  · haveI := h.2 g
+  · have := h.2 g
     let f : stabAt Γ K g → K ⧸ K'.subgroupOf K := fun x => QuotientGroup.mk ⟨_, x.2⟩
     let s : (K ⧸ K'.subgroupOf K) → stabAt Γ K g := fun q =>
       Classical.epsilon (h := ⟨⟨1, one_mem_stabAt Γ K g⟩⟩) fun x => f x = q
@@ -165,8 +165,8 @@ theorem FiniteClasses.of_ge (h : FiniteClasses Γ K') (hle : K' ≤ K) (hi : K'.
 
 theorem relIndex_ne_zero_of_isOpen [TopologicalSpace G] [IsTopologicalGroup G] (hK : IsCompact (K : Set G))
     (hK' : IsOpen (K' : Set G)) : K'.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI := Subgroup.quotient_finite_of_isOpen (K'.subgroupOf K) (hK'.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have := Subgroup.quotient_finite_of_isOpen (K'.subgroupOf K) (hK'.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 theorem FiniteClasses.of_isCompact_isOpen [TopologicalSpace G] [IsTopologicalGroup G] (h : FiniteClasses Γ K)
@@ -234,8 +234,8 @@ open MeasureTheory in
 theorem FiniteClasses.measure_toReal [MeasurableSpace G] [MeasurableMul G] [Countable Γ] (h : FiniteClasses Γ K)
     (μ : Measure G) [μ.IsMulLeftInvariant] (hK : MeasurableSet (K : Set G)) (hK1 : μ K = 1) {𝓕 : Set G}
     (h𝓕 : IsFundamentalDomain Γ 𝓕 μ) : (μ 𝓕).toReal = classMass Γ K := by
-  haveI := h.1
-  haveI := Fintype.ofFinite (ClassSet Γ K)
+  have := h.1
+  have := Fintype.ofFinite (ClassSet Γ K)
   have e : ∀ g, Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.stab Γ K g = stabAt Γ K g := fun g => by
     ext γ; simp only [Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.stab, stabAt, mul_assoc]
   rw [Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measure_fd_toReal μ hK hK1 (fun c : ClassSet Γ K => c.out) ?_ ?_ ?_ h𝓕,
@@ -357,9 +357,9 @@ theorem mem_stdLevel (g : HA (Af F) σ J) : g ∈ stdLevel σ J ↔
 theorem intTens_open_compact (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] :
     IsOpen (intTens F E : Set (Af F ⊗[F] E)) ∧
       ∃ C : Set (Af F ⊗[F] E), IsCompact C ∧ ∀ w ∈ intTens F E, w ∈ C := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   let L : Submodule (𝓞 E) (Fin 1 → E) := Submodule.span (𝓞 E) {fun _ => 1}
   have h1 : (fun _ => 1 : Fin 1 → E) ∈ L := Submodule.subset_span rfl
   have hsp : Submodule.span E (L : Set (Fin 1 → E)) = ⊤ := by
@@ -431,13 +431,13 @@ theorem intTens_open_compact (F E : Type) [Field F] [NumberField F] [Field E] [N
     rw [RingEquiv.symm_apply_apply, ← Algebra.TensorProduct.one_def, mul_one]
 
 theorem topGroup_fin : IsTopologicalGroup (HA (Af F) σ J) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   exact inferInstanceAs (IsTopologicalGroup (HR (Af F) σ J))
 
 theorem isOpen_stdLevel : IsOpen (stdLevel σ J : Set (HA (Af F) σ J)) := by
-  have hm : Continuous (HA.mat (Af F) σ J) := continuous_subtype_val
+  have hm : Continuous (HA.mat (Af F) σ J) := continuous_subtypeVal
   have : (stdLevel σ J : Set (HA (Af F) σ J)) = ⋂ i, ⋂ j,
       ((fun g => (HA.mat (Af F) σ J g).1 i j) ⁻¹' (intTens F E) ∩
         (fun g => ((HA.mat (Af F) σ J g)⁻¹).1 i j) ⁻¹' (intTens F E)) := by
@@ -449,9 +449,9 @@ theorem isOpen_stdLevel : IsOpen (stdLevel σ J : Set (HA (Af F) σ J)) := by
   · exact (intTens_open_compact F E).1.preimage ((Units.continuous_coe_inv.comp hm).matrix_elem i j)
 
 theorem isCompact_stdLevel (hJ : J.det ≠ 0) : IsCompact (stdLevel σ J : Set (HA (Af F) σ J)) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := topGroup_fin σ J
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := topGroup_fin σ J
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   obtain ⟨C, hC, hCe⟩ := (intTens_open_compact F E).2
   obtain ⟨K, hK, hKe⟩ := GlobalTheory.StabCompact.exists_compact_of_entries (Af F) σ J hJ C hC
   exact hK.of_isClosed_subset ((stdLevel σ J).isClosed_of_isOpen (isOpen_stdLevel σ J))
@@ -463,7 +463,7 @@ theorem finiteClasses_unitary (hσ : IsCMExt F E σ) (hJ : IsHermND σ J) (hd : 
     {K : Subgroup (HA (Af F) σ J)} (hc : IsCompact (K : Set (HA (Af F) σ J)))
     (ho : IsOpen (K : Set (HA (Af F) σ J))) :
     FiniteClasses (ratIn (Af F) σ J) K := by
-  haveI := topGroup_fin σ J
+  have := topGroup_fin σ J
   have hτ : ∀ τ : E →+* ℂ, τ.comp (σ : E →+* E) = (starRingEnd ℂ).comp τ :=
     fun τ => RingHom.ext (hσ.2.2.2 τ)
   have hH : IsHerm (σ : E →+* E) J := Matrix.ext fun i j => hJ.1 i j
@@ -539,11 +539,11 @@ theorem IsFinProj.surjective (h : IsFinProj σ J π) : Function.Surjective π :=
 
 omit [NumberField E] in
 theorem IsFinProj.injOn (h : IsFinProj σ J π) : Set.InjOn π (ratIn (AF F) σ J) := by
-  haveI : Nontrivial (Af F) := by
+  have : Nontrivial (Af F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
     exact (Formalism.UG.evalV F ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩).toRingHom.domain_nontrivial
-  haveI : Nontrivial (Af F ⊗[F] E) :=
+  have : Nontrivial (Af F ⊗[F] E) :=
     (Algebra.TensorProduct.includeLeft_injective (R := F) (S := F) (A := Af F) (B := E)
       (algebraMap F E).injective).nontrivial
   rintro x ⟨u, -, hu⟩ y ⟨v, -, hv⟩ e
@@ -577,7 +577,7 @@ theorem IsFinProj.continuous (h : IsFinProj σ J π) : Continuous π := by
   obtain ⟨e, he, hc, -⟩ := GlobalTheory.AdSplit.exists_adele_equiv F E
   have hq : Continuous (Algebra.TensorProduct.map (sndA F) (AlgHom.id F E)).toRingHom :=
     (continuous_snd.comp hc).congr fun z => (he z).2
-  have hm : Continuous (HA.mat (AF F) σ J) := continuous_subtype_val
+  have hm : Continuous (HA.mat (AF F) σ J) := continuous_subtypeVal
   refine continuous_induced_rng.2 ?_
   change Continuous fun g => HA.mat (Af F) σ J (π g)
   simp only [h _]
@@ -593,9 +593,9 @@ theorem IsFinProj.measure_toReal (h : IsFinProj σ J π) (hσ : IsCMExt F E σ) 
     (ho : IsOpen (K : Set (HA (Af F) σ J))) (μ : Measure (HA (AF F) σ J)) [μ.IsMulLeftInvariant]
     (hK1 : μ (K.comap π) = 1) {𝓕 : Set (HA (AF F) σ J)} (h𝓕 : IsFundamentalDomain (HFinIn (AF F) σ J) 𝓕 μ) :
     (μ 𝓕).toReal = unitaryMass σ J K := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA σ J
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA σ J
-  haveI : Countable (ratIn (AF F) σ J) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma σ J
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA σ J
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA σ J
+  have : Countable (ratIn (AF F) σ J) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma σ J
   have hf : FiniteClasses (ratIn (AF F) σ J) (K.comap π) := by
     rw [finiteClasses_comap π _ K h.surjective h.injOn, h.map_ratIn]
     exact finiteClasses_unitary hσ hJ hd hc ho
@@ -615,7 +615,7 @@ theorem classMass_top_top (G : Type) [Group G] :
 theorem classMass_bot {G : Type} [Group G] (K : Subgroup G) [K.FiniteIndex] :
     classMass (⊥ : Subgroup G) K = K.index := by
   have e : ClassSet (⊥ : Subgroup G) K = (G ⧸ K) := DoubleCoset.left_bot_eq_left_quot K
-  haveI : Finite (ClassSet (⊥ : Subgroup G) K) := by rw [e]; infer_instance
+  have : Finite (ClassSet (⊥ : Subgroup G) K) := by rw [e]; infer_instance
   rw [classMass_of_isNeat fun g => Set.eq_singleton_iff_unique_mem.2
     ⟨one_mem_stabAt _ _ _, fun _ _ => Subsingleton.elim _ _⟩, e]
   rfl

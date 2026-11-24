@@ -78,7 +78,7 @@ private theorem fin_expU {F : Type} [Field F] [NumberField F] [IsTotallyReal F] 
   have e1 : expU z = expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]

@@ -241,11 +241,11 @@ theorem modpi_cocycles_finite_classes : Formalism.GaloisCohomology.LocalTateDual
     rintro g _ ⟨m, rfl⟩
     show ρ g (ϖ • m) ∈ N
     rw [map_smul]; exact hmemN _
-  haveI hdisc : DiscreteTopology (M ⧸ N) :=
+  have hdisc : DiscreteTopology (M ⧸ N) :=
     QuotientAddGroup.discreteTopology (N := N.toAddSubgroup) hN
-  haveI : CompactSpace (M ⧸ N) :=
+  have : CompactSpace (M ⧸ N) :=
     (Submodule.Quotient.mk_surjective N).compactSpace (Submodule.isOpenQuotientMap_mkQ N).continuous
-  haveI : Finite (M ⧸ N) := finite_of_compact_of_discrete
+  have : Finite (M ⧸ N) := finite_of_compact_of_discrete
   obtain ⟨r, hr⟩ := Ideal.mem_span_singleton'.mp hp
   obtain ⟨k, hk1⟩ : ∃ k : ℕ, k = 1 := ⟨1, rfl⟩
   have hkill : ∀ q : M ⧸ N, (p ^ k : ℕ) • q = 0 := by
@@ -256,8 +256,8 @@ theorem modpi_cocycles_finite_classes : Formalism.GaloisCohomology.LocalTateDual
     have : (p • m : M) = ϖ • (r • m) := by
       rw [← Nat.cast_smul_eq_nsmul O, ← hr, smul_smul, mul_comm]
     rw [this]; exact hmemN _
-  haveI : Module (ZMod (p ^ k)) (M ⧸ N) := AddCommGroup.zmodModule (n := p ^ k) hkill
-  haveI : ContinuousConstSMul (ZMod (p ^ k)) (M ⧸ N) := ⟨fun _ => continuous_of_discreteTopology⟩
+  have : Module (ZMod (p ^ k)) (M ⧸ N) := AddCommGroup.zmodModule (n := p ^ k) hkill
+  have : ContinuousConstSMul (ZMod (p ^ k)) (M ⧸ N) := ⟨fun _ => continuous_of_discreteTopology⟩
   let f : Formalism.GaloisCohomology.GK p K → Module.End (ZMod (p ^ k)) (M ⧸ N) := fun h =>
     (N.mapQ N (ρ (e.symm h)) (hstab _)).toAddMonoidHom.toZModLinearMap (p ^ k)
   have hf1 : f 1 = 1 := by
@@ -291,11 +291,11 @@ theorem modpi_cocycles_finite_classes : Formalism.GaloisCohomology.LocalTateDual
     intro a b
     simp only [cb, map_mul, c.2.2, Submodule.Quotient.mk_add, hρ'mk]
   let κ : Z1 ρ → H1 ρ' := fun c => Submodule.Quotient.mk ⟨cb c, hcb c⟩
-  haveI := Fintype.ofFinite (H1 ρ')
+  have := Fintype.ofFinite (H1 ρ')
   let pick : H1 ρ' → Z1 ρ := fun y => if hy : ∃ c, κ c = y then hy.choose else 0
   refine ⟨Finset.univ.image pick, fun c => ?_⟩
   have hex : ∃ c', κ c' = κ c := ⟨c, rfl⟩
-  have hpick : pick (κ c) = hex.choose := dif_pos hex
+  have hpick : pick (κ c) = hex.choose := dite_eq_left hex
   refine ⟨pick (κ c), Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩
   set c₀ := pick (κ c)
   have heq : κ c₀ = κ c := by rw [hpick]; exact hex.choose_spec
@@ -328,14 +328,14 @@ namespace GlobalTheory.FinIsoDualLattice
 theorem finIso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTateDualityK) : FinIso := by
   intro p _ K O _ _ _ _ _ _ _ VT VT' _ _ _ _ _ _ _ _ _ _ _ _ _ _ G _ _ hK hO i D hD
   obtain ⟨hR, hC, hT2, hA, hpm, hp0⟩ := hO
-  haveI := hR; haveI := hC; haveI := hT2; haveI := hD.t2'
+  have := hR; have := hC; have := hT2; have := hD.t2'
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨hFin, hFree⟩ := _root_.GlobalTheory.dualLat_finite_free D.bT D.T hD.lat hD.perf
-  haveI := hFin; haveI := hFree
+  have := hFin; have := hFree
   obtain ⟨hcpl, hsep⟩ := _root_.GlobalTheory.compact_dvr_complete_separated hA ϖ hϖ
   obtain ⟨hcT, hsT⟩ := GlobalTheory.freeModule_adicComplete_separated ϖ hcpl hsep (↥D.T')
   obtain ⟨hcomp, hopen, hemb⟩ := _root_.GlobalTheory.finite_free_compact_adic_dvr hA (M := ↥D.T') ϖ hϖ
-  haveI := hcomp
+  have := hcomp
   have hρ : ContAction D.ρTl' := sub_contAction D.contT' D.T' D.stT'
   have hpϖ : (p : O) ∈ Ideal.span {ϖ} := by
     rwa [← Irreducible.maximalIdeal_eq hϖ]

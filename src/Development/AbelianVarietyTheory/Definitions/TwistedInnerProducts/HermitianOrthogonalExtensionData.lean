@@ -133,10 +133,10 @@ def ofSgn (ε : Bool) (V : HSp D) : GA D (sgn ε V) ≃* GA D V where
 theorem mt_ofSgn (ε : Bool) (V : HSp D) (g : GA D (sgn ε V)) : Formalism.L2.Theta.mt V (ofSgn ε V g) = Formalism.L2.Theta.mt (sgn ε V) g := rfl
 
 theorem continuous_ofSgn (ε : Bool) (V : HSp D) : Continuous (ofSgn ε V) :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem continuous_ofSgn_symm (ε : Bool) (V : HSp D) : Continuous (ofSgn ε V).symm :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem neg_gram_inv (V : HSp D) : (neg V).gram⁻¹ = -V.gram⁻¹ := by
   refine Matrix.inv_eq_right_inv ?_

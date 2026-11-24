@@ -80,10 +80,10 @@ theorem surjective_algebraMap_of_finite_unramified : ∀ (R : Type) [CommRing R]
     (T : Type) [CommRing T] [IsLocalRing T] [Algebra R T] [Module.Finite R T]
     [Algebra.FormallyUnramified R T], Function.Surjective (algebraMap R T) := by
   intro R _ _ _ T _ _ _ _ _
-  haveI := GlobalTheory.isLocalHom_algebraMap_of_moduleFinite R T
+  have := GlobalTheory.isLocalHom_algebraMap_of_moduleFinite R T
   have hm := Algebra.FormallyUnramified.map_maximalIdeal (R := R) (S := T)
-  haveI : Algebra.IsIntegral R T := Algebra.IsIntegral.of_finite R T
-  haveI : Algebra.IsIntegral (IsLocalRing.ResidueField R) (IsLocalRing.ResidueField T) :=
+  have : Algebra.IsIntegral R T := Algebra.IsIntegral.of_finite R T
+  have : Algebra.IsIntegral (IsLocalRing.ResidueField R) (IsLocalRing.ResidueField T) :=
     inferInstance
   have hk : Function.Surjective
       (algebraMap (IsLocalRing.ResidueField R) (IsLocalRing.ResidueField T)) :=
@@ -114,9 +114,9 @@ theorem nonempty_algHom_residueField : ∀ (R : Type) [CommRing R] [IsLocalRing 
     (T : Type) [CommRing T] [IsLocalRing T] [Algebra R T] [Module.Finite R T],
     Nonempty (T →ₐ[R] IsLocalRing.ResidueField R) := by
   intro R _ _ _ T _ _ _ _
-  haveI := GlobalTheory.isLocalHom_algebraMap_of_moduleFinite R T
-  haveI : Algebra.IsIntegral R T := Algebra.IsIntegral.of_finite R T
-  haveI : Algebra.IsIntegral (IsLocalRing.ResidueField R) (IsLocalRing.ResidueField T) :=
+  have := GlobalTheory.isLocalHom_algebraMap_of_moduleFinite R T
+  have : Algebra.IsIntegral R T := Algebra.IsIntegral.of_finite R T
+  have : Algebra.IsIntegral (IsLocalRing.ResidueField R) (IsLocalRing.ResidueField T) :=
     inferInstance
   let l : IsLocalRing.ResidueField T →ₐ[IsLocalRing.ResidueField R] IsLocalRing.ResidueField R :=
     IsAlgClosed.lift
@@ -129,7 +129,7 @@ theorem exists_section_of_point : ∀ (R : Type) [CommRing R] [HenselianLocalRin
   intro R _ _ _ B _ _ _ _ K _ φ χ hχ
   classical
   obtain ⟨J, hJ, T, _, _, e, hT, hT'⟩ := GlobalTheory.finite_algebra_strictly_henselian_pi R B
-  haveI := Fintype.ofFinite J
+  have := Fintype.ofFinite J
   let ε : J → B := fun i => e.symm (Pi.single i 1)
   have hεsum : ∑ i, ε i = 1 := by
 
@@ -159,11 +159,11 @@ theorem exists_section_of_point : ∀ (R : Type) [CommRing R] [HenselianLocalRin
 
     simp [map_sum, h] at this
   have hi1 : χ (ε i) = 1 := (IsIdempotentElem.iff_eq_zero_or_one.1 ((hεid i).map χ)).resolve_left hi
-  haveI : IsLocalRing (T i) := inferInstance
-  haveI : Module.Finite R (T i) := (hT' i).2
+  have : IsLocalRing (T i) := inferInstance
+  have : Module.Finite R (T i) := (hT' i).2
   let π : B →ₐ[R] T i := (Pi.evalAlgHom R T i).comp e.toAlgHom
   have hπ : Function.Surjective π := fun y => ⟨e.symm (Pi.single i y), by simp [π]⟩
-  haveI : Algebra.FormallyUnramified R (T i) := Algebra.FormallyUnramified.of_surjective π hπ
+  have : Algebra.FormallyUnramified R (T i) := Algebra.FormallyUnramified.of_surjective π hπ
   have hsurj : Function.Surjective (algebraMap R (T i)) := surjective_algebraMap_of_finite_unramified R (T i)
   obtain ⟨β⟩ := nonempty_algHom_residueField R (T i)
   obtain ⟨ψ₀, hψ₀⟩ := (GlobalTheory.EtaleHensel.bijective_residue_comp R B R).2 (β.comp π)
@@ -200,9 +200,9 @@ theorem exists_iso_sp_of_finite_etale : ∀ (R : Type) [CommRing R] (X : Scheme.
     ∃ (B : Type) (_ : CommRing B) (_ : Algebra R B), Algebra.Etale R B ∧ Module.Finite R B ∧
       ∃ e : X ≅ Sp B, e.hom ≫ spMap (algebraMap R B) = f := by
   intro R _ X f hf hfe
-  haveI : IsAffine X := isAffine_of_isAffineHom f
+  have : IsAffine X := isAffine_of_isAffineHom f
   let ρ : R →+* Γ(X, ⊤) := ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ f.appTop).hom
-  letI : Algebra R Γ(X, ⊤) := ρ.toAlgebra
+  let : Algebra R Γ(X, ⊤) := ρ.toAlgebra
   have key : X.isoSpec.hom ≫ spMap (algebraMap R Γ(X, ⊤)) = f := by
     have h := Scheme.isoSpec_hom_naturality f
     rw [Scheme.isoSpec_Spec_hom] at h
@@ -238,11 +238,11 @@ theorem torsion_points_restrict_bijective : ∀ (S : Scheme.{0}) (A : Over S) [G
     ∀ x : Over.mk (spMap φ ≫ t) ⟶ A, x ^ n = 1 → ∃ g : Over.mk t ⟶ A, g ^ n = 1 ∧
       (Over.homMk (spMap φ) rfl : Over.mk (spMap φ ≫ t) ⟶ Over.mk t) ≫ g = x := by
   intro S A _ _ hA n _ hn R _ _ _ t K _ φ
-  haveI := hA
+  have := hA
   obtain ⟨-, hfin, het⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion A hn
-  haveI := hfin
-  haveI := het
-  haveI := preconnectedSpace_sp R
+  have := hfin
+  have := het
+  have := preconnectedSpace_sp R
   let ψK : Over.mk (spMap φ ≫ t) ⟶ Over.mk t := Over.homMk (spMap φ) rfl
   let E := GlobalTheory.TorsionUnram.torsionEquiv A n
   refine ⟨fun g h hg hh hgh => ?_, fun x hx => ?_⟩
@@ -257,7 +257,7 @@ theorem torsion_points_restrict_bijective : ∀ (S : Scheme.{0}) (A : Over S) [G
       rw [Category.assoc, Category.assoc, ga, gb]
       exact hgh
     have hab' : spMap φ ≫ a.left = spMap φ ≫ b.left := congrArg (fun u => u.left) hab
-    haveI : PreconnectedSpace (Over.mk t).left := preconnectedSpace_sp R
+    have : PreconnectedSpace (Over.mk t).left := preconnectedSpace_sp R
     have : a = b := GlobalTheory.over_eq_of_preconnected_of_unramified (spMap φ) hab'
     rw [← ga, ← gb, this]
   · obtain ⟨y, hy⟩ := (E _).surjective ⟨x, hx⟩

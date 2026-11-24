@@ -141,7 +141,7 @@ theorem cloudBAt_of_rho {p n' : ℕ} {W Qq O Kf : Type} [CommRing W] [IsDomain W
       u ∈ Re p ι σ w r lam0 e)
     (hρ : RhoAt p n' ι σ w r TT lam0 c0 loss bK e Θ) : CloudBAt p n' ι σ w r TT lam0 c0 loss bK e FsB Θ := by
   obtain ⟨κ, Ix, ρ, hκ, h1, h2, h3, h4, h5⟩ := hρ
-  haveI := hS.frac_alt
+  have := hS.frac_alt
   have hpne : (p : Kf) ≠ 0 := by
     have hW : (p : W) ≠ 0 := hS.p_unif.ne_zero
     have hQ : (p : Qq) ≠ 0 := by

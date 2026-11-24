@@ -164,7 +164,7 @@ theorem finite_minimiser_systems : ∀ (φ : InvFun ℤ), ∀ (W : Matrix (Fin 8
   have hfin : {μ : (Fin 8 → Fin r → ZMod N) → (Fin 8 → Fin r → ℤ) | ∀ c, μ c ∈ {α | qW W G α ≤ Bd c}}.Finite :=
     Set.Finite.pi' fun c => hfinG (Bd c)
   refine ⟨hfin.toFinset, fun b k cf hk hcf hkb μ hμ hmin => ?_⟩
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   intro c
   obtain ⟨β, hβF, hβ⟩ := hF c ⟨μ c, hμ c⟩
   have hle : ∀ j, qW W (γ j) β.1 ≤ qW W (γ j) (μ c) := fun j => by

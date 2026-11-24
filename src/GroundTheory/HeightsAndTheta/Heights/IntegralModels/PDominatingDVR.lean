@@ -138,7 +138,7 @@ theorem DominatingDVR.proof (hKA : KrullAkizuki.Statement) (hBU : BlowUpChart.St
     exact one_ne_zero h0
 
   set V := Localization.subalgebra.ofField K P.primeCompl P.primeCompl_le_nonZeroDivisors
-  letI : CommRing V := Subalgebra.toCommRing (R := C) (A := K) V
+  let : CommRing V := Subalgebra.toCommRing (R := C) (A := K) V
   have : IsDomain V := Subalgebra.isDomain (R := C) (A := K) V
   have : IsLocalization.AtPrime V P := (inferInstance : IsLocalization P.primeCompl V)
   have hV : IsDiscreteValuationRing V :=

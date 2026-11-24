@@ -106,7 +106,7 @@ theorem exists_ge_cast_ne_zero (K : Type) [Field K] (t : ℕ) : ∃ n : ℕ, t �
 theorem finiteOrder_of_const_of_cube :
     GlobalTheory.AmpleRigid.ConstSt → GlobalTheory.AmpleRigid.CubeSt → GlobalTheory.AmpleRigid.FiniteOrderSt := by
   intro hConst hCube K _ _ A _ _ hA L hL hAmp σ hσ hfix
-  haveI : IsIntegral A.left := GlobalTheory.SS.isIntegral_of_abelian A hA
+  have : IsIntegral A.left := GlobalTheory.SS.isIntegral_of_abelian A hA
   let q : (A ⟶ A) → Pic A.left := fun u => pull u.left (cls L hL)
   have q1 : q 1 = 0 := pull_one_eq_zero A _
   have hq : ∀ x y : A ⟶ A, q (x * y) + q (x * y⁻¹) = q x + q x + q y + q y⁻¹ := by

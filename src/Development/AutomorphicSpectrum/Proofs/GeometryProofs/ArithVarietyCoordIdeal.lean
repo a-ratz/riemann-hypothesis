@@ -127,11 +127,11 @@ theorem dedekind_finite_of_finite [CharZero Ω] (hf : FiniteDimensional ℚ (alg
   let L := algebraicClosure ℚ Ω
   have hmem : ∀ a : A, algebraMap A Ω a ∈ L := fun a =>
     mem_algebraicClosure_iff'.2 ((IsIntegralClosure.isIntegral_iff (A := A) (R := ℤ)).2 ⟨a, rfl⟩).tower_top
-  letI : Algebra A L := ((algebraMap A Ω).codRestrict L.toSubalgebra.toSubring hmem).toAlgebra
+  let : Algebra A L := ((algebraMap A Ω).codRestrict L.toSubalgebra.toSubring hmem).toAlgebra
   have hcoe : ∀ a : A, ((algebraMap A L a : L) : Ω) = algebraMap A Ω a := fun _ => rfl
-  haveI : IsScalarTower ℤ A L := inferInstance
-  haveI : NumberField L := ⟨⟩
-  haveI : IsIntegralClosure A ℤ L := by
+  have : IsScalarTower ℤ A L := inferInstance
+  have : NumberField L := ⟨⟩
+  have : IsIntegralClosure A ℤ L := by
     refine ⟨fun a b hab => IsIntegralClosure.algebraMap_injective A ℤ Ω ?_, fun {v} => ?_⟩
     · rw [← hcoe, ← hcoe, hab]
     · rw [← isIntegral_algebraMap_iff (A := L) (B := Ω) (R := ℤ) ]
@@ -141,7 +141,7 @@ theorem dedekind_finite_of_finite [CharZero Ω] (hf : FiniteDimensional ℚ (alg
         exact ⟨a, Subtype.ext ha⟩
       · rintro ⟨a, rfl⟩
         exact ⟨a, rfl⟩
-  haveI : IsDomain A := (IsIntegralClosure.algebraMap_injective A ℤ Ω).isDomain _
+  have : IsDomain A := (IsIntegralClosure.algebraMap_injective A ℤ Ω).isDomain _
   exact ⟨IsIntegralClosure.isDedekindDomain ℤ ℚ L A, IsIntegralClosure.finite ℤ ℚ L A⟩
 
 end Field
@@ -165,7 +165,7 @@ theorem isIntegrallyClosedIn_of_atPrime (A : Type) [CommRing A] [Algebra A Ω] [
     rw [ha, map_zero] at e
     exact (IsLocalization.map_units O s).mul_left_eq_zero.1 e
   · obtain ⟨s, hsw⟩ := IsIntegral.exists_multiple_integral_of_isLocalization m.primeCompl w hw
-    haveI : Algebra.IsIntegral ℤ A := IsIntegralClosure.isIntegral_algebra ℤ Ω
+    have : Algebra.IsIntegral ℤ A := IsIntegralClosure.isIntegral_algebra ℤ Ω
     have hz : IsIntegral ℤ (s • w) := isIntegral_trans _ hsw
     obtain ⟨a, ha⟩ := (IsIntegralClosure.isIntegral_iff (A := A) (R := ℤ)).1 hz
     refine ⟨IsLocalization.mk' O a s, ?_⟩
@@ -181,7 +181,7 @@ end Local
 theorem const_closure : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω], IsDedekindDomain A ∧ Module.Finite ℤ A ∧ Function.Injective (algebraMap A Ω) ∧ HasConstants ℤ A y ∧ ∀ (m : Ideal A) [m.IsPrime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], IsIntegrallyClosedIn O Ω ∧ fnField O y = ⊤ := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hV A _ _ _
   classical
-  haveI : CharZero Ω := charZero_of_isArithVar hV
+  have : CharZero Ω := charZero_of_isArithVar hV
   obtain ⟨c₀, -, hdiv⟩ := exists_chart_div 𝔐.tie
   have hfin : FiniteDimensional ℚ (algebraicClosure ℚ Ω) := by
     refine GroundTheory.Heights₂.Heights.Inter.RelAlgClosureFinite.proof ℚ Ω

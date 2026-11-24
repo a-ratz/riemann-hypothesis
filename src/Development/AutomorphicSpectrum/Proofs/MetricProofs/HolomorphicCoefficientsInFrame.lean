@@ -98,7 +98,7 @@ theorem differentiableOn_coeff_of_linearIndependent (n m g : ℕ) (U : Set (Fin 
     ∑ b, (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin m => ℂ) b).smulRight (L (d b t))
   have hTapply : ∀ t v, T t v = ∑ b, v b • L (d b t) := by
     intro t v
-    simp [T, ContinuousLinearMap.sum_apply]
+    simp [T, sum_apply]
   have hT0 : T t₀ = 1 := by
     apply ContinuousLinearMap.ext
     intro v
@@ -127,7 +127,7 @@ theorem differentiableOn_coeff_of_linearIndependent (n m g : ℕ) (U : Set (Fin 
 
       rw [hw t ht, hTapply, map_sum]
       simp
-    rw [h1, ← hu', Ring.inverse_unit, ← ContinuousLinearMap.mul_apply, u.inv_mul]
+    rw [h1, ← hu', Ring.inverse_unit, ← mul_apply_eq_comp, u.inv_mul]
     rfl
   refine DifferentiableAt.congr_of_eventuallyEq ?_ heq
   have hinv : DifferentiableAt ℂ (fun t => Ring.inverse (T t)) t₀ := by

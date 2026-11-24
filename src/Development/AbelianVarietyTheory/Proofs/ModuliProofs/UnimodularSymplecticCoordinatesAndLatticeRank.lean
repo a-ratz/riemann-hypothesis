@@ -70,13 +70,13 @@ theorem free_finite_finrank_of_discrete_span {La : Type} [AddCommGroup La] {g : 
     (hsp : Submodule.span ℝ (Set.range Q) = ⊤) :
     Module.Free ℤ La ∧ Module.Finite ℤ La ∧ Module.finrank ℤ La = 2 * g := by
   set L : Submodule ℤ (Fin g → ℂ) := LinearMap.range Q.toIntLinearMap with hL
-  haveI : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨by
+  have : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨by
     rw [hL, LinearMap.coe_range]
     exact hsp⟩
   let e : La ≃ₗ[ℤ] L := LinearEquiv.ofInjective Q.toIntLinearMap hinj
-  haveI : Module.Free ℤ L := ZLattice.module_free ℝ L
-  haveI : Module.Finite ℤ L := ZLattice.module_finite ℝ L
+  have : Module.Free ℤ L := ZLattice.module_free ℝ L
+  have : Module.Finite ℤ L := ZLattice.module_finite ℝ L
   refine ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm, ?_⟩
   rw [e.finrank_eq, ZLattice.rank ℝ L, Module.finrank_pi_fintype]
   simp [Complex.finrank_real_complex, mul_comm]
@@ -95,7 +95,7 @@ theorem unimodular_symplectic_coordinates_and_lattice_rank :
     map_sum, LinearMap.sum_apply, map_smul, LinearMap.smul_apply, smul_eq_mul]
     simp only [hf.left_left, hf.right_right, hf.left_right, hf.right_left halt, mul_zero,
       Finset.sum_const_zero, add_zero, zero_add, mul_ite, _root_.mul_one, mul_neg,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_neg_distrib, omegaStd]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_neg_distrib, omegaStd]
     rw [neg_add_eq_sub, ← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     ring

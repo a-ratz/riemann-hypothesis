@@ -253,7 +253,7 @@ theorem mem_latW {B : Base F E} (hB : B.IsGood σ) {W : Spc F E d} {r s : ℕ} (
       smul_left_injective E hy₀ (congrArg Subtype.val hab)
     exact RingOfIntegers.not_isField E
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
-  letI := hFull
+  let := hFull
   obtain ⟨m, g, f, hg, hf, hid⟩ := dual_family (𝓞 F) F (W.L.restrictScalars (𝓞 F)) (hW.lat.fg.restrictScalars) (by
     rw [eq_top_iff]
     intro x _
@@ -385,7 +385,7 @@ theorem mem_latAtV {B : Base F E} (hB : B.IsGood σ) {X : Spc F E n} {W : Spc F 
       smul_left_injective E hy₀ (congrArg Subtype.val hab)
     exact RingOfIntegers.not_isField E
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
-  letI := hFull
+  let := hFull
   obtain ⟨m, g, f, hg, hf, hid⟩ := dual_family (𝓞 E) E X.L hX.lat.fg (Submodule.IsFullLattice.span_eq_top (A := E) (M := X.L))
   let a : Fin m → Fin n → E := fun i k => f i (Pi.single k 1)
   let u : Fin m → Fin n → E := fun i => (fun k => σ (a i k)) ᵥ* X.J⁻¹

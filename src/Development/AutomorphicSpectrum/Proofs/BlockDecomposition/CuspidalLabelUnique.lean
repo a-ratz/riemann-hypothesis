@@ -76,10 +76,10 @@ theorem pow_card_pow_self (x : AlgebraicClosure K) {d : ℕ} (hd : (minpoly K x)
   have hint : IsIntegral K x := Algebra.IsIntegral.isIntegral x
   have hfin : Module.finrank K (IntermediateField.adjoin K {x}) = d := by
     rw [IntermediateField.adjoin.finrank hint, hd]
-  haveI : FiniteDimensional K (IntermediateField.adjoin K {x}) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K {x}) :=
     IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin K {x}) := Module.finite_of_finite K
-  letI : Fintype (IntermediateField.adjoin K {x}) := Fintype.ofFinite _
+  have : Finite (IntermediateField.adjoin K {x}) := Module.finite_of_finite K
+  let : Fintype (IntermediateField.adjoin K {x}) := Fintype.ofFinite _
   have hcard : Fintype.card (IntermediateField.adjoin K {x}) = Fintype.card K ^ d := by
     rw [Module.card_fintype (Module.finBasis K (IntermediateField.adjoin K {x})), Fintype.card_fin, hfin]
   have h := FiniteField.pow_card
@@ -92,7 +92,7 @@ private theorem minpoly_pow_card_pow_lemma (x : AlgebraicClosure K) :
   have hint : IsIntegral K x := Algebra.IsIntegral.isIntegral x
   symm
   apply minpoly.eq_of_irreducible_of_monic (minpoly.irreducible hint)
-  · rw [← Polynomial.expand_aeval, FiniteField.expand_card, map_pow, minpoly.aeval,
+  · rw [← Polynomial.expand_aeval, FiniteField.Polynomial.expand_card, map_pow, minpoly.aeval,
       zero_pow Fintype.card_ne_zero]
   · exact minpoly.monic hint
 
@@ -123,7 +123,7 @@ private theorem regular_iff_degree_lemma (α : AlgebraicClosure K) {e : ℕ} (he
     | zero => intro f; simp
     | succ n ih =>
       intro f
-      rw [pow_succ, pow_mul, ih, ← FiniteField.expand_card, ← Polynomial.expand_mul, Nat.mul_comm]
+      rw [pow_succ, pow_mul, ih, ← FiniteField.Polynomial.expand_card, ← Polynomial.expand_mul, Nat.mul_comm]
   have hg : (IntermediateField.AdjoinSimple.gen K α) ^ Fintype.card K ^ e = IntermediateField.AdjoinSimple.gen K α :=
     Subtype.ext (by simpa using h)
   have hfix' : ∀ y : IntermediateField.adjoin K {α}, y ^ Fintype.card K ^ e = y := by
@@ -133,10 +133,10 @@ private theorem regular_iff_degree_lemma (α : AlgebraicClosure K) {e : ℕ} (he
   have hfix : ∀ y : IntermediateField.adjoin K {α}, (y : AlgebraicClosure K) ^ Fintype.card K ^ e = y := by
     intro y
     simpa using congrArg (fun z : IntermediateField.adjoin K {α} => (z : AlgebraicClosure K)) (hfix' y)
-  haveI : FiniteDimensional K (IntermediateField.adjoin K {α}) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K {α}) :=
     IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin K {α}) := Module.finite_of_finite K
-  letI : Fintype (IntermediateField.adjoin K {α}) := Fintype.ofFinite _
+  have : Finite (IntermediateField.adjoin K {α}) := Module.finite_of_finite K
+  let : Fintype (IntermediateField.adjoin K {α}) := Fintype.ofFinite _
   have hcard : Fintype.card (IntermediateField.adjoin K {α}) = Fintype.card K ^ (minpoly K α).natDegree := by
     rw [Module.card_fintype (Module.finBasis K (IntermediateField.adjoin K {α})), Fintype.card_fin,
       IntermediateField.adjoin.finrank hint]
@@ -200,7 +200,7 @@ theorem regular_iff_degree {d : ℕ} (hd : 0 < d) (α : AlgebraicClosure K)
           (IntermediateField.adjoin.powerBasis hint).gen)).charpoly = minpoly K α := by
       rw [Matrix.charpoly_reindex, charpoly_leftMulMatrix, IntermediateField.adjoin.powerBasis_gen,
         IntermediateField.minpoly_gen]
-    haveI : FiniteDimensional K (IntermediateField.adjoin K {α}) :=
+    have : FiniteDimensional K (IntermediateField.adjoin K {α}) :=
       IntermediateField.adjoin.finiteDimensional hint
     have hdet : (Matrix.reindex (finCongr hdim) (finCongr hdim)
         (Algebra.leftMulMatrix (IntermediateField.adjoin.powerBasis hint).basis
@@ -245,7 +245,7 @@ theorem exists_root (C : LabelConv K) {d : ℕ} (hd : 0 < d) {P : K[X]} (hm : P.
     have h1 : x ^ (Fintype.card K ^ d - 1) * x = 1 * x := by
       rw [← pow_succ, Nat.sub_add_cancel (by omega), hxq, one_mul]
     exact mul_right_cancel₀ hx0 h1
-  haveI : NeZero (Fintype.card K ^ d - 1) := ⟨hpos.ne'⟩
+  have : NeZero (Fintype.card K ^ d - 1) := ⟨hpos.ne'⟩
   have hord : orderOf (C.gen d) = Fintype.card K ^ d - 1 := C.gen_order d hd
   have hfin : IsOfFinOrder (C.gen d) := orderOf_pos_iff.mp (by rw [hord]; exact hpos)
   have hmodq : ∀ a b : ℕ, C.gen d ^ a = C.gen d ^ b ↔ a ≡ b [MOD Fintype.card K ^ d - 1] := by

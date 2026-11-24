@@ -127,7 +127,7 @@ private theorem exists_choose_mul_p_pow_mul_eq_p_mul (c : _root_.GlobalTheory.Ka
     rw [hjK]
     have hinj : Function.Injective ι := IsFractionRing.injective _ _
     refine mul_ne_zero (pow_ne_zero _ ?_) ?_
-    · rw [← map_natCast ι]; exact (map_ne_zero_iff ι hinj).2 (WittVector.p_nonzero p k)
+    · rw [← map_natCast ι]; exact (map_ne_zero_iff ι hinj).2 (WittVector.p_ne_zero p k)
     · rw [← map_natCast ι]; exact (map_ne_zero_iff ι hinj).2 hunit.ne_zero
   apply mul_right_cancel₀ hj0
   simp only [map_mul, map_pow, map_natCast]

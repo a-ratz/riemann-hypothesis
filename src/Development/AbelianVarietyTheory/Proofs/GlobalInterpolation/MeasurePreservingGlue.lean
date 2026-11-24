@@ -224,8 +224,8 @@ theorem exists_chart (j : Fin P ⊕ Fin Q) : ∃ fib : ℝ → Measure (Perpendi
   let c : ({i // i ≠ j} → ℂ) → ℝ := fun y => PerpendicularEmbedding.qf (glue j (0, y))
   have hc : Continuous c := continuous_qf.comp ((continuous_glue j).comp (by fun_prop))
   let ang : Measure ℝ := (2⁻¹ : ℝ≥0∞) • volume.restrict (Set.Ioo (-Real.pi) Real.pi)
-  haveI : IsFiniteMeasure ang := ⟨by
-    simp only [ang, Measure.smul_apply, smul_eq_mul]
+  have : IsFiniteMeasure ang := ⟨by
+    simp only [ang, smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top (by simp) (measure_lt_top _ _)⟩
   let m : Measure (({i // i ≠ j} → ℂ) × ℝ) := volume.prod ang
   let pt : ℝ × (({i // i ≠ j} → ℂ) × ℝ) → PerpendicularEmbedding.Sp P Q := fun a =>
@@ -336,7 +336,7 @@ theorem exists_isDxDq (P Q : ℕ) : ∃ fib : ℝ → Measure (PerpendicularEmbe
   have hk : ((2 : ℝ≥0∞) ^ (P + Q)) ≠ ⊤ := by simp
   refine ⟨fun t => ((2 : ℝ≥0∞) ^ (P + Q)) • ∑ j, F j t, fun t => ?_, fun φ hφ => ?_,
     fun φ hφ hs ht => ⟨fun t _ => ?_, ?_⟩⟩
-  · rw [Measure.smul_apply, Measure.finsetSum_apply, id, Finset.sum_eq_zero fun j _ => h1 j t,
+  · rw [smul_apply, sum_apply, id, Finset.sum_eq_zero fun j _ => h1 j t,
       smul_zero]
   · simp only [PerpendicularEmbedding.dx, Measure.restrict_smul, lintegral_smul_measure, smul_eq_mul,
       lintegral_finsetSum_measure]
@@ -381,11 +381,11 @@ theorem sphere_iff : PerpendicularEmbedding.SphereMass ↔ ActionCoordinates.Sph
   · intro h M hM fib' hfib'
     obtain ⟨⟨fib, hfib⟩, h2⟩ := h M hM
     rw [fib_eq one_ne_zero hfib hfib', cM_eq, ← h2 fib hfib, qf_eq]
-    exact measure_congr (Filter.eventuallyEq_univ.2 (ae_qf hfib 1))
+    exact measure_congr (Filter.eventuallyEqSet_univ.2 (ae_qf hfib 1))
   · intro h M hM
     refine ⟨exists_isDxDq M 0, fun fib hfib => ?_⟩
     rw [← cM_eq, ← h M hM fib (isDxDq_local hfib 1), qf_eq]
-    exact (measure_congr (Filter.eventuallyEq_univ.2 (ae_qf hfib 1))).symm
+    exact (measure_congr (Filter.eventuallyEqSet_univ.2 (ae_qf hfib 1))).symm
 
 theorem exists_test (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] :
     ∃ Φ : SchwartzMap V ℂ, HasCompactSupport Φ ∧ Φ 0 = 1 := by
@@ -518,8 +518,8 @@ theorem emb_mul {x₀ : PerpendicularEmbedding.Sp P Q} (h0 : PerpendicularEmbedd
 theorem isInvInvariant_cd (c : CDHaar) (P Q : ℕ) : (c.cd P Q).IsInvInvariant := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
   set μ := c.cd P Q
-  haveI : μ.IsHaarMeasure := c.haar P Q
-  haveI := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure P Q μ (c.haar P Q)
+  have : μ.IsHaarMeasure := c.haar P Q
+  have := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure P Q μ (c.haar P Q)
   have e : μ.inv = Measure.haarScalarFactor μ.inv μ • μ := Measure.isMulLeftInvariant_eq_smul _ _
   set k := Measure.haarScalarFactor μ.inv μ
   have e2 : μ = (k * k) • μ := by
@@ -542,7 +542,7 @@ theorem isInvInvariant_cd (c : CDHaar) (P Q : ℕ) : (c.cd P Q).IsInvInvariant :
 theorem lintegral_inv_cd (c : CDHaar) (f : UpqT P Q → ℝ≥0∞) :
     ∫⁻ g, f g⁻¹ ∂(c.cd P Q) = ∫⁻ g, f g ∂(c.cd P Q) := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
-  haveI := isInvInvariant_cd c P Q
+  have := isInvInvariant_cd c P Q
   exact lintegral_inv_eq_self f
 
 theorem measurable_comp_inv {f : UpqT P Q → ℝ≥0∞} (hf : Measurable f) :
@@ -556,7 +556,7 @@ theorem inner_eq (c : CDHaar) {x₀ : PerpendicularEmbedding.Sp P Q} (h0 : Perpe
     {a b : UpqT P Q} (hab : PerpendicularEmbedding.act a x₀ = PerpendicularEmbedding.act b⁻¹ x₀) (f : UpqT P Q → ℝ≥0∞) :
     ∫⁻ g', f (a * j g')⁻¹ ∂(c.cd P' Q') = ∫⁻ g', f (j g' * b) ∂(c.cd P' Q') := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P' Q'
-  haveI := c.haar P' Q'
+  have := c.haar P' Q'
   let J : UpqT P' Q' →* UpqT P Q := MonoidHom.mk' j (emb_mul h0 h)
   obtain ⟨k, hk⟩ : b * a ∈ Set.range j := by
     rw [hr]; change PerpendicularEmbedding.act (b * a) x₀ = x₀

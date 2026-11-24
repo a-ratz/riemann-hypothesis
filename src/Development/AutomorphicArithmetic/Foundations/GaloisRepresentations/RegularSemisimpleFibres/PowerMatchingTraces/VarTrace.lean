@@ -145,7 +145,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 private theorem cmp_surj {v : Pl F} (w : PlacesOver E v) (h : ∀ u : PlacesOver E v, u = w) :
     Function.Surjective (GM.cmp (n := n) w) := by
   have hev : Function.Bijective (Pi.evalRingHom (fun w : PlacesOver E v => w.1.adicCompletion E) w) := by
-    letI : Unique (PlacesOver E v) := ⟨⟨w⟩, h⟩
+    let : Unique (PlacesOver E v) := ⟨⟨w⟩, h⟩
     constructor
     · intro a b e
       funext u
@@ -166,7 +166,7 @@ private theorem stabV (T : Ty σ n q w₀) (v : Pl F) (h : ∀ u : PlacesOver E 
     {a : Gw n (T.mk' v).1 →* Gw n (T.mk' v).1} (ha : IsLocGal σ (T.mk' v) a) (x : Gw n (T.mk' v).1) (hx : x ∈ T.J (T.mk' v).1) :
     a x ∈ T.J (T.mk' v).1 ∧ T.χ (T.mk' v).1 (a x) = T.χ (T.mk' v).1 x := by
   obtain ⟨g, rfl⟩ := cmp_surj (T.mk' v) h x
-  letI : Unique (PlacesOver E v) := ⟨⟨T.mk' v⟩, h⟩
+  let : Unique (PlacesOver E v) := ⟨⟨T.mk' v⟩, h⟩
   have hall : ∀ u : PlacesOver E v, GM.cmp u g ∈ T.J u.1 := fun u => by
     obtain rfl := h u
     exact hx
@@ -185,7 +185,7 @@ open UpperTheory.Gal.InertialTypesAlt.G.StableBaseChangeTwists in
 theorem UpperTheory.Gal.InertialTypesAlt.G.baseTw :
     UpperTheory.Gal.InertialTypesAlt.G.BaseTw := by
   intro F E _ _ _ _ _ _ _ _ σ hgen hpr n hn μ _ V hV q w₀ T v hU hrk hne _ _ m hm τ s I hocc hs hI
-  haveI := hm
+  have := hm
   have hco := T.co (T.mk' v).1
   have hch := T.chr (T.mk' v).1
   have hT := test_ind hco hch
@@ -195,9 +195,9 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.baseTw :
   have hd0 : (m (T.J (T.mk' v).1))⁻¹ ≠ 0 := ENNReal.inv_ne_zero.2 ht
   have hdt : (m (T.J (T.mk' v).1))⁻¹ ≠ ⊤ := ENNReal.inv_ne_top.2 h0
   obtain ⟨mm, hmm⟩ : ∃ mm, mm = (m (T.J (T.mk' v).1))⁻¹ • m := ⟨_, rfl⟩
-  haveI hmmH : mm.IsHaarMeasure := hmm ▸ Measure.IsHaarMeasure.smul _ hd0 hdt
+  have hmmH : mm.IsHaarMeasure := hmm ▸ Measure.IsHaarMeasure.smul _ hd0 hdt
   have hmm1 : mm (T.J (T.mk' v).1) = 1 := by
-    rw [hmm, Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 ht]
+    rw [hmm, smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 ht]
   have hback : (m (T.J (T.mk' v).1)) • mm = m := by
     rw [hmm, smul_smul, ENNReal.mul_inv_cancel h0 ht, one_smul]
   obtain ⟨e, he0, he1, he2⟩ := UpperTheory.exists_unique_eigenline_of_rankOne_occurs E n μ V hV (T.mk' v).1 τ hocc (T.J (T.mk' v).1) (T.χ (T.mk' v).1)
@@ -438,7 +438,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.normLoc :
     rw [this]
     rfl
   have hy : ∏ u, c u = Matrix.GeneralLinearGroup.det γ := by
-    haveI := (GroundTheory.Global.nonempty_placesOver E v)
+    have := (GroundTheory.Global.nonempty_placesOver E v)
     apply Units.ext
     apply (incFin E v).injective
     have h1 : incFin E v ((∏ u, c u : (v.adicCompletion F)ˣ) : v.adicCompletion F) =
@@ -589,7 +589,7 @@ open UpperTheory.Gal.InertialTypesAlt.G
 theorem UpperTheory.Gal.InertialTypesAlt.G.trEx :
     UpperTheory.Gal.InertialTypesAlt.G.TrEx := by
   intro K _ _ _ n hn π v _ _ m hm τ hτ f hf
-  haveI := hm
+  have := hm
   let μ : Measure (normOneGL (K := K) (n := n)) := Measure.haar
   obtain ⟨χ, hχ, V, hV⟩ := Dp.exTwist K n μ π hn
   obtain ⟨⟨τ₁, h₁⟩, htw⟩ := locTw K n hn π χ v τ hτ
@@ -697,10 +697,10 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
   intro F E _ _ _ _ _ _ _ _ σ hσ hp n hn μE _ π P V hC hP hW v w hv iF bF iE bE mF mE hmF hmE τ τ' hτ hτ' s₀ I₀ hs₀ hI₀
   obtain rfl := bF.measurable_eq
   obtain rfl := bE.measurable_eq
-  letI : ∀ x : Pl E, MeasurableSpace (Gw n x) := fun _ => borel _
-  haveI : ∀ x : Pl E, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
-  letI : ∀ x : Pl F, MeasurableSpace (Gw n x) := fun _ => borel _
-  haveI : ∀ x : Pl F, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
+  let : ∀ x : Pl E, MeasurableSpace (Gw n x) := fun _ => borel _
+  have : ∀ x : Pl E, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
+  let : ∀ x : Pl F, MeasurableSpace (Gw n x) := fun _ => borel _
+  have : ∀ x : Pl F, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
   let μF : Measure (normOneGL (K := F) (n := n)) := Measure.haar
   have hV := hC.summand
   obtain ⟨-, hAtE, -, -, hnp, θ, hθ, hst⟩ := carryLift F E σ hσ hp n hn μE μF
@@ -746,7 +746,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
     · subst h; rw [Function.update_self]; exact ⟨hdH, hd1⟩
     · rw [Function.update_of_ne h]; exact hm₁ x
   have hoccE : ∀ x : Pl E, ∃ ρ : SmIrr (Gw n x), Occurs μE V x ρ := fun x => by
-    haveI := hm x
+    have := hm x
     exact (_root_.PositivityTheory.TfC.OccursBasics_holds E n μE V x (m x) hV).1
   obtain ⟨X, hX, hXv⟩ : ∃ X : ∀ y : Pl F, Σ ρ : SmIrr (Gw n (T.mk' y).1), (Gw n (T.mk' y).1 →* Gw n (T.mk' y).1) × (ρ.V ≃ₗ[ℂ] ρ.V),
       (∀ y, Occurs μE V (T.mk' y).1 (X y).1 ∧ (¬ GM.Split E y → IsLocGal σ (T.mk' y) (X y).2.1 ∧
@@ -783,7 +783,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
   obtain ⟨ν, hν⟩ := goodEx n hn
   obtain ⟨Z₀, hZ0, hZ₀, hZ⟩ : ∃ Z : Multiset ℂ, 0 ∉ Z ∧ Z ≠ 0 ∧ ∀ j : ℕ,
       HasTrace (m w₀.1) τ₀.ρ ((GM.iwCoset w₀.1 (j • ν)).indicator 1) (Z.map (· ^ j)).sum := by
-    haveI := hm w₀.1
+    have := hm w₀.1
     obtain ⟨hfx, -, -, -, -, A, hA, hfin, -⟩ := unitTrace E n μE V hV w₀.1 (m w₀.1) (hm _) τ₀ _ hτ₀ hcoI
       (T.at_q w₀ ▸ hfixS q hq w₀)
     have fd := fd_fixed (m w₀.1) τ₀.ρ _ hcoI.2.measurableSet hm1 A hA hfin
@@ -839,7 +839,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
       (fun V₀ => ∃ Λ' t', At μF SF V₀ Λ' t' ∧ Λ = bcInf Λ' ∧ ∀ y ∉ SE, t y = bcSat t' y) (y₀ ^ (k + 1)) (pow_pos hy₀ _)
     have hs₁ : ∀ i (y : Pl F), ∃ z : ℂ, y ∈ S → HasTrace (m' y) (ρ i y).ρ (L₁.f y) z := fun i y => by
       by_cases hy : y ∈ S
-      · haveI := (hm' y).1
+      · have := (hm' y).1
         have ht := L₁.test y (hL₁S ▸ hy)
         obtain ⟨z, hz⟩ := (_root_.PositivityTheory.TfC.OccursBasics_holds F n μF (V₀ i) y (m' y) (hι i).1).2.2 _ ((hι i).2.2.2 y) (L₁.f y) ⟨ht.2.2.1, ht.2.2.2⟩
         exact ⟨z, fun _ => hz⟩
@@ -943,7 +943,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
     linear_combination (L₁.c v * z₀) * h1 - (c₁ * z) * h2
   have hne0 := (main (ψ v) _ _ z₀ (tb v) (hbase v hvT hv).1 hb1 hb2 hb3 hz₀ hr₀).1
   refine ⟨tb v / (L₁.c v * z₀), div_ne_zero hr0 hne0, fun φ f c₁ z hφ hf hmat hsup hz => ?_⟩
-  haveI := hmE
+  have := hmE
   obtain ⟨z', hz'⟩ := (_root_.PositivityTheory.TfC.OccursBasics_holds E n μE V (T.mk' v).1 mE hV).2.2 τ' hocc' φ hφ
   obtain ⟨r, hr⟩ := (trBasic _ mE τ' I₀ φ).1 z' hz'
   have h := (main φ f c₁ z r hφ hf hmat hsup hz hr).2

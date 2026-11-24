@@ -62,7 +62,7 @@ variable {O : Type} [CommRing O]
 theorem phibN_div (p : ℕ) (hp : p.Prime) [Nontrivial O] [IsAdicComplete (Ideal.span {((p : ℕ) : O)}) O] (N : ℕ)
     (f : PowerSeries O) : ∃ (Q : PowerSeries O) (R : Polynomial O), R.degree < ((p * N : ℕ) : WithBot ℕ) ∧
       f = ((1 + PowerSeries.X) ^ p - 1) ^ N * Q + (R : PowerSeries O) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   set I : Ideal O := Ideal.span {((p : ℕ) : O)} with hI
   have hjac : I ≤ (⊥ : Ideal O).jacobson := by
     first
@@ -74,8 +74,8 @@ theorem phibN_div (p : ℕ) (hp : p.Prime) [Nontrivial O] [IsAdicComplete (Ideal
     exact bot_ne_top hjac
   have hp2 : ((p : ℕ) : O) ∈ nonunits O :=
     mem_nonunits_iff.2 (fun hu => hIne (Ideal.span_singleton_eq_top.2 hu))
-  haveI hch : CharP (O ⧸ I) p := CharP.quotient O p hp2
-  haveI : Nontrivial (O ⧸ I) := by
+  have hch : CharP (O ⧸ I) p := CharP.quotient O p hp2
+  have : Nontrivial (O ⧸ I) := by
     first
     | exact Ideal.Quotient.nontrivial_iff.2 hIne
     | exact Submodule.Quotient.nontrivial_of_lt_top _ hIne.lt_top
@@ -87,7 +87,7 @@ theorem phibN_div (p : ℕ) (hp : p.Prime) [Nontrivial O] [IsAdicComplete (Ideal
     | simpa using congrArg PowerSeries.constantCoeff hab
     | simpa using congrArg (PowerSeries.coeff 0) hab
     | exact PowerSeries.C_injective hab
-  haveI : CharP (PowerSeries (O ⧸ I)) p := charP_of_injective_algebraMap hinj p
+  have : CharP (PowerSeries (O ⧸ I)) p := charP_of_injective_algebraMap hinj p
   have hmap : PowerSeries.map (Ideal.Quotient.mk I) (((1 + PowerSeries.X) ^ p - 1) ^ N) =
       PowerSeries.X ^ (p * N) := by
     simp only [map_pow, map_sub, map_add (f := _), map_one, PowerSeries.map_X]
@@ -100,13 +100,13 @@ theorem phibN_div (p : ℕ) (hp : p.Prime) [Nontrivial O] [IsAdicComplete (Ideal
     simpa using hj
   have hdiv : (((1 + PowerSeries.X) ^ p - 1) ^ N : PowerSeries O).IsWeierstrassDivisorAt I := by
     show IsUnit _
-    rw [hmap, PowerSeries.order_X_pow, ENat.toNat_coe]
+    rw [hmap, PowerSeries.order_X_pow, ENat.toNat_natCast]
     apply key
     rw [← PowerSeries.coeff_map, hmap, PowerSeries.coeff_X_pow_self]
   have hW := hdiv.isWeierstrassDivisionAt_div_mod f
   refine ⟨hdiv.div f, hdiv.mod f, ?_, ?_⟩
   · have hd := hW.degree_lt
-    rw [hmap, PowerSeries.order_X_pow, ENat.toNat_coe] at hd
+    rw [hmap, PowerSeries.order_X_pow, ENat.toNat_natCast] at hd
     exact_mod_cast hd
   · exact hW.eq_mul_add
 

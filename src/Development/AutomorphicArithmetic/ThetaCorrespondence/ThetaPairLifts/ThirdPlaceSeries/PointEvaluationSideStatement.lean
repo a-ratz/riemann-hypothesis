@@ -146,7 +146,7 @@ theorem scale_large_three (eps : ℝ) (he : 0 < eps) : ∃ x0 : ℝ, ∀ s : Sca
       have := Real.add_one_le_exp (1 : ℝ); linarith
     have h8 : (8 : ℝ) ≤ Real.exp 3 := by
       have : Real.exp 3 = Real.exp 1 ^ 3 := by
-        rw [← Real.exp_nat_mul]; norm_num
+        rw [← Real.exp_natCast_mul]; norm_num
       rw [this]
       nlinarith [pow_le_pow_left₀ (by norm_num : (0:ℝ) ≤ 2) he1 3]
     exact h8.trans (Real.exp_le_exp.2 a3)
@@ -391,7 +391,7 @@ theorem uW_numRec (large₂ : SizeData₂ D) (hD : ∃ n : ℕ, D.s.Del = n) (u 
     have h' : l < D.R.k - 2 := by have := h.2; simp only at this; omega
     have a := D.s.u_letter u (tauPl D z) l h'
     have h2 : D.s.letter u ⟨l, h'⟩ = true := h1
-    rw [if_pos h2, D.hcW_v] at a
+    rw [ite_eq_left h2, D.hcW_v] at a
     have h3 : (((numDatumOfParameters D large₂).Del : ℕ) : ℚ) = D.s.Del := by
       show ((⌊D.s.Del⌋₊ : ℕ) : ℚ) = D.s.Del
       rw [hn, Nat.floor_natCast]
@@ -401,7 +401,7 @@ theorem uW_numRec (large₂ : SizeData₂ D) (hD : ∃ n : ℕ, D.s.Del = n) (u 
     have h' : l < D.R.k - 2 := by have := h.2; simp only at this; omega
     have a := D.s.u_letter u (tauPl D z) l h'
     have h2 : ¬ D.s.letter u ⟨l, h'⟩ = true := h1
-    rw [if_neg h2, D.hcW_v] at a
+    rw [ite_eq_right h2, D.hcW_v] at a
     rw [a]
     rfl
   · by_cases h0 : r = 0
@@ -1016,7 +1016,7 @@ namespace GlobalTheory.ColRows.FldDef
 
 theorem sd_of_isSdLat {B : Base} {n : ℕ} {L : Submodule (𝓞 B.host.E) (Fin n → B.host.E)}
     (h : Formalism.L2.Col.IsSdLat (E := B.fields.E) L) : letI := B.host.cmStar; IsSDLat B.host.E n L := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   have hspan : Submodule.span B.fields.E (L : Set (Fin n → B.fields.E)) = ⊤ := by
     apply Submodule.dualAnnihilator_eq_bot_iff.mp
     apply le_antisymm ?_ bot_le
@@ -1070,7 +1070,7 @@ theorem chiRec_detId {idl : (I.rec7 l Z).Dt ⧸ (I.rec7 l Z).UO → TaylorLogMet
     (hidl : TaylorLogMetric.RelDetPinned (I.rec7 l Z) idl) (n : ℕ) (L : Submodule (𝓞 B.host.E) (Fin n → B.host.E))
     (hL : StandardLatticesGL3.SD (I.rec7 l Z) L) :
     TaylorLogMetric.chiRec (I.rec7 l Z) idl (Th.detId B.host (Th.stdL B.host n) L) = I.chi (Th.detId B.host (Th.stdL B.host n) L) := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   let S0 : SDLat B.host.E n := ⟨Th.stdL B.host n, sd_stdL (I.rec7 l Z) n⟩
   let L1 : SDLat B.host.E n := ⟨L, hL⟩
   have h2 : idl ((I.rec7 l Z).relDet n S0 L1) = TaylorLogMetric.detId (I.rec7 l Z) S0.1 L1.1 := hidl.2.2.2.2 n S0 L1
@@ -1264,7 +1264,7 @@ theorem mem_tops_rec (D : D7) (z : Bool × Formalism.MainNotions.G.HH D) :
   obtain ⟨b, t⟩ := z
   constructor
   · rintro ⟨t', ht, h⟩
-    cases b <;> simp only [Formalism.MainNotions.G.plGG, if_true, if_false, Bool.false_eq_true] at h
+    cases b <;> simp only [Formalism.MainNotions.G.plGG, ite_true, ite_false, Bool.false_eq_true] at h
     · exact ⟨rfl, (hinj h) ▸ ht⟩
     · exact absurd h (hP.2 _ _)
   · rintro ⟨h1, h2⟩
@@ -1512,7 +1512,7 @@ theorem definiteSideCondition_of_nprimeDef_of_nuFull (CY CT : ℝ) (hCT : 0 ≤ 
     rintro _ ⟨a, _, z, hz, rfl⟩
     exact Submodule.smul_mem _ _ (Submodule.subset_span hz)
   have hfull : Submodule.IsFullLattice D.what₂.LL (Formalism.L2.DIV.Cons.nuOf O.L u (I.eNu u)) := by
-    letI : Submodule.IsLattice D.what₂.LL (Formalism.L2.DIV.Cons.nuOf O.L u (I.eNu u)) := hl
+    let : Submodule.IsLattice D.what₂.LL (Formalism.L2.DIV.Cons.nuOf O.L u (I.eNu u)) := hl
     refine ⟨?_⟩
     let e := I.eNu u
     let S := Submodule.span D.what₂.LL (Formalism.L2.DIV.Cons.nuOf O.L u (I.eNu u)).carrier

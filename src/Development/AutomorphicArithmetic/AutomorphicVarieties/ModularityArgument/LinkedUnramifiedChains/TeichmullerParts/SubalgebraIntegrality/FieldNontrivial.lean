@@ -143,9 +143,9 @@ variable {A B K M : Type} [CommRing A] [CommRing B] [Field K] [Algebra A B] [Alg
 
 private theorem field_nontrivial (k K N : Type) [Field k] [Field K] [Algebra k K] [AddCommGroup N] [Module k N] [Nontrivial N] :
     Nontrivial (K ⊗[k] N) := by
-  haveI : Module.Free k K := Module.Free.of_divisionRing k K
-  haveI : Module.Free k N := Module.Free.of_divisionRing k N
-  haveI : Module.Free k (K ⊗[k] N) := Module.Free.of_divisionRing k _
+  have : Module.Free k K := Module.Free.of_divisionRing k K
+  have : Module.Free k N := Module.Free.of_divisionRing k N
+  have : Module.Free k (K ⊗[k] N) := Module.Free.of_divisionRing k _
   rw [← Module.rank_pos_iff_of_free (R := k), rank_tensorProduct']
   exact pos_iff_ne_zero.2 (mul_ne_zero Module.rank_pos_of_free.ne' Module.rank_pos_of_free.ne')
 
@@ -158,8 +158,8 @@ private theorem fibre_nontrivial [Module.Finite B M] (hann : ∀ b : B, (∀ m :
   have h1 := (Module.mem_support_iff_nontrivial_residueField_tensorProduct p).1 hp
   let r : p.asIdeal.ResidueField →ₐ[B] K := Ideal.ResidueField.liftₐ p.asIdeal (Algebra.ofId B K) le_rfl
     (fun b hb => isUnit_iff_ne_zero.2 hb)
-  letI := r.toRingHom.toAlgebra
-  haveI : IsScalarTower B p.asIdeal.ResidueField K := IsScalarTower.of_algebraMap_eq fun b => (r.commutes b).symm
+  let := r.toRingHom.toAlgebra
+  have : IsScalarTower B p.asIdeal.ResidueField K := IsScalarTower.of_algebraMap_eq fun b => (r.commutes b).symm
   have h2 : Nontrivial (K ⊗[p.asIdeal.ResidueField] (p.asIdeal.ResidueField ⊗[B] M)) := field_nontrivial _ _ _
   exact (AlgebraTensorModule.cancelBaseChange B p.asIdeal.ResidueField K K M).symm.toEquiv.nontrivial
 
@@ -190,12 +190,12 @@ variable (y : B →ₐ[O] K) (hann : ∀ b : B, (∀ m : M, b • m = 0) → y b
 include hann in
 private theorem joint_ne [IsAlgClosed K] [Module.Finite A M] [Algebra A K] (hK : ∀ a, algebraMap A K a = y (lam a)) :
     (⨅ b : B, Module.End.maxGenEigenspace ((actL lam M hs b).baseChange K) (y b)) ≠ ⊥ := by
-  letI : Algebra A B := lam.toRingHom.toAlgebra
-  letI : Algebra B K := y.toRingHom.toAlgebra
-  haveI : IsScalarTower A B K := IsScalarTower.of_algebraMap_eq hK
-  haveI : IsScalarTower A B M := IsScalarTower.of_algebraMap_smul fun a m => (hs a m).symm
-  haveI : Module.Finite B M := Module.Finite.of_restrictScalars_finite A B M
-  haveI := fibre_nontrivial (B := B) (K := K) (M := M) hann
+  let : Algebra A B := lam.toRingHom.toAlgebra
+  let : Algebra B K := y.toRingHom.toAlgebra
+  have : IsScalarTower A B K := IsScalarTower.of_algebraMap_eq hK
+  have : IsScalarTower A B M := IsScalarTower.of_algebraMap_smul fun a m => (hs a m).symm
+  have : Module.Finite B M := Module.Finite.of_restrictScalars_finite A B M
+  have := fibre_nontrivial (B := B) (K := K) (M := M) hann
   refine ne_bot_of_quot _ (act_comm lam M hs) _ (TensorProduct.mapOfCompatibleSMul B A K K M) ?_ ?_
   · intro h0
     obtain ⟨q, hq⟩ := exists_ne (0 : K ⊗[B] M)
@@ -264,7 +264,7 @@ private theorem mu_eq [IsAlgClosed K] [Module.Finite A M] [Module.Free A M] {I :
     (hZ : Z = Submodule.span C (Set.range sp) ⊓ ⨅ i, (γ i).maxGenEigenspace (ι (y (g i)))) :
     Z ≠ ⊥ ∧ mu lam M hs y = Module.finrank C Z := by
   unfold mu
-  letI : Algebra A K := (y.comp lam).toRingHom.toAlgebra
+  let : Algebra A K := (y.comp lam).toRingHom.toAlgebra
   have hK : ∀ a, algebraMap A K a = y (lam a) := fun _ => rfl
   obtain ⟨Ψ, ht, hk, hi, hr⟩ := exists_semi M ι sp hsm hind
   have hne := joint_ne lam M hs y hann hK
@@ -277,7 +277,7 @@ private theorem mu_eq [IsAlgClosed K] [Module.Finite A M] [Module.Free A M] {I :
   subst hZ
   refine ⟨fun h0 => hne ?_, congrArg Cardinal.toNat tr⟩
   rw [h0, rank_bot] at tr
-  haveI := Module.Free.of_divisionRing K
+  have := Module.Free.of_divisionRing K
     ↥(⨅ i, Module.End.maxGenEigenspace (LinearMap.baseChange K (actL lam M hs (g i))) (y (g i)))
   exact Submodule.subsingleton_iff_eq_bot.1 (Module.rank_zero_iff_of_free.1 tr)
 
@@ -330,7 +330,7 @@ open UpperTheory.V.Z.J.D
 theorem UpperTheory.V.Z.J.D.muZ :
     LocSp → MuZ := by
   intro hL L Ω _ _ _ _ _ l _ n c H hA A _ _ _ θ hθ ι x lam d ξ c0 sp hsp K a _ B _ _ j f hf _ hs hB z hz
-  haveI := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a).2.1
-  haveI := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a).2.2
+  have := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a).2.1
+  have := ((UpperTheory.V.Hi.hiComm L Ω l n c H hA A θ hθ K).2.2.2 a).2.2
   exact mu_hecke (H.MK θ a K) (H.X.Ord (H.τA A) θ (H.lev K)) inf_le_left (H.op A) j f hf hs hB z x.toRingHom hz ι sp
     (hsp.add K) (hsp.smul K) (H.opC ι lam d) (hsp.op K) _ (hL L Ω l n c H hA A θ hθ ι x lam d ξ c0 sp hsp K a z hz)

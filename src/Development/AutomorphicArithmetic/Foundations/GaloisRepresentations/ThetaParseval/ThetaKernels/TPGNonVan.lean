@@ -113,17 +113,17 @@ open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.Inde
 theorem UpperTheory.haarMeasure_triple_product_decomposition :
     ∀ {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (A B C : Subgroup G), IsClosed (A : Set G) → IsClosed (B : Set G) → IsClosed (C : Set G) → ∀ (j : A × B × C ≃ₜ* G) (μ : Measure G), μ.IsHaarMeasure → ∀ (μA : Measure A) (μB : Measure B) (μC : Measure C), μA.IsHaarMeasure → μB.IsHaarMeasure → μC.IsHaarMeasure → ∀ f : G → ℂ, Integrable f μ → Integrable (fun y => f (j y)) (μA.prod (μB.prod μC)) ∧ ∃ c : ℝ, ∫ y, f (j y) ∂(μA.prod (μB.prod μC)) = c * ∫ g, f g ∂μ := by
   intro G _ _ _ _ _ _ _ _ A B C hA hB hC j μ hμ μA μB μC hμA hμB hμC f hf
-  haveI : LocallyCompactSpace A := hA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace B := hB.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace C := hC.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : (μB.prod μC).IsHaarMeasure := Measure.prod.instIsHaarMeasure μB μC
-  haveI : SigmaFinite (μB.prod μC) := inferInstance
-  haveI : MeasurableMul (B × C) := inferInstance
-  haveI hPH : (μA.prod (μB.prod μC)).IsHaarMeasure :=
+  have : LocallyCompactSpace A := hA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace B := hB.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace C := hC.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : (μB.prod μC).IsHaarMeasure := Measure.prod.instIsHaarMeasure μB μC
+  have : SigmaFinite (μB.prod μC) := inferInstance
+  have : MeasurableMul (B × C) := inferInstance
+  have hPH : (μA.prod (μB.prod μC)).IsHaarMeasure :=
     Measure.prod.instIsHaarMeasure μA (μB.prod μC)
   set P : Measure (A × B × C) := μA.prod (μB.prod μC) with hP
   have hme : MeasurableEmbedding j := j.toHomeomorph.measurableEmbedding
-  haveI hmap : (Measure.map j P).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map P j
+  have hmap : (Measure.map j P).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map P j
   have hk : Measure.map j P = Measure.haarScalarFactor (Measure.map j P) μ • μ :=
     Measure.isMulLeftInvariant_eq_smul _ _
   set k : ℝ≥0 := Measure.haarScalarFactor (Measure.map j P) μ with hkdef
@@ -215,8 +215,8 @@ end UpperTheory.MatrixCoefficientBound
 theorem UpperTheory.matrix_coefficient_bounded_by_value_at_one :
     ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d : ℕ} {X : Spc F E n} {W : Spc F E d} {M : Model σ X W}, Cpt σ X.J → M.μ.IsHaarMeasure → IsFundamentalDomain (ratU σ X.J) M.dom M.μ → ∀ {φ : UA σ X.J → ℂ}, IsFn φ → φ ≠ 0 → ∃ r : ℝ, 0 < r ∧ mc M φ 1 = r ∧ ∀ g, ‖mc M φ g‖ ≤ r := by
   intro F E _ _ _ _ _ σ n d X W M hK hμ hD φ hφ h0
-  haveI := hK.cnt
-  haveI := hK.right M.μ hμ
+  have := hK.cnt
+  have := hK.right M.μ hμ
   obtain ⟨C, hC⟩ := hK.bdd hφ.1 hφ.2
   have e1 : mc M φ 1 = ((∫ y in M.dom, ‖φ y‖ ^ 2 ∂M.μ : ℝ) : ℂ) := by
     rw [← integral_complex_ofReal]
@@ -259,7 +259,7 @@ theorem UpperTheory.unitaryAdelic_mem_of_localGroups_near_one :
     refine Subgroup.isOpen_of_mem_nhds K (g := 1) ?_
     let U : Set (gAt σ X S) := ⋂ v ∈ S, (fun b : gAt σ X S => Euler.prj v b.1) ⁻¹' O v
     have oU : IsOpen U := isOpen_biInter_finset fun v hv =>
-      (hOo v hv).preimage (Euler.cont_prj.comp continuous_subtype_val)
+      (hOo v hv).preimage (Euler.cont_prj.comp continuous_subtypeVal)
     have mU : (1 : gAt σ X S) ∈ U := by
       refine Set.mem_iInter₂.2 fun v hv => ?_
       show Euler.prj v (1 : UA σ X.J) ∈ O v
@@ -528,7 +528,7 @@ theorem _root_.UpperTheory.TP.nonVan_k :
   have hOff0 : gOff (cj E) X S ≤ gOff (cj E) X ∅ := Subgroup.closure_mono fun g hg =>
     ⟨hg.1, fun v hv => absurd hv (by simp)⟩
   have hunr : UnrOff χW (S : Set (Pl (maximalRealSubfield E))) := fun w hw => hRam w fun h => hw (by
-    simp only [above, Set.mem_setOf_eq] at h ⊢
+    simp only [above, Set.mem_ofPred_eq] at h ⊢
     exact hSS (Finset.mem_union_right _ h))
   have hbump := fun v => hBu _ E (cj E) B n d X W M χX χW om hP hn hd v N (oN.mem_nhds one_N)
   choose H b hb hHN using hbump
@@ -542,8 +542,8 @@ theorem _root_.UpperTheory.TP.nonVan_k :
     · filter_upwards [S.finite_toSet.compl_mem_cofinite] with v hv
       simp only [Set.mem_compl_iff, Finset.mem_coe] at hv
       simp [hφf, hv]
-  letI : MeasurableSpace (Fin n × Fin d → AF (maximalRealSubfield E)) := borel _
-  haveI : BorelSpace (Fin n × Fin d → AF (maximalRealSubfield E)) := ⟨rfl⟩
+  let : MeasurableSpace (Fin n × Fin d → AF (maximalRealSubfield E)) := borel _
+  have : BorelSpace (Fin n × Fin d → AF (maximalRealSubfield E)) := ⟨rfl⟩
   let ν : Measure (Fin n × Fin d → AF (maximalRealSubfield E)) := Measure.addHaar
   have hν : ν.IsAddHaarMeasure := inferInstance
   obtain ⟨hc1, hco⟩ := hDa _ E (cj E) B n d X W M χX χW om hP hn K a ε hK ha hε ν hν S hunr H φf hfin
@@ -568,15 +568,15 @@ theorem _root_.UpperTheory.TP.nonVan_k :
       rw [mul_assoc x, hcomm, ← mul_assoc x, ← mul_assoc y]
       exact hHfix hbH _
     simp only [mc, this]
-  haveI : LocallyCompactSpace (gInf (cj E) X) := cInf.isClosed.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace (gAt (cj E) X S) := clAt.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace (gOff (cj E) X S) := clOff'.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (gInf (cj E) X) := cInf.isClosed.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (gAt (cj E) X S) := clAt.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (gOff (cj E) X S) := clOff'.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let μA : Measure (gInf (cj E) X) := Measure.haar
   let μB : Measure (gAt (cj E) X S) := Measure.haar
   let μC : Measure (gOff (cj E) X S) := Measure.haar
-  haveI : SFinite μA := nv_sf_pk μA
-  haveI : SFinite μB := nv_sf_pk μB
-  haveI : SFinite μC := nv_sf_pk μC
+  have : SFinite μA := nv_sf_pk μA
+  have : SFinite μB := nv_sf_pk μB
+  have : SFinite μC := nv_sf_pk μC
   obtain ⟨κ, hκ, hκe⟩ := hSc E B n d X W M χX χW om hP hn e e' he he' U hU f₀ hf0 φ hφ0 hS ν hν φf hfin μA inferInstance
   have hPol : pure f₀ φf ∈ PolData B M := Submodule.subset_span ⟨f₀, hf₀, φf, hfin.1, hfin.2, rfl⟩
   obtain ⟨hI, hZ⟩ := hR _ E (cj E) B n d X W M χX χW om hP hn (by omega) K a ε hK ha hε t₀ ht hlt ν hν _ hPol φ' hfn
@@ -592,7 +592,7 @@ theorem _root_.UpperTheory.TP.nonVan_k :
   have cB : IsCompact {b : gAt (cj E) X S | IntAll b.1} := clAt.isClosedEmbedding_subtypeVal.isCompact_preimage cK
   have cC : IsCompact {c : gOff (cj E) X S | IntAll c.1} := clOff'.isClosedEmbedding_subtypeVal.isCompact_preimage cK
   refine hAb _ _ _ μA μB μC {b | b.1 ∈ ⨆ v ∈ S, H v} {c | IntAll c.1} oH.measurableSet
-    (oK.preimage continuous_subtype_val).measurableSet (oH.measure_ne_zero μB ⟨1, one_mem (⨆ v ∈ S, H v)⟩)
+    (oK.preimage continuous_subtypeVal).measurableSet (oH.measure_ne_zero μB ⟨1, one_mem (⨆ v ∈ S, H v)⟩)
     (ne_top_of_le_ne_top cB.measure_lt_top.ne (measure_mono fun b hb' => hIG _ hb')) cC.measure_lt_top.ne
     _ (fun x c => coef om ν (pure f₀ φf) x.1 * star (mc M φ' (x.1 * c.1))) s (fun c => star (mc M φ' c.1))
     (κ * coef om ν (pure f₀ φf) 1) r (fun c => ENNReal.ofReal (a (ε (c.1, 1)) ^ ((d : ℝ) / 2)))
@@ -614,7 +614,7 @@ theorem _root_.UpperTheory.TP.nonVan_k :
     simp [e1]
   · intro c
     refine ⟨by simpa using r2 c.1, ?_⟩
-    rw [← s1 c, ofReal_norm_eq_enorm]
+    rw [← s1 c, ofReal_norm]
 end
 end
 end -- clump:auto

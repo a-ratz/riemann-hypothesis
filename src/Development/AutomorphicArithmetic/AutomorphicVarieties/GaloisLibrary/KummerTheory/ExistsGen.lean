@@ -126,7 +126,7 @@ theorem UpperTheory.V.Kum.existsGen :
   obtain ⟨a, ha⟩ : ∃ a, Nat.find hex = a + 1 := ⟨Nat.find hex - 1, by omega⟩
   rw [ha] at hspec hmin h1 h2
   have hle := hmin a (Nat.lt_succ_self a)
-  obtain ⟨u, hu, hua⟩ := SetLike.not_le_iff_exists.1 hspec
+  obtain ⟨u, hu, hua⟩ := IsConcreteLE.not_le_iff_exists.1 hspec
   have fin : ∀ γ ∈ V, KStar.TotallyRealRoots.red l γ = KStar.TotallyRealRoots.red l g → γ ^ (l - 1) ∉ KStar.TotallyRealRoots.princ l (a + 1) →
       V ≤ (Subgroup.zpowers γ).topologicalClosure := by
     intro γ hγ e h

@@ -66,11 +66,11 @@ namespace GlobalTheory.ToricRankZero
 
 theorem isProper_of_torusExtension_of_finrank_eq_zero {k : Type} [Field k] (G : Over (Sp k)) [GrpObj G]
     (E : TorusExtension G) (hX : (letI := E.addCommGroup; Module.finrank ℤ E.X) = 0) : IsProper G.hom := by
-  letI := E.addCommGroup
-  letI := E.free
-  letI := E.finite
-  letI := E.grpB
-  haveI := E.q_hom
+  let := E.addCommGroup
+  let := E.free
+  let := E.finite
+  let := E.grpB
+  have := E.q_hom
   have hsub : Subsingleton E.X := Module.finrank_zero_iff.1 hX
   have hp := E.isKernel
   have : Mono E.q := ⟨fun {Y} x y hxy => by
@@ -85,7 +85,7 @@ theorem isProper_of_torusExtension_of_finrank_eq_zero {k : Type} [Field k] (G : 
         rw [← ofAdd_toAdd a, Subsingleton.elim (Multiplicative.toAdd a) 0]
       rw [ha1, map_one, map_one]
     have h3 := hp.lift_fst _ _ h1
-    haveI := E.i_hom
+    have := E.i_hom
     rw [h2, MonObj.one_comp] at h3
     exact mul_inv_eq_one.1 h3.symm⟩
   have : Mono E.q.left := inferInstanceAs (Mono ((Over.forget _).map E.q))

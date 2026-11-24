@@ -59,8 +59,8 @@ theorem exists_map_eq_charK : ∀ {A B K : Type} [CommRing A] [IsDomain A] [IsIn
     [Algebra A K] [IsFractionRing A K] (φ : A →+* B) (hφ : φ.Finite) (b : B),
     ∃ P : A[X], P.map (algebraMap A K) = charK φ hφ K b := by
   intro A B K _ _ _ _ _ _ _ φ hφ b
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let := φ.toAlgebra
+  have : Module.Finite A B := hφ
   obtain ⟨g, hgm, hg⟩ := (Algebra.IsIntegral.isIntegral (R := A) b)
   have hT : aeval (Algebra.lmul K (K ⊗[A] B) (1 ⊗ₜ b)) (g.map (algebraMap A K)) = 0 := by
     rw [Polynomial.aeval_algHom_apply, Polynomial.aeval_map_algebraMap]

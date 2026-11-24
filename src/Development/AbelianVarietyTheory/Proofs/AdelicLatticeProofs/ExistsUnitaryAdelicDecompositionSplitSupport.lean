@@ -138,7 +138,7 @@ theorem _root_.GlobalTheory.UnRep.SplitRep.exists_multiple (s : 𝓞 E) (hs : s 
       ∃ P : Ideal (𝓞 E), P.IsPrime ∧ s ∈ P ∧ P.comap (algebraMap (𝓞 F) (𝓞 E)) = v.asIdeal := by
   classical
   set J := Ideal.comap (algebraMap (𝓞 F) (𝓞 E)) (Ideal.span {s}) with hJdef
-  have hJ : J ≠ ⊥ := Ideal.comap_ne_bot_of_integral_mem hs (Ideal.mem_span_singleton_self s)
+  have hJ : J ≠ ⊥ := Ideal.under_ne_bot_of_integral_mem hs (Ideal.mem_span_singleton_self s)
     (Algebra.IsIntegral.isIntegral s)
   have hJ0 : J ∈ nonZeroDivisors (Ideal (𝓞 F)) := mem_nonZeroDivisors_of_ne_zero hJ
   set h := Fintype.card (ClassGroup (𝓞 F))

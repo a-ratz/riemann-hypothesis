@@ -68,7 +68,7 @@ theorem unit_ext_field {K F : Type} [Field K] [Field F] (ρ : Sp F ⟶ Sp K) (z 
     rw [gm_val ρ z ⊤ hz, gm_val ρ z ⊤ hz] at e
     have hK : IsField Γ(Sp K, ⊤) :=
       (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.toMulEquiv.isField (Field.toIsField K)
-    letI := hK.toField
+    let := hK.toField
     exact Units.ext (RingHom.injective
       (((Sp F).presheaf.germ (ρ ⁻¹ᵁ ⊤) z hz).hom.comp (ρ.app ⊤).hom) e)
   · exact unit_ext fun y hy => absurd (by rw [Subsingleton.elim (ρ z) y]; exact hy) hz
@@ -189,7 +189,7 @@ theorem arcWit_data_iso : Laws5 → ∀ (E : Type) [Field E] [NumberField E] [Is
   let F := AlgebraicClosure (FractionRing (PowerSeries k))
   let κ : k →+* F := ((algebraMap (FractionRing (PowerSeries k)) F).comp (algebraMap (PowerSeries k) _)).comp
     (PowerSeries.C (R := k))
-  letI : Algebra (FractionRing k) F := (IsFractionRing.lift (K := FractionRing k) (g := κ) κ.injective).toAlgebra
+  let : Algebra (FractionRing k) F := (IsFractionRing.lift (K := FractionRing k) (g := κ) κ.injective).toAlgebra
   have ha : ∀ x, algebraMap (FractionRing k) F (algebraMap k _ x) =
       algebraMap (FractionRing (PowerSeries k)) F (algebraMap (PowerSeries k) _ (PowerSeries.C (R := k) x)) :=
     fun x => IsFractionRing.lift_algebraMap (K := FractionRing k) (g := κ) κ.injective x

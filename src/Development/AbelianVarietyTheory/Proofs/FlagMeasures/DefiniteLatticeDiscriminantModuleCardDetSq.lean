@@ -69,7 +69,7 @@ theorem idxN_latIn {U : Submodule K V} {A B : Submodule (𝓞 K) V} (hA : ∀ x 
 
 theorem isLattice_latIn_span {U : Submodule K V} {N : Submodule (𝓞 K) V} (hN : N.FG)
     (hU : Submodule.span K (N : Set V) = U) : Submodule.IsFullLattice K (latIn U N) := by
-  haveI : Submodule.IsLattice K (latIn U N) := by
+  have : Submodule.IsLattice K (latIn U N) := by
     apply Submodule.IsLattice.of_fg K
     refine Submodule.fg_of_fg_map_injective (U.subtype.restrictScalars (𝓞 K)) U.injective_subtype ?_
     exact Submodule.FG.of_le hN (Submodule.map_comap_le _ _)

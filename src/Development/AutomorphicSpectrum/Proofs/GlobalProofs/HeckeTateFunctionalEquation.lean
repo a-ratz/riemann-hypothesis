@@ -136,7 +136,7 @@ theorem component_eq (χ : HChar E) (hu : IsUnitary χ) {I : Type} [Fintype I] {
       (((toHecke χ hu).infiniteComponent (InfinitePlace.mk (φ i)) u : Circle) : ℂ)) =
       fun u : ((InfinitePlace.mk (φ i)).Completion)ˣ => (e u / ((‖e u‖ : ℝ) : ℂ)) ^ n i := by
     refine (denseRange_atInf_place _).equalizer ?_ ?_ ?_
-    · exact continuous_subtype_val.comp (map_continuous _)
+    · exact continuous_subtypeVal.comp (map_continuous _)
     · exact (h1.div (Complex.continuous_ofReal.comp h1.norm) h3).zpow₀ _
         fun u => Or.inl (div_ne_zero (h2 u) (h3 u))
     · funext k
@@ -172,7 +172,7 @@ theorem params (χ : HChar E) (hu : IsUnitary χ) {I : Type} [Fintype I] {φ : I
       ((‖(z : ℂ)‖ : ℝ) : ℂ) ^ ((((T.infiniteWeight w, 2 * T.infiniteTau w).2 : ℝ) : ℂ) * Complex.I) := fun z => by
     have hpos : 0 < ‖(z : ℂ)‖ := norm_pos_iff.2 z.ne_zero
     show ((T.infiniteComponent w (unitsContinuousHom e.symm hec z) : Circle) : ℂ) = _
-    rw [HeckeCharacter.infiniteComponent_eq, hι, hnorm, InfinitePlace.mult, if_neg hnr,
+    rw [HeckeCharacter.infiniteComponent_eq, hι, hnorm, InfinitePlace.mult, ite_eq_right hnr,
       ofReal_pow_cpow hpos]
     congr 2
     push_cast
@@ -258,7 +258,7 @@ theorem exists_ext_surj {L : Type} [Field L] [NumberField L] (φ : L →+* ℂ) 
 
 theorem exists_norm_one_zpow_ne (m : ℤ) (hm : m ≠ 0) : ∃ ζ : ℂ, ‖ζ‖ = 1 ∧ ζ ^ m ≠ 1 := by
   refine ⟨Complex.exp (((Real.pi / m : ℝ) : ℂ) * Complex.I), Complex.norm_exp_ofReal_mul_I _, ?_⟩
-  rw [← Complex.exp_int_mul]
+  rw [← Complex.exp_intCast_mul]
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm
   have hx : (m : ℂ) * (((Real.pi / m : ℝ) : ℂ) * Complex.I) = (Real.pi : ℂ) * Complex.I := by
     push_cast
@@ -291,7 +291,7 @@ private theorem denseRange_units_map_infiniteAdeleRing (E : Type) [Field E] [Num
   by_cases hk0 : k = 0
   · have h0 : (u' : InfiniteAdeleRing E) = 0 := by rw [← hk, hk0, map_zero]
     have h01 : (0 : InfiniteAdeleRing E) = 1 := by rw [← u'.mul_inv, h0, zero_mul]
-    haveI := subsingleton_of_zero_eq_one h01
+    have := subsingleton_of_zero_eq_one h01
     exact ⟨u', hu', 1, Units.ext (Subsingleton.elim _ _)⟩
   · exact ⟨u', hu', Units.mk0 k hk0, Units.ext (by simpa using hk)⟩
 
@@ -869,7 +869,7 @@ theorem unrAt_iff_not_dvd_conductor (χ : HChar E) (hu : IsUnitary χ) (v : Heig
     have h3 : Valued.v (a : v.adicCompletion E) = 1 := by
       refine le_antisymm h1 ?_
       rw [Units.val_inv_eq_inv_val, map_inv₀] at h2
-      exact (inv_le_one₀ (by simp [zero_lt_iff])).1 h2
+      exact (inv_le_one₀ (by simp [pos_iff_ne_zero])).1 h2
     rw [MonoidHom.mem_ker]
     show (toHecke χ hu).localComponent v a = 1
     apply Circle.ext
@@ -904,8 +904,8 @@ theorem hasProd_eulerFactor_toHecke : ∀ (E : Type) [Field E] [NumberField E] (
     funext v
     unfold eulerFactor
     by_cases hv : χ.UnrAt v
-    · rw [if_pos hv, coeff_eq_val χ hu ((unrAt_iff_not_dvd_conductor χ hu v).1 hv)]
-    · rw [if_neg hv, HeckeCharacter.coeff_asIdeal_of_dvd _
+    · rw [ite_eq_left hv, coeff_eq_val χ hu ((unrAt_iff_not_dvd_conductor χ hu v).1 hv)]
+    · rw [ite_eq_right hv, HeckeCharacter.coeff_asIdeal_of_dvd _
         (not_not.1 (mt (unrAt_iff_not_dvd_conductor χ hu v).2 hv))]
       simp
   rw [h]
@@ -940,7 +940,7 @@ theorem isStdChar_adelicAddChar (E : Type) [Field E] [NumberField E] (w : Height
     GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.IsStdChar E (adelicAddChar E) := by
   refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_⟩
   · show Continuous (fun a : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF E => ((adelicChar E a : Circle) : ℂ))
-    exact continuous_subtype_val.comp continuous_adelicChar
+    exact continuous_subtypeVal.comp continuous_adelicChar
   · intro x
     rw [adelicAddChar_apply]
     have h := (adelicChar E x).2
@@ -991,7 +991,7 @@ private theorem eq_one_of_norm_one_of_forall_re_pow_pos (c : ℂ) (hc : ‖c‖ 
   have hA : Real.pi / 2 ≤ (m : ℝ) * |θ| := by nlinarith
   have hB : (m : ℝ) * |θ| ≤ Real.pi + Real.pi / 2 := by nlinarith
   have hre : (c ^ m).re = Real.cos ((m : ℝ) * |θ|) := by
-    rw [hce, ← Complex.exp_nat_mul]
+    rw [hce, ← Complex.exp_natCast_mul]
     have hx : (↑m * (↑θ * Complex.I) : ℂ) = ↑((m : ℝ) * θ) * Complex.I := by
       push_cast
       ring
@@ -1303,7 +1303,7 @@ theorem L_locUnr (χ : HChar E) (hu : IsUnitary χ) (v : HeightOneSpectrum (𝓞
     rw [Nat.cast_ne_zero, Ne, Ideal.absNorm_eq_zero_iff]
     exact v.ne_bot
   rw [(toHecke χ hu).localEpsilon_half_of_not_dvd v hv (atFin v (unif v ^ (0 + diffExp v)))
-    (by rw [ord_unif, differentExp_eq, zero_add]), coe_localComponent, locEps, if_pos rfl, mul_one, mul_assoc,
+    (by rw [ord_unif, differentExp_eq, zero_add]), coe_localComponent, locEps, ite_eq_left rfl, mul_one, mul_assoc,
     ← Complex.cpow_add _ _ hN]
   have : -(1 / 2 : ℂ) * ((0 + diffExp v : ℕ) : ℂ) + (diffExp v : ℂ) / 2 = 0 := by
     push_cast
@@ -1322,7 +1322,7 @@ theorem L_locRam (χ : HChar E) (hu : IsUnitary χ) (v : HeightOneSpectrum (𝓞
     exact v.ne_bot
   rw [(toHecke χ hu).localEpsilon_half_of_dvd v hv (atFin v (unif v ^ (m + diffExp v)))
     (by rw [ord_unif, differentExp_eq, HeckeCharacter.condExp_eq, hc]; push_cast; rfl),
-    L_ramInt χ hu v hm h, coe_localComponent, locEps, if_neg hm, hc]
+    L_ramInt χ hu v hm h, coe_localComponent, locEps, ite_eq_right hm, hc]
   set c : ℂ := ((Ideal.absNorm v.asIdeal : ℕ) : ℂ) ^ ((m : ℂ) / 2) with hcdef
   have hc0 : c ≠ 0 := by
     rw [hcdef, Ne, Complex.cpow_eq_zero_iff]
@@ -1381,7 +1381,7 @@ theorem gammaFactor_toHecke (hφ : IsCMType φ) (hu : IsUnitary χ) (hi : Formal
   have e : (((n i).natAbs : ℕ) : ℂ) = ((|n i| : ℤ) : ℂ) := by
     rw [← Int.cast_natCast, Int.natCast_natAbs]
   show (toHecke χ hu).infiniteGamma (InfinitePlace.mk (φ i)) s = _
-  rw [HeckeCharacter.infiniteGamma, if_neg hc, h1, h2, e, Complex.Gammaℂ_def]
+  rw [HeckeCharacter.infiniteGamma, ite_eq_right hc, h1, h2, e, Complex.Gammaℂ_def]
   simp
 
 theorem prod_weight_toHecke (hφ : IsCMType φ) (hu : IsUnitary χ) (hi : Formalism.L2.Host.HChar.HasInf χ φ n) :

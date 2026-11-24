@@ -68,7 +68,7 @@ theorem deriv_characterTrace_realLift : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   have hξ' : ∀ w, ((τ w).1 ξ).im ≠ 0 := fun w => im_ne_zero hCM hξ (τ w).1
   choose C' hC' using fun w => (hC w).2
   have hL : ∀ w, C' w * C w = 1 := fun w => frame_inv (hC w).1 (hC' w)
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   set U : Set (InfinitePlace F → Mat R S) := {h | ∀ w, (h w)ᴴ * Jm R S * h w = Jm R S} with hU
   set Λ : (InfinitePlace F → Mat R S) → Matrix β β (AE F E) :=
     fun h => 1 + liftM τ ξ (fun w => C w * h w * C' w - 1) with hΛ
@@ -107,7 +107,7 @@ theorem deriv_characterTrace_realLift : _root_.GlobalTheory.FunPr.ThetaLocalInpu
         exact piInf_cA hCM (τ w) z
       rw [Matrix.map_mul, Matrix.map_mul, hc, Matrix.transpose_map, Λπ]
       by_cases hb : b = 0
-      · haveI := isEmpty_of_zero (hb ▸ (hC w).1) (hC' w)
+      · have := isEmpty_of_zero (hb ▸ (hC w).1) (hC' w)
         ext i
         exact isEmptyElim i
       · have h1 := conj_unit (hC w).1 (hC' w) ((form_iff (h w)).1 (hh w))
@@ -136,11 +136,11 @@ theorem deriv_characterTrace_realLift : _root_.GlobalTheory.FunPr.ThetaLocalInpu
     (continuous_const.matrix_mul (continuous_apply w).matrix_conjTranspose).matrix_mul continuous_const
   have Gc : Continuous G := by
     have hu : Continuous fun h : U => ((G h).1 : GL β (AE F E)) :=
-      Units.continuous_iff.2 ⟨Λc.comp continuous_subtype_val, (Λc.comp hinvc).comp continuous_subtype_val⟩
+      Units.continuous_iff.2 ⟨Λc.comp continuous_subtypeVal, (Λc.comp hinvc).comp continuous_subtypeVal⟩
     exact hu.subtype_mk _
   classical
   let χ : (InfinitePlace F → Mat R S) → ℂ := fun h => if hh : h ∈ U then ν (G ⟨h, hh⟩) else 0
-  have χG : ∀ h : U, χ h = ν (G h) := fun h => by simp only [χ, dif_pos h.2]
+  have χG : ∀ h : U, χ h = ν (G h) := fun h => by simp only [χ, dite_eq_left h.2]
   have memU : ∀ h h' : InfinitePlace F → Mat R S, h ∈ U → h' ∈ U → h * h' ∈ U := fun h h' hh hh' w =>
     mem_mul (hh w) (hh' w)
   obtain ⟨n, hn⟩ := prod_char (R := R) (S := S) χ
@@ -148,7 +148,7 @@ theorem deriv_characterTrace_realLift : _root_.GlobalTheory.FunPr.ThetaLocalInpu
       rw [χG ⟨g, hg⟩, χG ⟨h, hh⟩, χG ⟨g * h, memU g h hg hh⟩, Gmul ⟨g, hg⟩ ⟨h, hh⟩]
       exact hmul _ _ (LevelValuationRings _) (LevelValuationRings _))
     (by
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       convert hcont.comp_continuous Gc LevelValuationRings using 1
       funext h
       exact χG h)
@@ -201,7 +201,7 @@ theorem deriv_characterTrace_realLift : _root_.GlobalTheory.FunPr.ThetaLocalInpu
     rw [hγe t, ← χG, hn _ (heU t), Finset.mul_sum, Complex.exp_sum]
     refine Finset.prod_congr rfl fun w _ => ?_
     rw [he]; simp only
-    rw [GlobalTheory.DetSqrtCover.det_exp, ← Complex.exp_int_mul, Matrix.trace_smul]
+    rw [GlobalTheory.DetSqrtCover.det_exp, ← Complex.exp_intCast_mul, Matrix.trace_smul]
     congr 1
     simp only [Complex.real_smul]
     ring

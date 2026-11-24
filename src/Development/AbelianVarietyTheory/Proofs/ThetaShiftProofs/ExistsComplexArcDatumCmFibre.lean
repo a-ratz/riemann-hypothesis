@@ -162,7 +162,7 @@ theorem chi_eq {G : Over (Sp ℂ)} [GrpObj G] {L : LB G.left} (hL : L.IsLB) (f :
   simp [← hm] at e3 hs
   have x : Complex.exp (Real.pi / 2 * hermForm Hm (l + m) (l + m)) =
       Complex.exp (Real.pi / 2 * hermForm Hm l l) ^ 2 * Complex.exp (Real.pi / 2 * hermForm Hm m m) := by
-    rw [← Complex.exp_nat_mul, ← Complex.exp_add]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     have z : hermForm Hm 0 0 = 0 := by simp [hermForm]
     push_cast
@@ -344,7 +344,7 @@ theorem exists_arcIn_fibre : Known → ∀ (E : Type) [Field E] [NumberField E] 
     have h₂ : (hermForm A.Hm a (A.F H.w0 a)).im = -(A.Ef (A.FLam H.w0 ⟨a, lam.le a.2⟩) ⟨a, lam.le a.2⟩ : ℤ) := by
       rw [h₁, neg_neg]; rfl
     generalize A.Ef (A.FLam H.w0 ⟨a, lam.le a.2⟩) ⟨a, lam.le a.2⟩ = n at h₂
-    rw [h₂, ← Complex.exp_neg_pi_mul_I, ← Complex.exp_int_mul]
+    rw [h₂, ← Complex.exp_neg_pi_mul_I, ← Complex.exp_intCast_mul]
     congr 1
     push_cast
     ring

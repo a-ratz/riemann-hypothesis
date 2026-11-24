@@ -146,11 +146,11 @@ private theorem eigBoxL_lemma {G Q Y X : Type} [Group G] [AddCommGroup Y] [Modul
     rw [hg] at e
     exact hv (by simpa using e.symm)
   by_cases hQ : Finite Q
-  · haveI := Fintype.ofFinite Q
+  · have := Fintype.ofFinite Q
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
 
     simp only [LinearMap.sum_apply, map_sum, h]
-  · haveI : Infinite Q := not_finite_iff_infinite.mp hQ
+  · have : Infinite Q := not_finite_iff_infinite.mp hQ
     rw [finsum_of_infinite_support, finsum_of_infinite_support]
     · simp
     · exact Set.infinite_univ.mono fun q _ => ne2 (c q)
@@ -177,7 +177,7 @@ private theorem eigBoxL_lemma_3 {L : Type} [Field L] [NumberField L] {n : ℕ} {
     exact eigBoxL_lemma _ ρ₁ ρ₂ g hg z
   rw [eigL] at hy ⊢
   simp only [Submodule.mem_inf, Submodule.mem_iInf, fixd, Submodule.mem_mk, AddSubmonoid.mem_mk,
-    AddSubsemigroup.mem_mk, Set.mem_setOf_eq, Module.End.mem_eigenspace_iff,
+    AddSubsemigroup.mem_mk, Set.mem_ofPred_eq, Module.End.mem_eigenspace_iff,
     Module.End.mem_maxGenEigenspace] at hy ⊢
   obtain ⟨⟨⟨h1, h2⟩, h3⟩, h4⟩ := hy
   refine ⟨⟨⟨fun u hu' => ?_, fun u hu' => ?_⟩, fun v i z => ?_⟩, fun v j => ?_⟩
@@ -199,7 +199,7 @@ private theorem eigBoxL_lemma_4 {L : Type} [Field L] [NumberField L] {n : ℕ} {
     exact eigBoxL_lemma _ ρ₁ ρ₂ g hg z
   rw [eigL] at hy ⊢
   simp only [Submodule.mem_inf, Submodule.mem_iInf, fixd, Submodule.mem_mk, AddSubmonoid.mem_mk,
-    AddSubsemigroup.mem_mk, Set.mem_setOf_eq, Module.End.mem_eigenspace_iff,
+    AddSubsemigroup.mem_mk, Set.mem_ofPred_eq, Module.End.mem_eigenspace_iff,
     Module.End.mem_maxGenEigenspace] at hy ⊢
   obtain ⟨⟨⟨h1, h2⟩, h3⟩, h4⟩ := hy
   refine ⟨⟨⟨fun u hu' => ?_, fun u hu' => ?_⟩, fun v i z => ?_⟩, fun v j => ?_⟩
@@ -370,8 +370,8 @@ theorem eigBoxL {L : Type} [Field L] [NumberField L] {n : ℕ} {V : Type} [Finty
     rw [hpr, hpr]
     exact hf (by rw [← hΦ, ← hΦ, h])
   have hMi : Function.Injective M := by
-    haveI : Module.Flat ℂ A := Module.Flat.of_free
-    haveI : Module.Flat ℂ B := Module.Flat.of_free
+    have : Module.Flat ℂ A := Module.Flat.of_free
+    have : Module.Flat ℂ B := Module.Flat.of_free
     exact TensorProduct.map_injective_of_flat_flat _ _ A.injective_subtype B.injective_subtype
   have hP : ((invT K₁ K₂ τ₀ (π.comp (MonoidHom.inr _ _)) ⊓ Submodule.pi Set.univ fun _ =>
         ePart ((π.comp (MonoidHom.inr _ _)).comp (MonoidHom.inr G H)) a N) ⊓ Submodule.pi Set.univ fun _ =>

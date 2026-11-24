@@ -159,7 +159,7 @@ theorem shift_hasQ {N : ℕ} {f : ℍ → ℂ} {a : ℕ → ℂ} (h : HasQ N f a
   rw [hz, sub_zero]
   convert h1 using 2 with n
   case e'_5 =>
-    simp only [le_add_iff_nonneg_left, zero_le, if_true, Nat.add_sub_cancel, ee]
+    simp only [le_add_iff_nonneg_left, zero_le, ite_true, Nat.add_sub_cancel, ee]
     rw [mul_assoc (a n), ← Complex.exp_add]
     congr 2
     push_cast
@@ -246,7 +246,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω]
 theorem siegel_coeff [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) {M c : ℕ} (hM : 0 < M) (hc1 : 1 < c)
     (hc6 : Nat.Coprime c 6) (hcM : c ≡ 1 [MOD M]) (a b : ℤ) (hab : ¬ ((M : ℤ) ∣ a ∧ (M : ℤ) ∣ b)) (r : ℚ) :
     (X.exp (siegel X c ![(a : ℚ) / M, (b : ℚ) / M])).coeff r ∈ Subring.closure {eOm ε (1 / (M : ℚ))} := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hMz : (M : ℤ) ≠ 0 := by exact_mod_cast hM.ne'
   have hMq : (M : ℚ) ≠ 0 := by exact_mod_cast hM.ne'
   have hcop : Nat.Coprime c M := by
@@ -330,7 +330,7 @@ theorem good_closure {F : HahnSeries ℚ Ω} {ζ : Ω} {M : ℕ} (hM : 0 < M) (h
 theorem good_siegel [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) {M c : ℕ} (hM : 0 < M) (hc1 : 1 < c)
     (hc6 : Nat.Coprime c 6) (hcM : c ≡ 1 [MOD M]) (a b : ℤ) (hab : ¬ ((M : ℤ) ∣ a ∧ (M : ℤ) ∣ b))
     (γ : SL(2, ℤ)) : Good (X.exp (X.sl (ofSL γ) (siegel X c ![(a : ℚ) / M, (b : ℚ) / M]))) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hMq : (M : ℚ) ≠ 0 := by exact_mod_cast hM.ne'
   rw [_root_.GlobalTheory.KZ.SiegelSL.sl_siegel Ω ε X c _ γ (admissible_of_integral_conj_le hM hc1 hc6 hcM hab)]
   have hdet : (γ 0 0 : ℤ) * γ 1 1 - γ 0 1 * γ 1 0 = 1 := by
@@ -358,7 +358,7 @@ theorem good_siegel [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) 
     apply ε.injective
     rw [map_pow, eps_zeta ε hM, map_one]
     unfold ee
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have : (M : ℂ) * (2 * Real.pi * Complex.I * (1 / M)) = 2 * Real.pi * Complex.I := by
       have : (M : ℂ) ≠ 0 := by exact_mod_cast hM.ne'
       field_simp
@@ -372,7 +372,7 @@ theorem frac_bd : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
     (∃ (S : Finset Ω) (D : ℕ), 0 < D ∧ ∀ r, (X.exp (X.sl (ofSL γ) f)).coeff r ∈ IntermediateField.adjoin ℚ (S : Set Ω) ∧
       IsIntegral ℤ ((D : Ω) * (X.exp (X.sl (ofSL γ) f)).coeff r)) := by
   intro Ω _ _ _ ε X M c hM hc1 hc6 hcM f hf γ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   show Good (X.exp (X.sl (ofSL γ) f))
   induction hf using Algebra.adjoin_induction with
   | mem x hx =>

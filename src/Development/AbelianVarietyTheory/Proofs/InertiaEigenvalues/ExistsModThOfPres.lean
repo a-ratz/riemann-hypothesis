@@ -553,7 +553,7 @@ theorem exists_lift (hι : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerC
   have hl : 2 ≤ l := (Fact.out : l.Prime).two_le
   obtain ⟨u, hu⟩ := hι.1
   obtain ⟨u', hu'⟩ := PowerSeries.map_surjective (algebraMap O k) hk (u : k⟦X⟧)
-  haveI : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
+  have : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
   have hq : PowerSeries.map (algebraMap O k) W.q₀ = PowerSeries.X ^ (l - 1) := by
     have := congrArg (PowerSeries.map (algebraMap O k)) W.q₀_def
     rw [hp, map_mul, map_sub, map_pow, map_add (f := _), map_one, PowerSeries.map_X, add_pow_char, one_pow,
@@ -741,7 +741,7 @@ theorem eq_unit_mul_pow (ι : k⸨X⸩ →ₐ[k] k⸨X⸩) {d : ℕ} (hd : 0 < d
     rintro rfl
     have : (0 : k⟦X⟧) = (PowerSeries.X ^ d) ^ p * (w : k⟦X⟧) := coe_inj (by rw [← hc]; simp)
     exact (mul_ne_zero (pow_ne_zero _ (pow_ne_zero _ PowerSeries.X_ne_zero)) w.ne_zero) this.symm
-  obtain ⟨r, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hc0 (PowerSeries.X_irreducible (R := k))
+  obtain ⟨r, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hc0 (PowerSeries.irreducible_X (R := k))
   obtain ⟨b, hb⟩ := h2 (u : k⟦X⟧)
   obtain ⟨b', hb'⟩ := h2 ((u⁻¹ : (k⟦X⟧)ˣ) : k⟦X⟧)
   have hbb : b * b' = 1 := coe_inj (by
@@ -753,8 +753,8 @@ theorem eq_unit_mul_pow (ι : k⸨X⸩ →ₐ[k] k⸨X⸩) {d : ℕ} (hd : 0 < d
       rw [mul_comm (w : k⟦X⟧), pow_mul, pow_mul, ← hc, hu, PowerSeries.coe_mul, PowerSeries.coe_mul, map_mul, hb,
         PowerSeries.coe_pow, PowerSeries.coe_pow, PowerSeries.coe_pow, ← vv_eq_coe_X, map_pow, hu₁, mul_pow]
       simp [mul_assoc])
-  have := IsDiscreteValuationRing.unit_mul_pow_congr_pow (PowerSeries.X_irreducible (R := k))
-    (PowerSeries.X_irreducible (R := k)) _ _ _ _ key
+  have := IsDiscreteValuationRing.unit_mul_pow_congr_pow (PowerSeries.irreducible_X (R := k))
+    (PowerSeries.irreducible_X (R := k)) _ _ _ _ key
   have hr : r = p := Nat.eq_of_mul_eq_mul_left hd this
   exact ⟨u, hr ▸ hu⟩
 
@@ -1096,8 +1096,8 @@ theorem exists_proj {T T' Z : LocLat G Qp LL O} (f : LatHom T.L Z.L) (g : LatHom
   have hz : ∀ z, f.f (e.symm z).1 + g.f (e.symm z).2 = z := fun z => e.apply_symm_apply z
   have hρ : ∀ σ z, e.symm (Z.ρ σ z) = (T.ρ σ (e.symm z).1, T'.ρ σ (e.symm z).2) := fun σ z => by
     rw [← he, f.equiv, g.equiv, ← map_add (f := _), hz]
-  haveI := T.mtop.toContinuousSMul
-  haveI := T'.mtop.toContinuousSMul
+  have := T.mtop.toContinuousSMul
+  have := T'.mtop.toContinuousSMul
   refine ⟨⟨LinearMap.fst LL _ _ ∘ₗ e.symm.toLinearMap, fun σ z => ?_,
       IsModuleTopology.continuous_of_linearMap _, fun z h => ?_⟩,
     ⟨LinearMap.snd LL _ _ ∘ₗ e.symm.toLinearMap, fun σ z => ?_,
@@ -1527,8 +1527,8 @@ theorem sen_base : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P)
   obtain ⟨ν, hν, -, hν'⟩ := hQ.2.2.2.2.2 T _ hU' γ hγ' c hc
   obtain ⟨b, hb1, hb2, hb3⟩ := hQ.1 T hU.1
   obtain ⟨M, hM1, hM2⟩ := hν' _ (fun j => ⟨b j, hb1 j⟩) hb2 hb3 (τ i)
-  haveI := T.L.free
-  haveI : Module.Finite S.O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := T.L.free
+  have : Module.Finite S.O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
   have hm := rank_eq S.Γ.lam hk.1 ((hk.2 _).2 dvd_rfl) q hK
   rw [sen_gen p hp (fun a ha => (hι.2.2.1 _).1 fun z hz => ?_) hO hm (fun j => ⟨b j, hb1 j⟩) hb2 hb3 ν hν i (N i)
     (hN i) (hNN ▸ hL i) M hM2 x, hM1, map_prod_c c hc2]

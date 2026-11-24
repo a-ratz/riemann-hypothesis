@@ -72,10 +72,10 @@ theorem exists_haar_fundamentalDomains : ∀ (E : Type) [Field E] [NumberField E
     ∃ (μ : Measure (GA E a)) (_ : μ.IsHaarMeasure) (𝓕 𝓕' : Set (GA E a)),
       IsFundamentalDomain (ratGL E a).range 𝓕 μ ∧ IsFundamentalDomain (latticeGL E a) 𝓕' μ := by
   intro E _ _ _ a
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E a
-  haveI := CuspidalL2GL.t2Space_GA E a
-  haveI := CuspidalL2GL.secondCountableTopology_GA E a
-  haveI : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
+  have := CuspidalL2GL.locallyCompactSpace_GA E a
+  have := CuspidalL2GL.t2Space_GA E a
+  have := CuspidalL2GL.secondCountableTopology_GA E a
+  have : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
   obtain ⟨𝓕, -, -, h𝓕⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (ratGL E a).range
   obtain ⟨𝓕', -, -, h𝓕'⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (latticeGL E a)
   exact ⟨Measure.haar, inferInstance, 𝓕, 𝓕', h𝓕 _, h𝓕' _⟩

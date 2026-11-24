@@ -76,7 +76,7 @@ theorem levi_sum {κ : Type} [Fintype κ] {K : Type} (s : Finset K) (f : K → (
   rw [show (∑ i ∈ s, fderiv ℝ (f i)) = fun y => ∑ k ∈ s, fderiv ℝ (f k) y from by ext; simp] at h2
   unfold levi
   rw [hEq.fderiv_eq, h2]
-  simp only [ContinuousLinearMap.sum_apply]
+  simp only [sum_apply]
   rw [← Finset.sum_add_distrib, Finset.sum_div]
 
 theorem levi_fs_nonneg {κ : Type} [Fintype κ] {z : κ → ℂ} (hz : z ≠ 0) (w : κ → ℂ) :

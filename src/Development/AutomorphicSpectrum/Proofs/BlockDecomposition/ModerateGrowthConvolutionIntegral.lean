@@ -101,7 +101,7 @@ theorem continuous_bnd : Continuous fun u : AutomorphicForm.archGroup E a => bnd
   have hm : Continuous (mMap E a) := (mMap E a).continuous_of_finiteDimensional
   have hv : Continuous fun u : AutomorphicForm.archGroup E a =>
       ((u : (AutomorphicForm.ArchMatrix E a)ˣ) : AutomorphicForm.ArchMatrix E a) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have h1 : Continuous fun u : AutomorphicForm.archGroup E a => toL (toGL E a u).val := by
     simp_rw [toL_toGL]
     exact hm.comp hv

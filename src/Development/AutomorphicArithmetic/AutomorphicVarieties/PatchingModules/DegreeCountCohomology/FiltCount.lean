@@ -92,10 +92,10 @@ theorem UpperTheory.V.Pa.filtCount :
     have hrange : ((f 0).range : Set Y) ⊆ P 0 := by
       rintro _ ⟨z, rfl⟩
       exact hfilt 0 z (fun j hj => absurd hj (Fin.not_lt_zero j))
-    haveI : Finite (f 0).range := ((hP 0).subset hrange).to_subtype
+    have : Finite (f 0).range := ((hP 0).subset hrange).to_subtype
     have e := QuotientAddGroup.quotientKerEquivRange (f 0)
-    haveI : Finite (Z ⧸ (f 0).ker) := Finite.of_equiv _ e.toEquiv.symm
-    haveI : Finite Z := Finite.of_addSubgroup_quotient (f 0).ker
+    have : Finite (Z ⧸ (f 0).ker) := Finite.of_equiv _ e.toEquiv.symm
+    have : Finite Z := Finite.of_addSubgroup_quotient (f 0).ker
     refine ⟨inferInstance, ?_⟩
     rw [AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup (f 0).ker, Nat.card_congr e.toEquiv,
       Fin.prod_univ_succ]

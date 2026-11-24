@@ -577,10 +577,10 @@ omit [CompactSpace G] [TotallyDisconnectedSpace G] in
 theorem subsingleton_cohomology_of_top {k : Type} [CommRing k] (A : Rep.{0} k G) [IsDiscreteRep A]
     (r : ℕ) (h : Subsingleton (cohomology (Rep.res (⊤ : Subgroup G).subtype A) r)) :
     Subsingleton (cohomology A r) := by
-  let φ := cohomologyMapAlong (Subgroup.topEquiv (G := G)).toMonoidHom continuous_subtype_val
+  let φ := cohomologyMapAlong (Subgroup.topEquiv (G := G)).toMonoidHom continuous_subtypeVal
     (B := Rep.res (⊤ : Subgroup G).subtype A) (Rep.ofHom ⟨LinearMap.id, fun _ => rfl⟩) r
   have hi : IsIso φ := isIso_cohomologyMapAlong_of_mulEquiv (Subgroup.topEquiv (G := G))
-    continuous_subtype_val (continuous_id.subtype_mk _) (B := Rep.res (⊤ : Subgroup G).subtype A)
+    continuous_subtypeVal (continuous_id.subtype_mk _) (B := Rep.res (⊤ : Subgroup G).subtype A)
     (Rep.ofHom ⟨LinearMap.id, fun _ => rfl⟩) Function.bijective_id r
   exact ((ModuleCat.mono_iff_injective φ).1 inferInstance).subsingleton
 

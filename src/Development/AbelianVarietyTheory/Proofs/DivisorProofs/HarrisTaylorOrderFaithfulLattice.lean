@@ -146,7 +146,7 @@ lemma integral (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (c : 
     (h : ∀ y : D.La, ∃ z : D.La, algebraMap (𝓞 D.F) D.O c • y = (p : ℤ) • z) :
     ∃ c' : 𝓞 D.F, c = (p : ℤ) • c' := by
   classical
-  haveI := D.freeLa; haveI := D.finLa
+  have := D.freeLa; have := D.finLa
   have hp0 : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hfaith : ∀ q : 𝓞 D.F, (∀ y : D.La, algebraMap (𝓞 D.F) D.O q • y = 0) → q = 0 := by
     intro q hq
@@ -154,7 +154,7 @@ lemma integral (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (c : 
     have hI : Ideal.span {q} ≠ ⊥ := by simpa [Ideal.span_singleton_eq_bot] using hq0
     have hne : Ideal.absNorm (Ideal.span {q}) ≠ 0 := fun h => hI (Ideal.absNorm_eq_zero_iff.1 h)
     obtain ⟨r, hr⟩ := Ideal.mem_span_singleton'.1 (Ideal.absNorm_mem (Ideal.span {q}))
-    haveI : Nontrivial D.La := Module.nontrivial_of_finrank_pos (R := ℤ) (by
+    have : Nontrivial D.La := Module.nontrivial_of_finrank_pos (R := ℤ) (by
       rw [D.rankLa]
       have := D.m_pos; have := D.n_pos
       have := Module.finrank_pos (R := ℚ) (M := D.F)
@@ -221,7 +221,7 @@ end GlobalTheory.HTFaith
 theorem GlobalTheory.HTFaith.faithful : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (x : D.O), (∀ y : D.La, x • y = 0) → x = 0 := by
   intro p _ D x hx
   classical
-  haveI := D.freeO; haveI := D.finO; haveI := D.freeLa; haveI := D.finLa
+  have := D.freeO; have := D.finO; have := D.freeLa; have := D.finLa
   by_contra hne
   obtain ⟨k, x', rfl, hx'⟩ := GlobalTheory.HTFaith.saturate p D.O x hne
   have hp0 : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero

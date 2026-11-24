@@ -102,9 +102,9 @@ theorem eventually_princ_mat {F E : Type} [Field F] [NumberField F] [Field E] [N
     {φ : X → GL (Fin n) (Af F ⊗[F] E)} (hf : Continuous φ) (h₀ : φ x₀ = 1) :
     ∀ᶠ κ in 𝓝 x₀, Formalism.UG.bc (GlobalTheory.Mass.swapTens F E (Af F) : _ →+* _) (φ κ) ∈ St β ∧
       ∀ PP ∈ T, redFn β PP (Formalism.UG.bc (GlobalTheory.Mass.swapTens F E (Af F) : _ →+* _) (φ κ)) = 1 := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   have ho := (GlobalTheory.Mass.intTens_open_compact F E).1
   set s := GlobalTheory.Mass.swapTens F E (Af F)
   let β' : GL (Fin n) (Af F ⊗[F] E) := Formalism.UG.bc (s.symm : _ →+* _) β
@@ -166,7 +166,7 @@ theorem eventually_princ (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (T : Fin
     ∀ᶠ κ in 𝓝 (1 : GA D V), finE V κ ∈ UA D.sp.cm V.gram ∧ finE V κ ∈ St β ∧ ∀ PP ∈ T, redFn β PP (finE V κ) = 1 := by
   obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj D.sp.cm.sig V.gram
   have hf : Continuous (finHom V) :=
-    (continuous_subtype_val.comp hπ.continuous).congr fun κ => hπ κ
+    (continuous_subtypeVal.comp hπ.continuous).congr fun κ => hπ κ
   filter_upwards [eventually_princ_mat β T hf (map_one _)] with κ h
   refine ⟨?_, h⟩
   have := (GlobalTheory.Mass.swapPts (Af D.host.F) D.sp.cm.sig V.gram (π κ)).2
@@ -233,10 +233,10 @@ theorem ext_invariant {V : HSp D} (c : CoefA V) {J : Subgroup (Bridge.Gf V)} {χ
 theorem ext_continuous {V : HSp D} (c : CoefA V) (hc : c.Is) (β : GL (Fin V.rank) (Lev.EAf D))
     (L : LevDat D.host.E ℂ V.rank) {f : Bridge.Gf V → c.W}
     (hf : f ∈ Bridge.AdForms (Bridge.ratF V) c.coef.ρ (levEnv V β L).J (levEnv V β L).χ) : Continuous (c.ext f) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  haveI : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
   exact form_continuous (finHom V).rangeRestrict (GQ V) c.ρ hc.2.2.1 (eventually_level V β L) hf
 
 theorem integrableOn_form {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}

@@ -57,10 +57,10 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ}
 omit [StarRing E] in
 theorem exists_reps (N : Submodule (𝓞 E) (Sp E n)) (hN : N.FG) (m : ℕ) (hm : m ≠ 0) :
     ∃ T : Set (Sp E n), T.Finite ∧ ∀ x ∈ N, ∃ t ∈ T, ∃ z ∈ N, x - t = (m : 𝓞 E) • z := by
-  haveI : Module.Finite (𝓞 E) N := Module.Finite.iff_fg.2 hN
-  haveI : Module.Finite ℤ N := Module.Finite.trans (𝓞 E) N
+  have : Module.Finite (𝓞 E) N := Module.Finite.iff_fg.2 hN
+  have : Module.Finite ℤ N := Module.Finite.trans (𝓞 E) N
   let M : Submodule ℤ N := LinearMap.range (LinearMap.lsmul ℤ N (m : ℤ))
-  haveI : Finite (N ⧸ M) := by
+  have : Finite (N ⧸ M) := by
     refine Module.finite_of_fg_torsion _ fun x => ⟨⟨(m : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hm)⟩, ?_⟩
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective M x
     show (m : ℤ) • (Submodule.Quotient.mk y : N ⧸ M) = 0
@@ -86,7 +86,7 @@ theorem exists_reps_loc (P : HeightOneSpectrum (𝓞 E)) (N : Submodule (𝓞 E)
   have hk : ∀ k : ℕ, s ^ (k + 1) • x ∈ N := fun k => by
     rw [pow_succ, mul_smul]; exact N.smul_mem _ hsx
   choose t ht z hz he using fun k => h _ (hk k)
-  haveI := hT.to_subtype
+  have := hT.to_subtype
   obtain ⟨i, j, hij, hEq⟩ : ∃ i j : ℕ, i < j ∧ t i = t j := by
     obtain ⟨a, b, hab, h1⟩ := Finite.exists_ne_map_eq_of_infinite (fun k => (⟨t k, ht k⟩ : T))
     have h1' : t a = t b := congrArg Subtype.val h1
@@ -131,7 +131,7 @@ theorem finite_cosets (SB : Finset (HeightOneSpectrum (𝓞 E))) (N : Submodule 
   choose t ht h1 using fun P => h P y ((mem_locLat SB N a y).1 hy P)
   refine ⟨t, ht, ?_⟩
   ext z
-  simp only [Set.mem_setOf_eq, mem_locLat]
+  simp only [Set.mem_ofPred_eq, mem_locLat]
   refine forall_congr' fun P => ?_
   have e : z - t P = (z - y) + (y - t P) := by abel
   rw [e, smul_add]

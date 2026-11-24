@@ -163,7 +163,7 @@ theorem wComp_mul_of_weight_zero {σ R M : Type} [CommSemiring R] [AddCommMonoid
     · have h2 := hQ hq
       have hm : x.1 + x.2 = m := Finset.HasAntidiagonal.mem_antidiagonal.1 hx
       have e : Finsupp.weight w x.1 = n := by rw [← h, ← hm, map_add (f := _), h2, add_zero]
-      rw [if_pos e]
+      rw [ite_eq_left e]
   · symm
     refine Finset.sum_eq_zero fun x hx => ?_
     rw [coeff_weightedHomogeneousComponent]
@@ -172,7 +172,7 @@ theorem wComp_mul_of_weight_zero {σ R M : Type} [CommSemiring R] [AddCommMonoid
     · have h2 := hQ hq
       have hm : x.1 + x.2 = m := Finset.HasAntidiagonal.mem_antidiagonal.1 hx
       have e : Finsupp.weight w x.1 ≠ n := by rw [← hm, map_add (f := _), h2, add_zero] at h; exact h
-      rw [if_neg e, zero_mul]
+      rw [ite_eq_right e, zero_mul]
 
 theorem blockRed_eq_rename_map (O : Type) [CommRing O] (N : ℕ) {ι : Type} (ϖ : O) (τ : ι) (f : MvPolynomial (Fin N × Fin N) O) :
     blockRed O N ϖ τ f = rename (fun v => ((τ, v) : BVar N ι)) (map (Ideal.Quotient.mk (Ideal.span {ϖ})) f) := by
@@ -382,7 +382,7 @@ theorem coefHom_genHom_monomial (wf : Fin N × Fin N → M) (h : ∀ a b s, wx (
     rw [map_zero, add_zero]
     exact isWeightedHomogeneous_C _ _
   | add f g hf hg =>
-    rw [← mul_one c, ← monomial_mul, map_mul, map_add (f := _)]
+    rw [← mul_one c, ← monomial_mul_monomial, map_mul, map_add (f := _)]
     exact (hf c).mul wx u (hg 1)
   | single v n =>
     induction n generalizing c with
@@ -392,7 +392,7 @@ theorem coefHom_genHom_monomial (wf : Fin N × Fin N → M) (h : ∀ a b s, wx (
       rw [map_zero, add_zero]
       exact isWeightedHomogeneous_C _ _
     | succ n ih =>
-      rw [Finsupp.single_add, ← mul_one c, ← monomial_mul, map_mul, map_add (f := _)]
+      rw [Finsupp.single_add, ← mul_one c, ← monomial_mul_monomial, map_mul, map_add (f := _)]
       refine (ih c).mul wx u ?_
       rw [Finsupp.weight_single, one_smul]
       exact hX v
@@ -662,14 +662,14 @@ theorem rowProj_mul_coefEnd (ν v : Fin N → ℕ) (m : Fin N × Fin N →₀ �
   apply Subtype.ext
   rw [Module.End.mul_apply, coe_rowProj, coe_coefEnd, weightedHomogeneousComponent_of_mem (coeff_genHom_row O N f m)]
   by_cases h : Finsupp.weight (colW N N) m = v
-  · rw [if_pos h, if_pos h.symm]; rfl
-  · rw [if_neg h, if_neg (Ne.symm h)]; rfl
+  · rw [ite_eq_left h, ite_eq_left h.symm]; rfl
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]; rfl
 
 theorem rowProj_mul_self (ν v : Fin N → ℕ) : rowProj O N ν v * rowProj O N ν v = rowProj O N ν v := by
   ext1 f
   apply Subtype.ext
   rw [Module.End.mul_apply, coe_rowProj, coe_rowProj,
-    weightedHomogeneousComponent_of_mem (weightedHomogeneousComponent_isWeightedHomogeneous v _), if_pos rfl]
+    weightedHomogeneousComponent_of_mem (weightedHomogeneousComponent_isWeightedHomogeneous v _), ite_eq_left rfl]
 
 variable {ι : Type} [Fintype ι] [DecidableEq ι] (lam : ι → ℕ → ℕ)
 
@@ -841,7 +841,7 @@ omit hψ in
 theorem apply_coef_eq_zero_of_col (τ : ι) (w : Fin N → ℕ) (h0 : ∀ v, v ≠ w → ∀ z, ψ (projA O N lam τ v • z) = 0)
     (m : Fin N × Fin N →₀ ℕ) (hm : Finsupp.weight (colW N N) m ≠ w) (z : Gm) : ψ (c τ m • z) = 0 := by
   have := proj_mul_coef c hc τ m (Finsupp.weight (colW N N) m)
-  rw [if_pos rfl] at this
+  rw [ite_eq_left rfl] at this
   rw [← this, mul_smul, h0 _ hm]
 
 theorem apply_proj (τ : ι) (w : Fin N → ℕ) (h0 : ∀ v, v ≠ w → ∀ z, ψ (projA O N lam τ v • z) = 0) (z : Gm) :
@@ -874,7 +874,7 @@ theorem apply_coef_eq_zero_of_lt (w : ι → Fin N → ℕ) (hmax : ∀ w' : ι 
       refine ⟨projA O N lam σ (w' σ) • z', h1.trans ?_, fun ρ hρ => ?_⟩
       · by_cases h : σ = τ
         · subst h
-          rw [smul_smul, coef_mul_proj c hc, if_pos (by simp [hw'])]
+          rw [smul_smul, coef_mul_proj c hc, ite_eq_left (by simp [hw'])]
         · rw [smul_smul, coef_proj_comm c hc (Ne.symm h), mul_smul, hw', Function.update_of_ne h, apply_proj c hc ψ hψ σ _ (h0 σ)]
       · rcases Finset.mem_insert.1 hρ with rfl | hρ'
         · rw [smul_smul, proj_mul_self]
@@ -906,7 +906,7 @@ theorem elemHom_eq_or_lt (l j : Fin N) (hlj : l < j) (m : Fin N × Fin N →₀ 
     simp only [elemHom, unitHom, aeval_monomial, Finsupp.prod]
     congr 1
     refine Finset.prod_congr rfl fun v hv => ?_
-    rw [if_neg (show ¬ v = (l, j) by rintro rfl; exact Finsupp.mem_support_iff.1 hv h1), add_zero]
+    rw [ite_eq_right (show ¬ v = (l, j) by rintro rfl; exact Finsupp.mem_support_iff.1 hv h1), add_zero]
   by_cases h2 : ∃ v ∈ m.support, v.1 ≠ v.2 ∧ v ≠ (l, j)
   · left
     obtain ⟨v, hv, hv1, hv2⟩ := h2
@@ -1082,8 +1082,8 @@ theorem stepT_proj {τ : ι} {w : Fin N → ℕ} {ψ : Gm →+ MvPolynomial (BVa
     · simp [Finsupp.weight_apply]
   rw [weightedHomogeneousComponent_of_mem h1, smul_smul, coef_mul_proj c hc]
   by_cases hv : Finsupp.weight (rowW N N) m = v
-  · rw [if_pos hv, if_pos hv.symm]
-  · rw [if_neg hv, if_neg (Ne.symm hv), zero_smul, map_zero, mul_zero]
+  · rw [ite_eq_left hv, ite_eq_left hv.symm]
+  · rw [ite_eq_right hv, ite_eq_right (Ne.symm hv), zero_smul, map_zero, mul_zero]
 
 theorem stepT_mem {τ : ι} {w : Fin N → ℕ} {ψ : Gm →+ MvPolynomial (BVar N ι) k} (h : Good c τ w ψ) (z : Gm) :
     toBlock k N τ (stepT c τ ψ z) ∈ dualWeyl (MvPolynomial (OVar N τ) k) N N w := by
@@ -1101,7 +1101,7 @@ theorem stepT_mem {τ : ι} {w : Fin N → ℕ} {ψ : Gm →+ MvPolynomial (BVar
   have h2 : ∀ m, toBlock k N τ (blockEmb O N k τ (monomial m 1)) = monomial m 1 := by
     intro m
     rw [monomial_eq, monomial_eq, C_1, C_1, one_mul, one_mul]
-    simp only [Finsupp.prod, map_prod, map_pow, blockEmb, toBlock, aeval_X, dif_pos]
+    simp only [Finsupp.prod, map_prod, map_pow, blockEmb, toBlock, aeval_X, dite_eq_left]
   have h3 : toBlock k N τ (stepT c τ ψ z) = ∑ m ∈ expSet N (res N (lam τ)), monomial m 1 * C (ψ' (c τ m • z)) := by
 
     rw [stepT_apply, map_sum]
@@ -1194,7 +1194,7 @@ theorem grp_of_single (P : Gm →+ MvPolynomial (BVar N ι) k)
     intro s
     induction s using Finset.induction_on with
     | empty =>
-      simp only [Finset.notMem_empty, if_false]
+      simp only [Finset.notMem_empty, ite_false]
       exact S.one_mem
     | insert τ s hτ ih =>
       have : (fun σ => if σ ∈ insert τ s then g σ else 1) = Pi.mulSingle τ (g τ) * fun σ => if σ ∈ s then g σ else 1 := by
@@ -1205,7 +1205,7 @@ theorem grp_of_single (P : Gm →+ MvPolynomial (BVar N ι) k)
       rw [this]
       exact S.mul_mem (h τ (g τ)) ih
   have := key Finset.univ
-  simp only [Finset.mem_univ, if_true] at this
+  simp only [Finset.mem_univ, ite_true] at this
   exact this z
 
 end GlobalTheory.HighWtEmb
@@ -1294,7 +1294,7 @@ theorem prodProj_mul_eq_zero (O : Type) [CommRing O] (N : ℕ) (ι : Type) [Fint
   simp only [Function.update_self]
   apply Subtype.ext
   simp only [rowProj, LinearMap.restrict_apply, ZeroMemClass.coe_zero]
-  rw [weightedHomogeneousComponent_of_mem (weightedHomogeneousComponent_isWeightedHomogeneous _ _), if_neg hv.symm]
+  rw [weightedHomogeneousComponent_of_mem (weightedHomogeneousComponent_isWeightedHomogeneous _ _), ite_eq_right hv.symm]
 
 
 set_option synthInstance.maxHeartbeats 400000 in
@@ -1307,12 +1307,12 @@ theorem exists_weightForm : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscrete
     obtain ⟨x, rfl⟩ := hπ z
     rw [← map_smul]
     exact h0 _ x rfl
-  letI iO : Module O Gm := Module.compHom Gm (algebraMap O (alg O N lam))
+  let iO : Module O Gm := Module.compHom Gm (algebraMap O (alg O N lam))
   have hT : Module.IsTorsionBySet O Gm (Ideal.span {ϖ} : Ideal O) :=
     (Module.isTorsionBySet_span_singleton_iff ϖ).2 fun z => hkill z
-  haveI hmax : (Ideal.span {ϖ} : Ideal O).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  letI kF : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
-  letI iK : Module (O ⧸ Ideal.span {ϖ}) Gm := hT.module
+  have hmax : (Ideal.span {ϖ} : Ideal O).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  let kF : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
+  let iK : Module (O ⧸ Ideal.span {ϖ}) Gm := hT.module
   obtain ⟨f, hf⟩ := Module.Projective.exists_dual_ne_zero (O ⧸ Ideal.span {ϖ}) hz0
   obtain ⟨e, he, hex⟩ := exists_prodProj O N ι lam Gm w z₀ hfix Finset.univ
   let φ : Gm →+ O ⧸ Ideal.span {ϖ} :=
@@ -1685,8 +1685,8 @@ theorem exists_basis_reduction_linearIndependent : ∀ (O : Type) [CommRing O] [
       LinearIndependent (O ⧸ Ideal.span {ϖ})
         (fun i => MvPolynomial.map (Ideal.Quotient.mk (Ideal.span {ϖ})) (b i : MvPolynomial (Fin N × Fin N) O)) := by
   intro O _ _ _ ϖ hϖ hBC N ν hν
-  haveI := GlobalTheory.NablaFin.dualWeyl_finite O N ν
-  haveI : Module.Free O (dualWeyl O N N ν) := Module.free_of_finite_type_torsion_free'
+  have := GlobalTheory.NablaFin.dualWeyl_finite O N ν
+  have : Module.Free O (dualWeyl O N N ν) := Module.free_of_finite_type_torsion_free'
   let b := (Module.Free.chooseBasis O (dualWeyl O N N ν)).reindex (Fintype.equivFin _)
   refine ⟨_, b, ?_⟩
   rw [Fintype.linearIndependent_iff]
@@ -1725,7 +1725,7 @@ theorem curry_sum_mapDomain {ι σ : Type} [Fintype ι] [DecidableEq ι] (F : ι
   rw [Finsupp.curry_apply, Finsupp.coe_finsetSum, Finset.sum_apply, Finset.sum_eq_single τ]
   · exact Finsupp.mapDomain_apply_of_injective (fun _ _ h => congrArg Prod.snd h) _ _
   · intro ρ _ hρ
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨t, ht⟩
     exact hρ (congrArg Prod.fst ht)
   · simp
@@ -1785,7 +1785,7 @@ theorem linearIndependent_prod_rename : ∀ (k : Type) [Field k] (ι : Type) [Fi
       by_contra hc
       push_neg at hc
       exact hp (funext hc)
-    rw [Finset.prod_eq_zero (Finset.mem_univ τ) (if_neg hτ), mul_zero]
+    rw [Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ), mul_zero]
   · simp
 
 theorem blockRed_eq (O : Type) [CommRing O] (N : ℕ) {ι : Type} (ϖ : O) (τ : ι) (g : MvPolynomial (Fin N × Fin N) O) :
@@ -1799,8 +1799,8 @@ theorem mem_smul_top_of_redT_eq_zero : ∀ (O : Type) [CommRing O] [IsDomain O] 
     (mu : ι → ℕ → ℕ) (ϖ : O), Irreducible ϖ → (∀ τ, Antitone (res N (mu τ))) → GlobalTheory.HighWt.BaseChange →
     ∀ y : NablaT O N mu, redT O N mu ϖ y = 0 → y ∈ (Ideal.span {ϖ} • ⊤ : Submodule O (NablaT O N mu)) := by
   intro O _ _ _ N ι _ _ mu ϖ hϖ hanti hBC y hy
-  haveI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  letI : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
+  have : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  let : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
   have hb := fun τ => exists_basis_reduction_linearIndependent O ϖ hϖ hBC N (res N (mu τ)) (hanti τ)
   choose n b hli using hb
   let B := Basis.piTensorProduct b
@@ -1880,8 +1880,8 @@ theorem embeds_of_maxWeight : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
     have h1 : Pz z ∈ nabK (O ⧸ Ideal.span {ϖ}) N (fun τ => res N (GlobalTheory.HighWt.extW N w τ)) := by
       have e : (fun τ => res N (GlobalTheory.HighWt.extW N w τ)) = w := funext fun τ => GlobalTheory.HighWt.res_extW N w τ
       rw [e]
-      haveI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-      letI : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
+      have : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+      let : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
       exact _root_.GlobalTheory.HighWtEmb.mem_nabK_of_toBlock (O ⧸ Ideal.span {ϖ}) N ι w (Pz z) (hPn z)
     obtain ⟨y, hy⟩ := _root_.GlobalTheory.HighWtEmb.nabK_lift O N ι (GlobalTheory.HighWt.extW N w) ϖ hϖ hmuA hBC _ h1
     exact ⟨Submodule.Quotient.mk y, hy⟩
@@ -1910,11 +1910,11 @@ theorem embeds_of_maxWeight : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
       exact ihx _ (ihy z hz)
   let K : Submodule (alg O N lam) Gm :=
     { carrier := {z | Pz z = 0}
-      add_mem' := fun {a b} ha hb => by simp only [Set.mem_setOf_eq, map_add (f := _)] at *; rw [ha, hb, add_zero]
+      add_mem' := fun {a b} ha hb => by simp only [Set.mem_ofPred_eq, map_add (f := _)] at *; rw [ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun a z hz => hsm a z hz }
   have hK : K = ⊥ := by
-    haveI : IsSimpleOrder (Submodule (alg O N lam) Gm) := (isSimpleModule_iff _ _).1 hS
+    have : IsSimpleOrder (Submodule (alg O N lam) Gm) := (isSimpleModule_iff _ _).1 hS
     rcases IsSimpleOrder.eq_bot_or_eq_top K with h | h
     · exact h
     · exfalso

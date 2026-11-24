@@ -156,7 +156,7 @@ theorem q_not_mem_sq (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSid
     exact mul_le_mul' ((hu _).mp ((mem_P_iff h hu a).mp ha)) ((hu _).mp ((mem_P_iff h hu b).mp hb))
   have h1 := hle hq
   rw [mem_vI, coe_nat', v_q h, pow_two] at h1
-  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := zero_lt_iff.mpr v_unif_ne_zero
+  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := pos_iff_ne_zero.mpr v_unif_ne_zero
   have : (1 : ValueGroupWithZero k) ≤ valuation k (ϖ : k) := by
     have h2 : valuation k (ϖ : k) * 1 ≤ valuation k (ϖ : k) * valuation k (ϖ : k) := by rwa [mul_one]
     exact le_of_mul_le_mul_left h2 h0
@@ -164,8 +164,8 @@ theorem q_not_mem_sq (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSid
 
 theorem reduction_spec {a : E} {r s : 𝓞 E} (hs : s ∉ P.asIdeal) (hsa : algebraMap (𝓞 E) E s * a = algebraMap (𝓞 E) E r) :
     Ideal.Quotient.mk P.asIdeal s * redP P a = Ideal.Quotient.mk P.asIdeal r := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   have hex : ∃ c r s, s ∉ P.asIdeal ∧ algebraMap (𝓞 E) E s * a = algebraMap (𝓞 E) E r ∧
       Ideal.Quotient.mk P.asIdeal s * c = Ideal.Quotient.mk P.asIdeal r :=
@@ -187,7 +187,7 @@ theorem v_div_q (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFull
   have hq := q_ne_zero h
   have hsplit : valuation k (ι a) = valuation k (ι (a / (q : E))) * valuation k (ϖ : k) := by
     rw [h.unif, ← map_mul, ← map_mul, div_mul_cancel₀ a hq]
-  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := zero_lt_iff.mpr v_unif_ne_zero
+  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := pos_iff_ne_zero.mpr v_unif_ne_zero
   rw [hu, hsplit]
   constructor
   · intro hle
@@ -200,8 +200,8 @@ theorem v_div_q (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFull
 
 theorem v_lt_one_iff_red (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) {a : E} (ha : IntAt P a) :
     valuation k (ι a) < 1 ↔ redP P a = 0 := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   obtain ⟨r, s, hs, hsa⟩ := ha
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   have hspec := reduction_spec hs hsa
@@ -218,8 +218,8 @@ theorem v_lt_one_iff_red (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRo
 
 theorem v_eq_one_iff_red (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) {a : E} (ha : IntAt P a) :
     valuation k (ι a) = 1 ↔ IsUnit (redP P a) := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   rw [isUnit_iff_ne_zero, Ne, ← v_lt_one_iff_red h hu ha]
   have := v_le_one h ha
   constructor
@@ -231,13 +231,13 @@ theorem card_quot (h : IsCompl P q ι ϖ) : Nat.card (𝓞 E ⧸ P.asIdeal) = q 
 
 theorem q_prime_char (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) :
     q.Prime ∧ CharP (𝓞 E ⧸ P.asIdeal) q := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   have hq0 : q ≠ 0 := by
     intro h0; apply q_ne_zero h; rw [h0, Nat.cast_zero]
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (by rw [card_quot h]; exact hq0)
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
-  haveI := ringChar.charP (𝓞 E ⧸ P.asIdeal)
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (by rw [card_quot h]; exact hq0)
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  have := ringChar.charP (𝓞 E ⧸ P.asIdeal)
   obtain ⟨n, hp, hcard⟩ := FiniteField.card (𝓞 E ⧸ P.asIdeal) (ringChar (𝓞 E ⧸ P.asIdeal))
   set p := ringChar (𝓞 E ⧸ P.asIdeal) with hpdef
   have hqp : q = p ^ (n : ℕ) := by rw [← card_quot h, Nat.card_eq_fintype_card, hcard]
@@ -246,7 +246,7 @@ theorem q_prime_char (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSid
   have hv : valuation k (ι (p : E)) < 1 := by
     have := (mem_P_iff h hu _).mp hpP; rwa [coe_nat'] at this
   have hv0 : 0 < valuation k (ι (p : E)) := by
-    rw [zero_lt_iff, Ne, map_eq_zero, map_eq_zero]; exact_mod_cast hp.ne_zero
+    rw [pos_iff_ne_zero, Ne, map_eq_zero, map_eq_zero]; exact_mod_cast hp.ne_zero
   have hle : valuation k (ι (p : E)) ^ 1 ≤ valuation k (ι (p : E)) ^ (n : ℕ) := by
     rw [pow_one, ← map_pow, ← map_pow, ← Nat.cast_pow, ← hqp, ← h.unif, ← hu]
     exact hv
@@ -263,16 +263,16 @@ theorem v_nat_le_one (h : IsCompl P q ι ϖ) (i : ℕ) : valuation k (i : k) ≤
 
 theorem dvd_of_v (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) (m : ℕ) :
     ∀ z : ℤ, valuation k (z : k) ≤ valuation k (ϖ : k) ^ m → (q : ℤ) ^ m ∣ z := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
-  haveI := (q_prime_char h hu).2
-  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := zero_lt_iff.mpr v_unif_ne_zero
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
+  have := (q_prime_char h hu).2
+  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := pos_iff_ne_zero.mpr v_unif_ne_zero
   induction m with
   | zero => intro z _; simp
   | succ m ih =>
     intro z hz
     have hz1 : valuation k (z : k) ≤ valuation k (ϖ : k) :=
-      le_trans hz (pow_le_of_le_one zero_le' (le_of_lt (v_unif_lt_one hu)) (Nat.succ_ne_zero m))
+      le_trans hz (pow_le_of_le_one zero_le (le_of_lt (v_unif_lt_one hu)) (Nat.succ_ne_zero m))
     have hzP : ((z : ℤ) : 𝓞 E) ∈ P.asIdeal := by
       rw [mem_P_iff h hu, coe_int', map_intCast, hu]; exact hz1
     have hdq : (q : ℤ) ∣ z := by
@@ -288,17 +288,17 @@ theorem dvd_of_v (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFul
 
 theorem exists_rep_one (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) (x : k) (hx : valuation k x ≤ 1) :
     ∃ i : ℕ, i < q ∧ valuation k (x - i) ≤ valuation k (ϖ : k) := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
-  haveI := (q_prime_char h hu).2
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
+  have := (q_prime_char h hu).2
   have hq0 : q ≠ 0 := (q_prime_char h hu).1.ne_zero
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (by rw [card_quot h]; exact hq0)
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (by rw [card_quot h]; exact hq0)
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
   have hU : {y | valuation k (y - x) < 1} ∈ nhds x := by
     rw [IsValuativeTopology.mem_nhds_iff]
     exact ⟨1, by rintro _ ⟨z, hz, rfl⟩; simpa using hz⟩
   obtain ⟨_, hy, a, rfl⟩ := mem_closure_iff_nhds.mp (h.dense x) _ hU
-  simp only [Set.mem_setOf_eq] at hy
+  simp only [Set.mem_ofPred_eq] at hy
   have ha : IntAt P a := by
     apply intAt_of_v h
     have e : ι a = (ι a - x) + x := by ring
@@ -339,7 +339,7 @@ theorem exists_rep_one (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowS
 
 theorem exists_rep (h : IsCompl P q ι ϖ) (hu : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) (n : ℕ) :
     ∀ x : k, valuation k x ≤ 1 → ∃ i : ℕ, i < q ^ n ∧ valuation k (x - i) ≤ valuation k (ϖ : k) ^ n := by
-  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := zero_lt_iff.mpr v_unif_ne_zero
+  have h0 : (0 : ValueGroupWithZero k) < valuation k (ϖ : k) := pos_iff_ne_zero.mpr v_unif_ne_zero
   induction n with
   | zero => intro x hx; exact ⟨0, by simp, by simpa using hx⟩
   | succ n ih =>

@@ -125,7 +125,7 @@ theorem PositivityTheory.Xgp.t_re_bridge : ResExistsStatement → ∀ (K : Type)
   · rw [← key, hlin]
     ring
   · intro x hx
-    simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_setOf_eq, not_or] at hx
+    simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_ofPred_eq, not_or] at hx
     obtain ⟨hxN, hxf, hxg⟩ := hx
     have hz := (R.mem x x (R.mem_U x)).1
     have hf0 := norm_pos_iff.mpr hxf

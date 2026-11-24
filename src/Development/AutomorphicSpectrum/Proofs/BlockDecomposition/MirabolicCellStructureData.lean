@@ -195,7 +195,7 @@ theorem mirChar_ker_open (ψ : AddChar k Circle) (hψ : Continuous ψ) (n : ℕ)
     have hl : GlobalTheory.CompanionTheory.BZFun.lastCol k u (Fin.last n) = w.toAdd (Fin.last n) := by
       simp only [GlobalTheory.CompanionTheory.BZFun.lastCol, ← hw]
       exact unip_apply_castSucc_last k (n + 1) w _
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_setOf_eq, hl,
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_ofPred_eq, hl,
       mirChar_eq k ψ n u w hw.symm]
     constructor
     · intro h
@@ -211,7 +211,7 @@ theorem isClosed_Cl (i t : ℕ) : IsClosed (Cl k i t) := by
   have hc : Continuous fun p : Mir k ((i + 1) + t + 1) =>
       (((p⁻¹ : Mir k ((i + 1) + t + 1)) : GL (Fin ((i + 1) + t + 2)) k) :
         Matrix (Fin ((i + 1) + t + 2)) (Fin ((i + 1) + t + 2)) k) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_inv)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_inv)
   have he : Cl k i t = ⋂ c : Fin (i + 1), {p : Mir k ((i + 1) + t + 1) |
       (((p⁻¹ : Mir k ((i + 1) + t + 1)) : GL (Fin ((i + 1) + t + 2)) k) :
         Matrix (Fin ((i + 1) + t + 2)) (Fin ((i + 1) + t + 2)) k)

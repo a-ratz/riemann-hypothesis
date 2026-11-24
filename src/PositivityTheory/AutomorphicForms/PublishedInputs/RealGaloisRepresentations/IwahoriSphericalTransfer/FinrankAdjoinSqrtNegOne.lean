@@ -91,7 +91,7 @@ theorem QCM.isIntegral_sqrt_neg_one {i : Ω} (hi : i ^ 2 = -1) : IsIntegral F i 
 theorem QCM.finrank_adjoin_sqrt_neg_one [IsTotallyReal F] {i : Ω} (hi : i ^ 2 = -1) : Module.finrank F F⟮i⟯ = 2 := by
   obtain ⟨v⟩ : Nonempty (InfinitePlace F) := inferInstance
   have hirr : Irreducible (X ^ 2 - C (-1) : F[X]) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two (QCM.sq_ne_neg_one_of_isReal (IsTotallyReal.isReal v))
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two (QCM.sq_ne_neg_one_of_isReal (IsTotallyReal.isReal v))
   rw [IntermediateField.adjoin.finrank (QCM.isIntegral_sqrt_neg_one hi),
     ← minpoly.eq_of_irreducible_of_monic hirr (by simp [hi]) (monic_X_pow_sub_C _ two_ne_zero), natDegree_X_pow_sub_C _]
 
@@ -108,7 +108,7 @@ def QCM.gauss [IsTotallyReal F] {i : Ω} (hi : i ^ 2 = -1) : QCM F Ω :=
     two := QCM.finrank_adjoin_sqrt_neg_one hi }
 
 theorem QCM.nonempty [IsTotallyReal F] [IsAlgClosure F Ω] : Nonempty (QCM F Ω) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   obtain ⟨i, hi⟩ := IsAlgClosed.exists_pow_nat_eq (-1 : Ω) two_pos
   exact ⟨QCM.gauss hi⟩
 

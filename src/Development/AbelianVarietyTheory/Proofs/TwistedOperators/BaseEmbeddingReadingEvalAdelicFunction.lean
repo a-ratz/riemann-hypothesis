@@ -152,10 +152,10 @@ section Prime
 
 theorem exists_prime_under {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum (𝓞 E)) :
     ∃ p f : ℕ, p.Prime ∧ (p : 𝓞 E) ∈ P.asIdeal ∧ Nat.card (𝓞 E ⧸ P.asIdeal) = p ^ f := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
   obtain ⟨f, hp, hf⟩ := FiniteField.card (𝓞 E ⧸ P.asIdeal) (ringChar (𝓞 E ⧸ P.asIdeal))
   refine ⟨_, f, hp, ?_, by rw [Nat.card_eq_fintype_card, hf]⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]

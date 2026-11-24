@@ -135,10 +135,10 @@ theorem exists_pow_eq_ratId_mul (x : (AfE F E)ˣ) :
   · apply Units.ext
     apply ι.injective
     have e := congrArg (fun t : (FiniteAdeleRing (𝓞 E) E)ˣ => (t : FiniteAdeleRing (𝓞 E) E)) he
-    simp only [Units.val_pow_eq_pow_val, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    simp only [Units.val_pow_eq_pow_val, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
       RingEquiv.toRingHom_eq_coe, RingHom.coe_coe] at e
     rw [Units.val_pow_eq_pow_val, map_pow, e, Units.val_mul, map_mul]
-    simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe,
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe,
       RingEquiv.apply_symm_apply]
     congr 1
     rw [ratId, Units.coe_map]
@@ -194,7 +194,7 @@ theorem normOne_idele_pow_eq_normOne_principal_mul_unit (σ : E →ₐ[F] E) (h�
       intro h0
       apply ha
       rw [← hσ (a : E), h0, map_zero]
-    simp only [sa, Units.val_mul, Units.val_inv_eq_inv_val, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    simp only [sa, Units.val_mul, Units.val_inv_eq_inv_val, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
       AlgHom.coe_toRingHom, RingHom.coe_coe, map_mul, map_inv₀, hσ]
     field_simp
   · rw [U1, MonoidHom.mem_ker, MonoidHom.mul_apply, MonoidHom.id_apply, map_mul, map_inv, conjId_conjId σ hσ]
@@ -232,7 +232,7 @@ namespace GlobalTheory.TieFinOrd
 theorem mt_finite_order : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ i < D.R.m, ∀ y : (letI := D.host.cmStar; Formalism.L2.Herm.unitaryOneFiniteAdeles D.sp.cm), Matrix.GeneralLinearGroup.det y.1 ∈ intU D.host.F D.host.E → ∃ n : ℕ, 0 < n ∧ (t.O u μ).mt (i + 1) (dtU y) ^ n = 1) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a H T i hi y hint
   classical
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hzU : Matrix.GeneralLinearGroup.det y.1 ∈ U1 (sigD D) := det_in_unitary_one D.host.F D.host.E (sigD D) 1 1 (by simp) y.1 y.2
   set z := Matrix.GeneralLinearGroup.det y.1 with hz
   have hconj : conjId (sigD D) z = z⁻¹ := by
@@ -270,7 +270,7 @@ theorem mt_finite_order : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dt
     simp only [tupGrp, finChar, Subgroup.mem_inf] at htor
     obtain ⟨k, hk, hkk⟩ := (isOfFinOrder_iff_pow_eq_one).1 htor.1.1.1.2
     refine ⟨2 * (n * k), by positivity, ?_⟩
-    rw [pow_mul, hsq, hmt u, twMt, if_pos ⟨by omega, by omega⟩, MonoidHom.mul_apply, mul_pow, pow_mul, hmun, one_pow, one_mul,
+    rw [pow_mul, hsq, hmt u, twMt, ite_eq_left ⟨by omega, by omega⟩, MonoidHom.mul_apply, mul_pow, pow_mul, hmun, one_pow, one_mul,
       hξ x, ← map_pow, mul_comm, pow_mul]
     have : ((t.tup μ : Chr t.X.F t.X.E t.X.K) x) ^ k = 1 := by
       rw [← MonoidHom.pow_apply, hkk, MonoidHom.one_apply]
@@ -329,7 +329,7 @@ theorem norm_twG_unit (X : Sys p) (E : CEmb X.G) (v : X.Pl) (s : Fin (X.G.P.n' v
 
 theorem norm_twG (X : Sys p) (E : CEmb X.G) (v : X.Pl) (s : Fin (X.G.P.n' v)) {y : X.G.P.Qq v} (hy : y ≠ 0) :
     ‖twG X E v s y‖ = ‖(p : ℂ_[p])‖ ^ ordP (X.G.P.W v) p y := by
-  haveI := (X.G.P.setting v).frac_alt
+  have := (X.G.P.setting v).frac_alt
   have hp := (X.G.P.setting v).p_unif
   obtain ⟨n, u, rfl⟩ := exists_eq_unit_mul_zpow₂ hp hy
   rw [ordP_eq hp n u, map_mul, map_zpow₀, map_natCast, norm_mul, norm_twG_unit, one_mul, norm_zpow]
@@ -366,11 +366,11 @@ theorem norm_lamC_type_normOne : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (X : Sys 
       ‖(p : ℂ_[p])‖ ^ ((if IsOddPos s then -1 else 1) * e (pos ⟨v, s⟩) * ordP (X.G.P.W v) p (ρ v z)) := by
     intro v s
     by_cases hs : IsOddPos s
-    · rw [LamPos.odd X E pos lam ρ hL v s hs, if_pos hs, eq_inv_of_mul_eq_one_right (hρ v), map_inv₀, norm_inv, norm_twG X E v s (hρ0 v),
+    · rw [LamPos.odd X E pos lam ρ hL v s hs, ite_eq_left hs, eq_inv_of_mul_eq_one_right (hρ v), map_inv₀, norm_inv, norm_twG X E v s (hρ0 v),
         inv_zpow', ← zpow_mul]
       congr 1
       ring
-    · rw [LamPos.even X E pos lam ρ hL v s hs, if_neg hs, norm_twG X E v s (hρ0 v), ← zpow_mul]
+    · rw [LamPos.even X E pos lam ρ hL v s hs, ite_eq_right hs, norm_twG X E v s (hρ0 v), ← zpow_mul]
       congr 1
       ring
   rw [h1, norm_prod]

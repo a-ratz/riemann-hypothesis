@@ -78,14 +78,14 @@ theorem nnnorm_repr_le_absFin {ι : Type} [Fintype ι] [DecidableEq ι] (b : Mod
   rw [absBar_mul]
   refine (mul_le_of_le_one_right' ?_).trans (le_absFin F v τ y)
   have := (le_absFin F v τ _).trans (absFin_tmul_le F v 1 (⟨b i, hb i⟩ : 𝓞 E))
-  rw [finEmb_tmul, map_one, one_mul, nnnorm_one] at this
+  rw [finEmb_tmul, map_one, one_mul, nnNorm_one] at this
   exact this
 
 theorem exists_norm_repr_le {ι : Type} [Fintype ι] [DecidableEq ι] (b : Module.Basis ι F E)
     (w : InfinitePlace F) (c : ℝ) (i : ι) : ∃ B : ℝ, ∀ y : w.Completion ⊗[F] E,
       (∀ τ : EmbOver E w, ‖infEmb τ y‖ ≤ c) →
       ‖(Algebra.TensorProduct.basis w.Completion b.traceDual).repr y i‖ ≤ B := by
-  letI : Algebra F ℂ := w.embedding.toAlgebra
+  let : Algebra F ℂ := w.embedding.toAlgebra
   let t : (E →ₐ[F] ℂ) → EmbOver E w := fun τ => ⟨τ, RingHom.ext τ.commutes⟩
   have key : ∀ y : w.Completion ⊗[F] E, InfinitePlace.Completion.extensionEmbedding w
       ((Algebra.TensorProduct.basis w.Completion b.traceDual).repr y i) =
@@ -129,7 +129,7 @@ theorem exists_compact_adeles (B : InfinitePlace F → ℝ) (c : ℝ≥0) : ∃ 
       convert this using 1
       ext x
       rw [Set.mem_preimage, mem_closedBall_zero_iff,
-        (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _), Set.mem_setOf_eq]
+        (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _), Set.mem_ofPred_eq]
   have h2 : IsCompact (⋃ d ∈ Finset.range (⌊c⌋₊ + 1), (fun x : Af F => algebraMap F (Af F) (d : F)⁻¹ * x) ''
       {a : Af F | ∀ v, a v ∈ v.adicCompletionIntegers F}) :=
     (Finset.range _).isCompact_biUnion fun d _ =>
@@ -164,7 +164,7 @@ theorem exists_compact_entries (n : Type) [Fintype n] [DecidableEq n] (c : ℝ�
   · refine (congrArg norm (repr_map b.traceDual (evInf F w) (g.1 i j) k)).symm.trans_le (hB k w _ fun τ => ?_)
     have h := (((normInf_le_iff F w).1 (le_htOf _ _) τ).trans (GlobalTheory.Grow.htInf_le_heightGL F g w)).trans hg
     exact (norm_entry_le_opNorm _ i j).trans (NNReal.coe_le_coe.2 h)
-  · exact (hdc.trans (le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => one_le_htOf _ _))).trans hg
+  · exact (hdc.trans (le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => one_le_htOf _ _))).trans hg
   · refine (congrArg nnnorm (repr_map b.traceDual (evFin F v) (g.1 i j) k)).symm.trans_le
       ((nnnorm_repr_le_absFin b hb' v _ k).trans ?_)
     exact (absFin_le_normFin F v (bc (compFin F E v) g).1 i j).trans (le_htOf _ _)

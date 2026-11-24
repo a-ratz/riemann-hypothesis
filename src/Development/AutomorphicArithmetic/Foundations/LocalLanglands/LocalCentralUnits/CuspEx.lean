@@ -291,16 +291,16 @@ theorem UpperTheory.continuous_inertia_restriction_of_compat :
         [IsScalarTower E L Ω] (A : ValuationSubring Ω) (ι : Ine (F := E) A →* Ine (F := L) A),
         (∀ (t : Ine (F := E) A) (x : Ω), (ι t : G L Ω) x = (t : G E Ω) x) → Continuous ι := by
   intro E L Ω _ _ _ _ _ _ _ _ _ A ι hι
-  haveI : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
+  have : FiniteDimensional E L := Module.Finite.of_restrictScalars_finite ℚ E L
   apply continuous_of_continuousAt_one ι
   rw [ContinuousAt, map_one, tendsto_subtype_rng, Filter.tendsto_def]
   intro s hs
   rw [OneMemClass.coe_one] at hs
   obtain ⟨K, hK, hKs⟩ := (krullTopology_mem_nhds_one_iff L Ω s).mp hs
-  haveI : FiniteDimensional E K := Module.Finite.trans L K
-  haveI : FiniteDimensional E (K.restrictScalars E) := inferInstanceAs (FiniteDimensional E K)
+  have : FiniteDimensional E K := Module.Finite.trans L K
+  have : FiniteDimensional E (K.restrictScalars E) := inferInstanceAs (FiniteDimensional E K)
   have hopen := (K.restrictScalars E).fixingSubgroup_isOpen
-  refine Filter.mem_of_superset ((hopen.preimage continuous_subtype_val).mem_nhds ?_) ?_
+  refine Filter.mem_of_superset ((hopen.preimage continuous_subtypeVal).mem_nhds ?_) ?_
   · exact (K.restrictScalars E).fixingSubgroup.one_mem
   · intro t ht
     apply hKs
@@ -431,7 +431,7 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
   have hAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hfinw : Finite (𝓞 E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-  haveI : Nontrivial (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
+  have : Nontrivial (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr w.isPrime.ne_top
   have hq2 : 2 ≤ normV w := Finite.one_lt_card (α := 𝓞 E ⧸ w.asIdeal)
   obtain ⟨q, hqdef⟩ : ∃ q : ℕ, q = normV w := ⟨_, rfl⟩
   rw [← hqdef] at hφ hq2 ⊢
@@ -451,9 +451,9 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
       Valuation.map_one_sub_of_lt _ hQΩ]
   have hN' : ¬ A.valuation (((q ^ n - 1 : ℕ)) : Ω) < 1 := by
     rw [hN1]; exact lt_irrefl 1
-  haveI : NeZero (((q ^ n - 1 : ℕ)) : Ω) := ⟨by exact_mod_cast (show q ^ n - 1 ≠ 0 by omega)⟩
-  haveI : NeZero (q ^ n - 1) := ⟨by omega⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (q ^ n - 1)
+  have : NeZero (((q ^ n - 1 : ℕ)) : Ω) := ⟨by exact_mod_cast (show q ^ n - 1 ≠ 0 by omega)⟩
+  have : NeZero (q ^ n - 1) := ⟨by omega⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (q ^ n - 1)
   have hζ1 : A.valuation ζ = 1 := ReciprocityTheory.Gal.valuation_eq_one_of_pow_eq_one A (by omega) hζ.pow_eq_one
   have hζA : A.valuation ζ ≤ 1 := hζ1.le
   let f : ℤ[X] := X ^ (q ^ n - 1) - C 1
@@ -470,10 +470,10 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
   let L := IntermediateField.adjoin E ({ζ} : Set Ω)
   have hfd : FiniteDimensional E L := IntermediateField.adjoin.finiteDimensional hζE
   have : FiniteDimensional ℚ L := Module.Finite.trans E L
-  haveI hNF : NumberField L := ⟨⟩
-  haveI hAC' : IsAlgClosure L Ω := ⟨hAC, Algebra.IsAlgebraic.tower_top (K := E) L⟩
-  haveI hcyc : IsCyclotomicExtension {q ^ n - 1} E L := hζ.intermediateField_adjoin_isCyclotomicExtension E
-  haveI hgal : IsGalois E L := IsCyclotomicExtension.isGalois {q ^ n - 1} E L
+  have hNF : NumberField L := ⟨⟩
+  have hAC' : IsAlgClosure L Ω := ⟨hAC, Algebra.IsAlgebraic.tower_top (K := E) L⟩
+  have hcyc : IsCyclotomicExtension {q ^ n - 1} E L := hζ.intermediateField_adjoin_isCyclotomicExtension E
+  have hgal : IsGalois E L := IsCyclotomicExtension.isGalois {q ^ n - 1} E L
 
   have hroot : ∀ τ : Ω ≃ₐ[E] Ω, τ ∈ ReciprocityTheory.Gal.Dec (F := E) A → A.valuation (τ ζ - ζ) < 1 → τ ζ = ζ := by
     intro τ hτ hlt
@@ -541,7 +541,7 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
       rw [← hmap]; exact hm)
     exact _root_.GlobalTheory.UnramSimpleGen.not_mem_sq_of_derivative E L w u ζ' f hf hfζ' (GlobalTheory.UnrCycExt.adjoin_gen_eq_top E ζ hζE) hover hder' c hc
   · show Nat.card (𝓞 L ⧸ u.asIdeal) = q ^ n
-    haveI : u.asIdeal.IsMaximal := u.isMaximal
+    have : u.asIdeal.IsMaximal := u.isMaximal
     refine _root_.GlobalTheory.card_quotient_eq_of_pow_sub_self_mem u.asIdeal (q ^ n) ζ' (by omega) ?_ ?_ ?_
     · apply Subtype.ext
       exact hζL.pow_eq_one
@@ -591,7 +591,7 @@ theorem UpperTheory.exists_unit_residue_logarithm_of_roots_of_unity :
   intro C Γ K _ _ _ v ϖ h0 h1 hmax ρ hsurj hker N hN hpow hNK
   classical
   have hv0 : v ϖ ≠ 0 := by simpa using h0
-  have hvpos : 0 < v ϖ := zero_lt_iff.mpr hv0
+  have hvpos : 0 < v ϖ := pos_iff_ne_zero.mpr hv0
   let abelian₂ : Cˣ → K := fun a =>
     if hy : ((a : C) ^ N - 1) / ϖ ∈ v.valuationSubring then ρ ⟨_, hy⟩ else 0
   have hlt : ∀ a : C, v a = 1 → v (a ^ N - 1) < 1 := by
@@ -613,7 +613,7 @@ theorem UpperTheory.exists_unit_residue_logarithm_of_roots_of_unity :
   have key : ∀ (a : Cˣ) (y : v.valuationSubring), (y : C) = ((a : C) ^ N - 1) / ϖ → abelian₂ a = ρ y := by
     intro a y hy
     have hm : ((a : C) ^ N - 1) / ϖ ∈ v.valuationSubring := hy ▸ y.2
-    simp only [abelian₂, dif_pos hm]
+    simp only [abelian₂, dite_eq_left hm]
     congr 1
     exact Subtype.ext hy.symm
   have hϖm : ϖ ∈ v.valuationSubring := by
@@ -691,9 +691,9 @@ theorem UpperTheory.exists_addChar_invariant_iff_finiteField_aut_eq_one :
         (∀ x : K, ψ (Multiplicative.ofAdd ((f ^ m) x)) = ψ (Multiplicative.ofAdd x)) ↔ f ^ m = 1 := by
   intro K _ _ f
   classical
-  haveI hp : Fact (ringChar K).Prime := ⟨CharP.char_is_prime K _⟩
-  haveI : NeZero (ringChar K) := ⟨hp.out.ne_zero⟩
-  letI : Algebra (ZMod (ringChar K)) K := ZMod.algebra K (ringChar K)
+  have hp : Fact (ringChar K).Prime := ⟨CharP.char_is_prime K _⟩
+  have : NeZero (ringChar K) := ⟨hp.out.ne_zero⟩
+  let : Algebra (ZMod (ringChar K)) K := ZMod.algebra K (ringChar K)
   obtain ⟨b, hb⟩ := IsCyclic.exists_generator (α := Kˣ)
   let T : K →ₗ[ZMod (ringChar K)] ZMod (ringChar K) := Algebra.trace (ZMod (ringChar K)) K
   let χ : AddChar K ℂ :=
@@ -930,11 +930,11 @@ namespace UpperTheory.Zero.LLC
 private theorem exists_frobAut (K : Type) [Field K] [Finite K] (q n : ℕ) (hq : 1 < q) (hn : 0 < n)
     (hcard : Nat.card K = q ^ n) : ∃ f : RingAut K, (∀ x, f x = x ^ q) ∧ orderOf f = n := by
   classical
-  letI := Fintype.ofFinite K
+  let := Fintype.ofFinite K
   obtain ⟨p, hpc⟩ := CharP.exists K
   obtain ⟨k, hp, hk⟩ := FiniteField.card K p
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : ExpChar K p := ExpChar.prime hp
+  have : Fact p.Prime := ⟨hp⟩
+  have : ExpChar K p := ExpChar.prime hp
   have hc : Fintype.card K = q ^ n := by rw [← Nat.card_eq_fintype_card]; exact hcard
   have hd : q ∣ p ^ (k : ℕ) := by
     rw [← hk, hc]; exact dvd_pow_self q hn.ne'
@@ -974,7 +974,7 @@ private theorem exists_frobAut (K : Type) [Field K] [Finite K] (q n : ℕ) (hq :
 
 private theorem le_exp_neg_one {γ : WithZero (Multiplicative ℤ)} (h : γ < 1) : γ ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne γ 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -982,7 +982,7 @@ private theorem le_exp_neg_one {γ : WithZero (Multiplicative ℤ)} (h : γ < 1)
 
 private theorem exp_neg_one_le {γ : WithZero (Multiplicative ℤ)} (h : ¬ γ ≤ WithZero.exp (-2 : ℤ)) :
     WithZero.exp (-1 : ℤ) ≤ γ := by
-  have h0 : γ ≠ 0 := by rintro rfl; exact h zero_le'
+  have h0 : γ ≠ 0 := by rintro rfl; exact h zero_le
   rw [← WithZero.exp_log h0] at h ⊢
   rw [WithZero.exp_le_exp] at h ⊢
   omega
@@ -1005,7 +1005,7 @@ private theorem junkData (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
         π t' = Multiplicative.ofAdd (f (Multiplicative.toAdd (π t))) := by
   classical
   obtain ⟨c, hcw, hc2⟩ : ∃ c : 𝓞 E, c ∈ w.asIdeal ∧ c ∉ w.asIdeal ^ 2 :=
-    SetLike.exists_of_lt (Ideal.pow_lt_self _ w.ne_bot w.isPrime.ne_top 2 le_rfl)
+    IsConcreteLE.exists_of_lt (Ideal.pow_lt_self _ w.ne_bot w.isPrime.ne_top 2 le_rfl)
   have hφ : IsFrob A (normV w) (frob h : G E Ω) := isFrob_frob
   obtain ⟨L, _, _, _, _, _, _, u, hu, s, hs, hfix, hcu, hN⟩ := UpperTheory.exists_numberField_extension_place_frobenius_degree E Ω A w h n hn _ hφ c hc2
   obtain ⟨a, ha, -⟩ := UpperTheory.Zero.LLC.artEx L Ω A u hu
@@ -1042,8 +1042,8 @@ private theorem junkData (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
     calc 4 = 2 ^ 2 := rfl
       _ ≤ normV w ^ 2 := Nat.pow_le_pow_left hq1 2
       _ ≤ normV w ^ n := Nat.pow_le_pow_right (by omega) hn
-  haveI : Finite K := Nat.finite_of_card_ne_zero (by rw [hcard]; omega)
-  letI := Fintype.ofFinite K
+  have : Finite K := Nat.finite_of_card_ne_zero (by rw [hcard]; omega)
+  let := Fintype.ofFinite K
   have hcardF : Fintype.card K = normV w ^ n := by rw [← Nat.card_eq_fintype_card]; exact hcard
   have hρ0 : ∀ x : O, ρ x = 0 ↔ Valued.v (x : u.adicCompletion L) < 1 := by
     intro x
@@ -1135,10 +1135,10 @@ private theorem junkData (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
       have hv0 : Valued.v ϖ ≠ 0 := (Valuation.ne_zero_iff _).2 hϖ0
       have h1 : Valued.v ((((a (ineIncl hu (ι t)) : (u.adicCompletion L)ˣ) : u.adicCompletion L) - 1) * (ϖ ^ 2)⁻¹) ≤ 1 :=
         (Valuation.mem_valuationSubring_iff _ _).1 ht
-      rw [map_mul, map_inv₀, map_pow, mul_inv_le_iff₀ (pow_pos (zero_lt_iff.2 hv0) 2), one_mul] at h1
+      rw [map_mul, map_inv₀, map_pow, mul_inv_le_iff₀ (pow_pos (pos_iff_ne_zero.2 hv0) 2), one_mul] at h1
       refine lt_of_le_of_lt h1 ?_
       rw [pow_two]
-      exact mul_lt_of_lt_one_left (zero_lt_iff.2 hv0) hϖ1
+      exact mul_lt_of_lt_one_left (pos_iff_ne_zero.2 hv0) hϖ1
   · intro t t' htt
     have hW : WeilRel (frob h : G E Ω).toRingEquiv (ineIncl hu (ι t)) (ineIncl hu (ι t')) := by
       intro z
@@ -1323,7 +1323,7 @@ private theorem aeval_charpoly_inv {n : ℕ} {K : Type} [Field K] [Algebra (ZMod
     aeval (((z⁻¹ : Kˣ)) : K) ((y⁻¹ : Gn g n) : Mt g n).charpoly = 0 := by
   have hd : IsUnit (y : Mt g n).det := (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
   have e := congrArg (aeval (((z⁻¹ : Kˣ)) : K)) (charpoly_inv_mul y)
-  letI : Invertible (z : K) := invertibleOfNonzero z.ne_zero
+  let : Invertible (z : K) := invertibleOfNonzero z.ne_zero
   have r : aeval (((z⁻¹ : Kˣ)) : K) (y : Mt g n).charpoly.reverse = 0 := by
     rw [aeval_def, Units.val_inv_eq_inv_val, ← invOf_eq_inv, eval₂_reverse_eq_zero_iff, ← aeval_def, h]
   rw [map_mul, map_mul, r, mul_zero, aeval_C, mul_eq_zero] at e
@@ -1353,7 +1353,7 @@ private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
         have := congrFun (congrFun h3 ⟨i - a, hi'⟩) ⟨j - a, hj'⟩
         have e1 : a + ((i : ℕ) - a) = i := by omega
         have e2 : a + ((j : ℕ) - a) = j := by omega
-        simp only [br, entN, e1, e2, i.2, j.2, and_self, dif_pos, Units.val_one] at this
+        simp only [br, entN, e1, e2, i.2, j.2, and_self, dite_eq_left, Units.val_one] at this
         rw [this, Matrix.one_apply, Matrix.one_apply]
         simp only [Fin.ext_iff]
         congr 1
@@ -1378,7 +1378,7 @@ private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
         have := h _ _ hc
         simp only at this
         omega
-      simp only [tl, entN, hi, hj, and_self, dif_pos, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
+      simp only [tl, entN, hi, hj, and_self, dite_eq_left, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
     · ext i j
       have hi : a + (i : ℕ) < n := by omega
       have hj : a + (j : ℕ) < n := by omega
@@ -1387,7 +1387,7 @@ private theorem rad_iff {a b n : ℕ} (hn : a + b = n) (M : Mt g n) :
         have := h _ _ hc
         simp only at this
         omega
-      simp only [br, entN, hi, hj, and_self, dif_pos, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
+      simp only [br, entN, hi, hj, and_self, dite_eq_left, Units.val_one, hh, Matrix.one_apply, Fin.ext_iff]
       simp
 
 private theorem rad_inv {a b n : ℕ} (hn : a + b = n) {x : Gn g n}
@@ -1659,7 +1659,7 @@ private theorem good_cases {x : IrrGL (k := w.adicCompletion E)} (hc : x.IsCusp)
     x.1 = 1 ∨ ((∃ (g : ℕ) (_ : Fact g.Prime) (i : ℚ_[g] ≃+* w.adicCompletion E), Continuous i) ∧
       ∃ (y : IrrGL (k := w.adicCompletion E)) (χ : (w.adicCompletion E)ˣ →* ℂˣ) (hχ : IsSmoothChar χ),
         y.IsCusp ∧ DZ y ∧ x = y.tw χ hχ) := by
-  haveI := charZero_compl (E := E) w
+  have := charZero_compl (E := E) w
   rcases hg with h1 | ⟨hq, y, χ, hχ, hd, rfl⟩
   · exact Or.inl h1
   · exact Or.inr ⟨hq, y, χ, hχ, ((clBasic _ y).2.1 χ hχ).2.1.1 hc, hd, rfl⟩
@@ -1701,7 +1701,7 @@ variable {r : IrrGL (k := w.adicCompletion E) → WD h}
 private theorem Gm.basic (H : Gm a ha r) {x : IrrGL (k := w.adicCompletion E)} (hc : x.IsCusp) (hg : GoodCusp x) :
     IsIrrWD (r x) ∧ (r x).lpDim = x.1 ∧
       ∀ ω, HasCentralChar x.rep ω → ∀ σ, ((r x).eig σ).prod = (ω (a σ) : ℂ) := by
-  haveI := charZero_compl (E := E) w
+  have := charZero_compl (E := E) w
   rcases good_cases hc hg with h1 | ⟨hq, y, χ, hχ, hy, hd, rfl⟩
   · obtain ⟨χ, hχ, rfl⟩ := ((clBasic _ x).2.2.2.2.1 h1).2
     obtain ⟨p1, p2, p3, p4, -⟩ := parOne E Ω A w h a ha χ hχ
@@ -1723,7 +1723,7 @@ private theorem Gm.basic (H : Gm a ha r) {x : IrrGL (k := w.adicCompletion E)} (
 
 private theorem Gm.dual (H : Gm a ha r) {x y : IrrGL (k := w.adicCompletion E)} (hc : x.IsCusp) (hg : GoodCusp x)
     (hd : DualCl x y) : r y = (r x).lpDual := by
-  haveI := charZero_compl (E := E) w
+  have := charZero_compl (E := E) w
   rcases good_cases hc hg with h1 | ⟨hq, u, χ, hχ, hu, hdz, rfl⟩
   · obtain ⟨χ, hχ, rfl⟩ := ((clBasic _ x).2.2.2.2.1 h1).2
     have hi := hχ.inv
@@ -1755,7 +1755,7 @@ private theorem Gm.tw_inj (H : Gm a ha r) {u v : IrrGL (k := w.adicCompletion E)
     (hu : u.IsCusp) (hud : DZ u) (hv : v.IsCusp) (hvd : DZ v) {χ χ' : (w.adicCompletion E)ˣ →* ℂˣ}
     (hχ : IsSmoothChar χ) (hχ' : IsSmoothChar χ') (e : r (u.tw χ hχ) = r (v.tw χ' hχ')) :
     u.tw χ hχ = v.tw χ' hχ' := by
-  haveI := charZero_compl (E := E) w
+  have := charZero_compl (E := E) w
   have Pu := H.par hq u hu hud
   have Pv := H.par hq v hv hvd
   rw [H.tw u hu (goodCusp_self hq hud), H.tw v hv (goodCusp_self hq hvd)] at e
@@ -1784,16 +1784,16 @@ end SlopeTestRemainingChoices
 
 theorem cuspEx : CuspEx := by
   intro E Ω _ _ _ _ _ A w h a ha
-  haveI := charZero_compl (E := E) w
+  have := charZero_compl (E := E) w
   classical
   obtain ⟨r₀, H1, H2, H3⟩ := goodMap E Ω A w h a ha
   have H : Gm a ha r₀ := ⟨H1, H2, H3⟩
   obtain ⟨e, he⟩ := expo E Ω A w h a ha
-  haveI : Nonempty (WD h) := ⟨WD.lpZero (h := h)⟩
+  have : Nonempty (WD h) := ⟨WD.lpZero (h := h)⟩
   choose! J hJ using junkEx E Ω A w h
   let r : IrrGL (k := w.adicCompletion E) → WD h := fun x => if GoodCusp x then r₀ x else (J x.1).lpTw (e x)
-  have rg : ∀ x, GoodCusp x → r x = r₀ x := fun x hx => if_pos hx
-  have rb : ∀ x, ¬ GoodCusp x → r x = (J x.1).lpTw (e x) := fun x hx => if_neg hx
+  have rg : ∀ x, GoodCusp x → r x = r₀ x := fun x hx => ite_eq_left hx
+  have rb : ∀ x, ¬ GoodCusp x → r x = (J x.1).lpTw (e x) := fun x hx => ite_eq_right hx
   have two : ∀ x : IrrGL (k := w.adicCompletion E), x.IsCusp → ¬ GoodCusp x → 2 ≤ x.1 := by
     intro x hx hb
     have h0 := hx.1

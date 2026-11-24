@@ -150,13 +150,13 @@ theorem prime_isMaximal_of_isFractionRing (A : Type) [CommRing A] [IsDomain A] [
     [Algebra.FiniteType ℤ A] (q : Ideal A) (hq : q.IsPrime) (h0 : q ≠ ⊥) : q.IsMaximal := by
   have hpK : CharP K p := charP_of_injective_algebraMap (algebraMap (ZMod p) K).injective p
   have hpA : CharP A p := (RingHom.charP_iff (algebraMap A K) (IsFractionRing.injective _ _) p).2 hpK
-  letI : Algebra (ZMod p) A := ZMod.algebra _ p
-  haveI : IsScalarTower (ZMod p) A K :=
+  let : Algebra (ZMod p) A := ZMod.algebra _ p
+  have : IsScalarTower (ZMod p) A K :=
     IsScalarTower.of_algebraMap_eq fun x =>
       DFunLike.congr_fun (Subsingleton.elim (algebraMap (ZMod p) K)
         ((algebraMap A K).comp (algebraMap (ZMod p) A))) x
-  haveI : IsScalarTower ℤ (ZMod p) A := IsScalarTower.of_algebraMap_eq fun x => by simp
-  haveI : Algebra.FiniteType (ZMod p) A := Algebra.FiniteType.of_restrictScalars_finiteType ℤ _ _
+  have : IsScalarTower ℤ (ZMod p) A := IsScalarTower.of_algebraMap_eq fun x => by simp
+  have : Algebra.FiniteType (ZMod p) A := Algebra.FiniteType.of_restrictScalars_finiteType ℤ _ _
   have hd := GroundTheory.Arith.Abelian.Jacobian.ringKrullDim_eq_trdeg_fractionRing (ZMod p) (A := A) K
   rw [GroundTheory.FunctionField.trdeg_eq_one] at hd
   have hle : Ring.KrullDimLE 1 A := by
@@ -168,7 +168,7 @@ include p in
 theorem chart_prime_isMaximal (w : (Σ k, J k) → K) (hbir : Birational w) (c : ∀ k, J k)
     (hc : ∀ k, w ⟨k, c k⟩ ≠ 0) (q : Ideal (chartRingZ w c)) (hq : q.IsPrime) (h0 : q ≠ ⊥) : q.IsMaximal := by
   have hfr := chart_isFractionRing w hbir c hc
-  haveI : Algebra.FiniteType ℤ (chartRingZ w c) := by
+  have : Algebra.FiniteType ℤ (chartRingZ w c) := by
     refine (Subalgebra.fg_iff_finiteType _).1 ?_
     exact Subalgebra.fg_def.2 ⟨_, Set.finite_range _, rfl⟩
   exact prime_isMaximal_of_isFractionRing (p := p) (K := K) _ q hq h0
@@ -194,8 +194,8 @@ def IsRho {K : Type} [Field K] (w : (Σ k, J k) → K) (W : Ideal (MRing J))
 theorem exists_rho {K : Type} [Field K] (w : (Σ k, J k) → K) (W : Ideal (MRing J)) (hV : (mCoordIdeal w).IsPrime)
     (hW : W.IsPrime) (hVW : mCoordIdeal w ≤ W) : ∃ ρ, IsRho w W ρ := by
   classical
-  haveI := hV
-  haveI := hW
+  have := hV
+  have := hW
   let R := MRing J ⧸ mCoordIdeal w
   let P := MvPolynomial B K
   let E := FractionRing P
@@ -271,8 +271,8 @@ theorem IsRho.div (hV : (mCoordIdeal w).IsPrime) (hW : W.IsPrime) (hVW : mCoordI
         algebraMap (MRing J ⧸ mCoordIdeal w) (FractionRing (MRing J ⧸ mCoordIdeal w)) (Ideal.Quotient.mk _ v) =
       algebraMap (MRing J ⧸ mCoordIdeal w) (FractionRing (MRing J ⧸ mCoordIdeal w)) (Ideal.Quotient.mk _ u) ∧
       ρ x * aeval w v = aeval w u := by
-  haveI := hV
-  haveI := hW
+  have := hV
+  have := hW
   have hv0 : fracHom (mCoordIdeal w) v ≠ 0 := fun h => hvW (hVW (fracHom_eq_zero_iff.1 h))
   have hx : (fracHom (mCoordIdeal w) u / fracHom (mCoordIdeal w) v) * fracHom (mCoordIdeal w) v = fracHom (mCoordIdeal w) u :=
     div_mul_cancel₀ _ hv0
@@ -280,8 +280,8 @@ theorem IsRho.div (hV : (mCoordIdeal w).IsPrime) (hW : W.IsPrime) (hVW : mCoordI
 
 theorem IsRho.injective (hV : (mCoordIdeal w).IsPrime) (hW : W.IsPrime) (hVW : mCoordIdeal w ≤ W) {ρ} (hρ : IsRho w W ρ) :
     Function.Injective ρ := by
-  haveI := hV
-  haveI := hW
+  have := hV
+  have := hW
   change Function.Injective ρ.toAddMonoidHom
   apply (injective_iff_map_eq_zero ρ.toAddMonoidHom).2
   intro x hx
@@ -299,8 +299,8 @@ theorem IsRho.isFractionRing (hbir : Birational w) (hV : (mCoordIdeal w).IsPrime
     (hVW : mCoordIdeal w ≤ W) {c : ∀ k, J k} (hc : ∀ k, (X ⟨k, c k⟩ : MRing J) ∉ W) {ρ} (hρ : IsRho w W ρ) :
     letI := ρ.toAlgebra
     IsFractionRing (locRing (mCoordIdeal w) W) K := by
-  letI := ρ.toAlgebra
-  haveI : FaithfulSMul (locRing (mCoordIdeal w) W) K :=
+  let := ρ.toAlgebra
+  have : FaithfulSMul (locRing (mCoordIdeal w) W) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (hρ.injective hV hW hVW)
   refine IsFractionRing.of_field _ _ fun z => ?_
   obtain ⟨d, g, h, hg, hh, h0, hz⟩ := hbir z
@@ -325,13 +325,13 @@ theorem IsRho.dom_iff (hV : (mCoordIdeal w).IsPrime) (hW : W.IsPrime) (hVW : mCo
     [IsLocalRing (locRing (mCoordIdeal w) W)] (v : Place (ZMod p) K) :
     ((∀ a, v.valuation (ρ a) ≤ 1) ∧ ∀ a ∈ maximalIdeal (locRing (mCoordIdeal w) W), v.valuation (ρ a) < 1) ↔
       Dom v w W := by
-  haveI := hV
-  haveI := hW
+  have := hV
+  have := hW
   constructor
   · rintro ⟨h1, h2⟩ e g h hg hh hhW
     obtain ⟨x, hxf, hx⟩ := hρ.div hV hW hVW hg hh hhW
     have hh0 := aeval_form_ne_zero hVW hh hhW
-    have hpos : 0 < v.valuation (aeval w h) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hh0)
+    have hpos : 0 < v.valuation (aeval w h) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hh0)
     rw [← hx, map_mul]
     refine ⟨mul_le_of_le_one_left' (h1 x), fun hgW => ?_⟩
     have hm : x ∈ maximalIdeal (locRing (mCoordIdeal w) W) :=
@@ -346,7 +346,7 @@ theorem IsRho.dom_iff (hV : (mCoordIdeal w).IsPrime) (hW : W.IsPrime) (hVW : mCo
       obtain ⟨u, t, e, hu, ht, htW, ha⟩ := gen a
       have h1 := hρ a u t e hu ht htW ha
       have ht0 := aeval_form_ne_zero hVW ht htW
-      have hpos : 0 < v.valuation (aeval w t) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ht0)
+      have hpos : 0 < v.valuation (aeval w t) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ht0)
       have h2 := (hD e u t hu ht htW).1
       rw [← h1, map_mul] at h2
       exact le_of_mul_le_mul_right (by simpa using h2) hpos
@@ -354,7 +354,7 @@ theorem IsRho.dom_iff (hV : (mCoordIdeal w).IsPrime) (hW : W.IsPrime) (hVW : mCo
       obtain ⟨u, t, e, hu, ht, htW, ha⟩ := gen a
       have h1 := hρ a u t e hu ht htW ha
       have ht0 := aeval_form_ne_zero hVW ht htW
-      have hpos : 0 < v.valuation (aeval w t) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ht0)
+      have hpos : 0 < v.valuation (aeval w t) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ht0)
       have huW : u ∈ W := (mem_maximalIdeal_iff hVW a hu ht htW ha).1 ham
       have h2 := (hD e u t hu ht htW).2 huW
       rw [← h1, map_mul] at h2

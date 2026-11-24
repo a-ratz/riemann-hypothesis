@@ -100,9 +100,9 @@ def Reps {G : Type*} [Group G] (H U : Subgroup G) (S : Finset G) : Prop :=
 theorem exists_reps' {G : Type*} [Group G] (H U W : Subgroup G) [W.FiniteIndex] (hW : H ⊓ W ≤ U) :
     ∃ S : Finset G, Reps H U S := by
   classical
-  haveI : (U.subgroupOf H).FiniteIndex :=
+  have : (U.subgroupOf H).FiniteIndex :=
     Subgroup.finiteIndex_of_le (H := W.subgroupOf H) fun x hx => hW ⟨x.2, hx⟩
-  letI : Fintype (H ⧸ U.subgroupOf H) := Fintype.ofFinite _
+  let : Fintype (H ⧸ U.subgroupOf H) := Fintype.ofFinite _
   refine ⟨Finset.univ.image (fun q : H ⧸ U.subgroupOf H => (q.out : G)), ?_, ?_⟩
   · intro s hs
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hs
@@ -359,13 +359,13 @@ theorem faithH : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P
     ((cyc_basic l P.χQ P.χQ_cyc).2.2 K h (by
       have : K0 K = ⊥ := bot_inf_eq _
       rw [this, IntermediateField.fixingSubgroup_bot]; trivial)).2
-  haveI : FiniteDimensional ℚ_[l] L.1 := L.2
+  have : FiniteDimensional ℚ_[l] L.1 := L.2
   let E : IntermediateField ℚ_[l] (Om l) := IntermediateField.normalClosure ℚ_[l] L.1 (Om l)
   have hLE : L.1 ≤ E := IntermediateField.le_normalClosure _
-  haveI : FiniteDimensional ℚ_[l] E := inferInstance
-  haveI : Normal ℚ_[l] E := inferInstance
-  haveI : E.fixingSubgroup.FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
+  have : FiniteDimensional ℚ_[l] E := inferInstance
+  have : Normal ℚ_[l] E := inferInstance
+  have : E.fixingSubgroup.FiniteIndex := by
+    have := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
     exact Subgroup.finiteIndex_of_finite_quotient
   have hsup : (Kinf K ⊔ E).fixingSubgroup = Hinf K ⊓ E.fixingSubgroup :=
     IntermediateField.fixingSubgroup_sup
@@ -731,7 +731,7 @@ theorem exists_et (I : WIo R RA RW inclR φR gR πA)
     · intro i j g hg
       have h := repr_semi (e T) (TWact (gR g) T g) (gR g) (act_smul _ T g) (x j) i
       simp only [hx g hg, hfix T g hg, Module.Basis.repr_self, Finsupp.single_apply, ite_mul, one_mul,
-        zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+        zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
       exact h.symm
     · ext i j
       have h := repr_semi (e T) (TWmap φR T) φR (phi_smul _ T) (x j) i
@@ -781,8 +781,8 @@ theorem exists_et (I : WIo R RA RW inclR φR gR πA)
     rw [hγG, show sec (Γ.resΓ g) = g * (g⁻¹ * sec (Γ.resΓ g)) by group, act_mul _ _ _ (hmul g _),
       hker T _ (by simp [hsec])]
   have hj := fun T => jB_inj I.ioE hinj (e T)
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI : Nontrivial R.EE := R.EE_inj.nontrivial
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have : Nontrivial R.EE := R.EE_inj.nontrivial
   exact ⟨{
     DD := fun T => Fin (Module.finrank O ↥T.L.T) → R.EE
     φD := φD
@@ -944,11 +944,11 @@ theorem γ₀_X_eq {K : FinExt l} {s : ℕ} {LL : FinExt l} {Γ : GamS P K s LL}
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (K : FinExt l) (s : ℕ) (LL : FinExt l), Good K s LL → ∀ (Γ : GamS P K s LL) (R : WSer Γ), ∃ I : IoS AI R, IoW I := by
   intro l _ P AI K s LL hG Γ R
-  haveI := (P.PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := (P.PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨u, hu, huniq⟩ := GlobalTheory.UnramIdem.exists_prod_hom l P K s LL hG Γ.emb Γ.emb_bij
   have he := εroot_sub_not_unit AI s
-  haveI := (GlobalTheory.HWL.TensorWitt.main l LL).2.2.2.2 _ he
+  have := (GlobalTheory.HWL.TensorWitt.main l LL).2.2.2.2 _ he
   obtain ⟨io, hπ, hc⟩ := let_exists
     ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] (WittVector.teichmuller l (AI.εroot s) - 1) : RA LL) u
   have hπ' := hπ.trans (tmul_sub_one LL _)

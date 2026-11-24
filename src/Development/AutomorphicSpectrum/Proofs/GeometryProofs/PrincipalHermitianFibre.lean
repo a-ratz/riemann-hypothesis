@@ -127,9 +127,9 @@ theorem exists_fibre_equiv {S : Scheme.{0}} (G : Over S) [GrpObj G] [Smooth G.ho
     (j : V →ₛₗ[σ.comp (algebraMap (𝓞 L) L)] W)
     (hj : ∀ a, ((Mσ.pt (j a)).left ≫ (𝟙 G.left) = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (σ.comp (algebraMap (𝓞 L) L))) ≫ (M.pt a).left)) :
     ∃ e : Fibre σ V ≃ₗ[ℂ] W, ∀ a, e ((1 : ComplexAt σ) ⊗ₜ a) = j a := by
-  letI i₀ : Algebra (𝓞 L) ℂ := (σ.comp (algebraMap (𝓞 L) L)).toAlgebra
-  letI i₂ : Module (𝓞 L) W := Module.compHom W (algebraMap (𝓞 L) ℂ)
-  haveI i₃ : IsScalarTower (𝓞 L) ℂ W := ⟨fun a z w => by
+  let i₀ : Algebra (𝓞 L) ℂ := (σ.comp (algebraMap (𝓞 L) L)).toAlgebra
+  let i₂ : Module (𝓞 L) W := Module.compHom W (algebraMap (𝓞 L) ℂ)
+  have i₃ : IsScalarTower (𝓞 L) ℂ W := ⟨fun a z w => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   let j' : V →ₗ[𝓞 L] W := { toFun := j, map_add' := map_add j, map_smul' := fun a v => j.map_smulₛₗ a v }
@@ -197,7 +197,7 @@ end Geo
 
 theorem exists_hermitianBundle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (L : Type) [Field L] [NumberField L] (t : SAB H (Sp (𝓞 L))) (tK : SAB H (Sp L)) (_ : SABMap tK t (spMap (algebraMap (𝓞 L) L))), IsPrincipal tK → ∃ (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel t.G (𝟙 _) B.carrier), IsFibre (HodgeIP t.G t.PP.L) (𝟙 _) B MB := by
   intro E _ _ _ H L _ _ t tK m hK
-  haveI : Smooth t.G.hom := t.semi.smooth
+  have : Smooth t.G.hom := t.semi.smooth
   obtain ⟨V, i₁, i₂, ⟨M⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists _ t.G (𝓞 L) (𝟙 _)
   obtain ⟨hf, hpj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective _ t.G (𝓞 L) (𝟙 _) V M
   have hW := fun σ : L →+* ℂ => GlobalTheory.CompanionTheory.Ar.lieModel_exists _ t.G ℂ (spMap (σ.comp (algebraMap (𝓞 L) L)) ≫ 𝟙 _)

@@ -134,7 +134,7 @@ private theorem twistOf_schur {k H : Type} [Field k] [IsAlgClosed k] [Group H] {
     (hA : ∀ h, A * (R h : Matrix (Fin n) (Fin n) k) = (R h : Matrix (Fin n) (Fin n) k) * A) :
     ∃ c : k, A = c • (1 : Matrix (Fin n) (Fin n) k) := by
   obtain ⟨h0, -, h2⟩ := hR
-  haveI : Nontrivial (Fin n → k) := by
+  have : Nontrivial (Fin n → k) := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     exact h0 (Subsingleton.elim _ _)

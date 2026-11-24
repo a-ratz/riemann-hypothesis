@@ -123,7 +123,7 @@ theorem jK_sl_isIntegral : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
   intro Ω _ _ _ ε Tw hε hj g
   set f := Tw.sl g Tw.jK with hf
   obtain ⟨M, hM, hlev⟩ := Tw.level f
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   let red : SL(2, ℤ) →* SL(2, ZMod M) := Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M))
 
   have hred : ∀ γ γ' : SL(2, ℤ), red γ = red γ' → Tw.sl (ofSL γ) f = Tw.sl (ofSL γ') f := by
@@ -142,7 +142,7 @@ theorem jK_sl_isIntegral : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     rintro _ ⟨γ, rfl⟩
     refine ⟨red γ, ?_⟩
     have h : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-    simp only [F, dif_pos h]
+    simp only [F, dite_eq_left h]
     exact hred _ _ h.choose_spec
   let T := hSfin.toFinset
   have hT : ∀ y, y ∈ T ↔ y ∈ S := fun y => Set.Finite.mem_toFinset hSfin

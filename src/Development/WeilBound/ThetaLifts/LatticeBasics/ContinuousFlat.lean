@@ -99,9 +99,9 @@ theorem kpair_cont {B : Base F E} {r s : ℕ} (hB : B.IsGood σ) (hY : Y.IsHerm 
         ∫ g, flat a f s₀ s (e (1, g)) * detInv χ g * pet μ D (fun h => φ (h * g)) φ ∂μ := by
   have hJ := aniso_of hB hY h0
   obtain ⟨t₁, half⟩ := hE.half
-  haveI := c.sc; haveI := c.lc
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : IsFiniteMeasure (μ.restrict D) := ⟨by simpa using c.fin _ _ hμ hD⟩
+  have := c.sc; have := c.lc
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : IsFiniteMeasure (μ.restrict D) := ⟨by simpa using c.fin _ _ hμ hD⟩
   have bc : ∀ {φ : UA σ Y.J → ℂ}, IsRapid φ → An.BC φ := fun h => ⟨h.1, c.bdd h.1 h.2.1⟩
   have cE : ∀ s ∈ U, Continuous (Ê s) := fun s hs =>
     hE.cont.comp_continuous (f := fun x => (s, x)) (by fun_prop) fun _ => ⟨hs, trivial⟩

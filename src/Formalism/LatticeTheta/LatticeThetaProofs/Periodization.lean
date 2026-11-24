@@ -142,10 +142,10 @@ lemma summable_one_add_norm (Λ : Submodule ℤ V) [DiscreteTopology Λ] [IsZLat
     (hs.add (hasSum_ite_eq (0 : Λ) (1 : ℝ)).summable)
   by_cases h : l = 0
   · subst h
-    simp only [if_pos rfl, ZeroMemClass.coe_zero, norm_zero, add_zero, Real.one_rpow, if_true, ↓reduceIte]
+    simp only [ite_eq_left rfl, ZeroMemClass.coe_zero, norm_zero, add_zero, Real.one_rpow, ite_true, ↓reduceIte]
     linarith [Real.rpow_nonneg (le_refl (0 : ℝ)) (-b)]
   · have hl : 0 < ‖(l : V)‖ := norm_pos_iff.mpr (by simpa using h)
-    rw [if_neg h, add_zero]
+    rw [ite_eq_right h, add_zero]
     show (1 + ‖(l : V)‖) ^ (-b) ≤ ‖(l : V)‖ ^ (-b)
     rw [Real.rpow_neg (by positivity), Real.rpow_neg hl.le]
     exact inv_anti₀ (Real.rpow_pos_of_pos hl b) (Real.rpow_le_rpow hl.le (by linarith) hb0.le)

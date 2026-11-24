@@ -80,8 +80,8 @@ theorem _root_.UpperTheory.KN.exists_linearMap_span_baseChange_of_semilinear :
         ∀ y : ↥Y, φ ⟨fun j m => fK (y.1 j m), Submodule.subset_span ⟨y.1, y.2, rfl⟩⟩ = ψ y := by
   intro O O' LL Q _ _ _ _ _ _ _ _ f fK a n Y ψ hinj hf hfg hψ
   classical
-  haveI : Module.Finite O Y := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free O Y := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O Y := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free O Y := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis O Y
   let v : Module.Free.ChooseBasisIndex O Y → Fin a → Fin n → LL := fun i j m => fK ((b i).1 j m)
   have h1 : LinearIndependent O (fun i => fun p : Fin a × Fin n => (b i).1 p.1 p.2) := by
@@ -96,7 +96,7 @@ theorem _root_.UpperTheory.KN.exists_linearMap_span_baseChange_of_semilinear :
   have h2 : LinearIndependent (FractionRing O) (fun i => fun p : Fin a × Fin n => (b i).1 p.1 p.2) :=
     (LinearIndependent.iff_fractionRing O (FractionRing O)).mp h1
   have h3 : LinearIndependent LL (fun i => fun p : Fin a × Fin n => fK ((b i).1 p.1 p.2)) := by
-    letI := fK.toAlgebra
+    let := fK.toAlgebra
     exact linearIndependent_algebraMap_comp_iff.mpr h2
   have h4 : LinearIndependent O' v := by
     rw [Fintype.linearIndependent_iff] at h3 ⊢

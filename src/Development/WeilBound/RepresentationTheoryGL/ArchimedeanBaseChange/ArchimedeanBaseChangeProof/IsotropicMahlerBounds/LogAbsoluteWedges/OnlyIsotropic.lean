@@ -502,7 +502,7 @@ theorem pairF_of_mulF : MulF → PairF := by
   have hdetT : (Uᵀ * W).det = (Wᵀ * U).det := by
     rw [← Matrix.det_transpose, Matrix.transpose_mul, Matrix.transpose_transpose]
   by_cases h : ∃ s : κ → ι, (U.submatrix s id).det ≠ 0
-  · haveI : Nonempty (κ → ι) := ⟨h.choose⟩
+  · have : Nonempty (κ → ι) := ⟨h.choose⟩
     obtain ⟨s₀, hs₀⟩ := Finite.exists_max (fun s : κ → ι => ‖(U.submatrix s id).det‖)
     have hd : (U.submatrix s₀ id).det ≠ 0 := by
       obtain ⟨s, hs⟩ := h
@@ -624,7 +624,7 @@ theorem degG_reindex (hF : WedgeF) (hI : WedgeI) {κ κ' : Type} [Fintype κ] [D
     rw [← Matrix.submatrix_map]
     exact (hI (Fin n)).reindex κ κ' e (A.map (cV v))
   have hw : ∀ w, nF ((A.submatrix id e).map (cW w)) = nF (A.map (cW w)) := fun w => by
-    haveI := ultra w
+    have := ultra w
     rw [← Matrix.submatrix_map]
     exact (hF (w.adicCompletion E) (Fin n)).reindex κ κ' e (A.map (cW w))
   simp only [degG, hfr, ← hA, hv, hw]
@@ -653,7 +653,7 @@ theorem degG_mul (mF : MulF) (mI : MulI) (lg : LogAbsBasic) (fs : FinSupp) {κ :
     rw [Matrix.map_mul, (mI (Fin n) (Fin n) κ _).2.1, hdet, Real.log_mul (f1 v) hne]
   have hw : ∀ w, Real.log (nF ((A * s.map (algebraMap E (Ad E))).map (cW w))) =
       Real.log (nF (A.map (cW w))) + Real.log ‖cW w (algebraMap E (Ad E) s.det)‖ := fun w => by
-    haveI := ultra w
+    have := ultra w
     have hne : ‖cW w (algebraMap E (Ad E) s.det)‖ ≠ 0 := norm_ne_zero_iff.2 (hu.map (cW w)).ne_zero
     rw [Matrix.map_mul, (mF _ (Fin n) (Fin n) κ _).2.1, hdet, Real.log_mul (f2 w) hne]
   have hsupp : (Function.support fun w => Real.log (nF (A.map (cW w)))).Finite :=
@@ -809,7 +809,7 @@ theorem sum_ineq (hF : WedgeF) (hI : WedgeI) (hS : WedgeSub) (hFS : FinSupp)
   have finp : ∑ᶠ w, Real.log (nF ((fromCols P (fromCols Q R)).map (cW w))) + ∑ᶠ w, Real.log (nF (P.map (cW w))) ≤
       ∑ᶠ w, Real.log (nF ((fromCols P Q).map (cW w))) + ∑ᶠ w, Real.log (nF ((fromCols P R).map (cW w))) := by
     rw [← finsum_add_distrib (fin _ s₀) (fin _ s₁), ← finsum_add_distrib (fin _ s₂) (fin _ s₃)]
-    refine finsum_le_finsum' ((fin _ s₀).union (fin _ s₁) |>.subset (Function.support_add _ _))
+    refine finsum_le_finsum ((fin _ s₀).union (fin _ s₁) |>.subset (Function.support_add _ _))
       ((fin _ s₂).union (fin _ s₃) |>.subset (Function.support_add _ _)) fun w => ?_
     have a₀ := f₀ w
     have a₂ := f₂ w
@@ -1026,7 +1026,7 @@ theorem finSupp_of_mul : MulF → MulI → SzFin → FinSupp := by
     fun w => nF_ne_zero_of_left_inv hF (map_mul_eq_one (cW w) h), ?_⟩
   refine ((hS E κ ι Y).union (hS E ι κ A)).subset fun w hw => ?_
   by_contra hn
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_lt] at hn
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_lt] at hn
   exact hw (nF_eq_one_of_sz_le hF (map_mul_eq_one (cW w) h) hn.1 hn.2)
 
 end GlobalTheory.CompanionTheory.WedgeSupport

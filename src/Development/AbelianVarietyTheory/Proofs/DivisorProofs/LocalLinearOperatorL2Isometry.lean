@@ -72,7 +72,7 @@ theorem self_eq {g : X → ℂ} (hg : g ∈ SB X) :
   constructor
   · rw [ofReal_integral_eq_lintegral_ofReal hn (Filter.Eventually.of_forall fun x => by positivity)]
     congr 1; funext x
-    rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   · rw [← integral_complex_ofReal]
     congr 1; funext x
     rw [Complex.mul_conj, Complex.normSq_eq_norm_sq]
@@ -110,8 +110,8 @@ theorem GlobalTheory.PolarSB.pairing_eq : ∀ {F : Type} [Field F] [NumberField 
       ∫ x, T φ₁ x * starRingEnd ℂ (T (fun y => starRingEnd ℂ (φ₂ y)) x) ∂μ = ∫ x, φ₁ x * φ₂ x ∂μ := by
   open MeasureTheory ComplexConjugate in
   intro F _ _ κ _ v T hSB hlin μ hμ hnorm φ₁ h₁ φ₂ h₂
-  letI : MeasurableSpace (κ → Fv F v) := borel _
-  haveI : BorelSpace (κ → Fv F v) := ⟨rfl⟩
+  let : MeasurableSpace (κ → Fv F v) := borel _
+  have : BorelSpace (κ → Fv F v) := ⟨rfl⟩
   set w : (κ → Fv F v) → ℂ := fun y => starRingEnd ℂ (φ₂ y) with hw
   have hwSB : w ∈ SB (κ → Fv F v) := GlobalTheory.PolarSB.conj_mem h₂
   have hN : ∀ g ∈ SB (κ → Fv F v),

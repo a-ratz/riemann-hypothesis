@@ -65,7 +65,7 @@ theorem ordF_of_span (v v' w : HeightOneSpectrum (𝓞 L)) (j : ℕ) (a : 𝓞 L
     (h : Ideal.span {a} = v.asIdeal * v'.asIdeal ^ j) :
     ordF w (uOf a ha) = (if v = w then 1 else 0) + (if v' = w then (j : ℤ) else 0) := by
   have h1 : ordF w (uOf a ha) = FractionalIdeal.count L w ((Ideal.span {a} : Ideal (𝓞 L)) : FractionalIdeal (nonZeroDivisors (𝓞 L)) L) := by
-    rw [FractionalIdeal.count_coe L w (by simpa using ha)]
+    rw [FractionalIdeal.count_coeIdeal L w (by simpa using ha)]
     show -WithZero.log (w.valuation L (algebraMap (𝓞 L) L a)) = _
     rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg _ ha]
     simp
@@ -94,7 +94,7 @@ theorem prod_rule_two (χ : HChar L) (S : Finset (HeightOneSpectrum (𝓞 L))) (
     · have h1 : v ≠ w := fun e => hv (e ▸ hw)
       have h2 : v' ≠ w := fun e => hv' (e ▸ hw)
       simp [h1, h2]
-    · rw [finprod_eq_if, if_pos hw, zpow_add]
+    · rw [finprod_eq_if, ite_eq_left hw, zpow_add]
       congr 1
       · split_ifs with h1
         · simp [h1]
@@ -109,10 +109,10 @@ theorem prod_rule_two (χ : HChar L) (S : Finset (HeightOneSpectrum (𝓞 L))) (
   · intro x hx; simp [Ne.symm hx]
   · refine (Set.finite_singleton v).subset fun x hx => ?_
     by_contra h1
-    exact hx (if_neg fun e => h1 e.symm)
+    exact hx (ite_eq_right fun e => h1 e.symm)
   · refine (Set.finite_singleton v').subset fun x hx => ?_
     by_contra h1
-    exact hx (if_neg fun e => h1 e.symm)
+    exact hx (ite_eq_right fun e => h1 e.symm)
 
 theorem locK_pow (χ : HChar L) (w : HeightOneSpectrum (𝓞 L)) :
     ∃ N : ℕ, 0 < N ∧ ∀ (a : 𝓞 L) (ha : a ≠ 0), a ∉ w.asIdeal → χ.locK w (uOf a ha) ^ N = 1 := by

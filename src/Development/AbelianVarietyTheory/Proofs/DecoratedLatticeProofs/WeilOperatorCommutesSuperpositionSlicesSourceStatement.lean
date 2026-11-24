@@ -74,10 +74,10 @@ theorem pair_swap {S A B T : HSp D} (o : OrthDec S A B) {Ω : Type} [MeasurableS
     (g : WO A T → ℂ) (hgc : Continuous g) (Cg : ℝ) (hg : ∀ x, ‖g x‖ ≤ Cg) :
     ∫ u, (∫ w, a w * Φ ((o.resS T).symm (u, k w)) ∂μ) * star (g u) ∂ν =
       ∫ w, a w * ∫ u, Φ ((o.resS T).symm (u, k w)) * star (g u) ∂ν ∂μ := by
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : BorelSpace (WO A T) := ⟨rfl⟩
-  haveI : BorelSpace (WO B T) := ⟨rfl⟩
-  haveI : SFinite ν := @instSFiniteOfSigmaFinite _ _ ν (@IsFiniteMeasure.toSigmaFinite _ _ ν _)
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO A T) := ⟨rfl⟩
+  have : BorelSpace (WO B T) := ⟨rfl⟩
+  have : SFinite ν := @instSFiniteOfSigmaFinite _ _ ν (@IsFiniteMeasure.toSigmaFinite _ _ ν _)
   obtain ⟨-, -, hA2, -⟩ := lattice_Mx D T.rank A.rank
   obtain ⟨-, -, hB2, -⟩ := lattice_Mx D T.rank B.rank
   have hσ : Measurable fun q : WO A T × Ω => Φ ((o.resS T).symm (q.1, k q.2)) :=
@@ -141,8 +141,8 @@ theorem comm_sfinite {S A B T : HSp D} (o : OrthDec S A B) {χ χ' : (AE D)ˣ �
   have hL : IsThetaFunO ψ A T (om p G) := hW.om_pres p G hG
   obtain ⟨v⟩ := GlobalTheory.Unf.Inhab.nonempty_volM D T.rank A.rank
   obtain ⟨hhaar, hfd, hvol⟩ := v.covol
-  haveI := hhaar
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
+  have := hhaar
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, hvol]; exact ENNReal.one_lt_top⟩
   have key : ∀ g, IsThetaFunO ψ A T g → thPair v.μ v.𝓕 (om p G) g = thPair v.μ v.𝓕 R g := by
     intro g hg
@@ -171,7 +171,7 @@ theorem comm_sfinite {S A B T : HSp D} (o : OrthDec S A B) {χ χ' : (AE D)ˣ �
   obtain ⟨CL, hCL⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded A T ψ hψ _ hL
   obtain ⟨CR, hCR⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded A T ψ hψ _ hR
   obtain ⟨Cd, hCd⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded A T ψ hψ _ hd
-  haveI : BorelSpace (WO A T) := ⟨rfl⟩
+  have : BorelSpace (WO A T) := ⟨rfl⟩
   have bint : ∀ f : WO A T → ℂ, Continuous f → ∀ C : ℝ, (∀ x, ‖f x‖ ≤ C) →
       Integrable (fun x => f x * star ((om p G - R) x)) (v.μ.restrict v.𝓕) := by
     intro f hf C hC
@@ -201,7 +201,7 @@ theorem comm_sfinite {S A B T : HSp D} (o : OrthDec S A B) {χ χ' : (AE D)ˣ �
   have hae' : ∀ᵐ x ∂v.μ.restrict v.𝓕, (om p G - R) x = 0 :=
     hae.mono fun x hx => Complex.normSq_eq_zero.1 hx
   obtain ⟨i1, -, i3, -, i5, -⟩ := lattice_Mx D T.rank A.rank
-  haveI := i1; haveI := i3; haveI := i5
+  have := i1; have := i3; have := i5
   have hz := GlobalTheory.WeilVacMove.eq_zero_of_ae_fundamentalDomain (ratMx D T.rank A.rank) v.μ v.𝓕 hfd (om p G - R) hd.cont
     (GlobalTheory.WeilVacMove.norm_periodic hψ hd) hae'
   have := congrFun hz u₀

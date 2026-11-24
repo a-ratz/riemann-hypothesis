@@ -369,7 +369,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ 
   have hV : ∀ ε : ℝ, 0 < ε → {s : G ℚ Ω | ∀ i j, ‖(aff W z s - 1) i j‖ < ε} ∈ nhds (1 : G ℚ Ω) := by
     intro ε hε
     refine IsOpen.mem_nhds ?_ (by simp [ha1, hε])
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     exact isOpen_lt ((hcont i j).sub continuous_const).norm continuous_const
   have hker : ∀ s : P, (∀ i j, ‖(aff W z s - 1) i j‖ < 1) → s ∈ M.ker := by
@@ -383,7 +383,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ 
     exact Subgroup.finiteIndex_of_le (H := H.subgroupOf P) fun s hs => hker s (hsub hs)
   classical
   let Q := P ⧸ M.ker
-  letI : Fintype Q := Fintype.ofFinite _
+  let : Fintype Q := Fintype.ofFinite _
   have hcard : ¬ l ∣ Fintype.card Q := by
     intro hd
     obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card l hd
@@ -442,8 +442,8 @@ theorem fg_map_mkQ_of_ev {R M N : Type*} [CommRing R] [IsNoetherianRing R] [AddC
   have hker : LinearMap.ker f ≤ LinearMap.ker g := by
     intro y hy
     exact (Submodule.Quotient.mk_eq_zero B).2 (h3 y y.2 hy)
-  haveI : Module.Finite R (LinearMap.range f) := Module.Finite.iff_fg.2 hf
-  haveI : Module.Finite R (Y ⧸ LinearMap.ker f) := Module.Finite.equiv f.quotKerEquivRange.symm
+  have : Module.Finite R (LinearMap.range f) := Module.Finite.iff_fg.2 hf
+  have : Module.Finite R (Y ⧸ LinearMap.ker f) := Module.Finite.equiv f.quotKerEquivRange.symm
   have hg : (LinearMap.range g).FG := by
     rw [← Submodule.range_liftQ (LinearMap.ker f) g hker, LinearMap.range_eq_map]
     exact Module.Finite.fg_top.map _
@@ -465,8 +465,8 @@ theorem cobound_mem_coc {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact 
 
 theorem fg_coc_mod_cob : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : R2 Ω l) (c : Coef l) (I : Subgroup (G ℚ Ω)) (P : Set (G ℚ Ω)) (γ : G ℚ Ω), Continuous W → (∀ s i j, mat W s i j ∈ c.O) → (∀ z ∈ coc W c I, ∃ v : Fin 2 → Qbar l, (∀ i, v i ∈ c.O) ∧ ∀ σ ∈ P, z σ = mat W σ *ᵥ v - v) → (∀ z ∈ coc W c I, (∀ σ ∈ P, z σ = 0) → z γ = 0 → ∀ s ∈ I, z s = 0) → ((coc W c I).map (cob W c I).mkQ).FG := by
   intro l _ Ω _ _ W c I P γ hW hO hP hγ
-  haveI := c.dvr
-  haveI : IsNoetherianRing c.O := PrincipalIdealRing.isNoetherianRing
+  have := c.dvr
+  have : IsNoetherianRing c.O := PrincipalIdealRing.isNoetherianRing
   let Y : Submodule c.O (G ℚ Ω → Fin 2 → Qbar l) :=
     coc W c I ⊓ ⨅ σ ∈ P, LinearMap.ker (LinearMap.proj σ : (G ℚ Ω → Fin 2 → Qbar l) →ₗ[c.O] (Fin 2 → Qbar l))
   have hY : ∀ z, z ∈ Y ↔ z ∈ coc W c I ∧ ∀ σ ∈ P, z σ = 0 := by
@@ -738,7 +738,7 @@ theorem normCompatible_eq_zero : ∀ (O H : Type) [CommRing O] [IsNoetherianRing
       ZMod.unitOfCoprime q (Nat.Coprime.pow_right r hq) := by
     subst hu
     ext
-    rw [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, ZMod.coe_unitOfCoprime,
+    rw [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, ZMod.coe_unitOfCoprime,
       ZMod.coe_unitOfCoprime, map_natCast]
   have hw1 : ZMod.unitsMap (pow_dvd_pow l (Nat.le_add_right r k)) (u ^ ((l - 1) * l ^ s)) = 1 := by
     rw [map_pow, hmap, unit_pow_eq_one l r s hs2]
@@ -872,7 +872,7 @@ theorem cycMod_eq_one_of_mem_Ine {B : ValuationSubring Ω} {q : Pl} (hB : IsPlac
   have h := cycZ_toZModPow_eq hl hB (q := 1) (fun x hx => by simpa using hs.2 x hx) r
   ext
   simp only [cycMod, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, Units.val_one]
-  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, h]
+  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, h]
   simp
 
 theorem coprime_normV {q : Pl} (hl : ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal) : Nat.Coprime (normV q) l := by
@@ -891,7 +891,7 @@ theorem cycMod_frob {B : ValuationSubring Ω} {q : Pl} (hB : IsPlaceOver B q) (h
   have h := cycZ_of_isFrob hl hB hφ
   ext
   simp only [cycMod, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, ZMod.coe_unitOfCoprime]
-  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, h]
+  rw [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, h]
   simp
 
 end GlobalTheory.InertCoh
@@ -969,8 +969,8 @@ theorem unr_of_limit_spec : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
       (fun w hw => _root_.GlobalTheory.WildCob.main l Ω W c B q hW hWO hB hl w hw)
       (fun w hw hP h0 => _root_.GlobalTheory.CocWildTame.eq_zero_on_Ine l Ω W B γ hγ w hw.1 hw.2.2 (fun σ hσ => hP σ hσ) h0)
   have hlO : ¬ IsUnit ((l : ℕ) : c.O) := not_isUnit_natCast_O c
-  haveI : IsLocalRing c.O := IsDiscreteValuationRing.toIsLocalRing
-  haveI : IsNoetherianRing c.O := inferInstance
+  have : IsLocalRing c.O := IsDiscreteValuationRing.toIsLocalRing
+  have : IsNoetherianRing c.O := inferInstance
   have hzero := _root_.GlobalTheory.NormSystemVanishing.normCompatible_eq_zero c.O _ l hlO (normV q) hq (GlobalTheory.TameConjInv.prime_normV q).two_le
     ((coc W c (Ine (F := ℚ) B)).map (cob W c (Ine (F := ℚ) B)).mkQ) hFG FH hFM
     (fun r x => (cob W c (Ine (F := ℚ) B)).mkQ (z r x)) (fun r x => Submodule.mem_map_of_mem (hzZ r x)) hfrob hN

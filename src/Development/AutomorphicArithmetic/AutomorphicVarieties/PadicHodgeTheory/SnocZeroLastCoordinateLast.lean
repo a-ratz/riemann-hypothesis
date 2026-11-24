@@ -76,9 +76,9 @@ private theorem ch_step {ρ : Representation E G V} {S : Set (G →* Eˣ)} {U : 
   rcases Nat.lt_succ_iff_lt_or_eq.1 hi with h | rfl
   · have h1 : i ≤ n := h.le
     have h2 : i + 1 ≤ n := h
-    simp only [h1, h2, if_true]
+    simp only [h1, h2, ite_true]
     exact hF i h
-  · simp only [le_refl, if_true, Nat.add_one_le_iff, lt_irrefl, if_false, hn]
+  · simp only [le_refl, ite_true, Nat.add_one_le_iff, lt_irrefl, ite_false, hn]
     exact ⟨le_sup_left, κ, hκ, x, rfl, hx⟩
 
 private theorem ch_step2 [FiniteDimensional E V] {ρ : Representation E G V} {S : Set (G →* Eˣ)}
@@ -131,7 +131,7 @@ private theorem filt_tri {A : Type} [CommRing A] [Algebra E A] [Module.Finite E 
     (ψ : Fin n → G → A) (hψ : ∀ i, ∃ κ ∈ S, ∀ g, (κ g : E) = π (ψ i g))
     (hρ : ∀ g (i : Fin n) (x : Fin n → A), (∀ j, i < j → x j = 0) →
       (∀ j, i < j → ρ g x j = 0) ∧ ρ g x i = ψ i g * x i) : FiltBy ρ S := by
-  haveI : IsNoetherianRing A := isNoetherian_of_tower E inferInstance
+  have : IsNoetherianRing A := isNoetherian_of_tower E inferInstance
   set m : Ideal A := RingHom.ker (π : A →+* E) with hm
   obtain ⟨N, hN⟩ : IsNilpotent m := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian m)]
@@ -281,7 +281,7 @@ private theorem key (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {G : 
     exact crUnr φ hφ (mrep M) (cont_mrep M hM) 0 fun _ _ _ => Subsingleton.elim _ _
   | succ n ih =>
     intro M hM κ w htri hdiag hw hI hne
-    haveI : ContinuousConstSMul E (Fin n → A) := ⟨fun c => IsModuleTopology.continuous_of_linearMap
+    have : ContinuousConstSMul E (Fin n → A) := ⟨fun c => IsModuleTopology.continuous_of_linearMap
       ((Algebra.lsmul ℚ_[l] ℚ_[l] (Fin n → A) : E →ₐ[ℚ_[l]] Module.End ℚ_[l] (Fin n → A)) c)⟩
     set M0 := topBlock M htri with hM0
     have hM0c : ∀ i j, Continuous fun g => M0 g i j := fun i j => hM _ _
@@ -313,7 +313,7 @@ private theorem key (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {G : 
         intro x _
         exact Submodule.subset_span ⟨(1, x), by simp⟩
     have hπc : ∀ σ, π (cycA l l A σ : A) = (cycA l l E σ : E) := fun σ => by
-      simp only [cycA, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+      simp only [cycA, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
       rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] A, IsScalarTower.algebraMap_apply ℚ_[l] E A,
         AlgHom.commutes, IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] E]
       rfl
@@ -396,8 +396,8 @@ open UpperTheory.V.Loc.DualInvariantFiltration in
 theorem UpperTheory.V.Loc.prC :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {A : Type} [CommRing A] [Algebra E A] [Algebra ℚ_[l] A] [IsScalarTower ℚ_[l] E A] [Module.Finite E A] [Algebra ℤ_[l] A] [IsScalarTower ℤ_[l] ℚ_[l] A] (π : A →ₐ[E] E), (∀ a, π a = 0 → IsNilpotent a) → ∀ {n : ℕ} (r : G →* GL (Fin n) A), (∀ i j, QCont l fun g => (r g : Matrix (Fin n) (Fin n) A) i j) → ∀ (κ : Fin n → G →* Aˣ) (w : Fin n → ℤ), UpperTri r κ → StrictAnti w → (∀ i g, φ g ∈ Iq l → κ i g = cycA l l A (φ g) ^ w i) → (∀ i j, i < j → ∃ g, π (κ i g : A) ≠ π (κ j g : A) * (cycA l l E (φ g) : E)) → IsCr φ (colRep r) := by
   intro hP l _ G _ _ _ φ hφ E _ _ _ _ _ A _ _ _ _ _ _ _ π hπ n r hr κ w htri hw hI hne
-  letI : TopologicalSpace A := moduleTopology ℚ_[l] A
-  haveI : IsModuleTopology ℚ_[l] A := ⟨rfl⟩
-  haveI : Module.Finite ℚ_[l] A := Module.Finite.trans E A
-  haveI : IsTopologicalRing A := IsModuleTopology.isTopologicalRing ℚ_[l] A
+  let : TopologicalSpace A := moduleTopology ℚ_[l] A
+  have : IsModuleTopology ℚ_[l] A := ⟨rfl⟩
+  have : Module.Finite ℚ_[l] A := Module.Finite.trans E A
+  have : IsTopologicalRing A := IsModuleTopology.isTopologicalRing ℚ_[l] A
   exact key hP φ hφ π hπ n ((Units.coeHom _).comp r) hr κ w (fun g => (htri g).1) (fun g => (htri g).2) hw hI hne

@@ -198,7 +198,7 @@ theorem locG_rankOne_eq_rcAt {hL : GlobalTheory.Published.LocalLanglandsGL} {D :
     (cg : CGTrue hL D T) (cs : CharSide D cf) (π : D.naut.CG 1) (w : PlE D.host)
     (ξ : (w.adicCompletion D.host.E)ˣ →* ℂˣ) (h : IsComp (cs.e1 π).1 w ξ) :
     T.e w (D.naut.locG π w) = rcAt hL D w 1 (GlobalTheory.SplitRead.Irr.ofDet 1 ξ h.1) := by
-  haveI := host_isCMField D.host
+  have := host_isCMField D.host
   set χ' := (CGu.equivChar D.host.E (cg.e 1 π)).1 with hχ'
   set χ := (cs.e1 π).1 with hχ
   have hloc : ∀ v, T.e v (D.naut.locG π v) = GlobalTheory.CuspRep.ParLaws.locPar hL (CG.ofChar χ') (D.nd.plOm.2 v) := fun v => by

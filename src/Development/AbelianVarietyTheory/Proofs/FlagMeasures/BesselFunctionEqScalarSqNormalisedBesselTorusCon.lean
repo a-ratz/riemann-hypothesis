@@ -161,10 +161,10 @@ theorem besselJ_changeFrame : ∀ (k r : ℕ) (L : Formalism.MainNotions.S.LocBe
       ∀ n ∈ Nset k r, psi k r w L.c (aT k r α * n * (aT k r α)⁻¹) = psi k r w cStd n := by
     intro w hw n hn
     simp only [psi, hw n hn, ← mul_assoc, hcα]
-  haveI : IsFiniteMeasure L.μW := ⟨by rw [L.hμW.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure L.μW' := ⟨by rw [L.hμW'.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure L.μW := ⟨by rw [L.hμW.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure L.μW' := ⟨by rw [L.hμW'.2]; exact ENNReal.one_lt_top⟩
   have hNc : (D.muN k r) (Nset k r)ᶜ = 0 := by rw [← hμN]; exact Bs.haarN.conc
-  haveI : IsFiniteMeasureOnCompacts (D.muN k r) :=
+  have : IsFiniteMeasureOnCompacts (D.muN k r) :=
     ⟨fun K hK => by rw [← hμN]; exact Bs.haarN.finite_compact K hK⟩
   have hW : L.μW (UWset k r L.z)ᶜ = 0 := L.hμW.1.2.2.1
   have hW' : L.μW' (UWset k r L.z')ᶜ = 0 := L.hμW'.1.2.2.1

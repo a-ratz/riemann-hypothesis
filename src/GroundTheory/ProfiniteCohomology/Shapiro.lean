@@ -237,9 +237,9 @@ theorem isIso_shapiroMap_zero : IsIso (shapiroMap U B 0) := by
     apply Subtype.ext
     funext x
     rfl
-  haveI : IsIso (ModuleCat.ofHom (coindInvariantsEval U B)) :=
+  have : IsIso (ModuleCat.ofHom (coindInvariantsEval U B)) :=
     (LinearEquiv.ofBijective _ (coindInvariantsEval_bijective U B)).toModuleIso.isIso_hom
-  haveI : IsIso (HomologicalComplex.cyclesMap ψ 0) := by
+  have : IsIso (HomologicalComplex.cyclesMap ψ 0) := by
     rw [hψ]
     infer_instance
   have h := CochainComplex.isoHomologyπ₀_inv_naturality ψ

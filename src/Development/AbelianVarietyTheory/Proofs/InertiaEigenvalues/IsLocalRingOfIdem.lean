@@ -195,7 +195,7 @@ theorem valuation_conj (x : K.E) : (IsDiscreteValuationRing.maximalIdeal K.O).va
     have h1 : v (a / b) ≤ 1 := by
       rw [map_div₀]; exact div_le_one_of_le₀ h zero_le
     have h2 := val_conj_le _ h1
-    rw [map_div₀, map_div₀, div_le_one₀ (zero_lt_iff.2 (by simpa using hb))] at h2
+    rw [map_div₀, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 (by simpa using hb))] at h2
     exact h2
   obtain ⟨π, hπ⟩ := (IsDiscreteValuationRing.maximalIdeal K.O).valuation_exists_uniformizer K.E
   rw [← hv] at hπ

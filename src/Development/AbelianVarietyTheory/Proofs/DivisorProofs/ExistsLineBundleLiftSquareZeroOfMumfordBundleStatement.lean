@@ -106,7 +106,7 @@ variable {X : Scheme.{0}}
 private theorem res_res' {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (x : Γ(X, U)ˣ) :
     res h' (res h x) = res (h'.trans h) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -242,8 +242,8 @@ theorem exists_isObU : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
     rw [hzσ, add_sub_cancel, mul_assoc _ _ (v T T'' (a ≫ b) : L.B T''), Units.inv_mul, _root_.mul_one]
   have hZ : (fun T T' T'' a b ↦ z T T' T'' a b : C2 (ext R₁ F)) ∈ Z2 (ext R₁ F) := by
     intro T T' T'' T''' a b c
-    haveI := L.smooth T'''
-    haveI : Module.Flat R (L.B T''') := Algebra.Smooth.flat R _
+    have := L.smooth T'''
+    have : Module.Flat R (L.B T''') := Algebra.Smooth.flat R _
     have nat := sig_natural R R₀ I hI π hπ hk R₁ α (L.B T'') (F.obj T'') (L.p T'') (L.semi T'')
       (L.surj T'') (L.ker T'') (L.B T''') (F.obj T''') (L.p T''') (L.semi T''') (L.surj T''') (L.ker T''')
       (L.ρ c) (mp F c) (L.nat c) (σ T'') (σ T''') (hσ T'') (hσ T''')
@@ -324,7 +324,7 @@ namespace GlobalTheory.LBObs.FrameCoc
 theorem res_res' {X : Scheme.{0}} {U V W : X.Opens} (h : W ≤ V) (h' : V ≤ U) (x : Γ(X, U)ˣ) :
     res h (res h' x) = res (h.trans h') x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -572,7 +572,7 @@ variable {X : Scheme.{0}}
 theorem res_res {U W W' : X.Opens} (h : W ≤ U) (h' : W' ≤ W) (x : Γ(X, U)ˣ) :
     res h' (res h x) = res (h'.trans h) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -933,9 +933,9 @@ theorem GlobalTheory.LBObs.exists_lift_of_isObL_zero : ∀ (R R₀ : Type) [Comm
     rw [h1]
     refine ((e (G.obj T'')).map_mul _ _).trans ?_
     exact congrArg (· * e (G.obj T'') (v T' T'' b).val) (he (G.obj T') (G.obj T'') (G.map b) (v T T' a).val)
-  haveI : IsClosedImmersion i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip
+  have : IsClosedImmersion i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip
     (IsClosedImmersion.spec_of_surjective _ hπ)
-  haveI : Surjective i := surjective_of_isPullback_sqZero hI hπ hk hpb
+  have : Surjective i := surjective_of_isPullback_sqZero hI hπ hk hpb
   have hbas' : IsBas V' := GlobalTheory.LBObs.isBas_of_preimage_eq X X₀ i C' V' (opOf G) (fun T => hpre _) hbas
   obtain ⟨L, hL, hfrL⟩ := GlobalTheory.T.exists_lineBundle_of_thinBasis_cocycle X C' V' hV' u' hbas' hcoc
   have hH : ∀ T, opOf G T ≤ i ⁻¹ᵁ V' ((𝟭 C').obj T) := fun T => (hpre _).ge
@@ -1377,7 +1377,7 @@ def pG (P : S.Presents s i) (L : LB X) : PCh P L ⥤ AffOp X₀ where
 
 theorem isAffineOpen_chartOpen (P : S.Presents s i) (T : AffOp X₀) :
     IsAffineOpen (GlobalTheory.PresCharts.chartOpen P T) := by
-  haveI := P.isOpen T
+  have := P.isOpen T
   unfold GlobalTheory.PresCharts.chartOpen
   exact isAffineOpen_opensRange _
 

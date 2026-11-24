@@ -165,7 +165,7 @@ theorem isOpen_vecInt (S : Finset (HeightOneSpectrum (𝓞 E))) :
     (fun v => Valued.isOpen_integer _) (p := fun v => v ∉ S)
   have e : {y : Fin k → Ad E | ∀ v, v ∉ S → ∀ i, (y i).2 v ∈ v.adicCompletionIntegers E} =
       ⋂ i, (fun y : Fin k → Ad E => (y i).2) ⁻¹' {x | ∀ v, v ∉ S → x v ∈ v.adicCompletionIntegers E} := by
-    ext y; simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    ext y; simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
     exact ⟨fun h i v hv => h v hv i, fun h v hv i => h i v hv⟩
   rw [e]
   exact isOpen_iInter_of_finite fun i => h.preimage (continuous_snd.comp (continuous_apply i))
@@ -216,7 +216,7 @@ theorem c5 (C : Set (Fin k → Ad E)) (hC : IsCompact C) : ∃ B : ℝ, ∀ (g :
   have hfp : ∏ᶠ v, ‖finComp v y‖ ≤ ∏ v ∈ S, b v := by
     have hsub : Function.mulSupport b' ⊆ (S : Set _) := fun v hv => by
       by_contra h
-      exact hv (by simp only [hb', if_neg (show v ∉ S from h)])
+      exact hv (by simp only [hb', ite_eq_right (show v ∉ S from h)])
     refine (finprod_le_finprod_of_nonneg hfc.finite_mulSupport ((S.finite_toSet).subset hsub)
       (fun v => norm_nonneg _) fun v => ?_).trans (le_of_eq ?_)
     · simp only [hb']
@@ -224,7 +224,7 @@ theorem c5 (C : Set (Fin k → Ad E)) (hC : IsCompact C) : ∃ B : ℝ, ∀ (g :
       · exact hb v y hy
       · exact norm_finComp_le_one (hS y hy v hv)
     · rw [finprod_eq_prod_of_mulSupport_subset b' hsub]
-      exact Finset.prod_congr rfl fun v hv => by simp only [hb', if_pos hv]
+      exact Finset.prod_congr rfl fun v hv => by simp only [hb', ite_eq_left hv]
   refine mul_le_mul (Finset.prod_le_prod₀ (fun w _ => pow_nonneg (euclidNorm_nonneg _) _)
     fun w _ => pow_le_pow_left₀ (euclidNorm_nonneg _) (ha w y hy) _) hfp
     (finprod_nonneg fun _ => norm_nonneg _)

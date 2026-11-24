@@ -76,7 +76,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.commPrj :
   have hcl : IsClosed (fixF μ U : Set (LL μ)) := by
     have : (fixF μ U : Set (LL μ)) = ⋂ u ∈ U, {v | rhoF μ u v = v} := by
       ext v
-      simp only [SetLike.mem_coe, hmem, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, hmem, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact isClosed_biInter fun u _ => isClosed_eq (rhoF μ u).continuous continuous_id
   have hmul : ∀ h h', rhoF μ (h * h') = rhoF μ h ∘L rhoF μ h' := fun h h' => by
@@ -92,7 +92,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.commPrj :
     rw [hmem] at hv ⊢
     intro u hu
     have := congrArg (fun S : LL μ →L[ℂ] LL μ => S v) (hT u hu).eq
-    simp only [ContinuousLinearMap.mul_apply, hv u hu] at this
+    simp only [mul_apply_eq_comp, hv u hu] at this
     exact this.symm
   have hT : ∀ T : LL μ →L[ℂ] LL μ, (∀ u ∈ U, Commute T (rhoF μ u)) → Commute T (prj (fixF μ U)) := by
     intro T hT

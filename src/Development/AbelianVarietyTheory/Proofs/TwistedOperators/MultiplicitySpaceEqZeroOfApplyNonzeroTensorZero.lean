@@ -73,7 +73,7 @@ theorem eq_zero_of_tprodInnerFun {ι : Type} [Fintype ι] {E : ι → Type} [∀
   obtain ⟨n, f, g, hg⟩ := Submodule.mem_span_set'.1 hx
   choose v hv using fun j => (g j).2
   let W : ∀ i, Submodule ℂ (E i) := fun i => Submodule.span ℂ (Set.range fun j => v j i)
-  haveI : ∀ i, FiniteDimensional ℂ (W i) := fun i =>
+  have : ∀ i, FiniteDimensional ℂ (W i) := fun i =>
     FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   let b := fun i => stdOrthonormalBasis ℂ (W i)
   have hexp : ∀ j i, v j i = ∑ k, ⟪(b i k : E i), v j i⟫_ℂ • (b i k : E i) := by
@@ -126,7 +126,7 @@ theorem eq_zero_of_integral_fundDomain {G : Type} [Group G] [TopologicalSpace G]
     refine h𝓕.measure_zero_of_invariant _ (fun γ => ?_) ?_
     · ext g
       rw [Set.mem_smul_set_iff_inv_smul_mem]
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [Subgroup.smul_def, smul_eq_mul, hinv _ (γ⁻¹).2]
     · rw [← Measure.restrict_apply ho.measurableSet]
       exact hae'

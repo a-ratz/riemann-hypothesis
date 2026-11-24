@@ -116,5 +116,5 @@ theorem GlobalTheory.VolBr.Pair.isBallFam : ∀ (k : Type) [CommRing k] (X : Sch
       (Pair.nu_sub P a b hf.1 hg.1 σ y).trans (add_le_add (hf.2 σ y) (hg.2 σ y))⟩
     nsmul_iff := fun n r f hn hf => by
       have h0 : (0 : ℝ) < n := by exact_mod_cast hn
-      simp only [VolBr.Pair.Bl, Set.mem_setOf_eq, Pair.nu_nsmul P a b hf, mul_le_mul_iff_right₀ h0,
+      simp only [VolBr.Pair.Bl, Set.mem_ofPred_eq, Pair.nu_nsmul P a b hf, mul_le_mul_iff_right₀ h0,
         and_iff_right (nsmul_mem hf n), and_iff_right hf] }

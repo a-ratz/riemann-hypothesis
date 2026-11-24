@@ -103,13 +103,13 @@ theorem isInternal_quotPiece {I : Ideal (MvPolynomial ι k)}
       have : (⨆ (j) (_ : j ≠ i), weightedHomogeneousSubmodule k (fun _ : ι => (1 : ℤ)) j) ≤
           LinearMap.ker (weightedHomogeneousComponent (fun _ : ι => (1 : ℤ)) i) := by
         refine iSup₂_le fun j hj z hz => ?_
-        rw [LinearMap.mem_ker, weightedHomogeneousComponent_of_mem hz, if_neg (Ne.symm hj)]
+        rw [LinearMap.mem_ker, weightedHomogeneousComponent_of_mem hz, ite_eq_right (Ne.symm hj)]
       exact this hb
     have hab' : a - b ∈ I := Ideal.Quotient.eq.mp hab.symm
     have h2 := weightedHomogeneousComponent_one_mem hI i hab'
-    rw [map_sub, hb0, sub_zero, weightedHomogeneousComponent_of_mem ha, if_pos rfl] at h2
+    rw [map_sub, hb0, sub_zero, weightedHomogeneousComponent_of_mem ha, ite_eq_left rfl] at h2
     exact Ideal.Quotient.eq_zero_iff_mem.mpr h2
-  · letI := weightedDecomposition k (fun _ : ι => (1 : ℤ))
+  · let := weightedDecomposition k (fun _ : ι => (1 : ℤ))
     have htop := (DirectSum.Decomposition.isInternal
       (weightedHomogeneousSubmodule k (fun _ : ι => (1 : ℤ)))).submodule_iSup_eq_top
     unfold quotPiece
@@ -231,7 +231,7 @@ theorem exists_linear_normalisation [Infinite k] {P : Ideal (MvPolynomial ι k)}
         MvPolynomial (Fin s) k →ₐ[k] _).toRingHom.IsIntegral ∧
       Function.Injective (aeval fun j => Ideal.Quotient.mk P (z j) :
         MvPolynomial (Fin s) k →ₐ[k] _) := by
-  haveI : Nontrivial (MvPolynomial ι k ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP
+  have : Nontrivial (MvPolynomial ι k ⧸ P) := Ideal.Quotient.nontrivial_iff.2 hP
   induction r with
   | zero =>
     refine ⟨0, w, hw, hy, hint, (injective_iff_map_eq_zero _).2 fun g hg => ?_⟩
@@ -261,9 +261,9 @@ theorem exists_linear_normalisation [Infinite k] {P : Ideal (MvPolynomial ι k)}
     let w' : Fin r → MvPolynomial ι k := fun j => w j.succ - C (c j) * w 0
     refine ih w' (fun j => (hw _).sub ((hw 0).C_mul _)) (fun j => by simp [w', hy]) ?_
     let φ : MvPolynomial (Fin r) k →ₐ[k] _ := aeval fun j => Ideal.Quotient.mk P (w' j)
-    letI := φ.toRingHom.toAlgebra
+    let := φ.toRingHom.toAlgebra
     set_option synthInstance.maxHeartbeats 200000 in
-    haveI : IsScalarTower k (MvPolynomial (Fin r) k) (MvPolynomial ι k ⧸ P) :=
+    have : IsScalarTower k (MvPolynomial (Fin r) k) (MvPolynomial ι k ⧸ P) :=
       IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
     refine (isIntegral_of_projection (R := MvPolynomial (Fin r) k) _ (Fin.cons 0 X) (Fin.cons 1 c)
       (Ideal.Quotient.mk P (w 0)) ?_ (homogeneousComponent_isHomogeneous m g) hgm hc hint).1
@@ -286,7 +286,7 @@ theorem hilbertPoly_ne_zero {P : Ideal (MvPolynomial ι k)} [P.IsPrime] (hne : �
   rintro rfl
   obtain ⟨n, hn, hn0⟩ := (hH.eventually_eq.and (eventually_ge_atTop 0)).exists
   lift n to ℕ using hn0
-  haveI := hH.finite n
+  have := hH.finite n
   have hbot : quotPiece P (n : ℤ) = ⊥ := by simpa using hn
   obtain ⟨i, hi⟩ := hne
   have hmem : Ideal.Quotient.mk P (X i ^ n) ∈ quotPiece P (n : ℤ) := by
@@ -302,13 +302,13 @@ theorem degree_lt_of_isIntegral {A : Type*} [CommRing A] [Algebra k A] [Algebra.
     (hint : (aeval z : MvPolynomial (Fin s) k →ₐ[k] A).toRingHom.IsIntegral) :
     H.degree < (s : ℕ) := by
   let φ : MvPolynomial (Fin s) k →ₐ[k] A := aeval z
-  letI := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower k (MvPolynomial (Fin s) k) A :=
+  let := φ.toRingHom.toAlgebra
+  have : IsScalarTower k (MvPolynomial (Fin s) k) A :=
     IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) k) A := ⟨hint⟩
-  haveI : Algebra.FiniteType (MvPolynomial (Fin s) k) A :=
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) k) A := ⟨hint⟩
+  have : Algebra.FiniteType (MvPolynomial (Fin s) k) A :=
     Algebra.FiniteType.of_restrictScalars_finiteType k _ _
-  haveI : Module.Finite (MvPolynomial (Fin s) k) A := Algebra.IsIntegral.finite
+  have : Module.Finite (MvPolynomial (Fin s) k) A := Algebra.IsIntegral.finite
   obtain ⟨H', hH', hd⟩ := exists_isHilbertPoly (ι := Fin s) ℳ (fun j n m hm => by
     have : algebraMap (MvPolynomial (Fin s) k) A (X j) = z j := aeval_X _ _
     rw [Algebra.smul_def, this]
@@ -319,8 +319,8 @@ theorem exists_monic_minimal {R A : Type*} [CommRing R] [IsDomain R] [IsIntegral
     [CommRing A] [IsDomain A] (φ : R →+* A) (hinj : Function.Injective φ) (hint : φ.IsIntegral)
     (t : A) : ∃ p : Polynomial R, p.Monic ∧ 0 < p.natDegree ∧ p.eval₂ φ t = 0 ∧
       ∀ a : Fin p.natDegree → R, ∑ j, φ (a j) * t ^ (j : ℕ) = 0 → a = 0 := by
-  letI := φ.toAlgebra
-  haveI : FaithfulSMul R A := (faithfulSMul_iff_algebraMap_injective R A).2 hinj
+  let := φ.toAlgebra
+  have : FaithfulSMul R A := (faithfulSMul_iff_algebraMap_injective R A).2 hinj
   have ht : IsIntegral R t := hint t
   refine ⟨minpoly R t, minpoly.monic ht, minpoly.natDegree_pos ht, minpoly.aeval R t, ?_⟩
   intro a ha
@@ -420,7 +420,7 @@ theorem ringKrullDim_eq_natDegree_idealHilbertPoly [Infinite k] [Finite ι]
           Ideal.Quotient.mkₐ k P := by
         ext j; simp
       exact DFunLike.congr_fun this x)
-  letI := (isInternal_quotPiece hPh).chooseDecomposition
+  let := (isInternal_quotPiece hPh).chooseDecomposition
   have hdeg := degree_lt_of_isIntegral (quotPiece P) hH _
     (fun j n m hm => mk_mul_mem_quotPiece P (hz j) n hm) hzint
   obtain _ | e := s
@@ -441,8 +441,8 @@ theorem ringKrullDim_eq_natDegree_idealHilbertPoly [Infinite k] [Finite ι]
       apply Ideal.Quotient.eq_zero_iff_mem.mpr
       simpa using ha))).1
   let φ : MvPolynomial (Fin (e + 1)) k →ₐ[k] _ := aeval fun j => Ideal.Quotient.mk P (z j)
-  letI := φ.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin (e + 1)) k) (MvPolynomial ι k ⧸ P) := ⟨hzint⟩
+  let := φ.toRingHom.toAlgebra
+  have : Algebra.IsIntegral (MvPolynomial (Fin (e + 1)) k) (MvPolynomial ι k ⧸ P) := ⟨hzint⟩
   rw [ReciprocityTheory.CA.ringKrullDim_eq_of_isIntegral_of_injective
     (A := MvPolynomial (Fin (e + 1)) k) hzinj, MvPolynomial.ringKrullDim_of_isNoetherianRing,
     ringKrullDim_eq_zero_of_field, he]
@@ -489,9 +489,9 @@ theorem exists_form_degree_le_of_isHilbertPoly [Infinite k] [Finite ι]
       MvPolynomial (Fin (Fintype.card ι)) k →ₐ[k] _).toRingHom.IsIntegral := by
     let φ : MvPolynomial (Fin (Fintype.card ι)) k →ₐ[k] _ :=
       aeval fun j => Ideal.Quotient.mk P (w j)
-    letI := φ.toRingHom.toAlgebra
+    let := φ.toRingHom.toAlgebra
     set_option synthInstance.maxHeartbeats 200000 in
-    haveI : IsScalarTower k (MvPolynomial (Fin (Fintype.card ι)) k) (MvPolynomial ι k ⧸ P) :=
+    have : IsScalarTower k (MvPolynomial (Fin (Fintype.card ι)) k) (MvPolynomial ι k ⧸ P) :=
       IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
     have e : (aeval fun j => Ideal.Quotient.mk P (X j) : MvPolynomial ι k →ₐ[k] _) =
         Ideal.Quotient.mkₐ k P := by
@@ -514,7 +514,7 @@ theorem exists_form_degree_le_of_isHilbertPoly [Infinite k] [Finite ι]
   obtain ⟨s, z, hz, hzy, hzint, hzinj⟩ := exists_linear_normalisation hP hPh y _ w
     (fun j => (isHomogeneous_X _ _).sub ((isHomogeneous_X _ _).C_mul _))
     (fun j => by simp [w, hi]) hint
-  letI := (isInternal_quotPiece hPh).chooseDecomposition
+  let := (isInternal_quotPiece hPh).chooseDecomposition
   have hdeg := degree_lt_of_isIntegral (quotPiece P) hH _
     (fun j n m hm => mk_mul_mem_quotPiece P (hz j) n hm) hzint
   obtain _ | e := s

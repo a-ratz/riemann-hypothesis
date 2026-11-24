@@ -171,7 +171,7 @@ theorem trial_of_inputs : DSData → Mom2 → Approx → Restrict → Trial := b
     have := hI (η - w)
     rw [h0, norm_zero] at this
     linarith
-  · refine ⟨F.map I, by haveI := hFfd; infer_instance, ?_, Submodule.mem_map_of_mem hη'F⟩
+  · refine ⟨F.map I, by have := hFfd; infer_instance, ?_, Submodule.mem_map_of_mem hη'F⟩
     intro a b hab y hy
     obtain ⟨z, hz, rfl⟩ := Submodule.mem_map.mp hy
     rw [← hIE a b z]

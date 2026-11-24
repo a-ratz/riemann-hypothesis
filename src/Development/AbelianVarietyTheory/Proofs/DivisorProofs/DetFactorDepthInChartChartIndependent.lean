@@ -259,9 +259,9 @@ theorem nuFacC_le {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
     letI := H.starRing
     ∀ (p : ℕ) [Fact p.Prime] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io)
       (C C' : IntegralChartA3 Xo c T io y) (X : ValExt T p) (f : Lt1 Dw) (k : ℕ), nuFacC C' X f k ≤ nuFacC C X f k := by
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y C C' X f k
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨n, hn⟩ := GlobalTheory.T.exists_iso_integralModels_matching_lieBases E H Dw l Xo c T io y.1 C.I C'.I
   obtain ⟨B, b1, b2, b3, b4, b5, b6, -⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y C
   obtain ⟨B', b1', b2', b3', b4', b5', b6', -⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y C'

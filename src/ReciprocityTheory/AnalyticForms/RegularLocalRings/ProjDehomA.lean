@@ -220,7 +220,7 @@ variable [Nonempty K]
 theorem segreGrading_algebraMap_surjective {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P) :
     letI := segreGraded hP
     Function.Surjective (algebraMap ℂ (segreGrading P 0)) := by
-  letI := segreGraded hP
+  let := segreGraded hP
   rintro ⟨x, hx⟩
   obtain ⟨q, hq, rfl⟩ := Submodule.mem_map.1 hx
   have hq' : q.IsHomogeneous 0 := (mem_homogeneousSubmodule 0 q).1 hq
@@ -238,11 +238,11 @@ theorem segreGrading_algebraMap_surjective {P : Ideal (MvPolynomial (Σ k, ι k)
 theorem segreRing_finiteType {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P) :
     letI := segreGraded hP
     Algebra.FiniteType (segreGrading P 0) (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) := by
-  letI := segreGraded hP
-  haveI : Algebra.FiniteType ℂ (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) :=
+  let := segreGraded hP
+  have : Algebra.FiniteType ℂ (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℂ (segreIdeal P))
       (Ideal.Quotient.mkₐ_surjective ℂ _)
-  haveI : IsScalarTower ℂ (segreGrading P 0) (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) :=
+  have : IsScalarTower ℂ (segreGrading P 0) (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) :=
     IsScalarTower.of_algebraMap_eq fun c => by
       rw [← SetLike.GradeZero.coe_algebraMap (segreGrading P) c]
       rfl

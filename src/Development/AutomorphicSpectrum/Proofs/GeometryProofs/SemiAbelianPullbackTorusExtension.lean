@@ -219,9 +219,9 @@ theorem killsOver_pow (u : splitTorus S X ⟶ G) [IsMonHom u] (Y : AddSubgroup X
         Ideal.pow_le_self (by omega)
       rw [e] at h1
       exact (IsLocalRing.maximalIdeal.isMaximal R).ne_top (top_le_iff.1 h1)
-    haveI : Nontrivial (R ⧸ IsLocalRing.maximalIdeal R ^ (n + 1 + 1)) :=
+    have : Nontrivial (R ⧸ IsLocalRing.maximalIdeal R ^ (n + 1 + 1)) :=
       Ideal.Quotient.nontrivial_iff.2 hJ
-    haveI : IsLocalRing (R ⧸ IsLocalRing.maximalIdeal R ^ (n + 1 + 1)) :=
+    have : IsLocalRing (R ⧸ IsLocalRing.maximalIdeal R ^ (n + 1 + 1)) :=
       IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
     let I : Ideal (R ⧸ IsLocalRing.maximalIdeal R ^ (n + 1 + 1)) :=
       (IsLocalRing.maximalIdeal R ^ (n + 1)).map (Ideal.Quotient.mk _)
@@ -247,7 +247,7 @@ theorem diff_injective_mod_pi : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDi
     (spMap (IsLocalRing.residue R) ≫ b) M hM δ hne hδ
   have hR := _root_.GlobalTheory.CompanionTheory.Ar.KillsAdic.killsOver_of_forall_pow S G X u ψ.ker R b (killsOver_pow u ψ.ker b hk)
   have hKk := killsOver_comp u ψ.ker b (algebraMap R K) hR
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨-, -, h1, -, hex, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X (AddMonoidAlgebra K (ZMod l))
     (spMap (algebraMap K (AddMonoidAlgebra K (ZMod l))) ≫ spMap (algebraMap R K) ≫ b)
   let w : Multiplicative X →* AddMonoidAlgebra K (ZMod l) :=
@@ -338,9 +338,9 @@ theorem lie_torus_saturated : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDisc
     obtain ⟨δ', rfl⟩ := exists_div hπ δ h3
     exact (GlobalTheory.CompanionTheory.CommAlg.SatOfInj.mem_max_smul_top_iff hπ _).mpr ⟨δ', rfl⟩
   have e := addMonoidHomLequivInt (A := X) (B := R) R
-  haveI : Module.Free R (X →+ R) := Module.Free.of_equiv e.symm
-  haveI : Module.Finite R (X →+ R) := Module.Finite.equiv e.symm
-  haveI : Module.IsTorsionFree R E := inferInstance
+  have : Module.Free R (X →+ R) := Module.Free.of_equiv e.symm
+  have : Module.Finite R (X →+ R) := Module.Finite.equiv e.symm
+  have : Module.IsTorsionFree R E := inferInstance
   exact GlobalTheory.CompanionTheory.CommAlg.SatOfInj.sat_of_inj_mod R (X →+ R) E A key
 
 end GlobalTheory.CompanionTheory.Ar.TorusSat
@@ -548,13 +548,13 @@ theorem exists_quot_at {O K : Type} [CommRing O] [IsDedekindDomain O] [Field K] 
     fun s => IsUnit.mk0 _ fun h0 => nonZeroDivisors.ne_zero (hle s.2)
       (IsFractionRing.injective O K (h0.trans (map_zero _).symm))
   have hc : c.comp (algebraMap O (Localization.AtPrime P)) = algebraMap O K := IsLocalization.lift_comp _
-  letI : Algebra (Localization.AtPrime P) K := c.toAlgebra
+  let : Algebra (Localization.AtPrime P) K := c.toAlgebra
   have hcK : (algebraMap (Localization.AtPrime P) K).comp (algebraMap O (Localization.AtPrime P)) =
       algebraMap O K := hc
-  haveI : IsScalarTower O (Localization.AtPrime P) K := IsScalarTower.of_algebraMap_eq' hc.symm
-  haveI : IsFractionRing (Localization.AtPrime P) K :=
+  have : IsScalarTower O (Localization.AtPrime P) K := IsScalarTower.of_algebraMap_eq' hc.symm
+  have : IsFractionRing (Localization.AtPrime P) K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.primeCompl _ K
-  haveI : IsDiscreteValuationRing (Localization.AtPrime P) :=
+  have : IsDiscreteValuationRing (Localization.AtPrime P) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain O hP _
   have hinj : Function.Injective (algebraMap O (Localization.AtPrime P)) :=
     IsLocalization.injective _ hle
@@ -711,7 +711,7 @@ theorem exists_fibre_model {R R' : Type} [CommRing R] [CommRing R'] [Algebra R R
       (M₁ : LieModel G₁ (𝟙 _) T) (j : V →ₗ[R] T),
       (∀ e, ((M₁.pt (j e)).left ≫ φ = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap R R')) ≫ (M.pt e).left)) ∧ IsBaseChange R' j := by
   obtain ⟨T, iT, mT, ⟨M'⟩⟩ := lieModel_exists _ G R' (spMap (algebraMap R R') ≫ 𝟙 _)
-  letI mR : Module R T := Module.compHom T (algebraMap R R')
+  let mR : Module R T := Module.compHom T (algebraMap R R')
   have hsm : ∀ (a : R) (t : T), a • t = algebraMap R R' a • t := fun _ _ => rfl
   have tower : IsScalarTower R R' T :=
     ⟨fun a b t => by rw [Algebra.smul_def, hsm, mul_smul]⟩
@@ -779,8 +779,8 @@ theorem lifts_unique {R R' : Type} [CommRing R] [CommRing R'] {c : R →+* R'} {
 
 theorem lie_quot_full : ∀ (O K : Type) [CommRing O] [IsDedekindDomain O] [Field K] [Algebra O K] [IsFractionRing O K] (G G' : Over (Sp O)) [GrpObj G] [GrpObj G'] (GK : Over (Sp K)) [GrpObj GK] (τ : TorusExtension GK) (φ : GK.left ⟶ G.left) (φ' : τ.B.left ⟶ G'.left), letI := τ.addCommGroup; letI := τ.grpB; IsSemiAbelian G → IsSemiAbelian G' → IsGrpPullback GK G (spMap (algebraMap O K)) φ → IsGrpPullback τ.B G' (spMap (algebraMap O K)) φ' → ∀ (MT : LieModel (splitTorus (Sp K) τ.X) (𝟙 _) (τ.X →+ K)), IsCocharLie MT → ∀ (E : Type) [AddCommGroup E] [Module O E] (E' : Type) [AddCommGroup E'] [Module O E'] (M : LieModel G (𝟙 _) E) (M' : LieModel G' (𝟙 _) E'), ∃ (io : (τ.X →+ O) →ₗ[O] E) (f : E →ₗ[O] E'), (∀ δ, ((MT.pt ((algebraMap O K).toAddMonoidHom.comp δ) ≫ τ.i).left ≫ φ = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap O K)) ≫ (M.pt (io δ)).left)) ∧ (∀ (e : E) (v : epsAt (𝟙 (Sp K)) ⟶ GK), (v.left ≫ φ = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap O K)) ≫ (M.pt e).left) → ((v ≫ τ.q).left ≫ φ' = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap O K)) ≫ (M'.pt (f e)).left)) ∧ Function.Injective io ∧ LinearMap.ker f = LinearMap.range io ∧ ∀ e' : E', ∃ (a : O) (e : E), a ≠ 0 ∧ f e = a • e' := by
   intro O K _ _ _ _ _ G G' _ _ GK _ τ φ φ'
-  letI := τ.addCommGroup
-  letI := τ.grpB
+  let := τ.addCommGroup
+  let := τ.grpB
   intro hG hG' hφ hφ' MT hMT E _ _ E' _ _ M M'
   have := τ.free
   have := τ.finite

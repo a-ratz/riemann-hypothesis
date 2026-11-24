@@ -143,8 +143,8 @@ theorem UpperTheory.Reformulated.B.ExistsRootCongruence.exists_root_congr :
   intro l _ x hx
   obtain ⟨m, hm, h⟩ := coprime_pow_congr hx
   have hm0 : 0 < m := Nat.pos_of_ne_zero (by rintro rfl; exact hm (dvd_zero l))
-  haveI : NeZero m := ⟨hm0.ne'⟩
-  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl l) m
+  have : NeZero m := ⟨hm0.ne'⟩
+  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl l) m
   have e := congrArg (eval x) (X_pow_sub_one_eq_prod hm0 hμ)
   simp only [eval_sub, eval_pow, eval_X, eval_one, eval_prod, eval_C] at e
   by_contra hcon

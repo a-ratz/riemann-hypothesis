@@ -198,7 +198,7 @@ theorem mem_homogeneousExponentsOneBlock {n : ℕ} {m : Unit × Fin d →₀ ℕ
 theorem trace_one_block (n : ℕ) (f : MvPolynomial (Unit × Fin d) ℂ →ₗ[ℂ] MvPolynomial (Unit × Fin d) ℂ)
     (F : Module.End ℂ (MH d fun _ : Unit => n)) (hF : ∀ P, (F P).1 = f P.1) :
     LinearMap.trace ℂ _ F = ∑ m ∈ deg1 d n, AddMonoidAlgebra.coeff (f (monomial m 1)) m := by
-  haveI := finMH Unit d (fun _ : Unit => n)
+  have := finMH Unit d (fun _ : Unit => n)
   refine trace_eq_sum_coeff _ _ (fun P => ?_) f F hF
   refine (memMH Unit d (fun _ => n) P).trans ?_
   simp only [mem_homogeneousExponentsOneBlock]
@@ -218,7 +218,7 @@ theorem trace_blocks [DecidableEq K] (n : K → ℕ)
     LinearMap.trace ℂ _ F = ∑ μ ∈ Fintype.piFinset (fun k => deg1 d (n k)),
       AddMonoidAlgebra.coeff (f (monomial (glue μ) 1)) (glue μ) := by
   classical
-  haveI := finMH K d n
+  have := finMH K d n
   have hV : ∀ P, P ∈ MH d n ↔ ∀ m ∈ P.support,
       m ∈ (Fintype.piFinset fun k => deg1 d (n k)).image glue := by
     intro P

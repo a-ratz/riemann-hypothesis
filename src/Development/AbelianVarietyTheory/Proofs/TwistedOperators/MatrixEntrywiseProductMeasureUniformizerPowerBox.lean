@@ -70,12 +70,12 @@ theorem volM_box : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
       ν (𝒪[k] : Set k) ^ (Fintype.card A * Fintype.card D) *
         ENNReal.ofReal ((resCard k : ℝ) ^ (-∑ i, ∑ j, c i j)) := by
   intro k _ _ _ _ _ _ ν _ ϖ hϖ A D _ _ c
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   have hset : ({y : Matrix A D k | ∀ i j, valuation k (y i j) ≤ valuation k ((ϖ : k) ^ c i j)} :
       Set (A → D → k)) = Set.univ.pi fun i => Set.univ.pi fun j => cball (ϖ ^ c i j) := by
     ext y
-    simp only [Set.mem_univ_pi, cball, Set.mem_setOf_eq, Units.val_zpow_eq_zpow_val]
+    simp only [Set.mem_univ_pi, cball, Set.mem_ofPred_eq, Units.val_zpow_eq_zpow_val]
     rfl
   set d : ℝ≥0 := distribHaarChar k ϖ with hd
   have hdq : (d : ℝ) = (resCard k : ℝ)⁻¹ := nabs_unif hϖ

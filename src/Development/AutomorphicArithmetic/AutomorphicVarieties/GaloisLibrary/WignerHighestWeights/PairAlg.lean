@@ -138,7 +138,7 @@ theorem UpperTheory.V.AlgRepEndIrreducible.expSub :
       (A : Matrix (Fin d) (Fin d) ℂ) (B : Matrix (Fin d') (Fin d') ℂ), (A, B) ∈ S → (NormedSpace.exp A, NormedSpace.exp B) ∈ S := by
   intro d d' S A B h
   have hc : IsClosed (S : Set (Matrix (Fin d) (Fin d) ℂ × Matrix (Fin d') (Fin d') ℂ)) :=
-    Submodule.closed_of_finiteDimensional (Subalgebra.toSubmodule S)
+    Submodule.isClosed_of_finiteDimensional (Subalgebra.toSubmodule S)
   have hA : HasSum (fun n : ℕ => ((n.factorial : ℂ)⁻¹) • A ^ n) (NormedSpace.exp A) := by
     open scoped Matrix.Norms.Operator in
     exact NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A

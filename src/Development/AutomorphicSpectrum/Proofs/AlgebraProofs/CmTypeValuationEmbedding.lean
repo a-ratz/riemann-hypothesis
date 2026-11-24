@@ -156,9 +156,9 @@ theorem exists_coord (emb : (E →+* C) → (𝓞 E →+* w.valuationSubring))
     refine ⟨fun i s => if i = j then emb s (RingOfIntegers.basis E k) else 0, fun i => ?_,
       fun s => ?_⟩
     · by_cases hij : i = j
-      · simp only [hij, if_true]
+      · simp only [hij, ite_true]
         exact Submodule.subset_span ⟨_, rfl⟩
-      · simp only [hij, if_false]
+      · simp only [hij, ite_false]
         exact zero_mem (valSpan emb)
     · rw [HodgeDeterminantLattice.eigProj_act, Finset.sum_eq_single j (fun i _ hi => by simp [hi]) (by simp)]
       simp [hemb]
@@ -214,7 +214,7 @@ theorem block_freeLattice : ∀ (E : Type) [Field E] [NumberField E] (C : Type) 
   intro E _ _ C _ _ w _ emb hemb hcard D π H M _ _ _ _ ρ X N t hfree _
   classical
   have hind : (fun s => if D s then (1 : w.valuationSubring) else 0) ∈ valSpan emb :=
-    (H _ (fun s hs => if_neg hs)).1 ⟨1, fun s hs => by simp [hs]⟩
+    (H _ (fun s hs => ite_eq_right hs)).1 ⟨1, fun s hs => by simp [hs]⟩
   have hpoly : ∀ F ∈ valSpan emb, ∃ g : Polynomial w.valuationSubring,
       ∀ s, D s → F s = g.eval (emb s π) := by
     intro F hF
@@ -258,7 +258,7 @@ theorem block_freeLattice : ∀ (E : Type) [Field E] [NumberField E] (C : Type) 
     let F : Fin N → (E →+* C) → w.valuationSubring :=
       fun j s => if D s then (g j).eval (emb s π) else 0
     have hFm : ∀ j, F j ∈ valSpan emb := fun j =>
-      (H (F j) (fun s hs => if_neg hs)).1 ⟨g j, fun s hs => if_pos hs⟩
+      (H (F j) (fun s hs => ite_eq_right hs)).1 ⟨g j, fun s hs => ite_eq_left hs⟩
     have key : ∑ j, ∑ s, ((F j s : w.valuationSubring) : C) • HT.eigProj ρ s (t j) ∈ X :=
       sum_mem fun j _ => sum_smul_mem emb hemb hcard hfree j (hFm j)
     have e : ∑ s, eigCoord ρ t s.1 (f s) =
@@ -268,7 +268,7 @@ theorem block_freeLattice : ∀ (E : Type) [Field E] [NumberField E] (C : Type) 
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [sum_eq_sum_subtype D _ (fun s hs => by simp [F, hs])]
       refine Finset.sum_congr rfl fun s _ => ?_
-      simp only [F, if_pos s.2, hg j s]
+      simp only [F, ite_eq_left s.2, hg j s]
     rw [e]
     exact key
   · obtain ⟨F, hF, e⟩ := exists_coord emb hemb hfree hy
@@ -368,8 +368,8 @@ theorem targetV : TargetO → ∀ (E : Type) [Field E] [NumberField E] (V C : Ty
     exact o.2) hcard hσ' hbar
   refine ⟨γ, hγ, ?_⟩
   intro W _ _ _ _ _ ρ ρH HV Lie x v w u A h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11 h12 h13
-  letI : Module ν.valuationSubring W := Module.compHom W (algebraMap ν.valuationSubring C)
-  haveI : IsScalarTower ν.valuationSubring C W := ⟨fun o c y => by
+  let : Module ν.valuationSubring W := Module.compHom W (algebraMap ν.valuationSubring C)
+  have : IsScalarTower ν.valuationSubring C W := ⟨fun o c y => by
     change ((o : C) * c) • y = (o : C) • (c • y)
     rw [mul_smul]⟩
   obtain ⟨ε, hε⟩ := H W ρ ρH (xfer hr HV) (xfer hr Lie) x v w u A h1 h2
@@ -949,10 +949,10 @@ theorem sep_poly (E : Type) [Field E] [NumberField E] (P : Ideal (𝓞 E)) (hP :
     have hle := Polynomial.natDegree_le_of_dvd hdvd hne
     have hlt := Polynomial.natDegree_derivative_lt (p := minpoly ℤ a) (by omega)
     omega
-  · haveI : P.IsMaximal := hP.isMaximal hbot
-    letI : Field (𝓞 E ⧸ P) := Ideal.Quotient.field P
-    haveI : Finite (𝓞 E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hbot
-    letI : Fintype (𝓞 E ⧸ P) := Fintype.ofFinite _
+  · have : P.IsMaximal := hP.isMaximal hbot
+    let : Field (𝓞 E ⧸ P) := Ideal.Quotient.field P
+    have : Finite (𝓞 E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hbot
+    let : Fintype (𝓞 E ⧸ P) := Fintype.ofFinite _
     refine ⟨X ^ Fintype.card (𝓞 E ⧸ P) - X, ?_, ?_⟩
     · rw [map_sub, Polynomial.aeval_X_pow, Polynomial.aeval_X, ← Ideal.Quotient.eq_zero_iff_mem,
         map_sub, map_pow, FiniteField.pow_card, sub_self]
@@ -984,7 +984,7 @@ theorem ex_unif (E : Type) [Field E] [NumberField E] (P : Ideal (𝓞 E)) (hP : 
       rw [hJ] at hmem
       rw [h2]
       exact Ideal.mul_mono_right hJ' hmem
-    obtain ⟨t, htJ, htP⟩ := SetLike.not_le_iff_exists.mp hJP
+    obtain ⟨t, htJ, htP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
     refine ⟨π, hπ1, fun b hb => ⟨t, htP, ?_⟩⟩
     have hbt : b * t ∈ Ideal.span {π} := by
       rw [hJ]
@@ -1175,7 +1175,7 @@ theorem ex_poly (E : Type) [Field E] [NumberField E] (V : Type) [CommRing V] [Is
   have hP : ((IsLocalRing.maximalIdeal V).comap c).IsPrime := Ideal.comap_isPrime c _
   obtain ⟨π, hπP, hπ⟩ := PositivityTheory.Xgn.MonogenicSeparating.ex_unif E _ hP
   obtain ⟨R, hRfin, hFR, hRspan⟩ := exists_finite_subalgebra_pi_of_ringHom_lemma_2 (RingHom.pi e)
-  haveI := hRfin
+  have := hRfin
   obtain ⟨φ, hφ⟩ : ∃ φ : 𝓞 E →+* R, ∀ a s, (φ a : S → V) s = e s a :=
     ⟨(RingHom.pi e).codRestrict R hFR, fun a s => rfl⟩
   have hgen : Submodule.span V (Set.range φ) = ⊤ := by
@@ -1300,11 +1300,11 @@ end PositivityTheory.Xgn.MonogenicSeparating
 theorem PositivityTheory.Xgn.exists_monogenic_separating : ∀ (E : Type) [Field E] [NumberField E] (V C : Type) [CommRing V] [IsDomain V] [ValuationRing V] [Field C] [CharZero C] [Algebra V C] [IsFractionRing V C] (emb : (E →+* C) → (𝓞 E →+* V)), (∀ s (a : 𝓞 E), algebraMap V C (emb s a) = s (a : E)) → Nat.card (E →+* C) = Module.finrank ℚ E → ∀ σ : E →+* C, ∃ π : 𝓞 E, (∀ s s' : E →+* C, (∀ a, ¬ IsUnit (emb s a - emb σ a)) → (∀ a, ¬ IsUnit (emb s' a - emb σ a)) → emb s π = emb s' π → s = s') ∧ ∀ f : (E →+* C) → V, (∀ s, (∃ a, IsUnit (emb s a - emb σ a)) → f s = 0) → ((∃ g : Polynomial V, ∀ s, (∀ a, ¬ IsUnit (emb s a - emb σ a)) → f s = g.eval (emb s π)) ↔ f ∈ Submodule.span V (Set.range fun a : 𝓞 E => fun s => emb s a)) := by
   intro E _ _ V C _ _ _ _ _ _ _ emb hemb hcard σ
   classical
-  haveI : IsLocalRing V := ValuationRing.isLocalRing V
-  haveI : Finite (E →+* C) := Nat.finite_of_card_ne_zero (by
+  have : IsLocalRing V := ValuationRing.isLocalRing V
+  have : Finite (E →+* C) := Nat.finite_of_card_ne_zero (by
     rw [hcard]
     exact (Module.finrank_pos (R := ℚ) (M := E)).ne')
-  letI : Fintype (E →+* C) := Fintype.ofFinite _
+  let : Fintype (E →+* C) := Fintype.ofFinite _
   obtain ⟨π, hπ⟩ := PositivityTheory.Xgn.MonogenicSeparating.ex_poly E V
     {s : E →+* C // ∀ a, ¬ IsUnit (emb s a - emb σ a)} (fun s => emb s.1) (emb σ)
     (fun s a => s.2 a)
@@ -1466,7 +1466,7 @@ theorem sum_eigProj (E : Type) [Field E] [NumberField E] (C : Type) [Field C] [C
           rw [map_smul, smul_eq_mul]
       _ = ((b.repr 1 k : ℤ) : ℚ) := by
           simp only [HT.dualInt, LinearMap.BilinForm.apply_dualBasis_left, mul_ite, mul_one, mul_zero,
-            Finset.sum_ite_eq', Finset.mem_univ, if_true]
+            Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have hsum : ∀ k, ∑ s : E →+* C, s (HT.dualInt E k) = ((b.repr 1 k : ℤ) : C) := by
     intro k
     rw [sum_embeddings_eq_trace E C hc, htr, map_intCast]
@@ -1512,9 +1512,9 @@ theorem targetO : TargetO := by
   intro E _ _ C _ _ ν bar σ σ' rk p q hℓ hint hcard hσ' hbar
   classical
   obtain ⟨ℓ, h0, h1⟩ := hℓ
-  haveI : Finite (E →+* C) := Nat.finite_of_card_ne_zero (by
+  have : Finite (E →+* C) := Nat.finite_of_card_ne_zero (by
     rw [hcard]; exact Module.finrank_pos.ne')
-  letI : Fintype (E →+* C) := Fintype.ofFinite _
+  let : Fintype (E →+* C) := Fintype.ofFinite _
   have hcard' : Fintype.card (E →+* C) = Module.finrank ℚ E := by rw [← Nat.card_eq_fintype_card, hcard]
   have hsumAll := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ExG.SumEig.sum_eigProj E C hcard'
   let emb : (E →+* C) → (𝓞 E →+* ν.valuationSubring) := fun s =>

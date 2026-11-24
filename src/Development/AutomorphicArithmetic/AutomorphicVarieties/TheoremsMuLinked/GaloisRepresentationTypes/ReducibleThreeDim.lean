@@ -224,14 +224,14 @@ private theorem pA_ad_one {x : GG (m := 3) (R := R)} (hx : IsBlockSL2Embedding x
     (hw : (w : Matrix (Fin 2) (Fin 2) R) = wOf x) (Y : Matrix (Fin 2) (Fin 2) R) :
     pA (x.adFun (sA Y)) = (w : Matrix (Fin 2) (Fin 2) R) * Y * ((w⁻¹ : GL (Fin 2) R) : Matrix (Fin 2) (Fin 2) R) := by
   obtain ⟨a, b, c, d, h, hx⟩ := hx
-  rw [wOf_eq hx, if_pos h1] at hw
+  rw [wOf_eq hx, ite_eq_left h1] at hw
   have : ((w⁻¹ : GL (Fin 2) R) : Matrix (Fin 2) (Fin 2) R) = !![d, -b; -c, a] := by
     apply Units.inv_eq_of_mul_eq_one_right
     rw [hw]
     ext i j
     fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two] <;>
       first | ring1 | linear_combination h
-  rw [ad_eq h hx, if_pos h1, this, hw, conj_eq]
+  rw [ad_eq h hx, ite_eq_left h1, this, hw, conj_eq]
   ext i j
   simp only [Matrix.mul_apply, Fin.sum_univ_two]
   fin_cases i <;> fin_cases j <;> simp [sA, pA] <;> ring
@@ -240,7 +240,7 @@ private theorem pA_ad_c {x : GG (m := 3) (R := R)} (hx : x.mat = 1) (h1 : x.righ
     pA (x.adFun (sA Y)) = -(Jmat R 2 * Yᵀ * Jmat R 2) := by
   have hx' : x.mat = !![1, 0, 0; 0, 1, 0; 0, 0, 1] := by
     rw [hx]; ext i j; fin_cases i <;> fin_cases j <;> simp
-  rw [ad_eq (by ring) hx', if_neg (by rw [h1]; decide), theta_eq]
+  rw [ad_eq (by ring) hx', ite_eq_right (by rw [h1]; decide), theta_eq]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [sA, pA, Jmat, Fin.rev, Matrix.mul_apply, Fin.sum_univ_three, Fin.sum_univ_two]

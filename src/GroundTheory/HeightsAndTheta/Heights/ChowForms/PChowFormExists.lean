@@ -101,7 +101,7 @@ theorem ChowFormExists.proof (h₁ : IncIdealDim.Statement) (h₂ : IncIdealPrim
   have hS : ringKrullDim (MvPolynomial (Fin k × Fin n) F) = ((k * n : ℕ) : WithBot ℕ∞) := by
     rw [MvPolynomial.ringKrullDim_of_isNoetherianRing_of_finite, ringKrullDim_eq_zero_of_field,
       Nat.card_eq_fintype_card, Fintype.card_prod, Fintype.card_fin, Fintype.card_fin, zero_add]
-  letI : (incIdeal P k).IsPrime := hQ
+  let : (incIdeal P k).IsPrime := hQ
   have hsum := GroundTheory.Arith.Abelian.Jacobian.height_add_ringKrullDim_quotient F (incIdeal P k)
   rw [hdimQ, hS] at hsum
   have hkn : k ≤ k * n := Nat.le_mul_of_pos_right k hn

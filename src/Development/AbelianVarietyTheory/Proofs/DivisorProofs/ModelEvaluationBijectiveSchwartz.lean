@@ -108,10 +108,10 @@ theorem model_admissible_iff_evaluation : GlobalTheory.FunPr.Hypotheses₂ → �
       rw [h2] at h1
       exact h1.symm
 
-    rw [hsplit, map_sum, ContinuousLinearMap.sum_apply]
+    rw [hsplit, map_sum, sum_apply]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_smul, hφe j]
-    simp only [ContinuousLinearMap.coe_smul', Pi.smul_apply, ContinuousLinearMap.coe_comp', Function.comp_apply]
+    simp only [FunLike.coe_smul, Pi.smul_apply, ContinuousLinearMap.coe_comp, Function.comp_apply]
     rw [← hTj j (S f)]
     rfl
 

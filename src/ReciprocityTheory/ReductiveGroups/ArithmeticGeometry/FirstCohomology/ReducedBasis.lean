@@ -109,7 +109,7 @@ lemma greedy [FiniteDimensional ℝ E] (X : Submodule ℤ E) [DiscreteTopology X
           unfold V
           congr 1
           ext x
-          simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+          simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
           constructor
           · rintro ⟨l, hl, rfl⟩
             exact ⟨⟨l.val, hl⟩, rfl⟩
@@ -140,7 +140,7 @@ lemma greedy [FiniteDimensional ℝ E] (X : Submodule ℤ E) [DiscreteTopology X
     have hli : l ≠ i := by
       intro h
       subst h
-      simp only [Set.mem_setOf_eq] at hl
+      simp only [Set.mem_ofPred_eq] at hl
       omega
     simp [Function.update_of_ne hli]
   have key : ∀ n ≤ d, ∃ u : Fin d → E, ∀ k : Fin d, k.val < n → (u k ∈ X ∧ u k ∉ V u k.val ∧
@@ -303,7 +303,7 @@ theorem reducedBasis_holds : ReducedBasisStatement := by
     intro k j hjk
     apply (hu j).2.2.2 (u k) (huX k)
     intro hmem
-    exact huV k (RB.V_mono u (Fin.lt_iff_val_lt_val.1 hjk).le hmem)
+    exact huV k (RB.V_mono u (Fin.lt_def.1 hjk).le hmem)
   have hb := fun k => RB.exists_b u hli X huX k (fun j hj => hmono k j hj)
   choose b hbX hbV hb0 hb1 hbmin hbnrm hbd using hb
   have hspan := RB.span_flag u hli X b hbX hbV hb0 hb1 hbmin

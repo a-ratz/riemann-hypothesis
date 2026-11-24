@@ -57,7 +57,7 @@ theorem UpperTheory.V.Hi.fnIndep :
     ∀ (O Ω S ι : Type) [CommRing O] [IsDomain O] [Field Ω] [Algebra O Ω], Function.Injective (algebraMap O Ω) → ∀ (m : ℕ) (v : ι → S → Fin m → O), LinearIndependent O v → LinearIndependent Ω fun i s j => algebraMap O Ω (v i s j) := by
   intro O Ω S ι _ _ _ _ hinj m v hv
   classical
-  letI : Algebra (FractionRing O) Ω := (IsFractionRing.lift hinj).toAlgebra
+  let : Algebra (FractionRing O) Ω := (IsFractionRing.lift hinj).toAlgebra
   have htow : ∀ x : O, algebraMap O Ω x =
       algebraMap (FractionRing O) Ω (algebraMap O (FractionRing O) x) :=
     fun x => (IsFractionRing.lift_algebraMap hinj x).symm

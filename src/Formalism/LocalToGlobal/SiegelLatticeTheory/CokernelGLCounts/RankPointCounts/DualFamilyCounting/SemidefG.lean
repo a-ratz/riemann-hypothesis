@@ -106,16 +106,16 @@ theorem semidefG (h : Dual e y z N) (hN : 0 < N) (τ : E →+* ℂ) (hτ : ∀ a
     rcases i with a | b <;> rcases j with a' | b'
     · have ha : a ≠ a' := fun h => hij (by rw [h])
       have ha' : a' ≠ a := fun h => ha h.symm
-      simp only [wv, Sum.elim_inl, map_sub, LinearMap.sub_apply, h.ee, h.yy, h.ey, h.ye, if_neg ha, if_neg ha']
+      simp only [wv, Sum.elim_inl, map_sub, LinearMap.sub_apply, h.ee, h.yy, h.ey, h.ye, ite_eq_right ha, ite_eq_right ha']
       simp
     · cases b'
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, if_false, map_sub,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, ite_false, map_sub,
           LinearMap.sub_apply, h.ez, h.yz, sub_zero]
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, if_true, map_sub, LinearMap.sub_apply, hE, hF, sub_zero]
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, ite_true, map_sub, LinearMap.sub_apply, hE, hF, sub_zero]
     · cases b
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, if_false, map_sub,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, ite_false, map_sub,
           hsw0 S (h.ez a'), hsw0 S (h.yz a'), sub_zero]
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, if_true, map_sub, hsw0 S (hE a'), hsw0 S (hF a'), sub_zero]
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, ite_true, map_sub, hsw0 S (hE a'), hsw0 S (hF a'), sub_zero]
     · cases b <;> cases b'
       · exact absurd rfl hij
       · simpa [wv] using hz
@@ -124,20 +124,20 @@ theorem semidefG (h : Dual e y z N) (hN : 0 < N) (τ : E →+* ℂ) (hτ : ∀ a
   have hdiag : ∀ i, τ (S.hT (wv i) (wv i)) = (d i : ℂ) := by
     intro i
     rcases i with a | b
-    · simp only [wv, d, Sum.elim_inl, map_sub, LinearMap.sub_apply, h.ee, h.yy, h.ey, h.ye, if_true]
+    · simp only [wv, d, Sum.elim_inl, map_sub, LinearMap.sub_apply, h.ee, h.yy, h.ey, h.ye, ite_true]
       simp only [map_zero, map_one]
       push_cast; ring
     · cases b
-      · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, if_false, h.zz, map_neg, map_natCast]
+      · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, ite_false, h.zz, map_neg, map_natCast]
         push_cast; ring
-      · simp only [wv, d, Sum.elim_inr, if_true]
+      · simp only [wv, d, Sum.elim_inr, ite_true]
         exact real_of τ hτ w
   have hneg : ∀ i, d i < 0 := by
     intro i
     rcases i with a | b
     · simp [d]
     · cases b
-      · simp only [d, Sum.elim_inr, Bool.false_eq_true, if_false]; linarith
+      · simp only [d, Sum.elim_inr, Bool.false_eq_true, ite_false]; linarith
       · simpa [d] using hlt
   have hc := PI.CntNotPosW.card_le_of_negFamily S τ hτ hsig wv d hoff hdiag hneg
   simp only [Fintype.card_sum, Fintype.card_fin, Fintype.card_bool] at hc

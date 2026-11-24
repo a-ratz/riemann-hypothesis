@@ -168,7 +168,7 @@ theorem lq_open (hQ : QOpen q) : IsOpen {x : UAd hc n | (x : GL (Fin n) 𝒜) �
     show _ = _ + _ * (((Formalism.L2.DIV.oToS F E a0 : Formalism.L2.Herm.intAf F E) : 𝒜) * _)
     rw [e, mul_assoc]
   have hnh : (((levUQ hc n ST SG Q H q).subgroupOf (UAd hc n) : Subgroup (UAd hc n)) : Set (UAd hc n)) ∈ nhds (1 : UAd hc n) := by
-    refine Filter.mem_of_superset ((hWo.preimage continuous_subtype_val).mem_nhds hW1) ?_
+    refine Filter.mem_of_superset ((hWo.preimage continuous_subtypeVal).mem_nhds hW1) ?_
     intro x hx
     exact hsub x.1 x.2 hx
   exact Subgroup.isOpen_of_mem_nhds _ hnh

@@ -285,7 +285,7 @@ theorem exists_form_const {K : Type} [Fintype K] {ι : K → Type} [∀ k, Finty
     ∃ v : MRing ι, Small.IsFormOff (mCoordIdeal y) v ∧ ∀ z ∈ mcPts (mCoordIdeal y), MvPolynomial.aeval z v ≠ 0 →
       ∃ σ : F →+* ℂ, ∀ t : F, Small.HasVal y 0 (cst t) z (σ t) := by
   classical
-  haveI : CharZero Ω := charZero_of_injective_ringHom cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom cst.injective
   let b := Module.finBasis ℚ F
   obtain ⟨v, hv, H⟩ := GlobalTheory.CompanionTheory.Ar.Rec.FinRd.ValSub.exists_subring_val K ι Ω y hb
     (Finset.univ.image fun i => cst (b i))
@@ -658,14 +658,14 @@ theorem mem_chartLatNm_of_disc : (∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (A
   have hN' : ∀ c, 0 < N' c := by
     intro c
     by_cases h : ∀ k, y ⟨k, c k⟩ ≠ 0
-    · simp only [N', dif_pos h]
+    · simp only [N', dite_eq_left h]
       exact hN0 c h
-    · simp only [N', dif_neg h]
+    · simp only [N', dite_eq_right h]
       exact one_pos
   refine ⟨∏ c, N' c, Finset.prod_pos fun c _ => hN' c, ?_⟩
   intro c hc
   obtain ⟨m, hm⟩ : N' c ∣ ∏ c, N' c := Finset.dvd_prod_of_mem _ (Finset.mem_univ c)
-  have hNc : N' c = N c hc := by simp only [N', dif_pos hc]
+  have hNc : N' c = N c hc := by simp only [N', dite_eq_left hc]
   have hmem : ((∏ c, N' c : ℕ) : Ω) * s * ∏ k, y ⟨k, c k⟩ ^ (-(((1 : ℕ) : ℤ) * a k)) ∈ chartRingZ y c := by
     have e : ((∏ c, N' c : ℕ) : Ω) * s * ∏ k, y ⟨k, c k⟩ ^ (-(((1 : ℕ) : ℤ) * a k)) =
         (m : Ω) * ((N c hc : Ω) * (s * ∏ k, y ⟨k, c k⟩ ^ (-a k))) := by
@@ -881,7 +881,7 @@ theorem chart_differentiable (R : AnLogRes P J e) (hJ : ∀ z, z ∉ mcPts J)
   let Inv := hb.localInverse hb' hn
   have hInv : ContDiffAt ℂ 1 Inv (b (R.A.chart j x₀)) := hb.to_localInverse hb' hn
   have hleft : ∀ᶠ v in 𝓝 (R.A.chart j x₀), Inv (b v) = v :=
-    (hb.hasStrictFDerivAt' hb' hn).eventually_left_inverse
+    (hb.hasStrictFDerivAt hb' hn).eventually_left_inverse
   let c : ℂ → Fin e → ℂ := fun z => ρc (affCoord p (Zf z))
   have hZp : ∀ k, Zf 0 ⟨k, p k⟩ ≠ 0 := by
     obtain ⟨d, -, hd⟩ := h0
@@ -928,7 +928,7 @@ theorem exists_lower_bound {g : ℂ → ℂ} (hg : AnalyticAt ℂ g 0)
     have h1 : ∀ᶠ z in 𝓝[≠] (0 : ℂ), g z = 0 := h.filter_mono nhdsWithin_le_nhds
     obtain ⟨z, hz1, hz2⟩ := (hne.and h1).exists
     exact hz1 hz2
-  obtain ⟨m, f, hf, hf0, hgf⟩ := hg.exists_eventuallyEq_pow_smul_nonzero_iff.2 hnot
+  obtain ⟨m, f, hf, hf0, hgf⟩ := hg.exists_eventuallyEq_pow_smul_ne_zero_iff.2 hnot
   refine ⟨‖f 0‖ / 2, m, by positivity, ?_⟩
   have hlt : ∀ᶠ z in 𝓝 (0 : ℂ), ‖f 0‖ / 2 < ‖f z‖ :=
     hf.continuousAt.norm.eventually (lt_mem_nhds (by
@@ -1094,7 +1094,7 @@ theorem UpperTheory.Reformulated.B.DYhc4.main :
       b ∉ p →
         ∃ (ψ : A →+* ℂ), ψ.comp (Algebra.algebraMap K A) = σ ∧ (∀ a ∈ p, (ψ : A → ℂ) a = (0 : ℂ)) ∧ (ψ : A → ℂ) b ≠ (0 : ℂ) := by
   intro K A _ _ _ _ σ p hp b hb
-  haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := K)
+  have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := K)
   have hj : p.jacobson = p := IsJacobsonRing.out' p hp.isRadical
   have hex : ∃ m : Ideal A, p ≤ m ∧ m.IsMaximal ∧ b ∉ m := by
     by_contra h
@@ -1105,11 +1105,11 @@ theorem UpperTheory.Reformulated.B.DYhc4.main :
     rintro J ⟨hpJ, hJ⟩
     exact h J hpJ hJ
   obtain ⟨m, hpm, hm, hbm⟩ := hex
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType K (A ⧸ m) :=
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType K (A ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ K m) (Ideal.Quotient.mkₐ_surjective K m)
-  haveI : Module.Finite K (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (A ⧸ m)
-  letI : Algebra K ℂ := σ.toAlgebra
+  have : Module.Finite K (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (A ⧸ m)
+  let : Algebra K ℂ := σ.toAlgebra
   let f : (A ⧸ m) →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1493,7 +1493,7 @@ theorem ne_zero_of_top_le {R K : Type} [CommRing R] [Field K] (φ : R →+* K) (
 theorem isDVR_regAt {R K : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] [Field K]
     {φ : R →+* K} (hξ : IsCptGen (pt φ)) (x : Cpt (pt φ)) (h1 : x.1.asIdeal.height = 1) :
     IsDiscreteValuationRing (regAt (pt φ) x) := by
-  haveI : (x.1 : PrimeSpectrum R).asIdeal.IsPrime := PrimeSpectrum.isPrime _
+  have : (x.1 : PrimeSpectrum R).asIdeal.IsPrime := PrimeSpectrum.isPrime _
   have hd := _root_.GlobalTheory.localizationAtPrime_isDiscreteValuationRing_of_height_eq_one R x.1.asIdeal h1
   have key : ∀ (q : PrimeSpectrum R), Nonempty (Localization.AtPrime q.asIdeal ≃+* (Spec.structureSheaf R).presheaf.stalk q) :=
     fun q => ⟨(IsLocalization.algEquiv q.asIdeal.primeCompl _ _).toRingEquiv⟩
@@ -1605,10 +1605,10 @@ theorem disc_of_pole {R K : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R]
 
 theorem pole_disc : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (A : Subalgebra ℚ Ω), A.FG → Algebra.Smooth ℚ A → (∀ x : Ω, ∃ a ∈ A, ∃ b ∈ A, b ≠ 0 ∧ x * b = a) → ∀ g h b : A, (h : Ω) ≠ 0 → (b : Ω) ≠ 0 → (g : Ω) / h ∉ A → ∃ (ψ : ℂ → (A →+* ℂ)) (C : ℝ), (∀ a : A, DifferentiableOn ℂ (fun z => ψ z a) (Metric.ball 0 1)) ∧ ∀ z ∈ Metric.ball (0 : ℂ) 1, z ≠ 0 → ψ z b ≠ 0 ∧ ψ z h ≠ 0 ∧ ‖ψ z h‖ ≤ C * ‖z‖ * ‖ψ z g‖ := by
   intro Ω _ _ A hFG hSm hfrac g h b hh hb ht
-  haveI : Algebra.FiniteType ℚ A := (Subalgebra.fg_iff_finiteType A).1 hFG
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing ℚ A
-  haveI : IsIntegrallyClosed A := GlobalTheory.isIntegrallyClosed_of_smooth ℚ A
-  haveI : IsFractionRing A Ω := IsFractionRing.of_field A Ω fun z => by
+  have : Algebra.FiniteType ℚ A := (Subalgebra.fg_iff_finiteType A).1 hFG
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing ℚ A
+  have : IsIntegrallyClosed A := GlobalTheory.isIntegrallyClosed_of_smooth ℚ A
+  have : IsFractionRing A Ω := IsFractionRing.of_field A Ω fun z => by
     obtain ⟨a, ha, c, hc, hc0, e⟩ := hfrac z
     have hc0' : algebraMap A Ω ⟨c, hc⟩ ≠ 0 := hc0
     exact ⟨⟨a, ha⟩, ⟨c, hc⟩, eq_div_of_mul_eq hc0' e⟩
@@ -1821,7 +1821,7 @@ theorem le_exp_mul_pow_of_log_le {P r A B : ℝ} {M : ℕ} (hP : 0 < P) (hr : 1 
   have h1 : Real.log P ≤ A + (M : ℝ) * Real.log r := by nlinarith
   calc P = Real.exp (Real.log P) := (Real.exp_log hP).symm
     _ ≤ Real.exp (A + (M : ℝ) * Real.log r) := Real.exp_le_exp.2 h1
-    _ = Real.exp A * r ^ M := by rw [Real.exp_add, Real.exp_nat_mul, Real.exp_log hr0]
+    _ = Real.exp A * r ^ M := by rw [Real.exp_add, Real.exp_natCast_mul, Real.exp_log hr0]
 
 theorem sing_prod_le_rW_pow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (n : RootIx Dw → ℤ), ∀ w₀ ∈ mcPts (mCoordIdeal RM.y), ∃ (C : ℝ) (M : ℕ), 0 ≤ C ∧ ∀ᶠ w in 𝓝 w₀, w ∈ mcPts (mCoordIdeal RM.y) → ∀ x : Or.Re.R.X, SameOrbit (Or.Re.R.lift x x) w → Or.Re.π x ∈ Sys.open' → ∏ r, (Or.sing r).h w ^ n r ≤ C * ReciprocityTheory.AnForm.P.rW Sys.L Sys.s (Or.Re.π x) ^ M := by
   intro E _ _ _ H Dw l Xo c O _ β Y SS RM Sys Fx Or n w₀ hw₀

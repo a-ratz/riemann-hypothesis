@@ -87,14 +87,14 @@ theorem mem_range_of_isIntegral {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
 theorem isIntegral_ee {M : ℕ} (hM : 0 < M) : IsIntegral ℚ (ee (1 / (M : ℂ))) := by
   have hMc : (M : ℂ) ≠ 0 := by exact_mod_cast hM.ne'
   have h : ee (1 / (M : ℂ)) ^ M = 1 := by
-    rw [ee, ← Complex.exp_nat_mul]
+    rw [ee, ← Complex.exp_natCast_mul]
     have : (M : ℂ) * (2 * Real.pi * Complex.I * (1 / M)) = 2 * Real.pi * Complex.I := by field_simp
     rw [this, Complex.exp_two_pi_mul_I]
   exact IsIntegral.of_pow hM (by rw [h]; exact isIntegral_one)
 
 theorem isIntegral_of_mem_adjoin {M : ℕ} (hM : 0 < M) {z : ℂ}
     (hz : z ∈ IntermediateField.adjoin ℚ {ee (1 / (M : ℂ))}) : IsIntegral ℚ z := by
-  haveI := IntermediateField.adjoin.finiteDimensional (isIntegral_ee hM)
+  have := IntermediateField.adjoin.finiteDimensional (isIntegral_ee hM)
   have h := Algebra.IsIntegral.isIntegral (R := ℚ) (⟨z, hz⟩ : IntermediateField.adjoin ℚ {ee (1 / (M : ℂ))})
   exact IntermediateField.isIntegral_iff.1 h
 
@@ -178,7 +178,7 @@ theorem exp_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω] (ε : �
       Complex.exp (2 * Real.pi * Complex.I * (m : ℂ) * τ / M)) ∘ (fun j : ℕ => (j : ℤ) + k) =
       fun j : ℕ => ee ((k : ℂ) / M * (τ : ℂ)) * (A j * Complex.exp (2 * Real.pi * Complex.I * j * τ / M)) := by
     funext j
-    simp only [Function.comp_apply, le_add_iff_nonneg_left, Nat.cast_nonneg, if_true, add_sub_cancel_right,
+    simp only [Function.comp_apply, le_add_iff_nonneg_left, Nat.cast_nonneg, ite_true, add_sub_cancel_right,
       Int.toNat_natCast, hε]
     rw [mul_left_comm, ee, ← Complex.exp_add]
     congr 2
@@ -193,7 +193,7 @@ namespace GlobalTheory.KZ.SiegelMem
 theorem an_siegel_eq : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (T : Tower Ω ε)
     (c : ℕ) (x : Fin 2 → ℚ), admitted c x → T.an (siegel T c x) = ((sgC c x : ℂ → ℂ) : Mero) := by
   intro Ω _ _ _ ε T c x hx
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   set M : ℕ := (x 0).den * (x 1).den with hMdef
   have hM : 0 < M := Nat.mul_pos (x 0).den_pos (x 1).den_pos
   set Px : Fin 2 → ℤ := ![(x 0).num * (x 1).den, (x 1).num * (x 0).den] with hPx
@@ -207,7 +207,7 @@ theorem an_siegel_eq : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
     UpperHalfPlane.mdifferentiable_iff.1 (GlobalTheory.Sieg.mdifferentiable_sg c x hx)
   have hlev : ∀ γ ∈ CongruenceSubgroup.Gamma M, ∀ τ : ℍ, sg c (act x γ) τ = sg c x τ := by
     intro γ hγ τ
-    haveI : NeZero M := ⟨hM.ne'⟩
+    have : NeZero M := ⟨hM.ne'⟩
     obtain ⟨g00, g01, g10, g11⟩ := CongruenceSubgroup.Gamma_mem.1 hγ
     have d00 : (M : ℤ) ∣ γ 0 0 - 1 := (ZMod.intCast_zmod_eq_zero_iff_dvd _ M).1 (by push_cast; rw [g00, sub_self])
     have d01 : (M : ℤ) ∣ γ 0 1 := (ZMod.intCast_zmod_eq_zero_iff_dvd _ M).1 g01

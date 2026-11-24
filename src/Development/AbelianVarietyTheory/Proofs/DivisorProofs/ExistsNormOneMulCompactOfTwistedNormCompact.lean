@@ -121,14 +121,14 @@ theorem quadratic_preimage_compact_on_subspace
     (hhom : ∀ (c : K) w, q (c • w) = (c * star c) • q w) (hnull : ∀ w ∈ S, q w = 0 → w = 0)
     (Q : Set (Matrix (Fin m) (Fin m) K)) (hQ : IsCompact Q) :
     ∃ B : Set (Matrix (Fin m) (Fin m) K), IsCompact B ∧ ∀ w ∈ S, q w ∈ Q → w ∈ B := by
-  haveI : ProperSpace (Matrix (Fin m) (Fin m) K) := FiniteDimensional.proper K _
+  have : ProperSpace (Matrix (Fin m) (Fin m) K) := FiniteDimensional.proper K _
   obtain ⟨c₀, hc₀⟩ := NormedField.exists_one_lt_norm K
   have hc₀pos : 0 < ‖c₀‖ := lt_trans one_pos hc₀
   obtain ⟨R, hR⟩ := hQ.isBounded.subset_closedBall 0
   set Sh : Set (Matrix (Fin m) (Fin m) K) :=
     (S : Set _) ∩ {w | 1 / ‖c₀‖ ≤ ‖w‖ ∧ ‖w‖ ≤ 1} with hShdef
   have hSclosed : IsClosed (S : Set (Matrix (Fin m) (Fin m) K)) :=
-    Submodule.closed_of_finiteDimensional S
+    Submodule.isClosed_of_finiteDimensional S
   have hShc : IsCompact Sh := by
     refine (isCompact_closedBall (0 : Matrix (Fin m) (Fin m) K) 1).of_isClosed_subset ?_ ?_
     · refine hSclosed.inter ?_
@@ -296,7 +296,7 @@ theorem exists_normOne_mul_compact : ∀ (K : Type) [NontriviallyNormedField K] 
   have hu := hδ.1
   set N := GlobalTheory.Tw.nrm δ with hNdef
   set A := Algebra.adjoin K {N} with hAdef
-  letI : CommRing A := Algebra.instCommRingAdjoinSingleton N
+  let : CommRing A := Algebra.instCommRingAdjoinSingleton N
   have hA := GlobalTheory.Tw.CentralizerAdjoin.adj_adjoin hu
   have hmul := GlobalTheory.Tw.CentralizerAdjoin.adj_mul' hu
   have hsemi := GlobalTheory.Tw.CentralizerAdjoin.adj_semi δ
@@ -316,9 +316,9 @@ theorem exists_normOne_mul_compact : ∀ (K : Type) [NontriviallyNormedField K] 
       map_add' := fun x y => Subtype.ext (hadd x.1 y.1) }
   have hσv : ∀ x : A, (σ x : Matrix (Fin n) (Fin n) K) = GlobalTheory.Tw.adj δ x := fun x => rfl
   have hσσ : ∀ x : A, σ (σ x) = x := fun x => Subtype.ext (hA x x.2).2
-  haveI : IsReduced A := ⟨fun x ⟨m, hm⟩ => Subtype.ext
+  have : IsReduced A := ⟨fun x ⟨m, hm⟩ => Subtype.ext
     (_root_.GlobalTheory.adjoin_matrix_reduced_of_charpoly_separable K n N hδ.2 x x.2 m (by simpa using congrArg Subtype.val hm))⟩
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
   obtain ⟨e, f, he, hf, hes, hsum, hnull⟩ := _root_.GlobalTheory.reducedArtinian_involution_split A σ hσσ
 
   have hse : σ e * f = 0 := by
@@ -332,7 +332,7 @@ theorem exists_normOne_mul_compact : ∀ (K : Type) [NontriviallyNormedField K] 
     have h := congrArg σ hsum
     rw [map_add (f := _), map_add (f := _), hσσ, map_one] at h
     linear_combination h - hsum
-  letI : ContinuousStar K := ⟨(Isometry.of_dist_eq fun x y => by
+  let : ContinuousStar K := ⟨(Isometry.of_dist_eq fun x y => by
     rw [dist_eq_norm, dist_eq_norm, ← star_sub, hK]).continuous⟩
   have hqc : Continuous fun w : Matrix (Fin n) (Fin n) K => w * GlobalTheory.Tw.adj δ w := by
     unfold GlobalTheory.Tw.adj

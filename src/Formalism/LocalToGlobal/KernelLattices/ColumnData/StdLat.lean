@@ -65,14 +65,14 @@ theorem single_mem_stdL {N : ℕ} (a : Fin N) : (Pi.single a 1 : Fin N → D.hos
 
 theorem star_mem_range (x : D.host.E) (h : x ∈ (algebraMap (𝓞 D.host.E) D.host.E).range) :
     (letI := D.host.cmStar; star x) ∈ (algebraMap (𝓞 D.host.E) D.host.E).range := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨y, rfl⟩ := RingHom.mem_range.1 h
   have hi : IsIntegral ℤ (star (algebraMap (𝓞 D.host.E) D.host.E y)) :=
     (NumberField.RingOfIntegers.isIntegral_coe y).map (starRingEnd D.host.E).toIntAlgHom
   exact RingHom.mem_range.2 ⟨⟨_, hi⟩, rfl⟩
 
 theorem stdL_isSD (N : ℕ) : (letI := D.host.cmStar; IsSDLat D.host.E N (Formalism.L2.Ker.Cd.StandardLatticesGL3.stdL D N)) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   refine ⟨?_, ?_, ?_⟩
   · have hspan : Formalism.L2.Ker.Cd.StandardLatticesGL3.stdL D N = Submodule.span (𝓞 D.host.E)
         (Set.range fun i : Fin N => (Pi.single i 1 : Fin N → D.host.E)) := by

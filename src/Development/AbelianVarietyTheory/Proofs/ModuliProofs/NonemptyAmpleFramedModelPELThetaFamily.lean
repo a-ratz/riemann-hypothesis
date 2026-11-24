@@ -443,7 +443,7 @@ theorem exists_polAV {Z : Scheme.{0}} (G : Over Z) [GrpObj G] [IsCommMonObj G] (
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
 
 theorem isOpen_TT_eq_bot (S : ThetaSys o Ω) (M : RatModel o Ω) : IsOpen {z | S.TT M z = ⊥} := by
-  haveI : NeZero (S.r * S.N) := ⟨(Nat.mul_pos S.r_pos (lt_of_lt_of_le two_pos S.N_ge)).ne'⟩
+  have : NeZero (S.r * S.N) := ⟨(Nat.mul_pos S.r_pos (lt_of_lt_of_le two_pos S.N_ge)).ne'⟩
   refine isOpen_iff_forall_mem_open.2 fun z hz => ⟨⋂ x ∈ S.supI M z, {z' | M.Div S.th x z'}, fun z' hz' => ?_,
     (Set.toFinite _).isOpen_biInter fun x _ => M.isOpen_setOf_div S.th x, Set.mem_iInter₂.2 fun x hx => hx⟩
   have hle : S.HH M z ≤ S.HH M z' := AddSubgroup.closure_mono fun x hx => Set.mem_iInter₂.1 hz' x hx
@@ -588,9 +588,9 @@ theorem valF_pullOn {σ : ∀ j, Γ(X, V ⊓ (powAlong L k (𝟙 X)).U j)} (hσ 
   · exact Points.valR_appLE g F _ h _
   · have h' : ¬ ⊤ ≤ (g ≫ F) ⁻¹ᵁ (V ⊓ (powAlong L k (𝟙 X)).U j) := fun h' =>
       h fun y hy => Set.mem_iInter.2 fun a => Set.mem_iInter.1 (h' hy).2 a
-    have e : valF (g ≫ F) _ (σ j) = 0 := dif_neg h'
+    have e : valF (g ≫ F) _ (σ j) = 0 := dite_eq_right h'
     rw [e]
-    exact dif_neg h
+    exact dite_eq_right h
 
 end Sections
 
@@ -966,7 +966,7 @@ namespace GlobalTheory
 
 theorem isOpen_setOf_TT_eq_bot : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : GlobalTheory.ZH.ThetaSys o Ω) (M : GlobalTheory.ZH.RatModel o Ω) (I : Type) (d : I → Ω) (e : ℕ), M.HasDiv S.th → (∀ z : M.Z, ∀ x₀ ∈ S.supI M z, (S.TT M z = ⊥ ↔ ∃ k, d k ≠ 0 ∧ S.th x₀ ^ e / d k ∈ M.O z)) → IsOpen {z : M.Z | S.TT M z = ⊥} := by
   intro o Ω _ _ _ S M I d e hdiv h
-  haveI : NeZero (S.r * S.N) :=
+  have : NeZero (S.r * S.N) :=
     ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)⟩
   refine isOpen_iff_forall_mem_open.2 fun z hz => ?_
   obtain ⟨x₀, hx₀⟩ := hdiv z
@@ -1034,13 +1034,13 @@ namespace GlobalTheory.FamilyModel
 theorem exists_isDomain_away {R : Type} [CommRing R] [IsNoetherianRing R] [_root_.IsReduced R] (p : Ideal R) [hp : p.IsPrime]
     (hm : ∀ q : Ideal R, q.IsPrime → q ≤ p → q = p) : ∃ f ∉ p, IsDomain (Localization.Away f) := by
   have hmin : p ∈ minimalPrimes R := ⟨⟨hp, bot_le⟩, fun q hq hle => (hm q hq.1 hle).ge⟩
-  have hfin := (minimalPrimes.finite_of_isNoetherianRing R).subset (Set.diff_subset (t := {p}))
+  have hfin := (minimalPrimes.finite_of_isNoetherianRing R).subset (Set.sdiff_subset (t := {p}))
   have hnle : ¬ (hfin.toFinset.inf id ≤ p) := by
     rw [Ideal.IsPrime.inf_le' hp]
     rintro ⟨q, hq, hle⟩
     rw [Set.Finite.mem_toFinset] at hq
     exact hq.2 (hm q hq.1.1.1 hle)
-  obtain ⟨f, hf, hfp⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨f, hf, hfp⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have hz : ∀ a ∈ p, f * a = 0 := fun a ha => by
     have : f * a ∈ sInf (minimalPrimes R) := Ideal.mem_sInf.2 fun {q} hq => by
       by_cases h : q = p
@@ -1081,7 +1081,7 @@ theorem exists_integral_chart {o : Type} [CommRing o] [IsDomain o] [IsNoetherian
   obtain ⟨p, rfl⟩ := hx
   have hft : β.hom.FiniteType := by
     rw [← HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType), hβ]; infer_instance
-  letI : Algebra o R₀ := β.hom.toAlgebra
+  let : Algebra o R₀ := β.hom.toAlgebra
   have : Algebra.FiniteType o R₀ := hft
   have : IsNoetherianRing R₀ := Algebra.FiniteType.isNoetherianRing o R₀
   have : IsReduced (Sp R₀) := isReduced_of_isOpenImmersion x

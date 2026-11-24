@@ -90,9 +90,9 @@ theorem prod_le_right (ν : Measure X) (μ : Measure Y) (lam : Measure Z) [SFini
   rw [Measure.prod_apply m1, Measure.prod_apply m2, ← lintegral_const_mul' _ _ ENNReal.coe_ne_top]
   refine lintegral_mono fun x => ?_
   have e1 : Prod.mk x ⁻¹' {z : X × Y | f z.1 + g z.2 ≤ t} = {y | g y ≤ t - f x} := by
-    ext y; simp only [mem_preimage, mem_setOf_eq]; constructor <;> intro <;> linarith
+    ext y; simp only [mem_preimage, mem_ofPred_eq]; constructor <;> intro <;> linarith
   have e2 : Prod.mk x ⁻¹' {z : X × Z | f z.1 + h z.2 ≤ t} = {y | h y ≤ t - f x} := by
-    ext y; simp only [mem_preimage, mem_setOf_eq]; constructor <;> intro <;> linarith
+    ext y; simp only [mem_preimage, mem_ofPred_eq]; constructor <;> intro <;> linarith
   simp only [e1, e2]
   exact H _ (by linarith [h0 x])
 
@@ -127,7 +127,7 @@ theorem le_of_pos (ν : Measure X) (lam : Measure Z) {f : X → ℝ} {g : Z → 
   intro s hs
   rcases lt_trichotomy s 0 with h | h | h
   · have : {y | f y ≤ s} = ∅ := by
-      ext y; simp only [mem_setOf_eq, mem_empty_iff_false, iff_false, not_le]; linarith [h0 y]
+      ext y; simp only [mem_ofPred_eq, mem_empty_iff_false, iff_false, not_le]; linarith [h0 y]
     simp [this]
   · subst h
     have T := tendsto_measure_biInter_gt (μ := lam) (s := fun r : ℝ => {z | g z ≤ r}) (a := 0)
@@ -135,21 +135,21 @@ theorem le_of_pos (ν : Measure X) (lam : Measure Z) {f : X → ℝ} {g : Z → 
       (fun i j _ hij z hz => le_trans hz hij) ⟨δ, hδ, hfin⟩
     have e : (⋂ r > (0 : ℝ), {z | g z ≤ r}) = {z | g z ≤ 0} := by
       ext z
-      simp only [mem_iInter, mem_setOf_eq]
+      simp only [mem_iInter, mem_ofPred_eq]
       exact ⟨fun h => le_of_forall_gt_imp_ge_of_dense fun r hr => h r hr, fun h r hr => h.trans hr.le⟩
     rw [e] at T
     refine ge_of_tendsto (ENNReal.Tendsto.const_mul T (Or.inr ENNReal.coe_ne_top)) ?_
     filter_upwards [Ioc_mem_nhdsGT hδ] with r hr
     have hsub : {y | f y ≤ 0} ⊆ {y | f y ≤ r} := by
       intro y hy
-      simp only [mem_setOf_eq] at hy ⊢
+      simp only [mem_ofPred_eq] at hy ⊢
       exact hy.trans hr.1.le
     exact (measure_mono hsub).trans (H r hr.1 hr.2)
   · exact H s h hs
 
 theorem sqrt_set {A : Type*} (f : A → ℝ) {r : ℝ} (hr : 0 ≤ r) :
     {x | Real.sqrt (f x) ≤ r} = {x | f x ≤ r ^ 2} := by
-  ext x; simp only [mem_setOf_eq]; exact Real.sqrt_le_left hr
+  ext x; simp only [mem_ofPred_eq]; exact Real.sqrt_le_left hr
 
 theorem vol_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     [MeasurableSpace E] [BorelSpace E] {r : ℝ} (hr : 0 ≤ r) :
@@ -158,7 +158,7 @@ theorem vol_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Fin
   rw [← Measure.addHaar_closedBall volume (0 : E) hr]
   congr 1
   ext x
-  simp only [mem_setOf_eq, mem_closedBall_zero_iff]
+  simp only [mem_ofPred_eq, mem_closedBall_zero_iff]
   exact pow_le_pow_iff_left₀ (norm_nonneg _) hr two_ne_zero
 
 theorem Asym.compare {ν : Measure X} {f : X → ℝ} {d : ℕ} (h : Asym ν f d) (hf : Measurable f)
@@ -224,7 +224,7 @@ theorem vol_prod (d e : ℕ) {r : ℝ} (hr : 0 ≤ r) :
   refine h1.symm.trans ?_
   congr 1
   ext z
-  simp only [mem_preimage, mem_setOf_eq, LinearIsometryEquiv.norm_map]
+  simp only [mem_preimage, mem_ofPred_eq, LinearIsometryEquiv.norm_map]
   rw [WithLp.prod_norm_sq_eq_of_L2]
   rfl
 
@@ -367,7 +367,7 @@ theorem emb_mul {ε : Fin n → Bool} (e : Fin p ⊕ Fin q ≃ Fin n) (hJ : Jm �
   rw [uMat_emb, uMat_emb, uMat_emb, blk_mul]
   rfl
 
-theorem continuous_uMat {ε : Fin n → Bool} : Continuous (uMat : UJ ε → Matrix (Fin n) (Fin n) ℂ) := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_uMat {ε : Fin n → Bool} : Continuous (uMat : UJ ε → Matrix (Fin n) (Fin n) ℂ) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_emb {ε : Fin n → Bool} (e : Fin p ⊕ Fin q ≃ Fin n) (hJ : Jm ε = blk e 1 (-1)) :
     Continuous (emb e hJ) := by
@@ -490,9 +490,9 @@ theorem exists_gauge_allPos (N : ℕ) : ∃ ν : Measure (UJ (allPos N)), IsFini
     rw [htop, ENNReal.toReal_top, mul_zero] at hvol
     exact (volU_pos N).ne hvol
   refine ⟨ENNReal.ofReal c • Formalism.REAL.muG (allPos N), ⟨?_⟩, ⟨fun g => hsub.2.1 g trivial⟩, hsub.2.2, ?_⟩
-  · rw [Measure.smul_apply, smul_eq_mul]
+  · rw [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top hfin.lt_top
-  · rw [Measure.smul_apply, smul_eq_mul, ← ENNReal.ofReal_toReal hfin, ← ENNReal.ofReal_mul hc0.le, hvol]
+  · rw [smul_apply, smul_eq_mul, ← ENNReal.ofReal_toReal hfin, ← ENNReal.ofReal_mul hc0.le, hvol]
 
 theorem volume_maxK : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ), (univ.filter fun a => ε a = true).card = p → (univ.filter fun a => ε a = false).card = q → ∀ μ, IsGaugeSub (maxK ε) (p ^ 2 + q ^ 2) μ → μ Set.univ = ENNReal.ofReal (volU p * volU q) := by
   intro n ε p q hp hq μ hμ

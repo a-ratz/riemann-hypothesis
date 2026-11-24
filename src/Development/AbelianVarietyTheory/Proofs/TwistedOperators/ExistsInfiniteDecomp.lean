@@ -120,7 +120,7 @@ theorem exists_finite_decomp :
         exact hu (by simp only [Set.mem_ofPred_eq] at h; simp [h])⟩
     refine ⟨_, funext fun w => (GlobalTheory.LFun.finAdEquiv_apply w.2 Y).symm.trans ?_⟩
     rw [hY]
-    exact dif_pos w.2
+    exact dite_eq_left w.2
   · simpa using GlobalTheory.LFun.complMap_mem w.2 ha
 
 
@@ -133,7 +133,7 @@ theorem exists_infinite_decomp :
   classical
   have hl : ∀ (v : InfinitePlace F) (w : {w : InfinitePlace K // w.comap (algebraMap F K) = v}),
       w.1.LiesOver v := fun v w => ⟨congrArg Subtype.val w.2⟩
-  haveI : ∀ w : InfinitePlace K, IsScalarTower F K w.Completion := fun w =>
+  have : ∀ w : InfinitePlace K, IsScalarTower F K w.Completion := fun w =>
     .of_algebraMap_eq fun x => by
       simp [AbsoluteValue.Completion.algebraMap_def, WithAbs.algebraMap_right_apply]
   let φ : ∀ (v : InfinitePlace F) (w : {w : InfinitePlace K // w.comap (algebraMap F K) = v}),
@@ -145,13 +145,13 @@ theorem exists_infinite_decomp :
       ∀ w : {w : InfinitePlace K // w.comap (algebraMap F K) = v}, w.1.Completion :=
     LinearMap.pi fun w => (φ v w).toLinearMap
   have hs : Function.Surjective f := by
-    letI : NontriviallyNormedField v.Completion :=
+    let : NontriviallyNormedField v.Completion :=
       { (inferInstance : NormedField v.Completion) with
         non_trivial := ⟨2, by
           rw [← (InfinitePlace.Completion.isometry_extensionEmbedding v).norm_map_of_map_zero (map_zero _),
             map_ofNat]
           simp⟩ }
-    have hcl : IsClosed (SetLike.coe (LinearMap.range f)) := Submodule.closed_of_finiteDimensional _
+    have hcl : IsClosed (SetLike.coe (LinearMap.range f)) := Submodule.isClosed_of_finiteDimensional _
     intro z
     have hc : Continuous fun (y : InfiniteAdeleRing K)
         (w : {w : InfinitePlace K // w.comap (algebraMap F K) = v}) => y w.1 :=
@@ -161,11 +161,11 @@ theorem exists_infinite_decomp :
         fun x => ⟨1 ⊗ₜ x, funext fun w => h1 v w x⟩
     have := key fun u => if h : u.comap (algebraMap F K) = v then z ⟨u, h⟩ else 0
     rwa [show (fun w : {w : InfinitePlace K // w.comap (algebraMap F K) = v} => _) = z from
-      funext fun w => dif_pos w.2] at this
-  haveI : Module.Finite v.Completion
+      funext fun w => dite_eq_left w.2] at this
+  have : Module.Finite v.Completion
       (∀ w : {w : InfinitePlace K // w.comap (algebraMap F K) = v}, w.1.Completion) :=
     Module.Finite.of_surjective f hs
-  haveI : ∀ w : {w : InfinitePlace K // w.comap (algebraMap F K) = v},
+  have : ∀ w : {w : InfinitePlace K // w.comap (algebraMap F K) = v},
       Module.Finite v.Completion w.1.Completion := fun w =>
     Module.Finite.of_surjective (LinearMap.proj (R := v.Completion)
       (φ := fun w : {w : InfinitePlace K // w.comap (algebraMap F K) = v} => w.1.Completion) w)
@@ -204,17 +204,17 @@ theorem eta_norm_eq_prod {E L A ι : Type} [Field E] [Field L] [Algebra F E] [Al
     (hm : ∀ a b : Aˣ, eta F E A (a * b) = eta F E A a * eta F E A b) (x : (A ⊗[F] K)ˣ) :
     eta F E A (Units.map (Algebra.norm A : A ⊗[F] K →* A) x) =
       ∏ i, eta K L (B i) (Units.map (ψ i : A ⊗[F] K →* B i) x) := by
-  letI : ∀ i, Algebra A (B i) := fun i => ((ψ i).comp (algebraMap A _)).toAlgebra
-  letI : ∀ i, Algebra F (B i) := fun i => ((algebraMap K (B i)).comp (algebraMap F K)).toAlgebra
-  haveI : ∀ i, IsScalarTower F K (B i) := fun i => .of_algebraMap_eq fun _ => rfl
-  haveI : ∀ i, IsScalarTower F A (B i) := fun i => .of_algebraMap_eq fun t => by
+  let : ∀ i, Algebra A (B i) := fun i => ((ψ i).comp (algebraMap A _)).toAlgebra
+  let : ∀ i, Algebra F (B i) := fun i => ((algebraMap K (B i)).comp (algebraMap F K)).toAlgebra
+  have : ∀ i, IsScalarTower F K (B i) := fun i => .of_algebraMap_eq fun _ => rfl
+  have : ∀ i, IsScalarTower F A (B i) := fun i => .of_algebraMap_eq fun t => by
     change algebraMap K (B i) (algebraMap F K t) = ψ i (algebraMap A _ (algebraMap F A t))
     rw [← h1, ← IsScalarTower.algebraMap_apply, Algebra.TensorProduct.algebraMap_apply']
   let f : A ⊗[F] K →ₐ[A] ∀ i, B i := { RingHom.pi ψ with commutes' := fun _ => rfl }
   let e : A ⊗[F] K ≃ₐ[A] ∀ i, B i := AlgEquiv.ofBijective f hb
-  haveI : Module.Finite F K := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : Module.Finite A (∀ i, B i) := Module.Finite.equiv e.toLinearEquiv
-  haveI : ∀ i, Module.Finite A (B i) := fun i =>
+  have : Module.Finite F K := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : Module.Finite A (∀ i, B i) := Module.Finite.equiv e.toLinearEquiv
+  have : ∀ i, Module.Finite A (B i) := fun i =>
     Module.Finite.of_surjective (LinearMap.proj (R := A) (φ := B) i) (Function.surjective_eval i)
   let η : Aˣ →* ℤˣ := MonoidHom.mk' (eta F E A) hm
   have h2 : Units.map (Algebra.norm A : A ⊗[F] K →* A) x =
@@ -274,7 +274,7 @@ theorem finite_not_form {d : K} (hd : d ≠ 0) :
 theorem finite_not_integral (t : K) :
     {v : HeightOneSpectrum (𝓞 F) | ¬ ((algebraMap (v.adicCompletion F) (v.adicCompletion F ⊗[F] K)).comp
         (v.adicCompletionIntegers F).subtype).IsIntegralElem (1 ⊗ₜ t)}.Finite := by
-  haveI : Module.Finite F K := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : Module.Finite F K := Module.Finite.of_restrictScalars_finite ℚ _ _
   have ht : IsIntegral F t := Algebra.IsIntegral.isIntegral t
   have hfin : ∀ a : F, {v : HeightOneSpectrum (𝓞 F) | ¬ v.valuation F a ≤ 1}.Finite := fun a => by
     by_cases ha : a = 0
@@ -348,7 +348,7 @@ theorem exists_global {E : Type} [Field E] [NumberField E] [Algebra F E] [Algebr
     exact hw (hX w h)
   have hfib : ∀ v, eta F E _ (finDiag F δ v) =
       ∏ w ∈ (finite_fibre F K v).toFinset, eta K L _ (X w) := fun v => by
-    haveI : Fintype {w : HeightOneSpectrum (𝓞 K) // w.under (𝓞 F) = v} := (finite_fibre F K v).fintype
+    have : Fintype {w : HeightOneSpectrum (𝓞 K) // w.under (𝓞 F) = v} := (finite_fibre F K v).fintype
     rw [Finset.prod_subtype (p := fun w => w.under (𝓞 F) = v) _ (by simp)]
     refine (eta_eq_of_div_mem (hf v)).symm.trans
       ((eta_norm_eq_prod (ψ v) (g1 v) (gb v) (bf v) (mf v) (x v)).trans ?_)

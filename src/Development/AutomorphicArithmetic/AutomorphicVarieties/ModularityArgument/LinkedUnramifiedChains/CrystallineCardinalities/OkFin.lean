@@ -54,8 +54,8 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr Uppe
 theorem UpperTheory.V.Z.J.okFin :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O], (l : O) ≠ 0 → (∀ k, Finite (Ok l O k)) ∧ (∀ c : O, c ≠ 0 → Finite (O ⧸ Ideal.span {c})) ∧ (∀ k, (∀ x : Ok l O k, l ^ k • x = 0)) ∧ (∀ k, 2 ^ k ≤ Nat.card (Ok l O k)) ∧ (∀ k, ∃ N, maximalIdeal O ^ N ≤ Ideal.span {(l : O) ^ k}) ∧ (∀ k (a : ℤ_[l]) (x : Ok l O k), algebraMap ℤ_[l] O a • x = (PadicInt.toZModPow k a).val • x) ∧ (∀ k, 0 < k → Ideal.span {(l : O) ^ k} ≤ maximalIdeal O) := by
   intro l _ O _ _ _ _ _ hl
-  haveI hchar := IsCoef.char (l := l) (O := O)
-  haveI hfinres := IsCoef.fin (l := l) (O := O)
+  have hchar := IsCoef.char (l := l) (O := O)
+  have hfinres := IsCoef.fin (l := l) (O := O)
   have hlm : (l : O) ∈ maximalIdeal O := by
     rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]
     exact CharP.cast_eq_zero _ l
@@ -73,12 +73,12 @@ theorem UpperTheory.V.Z.J.okFin :
     intro k
     induction k with
     | zero =>
-      haveI := hfin 0
+      have := hfin 0
       rw [pow_zero]
       exact Nat.card_pos
     | succ k ih =>
-      haveI := hfin k
-      haveI := hfin (k + 1)
+      have := hfin k
+      have := hfin (k + 1)
       have hle : Ideal.span {(l : O) ^ (k + 1)} ≤ Ideal.span {(l : O) ^ k} := by
         rw [Ideal.span_singleton_le_span_singleton]
         exact pow_dvd_pow _ (Nat.le_succ k)
@@ -92,7 +92,7 @@ theorem UpperTheory.V.Z.J.okFin :
       have hne : Ideal.Quotient.mk (Ideal.span {(l : O) ^ (k + 1)}) ((l : O) ^ k) ≠ 0 := by
         rw [Ne, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton, pow_dvd_pow_iff hl hlu]
         omega
-      haveI : Nontrivial g.ker := nontrivial_of_ne ⟨_, hmem⟩ 0 (fun h => hne (congrArg Subtype.val h))
+      have : Nontrivial g.ker := nontrivial_of_ne ⟨_, hmem⟩ 0 (fun h => hne (congrArg Subtype.val h))
       have h2 : 2 ≤ Nat.card g.ker := Finite.one_lt_card_iff_nontrivial.mpr inferInstance
       have hrange : Nat.card g.range = Nat.card (Ok l O k) := by
         rw [AddMonoidHom.range_eq_top.mpr hsurj, AddSubgroup.card_top]
@@ -107,7 +107,7 @@ theorem UpperTheory.V.Z.J.okFin :
       Nat.cast_pow]
     exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
   · intro k
-    haveI := hfin k
+    have := hfin k
     exact IsLocalRing.finite_quotient_iff.mp (hfin k)
   · intro k a x
     have hmem : a - (((PadicInt.toZModPow k a).val : ℕ) : ℤ_[l]) ∈ RingHom.ker (PadicInt.toZModPow (p := l) k) := by

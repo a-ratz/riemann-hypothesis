@@ -76,12 +76,12 @@ theorem avg_eq_of_le (N : Subgroup H) [Finite (H ⧸ N)] (u : H → ℂ)
   have hle : N ≤ rStab u := fun n hn x => hu x n hn
   set R := rStab u with hR
   let e := Subgroup.quotientEquivProdOfLE hle
-  haveI : Fintype (H ⧸ N) := Fintype.ofFinite _
-  haveI : Finite ((H ⧸ R) × (R ⧸ N.subgroupOf R)) := Finite.of_equiv _ e
-  haveI : Finite (H ⧸ R) := Finite.prod_left (R ⧸ N.subgroupOf R)
-  haveI : Finite (R ⧸ N.subgroupOf R) := Finite.prod_right (H ⧸ R)
-  haveI : Fintype (H ⧸ R) := Fintype.ofFinite _
-  haveI : Fintype (R ⧸ N.subgroupOf R) := Fintype.ofFinite _
+  have : Fintype (H ⧸ N) := Fintype.ofFinite _
+  have : Finite ((H ⧸ R) × (R ⧸ N.subgroupOf R)) := Finite.of_equiv _ e
+  have : Finite (H ⧸ R) := Finite.prod_left (R ⧸ N.subgroupOf R)
+  have : Finite (R ⧸ N.subgroupOf R) := Finite.prod_right (H ⧸ R)
+  have : Fintype (H ⧸ R) := Fintype.ofFinite _
+  have : Fintype (R ⧸ N.subgroupOf R) := Fintype.ofFinite _
   have he : ∀ (q : H ⧸ R) (r : R ⧸ N.subgroupOf R), u (e.symm (q, r)).out = u q.out := by
     intro q r
     have h1 : e.symm (q, r) = (QuotientGroup.mk (q.out * (r.out : H)) : H ⧸ N) := by
@@ -267,10 +267,10 @@ theorem conjAvg_gen (K : Subgroup G) (hKo : IsOpen (K : Set G)) (hKc : IsCompact
       (fun g => avg fun k : K => f ((k : G)⁻¹ * g * k)) g) ∧
     twTr ρ K K' (fun g => avg fun k : K => f ((k : G)⁻¹ * g * k)) LinearMap.id = twTr ρ K K' f LinearMap.id := by
   set F : G → ℂ := fun g => avg fun k : K => f ((k : G)⁻¹ * g * k) with hFdef
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   set N := K'.subgroupOf K with hNdef
-  haveI : Finite (K ⧸ N) := Subgroup.quotient_finite_of_isOpen _ (hK'o.preimage continuous_subtype_val)
-  haveI : Fintype (K ⧸ N) := Fintype.ofFinite _
+  have : Finite (K ⧸ N) := Subgroup.quotient_finite_of_isOpen _ (hK'o.preimage continuous_subtypeVal)
+  have : Fintype (K ⧸ N) := Fintype.ofFinite _
   have hu : ∀ g, ∀ x : K, ∀ n ∈ N, f (((x * n : K) : G)⁻¹ * g * (x * n : K)) = f ((x : G)⁻¹ * g * x) := by
     intro g x n hn
     have hn' : (n : G) ∈ K' := Subgroup.mem_subgroupOf.mp hn
@@ -366,11 +366,11 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 private theorem exists_normal (K K₀ : Subgroup G) (hKo : IsOpen (K : Set G)) (hKc : IsCompact (K : Set G))
     (hK₀ : IsOpen (K₀ : Set G)) :
     ∃ N : Subgroup G, IsOpen (N : Set G) ∧ N ≤ K₀ ∧ N ≤ K ∧ (N.subgroupOf K).Normal := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   set U := K₀.subgroupOf K with hU
-  have hUo : IsOpen (U : Set K) := hK₀.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ U) := Subgroup.quotient_finite_of_isOpen _ hUo
-  haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have hUo : IsOpen (U : Set K) := hK₀.preimage continuous_subtypeVal
+  have : Finite (K ⧸ U) := Subgroup.quotient_finite_of_isOpen _ hUo
+  have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hUc : IsClosed (U : Set K) := U.isClosed_of_isOpen hUo
   have hcl : IsClosed (U.normalCore : Set K) := by
     have e : (U.normalCore : Set K) = ⋂ b : K, (fun a => b * a * b⁻¹) ⁻¹' (U : Set K) := by
@@ -382,7 +382,7 @@ private theorem exists_normal (K K₀ : Subgroup G) (hKo : IsOpen (K : Set G)) (
   have hco : IsOpen (U.normalCore : Set K) := Subgroup.isOpen_of_isClosed_of_finiteIndex _ hcl
   refine ⟨U.normalCore.map K.subtype, ?_, ?_, Subgroup.map_subtype_le _, ?_⟩
   · rw [Subgroup.coe_map]
-    exact hKo.isOpenMap_subtype_val _ hco
+    exact hKo.isOpenMap_subtypeVal _ hco
   · rintro _ ⟨x, hx, rfl⟩
     exact Subgroup.mem_subgroupOf.1 (Subgroup.normalCore_le U hx)
   · have e : (U.normalCore.map K.subtype).subgroupOf K = U.normalCore :=
@@ -415,7 +415,7 @@ private theorem hint_sub {H : Type} [Group H] [Subsingleton H] (K : Subgroup H) 
     Subgroup.relIndex_eq_one.2 fun x _ => by
       rw [Subsingleton.elim x 1]
       exact one_mem _
-  haveI : Unique (H ⧸ (rStab u ⊓ K)) :=
+  have : Unique (H ⧸ (rStab u ⊓ K)) :=
     { default := QuotientGroup.mk 1
       uniq := fun q => by
         induction q using QuotientGroup.induction_on with
@@ -447,11 +447,11 @@ private theorem blk_zero {n : ℕ} (w : Pl E) (g : GLw n w) (m : GLw 0 w) (X : M
 
 private theorem constant_term_parabolic_average {n : ℕ} (w : Pl E) (hw : IsSplitAt w) (μ : HChar E) (f : ∀ w : Pl E, GLw n w → ℂ) (g : GLw n w) :
     ct0 μ (Nat.add_zero n) f w (g, 1) = avg fun k : KGL w (n := n) => f w ((k : GLw n w)⁻¹ * g * k) := by
-  haveI : Subsingleton (Multiplicative (Matrix (Fin n) (Fin 0) (w.adicCompletion E))) :=
+  have : Subsingleton (Multiplicative (Matrix (Fin n) (Fin 0) (w.adicCompletion E))) :=
     ⟨fun a b => Multiplicative.toAdd.injective (by ext i j; exact j.elim0)⟩
   have hU : ∀ y : GLw n w, y ∈ UL n w := fun y => by
     unfold UL
-    rw [if_pos hw]
+    rw [ite_eq_left hw]
     trivial
   have hs : ∀ y : GLw n w, (toSub (UL n w) y : GLw n w) = y := fun y => by
     unfold toSub

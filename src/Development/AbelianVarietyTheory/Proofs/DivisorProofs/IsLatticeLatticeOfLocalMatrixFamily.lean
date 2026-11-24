@@ -54,7 +54,7 @@ variable {K : Type} [Field K] [NumberField K] {ι : Type} [Fintype ι] [Decidabl
 omit [DecidableEq ι] in
 theorem exists_denom (B : HeightOneSpectrum (𝓞 K) → Matrix ι ι K) (h : {w | ¬ IntAt w (B w)}.Finite) :
     ∃ d : 𝓞 K, d ≠ 0 ∧ ∀ w, IntAt w ((d : K) • B w) := by
-  haveI : Finite {w | ¬ IntAt w (B w)} := h
+  have : Finite {w | ¬ IntAt w (B w)} := h
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors (𝓞 K))
     (fun p : {w | ¬ IntAt w (B w)} × ι × ι => B p.1.1 p.2.1 p.2.2)
   refine ⟨b, nonZeroDivisors.coe_ne_zero b, fun w i j => ?_⟩

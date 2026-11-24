@@ -170,7 +170,7 @@ theorem primePow_anti (w : HeightOneSpectrum (𝓞 K)) {n n' : ℤ} (h : n' ≤ 
     rw [zpow_add₀ hP, zpow_natCast]
     calc _ ≤ (w.asIdeal : FractionalIdeal (𝓞 K)⁰ K) ^ n' * 1 := by gcongr
       _ = _ := mul_one _
-  exact FractionalIdeal.coe_le_coe.mpr h2
+  exact FractionalIdeal.coeToSubmodule_le_coeToSubmodule.mpr h2
 
 theorem scaledAt_anti {d : ℕ} (w : HeightOneSpectrum (𝓞 K)) (B : Submodule (𝓞 K) (Fin d → K)) {n n' : ℤ}
     (h : n' ≤ n) : scaledAt w n B ≤ scaledAt w n' B := by
@@ -216,7 +216,7 @@ theorem mem_localization_of_smul_mem₂ {K : Type} [Field K] [NumberField K] [St
   have h1 : s • y ∈ Formalism.HermitianLatticesTheory.idealSmul
       (((1 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)) : Submodule (𝓞 K) K) M := by
     refine Submodule.subset_span ⟨1, ?_, s • y, h, (one_smul _ _).symm⟩
-    exact FractionalIdeal.mem_coe.mpr (FractionalIdeal.one_mem_one _)
+    exact FractionalIdeal.mem_coeToSubmodule.mpr (FractionalIdeal.one_mem_one _)
   have hm := smulK_mem_idealSmul _ _ M _ hc h1
   rw [one_mul] at hm
   have e : (algebraMap (𝓞 K) K t * s⁻¹) • s • y = t • y := by

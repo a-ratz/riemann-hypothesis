@@ -172,7 +172,7 @@ def polM (τ : ∀ w : InfinitePlace F, EmbOver E w) (m : ℕ) : Submodule ℂ (
   fil (⨆ ε, vacE M τ ε) (fun i => dopL (lamF F _) (Module.finBasis ℝ _ i)) m
 
 theorem polM_fin (h : IsCMExt F E σ) (τ : ∀ w : InfinitePlace F, EmbOver E w) (m : ℕ) : FiniteDimensional ℂ (polM M τ m) := by
-  haveI := vacE_fin M h τ
+  have := vacE_fin M h τ
   exact fil_fin _ _ m
 
 theorem exists_polM (hψ : IsStd ψ) {τ : ∀ w : InfinitePlace F, EmbOver E w} {f} (hf : f ∈ M.Pol ψ τ) : ∃ m, f ∈ polM M τ m := by
@@ -210,10 +210,10 @@ theorem exists_slice (hs : IsSplitting (adeleClass F) ψ M.co (actAB (cA σ)) om
   refine ⟨{ toFun := A, map_add' := fun a b => ?_, map_smul' := fun c a => ?_ }, hA⟩
   · ext ξ
     have : pureA F (a + b : SInf F _) g = pureA F a g + pureA F b g := funext fun _ => by simp [pureA, add_mul]
-    rw [SchwartzMap.add_apply, ← hA, ← hA, ← hA, this, map_add (f := _), Pi.add_apply]
+    rw [add_apply, ← hA, ← hA, ← hA, this, map_add (f := _), Pi.add_apply]
   · ext ξ
     have : pureA F (c • a : SInf F _) g = c • pureA F a g := funext fun _ => by simp [pureA, mul_assoc]
-    rw [RingHom.id_apply, SchwartzMap.smul_apply, ← hA, ← hA, this, map_smul, Pi.smul_apply]
+    rw [RingHom.id_apply, smul_apply, ← hA, ← hA, this, map_smul, Pi.smul_apply]
 
 theorem at_act {u : Matrix (Fin n) (Fin d) (AE F E)} (hu : At (evI F) u) (x : UA σ X.J × UA σ W.J) :
     At (evI F) (actAB (cA σ) x u) := fun s hs => by
@@ -376,13 +376,13 @@ theorem orbit_fin {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
     (ρ : G →* Module.End ℂ ((κ → AF F) → ℂ)) (Φ : (κ → AF F) → ℂ) (hc : ∀ z, Continuous fun k => ρ k Φ z)
     (hs : ∀ k, ρ k Φ ∈ schA F κ) (P : Submodule ℂ (SInf F κ)) [FiniteDimensional ℂ P] (hP : ∀ k, ρ k Φ ∈ slc P) :
     FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k => ρ k Φ)) := by
-  haveI : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   let C := CompactExhaustion.choice (κ → Af F)
   obtain ⟨U, hU⟩ := (𝓝 (0 : κ → Af F)).exists_antitone_basis
   obtain ⟨⟨a, b⟩, k₀, hk₀⟩ := nonempty_interior_of_iUnion_of_closed (f := fun p : ℕ × ℕ => {k | Lev (C p.1) (U p.2) (ρ k Φ)})
     (fun p => by
-      simp only [Lev, Set.setOf_and, Set.setOf_forall]
+      simp only [Lev, Set.ofPred_and, Set.ofPred_forall]
       exact (isClosed_iInter fun x => isClosed_iInter fun y => isClosed_iInter fun _ => isClosed_eq (hc _) continuous_const).inter
         (isClosed_iInter fun x => isClosed_iInter fun y => isClosed_iInter fun u => isClosed_iInter fun _ => isClosed_eq (hc _) (hc _)))
     (Set.eq_univ_of_forall fun k => by
@@ -393,7 +393,7 @@ theorem orbit_fin {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
   let Ω := slc P ⊓ levS (C a) (U b)
   let c : SInf F κ →ₗ[ℂ] ((κ → mixedEmbedding.mixedSpace F) → ℂ) :=
     { toFun := fun f => f, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
-  haveI : FiniteDimensional ℂ Ω := level_fin pt (fun z => ⟨_, _, pt_eta z⟩) c P (C.isCompact a) (hU.mem b) Ω (fun Ψ h => h.1)
+  have : FiniteDimensional ℂ Ω := level_fin pt (fun z => ⟨_, _, pt_eta z⟩) c P (C.isCompact a) (hU.mem b) Ω (fun Ψ h => h.1)
     (fun Ψ h => h.2.1) fun Ψ h => h.2.2
   obtain ⟨s, -, hcov⟩ := isCompact_univ.elim_nhds_subcover
     (fun k₁ : G => (fun k => k₀ * k₁⁻¹ * k) ⁻¹' {k | Lev (C a) (U b) (ρ k Φ)}) fun k₁ _ =>
@@ -443,14 +443,14 @@ theorem kFinData_of (hS : StabEx) : KFinData := by
   refine ⟨h1, ?_⟩
   obtain ⟨K', -, -, hK', hc, -⟩ := hS F E σ B n X r s hP.base hP.herm
   obtain rfl : K = K' := Subgroup.ext fun g => (hK g).trans (hK' g).symm
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hc
-  haveI := polM_fin M hP.base.cm B.emb m
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hc
+  have := polM_fin M hP.base.cm B.emb m
   refine orbit_fin (om.comp ((MonoidHom.inl _ _).comp K.subtype)) Φ (fun z => ?_) (fun k => hs.pres _ _ h1) _ fun k => hm k.1 k.2
   let l : ((Fin n × Fin d → AF F) → ℂ) →ₗ[ℂ] ℂ := LinearMap.proj z
   have hl' : l ∈ (adeleClass F).adm (Fin n × Fin d) := fun g' _ =>
     ⟨g' (fun i => (z i).2) • (BoundedContinuousFunction.evalCLM ℂ (fun i => evI F (z i)) ∘L
       SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ _), fun f => by simp [l, pureA, evI, mul_comm]⟩
-  exact (hs.cont l hl' Φ h1).comp (continuous_subtype_val.prodMk continuous_const)
+  exact (hs.cont l hl' Φ h1).comp (continuous_subtypeVal.prodMk continuous_const)
 
 end PositivityTheory.ThKCT
 

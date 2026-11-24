@@ -156,7 +156,7 @@ theorem ev_basicOpen_injective (ξ : Sp Ω ⟶ X) {V : X.Opens} (hV : IsAffineOp
     Function.Injective (ev ξ (X.basicOpen g) hη) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro x hx
-  haveI := hV.isLocalization_basicOpen g
+  have := hV.isLocalization_basicOpen g
   obtain ⟨n, a, ha⟩ := IsLocalization.Away.surj g x
   have hres : ∀ w : Γ(X, V), ev ξ (X.basicOpen g) hη (algebraMap Γ(X, V) Γ(X, X.basicOpen g) w) =
       ev ξ V (X.basicOpen_le g hη) w := fun w => ev_res ξ (X.basicOpen_le g) hη w
@@ -177,7 +177,7 @@ theorem coords_rat {F R : Type} [Field F] [Algebra ℚ F] [Algebra.FormallyEtale
     (h2 : Submodule.span R (Set.range fun i => KaehlerDifferential.D F R (z i)) = ⊤) :
     LinearIndependent R (fun i => KaehlerDifferential.D ℚ R (z i)) ∧
       Submodule.span R (Set.range fun i => KaehlerDifferential.D ℚ R (z i)) = ⊤ := by
-  haveI : Subsingleton (Ω[F⁄ℚ]) := inferInstance
+  have : Subsingleton (Ω[F⁄ℚ]) := inferInstance
   have hinj : Function.Injective (KaehlerDifferential.map ℚ F R R) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
@@ -252,17 +252,17 @@ theorem patch_core {F : Type} [Field F] [NumberField F] {W : Scheme.{0}} (sW : W
         IsLocAt A q (regAt ξ p') := by
   have hD : IsAffineOpen (W.basicOpen g) := hV.basicOpen g
   have hDV : W.basicOpen g ≤ V := W.basicOpen_le g
-  letI iVF := ReciprocityTheory.ChartRestriction.G.Geo.ResK.secAlgebra sW V
-  letI iDF := ReciprocityTheory.ChartRestriction.G.Geo.ResK.secAlgebra sW (W.basicOpen g)
-  letI iVQ : Algebra ℚ Γ(W, V) := ((algebraMap F Γ(W, V)).comp (algebraMap ℚ F)).toAlgebra
-  letI iDQ : Algebra ℚ Γ(W, W.basicOpen g) :=
+  let iVF := ReciprocityTheory.ChartRestriction.G.Geo.ResK.secAlgebra sW V
+  let iDF := ReciprocityTheory.ChartRestriction.G.Geo.ResK.secAlgebra sW (W.basicOpen g)
+  let iVQ : Algebra ℚ Γ(W, V) := ((algebraMap F Γ(W, V)).comp (algebraMap ℚ F)).toAlgebra
+  let iDQ : Algebra ℚ Γ(W, W.basicOpen g) :=
     ((algebraMap F Γ(W, W.basicOpen g)).comp (algebraMap ℚ F)).toAlgebra
-  haveI : IsScalarTower ℚ F Γ(W, V) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℚ F Γ(W, W.basicOpen g) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI hFe : Algebra.FormallyEtale ℚ F := Algebra.FormallyEtale.of_isSeparable ℚ F
-  haveI hFs : Algebra.Smooth ℚ F := ⟨inferInstance, Algebra.FinitePresentation.of_finiteType.1 inferInstance⟩
-  haveI hsF : Algebra.Smooth F Γ(W, W.basicOpen g) := smooth_secAlgebra' sW e hsm hD
-  haveI hsQ : Algebra.Smooth ℚ Γ(W, W.basicOpen g) := Algebra.Smooth.comp ℚ F _
+  have : IsScalarTower ℚ F Γ(W, V) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower ℚ F Γ(W, W.basicOpen g) := IsScalarTower.of_algebraMap_eq' rfl
+  have hFe : Algebra.FormallyEtale ℚ F := Algebra.FormallyEtale.of_isSeparable ℚ F
+  have hFs : Algebra.Smooth ℚ F := ⟨inferInstance, Algebra.FinitePresentation.of_finiteType.1 inferInstance⟩
+  have hsF : Algebra.Smooth F Γ(W, W.basicOpen g) := smooth_secAlgebra' sW e hsm hD
+  have hsQ : Algebra.Smooth ℚ Γ(W, W.basicOpen g) := Algebra.Smooth.comp ℚ F _
   let ψ := ev ξ (W.basicOpen g) hη
   let A : Subalgebra ℚ Ω := (RingHom.toRatAlgHom ψ).range
   have hψ : ∀ x, ψ x ∈ A := fun x => ⟨x, rfl⟩
@@ -274,16 +274,16 @@ theorem patch_core {F : Type} [Field F] [NumberField F] {W : Scheme.{0}} (sW : W
   have hsmooth : Algebra.Smooth ℚ A := Algebra.Smooth.of_equiv φ.toRatAlgEquiv
 
   obtain ⟨c0, c0'⟩ := coords_rat (F := F) (R := Γ(W, V)) z hz.1 hz.2
-  haveI := hV.isLocalization_basicOpen g
-  haveI : Algebra.FormallyEtale Γ(W, V) Γ(W, W.basicOpen g) :=
+  have := hV.isLocalization_basicOpen g
+  have : Algebra.FormallyEtale Γ(W, V) Γ(W, W.basicOpen g) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers g)
-  haveI : IsScalarTower ℚ Γ(W, V) Γ(W, W.basicOpen g) :=
+  have : IsScalarTower ℚ Γ(W, V) Γ(W, W.basicOpen g) :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   obtain ⟨c1, c2⟩ := SncRes.coords_of_formallyEtale (R := Γ(W, V)) (S := Γ(W, W.basicOpen g)) z c0 c0'
-  letI iS : Algebra Γ(W, W.basicOpen g) A := φ.toRingHom.toAlgebra
-  haveI : Algebra.FormallyEtale Γ(W, W.basicOpen g) A :=
+  let iS : Algebra Γ(W, W.basicOpen g) A := φ.toRingHom.toAlgebra
+  have : Algebra.FormallyEtale Γ(W, W.basicOpen g) A :=
     Algebra.FormallyEtale.of_equiv (AlgEquiv.ofRingEquiv (f := φ) fun _ => rfl)
-  haveI : IsScalarTower ℚ Γ(W, W.basicOpen g) A :=
+  have : IsScalarTower ℚ Γ(W, W.basicOpen g) A :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   obtain ⟨d1, d2⟩ := SncRes.coords_of_formallyEtale (R := Γ(W, W.basicOpen g)) (S := A) _ c1 c2
   have hPp : hD.fromSpec (hD.primeIdealOf ⟨p'.1, hp⟩) = p'.1 := hD.fromSpec_primeIdealOf _
@@ -327,9 +327,9 @@ theorem exists_patch : ∀ (F : Type) [Field F] [NumberField F] (W : Scheme.{0})
   obtain ⟨j, hj⟩ := hcov p'.1
   obtain ⟨z, k, hk, hz, hT⟩ := hV j
   have hVa : IsAffineOpen (V j : W.Opens) := (V j).2
-  letI iV := ReciprocityTheory.ChartRestriction.G.Geo.ResK.secAlgebra sW (V j : W.Opens)
-  haveI : Algebra.Smooth F Γ(W, (V j : W.Opens)) := smooth_secAlgebra' sW e hsm hVa
-  haveI : IsNoetherianRing Γ(W, (V j : W.Opens)) := Algebra.FiniteType.isNoetherianRing F _
+  let iV := ReciprocityTheory.ChartRestriction.G.Geo.ResK.secAlgebra sW (V j : W.Opens)
+  have : Algebra.Smooth F Γ(W, (V j : W.Opens)) := smooth_secAlgebra' sW e hsm hVa
+  have : IsNoetherianRing Γ(W, (V j : W.Opens)) := Algebra.FiniteType.isNoetherianRing F _
   have hη : genPt ξ ∈ (V j : W.Opens) := p'.2.mem_open (V j : W.Opens).2 hj
   obtain ⟨g, hpg, hkill⟩ := exists_kill hξ hVa p' hj hη
   have hηg : genPt ξ ∈ W.basicOpen g := p'.2.mem_open (W.basicOpen g).2 hpg

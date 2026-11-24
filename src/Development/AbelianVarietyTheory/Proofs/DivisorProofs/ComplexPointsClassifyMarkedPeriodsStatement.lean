@@ -184,7 +184,7 @@ theorem GlobalTheory.TorusRM.lbIso_lam_of_same_form : ∀ (g : ℕ) (A : Over (S
       (χ : u.Λ → ℂ) (χ' : u'.Λ → ℂ), M.IsLB → M'.IsLB → u'.ex = u.ex →
     GlobalTheory.TorusRM.IsFactorAH u Hm χ → GlobalTheory.TorusRM.IsFactorAH u' Hm χ' → LBIso (abelian₂ A M) (abelian₂ A M') := by
   intro g A _ hA hP M M' u u' Hm χ χ' h1 h2 he f1 f2
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have hl1 : (abelian₂ A M).IsLB := LB.isLB_linComb h1 _ _
   have hl2 : (abelian₂ A M').IsLB := LB.isLB_linComb h2 _ _
   have hPP : IsProjOver (A ⊗ A).hom := GlobalTheory.ProjSpace.isProjOver_pullback hP hP
@@ -352,7 +352,7 @@ theorem surjective_of_forall_sub_mem {g : ℕ} (T : (Fin g → ℂ) →ₗ[ℂ] 
     intro x
     have hx : x ∈ (LinearMap.range T).restrictScalars ℝ := h' ▸ Submodule.mem_top
     exact LinearMap.mem_range.1 ((Submodule.restrictScalars_mem ℝ _ x).1 hx)
-  haveI : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hcov : (Set.univ : Set (Fin g → ℂ)) ⊆ ⋃ l : Λ,
       (fun y => y + -(l : Fin g → ℂ)) ⁻¹' (((LinearMap.range T).restrictScalars ℝ : Submodule ℝ (Fin g → ℂ)) : Set (Fin g → ℂ)) := by
     intro x _
@@ -395,7 +395,7 @@ theorem exists_isMonHom_of_map_lattice (A A' : Over (Sp ℂ)) [GrpObj A] [GrpObj
     exists_linear_factor A' g' hA' hgA' L' u'
   obtain ⟨β, hβ, hβe⟩ := exists_of_polAV Q Q' (8 * g) (8 * g') v v' (J' ∘ₗ M ∘ₗ R) hQ hQ'
     (fun l hl => hJΛ' _ (hM _ (hRΛ _ hl)))
-  haveI := hi; haveI := hr'; haveI := hβ
+  have := hi; have := hr'; have := hβ
   have hφ : ∀ z, u.ex z ≫ i ≫ β ≫ r' = u'.ex ((m' * m) • M z) := by
     intro z
     have e := hβe (J z)
@@ -444,9 +444,9 @@ theorem existsUnique_isMonHom_of_map_ker : ∀ (A A' : Over (Sp ℂ)) [GrpObj A]
   have hex : ∀ z, e' (M z) = e z ≫ α := fun z => by
     rw [← hT', ← hFT, hαe, hT]
   refine ⟨α, ⟨hα, hex⟩, fun f hf => ?_⟩
-  haveI := hA.smooth
-  haveI := hA'.proper
-  haveI : IsReduced A.left := GlobalTheory.isReduced_of_smooth_complex _ A.hom hA.smooth
+  have := hA.smooth
+  have := hA'.proper
+  have : IsReduced A.left := GlobalTheory.isReduced_of_smooth_complex _ A.hom hA.smooth
   refine GlobalTheory.ComplexPoints.over_hom_ext_of_complexPoints fun x => ?_
   obtain ⟨z, rfl⟩ := he.2.1 x
   rw [← hf.2, hex]
@@ -486,7 +486,7 @@ theorem pull_birig : ∀ (S : Scheme.{0}) (A A' : Over S) [GrpObj A] [IsCommMonO
     LBIso (P.pull (lift (fst A A ≫ f) (snd A A ≫ f)).left)
       ((P.pull (lift (fst A A ≫ f) (snd A A ≫ f)).left).pull (lift (snd A A) (fst A A)).left) := by
   intro S A A' _ _ _ _ f hf P hP ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩ hs
-  haveI := hf
+  have := hf
   set φ₂ := (lift (fst A A ≫ f) (snd A A ≫ f)).left with hφ₂
   have hP₂ : (P.pull φ₂).IsLB := pull_isLB hP _
 
@@ -522,7 +522,7 @@ theorem weil_pull_iso : ∀ (S : Scheme.{0}) (A A' : Over S) [GrpObj A] [IsCommM
     (c : Γ(T.left, ⊤)ˣ), Out.WeilIs A' (P.pull (lift (𝟙 A') (𝟙 A')).left) k (x ≫ F.hom) (y ≫ F.hom) c →
     Out.WeilIs A ((P.pull (lift (fst A A ≫ F.hom) (snd A A ≫ F.hom)).left).pull (lift (𝟙 A) (𝟙 A)).left) k x y c := by
   intro S A A' _ _ _ _ F hF P hP T k x y c H
-  haveI := hF
+  have := hF
   set φ₂ := (lift (fst A A ≫ F.hom) (snd A A ≫ F.hom)).left with hφ₂
   have eq : (lift (𝟙 A) (𝟙 A)).left ≫ φ₂ = F.hom.left ≫ (lift (𝟙 A') (𝟙 A')).left := by
     rw [hφ₂, ← Over.comp_left, ← Over.comp_left]
@@ -559,8 +559,8 @@ theorem nonempty_objMap_of_markedIsom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
   obtain ⟨f₀', -, uid'⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o'.A o'.A D.g D.g o'.ab o'.ab h' h' e' e' LinearMap.id he' he' (fun z hz => hz)
   have hfe2 : ∀ z, e' (u z) = e z ≫ f := hfe
   have hfe2' : ∀ z, e (u.symm z) = e' z ≫ f' := hfe'
-  haveI := hf
-  haveI := hf'
+  have := hf
+  have := hf'
   have c1 : f ≫ f' = 𝟙 _ := by
     rw [uid (f ≫ f') ⟨inferInstance, fun z => ?_⟩, uid (𝟙 _) ⟨inferInstance, fun z => (Category.comp_id _).symm⟩]
     refine Eq.trans ?_ (Category.assoc (e z) f f')
@@ -572,7 +572,7 @@ theorem nonempty_objMap_of_markedIsom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
     rw [← hfe2']
     exact (by rw [u.apply_symm_apply]; rfl : e' (LinearMap.id z) = e' (u (u.symm z))).trans (hfe2 (u.symm z))
   let F : o.A ≅ o'.A := ⟨f, f', c1, c2⟩
-  haveI : IsMonHom F.hom := hf
+  have : IsMonHom F.hom := hf
 
   have hcomm : ∀ (c : D.O) z, u (ρ c *ᵥ z) = ρ c *ᵥ u z := by
     intro c
@@ -585,8 +585,8 @@ theorem nonempty_objMap_of_markedIsom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
     simpa using LinearMap.congr_fun this z
   have hact : ∀ c, o.act.act c ≫ f = f ≫ o'.act.act c := by
     intro c
-    haveI := o.act.hom c
-    haveI := o'.act.hom c
+    have := o.act.hom c
+    have := o'.act.hom c
     obtain ⟨fa, -, ua⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o.A o'.A D.g D.g o.ab o'.ab h h' e e'
       (u.toLinearMap ∘ₗ Matrix.toLin' (ρ c)) he he' (fun z hz => by
         obtain ⟨x, rfl⟩ := (hk z).1 hz

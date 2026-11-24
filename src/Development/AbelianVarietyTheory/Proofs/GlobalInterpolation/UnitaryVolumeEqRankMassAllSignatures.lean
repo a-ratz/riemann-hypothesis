@@ -360,8 +360,8 @@ theorem unitary_neg_same : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hψ : ∀ h : HA (AF F) σ J, HA.mat (AF F) σ (-J) (ψ h) = HA.mat (AF F) σ J h := fun h => rfl
   let φ : HA (AF F) σ J ≃ₜ* HA (AF F) σ (-J) :=
     { ψ with
-      continuous_toFun := Continuous.subtype_mk continuous_subtype_val _
-      continuous_invFun := Continuous.subtype_mk continuous_subtype_val _ }
+      continuous_toFun := Continuous.subtype_mk continuous_subtypeVal _
+      continuous_invFun := Continuous.subtype_mk continuous_subtypeVal _ }
   have hφ : ∀ h : HA (AF F) σ J, HA.mat (AF F) σ (-J) (φ h) = HA.mat (AF F) σ J h := fun h => rfl
   refine ⟨φ, hφ, ?_, ?_⟩
   · intro h
@@ -479,12 +479,12 @@ theorem vol_neg_eq : ∀ D : D7, VolTie D → ∀ (W : HSpace D.host.E) (n : ℕ
     rw [← hK]; exact measure_KSub D W' W'.rank μ' hμ' θ hθ A hA
   have := Unfold.borelHA D.sp.cm.sig W.gram
   have := Unfold.borelHA D.sp.cm.sig W'.gram
-  haveI := hμ.1
-  haveI := hμ'.1
-  haveI := Unfold.measurableMulHA D.sp.cm.sig W.gram
-  haveI := Unfold.measurableMulHA D.sp.cm.sig W'.gram
-  haveI : Countable (GamA D W) := Unfold.countableGamma D.sp.cm.sig W.gram
-  haveI : Countable (GamA D W') := Unfold.countableGamma D.sp.cm.sig W'.gram
+  have := hμ.1
+  have := hμ'.1
+  have := Unfold.measurableMulHA D.sp.cm.sig W.gram
+  have := Unfold.measurableMulHA D.sp.cm.sig W'.gram
+  have : Countable (GamA D W) := Unfold.countableGamma D.sp.cm.sig W.gram
+  have : Countable (GamA D W') := Unfold.countableGamma D.sp.cm.sig W'.gram
   have e := Unfold.measure_fd_toReal μ (StabFin.isOpen_SFin W D.sp.cm.sig).measurableSet hK1 _ hcov hdisj hfin h𝓕
   have e' := Unfold.measure_fd_toReal μ' (StabFin.isOpen_SFin W' D.sp.cm.sig).measurableSet hK1' g' hcov' hdisj'
     hfin' h𝓕'

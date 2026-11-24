@@ -465,8 +465,8 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
       ext y; simp [hCdef, sub_eq_neg_add]
     rw [this, measure_preimage_add]
   have hCfin : m C < ⊤ := hmC ▸ hLfin
-  haveI : IsFiniteMeasure (m.restrict C) := ⟨by simpa using hCfin⟩
-  haveI : IsFiniteMeasure (m.restrict (L : Set X)) := ⟨by simpa using hLfin⟩
+  have : IsFiniteMeasure (m.restrict C) := ⟨by simpa using hCfin⟩
+  have : IsFiniteMeasure (m.restrict (L : Set X)) := ⟨by simpa using hLfin⟩
   have hq0 : ∀ x, q x ≠ 0 := fun x h => by simpa [h] using hq1 x
   have hBnorm : ∀ x y, ‖B x y‖ = 1 := fun x y => by
     have := congrArg norm (hqB x y)
@@ -494,7 +494,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
       have ht : I = ∫ y in (L : Set X), q (x' + y) ∂m := by
         refine setIntegral_translate_of_iff m hCm hLm x' (fun y => ?_) q
         have e : x' + y - x₀ = (x' - x₀) + y := by abel
-        simp only [hCdef, Set.mem_setOf_eq, e, SetLike.mem_coe]
+        simp only [hCdef, Set.mem_ofPred_eq, e, SetLike.mem_coe]
         exact L.add_mem_cancel_left hx''
       rw [ht, ← integral_const_mul]
       refine integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)
@@ -522,7 +522,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
     have ht : J y = ∫ x in C, B (l + x) y ∂m := by
       refine setIntegral_translate_of_iff m hCm hCm l (fun x => ?_) (fun x => B x y)
       have e : l + x - x₀ = l + (x - x₀) := by abel
-      simp only [hCdef, Set.mem_setOf_eq, e]
+      simp only [hCdef, Set.mem_ofPred_eq, e]
       exact L.add_mem_cancel_left hl
     have h2 : J y = B l y * J y := by
       conv_lhs => rw [ht]
@@ -535,7 +535,7 @@ theorem weyl_sq_compact_open : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace
   have hSL : S ⊆ (L : Set X) := fun y hy => hy.1
   have hSfin : m S < ⊤ := (measure_mono hSL).trans_lt hLfin
   have hcut : ∫ y in (L : Set X), q y * J y ∂m = ∫ y in S, q y * J y ∂m := by
-    refine setIntegral_eq_of_subset_of_forall_diff_eq_zero hLm hSL fun y hy => ?_
+    refine setIntegral_eq_of_subset_of_forall_sdiff_eq_zero hLm hSL fun y hy => ?_
     have : ¬ ∀ l ∈ L, B l y = 1 := fun h => hy.2 ⟨hy.1, h⟩
     push_neg at this
     obtain ⟨l, hl, hne⟩ := this
@@ -630,7 +630,7 @@ theorem latN_isOpen_isCompact : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
         exact ⟨z, hz, rfl⟩
     rw [himg]
     exact (AfTop.isCompact_Oh F).image (continuous_const_mul _)
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
   let Bs := Algebra.TensorProduct.basis (Af F) b
   let e : (Af F ⊗[F] E) ≃ₜ (Fin d → Af F) :=
     { Bs.equivFun.toEquiv with
@@ -899,7 +899,7 @@ theorem pair_single : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       simpa [Matrix.mulVec, dotProduct] using h1
     unfold hR Formalism.UG.hform
     rw [Finset.sum_eq_single i₀]
-    · simp only [if_true, JR, ratTuple, Matrix.map_apply]
+    · simp only [ite_true, JR, ratTuple, Matrix.map_apply]
       rw [← hv]
 
       simp only [map_mul, map_sum, Finset.mul_sum]
@@ -1139,11 +1139,11 @@ theorem phaseB_pairB_props : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     ∀ X, Continuous (pairB σ J (psiFin F ψ) b X) := by
   intro F E _ _ _ _ _ σ hσ M J n ψ hψ b
   obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : LocallyCompactSpace (Af F) := a1
-  haveI : SecondCountableTopology (Af F) := a2
-  haveI : T2Space (Af F) := a3
+  have : LocallyCompactSpace (Af F) := a1
+  have : SecondCountableTopology (Af F) := a2
+  have : T2Space (Af F) := a3
   obtain ⟨t1, -, -, -, hs, htr, -, -, -, hG⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Af F)
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := t1
+  have : IsTopologicalRing (Af F ⊗[F] E) := t1
   obtain ⟨hc, hn⟩ := psiFin_continuous_unit F ψ hψ
   refine ⟨?_, fun X => hn _, fun X => ?_⟩
   · refine hc.comp (continuous_const.mul (htr.comp (Continuous.matrix_trace
@@ -1255,7 +1255,7 @@ theorem rat_test : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   obtain ⟨ρ, e, h1, h2, h3, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hF
   obtain ⟨a, ha, -, ψf, hstd, hpsi⟩ := _root_.GlobalTheory.CompanionTheory.Glob.CharAF.exists_char_data F hF ρ e h1 h2 h3 ψ hψ
   have hbeta := ((_root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F).2 ψf hstd).2.2
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   let τ : E ≃ₐ[F] E := AlgEquiv.ofBijective σ (Algebra.IsAlgebraic.algHom_bijective σ)
   let b' : Module.Basis (Fin d) F E := b.map τ.toLinearEquiv
   have hb' : ∀ k, b' k = σ (b k) := fun k => by simp [b', τ]
@@ -1588,15 +1588,15 @@ theorem finite_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   intro F E _ _ _ _ _ σ hCM M J hJ n ψ hψ μ hμ Q hQ
   classical
   obtain ⟨hA1, hA2, hA3, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : LocallyCompactSpace (Af F) := hA1
-  haveI : SecondCountableTopology (Af F) := hA2
-  haveI : T2Space (Af F) := hA3
+  have : LocallyCompactSpace (Af F) := hA1
+  have : SecondCountableTopology (Af F) := hA2
+  have : T2Space (Af F) := hA3
   obtain ⟨hT1, hT2, hT3, hT4, -, -, -, hT8, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := hT1
-  haveI : SecondCountableTopology (Af F ⊗[F] E) := hT3
-  haveI : T2Space (Af F ⊗[F] E) := hT4
-  haveI : BorelSpace (Fin n → Fin M → Af F ⊗[F] E) := hT8 n M
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (Af F ⊗[F] E) := hT1
+  have : SecondCountableTopology (Af F ⊗[F] E) := hT3
+  have : T2Space (Af F ⊗[F] E) := hT4
+  have : BorelSpace (Fin n → Fin M → Af F ⊗[F] E) := hT8 n M
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨d, ⟨b⟩⟩ : ∃ d : ℕ, Nonempty (Module.Basis (Fin d) F E) :=
     ⟨_, ⟨Module.finBasis F E⟩⟩
   obtain ⟨N, hN, hNU⟩ := GlobalTheory.T.lattice_levels_neighbourhood_basis F E σ hCM d b n M _ (invariant_mem_nhds hQ.1 hQ.2)
@@ -1642,8 +1642,8 @@ theorem finite_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   set c' : Matrix (Fin n) (Fin n) E := ((t • c).1).map σ with hc'
   have hδ : delta c' = delta (t • c).1 := GlobalTheory.T.delta_conj_invariant F E σ n _
   have hδ0 : delta c' ≠ 0 := GlobalTheory.T.delta_ne_zero' E n c'
-  haveI hfin : Finite ((Fin n → 𝓞 E) ⧸ Kc c') := Nat.finite_of_card_ne_zero hδ0
-  haveI := Fintype.ofFinite ((Fin n → 𝓞 E) ⧸ Kc c')
+  have hfin : Finite ((Fin n → 𝓞 E) ⧸ Kc c') := Nat.finite_of_card_ne_zero hδ0
+  have := Fintype.ofFinite ((Fin n → 𝓞 E) ⧸ Kc c')
 
   have hcount : ((delta c' ^ M : ℕ) : ℝ≥0∞) * μ S ≤ μ (L : Set _) := by
     have h := GlobalTheory.T.disjoint_translates_volume_bound _ μ L S hSm hSL (Fin M → (Fin n → 𝓞 E) ⧸ Kc c')
@@ -1676,7 +1676,7 @@ theorem finite_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
               intro a i
               by_cases h : a = c₀ ∧ i = i₀
               · simpa [h] using hx
-              · simp only [h, if_false]
+              · simp only [h, ite_false]
                 exact (latN b n M N).zero_mem a i)
             rw [hB, hbc, GlobalTheory.T.pairing_on_rational_tuple_formula F E σ M J hJ n (psiFin F ψ) c c₀ i₀ x s₂ _] at h1
             exact h1)

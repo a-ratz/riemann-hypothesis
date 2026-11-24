@@ -74,10 +74,10 @@ theorem setIntegral_mul_right_N {ρ : ℕ} (B : BesLev D ρ) (G : flagN B.d → 
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.V
   obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag B.V (isIsoSub_e B.d)
   obtain ⟨u1, u2, u3⟩ := B.vN.unit
-  haveI : DiscreteTopology (NFlagQ B.V B.d.e) := by
+  have : DiscreteTopology (NFlagQ B.V B.d.e) := by
     refine DiscreteTopology.of_continuous_injective
       (f := fun γ : NFlagQ B.V B.d.e => (⟨γ.1.1, γ.2⟩ : GQ B.V)) ?_ ?_
-    · exact Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
+    · exact Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
     · intro a b hab
       exact Subtype.ext (Subtype.ext (congrArg (fun x : GQ B.V => (x : GA D B.V)) hab))
   obtain ⟨K, hK, hcov⟩ := (GlobalTheory.T.isotropic_unipotentRadicals_rational_cocompact D B.V ρ B.d.e (isIsoSub_e B.d)).1

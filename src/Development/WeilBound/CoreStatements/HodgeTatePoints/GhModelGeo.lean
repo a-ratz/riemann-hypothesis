@@ -110,9 +110,9 @@ theorem exists_base {S : Scheme.{0}} {G : Over S} [GrpObj G] [Smooth G.hom] {A R
     fun e => congrArg CommaMorphism.left (hj e)
   refine ⟨AddMonoidHom.mk' j hadd, hl, hsm, fun n b => ?_⟩
   subst hz
-  letI := φ.toAlgebra
-  letI : Module A F := Module.compHom F φ
-  haveI : IsScalarTower A R F := ⟨fun a r y => mul_smul (φ a) r y⟩
+  let := φ.toAlgebra
+  let : Module A F := Module.compHom F φ
+  have : IsScalarTower A R F := ⟨fun a r y => mul_smul (φ a) r y⟩
   let jL : E →ₗ[A] F := { toFun := j, map_add' := hadd, map_smul' := hsm }
   have hb : IsBaseChange R jL := PositivityTheory.HtPt.Htat.Lie.isBaseChange_lie x M R F N jL hl
   exact ⟨hb.basis b, fun i => hb.basis_apply b i⟩
@@ -135,7 +135,7 @@ theorem exists_frame [IsCommMonObj G] [Smooth G.hom] (M : LieModel G ξ E) {R : 
   obtain ⟨EA, _, _, ⟨MA⟩⟩ := lieModel_exists X G (X.presheaf.stalk (centre z)) (X.fromSpecStalk (centre z))
   obtain ⟨EB, _, _, ⟨MB⟩⟩ := lieModel_exists X G (X.presheaf.stalk (centre zC)) (X.fromSpecStalk (centre zC))
   obtain ⟨hfin, hproj, -⟩ := PositivityTheory.HtPt.Htat.lie_proj X G _ _ EA MA
-  haveI : Module.Free (X.presheaf.stalk (centre z)) EA := Module.free_of_flat_of_isLocalRing
+  have : Module.Free (X.presheaf.stalk (centre z)) EA := Module.free_of_flat_of_isLocalRing
   let b := Module.finBasis (X.presheaf.stalk (centre z)) EA
   obtain ⟨k, hk, -, hkb⟩ := exists_base (A := X.presheaf.stalk (centre z)) (R := X.presheaf.stalk (centre zC))
     (X.presheaf.stalkSpecializes hsp).hom _ _ (Scheme.SpecMap_stalkSpecializes_fromSpecStalk hsp) MA MB

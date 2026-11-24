@@ -255,7 +255,7 @@ lemma _root_.GlobalTheory.GoodTop.contDiff_logCutoff (k : ℕ) : ContDiff ℝ �
   · have hev : _root_.GlobalTheory.GoodTop.logCutoff k =ᶠ[𝓝 z]
         fun w => Real.smoothTransition (2 + Real.log ‖w‖ / ((k : ℝ) + 1)) := by
       filter_upwards [isOpen_ne.mem_nhds h0] with w hw
-      simp only [_root_.GlobalTheory.GoodTop.logCutoff, if_neg (show w ≠ 0 from hw)]
+      simp only [_root_.GlobalTheory.GoodTop.logCutoff, ite_eq_right (show w ≠ 0 from hw)]
     refine ContDiffAt.congr_of_eventuallyEq ?_ hev
     refine Real.smoothTransition.contDiff.contDiffAt.comp z ?_
     refine contDiffAt_const.add (ContDiffAt.div_const ?_ _)
@@ -324,7 +324,7 @@ private lemma exists_bound_fderiv_logCutoff_mul_norm_mul_log :
   have hev : _root_.GlobalTheory.GoodTop.logCutoff k =ᶠ[𝓝 z]
       fun w => Real.smoothTransition (2 + Real.log ‖w‖ / ((k : ℝ) + 1)) := by
     filter_upwards [isOpen_ne.mem_nhds h0] with w hw
-    simp only [_root_.GlobalTheory.GoodTop.logCutoff, if_neg (show w ≠ 0 from hw)]
+    simp only [_root_.GlobalTheory.GoodTop.logCutoff, ite_eq_right (show w ≠ 0 from hw)]
   set N := fderiv ℝ (fun w : ℂ => ‖w‖) z
   have hn : HasFDerivAt (fun w : ℂ => ‖w‖) N z :=
     ((contDiffAt_norm ℝ (n := 1) h0).differentiableAt one_ne_zero).hasFDerivAt
@@ -343,7 +343,7 @@ private lemma exists_bound_fderiv_logCutoff_mul_norm_mul_log :
   have hlog : Real.log ‖z‖ = (x - 2) * ((k : ℝ) + 1) := by
     simp only [x]; field_simp; ring
   have hNc : ‖N c‖ ≤ ‖c‖ := (N.le_opNorm c).trans (by simpa using mul_le_mul_of_nonneg_right hN (norm_nonneg c))
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+  simp only [smul_apply, FunLike.coe_smul, Pi.smul_apply,
     smul_eq_mul, Real.norm_eq_abs]
   rw [hlog]
   have e : |deriv Real.smoothTransition x * (‖z‖⁻¹ / ((k : ℝ) + 1)) * N c| *
@@ -388,7 +388,7 @@ private lemma logCutoff_eq_one_of_exp_le_norm (k : ℕ) {z : ℂ}
   have h0 : z ≠ 0 := by
     intro h; rw [h, norm_zero] at hz; exact absurd hz (not_le.mpr (Real.exp_pos _))
   unfold _root_.GlobalTheory.GoodTop.logCutoff
-  rw [if_neg h0]
+  rw [ite_eq_right h0]
   apply Real.smoothTransition.one_of_one_le
   have hk : (0 : ℝ) < (k : ℝ) + 1 := by positivity
   have hlog : -((k : ℝ) + 1) ≤ Real.log ‖z‖ := by
@@ -440,10 +440,10 @@ private lemma fderiv_prod_logCutoff_coordVec {n : ℕ} (k : ℕ) (S : Finset (Fi
           fun t : ℝ => (∏ a ∈ S.erase b, _root_.GlobalTheory.GoodTop.logCutoff k (v a)) *
             _root_.GlobalTheory.GoodTop.logCutoff k (v b + (t : ℂ) * c) := by
         funext t
-        rw [← Finset.mul_prod_erase S _ hb, mul_comm, hcoord, if_pos rfl]
+        rw [← Finset.mul_prod_erase S _ hb, mul_comm, hcoord, ite_eq_left rfl]
         congr 1
         refine Finset.prod_congr rfl fun a ha => ?_
-        rw [hcoord, if_neg (Finset.ne_of_mem_erase ha)]
+        rw [hcoord, ite_eq_right (Finset.ne_of_mem_erase ha)]
       rw [e]
       exact hψline.const_mul _
     exact h1.unique h2
@@ -454,7 +454,7 @@ private lemma fderiv_prod_logCutoff_coordVec {n : ℕ} (k : ℕ) (S : Finset (Fi
           fun _ => ∏ a ∈ S, _root_.GlobalTheory.GoodTop.logCutoff k (v a) := by
         funext t
         refine Finset.prod_congr rfl fun a ha => ?_
-        rw [hcoord, if_neg (fun h : a = b => hb (h ▸ ha))]
+        rw [hcoord, ite_eq_right (fun h : a = b => hb (h ▸ ha))]
       rw [e]
       exact hasDerivAt_const _ _
     exact h1.unique h2
@@ -585,8 +585,8 @@ theorem dbar_dbar_symm {f : E → ℂ} {z : E} (hf : ContDiffAt ℝ 2 f z) (v w 
   have hs : IsSymmSndFDerivAt ℝ f z := hf.isSymmSndFDerivAt (by simp)
   rw [dbar_eq_of_hasFDerivAt (hasFDerivAt_dbar_apply hf w),
     dbar_eq_of_hasFDerivAt (hasFDerivAt_dbar_apply hf v)]
-  simp only [antilinPart_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.apply_apply]
+  simp only [antilinPart_apply, smul_apply, add_apply,
+    ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.apply_apply]
   rw [hs v w, hs v (Complex.I • w), hs (Complex.I • v) w, hs (Complex.I • v) (Complex.I • w)]
   ring_nf
 
@@ -595,8 +595,8 @@ theorem dbar_finset_prod {ι : Type*} [DecidableEq ι] (s : Finset ι) {g : ι �
     dbar (fun x => ∏ i ∈ s, g i x) z u = ∑ k ∈ s, dbar (g k) z u * ∏ i ∈ s.erase k, g i z := by
   have h := HasFDerivAt.finsetProd (fun i hi => (hg i hi).hasFDerivAt)
   rw [dbar_eq_of_hasFDerivAt h]
-  simp only [antilinPart_apply, dbar_apply, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
+  simp only [antilinPart_apply, dbar_apply, sum_apply,
+    smul_apply, smul_eq_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl fun k _ => by ring
 
 end GlobalTheory.GoodTop.Piola
@@ -1095,7 +1095,7 @@ theorem integral_mixTop_position_eq_zero : ∀ {n : ℕ} {r : Type} [Fintype r] 
       ‖θ j a v p q‖ * poinWt S v a ≤ |c| + C + 2 * C * (|c| + C) := by
     intro v hv hvK a p q
     obtain ⟨hρv, -, hc0, -⟩ := hC v hvK
-    simp only [hθ, transConn, lt_irrefl, if_false, if_true, Matrix.neg_apply, Matrix.smul_apply,
+    simp only [hθ, transConn, lt_irrefl, ite_false, ite_true, Matrix.neg_apply, Matrix.smul_apply,
       Matrix.sub_apply, smul_eq_mul, norm_neg, norm_mul, Complex.norm_real, Real.norm_eq_abs]
     have e := weighted_bound_cut_sum |ρ v| ‖conn G₁ v (coordVec a) p q‖ ‖conn G₀ v (coordVec a) p q‖ (poinWt S v a) C c
       (abs_nonneg _) hρv (norm_nonneg _) (norm_nonneg _) (hw v hv.1 a).1 (hw v hv.1 a).2
@@ -1301,7 +1301,7 @@ namespace GlobalTheory.GoodTop
 
 theorem hasInt_cut_topDens_patch : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X : Var F} {m : ℕ} (E : Fr (ratOf X) (fun _ : Unit => m) 0) (O : X.X.Opens) (H H₀ : Mat (fun _ : Unit => m) X.Fn → CxPts X.str σ → Mat (fun _ : Unit => m) ℂ), IsMetricOn E O H → IsMetricOn E ⊤ H₀ → ∀ {e : OpenPartialHomeomorph (CxPts X.str σ) (V X.dim)} {S : Finset (Fin X.dim)} {A : Mat (fun _ : Unit => m) X.Fn} {W : Set (CxPts X.str σ)} {c : ℝ}, GoodPatch E O H e S A W c → ∀ {ρ : CxPts X.str σ → ℝ}, (∀ y, CInfAt ρ y) → tsupport ρ ⊆ W → HasInt (fun c : AlgChart X.str σ X.dim => c.e) (fun c y => ρ y * topDens E H₀ c y) (ptsIn X.str σ ⊤) ((Real.pi ^ X.dim)⁻¹ * (∫ v in e '' W, (ρ (e.symm v) : ℂ) * mixTop fun _ => curvAt (fun v => H₀ A (e.symm v) ()) v).re) := by
   intro F _ σ X m E O H H₀ hH hH₀ e S A W c hp ρ hρ hsupp
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ X.isProjOver
+  have := CxPts.secondCountableTopology_of_isProjOver σ X.isProjOver
   have hcont : Continuous ρ := continuous_iff_continuousAt.2 fun y => (hρ y).continuousAt
   have htop : ptsIn X.str σ ⊤ = Set.univ := Set.eq_univ_of_forall fun _ => mem_ptsIn_top
   set f : V X.dim → ℂ := fun v => (ρ (e.symm v) : ℂ) * mixTop fun _ => curvAt (fun v => H₀ A (e.symm v) ()) v with hf

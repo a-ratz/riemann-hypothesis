@@ -80,7 +80,7 @@ private theorem mem_fixingSubgroup_adjoinRoots (m : ℕ) (g : Gal(AlgebraicClosu
         rw [Subgroup.zpowers_le]
         exact h ζ hζ
       exact fun f hf => this hf
-    exact (IntermediateField.le_iff_le _ _).1 hle (Subgroup.mem_zpowers g)
+    exact (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 hle (Subgroup.mem_zpowers g)
 
 private theorem comap_princ_eq [CharZero E] (n : ℕ) :
     (princ l n).comap (eps l E) = (adjoinRoots E (l ^ n)).fixingSubgroup := by
@@ -124,7 +124,7 @@ theorem totient_le_finrank_mul [NumberField E] (n : ℕ) :
   have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   have : NeZero ((l ^ n : ℕ) : AlgebraicClosure E) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne _)⟩
   have := go_finiteDimensional_adjoinRoots (E := E) hpos
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (AlgebraicClosure E) (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (AlgebraicClosure E) (l ^ n)
   have hmem : ζ ∈ adjoinRoots E (l ^ n) := IntermediateField.subset_adjoin E _ hζ.pow_eq_one
   have hζ' : IsPrimitiveRoot (⟨ζ, hmem⟩ : adjoinRoots E (l ^ n)) (l ^ n) :=
     IsPrimitiveRoot.of_map_of_injective (f := (adjoinRoots E (l ^ n)).val) hζ Subtype.val_injective
@@ -143,7 +143,7 @@ theorem finiteIndex_of_index_map_le {U : Subgroup ℤ_[l]ˣ} (hU : IsClosed (U :
       mul_one]
   have hne : ∀ n, (U ⊔ princ l n).index ≠ 0 := by
     intro n
-    haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
     rw [hidx]
     exact Subgroup.index_ne_zero_of_finite
   have hbdd : BddAbove (Set.range fun n => (U ⊔ princ l n).index) := by
@@ -194,9 +194,9 @@ theorem isOpen_galImage [NumberField E] : IsOpen (galImage l E : Set ℤ_[l]ˣ) 
   refine ⟨isClosed_galImage,
     finiteIndex_of_index_map_le isClosed_galImage (B := Module.finrank ℚ E) fun n => ?_⟩
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hN : 0 < l ^ n := pow_pos hl.pos n
-  haveI : FiniteDimensional E (adjoinRoots E (l ^ n)) := go_finiteDimensional_adjoinRoots hN
+  have : FiniteDimensional E (adjoinRoots E (l ^ n)) := go_finiteDimensional_adjoinRoots hN
   have hcard := Subgroup.index_mul_card ((galImage l E).map (redPow l n))
   rw [card_map_redPow_galImage, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient] at hcard
   have htot := totient_le_finrank_mul (l := l) (E := E) n

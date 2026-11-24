@@ -202,7 +202,7 @@ theorem hormander_open (hU : IsOpen U) (e : V n → ℝ) (he : ContDiffOn ℝ �
         simp [and_comm] }
   obtain ⟨F, hFh, hFi⟩ := ReciprocityTheory.L2DbarEstimates.hormander n U X (fun x => φ x.1) (fun x => F0 x.1)
     (fun x => h x.1) (smoothR_val hφ) (fun x ξ => by rw [levi_val hU]; exact hφl x.1 x.2 ξ)
-    (smooth_val hF0) (hh.comp measurable_subtype_coe) (fun x ξ => by
+    (smooth_val hF0) (hh.comp measurable_subtypeVal) (fun x ξ => by
       show ENNReal.ofReal (‖dbarDot n (Subtype.val : U → V n) (fun x => F0 x.1) x ξ‖ ^ 2) ≤
         h x.1 * ENNReal.ofReal (Levi n (Subtype.val : U → V n) (fun x => φ x.1) x ξ).re
       rw [levi_val hU, dbarDot]

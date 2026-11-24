@@ -86,7 +86,7 @@ theorem UpperTheory.Reformulated.B.DiagonalizeThreeByThree.diagonalize_three_by_
   have hli : LinearIndependent K v :=
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' M) d hd v hv
   let P : Matrix (Fin 3) (Fin 3) K := Matrix.of fun i j => v j i
-  have hP : IsUnit P := Matrix.linearIndependent_cols_iff_isUnit.mp hli
+  have hP : IsUnit P := Matrix.linearIndependent_col_iff_isUnit.mp hli
   have hMP : M * P = P * Matrix.diagonal d := by
     ext i j
     have h := congrFun (hv j).apply_eq_smul i

@@ -244,9 +244,9 @@ theorem fub [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (Bs : B.RealPl
       Integrable (rint Bs F ((Matrix.of x.1)⁻¹ * (Matrix.of x.2)⁻¹ * γ)) (Bs.μW'.prod Bs.μN)) :
     Integrable (lint Bs γ (fun x => θ (x, 0)) F) (Bs.μW.prod Bs.μN) ∧
       ∫ p, θ p • D.orbIntegrand Bs γ F p ∂Bs.μSS = ∫ x, lint Bs γ (fun x => θ (x, 0)) F x ∂(Bs.μW.prod Bs.μN) := by
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
   have hI' : Integrable (fun p => θ p • D.orbIntegrand Bs γ F p) ((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)) := hI
   have hinner : ∀ᵐ x ∂(Bs.μW.prod Bs.μN),
       ∫ y, θ (x, y) • D.orbIntegrand Bs γ F (x, y) ∂(Bs.μW'.prod Bs.μN) = lint Bs γ (fun x => θ (x, 0)) F x := by
@@ -305,8 +305,8 @@ theorem norm_rint (Bs : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[�
 theorem rint_aesm (Bs : B.RealPlaceData k r Wp Wq) {F : B.Mat k r → (Wq →L[ℂ] Wp)} (x : B.Mat k r) (hx : x ∈ B.GV k r)
     (hF : ContinuousOn F (B.GV k r)) :
     AEStronglyMeasurable (rint Bs F x) (Bs.μW'.prod Bs.μN) := by
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
   set S : Set (Mt k r × Mt k r) := {y | (Matrix.of y.1 : B.Mat k r) ∈ UWset k r Bs.z' ∧ (Matrix.of y.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r}
     with hS
   have hWc' := (P.weyl_subgroup_closed k r Bs.z').closed
@@ -341,9 +341,9 @@ theorem inner_int (Bs : B.RealPlaceData k r Wp Wq) (γ : B.Mat k r) (hγ : γ �
     (hF : ContinuousOn F (B.GV k r)) (hb : ∀ᵐ p ∂Bs.μSS, θ p * ‖F (B.sgs p γ)‖ ≤ cF * maj p) :
     ∀ᵐ x ∂(Bs.μW.prod Bs.μN),
       Integrable (rint Bs F ((Matrix.of x.1)⁻¹ * (Matrix.of x.2)⁻¹ * γ)) (Bs.μW'.prod Bs.μN) := by
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
+  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
   have hmaj' : Integrable maj ((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)) := hmaj
   have hb' : ∀ᵐ p ∂((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)), θ p * ‖F (B.sgs p γ)‖ ≤ cF * maj p := hb
   have hW' : ∀ᵐ p ∂((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)), (Matrix.of p.2.1 : B.Mat k r) ∈ UWset k r Bs.z' :=

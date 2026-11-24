@@ -56,7 +56,7 @@ theorem unfold_Zn {d : ℕ} (g : (Fin d → ℝ) → ENNReal) :
     ∫⁻ x, g x = ∑' n : Fin d → ℤ, ∫⁻ x in cubeIco (Fin d), g (x + fun i => (n i : ℝ)) := by
   classical
   set b := Pi.basisFun ℝ (Fin d) with hb
-  haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range b)) (Fin d → ℝ) volume :=
+  have : VAddInvariantMeasure (Submodule.span ℤ (Set.range b)) (Fin d → ℝ) volume :=
     ⟨fun c s _ => by
       show volume ((fun x => (c : Fin d → ℝ) + x) ⁻¹' s) = volume s
       exact measure_preimage_add _ _ _⟩

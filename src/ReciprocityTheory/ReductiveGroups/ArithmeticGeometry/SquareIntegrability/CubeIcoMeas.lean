@@ -90,7 +90,7 @@ theorem avg_fd_cube {ι κ : Type} [Fintype ι] [Fintype κ]
     simp [ZSpan.mem_fundamentalDomain, cubeIco, e]
   have hme : MeasurableEmbedding e := e.toHomeomorph.measurableEmbedding
   set μ : Measure (κ → ℝ) := (volume : Measure (EuclideanSpace ℂ ι)).map e with hμ
-  haveI : μ.IsAddHaarMeasure := e.isAddHaarMeasure_map _
+  have : μ.IsAddHaarMeasure := e.isAddHaarMeasure_map _
   have hsm : μ = μ.addHaarScalarFactor volume • volume := Measure.isAddLeftInvariant_eq_smul μ volume
   set c := μ.addHaarScalarFactor volume with hcdef
   have hvol : volume (ZSpan.fundamentalDomain B) = (c : ENNReal) := by
@@ -121,7 +121,7 @@ theorem avg_fd_swap {ι κ₁ κ₂ : Type} [Fintype ι] [Fintype κ₁] [Fintyp
     (f : EuclideanSpace ℂ ι → ℝ)
     (hf : ∀ γ ∈ Submodule.span ℤ (Set.range B₁), ∀ v, f (γ + v) = f v) :
     ⨍ v in ZSpan.fundamentalDomain B₁, f v = ⨍ v in ZSpan.fundamentalDomain B₂, f v := by
-  haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range B₁)) (EuclideanSpace ℂ ι) volume :=
+  have : VAddInvariantMeasure (Submodule.span ℤ (Set.range B₁)) (EuclideanSpace ℂ ι) volume :=
     ⟨fun c s _ => measure_preimage_add volume (c : EuclideanSpace ℂ ι) s⟩
   have h1 := ZSpan.isAddFundamentalDomain B₁ (volume : Measure (EuclideanSpace ℂ ι))
   have h2 := ZSpan.isAddFundamentalDomain B₂ (volume : Measure (EuclideanSpace ℂ ι))

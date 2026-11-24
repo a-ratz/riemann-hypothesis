@@ -418,9 +418,9 @@ theorem UpperTheory.exists_twoChart_quotient_of_finite_coord :
     · refine Ideal.Quotient.eq.2 (mem_map_of_coord β I (fun i => ?_))
       rw [map_sub, Finsupp.sub_apply, hrx, hf, Finsupp.filter_apply]
       by_cases hi : i ∈ V j
-      · rw [if_pos hi, sub_self]
+      · rw [ite_eq_left hi, sub_self]
         exact I.zero_mem
-      · rw [if_neg hi, zero_sub]
+      · rw [ite_eq_right hi, zero_sub]
         have hw0 : β.repr (T.t ^ j * c) i = 0 := Finsupp.notMem_support_iff.1 (fun h => hi (hwV h))
         have hci := hcoord i
         rw [map_sub, Finsupp.sub_apply, hw0, sub_zero] at hci
@@ -459,7 +459,7 @@ theorem UpperTheory.exists_section_lift_of_etale_of_henselian :
   intro A E _ _ _ _ _ π
   classical
   let Q : Ideal E := RingHom.ker π
-  haveI : Q.IsPrime := RingHom.ker_isPrime π
+  have : Q.IsPrime := RingHom.ker_isPrime π
   obtain ⟨f, hfQ, hstd⟩ := Algebra.IsEtaleAt.exists_isStandardEtale (R := A) Q
   obtain ⟨P⟩ := hstd.nonempty_standardEtalePresentation
   have hunit : ∀ y : Submonoid.powers f, IsUnit (π y) := by
@@ -496,7 +496,7 @@ theorem UpperTheory.exists_section_lift_of_etale_of_henselian :
     simp [ρ, hra, ResidueField.algebraMap_eq]
   refine ⟨(P.lift a hA).comp (P.equivRing.toAlgHom.comp ι), fun x => ?_⟩
   have := congrArg (fun φ => φ (P.equivRing (ι x))) hρ
-  simp only [AlgHom.comp_apply, ρ, IsScalarTower.coe_toAlgHom', ResidueField.algebraMap_eq, τ, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe, AlgEquiv.symm_apply_apply] at this
+  simp only [AlgHom.comp_apply, ρ, IsScalarTower.coe_toAlgHom', ResidueField.algebraMap_eq, τ, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass, AlgEquiv.symm_apply_apply] at this
   simpa [hπ] using this
 
 end
@@ -550,7 +550,7 @@ theorem UpperTheory.exists_common_zero_of_jacobian_isUnit_henselian :
   classical
   let I := Ideal.span (Set.range F)
   let d := Ideal.Quotient.mk I (Matrix.of fun s t : Fin n => MvPolynomial.pderiv s (F t)).det
-  haveI := etale_away_jacobian A n F
+  have := etale_away_jacobian A n F
   let ψ : MvPolynomial (Fin n) A →ₐ[A] ResidueField A :=
     (Algebra.ofId A (ResidueField A)).comp (MvPolynomial.aeval (0 : Fin n → A))
   have hψ : ∀ p, ψ p = residue A (MvPolynomial.eval 0 p) := fun p => by
@@ -621,7 +621,7 @@ private lemma UpperTheory.eval_zero_pderiv {R : Type} [CommRing R] {n : ℕ} (j 
     by_cases hs : s = Finsupp.single j 1
     · subst hs
       simp
-    · rw [if_neg hs]
+    · rw [ite_eq_right hs]
       split_ifs with h
       · by_cases hsj : s j = 0
         · simp [hsj]
@@ -788,7 +788,7 @@ private lemma coord_setup (T : TC A D) (hC : T.Coord) (j : ℕ) :
     rw [Module.Basis.repr_self, Finsupp.single_apply]
     by_cases h : i = k
     · subst h; simp
-    · rw [if_neg, if_neg h]
+    · rw [ite_eq_right, ite_eq_right h]
       intro h'
       exact h (F.equivFin.symm.injective (Subtype.ext h'.symm))
   · intro x hx hL
@@ -1012,7 +1012,7 @@ theorem UpperTheory.exists_monic_laurent_polynomial_near_root_of_unity :
   have hs : φ (LaurentPolynomial.T (-1)) = T.s := by
     change φ0 _ = _
     simp [φ0, τ, zpow_neg]
-  letI : Algebra (LaurentPolynomial A) D := φ.toRingHom.toAlgebra
+  let : Algebra (LaurentPolynomial A) D := φ.toRingHom.toAlgebra
   have hmap : ∀ r, algebraMap (LaurentPolynomial A) D r = φ r := fun _ => rfl
   have hadj : Algebra.adjoin A {T.t} ≤ φ.range := by
     refine Algebra.adjoin_le ?_

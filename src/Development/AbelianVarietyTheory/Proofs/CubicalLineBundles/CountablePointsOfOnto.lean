@@ -56,7 +56,7 @@ namespace GlobalTheory.CMCount
 theorem eq_top_of_countable {V L : Type} [AddCommGroup V] [Module ℂ V] [Countable L] (W : Submodule ℂ V) (P : L → V)
     (h : ∀ z, ∃ a, z - P a ∈ W) : W = ⊤ := by
   by_contra hW
-  obtain ⟨v, -, hv⟩ := SetLike.exists_of_lt (lt_top_iff_ne_top.2 hW)
+  obtain ⟨v, -, hv⟩ := IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.2 hW)
   choose a ha using h
   have : Function.Injective fun c : ℂ => a (c • v) := fun c d e => by
     by_contra hne
@@ -176,10 +176,10 @@ theorem countable_points_of_onto : ThetaUnifAV → Out.Laws → ∀ (E : Type) [
   obtain ⟨s, hsΛ, hs, hli⟩ := exists_linearIndependent ℝ (u₀.Λ : Set (Fin P₀.g → ℂ))
   rw [u₀.full] at hs
   have : Finite s := hli.finite
-  have : Countable (𝓞 E) := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have : Countable (𝓞 E) := Countable.of_moduleFinite (R := ℤ)
   have : ∀ i, Countable (FU.Di i).La := fun i =>
     have := (FU.Di i).fin
-    Finsupp.Countable.of_moduleFinite (R := 𝓞 E)
+    Countable.of_moduleFinite (R := 𝓞 E)
   let R : (Sp ℂ ⟶ Xo.X) → (Σ i : Fin FU.n, Σ n : ℕ, Fin n → s → (FU.Di i).La) → Prop := fun y c =>
     ∃ P, IsPeriod (FU.Di c.1) ty P ∧ FU.u c.1 P = y ∧ ∃ F : Fin c.2.1 → ((Fin P₀.g → ℂ) →ₗ[ℂ] (Fin g → ℂ)),
       ⨆ j, LinearMap.range (F j) = ⊤ ∧ ∀ j (x : s), F j x = P (c.2.2 j x)

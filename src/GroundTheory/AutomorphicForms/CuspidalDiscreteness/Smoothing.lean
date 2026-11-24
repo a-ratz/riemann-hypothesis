@@ -162,7 +162,7 @@ def finOne : AdelicGLn.integralFiniteGL K n →* normOneGL (K := K) (n := n) whe
     (finOne K n u : AdelicGLn.AdelicGL K n) = finEmb K n u := rfl
 
 theorem continuous_finOne : Continuous (finOne K n) :=
-  continuous_induced_rng.2 (continuous_finEmb.comp continuous_subtype_val)
+  continuous_induced_rng.2 (continuous_finEmb.comp continuous_subtypeVal)
 
 theorem archProj_inv_mul_finOne (A : ArchUnits K n) (u : AdelicGLn.integralFiniteGL K n) :
     (archProj K n A)⁻¹ * finOne K n u = finOne K n u * (archProj K n A)⁻¹ := by

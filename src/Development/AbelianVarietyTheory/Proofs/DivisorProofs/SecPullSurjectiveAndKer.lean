@@ -84,8 +84,8 @@ theorem secPull_surjective_and_ker (R R₀ : Type) [CommRing R] [CommRing R₀] 
     rw [Category.assoc, affPt_w, ← spc, ← spc, hτ]
   let w := hpb.lift _ _ hz
   have hw : w ≫ i = spMap q ≫ affPt s p.1.2 := hpb.lift_fst _ _ _
-  haveI : IsOpenImmersion (affPt s₀ p.1.1) := p.1.1.2.isOpenImmersion_fromSpec
-  haveI : IsOpenImmersion (affPt s p.1.2) := p.1.2.2.isOpenImmersion_fromSpec
+  have : IsOpenImmersion (affPt s₀ p.1.1) := p.1.1.2.isOpenImmersion_fromSpec
+  have : IsOpenImmersion (affPt s p.1.2) := p.1.2.2.isOpenImmersion_fromSpec
   have hr : Set.range w ⊆ Set.range (affPt s₀ p.1.1) := by
     rintro _ ⟨x, rfl⟩
     have e : Set.range (affPt s₀ p.1.1) = p.1.1.1 := p.1.1.2.range_fromSpec
@@ -104,11 +104,11 @@ theorem secPull_surjective_and_ker (R R₀ : Type) [CommRing R] [CommRing R₀] 
       hw', hw]
   let ψ' := Ideal.Quotient.lift J (secPull s s₀ p) hJker
   have h2 : ψ'.comp q = secPull s s₀ p := Ideal.Quotient.lift_comp_mk _ _ _
-  haveI : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective _ hπ
-  haveI : IsClosedImmersion i := MorphismProperty.of_isPullback hpb.flip this
-  haveI : Mono (spMap (secPull s s₀ p) ≫ affPt s p.1.2) := by
+  have : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective _ hπ
+  have : IsClosedImmersion i := MorphismProperty.of_isPullback hpb.flip this
+  have : Mono (spMap (secPull s s₀ p) ≫ affPt s p.1.2) := by
     rw [secPull_affPt]; infer_instance
-  haveI : Mono (spMap (secPull s s₀ p)) := mono_of_mono _ (affPt s p.1.2)
+  have : Mono (spMap (secPull s s₀ p)) := mono_of_mono _ (affPt s p.1.2)
   have h3 : ψ'.comp ψ = RingHom.id _ := by
     apply spi
     rw [← cancel_mono (spMap (secPull s s₀ p)), ← spc, ← spc, RingHom.comp_assoc, h1, h2,

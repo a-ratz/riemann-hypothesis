@@ -68,7 +68,7 @@ theorem herm_last_scaled (t : ℝ) (ht : 0 < t) :
   unfold herm Hb
   rw [dotProduct, Finset.sum_eq_single (Fin.last k)]
   · simp only [Matrix.mulVec_diagonal, Matrix.mulVec_smul, Pi.star_apply, Pi.smul_apply,
-      Pi.single_eq_same, if_pos rfl, smul_eq_mul, mul_one, star_mul', star_one]
+      Pi.single_eq_same, ite_eq_left rfl, smul_eq_mul, mul_one, star_mul', star_one]
     rw [hcs]
     simp only [↓reduceIte]
     linear_combination (-1 : ℂ) * hs
@@ -175,12 +175,12 @@ private theorem nu_conjTranspose_mul_Hb_mul_nu (hk : 1 ≤ k) (w s : ℂ) (hs : 
     rw [Fintype.sum_eq_add 0 (Fin.last k) h0L]
     · by_cases hj0 : j = 0
       · subst hj0
-        simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, if_true, if_false,
+        simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, ite_true, ite_false,
           ↓reduceIte, mul_one, one_mul, mul_neg, neg_mul]
         linear_combination hws
       · by_cases hjL : j = Fin.last k
         · subst hjL
-          simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, if_true, if_false,
+          simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, ite_true, ite_false,
             ↓reduceIte, mul_one, one_mul, mul_neg, neg_mul]
           ring
         · simp [h0L, h0L.symm, hj0, hjL, Ne.symm hj0, Ne.symm hjL]
@@ -191,19 +191,19 @@ private theorem nu_conjTranspose_mul_Hb_mul_nu (hk : 1 ≤ k) (w s : ℂ) (hs : 
       rw [Fintype.sum_eq_add 0 (Fin.last k) h0L]
       · by_cases hj0 : j = 0
         · subst hj0
-          simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, if_true, if_false,
+          simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, ite_true, ite_false,
             ↓reduceIte, mul_one, one_mul, mul_neg, neg_mul]
           ring
         · by_cases hjL : j = Fin.last k
           · subst hjL
-            simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, if_true, if_false,
+            simp only [h0L, h0L.symm, hs, star_star, eq_self_iff_true, ite_true, ite_false,
               ↓reduceIte, mul_one, one_mul, mul_neg, neg_mul]
             linear_combination (-1 : ℂ) * hws
           · simp [h0L, h0L.symm, hj0, hjL, Ne.symm hj0, Ne.symm hjL]
       · intro x hx
         simp [hx.1, hx.2]
     · rw [Fintype.sum_eq_single i]
-      · simp only [hi0, hiL, if_false, if_true, ↓reduceIte, eq_self_iff_true, star_one, one_mul]
+      · simp only [hi0, hiL, ite_false, ite_true, ↓reduceIte, eq_self_iff_true, star_one, one_mul]
         by_cases hj0 : j = 0
         · subst hj0
           simp [hi0, hiL]
@@ -329,7 +329,7 @@ theorem theSecB_core (hk : 1 ≤ k) (a b : Fin (k + 1) → ℂ) (T T' : ℝ) (hT
       rw [dotProduct, Finset.sum_eq_single (Fin.last k)]
       · simp only [Matrix.mulVec_diagonal, Pi.star_apply, Pi.smul_apply, Pi.add_apply,
           Pi.single_eq_same, Pi.single_eq_of_ne h0L.symm, smul_eq_mul, mul_one, mul_zero,
-          zero_add, star_mul', star_one, eq_self_iff_true, if_true, ↓reduceIte]
+          zero_add, star_mul', star_one, eq_self_iff_true, ite_true, ↓reduceIte]
         rw [hcs]
         unfold wZ
         push_cast
@@ -347,12 +347,12 @@ private theorem herm_Hb_wbPart_eq_herm_Hpk_of_inWb (r : ℕ) (z : Fin (2 * r + k
     simp only [Matrix.mulVec, dotProduct]
     rw [Finset.sum_eq_single i]
     · simp only [Hpk]
-      rw [if_neg (by omega), if_neg (by omega), if_pos (by simp [h1, h2])]
+      rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by simp [h1, h2])]
     · intro j _ hji
       by_cases hj : j.val < r ∨ r + k < j.val
       · rw [hz j hj, mul_zero]
       · simp only [Hpk]
-        rw [if_neg (by omega), if_neg (by omega), if_neg (by
+        rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by
           rintro ⟨_, _, h⟩
           exact hji h.symm), zero_mul]
     · intro h
@@ -382,8 +382,8 @@ private theorem herm_Hb_wbPart_eq_herm_Hpk_of_inWb (r : ℕ) (z : Fin (2 * r + k
       simp [wI, Fin.ext_iff]
     simp only [wbPart]
     by_cases hjl : j = Fin.last k
-    · rw [if_pos hjl, if_pos (hc.1 hjl)]
-    · rw [if_neg hjl, if_neg (fun h => hjl (hc.2 h))]
+    · rw [ite_eq_left hjl, ite_eq_left (hc.1 hjl)]
+    · rw [ite_eq_right hjl, ite_eq_right (fun h => hjl (hc.2 h))]
 
 theorem theSection_isSection (r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (hk : 1 ≤ k) (hz : inWb k r z)
     (hz' : inWb k r z') (hT : 0 < Tz k r z) (hT' : 0 < Tz k r z') :

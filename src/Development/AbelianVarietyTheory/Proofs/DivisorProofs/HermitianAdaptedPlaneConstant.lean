@@ -106,38 +106,38 @@ theorem exists_prod_openCompact_subset :
   have hNO : ∀ v, ∀ x ∈ N v, x ∈ A v := by
     intro v x hx
     by_cases hv : v ∈ I
-    · simp only [N, hv, if_true] at hx; exact hx.2
-    · simp only [N, hv, if_false] at hx; exact hx
+    · simp only [N, hv, ite_true] at hx; exact hx.2
+    · simp only [N, hv, ite_false] at hx; exact hx
   have hNG : ∀ v ∈ I, ∀ x ∈ N v, x ∈ (G v : Set (R v)) := by
     intro v hv x hx
-    simp only [N, hv, if_true] at hx; exact hx.1
+    simp only [N, hv, ite_true] at hx; exact hx.1
   have hNopen : ∀ v, IsOpen (N v : Set (R v)) := by
     intro v
     by_cases hv : v ∈ I
-    · simp only [N, hv, if_true, AddSubgroup.coe_inf]
+    · simp only [N, hv, ite_true, AddSubgroup.coe_inf]
       exact (G v).isOpen.inter (hOopen v)
-    · simp only [N, hv, if_false]; exact hOopen v
+    · simp only [N, hv, ite_false]; exact hOopen v
   have hNcpt : ∀ v, IsCompact (N v : Set (R v)) := by
     intro v
     by_cases hv : v ∈ I
-    · simp only [N, hv, if_true, AddSubgroup.coe_inf]
+    · simp only [N, hv, ite_true, AddSubgroup.coe_inf]
       exact (hOcpt v).inter_left (G v).isClosed
-    · simp only [N, hv, if_false]; exact hOcpt v
+    · simp only [N, hv, ite_false]; exact hOcpt v
   refine ⟨N, hNopen, hNcpt, ?_, ?_, ?_⟩
   · filter_upwards [I.eventually_cofinite_notMem] with v hv
-    simp only [N, hv, if_false]; rfl
+    simp only [N, hv, ite_false]; rfl
   ·
     let P : Set (FiniteAdeleRing (𝓞 F) F) := {a | ∀ v, a v ∈ N v}
     have hPeq : P = {a : FiniteAdeleRing (𝓞 F) F | ∀ v, v ∉ I → a v ∈ A v} ∩ ⋂ v ∈ I, (fun a : FiniteAdeleRing (𝓞 F) F => a v) ⁻¹' (N v : Set (R v)) := by
       ext a
-      simp only [P, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage]
+      simp only [P, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage]
       constructor
       · intro h; exact ⟨fun v _ => hNO v _ (h v), fun v _ => h v⟩
       · rintro ⟨h1, h2⟩ v
         by_cases hv : v ∈ I
         · exact h2 v hv
         · have := h1 v hv
-          simp only [N, hv, if_false]; exact this
+          simp only [N, hv, ite_false]; exact this
     have hPopen : IsOpen P := by
       rw [hPeq]
       refine IsOpen.inter (RestrictedProduct.isOpen_forall_imp_mem hOopen) ?_
@@ -230,7 +230,7 @@ theorem coset_indicator_finprod : ∀ (F : Type) [Field F] [NumberField F] (κ :
   · filter_upwards [hNcof, hint a] with v hv ha
     congr 1
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine forall_congr' fun i => ?_
     rw [← SetLike.mem_coe, hv, SetLike.mem_coe]
     exact ⟨fun h => by simpa using add_mem h (ha i), fun h => sub_mem h (ha i)⟩
@@ -240,7 +240,7 @@ theorem coset_indicator_finprod : ∀ (F : Type) [Field F] [NumberField F] (κ :
       refine Set.indicator_of_mem (fun i => ?_) _
       simpa [map_sub] using hy i v
     · rw [Set.indicator_of_notMem hy]
-      simp only [Set.mem_setOf_eq, not_forall] at hy
+      simp only [Set.mem_ofPred_eq, not_forall] at hy
       obtain ⟨i, v, hv⟩ := hy
       refine (finprod_eq_zero _ v (Set.indicator_of_notMem (show (fun j => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (y j)) ∉ {x | ∀ j, x j - Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (a j) ∈ N v} from fun h => hv (by simpa [map_sub] using h i)) _) ?_).symm
       refine (Filter.eventually_cofinite.1 ((hNcof.and (hint a)).and (hint y))).subset fun w hw h' => hw ?_
@@ -294,9 +294,9 @@ theorem sb_decomp : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintyp
       exact QuotientAddGroup.eq_iff_sub_mem
     by_cases h : y - q.out ∈ U
     · rw [Set.indicator_of_mem (show y ∈ {y : κ → FiniteAdeleRing (𝓞 F) F | ∀ i v,
-        Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (y i - q.out i) ∈ N v} from h), if_pos (this.mpr h), Pi.one_apply]
+        Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (y i - q.out i) ∈ N v} from h), ite_eq_left (this.mpr h), Pi.one_apply]
     · rw [Set.indicator_of_notMem (show y ∉ {y : κ → FiniteAdeleRing (𝓞 F) F | ∀ i v,
-        Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (y i - q.out i) ∈ N v} from h), if_neg (fun h' => h (this.mp h'))]
+        Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (y i - q.out i) ∈ N v} from h), ite_eq_right (fun h' => h (this.mp h'))]
   have key : ∀ y, g y = ∑ q ∈ Tq, g q.out *
       Set.indicator {y : κ → FiniteAdeleRing (𝓞 F) F | ∀ i v, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (y i - q.out i) ∈ N v} 1 y := by
     intro y
@@ -357,8 +357,8 @@ theorem pullback_adm : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Fi
     rfl
 
   rw [LinearMap.comp_apply, hsplit, map_sum, map_sum]
-  simp only [map_smul, ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
-    ContinuousLinearMap.coe_comp', Function.comp_apply]
+  simp only [map_smul, FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply,
+    ContinuousLinearMap.coe_comp, Function.comp_apply]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [hloc f (φ j) (hφ j) (hfam j)]
   exact congrArg (c j • ·) (hTj j (ei f))

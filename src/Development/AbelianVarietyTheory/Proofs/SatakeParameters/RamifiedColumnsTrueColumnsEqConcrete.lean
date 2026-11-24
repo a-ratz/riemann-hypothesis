@@ -101,7 +101,7 @@ end Gen
 theorem colStep0_mem_lat : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X) (h : I.Ok) (hX : B.fields.Ok) (l : I.Laws) (u : B.Word) (a : I.ι) (x : ((I.fm l u a).lat 0).V) (φ : ColsK I u), IsCol I u a l x φ → (x ∈ ((I.fm l u a).lat 0).L ↔ φ ∈ MfL (Pr := B.primes X) B.wts I.Ch u) := by
   intro B X I h hX l u a x φ hc
   have hL := h.idx_ok a
-  letI := StepZero.idxUnique hL
+  let := StepZero.idxUnique hL
   have h₀ := colOk B.wts I.Ch hX u 0
   have key := mem_lat_reRep ((I.Tp a).pref u 0) (lamT (B.hcW u) 0) (I.pref u a 0) (StepZero.ysAt_zero I.sel (I.tup a) (I.cst a))
     (StepZero.levGAt_zero (I.Tp a) hL) (StepZero.levQAt_zero (I.Tp a) hL) ((l.fmL u a).fam 0) h₀

@@ -224,7 +224,7 @@ theorem int_exists (ρ : Γ → Module.End ℂ M) (y : M)
     (hcont : ∀ lam : M →ₗ[ℂ] ℂ, Continuous fun γ => lam (ρ γ y)) {g : Γ → ℂ} (hg : Continuous g) :
     ∃ x : M, ∀ lam : M →ₗ[ℂ] ℂ, lam x = ∫ k, g k * lam (ρ k y) ∂μ := by
   classical
-  haveI := hfin
+  have := hfin
   set V := Submodule.span ℂ (Set.range fun γ => ρ γ y) with hV
   let b := Module.finBasis ℂ V
   have hext : ∀ i, ∃ f : M →ₗ[ℂ] ℂ, f ∘ₗ V.subtype = b.coord i := fun i => LinearMap.exists_extend _
@@ -321,8 +321,8 @@ theorem swStart_holds : SWStart := by
   unfold SWStart
   intro n M _ _ ι _ _ Γ _ _ _ _ _ bar κ E ρ hK hG φ hφ
   classical
-  letI : MeasurableSpace Γ := borel Γ
-  haveI : BorelSpace Γ := ⟨rfl⟩
+  let : MeasurableSpace Γ := borel Γ
+  have : BorelSpace Γ := ⟨rfl⟩
   obtain ⟨H, hH⟩ := SWS.exists_half bar hK.invol hK.ne
   obtain ⟨y, hy⟩ : ∃ y, φ y ≠ 0 := by
     by_contra h

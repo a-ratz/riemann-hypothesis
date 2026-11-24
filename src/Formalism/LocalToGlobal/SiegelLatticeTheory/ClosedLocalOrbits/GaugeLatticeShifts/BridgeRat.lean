@@ -221,7 +221,7 @@ theorem ratFromAd (A : X.B.I.Gf) {u : D.what₂.Word} {Λ : Submodule (𝓞 D.ho
     rw [this]
     exact smul_mem_mL X.B.I (Submodule.smul_mem _ _ (X.vectorsInLattice.1 a).1)
   refine Formalism.L2.SG.Pf.mem_of_forall_locP fun P => ?_
-  haveI := P.isPrime
+  have := P.isPrime
   by_cases hP : ((gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal
   ·
     have h1 := locP_of_InAt X A hlat hdiff P hP

@@ -60,7 +60,7 @@ theorem exists_algebraic_norm_eq_rpow (l : ℕ) [Fact l.Prime] (lam : algebraicC
     have h1 := PadicComplex.norm_extends' l (l : ℚ_[l])
     rw [Padic.norm_p] at h1
     simpa using h1
-  haveI : IsAlgClosed (algebraicClosure ℚ ℂ) := (algebraicClosure.isAlgClosure ℚ ℂ).isAlgClosed
+  have : IsAlgClosed (algebraicClosure ℚ ℂ) := (algebraicClosure.isAlgClosure ℚ ℂ).isAlgClosed
   obtain ⟨x, hx⟩ := IsAlgClosed.exists_pow_nat_eq ((l : algebraicClosure ℚ ℂ) ^ q.num) q.den_pos
   refine ⟨x, ?_, ?_⟩
   · rintro rfl

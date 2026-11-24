@@ -64,7 +64,7 @@ local instance borelFvAt (v : Pl (F := F)) : BorelSpace (Fv F v) := ⟨rfl⟩
 
 theorem mem_int_iff {v : Pl (F := F)} (x : Fv F v) : x ∈ 𝒪[Fv F v] ↔ x ∈ v.adicCompletionIntegers F := by
   rw [HeightOneSpectrum.mem_adicCompletionIntegers]
-  haveI : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (Fv F v))
     (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ)))).le_one_iff_le_one
@@ -114,12 +114,12 @@ theorem hasConductor_psiC (ψ : AddChar (AF F) ℂ) (v : Pl (F := F)) (hψ : Psi
   · intro h y hy
     by_cases hx : x = 0
     · subst hx
-      rw [map_zero, le_zero_iff, map_eq_zero] at hy
+      rw [map_zero, nonpos_iff_eq_zero, map_eq_zero] at hy
       subst hy
       exact AddChar.map_zero_eq_one _
     · have hyx : y / x ∈ v.adicCompletionIntegers F := by
         rw [← mem_int_iff, Valuation.mem_integer_iff, map_div₀,
-          div_le_one₀ (by rw [zero_lt_iff, Ne, map_eq_zero]; exact hx)]
+          div_le_one₀ (by rw [pos_iff_ne_zero, Ne, map_eq_zero]; exact hx)]
         exact hy
       have := h _ hyx
       rwa [mul_div_cancel₀ _ hx] at this
@@ -150,7 +150,7 @@ theorem exists_selfDual (ψ : AddChar (AF F) ℂ) (v : Pl (F := F)) (hψ : PsiUn
 theorem isUnitVol_measV (ψ : AddChar (AF F) ℂ) (v : Pl (F := F)) (hψ : PsiUnr ψ v) :
     GlobalTheory.SplitWeil.IsUnitVol (measV ψ v) := by
   have hex := exists_selfDual ψ v hψ
-  have hm : measV ψ v = hex.choose := by simp only [measV, dif_pos hex]
+  have hm : measV ψ v = hex.choose := by simp only [measV, dite_eq_left hex]
   have hs := hex.choose_spec
   rw [hm]
   exact (GlobalTheory.SplitWeil.isUnitVol_iff_isSelfDual (hasConductor_psiC ψ v hψ) _).2 ⟨hs.1, fun f hf => hs.2 f hf⟩
@@ -159,8 +159,8 @@ theorem fourV_indO (ψ : AddChar (AF F) ℂ) (v : Pl (F := F)) (hψ : PsiUnr ψ 
     fourV ψ v (GlobalTheory.SympChange.indO (κ := κ) v) = GlobalTheory.SympChange.indO v := by
   classical
   have hU := isUnitVol_measV ψ v hψ
-  haveI := hU.1
-  haveI := GlobalTheory.SplitWeil.secondCountable (Fv F v)
+  have := hU.1
+  have := GlobalTheory.SplitWeil.secondCountable (Fv F v)
   have hball : GlobalTheory.SplitWeil.cball (1 : (Fv F v)ˣ) = ((ValuativeRel.valuation (Fv F v)).integer : Set (Fv F v)) := by
     ext x; simp [GlobalTheory.SplitWeil.cball, Valuation.mem_integer_iff]
   have hbox : GlobalTheory.SplitWeil.FourierPi.box κ (1 : (Fv F v)ˣ) = {x | ∀ i, x i ∈ v.adicCompletionIntegers F} := by

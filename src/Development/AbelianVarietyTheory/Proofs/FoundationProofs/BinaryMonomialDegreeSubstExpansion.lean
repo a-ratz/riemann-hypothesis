@@ -68,7 +68,7 @@ theorem ex_inj (w : ℕ) {i j : Fin (w + 1)} (h : ex w i = ex w j) : i = j := by
 
 theorem mon_eq (R : Type) [CommRing R] (w : ℕ) (i : Fin (w + 1)) :
     mon R w i = MvPolynomial.monomial (ex w i) 1 := by
-  rw [mon, ex, MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul, one_mul]
+  rw [mon, ex, MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial, MvPolynomial.monomial_mul_monomial, one_mul]
 
 theorem C_mul_mon (R : Type) [CommRing R] (w : ℕ) (i : Fin (w + 1)) (c : R) :
     MvPolynomial.C c * mon R w i = MvPolynomial.monomial (ex w i) c := by
@@ -81,7 +81,7 @@ theorem coeff_sum_mon (R : Type) [CommRing R] (w : ℕ) (c : Fin (w + 1) → R) 
   rw [Finset.sum_eq_single j]
   · simp
   · intro i _ hij
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h; exact hij (ex_inj w h)
   · simp
 
@@ -112,7 +112,7 @@ theorem hom_expand (R : Type) [CommRing R] (w : ℕ) (p : MvPolynomial (Fin 2) R
     symm
     apply Finset.sum_eq_zero
     intro i _
-    rw [C_mul_mon, MvPolynomial.coeff_monomial, if_neg]
+    rw [C_mul_mon, MvPolynomial.coeff_monomial, ite_eq_right]
     intro h; exact hd ⟨i, h⟩
 
 theorem polySlash_monomial_isHomogeneous (w : ℕ) (m : Matrix (Fin 2) (Fin 2) ℤ) (k : Fin (w + 1)) :

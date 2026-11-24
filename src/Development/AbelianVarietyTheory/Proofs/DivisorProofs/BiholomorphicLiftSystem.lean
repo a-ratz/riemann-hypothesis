@@ -61,9 +61,9 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem Datum.algebraMap_injective (D : Datum p) (hm : D.m = 1) :
     Function.Injective (algebraMap (𝓞 D.F) D.O) := by
-  haveI := D.freeO
-  haveI := D.finO
-  haveI : Nontrivial D.O := by
+  have := D.freeO
+  have := D.finO
+  have : Nontrivial D.O := by
     apply Module.nontrivial_of_finrank_pos (R := ℤ)
     rw [D.rankO, hm]; simpa using Module.finrank_pos (R := ℚ) (M := D.F)
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -88,8 +88,8 @@ theorem Datum.algebraMap_injective (D : Datum p) (hm : D.m = 1) :
 
 theorem Datum.exists_zsmul_eq_algebraMap (D : Datum p) (hm : D.m = 1) (x : D.O) :
     ∃ e : ℤ, e ≠ 0 ∧ ∃ a : 𝓞 D.F, e • x = algebraMap (𝓞 D.F) D.O a := by
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeO
+  have := D.finO
   let f : 𝓞 D.F →ₗ[ℤ] D.O := (algebraMap (𝓞 D.F) D.O).toAddMonoidHom.toIntLinearMap
   have hf : Function.Injective f := D.algebraMap_injective hm
   let M := LinearMap.range f

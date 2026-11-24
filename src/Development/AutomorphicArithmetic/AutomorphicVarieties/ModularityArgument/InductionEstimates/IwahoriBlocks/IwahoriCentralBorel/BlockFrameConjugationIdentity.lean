@@ -61,7 +61,7 @@ private lemma fixA_comb {K : Type} [Field K] [NumberField K] {n : ℕ} {κ : Mea
     (ha : Continuous (arc1 : archCompact K n → G1 K n)) {f f' : G1 K n → ℂ} (hf : Continuous f)
     (hf' : Continuous f') (c : ℂ) (h₁ : FixA κ e f) (h₂ : FixA κ e f') : FixA κ e (f + c • f') := by
   intro g
-  haveI := he.haar.prob
+  have := he.haar.prob
   have hi : ∀ {p : G1 K n → ℂ}, Continuous p → Integrable (fun k => e k * p (g * arc1 k)) κ := by
     intro p hp
     exact (he.cont.mul (hp.comp (continuous_const.mul ha))).integrable_of_hasCompactSupport
@@ -135,12 +135,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.zMem :
       { carrier := {g | rS ι g (flat 0 f) = flat 0 f}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul]
           simp }

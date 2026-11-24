@@ -156,16 +156,16 @@ theorem isDomain_tensor (k : Type) [Field k] (σ : Type) (A : Type) [CommRing A]
     [Algebra k A] : IsDomain (FractionRing (MvPolynomial σ k) ⊗[k] A) := by
   let P := MvPolynomial σ k
   let K := FractionRing P
-  letI : Algebra (P ⊗[k] A) (K ⊗[k] A) :=
+  let : Algebra (P ⊗[k] A) (K ⊗[k] A) :=
     (Algebra.TensorProduct.map (IsScalarTower.toAlgHom k P K) (AlgHom.id k A)).toAlgebra
-  haveI : IsScalarTower P (P ⊗[k] A) (K ⊗[k] A) :=
+  have : IsScalarTower P (P ⊗[k] A) (K ⊗[k] A) :=
     .of_algebraMap_eq fun x => by simp [RingHom.algebraMap_toAlgebra]
-  haveI := IsLocalization.tensorProduct_tensorProduct k A (nonZeroDivisors P) K
+  have := IsLocalization.tensorProduct_tensorProduct k A (nonZeroDivisors P) K
     (by ext; simp [RingHom.algebraMap_toAlgebra])
   let e : P ⊗[k] A ≃+* MvPolynomial σ A :=
     ((Algebra.TensorProduct.comm k P A).toRingEquiv.trans
       (MvPolynomial.scalarRTensorAlgEquiv).toRingEquiv)
-  haveI : IsDomain (P ⊗[k] A) := e.toMulEquiv.isDomain
+  have : IsDomain (P ⊗[k] A) := e.toMulEquiv.isDomain
   have hinj : Function.Injective (algebraMap P (P ⊗[k] A)) :=
     Algebra.TensorProduct.includeLeft_injective (S := P) (algebraMap k A).injective
   refine IsLocalization.isDomain_of_le_nonZeroDivisors (K ⊗[k] A)
@@ -249,8 +249,8 @@ namespace GlobalTheory
 
 theorem isAffineOpen_preimage_and_tensor_equiv_of_isPullback : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (X X' : Scheme.{0}) (f : X ⟶ Spec (CommRingCat.of k)) (f' : X' ⟶ Spec (CommRingCat.of K)) (π : X' ⟶ X), IsPullback π f' f (Spec.map (CommRingCat.ofHom (algebraMap k K))) → ∀ V : X.Opens, IsAffineOpen V → letI : Algebra k Γ(X, V) := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ f.appLE ⊤ V le_top).hom.toAlgebra; IsAffineOpen (π ⁻¹ᵁ V) ∧ ∃ e : K ⊗[k] Γ(X, V) ≃+* Γ(X', π ⁻¹ᵁ V), (∀ a, e (1 ⊗ₜ a) = (π.app V).hom a) ∧ ∀ c : K, e (c ⊗ₜ 1) = ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ f'.appLE ⊤ (π ⁻¹ᵁ V) le_top).hom c := by
   intro k K _ _ _ X X' f f' π h V hV
-  letI : Algebra k Γ(X, V) := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ f.appLE ⊤ V le_top).hom.toAlgebra
-  haveI : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) h.flip inferInstance
+  let : Algebra k Γ(X, V) := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ f.appLE ⊤ V le_top).hom.toAlgebra
+  have : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) h.flip inferInstance
   refine ⟨hV.preimage π, ?_⟩
   have hpo := (isIso_pushoutSection_iff h (US := ⊤) (UT := ⊤) (UX := V) (UY := π ⁻¹ᵁ V) le_top
     le_top (by simp)).1 (isIso_pushoutSection_of_isAffineOpen h _ _ _ (isAffineOpen_top _)
@@ -262,16 +262,16 @@ theorem isAffineOpen_preimage_and_tensor_equiv_of_isPullback : ∀ (k K : Type) 
       (by simp) ?_ (by simp [Scheme.Hom.appLE_eq_app]) (by simp)
     rw [← Scheme.ΓSpecIso_naturality]
     congr 1
-  letI : Algebra K Γ(X', π ⁻¹ᵁ V) :=
+  let : Algebra K Γ(X', π ⁻¹ᵁ V) :=
     ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ f'.appLE ⊤ (π ⁻¹ᵁ V) le_top).hom.toAlgebra
-  letI : Algebra Γ(X, V) Γ(X', π ⁻¹ᵁ V) := (π.app V).hom.toAlgebra
-  letI : Algebra k Γ(X', π ⁻¹ᵁ V) :=
+  let : Algebra Γ(X, V) Γ(X', π ⁻¹ᵁ V) := (π.app V).hom.toAlgebra
+  let : Algebra k Γ(X', π ⁻¹ᵁ V) :=
     ((((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ f'.appLE ⊤ (π ⁻¹ᵁ V) le_top).hom).comp
       (algebraMap k K)).toAlgebra
-  haveI : IsScalarTower k K Γ(X', π ⁻¹ᵁ V) := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower k Γ(X, V) Γ(X', π ⁻¹ᵁ V) := .of_algebraMap_eq fun r => by
+  have : IsScalarTower k K Γ(X', π ⁻¹ᵁ V) := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower k Γ(X, V) Γ(X', π ⁻¹ᵁ V) := .of_algebraMap_eq fun r => by
     exact (congrArg (fun φ => φ.hom r) hpo'.w).symm
-  haveI : Algebra.IsPushout k K Γ(X, V) Γ(X', π ⁻¹ᵁ V) :=
+  have : Algebra.IsPushout k K Γ(X, V) Γ(X', π ⁻¹ᵁ V) :=
     CommRingCat.isPushout_iff_isPushout.mp hpo'.flip
   refine ⟨(Algebra.IsPushout.equiv k K Γ(X, V) Γ(X', π ⁻¹ᵁ V)).toRingEquiv, fun a => ?_, fun c => ?_⟩
   · simp [Algebra.IsPushout.equiv_tmul, RingHom.algebraMap_toAlgebra]
@@ -398,12 +398,12 @@ theorem span_genericForm_isPrime_or_eq_top :
   let P := MvPolynomial (Fin N) k
   let K := FractionRing P
   let B := P ⊗[k] A
-  haveI : IsDomain B := isDomain_tensor
+  have : IsDomain B := isDomain_tensor
   let φ : B →ₐ[k] K ⊗[k] A :=
     Algebra.TensorProduct.map (IsScalarTower.toAlgHom k P K) (AlgHom.id k A)
-  letI : Algebra B (K ⊗[k] A) := φ.toRingHom.toAlgebra
+  let : Algebra B (K ⊗[k] A) := φ.toRingHom.toAlgebra
   have hφ : ∀ x, algebraMap B (K ⊗[k] A) x = φ x := fun _ => rfl
-  haveI : IsScalarTower P B (K ⊗[k] A) := by
+  have : IsScalarTower P B (K ⊗[k] A) := by
     refine IsScalarTower.of_algebraMap_eq fun p => ?_
     rw [hφ]
     simp [φ, Algebra.TensorProduct.algebraMap_apply]
@@ -414,7 +414,7 @@ theorem span_genericForm_isPrime_or_eq_top :
     change φ (1 ⊗ₜ[k] x) = 1 ⊗ₜ[k] x
     rw [Algebra.TensorProduct.map_tmul, map_one, AlgHom.id_apply]
   let M : Submonoid B := Algebra.algebraMapSubmonoid B (nonZeroDivisors P)
-  haveI hL : IsLocalization M (K ⊗[k] A) :=
+  have hL : IsLocalization M (K ⊗[k] A) :=
     IsLocalization.tensorProduct_tensorProduct k A (nonZeroDivisors P) K H
   have hkA : Function.Injective (algebraMap k A) := (algebraMap k A).injective
   have hM : M ≤ nonZeroDivisors B := by
@@ -433,7 +433,7 @@ theorem span_genericForm_isPrime_or_eq_top :
   refine ⟨?_, ?_⟩
   · rw [ht0]
     exact fun h => genForm_ne_zero (k := k) a hu (hinj (h.trans (map_zero _).symm))
-  haveI hQ := isPrime_span_genForm (k := k) a hu
+  have hQ := isPrime_span_genForm (k := k) a hu
   by_cases hd : Disjoint (M : Set B) (Ideal.span {genForm (k := k) a} : Set B)
   · right
     refine ⟨?_, fun x hx => ?_⟩
@@ -474,9 +474,9 @@ namespace GlobalTheory.GenericMember
 
 theorem genSec_chart_ne_zero_and_isPrime : ∀ (k : Type) [Field k] (N : ℕ) (X X' : Scheme.{0}) [IsIntegral X] (f : X ⟶ Sp k) (f' : X' ⟶ Sp (FractionRing (MvPolynomial (Fin N) k))) (π : X' ⟶ X) (L : LB X) (hL : L.IsLB) (b : Fin N → L.Sec) (V : X.Opens) (hne : (V : Set X).Nonempty) (hW : IsAffineOpen (π ⁻¹ᵁ V)) (c : L.ι) (hVc : V ≤ L.U c) (j : Fin N), IsUnit (resG X hVc ((b j).f c)) → letI : Algebra k Γ(X, V) := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ f.appLE ⊤ V le_top).hom.toAlgebra; ∀ e : FractionRing (MvPolynomial (Fin N) k) ⊗[k] Γ(X, V) ≃+* Γ(X', π ⁻¹ᵁ V), (∀ a, e (1 ⊗ₜ a) = (π.app V).hom a) → (∀ q, e (q ⊗ₜ 1) = ((Scheme.ΓSpecIso _).inv ≫ f'.appLE ⊤ (π ⁻¹ᵁ V) le_top).hom q) → (genSec k N f' π L b).f (fun _ => c) ≠ 0 ∧ ((secIdeal (LB.isLB_pull hL π) (genSec k N f' π L b)).ideal ⟨π ⁻¹ᵁ V, hW⟩ = ⊤ ∨ ((secIdeal (LB.isLB_pull hL π) (genSec k N f' π L b)).ideal ⟨π ⁻¹ᵁ V, hW⟩).IsPrime ∧ ((secIdeal (LB.isLB_pull hL π) (genSec k N f' π L b)).ideal ⟨π ⁻¹ᵁ V, hW⟩).comap (π.app V).hom = ⊥) := by
   intro k _ N X X' _ f f' π L hL b V hne hW c hVc j hj
-  letI : Algebra k Γ(X, V) := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ f.appLE ⊤ V le_top).hom.toAlgebra
+  let : Algebra k Γ(X, V) := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ f.appLE ⊤ V le_top).hom.toAlgebra
   intro e he1 he2
-  haveI : Nonempty V := hne.to_subtype
+  have : Nonempty V := hne.to_subtype
   set a : Fin N → Γ(X, V) := fun i => resG X hVc ((b i).f c) with ha
   set t₀ : FractionRing (MvPolynomial (Fin N) k) ⊗[k] Γ(X, V) :=
     ∑ i, algebraMap (MvPolynomial (Fin N) k) (FractionRing (MvPolynomial (Fin N) k)) (MvPolynomial.X i) ⊗ₜ[k] a i with ht
@@ -528,7 +528,7 @@ theorem genSec_chart_ne_zero_and_isPrime : ∀ (k : Type) [Field k] (N : ℕ) (X
       rw [hmap, h, Ideal.map_top]
     · right
       refine ⟨?_, ?_⟩
-      · haveI := hp
+      · have := hp
         rw [hmap]
         exact Ideal.map_isPrime_of_equiv e
       · rw [eq_bot_iff]
@@ -585,7 +585,7 @@ theorem exists_cover {Y : Scheme.{0}} (I : Y.IdealSheafData) {ι : Type} (W : ι
     ∃ a y, (I.subschemeCover.f (W a)) y = x := by
   have hx : I.subschemeι x ∈ (⨆ a, (W a).1) := by rw [hW]; trivial
   obtain ⟨a, ha⟩ := TopologicalSpace.Opens.mem_iSup.mp hx
-  haveI := I.subschemeCover.map_prop (W a)
+  have := I.subschemeCover.map_prop (W a)
   have : x ∈ (I.subschemeCover.f (W a)).opensRange := by
     rw [Scheme.IdealSheafData.opensRange_subschemeCover_map]; exact ha
   obtain ⟨y, hy⟩ := this
@@ -593,7 +593,7 @@ theorem exists_cover {Y : Scheme.{0}} (I : Y.IdealSheafData) {ι : Type} (W : ι
 
 theorem isEmpty_spec_top {Y : Scheme.{0}} (I : Y.IdealSheafData) (U : Y.affineOpens)
     (h : I.ideal U = ⊤) : IsEmpty (Spec (I.subschemeCover.X U)) := by
-  haveI : Subsingleton (Γ(Y, U) ⧸ I.ideal U) := Ideal.Quotient.subsingleton_iff.mpr h
+  have : Subsingleton (Γ(Y, U) ⧸ I.ideal U) := Ideal.Quotient.subsingleton_iff.mpr h
   refine ⟨fun y => ?_⟩
   have : Subsingleton (I.subschemeCover.X U) := this
   exact y.isPrime.ne_top (Ideal.eq_top_iff_one _ |>.mpr (by rw [Subsingleton.elim (1 : I.subschemeCover.X U) 0]; exact zero_mem _))
@@ -603,18 +603,18 @@ theorem isIntegral_or_isEmpty_subscheme : ∀ (Y : Scheme.{0}) (I : Y.IdealSheaf
   by_cases hex : ∃ a, (I.ideal (W a)).IsPrime
   · left
     obtain ⟨a₀, ha₀⟩ := hex
-    haveI hred : ∀ a, _root_.IsReduced (I.subschemeCover.X (W a)) := by
+    have hred : ∀ a, _root_.IsReduced (I.subschemeCover.X (W a)) := by
       intro a
       rcases hI a with h | h
-      · haveI : Subsingleton (Γ(Y, W a) ⧸ I.ideal (W a)) := Ideal.Quotient.subsingleton_iff.mpr h
+      · have : Subsingleton (Γ(Y, W a) ⧸ I.ideal (W a)) := Ideal.Quotient.subsingleton_iff.mpr h
         change _root_.IsReduced (Γ(Y, W a) ⧸ I.ideal (W a)); infer_instance
-      · haveI := h
+      · have := h
         change _root_.IsReduced (Γ(Y, W a) ⧸ I.ideal (W a)); infer_instance
     let 𝒰 : I.subscheme.OpenCover := Scheme.Cover.mkOfCovers ι (fun a => Spec (I.subschemeCover.X (W a)))
       (fun a => I.subschemeCover.f (W a)) (exists_cover I W hW) (fun a => I.subschemeCover.map_prop (W a))
-    haveI : ∀ a : 𝒰.I₀, AlgebraicGeometry.IsReduced (𝒰.X a) := fun a => by
-      change AlgebraicGeometry.IsReduced (Spec (I.subschemeCover.X (W a))); haveI := hred a; infer_instance
-    haveI : AlgebraicGeometry.IsReduced I.subscheme := IsReduced.of_openCover I.subscheme 𝒰
+    have : ∀ a : 𝒰.I₀, AlgebraicGeometry.IsReduced (𝒰.X a) := fun a => by
+      change AlgebraicGeometry.IsReduced (Spec (I.subschemeCover.X (W a))); have := hred a; infer_instance
+    have : AlgebraicGeometry.IsReduced I.subscheme := IsReduced.of_openCover I.subscheme 𝒰
     have hpt : ∀ a (ha : (I.ideal (W a)).IsPrime), ∃ x : I.subscheme,
         I.subschemeι x = (W a).2.fromSpec ⟨I.ideal (W a), ha⟩ := by
       intro a ha
@@ -623,7 +623,7 @@ theorem isIntegral_or_isEmpty_subscheme : ∀ (Y : Scheme.{0}) (I : Y.IdealSheaf
       exact this
     have hrange : ∀ a (x : I.subscheme), I.subschemeι x ∈ (W a).1 → x ∈ Set.range (I.subschemeCover.f (W a)) := by
       intro a x hx
-      haveI := I.subschemeCover.map_prop (W a)
+      have := I.subschemeCover.map_prop (W a)
       have : x ∈ (I.subschemeCover.f (W a)).opensRange := by
         rw [Scheme.IdealSheafData.opensRange_subschemeCover_map]; exact hx
       exact this
@@ -632,18 +632,18 @@ theorem isIntegral_or_isEmpty_subscheme : ∀ (Y : Scheme.{0}) (I : Y.IdealSheaf
       rcases hI a with h | h
       · exact ((isEmpty_spec_top I (W a) h).false y).elim
       · exact h
-    haveI : IrreducibleSpace I.subscheme := by
+    have : IrreducibleSpace I.subscheme := by
       obtain ⟨x₀, -⟩ := hpt a₀ ha₀
       have hpre : IsPreirreducible (Set.univ : Set I.subscheme) := by
         refine isPreirreducible_univ_of_cover (fun a => Set.range (I.subschemeCover.f (W a))) (fun a => ?_)
           (fun x => ?_) (fun a => ?_) (fun a b ha hb => ?_)
-        · haveI := I.subschemeCover.map_prop (W a); exact (I.subschemeCover.f (W a)).isOpenEmbedding.isOpenMap.isOpen_range
+        · have := I.subschemeCover.map_prop (W a); exact (I.subschemeCover.f (W a)).isOpenEmbedding.isOpenMap.isOpen_range
         · obtain ⟨a, y, hy⟩ := exists_cover I W hW x; exact ⟨a, y, hy⟩
         · rcases hI a with h | h
-          · haveI := isEmpty_spec_top I (W a) h
+          · have := isEmpty_spec_top I (W a) h
             rw [Set.range_eq_empty]; exact isPreirreducible_empty
-          · haveI : IsDomain (I.subschemeCover.X (W a)) := by
-              change IsDomain (Γ(Y, W a) ⧸ I.ideal (W a)); haveI := h; infer_instance
+          · have : IsDomain (I.subschemeCover.X (W a)) := by
+              change IsDomain (Γ(Y, W a) ⧸ I.ideal (W a)); have := h; infer_instance
             rw [← Set.image_univ]
             exact ((IrreducibleSpace.isIrreducible_univ _).image _
               (I.subschemeCover.f (W a)).continuous.continuousOn).isPreirreducible
@@ -651,7 +651,7 @@ theorem isIntegral_or_isEmpty_subscheme : ∀ (Y : Scheme.{0}) (I : Y.IdealSheaf
           refine ⟨x, hrange a x ?_, hrange b x ?_⟩
           · rw [hx, ← SetLike.mem_coe, ← (W a).2.range_fromSpec]; exact ⟨_, rfl⟩
           · rw [hx]; exact hm a b (hp a ha) (hp b hb).ne_top
-      haveI : PreirreducibleSpace I.subscheme := ⟨hpre⟩
+      have : PreirreducibleSpace I.subscheme := ⟨hpre⟩
       exact { toNonempty := ⟨x₀⟩ }
     exact isIntegral_of_irreducibleSpace_of_isReduced _
   · right
@@ -897,11 +897,11 @@ theorem topSelf_le_growthOn : GlobalTheory.Published.NefNumerics → ∀ (E : Ty
     ENNReal.ofReal (topSelfIntersection c.F (L₀ X Z u) (dimFlag Dw) : ℝ) ≤ GlobalTheory.CompHt.growthOn U Z (wtOf Dw u 0) := by
   intro hN E _ _ _ H Dw l Xo c Y X Z r U u hV hD hC hf
   obtain ⟨f, hf⟩ := hf
-  letI := algebraΓOfHom (str₀ X Z)
+  let := algebraΓOfHom (str₀ X Z)
   intro hnef
   let S : LinSys c.F := ⟨Y₀ X Z, str₀ X Z, dimFlag Dw, L₀ X Z u, isLB_L₀ X Z u, 0, Fin.elim0⟩
   have hS : S.IsVariety := ⟨hV.1, hV.2.1, hV.2.2, hD⟩
-  haveI : IsIntegral (Y₀ X Z) := hS.isIntegral
+  have : IsIntegral (Y₀ X Z) := hS.isIntegral
   have hp : IsProjOver (strHom c.F (X := (Y₀ X Z))) := by
     rw [strHom_eq (f := str₀ X Z) fun _ => rfl]
     exact hV.2.1
@@ -944,7 +944,7 @@ namespace GlobalTheory.JetRank
 
 theorem isProjOver_along {k : Type} [Field k] {X Z : Scheme.{0}} [Algebra k Γ(X, ⊤)] (hp : IsProjOver (strHom k (X := X)))
     (i : Z ⟶ X) [IsClosedImmersion i] : letI := algebraΓAlong k i; IsProjOver (strHom k (X := Z)) := by
-  letI := algebraΓAlong k i
+  let := algebraΓAlong k i
   obtain ⟨n, e, he, hs⟩ := hp
   exact ⟨n, i ≫ e, inferInstance, by rw [Category.assoc, hs, comp_strHom (appTop_algebraMap_along k i)]⟩
 
@@ -964,7 +964,7 @@ theorem globalSections_dim_le_div_add_restriction [IsIntegral X] (hp : IsProjOve
     (ht : t ≠ 0) : letI := algebraΓAlong k (secIdeal hL t).subschemeι
     lbH0 k B ≤ lbH0 k (LB.div B L) + lbH0 k (B.pull (secIdeal hL t).subschemeι) := by
 
-  letI := algebraΓAlong k (secIdeal hL t).subschemeι
+  let := algebraΓAlong k (secIdeal hL t).subschemeι
   have := isNoetherian_of_isProjOver hp
   have := (mono_cutHom_structureModule_iff hL t).2 ((sec_ne_zero_iff t).1 ht)
   have hF := finiteCohTwists_of_isProjOver (algebraMap_eq_strHom k X) (structureModule X) hp
@@ -992,7 +992,7 @@ theorem interNum_cons_nonneg [IsIntegral X] (hN : GlobalTheory.Published.NefNume
   obtain ⟨t, ht⟩ := hs
   have := isNoetherian_of_isProjOver hp
   have := (mono_cutHom_structureModule_iff hB t).2 ((sec_ne_zero_iff t).1 ht)
-  letI := algebraΓAlong k (secIdeal hB t).subschemeι
+  let := algebraΓAlong k (secIdeal hB t).subschemeι
   have hi := appTop_algebraMap_along k (secIdeal hB t).subschemeι
   rw [interNum_cons_eq_interNumSub hB t (fun i => (hP i).isLB)
     (finiteCohTwists_of_isProjOver (algebraMap_eq_strHom k X) _ hp), interNumSub_def,
@@ -1062,7 +1062,7 @@ theorem exists_step {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] [a : Al
           interNum k (structureModule X) (Fin.cons L P : Fin (e + 1) → LB X) := by
   obtain ⟨f, rfl⟩ : ∃ f : X ⟶ Sp k, a = algebraΓOfHom f :=
     ⟨strHom k X, Algebra.algebra_ext _ _ (algebraMap_eq_strHom k X)⟩
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   rw [strHom_eq (f := f) fun _ => rfl] at hp
   have hLB := hL.isLB
   obtain ⟨N, b, hb⟩ := hL
@@ -1070,7 +1070,7 @@ theorem exists_step {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] [a : Al
   have H := IsPullback.of_hasPullback f (spMap (algebraMap k K))
   set π := pullback.fst f (spMap (algebraMap k K))
   set f' := pullback.snd f (spMap (algebraMap k K))
-  letI := algebraΓOfHom f'
+  let := algebraΓOfHom f'
   obtain ⟨hpr, -⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB f).1 hp
   have := _root_.GlobalTheory.PureTransc.isIntegral_of_isPullback k N X _ f f' π H
   obtain ⟨t, ht, hH⟩ := _root_.GlobalTheory.GenericMember.isIntegral_or_isEmpty_zeroScheme k N X _ f f' π H L hLB b hb
@@ -1081,7 +1081,7 @@ theorem exists_step {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] [a : Al
   have := isNoetherian_of_isProjOver hp'
   have := (mono_cutHom_structureModule_iff hL' t).2 ((sec_ne_zero_iff t).1 ht)
   set ι := (secIdeal hL' t).subschemeι
-  letI := algebraΓAlong K ι
+  let := algebraΓAlong K ι
   refine ⟨K, inferInstance, _, algebraΓAlong K ι, ι ≫ π, isProjOver_along hp' ι, ?_, hH, fun B hB => ?_, fun e P hP => ?_⟩
   · exact dim_zeroScheme_le hL' ht ((_root_.GlobalTheory.FieldExtDim.topologicalKrullDim_baseChange_le k K X _ f f' π H).trans hd)
   · have h1 := globalSections_dim_le_div_add_restriction hp' hL' (LB.isLB_pull hB π) ht
@@ -1340,8 +1340,8 @@ theorem topSelf_pull (hN : GlobalTheory.Published.NefNumerics) {k : Type} [Field
     IsIntegral M.X ∧ IsProjOver (strHom k (X := M.X)) ∧ topologicalKrullDim M.X = D ∧
       (∀ B : LB Y, B.IsLB → lbH0 k (B.pull M.σ) = lbH0 k B) ∧
       ∀ B : LB Y, IsNef k B → IsNef k (B.pull M.σ) ∧ topSelfIntersection k (B.pull M.σ) D = topSelfIntersection k B D := by
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom M.str
+  let := algebraΓOfHom p
+  let := algebraΓOfHom M.str
   have hV : LinSys.IsVariety ⟨Y, p, D, LB.triv Y, LB.isLB_triv Y, 0, Fin.elim0⟩ := ⟨hs, hp, hc, hD⟩
   have hV' : LinSys.IsVariety ⟨M.X, M.str, D, LB.triv _, LB.isLB_triv _, 0, Fin.elim0⟩ := ⟨M.smooth, M.proj, hc', hD⟩
   have : IsIntegral Y := hV.isIntegral
@@ -1369,7 +1369,7 @@ theorem topSelf_pull (hN : GlobalTheory.Published.NefNumerics) {k : Type} [Field
   simp only [e₁] at t'
   have := tendsto_nhds_unique t' t
   have hf : (D.factorial : ℝ) ≠ 0 := by positivity
-  exact_mod_cast (div_left_inj' hf).1 this
+  exact_mod_cast (div_left_inj₀ hf).1 this
 
 theorem cls_nsmul {Y : Scheme.{0}} {Λ : Type} [AddCommGroup Λ] {B : Λ → LB Y} (C : Common B) (a : Λ) (n : ℕ) :
     cls (B (n • a)) (C.isLB _) = n • cls (B a) (C.isLB _) :=
@@ -1389,11 +1389,11 @@ theorem finrank_cusp_le (hQ : GlobalTheory.HSCore.Quoted) (hPr : GlobalTheory.Pu
       IsNef c.F (L₀ X Z u) ∧ IsNef c.F (L₀ X Z la) ∧ IsNef c.F (L₀ X Z (n • u - la)))
     (h : n * v < (a + 1) * (GlobalTheory.CompHt.compDeg U Z (wtOf Dw u 0) : ℝ)) :
     Module.finrank c.F (Cusp Z U la) ≤ (a + dimFlag Dw).choose (dimFlag Dw) * GlobalTheory.CompHt.compDeg U Z (wtOf Dw u 0) := by
-  letI := algebraΓOfHom (str₀ X Z)
+  let := algebraΓOfHom (str₀ X Z)
   obtain ⟨hs, hp, hc⟩ := id hV
   have : ConnectedSpace (Y₀ X Z) := GeometricallyConnected.connectedSpace_of_subsingleton (str₀ X Z)
   obtain ⟨R⟩ := nonempty_resol hPr hs hp hc (dense_U₀ X Z).nonempty (common₀ X Z) hF hF
-  letI := algebraΓOfHom R.str
+  let := algebraΓOfHom R.str
   have hc' := GlobalTheory.CompHS.Modif.geometricallyConnected_str _ _ _ _ _ R.toModif hs hc (dense_U₀ _ _)
   obtain ⟨_, hp', hd', h0, hpull⟩ := topSelf_pull hQ.nef hs hp hc hD R.toModif hc'
   obtain ⟨hgen, hdeg⟩ := topSelf_moving hQ R.toModif R.Δ₁ hV hD (hC u).1 hF hB

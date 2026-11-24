@@ -299,7 +299,7 @@ theorem landau_dichotomy {Z : Set ℂ} (hiso : ∀ z : ℂ, 0 < z.re → ∀ᶠ 
           rw [hTe] at ht
           exact absurd ht (Set.notMem_empty t)
         · obtain ⟨t₀, ht₀, htmin⟩ := Set.exists_min_image (F \ {((σ - d : ℝ) : ℂ)})
-            (fun w => dist w (σ : ℂ)) (hfin.subset Set.diff_subset) hTne
+            (fun w => dist w (σ : ℂ)) (hfin.subset sdiff_subset) hTne
           exact ⟨dist t₀ (σ : ℂ), hT t₀ ht₀, htmin⟩
       refine ⟨min r (σ - θ), ?_, min_le_right _ _, ?_⟩
       · rw [sub_sub_cancel]
@@ -340,7 +340,7 @@ theorem landau_growth_contra {c d e C : ℝ} (hc : 0 < c) (hd : 0 < d) (hde : d 
   have hdk : 0 < d ^ k := pow_pos hd k
   have hek : 0 < e ^ k := pow_pos he k
   have hpow : e ^ k = d ^ k * Real.exp (k * L) := by
-    rw [Real.exp_nat_mul, hLdef, Real.exp_log (div_pos he hd), div_pow, mul_div_cancel₀ _ hdk.ne']
+    rw [Real.exp_natCast_mul, hLdef, Real.exp_log (div_pos he hd), div_pow, mul_div_cancel₀ _ hdk.ne']
   rw [div_lt_div_iff₀ hek hdk, hpow]
   set X := Real.exp (L / 2 * U) with hXdef
   have hXpos : 0 < X := Real.exp_pos _
@@ -428,7 +428,7 @@ theorem landau_nearest {Z : Set ℂ} (hiso : ∀ z : ℂ, 0 < z.re → ∀ᶠ w 
       ((σ - p.1.re) ^ 2 + p.1.im ^ 2 - (σ - p.2.re) ^ 2 - p.2.im ^ 2) / (2 * (p.1.im - p.2.im))) ''
       (F ×ˢ F) with hB
   have hBfin : B.Finite := (hF.prod hF).image _
-  obtain ⟨γ, hγI, hγB⟩ := ((Set.Ioo_infinite (show ρ₁.im - ε < ρ₁.im + ε by linarith)).diff hBfin).nonempty
+  obtain ⟨γ, hγI, hγB⟩ := ((Set.Ioo_infinite (show ρ₁.im - ε < ρ₁.im + ε by linarith)).sdiff hBfin).nonempty
   set c : ℂ := (σ : ℂ) + γ * I with hc
   have hγε : |γ - ρ₁.im| < ε := abs_sub_lt_iff.mpr ⟨by linarith [hγI.2], by linarith [hγI.1]⟩
   have hcc₀ : ‖c - c₀‖ = |γ - ρ₁.im| := by
@@ -467,7 +467,7 @@ theorem landau_nearest {Z : Set ℂ} (hiso : ∀ z : ℂ, 0 < z.re → ∀ᶠ w 
       rw [hTe] at ht
       exact absurd ht (Set.notMem_empty t)
     · obtain ⟨t₀, ht₀, htmin⟩ := Set.exists_min_image (F \ {ρ}) (fun w => ‖c - w‖)
-        (hF.subset Set.diff_subset) hTne
+        (hF.subset sdiff_subset) hTne
       exact ⟨‖c - t₀‖, hT t₀ ht₀, htmin⟩
   refine ⟨γ, ρ, hρF.1, min r D, lt_min hr (by linarith), min_le_right _ _, ?_⟩
   intro w hw hb
@@ -524,7 +524,7 @@ theorem landau_pole_asym {Φ : ℂ → ℂ} {z ρ c : ℂ} {r r' : ℝ} (hρ : �
     by_cases hsρ : s = ρ
     · rw [hsρ]
       simp [G]
-    · simp only [G, if_neg hsρ]
+    · simp only [G, ite_eq_right hsρ]
       rw [hs (Set.mem_compl_singleton_iff.mpr hsρ)]
       ring
   have hGd : DifferentiableOn ℂ G (Metric.ball z r) := by
@@ -537,7 +537,7 @@ theorem landau_pole_asym {Φ : ℂ → ℂ} {z ρ c : ℂ} {r r' : ℝ} (hρ : �
       have hloc : G =ᶠ[𝓝 s] fun t => Φ t - c / (t - ρ) := by
         filter_upwards [hopen.mem_nhds hmem] with t ht
         have htρ : t ≠ ρ := ht.2
-        simp only [G, if_neg htρ]
+        simp only [G, ite_eq_right htρ]
       have hd' : DifferentiableAt ℂ (fun t => Φ t - c / (t - ρ)) s :=
         hΦ.sub ((differentiableAt_const c).div
           (differentiableAt_id.sub (differentiableAt_const ρ)) (sub_ne_zero.mpr hsρ))
@@ -550,7 +550,7 @@ theorem landau_pole_asym {Φ : ℂ → ℂ} {z ρ c : ℂ} {r r' : ℝ} (hρ : �
   have hloc : Φ =ᶠ[𝓝 z] G + fun s => c * (s - ρ)⁻¹ := by
     filter_upwards [hopen.mem_nhds hmemz] with t ht
     have htρ : t ≠ ρ := ht.2
-    simp only [Pi.add_apply, G, if_neg htρ, div_eq_mul_inv]
+    simp only [Pi.add_apply, G, ite_eq_right htρ, div_eq_mul_inv]
     ring
   have hGc : ContDiffAt ℂ k G z :=
     (hGd.contDiffOn Metric.isOpen_ball).contDiffAt
@@ -745,7 +745,7 @@ lemma landau_tails_pow (k : ℕ) {σ a x c : ℝ} (hσ : 0 < σ) (ha : 0 < a)
     have e : (σ - a) / a + 1 = σ / a := by field_simp; ring
     linarith
   have h2 : (σ / a) ^ k ≤ Real.exp (k * ((σ - a) / a)) := by
-    rw [Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul]
     exact pow_le_pow_left₀ (by positivity) h1 k
   have h3 : Real.exp x * (σ / a) ^ k ≤ Real.exp c := by
     calc _ ≤ Real.exp x * Real.exp (k * ((σ - a) / a)) := by gcongr
@@ -923,7 +923,7 @@ theorem landau_window_ineq {g R : ℝ → ℝ} (hg : Measurable g) {C₀ : ℝ}
     rw [this, integral_complex_ofReal, Complex.ofReal_re]
   have hI3 : IntegrableOn (fun u => |g u| * w u + g u * w u) (Ioi 0) := hI1.add hI2
   have hsub : Icc U V ⊆ Ioi (0 : ℝ) := fun u hu => lt_of_lt_of_le hU hu.1
-  have hsplit := integral_inter_add_diff (μ := volume) (s := Ioi (0 : ℝ)) (t := Icc U V)
+  have hsplit := integral_inter_add_sdiff (μ := volume) (s := Ioi (0 : ℝ)) (t := Icc U V)
     measurableSet_Icc hI3
   rw [inter_eq_right.2 hsub, integral_add hI1 hI2] at hsplit
   have hA : ∫ u in Icc U V, (|g u| * w u + g u * w u)
@@ -950,7 +950,7 @@ theorem landau_window_ineq {g R : ℝ → ℝ} (hg : Measurable g) {C₀ : ℝ}
   have hB : ∫ u in Ioi (0 : ℝ) \ Icc U V, (|g u| * w u + g u * w u)
       ≤ 2 * C₀ * ∫ u in Ioi (0 : ℝ) \ Icc U V, h u := by
     rw [← integral_const_mul]
-    refine setIntegral_mono_on (hI3.mono_set diff_subset) ((hhi.mono_set diff_subset).const_mul _)
+    refine setIntegral_mono_on (hI3.mono_set sdiff_subset) ((hhi.mono_set sdiff_subset).const_mul _)
       (measurableSet_Ioi.diff measurableSet_Icc) fun u hu => ?_
     have hu0 : 0 ≤ u := le_of_lt hu.1
     have h1 := hb u hu0

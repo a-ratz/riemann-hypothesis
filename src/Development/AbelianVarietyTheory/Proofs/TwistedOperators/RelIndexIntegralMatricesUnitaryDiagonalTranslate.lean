@@ -109,7 +109,7 @@ theorem diag_unitary_exp_sym {L : Type} [Field L] [Valued L (WithZero (Multiplic
     have e := congrArg (fun M => M i (Fin.rev i)) hmem
     simp only [Matrix.diagonal_mul, Matrix.mul_diagonal] at e
     have hJ : Formalism.UG.antiJ L r i (Fin.rev i) = 1 := by
-      simp only [Formalism.UG.antiJ, Fin.val_rev]; rw [if_pos]; omega
+      simp only [Formalism.UG.antiJ, Fin.val_rev]; rw [ite_eq_left]; omega
     rw [hJ, mul_one] at e
     rw [← zpow_add₀ hϖ] at e
     have e2 := congrArg (fun x => Valued.v x) e
@@ -404,7 +404,7 @@ namespace GlobalTheory.UnramIntIndex
 theorem le_exp_neg_one_of_lt_one {a : WithZero (Multiplicative ℤ)} (ha : a < 1) :
     a ≤ ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
   rcases eq_or_ne a 0 with rfl | h
-  · exact zero_le'
+  · exact zero_le
   · obtain ⟨m, rfl⟩ := WithZero.ne_zero_iff_exists.mp h
     rw [← WithZero.coe_one, WithZero.coe_lt_coe] at ha
     rw [WithZero.coe_le_coe]
@@ -465,7 +465,7 @@ theorem relIndex_mul_uniformizer (ϖ : L) (c : L →+* L) (q : ℕ) (h : IsUnram
       have hle := le_exp_neg_one_of_lt_one hy'
       refine ⟨ϖ⁻¹ * (y : L), ?_, ?_⟩
       · show Valued.v (ϖ⁻¹ * (y : L)) ≤ 1
-        rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.mpr (by simpa using h0)), mul_one, h4]
+        rw [map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.mpr (by simpa using h0)), mul_one, h4]
         exact hle
       · show ϖ * (ϖ⁻¹ * (y : L)) = (y : L)
         field_simp

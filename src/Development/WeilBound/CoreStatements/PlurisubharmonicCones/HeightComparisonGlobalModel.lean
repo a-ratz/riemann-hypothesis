@@ -214,7 +214,7 @@ theorem abelian_part_integral_point_bis : Top.Given → ∀ (E : Type) [Field E]
   intro hG E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 L _ _ z P V _ _ _ _ MV A hpq hdisc hfree hA s
   classical
   have hξ : IsCptGen 𝔐.ξ := 𝔐.tie.gen
-  haveI := 𝔐.t.semi.smooth
+  have := 𝔐.t.semi.smooth
   obtain ⟨hact, hlab, hΛ, -⟩ := hA
   obtain ⟨ML, hML⟩ := (LieMove.main L 𝔐.X (spMap (algebraMap (𝓞 L) L) ≫ z) 𝔐.t.G P.tK.G P.m.φ V P.m.cart).2 MV
   have hactL : ML.IsActOf 𝔐.t.act.act A.ρ := fun a x => Over.OverMorphism.ext (by
@@ -238,7 +238,7 @@ theorem abelian_part_integral_point_bis : Top.Given → ∀ (E : Type) [Field E]
     swap
     · exact ⟨0, 0, fun h => absurd h hpS⟩
     have hp := 𝔐.S_prime p hpS
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     obtain ⟨κ, hκ, hS⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.ModelSandwich.sandwich_of_htFree hG.2.2.2.2.2.2.1 E H D l Xo c _ _ Y S Ω K J y 𝔐 p hpS hpq (hfree p hpS)
     have hne : Ideal.span {(p : 𝓞 L)} ≠ ⊤ := fun h => by
       have h1 := congrArg Ideal.absNorm h

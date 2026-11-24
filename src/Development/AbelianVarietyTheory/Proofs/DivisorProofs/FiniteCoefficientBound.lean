@@ -170,7 +170,7 @@ namespace GlobalTheory.CompanionTheory.ResCardPlace
 
 theorem resCard_Kw : ∀ {D : D7} (w : Pl D.host.E), GlobalTheory.SplitWeil.resCard (Kw w) = Ideal.absNorm w.asIdeal := by
   intro D w
-  haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (Kw w))
     (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ)))
@@ -349,7 +349,7 @@ variable {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
 theorem relIndex_eq {p : ℕ} (hp : p.Prime) (hu : ∀ m : ℕ, m.Coprime p → (m : k) ≠ 0 ∧ ((m : k))⁻¹ ∈ 𝒪[k])
     (C : Subgroup (GL (n ⊕ Fin c) k)) (h0 : (KO k (n ⊕ Fin c)).relIndex (symN k n c ⊓ C) ≠ 0) :
     ∃ a, (KO k (n ⊕ Fin c)).relIndex (symN k n c ⊓ C) = p ^ a := by
-  haveI : ((KO k (n ⊕ Fin c)).subgroupOf (symN k n c ⊓ C)).FiniteIndex := ⟨h0⟩
+  have : ((KO k (n ⊕ Fin c)).subgroupOf (symN k n c ⊓ C)).FiniteIndex := ⟨h0⟩
   refine GlobalTheory.UnipVol.index_eq_prime_pow _ hp fun g m hm hg => ?_
   rw [Subgroup.mem_subgroupOf] at hg ⊢
   exact mem_KO_of_pow (symN_le_UT g.2.1) (hu m hm).1 (hu m hm).2 (by simpa using hg)
@@ -382,7 +382,7 @@ theorem unit_Kw (P : Pl D.host.E) {p : ℕ} (hp : ((p : ℕ) : 𝓞 D.host.E) �
     (m : Kw P) ≠ 0 ∧ ((m : Kw P))⁻¹ ∈ 𝒪[Kw P] := by
   have hnm : ((m : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal := GlobalTheory.UnipVol.natCast_notMem hp hm
   have h1 : P.intValuation ((m : ℕ) : 𝓞 D.host.E) = 1 := (P.intValuation_eq_one_iff).2 hnm
-  haveI : (Valued.v : Valuation (Kw P) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kw P) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have e := ValuativeRel.isEquiv (valuation (Kw P)) (Valued.v : Valuation (Kw P) (WithZero (Multiplicative ℤ)))
   have h2 : (Valued.v : Valuation (Kw P) (WithZero (Multiplicative ℤ))) (m : Kw P) = 1 := by
     have e0 : (m : Kw P) = algebraMap D.host.E (Kw P) ((m : ℕ) : D.host.E) := (map_natCast _ m).symm
@@ -621,7 +621,7 @@ theorem coefficient_local_term_at_split_place {μ₀ : T} (hL : L.Is μ₀) (S :
     rw [h1, h2]
   have hm : 0 < D.R.m := by have := D.R.two_le_m; omega
   have h00 := ((Good.locGrid_isGood hL G W t hde hc).1 P hl).square 0 hm 0 hm
-  haveI := (isUnitVol_unitVol P).1
+  have := (isUnitVol_unitVol P).1
   have hT := isTensor_Tflip hL W S.B t Φ hde hc hl
   rw [hdep] at hT
   have hO := oneCoset hs (psiAt W P) (unitVol P) (givenLevel G t P) (Tflip W S.B t Φ P) (unifAt P) (cosExp G P) D.R.m_even
@@ -694,9 +694,9 @@ theorem coef_QL {μ₀ : T} (hL : L.Is μ₀) (S : GridChoice W U) (t : T) (Φ :
       (if v.1 ∈ G.pl.W0 then expAt G v.1 * vw w ((resCard (Kw v.1) : ℕ) : D.what₂.LL) else 0) := by
     rintro ⟨P, hl⟩
     by_cases hP : P ∈ G.pl.W0
-    · rw [if_pos hP]
+    · rw [ite_eq_left hP]
       exact coefficient_local_term_at_split_place hL S t Φ hde hc hP hl hβ w
-    · rw [if_neg hP]
+    · rw [ite_eq_right hP]
       have hQ : P ∈ L.Q t := by
         rcases Finset.mem_union.1 hl with h | h
         · exact absurd h hP

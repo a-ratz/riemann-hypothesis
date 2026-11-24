@@ -102,7 +102,7 @@ theorem charpoly_smul_inv {n : ℕ} (M N : Matrix (Fin n) (Fin n) ℂ) (h : M * 
 theorem continuous_cyc_val (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] (l : ℕ) [Fact l.Prime] :
     Continuous fun g : G F Ω => ((cyc F Ω l g : (Qbar l)ˣ) : Qbar l) := by
   have h1 : Continuous (algebraMap ℚ_[l] (PadicAlgCl l)) := continuous_algebraMap _ _
-  have h2 : Continuous fun z : ℤ_[l] => (z : ℚ_[l]) := continuous_subtype_val
+  have h2 : Continuous fun z : ℤ_[l] => (z : ℚ_[l]) := continuous_subtypeVal
   exact h1.comp (h2.comp (Units.continuous_val.comp (continuous_cycZ F Ω l)))
 
 theorem cyc_val_frob {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ}

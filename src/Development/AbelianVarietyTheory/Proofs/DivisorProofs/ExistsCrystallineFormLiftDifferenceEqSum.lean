@@ -91,13 +91,13 @@ variable (hJ : J ^ 2 = 0) (ρ₁ ρ₂ : B →ₐ[R] C) (hd : ∀ b, ρ₁ b - �
 
 theorem diffLam_smul (b : B) (m : Ω[B⁄R]) :
     diffLam hJ ρ₁ ρ₂ hd (b • m) = ρ₂ b * diffLam hJ ρ₁ ρ₂ hd m := by
-  letI : Algebra B C := (ρ₂ : B →+* C).toAlgebra
-  haveI : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq fun r ↦ (ρ₂.commutes r).symm
+  let : Algebra B C := (ρ₂ : B →+* C).toAlgebra
+  have : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq fun r ↦ (ρ₂.commutes r).symm
   exact ((diffDer hJ ρ₁ ρ₂ hd).liftKaehlerDifferential).map_smul b m
 
 theorem diffLam_D (t : B) : diffLam hJ ρ₁ ρ₂ hd (D R B t) = ρ₁ t - ρ₂ t := by
-  letI : Algebra B C := (ρ₂ : B →+* C).toAlgebra
-  haveI : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq fun r ↦ (ρ₂.commutes r).symm
+  let : Algebra B C := (ρ₂ : B →+* C).toAlgebra
+  have : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq fun r ↦ (ρ₂.commutes r).symm
   exact (diffDer hJ ρ₁ ρ₂ hd).liftKaehlerDifferential_comp_D t
 
 theorem diffLam_mem (m : Ω[B⁄R]) : diffLam hJ ρ₁ ρ₂ hd m ∈ J := by

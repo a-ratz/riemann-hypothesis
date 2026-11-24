@@ -190,7 +190,7 @@ theorem exists_real_det_ne_zero {A C : Matrix (Fin n) (Fin n) ℂ} (h : (A - Com
     apply Polynomial.eq_zero_of_infinite_isRoot
     apply Set.Infinite.mono _ (Set.infinite_range_of_injective Complex.ofReal_injective)
     rintro _ ⟨t, rfl⟩
-    rw [Set.mem_setOf_eq, Polynomial.IsRoot, heval]
+    rw [Set.mem_ofPred_eq, Polynomial.IsRoot, heval]
     exact hne t
   apply h
   have := heval Complex.I

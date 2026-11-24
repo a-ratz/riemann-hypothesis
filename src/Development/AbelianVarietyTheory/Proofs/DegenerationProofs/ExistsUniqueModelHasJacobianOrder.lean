@@ -90,7 +90,7 @@ theorem det_mem {B S L I : Type} [CommRing B] [CommRing S] [CommRing L] [Fintype
     (N : AddSubgroup L) (hN : ∀ s : S, ∀ x ∈ N, φ s * x ∈ N)
     (h : ∀ t : I → B, (Matrix.of fun i j => δ i (φ (ρ (t j)))).det ∈ N) (t : I → S) :
     (Matrix.of fun i j => δ i (φ (t j))).det ∈ N := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   let N' : Submodule S L := { N with smul_mem' := fun s x hx => hN s x hx }
   let f : (I → I → L) →ₘₗ[S] L :=
     (Matrix.detRowAlternating (n := I) (R := L)).toMultilinearMap.restrictScalars S
@@ -121,7 +121,7 @@ theorem exists_pow_mul_mem {R B L I : Type} [CommRing R] [CommRing B] [CommRing 
     (hδ : ∀ i a b, δ i (a * b) = a * δ i b + b * δ i a) (h0 : ∀ i r, δ i (φ (c r)) = 0)
     (hloc : ∀ x : L, ∃ (k : ℕ) (b : B), φ b = φ p ^ k * x) :
     ∃ N : ℕ, ∀ i b, ∃ s, φ s = φ p ^ N * δ i (φ b) := by
-  letI := c.toAlgebra
+  let := c.toAlgebra
   obtain ⟨T, hT⟩ := (show Algebra.FiniteType R B from hc).1
   choose k a hk using hloc
   refine ⟨(Finset.univ ×ˢ T).sup fun q : I × B => k (δ q.1 (φ q.2)), fun i b => ?_⟩

@@ -62,14 +62,14 @@ theorem gCauchy : GCauchyStatement := by
   have hT : ∀ z : Fin N → ℂ, ‖T z‖ ^ 2 = ∑ j, ‖z j‖ ^ 2 := by
     intro z
     rw [EuclideanSpace.norm_sq_eq]
-    simp only [T, ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe,
+    simp only [T, ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe,
       LinearMap.coe_toContinuousLinearMap', Function.comp_apply, LinearMap.funLeft_apply]
     simp only [EuclideanSpace.equiv, PiLp.continuousLinearEquiv_symm_apply]
     exact Fintype.sum_equiv e _ _ (fun i => by simp)
   have hTs : ∀ i : ι, T (Pi.single (e i) 1) = EuclideanSpace.single i 1 := by
     intro i
     ext j
-    simp only [T, ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe,
+    simp only [T, ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe,
       LinearMap.coe_toContinuousLinearMap', Function.comp_apply, LinearMap.funLeft_apply,
       EuclideanSpace.equiv, PiLp.continuousLinearEquiv_symm_apply, PiLp.single_apply]
     by_cases h : j = i
@@ -101,8 +101,8 @@ theorem gCauchy : GCauchyStatement := by
       | simp [Finsupp.sum, Finsupp.degree]
   have hdeg : (k : ℝ) = (α.degree : ℝ) := by rw [hk]
   unfold polyDeriv
-  rw [MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton,
-    MvPolynomial.coeff_monomial, if_pos rfl, one_mul]
+  rw [MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton,
+    MvPolynomial.coeff_monomial, ite_eq_left rfl, one_mul]
   rw [← hdeg, ← hcomp]
   exact hc
 

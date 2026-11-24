@@ -65,7 +65,7 @@ private theorem norm_eq_one {Γ K : Type} [Group Γ] [TopologicalSpace Γ] [Comp
 theorem UpperTheory.continuous_character_compact_unit_values :
     UpperTheory.V.Af.Wd.CharEnd := by
   intro F Ω _ _ _ _ _ l hl ι w A h hw ψ a hψ hσ
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   have hq1 : 1 < normV w := GlobalTheory.WeilDeligne.one_lt_normV w
   have hpow := normV_eq_pow (l := l) hw
   have hf : resDeg l w ≠ 0 := by

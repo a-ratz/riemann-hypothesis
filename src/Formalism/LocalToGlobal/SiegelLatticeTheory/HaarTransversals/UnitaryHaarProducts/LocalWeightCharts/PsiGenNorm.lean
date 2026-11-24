@@ -166,8 +166,8 @@ theorem aBound_of (hSG : SigmaG) (hD : Decay) (hRG : ReprodG) (hS : SGrp) (hPi :
     rw [Real.norm_eq_abs] at this
     exact le_trans (le_abs_self _) (le_trans this (le_max_left _ _))
   set N := N1H k r
-  haveI : SigmaFinite μN := hNh.1
-  haveI : SigmaFinite μW := hWh.1
+  have : SigmaFinite μN := hNh.1
+  have : SigmaFinite μW := hWh.1
   set I := ∫⁻ m : Mt k r, ENNReal.ofReal (opn (of m) ^ (-N)) ∂μN
   have hI : I < ∞ := hNI k r μN hNh hNfin
   set A := Cφ * (Kw * (opn (Hpk k r) * opn (Hpk k r))) ^ N * ‖ξ‖
@@ -202,7 +202,7 @@ theorem aBound_of (hSG : SigmaG) (hD : Decay) (hRG : ReprodG) (hS : SGrp) (hPi :
       ≤ ∫⁻ p, ENNReal.ofReal (A * opn g ^ N) * ENNReal.ofReal (opn (of p.2) ^ (-N)) ∂(μW.prod μN) := by
         apply lintegral_mono_ae
         filter_upwards [hae] with p hp
-        rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (mul_nonneg hA0 (Real.rpow_nonneg hg0 _))]
+        rw [← ofReal_norm, ← ENNReal.ofReal_mul (mul_nonneg hA0 (Real.rpow_nonneg hg0 _))]
         exact ENNReal.ofReal_le_ofReal (hpt p hp.1 hp.2)
     _ = ENNReal.ofReal (A * opn g ^ N) * (μW Set.univ * I) := by
         rw [lintegral_const_mul _ hmeas, lintegral_prod _ hmeas.aemeasurable]

@@ -58,7 +58,7 @@ private theorem full_of_short_span {D : D7} {B : WeightFamilies.Prov D}
     (hH : WeightAlgebra.H2 X S ka wL wF)
     (hlat : Submodule.IsLattice B.KO (B.Mlat j ka)) :
     Submodule.IsFullLattice B.KO (B.Mlat j ka) := by
-  letI := hlat
+  let := hlat
   refine ⟨?_⟩
   apply top_unique
   rw [← hsp]

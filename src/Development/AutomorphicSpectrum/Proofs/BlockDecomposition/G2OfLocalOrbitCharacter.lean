@@ -166,10 +166,10 @@ theorem finprod_eq_finprod_mem_fibres_of_section :
     intro s hs
     apply finprod_mem_eq_prod_of_subset
     · rintro x ⟨hx1, hx2⟩
-      simp only [Finset.coe_filter, Set.mem_setOf_eq, hT, Set.Finite.mem_toFinset]
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq, hT, Set.Finite.mem_toFinset]
       exact ⟨hx2, (key s hs x).1 hx1⟩
     · intro x hx
-      simp only [Finset.coe_filter, Set.mem_setOf_eq] at hx
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hx
       exact (key s hs x).2 hx.2
   rw [finprod_mem_congr rfl hin, finprod_eq_prod_of_mulSupport_subset f (s := T) (by simp [hT])]
   rw [finprod_mem_eq_prod_of_subset (t := T.image g)]
@@ -279,7 +279,7 @@ theorem absHalf_prodFormula : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       congr 1
       funext v
       rw [InfinitePlace.norm_embedding_eq, InfinitePlace.mult,
-        if_neg (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
+        ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
     have hprod := prod_abs_eq_one (K := E) hx
     have hsq : ((∏ᶠ w : Pl E, Real.sqrt (FinitePlace.mk w x)) * ∏ v : InfinitePlace E, ‖v.embedding x‖) ^ 2 = 1 := by
       rw [mul_pow, hA, hP, hF, mul_comm]
@@ -403,9 +403,9 @@ theorem exists_bound {X : Type} [TopologicalSpace X] (w : Pl E) {f : X → w.adi
     {C : Set X} (hC : IsCompact C) : ∃ B : WithZero (Multiplicative ℤ), ∀ x ∈ C, Valued.v (f x) ≤ B := by
   have hcov : C ⊆ ⋃ m : ℤ, f ⁻¹' {y | Valued.v y ≤ WithZero.exp m} := by
     intro x _
-    simp only [Set.mem_iUnion, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_preimage, Set.mem_ofPred_eq]
     rcases eq_or_ne (Valued.v (f x)) 0 with h | h
-    · exact ⟨0, by rw [h]; exact zero_le'⟩
+    · exact ⟨0, by rw [h]; exact zero_le⟩
     · exact ⟨WithZero.log (Valued.v (f x)), (WithZero.exp_log h).ge⟩
   have hmono : Monotone fun m : ℤ => f ⁻¹' {y | Valued.v y ≤ WithZero.exp m} := by
     intro a b hab x hx
@@ -429,7 +429,7 @@ theorem GlobalTheory.CharpolyBound.bound : ∀ (E : Type) [Field E] [NumberField
   · by_cases hkn : k ≤ n
     · exact le_sup_of_le_left ((hBk k g hg).trans (Finset.le_sup (f := Bk) (Finset.mem_range.2 (by omega))))
     · rw [coeff_eq_zero_of_natDegree_lt (by rw [charpoly_natDegree_eq_dim, Fintype.card_fin]; omega), map_zero]
-      exact zero_le'
+      exact zero_le
   · have h0 : g.val.charpoly.coeff 0 = (-1) ^ n * g.val.det := by
       rw [det_eq_sign_charpoly_coeff, Fintype.card_fin, ← mul_assoc, ← pow_add, ← two_mul, pow_mul]
       simp
@@ -593,7 +593,7 @@ namespace GlobalTheory.BddFinite
 
 theorem exists_le_exp_nat (B : WithZero (Multiplicative ℤ)) : ∃ n : ℕ, B ≤ WithZero.exp (n : ℤ) := by
   induction B using WithZero.recZeroCoe with
-  | zero => exact ⟨0, zero_le'⟩
+  | zero => exact ⟨0, zero_le⟩
   | coe m =>
     refine ⟨(Multiplicative.toAdd m).toNat, ?_⟩
     rw [WithZero.exp, WithZero.coe_le_coe, ← Multiplicative.toAdd_le]
@@ -780,7 +780,7 @@ theorem finite_ell_charpoly : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         refine ⟨(mul_le_mul' (hu.1 _) hu.2.1).trans (le_max_right _ _), fun hs => ?_⟩
         rw [map_inv₀, (hu.2.2 hs).2, inv_one, mul_one]; exact (hu.2.2 hs).1 _
       · rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by rw [hP.1.2.1]; omega), map_zero, map_zero]
-        exact ⟨zero_le', fun _ => zero_le'⟩
+        exact ⟨zero_le, fun _ => zero_le⟩
   set A := {x : E | ∃ P ∈ T, ∃ k, P.coeff k = x} with hA
   have hAfin : A.Finite := by
     refine _root_.GlobalTheory.BddFinite.finite_of_bdd E A ((2 : ℝ) ^ n) ?_ ?_ ?_
@@ -790,7 +790,7 @@ theorem finite_ell_charpoly : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       have : {w : Pl E | ¬ ∀ x ∈ A, w.valuation E x ≤ 1} ⊆ ⋃ u ∈ {u : Pl E | ¬ C u ⊆ GlobalTheory.LFun.KGL u (n := n)},
           {w : Pl E | w.under (𝓞 (maximalRealSubfield E)) = u.under (𝓞 (maximalRealSubfield E))} := by
         intro w hw
-        simp only [Set.mem_setOf_eq, Set.mem_iUnion] at hw ⊢
+        simp only [Set.mem_ofPred_eq, Set.mem_iUnion] at hw ⊢
         refine ⟨σ w, fun hs => hw ?_, (hσ w).2.symm⟩
         rintro _ ⟨P, hP, k, rfl⟩; exact (glob P hP w k).2 hs
       refine Filter.eventually_cofinite.2 (Set.Finite.subset (hbad.biUnion fun u _ => ?_) this)
@@ -971,7 +971,7 @@ theorem resultant_factors_prod_eq_one {E : Type} [Field E] [NumberField E] [IsCM
     · obtain ⟨u, hu, huw⟩ := hsp
       have hfib : {x : Pl E | x.under (𝓞 (maximalRealSubfield E)) = w.under (𝓞 (maximalRealSubfield E))} = {w, u} := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
         constructor
         · exact fun hx => GlobalTheory.T.eq_or_eq_of_under_maximalRealSubfield_eq_CMField E w u x hu huw hx
         · rintro (rfl | rfl)
@@ -984,7 +984,7 @@ theorem resultant_factors_prod_eq_one {E : Type} [Field E] [NumberField E] [IsCM
         unfold delta
         rw [hres]
         simp only [hn₁, hn₂, hdl]
-        rw [if_pos ⟨u, hu, huw⟩]
+        rw [ite_eq_left ⟨u, hu, huw⟩]
       have hne : (-1) ^ (a * b) * algebraMap E (w.adicCompletion E) d ≠ 0 :=
         mul_ne_zero (pow_ne_zero _ (neg_ne_zero.2 one_ne_zero)) (hA0 d hd0)
       rw [hdelta, dite_eq_left hne]
@@ -1022,7 +1022,7 @@ theorem resultant_factors_prod_eq_one {E : Type} [Field E] [NumberField E] [IsCM
       ring
     · have hfib : {x : Pl E | x.under (𝓞 (maximalRealSubfield E)) = w.under (𝓞 (maximalRealSubfield E))} = {w} := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
         constructor
         · intro hx
           by_contra hxw
@@ -1032,7 +1032,7 @@ theorem resultant_factors_prod_eq_one {E : Type} [Field E] [NumberField E] [IsCM
       unfold delta
       rw [hres]
       simp only [hn₁, hn₂, hdl]
-      rw [if_neg hsp]
+      rw [ite_eq_right hsp]
       simp only [f]
       rw [GlobalTheory.T.unitaryHeckeCharCM_locK_nonsplit_eq_neg_one_pow E μ e hμ w hsp k]
       rfl
@@ -1101,7 +1101,7 @@ theorem delta_eventually_one {E : Type} [Field E] [NumberField E] [IsCMField E] 
       unfold GlobalTheory.BCT.delta
       rw [hres]
       simp only [hn₁, hn₂, hdl]
-      rw [if_pos hsp]
+      rw [ite_eq_left hsp]
     rw [hdelta, dite_eq_left hne]
     have hunit : (Units.mk0 _ hne : (w.adicCompletion E)ˣ) = atFin w u := by
       apply Units.ext
@@ -1114,7 +1114,7 @@ theorem delta_eventually_one {E : Type} [Field E] [NumberField E] [IsCMField E] 
   · unfold GlobalTheory.BCT.delta
     rw [hres]
     simp only [hn₁, hn₂, hdl]
-    rw [if_neg hsp, h3, mul_one]
+    rw [ite_eq_right hsp, h3, mul_one]
     have := GlobalTheory.T.unitaryHeckeCharCM_locK_nonsplit_eq_neg_one_pow E μ e hμ w hsp k
     rw [h1] at this
     simpa [k] using this.symm
@@ -1328,7 +1328,7 @@ theorem g2c : EllLocal → KapOrbAE → ChWMap → GlobalComplexCoefficients := 
   have hl : ∀ (a : Fin (n + 1)) (v : InfinitePlace E), _ := fun a v =>
     laplace_cast n a (Nat.lt_succ_iff.1 a.2) (lam v) (e v) (hμ.2.2.2.1 v)
   choose κ inst l₁ l₂ ε hinf hL using hl
-  letI : ∀ a v, Fintype (κ a v) := inst
+  let : ∀ a v, Fintype (κ a v) := inst
   let J : Type := Σ a : Fin (n + 1), ∀ v, κ a v
   let c₀ : J → ℂ := fun j => ∏ v, ε j.1 v (j.2 v)
   refine ⟨{j : J // c₀ j ≠ 0}, inferInstance, fun i => i.1.1, fun i v => l₁ i.1.1 v (i.1.2 v),

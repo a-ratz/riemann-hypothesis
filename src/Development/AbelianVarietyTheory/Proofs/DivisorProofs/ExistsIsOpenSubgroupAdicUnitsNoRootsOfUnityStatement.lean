@@ -140,7 +140,7 @@ theorem exists_open_subgroup_no_roots : ∀ (E : Type) [Field E] [NumberField E]
   intro E _ _ w
   set S := {t : Eˣ | ∃ n : ℕ, 0 < n ∧ t ^ n = 1}
   have hL : ((fun t : Eˣ => WithZero.log (Valued.v ((algebraMap E (w.adicCompletion E) (t : E)) - 1))) ''
-      (S \ {1})).Finite := ((finite_roots E).diff).image _
+      (S \ {1})).Finite := ((finite_roots E).sdiff).image _
   obtain ⟨b, hb⟩ := hL.bddBelow
   refine ⟨congOne w (min b 0 - 1) (by omega), isOpen_congOne w _ _, fun t ht hV => ?_⟩
   by_contra h1

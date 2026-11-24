@@ -81,7 +81,7 @@ theorem hasDerivAt_rhoS (w : l ⊕ l → ℝ) (f : Sch l) (T : Sch l →L[ℂ] �
     ext x
     rw [hG, rhoS_apply, Der.hl, phase, pPart_smul, qPart_smul]
     congr 2
-    simp only [real_inner_smul_left, real_inner_smul_right, ContinuousLinearMap.neg_apply, innerSL_apply_apply,
+    simp only [real_inner_smul_left, real_inner_smul_right, neg_apply, innerSL_apply_apply,
       real_inner_comm (pPart w) (qPart w)]
     push_cast
     ring

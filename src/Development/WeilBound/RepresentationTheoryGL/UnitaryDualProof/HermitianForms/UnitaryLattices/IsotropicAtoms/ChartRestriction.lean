@@ -115,11 +115,11 @@ theorem exists_compact_annihilator_subset : ∀ {k : Type} [Field k] [ValuativeR
     by_contra hlt
     have hle : γ i ≤ valuation k (t i) := not_lt.1 hlt
     have hγi : γ i ≠ 0 := hγ i hi
-    have hpos : 0 < γ i := zero_lt_iff.2 hγi
+    have hpos : 0 < γ i := pos_iff_ne_zero.2 hγi
     have hti : t i ≠ 0 := by
       intro h0
       rw [h0, map_zero] at hle
-      exact hγi (le_antisymm hle zero_le')
+      exact hγi (le_antisymm hle zero_le)
     have hmem : (Pi.single i (x₁ / t i) : Fin n → k) ∈ Ξ := by
       intro j
       by_cases hj : j = i
@@ -148,7 +148,7 @@ namespace GlobalTheory.CompanionTheory.Dblock.ComapLat
 
 theorem comap_mulVec_compact_open : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (g : Matrix (Fin n) (Fin n) k), IsUnit g → ∀ A : AddSubgroup (Fin n → k), IsCompact (A : Set (Fin n → k)) → IsOpen (A : Set (Fin n → k)) → IsCompact ((A.comap (Matrix.mulVecLin g).toAddMonoidHom : AddSubgroup (Fin n → k)) : Set (Fin n → k)) ∧ IsOpen ((A.comap (Matrix.mulVecLin g).toAddMonoidHom : AddSubgroup (Fin n → k)) : Set (Fin n → k)) := by
   intro k _ _ _ _ n g hg A hc ho
-  haveI : IsTopologicalRing k := inferInstance
+  have : IsTopologicalRing k := inferInstance
   have hdet : IsUnit g.det := (Matrix.isUnit_iff_isUnit_det g).1 hg
   have hcont : ∀ m : Matrix (Fin n) (Fin n) k, Continuous (fun x : Fin n → k => m.mulVec x) :=
     fun m => continuous_const.matrix_mulVec continuous_id
@@ -294,11 +294,11 @@ theorem finite_transversal {X : Type} [TopologicalSpace X] [AddCommGroup X]
     (hH : IsOpen (H : Set X)) (_hHA : H ≤ A) :
     ∃ T : Finset X, (∀ t ∈ T, t ∈ A) ∧ ∀ a ∈ A, ∃! t, t ∈ T ∧ a - t ∈ H := by
   classical
-  haveI : CompactSpace A := isCompact_iff_compactSpace.mp hA
+  have : CompactSpace A := isCompact_iff_compactSpace.mp hA
   have hopen : IsOpen ((H.addSubgroupOf A : AddSubgroup A) : Set A) :=
-    hH.preimage continuous_subtype_val
-  haveI : Finite (A ⧸ H.addSubgroupOf A) := AddSubgroup.quotient_finite_of_isOpen _ hopen
-  haveI : Fintype (A ⧸ H.addSubgroupOf A) := Fintype.ofFinite _
+    hH.preimage continuous_subtypeVal
+  have : Finite (A ⧸ H.addSubgroupOf A) := AddSubgroup.quotient_finite_of_isOpen _ hopen
+  have : Fintype (A ⧸ H.addSubgroupOf A) := Fintype.ofFinite _
   let rep : A ⧸ H.addSubgroupOf A → X := fun q => ((Quotient.out q : A) : X)
   refine ⟨Finset.univ.image rep, ?_, ?_⟩
   · intro t ht
@@ -506,7 +506,7 @@ theorem isOpen_annihilator_of_isCompact :
     intro m
     have hma : m • a ∈ (A : Set (Fin n → k)) := SetLike.mem_coe.mpr (A.nsmul_mem ha m)
     have h1 := hVW (Set.mk_mem_prod hξ (hAW hma))
-    rw [Set.mem_setOf_eq, dotProduct_smul, AddChar.map_nsmul_eq_pow, Circle.coe_pow] at h1
+    rw [Set.mem_ofPred_eq, dotProduct_smul, AddChar.map_nsmul_eq_pow, Circle.coe_pow] at h1
     exact h1
   exact AddSubgroup.isOpen_of_mem_nhds H hmem
 

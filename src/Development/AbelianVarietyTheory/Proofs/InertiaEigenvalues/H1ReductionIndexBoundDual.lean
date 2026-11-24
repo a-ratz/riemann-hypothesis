@@ -144,7 +144,7 @@ theorem torsion_finite_and_killed {O : Type} [CommRing O] [IsDomain O] [IsDiscre
     apply Dvd.dvd.mul_left
     rw [← pow_mul]
     exact pow_dvd_pow ϖ (Nat.le_mul_of_pos_left n (Nat.pos_of_ne_zero he))
-  haveI : Module.Finite O ↥(Submodule.torsion O M) :=
+  have : Module.Finite O ↥(Submodule.torsion O M) :=
     Module.Finite.iff_fg.2 (IsNoetherian.noetherian _)
   obtain ⟨y, hy, hy0⟩ := Submodule.annihilator_top_inter_nonZeroDivisors
     (Submodule.torsion_isTorsion (R := O) (M := M))
@@ -154,11 +154,11 @@ theorem torsion_finite_and_killed {O : Type} [CommRing O] [IsDomain O] [IsDiscre
     rw [ht, mul_comm, mul_smul, Submodule.mem_annihilator.1 hy x Submodule.mem_top, smul_zero]
   refine ⟨?_, k, fun x hx => congrArg Subtype.val (hk ⟨x, hx⟩)⟩
   have hT : Module.IsTorsionBy O ↥(Submodule.torsion O M) (ℓ ^ k) := fun x => hk x
-  letI := hT.module
-  haveI := hfin k
-  haveI : IsScalarTower O (O ⧸ Ideal.span {ℓ ^ k}) ↥(Submodule.torsion O M) :=
+  let := hT.module
+  have := hfin k
+  have : IsScalarTower O (O ⧸ Ideal.span {ℓ ^ k}) ↥(Submodule.torsion O M) :=
     Module.IsTorsionBySet.isScalarTower ((Module.isTorsionBySet_span_singleton_iff _).mpr hT)
-  haveI : Module.Finite (O ⧸ Ideal.span {ℓ ^ k}) ↥(Submodule.torsion O M) :=
+  have : Module.Finite (O ⧸ Ideal.span {ℓ ^ k}) ↥(Submodule.torsion O M) :=
     Module.Finite.of_restrictScalars_finite O _ _
   exact Module.finite_of_finite (O ⧸ Ideal.span {ℓ ^ k})
 
@@ -246,7 +246,7 @@ theorem exists_finset_red (L : Lattice (O := O) ρ) (I : Submodule O ↥L.T) (hI
         (Submodule.Quotient.mk a : LatticeCohomology L) ∈ Submodule.torsion O (LatticeCohomology L) → redT L I a = c →
         (Submodule.Quotient.mk c : QuotientCohomology L I hI) ∈ F := by
   classical
-  letI := Fintype.ofFinite ↥(Submodule.torsion O (LatticeCohomology L))
+  let := Fintype.ofFinite ↥(Submodule.torsion O (LatticeCohomology L))
   have key : ∀ t : ↥(Submodule.torsion O (LatticeCohomology L)), ∃ x : QuotientCohomology L I hI,
       ∀ (c : ↥(quotientCocycles L I hI)) (a : ↥(latticeCocycles L)), (Submodule.Quotient.mk a : LatticeCohomology L) = t →
         redT L I a = c → (Submodule.Quotient.mk c : QuotientCohomology L I hI) = x := by
@@ -296,9 +296,9 @@ theorem ker_bounded : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : 
   intro hT l _ P K LL _ _ _ O _ _ hO A' LA'
   have hgc := GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO
   have hfg : Module.Finite O (LatticeCohomology LA') := GlobalTheory.TateFiniteH1.tate_finH1 hT l P K LL O hO A' LA'
-  letI hD : IsDomain O := hO.1.choose
-  haveI : IsDiscreteValuationRing O := hO.1.choose_spec.1
-  haveI : IsFractionRing O LL := hO.1.choose_spec.2
+  let hD : IsDomain O := hO.1.choose
+  have : IsDiscreteValuationRing O := hO.1.choose_spec.1
+  have : IsFractionRing O LL := hO.1.choose_spec.2
   have hlLL : ((l : ℕ) : LL) ≠ 0 := by
     intro h
     have h' : algebraMap ℚ_[l] LL (l : ℚ_[l]) = 0 := by rw [map_natCast]; exact h
@@ -349,7 +349,7 @@ theorem card_le_of_double_annihilator (O : Type) [CommRing O] (X Y E : Type) [Ad
     apply h1
     intro y hy
     have := congrFun hx ⟨y, (h2 y hy).1⟩
-    rw [hL, if_pos hy] at this
+    rw [hL, ite_eq_left hy] at this
     exact this
   have hmem : ∀ x (y : F), L x y ∈ Es := by
     intro x y
@@ -392,7 +392,7 @@ namespace GlobalTheory.GoodCoeff
 theorem exists_finset_pow_torsion : ∀ (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ k : ℕ, ∃ Es : Finset (LL ⧸ LinearMap.range (Algebra.linearMap O LL)), ∀ e, ((l : ℕ) : O) ^ k • e = 0 → e ∈ Es := by
   intro l _ LL _ _ _ O _ _ hG k
   classical
-  haveI hfin : Finite (O ⧸ Ideal.span {((l : ℕ) : O) ^ k}) :=
+  have hfin : Finite (O ⧸ Ideal.span {((l : ℕ) : O) ^ k}) :=
     (good_coeff_integers l LL O hG).2.2.1 k
   have hl : (l : LL) ≠ 0 := by
     have := (algebraMap ℚ_[l] LL).injective.ne
@@ -581,8 +581,8 @@ theorem redT_mem_Z1Q_of_ne (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) [
     (hI : StableSub LA (Ideal.span {b} • ⊤ : Submodule O ↥LA.T)) (a : ↥(latticeCocycles LA)) :
     redT LA _ a ∈ quotientCocycles LA _ hI := by
   obtain ⟨⟨hDom, hDVR, hFr⟩, hfd, hmt, htr, hopen⟩ := hO
-  haveI := hDom; haveI := hDVR; haveI := hFr; haveI := htr
-  haveI : IsTopologicalAddGroup A.V := IsModuleTopology.topologicalAddGroup LL A.V
+  have := hDom; have := hDVR; have := hFr; have := htr
+  have : IsTopologicalAddGroup A.V := IsModuleTopology.isTopologicalAddGroup LL A.V
   have hT : IsOpen (LA.T : Set A.V) := Formalism.MainNotions.BlochKatoDuality.Br.lat_open hopen LA.T LA.fg LA.span
   set c : LL := algebraMap O LL b with hcdef
   have hTr : IsOpen ((fun v : A.V => c • v) '' (LA.T : Set A.V)) :=
@@ -1074,10 +1074,10 @@ theorem level_pairing_of (hG : GoodO (Qp := Qp) LL O)
           ((((l : ℕ) : LL) ^ r)⁻¹ • Formalism.MainNotions.LocalSituation.liftQ LA' _ ((c' : G → ↥LA'.T ⧸
             (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA'.T)) g)) : A'.V ⧸ LA'.T))) := by
   obtain ⟨⟨hO, hDVR, hFr⟩, -, -, htr, hopen⟩ := hG
-  haveI := hO
-  haveI := hDVR
-  haveI := hFr
-  haveI := htr
+  have := hO
+  have := hDVR
+  have := hFr
+  have := htr
   have hlm : algebraMap O LL ((l : ℕ) : O) = ((l : ℕ) : LL) := map_natCast _ _
   have hl0 : ((l : ℕ) : O) ≠ 0 := fun h => hlL (by rw [← hlm, h, map_zero])
   have hsinv : (algebraMap O LL ((l : ℕ) : O))⁻¹ ^ r = (((l : ℕ) : LL) ^ r)⁻¹ := by
@@ -1148,8 +1148,8 @@ theorem h1_reduction_index_bounded : Formalism.GaloisCohomology.LocalTateDuality
   refine ⟨Es.card ^ C0, pow_pos hEs1 _, fun r hI => ?_⟩
   have hI' : StableSub LA' (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA'.T) :=
     GlobalTheory.TateOrth.stable_span_smul_top LA' _
-  haveI hX := _root_.GlobalTheory.CocycleModPow.finite_H1Q_lpow hT l K LL O hO A LA r hI
-  haveI hY := _root_.GlobalTheory.CocycleModPow.finite_H1Q_lpow hT l K LL O hO A' LA' r hI'
+  have hX := _root_.GlobalTheory.CocycleModPow.finite_H1Q_lpow hT l K LL O hO A LA r hI
+  have hY := _root_.GlobalTheory.CocycleModPow.finite_H1Q_lpow hT l K LL O hO A' LA' r hI'
   haveI : Module.Finite O (QuotientCohomology LA' _ hI') := Module.Finite.of_finite
   obtain ⟨f, hker, hf⟩ := _root_.GlobalTheory.ReductionH1Kernel.ker_reduction_H1 l P K LL O hO A LA r hI
   obtain ⟨β, hβ1, hβ2⟩ := _root_.GlobalTheory.TateLevel.tate_pairing_level hT l P K LL O hO L1 hL1 A A' LA LA' m hm r hI hI'

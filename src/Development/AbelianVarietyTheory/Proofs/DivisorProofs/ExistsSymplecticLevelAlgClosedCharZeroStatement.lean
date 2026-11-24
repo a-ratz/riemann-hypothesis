@@ -81,7 +81,7 @@ theorem exists_level_algClosed_charZero :
   have hL : Laws := GlobalTheory.abelianSchemeLaws_all.1
   have hk0 : (k : C) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   have : NeZero (k : C) := ⟨hk0⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C k
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C k
   let ze : Cˣ := (hζ.isUnit (by omega)).unit
   have hze : IsPrimitiveRoot ze k := IsPrimitiveRoot.coe_units_iff.1 (by simpa [ze] using hζ)
   obtain ⟨pt, hpt, hw⟩ := EllipticLevel.exists_symplectic_system hL P k hk0 ze hze

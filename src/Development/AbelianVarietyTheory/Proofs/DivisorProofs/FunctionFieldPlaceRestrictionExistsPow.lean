@@ -61,11 +61,11 @@ open WithZero
 variable {F : Type} [Field F]
 
 theorem pow_inj {e : ℕ} (he : e ≠ 0) {a b : ℤᵐ⁰} (h : a ^ e = b ^ e) : a = b :=
-  le_antisymm ((pow_le_pow_iff_left₀ zero_le' zero_le' he).1 h.le)
-    ((pow_le_pow_iff_left₀ zero_le' zero_le' he).1 h.ge)
+  le_antisymm ((pow_le_pow_iff_left₀ zero_le zero_le he).1 h.le)
+    ((pow_le_pow_iff_left₀ zero_le zero_le he).1 h.ge)
 
 theorem pow_le_one_iff' {e : ℕ} (he : e ≠ 0) {a : ℤᵐ⁰} : a ^ e ≤ 1 ↔ a ≤ 1 := by
-  simpa using (pow_le_pow_iff_left₀ (zero_le' (a := a)) (zero_le' (a := (1 : ℤᵐ⁰))) he)
+  simpa using (pow_le_pow_iff_left₀ (zero_le (a := a)) (zero_le (a := (1 : ℤᵐ⁰))) he)
 
 theorem pow_of_iff (v q : Valuation F ℤᵐ⁰) (hq : Function.Surjective q)
     (h : ∀ x, v x ≤ 1 ↔ q x ≤ 1) : ∃ e : ℕ, 0 < e ∧ ∀ x, v x = q x ^ e := by
@@ -141,7 +141,7 @@ theorem root (v : Valuation F ℤᵐ⁰) (hv : ∃ a, 1 < v a) :
       exact ⟨exp m, by rw [hm, ← exp_nsmul, nsmul_eq_mul]⟩
   choose qf hqf using hroot
   have hle : ∀ {a b : ℤᵐ⁰}, a ^ Nat.find hS ≤ b ^ Nat.find hS → a ≤ b :=
-    fun h => (pow_le_pow_iff_left₀ zero_le' zero_le' he0.ne').1 h
+    fun h => (pow_le_pow_iff_left₀ zero_le zero_le he0.ne').1 h
   let q : Valuation F ℤᵐ⁰ :=
     { toFun := qf
       map_zero' := pow_inj he0.ne' (by rw [hqf, map_zero, zero_pow he0.ne'])
@@ -178,7 +178,7 @@ theorem exists_one_lt {E : Type} [Field E] [Algebra F E] [FiniteDimensional F E]
     apply p.map_sum_lt (pow_ne_zero _ (ne_of_gt (lt_trans zero_lt_one hy1)))
     intro i hi
     rw [map_mul, map_pow]
-    calc p (algebraMap F E (f.coeff i)) * p y ^ i ≤ 1 * p y ^ i := mul_le_mul_of_nonneg_right (hcon _) zero_le'
+    calc p (algebraMap F E (f.coeff i)) * p y ^ i ≤ 1 * p y ^ i := mul_le_mul_of_nonneg_right (hcon _) zero_le
       _ = p y ^ i := one_mul _
       _ < p y ^ f.natDegree := pow_lt_pow_right₀ hy1 (Finset.mem_range.1 hi)
   have hs : ∑ i ∈ Finset.range f.natDegree, algebraMap F E (f.coeff i) * y ^ i =

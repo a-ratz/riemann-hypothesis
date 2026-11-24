@@ -281,7 +281,7 @@ theorem charZero_of_horizontal (y : (Σ k, ι k) → Ω) (h : IsHorizontal (mCoo
 theorem ne_zero_of_genUnit {y : (Σ k, ι k) → Ω} {d : ℕ} (hA : IsArithVar (mCoordIdeal y) d) {a : K → ℤ} {u : Ω}
     (H : GenUnit y a u) : u ≠ 0 := by
   obtain ⟨-, ⟨-, -, hR⟩, hH, -⟩ := hA
-  haveI := charZero_of_horizontal y hH
+  have := charZero_of_horizontal y hH
   have hy : y ∈ ptsOver Ω (mCoordIdeal y) :=
     ⟨fun k => let ⟨i, hi⟩ := hR k; ⟨i, coord_ne_zero y hi⟩, fun f hf => aeval_eq_zero_of_mem y hf⟩
   obtain ⟨v, hv0, dg, dh, g, h, -, -, -, hgy, hhy, hgz⟩ := H Ω y hy
@@ -345,8 +345,8 @@ theorem chart_mem (y : (Σ k, ι k) → Ω) (hS : IsMultiHomogIdeal (mCoordIdeal
       simpa [hSdef] using h⟩
   have key : ∀ M : Ideal (satQ S), M.IsMaximal → ∃ b e : satQ S, b ∉ M ∧ e ∉ M ∧ (e : Ω) = t * b := by
     intro M hM
-    letI := Ideal.Quotient.field M
-    haveI : CharZero (satQ S ⧸ M) := charZero_of_inj_zero fun n hn => by
+    let := Ideal.Quotient.field M
+    have : CharZero (satQ S ⧸ M) := charZero_of_inj_zero fun n hn => by
       by_contra h0
       apply natCast_notMem S M hM n h0
       have h1 : Ideal.Quotient.mk M (n : satQ S) = 0 := by
@@ -386,7 +386,7 @@ theorem exists_vertBound : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, 
   classical
   have hu := ne_zero_of_genUnit hA H
   obtain ⟨-, ⟨-, hS, -⟩, hH, -⟩ := hA
-  haveI := charZero_of_horizontal y hH
+  have := charZero_of_horizontal y hH
   have hn : ∀ c : ∀ k, ι k, ∃ n : ℕ, 0 < n ∧ ((∀ k, y ⟨k, c k⟩ ≠ 0) →
       (n : Ω) * (u * ∏ k, y ⟨k, c k⟩ ^ (-(a k))) ∈ chartRingZ y c ∧
       (n : Ω) * (u * ∏ k, y ⟨k, c k⟩ ^ (-(a k)))⁻¹ ∈ chartRingZ y c) := by
@@ -621,16 +621,16 @@ theorem isGeom_of_splitComps [NumberField c.F] {Y : Model Xo c (algebraMap (𝓞
     simp only [Model.j, Category.assoc]
     rw [pullback.condition, ← Category.assoc Y.jQ, Y.jQ_over, ← Category.assoc, Z.over_inc]
     simp [spMap, ← Spec.map_comp]
-  letI : Algebra c.F Z.Ω := Z.inc.toAlgebra
+  let : Algebra c.F Z.Ω := Z.inc.toAlgebra
   have hx : IsAlgebraic c.F x := ⟨f, hf, by rw [Polynomial.aeval_def]; exact hfx⟩
-  haveI : Algebra.IsAlgebraic ℤ c.F := (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ) (C := c.F)).2 inferInstance
+  have : Algebra.IsAlgebraic ℤ c.F := (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ) (C := c.F)).2 inferInstance
   have hz : IsAlgebraic ℤ x := hx.restrictScalars ℤ
   obtain ⟨a, ha⟩ := hs Z.Ω (Z.ξ₀ ≫ Y.j) Z.inc Z.gen hover x hz
   exact ⟨a, ha⟩
 
 theorem flat_unit_of_root_lines : Flat.FlatLineGenerator → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (R : Top.RootModel (CMType H) (D.p + D.q)) (𝔐 : HodgeCpt Y S R.y) (Fl : 𝔐.Flag) (e : CMType H × Fin (D.p + D.q) → R.Ω), 1 ≤ D.p + D.q → SplitComps Y → Fl.RootLines R.xdeg e → Ht.FlatUnit R := by
   intro hA0 E _ _ _ H D l Xo c Y S R 𝔐 Fl e hpq hs hroot τ
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   have hβ : Function.Injective (algebraMap (𝓞 c.F) c.F) ∧ IsNoetherianRing (𝓞 c.F) ∧
       ∀ x : c.F, ∃ a b : 𝓞 c.F, algebraMap (𝓞 c.F) c.F b ≠ 0 ∧ x * algebraMap (𝓞 c.F) c.F b = algebraMap (𝓞 c.F) c.F a := by
     refine ⟨RingOfIntegers.coe_injective, inferInstance, fun x => ?_⟩
@@ -651,7 +651,7 @@ theorem flat_unit_of_root_lines : Flat.FlatLineGenerator → ∀ (E : Type) [Fie
     obtain ⟨W₂, hW₂, u₂, -, hu₂⟩ := hv₂ x₀ hx₀
     exact GlobalTheory.CompanionTheory.Ar.Flat.LinePull.isCoeffAt_pull _ _ _ _ _ _ 𝔐.f i _ _ j _ _ _ _ D.p D.q a b a' b' p x₀ u₁ u₂ Z.gen
       𝔐.tie.gen hT.1 hT.2.2.1 ex (hu₁ x₀ hx₀ hW₁) (hu₂ x₀ hx₀ hW₂) hs₁ hs₂ (hgen.2.2 x₀ hx₀) ha' hb'
-  haveI hchar : CharZero R.Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have hchar : CharZero R.Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   let x₀ : Cpt 𝔐.ξ := ⟨genPt 𝔐.ξ, specializes_rfl⟩
   have hx₀ : x₀ ∈ genFibre ℤ 𝔐.ξ := fun o ho =>
     ⟨by simpa using ho, CoordBase.mem_regAt_gen 𝔐.tie.gen _, CoordBase.mem_regAt_gen 𝔐.tie.gen _⟩
@@ -1068,7 +1068,7 @@ theorem multAt_map (e : ∀ k, ι k ≃ Fin (n k + 1)) (J V : Ideal (MRing ι)) 
   unfold multAt
   by_cases hV : V.IsPrime
   · have hV' : (V.map (ren e)).IsPrime := (isPrime_map_ringEquiv_iff (ren e) V).2 hV
-    rw [dif_pos hV, dif_pos hV']
+    rw [dite_eq_left hV, dite_eq_left hV']
     exact congrArg ENat.toNat (length_localizedModule_quotient_map (ren e) J V)
   · have hV' : ¬ (V.map (ren e)).IsPrime := fun h' => hV ((isPrime_map_ringEquiv_iff (ren e) V).1 h')
     rw [dite_eq_right hV, dite_eq_right hV']
@@ -1096,7 +1096,7 @@ theorem geoNum_map (e : ∀ k, ι k ≃ Fin (n k + 1)) (V : Ideal (MRing ι)) (h
     (b : Fin 0 → K → ℤ) (b' : Fin 0 → K → ℤ) :
     geoNum (ι := blockIdx n) 0 (V.map (ren e)) b' = geoNum 0 V b := by
   have hV' := (isRelevant_map_iff e V).2 hV
-  simp only [geoNum, dif_pos hV, dif_pos hV']
+  simp only [geoNum, dite_eq_left hV, dite_eq_left hV']
   have hc : ∀ k, (X ⟨k, e k (hV k).choose⟩ : MRing (blockIdx n)) ∉ V.map (ren e) := fun k hm => by
     rw [← ren_X] at hm
     exact (hV k).choose_spec ((mem_map_ringEquiv_iff (ren e) V _).1 hm)
@@ -1340,7 +1340,7 @@ theorem recR_map (e : ∀ k, ι k ≃ Fin (n k + 1)) {x : Cone n (AlgebraicClosu
     exact ⟨V, hV, rfl⟩
   have hnh := hver _ hV'
   have hnh' : ¬ IsHorizontal V := fun h => hnh ((isHorizontal_map_iff e V).2 h)
-  rw [if_neg hnh, if_neg hnh', hsup, multAt_map, charOf_map,
+  rw [ite_eq_right hnh, ite_eq_right hnh', hsup, multAt_map, charOf_map,
     geoNum_map e V hV.2 (fun c c' h1 h2 => (hdeh _ hV' c c' h1 h2).2)]
 
 end Recursion
@@ -1391,7 +1391,7 @@ theorem pointCurve_height : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k,
   intro K _ ι _ II hII P d hP L _ _ w hw
   classical
   obtain ⟨hwb, hwP⟩ := hw
-  haveI : Nonempty K := hP.1
+  have : Nonempty K := hP.1
   have hne : ∀ k, Nonempty (ι k) := fun k => (hwb k).elim fun i _ => ⟨i⟩
   let n : K → ℕ := fun k => Fintype.card (ι k) - 1
   have hcard : ∀ k, Fintype.card (ι k) = n k + 1 := fun k => by
@@ -1779,7 +1779,7 @@ theorem global_model_tower_fifth_condition : Given → ∀ (E : Type) [Field E] 
   obtain ⟨-, -, -, -, hRes, -, hF, hGaga, -⟩ := hG'
   refine _root_.GlobalTheory.CompanionTheory.Ar.TopGood.tower_good_of_sandwich_split hG (_root_.GlobalTheory.CompanionTheory.Ar.Flat.A0.flat_zero_of_resolution_gaga hRes hGaga) E H D l (Xo l) c Y T o II hII.1
     (splitComps_of_origin o.toTowerOrigin) fun B a p hpS => ?_
-  haveI : Fact p.Prime := ⟨(o.Or B a).𝔐.S_prime p hpS⟩
+  have : Fact p.Prime := ⟨(o.Or B a).𝔐.S_prime p hpS⟩
   exact _root_.GlobalTheory.CompanionTheory.Ar.HT.ModelSandwich.sandwich_of_htFree hF E H D l (Xo l) c _ _ Y (o.S B) _ _ _ _ (o.Or B a).𝔐 p hpS (by omega) (o.omVB B a p hpS)
 
 end RootFieldNumerics

@@ -268,8 +268,8 @@ theorem volume_adL {m : ℕ} {H H' A B : Matrix (Fin m) (Fin m) ℂ} (hH : Hᴴ 
 theorem strict_entry {m : ℕ} (V : Submodule ℝ (EE m)) (A B : Matrix (Fin m) (Fin m) ℂ) (i j : Fin m) :
     ∃ D : V →L[ℝ] ℂ, HasStrictFDerivAt (fun x : V => (B * NormedSpace.exp (unrealify (x : EE m)) * A) i j) D 0 ∧
       ∀ v : V, D v = (B * unrealify (v : EE m) * A) i j := by
-  letI : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin m) (Fin m) ℂ) := Matrix.linftyOpNormedAlgebra
   let U : V →L[ℝ] Matrix (Fin m) (Fin m) ℂ :=
     LinearMap.toContinuousLinearMap ((rl m).symm.toLinearMap ∘ₗ V.subtype)
   have hU : ∀ v : V, U v = unrealify (v : EE m) := fun v => rl_symm (v : EE m)
@@ -288,7 +288,7 @@ theorem strict_entry {m : ℕ} (V : Submodule ℝ (EE m)) (A B : Matrix (Fin m) 
       rfl
     rw [hf]
     exact hall
-  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply, hU]
+  · simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self, hU]
     rfl
 
 theorem dens_map {m : ℕ} {H H' A B : Matrix (Fin m) (Fin m) ℂ} (hH : Hᴴ = H) (hH2 : H * H = 1)
@@ -390,9 +390,9 @@ theorem exists_sort {n : ℕ} (ε : Fin n → Bool) : ∃ (p q : ℕ) (e : Fin p
 theorem measurable_reindex {n p q : ℕ} (e : Fin p ⊕ Fin q ≃ Fin n) :
     Measurable fun g : Formalism.BasicNotions.UpqT p q =>
       (Matrix.of.symm (Matrix.reindex e e (Formalism.BasicNotions.UpqT.mat g)) : PI.MtM n) := by
-  haveI : BorelSpace (Formalism.BasicNotions.UpqT p q) := ⟨rfl⟩
+  have : BorelSpace (Formalism.BasicNotions.UpqT p q) := ⟨rfl⟩
   have hmat : Continuous (Formalism.BasicNotions.UpqT.mat : Formalism.BasicNotions.UpqT p q → _) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hc : Continuous fun g : Formalism.BasicNotions.UpqT p q =>
       (Matrix.of.symm (Matrix.reindex e e (Formalism.BasicNotions.UpqT.mat g)) : PI.MtM n) :=
     hmat.matrix_reindex e e
@@ -418,7 +418,7 @@ theorem hasDens_smul {m : ℕ} {S : Set (Matrix (Fin m) (Fin m) ℂ)} {μ : Meas
     (h : HasDens S μ c) (t : NNReal) : HasDens S (t • μ) (t * c) := by
   unfold HasDens at h ⊢
   refine (ENNReal.Tendsto.const_mul h (Or.inr ENNReal.coe_ne_top) (a := (t : ℝ≥0∞))).congr fun ρ => ?_
-  rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_div_assoc]
+  rw [smul_apply, ENNReal.smul_def, smul_eq_mul, mul_div_assoc]
 
 theorem cd_dens {n p q : ℕ} (ε : Fin n → Bool) (e : Fin p ⊕ Fin q ≃ Fin n) (hpq : p + q = n)
     (h1 : ∀ i, ε (e (Sum.inl i)) = true) (h2 : ∀ j, ε (e (Sum.inr j)) = false) (cd : Formalism.BasicNotions.CDHaar) :
@@ -439,7 +439,7 @@ theorem cd_dens {n p q : ℕ} (ε : Fin n → Bool) (e : Fin p ⊕ Fin q ≃ Fin
       (Equiv.sumEmpty (Fin (p + q)) (Fin 0)) (Equiv.sumEmpty (Fin (p + q)) (Fin 0))
       (Formalism.BasicNotions.UpqT.mat g))) Set.univ = 1 := by
     rw [Measure.map_apply (measurable_reindex _) MeasurableSet.univ, Set.preimage_univ]
-    haveI := cd.prob (p + q)
+    have := cd.prob (p + q)
     exact measure_univ
   have hc0 : c0 = ENNReal.ofReal (volUn (p + q))⁻¹ :=
     hasDens_unique hK.2 (_root_.GlobalTheory.UnitaryVolume.hasDens_unitary (p + q) _ hK.1 hprob)

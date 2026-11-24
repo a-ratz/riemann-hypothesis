@@ -116,8 +116,8 @@ theorem exists_levChart : ∀ (D : D7) (e : AE D) (PP : Pl D.host.E), Formalism.
     RingHom.liftOfRightInverse (resS D.host.F PP) (Function.surjInv hrsurj) (Function.rightInverse_surjInv hrsurj) ⟨g, hker⟩
   have hι₀ : ∀ s, ι₀ (resS D.host.F PP s) = g s := fun s =>
     RingHom.liftOfRightInverse_comp_apply _ _ _ _ s
-  haveI := PP.isMaximal
-  letI : Field (kP PP) := Ideal.Quotient.field PP.asIdeal
+  have := PP.isMaximal
+  let : Field (kP PP) := Ideal.Quotient.field PP.asIdeal
   have hbij : Function.Bijective ι₀ := by
     refine ⟨RingHom.injective ι₀, fun r => ?_⟩
     obtain ⟨o, rfl⟩ := IsLocalRing.residue_surjective r

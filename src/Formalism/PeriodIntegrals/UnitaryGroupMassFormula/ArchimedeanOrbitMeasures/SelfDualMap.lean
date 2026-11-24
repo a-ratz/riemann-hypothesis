@@ -150,7 +150,7 @@ theorem selfDual_map {D : D7} (X : HidaSetting D) (ψ : AddChar (AF X.B.I.F) ℂ
       continuous_toFun := hc g
       continuous_invFun := hc g⁻¹ }
   have hH : (μ.map e.toMeasurableEquiv).IsAddHaarMeasure := by
-    haveI := hμ.1
+    have := hμ.1
     first
     | exact (smulAE X g).isAddHaarMeasure_map μ (hc g) (hc g⁻¹)
     | exact (smulAE X g).isAddHaarMeasure_map (hc g) (hc g⁻¹)
@@ -206,13 +206,13 @@ theorem sdInvG_of (hT : SdTestI) : SdInvG := by
     hP.2.2.2.2.1
   obtain ⟨Φ, hΦc, hΦs, hΦi, z, hz⟩ := hT X u' ψ hT' μinf νinf fibInf hP
   have hν := selfDual_map X ψ μinf hμ g
-  haveI := hμ.1
-  haveI := hν.1
+  have := hμ.1
+  have := hν.1
   obtain ⟨c, hctop, hc⟩ : ∃ c : ENNReal, c ≠ ⊤ ∧ μinf.map (fun y => g • y) = c • μinf := by
     refine ⟨(Measure.addHaarScalarFactor (μinf.map fun y => g • y) μinf : ENNReal), ENNReal.coe_ne_top,
       (Measure.isAddLeftInvariant_eq_smul (μinf.map fun y => g • y) μinf).trans ?_⟩
     ext s _
-    simp [Measure.smul_apply]
+    simp [smul_apply]
   rw [hc] at hν
   rw [hc]
   have hc1 : c = 1 :=

@@ -82,19 +82,19 @@ theorem rightInv_of_lattice (N : Subgroup G) (hN : IsClosed (N : Set G)) (μ : M
     ∀ t ∈ N, μ.map (fun x => x * t) = μ := by
   obtain ⟨hHaar, -, -⟩ := haarOnSet_isHaar N hN μ hσ h0 hc hinv
   have hcl : IsClosedEmbedding ((↑) : N → G) := hN.isClosedEmbedding_subtypeVal
-  haveI : LocallyCompactSpace N := hcl.locallyCompactSpace
-  haveI : SecondCountableTopology N := inferInstanceAs (SecondCountableTopology (N : Set G))
-  haveI := hHaar
+  have : LocallyCompactSpace N := hcl.locallyCompactSpace
+  have : SecondCountableTopology N := inferInstanceAs (SecondCountableTopology (N : Set G))
+  have := hHaar
   let Γ' : Subgroup N := Γ.comap N.subtype
   let ι : Γ' → Γ := fun g => ⟨((g : N) : G), g.2⟩
   have hιinj : Function.Injective ι := by
     intro a b h
     have h1 : ((a : N) : G) = ((b : N) : G) := congrArg (fun y : Γ => (y : G)) h
     exact Subtype.ext (Subtype.ext h1)
-  have hιc : Continuous ι := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
-  haveI : Countable Γ := hΓc.to_subtype
-  haveI : Countable Γ' := hιinj.countable
-  haveI : DiscreteTopology Γ' := DiscreteTopology.of_continuous_injective hιc hιinj
+  have hιc : Continuous ι := (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
+  have : Countable Γ := hΓc.to_subtype
+  have : Countable Γ' := hιinj.countable
+  have : DiscreteTopology Γ' := DiscreteTopology.of_continuous_injective hιc hιinj
   have hK' : IsCompact (((↑) : N → G) ⁻¹' C) := hcl.isCompact_preimage hC
   have hcov' : ∀ x : N, ∃ s ∈ Γ', s * x ∈ ((↑) : N → G) ⁻¹' C := by
     intro x
@@ -105,7 +105,7 @@ theorem rightInv_of_lattice (N : Subgroup G) (hN : IsClosed (N : Set G)) (μ : M
   intro t ht
   have hR := Formalism.L2.SG.CovariantRepresentation.haar_map_mul_right_of_lattice (μ.comap ((↑) : N → G)) Γ' hK' hcov' ⟨t, ht⟩
   have hmap : (μ.comap ((↑) : N → G)).map ((↑) : N → G) = μ := map_comap_subgroup N hN μ hc
-  have hmeas : Measurable ((↑) : N → G) := measurable_subtype_coe
+  have hmeas : Measurable ((↑) : N → G) := measurable_subtypeVal
   calc μ.map (fun x => x * t) = ((μ.comap ((↑) : N → G)).map ((↑) : N → G)).map (fun x => x * t) := by rw [hmap]
     _ = (μ.comap ((↑) : N → G)).map ((fun x => x * t) ∘ ((↑) : N → G)) :=
         Measure.map_map (measurable_mul_const t) hmeas
@@ -122,7 +122,7 @@ theorem isClosed_inN {n r : ℕ} (ε : Fin n → Bool) (e : Fin r → Fin n → 
     IsClosed {M : Matrix (Fin n) (Fin n) ℂ | InN ε e z M} := by
   have hc : ∀ (x : Fin n → ℂ) (S : Submodule ℂ (Fin n → ℂ)),
       IsClosed {M : Matrix (Fin n) (Fin n) ℂ | (M - 1) *ᵥ x ∈ S} := fun x S =>
-    (Submodule.closed_of_finiteDimensional S).preimage
+    (Submodule.isClosed_of_finiteDimensional S).preimage
       ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
   have e2 : {M : Matrix (Fin n) (Fin n) ℂ | InN ε e z M} = {M | InS e z M} ∩
       ⋂ y, ⋂ (_ : ∀ a, hJ ε (e a) y = 0), {M : Matrix (Fin n) (Fin n) ℂ | (M - 1) *ᵥ y ∈ spanLt e r} := by
@@ -210,7 +210,7 @@ theorem muN_compact {K : Set X.B.I.Ginf} (hK : IsCompact K) : X.muN u K < ⊤ :=
 theorem muN_right (hNO : NOCocompact X u) :
     ∀ t ∈ X.NinfU u, (X.muN u).map (fun y => y * t) = X.muN u := by
   have hK := Formalism.L2.SG.Closed.level_subgroup_is_group X
-  haveI := NOsub_discrete X u hK
+  have := NOsub_discrete X u hK
   obtain ⟨C, hC, hcov⟩ := hNO
   have hle : NOsub X u hK ≤ NinfSub X.eR (X.zR u) := by
     intro s hs
@@ -409,7 +409,7 @@ theorem sCompact_of (hFL : FinLevi X u) (hNO : NOCocompact X u) (hND : NDenseAt 
     induction c using Quotient.inductionOn' with
     | h g => exact ⟨g, rfl⟩
   choose sr hsr using hsurj
-  haveI := Fintype.ofFinite (Formalism.L2.SG.ColsDim.Classes (iotaF X u) (Ku X u hK))
+  have := Fintype.ofFinite (Formalism.L2.SG.ColsDim.Classes (iotaF X u) (Ku X u hK))
   obtain ⟨CN, hCN, hNcov⟩ := hNO
   have hK2c : IsCompact X.K2 := (level_subgroup_compact_open X).2
   have hK2o : IsOpen X.K2 := (level_subgroup_compact_open X).1

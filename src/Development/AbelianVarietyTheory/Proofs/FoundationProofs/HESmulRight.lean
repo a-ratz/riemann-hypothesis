@@ -64,7 +64,7 @@ def sgO (D : D7) : 𝓞 D.host.E →+* 𝓞 D.host.E :=
 theorem sgO_coe (D : D7) (a : 𝓞 D.host.E) : ((sgO D a : 𝓞 D.host.E) : D.host.E) = D.host.conj a := rfl
 
 theorem conj_conj (D : D7) (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [← AdLattice.star_eq_conj, ← AdLattice.star_eq_conj]
   exact star_star x
 
@@ -73,7 +73,7 @@ theorem sgO_sgO (D : D7) (a : 𝓞 D.host.E) : sgO D (sgO D a) = a :=
 
 theorem embT_conj (D : D7) (τ : D.what₂.Tau) (x : D.host.E) :
     embT D τ (D.host.conj x) = (starRingEnd ℂ) (embT D τ x) := by
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   rw [← AdLattice.star_eq_conj]
   exact NumberField.IsCMField.complexEmbedding_complexConj D.host.E (embT D τ) x
 

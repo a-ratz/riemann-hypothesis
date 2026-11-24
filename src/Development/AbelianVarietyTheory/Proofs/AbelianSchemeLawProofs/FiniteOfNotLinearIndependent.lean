@@ -178,11 +178,11 @@ theorem growth_of_veryAmpleBy {K : Type} [Field K] {X : Scheme.{0}} [IsIntegral 
   let W : X.Opens := X.basicOpen ((s i).f k₀)
   have hWD : W ≤ nonzeroLocus (s i) := le_iSup (fun k => X.basicOpen ((s i).f k)) k₀
   have hWU : W ≤ H.U k₀ := X.basicOpen_le _
-  haveI : Nonempty W := ⟨⟨x, hk₀⟩⟩
-  haveI : Nonempty (nonzeroLocus (s i)) := ⟨⟨x, hi⟩⟩
+  have : Nonempty W := ⟨⟨x, hk₀⟩⟩
+  have : Nonempty (nonzeroLocus (s i)) := ⟨⟨x, hi⟩⟩
   obtain ⟨u, hu⟩ : IsUnit (rs X hWU ((s i).f k₀)) := X.toRingedSpace.isUnit_res_basicOpen _
-  letI : Algebra K Γ(X, nonzeroLocus (s i)) := (cst f _).toAlgebra
-  letI : Algebra K Γ(X, W) := (cst f _).toAlgebra
+  let : Algebra K Γ(X, nonzeroLocus (s i)) := (cst f _).toAlgebra
+  let : Algebra K Γ(X, W) := (cst f _).toAlgebra
   let ρ : Γ(X, nonzeroLocus (s i)) →ₐ[K] Γ(X, W) :=
     { rs X hWD with commutes' := fun c => rs_cst f hWD c }
   have hρ : Function.Injective ρ := map_injective_of_isIntegral X (homOfLE hWD)
@@ -262,8 +262,8 @@ section Modules
 
 theorem finite_of_not_linearIndependent {R V : Type} [CommRing R] (hR : IsField R) [AddCommGroup V] [Module R V]
     (n : ℕ) (h : ∀ b : Fin n → V, ¬ LinearIndependent R b) : Module.Finite R V := by
-  letI := hR.toField
-  haveI : Module.Free R V := Module.Free.of_divisionRing R V
+  let := hR.toField
+  have : Module.Free R V := Module.Free.of_divisionRing R V
   by_contra hV
   obtain ⟨b, hb⟩ := exists_linearIndependent_of_le_rank (R := R) (M := V) (n := n)
     ((Cardinal.natCast_lt_aleph0 (n := n)).le.trans (not_lt.1 fun hlt => hV (Module.rank_lt_aleph0_iff.1 hlt)))
@@ -272,15 +272,15 @@ theorem finite_of_not_linearIndependent {R V : Type} [CommRing R] (hR : IsField 
 theorem finrank_compHom {K R V : Type} [CommRing K] [CommRing R] (e : K ≃+* R) [AddCommGroup V] [Module R V] :
     letI := Module.compHom V e.toRingHom
     Module.finrank K V = Module.finrank R V := by
-  letI := Module.compHom V e.toRingHom
+  let := Module.compHom V e.toRingHom
   exact congrArg Cardinal.toNat (rank_eq_of_equiv_equiv e (AddEquiv.refl V) e.bijective fun _ _ => rfl)
 
 theorem finite_compHom {K R V : Type} [CommRing K] [CommRing R] (e : K ≃+* R) [AddCommGroup V] [Module R V]
     [Module.Finite R V] :
     letI := Module.compHom V e.toRingHom
     Module.Finite K V := by
-  letI := Module.compHom V e.toRingHom
-  haveI : RingHomSurjective (e.symm : R →+* K) := ⟨e.symm.surjective⟩
+  let := Module.compHom V e.toRingHom
+  have : RingHomSurjective (e.symm : R →+* K) := ⟨e.symm.surjective⟩
   let φ : V →ₛₗ[(e.symm : R →+* K)] V :=
     { toFun := id
       map_add' := fun _ _ => rfl
@@ -311,7 +311,7 @@ theorem finite_secM {K : Type} [Field K] (P : PolAV (Spec (CommRingCat.of K)))
         ((Category.comp_id _).trans (Category.id_comp _).symm)))
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₂).trans
         ((Category.comp_id _).trans (Category.id_comp _).symm))
-  haveI : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
+  have : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
   obtain ⟨c, hc, ha⟩ := hn fun i => PowSec.down P.L (snd T P.A).left ρ.left ρ₂ a (SecM.toSec P.A (b i))
   have h0 : ∑ i, (show Γ(T.left, ⊤) from c i) • b i = 0 := by
     refine Subtype.ext (funext fun j => ?_)
@@ -377,13 +377,13 @@ theorem secM_finite_and_growth :
   obtain ⟨N, hN, m, s, hH, hs⟩ := hProj _ P K (𝟙 _) _ π f hpb
   obtain ⟨t₀, ht₀⟩ := hGen K _ f _ m s hH hs
   have hgi := hGI _ _ P.A.hom P.isAb.smooth P.isAb.geomConnected
-  haveI : IsIntegral (T ⊗ P.A).left := GeometricallyIntegral.geometrically_isIntegral _ _ _ hpb
+  have : IsIntegral (T ⊗ P.A).left := GeometricallyIntegral.geometrically_isIntegral _ _ _ hpb
   have hsm : SmoothOfRelativeDimension P.g f :=
     (smoothOfRelativeDimension_isStableUnderBaseChange P.g).of_isPullback hpb P.smoothDim
   let e : K ≃+* Γ(T.left, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm
   let V : ℕ → Type := fun t => SecM P.A P.L ((N * t : ℕ) : ℤ) T
-  letI : ∀ t, Module K (V t) := fun t => Module.compHom (V t) e.toRingHom
-  haveI : ∀ t, Module.Finite K (V t) := fun t => finite_compHom e
+  let : ∀ t, Module K (V t) := fun t => Module.compHom (V t) e.toRingHom
+  have : ∀ t, Module.Finite K (V t) := fun t => finite_compHom e
   have hrk : ∀ t, Module.finrank K (V t) = Module.finrank Γ(T.left, ⊤) (V t) := fun t => finrank_compHom e
   obtain ⟨c, C, hc, hcC⟩ := growth_of_veryAmpleBy f s hs P.g t₀ ht₀ (fun B _ _ _ r => hGK K B _ _ r)
     (hTr K _ f P.g hsm) V (fun t v => toPw P.L π N t (SecM.toSec P.A v))

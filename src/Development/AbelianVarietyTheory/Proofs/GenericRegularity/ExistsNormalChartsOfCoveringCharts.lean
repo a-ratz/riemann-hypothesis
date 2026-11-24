@@ -169,7 +169,7 @@ theorem exists_unramified_extension :
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible T
   let m := IsLocalRing.maximalIdeal T
   have hm : m = Ideal.span {ϖ} := hϖ.maximalIdeal_eq
-  letI : Field (T ⧸ m) := Ideal.Quotient.field m
+  let : Field (T ⧸ m) := Ideal.Quotient.field m
   let g : T ⊗[K] F →ₐ[K] (T ⧸ m) ⊗[K] F :=
     Algebra.TensorProduct.map (Ideal.Quotient.mkₐ K m) (AlgHom.id K F)
   have hker : RingHom.ker g = Ideal.span {ϖ ⊗ₜ[K] (1 : F)} := by
@@ -574,7 +574,7 @@ theorem points_chart (hE : EvLaws Xo c) [IsAdicComplete (IsLocalRing.maximalIdea
       ψ r * algebraMap V _ (φ s) = algebraMap V _ (φ x) := hψ
   let T : CDVR := { V := V }
   let ioV : c.F →+* T.Fr := χ.comp io
-  letI := ioV.toAlgebra
+  let := ioV.toAlgebra
   have hψK : ∀ k : c.F, ψ (algebraMap c.F _ k) = ioV k := by
     intro k
     obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (A := O) (io k)
@@ -621,7 +621,7 @@ theorem values_of_catches {O₀ : Type} [CommRing O₀] {β : O₀ →+* c.F} (P
       (∀ g : P.R e, (g : P.Ω) ∈ P.gens → ψ g ∈ W) ∧
       ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ∀ f ∈ sec Xo c a n, ∃ r : P.R e,
         evR Xo c f P.yg = r ∧ ∀ d : ℕ, nval T.V d (evI y f) = nval T.V d (ψ r) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨e, he, ψ, z, t, hg, hz, ht⟩ := h
   have hint : Integral T io z :=
     P.int e he T io ψ (fun a => hW _ (hβ a)) (fun g hg' => hW _ (hg g hg')) z hz
@@ -726,7 +726,7 @@ theorem exists_scharts_of_covers :
               (hg j.1 j.2) hE hfin hov V φ hφ
             cover := ?_ }, ?_, ?_⟩
   · rintro _ ⟨⟨_, T, io, d, ho, y, -, η, -, rfl⟩, rfl⟩
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have hβT : ∀ a, io ((la.valuation c.F).valuationSubring.subtype a) ∈ imageVal T.V T.Fr :=
       fun a => (mem_imageVal _).2 (mem_range_of_overLa ho a)
     obtain ⟨j, hj⟩ := hP T.Fr (imageVal T.V T.Fr) hβT y.1
@@ -739,7 +739,7 @@ theorem exists_scharts_of_covers :
       (fun k => (hψK k).trans (RingHom.congr_fun hχio k).symm)
       (fun a => (mem_imageVal _).2 ⟨g a, (hχg' a).symm⟩) hψg
     obtain ⟨φ', hφ'⟩ := exists_corestrict (V := T.V) φ fun x => (mem_imageVal _).1 (hφW x)
-    letI : Algebra T₀.V T.V := g.toAlgebra
+    let : Algebra T₀.V T.V := g.toAlgebra
     have hc : ∀ a, φ' (algebraMap T₀.V (A j j') a) = g a := fun a =>
       IsFractionRing.injective T.V T.Fr (by rw [hφ', hφO, hχg'])
     obtain ⟨hx, hch⟩ := chV_point (P j) io₀ (α j j') hβ (hK j j') (hg j j') φ' e he ψ
@@ -773,7 +773,7 @@ theorem exists_scharts_of_covers :
     obtain ⟨W, hWle, hWO, hWm⟩ := GlobalTheory.exists_valuationSubring_le_dominating_of_fractionField T₀.V
       T₀.Fr (FractionRing V) ι (imageVal V (FractionRing V))
       (fun x => (mem_imageVal _).2 ⟨χ x, rfl⟩)
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have hβT : ∀ a, io ((la.valuation c.F).valuationSubring.subtype a) ∈ W.comap i' := fun a => by
       obtain ⟨x, hx⟩ := hβ a
       rw [ValuationSubring.mem_comap, hι, ← hx]
@@ -787,7 +787,7 @@ theorem exists_scharts_of_covers :
     obtain ⟨j', φ, hφW, hφO, hφψ⟩ := hcov j e he (FractionRing V) W ι (i'.comp ψ)
       (fun k => by rw [RingHom.comp_apply, hψK, hι]) hWO hψg
     obtain ⟨φ', hφ'⟩ := exists_corestrict (V := V) φ fun x => (mem_imageVal _).1 (hWle (hφW x))
-    letI : Algebra T₀.V V := (χ.comp (algebraMap T₀.V T₀.Fr)).toAlgebra
+    let : Algebra T₀.V V := (χ.comp (algebraMap T₀.V T₀.Fr)).toAlgebra
     have hc : ∀ a, φ' (algebraMap T₀.V (A j j') a) = χ (algebraMap T₀.V T₀.Fr a) := fun a =>
       IsFractionRing.injective V (FractionRing V) (by rw [hφ', hφO]; rfl)
     obtain ⟨hx, hch⟩ := chV_point (P j) io₀ (α j j') hβ (hK j j') (hg j j') φ' e he (i'.comp ψ)

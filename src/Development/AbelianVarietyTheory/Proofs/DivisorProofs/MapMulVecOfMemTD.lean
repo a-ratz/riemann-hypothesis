@@ -76,7 +76,7 @@ private lemma nnreal_eq_of_smul_addHaar_eq {X : Type} [AddCommGroup X] [Topologi
   have h1 : μ K ≠ 0 := (μ.measure_pos_of_mem_nhds hK0).ne'
   have h2 : μ K ≠ ∞ := hK.measure_lt_top.ne
   have h3 : (a • μ) K = (b • μ) K := by rw [h]
-  simp only [Measure.smul_apply, Measure.nnreal_smul_coe_apply] at h3
+  simp only [smul_apply, Measure.nnreal_smul_coe_apply] at h3
   exact_mod_cast (ENNReal.mul_left_inj h1 h2).1 h3
 
 private lemma map_mul_lemma_2 {R : Type} [CommRing R] [TopologicalSpace R] [IsTopologicalRing R]
@@ -107,7 +107,7 @@ private lemma exists_map_mulVec_eq_smul_of_invertible {R : Type} [CommRing R] [T
   have key : ∀ μ : Measure (κ → R), μ.IsAddHaarMeasure → (μ.map (fun x => P *ᵥ x)).IsAddHaarMeasure :=
     fun μ _ => e.isAddHaarMeasure_map μ he he'
   let μ₀ : Measure (κ → R) := Measure.addHaar
-  haveI := key μ₀ inferInstance
+  have := key μ₀ inferInstance
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, μ₀.map (fun x => P *ᵥ x) = c • μ₀ :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   refine ⟨c, fun μ hμ => ?_⟩
@@ -177,8 +177,8 @@ private lemma map_diagonal_mulVec_eq_inv_prod_smul {R : Type} [CommRing R] [Topo
     [inst : MeasurableSpace (κ → R)] [hb : BorelSpace (κ → R)] (d : κ → Rˣ)
     (μ : Measure (κ → R)) [μ.IsAddHaarMeasure] :
     μ.map (fun x => diagonal (fun i => (d i : R)) *ᵥ x) = (∏ i, distribHaarChar R (d i))⁻¹ • μ := by
-  letI : MeasurableSpace R := borel R
-  haveI : BorelSpace R := ⟨rfl⟩
+  let : MeasurableSpace R := borel R
+  have : BorelSpace R := ⟨rfl⟩
   have e : inst = MeasurableSpace.pi :=
     (@BorelSpace.measurable_eq (κ → R) _ inst hb).trans
       (@BorelSpace.measurable_eq (κ → R) _ MeasurableSpace.pi Pi.borelSpace).symm
@@ -198,14 +198,14 @@ private lemma map_diagonal_mulVec_eq_inv_prod_smul {R : Type} [CommRing R] [Topo
     have hf : (fun x : κ → R => diagonal (fun i => (d i : R)) *ᵥ x) = fun x i => (d i : R) * x i := by
       funext x i
       exact mulVec_diagonal _ _ _
-    haveI : ∀ i, SigmaFinite ((Measure.addHaar : Measure R).map (fun y => (d i : R) * y)) := fun i => by
+    have : ∀ i, SigmaFinite ((Measure.addHaar : Measure R).map (fun y => (d i : R) * y)) := fun i => by
       rw [h1]; infer_instance
     rw [hf, hν0, Measure.pi_map_pi (f := fun i y => (d i : R) * y)
       (fun i => (continuous_const_mul (d i : R)).measurable.aemeasurable)]
     simp_rw [h1]
     refine Measure.pi_eq (fun s hs => ?_)
-    rw [Measure.smul_apply, Measure.nnreal_smul_coe_apply, Measure.pi_pi]
-    simp only [Measure.smul_apply, Measure.nnreal_smul_coe_apply, ← Finset.prod_inv_distrib,
+    rw [smul_apply, Measure.nnreal_smul_coe_apply, Measure.pi_pi]
+    simp only [smul_apply, Measure.nnreal_smul_coe_apply, ← Finset.prod_inv_distrib,
       Finset.prod_mul_distrib]
     norm_cast
   obtain ⟨k, hk⟩ : ∃ k : ℝ≥0, μ = k • ν := ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
@@ -219,7 +219,7 @@ private lemma exists_unit_det_map_mulVec_haar_eq_inv_smul {R : Type} [CommRing R
       μ.map (fun x => M *ᵥ x) = (distribHaarChar R v)⁻¹ • μ := by
   induction hM using Submonoid.closure_induction with
   | mem M hM =>
-    simp only [Set.mem_union, Set.mem_setOf_eq] at hM
+    simp only [Set.mem_union, Set.mem_ofPred_eq] at hM
     rcases hM with ⟨i, j, c, hij, rfl⟩ | ⟨d, rfl⟩
     · refine ⟨1, by rw [det_transvection_of_ne (h := hij), Units.val_one], fun μ hμ => ?_⟩
       rw [map_one, inv_one, one_smul]
@@ -241,8 +241,8 @@ theorem map_mulVec_of_mem_TD : ∀ (R : Type) [CommRing R] [TopologicalSpace R] 
     @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
     @Measure.map _ _ (borel _) (borel _) (fun x : κ → R => M *ᵥ x) μ = ((distribHaarChar R u)⁻¹ : ℝ≥0) • μ := by
   intro R _ _ _ _ _ _ κ _ _ M hM u hu μ hμ
-  letI : MeasurableSpace (κ → R) := borel (κ → R)
-  haveI : BorelSpace (κ → R) := ⟨rfl⟩
+  let : MeasurableSpace (κ → R) := borel (κ → R)
+  have : BorelSpace (κ → R) := ⟨rfl⟩
   obtain ⟨v, hv, hvμ⟩ := exists_unit_det_map_mulVec_haar_eq_inv_smul M hM
   have huv : u = v := Units.ext (hu.trans hv.symm)
   subst huv

@@ -65,12 +65,12 @@ theorem modulus_matrix : ∀ (F : Type) [Field F] [NumberField F] (ι : Type) [F
   obtain ⟨cinf, c, hU, hinf, hv⟩ := _root_.GlobalTheory.CompanionTheory.SW.ProdFormula.unitProd_scalar F A.det hA
   refine ⟨cinf, c, hU, ?_, ?_⟩
   · intro μ hμ
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     exact _root_.GlobalTheory.CompanionTheory.SW.DetScale.map_mulVec_eq_smul F (Ainf F) ι A hA Measure.addHaar inferInstance cinf
       (hinf Measure.addHaar inferInstance) μ hμ
   · intro v μ hμ
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-    haveI : SecondCountableTopology (Fv F v) := (GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v).2.2.1
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : SecondCountableTopology (Fv F v) := (GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v).2.2.1
     exact _root_.GlobalTheory.CompanionTheory.SW.DetScale.map_mulVec_eq_smul F (Fv F v) ι A hA Measure.addHaar inferInstance (c v)
       (hv v Measure.addHaar inferInstance) μ hμ
 

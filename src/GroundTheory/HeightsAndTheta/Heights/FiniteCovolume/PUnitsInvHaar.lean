@@ -93,7 +93,7 @@ theorem measurable_to_units {α : Type*} [MeasurableSpace α] {f : α → ℂˣ}
   exact hf ht
 
 theorem measurable_invSqWeight : Measurable (invSqWeight : (I → ℂ) → ℝ≥0∞) :=
-  Finset.measurable_prod _ fun i _ => ((measurable_pi_apply i).enorm.inv).pow_const 2
+  Finset.measurable_prod _ fun i _ => ((measurable_pi_apply i).eNorm.inv).pow_const 2
 
 omit [Fintype I] in
 theorem measurable_invUnits : Measurable (invUnits : (I → ℂ) → I → ℂˣ) := by
@@ -119,8 +119,8 @@ theorem map_scaleMap (t : I → ℂˣ) : (weightedVolume I).map (scaleMap t) = w
     Finset.prod_pos fun i _ => Complex.normSq_pos.2 (t i).ne_zero
   have hD : LinearMap.det (scaleMap t) ≠ 0 := by rw [det_scaleMap]; exact hDpos.ne'
   set κ : ℝ≥0∞ := ∏ i, ‖(t i : ℂ)‖ₑ ^ 2 with hκdef
-  have hκ0 : κ ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (enorm_ne_zero.2 (t i).ne_zero)
-  have hκtop : κ ≠ ⊤ := ENNReal.prod_ne_top fun i _ => ENNReal.pow_ne_top enorm_ne_top
+  have hκ0 : κ ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (eNorm_ne_zero.2 (t i).ne_zero)
+  have hκtop : κ ≠ ⊤ := ENNReal.prod_ne_top fun i _ => ENNReal.pow_ne_top eNorm_ne_top
   have hκD : ENNReal.ofReal (∏ i, Complex.normSq (t i : ℂ)) = κ := by
     rw [ENNReal.ofReal_prod_of_nonneg fun i _ => Complex.normSq_nonneg _]
     refine Finset.prod_congr rfl fun i _ => ?_
@@ -132,9 +132,9 @@ theorem map_scaleMap (t : I → ℂˣ) : (weightedVolume I).map (scaleMap t) = w
     intro b
     rw [invSqWeight, invSqWeight, hκdef, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun i _ => ?_
-    have h0 : ‖(t i : ℂ)‖ₑ ≠ 0 := enorm_ne_zero.2 (t i).ne_zero
-    rw [scaleMap_apply, enorm_mul, ENNReal.mul_inv (Or.inl h0) (Or.inl enorm_ne_top), mul_pow,
-      ← mul_assoc, ← mul_pow, ENNReal.mul_inv_cancel h0 enorm_ne_top, one_pow, one_mul]
+    have h0 : ‖(t i : ℂ)‖ₑ ≠ 0 := eNorm_ne_zero.2 (t i).ne_zero
+    rw [scaleMap_apply, eNorm_mul, ENNReal.mul_inv (Or.inl h0) (Or.inl eNorm_ne_top), mul_pow,
+      ← mul_assoc, ← mul_pow, ENNReal.mul_inv_cancel h0 eNorm_ne_top, one_pow, one_mul]
   ext s hs
   rw [map_apply hL hs, weightedVolume, withDensity_apply _ (hL hs), withDensity_apply _ hs,
     ← lintegral_indicator (hL hs), ← lintegral_indicator hs]
@@ -221,7 +221,7 @@ theorem invHaar_ne_zero : invHaar I ≠ 0 := by
     withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ,
     lintegral_eq_zero_iff measurable_invSqWeight] at h1
   have hpos : ∀ b : I → ℂ, invSqWeight b ≠ 0 := fun b =>
-    Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (ENNReal.inv_ne_zero.2 enorm_ne_top)
+    Finset.prod_ne_zero_iff.2 fun i _ => pow_ne_zero _ (ENNReal.inv_ne_zero.2 eNorm_ne_top)
   have hF : ∀ᵐ b ∂(volume : Measure (I → ℂ)), False := h1.mono fun b hb => hpos b hb
   exact NeZero.ne (volume : Measure (I → ℂ)) (ae_eq_bot.1 (Filter.eventually_false_iff_eq_bot.1 hF))
 
@@ -238,7 +238,7 @@ theorem proof (I : Type*) [Fintype I] : UnitsInvHaar.Statement I := by
     rw [hlam, smul_smul, inv_mul_cancel₀ hc', one_smul]
   have hF : Measurable fun a : I → ℂˣ => (∏ i, ‖(a i : ℂ)‖ₑ⁻¹ ^ (2 * (k + 1))) * g a :=
     (Finset.measurable_prod _ fun i _ =>
-      ((measurable_units_val.comp (measurable_pi_apply i)).enorm.inv).pow_const _).mul hg
+      ((measurable_units_val.comp (measurable_pi_apply i)).eNorm.inv).pow_const _).mul hg
   rw [hρ, lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul]
   congr 1
   rw [invHaar, lintegral_map hF measurable_invUnits, weightedVolume,
@@ -254,10 +254,10 @@ theorem proof (I : Type*) [Fintype I] : UnitsInvHaar.Statement I := by
   congr 1
   rw [invSqWeight, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
-  have h0 : ‖b i‖ₑ ≠ 0 := enorm_ne_zero.2 (hb i)
-  rw [Units.val_inv_eq_inv_val, Units.val_mk0, enorm_inv (hb i), inv_inv,
+  have h0 : ‖b i‖ₑ ≠ 0 := eNorm_ne_zero.2 (hb i)
+  rw [Units.val_inv_eq_inv_val, Units.val_mk0, eNorm_inv (hb i), inv_inv,
     show 2 * (k + 1) = 2 + 2 * k by ring, pow_add, ← mul_assoc, ← mul_pow,
-    ENNReal.inv_mul_cancel h0 enorm_ne_top, one_pow, one_mul]
+    ENNReal.inv_mul_cancel h0 eNorm_ne_top, one_pow, one_mul]
 
 end UnitsInvHaar
 

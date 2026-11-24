@@ -68,7 +68,7 @@ variable (K : Type) [Field K] [NumberField K]
 lemma card_fib (k : ℕ) :
     Nat.card {I : Ideal (𝓞 K) // Ideal.absNorm I = k} =
       (Ideal.finite_setOfPred_absNorm_eq (S := 𝓞 K) k).toFinset.card := by
-  rw [← Set.ncard_eq_toFinset_card _ (Ideal.finite_setOfPred_absNorm_eq (S := 𝓞 K) k),
+  rw [← Set.ncard_eq_toFinset_card _ (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) k),
     ← Nat.card_coe_set_eq]
   rfl
 
@@ -76,7 +76,7 @@ lemma sum_le_count (n : ℕ) :
     ∑ k ∈ Finset.Icc 1 n, (Nat.card {I : Ideal (𝓞 K) // Ideal.absNorm I = k} : ℝ) ≤
       (Nat.card {I : Ideal (𝓞 K) // (Ideal.absNorm I : ℝ) ≤ n} : ℝ) := by
   classical
-  have hle := Ideal.finite_setOfPred_absNorm_le (S := 𝓞 K) n
+  have hle := Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K) n
   set T := hle.toFinset with hTdef
   have hT : Nat.card {I : Ideal (𝓞 K) // (Ideal.absNorm I : ℝ) ≤ n} = T.card := by
     have hs : {I : Ideal (𝓞 K) | (Ideal.absNorm I : ℝ) ≤ n} = {I | Ideal.absNorm I ≤ n} := by

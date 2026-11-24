@@ -274,7 +274,7 @@ private theorem snd_lift_sub_one_apply_eq_zero {S E₁ E₂ n : Type} [CommRing 
 
 theorem char_trivial_first : ∀ (k : Type) [Field k] [CharZero k] (R S E₁ E₂ : Type) [CommRing R] [CommRing S] [Algebra R S] [CommRing E₁] [IsArtinianRing E₁] [Algebra k E₁] [CommRing E₂] (c : S →ₐ[R] S) (c₁ : E₁ →ₐ[k] E₁) (c₂ : E₂ →+* E₂) (ξ₁ : E₁) (s : S ≃+* E₁ × E₂), IsUnit ξ₁ → c₁ ξ₁ = -ξ₁ → (∀ x, c₁ (c₁ x) = x) → (∀ x, (s (c x)).1 = c₁ (s x).1) → (∀ x, (s (c x)).2 = c₂ (s x).2) → ∀ (β : Type) [Fintype β] [DecidableEq β] (J : Matrix β β S), IsUnit J.det → ∀ lam : GlobalTheory.WeilM.UG c (GlobalTheory.WeilM.dbl J) →* ℂˣ, (∀ (p : GlobalTheory.WeilM.UG c (GlobalTheory.WeilM.dbl J)) (t : GL β S), (∀ i j, (s ((((p : GL (β ⊕ β) S) : Matrix (β ⊕ β) (β ⊕ β) S) - 1) i j)).2 = 0) → (∀ i j, (s (((t : Matrix β β S) - 1) i j)).2 = 0) → ((p : GL (β ⊕ β) S) : Matrix (β ⊕ β) (β ⊕ β) S) * GlobalTheory.WeilM.diagCols β = GlobalTheory.WeilM.diagCols β * (t : Matrix β β S) → lam p = 1) → ∀ g : GlobalTheory.WeilM.UG c (GlobalTheory.WeilM.dbl J), (∀ i j, (s ((((g : GL (β ⊕ β) S) : Matrix (β ⊕ β) (β ⊕ β) S) - 1) i j)).2 = 0) → lam g = 1 := by
   intro k _ _ R S E₁ E₂ _ _ _ _ _ _ _ c c₁ c₂ ξ₁ s hξ hcξ hinv hc1 hc2 β _ _ J hdet lam hlam g hg
-  haveI : Invertible (2 : k) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : k) := invertibleOfNonzero two_ne_zero
   have hdet₁ : IsUnit (J.map (pr₁ s)).det := by
     rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
     exact hdet.map (pr₁ s)
@@ -415,7 +415,7 @@ def toRS (S : Finset (HeightOneSpectrum (𝓞 F))) : AF F →ₐ[F] RS F S :=
 theorem toRS_eps (S : Finset (HeightOneSpectrum (𝓞 F))) : toRS S (eps S) = 1 := by
   refine Prod.ext rfl (funext fun v => ?_)
   change evalV F v.1 (ind S) = 1
-  rw [ev_ind, if_pos v.2]
+  rw [ev_ind, ite_eq_left v.2]
 
 theorem eps_mul_of (S : Finset (HeightOneSpectrum (𝓞 F))) {a : AF F} (h : toRS S a = 0) : eps S * a = 0 := by
   have h1 : a.1 = 0 := congrArg Prod.fst h
@@ -441,7 +441,7 @@ theorem toRS_surj (S : Finset (HeightOneSpectrum (𝓞 F))) : Function.Surjectiv
     rw [dite_eq_right hvS']
     exact zero_mem (v.adicCompletionIntegers F)⟩
   refine ⟨pairA F r.1 y, Prod.ext rfl (funext fun v => ?_)⟩
-  exact dif_pos v.2
+  exact dite_eq_left v.2
 
 def splitS (S : Finset (HeightOneSpectrum (𝓞 F))) : AF F ≃ₐ[F] RS F S × (AF F ⧸ Ideal.span {eps S}) :=
   AlgEquiv.ofBijective ((toRS S).prod (Ideal.Quotient.mkₐ F _)) ⟨by

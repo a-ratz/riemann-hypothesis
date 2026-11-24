@@ -61,7 +61,7 @@ theorem ipow_zero (𝔡 : Ideal (𝓞 K)) : ipow 𝔡 0 = 1 := by
 theorem ipow_mul (h : 𝔡 ≠ ⊥) (m n : ℤ) : ipow 𝔡 m * ipow 𝔡 n = ipow 𝔡 (m + n) := by
   have h0 : (𝔡 : FractionalIdeal (𝓞 K)⁰ K) ≠ 0 := FractionalIdeal.coeIdeal_ne_zero.2 h
   unfold ipow
-  rw [zpow_add₀ h0, FractionalIdeal.coe_mul]
+  rw [zpow_add₀ h0, FractionalIdeal.coeToSubmodule_mul]
 
 theorem mul_mem (h : 𝔡 ≠ ⊥) {m n k : ℤ} (hk : m + n = k) {x y : K} (hx : x ∈ ipow 𝔡 m) (hy : y ∈ ipow 𝔡 n) :
     x * y ∈ ipow 𝔡 k := by
@@ -119,7 +119,7 @@ theorem star_mem_nat (h : 𝔡 ≠ ⊥) (hs : ∀ x ∈ 𝔡, ∃ y ∈ 𝔡, (y
     refine Submodule.mul_induction_on hx (fun a ha b hb => ?_) (fun a b ha hb => ?_)
     · rw [star_mul']
       refine Submodule.mul_mem_mul (ih ha) ?_
-      simp only [ipow, zpow_one, FractionalIdeal.mem_coe, FractionalIdeal.mem_coeIdeal] at hb ⊢
+      simp only [ipow, zpow_one, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_coeIdeal] at hb ⊢
       obtain ⟨y, hy, rfl⟩ := hb
       exact hs y hy
     · rw [star_add]; exact add_mem ha hb

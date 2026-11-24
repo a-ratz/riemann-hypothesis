@@ -126,7 +126,7 @@ theorem isCompact_kSet : IsCompact (kSet n) := by
 def kOf (M : kSet n) : KR n := ⟨mkG M.1 M.2.1, M.2⟩
 
 theorem continuous_kOf : Continuous (kOf (n := n)) :=
-  Continuous.subtype_mk (continuous_mkG continuous_subtype_val (fun M => M.2.1)) _
+  Continuous.subtype_mk (continuous_mkG continuous_subtypeVal (fun M => M.2.1)) _
 
 theorem surj_kOf : Function.Surjective (kOf (n := n)) := by
   intro k

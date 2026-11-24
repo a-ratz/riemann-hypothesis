@@ -207,18 +207,18 @@ theorem exists_coprime_basis : ∀ (F : Type) [Field F] [NumberField F] (M : Typ
   classical
   let S : Submonoid (𝓞 F) := GlobalTheory.Mass.primeTo (N : 𝓞 F)
   have hSle : S ≤ nonZeroDivisors (𝓞 F) := GlobalTheory.Mass.SemiBasis.primeTo_le hN
-  haveI : Module.IsTorsionFree (𝓞 F) M := isTorsionFree_of_addTorsionFree M
-  haveI : Module.Finite (𝓞 F) M := Module.Finite.of_restrictScalars_finite ℤ (𝓞 F) M
-  haveI : IsDomain (Localization S) := IsLocalization.isDomain_localization hSle
-  haveI : IsPrincipalIdealRing (Localization S) := by
-    haveI := GlobalTheory.Mass.SemiBasis.isPID (K := F) hN
+  have : Module.IsTorsionFree (𝓞 F) M := isTorsionFree_of_addTorsionFree M
+  have : Module.Finite (𝓞 F) M := Module.Finite.of_restrictScalars_finite ℤ (𝓞 F) M
+  have : IsDomain (Localization S) := IsLocalization.isDomain_localization hSle
+  have : IsPrincipalIdealRing (Localization S) := by
+    have := GlobalTheory.Mass.SemiBasis.isPID (K := F) hN
     have hA : GlobalTheory.Mass.SemiBasis.A F hN =
         Localization.subalgebra.ofField F (GlobalTheory.Mass.primeTo (N : 𝓞 F))
           (GlobalTheory.Mass.SemiBasis.primeTo_le hN) := by
       apply Subalgebra.ext
       intro x
       rfl
-    haveI : IsLocalization S (GlobalTheory.Mass.SemiBasis.A F hN) := by
+    have : IsLocalization S (GlobalTheory.Mass.SemiBasis.A F hN) := by
       rw [hA]
       exact Localization.subalgebra.isLocalization_ofField (A := 𝓞 F) (K := F)
         (S := GlobalTheory.Mass.primeTo (N : 𝓞 F))
@@ -226,7 +226,7 @@ theorem exists_coprime_basis : ∀ (F : Type) [Field F] [NumberField F] (M : Typ
     exact IsPrincipalIdealRing.of_surjective
       (IsLocalization.algEquiv S (GlobalTheory.Mass.SemiBasis.A F hN) (Localization S)).toRingHom
       (IsLocalization.algEquiv S (GlobalTheory.Mass.SemiBasis.A F hN) (Localization S)).surjective
-  haveI : Module.Finite (Localization S) (LocalizedModule S M) :=
+  have : Module.Finite (Localization S) (LocalizedModule S M) :=
     Module.Finite.of_isLocalizedModule S (LocalizedModule.mkLinearMap S M)
   obtain ⟨r, b⟩ := Module.basisOfFiniteTypeTorsionFree' (R := Localization S) (M := LocalizedModule S M)
   have hb : ∀ i, ∃ (m : M) (s : S), b i = LocalizedModule.mk m s := fun i => by
@@ -334,9 +334,9 @@ theorem selfDual_isFullLattice {D : D7} : ∀ (V : HSp D) (Λ : Submodule (𝓞 
 theorem exists_basis_in_lattice {n : ℕ} (Λ : Submodule (𝓞 K) (Fin n → K)) [hΛ : Λ.IsFullLattice K] (N : ℕ) (hN : 2 ≤ N) :
     ∃ b : Module.Basis (Fin n) K (Fin n → K), (∀ i, b i ∈ Λ) ∧ ∃ c : 𝓞 K, IsCoprime c (N : 𝓞 K) ∧
       ∀ w ∈ Λ, (c : K) • w ∈ Submodule.span (𝓞 K) (Set.range b) := by
-  haveI : Module.Finite (𝓞 K) Λ := Module.Finite.iff_fg.2 hΛ.fg
-  haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 K) Λ
-  haveI : HasUniqueDiv Λ := ⟨fun k hk a b h => Subtype.ext
+  have : Module.Finite (𝓞 K) Λ := Module.Finite.iff_fg.2 hΛ.fg
+  have : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 K) Λ
+  have : HasUniqueDiv Λ := ⟨fun k hk a b h => Subtype.ext
     (nsmul_right_injective hk (by simpa using congrArg Subtype.val h))⟩
   obtain ⟨r, x, hli, c, hc0, hcop, hspan⟩ := GlobalTheory.CoprimeBasis.exists_coprime_basis K Λ N hN
   set x' : Fin r → (Fin n → K) := fun i => (x i : Fin n → K) with hx'
@@ -396,7 +396,7 @@ theorem exists_onto_mod {n n' : ℕ} (hnn : n ≤ n') (Λ : Submodule (𝓞 K) (
   have hφψ : φ ∘ₗ ψ = LinearMap.id := by
     refine b.ext fun i => ?_
     show φ (ψ (b i)) = b i
-    simp only [φ, ψ, Module.Basis.constr_basis, Fin.coe_castLE]
+    simp only [φ, ψ, Module.Basis.constr_basis, Fin.val_castLE]
     rw [dite_eq_left i.isLt]
   have hφ : Submodule.span (𝓞 K) (Set.range b') ≤ Λ.comap (φ.restrictScalars (𝓞 K)) := by
     rw [Submodule.span_le]
@@ -443,8 +443,8 @@ theorem ontoModEx : OntoModEx := by
   intro D _ T L μ0 _ sc G W M _ i hi
   have h0 := G.sp.P_is i hi.le
   have h1 := G.sp.P_is (i + 1) hi
-  haveI : (G.Λ (.core i)).IsFullLattice D.host.E := selfDual_isFullLattice _ _ h0.sd
-  haveI : (G.Λ (.core (i + 1))).IsFullLattice D.host.E := selfDual_isFullLattice _ _ h1.sd
+  have : (G.Λ (.core i)).IsFullLattice D.host.E := selfDual_isFullLattice _ _ h0.sd
+  have : (G.Λ (.core (i + 1))).IsFullLattice D.host.E := selfDual_isFullLattice _ _ h1.sd
   have e0 : (G.V (.core i)).rank = rankP D i := h0.rank
   have e1 : (G.V (.core (i + 1))).rank = rankP D (i + 1) := h1.rank
   have hle : (G.V (.core i)).rank ≤ (G.V (.core (i + 1))).rank := by

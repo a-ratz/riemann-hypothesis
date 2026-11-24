@@ -129,7 +129,7 @@ theorem exists_isLatBasis_of_discrete {g : ℕ} (H : AddSubgroup (Fin g → ℂ)
     ∃ β : Fin (2 * g) → Fin g → ℂ, IsLatBasis (H : Set (Fin g → ℂ)) β := by
   set L : Submodule ℤ (Fin g → ℂ) := H.toIntSubmodule with hL
   have hLset : (L : Set (Fin g → ℂ)) = H := rfl
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     refine discreteTopology_of_isOpen_singleton_zero ?_
     obtain ⟨U, hU, hUo, h0U⟩ := eventually_nhds_iff.1 hd
     refine ⟨U, hUo, ?_⟩
@@ -140,7 +140,7 @@ theorem exists_isLatBasis_of_discrete {g : ℕ} (H : AddSubgroup (Fin g → ℂ)
       exact Subtype.ext (hU x.1 hx x.2)
     · rintro rfl
       exact h0U
-  haveI : IsZLattice ℝ L := ⟨by rw [hLset]; exact hs⟩
+  have : IsZLattice ℝ L := ⟨by rw [hLset]; exact hs⟩
   have hr : Module.finrank ℤ L = 2 * g := by
     rw [ZLattice.rank ℝ L, Module.finrank_pi_fintype]
     simp [Complex.finrank_real_complex, mul_comm]

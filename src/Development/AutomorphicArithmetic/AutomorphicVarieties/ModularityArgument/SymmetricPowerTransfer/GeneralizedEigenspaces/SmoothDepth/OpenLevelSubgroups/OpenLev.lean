@@ -60,7 +60,7 @@ theorem UpperTheory.V.Z.Sym.Al.openLev :
   let b := Module.finBasis ℂ V
   have e : {x : finU (E := L) (n := n) | (x : UA L n) ∈ U} = ⋂ i, {k : finU (E := L) (n := n) | RU L n k (b.coord i ∘ φ) = b.coord i ∘ φ} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     refine ⟨fun h i => funext fun g => congrArg (b.coord i) (h g), fun h g => b.ext_elem fun i => congrFun (h i) g⟩
   rw [e]
   exact isOpen_iInter_of_finite fun i => (hπ.aut _ (hc _)).level

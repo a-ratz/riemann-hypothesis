@@ -70,7 +70,7 @@ theorem hom_ext_of_flat_family {Y X : Scheme.{0}} (f g : Y ⟶ X)
   have : Epi (Limits.Sigma.desc p) := Flat.epi_of_flat_of_surjective _
   rw [← cancel_epi (Limits.Sigma.desc p)]
   refine Limits.Sigma.hom_ext _ _ fun y => ?_
-  rw [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_desc_assoc, he]
+  rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc_assoc, he]
 
 theorem eq_of_isIso_pullback {S S' : Scheme.{0}} (f : S' ⟶ S) [IsPreimmersion f] {Y X : Over S} (ψ : Y ⟶ X)
     [IsIso ((Over.pullback f).map ψ)] {x y : Y.left} (hx : Y.hom x ∈ Set.range f) (h : ψ.left x = ψ.left y) :

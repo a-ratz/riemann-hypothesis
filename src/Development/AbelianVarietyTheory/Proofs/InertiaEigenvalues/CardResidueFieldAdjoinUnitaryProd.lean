@@ -68,11 +68,11 @@ theorem odd_of_involution {k₀ k : Type} [Field k₀] [Field k] [Fintype k₀] 
     intro m h
     rw [← map_pow, pow_mul, ← h0, FiniteField.pow_card_pow, hxy] at h
     exact hne (ι.injective h).symm
-  letI := Fintype.ofFinite k
+  let := Fintype.ofFinite k
   obtain ⟨p, hchar⟩ := CharP.exists k
-  haveI := hchar
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime k p⟩
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
+  have := hchar
+  have : Fact p.Prime := ⟨CharP.char_is_prime k p⟩
+  let : Algebra (ZMod p) k := ZMod.algebra k p
   let τA : k ≃ₐ[ZMod p] k := AlgEquiv.ofRingEquiv (f := τ) (fun r => by
     have := RingHom.ext_zmod ((τ : k →+* k).comp (algebraMap (ZMod p) k)) (algebraMap (ZMod p) k)
     exact DFunLike.congr_fun this r)
@@ -137,13 +137,13 @@ theorem card_residueField (B : InvAlg K) (hu : B.g * B.σ B.g = 1) (hi : IsInteg
       Nat.card (@IsLocalRing.ResidueField (Algebra.adjoin K.O ({B.g} : Set B.A)) _ hl) = K.q ^ (2 * d) := by
   set_option synthInstance.maxHeartbeats 200000 in
   classical
-  haveI := hl
-  haveI : Module.Finite K.O (Algebra.adjoin K.O ({B.g} : Set B.A)) :=
+  have := hl
+  have : Module.Finite K.O (Algebra.adjoin K.O ({B.g} : Set B.A)) :=
     Module.Finite.iff_fg.mpr hi.fg_adjoin_singleton
-  letI : Fintype (ResidueField K.O) := Fintype.ofFinite _
-  haveI : Finite (ResidueField (Algebra.adjoin K.O ({B.g} : Set B.A))) :=
+  let : Fintype (ResidueField K.O) := Fintype.ofFinite _
+  have : Finite (ResidueField (Algebra.adjoin K.O ({B.g} : Set B.A))) :=
     Module.finite_of_finite (ResidueField K.O)
-  letI : Fintype (ResidueField (Algebra.adjoin K.O ({B.g} : Set B.A))) := Fintype.ofFinite _
+  let : Fintype (ResidueField (Algebra.adjoin K.O ({B.g} : Set B.A))) := Fintype.ofFinite _
   set τ := ResidueField.mapEquiv (sigmaAdj B hu hi)
   have hτ : ∀ z, τ (τ z) = z := by
     intro z

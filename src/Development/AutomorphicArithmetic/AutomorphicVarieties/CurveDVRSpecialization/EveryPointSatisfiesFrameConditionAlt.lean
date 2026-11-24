@@ -51,7 +51,7 @@ private theorem chi_map_ofRep {n : ℕ} {A K G : Type} [CommRing A] [CommRing K]
   rw [← Matrix.charpoly_map]
   simp only [GDet.chi, GDet.map, GDet.ofRep]
   rw [Matrix.charpoly]
-  simp only [MonoidHom.comp_apply, MonoidHom.coe_coe, Matrix.coe_detMonoidHom]
+  simp only [MonoidHom.comp_apply, MonoidHom.coe_ofClass, Matrix.coe_detMonoidHom]
   congr 1
   simp only [MonoidAlgebra.mapRingHom_single, map_one, GDet.repAlg, AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
     map_sub, MonoidAlgebra.lift_single]
@@ -148,11 +148,11 @@ private theorem absolute_irreducible_rank_four {l : ℕ} [Fact l.Prime] {F : GFr
   · subst hn
     ext i
     exact i.elim0
-  letI := y.field
-  haveI := y.fin
-  letI := y.algk
-  letI := y.algO
-  haveI := y.tower
+  let := y.field
+  have := y.fin
+  let := y.algk
+  let := y.algO
+  have := y.tower
   let i0 : Fin n := ⟨0, hn⟩
   let z : O := algebraMap ℤ_[l] O (F.ε g)
   let c : y.K := algebraMap (ResidueField O) y.K (r.chib i0 g)

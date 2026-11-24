@@ -215,7 +215,7 @@ namespace GlobalTheory.TestFibre
 
 theorem exists_nsmul_of_nsmul_eq_zero {K : Type} {r N : ℕ} (hr : 0 < r) (hN : 0 < N) (a₀ : K → ZMod (r * N))
     (h : N • a₀ = 0) : ∃ a : K → ZMod (r * N), r • a = a₀ := by
-  haveI : NeZero (r * N) := ⟨(Nat.mul_pos hr hN).ne'⟩
+  have : NeZero (r * N) := ⟨(Nat.mul_pos hr hN).ne'⟩
   have key : ∀ i, ∃ b : ZMod (r * N), r • b = a₀ i := by
     intro i
     have h1 : ((N * (a₀ i).val : ℕ) : ZMod (r * N)) = 0 := by
@@ -818,7 +818,7 @@ theorem torus_points_level_weights : Laws → Laws2 → UTorsSt → ∀ (o Ω : 
   obtain ⟨hadd, -⟩ := (GlobalTheory.T.uniformisedModel_torsionPoints_group_pairing h₁ o Ω S ρ p y₀ u).2 x hx
   obtain ⟨τ, q, hq0, hqτ, hq, hval⟩ := GlobalTheory.T.thetaSystem_orthogonal_labels_are_torus_points h₁ h₂ hT o Ω S ρ p y₀ u l hy x hx t
   have hL : LL := (laws_all h₁ h₂).1
-  letI := gtGroup u.D.toPre (PadicAlgCl p)
+  let := gtGroup u.D.toPre (PadicAlgCl p)
   have hB := u.D.tau_bimult
   have hN : 1 ≤ S.N := le_trans (by norm_num) S.N_ge
   have hx0 : x 0 = 1 := by
@@ -839,7 +839,7 @@ theorem torus_points_level_weights : Laws → Laws2 → UTorsSt → ∀ (o Ω : 
     exact (GlobalTheory.T.uniformisation_torsion_maps_compatible_in_level hL u.V _ hA u.D u.A u.G u.semi u.U (PadicAlgCl p) S.N S.r (S.r * S.N) hN S.r_pos
       (mul_comm _ _) (qkMk hB q.y (S.r • q.g) hg) q (x t)).2 rfl ((isNsmul_iff_eq _ _ _).2 rfl) hq
   · obtain ⟨a, ha⟩ := l.yy_onto (QuotientAddGroup.mk β)
-    haveI : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by omega)⟩
+    have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by omega)⟩
     have hζ : y₀ (algebraMap o S.R S.ζN) ^ S.N = 1 := by
       rw [← map_pow, ← map_pow, ThetaSys.ζN, ← pow_mul,
         show S.r ^ 2 * S.N * S.N = (S.r * S.N) ^ 2 by ring, S.prim.pow_eq_one, map_one, map_one]
@@ -1087,8 +1087,8 @@ theorem exists_norm_FF_eq : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [Co
     obtain ⟨j, hj, hr⟩ := ρ.r_eq
     rw [hr]
     exact ρ.n_prime.two_le.trans (Nat.le_self_pow (by omega) _)
-  haveI : NeZero (S.r * S.N) := ⟨by omega⟩
-  haveI : Fintype (S.perp l.yy.ker) := Fintype.ofFinite _
+  have : NeZero (S.r * S.N) := ⟨by omega⟩
+  have : Fintype (S.perp l.yy.ker) := Fintype.ofFinite _
   obtain ⟨g, w₁, hg, hw₁, hgv, hwv⟩ := exists_origin hLL hT hVR hTW hUU u.complete hadm hϖ u.D hQ hv S.N
   obtain ⟨Φ, hΦ, hsupp, hval⟩ := CoefUnit.exists_fam_coef_val hLL hT hVR hTW hUU u.V u.complete ϖ hϖ u.D Q hQ
     (PadicAlgCl p) v hv S.N hN4 g w₁ _ 0 hw₁.1 hgv hwv α

@@ -219,7 +219,7 @@ theorem OL_nhds (LL : FinExt l) (u : ℕ) (hu : u ≠ 0) :
   have hu' : (u : Om l) ≠ 0 := Nat.cast_ne_zero.2 hu
   have hpos : 0 < ‖(u : Om l)‖ := norm_pos_iff.2 hu'
   have h1 : (fun x : ↥LL.1 => (x : Om l)) ⁻¹' Metric.ball 0 ‖(u : Om l)‖ ∈ 𝓝 (0 : ↥LL.1) :=
-    continuous_subtype_val.continuousAt.preimage_mem_nhds (Metric.ball_mem_nhds _ hpos)
+    continuous_subtypeVal.continuousAt.preimage_mem_nhds (Metric.ball_mem_nhds _ hpos)
   refine Filter.mem_of_superset h1 fun x hx => ?_
   have hx' : ‖(x : Om l)‖ < ‖(u : Om l)‖ := by simpa using hx
   refine ⟨⟨x / u, (GlobalTheory.mem_integralClosure_padicInt_iff LL.1 _).2 ?_⟩, ?_⟩
@@ -247,16 +247,16 @@ theorem exists_trace {P : LocPrime l} (AI : LocAinf l P) (K : FinExt l) {G : Typ
   rw [hι.isInducing.nhds_eq_comap, map_one] at hU ⊢
   obtain ⟨W, hW, hWU⟩ := hU
   obtain ⟨E, hfd, hN, hE⟩ := (krullTopology_mem_nhds_one_iff_of_normal ℚ_[l] (Om l) W).1 hW
-  haveI : E.fixingSubgroup.FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
+  have : E.fixingSubgroup.FiniteIndex := by
+    have := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
     exact Subgroup.finiteIndex_of_finite_quotient
   have hEn : E.fixingSubgroup.Normal := by
     rw [← IntermediateField.restrictNormalHom_ker]; infer_instance
   let N : Subgroup G := E.fixingSubgroup.comap ι
-  haveI : N.FiniteIndex := ⟨by
+  have : N.FiniteIndex := ⟨by
     rw [Subgroup.index_comap]
     exact (inferInstance : (E.fixingSubgroup.subgroupOf ι.range).FiniteIndex).index_ne_zero⟩
-  letI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  let : Fintype (G ⧸ N) := Fintype.ofFinite _
   let S : Finset G := Finset.univ.image (fun q : G ⧸ N => q.out)
   have hS : ∀ h, ∃! s, s ∈ S ∧ s⁻¹ * h ∈ N := by
     intro h
@@ -308,8 +308,8 @@ theorem as_TW {G : Type} [Group G] [TopologicalSpace G] (LL : FinExt l)
     ∀ b, TWmap (φRW LL) T b = b → ∃ t : ↥T.L.T, b = (1 : RW LL) ⊗ₜ[↥(OL LL)] t :=
   by
     set_option synthInstance.maxHeartbeats 200000 in
-      haveI := T.L.free
-      haveI := free_OL LL
+      have := T.L.free
+      have := free_OL LL
       exact as_two (O := ↥(OL LL)) (P := ↥T.L.T) (frobW l) (GlobalTheory.ArtinSchreierWitt.main l).1
         (GlobalTheory.ArtinSchreierWitt.main l).2.1
 
@@ -321,11 +321,11 @@ theorem cob_TW {P : LocPrime l} (AI : LocAinf l P) (K LL : FinExt l)
     ∃ b : TW (RW LL) T, ∀ (σ : ↥H) (t : ↥T.L.T), (t : T.V) = (c : ↥H → T.V) σ →
       (1 : RW LL) ⊗ₜ[↥(OL LL)] t =
         TWact (AI.gRW LL ((σ : ↥(GK K)) : GQ l)) T (σ : ↥(GK K)) b - b := by
-  haveI := T.L.free
-  haveI : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
-  haveI := free_OL LL
-  haveI := finite_OL LL
-  haveI := perfect_Cb (l := l)
+  have := T.L.free
+  have : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := free_OL LL
+  have := finite_OL LL
+  have := perfect_Cb (l := l)
   obtain ⟨c, ⟨hcont, hcoc⟩, hT⟩ := c
   let c' : ↥H → ↥T.L.T := fun σ => ⟨c σ, hT σ (Set.mem_univ _)⟩
   have h1 : c 1 = 0 := by

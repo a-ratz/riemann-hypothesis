@@ -63,7 +63,7 @@ theorem one_add_pow_mul_exp_neg_pi_mul_sq_le {r : ℝ} (hr : 0 ≤ r) (N : ℕ) 
   have h1 : (1 + r) ^ N ≤ Real.exp (N * r) := by
     calc (1 + r) ^ N ≤ Real.exp r ^ N :=
           pow_le_pow_left₀ (by linarith) (by linarith [Real.add_one_le_exp r]) N
-      _ = Real.exp (N * r) := by rw [← Real.exp_nat_mul]
+      _ = Real.exp (N * r) := by rw [← exp_natCast_mul]
   calc (1 + r) ^ N * Real.exp (-π * r ^ 2) ≤ Real.exp (N * r) * Real.exp (-π * r ^ 2) := by
         gcongr
     _ = Real.exp (N * r - π * r ^ 2) := by rw [← Real.exp_add]; ring_nf

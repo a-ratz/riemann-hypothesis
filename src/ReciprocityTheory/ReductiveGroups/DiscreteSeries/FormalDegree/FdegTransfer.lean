@@ -69,7 +69,7 @@ theorem isFdeg_smul {ε : Fin n → Bool} {H : Type*} [NormedAddCommGroup H] [In
 theorem isFdeg_muCD {ε : Fin n → Bool} {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} {μ : Measure (Formalism.REAL.UJ ε)} [μ.IsHaarMeasure] {d : ℝ}
     (hd : Formalism.MainNotions.S.IsFdeg μ σ d) : ∃ d' : ℝ, Formalism.MainNotions.S.IsFdeg (muCD ε) σ d' := by
-  haveI := muCD_isHaar ε
+  have := muCD_isHaar ε
   obtain ⟨c, hcpos, hsm⟩ : ∃ c : NNReal, 0 < c ∧ muCD ε = c • μ :=
     ⟨_, Measure.haarScalarFactor_pos_of_isHaarMeasure (muCD ε) μ,
       Measure.isMulLeftInvariant_eq_smul (muCD ε) μ⟩

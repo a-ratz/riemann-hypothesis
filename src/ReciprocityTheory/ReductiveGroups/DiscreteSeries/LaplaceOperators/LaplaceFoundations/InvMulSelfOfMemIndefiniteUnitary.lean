@@ -161,7 +161,7 @@ theorem derived_action_skew_adjoint {ε : Fin n → Bool} {σ : Matrix (Fin n) (
   have h5 := h3.unique (hasDerivAt_const (0 : ℝ) ⟪w, u⟫_ℂ)
   have h0 : NormedSpace.exp (((0 : ℝ) : ℂ) • Y) = 1 := by simp
   rw [h0, hσ.1.1] at h5
-  simp only [ContinuousLinearMap.one_apply] at h5
+  simp only [one_apply_eq_self] at h5
   exact eq_neg_of_add_eq_zero_left h5
 
 theorem hasDerivAt_conj_exp_action {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
@@ -222,7 +222,7 @@ private theorem exists_inG_add_I_smul_inG (ε : Fin n → Bool) (X : Matrix (Fin
 theorem b3a : MatrixCoeffConjugationMove := by
   intro n ε H _ _ σ w hσ hw g hg X
   have hφ : ∀ Y, phiW ε σ w Y = ((actM (smE ε σ) Y ⟨w, hw⟩ : smD ε σ) : H) := fun Y => by
-    simp only [phiW, dif_pos hw]
+    simp only [phiW, dite_eq_left hw]
   have hlin : ∀ (Y Z : Matrix (Fin n) (Fin n) ℂ) (c : ℂ),
       ((actM (smE ε σ) (Y + c • Z) ⟨w, hw⟩ : smD ε σ) : H) =
         ((actM (smE ε σ) Y ⟨w, hw⟩ : smD ε σ) : H) +

@@ -389,7 +389,7 @@ theorem lamPts_pull {R : Type} [CommRing R] [IsDomain R] {Q : Data R} {D' : DegP
     simp only [map_zpow]
     change ∏ k, ((snd Q.B Q.B ≫ PowLim.inc pr hl i₀) ≫ pr k) ^ m j k = _
     simp only [e]
-    rw [Finset.prod_eq_single i₀ (fun k _ hk => by rw [if_neg hk, one_zpow]) (by simp), if_pos rfl]
+    rw [Finset.prod_eq_single i₀ (fun k _ hk => by rw [ite_eq_right hk, one_zpow]) (by simp), ite_eq_left rfl]
   rw [GlobalTheory.TensPair.lamPts_comp, h1, h2]
 
 theorem xe_xi {R : Type} [CommRing R] [IsDomain R] {Q : Data R} {D' : DegPre R} {r : ℕ}
@@ -419,7 +419,7 @@ theorem pt_pull {R : Type} [CommRing R] [IsDomain R] {Q : Data R} {D' : DegPre R
     calc toUnit (TK R) ≫ Q.c b ^ m i i₀ = (toUnit (TK R) ≫ Q.c b) ^ m i i₀ := map_zpow (preHom (toUnit (TK R))) _ _
       _ = ∏ k, ((toUnit (TK R) ≫ Q.c b ≫ PowLim.inc pr hl i₀) ≫ pr k) ^ m i k := by
         simp only [e]
-        rw [Finset.prod_eq_single i₀ (fun k _ hk => by rw [if_neg hk, one_zpow]) (by simp), if_pos rfl]
+        rw [Finset.prod_eq_single i₀ (fun k _ hk => by rw [ite_eq_right hk, one_zpow]) (by simp), ite_eq_left rfl]
       _ = (toUnit (TK R) ≫ Q.c b ≫ PowLim.inc pr hl i₀) ≫ ∏ k, pr k ^ m i k := by
         change _ = preHom (toUnit (TK R) ≫ Q.c b ≫ PowLim.inc pr hl i₀) (∏ k, pr k ^ m i k)
         rw [map_prod]
@@ -465,10 +465,10 @@ theorem pairing_factor : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
       simp only [Sum.elim_inl, lamPts_pull, Fintype.prod_prod_type]
       symm
       rw [Finset.prod_eq_single i₀ ?_ (by simp)]
-      · exact Finset.prod_congr rfl fun j _ => Finset.prod_congr rfl fun l _ => by rw [if_pos rfl]
+      · exact Finset.prod_congr rfl fun j _ => Finset.prod_congr rfl fun l _ => by rw [ite_eq_left rfl]
       · intro i _ hi
         refine Finset.prod_eq_one fun j _ => ?_
-        rw [Fin.prod_univ_four, if_neg hi]
+        rw [Fin.prod_univ_four, ite_eq_right hi]
         simp only [GlobalTheory.PolDeg.lamPts, Oε, _root_.one_mul]
         simp [zpow_mul, zpow_neg]
         apply Additive.ofMul.injective
@@ -482,8 +482,8 @@ theorem pairing_factor : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
       val (Q.tau a b) (𝟙 _) z J' = GlobalTheory.PolDeg.lamVal w (lift (toUnit (TK R) ≫ Q.c a) (toUnit (TK R) ≫ Q.c b) : TK R ⟶ G2 Q.B).left z J J' *
         val (D'.toPre.tau (PowLim.xi xe i₀ a) b') (𝟙 _) z J by
     exact key _ (fun j => (PowLim.xe_smul xe (symUnitOf W h) (TensO.binv _) (PowLim.xi xe i₀ b) j).trans (by
-      rw [Finset.sum_eq_single i₀ (fun k _ hk => by rw [xe_xi, if_neg hk, smul_zero]) (by simp),
-        xe_xi, if_pos rfl]))
+      rw [Finset.sum_eq_single i₀ (fun k _ hk => by rw [xe_xi, ite_eq_right hk, smul_zero]) (by simp),
+        xe_xi, ite_eq_left rfl]))
   intro b' hb'
   have hPl : (lift (toUnit (TK R) ≫ D'.toPre.c (PowLim.xi xe i₀ a)) (toUnit (TK R) ≫ D'.toPre.c b') : TK R ⟶ G2 D'.toPre.P.A).left =
       (lift (toUnit (TK R) ≫ Q.c a) (toUnit (TK R) ≫ Q.c b) : TK R ⟶ G2 Q.B).left ≫
@@ -493,9 +493,9 @@ theorem pairing_factor : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
   have hPi : ∏ i, ∏ j, val (Q.tau (xe (PowLim.xi xe i₀ a) i) (xe b' j)) (𝟙 _) z J' ^ ((W + W.transpose) i j) =
       ∏ j, val (Q.tau a (TensO.mat _ (TensO.binv (symUnitOf W h)) j i₀ • b)) (𝟙 _) z J' ^ ((W + W.transpose) i₀ j) := by
     rw [Finset.prod_eq_single i₀ (fun i _ hi => Finset.prod_eq_one fun j _ => by
-      rw [xe_xi, if_neg hi, t0, one_zpow]) (by simp)]
+      rw [xe_xi, ite_eq_right hi, t0, one_zpow]) (by simp)]
     refine Finset.prod_congr rfl fun j _ => ?_
-    rw [xe_xi, if_pos rfl, hb']
+    rw [xe_xi, ite_eq_left rfl, hb']
   have e1 := hv₁ (PowLim.xi xe i₀ a) b' z J' J hJ' hJ
   rw [hPi, hPl] at e1
   have e2 := hvw _ (lift (toUnit (TK R) ≫ Q.c a) (toUnit (TK R) ≫ Q.c b) : TK R ⟶ G2 Q.B).left z J' hJ'
@@ -713,7 +713,7 @@ theorem triv_neg {c : Vec r →₀ ℤ} {V} (h : Triv Q D' pr c V) :
 
 theorem zero_vecHom (hpr : ∀ i, IsMonHom (pr i)) (v : Vec r) : lift η[D'.P.A] η[D'.P.A] ≫ vecHom pr v = 1 := by
   have h : ∀ k, η[D'.P.A] ≫ pr k = 1 := fun k => by
-    haveI := hpr k
+    have := hpr k
     rw [IsMonHom.one_hom, Hom.one_def, toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
   simp only [comp_vecHom, h, one_zpow, Finset.prod_const_one, _root_.mul_one]
 
@@ -872,7 +872,7 @@ theorem ros_pr (hpr : ∀ i, IsMonHom (pr i)) (A A' : Matrix (Fin r) (Fin r) ℤ
   fin_cases a
   · refine ⟨(fst D'.P.A D'.P.A ≫ PowLim.act pr hl A) * snd D'.P.A D'.P.A, rfl, fun k => ?_⟩
     show _ = vecHom pr (axv A k + zv k)
-    haveI := hpr k
+    have := hpr k
     rw [MonObj.mul_comp, Category.assoc, vecHom_add, vecHom_axv hl, vecHom_zv]
   · refine ⟨fst D'.P.A D'.P.A ≫ PowLim.act pr hl A, rfl, fun k => ?_⟩
     show _ = vecHom pr (axv A k)
@@ -882,7 +882,7 @@ theorem ros_pr (hpr : ∀ i, IsMonHom (pr i)) (A A' : Matrix (Fin r) (Fin r) ℤ
     rw [vecHom_zv]
   · refine ⟨fst D'.P.A D'.P.A * (snd D'.P.A D'.P.A ≫ PowLim.act pr hl A'), rfl, fun k => ?_⟩
     show _ = vecHom pr (xv k + azv A' k)
-    haveI := hpr k
+    have := hpr k
     rw [MonObj.mul_comp, Category.assoc, vecHom_add, vecHom_xv, vecHom_azv hl]
   · refine ⟨fst D'.P.A D'.P.A, rfl, fun k => ?_⟩
     show _ = vecHom pr (xv k)
@@ -966,8 +966,8 @@ theorem ros_sig (hpr : ∀ i, IsMonHom (pr i)) {W : Matrix (Fin r) (Fin r) ℤ}
     (∏ a, isoV w z J J' (D'.pt2 y y' ≫ rosatiφ D'.P.A (PowLim.act pr hl A) (PowLim.act pr hl A') a) ^ rosatiε a) *
       val u' (D'.pt2 y y') z J' = val Ξ (D'.pt2 y y') z J := by
   have hG : GlobalFnsSt := GlobalTheory.SemiRigid.globalFns
-  haveI := PowLim.act_isMonHom pr hl hpr A
-  haveI := PowLim.act_isMonHom pr hl hpr A'
+  have := PowLim.act_isMonHom pr hl hpr A
+  have := PowLim.act_isMonHom pr hl hpr A'
   have sj : Function.Surjective ((snd D'.P.A D'.P.A).left ≫ D'.P.A.hom).appTop.hom :=
     surj_comp (surj_snd hG D'.P.isAb _) (hG _ _ D'.P.isAb).2
   have he : zero2 D'.P.A ≫ (snd D'.P.A D'.P.A).left ≫ D'.P.A.hom = 𝟙 _ := by
@@ -1188,7 +1188,7 @@ theorem GlobalTheory.Mum.PolTens.tauBal_polTens : ∀ (R : Type) [CommRing R] [I
     ∀ a : TensO (symUnitOf W h), D'.toPre.TauBal (PowLim.act pr hl (TensO.mat _ a)) (PowLim.act pr hl (TensO.mat _ (star a)))
       (fun y => a • y) (fun y => star a • y) := by
   intro R _ _ _ _ Q D' r W h _ pr hl xe w hpr hc hw hpsi
-  letI := PowLim.mod xe (symUnitOf W h)
+  let := PowLim.mod xe (symUnitOf W h)
   intro a
   have hA := transpose_mul_eq W h a
   intro u' hu' hn' y y'
@@ -1313,7 +1313,7 @@ theorem pairQ_mul (hpr : ∀ i, IsMonHom (pr i)) (W : Matrix (Fin r) (Fin r) ℤ
     (u v : X ⟶ D'.P.A) :
     pairQ Q pr W (u * v) (u * v) = pairQ Q pr W u u + pairQ Q pr W v v + pairQ Q pr (W + W.transpose) u v := by
   have hm : ∀ i, (u * v) ≫ pr i = u ≫ pr i * v ≫ pr i := fun i => by
-    haveI := hpr i
+    have := hpr i
     exact MonObj.mul_comp _ _ _
   have hΘ : ∃ t : LB.Gen (Theta Q.B Q.M.L), t.IsGen := ⟨Q.cub.t, Q.cub.isGen⟩
   have e : ∑ i, ∑ j, W i j • lam (cls Q.M.L Q.M.isLB) (v ≫ pr i) (u ≫ pr j) =
@@ -1399,7 +1399,7 @@ theorem GlobalTheory.Mum.PFactor.nonempty_of_tens : ∀ (R : Type) [CommRing R] 
   let hl := hlim.some
   let s := symUnitOf W hdet
   let i₀ : Fin r := ⟨0, hr⟩
-  letI := PowLim.mod xe s
+  let := PowLim.mod xe s
   obtain ⟨w', hw', htau⟩ := GlobalTheory.T.mumfordIso_periods_factor_tensor_polarised R hR Q D' W hdet hpos pr hl xe w hpr hc hw hpsi i₀
   obtain ⟨hxx, hxe, hinj, honto⟩ := PowLim.factor_latt xe s i₀
   have hp : 0 < (s.1 : Matrix (Fin r) (Fin r) ℤ) i₀ i₀ := by

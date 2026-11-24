@@ -116,23 +116,23 @@ theorem adjH_spec (T : (Wq →L[ℂ] Wp) →L[ℂ] (Wq →L[ℂ] Wp)) (A B : Wq 
 lemma adjH_add (T S : (Wq →L[ℂ] Wp) →L[ℂ] (Wq →L[ℂ] Wp)) : adjH (T + S) = adjH T + adjH S := by
   ext B : 1
   apply hsE.injective
-  simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+  simp only [add_apply, map_add (f := _)]
   show hsVec (adjH (T + S) B) = hsVec (adjH T B) + hsVec (adjH S B)
   rw [hsE_adjH, hsE_adjH, hsE_adjH]
   have : conjE (T + S) = conjE T + conjE S := by
     ext v : 1; simp [conjE]
-  rw [this, map_add (f := _), ContinuousLinearMap.add_apply]
+  rw [this, map_add (f := _), add_apply]
 
 lemma adjH_smulC (c : ℂ) (T : (Wq →L[ℂ] Wp) →L[ℂ] (Wq →L[ℂ] Wp)) : adjH (c • T) = (starRingEnd ℂ c) • adjH T := by
   ext B : 1
   apply hsE.injective
   show hsVec (adjH (c • T) B) = hsE (((starRingEnd ℂ c) • adjH T) B)
-  rw [ContinuousLinearMap.smul_apply, map_smul]
+  rw [smul_apply, map_smul]
   show _ = (starRingEnd ℂ c) • hsVec (adjH T B)
   rw [hsE_adjH, hsE_adjH]
   have : conjE (c • T) = c • conjE T := by
     ext v : 1; simp [conjE]
-  rw [this, map_smulₛₗ, ContinuousLinearMap.smul_apply]
+  rw [this, map_smulₛₗ, smul_apply]
 
 lemma adjH_smul (c : ℝ) (T : (Wq →L[ℂ] Wp) →L[ℂ] (Wq →L[ℂ] Wp)) : adjH (c • T) = c • adjH T := by
   rw [← Complex.coe_smul, adjH_smulC, Complex.conj_ofReal, Complex.coe_smul]

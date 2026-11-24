@@ -83,7 +83,7 @@ theorem exists_eq_of_count {La G : Type} [AddCommGroup La] [Module.Finite ℤ La
     simp only [K, AddMonoidHom.mem_range]
     exact ⟨fun ⟨b, hb⟩ => ⟨b, hb.symm⟩, fun ⟨b, hb⟩ => ⟨b, hb.symm⟩⟩
   have : AddGroup.FG La := Module.Finite.iff_addGroup_fg.1 inferInstance
-  have : Finite (La ⧸ K) := AddCommGroup.finite_of_fg_torsion _ fun q => by
+  have : Finite (La ⧸ K) := AddCommGroup.finite_of_fg_isAddTorsion _ fun q => by
     induction q using QuotientAddGroup.induction_on with
     | H a =>
       refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨n, hn, ?_⟩

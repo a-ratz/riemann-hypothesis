@@ -193,7 +193,7 @@ theorem latest_thresholds_decay (H : HypT N n0 r K LL B od bb a La p) (P : ℕ �
   have hv : LL.vec ⟨x - 1, by omega⟩ = LL.vec ⟨y - 1, by omega⟩ := by
     rw [hP x ⟨hxs.1.1, by omega⟩ hxs.2, hP y ⟨hys.1.1, by omega⟩ hys.2]
   have h2 := H.H2 ⟨x - 1, by omega⟩ ⟨y - 1, by omega⟩
-    (by rw [Fin.lt_iff_val_lt_val]; simp only; omega) (by simp only; omega) hv
+    (by rw [Fin.lt_def]; simp only; omega) (by simp only; omega) hv
   have hp13 : (13 : ℝ) ≤ p := by exact_mod_cast H.p13
   have hB0 : (0 : ℝ) ≤ (B ⟨x - 1, by omega⟩ : ℝ) := Nat.cast_nonneg _
   have h3 : ((13 ^ 2 * B ⟨x - 1, by omega⟩ : ℕ) : ℝ) ≤ ((5 * B ⟨y - 1, by omega⟩ : ℕ) : ℝ) := by
@@ -273,7 +273,7 @@ theorem toL_TData (H : HypT N n0 r K LL B od bb a La p) : (toL r K LL B).TData 1
   · rw [letters_n0_eq H] at hl3
     rw [toL_B LL B l ⟨hl1, by omega⟩, hb]
     have h5 := H.bb_le ⟨i - 1, by omega⟩ ⟨l - 1, by omega⟩ (by simp only; omega)
-      (by rw [Fin.lt_iff_val_lt_val]; simp only; omega) (by simp only; omega)
+      (by rw [Fin.lt_def]; simp only; omega) (by simp only; omega)
     refine le_trans h5 (le_of_eq ?_)
     push_cast
     ring

@@ -250,7 +250,7 @@ private lemma d_eq_zero_of_not_mem_tsupport {n : ℕ} {z : M → V n} {g : M →
     have hfd : fderiv ℝ (g ∘ e.symm) (z x) = 0 := by
       rw [hev.fderiv_eq]
       exact fderiv_const_apply _
-    simp only [wd, hfd, ContinuousLinearMap.zero_apply, mul_zero, sub_zero, zero_div]
+    simp only [wd, hfd, zero_apply, mul_zero, sub_zero, zero_div]
   · rfl
 
 theorem gm_tstar_hcs (n : ℕ) (z : M → V n) (ph : M → ℝ) (f : M → V n) (hf : IsTestForm n z f) :
@@ -330,7 +330,7 @@ theorem gm_lintegral_wvol {E : Type*} [NormedAddCommGroup E] (n : ℕ) (z : M �
     (Eventually.of_forall fun _ => ENNReal.ofReal_lt_top)]
   congr 1
   funext x
-  rw [Pi.mul_apply, ← ofReal_norm_eq_enorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) (by norm_num),
+  rw [Pi.mul_apply, ← ofReal_norm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) (by norm_num),
     Real.rpow_two, ← ENNReal.ofReal_mul (Real.exp_pos _).le, mul_comm]
 
 theorem gm_memLp_two_iff {E : Type*} [NormedAddCommGroup E] {μ : Measure M} (g : M → E)
@@ -401,7 +401,7 @@ theorem gm_hcs_of {E F : Type*} [Zero E] [Zero F] (t : M → E) (G : M → F) (h
 theorem gm_memLp_tstar (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (ph : M → ℝ)
     (hph : SmoothR n z ph) (f : M → V n) (hf : IsTestForm n z f) :
     MemLp (tstar n z ph ph f) 2 (wvol n z ph) := by
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   have hc : Continuous (tstar n z ph ph f) := gm_tstar_cont n z hz ph hph f hf
   have hs := gm_tstar_hcs n z ph f hf
   have hph' := gm_cont_of_smoothR n z hz ph hph
@@ -428,7 +428,7 @@ theorem gm_ipV_integrable (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (
     (hph : SmoothR n z ph) (v : M → V n) (hv : Continuous v) (f : M → V n)
     (hf : IsTestForm n z f) :
     Integrable (fun x => ⟪v x, f x⟫_ℂ * (Real.exp (-ph x) : ℂ)) (vol n z) := by
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   have hfc : Continuous f := gm_form_continuous f fun k => continuous_of_ck hz (hf k).1
   have hfs : HasCompactSupport f := gm_form_hcs f fun k => (hf k).2
   have hph' : Continuous ph := gm_cont_of_smoothR n z hz ph hph
@@ -520,7 +520,7 @@ theorem gm_tstar_single (n : ℕ) (z : M → V n) (ph : M → ℝ) (φ : M → �
     · subst hk
       have hE : (Real.exp (-ph y) : ℂ) * (Real.exp (ph y) : ℂ) = 1 := by
         rw [← Complex.ofReal_mul, ← Real.exp_add, neg_add_cancel, Real.exp_zero, Complex.ofReal_one]
-      simp only [gmSingle, PiLp.single_apply, eq_self_iff_true, if_true, ← mul_assoc, hE,
+      simp only [gmSingle, PiLp.single_apply, eq_self_iff_true, ite_true, ← mul_assoc, hE,
         one_mul]
     · simp [gmSingle, hk]
   have hd : ∀ k, d n z k (fun y => (Real.exp (-ph y) : ℂ) * gmSingle ph φ j y k) x =
@@ -529,14 +529,14 @@ theorem gm_tstar_single (n : ℕ) (z : M → V n) (ph : M → ℝ) (φ : M → �
     rw [hfun k]
     by_cases hk : k = j
     · subst hk
-      simp only [eq_self_iff_true, if_true]
+      simp only [eq_self_iff_true, ite_true]
       exact d_conj_eq_conj_db φ k x
-    · simp only [hk, if_false]
+    · simp only [hk, ite_false]
       apply d_eq_zero_of_not_mem_tsupport
       first
         | simp
         | (rw [show (fun _ : M => (0 : ℂ)) = 0 from rfl, tsupport_zero]; simp)
-  simp only [tstar, hd, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [tstar, hd, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem gm_ipV_single (n : ℕ) (z : M → V n) (ph : M → ℝ) (F0 φ : M → ℂ) (j : Fin n) :
     ipV n z (dbarF n z F0) (gmSingle ph φ j) ph = conj (∫ x, db n z j F0 x * φ x ∂vol n z) := by
@@ -562,7 +562,7 @@ variable {M : Type*} [TopologicalSpace M] [T2Space M] [SecondCountableTopology M
 theorem locL2_sub_weightedL2 (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (ph : M → ℝ)
     (hph : SmoothR n z ph) (F0 : M → ℂ) (hF0 : Continuous F0) (u : Lp ℂ 2 (wvol n z ph)) :
     LocalL2Isometry (vol n z) (fun x => F0 x - u x) := by
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   have hph' := gm_cont_of_smoothR n z hz ph hph
   have hm : Measurable (fun x => ENNReal.ofReal (Real.exp (-ph x))) :=
     ENNReal.measurable_ofReal.comp (Real.measurable_exp.comp hph'.measurable.neg)
@@ -579,7 +579,7 @@ theorem locL2_sub_weightedL2 (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z
   obtain ⟨B, hB⟩ := hC.exists_bound_of_continuousOn hF0.continuousOn
   obtain ⟨M0, hM0⟩ := hC.exists_bound_of_continuousOn hph'.continuousOn
   have hCfin : vol n z C < ⊤ := hC.measure_lt_top
-  haveI : IsFiniteMeasure ((vol n z).restrict C) := by
+  have : IsFiniteMeasure ((vol n z).restrict C) := by
     first
       | exact isFiniteMeasure_restrict.2 hCfin.ne
   have hF0C : MemLp F0 2 ((vol n z).restrict C) :=

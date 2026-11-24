@@ -69,7 +69,7 @@ theorem span_evR_eq_top_of_noCommonZero : ∀ (E : Type) [Field E] [NumberField 
   intro E _ _ _ H Dw l Xo c hL a n m ws hws hnz S _ _ _ y
   by_contra hne
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
-  letI : Field (S ⧸ M) := Ideal.Quotient.field M
+  let : Field (S ⧸ M) := Ideal.Quotient.field M
   let T : Type := AlgebraicClosure (S ⧸ M)
   let φ : S →ₐ[c.F] T := (IsScalarTower.toAlgHom c.F (S ⧸ M) T).comp (Ideal.Quotient.mkₐ c.F M)
   obtain ⟨z, hz⟩ := hL.bc S T φ y
@@ -164,7 +164,7 @@ theorem PChart.exists_refine (hL : EvLaws Xo c) {O : Type} [CommRing O] {β : O 
     exact Subfield.closure_mono (Set.union_subset_union_right _ hG)
   · exact Subring.closure_mono (Set.union_subset_union_right _ hG) (P.es_mem e he).2
   · intro e he T io
-    letI := io.toAlgebra
+    let := io.toAlgebra
     intro ψ h1 h2 z hz
     refine P.int e he T io (ψ.comp (Subalgebra.inclusion (hle e he))) h1 (fun g hg => ?_) z
       (frMap_trans _ _ _ _ _ _ _ _ (hy' e he) hz)
@@ -223,7 +223,7 @@ theorem exists_covers_fam : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hk0 : ψ (evR Xo c (ws k) ((P j).y e he)) ≠ 0 := by
     intro h0
     have := hk i₀ (Finset.mem_univ _)
-    simp only [h0, map_zero, le_zero_iff, map_eq_zero] at this
+    simp only [h0, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact hi₀ this
   have hk1 : evR Xo c (ws k) (P j).yg ≠ 0 := by
     intro h0
@@ -233,7 +233,7 @@ theorem exists_covers_fam : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     rw [h2, map_zero]
   refine ⟨⟨(j, k), hk1⟩, hC ⟨(j, k), hk1⟩ L W y e he ψ z t h1 hz hb hk0 fun i => ?_⟩
   rw [← W.valuation_le_one_iff, map_div₀]
-  exact div_le_one_of_le₀ (hk i (Finset.mem_univ _)) zero_le'
+  exact div_le_one_of_le₀ (hk i (Finset.mem_univ _)) zero_le
 
 end GlobalTheory.Reg
 end -- clump:auto

@@ -209,7 +209,7 @@ theorem isotropic_summand_lift : ∀ (R : Type) [CommRing R] (I : Ideal R) (D : 
   let P : D →ₗ[R] D := F.subtype ∘ₗ Submodule.linearProjOfIsCompl F N hFN
   have hPF : ∀ x, P x ∈ F := fun x => (Submodule.linearProjOfIsCompl F N hFN x).2
   have hPx : ∀ x ∈ F, P x = x := fun x hx =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hFN ⟨x, hx⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hFN ⟨x, hx⟩)
   let B : D →ₗ[R] D →ₗ[R] R := φ.compl₁₂ P P
   have hB : ∀ x y, B x y = φ (P x) (P y) := fun x y => rfl
   have hBI : ∀ x y, B x y ∈ I := fun x y => hF _ (hPF x) _ (hPF y)
@@ -367,7 +367,7 @@ theorem lagr_univ {R : Type} [CommRing R] [IsLocalRing R] (I : Ideal R) {D : Typ
     (hFN : IsCompl F N) (iso : ∀ x ∈ F, ∀ y ∈ F, φ x y ∈ I) :
     ∃ E N' : Submodule R D, IsCompl E N' ∧ (∀ x ∈ E, ∀ y ∈ E, φ x y = 0) ∧
       E ⊔ I • (⊤ : Submodule R D) = F ⊔ I • (⊤ : Submodule R D) := by
-  haveI : Module.Free R D := Module.free_of_flat_of_isLocalRing
+  have : Module.Free R D := Module.free_of_flat_of_isLocalRing
   let ε := (Module.finBasis R D).equivFun
   let ψ : (Fin (Module.finrank R D) → R) →ₗ[R] (Fin (Module.finrank R D) → R) →ₗ[R] R :=
     φ.compl₁₂ ε.symm.toLinearMap ε.symm.toLinearMap
@@ -408,7 +408,7 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
   have ADC : GlobalTheory.Published.AbelianDualCrystal := GlobalTheory.abelianDualCrystal_of_dualAbelianScheme ADD
   have GD : GlobalTheory.Published.GrothendieckDeformation :=
     GlobalTheory.Published.grothendieckDeformation_of_lifting ADR _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers
-  haveI := P₀.isAb.comm
+  have := P₀.isAb.comm
   obtain ⟨A', _, i', h', hA'⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine R (RingHom.ker π) hI0 R₀ π hπ rfl P₀.A P₀.isAb
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim R A' hA'
   have C := GlobalTheory.Published.AbelianDualCrystal.cupSquare_crys_prod ADR.1 ADC.2 hκ hπ rfl hA' hg hA' hg h' h'
@@ -420,13 +420,13 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
   obtain ⟨bij, ⟨N0, hN0⟩, hAdm⟩ := HC g P₀.A A' i' h' hA' hg
   let e := LinearEquiv.ofBijective (crysToDR κ h') (HC.crysToDR_bijective h' hA' hg)
   have ee : ∀ xA, crysToDR κ h' (e.symm xA) = xA := e.apply_symm_apply
-  letI : Algebra R R₀ := π.toAlgebra
+  let : Algebra R R₀ := π.toAlgebra
   have hBC := (ADR.2.2.1 R A' g hA' hg R₀ P₀.A i' h').1
   obtain ⟨hfinA, hprojA, -⟩ := ADR.1.prim hA' hg
-  haveI := hfinA
-  haveI := hprojA
-  haveI : Module.Finite R (Crys κ (spMap π) P₀.A) := Module.Finite.equiv e.symm
-  haveI : Module.Projective R (Crys κ (spMap π) P₀.A) := Module.Projective.of_equiv e.symm
+  have := hfinA
+  have := hprojA
+  have : Module.Finite R (Crys κ (spMap π) P₀.A) := Module.Finite.equiv e.symm
+  have : Module.Projective R (Crys κ (spMap π) P₀.A) := Module.Projective.of_equiv e.symm
 
   let red : Crys κ (spMap π) P₀.A →ₛₗ[π] HdR P₀.A := hBC.bcMap.comp (crysToDR κ h')
   have hm : ∀ x, (crysRedMor κ rfl P₀.A).Corr x (red x) := fun x ↦

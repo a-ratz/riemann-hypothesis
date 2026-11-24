@@ -588,9 +588,9 @@ theorem io_sc_entry {S : Type} [Fintype S] [DecidableEq S] (w : (DQ P).Pr) (e e'
     by_cases h2 : π = π'
     · subst h2; simp [io, sc, Matrix.scalar_apply]
     · simp only [io, sc, Matrix.scalar_apply, Matrix.diagonal_apply_eq, Matrix.diagonal_apply_ne _ h2, h2,
-        and_false, if_false]
+        and_false, ite_false]
       rfl
-  · simp only [io, Matrix.scalar_apply, Matrix.diagonal_apply_ne _ h1, h1, false_and, if_false]
+  · simp only [io, Matrix.scalar_apply, Matrix.diagonal_apply_ne _ h1, h1, false_and, ite_false]
     rfl
 
 theorem apply_matrix_function {N : ℕ} (g gb : SmQ P.r P.TT) (U : Qp P.r P.TT → Iota P N → ℂ)
@@ -600,14 +600,14 @@ theorem apply_matrix_function {N : ℕ} (g gb : SmQ P.r P.TT) (U : Qp P.r P.TT �
   simp only [io_sc_entry]
   rw [Finset.sum_eq_single (ixOf P N i).1]
   · rw [Finset.sum_eq_single (ixOf P N i).2]
-    · rw [if_pos ⟨rfl, rfl⟩, iotaOf_ixOf]
+    · rw [ite_eq_left ⟨rfl, rfl⟩, iotaOf_ixOf]
       show evQ P g q * evQ P (toSm P fun q' => U q' i) q = _
       rw [evQ_toSm P (hU i)]
-    · intro π' _ h; rw [if_neg (fun h' => h h'.2.symm)]; rfl
+    · intro π' _ h; rw [ite_eq_right (fun h' => h h'.2.symm)]; rfl
     · simp
   · intro e' _ h
     refine Finset.sum_eq_zero fun π' _ => ?_
-    rw [if_neg (fun h' => h h'.1.symm)]; rfl
+    rw [ite_eq_right (fun h' => h h'.1.symm)]; rfl
   · simp
 
 theorem apply_matrix_pointwise {N : ℕ} (b : SlopeTestRemainingChoices (Fin N) (A P (DQ P))) (hb : b ∈ BlockMatrixAlgebra P (Fin N))
@@ -730,22 +730,22 @@ theorem ev_prod_gen (v : M.Var P.r) (f : Fin P.r → SmQ P.r P.TT) (c : Fin P.r 
   | insert a s ha ih =>
     rw [Finset.prod_insert ha, euler_mul, ih, h a, Finset.filter_insert]
     by_cases hc : c a
-    · rw [if_pos hc, if_pos hc, Finset.card_insert_of_notMem (fun h' => ha (Finset.mem_filter.1 h').1)]
+    · rw [ite_eq_left hc, ite_eq_left hc, Finset.card_insert_of_notMem (fun h' => ha (Finset.mem_filter.1 h').1)]
       push_cast
       rw [add_smul, one_smul, mul_smul_comm]
       abel
-    · rw [if_neg hc, if_neg hc, zero_mul, zero_add, mul_smul_comm]
+    · rw [ite_eq_right hc, ite_eq_right hc, zero_mul, zero_add, mul_smul_comm]
 
 theorem ev_cc (v : M.Var P.r) (m : Fin P.r) : eulerQ v (cc P m) =
     if v = M.vc m ∨ v = M.vcb m then cc P m else 0 := by
   rw [cc, euler_mul, euler_coord, euler_coord]
   by_cases h1 : v = M.vc m
   · subst h1
-    simp only [if_true, MAx1.vc_vcb m m, if_false, true_or]; ring
+    simp only [ite_true, MAx1.vc_vcb m m, ite_false, true_or]; ring
   · by_cases h2 : v = M.vcb m
     · subst h2
-      simp only [(MAx1.vc_vcb m m).symm, if_true, if_false, or_true]; ring
-    · simp only [h1, h2, if_false, or_self]; ring
+      simp only [(MAx1.vc_vcb m m).symm, ite_true, ite_false, or_true]; ring
+    · simp only [h1, h2, ite_false, or_self]; ring
 
 theorem ev_GQ_c (l : Fin P.r) : eulerQ (M.vc l) (MAx2.Jet.GQ P) = MAx2.Jet.GQ P := by
   classical
@@ -1010,12 +1010,12 @@ theorem conjS_gL {l : ℕ} {L : LevelData (A P (DQ P)) P.r} (hTT : 0 ≤ P.TT) (
   show (((Gq P q) ^ (-s) : ℝ) : ℂ) * wordModuleApply P (if b then g2 P l L w Y else g1 P L w Y) (wordModuleApply P (io (Gs P s)) X) q i = _
   rw [← apply_matrix_mul]
   cases b
-  · simp only [Bool.false_eq_true, if_false, g1]
+  · simp only [Bool.false_eq_true, ite_false, g1]
     have e : (io (L.Di * L.Ahat (Y : ℂ)) : SlopeTestRemainingChoices (Fin w.length) (A P (DQ P))) * io (Gs P s) =
         io (Gs P s) * io (L.Di * L.Ahat ((Y : ℂ) + s)) := by
       rw [← io_mul, ← io_mul, mul_assoc, hA, ← mul_assoc, hDi.eq, mul_assoc]
     rw [e, apply_matrix_gamma_power_left, ← mul_assoc, rpow_neg_mul _ _ (Gq_pos P q), one_mul]
-  · simp only [if_true, g2]
+  · simp only [ite_true, g2]
     have e : (io (L.Dbi * L.R0 (Y : ℂ)) + (frW P l L w).ee (Y : ℂ) * io (L.Di * L.Ahat (Y : ℂ)) :
         SlopeTestRemainingChoices (Fin w.length) (A P (DQ P))) * io (Gs P s) =
         io (Gs P s) * io (L.Dbi * L.R0 ((Y : ℂ) + s)) +
@@ -1054,9 +1054,9 @@ theorem polyIn_mono {f : ℂ → R} {d d' : ℕ} (h : PolyIn f d) (hd : d ≤ d'
   rw [ha]
   calc ∑ k ∈ Finset.range (d + 1), s ^ k • a k
       = ∑ k ∈ Finset.range (d + 1), s ^ k • (if k ≤ d then a k else 0) :=
-        Finset.sum_congr rfl fun k hk => by rw [if_pos (Nat.lt_succ_iff.1 (Finset.mem_range.1 hk))]
+        Finset.sum_congr rfl fun k hk => by rw [ite_eq_left (Nat.lt_succ_iff.1 (Finset.mem_range.1 hk))]
     _ = _ := Finset.sum_subset (fun x hx => Finset.mem_range.2 (by have := Finset.mem_range.1 hx; omega)) fun k _ hk => by
-        rw [if_neg (fun h => hk (Finset.mem_range.2 (Nat.lt_succ_of_le h))), smul_zero]
+        rw [ite_eq_right (fun h => hk (Finset.mem_range.2 (Nat.lt_succ_of_le h))), smul_zero]
 
 theorem polyIn_add {f g : ℂ → R} {d : ℕ} (hf : PolyIn f d) (hg : PolyIn g d) : PolyIn (fun s => f s + g s) d := by
   obtain ⟨a, ha⟩ := hf
@@ -1075,10 +1075,10 @@ theorem polyIn_smul_var {f : ℂ → R} {d : ℕ} (hf : PolyIn f d) : PolyIn (fu
   obtain ⟨a, ha⟩ := hf
   refine ⟨fun k => if k = 0 then 0 else a (k - 1), fun s => ?_⟩
   dsimp only
-  rw [ha, Finset.sum_range_succ' (fun k => s ^ k • (if k = 0 then (0 : R) else a (k - 1))) (d + 1), if_pos rfl,
+  rw [ha, Finset.sum_range_succ' (fun k => s ^ k • (if k = 0 then (0 : R) else a (k - 1))) (d + 1), ite_eq_left rfl,
     smul_zero, add_zero, Finset.smul_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
-  rw [if_neg (Nat.succ_ne_zero k), Nat.add_sub_cancel, pow_succ, mul_comm, mul_smul]
+  rw [ite_eq_right (Nat.succ_ne_zero k), Nat.add_sub_cancel, pow_succ, mul_comm, mul_smul]
 
 theorem polyIn_affine_mul {f : ℂ → R} {d : ℕ} (u v : R) (hf : PolyIn f d) :
     PolyIn (fun s => (s • u + v) * f s) (d + 1) := by
@@ -1219,7 +1219,7 @@ theorem conjugation_shift_identity {l : ℕ} {L : LevelData (A P (DQ P)) P.r} (h
   · rw [conjS_gL P hTT hL w Y s X hX q false i, hf]
     rfl
   · rw [conjS_gL P hTT hL w Y s X hX q true i, gX_split P hL w (Y + s) X q i]
-    simp only [if_true, hf, hc]
+    simp only [ite_true, hf, hc]
     rw [apply_matrix_add, apply_matrix_mul,
       apply_matrix_pointwise P ((frW P l L w).ee (Y : ℂ)) ((frame_mem_base P l hL (wordP w)).1 (Y : ℂ)) (wordModuleApply P (io (L.Di * L.Ahat ((Y : ℂ) + s))) X)
         (fun i => apply_matrix_smooth P _ X i), add_assoc, ← Finset.sum_add_distrib]
@@ -1241,11 +1241,11 @@ theorem polynomial_shift_identity {l : ℕ} {L : LevelData (A P (DQ P)) P.r} (hT
   obtain ⟨b, i⟩ := bi
   rw [conjS_gL P hTT hL w Y s X hX q b i]
   cases b
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     rw [haF, apply_matrix_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [apply_matrix_smul]
-  · simp only [if_true]
+  · simp only [ite_true]
     rw [haT, apply_matrix_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [apply_matrix_smul]
@@ -1319,7 +1319,7 @@ theorem wordS_nodup : ∀ v : List (Bool × ℝ), ((wordS v).map Letter.intersec
       obtain ⟨b, hb, e⟩ := hm
       have h1 := wordS_position_lt v b hb
       have h2 := congrArg Fin.val e
-      simp only [Function.comp_apply, Fin.coe_castSucc, Fin.val_last] at h2
+      simp only [Function.comp_apply, Fin.val_castSucc, Fin.val_last] at h2
       omega
     · have h := (wordS_nodup v).map (Fin.castSucc_injective v.length)
       rw [List.map_map] at h
@@ -1411,7 +1411,7 @@ theorem good_of_cut {P : M.Par} {l : ℕ} (w : List ℝ) (h : M.CutWord P l (wor
   · exact Complex.conj_eq_iff_im.2 (h2 a ha).1
   · refine h3.imp_of_mem fun {a b} ha hb hab => ?_
     unfold RegL
-    rw [if_pos (plusWord_letters_plus w b hb)]
+    rw [ite_eq_left (plusWord_letters_plus w b hb)]
     intro e
     have : a.pt.re - b.pt.re = 1 := by
       have := congrArg Complex.re e
@@ -1516,18 +1516,18 @@ theorem embM_mul (M M' : SlopeTestRemainingChoices (Fin N) A) : embM (M * M') = 
   rw [Matrix.mul_apply, sum_snoc]
   simp only [embM_apply, Fin.init_snoc, Fin.snoc_last, Matrix.mul_apply]
   by_cases h : E (Fin.last N) = E'' (Fin.last N)
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     refine Finset.sum_congr rfl fun e _ => ?_
     rw [Finset.sum_eq_single (E (Fin.last N))]
-    · rw [if_pos rfl, if_pos h]
-    · intro b _ hb; rw [if_neg (Ne.symm hb), zero_mul]
+    · rw [ite_eq_left rfl, ite_eq_left h]
+    · intro b _ hb; rw [ite_eq_right (Ne.symm hb), zero_mul]
     · simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun e _ => Finset.sum_eq_zero fun b _ => ?_
     by_cases h1 : E (Fin.last N) = b
-    · subst h1; rw [if_neg h, mul_zero]
-    · rw [if_neg h1, zero_mul]
+    · subst h1; rw [ite_eq_right h, mul_zero]
+    · rw [ite_eq_right h1, zero_mul]
 
 def embR (A : Type) [Ring A] (N : ℕ) : SlopeTestRemainingChoices (Fin N) A →+* SlopeTestRemainingChoices (Fin (N + 1)) A where
   toFun := embM
@@ -1575,13 +1575,13 @@ theorem embM_eU (a : Fin N) (i j : Fin 2) : embM (eU a i j : SlopeTestRemainingC
       | last => exact h0
       | cast b => exact h3 b (fun e => hb (by rw [e]))
   by_cases h : E a.castSucc = i ∧ E' a.castSucc = j ∧ ∀ b, b ≠ a.castSucc → E b = E' b
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     obtain ⟨h0, h1⟩ := key.1 h
-    rw [if_pos h0, if_pos h1]
-  · rw [if_neg h]
+    rw [ite_eq_left h0, ite_eq_left h1]
+  · rw [ite_eq_right h]
     by_cases h0 : E (Fin.last N) = E' (Fin.last N)
-    · rw [if_pos h0, if_neg (fun h1 => h (key.2 ⟨h0, h1⟩))]
-    · rw [if_neg h0]
+    · rw [ite_eq_left h0, ite_eq_right (fun h1 => h (key.2 ⟨h0, h1⟩))]
+    · rw [ite_eq_right h0]
 
 theorem embM_ins (a : Fin N) (M : M2 (SlopeTestRemainingChoices (Fin N) A)) : embM (ins a M) = ins a.castSucc (M.map embM) := by
   unfold ins
@@ -1602,8 +1602,8 @@ theorem embM_star [StarRing A] (M : SlopeTestRemainingChoices (Fin N) A) : embM 
   ext E E'
   simp only [embM_apply, Matrix.star_apply]
   by_cases h : E (Fin.last N) = E' (Fin.last N)
-  · rw [if_pos h, if_pos h.symm]
-  · rw [if_neg h, if_neg (Ne.symm h), star_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), star_zero]
 
 end Emb
 
@@ -1731,7 +1731,7 @@ theorem plusWord_cons (Y : ℝ) (w : List ℝ) :
   apply congrArg₂ (· :: ·)
   · show Letter.mk _ _ _ = _
     congr 1
-    exact Fin.ext (by rw [Fin.coe_cast, Fin.val_last, List.length_map, Fin.val_last])
+    exact Fin.ext (by rw [Fin.val_cast, Fin.val_last, List.length_map, Fin.val_last])
   · unfold wordP
     erw [List.map_map, List.map_map]
     refine List.map_congr_left fun lt _ => ?_
@@ -1785,10 +1785,10 @@ theorem uw_prod (l : ℕ) (hS : SitesOK (K := ℂ) (startM P D l).QQ (sites P D)
     (z : Ix (Fin w.length)) :
     uw (sites P D) (wordP w) z = ((wordP w).map fun a => v0 (sites P D) a.pt (z a.intersection_update_fsHerm_neg_one)).prod := by
   rw [Formalism.FourierDecayAlt.P.word_product_formula ℂ (A P D) (Fin w.length) _ (sites P D) (wordP w) hS hG z]
-  rw [if_pos (fun c hc => absurd (wordP_all_positions w c) hc)]
+  rw [ite_eq_left (fun c hc => absurd (wordP_all_positions w c) hc)]
   congr 1
   refine List.map_congr_left fun a ha => ?_
-  rw [if_pos (plusWord_letters_plus w a ha)]
+  rw [ite_eq_left (plusWord_letters_plus w a ha)]
 
 theorem uw_cons (l : ℕ) (hS : SitesOK (K := ℂ) (startM P D l).QQ (sites P D)) (Y : ℝ) (w : List ℝ)
     (hG : Good (wordP (Y :: w))) (hG' : Good (wordP w)) (E : Ix (Fin (w.length + 1))) :
@@ -2128,8 +2128,8 @@ theorem eU_last_snoc (i j : Fin 2) (e e' : Ix (Fin N)) (c c' : Fin 2) :
       | cast k => simp
   simp only [eU, Matrix.of_apply, Fin.snoc_last]
   by_cases h : c = i ∧ c' = j ∧ e = e'
-  · rw [if_pos h, if_pos ⟨h.1, h.2.1, key.2 h.2.2⟩]
-  · rw [if_neg h, if_neg (fun h' => h ⟨h'.1, h'.2.1, key.1 h'.2.2⟩)]
+  · rw [ite_eq_left h, ite_eq_left ⟨h.1, h.2.1, key.2 h.2.2⟩]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h ⟨h'.1, h'.2.1, key.1 h'.2.2⟩)]
 
 theorem ins_last_apply (M : M2 (SlopeTestRemainingChoices (Fin N) A)) (e e' : Ix (Fin N)) (c c' : Fin 2) :
     ins (Fin.last N) (M.map embM) (Fin.snoc (α := fun _ => Fin 2) e c) (Fin.snoc (α := fun _ => Fin 2) e' c') = M c c' e e' := by
@@ -2137,13 +2137,13 @@ theorem ins_last_apply (M : M2 (SlopeTestRemainingChoices (Fin N) A)) (e e' : Ix
   simp only [Matrix.sum_apply, Matrix.mul_apply, Matrix.map_apply]
   simp only [sum_snoc, eU_last_snoc, embM_snoc, ite_mul, one_mul, zero_mul]
   rw [Finset.sum_eq_single c (fun i _ hi => Finset.sum_eq_zero fun j _ => Finset.sum_eq_zero fun e1 _ =>
-    Finset.sum_eq_zero fun b _ => if_neg (fun h => hi h.1.symm)) (by simp)]
+    Finset.sum_eq_zero fun b _ => ite_eq_right (fun h => hi h.1.symm)) (by simp)]
   rw [Finset.sum_eq_single c' (fun j _ hj => Finset.sum_eq_zero fun e1 _ => Finset.sum_eq_zero fun b _ => by
       by_cases h1 : c = c ∧ b = j ∧ e = e1
-      · rw [if_pos h1, if_neg (fun h2 => hj (h1.2.1.symm.trans h2))]
-      · rw [if_neg h1]) (by simp)]
-  rw [Finset.sum_eq_single e (fun e1 _ he => Finset.sum_eq_zero fun b _ => if_neg (fun h => he h.2.2.symm)) (by simp)]
-  rw [Finset.sum_eq_single c' (fun b _ hb => if_neg (fun h => hb h.2.1)) (by simp)]
+      · rw [ite_eq_left h1, ite_eq_right (fun h2 => hj (h1.2.1.symm.trans h2))]
+      · rw [ite_eq_right h1]) (by simp)]
+  rw [Finset.sum_eq_single e (fun e1 _ he => Finset.sum_eq_zero fun b _ => ite_eq_right (fun h => he h.2.2.symm)) (by simp)]
+  rw [Finset.sum_eq_single c' (fun b _ hb => ite_eq_right (fun h => hb h.2.1)) (by simp)]
   simp
 
 end InsLast
@@ -2240,7 +2240,7 @@ theorem key_alg (hL : IsModelLevel P D L) (hS : SitesOK (K := ℂ) (startM P D l
     rw [F_cons L (startM P D l) Y w, Matrix.mul_apply, sum_snoc]
     refine Finset.sum_congr rfl fun e' _ => ?_
     simp only [ins_last_apply, embM_snoc, mul_ite, mul_zero]
-    rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)]
   unfold gRw
   refine Eq.trans ?_ (sum_snoc (N := w.length) (fun E => (ofWord L (startM P D l) (wordP (Y :: w))).F
     (Fin.snoc (α := fun _ => Fin 2) e c) E * uw (sites P D) (wordP (Y :: w)) E)).symm
@@ -2396,21 +2396,21 @@ theorem eU_mul_snoc (i j : Fin 2) (X : SlopeTestRemainingChoices (Fin (N + 1)) A
     ((eU (Fin.last N) i j : SlopeTestRemainingChoices (Fin (N + 1)) A) * X) (sn e b) (sn e' b') = if b = i then X (sn e j) (sn e' b') else 0 := by
   rw [Matrix.mul_apply, sum_snoc]
   simp only [eU_last_snoc, ite_mul, one_mul, zero_mul]
-  rw [Finset.sum_eq_single e (fun e1 _ he => Finset.sum_eq_zero fun c1 _ => if_neg fun h => he h.2.2.symm) (by simp)]
-  rw [Finset.sum_eq_single j (fun c1 _ hc => if_neg fun h => hc h.2.1) (by simp)]
+  rw [Finset.sum_eq_single e (fun e1 _ he => Finset.sum_eq_zero fun c1 _ => ite_eq_right fun h => he h.2.2.symm) (by simp)]
+  rw [Finset.sum_eq_single j (fun c1 _ hc => ite_eq_right fun h => hc h.2.1) (by simp)]
   by_cases h : b = i
-  · rw [if_pos ⟨h, rfl, rfl⟩, if_pos h]
-  · rw [if_neg (fun h' => h h'.1), if_neg h]
+  · rw [ite_eq_left ⟨h, rfl, rfl⟩, ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h h'.1), ite_eq_right h]
 
 theorem mul_eU_snoc (i j : Fin 2) (X : SlopeTestRemainingChoices (Fin (N + 1)) A) (e e' : Ix (Fin N)) (b b' : Fin 2) :
     (X * (eU (Fin.last N) i j : SlopeTestRemainingChoices (Fin (N + 1)) A)) (sn e b) (sn e' b') = if b' = j then X (sn e b) (sn e' i) else 0 := by
   rw [Matrix.mul_apply, sum_snoc]
   simp only [eU_last_snoc, mul_ite, mul_one, mul_zero]
-  rw [Finset.sum_eq_single e' (fun e1 _ he => Finset.sum_eq_zero fun c1 _ => if_neg fun h => he h.2.2) (by simp)]
-  rw [Finset.sum_eq_single i (fun c1 _ hc => if_neg fun h => hc h.1) (by simp)]
+  rw [Finset.sum_eq_single e' (fun e1 _ he => Finset.sum_eq_zero fun c1 _ => ite_eq_right fun h => he h.2.2) (by simp)]
+  rw [Finset.sum_eq_single i (fun c1 _ hc => ite_eq_right fun h => hc h.1) (by simp)]
   by_cases h : b' = j
-  · rw [if_pos ⟨rfl, h, rfl⟩, if_pos h]
-  · rw [if_neg (fun h' => h h'.2.1), if_neg h]
+  · rw [ite_eq_left ⟨rfl, h, rfl⟩, ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h h'.2.1), ite_eq_right h]
 
 def resM (X : SlopeTestRemainingChoices (Fin (N + 1)) A) : SlopeTestRemainingChoices (Fin N) A := fun e e' => X (sn e 0) (sn e' 0)
 
@@ -2419,13 +2419,13 @@ theorem free_embM {X : SlopeTestRemainingChoices (Fin (N + 1)) A} (hX : FreeOf (
     intro e e' b b'
     by_cases h : b = b'
     · subst h
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       have := congrFun (congrFun (hX b 0).eq (sn e b)) (sn e' 0)
-      rw [eU_mul_snoc, mul_eU_snoc, if_pos rfl, if_pos rfl] at this
+      rw [eU_mul_snoc, mul_eU_snoc, ite_eq_left rfl, ite_eq_left rfl] at this
       exact this.symm
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have := congrFun (congrFun (hX b b).eq (sn e b)) (sn e' b')
-      rw [eU_mul_snoc, mul_eU_snoc, if_pos rfl, if_neg (Ne.symm h)] at this
+      rw [eU_mul_snoc, mul_eU_snoc, ite_eq_left rfl, ite_eq_right (Ne.symm h)] at this
       exact this
   ext E E'
   rw [← Fin.snoc_init_self (α := fun _ => Fin 2) E, ← Fin.snoc_init_self (α := fun _ => Fin 2) E', key, embM_snoc]
@@ -2544,7 +2544,7 @@ theorem good_of_cutW {S : Type} (w : List (Letter ℂ S)) (hp : ∀ a ∈ w, a.p
   refine ⟨h1, fun a ha => Complex.conj_eq_iff_im.2 (h2 a ha).1, ?_⟩
   refine h3.imp_of_mem fun {a b} ha hb hab => ?_
   unfold RegL
-  rw [if_pos (hp b hb)]
+  rw [ite_eq_left (hp b hb)]
   intro e
   have : a.pt.re - b.pt.re = 1 := by
     have := congrArg Complex.re e
@@ -2565,7 +2565,7 @@ theorem reg_new (Y : ℝ) (w : List ℝ) (h : M.CutWord P l (wordP (Y :: w))) :
   have hh := (List.pairwise_cons.1 h3).1
   intro a ha
   unfold RegL
-  rw [if_pos (liftL_plus w a ha)]
+  rw [ite_eq_left (liftL_plus w a ha)]
   intro e
   have h4 := hh a ha
   have : ((Y : ℝ) : ℂ).re - a.pt.re = 1 := by
@@ -2687,7 +2687,7 @@ theorem last_not_mem (w : List ℝ) : Fin.last w.length ∉ ((wordP w).map liftL
   rw [List.map_map, List.mem_map] at h
   obtain ⟨a, _, ha⟩ := h
   have := congrArg Fin.val ha
-  simp only [Function.comp_apply, liftL, Fin.coe_castSucc, Fin.val_last] at this
+  simp only [Function.comp_apply, liftL, Fin.val_castSucc, Fin.val_last] at this
   have := a.intersection_update_fsHerm_neg_one.2
   omega
 
@@ -2784,7 +2784,7 @@ theorem star_io (x : A) : star (io x : SlopeTestRemainingChoices S A) = io (star
   simp only [Matrix.star_apply, Matrix.scalar_apply, Matrix.diagonal_apply]
   by_cases h : E = E'
   · subst h; simp
-  · rw [if_neg (Ne.symm h), if_neg h, star_zero]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h, star_zero]
 
 end Star
 
@@ -2798,7 +2798,7 @@ theorem star_sc (w : D.Pr) : star (sc P D w) = sc P D (star w) := by
   simp only [Matrix.star_apply, Matrix.scalar_apply, Matrix.diagonal_apply]
   by_cases h : i = j
   · subst h; simp
-  · rw [if_neg (Ne.symm h), if_neg h, star_zero]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h, star_zero]
 
 theorem star_pP (l : Fin P.r) : star (D.pP l) = -(D.pbP l) := by
   show ((D.pP l).2.unop, MulOpposite.op (D.pP l).1) = -(D.pbP l)
@@ -3006,14 +3006,14 @@ theorem uw_lift (hS : SitesOK (K := ℂ) (startM P (DQ P) l).QQ (sites P (DQ P))
   rw [Formalism.FourierDecayAlt.P.word_product_formula ℂ (A P (DQ P)) (Fin (w.length + 1)) _ (sites P (DQ P)) _ hS hGl (sn e b)]
   by_cases hb : b = 0
   · subst hb
-    rw [if_pos (fun c hc => ?_), if_pos rfl, uw_prod P (DQ P) l hS w hG e, List.map_map]
+    rw [ite_eq_left (fun c hc => ?_), ite_eq_left rfl, uw_prod P (DQ P) l hS w hG e, List.map_map]
     · congr 1
       refine List.map_congr_left fun a ha => ?_
-      simp only [Function.comp_apply, liftL, if_pos (plusWord_letters_plus w a ha), Fin.snoc_castSucc]
+      simp only [Function.comp_apply, liftL, ite_eq_left (plusWord_letters_plus w a ha), Fin.snoc_castSucc]
     · induction c using Fin.lastCases with
       | last => simp
       | cast k => exact absurd (mem_lift_positions w k) hc
-  · rw [if_neg (fun h => hb (by have := h _ (last_not_mem w); simpa using this)), if_neg hb]
+  · rw [ite_eq_right (fun h => hb (by have := h _ (last_not_mem w); simpa using this)), ite_eq_right hb]
 
 theorem core4 (hL : IsModelLevel P (DQ P) L) (hOK : P.OK) (hS : SitesOK (K := ℂ) (startM P (DQ P) l).QQ (sites P (DQ P)))
     (Y : ℝ) (w : List ℝ) (hcw : M.CutWord P l (wordP (Y :: w))) (e : Ix (Fin w.length)) :
@@ -3041,11 +3041,11 @@ theorem core4 (hL : IsModelLevel P (DQ P) L) (hOK : P.OK) (hS : SitesOK (K := �
     exact congr (congrArg (· * ·) (congrArg₂ (· * ·)
       (congrArg (fun x => (io (star x) : SlopeTestRemainingChoices (Fin (w.length + 1)) (A P (DQ P)))) (hv k)) (free_embM (hTTf k k'))))
       (congrArg (fun x => (io x : SlopeTestRemainingChoices (Fin (w.length + 1)) (A P (DQ P)))) (hv k'))
-  rw [hCw, uw_lift hS w hG hGl e 0, if_pos rfl, sum_snoc] at hMW
+  rw [hCw, uw_lift hS w hG hGl e 0, ite_eq_left rfl, sum_snoc] at hMW
   simp only [embM_snoc, uw_lift hS w hG hGl, ite_mul, zero_mul] at hMW
   rw [← hMW]
   refine Finset.sum_congr rfl fun e' _ => ?_
-  rw [Finset.sum_eq_single 0 (fun b _ hb => by rw [if_neg (Ne.symm hb)]) (by simp), if_pos rfl, if_pos rfl]
+  rw [Finset.sum_eq_single 0 (fun b _ hb => by rw [ite_eq_right (Ne.symm hb)]) (by simp), ite_eq_left rfl, ite_eq_left rfl]
 
 end Core4
 
@@ -3134,7 +3134,7 @@ theorem cs_cons (x0 q0 : ℂ → ℂ) (Y : ℝ) (w : List ℝ) (e : Ix (Fin w.le
        else xs x0 (wordP w) e ((Y : ℝ) : ℂ)) := by
   rw [plusWord_cons]
   show cs x0 q0 ((wordP w).map liftL) (sn e b) * (if true then (if (sn e b) (Fin.last w.length) = 0 then _ else _) else _) = _
-  rw [cs_lift, if_pos rfl, Fin.snoc_last, qw_lift, xs_lift, xs_lift]
+  rw [cs_lift, ite_eq_left rfl, Fin.snoc_last, qw_lift, xs_lift, xs_lift]
 
 end Relabel
 
@@ -3344,7 +3344,7 @@ theorem DnM_diag (hL : IsModelLevel P (DQ P) L) (Y : ℝ) (w : List ℝ)
     rw [Pi.smul_apply, ← map_smul, mul_assoc, ← map_mul]
     congr 2
     funext π
-    rw [cs_cons, if_pos rfl, div_eq_mul_inv]
+    rw [cs_cons, ite_eq_left rfl, div_eq_mul_inv]
     rfl
   · simp only [Fin.mk_one, Fin.isValue, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_one, Matrix.head_cons,
       Matrix.empty_val', Matrix.cons_val_fin_one]
@@ -3354,7 +3354,7 @@ theorem DnM_diag (hL : IsModelLevel P (DQ P) L) (Y : ℝ) (w : List ℝ)
     rw [mul_assoc, ← map_mul]
     congr 2
     funext π
-    rw [cs_cons, if_neg (by decide)]
+    rw [cs_cons, ite_eq_right (by decide)]
     rfl
 
 theorem wtc_diag (hL : IsModelLevel P (DQ P) L) (w : List ℝ)
@@ -3503,8 +3503,8 @@ theorem part_U (hTT : 0 ≤ P.TT) (hOK : P.OK) (hl1 : 1 ≤ l) (hlk : l ≤ P.k)
     rw [apply_matrix_vector P _ _ j _ hX q i']
     subst hB
     cases B
-    · rw [if_neg (by decide), hg1]; rfl
-    · rw [if_pos rfl, hg2]; rfl
+    · rw [ite_eq_right (by decide), hg1]; rfl
+    · rw [ite_eq_left rfl, hg2]; rfl
   rw [hgX, hDn b, act_diag hTT]
   have hre := cs_real hOK hl1 hlk (wordP (Y :: w)) hcw (ixOf P w.length i').2
     (Fin.snoc (α := fun _ => Fin 2) (ixOf P w.length i').1 b)
@@ -3817,7 +3817,7 @@ theorem prodRatio {ι : Type} (T : Finset ι) (lam : ι → ℝ) (α β L Y s : 
           linarith [Real.add_one_le_exp (3 * L / (β - α))]
         calc (1 + 3 * L / (β - α)) ^ T.card ≤ (Real.exp (3 * L / (β - α))) ^ T.card :=
               pow_le_pow_left₀ (by positivity) h6 _
-          _ = Real.exp (T.card * (3 * L / (β - α))) := by rw [Real.exp_nat_mul]
+          _ = Real.exp (T.card * (3 * L / (β - α))) := by rw [Real.exp_natCast_mul]
           _ ≤ Real.exp 3 := by
               apply Real.exp_le_exp.mpr
               rw [mul_div_assoc', div_le_iff₀ hI]; nlinarith
@@ -3826,7 +3826,7 @@ theorem pow_le_exp (x : ℝ) (n : ℕ) (L : ℝ) (hL : 0 < L) (hx : 0 ≤ x) (hn
     (1 + x / L) ^ n ≤ Real.exp x := by
   have h6 : 1 + x / L ≤ Real.exp (x / L) := by linarith [Real.add_one_le_exp (x / L)]
   calc (1 + x / L) ^ n ≤ (Real.exp (x / L)) ^ n := pow_le_pow_left₀ (by positivity) h6 n
-    _ = Real.exp (n * (x / L)) := by rw [Real.exp_nat_mul]
+    _ = Real.exp (n * (x / L)) := by rw [Real.exp_natCast_mul]
     _ ≤ Real.exp x := by
         apply Real.exp_le_exp.mpr
         rw [mul_div_assoc', div_le_iff₀ hL]; nlinarith
@@ -3911,7 +3911,7 @@ theorem dw_true (P : M.Par) (l : ℕ) (w : List ℝ) (Y : ℝ) (q : Qp P.r P.TT)
       (cs (M.x0 P l (ixOf P w.length i).2) (M.qC P) (tl w) (ixOf P (w.length + 1) (true, i)).1 *
         xs (M.x0 P l (ixOf P w.length i).2) (tl w) (ixOf P (w.length + 1) (true, i)).1 (Y : ℂ)).re := by
   simp only [dwW, plusWord_cons, cs]
-  rw [if_pos trivial, if_neg]
+  rw [ite_eq_left trivial, ite_eq_right]
   · rfl
   · show ¬ (Fin.snoc (α := fun _ => Fin 2) (ixOf P w.length i).1 (if true then 1 else 0) (Fin.last w.length) = 0)
     simp
@@ -3922,7 +3922,7 @@ theorem dw_false (P : M.Par) (l : ℕ) (w : List ℝ) (Y : ℝ) (q : Qp P.r P.TT
         (qw (M.qC P) (tl w) (Y : ℂ) /
           xs (M.x0 P l (ixOf P w.length i).2) (tl w) (ixOf P (w.length + 1) (false, i)).1 ((Y : ℂ) + 1))).re := by
   simp only [dwW, plusWord_cons, cs]
-  rw [if_pos trivial, if_pos]
+  rw [ite_eq_left trivial, ite_eq_left]
   · rfl
   · show Fin.snoc (α := fun _ => Fin 2) (ixOf P w.length i).1 (if false then 1 else 0) (Fin.last w.length) = 0
     simp
@@ -5027,12 +5027,12 @@ theorem csR_type (x0s x0t q0R : ℝ → ℝ) (μ : Letter ℂ S → ℝ) : ∀ (
         else xsR x0t v e b.pt.re) * μ b) by ring, ih]
     congr 1
     by_cases he : e b.intersection_update_fsHerm_neg_one = 0
-    · simp only [he, if_true, xsR]
+    · simp only [he, ite_true, xsR]
       obtain ⟨e1, e2⟩ := hb1 he
       have e3 : phR v e (b.pt.re + 1) ≠ 0 := phR_ne b v hp.1 e 1 (by norm_num)
       rw [e1]
       field_simp
-    · simp only [he, if_false, xsR]
+    · simp only [he, ite_false, xsR]
       rw [← hb2 he]; ring
 
 end Real
@@ -5141,7 +5141,7 @@ theorem csR_flip (x0R q0R : ℝ → ℝ) (L : ℝ) (hL : 2 ≤ L) (la : Letter �
     simp only [csR, List.length_cons]
     rcases List.mem_cons.1 h with rfl | h'
     · have hv : ∀ c ∈ v, e c.intersection_update_fsHerm_neg_one = e' c.intersection_update_fsHerm_neg_one := fun c hc => he _ (fun e0 => hnd'.1 (e0 ▸ List.mem_map_of_mem hc))
-      rw [csR_congr x0R q0R v e e' hv, if_pos hea, if_neg he'a]
+      rw [csR_congr x0R q0R v e e' hv, ite_eq_left hea, ite_eq_right he'a]
       simp only [xsR, qwR]
       rw [phR_congr v e e' hv]
       have hph0 := (phR_bounds L hL v e' la.pt.re fun c hc => hp'.1 c hc)
@@ -5655,9 +5655,9 @@ theorem xpoly_up (k : ℕ) (ρs ρt : ℕ → ℝ) (l : ℕ) (hl : l ∈ Icc 1 (
     (hup : ∀ i ∈ Icc 1 (k - 1), ρt i = ρs i + if i = l then 1 else 0) (Y : ℝ) :
     I.xpoly k ρt Y * (Y + ρs l) = I.xpoly k ρs Y * (Y + ρs l + 1) := by
   unfold I.xpoly
-  rw [← mul_prod_erase _ _ hl, ← mul_prod_erase _ _ hl, hup l hl, if_pos rfl]
+  rw [← mul_prod_erase _ _ hl, ← mul_prod_erase _ _ hl, hup l hl, ite_eq_left rfl]
   have : ∏ x ∈ (Icc 1 (k - 1)).erase l, (Y + ρt x) = ∏ x ∈ (Icc 1 (k - 1)).erase l, (Y + ρs x) :=
-    prod_congr rfl fun x hx => by rw [hup x (mem_of_mem_erase hx), if_neg (ne_of_mem_erase hx)]; ring
+    prod_congr rfl fun x hx => by rw [hup x (mem_of_mem_erase hx), ite_eq_right (ne_of_mem_erase hx)]; ring
   rw [this]; ring
 
 end
@@ -5865,7 +5865,7 @@ theorem ss_weight (x0s x0t q0R : ℝ → ℝ) (ρm L Iw Y : ℝ) (hL2 : 2 < L) (
     refine ⟨fun he => ⟨?_, p2.ne'⟩, fun he => ?_, ?_⟩
     · have hr := hrel (b.pt.re + 1)
       have hd2 : b.pt.re + 1 + ρm ≠ 0 := by rw [show b.pt.re + 1 + ρm = b.pt.re + ρm + 1 by ring]; exact hd
-      simp only [he, sgR, if_true]
+      simp only [he, sgR, ite_true]
       field_simp
       linear_combination hr
     · have he1 : e1 b.intersection_update_fsHerm_neg_one = 1 := by
@@ -5873,7 +5873,7 @@ theorem ss_weight (x0s x0t q0R : ℝ → ℝ) (ρm L Iw Y : ℝ) (hL2 : 2 < L) (
         · exact absurd h he
         · exact h
       have hr := hrel b.pt.re
-      simp only [he1, sgR, show (1 : Fin 2) ≠ 0 by decide, if_false]
+      simp only [he1, sgR, show (1 : Fin 2) ≠ 0 by decide, ite_false]
       field_simp
       linear_combination hr
     · have hfar := hρfar b hb
@@ -6026,13 +6026,13 @@ theorem sparse_bound {ι α : Type} [Fintype ι] [DecidableEq ι] (T : Finset α
     by_cases h : ∃ i', Pr m i i'
     · obtain ⟨i0, h0⟩ := h
       rw [sum_eq_single i0, sum_eq_single i0]
-      · rw [if_pos h0, if_pos h0, norm_mul, mul_pow]
-      · intro b _ hb; rw [if_neg (fun hb' => hb (hu1 m i b i0 hb' h0))]
+      · rw [ite_eq_left h0, ite_eq_left h0, norm_mul, mul_pow]
+      · intro b _ hb; rw [ite_eq_right (fun hb' => hb (hu1 m i b i0 hb' h0))]
       · simp
-      · intro b _ hb; rw [if_neg (fun hb' => hb (hu1 m i b i0 hb' h0))]; simp
+      · intro b _ hb; rw [ite_eq_right (fun hb' => hb (hu1 m i b i0 hb' h0))]; simp
       · simp
     · push Not at h
-      rw [sum_eq_zero fun i' _ => by rw [if_neg (h i')]; simp, sum_eq_zero fun i' _ => by rw [if_neg (h i')]]
+      rw [sum_eq_zero fun i' _ => by rw [ite_eq_right (h i')]; simp, sum_eq_zero fun i' _ => by rw [ite_eq_right (h i')]]
       simp
   have hcs : ∀ i, ‖∑ m ∈ T, ∑ i', (if Pr m i i' then κ m i i' else 0) * v i'‖ ^ 2 ≤
       (T.card : ℝ) * ∑ m ∈ T, ∑ i', (if Pr m i i' then ‖κ m i i'‖ ^ 2 * ‖v i'‖ ^ 2 else 0) := by
@@ -6060,12 +6060,12 @@ theorem sparse_bound {ι α : Type} [Fintype ι] [DecidableEq ι] (T : Finset α
         refine sum_le_sum fun m hm => sum_le_sum fun i' _ => mul_le_mul_of_nonneg_left ?_ (sq_nonneg _)
         by_cases h : ∃ i, Pr m i i'
         · obtain ⟨i0, h0⟩ := h
-          rw [sum_eq_single i0, if_pos h0]
+          rw [sum_eq_single i0, ite_eq_left h0]
           · exact hβ m hm i0 i' h0
-          · intro b _ hb; rw [if_neg (fun hb' => hb (hu2 m b i0 i' hb' h0))]
+          · intro b _ hb; rw [ite_eq_right (fun hb' => hb (hu2 m b i0 i' hb' h0))]
           · simp
         · push Not at h
-          rw [sum_eq_zero fun i _ => by rw [if_neg (h i)]]
+          rw [sum_eq_zero fun i _ => by rw [ite_eq_right (h i)]]
           exact mul_nonneg (hσ i') (hβ0 m i')
     _ = ∑ i', σ i' * ‖v i'‖ ^ 2 * ((T.card : ℝ) * ∑ m ∈ T, β m i') := by
         rw [sum_comm, mul_sum]
@@ -6117,15 +6117,15 @@ theorem evalOne_frame_difference (P : M.Par) (w : List ℝ) (L : R.LevelData (A 
   unfold dSS dL
   congr 1
   · by_cases he : e = e'
-    · rw [if_pos he]
+    · rw [ite_eq_left he]
       refine sum_congr rfl fun j _ => ?_
-      rw [Matrix.smul_apply, Matrix.smul_apply, evalOne_smul, io_mult_apply, if_pos he, evalOne_mul_scalar_matrix, hz, hzbi,
+      rw [Matrix.smul_apply, Matrix.smul_apply, evalOne_smul, io_mult_apply, ite_eq_left he, evalOne_mul_scalar_matrix, hz, hzbi,
         ZJ, evalOne_shift_piece]
       unfold phase
       ring
-    · rw [if_neg he]
+    · rw [ite_eq_right he]
       refine sum_eq_zero fun j _ => ?_
-      rw [Matrix.smul_apply, Matrix.smul_apply, evalOne_smul, io_mult_apply, if_neg he]
+      rw [Matrix.smul_apply, Matrix.smul_apply, evalOne_smul, io_mult_apply, ite_eq_right he]
       simp [evalOne_zero]
   · rw [evalOne_sub, evalOne_scalar_matrix, evalOne_scalar_matrix]
     split_ifs <;> simp
@@ -6223,20 +6223,20 @@ theorem dSS_sparse (P : M.Par) (w : List ℝ) (Y₁ Y₂ : ℝ) (q : Qp P.r P.TT
       else 0 := by
   unfold dSS
   by_cases he : e = e'
-  · rw [if_pos he, Fintype.sum_prod_type]
+  · rw [ite_eq_left he, Fintype.sum_prod_type]
     refine sum_congr rfl fun m _ => ?_
     rw [sum_eq_single π]
     · by_cases hu : M.Up P ((m : ℕ) + 1) π' π
       · have h1 : (e = e' ∧ M.Up P ((m : ℕ) + 1) π' π) := ⟨he, hu⟩
-        rw [if_pos h1]
-        simp only [hu, if_true, mul_one]
+        rw [ite_eq_left h1]
+        simp only [hu, ite_true, mul_one]
       · have h1 : ¬ (e = e' ∧ M.Up P ((m : ℕ) + 1) π' π) := fun h => hu h.2
-        rw [if_neg h1]
-        simp only [hu, if_false, mul_zero]
-    · intro b _ hb; rw [if_neg (Ne.symm hb)]; simp
+        rw [ite_eq_right h1]
+        simp only [hu, ite_false, mul_zero]
+    · intro b _ hb; rw [ite_eq_right (Ne.symm hb)]; simp
     · simp
-  · rw [if_neg he]
-    exact (sum_eq_zero fun m _ => if_neg fun h => he h.1).symm
+  · rw [ite_eq_right he]
+    exact (sum_eq_zero fun m _ => ite_eq_right fun h => he h.1).symm
 
 theorem dL_sparse (P : M.Par) (w : List ℝ) (Y₁ Y₂ : ℝ) (e e' : Ix (Fin w.length)) (π π' : M.Ty P) :
     dL P w Y₁ Y₂ e e' π π' = ∑ n : Fin (wordP w).length,
@@ -6248,15 +6248,15 @@ theorem dL_sparse (P : M.Par) (w : List ℝ) (Y₁ Y₂ : ℝ) (e e' : Ix (Fin w
   unfold dL
   rw [lsS_sum, lsS_sum, ← sum_sub_distrib]
   by_cases hp : π = π'
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     refine sum_congr rfl fun n _ => ?_
     unfold eUS
     by_cases hc : e ((wordP w).get n).intersection_update_fsHerm_neg_one = 0 ∧ e' ((wordP w).get n).intersection_update_fsHerm_neg_one = 1 ∧
         ∀ b, b ≠ ((wordP w).get n).intersection_update_fsHerm_neg_one → e b = e' b
-    · rw [if_pos hc, if_pos ⟨hp, hc⟩]; simp; ring
-    · rw [if_neg hc, if_neg fun h => hc h.2]; simp
-  · rw [if_neg hp]
-    exact (sum_eq_zero fun n _ => if_neg fun h => hp h.1).symm
+    · rw [ite_eq_left hc, ite_eq_left ⟨hp, hc⟩]; simp; ring
+    · rw [ite_eq_right hc, ite_eq_right fun h => hc h.2]; simp
+  · rw [ite_eq_right hp]
+    exact (sum_eq_zero fun n _ => ite_eq_right fun h => hp h.1).symm
 
 end
 
@@ -6573,7 +6573,7 @@ theorem Ctx.ss_entry (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (i i' :
 
   have hrho := Formalism.FourierDecayAlt.P.rho_raise P mm πs πt hup
   set ρs := M.rho P πs
-  have hρt : M.rho P πt mm = ρs mm + 1 := by rw [hrho mm hmm, if_pos rfl]
+  have hρt : M.rho P πt mm = ρs mm + 1 := by rw [hrho mm hmm, ite_eq_left rfl]
   have hgJ : gJ P (m, πt) = -((ρs mm + 1 : ℝ) : ℂ) := by
     show -((M.rho P πt mm : ℝ) : ℂ) = _
     rw [hρt]
@@ -6926,7 +6926,7 @@ theorem Ctx.let_entry (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (i i' 
     calc ‖multS ((wordP w).take n) ((wordP w).get n).pt (ixOf P w.length i').1‖ ^ 2
         ≤ ((1 + 1 / Lb) ^ ((wordP w).take n).length) ^ 2 := pow_le_pow_left₀ (norm_nonneg _) this 2
       _ ≤ Real.exp 1 ^ 2 := pow_le_pow_left₀ (by positivity) e1 2
-      _ = Real.exp 2 := by rw [← Real.exp_nat_mul]; norm_num
+      _ = Real.exp 2 := by rw [← Real.exp_natCast_mul]; norm_num
   rw [norm_mul, mul_pow]
   set W := Wq P q ^ (w.length + 1)
   have hW : 0 ≤ W := pow_nonneg (MAx3.Wq_pos P hTT.le q).le _
@@ -7023,7 +7023,7 @@ theorem sep_of_up (P : M.Par) (hOK : P.OK) (πs πt : M.Ty P) (m : ℕ) (hm : m 
   have hj' := mem_Icc.1 hj
   rcases lt_trichotomy j m with hlt | heq | hgt
   · have h1 := rho_le P.k P.u P.u' (M.rho P πt) ht j m hj'.1 hlt.le hm'.2
-    rw [hrho j hj, if_neg (ne_of_lt hlt), hrho m hm, if_pos rfl] at h1
+    rw [hrho j hj, ite_eq_right (ne_of_lt hlt), hrho m hm, ite_eq_left rfl] at h1
     have : (1 : ℝ) ≤ ((m - j : ℕ) : ℝ) := by exact_mod_cast (by omega : 1 ≤ m - j)
     rw [abs_of_pos (by linarith)]; linarith
   · subst heq
@@ -7088,7 +7088,7 @@ theorem Ctx.ss_bound (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (v : Io
         4 * Real.exp 7 * Lb ^ 2 * summand P (ixOf P w.length i').2 Y ((m : ℕ) + 1) else 0)
     (fun i => (h.weights_nonneg q i).1) (fun i => (h.weights_nonneg q i).2) ?_ ?_ (88 * Real.exp 7) ?_ v
   · intro m _ i i' hPr
-    rw [if_pos ⟨_, hPr.2⟩]
+    rw [ite_eq_left ⟨_, hPr.2⟩]
     exact h.ss_entry q i i' m hPr.1 hPr.2
   · intro m i'
     split_ifs
@@ -7941,12 +7941,12 @@ theorem monL_conj (u : Qp P.r P.TT → M.Ty P → ℂ) (hu : ∀ π, (fun q => u
       _ * wordModuleApply P (io (if b then lb L ((y : ℂ) + ((t + s : ℝ) : ℂ)) else la L ((y : ℂ) + ((t + s : ℝ) : ℂ)))) _ q i
     rw [ih, ← G.apply_matrix_mul, ← G.io_mul]
     cases b
-    · simp only [Bool.false_eq_true, if_false]
+    · simp only [Bool.false_eq_true, ite_false]
       have e : la L ((y : ℂ) + t) * G.Gs P s = G.Gs P s * la L ((y : ℂ) + ((t + s : ℝ) : ℂ)) := by
         unfold la
         rw [mul_assoc, (G.hat_Gs hTT hL s _).1, ← mul_assoc, hDi.eq, mul_assoc, hc]
       rw [e, G.io_mul, G.apply_matrix_gamma_power_left]
-    · simp only [if_true]
+    · simp only [ite_true]
       have e : lb L ((y : ℂ) + t) * G.Gs P s = G.Gs P s * lb L ((y : ℂ) + ((t + s : ℝ) : ℂ)) := by
         unfold lb
         rw [mul_assoc, (G.hat_Gs hTT hL s _).2, ← mul_assoc, hDbi.eq, mul_assoc, hc]
@@ -8135,7 +8135,7 @@ theorem ptMat_mul {N : ℕ} (b c : SlopeTestRemainingChoices (Fin N) (A P (DQ P)
   have hU : ∀ i', (fun q => U q i') ∈ smSub P.r P.TT := fun i' => const_mem P _
   have h1 := G.apply_matrix_pointwise P (b * c) (mul_mem hb hc) U hU q i
   rw [G.apply_matrix_mul, G.apply_matrix_pointwise P b hb _ (fun i' => G.apply_matrix_smooth P c U i') q i] at h1
-  simp only [U, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+  simp only [U, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
   rw [← h1]
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [G.apply_matrix_pointwise P c hc U hU q j]
@@ -8149,7 +8149,7 @@ theorem ptMat_one {N : ℕ} (q : Qp P.r P.TT) (i k : Iota P N) :
   have hU : ∀ i', (fun q => U q i') ∈ smSub P.r P.TT := fun i' => const_mem P _
   have h1 := G.apply_matrix_pointwise P (1 : SlopeTestRemainingChoices (Fin N) (A P (DQ P))) (Subalgebra.one_mem _) U hU q i
   rw [apply_matrix_one P U hU q i] at h1
-  simp only [U, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+  simp only [U, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
   exact h1.symm
 
 theorem eq_iff_last {N : ℕ} (x y : Ix (Fin (N + 1))) :
@@ -8353,8 +8353,8 @@ theorem monPoly (u : Qp P.r P.TT → M.Ty P → ℂ) (hu : ∀ π, (fun q => u q
     have hx : (if b then lb L ((y 0 : ℂ) + ((0 : ℝ) : ℂ)) else la L ((y 0 : ℂ) + ((0 : ℝ) : ℂ))) =
         ∑ k ∈ Finset.range (P.r + 1 + 1), ((y 0 : ℝ) : ℂ) ^ k • γ b k := by
       cases b
-      · simp only [Bool.false_eq_true, if_false, γ, Complex.ofReal_zero, add_zero]; exact hα _
-      · simp only [if_true, γ, Complex.ofReal_zero, add_zero]; exact hβ _
+      · simp only [Bool.false_eq_true, ite_false, γ, Complex.ofReal_zero, add_zero]; exact hα _
+      · simp only [ite_true, γ, Complex.ofReal_zero, add_zero]; exact hβ _
     rw [hx]
     simp only [apply_matrix_polynomial]
     simp only [Finset.sum_range]
@@ -8455,7 +8455,7 @@ theorem inv_prop (w : List ℝ) (N : ℕ) (h : Iota P N = Iota P w.length) (ω :
     rw [← ptMat_mul P _ _ (hUS _ hBi) (hUS _ hB), Bi_mul, ptMat_one]
     by_cases hik : i = k
     · subst hik; simp
-    · rw [if_neg (fun h' => hik ((cast_inj h).1 h')), if_neg hik, zero_mul]
+    · rw [ite_eq_right (fun h' => hik ((cast_inj h).1 h')), ite_eq_right hik, zero_mul]
   simp only [key]
   simp
 
@@ -9645,11 +9645,11 @@ theorem letter_vec_NF {N : ℕ} (y₁ y₂ : ℂ) (E : SlopeTestRemainingChoices
   refine Submodule.sum_mem _ fun e' _ => ?_
   rw [letter_entry hL hLaw]
   cases b
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     split_ifs
     · exact letterA hS y₁ (h𝒳 e')
     · rw [zero_mul]; exact Submodule.zero_mem _
-  · simp only [if_true, add_mul]
+  · simp only [ite_true, add_mul]
     refine Submodule.add_mem _ ?_ ?_
     · split_ifs
       · exact letterR hS y₂ (h𝒳 e')
@@ -9874,10 +9874,10 @@ theorem PW_fn {x : A P (DQ P)} {g : Qp P.r P.TT → ℂ} (hx : IsFn x g) {C : �
     split_ifs
     · exact hg q
     · simpa using hC
-  · rw [MAx2.R2.act_sc, Finset.sum_eq_single π (fun b _ hb => by dsimp only; rw [if_neg (Ne.symm hb), zero_mul])
+  · rw [MAx2.R2.act_sc, Finset.sum_eq_single π (fun b _ hb => by dsimp only; rw [ite_eq_right (Ne.symm hb), zero_mul])
       (by simp)]
     dsimp only
-    rw [if_pos rfl, ← hF q]
+    rw [ite_eq_left rfl, ← hF q]
     show evQ P (F * f π) q = _
     rw [MAx2.Jet.evQ_mul]
 
@@ -9888,10 +9888,10 @@ theorem PW_kap (g : M.Ty P → ℂ) : PW (kap P (DQ P) g) (∑ π, ‖g π‖) :
     split_ifs
     · exact Finset.single_le_sum (f := fun π => ‖g π‖) (fun _ _ => norm_nonneg _) (Finset.mem_univ π)
     · simpa using Finset.sum_nonneg (fun π _ => norm_nonneg (g π))
-  · rw [MAx2.R2.act_kap, Finset.sum_eq_single π (fun b _ hb => by dsimp only; rw [if_neg (Ne.symm hb), zero_mul])
+  · rw [MAx2.R2.act_kap, Finset.sum_eq_single π (fun b _ hb => by dsimp only; rw [ite_eq_right (Ne.symm hb), zero_mul])
       (by simp)]
     dsimp only
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     rfl
 
 theorem PW_scalars (x : A P (DQ P)) (c : M.Ty P → M.Ty P → ℂ) (hc : ∀ π π', x π π' = algebraMap ℂ (DQ P).Pr (c π π')) :
@@ -10556,7 +10556,7 @@ theorem ee_rep (l : ℕ) : ∀ v : List (Letter ℂ S), (∀ a ∈ v, a.plus = t
     have hcont : ∀ Y ∈ Gw P (a :: v), ContinuousAt (fun Y : ℂ => (Y - a.pt)⁻¹) Y := fun Y hY =>
       (continuousAt_id.sub continuousAt_const).inv₀ (sub_ne_zero.2 (hY.2 a List.mem_cons_self))
     have htz : (tz L : SlopeTestRemainingChoices S (A P (DQ P))) ∈ UB L S := io_B hL hLaw (Subalgebra.smul_mem _ (ζbi_BA hL hLaw) _)
-    simp only [ofWord, hpl, if_true]
+    simp only [ofWord, hpl, ite_true]
     show Rep L (Gw P (a :: v)) (fun Y => ins a.intersection_update_fsHerm_neg_one !![(ofWord L (startM P (DQ P) l) v).ee Y -
       (ofWord L (startM P (DQ P) l) v).DD Y a.pt + tz L, -((Y - a.pt)⁻¹ • 1); 0,
       (ofWord L (startM P (DQ P) l) v).xi a.pt * (ofWord L (startM P (DQ P) l) v).ee Y *
@@ -10607,10 +10607,10 @@ theorem PW_alg (c : ℂ) : PW (algebraMap ℂ (A P (DQ P)) c) ‖c‖ := by
   classical
   refine ⟨norm_nonneg _, fun _ π π' => if π = π' then c else 0, fun q π π' => ?_, fun f q π => ?_⟩
   · dsimp only; split_ifs <;> simp
-  · rw [MAx2.R2.act_alg, Finset.sum_eq_single π (fun b _ hb => by dsimp only; rw [if_neg (Ne.symm hb), zero_mul])
+  · rw [MAx2.R2.act_alg, Finset.sum_eq_single π (fun b _ hb => by dsimp only; rw [ite_eq_right (Ne.symm hb), zero_mul])
       (by simp)]
     dsimp only
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     rfl
 
 theorem PW_entry {x : A P (DQ P)} {C : ℝ} (hx : PW x C) (q : Qp P.r P.TT) (π π' : M.Ty P) :
@@ -10619,10 +10619,10 @@ theorem PW_entry {x : A P (DQ P)} {C : ℝ} (hx : PW x C) (q : Qp P.r P.TT) (π 
   obtain ⟨h0, Mx, b, e⟩ := hx
   have key := e (fun π'' => if π'' = π' then 1 else 0) q π
   have hl : actA P x (fun π'' => if π'' = π' then 1 else 0) π = (x π π').1 1 := by
-    rw [MAx2.R2.actA_eq, Finset.sum_eq_single π' (fun b _ hb => by rw [if_neg hb, map_zero]) (by simp), if_pos rfl]
+    rw [MAx2.R2.actA_eq, Finset.sum_eq_single π' (fun b _ hb => by rw [ite_eq_right hb, map_zero]) (by simp), ite_eq_left rfl]
     rfl
   rw [hl] at key
-  rw [key, Finset.sum_eq_single π' (fun b _ hb => by rw [if_neg hb, G.evQ_zero, mul_zero]) (by simp), if_pos rfl]
+  rw [key, Finset.sum_eq_single π' (fun b _ hb => by rw [ite_eq_right hb, G.evQ_zero, mul_zero]) (by simp), ite_eq_left rfl]
   show ‖Mx q π π' * 1‖ ≤ C
   rw [mul_one]; exact b q π π'
 
@@ -11167,7 +11167,7 @@ theorem gx_true_bound {l : ℕ} {L : LevelData (A P (DQ P)) P.r} (hL : IsModelLe
         ∑ i', ‖ptMat P ((frW P l L w).ee (Y : ℂ)) q i i'‖ * ‖gL P l L w Y X q (false, i')‖ * D := by
         rw [add_mul, Finset.sum_mul]
     _ ≤ BR i q + ∑ i', |E| * BA i' q := add_le_add hR (Finset.sum_le_sum fun i' _ => h2 i')
-    _ = BdF BA BR E (true, i) q := by simp only [BdF, if_true, Finset.mul_sum]
+    _ = BdF BA BR E (true, i) q := by simp only [BdF, ite_true, Finset.mul_sum]
 
 end
 
@@ -11244,7 +11244,7 @@ theorem cont_gR (hL : IsModelLevel P (DQ P) L) (w : List ℝ) (X : Qp P.r P.TT �
     funext Y
     rw [G.gX_split P hL w Y X q i]
     have h1 := hα (Y : ℂ) q i
-    simp only [if_true] at h1
+    simp only [ite_true] at h1
     rw [h1]
     congr 1
     exact Finset.sum_congr rfl fun i' _ => by rw [hpt]
@@ -11312,7 +11312,7 @@ theorem fourth_identity_dual : Formalism.FourierDecayAlt.MA.I4'Q := by
     rcases a with ⟨_ | _, i⟩
     · exact hBAb Y hY q i
     · have hR := hBRb Y hY q i
-      simp only [if_true] at hR
+      simp only [ite_true] at hR
       exact MAx3.I4.gx_true_bound hL w Y _ q i BA BR E _ (pow_nonneg (MAx3.I4.Dabs_pos hTT q).le _) hR
         (fun i' => hBAb Y hY q i') (fun i' => by rw [hpt]; exact ((hE q i i').1 Y hY).trans (le_abs_self _))
   have hkc : ∀ a : Bool × Iota P w.length, ContinuousOn (MAx3.I4.kap' P l w a.1 a.2) (MAx3.I4.Jbox α β Lb w.length) :=
@@ -11421,7 +11421,7 @@ theorem group_unique (K : ℕ) (a b : ℕ → SmQ P.r P.TT)
     · intro n; exact hev n
   have hc := congrArg (fun p : Polynomial ℂ => p.coeff k) hpab
   simp only [pa, pb, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow] at hc
-  rw [Finset.sum_ite_eq _ k, Finset.sum_ite_eq _ k, if_pos hk, if_pos hk] at hc
+  rw [Finset.sum_ite_eq _ k, Finset.sum_ite_eq _ k, ite_eq_left hk, ite_eq_left hk] at hc
   exact hc
 
 theorem isJ_unique {F F' : (ℝ → ℝ) → SmQ P.r P.TT} (hF : IsJ P F) (hF' : IsJ P F')
@@ -11436,8 +11436,8 @@ theorem isJ_unique {F F' : (ℝ → ℝ) → SmQ P.r P.TT} (hF : IsJ P F) (hF' :
     intro K0 c hK φ
     rw [← Finset.sum_range_add_sum_Ico _ (Nat.succ_le_succ hK)]
     rw [Finset.sum_eq_zero (s := Finset.Ico (K0 + 1) (K + 1)) (fun k hk => by
-      rw [if_neg (by simp [Finset.mem_Ico] at hk; omega), mul_zero]), add_zero]
-    exact Finset.sum_congr rfl fun k hk => by rw [if_pos (by simp at hk; omega)]
+      rw [ite_eq_right (by simp [Finset.mem_Ico] at hk; omega), mul_zero]), add_zero]
+    exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left (by simp at hk; omega)]
   have hu := group_unique P K (fun k => if k ≤ K1 then a k else 0) (fun k => if k ≤ K2 then b k else 0) (fun s => by
     rw [← pad K1 a (le_max_left _ _), ← pad K2 b (le_max_right _ _), ← ha _ (G.smoothLog_rpow s),
       ← hb _ (G.smoothLog_rpow s)]
@@ -11553,7 +11553,7 @@ theorem lagrange {M : Type} [AddCommGroup M] [Module ℂ M] (F : ℂ → M) (K :
   rw [Finset.sum_comm]
   have e2 : ∀ k' : Fin (K + 1), ∑ m : Fin (K + 1), (V⁻¹ ⟨k, hk'⟩ m * V m k') • a k' = (V⁻¹ * V) ⟨k, hk'⟩ k' • a k' := by
     intro k'; rw [← Finset.sum_smul, Matrix.mul_apply]
-  simp only [e2, hWV, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [e2, hWV, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 end Poly
 
@@ -11649,8 +11649,8 @@ theorem pad {M : Type} [AddCommMonoid M] [Module ℂ M] (K K' : ℕ) (hK : K ≤
       ∑ k ∈ Finset.range (K' + 1), t ^ k • (if k ≤ K then c k else 0) := by
   rw [← Finset.sum_range_add_sum_Ico _ (Nat.succ_le_succ hK)]
   rw [Finset.sum_eq_zero (s := Finset.Ico (K + 1) (K' + 1)) (fun k hk => by
-    rw [if_neg (by simp [Finset.mem_Ico] at hk; omega), smul_zero]), add_zero]
-  exact Finset.sum_congr rfl fun k hk => by rw [if_pos (by simp at hk; omega)]
+    rw [ite_eq_right (by simp [Finset.mem_Ico] at hk; omega), smul_zero]), add_zero]
+  exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left (by simp at hk; omega)]
 
 theorem CP_zero (d ℓ : ℕ) : CP L d ℓ 0 :=
   ⟨0, fun _ => 0, fun _ => Submodule.zero_mem _, fun s => by simp⟩
@@ -11700,7 +11700,7 @@ theorem CP_term {d ℓ : ℕ} {b : A P (DQ P)} (hb : b ∈ I4.SB L) {i i' : ℕ}
     have hs := ha (s : ℂ)
     dsimp only at hs ⊢
     rw [hs]
-    exact Finset.sum_congr rfl fun k hk => by rw [if_pos hk]
+    exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left hk]
 
 theorem polynomial_control_of_normal_form {d ℓ : ℕ} {x : A P (DQ P)} (hx : x ∈ NormalFormTwo L (I4.SB L) d ℓ) : CP L d ℓ x := by
   induction hx using Submodule.span_induction with
@@ -12596,7 +12596,7 @@ theorem polyIn_coeff_span {R : Type} [AddCommGroup R] [Module ℂ R] (f : ℂ �
     simp_rw [← Finset.sum_smul]
     have : ∀ j : Fin (d + 1), (∑ n, W kk n * V n j) = (1 : Matrix (Fin (d + 1)) (Fin (d + 1)) ℂ) kk j := by
       intro j; rw [← hWV, Matrix.mul_apply]
-    simp_rw [this, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp_rw [this, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     try rfl
   rw [key]
   exact Submodule.sum_mem _ fun n _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨n, rfl⟩)
@@ -12837,13 +12837,13 @@ theorem leib_gen (P : M.Par) (X : ℂ → A P (DQ P)) (y : ℂ) (σ : ℝ) (d : 
   set a' : ℕ → A P (DQ P) := fun k => if k < d + 1 then a k else 0
   have ha' : ∀ t, X (y + t) = ∑ k ∈ Finset.range (d + 1), t ^ k • a' k := fun t => by
     rw [show X (y + t) = (fun t => X (y + t)) t from rfl, ha t]
-    exact Finset.sum_congr rfl fun k hk => by simp only [a']; rw [if_pos (Finset.mem_range.1 hk)]
+    exact Finset.sum_congr rfl fun k hk => by simp only [a']; rw [ite_eq_left (Finset.mem_range.1 hk)]
   have hspan : ∀ k, a' k ∈ Submodule.span ℂ (Set.range fun n : Fin (d + 1) => X (y + n)) := by
     intro k
     by_cases hk : k < d + 1
     · have := polyIn_coeff_span (fun t => X (y + t)) d a' ha' k (Finset.mem_range.2 hk)
       simpa using this
-    · have : a' k = 0 := by simp only [a']; rw [if_neg hk]
+    · have : a' k = 0 := by simp only [a']; rw [ite_eq_right hk]
       rw [this]; exact Submodule.zero_mem _
   have hsub : Submodule.span ℂ (Set.range fun n : Fin (d + 1) => X (y + n)) ≤ Subalgebra.toSubmodule (JetMatrixAlgebra P) :=
     Submodule.span_le.2 (by rintro _ ⟨n, rfl⟩; exact hmem _)
@@ -13539,12 +13539,12 @@ theorem site_entries (l m : Fin r) (hlm : l ≠ m) (y y' : ℂ) (i j k n : Fin 2
     (L.Tvl y l) i j * (L.Tvl y' m) k n = (L.Tvl y' m) k n * (L.Tvl y l) i j := by
   have hm : L.Tvl y' m ∈ matSub (siteC L l) (Fin 2) := by
     refine matrix_two_mem_sub _ _ _ _ _ (sub_mem (Subalgebra.algebraMap_mem _ _) ?_) (neg_mem ?_) ?_ (Subalgebra.zero_mem _)
-    · exact mem_siteC L (L.pb_pb l m) (by rw [L.pb_cb m l, if_neg (Ne.symm hlm), add_zero])
-        (by rw [L.pb_cbi m l, if_neg (Ne.symm hlm), sub_zero])
+    · exact mem_siteC L (L.pb_pb l m) (by rw [L.pb_cb m l, ite_eq_right (Ne.symm hlm), add_zero])
+        (by rw [L.pb_cbi m l, ite_eq_right (Ne.symm hlm), sub_zero])
     · refine mem_siteC L ?_ (fc L (m_cb L l) (m_cb L m)) (fc L (m_cbi L l) (m_cb L m))
-      rw [L.pb_cb, if_neg hlm, add_zero]
+      rw [L.pb_cb, ite_eq_right hlm, add_zero]
     · refine mem_siteC L ?_ (fc L (m_cb L l) (m_cbi L m)) (fc L (m_cbi L l) (m_cbi L m))
-      rw [L.pb_cbi, if_neg hlm, sub_zero]
+      rw [L.pb_cbi, ite_eq_right hlm, sub_zero]
   have hz := hm k n
   rw [siteC, Subalgebra.mem_centralizer_iff] at hz
   have hl : L.Tvl y l ∈ matSub (Subalgebra.centralizer ℂ {(L.Tvl y' m) k n}) (Fin 2) := by
@@ -14376,8 +14376,8 @@ theorem PR_mono {f : ℝ → R} {d d' : ℕ} (h : PR f d) (hd : d ≤ d') : PR f
   dsimp only
   rw [ha, ← Finset.sum_range_add_sum_Ico _ (Nat.succ_le_succ hd)]
   rw [Finset.sum_eq_zero (s := Finset.Ico (d + 1) (d' + 1)) (fun k hk => by
-    rw [if_neg (by simp [Finset.mem_Ico] at hk; omega), smul_zero]), add_zero]
-  exact Finset.sum_congr rfl fun k hk => by rw [if_pos (by simp at hk; omega)]
+    rw [ite_eq_right (by simp [Finset.mem_Ico] at hk; omega), smul_zero]), add_zero]
+  exact Finset.sum_congr rfl fun k hk => by rw [ite_eq_left (by simp at hk; omega)]
 
 theorem PR_add {f g : ℝ → R} {d : ℕ} (hf : PR f d) (hg : PR g d) : PR (fun s => f s + g s) d := by
   obtain ⟨a, ha⟩ := hf; obtain ⟨b, hb⟩ := hg
@@ -14407,7 +14407,7 @@ theorem PR_mul {f g : ℝ → R} {d1 d2 : ℕ} (hf : PR f d1) (hg : PR g d2) : P
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun j hj => ?_
   simp only [smul_ite, smul_zero]
-  rw [Finset.sum_ite_eq (range (d1 + d2 + 1)) (i + j), if_pos (by simp at hi hj ⊢; omega)]
+  rw [Finset.sum_ite_eq (range (d1 + d2 + 1)) (i + j), ite_eq_left (by simp at hi hj ⊢; omega)]
   rw [smul_mul_smul_comm, pow_add]
 
 theorem PR_sum {ι : Type} (s : Finset ι) (f : ι → ℝ → R) {d : ℕ} (h : ∀ i ∈ s, PR (f i) d) :
@@ -14758,10 +14758,10 @@ theorem Wt_mono (ht : ∀ a, Function.Injective (t a)) (κ κ' : Fin N → Fin (
   simp only [this, Matrix.one_apply]
   by_cases h : κ = κ'
   · subst h; simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     obtain ⟨a, ha⟩ : ∃ a, κ a ≠ κ' a := by
       by_contra hc; push_neg at hc; exact h (funext hc)
-    exact Finset.prod_eq_zero (Finset.mem_univ a) (by rw [if_neg ha])
+    exact Finset.prod_eq_zero (Finset.mem_univ a) (by rw [ite_eq_right ha])
 
 theorem coeff_of_grid {V : Type} [AddCommGroup V] [Module ℂ V] (ht : ∀ a, Function.Injective (t a))
     (f : (Fin N → Fin (n + 1)) → V) (κ : Fin N → Fin (n + 1)) :
@@ -14769,7 +14769,7 @@ theorem coeff_of_grid {V : Type} [AddCommGroup V] [Module ℂ V] (ht : ∀ a, Fu
   simp only [Finset.smul_sum, smul_smul]
   rw [Finset.sum_comm]
   simp only [← Finset.sum_smul, Wt_mono t ht, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true]
+    ite_true]
 
 end
 
@@ -15406,7 +15406,7 @@ theorem SA_mul {x y : A P (DQ P)} {Mx My : Qp P.r P.TT → Matrix (M.Ty P) (M.Ty
 theorem SA_one : SA (1 : A P (DQ P)) (fun _ => 1) := by
   refine ⟨fun f q π => ?_, fun f q π => ?_⟩ <;>
   · simp only [star_one, MAx2.R2.act_one, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, map_one, map_zero, apply_ite conj]
+      Finset.mem_univ, ite_true, map_one, map_zero, apply_ite conj]
     try simp [eq_comm]
 
 def CF (x : A P (DQ P)) (g : Qp P.r P.TT → ℂ) : Prop :=
@@ -17168,18 +17168,18 @@ theorem QA_left {m0 : ℕ} (hD : JDecay P L j m0) (hA : JAdj P L j m0) (hm0 : w.
     unfold g1
     rw [io_apply]
     by_cases h : e' = e
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       exact quadratic_form_lowering hTTp hL hLaw hD hA hm0 hψ hx Y _ (yv_NFD hTTp hL hLaw hS hFr hcw false e')
-    · rw [if_neg h, star_zero, zero_mul]; exact QA_zero _
+    · rw [ite_eq_right h, star_zero, zero_mul]; exact QA_zero _
   · rw [Matrix.star_apply]
     have e2 : g2 P l L w Y e' e = gb P l L w Y true e' e := rfl
-    rw [e2, gb_apply hTTp hL hLaw hS hFr hcw, if_pos rfl, star_add, add_mul]
+    rw [e2, gb_apply hTTp hL hLaw hS hFr hcw, ite_eq_left rfl, star_add, add_mul]
     refine QA_add ?_ (quadratic_form_lowering_base hTTp hL hLaw hD hA hm0 hψ hx Y _ (ee_BA hTTp hL hLaw hS hFr hcw e' e)
       (yv_NFD hTTp hL hLaw hS hFr hcw true e'))
     by_cases h : e' = e
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       exact quadratic_form_raising hTTp hL hLaw hD hA hm0 hψ hx Y _ (yv_NFD hTTp hL hLaw hS hFr hcw true e')
-    · rw [if_neg h, star_zero, zero_mul]; exact QA_zero _
+    · rw [ite_eq_right h, star_zero, zero_mul]; exact QA_zero _
 
 theorem QA_right {m0 : ℕ} (hD : JDecay P L j m0) (hA : JAdj P L j m0) (hm0 : (w.length + 1) + (w.length + 1) ≤ m0)
     {ψ : ℝ → ℝ} (hψ : admitted ψ) (b : Bool) (e : Ix (Fin w.length)) :
@@ -17191,16 +17191,16 @@ theorem QA_right {m0 : ℕ} (hD : JDecay P L j m0) (hA : JAdj P L j m0) (hm0 : (
   have hx := xv_NFD hTTp hL hLaw hS hFr hcw e'
   rw [gb_apply hTTp hL hLaw hS hFr hcw]
   cases b
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     by_cases h : e = e'
-    · rw [if_pos h]; exact rc1 hTTp hL hLaw hψ hx (Y : ℂ)
-    · rw [if_neg h, zero_mul, mul_zero]; exact Submodule.zero_mem _
-  · simp only [if_true]
+    · rw [ite_eq_left h]; exact rc1 hTTp hL hLaw hψ hx (Y : ℂ)
+    · rw [ite_eq_right h, zero_mul, mul_zero]; exact Submodule.zero_mem _
+  · simp only [ite_true]
     rw [add_mul, mul_add]
     refine Submodule.add_mem _ ?_ (rc3 hTTp hL hLaw hψ hx (Y : ℂ) (ee_BA hTTp hL hLaw hS hFr hcw e e'))
     by_cases h : e = e'
-    · rw [if_pos h]; exact rc2 hTTp hL hLaw hψ hx (Y : ℂ)
-    · rw [if_neg h, zero_mul, mul_zero]; exact Submodule.zero_mem _
+    · rw [ite_eq_left h]; exact rc2 hTTp hL hLaw hψ hx (Y : ℂ)
+    · rw [ite_eq_right h, zero_mul, mul_zero]; exact Submodule.zero_mem _
 
 end
 

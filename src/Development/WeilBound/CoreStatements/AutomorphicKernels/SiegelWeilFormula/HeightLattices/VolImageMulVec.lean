@@ -62,8 +62,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 private theorem secondCountable_Fv' (v : HeightOneSpectrum (𝓞 F)) :
     SecondCountableTopology (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) := by
-  haveI : Countable F := (Module.finBasis ℚ F).equivFun.toEquiv.injective.countable
-  haveI : TopologicalSpace.SeparableSpace (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) :=
+  have : Countable F := (Module.finBasis ℚ F).equivFun.toEquiv.injective.countable
+  have : TopologicalSpace.SeparableSpace (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) :=
     ⟨⟨Set.range (algebraMap F (v.adicCompletion F)), Set.countable_range _,
       HeightOneSpectrum.denseRange_algebraMap F v⟩⟩
   infer_instance
@@ -71,7 +71,7 @@ private theorem secondCountable_Fv' (v : HeightOneSpectrum (𝓞 F)) :
 private theorem secondCountable_Fv_tensor (v : HeightOneSpectrum (𝓞 F)) :
     SecondCountableTopology (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E) := by
   classical
-  haveI := secondCountable_Fv' (F := F) v
+  have := secondCountable_Fv' (F := F) v
   let K := HeckeCharacterZeroLocus.SiegelWeilU.Fv F v
   let b := Module.Free.chooseBasis K (K ⊗[F] E)
   let e := b.equivFun
@@ -87,12 +87,12 @@ theorem vol_image_mulVec (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (μ : Measur
   classical
   let K := HeckeCharacterZeroLocus.SiegelWeilU.Fv F v
   let B := K ⊗[F] E
-  haveI : SecondCountableTopology K := secondCountable_Fv' v
-  haveI : SecondCountableTopology B := secondCountable_Fv_tensor v
-  haveI : BorelSpace K := ⟨rfl⟩
-  haveI : TopologicalSpace.PseudoMetrizableSpace (Fin n → B) := inferInstance
-  haveI : SigmaCompactSpace (Fin n → B) := inferInstance
-  haveI : IsLocallyFiniteMeasure μ := inferInstance
+  have : SecondCountableTopology K := secondCountable_Fv' v
+  have : SecondCountableTopology B := secondCountable_Fv_tensor v
+  have : BorelSpace K := ⟨rfl⟩
+  have : TopologicalSpace.PseudoMetrizableSpace (Fin n → B) := inferInstance
+  have : SigmaCompactSpace (Fin n → B) := inferInstance
+  have : IsLocallyFiniteMeasure μ := inferInstance
   let V := Fin n → B
   let f : V →ₗ[K] V := (Matrix.mulVecLin M.1).restrictScalars K
   let b := Module.Free.chooseBasis K V
@@ -137,7 +137,7 @@ theorem vol_image_mulVec (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (μ : Measur
     exact congrArg μ (Set.preimage_image_eq L ψ.injective)
   rw [himg, GlobalTheory.Doubling.absEv_apply, Matrix.GeneralLinearGroup.val_det_apply, ← hchar]
   conv_lhs => rw [← key]
-  rw [Measure.smul_apply, hmap, ENNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, hmap, ENNReal.smul_def, smul_eq_mul]
 
 theorem vol_image_mulVec' (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (μ : Measure (Fin n → HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E))
     [μ.IsAddHaarMeasure] (M : Matrix (Fin n) (Fin n) (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E)) (hM : IsUnit M.det)
@@ -149,7 +149,7 @@ theorem vol_image_mulVec' (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (μ : Measu
 
 theorem exists_haar_tup (v : HeightOneSpectrum (𝓞 F)) (n : ℕ) :
     ∃ lv : Measure (Fin n → HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E), lv.IsAddHaarMeasure := by
-  haveI : SecondCountableTopology (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E) := secondCountable_Fv_tensor (E := E) v
+  have : SecondCountableTopology (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E) := secondCountable_Fv_tensor (E := E) v
   exact ⟨Measure.addHaar, inferInstance⟩
 
 end PositivityTheory.SiegelWeilFormula.HeightDict

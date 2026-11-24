@@ -208,7 +208,7 @@ theorem GlobalTheory.arcWit_psiOn_basicOpen : ∀ (E : Type) [Field E] [NumberFi
     (a.be (W.e.symm x) (W.e.symm x) / 2)
   refine ⟨⟨s, hs, fun x => ?_⟩, fun F _ _ r z hz hr y => ?_⟩
   · let F := AlgebraicClosure (FractionRing R)
-    letI : Algebra (FractionRing O') F := ((algebraMap (FractionRing R) F).comp (fracMap hf)).toAlgebra
+    let : Algebra (FractionRing O') F := ((algebraMap (FractionRing R) F).comp (fracMap hf)).toAlgebra
     have hF : ∀ x, algebraMap (FractionRing O') F (algebraMap O' _ x) =
         algebraMap (FractionRing R) F (algebraMap R _ (f x)) := fun x =>
       congrArg (algebraMap (FractionRing R) F) (fracMap_algebraMap hf x)

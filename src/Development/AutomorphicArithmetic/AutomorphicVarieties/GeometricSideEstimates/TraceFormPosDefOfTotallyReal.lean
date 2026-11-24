@@ -202,7 +202,7 @@ private theorem inf_ne {E : Type} [Field E] [NumberField E] [_root_.NumberField.
 private theorem sep {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (T : Set (Af E)) (hT : IsCompact T) :
     ∃ c : ℝ, 0 < c ∧ ∀ x : E, algebraMap E (Af E) x ∈ T → x = 0 ∨ c ≤ ‖pInf E (algebraMap E (Ad E) x)‖ := by
   have hf := UpperTheory.V.Lit.Dr.finField E 1 T hT
-  have hf2 := (hf.subset (Set.diff_subset (t := {0}))).image fun x => ‖pInf E (algebraMap E (Ad E) x)‖⁻¹
+  have hf2 := (hf.subset (Set.sdiff_subset (t := {0}))).image fun x => ‖pInf E (algebraMap E (Ad E) x)‖⁻¹
   obtain ⟨M, hM⟩ := hf2.bddAbove
   refine ⟨(max M 1)⁻¹, by positivity, fun x hx => ?_⟩
   by_cases h0 : x = 0
@@ -268,7 +268,7 @@ theorem UpperTheory.geometric_side_comparison :
   refine ⟨Real.exp (-Real.pi) / 16, by positivity, ?_⟩
   intro A V _ _ _ φ hinj hS hT h2
   classical
-  haveI : IsAddTorsionFree V := by
+  have : IsAddTorsionFree V := by
     constructor
     intro n hn x y _ hxy
     have h : ((n : ℝ)) • x = ((n : ℝ)) • y := by simpa [Nat.cast_smul_eq_nsmul] using hxy
@@ -278,7 +278,7 @@ theorem UpperTheory.geometric_side_comparison :
     rw [Filter.eventually_cofinite] at h
     refine h.subset ?_
     intro x (hx : ‖φ x‖ < 1)
-    simp only [Set.mem_setOf_eq, not_lt]
+    simp only [Set.mem_ofPred_eq, not_lt]
     apply Real.exp_le_exp.mpr
     have ha2 : ‖φ x‖ ^ 2 ≤ 1 := by nlinarith [norm_nonneg (φ x)]
     nlinarith [Real.pi_pos]
@@ -288,11 +288,11 @@ theorem UpperTheory.geometric_side_comparison :
   set F := hfin2.toFinset with hF
   have hFH : F ⊆ H := by
     intro x hx
-    simp only [hF, hH, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
+    simp only [hF, hH, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx ⊢
     linarith
   have hcd : 2 * F.card - 1 ≤ H.card := by
     have h0 : (0 : A) ∈ F := by
-      simp only [hF, Set.Finite.mem_toFinset, Set.mem_setOf_eq, map_zero, norm_zero]
+      simp only [hF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, map_zero, norm_zero]
       norm_num
     have hne : (F.image φ).Nonempty := ⟨φ 0, Finset.mem_image_of_mem _ h0⟩
     have hcdv := cauchy_davenport_of_isAddTorsionFree hne hne
@@ -304,7 +304,7 @@ theorem UpperTheory.geometric_side_comparison :
       obtain ⟨x, hx, rfl⟩ := Finset.mem_image.mp ha
       obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hb
       refine Finset.mem_image.mpr ⟨x + y, ?_, map_add φ x y⟩
-      simp only [hF, hH, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx hy ⊢
+      simp only [hF, hH, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hx hy ⊢
       rw [map_add (f := _)]
       calc ‖φ x + φ y‖ ≤ ‖φ x‖ + ‖φ y‖ := norm_add_le _ _
         _ < 1 := by linarith
@@ -321,7 +321,7 @@ theorem UpperTheory.geometric_side_comparison :
     refine le_trans ?_ (hT.sum_le_tsum (H \ F) (fun x _ => by positivity))
     have hpt : ∀ x ∈ H \ F, Real.exp (-Real.pi) / 4 ≤ ‖φ x‖ ^ 2 * Real.exp (-Real.pi * ‖φ x‖ ^ 2) := by
       intro x hx
-      simp only [Finset.mem_sdiff, hF, hH, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_lt] at hx
+      simp only [Finset.mem_sdiff, hF, hH, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_lt] at hx
       obtain ⟨h1, h3⟩ := hx
       have ha2 : ‖φ x‖ ^ 2 ≤ 1 := by nlinarith [norm_nonneg (φ x)]
       have e1 : Real.exp (-Real.pi) ≤ Real.exp (-Real.pi * ‖φ x‖ ^ 2) :=
@@ -335,21 +335,21 @@ theorem UpperTheory.geometric_side_comparison :
   have hS1 : ∑' x, Real.exp (-Real.pi * ‖φ x‖ ^ 2) ≤
       4 * ∑' x, ‖φ x‖ ^ 2 * Real.exp (-Real.pi * ‖φ x‖ ^ 2) + F.card := by
     have hg : Summable (fun x => if x ∈ F then (1 : ℝ) else 0) :=
-      summable_of_ne_finset_zero (s := F) (fun x hx => if_neg hx)
+      summable_of_ne_finset_zero (s := F) (fun x hx => ite_eq_right hx)
     have hsum : ∑' x, (if x ∈ F then (1 : ℝ) else 0) = F.card := by
-      rw [tsum_eq_sum (s := F) (fun x hx => if_neg hx)]
+      rw [tsum_eq_sum (s := F) (fun x hx => ite_eq_right hx)]
       simp
     have hle : ∀ x, Real.exp (-Real.pi * ‖φ x‖ ^ 2) ≤
         4 * (‖φ x‖ ^ 2 * Real.exp (-Real.pi * ‖φ x‖ ^ 2)) + (if x ∈ F then (1 : ℝ) else 0) := by
       intro x
       have hp := Real.exp_pos (-Real.pi * ‖φ x‖ ^ 2)
       by_cases hx : x ∈ F
-      · rw [if_pos hx]
+      · rw [ite_eq_left hx]
         have : Real.exp (-Real.pi * ‖φ x‖ ^ 2) ≤ 1 :=
           Real.exp_le_one_iff.mpr (by nlinarith [Real.pi_pos, sq_nonneg ‖φ x‖])
         nlinarith [sq_nonneg ‖φ x‖]
-      · rw [if_neg hx]
-        simp only [hF, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_lt] at hx
+      · rw [ite_eq_right hx]
+        simp only [hF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_lt] at hx
         have : (1 : ℝ) / 4 ≤ ‖φ x‖ ^ 2 := by nlinarith
         nlinarith
     calc _ ≤ ∑' x, (4 * (‖φ x‖ ^ 2 * Real.exp (-Real.pi * ‖φ x‖ ^ 2)) + (if x ∈ F then (1 : ℝ) else 0)) :=

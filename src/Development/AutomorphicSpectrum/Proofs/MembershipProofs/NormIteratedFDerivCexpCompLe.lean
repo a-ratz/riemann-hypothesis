@@ -64,7 +64,7 @@ theorem one_add_pow_mul_exp_le {c r : ℝ} (hc : 0 < c) (hr : 0 ≤ r) (N : ℕ)
     pow_le_pow_left₀ (by linarith) (by linarith [Real.add_one_le_exp r]) N
   calc (1 + r) ^ N * Real.exp (-c * r ^ 2) ≤ Real.exp r ^ N * Real.exp (-c * r ^ 2) :=
         mul_le_mul_of_nonneg_right h1 (Real.exp_pos _).le
-    _ = Real.exp (N * r + -c * r ^ 2) := by rw [← Real.exp_nat_mul, ← Real.exp_add]
+    _ = Real.exp (N * r + -c * r ^ 2) := by rw [← Real.exp_natCast_mul, ← Real.exp_add]
     _ ≤ Real.exp (N ^ 2 / (4 * c)) := by
         apply Real.exp_le_exp.2
         rw [le_div_iff₀ (by positivity)]

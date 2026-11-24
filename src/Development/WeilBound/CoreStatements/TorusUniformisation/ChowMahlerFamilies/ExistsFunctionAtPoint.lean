@@ -62,9 +62,9 @@ theorem germ_frac {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (CommRingCa
     (φ : R →+* Ω) (hφ : Function.Injective φ) (x : Spec (CommRingCat.of R) ⟶ X) (hx : spMap φ ≫ x = ξ)
     (z : Spec (CommRingCat.of R)) (hz : genPt ξ ⤳ x z) (a : X.presheaf.stalk (x z)) :
     ∃ r s : R, s ∉ z.asIdeal ∧ φ s * genMap ξ ⟨x z, hz⟩ a = φ r ∧ (r ∉ z.asIdeal → IsUnit a) := by
-  haveI : z.asIdeal.IsPrime := PrimeSpectrum.isPrime z
-  letI alg : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk z) := StructureSheaf.stalkAlgebra R z
-  haveI loc : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk z) z.asIdeal :=
+  have : z.asIdeal.IsPrime := PrimeSpectrum.isPrime z
+  let alg : Algebra R ((Spec (CommRingCat.of R)).presheaf.stalk z) := StructureSheaf.stalkAlgebra R z
+  have loc : IsLocalization.AtPrime ((Spec (CommRingCat.of R)).presheaf.stalk z) z.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk R z
   have hu : ∀ s : z.asIdeal.primeCompl, IsUnit (φ s) := by
     intro s

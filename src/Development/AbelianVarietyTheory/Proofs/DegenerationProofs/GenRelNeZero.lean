@@ -100,7 +100,7 @@ theorem exists_eq_nsmul_of_forall_zmod {X : Type*} [AddCommGroup X] [Module.Free
 theorem exists_eq_nsmul_of_forall_addChar {X : Type*} [AddCommGroup X] [Module.Free ℤ X] {M : ℕ}
     (hM : M ≠ 0) {C : Type*} [CommMonoid C] {ζ : C} (hζ : IsPrimitiveRoot ζ M) (v : X)
     (h : ∀ t : AddChar X C, (∀ x, t x ^ M = 1) → t v = 1) : ∃ z : X, v = M • z := by
-  haveI : NeZero M := ⟨hM⟩
+  have : NeZero M := ⟨hM⟩
   refine exists_eq_nsmul_of_forall_zmod M v fun t => ?_
   have h1 := h ((AddChar.zmodChar M hζ.pow_eq_one).compAddMonoidHom t) fun x => by
     rw [← AddChar.map_nsmul_eq_pow]
@@ -239,7 +239,7 @@ theorem fix_torsion_of_fix_conj_rel (bar : O ≃+* O) (I : Ideal O) (hsup : I �
   let e : G → G → A := fun x y => if h : ∃ c, R x y c then h.choose else 1
   have he : ∀ x y, x ^ M = 1 → y ^ M = 1 → R x y (e x y) := fun x y hx hy => by
     have h : ∃ c, R x y c := (R_ex x y hx hy).exists
-    simp only [e, dif_pos h]
+    simp only [e, dite_eq_left h]
     exact h.choose_spec
   have hu : ∀ x y c, x ^ M = 1 → y ^ M = 1 → R x y c → e x y = c := fun x y c hx hy h =>
     (R_ex x y hx hy).unique (he x y hx hy) h
@@ -615,7 +615,7 @@ theorem exists_equiv (hG : GlobalFnsSt) {x : 𝓞 E} (hx : x ∈ l.Mb.map (H.bar
     letI := H.starRing
     ∃ q₁ q₂ : QkPt P F l.M, IsTransport a w₁ e₁ uF (qkSmul a.bimult hG a.oa x p) q₁ ∧
       IsTransport a w₂ e₂ uF (qkSmul a.bimult hG a.oa x p) q₂ ∧ QkPt.Equiv P F q₁ q₂ := by
-  letI := H.starRing
+  let := H.starRing
   have h₀ : 0 < l.M := lt_of_lt_of_le three_pos l.three_le
   have h₁ : l.M ∣ l.M' := Nat.dvd_lcm_left _ _
   obtain ⟨r, z, hr, hz⟩ := hrz
@@ -635,10 +635,10 @@ theorem exists_equiv (hG : GlobalFnsSt) {x : 𝓞 E} (hx : x ∈ l.Mb.map (H.bar
 
 theorem lattice_congr (hL : Laws) (hM : (l.M : F) ≠ 0) (y : a.D₀.X) :
     ∃ z, e₁.trans e₂.symm y = y + l.M • z := by
-  letI := H.starRing
+  let := H.starRing
   have h₀ : l.M ≠ 0 := (lt_of_lt_of_le three_pos l.three_le).ne'
   have : NeZero (l.M : F) := ⟨hM⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F l.M
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F l.M
   refine ConjIdeal.trans_symm_congr_one H.bar (fun x => star_star x) l.Mb l.coprime h₀ hζ e₁ e₂ (fun x hx y => ?_)
     (fun t ht x hx χ => ?_) y
   · obtain ⟨p, rfl⟩ := exists_qkPt (F := F) hL.mulN (Or.inr hL.polBaseChange) a.bimult h₀ y
@@ -676,7 +676,7 @@ theorem lattice_eq (hL : Laws) (hM : (l.M : F) ≠ 0)
   exact e₂.symm_apply_eq.1 hy
 
 theorem map_eq [IsNoetherianRing R] (hL : Laws) (hM : (l.M : F) ≠ 0) : φ₁ = φ₂ := by
-  letI := H.starRing
+  let := H.starRing
   have h₀ : l.M ≠ 0 := (lt_of_lt_of_le three_pos l.three_le).ne'
   obtain ⟨p₁, g₁, -, a₁, -, -⟩ := id W₁
   obtain ⟨p₂, g₂, -, a₂, -, -⟩ := id W₂
@@ -722,7 +722,7 @@ theorem rigid : Laws → Laws2 → ∀ (E : Type) [Field E] [NumberField E] [IsC
   let g : O' →+* F := ((algebraMap (FractionRing R) F).comp (algebraMap R (FractionRing R))).comp f
   have hg : Function.Injective g :=
     ((algebraMap (FractionRing R) F).injective.comp (IsFractionRing.injective R _)).comp hf
-  letI : Algebra (FractionRing O') F := (IsFractionRing.lift (K := FractionRing O') hg).toAlgebra
+  let : Algebra (FractionRing O') F := (IsFractionRing.lift (K := FractionRing O') hg).toAlgebra
   have hF : ∀ x, algebraMap (FractionRing O') F (algebraMap O' _ x) =
       algebraMap (FractionRing R) F (algebraMap R _ (f x)) :=
     fun x => IsFractionRing.lift_algebraMap (K := FractionRing O') hg x

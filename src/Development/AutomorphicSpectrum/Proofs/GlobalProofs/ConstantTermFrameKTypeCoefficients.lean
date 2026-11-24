@@ -65,10 +65,10 @@ theorem cdp_le_of_continuousMulEquiv {G H : Type} [Group G] [TopologicalSpace G]
   have he : Continuous φ.toMonoidHom := e.continuous_invFun
   have he' : Continuous φ.symm.toMonoidHom := e.continuous_toFun
   let B : Rep.{0} (ULift.{0} ℤ) H := Rep.res φ.toMonoidHom A
-  haveI : IsDiscreteRep B := IsDiscreteRep.res he A
+  have : IsDiscreteRep B := IsDiscreteRep.res he A
   have hB : IsAddTorsion B := hA
   have hH := primaryComponent_cohomology_eq_bot_of_cdp_lt B hB hq
-  haveI := isIso_cohomologyMapAlong_of_mulEquiv φ he he' (𝟙 B) Function.bijective_id q
+  have := isIso_cohomologyMapAlong_of_mulEquiv φ he he' (𝟙 B) Function.bijective_id q
   let F := asIso (cohomologyMapAlong φ.toMonoidHom he (𝟙 B) q)
   rw [primaryComponent_eq_bot_iff] at hH ⊢
   rintro x ⟨k, hk⟩

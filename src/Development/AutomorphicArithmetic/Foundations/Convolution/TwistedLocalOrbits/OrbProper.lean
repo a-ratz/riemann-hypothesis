@@ -84,7 +84,7 @@ private theorem openOrbit {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
     simp only [twConj, map_mul]; group
   have h1 : ∀ y, twConj θ 1 y = y := fun y => by simp [twConj]
   let X := {δ' // δ' ∈ {δ' | TwConjugate θ δ δ'}}
-  letI : MulAction G X :=
+  let : MulAction G X :=
     { smul := fun g y => ⟨twConj θ g⁻¹ y.1, by
         obtain ⟨a, ha⟩ := y.2
         exact ⟨a * g⁻¹, by rw [hm, ← ha]⟩⟩
@@ -93,18 +93,18 @@ private theorem openOrbit {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
         change twConj θ (a * b)⁻¹ y.1 = twConj θ a⁻¹ (twConj θ b⁻¹ y.1)
         rw [mul_inv_rev, hm]) }
   have hs : ∀ (g : G) (y : X), (g • y).1 = twConj θ g⁻¹ y.1 := fun _ _ => rfl
-  haveI : ContinuousSMul G X := ⟨Continuous.subtype_mk (by
+  have : ContinuousSMul G X := ⟨Continuous.subtype_mk (by
     simp only [twConj]
-    exact ((continuous_fst.inv.inv).mul (continuous_subtype_val.comp continuous_snd)).mul (hθ.comp continuous_fst.inv)) _⟩
+    exact ((continuous_fst.inv.inv).mul (continuous_subtypeVal.comp continuous_snd)).mul (hθ.comp continuous_fst.inv)) _⟩
   let x₀ : X := ⟨δ, 1, (h1 δ).symm⟩
   have hx : ∀ y : X, ∃ g : G, g • x₀ = y := fun y => by
     obtain ⟨a, ha⟩ := y.2
     exact ⟨a⁻¹, Subtype.ext (by rw [hs, inv_inv]; exact ha.symm)⟩
-  haveI : MulAction.IsPretransitive G X := ⟨fun y z => by
+  have : MulAction.IsPretransitive G X := ⟨fun y z => by
     obtain ⟨a, rfl⟩ := hx y
     obtain ⟨b, rfl⟩ := hx z
     exact ⟨b * a⁻¹, by rw [smul_smul, inv_mul_cancel_right]⟩⟩
-  haveI : LocallyCompactSpace X := hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace X := hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have ho := isOpenMap_smul_of_sigmaCompact (G := G) x₀
   have hK : IsCompact (Subtype.val ⁻¹' C : Set X) := hc.isClosedEmbedding_subtypeVal.isCompact_preimage hC
   choose N hN hN' using fun g : G => exists_compact_mem_nhds g
@@ -156,7 +156,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.orbProper :
   have e : {δ' | TwConjugate (sigmaGL σ) δ δ'} = ⋂ i, {δ' : GL (Fin n) E | (normGL σ δ' : Matrix (Fin n) (Fin n) E).charpoly.coeff i =
       (normGL σ δ : Matrix (Fin n) (Fin n) E).charpoly.coeff i} := by
     ext δ'
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     refine ⟨?_, fun h => inj σ hσ δ δ' hδ (Polynomial.ext h)⟩
     rintro ⟨g, rfl⟩ i
     rw [normGL, twNorm_twConj_of_pow_eq_one _ hl, Units.val_mul, Units.val_mul, Matrix.coe_units_inv, Matrix.charpoly_units_conj']

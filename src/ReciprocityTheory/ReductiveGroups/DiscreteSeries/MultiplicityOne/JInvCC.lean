@@ -225,7 +225,7 @@ lemma gN_le_norm (A : Mat k r) : gN A ≤ ((2 * r + k + 1 : ℕ) : ℝ) * ‖A�
   apply Real.sqrt_le_sqrt
   have hij : ∀ i j, Complex.normSq (A i j) ≤ ‖A‖ ^ 2 := fun i j => by
     rw [Complex.normSq_eq_norm_sq]
-    exact pow_le_pow_left₀ (norm_nonneg _) (Matrix.norm_entry_le_entrywise_sup_norm A) 2
+    exact pow_le_pow_left₀ (norm_nonneg _) (norm_apply_le_norm A) 2
   calc ∑ i, ∑ j, Complex.normSq (A i j)
       ≤ ∑ _i : Fin (2 * r + k + 1), ∑ _j : Fin (2 * r + k + 1), ‖A‖ ^ 2 :=
         Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => hij i j
@@ -362,7 +362,7 @@ theorem main (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (γ : Matrix (Fin (k 
     simp only [hYb, Matrix.smul_apply, smul_eq_mul, norm_mul, Complex.norm_real, Real.norm_eq_abs,
       abs_of_pos (inv_pos.mpr hM0)]
     calc M⁻¹ * ‖gbar k r γ X i j‖ ≤ M⁻¹ * M :=
-          mul_le_mul_of_nonneg_left ((Matrix.norm_entry_le_entrywise_sup_norm _).trans h1) (inv_pos.mpr hM0).le
+          mul_le_mul_of_nonneg_left ((norm_apply_le_norm _).trans h1) (inv_pos.mpr hM0).le
       _ = 1 := inv_mul_cancel₀ hM0.ne'
   refine ⟨M ^ m * C ^ |A| * max c 0, CkOn_th hE hEG hCk, ?_⟩
   intro u v hu hv hlen g hg

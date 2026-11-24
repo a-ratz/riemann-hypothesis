@@ -123,7 +123,7 @@ theorem iSup_inj_eq (h𝓕 : IsFundamentalDomain Λ 𝓕 μ) {Φ : G → ℝ≥0
       have h1 : AEDisjoint μ ((1 : Λ) • 𝓕) (s.1 • 𝓕) := h𝓕.aedisjoint s.2.symm
       rw [one_smul] at h1
       exact (measure_congr (hAe.inter ((smul_set_ae_eq s.1).2 hAe))).trans h1
-    have hD : (A \ B : Set G) =ᵐ[μ] 𝓕 := (diff_ae_eq_self.2 h0).trans hAe
+    have hD : (A \ B : Set G) =ᵐ[μ] 𝓕 := (sdiff_ae_eq_self.2 h0).trans hAe
     refine le_iSup_of_le (A \ B) (le_iSup_of_le (hA.diff hB) (le_iSup_of_le ?_ (setLIntegral_congr hD).ge))
     intro s g hg hs
     by_contra hne
@@ -188,7 +188,7 @@ theorem measurable_frameOf : Measurable (frameOf X) := by
   refine Measurable.of_eval fun τ => ?_
   have h : Continuous fun u : Upq r X.p0 =>
       mat (baseFr X) τ * ((u : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) :=
-    continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)
+    continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)
   exact Measurable.of_eval fun a => Measurable.of_eval fun b =>
     (h.matrix_elem a b).measurable.comp (measurable_pi_apply τ)
 

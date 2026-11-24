@@ -152,9 +152,9 @@ theorem exists_ext_lift_to_cover : ∀ (E : Type) [Field E] [NumberField E] [IsC
   have key : ∃ p : Sp k ⟶ d.Xo₂.X, p ≫ d.r = spMap (algebraMap T.Fr k) ≫ xOf y ∧
       p ≫ d.Xo₂.s = spMap ((algebraMap T.Fr k).comp
         ((io.comp j).comp (IntermediateField.inclusion d.c₂.le).toRingHom)) := by
-    letI := io.toAlgebra
-    letI : Algebra c.F k := ((algebraMap T.Fr k).comp io).toAlgebra
-    letI : Algebra d.c₂.F k := ((algebraMap T.Fr k).comp (io.comp j)).toAlgebra
+    let := io.toAlgebra
+    let : Algebra c.F k := ((algebraMap T.Fr k).comp io).toAlgebra
+    let : Algebra d.c₂.F k := ((algebraMap T.Fr k).comp (io.comp j)).toAlgebra
     let ψ : T.Fr →ₐ[c.F] k := { algebraMap T.Fr k with commutes' := fun _ => rfl }
     obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c T.Fr k ψ y.1
     obtain ⟨z₂, hz₂⟩ := hd.2.2.2.2.2.2.1 k (fun a => by
@@ -162,10 +162,10 @@ theorem exists_ext_lift_to_cover : ∀ (E : Type) [Field E] [NumberField E] [IsC
       rw [hj]) z
     exact ⟨z₂.x, hz₂.1.trans hz.1, z₂.x_over⟩
   obtain ⟨p, hp1, hp2⟩ := key
-  haveI := d.Xo₂.smooth
-  haveI : Smooth d.Xo₂.s := SmoothOfRelativeDimension.smooth Dw.dim _
+  have := d.Xo₂.smooth
+  have : Smooth d.Xo₂.s := SmoothOfRelativeDimension.smooth Dw.dim _
   obtain ⟨K, hK, q, hq⟩ := exists_finite_subfield d.Xo₂.s _ p hp2
-  haveI := epi_spMap (algebraMap K k)
+  have := epi_spMap (algebraMap K k)
   have hKk : (algebraMap K k).comp (algebraMap T.Fr K) = algebraMap T.Fr k := rfl
   have hq1 : q ≫ d.r = spMap (algebraMap T.Fr K) ≫ xOf y := by
     rw [← cancel_epi (spMap (algebraMap K k)), ← Category.assoc, hq, hp1, ← Category.assoc, spMap_comp', hKk]
@@ -181,8 +181,8 @@ theorem exists_ext_lift_to_cover : ∀ (E : Type) [Field E] [NumberField E] [IsC
   have hio : ∀ a : c.F, io₂ (d.eF a) = iT (io a) := fun a => by
     change iT (io (j (d.eF a))) = _
     rw [hj]
-  letI := (iT.comp io).toAlgebra
-  letI := io₂.toAlgebra
+  let := (iT.comp io).toAlgebra
+  let := io₂.toAlgebra
   obtain ⟨y₂, -, hy₂⟩ := (GlobalTheory.frames_lift_to_cover hL E H Dw l Xo c n d).1 T'.Fr hio y'.1
     (spMap ψ.toRingHom ≫ q)
     (by rw [Category.assoc, hq1, ← Category.assoc, spMap_comp', hψ']; exact hx'.symm)

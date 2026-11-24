@@ -61,7 +61,7 @@ namespace GlobalTheory.DepthZeroType
 
 theorem isSplitPl_of_over (D : D7) (k : Fin 2) (w : PlE D.host) (hw : w ∈ placesOver D.host.E (D.host.g k)) :
     IsSplitPl D.host w := by
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   have hP := (GlobalTheory.Mem.Chr.splitsC_place (p := D.host.g k) (D.host.g_prime k) (D.nd.g_split k) w hw).2.2
   by_contra hn
   have hle : ∀ x ∈ w.asIdeal, D.host.conj • x ∈ w.asIdeal := by

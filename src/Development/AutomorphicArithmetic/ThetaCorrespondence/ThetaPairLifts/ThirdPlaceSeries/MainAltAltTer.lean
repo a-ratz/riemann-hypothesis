@@ -97,8 +97,8 @@ end Gen
 
 theorem h0V_eq_bot_of_multV_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1), IsDR (P.PD K) ρ → multV (P.PD K) ρ τ 0 = 0 → H0V ρ = ⊥ := by
   intro l _ P AI T K LL V _ _ _ _ _ ρ τ hdR hm
-  haveI := K.2
-  haveI := LL.2
+  have := K.2
+  have := LL.2
   by_contra hne
   obtain ⟨v, hv, hv0⟩ := Submodule.ne_bot_iff _ |>.1 hne
   have hinv : ∀ g, ρ g v = v := by
@@ -163,7 +163,7 @@ theorem zero_not_mem_JW {L : SizeData₂ D} (hc : jcCondition L) (j : ℕ) (hj1 
   obtain ⟨hlow, -, hcl, h0⟩ := hc j hj1 hjm ρ
   have ht : (0 : ℚ) ≤ D.R.t := Nat.cast_nonneg _
   cases up
-  · simp only [JW, cloudT, lowT, Bool.false_eq_true, ↓reduceIte, Set.mem_union, reflS, Set.mem_setOf_eq, AdmissibleParameterJ.refl]
+  · simp only [JW, cloudT, lowT, Bool.false_eq_true, ↓reduceIte, Set.mem_union, reflS, Set.mem_ofPred_eq, AdmissibleParameterJ.refl]
     rintro (h | h)
     · have := hcl _ h; linarith
     · rcases hlow _ h with ⟨-, h2⟩ | ⟨h2, -⟩ <;> linarith
@@ -225,12 +225,12 @@ theorem twistedRep_no_invariants_purity (D : D7) (L : SizeData₂ D) (ep : Bool)
   constructor
   · refine _root_.GlobalTheory.InvJump.h0V_eq_bot_of_multV_zero _ _ _ (D.locT _) _ _ _ _ τ₀ hdrW ?_
     refine hW0.trans ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     push_cast
     exact zero_not_mem_JW hJc _ hjr.1 hjr.2 ρ' _
   · refine _root_.GlobalTheory.InvJump.h0V_eq_bot_of_multV_zero _ _ _ (D.locT _) _ _ _ _ τ₀ hdrT ?_
     refine hT0.trans ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rw [GlobalTheory.JumpSets.dualS_int]
     push_cast
     exact neg_one_not_mem_JW hJc _ hjr.1 hjr.2 ρ' _

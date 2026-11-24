@@ -83,7 +83,7 @@ theorem val_inv_pow_mono {ϖ : kˣ} (hϖ : IsUnif ϖ) {n n' : ℕ} (h : n ≤ n'
   rw [val_inv_pow, val_inv_pow]
   have h0 : valuation k (ϖ : k) ≠ 0 := by simp
   have h1 : valuation k (ϖ : k) ≤ 1 := hϖ ▸ uniformizer_lt_one.le
-  exact inv_anti₀ (pow_pos (zero_lt_iff.2 h0) _) (pow_le_pow_of_le_one zero_le' h1 h)
+  exact inv_anti₀ (pow_pos (pos_iff_ne_zero.2 h0) _) (pow_le_pow_of_le_one zero_le h1 h)
 
 theorem exists_le {ϖ : kˣ} (hϖ : IsUnif ϖ) (a : k) :
     ∃ n : ℕ, valuation k a ≤ valuation k (((ϖ ^ n)⁻¹ : kˣ) : k) := by
@@ -96,7 +96,7 @@ theorem exists_le {ϖ : kˣ} (hϖ : IsUnif ϖ) (a : k) :
   have h0 : valuation k (ϖ : k) ≠ 0 := by simp
   simp only [Units.val_inv_eq_inv_val, Units.val_mk0] at hn
   have := le_of_lt hn
-  rwa [le_inv_comm₀ (pow_pos (zero_lt_iff.2 h0) _) (zero_lt_iff.2 hv)] at this
+  rwa [le_inv_comm₀ (pow_pos (pos_iff_ne_zero.2 h0) _) (pos_iff_ne_zero.2 hv)] at this
 
 theorem exists_bound_conj {ϖ : kˣ} (hϖ : IsUnif ϖ) {m n : Type} [Fintype m] [DecidableEq m] [Fintype n]
     [DecidableEq n] (A : GL m k) (B : GL n k) :

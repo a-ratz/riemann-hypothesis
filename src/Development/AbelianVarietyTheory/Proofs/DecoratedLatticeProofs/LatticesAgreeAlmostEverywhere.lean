@@ -89,10 +89,10 @@ theorem exists_int_smul_le (L M : Submodule (𝓞 E) V) (hL : L.FG)
   let N : Submodule (𝓞 E) V :=
     { carrier := {y | (∏ g ∈ G, c g) • y ∈ M}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, smul_add] at *; exact M.add_mem ha hb
+        simp only [Set.mem_ofPred_eq, smul_add] at *; exact M.add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun r y hy => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_comm]; exact M.smul_mem r hy }
   have hle : Submodule.span (𝓞 E) (G : Set V) ≤ N := by
     rw [Submodule.span_le]
@@ -163,7 +163,7 @@ theorem latV_eq_off_finite : ∀ (D : D7) (S : HSp D) (L M : Lat S), Submodule.I
   obtain ⟨d₂, hd₂, h₂⟩ := exists_int_smul_le M L hM.fg hL.span_eq_top
   have hd : d₁ * d₂ ≠ 0 := mul_ne_zero hd₁ hd₂
   refine ⟨(finite_places_int (D := D) (d₁ * d₂) hd).toFinset, fun v hv => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Int.cast_mul] at hv
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Int.cast_mul] at hv
   have hv₁ : ((d₁ : 𝓞 D.host.F)) ∉ v.asIdeal := fun h => hv (v.asIdeal.mul_mem_right _ h)
   have hv₂ : ((d₂ : 𝓞 D.host.F)) ∉ v.asIdeal := fun h => hv (v.asIdeal.mul_mem_left _ h)
   exact le_antisymm (latV_le_of_int_smul S L M d₁ hd₁ h₁ v hv₁) (latV_le_of_int_smul S M L d₂ hd₂ h₂ v hv₂)

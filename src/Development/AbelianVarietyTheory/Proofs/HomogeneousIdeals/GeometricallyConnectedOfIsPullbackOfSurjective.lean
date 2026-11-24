@@ -80,18 +80,18 @@ theorem GlobalTheory.geometricallyConnected_of_isPullback_of_surjective {X Y X' 
   exact (pullback.fst snd v).surjective.connectedSpace (pullback.fst snd v).continuous
 
 theorem GlobalTheory.torusExtension_smooth_geometricallyConnected {K : Type} [Field K] (G : Over (Spec (CommRingCat.of K))) [GrpObj G] (E : TorusExtension G) : Smooth E.q.left ∧ GeometricallyConnected E.q.left ∧ Smooth G.hom ∧ GeometricallyConnected G.hom ∧ IsSeparated G.hom := by
-  letI := E.addCommGroup
-  letI := E.grpB
-  haveI := E.free
-  haveI := E.finite
-  haveI := E.q_hom
-  haveI := E.i_hom
-  haveI := E.q_flat
-  haveI := E.q_surjective
-  haveI := E.q_quasiCompact
-  haveI : Smooth E.B.hom := E.isAbelian.smooth
-  haveI : GeometricallyConnected E.B.hom := E.isAbelian.geomConnected
-  haveI : IsProper E.B.hom := E.isAbelian.proper
+  let := E.addCommGroup
+  let := E.grpB
+  have := E.free
+  have := E.finite
+  have := E.q_hom
+  have := E.i_hom
+  have := E.q_flat
+  have := E.q_surjective
+  have := E.q_quasiCompact
+  have : Smooth E.B.hom := E.isAbelian.smooth
+  have : GeometricallyConnected E.B.hom := E.isAbelian.geomConnected
+  have : IsProper E.B.hom := E.isAbelian.proper
   have hTc : GeometricallyConnected (splitTorus (Spec (CommRingCat.of K)) E.X).hom :=
     ((GlobalTheory.splitTorus_properties (Spec (CommRingCat.of K))).1 E.X).2.2.2.2.2.2.2.1
   have hiq : E.i ≫ E.q = 1 := E.isKernel.w

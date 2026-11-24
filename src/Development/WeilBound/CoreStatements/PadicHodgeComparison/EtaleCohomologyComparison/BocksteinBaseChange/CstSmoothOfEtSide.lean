@@ -93,8 +93,8 @@ theorem UpperTheory.Reformulated.B.Yra1.main.{u_1} :
   have hrank : M.rank = a := by
     rw [← Matrix.finrank_range_mulVecLin, LinearMap.finrank_range_of_inj hinj, Module.finrank_fin_fun]
   obtain ⟨κ, f, hf, hsp, hli⟩ := exists_linearIndependent' F M.row
-  haveI : Finite κ := Finite.of_injective f hf
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective f hf
+  let : Fintype κ := Fintype.ofFinite κ
   have hcard : Fintype.card κ = a := by
     rw [← finrank_span_eq_card hli, hsp, ← Matrix.rank_eq_finrank_span_row, hrank]
   let eqv : κ ≃ Fin a := Fintype.equivFinOfCardEq hcard
@@ -104,7 +104,7 @@ theorem UpperTheory.Reformulated.B.Yra1.main.{u_1} :
     have h : (M.submatrix (f ∘ eqv.symm) id).row = (M.row ∘ f) ∘ eqv.symm := by
       ext i j; rfl
     rw [h]; exact this
-  have hu := Matrix.linearIndependent_rows_iff_isUnit.mp hli2
+  have hu := Matrix.linearIndependent_row_iff_isUnit.mp hli2
   exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
 end -- clump:auto
 end -- clump:auto

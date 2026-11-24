@@ -106,8 +106,8 @@ theorem valAt_of_field_map {K K' : Type} [Field K] [Field K'] (ξ : Spec (CommRi
   subst e
   obtain ⟨ψ, hψ⟩ : ∃ ψ : X.presheaf.stalk (centre w) ⟶ CommRingCat.of K',
       ψ = Scheme.stalkClosedPointTo w ≫ CommRingCat.ofHom f := ⟨_, rfl⟩
-  haveI : IsLocalHom ψ.hom := by
-    haveI := isLocalHom_of_field' f
+  have : IsLocalHom ψ.hom := by
+    have := isLocalHom_of_field' f
     have hh : ψ.hom = f.comp (Scheme.stalkClosedPointTo w).hom := by
       subst hψ
       rfl

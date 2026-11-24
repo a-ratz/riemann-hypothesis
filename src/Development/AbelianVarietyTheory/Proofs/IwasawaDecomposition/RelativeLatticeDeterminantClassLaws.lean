@@ -129,14 +129,14 @@ theorem relDetT_eq (N : ℕ) (M M' : Submodule (𝓞 H.E) (Fin N → H.E)) :
 theorem ordI_repI (N : ℕ) : letI := H.cmStar; ∀ (M M' : SDLat H.E N) (w w' : HeightOneSpectrum (𝓞 H.E)),
     IsConjPl H w w' → ordI w (repI H N M.1 M'.1) - ordI w' (repI H N M.1 M'.1) =
       ordSub w (detSub M'.1) - ordSub w (detSub M.1) := by
-  letI := H.cmStar
+  let := H.cmStar
   intro M M' w w' hw
   have f1 := (ordSub_detSub_lattice H.E N M.1 M.2.1 M.2.2.1).1
   have f2 := (ordSub_detSub_lattice H.E N M'.1 M'.2.1 M'.2.2.1).1
   have hf : {w | (ordSub w (detSub M'.1) - ordSub w (detSub M.1)).toNat ≠ 0}.Finite := by
     refine (f1.union f2).subset fun v hv => ?_
     by_contra hn
-    simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at hn
+    simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at hn
     exact hv (by simp [hn.1, hn.2])
   have h1 := GlobalTheory.Mem.Chr.ordSub_detSub_selfDual R H N M w w' hw
   have h2 := GlobalTheory.Mem.Chr.ordSub_detSub_selfDual R H N M' w w' hw
@@ -154,7 +154,7 @@ open RelDet
 open Classical in
 theorem relDetT_laws : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (N : ℕ), letI := H.cmStar; (∀ L : SDLat H.E N, relDetT H N L.1 L.1 = 1) ∧ (∀ L L' L'' : SDLat H.E N, relDetT H N L.1 L'.1 * relDetT H N L'.1 L''.1 = relDetT H N L.1 L''.1) ∧ ∀ (L L' : SDLat H.E N) (γ : Matrix.unitaryGroup (Fin N) H.E), L'.1 = SDLat.smulLat (γ : Matrix (Fin N) (Fin N) H.E) L.1 → relDetT H N L.1 L'.1 = QuotientGroup.mk (e1T H ⟨(γ : Matrix (Fin N) (Fin N) H.E).det, Matrix.det_of_mem_unitary γ.2⟩) := by
   intro R H N
-  letI := H.cmStar
+  let := H.cmStar
   refine ⟨fun L => relDetT_self H N L.1, fun L L' L'' => ?_, fun L L' γ hγ => ?_⟩
   · rw [relDetT_eq, relDetT_eq, relDetT_eq, ← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul]
     refine mk_mk_eq H fun w w' hw => ?_

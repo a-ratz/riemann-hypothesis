@@ -70,10 +70,10 @@ theorem summable_one_add_norm_inv_pow {E : Type} [NormedAddCommGroup E] [NormedS
     ((ZLattice.summable_norm_pow_inv L k hk).add (hasSum_ite_eq (0 : L) (1 : ℝ)).summable)
   by_cases hz : z = 0
   · subst hz
-    simp only [if_pos rfl, norm_zero, add_zero, inv_one, one_pow]
+    simp only [ite_eq_left rfl, norm_zero, add_zero, inv_one, one_pow]
     exact le_add_of_nonneg_left (by positivity)
   · have h0 : 0 < ‖z‖ := norm_pos_iff.2 hz
-    simp only [hz, if_false, add_zero]
+    simp only [hz, ite_false, add_zero]
     gcongr
     linarith
 
@@ -86,7 +86,7 @@ theorem norm_thetaSum_pureA_le {κ : Type} [Fintype κ] {g : (κ → FiniteAdele
         C * (s.sup (schwartzSeminormFamily ℂ (κ → mixedEmbedding.mixedSpace F) ℂ)) f := by
   obtain ⟨B, hB⟩ := hg.1.continuous.bounded_above_of_compact_support hg.2
   obtain ⟨N, hN, hK⟩ := GlobalTheory.WeilM.exists_nat_mul_integral_of_isCompact F hg.2.isCompact
-  haveI := GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
+  have := GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
   set L := GlobalTheory.WeilM.denomLattice F κ N with hLdef
   set k := Module.finrank ℤ L + 1 with hkdef
   have hu : Summable fun z : L => ((1 + ‖z‖)⁻¹) ^ k := summable_one_add_norm_inv_pow L (Nat.lt_succ_self _)

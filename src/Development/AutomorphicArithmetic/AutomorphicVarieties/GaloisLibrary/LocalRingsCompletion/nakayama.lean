@@ -93,7 +93,7 @@ theorem UpperTheory.V.abelian₂.nakayama :
       Submodule.span R (Set.range s) = ⊤ := by
     intro r s hs
     have hsurj : Function.Surjective (Fintype.linearCombination R s) := by
-      haveI := isPrecomplete_pi I r
+      have := isPrecomplete_pi I r
       apply surjective_of_mkQ_comp_surjective (I := I)
       intro q
       obtain ⟨m, rfl⟩ := Submodule.Quotient.mk_surjective _ q

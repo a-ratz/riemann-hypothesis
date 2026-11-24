@@ -239,7 +239,7 @@ theorem cp_td_bu {R : Type*} [Ring R] {a c d : ℕ → R} (h : Sep a c d) (r : �
   · rw [(cp_td h r r le_rfl).1, (cp_bu r).1, Nat.sub_self]
   · rcases r with _ | s
     · simp [td, bu]
-    · rw [(cp_td h (s + 1) s (by omega)).2, if_pos le_rfl, (cp_bu s).2]
+    · rw [(cp_td h (s + 1) s (by omega)).2, ite_eq_left le_rfl, (cp_bu s).2]
       simp
 
 section ops
@@ -450,13 +450,13 @@ theorem residue_continuity_holds : JDRCont := by
   have hb : b = 0 ∨ b = 1 := by fin_cases b <;> simp
   rcases hb with rfl | rfl
   · have e2 : (Q.vAB r Y r).1 f c = (Q.vAB r Y r).1 f' c := (ev.1 f f' c hf'e.symm).eq_of_nhds
-    simp only [Q.cmp, if_true]
+    simp only [Q.cmp, ite_true]
     rw [e1, e2]
     change tdU r Y r 0 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c =
       (Q.vAB r Y r).1 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c
     rw [h3, h4.1, h5.1]
   · have e2 : (Q.vAB r Y r).2 f c = (Q.vAB r Y r).2 f' c := (ev.2 f f' c hf'e.symm).eq_of_nhds
-    simp only [Q.cmp, show ¬ ((1 : Fin 2) = 0) by decide, if_false]
+    simp only [Q.cmp, show ¬ ((1 : Fin 2) = 0) by decide, ite_false]
     rw [e1, e2]
     change tdU r Y r 1 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c =
       (Q.vAB r Y r).2 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c
@@ -670,10 +670,10 @@ theorem loc_vABs (Y : ℂ) : ∀ i, Loc (X := X) (Q.vABs r Y i).1 ∧ Loc (X := 
   | succ i ih =>
     obtain ⟨h1, h2⟩ := ih
     by_cases hi : i < r
-    · simp only [Q.vABs, dif_pos hi]
+    · simp only [Q.vABs, dite_eq_left hi]
       exact ⟨loc_sub (loc_comp h1 (loc_sub (loc_smul Y loc_id) (loc_pbOp _))) (loc_comp h2 (loc_cbOp _)),
         loc_comp h1 (loc_cbiOp _)⟩
-    · simp only [Q.vABs, dif_neg hi]
+    · simp only [Q.vABs, dite_eq_right hi]
       exact ⟨h1, h2⟩
 
 end loc
@@ -693,13 +693,13 @@ theorem mirror_residue_continuity : JDRvCont := by
   have hb : b = 0 ∨ b = 1 := by fin_cases b <;> simp
   rcases hb with rfl | rfl
   · have e2 : (Q.vABs r Y r).1 f c = (Q.vABs r Y r).1 f' c := (ev.1 f f' c hf'e.symm).eq_of_nhds
-    simp only [Q.cmp, if_true]
+    simp only [Q.cmp, ite_true]
     rw [e1, e2]
     change tdUv r Y r 0 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c =
       (Q.vABs r Y r).1 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c
     rw [h3, h4.1, h5.1]
   · have e2 : (Q.vABs r Y r).2 f c = (Q.vABs r Y r).2 f' c := (ev.2 f f' c hf'e.symm).eq_of_nhds
-    simp only [Q.cmp, show ¬ ((1 : Fin 2) = 0) by decide, if_false]
+    simp only [Q.cmp, show ¬ ((1 : Fin 2) = 0) by decide, ite_false]
     rw [e1, e2]
     change tdUv r Y r 1 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c =
       (Q.vABs r Y r).2 ((⟨f', hf'm⟩ : WSm r X) : (Fin r → ℂ) → X) c

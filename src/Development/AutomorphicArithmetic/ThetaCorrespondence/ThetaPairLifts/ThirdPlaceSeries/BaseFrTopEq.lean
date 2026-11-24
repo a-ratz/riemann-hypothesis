@@ -86,8 +86,8 @@ theorem baseFr_top_eq_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {
     have h6 : ∀ c, (J.G i).FT.β c b = if c = e' b then 1 else 0 := fun c => (congrFun (congrFun hT' c) b).trans Matrix.one_apply
     refine Eq.symm ((Finset.sum_congr rfl fun c _ => congrArg _ (h6 c)).trans ?_)
     refine (Finset.sum_eq_single (e' b) (fun c _ hc => ?_) (fun h => absurd (Finset.mem_univ _) h)).trans ?_
-    · exact (congrArg _ (if_neg hc)).trans (mul_zero _)
-    · exact (congrArg _ (if_pos rfl)).trans (mul_one _)
+    · exact (congrArg _ (ite_eq_right hc)).trans (mul_zero _)
+    · exact (congrArg _ (ite_eq_left rfl)).trans (mul_one _)
   · have h2 : (e (Sum.inr b)).val = B.R.N B.R.m - 1 := he _
     have h3 := (e (Sum.inr b)).2
     have h4 : (if r.val = (e (Sum.inr b)).val then (if r.val + 1 = B.R.N B.R.m then ((X.piT u : 𝓞 B.host.E) : B.host.E) else 1) else 0) =

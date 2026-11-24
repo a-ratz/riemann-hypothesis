@@ -108,11 +108,11 @@ theorem continuous_val_and_bounded : ∀ (k : Type) [CommRing k] (X : Scheme.{0}
     exact Real.continuous_sqrt.comp (Complex.continuous_re.comp (continuous_val_mul_conj k X p P a b σ f hf f hf))
   refine ⟨hc, ?_⟩
   have hb : ∀ σ : k →+* ℂ, ∃ C : ℝ, ∀ y : CxPts p σ, P.nu a b σ y f ≤ C := fun σ => by
-    haveI := hX.compactSpace σ
+    have := hX.compactSpace σ
     obtain ⟨C, hC⟩ := (isCompact_range (hc σ)).bddAbove
     exact ⟨C, fun y => hC ⟨y, rfl⟩⟩
   choose C hC using hb
-  haveI := hX.finite_emb
+  have := hX.finite_emb
   obtain ⟨M, hM⟩ := (Set.finite_range C).bddAbove
   exact ⟨M, fun σ y => (hC σ y).trans (hM ⟨σ, rfl⟩)⟩
 

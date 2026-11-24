@@ -85,7 +85,7 @@ theorem exists_haar_GA : ∃ μ : Measure (GA E a), μ.IsHaarMeasure := ⟨Measu
 theorem memL2_normalised_cusp_form (hB : GlobalTheory.Published.CuspFormsBoundedGL) (μ : Measure (GA E a)) [μ.IsHaarMeasure]
     {π : CuspSub E a} (hπ : IsNormalised π) : ∀ φ ∈ π.V, MemL2Quotient (latticeGL E a) μ φ.1 := by
   intro φ hφ
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have h := π.cusp φ hφ
   obtain ⟨C, hC⟩ := hB E a φ h fun t g => by rw [hπ φ hφ t g]
   exact GlobalTheory.CuspQuot.memL2_of_bound (ContAut.continuous_of_isOpen_stab E a φ h.1.level)
@@ -275,8 +275,8 @@ theorem inner_lie_skew' (hB : GlobalTheory.Published.CuspFormsBoundedGL) (μ : M
     ⟪toL2ₗ μ π.V (memL2_normalised_cusp_form hB μ hπ) (π.op (.lie X) f), toL2ₗ μ π.V (memL2_normalised_cusp_form hB μ hπ) g⟫_ℂ +
       ⟪toL2ₗ μ π.V (memL2_normalised_cusp_form hB μ hπ) f,
         toL2ₗ μ π.V (memL2_normalised_cusp_form hB μ hπ) (π.op (.lie X) g)⟫_ℂ = 0 := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
-  haveI : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have : μ.IsMulRightInvariant := GlobalTheory.CovolGL.isMulRightInvariant E a μ
   set hL := memL2_normalised_cusp_form hB μ hπ
   have hbd : ∀ x : π.V, ∃ C : ℝ, ∀ g, ‖(lie E a X x.1).1 g‖ ≤ C := fun x =>
     hB E a _ (π.cusp _ (π.stable (.lie X) x.1 x.2)) fun t g => congrArg norm (hπ _ (π.stable (.lie X) x.1 x.2) t g)
@@ -290,7 +290,7 @@ theorem inner_lie_skew' (hB : GlobalTheory.Published.CuspFormsBoundedGL) (μ : M
       fun _ => ⟪(hL f.1 f.2).toL2, (hL g.1 g.2).toL2⟫_ℂ := funext fun t => inner_R μ _ _ _
   rw [hconst] at hd
   have h0 := hd.unique (hasDerivAt_const _ _)
-  simp only [expG_zero, map_one, ContinuousLinearMap.one_apply] at h0
+  simp only [expG_zero, map_one, one_apply_eq_self] at h0
   rw [add_comm]
   exact h0
 

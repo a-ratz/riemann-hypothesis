@@ -86,7 +86,7 @@ theorem unramB_irr_quot (w : HeightOneSpectrum (𝓞 E)) {V : Type} [AddCommGrou
       intro g u hu
       obtain ⟨y, rfl⟩ := LinearMap.mem_range.1 hu
       exact LinearMap.mem_range.2 ⟨_, hq g y⟩⟩
-    haveI : IsSimpleOrder (Subrepresentation π) := hπi
+    have : IsSimpleOrder (Subrepresentation π) := hπi
     rcases eq_bot_or_eq_top T with hT | hT
     · exfalso
       have hm : q ⟨f0, GlobalTheory.FinZeta.GLSeries.self_mem_cyc _ f0⟩ ∈ T.toSubmodule := LinearMap.mem_range_self q _
@@ -133,8 +133,8 @@ theorem unram_component {c : ℕ} {N : Fin c → ℕ} (h : ∑ i, N i = n) (w : 
     ∃ P : SmIrr (GL (Fin n) (w.adicCompletion E)), GlobalTheory.SmGL.IsSubquotient P.ρ (locProd h w σ) ∧
       GlobalTheory.LGrp.IsSpherical P.ρ (GlobalTheory.LFun.KGL w (n := n)) ∧ GlobalTheory.LFun.HasSatGL w P.ρ (∑ i, B i) := by
   classical
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   have hKO : ∀ m, GlobalTheory.LFun.KGL w (n := m) = GlobalTheory.SplitWeil.KO (w.adicCompletion E) (Fin m) :=
     fun m => (GlobalTheory.SmGL.SphCompletion.KO_completion w m).symm
 

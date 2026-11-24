@@ -126,7 +126,7 @@ theorem bound_of_ineqs {K K' c i δ S n p : ℝ} {a : ℕ} (hδ : 0 < δ) (hac :
       _ = _ := by ring
   have e3 : Real.exp (-(2 * c * p)) ^ a =
       Real.exp (2 * (i - a * c) * p) * Real.exp (-(2 * i * p)) := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
     congr 1
     ring
   rw [e3, ← mul_assoc] at e2
@@ -254,7 +254,7 @@ theorem main : ∀ (n N : ℕ) (w : Fin N → V n → ℂ) (U : Set (V n)), IsOp
         filter_upwards [(hD j0).continuousAt.eventually_ne hj0] with z hz
         rw [div_mul_cancel₀ _ hz]
       rw [hev.fderiv_eq, fderiv_fun_mul (hQ k) (hD j0)]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, hx k, smul_eq_mul,
+      simp only [add_apply, smul_apply, hx k, smul_eq_mul,
         Pi.smul_apply]
       ring
     have hs : ((sqNorm (fun i => w i 0) : ℝ) : ℂ) ≠ 0 :=
@@ -307,7 +307,7 @@ theorem pnorm_sq {r : ℕ} (X : Data E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r →
   have e : X.pnorm la P x = ‖P x‖ * X.nfac la x := rfl
   have e2 : -phla X la x = ((2 : ℕ) : ℝ) * Real.log (X.nfac la x) := by
     unfold phla; push_cast; ring
-  rw [e, e2, Real.exp_nat_mul, Real.exp_log hn, mul_pow]
+  rw [e, e2, Real.exp_natCast_mul, Real.exp_log hn, mul_pow]
 
 theorem pnorm_contOn {r : ℕ} (X : Data E r) (la : Wt X.Ψ r) {P : Frame X.Ψ r → ℂ}
     (hP : DifferentiableOn ℂ P X.dom) : ContinuousOn (X.pnorm la P) X.dom :=
@@ -683,18 +683,18 @@ theorem strictDom_smul_sub {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     have h3 := hl τ ((U.X k).p0 - 1 - j) ((U.X k).p0 - 1 - i) (by omega) (by omega)
     have h4 := mul_lt_mul_of_pos_left (Int.ofNat_lt.2 h3) hs'
     simp only [Pi.sub_apply, Pi.smul_apply]
-    simp only [laU, h1, h2, if_false, hz, nsmul_eq_mul]
+    simp only [laU, h1, h2, ite_false, hz, nsmul_eq_mul]
     linarith
   · have hij' : (i : ℕ) < j := hij
     have h1 : (U.X k).p0 ≤ (j : ℕ) := by omega
     have h3 := hu τ (i - (U.X k).p0) (j - (U.X k).p0) (by omega) (by omega)
     have h4 := mul_lt_mul_of_pos_left (Int.ofNat_lt.2 h3) hs'
     simp only [Pi.sub_apply, Pi.smul_apply]
-    simp only [laU, h1, hi, if_true, hz, nsmul_eq_mul]
+    simp only [laU, h1, hi, ite_true, hz, nsmul_eq_mul]
     linarith
   · have h1 : ¬ (U.X k).p0 ≤ (i : ℕ) := by omega
     simp only [Pi.sub_apply, Pi.smul_apply]
-    simp only [laU, h1, hj, if_true, if_false, hz, nsmul_eq_mul]
+    simp only [laU, h1, hj, ite_true, ite_false, hz, nsmul_eq_mul]
     have h3 := mul_nonneg hs'.le (Int.natCast_nonneg
       (a (Function.invFun (relab c σ) (conjEmb τ.1), (U.X k).p0 - 1 - (i : ℕ))))
     have h4 := mul_nonneg hs'.le (Int.natCast_nonneg
@@ -735,7 +735,7 @@ theorem weights_of_run : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : 
     obtain ⟨t, ht, -⟩ := key τ
     rw [ht]
     refine wtA_lt_upper wL t hxy (extendByZero_strictAnti_of_positive_gaps _ (wL.aPlus_antitone t) (fun i hi => ?_) hxy (by omega))
-    rw [hLP t i, if_pos hi]
+    rw [hLP t i, ite_eq_left hi]
     exact fdiv_pos hT (hgP t i hi)
   have hl : ∀ τ : ((T.U j σ).X k).Ψ, ∀ x y, x < y → y < ((T.U j σ).X k).p0 →
       wtA wL (Function.invFun (relab T.Q.c σ) (conjEmb τ.1), y) <
@@ -744,7 +744,7 @@ theorem weights_of_run : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : 
     obtain ⟨t, -, ht⟩ := key τ
     rw [ht]
     refine wtA_lt_lower wL t hxy (extendByZero_strictAnti_of_positive_gaps _ (wL.aM_anti t) (fun i hi => ?_) hxy (by omega))
-    rw [hLM t i, if_pos hi]
+    rw [hLM t i, ite_eq_left hi]
     exact fdiv_pos hT (hgM t i hi)
   have h20 : 20 ≤ wL.n / 2 := by omega
   refine ⟨nd_eq _ hf hpq, ?_, fun i hi => ?_, fun hm => Or.inl ?_⟩
@@ -917,7 +917,7 @@ theorem ratiosFree_of_proper (X : Data E r) (L eW : Wt X.Ψ r) {N : ℕ} (a : �
       unfold dmin lminor
       exact ((hgram τ).matrix_submatrix _ _).matrix_det
     show IsOpen (GG X.Ψ X.Gm X.p0)
-    simp only [GG, Set.setOf_forall, Set.setOf_and]
+    simp only [GG, Set.ofPred_forall, Set.ofPred_and]
     refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
     · exact isOpen_ne_fun (hmat τ).matrix_det continuous_const
     · exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (hdmin τ i)))
@@ -967,7 +967,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem rdU_of_mem (U : Unf Xo c σ r) (f : Rul Xo c) (k : U.Comp) {x} (hx : x ∈ (U.X k).dom) :
     rdU U f k x = toC (evR Xo c f (U.un k ⟨x, hx⟩)) := by
   unfold rdU
-  exact dif_pos hx
+  exact dite_eq_left hx
 
 def rdHom (U : Unf Xo c σ r) (k : U.Comp) {x} (hx : x ∈ (U.X k).dom)
     (hT : FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) (U.un k ⟨x, hx⟩)) :
@@ -989,15 +989,15 @@ theorem rdU_aeval (U : Unf Xo c σ r) (k : U.Comp) {x} (hx : x ∈ (U.X k).dom)
   ext a
   show toC (evR Xo c (algebraMap _ _ a) _) = σ a
   unfold evR toC evalAt
-  rw [dif_pos (by exact hT)]
+  rw [dite_eq_left (by exact hT)]
   erw [AlgHom.commutes]
   rfl
 
 theorem exists_rdU_ne_zero (U : Unf Xo c σ r) (k : U.Comp) {N : ℕ} {w : Fin N → Rul Xo c}
     (hN : NoCommonZero Xo c w) : ∀ x ∈ (U.X k).dom, ∃ i, rdU U (w i) k x ≠ 0 := by
   intro x hx
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   obtain ⟨i, hi⟩ := hN (CAt σ) (U.un k ⟨x, hx⟩)
   exact ⟨i, by rw [rdU_of_mem U _ k hx]; exact hi⟩
 

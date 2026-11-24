@@ -137,14 +137,14 @@ theorem exists_etale_chart (f : X ⟶ Spec (CommRingCat.of R)) [Smooth f] {U : X
       φ.comp MvPolynomial.C = AbLaw.cst f V ∧ φ.Etale := by
   obtain ⟨_, ⟨W, hW, rfl⟩, hxW, hWU⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open hx U.isOpen
   have hW : IsAffineOpen W := hW
-  letI := (AbLaw.cst f W).toAlgebra
-  haveI : Algebra.Smooth R Γ(X, W) := cst_smooth f hW
+  let := (AbLaw.cst f W).toAlgebra
+  have : Algebra.Smooth R Γ(X, W) := cst_smooth f hW
   obtain ⟨g, hg, hs⟩ := Algebra.IsSmoothAt.exists_notMem_isStandardSmooth R (hW.primeIdealOf ⟨x, hxW⟩).asIdeal
   have hxg : x ∈ X.basicOpen g := by
     exact (mem_basicOpen_iff hW ⟨x, hxW⟩ g).2 hg
-  haveI := hW.isLocalization_basicOpen g
-  letI := (AbLaw.cst f (X.basicOpen g)).toAlgebra
-  haveI : IsScalarTower R Γ(X, W) Γ(X, X.basicOpen g) :=
+  have := hW.isLocalization_basicOpen g
+  let := (AbLaw.cst f (X.basicOpen g)).toAlgebra
+  have : IsScalarTower R Γ(X, W) Γ(X, X.basicOpen g) :=
     .of_algebraMap_eq fun r => (rs_cst f (X.basicOpen_le g) r).symm
   have h2 : Algebra.IsStandardSmooth R Γ(X, X.basicOpen g) :=
     .of_algEquiv ((IsLocalization.algEquiv (Submonoid.powers g) (Localization.Away g) Γ(X, X.basicOpen g)).restrictScalars R)
@@ -157,7 +157,7 @@ theorem isPrime_map [IsLocalRing R] (f : X ⟶ Spec (CommRingCat.of R)) [Geometr
   let g := IsLocalRing.residue R
   let t := Spec.map (CommRingCat.ofHom g)
   have H := IsPullback.of_hasPullback f t
-  haveI : IsIntegral (pullback f t) :=
+  have : IsIntegral (pullback f t) :=
     GeometricallyIntegral.geometrically_isIntegral t _ _ H
   have po := isPushout_app H hV
   have hne : Nonempty (pullback.fst f t ⁻¹ᵁ V) := by
@@ -207,8 +207,8 @@ theorem isLocalization_app {U : X.Opens} (hU : IsAffineOpen U) :
 
 theorem exists_numerator {U : X.Opens} (hU : IsAffineOpen U) (t : Γ(XK, j ⁻¹ᵁ U)) :
     ∃ (π : O) (b : Γ(X, U)), π ≠ 0 ∧ (j.app U).hom b = AbLaw.cst fK (j ⁻¹ᵁ U) (algebraMap O K π) * t := by
-  letI := (j.app U).hom.toAlgebra
-  haveI := isLocalization_app H hU
+  let := (j.app U).hom.toAlgebra
+  have := isLocalization_app H hU
   obtain ⟨⟨b, _, π, hπ, rfl⟩, h⟩ := IsLocalization.surj ((nonZeroDivisors O).map (AbLaw.cst f U)) t
   refine ⟨π, b, nonZeroDivisors.ne_zero hπ, ?_⟩
   rw [← app_cst H.w, mul_comm]
@@ -216,10 +216,10 @@ theorem exists_numerator {U : X.Opens} (hU : IsAffineOpen U) (t : Γ(XK, j ⁻¹
 
 theorem app_injective_of_affine [Smooth f] {U : X.Opens} (hU : IsAffineOpen U) :
     Function.Injective (j.app U).hom := by
-  letI := (j.app U).hom.toAlgebra
-  haveI := isLocalization_app H hU
-  letI := (AbLaw.cst f U).toAlgebra
-  haveI : Module.Flat O Γ(X, U) := (cst_smooth f hU).flat
+  let := (j.app U).hom.toAlgebra
+  have := isLocalization_app H hU
+  let := (AbLaw.cst f U).toAlgebra
+  have : Module.Flat O Γ(X, U) := (cst_smooth f hU).flat
   refine IsLocalization.injective (M := (nonZeroDivisors O).map (AbLaw.cst f U)) Γ(XK, j ⁻¹ᵁ U) ?_
   rintro _ ⟨π, hπ, rfl⟩
   have := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := Γ(X, U)) hπ
@@ -340,24 +340,24 @@ theorem exists_of_eq [Ring.DimensionLEOne O] [IsAlgClosed K] [Smooth f] [Geometr
     ∃ (V : X.Opens) (hV : V ≤ M.U i) (c : K) (b : Γ(X, V)), x ∈ V ∧ c ≠ 0 ∧
       (j.app V).hom b = AbLaw.cst fK (j ⁻¹ᵁ V) c * loc σ i hV ∧
       ∃ y ∈ X.basicOpen b, f y = IsLocalRing.closedPoint O := by
-  haveI : IsIntegral XK := GeometricallyIntegral.geometrically_isIntegral _ _ _ H
+  have : IsIntegral XK := GeometricallyIntegral.geometrically_isIntegral _ _ _ H
   obtain ⟨V, hV, hxV, hVU, n, φ, hφ, hφ'⟩ := exists_etale_chart f hx
   have hp := isPrime_map f hV hxV hfx
   have hinj := app_injective H V
-  haveI : Nonempty V := ⟨⟨x, hxV⟩⟩
+  have : Nonempty V := ⟨⟨x, hxV⟩⟩
   have hne : Nonempty (j ⁻¹ᵁ V) :=
     nonempty_of_ne_zero (a := 1) fun h => one_ne_zero (hinj ((map_one _).trans (h.trans (map_zero _).symm)))
-  haveI : IsDomain Γ(X, V) := hinj.isDomain _
+  have : IsDomain Γ(X, V) := hinj.isDomain _
   obtain ⟨π, b, hπ, hb⟩ := exists_numerator H hV (loc σ i hVU)
   have hπ' : algebraMap O K π ≠ 0 := fun h => hπ (IsFractionRing.injective O K (h.trans (map_zero _).symm))
   have hb0 : b ≠ 0 := by
     rintro rfl
     rw [map_zero] at hb
     exact mul_ne_zero ((map_ne_zero _).2 hπ') (loc_ne_zero σ hσ i hVU hne) hb.symm
-  letI := (AbLaw.cst f V).toAlgebra
-  letI := φ.toAlgebra
-  haveI : IsScalarTower O (MvPolynomial (Fin n) O) Γ(X, V) := .of_algebraMap_eq' hφ.symm
-  haveI : Algebra.Etale (MvPolynomial (Fin n) O) Γ(X, V) := hφ'
+  let := (AbLaw.cst f V).toAlgebra
+  let := φ.toAlgebra
+  have : IsScalarTower O (MvPolynomial (Fin n) O) Γ(X, V) := .of_algebraMap_eq' hφ.symm
+  have : Algebra.Etale (MvPolynomial (Fin n) O) Γ(X, V) := hφ'
   obtain ⟨ρ, b', e, hb'⟩ := GlobalTheory.etale_mvPolynomial_exists_content O K n Γ(X, V) hp b hb0
   have hρ : algebraMap O K ρ ≠ 0 := fun h => hb0 (by
     rw [e, IsFractionRing.injective O K (h.trans (map_zero _).symm), map_zero, zero_mul])

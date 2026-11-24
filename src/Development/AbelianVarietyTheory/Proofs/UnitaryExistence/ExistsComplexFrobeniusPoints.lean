@@ -62,17 +62,17 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 namespace ComplexTransfer
 
 theorem epi_spMap_field {k Ω : Type} [Field k] [Field Ω] (σ : k →+* Ω) : Epi (spMap σ) := by
-  letI := σ.toAlgebra
-  haveI : Flat (spMap σ) := by
+  let := σ.toAlgebra
+  have : Flat (spMap σ) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.flat_algebraMap_iff.2 inferInstance
-  haveI : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
+  have : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
 
 theorem countable_of_finiteType (K A : Type) [CommRing K] [Countable K] [CommRing A] [Algebra K A]
     [h : Algebra.FiniteType K A] : Countable A := by
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 h
-  haveI : Countable (MvPolynomial (Fin n) K) := by
+  have : Countable (MvPolynomial (Fin n) K) := by
     rw [← Cardinal.mk_le_aleph0_iff]
     refine (MvPolynomial.cardinalMk_le_max).trans ?_
     simp
@@ -91,7 +91,7 @@ theorem exists_common_field {K : Type} [Field K] [Countable K] (σ : K →+* ℂ
     rw [← Cardinal.mk_le_aleph0_iff]
     refine (IntermediateField.cardinalMk_adjoin_le K s).trans ?_
     simp
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   obtain ⟨j⟩ := GlobalTheory.nonempty_algHom_complex_of_countable K L
   refine ⟨L, inferInstance, inferInstance, L.val, j,
     φ.codRestrict L.toSubalgebra fun a => IntermediateField.subset_adjoin K s (Or.inl ⟨a, rfl⟩),
@@ -122,10 +122,10 @@ theorem exists_complex_framed_pair : ∀ (E : Type) [Field E] [NumberField E] [I
   have hA : AllTest Xo c := GlobalTheory.Frames.allTest_of_secBaseChange hS E H Dw l Xo c
   obtain ⟨p, φ, y₀, hy⟩ := hA k y
   obtain ⟨q, ψ, y₁, hy'⟩ := hA k y'
-  haveI := c.fin
-  haveI : Countable c.F := ComplexTransfer.countable_of_finiteType ℚ c.F
-  haveI : Countable p.R := ComplexTransfer.countable_of_finiteType c.F p.R
-  haveI : Countable q.R := ComplexTransfer.countable_of_finiteType c.F q.R
+  have := c.fin
+  have : Countable c.F := ComplexTransfer.countable_of_finiteType ℚ c.F
+  have : Countable p.R := ComplexTransfer.countable_of_finiteType c.F p.R
+  have : Countable q.R := ComplexTransfer.countable_of_finiteType c.F q.R
   obtain ⟨L, _, _, ι, j, φL, ψL, hφ, hψ, hj⟩ :=
     ComplexTransfer.exists_common_field c.F.val.toRingHom φ ψ
   obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hS E H Dw l Xo c _ _ (j.comp φL) y₀
@@ -151,7 +151,7 @@ theorem exists_complex_framed_pair : ∀ (E : Type) [Field E] [NumberField E] [I
       rw [← Category.assoc, ← Geo.Tor.spMap_comp, hz.1]; rfl
     have e4 : z'.x = spMap j.toRingHom ≫ spMap ψL.toRingHom ≫ y₁.x := by
       rw [← Category.assoc, ← Geo.Tor.spMap_comp, hz'.1]; rfl
-    haveI := ComplexTransfer.epi_spMap_field ι.toRingHom
+    have := ComplexTransfer.epi_spMap_field ι.toRingHom
     rw [e1, e2, Category.assoc, cancel_epi] at h
     rw [e3, e4, h]
     simp only [Category.assoc]

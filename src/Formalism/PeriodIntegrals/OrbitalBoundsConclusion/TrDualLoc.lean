@@ -385,7 +385,7 @@ theorem main {K : Type} [Field K] [NumberField K] {ℓ : ℕ} [Fact ℓ.Prime] {
 
       rw [← hexp, Finset.sum_mul, map_sum] at h
       simpa only [smul_mul_assoc, map_smul, hBD, htb, smul_eq_mul, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true] using h
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true] using h
     rw [← hexp]
     simp [hc0]
   let φ : ℚ_[ℓ] ⊗[ℚ] K →ₗ[ℚ_[ℓ]] ℚ_[ℓ] := (Algebra.trace ℚ_[ℓ] Fp).comp π.toLinearMap
@@ -400,7 +400,7 @@ theorem main {K : Type} [Field K] [NumberField K] {ℓ : ℕ} [Fact ℓ.Prime] {
           if j = i then 1 else 0 := fun i => htb i j
 
       simp only [β, Finset.sum_mul, map_sum, smul_mul_assoc, map_smul, htb', smul_eq_mul, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rfl
     intro x
     exact congrArg (fun L => L x) hL
@@ -437,8 +437,8 @@ theorem main {K : Type} [Field K] [NumberField K] {ℓ : ℕ} [Fact ℓ.Prime] {
     have h0 := hker (g x ^ (n + 1) - g (x ^ (n + 1))) (by rw [map_sub, map_pow, hg', hg', sub_self])
     rwa [mul_sub, sub_eq_zero] at h0
 
-  haveI : ContinuousSMul ℚ_[ℓ] Fp := continuousSMul_of_algebraMap ℚ_[ℓ] Fp hc
-  haveI : T2Space Fp := t2Space_of_nonarchimedeanLocalField' Fp
+  have : ContinuousSMul ℚ_[ℓ] Fp := continuousSMul_of_algebraMap ℚ_[ℓ] Fp hc
+  have : T2Space Fp := t2Space_of_nonarchimedeanLocalField' Fp
   let F : Fp → (Module.Free.ChooseBasisIndex ℤ (𝓞 K) → ℚ_[ℓ]) := fun x i => (BA K ℓ).repr (σ x) i
   have hF : Continuous F := by
     refine continuous_pi fun i => ?_
@@ -496,7 +496,7 @@ section -- clump:auto
 
 theorem trace_dual_local : PI.TrDualLoc.Stmt := by
   intro K _ _ p _ Fp _ _ _ _ _ hc hfin ι hd _ t ht c hcO
-  haveI : CharZero Fp :=
+  have : CharZero Fp :=
     charZero_of_injective_algebraMap (algebraMap ℚ_[Formalism.MainNotions.S.Loc.resChar p] Fp).injective
   exact PI.TrDualLocW.main hc hfin ι (PI.CntNotIntW.tensorLiftSurjective K _ Fp hc hfin ι hd) t ht c hcO
 end -- clump:auto

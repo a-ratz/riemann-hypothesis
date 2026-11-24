@@ -85,7 +85,7 @@ theorem aic_of_isAlgClosed (K : Type) [Field K] [IsAlgClosed K] : GlobalTheory.E
 
 theorem algebraMap_injective_of_indEt {A O : Type} [CommRing A] [IsDomain A] [CommRing O]
     [Nontrivial O] [Algebra A O] (h : GlobalTheory.EtC.IndEt A O) : Function.Injective (algebraMap A O) := by
-  haveI : Module.Flat A O := GlobalTheory.IndEtaleLocal.flat_of_isIndEtale h
+  have : Module.Flat A O := GlobalTheory.IndEtaleLocal.flat_of_isIndEtale h
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro a ha
   by_contra ha0
@@ -99,7 +99,7 @@ theorem isDomain_of_indEt {A O : Type} [CommRing A] [IsDomain A] [IsIntegrallyCl
     [CommRing O] [IsLocalRing O] [Algebra A O] (h : GlobalTheory.EtC.IndEt A O) : IsDomain O := by
   refine @NoZeroDivisors.to_isDomain O _ _ ⟨fun {x y} hxy => ?_⟩
   let I : Ideal (MvPolynomial (Fin 2) A) := Ideal.span {MvPolynomial.X 0 * MvPolynomial.X 1}
-  haveI : Algebra.FinitePresentation A (MvPolynomial (Fin 2) A ⧸ I) :=
+  have : Algebra.FinitePresentation A (MvPolynomial (Fin 2) A ⧸ I) :=
     Algebra.FinitePresentation.quotient (Submodule.fg_span_singleton _)
   let g : (MvPolynomial (Fin 2) A ⧸ I) →ₐ[A] O :=
     Ideal.Quotient.liftₐ I (MvPolynomial.aeval ![x, y]) (by
@@ -117,7 +117,7 @@ theorem isDomain_of_indEt {A O : Type} [CommRing A] [IsDomain A] [IsIntegrallyCl
       exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton_self _)
     simp only [w, ← map_mul, this, map_zero]
   let q : Ideal W := (IsLocalRing.maximalIdeal O).comap v
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
+  have : q.IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨hdom, -⟩ := GlobalTheory.etale_localization_atPrime_isDomain_isIntegrallyClosed A W q
   have hq : ∀ t ∈ q.primeCompl, IsUnit (v t) := fun t ht => by
     by_contra hc
@@ -140,10 +140,10 @@ theorem isIntegral_tmul_one {A O : Type} [CommRing A] [IsDomain A] [CommRing O] 
     (h : GlobalTheory.EtC.IndEt A O) (o : O) :
     IsIntegral (FractionRing A) (o ⊗ₜ[A] (1 : FractionRing A)) := by
   obtain ⟨W, _, _, _, u, v, huv⟩ := GlobalTheory.IndEtaleLocal.exists_etale_factor h (Polynomial.aeval (R := A) o)
-  haveI : Algebra.Etale (FractionRing A) (FractionRing A ⊗[A] W) := Algebra.Etale.baseChange A W _
-  haveI : Module.Finite (FractionRing A) (FractionRing A ⊗[A] W) :=
+  have : Algebra.Etale (FractionRing A) (FractionRing A ⊗[A] W) := Algebra.Etale.baseChange A W _
+  have : Module.Finite (FractionRing A) (FractionRing A ⊗[A] W) :=
     Algebra.FormallyUnramified.finite_of_free _ _
-  haveI : Algebra.IsIntegral (FractionRing A) (FractionRing A ⊗[A] W) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral (FractionRing A) (FractionRing A ⊗[A] W) := Algebra.IsIntegral.of_finite _ _
   let χ : W →ₐ[A] O ⊗[A] FractionRing A := (Algebra.TensorProduct.includeLeft (S := A)).comp v
   let Χ : FractionRing A ⊗[A] W →ₐ[FractionRing A] O ⊗[A] FractionRing A :=
     Algebra.TensorProduct.lift (Algebra.ofId _ _) χ (fun _ _ => Commute.all _ _)
@@ -164,17 +164,17 @@ theorem isField_aic_tensor_fractionRing_of_strictlyHenselian :
       GlobalTheory.EtC.SH O → GlobalTheory.EtC.IndEt A O →
       IsField (O ⊗[A] FractionRing A) ∧ GlobalTheory.EtC.AIC (O ⊗[A] FractionRing A) := by
   intro A O _ _ _ _ hA hO h
-  haveI := isIntegrallyClosed_of_aic hA
+  have := isIntegrallyClosed_of_aic hA
   obtain ⟨hH, -⟩ := hO
-  haveI := hH
-  haveI := isDomain_of_indEt h
-  haveI : IsAlgClosed (FractionRing A) := GlobalTheory.T.isAlgClosed_fractionRing_of_monic_polynomials_have_roots A hA
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors A))
+  have := hH
+  have := isDomain_of_indEt h
+  have : IsAlgClosed (FractionRing A) := GlobalTheory.T.isAlgClosed_fractionRing_of_monic_polynomials_have_roots A hA
+  have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors A))
       (O ⊗[A] FractionRing A) := by
     rw [Algebra.isLocalization_iff_isPushout (nonZeroDivisors A) (FractionRing A)]
     infer_instance
   have hinj := algebraMap_injective_of_indEt h
-  haveI : IsDomain (O ⊗[A] FractionRing A) :=
+  have : IsDomain (O ⊗[A] FractionRing A) :=
     IsLocalization.isDomain_of_le_nonZeroDivisors (M := Algebra.algebraMapSubmonoid O (nonZeroDivisors A)) (O ⊗[A] FractionRing A) (by
       rintro _ ⟨a, ha, rfl⟩
       exact mem_nonZeroDivisors_of_ne_zero ((map_ne_zero_iff _ hinj).mpr (nonZeroDivisors.ne_zero ha)))
@@ -189,7 +189,7 @@ theorem isField_aic_tensor_fractionRing_of_strictlyHenselian :
       rw [this]
       exact (isIntegral_tmul_one h o).mul isIntegral_algebraMap
     | add x y hx hy => exact hx.add hy
-  haveI : Algebra.IsIntegral (FractionRing A) (O ⊗[A] FractionRing A) := ⟨hall⟩
+  have : Algebra.IsIntegral (FractionRing A) (O ⊗[A] FractionRing A) := ⟨hall⟩
   let e := RingEquiv.ofBijective _
     (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := FractionRing A) (K := O ⊗[A] FractionRing A))
   exact ⟨MulEquiv.isField (Field.toIsField (FractionRing A)) e.symm.toMulEquiv,

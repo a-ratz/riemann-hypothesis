@@ -170,7 +170,7 @@ def realCoord (σ : (D.what₂.Tau → ℂ) →+ AE D) {m n d : ℕ} (ε : Modul
 
 theorem continuous_realCoord {σ : (D.what₂.Tau → ℂ) →+ AE D} (hσ : Continuous σ) {m n d : ℕ}
     (ε : Module.Basis (Fin d) D.host.F D.host.E) : Continuous (realCoord σ (m := m) (n := n) ε) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   refine continuous_pi fun p => (continuous_mixed D.host.F).comp (continuous_fst.comp ?_)
   exact ((continuous_apply p.2.2).comp (IsModuleTopology.continuous_of_linearMap
       (Algebra.TensorProduct.basis (AF D.host.F) ε).equivFun.toLinearMap)).comp
@@ -327,7 +327,7 @@ variable {D : D7}
 
 theorem continuous_coord {d m n : ℕ} (ε : Module.Basis (Fin d) D.host.F D.host.E) :
     Continuous (coord (D := D) (m := m) (n := n) ε) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   refine continuous_pi fun p => ?_
   let L : AE D →ₗ[AF D.host.F] AF D.host.F :=
     (Finsupp.lapply p.2.2).comp (Algebra.TensorProduct.basis (AF D.host.F) ε).repr.toLinearMap
@@ -337,14 +337,14 @@ theorem continuous_coord {d m n : ℕ} (ε : Module.Basis (Fin d) D.host.F D.hos
 theorem continuous_invPt (B : HSp D) {a : ℕ} (ξ : Matrix (Fin B.rank) (Fin a) D.host.E) :
     Continuous fun h : GA D B => invPt B h ξ := by
   unfold invPt
-  have hmt : Continuous (Formalism.L2.Theta.mt B) := Units.continuous_val.comp continuous_subtype_val
+  have hmt : Continuous (Formalism.L2.Theta.mt B) := Units.continuous_val.comp continuous_subtypeVal
   exact (hmt.comp continuous_inv).matrix_mul continuous_const
 
 theorem measurable_absTheta (B : HSp D) {a : ℕ} {φ : Mx D B.rank a → ℂ} (hφ : Continuous φ) :
     Measurable (absTheta B φ) := by
-  haveI := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
-  haveI : Countable (Matrix (Fin B.rank) (Fin a) D.host.E) := inferInstanceAs (Countable (Fin B.rank → Fin a → D.host.E))
-  exact Measurable.tsum fun ξ => (hφ.comp (continuous_invPt B ξ)).enorm.measurable
+  have := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
+  have : Countable (Matrix (Fin B.rank) (Fin a) D.host.E) := inferInstanceAs (Countable (Fin B.rank → Fin a → D.host.E))
+  exact Measurable.tsum fun ξ => (hφ.comp (continuous_invPt B ξ)).eNorm.measurable
 
 theorem measurable_descend_absTheta (B : HSp D) {a : ℕ} {φ : Mx D B.rank a → ℂ} (hφ : Continuous φ) :
     Measurable (descend (GQ B) (absTheta B φ)) :=
@@ -356,13 +356,13 @@ theorem absTheta_add_le (B : HSp D) {a : ℕ} (φ ψ : Mx D B.rank a → ℂ) (h
     absTheta B (φ + ψ) h ≤ absTheta B φ h + absTheta B ψ h := by
   unfold absTheta
   rw [← ENNReal.tsum_add]
-  exact ENNReal.tsum_le_tsum fun ξ => enorm_add_le _ _
+  exact ENNReal.tsum_le_tsum fun ξ => eNorm_add_le _ _
 
 theorem absTheta_smul (B : HSp D) {a : ℕ} (c : ℂ) (φ : Mx D B.rank a → ℂ) (h : GA D B) :
     absTheta B (c • φ) h = ‖c‖ₑ * absTheta B φ h := by
   unfold absTheta
   rw [← ENNReal.tsum_mul_left]
-  simp only [Pi.smul_apply, smul_eq_mul, enorm_mul]
+  simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul]
 
 theorem absThetaInt_add_le (B : HSp D) (m : Measure (GA D B)) {a : ℕ} {φ : Mx D B.rank a → ℂ} (hφ : Continuous φ)
     (ψ : Mx D B.rank a → ℂ) : absThetaInt B m (φ + ψ) ≤ absThetaInt B m φ + absThetaInt B m ψ := by
@@ -373,7 +373,7 @@ theorem absThetaInt_add_le (B : HSp D) (m : Measure (GA D B)) {a : ℕ} {φ : Mx
 theorem absThetaInt_smul (B : HSp D) (m : Measure (GA D B)) {a : ℕ} (c : ℂ) (φ : Mx D B.rank a → ℂ) :
     absThetaInt B m (c • φ) = ‖c‖ₑ * absThetaInt B m φ := by
   unfold absThetaInt
-  rw [← lintegral_const_mul' _ _ enorm_ne_top]
+  rw [← lintegral_const_mul' _ _ eNorm_ne_top]
   exact lintegral_congr fun q => absTheta_smul B c φ q.out
 
 theorem absTheta_le_liminf (B : HSp D) {a : ℕ} {ι : Type*} {u : Filter ι} [u.NeBot] {φs : ι → Mx D B.rank a → ℂ}
@@ -383,7 +383,7 @@ theorem absTheta_le_liminf (B : HSp D) {a : ℕ} {ι : Type*} {u : Filter ι} [u
   rw [ENNReal.tsum_eq_iSup_sum]
   refine iSup_le fun s => ?_
   have ht : Filter.Tendsto (fun i => ∑ ξ ∈ s, ‖φs i (invPt B h ξ)‖ₑ) u (nhds (∑ ξ ∈ s, ‖φ (invPt B h ξ)‖ₑ)) :=
-    tendsto_finsetSum s fun ξ _ => (hlim _).enorm
+    tendsto_finsetSum s fun ξ _ => (hlim _).eNorm
   rw [← ht.liminf_eq]
   exact Filter.liminf_le_liminf (Filter.Eventually.of_forall fun i => ENNReal.sum_le_tsum s)
 
@@ -413,14 +413,14 @@ theorem absThetaInt_le_contSeminorm : GlobalTheory.Published.WeilThetaConvergenc
         exact ENNReal.toReal_mono (ENNReal.add_ne_top.2 ⟨hfin φ, hfin ψ⟩) (absThetaInt_add_le B m (hcont φ) _))
       (fun c φ => by
         show (absThetaInt B m (c • (φ.1 ∘ coord ε))).toReal = _
-        rw [absThetaInt_smul, ENNReal.toReal_mul, toReal_enorm])
+        rw [absThetaInt_smul, ENNReal.toReal_mul, toReal_eNorm])
   refine ⟨ν, fun g => ?_, fun φ => (ENNReal.ofReal_toReal (hfin φ)).ge⟩
   let L : SchwartzMap (Fin B.rank × Fin A.rank × Fin d → mixedEmbedding.mixedSpace D.host.F) ℂ →ₗ[ℂ]
       WeilM.schA D.host.F (Fin B.rank × Fin A.rank × Fin d) :=
     { toFun := pureS g
       map_add' := fun f f' => Subtype.ext (funext fun x => by simp [pureS, WeilM.pureA, add_mul])
       map_smul' := fun c f => Subtype.ext (funext fun x => by simp [pureS, WeilM.pureA, mul_assoc]) }
-  haveI := GlobalTheory.schwartzMap_barrelledSpace (Fin B.rank × Fin A.rank × Fin d → mixedEmbedding.mixedSpace D.host.F)
+  have := GlobalTheory.schwartzMap_barrelledSpace (Fin B.rank × Fin A.rank × Fin d → mixedEmbedding.mixedSpace D.host.F)
   have hev : ∀ y, Continuous fun f : SchwartzMap (Fin B.rank × Fin A.rank × Fin d → mixedEmbedding.mixedSpace D.host.F) ℂ => f y :=
     fun y => ((continuous_eval_const y : Continuous fun F : BoundedContinuousFunction (Fin B.rank × Fin A.rank × Fin d → mixedEmbedding.mixedSpace D.host.F) ℂ => F y)).comp
       (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (Fin B.rank × Fin A.rank × Fin d → mixedEmbedding.mixedSpace D.host.F) ℂ).continuous

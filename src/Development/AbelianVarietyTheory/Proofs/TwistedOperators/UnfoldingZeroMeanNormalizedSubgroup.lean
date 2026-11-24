@@ -70,9 +70,9 @@ namespace GlobalTheory.UnfoldNormal
 
 theorem ae_exists_pairGroup_smul_mem_shear : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [LocallyCompactSpace H] [SecondCountableTopology H] [T2Space H] [MeasurableSpace H] [BorelSpace H], ∀ (ν : Measure H) [ν.IsHaarMeasure] (Γ N : Subgroup H), Countable Γ → IsClosed (N : Set H) → ∀ (hN : ∀ γ ∈ Γ, ∀ n ∈ N, γ * n * γ⁻¹ ∈ N) (κ : Measure N) (𝓝 : Set N), κ.IsHaarMeasure → IsFundamentalDomain (Γ.subgroupOf N) 𝓝 κ → (∀ (γ : H) (hγ : γ ∈ Γ), κ.map (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = κ) → ∀ 𝓕 : Set H, IsFundamentalDomain Γ 𝓕 ν → ∀ᵐ p ∂((κ.prod ν).map (GlobalTheory.UnfoldNormal.shear N)), ∃ g : GlobalTheory.UnfoldNormal.pairGroup Γ N hN, g • p ∈ GlobalTheory.UnfoldNormal.shear N '' (𝓝 ×ˢ 𝓕) := by
   intro H _ _ _ _ _ _ _ _ ν _ Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hconj 𝓕 h𝓕
-  haveI : LocallyCompactSpace N := hNc.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
-  haveI : SigmaFinite κ := inferInstance
+  have : LocallyCompactSpace N := hNc.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
+  have : SigmaFinite κ := inferInstance
   have hgoodn : ∀ᵐ n : N ∂κ, ∀ v : Γ, ∃ δ : Γ.subgroupOf N,
       δ • (⟨(v : H) * n * (v : H)⁻¹, hN v v.2 n n.2⟩ : N) ∈ 𝓝 := by
     rw [ae_all_iff]
@@ -165,7 +165,7 @@ theorem aedisjoint_pairGroup_smul_shear_image : ∀ (H : Type) [Group H] [Topolo
     have hW : κ (δ • 𝓝 ∩ δ' • 𝓝) = 0 := h𝓝.aedisjoint hδ
     let c : N → N := fun n : N => (⟨v⁻¹ * n * v⁻¹⁻¹, hN v⁻¹ (Γ.inv_mem hv) n n.2⟩ : N)
     have hc : Continuous c :=
-      ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
+      ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
     have hcW : κ (c ⁻¹' (δ • 𝓝 ∩ δ' • 𝓝)) = 0 := by
       have h1 := Measure.le_map_apply hc.measurable.aemeasurable (μ := κ) (δ • 𝓝 ∩ δ' • 𝓝)
       have h2 : κ.map c = κ := hconj v⁻¹ (Γ.inv_mem hv)
@@ -234,9 +234,9 @@ theorem map_conj_eq_self (H : Type) [Group H] [TopologicalSpace H] [IsTopologica
     (h𝓝 : IsFundamentalDomain (Γ.subgroupOf N) 𝓝 κ) (hfin : κ 𝓝 ≠ ⊤)
     (γ : H) (hγ : γ ∈ Γ) :
     κ.map (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = κ := by
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
-  haveI : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : Countable (Γ.subgroupOf N) := by
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
+  have : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : Countable (Γ.subgroupOf N) := by
     refine Function.Injective.countable (f := fun x : Γ.subgroupOf N => (⟨(x : N), x.2⟩ : Γ)) ?_
     intro a b hab
     apply Subtype.ext; apply Subtype.ext
@@ -244,7 +244,7 @@ theorem map_conj_eq_self (H : Type) [Group H] [TopologicalSpace H] [IsTopologica
   set e := conjEquiv N γ (hN γ hγ) (hN γ⁻¹ (Γ.inv_mem hγ)) with he_def
   have hfun : (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = ⇑e := rfl
   rw [hfun]
-  haveI : (κ.map e).IsHaarMeasure := e.isHaarMeasure_map κ
+  have : (κ.map e).IsHaarMeasure := e.isHaarMeasure_map κ
   have hsm : κ.map e = Measure.haarScalarFactor (κ.map e) κ • κ :=
     Measure.isMulLeftInvariant_eq_smul (κ.map e) κ
   set c := Measure.haarScalarFactor (κ.map e) κ
@@ -279,7 +279,7 @@ theorem map_conj_eq_self (H : Type) [Group H] [TopologicalSpace H] [IsTopologica
     have h' : (c • κ) 𝓝 = κ 𝓝 := by rw [← hsm, hmap, hmeq]
     rw [one_mul]
     conv_rhs => rw [← h']
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
   have hc1 : (c : ENNReal) = 1 := (ENNReal.mul_left_inj hne hfin).1 hc
   have : c = 1 := by exact_mod_cast hc1
   rw [hsm, this, one_smul]
@@ -319,13 +319,13 @@ theorem map_swap_map_shear (H : Type) [Group H] [TopologicalSpace H] [IsTopologi
     (κ : Measure N) (hκ : κ.IsHaarMeasure) (hinv : κ.map (fun n => n⁻¹) = κ) :
     ((κ.prod ν).map (GlobalTheory.UnfoldNormal.shear N)).map Prod.swap
       = (κ.prod ν).map (GlobalTheory.UnfoldNormal.shear N) := by
-  haveI : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
-  haveI := hκ
+  have : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
+  have := hκ
   have hsh : Measurable (shear N) := (measurableEmbedding_shear hNc).measurable
   have hT : MeasurePreserving (fun p : N × H => (p.1⁻¹, (p.1 : H) * p.2)) (κ.prod ν) (κ.prod ν) := by
     refine MeasurePreserving.skew_product (f := fun n : N => n⁻¹) (g := fun (n : N) (h : H) => (n : H) * h)
-      ⟨measurable_inv, hinv⟩ ((measurable_subtype_coe.comp measurable_fst).mul measurable_snd) ?_
+      ⟨measurable_inv, hinv⟩ ((measurable_subtypeVal.comp measurable_fst).mul measurable_snd) ?_
     exact Filter.Eventually.of_forall fun n => (measurePreserving_mul_left ν (n : H)).map_eq
   have hcomm : Prod.swap ∘ shear N = shear N ∘ (fun p : N × H => (p.1⁻¹, (p.1 : H) * p.2)) := by
     funext p
@@ -353,9 +353,9 @@ theorem smulInvariantMeasure_shear_map (H : Type) [Group H] [TopologicalSpace H]
     (hN : ∀ γ ∈ Γ, ∀ n ∈ N, γ * n * γ⁻¹ ∈ N) (κ : Measure N) (hκ : κ.IsHaarMeasure)
     (hconj : ∀ (γ : H) (hγ : γ ∈ Γ), κ.map (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = κ) :
     SMulInvariantMeasure (pairGroup Γ N hN) (H × H) ((κ.prod ν).map (shear N)) := by
-  haveI : LocallyCompactSpace N := hNc.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
-  haveI : SigmaFinite κ := inferInstance
+  have : LocallyCompactSpace N := hNc.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
+  have : SigmaFinite κ := inferInstance
   refine ⟨fun g s hs => ?_⟩
   obtain ⟨⟨u, v⟩, hu, hv, huv⟩ := g
   have hmeasg : Measurable (fun x : H × H => ((⟨(u, v), hu, hv, huv⟩ : pairGroup Γ N hN)) • x) := by
@@ -364,7 +364,7 @@ theorem smulInvariantMeasure_shear_map (H : Type) [Group H] [TopologicalSpace H]
   let δ : N := ⟨u * v⁻¹, huv⟩
   let c : N → N := fun n => ⟨v * n * v⁻¹, hN v hv n n.2⟩
   have hc : MeasurePreserving c κ κ :=
-    ⟨(show Continuous c from ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _).measurable,
+    ⟨(show Continuous c from ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _).measurable,
       hconj v hv⟩
   have hf : MeasurePreserving (fun n : N => δ * c n) κ κ := (measurePreserving_mul_left κ δ).comp hc
   have hT : MeasurePreserving (Prod.map (fun n : N => δ * c n) (fun h : H => v * h)) (κ.prod ν) (κ.prod ν) :=
@@ -395,31 +395,31 @@ namespace GlobalTheory.UnfoldNormal
 
 theorem unfold_zero_mean : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [LocallyCompactSpace H] [SecondCountableTopology H] [T2Space H] [MeasurableSpace H] [BorelSpace H] (ν : Measure H) [ν.IsHaarMeasure] (Γ N : Subgroup H), Countable Γ → IsClosed (N : Set H) → (∀ γ ∈ Γ, ∀ n ∈ N, γ * n * γ⁻¹ ∈ N) → ∀ (κ : Measure N) (𝓝 : Set N), κ.IsHaarMeasure → IsFundamentalDomain (Γ.subgroupOf N) 𝓝 κ → κ 𝓝 ≠ ⊤ → ∀ K F : H → ℂ, Measurable K → Measurable F → (∀ n ∈ N, ∀ h, K (n * h) = K h) → (∀ γ ∈ Γ, ∀ h, K (γ * h) = K h) → (∀ γ ∈ Γ, ∀ h, F (γ * h) = F h) → (∀ h, ∫ n in 𝓝, F ((n : H) * h) ∂κ = 0) → ∀ 𝓕 : Set H, IsFundamentalDomain Γ 𝓕 ν → IntegrableOn (fun h => K h * F h) 𝓕 ν → ∫ h in 𝓕, K h * F h ∂ν = 0 := by
   intro H _ _ _ _ _ _ _ _ ν _ Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 h𝓝t K F hKm hFm hKN hKΓ hFΓ h0 𝓕 h𝓕 hint
-  haveI : LocallyCompactSpace N := hNc.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
-  haveI : SigmaCompactSpace N := inferInstance
-  haveI : SigmaFinite κ := inferInstance
-  haveI : Countable (Γ.subgroupOf N) := by
+  have : LocallyCompactSpace N := hNc.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology (N : Set H)
+  have : SigmaCompactSpace N := inferInstance
+  have : SigmaFinite κ := inferInstance
+  have : Countable (Γ.subgroupOf N) := by
     refine Function.Injective.countable (f := fun x : Γ.subgroupOf N => (⟨(x : N), x.2⟩ : Γ)) ?_
     intro a b hab
     apply Subtype.ext; apply Subtype.ext
     simpa using congrArg (fun y : Γ => (y : H)) hab
   have hR : ∀ n₀ : N, κ.map (· * n₀) = κ := _root_.GlobalTheory.haar_map_mul_right_eq_of_fundamentalDomain H Γ N hΓ hNc κ 𝓝 hκ h𝓝 h𝓝t
   have hI : κ.map (fun n => n⁻¹) = κ := by
-    haveI : κ.IsMulRightInvariant := ⟨hR⟩
+    have : κ.IsMulRightInvariant := ⟨hR⟩
     exact (GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant κ).inv_eq_self
   have hC : ∀ γ (hγ : γ ∈ Γ), κ.map (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = κ :=
     GlobalTheory.T.haar_map_conj_normalizing_lattice_eq_self H Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 h𝓝t
   have hemb : MeasurableEmbedding (shear N) := measurableEmbedding_shear hNc
   set G := pairGroup Γ N hN with hG
   set μ := (κ.prod ν).map (shear N) with hμ
-  haveI : Countable G := by
+  have : Countable G := by
     refine Function.Injective.countable (f := fun g : G => ((⟨(g : H × H).1, g.2.1⟩ : Γ), (⟨(g : H × H).2, g.2.2.1⟩ : Γ))) ?_
     intro a b hab
     simp only [Prod.mk.injEq, Subtype.mk.injEq] at hab
     exact Subtype.ext (Prod.ext hab.1 hab.2)
-  haveI : MeasurableConstSMul G (H × H) := inferInstance
-  haveI : SMulInvariantMeasure G (H × H) μ := _root_.GlobalTheory.UnfoldNormal.smulInvariantMeasure_shear_map H ν Γ N hNc hN κ hκ hC
+  have : MeasurableConstSMul G (H × H) := inferInstance
+  have : SMulInvariantMeasure G (H × H) μ := _root_.GlobalTheory.UnfoldNormal.smulInvariantMeasure_shear_map H ν Γ N hNc hN κ hκ hC
   have hS : IsFundamentalDomain G (shear N '' (𝓝 ×ˢ 𝓕)) μ :=
     ⟨nullMeasurableSet_shear_image hNc κ ν h𝓝.nullMeasurableSet h𝓕.nullMeasurableSet,
       GlobalTheory.T.ae_exists_pairGroup_smul_mem_sheared_domain H ν Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hC 𝓕 h𝓕, _root_.GlobalTheory.UnfoldNormal.aedisjoint_pairGroup_smul_shear_image H ν Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hC 𝓕 h𝓕⟩
@@ -457,7 +457,7 @@ theorem unfold_zero_mean : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopo
     rw [hS.integrableOn_iff hS2 (f := fun p => f p.1) hΦ]
     have h2 : IntegrableOn (fun p : H × H => f p.2) S μ := by
       rw [hmp.integrableOn_image hemb]
-      haveI : IsFiniteMeasure (κ.restrict 𝓝) := isFiniteMeasure_restrict.2 h𝓝t
+      have : IsFiniteMeasure (κ.restrict 𝓝) := isFiniteMeasure_restrict.2 h𝓝t
       change Integrable (fun q : N × H => f q.2) ((κ.prod ν).restrict (𝓝 ×ˢ 𝓕))
       rw [← Measure.prod_restrict]
       exact hint.comp_snd (κ.restrict 𝓝)

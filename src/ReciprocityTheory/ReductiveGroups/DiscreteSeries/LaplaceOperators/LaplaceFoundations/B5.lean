@@ -183,7 +183,7 @@ theorem log_bound (D : ℝ) (m : ℕ) : ∃ A : ℝ, 0 ≤ A ∧ ∀ s a y : ℝ
     have hsa2 : 1 + Real.sqrt a ≤ 3 * E ^ 2 := by nlinarith
     have hy2 : y ≤ B * Real.exp (4 * ((m : ℝ) + 1) * σ) := by
       have hexp : Real.exp (4 * ((m : ℝ) + 1) * σ) = E ^ (4 * (m + 1)) := by
-        rw [hE, ← Real.exp_nat_mul]; push_cast; ring_nf
+        rw [hE, ← Real.exp_natCast_mul]; push_cast; ring_nf
       calc y ≤ D ^ 2 * a * (1 + Real.sqrt a) ^ (2 * m) := hyA
         _ ≤ D ^ 2 * (1 + Real.sqrt a) ^ 2 * (1 + Real.sqrt a) ^ (2 * m) := by
             gcongr; nlinarith

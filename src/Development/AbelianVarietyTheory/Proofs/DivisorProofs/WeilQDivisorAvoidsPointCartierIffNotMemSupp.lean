@@ -67,8 +67,8 @@ private lemma exists_coheight_one_generalization_not_unitAt {X : Scheme.{0}} [Is
     ((genericPoint_spec X).mem_open_set_iff V.isOpen).mpr ⟨z, trivial, hzV⟩
   rw [← _root_.GlobalTheory.Cartier.fnOf_resG hVU hgV a] at hf hnu ⊢
   generalize _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.resG X hVU a = b at hf hnu ⊢
-  haveI : IsNoetherianRing Γ(X, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
-  haveI : Nonempty V := ⟨⟨z, hzV⟩⟩
+  have : IsNoetherianRing Γ(X, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : Nonempty V := ⟨⟨z, hzV⟩⟩
   have hmem : ∀ q : PrimeSpectrum Γ(X, V), hV'.fromSpec q ∈ V := fun q => by
     have : hV'.fromSpec q ∈ Set.range hV'.fromSpec := Set.mem_range_self q
     rwa [hV'.range_fromSpec] at this
@@ -87,18 +87,18 @@ private lemma exists_coheight_one_generalization_not_unitAt {X : Scheme.{0}} [Is
     exact hnu (hpz ▸ (key p).mpr h)
   obtain ⟨P, hPmin, hPp⟩ := Ideal.exists_minimalPrimes_le
     ((Ideal.span_singleton_le_iff_mem _).mpr hbp)
-  haveI hPprime : P.IsPrime := hPmin.1.1
+  have hPprime : P.IsPrime := hPmin.1.1
   set q : PrimeSpectrum Γ(X, V) := ⟨P, hPprime⟩
   have hbP : b ∈ P := (Ideal.span_singleton_le_iff_mem _).mp hPmin.1.2
   refine ⟨hV'.fromSpec q, ?_, ?_, fun h => (key q).mp h hbP⟩
   · rw [← hpz]
     exact ((PrimeSpectrum.le_iff_specializes q p).mp hPp).map hV'.fromSpec.continuous
-  · letI := X.presheaf.algebra_section_stalk ⟨hV'.fromSpec q, hmem q⟩
-    haveI hloc := hV'.isLocalization_stalk' q (hmem q)
+  · let := X.presheaf.algebra_section_stalk ⟨hV'.fromSpec q, hmem q⟩
+    have hloc := hV'.isLocalization_stalk' q (hmem q)
     have hdim : ringKrullDim (X.presheaf.stalk (hV'.fromSpec q)) = (P.height : WithBot ℕ∞) :=
       @IsLocalization.AtPrime.ringKrullDim_eq_height _ _ q.asIdeal q.2 _ _ _ hloc
     rw [ringKrullDim_stalk_eq_coheight] at hdim
-    haveI : (Ideal.span {b}).IsPrincipal := ⟨⟨b, rfl⟩⟩
+    have : (Ideal.span {b}).IsPrincipal := ⟨⟨b, rfl⟩⟩
     have hle : P.height ≤ 1 := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ P hPmin
     have hne : P.height ≠ 0 := by
       rw [Ne, Ideal.height_eq_zero_iff]
@@ -141,7 +141,7 @@ theorem _root_.GlobalTheory.PairStep.off_qWeil_iff_notMem_supp : ∀ (X : Scheme
     rw [← ha, _root_.GlobalTheory.Cartier.ord_algebraMap hw1 ha0] at hmult
     have hdim : ringKrullDim (X.presheaf.stalk w) = 1 := by
       rw [ringKrullDim_stalk_eq_coheight, hw1]; rfl
-    haveI : Ring.KrullDimLE 1 (X.presheaf.stalk w) := by
+    have : Ring.KrullDimLE 1 (X.presheaf.stalk w) := by
       rw [Ring.krullDimLE_iff, hdim]
       exact_mod_cast le_rfl
     have hfin := isFiniteLength_quotient_span_singleton (X.presheaf.stalk w)

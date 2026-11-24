@@ -301,7 +301,7 @@ theorem final_bound_of_assembly : FinalOf := by
     have hρ : ∀ p ∈ S, 1 - 1 / 400 < (ρ p).re ∧ |(ρ p).im| ≤ Q ∧ DirichletCharacter.LFunction p.2 (ρ p) = 0 := by
       intro p hp
       have h := (hS p hp).2.2
-      simp only [ρ, dif_pos h]
+      simp only [ρ, dite_eq_left h]
       exact h.choose_spec
     let jf : PC → ℕ := fun p => if h : (∃ j ∈ range J, 1 / (2 * (J : ℝ)) ≤
         ‖blk (pY Q) (pN Q) (pY Q * 2 ^ j) p (ρ p)‖) then h.choose else 0
@@ -320,7 +320,7 @@ theorem final_bound_of_assembly : FinalOf := by
       obtain ⟨h1, h2, h3⟩ := hρ p hpS
       have h := hDet Q hQ20 p hprim hp0 hlev (ρ p) (by unfold s0; exact h1) h2 h3
       rw [← hJdef] at h
-      simp only [jf, dif_pos h]
+      simp only [jf, dite_eq_left h]
       exact h.choose_spec
     have hre1 : ∀ p ∈ S', (ρ p).re < 1 := by
       intro p hp
@@ -740,7 +740,7 @@ theorem succ_le_max_mul_pow (e : ℝ) (he : 0 < e) (p k : ℕ) (hp : 2 ≤ p) :
   have ha : 0 < e * Real.log 2 := mul_pos he (Real.log_pos (by norm_num))
   refine (succ_le_max_mul_exp _ ha k).trans ?_
   refine mul_le_mul_of_nonneg_left ?_ (le_trans zero_le_one (le_max_left _ _))
-  rw [Real.rpow_def_of_pos hp0, ← Real.exp_nat_mul]
+  rw [Real.rpow_def_of_pos hp0, ← Real.exp_natCast_mul]
   apply Real.exp_le_exp.mpr
   have hk : (0 : ℝ) ≤ k := k.cast_nonneg
   calc e * Real.log 2 * k ≤ e * Real.log p * k :=

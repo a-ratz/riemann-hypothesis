@@ -290,7 +290,7 @@ theorem traceDual_injective (H : Host E) : Function.Injective (traceDual H) :=
 theorem finrank_eq_of_injective {M N : Type} [AddCommGroup M] [AddCommGroup N] [Module (𝓞 E) M] [Module (𝓞 E) N]
     [Module.Finite ℤ N] (φ : M →ₗ[𝓞 E] N) (hφ : Function.Injective φ) (h : finrank ℤ M = finrank ℤ N) :
     finrank (𝓞 E) M = finrank (𝓞 E) N := by
-  haveI : Module.Finite (𝓞 E) N := .of_restrictScalars_finite ℤ _ _
+  have : Module.Finite (𝓞 E) N := .of_restrictScalars_finite ℤ _ _
   have h1 := Submodule.finrank_quotient_add_finrank ((LinearMap.range φ).restrictScalars ℤ)
   have h2 := Submodule.finrank_quotient_add_finrank (LinearMap.range φ)
   have e := LinearEquiv.ofInjective φ hφ

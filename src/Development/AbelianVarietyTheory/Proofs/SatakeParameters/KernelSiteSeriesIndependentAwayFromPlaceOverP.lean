@@ -224,7 +224,7 @@ theorem exists_nsmul_mem_hatL {N : ℕ} (Lb : Submodule (𝓞 E) (Fin N → E))
 theorem exists_nsmul_mulVec_mem_hatL {N : ℕ} (Lb : Submodule (𝓞 E) (Fin N → E)) (hfin : Module.Finite (𝓞 E) Lb)
     (hspan : Submodule.span E (Lb : Set (Fin N → E)) = ⊤) (M : Matrix (Fin N) (Fin N) (E ⊗[F] 𝔸ᶠ[F])) :
     ∃ D : ℕ, 0 < D ∧ ∀ u ∈ Formalism.L2.Herm.hatL (F := F) Lb, D • (M *ᵥ u) ∈ Formalism.L2.Herm.hatL (F := F) Lb := by
-  haveI : Module.Finite ℤ Lb := Module.Finite.trans (𝓞 E) Lb
+  have : Module.Finite ℤ Lb := Module.Finite.trans (𝓞 E) Lb
   obtain ⟨k, s, hs⟩ := Module.Finite.exists_fin (R := ℤ) (M := Lb)
   obtain ⟨D, hD, hDj⟩ := exists_common_nat (Formalism.L2.Herm.hatL (F := F) Lb).toAddSubmonoid
     (fun j => M *ᵥ fun i => inclE (F := F) 𝔸ᶠ[F] ((s j : Fin N → E) i))
@@ -291,7 +291,7 @@ theorem exists_pow_div_mem (w : HeightOneSpectrum (𝓞 F)) {D : ℕ} (hD : 0 < 
     rw [← map_natCast (algebraMap F (w.adicCompletion F)), Formalism.UG.P.levelaf_valued_algebraMap,
       ← map_natCast (algebraMap (𝓞 F) F), HeightOneSpectrum.valuation_of_algebraMap]
   rw [e1, e2]
-  exact div_le_one_of_le₀ hc' zero_le'
+  exact div_le_one_of_le₀ hc' zero_le
 
 end GlobalTheory.TwV.Xc
 
@@ -317,7 +317,7 @@ theorem smul_mulVec_mem_hatL_of_oneOff {N : ℕ} (Lb : Submodule (𝓞 E) (Fin N
     (K : Matrix (Fin N) (Fin N) (E ⊗[F] 𝔸ᶠ[F])) (hK : ∀ w', w' ≠ w → K.map (prV (E := E) w') = 1) :
     ∃ m : ℕ, ∀ c : 𝓞 F, c ∈ w.asIdeal ^ m → ∀ u ∈ Formalism.L2.Herm.hatL (F := F) Lb,
       inclE (F := F) 𝔸ᶠ[F] (algebraMap F E (c : F)) • (K *ᵥ u) ∈ Formalism.L2.Herm.hatL (F := F) Lb := by
-  haveI := hfin
+  have := hfin
   obtain ⟨D, hD, hDK⟩ := exists_nsmul_mulVec_mem_hatL Lb hfin hspan K
   obtain ⟨m, hm⟩ := exists_pow_div_mem w hD
   refine ⟨m, fun c hc u hu => ?_⟩
@@ -697,7 +697,7 @@ theorem iw_algebraMap (A : LocAt F E n G) (hA : SplAlg A) (v : Fin G.P.nV) (f : 
 
 theorem iw_int (A : LocAt F E n G) (v : Fin G.P.nV) (x : 𝓞 E) :
     A.iw v (x : E) ∈ (algebraMap (G.P.W v) (G.P.Qq v)).range := by
-  haveI := (G.P.setting v).frac_alt
+  have := (G.P.setting v).frac_alt
   have h1 : IsIntegral ℤ (A.iw v (x : E)) := x.2.map (A.iw v).toIntAlgHom
   have h2 : IsIntegral (G.P.W v) (A.iw v (x : E)) := h1.tower_top
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 h2
@@ -718,7 +718,7 @@ def toW (A : LocAt F E n G) (v : Fin G.P.nV) : 𝓞 E →+* G.P.W v :=
 
 theorem toW_spec (A : LocAt F E n G) (v : Fin G.P.nV) (x : 𝓞 E) :
     algebraMap (G.P.W v) (G.P.Qq v) (toW A v x) = A.iw v (x : E) := by
-  haveI := (G.P.setting v).frac_alt
+  have := (G.P.setting v).frac_alt
   set e := RingEquiv.ofBijective (algebraMap (G.P.W v) (G.P.Qq v)).rangeRestrict
       ⟨fun a b h => IsFractionRing.injective (G.P.W v) (G.P.Qq v) (congrArg Subtype.val h),
         (algebraMap (G.P.W v) (G.P.Qq v)).rangeRestrict_surjective⟩ with he
@@ -779,7 +779,7 @@ theorem exists_primeOf_place : ∀ (F E : Type) [Field F] [NumberField F] [Field
       rw [← map_natCast (algebraMap F K), e2, ← map_natCast (algebraMap (𝓞 F) F)]
       exact (A.pl v).1.valuation_le_one _
     have hc : Valued.v (((p : ℕ) : K) ^ k) ≤ 1 := by
-      rw [map_pow]; exact pow_le_one₀ zero_le' hp1
+      rw [map_pow]; exact pow_le_one₀ zero_le hp1
     obtain ⟨r, hr⟩ := exists_int_near (A.pl v).1 _ ha _ hc0 hc
     set a := A.eQ v (algebraMap (G.P.W v) (G.P.Qq v) y)
     set d := a - algebraMap F K (algebraMap (𝓞 F) F r)
@@ -870,7 +870,7 @@ theorem inverseHalfDifferent_local_trivial_at_prime_norm : ∀ (D : D7) (p : ℕ
   have hn : ¬ D.host.𝔟 ≤ P.asIdeal := fun h => hnd (by
     rw [ht]
     exact ((Ideal.dvd_iff_le.2 h).trans hspec).mul_right _)
-  obtain ⟨t, htb, htP⟩ := SetLike.not_le_iff_exists.1 hn
+  obtain ⟨t, htb, htP⟩ := IsConcreteLE.not_le_iff_exists.1 hn
   have hb : ((D.host.𝔟 : Ideal (𝓞 D.host.E)) :
       FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) ≠ 0 :=
     FractionalIdeal.coeIdeal_ne_zero.2 fun h => hn (h ▸ bot_le)
@@ -993,9 +993,9 @@ theorem approx {F E K : Type} [Field F] [Field E] [Algebra F E] [Field K] [Algeb
       rw [Valuation.map_mul]
       by_cases hu : u = 0
       · have : Valued.v w = 0 := by
-          rw [hu, Valuation.map_zero] at hw; exact le_antisymm hw zero_le'
+          rw [hu, Valuation.map_zero] at hw; exact le_antisymm hw zero_le
         rw [this, zero_mul]; exact hr0
-      · rw [if_neg hu] at hz
+      · rw [ite_eq_right hu] at hz
         have hu0 : (0 : ℤᵐ⁰) < Valued.v u := by rw [pos_iff_ne_zero]; simpa using hu
         calc Valued.v w * Valued.v z ≤ Valued.v u * Valued.v z := by gcongr
           _ < Valued.v u * Valued.v (r * u⁻¹) := mul_lt_mul_of_pos_left hz hu0
@@ -1047,7 +1047,7 @@ theorem exists_frac {S K : Type} [CommRing S] [IsDedekindDomain S] [Field K] [Al
       _ ≤ 1 * ν (algebraMap S K s) := by gcongr; exact hle t
       _ = _ := one_mul _
   let A := Localization.AtPrime P
-  haveI : IsDiscreteValuationRing A := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain S hP A
+  have : IsDiscreteValuationRing A := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain S hP A
   have hinj : Function.Injective (algebraMap S A) :=
     IsLocalization.injective A P.primeCompl_le_nonZeroDivisors
   obtain ⟨x, y, hy, rfl⟩ := IsFractionRing.div_surjective (A := S) z
@@ -1090,7 +1090,7 @@ theorem exists_frac {S K : Type} [CommRing S] [IsDedekindDomain S] [Field K] [Al
 theorem prime_not_stable : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n p : ℕ) (G : GAtP p) (A : LocAt F E n G) (J : Matrix (Fin n) (Fin n) E) [Fact p.Prime], LocGood σ J A → LocInt A → SplAlg A → ∀ v (P : HeightOneSpectrum (𝓞 E)), PrimeOf p (G.P.W v) (A.iw v) P → ∃ a b : 𝓞 E, (b : E) = σ (a : E) ∧ a ∈ P.asIdeal ∧ b ∉ P.asIdeal := by
   intro F E _ _ _ _ _ σ n p G A J _ hG hI hS v P hP
   classical
-  haveI hfr := (G.P.setting v).frac_alt
+  have hfr := (G.P.setting v).frac_alt
   have hinjW : Function.Injective (algebraMap (G.P.W v) (G.P.Qq v)) := IsFractionRing.injective _ _
   let ν : Valuation E ℤᵐ⁰ := (Valued.v : Valuation ((A.pl v).1.adicCompletion F) ℤᵐ⁰).comap (A.phE v)
   have hν : ∀ x : E, ν x = Valued.v ((A.spl v (x ⊗ₜ[F] (1 : (A.pl v).1.adicCompletion F))).1) := by

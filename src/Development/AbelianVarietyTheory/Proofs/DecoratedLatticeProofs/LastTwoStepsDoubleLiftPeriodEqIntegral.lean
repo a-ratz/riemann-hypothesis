@@ -182,13 +182,13 @@ namespace GlobalTheory.LastRed
 
 theorem integral_automorphic_rankZeroWittEmbedding : ∀ (D : D7) (S S₀ : HSp D) (d : HypDec S S₀ 0) (v : Vol S) (v₀ : Vol S₀), v.μ = Measure.map d.emb0 v₀.μ → ∀ f : GA D S → ℂ, (∀ γ ∈ GQ S, ∀ g, f (γ * g) = f g) → ∫ g in v.𝓕, f g ∂v.μ = ∫ g in v₀.𝓕, f (d.emb0 g) ∂v₀.μ := by
   intro D S S₀ d v v₀ hμ f hf
-  haveI : BorelSpace (GA D S) := ⟨rfl⟩
-  haveI : BorelSpace (GA D S₀) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (GA D S₀) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : Countable (GQ S₀) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig S₀.gram
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableConstSMul_subgroup (GQ S₀)
-  haveI := v₀.haar
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.smulInvariant_subgroup (GQ S₀) v₀.μ
+  have : BorelSpace (GA D S) := ⟨rfl⟩
+  have : BorelSpace (GA D S₀) := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D S₀) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : Countable (GQ S₀) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig S₀.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableConstSMul_subgroup (GQ S₀)
+  have := v₀.haar
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.smulInvariant_subgroup (GQ S₀) v₀.μ
   have hbkc : Continuous (GlobalTheory.WeilSrc.Zero.back d) := continuous_of_mt S₀ (by
     simp only [GlobalTheory.WeilSrc.Zero.back, mt_ofMat]
     exact (continuous_const.matrix_mul (continuous_mt S)).matrix_mul continuous_const)

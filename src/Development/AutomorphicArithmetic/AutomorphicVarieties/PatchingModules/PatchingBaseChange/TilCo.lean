@@ -81,7 +81,7 @@ private theorem base_change_residue_surjective (O' R T : Type) [CommRing O'] [Is
       IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := R) P)
     rw [← Ideal.mem_comap, h1]
     exact hr
-  haveI : Nontrivial T := by
+  have : Nontrivial T := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h2 := congrArg φ h
     rw [map_zero, map_one] at h2
@@ -94,7 +94,7 @@ private theorem base_change_residue_surjective (O' R T : Type) [CommRing O'] [Is
       rw [mul_add, mul_one, mul_comm y, ← mul_assoc, Units.mul_inv, one_mul, add_comm]
     rw [e]
     exact v.isUnit.mul h3
-  haveI : IsLocalRing T := by
+  have : IsLocalRing T := by
     refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x => ?_
     obtain ⟨a, ha⟩ := hs x
     rcases IsLocalRing.isUnit_or_isUnit_one_sub_self a with h | h
@@ -112,7 +112,7 @@ private theorem base_change_residue_surjective (O' R T : Type) [CommRing O'] [Is
       infer_instance
     · infer_instance
   have hT : IsCL R T := cl_fin R R T hR
-  haveI : IsNoetherianRing T := hT.noeth
+  have : IsNoetherianRing T := hT.noeth
   refine ⟨hT.complete, ?_, ?_⟩
   · refine ⟨fun a ha => ?_⟩
     have h5 := ha.map φ
@@ -134,10 +134,10 @@ private theorem base_change_residue_surjective (O' R T : Type) [CommRing O'] [Is
 theorem UpperTheory.V.CA.cl_bc :
     ∀ (O O' R : Type) [CommRing O] [IsLocalRing O] [CommRing O'] [IsLocalRing O'] [Algebra O O'] [Module.Finite O O'] [IsLocalHom (algebraMap O O')] [CommRing R] [Algebra O R] [IsCO O R], IsCO O' (TensorProduct O O' R) := by
   intro O O' R _ _ _ _ _ _ _ _ _ _
-  letI : Algebra R (TensorProduct O O' R) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra R (TensorProduct O O' R) := Algebra.TensorProduct.rightAlgebra
   have hR : ∀ r : R, algebraMap R (TensorProduct O O' R) r = 1 ⊗ₜ r := fun r => rfl
   have hL : ∀ x : O', algebraMap O' (TensorProduct O O' R) x = x ⊗ₜ 1 := fun x => rfl
-  haveI : Module.Finite R (TensorProduct O O' R) := by
+  have : Module.Finite R (TensorProduct O O' R) := by
     let c := Algebra.TensorProduct.comm O R O'
     let e : TensorProduct O R O' →ₗ[R] TensorProduct O O' R :=
       { toFun := c
@@ -146,8 +146,8 @@ theorem UpperTheory.V.CA.cl_bc :
           rw [Algebra.smul_def, Algebra.smul_def, map_mul]
           congr 1 }
     exact Module.Finite.of_surjective e c.surjective
-  haveI : IsNoetherianRing R := inferInstance
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsNoetherianRing R := inferInstance
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   let f : O' →ₐ[O] ResidueField O' := IsScalarTower.toAlgHom O O' (ResidueField O')
   let g : R →ₐ[O] ResidueField O' :=
     (IsScalarTower.toAlgHom O (ResidueField O) (ResidueField O')).comp (res O R)
@@ -197,7 +197,7 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.BC.til_co :
     ∀ (O O' : Type) [CommRing O] [IsLocalRing O] [CommRing O'] [IsLocalRing O'] [Algebra O O'] [IsLocalHom (algebraMap O O')] [Module.Finite O O'] (R : Type) [CommRing R] [Algebra O R] [IsCO O R], ∃ _ : IsCO O' (Til O O' R), IsLocalHom (Til.ι O O' R) ∧ Til.s O O' R ∈ maximalIdeal (Til O O' R) := by
   intro O O' _ _ _ _ _ _ _ R _ _ _
-  haveI hT := UpperTheory.V.CA.cl_bc O O' R
+  have hT := UpperTheory.V.CA.cl_bc O O' R
   let f : R →+* O' ⊗[O] R := (Algebra.TensorProduct.includeRight : R →ₐ[O] O' ⊗[O] R).toRingHom
   have hint : f.IsIntegral := by
     intro x
@@ -223,9 +223,9 @@ theorem UpperTheory.V.Pa.BC.til_co :
     | add x y hx hy => exact RingHom.IsIntegralElem.add f hx hy
   have hloc : IsLocalHom f := by
     refine ((IsLocalRing.local_hom_tfae f).out 1 5).mpr ?_
-    haveI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' f hint (maximalIdeal (O' ⊗[O] R))
+    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal f hint (maximalIdeal (O' ⊗[O] R))
     exact IsLocalRing.eq_maximalIdeal this
-  haveI hco : IsCO O' (Til O O' R) := UpperTheory.V.Alg.co_mvps O' (O' ⊗[O] R) Unit
+  have hco : IsCO O' (Til O O' R) := UpperTheory.V.Alg.co_mvps O' (O' ⊗[O] R) Unit
   refine ⟨hco, ?_, ?_⟩
   · refine ⟨fun r hr => ?_⟩
     have hr' : IsUnit (PowerSeries.C ((1 : O') ⊗ₜ[O] r) : PowerSeries (O' ⊗[O] R)) := hr

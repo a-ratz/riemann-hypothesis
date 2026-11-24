@@ -121,7 +121,7 @@ theorem card_le_card_mul_card_support :
     simp only [hf, Finset.sum_mul, mul_assoc]
     rw [Finset.sum_comm]
     simp only [← Finset.mul_sum, sum_unitsChar_mul_inv, mul_ite, mul_zero]
-    rw [Finset.sum_ite_eq' S η, if_pos hη, mul_comm]
+    rw [Finset.sum_ite_eq' S η, ite_eq_left hη, mul_comm]
   have hc : ∀ η ∈ S, (Fintype.card C : ℝ) * ‖c η‖ ≤ T.card * ‖f z₀‖ := by
     intro η hη
     have h1 : ‖(Fintype.card C : ℂ) * c η‖ = (Fintype.card C : ℝ) * ‖c η‖ := by
@@ -182,7 +182,7 @@ theorem exists_eq_of_sum_eq {m d : ℕ} [NeZero m] (hm : 1 < m) (ζ ζ' : ℕ �
     (h : ∀ k : ZMod m, k ∉ B → ∑ i ∈ Finset.range d, ζ i ^ k.val = ∑ i ∈ Finset.range d, ζ' i ^ k.val) :
     ∃ i < d, ζ' 0 = ζ i := by
   have hm0 : m ≠ 0 := by omega
-  haveI : Fact (1 < m) := ⟨hm⟩
+  have : Fact (1 < m) := ⟨hm⟩
   let u : ℕ → ℂˣ := fun i => Units.mk0 (ζ i) (ne_zero_of_pow hm0 (hu i))
   let u' : ℕ → ℂˣ := fun i => Units.mk0 (ζ' i) (ne_zero_of_pow hm0 (hu' i))
   have huu : ∀ i, u i ^ m = 1 := fun i => Units.ext (by simp [u, hu i])
@@ -330,7 +330,7 @@ theorem label_eq (L : LabelDatum g) (hg : 5 ≤ g) (d : ℕ) (P P' : (ZMod g)[X]
   set m := g ^ d - 1 with hmdef
   have hgd : 5 ≤ g ^ d := le_trans hg (Nat.le_self_pow hd.ne' g)
   have hm : 1 < m := by omega
-  haveI : NeZero m := ⟨by omega⟩
+  have : NeZero m := ⟨by omega⟩
   obtain ⟨x, hx⟩ := exists_mem hd hPl
   obtain ⟨x', hx'⟩ := exists_mem hd hPl'
   have hx1 := pow_sub_one_eq_one hPl hx

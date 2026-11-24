@@ -81,9 +81,9 @@ theorem exists_gen_of_pull {B E : Scheme.{0}} [IsAffine B] [IsAffine E] (e : B �
     Module.Free.of_equiv (GlobalTheory.LB.appLinearEquiv (GlobalTheory.LB.pullbackIso hN e) ⊤).symm
   have bc := QCoh.isBaseChange_pullbackSections e (GlobalTheory.LB.toMod N) (isAffineOpen_top B) (isAffineOpen_top E) le_top
   have hle : (⊤ : B.Opens) ≤ e ⁻¹ᵁ ⊤ := le_top
-  letI := QCoh.appLEAlgebra e hle
-  letI := QCoh.appLEModule e ((Scheme.Modules.pullback e).obj (GlobalTheory.LB.toMod N)) hle
-  haveI := QCoh.appLE_isScalarTower e ((Scheme.Modules.pullback e).obj (GlobalTheory.LB.toMod N)) hle
+  let := QCoh.appLEAlgebra e hle
+  let := QCoh.appLEModule e ((Scheme.Modules.pullback e).obj (GlobalTheory.LB.toMod N)) hle
+  have := QCoh.appLE_isScalarTower e ((Scheme.Modules.pullback e).obj (GlobalTheory.LB.toMod N)) hle
   have f3 := Module.Free.of_equiv bc.equiv.symm
   refine (GlobalTheory.LB.exists_isGen_iff_isFrame hN).2 ((GlobalTheory.LB.exists_isFrame_iff_free hN (isAffineOpen_top E)).2 ?_)
   rw [← CommRing.Pic.mk_eq_one_iff_free]

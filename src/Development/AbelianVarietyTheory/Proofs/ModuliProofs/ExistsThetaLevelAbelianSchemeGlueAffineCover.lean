@@ -504,7 +504,7 @@ private theorem mul_comp_of_cover_isGrpPullback_isMonHom (hU : iSup U = ⊤) (h�
     (f' : ∀ i, G i ⟶ G i) (hf : ∀ i, (f' i).left ≫ ψ i = ψ i ≫ f.left) (hm : ∀ i, IsMonHom (f' i))
     {T : Over S} (a b : T ⟶ A) : (a * b) ≫ f = (a ≫ f) * (b ≫ f) := by
   refine over_ext hU fun i T' r => ?_
-  haveI := hm i
+  have := hm i
   obtain ⟨a', ha⟩ := exists_lift (hψ i).1 (r ≫ a)
   obtain ⟨b', hb⟩ := exists_lift (hψ i).1 (r ≫ b)
   have e1 := (hψ i).2 T' a' b' (r ≫ a) (r ≫ b) ha hb
@@ -639,7 +639,7 @@ private theorem gm_comp_global_eq_gm_units_map {X Y Z : Scheme.{0}} (f : Z ⟶ Y
   unfold gm pullU
   rw [dite_eq_left (show (f ≫ g) z ∈ (⊤ : X.Opens) from trivial), dite_eq_left (show f z ∈ (⊤ : Y.Opens) from trivial)]
   ext
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Scheme.Hom.comp_app, CommRingCat.hom_comp, RingHom.comp_apply, Scheme.Hom.appTop]
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Scheme.Hom.comp_app, CommRingCat.hom_comp, RingHom.comp_apply, Scheme.Hom.appTop]
   rfl
 
 theorem commIsOf_of_retract (hL : L.IsLB) {T T' : Over S} (g : T' ⟶ T) (h : T ⟶ T') (w : g ≫ h = 𝟙 T')
@@ -712,7 +712,7 @@ theorem local_of_openImmersion (hL : L.IsLB) {T T' : Over S} (j : T' ⟶ T) [IsO
       unfold unitRes
       rw [← hbl]
       ext
-      simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Scheme.Hom.comp_app,
+      simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Scheme.Hom.comp_app,
         CommRingCat.hom_comp, RingHom.comp_apply, Scheme.Hom.appTop]
       rfl
     rw [hu] at key
@@ -722,13 +722,13 @@ end GlobalTheory.WeilLocal
 
 theorem GlobalTheory.weilIs_of_openCover : ∀ (S : Scheme.{0}) (I : Type) (U : I → S.Opens) (A : Over S) [GrpObj A] (G : ∀ i, Over (U i).toScheme) [∀ i, GrpObj (G i)] (ψ : ∀ i, (G i).left ⟶ A.left), iSup U = ⊤ → (∀ i, IsGrpPullback (G i) A (U i).ι (ψ i)) → ∀ (L : LB A.left) (M : ∀ i, LB (G i).left), L.IsLB → (∀ i, (M i).IsLB) → (∀ i, LBIso (M i) (L.pull (ψ i))) → IsAbelianScheme A → (∀ i, IsAbelianScheme (G i)) → ∀ (k : ℤ) (x y : Out.baseOver S ⟶ A) (x' y' : ∀ i, Out.baseOver (U i).toScheme ⟶ G i) (c : Γ(S, ⊤)ˣ), (∀ i, (x' i).left ≫ ψ i = (U i).ι ≫ x.left) → (∀ i, (y' i).left ≫ ψ i = (U i).ι ≫ y.left) → (∀ i, Out.WeilIs (G i) (M i) k (x' i) (y' i) (Units.map (U i).ι.appTop.hom.toMonoidHom c)) → Out.WeilIs A L k x y c := by
   intro S I U A _ G _ ψ hU hψ L M hL hM hML hA hG k x y x' y' c hx hy hW
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   unfold Out.WeilIs
   intro p
   obtain ⟨i, hi⟩ := GlobalTheory.CoverGlue.exists_mem hU p
   obtain ⟨j, hj⟩ : ∃ j : Over.mk ((Out.baseOver (U i).toScheme).hom ≫ (U i).ι) ⟶ Out.baseOver S,
       j.left = (U i).ι := ⟨Over.homMk (U i).ι (by simp [Out.baseOver]), rfl⟩
-  haveI : IsOpenImmersion j.left := by
+  have : IsOpenImmersion j.left := by
     rw [hj]
     infer_instance
   have hx₀ : (j ≫ x).left = (x' i).left ≫ ψ i := by rw [Over.comp_left, hj, hx i]

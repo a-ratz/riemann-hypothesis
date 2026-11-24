@@ -72,7 +72,7 @@ theorem stab_fix_gq {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} (μsec : �
 theorem fibre_membership_holds : FibMem := by
   unfold FibMem
   intro E _ _ _ Wp Wq _ _ _ _ _ _ S T v hP J hJ q hq
-  simp only [NF.Fib, Set.mem_setOf_eq]
+  simp only [NF.Fib, Set.mem_ofPred_eq]
   intro p hp
   have hdom : q ∈ JF.QDom S.G.k S.G.r (T v).base.z (T v).base.z' := by
     obtain ⟨hq1, hq2⟩ := hq

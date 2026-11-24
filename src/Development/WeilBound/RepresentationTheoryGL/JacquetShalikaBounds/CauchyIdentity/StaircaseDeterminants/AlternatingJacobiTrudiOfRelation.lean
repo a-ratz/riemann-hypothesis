@@ -72,12 +72,12 @@ theorem hZ_neg (α : Fin m → ℂ) {z : ℤ} (hz : z < 0) : hZ z α = 0 := by
   simp [hZ, hz]
 
 theorem hZ_zero (α : Fin m → ℂ) : hZ 0 α = 1 := by
-  simp only [hZ, hN, lt_irrefl, if_false, Int.toNat_zero]
+  simp only [hZ, hN, lt_irrefl, ite_false, Int.toNat_zero]
   rw [Nat.antidiagonalTuple_zero_right]
   simp
 
 theorem det_hM_stair (α : Fin m → ℂ) : (hM α (stair m)).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · apply Finset.prod_eq_one
     intro k _
     simp only [hM, Matrix.of_apply]

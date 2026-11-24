@@ -751,7 +751,7 @@ theorem gN_tendsto (z : ℂ) : Tendsto (fun N => gN N z) atTop (𝓝 0) := by
 
 theorem ell_norm_le (q : ℕ) (a v : EuclideanSpace ℂ ι) : ‖ellL q a v‖ ≤ q * Real.pi * (‖a‖ * ‖v‖) := by
   unfold ellL
-  rw [ContinuousLinearMap.smul_apply, norm_smul]
+  rw [smul_apply, norm_smul]
   have h1 : ‖((innerSL ℂ) a) v‖ ≤ ‖a‖ * ‖v‖ := norm_inner_le_norm (𝕜 := ℂ) a v
   have h2 : ‖((q : ℂ) * (Real.pi : ℂ))‖ = q * Real.pi := by
     rw [norm_mul, Complex.norm_natCast, Complex.norm_real, Real.norm_eq_abs, abs_of_pos Real.pi_pos]
@@ -1486,9 +1486,9 @@ theorem paD_jet (c : ℕ) (H : EuclideanSpace ℂ ι → ℂ) {α : ι →₀ �
   rw [paD_sum_smul_paMono, Finset.sum_eq_single α]
   · have hf : (paFact α : ℂ) ≠ 0 :=
       Nat.cast_ne_zero.2 (Finset.prod_ne_zero_iff.2 fun i _ => Nat.factorial_ne_zero _)
-    rw [paD_mono, if_pos rfl, div_mul_cancel₀ _ hf]
+    rw [paD_mono, ite_eq_left rfl, div_mul_cancel₀ _ hf]
   · intro β _ hβ
-    rw [paD_mono, if_neg (Ne.symm hβ), mul_zero]
+    rw [paD_mono, ite_eq_right (Ne.symm hβ), mul_zero]
   · intro h
     exact absurd hα h
 
@@ -1518,7 +1518,7 @@ theorem paNum (g : ℕ) (c R0 : ℝ) (hc : 0 ≤ c) (h270 : 270 ≤ R0 ^ 2)
   have e1 : (2 : ℝ) ^ (1 + 3 * ((g : ℝ) + c) / 2) =
       Real.exp (Real.log 2 * (1 + 3 * ((g : ℝ) + c) / 2)) := Real.rpow_def_of_pos (by norm_num) _
   have e9 : (9 : ℝ) ^ g ≤ Real.exp (2.3 * g) := by
-    rw [mul_comm, Real.exp_nat_mul]
+    rw [mul_comm, Real.exp_natCast_mul]
     refine pow_le_pow_left₀ (by norm_num) ?_ g
     have h1 := Real.exp_one_gt_d9
     have h2 := Real.add_one_le_exp (0.3 : ℝ)

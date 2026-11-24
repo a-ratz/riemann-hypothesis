@@ -425,7 +425,7 @@ theorem exists_archQuad_lt {δ : ℝ} (hδ : 0 < δ) :
 abbrev archVal (a : archGroup K n) : ArchMatrix K n := ((a : (ArchMatrix K n)ˣ) : ArchMatrix K n)
 
 theorem continuous_archVal : Continuous (archVal : archGroup K n → ArchMatrix K n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_archVal_inv : Continuous (fun a : archGroup K n => archVal a⁻¹) :=
   continuous_archVal.comp continuous_inv
@@ -527,7 +527,7 @@ theorem exists_archBump (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] {N : S
     · rw [dist_eq_norm]; exact h2.le
 
   set I := ∫ a, ρ₀ a ∂ν
-  have hI : 0 < I := hcont.integral_pos_of_hasCompactSupport_nonneg_nonzero hcs hρ₀nn
+  have hI : 0 < I := hcont.integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs hρ₀nn
     (x := 1) (by rw [hρ₀1]; exact one_ne_zero)
   refine ⟨fun a => ρ₀ a / I, fun a => div_nonneg (hρ₀nn a) hI.le, ⟨?_, ?_⟩, ?_, fun a => ?_,
     fun k hk a => ?_, fun a ha => ?_, fun a ha => ?_⟩

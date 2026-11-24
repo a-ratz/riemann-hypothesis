@@ -69,8 +69,8 @@ theorem cont_iUnion_cosets {W : Type} [AddCommGroup W] (W0 : AddSubgroup W) {Γ 
     intro h
     rw [h, mul_zero] at hidx
     exact hN hidx.symm
-  haveI : (N ⊔ H).FiniteIndex := ⟨hJ⟩
-  haveI : Fintype (Γ ⧸ (N ⊔ H)) := Fintype.ofFinite _
+  have : (N ⊔ H).FiniteIndex := ⟨hJ⟩
+  have : Fintype (Γ ⧸ (N ⊔ H)) := Fintype.ofFinite _
   have hU : (⋃ a, S a) = ⋃ q ∈ (Finset.univ : Finset (Γ ⧸ (N ⊔ H))), S q.out := by
     ext w
     simp only [Set.mem_iUnion, Finset.mem_univ, exists_true_left]
@@ -174,7 +174,7 @@ theorem GlobalTheory.HL.cont_thick_torb_normal : ∀ {F : Type} [Field F] [Valua
     intro a ha k hk
     rw [← hnorm a ha]
     exact Subgroup.smul_mem_pointwise_smul k (MulAut.conj a) K' hk
-  haveI : (K'.subgroupOf K).Normal :=
+  have : (K'.subgroupOf K).Normal :=
     ⟨fun k hk a => hconj a a.2 k hk⟩
   set Fx := fixG L Hm (Submodule.span E (Set.range x)) with hFx
   have hsub : ∀ a b : K, a⁻¹ * b ∈ K'.subgroupOf K ⊔ Fx.subgroupOf K →

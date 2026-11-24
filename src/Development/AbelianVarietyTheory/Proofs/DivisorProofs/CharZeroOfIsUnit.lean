@@ -213,7 +213,7 @@ theorem charZero_of_isUnit {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Co
     rw [map_natCast] at this
     exact this.ne_zero
   let β : R →+* k := (Spec.preimage (x ≫ s)).hom
-  haveI := ringChar.charP k
+  have := ringChar.charP k
   rcases CharP.char_is_prime_or_zero k (ringChar k) with hl | hl
   · exfalso
     have h0 : ((ringChar k : ℕ) : k) = 0 := CharP.cast_eq_zero k _
@@ -222,7 +222,7 @@ theorem charZero_of_isUnit {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Co
     · have := (b.unit _ ((Nat.coprime_primes hl Fact.out).2 h)).map β
       rw [map_natCast, h0] at this
       exact not_isUnit_zero this
-  · haveI : CharP k 0 := hl ▸ ringChar.charP k
+  · have : CharP k 0 := hl ▸ ringChar.charP k
     exact CharP.charP_to_charZero k
 
 theorem exists_kerUPart : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → D.m = 1 → ∀ (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ), w.IsMaximal → uIdeal D r ≤ w → j ≤ D.n → (∃ e : ℕ, c = p ^ e ∧ (0 < j → 0 < e)) → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R), IsUnit ((p : ℕ) : Γ(S, ⊤)) → ∀ (o o' : Obj b N s) (ψ : o.A ⟶ o'.A), IsPIsog c o o' ψ → IsTj r w j o o' ψ → ∃ (K : Over S) (_ : GrpObj K) (i : K ⟶ o.A), IsMonHom i ∧ Mono i ∧ IsFinite K.hom ∧ Etale K.hom ∧ (∀ a : D.O, ∃ g : K ⟶ K, g ≫ i = i ≫ o.act.act a) ∧ IsIsogDeg (toUnit K) (Ideal.absNorm w ^ j) ∧ ∀ (T : Over S) (x : T ⟶ o.A), (x ≫ ψ = 1 ∧ ∃ e : ℕ, KilledBy o (uIdeal D r ^ e) x) ↔ InSub i x := by
@@ -231,8 +231,8 @@ theorem exists_kerUPart : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
   obtain ⟨J, hJ, hJp⟩ := exists_conj D r w hw.ne_top hu
   obtain ⟨α, hα1, hα2⟩ := exists_elt _ _ _ hJ hJp E
   have hc : IsUnit ((p ^ E : ℕ) : Γ(S, ⊤)) := by rw [Nat.cast_pow]; exact hp.pow E
-  haveI : ∀ a, IsMonHom (o.act.act a) := o.act.hom
-  haveI : ∀ a, IsMonHom (o'.act.act a) := o'.act.hom
+  have : ∀ a, IsMonHom (o.act.act a) := o.act.hom
+  have : ∀ a, IsMonHom (o'.act.act a) := o'.act.hom
   obtain ⟨K, G, i, hG, hi, hfin, het, hpts⟩ :=
     exists_subgroup o.ab o'.ab o.ab hc ψ (o.act.act (algebraMap (𝓞 D.F) D.O α))
   have hnat : ∀ k : ℕ, o.act.act (k : D.O) = 𝟙 o.A ^ k := by
@@ -278,7 +278,7 @@ theorem exists_kerUPart : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
       have h := hu (p_mem_uIdeal D r)
       rw [Ideal.absNorm_eq_zero_iff.1 h0, Ideal.mem_bot] at h
       exact (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero) h
-    · haveI := charZero_of_isUnit b s hp k t
+    · have := charZero_of_isUnit b s hp k t
       obtain ⟨h1, h2⟩ := hT k t
       rw [hm, Nat.one_mul] at h2
       rw [← h2]

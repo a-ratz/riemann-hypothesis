@@ -120,7 +120,7 @@ theorem ncard_gram_mod_eq_card_ker_pow_mul {A B : Type} [CommRing A] [Finite A] 
   have hset : {x : Fin m → Fin n → A | Prim c x ∧ ∀ a b, p ∣ ip c (x b) (x a) - G a b} =
       {x | (fun a i => φ (x a i)) ∈ sols c' n (G.map φ)} := by
     ext x
-    simp only [Set.mem_setOf_eq, sols]
+    simp only [Set.mem_ofPred_eq, sols]
     constructor
     · rintro ⟨hx, hG⟩
       refine ⟨Prim.map c c' φ hφ hx, fun a b => ?_⟩
@@ -337,7 +337,7 @@ theorem quad_count {B : Type} [CommRing B] [Fintype B] (c : B →+* B) (hc : ∀
           simp only [sub_eq_add_neg, AddChar.map_add_eq_mul]
           rw [← Finset.sum_mul]
           have h2 := quad_sum_char_pi χ hχ (fun j => c ((∑ i, c (s i) • x i) j))
-          rw [if_neg] at h2
+          rw [ite_eq_right] at h2
           · simp only [ip]
             rw [h2, zero_mul]
           · intro h3
@@ -989,7 +989,7 @@ theorem henselStep_count {V W T : Type} [AddCommGroup V] [AddCommGroup W] [AddCo
     obtain ⟨w0, hw0⟩ := h2 _ (T1.neg_mem hy1)
     refine Nat.card_congr ((Equiv.subRight w0).subtypeEquiv ?_)
     intro w
-    simp only [hS2, Set.mem_setOf_eq, Equiv.subRight_apply, AddSubgroup.mem_comap, map_sub]
+    simp only [hS2, Set.mem_ofPred_eq, Equiv.subRight_apply, AddSubgroup.mem_comap, map_sub]
     have key : f (y + ι w) - τ =
         (f (y + ι w) - f y - d w) + (d w0 - -(f y - τ)) + (d w - d w0) := by abel
     rw [key]
@@ -998,7 +998,7 @@ theorem henselStep_count {V W T : Type} [AddCommGroup V] [AddCommGroup W] [AddCo
       exact (T2.add_mem_cancel_left (T2.add_mem (h3 w) hw0)).1 h
     · intro h
       exact ⟨hP y hy w, T2.add_mem (T2.add_mem (h3 w) hw0) h⟩
-  haveI := Fintype.ofFinite S1
+  have := Fintype.ofFinite S1
   rw [Nat.card_sigma] at ha
   have hc : S2.ncard * Nat.card W * Nat.card T1 = S1.ncard * (Nat.card W * Nat.card T2) := by
     rw [← ha, Finset.sum_mul, Finset.sum_congr rfl (fun y _ => hb y), Finset.sum_const,
@@ -1092,7 +1092,7 @@ theorem hensel_step [Finite A] (c : A →+* A) (hc : ∀ u, c (c u) = u) {ω : A
           rw [← hH.1 a b, hu b a, map_mul, hq]
         simp only [henselDiff, AddMonoidHom.coe_mk, ZeroHom.coe_mk, Matrix.of_apply,
           ip_sum_left, ip_sum_right, ip_smul_left, ip_smul_right, hy, hy', mul_ite, mul_one,
-          mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul]
+          mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul]
         linear_combination (c θ) * h1 - θ * hu a b + H a b * hθ
       rw [this, sub_self]
       exact zero_mem _

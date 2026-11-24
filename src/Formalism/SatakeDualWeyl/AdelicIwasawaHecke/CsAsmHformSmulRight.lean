@@ -121,7 +121,7 @@ theorem classSetFiniteL_of (hSigmaInvol : Formalism.UG.CS.SigmaInvol) (hTracePos
     intro h
     apply hcE0
     rw [← hcOE, h, map_zero]
-  letI : StarRing E := starOfInv (σ : E →+* E) hinv
+  let : StarRing E := starOfInv (σ : E →+* E) hinv
   obtain ⟨hsymm, hfe⟩ := hFormSymm E (σ : E →+* E) hinv n J cE hσc hJ
   obtain ⟨d, hd0, hd⟩ := hScaleBound F E n σ J Λ hfin hspan
   obtain ⟨e, he0, he⟩ := hDualBound F E n σ J Λ hdet hfin hspan

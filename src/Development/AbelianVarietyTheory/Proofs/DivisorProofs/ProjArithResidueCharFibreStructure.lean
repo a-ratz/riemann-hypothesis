@@ -60,7 +60,7 @@ theorem dim_le_of_ne_univ [IrreducibleSpace S] {C : Set S} (hC : IsClosed C) (hn
     (hS : topologicalKrullDim S ≤ ((D + 1 : ℕ) : WithBot ℕ∞)) : topologicalKrullDim C ≤ D := by
   unfold topologicalKrullDim at *
   refine iSup_le fun q => ?_
-  let f := IrreducibleCloseds.map (Subtype.val : C → S) continuous_subtype_val
+  let f := IrreducibleCloseds.map (Subtype.val : C → S) continuous_subtypeVal
   have hf : StrictMono f := IrreducibleCloseds.map_strictMono_of_isInducing Topology.IsInducing.subtypeVal
   let q' := q.map f hf
   let top : IrreducibleCloseds S := ⟨Set.univ, IrreducibleSpace.isIrreducible_univ S, isClosed_univ⟩
@@ -83,7 +83,7 @@ theorem dim_le_of_closedPoint_notMem [T0Space S] [CompactSpace S] {T : Set S}
     (hS : topologicalKrullDim S ≤ ((D + 1 : ℕ) : WithBot ℕ∞)) : topologicalKrullDim T ≤ D := by
   unfold topologicalKrullDim at *
   refine iSup_le fun q => ?_
-  let f := IrreducibleCloseds.map (Subtype.val : T → S) continuous_subtype_val
+  let f := IrreducibleCloseds.map (Subtype.val : T → S) continuous_subtypeVal
   have hf : StrictMono f := IrreducibleCloseds.map_strictMono_of_isInducing Topology.IsInducing.subtypeVal
   let q' := q.map f hf
   obtain ⟨t, ht⟩ := q.head.isIrreducible.nonempty
@@ -188,7 +188,7 @@ theorem fib_structure : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral
       if h : IsIrreducible t then ringChar (X.residueField (IsIrreducible.genericPoint h)) else 0
     refine ⟨(hTf.toFinset.image ch).filter Nat.Prime, fun ℓ hℓ => (Finset.mem_filter.1 hℓ).2, ?_⟩
     rintro x ⟨t, ht, hxt⟩
-    have hct : ch t = ringChar (X.residueField (IsIrreducible.genericPoint (hTi t ht))) := dif_pos (hTi t ht)
+    have hct : ch t = ringChar (X.residueField (IsIrreducible.genericPoint (hTi t ht))) := dite_eq_left (hTi t ht)
     have hg := IsIrreducible.isGenericPoint_genericPoint (hTi t ht) (hTc t ht)
     have hsp := hg.specializes hxt
     rcases ringChar_eq_zero_or_prime (IsIrreducible.genericPoint (hTi t ht)) with h0 | hp

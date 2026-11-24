@@ -182,7 +182,7 @@ theorem crLem_of (hsec : LocSec) (hfib : Fib) (ha : CauchyRiemannFacts) : CRLem 
   have hH : ∀ y : GR n, φ y = F0 m 0 e y * H (zOfE (mR y)) := by
     intro y
     have hex : ∃ y' : GR n, zOfE (mR y') = zOfE (mR y) := ⟨y, rfl⟩
-    simp only [hHdef, dif_pos hex]
+    simp only [hHdef, dite_eq_left hex]
     have hz : zOfE (mR hex.choose) = zOfE (mR y) := hex.choose_spec
     have hk := hfib n hex.choose y hz
     have hkK : (hex.choose⁻¹ * y) ∈ AbsSt.KR n := hk
@@ -752,7 +752,7 @@ theorem locSec : LocSec := by
   set g := hcd.localInverse hf' hn with hgdef
   have hg : ContDiffAt ℝ ⊤ g (fM a0 V0) := hcd.to_localInverse hf' hn
   have hgV : g (fM a0 V0) = V0 := hcd.localInverse_apply_image hf' hn
-  have hright : ∀ᶠ Z in 𝓝 (fM a0 V0), fM a0 (g Z) = Z := (hcd.hasStrictFDerivAt' hf' hn).eventually_right_inverse
+  have hright : ∀ᶠ Z in 𝓝 (fM a0 V0), fM a0 (g Z) = Z := (hcd.hasStrictFDerivAt hf' hn).eventually_right_inverse
   rw [hfV0] at hg hgV hright
   have hg1 : ContDiffAt ℝ 1 g Z0 := hg.of_le le_top
   have hre : ContDiffAt ℝ 1 (fun Z => reP (g Z)) Z0 := reL.contDiff.contDiffAt.comp Z0 hg1
@@ -880,7 +880,7 @@ theorem cHom_cHom (y : GR n) : cHom n (cHom n y) = y := by
 
 theorem cHom_cont : Continuous (cHom n) := by
   show Continuous fun y : GR n => (⟨epsU n * y.1 * epsU n, _⟩ : GR n)
-  exact Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+  exact Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
 
 theorem first_cayley_block_of_conjugation (y : GR n) : u1 (mR (cHom n y)) = u2 (mR y) := by
   rw [mR_c, u1, u2, eps_conj_blocks]

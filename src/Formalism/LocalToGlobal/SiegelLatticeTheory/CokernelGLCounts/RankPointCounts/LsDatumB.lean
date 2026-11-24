@@ -55,7 +55,7 @@ section Abstract
 theorem hasSum_of_fiber {P G : Type*} [Finite P] (c : P → ℂ) (cls : P → G) (F : G → ℂ)
     (hF : ∀ g, HasSum (fun x : {x : P // cls x = g} => c x.1) (F g)) {s : ℂ} (hs : HasSum F s) :
     HasSum c s := by
-  haveI := Fintype.ofFinite P
+  have := Fintype.ofFinite P
   have h1 : HasSum c (∑ x, c x) := hasSum_fintype c
   have h2 := h1.tsum_fiberwise cls
   have e : F = fun g => ∑' x : ↑(cls ⁻¹' {g}), c x := funext fun g => ((hF g).tsum_eq).symm
@@ -82,8 +82,8 @@ theorem hasSum_rst (x0 : ∀ p, X p) (f : ∀ p, X p → ℂ) (a : ι → ℂ) (
   have hsupp : ∀ x : Rst x0, (Function.mulSupport fun p => f p (x.1 p)) ⊆ (S : Set ι) ∪ {p | x.1 p ≠ x0 p} := by
     intro x p hp
     by_contra hc
-    simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hc
-    exact (Function.mem_mulSupport.1 hp) (by rw [hoff p hc.1, if_pos hc.2])
+    simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hc
+    exact (Function.mem_mulSupport.1 hp) (by rw [hoff p hc.1, ite_eq_left hc.2])
   have hfin : ∀ x : Rst x0, (Function.mulSupport fun p => f p (x.1 p)).Finite := fun x =>
     ((S.finite_toSet).union x.2).subset (hsupp x)
   have hzero : ∀ x ∉ Set.range j, (∏ᶠ p, f p (x.1 p)) = 0 := by
@@ -93,14 +93,14 @@ theorem hasSum_rst (x0 : ∀ p, X p) (f : ∀ p, X p → ℂ) (a : ι → ℂ) (
       push_neg at h
       exact hx ⟨⟨x.1, h⟩, rfl⟩
     obtain ⟨p, hpS, hp⟩ := this
-    exact finprod_eq_zero _ p (by rw [hoff p hpS, if_neg hp]) (hfin x)
+    exact finprod_eq_zero _ p (by rw [hoff p hpS, ite_eq_right hp]) (hfin x)
   rw [← hj.hasSum_iff hzero]
   convert h0 using 1
   funext θ
   apply finprod_eq_prod_of_mulSupport_subset
   intro p hp
   by_contra hS
-  exact (Function.mem_mulSupport.1 hp) (by rw [hoff p hS, if_pos (θ.2 p hS)])
+  exact (Function.mem_mulSupport.1 hp) (by rw [hoff p hS, ite_eq_left (θ.2 p hS)])
 
 theorem hasSum_passage {P G : Type*} [Finite P] (c : P → ℂ) (cls : P → G) (F : G → ℂ)
     (hF : ∀ g, HasSum (fun x : {x : P // cls x = g} => c x.1) (F g))

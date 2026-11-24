@@ -100,7 +100,7 @@ theorem exists_coeffs_eq_of_null (tb : TopBasis s I ι) (hS : IsHausdorff I S) (
     simpa [F] using hi
   have hFm : Monotone F := by
     intro m n hmn i hi
-    simp only [F, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hi ⊢
+    simp only [F, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hi ⊢
     exact fun h => hi (Ideal.pow_le_pow_right hmn h)
   let y : ℕ → A := fun n => ∑ i ∈ F n, s (a i) * tb.b i
   have hy : ∀ m n, m ≤ n → y n - y m ∈ (I ^ m).map s := by

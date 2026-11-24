@@ -58,8 +58,8 @@ private theorem pf_const [IsDomain R] (h0 : ∀ a ∈ maximalIdeal O, algebraMap
   obtain ⟨a, ha⟩ := IsCO.res_surj (O := O) y
   refine ⟨a, ?_⟩
   by_contra hne
-  letI : Algebra (ResidueField O) R := (Ideal.Quotient.lift (maximalIdeal O) (algebraMap O R) h0).toAlgebra
-  haveI : IsScalarTower O (ResidueField O) R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (ResidueField O) R := (Ideal.Quotient.lift (maximalIdeal O) (algebraMap O R) h0).toAlgebra
+  have : IsScalarTower O (ResidueField O) R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have h1 : IsIntegral (ResidueField O) (y - algebraMap O R a) := (hy.sub isIntegral_algebraMap).tower_top
   exact ha (h1.isUnit (sub_ne_zero.2 hne))
 
@@ -171,9 +171,9 @@ private theorem pf_lift {g : G T.F Ω} (hg : resQ T.F g ∈ T.K.fixingSubgroup) 
   exact ⟨{ g.toRingEquiv with commutes' := fun x => h2 x.1 x.2 }, AlgEquiv.ext fun _ => rfl⟩
 
 private theorem pf_sqK (g : G ℚ Ω) : g ^ 2 ∈ T.K.fixingSubgroup := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsGalois ℚ Ω := inferInstance
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsGalois ℚ Ω := inferInstance
   have hi : T.K.fixingSubgroup.index = 2 := by
     rw [← T.degK]
     exact (IntermediateField.finrank_eq_fixingSubgroup_index Ω T.K).symm

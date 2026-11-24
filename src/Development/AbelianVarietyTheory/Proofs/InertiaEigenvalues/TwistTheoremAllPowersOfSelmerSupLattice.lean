@@ -589,8 +589,8 @@ theorem admissibleIndexBoundAllPowers_of_conditions (D : Formalism.BasicNotions.
     rw [Subgroup.coe_inf, Subgroup.coe_iInf, Subgroup.coe_iInf]
     exact (isOpen_iInter_of_finite hHEo).inter (isOpen_iInter_of_finite hHBo)
   have hnorm : ((⨅ lam, HE lam) ⊓ ⨅ y, HB y : Subgroup (GE N)).Normal := by
-    haveI := Subgroup.normal_iInf_normal hHEn
-    haveI := Subgroup.normal_iInf_normal hHBn
+    have := Subgroup.normal_iInf_normal hHEn
+    have := Subgroup.normal_iInf_normal hHBn
     infer_instance
   choose H0 S0 d hd hco using fun M (h : M₀ ≤ M) => hU i M hi (hM₀.trans h)
   choose P hPa hPs hPF using fun M (h : M₀ ≤ M) =>
@@ -624,7 +624,7 @@ theorem admissibleIndexBoundAllPowers_of_conditions (D : Formalism.BasicNotions.
       · exact ordHyp_mono (hfE M h lam) (Nat.le_add_right _ _)
       · exact ordHyp_mono (hfB M h y)
           ((Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ y)).trans (Nat.le_add_left _ _))) hε
-  haveI : NeZero (X.l i ^ M) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (X.l i ^ M) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hu0 : ∀ ζ : (X.Ok i k)ˣ, IsPrimitiveRoot (ζ : X.Ok i k) (X.l i ^ k) →
       ∀ q, (ζ ^ (X.l i ^ e q)) ^ (X.l i ^ M) = 1 := by
     intro ζ hζ q
@@ -933,7 +933,7 @@ theorem map_baseChange {O R W W' : Type} [CommRing O] [CommRing R] [Algebra O R]
 theorem torsionFree_tensor {O R W : Type} [CommRing O] [IsDomain O] [CommRing R] [IsDomain R] [Algebra O R]
     [AddCommGroup W] [Module (FractionRing O) W] [Module O W] [IsScalarTower O (FractionRing O) W]
     (c : R) (x : R ⊗[O] W) (hc : c ≠ 0) (hx : c • x = 0) : x = 0 := by
-  haveI : Module.Flat O W := Module.Flat.trans O (FractionRing O) W
+  have : Module.Flat O W := Module.Flat.trans O (FractionRing O) W
   have hinj := Module.Flat.rTensor_preserves_injective_linearMap (M := W)
     (LinearMap.mulLeft O c) (mul_right_injective₀ hc)
   apply hinj
@@ -994,8 +994,8 @@ theorem index_extend {O R S W : Type} [CommRing O] [CommRing R] [IsDomain R] [Is
     sIdx l M (Submodule.span S
       ((LinearMap.rTensor W (IsScalarTower.toAlgHom O R S).toLinearMap) '' (L : Set (R ⊗[O] W)))) ≤
       sIdx l M (T.baseChange S) + e := by
-  haveI : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : IsLocalHom (algebraMap R S) := Algebra.IsIntegral.isLocalHom _ _
+  have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have : IsLocalHom (algebraMap R S) := Algebra.IsIntegral.isLocalHom _ _
   rw [span_rTensor]
   have h1 := isLatIn_map (TensorProduct.AlgebraTensorModule.cancelBaseChange O R S S W).toLinearMap
     (isLatIn_baseChange S hinj hT)
@@ -1084,13 +1084,13 @@ variable {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂}
 open GlobalTheory.TwistInputsTest
 
 theorem charZero_O (i : X.Tw) : CharZero (X.O i) := by
-  haveI : CharZero (FractionRing (X.O i)) :=
+  have : CharZero (FractionRing (X.O i)) :=
     (RingHom.charZero_iff ((IsFractionRing.map (A := X.O0 i) (B := X.O i) (K := FractionRing (X.O0 i))
       (L := FractionRing (X.O i)) (X.O_inj i)).comp (X.emb0 i)).injective).1 inferInstance
   exact (RingHom.charZero_iff (IsFractionRing.injective (X.O i) (FractionRing (X.O i)))).2 inferInstance
 
 theorem card_ne_zero (i : X.Tw) : ((D.what₂.restRowsFiniteGroupCard : ℕ) : X.O i) ≠ 0 := by
-  haveI := charZero_O (X := X) i
+  have := charZero_O (X := X) i
   exact Nat.cast_ne_zero.2 D.what₂.restRowsFiniteGroupCard_pos.ne'
 
 theorem AO_apply (i : X.Tw) (j : ℕ) (b : Bool) (x : Y.Fm i j b) :
@@ -1214,10 +1214,10 @@ theorem abHyp_fam (E : ExpDat Y) (i : X.Tw) (hi : X.NonzeroIndexPlace i) (j : �
     exact Submodule.smul_mem _ _ (hc a ha' Q M h1 h2 h4 h6)
 
 theorem natCast_l_ne_zero (i : X.Tw) (k : ℕ) : ((X.l i : ℕ) : X.Ok i k) ≠ 0 ∧ ¬ IsUnit ((X.l i : ℕ) : X.Ok i k) := by
-  haveI := charZero_O (X := X) i
-  haveI : FaithfulSMul (X.O i) (X.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i k)
-  haveI := X.Ok_fin i k
-  haveI : IsLocalHom (algebraMap (X.O i) (X.Ok i k)) := Algebra.IsIntegral.isLocalHom _ _
+  have := charZero_O (X := X) i
+  have : FaithfulSMul (X.O i) (X.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i k)
+  have := X.Ok_fin i k
+  have : IsLocalHom (algebraMap (X.O i) (X.Ok i k)) := Algebra.IsIntegral.isLocalHom _ _
   rw [← map_natCast (algebraMap (X.O i) (X.Ok i k))]
   refine ⟨(map_ne_zero_iff _ (X.Ok_inj i k)).2 (Nat.cast_ne_zero.2 (X.lPrime i).out.ne_zero), fun h => ?_⟩
   exact (IsLocalRing.mem_maximalIdeal _).1 (X.O_l i) ((isUnit_map_iff _ _).1 h)
@@ -1237,9 +1237,9 @@ theorem export_at (E : ExpDat Y) (i : X.Tw) (hi : X.NonzeroIndexPlace i) (j : �
       IsLatIn (eThPsi Y i j b k Q ψ (SgJ Y E i j b)) (((V0 Y i j b).restrictScalars (X.O i)).baseChange (X.Ok i k)) ∧
       InclAt Y i j b (SgJ Y E i j b) k Q ψ := by
   obtain ⟨-, hfg, hsp, -, -, hty⟩ := h3 i hi j hj b
-  haveI : FaithfulSMul (X.O i) (X.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i k)
-  haveI := X.Ok_fin i k
-  haveI : IsLocalHom (algebraMap (X.O i) (X.Ok i k)) := Algebra.IsIntegral.isLocalHom _ _
+  have : FaithfulSMul (X.O i) (X.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i k)
+  have := X.Ok_fin i k
+  have : IsLocalHom (algebraMap (X.O i) (X.Ok i k)) := Algebra.IsIntegral.isLocalHom _ _
   have hB := isLatIn_B Y i j b hfg hsp
   have hBk := isLatIn_baseChange (X.Ok i k) (X.Ok_inj i k) hB
   have hincl : InclAt Y i j b (SgJ Y E i j b) k Q ψ :=
@@ -1284,7 +1284,7 @@ theorem export_at (E : ExpDat Y) (i : X.Tw) (hi : X.NonzeroIndexPlace i) (j : �
     rw [map_AO] at h1
     have hinj : Function.Injective (((D.what₂.restRowsFiniteGroupCard : ℕ) : X.O i) •
         (LinearMap.id : Y.Fm i j b →ₗ[X.O i] Y.Fm i j b)) := by
-      haveI : Module.IsTorsionFree (X.O i) (Y.Fm i j b) :=
+      have : Module.IsTorsionFree (X.O i) (Y.Fm i j b) :=
         Module.IsTorsionFree.trans_faithfulSMul (X.O i) (FractionRing (X.O i)) (Y.Fm i j b)
       exact smul_right_injective _ hc
     refine ⟨Submodule.fg_of_fg_map_injective _ hinj h1.1, ?_, fun x hx => ?_⟩
@@ -1408,7 +1408,7 @@ theorem heckeLaws_of_range (D : D7) (hC : HkComm D) (hO : OffRange D) : HeckeLaw
   refine ⟨fun j b k P k' P' h h' => ?_, (hO i hi).2⟩
   by_cases hj : j ∈ Finset.Icc 1 D.R.m
   · exact (hC i hi j hj b k P k' P' h h').eq
-  · haveI := (hO i hi).1 j hj b
+  · have := (hO i hi).1 j hj b
     exact LinearMap.ext fun x => Subsingleton.elim _ _
 
 theorem twistTheorem_allPowers_of_selmer_supLattice :

@@ -187,8 +187,8 @@ theorem Normal.hasVec_of_defPair {G : ChiGrid.GridData L sc} {W : G.Weil} {μ0 :
     (Z : Normal W N) {t : T} {p : Pair T} (hp : DefPair D.R.m p) (d : FinDatum G t p) : Z.HasVec d := by
   obtain ⟨h1, h2⟩ := hp.nodes
   have hv := Z.vac_is p hp
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ (h1.selfDual G hL)
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ (h2.selfDual G hL)
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ (h1.selfDual G hL)
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ (h2.selfDual G hL)
   rcases p with ⟨i, j⟩ | ⟨t', i, j⟩ | i | ⟨t', j⟩
   · exact VecEx.exists_isThetaAt_of_vac (S := G.pS (.chi i j)) (T := G.pT (.chi i j)) inferInstance inferInstance (isSelfDualC_neg (N.selfDual h2))
       (N.selfDual h1) d.e_is hv d.sb

@@ -109,15 +109,15 @@ end GlobalTheory.QLog.SmallFirst
 theorem GlobalTheory.QLog.small_first_of_frob : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = c.μ i) → ∀ (k : ℕ) (e : Fin d ⊕ Fin k → MvPowerSeries (Fin d) F.Q), IsBasis μ' e → IsAdapted F.θ μ' e → ∀ U : Matrix (Fin d ⊕ Fin k) (Fin d ⊕ Fin k) F.B, (∀ i, In (⊤ : Ideal F.B) (frob p F.s (e i) - comb (fun l => (U * blk d k (p : F.B) 1) l i) e) ∧ ∀ i', i = Sum.inl i' → In (Ideal.span {(p : F.B)}) (frob p F.s (e i) - comb (fun l => (U * blk d k (p : F.B) 1) l i) e)) → ∀ w : Fin d ⊕ Fin k → F.B, (∀ l, ¬IsUnit (F.θ (U.mulVec (fun j => F.σ (w j)) l))) → ∀ i, ¬IsUnit (F.θ (w (Sum.inl i))) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F G d c μ' hlift hmap k e hbas hadp U hU w hw i
   classical
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : IsLocalRing O := ValuationRing.isLocalRing O
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : IsLocalRing O := ValuationRing.isLocalRing O
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   set J : Ideal F.B := Ideal.comap F.θ (IsLocalRing.maximalIdeal O) with hJ
   have memJ : ∀ x, x ∈ J ↔ ¬IsUnit (F.θ x) := fun x => by
     rw [hJ, Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   have hpJ : (p : F.B) ∈ J := by
     rw [memJ, map_natCast]; exact Fact.out
-  haveI hJp : J.IsPrime := Ideal.IsPrime.comap F.θ
+  have hJp : J.IsPrime := Ideal.IsPrime.comap F.θ
   set α : Fin d →₀ ℕ := Finsupp.single i p with hα
 
   have hc : ∀ l, ∃ cl : F.B, (p : F.Q) * coeff α (e l) = algebraMap F.B F.Q cl := by
@@ -174,7 +174,7 @@ theorem GlobalTheory.QLog.small_first_of_frob : ∀ (p : ℕ) [Fact p.Prime] (C 
         rw [key, map_mul, map_sub, map_natCast, ← hteq]; ring
       have h4 := F.frame.inj h3
       have hne : (Sum.inr j : Fin d ⊕ Fin k) ≠ Sum.inl i := Sum.inr_ne_inl
-      rw [if_neg hne, sub_zero, h4]
+      rw [ite_eq_right hne, sub_zero, h4]
       exact J.mul_mem_right _ hpJ
 
   have hW : ∑ m, F.σ (w m) * ∑ l, U l m * cc l ∈ J := by
@@ -191,7 +191,7 @@ theorem GlobalTheory.QLog.small_first_of_frob : ∀ (p : ℕ) [Fact p.Prime] (C 
     have : F.σ (w (Sum.inl i)) = (∑ m, F.σ (w m) * ∑ l, U l m * cc l) -
         ∑ m, F.σ (w m) * ((∑ l, U l m * cc l) - (if m = Sum.inl i then 1 else 0)) := by
       simp only [mul_sub, Finset.sum_sub_distrib, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       ring
     rw [this]
     exact J.sub_mem hW hD
@@ -248,7 +248,7 @@ theorem coeff_pow_sub_expand_mem {B τ : Type} [CommRing B] (p : ℕ) [hp : Fact
     (hnu : ¬IsUnit (p : B)) (σ : B →+* B) (hσ : ∀ b, (p : B) ∣ σ b - b ^ p)
     (g : MvPowerSeries τ B) (α : τ →₀ ℕ) :
     coeff α (g ^ p - expand p hp.out.ne_zero (map σ g)) ∈ Ideal.span {(p : B)} := by
-  haveI : CharP (B ⧸ Ideal.span {(p : B)}) p := CharP.quotient B p hnu
+  have : CharP (B ⧸ Ideal.span {(p : B)}) p := CharP.quotient B p hnu
   set π := Ideal.Quotient.mk (Ideal.span {(p : B)})
   have hπσ : π.comp σ = (frobenius (B ⧸ Ideal.span {(p : B)}) p).comp π := by
     ext b
@@ -364,7 +364,7 @@ theorem coeff_pow_char_sum {σ k : Type} [DecidableEq σ] [Field k] (p : ℕ) [F
     (f : MvPowerSeries σ k) (α : σ →₀ ℕ) :
     coeff α (f ^ p) = ∑ m ∈ Finset.Iic α, if α = p • m then coeff m f ^ p else 0 := by
   classical
-  haveI := charP_mvPowerSeries σ k p
+  have := charP_mvPowerSeries σ k p
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   set P : MvPowerSeries σ k := ∑ m ∈ Finset.Iic α, monomial m (coeff m f)
   set g := f - P
@@ -397,9 +397,9 @@ theorem coeff_smul_pow_char {σ k : Type} [DecidableEq σ] [Field k] (p : ℕ) [
   classical
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   rw [coeff_pow_char_sum, Finset.sum_eq_single β]
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hα
     exact hb (smul_right_injective _ hp0 hα).symm
   · intro hn
@@ -410,7 +410,7 @@ theorem coeff_pow_char_of_not {σ k : Type} [DecidableEq σ] [Field k] (p : ℕ)
   classical
   rw [coeff_pow_char_sum]
   refine Finset.sum_eq_zero fun b _ => ?_
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hα; exact h ⟨b, hα.symm⟩
 
 end GlobalTheory.SmallSecondRoot
@@ -420,7 +420,7 @@ namespace GlobalTheory.SmallSecondRoot
 theorem exists_integral_cob1_congr_of_frobenius_congr : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (d : ℕ) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O), IsLaw μ → ∀ (c : MvPowerSeries (Fin d ⊕ Fin d) O) (t : MvPowerSeries (Fin d) O), (∀ α : Fin d →₀ ℕ, (∃ i, ¬ p ∣ α i) → ¬IsUnit (coeff α t)) → (∀ β : Fin d ⊕ Fin d →₀ ℕ, ¬IsUnit (coeff (p • β) (cob1 μ t) - coeff β c ^ p)) → ∃ u : MvPowerSeries (Fin d) O, ∀ α, ¬IsUnit (coeff α c - coeff α (cob1 μ u)) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv d μ hμ c t ht hct
   classical
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   have hroot : ∀ a : O, ∃ r : O, r ^ p = a := by
     intro a
@@ -437,7 +437,7 @@ theorem exists_integral_cob1_congr_of_frobenius_congr : ∀ (p : ℕ) [Fact p.Pr
   let res := IsLocalRing.residue O
   have hres : ∀ x : O, ¬ IsUnit x ↔ res x = 0 := fun x => by
     rw [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-  haveI : CharP (IsLocalRing.ResidueField O) p :=
+  have : CharP (IsLocalRing.ResidueField O) p :=
     (CharP.charP_iff_prime_eq_zero Fact.out).2 (by rw [← map_natCast res, ← hres]; exact Fact.out)
   have hμb : ∀ i, constantCoeff (map res (μ i)) = 0 := fun i => by
     rw [← coeff_zero_eq_constantCoeff_apply, coeff_map, coeff_zero_eq_constantCoeff_apply,
@@ -456,7 +456,7 @@ theorem exists_integral_cob1_congr_of_frobenius_congr : ∀ (p : ℕ) [Fact p.Pr
       ext i
       simp [Nat.mul_div_cancel' (hall i)]
   have hcob : map res (cob1 μ t) = (cob1 (fun i => map res (μ i)) (map res u)) ^ p := by
-    haveI := charP_mvPowerSeries (Fin d ⊕ Fin d) (IsLocalRing.ResidueField O) p
+    have := charP_mvPowerSeries (Fin d ⊕ Fin d) (IsLocalRing.ResidueField O) p
     rw [SmallSecond.map_formalGroupLawCoboundaryOne_eq res μ hμ.const, ht']
     unfold cob1 inL inR
     rw [subst_pow (hasSubst_of_constantCoeff_zero hμb),
@@ -522,8 +522,8 @@ open GlobalTheory.SmallSecond.ToO in
 theorem GlobalTheory.SmallSecond.frob_congr_to_O : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (F : BFrame ε) (d : ℕ) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = μ i) → ∀ (k : ℕ) (e : Fin d ⊕ Fin k → MvPowerSeries (Fin d) F.Q), (∀ i, QL μ' ⊤ (e i)) → ∀ (W : Fin d ⊕ Fin k → F.B) (b : Fin k → F.B), (∀ l, ¬IsUnit (F.θ (W l))) → In (⊤ : Ideal F.B) (frob p F.s (comb (Sum.elim (fun _ => 0) b) e) - comb W e) → In (Ideal.span {(p : F.B)}) (cob1 (up F.Q μ') (frob p F.s (comb (Sum.elim (fun _ => 0) b) e)) - frob p F.s (cob1 (up F.Q μ') (comb (Sum.elim (fun _ => 0) b) e))) → ∃ (F₁ : MvPowerSeries (Fin d ⊕ Fin d) F.B) (t : MvPowerSeries (Fin d) O), map (algebraMap F.B F.Q) F₁ = cob1 (up F.Q μ') (comb (Sum.elim (fun _ => 0) b) e) ∧ (∀ i, ¬IsUnit (lin t i)) ∧ (∀ β : Fin d ⊕ Fin d →₀ ℕ, ¬IsUnit (coeff (p • β) (cob1 μ t) - F.θ (coeff β F₁) ^ p)) ∧ ∀ α : Fin d ⊕ Fin d →₀ ℕ, (∃ i, ¬ p ∣ α i) → ¬IsUnit (coeff α (cob1 μ t)) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε F d μ μ' hlift hmap k e he W b hW hT hC
   classical
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : IsLocalRing O := ValuationRing.isLocalRing O
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : IsLocalRing O := ValuationRing.isLocalRing O
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   set m := IsLocalRing.maximalIdeal O with hm
   have memm : ∀ x : O, x ∈ m ↔ ¬IsUnit x := fun x => by
@@ -799,7 +799,7 @@ theorem linear_coeff_law (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O) (hμ
     simp only [Fintype.sum_sum_type, yZero,
     Sum.elim_inl, Sum.elim_inr, map_zero, mul_zero, Finset.sum_const_zero, add_zero, pderiv_X, map_sum, map_mul] at h2
     simp only [Pi.single_apply, apply_ite, map_one, map_zero, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
     split_ifs at h2 ⊢ <;> exact h2
   have hsw : ∀ k : Fin d ⊕ Fin d, constantCoeff ((Sum.elim (fun i => (X (Sum.inr i) : MvPowerSeries (Fin d ⊕ Fin d) O))
       (fun i => X (Sum.inl i))) k) = 0 := by
@@ -811,8 +811,8 @@ theorem linear_coeff_law (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O) (hμ
   rw [ReciprocityTheory.ChartRestriction.G.TB.ChartChgPfTP.pderiv_subst _ hsw, map_sum] at h2
   simp only [map_mul, constantCoeff_subst_of hsw] at h2
   simp only [Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, pderiv_X, Pi.single_apply, Sum.inr.injEq,
-    reduceCtorEq, if_false, map_zero, mul_zero, Finset.sum_const_zero, add_zero, apply_ite, map_one, mul_ite,
-    mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+    reduceCtorEq, ite_false, map_zero, mul_zero, Finset.sum_const_zero, add_zero, apply_ite, map_one, mul_ite,
+    mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
   rw [← h2, hx]
 
 end GlobalTheory.Katz.SmallDeriv
@@ -821,7 +821,7 @@ namespace GlobalTheory.Katz.SmallDeriv
 
 theorem isLocalRing_of_integers {C : Type} [Field C] (v : Valuation C NNReal) (O : Type) [CommRing O]
     [Algebra O C] (hv : v.Integers O) : IsLocalRing O := by
-  haveI : Nontrivial O := (algebraMap O C).domain_nontrivial
+  have : Nontrivial O := (algebraMap O C).domain_nontrivial
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   by_contra h
   push_neg at h
@@ -841,7 +841,7 @@ open GlobalTheory.Katz.SmallDeriv in
 theorem GlobalTheory.Katz.not_isUnit_coeff_of_coboundary_small : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (d : ℕ) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) O), IsLaw μ → ∀ t : MvPowerSeries (Fin d) O, (∀ i, ¬IsUnit (lin t i)) → (∀ α : Fin d ⊕ Fin d →₀ ℕ, (∃ i, ¬ p ∣ α i) → ¬IsUnit (coeff α (cob1 μ t))) → ∀ α : Fin d →₀ ℕ, (∃ i, ¬ p ∣ α i) → ¬IsUnit (coeff α t) := by
   intro p hpr C _ _ _ v O _ _ hpO _ _ hv d μ hμ t hlin hcob α ⟨i, hi⟩
   classical
-  haveI : IsLocalRing O := isLocalRing_of_integers v O hv
+  have : IsLocalRing O := isLocalRing_of_integers v O hv
   let π := IsLocalRing.residue O
   have hmem : ∀ a : O, π a = 0 ↔ ¬IsUnit a := by
     intro a
@@ -889,7 +889,7 @@ theorem GlobalTheory.Katz.not_isUnit_coeff_of_coboundary_small : ∀ (p : ℕ) [
     simp only [Matrix.vecMul_vecMul, Matrix.mul_adjugate, Matrix.zero_vecMul] at h1
     have h2 := congrFun h1 i
     simp only [Matrix.vecMul, dotProduct, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Pi.zero_apply] at h2
+      mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Pi.zero_apply] at h2
     exact (hdet.mul_right_eq_zero).1 (by rw [mul_comm]; exact h2)
   have hαi : 1 ≤ α i := Nat.pos_of_ne_zero (fun h => hi (h ▸ dvd_zero p))
   have hsub : α - Finsupp.single i 1 + Finsupp.single i 1 = α :=
@@ -1265,7 +1265,7 @@ theorem isUnit_of_isUnit_map {p : ℕ} {B O Q : Type} [CommRing B] [CommRing Q] 
   have hx0 : θ (b * b' - 1) = 0 := by
     rw [map_sub, map_mul, hb', ← hu, map_one, Units.mul_inv, sub_self]
   obtain ⟨y, -, hy⟩ := hF.pd _ hx0
-  haveI := hF.complete
+  have := hF.complete
   have hj : (p : B) * y ∈ (⊥ : Ideal B).jacobson :=
     IsAdicComplete.le_jacobson_bot _ (Ideal.mul_mem_right _ _ (Ideal.subset_span (Set.mem_singleton (p : B))))
   have hu1 := (Ideal.mem_jacobson_bot.1 hj) (-(-1) ^ p)
@@ -1285,13 +1285,13 @@ theorem exists_pow_eq {p : ℕ} [Fact p.Prime] {C : Type} [Field C] [IsAlgClosed
   have h1 : v z ≤ 1 := by
     have := hv.map_le_one a
     rw [← hz, map_pow] at this
-    exact (pow_le_one_iff_of_nonneg zero_le' (Fact.out : p.Prime).ne_zero).1 this
+    exact (pow_le_one_iff_of_nonneg zero_le (Fact.out : p.Prime).ne_zero).1 this
   obtain ⟨r, hr⟩ := hv.exists_of_le_one h1
   exact ⟨r, hv.hom_inj (by rw [map_pow, hr, hz])⟩
 
 theorem frob_matrix_isUnit : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = c.μ i) → ∀ (k : ℕ) (e : Fin d ⊕ Fin k → MvPowerSeries (Fin d) F.Q), IsBasis μ' e → IsAdapted F.θ μ' e → ∀ U : Matrix (Fin d ⊕ Fin k) (Fin d ⊕ Fin k) F.B, (∀ i, In (⊤ : Ideal F.B) (frob p F.s (e i) - comb (fun l => (U * blk d k (p : F.B) 1) l i) e) ∧ ∀ i', i = Sum.inl i' → In (Ideal.span {(p : F.B)}) (frob p F.s (e i) - comb (fun l => (U * blk d k (p : F.B) 1) l i) e)) → IsUnit U := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F G d c μ' hL hμ k e hB hA U hU
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   have hm : ∀ x : O, ¬IsUnit x ↔ x ∈ IsLocalRing.maximalIdeal O := fun x =>
     (IsLocalRing.mem_maximalIdeal x).symm
   have hpm : ((p : ℕ) : O) ∈ IsLocalRing.maximalIdeal O := (hm _).1 (Fact.out)

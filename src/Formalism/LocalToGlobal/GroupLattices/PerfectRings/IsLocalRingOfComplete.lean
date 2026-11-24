@@ -137,7 +137,7 @@ theorem isLocalRing_of_complete {B : Type*} [CommRing B] [IsDedekindDomain B] (I
   have hKQ : K ≤ Q := by
     have hle : P ^ a * K ≤ Q := hIeq ▸ hIQ
     rcases (Ideal.IsPrime.mul_le hQ.isPrime).mp hle with h | h
-    · haveI := hQ.isPrime
+    · have := hQ.isPrime
       exact absurd (hP.eq_of_le hQ.ne_top (Ideal.IsPrime.le_of_pow_le h)).symm hne
     · exact h
   have hsup : P ⊔ K = ⊤ :=

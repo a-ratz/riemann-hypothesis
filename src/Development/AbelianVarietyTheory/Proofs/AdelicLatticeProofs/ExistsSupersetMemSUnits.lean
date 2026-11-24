@@ -66,7 +66,7 @@ theorem finite_valuation_ne_one (F : Type) [Field F] [NumberField F] (x : Fˣ) :
   · right
     show 1 < v.valuation F ((x : F)⁻¹)
     rw [map_inv₀]
-    exact one_lt_inv₀ (zero_lt_iff.mpr h0) |>.mpr h
+    exact one_lt_inv₀ (pos_iff_ne_zero.mpr h0) |>.mpr h
   · left
     exact h
 

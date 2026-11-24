@@ -61,7 +61,7 @@ theorem hasLoc_OAff : ∀ {R' : Type} [CommRing R'] {X' : Scheme.{0}} (s' : X' �
   let V : X'.affineOpens := ⟨X'.basicOpen b', U.2.basicOpen b'⟩
   have hVU : V ≤ U := X'.basicOpen_le b'
   let l : T ⟶ Opposite.op V := (homOfLE hVU).op
-  haveI := U.2.isLocalization_basicOpen b'
+  have := U.2.isLocalization_basicOpen b'
   refine ⟨Opposite.op V, l, ?_, ?_, ?_, ?_⟩
   · exact IsLocalization.Away.algebraMap_isUnit (S := Γ(X', X'.basicOpen b')) b'
   · intro y

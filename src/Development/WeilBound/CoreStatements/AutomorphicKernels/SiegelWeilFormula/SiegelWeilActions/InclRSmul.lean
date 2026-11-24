@@ -322,12 +322,12 @@ theorem pEquiv0 {δ : E} (hδ0 : δ ≠ 0)
           rfl
       continuous_toFun := by
         refine Continuous.prodMk (Continuous.prodMk ?_ ?_) ?_
-        · exact continuous_pi fun j => (continuous_apply _).comp ((continuous_apply _).comp continuous_subtype_val)
-        · exact (continuous_ellA δ).comp ((continuous_apply _).comp ((continuous_apply _).comp continuous_subtype_val))
-        · exact continuous_induced_rng.2 (continuous_subtype_val.matrix_submatrix _ _)
+        · exact continuous_pi fun j => (continuous_apply _).comp ((continuous_apply _).comp continuous_subtypeVal)
+        · exact (continuous_ellA δ).comp ((continuous_apply _).comp ((continuous_apply _).comp continuous_subtypeVal))
+        · exact continuous_induced_rng.2 (continuous_subtypeVal.matrix_submatrix _ _)
       continuous_invFun := by
         refine Continuous.subtype_mk ((continuous_ins L _ δ).comp ?_) _
-        exact continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd) }
+        exact continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd) }
   refine ⟨P, fun β => rfl, fun β => ?_⟩
   constructor
   · intro hβ

@@ -83,7 +83,7 @@ theorem aut_fixes_delta_values : ∀ {D : D7} (ρ : Setup D.ntw), ρ.Good → �
       exact hv ((D.ntw.delta_ram i v A hA).1 ⟨g, hg, h⟩)
     cases b <;> simp [hψ, Formalism.MainNotions.BlochKatoReduction.Gen.psiAt, h1]
 
-  haveI : Finite (G D.host.E D.nd.Om ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hker
+  have : Finite (G D.host.E D.nd.Om ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hker
   have hn : ψ.ker.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hpow : ∀ g, ψ g ^ ψ.ker.index = 1 := fun g => by
     rw [← map_pow]

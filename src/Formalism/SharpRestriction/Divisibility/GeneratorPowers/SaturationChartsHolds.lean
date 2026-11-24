@@ -82,7 +82,7 @@ theorem exists_basis_of_saturated {R : Type} [CommRing R] [IsDomain R] [IsPrinci
       ∀ v : Fin d → R, ∃! a : Fin d → R, ∀ j, ∑ k, a k * w k j = v j := by
   classical
   set S := Submodule.span R (Set.range u) with hS
-  haveI : NoZeroSMulDivisors R ((Fin d → R) ⧸ S) := by
+  have : NoZeroSMulDivisors R ((Fin d → R) ⧸ S) := by
     refine ⟨fun {a q} h => ?_⟩
     obtain ⟨v, rfl⟩ := Submodule.Quotient.mk_surjective S q
     by_cases ha : a = 0
@@ -91,7 +91,7 @@ theorem exists_basis_of_saturated {R : Type} [CommRing R] [IsDomain R] [IsPrinci
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
       rw [Submodule.Quotient.mk_eq_zero]
       exact hs v a ha h
-  haveI : Module.Free R ((Fin d → R) ⧸ S) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free R ((Fin d → R) ⧸ S) := Module.free_of_finite_type_torsion_free'
   let bQ := Module.Free.chooseBasis R ((Fin d → R) ⧸ S)
   choose s' hs' using fun j => Submodule.Quotient.mk_surjective S (bQ j)
   let w' := Sum.elim u s'

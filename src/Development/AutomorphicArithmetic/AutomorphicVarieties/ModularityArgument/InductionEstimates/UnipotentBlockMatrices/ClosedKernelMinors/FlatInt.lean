@@ -144,15 +144,15 @@ private theorem slice_int {K : Type} [Field K] [NumberField K] {n N : ℕ} (μ :
       norm_integral_le_of_norm_le (hwi.norm.mul_const C) (Eventually.of_forall fun g => by
         rw [norm_mul]; exact mul_le_mul_of_nonneg_left (hC _) (norm_nonneg _))
   refine ⟨v, ?_, hv⟩
-  haveI := hτ.completeSpace_coe
+  have := hτ.completeSpace_coe
   rw [← τ.orthogonal_orthogonal, Submodule.mem_orthogonal]
   intro u hu
-  haveI := isFiniteMeasure_quotientMeasure (K := K) (n := n) μ₂
+  have := isFiniteMeasure_quotientMeasure (K := K) (n := n) μ₂
   have hu1 : Integrable (fun m => (u : RightCosetSpace (Gam K n) → ℂ) (mk (Gam K n) m)) (fd μ₂) :=
     ((Lp.memLp u).integrable one_le_two).comp_measurable (measurable_mk _)
   have hu2 : Integrable (fun m => conj ((u : RightCosetSpace (Gam K n) → ℂ) (mk (Gam K n) m))) (fd μ₂) :=
     (Complex.conjCLE : ℂ →L[ℝ] ℂ).integrable_comp hu1
-  haveI : BorelSpace (G1 K n × G1 K N) := Prod.borelSpace
+  have : BorelSpace (G1 K n × G1 K N) := Prod.borelSpace
   have hI : Integrable (fun p : G1 K n × G1 K N =>
       conj ((u : RightCosetSpace (Gam K n) → ℂ) (mk (Gam K n) p.1)) * w p.2 * Φ p) ((fd μ₂).prod μ) :=
     (hu2.mul_prod hwi).mul_bdd hΦ.aestronglyMeasurable (Eventually.of_forall hC)
@@ -204,7 +204,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.tChiSec :
     have := hH1 0 m₁ m₂ t y
     rwa [show (nn 0 : G1 K (2 + 2)) = 1 from unipOne_zero 2, one_mul] at this
   have hfix : D.Fix (tChi μ a χ f) := fun x => by
-    haveI := D.prob
+    have := D.prob
     rw [hT x, ← fix_int μ D.ν hU D.supp D.cont (a := fun g => a g) a.continuous a.hasCompactSupport
       (Θ := fun g => ψ (HH (x * g) - HH x) * f (x * g))
       ((hψ.comp ((hHc.comp (continuous_const.mul continuous_id)).sub continuous_const)).mul
@@ -363,7 +363,7 @@ private theorem assemble0 {d : ℕ} (γ : Fin d → ℝ → Eu d →L[ℂ] ℂ) 
     (hγc : ∀ i, HasCompactSupport (γ i)) : ∃ β : ℝ → Eu d →L[ℂ] Eu d, Ker β ∧ ∀ s v i, β s v i = γ i s v := by
   refine ⟨fun s => ∑ i, (γ i s).smulRight (EuclideanSpace.single i (1 : ℂ)), ⟨continuous_clm_apply.2 fun v => ?_, ?_⟩,
     fun s v i => ?_⟩
-  · simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smulRight_apply]
+  · simp only [sum_apply, ContinuousLinearMap.smulRight_apply]
     refine continuous_finsetSum _ fun i _ => ?_
     have : Continuous fun s => γ i s v := (hγ i).clm_apply continuous_const
     fun_prop
@@ -373,7 +373,7 @@ private theorem assemble0 {d : ℕ} (γ : Fin d → ℝ → Eu d →L[ℂ] ℂ) 
     rw [this]
     ext1
     simp
-  · simp [ContinuousLinearMap.sum_apply, Finset.sum_apply, Pi.single_apply]
+  · simp [sum_apply, Finset.sum_apply, Pi.single_apply]
 
 private theorem int_app {Y E F : Type*} [TopologicalSpace Y] [MeasurableSpace Y] [OpensMeasurableSpace Y] (μ : Measure Y)
     [IsFiniteMeasureOnCompacts μ] [NormedAddCommGroup E] [NormedSpace ℂ E] [NormedAddCommGroup F] [NormedSpace ℂ F]
@@ -409,9 +409,9 @@ private theorem assemble {X : Type*} {d : ℕ} (S : Eu d →ₗ[ℂ] (X → ℂ)
   rw [← integral_finsetSum _ fun x _ => hI x]
   refine integral_congr_ae (Eventually.of_forall fun s => ?_)
   change _ = χ s * β s v i
-  rw [hβv, ContinuousLinearMap.sum_apply, Finset.mul_sum]
+  rw [hβv, sum_apply, Finset.mul_sum]
   refine Finset.sum_congr rfl fun x _ => ?_
-  rw [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul]
   ring
 
 
@@ -448,7 +448,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.tChiKer :
     unfold tChi
     rw [← integral_mul_left_eq_self _ x⁻¹]
     refine integral_congr_ae (Eventually.of_forall fun g => ?_)
-    simp only [mul_inv_cancel_left, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [mul_inv_cancel_left, smul_apply, smul_eq_mul]
     have : ev g v = A.sec v g := rfl
     rw [this]
     ring

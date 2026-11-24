@@ -161,15 +161,15 @@ theorem leviW_mul {z : Fin (2 * r + k + 1) → ℂ} {h n : Mat k r} (hh : h ∈ 
     · intro l _ hl
       by_cases hr : r ≤ l.val
       · rw [hn.2.2 l j h1.2.1 h1.2.2 hr]; simp [hl]
-      · rw [col_out hh (j := l) (by omega) i, if_neg, zero_mul]
+      · rw [col_out hh (j := l) (by omega) i, ite_eq_right, zero_mul]
         rintro rfl
         omega
     · simp
   · subst h2
     rw [col_out hh (j := i) (by tauto) i]; simp
   · by_cases hj : r ≤ j.val ∧ j.val ≤ r + k
-    · rw [row_out hh (i := i) (by tauto) j, if_neg h2]
-    · rw [col_out hh hj i, if_neg h2]
+    · rw [row_out hh (i := i) (by tauto) j, ite_eq_right h2]
+    · rw [col_out hh hj i, ite_eq_right h2]
 
 theorem measurable_lmulM (a : Mat k r) : Measurable (lmulM a : Mt k r → Mt k r) := by
   apply Continuous.measurable
@@ -233,7 +233,7 @@ theorem haar_unique {U : Set (Mat k r)} (hU : IsClosedSubgroup U) {μ ν : Measu
     exact m2 (by rw [e', zero_smul])
   · rintro rfl
     obtain ⟨t, t0, t1⟩ := exists_pos_lt_top μ m2
-    rw [e', Measure.smul_apply, smul_eq_mul] at t0 t1
+    rw [e', smul_apply, smul_eq_mul] at t0 t1
     by_cases h : ν t = 0
     · exact t0 (by rw [h, mul_zero])
     · exact t1 (ENNReal.top_mul h)
@@ -277,7 +277,7 @@ theorem isHaarOn_iff {U : Set (Mat k r)} (hU : IsClosedSubgroup U) (μ : Measure
   obtain ⟨ν, hν⟩ := exists_haar hU
   obtain ⟨c, -, c1, e⟩ := haar_unique hU h (haar_of_compact hU.closed hν)
   refine ⟨h.2.2.1, h.2.2.2, fun C hC hCU => ?_, h.2.1⟩
-  rw [e, Measure.smul_apply, smul_eq_mul]
+  rw [e, smul_apply, smul_eq_mul]
   exact ENNReal.mul_lt_top c1.lt_top (hν.2.2.1 C hC hCU)
 
 def uinv (k r : ℕ) (h : Mat k r) : Mat k r := Hpk k r * hᴴ * Hpk k r

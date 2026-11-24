@@ -166,7 +166,7 @@ theorem UpperTheory.Gal.TypesAndIwahori.indSupp :
   have key : ∀ (p : P) (c : G), c ∈ C → φ (↑p * c) = σ p u := by
     intro p c hc
     have h : ∃ p' : P, ∃ c' ∈ C, (↑p * c : G) = ↑p' * c' := ⟨p, c, hc, rfl⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
     obtain ⟨c', hc', hpc⟩ := h.choose_spec
     have hq : ((h.choose⁻¹ * p : P) : G) ∈ C := by
       have e : ((h.choose⁻¹ * p : P) : G) = c' * c⁻¹ := by
@@ -180,7 +180,7 @@ theorem UpperTheory.Gal.TypesAndIwahori.indSupp :
       _ = σ p u := by rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
   have zero : ∀ g : G, (¬∃ p : P, ∃ c ∈ C, g = ↑p * c) → φ g = 0 := by
     intro g hg
-    simp only [φ, dif_neg hg]
+    simp only [φ, dite_eq_right hg]
   have memInd : φ ∈ indSpace P σ := by
     show ∀ (h : P) (g : G), φ (↑h * g) = σ h (φ g)
     intro h g
@@ -342,7 +342,7 @@ open UpperTheory.Gal.InertialTypesAlt.G
 
 private theorem valued_le_one {F : Type} [Field F] [NumberField F] (v : Pl F) {x : v.adicCompletion F}
     (h : x ∈ (ValuativeRel.valuation (v.adicCompletion F)).integer) : Valued.v x ≤ 1 := by
-  haveI : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation _) Valued.v).le_one_iff_le_one.1
     ((Valuation.mem_integer_iff _ _).1 h)
@@ -423,7 +423,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem UpperTheory.Gal.InertialTypesAlt.avgMap :
     AvgMap := by
   intro G _ _ H U Z W X _ _ _ _ _ _ _ _ ρ κ η Φ ev ψ hΦ hev hinj hψ hne
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   refine ⟨∑ g : G, (ρ g⁻¹).comp (Φ.comp (ψ.comp (η g))), ?_, ?_⟩
   · obtain ⟨x, hx⟩ : ∃ x, ψ x ≠ 0 := by
       by_contra h
@@ -580,7 +580,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.cuspIne :
   have hrank := (hsys R hR).rank
   obtain ⟨ι, hι⟩ := hT E Ω A v h g y.fst hn D R hR
   obtain ⟨_, hcard, ⟨r⟩⟩ := hB E v g i hi
-  haveI : Finite 𝓀[HeightOneSpectrum.adicCompletion E v] :=
+  have : Finite 𝓀[HeightOneSpectrum.adicCompletion E v] :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact (Fact.out : g.Prime).ne_zero)
   obtain ⟨θ, hθ, hreg', hnames⟩ :=
     hN g y.fst hn 𝓀[HeightOneSpectrum.adicCompletion E v] D.K (IsLocalRing.ResidueField A) hrank r e ι Θ hΘ c hreg
@@ -705,7 +705,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem UpperTheory.Gal.InertialTypesAlt.finSec :
     FinSec := by
   intro H U V _ _ _ _ _ _ ρ σ f hf hsurj
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
   obtain ⟨s₀, hs₀⟩ := f.exists_rightInverse_of_surjective (LinearMap.range_eq_top.2 hsurj)
   have hs₀' : ∀ y, f (s₀ y) = y := fun y => LinearMap.congr_fun hs₀ y
   have hc : (Fintype.card H : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -832,8 +832,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.hcOne :
   subst hn
   unfold hc hcTw
   simp only [gal_id', mul_one, inv_mul_cancel, inPar_one', ite_true, tlG_one', brG_one']
-  haveI : Nonempty { p : GL (Fin (a + b)) F // InPar a p } := ⟨⟨1, inPar_one' a _⟩⟩
-  haveI : Fintype (GL (Fin (a + b)) F) := Fintype.ofFinite _
+  have : Nonempty { p : GL (Fin (a + b)) F // InPar a p } := ⟨⟨1, inPar_one' a _⟩⟩
+  have : Fintype (GL (Fin (a + b)) F) := Fintype.ofFinite _
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, nsmul_eq_mul]
   exact mul_ne_zero (inv_ne_zero (Nat.cast_ne_zero.mpr Nat.card_pos.ne'))
     (mul_ne_zero (Nat.cast_ne_zero.mpr Finset.univ_nonempty.card_pos.ne') (mul_ne_zero hα hβ))
@@ -899,8 +899,8 @@ private theorem frob_ne_one {F F' : Type} [Field F] [Field F'] [Algebra F F'] [F
     (s : F' ≃ₐ[F] F') (hp : (Module.finrank F F').Prime) (hs : ∀ z, s z = z ^ Nat.card F) :
     s ≠ 1 := by
   rintro rfl
-  haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
-  haveI : Fintype F' := Fintype.ofFinite F'
+  have : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
+  have : Fintype F' := Fintype.ofFinite F'
   have hcard : Nat.card F' = Nat.card F ^ Module.finrank F F' := Module.natCard_eq_pow_finrank
   have hq : 1 < Nat.card F := Finite.one_lt_card
   generalize Nat.card F = q at hs hq hcard
@@ -980,12 +980,12 @@ theorem UpperTheory.Gal.InertialTypesAlt.lblOf :
   have hch : ∀ a, ∃ j, Reg (Nat.card 𝓀[k]) (x a).fst j ∧
       ∀ γ, LinearMap.trace ℂ _ (levelZero (x a).rep γ) = cusp θ (x a).fst j γ := by
     intro a
-    haveI := (hci a).1
+    have := (hci a).1
     exact hC 𝓀[k] θ hθ (x a).fst (hcusp a).1 _ (levelZero (x a).rep) (hci a).2.1 (hci a).2.2
   choose c hreg htr using hch
   refine ⟨s, x, c, hmap, fun a => ⟨hcusp a, hdzx a, hreg a, htr a⟩, ?_⟩
-  haveI : ∀ a, FiniteDimensional ℂ (fixed (x a).rep (KOne k (Fin (x a).fst))) := fun a => (hci a).1
-  haveI hfinV : FiniteDimensional ℂ (fixed π (KOne k (Fin N))) := by
+  have : ∀ a, FiniteDimensional ℂ (fixed (x a).rep (KOne k (Fin (x a).fst))) := fun a => (hci a).1
+  have hfinV : FiniteDimensional ℂ (fixed π (KOne k (Fin N))) := by
     obtain ⟨-, hadm⟩ := UpperTheory.Zero.LLC.Pr.adm k N V π hS.isSmooth hS.isIrreducible
     have := hadm (levelPre ⊥) (isOpen_levelPre ⊥) (isCompact_levelPre ⊥)
     rwa [levelPre_bot] at this
@@ -1431,7 +1431,7 @@ namespace UpperTheory.Gal.InertialTypesAlt
 private theorem polBot_block (Q : ℕ) (x : ℂ) (hQ : 2 ≤ Q) (hx : x ^ (Q - 1) = 1) (c : ℕ → ℕ) (m : ℕ) :
     (((Multiset.range m).map fun j => ((1 : ℕ), ((c j : ℕ) : ZMod (Q - 1)))).map
       fun b => (X - C (x ^ b.2.val)) ^ b.1).prod = ∏ j ∈ Finset.range m, (X - C (x ^ c j)) := by
-  haveI : NeZero (Q - 1) := ⟨by omega⟩
+  have : NeZero (Q - 1) := ⟨by omega⟩
   rw [Multiset.map_map, Finset.prod_eq_multiset_prod, Finset.range_val]
   congr 1
   apply Multiset.map_congr rfl
@@ -1518,7 +1518,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 private theorem card_eq_pow_finrank {F F' : Type} [Field F] [Field F'] [Finite F'] (m : Module F F') :
     Nat.card F' = Nat.card F ^ @Module.finrank F F' _ _ m := by
-  letI := m
+  let := m
   exact Module.natCard_eq_pow_finrank
 
 private theorem finrank_module_unique {F F' : Type} [Field F] [Field F'] [Finite F] [Finite F'] (m₁ m₂ : Module F F') :
@@ -1532,7 +1532,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.stepInert :
     τ τ' hτ hτ' a hPa hL
   obtain ⟨hOk, hq, hna, hMeets⟩ := hL
   obtain ⟨r, j, hr, hj, hje⟩ := hRE K M Ω A v w e e' he he'
-  letI := r.toAlgebra
+  let := r.toAlgebra
   obtain ⟨hfr, s, hsf⟩ := hRD K M hl v w hs hu
   have hfr' : @Module.finrank 𝓀[v.adicCompletion K] 𝓀[w.1.adicCompletion M] _ _ Algebra.toModule = Module.finrank K M :=
     (finrank_module_unique _ _).trans hfr
@@ -1571,7 +1571,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.stepInert :
         star (shLift s (JD (pullθ ι θ') a.D a.L a.rk) δ) := fun δ => by
       unfold shLift
       split_ifs <;> simp
-    haveI : FiniteDimensional ℂ (fixed τ'.ρ (KOne (w.1.adicCompletion M) (Fin a.rk))) :=
+    have : FiniteDimensional ℂ (fixed τ'.ρ (KOne (w.1.adicCompletion M) (Fin a.rk))) :=
       (UpperTheory.Zero.LLC.Pr.adm _ _ _ _ τ'.smooth τ'.irred).2 _ GlobalTheory.StepData.isOpen_KOne
         (levelPre_bot (k := w.1.adicCompletion M) (n := Fin a.rk) ▸ isCompact_levelPre ⊥)
     refine hTr ?_
@@ -1856,7 +1856,7 @@ private theorem JD_eq {F : Type} [Field F] (θ : AlgebraicClosure F →* ℂ) (D
 
 private theorem cusp_one {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ) (k : ℕ) :
     cusp θ 1 k = detc θ 1 k := by
-  haveI : Fintype F := Fintype.ofFinite F
+  have : Fintype F := Fintype.ofFinite F
   funext x
   have hcp : Matrix.charpoly (x : Matrix (Fin 1) (Fin 1) F) = X - C ((x : Matrix (Fin 1) (Fin 1) F) 0 0) := by
     simp [Matrix.charpoly, Matrix.charmatrix, Matrix.det_fin_one]
@@ -1900,8 +1900,8 @@ theorem jAppend_holds : JAppend := fun F _ _ θ => (GlobalTheory.T.harishChandra
 
 theorem normEx_holds : NormEx := by
   intro F F' _ _ _ _ s hs t δ
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  haveI : Fintype F := Fintype.ofFinite F
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Fintype F := Fintype.ofFinite F
   refine GlobalTheory.T.every_element_is_norm F F' s (fun τ => ?_) t δ
   have e : s = FiniteField.frobeniusAlgEquivOfAlgebraic F F' := by
     ext z; rw [hs z, Nat.card_eq_fintype_card]; rfl

@@ -128,7 +128,7 @@ variable {V : ℕ → HSp D} {Mo : ℕ → Type} [∀ n, AddCommGroup (Mo n)] [�
   (comp : ∀ n, GfC (V n) → GfC (V (n + 1)) → Mo n →ₗ[ℂ] Mo (n + 1)) (v : GfC (V 0) → Mo 0)
 
 theorem ext_lt {P : ℕ → Type} [∀ j, One (P j)] {n : ℕ} (x : ∀ j : Fin n, P j) {j : ℕ} (h : j < n) : ext n x j = x ⟨j, h⟩ :=
-  dif_pos h
+  dite_eq_left h
 
 theorem ext_update {P : ℕ → Type} [∀ j, One (P j)] {n : ℕ} (x : ∀ j : Fin n, P j) (j : Fin n) (z : P j) :
     ext n (Function.update (β := fun j : Fin n => P j) x j z) = Function.update (β := P) (ext n x) (j : ℕ) z := by
@@ -151,17 +151,17 @@ theorem sum_last {A : ℕ → Type} (o : ∀ n, A n → GfC (V n)) (w : ∀ n, A
           (ptV comp v (ext (n + 1) fun j => o j (c j)) n (ext (P := fun j => GfC (V j)) (n + 1) (fun j => o j (c j)) n)) := by
   rw [finsum_snoc n hA]
   refine finsum_congr fun a => ?_
-  letI : ∀ j : Fin n, Fintype (A j) := fun j => @Fintype.ofFinite _ (hA j (by omega))
+  let : ∀ j : Fin n, Fintype (A j) := fun j => @Fintype.ofFinite _ (hA j (by omega))
 
   rw [sumV_eq comp v o w n fun j hj => hA j (by omega), finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, map_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun c _ => ?_
   have e1 : ext (P := fun j => GfC (V j)) (n + 1)
       (fun j => o j (Fin.snoc (α := fun j : Fin (n + 1) => A j) c a j)) n = o n a := by
-    rw [ext, dif_pos (Nat.lt_succ_self n)]
+    rw [ext, dite_eq_left (Nat.lt_succ_self n)]
     exact congrArg (o n) (Fin.snoc_last (α := fun j : Fin (n + 1) => A j) a c)
   have e2 : ptV comp v (ext (n + 1) fun j => o j (Fin.snoc (α := fun j : Fin (n + 1) => A j) c a j)) n =
       ptV comp v (ext n fun j => o j (c j)) n := ptV_congr comp v n fun j hj => by
-    rw [ext, ext, dif_pos (Nat.lt_succ_of_lt hj), dif_pos hj]
+    rw [ext, ext, dite_eq_left (Nat.lt_succ_of_lt hj), dite_eq_left hj]
     exact congrArg (o j) (Fin.snoc_castSucc (α := fun j : Fin (n + 1) => A j) a c ⟨j, hj⟩)
   have e3 : ∏ j : Fin (n + 1), w j (Fin.snoc (α := fun j : Fin (n + 1) => A j) c a j) = w n a * ∏ j : Fin n, w j (c j) := by
     rw [Fin.prod_univ_castSucc, mul_comm]
@@ -290,7 +290,7 @@ theorem one_term (μ : ∀ n, Measure (GA D (V n))) (fd : ∀ n, Set (GA D (V n)
             rw [ih, finOf_mul_inf, mul_inv_rev, map_mul, Module.End.mul_apply]
           simp only [e]
           exact a4 _))
-      haveI := Fintype.ofFinite (FinCl (V n) (K n))
+      have := Fintype.ofFinite (FinCl (V n) (K n))
       simp only [liftC, sumV]
 
       rw [hU, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, map_sum, map_sum]
@@ -322,7 +322,7 @@ theorem one_term (μ : ∀ n, Measure (GA D (V n))) (fd : ∀ n, Set (GA D (V n)
             rw [ih, finOf_mul_inf, mul_inv_rev, map_mul, Module.End.mul_apply]
           simp only [e]
           exact a4 _))
-      haveI := Fintype.ofFinite (FinCl (V' n) (K' n))
+      have := Fintype.ofFinite (FinCl (V' n) (K' n))
       simp only [liftC, sumV]
 
       rw [hU, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, map_sum, map_sum]
@@ -342,8 +342,8 @@ theorem one_term (μ : ∀ n, Measure (GA D (V n))) (fd : ∀ n, Set (GA D (V n)
   refine (sum_last comp' v' (A := fun n => FinCl (V' n) (K' n)) (fun _ c => Quotient.out c) (fun n => wgt (V' n) (μ' n) (K' n)) N fA'
     (fun z => B (sumV (A := fun n => FinCl (V n) (K n)) (fun _ c => Quotient.out c) (fun n => wgt (V n) (μ n) (K n))
       comp v N (e z)))).trans ?_
-  letI : ∀ j : Fin N, Fintype (FinCl (V j) (K j)) := fun j => @Fintype.ofFinite _ (fA j j.2)
-  letI : ∀ j : Fin (N + 1), Fintype (FinCl (V' j) (K' j)) := fun j => @Fintype.ofFinite _ (fA' j j.2)
+  let : ∀ j : Fin N, Fintype (FinCl (V j) (K j)) := fun j => @Fintype.ofFinite _ (fA j j.2)
+  let : ∀ j : Fin (N + 1), Fintype (FinCl (V' j) (K' j)) := fun j => @Fintype.ofFinite _ (fA' j j.2)
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Fintype.sum_prod_type_right]
   refine Finset.sum_congr rfl fun b _ => ?_
 
@@ -458,9 +458,9 @@ theorem glue (hc : ∀ d ∈ τ.support, ∀ n < N, ArrowOK (comp d) ρ (ker d) 
     (fun j => (hJ j j.2).1) (fun i => (hK' i _).1) (fun i => (hJ' i (Nat.le_of_lt_succ i.2)).2.1) (fun i => (hJ' i _).1)
     (fun j => (hK j j.2).2) (fun i => (hK' i _).2)
     (fun x y => P (ptX N e x y) (ext (P := fun j => GfC (V' j)) (N + 1) y)) ?_ ?_]
-  · letI : ∀ j : Fin N, Fintype (FinCl (V j) (J j)) := fun j =>
+  · let : ∀ j : Fin N, Fintype (FinCl (V j) (J j)) := fun j =>
       @Fintype.ofFinite _ (ClassFin.finite_finCl_and_gamOrd _ _ (hV j j.2) (hJ j j.2).2.1).1
-    letI : ∀ j : Fin (N + 1), Fintype (FinCl (V' j) (J' j)) := fun j =>
+    let : ∀ j : Fin (N + 1), Fintype (FinCl (V' j) (J' j)) := fun j =>
       @Fintype.ofFinite _ (ClassFin.finite_finCl_and_gamOrd _ _ (hV' j (Nat.le_of_lt_succ j.2))
         (hJ' j (Nat.le_of_lt_succ j.2)).2.1).1
     have key := fun d (hd : d ∈ τ.support) => (one_term (hc d hd) hF hFa (hc' d hd) hF' hFa' h μ fd J

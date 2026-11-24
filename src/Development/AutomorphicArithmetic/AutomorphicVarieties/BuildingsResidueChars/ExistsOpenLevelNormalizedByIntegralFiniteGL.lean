@@ -59,16 +59,16 @@ private theorem exists_normal_open_level_subgroup {G : Type*} [Group G] [Topolog
     ∃ L' : Subgroup G, IsOpen (L' : Set G) ∧ L' ≤ L ∧ (∀ k ∈ H, ∀ u ∈ L', k⁻¹ * u * k ∈ L') ∧
       ∃ t : Finset G, ∀ k ∈ H, ∃ c ∈ t, c⁻¹ * k ∈ L' := by
   classical
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hHc
-  have hNo : IsOpen ((L.subgroupOf H : Subgroup H) : Set H) := hL.preimage continuous_subtype_val
-  haveI : Finite (H ⧸ L.subgroupOf H) := (L.subgroupOf H).quotient_finite_of_isOpen hNo
-  haveI : (L.subgroupOf H).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hHc
+  have hNo : IsOpen ((L.subgroupOf H : Subgroup H) : Set H) := hL.preimage continuous_subtypeVal
+  have : Finite (H ⧸ L.subgroupOf H) := (L.subgroupOf H).quotient_finite_of_isOpen hNo
+  have : (L.subgroupOf H).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hCo : IsOpen ((L.subgroupOf H).normalCore : Set H) :=
     Subgroup.isOpen_of_isClosed_of_finiteIndex _
       ((L.subgroupOf H).normalCore_isClosed (Subgroup.isClosed_of_isOpen _ hNo))
   refine ⟨(L.subgroupOf H).normalCore.map H.subtype, ?_, ?_, ?_, ?_⟩
   · rw [Subgroup.coe_map]
-    exact hHo.isOpenMap_subtype_val _ hCo
+    exact hHo.isOpenMap_subtypeVal _ hCo
   · rintro _ ⟨u, hu, rfl⟩
     have := (L.subgroupOf H).normalCore_le hu
     exact this
@@ -76,8 +76,8 @@ private theorem exists_normal_open_level_subgroup {G : Type*} [Group G] [Topolog
     refine ⟨(⟨k, hk⟩ : H)⁻¹ * u * ⟨k, hk⟩, ?_, by simp⟩
     have := (Subgroup.normalCore_normal (L.subgroupOf H)).conj_mem u hu ((⟨k, hk⟩ : H)⁻¹)
     simpa using this
-  · haveI : Finite (H ⧸ (L.subgroupOf H).normalCore) := Subgroup.finite_quotient_of_finiteIndex
-    letI := Fintype.ofFinite (H ⧸ (L.subgroupOf H).normalCore)
+  · have : Finite (H ⧸ (L.subgroupOf H).normalCore) := Subgroup.finite_quotient_of_finiteIndex
+    let := Fintype.ofFinite (H ⧸ (L.subgroupOf H).normalCore)
     refine ⟨Finset.univ.image (fun q : H ⧸ (L.subgroupOf H).normalCore => ((q.out : H) : G)), ?_⟩
     intro k hk
     refine ⟨(((QuotientGroup.mk ⟨k, hk⟩ : H ⧸ (L.subgroupOf H).normalCore).out : H) : G),

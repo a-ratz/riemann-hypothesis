@@ -133,8 +133,8 @@ theorem sub_finite (N : Submodule (𝓞 E) (Fin M → E)) (hN : N.FG) (n : ℕ) 
     {s : Set (Fin M → E) | (∃ G : AddSubgroup (Fin M → E), (G : Set (Fin M → E)) = s) ∧
       (∀ x ∈ N, (n : E) • x ∈ s) ∧ s ⊆ N}.Finite := by
   classical
-  haveI : Module.Finite (𝓞 E) N := Module.Finite.iff_fg.2 hN
-  haveI : Module.Finite ℤ N := Module.Finite.trans (𝓞 E) N
+  have : Module.Finite (𝓞 E) N := Module.Finite.iff_fg.2 hN
+  have : Module.Finite ℤ N := Module.Finite.trans (𝓞 E) N
   obtain ⟨S, hS⟩ := Module.Finite.fg_top (R := ℤ) (M := N)
 
   let rep : (S → Fin n) → (Fin M → E) := fun c => ∑ g : S, ((c g : ℕ) : ℤ) • ((g : N) : Fin M → E)

@@ -134,14 +134,14 @@ private theorem retract_lemma_3 [IsDedekindDomain O] {M : Type} [AddCommGroup M]
     (FractionalIdeal.mem_one_iff (S := nonZeroDivisors O)).1
       (((FractionalIdeal.mem_inv_iff hJ).1 hb) (ψ x) ((hJc _).2 (LinearMap.mem_range_self ψ x)))
   have h1 : (1 : K) ∈ (J : Submodule O K) * ((J⁻¹ : FractionalIdeal (nonZeroDivisors O) K) : Submodule O K) := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hJ, FractionalIdeal.mem_coe]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hJ, FractionalIdeal.mem_coeToSubmodule]
     exact FractionalIdeal.one_mem_one (S := nonZeroDivisors O)
   obtain ⟨g, hg1, hg2⟩ : ∃ g : M →ₗ[O] M, (∀ x, ψ (g x) = 1 * ψ x) ∧ ∀ x, ψ x = 0 → g x = 0 := by
     refine Submodule.mul_induction_on
       (C := fun y => ∃ g : M →ₗ[O] M, (∀ x, ψ (g x) = y * ψ x) ∧ ∀ x, ψ x = 0 → g x = 0) h1 ?_ ?_
     · intro a ha b hb
-      obtain ⟨l, rfl⟩ := LinearMap.mem_range.1 ((hJc a).1 (FractionalIdeal.mem_coe.1 ha))
-      have hb' := hint b (FractionalIdeal.mem_coe.1 hb)
+      obtain ⟨l, rfl⟩ := LinearMap.mem_range.1 ((hJc a).1 (FractionalIdeal.mem_coeToSubmodule.1 ha))
+      have hb' := hint b (FractionalIdeal.mem_coeToSubmodule.1 hb)
       let c : M →ₗ[O] O :=
         { toFun := fun x => (hb' x).choose
           map_add' := fun x y => by

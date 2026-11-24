@@ -57,22 +57,22 @@ theorem exists_cover_field (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] 
     ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (τ : K' →+* FractionRing R'),
       FinExt ρ ∧ IsLocalHom ρ ∧ τ.comp (io.comp (algebraMap R (FractionRing R))) = (algebraMap R' (FractionRing R')).comp ρ := by
   obtain ⟨⟨hN, -, hIC, hC⟩, hc0⟩ := hR
-  letI : Algebra (FractionRing R) K' := io.toAlgebra
-  letI : Algebra R K' := (io.comp (algebraMap R (FractionRing R))).toAlgebra
-  haveI : IsScalarTower R (FractionRing R) K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FiniteDimensional (FractionRing R) K' := hfin
-  haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
-  haveI : Algebra.IsSeparable (FractionRing R) K' := inferInstance
+  let : Algebra (FractionRing R) K' := io.toAlgebra
+  let : Algebra R K' := (io.comp (algebraMap R (FractionRing R))).toAlgebra
+  have : IsScalarTower R (FractionRing R) K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional (FractionRing R) K' := hfin
+  have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
+  have : Algebra.IsSeparable (FractionRing R) K' := inferInstance
   let C := integralClosure R K'
-  haveI : Module.Finite R C := IsIntegralClosure.finite R (FractionRing R) K' C
-  haveI : IsFractionRing C K' := integralClosure.isFractionRing_of_finite_extension (FractionRing R) K'
+  have : Module.Finite R C := IsIntegralClosure.finite R (FractionRing R) K' C
+  have : IsFractionRing C K' := integralClosure.isFractionRing_of_finite_extension (FractionRing R) K'
   have hφ : Function.Injective (algebraMap R C) := fun a b h => by
     have h' : io (algebraMap R (FractionRing R) a) = io (algebraMap R (FractionRing R) b) := congrArg Subtype.val h
     exact IsFractionRing.injective R (FractionRing R) (io.injective h')
   obtain ⟨R', _, _, _, ρ, σ, hCN, hρ, hfin', hloc, hσ⟩ :=
     GlobalTheory.LocExt.exists_isCN_cover_of_finite R C (algebraMap R C) ⟨hN, hIC, hC, hc0⟩ hφ (RingHom.finite_algebraMap.2 inferInstance)
   have hσi : Function.Injective σ := by
-    refine (RingHom.injective_iff_ker_eq_bot σ).2 (Ideal.eq_bot_of_comap_eq_bot (R := R) ?_)
+    refine (RingHom.injective_iff_ker_eq_bot σ).2 (Ideal.eq_bot_of_under_eq_bot (R := R) ?_)
     change (RingHom.ker σ).comap (algebraMap R C) = ⊥
     rw [RingHom.comap_ker, hσ]
     exact (RingHom.injective_iff_ker_eq_bot ρ).1 hρ

@@ -90,10 +90,10 @@ theorem lev_of_mem {D : D7} (θ : InfFam D) {V : HSp D} {S : D.what₂.Tau → S
   | zero => intros; simp
   | add x y _ _ hx hy =>
     intro v k hk g
-    simp only [MultilinearMap.add_apply, Pi.add_apply, hx v k hk g, hy v k hk g, mul_add]
+    simp only [add_apply, Pi.add_apply, hx v k hk g, hy v k hk g, mul_add]
   | smul a x _ hx =>
     intro v k hk g
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx v k hk g]
+    simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx v k hk g]
     ring
 
 theorem valMove : ∀ D : D7, ValMove D := by

@@ -171,7 +171,7 @@ theorem finite_integralClosure : Module.Finite R (integralClosure R L) := by
     Algebra.finite_adjoin_of_finite_of_isIntegral s.finite_toSet fun x hx => hsT hx
   have hCn : IsNoetherianRing C := IsNoetherianRing.of_finite R C
   have hCd : Ring.DimensionLEOne C := Ring.DimensionLEOne.of_isIntegral R C
-  letI : Algebra C B := (Subalgebra.inclusion hCB).toAlgebra
+  let : Algebra C B := (Subalgebra.inclusion hCB).toAlgebra
   have : IsScalarTower R C B := .of_algebraMap_eq fun _ => rfl
   have : FaithfulSMul C B := (faithfulSMul_iff_algebraMap_injective _ _).mpr
     (Subalgebra.inclusion_injective hCB)
@@ -365,7 +365,7 @@ theorem finite_of_finiteReduction (φ : MvPowerSeries τ R →ₐ[R] MvPowerSeri
 omit [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Finite σ] in
 theorem isLocalHom_of_constantCoeff_mem (φ : MvPowerSeries τ R →ₐ[R] MvPowerSeries σ R)
     (h0 : ∀ j, constantCoeff (φ (X j)) ∈ maximalIdeal R) : IsLocalHom φ.toRingHom := by
-  refine ((IsLocalRing.local_hom_TFAE _).out 1 4).2 fun g hg => ?_
+  refine ((local_hom_tfae _).out 1 4).2 fun g hg => ?_
   have h1 := algHom_sub_constantCoeff_mem φ (K := maximalIdeal _)
     (fun j => mem_maximalIdeal_iff_constantCoeff.2 (h0 j)) g
   have h2 : algebraMap R (MvPowerSeries σ R) (constantCoeff g) ∈ maximalIdeal _ := by
@@ -444,7 +444,7 @@ theorem flat_injective_basis_of_finite {A B : Type*} [CommRing A] [CommRing B]
     (hd : ringKrullDim A ≤ ringKrullDim B) :
     ψ.Flat ∧ Function.Injective ψ ∧ @Module.Free A B _ _ ψ.toAlgebra.toModule ∧
       ∃ (n : ℕ) (e : Fin n → B), ∀ g : B, ∃! c : Fin n → A, g = ∑ i, ψ (c i) * e i := by
-  letI := ψ.toAlgebra
+  let := ψ.toAlgebra
   have : Module.Finite A B := hψ
   have : IsLocalHom (algebraMap A B) := ‹_›
   have hf : Module.Flat A B := flat_of_isCM_of_quasiFinite (isCM_of_isRegularLocalRing B) hd

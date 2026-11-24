@@ -159,7 +159,7 @@ theorem exists_integral_domain_extension_monic_roots :
     rw [← eval₂_at_apply, map_zero]
     exact hy'
   · intro K _ _ h hinj
-    letI : Algebra (FractionRing D) K := (IsFractionRing.lift hinj : FractionRing D →+* K).toAlgebra
+    let : Algebra (FractionRing D) K := (IsFractionRing.lift hinj : FractionRing D →+* K).toAlgebra
     let φ : AlgebraicClosure (FractionRing D) →ₐ[FractionRing D] K := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -192,21 +192,21 @@ theorem ringHom_extend_of_isIntegral_isAlgClosed (A C K : Type) [CommRing A] [Co
     (hk : RingHom.ker (algebraMap A C) ≤ RingHom.ker h) :
     ∃ ψ : C →+* K, ψ.comp (algebraMap A C) = h := by
   classical
-  haveI hp : (RingHom.ker h).IsPrime := RingHom.ker_isPrime h
+  have hp : (RingHom.ker h).IsPrime := RingHom.ker_isPrime h
   obtain ⟨Q, -, hQ, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (RingHom.ker h) (⊥ : Ideal C)
     (by simpa [← RingHom.ker_eq_comap_bot] using hk)
-  haveI : Q.LiesOver (RingHom.ker h) := (Ideal.liesOver_iff _ _).mpr hQc.symm
-  letI : Algebra (A ⧸ RingHom.ker h) K := (RingHom.kerLift h).toAlgebra
-  haveI : FaithfulSMul (A ⧸ RingHom.ker h) K :=
+  have : Q.LiesOver (RingHom.ker h) := (Ideal.liesOver_iff _ _).mpr hQc.symm
+  let : Algebra (A ⧸ RingHom.ker h) K := (RingHom.kerLift h).toAlgebra
+  have : FaithfulSMul (A ⧸ RingHom.ker h) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (RingHom.kerLift_injective h)
-  haveI : FaithfulSMul (A ⧸ RingHom.ker h) (C ⧸ Q) := inferInstance
-  haveI : Nontrivial (A ⧸ RingHom.ker h) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
-  haveI : Algebra.IsIntegral (A ⧸ RingHom.ker h) (C ⧸ Q) :=
+  have : FaithfulSMul (A ⧸ RingHom.ker h) (C ⧸ Q) := inferInstance
+  have : Nontrivial (A ⧸ RingHom.ker h) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
+  have : Algebra.IsIntegral (A ⧸ RingHom.ker h) (C ⧸ Q) :=
     Ideal.Quotient.algebra_isIntegral_of_liesOver (A := A) (p := RingHom.ker h) (P := Q)
-  haveI : Algebra.IsAlgebraic (A ⧸ RingHom.ker h) (C ⧸ Q) := Algebra.IsIntegral.isAlgebraic
-  haveI : Module.IsTorsionFree (A ⧸ RingHom.ker h) (C ⧸ Q) :=
+  have : Algebra.IsAlgebraic (A ⧸ RingHom.ker h) (C ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Module.IsTorsionFree (A ⧸ RingHom.ker h) (C ⧸ Q) :=
     Module.isTorsionFree_iff_algebraMap_injective.2 (FaithfulSMul.algebraMap_injective _ _)
-  haveI : Module.IsTorsionFree (A ⧸ RingHom.ker h) K :=
+  have : Module.IsTorsionFree (A ⧸ RingHom.ker h) K :=
     Module.isTorsionFree_iff_algebraMap_injective.2 (RingHom.kerLift_injective h)
   let φ : (C ⧸ Q) →ₐ[A ⧸ RingHom.ker h] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -245,7 +245,7 @@ theorem geomPoints_factor_henselian_of_specializes :
   have hAffine := exists_ringHom_pair_of_specializes x x' u u' hsp
   obtain ⟨B, _, g, g', ρ, hker, hx, hx'⟩ := hAffine
   set q := RingHom.ker g' with hq
-  haveI : q.IsPrime := RingHom.ker_isPrime g'
+  have : q.IsPrime := RingHom.ker_isPrime g'
   let D := B ⧸ q
   let h' : D →+* k' := RingHom.kerLift g'
   have h'inj : Function.Injective h' := RingHom.kerLift_injective g'
@@ -256,7 +256,7 @@ theorem geomPoints_factor_henselian_of_specializes :
     intro a ha; rw [RingHom.mem_ker] at ha ⊢
     rw [show a = 0 from hCinj (by rw [ha, map_zero])]; exact map_zero h)
   let P := RingHom.ker ψ
-  haveI : P.IsPrime := RingHom.ker_isPrime ψ
+  have : P.IsPrime := RingHom.ker_isPrime ψ
   let R := Localization.AtPrime P
   have h0 : (0 : C) ∉ P.primeCompl := fun h0 => h0 P.zero_mem
   have hRloc := (absIntClosed_localization_and_quotient C ⟨hCdom, hCroot⟩).1 P.primeCompl h0

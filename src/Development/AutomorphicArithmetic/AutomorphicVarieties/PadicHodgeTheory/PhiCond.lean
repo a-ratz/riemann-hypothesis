@@ -52,13 +52,13 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N Formalism.Bas
 theorem UpperTheory.V.Loc.phiCond :
     LocalPublishedTheorems → ∀ (v l : ℕ) [Fact v.Prime] [Fact l.Prime] (H : Subgroup (GQ v)), IsOpen (H : Set (GQ v)) → Finite {f : H →* Multiplicative (ZMod l) // IsOpen (f.ker : Set H)} := by
   intro hP v l _ _ H hH
-  letI : Algebra ℤ_[l] (ZMod l) := (PadicInt.toZMod (p := l)).toAlgebra
-  letI : TopologicalSpace (ZMod l) := ⊥
-  haveI : DiscreteTopology (ZMod l) := ⟨rfl⟩
+  let : Algebra ℤ_[l] (ZMod l) := (PadicInt.toZMod (p := l)).toAlgebra
+  let : TopologicalSpace (ZMod l) := ⊥
+  have : DiscreteTopology (ZMod l) := ⟨rfl⟩
   let ρ : Representation (ZMod l) H (ZMod l) := 1
   have hρ : ContAction ρ := continuous_snd
   have hfin := (tateFin hP (v := v) (l := l) H.subtype hH.isOpenEmbedding_subtypeVal (ZMod l) (ZMod l) ρ hρ).1
-  haveI : Finite (H1 ρ) := Module.finite_of_finite (ZMod l)
+  have : Finite (H1 ρ) := Module.finite_of_finite (ZMod l)
   have hc : ∀ f : {f : H →* Multiplicative (ZMod l) // IsOpen (f.ker : Set H)},
       (fun g => Multiplicative.toAdd (f.1 g)) ∈ Z1 ρ := by
     intro f

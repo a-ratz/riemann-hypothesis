@@ -253,7 +253,7 @@ variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
 
 theorem gi_val (v : HeightOneSpectrum (𝓞 X.B.I.F)) (i : Fin 2) (hv : ((D.host.g i : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal) :
     v.intValuation ((D.host.g i : ℕ) : 𝓞 X.B.I.F) = WithZero.exp (-1 : ℤ) := by
-  letI : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
+  let : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
   exact tower_val X.B.I.F D.host.E (D.host.g_prime i) (D.nd.g_split i) v hv
 
 end GiVal
@@ -445,7 +445,7 @@ variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
 theorem gResCard_holds : ∀ (v : HeightOneSpectrum (𝓞 X.B.I.F)) (i : Fin 2), ((D.host.g i : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal →
     Nat.card (𝓞 X.B.I.F ⧸ v.asIdeal) = D.host.g i := by
   intro v i hv
-  letI : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
+  let : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
   exact tower_card X.B.I.F D.host.E (D.host.g_prime i) (D.nd.g_split i) v hv
 
 theorem gUnif_holds : ∀ v : HeightOneSpectrum (𝓞 X.B.I.F), ((X.B.g : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal →
@@ -574,7 +574,7 @@ theorem trV_nondeg (z : I.E ⊗[I.F] v.adicCompletion I.F)
       have := LinearMap.BilinForm.apply_dualBasis_left hB b j i
       rw [tForm_apply, mul_comm] at this
       exact this
-    simp only [e, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
+    simp only [e, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h1
     exact h1
   simp [ha]
 

@@ -100,13 +100,13 @@ theorem etaleSmooth_inverse {A : WeightedAtlas n Y ι La} {U : Set Y} {z : Y →
     rw [hf'def, ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero]
     exact (hz.differentiableAt (by simp)).hasFDerivAt
   have hn : (∞ : WithTop ℕ∞) ≠ 0 := by simp
-  have hstrict := hz.hasStrictFDerivAt' hf' hn
+  have hstrict := hz.hasStrictFDerivAt hf' hn
   have hzx : (z ∘ (A.chart i).symm) (A.chart i x) = v := by
     rw [Function.comp_apply, (A.chart i).left_inv hi]
     exact hzs v hv
   have hGv : G v = A.chart i x := rfl
   have hc0 : ContinuousAt (Subtype.val ∘ e.symm) v :=
-    continuous_subtype_val.continuousAt.comp (e.continuousAt_symm hv)
+    continuous_subtypeVal.continuousAt.comp (e.continuousAt_symm hv)
   have hsrc : ∀ᶠ v' in 𝓝 v, ((e.symm v' : U) : Y) ∈ (A.chart i).source :=
     hc0.eventually_mem ((A.chart i).open_source.mem_nhds hi)
   have hGc : ContinuousAt G v :=

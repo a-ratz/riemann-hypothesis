@@ -188,7 +188,7 @@ theorem lcsc_UA (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
 
 theorem continuous_ht (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
     Continuous (ht : UA σ J → ℝ≥0) := by
-  exact (GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtype_val
+  exact (GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtypeVal
 
 theorem grpTop_of : GrpTop := by
   unfold GrpTop
@@ -204,7 +204,7 @@ theorem grpTop_of : GrpTop := by
   have hR : Countable (Set.range f) := (Set.countable_range f).to_subtype
   refine ⟨(lcsc_UA σ J).1, (lcsc_UA σ J).2.1, (lcsc_UA σ J).2.2, ?_,
     GlobalTheory.RatUDiscrete.discreteTopology_ratU F E σ n J,
-    Units.continuous_val.comp continuous_subtype_val, ?_, ?_⟩
+    Units.continuous_val.comp continuous_subtypeVal, ?_, ?_⟩
   · have key : ∀ x : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ratU σ J,
         ((x : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA σ J) : GL (Fin n) _) ∈ Set.range f :=
       fun x => MonoidHom.mem_range.mp x.2

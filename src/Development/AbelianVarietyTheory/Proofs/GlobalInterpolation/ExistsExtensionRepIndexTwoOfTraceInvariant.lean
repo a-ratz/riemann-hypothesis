@@ -70,10 +70,10 @@ theorem _root_.GlobalTheory.IndexTwoExt.isSSRep_of_ker [CharZero k] (η : Γ →
   have hp1 : ∀ v, p v ∈ W := fun v => by simp [hpdef]
   have hpW : ∀ v ∈ W, p v = v := fun v hv => by
     simp only [hpdef, LinearMap.comp_apply, Submodule.subtype_apply]
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨v, hv⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨v, hv⟩)
   have hpW' : ∀ v ∈ W', p v = 0 := fun v hv => by
     simp only [hpdef, LinearMap.comp_apply, Submodule.subtype_apply]
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨v, hv⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨v, hv⟩)
   have hpc : ∀ g, η g = 1 → Commute (σ g) p := by
     intro g hg
     refine LinearMap.ext fun v => ?_
@@ -199,7 +199,7 @@ private theorem exists_dvd_sq_sub_X_of_eval_zero_ne_zero {k : Type} [Field k] [I
         rw [hgμ]
         field_simp
         ring
-      · obtain ⟨s, hs⟩ := IsAlgClosed.exists_eq_mul_self
+      · obtain ⟨s, hs⟩ := IsAlgClosed.isSquare
           (discrim (g.eval μ) (2 * q.eval μ) (e.eval μ))
         obtain ⟨x, hx⟩ := exists_quadratic_eq_zero hgμ ⟨s, hs⟩
         exact ⟨x, by linear_combination hx⟩
@@ -327,7 +327,7 @@ theorem _root_.GlobalTheory.IndexTwoExt.main : ∀ (Γ k : Type) [Group Γ] [Top
       _ = P * (r h * Dg) := by rw [(hDgr h).eq]
       _ = P * r h * P⁻¹ * (P * Dg) := by group
   let f : Γ → GL (Fin n) k := fun x => if hx : x ∈ η.ker then r ⟨x, hx⟩ else 1
-  have hf : ∀ x (hx : η x = 1), f x = r ⟨x, MonoidHom.mem_ker.2 hx⟩ := fun x hx => dif_pos _
+  have hf : ∀ x (hx : η x = 1), f x = r ⟨x, MonoidHom.mem_ker.2 hx⟩ := fun x hx => dite_eq_left _
   have hfm : ∀ x y, η x = 1 → η y = 1 → f (x * y) = f x * f y := by
     intro x y hx hy
     have hxy : η (x * y) = 1 := by rw [map_mul, hx, hy, one_mul]
@@ -339,8 +339,8 @@ theorem _root_.GlobalTheory.IndexTwoExt.main : ∀ (Γ k : Type) [Group Γ] [Top
     exact hBr _
   have hfs : B * B = f (t * t) := by rw [hBB, hf (t * t) htt]
   let F : Γ → GL (Fin n) k := fun g => if η g = 1 then f g else f (g * t⁻¹) * B
-  have hF1 : ∀ g, η g = 1 → F g = f g := fun g hg => if_pos hg
-  have hF2 : ∀ g, η g = -1 → F g = f (g * t⁻¹) * B := fun g hg => if_neg (by rw [hg]; decide)
+  have hF1 : ∀ g, η g = 1 → F g = f g := fun g hg => ite_eq_left hg
+  have hF2 : ∀ g, η g = -1 → F g = f (g * t⁻¹) * B := fun g hg => ite_eq_right (by rw [hg]; decide)
   let ρ : Γ →* GL (Fin n) k :=
     { toFun := F
       map_one' := by
@@ -368,8 +368,8 @@ theorem _root_.GlobalTheory.IndexTwoExt.main : ∀ (Γ k : Type) [Group Γ] [Top
     show F h = r h
     rw [hF1 _ (MonoidHom.mem_ker.1 h.2), hf _ (MonoidHom.mem_ker.1 h.2)]
   have hfc : ContinuousOn f (η.ker : Set Γ) := by
-    rw [continuousOn_iff_continuous_restrict]
-    exact hr.congr fun x => (dif_pos x.2 : f (x : Γ) = r ⟨x, x.2⟩).symm
+    rw [continuousOn_iff_continuous_domRestrict]
+    exact hr.congr fun x => (dite_eq_left x.2 : f (x : Γ) = r ⟨x, x.2⟩).symm
   have hcont : Continuous ρ := by
     refine continuous_of_continuousAt_one ρ ?_
     have hnhds : (η.ker : Set Γ) ∈ nhds (1 : Γ) := hH.mem_nhds (one_mem η.ker)

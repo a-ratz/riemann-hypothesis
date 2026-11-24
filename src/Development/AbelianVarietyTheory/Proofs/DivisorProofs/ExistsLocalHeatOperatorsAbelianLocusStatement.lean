@@ -218,7 +218,7 @@ theorem exists_dlog_add_coboundary_affine : ∀ (E : Type) [Field E] [NumberFiel
     rfl
   obtain ⟨hv, hb⟩ := GlobalTheory.KSAbLocus.tanBasis_of_basis t v' ρ
   rw [hcU] at hv hb
-  haveI : IsOpenImmersion (chart U) := U.2.isOpenImmersion_fromSpec
+  have : IsOpenImmersion (chart U) := U.2.isOpenImmersion_fromSpec
   obtain ⟨t', mm, k, hkU, hkg⟩ := exists_pull_charts (chart U) t
   have h2 : (U.1 : (Sp R).Opens) = PrimeSpectrum.basicOpen (∏ i, tt i) :=
     basicOpen_eq_of_affine (R := CommRingCat.of R) (∏ i, tt i)
@@ -298,7 +298,7 @@ theorem exists_dlog_add_coboundary_affine : ∀ (E : Type) [Field E] [NumberFiel
       δ a O ((t'.G.hom.appLE U'.1 O h).hom r) = 0 := by
     intro a O hO r
     refine GlobalTheory.LogKSBal.ext_valR _ _ fun B _ y hy => ?_
-    haveI : IsIso (chart U') := by
+    have : IsIso (chart U') := by
       show IsIso (isAffineOpen_top (Sp Γ(Sp R, U.1))).fromSpec
       rw [IsAffineOpen.fromSpec_top]
       infer_instance
@@ -914,8 +914,8 @@ theorem isKS_symm_abLocus : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
           fun _ => rfl) hext
     exact LBIso.chartPull (chartPullUnpull P.A.L _ hgi)
       (chartPullSame t.PP.L _ _ _ (𝟙 _) fun _ => (Category.id_comp _).symm) h1
-  haveI : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
-  haveI : CharZero (FractionRing R) :=
+  have : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
+  have : CharZero (FractionRing R) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
   have key := GlobalTheory.T.kodairaSpencer_matrix_transpose_eq_at_polarized_point E H (Sp R) t (bo R c).1 (bo R c) n _ hv hb (FractionRing R) x₀ P.A
     (P.U.gen.inv.left ≫ pullback.fst t.G.hom (ReciprocityTheory.ChartRestriction.G.Out.jK R)) (gpG.congr hsp.symm rfl) hL le_rfl DV Θ₁ hKS

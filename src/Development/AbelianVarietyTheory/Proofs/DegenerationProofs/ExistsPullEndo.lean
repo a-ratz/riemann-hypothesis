@@ -110,7 +110,7 @@ theorem fibGrp : FibGrpSt := by
       have h := hadd ((G - F) z) (F z)
       rw [LinearMap.sub_apply, sub_add_cancel, hG, hF'] at h
       exact mul_eq_right.1 h.symm
-    haveI := u.discrete
+    have := u.discrete
     have hc : Continuous fun w => (⟨(G - F) w, hm w⟩ : u.Λ) :=
       (G - F).continuous_of_finiteDimensional.subtype_mk _
     refine sub_eq_zero.1 (LinearMap.ext fun z => ?_)

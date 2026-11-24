@@ -97,7 +97,7 @@ theorem main : ∀ (G V : Type) [Group G] [AddCommGroup V] [Module ℂ V] (ρ : 
     refine Submodule.span_le.2 ?_
     rintro w ⟨g, v, hv, rfl⟩
     exact T.apply_mem_toSubmodule g (hT v hv)
-  haveI : Module.Finite (MonoidAlgebra ℂ G) ρ.asModule := by
+  have : Module.Finite (MonoidAlgebra ℂ G) ρ.asModule := by
     let t : Finset ρ.asModule := s
     refine ⟨⟨t, ?_⟩⟩
     have h := key (Subrepresentation.ofSubmodule' (Submodule.span (MonoidAlgebra ℂ G) (t : Set ρ.asModule)))
@@ -106,7 +106,7 @@ theorem main : ∀ (G V : Type) [Group G] [AddCommGroup V] [Module ℂ V] (ρ : 
     have hx : x ∈ Subrepresentation.ofSubmodule' (Submodule.span (MonoidAlgebra ℂ G) (t : Set ρ.asModule)) := by
       rw [h]; trivial
     exact hx
-  haveI : IsCoatomic (Subrepresentation ρ) :=
+  have : IsCoatomic (Subrepresentation ρ) :=
     (OrderIso.isCoatomic_iff Subrepresentation.subrepresentationSubmoduleOrderIso).2 inferInstance
   have hbt : (⊥ : Subrepresentation ρ) ≠ ⊤ := by
     intro h
@@ -315,7 +315,7 @@ theorem jacquet_fg : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
       Submodule.span ℂ {w | ∃ g : GL (Fin a) k × GL (Fin b) k, ∃ v ∈ s, w = jac₂ (stdSum h) π g v} = ⊤ := by
   intro k _ _ _ _ a b n h V _ _ π hsm hirr
   classical
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hirr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hirr
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   set e := stdSum h
   set N := unipRad k (two e)
@@ -375,7 +375,7 @@ theorem isCuspidal_of_isSubquotient {n V W : Type} [Fintype n] [DecidableEq n] [
     (hτ : IsCuspidal τ) (h : IsSubquotient π τ) : IsCuspidal π := by
   refine ⟨h.isSmooth hτ.1, fun s d e he => ?_⟩
   obtain ⟨S, f, hf⟩ := GlobalTheory.JacquetExact.isSubquotient_jac e hτ.1 h
-  haveI := hτ.2 s d e he
+  have := hτ.2 s d e he
   exact hf.subsingleton
 
 theorem exists_root_norm {ω : kˣ →* ℂˣ} (hω : IsSmoothChar ω) {b : ℕ} (hb : 0 < b) :
@@ -417,7 +417,7 @@ theorem exists_irreducible_sub {b : ℕ} (hb : 0 < b) {X : Type} [AddCommGroup X
   obtain ⟨ψ, hψ, hψ1⟩ := exists_root_norm hω hb
   have hc' : IsCuspidal (twist ρ (detChar (Fin b) ψ)) := GlobalTheory.LocGL.isCuspidal_twist hρc hψ
   have hsc := GlobalTheory.CuspCoef.isSupercuspidal_of_isCuspidal k b Y _ hc'
-  haveI : Nontrivial Y := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hρi
+  have : Nontrivial Y := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hρi
   obtain ⟨y, hy⟩ := exists_ne (0 : Y)
   obtain ⟨l, hl, hly⟩ := _root_.GlobalTheory.SmoothForm.exists_smooth_form_ne_zero _ _ (twist ρ (detChar (Fin b) ψ)) (fun U hU => by
     obtain ⟨γ, hγ, h⟩ := GlobalTheory.CentralExponent.exists_cong_subset (n := Fin b) hU
@@ -469,9 +469,9 @@ theorem exists_map_jac₂ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   have hτs : IsSmooth τ := (IsSubquotient.of_surjective f hf).isSmooth (isSmooth_jac₂ _ hs)
   have hτc : IsCuspidal (k := k) (n := Fin b) (τ.comp (MonoidHom.inr _ _)) :=
     isCuspidal_of_isSubquotient hJc (IsSubquotient.of_surjective (compMap f _) hf)
-  haveI : Nontrivial X := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτi
-  haveI := GlobalTheory.LocGL.secondCountableTopology_GL k (Fin a)
-  haveI := GlobalTheory.LocGL.secondCountableTopology_GL k (Fin b)
+  have : Nontrivial X := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτi
+  have := GlobalTheory.LocGL.secondCountableTopology_GL k (Fin a)
+  have := GlobalTheory.LocGL.secondCountableTopology_GL k (Fin b)
   obtain ⟨Y, _, _, ρ, hρi, hρc, hι⟩ := exists_irreducible_sub hb (τ.comp (MonoidHom.inr _ _)) hτc fun z hz =>
     GlobalTheory.LocGL.exists_eq_smul_of_isSmooth hτs hτi ⟨τ (1, z), fun g => by
       rw [← Module.End.mul_eq_comp, ← Module.End.mul_eq_comp, ← map_mul, ← map_mul]

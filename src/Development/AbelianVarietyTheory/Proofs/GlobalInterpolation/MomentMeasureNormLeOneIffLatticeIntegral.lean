@@ -82,7 +82,7 @@ noncomputable def incl (p : ℕ) [Fact p.Prime] : ℤ_[p] →+* ℂ_[p] :=
   (algebraMap ℚ_[p] ℂ_[p]).comp PadicInt.Coe.ringHom
 
 theorem continuous_incl : Continuous (incl p) :=
-  (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtype_val
+  (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtypeVal
 
 theorem factorial_mul_binomC (k : ℕ) (x : ℤ_[p]) :
     (k.factorial : ℂ_[p]) * binomC k x
@@ -96,8 +96,8 @@ theorem exists_mahler_expansion {E : Type*} [NormedAddCommGroup E] [NormedSpace 
     [IsUltrametricDist E] [CompleteSpace E] (f : C(ℤ_[p], E)) :
     ∃ t : ℕ → C(ℤ_[p], E), HasSum t f ∧
       ∀ n, ∃ a : E, ∀ x, t n x = ((mahler n x : ℤ_[p]) : ℚ_[p]) • a := by
-  letI : Module ℤ_[p] E := Module.compHom E (algebraMap ℤ_[p] ℚ_[p])
-  haveI : IsBoundedSMul ℤ_[p] E := IsBoundedSMul.of_norm_smul_le fun r x =>
+  let : Module ℤ_[p] E := Module.compHom E (algebraMap ℤ_[p] ℚ_[p])
+  have : IsBoundedSMul ℤ_[p] E := IsBoundedSMul.of_norm_smul_le fun r x =>
     norm_smul_le (r : ℚ_[p]) x
   exact ⟨_, PadicInt.hasSum_mahler f, fun n => ⟨_, fun _ => rfl⟩⟩
 
@@ -243,8 +243,8 @@ theorem measure_eq_of_moments : ∀ (q : ℕ) [Fact q.Prime] (κ : Type) [Fintyp
     funext i
     simp [π, π']
   have := congrArg (fun ν => ν (F.comp π')) hz
-  simp only [ContinuousLinearMap.comp_apply, hF, ContinuousLinearMap.sub_apply,
-    ContinuousLinearMap.zero_apply] at this
+  simp only [ContinuousLinearMap.comp_apply, hF, sub_apply,
+    zero_apply] at this
   exact sub_eq_zero.mp this
 
 end GlobalTheory.MomN
@@ -468,7 +468,7 @@ theorem norm_le_one_iff_latInt : ∀ (q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* �
       · simp [GlobalTheory.MomOne.zc]
     · intro i
       rw [Finset.sum_eq_single i (fun j _ hj => by simp [Ne.symm hj]) (by simp)]
-      simp only [if_true]
+      simp only [ite_true]
       rw [smul_smul, div_eq_mul_inv, mul_comm]
 
 end GlobalTheory.MomN

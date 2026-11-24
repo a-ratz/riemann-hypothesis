@@ -90,7 +90,7 @@ theorem UpperTheory.weil_deligne_rank_one_line :
   have hw : weilD Bw h P ρ σ ((phiD P ρ ^ n) x) = (c ^ (-deg σ) * s) • (phiD P ρ ^ n) x := by
     rw [weilD_apply]
     exact key (phiU P ρ) (phiD P ρ) _ (coe_phiU P ρ) (phiD_actD P ρ _) x c s hc _ hφ hs n _
-  obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_nonzero' (K := ℂ) _ hn).mp hd y
+  obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_ne_zero' (K := ℂ) _ hn).mp hd y
   rw [map_smul, wdRho_mk, hw]
   change d • wdMk P ι ρ ((Dpst P ρ).module.toSMul.smul (c ^ (-deg σ) * s) ((phiD P ρ ^ n) x)) = _
   rw [wdMk_smul, smul_comm]
@@ -116,7 +116,7 @@ private theorem cw_cyc {l : ℕ} [Fact l.Prime] (L : FinExt l) (n : ℤ) :
       rw [← h0.2.2 g]
       rfl
     rw [this]
-    have h2 : Continuous fun z : ℤ_[l] => (z : ℚ_[l]) := continuous_subtype_val
+    have h2 : Continuous fun z : ℤ_[l] => (z : ℚ_[l]) := continuous_subtypeVal
     exact (continuous_algebraMap ℚ_[l] (Om l)).comp (h2.comp (Units.continuous_val.comp h0.1))
   have : (fun g : GQ l => (((cycL L g ^ n : (↥L.1)ˣ) : ↥L.1) : Om l)) =
       fun g => (((cycL L g : (↥L.1)ˣ) : ↥L.1) : Om l) ^ n := by
@@ -132,7 +132,7 @@ private theorem cw_lc {l : ℕ} [Fact l.Prime] (K K' : FinExt l) {C : Type} [Gro
   have ho : IsOpen ((GK K' : Subgroup (GQ l)) : Set (GQ l)) := IntermediateField.fixingSubgroup_isOpen K'.1
   refine (IsLocallyConstant.iff_exists_open _).2 fun x => ?_
   refine ⟨{y | ((x⁻¹ * y : ↥(GK K)) : GQ l) ∈ GK K'}, ?_, ?_, fun y hy => ?_⟩
-  · exact ho.preimage (continuous_subtype_val.comp (continuous_const.mul continuous_id))
+  · exact ho.preimage (continuous_subtypeVal.comp (continuous_const.mul continuous_id))
   · simp
   · have := hχ _ hy
     rw [map_mul, map_inv, inv_mul_eq_one] at this
@@ -151,7 +151,7 @@ private theorem cw_eta {l : ℕ} [Fact l.Prime] (K K' L : FinExt l) (κ χ : ↥
     rw [mul_mul_mul_comm, mul_inv_cancel, mul_one, mul_comm (κ g), mul_inv_cancel_left]
   · have h3 : Continuous fun g => ((((χ g)⁻¹ : (↥L.1)ˣ) : ↥L.1) : Om l) :=
       ((cw_lc K K' χ hK').comp fun u => (((u⁻¹ : (↥L.1)ˣ) : ↥L.1) : Om l)).continuous
-    exact (hκc.mul ((cw_cyc L (-m)).comp continuous_subtype_val)).mul h3
+    exact (hκc.mul ((cw_cyc L (-m)).comp continuous_subtypeVal)).mul h3
 
 private theorem cw_line {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ}
     [Fact l.Prime] (P : LocPrime l) (ι : Om l ≃+* ℂ) {w : HeightOneSpectrum (𝓞 F)} {A : ValuationSubring Ω}

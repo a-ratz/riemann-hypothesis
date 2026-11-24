@@ -309,7 +309,7 @@ theorem _root_.GlobalTheory.ExpImage.solve_mod_pow : ∀ (l : ℕ) [Fact l.Prime
     intro n
     refine isUnit_padicInt_of_not_dvd' _ fun hd => hm ?_
     rw [← toZMod_eq_zero_iff_dvd] at hd
-    haveI : CharP (PowerSeries (ZMod l)) l :=
+    have : CharP (PowerSeries (ZMod l)) l :=
       charP_of_injective_ringHom (PowerSeries.C_injective (R := ZMod l)) l
     obtain ⟨t, ht⟩ : ∃ t, l ^ s = t + 3 := ⟨l ^ s - 3, by have := three_le_prime_pow hlp hs1 hs2; omega⟩
     have hvb : PowerSeries.map PadicInt.toZMod v = 1 + X ^ 2 * (X ^ t * (1 + X)) := by
@@ -1014,7 +1014,7 @@ theorem norm_chi (σ : GQ l) : ‖((LT l).χQ σ : ℚ_[l])‖ = 1 :=
 
 theorem logChi_coe (σ : GQ l) :
     ((logChi LT σ : ℤ_[l]) : ℚ_[l]) = logZl l ((LT l).χQ σ : ℚ_[l]) := by
-  exact congrArg Subtype.val (dif_pos ((GlobalTheory.PadicLogUnits.logZl_hom l).2.2.1 _ (norm_chi LT σ)))
+  exact congrArg Subtype.val (dite_eq_left ((GlobalTheory.PadicLogUnits.logZl_hom l).2.2.1 _ (norm_chi LT σ)))
 
 theorem logChi_mul (σ τ : GQ l) : ((logChi LT (σ * τ) : ℤ_[l]) : ℚ_[l]) =
     ((logChi LT σ : ℤ_[l]) : ℚ_[l]) + ((logChi LT τ : ℤ_[l]) : ℚ_[l]) := by
@@ -1249,7 +1249,7 @@ theorem expStar_of_sum : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] (AI : Loc
     rw [← norm_pos_iff, hlog s hs.1 hs.2 u hg.2.le, hg.2]
     exact zpow_pos hl _
   have hLc : ((logChi LT g : ℤ_[l]) : ℚ_[l]) = logZl l u :=
-    congrArg Subtype.val (dif_pos (hint _ (hn g)))
+    congrArg Subtype.val (dite_eq_left (hint _ (hn g)))
   have hne : ∀ j ∈ Finset.range e, u ^ ((j : ℤ) - e) - 1 ≠ 0 := by
     intro j hj
     have hj' := Finset.mem_range.1 hj
@@ -1407,7 +1407,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P),
       Ideal.span {((l : ℕ) : Ainf l), AI.μ} := geom_mem l _
   have hφ := map_le l _ (frob_mu AI)
   refine ⟨fun q => ?_, fun M n => ⟨n + M, fun k hk => ?_⟩⟩
-  · haveI := (GlobalTheory.Per.AinfComplete.main l AI.μ (mu_not_isUnit AI)).1
+  · have := (GlobalTheory.Per.AinfComplete.main l AI.μ (mu_not_isUnit AI)).1
     obtain ⟨y, hy⟩ := solve _ _ hφ hc q
     refine ⟨y, ?_⟩
     rw [map_mul, frob_mu, ← hy]; ring

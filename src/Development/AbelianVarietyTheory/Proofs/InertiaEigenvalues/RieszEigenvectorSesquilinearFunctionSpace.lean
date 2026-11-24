@@ -96,7 +96,7 @@ theorem riesz_and_eigenvector_of_sesq_on_fun_space : ∀ (X : Type) (C : Submodu
     (∀ f : X → ℂ, f ∈ C → ∃ h : X → ℂ, h ∈ C ∧ ∀ g : X → ℂ, g ∈ C → ip h g = Φ f g) ∧
     (C ≠ ⊥ → ∃ c : ℂ, ∃ e : X → ℂ, e ∈ C ∧ e ≠ 0 ∧ ∀ f : X → ℂ, f ∈ C → Φ f e = c * ip f e) := by
   intro X C hfin ip Φ hl hr hs hp Φl Φr
-  haveI := hfin
+  have := hfin
   obtain ⟨ipa, ips, ipa', ips'⟩ := sesq_rules_of_combination C ip hl hr
   obtain ⟨Φa, Φs, Φa', Φs'⟩ := sesq_rules_of_combination C Φ Φl Φr
   let B : C →ₗ[ℂ] C →ₗ⋆[ℂ] ℂ := LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ)
@@ -164,7 +164,7 @@ theorem riesz_and_eigenvector_of_sesq_on_fun_space : ∀ (X : Type) (C : Submodu
         map_smul' := fun c g => inj _ _ (fun f => by
           rw [hR, Submodule.coe_smul, RingHom.id_apply, Submodule.coe_smul, ips' c _ _ f.2 (R g).2, hR,
             Φs' c _ _ f.2 g.2]) }
-    haveI : Nontrivial C := Submodule.nontrivial_iff_ne_bot.mpr hC
+    have : Nontrivial C := Submodule.nontrivial_iff_ne_bot.mpr hC
     obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue Rl
     obtain ⟨e, he⟩ := hc.exists_hasEigenvector
     refine ⟨c, e, e.2, by rw [ne_eq, Submodule.coe_eq_zero]; exact he.2, fun f hf => ?_⟩

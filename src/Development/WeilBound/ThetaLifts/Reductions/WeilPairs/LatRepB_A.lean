@@ -57,8 +57,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem exists_trace_one (hu : Algebra.Unramified (𝓞 F) (𝓞 E)) : ∃ b : 𝓞 E, Algebra.trace F E (b : E) = 1 := by
   classical
-  haveI : Module.Finite (𝓞 F) (𝓞 E) := Module.Finite.of_restrictScalars_finite ℤ _ _
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite (𝓞 F) (𝓞 E) := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have htop : differentIdeal (𝓞 F) (𝓞 E) = ⊤ := by
     by_contra hn
     obtain ⟨P, hP, hle⟩ := Ideal.exists_le_maximal _ hn
@@ -141,8 +141,8 @@ theorem inertQ_of_fix (h : IsCMExt F E σ) [IsGalois ℚ E] {P : Ideal (𝓞 E)}
     fun P hP h => ⟨hmax.eq_of_le (Ideal.IsPrime.ne_top inferInstance) (by
       rw [Ideal.span_singleton_le_iff_mem, Ideal.under, Ideal.mem_comap]
       simpa using h)⟩
-  haveI := key P hP.isPrime hqP
-  haveI := key Q hQ.isPrime hqQ
+  have := key P hP.isPrime hqP
+  have := key Q hQ.isPrime hqQ
   obtain ⟨g, rfl⟩ := Ideal.exists_smul_eq_of_isGaloisGroup (Ideal.span {(q : ℤ)}) P Q (E ≃ₐ[ℚ] E)
   rw [Ideal.mem_pointwise_smul_iff_inv_smul_mem] at hr ⊢
   have e : g⁻¹ • sgOF σ r = sgOF σ (g⁻¹ • r) := RingOfIntegers.ext (sg_comm h g⁻¹ r)
@@ -154,7 +154,7 @@ theorem exists_move (h : IsCMExt F E σ) (hu : Algebra.Unramified (𝓞 F) (𝓞
   have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h.2.2.1 }
   have : IsGalois F E := inferInstance
   have hσ := sg_sg h
-  haveI : P.IsMaximal := hP
+  have : P.IsMaximal := hP
   have : (P.under (𝓞 F)).IsMaximal := Ideal.isMaximal_under_of_isIntegral_of_isMaximal P
   have hcard := Ideal.card_inertia_eq_ramificationIdxIn (G := E ≃ₐ[F] E) (P.under (𝓞 F)) P
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx (P.under (𝓞 F)) P (E ≃ₐ[F] E),

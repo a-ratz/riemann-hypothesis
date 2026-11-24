@@ -57,8 +57,8 @@ private theorem lv_gen (hP : Loc.LocalPublishedTheorems) {v l : ℕ} [Fact v.Pri
     (k : Type) [Field k] [Finite k] [CharP k l] [Algebra ℤ_[l] k] (κ : H →* kˣ) (hκ : IsOpen (κ.ker : Set H))
     (σ : H) (h1 : κ σ ≠ 1) (h2 : Loc.cycA v l k (φ σ) = 1) (z : H → k) (hz : IsLocallyConstant z)
     (hc : ∀ g h, z (g * h) = z g + (κ g : k) * z h) : ∃ m, ∀ g, z g = (κ g : k) * m - m := by
-  letI : TopologicalSpace k := ⊥
-  haveI : DiscreteTopology k := ⟨rfl⟩
+  let : TopologicalSpace k := ⊥
+  have : DiscreteTopology k := ⟨rfl⟩
   have h1' : (κ σ : k) ≠ 1 := fun h => h1 (Units.ext h)
   have hρ : ∀ g x, Loc.chRep κ g x = (κ g : k) * x := fun _ _ => rfl
   have hlc : IsLocallyConstant κ := by
@@ -90,8 +90,8 @@ private theorem lv_gen (hP : Loc.LocalPublishedTheorems) {v l : ℕ} [Fact v.Pri
     rw [MonoidHom.comp_apply, h2, hρ, ← smul_eq_mul, map_smul, smul_eq_mul, Units.val_one] at this
     by_contra h
     exact h1' (mul_right_cancel₀ h this)
-  rw [e2, z0, z2, if_neg hvl, finrank_bot, finrank_bot] at e1
-  haveI : Subsingleton (H1 (Loc.chRep κ)) := Module.finrank_zero_iff.1 e1
+  rw [e2, z0, z2, ite_eq_right hvl, finrank_bot, finrank_bot] at e1
+  have : Subsingleton (H1 (Loc.chRep κ)) := Module.finrank_zero_iff.1 e1
   have hz1 : z ∈ Z1 (Loc.chRep κ) := ⟨hz.continuous, hc⟩
   have : (Submodule.Quotient.mk ⟨z, hz1⟩ : H1 (Loc.chRep κ)) = 0 := Subsingleton.elim _ _
   rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, mem_coboundaries1] at this
@@ -103,7 +103,7 @@ private theorem lv_dec (hP : Loc.LocalPublishedTheorems) {Ω : Type} [Field Ω] 
     (hκ : IsOpen (κ.ker : Set (Dec (F := ℚ) A))) (σ : Dec (F := ℚ) A) (h1 : κ σ ≠ 1)
     (h2 : algebraMap ℤ_[l] k (cycZ ℚ Ω l σ : ℤ_[l]ˣ) = 1) (z : Dec (F := ℚ) A → k) (hz : IsLocallyConstant z)
     (hc : ∀ g h, z (g * h) = z g + (κ g : k) * z h) : ∃ m, ∀ g, z g = (κ g : k) * m - m := by
-  haveI : Fact v.Prime := ⟨hv⟩
+  have : Fact v.Prime := ⟨hv⟩
   obtain ⟨w, hw, hAw⟩ := GlobalTheory.DecLocal.exists_place_below (p := v) (F := ℚ) A hA
   obtain ⟨j, rfl⟩ := (Loc.decEmb (F := ℚ) (Ω := Ω) (v := v)).1 A w hAw hw
   obtain ⟨φ, hφ, -, -, -, hcyc, -⟩ := ((Loc.decEmb (F := ℚ) (Ω := Ω) (v := v)).2 j).2
@@ -136,14 +136,14 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locVanP :
     · exact ⟨3, 0, by decide, fun g => by simp [Raw.ps]⟩
   have hγr : ∀ g, red (γ g : c.O) * red (D.ps j g : c.O) = red (D.ps i g : c.O) := fun g => by
     rw [← map_mul, ← Units.val_mul, hγ']
-  letI : Algebra ℤ_[l] k := (red.comp (algebraMap ℤ_[l] c.O)).toAlgebra
+  let : Algebra ℤ_[l] k := (red.comp (algebraMap ℤ_[l] c.O)).toAlgebra
   have hl0 : (l : k) = 0 := by
     have hloc := (dvrFacts l c.O).2.2.1
     have hm : (l : c.O) ∈ maximalIdeal c.O := by
       rw [mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O), isUnit_map_iff]
       exact PadicInt.p_nonunit
     simpa using hred _ hm
-  haveI : CharP k l := (CharP.charP_iff_prime_eq_zero hl).2 hl0
+  have : CharP k l := (CharP.charP_iff_prime_eq_zero hl).2 hl0
   let κ : D.Gp p →* kˣ := ((Units.map red.toMonoidHom).comp γ).comp (D.Gp p).subtype
   have hκ : ∀ g : D.Gp p, (κ g : k) = red (γ g : c.O) := fun _ => rfl
   have hker : D.rbar.ker.comap (D.Gp p).subtype ≤ κ.ker := by
@@ -158,7 +158,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locVanP :
     rw [h1, h1, mul_one] at this
     exact this
   refine lv_dec hP hpp hpl (D.pl p) (hD.pl_over p hpp) k κ
-    (Subgroup.isOpen_mono hker (fo.preimage continuous_subtype_val)) ⟨D.sg p, hσ⟩ (fun h => ?_) ?_ z hz hc
+    (Subgroup.isOpen_mono hker (fo.preimage continuous_subtypeVal)) ⟨D.sg p, hσ⟩ (fun h => ?_) ?_ z hz hc
   · have h' : red (γ (D.sg p) : c.O) = 1 := congrArg Units.val h
     have := hγr (D.sg p)
     rw [h', one_mul, lv_red red hred] at this

@@ -81,7 +81,7 @@ theorem isOpen_frames {E : Type} [Field E] [NumberField E] [IsCMField E] (Ψ : F
     unfold FD.dmin FD.lminor
     exact ((hgram τ).matrix_submatrix _ _).matrix_det
   unfold FD.GG
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [Set.ofPred_forall, Set.ofPred_and]
   refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
   · exact isOpen_ne_fun (hmat τ).matrix_det continuous_const
   · exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (hdmin τ i)))

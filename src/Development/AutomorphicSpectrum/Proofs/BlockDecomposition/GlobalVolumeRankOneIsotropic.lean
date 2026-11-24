@@ -227,7 +227,7 @@ theorem fib_ne_zero : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCompactSpa
   have hnull := ae_iff.1 hae
   refine hpos.ne' (measure_mono_null ?_ hnull)
   intro v hv
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   intro hcon
   have h4 := hcon hv.2
   simp only [Pi.zero_apply, ENNReal.ofReal_eq_zero] at h4
@@ -522,22 +522,22 @@ end Meas
 
 theorem fibre_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (μ : Measure (Fin 1 → Fin M → R ⊗[F] E)) (ν : Measure (HermR R σ 1)) (m : HermR R σ 1 → Measure (Fin 1 → Fin M → R ⊗[F] E)), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → IsGramFibFree R σ J 1 μ ν m → ∀ X : Fin 1 → Fin M → R ⊗[F] E, LinearIndependent (R ⊗[F] E) X → gramR R σ J X = 0 → ∀ S : HermR R σ 1, m S ≠ 0 := by
   intro F E _ _ _ _ _ σ hσ M J hJ R _ _ _ _ _ hL μ ν m hμ hν hm X hX hX0 S
-  haveI : IsTopologicalRing R := hL.1
-  haveI : LocallyCompactSpace R := hL.2.1
-  haveI : SecondCountableTopology R := hL.2.2.1
-  haveI : T2Space R := hL.2.2.2.1
+  have : IsTopologicalRing R := hL.1
+  have : LocallyCompactSpace R := hL.2.1
+  have : SecondCountableTopology R := hL.2.2.1
+  have : T2Space R := hL.2.2.2.1
   obtain ⟨tK1, tK2, tK3, tK4, tsc, -, -, tK8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := tK1
-  haveI := tK2
-  haveI := tK3
-  haveI := tK4
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (Fin 1 → Fin M → R ⊗[F] E) := tK8 1 M
+  have := tK1
+  have := tK2
+  have := tK3
+  have := tK4
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fin 1 → Fin M → R ⊗[F] E) := tK8 1 M
   obtain ⟨h1, h2, h3, h4, h5⟩ := HermTop.herm_top F E σ hσ R 1
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
+  have := h1
+  have := h2
+  have := h3
+  have := h4
   obtain ⟨g, hgc, hg⟩ := h5 M J hJ
   have hU := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ R hL
   have hss : ∀ a, sigR R σ (sigR R σ a) = a := HermTop.sigR_sigR R (HermTop.sigma_sigma hσ)
@@ -677,8 +677,8 @@ theorem prod_factor_open : ∀ {ι : Type} [Fintype ι]
     a₀ a hc₀ h1₀ hm₀ hc h1 hm U₀ U hU₀ hU hsU₀ hsU Z₀ Z hZ₀ hZ hs₀ hs ht₀ ht m₀ m hfin₀ hfin
     hi₀ hi hz₀ hz hn₀ hn P hPc hP hPZ
   classical
-  haveI : LocallyCompactSpace ↥U₀ := hU₀.locallyCompactSpace
-  haveI : ∀ i, LocallyCompactSpace ↥(U i) := fun i => (hU i).locallyCompactSpace
+  have : LocallyCompactSpace ↥U₀ := hU₀.locallyCompactSpace
+  have : ∀ i, LocallyCompactSpace ↥(U i) := fun i => (hU i).locallyCompactSpace
   have hmeas₀ : ∀ g, Measurable (a₀ g) := fun g =>
     (hc₀.comp (Continuous.prodMk_right g)).measurable
   have hmeas : ∀ i g, Measurable (a i g) := fun i g =>
@@ -687,9 +687,9 @@ theorem prod_factor_open : ∀ {ι : Type} [Fintype ι]
   let b : ∀ i, G i → ↥(U i) → ↥(U i) := fun i g x => ⟨a i g x.1, hsU i g x.1 x.2⟩
   let E : (↥U₀ × ∀ i, ↥(U i)) → W₀ × ∀ i, W i := Prod.map Subtype.val fun z i => (z i).1
   have he₀ : MeasurableEmbedding (Subtype.val : ↥U₀ → W₀) :=
-    MeasurableEmbedding.subtype_coe hU₀.measurableSet
+    MeasurableEmbedding.subtypeVal hU₀.measurableSet
   have he : ∀ i, MeasurableEmbedding (Subtype.val : ↥(U i) → W i) := fun i =>
-    MeasurableEmbedding.subtype_coe (hU i).measurableSet
+    MeasurableEmbedding.subtypeVal (hU i).measurableSet
   have hEo : IsOpenEmbedding E :=
     hU₀.isOpenEmbedding_subtypeVal.prodMap
       (IsOpenEmbedding.piMap fun i => (hU i).isOpenEmbedding_subtypeVal)
@@ -706,19 +706,19 @@ theorem prod_factor_open : ∀ {ι : Type} [Fintype ι]
     refine measure_mono_null (Set.compl_subset_compl.mpr ?_) hPZ
     rintro ⟨x, z⟩ ⟨h₀, hz'⟩
     exact ⟨(⟨x, h₀.2⟩, fun i => ⟨z i, (hz' i (Set.mem_univ i)).2⟩), rfl⟩
-  haveI : IsFiniteMeasureOnCompacts (m₀.comap (Subtype.val : ↥U₀ → W₀)) :=
-    comap_finite_compacts he₀ continuous_subtype_val (fun y => y.2) (hfin₀)
-  haveI : ∀ i, IsFiniteMeasureOnCompacts ((m i).comap (Subtype.val : ↥(U i) → W i)) := fun i =>
-    comap_finite_compacts (he i) continuous_subtype_val (fun y => y.2) (hfin i)
-  haveI : IsFiniteMeasureOnCompacts (P.comap E) :=
+  have : IsFiniteMeasureOnCompacts (m₀.comap (Subtype.val : ↥U₀ → W₀)) :=
+    comap_finite_compacts he₀ continuous_subtypeVal (fun y => y.2) (hfin₀)
+  have : ∀ i, IsFiniteMeasureOnCompacts ((m i).comap (Subtype.val : ↥(U i) → W i)) := fun i =>
+    comap_finite_compacts (he i) continuous_subtypeVal (fun y => y.2) (hfin i)
+  have : IsFiniteMeasureOnCompacts (P.comap E) :=
     comap_finite_compacts hE hEo.continuous (S := Set.univ) (fun _ => Set.mem_univ _)
       (fun K hK _ => hK.measure_lt_top)
   have hcb₀ : Continuous fun p : G₀ × ↥U₀ => b₀ p.1 p.2 :=
     Continuous.subtype_mk (hc₀.comp (continuous_fst.prodMk
-      (continuous_subtype_val.comp continuous_snd))) _
+      (continuous_subtypeVal.comp continuous_snd))) _
   have hcb : ∀ i, Continuous fun p : G i × ↥(U i) => b i p.1 p.2 := fun i =>
     Continuous.subtype_mk ((hc i).comp (continuous_fst.prodMk
-      (continuous_subtype_val.comp continuous_snd))) _
+      (continuous_subtypeVal.comp continuous_snd))) _
   have hmb₀ : ∀ g, Measurable (b₀ g) := fun g =>
     (hcb₀.comp (Continuous.prodMk_right g)).measurable
   have hmb : ∀ i g, Measurable (b i g) := fun i g =>
@@ -727,7 +727,7 @@ theorem prod_factor_open : ∀ {ι : Type} [Fintype ι]
     hcb₀ (fun x => Subtype.ext (h1₀ x.1)) (fun g h x => Subtype.ext (hm₀ g h x.1))
     hcb (fun i x => Subtype.ext (h1 i x.1)) (fun i g h x => Subtype.ext (hm i g h x.1))
     (Subtype.val ⁻¹' Z₀) (fun i => Subtype.val ⁻¹' Z i)
-    (hZ₀.preimage continuous_subtype_val) (fun i => (hZ i).preimage continuous_subtype_val)
+    (hZ₀.preimage continuous_subtypeVal) (fun i => (hZ i).preimage continuous_subtypeVal)
     (fun g x hx => hs₀ g x.1 hx) (fun i g x hx => hs i g x.1 hx)
     (fun x hx y hy => by
       obtain ⟨g, hg⟩ := ht₀ x.1 ⟨hx, x.2⟩ y.1 ⟨hy, y.2⟩
@@ -764,8 +764,8 @@ theorem prod_factor_open : ∀ {ι : Type} [Fintype ι]
       rintro _ ⟨y, hy, rfl⟩ hmem
       exact hy ⟨hmem.1.1, fun i _ => (hmem.2 i (Set.mem_univ i)).1⟩)
   refine ⟨c, fun f₀ f hf₀ hf => ?_⟩
-  have h := hcf (fun x => f₀ x.1) (fun i x => f i x.1) (hf₀.comp measurable_subtype_coe)
-    (fun i => (hf i).comp measurable_subtype_coe)
+  have h := hcf (fun x => f₀ x.1) (fun i x => f i x.1) (hf₀.comp measurable_subtypeVal)
+    (fun i => (hf i).comp measurable_subtypeVal)
   have hL := lintegral_comap_of_carried hE hcarP fun x => f₀ x.1 * ∏ i, f i (x.2 i)
   have hL₀ := lintegral_comap_of_carried he₀ hcar₀ f₀
   have hLi := fun i => lintegral_comap_of_carried (he i) (hcar i) (f i)
@@ -838,19 +838,19 @@ theorem local_pack_free {F E : Type} [Field F] [NumberField F] [Field E] [Number
         {Y | LinearIndependent (R ⊗[F] E) Y},
       ∃ h : HA R σ J, actW R σ J h X = Y) := by
   obtain ⟨tr, lc, sc, t2, art, red, -⟩ := id hR
-  haveI := tr
-  haveI := lc
-  haveI := sc
-  haveI := t2
+  have := tr
+  have := lc
+  have := sc
+  have := t2
   obtain ⟨tK1, tK2, tK3, tK4, -, -, -, tK8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := tK1
-  haveI := tK2
-  haveI := tK3
-  haveI := tK4
-  haveI : BorelSpace (Fin 1 → Fin M → R ⊗[F] E) := tK8 1 M
+  have := tK1
+  have := tK2
+  have := tK3
+  have := tK4
+  have : BorelSpace (Fin 1 → Fin M → R ⊗[F] E) := tK8 1 M
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam hlam
-  haveI := hW 1 M
-  haveI := hH 1
+  have := hW 1 M
+  have := hH 1
   have hU := GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hσ R hR 1 M
   have hz : (0 : Matrix (Fin 1) (Fin 1) E).map (inclR (F := F) R) = 0 := by
     ext a c
@@ -870,41 +870,41 @@ theorem fact_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have hRI := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   have hRv := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
   obtain ⟨trI, lcI, scI, t2I, -⟩ := id hRI
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hRv v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hRv v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hRv v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v) := fun v => (hRv v).2.2.2.1
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hRv v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hRv v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hRv v).2.2.1
+  have : ∀ v, T2Space (Fv F v) := fun v => (hRv v).2.2.2.1
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have kA := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
   have kI := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   have kV := fun v => _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI := kA.1
-  haveI := kA.2.1
-  haveI := kA.2.2.1
-  haveI := kA.2.2.2.1
-  haveI := kA.2.2.2.2.2.2.2.1 1 M
-  haveI := kI.1
-  haveI := kI.2.1
-  haveI := kI.2.2.1
-  haveI := kI.2.2.2.1
-  haveI := kI.2.2.2.2.2.2.2.1 1 M
-  haveI : ∀ v, IsTopologicalRing (Fv F v ⊗[F] E) := fun v => (kV v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v ⊗[F] E) := fun v => (kV v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v ⊗[F] E) := fun v => (kV v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.1
-  haveI : ∀ v, BorelSpace (Fin 1 → Fin M → Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.2.2.2.2.1 1 M
+  have := kA.1
+  have := kA.2.1
+  have := kA.2.2.1
+  have := kA.2.2.2.1
+  have := kA.2.2.2.2.2.2.2.1 1 M
+  have := kI.1
+  have := kI.2.1
+  have := kI.2.2.1
+  have := kI.2.2.2.1
+  have := kI.2.2.2.2.2.2.2.1 1 M
+  have : ∀ v, IsTopologicalRing (Fv F v ⊗[F] E) := fun v => (kV v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v ⊗[F] E) := fun v => (kV v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v ⊗[F] E) := fun v => (kV v).2.2.1
+  have : ∀ v, T2Space (Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.1
+  have : ∀ v, BorelSpace (Fin 1 → Fin M → Fv F v ⊗[F] E) := fun v => (kV v).2.2.2.2.2.2.2.1 1 M
   have uA := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
   have uI := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (Ainf F)
   have uV := fun v => _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (Fv F v)
-  haveI := uI.1
-  haveI := uI.2.1
-  haveI := uI.2.2.1
-  haveI := uI.2.2.2.1
-  haveI : ∀ v, IsTopologicalGroup (HA (Fv F v) σ J) := fun v => (uV v).1
-  haveI : ∀ v, LocallyCompactSpace (HA (Fv F v) σ J) := fun v => (uV v).2.1
-  haveI : ∀ v, SecondCountableTopology (HA (Fv F v) σ J) := fun v => (uV v).2.2.1
-  haveI : ∀ v, T2Space (HA (Fv F v) σ J) := fun v => (uV v).2.2.2.1
+  have := uI.1
+  have := uI.2.1
+  have := uI.2.2.1
+  have := uI.2.2.2.1
+  have : ∀ v, IsTopologicalGroup (HA (Fv F v) σ J) := fun v => (uV v).1
+  have : ∀ v, LocallyCompactSpace (HA (Fv F v) σ J) := fun v => (uV v).2.1
+  have : ∀ v, SecondCountableTopology (HA (Fv F v) σ J) := fun v => (uV v).2.2.1
+  have : ∀ v, T2Space (HA (Fv F v) σ J) := fun v => (uV v).2.2.2.1
   have LI := local_pack_free σ hσ J hJ (Ainf F) hRI h₀ b laminf hinf.1 minf hminf
   have LV := fun v => local_pack_free σ hσ J hJ (Fv F v) (hRv v) h₀ b (lam v) (hlam v).1 (m v) (hm v)
   obtain ⟨cI, cF, cV, hlat, hint, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b 1 M
@@ -921,7 +921,7 @@ theorem fact_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have cAV := fun v => ((uV v).2.2.2.2.2 1).1
   have cAA := (uA.2.2.2.2.2 1).1
   set P := (I.restrict (intOff b S)).map (FactS.pr S) with hPdef
-  haveI hPc : IsFiniteMeasureOnCompacts P := ⟨fun K hK => by
+  have hPc : IsFiniteMeasureOnCompacts P := ⟨fun K hK => by
     rw [hPdef, Measure.map_apply hprm hK.isClosed.measurableSet,
       Measure.restrict_apply (hprm hK.isClosed.measurableSet)]
     exact FactS.preimage_lt_top σ hσ b S I K hK⟩

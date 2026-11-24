@@ -239,21 +239,21 @@ def resForm (h : V ≤ U) {ε : Γ(X, V) →+* R} {ε' : Γ(X, U) →+* R} (hε 
 theorem exists_extend [F.IsQuasicoherent] (hU : IsAffineOpen U) (hV : IsAffineOpen V) (h : V ≤ U)
     {ε : Γ(X, V) →+* R} {ε' : Γ(X, U) →+* R} (hε : ∀ a, ε (resG X h a) = ε' a) (l : Γ(F, U) →ₛₗ[ε'] R) :
     ∃ μ : Γ(F, V) →ₛₗ[ε] R, ∀ s, μ (resM F h s) = l s := by
-  letI := QCoh.resAlgebra h
-  letI := QCoh.resModule F h
-  haveI := QCoh.res_isScalarTower F h
-  letI : Module Γ(X, V) R := Module.compHom R ε
-  letI : Module Γ(X, U) R := Module.compHom R ε'
-  haveI : IsScalarTower Γ(X, U) Γ(X, V) R := .of_algebraMap_smul fun a x => congrArg (· * x) (hε a)
+  let := QCoh.resAlgebra h
+  let := QCoh.resModule F h
+  have := QCoh.res_isScalarTower F h
+  let : Module Γ(X, V) R := Module.compHom R ε
+  let : Module Γ(X, U) R := Module.compHom R ε'
+  have : IsScalarTower Γ(X, U) Γ(X, V) R := .of_algebraMap_smul fun a x => congrArg (· * x) (hε a)
   let l' : Γ(F, U) →ₗ[Γ(X, U)] R := ⟨⟨l, l.map_add⟩, l.map_smulₛₗ⟩
   let μ := (QCoh.isBaseChange_resLinear F hU hV h).lift l'
   exact ⟨⟨⟨μ, μ.map_add⟩, μ.map_smul⟩, fun s => (QCoh.isBaseChange_resLinear F hU hV h).lift_eq l' s⟩
 
 theorem form_ext [F.IsQuasicoherent] (hU : IsAffineOpen U) (hV : IsAffineOpen V) (h : V ≤ U)
     {ε : Γ(X, V) →+* R} {μ μ' : Γ(F, V) →ₛₗ[ε] R} (H : ∀ s, μ (resM F h s) = μ' (resM F h s)) : μ = μ' := by
-  letI := QCoh.resAlgebra h
-  letI := QCoh.resModule F h
-  haveI := QCoh.res_isScalarTower F h
+  let := QCoh.resAlgebra h
+  let := QCoh.resModule F h
+  have := QCoh.res_isScalarTower F h
   refine LinearMap.ext fun t => (QCoh.isBaseChange_resLinear F hU hV h).inductionOn t
     H (fun a t ht => ?_) fun a b ha hb => ?_
   · rw [μ.map_smulₛₗ, μ'.map_smulₛₗ, ht]

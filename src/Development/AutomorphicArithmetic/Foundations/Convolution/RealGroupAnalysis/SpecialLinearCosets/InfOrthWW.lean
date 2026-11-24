@@ -171,7 +171,7 @@ private theorem cols_add (p q : (Fin 2 → Kv v) × (Fin 2 → Kv v)) :
 private theorem int_sb {a : M2 v → ℂ} (ha : a ∈ SB (M2 v)) :
     Integrable (fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => a (cols p.1 p.2)) ((μ2 v).prod (μ2 v)) := by
   obtain ⟨h1, h2⟩ := GroundTheory.LocalField.mem_schwartzBruhat.1 ha
-  haveI : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
+  have : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
   exact (h1.continuous.comp colsH.continuous).integrable_of_hasCompactSupport (h2.comp_homeomorph colsH)
 
 private noncomputable def IMl : SB (M2 v) →ₗ[ℂ] ℂ where
@@ -189,7 +189,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.invFn :
     ∀ (F : Type) [Field F] [NumberField F] (v : P F) (ℓ : SB (M2 v) →ₗ[ℂ] ℂ), (∀ (y : M2 v) (a a' : SB (M2 v)), (∀ m, a'.1 m = a.1 (m + y)) → ℓ a' = ℓ a) →
       ∃ c : ℂ, ∀ a : SB (M2 v), ℓ a = c * IM a.1 := by
   intro F _ _ v ℓ hℓ
-  haveI : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
+  have : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
   have hI : ∀ (y : M2 v) (a a' : SB (M2 v)), (∀ m, a'.1 m = a.1 (m + y)) → IM a'.1 = IM a.1 := by
     intro y a a' h
     have e : (fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => a'.1 (cols p.1 p.2)) =
@@ -225,7 +225,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.invFn :
     have hfin : ((μ2 v).prod (μ2 v)) S ≠ ⊤ := hSc.measure_lt_top.ne
     have : ((μ2 v).prod (μ2 v)).real S ≠ 0 := ENNReal.toReal_ne_zero.2 ⟨hpos, hfin⟩
     simpa using this
-  haveI : T2Space (Multiplicative (M2 v)) := inferInstanceAs (T2Space (M2 v))
+  have : T2Space (Multiplicative (M2 v)) := inferInstanceAs (T2Space (M2 v))
   obtain ⟨c, hc⟩ := ifnAbs (G := Multiplicative (M2 v)) (lgrp F v).2 ℓ IMl
     (fun y a a' h => hℓ (Multiplicative.toAdd y) a a' h)
     (fun y a a' h => hI (Multiplicative.toAdd y) a a' h)
@@ -251,7 +251,7 @@ private theorem continuous_form {R : Type} [CommRing R] [TopologicalSpace R] [Is
   fun_prop
 
 private theorem continuous_psi {F : Type} [Field F] [NumberField F] : Continuous (ψ : A F → ℂ) :=
-  continuous_subtype_val.comp (continuous_adelicChar (K := F))
+  continuous_subtypeVal.comp (continuous_adelicChar (K := F))
 
 private theorem norm_psi {F : Type} [Field F] [NumberField F] (x : A F) : ‖ψ x‖ = 1 :=
   Circle.norm_coe _
@@ -369,7 +369,7 @@ private def colsH : ((Fin 2 → Kv v) × (Fin 2 → Kv v)) ≃ₜ M2 v where
 private theorem integrable_cols {b : M2 v → ℂ} (hb : b ∈ SB (M2 v)) {g : (Fin 2 → Kv v) × (Fin 2 → Kv v) → ℂ}
     (hg : Continuous g) :
     Integrable (fun p => b (cols p.1 p.2) * g p) ((μ2 v).prod (μ2 v)) := by
-  haveI : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
+  have : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
   have hc : Continuous fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => b (cols p.1 p.2) :=
     hb.1.continuous.comp (colsH (v := v)).continuous
   have hs : HasCompactSupport fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => b (cols p.1 p.2) :=
@@ -422,7 +422,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.ptW :
     have := (T ⟨a, ha⟩).2
     rwa [hT ⟨a, ha⟩] at this
   obtain ⟨-, -, hadd, hlc, -, -⟩ := UpperTheory.ConvolutionTheory.R2.I.psiLaws F v
-  haveI : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
+  have : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
   have hcont : Continuous fun p : (Fin 2 → Kv v) × (Fin 2 → Kv v) => ψl v (BM (cols p.1 p.2) X) := by
     simp only [bm_cols]
     exact hlc.continuous.comp (cont_lin _ _ _ _)

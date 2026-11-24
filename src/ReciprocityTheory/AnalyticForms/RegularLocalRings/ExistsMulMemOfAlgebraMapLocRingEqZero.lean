@@ -143,8 +143,8 @@ theorem stalkIdeal_eq (Z : W.IdealSheafData) (U V : W.affineOpens) (x : W) (hU :
 theorem exists_unit_mul_mem_of_germ_mem {V : W.Opens} (hV : IsAffineOpen V) (x : W) (hx : x ∈ V)
     (I : Ideal Γ(W, V)) {t : Γ(W, V)} (ht : W.presheaf.germ V x hx t ∈ I.map (W.presheaf.germ V x hx).hom) :
     ∃ d : Γ(W, V), IsUnit (W.presheaf.germ V x hx d) ∧ d * t ∈ I := by
-  letI := TopCat.Presheaf.algebra_section_stalk W.presheaf (⟨x, hx⟩ : V)
-  haveI := hV.isLocalization_stalk ⟨x, hx⟩
+  let := TopCat.Presheaf.algebra_section_stalk W.presheaf (⟨x, hx⟩ : V)
+  have := hV.isLocalization_stalk ⟨x, hx⟩
   have ht' : algebraMap Γ(W, V) (W.presheaf.stalk x) t ∈
       Ideal.map (algebraMap Γ(W, V) (W.presheaf.stalk x)) I := ht
   obtain ⟨⟨⟨a, ha⟩, ⟨s, hs⟩⟩, h⟩ := (IsLocalization.mem_map_algebraMap_iff
@@ -169,7 +169,7 @@ theorem isBranch_of_germ {T : Set W} (hT : IsClosed T) {U V : W.Opens} {s : Γ(W
     IsBranchH T s' y C := by
   unfold IsBranchH at hb ⊢
   obtain ⟨hC, hyC, hirr, hηU, hηZ⟩ := hb
-  obtain ⟨U₁, hy1, t, ht⟩ := W.presheaf.germ_exist u
+  obtain ⟨U₁, hy1, t, ht⟩ := W.presheaf.exists_germ_eq u
   have e1 : W.presheaf.germ (U ⊓ U₁) y (show y ∈ U ⊓ U₁ from ⟨hyU, hy1⟩)
       (W.presheaf.map (homOfLE inf_le_left).op s * W.presheaf.map (homOfLE inf_le_right).op t) =
       W.presheaf.germ U y hyU s * u := by
@@ -203,7 +203,7 @@ theorem exists_nbhd_zeroLocus {U V : W.Opens} {x : W} (hxU : x ∈ U) (hxV : x �
     (s' : Γ(W, V)) (u : W.presheaf.stalk x) (hu : IsUnit u)
     (heq : W.presheaf.germ V x hxV s' = W.presheaf.germ U x hxU s * u) :
     ∃ O : W.Opens, x ∈ O ∧ ∀ z ∈ O, (z ∈ W.zeroLocus {s} ↔ z ∈ W.zeroLocus {s'}) := by
-  obtain ⟨U₁, hx1, t, ht⟩ := W.presheaf.germ_exist u
+  obtain ⟨U₁, hx1, t, ht⟩ := W.presheaf.exists_germ_eq u
   have hxt : x ∈ W.basicOpen t := (Scheme.mem_basicOpen _ _ x hx1).2 (by rw [ht]; exact hu)
   have e1 : W.presheaf.germ (U ⊓ U₁) x ⟨hxU, hx1⟩
       (W.presheaf.map (homOfLE inf_le_left).op s * W.presheaf.map (homOfLE inf_le_right).op t) =
@@ -236,7 +236,7 @@ section Chart
 variable {s : W ⟶ Spec (.of ℂ)}
 
 theorem secHom_surjective (P : AffPres s) : Function.Surjective P.secHom := by
-  haveI : IsIso P.iso.hom.appTop := inferInstanceAs (IsIso (P.iso.hom.app ⊤))
+  have : IsIso P.iso.hom.appTop := inferInstanceAs (IsIso (P.iso.hom.app ⊤))
   unfold AffPres.secHom
   simp only [RingHom.coe_comp]
   exact (ConcreteCategory.bijective_of_isIso _).2.comp ((ConcreteCategory.bijective_of_isIso _).2.comp
@@ -262,7 +262,7 @@ theorem germ_unit_iff (P : AffPres s) (y : W) (hy : y ∈ P.V) (hc : IsClosed ({
     (g : MvPolynomial (Fin P.n) ℂ) :
     IsUnit (W.presheaf.germ P.V y hy (P.secHom g)) ↔ eval (P.coord y hy) g ≠ 0 := by
   obtain ⟨ψ, hψ⟩ := P.exists_stalkEquiv y hy hc
-  haveI : Nontrivial (locRing P.K (P.coord y hy)) := ψ.symm.toEquiv.nontrivial
+  have : Nontrivial (locRing P.K (P.coord y hy)) := ψ.symm.toEquiv.nontrivial
   rw [← isUnit_algebraMap_locRing_iff P.K (P.coord y hy) (eval_eq_zero_of_mem_of_nontrivial_locRing _ _) g,
     ← hψ g]
   exact ⟨fun h => h.map ψ, fun h => by simpa using h.map ψ.symm⟩

@@ -241,9 +241,9 @@ theorem cov_blow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
   have hρ1 : ∀ α, ψ₁ (i₁ α) = i₃ (Polynomial.toLaurent α) := fun α => RingHom.congr_fun hψ₁ α
   have hρ2 : ∀ β, ψ₂ (i₂ β) = i₃ (LaurentPolynomial.invert (Polynomial.toLaurent β)) :=
     fun β => RingHom.congr_fun hψ₂ β
-  letI : Algebra A T₁ := (i₁.comp Polynomial.C).toAlgebra
-  letI : Algebra A T₂ := (i₂.comp Polynomial.C).toAlgebra
-  letI : Algebra A T₃ := (i₃.comp LaurentPolynomial.C).toAlgebra
+  let : Algebra A T₁ := (i₁.comp Polynomial.C).toAlgebra
+  let : Algebra A T₂ := (i₂.comp Polynomial.C).toAlgebra
+  let : Algebra A T₃ := (i₃.comp LaurentPolynomial.C).toAlgebra
   have c1' : ∀ a : A, i₁ (algebraMap A (Polynomial A) a) = algebraMap A T₁ a := fun a => by
     rw [Polynomial.algebraMap_eq]; rfl
   have c2' : ∀ a : A, i₂ (algebraMap A (Polynomial A) a) = algebraMap A T₂ a := fun a => by
@@ -447,8 +447,8 @@ theorem St.next (p : ℕ) [Fact p.Prime] {A : Type} [CommRing A] {r : ℕ → A}
       Splits p (algebraMap A s.G (r 0)) (f : s.G →+* s'.G) := by
   obtain ⟨B, _, _, hB, hc, h1, h2, h3⟩ := cov_step p s.G (fun k => algebraMap A s.G (r k)) s.pf
     (fun k => by rw [← map_pow, hr k])
-  letI : Algebra A B := ((algebraMap s.G B).comp (algebraMap A s.G)).toAlgebra
-  haveI : IsScalarTower A s.G B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra A B := ((algebraMap s.G B).comp (algebraMap A s.G)).toAlgebra
+  have : IsScalarTower A s.G B := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact ⟨⟨B, hB, Leaf.cov_comp p A s.G B r hA s.pf hr s.cov hc⟩, IsScalarTower.toAlgHom A s.G B, h1, h2, h3⟩
 
 theorem tower_seq : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ → A), Pf p A → IsRt p r → ∃ (G : ℕ → Type) (_ : ∀ n, CommRing (G n)) (_ : ∀ n, Algebra A (G n)) (f : ∀ n, G n →ₐ[A] G (n + 1)), (∀ n, Pf p (G n) ∧ Cov p r (G n) ∧ AICm (f n : G n →+* G (n + 1)) ∧ VALm (algebraMap A (G n) (r 0)) (f n : G n →+* G (n + 1)) ∧ Splits p (algebraMap A (G n) (r 0)) (f n : G n →+* G (n + 1))) ∧ Function.Bijective (algebraMap A (G 0)) := by

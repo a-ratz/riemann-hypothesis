@@ -220,7 +220,7 @@ theorem UpperTheory.Reformulated.B.QuotientBasisFiniteDimensional.qb_fd :
   intro l _ ι _ f
   refine ⟨IntermediateField.adjoin ℚ_[l] (Set.range f), ?_, fun i =>
     IntermediateField.subset_adjoin ℚ_[l] (Set.range f) ⟨i, rfl⟩⟩
-  haveI : Finite (Set.range f) := (Set.finite_range f).to_subtype
+  have : Finite (Set.range f) := (Set.finite_range f).to_subtype
   exact IntermediateField.finiteDimensional_adjoin fun x _ =>
     Algebra.IsIntegral.isIntegral x
 end -- clump:auto
@@ -240,7 +240,7 @@ theorem UpperTheory.Reformulated.B.FiniteModuleImageInFiniteExtension.qb_fdmod :
   intro l _ M _ _ hM f
   obtain ⟨S, hS⟩ := hM.fg_top
   have hfin : (f '' (S : Set M)).Finite := S.finite_toSet.image _
-  haveI : Finite (f '' (S : Set M)) := hfin.to_subtype
+  have : Finite (f '' (S : Set M)) := hfin.to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] (f '' (S : Set M)), ?_, ?_⟩
   · exact IntermediateField.finiteDimensional_adjoin
       (fun x _ => Algebra.IsIntegral.isIntegral x)
@@ -374,7 +374,7 @@ private theorem qb_ring [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O]
         linear_combination (-x⁻¹) * hd' + algebraMap O _ d * h5
       rw [h4, norm_mul, norm_neg, norm_mul, norm_inv, h1, inv_one, one_mul]
       exact (mul_le_of_le_one_right (norm_nonneg _) (qb_le d)).trans_lt hc
-  haveI : IsLocalRing A := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
+  have : IsLocalRing A := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
     rw [hu, hu]
     by_contra hn
     push Not at hn
@@ -383,15 +383,15 @@ private theorem qb_ring [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O]
     simp at h1
   have hm : ∀ a : A, a ∈ maximalIdeal A ↔ ‖(a : PadicAlgCl l)‖ < 1 := fun a => by
     rw [mem_maximalIdeal, mem_nonunits_iff, hu, not_not]
-  haveI : Module.Finite ℤ_[l] (integralClosure ℤ_[l] K) := IsIntegralClosure.finite ℤ_[l] ℚ_[l] K _
+  have : Module.Finite ℤ_[l] (integralClosure ℤ_[l] K) := IsIntegralClosure.finite ℤ_[l] ℚ_[l] K _
   let j : A →ₗ[ℤ_[l]] integralClosure ℤ_[l] K :=
     { toFun := fun a => ⟨⟨a.1, a.2.1⟩, (isIntegral_algHom_iff (K.val.restrictScalars ℤ_[l]) Subtype.val_injective).1
         ((qb_intIff _).2 (qb_le' a.2.2.choose_spec))⟩
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  haveI : Module.Finite ℤ_[l] A := Module.Finite.of_injective j fun a b h =>
+  have : Module.Finite ℤ_[l] A := Module.Finite.of_injective j fun a b h =>
     Subtype.ext (congrArg (fun z : integralClosure ℤ_[l] K => ((z : K) : PadicAlgCl l)) h)
-  haveI : Module.Finite O A := Module.Finite.of_restrictScalars_finite ℤ_[l] O A
+  have : Module.Finite O A := Module.Finite.of_restrictScalars_finite ℤ_[l] O A
   refine ⟨A, co_finite O O A fun x => ?_, fun _ => Iff.rfl, hm⟩
   obtain ⟨c, hc⟩ := x.2.2
   exact ⟨c, (hm _).2 hc⟩
@@ -450,7 +450,7 @@ private theorem qb_field {l : ℕ} [Fact l.Prime] (F : GFrame l) {n : ℕ} (ρ :
     rw [← (hP v g).2 i]
     simp only [Units.val_mul, Matrix.mul_apply]
     rfl
-  haveI : CompactSpace F.G₀ := isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
+  have : CompactSpace F.G₀ := isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   obtain ⟨K₁, h₁, hK₁⟩ := GlobalTheory.CompactRepField.exists_finiteDimensional_entries_mem l F.G₀ n ρ hρ
   obtain ⟨K₂, h₂, hK₂⟩ := qb_fd fun x : F.Vl × Fin n × Fin n => (P x.1).val x.2.1 x.2.2
   obtain ⟨K₃, h₃, hK₃⟩ := qb_fd fun x : F.Vl × Fin n × Fin n => (P x.1).inv x.2.1 x.2.2
@@ -572,8 +572,8 @@ theorem UpperTheory.V.W.exists_determinantPair_over_algebraicIntegers :
       rfl
     · rw [← hp, ← hf2]
       rfl
-    · letI : Algebra ℤ_[l] B.B := ((algebraMap O B.B).comp (algebraMap ℤ_[l] O)).toAlgebra
-      haveI : IsScalarTower ℤ_[l] O B.B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    · let : Algebra ℤ_[l] B.B := ((algebraMap O B.B).comp (algebraMap ℤ_[l] O)).toAlgebra
+      have : IsScalarTower ℤ_[l] O B.B := IsScalarTower.of_algebraMap_eq fun _ => rfl
       have hmem : ∀ x, f' x ∈ A := fun x => by
         obtain ⟨c, hc⟩ := IsCO.res_surj (O := O) x
         refine (hA _).2 ⟨(le_sup_left : K ≤ _) (hK x), c, ?_⟩
@@ -589,18 +589,18 @@ theorem UpperTheory.V.W.exists_determinantPair_over_algebraicIntegers :
           exact hf1'
       · refine MonoidHom.ext fun g => Units.ext (Subtype.ext ?_)
         exact congrArg Units.val (DFunLike.congr_fun ((hf2' v i).trans (hp v i).symm) g)
-  haveI : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=
+  have : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=
     (IsFractionRing.comap_isAlgebraic_iff (K := ℚ_[l])).2 inferInstance
   have hinj : Function.Injective (algebraMap ℤ_[l] O) := by
     refine Function.Injective.of_comp (f := algebraMap O (PadicAlgCl l)) fun a b h => ?_
     simp only [Function.comp_apply, ← IsScalarTower.algebraMap_apply] at h
     simp only [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l)] at h
     exact IsFractionRing.injective ℤ_[l] ℚ_[l] ((algebraMap ℚ_[l] (PadicAlgCl l)).injective h)
-  haveI : Algebra.IsAlgebraic O (PadicAlgCl l) := Algebra.IsAlgebraic.extendScalars hinj
+  have : Algebra.IsAlgebraic O (PadicAlgCl l) := Algebra.IsAlgebraic.extendScalars hinj
   have fin : ∀ f : B.B →ₐ[O] PadicAlgCl l,
       ∃ K : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] K ∧ ∀ x, f x ∈ K := fun f => by
-    haveI := exists_algebraicPoint_of_groupDeterminant O B.B (PadicAlgCl l) f
-    haveI : Module.Finite ℤ_[l] f.range := Module.Finite.trans O f.range
+    have := exists_algebraicPoint_of_groupDeterminant O B.B (PadicAlgCl l) f
+    have : Module.Finite ℤ_[l] f.range := Module.Finite.trans O f.range
     obtain ⟨K, hK, h⟩ := qb_fdmod (f.range.val.toLinearMap.restrictScalars ℤ_[l])
     exact ⟨K, hK, fun x => h ⟨f x, x, rfl⟩⟩
   obtain ⟨f, hf, -⟩ := main ⊥ inferInstance

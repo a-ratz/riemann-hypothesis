@@ -98,17 +98,17 @@ theorem _root_.GlobalTheory.DI.StalkKer.stalkMap_surjective_ker : ∀ (p : ℕ) 
       have hu : IsUnit ((p : ℕ) : O) := Ideal.span_singleton_eq_top.1 hT
       have h0 : IsUnit (0 : O) := hsq ▸ hu.pow 2
       exact zero_ne_one (isUnit_zero_iff.1 h0)
-    haveI : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
-    haveI : IsLocalRing (O ⧸ I) :=
+    have : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
+    have : IsLocalRing (O ⧸ I) :=
       IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
-    haveI hloc : IsLocalHom (Ideal.Quotient.mk I) :=
+    have hloc : IsLocalHom (Ideal.Quotient.mk I) :=
       IsLocalHom.of_surjective (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
     have hpQ : ((p : ℕ) : O ⧸ I) = 0 := by
       rw [← map_natCast (Ideal.Quotient.mk I)]
       exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span rfl)
-    haveI : CharP (O ⧸ I) p := ringChar.of_eq (CharP.ringChar_of_prime_eq_zero hp.out hpQ)
+    have : CharP (O ⧸ I) p := ringChar.of_eq (CharP.ringChar_of_prime_eq_zero hp.out hpQ)
     let q : O ⟶ CommRingCat.of (O ⧸ I) := CommRingCat.ofHom (Ideal.Quotient.mk I)
-    haveI : IsLocalHom q.hom := hloc
+    have : IsLocalHom q.hom := hloc
     let a : Spec (CommRingCat.of (O ⧸ I)) ⟶ Y := Spec.map q ≫ Y.fromSpecStalk (π y)
     let b : Spec (CommRingCat.of (O ⧸ I)) ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp (ZMod p) :=
       Spec.map (CommRingCat.ofHom (ZMod.castHom (dvd_refl p) (O ⧸ I)))

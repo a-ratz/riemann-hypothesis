@@ -95,8 +95,8 @@ theorem hint_eq (K K' : Subgroup G) (hle : K' ≤ K) (hidx : K'.relIndex K ≠ 0
     rw [hq]
     obtain ⟨s, hs⟩ := QuotientGroup.mk_out_eq_mul S q.out
     rw [hs, hrS _ s.2]
-  haveI : Finite (S ⧸ K'.subgroupOf S) := Nat.finite_of_card_ne_zero h1
-  letI : Fintype (S ⧸ K'.subgroupOf S) := Fintype.ofFinite _
+  have : Finite (S ⧸ K'.subgroupOf S) := Nat.finite_of_card_ne_zero h1
+  let : Fintype (S ⧸ K'.subgroupOf S) := Fintype.ofFinite _
   have h3 : ∑ᶠ q : G ⧸ K', u ((e q).1).out =
       ∑ᶠ x : (G ⧸ S) × (S ⧸ K'.subgroupOf S), u x.1.out :=
     finsum_comp_equiv e (f := fun x => u x.1.out)

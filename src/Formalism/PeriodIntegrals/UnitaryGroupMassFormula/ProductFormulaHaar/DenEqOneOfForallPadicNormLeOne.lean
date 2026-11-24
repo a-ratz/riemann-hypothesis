@@ -85,7 +85,7 @@ theorem den_eq_one_of_forall_padicNorm_le_one {r : ℚ}
     (h : ∀ q : ℕ, q.Prime → padicNorm q r ≤ 1) : r.den = 1 := by
   by_contra hd
   obtain ⟨q, hq, hqd⟩ := Nat.exists_prime_and_dvd hd
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   exact (padicNorm_le_one_iff_not_dvd_den r).1 (h q hq) hqd
 
 theorem padicNorm_le_one_of_den_eq_one {q : ℕ} [Fact q.Prime] {a : ℚ} (ha : a.den = 1) :
@@ -108,7 +108,7 @@ theorem den_sub_sum_eq_one {ι : Type*} (ℓ : ι → ℕ) (hℓ : ∀ i, (ℓ i
   classical
   apply den_eq_one_of_forall_padicNorm_le_one
   intro q hq
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hsum : ∀ s : Finset ι, (∀ i ∈ s, padicNorm q (a i) ≤ 1) →
       padicNorm q (∑ i ∈ s, a i) ≤ 1 :=
     fun s hs => Finset.sum_induction _ (fun x => padicNorm q x ≤ 1)
@@ -134,7 +134,7 @@ theorem exp_two_pi_of_den_eq_one {a : ℚ} (ha : a.den = 1) :
     Complex.exp (2 * Real.pi * Complex.I * (a : ℂ)) = 1 := by
   have h : (a : ℂ) = ((a.num : ℤ) : ℂ) := by
     calc (a : ℂ) = (((a.num : ℤ) : ℚ) : ℂ) :=
-          congrArg (fun x : ℚ => (x : ℂ)) (Rat.coe_int_num_of_den_eq_one ha).symm
+          congrArg (fun x : ℚ => (x : ℂ)) (Rat.intCast_num_of_den_eq_one ha).symm
       _ = ((a.num : ℤ) : ℂ) := Rat.cast_intCast _
   rw [h]
   exact exp_two_pi_int _
@@ -177,7 +177,7 @@ theorem finprod_exp {ι : Type*} (ℓ : ι → ℕ) (hℓ : ∀ i, (ℓ i).Prime
       Complex.exp (2 * Real.pi * Complex.I * (t : ℂ)) := by
   refine finprod_exp_of_padicNorm ℓ hℓ a ha fib hfib hfin t ?_
   intro q hq
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have h := ht q
   have e : ‖((t - ∑ i ∈ fib q, a i : ℚ) : ℚ_[q])‖ = _ := Padic.eq_padicNorm (t - ∑ i ∈ fib q, a i)
   have h' : ((padicNorm q (t - ∑ i ∈ fib q, a i) : ℚ) : ℝ) ≤ 1 := by

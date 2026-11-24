@@ -89,9 +89,9 @@ private theorem free_quotient_base_change (S T S' : Type) [CommRing S] [CommRing
 theorem UpperTheory.V.Pa.BC.free_bc :
     ∀ (O O' : Type) [CommRing O] [CommRing O'] [Algebra O O'] [Module.Finite O O'] (S R : Type) [CommRing S] [Algebra O S] [IsNoetherianRing S] [CommRing R] [Algebra O R] [IsNoetherianRing R] (s : S →ₐ[O] R) (M : Type) [AddCommGroup M] [Module R M] (I : Ideal S) (rk : ℕ) (e : M ≃+ (Fin rk → S ⧸ I)), (∀ z m, e (s z • m) = z • e m) → ∀ (S' : Type) [CommRing S'] (τ : Til O O' S ≃+* S') (I' : Ideal S'), I' = I.map ((τ : Til O O' S →+* S').comp (Til.ι O O' S)) → ∃ e' : Til O O' R ⊗[R] M ≃+ (Fin rk → S' ⧸ I'), ∀ z m, e' (Til.map O' s z • m) = τ z • e' m := by
   intro O O' _ _ _ _ S R _ _ _ _ _ _ s M _ _ I rk e he S' _ τ I' hI
-  letI : Module S M := Module.compHom M s.toRingHom
+  let : Module S M := Module.compHom M s.toRingHom
   let eL : M ≃ₗ[S] (Fin rk → S ⧸ I) := e.toLinearEquiv (fun c x => he c x)
-  haveI : Module.Finite S M := Module.Finite.equiv eL.symm
+  have : Module.Finite S M := Module.Finite.equiv eL.symm
   obtain ⟨ε, -, hε⟩ := BC.til_mod O O' S R s M (fun a m => rfl)
   obtain ⟨f, hf⟩ := free_quotient_base_change S (Til O O' S) S' τ I rk M eL I' (by rw [Til.algebraMap_eq]; exact hI)
   refine ⟨ε.symm.trans f, ?_⟩

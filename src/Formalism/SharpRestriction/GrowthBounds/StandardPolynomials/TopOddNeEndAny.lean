@@ -62,7 +62,7 @@ variable {X : Loc} [Fact X.p.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDisc
 theorem mono_two (v1 v2 : VarH X) (a b : ℕ) :
     (monomial (Finsupp.single v1 a + Finsupp.single v2 b) (1 : KK O) : RHH O X) =
       MvPolynomial.X v1 ^ a * MvPolynomial.X v2 ^ b := by
-  rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul, one_mul]
+  rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul]
 
 theorem softMk (S : UniformizedDVR X.p O) (hS : S.SqP) (hD : D1num X) (h2 : 2 ≤ numSeg X.TT) (C0 CE1 CE2 : ℝ) (a : IM X) :
     SoftOK S.w (fMk O C0 CE1 CE2 X a) (oMk C0 CE1 CE2 X a) (monomial (aMk C0 CE1 CE2 X a) 1) (dgMk C0 CE1 CE2 X a) := by
@@ -169,10 +169,10 @@ theorem dgMk_le (hD : D1num X) (hG : ∀ j, segG X.TT j ≤ X.G') (C0 CE1 CE2 : 
     by_cases hex : ∃ j0, (topStart X j0, true) = l
     · obtain ⟨j0, hj0⟩ := hex
       rw [Finset.sum_eq_single j0]
-      · rw [if_pos hj0, mul_one]
+      · rw [ite_eq_left hj0, mul_one]
         exact (Nat.sub_le _ _).trans (hpG j0)
       · intro j _ hj
-        rw [if_neg, mul_zero]
+        rw [ite_eq_right, mul_zero]
         intro h
         apply hj
         apply topStart_inj X
@@ -183,7 +183,7 @@ theorem dgMk_le (hD : D1num X) (hG : ∀ j, segG X.TT j ≤ X.G') (C0 CE1 CE2 : 
     · rw [Finset.sum_eq_zero]
       · exact Nat.zero_le _
       · intro j _
-        rw [if_neg (fun h => hex ⟨j, h⟩), mul_zero]
+        rw [ite_eq_right (fun h => hex ⟨j, h⟩), mul_zero]
 
 theorem dgMk_Y (C0 CE1 CE2 : ℝ) (a : IM X) (j' : Fin (numSeg X.TT)) : dgMk C0 CE1 CE2 X a (topEnd X j', false) = 0 := by
   rcases a with x | x | x | x <;>
@@ -213,7 +213,7 @@ theorem bMk_eq (C0 CE1 CE2 : ℝ) (β : GlobalTheory X) (j : Fin (numSeg X.TT)) 
     try simp only [mul_comm, mul_left_comm]
     try abel
     try ring_nf
-  · simp only [hs, if_false, Finset.sum_const_zero, zero_add, add_zero]
+  · simp only [hs, ite_false, Finset.sum_const_zero, zero_add, add_zero]
     try simp only [mul_comm, mul_left_comm]
     try abel
     try ring_nf

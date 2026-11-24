@@ -314,9 +314,9 @@ open Classical
 
 theorem lifts_of_closed : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (F : Type) [Field F] (e : F ≃+* c.F) (C : FlagCpt Z e) (X : Var F) (j : X.X ⟶ gen Z), IsOpenImmersion j → j ≫ genStr Z ≫ spMap e.toRingHom = X.str → ∀ (f : C.Y.X ⟶ X.X), f ≫ j = C.π → ∀ (f₀ : EigFrame Z (constF e X) (genericPt X ≫ j ≫ genι Z)) (Eb : Fr (ratOf X) Dw.mult 0) (A₀ : Mat Dw.mult X.Fn), Tied e X j f₀ Eb A₀ → (∀ (K : Type) [Field K] [IsAlgClosed K] (χ : c.F →+* K) (x : Sp K ⟶ X.X), x ≫ j ≫ genStr Z = spMap χ → ∀ g : EigFrame Z χ (x ≫ j ≫ genι Z), ∃! p : Sp K ⟶ C.Y.X, p ≫ f = x ∧ C.Carries p g) → ∀ (φ : X.Fn →ₐ[F] C.Y.Fn), (ratOf X).IsHom (ratOf C.Y) φ f → ∀ (E' : Fr (ratOf C.Y) Dw.mult Dw.mult) (A₁ : Mat Dw.mult C.Y.Fn), Tied e C.Y C.π C.f0 E' A₁ → f₀.Coord (φ : X.Fn →+* C.Y.Fn) C.f0 (A₁ * (A₀.map φ)⁻¹) → (∀ z', ∀ A' ∈ E'.S z', ∀ A ∈ Eb.S (f z'), Par 0 ((ratOf C.Y).O z').toSubring (A' * (A.map φ)⁻¹)) → ∀ (K : Type) [Field K] (x : Sp K ⟶ X.X), ∀ A ∈ Eb.S (x (IsLocalRing.closedPoint K)), ∀ h : Mat Dw.mult K, Par 0 ⊤ h → ∃! p : Sp K ⟶ C.Y.X, p ≫ f = x ∧ Bears E' φ A h p := by
   intro E _ _ _ H Dw l Xo c O _ β Z F _ e C X j _ hj f hπ f₀ Eb A₀ hT hL φ hφ E' A₁ hT' hC _ K _ x A hA h hh
-  haveI : CharZero F := (RingHom.charZero_iff e.toRingHom.injective).2 inferInstance
+  have : CharZero F := (RingHom.charZero_iff e.toRingHom.injective).2 inferInstance
   obtain ⟨ρ, -⟩ : ∃ ρ : F →+* K, x ≫ X.str = spMap ρ := ⟨_, (Spec.map_preimage _).symm⟩
-  haveI : CharZero K := (RingHom.charZero_iff ρ.injective).1 inferInstance
+  have : CharZero K := (RingHom.charZero_iff ρ.injective).1 inferInstance
   have hcl := lifts_closed e C X j f₀ Eb A₀ E' A₁ φ f hj hπ.symm hT hT' hC hφ hL (AlgebraicClosure K)
     (spMap (algebraMap K (AlgebraicClosure K)) ≫ x) A (by rwa [GlobalTheory.FieldPts.comp_closedPoint])
     (h.map (algebraMap K (AlgebraicClosure K))) (hh.map _ fun _ _ => trivial)

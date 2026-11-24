@@ -83,7 +83,7 @@ def resFun : (G → T.V) →ₗ[O] (H → T.V) := LinearMap.funLeft O T.V (Subty
 
 theorem resFun_Z1T (c : G → T.V) (hc : c ∈ latticeCocycles T.L) : resFun H T c ∈ latticeCocycles (resLat T H) := by
   obtain ⟨⟨hcont, hcoc⟩, hmem⟩ := hc
-  refine ⟨⟨hcont.comp continuous_subtype_val, fun g h => hcoc g h⟩, ?_⟩
+  refine ⟨⟨hcont.comp continuous_subtypeVal, fun g h => hcoc g h⟩, ?_⟩
   intro g _
   exact hmem g (Set.mem_univ _)
 

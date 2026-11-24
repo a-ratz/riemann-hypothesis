@@ -62,7 +62,7 @@ theorem charZero_of_tower (T : Tower p Ω) : CharZero Ω := by
   have hpp : p.Prime := Fact.out
   have hp : (p : Ω) ≠ 0 := by
     intro h0
-    haveI : CharP Ω p := (CharP.charP_iff_prime_eq_zero hpp).mpr h0
+    have : CharP Ω p := (CharP.charP_iff_prime_eq_zero hpp).mpr h0
     have hz := T.prim 1
     rw [pow_one] at hz
     have h1 : (T.ζ 1 - 1) ^ p = 0 := by rw [sub_pow_char, one_pow, hz.pow_eq_one, sub_self]
@@ -117,7 +117,7 @@ theorem sum_fixed (H : Subgroup (Gal p Ω)) (E : Finset (Gal p Ω)) (y₀ x : Ω
   let rep : Gal p Ω → Gal p Ω := fun a => if ha : a ∈ H then (huniq a ha).exists.choose else 1
   have hrep : ∀ a ∈ H, rep a ∈ E ∧ a y₀ = rep a y₀ ∧ a x = rep a x := by
     intro a ha
-    simp only [rep, dif_pos ha]
+    simp only [rep, dite_eq_left ha]
     exact (huniq a ha).exists.choose_spec
   have hun : ∀ a ∈ H, ∀ g ∈ E, a y₀ = g y₀ → a x = g x → rep a = g := by
     intro a ha g hg h1 h2

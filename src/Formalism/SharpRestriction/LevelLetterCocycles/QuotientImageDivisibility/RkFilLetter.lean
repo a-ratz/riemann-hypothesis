@@ -145,7 +145,7 @@ private theorem exists_emb_idempotent_projection (i : ZMod n) :
     ∃ (e : LL ⊗[Qp] K₀) (Li : LL ⊗[Qp] K₀ →ₗ[LL] LL),
       (∀ (l : LL) (c : K₀), Li (l ⊗ₜ c) = l * W.emb i c) ∧ Li e = 1 ∧
       ∀ d : K₀, (1 ⊗ₜ[Qp] d) * e = W.emb i d • e := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   classical
   obtain ⟨L, hL⟩ : ∃ L : ZMod n → (LL ⊗[Qp] K₀ →ₐ[LL] LL),
       ∀ k (l : LL) (c : K₀), L k (l ⊗ₜ c) = l * W.emb k c :=

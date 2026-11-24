@@ -74,7 +74,7 @@ theorem exists_ringEquiv_over (R K L : Type) [Field R] [Field K] [Field L] [IsAl
     hs.1.aevalEquiv.symm.trans ((MvPolynomial.renameEquiv R e).trans ht.1.aevalEquiv)
   refine ⟨IsAlgClosure.equivOfEquiv K L e0.toRingEquiv, fun x => ?_⟩
   rw [IsScalarTower.algebraMap_apply R (Algebra.adjoin R (Set.range ((↑) : s → K))) K,
-    IsAlgClosure.equivOfEquiv_algebraMap, AlgEquiv.coe_ringEquiv,
+    IsAlgClosure.equivOfEquiv_algebraMap, AlgEquiv.coe_toRingEquiv,
     AlgEquiv.commutes, ← IsScalarTower.algebraMap_apply]
 
 theorem mk_le_continuum_of_denseRange {X Y : Type} [MetricSpace Y] (f : X → Y)

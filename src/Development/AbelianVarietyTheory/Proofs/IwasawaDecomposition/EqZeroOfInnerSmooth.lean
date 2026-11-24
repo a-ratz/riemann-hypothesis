@@ -430,7 +430,7 @@ theorem eq_zero_of_forall_test {E : Type} [NormedAddCommGroup E] [NormedSpace �
   have hψc : HasCompactSupport fun g : Formalism.REAL.UJ ε => φ (umat g) := hφc.comp_isClosedEmbedding hemb
   have hψi : Integrable (fun g : Formalism.REAL.UJ ε => φ (umat g)) μ := hψ.integrable_of_hasCompactSupport hψc
   have hpos : 0 < ∫ g : Formalism.REAL.UJ ε, φ (umat g) ∂μ :=
-    hψ.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hψc (fun g => hφ0 _)
+    hψ.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hψc (fun g => hφ0 _)
       (by show φ 1 ≠ 0; rw [hφ1]; exact one_ne_zero)
   have e1 : ∫ g : Formalism.REAL.UJ ε, (φ (umat g) • F g - φ (umat g) • F 1) ∂μ
       = -((∫ g : Formalism.REAL.UJ ε, φ (umat g) ∂μ) • F 1) := by

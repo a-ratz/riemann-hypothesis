@@ -78,7 +78,7 @@ variable {G : Over (Spec (CommRingCat.of R))} [GrpObj G]
 
 theorem exists_isLieBasis [IsLocalRing R] (G : Over (Sp R)) [GrpObj G] (hsm : Smooth G.hom) :
     ∃ (d : ℕ) (v : Fin d → (epsR R ⟶ G)), IsLieBasis v := by
-  haveI := hsm
+  have := hsm
   obtain ⟨n, x, hx⟩ := univChartLoc G
   let v : Fin n → (epsR R ⟶ G) := fun i => spMap (dualLift (Pi.single i 1)) ≫ x 1
   have htan : ∀ i, IsTan (v i) := fun i => isTan_dualLift hx _

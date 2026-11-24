@@ -100,7 +100,7 @@ private theorem topologicalKrullDim_le_of_iUnion_eq_univ {X : Type u} [Topologic
   let V : Fin (p.length + 1) → IrreducibleCloseds ↥(U i) := fun j =>
     ⟨Subtype.val ⁻¹' ((p j : IrreducibleCloseds X) : Set X),
       ⟨⟨⟨x, hi⟩, hsub j hx⟩, (p j).isIrreducible.2.preimage hoe⟩,
-      (p j).isClosed.preimage continuous_subtype_val⟩
+      (p j).isClosed.preimage continuous_subtypeVal⟩
   have hstep : ∀ j : Fin p.length, V j.castSucc < V j.succ := by
     intro j
     have hlt : p j.castSucc < p j.succ := p.step j

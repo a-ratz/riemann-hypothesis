@@ -67,7 +67,7 @@ theorem split (E H₁ H₂ : Type*) [AddCommGroup E] [Module ℂ E]
     [NormedAddCommGroup H₂] [InnerProductSpace ℂ H₂] [CompleteSpace H₂] :
     SplitStatement E H₁ H₂ := by
   intro ι t K hK hrange f w hfw
-  haveI : CompleteSpace K := hK.completeSpace_coe
+  have : CompleteSpace K := hK.completeSpace_coe
   obtain ⟨f₁, hf₁, f₂, hf₂, rfl⟩ := K.exists_add_mem_mem_orthogonal f
   have h2 : WeakAdj ι t f₂ 0 := by
     intro g

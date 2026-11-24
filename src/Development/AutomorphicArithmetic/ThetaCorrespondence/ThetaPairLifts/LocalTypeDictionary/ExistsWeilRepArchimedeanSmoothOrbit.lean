@@ -124,9 +124,9 @@ theorem archOp_lintegral_eq : ∀ {F E : Type} [Field F] [NumberField F] [Field 
       (f : SInf F (Fin n × Fin d)),
       ∫⁻ x, ‖archOp om h f (C.symm x)‖ₑ ^ 2 = ∫⁻ x, ‖f (C.symm x)‖ₑ ^ 2 := by
   intro F E _ _ _ _ _ σ n d X W M ψ χX χW om hW hex h hh N C f
-  haveI := GlobalTheory.ArchimedeanUnitaryL2.opensMeasurable F (Fin n × Fin d)
+  have := GlobalTheory.ArchimedeanUnitaryL2.opensMeasurable F (Fin n × Fin d)
   set μ : Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Measure.map C.symm volume with hμ
-  haveI : μ.IsAddHaarMeasure := C.symm.isAddHaarMeasure_map volume
+  have : μ.IsAddHaarMeasure := C.symm.isAddHaarMeasure_map volume
   obtain ⟨g, hg, hg0⟩ : ∃ g : (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) → ℂ,
       g ∈ GlobalTheory.WeilM.SB (Fin n × Fin d → FiniteAdeleRing (𝓞 F) F) ∧ g 0 ≠ 0 := by
     refine ⟨_, GlobalTheory.SchANonzero.indicator_intPts_mem_SB F _, ?_⟩
@@ -149,8 +149,8 @@ theorem archOp_lintegral_eq : ∀ {F E : Type} [Field F] [NumberField F] [Field 
   rw [hAct] at hU
   have h1 := ((hc (archOp om h f)).symm.trans hU).trans (hc f)
   have h2 := (ENNReal.mul_right_inj hc0 hct).1 h1
-  rw [hμ, lintegral_map ((archOp om h f).continuous.measurable.enorm.pow_const 2) C.symm.continuous.measurable,
-    lintegral_map (f.continuous.measurable.enorm.pow_const 2) C.symm.continuous.measurable] at h2
+  rw [hμ, lintegral_map ((archOp om h f).continuous.measurable.eNorm.pow_const 2) C.symm.continuous.measurable,
+    lintegral_map (f.continuous.measurable.eNorm.pow_const 2) C.symm.continuous.measurable] at h2
   exact h2
 
 end GlobalTheory.ArchimedeanLineL2
@@ -434,13 +434,13 @@ theorem tens_add {κ : Type} [Fintype κ] (f f' : SInf F κ) (r : (κ → AF F) 
     tens (evI F) (⇑(f + f') : (κ → mixedEmbedding.mixedSpace F) → ℂ) r = tens (evI F) ⇑f r + tens (evI F) ⇑f' r := by
   funext x
   change (f + f') (fun i => evI F (x i)) * r x = f (fun i => evI F (x i)) * r x + f' (fun i => evI F (x i)) * r x
-  rw [SchwartzMap.add_apply, add_mul]
+  rw [add_apply, add_mul]
 
 theorem tens_smul {κ : Type} [Fintype κ] (c : ℂ) (f : SInf F κ) (r : (κ → AF F) → ℂ) :
     tens (evI F) (⇑(c • f) : (κ → mixedEmbedding.mixedSpace F) → ℂ) r = c • tens (evI F) ⇑f r := by
   funext x
   change (c • f) (fun i => evI F (x i)) * r x = c • (f (fun i => evI F (x i)) * r x)
-  rw [SchwartzMap.smul_apply, smul_mul_assoc]
+  rw [smul_apply, smul_mul_assoc]
 
 theorem img (om : Rep σ X W) (h : UA σ W.J) (f : SInf F (Fin n × Fin d))
     (hx : ∃ f₁ : SInf F (Fin n × Fin d), Acts (evI F) (om (1, h)) ⇑f ⇑f₁) :
@@ -580,7 +580,7 @@ theorem archOp_apply_continuous : ∀ {F E : Type} [Field F] [NumberField F] [Fi
     intro g _
     refine ⟨g 0 • ((BoundedContinuousFunction.evalCLM ℂ x).comp
       (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (Fin n × Fin d → mixedEmbedding.mixedSpace F) ℂ)), fun f' => ?_⟩
-    rw [ContinuousLinearMap.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     show pureA F f' g (liftV x) = _
     simp only [pureA, liftV, RingEquiv.apply_symm_apply]
     change f' x * g 0 = g 0 * f' x
@@ -630,13 +630,13 @@ theorem continuous_archAct_line : ∀ {F E : Type} [Field F] [NumberField F] [Fi
     ∀ v : (Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F),
       Continuous fun t : ℝ => archAct M (γ (Multiplicative.ofAdd t)) v := by
   intro F E _ _ _ _ _ σ n d X W M γ hγ v
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : IsModuleTopology (AF F) (Matrix (Fin n) (Fin d) (AE F E)) :=
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (Matrix (Fin n) (Fin d) (AE F E)) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin n → Fin d → AE F E))
   have hγc : Continuous fun t : ℝ => γ (Multiplicative.ofAdd t) := hγ.1.comp continuous_ofAdd
   have hm : Continuous fun t : ℝ => (mat (γ (Multiplicative.ofAdd t)))ᵀ :=
-    ((Units.continuous_val.comp continuous_subtype_val).comp hγc).matrix_transpose
+    ((Units.continuous_val.comp continuous_subtypeVal).comp hγc).matrix_transpose
   have he : Continuous M.co.e := IsModuleTopology.continuous_of_linearMap M.co.e.toLinearMap
   have hev : Continuous (evI F) := by
     change Continuous fun a : AF F => InfiniteAdeleRing.ringEquiv_mixedSpace F a.1

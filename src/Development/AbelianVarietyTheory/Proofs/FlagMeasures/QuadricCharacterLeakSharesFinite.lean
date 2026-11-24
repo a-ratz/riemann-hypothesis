@@ -351,8 +351,8 @@ theorem exists_isON_orth (h : IsHerm L Hm) (y : Fin n → E) (k : ℕ) :
     let f : Fin k → Fin n → E := fun i => e i.succ.succ.succ
     have hf' : IsON L Hm f := fun i j => by simpa [f] using he i.succ.succ.succ j.succ.succ.succ
     have hne : ∀ i j, i ≠ j → hf L Hm (e i) (e j) = 0 := fun i j hij => by
-      rw [he, if_neg hij]
-    have heq : ∀ i, hf L Hm (e i) (e i) = 1 := fun i => by rw [he, if_pos rfl]
+      rw [he, ite_eq_right hij]
+    have heq : ∀ i, hf L Hm (e i) (e i) = 1 := fun i => by rw [he, ite_eq_left rfl]
     have hmem : ∀ i : Fin (k + 1 + 2), (∀ j : Fin k, i ≠ j.succ.succ.succ) →
         e i ∈ M ⊓ ⨅ j, orthTo L Hm (f j) := fun i hi =>
       ⟨hM i, (Submodule.mem_iInf _).2 fun j => hne _ _ (hi j)⟩
@@ -529,7 +529,7 @@ private theorem exists_nat_mul_mem_integer (x : F) : ∃ N : ℕ, 0 < N ∧ (N :
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[F]
   obtain ⟨n, u, hb⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hb0 hϖ
   refine ⟨Nat.card (𝒪[F] ⧸ Ideal.span {ϖ ^ n}), ?_, ?_⟩
-  · haveI := finite_quotient_span_pow_flag_measures hϖ n
+  · have := finite_quotient_span_pow_flag_measures hϖ n
     exact Nat.card_pos
   have hmem : ((Nat.card (𝒪[F] ⧸ Ideal.span {ϖ ^ n}) : ℕ) : 𝒪[F]) ∈ Ideal.span {ϖ ^ n} := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ← nsmul_one]
@@ -824,8 +824,8 @@ open scoped Pointwise ENNReal Classical in
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] in
 theorem _root_.GlobalTheory.HL.CharCond.expand_by_conductor : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (ϖ : 𝒪[F]), Irreducible ϖ → ∀ ψ : AddChar F ℂ, (∀ x : F, (∀ y : 𝒪[F], ψ (x * y) = 1) ↔ x ∈ 𝒪[F]) → ∀ {U : Type} (R : Finset U) (Q : U → 𝒪[F]) (χ : U → ℂ) (a : ℕ) (B : ℕ → ℝ), (∀ i, 1 ≤ i → i ≤ a → ∀ (t : F) (u₀ : (𝒪[F])ˣ), t * (ϖ : F) ^ i = ((u₀ : 𝒪[F]) : F) → ‖∑ u ∈ R, ψ (t * Q u) * χ u‖ ≤ B i) → ‖(∑ u ∈ R.filter (fun u => ϖ ^ a ∣ Q u), χ u) * (_root_.GlobalTheory.HL.resQ ϖ : ℂ) ^ a - ∑ u ∈ R, χ u‖ ≤ ∑ i ∈ Finset.Icc 1 a, ((_root_.GlobalTheory.HL.resQ ϖ : ℝ) ^ i - (_root_.GlobalTheory.HL.resQ ϖ : ℝ) ^ (i - 1)) * B i := by
   intro F _ _ _ _ ϖ hϖ ψ hψ U R Q χ a B hB
-  haveI := finite_quotient_span_pow' hϖ a
-  letI : Fintype (𝒪[F] ⧸ Ideal.span {ϖ ^ a}) := Fintype.ofFinite _
+  have := finite_quotient_span_pow' hϖ a
+  let : Fintype (𝒪[F] ⧸ Ideal.span {ϖ ^ a}) := Fintype.ofFinite _
   have hϖ0 : (ϖ : F) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   set q := _root_.GlobalTheory.HL.resQ ϖ with hqdef
   set rep := _root_.GlobalTheory.HL.CharCond.rep ϖ a with hrep
@@ -857,8 +857,8 @@ theorem _root_.GlobalTheory.HL.CharCond.expand_by_conductor : ∀ {F : Type} [Fi
         _ = _ := by
             rw [e, hcard]
             by_cases h : ϖ ^ a ∣ Q u
-            · rw [if_pos (hiff.2 h), if_pos h]; push_cast; rfl
-            · rw [if_neg (fun h' => h (hiff.1 h')), if_neg h]
+            · rw [ite_eq_left (hiff.2 h), ite_eq_left h]; push_cast; rfl
+            · rw [ite_eq_right (fun h' => h (hiff.1 h')), ite_eq_right h]
     simp only [hg]
     rw [Finset.sum_comm]
     simp_rw [← Finset.sum_mul, hinner]
@@ -1215,7 +1215,7 @@ private lemma exists_norm_eq_uniformizer' (L : _root_.Formalism.MainNotions.S.Lo
     {y : E} (hy : y ∈ L.O) (hyu : ∀ z ∈ L.O, y * z ≠ 1)
     (hyϖ : ∀ c ∈ L.O, y ≠ algebraMap F E (ϖ : F) * c) :
     ∃ π ∈ L.O, π * L.cj π = algebraMap F E (ϖ : F) := by
-  haveI := hPID
+  have := hPID
   let y₁ : L.O := ⟨y, hy⟩
   let ϖ₁ : L.O := ⟨algebraMap F E (ϖ : F), algebraMap_integer_mem_O' L ϖ⟩
   let J : Ideal L.O := Ideal.span {y₁, ϖ₁}
@@ -1286,7 +1286,7 @@ private lemma exists_coprime_combination_pi_cj (L : _root_.Formalism.MainNotions
     (hPID : IsPrincipalIdealRing L.O) {π : E} (hπ : π ∈ L.O)
     (hN : π * L.cj π = algebraMap F E (ϖ : F)) :
     ∃ r ∈ L.O, ∃ s ∈ L.O, π * r + L.cj π * s = 1 := by
-  haveI := hPID
+  have := hPID
   let π₁ : L.O := ⟨π, hπ⟩
   let π₂ : L.O := ⟨L.cj π, _root_.GlobalTheory.UnramOrder.cj_mem L hπ⟩
   let K : Ideal L.O := Ideal.span {π₁, π₂}
@@ -1609,8 +1609,8 @@ theorem exists_norm (hH : IsHermND L Hm) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ)
   have hQ : ∀ u ∈ UU, nrm u ∈ 𝒪[F] := fun u hu => (hint _).1 (by rw [hnrm]; exact hUU u hu u hu)
   refine ⟨nrm, fun u => if h : nrm u ∈ 𝒪[F] then ⟨nrm u, h⟩ else 0, hnrm, fun u hu => ?_,
     fun a u hu => ?_⟩
-  · simp only [dif_pos (hQ u hu)]
-  · simp only [dif_pos (hQ u hu)]
+  · simp only [dite_eq_left (hQ u hu)]
+  · simp only [dite_eq_left (hQ u hu)]
     constructor
     · rintro ⟨c, hc⟩
       refine ⟨c, ?_⟩

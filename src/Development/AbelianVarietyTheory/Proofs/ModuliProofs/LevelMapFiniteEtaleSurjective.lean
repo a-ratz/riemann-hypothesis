@@ -97,7 +97,7 @@ theorem zeta_dvd {a b : ℕ} (hb : 0 < b) (h : a ∣ b) : zeta a = zeta b ^ (b /
   obtain ⟨k, rfl⟩ := h
   have ha : a ≠ 0 := by rintro rfl; simp at hb
   have hk : k ≠ 0 := by rintro rfl; simp at hb
-  rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero ha), zeta, zeta, ← Complex.exp_nat_mul]
+  rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero ha), zeta, zeta, ← Complex.exp_natCast_mul]
   congr 1
   have ha' : (a : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr ha
   have hk' : (k : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hk

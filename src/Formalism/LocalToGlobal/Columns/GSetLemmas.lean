@@ -159,8 +159,8 @@ theorem map_intDel (h : S.Ok) (s : S.Sec) :
     · simp
 
 theorem finiteDimensional_EqFun (h : S.Ok) : FiniteDimensional K S.EqFun := by
-  letI := h.fintypeCl
-  haveI : Module.Finite K S.V := Module.Finite.of_basis S.bV
+  let := h.fintypeCl
+  have : Module.Finite K S.V := Module.Finite.of_basis S.bV
   exact LinearEquiv.finiteDimensional (S.resOf h S.outSec).symm
 
 variable {S} in

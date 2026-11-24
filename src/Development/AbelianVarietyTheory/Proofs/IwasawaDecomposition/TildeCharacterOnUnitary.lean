@@ -89,7 +89,7 @@ theorem chi_laws (R : Ranks) (H : Formalism.BasicNotions.Host R) (χ : HChar H.E
     unfold IsUnitAt
     rw [hy]
     exact ha v
-  · letI := H.cmStar
+  · let := H.cmStar
     intro z
     obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Mem.RatPts.rat_points R H
     obtain ⟨k, hk⟩ := h2 z

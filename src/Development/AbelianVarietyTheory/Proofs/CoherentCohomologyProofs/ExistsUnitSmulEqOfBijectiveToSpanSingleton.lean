@@ -62,8 +62,8 @@ instance isInvariant_fixedSubring : Algebra.IsInvariant (FixedPoints.subring A G
 theorem finite_of_isInvariant [Finite G] (R B : Type*) [CommRing R] [CommRing B] [Algebra R A]
     [Algebra R B] [Algebra B A] [IsScalarTower R B A] [Algebra.IsInvariant B A G]
     [Algebra.FiniteType R A] : Module.Finite B A := by
-  haveI := Algebra.IsInvariant.isIntegral B A G
-  haveI : Algebra.FiniteType B A := Algebra.FiniteType.of_restrictScalars_finiteType R B A
+  have := Algebra.IsInvariant.isIntegral B A G
+  have : Algebra.FiniteType B A := Algebra.FiniteType.of_restrictScalars_finiteType R B A
   exact Algebra.IsIntegral.finite
 
 theorem finiteType_of_isInvariant [Finite G] (R B : Type*) [CommRing R] [CommRing B] [Algebra R A]
@@ -78,7 +78,7 @@ theorem exists_orbit_eq_primesOver_of_isInvariant [Finite G] (B : Type*) [CommRi
     [Algebra B A] [FaithfulSMul B A] [SMulCommClass G B A] [Algebra.IsInvariant B A G]
     (P : Ideal B) [P.IsPrime] :
     ∃ Q : Ideal A, Q.IsPrime ∧ Q.LiesOver P ∧ MulAction.orbit G Q = P.primesOver A := by
-  haveI := Algebra.IsInvariant.isIntegral B A G
+  have := Algebra.IsInvariant.isIntegral B A G
   obtain ⟨⟨Q, hQ, hQP⟩⟩ := Ideal.nonempty_primesOver (S := A) P
   exact ⟨Q, hQ, hQP, Algebra.IsInvariant.orbit_eq_primesOver B A G P Q⟩
 
@@ -241,7 +241,7 @@ theorem bijective_toSpanSingleton_of_isBaseChange [Module.Invertible A M] (f : M
     [Module A' M'] [IsScalarTower A A' M'] (l : M →ₗ[A] M') (hl : IsBaseChange A' l)
     (hu : IsUnit (algebraMap A A' (f e))) :
     Function.Bijective (LinearMap.toSpanSingleton A' M' (l e)) := by
-  haveI : Module.Invertible A' M' := .congr hl.equiv
+  have : Module.Invertible A' M' := .congr hl.equiv
   refine Module.Invertible.bijective_of_surjective fun y ↦ ?_
   induction y using hl.inductionOn with
   | tmul m =>

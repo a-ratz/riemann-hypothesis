@@ -185,12 +185,12 @@ attribute [local instance] borelG borelF borelA borelH
 
 theorem convMul : ConvMul := by
   intro E _ _ _ B f hf
-  haveI := B.ha
-  haveI := B.hb
-  haveI := B.hν
-  haveI : BorelSpace (G B.a) := ⟨rfl⟩
-  haveI : BorelSpace (G B.b) := ⟨rfl⟩
-  haveI : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
+  have := B.ha
+  have := B.hb
+  have := B.hν
+  have : BorelSpace (G B.a) := ⟨rfl⟩
+  have : BorelSpace (G B.b) := ⟨rfl⟩
+  have : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
   refine ⟨fun t t' ht ht' => ?_, fun ψ ψ' hψ hψ' => ?_⟩
   · have hT := PositivityTheory.Rg.BcB.F.Op.test B tensTest t ht
     have hT' := PositivityTheory.Rg.BcB.F.Op.test B tensTest t' ht'

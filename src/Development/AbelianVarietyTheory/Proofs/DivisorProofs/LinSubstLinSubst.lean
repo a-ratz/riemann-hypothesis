@@ -175,7 +175,7 @@ theorem _root_.GlobalTheory.HeightUnique.gaussAbs_C {K σ : Type} [Field K] [Num
   by_cases hc : c = 0
   · subst hc
     simp
-  · rw [C_apply, support_monomial, if_neg hc]
+  · rw [C_apply, support_monomial, ite_eq_right hc]
     simp [Real.coe_toNNReal _ (apply_nonneg w c)]
 
 open CategoryTheory AlgebraicGeometry NumberField MvPolynomial in
@@ -239,7 +239,7 @@ theorem _root_.GlobalTheory.HeightUnique.formHeight_C_mul {F : Type} [Field F] [
     rw [map_mul, map_C, _root_.GlobalTheory.HeightUnique.linSubst_C_mul,
       _root_.ReciprocityTheory.MultiplicativeHeights.sphere_mean_mul_multihomogeneous _root_.ReciprocityTheory.MultiplicativeHeights.Closed.sphereLogIntegrable B N (fun _ => 0) a _ _ hC hg hCh hgh]
     congr 1
-    haveI := _root_.ReciprocityTheory.MultiplicativeHeights.blockSphereMeasure_isProbability (B := B) hN
+    have := _root_.ReciprocityTheory.MultiplicativeHeights.blockSphereMeasure_isProbability (B := B) hN
     unfold _root_.ReciprocityTheory.MultiplicativeHeights.blockSphereMean
     simp [eval_C]
   have hsuppc : (Function.support fun v : FinitePlace F => Real.log (v c)).Finite := by

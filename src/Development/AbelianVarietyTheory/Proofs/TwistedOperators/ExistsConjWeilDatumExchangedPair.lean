@@ -102,8 +102,8 @@ theorem unit_transport {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} (hST : Adj
       ∀ G : WO S T → ENNReal, ∫⁻ w in 𝓕, G (adjO S T w) ∂μ = ∫⁻ v in 𝓕', G v ∂μ' := by
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.MixModel.lattice_Mx D S.rank T.rank
   obtain ⟨j1, j2, j3, j4, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : BorelSpace (WO T S) := ⟨rfl⟩
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO T S) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   let eA : WO T S ≃+ WO S T :=
     { toFun := adjO S T
       invFun := adjO T S
@@ -134,7 +134,7 @@ theorem unit_transport {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} (hST : Adj
 
 theorem enorm_dag (S T : HSp D) (f : WO S T → ℂ) (y : WO T S) : ‖dag S T f y‖ₑ = ‖f (adjO S T y)‖ₑ := by
   simp only [dag]
-  rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, Complex.norm_conj]
+  rw [← ofReal_norm, ← ofReal_norm, Complex.norm_conj]
 
 theorem isSplitIdem_cA {e : AE D} (he : IsSplitIdem D e) : IsSplitIdem D (cA D e) := by
   obtain ⟨h1, h2, v, ε, hε, h3⟩ := he

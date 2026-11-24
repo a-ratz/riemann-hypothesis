@@ -132,7 +132,7 @@ theorem map_mul_left_infiniteAdeleMeasure (b : (InfiniteAdeleRing K)ˣ) :
       ENNReal.ofReal ‖((b⁻¹ : (InfiniteAdeleRing K)ˣ) : InfiniteAdeleRing K)‖ •
         infiniteAdeleMeasure K := by
   ext S hS
-  rw [map_apply (continuous_const_mul _).measurable hS, Measure.smul_apply, smul_eq_mul,
+  rw [map_apply (continuous_const_mul _).measurable hS, _root_.smul_apply, smul_eq_mul,
     ← infiniteAdeleMeasure_smul]
   congr 1
   exact Set.preimage_smul b S
@@ -142,7 +142,7 @@ theorem map_mul_left_finiteAdeleMeasure (b : (𝔸ᶠ[K])ˣ) :
       ((∏ᶠ v : HeightOneSpectrum (𝓞 K), ‖((b⁻¹ : (𝔸ᶠ[K])ˣ) : 𝔸ᶠ[K]) v‖₊ : ℝ≥0) : ℝ≥0∞) •
         finiteAdeleMeasure K := by
   ext S hS
-  rw [map_apply (continuous_const_mul _).measurable hS, Measure.smul_apply, smul_eq_mul,
+  rw [map_apply (continuous_const_mul _).measurable hS, _root_.smul_apply, smul_eq_mul,
     ← finiteAdeleMeasure_smul]
   congr 1
   exact Set.preimage_smul b S
@@ -202,7 +202,7 @@ theorem adeleMeasure_smul (a : IdeleGroup K) (E : Set 𝔸[K]) :
     rw [map_smul_adeleMeasure]
   have hm := (Homeomorph.smul a⁻¹).toMeasurableEquiv.map_apply (μ := adeleMeasure K) E
   rw [show ⇑(Homeomorph.smul a⁻¹).toMeasurableEquiv = fun x : 𝔸[K] ↦ a⁻¹ • x from rfl] at hm
-  rw [hm, Measure.smul_apply, smul_eq_mul] at hE
+  rw [hm, _root_.smul_apply, smul_eq_mul] at hE
   have h := hE
   rw [← Set.preimage_smul_inv]
   convert h using 2

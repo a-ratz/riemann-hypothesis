@@ -164,8 +164,8 @@ theorem substituted_factorization_exists (hd : d.AxH 𝒜) (h : d.S1) (x : Fin (
     fun p hp => d.multiplicity_split_finsum hd h c hp hmem (hx c)
   have hyne : algebraMap (Ω c) (OmS (Ω c) d.D d.N) a ≠ 0 :=
     (map_ne_zero_iff _ (algebraMap (Ω c) (OmS (Ω c) d.D d.N)).injective).mpr ha
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  haveI := d.KT_finiteDimensional hd c
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  have := d.KT_finiteDimensional hd c
   have hfr := d.KTtoS_fieldRange h c
   let e : (KTf K d.D d.N) ≃+* (d.KT c) :=
     ((d.KTtoS h c).rangeRestrictFieldEquiv).trans (RingEquiv.subfieldCongr hfr)
@@ -175,7 +175,7 @@ theorem substituted_factorization_exists (hd : d.AxH 𝒜) (h : d.S1) (x : Fin (
     refine RingHom.ext fun y => ?_
     show d.KTtoS h c (e.symm y) = (y : OmS (Ω c) d.D d.N)
     rw [← he, RingEquiv.apply_symm_apply]
-  haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+  have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
     Module.Finite.of_equiv_equiv e.symm (RingEquiv.refl _) hc
   have hmap : ∀ z : KTp K d.D d.N,
       algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
@@ -186,23 +186,23 @@ theorem substituted_factorization_exists (hd : d.AxH 𝒜) (h : d.S1) (x : Fin (
       HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p := by
     intro p
     ext w
-    simp only [Data.OverP, HNm.OverR, Set.mem_setOf_eq, hmap]
+    simp only [Data.OverP, HNm.OverR, Set.mem_ofPred_eq, hmap]
   have hset : {p | p ∈ d.HtOne ∧ ∃ w ∈ d.OverP c p, w (algebraMap (Ω c) (OmS (Ω c) d.D d.N) a) ≠ 0} =
       {p : Ideal (KTp K d.D d.N) | p.IsPrime ∧ p.height = 1 ∧
         ∃ w ∈ HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N)
           (L := OmS (Ω c) d.D d.N) p,
           w (algebraMap (Ω c) (OmS (Ω c) d.D d.N) a) ≠ 0} := by
     ext p
-    simp only [Set.mem_setOf_eq, Data.HtOne, hOver, and_assoc]
+    simp only [Set.mem_ofPred_eq, Data.HtOne, hOver, and_assoc]
   have hSa : {p | p ∈ d.HtOne ∧ ∃ w ∈ d.OverP c p,
       w (algebraMap (Ω c) (OmS (Ω c) d.D d.N) a) ≠ 0}.Finite := by
     rw [hset]
     classical
-    letI : Algebra (KTp K d.D d.N) (OmS (Ω c) d.D d.N) :=
+    let : Algebra (KTp K d.D d.N) (OmS (Ω c) d.D d.N) :=
       ((algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)).comp
         (algebraMap (KTp K d.D d.N) (KTf K d.D d.N))).toAlgebra
     set_option synthInstance.maxHeartbeats 100000 in
-    haveI : IsScalarTower (KTp K d.D d.N) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+    have : IsScalarTower (KTp K d.D d.N) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
       IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     let y := algebraMap (Ω c) (OmS (Ω c) d.D d.N) a
     have halg : ∀ z : OmS (Ω c) d.D d.N, IsAlgebraic (KTp K d.D d.N) z := fun z =>
@@ -215,7 +215,7 @@ theorem substituted_factorization_exists (hd : d.AxH 𝒜) (h : d.S1) (x : Fin (
         (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p,
         w y ≠ 0) → de * ei ∈ p := by
       rintro p ⟨w, hw, hwy⟩
-      simp only [HNm.OverR, Set.mem_setOf_eq] at hw
+      simp only [HNm.OverR, Set.mem_ofPred_eq] at hw
       by_contra hnot
       have hdep : de ∉ p := fun hd => hnot (p.mul_mem_right ei hd)
       have heip : ei ∉ p := fun he => hnot (p.mul_mem_left de he)
@@ -238,7 +238,7 @@ theorem substituted_factorization_exists (hd : d.AxH 𝒜) (h : d.S1) (x : Fin (
         (fun q : KTp K d.D d.N => Ideal.span {q}) ''
           {q | q ∈ UniqueFactorizationMonoid.factors (de * ei)} := by
       rintro p ⟨hp, hh, hw⟩
-      haveI := hp
+      have := hp
       obtain ⟨g, hg, rfl⟩ := ValUFD.heightOne_principal p hh
       have hdvd : g ∣ de * ei := Ideal.mem_span_singleton.mp (key _ hw)
       obtain ⟨q, hq, hgq⟩ :=

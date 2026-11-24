@@ -88,7 +88,7 @@ theorem bigCell_of (hLU : LUStatement (E := E)) : BigCellStatement (E := E) := b
     have hset : GG X.Ψ X.Gm X.p0 = ⋂ τ : X.Ψ, ({x | (mat x τ).det ≠ 0} ∩
         ⋂ i : Fin (r + 1), {x | 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}) := by
       ext x
-      simp only [GG, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+      simp only [GG, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
     rw [hset]
     exact isOpen_iInter_of_finite fun τ => (isOpen_ne_fun (hdet τ) continuous_const).inter
       (isOpen_iInter_of_finite fun i => isOpen_lt continuous_const (continuous_const.mul (hmin τ i)))

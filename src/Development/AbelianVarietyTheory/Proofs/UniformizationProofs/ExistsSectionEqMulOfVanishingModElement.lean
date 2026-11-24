@@ -56,8 +56,8 @@ namespace GlobalTheory.SectionKernel
 theorem mem_map_of_flat {R B : Type} [CommRing R] [CommRing B] (c : R →+* B) (hf : c.Flat)
     {I : Ideal R} {ε : R} (h : ∀ x, ε * x = 0 → x ∈ I) (b : B) (hb : c ε * b = 0) :
     b ∈ I.map c := by
-  letI := c.toAlgebra
-  haveI : Module.Flat R B := hf
+  let := c.toAlgebra
+  have : Module.Flat R B := hf
   obtain ⟨l, d, y, hy, hc⟩ := Module.Flat.isTrivialRelation_of_sum_smul_eq_zero (R := R) (M := B)
     (f := fun _ : Unit => ε) (x := fun _ => b)
     (by rw [Fintype.sum_unique, Algebra.smul_def]; exact hb)

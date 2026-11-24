@@ -143,7 +143,7 @@ theorem summable_and_tsum_le_of_box_count (ι Γ : Type) [Fintype ι] (D : Γ �
         _ ≤ A * Real.exp (a * ∑ v, r v) * e := mul_le_mul_of_nonneg_right hcard he
         _ = c * A * Real.exp (a * Fintype.card ι) * ∏ v, q ^ (n v) := by
             rw [he_def, hq]
-            simp_rw [← Real.exp_nat_mul]
+            simp_rw [← Real.exp_natCast_mul]
             rw [← Real.exp_sum, ← Real.exp_sum, Finset.sum_neg_distrib, hS2, hS3, hS1]
             rw [show A * Real.exp (a * (∑ v, (n v : ℝ) + Fintype.card ι)) *
                   (c * Real.exp (-(2 * a * ∑ v, (n v : ℝ)))) =
@@ -162,7 +162,7 @@ theorem summable_and_tsum_le_of_box_count (ι Γ : Type) [Fintype ι] (D : Γ �
       _ ≤ c * A * Real.exp (a * Fintype.card ι) * 2 ^ Fintype.card ι :=
           mul_le_mul_of_nonneg_left (hprod _) (by positivity)
       _ = c * A * (2 * Real.exp a) ^ Fintype.card ι := by
-          rw [mul_pow, ← Real.exp_nat_mul, mul_comm (Fintype.card ι : ℝ) a]
+          rw [mul_pow, ← Real.exp_natCast_mul, mul_comm (Fintype.card ι : ℝ) a]
           ring
   exact ⟨summable_of_sum_le (fun γ => (ht γ).1) hfin, tsum_le_of_sum_le' hB hfin⟩
 

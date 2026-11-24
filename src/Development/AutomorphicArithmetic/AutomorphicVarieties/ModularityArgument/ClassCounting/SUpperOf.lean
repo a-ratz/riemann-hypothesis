@@ -314,7 +314,7 @@ private theorem rankCount_gen (M : Type) [AddCommGroup M] [Module.Finite ℤ M] 
     ∃ (s : ℕ) (v : Fin s → M), s ≤ r ∧ ∀ m : M, ∃ c : Fin s → ℤ,
       m - ∑ i, c i • v i ∈ Submodule.torsion ℤ M := by
   classical
-  haveI : Module.Free ℤ (M ⧸ Submodule.torsion ℤ M) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (M ⧸ Submodule.torsion ℤ M) := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ (M ⧸ Submodule.torsion ℤ M)
   have hs : Module.finrank ℤ (M ⧸ Submodule.torsion ℤ M) ≤ r := by
     have h1 : (Module.finrank ℤ (M ⧸ Submodule.torsion ℤ M) : Cardinal) ≤ r := by
@@ -344,10 +344,10 @@ theorem UpperTheory.V.ZK.Up.rankCount :
     UpperTheory.V.ZK.Up.RankCount := by
   intro H B _ _ q r hq hB hT J hJ f S hS
   classical
-  haveI := Fintype.ofFinite (AddCommGroup.torsion H)
+  have := Fintype.ofFinite (AddCommGroup.torsion H)
   choose! x hxJ hx using hS
   let J' : Submodule ℤ H := Submodule.span ℤ ((fun b => x b) '' (S : Set B))
-  haveI : Module.Finite ℤ J' := Module.Finite.span_of_finite _ ((S.finite_toSet).image _)
+  have : Module.Finite ℤ J' := Module.Finite.span_of_finite _ ((S.finite_toSet).image _)
   have hJJ : J' ≤ J := Submodule.span_le.2 (by
     rintro _ ⟨b, hb, rfl⟩
     exact hxJ b hb)
@@ -407,7 +407,7 @@ private theorem UpperTheory.V.ZK.Up.card_tors_eq {M N : Type} [AddCommGroup M] [
 theorem UpperTheory.V.ZK.Up.torsStab :
     UpperTheory.V.ZK.Up.TorsStab := by
   intro L _ _ hL m n n' hn hnn'
-  haveI := hL
+  have := hL
   have hiso : ∀ k, 2 * m + 4 ≤ k → IsIso (grpHMap (stab (𝓞 L) k (k + 1) (Nat.le_succ k)) m) :=
     fun k hk => _root_.GlobalTheory.HomStab.kStability_main (𝓞 L) 2 (dedekindSR (𝓞 L)) m k (by omega)
   have he : Nonempty ((grpH (GL (Fin n) (𝓞 L)) m : Type) ≃+ (grpH (GL (Fin n') (𝓞 L)) m : Type)) := by
@@ -415,7 +415,7 @@ theorem UpperTheory.V.ZK.Up.torsStab :
     | base => exact ⟨AddEquiv.refl _⟩
     | succ k hk ih =>
       obtain ⟨e⟩ := ih
-      haveI := hiso k (by omega)
+      have := hiso k (by omega)
       exact ⟨e.trans (asIso (grpHMap (stab (𝓞 L) k (k + 1) (Nat.le_succ k)) m)).toLinearEquiv.toAddEquiv⟩
   obtain ⟨e⟩ := he
   have key : ∀ x, x ∈ AddCommGroup.torsion (grpH (GL (Fin n) (𝓞 L)) m : Type) ↔

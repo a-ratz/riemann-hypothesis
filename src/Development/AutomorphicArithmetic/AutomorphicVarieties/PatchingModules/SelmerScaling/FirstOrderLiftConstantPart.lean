@@ -127,8 +127,8 @@ private theorem f_local {O B K : Type} [CommRing O] [CommRing B] [IsLocalRing B]
 theorem UpperTheory.V.Pa.trConst :
     ∀ (l : ℕ) [Fact l.Prime] (S : Ctx l), ∀ (R : Type) [CommRing R] [Algebra S.F R] (e : R →ₐ[S.F] S.F) (θ : S.U.AA →+* R), S.Test R e θ → (∀ b ∈ pairVals S.u ∪ {b | ∃ j i, b = S.P.U j i ∨ b = S.P.y j i} ∪ {S.P.s}, θ (algebraMap S.B S.U.AA b) = algebraMap S.F R (algebraMap S.x.A S.F (S.P.f b))) → ∀ b : S.Bh, θ (algebraMap S.Bh S.U.AA b) = algebraMap S.F R (S.rF b) := by
   intro l _ S R _ _ e θ hT hgen b
-  letI : Algebra S.x.A R := ((algebraMap S.F R).comp (algebraMap S.x.A S.F)).toAlgebra
-  haveI : IsScalarTower S.x.A S.F R := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra S.x.A R := ((algebraMap S.F R).comp (algebraMap S.x.A S.F)).toAlgebra
+  have : IsScalarTower S.x.A S.F R := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨M, hMfin, -, -, hMj, -⟩ := trLat l S R e θ hT
   have htow : ∀ y : S.B, algebraMap S.B S.U.AA y = algebraMap S.Bh S.U.AA (algebraMap S.B S.Bh y) :=
     fun y => by first | rfl | exact IsScalarTower.algebraMap_apply _ _ _ _
@@ -356,12 +356,12 @@ private theorem psi_lem {k R Γ : Type} [Field k] [CommRing R] [Algebra k R] {n 
     simp [Matrix.algebraMap_matrix_apply, hab.ne', htri _ a b hab])).2 i
   rw [hrel, List.map_ofFn, List.prod_ofFn] at h2
   have h3 := one_zero _ i (fun j hj => unit_of e hn _ (by
-    have hg : g' j = s j hj := dif_pos hj
-    simp only [Function.comp_apply, Matrix.sub_apply, Matrix.map_apply, Matrix.algebraMap_matrix_apply, if_true,
+    have hg : g' j = s j hj := dite_eq_left hj
+    simp only [Function.comp_apply, Matrix.sub_apply, Matrix.map_apply, Matrix.algebraMap_matrix_apply, ite_true,
       map_sub, AlgHom.commutes, Algebra.algebraMap_self, RingHom.id_apply, hc, hg]
     exact sub_ne_zero.2 (hs j hj))) h2.symm
-  have hg : g' i = g := dif_neg (by simp)
-  simp only [Function.comp_apply, Matrix.sub_apply, Matrix.map_apply, Matrix.algebraMap_matrix_apply, if_true,
+  have hg : g' i = g := dite_eq_right (by simp)
+  simp only [Function.comp_apply, Matrix.sub_apply, Matrix.map_apply, Matrix.algebraMap_matrix_apply, ite_true,
     Algebra.algebraMap_self, RingHom.id_apply, hg] at h3
   exact (sub_eq_zero.1 h3).symm
 
@@ -387,7 +387,7 @@ private theorem u_lem {k R : Type} [Field k] [CommRing R] [Algebra k R] {n : ℕ
       (fun j => by
         by_cases hj : j = i
         · simp [hj]
-        · simp only [hj, if_false]; exact eig_map P _ v hv (c j))
+        · simp only [hj, ite_false]; exact eig_map P _ v hv (c j))
     have h2 := congrArg (fun Z => Z *ᵥ fun j => algebraMap k R (v j)) h
     simp only [sub_self, zero_sub, Matrix.zero_mulVec] at h2
     rw [← Matrix.mulVec_mulVec, Matrix.neg_mulVec, Algebra.algebraMap_eq_smul_one y, Matrix.smul_mulVec,
@@ -395,7 +395,7 @@ private theorem u_lem {k R : Type} [Field k] [CommRing R] [Algebra k R] {n : ℕ
     refine (IsUnit.mul_left_eq_zero (IsUnit.prod_iff.2 fun j _ => ?_)).1 (eig_zero v hv0 _ h2)
     by_cases hj : j = i
     · simp [hj]
-    · simp only [hj, if_false]; exact hu j hj
+    · simp only [hj, ite_false]; exact hu j hj
 
 private theorem conj_const {l : ℕ} [Fact l.Prime] (S : Ctx l) (R : Type) [CommRing R] [Algebra S.F R]
     (e : R →ₐ[S.F] S.F) (θ : S.U.AA →+* R) (hθ : S.Test R e θ) (T T' : Matrix (Fin S.n) (Fin S.n) R)
@@ -475,7 +475,7 @@ private theorem conj_const {l : ℕ} [Fact l.Prime] (S : Ctx l) (R : Type) [Comm
     funext k
     by_cases hk : k = i
     · simp [hk]
-    · simp only [Function.comp_apply, hk, if_false, map_sub, hφ1, hφ2]
+    · simp only [Function.comp_apply, hk, ite_false, map_sub, hφ1, hφ2]
   · exact key _ _ t3
 
 theorem UpperTheory.V.Pa.alInj :
@@ -773,9 +773,9 @@ theorem UpperTheory.V.Pa.kapSel1 :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G G0 : Glob l L) (h : G.Hom G0) (n : ℕ) (x : NP G0.frame n), ∀ (k : Kap x), ∀ i j : Fin k.g, (fun γ => DD.epM (Pi.single j (kapF h k i γ))) ∈ Sel1 h x.Fr k ∧ BndD x.t fun γ => DD.epM (Pi.single j (kapF h k i γ)) := by
   intro l _ L G G0 h n x k i j
   have hm := k.mem i
-  simp only [SelZ, Set.mem_setOf_eq] at hm
+  simp only [SelZ, Set.mem_ofPred_eq] at hm
   obtain ⟨hOd, hcont, hcoc, hconj, hIu, hloc⟩ := hm
-  have hpc : Continuous h.p₀ := Continuous.codRestrict (h.cont.comp continuous_subtype_val) _
+  have hpc : Continuous h.p₀ := Continuous.codRestrict (h.cont.comp continuous_subtypeVal) _
   have hc' : ∀ a b : Fin n, AdicCont (Ideal.span {x.t}) fun γ : G.frame.G₀ => k.κ i (h.p₀ γ) a b := by
     intro a b
     have h1 := hcont a b
@@ -784,7 +784,7 @@ theorem UpperTheory.V.Pa.kapSel1 :
     intro N
     exact (h1 N).comp_continuous hpc
   refine ⟨?_, bndD_epM_single_map_of_adicCont x.t j (fun γ => k.κ i (h.p₀ γ)) hc'⟩
-  simp only [Sel1, SelZ, Set.mem_setOf_eq]
+  simp only [Sel1, SelZ, Set.mem_ofPred_eq]
   refine ⟨fun γ => epM_single_map_mem_W1_of_mem_Od _ _ j _ (hOd _), fun a b => adicCont_epM_single_map_apply x.t j _ a b (hc' a b), fun g g' => ?_,
     fun g => ?_, fun u g hg => ?_, fun v => ?_⟩
   · show DD.epM (Pi.single j ((k.κ i (h.p₀ (g * g'))).map (algebraMap x.A x.Fr))) =
@@ -1666,7 +1666,7 @@ theorem UpperTheory.V.Pa.claim1 :
         split_ifs
         · rfl
         · rfl
-      simp only [hw, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [hw, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hd : ∀ m, (fun i => c (Sum.inr (i, m))) = 0 := by
       intro m
       have hnegE : ∀ u : DD S.x.Fr S.k.g, (-u).ep m = -u.ep m := fun u => map_neg (epH S.x.Fr m) u

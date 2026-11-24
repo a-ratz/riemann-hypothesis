@@ -92,9 +92,9 @@ theorem WData.exists_closed_off (w : WData P D hP) (Q : AffPres (w.π ≫ toSpec
         w.π.base x'.1 ∉ (projB P D hP : Set (projX P hP)) ∧ eval (Q.coord x'.1 hx') G ≠ 0 := by
   generalize hp : Q.coord x.1 hxV = p at h𝔮x hG
   have := w.regular x.1
-  haveI hregL : IsRegularLocalRing (locRing Q.K p) := by
+  have hregL : IsRegularLocalRing (locRing Q.K p) := by
     rw [← hp]; exact (Q.isRegularLocalRing_stalk_iff x.1 hxV x.2).mp (w.regular x.1)
-  haveI : IsDomain (locRing Q.K p) := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
+  have : IsDomain (locRing Q.K p) := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
   set d := (maximalIdeal (w.W.presheaf.stalk x.1)).spanFinrank with hdd
   have hd : ringKrullDim (w.W.presheaf.stalk x.1) = d :=
     (IsRegularLocalRing.spanFinrank_maximalIdeal).symm
@@ -134,7 +134,7 @@ theorem WData.exists_closed_off (w : WData P D hP) (Q : AffPres (w.π ≫ toSpec
     intro hmem
     rcases h𝔮prime.mem_or_mem hmem with hh | hprod
     · exact S.eval_h (by simpa [ptIdeal, RingHom.mem_ker] using h𝔮x hh)
-    · haveI := h𝔮prime
+    · have := h𝔮prime
       obtain ⟨l, -, hl⟩ := Ideal.IsPrime.prod_mem_iff.mp hprod
       have h0 : algebraMap _ (locRing Q.K p) (S.r l) = 0 := h𝔮𝔮' hl
       exact ne_zero_of_span_eq_maximalIdeal hdL (fun l => algebraMap _ (locRing Q.K p) (S.r l))
@@ -221,7 +221,7 @@ theorem WData.dim_coord (w : WData P D hP) {e : ℕ}
     (hx : x ∈ w.src c) : ringKrullDim (locRing (w.pres c.1 c.2).K (w.coord c x)) = e := by
   have h1 : w.coord c x = (w.pres c.1 c.2).coord x.1 hx := by
     unfold WData.coord
-    exact dif_pos hx
+    exact dite_eq_left hx
   rw [h1, ← (w.pres c.1 c.2).ringKrullDim_stalk x.1 hx x.2]
   exact he x
 

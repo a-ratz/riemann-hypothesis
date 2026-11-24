@@ -77,7 +77,7 @@ def dSq {m n : ℕ} (Z : D.what₂.Tau → Fin m → Fin n → ℂ) : (D.what₂
 
 theorem dSq_apply {m n : ℕ} (Z V : D.what₂.Tau → Fin m → Fin n → ℂ) :
     dSq Z V = ∑ τ, ∑ a, ∑ b, 2 * (V τ a b * starRingEnd ℂ (Z τ a b)).re := by
-  simp [dSq, ContinuousLinearMap.sum_apply, entryR_apply, Complex.inner, two_mul]
+  simp [dSq, sum_apply, entryR_apply, Complex.inner, two_mul]
   refine Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
 
 theorem hasFDerivAt_sqSum {m n : ℕ} (Z : D.what₂.Tau → Fin m → Fin n → ℂ) :
@@ -243,7 +243,7 @@ theorem differentiable_gZ_of_frames {θ : InfFam D} {σ : (D.what₂.Tau → ℂ
     ring
   have ha := hann (Φ Z) (Φ v)
   rw [hJ, hω1, hω2, show f (iotaW σ T S (Φ Z)) = F (Φ Z) from rfl] at ha
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.coe_restrictScalars', map_smul, Complex.ofRealCLM_apply, smul_eq_mul]
   push_cast at ha ⊢
   generalize Complex.exp ((Real.pi : ℂ) * (Formalism.L2.Pj.xiR D : ℂ) * (sqSum Z : ℂ)) = E

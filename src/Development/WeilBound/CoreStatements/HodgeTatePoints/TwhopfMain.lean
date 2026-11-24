@@ -122,8 +122,8 @@ theorem toUnit_genPt_left : (toUnit (genPt V)).left =
 
 theorem section_ext (Γ : QFGroup V T) (σ τ : 𝟙_ (Over (Spec (CommRingCat.of V))) ⟶ Γ.G)
     (h : toUnit (genPt V) ≫ σ = toUnit (genPt V) ≫ τ) : σ = τ := by
-  haveI := Γ.separated
-  haveI hdom : IsDominant (Spec.map (CommRingCat.ofHom (algebraMap V (FractionRing V)))) :=
+  have := Γ.separated
+  have hdom : IsDominant (Spec.map (CommRingCat.ofHom (algebraMap V (FractionRing V)))) :=
     ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical _).2 (by
       change RingHom.ker (algebraMap V (FractionRing V)) ≤ _
       rw [(RingHom.injective_iff_ker_eq_bot _).1 (IsFractionRing.injective V (FractionRing V))]

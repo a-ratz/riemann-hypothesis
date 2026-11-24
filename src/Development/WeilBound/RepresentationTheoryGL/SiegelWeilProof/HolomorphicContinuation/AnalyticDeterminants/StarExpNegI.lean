@@ -206,7 +206,7 @@ theorem rot_conj (j : ℕ) (θ : ℝ) (r s : Fin n) :
   rw [rot_eq, conj_nU _ _ (dA_ne j θ) (dB_ne j θ), smul_conjCm]
   congr 2
   have he : Complex.exp (2 * θ * Complex.I) = Complex.exp (θ * Complex.I) ^ 2 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     push_cast
     ring

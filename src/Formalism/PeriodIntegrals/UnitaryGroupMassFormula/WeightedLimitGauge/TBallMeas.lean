@@ -64,7 +64,7 @@ theorem continuous_expChart (k r : ℕ) (S : Set (Mat k r)) :
     let _ : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
     have : @CompleteSpace (Matrix (Fin n) (Fin n) ℂ) PseudoMetricSpace.toUniformSpace := by
       let _ : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-      exact FiniteDimensional.complete ℂ _
+      exact FiniteDimensional.completeSpace ℂ _
     let _ : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra (R := ℚ)
     exact NormedSpace.exp_continuous
   have hun : Continuous (fun x : EuclideanSpace ℝ (Fin n × Fin n × Bool) => unrealify x) := by
@@ -75,7 +75,7 @@ theorem continuous_expChart (k r : ℕ) (S : Set (Mat k r)) :
       (PiLp.continuous_apply 2 (fun _ : Fin n × Fin n × Bool => ℝ) (i, j, true)))
   have hall : Continuous (fun x : lieE S =>
       NormedSpace.exp (unrealify (x : EuclideanSpace ℝ (Fin n × Fin n × Bool)))) :=
-    (hexp.comp hun).comp continuous_subtype_val
+    (hexp.comp hun).comp continuous_subtypeVal
   exact continuous_pi fun i => continuous_pi fun j => (continuous_apply j).comp ((continuous_apply i).comp hall)
 
 theorem measurableSet_expBall (k r : ℕ) (S : Set (Mat k r)) (ρ : ℝ) :

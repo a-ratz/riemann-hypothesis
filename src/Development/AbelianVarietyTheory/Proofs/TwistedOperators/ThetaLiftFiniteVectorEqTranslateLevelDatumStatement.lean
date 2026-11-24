@@ -217,7 +217,7 @@ theorem conjI_eq_map {E : Type} [Field E] [NumberField E] [IsCMField E] (P : Ide
   rw [Ideal.map, Set.image]
   congr 1
   ext a
-  simp only [Set.mem_setOf_eq, SetLike.mem_coe]
+  simp only [Set.mem_ofPred_eq, SetLike.mem_coe]
   constructor
   · rintro ⟨b, hb, h⟩
     refine ⟨b, hb, ?_⟩
@@ -230,7 +230,7 @@ theorem conjI_eq_map {E : Type} [Field E] [NumberField E] [IsCMField E] (P : Ide
 theorem exists_conj_place : ∀ (D : D7) (PP : Formalism.L2.DIV.Pl D.host.E), ∃ PP' : Formalism.L2.DIV.Pl D.host.E, PP'.asIdeal = conjI PP.asIdeal ∧ Formalism.IndefR.Lev.IsConjPl PP' PP := by
   intro D PP
   let σ := IsCMField.ringOfIntegersComplexConj D.host.E
-  haveI : (PP.asIdeal.map σ).IsPrime := Ideal.map_isPrime_of_equiv σ
+  have : (PP.asIdeal.map σ).IsPrime := Ideal.map_isPrime_of_equiv σ
   have hne : PP.asIdeal.map σ ≠ ⊥ := by
     rw [Ne, Ideal.map_eq_bot_iff_of_injective σ.injective]
     exact PP.ne_bot
@@ -412,7 +412,7 @@ theorem fsmul (c : 𝓞 D.host.E) (x : Fin r → D.host.E) : m *ᵥ toAf (D := D
 
 theorem sum_one_smul (β : Fin r → Fin r → D.host.E) (i : Fin r) :
     ∑ j, (1 : Matrix (Fin r) (Fin r) (𝓞 D.host.E)) j i • β j = β i := by
-  simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem sum_sub_one (β : Fin r → Fin r → D.host.E) (κ' : Matrix (Fin r) (Fin r) (𝓞 D.host.E)) (i : Fin r) :
     ∑ j, (κ' j i - (1 : Matrix (Fin r) (Fin r) (𝓞 D.host.E)) j i) • β j = ∑ j, κ' j i • β j - β i := by
@@ -756,7 +756,7 @@ variable {D : D7} {S T : HSp D}
 
 theorem mem_of_indL_ne {L : AddSubgroup (WO S T)} {t : WO S T} (h : GlobalTheory.LiftLevel.indL L t ≠ 0) : t ∈ L := by
   by_contra hn
-  exact h (by simp only [GlobalTheory.LiftLevel.indL, hn, if_false])
+  exact h (by simp only [GlobalTheory.LiftLevel.indL, hn, ite_false])
 
 theorem isSBHalf_indL (a : AE D) (Λ L : AddSubgroup (WO S T)) (hL : ∀ x ∈ L, IsHalf a x)
     (h1 : ∃ m : ℕ, 0 < m ∧ ∀ x ∈ L, m • x ∈ Λ) (h2 : ∃ m : ℕ, 0 < m ∧ ∀ x ∈ Λ, IsHalf a x → m • x ∈ L) :
@@ -853,8 +853,8 @@ theorem indL_theta_fock_latVac : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B : C
     congr 1
     funext t
     by_cases h : t ∈ L
-    · simp only [GlobalTheory.LiftLevel.indL, h, if_true, ht t h, one_mul]
-    · simp only [GlobalTheory.LiftLevel.indL, h, if_false, mul_zero]
+    · simp only [GlobalTheory.LiftLevel.indL, h, ite_true, ht t h, one_mul]
+    · simp only [GlobalTheory.LiftLevel.indL, h, ite_false, mul_zero]
   have hfix_r : ∀ r ∈ GlobalTheory.PlaceModel.half S T b, heisO C.ψ S T r f₀ = f₀ →
       heisO C.ψ S T r (Tm (GlobalTheory.LiftLevel.indL L)) = Tm (GlobalTheory.LiftLevel.indL L) := fun r hr hr0 =>
     heisO_fix hψ hS hT ha hinf hTm r hr0
@@ -986,7 +986,7 @@ theorem thPVec_ne_zero : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), T.rank ≤ S.
   intro h0
   have := congrFun h0 x
   simp only [Pi.zero_apply] at this
-  rw [if_pos ⟨hx1, hx2⟩] at this
+  rw [ite_eq_left ⟨hx1, hx2⟩] at this
   exact hx3 this
 
 end GlobalTheory.ThPVecNe
@@ -1063,7 +1063,7 @@ theorem thP_vec_eq_translate : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (om : GA
   have hfT : f = Tm (thPDatum S T βS βT Pg Q ξ e) := hall Tm hTm
   obtain ⟨hSB, hTh, hFock, hLat⟩ := GlobalTheory.T.placeModel_indicator_theta_fock_latticeVacuum D S T C B hB ΛT hsd (Pg ∪ Q) e he f₀ hvac Tm hTm L hA hB' hC
   have hLat'' := hLat _ hD
-  haveI := Fintype.ofFinite (LvCls C Lv)
+  have := Fintype.ofFinite (LvCls C Lv)
   set f'' := Tm (indL L) with hf''
   have hee : cA D e * cA D e = cA D e := by rw [← map_mul, GlobalTheory.PlaceVec.idemSum_mul_self he]
   have hhalf : ∀ w : WO S T, IsHalf (cA D e) (partAt (cA D e) w) := fun w i j => by

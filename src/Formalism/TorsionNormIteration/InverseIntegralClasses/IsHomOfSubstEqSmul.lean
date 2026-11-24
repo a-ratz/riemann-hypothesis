@@ -72,8 +72,8 @@ theorem coeff_one_subst {R : Type} [CommRing R] (f a : PowerSeries R)
     rcases Nat.lt_or_gt_of_ne hd with h | h
     · have h0 : d = 0 := by omega
       subst h0
-      rw [pow_zero, coeff_one, if_neg one_ne_zero, smul_zero]
-    · rw [mul_pow, coeff_X_pow_mul', if_neg (by omega), smul_zero]
+      rw [pow_zero, coeff_one, ite_eq_right one_ne_zero, smul_zero]
+    · rw [mul_pow, coeff_X_pow_mul', ite_eq_right (by omega), smul_zero]
 
 end Formalism.LT.PadicP
 

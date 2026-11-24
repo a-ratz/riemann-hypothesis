@@ -194,7 +194,7 @@ theorem epsPow_epsPow {a : ℤ_[l]} (ha : epsPow untilt_epsilon a = epsT AI) (c 
   have e1 : PreTilt.untilt (φi^[n] (epsT AI)) =
       PreTilt.untilt (φi^[n] (epsilon l)) ^ (PadicInt.toZModPow n a).val := by
     rw [← ha]; exact untilt_iterate_epsPow _ a n
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have e2 : (PadicInt.toZModPow n (a * c)).val = (PadicInt.toZModPow n a).val * (PadicInt.toZModPow n c).val % (l ^ n) := by
     rw [map_mul, ZMod.val_mul]
   have L := untilt_iterate_epsPow (untilt_epsT AI) c n
@@ -375,7 +375,7 @@ theorem continuous_κ (l : ℕ) [Fact l.Prime] : Continuous (κ : GQ l → ℚ_[
     calc _ ≤ (l : ℝ) ^ (-(m : ℤ)) := (PadicInt.norm_le_pow_iff_mem_span_pow _ m).2 hmem
       _ = (l : ℝ)⁻¹ ^ m := by rw [_root_.zpow_neg, zpow_natCast, inv_pow]
       _ < ε := hm
-  exact continuous_subtype_val.comp hc
+  exact continuous_subtypeVal.comp hc
 
 end period_ring_base
 end -- clump:auto

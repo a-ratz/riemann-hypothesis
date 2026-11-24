@@ -181,15 +181,15 @@ theorem killR_of_steps (D : D7) (HW : HWOf D.loc) (hd : dvdR) (hq : quotR D) (hn
   have hB : latticeCoboundaries T₂.L ≤ F.ImF ((D.loc l).PD K) := by
     unfold LatHom.ImF
     exact le_sup_right
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : NeZero (finrank ℚ_[l] ↥(K0 K)) := by
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : NeZero (finrank ℚ_[l] ↥(K0 K)) := by
     first
     | infer_instance
     | exact ⟨Module.finrank_pos.ne'⟩
     | exact ⟨(Formalism.MainNotions.N.Ln34.max_unramified_finrank_pos K).ne'⟩
     | exact ⟨(Formalism.MainNotions.N.PreambleDegrees.finrank_maxUnramifiedSubfield_padicFinExt_pos K).ne'⟩
     | (haveI := Formalism.MainNotions.WachCoordinates.Br.finiteDimensional_max_unramified K; exact ⟨Module.finrank_pos.ne'⟩)
-    | (haveI := FiniteDimensional.left ℚ_[l] ↥(K0 K) ↥K.1; exact ⟨Module.finrank_pos.ne'⟩)
+    | (have := FiniteDimensional.left ℚ_[l] ↥(K0 K) ↥K.1; exact ⟨Module.finrank_pos.ne'⟩)
   refine ⟨sK l K, h', Nat.mul_div_cancel' (hd l hl K LL hG), hh1, hh', Finset.univ.biUnion s₀, ?_, ?_, ?_⟩
   · calc (Finset.univ.biUnion s₀).card ≤ ∑ c, (s₀ c).card := Finset.card_biUnion_le
       _ ≤ ∑ _c : ZMod (finrank ℚ_[l] ↥(K0 K)), eK K * (eK K + 1) * m :=

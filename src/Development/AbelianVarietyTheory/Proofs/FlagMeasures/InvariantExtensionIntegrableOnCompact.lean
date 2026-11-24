@@ -126,7 +126,7 @@ theorem integrableOn_rep (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableSet
     ∃ M : ℝ, ∀ F : Lp ℂ 2 (μ.restrict D), IntegrableOn (fun y => F (r y)) C μ ∧
       ∫ y in C, ‖F (r y)‖ ∂μ ≤ M * ‖F‖ := by
   refine ⟨((S.card : ℝ≥0∞) ^ (1 / 2 : ℝ) * μ C ^ (1 / 2 : ℝ)).toReal, fun F => ?_⟩
-  haveI : IsFiniteMeasure (μ.restrict C) := isFiniteMeasure_restrict.2 hCf
+  have : IsFiniteMeasure (μ.restrict C) := isFiniteMeasure_restrict.2 hCf
   have hFm : Measurable (F : G → ℂ) := (Lp.stronglyMeasurable F).measurable
   have hgm : AEStronglyMeasurable (fun y => F (r y)) (μ.restrict C) :=
     (aestronglyMeasurable_comp_rep hD hDm hr (Lp.stronglyMeasurable F)).restrict
@@ -152,7 +152,7 @@ theorem integrableOn_rep (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableSet
     h2.trans_lt (ENNReal.mul_lt_top hcard.lt_top (Lp.eLpNorm_lt_top F))
   refine ⟨hL2.integrable (by norm_num), ?_⟩
   calc ∫ y in C, ‖F (r y)‖ ∂μ = (eLpNorm (fun y => F (r y)) 1 (μ.restrict C)).toReal := by
-        rw [integral_norm_eq_lintegral_enorm hgm, eLpNorm_one_eq_lintegral_enorm hgm]
+        rw [integral_norm_eq_lintegral_eNorm hgm, eLpNorm_one_eq_lintegral_eNorm hgm]
     _ ≤ ((S.card : ℝ≥0∞) ^ (1 / 2 : ℝ) * eLpNorm F 2 (μ.restrict D) * μ C ^ (1 / 2 : ℝ)).toReal :=
         ENNReal.toReal_mono (ENNReal.mul_ne_top (ENNReal.mul_ne_top hcard (Lp.eLpNorm_ne_top F)) hCr)
           (h1.trans (by gcongr))
@@ -165,12 +165,12 @@ theorem ext_integrableOn : ∀ (B : RowsAut) (C : Set B.I.GA), IsCompact C → �
   intro B C hC
   obtain ⟨Γ, hΓ, hΓc, hfin, hfd⟩ := _root_.GlobalTheory.RatDiscrete.rational_points B.I
   obtain ⟨hT2, -, hsc, -⟩ := _root_.GlobalTheory.CongTop.adelic_topology B.I
-  haveI := hΓc
-  haveI := hT2
-  haveI := hsc
+  have := hΓc
+  have := hT2
+  have := hsc
   have hD := hfd B.μf B.fund B.fund_spec
-  haveI : (B.I.muA B.μf).IsMulLeftInvariant := ⟨(_root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).1⟩
-  haveI : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by
+  have : (B.I.muA B.μf).IsMulLeftInvariant := ⟨(_root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).1⟩
+  have : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by
     unfold AutInst.muA
     infer_instance
   have hDm : MeasurableSet B.fund := B.fund_spec.1

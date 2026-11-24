@@ -225,7 +225,7 @@ theorem minorProd_scale {r : ℕ} (la : Fin r → ℤ) (Y Y' : Matrix (Fin r) (F
   congr 2
   refine Finset.prod_congr rfl fun j _ => ?_
   have hj : (j : ℕ) < r := by have := j.isLt; have := k.isLt; simp only [Fin.val_succ] at *; omega
-  simp only [hs, hj, dif_pos]
+  simp only [hs, hj, dite_eq_left]
   rfl
 
 theorem lminor_diagonal_mul {r : ℕ} (t : Fin r → ℂ) (Y : Matrix (Fin r) (Fin r) ℂ)
@@ -241,7 +241,7 @@ theorem extendByZero_antitone_off_break {r p : ℕ} (la : Fin r → ℤ)
     (h2 : ∀ i j : Fin r, p ≤ (i : ℕ) → i ≤ j → la j ≤ la i) {k : ℕ} (hk : k + 1 < r)
     (hp : k + 1 ≠ p) : 0 ≤ ext0 la k - ext0 la (k + 1) := by
   have hk' : k < r := by omega
-  simp only [ext0, hk, hk', dif_pos, sub_nonneg]
+  simp only [ext0, hk, hk', dite_eq_left, sub_nonneg]
   rcases lt_or_gt_of_ne hp with h | h
   · exact h1 _ _ (by simp [Fin.le_def]) h
   · exact h2 _ _ (by simp only; omega) (by simp [Fin.le_def])
@@ -432,7 +432,7 @@ theorem volume_ellipsoid_le {ι : Type*} [Fintype ι] [DecidableEq ι] (R : ℝ)
   rw [hdet, abs_of_pos (inv_pos.mpr hpos), ← hdG] at this
   rw [← this]
   refine measure_mono fun x hx => ?_
-  simp only [Set.mem_setOf_eq, hB', form_gram_re] at hx
+  simp only [Set.mem_ofPred_eq, hB', form_gram_re] at hx
   simp only [Set.mem_preimage, mem_closedBall_zero_iff]
   refine (pi_norm_le_iff_of_nonneg (Real.sqrt_nonneg _)).2 fun k => ?_
   refine Real.le_sqrt_of_sq_le (le_trans ?_ hx)
@@ -639,7 +639,7 @@ theorem lintegral_mul_right {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Finty
     rw [LinearMap.det_restrictScalars, hL, Algebra.norm_complex_apply, Complex.normSq_eq_norm_sq,
       norm_pow, ← pow_mul, mul_comm]
   have hpos : 0 < ‖A.det‖ ^ (2 * Fintype.card κ) := pow_pos (norm_pos_iff.2 hA) _
-  haveI : (volume : Measure (κ → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (κ → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure (κ → ι → ℂ))
     (f := L.restrictScalars ℝ) (by rw [hdet]; exact hpos.ne')
   have hm : Measurable (L.restrictScalars ℝ) :=
@@ -676,7 +676,7 @@ theorem columns_integral (ι κ : Type*) [Fintype ι] [DecidableEq ι] [Fintype 
         (Matrix.of x.2)ᴴ * Matrix.of x.2 - 1 : Matrix ι ι ℂ) i j‖ < δ} with hS
   have hSm : MeasurableSet S := by
     refine IsOpen.measurableSet ?_
-    simp only [hS, Set.setOf_forall]
+    simp only [hS, Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     refine isOpen_lt ?_ continuous_const
     simp only [Matrix.sub_apply, Matrix.mul_apply, conjTranspose_apply, transpose_apply, of_apply]
@@ -835,19 +835,19 @@ theorem lintegral_cutEquiv (ι κ : Type*) [Fintype ι] [Fintype κ] :
     ∃ c : ENNReal, c < ⊤ ∧ ∀ g : ((ι → ι → ℂ) × (κ → ι → ℂ)) × (κ → ι ⊕ κ → ℂ) → ENNReal,
       ∫⁻ y, g (cutEquiv ι κ y) = c * ∫⁻ w, g w := by
   let e := (cutEquiv ι κ).toContinuousLinearEquiv
-  haveI : BorelSpace (ι → ι → ℂ) := Pi.borelSpace
-  haveI : BorelSpace (κ → ι → ℂ) := Pi.borelSpace
-  haveI : BorelSpace (κ → ι ⊕ κ → ℂ) := Pi.borelSpace
-  haveI : BorelSpace (ι ⊕ κ → ι ⊕ κ → ℂ) := Pi.borelSpace
-  haveI : BorelSpace ((ι → ι → ℂ) × (κ → ι → ℂ)) := Prod.borelSpace
-  haveI : BorelSpace (((ι → ι → ℂ) × (κ → ι → ℂ)) × (κ → ι ⊕ κ → ℂ)) := Prod.borelSpace
-  haveI : (volume : Measure (ι → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (κ → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (κ → ι ⊕ κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (ι ⊕ κ → ι ⊕ κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure ((ι → ι → ℂ) × (κ → ι → ℂ))).IsAddHaarMeasure :=
+  have : BorelSpace (ι → ι → ℂ) := Pi.borelSpace
+  have : BorelSpace (κ → ι → ℂ) := Pi.borelSpace
+  have : BorelSpace (κ → ι ⊕ κ → ℂ) := Pi.borelSpace
+  have : BorelSpace (ι ⊕ κ → ι ⊕ κ → ℂ) := Pi.borelSpace
+  have : BorelSpace ((ι → ι → ℂ) × (κ → ι → ℂ)) := Prod.borelSpace
+  have : BorelSpace (((ι → ι → ℂ) × (κ → ι → ℂ)) × (κ → ι ⊕ κ → ℂ)) := Prod.borelSpace
+  have : (volume : Measure (ι → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (κ → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (κ → ι ⊕ κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (ι ⊕ κ → ι ⊕ κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure ((ι → ι → ℂ) × (κ → ι → ℂ))).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
-  haveI : (volume : Measure (((ι → ι → ℂ) × (κ → ι → ℂ)) × (κ → ι ⊕ κ → ℂ))).IsAddHaarMeasure :=
+  have : (volume : Measure (((ι → ι → ℂ) × (κ → ι → ℂ)) × (κ → ι ⊕ κ → ℂ))).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
   have hmap := Measure.isAddLeftInvariant_eq_smul (Measure.map e volume)
     (volume : Measure (((ι → ι → ℂ) × (κ → ι → ℂ)) × (κ → ι ⊕ κ → ℂ)))
@@ -883,7 +883,7 @@ theorem integrableOn_minor (ι κ : Type*) [Fintype ι] [DecidableEq ι] [Fintyp
     simp [Matrix.mul_apply, Fintype.sum_sum_type, Matrix.one_apply, sub_eq_add_neg, neg_ite]
   have hUm : MeasurableSet U := by
     refine IsOpen.measurableSet ?_
-    simp only [hU, Set.setOf_forall, Matrix.sub_apply, hent]
+    simp only [hU, Set.ofPred_forall, Matrix.sub_apply, hent]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     refine isOpen_lt ?_ continuous_const
     fun_prop

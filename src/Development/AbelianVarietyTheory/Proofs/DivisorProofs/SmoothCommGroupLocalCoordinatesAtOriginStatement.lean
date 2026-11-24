@@ -301,12 +301,12 @@ theorem exists_tan_of_derivation (R : Type) [CommRing R] [IsLocalRing R] (G : Ov
     ∃ v : TanM (𝟙 (Sp R)) G, ∀ f, tanDer G v f = D f := by
   set ψ := derHom G D hadd hmul hc with hψdef
   have hψ : ∀ f, ψ f = TrivSqZeroExt.inl (evO G f) + TrivSqZeroExt.inr (D f) := fun f => rfl
-  haveI : IsLocalHom (evO G) := Scheme.isLocalHom_stalkClosedPointTo' (R := R) (η[G]).left
-  haveI hloc : IsLocalHom ψ := ⟨fun a ha => by
+  have : IsLocalHom (evO G) := Scheme.isLocalHom_stalkClosedPointTo' (R := R) (η[G]).left
+  have hloc : IsLocalHom ψ := ⟨fun a ha => by
     have h2 : IsUnit (ψ a).fst := (TrivSqZeroExt.isUnit_iff_isUnit_fst).1 ha
     simp only [hψ, TrivSqZeroExt.fst_add, TrivSqZeroExt.fst_inl, TrivSqZeroExt.fst_inr, add_zero] at h2
     exact isUnit_of_map_unit (evO G) a h2⟩
-  haveI hloc' : IsLocalHom (CommRingCat.ofHom ψ).hom := hloc
+  have hloc' : IsLocalHom (CommRingCat.ofHom ψ).hom := hloc
   let p : Sp (DualNumber R) ⟶ G.left := spMap ψ ≫ G.left.fromSpecStalk (origin G)
   have hcomp : ψ.comp (constO G) = algebraMap R (DualNumber R) := by
     ext r <;> simp [hψ, evO_constO, hc, TrivSqZeroExt.algebraMap_eq_inl]
@@ -519,8 +519,8 @@ theorem GlobalTheory.CoordsOrigin.noetherian_free_cotangent : ∀ (R : Type) [Co
       (letI : Algebra R (G.left.presheaf.stalk (origin G)) := (constO G).toAlgebra;
         Module.Free R (RingHom.ker (evO G)).Cotangent ∧ Module.Finite R (RingHom.ker (evO G)).Cotangent) := by
   intro R _ _ _ G _ hs
-  haveI := hs
-  haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
+  have := hs
+  have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
   exact ⟨inferInstance, GlobalTheory.CoordsOrigin.free_finite_cotangent_of_eq G _ (GlobalTheory.CoordsOrigin.constO_eq_strMap G)⟩
 end -- clump:auto
 end -- clump:auto
@@ -625,7 +625,7 @@ theorem tanDer_add : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Over (Sp R
     (u v : TanM (𝟙 (Sp R)) G) (f : G.left.presheaf.stalk (origin G)),
     tanDer G (u + v) f = tanDer G u f + tanDer G v f := by
   intro R _ _ G _ _ u v f
-  haveI : IsLocalRing (TrivSqZeroExt R (R × R)) := isLocalRing_tsz R (R × R)
+  have : IsLocalRing (TrivSqZeroExt R (R × R)) := isLocalRing_tsz R (R × R)
   let P : overAt (𝟙 (Sp R)) (TrivSqZeroExt R (R × R)) ⟶ G :=
     (homAt (𝟙 (Sp R)) (tm (LinearMap.inl R R R)) ≫ tv u) * (homAt (𝟙 (Sp R)) (tm (LinearMap.inr R R R)) ≫ tv v)
   have hz : (0 : R →ₗ[R] R) = (0 : R) • (LinearMap.id : R →ₗ[R] R) := by simp
@@ -654,7 +654,7 @@ theorem tanDer_add : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Over (Sp R
   have hP : P.left (IsLocalRing.closedPoint (TrivSqZeroExt R (R × R))) = origin G := by
     have e : spMap ((tm (LinearMap.fst R R R) : TrivSqZeroExt R (R × R) →ₐ[R] DualNumber R) :
         TrivSqZeroExt R (R × R) →+* DualNumber R) ≫ P.left = (tv u).left := congrArg (fun q => q.left) hfst
-    haveI := isLocalHom_map (LinearMap.fst R R R)
+    have := isLocalHom_map (LinearMap.fst R R R)
     have e0 : spMap ((tm (LinearMap.fst R R R) : TrivSqZeroExt R (R × R) →ₐ[R] DualNumber R) :
         TrivSqZeroExt R (R × R) →+* DualNumber R) (IsLocalRing.closedPoint (DualNumber R)) =
         IsLocalRing.closedPoint (TrivSqZeroExt R (R × R)) :=
@@ -664,7 +664,7 @@ theorem tanDer_add : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Over (Sp R
   have key : ∀ (L : R × R →ₗ[R] R) (w : TanM (𝟙 (Sp R)) G), homAt (𝟙 (Sp R)) (tm L) ≫ P = tv w →
       tanDer G w f = L (valAt P.left (origin G) hP f).snd := by
     intro L w hw
-    haveI := isLocalHom_map L
+    have := isLocalHom_map L
     have e : (tv w).left = spMap ((tm L : TrivSqZeroExt R (R × R) →ₐ[R] DualNumber R) :
         TrivSqZeroExt R (R × R) →+* DualNumber R) ≫ P.left := (congrArg (fun q => q.left) hw).symm
     have hy : (spMap ((tm L : TrivSqZeroExt R (R × R) →ₐ[R] DualNumber R) :
@@ -733,7 +733,7 @@ theorem stalkClosedPointTo_localMap_comp {X : Scheme.{0}} {A B : CommRingCat.{0}
     rw [hy, Spec.map_comp, Category.assoc, Scheme.Spec_stalkClosedPointTo_fromSpecStalk]
   clear hy
   subst hy'
-  haveI : IsLocalHom (Scheme.stalkClosedPointTo x ≫ g).hom := by
+  have : IsLocalHom (Scheme.stalkClosedPointTo x ≫ g).hom := by
     rw [CommRingCat.hom_comp]; infer_instance
   refine TopCat.Presheaf.stalk_hom_ext _ fun U hU => ?_
   simp only [TopCat.Presheaf.stalkCongr_hom, Category.assoc, TopCat.Presheaf.germ_stalkSpecializes_assoc]
@@ -827,7 +827,7 @@ theorem isLocalHom_epsMul_zero : IsLocalHom (epsMul (0 : R)) :=
 
 theorem tvStalk_fst (u v : TanM (𝟙 (Sp R)) G) (f : G.left.presheaf.stalk (origin G)) :
     ((tvStalk G u).hom f).fst = ((tvStalk G v).hom f).fst := by
-  haveI := isLocalHom_epsMul_zero (R := R)
+  have := isLocalHom_epsMul_zero (R := R)
   have hl : ∀ w : TanM (𝟙 (Sp R)) G, IsLocalHom (tvStalk G w ≫ CommRingCat.ofHom (epsMul (0 : R))).hom := by
     intro w
     rw [CommRingCat.hom_comp, CommRingCat.hom_ofHom]
@@ -908,7 +908,7 @@ namespace GlobalTheory.CoordsOrigin
 
 theorem coords_at_origin : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∀ (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) G)) (dd : Fin n → Fld G.left), (∀ a, IsInv G (v a) (dd a)) → ∀ δ : Fin n → Derivation ℤ (G.left.presheaf.stalk (origin G)) (G.left.presheaf.stalk (origin G)), (∀ a O (hO : origin G ∈ O) f, δ a ((G.left.presheaf.germ O (origin G) hO).hom f) = (G.left.presheaf.germ O (origin G) hO).hom (dd a O f)) → ∃ z : Fin n → G.left.presheaf.stalk (origin G), (∀ i, evO G (z i) = 0) ∧ (∀ a i, evO G (δ a (z i)) = if a = i then 1 else 0) ∧ maximalIdeal (G.left.presheaf.stalk (origin G)) = (maximalIdeal R).map (constO G) ⊔ Ideal.span (Set.range z) := by
   intro R _ _ _ _ G _ _ hsm n v dd hinv δ hδ
-  letI : Algebra R (G.left.presheaf.stalk (origin G)) := (constO G).toAlgebra
+  let : Algebra R (G.left.presheaf.stalk (origin G)) := (constO G).toAlgebra
   obtain ⟨hN, hF, hFin⟩ := GlobalTheory.T.originLocalRing_noetherian_free_unitSectionConormal R G hsm
   have key : ∀ a f, evO G (δ a f) = tanDer G (v a) f := by
     intro a f

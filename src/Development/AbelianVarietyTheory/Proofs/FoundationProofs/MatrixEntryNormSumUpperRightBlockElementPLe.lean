@@ -111,7 +111,7 @@ theorem cosh_const_numerical_bound (p q : ℕ) :
   have hR : Real.exp (3 * ((p + q : ℕ) : ℝ) ^ 2 * Real.log (((p + q : ℕ) : ℝ) + 2))
       = (((p + q : ℕ) : ℝ) + 2) ^ (3 * (p + q) ^ 2) := by
     have : (3 * ((p + q : ℕ) : ℝ) ^ 2) = ((3 * (p + q) ^ 2 : ℕ) : ℝ) := by push_cast; ring
-    rw [this, Real.exp_nat_mul, Real.exp_log (by positivity)]
+    rw [this, Real.exp_natCast_mul, Real.exp_log (by positivity)]
   rw [hR, hsq]
   have ha : (1 : ℝ) ≤ ((p + q : ℕ) : ℝ) := by exact_mod_cast hpos
   generalize ((p + q : ℕ) : ℝ) = a at ha

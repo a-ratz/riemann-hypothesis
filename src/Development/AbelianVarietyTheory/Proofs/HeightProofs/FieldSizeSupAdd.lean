@@ -87,7 +87,7 @@ theorem sum_emb_mul_dual {E : Type} [Field E] [NumberField E] {ι : Type} [Finty
         ← trace_eq_sum_embeddings ℂ]
     simp only [LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply, AlgHom.toLinearMap_apply,
       smul_eq_mul, LinearMap.zero_apply, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [h1, sub_eq_zero]
     simp only [Finset.sum_mul, map_mul]
     rw [Finset.sum_comm]
@@ -100,9 +100,9 @@ theorem eq_sum_trace_mul_dual {F E L : Type} [Field F] [NumberField F] [Field E]
     {ι : Type} [Fintype ι] [DecidableEq ι] (b : Module.Basis ι ℚ E) (y : L) :
     y = ∑ i, algebraMap F L (Algebra.trace F L (y * j (b i))) * j (b.traceDual i) := by
   classical
-  letI : Algebra L ℂ := u.toAlgebra
-  letI : Algebra F ℂ := (u.comp (algebraMap F L)).toAlgebra
-  haveI : IsScalarTower F L ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra L ℂ := u.toAlgebra
+  let : Algebra F ℂ := (u.comp (algebraMap F L)).toAlgebra
+  have : IsScalarTower F L ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
   apply u.injective
 
   rw [map_sum]
@@ -125,9 +125,9 @@ theorem eq_sum_trace_mul_dual {F E L : Type} [Field F] [NumberField F] [Field E]
     rw [this]
     by_cases h : ρ = IsScalarTower.toAlgHom F L ℂ
     · subst h
-      rw [if_pos rfl, if_pos (by rfl), mul_one]
+      rw [ite_eq_left rfl, ite_eq_left (by rfl), mul_one]
       rfl
-    · rw [if_neg h, if_neg, mul_zero]
+    · rw [ite_eq_right h, ite_eq_right, mul_zero]
       intro h'
       apply h
       have := hgen (ρ : L →+* ℂ) (fun x => ρ.commutes x) (fun x => DFunLike.congr_fun h' x)
@@ -178,7 +178,7 @@ theorem map_different_le_sup (F F' : IntermediateField ℚ ℂ) [NumberField F] 
     (differentIdeal ℤ (𝓞 F')).map
       (RingOfIntegers.mapRingHom (IntermediateField.inclusion (le_sup_right : F' ≤ F ⊔ F')).toRingHom) ≤
       differentIdeal (𝓞 F) (𝓞 ↥(F ⊔ F')) := by
-  letI : Algebra F ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_left).toRingHom.toAlgebra
+  let : Algebra F ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_left).toRingHom.toAlgebra
   refine map_different_le (F := F) _ (F ⊔ F').val.toRingHom fun ρ h1 h2 => ?_
   ext ⟨x, hx⟩
   change ρ ⟨x, hx⟩ = x
@@ -255,10 +255,10 @@ theorem log_discr_div_le (F F' L : Type) [Field F] [Field F'] [Field L]
 
 theorem sz_sup : ∀ (F F' : IntermediateField ℚ ℂ) (a b a' b' : ℝ), Sz F a b → Sz F' a' b' → Sz (F ⊔ F') (a + a') (b + b') := by
   rintro F F' a b a' b' ⟨i1, ha, hb⟩ ⟨i2, ha', hb'⟩
-  haveI i3 : FiniteDimensional ℚ ↥(F ⊔ F') := IntermediateField.finiteDimensional_sup F F'
-  letI : NumberField F := NumberField.mk
-  letI : NumberField F' := NumberField.mk
-  letI : NumberField ↥(F ⊔ F') := NumberField.mk
+  have i3 : FiniteDimensional ℚ ↥(F ⊔ F') := IntermediateField.finiteDimensional_sup F F'
+  let : NumberField F := NumberField.mk
+  let : NumberField F' := NumberField.mk
+  let : NumberField ↥(F ⊔ F') := NumberField.mk
   refine ⟨i3, ?_, ?_⟩
   · have h1 : (Module.finrank ℚ ↥(F ⊔ F') : ℝ) ≤ Module.finrank ℚ F * Module.finrank ℚ F' := by
       exact_mod_cast IntermediateField.finrank_sup_le F F'
@@ -267,8 +267,8 @@ theorem sz_sup : ∀ (F F' : IntermediateField ℚ ℂ) (a b a' b' : ℝ), Sz F 
     have h2 := Real.log_le_log (q _) h1
     rw [Real.log_mul (q F).ne' (q F').ne'] at h2
     linarith
-  · letI : Algebra F ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_left).toRingHom.toAlgebra
-    letI : Algebra F' ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_right).toRingHom.toAlgebra
+  · let : Algebra F ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_left).toRingHom.toAlgebra
+    let : Algebra F' ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_right).toRingHom.toAlgebra
     have h := log_discr_div_le F F' ↥(F ⊔ F') (_root_.GlobalTheory.DiffBaseChange.map_different_le_sup F F')
     exact h.trans (add_le_add hb hb')
 

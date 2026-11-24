@@ -332,7 +332,7 @@ theorem exists_eigen_int (C : Core l) (c : Per.OC l) : ∃ y : Per.Acris l, phiA
     Per.θD l (C.j y) = (l : ℂ_[l]) ^ 2 * c := by
   let Θ : Per.Acris l →+* Per.OC l := ((Per.θD l).comp C.j).codRestrict _ fun x =>
     (GlobalTheory.RingBasics.mem_OC _).2 (norm_theta_j_le C x)
-  haveI := (acris_basic l).1
+  have := (acris_basic l).1
   obtain ⟨y, h1, h2⟩ := exists_exact l (phiA l) Θ (fun c => by
     obtain ⟨x, hx⟩ := untilt_surjective l (1 + (l : Per.OC l) ^ 2 * c)
     obtain ⟨w, hw⟩ := tm_pow_sq l x c hx

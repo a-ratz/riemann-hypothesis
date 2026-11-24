@@ -493,7 +493,7 @@ theorem exists_limit {n : ℕ} {U : Set (V n)} (hU : IsOpen U) (K : ℕ → Set 
         ≤ ∫⁻ z in S, (ENNReal.ofReal (2 * N ^ 2) + ENNReal.ofReal (2 * Real.exp M) *
             ENNReal.ofReal (‖F0 z - F k z‖ ^ 2 * Real.exp (-φ k z))) := by
           refine setLIntegral_mono' hS.measurableSet fun z hz => ?_
-          rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+          rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
             ← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_add (by positivity)
               (by positivity)]
           refine ENNReal.ofReal_le_ofReal ?_
@@ -909,7 +909,7 @@ noncomputable section
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
 theorem spread_zero (X : Data E r) (hr : 0 < r) (τ : X.Ψ) : X.spread (fun _ _ => 0) τ = 0 := by
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   simp [Data.spread]
 
 theorem nd_le (X : Data E r) : nd X ≤ X.Ψ.card * (r * r) := by
@@ -957,14 +957,14 @@ theorem real_bound (f r n : ℕ) (hf : 1 ≤ f) (hr : 1 ≤ r) (hn : n ≤ f * (
     exact inv_anti₀ hKpos (by linarith [Real.add_one_le_exp K])
   have hδn : Real.exp (-(2 * n * K)) ≤ (1 / K) ^ (2 * n) := by
     calc Real.exp (-(2 * n * K)) = Real.exp (-K) ^ (2 * n) := by
-          rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+          rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
       _ ≤ (1 / K) ^ (2 * n) := pow_le_pow_left₀ (Real.exp_pos _).le hδ _
   have hpi : (1 : ℝ) ≤ Real.pi ^ n := one_le_pow₀ (by linarith [Real.pi_gt_three])
   have hfac : (n.factorial : ℝ) ≤ Real.exp ((n : ℝ) * n) := by
     have h1 : (n.factorial : ℝ) ≤ (n : ℝ) ^ n := by exact_mod_cast Nat.factorial_le_pow n
     have h2 : (n : ℝ) ^ n ≤ Real.exp n ^ n :=
       pow_le_pow_left₀ (Nat.cast_nonneg _) (by linarith [Real.add_one_le_exp (n : ℝ)]) _
-    rw [← Real.exp_nat_mul] at h2
+    rw [← Real.exp_natCast_mul] at h2
     exact h1.trans h2
   have hfpos : (0 : ℝ) < n.factorial := by exact_mod_cast Nat.factorial_pos n
   have hN := nat_bound f r n hf hr hn
@@ -1190,7 +1190,7 @@ theorem fibre_bound (X : Data E r) {j : ℕ} (hj : j ≤ r) (hp : X.p0 = r - j) 
     exact Real.rpow_le_one h0.le h1 (by linarith)
   · rw [wt, Set.indicator_of_notMem (show v ∉ {v : Fin j × Fin (r - j) → ℂ | toMat v ∈ hcDom j (r - j)} from hv),
       zero_mul]
-    exact zero_le'
+    exact zero_le
 
 theorem lintegral_x0F_le (X : Data E r) {j : ℕ} (hj : j ≤ r) (hp : X.p0 = r - j) {bb : ℝ} (hbb : (r : ℝ) ≤ bb) :
     ∫⁻ z, ENNReal.ofReal (kaF X (x0F X) bb z) ∂muF X (x0F X) ≤
@@ -1233,7 +1233,7 @@ theorem lintegral_x0F_le (X : Data E r) {j : ℕ} (hj : j ≤ r) (hp : X.p0 = r 
         rw [← Finset.prod_mul_distrib]
         calc ∏ t, wt j (r - j) bb (a t) * ∫⁻ b, D (glue e (a t, b))
             ≤ ∏ t : X.Ψ, K * (cube j (r - j)).indicator 1 (a t) :=
-              Finset.prod_le_prod' fun t _ => fibre_bound X hj hp hbb (a t)
+              Finset.prod_le_prod fun t _ => fibre_bound X hj hp hbb (a t)
           _ = K ^ X.Ψ.card * (Set.univ.pi fun _ : X.Ψ => cube j (r - j)).indicator 1 a := by
               rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_coe]
               congr 1
@@ -1307,7 +1307,7 @@ theorem bound_num (r j f : ℕ) (hj : j ≤ r) :
     _ ≤ (Real.exp 3 ^ ((j + k) * (j + k))) ^ f :=
         pow_le_pow_left₀ (by positivity) (pow_le_pow_left₀ Real.pi_pos.le hπe _) f
     _ = Real.exp (3 * (((j + k) * (j + k) * f : ℕ) : ℝ)) := by
-        rw [← pow_mul, ← Real.exp_nat_mul, mul_comm]
+        rw [← pow_mul, ← Real.exp_natCast_mul, mul_comm]
     _ ≤ Real.exp (3 * ((f : ℝ) * ((j + k : ℕ) : ℝ)) ^ 8) := by
         refine Real.exp_le_exp.2 (mul_le_mul_of_nonneg_left ?_ (by norm_num))
         exact_mod_cast hn
@@ -1603,7 +1603,7 @@ theorem ballSum_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [NumberFi
   refine ⟨15, by norm_num, ?_⟩
   intro E _ _ _ r X x y hp0 hp0r hx hy hinj
   classical
-  haveI := FundSetPf.countable_GL (E := E) (r := r)
+  have := FundSetPf.countable_GL (E := E) (r := r)
   have hr : 0 < r := by omega
   set s : ℝ := 4 * (X.Ψ.card : ℝ) * (r : ℝ) ^ 2 + 1 with hs
   have hs0 : 0 ≤ s := by positivity
@@ -1795,7 +1795,7 @@ theorem GlobalTheory.PoincareL2.poincare_l2_of_orthogonal (h1 : ∃ C : ℝ, 0 �
   have hPdm : Measurable Pd := PairUnfoldPf.meas_indC X hP0.1.continuousOn
   set ψ : Frame X.Ψ r → ℝ≥0∞ := fun y => ‖Pd y‖ₑ ^ 2 * W y / ENNReal.ofReal (PoinPf.kaY X x bb y) with hψ
   have hψm : Measurable ψ :=
-    ((hPdm.enorm.pow_const 2).mul hW.1).div (PoinPf.meas_kaY X x bb).ennreal_ofReal
+    ((hPdm.eNorm.pow_const 2).mul hW.1).div (PoinPf.meas_kaY X x bb).ennreal_ofReal
   have hψB : ∀ y ∈ X.dom, ∀ b ∈ Bor X.Ψ r, ψ (rmul y b) = ψ y := by
     intro y hy b hb
     have hyb : rmul y b ∈ X.dom := PoinPf.rmulDom X hb hy
@@ -1806,7 +1806,7 @@ theorem GlobalTheory.PoincareL2.poincare_l2_of_orthogonal (h1 : ∃ C : ℝ, 0 �
     have ht : ENNReal.ofReal (‖bchar la b‖ ^ 2) ≠ ⊤ := ENNReal.ofReal_ne_top
     have hc : ‖bchar la b‖ₑ ^ 2 = ENNReal.ofReal (‖bchar la b‖ ^ 2) := by
       rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
-    rw [enorm_mul, mul_pow, hc]
+    rw [eNorm_mul, mul_pow, hc]
     congr 1
     rw [ENNReal.div_eq_inv_mul]
     calc ENNReal.ofReal (‖bchar la b‖ ^ 2) * ‖P0 y‖ₑ ^ 2 * ((ENNReal.ofReal (‖bchar la b‖ ^ 2))⁻¹ * W y)

@@ -199,8 +199,8 @@ def eva (f : Z1 (O (dp0 ℂ) (str A))) (U : A.left.affineOpens) : Hol (W u U.1) 
 theorem exists_lift {B O : Type} [CommRing B] [Algebra ℂ B] [CommRing O] [Algebra ℂ O] (α : B →ₐ[ℂ] O)
     (d : Fin g → Derivation ℂ O O) : ∃ ℓ : Ω[B⁄ℂ] →+ (Fin g → O),
       (∀ (b : B) ω, ℓ (b • ω) = α b • ℓ ω) ∧ ∀ b a, ℓ (KaehlerDifferential.D ℂ B b) a = d a (α b) := by
-  letI : Algebra B O := α.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ B O := IsScalarTower.of_algebraMap_eq fun c => (α.commutes c).symm
+  let : Algebra B O := α.toRingHom.toAlgebra
+  have : IsScalarTower ℂ B O := IsScalarTower.of_algebraMap_eq fun c => (α.commutes c).symm
   refine ⟨(LinearMap.pi fun a => ((d a).compAlgebraMap B).liftKaehlerDifferential).toAddMonoidHom, fun b ω => ?_, fun b a => ?_⟩
   · funext a
     simp only [LinearMap.toAddMonoidHom_coe, map_smul, Pi.smul_apply, smul_eq_mul, Algebra.smul_def]
@@ -432,9 +432,9 @@ theorem exists_basis_of_discrete_of_span_eq_top_complex_pi :
         LinearIndependent ℝ (fun i => (b i : Fin g → ℂ)) ∧
           Submodule.span ℝ (Set.range fun i => (b i : Fin g → ℂ)) = ⊤ := by
   intro g Λ hd h
-  haveI : IsZLattice ℝ Λ := ⟨h⟩
-  haveI : Module.Free ℤ Λ := ZLattice.module_free ℝ Λ
-  haveI : Module.Finite ℤ Λ := ZLattice.module_finite ℝ Λ
+  have : IsZLattice ℝ Λ := ⟨h⟩
+  have : Module.Free ℤ Λ := ZLattice.module_free ℝ Λ
+  have : Module.Finite ℤ Λ := ZLattice.module_finite ℝ Λ
   have hr : Module.finrank ℤ Λ = 2 * g := by
     rw [ZLattice.rank ℝ Λ, Module.finrank_pi_fintype, Finset.sum_const, Complex.finrank_real_complex]
     simp [mul_comm]
@@ -850,7 +850,7 @@ theorem logDer_mul {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {f c d 
   have hm : HasFDerivAt (fun w => c w * d w) (c z • fderiv ℂ d z + d z • fderiv ℂ c z) z :=
     hc.hasFDerivAt.mul hd.hasFDerivAt
   rw [h.fderiv_eq, hm.fderiv, h.eq_of_nhds]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   field_simp
   ring
 

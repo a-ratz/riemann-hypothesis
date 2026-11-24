@@ -117,7 +117,7 @@ theorem exists_acris (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) :
   have hlog : IsLogA AI.ε C.t := hC.ε ▸ C.t_log
   have hc : ∀ x, T.eB ((T.eB.symm.toRingHom.comp (algebraMap (Per.Acris l) (Per.Bcris l))) x) =
       algebraMap (Per.Acris l) (Per.Bcris l) x := fun x => T.eB.apply_symm_apply _
-  haveI := (acris_basic l).1
+  have := (acris_basic l).1
   refine ⟨Per.Acris l, inferInstance, algebraMap (Per.Ainf l) (Per.Acris l),
     T.eB.symm.toRingHom.comp (algebraMap (Per.Acris l) (Per.Bcris l)), phiA l, fun g => sigA g, C.t,
     GlobalTheory.Decompl.LAdic.good_of_complete l _ (acris_basic l).2.1, fun w => T.eB.injective ?_, fun w => ?_,
@@ -455,7 +455,7 @@ theorem _root_.GlobalTheory.AwayNorm.exists_normed_away : ∀ (p : ℕ) (R : Typ
     ciInf_le (hbdd x) ⟨r, h⟩
   have hge1 : ∀ x (c : ℝ), (∀ r, D x r → c ≤ (p : ℝ)⁻¹ ^ r) → c ≤ nrm x := by
     intro x c h
-    haveI := hne x
+    have := hne x
     exact le_ciInf fun r => h r.1 r.2
   have hnn : ∀ x, 0 ≤ nrm x := fun x => hge1 x 0 fun r _ => by positivity
   have hlow : ∀ x r, ¬ D x r → (p : ℝ)⁻¹ ^ (r - 1) ≤ nrm x := by
@@ -531,7 +531,7 @@ theorem _root_.GlobalTheory.AwayNorm.exists_normed_away : ∀ (p : ℕ) (R : Typ
       neg' := hnneg
       mul_le' := hnmul
       eq_zero_of_map_eq_zero' := hnpos }
-  letI inst : NormedCommRing L := { f.toNormedRing with mul_comm := mul_comm }
+  let inst : NormedCommRing L := { f.toNormedRing with mul_comm := mul_comm }
   have hnorm : ∀ x : L, ‖x‖ = nrm x := fun _ => rfl
   have hcharN : ∀ (x : L) (r : ℕ), ‖x‖ ≤ ((p : ℝ)⁻¹) ^ r ↔
       ∃ y : R, x = (p : L) ^ r * algebraMap R L y := by
@@ -800,7 +800,7 @@ theorem exists_banach_model : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI 
   obtain ⟨A, iA, b, κ, φ, γ, t, hG, ⟨h1, h2, h3, h4, h5, h6⟩, hnil, hlog, hbd⟩ :=
     _root_.GlobalTheory.HWLCris.exists_tensor_acris l P AI T LL β hβ
   obtain ⟨N, iN, cN, aN, hloc, hn, hm⟩ := GlobalTheory.AwayNorm.exists_normed_away l A hp hG
-  haveI := away_OL LL
+  have := away_OL LL
   have uN : IsUnit (l : N) := by
     have := IsLocalization.Away.algebraMap_isUnit (S := N) (l : A)
     rwa [map_natCast] at this
@@ -888,7 +888,7 @@ theorem trunc_mul_sub_mem (φ : R →+* P.R.BdR) (hφ : ∀ x, φ x ∈ FilB P 0
   have hd : Polynomial.X ^ m ∣ f.trunc m * g.trunc m - (f * g).trunc m := by
     rw [Polynomial.X_pow_dvd_iff]
     intro d hd
-    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, if_pos hd,
+    rw [Polynomial.coeff_sub, PowerSeries.coeff_trunc, ite_eq_left hd,
       PowerSeries.coeff_mul_eq_coeff_trunc_mul_trunc f g hd, ← Polynomial.coe_mul,
       Polynomial.coeff_coe, sub_self]
   obtain ⟨q, hq⟩ := hd
@@ -1406,8 +1406,8 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
   intro l _ P AI T K s LL hG Γ R I hW β hβ
   obtain ⟨N, _, _, c, b, κ, φ, γ, t, ⟨hκb, hφb, hκφ, hγb, hκγ, hκt⟩, hc, hb, hbo, hκc, ⟨hφ, hφc⟩, hγ, hs, hlog, hcl⟩ :=
     _root_.GlobalTheory.HWL.BanachModel.exists_banach_model l P AI T LL β hβ
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨by
-    haveI := (P.PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨by
+    have := (P.PD K).finK₀
     exact Module.finrank_pos.ne'⟩
   let μ : ℕ → N := fun s => b ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] (WittVector.teichmuller l (AI.εroot s) - 1))
   have hμ : ∀ s, Small (μ s) := hs
@@ -1512,9 +1512,9 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
       exact ((hc'.continuous.tendsto _).comp (tendsto_subtype_rng.2 (he k))).mul_const _
     have hmem := (hcl ι m).mem_of_tendsto hlim (Eventually.of_forall fun M => by
       have h := _root_.GlobalTheory.ExpImage.PolyTaylor.poly_taylor l P AI T LL s ζ ι hζ (trunc M (a i)) m
-      rw [Set.mem_setOf_eq, ← hπ, map_sub, hev, Polynomial.hom_eval₂, hπμ, show π.comp c = (ι : ↥LL.1 →+* P.R.BdR) from RingHom.ext hπc]
+      rw [Set.mem_ofPred_eq, ← hπ, map_sub, hev, Polynomial.hom_eval₂, hπμ, show π.comp c = (ι : ↥LL.1 →+* P.R.BdR) from RingHom.ext hπc]
       exact h)
-    rw [Set.mem_setOf_eq, ← hπ, map_sub, hev] at hmem
+    rw [Set.mem_ofPred_eq, ← hπ, map_sub, hev] at hmem
     have e2 : π (∑ j, f (letE j) * ev c (μ s) (a j)) = π (ev c (μ s) (a i)) := by
       set_option synthInstance.maxHeartbeats 100000 in
         simp [map_sum, map_mul π, hπE]

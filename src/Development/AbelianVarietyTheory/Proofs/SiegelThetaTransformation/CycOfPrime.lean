@@ -219,8 +219,8 @@ theorem count [IsDomain O] [Module.Finite O M] [Module.Projective O M] (P : Idea
     · rintro ⟨f, hf, rfl⟩
       exact ⟨Projectivization.mk _ f hf, rfl⟩
     · rintro ⟨x, rfl⟩
-      refine ⟨x.rep, x.rep_nonzero, ?_⟩
-      have h1 : φ (Projectivization.mk _ x.rep x.rep_nonzero) = LinearMap.ker x.rep := rfl
+      refine ⟨x.rep, x.rep_ne_zero, ?_⟩
+      have h1 : φ (Projectivization.mk _ x.rep x.rep_ne_zero) = LinearMap.ker x.rep := rfl
       rw [Projectivization.mk_rep] at h1
       exact h1.symm
   rw [hS]

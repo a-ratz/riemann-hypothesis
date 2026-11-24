@@ -153,7 +153,7 @@ theorem exists_fractionalIdeal_eq_span_image (τ : E →+* L) {𝔞 : Fractional
       Real.log (FractionalIdeal.absNorm 𝔠) / finrank ℚ L = Real.log (FractionalIdeal.absNorm 𝔞) / finrank ℚ E := by
   let _ := τ.toAlgebra
   refine ⟨FractionalIdeal.extendedHom L (𝓞 L) 𝔞, by rwa [Ne, FractionalIdeal.extendedHom_eq_zero_iff],
-    FractionalIdeal.coe_extendedHom_eq_span L (𝓞 L) 𝔞, ?_⟩
+    FractionalIdeal.coeToSubmodule_extendedHom_eq_span L (𝓞 L) 𝔞, ?_⟩
   have h1 : (0 : ℝ) < finrank E L := by exact_mod_cast finrank_pos
   have h2 : (0 : ℝ) < finrank ℚ E := by exact_mod_cast finrank_pos
   rw [absNorm_extendedHom, Rat.cast_pow, Real.log_pow, ← finrank_mul_finrank ℚ E L, Nat.cast_mul]
@@ -180,7 +180,7 @@ theorem log_absNorm_conjFrac [IsCMField E] {𝔞 : FractionalIdeal (𝓞 E)⁰ E
     rintro ⟨y, hy, rfl⟩
     exact cc_mem_conjFrac.2 hy
   rw [e, Submodule.span_eq, FractionalIdeal.coeToSubmodule_inj] at h1
-  rwa [h1, div_left_inj' h3.ne'] at h2
+  rwa [h1, div_left_inj₀ h3.ne'] at h2
 
 theorem log_rootDiscr_tower [Algebra E L] : Real.log (rootDiscr L) =
     Real.log (Ideal.absNorm (differentIdeal (𝓞 E) (𝓞 L))) / finrank ℚ L + Real.log (rootDiscr E) := by

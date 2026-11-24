@@ -207,7 +207,7 @@ theorem dual_ord (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {O : Typ
     [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E]
     (r' : GQ l →* GG (m := 3) (R := DualNumber E)) (hr : D.InDcr (fstHom E E E : DualNumber E →+* E) r') :
     D.InDord (fstHom E E E : DualNumber E →+* E) r' := by
-  haveI : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
+  have : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
   obtain ⟨γ, hc, hγ⟩ := exists_coc _ r' hr.red
   have c1 : ∀ a b, QCont l fun g => ((r' g).mat a b).fst := fun a b =>
     qcont_map (LinearMap.fst ℚ_[l] E E) (hr.cont a b)
@@ -218,9 +218,9 @@ theorem dual_ord (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {O : Typ
     ext <;> simp [ep, algebraMap_eq_inl]⟩
   obtain ⟨X, hX, hX'⟩ : ∃ X : Matrix (Fin 3) (Fin 3) E, (∀ a b, 0 ≤ wt a b → X a b = 0) ∧
       ∀ g a b, wt a b < 0 → (γ g + (X - adRep (D.rz E) g X)) a b = 0 := by
-    letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-    haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-    haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+    let : TopologicalSpace E := moduleTopology ℚ_[l] E
+    have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+    have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
     have d1 : Continuous fun g => (D.rz E g).mat := continuous_matrix fun a b => by
       have := c1 a b
       simp only [fun g => (hd g).2 a b] at this
@@ -241,11 +241,11 @@ theorem dual_ord (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {O : Typ
         γ g a b = (adRep (D.rz E) g Y - Y) a b := fun j hj => by
       obtain ⟨-, -, h1, h2⟩ := dim_Z1f_crystalline_deformation hP D E j
       have h3 := h1 γ hf
-      obtain ⟨Y, hY⟩ := (mem_coboundaries1 _ _).1 (((h2 _ h3.1 fun g a b h => if_neg h).1 hj).1 h3)
+      obtain ⟨Y, hY⟩ := (mem_coboundaries1 _ _).1 (((h2 _ h3.1 fun g a b h => ite_eq_right h).1 hj).1 h3)
       refine ⟨Y, fun g a b h => ?_⟩
-      rw [← hY g, Matrix.of_apply, if_pos h]
+      rw [← hY g, Matrix.of_apply, ite_eq_left h]
     choose Y hY using key
-    refine ⟨Matrix.of fun a b => if h : wt a b < 0 then Y _ h a b else 0, fun a b h => dif_neg (not_lt.2 h),
+    refine ⟨Matrix.of fun a b => if h : wt a b < 0 then Y _ h a b else 0, fun a b h => dite_eq_right (not_lt.2 h),
       fun g a b h => ?_⟩
     have hw : wt b.rev a.rev = wt a b := by fin_cases a <;> fin_cases b <;> rfl
     have e : ∀ j (hj : j < 0), j = wt a b → Y j hj = Y _ h := by
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Loc.ordEq :
     rw [hr.red, rz_eq, GG.mat, unitaryThreeReflection_left, tor_val, Matrix.diagonal_apply_ne _ hab]
   push Not at hinj
   obtain ⟨x, hx, hx0⟩ := hinj
-  haveI : IsNoetherianRing B := IsNoetherianRing.of_finite ℚ_[l] B
+  have : IsNoetherianRing B := IsNoetherianRing.of_finite ℚ_[l] B
   obtain ⟨ε, hε0, h0, hε⟩ := exists_eps π hπ x hx hx0
   let I : Ideal B := Ideal.span {ε}
   let q : B →ₐ[E] B ⧸ I := Ideal.Quotient.mkₐ E I
@@ -370,8 +370,8 @@ theorem UpperTheory.V.Loc.ordEq :
   obtain ⟨n₁, hn₁, rfl⟩ := lift_lower (q : B →+* B ⧸ I) hq n' hn2'
   have hc₁ : Matrix.GeneralLinearGroup.map (π : B →+* E) n₁ = 1 := ((congOne_iff _ _).1 hn1' :)
   have hr₁ := dcr_conj hu₁.toInDcrAt n₁ hc₁
-  haveI : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
-  haveI : Module.Finite ℚ_[l] (fib π) :=
+  have : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
+  have : Module.Finite ℚ_[l] (fib π) :=
     Module.Finite.of_injective ((fib π).val.restrictScalars ℚ_[l]).toLinearMap Subtype.val_injective
   let f₁ : fib π →ₐ[ℚ_[l]] B := (p1 π).restrictScalars ℚ_[l]
   let f₂ : fib π →ₐ[ℚ_[l]] DualNumber E := (p2 π).restrictScalars ℚ_[l]

@@ -104,8 +104,8 @@ theorem mem_smul_of_forall_char_pow_eq_one
     simp [map_sum, Finsupp.single_apply, Int.mul_ediv_cancel' (h j)]
   obtain ⟨i, hi⟩ := hex
   have hk0 : k ≠ 0 := by rintro rfl; exact hk (by simp)
-  haveI : NeZero (k : F) := ⟨hk⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F k
+  have : NeZero (k : F) := ⟨hk⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F k
   have hζ0 : ζ ≠ 0 := hζ.ne_zero hk0
   let u : Fˣ := Units.mk0 ζ hζ0
   have hu : IsPrimitiveRoot u k := IsPrimitiveRoot.coe_units_iff.mp (by simpa [u] using hζ)
@@ -218,7 +218,7 @@ theorem weilIs_lam (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (n : �
         simpa using hb
       · simp only [c, psum_both, MonObj.comp_mul, lift_fst, lift_snd]
         convert h₁₂ using 1
-        simp only [Finset.mem_insert, Finset.mem_singleton, true_or, or_true, and_self, if_true]
+        simp only [Finset.mem_insert, Finset.mem_singleton, true_or, or_true, and_self, ite_true]
         ac_rfl)
   have e : ∏ I, c I ^ ((-1 : ℤ) ^ (2 - I.down.card)) = c₁ * c₂ := by
     rw [prod_ulift_finset_fin_two]
@@ -294,11 +294,11 @@ theorem commutatorPairing_eighthPower_bundle : ∀ (S : Scheme.{0}) [IsLocallyNo
   have hM := LB.isLB_linComb hΛ (K := Fin 8 × Fin 8) (fun ab => (lift (pr ab.1) (pr ab.2)).left)
     (fun ab => W ab.1 ab.2)
   have hφ : ∀ ab : Fin 8 × Fin 8, IsMonHom (lift (pr ab.1) (pr ab.2)) := fun ab => by
-    haveI := hpr ab.1
-    haveI := hpr ab.2
+    have := hpr ab.1
+    have := hpr ab.2
     infer_instance
   have ht : ∀ {z : T ⟶ P'.A}, z ^ n = 1 → ∀ a, (z ≫ pr a) ^ n = 1 := fun {z} hz a => by
-    haveI := hpr a
+    have := hpr a
     rw [← MonObj.pow_comp, hz, MonObj.one_comp]
   have key := GlobalTheory.PairingComb.weilIs_linComb hG P'.isAb hΛ (fun ab : Fin 8 × Fin 8 => lift (pr ab.1) (pr ab.2)) hφ
     (fun ab => W ab.1 ab.2) (n := n) (x := x) (y := y) (fun ab => c ab.1 ab.2 * c ab.2 ab.1) (fun ab => by
@@ -323,11 +323,11 @@ theorem sum_symmetrised_bilinear_matrix_eq {J X Y : Type} [Fintype J] [AddCommGr
 theorem label_proj_eq : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → IsDiscreteValuationRing R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (G' : Over (Sp R)) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (D' : DegData R (maximalIdeal R)) (A' : PolAV (Sp (FractionRing R))) (U' : Unif (maximalIdeal R) D' A' G') (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (pr : Fin 8 → (A'.A ⟶ A.A)), (∀ a, IsMonHom (pr a)) → (∀ (T' : Over (Sp (FractionRing R))) (y : Fin 8 → (T' ⟶ A.A)), ∃! z : T' ⟶ A'.A, ∀ a, z ≫ pr a = y a) → LBIso A'.L (LB.LinComb (abelian₂ A.A A.L) (K := Fin 8 × Fin 8) (fun ab => (lift (pr ab.1) (pr ab.2)).left) (fun ab => W ab.1 ab.2)) → ∀ (pG : Fin 8 → (G' ⟶ G)), (∀ v, IsMonHom (pG v)) → (∀ v, (Over.pullback (jK R)).map (pG v) ≫ U.gen.hom = U'.gen.hom ≫ pr v) → ∀ (c : Fin 8 → (D.toPre.X →+ D'.toPre.X)), (∀ v, TorMatch U U' (RingHom.id R) (pG v).left (c v)) → ∀ e : D'.toPre.X ≃+ (Fin 8 → D.toPre.X), (∀ y, ∑ v, c v (∑ u, (W + W.transpose) v u • e y u) = y) → ∀ v : Fin 8, (∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (k : ℕ), IsUnit (k : R) → ∀ (q : QkPt D.toPre F k) (q' : QkPt D'.toPre F k) (a : TFK (R := R) F ⟶ A.A) (a' : TFK (R := R) F ⟶ A'.A), QkToAkU U.toUnifPre F k q a → QkToAkU U'.toUnifPre F k q' a' → a.left ≫ genMap U = a'.left ≫ genMap U' ≫ (pG v).left → ∃ z, q.y = e q'.y v + k • z) := by
   intro R _ _ _ hRb hdvr G _ _ hG D A U G' _ _ hG' D' A' U' W hW pr hpr huniv hL pG hpG hgen c hc e he v F _ _ _ k hk
     q q' a a' hqa hqa' hla
-  haveI := hdvr
+  have := hdvr
   obtain ⟨hR, hR0⟩ := id hRb
   obtain ⟨-, -, -, hRc⟩ := id hR
-  haveI := hRc
-  haveI := hR0
+  have := hRc
+  have := hR0
   have hB := D.tau_bimult
   have hB' := D'.tau_bimult
   have hk0 : k ≠ 0 := by rintro rfl; simp at hk
@@ -342,7 +342,7 @@ theorem label_proj_eq : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   obtain rfl : a' = f' q' := (i₂ q' a').1 hqa'
   have hav : f q = f' q' ≫ pr v := eq_comp_of_genMap U U' (pG v) (pr v) (hgen v) _ _ hla
   have hpw : ∀ w, (f' q' ≫ pr w) ^ k = 1 := fun w => by
-    haveI := hpr w
+    have := hpr w
     rw [← MonObj.pow_comp, p₂, MonObj.one_comp]
   choose qw hqw using fun w => s₁ _ (hpw w)
   have key : ∀ τ : Multiplicative D.toPre.X →* Fˣ, τ ^ k = 1 →

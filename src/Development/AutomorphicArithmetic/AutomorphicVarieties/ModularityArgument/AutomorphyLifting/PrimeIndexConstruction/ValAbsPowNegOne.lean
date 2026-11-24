@@ -225,7 +225,7 @@ private theorem degs_le (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (�
     (T : Finset (v.asIdeal.primesOver (𝓞 E))) : ∑ q ∈ T, q.1.inertiaDeg (𝓞 F) ≤ 2 := by
   have := v.isMaximal
   have : Fintype (v.asIdeal.primesOver (𝓞 E)) := (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).fintype
-  rw [← h2, Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E,
+  rw [← h2, IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E,
     ← Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 E)]
   refine (Finset.sum_le_sum_of_subset T.subset_univ).trans (Finset.sum_le_sum fun q _ => ?_)
   have := q.2.1
@@ -369,7 +369,7 @@ private theorem indSys_of_att {K M Ω : Type} [Field K] [NumberField K] [_root_.
     {l : ℕ} [Fact l.Prime] {ι : Qbar l ≃+* ℂ} {π : CuspSub M 2} {r : G M Ω →* GL (Fin 2) (Qbar l)} (hatt : AttC ι r π)
     {R : G K Ω →* GL (Fin 4) (Qbar l)} (H : IndCh (galEmb K M Ω) r R) {P : CuspSub K 4} (hP : AttC ι R P) :
     IndSys (F := K) (E := M) (CG.mk π).HasSat (CG.mk (P.twist (GlobalTheory.HeckeGal.Model.absPow K (-1)))).HasSat := by
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
   have hu : ∀ w B B', (CG.mk π).HasSat w B → (CG.mk π).HasSat w B' → B = B' := fun _ _ _ h h' => h.unique h'
   have hsys := indSys_indSat (F := K) h2 (hatt.2.mono fun w ⟨B, h, _⟩ => ⟨B, h⟩)
   have hA := attInd K M Ω h2 l ι r R _ _ hu (indSat_unique h2 hu) hatt hsys hP.1 H

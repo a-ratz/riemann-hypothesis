@@ -79,7 +79,7 @@ theorem mem_fixed_iff {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ
 theorem support_out_finite {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (H : Subgroup G)
     (hH : IsOpen (H : Set G)) (F : G → ℂ) (hF : HasCompactSupport F) :
     (Function.support fun q : G ⧸ H => F q.out).Finite := by
-  haveI := QuotientGroup.discreteTopology hH
+  have := QuotientGroup.discreteTopology hH
   refine ((HasCompactSupport.isCompact hF).image QuotientGroup.continuous_mk).finite_of_discrete.subset ?_
   intro q hq
   exact ⟨q.out, subset_tsupport _ hq, QuotientGroup.out_eq' q⟩
@@ -129,16 +129,16 @@ theorem twTr_level (ρ : Representation ℂ G V) (K K₀ K'' : Subgroup G) (F : 
     twTr ρ K K'' F LinearMap.id = twTr ρ K K₀ F LinearMap.id := by
   have hK₀o : IsOpen (K₀ : Set G) := Subgroup.isOpen_mono hle hK''o
   have hc : K''.relIndex K ≠ 0 := by
-    haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-    have ho : IsOpen ((K''.subgroupOf K : Subgroup K) : Set K) := hK''o.preimage continuous_subtype_val
-    haveI := Subgroup.quotient_finite_of_isOpen _ ho
+    have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+    have ho : IsOpen ((K''.subgroupOf K : Subgroup K) : Set K) := hK''o.preimage continuous_subtypeVal
+    have := Subgroup.quotient_finite_of_isOpen _ ho
     exact Subgroup.index_ne_zero_of_finite
   have hmul : K''.relIndex K₀ * K₀.relIndex K = K''.relIndex K :=
     Subgroup.relIndex_mul_relIndex (H := K'') (K := K₀) (L := K) hle hle'
   have hd : K''.relIndex K₀ ≠ 0 := left_ne_zero_of_mul (hmul ▸ hc)
   have hcard : Nat.card (↥K₀ ⧸ K''.subgroupOf K₀) ≠ 0 := hd
-  haveI : Finite (↥K₀ ⧸ K''.subgroupOf K₀) := Nat.finite_of_card_ne_zero hcard
-  letI := Fintype.ofFinite (↥K₀ ⧸ K''.subgroupOf K₀)
+  have : Finite (↥K₀ ⧸ K''.subgroupOf K₀) := Nat.finite_of_card_ne_zero hcard
+  let := Fintype.ofFinite (↥K₀ ⧸ K''.subgroupOf K₀)
   set d : ℕ := K''.relIndex K₀ with hd_def
   obtain ⟨P, hPapp⟩ : ∃ P : V →ₗ[ℂ] V, ∀ v, P v =
       (d : ℂ)⁻¹ • ∑ k : ↥K₀ ⧸ K''.subgroupOf K₀, ρ ((k.out : K₀) : G) v :=
@@ -215,7 +215,7 @@ theorem twTr_level (ρ : Representation ℂ G V) (K K₀ K'' : Subgroup G) (F : 
     intro v hv
     rw [mem_fixed_iff] at hv ⊢
     exact fun h hh => hv h (hle hh)
-  haveI : FiniteDimensional ℂ (fixed ρ K₀) := Submodule.finiteDimensional_of_le hVle
+  have : FiniteDimensional ℂ (fixed ρ K₀) := Submodule.finiteDimensional_of_le hVle
   have h'' : ∀ v ∈ fixed ρ K'', levOp ρ K K'' F LinearMap.id v ∈ fixed ρ K'' :=
     fun v hv => levOp_mem_fixed ρ K K₀ K'' F hF hK''o hle v hv
   have h0 : ∀ v ∈ fixed ρ K₀, levOp ρ K K₀ F LinearMap.id v ∈ fixed ρ K₀ :=

@@ -78,7 +78,7 @@ theorem evalTerm_finite [Finite σ] (F : MvPowerSeries σ A) (x : σ → R)
     (hx : ∀ i, IsNilpotent (x i)) : (Function.support (evalTerm F x)).Finite := by
   classical
   choose N hN using hx
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   refine (Set.finite_Iic (Finsupp.equivFunOnFinite.symm N)).subset fun d hd => ?_
   by_contra hcon
   apply hd

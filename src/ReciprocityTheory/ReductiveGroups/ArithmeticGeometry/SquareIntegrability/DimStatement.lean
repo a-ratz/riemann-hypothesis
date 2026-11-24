@@ -516,7 +516,7 @@ theorem dim_core (q : ℕ) (hq : 1 ≤ q) :
     FiniteDimensional ℂ (Y.Sec q) ∧ finrank ℂ (Y.Sec q) ≤ q ^ Fintype.card ι := by
   obtain ⟨e, f, he, hf, hee, hef⟩ := exists_pairs Y
   have hinj := T_inj Y e f hee hef he hf q hq
-  haveI hfin : FiniteDimensional ℂ (Y.Sec q) := Module.Finite.of_injective (T Y e q) hinj
+  have hfin : FiniteDimensional ℂ (Y.Sec q) := Module.Finite.of_injective (T Y e q) hinj
   refine ⟨hfin, ?_⟩
   calc finrank ℂ (Y.Sec q) ≤ finrank ℂ ((Fin (Fintype.card ι) → Fin q) → ℂ) :=
         LinearMap.finrank_le_finrank_of_injective hinj

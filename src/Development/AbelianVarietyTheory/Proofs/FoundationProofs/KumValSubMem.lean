@@ -103,7 +103,7 @@ theorem apply_pow (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] 
 theorem cycMod_eq_one (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (m : ℕ) (hm : 1 ≤ m)
     (ζ : Ω) (hζ : IsPrimitiveRoot ζ (l ^ m)) (s : G ℚ Ω) (hsζ : s ζ = ζ) : cycMod ℚ Ω l m s = 1 := by
   have hlm : 1 < l ^ m := Nat.one_lt_pow (by omega) (Fact.out : l.Prime).one_lt
-  haveI : Fact (1 < l ^ m) := ⟨hlm⟩
+  have : Fact (1 < l ^ m) := ⟨hlm⟩
   have h1 := apply_pow Ω l m s hζ.pow_eq_one
   rw [hsζ] at h1
   have hv1 : ((cycMod ℚ Ω l m s : (ZMod (l ^ m))ˣ) : ZMod (l ^ m)).val = 1 := by
@@ -204,7 +204,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∃ c : ℕ, ∀ (Ω : 
   · exact ⟨(l : Ω) ^ 1 * o, mul_mem (pow_mem hlA 1) ho, by simp⟩
   have hm : 1 ≤ m := by omega
   have hlm : 1 < l ^ m := Nat.one_lt_pow (by omega) (Fact.out : l.Prime).one_lt
-  haveI : Fact (1 < l ^ m) := ⟨hlm⟩
+  have : Fact (1 < l ^ m) := ⟨hlm⟩
   have hprim := isPrimitiveRoot_root l m hm ζ ζ' hζ hζ'
   have hζ'A : ζ' ∈ A := by
     rw [← A.valuation_le_one_iff]
@@ -394,7 +394,7 @@ theorem core [CharZero K] {R : Type} [CommRing R] [Algebra R K] (O : Subalgebra 
         p ^ c * T ∈ ball (p ^ k')) (d y : K) (_ : ‖d‖ ≤ 1) (_ : ‖y‖ ≤ 1)
       (_ : ∀ h : Γ, (∀ a ∈ O, h • a = a) → d * lam h - (h • y - y) ∈ ball (p ^ k)), d ∈ ball (p ^ (k - c₁)) := by
   classical
-  haveI := Fintype.ofFinite (O →ₐ[R] K)
+  have := Fintype.ofFinite (O →ₐ[R] K)
   have hsep : ∀ φ : O →ₐ[R] K, ∃ a : O, φ ≠ O.val → (a : K) - φ a ≠ 0 := by
     intro φ
     by_cases h : φ = O.val
@@ -427,8 +427,8 @@ theorem core [CharZero K] {R : Type} [CommRing R] [Algebra R K] (O : Subalgebra 
     intro a ha
     rw [mul_smul, inv_smul_eq_iff]
     exact (DFunLike.congr_fun hq ⟨a, ha⟩).symm
-  haveI : Finite (Γ ⧸ H) := Finite.of_injective _ hinj
-  haveI := Fintype.ofFinite (Γ ⧸ H)
+  have : Finite (Γ ⧸ H) := Finite.of_injective _ hinj
+  have := Fintype.ofFinite (Γ ⧸ H)
   have hidx : H.index ≤ Nat.card (O →ₐ[R] K) := Nat.card_le_card_of_injective _ hinj
   have ht : s₀ ^ (Nat.card (O →ₐ[R] K)).factorial ∈ H :=
     Subgroup.pow_mem_of_index_ne_zero_of_dvd (Nat.card_pos (α := Γ ⧸ H)).ne' s₀
@@ -684,7 +684,7 @@ theorem uniq_true (hl2 : l ≠ 2) : ∃ c : ℕ, ∀ (Ω : Type) [Field Ω] [Alg
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have : NeZero ((l ^ (m + m) : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ hl.ne_zero)⟩
-  obtain ⟨ζ', hζ'⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ (m + m))
+  obtain ⟨ζ', hζ'⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ (m + m))
   have hζ : IsPrimitiveRoot (ζ' ^ l ^ m) (l ^ m) := hζ'.pow (pow_pos hl.pos _) (pow_add l m m)
   have key := hc Ω A (overL hj) m n (by omega) _ ζ' hζ rfl y x hy hx (fun s hs hm => hyfix s ⟨hs, hm⟩)
     (fun s hs hm τ hτ => by
@@ -724,9 +724,9 @@ namespace GlobalTheory.RecOne.CycDvd
 
 theorem apply_eq_pow (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (n : ℕ) (s : G ℚ Ω)
     {t : Ω} (ht : t ^ (l ^ n) = 1) : s t = t ^ ((cycMod ℚ Ω l n s : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
   have h1 := cyclotomicCharacter.spec (L := Ω) l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) t ht
   have h2 : (cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s)).val.toZModPow n =
       ((cycMod ℚ Ω l n s : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) := by
@@ -738,7 +738,7 @@ theorem exists_Ine_apply_eq (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Alg
     (A : ValuationSubring Ω) (hA : A.valuation (l : Ω) < 1) (n : ℕ) {z μ : Ω} (hz : IsPrimitiveRoot z (l ^ n))
     (hμ : IsPrimitiveRoot μ (l ^ n)) : ∃ s ∈ Ine (F := ℚ) A, s z = μ := by
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  haveI : NeZero (l ^ n) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   obtain ⟨i, hi, hcop, rfl⟩ := (hz.isPrimitiveRoot_iff).1 hμ
   obtain ⟨⟨s, hs⟩, hsu⟩ := GlobalTheory.InertiaPowers.cycMod_Ine_surjective l Ω A hA n (ZMod.unitOfCoprime i hcop)
   refine ⟨s, hs, ?_⟩
@@ -910,10 +910,10 @@ theorem exists_root_succ [CharZero Ω] [IsAlgClosed Ω] {p : ℕ} [hp : Fact p.P
     (n : ℕ) (z : A) (hz : IsPrimitiveRoot (z : Ω) (p ^ n)) :
     ∃ w : A, IsPrimitiveRoot (w : Ω) (p ^ (n + 1)) ∧ w ^ p = z := by
   have hpos : 0 < p ^ (n + 1) := pow_pos hp.out.pos _
-  haveI : NeZero (p ^ (n + 1)) := ⟨hpos.ne'⟩
-  haveI : NeZero (p ^ n) := ⟨(pow_pos hp.out.pos _).ne'⟩
-  haveI : NeZero ((p ^ (n + 1) : ℕ) : Ω) := ⟨by exact_mod_cast hpos.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (p ^ (n + 1))
+  have : NeZero (p ^ (n + 1)) := ⟨hpos.ne'⟩
+  have : NeZero (p ^ n) := ⟨(pow_pos hp.out.pos _).ne'⟩
+  have : NeZero ((p ^ (n + 1) : ℕ) : Ω) := ⟨by exact_mod_cast hpos.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (p ^ (n + 1))
   have h1 : IsPrimitiveRoot (ζ ^ p) (p ^ n) := hζ.pow hpos (by rw [pow_succ'])
   obtain ⟨i, -, hi, hiz⟩ := h1.isPrimitiveRoot_iff.1 hz
 
@@ -953,8 +953,8 @@ theorem zeta_derivation_cyc : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω
     ∃ D : A → FracA A, IsDerOn (cycAlg l A) D ∧
       D z = Submodule.Quotient.mk ((z : Ω) * (l : Ω) / (l : Ω) ^ N) := by
   intro p hp Ω _ _ hc A hO N z hz
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   obtain ⟨zs, hz0, hprim, hpow⟩ := exists_seq A N z hz
   let B : ℕ → Subalgebra (fixA A) A := fun m => Algebra.adjoin (fixA A) {zs (m + 1)}
@@ -997,7 +997,7 @@ theorem zeta_derivation_cyc : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω
   have hle : cycAlg p A ≤ ⨆ m, B m := by
     refine Algebra.adjoin_le ?_
     rintro x ⟨n, hx⟩
-    haveI : NeZero (p ^ (N + n)) := ⟨(pow_pos hp.out.pos _).ne'⟩
+    have : NeZero (p ^ (N + n)) := ⟨(pow_pos hp.out.pos _).ne'⟩
     have hzA : IsPrimitiveRoot (zs n) (p ^ (N + n)) :=
       IsPrimitiveRoot.of_map_of_injective (f := A.subtype) (hprim n) Subtype.val_injective
     obtain ⟨i, -, rfl⟩ := hzA.eq_pow_of_pow_eq_one (ξ := x) (by rw [pow_add, mul_comm, pow_mul, hx, one_pow])
@@ -1039,7 +1039,7 @@ namespace GlobalTheory.RecOne
 theorem pow_four_mul_mem_of_smul_dA_eq_zero : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω), OverL l A → ∀ (N : ℕ) (z : A), IsPrimitiveRoot (z : Ω) (l ^ N) → ∀ a : A, a • dA A z = 0 → ∃ w ∈ A, (l : Ω) ^ 4 * (a : Ω) = (l : Ω) ^ N * w := by
   intro l _ hl2 Ω _ _ _ A hA N z hz a hrel
   have hlΩ : (l : Ω) ≠ 0 := by
-    haveI : CharZero Ω := algebraRat.charZero Ω
+    have : CharZero Ω := algebraRat.charZero Ω
     exact_mod_cast (Fact.out : l.Prime).ne_zero
   have hpos : 0 < l ^ N := pow_pos (Fact.out : l.Prime).pos N
   have hz1 : (z : Ω) ^ (l ^ N) = 1 := hz.pow_eq_one
@@ -1292,12 +1292,12 @@ theorem kummer_eq_dlog_one : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∃ c : �
   intro l hl hl2
   refine ⟨6, ?_⟩
   intro Ω _ _ _ A hA m ζ ζ' hζ hζ' P hP hu hu' hu0
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hlp : l.Prime := Fact.out
   have hl0 : (l : Ω) ≠ 0 := Nat.cast_ne_zero.2 hlp.ne_zero
   have hpos : ∀ j : ℕ, 0 < l ^ j := fun j => pow_pos hlp.pos j
-  haveI : ∀ j : ℕ, NeZero (l ^ j) := fun j => ⟨(hpos j).ne'⟩
+  have : ∀ j : ℕ, NeZero (l ^ j) := fun j => ⟨(hpos j).ne'⟩
   rcases Nat.eq_zero_or_pos m with rfl | hm
   · refine ⟨0, A.zero_mem, fun s _ _ k t _ _ => ⟨0, A.zero_mem, ?_⟩⟩
     have hk : k.val = 0 := by have := ZMod.val_lt k; simpa using this
@@ -1493,7 +1493,7 @@ theorem recip_conj : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∃ c : ℕ, ∀ 
   have hζA : ζ ∈ A := by
     rw [← A.valuation_le_one_iff]
     have h1 : A.valuation ζ ^ (l ^ m) = 1 := by rw [← map_pow, hζ1, map_one]
-    exact ((pow_eq_one_iff_of_nonneg zero_le' hpos.ne').1 h1).le
+    exact ((pow_eq_one_iff_of_nonneg zero_le hpos.ne').1 h1).le
   have hQ1 : P.eval (ζ ^ n) ∈ A := hτP ▸ (apply_mem_iff_of_mem_Dec hτD _).2 hPA
   have hQ2 : (P.eval (ζ ^ n))⁻¹ ∈ A := by
     rw [← hτP, ← map_inv₀]; exact (apply_mem_iff_of_mem_Dec hτD _).2 hPi
@@ -1628,7 +1628,7 @@ theorem exists_kumVal {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
     (hζ : IsPrimitiveRoot ζ (l ^ m)) (hu : u ≠ 0) (hv : v ^ (l ^ m) = u) {s : G ℚ Ω} (hs : s u = u) :
     ∃ k : ZMod (l ^ m), s v = ζ ^ k.val * v := by
   have hpos : 0 < l ^ m := pow_pos (Fact.out : l.Prime).pos m
-  haveI : NeZero (l ^ m) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ m) := ⟨hpos.ne'⟩
   have hv0 : v ≠ 0 := by rintro rfl; exact hu (by rw [← hv, zero_pow hpos.ne'])
   have h1 : (s v / v) ^ (l ^ m) = 1 := by rw [div_pow, ← map_pow, hv, hs, div_self hu]
   obtain ⟨k, hk, e⟩ := hζ.eq_pow_of_pow_eq_one h1
@@ -1677,7 +1677,7 @@ theorem htv_coeff : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∃ c : ℕ, ∀ (
   have hs' : τ * s * τ⁻¹ ∈ Ine (F := ℚ) A := mul_mem (mul_mem hτ hs) (inv_mem hτ)
   have hs1' : cycMod ℚ Ω l m (τ * s * τ⁻¹) = 1 := by rw [map_mul, map_mul, hs1, map_inv, mul_one, mul_inv_cancel]
   have hfix : ∀ {g : G ℚ Ω}, cycMod ℚ Ω l m g = 1 → g ζ = ζ := fun hg => by
-    haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i =>
+    have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i =>
       haveI : NeZero ((l ^ i : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
       inferInstance
     exact GlobalTheory.Col.fix_of_cycMod le_rfl hg hζ.pow_eq_one

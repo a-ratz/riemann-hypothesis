@@ -107,7 +107,7 @@ theorem injective_of_algClosure (R : Type) [CommRing R] (M : Type) [AddCommGroup
         m.ResidueField m.ResidueField (M := k) f) x).symm
     have h1 : Function.Injective ((f.baseChange m.ResidueField).lTensor k) :=
       Function.Injective.of_comp (e ▸ (hinj.comp (LinearEquiv.injective _)))
-    haveI : Module.FaithfullyFlat m.ResidueField k :=
+    have : Module.FaithfullyFlat m.ResidueField k :=
       (fun (F L : Type) [Field F] [Field L] [Algebra F L] ↦ (inferInstance : Module.FaithfullyFlat F L)) _ _
     exact (Module.FaithfullyFlat.lTensor_injective_iff_injective m.ResidueField k _).1 h1
   exact Function.LeftInverse.injective (g := g) fun x ↦ LinearMap.congr_fun hg x
@@ -215,8 +215,8 @@ theorem split_injective_of_forall_prime_baseChange_field_injective :
     simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff, isUnit_iff_ne_zero]
     intro h0
     exact hx (hk ▸ h0))
-  letI : Algebra m.ResidueField k := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower R m.ResidueField k :=
+  let : Algebra m.ResidueField k := φ.toRingHom.toAlgebra
+  have : IsScalarTower R m.ResidueField k :=
     IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
   have e : (AlgebraTensorModule.cancelBaseChange R m.ResidueField m.ResidueField k N) ∘
         ((f.baseChange m.ResidueField).lTensor k) =
@@ -265,8 +265,8 @@ theorem surj_of_comp {R R' : Type} [CommRing R] [CommRing R'] {X X' X₀ : Schem
 theorem fp_bc1 (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ)
     (hA : IsAbelianScheme A) (hg : SmoothOfRelativeDimension g A.hom) :
     (Module.Finite R (HO1 A.hom) ∧ Module.Projective R (HO1 A.hom)) ∧ StructureSheafH1BaseChange A.hom := by
-  haveI : Smooth A.hom := hA.smooth
-  haveI : IsProper A.hom := hA.proper
+  have : Smooth A.hom := hA.smooth
+  have : IsProper A.hom := hA.proper
   obtain ⟨h1, -, h3, -⟩ := GlobalTheory.T.structure_cohomology_residue_field_fibre R A.left A.hom inferInstance inferInstance (GlobalTheory.T.globalFunctionsConstantAfterBaseChange_of_abelianScheme R A hA)
     (by
       intro R' _ _ _ _ k _ _ α hα X' s' φ X₀ s₀ ψ hφ w
@@ -356,10 +356,10 @@ theorem axesO1_of_isAbelianScheme : ∀ (R : Type) [CommRing R] [IsNoetherianRin
   let e2 : ULift.{1} (HO1 A.hom × HO1 A.hom) ≃ₗ[R] HO1 A.hom × HO1 A.hom := ULift.moduleEquiv
   let f : ULift.{1} (HO1 (A ⊗ A).hom) →ₗ[R] ULift.{1} (HO1 A.hom × HO1 A.hom) :=
     e2.symm.toLinearMap ∘ₗ axesMap A ∘ₗ e1.toLinearMap
-  haveI : Module.Finite R (ULift.{1} (HO1 (A ⊗ A).hom)) := Module.Finite.equiv e1.symm
-  haveI : Module.Projective R (ULift.{1} (HO1 (A ⊗ A).hom)) := Module.Projective.of_equiv e1.symm
-  haveI : Module.Finite R (ULift.{1} (HO1 A.hom × HO1 A.hom)) := Module.Finite.equiv e2.symm
-  haveI : Module.Projective R (ULift.{1} (HO1 A.hom × HO1 A.hom)) := Module.Projective.of_equiv e2.symm
+  have : Module.Finite R (ULift.{1} (HO1 (A ⊗ A).hom)) := Module.Finite.equiv e1.symm
+  have : Module.Projective R (ULift.{1} (HO1 (A ⊗ A).hom)) := Module.Projective.of_equiv e1.symm
+  have : Module.Finite R (ULift.{1} (HO1 A.hom × HO1 A.hom)) := Module.Finite.equiv e2.symm
+  have : Module.Projective R (ULift.{1} (HO1 A.hom × HO1 A.hom)) := Module.Projective.of_equiv e2.symm
   obtain ⟨r, hr⟩ := GlobalTheory.split_injective_of_forall_prime_baseChange_field_injective R _ _ f (by
     intro P
     refine ⟨AlgebraicClosure P.asIdeal.ResidueField, inferInstance, inferInstance, ?_, ?_⟩
@@ -657,7 +657,7 @@ theorem rankAtStalk_eq_finrank_residueField {R M : Type} [CommRing R] [AddCommGr
     [Module.Finite R M] [Module.Projective R M] (p : PrimeSpectrum R) :
     Module.rankAtStalk M p = Module.finrank p.asIdeal.ResidueField (p.asIdeal.ResidueField ⊗[R] M) := by
   rw [Module.rankAtStalk_eq_finrank_tensorProduct]
-  haveI : Module.Free (Localization.AtPrime p.asIdeal) (Localization.AtPrime p.asIdeal ⊗[R] M) :=
+  have : Module.Free (Localization.AtPrime p.asIdeal) (Localization.AtPrime p.asIdeal ⊗[R] M) :=
     Module.free_of_flat_of_isLocalRing
   have e := (AlgebraTensorModule.cancelBaseChange R (Localization.AtPrime p.asIdeal)
     p.asIdeal.ResidueField p.asIdeal.ResidueField M)
@@ -670,16 +670,16 @@ theorem exists_grpObj_of_isPullback {R R' : Type} [CommRing R] [CommRing R'] (f 
     (h : IsPullback φ s' A.hom (spMap f)) (hA : IsAbelianScheme A)
     (hg : SmoothOfRelativeDimension g A.hom) :
     ∃ _ : GrpObj (Over.mk s'), IsAbelianScheme (Over.mk s') ∧ SmoothOfRelativeDimension g s' := by
-  letI : GrpObj ((Over.pullback (spMap f)).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback (spMap f)).obj A) := Functor.grpObjObj
   have hP := isGrpPullback_pullback A (spMap f)
   obtain ⟨hPA, -⟩ := GlobalTheory.AbBaseChange.isAbelianScheme_and_relDim_of_isGrpPullback f A
     ((Over.pullback (spMap f)).obj A) (pullback.fst A.hom (spMap f)) g hP hA hg
   let e : Over.mk s' ≅ (Over.pullback (spMap f)).obj A := Over.isoMk h.isoPullback (by simp)
-  letI gr : GrpObj (Over.mk s') := GrpObj.ofIso e.symm
+  let gr : GrpObj (Over.mk s') := GrpObj.ofIso e.symm
   have := smoothOfRelativeDimension_isStableUnderBaseChange.{0} g
   refine ⟨gr, GlobalTheory.Compare.AbelianSchemeTorusCompare.isAbelianScheme_of_iso e ?_ hPA,
     MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension g) h hg⟩
-  haveI : IsMonHom e.symm.hom := inferInstance
+  have : IsMonHom e.symm.hom := inferInstance
   exact isMonHom_inv_of_iso e.symm
 
 end GlobalTheory.AbCohRing

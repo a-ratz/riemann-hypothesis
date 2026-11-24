@@ -426,8 +426,8 @@ theorem compr_comm (j : ℤ) (g h : FiltrationCocycleLiftCriterion) : compr σ j
   ext1 v
   apply ext_inner_left ℂ
   intro w
-  rw [Submodule.coe_inner, Submodule.coe_inner, ContinuousLinearMap.mul_apply,
-    ContinuousLinearMap.mul_apply, inner_compr_compr, ← compr_iotaG σ j h, ← compr_iotaG σ j g,
+  rw [Submodule.coe_inner, Submodule.coe_inner, mul_apply_eq_comp,
+    mul_apply_eq_comp, inner_compr_compr, ← compr_iotaG σ j h, ← compr_iotaG σ j g,
     inner_compr_compr]
   congr 1
   congr 1; funext θ

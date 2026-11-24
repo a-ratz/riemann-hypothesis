@@ -205,7 +205,7 @@ private theorem key {B S : Type} [CommRing B] [HenselianLocalRing B] [CommRing S
     simp
   have hcard : ∀ n : Ideal S, n.IsMaximal → (Finset.univ.filter (fun i => θ i ∈ n)).card = a := by
     intro n hn
-    letI := Ideal.Quotient.field n
+    let := Ideal.Quotient.field n
     have := data ((Ideal.Quotient.mk n).comp (algebraMap B S)) (by
       intro b
       rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem]
@@ -224,7 +224,7 @@ private theorem key {B S : Type} [CommRing B] [HenselianLocalRing B] [CommRing S
     rw [hFS]
     exact Polynomial.monic_prod_of_monic _ _ (fun I _ => Polynomial.monic_X_sub_C _)
   obtain ⟨τ, hτ0, hτm⟩ : ∃ τ : B, F.IsRoot τ ∧ τ ∉ IsLocalRing.maximalIdeal B := by
-    letI := Ideal.Quotient.field n2
+    let := Ideal.Quotient.field n2
     let ψ : B →+* S ⧸ n2 := (Ideal.Quotient.mk n2).comp (algebraMap B S)
     let θb : σ → S ⧸ n2 := fun i => Ideal.Quotient.mk n2 (θ i)
     have hzero : ∀ i, θb i = 0 ↔ θ i ∈ n2 := fun i => Ideal.Quotient.eq_zero_iff_mem
@@ -336,15 +336,15 @@ private theorem ext_hom {B S C : Type} [CommRing B] [CommRing S] [Algebra B S] [
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective a
     have : b ∈ q := by rw [hq]; exact ha
     exact Ideal.Quotient.eq_zero_iff_mem.mpr this
-  letI : Algebra (B ⧸ q) C := f1.toAlgebra
+  let : Algebra (B ⧸ q) C := f1.toAlgebra
   have hi : Function.Injective (algebraMap (B ⧸ q) (S ⧸ P)) := by
     exact Ideal.algebraMap_quotient_injective
-  haveI : Algebra.IsIntegral (B ⧸ q) (S ⧸ P) := .tower_top B
-  haveI : IsDomain (B ⧸ q) := Ideal.Quotient.isDomain q
-  haveI : IsDomain (S ⧸ P) := Ideal.Quotient.isDomain P
-  haveI : Module.IsTorsionFree (B ⧸ q) (S ⧸ P) := Module.isTorsionFree_iff_algebraMap_injective.mpr hi
-  haveI : Module.IsTorsionFree (B ⧸ q) C := Module.isTorsionFree_iff_algebraMap_injective.mpr hf1
-  haveI : Algebra.IsAlgebraic (B ⧸ q) (S ⧸ P) := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsIntegral (B ⧸ q) (S ⧸ P) := .tower_top B
+  have : IsDomain (B ⧸ q) := Ideal.Quotient.isDomain q
+  have : IsDomain (S ⧸ P) := Ideal.Quotient.isDomain P
+  have : Module.IsTorsionFree (B ⧸ q) (S ⧸ P) := Module.isTorsionFree_iff_algebraMap_injective.mpr hi
+  have : Module.IsTorsionFree (B ⧸ q) C := Module.isTorsionFree_iff_algebraMap_injective.mpr hf1
+  have : Algebra.IsAlgebraic (B ⧸ q) (S ⧸ P) := Algebra.IsIntegral.isAlgebraic
   let L : (S ⧸ P) →ₐ[B ⧸ q] C := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -376,7 +376,7 @@ private theorem loc_hom {l : ℕ} [Fact (Nat.Prime l)] (κ : PadicAlgCl l) (hκ 
     exact ⟨⟨_, hc n⟩, rfl⟩
   obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨q.reverse, ?_, ?_⟩
-  · letI : Invertible w := invertibleOfNonzero (inv_ne_zero hκ0)
+  · let : Invertible w := invertibleOfNonzero (inv_ne_zero hκ0)
     have h1 := Polynomial.eval₂_reverse_mul_pow ((algebraMap ℚ_[l] (PadicAlgCl l)).comp (algebraMap ℤ_[l] ℚ_[l])) w q
     have h2 : Polynomial.eval₂ ((algebraMap ℚ_[l] (PadicAlgCl l)).comp (algebraMap ℤ_[l] ℚ_[l])) w q = 0 := by
       rw [← Polynomial.eval₂_map, hq]
@@ -406,7 +406,7 @@ private theorem cl_exists {B : Type} [CommRing B] [IsDomain B] [HenselianLocalRi
   have hinj : Function.Injective (algebraMap B S) := by
     intro a b hab
     exact hinjΩ (congrArg Subtype.val hab)
-  haveI hI : Algebra.IsIntegral B S := inferInstance
+  have hI : Algebra.IsIntegral B S := inferInstance
   have hkey : ∀ (θ0 : S) (n n' : Ideal S), n.IsMaximal → n'.IsMaximal → θ0 ∉ n → θ0 ∉ n' := by
     intro θ0 n n' hn hn' h0
     obtain ⟨Q, hQm, hQ0⟩ := Algebra.IsIntegral.isIntegral (R := B) θ0
@@ -677,7 +677,7 @@ private theorem spl_dual {ν : K} {M A : M4 K} (hM : ∀ i j, j < i → M i j = 
     · simp
   have h0 : A i i ≠ 0 := by
     have := ((Matrix.isUnit_iff_isUnit_det A).1 hu).ne_zero
-    rw [Matrix.det_of_upperTriangular hA'] at this
+    rw [Matrix.det_of_isUpperTriangular hA'] at this
     exact Finset.prod_ne_zero_iff.1 this i (Finset.mem_univ _)
   have e := congrFun (congrFun h i) i
   have hs : ∀ i, sgn i * sgn i = 1 := by decide
@@ -689,7 +689,7 @@ private theorem spl_int {B : Type} [CommRing B] [Algebra B K] (X : M4 B) (u : (M
     IsIntegral B (((u : M4 K) * (algebraMap B K).mapMatrix X * (u⁻¹ : (M4 K)ˣ)) i i) := by
   refine ⟨X.charpoly, X.charpoly_monic, ?_⟩
   rw [Polynomial.eval₂_eq_eval_map, ← Matrix.charpoly_map, ← RingHom.mapMatrix_apply,
-    ← Matrix.charpoly_units_conj u, ← Matrix.coe_units_inv, Matrix.charpoly_of_upperTriangular _ (fun i j h => hM i j h),
+    ← Matrix.charpoly_units_conj u, ← Matrix.coe_units_inv, Matrix.charpoly_of_isUpperTriangular _ (fun i j h => hM i j h),
     Polynomial.eval_prod]
   exact Finset.prod_eq_zero (Finset.mem_univ i) (by simp)
 
@@ -785,7 +785,7 @@ theorem UpperTheory.V.Loc.spPtL :
     have h := spl_gsp (y : B →+* PadicAlgCl l) (hρ.1 g)
     rwa [hy] at h
   obtain ⟨u, κ, h1, h2, h3, h4⟩ := ordFlag _ (PadicAlgCl l) _ D.s0 _ (fun a b e => hinj (hO e)) hord
-  haveI : HenselianLocalRing B := GlobalTheory.henselianLocalRing_of_henselianRing B
+  have : HenselianLocalRing B := GlobalTheory.henselianLocalRing_of_henselianRing B
   have hs0 : D.s0 ∈ (D.Ip l).subgroupOf (D.Gp l) := hD.decompSigma_mem.1.1
   have hred : ∀ i (g : D.Gp l), ‖(κ i g : PadicAlgCl l) - ((D.ps i g : c.Oˣ) : c.O)‖ < 1 := fun i g =>
     spl_red hO (ps := fun i (g : D.Gp l) => (D.ps i g : c.O)) hinj hρ.2 x hx y i g _ (h4 i g)
@@ -806,9 +806,9 @@ theorem UpperTheory.V.Loc.spPtL :
   · by_contra hn
     push Not at hn
     have hlam : lamW i ≠ lamW j := by
-      haveI : CompactSpace (D.Gp l) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
-      haveI := Subgroup.quotient_finite_of_isOpen U hU
-      haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+      have : CompactSpace (D.Gp l) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
+      have := Subgroup.quotient_finite_of_isOpen U hU
+      have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
       obtain ⟨n, hn0, -, hnU⟩ := U.exists_pow_mem_of_index_ne_zero Subgroup.FiniteIndex.index_ne_zero D.s0
       have e := hn _ hnU
       have hm : ((D.s0 ^ n : D.Gp l) : G ℚ Ω) ∈ D.Ip l ⊓ D.ψ.ker ⊓ D.om.ker := pow_mem hD.decompSigma_mem n

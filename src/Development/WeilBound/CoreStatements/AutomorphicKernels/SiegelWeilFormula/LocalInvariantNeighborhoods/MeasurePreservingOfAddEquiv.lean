@@ -64,7 +64,7 @@ theorem measurePreserving_of_addEquiv {G : Type*} [AddCommGroup G] [TopologicalS
   have hfin : μ B ≠ ⊤ := hB.measure_lt_top.ne
   have hc : c = 1 := by
     have h1 := congrArg (fun ν : Measure G => ν B) hcμ
-    simp only [Measure.smul_apply, hval, ENNReal.smul_def, smul_eq_mul] at h1
+    simp only [smul_apply, hval, ENNReal.smul_def, smul_eq_mul] at h1
     have h2 : (c : ENNReal) * μ B = 1 * μ B := by rw [one_mul]; exact h1.symm
     have h3 : (c : ENNReal) = 1 := (ENNReal.mul_left_inj hpos hfin).1 h2
     exact_mod_cast h3

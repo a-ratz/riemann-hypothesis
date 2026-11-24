@@ -210,7 +210,7 @@ theorem norm_index_count_bound (hS : StripsMem) (hP : GTPieri) (hC : StdCountGT)
     have hν : ∀ ν : {ν // ν ∈ succs (isVec i) (B i) μ₀}, Antitone ν.1 :=
       fun ν => Step.antitone ((mem_succs hS _ _ _ _).1 ν.2)
     have ihν := fun ν : {ν // ν ∈ succs (isVec i) (B i) μ₀} => ih (i + 1) (by omega) ν.1 (hν ν)
-    haveI : ∀ ν : {ν // ν ∈ succs (isVec i) (B i) μ₀}, Finite (ContIdx n (i + 1) N isVec B ν.1) :=
+    have : ∀ ν : {ν // ν ∈ succs (isVec i) (B i) μ₀}, Finite (ContIdx n (i + 1) N isVec B ν.1) :=
       fun ν => (ihν ν).1
     refine ⟨Finite.of_equiv _ e.symm, ?_⟩
     have hsum : ∑ ν : {ν // ν ∈ succs (isVec i) (B i) μ₀}, Nat.card (ContIdx n (i + 1) N isVec B ν.1) =

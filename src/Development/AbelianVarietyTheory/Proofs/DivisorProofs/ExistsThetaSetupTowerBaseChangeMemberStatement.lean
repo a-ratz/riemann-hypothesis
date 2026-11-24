@@ -154,8 +154,8 @@ theorem Tower.regAt : ∀ {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (F
     exact Spec_closedPoint
   intro a ha
   set P₂ := (jK V' ≫ spMap ev₂ ≫ 𝔗.X₂.M.Z.fromSpecStalk z₂) (closedPoint (FractionRing V'))
-  haveI := 𝔗.X₂.normal.isIntegrallyClosed_stalk P₂
-  haveI : IsIntegrallyClosed (𝔗.X₂.M.O P₂) := IsIntegrallyClosed.of_equiv (𝔗.X₂.M.stalkEquiv P₂)
+  have := 𝔗.X₂.normal.isIntegrallyClosed_stalk P₂
+  have : IsIntegrallyClosed (𝔗.X₂.M.O P₂) := IsIntegrallyClosed.of_equiv (𝔗.X₂.M.stalkEquiv P₂)
   have hmem : ∀ c : X₁.S.R, ((algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁).comp X₁.S.R.val.toRingHom) c ∈ 𝔗.X₂.M.O P₂ := fun c =>
     𝔗.map_mem_O (by rw [hpt]; exact hreg c.1 c.2)
   let q : X₁.S.R →+* 𝔗.X₂.M.O P₂ := ((algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁).comp X₁.S.R.val.toRingHom).codRestrict _ hmem
@@ -279,8 +279,8 @@ theorem UMem.exists_baseChange : ∀ {g n : ℕ} {F : SFam g n (zetaAway n)} {W 
   have aR : AdmBase V (maximalIdeal V) := ⟨hV.1, inferInstance, hV.2.1, hV.2.2.1⟩
   have aR' : AdmBase V' (maximalIdeal V') := ⟨hcn.1, inferInstance, hcn.2.1, hcn.2.2.1⟩
   have hI : (maximalIdeal V).map io ≤ maximalIdeal V' := by
-    letI := io.toAlgebra
-    haveI : Algebra.IsIntegral V V' := ⟨hfin.to_isIntegral⟩
+    let := io.toAlgebra
+    have : Algebra.IsIntegral V V' := ⟨hfin.to_isIntegral⟩
     have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (R := V) (algebraMap _ _) hfin.to_isIntegral (maximalIdeal V')
     rw [Ideal.map_le_iff_le_comap]
     exact (IsLocalRing.eq_maximalIdeal hmax).ge
@@ -438,7 +438,7 @@ namespace GlobalTheory.TermsMove
 theorem tors_mul {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {F : Type} [Field F] [Algebra (FractionRing R) F]
     {g : GtPtF D F} {n : ℕ} (d : ℕ) (h : ∃ o, GtPtF.IsNsmul n g o ∧ o.IsZero) :
     ∃ o, GtPtF.IsNsmul (n * d) g o ∧ o.IsZero := by
-  letI := @TorusExt.gtGroup
+  let := @TorusExt.gtGroup
   obtain ⟨o, o₁, o₂⟩ := h
   rw [TorusExt.isNsmul_iff_eq] at o₁
   rw [TorusExt.isZero_iff_eq] at o₂
@@ -498,10 +498,10 @@ theorem exists_witnesses : ∀ {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matr
   intro g n F W Z i X₁ act 𝔗 z₁ z₂ hp x₀ hdiv V _ _ _ ev X _ m t δ 𝔪 C lab x fr th w₀ s g' w h1 h2 h3 h4 h5 h6
     V' _ _ _ io f hf hinj hfin ev₂ 𝔪₂ ψ hD bc hExt hyK hcart wψ hwψ hφ hmon hU he₈ hgen x₂ fr₂ h1' h2' ρ hρ
   have hG := GlobalTheory.globalFns_holds
-  letI : Algebra (FractionRing V) (FractionRing V') := f.toAlgebra
-  haveI : IsScalarTower (FractionRing V) (FractionRing V) (FractionRing V') := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (FractionRing V) (FractionRing V') := f.toAlgebra
+  have : IsScalarTower (FractionRing V) (FractionRing V) (FractionRing V') := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hF : Compat io (FractionRing V') := hf
-  haveI : IsLocalHom io := RingHom.IsIntegral.isLocalHom hfin.to_isIntegral hinj
+  have : IsLocalHom io := RingHom.IsIntegral.isLocalHom hfin.to_isIntegral hinj
   have hI : (maximalIdeal V).map io ≤ maximalIdeal V' := map_maximalIdeal_le io
   have hg₂ : jFK (R := V') (FractionRing V') ≫ spMap f = jFK (R := V) (FractionRing V') := (Spec.map_comp _ _).symm
   obtain ⟨κ, κ', hκ⟩ := exists_isFibreIso hD hF
@@ -728,7 +728,7 @@ theorem tower_frames {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8)
   have hpos : 0 < X₁.S.r * X₁.S.N * 𝔗.d := by
     rw [← 𝔗.lev]
     exact Nat.mul_pos 𝔗.X₂.S.r_pos (by have := 𝔗.X₂.S.N_ge; omega)
-  haveI : NeZero ((X₁.S.r * X₁.S.N * 𝔗.d) ^ 2) := ⟨pow_ne_zero 2 hpos.ne'⟩
+  have : NeZero ((X₁.S.r * X₁.S.N * 𝔗.d) ^ 2) := ⟨pow_ne_zero 2 hpos.ne'⟩
   choose k hk using fun b => hprim.eq_pow_of_pow_eq_one (hμ b)
   refine ⟨(Scheme.ΓSpecIso (CommRingCat.of 𝔗.X₂.S.R)).hom.hom ρ₀.val, k, (ρ₀.map (Scheme.ΓSpecIso (CommRingCat.of 𝔗.X₂.S.R)).hom.hom.toMonoidHom).isUnit, fun b Y r y J₁ J₂ hJ₁ hJ₂ => ?_⟩
   have h1 := Hτ b Y r y J₁ J₂ hJ₁ hJ₂
@@ -895,7 +895,7 @@ theorem frames_along_tower : ∀ {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Ma
   show (gw w y zz (J (y ≫ ψ)) (J' y)).val * (val (fr₂ (𝔗.lam b)) (𝟙 _) zz J').val = _
   rw [hval]
   have hB := Units.inv_mul (gw 𝔪.wl (y ≫ ψ) zz (J₁ (y ≫ ψ ≫ 𝔪.φ)) (J (y ≫ ψ)))
-  simp only [id, GlobalTheory.Poinc.TorsRatio.cst_eq_cstK, map_mul, map_pow, Units.val_mul, Units.coe_map, MonoidHom.coe_coe,
+  simp only [id, GlobalTheory.Poinc.TorsRatio.cst_eq_cstK, map_mul, map_pow, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass,
     IsUnit.unit_spec] at hB ⊢
   have key : ∀ a b c d e : (TFK (R := V') (FractionRing V')).left.presheaf.stalk zz,
       a * b * (c * (d * e)) = b * c * e * (a * d) := fun _ _ _ _ _ => by ring
@@ -988,7 +988,7 @@ theorem valR_through_stalk {X : Scheme.{0}} {x : X} {C : Type} [CommRing C] (ψ 
 theorem val_germ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {M : RatModel o Ω} {V : Type} [CommRing V] [IsDomain V]
     {z : M.Z} (ev : M.Z.presheaf.stalk z →+* V) (x : M.Z.presheaf.stalk z) :
     M.val (jK V ≫ spMap ev ≫ M.Z.fromSpecStalk z) (M.stalkHom z x) = algebraMap V (FractionRing V) (ev x) := by
-  obtain ⟨U, hz, f, rfl⟩ := M.Z.presheaf.germ_exist x
+  obtain ⟨U, hz, f, rfl⟩ := M.Z.presheaf.exists_germ_eq x
   have hr : Set.range (jK V ≫ spMap ev ≫ M.Z.fromSpecStalk z) ⊆ U := by
     rintro _ ⟨w, rfl⟩
     have : (jK V ≫ spMap ev ≫ M.Z.fromSpecStalk z) w ∈ Set.range (M.Z.fromSpecStalk z) := ⟨_, rfl⟩

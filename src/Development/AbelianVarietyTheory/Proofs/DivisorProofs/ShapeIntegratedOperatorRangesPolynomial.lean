@@ -152,7 +152,7 @@ theorem unitarySigns_haar_isMulRightInvariant :
     ∀ (n : ℕ) (ε : Fin n → Bool) (μ : MeasureTheory.Measure (Formalism.REAL.UJ ε)) [μ.IsHaarMeasure],
       μ.IsMulRightInvariant := by
   intro n ε μ _
-  haveI : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ _ g⟩
+  have : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ _ g⟩
   rw [Measure.isMulLeftInvariant_eq_smul μ (Formalism.REAL.muG ε)]
   infer_instance
 
@@ -236,7 +236,7 @@ theorem shape_cc {ε : Fin n → Bool} {d : ℕ} {φ : Mat n → ℂ} (hφ : φ 
   induction hφ using Submodule.span_induction with
   | mem φ h =>
     obtain ⟨H, P, ⟨hH, R, hR⟩, -, rfl⟩ := h
-    have hM : Continuous fun g : UJ ε => toM g := Units.continuous_val.comp continuous_subtype_val
+    have hM : Continuous fun g : UJ ε => toM g := Units.continuous_val.comp continuous_subtypeVal
     refine ⟨?_, ?_⟩
     · have hr : Continuous fun g : UJ ε => rM ε (toM g) := (GlobalTheory.offDiagBlockNorm_cont_inv n ε).1
       have hent : Continuous fun g : UJ ε =>
@@ -310,7 +310,7 @@ open RangeSh
 
 theorem rangeShape : RangeShape := by
   intro n ε μ _ U _ _ _ π hπ d φ hφ
-  haveI := GlobalTheory.unitarySigns_haar_isMulRightInvariant n ε μ
+  have := GlobalTheory.unitarySigns_haar_isMulRightInvariant n ε μ
   obtain ⟨hc, hs⟩ := shape_cc hφ
   set f : UJ ε → ℂ := fun g => φ (toM g) with hf
   have hT : IsRepOp π μ f (repOp π μ f) := hπ.isRepOp hc hs
@@ -331,7 +331,7 @@ theorem rangeShape : RangeShape := by
       rw [hπ.inner_apply_left, inv_inv]
     rw [e1, hin, ← integral_mul_left_eq_self (fun g => ⟪l, π g u⟫_ℂ * f ((k : UJ ε)⁻¹ * g)) (k : UJ ε)]
     refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
-    simp only [hπ.inner_apply_left, inv_inv, inv_mul_cancel_left, map_mul, ContinuousLinearMap.mul_apply]
+    simp only [hπ.inner_apply_left, inv_inv, inv_mul_cancel_left, map_mul, mul_apply_eq_comp]
     ring
   · have key := GlobalTheory.Pc3.RS.integral_mem μ (polyK ε d) (fun g k => ⟪u, π g l⟫_ℂ * f (g * (k : UJ ε)))
       (fun g => (polyK ε d).smul_mem ⟪u, π g l⟫_ℂ (shape_right hφ g))
@@ -345,7 +345,7 @@ theorem rangeShape : RangeShape := by
     rw [e1, hin, ← integral_mul_right_eq_self (fun g => ⟪u, π g l⟫_ℂ * f (g * (k : UJ ε))) (k : UJ ε)⁻¹]
     congr 1
     refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
-    simp only [inv_mul_cancel_right, map_mul, ContinuousLinearMap.mul_apply]
+    simp only [inv_mul_cancel_right, map_mul, mul_apply_eq_comp]
     ring
 
 end GlobalTheory.PsCo.Pc3

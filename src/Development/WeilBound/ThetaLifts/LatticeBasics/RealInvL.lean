@@ -71,7 +71,7 @@ def dop (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) : 𝓢(V, ℂ) :=
 theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
     dop a L f x = fderiv ℝ f x a + (-(2 * Real.pi * Complex.I) * (L x : ℂ)) * f x := by
   have hT := L.hasTemperateGrowth
-  simp only [dop, SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
+  simp only [dop, add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   simp only [Complex.real_smul, smul_eq_mul]
   ring
@@ -79,7 +79,7 @@ theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
 theorem dop_add (a b : V) (L M : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     dop (a + b) (L + M) f = dop a L f + dop b M f := by
   ext x
-  simp only [SchwartzMap.add_apply, dop_apply, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [add_apply, dop_apply, map_add (f := _), add_apply]
   push_cast
   ring
 
@@ -175,7 +175,7 @@ theorem hl_line_deriv (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
   obtain ⟨g₀, -, hg₀⟩ := exists_dual_vector ℝ a hna
   set lam : V →L[ℝ] ℝ := ‖a‖⁻¹ • g₀ with hlam
   have hla : lam a = 1 := by
-    simp only [hlam, ContinuousLinearMap.smul_apply, hg₀, smul_eq_mul]
+    simp only [hlam, smul_apply, hg₀, smul_eq_mul]
     simpa using inv_mul_cancel₀ hna
   set q : V → ℝ := fun x => lam x * L x + (-(L a / 2)) * (lam x * lam x) with hq
   have hqt : q.HasTemperateGrowth :=
@@ -254,7 +254,7 @@ theorem aOf_add (M : Model σ X W) (u v : Matrix (Fin n) (Fin d) (AE F E)) :
 theorem lOf_add (M : Model σ X W) (u v : Matrix (Fin n) (Fin d) (AE F E)) :
     lOf M (u + v) = lOf M u + lOf M v := by
   ext y
-  simp only [lOf, ContinuousLinearMap.add_apply, linForm_apply, ← map_add (f := _), ← Finset.sum_add_distrib]
+  simp only [lOf, add_apply, linForm_apply, ← map_add (f := _), ← Finset.sum_add_distrib]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   simp [map_add (f := _), evI_add, mul_add]
@@ -468,7 +468,7 @@ theorem pureA_splitE (f : (κ → mixedEmbedding.mixedSpace F) → ℂ) (g : (κ
 
 open scoped Classical in
 theorem volume_isAddHaar [Fintype κ] : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := by
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
   exact Measure.pi.isAddHaarMeasure _
 
 variable {F κ} [Fintype κ]
@@ -479,22 +479,22 @@ theorem lintegral_eq {S : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ}
       ∀ φ ∈ schA F κ, ∫⁻ x, ‖S φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) {f f' : SInf F κ}
     (h : ∀ g ∈ SB (κ → Af F), S (pureA F f g) = pureA F f' g) : ∫⁻ x, ‖f' x‖ₑ ^ 2 = ∫⁻ x, ‖f x‖ₑ ^ 2 := by
   obtain ⟨g, hg, h₁⟩ := exists_sb_one (F := F) (κ := κ)
-  haveI := volume_isAddHaar F κ
-  haveI : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : LocallyCompactSpace (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : SecondCountableTopology (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  letI mY : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-  letI mA : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → AdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI : SigmaCompactSpace (κ → FiniteAdeleRing (𝓞 F) F) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have := volume_isAddHaar F κ
+  have : OpensMeasurableSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : LocallyCompactSpace (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : SecondCountableTopology (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  let mY : MeasurableSpace (κ → FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  let mA : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → AdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have : SigmaCompactSpace (κ → FiniteAdeleRing (𝓞 F) F) := sigmaCompactSpace_of_locallyCompact_secondCountable
   set ν : Measure (κ → FiniteAdeleRing (𝓞 F) F) := Measure.addHaar with hν
-  haveI : SFinite ν := inferInstance
-  haveI : MeasurableAdd (κ → mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
-  haveI : MeasurableAdd (κ → FiniteAdeleRing (𝓞 F) F) := ContinuousAdd.measurableAdd
-  haveI : ν.IsAddHaarMeasure := by rw [hν]; infer_instance
-  haveI : ((volume : Measure (κ → mixedEmbedding.mixedSpace F)).prod ν).IsAddHaarMeasure :=
+  have : SFinite ν := inferInstance
+  have : MeasurableAdd (κ → mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
+  have : MeasurableAdd (κ → FiniteAdeleRing (𝓞 F) F) := ContinuousAdd.measurableAdd
+  have : ν.IsAddHaarMeasure := by rw [hν]; infer_instance
+  have : ((volume : Measure (κ → mixedEmbedding.mixedSpace F)).prod ν).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure (volume : Measure (κ → mixedEmbedding.mixedSpace F)) ν
   have hμH : Measure.IsAddHaarMeasure ((volume.prod ν).map (splitE F κ)) :=
     (splitE F κ).isAddHaarMeasure_map _ (continuous_splitE F κ) (continuous_splitE_symm F κ)
@@ -509,9 +509,9 @@ theorem lintegral_eq {S : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ}
     have h1 : ∫⁻ y, ‖g y * g y‖ₑ ∂ν < ⊤ :=
       ((hgc.mul hgc).integrable_of_hasCompactSupport (hg.2.mul_left (f := g))).2
     refine ne_of_lt (lt_of_le_of_lt (le_of_eq (lintegral_congr fun y => ?_)) h1)
-    rw [enorm_mul, sq]
+    rw [eNorm_mul, sq]
   have hC0 : ∫⁻ y, ‖g y‖ₑ ^ 2 ∂ν ≠ 0 := fun h0 => by
-    rw [lintegral_eq_zero_iff (hgc.measurable.enorm.pow_const 2)] at h0
+    rw [lintegral_eq_zero_iff (hgc.measurable.eNorm.pow_const 2)] at h0
     have h2 : g =ᵐ[ν] 0 := h0.mono fun y hy => by simpa using hy
     have := congrFun ((hgc.ae_eq_iff_eq ν continuous_zero).1 h2) 0
     simp [h₁] at this
@@ -520,10 +520,10 @@ theorem lintegral_eq {S : ((κ → AF F) → ℂ) → (κ → AF F) → ℂ}
     rw [hint]
     have e1 : ∀ p, ‖pureA F a g (splitE F κ p)‖ₑ ^ 2 = ‖a p.1‖ₑ ^ 2 * ‖g p.2‖ₑ ^ 2 := by
       intro p
-      rw [pureA_splitE, enorm_mul, mul_pow]
+      rw [pureA_splitE, eNorm_mul, mul_pow]
     simp_rw [e1]
-    rw [lintegral_prod_mul (a.continuous.measurable.enorm.pow_const 2).aemeasurable
-      (hgc.measurable.enorm.pow_const 2).aemeasurable]
+    rw [lintegral_prod_mul (a.continuous.measurable.eNorm.pow_const 2).aemeasurable
+      (hgc.measurable.eNorm.pow_const 2).aemeasurable]
   have := hU _ hμH _ (Submodule.subset_span ⟨f, g, hg, rfl⟩)
   rw [h g hg, hp, hp] at this
   exact (ENNReal.mul_left_inj hC0 hC).1 this

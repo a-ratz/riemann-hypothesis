@@ -146,11 +146,11 @@ theorem maj_jn_le (θ : InfFam D) (hn : r + t = n) (K : Set (Mx D a n)) (N : ℕ
       rw [e]
       exact this
     unfold GlobalTheory.Unf.maj
-    rw [if_pos hb, if_pos hb']
+    rw [ite_eq_left hb, ite_eq_left hb']
     have h1 := GlobalTheory.Unf.realSize_nonneg θ v
     have h2 := realSize_le θ hn x v
     gcongr
-  · have h0 : GlobalTheory.Unf.maj θ K N (jn hn x v) = 0 := by unfold GlobalTheory.Unf.maj; rw [if_neg hb]
+  · have h0 : GlobalTheory.Unf.maj θ K N (jn hn x v) = 0 := by unfold GlobalTheory.Unf.maj; rw [ite_eq_right hb]
     rw [h0]
     exact GlobalTheory.Unf.maj_nonneg θ _ N v
 
@@ -159,7 +159,7 @@ theorem integrable_slice : ∀ {D : D7} {n r t : ℕ} {θ : InfFam D} (hθ : IsI
     Integrable (fun v => Φ.1 (jn hn x v)) μt := by
   intro D n r t θ hθ a hn μt _ Φ x
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D a t
-  haveI : BorelSpace (Mx D a t) := ⟨rfl⟩
+  have : BorelSpace (Mx D a t) := ⟨rfl⟩
   obtain ⟨hc, K, hK, hC⟩ := GlobalTheory.SchwartzMaj.continuous_and_le_maj D θ hθ a n Φ.1
     (GlobalTheory.SchwartzPure.isSchwartzBruhat_of_mem_schwartzA D θ hθ a n Φ.1 Φ.2)
   obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajInt.maj_integrable D θ hθ a t (fun _ _ => True) 0 μt inferInstance
@@ -744,10 +744,10 @@ theorem integrable_fib (hP : PartFT) {hn : r + t = n} (M : Maps D hn) (m : Meas 
     Integrable (fun z => Φ.1 (jn hn z.1 z.2)) (fib.prod μt) := by
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D V.rank r
   obtain ⟨j1, j2, j3, j4, -⟩ := lattice_Mx D V.rank t
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D V.rank t) := ⟨rfl⟩
-  haveI := hfib.fin
-  haveI := hμt.choose_spec.1
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank t) := ⟨rfl⟩
+  have := hfib.fin
+  have := hμt.choose_spec.1
   obtain ⟨F, hF⟩ := exists_real_schwartz_majorant Φ
   have hPa := hP D n r t hn M V ψ hψ χ hχ hη θ hθ μ hμ ω hω μr μt hμr hμt
   have hm : ∀ x, ∫ v, F.1 (jn hn x v) ∂μt = (ω (M.emb w) F).1 (jn hn x 0) := by
@@ -794,12 +794,12 @@ theorem core (hP : PartFT) {hn : r + t = n} (M : Maps D hn) (m : Meas D r t) (V 
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D V.rank r
   obtain ⟨j1, j2, j3, j4, -⟩ := lattice_Mx D V.rank t
   obtain ⟨k1, k2, k3, k4, -⟩ := lattice_Mx D r t
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D V.rank t) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D r t) := ⟨rfl⟩
-  haveI := hfib.fin
-  haveI := hμt.choose_spec.1
-  haveI := m.hμ.1
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank t) := ⟨rfl⟩
+  have : BorelSpace (Mx D r t) := ⟨rfl⟩
+  have := hfib.fin
+  have := hμt.choose_spec.1
+  have := m.hμ.1
   obtain ⟨hc1, hc2, hc3, hc4, hn1, hn2⟩ := GlobalTheory.T.continuous_theta_kernel_components (t := t) hψ V b₀ b
   have hcΦ : Continuous fun z : Mx D V.rank r × Mx D V.rank t => Φ.1 (jn hn z.1 z.2) :=
     (GlobalTheory.RegSch.CentreWeilComm.continuous_of_mem hθ Φ).comp (c_jn_cont hn)

@@ -102,7 +102,7 @@ theorem mixS_om_compact_maj : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T
     refine h1.trans ?_
     rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_coe_nnreal]
     gcongr
-  rw [← ofReal_norm_eq_enorm] at h3
+  rw [← ofReal_norm] at h3
   exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 h3
 
 end GlobalTheory.Unf

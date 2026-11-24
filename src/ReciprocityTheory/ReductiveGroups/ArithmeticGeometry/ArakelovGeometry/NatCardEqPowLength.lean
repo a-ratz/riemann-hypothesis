@@ -179,8 +179,8 @@ theorem card_dehom {W : Ideal (MRing ι)} (hWp : W.IsPrime) (hWm : IsMultiHomogI
     let a' : K → ℕ := fun k => max (a k) (b k)
     have ha' : ∀ k, a₁ ≤ a' k := fun k => le_trans (ha k) (le_max_left _ _)
     obtain ⟨x', hx'⟩ := dmap_mono W i (fun k => le_max_right (a k) (b k)) x
-    haveI := hfin a
-    haveI := hfin a'
+    have := hfin a
+    have := hfin a'
     have hsub : Set.range (dmap W i a) ⊆ Set.range (dmap W i a') := by
       rintro _ ⟨z, rfl⟩
       obtain ⟨z', hz'⟩ := dmap_mono W i (fun k => le_max_left (a k) (b k)) z
@@ -201,14 +201,14 @@ theorem card_dehom {W : Ideal (MRing ι)} (hWp : W.IsPrime) (hWm : IsMultiHomogI
 
 theorem natCard_eq_pow_length {A : Type*} [AddCommGroup A] [Finite A] {p : ℕ} (hp : p.Prime)
     (h : ∀ x : A, p • x = 0) : Nat.card A = p ^ (Module.length ℤ A).toNat := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  letI : Module (ZMod p) A := AddCommGroup.zmodModule h
+  have : Fact p.Prime := ⟨hp⟩
+  let : Module (ZMod p) A := AddCommGroup.zmodModule h
   have hlen : Module.length ℤ A = Module.length (ZMod p) A :=
     Module.length_eq_of_surjective (fun x => ⟨(x.val : ℤ), by simp⟩)
   have hfin : Module.length (ZMod p) A = (Module.finrank (ZMod p) A : ℕ∞) :=
     @Module.length_eq_finrank (ZMod p) A _ _ _ Module.Finite.of_finite
   have hcard : Nat.card A = Nat.card (ZMod p) ^ Module.finrank (ZMod p) A :=
     @Module.natCard_eq_pow_finrank (ZMod p) A _ _ _ Module.Finite.of_finite
-  rw [hlen, hfin, ENat.toNat_coe, hcard, Nat.card_zmod]
+  rw [hlen, hfin, ENat.toNat_natCast, hcard, Nat.card_zmod]
 
 end ReciprocityTheory.ChartRestriction.G.ArakelovGeometry

@@ -122,8 +122,8 @@ theorem exists_zeta (K : FinExt l) (s : ℕ) (hs : 1 ≤ s) :
     ∃ ζ : PadicComplex l, IsPrimitiveRoot ζ l ∧ ζ ∈ inC (Ks K s) ∧
       ‖(l : PadicComplex l)‖ ≤ ‖ζ - 1‖ := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  have : NeZero l := ⟨hp.ne_zero⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hz' : IsPrimitiveRoot (z : PadicComplex l) l :=
     hz.map_of_injective (f := algebraMap (Om l) (PadicComplex l)) (RingHom.injective _)
   refine ⟨z, hz', ⟨z, ?_, rfl⟩, ?_⟩

@@ -90,7 +90,7 @@ theorem kType_unique {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T T' : KType ε
       rw [Matrix.smul_single, smul_eq_mul, mul_one]
     conv_lhs => rw [Matrix.matrix_eq_sum_single X]
 
-    simp only [hs, map_sum, map_smul, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply]
+    simp only [hs, map_sum, map_smul, sum_apply, smul_apply]
   have hdτ : ∀ X : Matrix (Fin n) (Fin n) ℂ, X * Jm ε = Jm ε * X → ∀ v : T.V,
       φ (T.dτ X v) = T'.dτ X (φ v) := by
     intro X hX v
@@ -125,8 +125,8 @@ theorem kType_unique {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T T' : KType ε
       ContinuousLinearEquiv.coe_coe]
     rw [LinearIsometryEquiv.coe_toContinuousLinearEquiv, hdτ Y hY.2]
     simp
-  letI : NormedAlgebra ℚ (T.V →L[ℂ] T.V) := NormedAlgebra.restrictScalars ℚ ℂ _
-  letI : NormedAlgebra ℚ (T'.V →L[ℂ] T'.V) := NormedAlgebra.restrictScalars ℚ ℂ _
+  let : NormedAlgebra ℚ (T.V →L[ℂ] T.V) := NormedAlgebra.restrictScalars ℚ ℂ _
+  let : NormedAlgebra ℚ (T'.V →L[ℂ] T'.V) := NormedAlgebra.restrictScalars ℚ ℂ _
   have hexp := NormedSpace.map_exp f (map_continuous f) (T.dτ Y)
   rw [hf] at hexp
   rw [← hexp]

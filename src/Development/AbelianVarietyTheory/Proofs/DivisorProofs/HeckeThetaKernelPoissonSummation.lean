@@ -130,7 +130,7 @@ variable {I : Type} [Fintype I] in
 private lemma det_dilE_eq_exp_sum (y : I → ℝ) : LinearMap.det (_root_.GlobalTheory.HeckePoisson.Dilation.dilE y) = Real.exp (∑ i, y i) := by
   rw [_root_.GlobalTheory.HeckePoisson.Dilation.dilE, LinearMap.det_conj, _root_.GlobalTheory.HeckePoisson.Dilation.dilPi, LinearMap.det_pi, Real.exp_sum]
   refine Finset.prod_congr rfl fun i _ => ?_
-  rw [LinearMap.det_smul, LinearMap.det_id, mul_one, Complex.finrank_real_complex, ← Real.exp_nat_mul]
+  rw [LinearMap.det_smul, LinearMap.det_id, mul_one, Complex.finrank_real_complex, ← Real.exp_natCast_mul]
   congr 1
   push_cast
   ring
@@ -275,7 +275,7 @@ private theorem hasFDerivAt_conj_pow_mul_gaussian_half (n : ℕ) (l : ℂ) :
   have hlin : HasFDerivAt (fun z : ℂ => z / 2) ((1 / 2 : ℝ) • ContinuousLinearMap.id ℝ ℂ) l := by
     refine (((1 / 2 : ℝ) • ContinuousLinearMap.id ℝ ℂ).hasFDerivAt).congr_of_eventuallyEq
       (Filter.Eventually.of_forall fun z => ?_)
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, Complex.real_smul]
+    simp only [smul_apply, ContinuousLinearMap.id_apply, Complex.real_smul]
     push_cast; ring
   have hP : HasFDerivAt (fun z : ℂ => (starRingEnd ℂ) (z / 2))
       ((Complex.conjCLE : ℂ →L[ℝ] ℂ).comp ((1 / 2 : ℝ) • ContinuousLinearMap.id ℝ ℂ)) l :=
@@ -285,7 +285,7 @@ private theorem hasFDerivAt_conj_pow_mul_gaussian_half (n : ℕ) (l : ℂ) :
     Complex.ofRealCLM.hasFDerivAt.comp l hN
   have hQ := hR.cexp
   refine ⟨_, ((hP.pow n).mul hQ).const_mul ((1 / 2 : ℂ) * (-Complex.I) ^ n), ?_⟩
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.id_apply, Complex.conjCLE_apply, Complex.ofRealCLM_apply, innerSL_apply_apply,
     smul_eq_mul, Function.comp_apply]
   have c2 : (starRingEnd ℂ) 2 = 2 := map_ofNat _ 2
@@ -531,7 +531,7 @@ def toMixed {φ : I → K →+* ℂ} (h : IsCMType φ) : EuclideanSpace ℂ I �
 theorem toMixed_embA {φ : I → K →+* ℂ} (h : IsCMType φ) (α : 𝓞 K) :
     toMixed h (embA φ α) = mixedEmbedding K (α : K) := by
   classical
-  haveI : IsEmpty {w : InfinitePlace K // w.IsReal} :=
+  have : IsEmpty {w : InfinitePlace K // w.IsReal} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w.1) w.2⟩
   refine Prod.ext (Subsingleton.elim _ _) (funext fun w => ?_)
   rw [mixedEmbedding.mixedEmbedding_apply_isComplex]
@@ -781,8 +781,8 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
   intro K _ _ _ I _ φ hφ n M F hM hF
   classical
   obtain ⟨hd, hz⟩ := _root_.GlobalTheory.HeckePoisson.lat_isZLattice K I φ hφ M hM
-  haveI : Finite (𝓞 K ⧸ M) := Ideal.finiteQuotientOfFreeOfNeBot M hM
-  letI : Fintype (𝓞 K ⧸ M) := Fintype.ofFinite _
+  have : Finite (𝓞 K ⧸ M) := Ideal.finiteQuotientOfFreeOfNeBot M hM
+  let : Fintype (𝓞 K ⧸ M) := Fintype.ofFinite _
   set L := lat φ M with hL
   set D := GlobalTheory.dualLattice L with hD
   have hI : Nonempty I := by
@@ -812,12 +812,12 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
   have ha_half : ∀ l, a (half l) = A l := by
     intro l
     have h : ∃ l' : D, half l' = half l := ⟨l, rfl⟩
-    simp only [ha_def, dif_pos h]
+    simp only [ha_def, dite_eq_left h]
     rw [hhalf (Classical.choose_spec h)]
   have ha_zero : ∀ v, v ∉ Set.range half → a v = 0 := by
     intro v hv
     have h : ¬ ∃ l : D, half l = v := fun ⟨l, hl⟩ => hv ⟨l, hl⟩
-    simp only [ha_def, dif_neg h]
+    simp only [ha_def, dite_eq_right h]
   set B : ℝ := ‖cov⁻¹‖ * ∑ c : 𝓞 K ⧸ M, ‖F (Quotient.out c)‖ with hB
   have hB0 : 0 ≤ B := by positivity
   have hAB : ∀ l, ‖A l‖ ≤ B := by

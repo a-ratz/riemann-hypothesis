@@ -63,15 +63,15 @@ namespace GlobalTheory.CompanionTheory.FundamentalDomainCentralCharacter
 open Ad3.R Ad3
 
 theorem countable_range : Countable (AdelicGLn.diagonal ℚ 2).range := by
-  haveI : Countable (Matrix (Fin 2) (Fin 2) ℚ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℚ))
-  haveI : Countable (GL (Fin 2) ℚ) := Function.Injective.countable (f := fun u : GL (Fin 2) ℚ => (u.val, u.inv)) (fun a b h => Units.ext (congrArg Prod.fst h))
+  have : Countable (Matrix (Fin 2) (Fin 2) ℚ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℚ))
+  have : Countable (GL (Fin 2) ℚ) := Function.Injective.countable (f := fun u : GL (Fin 2) ℚ => (u.val, u.inv)) (fun a b h => Units.ext (congrArg Prod.fst h))
   exact (Set.countable_range (AdelicGLn.diagonal ℚ 2)).to_subtype
 
 theorem md_pos (a : Jd) : 0 < md a := (IdeleGroup.ideleModule ℚ a).2
 theorem md_mul (a b : Jd) : md (a * b) = md a * md b := by
   simp [md, map_mul]
 theorem md_one : md 1 = 1 := by simp [md]
-theorem continuous_md : Continuous md := continuous_subtype_val.comp IdeleGroup.continuous_ideleModule
+theorem continuous_md : Continuous md := continuous_subtypeVal.comp IdeleGroup.continuous_ideleModule
 theorem continuous_Dt : Continuous Dt := continuous_md.comp (AdelicGLn.continuous_det ℚ 2)
 theorem Dt_pos (g : G2) : 0 < Dt g := md_pos _
 theorem Dt_mul (g h : G2) : Dt (g * h) = Dt g * Dt h := by
@@ -115,8 +115,8 @@ theorem mem_band_dia {γ : GL (Fin 2) ℚ} {g : G2} : dia2 γ * g ∈ band ↔ g
 
 theorem fundamental_domain_integral_central_vanishing : Ad3.R.G1a → Ad3.R.G1 := by
   intro hA μ 𝓕 mK 𝓓 hS F hF hB hL
-  haveI := hS.haar
-  haveI := hS.right
+  have := hS.haar
+  have := hS.right
   obtain ⟨-, hz, hT⟩ := hA μ 𝓕 mK 𝓓 hS
   have hbM := measurableSet_band
   have Fm : Measurable F := hF.measurable
@@ -137,7 +137,7 @@ theorem fundamental_domain_integral_central_vanishing : Ad3.R.G1a → Ad3.R.G1 :
     have hBhL : LInv (Bh.indicator F) := by
       intro γ g
       have hm : dia2 γ * g ∈ Bh ↔ g ∈ Bh := by
-        simp only [hBh, Set.mem_setOf_eq, mul_assoc, mem_band_dia]
+        simp only [hBh, Set.mem_ofPred_eq, mul_assoc, mem_band_dia]
       by_cases hg : g ∈ Bh
       · rw [Set.indicator_of_mem hg, Set.indicator_of_mem (hm.2 hg), hL]
       · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem (fun h => hg (hm.1 h))]
@@ -152,7 +152,7 @@ theorem fundamental_domain_integral_central_vanishing : Ad3.R.G1a → Ad3.R.G1 :
       have hm : dg2 z z * g ∈ band ↔ g ∈ Bh := by
         have : Dt (dg2 z z * g) = Dt (g * h⁻¹) := by
           rw [Dt_mul, Dt_mul, Dt_central, hz1, Dt_inv, mul_comm]
-        simp only [hBh, Set.mem_setOf_eq, band, this]
+        simp only [hBh, Set.mem_ofPred_eq, band, this]
       by_cases hg : g ∈ Bh
       · rw [Set.indicator_of_mem hg, Set.indicator_of_mem (hm.2 hg), hC]
       · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem (fun h => hg (hm.1 h))]
@@ -176,7 +176,7 @@ theorem fundamental_domain_integral_central_vanishing : Ad3.R.G1a → Ad3.R.G1 :
       intro g
       have hm : dg2 z z * g ∈ band ↔ g ∈ band := by
         have : Dt (dg2 z z * g) = Dt g := by rw [Dt_mul, Dt_central, hmd, one_mul]
-        simp only [band, Set.mem_setOf_eq, this]
+        simp only [band, Set.mem_ofPred_eq, this]
       by_cases hg : g ∈ band
       · rw [Set.indicator_of_mem hg, Set.indicator_of_mem (hm.2 hg), hc]
       · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem (fun h => hg (hm.1 h)), mul_zero]
@@ -208,19 +208,19 @@ theorem fundamental_domain_integral_central_vanishing : Ad3.R.G1a → Ad3.R.G1 :
       have h1 := (ae_iff.1 ((ae_restrict_iff' hmeas).1 hae))
       refine measure_mono_null ?_ h1
       rintro g ⟨⟨hb, hf⟩, hg⟩
-      simp only [Set.mem_setOf_eq, not_forall]
+      simp only [Set.mem_ofPred_eq, not_forall]
       exact ⟨⟨hg, hb⟩, by simpa using hf⟩
     have hinv : ∀ γ ∈ (AdelicGLn.diagonal ℚ 2).range, ∀ x : G2, γ * x ∈ t ↔ x ∈ t := by
       rintro _ ⟨δ, rfl⟩ x
       have e1 := hL δ x
-      simp only [ht, Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [ht, Set.mem_inter_iff, Set.mem_ofPred_eq]
       rw [show AdelicGLn.diagonal ℚ 2 δ * x = dia2 δ * x from rfl, mem_band_dia, e1]
     have hts : ∀ γ : (AdelicGLn.diagonal ℚ 2).range, γ • t = t := by
       intro γ
       ext x
       rw [Set.mem_smul_set_iff_inv_smul_mem, Subgroup.smul_def, smul_eq_mul]
       exact hinv _ (γ⁻¹).2 x
-    haveI := countable_range
+    have := countable_range
     set_option synthInstance.maxHeartbeats 200000 in
     have hμt : μ t = 0 := hS.fd.measure_zero_of_invariant t hts h0
     set U : Set G2 := {g | 1 < Dt g ∧ Dt g < 2 ∧ F g ≠ 0} with hU

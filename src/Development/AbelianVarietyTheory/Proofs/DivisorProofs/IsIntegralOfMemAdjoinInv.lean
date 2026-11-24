@@ -54,7 +54,7 @@ theorem _root_.GlobalTheory.ValCrit.isIntegral_of_mem_adjoin_inv {R K : Type*} [
     (h : y⁻¹ ∈ Algebra.adjoin R {y}) : IsIntegral R y⁻¹ := by
   rw [Algebra.adjoin_singleton_eq_range_aeval] at h
   obtain ⟨p, hp⟩ := h
-  letI : Invertible y := invertibleOfNonzero hy
+  let : Invertible y := invertibleOfNonzero hy
   set n := p.natDegree
   have hrefl : (reflect n p).degree < ((n + 1 : ℕ) : WithBot ℕ) := by
     refine lt_of_le_of_lt (degree_le_natDegree) ?_
@@ -137,9 +137,9 @@ theorem _root_.GlobalTheory.ValCrit.dvd_of_forall_cdvr : ∀ (R : Type) [CommRin
   have hinjS : Function.Injective (algebraMap R S) := by
     intro a b hab
     exact hinjK (congrArg Subtype.val hab)
-  haveI : Algebra.FiniteType R S := Algebra.FiniteType.adjoin_of_finite (Set.finite_singleton y)
-  haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing R S
-  haveI : CharZero S := charZero_of_injective_algebraMap hinjS
+  have : Algebra.FiniteType R S := Algebra.FiniteType.adjoin_of_finite (Set.finite_singleton y)
+  have : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing R S
+  have : CharZero S := charZero_of_injective_algebraMap hinjS
   set J : Ideal S := (IsLocalRing.maximalIdeal R).map (algebraMap R S) ⊔ Ideal.span {ys}
   have hJ : J ≠ ⊤ := maximalIdeal_map_sup_span_ne_univ_of_inv_not_mem_adjoin y hnot
   obtain ⟨P, hPmax, hJP⟩ := Ideal.exists_le_maximal J hJ

@@ -88,14 +88,14 @@ theorem resChar_finite (D : Formalism.BasicNotions.D7) (ℓ : ℕ) : {p : PlF D 
   have hsub : {p : PlF D | Loc.resChar p = ℓ} ⊆
       {v | v.asIdeal ∣ Ideal.span {(ℓ : 𝓞 D.host.F)}} := by
     intro p hp
-    simp only [Set.mem_setOf_eq] at hp ⊢
+    simp only [Set.mem_ofPred_eq] at hp ⊢
     rw [Ideal.dvd_span_singleton, ← hp, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
     exact ringChar.Nat.cast_ringChar
   by_cases hℓ : ℓ = 0
   · subst hℓ
     have hempty : {p : PlF D | Loc.resChar p = 0} = ∅ := by
       ext p
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       intro hp
       have h1 : ((Ideal.absNorm p.asIdeal : ℕ) : 𝓞 D.host.F ⧸ p.asIdeal) = 0 := by
         rw [← map_natCast (Ideal.Quotient.mk p.asIdeal), Ideal.Quotient.eq_zero_iff_mem]

@@ -227,7 +227,7 @@ end Mix
 
 theorem mem_SB_of_isNatDatum {k A C : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     [Fintype A] [Fintype C] {ϖ : kˣ} {n : ℕ} {Φ : Matrix A C k → ℂ} (h : IsNatDatum ϖ n Φ) : Φ ∈ GlobalTheory.WeilM.SB (Matrix A C k) := by
-  have h0 : 0 < ValuativeRel.valuation k ((ϖ ^ n : kˣ) : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < ValuativeRel.valuation k ((ϖ ^ n : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
   refine ⟨(IsLocallyConstant.iff_exists_open Φ).2 fun x =>
       ⟨{x' | ∀ r s, (x' - x) r s / ((ϖ ^ n : kˣ) : k) ∈ (ValuativeRel.valuation k).integer}, ?_, fun r s => by simp,
       fun x' hx' => ?_⟩,
@@ -548,7 +548,7 @@ theorem mixed_compare : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
     fun x u hx hu => GlobalTheory.T.tensorSymplecticForm_at_split_finite_place hT.base.cm Γ.V Γ.W hT.geo.hV.herm hT.geo.hW.skew W.ψ _ _ _ x u hx hu
   have h1 := GivenAdm.givenLevel_open hL hw ((i : ℕ), (j : ℕ))
   have h2 := isOpen_map_invT h1.1 h1.2
-  haveI hμ := isHaarMeasure_haarVol h2.1 h2.2
+  have hμ := isHaarMeasure_haarVol h2.1 h2.2
   refine ⟨ι, i1, 1, one_ne_zero, GeneralLinearGroup.map (jj.symm : Kw w →+* Fv D.host.F v) g, invT cF, fun n Φ hn hΦ => ?_,
     fun K₁ K₂ => ?_⟩
   · have hN := LocTensor.isNatDatum_flipAt hL W i j hw hb hn hΦ

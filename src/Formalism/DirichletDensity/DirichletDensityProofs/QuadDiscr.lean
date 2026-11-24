@@ -69,7 +69,7 @@ theorem quadDiscr_ne_one (K : Type) [Field K] [NumberField K] (a : ℤ) (x : K)
     (hx : x ^ 2 = (a : K)) (hadj : IntermediateField.adjoin ℚ {x} = ⊤) (hsf : Squarefree a)
     (h4 : a % 4 = 1) (h1 : a ≠ 1) : discr K = a := by
   have hirr : Irreducible (X ^ 2 - C (a : ℚ)) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two (quad_not_sq_rat a hsf h1)
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two (quad_not_sq_rat a hsf h1)
   have hmon : (X ^ 2 - C (a : ℚ)).Monic := monic_X_pow_sub_C _ two_ne_zero
   have hev : aeval x (X ^ 2 - C (a : ℚ)) = 0 := by simp [hx]
   have hmin : minpoly ℚ x = X ^ 2 - C (a : ℚ) :=

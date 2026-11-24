@@ -93,8 +93,8 @@ theorem leftInvariant_of_section : ∀ {Γ K X : Type} [Group Γ] [TopologicalSp
     refine ⟨Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts K), inferInstance, ?_⟩
     have h := Measure.haarMeasure_self (G := K) (K₀ := ⊤)
     rwa [TopologicalSpace.PositiveCompacts.coe_top] at h
-  haveI := hmH
-  haveI : IsFiniteMeasure m := ⟨by rw [hm1]; exact ENNReal.one_lt_top⟩
+  have := hmH
+  have : IsFiniteMeasure m := ⟨by rw [hm1]; exact ENNReal.one_lt_top⟩
   set φ : X × K → Γ := fun p => s p.1 * e p.2 with hφ_def
   have hφ : Measurable φ := (hs.comp measurable_fst).mul (he.measurable.comp measurable_snd)
   set ν : Measure Γ := Measure.map φ (ρ.prod m) with hν_def
@@ -113,7 +113,7 @@ theorem leftInvariant_of_section : ∀ {Γ K X : Type} [Group Γ] [TopologicalSp
       Measurable (fun x => m ((fun k => s x * e k) ⁻¹' B)) := by
     intro B hB
     exact measurable_measure_prodMk_left (hφ hB)
-  haveI : ν.IsMulLeftInvariant := by
+  have : ν.IsMulLeftInvariant := by
     constructor
     intro g
     ext B hB
@@ -133,7 +133,7 @@ theorem leftInvariant_of_section : ∀ {Γ K X : Type} [Group Γ] [TopologicalSp
       _ = ∫⁻ y, m ((fun k => s y * e k) ⁻¹' B) ∂(Measure.map a ρ) := by
           rw [lintegral_map (hmeasψ B hB) ha]
       _ = ∫⁻ y, m ((fun k => s y * e k) ⁻¹' B) ∂ρ := by rw [hamap]
-  haveI : IsFiniteMeasureOnCompacts ν := by
+  have : IsFiniteMeasureOnCompacts ν := by
     constructor
     intro A hA
     have hsub : φ ⁻¹' A ⊆ (s ⁻¹' (A * Set.range e)) ×ˢ Set.univ := by
@@ -320,7 +320,7 @@ theorem isClosed_posSemidef (n : ℕ) : IsClosed {M : Mat n | M.PosSemidef} := b
   have h : {M : Mat n | M.PosSemidef} =
       {M : Mat n | Mᴴ = M} ∩ ⋂ x : Fin n → ℂ, {M : Mat n | 0 ≤ star x ⬝ᵥ M *ᵥ x} := by
     ext M
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter,
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter,
       Matrix.posSemidef_iff_dotProduct_mulVec]
     rfl
   rw [h]
@@ -332,7 +332,7 @@ theorem measurableSet_cone (n : ℕ) : MeasurableSet (cone n) := by
   have h : cone n = (hOf ⁻¹' {M : Mat n | M.PosSemidef}) ∩
       ((fun v => (hOf v : Mat n).det) ⁻¹' {(0 : ℂ)}ᶜ) := by
     ext v
-    simp only [cone, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage,
+    simp only [cone, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage,
       Set.mem_compl_iff, Set.mem_singleton_iff]
     exact ⟨fun hv => ⟨hv.posSemidef, hv.det_pos.ne'⟩,
       fun hv => (Matrix.PosSemidef.posDef_iff_det_ne_zero hv.1).2 hv.2⟩
@@ -905,9 +905,9 @@ def emb : UK n →* G n := Unitary.toUnits
 
 theorem continuous_emb : Continuous (emb : UK n → G n) := by
   rw [Units.continuous_iff]
-  refine ⟨continuous_subtype_val, ?_⟩
+  refine ⟨continuous_subtypeVal, ?_⟩
   show Continuous fun κ : UK n => star κ.1
-  exact continuous_subtype_val.star
+  exact continuous_subtypeVal.star
 
 theorem val_mem (y : G n) : y.val ∈ GLs n :=
   ((Matrix.isUnit_iff_isUnit_det _).1 y.isUnit).ne_zero
@@ -931,7 +931,7 @@ def sec (σ₀ : Mat n → Mat n) (hσ : ∀ P : Mat n, P.PosDef → σ₀ P * (
 
 theorem sec_val (σ₀ : Mat n → Mat n) (hσ : ∀ P : Mat n, P.PosDef → σ₀ P * (σ₀ P)ᴴ = P)
     {v : Fin n × Fin n → ℝ} (h : v ∈ cone n) : (sec σ₀ hσ v).val = σ₀ (hOf v) := by
-  simp only [sec, dif_pos h]
+  simp only [sec, dite_eq_left h]
   rfl
 
 theorem measurable_sec (σ₀ : Mat n → Mat n) (hc : ContinuousOn σ₀ {P | P.PosDef})
@@ -939,9 +939,9 @@ theorem measurable_sec (σ₀ : Mat n → Mat n) (hc : ContinuousOn σ₀ {P | P
     Measurable (sec σ₀ hσ) := by
   classical
   have hcont : ContinuousOn (sec σ₀ hσ) (cone n) := by
-    rw [continuousOn_iff_continuous_restrict, Units.continuous_iff]
+    rw [continuousOn_iff_continuous_domRestrict, Units.continuous_iff]
     have h1 : Continuous fun v : cone n => σ₀ (hOf v.1) :=
-      hc.comp_continuous (contDiff_hOf.continuous.comp continuous_subtype_val) fun v => v.2
+      hc.comp_continuous (contDiff_hOf.continuous.comp continuous_subtypeVal) fun v => v.2
     have h2 : (Units.val ∘ (cone n).restrict (sec σ₀ hσ)) = fun v : cone n => σ₀ (hOf v.1) := by
       funext v; exact sec_val σ₀ hσ v.2
     have h3 : (fun x : cone n => (((cone n).restrict (sec σ₀ hσ) x)⁻¹ : G n).val) =

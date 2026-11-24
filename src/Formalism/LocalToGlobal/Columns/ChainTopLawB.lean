@@ -104,7 +104,7 @@ theorem ctl_lamJsym_lamJ {K : Type} [Field K] (σ₀ : K →+* ℂ) (ψ₀ : Add
     σ₀ ((lamJsym ψ₀ χ n k₀ (k₀ + 2 * rS + 1) t j rS h M : Kˣ) : K) =
       Formalism.L2.Forms.lamJ (glmPsi (RingEquiv.refl (𝓞 E ⧸ P.asIdeal)) σ₀ ψ₀) (fun s => glmChi (RingEquiv.refl (𝓞 E ⧸ P.asIdeal)) σ₀ (χ s))
         (k₀ + 2 * rS + 1) t j k₀ ((M.1 : Matrix (Fin n) (Fin n) (𝓞 E ⧸ P.asIdeal)).map (RingEquiv.refl (𝓞 E ⧸ P.asIdeal))) := by
-  letI := resField P
+  let := resField P
   rw [lamJsym_eq_lamSym (RingEquiv.refl (𝓞 E ⧸ P.asIdeal)) σ₀ ψ₀ χ ht hn h M]
   rfl
 
@@ -159,7 +159,7 @@ theorem ctl_top (hlaw : CtlPhiLaw) (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu
     (prXpG E (N' + 1) ∘ₗ y ∘ₗ LinearMap.funLeft E E (Fin.castAdd 0))
   rw [hcongr, hL]
 
-  letI := resField P
+  let := resField P
   have hinvJ : ((lamJsym ψ₀ χ n' k₀ (k₀ + 2 * rS + 1) t (m - 1) rS hrn' ⟨H⁻¹, Subgroup.inv_mem _ hH⟩ : Kˣ) : K) =
       ((lamJsym ψ₀ χ n' k₀ (k₀ + 2 * rS + 1) t (m - 1) rS hrn' ⟨H, hH⟩ : Kˣ) : K)⁻¹ := by
     rw [show (⟨H⁻¹, Subgroup.inv_mem _ hH⟩ : ↥(HJsym (𝓞 E ⧸ P.asIdeal) n' k₀ (k₀ + 2 * rS + 1) t (m - 1) rS hrn')) = ⟨H, hH⟩⁻¹ from rfl,
@@ -285,7 +285,7 @@ theorem topLawG_sym (hlaw : CtlPhiLaw) (hX : X.Ok) (hPr : Pr.Ok) {m2 : ℕ} (hm 
     exact congrArg (fun z : X.Kˣ => (z : X.K))
       (ctl_lamXmsym_congr (Ch.psi0 ⟨w.1, hw⟩) (extChi fun s => Ch.chi s ⟨w.1, hw⟩) hrN (by omega) hH'm hH')
   unfold rhoS rhoT PhiTopG
-  simp only [if_pos hw, hsharp, if_true]
+  simp only [ite_eq_left hw, hsharp, ite_true]
   have e1 : psi0P Ch w.1 = Ch.psi0 ⟨w.1, hw⟩ := by
     unfold psi0P
     rw [dite_eq_left hw]

@@ -124,8 +124,8 @@ def geoField : Subfield Ω :=
 
 theorem mem_geoField_of_fixed (h : IsClo p Ω) (x : Ω) (hx : ∀ g ∈ Ggeo (p := p) Ω, g x = x) :
     x ∈ geoField p Ω := by
-  haveI := h.clo
-  haveI : CharZero Ω := Basic.charZero_of_isClo h
+  have := h.clo
+  have : CharZero Ω := Basic.charZero_of_isClo h
   have hR : ∀ a : O0 p, algebraMap (O0 p) Ω a ∈ geoField p Ω := fun a =>
     Subfield.subset_closure (Or.inl ⟨a, rfl⟩)
   let f : O0 p →+* geoField p Ω := (algebraMap (O0 p) Ω).codRestrict (geoField p Ω) hR
@@ -135,11 +135,11 @@ theorem mem_geoField_of_fixed (h : IsClo p Ω) (x : Ω) (hx : ∀ g ∈ Ggeo (p 
     obtain ⟨P, hP0, hP⟩ := h.alg.isAlgebraic a
     refine ⟨P.map f, (Polynomial.map_ne_zero_iff hfi).2 hP0, ?_⟩
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, hf, ← Polynomial.aeval_def, hP]⟩
-  letI : Algebra.IsAlgebraic (geoField p Ω) Ω := hAlg
-  haveI : IsAlgClosure (geoField p Ω) Ω := ⟨h.clo, hAlg⟩
-  haveI : CharZero (geoField p Ω) := ⟨fun m n e =>
+  let : Algebra.IsAlgebraic (geoField p Ω) Ω := hAlg
+  have : IsAlgClosure (geoField p Ω) Ω := ⟨h.clo, hAlg⟩
+  have : CharZero (geoField p Ω) := ⟨fun m n e =>
     CharZero.cast_injective (congrArg Subtype.val e)⟩
-  haveI : IsGalois (geoField p Ω) Ω := inferInstance
+  have : IsGalois (geoField p Ω) Ω := inferInstance
   have hbot : x ∈ (⊥ : IntermediateField (geoField p Ω) Ω) := by
     refine (InfiniteGalois.mem_bot_iff_fixed x).2 fun σ => ?_
     let τ : Ω ≃ₐ[O0 p] Ω := AlgEquiv.ofRingEquiv (f := σ.toRingEquiv)
@@ -173,8 +173,8 @@ private theorem mem_geoField_of_fixed_local {p : ℕ} [Fact p.Prime] {Ω : Type}
     [Algebra (O0 p) Ω] (h : IsClo p Ω) (x : Ω)
     (hx : ∀ g ∈ Ggeo (p := p) Ω, g x = x) :
     x ∈ Subfield.closure (Set.range (algebraMap (O0 p) Ω) ∪ {y : Ω | IsAlgZp (p := p) y}) := by
-  haveI := h.clo
-  haveI : CharZero Ω := Basic.charZero_of_isClo h
+  have := h.clo
+  have : CharZero Ω := Basic.charZero_of_isClo h
   let F : Subfield Ω := Subfield.closure
     (Set.range (algebraMap (O0 p) Ω) ∪ {y : Ω | IsAlgZp (p := p) y})
   have hR : ∀ a : O0 p, algebraMap (O0 p) Ω a ∈ F := fun a =>
@@ -186,10 +186,10 @@ private theorem mem_geoField_of_fixed_local {p : ℕ} [Fact p.Prime] {Ω : Type}
     obtain ⟨P, hP0, hP⟩ := h.alg.isAlgebraic a
     refine ⟨P.map f, (Polynomial.map_ne_zero_iff hfi).2 hP0, ?_⟩
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, hf, ← Polynomial.aeval_def, hP]⟩
-  letI : Algebra.IsAlgebraic F Ω := hAlg
-  haveI : IsAlgClosure F Ω := ⟨h.clo, hAlg⟩
-  haveI : CharZero F := ⟨fun m n e => CharZero.cast_injective (congrArg Subtype.val e)⟩
-  haveI : IsGalois F Ω := inferInstance
+  let : Algebra.IsAlgebraic F Ω := hAlg
+  have : IsAlgClosure F Ω := ⟨h.clo, hAlg⟩
+  have : CharZero F := ⟨fun m n e => CharZero.cast_injective (congrArg Subtype.val e)⟩
+  have : IsGalois F Ω := inferInstance
   have hbot : x ∈ (⊥ : IntermediateField F Ω) := by
     refine (InfiniteGalois.mem_bot_iff_fixed x).2 fun σ => ?_
     let τ : Ω ≃ₐ[O0 p] Ω := AlgEquiv.ofRingEquiv (f := σ.toRingEquiv)

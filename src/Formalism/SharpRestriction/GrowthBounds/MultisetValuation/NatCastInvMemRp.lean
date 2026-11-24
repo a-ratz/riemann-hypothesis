@@ -57,7 +57,7 @@ variable (p : ℕ) [hp : Fact p.Prime] (K' : Type) [Field K'] [Algebra (K0 p) K'
 
 theorem pK'_ne : ((p : ℕ) : K') ≠ 0 := by
   intro h
-  apply WittVector.FractionRing.p_nonzero p (kb p)
+  apply WittVector.FractionRing.p_ne_zero p (kb p)
   apply (algebraMap (K0 p) K').injective
   rw [map_natCast, h, map_zero]
 
@@ -86,7 +86,7 @@ theorem natCast_inv_mem_Rp (vp : K') (m : ℕ) (hm : ¬ p ∣ m) : ((m : K'))⁻
 
 private lemma exists_not_dvd_eq_pow_padicValNat_mul (n : ℕ) (hn : n ≠ 0) : ∃ m, ¬ p ∣ m ∧ n = p ^ padicValNat p n * m := by
   obtain ⟨m, hm⟩ := ((_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _)) : p ^ padicValNat p n ∣ n)
-  refine ⟨m, fun ⟨c, hc⟩ => pow_succ_padicValNat_not_dvd (p := p) hn ⟨c, ?_⟩, hm⟩
+  refine ⟨m, fun ⟨c, hc⟩ => pow_succ_multiplicity_not_dvd (p := p) hn ⟨c, ?_⟩, hm⟩
   conv_lhs => rw [hm]
   rw [hc, Nat.padicValNat_def]
   ring

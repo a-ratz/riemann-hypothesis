@@ -97,7 +97,7 @@ private lemma inG_of_skewHermitian_of_commute_Jm (X : Matrix (Fin n) (Fin n) ℂ
 
 private lemma deriv_mem_submodule_of_forall_mem {S : Submodule ℂ H} [FiniteDimensional ℂ S] {f : ℝ → H} {f' : H}
     (hf : HasDerivAt f f' 0) (hS : ∀ t, f t ∈ S) : f' ∈ S := by
-  have hcl : IsClosed (S : Set H) := S.closed_of_finiteDimensional
+  have hcl : IsClosed (S : Set H) := S.isClosed_of_finiteDimensional
   refine hcl.mem_of_tendsto (hasDerivAt_iff_tendsto_slope.mp hf)
     (Filter.Eventually.of_forall fun t => ?_)
   rw [slope_def_module]
@@ -306,7 +306,7 @@ theorem isKTypeOf_of_isKIrrHW (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn �
     Formalism.MainNotions.S.IsKTypeOf ε σ Λ (V.map D.subtype) := by
   unfold Formalism.MainNotions.S.IsKTypeOf
   have hW : FiniteDimensional ℂ (V.map D.subtype) := by
-    haveI := hV.1
+    have := hV.1
     first
     | exact Module.Finite.map V D.subtype
   refine ⟨hW, ?_, ?_, ?_, ?_⟩
@@ -316,7 +316,7 @@ theorem isKTypeOf_of_isKIrrHW (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn �
     rw [← hxv, Submodule.subtype_apply, ← hy]
     exact Submodule.mem_map_of_mem hyV
   · intro S' hle hS'
-    haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
+    have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
     have hmem : ∀ X : Matrix (Fin n) (Fin n) ℂ, Xᴴ = -X → X * Jm ε = Jm ε * X →
         ∀ v : D, (v : H) ∈ S' → ((actM E X v : D) : H) ∈ S' := by
       intro X hX hJ v hv

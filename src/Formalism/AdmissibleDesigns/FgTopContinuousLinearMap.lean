@@ -64,10 +64,10 @@ theorem fgTop_continuous_linearMap {ℓ : ℕ} {O : Type} [CommRing O] [IsDomain
     [TopologicalSpace O] {M N : Type} [AddCommGroup M] [Module O M] [TopologicalSpace M] [ContinuousAdd M]
     [AddCommGroup N] [Module O N] [TopologicalSpace N] [ContinuousAdd N] [ContinuousSMul O N]
     (hR : IsFGTop O M) (hO : PadicCoeff ℓ O) (f : M →ₗ[O] N) : Continuous f := by
-  haveI := hO.compact
-  haveI := hR.t2
-  haveI := hR.csmul
-  haveI := hR.fg
+  have := hO.compact
+  have := hR.t2
+  have := hR.csmul
+  have := hR.fg
   obtain ⟨k, π, hπ⟩ := Module.Finite.exists_fin' O M
   have hπc : Continuous π := LinearMap.continuous_on_pi π
   have hq : Topology.IsQuotientMap π := hπc.isClosedMap.isQuotientMap hπc hπ
@@ -305,7 +305,7 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
   {n : Type} [Fintype n] [DecidableEq n] {Γ : Type} [Group Γ] [TopologicalSpace Γ]
 
 theorem t2Space_fractionRing_of_padicCoeff (ℓ : ℕ) (hO : PadicCoeff ℓ O) (hF : FracTop O) : T2Space (FractionRing O) := by
-  haveI := hO.t2
+  have := hO.t2
   refine IsTopologicalAddGroup.t2Space_of_zero_sep fun z hz => ?_
   by_cases h : z ∈ Set.range (algebraMap O (FractionRing O))
   · obtain ⟨w, rfl⟩ := h
@@ -393,7 +393,7 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Topol
 theorem eps_cont (ℓ : ℕ) [hℓ : Fact ℓ.Prime] (hO : PadicCoeff ℓ O) {Ek Ω : Type} [Field Ek] [Field Ω] [Algebra Ek Ω]
     [CharZero Ω] [IsAlgClosed Ω] (ε : (Ω ≃ₐ[Ek] Ω) →* Oˣ) (hc : IsCycG ℓ ε) :
     Continuous fun g => ((ε g : Oˣ) : O) := by
-  haveI := hO.ring
+  have := hO.ring
   have hB : ∀ U ∈ nhds (0 : O), ∃ n : ℕ, ((Ideal.span {(ℓ : O) ^ n} : Ideal O) : Set O) ⊆ U := by
     intro U hU
     obtain ⟨k, hk⟩ := (isAdic_iff.1 hO.adic).2 U hU
@@ -402,12 +402,12 @@ theorem eps_cont (ℓ : ℕ) [hℓ : Fact ℓ.Prime] (hO : PadicCoeff ℓ O) {Ek
       ∀ h ∈ W, ((ε h : Oˣ) : O) - 1 ∈ Ideal.span {(ℓ : O) ^ n} := by
     intro n
     have hN : 0 < ℓ ^ n := pow_pos hℓ.out.pos n
-    haveI : NeZero ((ℓ ^ n : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hN.ne'⟩
+    have : NeZero ((ℓ ^ n : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hN.ne'⟩
     obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic (ℓ ^ n) Ω)
       (Polynomial.degree_cyclotomic_pos _ Ω hN).ne'
     have hprim : IsPrimitiveRoot ζ (ℓ ^ n) := Polynomial.isRoot_cyclotomic_iff.1 hζ
     have hint : IsIntegral Ek ζ := IsIntegral.of_pow hN (by rw [hprim.pow_eq_one]; exact isIntegral_one)
-    haveI : FiniteDimensional Ek (IntermediateField.adjoin Ek {ζ}) :=
+    have : FiniteDimensional Ek (IntermediateField.adjoin Ek {ζ}) :=
       IntermediateField.adjoin.finiteDimensional hint
     refine ⟨((IntermediateField.adjoin Ek {ζ}).fixingSubgroup : Set (Ω ≃ₐ[Ek] Ω)),
       IntermediateField.fixingSubgroup_isOpen _, (IntermediateField.adjoin Ek {ζ}).fixingSubgroup.one_mem,
@@ -505,7 +505,7 @@ def moduleH1FractionField : Module (FractionRing O) (H1 ρ) :=
 
 theorem isScalarTower_H1 :
     @IsScalarTower O (FractionRing O) (H1 ρ) _ (moduleH1FractionField ρ hcs hρ).toSMul _ := by
-  letI := moduleH1FractionField ρ hcs hρ
+  let := moduleH1FractionField ρ hcs hρ
   refine ⟨fun o c x => ?_⟩
   induction x using Submodule.Quotient.induction_on with
   | H z =>
@@ -631,7 +631,7 @@ variable [TopologicalSpace (FractionRing O)] [IsTopologicalAddGroup (FractionRin
 
 theorem block_zero_continuous {ℓ : ℕ} (hO : PadicCoeff ℓ O) (hR : IsFGTop O R') (hu : Continuous fun g => uElt r χ g)
     (a b : {a // bl a = 0}) : Continuous fun g => M0 r χ bl ρk g a b := by
-  haveI := hO.ring
+  have := hO.ring
   let f : R' →ₗ[O] O :=
     { toFun := fun x => ρk 0 x a b
       map_add' := fun x y => by simp
@@ -660,7 +660,7 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 theorem realLat_Dat (ℓ : ℕ) (hO : PadicCoeff ℓ O) (hF : FracTop O) (w : ℕ) :
     RealLat (Dat r χ bl ρk ε Aw hK hε hM w) := by
   exact realLat_datStd ℓ hO hF hK (epsW ε Aw w) (Mw r χ bl ρk Aw w) _ _
-    (fun a b => (hM a b).comp continuous_subtype_val)
+    (fun a b => (hM a b).comp continuous_subtypeVal)
 
 theorem rowLat (ℓ : ℕ) (hO : PadicCoeff ℓ O) (hF : FracTop O) (w : ℕ) :
     (∀ g : decs Ek Aw w, (Dat r χ bl ρk ε Aw hK hε hM w).ε g = ε g) ∧
@@ -691,7 +691,7 @@ theorem heD {T₁ : Type} [AddCommGroup T₁] [Module O T₁] (ρ₁ : Represent
 
 theorem csK (h : ContinuousMul (FractionRing O)) :
     ContinuousConstSMul (FractionRing O) ({a // bl a = 0} → FractionRing O) := by
-  haveI := h
+  have := h
   infer_instance
 
 def modT (w : ℕ) : Module (FractionRing O) (H1 (Dat r χ bl ρk ε Aw hK hε hM w).ρT) :=
@@ -724,8 +724,8 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Topol
 
 theorem eps_cont_nf (ℓ : ℕ) [Fact ℓ.Prime] (hO : PadicCoeff ℓ O) (ε : (Ω ≃ₐ[Ek] Ω) →* Oˣ) (hc : IsCycG ℓ ε) :
     Continuous fun g => ((ε g : Oˣ) : O) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Ek
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Ek Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Ek
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Ek Ω).injective
   exact eps_cont ℓ hO ε hc
 
 end Inputs

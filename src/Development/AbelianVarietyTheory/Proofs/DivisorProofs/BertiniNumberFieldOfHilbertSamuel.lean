@@ -116,7 +116,7 @@ attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem degree_eq_hilbertDegree_of_isChowForm : ∀ (F : Type) [Field F] [CharZero F] (D N δ : ℕ) (I : Ideal (MvPolynomial (Fin N) F)) (f : MvPolynomial (Fin (D + 1) × Fin N) F), IsChowForm I D δ f → I.IsPrime → (∀ g ∈ I, ∀ n : ℕ, homogeneousComponent n g ∈ I) → δ = hilbertDegree I := by
   intro F _ _ D N δ I f hf hp hI
-  haveI := hp
+  have := hp
   exact GlobalTheory.ChowExists.degree_eq_hilbertDegree (GlobalTheory.ChowExists.isHomogeneous_of_component hI)
     hf.isChowFormInt
 
@@ -350,7 +350,7 @@ theorem exists_finset_separating {F : Type} [Field F] (S : LinSys F) (h : S.IsVa
   have hle : W ≤ S.str ⁻¹ᵁ ⊤ := le_top
   have hft : (S.str.appLE ⊤ W hle).hom.FiniteType :=
     HasRingHomProperty.appLE (P := @LocallyOfFiniteType) S.str inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ hle
-  letI := (S.str.appLE ⊤ W hle).hom.toAlgebra
+  let := (S.str.appLE ⊤ W hle).hom.toAlgebra
   obtain ⟨s, hs⟩ : Algebra.FiniteType Γ(Sp F, ⊤) Γ(S.Y, W) := hft
   refine ⟨s, fun K _ _ x x' hx hx' H => Subtype.ext ?_⟩
   have h1 := (le_iff_ptOf_mem _ _).2 hx
@@ -368,8 +368,8 @@ theorem exists_finset_separating {F : Type} [Field F] (S : LinSys F) (h : S.IsVa
 theorem exists_form_finite_fibres : ∀ (F : Type) [Field F] (S : LinSys F), S.IsVariety → S.BasePointFree → S.Birational → ∃ (d : ℕ) (g : MvPolynomial (Fin S.N) F), g.IsHomogeneous d ∧ g ∉ S.imageIdeal ∧ ∀ (K : Type) [Field K] [Algebra F K] (y : Fin S.N → K), {x : S.Pt K | aeval (S.coords x.1) g ≠ 0 ∧ ∃ c : K, S.coords x.1 = c • y}.Finite := by
   intro F _ S hV hb hB
   classical
-  haveI := compactSpace_Y S hV
-  haveI := HeightExists.isPrime_imageIdeal hV
+  have := compactSpace_Y S hV
+  have := HeightExists.isPrime_imageIdeal hV
   have hcov : ∀ y : S.Y, ∃ W : S.Y.Opens, IsAffineOpen W ∧ y ∈ W := fun y => by
     obtain ⟨W, hW, hy, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := y) trivial
     exact ⟨W, hW, hy⟩
@@ -597,9 +597,9 @@ theorem homogeneous_components_of_integral_equation (F K : Type) [Field F] [Fiel
       = MvPolynomial.eval₂ φ w (homogeneousComponent (e * (m - k)) (b k)) * τ ^ (k : ℕ) := by
     intro k
     have hle : e * (k : ℕ) ≤ e * m := Nat.mul_le_mul_left e k.is_lt.le
-    rw [hpow, ← mul_assoc, Polynomial.coeff_mul_X_pow', if_pos hle, Polynomial.coeff_mul_C,
+    rw [hpow, ← mul_assoc, Polynomial.coeff_mul_X_pow', ite_eq_left hle, Polynomial.coeff_mul_C,
       ← Nat.mul_sub, coeff_eval₂_C_mul_X]
-  rw [hpow, Polynomial.coeff_C_mul_X_pow, if_pos rfl] at hc
+  rw [hpow, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at hc
   simpa only [hterm] using hc
 
 end GlobalTheory
@@ -682,7 +682,7 @@ theorem relation_of_generic (F : Type) [Field F] (S : LinSys F) (hY : AlgebraicG
     rw [← ptOf_resPt η] at hm
     exact ((valR_ne_zero_iff (resPt η) hηU _).2 hm hzero).elim
   have hf : relFn S (S.chartAt (ptOf x.1)) u th m a = 0 := by
-    haveI := hY
+    have := hY
     exact (basicOpen_eq_bot_iff _).1 hb
   have key := valR_relFn S x.1 _ hxU u th m a
   rw [hf, valR_zero x.1 _ ((le_iff_ptOf_mem _ _).2 hxU)] at key
@@ -813,7 +813,7 @@ theorem exists_pt_of_mem_cone_of_isAlgClosed : ∀ (F : Type) [Field F] (S : Lin
     have e : 1 * (1 * (m - (k : ℕ))) + k = m := by omega
     rwa [e] at h2
 
-  haveI := HeightExists.isIntegral hT
+  have := HeightExists.isIntegral hT
   obtain ⟨Ω, _, _, xg, hxg, -⟩ := HeightExists.exists_generic hT
   have hmem : G ∈ (S.baseChange K).imageIdeal := by
     rw [imageIdeal_eq_coneIdeal_of_generic K Ω _ xg hxg 1 _ one_ne_zero (one_smul _ _).symm]
@@ -904,8 +904,8 @@ theorem simpleAt_of_noSquare : ∀ (F : Type) [Field F] [NumberField F] (T : Tup
   intro F _ _ T hT δ f hf hδ E _ _ s hfin hopen hsq
   classical
   obtain ⟨hfs, hmod, hrank⟩ := finite_finrank T hT E s hfin
-  letI := algebraΓOfHom ((T.linSection E s).subschemeι ≫ (T.toLinSys.baseChange E).str)
-  haveI := hmod
+  let := algebraΓOfHom ((T.linSection E s).subschemeι ≫ (T.toLinSys.baseChange E).str)
+  have := hmod
   have hPfin : (T.geomPts E (T.linSection E s)).Finite := hfs.finite_subPts _
   have hcard := natCard_subPts _ _ hfs (AlgebraicClosure E)
   have hI := _root_.GlobalTheory.etale_of_finrank_le_card_algHom_algebraicClosure E Γ((T.linSection E s).subscheme, ⊤)
@@ -1010,16 +1010,16 @@ theorem subset_of_forall_pt_mem : ∀ (k : Type) [Field k] (S : LinSys k), S.IsV
     [Algebra k Ω] [IsAlgClosed Ω] (Z : Set S.Y), IsClosed Z → ∀ U : Set S.Y, IsOpen U →
     (∀ x : S.Pt Ω, ptOf x.1 ∈ Z → ptOf x.1 ∈ U) → Z ⊆ U := by
   intro k _ S hS Ω _ _ _ Z hZ U hU h
-  haveI := hS.smooth
-  haveI : Smooth S.str := SmoothOfRelativeDimension.smooth S.D S.str
-  haveI : LocallyOfFiniteType S.str := inferInstance
-  haveI : JacobsonSpace S.Y := LocallyOfFiniteType.jacobsonSpace S.str
+  have := hS.smooth
+  have : Smooth S.str := SmoothOfRelativeDimension.smooth S.D S.str
+  have : LocallyOfFiniteType S.str := inferInstance
+  have : JacobsonSpace S.Y := LocallyOfFiniteType.jacobsonSpace S.str
   by_contra hne
   obtain ⟨z, hzZ, hzU⟩ := Set.not_subset.1 hne
   obtain ⟨y, ⟨hyZ, hyU⟩, hy⟩ := nonempty_inter_closedPoints (Z := Z ∩ Uᶜ) ⟨z, hzZ, hzU⟩
     (hZ.inter hU.isClosed_compl).isLocallyClosed
   have hyc : IsClosed ({y} : Set S.Y) := hy
-  haveI : IsFinite (resPt y ≫ S.str) := by
+  have : IsFinite (resPt y ≫ S.str) := by
     rw [isClosed_singleton_iff_isClosedImmersion] at hyc
     rw [isFinite_iff_locallyOfFiniteType_of_jacobsonSpace]
     unfold resPt
@@ -1029,8 +1029,8 @@ theorem subset_of_forall_pt_mem : ∀ (k : Type) [Field k] (S : LinSys k), S.IsV
       rw [Spec.map_preimage]; infer_instance
     rw [IsIntegralHom.SpecMap_iff] at this
     exact this
-  letI : Algebra k (S.Y.residueField y) := (S.baseHom (resPt y)).toAlgebra
-  haveI : Algebra.IsIntegral k (S.Y.residueField y) := ⟨hφ⟩
+  let : Algebra k (S.Y.residueField y) := (S.baseHom (resPt y)).toAlgebra
+  have : Algebra.IsIntegral k (S.Y.residueField y) := ⟨hφ⟩
   let τ : S.Y.residueField y →ₐ[k] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1068,9 +1068,9 @@ namespace GlobalTheory.HSShort.Supp
 theorem finite_of_finite_pts {k : Type} [Field k] (S : LinSys k) (hS : S.IsVariety) (Ω : Type) [Field Ω]
     [Algebra k Ω] [IsAlgClosed Ω] (Z : Set S.Y) (hZ : IsClosed Z)
     (h : {x : S.Pt Ω | ptOf x.1 ∈ Z}.Finite) : Z.Finite := by
-  haveI := hS.smooth
-  haveI : Smooth S.str := SmoothOfRelativeDimension.smooth S.D S.str
-  haveI : JacobsonSpace S.Y := LocallyOfFiniteType.jacobsonSpace S.str
+  have := hS.smooth
+  have : Smooth S.str := SmoothOfRelativeDimension.smooth S.D S.str
+  have : JacobsonSpace S.Y := LocallyOfFiniteType.jacobsonSpace S.str
   have hf : (Z ∩ closedPoints S.Y).Finite := by
     refine (h.image fun x => ptOf x.1).subset ?_
     rintro y ⟨hyZ, hy⟩
@@ -1416,7 +1416,7 @@ theorem line_natDegree_le_and_coeff (F R : Type) [CommRing F] [CommRing R] [Alge
   have hdeg : ∀ p, (v p).natDegree ≤ w p := by
     rintro ⟨i, j⟩
     refine Fin.lastCases ?_ (fun i => ?_) i
-    · simp only [hv, w, join, if_true, Fin.lastCases_last]
+    · simp only [hv, w, join, ite_true, Fin.lastCases_last]
       rw [add_comm]
       exact Polynomial.natDegree_linear_le
     · simp [hv, w, join]
@@ -1572,9 +1572,9 @@ theorem coeffDeg_line {D N δ : ℕ} (f : MvPolynomial (Fin (D + 1) × Fin N) F)
         (fun j => Polynomial.C (C (ξ₀ j)) + Polynomial.C (C (ξ₁ j)) * Polynomial.X) p) := by
     rintro ⟨i, j⟩
     refine Fin.lastCases ?_ (fun i => ?_) i
-    · simp only [join, Fin.lastCases_last, if_true]
+    · simp only [join, Fin.lastCases_last, ite_true]
       exact (coeffDeg_C (totalDegree_C _).le).add ((coeffDeg_C (e := 0) (totalDegree_C _).le).mul coeffDeg_X)
-    · simp only [join, Fin.lastCases_castSucc, if_neg (Fin.castSucc_ne_last i)]
+    · simp only [join, Fin.lastCases_castSucc, ite_eq_right (Fin.castSucc_ne_last i)]
       exact coeffDeg_C (totalDegree_X _).le
   refine (hc.mul (coeffDeg_prod Finset.univ _ _ fun p _ => (hw p).pow (d p))).mono (le_of_eq ?_)
   rw [zero_add, Fintype.sum_prod_type, Fin.sum_univ_castSucc]
@@ -1615,7 +1615,7 @@ theorem resultant_derivative_ne_zero : ∀ (σ F : Type) [Fintype σ] [Field F] 
   intro σ F _ _ _ p δ hδ hp hirr
   let K := FractionRing (MvPolynomial σ F)
   have hinj : Function.Injective (algebraMap (MvPolynomial σ F) K) := IsFractionRing.injective _ _
-  haveI : CharZero K := charZero_of_injective_algebraMap hinj
+  have : CharZero K := charZero_of_injective_algebraMap hinj
   have hprim : p.IsPrimitive := hirr.isPrimitive (by omega)
   have h1 : Irreducible (p.map (algebraMap _ K)) := hprim.irreducible_iff_irreducible_map_fraction_map.1 hirr
   have h2 := Polynomial.resultant_ne_zero _ _ h1.separable
@@ -1647,7 +1647,7 @@ theorem exists_specialise_ne_zero : ∀ (F S T : Type) [Field F] [Infinite F] (R
 theorem irreducible_of_map {F L : Type} [Field F] [Field L] [Algebra F L] {σ : Type} (f : MvPolynomial σ F)
     (h : Irreducible (MvPolynomial.map (algebraMap F L) f)) : Irreducible f := by
   have hinj := (algebraMap F L).injective
-  haveI : IsLocalHom (MvPolynomial.map (σ := σ) (algebraMap F L)) := ⟨fun g hg => by
+  have : IsLocalHom (MvPolynomial.map (σ := σ) (algebraMap F L)) := ⟨fun g hg => by
     obtain ⟨c, hc, e⟩ := MvPolynomial.isUnit_iff_eq_C_of_isReduced.1 hg
     have hc0 : algebraMap F L (AddMonoidAlgebra.coeff g 0) = c := by
       rw [← coeff_map, e, coeff_zero_C]

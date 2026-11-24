@@ -171,7 +171,7 @@ theorem comp_eq_tanExp (hv : IsLieBasis v) (u : G ⟶ G) [IsMonHom u] (i : Fin n
   have hc := (hv.2 _ (h i)).exists.choose_spec
   rw [isLieComb_iff_lieExp] at hc
   rw [hc]
-  simp only [lieMat, dif_pos h, Matrix.transpose_apply, Matrix.of_apply]
+  simp only [lieMat, dite_eq_left h, Matrix.transpose_apply, Matrix.of_apply]
 
 theorem coordPt_comp (hv : IsLieBasis v) (u : G ⟶ G) [IsMonHom u] (c : Fin n → R') :
     coordPt v c ≫ u = coordPt v (((lieMat v hv u).map (algebraMap W R')).mulVec c) := by
@@ -196,11 +196,11 @@ end Main
 
 theorem exists_coords_baseChange : ∀ (W : Type) [CommRing W] [IsLocalRing W] (G : Over (Sp W)) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∃ (n : ℕ) (M : (G ⟶ G) → Matrix (Fin n) (Fin n) W), ∀ (R' : Type) [CommRing R'] (β : W →+* R'), ∃ T : (Fin n → R') → (epsPtR (spMap β) ⟶ G), Function.Injective T ∧ (∀ v : epsPtR (spMap β) ⟶ G, spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫ v.left = (1 : Over.mk (spMap β) ⟶ G).left ↔ v ∈ Set.range T) ∧ (∀ c c', T (c + c') = T c * T c') ∧ (∀ (s : R') c, (T (s • c)).left = spMap (ReciprocityTheory.ChartRestriction.G.Geo.Tor.epsScaleR s) ≫ (T c).left) ∧ ∀ u : G ⟶ G, IsMonHom u → ∀ c, T c ≫ u = T (((M u).map β).mulVec c) := by
   intro W _ _ G _ _ hsm
-  haveI := hsm
+  have := hsm
   obtain ⟨n, v, hv⟩ := ReciprocityTheory.ChartRestriction.G.Chart.exists_isLieBasis G hsm
   refine ⟨n, lieMat v hv, fun R' _ β => ?_⟩
-  letI := β.toAlgebra
+  let := β.toAlgebra
   exact ⟨coordPt v, coordPt_injective hv, coordPt_range hv, coordPt_add hv, coordPt_smul,
-    fun u hu c => by haveI := hu; exact coordPt_comp hv u c⟩
+    fun u hu c => by have := hu; exact coordPt_comp hv u c⟩
 
 end GlobalTheory.LieCoordR

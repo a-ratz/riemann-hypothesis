@@ -92,7 +92,7 @@ theorem weil_bound (hW : WeilConv) {M : Model σ X W} {χX χW om r s r' s'} (hp
     ∃ (C : ℝ) (k : ℕ), ∀ h, ∫⁻ g in M.dom, ‖theta om Φ g h‖ₑ ∂M.μ ≤ ENNReal.ofReal (C * (ht h : ℝ) ^ k) := by
   obtain ⟨h1, C, k, h2⟩ := (hW F E σ B n d X W M χX χW om r s r' s' hp hr).1 Φ hΦ
   refine ⟨C, k, fun h => ?_⟩
-  rw [← ofReal_integral_norm_eq_lintegral_enorm (h1 h)]
+  rw [← ofReal_integral_norm_eq_lintegral_eNorm (h1 h)]
   exact ENNReal.ofReal_le_ofReal (h2 h)
 
 theorem zero_term (hM : MixW) (hT : ThetaBasic) {M : Model σ X W} {M₁ : Model σ X W₁} {χX χW om om₁ r s r' s' r₁ s₁ i₀ i₁}

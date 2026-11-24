@@ -210,7 +210,7 @@ end Abstract
 theorem finrank_lattice {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V]
     [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (M : Submodule (𝓞 K) V)
     (hM : Submodule.IsFullLattice K M) : Module.finrank (𝓞 K) M = Module.finrank K V := by
-  letI := hM
+  let := hM
   have hr : Module.rank (𝓞 K) V = Module.rank K V :=
     (IsLocalization.rank_eq K (nonZeroDivisors (𝓞 K)) le_rfl).symm
   have : Module.rank (𝓞 K) M = Module.rank K V := by
@@ -229,8 +229,8 @@ theorem finrank_lattice {K V : Type} [Field K] [NumberField K] [AddCommGroup V] 
 
 theorem main : ∀ (K V : Type) [Field K] [NumberField K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (M : Submodule (𝓞 K) V), Submodule.IsFullLattice K M → ∀ (T : ℕ) (s : Finset (Ideal (𝓞 K))), T.Prime → (∀ P ∈ s, P.IsMaximal ∧ Ideal.absNorm P = T) → {L : Submodule (𝓞 K) V | L ≤ M ∧ Nonempty ((↥M ⧸ L.comap M.subtype) ≃ₗ[𝓞 K] (𝓞 K ⧸ ∏ P ∈ s, P))}.encard = (((∑ i ∈ Finset.range (Module.finrank K V), T ^ i) ^ s.card : ℕ) : ℕ∞) := by
   intro K V _ _ _ _ _ _ _ M hM T s hT hs
-  letI := hM
-  letI : Module.Finite (𝓞 K) M := Submodule.IsLattice.finite K M
+  let := hM
+  let : Module.Finite (𝓞 K) M := Submodule.IsLattice.finite K M
   have : Module.IsTorsionFree (𝓞 K) V := Module.IsTorsionFree.trans_faithfulSMul (𝓞 K) K V
   have : Module.FinitePresentation (𝓞 K) M := Module.finitePresentation_of_finite _ _
   have : Module.Projective (𝓞 K) M := Module.Flat.projective_of_finitePresentation
@@ -266,7 +266,7 @@ private theorem full_of_unimodular {K V : Type} [Field K] [NumberField K] [StarR
     [IsScalarTower (𝓞 K) K V] (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm)
     {L : Submodule (𝓞 K) V} (hL : Submodule.IsLattice K L) (hu : IsUnimodular h L) :
     Submodule.IsFullLattice K L := by
-  letI := hL
+  let := hL
   refine { span_eq_top := ?_ }
   let W := Submodule.span K (L : Set V)
   change W = ⊤
@@ -291,8 +291,8 @@ private theorem full_of_unimodular {K V : Type} [Field K] [NumberField K] [StarR
     simp [LinearMap.map_smul, hz']
   let i : K →ₗ[𝓞 K] L :=
     ((LinearMap.toSpanSingleton K _ (e x)).restrictScalars (𝓞 K)).codRestrict L hm
-  letI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL.fg
-  letI : Module.Finite (𝓞 K) K := Module.Finite.of_injective i fun a b hab =>
+  let : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL.fg
+  let : Module.Finite (𝓞 K) K := Module.Finite.of_injective i fun a b hab =>
     smul_left_injective K (fun hzero => hx0 (e.map_eq_zero_iff.mp hzero))
       (congrArg Subtype.val hab)
   exact RingOfIntegers.not_isField K
@@ -442,13 +442,13 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
     obtain ⟨M, hM, hu⟩ := o1 N ((hgen L N hL hLq).1 hN).1 ((hgen L N hL hLq).1 hN).2
     refine ⟨M, ⟨hM.1.toIsLattice, hM.2⟩, ?_⟩
     intro M' hM'
-    letI := hN.1
-    letI := hM'.1
+    let := hN.1
+    let := hM'.1
     exact hu M' ⟨Submodule.IsFullLattice.of_le K hM'.2.2.1, hM'.2⟩
   obtain ⟨M0, hM0, -⟩ := o1 L hL hLq
   have hM0full : Submodule.IsFullLattice K M0 := by
-    letI := hL.1
-    letI := hM0.1
+    let := hL.1
+    let := hM0.1
     exact Submodule.IsFullLattice.of_le K hM0.2.2.1
   obtain ⟨-, m2, -⟩ := _root_.GlobalTheory.Mass.MaxExists.main K V h hK hs hnd
   obtain ⟨-, m2', m3'⟩ := _root_.GlobalTheory.Mass.MaxExists.main K V' h' hK hs' hnd'
@@ -468,8 +468,8 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
     obtain ⟨M, hM, -⟩ := hex N hN
     rw [up_eq h _ N M (hex N hN) hM]
     exact (_root_.GlobalTheory.Mass.MaxGenus.main K V h hK hs hp M0 M (m2 M0 hM0.1 hM0.2.1).1).2 (m2 M (by
-      letI := hN.1
-      letI := hM.1
+      let := hN.1
+      let := hM.1
       exact Submodule.IsFullLattice.of_le K hM.2.2.1) hM.2.1).1
   have hfib := _root_.GlobalTheory.Mass.orbMass_eq_orbSum_fibre (isom h) _ _ (genus h L) (genus h M0) (up h (∏ P ∈ s, P))
     (up_smul h _) b3 a3 hmaps (fun y hy => b4 y hy.1)

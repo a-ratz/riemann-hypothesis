@@ -482,8 +482,8 @@ theorem exists_theta (ht : Γ.IsTorsionAlong G x N i) (hj : Γ.IsEmb (Γ.btOrder
     ∃ θ : P →ₗ[R] omega (Γ.btOrder ⊤), Function.Surjective θ ∧ N • θ = 0 ∧
       ∀ (V : Type) [AddCommGroup V] [Module R V] [Module Rᵐᵒᵖ V] [IsCentralScalar R V] (φ : P →ₗ[R] V), N • φ = 0 →
         ∃ ψ : omega (Γ.btOrder ⊤) →ₗ[R] V, ψ ∘ₗ θ = φ ∧ TanRel Γ i j ψ (hom x φ ≫ u) := by
-  letI : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤)) := opMod R _
-  haveI : IsCentralScalar R (omega (Γ.btOrder ⊤)) := opCentral R _
+  let : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤)) := opMod R _
+  have : IsCentralScalar R (omega (Γ.btOrder ⊤)) := opCentral R _
   obtain ⟨v₀, hv₀, hvN, hrel⟩ := rel_exists Γ ht hj (LinearMap.id : omega (Γ.btOrder ⊤) →ₗ[R] omega (Γ.btOrder ⊤))
   obtain ⟨θ, hθ, -⟩ := huniv _ v₀ hv₀
   have nat : ∀ (V : Type) [AddCommGroup V] [Module R V] [Module Rᵐᵒᵖ V] [IsCentralScalar R V]
@@ -505,8 +505,8 @@ theorem exists_theta (ht : Γ.IsTorsionAlong G x N i) (hj : Γ.IsEmb (Γ.btOrder
     have hz : zsec x ≫ (1 : ob x (omega (Γ.btOrder ⊤)) ⟶ G) = 1 := MonObj.comp_one _
     exact (huniv _ 1 hz).unique h1 h2
   refine ⟨θ, ?_, hN, ?_⟩
-  · letI : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opMod R _
-    haveI : IsCentralScalar R (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opCentral R _
+  · let : Module Rᵐᵒᵖ (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opMod R _
+    have : IsCentralScalar R (omega (Γ.btOrder ⊤) ⧸ LinearMap.range θ) := opCentral R _
     have := zero _ (LinearMap.range θ).mkQ (by
       ext w
       simp)
@@ -522,12 +522,12 @@ end Core
 
 theorem omega_canon : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] [IsNoetherianRing R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (x : Spec (CommRingCat.of R) ⟶ S) (N : ℕ) (i : Γ.G.left ⟶ G.left), Γ.IsTorsionAlong G x N i → Smooth G.hom → ∀ (L : Type) [AddCommGroup L] [Module R L] (M : LieModel G x L), ∃ θ : Module.Dual R L →ₗ[R] omega (Γ.btOrder ⊤), Function.Surjective θ ∧ (∀ w, θ w = 0 ↔ ∃ u, w = N • u) ∧ ∀ (f : augIdeal (Γ.btOrder ⊤)) (w : Module.Dual R L) (s : Γ(Γ.G.left, ⊤)), Γ.HasValues s (f.1.1 : T → R) → (θ w = (augIdeal (Γ.btOrder ⊤)).toCotangent f ↔ ∀ (e : L) (v : Spec (CommRingCat.of (DualNumber (R ⧸ Ideal.span {(N : R)}))) ⟶ Γ.G.left), v ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom ((algebraMap (R ⧸ Ideal.span {(N : R)}) (DualNumber (R ⧸ Ideal.span {(N : R)}))).comp (Ideal.Quotient.mk _))) → v ≫ i = Spec.map (CommRingCat.ofHom (dualMap (Ideal.Quotient.mk (Ideal.span {(N : R)})))) ≫ (M.pt e).left → valAt v ⊤ le_top s = TrivSqZeroExt.inr (Ideal.Quotient.mk (Ideal.span {(N : R)}) (w e))) := by
   intro R _ _ _ _ T _ _ Γ S G _ _ x N i ht hsm L _ _ M
-  haveI := hsm
+  have := hsm
   obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.exists_unique_emb_btOrder_top R T Γ
   obtain ⟨hop, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.isOpenImmersion_emb_and_translatesCover R T Γ j hj
-  haveI := hop
+  have := hop
   obtain ⟨-, hproj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G R x L M
-  haveI := hproj
+  have := hproj
   obtain ⟨u, hu, hupin, huniv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.Tan.Univ.tangent_universal S G R x L M
   obtain ⟨θ, hsurj, hNθ, hlift⟩ := exists_theta Γ ht hj u hu huniv
   have hθN : ∀ w', θ (N • w') = 0 := fun w' => by

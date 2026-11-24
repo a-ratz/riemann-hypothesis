@@ -344,7 +344,7 @@ theorem idem_mul_incA (P : Pl D → Prop) (y : D.host.E) :
   rw [mul_comm, idem, GlobalTheory.IdVGen.incA_mul_tmul, mul_one]
 
 theorem idem_mul_incA_mem {𝔞 : FI D} {c : D.host.E} (hc : c ∈ 𝔞) (v : Pl D) : idem D (· = v) * incA D c ∈ idV 𝔞 v :=
-  AddSubgroup.subset_closure ⟨ePl D (· = v), ePl_int _, fun w hw => by rw [evalV_ePl, if_neg hw], c, hc,
+  AddSubgroup.subset_closure ⟨ePl D (· = v), ePl_int _, fun w hw => by rw [evalV_ePl, ite_eq_right hw], c, hc,
     idem_mul_incA _ c⟩
 
 theorem mul_incA_mem {v : Pl D} {𝔞 : FI D} {y : D.host.E}
@@ -408,10 +408,10 @@ theorem exists_integer_of_forall (y : D.host.E) (h : ∀ v : Pl D, idem D (· = 
     · refine AddSubgroup.subset_closure ⟨(t : D.host.F)⁻¹ • ePl D (· ∉ hfin.toFinset), fun w => ?_, b, ?_⟩
       · rw [map_smul, evalV_ePl]
         by_cases hw : w ∈ hfin.toFinset
-        · rw [if_neg (not_not.2 hw), smul_zero]; exact zero_mem _
-        · rw [if_pos hw, Algebra.smul_def, mul_one]
+        · rw [ite_eq_right (not_not.2 hw), smul_zero]; exact zero_mem _
+        · rw [ite_eq_left hw, Algebra.smul_def, mul_one]
           refine GlobalTheory.IdVGen.inv_mem_integers fun hm => hw ?_
-          rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+          rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
           exact hm
       · rw [hb, TensorProduct.smul_tmul, ← Algebra.smul_def, smul_smul, inv_mul_cancel₀ hF, one_smul]
   have h2 : intAE D ≤ GlobalTheory.AdLat.hat1 D.host.F ((1 : FI D) : Set D.host.E) := by
@@ -423,7 +423,7 @@ theorem exists_integer_of_forall (y : D.host.E) (h : ∀ v : Pl D, idem D (· = 
 theorem idem_ne_zero (v : Pl D) : idem D (· = v) ≠ 0 := by
   intro h
   have := compAt_idem (· = v) v
-  rw [h, if_pos rfl, RingHom.map_zero] at this
+  rw [h, ite_eq_left rfl, RingHom.map_zero] at this
   exact zero_ne_one this
 
 theorem selfDual_of_local : ∀ (D : D7) (h : D.host.E) (𝔞 : FI D) (u : (AE D)ˣ), (∀ x : Pl D, ∀ a ∈ idAt D (· = x), a ∈ idV 𝔞 x ↔ ((u⁻¹ : (AE D)ˣ) : AE D) * a ∈ intAt D (· = x)) → (∀ x : Pl D, ∀ a ∈ idAt D (· = x), a ∈ intAt D (· = x) ↔ (u : AE D) * cA D (u : AE D) * incA D h * a ∈ intAt D (· = x)) → ∀ d : D.host.E, d ∈ 𝔞 ↔ ∀ c ∈ 𝔞, ∃ b : 𝓞 D.host.E, (b : D.host.E) = star c * d * h := by
@@ -513,7 +513,7 @@ theorem isSelfDualC_lineLat : ∀ (D : D7) (S : HSp D) (ζ : Fin S.rank → D.ho
   intro D S ζ hζ 𝔄 h𝔄
   classical
   obtain ⟨h1, hH⟩ := hζ
-  haveI : Subsingleton (Fin S.rank) := by rw [h1]; infer_instance
+  have : Subsingleton (Fin S.rank) := by rw [h1]; infer_instance
   let i₀ : Fin S.rank := ⟨0, by omega⟩
   have all : ∀ i : Fin S.rank, i = i₀ := fun i => Subsingleton.elim _ _
   set z := ζ i₀ with hz
@@ -704,7 +704,7 @@ theorem GlobalTheory.FinPl.CoreIdele.exists_core : ∀ (D : D7) (k : Type) [Fiel
     fun i => exists_sumFrame' (p i) B.o B.line (β i)
   choose β₀ hβ₀ using frames
   obtain ⟨M, hM, hlat, hoff⟩ := exists_modify hP.inj β₀ (fun i => gluedS q 1 (Q i).ker (Q i).vec)
-    (fun i => by haveI := (Q i).ker_isLat; infer_instance) hM₁ I
+    (fun i => by have := (Q i).ker_isLat; infer_instance) hM₁ I
   have glued : ∀ i, GluedCore B M q (β i) (β₀ i) (Q i) := fun i =>
     ⟨hP.unit i, hβ₀ i, hnorm i, hlat i (hP.all i)⟩
   have offP : ∀ x, ¬ P x → ∀ i, x ≠ (p i).v := fun x hx i e => hx ((hP.mem x).2 ⟨i, e⟩)

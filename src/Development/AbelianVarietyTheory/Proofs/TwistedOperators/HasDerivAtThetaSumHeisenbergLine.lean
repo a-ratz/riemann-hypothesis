@@ -249,7 +249,7 @@ theorem majorant_pure (f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ)
   set K := (fun x => x - yf) '' tsupport g with hKdef
   have hKc : IsCompact K := hg.2.isCompact.image (continuous_id.sub continuous_const)
   obtain ⟨N, hN, hK⟩ := exists_nat_mul_integral_of_isCompact F hKc
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   set L := denomLattice F κ N with hL
   set k := Module.finrank ℤ L + 1 with hk
   have hw := summable_one_add_norm_inv_pow L

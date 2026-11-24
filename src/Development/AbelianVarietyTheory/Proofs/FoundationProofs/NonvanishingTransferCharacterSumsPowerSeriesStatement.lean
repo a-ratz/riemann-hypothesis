@@ -422,9 +422,9 @@ theorem norm_apply_unit_le_one {N : ℕ} [NeZero N] (ψ : DirichletCharacter (Qb
 theorem sum_units_char_pow (m : ℕ) (hm : 1 ≤ m) (z : Qbar l) (ψ : DirichletCharacter (Qbar l) (l ^ m))
     (hz : IsPrimitiveRoot z (l ^ m)) (hψ : ψ.IsPrimitive) (j : ℕ) :
     ∑ b : (ZMod (l ^ m))ˣ, ψ b * (z ^ (b : ZMod (l ^ m)).val) ^ j = ψ⁻¹ (j : ZMod (l ^ m)) * gSum m z ψ := by
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have key := GlobalTheory.EisM.sum_primChar_mul_rootPow_mod_pow (Qbar l) l m m z ψ (Fact.out) hm le_rfl hz hψ (j : ℤ)
-  simp only [Nat.sub_self, pow_zero, one_dvd, if_true, one_mul, Int.ediv_one, Int.cast_natCast] at key
+  simp only [Nat.sub_self, pow_zero, one_dvd, ite_true, one_mul, Int.ediv_one, Int.cast_natCast] at key
   rw [sum_units_eq_sum ψ (fun a => (z ^ a.val) ^ j)]
   unfold gSum
   rw [sum_units_eq_sum ψ (fun a => z ^ a.val)]
@@ -437,7 +437,7 @@ theorem sum_units_char_pow (m : ℕ) (hm : 1 ≤ m) (z : Qbar l) (ψ : Dirichlet
 theorem chSum_gauss : ∀ (l : ℕ) [Fact l.Prime] (F : PowerSeries (Qbar l)) (a : ℕ → Qbar l) (N m : ℕ) (z : Qbar l) (ψ : DirichletCharacter (Qbar l) (l ^ m)), 1 ≤ m → l ^ (3 * m) ≤ N → (∀ n, ‖F.coeff n‖ ≤ 1) → (∀ y : Qbar l, tval F N y = ∑ j ∈ Finset.range N, a j * y ^ j) → IsPrimitiveRoot z (l ^ m) → ψ.IsPrimitive → Cg (2 * m) (chSum F m z ψ) (gSum m z ψ * ∑ j ∈ Finset.range N, a j * ψ⁻¹ (j : ZMod (l ^ m))) := by
   intro l _ F a N m z ψ hm hN hF htv hz hψ
   have hl := (Fact.out : l.Prime)
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hex : gSum m z ψ * ∑ j ∈ Finset.range N, a j * ψ⁻¹ (j : ZMod (l ^ m)) =
       ∑ b : (ZMod (l ^ m))ˣ, ψ b * tval F N (z ^ (b : ZMod (l ^ m)).val) := by
     simp_rw [htv, Finset.mul_sum]
@@ -545,9 +545,9 @@ theorem norm_natCast_sub_lt_one {a b : ℕ} (h : (a : ZMod l) = (b : ZMod l)) : 
 
 theorem exists_root_close {x : Qbar l} {n : ℕ} (hn : n ≠ 0) (h : ‖x ^ n - 1‖ < 1) :
     ∃ w : Qbar l, w ^ n = 1 ∧ ‖w - x‖ < 1 := by
-  haveI : NeZero n := ⟨hn⟩
-  haveI : NeZero (n : Qbar l) := ⟨Nat.cast_ne_zero.2 hn⟩
-  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Qbar l) n
+  have : NeZero n := ⟨hn⟩
+  have : NeZero (n : Qbar l) := ⟨Nat.cast_ne_zero.2 hn⟩
+  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Qbar l) n
   have h1 := congrArg (Polynomial.eval x) (Polynomial.X_pow_sub_one_eq_prod (Nat.pos_of_ne_zero hn) hμ)
   simp only [Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_one,
     Polynomial.eval_prod, Polynomial.eval_C] at h1
@@ -594,8 +594,8 @@ theorem exists_wild (k : ℕ) (ζ : Qbar l) (h2 : l ≠ 2) (hk : 1 ≤ k) (hζ :
   have hl : l.Prime := Fact.out
   have hl2 := hl.two_le
   have hlk : l ^ k ≠ 0 := pow_ne_zero _ hl.ne_zero
-  haveI : NeZero (l ^ k) := ⟨hlk⟩
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ k) := ⟨hlk⟩
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   obtain ⟨g, hg⟩ := (ZMod.isCyclic_units_of_prime_pow l hl h2 (k + 1)).exists_generator
   have hord : orderOf g = l ^ k * (l - 1) := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient,
@@ -645,7 +645,7 @@ theorem isPrimitive_of_value (k : ℕ) (ζ : Qbar l) (h2 : l ≠ 2) (hk : 1 ≤ 
     (χ : DirichletCharacter (Qbar l) (l ^ (k + 1))) (hχ : χ (1 + (l : ZMod (l ^ (k + 1)))) = ζ)
     (u : (ZMod (l ^ (k + 1)))ˣ) (hu : (u : ZMod (l ^ (k + 1))) = 1 + l) : χ.IsPrimitive := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := ⟨k - 1, by omega⟩
   rw [DirichletCharacter.isPrimitive_def]
   by_contra hne
@@ -681,7 +681,7 @@ theorem exists_primitive_inComp : ∀ (l : ℕ) [Fact l.Prime] (φ : DirichletCh
   intro l _ φ e k ζ h2 hk hζ
   have hl : l.Prime := Fact.out
   have hl1 : l - 1 ≠ 0 := by have := hl.two_le; omega
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hcop : Nat.Coprime (1 + l) (l ^ (k + 1)) := Nat.Coprime.pow_right _ (by simp)
   let u : (ZMod (l ^ (k + 1)))ˣ := ZMod.unitOfCoprime (1 + l) hcop
   have hu : (u : ZMod (l ^ (k + 1))) = 1 + l := by
@@ -795,7 +795,7 @@ theorem gSum_mul_gSum_inv_prim : ∀ (l : ℕ) [Fact l.Prime] (m : ℕ) (z : Qba
     (ψ : DirichletCharacter (Qbar l) (l ^ m)), IsPrimitiveRoot z (l ^ m) → ψ.IsPrimitive →
     gSum m z ψ * gSum m z⁻¹ ψ⁻¹ = (l : Qbar l) ^ m := by
   intro l _ m z ψ hz hψ
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   let e : AddChar (ZMod (l ^ m)) (Qbar l) := AddChar.zmodChar (l ^ m) hz.pow_eq_one
   have he : e.IsPrimitive := AddChar.zmodChar_primitive_of_primitive_root (l ^ m) hz
   have h1 : gSum m z ψ = gaussSum ψ e := by
@@ -833,14 +833,14 @@ theorem norm_gSum_le : ∀ (l : ℕ) [Fact l.Prime] (m : ℕ) (z : Qbar l) (ψ :
     z ^ (l ^ m) = 1 → ‖gSum m z ψ‖ ≤ ‖(l : Qbar l) ^ (m / 2)‖ := by
   intro l _ m z ψ hz
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hp.ne_zero⟩
   obtain ⟨k, hk⟩ : ∃ k, k = m / 2 := ⟨_, rfl⟩
   obtain ⟨s, hs⟩ : ∃ s, s = m - k := ⟨_, rfl⟩
   rw [← hk]
   have hsm : s ≤ m := by omega
   have hmss : m ≤ s + s := by omega
   have hmsk : m = s + k := by omega
-  haveI : NeZero (l ^ s) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ s) := ⟨pow_ne_zero _ hp.ne_zero⟩
   let π : ZMod (l ^ m) →+* ZMod (l ^ s) := ZMod.castHom (pow_dvd_pow l hsm) (ZMod (l ^ s))
   have hsurj : Function.Surjective π := ZMod.castHom_surjective (pow_dvd_pow l hsm)
   let q : ZMod (l ^ m) := ((l ^ s : ℕ) : ZMod (l ^ m))
@@ -929,10 +929,10 @@ theorem norm_gSum_le : ∀ (l : ℕ) [Fact l.Prime] (m : ℕ) (z : Qbar l) (ψ :
     intro x0
     refine Finset.card_nbij' (fun x => x - x0) (fun x => x + x0) ?_ ?_ ?_ ?_
     · intro a ha
-      simp only [Finset.coe_filter, Finset.mem_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha ⊢
+      simp only [Finset.coe_filter, Finset.mem_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at ha ⊢
       rw [map_sub, ha, sub_self]
     · intro a ha
-      simp only [Finset.coe_filter, Finset.mem_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha ⊢
+      simp only [Finset.coe_filter, Finset.mem_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at ha ⊢
       rw [map_add (f := _), ha, zero_add]
     · intro a _; simp
     · intro a _; simp
@@ -1014,7 +1014,7 @@ theorem sum_units_primePow_teichmuller_reindex :
           f ((((c : ZMod p).val ^ (p ^ m) * (1 + p) ^ l : ℕ)) : ZMod (p ^ (m + 1))) := by
   intro p hp hp2 m A _ f
   have hpp : p.Prime := hp.out
-  haveI : NeZero (p ^ (m + 1)) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : NeZero (p ^ (m + 1)) := ⟨pow_ne_zero _ hpp.ne_zero⟩
   have hcop : ∀ (c : (ZMod p)ˣ) (l : ℕ),
       Nat.Coprime ((c : ZMod p).val ^ (p ^ m) * (1 + p) ^ l) (p ^ (m + 1)) := by
     intro c l
@@ -1179,7 +1179,7 @@ theorem exists_decomp (hl : l ≠ 2) (R : ℕ) {j : ℕ} (hj : ¬ l ∣ j) :
     ∃ c t : ℕ, ¬ l ∣ c ∧ j ≡ c ^ (l ^ R) * (1 + l) ^ t [MOD l ^ (R + 1)] := by
   classical
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l ^ (R + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (R + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have h := GlobalTheory.sum_units_primePow_teichmuller_reindex l hl R ℕ
     (fun x => if x = (j : ZMod (l ^ (R + 1))) then 1 else 0)
   have hcop : Nat.Coprime j (l ^ (R + 1)) := Nat.Coprime.pow_right _ ((hp.coprime_iff_not_dvd).2 hj).symm
@@ -1196,7 +1196,7 @@ theorem exists_decomp (hl : l ≠ 2) (R : ℕ) {j : ℕ} (hj : ¬ l ∣ j) :
     exact c.ne_zero h0
   · refine ((ZMod.natCast_eq_natCast_iff _ _ _).1 ?_).symm
     by_contra h1
-    exact ht (if_neg h1)
+    exact ht (ite_eq_right h1)
 
 theorem dvd_of_modEq {n a b : ℕ} (h : a ≡ b [MOD n]) : (n : ℤ_[l]) ∣ (b : ℤ_[l]) - a := by
   have h1 := map_dvd (Int.castRingHom ℤ_[l]) (Nat.modEq_iff_dvd.1 h)
@@ -1248,7 +1248,7 @@ theorem teich : ∀ (l : ℕ) [Fact l.Prime] (φ : DirichletCharacter (Qbar l) l
         = φ (j : ZMod l) * ((j : Qbar l) ^ e - (emb l w * (1 + (l : Qbar l)) ^ t) ^ e) := by ring
     rw [h6, norm_mul, hφn, one_mul]
     exact h5
-  · haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  · have : NeZero (l ^ m) := ⟨pow_ne_zero _ hp.ne_zero⟩
     have hmd : l ^ m ∣ l ^ (R + 1) := pow_dvd_pow _ (by omega)
     have hld : l ∣ l ^ m := dvd_pow_self l (by omega)
     have hcc : Nat.Coprime c l := ((hp.coprime_iff_not_dvd).2 hc).symm
@@ -1384,7 +1384,7 @@ theorem exists_series_limit : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (b : ℕ
 theorem exists_coef_roots : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (x : Qbar l), ‖x‖ ≤ 1 → ∃ c' : Coef l, c.O ≤ c'.O ∧ x ∈ c'.O ∧ ∀ y : Qbar l, y ^ (l - 1) = 1 → y ∈ c'.O := by
   intro l _ c x hx
   have h1 : 0 < l - 1 := by have := (Fact.out : l.Prime).two_le; omega
-  haveI : NeZero (l - 1) := ⟨h1.ne'⟩
+  have : NeZero (l - 1) := ⟨h1.ne'⟩
   obtain ⟨ζ, hζ⟩ : ∃ ζ : Qbar l, IsPrimitiveRoot ζ (l - 1) := HasEnoughRootsOfUnity.prim
   obtain ⟨c₁, h₁, hx₁⟩ := (UpperTheory.V.HV.coefSup l).2.2.1 c x (GlobalTheory.BlochKatoIntegralScalars.isIntegral_of_norm_le_one x hx)
   obtain ⟨c₂, h₂, hx₂⟩ := (UpperTheory.V.HV.coefSup l).2.2.1 c₁ ζ (hζ.isIntegral h1).tower_top

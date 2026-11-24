@@ -59,14 +59,14 @@ namespace GlobalTheory.LBObs
 private lemma res_res_eq_res_trans {X : Scheme.{0}} {U W Z : X.Opens} (h : W ≤ U) (h' : Z ≤ W) (x : Γ(X, U)ˣ) :
     res h' (res h x) = res (h'.trans h) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
 private lemma pullU_res_eq_res_pullU {X Y : Scheme.{0}} (f : Y ⟶ X) {U W : X.Opens} (h : W ≤ U) (x : Γ(X, U)ˣ) :
     pullU f W (res h x) = res ((TopologicalSpace.Opens.map f.base).monotone h) (pullU f U x) := by
   ext
-  simp only [pullU, res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullU, res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, Scheme.Hom.naturality, CommRingCat.comp_apply]
   rfl
 

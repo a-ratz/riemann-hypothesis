@@ -97,8 +97,8 @@ theorem ext_finite_nonempty : ∀ D : D7, GlobalTheory.NormSum.Inp D → ∀ δ 
       map_mul' := fun x y => Subtype.ext (map_mul _ x y)
       map_zero' := Subtype.ext (map_zero _)
       map_add' := fun x y => Subtype.ext (map_add _ x y) }
-  letI : Algebra D.what₂.LL (fld D δ t0) := τ.toAlgebra
-  letI : Algebra D.what₂.LL ℂ := σ.toAlgebra
+  let : Algebra D.what₂.LL (fld D δ t0) := τ.toAlgebra
+  let : Algebra D.what₂.LL ℂ := σ.toAlgebra
   have : IsScalarTower ℚ D.what₂.LL (fld D δ t0) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have : IsScalarTower ℚ D.what₂.LL ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have : Algebra.IsAlgebraic ℚ (fld D δ t0) := Algebra.IsAlgebraic.of_finite ℚ _

@@ -102,7 +102,7 @@ theorem order_map_toNat_of_isDistinguishedAt {I : Ideal O} (hI : I ≠ ⊤) {E :
     ((E : PowerSeries O).map (Ideal.Quotient.mk I)).order.toNat = E.natDegree := by
   have h := hE.coe_natDegree_eq_order_map (E : PowerSeries O) 1
     (by rw [map_one]; exact (Ideal.ne_top_iff_one I).mp hI) (by rw [mul_one])
-  rw [← h, ENat.toNat_coe]
+  rw [← h, ENat.toNat_natCast]
 
 theorem exists_div_of_isDistinguishedAt {I : Ideal O} [IsAdicComplete I O] (hI : I ≠ ⊤)
     {E : Polynomial O} (hE : E.IsDistinguishedAt I) (F : PowerSeries O) :
@@ -144,7 +144,7 @@ theorem coe_eq_sum_fin {d : ℕ} {r : Polynomial O} (hr : r.degree < d) :
     · rw [Finset.sum_eq_single ⟨j, hj⟩]
       · simp
       · intro b _ hb
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         exact hb (Fin.ext h.symm)
       · intro h
@@ -153,7 +153,7 @@ theorem coe_eq_sum_fin {d : ℕ} {r : Polynomial O} (hr : r.degree < d) :
         (lt_of_lt_of_le hr (by exact_mod_cast not_lt.mp hj))]
       symm
       refine Finset.sum_eq_zero fun i _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hj (h ▸ i.2)
   rw [← coe_sum_fin]
@@ -357,7 +357,7 @@ theorem gaussValC : GaussC := by
   refine le_antisymm ((iInf_le _ 0).trans (by simp)) (le_iInf fun n => ?_)
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · simp
-  · rw [PowerSeries.coeff_C, if_neg hn.ne', addVal_zero]
+  · rw [PowerSeries.coeff_C, ite_eq_right hn.ne', addVal_zero]
     simp
 
 open IsDiscreteValuationRing in
@@ -1268,12 +1268,12 @@ theorem shape_ext {O : Type} [CommRing O] [Nontrivial O] (B : Base O) (ell : ℕ
         Polynomial.monic_X_pow_add_C _ hpos, Polynomial.natDegree_X_pow_add_C, ?_, ?_, isUnit_one,
         fun h => absurd h hs⟩
       · intro i hi
-        rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg (by omega), zero_add,
+        rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right (by omega), zero_add,
           Polynomial.coeff_C]
         split_ifs
         · exact dvd_rfl
         · exact dvd_zero _
-      · rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg (fun h => hpos h.symm), zero_add,
+      · rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right (fun h => hpos h.symm), zero_add,
           Polynomial.coeff_C_zero]
   choose E u h1 h2 h3 h4 h5 h6 using hall
   exact ⟨E, u, h1, h2, h3, h4, h5, h6⟩
@@ -1478,7 +1478,7 @@ theorem prep [IsLocalRing O] {l : O} (hl : ¬ IsUnit l) [IsAdicComplete (Ideal.s
       rwa [hnd] at this
     have h3 := congrArg (coeff d) hE
     rw [Polynomial.coeff_coe, hcd, hg, add_mul, map_add (f := _),
-      coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self, mul_assoc, coeff_C_mul,
+      coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self, mul_assoc, coeff_C_mul,
       coeff_zero_eq_constantCoeff_apply] at h3
     have h4 : constantCoeff q = 1 + l * (-(coeff d (vi * a * q))) := by
       rw [h3]; ring
@@ -1610,7 +1610,7 @@ theorem ell_nonunit {ϖ : O} (hϖ : Irreducible ϖ) {ℓ e : ℕ} (he : 1 ≤ e)
 
 theorem pshape' {B : Base O} {ϖ : O} (hϖ : Irreducible ϖ) {e : ℕ} (hB : PrimBase B ϖ e) (ell : ℕ) :
     B.PShape ell := by
-  haveI := hB.complete
+  have := hB.complete
   exact pshape (ell_nonunit hϖ hB.one_le_e hB.assoc) hB.e3 (by have := hB.three_le; omega) ell
 
 theorem unitDist {B : Base O} {ϖ : O} (hd : ϖ ∣ (B.ℓ : O)) {ell : ℕ} (hP : B.PShape ell) (s : ℕ)
@@ -1687,11 +1687,11 @@ theorem latGood {ϖ : O} (hϖ : Irreducible ϖ) {e : ℕ} (hB : PrimBase B ϖ e)
     (completion_holds O B n V L hB.complete hL.free) (X_regular_on_lattice O B n V L hL.free) hL.ltors
   · by_cases h : ∃ c ∈ Cu.cuts, ∃ k : ℕ, 1 ≤ k ∧ k ≤ j ∧ i = c + (k : ZMod n)
     · simp only [Mi]
-      rw [if_pos h]
+      rw [ite_eq_left h]
       obtain ⟨c, hc, k, hk1, hk2, rfl⟩ := h
       exact hL.frobeniusBounded_after c hc k hk1 hk2
     · simp only [Mi]
-      rw [if_neg h]
+      rw [ite_eq_right h]
       exact hL.p5M i
   · have hGh : G ≤ hh := le_trans hN.G_le_g hN.g_le_h
     have hle : Mi i ≤ hh := by
@@ -1701,7 +1701,7 @@ theorem latGood {ϖ : O} (hϖ : Irreducible ϖ) {e : ℕ} (hB : PrimBase B ϖ e)
   · have h : ∃ c' ∈ Cu.cuts, ∃ k' : ℕ, 1 ≤ k' ∧ k' ≤ j ∧ c + (k : ZMod n) = c' + (k' : ZMod n) :=
       ⟨c, hc, k, hk1, hk2, rfl⟩
     simp only [Mi]
-    rw [if_pos h]
+    rw [ite_eq_left h]
 
 theorem unit_phiIt {V₀ : Type} [AddCommGroup V₀] [Module (PowerSeries O) V₀] {L₀ : Lat B n V₀}
     {e₀ : V₀} (h : ∀ i, L₀.φ i e₀ = e₀) (i : ZMod n) (k : ℕ) (a : PowerSeries O) :
@@ -1717,7 +1717,7 @@ theorem unit_phiIt {V₀ : Type} [AddCommGroup V₀] [Module (PowerSeries O) V�
 theorem unit_phiFree {ϖ : O} (hϖ : Irreducible ϖ) {e : ℕ} (hB : PrimBase B ϖ e)
     {V₀ : Type} [AddCommGroup V₀] [Module (PowerSeries O) V₀] {L₀ : Lat B n V₀} {e₀ : V₀}
     (hU : PrimUnit L₀ e₀) (i : ZMod n) (k : ℕ) : L₀.PhiFree i k := by
-  haveI := hB.complete
+  have := hB.complete
   have hl := ell_nonunit hϖ hB.one_le_e hB.assoc
   have h1 : 1 ≤ B.ℓ := by have := hB.three_le; omega
   obtain ⟨hspan, hfree⟩ := basePhiFree hl hB.e3 h1 k

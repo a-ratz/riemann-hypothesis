@@ -132,7 +132,7 @@ theorem proof (hNL : NormalLocusRep.Statement) (hFN : FibreNormBound.Statement)
     have : -(Real.log (2 * B * SG) * ((τ : ℝ) + 1)) = ((τ + 1 : ℕ) : ℝ) * (-Real.log (2 * B * SG)) := by
       push_cast
       ring
-    rw [hE, this, Real.exp_nat_mul, Real.exp_neg, Real.exp_log (by linarith), ← mul_pow,
+    rw [hE, this, Real.exp_natCast_mul, Real.exp_neg, Real.exp_log (by linarith), ← mul_pow,
       inv_mul_cancel₀ (by linarith), one_pow]
   have hE1 : E ≤ 1 := by
     have : 1 ≤ (2 * B * SG) ^ (τ + 1) := one_le_pow₀ hX

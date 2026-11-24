@@ -138,7 +138,7 @@ theorem _root_.GlobalTheory.EtC.GmSec.gm_sec_bijective :
   have hP : Presheaf.IsSheaf Scheme.etaleTopology (Scheme.Γ ⋙ _root_.GlobalTheory.EtC.unitsF) :=
     (Presheaf.isSheaf_iff_isSheaf_forget _ _ (forget _)).mpr
       ((isSheaf_iff_isSheaf_of_type _ _).mpr isSheaf_etaleTopology_units)
-  haveI := isIso_toSheafify Scheme.etaleTopology hP
+  have := isIso_toSheafify Scheme.etaleTopology hP
   delta _root_.GlobalTheory.EtC.ofRings.sec
   exact ConcreteCategory.bijective_of_isIso
     ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ _root_.GlobalTheory.EtC.unitsF)).app (op U))

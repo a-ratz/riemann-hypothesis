@@ -73,7 +73,7 @@ theorem card_le_of_idem_indep {R : Type} [CommRing R] {e : R} (he : e * e = e) (
       linear_combination (-c) * he
     · intro hx
       exact ⟨x, by linear_combination -hx⟩
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (by
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (by
     intro hT
     have : (1 : R) ∈ I := by rw [hT]; trivial
     rw [hI, mul_one] at this
@@ -109,7 +109,7 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
 open GlobalTheory.DRFil in
 theorem finrank_DdRE_le (hF : IsField F) (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL)
     [FiniteDimensional LL ↥(DdRE PD ρ τ)] : finrank LL ↥(DdRE PD ρ τ) ≤ finrank LL V := by
-  haveI := nontrivial_dR PD
+  have := nontrivial_dR PD
   let b := Module.finBasis LL ↥(DdRE PD ρ τ)
   let v := Module.finBasis LL V
   have hli : LinearIndependent LL (fun i => (b i : V ⊗[Qp] F)) :=
@@ -140,19 +140,19 @@ theorem exists_baseChange {G : Type} [Group G] (Qp LL LL' : Type) [Field Qp] [Fi
 
 theorem components_finrank : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V), (∀ τ, FiniteDimensional ↥LL.1 ↥(DdRE (P.PD K) ρ τ) ∧ finrank ↥LL.1 ↥(DdRE (P.PD K) ρ τ) ≤ finrank ↥LL.1 V ∧ (IsDR (P.PD K) ρ → finrank ↥LL.1 ↥(DdRE (P.PD K) ρ τ) = finrank ↥LL.1 V)) ∧ ∀ τ, IsCrys (P.PD K) ρ → finrank ↥LL.1 ↥(DcrisL (P.PD K) ρ τ) = finrank ↥LL.1 V := by
   intro l _ P AI T K LL V _ _ _ _ _ ρ
-  haveI := LL.2
-  haveI := K.2
+  have := LL.2
+  have := K.2
   obtain ⟨LL', ⟨f⟩, hK, hK0⟩ := GlobalTheory.exists_finExt_embedding_splitting l K ↥LL.1
-  haveI := LL'.2
-  letI : Algebra ↥LL.1 ↥LL'.1 := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ_[l] ↥LL.1 ↥LL'.1 := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
-  haveI : FiniteDimensional ↥LL.1 ↥LL'.1 := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
+  have := LL'.2
+  let : Algebra ↥LL.1 ↥LL'.1 := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ_[l] ↥LL.1 ↥LL'.1 := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
+  have : FiniteDimensional ↥LL.1 ↥LL'.1 := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
   obtain ⟨V', _, _, _, _, _, _, _, ρ', j, hj, hρj⟩ := exists_baseChange ℚ_[l] ↥LL.1 ↥LL'.1 ρ
   obtain ⟨hV, -, ⟨hc, -⟩, ⟨hd, -⟩, -, hl, he⟩ := _root_.GlobalTheory.CoeffBC.finrank_baseChange (P.PD K) ↥LL.1 ↥LL'.1 V V' ρ ρ' j hj hρj
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Per.LetterDim.tied_letter_component_finrank l P AI T K LL' V' ρ'
   refine ⟨fun τ => ?_, fun τ hρ => ?_⟩
-  · haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
-    haveI : FiniteDimensional ↥LL.1 ↥(DdRE (P.PD K) ρ τ) :=
+  · have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
+    have : FiniteDimensional ↥LL.1 ↥(DdRE (P.PD K) ρ τ) :=
       Submodule.finiteDimensional_of_le (S₂ := DdR (P.PD K) ρ) inf_le_left
     refine ⟨this, finrank_DdRE_le (P.PD K) (GlobalTheory.Per.FontaineBound.isField_of_tied T) ρ τ, fun hρ => ?_⟩
     rw [← (he τ).1, ← hV]

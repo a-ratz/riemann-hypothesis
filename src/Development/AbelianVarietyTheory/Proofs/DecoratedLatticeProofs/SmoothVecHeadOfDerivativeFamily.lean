@@ -73,8 +73,8 @@ theorem contDiff_listProd (fs : List ((Fin k → ℝ) → Mx n)) :
     letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
     letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
     (∀ f ∈ fs, ContDiff ℝ ∞ f) → ContDiff ℝ ∞ (fun t => (fs.map (· t)).prod) := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
   induction fs with
   | nil => intro _; simpa using contDiff_const
   | cons f fs ih =>
@@ -86,8 +86,8 @@ theorem contDiff_facs (Xs : Fin k → Mx n) :
     letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
     letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
     ∀ f ∈ facs Xs, ContDiff ℝ ∞ f := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
   intro f hf
   obtain ⟨i, rfl⟩ := List.mem_ofFn.1 hf
   have he : ContDiff ℝ ∞ (NormedSpace.exp : Mx n → Mx n) :=
@@ -104,8 +104,8 @@ theorem contDiff_coef (ε : Fin n → Bool) (φ : Mx n →ₗ[ℝ] ℝ) (X : Mx 
       letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
       ContDiff ℝ ∞ B) (hU : ∀ t, B t ∈ UJset ε) :
     ContDiff ℝ ∞ fun t => φ ((B t)⁻¹ * X * B t) := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
   have e : (fun t => φ ((B t)⁻¹ * X * B t)) = fun t => φ (Jm ε * ctL (B t) * Jm ε * X * B t) := by
     funext t; rw [inv_eq_UJ (hU t)]; rfl
   rw [e]
@@ -213,7 +213,7 @@ theorem prod_update (Xs : Fin k → Mx n) (t : Fin k → ℝ) (i : Fin k) (s : �
     split_ifs with h
     · subst j; rfl
     · rfl
-  rw [e, List.prod_set, if_pos (by simp [facs]), List.map_drop]
+  rw [e, List.prod_set, ite_eq_left (by simp [facs]), List.map_drop]
 
 theorem famSmooth : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)), Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ →
@@ -233,8 +233,8 @@ theorem famSmooth : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCom
   let P : (Fin k → ℝ) → Mx n := fun t => ((facs Xs).map (· t)).prod
   have hPU : ∀ t, P t ∈ UJset ε := fun t => list_prod_mem _ (hmem t)
   have hPc : Continuous P := by
-    letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-    letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+    let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+    let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
     exact (contDiff_listProd _ (contDiff_facs Xs)).continuous
   let B : Fin k → (Fin k → ℝ) → Mx n := fun i t => (((facs Xs).drop (i + 1)).map (· t)).prod
   have hBU : ∀ i t, B i t ∈ UJset ε := fun i t => list_prod_mem _ (hmemD _ t)
@@ -263,7 +263,7 @@ theorem famSmooth : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCom
     show σ _ ((act h _ (der σ Y (act h hB u))).1 []) = _
     rw [der_act]
     have e2 := map_der_eq hb 1 (adInv hB Y) u []
-    simp only [ContinuousLinearMap.one_apply] at e2
+    simp only [one_apply_eq_self] at e2
     show σ _ (σ (NormedSpace.exp (t i • Xs i)) (σ (B i t) ((der σ (adInv hB Y) u).1 []))) = _
 
     rw [e2, ← sigma_mul hσ hA (exp_mem_UJ (hX i) (t i)),

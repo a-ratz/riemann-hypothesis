@@ -89,8 +89,8 @@ theorem lclosedeq_fd (r n : ℕ) (ν : Fin n → ℕ) : FiniteDimensional ℚ (d
         exact Nat.zero_le _
     rw [hd'] at h1
     simpa using h1
-  haveI := hS.to_subtype
-  haveI hfd : FiniteDimensional ℚ (weightedHomogeneousSubmodule ℚ (colW r n) ν) := by
+  have := hS.to_subtype
+  have hfd : FiniteDimensional ℚ (weightedHomogeneousSubmodule ℚ (colW r n) ν) := by
     rw [weightedHomogeneousSubmodule_eq_finsupp_supported]
     exact Module.Finite.equiv (AddMonoidAlgebra.supportedEquivFinsupp
       {d : Fin r × Fin n →₀ ℕ | Finsupp.weight (colW r n) d = ν}).symm

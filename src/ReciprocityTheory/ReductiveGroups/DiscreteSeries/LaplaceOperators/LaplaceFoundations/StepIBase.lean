@@ -242,10 +242,10 @@ theorem unreal_continuous :
   refine continuous_pi fun i => continuous_pi fun j => ?_
   have h1 : Continuous fun x : Formalism.MainNotions.S.lieE (Formalism.QuantumDeterminants.Nset k r) =>
       (x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool)) (i, j, false) :=
-    (EuclideanSpace.proj (i, j, false)).continuous.comp continuous_subtype_val
+    (EuclideanSpace.proj (i, j, false)).continuous.comp continuous_subtypeVal
   have h2 : Continuous fun x : Formalism.MainNotions.S.lieE (Formalism.QuantumDeterminants.Nset k r) =>
       (x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool)) (i, j, true) :=
-    (EuclideanSpace.proj (i, j, true)).continuous.comp continuous_subtype_val
+    (EuclideanSpace.proj (i, j, true)).continuous.comp continuous_subtypeVal
   have h3 : Continuous fun x : Formalism.MainNotions.S.lieE (Formalism.QuantumDeterminants.Nset k r) =>
       ((x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool)) (i, j, false) : ℂ) +
         ((x : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool)) (i, j, true) : ℂ) *
@@ -377,7 +377,7 @@ theorem assembly : AssemblyStatement := by
           (P * NormedSpace.exp (Formalism.MainNotions.S.unrealify (x : EuclideanSpace ℝ _)) * P⁻¹)
           (Classical.choice (hT t ht)).w⟫_ℂ *
         Complex.exp (-((t : ℂ) * trace (dMat (dNode k r) * conjL P x))) :=
-    fun t ht x => dif_pos ht
+    fun t ht x => dite_eq_left ht
   have hgc : Continuous fun x : Formalism.MainNotions.S.lieE (Formalism.QuantumDeterminants.Nset k r) =>
       P * NormedSpace.exp (Formalism.MainNotions.S.unrealify (x : EuclideanSpace ℝ _)) * P⁻¹ :=
     (continuous_const.matrix_mul exp_unreal_continuous).matrix_mul continuous_const
@@ -476,9 +476,9 @@ theorem assembly : AssemblyStatement := by
   have htN : N₂ ≤ t := le_trans (le_max_right _ _) (le_trans (le_max_left _ _) htm)
   have ht1 : 1 ≤ t := le_trans (le_max_right _ _) htm
 
-  haveI : Nontrivial Hπ := hπ'.1
-  haveI hFD : FiniteDimensional ℂ Hπ := hπ'.2.1
-  haveI hCS : CompleteSpace Hπ := FiniteDimensional.complete ℂ Hπ
+  have : Nontrivial Hπ := hπ'.1
+  have hFD : FiniteDimensional ℂ Hπ := hπ'.2.1
+  have hCS : CompleteSpace Hπ := FiniteDimensional.completeSpace ℂ Hπ
   let πm : Mat k r → (Hπ →L[ℂ] Hπ) := fun g =>
     π' (Matrix.of fun i j : Fin k => g (Formalism.QuantumDeterminants.wI k r i.castSucc) (Formalism.QuantumDeterminants.wI k r j.castSucc))
   have hblk : ∀ h : Matrix (Fin k) (Fin k) ℂ, πm (Formalism.MainNotions.S.blockW k r h) = π' h := by
@@ -519,7 +519,7 @@ theorem assembly : AssemblyStatement := by
   have hinWb : Formalism.QuantumDeterminants.inWb k r (z0 k r) := by
     intro i hi
     show (Pi.single (Formalism.QuantumDeterminants.wI k r (Fin.last k)) (1 : ℂ) : Fin (2 * r + k + 1) → ℂ) i = 0
-    rw [Pi.single_apply, if_neg]
+    rw [Pi.single_apply, ite_eq_right]
     intro hh
     subst hh
     simp only [Formalism.QuantumDeterminants.wI, Fin.val_last] at hi

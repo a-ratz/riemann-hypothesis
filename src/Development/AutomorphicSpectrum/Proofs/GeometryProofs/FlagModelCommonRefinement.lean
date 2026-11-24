@@ -153,7 +153,7 @@ end
 theorem frame_plucker : ∀ (Ω : Type) [Field Ω] (E : Type) [AddCommGroup E] [Module Ω E] (A : Subring Ω) [IsLocalRing A] (r : ℕ) (b : Module.Basis (Fin r) Ω E) (κ : Type) (z : κ → E) (f : Fin r → E), LinearIndependent Ω f → Submodule.span A (Set.range z) = Submodule.span A (Set.range f) → ∃ c₀ : Fin r → κ, b.det (z ∘ c₀) ≠ 0 ∧ ∀ c : Fin r → κ, b.det (z ∘ c) / b.det (z ∘ c₀) ∈ A := by
   intro Ω _ E _ _ A _ r b κ z f li h
   classical
-  haveI := Module.Finite.of_basis b
+  have := Module.Finite.of_basis b
   have sp : Submodule.span Ω (Set.range f) = ⊤ :=
     li.span_eq_top_of_card_eq_finrank' (by rw [Module.finrank_eq_card_basis b])
   let B := Module.Basis.mk li sp.ge
@@ -641,7 +641,7 @@ namespace PositivityTheory.HtPt.Mb.LJoinMany
 theorem join_finitely_many : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Algebra o Ω] (κ : Type) [Finite κ] (x : κ → Ω) (M : PModel o x) (A : Type) [Finite A] (κa : A → Type) [∀ a, Finite (κa a)] (w : ∀ a, κa a → Ω), (∀ a, ∃ l, w a l ≠ 0) → ∃ (κ' : Type) (_ : Finite κ') (y : κ' → Ω) (M' : PModel o y) (f : M'.X ⟶ M.X), Dominates M'.ξ M.ξ f (RingHom.id Ω) ∧ (∀ a (p' : Cpt M'.ξ), ∃ l, InChart M'.ξ (w a) l p') ∧ ∀ p : Cpt M.ξ, (∀ a, ∃ l, InChart M.ξ (w a) l p) → IsoAt M'.ξ f (RingHom.id Ω) p := by
   intro o _ Ω _ _ κ _ x M A _ κa _ w hw
   classical
-  haveI := Fintype.ofFinite A
+  have := Fintype.ofFinite A
   have hW : ∃ l : (∀ a, κa a), (∏ a, w a (l a)) ≠ 0 := by
     choose c hc using hw
     exact ⟨c, Finset.prod_ne_zero_iff.2 fun a _ => hc a⟩
@@ -729,7 +729,7 @@ theorem exists_common_normal_model : ∀ (o : Type) [CommRing o] [Algebra.EssFin
   let ws : ∀ s, κs s → Ω := fun s => match s with
     | .inl a => w a
     | .inr b => v b
-  haveI : ∀ s, Finite (κs s) := fun s => match s with
+  have : ∀ s, Finite (κs s) := fun s => match s with
     | .inl a => inferInstanceAs (Finite (κa a))
     | .inr b => hκb b
   have hws : ∀ s, ∃ l, ws s l ≠ 0 := fun s => match s with

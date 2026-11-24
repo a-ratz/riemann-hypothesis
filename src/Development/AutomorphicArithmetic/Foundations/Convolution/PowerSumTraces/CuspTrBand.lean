@@ -192,7 +192,7 @@ private theorem band_core {G H : Type} [Group G] [TopologicalSpace G] [NormedAdd
   · intro p hp
     obtain ⟨h1, h2, -, h4⟩ := (hmemS p).1 hp
     have hx : p.1 ∈ S0 := (hS1 _).2 ⟨h1, fun hb => h4 (le_bot_iff.1 (hb ▸ hEle _ h2.le))⟩
-    haveI := hS2 _ hx
+    have := hS2 _ hx
     exact Submodule.finiteDimensional_of_le (hEle p.1 h2.le)
   · intro φ c T hφ hc0 hb hT htr
     have hTW := hpres T hT

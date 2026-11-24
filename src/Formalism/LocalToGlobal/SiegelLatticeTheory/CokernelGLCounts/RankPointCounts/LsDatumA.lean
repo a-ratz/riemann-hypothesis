@@ -136,7 +136,7 @@ theorem lemma0L_holds (M : Model F E) (r : ℕ) : Lemma0L M r := by
       intro a
       have h := congrArg (fun e => e (Sum.inl a.castSucc)) he
       simp only [he1, he2, Finsupp.coe_sub, Pi.sub_apply, Finsupp.mapRange_apply] at h
-      rw [Finsupp.mapDomain_apply_of_injective hinjl, Finsupp.mapDomain_notin_range _ _ (by
+      rw [Finsupp.mapDomain_apply_of_injective hinjl, Finsupp.mapDomain_of_notMem_range _ _ (by
         rintro ⟨b, hb⟩
         simp at hb), sub_zero] at h
       exact h

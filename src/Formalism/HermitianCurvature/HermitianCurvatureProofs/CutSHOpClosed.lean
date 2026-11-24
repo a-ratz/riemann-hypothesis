@@ -112,7 +112,7 @@ private theorem inv_mem_UWset_and_inv_mul_eq_one {k r : ℕ} {z : Fin (2 * r + k
   have h2 : b * b⁻¹ = 1 := mul_eq_one_comm.mp h1
   refine ⟨⟨?_, ?_, ?_⟩, h1⟩
   · have hU := hb.1
-    simp only [UH, Set.mem_setOf_eq] at hU ⊢
+    simp only [UH, Set.mem_ofPred_eq] at hU ⊢
     calc b⁻¹.conjTranspose * Hpk k r * b⁻¹
         = b⁻¹.conjTranspose * (b.conjTranspose * Hpk k r * b) * b⁻¹ := by rw [hU]
       _ = (b * b⁻¹).conjTranspose * Hpk k r * (b * b⁻¹) := by
@@ -135,7 +135,7 @@ theorem norm_le_rho (D : B.RealPlaceData k r Wp Wq) {p : B.SS k r} (hp : D.inSS 
   refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun w => ?_
   have hw : D.π' (Matrix.of p.2.1)⁻¹ (D.π' (Matrix.of p.2.1) w) = w := by
     have h := congrArg (fun L => L w) (D.π'_rep.2 _ hbinv _ hb)
-    simp only [hbb, D.π'_rep.1, ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at h
+    simp only [hbb, D.π'_rep.1, ContinuousLinearMap.comp_apply, one_apply_eq_self] at h
     exact h.symm
   calc ‖A w‖ = ‖D.π (Matrix.of p.1.1) (A (D.π' (Matrix.of p.2.1)⁻¹ (D.π' (Matrix.of p.2.1) w)))‖ := by
         rw [D.π_unitary _ ha, hw]
@@ -558,7 +558,7 @@ theorem cutSH_opClosed_of (h2 : FamAlg) (h3 : FamDeriv) (h4 : RepLin) (h5 : FamJ
     change pOp (⟨0, by omega⟩ : Fin (P.r - j)) (fun c' => (Ψ : Fn P.k (P.r - j) (Wq →L[ℂ] Wp)) c' (gi j hj x.2))
       (cc j hj t x.1) = _
     unfold pOp
-    rw [if_pos (hom t ht x hx), opc_cc_zero]
+    rw [ite_eq_left (hom t ht x hx), opc_cc_zero]
     unfold wirt
     rw [hD 1 t ht x hx, hD Complex.I t ht x hx]
     module
@@ -582,7 +582,7 @@ theorem cutSH_opClosed_of (h2 : FamAlg) (h3 : FamDeriv) (h4 : RepLin) (h5 : FamJ
     change pbOp (⟨0, by omega⟩ : Fin (P.r - j)) (fun c' => (Ψ : Fn P.k (P.r - j) (Wq →L[ℂ] Wp)) c' (gi j hj x.2))
       (cc j hj t x.1) = _
     unfold pbOp
-    rw [if_pos (hom t ht x hx), opc_cc_zero]
+    rw [ite_eq_left (hom t ht x hx), opc_cc_zero]
     unfold wirtBar
     rw [hD 1 t ht x hx, hD Complex.I t ht x hx]
     module

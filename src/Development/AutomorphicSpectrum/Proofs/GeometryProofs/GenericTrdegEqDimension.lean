@@ -86,8 +86,8 @@ theorem trdeg_residueField_of_fst {X : Scheme.{0}} {O F Ω₀ : Type} [CommRing 
     (hF : letI := β.toAlgebra; ∀ u : F, ∃ a : O, a ≠ 0 ∧ _root_.IsIntegral O (a • u))
     {y : ↥(pullback s (spMap β))} (hy : pullback.fst s (spMap β) y = genPt ξ₀) :
     Algebra.trdeg ℤ ((pullback s (spMap β)).residueField y) = Algebra.trdeg ℤ Ω₀ := by
-  letI := β.toAlgebra
-  letI := g₀.toAlgebra
+  let := β.toAlgebra
+  let := g₀.toAlgebra
   have hsurj : SurjectiveOnStalks ξ₀ := by
     have : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
     rw [← Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ₀]
@@ -163,7 +163,7 @@ theorem trdeg_eq_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hsm : SmoothOfRelativeDimension D.dim str :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback (IsPullback.of_hasPullback _ _) Xo.smooth
   obtain ⟨-, htr⟩ := GlobalTheory.residueField_fg_trdeg_of_smoothOfRelativeDimension str D.dim hsm w hw
-  letI : Algebra c.F ((Xo.XF c).residueField w) :=
+  let : Algebra c.F ((Xo.XF c).residueField w) :=
     (Spec.preimage ((Xo.XF c).fromSpecResidueField w ≫ str)).hom.toAlgebra
   have : CharZero ((Xo.XF c).residueField w) :=
     charZero_of_injective_algebraMap (algebraMap c.F ((Xo.XF c).residueField w)).injective

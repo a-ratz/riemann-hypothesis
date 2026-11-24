@@ -141,7 +141,7 @@ theorem nat_step (hE : CrystallineSemistableComparison.E.EtNat) (hG : InGen) (hN
 
 theorem fNat : CrystallineSemistableComparison.E.EtNat → CrystallineSemistableComparison.E.FNat := by
   intro hE E hN l _ H r K M N u hu n j x
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   exact nat_step hE E.gen hN H r u hu n j x
 
 end GlobalTheory.CompanionTheory.FNatProof

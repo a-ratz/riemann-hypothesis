@@ -226,7 +226,7 @@ theorem tri (M : ℝ) : ∃ R0 : ℝ, ∀ (h p p' u : Matrix (Fin N) (Fin N) ℂ
   have hu_eq : u = (p' * a')⁻¹ * (h * p * a) := by
     rw [heq, Matrix.nonsing_inv_mul_cancel_left (A := p' * a') (B := u) hdet']
   have hut : u.BlockTriangular id := by
-    haveI := invertibleOfIsUnitDet (p' * a') hdet'
+    have := invertibleOfIsUnitDet (p' * a') hdet'
     rw [hu_eq]
     exact (blockTriangular_inv_of_blockTriangular (hp'.mul (blockTriangular_diagonal _))).mul
       ((hh.mul hp).mul (blockTriangular_diagonal _))
@@ -234,7 +234,7 @@ theorem tri (M : ℝ) : ∃ R0 : ℝ, ∀ (h p p' u : Matrix (Fin N) (Fin N) ℂ
   have hinv : u⁻¹ = star u := Matrix.inv_eq_left_inv hstar
   have hut' : (star u).BlockTriangular id := by
     rw [← hinv]
-    haveI : Invertible u := invertibleOfLeftInverse _ _ hstar
+    have : Invertible u := invertibleOfLeftInverse _ _ hstar
     exact blockTriangular_inv_of_blockTriangular hut
   have hoff : ∀ k l, k ≠ l → u k l = 0 := by
     intro k l hkl
@@ -294,7 +294,7 @@ theorem gauss_fin (R0 : ℝ) : {z : GaussianInt | ‖(z : ℂ)‖ ≤ R0}.Finite
     exact Zsqrtd.ext_iff.mpr ⟨h.1, h.2⟩
   refine (Set.Finite.preimage hinj hfin).subset ?_
   intro z hz
-  simp only [Set.mem_setOf_eq] at hz
+  simp only [Set.mem_ofPred_eq] at hz
   have key : ∀ n : ℤ, |(n : ℝ)| ≤ R0 → -⌈R0⌉ ≤ n ∧ n ≤ ⌈R0⌉ := by
     intro n hn
     have h1 := abs_le.mp hn
@@ -343,7 +343,7 @@ theorem umat_upper (x : Fin N → Fin N → ℕ × ℕ) : (umat x).BlockTriangul
   simp [umat, h1, h2]
 
 theorem umat_det (x : Fin N → Fin N → ℕ × ℕ) : (umat x).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (umat_upper x)]
+  rw [det_of_isUpperTriangular (umat_upper x)]
   simp [umat]
 
 def uel (x : Fin N → Fin N → ℕ × ℕ) : SpecialLinearGroup (Fin N) GaussianInt := ⟨umat x, umat_det x⟩
@@ -380,7 +380,7 @@ theorem count (s0 : Fin N → ℝ) : ∃ F : Finset (SpecialLinearGroup (Fin N) 
     · intro i j hij
       rcases hij.lt_or_eq with h | rfl
       · have hx' := hmem x hx i j
-        rw [if_pos h, Finset.mem_product, Finset.mem_range, Finset.mem_range] at hx'
+        rw [ite_eq_left h, Finset.mem_product, Finset.mem_range, Finset.mem_range] at hx'
         have e : umat x i j = ⟨((x i j).1 : ℤ), ((x i j).2 : ℤ)⟩ := by simp [umat, h.ne, h]
         rw [e]
         refine (Complex.norm_le_abs_re_add_abs_im _).trans ?_
@@ -418,12 +418,12 @@ theorem count (s0 : Fin N → ℝ) : ∃ F : Finset (SpecialLinearGroup (Fin N) 
       by_cases h : i < j
       · have e := congrArg
           (fun g : SpecialLinearGroup (Fin N) GaussianInt => (g : Matrix (Fin N) (Fin N) GaussianInt) i j) hxy
-        simp only [coe_uel_eq_umat, umat, h.ne, h, if_false, if_true] at e
+        simp only [coe_uel_eq_umat, umat, h.ne, h, ite_false, ite_true] at e
         have e1 := congrArg Zsqrtd.re e
         have e2 := congrArg Zsqrtd.im e
         simp only [Nat.cast_inj] at e1 e2
         exact Prod.ext e1 e2
-      · rw [if_neg h, Finset.mem_singleton] at hx' hy'
+      · rw [ite_eq_right h, Finset.mem_singleton] at hx' hy'
         rw [hx', hy']
 
 end PositivityTheory.KB.MomentRationality.Cz.Pk
@@ -485,7 +485,7 @@ theorem mt_nu_ne {w0 w : ι} (h : w ≠ w0) (c : SpecialLinearGroup (Fin N) Gaus
 
 theorem mt_inv_upper {a : G ι N} {w : ι} (h : (mt a w).BlockTriangular id) : (mt a⁻¹ w).BlockTriangular id := by
   have h1 : mt a⁻¹ w * mt a w = 1 := by rw [← mt_mul', inv_mul_cancel]; rfl
-  haveI : Invertible (mt a w) := invertibleOfLeftInverse _ _ h1
+  have : Invertible (mt a w) := invertibleOfLeftInverse _ _ h1
   rw [← Matrix.inv_eq_left_inv h1]
   exact blockTriangular_inv_of_blockTriangular h
 
@@ -749,8 +749,8 @@ theorem ineq (hN : 2 ≤ N) (T B : ℝ) (hB : B < 2 * ((N : ℝ) - 1)) : ∃ c �
           rw [Finset.sum_ite_eq']
           simp
       _ = ∑ k ∈ range n, |t k - t (k + 1)| := by
-          rw [Finset.sum_range_succ, if_neg (lt_irrefl n), add_zero]
-          exact sum_congr rfl fun a ha => if_pos (mem_range.mp ha)
+          rw [Finset.sum_range_succ, ite_eq_right (lt_irrefl n), add_zero]
+          exact sum_congr rfl fun a ha => ite_eq_left (mem_range.mp ha)
   have e3 : (∑ i : Fin (n + 1), ∑ j : Fin (n + 1), if i < j then t i - t j else 0) =
       ∑ j ∈ range (n + 1), ∑ i ∈ range j, (t i - t j) := by
     calc (∑ i : Fin (n + 1), ∑ j : Fin (n + 1), if i < j then t i - t j else 0)
@@ -758,7 +758,7 @@ theorem ineq (hN : 2 ≤ N) (T B : ℝ) (hB : B < 2 * ((N : ℝ) - 1)) : ∃ c �
           rw [Finset.sum_range]
           refine sum_congr rfl fun i _ => ?_
           rw [Finset.sum_range]
-          exact sum_congr rfl fun j _ => if_congr Fin.lt_iff_val_lt_val rfl rfl
+          exact sum_congr rfl fun j _ => if_congr Fin.lt_def rfl rfl
       _ = ∑ b ∈ range (n + 1), ∑ a ∈ range (n + 1), if a < b then t a - t b else 0 := sum_comm
       _ = ∑ j ∈ range (n + 1), ∑ i ∈ range j, (t i - t j) := by
           refine sum_congr rfl fun b hb => ?_
@@ -782,13 +782,13 @@ theorem summ (ε : ℝ) (hε : 0 < ε) :
     rw [summable_int_iff_summable_nat_and_neg]
     constructor
     · refine g.congr fun n => ?_
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       rw [abs_of_nonneg (Nat.cast_nonneg n)]
       ring
     · refine g.congr fun n => ?_
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       rw [abs_neg, abs_of_nonneg (Nat.cast_nonneg n)]
@@ -822,7 +822,7 @@ theorem summ (ε : ℝ) (hε : 0 < ε) :
     _ = ∏ _i : Fin N, ∑ k ∈ S, ENNReal.ofReal (Real.exp (-(ε * |(k : ℝ)|))) :=
         Finset.sum_prod_piFinset S (fun _ k => ENNReal.ofReal (Real.exp (-(ε * |(k : ℝ)|))))
     _ ≤ ∏ _i : Fin N, ∑' k : ℤ, ENNReal.ofReal (Real.exp (-(ε * |(k : ℝ)|))) :=
-        Finset.prod_le_prod' fun _ _ => ENNReal.sum_le_tsum S
+        prod_le_prod fun _ _ => ENNReal.sum_le_tsum S
     _ = (∑' k : ℤ, ENNReal.ofReal (Real.exp (-(ε * |(k : ℝ)|)))) ^ N := by
         rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 

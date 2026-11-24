@@ -69,7 +69,7 @@ theorem zl_span_image_finite : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group �
   let e : Matrix (Fin a) (Fin a) L →ₗ[ℚ_[l]] Matrix (Fin a) (Fin a) (PadicAlgCl l) :=
     LinearMap.mapMatrix L.val.toLinearMap
   let V := LinearMap.range e
-  haveI : FiniteDimensional ℚ_[l] V := LinearMap.finiteDimensional_range e
+  have : FiniteDimensional ℚ_[l] V := LinearMap.finiteDimensional_range e
   have hρV : ∀ g, ρ g ∈ V := fun g => ⟨fun i j => ⟨ρ g i j, hL g i j⟩, by ext i j; rfl⟩
   let ρV : Γ → V := fun g => ⟨ρ g, hρV g⟩
   have hρVc : Continuous ρV := hρ.subtype_mk _

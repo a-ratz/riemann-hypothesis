@@ -136,10 +136,10 @@ namespace GlobalTheory.CompanionTheory.SmoothRep
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem val_image_mem_nhds_one {E : Type} [Field E] [NumberField E] {a : ℕ} {N : Set (GL (Fin a) (Cinf E))} (hN : N ∈ 𝓝 1) :
     (Units.val '' N) ∈ 𝓝 (1 : Matrix (Fin a) (Fin a) (Cinf E)) := by
-  letI : NormedAddCommGroup (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedSpace
-  letI : NormedRing (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedRing
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  let : NormedAddCommGroup (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedAddCommGroup
+  let : NormedSpace ℝ (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedSpace
+  let : NormedRing (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedRing
+  have : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   exact (Units.isOpenEmbedding_val (R := Matrix (Fin a) (Fin a) (Cinf E))).isOpenMap.image_mem_nhds hN
 
 theorem exists_bump_conjInv : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)
@@ -166,7 +166,7 @@ theorem exists_bump_conjInv : ∀ (E : Type) [Field E] [NumberField E] [_root_.N
   have hts : tsupport (fun x => (f (hsq x) : ℂ)) ⊆ {x : Lie E a | hsq x ≤ δ ^ 2 / 2} :=
     closure_minimal (fun x hx => (hsupp x (fun h0 => hx (by simp [h0]))).le) hKc
   have hKb : {x : Lie E a | hsq x ≤ δ ^ 2 / 2} ⊆ Metric.closedBall (oneL E a) δ := fun x hx =>
-    (dist_oneL_lt hδ (by simp only [Set.mem_setOf_eq] at hx; linarith)).le
+    (dist_oneL_lt hδ (by simp only [Set.mem_ofPred_eq] at hx; linarith)).le
   refine ⟨fun x => f (hsq x), fun x => f.nonneg, ?_, ⟨?_, ?_, ?_⟩, ?_, ?_⟩
   · show 0 < f (hsq (oneL E a))
     rw [hsq_oneL]

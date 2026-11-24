@@ -73,7 +73,7 @@ theorem main_m_alt : GlobalTheory.Published.BernsteinZelevinskyFiniteness → Gl
     have h2 := hσ y hy
     have h3 : (D.nd.plOm.1 w).valuation y ≠ 0 := by simpa using hy
     have e2 : σ y / y - 1 = (σ y - y) / y := by field_simp
-    rw [e2, map_div₀, div_lt_one₀ (zero_lt_iff.mpr h3)] at h2
+    rw [e2, map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr h3)] at h2
     exact h2
   show (_root_.GlobalTheory.CuspRep.ParLawsT.locRecT hL (D.nd.plOm.2 w) (cls π.toIrrRep)).inePol σ = (X - 1) ^ n
   rw [← hb] at hd ⊢

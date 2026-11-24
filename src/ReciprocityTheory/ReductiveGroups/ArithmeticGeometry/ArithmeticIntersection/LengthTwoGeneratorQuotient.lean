@@ -77,8 +77,8 @@ variable {R S : Type*} [CommRing R] [CommRing S]
 
 theorem ord_ringEquiv (e : R ≃+* S) (x : R) : Ring.ord R x = Ring.ord S (e x) := by
   unfold Ring.ord
-  haveI : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := RingHomInvPair.of_ringEquiv e
-  haveI : RingHomInvPair (e.symm : S →+* R) (e : R →+* S) := RingHomInvPair.symm _ _
+  have : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := RingHomInvPair.of_ringEquiv e
+  have : RingHomInvPair (e.symm : S →+* R) (e : R →+* S) := RingHomInvPair.symm _ _
   let q := Ideal.quotientEquiv (Ideal.span {x}) (Ideal.span {e x}) e
     (by rw [Ideal.map_span, Set.image_singleton]; rfl)
   let g : (R ⧸ Ideal.span {x}) ≃ₛₗ[(e : R →+* S)] (S ⧸ Ideal.span {e x}) :=
@@ -102,8 +102,8 @@ theorem ord_ringEquiv (e : R ≃+* S) (x : R) : Ring.ord R x = Ring.ord S (e x) 
     | simp only [h]
 
 theorem length_self_ringEquiv (e : R ≃+* S) : Module.length R R = Module.length S S := by
-  haveI : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := RingHomInvPair.of_ringEquiv e
-  haveI : RingHomInvPair (e.symm : S →+* R) (e : R →+* S) := RingHomInvPair.symm _ _
+  have : RingHomInvPair (e : R →+* S) (e.symm : S →+* R) := RingHomInvPair.of_ringEquiv e
+  have : RingHomInvPair (e.symm : S →+* R) (e : R →+* S) := RingHomInvPair.symm _ _
   have iso : Submodule R R ≃o Submodule S S := Submodule.orderIsoMapComap e.toSemilinearEquiv
   have h : Order.krullDim (Submodule R R) = Order.krullDim (Submodule S S) := by
     first

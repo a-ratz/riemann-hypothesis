@@ -67,7 +67,7 @@ theorem vw_nat_nonneg (g : ℕ) (w : HeightOneSpectrum (𝓞 K)) : 0 ≤ vw w (g
   unfold vw
   have h : (g : K) = algebraMap (𝓞 K) K (g : 𝓞 K) := by simp
   rw [h, ← FractionalIdeal.coeIdeal_span_singleton]
-  apply FractionalIdeal.count_coe_nonneg
+  apply FractionalIdeal.count_coeIdeal_nonneg
 
 theorem lw_pos (w : HeightOneSpectrum (𝓞 K)) : 0 < lw w := by
   unfold lw
@@ -88,7 +88,7 @@ theorem plOver_mem {g : ℕ} (hg : 0 < g) (w : HeightOneSpectrum (𝓞 K)) (h : 
   have hJ : (Ideal.span {(g : 𝓞 K)} : Ideal (𝓞 K)) ≠ 0 := by
     rwa [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   unfold PlOver vw at h
-  rw [← hc, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K _ hJ] at h
+  rw [← hc, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K _ hJ] at h
   have h1 : 1 ≤ (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {(g : 𝓞 K)})).factors := by
     exact_mod_cast h
   have hm : Associates.mk (Ideal.span {(g : 𝓞 K)}) ≠ 0 := by rwa [ne_eq, Associates.mk_eq_zero]

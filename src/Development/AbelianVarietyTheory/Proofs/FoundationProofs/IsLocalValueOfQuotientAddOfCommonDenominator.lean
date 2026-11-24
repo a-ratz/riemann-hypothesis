@@ -108,7 +108,7 @@ theorem restrict_mul {R R' : Type} [CommRing R] [CommRing R'] (j : R →+* R') {
         refine hq ⟨(q * (M : ℚ)).num, ?_⟩
         show (((q * (M : ℚ)).num : ℤ) : ℚ) / (M : ℚ) = q
         rw [(Rat.den_eq_one_iff _).1 (hφ q h), mul_div_cancel_right₀ _ hM'.ne']
-      have h1 : (e C).coeff q = 0 := HahnSeries.embDomain_notin_range (f := ⟨⟨f, hi⟩, hf _ _⟩) hq
+      have h1 : (e C).coeff q = 0 := HahnSeries.embDomain_of_notMem_range (f := ⟨⟨f, hi⟩, hf _ _⟩) hq
       rw [h1, HahnSeries.map_coeff, h0, map_zero]
   have hm : (φ * χ).map j = φ.map j * χ.map j := HahnSeries.map_mul (j : R →ₙ+* R')
   rw [← he (C * D) r, map_mul, ← key φ C hφ hC, ← key χ D hχ hD, ← hm, HahnSeries.map_coeff]
@@ -121,8 +121,8 @@ theorem exists_ev {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [Algebra �
     ∃ x x', Ev ψ (fun r => j (C.coeff r)) x x' := by
   classical
   obtain ⟨v, hv, -, h0, h1⟩ := exists_valuation_isInt p Ω hc
-  letI : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
-  haveI : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
+  have : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hzp : ∀ z, zp Ω z = algebraMap ℤ_[p] Ω z := fun z => by
     have h : (HahnSeries.single 0 z : Lau p) = algebraMap ℤ_[p] (Lau p) z := by
       rw [HahnSeries.algebraMap_apply' ]; simp
@@ -140,14 +140,14 @@ theorem exists_ev {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [Algebra �
     obtain ⟨n, hn⟩ := OkBasis.val_int v _ hle hz0
     rw [hz, map_zero] at hn
     exact (pow_pos h0 n).ne hn
-  letI : Algebra ℚ_[p] Ω := (IsFractionRing.lift (K := ℚ_[p]) hinj).toAlgebra
-  haveI : IsScalarTower ℤ_[p] ℚ_[p] Ω := IsScalarTower.of_algebraMap_eq fun z =>
+  let : Algebra ℚ_[p] Ω := (IsFractionRing.lift (K := ℚ_[p]) hinj).toAlgebra
+  have : IsScalarTower ℤ_[p] ℚ_[p] Ω := IsScalarTower.of_algebraMap_eq fun z =>
     (IsFractionRing.lift_algebraMap hinj z).symm
   have halg' : ∀ x : Ω, IsAlgZp p x ↔ IsAlgebraic ℚ_[p] x := fun x =>
     (halg x).trans (IsFractionRing.isAlgebraic_iff ℤ_[p] ℚ_[p] Ω)
   let L := IntermediateField.adjoin ℚ_[p] (j '' (S : Set K))
-  haveI : Finite (j '' (S : Set K)) := (S.finite_toSet.image j).to_subtype
-  haveI : FiniteDimensional ℚ_[p] L := IntermediateField.finiteDimensional_adjoin (by
+  have : Finite (j '' (S : Set K)) := (S.finite_toSet.image j).to_subtype
+  have : FiniteDimensional ℚ_[p] L := IntermediateField.finiteDimensional_adjoin (by
     rintro _ ⟨t, -, rfl⟩
     exact ((halg' _).1 (hj t)).isIntegral)
   have hL : ∀ x : L, IsAlgZp p (x : Ω) := fun x =>
@@ -172,7 +172,7 @@ theorem exists_ev {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [Algebra �
     exact absurd (hπ ▸ one_le_pow₀ (not_le.1 h).le) (not_le.2 (hwp ▸ h1))
   choose lam hlam using fun r => hsp ⟨j (C.coeff r), hmem _ (hC r).2⟩ ((hv _).2 (hC r).1)
   let a : Fin F × Fin E → Lau p := fun i =>
-    ⟨fun r => if C.coeff r = 0 then 0 else lam r i.1 i.2, C.isPWO_support.mono fun r hr h => hr (if_pos h)⟩
+    ⟨fun r => if C.coeff r = 0 then 0 else lam r i.1 i.2, C.isPWO_support.mono fun r hr h => hr (ite_eq_left h)⟩
   refine ⟨_, _, EvRing.ev_of_fintype ψ _ _ _ (fun i : Fin F × Fin E => ((κ i.1 * π ^ (i.2 : ℕ) : L) : Ω)) a
     (fun i => ⟨(hv _).1 ?_, hL _⟩) (fun r => ?_) rfl rfl⟩
   · rw [← hw, map_mul, map_pow]
@@ -181,7 +181,7 @@ theorem exists_ev {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [Algebra �
     · simp [a, h, hzp]
     · have := congrArg (fun x : L => (x : Ω)) (hlam r)
       push_cast at this
-      simp only [a, if_neg h, Fintype.sum_prod_type]
+      simp only [a, ite_eq_right h, Fintype.sum_prod_type]
       push_cast
       simpa only [hf] using this
 

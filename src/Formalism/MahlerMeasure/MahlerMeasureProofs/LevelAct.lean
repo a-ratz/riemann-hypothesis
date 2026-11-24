@@ -76,7 +76,7 @@ theorem coeff_X_mul_pderiv' (i : σ) (p : MvPolynomial σ k) (m : σ →₀ ℕ)
       by_cases hs : s i = 0
       · simp [hs]
       · rw [show (X i : MvPolynomial σ k) = monomial (Finsupp.single i 1) 1 from rfl,
-          monomial_mul, one_mul]
+          monomial_mul_monomial, one_mul]
         have hsum : Finsupp.single i 1 + (s - Finsupp.single i 1) = s := by
           ext j
           by_cases hij : i = j
@@ -128,9 +128,9 @@ theorem pderiv_X_inj {f : Fin r → σ} (hf : Function.Injective f) (c d : Fin r
     pderiv (f c) (X (f d) : MvPolynomial σ k) = if d = c then 1 else 0 := by
   by_cases h : d = c
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact mvPolynomial_pderiv_X_self _
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact mvPolynomial_pderiv_X_of_ne (fun h' => h (hf h'))
 
 theorem pderiv_e_S (he : Function.Injective e) (hwe : ∀ c d, w c ≠ e d)

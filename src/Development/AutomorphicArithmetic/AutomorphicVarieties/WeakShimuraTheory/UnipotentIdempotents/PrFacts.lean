@@ -77,7 +77,7 @@ theorem UpperTheory.V.Ws.Lk.prFacts :
     have hle : (commutator (Dec (F := L) (s.A v))).topologicalClosure ≤
         (commutator (G L Ω)).topologicalClosure.comap (Dec (F := L) (s.A v)).subtype := by
       refine Subgroup.topologicalClosure_minimal _ ?_
-        ((Subgroup.isClosed_topologicalClosure _).preimage continuous_subtype_val)
+        ((Subgroup.isClosed_topologicalClosure _).preimage continuous_subtypeVal)
       rw [← Subgroup.map_le_iff_le_comap, commutator_def, Subgroup.map_commutator]
       exact (Subgroup.commutator_mono le_top le_top).trans (Subgroup.le_topologicalClosure _)
     exact hle ha

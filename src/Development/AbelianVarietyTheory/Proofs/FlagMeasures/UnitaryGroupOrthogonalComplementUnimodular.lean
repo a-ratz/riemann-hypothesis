@@ -157,7 +157,7 @@ theorem exists_skew (L : LocE F E) :
   obtain ⟨D, hD⟩ := (L.cj_fix ((z - L.cj z) * (z - L.cj z))).1 (by rw [map_mul, hδ]; ring)
   refine ⟨z - L.cj z, D, ?_, hδ, hD.symm⟩
   rintro rfl
-  haveI := L.reduced
+  have := L.reduced
   have : z - L.cj z = 0 := IsNilpotent.eq_zero ⟨2, by rw [pow_two, ← hD]; simp⟩
   exact hz (sub_eq_zero.1 this).symm
 
@@ -170,13 +170,13 @@ theorem quad_finite {K : Type} [Field K] (a b c : K) (h : ¬ (a = 0 ∧ b = 0 �
     · simpa using congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 2) h0
     · simpa using congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 1) h0
     · simpa using congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 0) h0
-  have := Polynomial.finite_setOf_isRoot hp
+  have := Polynomial.finite_setOfPred_isRoot hp
   simpa [Polynomial.IsRoot] using this
 
 theorem exists_norm_one [CharZero F] (L : LocE F E) (t s : E) (ht : IsUnit t) (htc : L.cj t = t) :
     ∃ u : E, u * L.cj u = 1 ∧ IsUnit (t - L.cj u * s) ∧
       IsUnit ((t - L.cj u * s) + L.cj (t - L.cj u * s)) := by
-  haveI := nontriv L
+  have := nontriv L
   obtain ⟨δ, D, hD, hδ, hδ2⟩ := exists_skew L
   obtain ⟨τ, rfl⟩ := (L.cj_fix t).1 htc
   have hτ : τ ≠ 0 := by rintro rfl; simp at ht
@@ -210,7 +210,7 @@ theorem exists_norm_one [CharZero F] (L : LocE F E) (t s : E) (ht : IsUnit t) (h
     have : τ ^ 2 = 0 := by rw [hA0, hN0] at h1; linear_combination -h1
     exact pow_eq_zero_iff (two_ne_zero) |>.1 this)
   obtain ⟨r, hr⟩ := ((f1.union f2).union f3).exists_notMem
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at hr
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at hr
   obtain ⟨⟨r1, r2⟩, r3⟩ := hr
   have r1' : r ^ 2 - D ≠ 0 := fun h => r1 (by linear_combination h)
   set e : F := (r ^ 2 - D)⁻¹ with he

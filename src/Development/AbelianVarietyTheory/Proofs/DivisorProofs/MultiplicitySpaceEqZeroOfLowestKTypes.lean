@@ -115,13 +115,13 @@ theorem mult_equiv_cont {θ} {M : DSModel V S} {J χ} {U : MMap M} (hU : U ∈ M
   | zero => exact ⟨fun _ _ _ _ _ _ => rfl, fun τ v x => ⟨0, sobCont_zero _ _, fun _ => rfl⟩⟩
   | add T T' _ _ h h' =>
     refine ⟨fun τ g hg v w hw => ?_, fun τ v x => ?_⟩
-    · rw [MultilinearMap.add_apply, h.1 τ g hg v w hw, h'.1 τ g hg v w hw]; rfl
+    · rw [add_apply, h.1 τ g hg v w hw, h'.1 τ g hg v w hw]; rfl
     · obtain ⟨ℓ, a, b⟩ := h.2 τ v x
       obtain ⟨ℓ', a', b'⟩ := h'.2 τ v x
       exact ⟨ℓ + ℓ', sobCont_add a a', fun w => by rw [LinearMap.add_apply, b, b']; rfl⟩
   | smul c T _ h =>
     refine ⟨fun τ g hg v w hw => ?_, fun τ v x => ?_⟩
-    · rw [MultilinearMap.smul_apply, h.1 τ g hg v w hw]; rfl
+    · rw [smul_apply, h.1 τ g hg v w hw]; rfl
     · obtain ⟨ℓ, a, b⟩ := h.2 τ v x
       exact ⟨c • ℓ, sobCont_smul c a, fun w => by rw [LinearMap.smul_apply, b]; rfl⟩
 
@@ -292,7 +292,7 @@ theorem inner_dRep (hG : IsUnit G) (hρ : IsURepOn (Formalism.QuantumDeterminant
       ⟨(ρ (NormedSpace.exp (t • X)) : H →ₗ[ℂ] H), hρ.2.1 _ (exp_mem hG hX t)⟩ y w
   rw [e] at h
   have h0 := h.unique (hasDerivAt_const _ _)
-  simp only [zero_smul, NormedSpace.exp_zero, hρ.1.1, ContinuousLinearMap.one_apply] at h0
+  simp only [zero_smul, NormedSpace.exp_zero, hρ.1.1, one_apply_eq_self] at h0
   exact eq_neg_of_add_eq_zero_left h0
 
 theorem exists_adjoint (hG : IsUnit G) (hρ : IsURepOn (Formalism.QuantumDeterminants.UH G) ρ) (l : List (Matrix (Fin n) (Fin n) ℂ))
@@ -497,7 +497,7 @@ theorem exists_factor (hG : IsUnit G) (hρ : IsURepOn (Formalism.QuantumDetermin
     rintro ⟨_, w, rfl⟩
     rw [hf]
     have h1 : (S.map fun l => ‖l.foldr (dRep ρ) (w : H)‖).sum ≤ S.length * ‖Φ w‖ := by
-      have := List.sum_le_card_nsmul (S.map fun l => ‖l.foldr (dRep ρ) (w : H)‖) ‖Φ w‖ fun x hx => by
+      have := List.sum_le_length_nsmul (S.map fun l => ‖l.foldr (dRep ρ) (w : H)‖) ‖Φ w‖ fun x hx => by
         obtain ⟨l, hl, rfl⟩ := List.mem_map.1 hx
         obtain ⟨j, rfl⟩ := List.get_of_mem hl
         have := norm_le_pi_norm (Φ w) j.succ
@@ -556,7 +556,7 @@ theorem eq_zero_of_bumps {F : Formalism.REAL.UJ ε → ℂ} (hF : Continuous F)
   have hint : Integrable (fun g : Formalism.REAL.UJ ε => φ (umat g) • F g) μ :=
     (hψ.smul hF).integrable_of_hasCompactSupport hψc.smul_right
   have hpos : 0 < ∫ g : Formalism.REAL.UJ ε, φ (umat g) ∂μ :=
-    hψ.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hψc (fun g => hφ0 _)
+    hψ.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hψc (fun g => hφ0 _)
       (by show φ 1 ≠ 0; rw [hφ1]; exact one_ne_zero)
   have e1 : ∫ g : Formalism.REAL.UJ ε, (φ (umat g) • F g - φ (umat g) • F 1) ∂μ
       = -((∫ g : Formalism.REAL.UJ ε, φ (umat g) ∂μ) • F 1) := by
@@ -616,7 +616,7 @@ theorem eq_zero_of_translates [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) (
   have hρ := isURepOn_conj hσ hP h
   set ρ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H) := fun g => σ (P * g * P⁻¹) with hρdef
   have hσρ : ∀ g, ρ (P⁻¹ * g * P) = σ g := fun g => congrArg σ (conj_conj hP g)
-  haveI : Nontrivial H := ⟨u, 0, hu0⟩
+  have : Nontrivial H := ⟨u, 0, hu0⟩
   have hd : Dense (smoothAll G ρ : Set H) := by
     refine dense_of_irred hi (fun g hg v hv k x hx hxG => ?_) ?_
     · have hg' := conj_inv_mem hP h hg

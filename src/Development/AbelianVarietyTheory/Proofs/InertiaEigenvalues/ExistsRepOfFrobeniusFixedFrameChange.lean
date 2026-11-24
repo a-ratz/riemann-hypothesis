@@ -132,10 +132,10 @@ theorem cont_of_frame : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocA
   have hχ : Continuous fun g : GQ l => (P.χQ g : ℚ_[l]) := GlobalTheory.Cyc.IsCyc.continuous P.χQ_cyc
   have hχk : Continuous fun g : ↥(GK K) => ((P.χQ (g : GQ l) ^ k k' : ℚ_[l]ˣ) : ℚ_[l]) := by
     simp only [Units.val_zpow_eq_zpow_val]
-    exact (hχ.comp continuous_subtype_val).zpow₀ _ fun g => Or.inl (Units.ne_zero _)
+    exact (hχ.comp continuous_subtypeVal).zpow₀ _ fun g => Or.inl (Units.ne_zero _)
   refine (continuous_const.mul ?_).mul ?_
   · exact (UniformSpace.Completion.continuous_coe _).comp ((continuous_algebraMap ℚ_[l] (Om l)).comp hχk)
-  · exact (cont_σC (b k')).comp continuous_subtype_val
+  · exact (cont_σC (b k')).comp continuous_subtypeVal
 
 variable {l : ℕ} [Fact l.Prime] (P : LocPrime l)
 
@@ -157,7 +157,7 @@ open FrameChange in
 theorem exists_rep_of_fixed_frame_change : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (n : Type) [Fintype n] [DecidableEq n] (K : FinExt l) (r : ℕ) (ρ : ↥(GK K) →* GL n ↥(MaximalUnramifiedExtension l)) (w e : Fin r → n → ℤ) (U : Fin r → GL n P.R.BdR) (A : GL n P.R.B), IsRat r ρ → (∀ (m : Fin r) (g : ↥(GK K)), matD P ρ m g * (U m : Matrix n n P.R.BdR).map (P.actQdR (g : GQ l)) = (U m : Matrix n n P.R.BdR) * Matrix.diagonal fun j => algebraMap ℚ_[l] P.R.BdR ((P.χQ (g : GQ l) ^ w m j : ℚ_[l]ˣ) : ℚ_[l])) → (∀ i j, P.φB^[r] ((A : Matrix n n P.R.B) i j) = (A : Matrix n n P.R.B) i j) → (∀ m : Fin r, ∃ W : GL n P.R.BdR, UnitM P W ∧ (A : Matrix n n P.R.B).map (ev P m) = (U m : Matrix n n P.R.BdR) * Matrix.diagonal (fun j => tz P (e m j)) * (W : Matrix n n P.R.BdR)) → ∃ ρ' : ↥(GK K) →* GL n ↥(MaximalUnramifiedExtension l), IsRat r ρ' ∧ Framed P ρ' (fun m j => w m j + e m j) ∧ (AdmSt P ρ' → AdmSt P ρ) := by
   intro l _ P AI T n _ _ K r ρ w e U A hρ hU hA hfr
   choose W hWu hAW using hfr
-  haveI := nontrivial_B P
+  have := nontrivial_B P
   have alg_inj : Function.Injective (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B) := (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B).injective
   let φr : P.R.B →+* P.R.B := ((P.φB ^ r : P.R.B →ₐ[ℚ_[l]] P.R.B) : P.R.B →+* P.R.B)
   have hφr : ∀ b, φr b = P.φB^[r] b := fun b => by simp [φr, AlgHom.coe_pow]

@@ -264,7 +264,7 @@ theorem parIndMap_exact {V₁ V V₂ : Type} [AddCommGroup V₁] [Module ℂ V�
   let ψ' : indSpace (parab k e) σ₁ := ⟨ψf, hmem⟩
   have hset : {x | (ind (parab k e) σ₁ x) ψ' = ψ'} = {x | (ind (parab k e) σ x) φ.1 = φ.1} := by
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro hx
       apply Subtype.ext
@@ -320,7 +320,7 @@ theorem not_isSubquotient_ind₂ (e : a ⊕ b ≃ n) {V U : Type} [AddCommGroup 
     [AddCommGroup U] [Module ℂ U] (ρ : Representation ℂ (GL a k × GL b k) V)
     {π : Representation ℂ (GL n k) U} (hπ : π.IsIrreducible) : ¬ IsSubquotient π (ind₂ e ρ) := by
   rintro ⟨S, f, hf⟩
-  haveI := nontrivial_of_irreducible hπ
+  have := nontrivial_of_irreducible hπ
   obtain ⟨x, y, hxy⟩ := exists_pair_ne U
   obtain ⟨x', rfl⟩ := hf x
   obtain ⟨y', rfl⟩ := hf y
@@ -411,8 +411,8 @@ theorem exists_covBy_left {r t : ℕ} {U V W : Type} [AddCommGroup U] [Module �
   obtain ⟨h1, h2⟩ := (hasFiniteLength_iff_wellFounded A).1 hA
   refine exists_covBy_of_split (fun (S T : Subrepresentation A) => IsSubquotient π (prod₂ (subQuot S T) B)) ?_ ?_ ⊤ ⊥ bot_le ?_
   · intro S hS
-    haveI := subsingleton_subQuot_self S
-    haveI := tensor_subsingleton_left (F := ℂ)
+    have := subsingleton_subQuot_self S
+    have := tensor_subsingleton_left (F := ℂ)
       (V := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule) (W := W)
     exact not_isSubquotient_ind₂ _ _ hπ hS
   · intro S₀ M₀ T₀ hTM hMS hQ
@@ -427,8 +427,8 @@ theorem exists_covBy_right {r t : ℕ} {U V W : Type} [AddCommGroup U] [Module �
   obtain ⟨h1, h2⟩ := (hasFiniteLength_iff_wellFounded B).1 hB
   refine exists_covBy_of_split (fun (S T : Subrepresentation B) => IsSubquotient π (prod₂ A (subQuot S T))) ?_ ?_ ⊤ ⊥ bot_le ?_
   · intro S hS
-    haveI := subsingleton_subQuot_self S
-    haveI := tensor_subsingleton_right (F := ℂ) (V := V)
+    have := subsingleton_subQuot_self S
+    have := tensor_subsingleton_right (F := ℂ) (V := V)
       (W := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule)
     exact not_isSubquotient_ind₂ _ _ hπ hS
   · intro S₀ M₀ T₀ hTM hMS hQ

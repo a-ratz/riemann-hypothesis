@@ -173,7 +173,7 @@ theorem exists_away_mem (S : StepLevel F E σ J T f bad) (p : ℕ) (hp : p ≠ 0
     ∃ κ : S.U, (∀ v : HeightOneSpectrum (𝓞 F), ((p : ℕ) : 𝓞 F) ∈ v.asIdeal → bc (prV (E := E) v) κ.1 = 1) ∧
       ∀ w : HeightOneSpectrum (𝓞 F), ((p : ℕ) : 𝓞 F) ∉ w.asIdeal → bc (prV (E := E) w) κ.1 = bc (prV (E := E) w) g := by
   obtain ⟨k, hk, h1, h2⟩ := exists_trivial_on σ J (finite_over (F := F) p hp).toFinset g hg
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at h1 h2
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at h1 h2
   refine ⟨⟨k, (S.U_eq k).2 ⟨hk, fun v => ?_⟩⟩, h1, h2⟩
   by_cases hv : ((p : ℕ) : 𝓞 F) ∈ v.asIdeal
   · rw [h1 v hv]; exact one_mem _
@@ -190,7 +190,7 @@ theorem chi_isIntegral {gp : Fin 2 → ℕ} {S : StepLevel F E σ J T f bad} {G 
   refine IsIntegral.prod _ fun i _ => ?_
   refine finprod_induction (fun z : ℂ => IsIntegral ℤ z) isIntegral_one (fun _ _ hx hy => hx.mul hy) fun v => ?_
   refine finprod_induction (fun z : ℂ => IsIntegral ℤ z) isIntegral_one (fun _ _ hx hy => hx.mul hy) fun h => ?_
-  haveI : Finite (kv F v) := Formalism.UG.P.glint_finite_residueField v
+  have : Finite (kv F v) := Formalism.UG.P.glint_finite_residueField v
   unfold lamJ
   rw [Finset.range_zero, Finset.prod_empty, mul_one, ← AddChar.map_neg_eq_inv]
   exact addChar_isIntegral _ _
@@ -498,7 +498,7 @@ theorem evalReps_surjective (Hv : P.Tup → Submodule O P.Xsp)
     intro i γ
     have h := isLatTup_smul C γ (hr.lat i)
     have e := hgam _ h
-    simp only [F, dif_pos h]
+    simp only [F, dite_eq_left h]
     generalize idx _ h = j at e ⊢
     generalize gam _ h = δ at e ⊢
     have e' : C.smul (δ⁻¹ * γ) (rep i) = rep j := by
@@ -506,7 +506,7 @@ theorem evalReps_surjective (Hv : P.Tup → Submodule O P.Xsp)
     obtain rfl := hr.inj _ _ _ e'
     obtain rfl : δ = γ := inv_mul_eq_one.1 (htriv _ _ (hr.lat i) e')
     rfl
-  refine ⟨⟨F, (mem_funMod_iff C Hv F).2 ⟨fun L hL => ?_, fun L hL => dif_neg hL, fun γ L => ?_⟩⟩, ?_⟩
+  refine ⟨⟨F, (mem_funMod_iff C Hv F).2 ⟨fun L hL => ?_, fun L hL => dite_eq_right hL, fun γ L => ?_⟩⟩, ?_⟩
   · obtain ⟨i, γ, rfl⟩ := hr.surj L hL
     rw [key, ← hact γ _ (hr.lat i)]
     exact Submodule.smul_mem _ _ ⟨_, (x i).2, rfl⟩
@@ -515,8 +515,8 @@ theorem evalReps_surjective (Hv : P.Tup → Submodule O P.Xsp)
       rw [← smul_mul, key, key, map_mul, Units.val_mul, mul_smul, actX_mul]
       congr 1
       exact (((C.actX γ).restrictScalars O).map_smul _ _).symm
-    · have h1 : F L = 0 := dif_neg hL
-      have h2 : F (C.smul γ L) = 0 := dif_neg (fun h => hL ((isLatTup_smul_iff C γ L).1 h))
+    · have h1 : F L = 0 := dite_eq_right hL
+      have h2 : F (C.smul γ L) = 0 := dite_eq_right (fun h => hL ((isLatTup_smul_iff C γ L).1 h))
       rw [h1, h2, map_zero, smul_zero]
   · funext i
     apply Subtype.ext
@@ -787,7 +787,7 @@ theorem card_ssIdx_natW {N m : ℕ} (h : m + 1 = N) (lam : Formalism.BasicNotion
   subst h
   have : nuOf l = lam.natW := by
     funext t
-    simp only [nuOf, Formalism.BasicNotions.DomWeight.natW, Formalism.BasicNotions.DomWeight.detShift, hl, dif_pos (Nat.succ_pos m)]
+    simp only [nuOf, Formalism.BasicNotions.DomWeight.natW, Formalism.BasicNotions.DomWeight.detShift, hl, dite_eq_left (Nat.succ_pos m)]
     rfl
   rw [this]
 
@@ -911,7 +911,7 @@ theorem exists_completion_equiv {v : HeightOneSpectrum (𝓞 F)} {i : F →+* Qn
       v.adicCompletion F) = v.valuation F ((p : F) ^ k) := fun k => by
     simpa using hval ((p : 𝓞 F) ^ k)
   have hvp0 : ∀ k : ℕ, v.valuation F ((p : F) ^ k) ≠ 0 := fun k => by simpa using hpF k
-  haveI : IsAdicComplete (Ideal.span {(p : v.adicCompletionIntegers F)}) (v.adicCompletionIntegers F) :=
+  have : IsAdicComplete (Ideal.span {(p : v.adicCompletionIntegers F)}) (v.adicCompletionIntegers F) :=
     (GlobalTheory.CNorm.isAdicComplete_and_card_quotient_adicCompletionIntegers F v).1 _ (by
       have := hval p
       rw [map_natCast] at this
@@ -935,7 +935,7 @@ theorem exists_completion_equiv {v : HeightOneSpectrum (𝓞 F)} {i : F →+* Qn
     (fun k x => by
       rw [Ideal.span_singleton_pow, Ideal.span_singleton_pow,
         GlobalTheory.CNorm.mem_span_singleton_adicCompletionIntegers v (by rw [hvp]; exact hvp0 k), hvp, hval,
-        ← div_le_one₀ (zero_lt_iff.2 (hvp0 k)), ← map_div₀, ← GlobalTheory.UnramCompletion.intAt_iff, hint,
+        ← div_le_one₀ (pos_iff_ne_zero.2 (hvp0 k)), ← map_div₀, ← GlobalTheory.UnramCompletion.intAt_iff, hint,
         Ideal.mem_span_singleton']
       refine exists_congr fun y => ?_
       rw [map_div₀, eq_div_iff ((_root_.map_ne_zero i).2 (hpF k)), hg, ← hinj.eq_iff]

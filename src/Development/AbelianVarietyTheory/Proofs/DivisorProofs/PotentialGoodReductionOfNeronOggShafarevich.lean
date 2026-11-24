@@ -111,7 +111,7 @@ open Polynomial
 
 theorem exists_finiteIndex_extend : ∀ (K L Ω Ω' : Type) [Field K] [Field L] [Field Ω] [Field Ω'] [Algebra K L] [FiniteDimensional K L] [Algebra K Ω] [IsSepClosure K Ω] [Algebra L Ω'] [IsSepClosure L Ω'] [Algebra K Ω'] [IsScalarTower K L Ω'] (j : Ω →ₐ[K] Ω'), ∃ H : Subgroup (Ω ≃ₐ[K] Ω), H.FiniteIndex ∧ ∀ σ ∈ H, ∃ σ' : Ω' ≃ₐ[L] Ω', ∀ x, σ' (j x) = j (σ x) := by
   intro K L Ω Ω' _ _ _ _ _ _ _ _ _ _ _ _ j
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
   let Ls : IntermediateField K L := separableClosure K L
   let ψ : Ls →ₐ[K] Ω' := (IsScalarTower.toAlgHom K L Ω').comp Ls.val
   have hmem : ∀ a : Ls, ψ a ∈ j.fieldRange := fun a =>
@@ -129,13 +129,13 @@ theorem exists_finiteIndex_extend : ∀ (K L Ω Ω' : Type) [Field K] [Field L] 
     Subgroup.quotient_finite_of_isOpen _ E.fixingSubgroup_isOpen
   refine ⟨E.fixingSubgroup, Subgroup.finiteIndex_of_finite_quotient, fun σ hσ => ?_⟩
   let A := AlgebraicClosure Ω'
-  letI : Algebra Ω A := ((algebraMap Ω' A).comp j.toRingHom).toAlgebra
-  haveI : IsScalarTower K Ω A := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra Ω A := ((algebraMap Ω' A).comp j.toRingHom).toAlgebra
+  have : IsScalarTower K Ω A := IsScalarTower.of_algebraMap_eq fun x => by
     change algebraMap K A x = algebraMap Ω' A (j (algebraMap K Ω x))
     rw [AlgHom.commutes, ← IsScalarTower.algebraMap_apply]
-  haveI : Algebra.IsAlgebraic K Ω' := Algebra.IsAlgebraic.trans K L Ω'
-  haveI : IsAlgClosure K A := IsAlgClosure.ofAlgebraic K Ω' A
-  haveI : Normal K A := IsAlgClosure.normal K A
+  have : Algebra.IsAlgebraic K Ω' := Algebra.IsAlgebraic.trans K L Ω'
+  have : IsAlgClosure K A := IsAlgClosure.ofAlgebraic K Ω' A
+  have : Normal K A := IsAlgClosure.normal K A
   let τ : A ≃ₐ[K] A := σ.liftNormal A
   have hτ : ∀ x : Ω, τ (algebraMap Ω' A (j x)) = algebraMap Ω' A (j (σ x)) := fun x =>
     AlgEquiv.liftNormal_commutes σ A x
@@ -305,14 +305,14 @@ theorem finite_image_of_map_eq_one_on_inf_finiteIndex :
     ∀ (G M : Type) [Group G] [Monoid M] (ρ : G →* M) (I H : Subgroup G), H.FiniteIndex →
       (∀ σ ∈ I, σ ∈ H → ρ σ = 1) → (ρ '' (I : Set G)).Finite := by
   intro G M _ _ ρ I H hH hρ
-  haveI : Finite (G ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
+  have : Finite (G ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
   classical
   let f : G ⧸ H → M := fun q => if h : ∃ σ ∈ I, (σ : G ⧸ H) = q then ρ h.choose else 1
   apply (Set.finite_range f).subset
   rintro _ ⟨σ, hσ, rfl⟩
   refine ⟨(σ : G ⧸ H), ?_⟩
   have h : ∃ τ ∈ I, (τ : G ⧸ H) = σ := ⟨σ, hσ, rfl⟩
-  simp only [f, dif_pos h]
+  simp only [f, dite_eq_left h]
   obtain ⟨hτI, hτ⟩ := h.choose_spec
   rw [QuotientGroup.eq] at hτ
   have h1 : ρ (h.choose⁻¹ * σ) = 1 := hρ _ (I.mul_mem (I.inv_mem hτI) hσ) hτ
@@ -424,7 +424,7 @@ namespace GlobalTheory.InertiaLift
 theorem mem_iff_pow_mem {F : Type} [Field F] (A : ValuationSubring F) {m : ℕ} (hm : 0 < m) (y : F) :
     y ∈ A ↔ y ^ m ∈ A := by
   rw [← A.valuation_le_one_iff, ← A.valuation_le_one_iff, map_pow]
-  exact (pow_le_one_iff_of_nonneg zero_le' hm.ne').symm
+  exact (pow_le_one_iff_of_nonneg zero_le hm.ne').symm
 
 theorem nonunit_of_pow {F : Type} [Field F] (A : ValuationSubring F) {m : ℕ} (hm : 0 < m) (z : F)
     (h : A.valuation (z ^ m) < 1) : A.valuation z < 1 := by
@@ -518,14 +518,14 @@ theorem sepClosure_finiteExt_pow_mem_range :
       [Algebra K Ω'] [IsScalarTower K L Ω'] (j : Ω →ₐ[K] Ω') (y : Ω'),
       ∃ (m : ℕ) (x : Ω), 0 < m ∧ y ^ m = j x ∧ ∀ a b : Ω', (a - b) ^ m = a ^ m - b ^ m := by
   intro K L Ω Ω' _ _ _ _ _ _ _ _ _ _ _ _ j y
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
-  haveI : Algebra.IsSeparable L Ω' := IsSepClosure.separable
-  haveI : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.of_finite K L
-  haveI : Algebra.IsAlgebraic K Ω' := Algebra.IsAlgebraic.trans K L Ω'
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : Algebra.IsSeparable L Ω' := IsSepClosure.separable
+  have : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.of_finite K L
+  have : Algebra.IsAlgebraic K Ω' := Algebra.IsAlgebraic.trans K L Ω'
   set S := separableClosure K Ω'
   set q := ringExpChar K
-  haveI : ExpChar Ω' q := expChar_of_injective_algebraMap (algebraMap K Ω').injective q
-  haveI : ExpChar S q := expChar_of_injective_algebraMap (algebraMap K S).injective q
+  have : ExpChar Ω' q := expChar_of_injective_algebraMap (algebraMap K Ω').injective q
+  have : ExpChar S q := expChar_of_injective_algebraMap (algebraMap K S).injective q
   obtain ⟨n, ⟨z, hz⟩⟩ := (isPurelyInseparable_iff_pow_mem S q).1 inferInstance y
 
   have hzsep : IsSeparable K (z : Ω') := mem_separableClosure_iff.1 z.2
@@ -596,9 +596,9 @@ theorem finite_image_inertia_of_goodReduction_baseChange (h : NeronOggShafarevic
     [Algebra K Ω'] [IsScalarTower K L Ω'] (hW : IsAbove R K (algebraMap W L).range)
     (hg : HasGoodReduction W L ((Over.pullback (spMap (algebraMap K L))).obj A)) :
     (galTate A l '' (inertia K V : Set (Ω ≃ₐ[K] Ω))).Finite := by
-  haveI : IsSepClosed Ω' := IsSepClosure.sep_closed L
-  haveI : Algebra.IsSeparable K Ω := IsSepClosure.separable
-  haveI : IsGalois K Ω := inferInstance
+  have : IsSepClosed Ω' := IsSepClosure.sep_closed L
+  have : Algebra.IsSeparable K Ω := IsSepClosure.separable
+  have : IsGalois K Ω := inferInstance
   let j : Ω →ₐ[K] Ω' := IsSepClosed.lift
   obtain ⟨V', hV'⟩ := exists_isAbove W L Ω'
   obtain ⟨hp, hm⟩ := GlobalTheory.T.residue_perfect_and_char_alt R K L W hW
@@ -672,15 +672,15 @@ theorem exists_finset_fix : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω
       (∀ a ∈ s, σ a = a) → specAut σ ≫ x = x := by
   classical
   intro K Ω _ _ _ A hA x
-  haveI := hA
+  have := hA
   obtain ⟨⟨p, φ⟩, hx⟩ := (Scheme.SpecToEquivOfField Ω A.left).symm.surjective x.left
   simp only [Scheme.SpecToEquivOfField_symm_apply] at hx
   have hxs : x.left ≫ A.hom = spMap (algebraMap K Ω) := Over.w x
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (A.left.fromSpecResidueField p ≫ A.hom)
   have hess := GlobalTheory.SS.essFiniteType_residueField_of_locallyOfFiniteType A.hom p ψ hψ
   rw [← hx, Category.assoc, ← hψ, ← Spec.map_comp, Spec.map_inj] at hxs
-  letI : Algebra K (A.left.residueField p) := ψ.hom.toAlgebra
-  haveI : Algebra.EssFiniteType K (A.left.residueField p) := hess
+  let : Algebra K (A.left.residueField p) := ψ.hom.toAlgebra
+  have : Algebra.EssFiniteType K (A.left.residueField p) := hess
   let fa : A.left.residueField p →ₐ[K] Ω :=
     { φ.hom with commutes' := fun c => congrArg (fun g => g.hom c) hxs }
   refine ⟨(Algebra.EssFiniteType.finset K (A.left.residueField p)).image fa, fun σ hσ => ?_⟩
@@ -801,7 +801,7 @@ theorem isDiscreteValuationRing_of_isAbove :
       [IsFractionRing R K] (L : Type) [Field L] [Algebra K L] [FiniteDimensional K L]
       (V : ValuationSubring L), IsAbove R K V.toSubring → IsDiscreteValuationRing V := by
   intro R K _ _ _ _ _ _ L _ _ _ V h
-  letI : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
+  let : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
   have : IsScalarTower R K L := .of_algebraMap_eq fun _ => rfl
   have memV : ∀ a : K, algebraMap K L a ∈ V ↔ a ∈ (algebraMap R K).range := fun a => by
     rw [← h]; rfl
@@ -883,9 +883,9 @@ theorem restrictScalars_mem_inertia_of_mem {K L Ω : Type} [Field K] [Field L] [
 
 theorem hasPotentialGoodReduction_of_finite_image_inertia : NeronOggShafarevichSt → ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [PerfectField (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring → ∀ (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ (l : ℕ) [Fact l.Prime], (l : ResidueField R) ≠ 0 → (galTate A l '' (inertia K V : Set (Ω ≃ₐ[K] Ω))).Finite → HasPotentialGoodReduction R K A := by
   intro hN R K Ω _ _ _ _ _ _ _ _ _ hs V hV A _ _ hA l _ hl hfin
-  haveI : Algebra.IsSeparable K Ω := hs.separable
-  haveI : IsSepClosed Ω := hs.sep_closed
-  haveI : IsProper A.hom := hA.proper
+  have : Algebra.IsSeparable K Ω := hs.separable
+  have : IsSepClosed Ω := hs.sep_closed
+  have : IsProper A.hom := hA.proper
   obtain ⟨L, hL, hfix⟩ := GlobalTheory.T.exists_finite_extension_killing_finite_tateModule_image K Ω A inferInstance l _ hfin
   let W : ValuationSubring L := V.comap (algebraMap L Ω)
   have hW : IsAbove R K W.toSubring := by
@@ -893,14 +893,14 @@ theorem hasPotentialGoodReduction_of_finite_image_inertia : NeronOggShafarevichS
     rw [← hV]
     ext x
     rfl
-  haveI : IsDiscreteValuationRing W := GlobalTheory.T.isDiscreteValuationRing_of_isAbove_alt R K L W hW
+  have : IsDiscreteValuationRing W := GlobalTheory.T.isDiscreteValuationRing_of_isAbove_alt R K L W hW
   have hr : (algebraMap W L).range = W.toSubring := by
     ext x
     exact ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
   have hW' : IsAbove R K (algebraMap W L).range := hr ▸ hW
   obtain ⟨hp, hm⟩ := GlobalTheory.T.residue_perfect_and_char_alt R K L W hW'
   obtain ⟨hab, hc⟩ := GlobalTheory.T.isAbelianScheme_and_comm_baseChange_field K L A hA
-  haveI : IsSepClosure L Ω := ⟨inferInstance, Algebra.isSeparable_tower_top_of_isSeparable K L Ω⟩
+  have : IsSepClosure L Ω := ⟨inferInstance, Algebra.isSeparable_tower_top_of_isSeparable K L Ω⟩
   have hV' : IsAbove W L V.toSubring := by
     unfold IsAbove
     rw [hr]

@@ -175,7 +175,7 @@ open GlobalTheory.RegCompare in
 theorem thetaInt_wop_intg {D : D7} {M X : HSp D} {ω : GlobalTheory.Grid.WRep M X} {ν : Measure (GA D M)} {𝓕 : Set (GA D M)}
     (hν : IsHaarFD M ν 𝓕) {Φ : WO M X → ℂ} (hL : ∀ γ ∈ GQ M, ∀ g h, thetaKO ω (γ * g) h Φ = thetaKO ω g h Φ)
     (hΦ : Intg ω ν 𝓕 Φ) (z : GA D M →₀ ℂ) : thetaInt ω ν 𝓕 (wop ω z Φ) = zdeg z • thetaInt ω ν 𝓕 Φ := by
-  haveI := hν.1
+  have := hν.1
   have key := fun h k => setIntegral_mul_right' M ν 𝓕 hν.2 (fun g => thetaKO ω g h Φ)
     (fun γ hγ u => hL γ hγ u h) (hΦ h) k
   have hi : ∀ k, Intg ω ν 𝓕 (ω (k, 1) Φ) := fun k h => by simpa only [thetaKO_right] using (key h k).1
@@ -241,7 +241,7 @@ namespace GlobalTheory.TopFlipNu
 
 theorem exists_pow_close {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (x c : w.adicCompletion E)
     (hx : Valued.v x = 1) (hc : c ≠ 0) : ∃ k : ℕ, 0 < k ∧ Valued.v (x ^ k - 1) ≤ Valued.v c := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have e := ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E))
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
@@ -259,7 +259,7 @@ theorem exists_pow_close {E : Type} [Field E] [NumberField E] (w : HeightOneSpec
     obtain ⟨y, hy, h⟩ := Set.mem_iUnion₂.1 (hs this)
     refine ⟨⟨y, hy⟩, ?_⟩
     have h2 : Valued.v ((x ^ n - y) * c⁻¹) ≤ 1 := h
-    rwa [map_mul, map_inv₀, mul_inv_le_iff₀ (zero_lt_iff.2 hv0), one_mul] at h2
+    rwa [map_mul, map_inv₀, mul_inv_le_iff₀ (pos_iff_ne_zero.2 hv0), one_mul] at h2
   choose f hf using h1
   have key : ∀ a b : ℕ, a < b → f a = f b → ∃ k : ℕ, 0 < k ∧ Valued.v (x ^ k - 1) ≤ Valued.v c := fun a b hab h => by
     obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hab
@@ -322,7 +322,7 @@ theorem nu_arith : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTheory.Ch
       Units.val_div_eq_div_val, Units.val_mul, Units.val_one]
     ring
   have hb : ∀ w ∈ locPl G t, GlobalTheory.KappaArith.AwayIm D (Qn G t) (((locGrid G μ₀ w).nu i j (x w) : ℂˣ) : ℂ) := fun w hw => by
-    haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+    have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
     have e := ValuativeRel.isEquiv (ValuativeRel.valuation (Kw w)) (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ)))
     have hv : Valued.v (x w : Kw w) = 1 := e.eq_one_iff_eq_one.1 (hx w hw)
     have hv' : Valued.v (((x w)⁻¹ : (Kw w)ˣ) : Kw w) = 1 := by rw [Units.val_inv_eq_inv_val, map_inv₀, hv, inv_one]
@@ -384,11 +384,11 @@ theorem vol_mul_relIndex [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype 
   have hi : (J.map invT).relIndex (KO k n) = J.relIndex (KO k n) := by
     conv_lhs => rw [← hK]
     exact Subgroup.relIndex_map_map_of_injective _ _ hinj
-  haveI : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
+  have : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
   have ho2 : IsOpen (((J.map invT).subgroupOf (KO k n) : Subgroup (KO k n)) : Set (KO k n)) :=
-    ho'.preimage continuous_subtype_val
-  haveI : Finite (KO k n ⧸ (J.map invT).subgroupOf (KO k n)) := Subgroup.quotient_finite_of_isOpen _ ho2
-  haveI : ((J.map invT).subgroupOf (KO k n)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    ho'.preimage continuous_subtypeVal
+  have : Finite (KO k n ⧸ (J.map invT).subgroupOf (KO k n)) := Subgroup.quotient_finite_of_isOpen _ ho2
+  have : ((J.map invT).subgroupOf (KO k n)).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have h := GlobalTheory.IndexVolume.relIndex_mul_measure_subgroup _ (KO k n) hle' ho'.measurableSet (haarVol (KO k n))
   rw [haarVol_self GlobalTheory.SplitFlip.isOpen_KO le_rfl, hi] at h
   have h2 := congrArg ENNReal.toReal h
@@ -433,7 +433,7 @@ variable {D : D7}
 theorem index_residue (w : Pl D.host.E) {n n' r s : ℕ} (h : n = r + s) (h' : n' = r + s) :
     ((blockTri (blk2 r) : Subgroup (GL (Fin n) 𝓀[Kw w])).index : ℝ) =
       (blockTri (blk2 r) : Subgroup (GL (Fin n') (kP w))).index := by
-  letI : Field (kP w) := Ideal.Quotient.field _
+  let : Field (kP w) := Ideal.Quotient.field _
   have hq : Nat.card (kP w) = Ideal.absNorm w.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
   have hq' : Nat.card 𝓀[Kw w] = Ideal.absNorm w.asIdeal :=
@@ -498,7 +498,7 @@ theorem relIndex_lev (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submod
       rw [hred PP (Finset.mem_union_left _ hP)]
       have hq : PP ∉ Q := Finset.disjoint_left.1 hd hP
       show (if h : PP ∈ Q then g ⟨PP, h⟩ else (1 : GL (Fin V.rank) (kP PP))) = 1
-      exact dif_neg hq
+      exact dite_eq_right hq
     have hSt' := parLev_St hκ1
     have hxbig : Lev.finE V κ ∈
         lev D.sp.cm V.gram β (Lev.datY V.rank r t j hr Pg ∅ (LevelP.triv _ _ _) χ ξ' Lev.Frm.B) := by
@@ -667,7 +667,7 @@ theorem measure_mul_levVol : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Globa
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (spW₁ G i j)
   obtain ⟨M₀, hM₀⟩ := exists_vol G hL μ₀
   have hX : (Node.grid i j).InRange D.R.m := ⟨i.2.le, j.2.le⟩
-  haveI := (hM₀.vtx _ hX).haar_fund.1
+  have := (hM₀.vtx _ hX).haar_fund.1
   have e₀ := Measure.isMulLeftInvariant_eq_smul (M₀.ν (.grid i j)) m
   have p₀ := Measure.haarScalarFactor_pos_of_isHaarMeasure (M₀.ν (.grid i j)) m
   set s₀ := Measure.haarScalarFactor (M₀.ν (.grid i j)) m
@@ -679,7 +679,7 @@ theorem measure_mul_levVol : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Globa
     have h0 : m C ≠ 0 := (Measure.measure_pos_of_mem_nhds m hC1).ne'
     have h := congrArg (fun μ : Measure (GA D (spW₁ G i j)) => μ C) (hs.symm.trans h1)
     rw [e₀] at h
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ← mul_assoc] at h
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, ← mul_assoc] at h
     have h' := congrArg ENNReal.toReal ((ENNReal.mul_left_inj h0 hC.measure_lt_top.ne).1 h)
     simpa using h'
   have hsub : locPl G μ₀ ⊆ locPl G t := by
@@ -1028,7 +1028,7 @@ theorem mixglobA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
     · rw [Set.indicator_of_mem (mem_halfPt.2 hu), Finset.prod_congr rfl fun w hw =>
         (congrArg _ ((hco w).2.2.1 u).symm).trans ((hv w hw).2 _ ((hh w hw).2.2.2.2 u).1)]
       by_cases hl : mapV e u ∈ latV G i j ∧ mapW e u ∈ latW G i j
-      · rw [if_pos ⟨hl.1, hu.1⟩, if_pos ⟨hl.2, hu.2⟩, mul_one, mul_one]
+      · rw [ite_eq_left ⟨hl.1, hu.1⟩, ite_eq_left ⟨hl.2, hu.2⟩, mul_one, mul_one]
         exact Finset.prod_congr rfl fun w hw => Set.indicator_of_mem (((hh w hw).2.2.2.2 u).2.2 hl.1 hl.2) _
       · have : ∃ w ∈ locPl G t, ofMaps e (atPl w 1 • mapV e u, atPl w 1 • mapW e u) ∉ latPt e (w.under (𝓞 D.host.F)) := by
           by_contra! hall
@@ -1037,12 +1037,12 @@ theorem mixglobA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
         obtain ⟨w, hw, hn⟩ := this
         rw [Finset.prod_eq_zero hw (Set.indicator_of_notMem hn _)]
         rcases not_and_or.1 hl with hl | hl
-        · rw [if_neg fun h => hl h.1, zero_mul, mul_zero]
-        · rw [if_neg fun h : _ ∧ IsHalf ε (mapW e u) => hl h.1, mul_zero, mul_zero]
+        · rw [ite_eq_right fun h => hl h.1, zero_mul, mul_zero]
+        · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapW e u) => hl h.1, mul_zero, mul_zero]
     · rw [Set.indicator_of_notMem (mt mem_halfPt.1 hu)]
       rcases not_and_or.1 hu with hl | hl
-      · rw [if_neg fun h => hl h.2, zero_mul, mul_zero]
-      · rw [if_neg fun h : _ ∧ IsHalf ε (mapW e u) => hl h.2, mul_zero, mul_zero]
+      · rw [ite_eq_right fun h => hl h.2, zero_mul, mul_zero]
+      · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapW e u) => hl h.2, mul_zero, mul_zero]
   have hR := GlobalTheory.InductLagr.rel_of_vac Γ.M W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
     (fun w => mixHalf e (atPl w 1)) (fun w => mixHalf e (cA D (atPl w 1))) (mixCo B t e) ι (halfPt e ε) R (c • f₀)
     (fun w hw => hι w hw) (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)
@@ -1176,7 +1176,7 @@ theorem mixglobB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
     · rw [Set.indicator_of_mem (mem_halfPt.2 hu), Finset.prod_congr rfl fun w hw =>
         (congrArg _ ((hco w).2.2.1 u).symm).trans ((hv w hw).2 _ ((hh w hw).2.2.2.2 u).1)]
       by_cases hl : mapA t e u ∈ latA G t i j ∧ mapB e u ∈ latB G i j
-      · rw [if_pos ⟨hl.1, hu.1⟩, if_pos ⟨hl.2, hu.2⟩, mul_one, mul_one]
+      · rw [ite_eq_left ⟨hl.1, hu.1⟩, ite_eq_left ⟨hl.2, hu.2⟩, mul_one, mul_one]
         exact Finset.prod_congr rfl fun w hw => Set.indicator_of_mem (((hh w hw).2.2.2.2 u).2.2 hl.1 hl.2) _
       · have : ∃ w ∈ locPl G t, ofMaps t e (atPl w 1 • mapA t e u, atPl w 1 • mapB e u) ∉ latPtS t e (w.under (𝓞 D.host.F)) := by
           by_contra! hall
@@ -1185,12 +1185,12 @@ theorem mixglobB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
         obtain ⟨w, hw, hn⟩ := this
         rw [Finset.prod_eq_zero hw (Set.indicator_of_notMem hn _)]
         rcases not_and_or.1 hl with hl | hl
-        · rw [if_neg fun h => hl h.1, zero_mul, mul_zero]
-        · rw [if_neg fun h : _ ∧ IsHalf ε (mapB e u) => hl h.1, mul_zero, mul_zero]
+        · rw [ite_eq_right fun h => hl h.1, zero_mul, mul_zero]
+        · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapB e u) => hl h.1, mul_zero, mul_zero]
     · rw [Set.indicator_of_notMem (mt mem_halfPt.1 hu)]
       rcases not_and_or.1 hu with hl | hl
-      · rw [if_neg fun h => hl h.2, zero_mul, mul_zero]
-      · rw [if_neg fun h : _ ∧ IsHalf ε (mapB e u) => hl h.2, mul_zero, mul_zero]
+      · rw [ite_eq_right fun h => hl h.2, zero_mul, mul_zero]
+      · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapB e u) => hl h.2, mul_zero, mul_zero]
   have hR := GlobalTheory.T.heisenbergStableRelation_of_vacua Γ.M' W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
     (fun w => mixHalfS e (atPl w 1)) (fun w => mixHalfS e (cA D (atPl w 1))) (mixCoS B t e) I (halfPt t e ε) R (c • f)
     hI (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)

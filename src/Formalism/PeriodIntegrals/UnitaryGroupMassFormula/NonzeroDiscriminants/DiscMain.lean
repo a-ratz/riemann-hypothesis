@@ -127,7 +127,7 @@ private lemma eisG_lat2_eq_inv_pow_mul_tsum (a z : ℂ) (ha : a ≠ 0) (hz : 0 <
       EisensteinSeries.eisSummand ((2 * k : ℕ) : ℤ) v (⟨z, hz⟩ : UpperHalfPlane)) ⊆ {v | v ≠ 0} := by
     intro v hv
     by_contra hv0
-    simp only [Set.mem_setOf_eq, not_not] at hv0
+    simp only [Set.mem_ofPred_eq, not_not] at hv0
     apply hv
     subst hv0
     simp [EisensteinSeries.eisSummand]

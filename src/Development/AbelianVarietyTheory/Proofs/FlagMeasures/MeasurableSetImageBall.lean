@@ -96,13 +96,13 @@ theorem _root_.GlobalTheory.GramExp.isMatGroup_UH {N : ℕ} (H : Matrix (Fin N) 
       continuous_const
   · simp
   · intro a ha b hb
-    simp only [Set.mem_setOf_eq] at ha hb ⊢
+    simp only [Set.mem_ofPred_eq] at ha hb ⊢
     rw [Matrix.conjTranspose_mul]
     calc bᴴ * aᴴ * H * (a * b) = bᴴ * (aᴴ * H * a) * b := by
           simp only [Matrix.mul_assoc]
       _ = H := by rw [ha, hb]
   · intro a ha
-    simp only [Set.mem_setOf_eq] at ha ⊢
+    simp only [Set.mem_ofPred_eq] at ha ⊢
     have hu := hunit a ha
     have hr : a * a⁻¹ = 1 := Matrix.mul_nonsing_inv a hu
     refine ⟨?_, hr⟩
@@ -116,9 +116,9 @@ open MeasureTheory Matrix Filter Topology in
 open scoped ENNReal in
 theorem _root_.GlobalTheory.GramExp.exp_cont {n : ℕ} :
     Continuous (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
   exact NormedSpace.exp_continuous
 
 

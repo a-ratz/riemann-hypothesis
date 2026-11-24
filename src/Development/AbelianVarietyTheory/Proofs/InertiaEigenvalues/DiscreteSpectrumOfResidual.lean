@@ -96,7 +96,7 @@ theorem lie_skew_mem_span {N : ℕ} (ψ : Sm E N)
   set W := Submodule.span ℂ (Set.range fun k => cptRep E N k ψ)
   have hf : FiniteDimensional ℂ W := hψ
   let W' : Submodule ℂ (GA E N → ℂ) := W.map (Sm E N).subtype
-  have hcl : IsClosed (W' : Set (GA E N → ℂ)) := W'.closed_of_finiteDimensional
+  have hcl : IsClosed (W' : Set (GA E N → ℂ)) := W'.isClosed_of_finiteDimensional
   let F : ℝ → GA E N → ℂ := fun t g => ψ.1 (g * infGL E N (c t))
   have hF : ∀ t, F t ∈ W' := fun t =>
     ⟨cptRep E N ⟨(c t).val, hu hS t⟩ ψ, Submodule.subset_span ⟨_, rfl⟩, funext fun g => by
@@ -327,11 +327,11 @@ theorem lie_mem_finVec : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     φ ∈ finVec (cptRep E N) → lie E N X φ ∈ finVec (cptRep E N) := by
   intro E _ _ _ N X φ hφ
   let S : Submodule ℂ (Sm E N) := Submodule.span ℂ (Set.range fun k => cptRep E N k φ)
-  haveI : FiniteDimensional ℂ S := hφ
+  have : FiniteDimensional ℂ S := hφ
   let b := Module.finBasis ℝ (Lie E N)
   let T : Submodule ℂ (Sm E N) := ⨆ s, S.map (lie E N (b s))
-  haveI : FiniteDimensional ℂ T := by
-    haveI : ∀ s, FiniteDimensional ℂ (S.map (lie E N (b s))) := fun s => inferInstance
+  have : FiniteDimensional ℂ T := by
+    have : ∀ s, FiniteDimensional ℂ (S.map (lie E N (b s))) := fun s => inferInstance
     exact Submodule.finiteDimensional_iSup _
   have key : ∀ (Z : Lie E N) (ψ : Sm E N), ψ ∈ S → lie E N Z ψ ∈ T := by
     intro Z ψ hψ
@@ -413,11 +413,11 @@ theorem tv_mem_unipRad (e : (Σ a, m a) ≃ Fin N) {p q : Fin N} (hpq : blk e p 
   · have hne : i ≠ j := by rintro rfl; exact lt_irrefl _ hij
     change (transvection p q c) i j = 0
     rw [transvection, Matrix.add_apply, Matrix.one_apply_ne hne, Matrix.single_apply]
-    rw [if_neg, zero_add]
+    rw [ite_eq_right, zero_add]
     rintro ⟨rfl, rfl⟩
     exact lt_asymm hpq hij
   · change (transvection p q c) (e ⟨a, i⟩) (e ⟨a, j⟩) = _
-    rw [transvection, Matrix.add_apply, Matrix.single_apply, if_neg, add_zero]
+    rw [transvection, Matrix.add_apply, Matrix.single_apply, ite_eq_right, add_zero]
     · by_cases hij : i = j
       · subst hij; simp
       · have hne : e ⟨a, i⟩ ≠ e ⟨a, j⟩ := fun h => hij (by simpa using e.injective h)

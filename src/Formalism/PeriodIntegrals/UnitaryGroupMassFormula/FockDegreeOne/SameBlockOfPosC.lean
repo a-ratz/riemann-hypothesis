@@ -133,7 +133,7 @@ theorem key_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) (hS : 
   let V : Submodule ℂ (Pol p q r s) := W ⊓ harmSub hS p q r s
   let N : Submodule ℂ (Pol p q r s) :=
     V ⊓ LinearMap.ker (homogeneousComponent e : Pol p q r s →ₗ[ℂ] Pol p q r s)
-  haveI : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ V := Submodule.finiteDimensional_of_le inf_le_left
   have hVst : ∀ a b : Ix p q, sameBlock a b → ∀ u ∈ V, fockAct1 p q r s (Eab a b) u ∈ V := by
     intro a b hab u hu
     exact ⟨hWK _ (isKC_Eab hab) u hu.1, hKh p q r s a b hab u hu.2⟩
@@ -163,7 +163,7 @@ theorem key_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) (hS : 
     have : c0 ∈ C := ⟨hc0V, hc0N⟩
     rw [h, Submodule.mem_bot] at this
     exact hc0 this
-  haveI : FiniteDimensional ℂ C :=
+  have : FiniteDimensional ℂ C :=
     Submodule.finiteDimensional_of_le (show C ≤ V from fun x hx => hx.1)
   have hCst : ∀ a b : Ix p q, sameBlock a b → ∀ u ∈ C, fockAct1 p q r s (Eab a b) u ∈ C := by
     intro a b hab u hu
@@ -229,7 +229,7 @@ theorem reduction_of (hI : InnerFacts) (hKc : KHc) (hKh : KHarm) (hHc : HcHarm) 
       rw [map_sub, FockRaiseLowGrade.hc_hc]
       by_cases h : e' = e
       · subst h; simp
-      · rw [if_neg h, hother e' h, sub_zero]
+      · rw [ite_eq_right h, hother e' h, sub_zero]
     exact sub_eq_zero.mp this
   rw [hPe]
   exact (mem_homogeneousSubmodule _ _).mpr (homogeneousComponent_isHomogeneous e P)

@@ -126,7 +126,7 @@ theorem len_quot_pow {t : R} (ht : Irreducible t) (k : ℕ) :
   have ht0 : t ≠ 0 := ht.ne_zero
   induction k with
   | zero =>
-    haveI : Subsingleton (R ⧸ Ideal.span {t ^ 0}) :=
+    have : Subsingleton (R ⧸ Ideal.span {t ^ 0}) :=
       Ideal.Quotient.subsingleton_iff.2 (by rw [pow_zero, Ideal.span_singleton_one])
     rw [Nat.cast_zero]
     exact Module.length_eq_zero_iff.2 this
@@ -346,17 +346,17 @@ theorem rankLen_holds : RankLenStatement.{u} := by
   obtain ⟨kk, hkk⟩ : ∃ kk : ℕ → ℕ, kk = fun n => (Module.length R (K (L.H n) (t ^ m))).toNat := ⟨_, rfl⟩
   obtain ⟨rr, hrr⟩ : ∃ rr : ℕ → ℕ, rr = fun n => Module.finrank R (L.H n) := ⟨_, rfl⟩
   have hKn : ∀ n, Module.length R (K (L.H n) (t ^ m)) = (kk n : ℕ∞) := by
-    intro n; rw [hkk]; exact (ENat.coe_toNat (hKfin n)).symm
+    intro n; rw [hkk]; exact (ENat.natCast_toNat (hKfin n)).symm
   have hCn : ∀ n, Module.length R (C.H n) = ((m * rr n + kk n + kk (n + 1) : ℕ) : ℕ∞) := by
     intro n
     rw [hlen, (hq n).1, hKn, hKn, hrr]
     push_cast
     ring
   have hCnat : ∀ n, (Module.length R (C.H n)).toNat = m * rr n + kk n + kk (n + 1) := by
-    intro n; rw [hCn, ENat.toNat_coe]
+    intro n; rw [hCn, ENat.toNat_natCast]
   have hzero : ∀ n, N < n → kk n = 0 ∧ rr n = 0 := by
     intro n hn
-    haveI := hfg.2 n hn
+    have := hfg.2 n hn
     refine ⟨?_, ?_⟩
     · have h0 : Module.length R (K (L.H n) (t ^ m)) = 0 := Module.length_eq_zero_iff.2 inferInstance
       rw [hKn] at h0
@@ -371,7 +371,7 @@ theorem rankLen_holds : RankLenStatement.{u} := by
       rw [hker]; exact Module.length_eq_zero_iff.2 inferInstance
     rw [hKn] at h0
     exact_mod_cast h0
-  refine ⟨⟨fun n => Module.length_ne_top_iff.1 (by rw [hCn]; exact ENat.coe_ne_top _), fun n hn => ?_⟩,
+  refine ⟨⟨fun n => Module.length_ne_top_iff.1 (by rw [hCn]; exact ENat.natCast_ne_top _), fun n hn => ?_⟩,
     ?_, fun n => ⟨?_, ?_⟩⟩
   · apply (Module.length_eq_zero_iff (R := R)).1
     rw [hCn, (hzero n hn).1, (hzero n hn).2, (hzero (n + 1) (by omega)).1]

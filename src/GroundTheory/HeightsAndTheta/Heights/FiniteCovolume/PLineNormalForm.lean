@@ -163,7 +163,7 @@ theorem IdealClassesFinite.proof (E) [Field E] [NumberField E] : IdealClassesFin
     have hwv' : (x : E) * w = y * v := by exact_mod_cast hwv
     rw [mem_scaledIdeal] at hw
     convert hw using 1
-    simp only [AddMonoidHom.coe_mulLeft, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
+    simp only [AddMonoidHom.coe_mulLeft, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass]
     field_simp
     linear_combination -hwv'
 

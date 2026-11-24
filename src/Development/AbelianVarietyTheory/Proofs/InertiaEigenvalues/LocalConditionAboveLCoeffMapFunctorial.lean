@@ -63,8 +63,8 @@ theorem selMaps_res_map {H : Type} [Group H] [TopologicalSpace H] (phi : H →* 
 
 theorem selMaps_map_ur (J : Subgroup Γ) (x : H1 rho) (hx : x ∈ H1ur rho J) :
     mapH1 rho rho' u hu he x ∈ H1ur rho' J := by
-  have h0 : resH1 rho J.subtype continuous_subtype_val x = 0 := hx
-  exact (selMaps_res_map rho rho' u hu he J.subtype continuous_subtype_val x).trans
+  have h0 : resH1 rho J.subtype continuous_subtypeVal x = 0 := hx
+  exact (selMaps_res_map rho rho' u hu he J.subtype continuous_subtypeVal x).trans
     ((congrArg _ h0).trans (map_zero _))
 
 end General
@@ -96,7 +96,7 @@ theorem selmerClass_coeffMap_mem_selmer (f : B →ₗ[Λ] B') (Q : Finset (PlE D
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   refine (selMaps_res_map (repOn ρ κ B) (repOn ρ κ B') (f.compLeft (Fin r)) continuous_of_discreteTopology
-    (repOn_map ρ κ f) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ▸ ?_
+    (repOn_map ρ κ f) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · exact localConditionAboveL_coeffMap_functorial bkP i ρ κ f v _ hv

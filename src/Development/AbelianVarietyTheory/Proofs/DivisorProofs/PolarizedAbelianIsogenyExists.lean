@@ -195,19 +195,19 @@ theorem exists_isog_principal_lam :
       ψ ≫ ρ = (𝟙 A) ^ N ∧ ρ ≫ ψ = (𝟙 P.A) ^ N ∧
       LBIso (abelian₂ A M) ((abelian₂ P.A P.L).pull (lift (fst A A ≫ ψ) (snd A A ≫ ψ)).left) := by
   intro g A _ hA M u Hm χ hM hAH
-  haveI := hA.comm
-  haveI := hA.smooth
-  haveI := hA.proper
-  haveI : IsReduced A.left := GlobalTheory.isReduced_of_smooth_complex _ A.hom hA.smooth
+  have := hA.comm
+  have := hA.smooth
+  have := hA.proper
+  have : IsReduced A.left := GlobalTheory.isReduced_of_smooth_complex _ A.hom hA.smooth
   have hint := GlobalTheory.TorusRM.ahFactor_im_int g A M u Hm χ hM (isFactorAH_of_isAH hAH)
   obtain ⟨Λ₁, N, Ef, hle, hN, hNΛ, hd1, hf1, hEf, hbij⟩ :=
     GlobalTheory.UnimodOver.exists_unimodular_overlattice g u.Λ Hm u.discrete u.full hAH.1 hAH.2.1 hint
   obtain ⟨P, uB, χB, -, hΛB, hAHB, -, -⟩ :=
     GlobalTheory.principalTorus_algebraic g Λ₁ Hm Ef hd1 hf1 hAH.1 hAH.2.1 hEf hbij
-  haveI := P.isAb.comm
-  haveI := P.isAb.smooth
-  haveI := P.isAb.proper
-  haveI : IsReduced P.A.left := GlobalTheory.isReduced_of_smooth_complex _ P.A.hom P.isAb.smooth
+  have := P.isAb.comm
+  have := P.isAb.smooth
+  have := P.isAb.proper
+  have : IsReduced P.A.left := GlobalTheory.isReduced_of_smooth_complex _ P.A.hom P.isAb.smooth
   have hsA := GlobalTheory.TorusAction.smoothOfRelativeDimension_of_holUnif A hA u
   have hsP := GlobalTheory.TorusAction.smoothOfRelativeDimension_of_holUnif P.A P.isAb uB
   have hle' : u.Λ ≤ uB.Λ := hΛB ▸ hle
@@ -226,7 +226,7 @@ theorem exists_isog_principal_lam :
     obtain ⟨w, rfl⟩ := uB.ex_onto x
     rw [← Category.assoc, hρe', hψe', comp_pow, Category.comp_id,
       ex_nsmul uB.ex uB.ex_add (unif_ex_zero uB)]
-  · haveI := hψ
+  · have := hψ
     have hM' : (P.L.pull ψ.left).IsLB := pull_isLB P.isLB _
     have hF₃ := pullUnif_factor ψ u uB hψe' hle' Hm χB (isFactorAH_of_isAH hAHB)
     obtain ⟨H, m, s, hH, hs, -⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmple ℂ A hA

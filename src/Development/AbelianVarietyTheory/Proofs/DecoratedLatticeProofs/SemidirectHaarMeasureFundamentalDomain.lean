@@ -77,12 +77,12 @@ theorem semiMap_injective (N : Subgroup G) (s : K →* G)
 theorem semiMap_me (N : Subgroup G) (s : K →* G) (hN : IsClosed (N : Set G)) (hs : Continuous s)
     (hinj : ∀ n ∈ N, ∀ n' ∈ N, ∀ h h', n * s h = n' * s h' → n = n' ∧ h = h') :
     MeasurableEmbedding (semiMap N s) := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : PolishSpace K := PI.VolStabW.TopoPolish.polish_of_lcsc K
-  haveI : PolishSpace N := PI.VolStabW.TopoPolish.polish_of_lcsc N
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : PolishSpace K := PI.VolStabW.TopoPolish.polish_of_lcsc K
+  have : PolishSpace N := PI.VolStabW.TopoPolish.polish_of_lcsc N
   exact Continuous.measurableEmbedding
-    (Continuous.subtype_mk ((continuous_subtype_val.comp continuous_snd).mul (hs.comp continuous_fst)) _)
+    (Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_snd).mul (hs.comp continuous_fst)) _)
     (semiMap_injective N s hinj)
 
 def conjN (N : Subgroup G) (s : K →* G) (hc : ∀ n ∈ N, ∀ h, s h * n * (s h)⁻¹ ∈ N) (g : K) : N ≃* N where
@@ -98,15 +98,15 @@ theorem conjN_apply (N : Subgroup G) (s : K →* G) (hc : ∀ n ∈ N, ∀ h, s 
 theorem conjN_null (N : Subgroup G) (s : K →* G) (hN : IsClosed (N : Set G)) (hs : Continuous s)
     (hc : ∀ n ∈ N, ∀ h, s h * n * (s h)⁻¹ ∈ N) (ν : Measure N) [ν.IsHaarMeasure] (g : K) {A : Set N}
     (hA : ν A = 0) : ν ((conjN N s hc g) ⁻¹' A) = 0 := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : PolishSpace N := PI.VolStabW.TopoPolish.polish_of_lcsc N
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : PolishSpace N := PI.VolStabW.TopoPolish.polish_of_lcsc N
   have hcont : ∀ g, Continuous (conjN N s hc g) := fun g =>
-    Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+    Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
   have hcs : Continuous (conjN N s hc g).symm :=
-    Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+    Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
   have hme := (hcont g).measurableEmbedding (conjN N s hc g).injective
-  haveI := MulEquiv.isHaarMeasure_map ν (conjN N s hc g) (hcont g) hcs
+  have := MulEquiv.isHaarMeasure_map ν (conjN N s hc g) (hcont g) hcs
   rw [← hme.map_apply]
   exact Measure.absolutelyContinuous_isHaarMeasure _ ν hA
 
@@ -180,8 +180,8 @@ theorem isFundamentalDomain_semi (N : Subgroup G) (s : K →* G) (hN : IsClosed 
     (h𝓕 : IsFundamentalDomain ΓK 𝓕 μ) (h𝓝 : IsFundamentalDomain (ΓG.subgroupOf N) 𝓝 ν) :
     IsFundamentalDomain ((ΓG ⊓ (N ⊔ s.range)).subgroupOf (N ⊔ s.range)) (semiMap N s '' (𝓕 ×ˢ 𝓝))
       (semiMeas N s μ ν) := by
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   have hme := semiMap_me N s hN hs hinj
   have hi := semiMap_injective N s hinj
   have hsR : ∀ g ∈ ΓK, s g ∈ ΓG := fun g hg => by
@@ -191,7 +191,7 @@ theorem isFundamentalDomain_semi (N : Subgroup G) (s : K →* G) (hN : IsClosed 
   · obtain ⟨t, -, ht, hts⟩ :=
       (h𝓕.nullMeasurableSet.prod h𝓝.nullMeasurableSet).exists_measurable_superset_ae_eq
     refine (hme.measurableSet_image.2 ht).nullMeasurableSet.congr ?_
-    rw [ae_eq_set, ← Set.image_diff hi, ← Set.image_diff hi, hme.map_apply, hme.map_apply,
+    rw [ae_eq_set, ← Set.image_sdiff hi, ← Set.image_sdiff hi, hme.map_apply, hme.map_apply,
       Set.preimage_image_eq _ hi, Set.preimage_image_eq _ hi]
     exact ae_eq_set.1 hts
   · rw [hme.ae_map_iff]
@@ -281,10 +281,10 @@ theorem semiFd_iterated : ∀ (D : D7) (S H : HSp D) (N : Subgroup (GA D S)) (s 
   intro D S H N s hs hN hc hinj hrat vH ν 𝓝 hν h𝓝 _hsemi
   obtain ⟨lS, scS, t2S, bS, tgS, -, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S
   obtain ⟨lH, scH, t2H, bH, tgH, -, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D H
-  haveI : Countable (GQ H) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig H.gram
-  haveI := vH.haar
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (GQ H) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig H.gram
+  have := vH.haar
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
   have hme := SemiFd.semiMap_me N s hN hs hinj
   have hi := SemiFd.semiMap_injective N s hinj
   refine ⟨SemiFd.semiMap N s '' (vH.𝓕 ×ˢ 𝓝),

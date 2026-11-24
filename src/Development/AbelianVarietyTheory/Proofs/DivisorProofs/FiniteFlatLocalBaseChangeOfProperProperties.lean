@@ -70,14 +70,14 @@ theorem finiteFlat_proper_baseChange_facts : ∀ (R R' : Type) [CommRing R] [IsL
   refine ⟨h2, inferInstance, inferInstance, h6.surj, (p' ≫ k).isClosedMap, p.isClosedMap, ?_, ?_⟩
   · intro V hV
     refine ⟨QuasiCompact.isCompact_preimage (f := p) _ V.isOpen hV.isCompact, ?_⟩
-    haveI : IsAffine V := hV
-    haveI : QuasiSeparatedSpace (p ⁻¹ᵁ V : Z.Opens).toScheme :=
+    have : IsAffine V := hV
+    have : QuasiSeparatedSpace (p ⁻¹ᵁ V : Z.Opens).toScheme :=
       quasiSeparatedSpace_of_quasiSeparated (p ∣_ V)
     exact (isQuasiSeparated_iff_quasiSeparatedSpace _ (p ⁻¹ᵁ V).isOpen).mpr this
-  · letI := ρ.toAlgebra
-    haveI : Module.Finite R R' := hfin
-    haveI : Module.Flat R R' := hflat
-    haveI : Module.Free R R' := Module.free_of_flat_of_isLocalRing
+  · let := ρ.toAlgebra
+    have : Module.Finite R R' := hfin
+    have : Module.Flat R R' := hflat
+    have : Module.Free R R' := Module.free_of_flat_of_isLocalRing
     let b := Module.finBasis R R'
     refine ⟨_, b, fun r' => ⟨b.repr r', ?_, ?_⟩⟩
     · exact (b.sum_repr r').symm

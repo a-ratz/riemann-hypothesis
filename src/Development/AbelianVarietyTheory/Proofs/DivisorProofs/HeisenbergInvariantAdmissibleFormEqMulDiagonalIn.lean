@@ -102,10 +102,10 @@ def glueE : (Vi F κ × Vf F κ) ≃ₜ+ (κ → AF F) where
 
 theorem lDiag_eq (μ : @Measure (κ → AF F) (borel _)) (hμ : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ) :
     ∃ c : ℂ, ∀ Φ ∈ schA F (κ ⊕ κ), lDiag F κ Φ = c * GlobalTheory.DiagSiegel.diagInt μ Φ := by
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : ((mu F κ).map (glueE F κ)).IsAddHaarMeasure := (glueE F κ).isAddHaarMeasure_map _
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : ((mu F κ).map (glueE F κ)).IsAddHaarMeasure := (glueE F κ).isAddHaarMeasure_map _
   have h := Measure.isAddLeftInvariant_eq_smul ((mu F κ).map (glueE F κ)) μ
   refine ⟨((Measure.addHaarScalarFactor ((mu F κ).map (glueE F κ)) μ : ℝ) : ℂ), fun Φ hΦ => ?_⟩
   have e := (glueE F κ).toHomeomorph.measurableEmbedding.integral_map (μ := mu F κ) (fun u => Φ (Sum.elim u u))

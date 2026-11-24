@@ -145,7 +145,7 @@ theorem isCosocle_of_isSocle_contra : ∀ {k : Type} [Field k] [ValuativeRel k] 
     refine hat0.1 (eq_bot_iff.2 ?_)
     rintro _ ⟨x, rfl⟩
     exact (h x).symm ▸ zero_mem (⊥ : Subrepresentation (contra π)).toSubmodule
-  haveI : WellFoundedGT (Subrepresentation π) := ((hasFiniteLength_iff_wellFounded π).1 hfl).1
+  have : WellFoundedGT (Subrepresentation π) := ((hasFiniteLength_iff_wellFounded π).1 hfl).1
   have hbt : (⊥ : Subrepresentation π) ≠ ⊤ := fun e => hx (Subtype.ext (LinearMap.ext fun v => by
     have hv : v ∈ (⊥ : Subrepresentation π) := e ▸ (show v ∈ (⊤ : Subrepresentation π) from trivial)
     have hv0 : v = 0 := (Submodule.mem_bot ℂ).1 hv

@@ -101,8 +101,8 @@ theorem exists_upq_extends {p q n : ℕ} (A : Matrix (Fin p ⊕ Fin q) (Fin n) �
 
 theorem finite_stabAt_of_out {G : Type} [Group G] {Γ L : Subgroup G}
     (h : ∀ c : Formalism.UG.ClassSet Γ L, Finite (stabAt Γ L c.out)) (g : G) : Finite (stabAt Γ L g) := by
-  haveI := h (DoubleCoset.mk Γ L g)
-  haveI : Nonempty (stabAt Γ L (DoubleCoset.mk Γ L g).out) := ⟨⟨1, one_mem_stabAt _ _ _⟩⟩
+  have := h (DoubleCoset.mk Γ L g)
+  have : Nonempty (stabAt Γ L (DoubleCoset.mk Γ L g).out) := ⟨⟨1, one_mem_stabAt _ _ _⟩⟩
   refine Nat.finite_of_card_ne_zero ?_
   rw [← stabOrder_mk, ← DoubleCoset.out_eq' (DoubleCoset.mk _ _ g), stabOrder_mk]
   exact Nat.card_pos.ne'
@@ -156,11 +156,11 @@ theorem comap_finE : K.comap (finE V) = levA V K ⊔ GinfC V := by
 variable {V K} in
 theorem nonempty_gam_equiv (c : Cl D.sp.cm V.gram K) :
     Nonempty (Gam c ≃ stabAt (UQ D.sp.cm V.gram) (K.subgroupOf (UA D.sp.cm V.gram)) c.out) := by
-  haveI : Nontrivial (Af D.host.F) := by
+  have : Nontrivial (Af D.host.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
     exact (Formalism.UG.evalV D.host.F ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _)⟩).toRingHom.domain_nontrivial
-  haveI : Nontrivial (EAf D) :=
+  have : Nontrivial (EAf D) :=
     (Algebra.TensorProduct.includeRight_injective (R := D.host.F) (A := D.host.E) (B := Af D.host.F)
       (algebraMap D.host.F D.host.E).injective).nontrivial
   have hm : ∀ γ : UR D.sp.cm V.gram, bc (inclE (F := D.host.F) (Af D.host.F)) γ.1 ∈ UA D.sp.cm V.gram := fun γ =>
@@ -239,7 +239,7 @@ theorem measure_toReal_eq_mass (hd : IsTotDef D.sp.cm.sig V.gram)
     (μ 𝓕).toReal = unitaryMass D.sp.cm.sig V.gram (toLev V K) := by
   have h := GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm
   obtain ⟨π, hπ, -⟩ := existsUnique_isFinProj D.sp.cm.sig V.gram
-  haveI := hμ.1
+  have := hμ.1
   refine hπ.measure_toReal h.1 (h.2 V) hd hc ho μ ?_ h𝓕
   rw [comap_toLev V K hπ]
   exact measure_comap_finE hμ

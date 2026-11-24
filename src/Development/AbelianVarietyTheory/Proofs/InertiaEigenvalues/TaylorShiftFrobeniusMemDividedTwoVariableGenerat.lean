@@ -83,7 +83,7 @@ theorem eventually_dvd {l : ℕ} [hl : Fact l.Prime] {e : ℕ} [NeZero e] (r : �
   rw [Filter.eventually_cofinite]
   refine ((Set.finite_lt_nat (l ^ r)).prod (Set.finite_lt_nat (e * l ^ r))).subset ?_
   rintro ⟨i, n⟩ h
-  simp only [Set.mem_setOf_eq] at h
+  simp only [Set.mem_ofPred_eq] at h
   refine ⟨?_, ?_⟩
   · show i < l ^ r
     by_contra hi; push_neg at hi
@@ -119,7 +119,7 @@ theorem coeff_frobS_eq_zero (x : (Wq l a)⟦X⟧) {m : ℕ} (h : ¬ l ∣ m) : c
   have : coeff m (frobS l a x) = if l ∣ m then sigma l a (coeff (m / l) x) else 0 := by
     simp only [frobS, RingHom.comp_apply, coeff_map, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, coeff_expand]
     split_ifs <;> simp
-  rw [this, if_neg h]
+  rw [this, ite_eq_right h]
 
 theorem tendsToZero_crystallinePrismShiftedFrobeniusCoeff {e : ℕ} [NeZero e] (x : (Wq l a)⟦X⟧) : LTo0 l (wSh l a e x) := fun r =>
   (eventually_dvd (l := l) (e := e) r).mono fun p hp => by
@@ -141,7 +141,7 @@ end Main
 
 theorem shP_frob_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), ∀ (sh : K⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ (f : K⟦X⟧) (i : ℕ), (i.factorial : K⟦X⟧) * coeff i (sh f) = (PowerSeries.derivative (R := K))^[i] f) → ∀ x : (Wq l a)⟦X⟧, shP a sh (inclS t K (frobS l a x)) ∈ PPSet t K e ∧ ∃ B ∈ PPSet t K e, shP a sh (inclS t K (frobS l a x)) - constP a K (inclS t K (frobS l a x)) = (l : ZMod a → K⟦X⟧⟦X⟧) * B := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t sh hsh x
-  haveI : CharZero K := charZero_of_ql (l := l)
+  have : CharZero K := charZero_of_ql (l := l)
   have hkey : ∀ τ i n, ((i.factorial * (n / e).factorial : ℕ) : K) *
       coeff n (coeff i (sh (toAc t K (frobS l a x) τ : K⟦X⟧))) = algebraMap O K (emb t τ (wSh l a e x (i, n))) := by
     intro τ i n
@@ -163,9 +163,9 @@ theorem shP_frob_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZe
     by_cases hi : i = 0
     · subst hi
       have h0 : wDiff e x (0, n) = 0 := by simp [wDiff]
-      rw [if_pos rfl, coeff_zero_eq_constantCoeff_apply, constantCoeff_sh sh hsh, sub_self, h0]
+      rw [ite_eq_left rfl, coeff_zero_eq_constantCoeff_apply, constantCoeff_sh sh hsh, sub_self, h0]
       simp
-    · rw [if_neg hi, map_zero, sub_zero]
+    · rw [ite_eq_right hi, map_zero, sub_zero]
       apply mul_left_cancel₀ (hD i n)
       rw [hkey, mul_left_comm, mul_div_cancel₀ _ (hD i n)]
       unfold wDiff

@@ -93,7 +93,7 @@ theorem exists_const_rect {Q Z : Type} [Group Q] [TopologicalSpace Q] [LocallyCo
     congr 1
     ext ⟨x, z⟩
     simp
-  haveI : μ.IsMulLeftInvariant := ⟨fun q => by
+  have : μ.IsMulLeftInvariant := ⟨fun q => by
     ext U hU
     have hT : Measurable (fun p : Q × Z => (q * p.1, p.2)) :=
       (measurable_fst.const_mul q).prodMk measurable_snd
@@ -101,12 +101,12 @@ theorem exists_const_rect {Q Z : Type} [Group Q] [TopologicalSpace Q] [LocallyCo
     conv_rhs => rw [← hinv q]
     rw [Measure.map_apply hT (hU.prod hA)]
     rfl⟩
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun L hL => by
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun L hL => by
     rw [hμ L hL.isClosed.measurableSet]
     exact (measure_mono (Set.prod_mono subset_rfl hAC)).trans_lt (hL.prod hC).measure_lt_top⟩
   refine ⟨Measure.haarScalarFactor μ η, fun U hU => ?_⟩
   have h := congrArg (fun ν : Measure Q => ν U) (Measure.isMulLeftInvariant_eq_smul μ η)
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h
   rw [← hμ U hU]
   exact h
 
@@ -134,7 +134,7 @@ theorem measure_eq_haar_prod_of_left_invariant :
     have hset : Prod.snd ⁻¹' A ∩ (K ×ˢ (Set.univ : Set Z)) = K ×ˢ A := by
       ext ⟨x, z⟩
       simp [and_comm]
-    simp only [m, Measure.smul_apply, smul_eq_mul]
+    simp only [m, smul_apply, smul_eq_mul]
     rw [Measure.map_apply measurable_snd hA, Measure.restrict_apply (measurable_snd hA), hset]
   have hrect : ∀ (U : Set Q) (A C : Set Z), MeasurableSet U → MeasurableSet A → IsCompact C →
       A ⊆ C → ρ (U ×ˢ A) = η U * m A := by
@@ -147,7 +147,7 @@ theorem measure_eq_haar_prod_of_left_invariant :
     rw [hm C hC.isClosed.measurableSet]
     exact ENNReal.mul_lt_top (ENNReal.inv_lt_top.2 (pos_iff_ne_zero.2 hKpos))
       (hKc.prod hC).measure_lt_top
-  haveI hmfc : IsFiniteMeasureOnCompacts m := ⟨fun C hC => hmC C hC⟩
+  have hmfc : IsFiniteMeasureOnCompacts m := ⟨fun C hC => hmC C hC⟩
   refine ⟨m, inferInstance, ?_⟩
   symm
   have genAux : ∀ (X : Type) [TopologicalSpace X] [SigmaCompactSpace X] [T2Space X]
@@ -216,8 +216,8 @@ theorem comap_map_of_intertwine {W V : Type} [MeasurableSpace W] [MeasurableSpac
       · change L (L' y) ∈ s
         rwa [hLL']
       · rw [hint', hyv, hAA']
-  rw [Measure.map_apply hL hs, Measure.smul_apply, hT.comap_apply, hT.comap_apply, himg,
-    ← Measure.map_apply hA (hT.measurableSet_image.2 hs), hμ, Measure.smul_apply]
+  rw [Measure.map_apply hL hs, smul_apply, hT.comap_apply, hT.comap_apply, himg,
+    ← Measure.map_apply hA (hT.measurableSet_image.2 hs), hμ, smul_apply]
 
 theorem withDensity_map_of_scale {W : Type} [MeasurableSpace W] {L : W → W} (hL : Measurable L)
     (ρ : Measure W) (c k : ℝ≥0∞) (hρ : ρ.map L = c • ρ) {d : W → ℝ≥0∞} (hd : Measurable d)
@@ -260,7 +260,7 @@ variable {V X Q : Type} [TopologicalSpace V] [TopologicalSpace X] [Group Q] [Top
 def theta (g : V → X) (b₀ : X) (p : Q × (g ⁻¹' {b₀})) : V := p.1 • (p.2 : V)
 
 theorem continuous_theta (g : V → X) (b₀ : X) : Continuous (theta (Q := Q) g b₀) :=
-  continuous_fst.smul (continuous_subtype_val.comp continuous_snd)
+  continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)
 
 theorem theta_isOpenEmbedding [T2Space X] {g : V → X} (hg : Continuous g)
     (heq : ∀ (q : Q) (v : V), g (q • v) = q • g v) {b₀ : X}
@@ -274,7 +274,7 @@ theorem theta_isOpenEmbedding [T2Space X] {g : V → X} (hg : Continuous g)
   let he : Q ≃ₜ Set.range o := ho.isEmbedding.toHomeomorph
   let s : (g ⁻¹' Set.range o) → Q := fun v => he.symm ⟨g v, v.2⟩
   have hs_cont : Continuous s :=
-    he.symm.continuous.comp ((hg.comp continuous_subtype_val).subtype_mk _)
+    he.symm.continuous.comp ((hg.comp continuous_subtypeVal).subtype_mk _)
   have hs : ∀ v, s v • b₀ = g v := fun v => by
     have := he.apply_symm_apply ⟨g v, v.2⟩
     exact congrArg Subtype.val this
@@ -283,7 +283,7 @@ theorem theta_isOpenEmbedding [T2Space X] {g : V → X} (hg : Continuous g)
     rw [heq, ← hs v, inv_smul_smul]
   let t : (g ⁻¹' Set.range o) → Q × (g ⁻¹' {b₀}) := fun v => (s v, ⟨(s v)⁻¹ • (v : V), hmem v⟩)
   have ht_cont : Continuous t :=
-    hs_cont.prodMk ((hs_cont.inv.smul continuous_subtype_val).subtype_mk _)
+    hs_cont.prodMk ((hs_cont.inv.smul continuous_subtypeVal).subtype_mk _)
   have hgθ : ∀ p : Q × (g ⁻¹' {b₀}), g (theta g b₀ p) = o p.1 := fun p => by
     have hz : g (p.2 : V) = b₀ := p.2.2
     simp only [theta, heq, hz, ho_def]
@@ -312,7 +312,7 @@ theorem theta_isOpenEmbedding [T2Space X] {g : V → X} (hg : Continuous g)
       · rintro ⟨u, hu, rfl⟩
         exact ⟨t u, hu, hθt u⟩
     rw [this]
-    exact hU.isOpenMap_subtype_val _ (hW.preimage ht_cont)
+    exact hU.isOpenMap_subtypeVal _ (hW.preimage ht_cont)
   refine ⟨.of_continuous_injective_isOpenMap (continuous_theta g b₀) hinj hopen, ?_⟩
   ext v
   constructor
@@ -345,15 +345,15 @@ theorem fibFam_orbit {g : V → X} {b₀ : X} (w : Q → ℝ≥0) (m : Measure (
     fibFam g b₀ w m (q • b₀) = (w q : ℝ≥0∞) • m.map (fun z : (g ⁻¹' {b₀}) => q • (z : V)) := by
   have h : Function.invFun (fun q : Q => q • b₀) (q • b₀) = q :=
     Function.leftInverse_invFun ho q
-  rw [fibFam, if_pos ⟨q, rfl⟩, h]
+  rw [fibFam, ite_eq_left ⟨q, rfl⟩, h]
 
 theorem fibFam_off {g : V → X} {b₀ : X} (w : Q → ℝ≥0) (m : Measure (g ⁻¹' {b₀})) {b : X}
     (hb : b ∉ Set.range (fun q : Q => q • b₀)) : fibFam g b₀ w m b = 0 := by
-  rw [fibFam, if_neg hb]
+  rw [fibFam, ite_eq_right hb]
 
 theorem continuous_smul_fib (g : V → X) (b₀ : X) (q : Q) :
     Continuous (fun z : (g ⁻¹' {b₀}) => q • (z : V)) :=
-  continuous_const.smul continuous_subtype_val
+  continuous_const.smul continuous_subtypeVal
 
 theorem fibFam_support {Y : Type} {f : V → Y} {g : V → X} {ι : X → Y} (hι : Function.Injective ι)
     (hg : Continuous g) (hf : ∀ v, f v = ι (g v))
@@ -374,7 +374,7 @@ theorem fibFam_support {Y : Type} {f : V → Y} {g : V → X} {ι : X → Y} (h�
       exact ((hg.measurable (measurableSet_singleton _)).inter (hg.measurable hBm)).compl
     change fibFam g b₀ w m ((fun q : Q => q • b₀) q) _ = 0
     change fibFam g b₀ w m (q • b₀) _ = 0
-    rw [fibFam_orbit w m ho.injective, Measure.smul_apply,
+    rw [fibFam_orbit w m ho.injective, smul_apply,
       Measure.map_apply (continuous_smul_fib g b₀ q).measurable hS]
     have : (fun z : (g ⁻¹' {b₀}) => q • (z : V)) ⁻¹'
         (f ⁻¹' {ι (q • b₀)} ∩ g ⁻¹' Set.range (fun q : Q => q • b₀))ᶜ = ∅ := by
@@ -431,7 +431,7 @@ theorem integrable_and_continuous [T2Space V] {g : V → X} (hg : Continuous g) 
       refine continuousOn_integral_of_compact_support
         (f := fun (q : Q) (z : (g ⁻¹' {b₀})) => φ (q • (z : V))) hk ?_ ?_
       · exact (hφ.comp (continuous_fst.smul
-          (continuous_subtype_val.comp continuous_snd))).continuousOn
+          (continuous_subtypeVal.comp continuous_snd))).continuousOn
       · intro q z hq hz
         exact hvan hkz q z hq hz
     exact hcont.continuousAt hKn
@@ -461,7 +461,7 @@ theorem exists_slice_measure [T2Space V] [LocallyCompactSpace V] {g : V → X} (
       (μ.comap (theta (Q := Q) g b₀)).withDensity (fun p => (χ p.1 : ℝ≥0∞)) =
         ((ν.comap (fun q : Q => q • b₀)).withDensity (fun q => (χ' q : ℝ≥0∞))).prod m := by
   have hcl : IsClosed (g ⁻¹' {b₀}) := isClosed_singleton.preimage hg
-  haveI : LocallyCompactSpace (g ⁻¹' {b₀}) :=
+  have : LocallyCompactSpace (g ⁻¹' {b₀}) :=
     hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨hΘ, -⟩ := theta_isOpenEmbedding (Q := Q) hg heq ho
   have hΘm := hΘ.measurableEmbedding
@@ -473,10 +473,10 @@ theorem exists_slice_measure [T2Space V] [LocallyCompactSpace V] {g : V → X} (
       (c a⁻¹ : ℝ≥0) * (c (a * q) : ℝ≥0) := by
     intro c a q
     rw [← ENNReal.coe_mul, ← map_mul, inv_mul_cancel_left]
-  haveI := comap_isLocallyFinite hΘ μ
-  haveI := comap_isLocallyFinite ho ν
+  have := comap_isLocallyFinite hΘ μ
+  have := comap_isLocallyFinite ho ν
   set η := (ν.comap (fun q : Q => q • b₀)).withDensity (fun q => (χ' q : ℝ≥0∞)) with hη
-  haveI hηf : IsLocallyFiniteMeasure η := IsLocallyFiniteMeasure.withDensity_coe hχ'
+  have hηf : IsLocallyFiniteMeasure η := IsLocallyFiniteMeasure.withDensity_coe hχ'
   have hηinv : η.IsMulLeftInvariant := by
     refine ⟨fun a => ?_⟩
     refine withDensity_map_of_scale (measurable_const_mul a) _ (χ' a) (χ' a⁻¹) ?_
@@ -500,11 +500,11 @@ theorem exists_slice_measure [T2Space V] [LocallyCompactSpace V] {g : V → X} (
       rw [ENNReal.coe_eq_zero.1 h0] at this
       simp at this
     exact hac.isOpenPosMeasure
-  haveI : η.IsHaarMeasure :=
+  have : η.IsHaarMeasure :=
     { toIsFiniteMeasureOnCompacts := inferInstance
       toIsMulLeftInvariant := hηinv
       toIsOpenPosMeasure := hηpos }
-  haveI : IsLocallyFiniteMeasure
+  have : IsLocallyFiniteMeasure
       ((μ.comap (theta (Q := Q) g b₀)).withDensity (fun p => (χ p.1 : ℝ≥0∞))) :=
     IsLocallyFiniteMeasure.withDensity_coe (f := fun p : Q × (g ⁻¹' {b₀}) => χ p.1)
       (hχ.comp continuous_fst)
@@ -594,11 +594,11 @@ end Core
 theorem exists_isFibreFamily_openOrbit : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCompactSpace V] [SecondCountableTopology V] [T2Space V] [MeasurableSpace V] [BorelSpace V] [TopologicalSpace X] [LocallyCompactSpace X] [SecondCountableTopology X] [T2Space X] [MeasurableSpace X] [BorelSpace X] (μ : Measure V) (ν : Measure X) [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ν] [ν.IsOpenPosMeasure] (f : V → Y) (g : V → X) (ι : X → Y), Function.Injective ι → Continuous g → (∀ v, f v = ι (g v)) → ∀ (Q : Type) [Group Q] [TopologicalSpace Q] [IsTopologicalGroup Q] [LocallyCompactSpace Q] [SecondCountableTopology Q] [T2Space Q] [MulAction Q V] [ContinuousSMul Q V] [MulAction Q X] [ContinuousSMul Q X], (∀ (q : Q) (v : V), g (q • v) = q • g v) → ∀ (χ χ' : Q →* ℝ≥0), Continuous χ → Continuous χ' → (∀ q : Q, μ.map (fun v => q • v) = χ q • μ) → (∀ q : Q, ν.map (fun x => q • x) = χ' q • ν) → ∀ b₀ : X, IsOpenEmbedding (fun q : Q => q • b₀) → ∃ fib : X → Measure V, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily μ f ι (g ⁻¹' (Set.range fun q : Q => q • b₀)) ν (Set.range fun q : Q => q • b₀) fib := by
   intro V X Y _ _ _ _ _ _ _ _ _ _ _ _ μ ν _ _ _ f g ι hι hg hf Q _ _ _ _ _ _ _ _ _ _ heq χ χ' hχ hχ'
     hμ hν b₀ ho
-  letI : MeasurableSpace Q := borel Q
-  haveI : BorelSpace Q := ⟨rfl⟩
+  let : MeasurableSpace Q := borel Q
+  have : BorelSpace Q := ⟨rfl⟩
   obtain ⟨m, hmf, hm⟩ := exists_slice_measure hg heq ho μ ν χ χ' hχ hχ' hμ hν
-  haveI := comap_isLocallyFinite ho ν
-  haveI : IsLocallyFiniteMeasure
+  have := comap_isLocallyFinite ho ν
+  have : IsLocallyFiniteMeasure
       ((ν.comap (fun q : Q => q • b₀)).withDensity (fun q => (χ' q : ℝ≥0∞))) :=
     IsLocallyFiniteMeasure.withDensity_coe hχ'
   have hw : Continuous (fun q : Q => χ' q * χ q⁻¹) := hχ'.mul (hχ.comp continuous_inv)
@@ -658,8 +658,8 @@ theorem exists_fibre_near : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     intro a b
     simp only [c, mul_inv_rev]
     rfl
-  have hcc : Continuous c := Units.continuous_val.comp (continuous_subtype_val.comp continuous_inv)
-  letI actV : DistribMulAction Q (Fin n → Fin M → R ⊗[F] E) :=
+  have hcc : Continuous c := Units.continuous_val.comp (continuous_subtypeVal.comp continuous_inv)
+  let actV : DistribMulAction Q (Fin n → Fin M → R ⊗[F] E) :=
     { smul := fun q X => rmul R X (c q)
       one_smul := fun X => by
         change rmul R X (c 1) = X
@@ -674,7 +674,7 @@ theorem exists_fibre_near : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
         change rmul R (X + Y) (c q) = rmul R X (c q) + rmul R Y (c q)
         funext a i; simp [rmul, add_mul, Finset.sum_add_distrib] }
   have hsmulV : ∀ (q : Q) (X : Fin n → Fin M → R ⊗[F] E), q • X = rmul R X (c q) := fun _ _ => rfl
-  letI actH : DistribMulAction Q (HermR R σ n) :=
+  let actH : DistribMulAction Q (HermR R σ n) :=
     { smul := fun q T => ⟨cT (sigR R σ) (c q) * (T : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * c q, hherm T (c q)⟩
       one_smul := fun T => by
         apply Subtype.ext
@@ -712,7 +712,7 @@ theorem exists_fibre_near : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     have h1 : Continuous fun p : Q × HermR R σ n => c p.1 := hcc.comp continuous_fst
     have h2 : Continuous fun p : Q × HermR R σ n => cT (sigR R σ) (c p.1) :=
       (h1.matrix_map hsig).matrix_transpose
-    exact (h2.matrix_mul (continuous_subtype_val.comp continuous_snd)).matrix_mul h1
+    exact (h2.matrix_mul (continuous_subtypeVal.comp continuous_snd)).matrix_mul h1
   have heq : ∀ (q : Q) (X : Fin n → Fin M → R ⊗[F] E), g (q • X) = q • g X := by
     intro q X
     apply Subtype.ext
@@ -817,7 +817,7 @@ lemma restr_family (hι : Function.Injective ι) (hg : Continuous g) (hf : ∀ v
   refine ⟨?_, ?_, ?_⟩
   · intro b
     by_cases hb : b ∈ B₂
-    · simp only [restr, if_pos hb]
+    · simp only [restr, ite_eq_left hb]
       refine measure_mono_null ?_ (h.1 b)
       intro v hv hv2
       apply hv
@@ -838,10 +838,10 @@ lemma restr_family (hι : Function.Injective ι) (hg : Continuous g) (hf : ∀ v
   · intro φ hφ hφc hφs
     have H := h.2.2 φ hφ hφc (hφs.trans (Set.preimage_mono hsub))
     refine ⟨fun b hb => ?_, ?_⟩
-    · simp only [restr, if_pos hb]
+    · simp only [restr, ite_eq_left hb]
       exact H.1 b (hsub hb)
     · refine (H.2.mono hsub).congr fun b hb => ?_
-      simp only [restr, if_pos hb]
+      simp only [restr, ite_eq_left hb]
 
 end Local
 
@@ -850,7 +850,7 @@ theorem glue : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCompactSpace V] [
   classical
   choose! C hCo hbC hCB F hF using hloc
   let fib : X → Measure V := fun b => if b ∈ B then F b b else 0
-  have hfibB : ∀ c ∈ B, fib c = F c c := fun c hc => by simp only [fib, if_pos hc]
+  have hfibB : ∀ c ∈ B, fib c = F c c := fun c hc => by simp only [fib, ite_eq_left hc]
   have hagree : ∀ a ∈ B, ∀ c ∈ C a, fib c = F a c := by
     intro a ha c hc
     have hcB : c ∈ B := hCB a ha hc
@@ -859,7 +859,7 @@ theorem glue : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCompactSpace V] [
     have u := _root_.GlobalTheory.CompanionTheory.SW.FibreUniq.fibreFamily_eq V X Y μ ν f g ι hι hg hf (C c) (C c ∩ C a) (hCo c hcB) hI
       Set.inter_subset_left (F c) (restr (C c ∩ C a) (F a)) (hF c hcB) r1 c ⟨hbC c hcB, hc⟩
     have hm : c ∈ C c ∩ C a := ⟨hbC c hcB, hc⟩
-    simp only [restr, if_pos hm] at u
+    simp only [restr, ite_eq_left hm] at u
     rw [hfibB c hcB, u]
   refine ⟨fib, ?_, ?_, ?_⟩
   · intro b
@@ -974,17 +974,17 @@ theorem exists_gramFib : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hKu := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hCM R hR
   obtain ⟨hXlc, hXsc, hXt2, hXb, hlift⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM R n
   obtain ⟨g, hg, hgf⟩ := hlift M J hJ
-  haveI := hKb n M
+  have := hKb n M
   have hinj : Function.Injective (Subtype.val : HermR R σ n → Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
     Subtype.val_injective
   have hBo : IsOpen {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} := by
     have hc : Continuous fun S : HermR R σ n => (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det :=
-      Continuous.matrix_det continuous_subtype_val
+      Continuous.matrix_det continuous_subtypeVal
     have : {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} =
         (fun S : HermR R σ n => (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det) ⁻¹'
           Set.range (Units.val : (R ⊗[F] E)ˣ → R ⊗[F] E) := by
       ext S
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_range]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_range]
       rfl
     rw [this]
     exact hKu.isOpen_range.preimage hc
@@ -1001,7 +1001,7 @@ theorem exists_gramFib : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     have hU : {X | IsUnit (gramR R σ J X).det} =
         g ⁻¹' {S | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} := by
       ext X
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, hgf X]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, hgf X]
     unfold IsGramFib
     rw [hU]
     exact hfib

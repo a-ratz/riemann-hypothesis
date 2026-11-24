@@ -90,7 +90,7 @@ theorem UpperTheory.multilinear_vanish_lattice :
       have hv : T (Function.update v a (v a)) = 0 := hker (hs a (Finset.mem_insert_self a s))
       rwa [Function.update_eq_self] at hv
   intro v hv
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   exact key Finset.univ v (fun i _ => hv i) (fun i hi => absurd (Finset.mem_univ i) hi)
 end -- clump:auto
 end -- clump:auto

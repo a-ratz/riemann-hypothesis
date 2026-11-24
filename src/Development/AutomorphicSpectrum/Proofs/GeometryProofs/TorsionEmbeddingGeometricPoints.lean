@@ -162,9 +162,9 @@ theorem lofp_of_noeth {X Z : Scheme.{0}} [IsLocallyNoetherian Z] (f : X ⟶ Z) [
     LocallyOfFinitePresentation f := by
   constructor
   intro U hU V hV e
-  haveI : IsNoetherianRing Γ(Z, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : IsNoetherianRing Γ(Z, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
   have h := f.finiteType_appLE hU hV e
-  letI := (f.appLE U V e).hom.toAlgebra
+  let := (f.appLE U V e).hom.toAlgebra
   exact Algebra.FinitePresentation.of_finiteType.mp h
 
 theorem kernel_props [IsLocallyNoetherian Z] (hp : IsPullback j (toUnit A) ((𝟙 B) ^ N) η[B])
@@ -429,7 +429,7 @@ theorem exists_qfGroup_torsion : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoe
   obtain ⟨_, _, _⟩ := exists_kernel_grp hp
   obtain ⟨h1, h2, h3, h4, h5⟩ := kernel_props hp
   have := kernel_base_etale (genPt R).hom hp (isUnit_natCast_generic hN)
-  haveI : IsReduced (genPt R).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of (FractionRing R))))
+  have : IsReduced (genPt R).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of (FractionRing R))))
   have hred := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.snd
     (pullback ((𝟙 ((Over.pullback x).obj G)) ^ N) η[(Over.pullback x).obj G]).hom (genPt R).hom)
   exact exists_of_kernel hp h1 h2 h3 h4 h5 hred τ hinj hτ hsurj

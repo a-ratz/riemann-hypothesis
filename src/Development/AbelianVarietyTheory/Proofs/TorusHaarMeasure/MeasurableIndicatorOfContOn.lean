@@ -78,13 +78,13 @@ theorem isClosed_satBall {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (δ : ℝ)
   set T : Set (Metric.closedBall (0 : V (nd X)) δ × Frame X.Ψ r) := {p | ∀ τ, ∀ i j : Fin r, j < i →
     ((mat (cpt X x0 (p.1 : V (nd X))) τ).adjugate * mat p.2 τ) i j = 0} with hTdef
   have hT : IsClosed T := by
-    simp only [hTdef, Set.setOf_forall]
+    simp only [hTdef, Set.ofPred_forall]
     refine isClosed_iInter fun τ => isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_iInter fun _ => isClosed_eq ?_ continuous_const
     have h1 : Continuous fun p : Metric.closedBall (0 : V (nd X)) δ × Frame X.Ψ r =>
         mat (cpt X x0 (p.1 : V (nd X))) τ :=
       (continuous_mat_frame X τ).comp ((ReciprocityTheory.ChartRestriction.G.AR.Up.OntoB.cd_cpt X x0).continuous.comp
-        (continuous_subtype_val.comp continuous_fst))
+        (continuous_subtypeVal.comp continuous_fst))
     have h2 : Continuous fun p : Metric.closedBall (0 : V (nd X)) δ × Frame X.Ψ r => mat p.2 τ :=
       (continuous_mat_frame X τ).comp continuous_snd
     exact (h1.matrix_adjugate.matrix_mul h2).matrix_elem i j
@@ -119,7 +119,7 @@ theorem rmul_mem_satBall_iff {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (δ : 
   obtain ⟨z, hz, h⟩ := h
   refine ⟨z, hz, fun τ => ?_⟩
   have hu : IsUnit (mat b τ).det := isUnit_iff_ne_zero.mpr (hb τ).1
-  letI := Matrix.invertibleOfIsUnitDet (mat b τ) hu
+  let := Matrix.invertibleOfIsUnitDet (mat b τ) hu
   have hinv : ((mat b τ)⁻¹).BlockTriangular id :=
     Matrix.blockTriangular_inv_of_blockTriangular (mat_blockTriangular_of_mem_bor hb τ)
   have heq : (mat (cpt X x0 z) τ).adjugate * mat x τ =
@@ -178,14 +178,14 @@ theorem measurable_indicator_of_contOn {α : Type} [TopologicalSpace α] [Measur
   · have h : U.domRestrict (U.indicator f) = U.domRestrict f := by
       funext x
       show U.indicator f (x : α) = f x
-      rw [Set.indicator_apply, if_pos x.2]
+      rw [Set.indicator_apply, ite_eq_left x.2]
     rw [h]
-    exact hf.restrict.measurable
+    exact hf.domRestrict.measurable
   · have h : Uᶜ.domRestrict (U.indicator f) = fun _ => 0 := by
       funext x
       have hx : (x : α) ∉ U := x.2
       show U.indicator f (x : α) = 0
-      rw [Set.indicator_apply, if_neg hx]
+      rw [Set.indicator_apply, ite_eq_right hx]
     rw [h]
     exact measurable_const
 
@@ -193,7 +193,7 @@ private theorem isOpen_dom_torus_haar_measure {r : ℕ} (X : Data E r) : IsOpen 
   have h : X.dom = ⋂ τ : X.Ψ, ({x : Frame X.Ψ r | (mat x τ).det ≠ 0} ∩
       ⋂ i : Fin (r + 1), {x : Frame X.Ψ r | 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}) := by
     ext x
-    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
     rfl
   rw [h]
   refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
@@ -226,7 +226,7 @@ private theorem submatrix_congr_mul_of_blockTriangular {r k : ℕ} (h : k ≤ r)
       by_contra hc
       push_neg at hc
       exact hm ⟨⟨m, hc⟩, Fin.ext rfl⟩
-    exact hN (show Fin.castLE h c < m from Fin.lt_iff_val_lt_val.mpr (lt_of_lt_of_le c.isLt hmk))
+    exact hN (show Fin.castLE h c < m from Fin.lt_def.mpr (lt_of_lt_of_le c.isLt hmk))
   ext a c
   simp only [Matrix.submatrix_apply, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply]
   symm
@@ -239,7 +239,7 @@ private theorem submatrix_congr_mul_of_blockTriangular {r k : ℕ} (h : k ≤ r)
 private theorem diag_ne_zero_of_mem_bor {r : ℕ} {Ψ : Finset (E →+* ℂ)} {b : Frame Ψ r} (hb : b ∈ Bor Ψ r) (τ : Ψ)
     (a : Fin r) : b τ a a ≠ 0 := by
   have h := (hb τ).1
-  rw [Matrix.det_of_upperTriangular (mat_blockTriangular_of_mem_bor hb τ)] at h
+  rw [Matrix.det_of_isUpperTriangular (mat_blockTriangular_of_mem_bor hb τ)] at h
   exact Finset.prod_ne_zero_iff.mp h a (Finset.mem_univ a)
 
 private theorem exists_dmin_rmul_eq_normSq_mul' {r : ℕ} (X : Data E r) {x b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r)
@@ -249,7 +249,7 @@ private theorem exists_dmin_rmul_eq_normSq_mul' {r : ℕ} (X : Data E r) {x b : 
   have hNt : ((mat b τ).submatrix (Fin.castLE hk) (Fin.castLE hk)).BlockTriangular id :=
     fun p q hpq => mat_blockTriangular_of_mem_bor hb τ (show Fin.castLE hk q < Fin.castLE hk p from hpq)
   refine ⟨((mat b τ).submatrix (Fin.castLE hk) (Fin.castLE hk)).det, ?_, ?_⟩
-  · rw [Matrix.det_of_upperTriangular hNt]
+  · rw [Matrix.det_of_isUpperTriangular hNt]
     exact Finset.prod_ne_zero_iff.mpr fun p _ => diag_ne_zero_of_mem_bor hb τ (Fin.castLE hk p)
   · simp only [dmin, lminor]
     rw [mat_rmul_torus_haar_measure, gram_mul_eq_transpose_mul_gram, submatrix_congr_mul_of_blockTriangular hk _ _ (mat_blockTriangular_of_mem_bor hb τ), Matrix.det_mul, Matrix.det_mul,
@@ -331,7 +331,7 @@ theorem vanish_off : (MeasInvStatement (E := E)) → (VanishAtSStatement (E := E
         rwa [lact_one_frame'] at h
       simp only [Set.indicator_of_mem hxU, Set.indicator_of_mem hxbU, p1, p3, hψi x hx b hb]
     · have hxbU : rmul x b ∉ U := fun h => hxU ((hUinv x hx b hb).1 h)
-      simp only [Set.indicator_apply, if_neg hxU, if_neg hxbU]
+      simp only [Set.indicator_apply, ite_eq_right hxU, ite_eq_right hxbU]
   have hL : ∫⁻ z, φ (cpt X x0 z) ∂muF X x0 < ⊤ := by
     refine lt_of_le_of_lt (lintegral_mono fun z => ?_) hint
     rw [hφ]
@@ -360,7 +360,7 @@ theorem vanish_off : (MeasInvStatement (E := E)) → (VanishAtSStatement (E := E
       | exact le_div_self (by positivity) hka0 hka1
       | (rw [le_div_iff₀ hka0]; nlinarith [mul_nonneg (sq_nonneg ‖P (cpt X x0 z)‖)
           (mul_nonneg (Real.exp_pos (-phla X la (cpt X x0 z))).le (Real.exp_pos (-ψ (cpt X x0 z))).le)])
-    · simp only [Set.indicator_apply, if_neg hz]
+    · simp only [Set.indicator_apply, ite_eq_right hz]
       simp
   have hR : ∫⁻ z, φ (cpt X x1 z) ∂muF X x1 < ⊤ := by
     rw [← hMI r X x0 x1 ho0 ho1 φ hφm hφinv]

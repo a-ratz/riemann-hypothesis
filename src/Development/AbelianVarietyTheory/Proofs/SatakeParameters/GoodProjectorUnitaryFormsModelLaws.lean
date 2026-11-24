@@ -102,8 +102,8 @@ theorem eH_laws : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {
   have happ : ∀ x v, (R.HW i (sg0 D A)).e (eH R i x) v = R.eWf i (sg0 D A) ((R.HW i (sg0 D A)).e x v) := fun x v => by
     unfold eH RealDat.eWf gaL
 
-    simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, MultilinearMap.sum_apply,
-    MultilinearMap.smul_apply]
+    simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, sum_apply,
+    smul_apply]
     refine Finset.sum_congr rfl fun g _ => congrArg _ ?_
     rw [hC.models.gW i (sg0 D A) g x]; rfl
   have hinj := (hC.models.HW i (sg0 D A)).1

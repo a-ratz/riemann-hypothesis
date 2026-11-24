@@ -161,7 +161,7 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
 theorem _root_.GlobalTheory.TrivCrys.isCrys_of_trivial {V : Type} [AddCommGroup V] [Module Qp V] [Module LL V]
     [IsScalarTower Qp LL V] [FiniteDimensional Qp V] (ρ : Representation LL G V)
     (hρ : ∀ g x, ρ g x = x) : _root_.Formalism.WeaklyAdmissibleFiltrations.IsCrys PD ρ := by
-  haveI : Nontrivial B := by
+  have : Nontrivial B := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     apply PD.not_mem_filtration_two
@@ -195,8 +195,8 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
     (PD : _root_.Formalism.WeaklyAdmissibleFiltrations.PeriodData G Qp K₀ K B BdR) {LL : Type} [Field LL] [Algebra Qp LL] in
 theorem _root_.GlobalTheory.TrivCrys.isCrys_lat_of_trivial : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K] [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K] {B BdR : Type} [CommRing B] [CommRing BdR] [Algebra Qp B] [Algebra K₀ B] [IsScalarTower Qp K₀ B] [Algebra Qp BdR] [Algebra K₀ BdR] [Algebra K BdR] [IsScalarTower Qp K BdR] [IsScalarTower K₀ K BdR] [IsScalarTower Qp K₀ BdR] {PD : _root_.Formalism.WeaklyAdmissibleFiltrations.PeriodData G Qp K₀ K B BdR} {LL O : Type} [Field LL] [Algebra Qp LL] [CommRing O] [Algebra O LL] [TopologicalSpace LL] [FiniteDimensional Qp LL] (U : _root_.Formalism.BasicNotions.LocLat G Qp LL O), (∀ g x, U.ρ g x = x) → _root_.Formalism.WeaklyAdmissibleFiltrations.IsCrys PD U.ρ := by
   intro G _ _ Qp K₀ K _ _ _ _ _ _ _ B BdR _ _ _ _ _ _ _ _ _ _ _ PD LL O _ _ _ _ _ _ U hU
-  haveI := U.fdim
-  haveI : FiniteDimensional Qp U.V := Module.Finite.trans LL U.V
+  have := U.fdim
+  have : FiniteDimensional Qp U.V := Module.Finite.trans LL U.V
   exact _root_.GlobalTheory.TrivCrys.isCrys_of_trivial PD U.ρ hU
 
 end GlobalTheory.TrivCrys

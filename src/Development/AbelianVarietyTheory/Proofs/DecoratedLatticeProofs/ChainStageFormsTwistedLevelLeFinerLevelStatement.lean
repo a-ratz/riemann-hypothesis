@@ -74,7 +74,7 @@ theorem prod_diagonal_block_dets_eq_lower_block_det {κ : Type} [CommRing κ] {r
     intro b c h; rw [diag_block_det_val c h]; rfl
   have emp : ∀ (b : Fin n → ℕ) (c : ℕ), c ∉ Finset.univ.image b → (M.toSquareBlock b c).det = 1 := by
     intro b c hc
-    haveI : IsEmpty {a : Fin n // b a = c} := ⟨fun a => hc (Finset.mem_image.2 ⟨a.1, Finset.mem_univ _, a.2⟩)⟩
+    have : IsEmpty {a : Fin n // b a = c} := ⟨fun a => hc (Finset.mem_image.2 ⟨a.1, Finset.mem_univ _, a.2⟩)⟩
     exact Matrix.det_isEmpty
   have hdet : ∀ (b : Fin n → ℕ) (N : ℕ), (∀ a, b a < N) → M.BlockTriangular b →
       M.det = ∏ c ∈ Finset.range N, (M.toSquareBlock b c).det := by

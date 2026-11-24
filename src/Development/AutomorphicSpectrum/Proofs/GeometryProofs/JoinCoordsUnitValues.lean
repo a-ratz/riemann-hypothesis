@@ -58,7 +58,7 @@ section General
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
 theorem isOpen_blockNonzero : IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
-  simp only [Set.setOf_forall, Set.setOf_exists]
+  simp only [Set.ofPred_forall, Set.ofPred_exists]
   exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i =>
     isOpen_ne_fun (continuous_apply _) continuous_const
 
@@ -128,7 +128,7 @@ theorem archBetween_of_off_form : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] 
       exact hS.1
     exact hb w hwp hS.2 (fun j => aeval w (g j) / aeval w (h j)) fun j =>
       ⟨dg j, dh j, g j, h j, hg j, hh j, hd j, e j, hw j, (div_mul_cancel₀ _ (hw j)).symm⟩
-  haveI hnb : (𝓝[{w | w ∈ mcPts (mCoordIdeal (Ht.joinOf M R i)) ∧ Cmp.evC w f ≠ 0}] z).NeBot :=
+  have hnb : (𝓝[{w | w ∈ mcPts (mCoordIdeal (Ht.joinOf M R i)) ∧ Cmp.evC w f ≠ 0}] z).NeBot :=
     mem_closure_iff_nhdsWithin_neBot.1 hzc
   have hmem : Fn z ∈ Set.Icc lo hi :=
     isClosed_Icc.mem_of_tendsto (hcont.tendsto.mono_left nhdsWithin_le_nhds) hev

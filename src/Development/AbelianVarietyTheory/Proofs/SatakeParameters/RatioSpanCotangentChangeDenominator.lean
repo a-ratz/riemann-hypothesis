@@ -95,7 +95,7 @@ theorem span_ratio_of_span_ratio (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (N : ℕ) (
           RingHom.ker (CxPts.evHom hza) ^ 2) :
     RingHom.ker (CxPts.evHom hzb) ≤ Ideal.span (Set.range fun j => GlobalTheory.EtProj.fRatio ι (f j) b (hf j) hb) ⊔
           RingHom.ker (CxPts.evHom hzb) ^ 2 := by
-  haveI := hι
+  have := hι
   set 𝒜 := ProjSpace.grading ℂ N
   set D := Proj.basicOpen 𝒜 a ⊓ Proj.basicOpen 𝒜 b with hDdef
   set W : X.Opens := ι ⁻¹ᵁ D with hWdef
@@ -132,10 +132,10 @@ theorem span_ratio_of_span_ratio (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (N : ℕ) (
     refine Eq.trans ?_ (Scheme.preimage_basicOpen ι _)
     rw [ProjFrac.basicOpen_frac]
     exact congrArg (fun U => ι ⁻¹ᵁ U) (inf_comm _ _)
-  letI algA : Algebra Γ(X, fOpen ι a) Γ(X, W) := (resG X hWa).toAlgebra
-  letI algB : Algebra Γ(X, fOpen ι b) Γ(X, W) := (resG X hWb).toAlgebra
-  haveI locA : IsLocalization.Away sa Γ(X, W) := hUa.isLocalization_of_eq_basicOpen sa (homOfLE hWa) eA
-  haveI locB : IsLocalization.Away sb Γ(X, W) := hUb.isLocalization_of_eq_basicOpen sb (homOfLE hWb) eB
+  let algA : Algebra Γ(X, fOpen ι a) Γ(X, W) := (resG X hWa).toAlgebra
+  let algB : Algebra Γ(X, fOpen ι b) Γ(X, W) := (resG X hWb).toAlgebra
+  have locA : IsLocalization.Away sa Γ(X, W) := hUa.isLocalization_of_eq_basicOpen sa (homOfLE hWa) eA
+  have locB : IsLocalization.Away sb Γ(X, W) := hUb.isLocalization_of_eq_basicOpen sb (homOfLE hWb) eB
   have evA : ∀ g, CxPts.evHom hzW (algebraMap Γ(X, fOpen ι a) Γ(X, W) g) = CxPts.evHom hza g := fun g => by
     change CxPts.evHom hzW (resG X hWa g) = _
     rw [← CxPts.ev_eq, ← CxPts.ev_eq]

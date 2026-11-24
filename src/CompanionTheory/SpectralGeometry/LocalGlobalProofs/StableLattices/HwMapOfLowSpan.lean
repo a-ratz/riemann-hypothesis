@@ -92,7 +92,7 @@ theorem diag_kunit {n : ℕ} {ε : Fin n → Bool} {ET : Fin n → Fin n → Mod
 
 theorem hwMap_of_lowSpan : LowSpan → HWMap := by
   intro hLS n ε T _ _ _ V _ _ ET E μ t v S hRT hUT hR hU ht hHT hH hS hSt hvS
-  haveI := hS
+  have := hS
   let Lm : (T × S) →ₗ[ℂ] WithLp 2 (T × V) :=
     (WithLp.linearEquiv 2 ℂ (T × V)).symm.toLinearMap ∘ₗ LinearMap.prodMap LinearMap.id S.subtype
   let S' : Submodule ℂ (WithLp 2 (T × V)) := LinearMap.range Lm

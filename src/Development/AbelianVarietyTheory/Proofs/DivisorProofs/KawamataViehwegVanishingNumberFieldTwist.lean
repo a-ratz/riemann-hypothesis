@@ -77,8 +77,8 @@ theorem subsingleton_coh_of_pull {k E : Type} [Field k] [Field E] [Algebra k E] 
     (H : IsPullback π f' f (Spec.map (CommRingCat.ofHom (algebraMap k E)))) {M : LB X} (hM : M.IsLB) (n : ℕ)
     (h : Subsingleton (coh (twist (structureModule X') (M.pull π)) n)) :
     Subsingleton (coh (twist (structureModule X) M) n) := by
-  letI := algebraΓOfHom f
-  letI := algebraΓOfHom f'
+  let := algebraΓOfHom f
+  let := algebraΓOfHom f'
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace f
   have := isAffineHom_diagonal_of_isSeparated f
   obtain ⟨m, D, hD, hc⟩ := exists_fin_affine_cover (X := X) (V := ⊤) isCompact_univ
@@ -99,8 +99,8 @@ theorem subsingleton_coh_of_pull {k E : Type} [Field k] [Field E] [Algebra k E] 
       (hu : ⨆ i, U i = ⊤) (hU : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ i ∈ s, U i)) (i : ℕ) :
       letI := algebraΓOfHom g
       Nonempty ((cechLB g N U).homology i ≃ₗ[R] coh (twist (structureModule Z) N) i) := by
-    letI := algebraΓOfHom g
-    haveI := LB.isQuasicoherent_toMod hN
+    let := algebraΓOfHom g
+    have := LB.isQuasicoherent_toMod hN
     exact ⟨((HomologicalComplex.homologyFunctor _ _ i).mapIso (cechIso g N U)).toLinearEquiv ≪≫ₗ
       cechHEquivCoh R hu hU (LB.toMod N) i ≪≫ₗ (cohOn.mapIso R ⊤ i (Twist.unitTwistIso N)).symm⟩
   have homologyEquiv {R : Type} (O : Type) [CommRing R] [CommRing O] [Algebra R O] [Module.Flat R O]
@@ -161,22 +161,22 @@ theorem vanishFrom_adj : Quoted → ∀ (K : Type) [Field K] [NumberField K] (G 
   have hV : S.IsVariety := G.geom.alg.variety
   have hV' := hV.baseChange Ω
   have hH := S.isPullback_baseChange Ω
-  haveI : IsIntegral (S.baseChange Ω).Y := hV'.isIntegral
-  haveI : SmoothOfRelativeDimension G.D (S.baseChange Ω).str := hV'.smooth
+  have : IsIntegral (S.baseChange Ω).Y := hV'.isIntegral
+  have : SmoothOfRelativeDimension G.D (S.baseChange Ω).str := hV'.smooth
   obtain ⟨hprop, A₀, hA₀⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hV.proj
-  haveI := hprop
+  have := hprop
   have hstr : strHom K G.Y = G.str := strHom_eq fun _ => rfl
   have hproj : IsProjOver (strHom K (X := G.Y)) := hstr ▸ hV.proj
-  haveI : IsProper (strHom K (X := G.Y)) := hstr ▸ hprop
+  have : IsProper (strHom K (X := G.Y)) := hstr ▸ hprop
 
   have hLnef : IsNef K G.L := IsGenerated.isNef_of_isProjOver (L := G.L) ⟨G.N, G.b, G.geom.alg.bpf⟩ hV.proj
   have hLj : IsNef K (lbPow G.L j) := hLnef.pow hA₀ j
   have hNnef : IsNef K (tens G.LA (lbPow G.L j)) := hnef.tens_of_isProjOver hLj hV.proj
   have hNbig : IsBig K (tens G.LA (lbPow G.L j)) := hbig.tens_nef Q.nef hproj hnef hLj
 
-  haveI : IsIntegralHom (spMap (algebraMap K Ω)) :=
+  have : IsIntegralHom (spMap (algebraMap K Ω)) :=
     IsIntegralHom.SpecMap_iff.2 fun x => Algebra.IsIntegral.isIntegral x
-  haveI : IsIntegralHom (S.bcFst Ω) := MorphismProperty.of_isPullback (P := @IsIntegralHom) hH.flip ‹_›
+  have : IsIntegralHom (S.bcFst Ω) := MorphismProperty.of_isPullback (P := @IsIntegralHom) hH.flip ‹_›
   let π := S.bcFst Ω
 
   have hN'nef : IsNef Ω ((tens G.LA (lbPow G.L j)).pull π) :=

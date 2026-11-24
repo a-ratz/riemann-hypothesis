@@ -103,7 +103,7 @@ theorem laurent_coeff_neg_eq_zero_of_bounded : ∀ (F : ℂ⸨X⸩) (T C : ℝ),
         have : r m₀ = 0 := by simp only [hr, mul_assoc, this, mul_one]; simp
         rw [this, norm_zero]; exact hRnn
       rcases lt_or_gt_of_ne hmm with hlt | hgt
-      · have : r m = 0 := by simp only [hr, if_neg hmm, HahnSeries.coeff_eq_zero_of_lt_order hlt, zero_mul, sub_zero]
+      · have : r m = 0 := by simp only [hr, ite_eq_right hmm, HahnSeries.coeff_eq_zero_of_lt_order hlt, zero_mul, sub_zero]
         rw [this, norm_zero]; exact hRnn
       · obtain ⟨n, hn⟩ := Int.eq_ofNat_of_zero_le (show (0:ℤ) ≤ m - m₀ - 1 by omega)
         have hm : m = (n + 1 : ℕ) - (k : ℤ) := by push_cast; omega
@@ -111,7 +111,7 @@ theorem laurent_coeff_neg_eq_zero_of_bounded : ∀ (F : ℂ⸨X⸩) (T C : ℝ),
           rw [← zpow_natCast t k, ← zpow_add₀ ht, ← zpow_natCast]; congr 1; omega
         have hρpos : 0 < ρ := by rw [hρe]; exact Real.exp_pos _
         have hrm : ‖r m‖ = ‖F.coeff m‖ * (ρ ^ m * ρ ^ k) := by
-          simp only [hr, if_neg hmm, sub_zero, norm_mul, norm_pow, norm_zpow, ← hρ, mul_assoc]
+          simp only [hr, ite_eq_right hmm, sub_zero, norm_mul, norm_pow, norm_zpow, ← hρ, mul_assoc]
         have hq₁m : ‖F.coeff m * q₁ ^ m‖ * ρ₁ ^ k = ‖F.coeff m‖ * (ρ₁ ^ m * ρ₁ ^ k) := by
           rw [norm_mul, norm_zpow, ← hρ₁, mul_assoc]
         rw [hrm, hq₁m, e1 ρ hρpos.ne', e1 ρ₁ hρ₁pos.ne']

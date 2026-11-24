@@ -91,7 +91,7 @@ theorem effCartier_of_mem_comps {Y : Scheme.{0}} [IsNoetherian Y] {Z : Y.IdealSh
       rw [Scheme.range_fromSpecStalk] at h
       exact Specializes.mem_open h O.isOpen hxO
     have h := Set.ext_iff.1 hO' (Y.fromSpecStalk x q)
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, hqO, and_true, true_and,
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, hqO, and_true, true_and,
       fromSpecStalk_mem_zeroLocus_iff U x hx] at h
     exact h
   have hCC : C.compl.compl = C := SetLike.coe_injective (compl_compl _)
@@ -99,7 +99,7 @@ theorem effCartier_of_mem_comps {Y : Scheme.{0}} [IsNoetherian Y] {Z : Y.IdealSh
   · obtain ⟨i, hi, hbi⟩ := hb
     have hp : Prime (Y.presheaf.germ U.1 x hx (f i)) :=
       prime_of_regular_params (fun i => Y.presheaf.germ U.1 x hx (f i)) hrsp.1 hrsp.2 i
-    haveI : IsDomain (Y.presheaf.stalk x) := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
+    have : IsDomain (Y.presheaf.stalk x) := ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
     refine ⟨_, mem_nonZeroDivisors_of_ne_zero hp.ne_zero, ?_⟩
     have h := AffineComplement.stalkId_vanishingIdeal_compl C.compl x
       (Y.presheaf.germ U.1 x hx (f i)) fun q => by
@@ -125,11 +125,11 @@ theorem exists_compList_effCartier (k : Type) [Field k] (Y : Scheme.{0}) (p : Y 
     (hB : FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal B)) :
     ∃ (m : ℕ) (C : Fin m → Closeds Y), FinalTheorems.CompList (B : Set Y) C ∧
       ∀ i, FinalTheorems.EffCartier (Scheme.IdealSheafData.vanishingIdeal (C i)) := by
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
-  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace p
-  haveI : IsNoetherian Y := {}
-  haveI : Finite (comps (B : Set Y)) := (comps_finite _).to_subtype
+  have : Smooth p := SmoothOfRelativeDimension.smooth d p
+  have : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian p
+  have : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace p
+  have : IsNoetherian Y := {}
+  have : Finite (comps (B : Set Y)) := (comps_finite _).to_subtype
   obtain ⟨m, ⟨e⟩⟩ := Finite.exists_equiv_fin (comps (B : Set Y))
   refine ⟨m, fun i => ⟨(e.symm i).1, isClosed_of_mem_comps B.isClosed (e.symm i).2⟩,
     ⟨fun i => (e.symm i).2.1.1, ?_, fun i j hij => ?_⟩, fun i => ?_⟩

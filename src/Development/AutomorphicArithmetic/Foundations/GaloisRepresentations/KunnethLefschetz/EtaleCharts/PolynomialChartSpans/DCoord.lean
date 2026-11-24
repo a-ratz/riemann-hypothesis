@@ -78,18 +78,18 @@ private theorem etale_diff (u : Fin D → B)
     (MvPolynomial.eval₂Hom (Algebra.TensorProduct.includeLeftRingHom : B →+* B ⊗[R] B)
       (fun k => (1 : B) ⊗ₜ[R] u k - u k ⊗ₜ[R] (1 : B))).Etale := by
   classical
-  letI algA : Algebra (MvPolynomial (Fin D) R) B := (MvPolynomial.aeval u).toRingHom.toAlgebra
-  letI algP : Algebra (MvPolynomial (Fin D) R) (MvPolynomial (Fin D) B) :=
+  let algA : Algebra (MvPolynomial (Fin D) R) B := (MvPolynomial.aeval u).toRingHom.toAlgebra
+  let algP : Algebra (MvPolynomial (Fin D) R) (MvPolynomial (Fin D) B) :=
     MvPolynomial.algebraMvPolynomial
-  letI smP : SMul (MvPolynomial (Fin D) R) (MvPolynomial (Fin D) B) := algP.toSMul
-  letI modP : Module (MvPolynomial (Fin D) R) (MvPolynomial (Fin D) B) := algP.toModule
+  let smP : SMul (MvPolynomial (Fin D) R) (MvPolynomial (Fin D) B) := algP.toSMul
+  let modP : Module (MvPolynomial (Fin D) R) (MvPolynomial (Fin D) B) := algP.toModule
   have t1 : IsScalarTower R (MvPolynomial (Fin D) R) B :=
     IsScalarTower.of_algebraMap_eq fun r => by
       simp [RingHom.algebraMap_toAlgebra, MvPolynomial.algebraMap_eq]
   let hm : MvPolynomial (Fin D) B →+* B ⊗[R] B :=
     MvPolynomial.eval₂Hom (Algebra.TensorProduct.includeRight : B →ₐ[R] B ⊗[R] B).toRingHom
       (fun k => u k ⊗ₜ[R] (1 : B))
-  letI algPT : Algebra (MvPolynomial (Fin D) B) (B ⊗[R] B) := hm.toAlgebra
+  let algPT : Algebra (MvPolynomial (Fin D) B) (B ⊗[R] B) := hm.toAlgebra
   have t2 : IsScalarTower (MvPolynomial (Fin D) R) B (B ⊗[R] B) := inferInstance
   have hcomp : (algebraMap (MvPolynomial (Fin D) R) (B ⊗[R] B)) =
       hm.comp (MvPolynomial.map (algebraMap R B)) := by
@@ -152,7 +152,7 @@ private theorem etale_prod (Z : Sch R) {U : Z.left.Opens} (hU : IsAffineOpen U) 
     Spec.map (CommRingCat.ofHom (algebraMap R (Sec Z U)))
   let a : Spec (CommRingCat.of (Sec Z U)) ⟶ Z.left := hU.fromSpec
   have ha : a ≫ Z.hom = sA := fromSpec_hom Z hU
-  haveI : IsOpenImmersion a := IsAffineOpen.isOpenImmersion_fromSpec hU
+  have : IsOpenImmersion a := IsAffineOpen.isOpenImmersion_fromSpec hU
   let m : pullback sA sA ⟶ pullback Z.hom Z.hom :=
     pullback.map sA sA Z.hom Z.hom a a (𝟙 _) (by rw [Category.comp_id, ha])
       (by rw [Category.comp_id, ha])
@@ -173,13 +173,13 @@ private theorem etale_prod (Z : Sch R) {U : Z.left.Opens} (hU : IsAffineOpen U) 
     apply pullback.hom_ext
     · simp only [g, m, Category.assoc, pullback.lift_fst, pullback.lift_fst_assoc, e1]
     · simp only [g, m, Category.assoc, pullback.lift_snd, pullback.lift_snd_assoc, e2]
-  haveI : IsOpenImmersion fN := IsAffineOpen.isOpenImmersion_fromSpec hN
-  haveI : Etale (g ≫ m) := by rw [hgm]; infer_instance
-  haveI : Etale g := Etale.of_comp g m
+  have : IsOpenImmersion fN := IsAffineOpen.isOpenImmersion_fromSpec hN
+  have : Etale (g ≫ m) := by rw [hgm]; infer_instance
+  have : Etale g := Etale.of_comp g m
   let φ : Sec Z U ⊗[R] Sec Z U →+* Sec (XX Z) N :=
     (Algebra.TensorProduct.productMap (secMap (p1 Z) h1) (secMap (p2 Z) h2)).toRingHom
   let g' : Spec (CommRingCat.of (Sec (XX Z) N)) ⟶ pullback sA sA := g
-  haveI : Etale g' := inferInstanceAs (Etale g)
+  have : Etale g' := inferInstanceAs (Etale g)
   have key : Spec.map (CommRingCat.ofHom φ) ≫ (pullbackSpecIso R (Sec Z U) (Sec Z U)).inv = g' := by
     apply pullback.hom_ext
     · rw [Category.assoc, pullbackSpecIso_inv_fst, ← Spec.map_comp]

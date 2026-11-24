@@ -68,9 +68,9 @@ theorem exists_fin_span_of_pow_mul :
         ∀ (l : Fin d → ℤ_[p]) (y : Ω), IsInt (p := p) y →
           (p : Ω) ^ v * y = ∑ t, zp Ω (l t) * E t → ∃ μ : Fin m → ℤ_[p], y = ∑ j, zp Ω (μ j) * f j := by
   intro p _ Ω _ _ hc d E hE v
-  letI := zpAlg (p := p) (Ω := Ω)
-  haveI : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : CharZero Ω := Basic.charZero_of_isClo hc
+  let := zpAlg (p := p) (Ω := Ω)
+  have : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : CharZero Ω := Basic.charZero_of_isClo hc
   have halg (x : Ω) : IsAlgZp (p := p) x ↔ IsAlgebraic ℤ_[p] x := by
     unfold IsAlgZp IsAlgebraic
     simp only [Polynomial.aeval_map_algebraMap]

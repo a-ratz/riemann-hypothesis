@@ -104,7 +104,7 @@ theorem e_locG_eq_rcAt_ofDet_of_isComp : GlobalTheory.Published.AutomorphicForms
     ∀ (π : D.naut.CG 1) (w : PlE D.host) (ξ : (w.adicCompletion D.host.E)ˣ →* ℂˣ) (h : IsComp (P.chr.e1 π).1 w ξ),
     P.T.e w (D.naut.locG π w) = _root_.GlobalTheory.NPin.weilDeligneOfLocalIrrep hL D w 1 (Irr.ofDet 1 ξ h.1) := by
   intro _ hL D P π w ξ h
-  haveI := host_isCMField D.host
+  have := host_isCMField D.host
   set χ' := (CGu.equivChar D.host.E (P.cg.e 1 π)).1 with hχ'
   set χ := (P.chr.e1 π).1 with hχ
   have hloc : ∀ v, P.T.e v (D.naut.locG π v) = _root_.GlobalTheory.CuspRep.ParLawsT.locParT hL (CG.ofChar χ') (D.nd.plOm.2 v) := fun v => by

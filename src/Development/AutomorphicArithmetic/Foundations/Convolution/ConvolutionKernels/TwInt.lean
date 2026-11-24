@@ -60,7 +60,7 @@ open scoped InnerProductSpace
 theorem UpperTheory.ConvolutionTheory.K.kern2 :
     Kern2 := by
   intro K _ _ n μ _ θ a g ha ha' hg hg'
-  haveI := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
+  have := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
   obtain ⟨C1, N1, hC1, b1⟩ := (kvBd K n μ a).1 ha
   obtain ⟨C2, N2, hC2, b2⟩ := (kvBd K n μ (ccStar g)).1 hg
   obtain ⟨C4, hC4, b4⟩ := (kvBd K n μ (ccStar g)).2 hg' 0

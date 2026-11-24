@@ -94,12 +94,12 @@ theorem U_mem (c : Fin (m + 1)) (x : Fin (m + 1) → k) : U c x ∈ unipB k (Fin
   refine (mem_unipB k).2 ⟨fun i j hji => ?_, fun i => ?_⟩
   · show colM c x i j = 0
     simp only [colM, Matrix.add_apply, Matrix.of_apply, Matrix.one_apply_ne (ne_of_gt hji)]
-    rw [if_neg]
+    rw [ite_eq_right]
     · simp
     · rintro ⟨rfl, h⟩; exact absurd (h.trans hji) (lt_irrefl _)
   · show colM c x i i = 1
     simp only [colM, Matrix.add_apply, Matrix.of_apply, Matrix.one_apply_eq]
-    rw [if_neg]
+    rw [ite_eq_right]
     · simp
     · rintro ⟨rfl, h⟩; exact lt_irrefl _ h
 
@@ -118,7 +118,7 @@ theorem superDiag_U (j : ℕ) (hj : j + 1 < m + 1) (x : Fin (m + 1) → k) :
     have hq' : q.val = b.val + 1 := (Finset.mem_filter.1 hq).2
     show colM _ x _ _ = 0
     simp only [colM, Matrix.add_apply, Matrix.of_apply]
-    rw [Matrix.one_apply_ne (fun h => by rw [h] at hq'; omega), if_neg, add_zero]
+    rw [Matrix.one_apply_ne (fun h => by rw [h] at hq'; omega), ite_eq_right, add_zero]
     rintro ⟨rfl, -⟩
     exact hb (Fin.ext (by simp at hq' ⊢; omega))
   · intro h; exact absurd (Finset.mem_univ _) h

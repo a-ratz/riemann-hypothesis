@@ -85,7 +85,7 @@ private theorem hol_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     (hf : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ Tw.an f = (φ : Mero)) : IsIntegral (Algebra.adjoin Ω {Tw.jK}) f := by
   classical
   obtain ⟨M, hM, hfix⟩ := Tw.level f
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨φ, hφ, hφd⟩ := hf
   let orb : SL(2, ℤ) → Tw.K := fun γ => Tw.sl (ofSL γ) f
   have hfac : ∀ γ γ' : SL(2, ℤ), Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ'
@@ -105,7 +105,7 @@ private theorem hol_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     refine ⟨Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ, ?_⟩
     have h : ∃ γ', Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ'
         = Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ := ⟨γ, rfl⟩
-    simp only [g', dif_pos h]
+    simp only [g', dite_eq_left h]
     exact hfac γ h.choose h.choose_spec
   set S := hfin.toFinset with hSdef
   have hmemS : ∀ s, s ∈ S ↔ ∃ γ, orb γ = s := by
@@ -237,7 +237,7 @@ private theorem siegel_admissible_periodic {c : ℕ} {x x' : Fin 2 → ℚ}
 
 private theorem near {M : ℕ} (hM : 0 < M) (a : ℤ) (y : ZMod M) (h : (a : ZMod M) = y) :
     ∃ j : ℤ, (a : ℚ) / M = (y.val : ℚ) / M + j := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have h1 : ((y.val : ℤ) : ZMod M) = (a : ZMod M) := by rw [h]; simp
   obtain ⟨j, hj⟩ := (ZMod.intCast_eq_intCast_iff_dvd_sub _ _ _).1 h1
   refine ⟨j, ?_⟩
@@ -248,7 +248,7 @@ private theorem near {M : ℕ} (hM : 0 < M) (a : ℤ) (y : ZMod M) (h : (a : ZMo
 
 private theorem siegel_admissible_to_rat {c M : ℕ} (hc : 1 < c) (h6 : Nat.Coprime c 6) (hM : 0 < M) (hcM : Nat.Coprime c M) {x : Row M}
     (hx : x ≠ 0) : GlobalTheory.Sieg.admitted c (toQ M x) := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hM' : (M : ℚ) ≠ 0 := by exact_mod_cast hM.ne'
   have key : ∀ i, (c : ℚ) * toQ M x i ∈ Set.range ((↑) : ℤ → ℚ) → x i = 0 := by
     rintro i ⟨j, hj⟩
@@ -268,8 +268,8 @@ private theorem siegel_admissible_to_rat {c M : ℕ} (hc : 1 < c) (h6 : Nat.Copr
 theorem UpperTheory.V.Z.Kato.Sym.sgB :
     UpperTheory.V.Z.Kato.Sym.SgB := by
   intro Ω _ _ _ ε X c M hc h6 hM hcM x hx
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero M := ⟨hM.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hA := siegel_admissible_to_rat hc h6 hM hcM hx
   refine ⟨KU.sgU Ω ε X c _ hA, fun γ => ?_, fun s => ?_, fun x' h => sieg_per X hA h⟩
   · unfold sg
@@ -301,7 +301,7 @@ theorem UpperTheory.V.Z.Kato.Sym.sgB :
       apply ε.injective
       rw [map_pow, GalUnits.eps_eOm, GalUnits.eps_eOm]
       unfold GlobalTheory.Sieg.ee
-      rw [← Complex.exp_nat_mul]
+      rw [← Complex.exp_natCast_mul]
       congr 1
       push_cast
       ring

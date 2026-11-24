@@ -175,7 +175,7 @@ theorem mem_of_filtration {V W K ι : Type} [AddCommGroup V] [Module ℂ V] [Add
         add_mem' := fun {a b} ha hb => ⟨fun k w => by simp [ha.1, hb.1], fun w => add_mem (ha.2 w) (hb.2 w)⟩
         zero_mem' := ⟨fun k w => by simp, fun w => zero_mem _⟩
         smul_mem' := fun c a ha => ⟨fun k w => by simp [ha.1], fun w => Submodule.smul_mem _ c (ha.2 w)⟩ }
-    haveI : FiniteDimensional ℂ E := by
+    have : FiniteDimensional ℂ E := by
       refine Submodule.finiteDimensional_of_le
         (S₂ := LinearMap.range (LinearMap.compRight (M := W) ℂ (S (d + 1)).subtype)) ?_
       intro ψ hψ
@@ -472,8 +472,8 @@ theorem pol_X (τ : D.what₂.Tau) (a b : Fin m) (t : D.what₂.Tau) (i : Fin m)
   simp only [pderiv_X, Pi.single_apply, Prod.mk.injEq, mul_ite, mul_one, mul_zero]
   by_cases h : t = τ ∧ i = b
   · obtain ⟨rfl, rfl⟩ := h; simp
-  · rw [if_neg h]
-    refine Finset.sum_eq_zero fun k _ => if_neg ?_
+  · rw [ite_eq_right h]
+    refine Finset.sum_eq_zero fun k _ => ite_eq_right ?_
     rintro ⟨rfl, rfl, rfl⟩; exact h ⟨rfl, rfl⟩
 
 theorem pol_comm (τ' τ : D.what₂.Tau) (c a b : Fin m) :
@@ -485,28 +485,28 @@ theorem pol_comm (τ' τ : D.what₂.Tau) (c a b : Fin m) :
   rw [Derivation.commutator_apply, Derivation.smul_apply, pol_X, pol_X]
   by_cases h1 : t = τ ∧ i = b <;> by_cases h2 : t = τ' ∧ i = c
   · obtain ⟨rfl, rfl⟩ := h1; obtain ⟨rfl, rfl⟩ := h2
-    simp only [pol_X, and_self, if_true, true_and]
+    simp only [pol_X, and_self, ite_true, true_and]
     by_cases hai : a = i
     · subst hai; simp
     · simp [hai, Ne.symm hai]
-  · rw [if_pos h1, if_neg h2, map_zero, sub_zero, pol_X]
+  · rw [ite_eq_left h1, ite_eq_right h2, map_zero, sub_zero, pol_X]
     obtain ⟨rfl, rfl⟩ := h1
     by_cases h3 : t = τ' ∧ a = c
     · obtain ⟨rfl, rfl⟩ := h3
-      simp only [and_self, if_true]
+      simp only [and_self, ite_true]
       have : i ≠ a := fun e => h2 ⟨rfl, e⟩
       simp [Ne.symm this]
-    · rw [if_neg h3]
+    · rw [ite_eq_right h3]
       by_cases h4 : t = τ'
       · subst h4
         have : c ≠ a := fun e => h3 ⟨rfl, e.symm⟩
         have : c ≠ i := fun e => h2 ⟨rfl, e.symm⟩
         simp [*]
       · simp [Ne.symm h4]
-  · rw [if_neg h1, if_pos h2, map_zero, zero_sub, pol_X]
+  · rw [ite_eq_right h1, ite_eq_left h2, map_zero, zero_sub, pol_X]
     obtain ⟨rfl, rfl⟩ := h2
-    rw [if_neg h1, neg_zero, smul_zero]
-  · rw [if_neg h1, if_neg h2, map_zero, map_zero, sub_zero, smul_zero]
+    rw [ite_eq_right h1, neg_zero, smul_zero]
+  · rw [ite_eq_right h1, ite_eq_right h2, map_zero, map_zero, sub_zero, smul_zero]
 
 end GlobalTheory.KHwExist
 
@@ -538,7 +538,7 @@ theorem kop_neg (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau) 
     Module.End.one_apply]
   by_cases hab : a = b
   · subst hab
-    simp only [if_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, ← Nat.cast_smul_eq_nsmul ℂ]
+    simp only [ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, ← Nat.cast_smul_eq_nsmul ℂ]
     module
   · simp [hab, Ne.symm hab]
 
@@ -581,7 +581,7 @@ theorem kop_diag (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau)
       (if (c : ℕ) < w.p τ then (n : ℂ) / 2 else -((n : ℂ) / 2)) • 1 := by
   by_cases hc : (c : ℕ) < w.p τ
   · rw [kop_pos w τ c c hc hc]; simp [hc]
-  · rw [kop_neg w τ c c hc hc]; simp only [hc, if_false, if_true, neg_smul, one_smul]; abel
+  · rw [kop_neg w τ c c hc hc]; simp only [hc, ite_false, ite_true, neg_smul, one_smul]; abel
 
 theorem kop_diag_commute (w : GlobalTheory.ExportSeries.Weight D n) (τ τ' : D.what₂.Tau) (c c' : Fin m) :
     kop w τ c c * kop w τ' c' c' = kop w τ' c' c' * kop w τ c c := by
@@ -601,10 +601,10 @@ theorem kop_comm (w : GlobalTheory.ExportSeries.Weight D n) (τ' τ : D.what₂.
   rw [kop_diag, k1]
   by_cases ha : (a : ℕ) < w.p τ
   · have hb := hC'.1 ha
-    rw [kop_pos w τ a b ha hb, if_neg hab, zero_smul, add_zero, polE_comm]
+    rw [kop_pos w τ a b ha hb, ite_eq_right hab, zero_smul, add_zero, polE_comm]
     by_cases hc : (c : ℕ) < w.p τ'
-    · rw [if_pos hc, one_smul]
-    · rw [if_neg hc]
+    · rw [ite_eq_left hc, one_smul]
+    · rw [ite_eq_right hc]
       by_cases ht : τ' = τ
       · subst ht
         have h1 : c ≠ a := fun e => hc (e ▸ ha)
@@ -612,17 +612,17 @@ theorem kop_comm (w : GlobalTheory.ExportSeries.Weight D n) (τ' τ : D.what₂.
         simp [h1, h2]
       · simp [ht]
   · have hb : ¬ (b : ℕ) < w.p τ := fun h => ha (hC'.2 h)
-    rw [kop_neg w τ a b ha hb, if_neg hab, zero_smul, sub_zero, mul_neg, neg_mul, sub_neg_eq_add,
+    rw [kop_neg w τ a b ha hb, ite_eq_right hab, zero_smul, sub_zero, mul_neg, neg_mul, sub_neg_eq_add,
       neg_add_eq_sub, ← neg_sub, polE_comm, smul_neg, smul_neg, smul_smul]
     by_cases hc : (c : ℕ) < w.p τ'
-    · rw [if_pos hc]
+    · rw [ite_eq_left hc]
       by_cases ht : τ' = τ
       · subst ht
         have h1 : c ≠ a := fun e => ha (e ▸ hc)
         have h2 : c ≠ b := fun e => hb (e ▸ hc)
         simp [h1, h2]
       · simp [ht]
-    · rw [if_neg hc]
+    · rw [ite_eq_right hc]
       congr 2
       split_ifs <;> ring
 
@@ -650,7 +650,7 @@ theorem exists_hw_of_height {V ι ρ : Type*} [AddCommGroup V] [Module ℂ V] [F
     (hTH : ∀ i, ∀ x ∈ T, H i x ∈ T) (hTh : ∀ x ∈ T, h x ∈ T) (hTR : ∀ r, ∀ x ∈ T, R r x ∈ T) :
     ∃ v ∈ T, v ≠ 0 ∧ (∀ r, R r v = 0) ∧ ∀ i, ∃ c : ℂ, H i v = c • v := by
   classical
-  haveI : Nontrivial T := Submodule.nontrivial_iff_ne_bot.2 hT0
+  have : Nontrivial T := Submodule.nontrivial_iff_ne_bot.2 hT0
   let hT : Module.End ℂ T := h.restrict hTh
   have hfin : {μ | Module.End.HasEigenvalue hT μ}.Finite := Module.End.finite_hasEigenvalue hT
   obtain ⟨μ0, hμ0⟩ := Module.End.exists_eigenvalue hT
@@ -658,7 +658,7 @@ theorem exists_hw_of_height {V ι ρ : Type*} [AddCommGroup V] [Module ℂ V] [F
   let E : Submodule ℂ V := T ⊓ LinearMap.ker (h - z • 1)
   have memE : ∀ x, x ∈ E ↔ x ∈ T ∧ h x = z • x := by
     intro x; simp [E, sub_eq_zero]
-  haveI : FiniteDimensional ℂ E := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ E := Submodule.finiteDimensional_of_le inf_le_left
   have hE0 : E ≠ ⊥ := by
     obtain ⟨x, hx⟩ := (hz : Module.End.HasEigenvalue hT z).exists_hasEigenvector
     rw [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff] at hx
@@ -820,13 +820,13 @@ lemma term_ge (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau) (a
 lemma mono1 (u v : FVar D m n) (α : FVar D m n →₀ ℕ) (c : ℂ) :
     (X u * pderiv v (monomial α c) : PolF D m n) = monomial (Finsupp.single u 1 + (α - Finsupp.single v 1)) (c * α v) := by
   classical
-  rw [pderiv_monomial, X, monomial_mul, one_mul]
+  rw [pderiv_monomial, X, monomial_mul_monomial, one_mul]
 
 lemma mono2 (u v : FVar D m n) (α : FVar D m n →₀ ℕ) (c : ℂ) :
     (pderiv u (X v * monomial α c) : PolF D m n) =
       monomial (Finsupp.single v 1 + α - Finsupp.single u 1) (c * ((Finsupp.single v 1 + α : FVar D m n →₀ ℕ) u)) := by
   classical
-  rw [X, monomial_mul, one_mul, pderiv_monomial]
+  rw [X, monomial_mul_monomial, one_mul, pderiv_monomial]
 
 def lamM (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau) (a : Fin n) (α : FVar D m n →₀ ℕ) : ℂ :=
   ∑ i : Fin m, ((if (i : ℕ) < w.p τ then (α (τ, i, a) : ℂ) else -((α (τ, i, a) : ℂ) + 1)) + 1 / 2)
@@ -903,7 +903,7 @@ lemma sop_off_mono (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Ta
   rw [sop_eq, LinearMap.sum_apply] at hβ
   obtain ⟨i, -, hi⟩ := Finset.mem_biUnion.1 (support_sum hβ)
   rw [LinearMap.add_apply] at hi
-  simp only [hab, if_false, LinearMap.zero_apply, add_zero] at hi
+  simp only [hab, ite_false, LinearMap.zero_apply, add_zero] at hi
   by_cases hp : (i : ℕ) < w.p τ
   · rw [term_lt w τ a b i hp, mono1, support_monomial] at hi
     split_ifs at hi with h0
@@ -1136,7 +1136,7 @@ theorem fct_add_single (α : σ →₀ ℕ) (v : σ) : fct (α + Finsupp.single 
   have : ∀ u ∈ (insert v α.support).erase v,
       ((α + Finsupp.single v 1 : σ →₀ ℕ) u).factorial = (α u).factorial := by
     intro u hu
-    rw [Finsupp.add_apply, Finsupp.single_apply, if_neg (Finset.ne_of_mem_erase hu).symm, add_zero]
+    rw [Finsupp.add_apply, Finsupp.single_apply, ite_eq_right (Finset.ne_of_mem_erase hu).symm, add_zero]
   rw [Finset.prod_congr rfl this, Finsupp.add_apply, Finsupp.single_eq_same, Nat.factorial_succ]
   ring
 
@@ -1222,7 +1222,7 @@ variable {σ : Type} [DecidableEq σ]
 theorem form_monomial (γ δ : σ →₀ ℕ) (c d : ℂ) :
     form (monomial γ c) (monomial δ d) = if γ = δ then (fct δ : ℂ) * (star c * d) else 0 := by
   rw [form_eq _ _ {δ} support_monomial_subset, Finset.sum_singleton, coeff_monomial, coeff_monomial,
-    if_pos rfl]
+    ite_eq_left rfl]
   split_ifs <;> simp
 
 theorem form_X_mul (v : σ) (P Q : MvPolynomial σ ℂ) : form (X v * P) Q = form P (pderiv v Q) := by
@@ -1230,9 +1230,9 @@ theorem form_X_mul (v : σ) (P Q : MvPolynomial σ ℂ) : form (X v * P) Q = for
   | monomial γ c =>
     induction Q using MvPolynomial.induction_on' with
     | monomial δ d =>
-      rw [X, monomial_mul, pderiv_monomial, form_monomial, form_monomial, one_mul]
+      rw [X, monomial_mul_monomial, pderiv_monomial, form_monomial, form_monomial, one_mul]
       by_cases hv : δ v = 0
-      · rw [hv, if_neg]
+      · rw [hv, ite_eq_right]
         · simp
         · intro h
           have := congrArg (fun f : σ →₀ ℕ => f v) h
@@ -1331,7 +1331,7 @@ theorem fadj_half (a b : Fin m) :
   intro P Q
   by_cases h : a = b
   · subst h
-    simp only [if_true, LinearMap.smul_apply, Module.End.one_apply, LinearMap.map_smulₛₗ₂, map_smul]
+    simp only [ite_true, LinearMap.smul_apply, Module.End.one_apply, LinearMap.map_smulₛₗ₂, map_smul]
     simp [Complex.conj_ofReal, map_ofNat]
   · simp [h, Ne.symm h]
 
@@ -1395,7 +1395,7 @@ theorem deg_X_mul_pderiv {σ : Type} (a b : σ) (P : MvPolynomial σ ℂ) :
   by_cases h : s b = 0
   · simp [h]
   · refine le_trans ?_ (MvPolynomial.le_totalDegree hs)
-    rw [MvPolynomial.X, MvPolynomial.monomial_mul]
+    rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial]
     refine (MvPolynomial.totalDegree_monomial_le _ _).trans (le_of_eq ?_)
     have h1 : s = Finsupp.single b 1 + (s - Finsupp.single b 1) := by
       rw [add_tsub_cancel_of_le]
@@ -1439,14 +1439,14 @@ theorem kop_totalDegree_le (D : D7) (n m : ℕ) (w : GlobalTheory.ExportSeries.W
   · obtain ⟨rfl, rfl⟩ := hil
     refine Submodule.smul_mem _ _ (Submodule.sum_mem _ fun j _ => Submodule.add_mem _ ?_ ?_)
     · intro Q
-      simp only [GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.raiO, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.lowO, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn, if_true, one_smul]
+      simp only [GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.raiO, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.lowO, GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn, ite_true, one_smul]
       unfold Cpt at hab
       by_cases hi : (i : ℕ) < w.p τ
       · have hl : (l : ℕ) < w.p τ := hab.1 hi
-        simp only [hi, hl, decide_true, if_true, Module.End.mul_apply, LinearMap.mulLeft_apply]
+        simp only [hi, hl, decide_true, ite_true, Module.End.mul_apply, LinearMap.mulLeft_apply]
         exact deg_X_mul_pderiv _ _ _
       · have hl : ¬ (l : ℕ) < w.p τ := fun h => hi (hab.2 h)
-        simp only [hi, hl, decide_false, Bool.false_eq_true, if_false, Module.End.mul_apply,
+        simp only [hi, hl, decide_false, Bool.false_eq_true, ite_false, Module.End.mul_apply,
           LinearMap.mulLeft_apply, LinearMap.neg_apply,
           MvPolynomial.totalDegree_neg]
         exact deg_pderiv_X_mul _ _ _
@@ -1523,7 +1523,7 @@ theorem abstract_irreducible_of_highestWeight (V : Type) [AddCommGroup V] [Modul
     obtain ⟨c, hc⟩ := hprop x y (hSU hxS) hyP.1 hxw hyw hx0
     have hyS : y ∈ S := hc ▸ S.smul_mem c hxS
     exact hy0 (han y hyP.1 (hyP.2 y hyS))
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSU
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSU
   let b := Module.finBasis ℂ S
   let φ : U →ₗ[ℂ] (Fin (Module.finrank ℂ S) → ℂ) :=
     LinearMap.pi fun i => (B (b i : V)).comp U.subtype
@@ -1707,7 +1707,7 @@ theorem lowestKType_irreducible : ∀ (D : D7) (n m : ℕ) (w : GlobalTheory.Exp
   have key := GlobalTheory.T.isIrreducible_of_anisotropic_form_highestWeight (W →ₗ[ℂ] PolF D m n) U hUfd J E st BM (GlobalTheory.LowestKType.IsKHwMap w) hUst
     (fun x _ => hBMani x) hBMadj (fun j => rfl)
     (fun T hTU hT0 hTst => by
-      haveI : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTU
+      have : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTU
       exact GlobalTheory.T.exists_highest_weight_K_type_map D n m w W T inferInstance hT0 (fun ψ hψ τ a b hab => hTst ⟨(τ, a, b), hab⟩ ψ hψ))
     (fun x y hx hy hxh hyh hx0 => by
       obtain ⟨c, hc⟩ := GlobalTheory.T.jointHarmonic_highestWeight_multiplicity_one D n m w lam (x w0) (y w0)

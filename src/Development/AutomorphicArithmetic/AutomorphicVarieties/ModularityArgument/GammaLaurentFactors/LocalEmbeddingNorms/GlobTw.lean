@@ -80,7 +80,7 @@ private theorem exists_retr : ∃ r : kˣ →* kˣ, (∀ x : kˣ, valuation k (x
     Subgroup.isOpen_mono (H₁ := H ⊓ filtSub k 0) (fun x hx => by rw [Subgroup.mem_comap, hr x hx.2.1]; exact hx.1)
       (hH.inter (isOpen_filtSub k 0))
   refine ⟨ho, ?_⟩
-  haveI : DiscreteTopology (kˣ ⧸ H.comap r) := QuotientGroup.discreteTopology ho
+  have : DiscreteTopology (kˣ ⧸ H.comap r) := QuotientGroup.discreteTopology ho
   have hf := ((GroundTheory.LocalField.isCompact_unitFiltrationUnits (K := k) 0).image
     (QuotientGroup.continuous_mk (N := H.comap r))).finite_of_discrete
   refine Set.finite_univ_iff.1 (hf.subset ?_)
@@ -140,7 +140,7 @@ end Loc
 
 private theorem val_one_iff {K : Type} [Field K] [NumberField K] (u : HeightOneSpectrum (𝓞 K)) (x : u.adicCompletion K) :
     valuation (u.adicCompletion K) x = 1 ↔ Valued.v x = 1 := by
-  haveI : (Valued.v : Valuation (u.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (u.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (valuation (u.adicCompletion K)) Valued.v).eq_one_iff_eq_one
 
@@ -149,7 +149,7 @@ private theorem exists_at {K L : Type} [Field K] [NumberField K] [Field L] [Numb
     (bad' : ∀ w : HeightOneSpectrum (𝓞 L), Finset ((w.adicCompletion L)ˣ →* ℂˣ)) :
     ∃ χ : (u.adicCompletion K)ˣ →* ℂˣ, IsSmoothChar χ ∧ (∃ N : ℕ, 0 < N ∧ χ ^ N = 1) ∧
       (∀ ξ ∈ bad, ¬ IsUnram (ξ * χ)) ∧ ∀ w : PlacesOver L u, ∀ ζ ∈ bad' w.1, ¬ IsUnram (ζ * χ.comp (nm w)) := by
-  haveI : CharZero (u.adicCompletion K) := charZero_of_injective_ringHom (algebraMap K (u.adicCompletion K)).injective
+  have : CharZero (u.adicCompletion K) := charZero_of_injective_ringHom (algebraMap K (u.adicCompletion K)).injective
   obtain ⟨m, hm, hmu⟩ : ∃ m : ℕ, 0 < m ∧ ((m : ℕ) : 𝓞 K) ∈ u.asIdeal :=
     ⟨_, (GlobalTheory.LocalData.resChar_prime u).pos, GlobalTheory.LocalData.resChar_mem u⟩
   have hv : Valued.v (((1 + m : ℕ) : u.adicCompletion K)) = 1 := by

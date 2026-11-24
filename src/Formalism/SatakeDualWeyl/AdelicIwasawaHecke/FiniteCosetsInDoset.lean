@@ -61,7 +61,7 @@ abbrev conjInter (K : Subgroup G) (s : G) : Subgroup K :=
 theorem finite_quot_conjInter {K : Subgroup G} (hK : IsCommensurated K) (s : G) :
     Finite (K ⧸ conjInter K s) := by
   unfold IsCommensurated at hK
-  haveI : (conjInter K s).FiniteIndex := ⟨hK s⟩
+  have : (conjInter K s).FiniteIndex := ⟨hK s⟩
   exact Subgroup.finite_quotient_of_finiteIndex
 
 theorem mul_eq_out_mul (K : Subgroup G) (s : G) (k : K) :
@@ -82,7 +82,7 @@ theorem mul_eq_out_mul (K : Subgroup G) (s : G) (k : K) :
 
 theorem finite_cosets_in_doset {K : Subgroup G} (hK : IsCommensurated K) (s : G) :
     {x : G ⧸ K | ∃ a b : K, x.out = (a : G) * s * b}.Finite := by
-  haveI := finite_quot_conjInter hK s
+  have := finite_quot_conjInter hK s
   refine (Set.finite_range
     (fun y : K ⧸ conjInter K s => ((((y.out : K) : G) * s : G) : G ⧸ K))).subset ?_
   rintro x ⟨a, b, hx⟩

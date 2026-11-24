@@ -60,10 +60,10 @@ theorem absNorm_small_finite (D : Formalism.BasicNotions.D7) :
         ⋃ n ∈ Finset.range 3, {I : Ideal (𝓞 D.host.F) | Ideal.absNorm I = n} := by
       ext I; simp [Finset.mem_range]
     rw [this]
-    exact Set.Finite.biUnion (Finset.finite_toSet _) (fun n _ => Ideal.finite_setOf_absNorm_eq n)
+    exact Set.Finite.biUnion (Finset.finite_toSet _) (fun n _ => Ring.HasFiniteQuotients.finite_absNorm_eq n)
   refine (h.preimage (fun p _ q _ hpq => IsDedekindDomain.HeightOneSpectrum.ext hpq)).subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   exact_mod_cast hp
 
 end Formalism.L2.SG.Pf.Cnt

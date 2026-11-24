@@ -258,7 +258,7 @@ theorem lbIso_diag {S T : Scheme.{0}} (A : Over S) (B : Over T) (β : B.left ⟶
 
 theorem isFinite_restrict : ∀ (S' : Scheme.{0}) [IsLocallyNoetherian S'] (G : Over S') [GrpObj G] [IsCommMonObj G] (P : LB (G2 G).left), IsAbelianScheme G → P.IsLB → ∀ V₀ : S'.Opens, IsAffineOpen V₀ → Out.RelAmple ((Over.pullback V₀.ι).obj G) ((P.pull (Pdiv.PullbackComparison.pφ₂ V₀.ι G)).pull (lift (𝟙 ((Over.pullback V₀.ι).obj G)) (𝟙 ((Over.pullback V₀.ι).obj G))).left) → ∀ (Z : Over S') (i : Z ⟶ G), IsClosedImmersion i.left → (∀ (T : Over S') (z : T ⟶ Z), Set.range T.hom.base ⊆ (V₀ : Set S') → GlobalTheory.MemKL G (P.pull (lift (𝟙 G) (𝟙 G)).left) (z ≫ i)) → IsFinite (Z.hom ∣_ V₀) := by
   intro S' _ G _ _ P hA hP V₀ hV hRel Z i hi hZ
-  haveI : IsNoetherianRing Γ(S', V₀) := IsLocallyNoetherian.component_noetherian ⟨V₀, hV⟩
+  have : IsNoetherianRing Γ(S', V₀) := IsLocallyNoetherian.component_noetherian ⟨V₀, hV⟩
   let t : Sp Γ(S', V₀) ⟶ V₀.toScheme := hV.isoSpec.inv
   let GV := (Over.pullback V₀.ι).obj G
   let B := (Over.pullback t).obj GV
@@ -301,21 +301,21 @@ theorem isFinite_restrict : ∀ (S' : Scheme.{0}) [IsLocallyNoetherian S'] (G : 
     show (((ZB.hom ≫ t) ≫ V₀.ι).base y) ∈ V₀
     exact (Scheme.Opens.range_ι V₀).subset ⟨(ZB.hom ≫ t).base y, rfl⟩
   obtain ⟨z, hz⟩ := (hrep ZB iB).1 hmem
-  haveI : IsClosedImmersion iV.left := isClosedImmersion_pullback_map _ i
-  haveI : IsClosedImmersion iB.left := isClosedImmersion_pullback_map _ iV
+  have : IsClosedImmersion iV.left := isClosedImmersion_pullback_map _ i
+  have : IsClosedImmersion iB.left := isClosedImmersion_pullback_map _ iV
   have hz' : z.left ≫ iL.left = iB.left := congrArg (fun q => q.left) hz
-  haveI : IsClosedImmersion (z.left ≫ iL.left) := by rw [hz']; infer_instance
-  haveI : IsClosedImmersion z.left := IsClosedImmersion.of_comp z.left iL.left
+  have : IsClosedImmersion (z.left ≫ iL.left) := by rw [hz']; infer_instance
+  have : IsClosedImmersion z.left := IsClosedImmersion.of_comp z.left iL.left
   have hZB : IsFinite ZB.hom := by
     rw [← Over.w z]; infer_instance
   have hV' : IsFinite ZV.hom := by
     have ec : ZV.hom = inv (pullback.fst ZV.hom t) ≫ pullback.snd ZV.hom t ≫ t := by
       rw [← pullback.condition, IsIso.inv_hom_id_assoc]
     rw [ec]
-    haveI : IsFinite (pullback.snd ZV.hom t) := hZB
+    have : IsFinite (pullback.snd ZV.hom t) := hZB
     infer_instance
   rw [← (isPullback_morphismRestrict Z.hom V₀).flip.isoPullback_hom_snd]
-  haveI : IsFinite (pullback.snd Z.hom V₀.ι) := hV'
+  have : IsFinite (pullback.snd Z.hom V₀.ι) := hV'
   infer_instance
 
 end GlobalTheory.KernelRepFinite
@@ -596,7 +596,7 @@ theorem exists_notMem_smul_eq_zero_of_submodule {A M : Type*} [CommRing A] [AddC
     [Module A M] (P : Ideal A) [P.IsPrime] (N : Submodule A M) (hN : N.FG) (t : A) (ht : t ∉ P)
     (h : ∀ m ∈ N, t • m ∈ P • N) :
     ∃ g : A, g ∉ P ∧ ∀ m ∈ N, g • m = 0 := by
-  haveI : Module.Finite A N := Module.Finite.iff_fg.mpr hN
+  have : Module.Finite A N := Module.Finite.iff_fg.mpr hN
   obtain ⟨g, hg, h0⟩ := exists_notMem_smul_eq_zero (M := N) P t ht (fun m => by
     have hm := h m m.2
     have hmap : P • N = (P • (⊤ : Submodule A N)).map N.subtype := by
@@ -642,7 +642,7 @@ theorem augmentation_agrees_after_inverting
   classical
   set J : Ideal B := RingHom.ker ε with hJdef
   set Q : Ideal B := P.map (algebraMap A B) with hQdef
-  haveI : IsNoetherian A B := isNoetherian_of_isNoetherianRing_of_finite A B
+  have : IsNoetherian A B := isNoetherian_of_isNoetherianRing_of_finite A B
 
   let D : B →ₗ[A] B := α.toLinearMap - (Algebra.linearMap A B).comp ε.toLinearMap
   have hDapp : ∀ b, D b = α b - algebraMap A B (ε b) := fun b => rfl
@@ -754,8 +754,8 @@ namespace GlobalTheory
 theorem torsion_of_one_tmul_eq_zero (D K M : Type) [CommRing D] [IsDomain D] [Field K]
     [Algebra D K] [FaithfulSMul D K] [AddCommGroup M] [Module D M] (m : M)
     (h : (1 : K) ⊗ₜ[D] m = 0) : ∃ d : D, d ≠ 0 ∧ d • m = 0 := by
-  letI : Algebra (FractionRing D) K := FractionRing.liftAlgebra D K
-  haveI : IsScalarTower D (FractionRing D) K := FractionRing.isScalarTower_liftAlgebra D K
+  let : Algebra (FractionRing D) K := FractionRing.liftAlgebra D K
+  have : IsScalarTower D (FractionRing D) K := FractionRing.isScalarTower_liftAlgebra D K
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective (Algebra.linearMap (FractionRing D) K)
     (by rw [LinearMap.ker_eq_bot]; exact (algebraMap (FractionRing D) K).injective)
   have hg1 : g 1 = 1 := by
@@ -773,10 +773,10 @@ theorem exists_not_mem_ker_smul_mem_map_of_one_tmul_eq_zero (A B K : Type) [Comm
     ∃ f : A, f ∉ RingHom.ker (algebraMap A K) ∧
       f • b ∈ (RingHom.ker (algebraMap A K)).map (algebraMap A B) := by
   set P := RingHom.ker (algebraMap A K) with hP
-  haveI : P.IsPrime := RingHom.ker_isPrime _
-  letI : Algebra (A ⧸ P) K := (RingHom.kerLift (algebraMap A K)).toAlgebra
-  haveI : IsScalarTower A (A ⧸ P) K := IsScalarTower.of_algebraMap_eq' (by ext a; rfl)
-  haveI : FaithfulSMul (A ⧸ P) K :=
+  have : P.IsPrime := RingHom.ker_isPrime _
+  let : Algebra (A ⧸ P) K := (RingHom.kerLift (algebraMap A K)).toAlgebra
+  have : IsScalarTower A (A ⧸ P) K := IsScalarTower.of_algebraMap_eq' (by ext a; rfl)
+  have : FaithfulSMul (A ⧸ P) K :=
     (faithfulSMul_iff_algebraMap_injective (A ⧸ P) K).2 (RingHom.kerLift_injective _)
   let I := P.map (algebraMap A B)
   let q : B →ₗ[A] B ⧸ I := (Ideal.Quotient.mkₐ A I).toLinearMap
@@ -1025,13 +1025,13 @@ theorem killed_near : ∀ (S' : Scheme.{0}) [IsLocallyNoetherian S'] (G : Over S
   obtain ⟨U, hU, hsU, hUV⟩ := exists_isAffineOpen_mem_and_subset hs
   have hUV : U ≤ V₀ := hUV
   have hfU : IsFinite (Z.hom ∣_ U) := by
-    haveI : MorphismProperty.RespectsIso @IsFinite :=
+    have : MorphismProperty.RespectsIso @IsFinite :=
       MorphismProperty.respectsIso_of_isStableUnderComposition (fun _ _ f (_ : IsIso f) => inferInstance)
     have h1 : IsFinite (Z.hom ∣_ V₀ ∣_ (V₀.ι ⁻¹ᵁ U)) := inferInstance
     rw [MorphismProperty.arrow_mk_iso_iff (P := @IsFinite) (morphismRestrictRestrict _ _ _),
       Scheme.Hom.image_preimage_eq_opensRange_inf, Scheme.Opens.opensRange_ι, inf_eq_right.mpr hUV] at h1
     exact h1
-  haveI : IsAffine U := hU
+  have : IsAffine U := hU
   set W : Z.left.Opens := Z.hom ⁻¹ᵁ U with hWdef
   have hW : IsAffineOpen W := by
     have h1 := (IsAffineHom.isAffine_preimage (f := Z.hom ∣_ U) ⊤ (isAffineOpen_top _)).image_of_isOpenImmersion
@@ -1040,9 +1040,9 @@ theorem killed_near : ∀ (S' : Scheme.{0}) [IsLocallyNoetherian S'] (G : Over S
   let A : CommRingCat.{0} := Γ(S', U)
   let B : CommRingCat.{0} := Γ(Z.left, W)
   let φ : A ⟶ B := Z.hom.appLE U W le_rfl
-  letI : Algebra A B := φ.hom.toAlgebra
+  let : Algebra A B := φ.hom.toAlgebra
   have hφ : φ = CommRingCat.ofHom (algebraMap A B) := rfl
-  haveI hfinAB : Module.Finite A B := by
+  have hfinAB : Module.Finite A B := by
     have h1 := IsFinite.finite_app (Z.hom ∣_ U) ⊤ (isAffineOpen_top _)
     rw [morphismRestrict_app'] at h1
     have gen : ∀ (U₁ : S'.Opens) (W₁ : Z.left.Opens) (e₁ : U₁ = U) (e₂ : W₁ = W) (hle : W₁ ≤ Z.hom ⁻¹ᵁ U₁),
@@ -1091,7 +1091,7 @@ theorem killed_near : ∀ (S' : Scheme.{0}) [IsLocallyNoetherian S'] (G : Over S
 
   let κ := S'.residueField s
   let χκ : A ⟶ κ := S'.presheaf.germ U s hsU ≫ S'.residue s
-  letI : Algebra A κ := χκ.hom.toAlgebra
+  let : Algebra A κ := χκ.hom.toAlgebra
   let R := CommRingCat.of (κ ⊗[A] B)
   let incl : B →ₐ[A] κ ⊗[A] B := Algebra.TensorProduct.includeRight
   let incL : κ →ₐ[A] κ ⊗[A] B := Algebra.TensorProduct.includeLeft
@@ -1119,7 +1119,7 @@ theorem killed_near : ∀ (S' : Scheme.{0}) [IsLocallyNoetherian S'] (G : Over S
   let P : Ideal A := RingHom.ker (algebraMap A κ)
   have hfibP : ∀ b, ∃ f : A, f ∉ P ∧ f • (α d b - algebraMap A B (ε b)) ∈ P.map (algebraMap A B) :=
     fun b => GlobalTheory.exists_not_mem_ker_smul_mem_map_of_one_tmul_eq_zero A B κ _ (hzero b)
-  haveI : P.IsPrime := RingHom.ker_isPrime _
+  have : P.IsPrime := RingHom.ker_isPrime _
   have hdP : (d : A) ∉ P := by
     rw [RingHom.mem_ker, map_natCast]; exact hd.ne_zero
   obtain ⟨g, hgP, hg⟩ := GlobalTheory.NakAug.augmentation_agrees_after_inverting A B P ε (α d) d hdP (hcot d) hfibP

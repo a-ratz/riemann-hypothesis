@@ -77,7 +77,7 @@ theorem kernel_isFullLattice : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsC
   intro X G _ _ g hG hg y e he
   obtain ⟨hadd, hsurj, hhol, hd1, hd2⟩ := he
   let A : Over (Sp ℂ) := (Over.pullback y).obj G
-  letI : GrpObj A := Functor.grpObjObj
+  let : GrpObj A := Functor.grpObjObj
   let φ : A.left ⟶ G.left := pullback.fst G.hom y
   have hp : IsGrpPullback A G y φ := isGrpPullback_pullback G y
   have hA : IsAbelianScheme A := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hG hp

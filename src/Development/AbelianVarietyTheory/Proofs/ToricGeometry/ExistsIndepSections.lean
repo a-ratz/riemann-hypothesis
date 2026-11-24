@@ -119,7 +119,7 @@ theorem exists_indep_sections (H : Out.GlobalSectionsRankAlgClosed) (P : Out.Pol
   have hr := H ℂ P n hn
   let T : Over (Sp ℂ) := baseOver (Sp ℂ)
   let c : Γ(T.left, ⊤) ≃+* ℂ := (Scheme.ΓSpecIso (CommRingCat.of ℂ)).commRingCatIsoToRingEquiv
-  haveI : Nontrivial Γ(T.left, ⊤) := c.symm.injective.nontrivial
+  have : Nontrivial Γ(T.left, ⊤) := c.symm.injective.nontrivial
   obtain ⟨b, hb⟩ := exists_linearIndependent_of_le_finrank (R := Γ(T.left, ⊤)) (M := SecM P.A P.L n T) hr.ge
   let ρ : P.A ⟶ T ⊗ P.A := lift (Over.homMk P.A.hom (Category.comp_id _)) (𝟙 _)
   have ρ₂ : ρ.left ≫ (snd T P.A).left = 𝟙 _ := congrArg (fun q => q.left) (lift_snd _ _ : ρ ≫ _ = _)
@@ -129,7 +129,7 @@ theorem exists_indep_sections (H : Out.GlobalSectionsRankAlgClosed) (P : Out.Pol
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₁).trans (pullback.condition.symm.trans
         ((Category.comp_id _).trans (Category.id_comp _).symm)))
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₂).trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  haveI : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
+  have : IsIso ρ.left := ⟨_, ρ₂, ρ₃⟩
   refine ⟨fun i => down P.L (snd T P.A).left ρ.left ρ₂ n (SecM.toSec P.A (b i)), fun a ha => ?_⟩
   have h0 : ∑ i, c.symm (a i) • b i = 0 := by
     refine Subtype.ext (funext fun j => ?_)

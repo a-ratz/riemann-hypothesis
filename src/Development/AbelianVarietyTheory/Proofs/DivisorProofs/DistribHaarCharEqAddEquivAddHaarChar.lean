@@ -101,9 +101,9 @@ def evalUnitCE (R : Type) [AddCommGroup R] [TopologicalSpace R] : (Unit → R) �
 theorem modu_norm_eq_absE : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E], NumberField.IsTotallyReal F →
     ∀ t : (AE F E)ˣ, (((adeleClass F).modu (Units.map (Algebra.norm (AF F) : AE F E →* AF F) t) : ℝ≥0) : ℝ) = (absE F E t : ℝ) := by
   intro F E _ _ _ _ _ hF t
-  haveI := hF
-  letI : MeasurableSpace (AF F) := borel _
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have := hF
+  let : MeasurableSpace (AF F) := borel _
+  have : BorelSpace (AF F) := ⟨rfl⟩
   set a : (AF F)ˣ := Units.map (Algebra.norm (AF F) : AE F E →* AF F) t with ha
   let M : Matrix Unit Unit (AF F) := fun _ _ => (a : AF F)
   have hdet : M.det = (a : AF F) := Matrix.det_unique M

@@ -68,7 +68,7 @@ theorem act_kReg_section : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [Bo
   intro hL n _ _ μ _ E κ f hκ hf hleft
   obtain ⟨-, -, -, -, hcG, -, -⟩ := hL n
   obtain ⟨hkc, R, hR⟩ := hκ
-  haveI : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   have hval : ∀ y : G n, y.val ∈ GLs n := fun y => by
     have : IsUnit y.val.det := (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
     exact this.ne_zero
@@ -102,7 +102,7 @@ theorem act_kReg_section : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [Bo
       rfl
     simp_rw [hpt]
     exact (E.ρ k₂⁻¹).integral_comp_comm'
-      (AddMonoidHomClass.isometry_of_norm (E.ρ k₂⁻¹) (E.iso _)).antilipschitz _
+      (AddMonoidHomClass.isometry_of_norm (E.ρ k₂⁻¹) (E.iso _)).antilipschitzWith _
 
 end GlobalTheory.CompanionTheory.WaveMult
 end -- clump:auto

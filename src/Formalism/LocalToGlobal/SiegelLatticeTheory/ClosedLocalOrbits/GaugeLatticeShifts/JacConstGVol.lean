@@ -75,8 +75,8 @@ theorem ujEq (k : ℕ) : Formalism.REAL.UJ (εT k) = ReciprocityTheory.ChartRest
 
 def eU (k : ℕ) : ↥(Formalism.REAL.UJ (εT k)) ≃* ↥(ReciprocityTheory.ChartRestriction.DS.UNgrp k) := MulEquiv.subgroupCongr (ujEq k)
 
-theorem cont_eU (k : ℕ) : Continuous (eU k) := continuous_induced_rng.2 continuous_subtype_val
-theorem cont_eU_symm (k : ℕ) : Continuous (eU k).symm := continuous_induced_rng.2 continuous_subtype_val
+theorem cont_eU (k : ℕ) : Continuous (eU k) := continuous_induced_rng.2 continuous_subtypeVal
+theorem cont_eU_symm (k : ℕ) : Continuous (eU k).symm := continuous_induced_rng.2 continuous_subtypeVal
 
 def hU (k : ℕ) : ↥(Formalism.REAL.UJ (εT k)) ≃ₜ ↥(ReciprocityTheory.ChartRestriction.DS.UNgrp k) :=
   { (eU k).toEquiv with continuous_toFun := cont_eU k, continuous_invFun := cont_eU_symm k }
@@ -137,7 +137,7 @@ theorem lieOf_U : lieOf {g : Matrix (Fin k) (Fin k) ℂ | Formalism.REAL.inUJ (�
   have hJ : Formalism.REAL.Jm (εT k) = 1 := by
     unfold Formalism.REAL.Jm; ext i j; simp [Matrix.diagonal_apply, Matrix.one_apply]
   ext X
-  simp only [lieOf, Set.mem_setOf_eq, Formalism.REAL.inUJ, hJ, Matrix.mul_one, SetLike.mem_coe]
+  simp only [lieOf, Set.mem_ofPred_eq, Formalism.REAL.inUJ, hJ, Matrix.mul_one, SetLike.mem_coe]
   constructor
   · intro h
     show Xᴴ = -X
@@ -185,7 +185,7 @@ theorem skMat_mem (x : UCo k) : skMat x ∈ skewH k := by
 theorem expSet_eq (ρ : ℝ) :
     Gauge.expSet (εT k) (Metric.ball 0 ρ) = (eU k) ⁻¹' (volUSet (Bρ k ρ)) := by
   ext g
-  simp only [Gauge.expSet, Set.mem_preimage, volUSet, Set.mem_setOf_eq, Metric.mem_ball, dist_zero_right, Bρ]
+  simp only [Gauge.expSet, Set.mem_preimage, volUSet, Set.mem_ofPred_eq, Metric.mem_ball, dist_zero_right, Bρ]
   constructor
   · rintro ⟨Y, hY, hg⟩
     have hY2 : (Y : EuclideanSpace ℝ (Fin k × Fin k × Bool)) ∈ (skewH k).map RLk := by rw [← gLie_eq]; exact Y.2
@@ -250,7 +250,7 @@ theorem norm_skMat_sq (x : UCo k) :
     rw [← Fintype.sum_prod_type' (f := fun a b => if h : b < a then ‖x.2 ⟨(a, b), h⟩‖ ^ 2 else 0),
       ← Fintype.sum_subtype_add_sum_subtype (fun ab : Fin k × Fin k => ab.2 < ab.1)]
     have h1 : ∀ i : {ab : Fin k × Fin k // ¬ (ab.2 < ab.1)},
-        (if h : i.1.2 < i.1.1 then ‖x.2 ⟨(i.1.1, i.1.2), h⟩‖ ^ 2 else 0) = 0 := fun i => dif_neg i.2
+        (if h : i.1.2 < i.1.1 then ‖x.2 ⟨(i.1.1, i.1.2), h⟩‖ ^ 2 else 0) = 0 := fun i => dite_eq_right i.2
     have h2 : ∀ i : Low k,
         (if h : i.1.2 < i.1.1 then ‖x.2 ⟨(i.1.1, i.1.2), h⟩‖ ^ 2 else 0) = ‖x.2 i‖ ^ 2 :=
       fun i => by rw [dite_eq_left i.2]
@@ -258,7 +258,7 @@ theorem norm_skMat_sq (x : UCo k) :
   rw [RLk_sq]
   simp only [key, Finset.sum_add_distrib]
   rw [Finset.sum_comm (f := fun a b => if h : a < b then ‖x.2 ⟨(b, a), h⟩‖ ^ 2 else 0), hL]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   ring
 
 end Formalism.L2.SG.Pf.GV
@@ -292,7 +292,7 @@ theorem vol_Bρ {ρ : ℝ} (hρ : 0 < ρ) : volume (Bρ k ρ) = (2 ^ Fintype.car
   have hGm : Measurable G := meas_ind_lt ρ
   have hB : Bρ k ρ = {x : UCo k | ∑ a, (x.1 a) ^ 2 + 2 * ∑ p : Low k, ‖x.2 p‖ ^ 2 < ρ ^ 2} := by
     ext x
-    simp only [Bρ, Set.mem_setOf_eq]
+    simp only [Bρ, Set.mem_ofPred_eq]
     rw [← norm_skMat_sq]
     constructor
     · intro h; exact pow_lt_pow_left₀ h (norm_nonneg _) two_ne_zero
@@ -303,7 +303,7 @@ theorem vol_Bρ {ρ : ℝ} (hρ : 0 < ρ) : volume (Bρ k ρ) = (2 ^ Fintype.car
   have e1 : ∀ x : UCo k, {x : UCo k | ∑ a, (x.1 a) ^ 2 + 2 * ∑ p : Low k, ‖x.2 p‖ ^ 2 < ρ ^ 2}.indicator 1 x =
       G (2 * ∑ p : Low k, ‖x.2 p‖ ^ 2 + sqs x.1) := by
     intro x
-    simp only [Set.indicator, Set.mem_setOf_eq, Pi.one_apply, hG, sqs]
+    simp only [Set.indicator, Set.mem_ofPred_eq, Pi.one_apply, hG, sqs]
     congr 1; apply propext; constructor <;> intro h <;> linarith
   simp_rw [e1]
   rw [Measure.volume_eq_prod, lintegral_prod _ ?meas]
@@ -418,7 +418,7 @@ theorem ratio_bounds {η : ℝ} (hη : 0 < η) :
   have h0 : mG Set.univ ≠ 0 := (isOpen_univ.measure_pos mG Set.univ_nonempty).ne'
   set μ : Measure ↥(Formalism.REAL.UJ (εT k)) := (mG Set.univ)⁻¹ • mG with hμ
   have : μ.IsHaarMeasure := Measure.IsHaarMeasure.smul mG (ENNReal.inv_ne_zero.2 hfin) (ENNReal.inv_ne_top.2 h0)
-  have : IsProbabilityMeasure μ := ⟨by rw [hμ, Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 hfin]⟩
+  have : IsProbabilityMeasure μ := ⟨by rw [hμ, smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 hfin]⟩
   set E := (hU k).toMeasurableEquiv with hE
   set μK : Measure ↥(ReciprocityTheory.ChartRestriction.DS.UNgrp k) := μ.map E with hμK
   have : μK.IsHaarMeasure := MulEquiv.isHaarMeasure_map μ (eU k) (cont_eU k) (cont_eU_symm k)
@@ -465,7 +465,7 @@ theorem ratio_bounds {η : ℝ} (hη : 0 < η) :
     unfold Gauge.ratioAt
     congr 1
     have : mG (Gauge.expSet (εT k) (Metric.ball 0 ρ)) = mG Set.univ * m := by
-      rw [hm, hμ, Measure.smul_apply, smul_eq_mul, ← mul_assoc, ENNReal.mul_inv_cancel h0 hfin, one_mul]
+      rw [hm, hμ, smul_apply, smul_eq_mul, ← mul_assoc, ENNReal.mul_inv_cancel h0 hfin, one_mul]
     rw [this, ENNReal.toReal_mul]
   have hZ : 0 ≤ (mG Set.univ).toReal := ENNReal.toReal_nonneg
   rw [hratio]
@@ -541,7 +541,7 @@ theorem gaugeVolU (k : ℕ) :
   have hZp : 0 < Z := ENNReal.toReal_pos h0 hfin
   refine ⟨⟨by rw [hg]; exact hT, by rw [hg]; exact div_pos hZp hDp⟩, ?_⟩
   unfold Gauge.muGauge
-  rw [Measure.smul_apply, smul_eq_mul, hg, ← ENNReal.ofReal_toReal hfin, ← ENNReal.ofReal_mul (by positivity),
+  rw [smul_apply, smul_eq_mul, hg, ← ENNReal.ofReal_toReal hfin, ← ENNReal.ofReal_mul (by positivity),
     volU_ratio]
   congr 1
   rw [← hZ]

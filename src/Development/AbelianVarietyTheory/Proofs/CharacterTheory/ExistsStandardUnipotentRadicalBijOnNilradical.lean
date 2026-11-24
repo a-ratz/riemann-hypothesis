@@ -189,7 +189,7 @@ theorem _root_.GlobalTheory.CuspGL.UnipNilRad.exists_unip_bijOn_nilRad :
         Matrix.toLin' ((u : Matrix (Fin d) (Fin d) F) - 1) := by
       rw [map_sub, Matrix.toLin'_one]
       rfl
-    rw [hsub, toLin'_mem_nilRad_lowSub_iff, Set.mem_setOf_eq]
+    rw [hsub, toLin'_mem_nilRad_lowSub_iff, Set.mem_ofPred_eq]
     simp only [Matrix.sub_apply, Matrix.one_apply, sub_eq_zero]
   · refine ⟨fun u hu => hu, fun u _ v _ h => ?_, fun f hf => ?_⟩
     · exact Units.ext (Matrix.toLin'.injective (sub_left_injective h))

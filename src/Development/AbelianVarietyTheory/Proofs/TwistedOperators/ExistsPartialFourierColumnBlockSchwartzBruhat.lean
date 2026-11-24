@@ -57,17 +57,17 @@ variable {A C : Type} [Fintype A] [DecidableEq C]
 theorem fourierInt_add (ψ : AddChar k Circle) (m : Measure k) (hψ : HasConductor ψ 1) (hm : IsUnitVol m)
     (P : Finset C) {Ξ₁ Ξ₂ : Matrix A C k → ℂ} (h₁ : Ξ₁ ∈ SB (Matrix A C k)) (h₂ : Ξ₂ ∈ SB (Matrix A C k)) :
     fourierInt ψ m P (Ξ₁ + Ξ₂) = fourierInt ψ m P Ξ₁ + fourierInt ψ m P Ξ₂ := by
-  haveI := hm.1
-  haveI := secondCountable k
-  haveI := isAddHaarMeasure_volM m (A := A) P
-  haveI : BorelSpace (Matrix A P k) := inferInstanceAs (BorelSpace (A → P → k))
+  have := hm.1
+  have := secondCountable k
+  have := isAddHaarMeasure_volM m (A := A) P
+  have : BorelSpace (Matrix A P k) := inferInstanceAs (BorelSpace (A → P → k))
   have hi : ∀ Ξ ∈ SB (Matrix A C k), ∀ Y : Matrix A C k,
       Integrable (fun U => Ξ (setCols P Y U) * (ψ (pairCols P Y U) : ℂ)) (volM m A P) := by
     intro Ξ hΞ Y
     have hg := comp_setCols_mem_SB hΞ P Y
     have hc : Continuous fun U : Matrix A P k => pairCols P Y U := by unfold pairCols; fun_prop
     exact (hg.1.continuous.integrable_of_hasCompactSupport hg.2).mul_bdd (c := 1)
-      ((continuous_subtype_val.comp (hψ.continuous.comp hc)).aestronglyMeasurable)
+      ((continuous_subtypeVal.comp (hψ.continuous.comp hc)).aestronglyMeasurable)
       (Filter.Eventually.of_forall fun U => (Circle.norm_coe _).le)
   funext Y
   simp only [fourierInt, Pi.add_apply, add_mul]
@@ -77,9 +77,9 @@ theorem fourierInt_shift [Fintype C] (ψ : AddChar k Circle) (m : Measure k) (hm
     (Ξ : Matrix A C k → ℂ) (T R : Matrix A C k) (hT : ∀ r, ∀ s ∉ P, T r s = 0) (hR : ∀ r, ∀ s ∈ P, R r s = 0) :
     fourierInt ψ m P (fun S => (ψ (GlobalTheory.FlipMatch.pairM S R) : ℂ) * Ξ (S + T)) =
       fun Z => (ψ (GlobalTheory.FlipMatch.pairM Z R - GlobalTheory.FlipMatch.pairM Z T) : ℂ) * fourierInt ψ m P Ξ Z := by
-  haveI := hm.1
-  haveI := isAddHaarMeasure_volM m (A := A) P
-  haveI : MeasurableAdd (Matrix A P k) := inferInstanceAs (MeasurableAdd (A → P → k))
+  have := hm.1
+  have := isAddHaarMeasure_volM m (A := A) P
+  have : MeasurableAdd (Matrix A P k) := inferInstanceAs (MeasurableAdd (A → P → k))
   funext Z
   unfold fourierInt
   set Tp := restrictCols P T
@@ -136,7 +136,7 @@ theorem GlobalTheory.ColFourier.exists_blockFourier : ∀ (k : Type) [Field k] [
   intro k _ _ _ _ A _ _ C _ _ ψ ϖ P hϖ hψ
   borelize k
   obtain ⟨m, hm⟩ := exists_isUnitVol k
-  haveI := hm.1
+  have := hm.1
   have hψ' : HasConductor ψ⁻¹ 1 := GlobalTheory.ColFourier.hasConductor_inv hψ
   have hSB := fun (χ : AddChar k Circle) (hχ : HasConductor χ 1) (Ξ : Matrix A C k → ℂ)
     (h : Ξ ∈ SB (Matrix A C k)) => _root_.GlobalTheory.ColFourier.fourierInt_mem_SB k A C χ m hχ hm P Ξ h

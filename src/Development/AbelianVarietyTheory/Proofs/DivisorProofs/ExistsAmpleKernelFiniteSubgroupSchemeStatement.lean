@@ -74,8 +74,8 @@ theorem exists_finite_subgroup_kernel : ∀ (K : Type) [Field K] [IsAlgClosed K]
   have hP : IsProjBy A.hom := ⟨H₀, hH₀, m, s, hva⟩
   obtain ⟨L, hL, hR⟩ := GlobalTheory.ProjFinite.exists_relAmple_of_isProjBy hP
   obtain ⟨H, j, hj, hf, hH⟩ := GlobalTheory.KernelRep.exists_finite_closed_kernel hG K A hA L hL hR
-  haveI : Mono j.left := inferInstance
-  haveI : Mono j := (Over.forget _).mono_of_mono_map this
+  have : Mono j.left := inferInstance
+  have : Mono j := (Over.forget _).mono_of_mono_map this
   have hjK : GlobalTheory.MemKL A L j := (hH H j).2 ⟨𝟙 _, Category.id_comp _⟩
   have h1 := (hH _ (1 : 𝟙_ (Over (Sp K)) ⟶ A)).1 (GlobalTheory.memKL_one hL _)
   have hm := (hH _ ((fst H H ≫ j) * (snd H H ≫ j))).1

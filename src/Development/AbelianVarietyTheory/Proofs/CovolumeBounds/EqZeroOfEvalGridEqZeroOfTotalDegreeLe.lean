@@ -228,7 +228,7 @@ theorem exists_sum_natCast_smul_apply_ne_zero [Fintype κ]
     (l : ∀ j, V →ₗ[K] W j) (s : κ → V) (h : ∀ j, ∃ k, l j (s k) ≠ 0) :
     ∃ c : κ → ℕ, (∀ k, c k ≤ Fintype.card ι) ∧ ∀ j, l j (∑ k, (c k : K) • s k) ≠ 0 := by
   have : ∀ j, IsAddTorsionFree (W j) := fun j => by
-    letI : HasUniqueDiv (W j) := HasUniqueDiv.of_isTorsionFree K (W j)
+    let : HasUniqueDiv (W j) := HasUniqueDiv.of_isTorsionFree K (W j)
     infer_instance
   simp only [Nat.cast_smul_eq_nsmul]
   exact exists_sum_nsmul_apply_ne_zero (fun j => (l j).toAddMonoidHom) s h

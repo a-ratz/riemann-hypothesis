@@ -126,7 +126,7 @@ theorem opI_mul (M N : LieI ι a) (v : X) : opI ρ M (opI ρ N v) = opI ρ (mulI
   by_cases hM : IsUnit (Matrix.of M)
   · by_cases hN : IsUnit (Matrix.of N)
     · have hMN : IsUnit (Matrix.of (mulI M N)) := by rw [of_mulI]; exact hM.mul hN
-      rw [dite_eq_left hM, dite_eq_left hN, dite_eq_left hMN, ← ContinuousLinearMap.mul_apply, ← map_mul]
+      rw [dite_eq_left hM, dite_eq_left hN, dite_eq_left hMN, ← mul_apply_eq_comp, ← map_mul]
       congr 2
       ext : 1
       simp [of_mulI]
@@ -328,7 +328,7 @@ theorem hasFDerivAt_FT_param (y : V) {Ψ : P × V → X} {s : Set P} {k : Set V}
     exact hgs p t hp ht
   refine ⟨_, fun Z => ?_, H2.congr_of_eventuallyEq (Filter.Eventually.of_forall fun p => ?_)⟩
   · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.prod_apply,
-      ContinuousLinearMap.id_apply, ContinuousLinearMap.zero_apply]
+      ContinuousLinearMap.id_apply, zero_apply]
     rw [convolution_precompR_apply _ hf hcs hcont, convolution_def]
     refine integral_congr_ae (Filter.Eventually.of_forall fun t => ?_)
     simp only [zero_sub, ContinuousLinearMap.lsmul_apply, hdiff, neg_neg, hf_def]
@@ -407,7 +407,7 @@ theorem good_gen (hS4 : S4) (hβ : ∀ y, (∀ x, β x y = 0) → y = 0)
   refine ⟨D', fun Z => ?_, ?_⟩
   · have key : ∀ x, Lx x Z = ∑ i, (η x * coef x Z i) • orb ρ (Dw (b i)) (σ x) := by
       intro x
-      simp only [hLx, hcoef, ContinuousLinearMap.smul_apply, Complex.ofRealCLM_apply,
+      simp only [hLx, hcoef, smul_apply, Complex.ofRealCLM_apply,
         LinearMap.coe_toContinuousLinearMap', ContinuousLinearMap.comp_apply,
         ContinuousLinearMap.coe_restrictScalars', orb_eq]
       conv_lhs => rw [← b.sum_repr (conjL (τ x) (σ x) Z)]

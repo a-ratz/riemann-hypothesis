@@ -182,7 +182,7 @@ theorem red (hL : Inv e ν L) (hu : USm ν) {l : kˣ} (hl : valuation k (l : k) 
         obtain ⟨j, rfl⟩ := e.surjective j
         rcases j with s | _ | _
         exacts [h.1.1.1 i s, h.1.2 i, h.2 i]
-      simp only [tn, cs, Set.indicator_apply, Set.mem_setOf_eq, this, Pi.one_apply]
+      simp only [tn, cs, Set.indicator_apply, Set.mem_ofPred_eq, this, Pi.one_apply]
       split_ifs <;> simp_all
     have o : IsOpen ((mb (Fin n) (Fin d₁) c ⊓ mb _ _ r : AddSubgroup _) : Set (Matrix (Fin n) (Fin d₁) k)) := (mb_open c0).inter (mb_open r0)
     have fu : Full (cs (mb (Fin n) (Fin d₁) c ⊓ mb _ _ r) (mid e y)) := by
@@ -205,8 +205,8 @@ theorem red (hL : Inv e ν L) (hu : USm ν) {l : kˣ} (hl : valuation k (l : k) 
             simp [Matrix.scalar_apply]
           rw [gv]
           rw [sub_zero, mulVec_diagonal, sub_eq_add_neg]
-        rw [this, map_mul, map_inv₀, map_one, inv_mul_le_iff₀ (zero_lt_iff.2 (by simpa using c0)), mul_one]
-      simp only [one, cs, Set.indicator_apply, Set.mem_setOf_eq, this, Pi.one_apply]
+        rw [this, map_mul, map_inv₀, map_one, inv_mul_le_iff₀ (pos_iff_ne_zero.2 (by simpa using c0)), mul_one]
+      simp only [one, cs, Set.indicator_apply, Set.mem_ofPred_eq, this, Pi.one_apply]
     rw [h _ fu, smul_eq_zero] at e2
     rw [e3, trans_inv hL fu one_sb (comp_mem one_sb g), e2.resolve_left (by simpa [apow] using apow_ne_zero (GeneralLinearGroup.det g) 1), smul_zero]
   intro Φ hΦ

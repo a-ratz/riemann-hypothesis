@@ -69,7 +69,7 @@ theorem hcMultDS_of (h0 : SmoothVectorsDense) (h1 : CalculusOnSmoothVectors) (hc
   intro n ε lam H _ _ _ σ hDS S hfd hst
   have hσ : IsURepOn (UJset ε) σ := hDS.2.2.1
   have hirr : IsIrredOn (UJset ε) σ := hDS.2.2.2.1
-  haveI : Nontrivial H := hDS.2.1
+  have : Nontrivial H := hDS.2.1
   obtain ⟨w, hw⟩ := exists_ne (0 : H)
   obtain ⟨d, hd⟩ := Formalism.MainNotions.BridgeCSchur.fdeg_of_DS lam σ hDS
   have hC : Calc ε σ (Vsub ε hσ w) := h1 n ε H σ hσ w

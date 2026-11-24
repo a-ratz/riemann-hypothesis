@@ -65,7 +65,7 @@ theorem algebraMap_eq_inclR_mul_sigR {F E : Type} [Field F] [Field E] [Algebra F
 
 theorem prod_modu_inclR : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ u : E, u ≠ 0 → (Function.mulSupport fun v : HeightOneSpectrum (𝓞 F) => modu (Fv F v ⊗[F] E) (inclR (Fv F v) u)).Finite ∧ modu (Ainf F ⊗[F] E) (inclR (Ainf F) u) * ∏ᶠ v : HeightOneSpectrum (𝓞 F), modu (Fv F v ⊗[F] E) (inclR (Fv F v) u) = 1 := by
   intro F E _ _ _ _ _ σ h u hu
-  haveI := h.1
+  have := h.1
   obtain ⟨k, hk⟩ := GlobalTheory.HermLineZeros.exists_of_fixed h (u * σ u) (by
     rw [map_mul, GlobalTheory.HermLineZeros.conj_invol h, mul_comm])
   have hk0 : k ≠ 0 := by

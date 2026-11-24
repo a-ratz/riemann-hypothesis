@@ -97,7 +97,7 @@ theorem UpperTheory.Gal.G3.pHopDeep :
       · simp [h0]
       · rw [X.pl_pl T (X.isAdmissibleIntegralBasisChange_one hn'n) (hadn _ h0), mul_one]
     · intro z hz
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       intro h0
       exact hz (by simp [h0])
   constructor
@@ -105,7 +105,7 @@ theorem UpperTheory.Gal.G3.pHopDeep :
     refine ⟨m, hmj, fun g hg => ⟨hf.2.1 g hg, fun u hu => ?_⟩⟩
     obtain ⟨⟨h, hh⟩, hheq⟩ := QuotientGroup.mk_out_eq_mul (X.K j) g
     have hz : (g : G ⧸ X.K j) ∈ hfin.toFinset := by
-      rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, hheq, (hf.1 h hh g).2]
+      rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hheq, (hf.1 h hh g).2]
       exact hg
     have hc := hS (j, (Quotient.out (g : G ⧸ X.K j))⁻¹) (Finset.mem_image_of_mem _ hz) u hu
     simp only [hheq] at hc
@@ -159,7 +159,7 @@ theorem UpperTheory.Gal.G3.pHopEx :
   have hsub : ∀ (w : G ⧸ X.K j → T.H (X.q m)),
       Function.support (fun z => f z.out • w z) ⊆ (S : Set (G ⧸ X.K j)) := by
     intro w z hz
-    simp only [S, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [S, Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h0
     exact hz (by simp [h0])
   let Y : T.H (X.q j) →ₗ[R] T.H (X.q m) := ∑ z ∈ S, f z.out • X.pl T m j z.out⁻¹
@@ -185,7 +185,7 @@ theorem UpperTheory.Gal.G3.pHopEx :
     have hsub2 : Function.support (fun z : G ⧸ X.K j => X.pl T m m k (f z.out • X.pl T m j z.out⁻¹ x))
         ⊆ (S : Set (G ⧸ X.K j)) := by
       intro z hz
-      simp only [S, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+      simp only [S, Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
       intro h0
       exact hz (by simp [h0])
 
@@ -322,7 +322,7 @@ private theorem sum_conv {G R : Type} {M : Type*} [Group G] [Field R] [AddCommGr
     intro y hy w hw
     refine Finset.mem_biUnion.2 ⟨y, hy, Finset.mem_image.2 ⟨((y.out⁻¹ * w.out : G) : G ⧸ K), ?_, ?_⟩⟩
     · obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul K (y.out⁻¹ * w.out)
-      simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       rw [hk, hf' _ k.2]
       exact hw
     · show ((y.out * (y.out⁻¹ * w.out) : G) : G ⧸ K) = w
@@ -336,14 +336,14 @@ private theorem sum_conv {G R : Type} {M : Type*} [Group G] [Field R] [AddCommGr
   have hc : ∀ w : G ⧸ K, conv K f f' w.out = ∑ y ∈ sf.toFinset, f y.out * f' (y.out⁻¹ * w.out) := by
     intro w
     refine finsum_eq_sum_of_support_subset _ fun y hy => ?_
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h
     exact hy (by simp [h])
   have hl : ∑ᶠ y : G ⧸ K, f y.out • ∑ᶠ z : G ⧸ K, f' z.out • Φ (y.out * z.out) =
       ∑ y ∈ sf.toFinset, f y.out • ∑ᶠ w : G ⧸ K, f' (y.out⁻¹ * w.out) • Φ w.out := by
     refine (finsum_congr fun y => by rw [sum_translate K f' Φ hf' hΦ y.out]).trans ?_
     refine finsum_eq_sum_of_support_subset _ fun y hy => ?_
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h
     exact hy (by simp [h])
   have hs : Function.support (fun w : G ⧸ K => conv K f f' w.out • Φ w.out) ⊆ (Tw : Set (G ⧸ K)) := by
@@ -474,18 +474,18 @@ private theorem count {G : Type} [Group G] {R : Type} {M : Type v} [Field R] [Ad
   have hle' : K'.subgroupOf K ≤ (lev K h).subgroupOf K := fun x hx =>
     Subgroup.mem_subgroupOf.mpr (hle (Subgroup.mem_subgroupOf.mp hx))
   let e := Subgroup.quotientEquivProdOfLE hle'
-  haveI : Finite ((K ⧸ (lev K h).subgroupOf K) ×
+  have : Finite ((K ⧸ (lev K h).subgroupOf K) ×
       ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K))) :=
     Finite.of_equiv _ e
-  haveI : Nonempty ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K)) :=
+  have : Nonempty ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K)) :=
     ⟨QuotientGroup.mk 1⟩
-  haveI : Nonempty (K ⧸ (lev K h).subgroupOf K) := ⟨QuotientGroup.mk 1⟩
-  haveI : Finite (K ⧸ (lev K h).subgroupOf K) :=
+  have : Nonempty (K ⧸ (lev K h).subgroupOf K) := ⟨QuotientGroup.mk 1⟩
+  have : Finite (K ⧸ (lev K h).subgroupOf K) :=
     Finite.prod_left ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K))
-  haveI : Finite ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K)) :=
+  have : Finite ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K)) :=
     Finite.prod_right (K ⧸ (lev K h).subgroupOf K)
-  letI := Fintype.ofFinite (K ⧸ (lev K h).subgroupOf K)
-  letI := Fintype.ofFinite ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K))
+  let := Fintype.ofFinite (K ⧸ (lev K h).subgroupOf K)
+  let := Fintype.ofFinite ((lev K h).subgroupOf K ⧸ (K'.subgroupOf K).subgroupOf ((lev K h).subgroupOf K))
   have key : ∀ a, (e a).1 = QuotientGroup.mk (a.out : K) := by
     intro a
     conv_lhs => rw [← QuotientGroup.out_eq' a]
@@ -564,8 +564,8 @@ theorem UpperTheory.Gal.G3.pHopOp :
   obtain ⟨m, hmj, hnorm, hS'⟩ := X.deep j {(i, (1 : G))}
   have hmi : X.K m ≤ X.K i := fun u hu => by
     simpa using hS' (i, 1) (Finset.mem_singleton_self _) u hu
-  haveI : Finite (X.K j ⧸ (X.K i).subgroupOf (X.K j)) := Nat.finite_of_card_ne_zero (X.idx i j)
-  letI : Fintype (X.K j ⧸ (X.K i).subgroupOf (X.K j)) := Fintype.ofFinite _
+  have : Finite (X.K j ⧸ (X.K i).subgroupOf (X.K j)) := Nat.finite_of_card_ne_zero (X.idx i j)
+  let : Fintype (X.K j ⧸ (X.K i).subgroupOf (X.K j)) := Fintype.ofFinite _
   have bm : X.admitted m j 1 := X.isAdmissibleIntegralBasisChange_one hmj
   have bmi : X.admitted m i 1 := X.isAdmissibleIntegralBasisChange_one hmi
   have admr : ∀ c : X.K j ⧸ (X.K i).subgroupOf (X.K j), X.admitted m i ((c.out : G))⁻¹ := fun c =>

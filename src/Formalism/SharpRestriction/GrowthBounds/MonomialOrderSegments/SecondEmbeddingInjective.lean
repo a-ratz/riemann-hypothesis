@@ -188,7 +188,7 @@ theorem TL_preimage (m : Fin D.r) :
       unfold TLset
       exact Finset.mem_union_left _ (Finset.mem_image_of_mem _ (by simp [LLj, seg_eB]))
     have h2 : (Fin.castAdd D.r a).val < D.stg j m := by
-      simp only [Fin.coe_castAdd, stg]
+      simp only [Fin.val_castAdd, stg]
       have := a.2
       omega
     exact iff_of_true h1 h2
@@ -198,8 +198,8 @@ theorem TL_preimage (m : Fin D.r) :
     have hm' := m'.2
     simp only [TLset, Finset.mem_union, Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and, mb, mlab, mtp,
       reduceCtorEq, and_false, exists_false, false_or, or_false, Sum.inr.injEq, Sum.inl.injEq, Prod.mk.injEq,
-      exists_eq_right, Fin.coe_natAdd, stg]
-    rw [Fin.lt_iff_val_lt_val, Fin.val_rev]
+      exists_eq_right, Fin.val_natAdd, stg]
+    rw [Fin.lt_def, Fin.val_rev]
     omega
 
 theorem YP_preimage1 (m : Fin D.r) :
@@ -213,7 +213,7 @@ theorem YP_preimage1 (m : Fin D.r) :
       unfold YPset
       exact Finset.mem_union_left _ (Finset.mem_image_of_mem _ (by simp [LLj, seg_eB]))
     have h2 : (Fin.castAdd D.r a).val < D.stg j m := by
-      simp only [Fin.coe_castAdd, stg]
+      simp only [Fin.val_castAdd, stg]
       have := a.2
       omega
     exact iff_of_true h1 h2
@@ -224,7 +224,7 @@ theorem YP_preimage1 (m : Fin D.r) :
     split_ifs with h0
     · simp only [YPset, Finset.mem_union, Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and, mb, mlab, mtp,
       reduceCtorEq, and_false, exists_false, false_or, or_false, Sum.inr.injEq, Sum.inl.injEq, Prod.mk.injEq,
-      exists_eq_right, Fin.coe_natAdd, stg]
+      exists_eq_right, Fin.val_natAdd, stg]
       rw [Fin.val_rev] at h0
       constructor
       · intro h
@@ -233,9 +233,9 @@ theorem YP_preimage1 (m : Fin D.r) :
         omega
     · simp only [YPset, Finset.mem_union, Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and, mb, mlab, mtp,
       reduceCtorEq, and_false, exists_false, false_or, or_false, Sum.inr.injEq, Sum.inl.injEq, Prod.mk.injEq,
-      exists_eq_right, Fin.coe_natAdd, stg]
+      exists_eq_right, Fin.val_natAdd, stg]
       rw [Fin.val_rev] at h0
-      rw [Fin.lt_iff_val_lt_val, Fin.val_rev]
+      rw [Fin.lt_def, Fin.val_rev]
       omega
 
 theorem YP_preimage0 (m : Fin D.r) (k : Fin (D.nB j + D.r))

@@ -113,7 +113,7 @@ theorem th_smul (hp : IsPair B M χX χW om r s r' s') (μ : Measure (UA σ W.J)
 theorem thZero_of (hB : ThetaBasic) (hE : EpsOf) (hV : FinVolU) (hS : SiegelAll) (hSo : SoDecay) (hF : SoFin)
     (hH : PositivityTheory.ThKG.Tow.PlaneHerm) (hDi : DictSt) : ThZero := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hp h1 h2 h3 h4 hν μ D hμ hD f hf hc
-  haveI := finW hE hV hp hμ hD
+  have := finW hE hV hp hμ hD
   have so : ∀ Ψ ∈ M.So B.ψ B.τ₁, th om μ D f Ψ 1 = 0 := fun Ψ hΨ => by
     have s₁ := (hF F E σ B n d X W M χX χW om r s r' s' hp).2.2.1 Ψ hΨ
     obtain ⟨C, k, hC⟩ := hSo F E σ B n d X W M χX χW om r s r' s' hp Ψ hΨ 1

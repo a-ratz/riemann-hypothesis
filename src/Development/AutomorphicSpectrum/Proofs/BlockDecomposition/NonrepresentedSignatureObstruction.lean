@@ -211,7 +211,7 @@ theorem hasSignature_diagonal {n P N : ℕ} (c : Fin n → ℝ) (h : P + N = n)
 theorem exists_signs (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (n : ℕ) (P : (F →+* ℝ) → ℕ) :
     ∃ a : Fin n → F, ∀ (σ : F →+* ℝ) (i : Fin n),
       ((i : ℕ) < P σ → 0 < σ (a i)) ∧ (P σ ≤ (i : ℕ) → σ (a i) < 0) := by
-  haveI : Finite (F →+* ℝ) := Finite.of_injective (fun σ => Complex.ofRealHom.comp σ) (fun σ τ h => by
+  have : Finite (F →+* ℝ) := Finite.of_injective (fun σ => Complex.ofRealHom.comp σ) (fun σ τ h => by
     ext x
     have := congrArg (fun g : F →+* ℂ => g x) h
     simpa using this)
@@ -242,7 +242,7 @@ theorem exists_signs (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (n :
 theorem exists_real_restrict {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E]
     [Algebra F E] (cm : CMData F E) (τ : E →+* ℂ) :
     ∃ σ : F →+* ℝ, ∀ x : F, τ (algebraMap F E x) = (σ x : ℂ) := by
-  haveI := cm.totReal
+  have := cm.totReal
   have hr : ComplexEmbedding.IsReal (τ.comp (algebraMap F E)) :=
     InfinitePlace.isReal_mk_iff.1 (IsTotallyReal.isReal _)
   exact ⟨hr.embedding, fun x => (hr.coe_embedding_apply x).symm⟩
@@ -251,10 +251,10 @@ theorem eq_or_conj_of_restrict {F E : Type} [Field F] [NumberField F] [Field E] 
     [Algebra F E] (cm : CMData F E) (τ τ' : E →+* ℂ)
     (h : ∀ x : F, τ' (algebraMap F E x) = τ (algebraMap F E x)) :
     τ' = τ ∨ τ' = (starRingEnd ℂ).comp τ := by
-  haveI := cm.totReal
-  haveI := cm.cmUnram.1
-  haveI : Algebra.IsQuadraticExtension F E := ⟨cm.deg2⟩
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have := cm.totReal
+  have := cm.cmUnram.1
+  have : Algebra.IsQuadraticExtension F E := ⟨cm.deg2⟩
+  have : IsCMField E := IsCMField.ofCMExtension F E
   have hst : ∀ (φ : E →+* ℂ) x, φ (star x) = starRingEnd ℂ (φ x) := cm.cmUnram.2.1
   have hcc : ∀ x : E, ReciprocityTheory.ChartRestriction.G.FD.cc x = star x := fun x => by
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
@@ -531,7 +531,7 @@ theorem gram_submatrix {E : Type} [Field E] [StarRing E] {m a b : Type} [Fintype
 
 theorem exists_lift {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E]
     [Algebra F E] (cm : CMData F E) (σ : F →+* ℝ) : ∃ τ : E →+* ℂ, ∀ x : F, τ (algebraMap F E x) = (σ x : ℂ) := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨cm.deg2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨cm.deg2⟩
   exact ⟨ComplexEmbedding.lift E (Complex.ofRealHom.comp σ), fun x => ComplexEmbedding.lift_algebraMap_apply E _ x⟩
 
 theorem exists_frame_of_sig {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E]
@@ -541,7 +541,7 @@ theorem exists_frame_of_sig {F E : Type} [Field F] [NumberField F] [Field E] [Nu
       Formalism.UG.HasSignature (G.map τ) p q ∧ p₁ + k ≤ p ∧ q₁ + k ≤ q) :
     ∃ x : Matrix (Fin m) (Fin t ⊕ Fin k) E, x.rank = t + k ∧ xᴴ * G * x = fromBlocks B 0 0 0 := by
   classical
-  haveI := cm.totReal
+  have := cm.totReal
   obtain ⟨n, hn⟩ : ∃ n, n = m - t - 2 * k := ⟨_, rfl⟩
   have hn0 : 0 < n := by omega
   choose L hL using exists_lift cm
@@ -621,7 +621,7 @@ theorem exists_frame_of_sig {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     rw [det_submatrix_equiv_self] at h5 ⊢
     have h6 : ∏ i, algebraMap F E (a' i) = (∏ i, algebraMap F E (a i)) * algebraMap F E c := by
       simp only [a', map_mul, Finset.prod_mul_distrib, apply_ite (algebraMap F E), map_one,
-        Finset.prod_ite_eq', Finset.mem_univ, if_true]
+        Finset.prod_ite_eq', Finset.mem_univ, ite_true]
     rw [hc, det_submatrix_equiv_self] at *
     rw [blockM_det, h6, ← mul_assoc, ← blockM_det, mul_div_cancel₀ _ h5]
   obtain ⟨R, hR, hRe⟩ := GlobalTheory.HermAdelicNorm.congr_of_signature_of_adelic_norm F E cm m G

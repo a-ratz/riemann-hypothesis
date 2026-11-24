@@ -133,7 +133,7 @@ theorem duality_diagonalClass_of_affineProperBaseChange (h : OrthogonalKeepingOp
       · exact ENNReal.zero_lt_top
       · filter_upwards [Lp.coeFn_zero ℂ 2 D.ν] with x hx
         have : ((0 : Hs (ι := ι) D) i : H E a b → ℂ) x = 0 := hx
-        rw [this, enorm_zero, zero_pow two_ne_zero, mul_zero])
+        rw [this, eNorm_zero, zero_pow two_ne_zero, mul_zero])
   exact ⟨M, s, f, a1, fun k => ⟨(a2 k).1, (a2 k).2.1, (a2 k).2.2.1, (a2 k).2.2.2.1, (a2 k).2.2.2.2.1, (a2 k).2.2.2.2.2.1⟩⟩
 
 end PositivityTheory.Rg.BcB.E2
@@ -201,7 +201,7 @@ theorem spec : Gelf → Point → SpecMeas → SpecIso → Spec := by
   refine ⟨S, borel S, ν, hνf, χ, V, ⟨?_, ?_, ?_, hViso, ?_⟩, ?_⟩
   · intro h0
     have h1 := hν 1
-    rw [h0, integral_zero_measure, map_one, ContinuousLinearMap.one_apply] at h1
+    rw [h0, integral_zero_measure, map_one, one_apply_eq_self] at h1
     exact hv (inner_self_eq_zero.1 h1.symm)
   · intro b
     simp only [hχ]
@@ -234,7 +234,7 @@ theorem spec : Gelf → Point → SpecMeas → SpecIso → Spec := by
     have hint : ∫ s, (tr s : ℂ) ∂ν = 0 := by
       have h1 := hν t
       have h2 : π t w = 0 := by
-        rw [hw, ← ContinuousLinearMap.mul_apply, ← map_mul, htg, map_zero, ContinuousLinearMap.zero_apply]
+        rw [hw, ← mul_apply_eq_comp, ← map_mul, htg, map_zero, zero_apply]
       rw [h2, inner_zero_right] at h1
       exact h1
     filter_upwards [ae_zero ν tr htr (fun s => le_max_left _ _) hint] with s hs
@@ -345,7 +345,7 @@ theorem desint : JointRep → Tonelli → WeakAE → EigAE → LocInt → NonZer
     simp only [h0, Pi.zero_apply] at hx
     simpa using hx.symm
   · rw [lintegral_congr_ae (g := fun x => W x * ‖f i x s‖ₑ ^ 2)
-      ((hae i).mono fun x hx => by simp only [hx, RCLike.enorm_conj])]
+      ((hae i).mono fun x hx => by simp only [hx, RCLike.eNorm_conj])]
     exact hsT i
   · rw [← hsO n]
     refine Finset.sum_congr rfl fun i _ => integral_congr_ae ?_
@@ -383,7 +383,7 @@ theorem eigae : WeakAE → EigAE := by
       have hi := (hc.integrable_of_hasCompactSupport (μ := X.μ) ((hΦ i j).2.smul_right)).2
       refine ne_of_lt (lt_of_le_of_lt (le_of_eq ?_) hi)
       refine lintegral_congr fun y => ?_
-      simp [enorm_smul]
+      simp [eNorm_smul]
     · have hm : MemLp (f i x) 2 ν := (Lp.memLp (F i x)).ae_eq ((hrep i).2 x).symm
       refine MemLp.of_le_mul (c := A) hm ?_ (ae_of_all _ fun s => ?_)
       · exact (hσ.mul (Complex.continuous_conj.measurable.comp (hfx i x))).aestronglyMeasurable
@@ -462,11 +462,11 @@ open MeasureTheory
 
 theorem hssep : HsSep := by
   intro X ι _
-  haveI : Fact ((1 : ENNReal) ≤ 2) := ⟨by norm_num⟩
-  haveI : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by norm_num⟩
-  haveI : SFinite X.ν := by unfold Ctx.ν; infer_instance
-  haveI : IsSeparable X.ν := inferInstance
-  haveI : SecondCountableTopology (Lp ℂ 2 X.ν) := inferInstance
+  have : Fact ((1 : ENNReal) ≤ 2) := ⟨by norm_num⟩
+  have : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by norm_num⟩
+  have : SFinite X.ν := by unfold Ctx.ν; infer_instance
+  have : IsSeparable X.ν := inferInstance
+  have : SecondCountableTopology (Lp ℂ 2 X.ν) := inferInstance
   infer_instance
 
 end PositivityTheory.Rg.BcB.E2.P
@@ -576,11 +576,11 @@ theorem ae_tendsto {S : Type} [MeasurableSpace S] {ν : Measure S} (h : Lp ℂ 2
     ∀ᵐ s ∂ν, Tendsto (fun j => (v j : S → ℂ) s) atTop (𝓝 (h s)) := by
   let g : ℕ → S → ℝ≥0∞ := fun j s => ‖(v j : S → ℂ) s - h s‖ₑ ^ (2:ℝ)
   have gm : ∀ j, Measurable (g j) := fun j =>
-    (((Lp.stronglyMeasurable (v j)).measurable.sub (Lp.stronglyMeasurable h).measurable).enorm).pow_const _
+    (((Lp.stronglyMeasurable (v j)).measurable.sub (Lp.stronglyMeasurable h).measurable).eNorm).pow_const _
   have hint : ∀ j, ∫⁻ s, g j s ∂ν ≤ ((2⁻¹ : ℝ≥0∞) ^ j) ^ 2 := by
     intro j
     have e1 : ∫⁻ s, g j s ∂ν = eLpNorm' (fun s => (v j : S → ℂ) s - h s) 2 ν ^ (2:ℝ) :=
-      lintegral_rpow_enorm_eq_rpow_eLpNorm' two_pos
+      lintegral_rpow_eNorm_eq_rpow_eLpNorm' two_pos
     have e2 : eLpNorm' (fun s => (v j : S → ℂ) s - h s) 2 ν = edist (v j) h := by
       rw [Lp.edist_def, eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.ofNat_ne_top]
       simp only [ENNReal.toReal_ofNat]
@@ -599,7 +599,7 @@ theorem ae_tendsto {S : Type} [MeasurableSpace S] {ν : Measure S} (h : Lp ℂ 2
     simpa [Function.comp_def] using this
   rw [tendsto_iff_edist_tendsto_0]
   refine h1.congr fun j => ?_
-  simp only [g, edist_eq_enorm_sub]
+  simp only [g, eDist_eq_eNorm_sub]
   rw [← ENNReal.rpow_mul]
   norm_num
 
@@ -817,10 +817,10 @@ theorem fdata : RowsEx → RowsEig → FData := by
     refine ⟨Complex.continuous_conj.comp_aestronglyMeasurable hgm, ?_⟩
     refine ne_top_of_le_ne_top (ENNReal.add_ne_top.2 ⟨hg' n i, hwt i⟩) ?_
     have hm : AEMeasurable (fun x => (W x)⁻¹ * ‖(g n i : X.G → ℂ) x‖ₑ ^ 2) X.ν :=
-      hW.inv.aemeasurable.mul (hgm.enorm.pow_const 2)
+      hW.inv.aemeasurable.mul (hgm.eNorm.pow_const 2)
     rw [← lintegral_add_left' hm]
     refine lintegral_mono fun x => ?_
-    rw [RCLike.enorm_conj]
+    rw [RCLike.eNorm_conj]
     exact Fdata.mul_le_weighted_squares _ _ _ (hW' x).1 (hW' x).2
   ·
     intro n h
@@ -1023,7 +1023,7 @@ lemma inner_L (π : C(S, ℂ) →⋆ₐ[ℂ] (K →L[ℂ] K)) (v : K) (ν : Meas
       inner ℂ (ContinuousMap.toLp (E := ℂ) 2 ν ℂ f) (ContinuousMap.toLp (E := ℂ) 2 ν ℂ f) := by
   rw [MeasureTheory.L2.inner_def]
   have h1 : inner ℂ (π f v) (π f v) = ∫ s, (star f * f) s ∂ν := by
-    rw [hν, map_mul, map_star, ContinuousLinearMap.mul_apply, ContinuousLinearMap.star_eq_adjoint,
+    rw [hν, map_mul, map_star, mul_apply_eq_comp, ContinuousLinearMap.star_eq_adjoint,
       ContinuousLinearMap.adjoint_inner_right]
   rw [h1]
   apply integral_congr_ae
@@ -1079,7 +1079,7 @@ theorem speciso : SpecIso := by
         rw [h1, h2, h3]
         rfl
       show V (M (e g)) = π f (V (e g))
-      rw [this, hVe, hVe, map_mul, ContinuousLinearMap.mul_apply]
+      rw [this, hVe, hVe, map_mul, mul_apply_eq_comp]
     have : h' = M h := by
       apply Lp.ext
       filter_upwards [hh', hM h] with s h1 h2
@@ -1204,7 +1204,7 @@ theorem specmeas : SpecMeas := by
   have hΛ : ∀ f : C(S, ℂ), 0 ≤ Λ (star f * f) := by
     intro f
     show 0 ≤ inner ℂ v (π (star f * f) v)
-    rw [map_mul, map_star, ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.mul_apply,
+    rw [map_mul, map_star, ContinuousLinearMap.star_eq_adjoint, mul_apply_eq_comp,
       ContinuousLinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]
     exact pow_nonneg (Complex.zero_le_real.mpr (norm_nonneg (π f v))) 2
   obtain ⟨ν, h1, h2, h3⟩ := Specmeas.exists_measure_of_positive Λ hΛ
@@ -1230,7 +1230,7 @@ namespace PositivityTheory.Rg.BcB.E2.P.Tonelli
 
 theorem enorm_sq {S : Type} [MeasurableSpace S] {ν : Measure S} (g : Lp ℂ 2 ν) :
     ‖g‖ₑ ^ 2 = ∫⁻ s, ‖(g : S → ℂ) s‖ₑ ^ 2 ∂ν := by
-  rw [Lp.enorm_def, eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ENNReal.ofNat_ne_top,
+  rw [Lp.eNorm_def, eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top,
     ← ENNReal.rpow_two, ← ENNReal.rpow_mul]
   · norm_num
   · exact Lp.aestronglyMeasurable g
@@ -1242,12 +1242,12 @@ namespace PositivityTheory.Rg.BcB.E2.P
 theorem tonelli : Tonelli := by
   intro Y S _ _ m _ ν _ F f W hf hW hfin
   have hmeas : Measurable (Function.uncurry fun y s => W y * ‖f y s‖ₑ ^ 2) :=
-    (hW.comp measurable_fst).mul (hf.1.enorm.pow_const 2)
+    (hW.comp measurable_fst).mul (hf.1.eNorm.pow_const 2)
   refine ae_lt_top hmeas.lintegral_prod_left' ?_
   rw [← lintegral_lintegral_swap hmeas.aemeasurable]
   refine ne_of_eq_of_ne (lintegral_congr fun y => ?_) hfin
   have hy : Measurable fun s => f y s := hf.1.comp measurable_prodMk_left
-  rw [lintegral_const_mul _ (hy.enorm.pow_const 2), Tonelli.enorm_sq]
+  rw [lintegral_const_mul _ (hy.eNorm.pow_const 2), Tonelli.enorm_sq]
   congr 1
   exact lintegral_congr_ae ((hf.2 y).mono fun s hs => by simp only [hs])
 
@@ -1275,7 +1275,7 @@ variable {Y S : Type} [MeasurableSpace Y] [MeasurableSpace S]
 theorem lint_slice (ν : Measure S) [IsFiniteMeasure ν] (F : Lp ℂ 2 ν) (f : S → ℂ) (hf : f =ᵐ[ν] F) :
     ∫⁻ s, ‖f s‖ₑ ∂ν ≤ ‖F‖ₑ * ν Set.univ ^ (1 / 2 : ℝ) := by
   rw [← eLpNorm_one_eq_lintegral_eNorm ((Lp.aestronglyMeasurable F).congr hf.symm),
-    eLpNorm_congr_ae hf, Lp.enorm_def]
+    eLpNorm_congr_ae hf, Lp.eNorm_def]
   have := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (p := 1) (q := 2) (μ := ν) (f := (F : S → ℂ))
     (by norm_num) (Lp.aestronglyMeasurable F)
   convert this using 3
@@ -1291,15 +1291,15 @@ theorem integrable_k (m : Measure Y) [SFinite m] (ν : Measure S) [IsFiniteMeasu
   refine ⟨hcm.mul hfm, ?_⟩
   show ∫⁻ p, ‖c p.1 * conj (f p.1 p.2)‖ₑ ∂(m.prod ν) < ⊤
   have hm : AEMeasurable (fun p : Y × S => ‖c p.1 * conj (f p.1 p.2)‖ₑ) (m.prod ν) :=
-    (hcm.mul hfm).enorm
+    (hcm.mul hfm).eNorm
   rw [lintegral_prod _ hm]
   have hC : ν Set.univ ^ (1 / 2 : ℝ) ≠ ⊤ := ENNReal.rpow_ne_top_of_nonneg (by norm_num) (measure_ne_top ν _)
   calc ∫⁻ y, ∫⁻ s, ‖c (y, s).1 * conj (f (y, s).1 (y, s).2)‖ₑ ∂ν ∂m
       = ∫⁻ y, ‖c y‖ₑ * ∫⁻ s, ‖f y s‖ₑ ∂ν ∂m := by
         refine lintegral_congr fun y => ?_
-        rw [← lintegral_const_mul' _ _ enorm_ne_top]
+        rw [← lintegral_const_mul' _ _ eNorm_ne_top]
         refine lintegral_congr fun s => ?_
-        simp [enorm_mul]
+        simp [eNorm_mul]
     _ ≤ ∫⁻ y, ‖c y‖ₑ * (‖F y‖ₑ * ν Set.univ ^ (1 / 2 : ℝ)) ∂m := by
         refine lintegral_mono fun y => ?_
         gcongr

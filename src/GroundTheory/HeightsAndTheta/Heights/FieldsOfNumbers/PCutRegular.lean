@@ -176,7 +176,7 @@ theorem isMultiHomogIdeal_sup_span {P : Ideal (MRing ι F)} (hP : IsMultiHomogId
   obtain ⟨t, rfl⟩ := Ideal.mem_span_singleton'.mp ht'
   have hcomponent : weightedHomogeneousComponent (blockWeight ι) b (t * s) =
       if c ≤ b then weightedHomogeneousComponent (blockWeight ι) (b - c) t * s else 0 := by
-    letI := MvPolynomial.weightedGradedAlgebra F (blockWeight ι)
+    let := MvPolynomial.weightedGradedAlgebra F (blockWeight ι)
     have hs' : s ∈ weightedHomogeneousSubmodule F (blockWeight ι) c :=
       (mem_weightedHomogeneousSubmodule _ _ _ _).mpr hs
     rw [← weightedDecomposition.decompose'_apply, ← weightedDecomposition.decompose'_apply]
@@ -318,7 +318,7 @@ open CutRegular in
 theorem CutRegular.proof (h1 : HilbExactDivide.Statement.{u}) (h2 : MultEqualsCoeff.Statement.{u})
     (_h3 : IntNumSymm.Statement.{u}) : CutRegular.Statement.{u} := by
   intro F _ K _ _ ι _ P hP n hdim c s hs hsP bs
-  haveI := hP.isPrime
+  have := hP.isPrime
   set I := P ⊔ Ideal.span {s} with hIdef
   have hdiff : diffStep (fun k => (c k : ℤ)) (hilbFn P) = hilbFn I := by
     funext m

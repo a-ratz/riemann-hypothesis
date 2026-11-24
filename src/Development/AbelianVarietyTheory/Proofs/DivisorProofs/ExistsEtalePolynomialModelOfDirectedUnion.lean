@@ -92,8 +92,8 @@ theorem exists_etale_polynomial_model_of_directed_union :
   let e : Polynomial (𝒜 i) ≃+* S i := RingEquiv.ofBijective f.rangeRestrict
     ⟨fun a b h ↦ hf (congrArg Subtype.val h), f.rangeRestrict_surjective⟩
   have he : ∀ p, ((e p : S i) : Polynomial T) = f p := fun _ ↦ rfl
-  letI alg₀ : Algebra (Polynomial (𝒜 i)) E₀ := ((algebraMap (S i) E₀).comp e.toRingHom).toAlgebra
-  letI algT : Algebra (Polynomial (𝒜 i)) (Polynomial T) := f.toAlgebra
+  let alg₀ : Algebra (Polynomial (𝒜 i)) E₀ := ((algebraMap (S i) E₀).comp e.toRingHom).toAlgebra
+  let algT : Algebra (Polynomial (𝒜 i)) (Polynomial T) := f.toAlgebra
   have hEt : Algebra.Etale (Polynomial (𝒜 i)) E₀ := by
     rw [← RingHom.etale_algebraMap]
     exact RingHom.Etale.respectsIso.2 (algebraMap (S i) E₀) e
@@ -101,13 +101,13 @@ theorem exists_etale_polynomial_model_of_directed_union :
   have hmapT : ∀ p, algebraMap (S i) (Polynomial T) (e p) = algebraMap (Polynomial (𝒜 i)) (Polynomial T) p :=
     fun _ ↦ rfl
   have hmapE : ∀ p, algebraMap (S i) E₀ (e p) = algebraMap (Polynomial (𝒜 i)) E₀ p := fun _ ↦ rfl
-  haveI c1 : SMulCommClass (S i) (Polynomial (𝒜 i)) (Polynomial T) :=
+  have c1 : SMulCommClass (S i) (Polynomial (𝒜 i)) (Polynomial T) :=
     ⟨fun a b x ↦ by simp only [Algebra.smul_def]; ring⟩
-  haveI c2 : TensorProduct.CompatibleSMul (S i) (Polynomial (𝒜 i)) (Polynomial T) E₀ :=
+  have c2 : TensorProduct.CompatibleSMul (S i) (Polynomial (𝒜 i)) (Polynomial T) E₀ :=
     ⟨fun p m n ↦ by
       rw [Algebra.smul_def, Algebra.smul_def, ← hmapT, ← hmapE, ← Algebra.smul_def, ← Algebra.smul_def,
         TensorProduct.smul_tmul]⟩
-  haveI c3 : TensorProduct.CompatibleSMul (Polynomial (𝒜 i)) (S i) (Polynomial T) E₀ :=
+  have c3 : TensorProduct.CompatibleSMul (Polynomial (𝒜 i)) (S i) (Polynomial T) E₀ :=
     ⟨fun s m n ↦ by
       obtain ⟨p, rfl⟩ := e.surjective s
       rw [Algebra.smul_def, Algebra.smul_def, hmapT, hmapE, ← Algebra.smul_def, ← Algebra.smul_def,

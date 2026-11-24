@@ -408,7 +408,7 @@ theorem isMult_nonneg [MeasurableSpace (G n)] {μ : Measure (G n)} {E : KMod n} 
   · rw [max_eq_right hT.le]; exact isBump_zero_of_neg (hks i).1 hT
 
 theorem mem_GLs_mul {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem unitary_mem_GLs (k : Matrix.unitaryGroup (Fin n) ℂ) : k.1 ∈ GLs n := by
@@ -434,7 +434,7 @@ theorem inv_mem_GLs {x : Mat n} (hx : x ∈ GLs n) : x⁻¹ ∈ GLs n := by
   exact (Matrix.isUnit_nonsing_inv_det x hu).ne_zero
 
 theorem conjTranspose_mem_GLs {x : Mat n} (hx : x ∈ GLs n) : xᴴ ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_conjTranspose, star_ne_zero] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_conjTranspose, star_ne_zero] at *
   exact hx
 
 theorem tw_mem_GLs {x d : Mat n} (hx : x ∈ GLs n) (hd : d ∈ GLs n) : x⁻¹ * d * xᴴ⁻¹ ∈ GLs n :=
@@ -461,18 +461,18 @@ theorem lAsm : LAsm := by
     if y ∈ cone n ×ˢ cone n then Kc σ c Fr k Γ T d.val y else 0 with hK'def
   have hUU : IsOpen (cone n ×ˢ cone n) := hopen.prod hopen
   have hKK' : ∀ y ∈ cone n ×ˢ cone n, K' =ᶠ[𝓝 y] Kc σ c Fr k Γ T d.val := fun y hy =>
-    Filter.eventually_of_mem (hUU.mem_nhds hy) fun y' hy' => by simp only [hK'def, if_pos hy']
+    Filter.eventually_of_mem (hUU.mem_nhds hy) fun y' hy' => by simp only [hK'def, ite_eq_left hy']
   obtain ⟨hherm, htr, -, -, -, -, -, hoPt⟩ := hHb n
   have hH := hHom (Fin n × Fin n) E.V (fun i => ε (hb i)) (fun i => ι (hb i)) S Γ (cone n) (oPt n) K' hopen hconv hoPt
     (fun i j => by
       rw [hCx.car (hb i) (hb j) (hherm i) (hherm j), htr i j]
       split_ifs <;> simp)
     (fun i => hCx.Γε _) (fun i => hCx.Γι _) hCx.SΓ hCx.Ssmooth (fun s i => hCx.Sε s _) hCx.Sder
-    (hKsm.congr fun y hy => by simp only [hK'def, if_pos hy])
+    (hKsm.congr fun y hy => by simp only [hK'def, ite_eq_left hy])
     (fun y => by
       by_cases hy : y ∈ cone n ×ˢ cone n
-      · simp only [hK'def, if_pos hy]; exact hKΓ y hy
-      · simp only [hK'def, if_neg hy, mul_zero, zero_mul])
+      · simp only [hK'def, ite_eq_left hy]; exact hKΓ y hy
+      · simp only [hK'def, ite_eq_right hy, mul_zero, zero_mul])
     (fun y hy => by
       rw [(hKK' y hy).fderiv_eq]
       exact hKch y hy)
@@ -501,11 +501,11 @@ theorem lAsm : LAsm := by
   rw [← heq1, ← heq0]
   have e1 : ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 1 * K' (v, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) =
       ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 1 * Kc σ c Fr k Γ T d.val (v, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) :=
-    setIntegral_congr_fun hopen.measurableSet fun v hv => by simp only [hK'def, if_pos (show (v, v) ∈ cone n ×ˢ cone n from ⟨hv, hv⟩)]
+    setIntegral_congr_fun hopen.measurableSet fun v hv => by simp only [hK'def, ite_eq_left (show (v, v) ∈ cone n ×ˢ cone n from ⟨hv, hv⟩)]
   have e0 : ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 0 * K' (oPt n, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) =
       ∫ v in cone n, LinearMap.trace ℂ E.V ((Γ * S 0 * Kc σ c Fr k Γ T d.val (oPt n, v) : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) :=
     setIntegral_congr_fun hopen.measurableSet fun v hv => by
-      simp only [hK'def, if_pos (show (oPt n, v) ∈ cone n ×ˢ cone n from ⟨hoPt, hv⟩)]
+      simp only [hK'def, ite_eq_left (show (oPt n, v) ∈ cone n ×ˢ cone n from ⟨hoPt, hv⟩)]
   rw [← e1, ← e0]
   exact hH
 
@@ -599,14 +599,14 @@ theorem map_thE [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) 
   rwa [h1, one_smul] at this
 
 theorem mem_GLs_mul {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem inv_mem_GLs {x : Mat n} (hx : x ∈ GLs n) : x⁻¹ ∈ GLs n :=
   (Matrix.isUnit_nonsing_inv_det x (isUnit_iff_ne_zero.2 hx)).ne_zero
 
 theorem cT_mem_GLs {x : Mat n} (hx : x ∈ GLs n) : xᴴ ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_conjTranspose, star_ne_zero] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_conjTranspose, star_ne_zero] at *
   exact hx
 
 theorem one_mem_GLs : (1 : Mat n) ∈ GLs n := by simp [GLs]
@@ -675,7 +675,7 @@ theorem end0 : End0 := by
       unfold Kf
       rw [hk1, hFr0, ← mul_assoc (E.ρ U0), hρ, one_mul]
     simp only [Kc]
-    rw [hKf, mul_smul_comm, ContinuousLinearMap.coe_smul, map_smul, smul_eq_mul, mul_comm]
+    rw [hKf, mul_smul_comm, ContinuousLinearMap.toLinearMap_smul, map_smul, smul_eq_mul, mul_comm]
 
   have hcont_ci : ContinuousOn (fun y : Mat n => yᴴ⁻¹) (GLs n) := by
     have h1 : ContinuousOn (fun y : Mat n => y⁻¹) (GLs n) :=
@@ -696,7 +696,7 @@ theorem end0 : End0 := by
     apply hRk _ (mem_GLs_mul hdG (inv_mem_GLs (cT_mem_GLs hy)))
     rw [hd, lg_diag_mul hz, lg_cT_inv hy]; exact hlt
   have hFsupp : ∃ R, ∀ y ∈ GLs n, R < lg y → F y = 0 :=
-    ⟨Rk, fun y hy hlt => by simp only [hFdef, hkz y hy hlt, zero_mul, mul_zero, ContinuousLinearMap.coe_zero, map_zero]⟩
+    ⟨Rk, fun y hy hlt => by simp only [hFdef, hkz y hy hlt, zero_mul, mul_zero, ContinuousLinearMap.toLinearMap_zero, map_zero]⟩
   have hFinv : ∀ y ∈ GLs n, ∀ κ : Matrix.unitaryGroup (Fin n) ℂ, F (y * κ.1) = F y := by
     intro y hy κ
     have hκ : κ.1 * star κ.1 = 1 := Matrix.mem_unitaryGroup_iff.1 κ.2
@@ -737,7 +737,7 @@ theorem end0 : End0 := by
     hcont_B.comp_continuous Units.continuous_val fun y => GlobalTheory.CompanionTheory.LengthGL.mem_GLs_val y
   have hBsupp : HasCompactSupport B :=
     HasCompactSupport.intro (GlobalTheory.CompanionTheory.LengthGL.isCompact_G (n := n) Rk) fun y hy => by
-      simp only [Set.mem_setOf_eq, not_le] at hy
+      simp only [Set.mem_ofPred_eq, not_le] at hy
       simp only [hBdef, hkz _ (GlobalTheory.CompanionTheory.LengthGL.mem_GLs_val y) hy, zero_mul]
   have hBint : Integrable B μ := hBcont.integrable_of_hasCompactSupport hBsupp
   have hIF : ∫ y : G n, F y.val ∂μ = trL (Γ * S 0) (∫ y, B y ∂μ) := by
@@ -746,14 +746,14 @@ theorem end0 : End0 := by
 
   have hkey : (∫ y, B y ∂μ) * S 0 = val (infOf lam) • (Fr d.val * T * S 0) := by
     refine ContinuousLinearMap.ext fun w => ?_
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.integral_apply hBint (S 0 w)]
+    rw [mul_apply_eq_comp, ContinuousLinearMap.integral_apply hBint (S 0 w)]
     set v := Fr d.val (T (S 0 w)) with hv
     have hS0v : S 0 v = v := by
       rw [hv]
       have e1 : S 0 (Fr d.val (T (S 0 w))) = (S 0 * Fr d.val) (T (S 0 w)) := rfl
-      rw [e1, hCx.sym_zero_comm_frame _ hdG, ContinuousLinearMap.mul_apply]
+      rw [e1, hCx.sym_zero_comm_frame _ hdG, mul_apply_eq_comp]
       have e2 : S 0 (T (S 0 w)) = (S 0 * T) (S 0 w) := rfl
-      rw [e2, ← hCx.time_comm_sym_zero, ContinuousLinearMap.mul_apply]
+      rw [e2, ← hCx.time_comm_sym_zero, mul_apply_eq_comp]
       have e3 : S 0 (S 0 w) = (S 0 * S 0) w := rfl
       rw [e3, hCx.S0sq]
     set f : Mat n → E.V := fun x => Fr x⁻¹ (S 0 v) with hfdef
@@ -766,23 +766,23 @@ theorem end0 : End0 := by
         have h := hCx.S0θ _ hcG
         rw [Matrix.conjTranspose_conjTranspose] at h
         have := congrArg (fun A : E.V →L[ℂ] E.V => A w) h
-        simpa [ContinuousLinearMap.mul_apply] using this
+        simpa [mul_apply_eq_comp] using this
       have hΓ : Γ (Fr (y.val)ᴴ (T (S 0 w))) = Fr (y.val)ᴴ (T (S 0 w)) := by
         have h1 : Γ (Fr (y.val)ᴴ (T (S 0 w))) = Fr (y.val)ᴴ (Γ (T (S 0 w))) := by
           have := congrArg (fun A : E.V →L[ℂ] E.V => A (T (S 0 w))) (hCx.ΓFr _ hcG)
-          simpa [ContinuousLinearMap.mul_apply] using this
+          simpa [mul_apply_eq_comp] using this
         have h2 : Γ (T (S 0 w)) = T (Γ (S 0 w)) := by
           have := congrArg (fun A : E.V →L[ℂ] E.V => A (S 0 w)) hCx.ΓT
-          simpa [ContinuousLinearMap.mul_apply] using this
+          simpa [mul_apply_eq_comp] using this
         have h3 : Γ (S 0 w) = S 0 w := by
           have := congrArg (fun A : E.V →L[ℂ] E.V => A w) hCx.S0Γ
-          simpa [ContinuousLinearMap.mul_apply] using this
+          simpa [mul_apply_eq_comp] using this
         rw [h1, h2, h3]
       have hval : (d * thE y).val = d.val * (y.val)ᴴ⁻¹ := by rw [Units.val_mul, thE_val]
       have hinv : ((d * thE y).val)⁻¹ * d.val = (y.val)ᴴ := by
         rw [hval, Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (isUnit_iff_ne_zero.2 hcG), mul_assoc,
           Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.2 hdG), mul_one]
-      simp only [hBdef, hhdef, ContinuousLinearMap.mul_apply]
+      simp only [hBdef, hhdef, mul_apply_eq_comp]
       rw [hθ, hΓ, hinv, hval]
     have hmp : MeasurePreserving (thE (n := n)) μ μ := ⟨thE.continuous.measurable, map_thE μ⟩
     have hI1 : ∫ y, B y (S 0 w) ∂μ = ∫ y, hh y ∂μ := by
@@ -798,20 +798,20 @@ theorem end0 : End0 := by
         have hinvκ : (g * κ.1)⁻¹ = (κ⁻¹ : Matrix.unitaryGroup (Fin n) ℂ).1 * g⁻¹ := by
           rw [Matrix.mul_inv_rev, Matrix.inv_eq_left_inv hκ']; rfl
         simp only [hfdef]
-        rw [hinvκ, hCx.mul _ (unitary_mem_GLs _) _ (inv_mem_GLs hg), hCx.onK, ContinuousLinearMap.mul_apply]
+        rw [hinvκ, hCx.mul _ (unitary_mem_GLs _) _ (inv_mem_GLs hg), hCx.onK, mul_apply_eq_comp]
     have hact : act μ E k f 1 = val (infOf lam) • f 1 := heig (infOf lam) f hfCE (hCx.eig v) 1 one_mem_GLs
     have hI2 : ∫ y, hh y ∂μ = act μ E k f 1 := by
       unfold act
       congr 1; funext y
       have hyG := GlobalTheory.CompanionTheory.LengthGL.mem_GLs_val y
       simp only [hhdef, hfdef, one_mul, hS0v]
-      rw [hCx.mul _ (inv_mem_GLs hyG) _ hdG, ContinuousLinearMap.mul_apply]
-    have hf1 : f 1 = v := by simp only [hfdef, inv_one, hCx.one, ContinuousLinearMap.one_apply, hS0v]
-    rw [hI1, hI2, hact, hf1, ContinuousLinearMap.smul_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply]
-  rw [hIF, trL_apply, hCx.S0Γ, ContinuousLinearMap.coe_mul, LinearMap.trace_mul_comm, ← ContinuousLinearMap.coe_mul,
-    hkey, ContinuousLinearMap.coe_smul, map_smul, smul_eq_mul]
+      rw [hCx.mul _ (inv_mem_GLs hyG) _ hdG, mul_apply_eq_comp]
+    have hf1 : f 1 = v := by simp only [hfdef, inv_one, hCx.one, one_apply_eq_self, hS0v]
+    rw [hI1, hI2, hact, hf1, smul_apply, mul_apply_eq_comp, mul_apply_eq_comp]
+  rw [hIF, trL_apply, hCx.S0Γ, ContinuousLinearMap.toLinearMap_mul, LinearMap.trace_mul_comm, ← ContinuousLinearMap.toLinearMap_mul,
+    hkey, ContinuousLinearMap.toLinearMap_smul, map_smul, smul_eq_mul]
   congr 1
-  rw [ContinuousLinearMap.coe_mul, LinearMap.trace_mul_comm, ← ContinuousLinearMap.coe_mul, ← mul_assoc, hd]
+  rw [ContinuousLinearMap.toLinearMap_mul, LinearMap.trace_mul_comm, ← ContinuousLinearMap.toLinearMap_mul, ← mul_assoc, hd]
   exact hCx.char z hz hz2
 
 end PositivityTheory.RgBcC.LfSt.GLSubgroupConjTransposeClosure

@@ -70,7 +70,7 @@ theorem Ks_mono (K : FinExt l) {m n : ℕ} (h : m ≤ n) : Ks K m ≤ Ks K n := 
   refine sup_le_sup_left (IntermediateField.adjoin.mono _ _ _ ?_) _
   intro x hx
   obtain ⟨c, rfl⟩ := Nat.exists_eq_add_of_le h
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   rw [pow_add, pow_mul, hx, one_pow]
 
 theorem root_mem (K : FinExt l) {m : ℕ} {x : Om l} (hx : x ^ (l ^ m) = 1) : x ∈ Ks K m :=
@@ -100,15 +100,15 @@ theorem Ks_stable (K : FinExt l) (m : ℕ) {g : GQ l} (hg : g ∈ (K0 K).fixingS
   exact this hx
 
 theorem exists_prim (n : ℕ) (hn : n ≠ 0) : ∃ z : Om l, IsPrimitiveRoot z n := by
-  haveI : NeZero (n : Om l) := ⟨Nat.cast_ne_zero.mpr hn⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) n
+  have : NeZero (n : Om l) := ⟨Nat.cast_ne_zero.mpr hn⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) n
 
 theorem coe_inj : Function.Injective (algebraMap (Om l) (PadicComplex l)) :=
   (algebraMap (Om l) (PadicComplex l)).injective
 
 theorem prim_lift {n : ℕ} (hn : n ≠ 0) {ζ : PadicComplex l} (h : IsPrimitiveRoot ζ n) :
     ∃ z : Om l, algebraMap _ _ z = ζ ∧ IsPrimitiveRoot z n := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   obtain ⟨z, hz⟩ := exists_prim (l := l) n hn
   have hz' := hz.map_of_injective (coe_inj (l := l))
   obtain ⟨i, -, hi⟩ := hz'.eq_pow_of_pow_eq_one h.pow_eq_one
@@ -181,7 +181,7 @@ theorem int_decomp (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) (c : ℕ) : ∀ x : O
   | succ c ih =>
     intro x hx hx1
     have hp : l.Prime := Fact.out
-    haveI : NeZero l := ⟨hp.ne_zero⟩
+    have : NeZero l := ⟨hp.ne_zero⟩
     obtain ⟨z, hz⟩ := exists_prim (l := l) (l ^ (j + (c + 1))) (pow_ne_zero _ hp.ne_zero)
     obtain ⟨y, hy, rfl⟩ := (_root_.GlobalTheory.Cyc.integers_eq_sum_zeta_pow l K (j + (c + 1)) (by omega) z hz).1 x hx hx1
     obtain ⟨o, ho, d, hd, hod⟩ := ih (y 0) (hy 0).1 (hy 0).2
@@ -428,7 +428,7 @@ theorem solve (hact : IsActC act) (hχ : IsCyc χ) (K : FinExt l) {j : ℕ} (hj 
   have hp : l.Prime := Fact.out
   have hζ1 : 0 < ‖ζ - 1‖ := norm_pos_iff.2 (sub_ne_zero.2 (hζ.ne_one hp.one_lt))
   have hcl : IsClosed (Xj K j : Set (PadicComplex l)) := AddSubgroup.isClosed_topologicalClosure _
-  haveI : CompleteSpace ↥(Xj K j) := hcl.completeSpace_coe
+  have : CompleteSpace ↥(Xj K j) := hcl.completeSpace_coe
   let f : ↥(Xj K j) → PadicComplex l := fun y => act g y - y
   have hanti : AntilipschitzWith (Real.toNNReal (l / ‖ζ - 1‖)) f := by
     refine AntilipschitzWith.of_le_mul_dist fun a b => ?_
@@ -442,7 +442,7 @@ theorem solve (hact : IsActC act) (hχ : IsCyc χ) (K : FinExt l) {j : ℕ} (hj 
     exact h
   have huc : UniformContinuous f :=
     ((AddMonoidHomClass.isometry_of_norm (act g) (hact.2 g)).uniformContinuous.comp
-      uniformContinuous_subtype_val).sub uniformContinuous_subtype_val
+      uniformContinuous_subtypeVal).sub uniformContinuous_subtypeVal
   have hr := (hanti.isClosed_range huc).preimage (continuous_const_mul (ζ - 1))
   have hsub : (Xalg K j : Set (PadicComplex l)) ⊆ (fun b => (ζ - 1) * b) ⁻¹' Set.range f := by
     intro d hd

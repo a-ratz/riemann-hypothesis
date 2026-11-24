@@ -294,7 +294,7 @@ variable {I t e}
 
 theorem proof (h₁ : IncidenceGeneric.Statement) (h₂ : ChartIncDomain.Statement) : ChartKernel.Statement := by
   intro F _ n e I t hI ht
-  haveI := hI.isPrime
+  have := hI.isPrime
   obtain ⟨-, hX⟩ := h₂ F n e I t hI ht
   have hτ : aeval (genPt I) (linForm t) ≠ 0 := fun h => ht ((aeval_genPt_eq_zero_iff I _).mp h)
   have hc : ∑ j, (aeval (genPt I) (linForm t))⁻¹ *

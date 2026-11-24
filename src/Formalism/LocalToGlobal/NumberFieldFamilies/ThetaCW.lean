@@ -208,7 +208,7 @@ theorem real_eq_sqrt_sign_sqrt (l : ℝ) (hl : l ≠ 0) : (l : ℂ) = star ((Rea
     ((Real.sqrt |l| : ℝ) : ℂ) := by
   rw [Complex.star_def, Complex.conj_ofReal]
   conv_lhs => rw [← sqrt_abs_mul_sign_sqrt_abs l hl]
-  by_cases hp : 0 < l <;> simp only [hp, decide_true, decide_false, if_true, if_false, Bool.false_eq_true] <;> push_cast <;> ring
+  by_cases hp : 0 < l <;> simp only [hp, decide_true, decide_false, ite_true, ite_false, Bool.false_eq_true] <;> push_cast <;> ring
 
 end Gen
 
@@ -235,7 +235,7 @@ theorem orth_basis (V : HSp D) : ∃ v : Fin V.rank → V.V, LinearIndependent D
 def basC (V : HSp D) : Matrix (Fin V.rank) (Fin V.rank) D.host.E := fun i k => V.frame.repr ((orth_basis V).choose k) i
 
 theorem basC_unit (V : HSp D) : IsUnit (basC V).det := by
-  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_cols_iff_isUnit]
+  rw [← Matrix.isUnit_iff_isUnit_det, ← linearIndependent_col_iff_isUnit]
   exact (orth_basis V).choose_spec.1.map' V.frame.equivFun.toLinearMap (LinearEquiv.ker _)
 
 theorem ob_coord (V : HSp D) (x y : V.V) :

@@ -127,11 +127,11 @@ namespace GlobalTheory.EtC
 theorem stalk_local_classes : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (Θ Θ₂ : Over S ⥤ Spc) (α : Θ ⟶ Θ₂), (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F (Θ.mapCone c)) → (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F (Θ₂.mapCone c)) → ∀ (O : Type) [CommRing O] (s : Spec (CommRingCat.of O) ⟶ S), IsStalk O s → Eqv R (α.app (Over.mk s)) F → ∀ (U : Over S), Etale U.hom → ∀ (g : Over.mk s ⟶ U) (n : ℤ), (∀ x : H R (Θ.obj U) F n, ∃ (V : Over S) (g₁ : Over.mk s ⟶ V) (h : V ⟶ U) (y : H R (Θ₂.obj V) F n), Etale V.hom ∧ g₁ ≫ h = g ∧ pull R (α.app V) F n y = pull R (Θ.map h) F n x) ∧ ∀ y : H R (Θ₂.obj U) F n, pull R (α.app U) F n y = 0 → ∃ (V : Over S) (g₁ : Over.mk s ⟶ V) (h : V ⟶ U), Etale V.hom ∧ g₁ ≫ h = g ∧ pull R (Θ₂.map h) F n y = 0 := by
   intro R _ F S Θ Θ' α hΘ hΘ' O _ s hs hα U hU g n
   obtain ⟨I, _, _, G, π, ⟨hl⟩, hG⟩ := GlobalTheory.T.exists_cofiltered_limit_affine_etale_of_isStalk' S O s hs
-  haveI : IsConnected I := IsCofiltered.isConnected I
+  have : IsConnected I := IsCofiltered.isConnected I
   have hcF : IsLimit ((Over.forget S).mapCone (Cone.mk _ π)) := isLimitOfPreserves (Over.forget S) hl
-  haveI : ∀ i, IsAffine ((G ⋙ Over.forget S).obj i) := fun i => (hG i).1
-  haveI : ∀ {i j : I} (f : i ⟶ j), IsAffineHom ((G ⋙ Over.forget S).map f) := fun _ => inferInstance
-  haveI : LocallyOfFinitePresentation U.hom := inferInstance
+  have : ∀ i, IsAffine ((G ⋙ Over.forget S).obj i) := fun i => (hG i).1
+  have : ∀ {i j : I} (f : i ⟶ j), IsAffineHom ((G ⋙ Over.forget S).map f) := fun _ => inferInstance
+  have : LocallyOfFinitePresentation U.hom := inferInstance
   let t0 : G ⋙ Over.forget S ⟶ (Functor.const I).obj S :=
     { app := fun i => (G.obj i).hom, naturality := fun i j f => by simp }
   obtain ⟨j, u0, hu0, hu1⟩ := Scheme.exists_π_app_comp_eq_of_locallyOfFinitePresentation
@@ -214,20 +214,20 @@ theorem contCone_bc_sch_qcqs (R : Type) [CommRing R] (F : Shv R) (hF : Finitary 
   have hl : IsLimit (H.mapCone c) := isLimitOfPreserves H hc
   have hcomp : ∀ i, CompactSpace ((G ⋙ H).obj i) := by
     intro i
-    haveI := hG i
-    haveI : QuasiCompact (pullback.fst (G.obj i).hom r) := MorphismProperty.of_isPullback (P := @QuasiCompact) (IsPullback.of_hasPullback (G.obj i).hom r).flip hqc
+    have := hG i
+    have : QuasiCompact (pullback.fst (G.obj i).hom r) := MorphismProperty.of_isPullback (P := @QuasiCompact) (IsPullback.of_hasPullback (G.obj i).hom r).flip hqc
     have hc' := QuasiCompact.compactSpace_of_compactSpace (pullback.fst (G.obj i).hom r)
     exact hc'
   have hqsp : ∀ i, QuasiSeparatedSpace ((G ⋙ H).obj i) := by
     intro i
-    haveI := hG i
-    haveI : QuasiSeparated (pullback.fst (G.obj i).hom r) := MorphismProperty.of_isPullback (P := @QuasiSeparated) (IsPullback.of_hasPullback (G.obj i).hom r).flip hqs
+    have := hG i
+    have : QuasiSeparated (pullback.fst (G.obj i).hom r) := MorphismProperty.of_isPullback (P := @QuasiSeparated) (IsPullback.of_hasPullback (G.obj i).hom r).flip hqs
     have hs' := quasiSeparatedSpace_of_quasiSeparated (pullback.fst (G.obj i).hom r)
     exact hs'
   have haff : ∀ (i j : I) (f : i ⟶ j), IsAffineHom ((G ⋙ H).map f) := by
     intro i j f
-    haveI := hG i
-    haveI := hG j
+    have := hG i
+    have := hG j
     have hsq : IsPullback ((G ⋙ H).map f) (pullback.fst (G.obj i).hom r) (pullback.fst (G.obj j).hom r)
         (G.map f).left := by
       refine IsPullback.of_right (h₁₂ := pullback.snd (G.obj j).hom r) (h₂₂ := (G.obj j).hom) (v₁₃ := r) ?_ ?_ ?_
@@ -290,7 +290,7 @@ def cdesc {U : Over S} (h : ∀ i, V i ⟶ U) : cop V ⟶ U :=
 theorem cι_cdesc {U : Over S} (h : ∀ i, V i ⟶ U) (i : ι) : cι V i ≫ cdesc V h = h i := by
   ext1
   change Sigma.ι (fun i => (V i).left) i ≫ Sigma.desc (fun i => (h i).left) = (h i).left
-  exact Sigma.ι_desc _ _
+  exact Sigma.ι_comp_desc _ _
 
 def cop_isColimit : IsColimit (Cofan.mk (cop V).left (fun i => (cι V i).left)) :=
   coproductIsCoproduct _

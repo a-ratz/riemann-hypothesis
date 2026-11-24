@@ -121,7 +121,7 @@ theorem exists_integral_point_lifting_residue_point :
   have hlift : ∃ (q : ℕ) (_ : Fact q.Prime) (y : Sp (OO q) ⟶ X),
       y (IsLocalRing.closedPoint (OO q)) = x s ∧ Set.range (gPt q ≫ y) ⊆ U := by
     obtain ⟨q, hq, hqz⟩ := exists_prime_residueField_eq_zero π (hcl x s)
-    haveI : Fact q.Prime := ⟨hq⟩
+    have : Fact q.Prime := ⟨hq⟩
     obtain ⟨K, hK, y, hy, hyU, -⟩ := exists_padic_point_scheme π (hcl x s) hqz U hU
     have hmem (a : PadicAlgCl q) : a ∈ OO q ↔ ‖a‖ ≤ 1 := by
       rw [Valuation.mem_valuationSubring_iff, ← NNReal.coe_le_coe]
@@ -129,7 +129,7 @@ theorem exists_integral_point_lifting_residue_point :
     let j : integralClosure ℤ_[q] K →+* OO q :=
       (K.val.toRingHom.comp (integralClosure ℤ_[q] K).val.toRingHom).codRestrict (OO q)
         fun a => (hmem _).mpr ((mem_integralClosure_padicInt_iff K _).mp a.2)
-    haveI : IsLocalHom j := by
+    have : IsLocalHom j := by
       refine ⟨fun a ha => ?_⟩
       obtain ⟨b, hb⟩ := ha.exists_right_inv
       have hb' : ((a : K) : PadicAlgCl q) * (b : PadicAlgCl q) = 1 :=
@@ -154,7 +154,7 @@ theorem exists_integral_point_lifting_residue_point :
         apply le_antisymm _ bot_le
         intro a ha
         have ha' : ((a : K) : PadicAlgCl q) ∈ (t : PrimeSpectrum (PadicAlgCl q)).asIdeal := ha
-        haveI := (t : PrimeSpectrum (PadicAlgCl q)).isPrime
+        have := (t : PrimeSpectrum (PadicAlgCl q)).isPrime
         rw [Ideal.eq_bot_of_prime (t : PrimeSpectrum (PadicAlgCl q)).asIdeal,
           Ideal.mem_bot] at ha'
         exact Subtype.ext (Subtype.ext ha')

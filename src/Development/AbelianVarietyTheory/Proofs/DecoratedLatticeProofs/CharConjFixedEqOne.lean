@@ -61,7 +61,7 @@ theorem nontrivial_AF (D : D7) : Nontrivial (AF D.host.F) :=
   inferInstanceAs (Nontrivial (InfiniteAdeleRing D.host.F × FiniteAdeleRing (𝓞 D.host.F) D.host.F))
 
 theorem finrank_AE (D : D7) : Module.finrank (AF D.host.F) (AE D) = 2 := by
-  haveI := nontrivial_AF D
+  have := nontrivial_AF D
   rw [Module.finrank_baseChange]; exact D.sp.cm.deg2
 
 theorem cA_tmul (D : D7) (a : AF D.host.F) (e : D.host.E) :

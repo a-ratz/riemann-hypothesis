@@ -95,11 +95,11 @@ def coordOf (b : Module.Basis (Fin d) F E) (S : Matrix (Fin n) (Fin n) (R ⊗[F]
 
 theorem psi_lt (σ : E →ₐ[F] E) (b : Module.Basis (Fin d) F E) (x : Idx n d → R) {a c : Fin n}
     (h : a < c) : psi R σ b x a c = offE R b x ⟨(a, c), h⟩ := by
-  simp only [psi, HaarCoord.hermMat, dif_pos h]
+  simp only [psi, HaarCoord.hermMat, dite_eq_left h]
 
 theorem psi_gt (σ : E →ₐ[F] E) (b : Module.Basis (Fin d) F E) (x : Idx n d → R) {a c : Fin n}
     (h : c < a) : psi R σ b x a c = sigR R σ (offE R b x ⟨(c, a), h⟩) := by
-  simp only [psi, HaarCoord.hermMat, dif_neg (not_lt_of_gt h), dif_pos h]
+  simp only [psi, HaarCoord.hermMat, dite_eq_right (not_lt_of_gt h), dite_eq_left h]
 
 theorem psi_eq (σ : E →ₐ[F] E) (b : Module.Basis (Fin d) F E) (x : Idx n d → R) (a : Fin n) :
     psi R σ b x a a = x (Sum.inl a) ⊗ₜ[F] (1 : E) := by
@@ -391,17 +391,17 @@ theorem map_eq_of_coord {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ)
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   have h2 : Module.finrank F E = 2 := hcm.2.2.1
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hcm
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
   let K : (Idx n d → R) ≃ₜ HermR R σ n :=
     { toFun := fun x => ⟨psi R σ b x, psi_mem R hinv b x⟩
       invFun := fun S => coordOf R b (S : Matrix (Fin n) (Fin n) (R ⊗[F] E))
       left_inv := fun x => coord_psi R h2 σ b x
       right_inv := fun S => Subtype.ext (psi_coord R hinv h2 hδ hσδ b S.2)
       continuous_toFun := (continuous_psi R t5 b).subtype_mk _
-      continuous_invFun := (continuous_coordOf R b t6 (t7 d b)).comp continuous_subtype_val }
+      continuous_invFun := (continuous_coordOf R b t6 (t7 d b)).comp continuous_subtypeVal }
   have hKadd : ∀ x y, K (x + y) = K x + K y := fun x y =>
     Subtype.ext ((psiL R σ b).map_add x y)
   let e : (Idx n d → R) ≃+ HermR R σ n := AddEquiv.mk' K.toEquiv hKadd
@@ -437,17 +437,17 @@ open PfHerm
 theorem pf_herm : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (g : Matrix (Fin n) (Fin n) E), g.det ≠ 0 → ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (∀ ν : Measure (HermR (Ainf F) σ n), ν.IsAddHaarMeasure → ∀ τ : HermR (Ainf F) σ n → HermR (Ainf F) σ n, (∀ S, (τ S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) = cT (sigR (Ainf F) σ) (g.map (inclR (Ainf F))) * (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) * g.map (inclR (Ainf F))) → ν.map τ = cinf • ν) ∧ ∀ v : HeightOneSpectrum (𝓞 F), (∀ ν : Measure (HermR (Fv F v) σ n), ν.IsAddHaarMeasure → ∀ τ : HermR (Fv F v) σ n → HermR (Fv F v) σ n, (∀ S, (τ S : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) = cT (sigR (Fv F v) σ) (g.map (inclR (Fv F v))) * (S : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) * g.map (inclR (Fv F v))) → ν.map τ = c v • ν) := by
   intro F E _ _ _ _ _ σ hcm n g hg
   have h2 : Module.finrank F E = 2 := hcm.2.2.1
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hcm
   let b : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E h2
   obtain ⟨cinf, c, hU, hI, hF⟩ := _root_.GlobalTheory.CompanionTheory.SW.ProdFormula.modulus_matrix F (Idx n 2) (Amat σ b g)
     (Amat_det hinv h2 hδ hσδ b hg)
   refine ⟨cinf, c, hU, ?_, fun v => ?_⟩
   · obtain ⟨l1, l2, l3, l4, -⟩ := isLocR_Ainf F hcm.1
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     exact fun ν hν τ hτ => map_eq_of_coord hcm (Ainf F) b g cinf hI ν hν τ hτ
   · obtain ⟨l1, l2, l3, l4, -⟩ := LocFv.isLocR_Fv F v
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     exact fun ν hν τ hτ => map_eq_of_coord hcm (Fv F v) b g (c v) (hF v) ν hν τ hτ
 
 end GlobalTheory.CompanionTheory.SW

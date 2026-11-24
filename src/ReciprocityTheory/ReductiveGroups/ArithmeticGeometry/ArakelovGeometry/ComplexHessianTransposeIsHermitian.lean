@@ -76,13 +76,13 @@ theorem bilinear_real_imag_expand {V : Type*} [NormedAddCommGroup V] [NormedSpac
   have key : ∀ (u w : Fin D → V), B (∑ i, u i) (∑ j, w j) = ∑ i, ∑ j, B (u i) (w j) := by
     intro u w
 
-    simp only [map_sum, ContinuousLinearMap.sum_apply]
+    simp only [map_sum, sum_apply]
     first
       | rfl
       | exact Finset.sum_comm
   rw [key]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_add (f := _), map_smul, add_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem decompose_real_imag_basis (v : Fin D → ℂ) :

@@ -361,9 +361,9 @@ theorem UpperTheory.V.Z.Tf.Orb.placeUnit :
     UpperTheory.V.Z.Tf.Orb.UnitMatch → UpperTheory.V.Z.Tf.Orb.UnitSB → UpperTheory.V.Z.Tf.Orb.PlaceData → UpperTheory.V.Z.Tf.Orb.PlaceOfLocal → UpperTheory.V.Z.Tf.Orb.PlaceInt → UpperTheory.V.Z.Tf.Orb.PlaceUnit := by
   intro hM hU hD hL hI hB F E _ _ _ _ _ _ σ hσ v w hw hur n _ _ _ _ mE mF hE hF vE vF
   obtain ⟨i1, i2, i3, i4, s, hs, hr, h1, h2, h3⟩ := hD F E σ hσ v w hw
-  letI : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
-  haveI : CharZero (v.adicCompletion F) := algebraRat.charZero _
+  let : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
+  have : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
+  have : CharZero (v.adicCompletion F) := algebraRat.charZero _
   obtain ⟨hH, hP⟩ := @hL F E _ _ _ _ _ _ σ hσ v w hw i1 i2 i3 i4 s hs hr h1 h2 n _ _ _ _ mE mF hE hF _ _
   have hc : Continuous (mapGL n (Pi.evalRingHom (fun w : PlacesOver E v => w.1.adicCompletion E) w)) :=
     Continuous.units_map _ (continuous_id.matrix_map (continuous_apply w))
@@ -390,18 +390,18 @@ theorem UpperTheory.V.Z.Tf.Orb.quotAlong :
   intro _ _ G _ _ _ _ _ _ _ _ H _ _ _ _ _ _ _ _ j hj μG hμ T S hT hc hS ν hν
   subst hS
   let e₀ : T ≃* T.map j := T.equivMapOfInjective j hj.injective
-  have c1 : Continuous e₀ := (hj.continuous.comp continuous_subtype_val).subtype_mk _
+  have c1 : Continuous e₀ := (hj.continuous.comp continuous_subtypeVal).subtype_mk _
   have c2 : Continuous e₀.symm := by
     rw [(hj.isInducing.comp IsInducing.subtypeVal).continuous_iff]
     have : (j ∘ Subtype.val) ∘ e₀.symm = Subtype.val := funext fun x => congrArg Subtype.val (e₀.apply_symm_apply x)
-    exact continuous_subtype_val.congr fun x => (congrFun this x).symm
+    exact continuous_subtypeVal.congr fun x => (congrFun this x).symm
   let e : T ≃ₜ* T.map j := ⟨e₀, c1, c2⟩
   have he : Measurable (e : T → T.map j) := c1.measurable
-  refine ⟨ν.map e, e.isHaarMeasure_map ν, Measure.map_map (g := fun x : T.map j => (x : G)) measurable_subtype_coe he, fun F _ _ => ?_⟩
+  refine ⟨ν.map e, e.isHaarMeasure_map ν, Measure.map_map (g := fun x : T.map j => (x : G)) measurable_subtypeVal he, fun F _ _ => ?_⟩
   have hp : PositivityTheory.Rg.Tf.Geo.IsNormAlong id (fun t : T => j t) ν = IsQuotNormaliser (T.map j) (ν.map e) := by
     funext ρ
     refine propext (and_congr_right fun hρ => forall_congr' fun g => ?_)
-    rw [lintegral_map (f := fun h : T.map j => ρ (h * g)) (hρ.comp (measurable_subtype_coe.mul_const g)) he]
+    rw [lintegral_map (f := fun h : T.map j => ρ (h * g)) (hρ.comp (measurable_subtypeVal.mul_const g)) he]
     rfl
   have gen : ∀ p q : (G → ℝ≥0∞) → Prop, p = q → ∀ [Decidable (∃ ρ, p ρ)] [Decidable (∃ ρ, q ρ)],
       (if h : ∃ ρ, p ρ then ∫ x, F x * ((h.choose x).toReal : ℂ) ∂μG else 0) =
@@ -426,12 +426,12 @@ private theorem UpperTheory.V.Z.Tf.Orb.quotReal_ae_fin {G : Type} [Group G] [Mea
     (H : Subgroup G) (μ : Measure H) [SFinite μ] {ρ : G → ℝ≥0∞} (hρ : IsQuotNormaliser H μ ρ) :
     ∀ᵐ g ∂μG, ρ g < ∞ := by
   have hmul : Measurable fun p : G × H => (p.2 : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
   have hset : MeasurableSet {p : G × H | ρ ((p.2 : G) * p.1) < ∞} :=
     measurableSet_lt (hρ.1.comp hmul) measurable_const
   have h1 : ∀ᵐ g ∂μG, ∀ᵐ h : H ∂μ, ρ ((h : G) * g) < ∞ := by
     refine Filter.Eventually.of_forall fun g => ?_
-    refine ae_lt_top (hρ.1.comp (measurable_subtype_coe.mul_const g)) ?_
+    refine ae_lt_top (hρ.1.comp (measurable_subtypeVal.mul_const g)) ?_
     rw [hρ.2 g]; exact ENNReal.one_ne_top
   have h2 : ∀ᵐ h : H ∂μ, ∀ᵐ g ∂μG, ρ ((h : G) * g) < ∞ :=
     (Measure.ae_ae_comm (p := fun (g : G) (h : H) => ρ ((h : G) * g) < ∞) hset).1 h1
@@ -440,7 +440,7 @@ private theorem UpperTheory.V.Z.Tf.Orb.quotReal_ae_fin {G : Type} [Group G] [Mea
     have := hρ.2 1
     rw [h0, lintegral_zero_measure] at this
     exact zero_ne_one this
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   obtain ⟨h, hh⟩ := h2.exists
   have h3 := (measurePreserving_mul_left μG ((h : G)⁻¹)).quasiMeasurePreserving.ae hh
   simpa using h3

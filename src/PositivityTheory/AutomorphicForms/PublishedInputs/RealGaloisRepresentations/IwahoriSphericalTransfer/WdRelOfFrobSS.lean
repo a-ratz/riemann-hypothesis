@@ -118,7 +118,7 @@ theorem GlobalTheory.RealGal.wdRelRes_gen : ∀ (F Ω : Type) [Field F] [NumberF
   have hV' : IsPst P (Bw'.repE L r'') := by rw [hrep]; exact hV
   rw [wdAt_of_model _ ι Bw h hj _ L r' hm hV, wdAt_of_model _ ι Bw' h' hj' _ L r'' hm' hV', hrep]
   generalize Bw.repE L r' = ρ at hV ⊢
-  haveI := hV.finite
+  have := hV.finite
   rw [wdPst_of_isPst ι Bw h hj hV, wdPst_of_isPst ι Bw' h' hj' hV]
   obtain ⟨c, hc, hdeg, hq, -⟩ := GlobalTheory.T.place_over_transport_ring_iso F Ω A v h K Ω A w h' _ _ i hP
   refine wdRel_of_frobSS _ (BridgeParam.isFrobSS_wdRep P ι Bw h hj ρ)

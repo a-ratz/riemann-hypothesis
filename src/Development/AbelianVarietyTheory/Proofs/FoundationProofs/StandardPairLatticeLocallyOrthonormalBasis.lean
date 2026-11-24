@@ -167,7 +167,7 @@ private theorem exists_orthonormal_mem_span_of_diagonal_square_prod {K V : Type}
     intro i j
     have hij : i = j := Fin.ext (by have := i.2; have := j.2; omega)
     subst hij
-    simp only [map_smul, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hv, if_true, map_ratCast,
+    simp only [map_smul, map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, hv, ite_true, map_ratCast,
       hs]
     push_cast
     field_simp
@@ -186,7 +186,7 @@ private theorem exists_orthonormal_mem_span_of_diagonal_square_prod {K V : Type}
     have hv11 := hv 1 1
     have hv01 := hv 0 1
     have hv10 := hv 1 0
-    simp only [if_true, h01, h01.symm, if_false] at hv00 hv11 hv01 hv10
+    simp only [ite_true, h01, h01.symm, ite_false] at hv00 hv11 hv01 hv10
     have hvs : ∀ (i : Fin r) (j : Fin (r + 2)), j = 0 ∨ j = 1 →
         h (v i.succ.succ) (v j) = 0 ∧ h (v j) (v i.succ.succ) = 0 := by
       intro i j hj
@@ -317,7 +317,7 @@ namespace GlobalTheory
 theorem exists_unit_norm_of_selfDual_hermitian_lattice :
     ∀ (K V : Type) [Field K] [CharZero K] [AddCommGroup V] [Module K V] (σ : K →+* K) (h : V →ₗ[K] V →ₛₗ[σ] K) (p d : ℕ) (θ : K) (O : Subring K) (L : AddSubgroup V), p.Prime → d.Prime → θ ^ 2 = -(d : K) → σ θ = -θ → (∀ x : K, ∃ a b : ℚ, x = (a : K) + (b : K) * θ) → (∀ x ∈ O, σ x ∈ O) → (1 + θ) / 2 ∈ O → (∀ r : ℚ, (r : K) ∈ O ↔ padicNorm p r ≤ 1) → (∀ x y : V, h y x = σ (h x y)) → (∀ x : V, h x x = 0 → x = 0) → (∀ a ∈ O, ∀ x ∈ L, a • x ∈ L) → (∀ x ∈ L, ∀ y ∈ L, h x y ∈ O) → (∀ x : V, ∃ m : ℕ, (p : K) ^ m • x ∈ L) → ∀ W : Submodule K V, (∀ x ∈ W, (∀ y ∈ L, y ∈ W → h x y ∈ O) → x ∈ L) → (∃ x ∈ W, x ≠ 0) → ∃ y ∈ L, y ∈ W ∧ ∃ u : ℚ, h y y = (u : K) ∧ padicNorm p u = 1 := by
   intro K V _ _ _ _ σ h p d θ O L hp hd hθ hσθ hK _ hω hO hherm hdef hL hLO hscale W hW hne
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hpK : (p : K) ≠ 0 := by exact_mod_cast hp.ne_zero
   have hpQ : (p : ℚ) ≠ 0 := by exact_mod_cast hp.ne_zero
   have hp1 : (1 : ℚ) < p := by exact_mod_cast hp.one_lt
@@ -393,11 +393,11 @@ theorem exists_unit_norm_of_selfDual_hermitian_lattice :
     rintro rfl
     exact hx00 (hdef _ (by simpa using hu))
   have hupos : 0 < padicNorm p u :=
-    lt_of_le_of_ne (padicNorm.nonneg _) (padicNorm.nonzero hu0).symm
+    lt_of_le_of_ne (padicNorm.nonneg _) (padicNorm.ne_zero hu0).symm
   have hnd : (p : ℚ)⁻¹ ≤ padicNorm p (d : ℚ) := by
     by_cases hpd : p = d
     · rw [← hpd, hnp]
-    · haveI : Fact d.Prime := ⟨hd⟩
+    · have : Fact d.Prime := ⟨hd⟩
       rw [padicNorm.padicNorm_of_prime_of_ne hpd]
       exact inv_le_one_of_one_le₀ hp1.le
   have hc : (p : ℚ) ≤ padicNorm p ((d : ℚ) / (p * p)) := by
@@ -450,7 +450,7 @@ theorem exists_lattice_norm_one_of_norm_one_mod (K V : Type) [Field K] [CharZero
     (W : Submodule K V) (he : ∃ e ∈ W, h e e = 1)
     (hy : ∃ y ∈ L, y ∈ W ∧ ∃ u : ℚ, h y y = (u : K) ∧ padicNorm p (u - 1) < 1) :
     ∃ z ∈ L, z ∈ W ∧ h z z = 1 := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨e, heW, hee⟩ := he
   obtain ⟨y₀, hy₀L, hy₀W, u₀, hu₀, hr⟩ := hy
   have hσω : σ ((1 + θ) / 2) = (1 - θ) / 2 := by
@@ -506,7 +506,7 @@ theorem exists_lattice_norm_one_of_norm_one_mod (K V : Type) [Field K] [CharZero
   obtain ⟨m, hm⟩ := hfull e
   have hp0 : (p : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hp.ne_zero
   have hpos : ∀ q : ℚ, q ≠ 0 → 0 < padicNorm p q := fun q hq =>
-    lt_of_le_of_ne (padicNorm.nonneg _) (padicNorm.nonzero hq).symm
+    lt_of_le_of_ne (padicNorm.nonneg _) (padicNorm.ne_zero hq).symm
   have hP0 : 0 < padicNorm p ((p : ℚ) ^ m) := hpos _ (pow_ne_zero _ hp0)
   have hP1 : padicNorm p ((p : ℚ) ^ m) ≤ 1 := by
     have := padicNorm.of_nat (p := p) (p ^ m)
@@ -592,9 +592,9 @@ theorem padicNorm_prime_mul_sq_ne_sq (p : ℕ) [hp : Fact p.Prime] (s t : ℚ) (
   · subst hs
     intro h
     simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, padicNorm.zero] at h
-    exact padicNorm.nonzero hpt h.symm
+    exact padicNorm.ne_zero hpt h.symm
   · intro h
-    rw [padicNorm.eq_zpow_of_nonzero (pow_ne_zero _ hs), padicNorm.eq_zpow_of_nonzero hpt,
+    rw [padicNorm.eq_zpow_of_ne_zero (pow_ne_zero _ hs), padicNorm.eq_zpow_of_ne_zero hpt,
       padicValRat.mul hp0 (pow_ne_zero _ ht), padicValRat.pow s, padicValRat.pow t,
       padicValRat.self hp.out.one_lt] at h
     have := zpow_right_injective₀ (by linarith) hp1.ne' h
@@ -623,7 +623,7 @@ theorem selfDual_lattice_exists_norm_one_mod :
     ∀ (K V : Type) [Field K] [CharZero K] [AddCommGroup V] [Module K V] (σ : K →+* K) (h : V →ₗ[K] V →ₛₗ[σ] K) (p d : ℕ) (θ : K) (O : Subring K) (L : AddSubgroup V), p.Prime → d.Prime → θ ^ 2 = -(d : K) → σ θ = -θ → (∀ x : K, ∃ a b : ℚ, x = (a : K) + (b : K) * θ) → (∀ x ∈ O, σ x ∈ O) → (1 + θ) / 2 ∈ O → (∀ r : ℚ, (r : K) ∈ O ↔ padicNorm p r ≤ 1) → (∀ x y : V, h y x = σ (h x y)) → (∀ x : V, h x x = 0 → x = 0) → (∀ a ∈ O, ∀ x ∈ L, a • x ∈ L) → (∀ x ∈ L, ∀ y ∈ L, h x y ∈ O) → (∀ x : V, ∃ m : ℕ, (p : K) ^ m • x ∈ L) → (∀ u v : ℚ, padicNorm p u = 1 → padicNorm p v = 1 → ∃ a b : ℤ, padicNorm p (u * (a : ℚ) ^ 2 + v * (b : ℚ) ^ 2 - 1) < 1) → (∀ W : Submodule K V, (∀ x ∈ W, (∀ y ∈ L, y ∈ W → h x y ∈ O) → x ∈ L) → (∃ x ∈ W, x ≠ 0) → ∃ y ∈ L, y ∈ W ∧ ∃ u : ℚ, h y y = (u : K) ∧ padicNorm p u = 1) → ∀ W : Submodule K V, (∀ x ∈ W, (∀ y ∈ L, y ∈ W → h x y ∈ O) → x ∈ L) → (∃ e ∈ W, h e e = 1) → ∃ y ∈ L, y ∈ W ∧ ∃ u : ℚ, h y y = (u : K) ∧ padicNorm p (u - 1) < 1 := by
   intro K V _ _ _ _ σ h p d θ O L hp hd hθ hσθ hK hσO hω hO hh hdef hL hLO hbig hab hun W hW
     ⟨e, heW, he⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have he0 : e ≠ 0 := by
     rintro rfl
     simp at he
@@ -698,7 +698,7 @@ theorem selfDual_lattice_exists_norm_one_mod :
           linear_combination h2
         rw [this, padicNorm.neg, padicNorm.mul, hu1n, mul_one]
         exact ht
-    · haveI : Fact d.Prime := ⟨hd⟩
+    · have : Fact d.Prime := ⟨hd⟩
       have hdn : padicNorm p (d : ℚ) = 1 := padicNorm.padicNorm_of_prime_of_ne hpd
       obtain ⟨a, b, hab'⟩ := hab u1 (u1 * d) hu1n (by rw [padicNorm.mul, hu1n, hdn, mul_one])
       have h4 := hnorm a b
@@ -781,7 +781,7 @@ theorem exists_orthogonal : ∀ (K V : Type) [Field K] [CharZero K] [AddCommGrou
 
 theorem binary_one_mod : ∀ (p : ℕ) (u v : ℚ), p.Prime → padicNorm p u = 1 → padicNorm p v = 1 → ∃ a b : ℤ, padicNorm p (u * (a : ℚ) ^ 2 + v * (b : ℚ) ^ 2 - 1) < 1 := by
   intro p u v hp hu hv
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have key : ∀ w : ℚ, padicNorm p w = 1 → ∃ n : ℤ, ¬ (p : ℤ) ∣ n ∧ padicNorm p (w - n) < 1 := by
     intro w hw
     have h1 : ‖(w : ℚ_[p])‖ = 1 := by rw [Padic.eq_padicNorm, hw]; simp
@@ -848,7 +848,7 @@ theorem orthonormal_of_diagonal : ∀ (K V : Type) [Field K] [NumberField K] [Ad
 
 theorem exists_local_ring : ∀ (K : Type) [Field K] [CharZero K] (p : ℕ), p.Prime → ∃ O : Subring K, (∀ x : K, x ∈ O ↔ ∃ s : ℕ, Nat.Coprime s p ∧ IsIntegral ℤ ((s : K) * x)) ∧ ∀ r : ℚ, (r : K) ∈ O ↔ padicNorm p r ≤ 1 := by
   intro K _ _ p hp
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hn : ∀ t : ℕ, IsIntegral ℤ (t : K) := fun t => isIntegral_natCast (R := ℤ) t
   refine ⟨{ carrier := {x | ∃ s : ℕ, Nat.Coprime s p ∧ IsIntegral ℤ ((s : K) * x)}
             mul_mem' := ?_, one_mem' := ⟨1, by simp, by simpa using isIntegral_one⟩, add_mem' := ?_,
@@ -1078,7 +1078,7 @@ theorem exists_orthonormal (D : D7) (N N' : ℕ) (hev : Even (N * N')) :
         by_cases hk : k = k'
         · subst hk; simp [ha]
         · rw [← hh₁, hw k k' hk]; simp [hk]
-      · rw [Matrix.single_apply_of_ne _ _ _ _ _ hij, if_neg (by tauto)]; simp)
+      · rw [Matrix.single_apply_of_ne _ _ _ _ _ hij, ite_eq_right (by tauto)]; simp)
     (by
       rw [← ε.prod_comp (fun t => a (ε.symm t).1.1)]
       simp only [Equiv.symm_apply_apply, Fintype.prod_prod_type, Finset.prod_const, Finset.card_univ,

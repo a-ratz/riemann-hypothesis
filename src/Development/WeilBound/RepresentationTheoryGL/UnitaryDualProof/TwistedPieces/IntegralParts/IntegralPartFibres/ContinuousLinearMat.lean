@@ -125,7 +125,7 @@ private theorem exists_pow_smul_mem_nhds_of_isCompact {t : kˣ} (ht : nabs k t <
     intro γ _
     obtain ⟨m, hm⟩ := exists_pow_lt₀ hv γ
     filter_upwards [eventually_ge_atTop m] with j hj
-    simp only [Set.mem_setOf_eq, map_pow]
+    simp only [Set.mem_ofPred_eq, map_pow]
     exact lt_of_le_of_lt (pow_le_pow_right_of_le_one' hv.le hj) hm
   have hev : ∀ᶠ s in 𝓝 (0 : k), ∀ x ∈ K, s • x ∈ W := by
     apply hK.eventually_forall_of_forall_eventually
@@ -148,16 +148,16 @@ theorem lat_small {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {L : AddSubgroup
 theorem lat_index_pos {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {L M : AddSubgroup (Matrix (Fin n) (Fin n) k)}
     (hL : IsLat Z L) (hM : IsLat Z M) (hML : M ≤ L) : M.relIndex L ≠ 0 := by
   obtain ⟨U, hUo, hU0, hUZ⟩ := hM.nhd
-  haveI : CompactSpace L := isCompact_iff_compactSpace.mp hL.cpt
+  have : CompactSpace L := isCompact_iff_compactSpace.mp hL.cpt
   have hnhds : (M.addSubgroupOf L : Set L) ∈ 𝓝 (0 : L) := by
     have hpre : IsOpen ((Subtype.val : L → Matrix (Fin n) (Fin n) k) ⁻¹' U) :=
-      hUo.preimage continuous_subtype_val
+      hUo.preimage continuous_subtypeVal
     refine Filter.mem_of_superset (hpre.mem_nhds (by simpa using hU0)) ?_
     intro y hy
     rw [SetLike.mem_coe, AddSubgroup.mem_addSubgroupOf]
     exact hUZ ⟨hy, hL.sub y.2⟩
   have hopen : IsOpen (M.addSubgroupOf L : Set L) := AddSubgroup.isOpen_of_mem_nhds _ hnhds
-  haveI : Finite (L ⧸ M.addSubgroupOf L) := AddSubgroup.quotient_finite_of_isOpen _ hopen
+  have : Finite (L ⧸ M.addSubgroupOf L) := AddSubgroup.quotient_finite_of_isOpen _ hopen
   show (M.addSubgroupOf L).index ≠ 0
   exact AddSubgroup.index_ne_zero_of_finite
 
@@ -211,7 +211,7 @@ theorem isOpen_intV (d : ℕ) : IsOpen ((intV (k := k) d) : Set (Fin d → k)) :
   refine Filter.mem_of_superset h1 ?_
   intro a ha i
   have h2 := ha i (Set.mem_univ i)
-  simp only [Set.mem_setOf_eq, Units.val_one] at h2
+  simp only [Set.mem_ofPred_eq, Units.val_one] at h2
   exact h2.le
 
 theorem exists_lat (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) : ∃ L, IsLat Z L := by
@@ -270,12 +270,12 @@ private theorem measure_eq_relIndex_mul_of_le {G : Type} [AddCommGroup G] [Measu
     (μ : Measure G) [μ.IsAddLeftInvariant] {H K : AddSubgroup G} (hHK : H ≤ K)
     (hH : MeasurableSet (H : Set G)) (hK : MeasurableSet (K : Set G)) (hi : H.relIndex K ≠ 0) :
     μ K = H.relIndex K * μ H := by
-  haveI : (H.addSubgroupOf K).FiniteIndex := ⟨hi⟩
-  have he : MeasurableEmbedding (Subtype.val : K → G) := MeasurableEmbedding.subtype_coe hK
-  haveI : MeasurableAdd K :=
-    ⟨fun c => ((measurable_const_add (c : G)).comp measurable_subtype_coe).subtype_mk,
-      fun c => ((measurable_add_const (c : G)).comp measurable_subtype_coe).subtype_mk⟩
-  haveI : (μ.comap (Subtype.val : K → G)).IsAddLeftInvariant := by
+  have : (H.addSubgroupOf K).FiniteIndex := ⟨hi⟩
+  have he : MeasurableEmbedding (Subtype.val : K → G) := MeasurableEmbedding.subtypeVal hK
+  have : MeasurableAdd K :=
+    ⟨fun c => ((measurable_const_add (c : G)).comp measurable_subtypeVal).subtype_mk,
+      fun c => ((measurable_add_const (c : G)).comp measurable_subtypeVal).subtype_mk⟩
+  have : (μ.comap (Subtype.val : K → G)).IsAddLeftInvariant := by
     constructor
     intro g
     ext A hA
@@ -298,7 +298,7 @@ private theorem measure_eq_relIndex_mul_of_le {G : Type} [AddCommGroup G] [Measu
         rw [← hz']
         exact hz
     rw [hs, measure_preimage_add]
-  have hm : MeasurableSet ((H.addSubgroupOf K : AddSubgroup K) : Set K) := measurable_subtype_coe hH
+  have hm : MeasurableSet ((H.addSubgroupOf K : AddSubgroup K) : Set K) := measurable_subtypeVal hH
   have h1 := AddSubgroup.index_mul_measure (H.addSubgroupOf K) hm (μ.comap (Subtype.val : K → G))
   rw [he.comap_apply, he.comap_apply, Set.image_univ, Subtype.range_coe] at h1
   have h2 : Subtype.val '' ((H.addSubgroupOf K : AddSubgroup K) : Set K) = H := by
@@ -316,8 +316,8 @@ private theorem measure_eq_relIndex_mul_of_le {G : Type} [AddCommGroup G] [Measu
 theorem lat_index_smul {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {L : AddSubgroup (Matrix (Fin n) (Fin n) k)}
     (hL : IsLat Z L) (t : kˣ) (ht : nabs k t < 1) :
     (L.relIndex (((t⁻¹ : kˣ) : k) • L) : ℝ) = (nabs k t)⁻¹ ^ Module.finrank k Z := by
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   obtain ⟨P, hP⟩ := exists_PZ Z
   have hPe : ∀ a, P (eZ Z a) = a := fun a => LinearMap.congr_fun hP a
   have hsurj : ∀ x ∈ Z, ∃ a, eZ Z a = x := fun x hx => ⟨_, eZ_surj Z hx⟩

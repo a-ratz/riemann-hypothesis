@@ -66,7 +66,7 @@ theorem IsFinCover.dlog_basis_and_vanish : ∀ (k : Type) [Field k] [CharZero k]
   obtain ⟨b, hb⟩ := h.exists_basis
   have hu : ∀ j : Fin d, (algebraMap F K (x j.succ / x 0))⁻¹ ≠ 0 := fun j =>
     inv_ne_zero ((map_ne_zero _).2 (div_ne_zero (h.pd.ne _) (h.pd.ne 0)))
-  haveI : Module.Finite K Ω[K⁄k] := Module.Finite.of_basis b
+  have : Module.Finite K Ω[K⁄k] := Module.Finite.of_basis b
   refine ⟨⟨b.unitsSMul (fun j => Units.mk0 _ (hu j)), fun j => ?_⟩, fun q hq y hy => ?_⟩
   · rw [Module.Basis.unitsSMul_apply, hb]
     rfl
@@ -127,9 +127,9 @@ private theorem trace_eq_zero_of_bot {ι E : Type} [LinearOrder ι] [AddCommGrou
     funext s
     have h1 := hC s (Set.mem_univ s)
     split_ifs at h1 <;> simpa [hG] using h1
-  haveI : Subsingleton ((cech G).Z p) :=
+  have : Subsingleton ((cech G).Z p) :=
     ⟨fun a b => Subtype.ext ((hZ a a.2).trans (hZ b b.2).symm)⟩
-  haveI : Subsingleton ((cech G).H p) :=
+  have : Subsingleton ((cech G).H p) :=
     (Submodule.Quotient.mk_surjective _).subsingleton
   rw [Subsingleton.elim f 0, map_zero]
 

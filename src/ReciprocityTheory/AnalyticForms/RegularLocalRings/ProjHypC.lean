@@ -167,7 +167,7 @@ theorem val_polyToAway_mul_pow {f : MvPolynomial (Σ k, ι k) ℂ} {a : K → �
     (polyToAway hP p f).val * algebraMap _ (Localization.Away (segreW P p)) (segreW P p) ^ (∑ k, a k) =
       algebraMap _ (Localization.Away (segreW P p))
         (Ideal.Quotient.mk (segreIdeal P) (rename (chartUpd p) f)) := by
-  letI := segreGraded hP
+  let := segreGraded hP
   let W := algebraMap (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) (Localization.Away (segreW P p))
     (segreW P p)
   let ψ : MvPolynomial (Σ k, ι k) ℂ →+* Localization.Away (segreW P p) :=
@@ -212,7 +212,7 @@ theorem val_polyToAway_segre_mul_pow {g : MvPolynomial ((k : K) → ι k) ℂ} {
     (polyToAway hP p (segreMap g)).val * algebraMap _ (Localization.Away (segreW P p)) (segreW P p) ^ d =
       algebraMap _ (Localization.Away (segreW P p)) (Ideal.Quotient.mk (segreIdeal P) g) := by
   classical
-  letI := segreGraded hP
+  let := segreGraded hP
   let W := algebraMap (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) (Localization.Away (segreW P p))
     (segreW P p)
   let ψ : MvPolynomial (Σ k, ι k) ℂ →+* Localization.Away (segreW P p) :=

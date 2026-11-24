@@ -70,7 +70,7 @@ theorem _root_.GlobalTheory.TestLat.SumLat.idx_nonempty (lam : ι → _root_.For
       (⟨fun _ => 1, fun _ => by simp⟩ : {y : ι → Matrix (Fin n) (Fin n) ℂ // ∀ τ, IsUnit (y τ).det})
     rw [h]
     exact map_zero _
-  haveI : Nontrivial (_root_.Formalism.L2.DIV.VV ℚ lam) := nontrivial_of_ne _ _ hne
+  have : Nontrivial (_root_.Formalism.L2.DIV.VV ℚ lam) := nontrivial_of_ne _ _ hne
   exact (_root_.Formalism.L2.DIV.bVV ℚ lam).index_nonempty
 
 open NumberField IsDedekindDomain MvPolynomial in
@@ -81,7 +81,7 @@ theorem _root_.GlobalTheory.TestLat.SumLat.isLattice_sumLat [Finite C] (lam : ι
     (T : C → Submodule (𝓞 K) (_root_.Formalism.L2.DIV.VV K lam)) (hT : ∀ c, Submodule.IsLattice K (T c)) :
     Submodule.IsLattice K (_root_.GlobalTheory.TestLat.sumLat lam e T) := by
   classical
-  haveI := Fintype.ofFinite C
+  have := Fintype.ofFinite C
   set f := _root_.GlobalTheory.TestLat.SumLat.valEquiv (K := K) lam e with hf
   let g : C → _root_.Formalism.L2.DIV.VV K lam →ₗ[K] (Fin N → K) := fun c =>
     f.symm.toLinearMap ∘ₗ LinearMap.single K (fun _ : C => _root_.Formalism.L2.DIV.VV K lam) c
@@ -137,10 +137,10 @@ theorem _root_.GlobalTheory.TestLat.SumLat.sumLat_lattice_dual : ∀ (K : Type) 
   intro K _ _ _ ι _ n lam C _ N e T hT
   classical
   obtain ⟨i₀⟩ := _root_.GlobalTheory.TestLat.SumLat.idx_nonempty lam
-  haveI : Finite (C × _root_.Formalism.L2.DIV.VVIdx lam) := Finite.of_equiv _ e
-  haveI : Finite C :=
+  have : Finite (C × _root_.Formalism.L2.DIV.VVIdx lam) := Finite.of_equiv _ e
+  have : Finite C :=
     Finite.of_surjective (fun p : C × _root_.Formalism.L2.DIV.VVIdx lam => p.1) (fun c => ⟨(c, i₀), rfl⟩)
-  haveI : Fintype C := Fintype.ofFinite C
+  have : Fintype C := Fintype.ofFinite C
   refine ⟨_root_.GlobalTheory.TestLat.SumLat.isLattice_sumLat lam e T hT, ?_, ?_⟩
   · obtain ⟨c₀⟩ := (inferInstance : Nonempty C)
     refine Nat.pos_of_ne_zero fun h => ?_

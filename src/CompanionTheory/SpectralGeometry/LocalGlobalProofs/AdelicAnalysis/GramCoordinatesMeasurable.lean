@@ -85,7 +85,7 @@ theorem ginf_gfin_measurable : ∀ (F E : Type) [Field F] [NumberField F] [Field
   obtain ⟨htg, -, -, -, hbor, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
   have hinv : ∀ p q, Continuous fun ω : HA (AF F) σ J => gmat (AF F) σ J b ω⁻¹ p q := fun p q =>
     (continuous_gmat_entry σ hσ J hJ b (AF F) p q).comp continuous_inv
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
   refine ⟨fun w p q => ?_, fun p q => ?_⟩
   · have hf : Continuous fun t : AF F => e (fstA F t) w :=
       (continuous_apply w).comp (he.continuous.comp continuous_fst)

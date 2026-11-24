@@ -87,15 +87,15 @@ theorem map_ev {σ A B : Type} [CommRing A] [CommRing B] [Algebra ℤ A] [Algebr
 theorem exists_point (A : Type) [CommRing A] [Algebra ℂ A] [Algebra.FiniteType ℂ A] [Nontrivial A] :
     Nonempty (A →ₐ[ℂ] ℂ) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   have := finite_of_finite_type_of_isJacobsonRing ℂ (A ⧸ m)
   exact ⟨(IsAlgClosed.lift : (A ⧸ m) →ₐ[ℂ] ℂ).comp (Ideal.Quotient.mkₐ ℂ m)⟩
 
 theorem extend_hom {R₀ R : Type} [CommRing R₀] [CommRing R] (r : R₀ →+* R) (hr : r.FiniteType) (q : Ideal R)
     [q.IsPrime] (φ : R₀ →+* ℂ) (h : RingHom.ker φ = q.comap r) :
     ∃ χ : R →+* ℂ, (∀ a, χ (r a) = φ a) ∧ ∀ b ∈ q, χ b = 0 := by
-  letI : Algebra (R₀ ⧸ RingHom.ker φ) ℂ := (RingHom.kerLift φ).toAlgebra
-  letI : Algebra (R₀ ⧸ RingHom.ker φ) (R ⧸ q) := (Ideal.quotientMap q r h.le).toAlgebra
+  let : Algebra (R₀ ⧸ RingHom.ker φ) ℂ := (RingHom.kerLift φ).toAlgebra
+  let : Algebra (R₀ ⧸ RingHom.ker φ) (R ⧸ q) := (Ideal.quotientMap q r h.le).toAlgebra
   have ft : Algebra.FiniteType (R₀ ⧸ RingHom.ker φ) (R ⧸ q) := by
     have : ((Ideal.quotientMap q r h.le).comp (Ideal.Quotient.mk _)).FiniteType := by
       rw [Ideal.quotientMap_comp_mk]
@@ -358,7 +358,7 @@ theorem norm_chart {y : (Σ k, ι k) → Ω} {Ωf : Type} [Field Ωf] [Algebra �
     exact ⟨⟨u, hu⟩, ⟨v, hv⟩, rfl⟩
   have alg : Algebra.IsAlgebraic a.range Ω := (IsFractionRing.comap_isAlgebraic_iff (K := Ωf)).2 inferInstance
   have ht : A b ≠ 0 := ev_ne_of_notMem hd hb (fun k => y ⟨k, c k⟩) hc
-  obtain ⟨t, htm, ⟨_, r, rfl⟩, hr, e⟩ := (alg.isAlgebraic (A b)).exists_nonzero_eq_adjoin_mul
+  obtain ⟨t, htm, ⟨_, r, rfl⟩, hr, e⟩ := (alg.isAlgebraic (A b)).exists_ne_zero_eq_adjoin_mul
     (mem_nonZeroDivisors_of_ne_zero ht)
   have hr' : a r ≠ 0 := fun h => hr (Subtype.ext h)
   obtain ⟨G, rfl⟩ : ∃ G, A G = t := by
@@ -485,7 +485,7 @@ theorem o_algover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     rw [e, this, Pi.smul_apply, smul_eq_mul]
     field_simp
   obtain ⟨b, d, hbd, hb, hint⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.HInterior.exists_form_interior E H D l Xo c O β Y S RM.Ω RM.K RM.ι RM.y Or.𝔐 x hx hβ
-  letI := Or.g.toAlgebra
+  let := Or.g.toAlgebra
   have : FiniteDimensional Fx.Ωf RM.Ω := Module.finite_of_finrank_pos (by
     rw [Or.g_deg, ← Or.Re_deg]; exact Or.Re.deg_pos)
   obtain ⟨n, s, hs, hsQ, hs0⟩ := AlgOv.norm_form Or.k₀ Or.ix Fx.yf Or.y_eq Fx.generate hbd hb

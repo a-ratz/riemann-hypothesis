@@ -227,7 +227,7 @@ theorem vvle_of_parts {E : Type} [Field E] [NumberField E] [IsCMField E] {t : �
         rw [← mul_add, ← Finset.sum_add_distrib]
         congr 1
         refine Finset.sum_congr rfl fun e he => ?_
-        haveI : Fact (l : ℕ).Prime := ⟨l.2⟩
+        have : Fact (l : ℕ).Prime := ⟨l.2⟩
         have hl2 := (Finset.mem_filter.mp hl).2
         obtain ⟨he1, he2⟩ := Finset.mem_Ico.mp he
         rw [shaLen_eq_add hl2 (ld l) e, ENat.toNat_add (hp'.1 l e hl2 he1 he2) (hm'.1 l e hl2 he1 he2),

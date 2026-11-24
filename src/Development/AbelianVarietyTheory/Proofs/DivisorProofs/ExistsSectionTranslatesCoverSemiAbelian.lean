@@ -81,7 +81,7 @@ theorem exists_section_translate_mem : ∀ (R : Type) [CommRing R] [IsDomain R] 
     rw [this, _root_.mul_one]
     exact hO x hx
 
-  haveI := hN
+  have := hN
   let k := G.left.residueField x
   let xp : Sp k ⟶ G.left := G.left.fromSpecResidueField x
   let s : Sp k ⟶ Sp R := xp ≫ G.hom

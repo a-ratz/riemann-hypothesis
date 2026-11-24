@@ -124,7 +124,7 @@ theorem unitWeightSum_finset_sum {a b : Fin n} (hab : a < b) :
     kUnitWtLin (root a b) = (((b : ℕ) - (a : ℕ) : ℕ) : ℝ) := by
   have hv : (a : ℕ) ≤ (b : ℕ) := le_of_lt (show (a : ℕ) < b from hab)
   rw [show root a b = Pi.single a (1 : ℝ) - Pi.single b 1 from rfl, unitWeightSum_sub, Nat.cast_sub hv]
-  simp only [kUnitWtLin, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [kUnitWtLin, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem tensorAction_ofLp {β : Fin n → ℝ} (hβ : InRootCone β) : ∃ N : ℕ, kUnitWtLin β = N := by
@@ -145,9 +145,9 @@ theorem rootCone_unitWeightSum_nat {β : Fin n → ℝ} (hβ : InRootCone β) (c
   simp only [Finset.sum_apply, Int.cast_sum]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   by_cases h : a < b
-  · simp only [h, if_true, Pi.smul_apply, smul_eq_mul, Int.cast_mul, Int.cast_natCast, Int.cast_sub,
+  · simp only [h, ite_true, Pi.smul_apply, smul_eq_mul, Int.cast_mul, Int.cast_natCast, Int.cast_sub,
       apply_ite (Int.cast : ℤ → ℝ), Int.cast_one, Int.cast_zero, root, Pi.sub_apply, Pi.single_apply]
-  · simp only [h, if_false, Pi.zero_apply, Int.cast_zero]
+  · simp only [h, ite_false, Pi.zero_apply, Int.cast_zero]
 
 theorem unitWeightSum_root (μ : Fin n → ℝ) (a : Fin n) : kirrPs (a.val + 1) μ = μ a + kirrPs a.val μ := by
   unfold kirrPs
@@ -178,7 +178,7 @@ theorem highestWeight_dominant {N : Type*} [NormedAddCommGroup N] [InnerProductS
   have h0 : A a b y = 0 := hy.2 a b hab hε
   have hc : A a b (A b a y) = ((ν a - ν b : ℝ) : ℂ) • y := by
     have h := LinearMap.congr_fun (hA a b b a) y
-    simp only [LinearMap.sub_apply, Module.End.mul_apply, h0, map_zero, sub_zero, if_true, hy.1] at h
+    simp only [LinearMap.sub_apply, Module.End.mul_apply, h0, map_zero, sub_zero, ite_true, hy.1] at h
     rw [h, Complex.ofReal_sub, sub_smul]
   have key : inner ℂ (A a b (A b a y)) y = inner ℂ (A b a y) (A b a y) := hU a b hε _ _
   rw [hc, inner_smul_left, inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K, Complex.conj_ofReal] at key
@@ -277,7 +277,7 @@ theorem exists_minimal_kStable {X : Type*} [AddCommGroup X] [Module ℂ X] {ε :
   push_neg at hcon
   obtain ⟨h1, h2⟩ := hcon
   have hlt : W' < W := lt_of_le_of_ne hW'W h2
-  haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
+  have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
   have hr := Submodule.finrank_lt_finrank_of_lt hlt
   exact Nat.find_min hex (by rw [← hWd]; exact hr) ⟨W', hW'W.trans hWS, h1, hW'st, rfl⟩
 
@@ -291,8 +291,8 @@ private theorem k3a_joint_lemma {N : Type*} [AddCommGroup N] [Module ℂ N] (T :
     obtain ⟨u, hu, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     exact ⟨u, hu, hu0, fun i hi => by simp at hi⟩
   · intro j s _ ih U hfd hst hne
-    haveI := hfd
-    haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hne
+    have := hfd
+    have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hne
     obtain ⟨l, hl⟩ := Module.End.exists_eigenvalue ((T j).restrict (hst j))
     obtain ⟨v, hv⟩ := Module.End.HasEigenvalue.exists_hasEigenvector hl
     obtain ⟨hvm, hvne⟩ := Module.End.hasEigenvector_iff.mp hv
@@ -315,7 +315,7 @@ private theorem k3a_joint_lemma {N : Type*} [AddCommGroup N] [Module ℂ N] (T :
       rw [memU] at hu ⊢
       refine ⟨hst i u hu.1, ?_⟩
       rw [hc j i, hu.2, map_smul]
-    haveI : FiniteDimensional ℂ (U ⊓ LinearMap.ker (T j - l • (1 : Module.End ℂ N)) : Submodule ℂ N) :=
+    have : FiniteDimensional ℂ (U ⊓ LinearMap.ker (T j - l • (1 : Module.End ℂ N)) : Submodule ℂ N) :=
       Submodule.finiteDimensional_of_le inf_le_left
     obtain ⟨u, hu, hu0, hall⟩ := ih _ inferInstance hUst hUne
     rw [memU] at hu
@@ -330,8 +330,8 @@ theorem exists_kIrreducible_highestWeight {N : Type*} [NormedAddCommGroup N] [In
     ∃ W ≤ S, ∃ ν : Fin n → ℝ, IsKIrrHW ε A ν W := by
   classical
   obtain ⟨W, hWS, hW0, hWst, hWmin⟩ := exists_minimal_kStable hfd hS hne
-  haveI hWfd : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
-  haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW0
+  have hWfd : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
+  have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW0
   obtain ⟨H, hH⟩ : ∃ H : Module.End ℂ N, ∀ x, H x = ∑ c : Fin n, ((n : ℂ) - ((c : ℕ) : ℂ)) • A c c x :=
     ⟨∑ c : Fin n, ((n : ℂ) - ((c : ℕ) : ℂ)) • A c c, fun x => by simp⟩
   have hcomm1 : ∀ a b c x, A c c (A a b x) - A a b (A c c x) =
@@ -350,7 +350,7 @@ theorem exists_kIrreducible_highestWeight {N : Type*} [NormedAddCommGroup N] [In
 
     rw [← sub_eq_iff_eq_add', hH, hH, map_sum, ← Finset.sum_sub_distrib]
     simp only [map_smul, ← smul_sub, hcomm1]
-    simp only [smul_sub, smul_ite, smul_zero, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [smul_sub, smul_ite, smul_zero, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [← sub_smul]
     congr 1
     ring
@@ -411,7 +411,7 @@ theorem exists_kIrreducible_highestWeight {N : Type*} [NormedAddCommGroup N] [In
     rw [memU] at hu ⊢
     refine ⟨hWst c c rfl u hu.1, ?_⟩
     rw [hHr c c u, hu.2, map_smul, sub_self, zero_smul, add_zero]
-  haveI : FiniteDimensional ℂ (W ⊓ LinearMap.ker (H - μ • (1 : Module.End ℂ N)) : Submodule ℂ N) :=
+  have : FiniteDimensional ℂ (W ⊓ LinearMap.ker (H - μ • (1 : Module.End ℂ N)) : Submodule ℂ N) :=
     Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨u, hu, hu0, hall⟩ := k3a_joint_lemma (fun c => A c c) hcomm univ _ inferInstance hUst hUne
   rw [memU] at hu
@@ -449,7 +449,7 @@ def k3aT (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ D) (a b :
 
 theorem tensorAction_apply_eq {a b : Fin n} (hab : ε a = ε b) (x : PiLp 2 fun _ : Fin n => D) :
     WithLp.ofLp (k3aT ε E a b x) = tensV E a b (WithLp.ofLp x) := by
-  rw [k3aT, if_pos hab]
+  rw [k3aT, ite_eq_left hab]
   rfl
 
 theorem partialSum_nonneg_rootCone (hU : IsKUnitary ε E) : IsKUnitary ε (k3aT ε E) := by
@@ -472,7 +472,7 @@ theorem partialSum_nonneg_rootCone (hU : IsKUnitary ε E) : IsKUnitary ε (k3aT 
     · exact inner_zero_right _
   rw [PiLp.inner_apply, PiLp.inner_apply]
   simp only [e1, e2, inner_add_left, inner_add_right, Finset.sum_add_distrib, l, r, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   rw [Finset.sum_congr rfl fun c _ => hU a b hab (WithLp.ofLp x c) (WithLp.ofLp y c)]
 
 end Lift
@@ -494,11 +494,11 @@ theorem partialSum_succ_alt (hU : IsKUnitary ε E) {Y : Type*} [AddCommGroup Y] 
     apply (WithLp.linearEquiv 2 ℂ (Fin n → D)).injective
     rw [LinearEquiv.apply_symm_apply]
     exact tensorAction_apply_eq hab _
-  haveI hKfd : FiniteDimensional ℂ (S ⊓ LinearMap.ker g : Submodule ℂ (Fin n → D)) :=
+  have hKfd : FiniteDimensional ℂ (S ⊓ LinearMap.ker g : Submodule ℂ (Fin n → D)) :=
     Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨K, hK⟩ : ∃ K : Submodule ℂ (WithLp 2 (Fin n → D)),
       K = (S ⊓ LinearMap.ker g).map ((WithLp.linearEquiv 2 ℂ (Fin n → D)).symm.toLinearMap) := ⟨_, rfl⟩
-  haveI : FiniteDimensional ℂ K := by rw [hK]; infer_instance
+  have : FiniteDimensional ℂ K := by rw [hK]; infer_instance
   have hmemK : ∀ v, v ∈ S → g v = 0 → (WithLp.linearEquiv 2 ℂ (Fin n → D)).symm v ∈ K := by
     intro v hv hfv
     rw [hK]

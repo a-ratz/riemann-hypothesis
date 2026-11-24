@@ -207,10 +207,10 @@ theorem deltaHalf_leviProj_eq_one_of_isCompact :
     (GlobalTheory.ParabLevel.isClosed_parab_two (R := k) e).isClosedEmbedding_subtypeVal
   let H : Subgroup (parab k (two e)) := K.subgroupOf (parab k (two e))
   have hH : IsCompact (H : Set (parab k (two e))) := hemb.isCompact_preimage hK
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hH
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hH
   have hopen : IsOpen ((χ.ker.subgroupOf H : Subgroup H) : Set H) :=
-    (isSmoothChar_deltaHalf k (m := Two (Fin a) (Fin b))).preimage (hχ.comp continuous_subtype_val)
-  haveI : Finite (H ⧸ χ.ker.subgroupOf H) := Subgroup.quotient_finite_of_isOpen _ hopen
+    (isSmoothChar_deltaHalf k (m := Two (Fin a) (Fin b))).preimage (hχ.comp continuous_subtypeVal)
+  have : Finite (H ⧸ χ.ker.subgroupOf H) := Subgroup.quotient_finite_of_isOpen _ hopen
   have hidx : (χ.ker.subgroupOf H).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   obtain ⟨m, hm, -, hmem⟩ := Subgroup.exists_pow_mem_of_index_ne_zero hidx (⟨p, hp⟩ : H)
   have hpow : deltaHalf k (Two (Fin a) (Fin b)) (leviProj k (two e) p) ^ m = 1 := by

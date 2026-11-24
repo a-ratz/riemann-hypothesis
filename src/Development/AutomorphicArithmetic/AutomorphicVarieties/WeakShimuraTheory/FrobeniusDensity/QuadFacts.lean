@@ -54,7 +54,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem exists_conj (K : Type) [Field K] [NumberField K] (h : Module.finrank ℚ K = 2) :
     ∃ t : K ≃ₐ[ℚ] K, t ≠ 1 ∧ (∀ s : K ≃ₐ[ℚ] K, s ≠ 1 → s = t) ∧
       ∀ x : 𝓞 K, x * RingOfIntegers.mapRingEquiv t.toRingEquiv x = ((Algebra.norm ℤ x : ℤ) : 𝓞 K) := by
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
   have hc : Fintype.card (K ≃ₐ[ℚ] K) = 2 := by
     rw [← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, h]
   obtain ⟨t, ht⟩ : ∃ t : K ≃ₐ[ℚ] K, t ≠ 1 := by
@@ -156,8 +156,8 @@ private theorem split_facts {K : Type} [Field K] [NumberField K] (h : Module.fin
     Ideal.absNorm w.asIdeal = p ∧ IsCoprime w.asIdeal (w.asIdeal.map τ) ∧
       ∀ n : ℕ, ∃ φ : 𝓞 K →+* ZMod (p ^ n), RingHom.ker φ = w.asIdeal ^ n := by
   classical
-  haveI hwm : w.asIdeal.IsMaximal := w.isMaximal
-  haveI hτm : (w.asIdeal.map τ).IsMaximal := Ideal.map_isMaximal_of_equiv τ
+  have hwm : w.asIdeal.IsMaximal := w.isMaximal
+  have hτm : (w.asIdeal.map τ).IsMaximal := Ideal.map_isMaximal_of_equiv τ
   have hcop : IsCoprime w.asIdeal (w.asIdeal.map τ) :=
     Ideal.isCoprime_iff_sup_eq.mpr (Ideal.IsMaximal.coprime_of_ne hwm hτm hne)
   have hpτ : (p : 𝓞 K) ∈ w.asIdeal.map τ := by
@@ -188,12 +188,12 @@ private theorem split_facts {K : Type} [Field K] [NumberField K] (h : Module.fin
     · rintro ⟨c, rfl⟩
       rw [Nat.cast_mul, Nat.cast_pow]
       exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow hw n)
-  haveI : CharP (𝓞 K ⧸ w.asIdeal ^ n) (p ^ n) := ⟨fun x => by
+  have : CharP (𝓞 K ⧸ w.asIdeal ^ n) (p ^ n) := ⟨fun x => by
     rw [← map_natCast (Ideal.Quotient.mk (w.asIdeal ^ n)), Ideal.Quotient.eq_zero_iff_mem, hchar]⟩
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hcard : Nat.card (𝓞 K ⧸ w.asIdeal ^ n) = p ^ n := by
     rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, map_pow, hnorm]
-  haveI : Finite (𝓞 K ⧸ w.asIdeal ^ n) :=
+  have : Finite (𝓞 K ⧸ w.asIdeal ^ n) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ hp.ne_zero)
   have hbij := (ZMod.castHom_injective (𝓞 K ⧸ w.asIdeal ^ n)).bijective_of_nat_card_le
     (by rw [hcard, Nat.card_zmod])
@@ -259,7 +259,7 @@ private theorem units_pm {K : Type} [Field K] [NumberField K] [_root_.NumberFiel
     omega
   have htors : u ∈ NumberField.Units.torsion K := by
     obtain ⟨⟨ζ, e⟩, hζ, -⟩ := NumberField.Units.exist_unique_eq_mul_prod K u
-    haveI : IsEmpty (Fin (NumberField.Units.rank K)) := by
+    have : IsEmpty (Fin (NumberField.Units.rank K)) := by
       rw [hr]
       infer_instance
     simp only [Finset.univ_eq_empty, Finset.prod_empty, mul_one] at hζ
@@ -323,9 +323,9 @@ open Pointwise in
 theorem UpperTheory.V.Ws.Tw.quadFacts :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (K : IntermediateField ℚ Ω) [NumberField K] [_root_.NumberField.IsTotallyComplex K], Module.finrank ℚ K = 2 → ∃ τ : 𝓞 K ≃+* 𝓞 K, (∀ c ∉ K.fixingSubgroup, ∀ x : 𝓞 K, c ((x : K) : Ω) = ((τ x : 𝓞 K) : K)) ∧ (∀ I : Ideal (𝓞 K), I * I.map τ = Ideal.span {(Ideal.absNorm I : 𝓞 K)}) ∧ (∀ c ∉ K.fixingSubgroup, ∀ s s' : G K Ω, resQ K s' = c * resQ K s * c⁻¹ → ∀ (w : HeightOneSpectrum (𝓞 K)) (A : ValuationSubring Ω), IsPlaceOver A w → IsFrob A (normV w) s → ∃ (w' : HeightOneSpectrum (𝓞 K)) (A' : ValuationSubring Ω), w'.asIdeal = w.asIdeal.map τ ∧ IsPlaceOver A' w' ∧ IsFrob A' (normV w') s') ∧ (∀ (p : ℕ) (A : ValuationSubring Ω), p.Prime → A.valuation (p : Ω) < 1 → Dec (F := ℚ) A ≤ K.fixingSubgroup → ∃ w : HeightOneSpectrum (𝓞 K), IsPlaceOver A w ∧ Ideal.absNorm w.asIdeal = p ∧ IsCoprime w.asIdeal (w.asIdeal.map τ) ∧ ∀ n : ℕ, ∃ φ : 𝓞 K →+* ZMod (p ^ n), RingHom.ker φ = w.asIdeal ^ n) ∧ ((∀ A : ValuationSubring Ω, A.valuation (2 : Ω) < 1 → Dec (F := ℚ) A ≤ K.fixingSubgroup) → ∀ u : (𝓞 K)ˣ, u = 1 ∨ u = -1) := by
   intro Ω _ _ _ l _ hl K _ _ h
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   obtain ⟨t, ht, hu, hτ⟩ := exists_conj K h
   let τ : 𝓞 K ≃+* 𝓞 K := RingOfIntegers.mapRingEquiv t.toRingEquiv
   have hτI : ∀ I : Ideal (𝓞 K), I * I.map τ = Ideal.span {(Ideal.absNorm I : 𝓞 K)} :=
@@ -358,7 +358,7 @@ theorem UpperTheory.V.Ws.Tw.quadFacts :
       ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem, ← map_inv]
     rfl
   let tw : HeightOneSpectrum (𝓞 K) → HeightOneSpectrum (𝓞 K) := fun w =>
-    ⟨w.asIdeal.map τ, by haveI := w.isPrime; exact Ideal.map_isPrime_of_equiv τ,
+    ⟨w.asIdeal.map τ, by have := w.isPrime; exact Ideal.map_isPrime_of_equiv τ,
       (Ideal.map_eq_bot_iff_of_injective τ.injective).not.mpr w.ne_bot⟩
   have hmemτ : ∀ (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K),
       x ∈ w.asIdeal.map τ ↔ τ.symm x ∈ w.asIdeal := by

@@ -72,7 +72,7 @@ theorem mem_span_singleton_adicCompletionIntegers {F : Type} [Field F] [NumberFi
     have ht1 : (t : v.adicCompletion F) ≠ 0 := by
       intro h; rw [h] at ht; simp at ht
     have hm : (x : v.adicCompletion F) / t ∈ v.adicCompletionIntegers F := by
-      rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 ht)]
+      rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ht)]
       exact hx
     refine ⟨⟨_, hm⟩, Subtype.ext ?_⟩
     change (x : v.adicCompletion F) / t * t = x

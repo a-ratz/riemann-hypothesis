@@ -58,8 +58,8 @@ theorem exists_periodPair_of_isLat (Λ : AddSubgroup ℂ) (hΛ : IsLat Λ) :
   classical
   obtain ⟨hd, hs⟩ := hΛ
   let Λ' : Submodule ℤ ℂ := Λ.toIntSubmodule
-  haveI : DiscreteTopology Λ' := hd
-  haveI : IsZLattice ℝ Λ' := ⟨by simpa [Λ'] using hs⟩
+  have : DiscreteTopology Λ' := hd
+  have : IsZLattice ℝ Λ' := ⟨by simpa [Λ'] using hs⟩
   have hr : Module.finrank ℤ Λ' = 2 := by
     rw [ZLattice.rank ℝ (L := Λ'), Complex.finrank_real_complex]
   let b : Module.Basis (Fin 2) ℤ Λ' := Module.finBasisOfFinrankEq ℤ Λ' hr
@@ -97,7 +97,7 @@ theorem eisG_eq_G_of_lattice (Λ : AddSubgroup ℂ) (L : PeriodPair) (hL : (L.la
     simp [Set.indicator, h0]
   · have hm : x ∈ L.lattice ↔ x ∈ Λ := by
       rw [← SetLike.mem_coe, hL, SetLike.mem_coe]
-    simp only [Set.indicator, Set.mem_setOf_eq, hx, ne_eq, not_false_eq_true, and_true,
+    simp only [Set.indicator, Set.mem_ofPred_eq, hx, ne_eq, not_false_eq_true, and_true,
       SetLike.mem_coe, hm, one_div]
 
 theorem g2_g3_eq_periodPair (Λ : AddSubgroup ℂ) (L : PeriodPair) (hL : (L.lattice : Set ℂ) = Λ) :

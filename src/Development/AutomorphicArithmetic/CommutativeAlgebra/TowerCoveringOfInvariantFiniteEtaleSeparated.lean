@@ -214,7 +214,7 @@ end Tw
 private theorem isIso_desc {C : Type*} [Category C] {I : Type} [Subsingleton I] [Nonempty I] {Y Z : C}
     [HasCoproduct fun _ : I => Y] (f : I → (Y ⟶ Z)) (hf : ∀ i, IsIso (f i)) : IsIso (Sigma.desc f) := by
   let i₀ : I := Classical.arbitrary I
-  haveI := hf i₀
+  have := hf i₀
   refine ⟨inv (f i₀) ≫ Sigma.ι (fun _ : I => Y) i₀, ?_, ?_⟩
   · refine Sigma.hom_ext _ _ fun b => ?_
     obtain rfl : b = i₀ := Subsingleton.elim _ _
@@ -236,12 +236,12 @@ theorem UpperTheory.tower_covering_of_invariant_finiteEtale_separated :
     ⟨by rw [T.K_eq]; exact hNK, fun k hk => (T.Δ_eq _).2 (integ_of_mem (hK₁ hk)),
       fun k hk u hu => by rw [T.K_eq] at hu ⊢; exact conj_mem (hK₁ hk) hu⟩
   have hj : K₀ ≤ T.X.K (T.lev ⟨S.N₀, S.std.three, S.cop⟩) := by rw [T.K_eq]; exact hK₀
-  haveI hn : ((T.X.K (T.lev N)).subgroupOf K₀).Normal :=
+  have hn : ((T.X.K (T.lev N)).subgroupOf K₀).Normal :=
     ⟨fun u hu k => Subgroup.mem_subgroupOf.2 (by simpa using hd.nrm k k.2 u (Subgroup.mem_subgroupOf.1 hu))⟩
-  haveI hfin : Finite (K₀ ⧸ (T.X.K (T.lev N)).subgroupOf K₀) := fin_quot hd hj
+  have hfin : Finite (K₀ ⧸ (T.X.K (T.lev N)).subgroupOf K₀) := fin_quot hd hj
   obtain ⟨e, hf, he⟩ := hFet p D G L E gb w q r 𝔴 𝔫 S k T N c a hNum C
-  haveI := hf
-  haveI := he
+  have := hf
+  have := he
   obtain ⟨d, hdim⟩ := S.dim k
   obtain ⟨C', hC'⟩ : ∃ C' : S.Cl (T.M N).univ (c * 1) (((1 : ℕ) : 𝓞 D.F) * a), S.pi T C' = S.pi T C := by
     have : ∀ (c' : ℕ) (a' : 𝓞 D.F), c' = c → a' = a → ∃ C' : S.Cl (T.M N).univ c' a', S.pi T C' = S.pi T C := by
@@ -280,7 +280,7 @@ theorem UpperTheory.tower_covering_of_invariant_finiteEtale_separated :
     have hM' : T.lev (g j).M = T.lev N := by rw [hM]
     have hmem : ∀ x : (g j).K, (x : G.GAf) ∈ T.X.K (T.lev N) := fun x => by
       rw [T.K_eq, ← hK]; exact x.2
-    haveI : Subsingleton (g j).I := ⟨fun x y => by
+    have : Subsingleton (g j).I := ⟨fun x y => by
       induction x using QuotientGroup.induction_on with | H x => ?_
       induction y using QuotientGroup.induction_on with | H y => ?_
       refine QuotientGroup.eq.2 (Subgroup.mem_subgroupOf.2 ?_)

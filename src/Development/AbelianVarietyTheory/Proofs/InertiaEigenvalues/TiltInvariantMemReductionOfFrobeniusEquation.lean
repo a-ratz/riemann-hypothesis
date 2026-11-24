@@ -189,7 +189,7 @@ namespace GlobalTheory.EmbTwo
 theorem range_eq_of_normal {F E L : Type} [Field F] [Field E] [Algebra F E] [Normal F E] [Field L]
     [Algebra F L] (φ ψ : E →ₐ[F] L) : φ.fieldRange = ψ.fieldRange := by
   let e : E ≃ₐ[F] ψ.fieldRange := AlgEquiv.ofInjectiveField ψ
-  haveI : Normal F ψ.fieldRange := Normal.of_algEquiv e
+  have : Normal F ψ.fieldRange := Normal.of_algEquiv e
   have h := AlgHom.fieldRange_of_normal (E := ψ.fieldRange) (φ.comp e.symm.toAlgHom)
   rw [← h]
   ext x
@@ -257,7 +257,7 @@ theorem GlobalTheory.EmbTwo.exists_gal_eq : ∀ (l : ℕ) [Fact l.Prime] (K : Fi
     have e1 := hO r
     rw [hrs, map_mul, map_mul, hO s] at e1
     exact mul_left_cancel₀ ((map_ne_zero σ₂).2 hs0) e1
-  letI : Algebra ↥K.1 F := (σ₁.comp (algebraMap ↥K.1 (Om l))).toAlgebra
+  let : Algebra ↥K.1 F := (σ₁.comp (algebraMap ↥K.1 (Om l))).toAlgebra
   let φ₁ : Om l →ₐ[↥K.1] F := { σ₁ with commutes' := fun _ => rfl }
   let φ₂ : Om l →ₐ[↥K.1] F := { σ₂ with commutes' := fun x => (hKK x).symm }
   have hR := range_eq_of_normal φ₁ φ₂
@@ -404,7 +404,7 @@ theorem exists_galK_fixFlat_of_tilt_maps_agree : ∀ (l : ℕ) [Fact l.Prime] (K
     simp only [θ₂, RingHom.comp_apply, hθ₂' a, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe,
       Ideal.quotEquivOfEq_mk]
   have hinj₂ : Function.Injective θ₂ := (Ideal.quotEquivOfEq hI).injective.comp hinj₂'
-  haveI := hdom
+  have := hdom
   have hK : ∀ r : ↥(OL K), θ₁ (intToOC K r) = θ₂ (intToOC K r) := by
     intro r
     obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (bk.str r)
@@ -472,7 +472,7 @@ variable {l : ℕ} [hl : Fact l.Prime]
 
 theorem dvd_pow_of_ne_zero {π b : OCb l} (hπ : IsHausdorff (Ideal.span {π}) (OCb l)) (hb : b ≠ 0) :
     ∃ n : ℕ, b ∣ π ^ n := by
-  haveI := GlobalTheory.FrobInt.valuationRing_tilt l
+  have := GlobalTheory.FrobInt.valuationRing_tilt l
   by_contra h
   push_neg at h
   apply hb
@@ -539,9 +539,9 @@ theorem mem_reduction_of_invariant : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l)
     have := hek X
     rwa [PowerSeries.map_X, bk.ev_X, WittVector.teichmuller_coeff_zero] at this
   obtain ⟨m, x', hx'⟩ := exists_clear_family hH x
-  letI : Algebra (Fq l bk.a)⟦X⟧ (OCb l) := ek.toAlgebra
+  let : Algebra (Fq l bk.a)⟦X⟧ (OCb l) := ek.toAlgebra
   have halg : ∀ a, algebraMap (Fq l bk.a)⟦X⟧ (OCb l) a = ek a := fun _ => rfl
-  haveI : Module.IsTorsionFree (Fq l bk.a)⟦X⟧ (OCb l) := by
+  have : Module.IsTorsionFree (Fq l bk.a)⟦X⟧ (OCb l) := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]; exact hinj
   let pr : OCb l →ₗ[(Fq l bk.a)⟦X⟧] (Fq l bk.a)⟦X⟧ :=
     { toFun := prA

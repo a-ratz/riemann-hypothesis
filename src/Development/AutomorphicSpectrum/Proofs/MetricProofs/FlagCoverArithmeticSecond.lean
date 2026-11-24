@@ -150,12 +150,12 @@ theorem isImg_unique : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
     coord_ne_of_X_notMem (hG'.1 k)
   let c : K' → ℂ := fun k =>
     if h : ∀ p, M'.blk p ≠ some k then (basePart M'.blk z ⟨⟨k, h⟩, F'.c ⟨k, h⟩⟩)⁻¹ else 1
-  have hcb : ∀ k : NonPluckerBlocks M'.blk, c k.1 = (basePart M'.blk z ⟨k, F'.c k⟩)⁻¹ := fun k => dif_pos k.2
+  have hcb : ∀ k : NonPluckerBlocks M'.blk, c k.1 = (basePart M'.blk z ⟨k, F'.c k⟩)⁻¹ := fun k => dite_eq_left k.2
   have hc : ∀ k, c k ≠ 0 := fun k => by
     by_cases h : ∀ p, M'.blk p ≠ some k
     · rw [hcb ⟨k, h⟩]
       exact inv_ne_zero (hne ⟨k, h⟩)
-    · simp only [c, dif_neg h]
+    · simp only [c, dite_eq_right h]
       exact one_ne_zero
   let z₁ : (Σ k, ι' k) → ℂ := fun p => c p.1 * z p
   have h1 : SameOrbit z₁ z := ⟨c, hc, rfl⟩

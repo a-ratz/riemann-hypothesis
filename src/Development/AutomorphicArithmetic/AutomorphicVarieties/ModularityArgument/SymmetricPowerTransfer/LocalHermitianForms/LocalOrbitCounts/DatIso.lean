@@ -52,7 +52,7 @@ theorem UpperTheory.V.Z.Sym.Loc.datIso : UpperTheory.V.Z.Sym.Loc.DatIso := by
   intro O K _ _ _ Δ τ c d m y
   constructor
   · unfold lcount
-    letI := torAct Δ τ
+    let := torAct Δ τ
     refine wTrans _ _ _ (Cint O τ) _ _ (fun S S' => S = ⇑(mulE (O := O) y) '' S') ?_ ?_ ?_ ?_ ?_ ?_
     · intro t S
       split_ifs with h1 h2 h3

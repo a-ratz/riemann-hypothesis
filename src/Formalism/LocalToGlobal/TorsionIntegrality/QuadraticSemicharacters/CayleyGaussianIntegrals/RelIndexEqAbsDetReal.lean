@@ -74,8 +74,8 @@ theorem relIndex_eq_abs_det_real {E : Type*} [AddCommGroup E] [Module ℝ E]
   let B₁ : Basis ι ℤ S₁ := b₁.restrictScalars ℤ
   let N : Submodule ℤ S₂ := S₁.comap S₂.subtype
   let BN : Basis ι ℤ N := B₁.map (Submodule.comapSubtypeEquivOfLe hle).symm
-  haveI : Module.Free ℤ S₂ := Module.Free.of_basis B₂
-  haveI : Module.Finite ℤ S₂ := Module.Finite.of_basis B₂
+  have : Module.Free ℤ S₂ := Module.Free.of_basis B₂
+  have : Module.Finite ℤ S₂ := Module.Finite.of_basis B₂
   have key := Submodule.natAbs_det_basis_change B₂ N BN
   have hcard : Nat.card (S₂ ⧸ N) = S₁.toAddSubgroup.relIndex S₂.toAddSubgroup := rfl
   have hrepr : ∀ (m : S₂) (i : ι), ((B₂.repr m i : ℤ) : ℝ) = b₂.repr (m : E) i := fun m i => by
@@ -115,10 +115,10 @@ theorem exists_basis_of_lattice {E : Type*} [NormedAddCommGroup E] [NormedSpace 
     ∃ b : Basis (Fin (finrank ℝ E)) ℝ E, Λ = .closure (Set.range b) := by
   classical
   let L : Submodule ℤ E := AddSubgroup.toIntSubmodule Λ
-  haveI : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨hs⟩
-  haveI := ZLattice.module_free ℝ L
-  haveI : Module.Finite ℤ L := ZLattice.module_finite ℝ L
+  have : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨hs⟩
+  have := ZLattice.module_free ℝ L
+  have : Module.Finite ℤ L := ZLattice.module_finite ℝ L
   let b := Module.Free.chooseBasis ℤ L
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex ℤ L) = finrank ℝ E := by
     rw [← Module.finrank_eq_card_chooseBasisIndex, ZLattice.rank ℝ L]

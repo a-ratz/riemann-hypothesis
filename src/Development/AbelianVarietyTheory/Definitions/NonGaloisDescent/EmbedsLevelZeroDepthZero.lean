@@ -464,7 +464,7 @@ theorem extendsCentral_iff [Nonempty n] {ω : kˣ →* ℂˣ} {ρ : Representati
     rw [← map_inv, GeneralLinearGroup.coe_scalar, Matrix.scalar_apply, diagonal_apply_eq] at this
     exact this
   rw [Units.val_inv_eq_inv_val, map_inv₀] at h2
-  obtain ⟨u, rfl⟩ := valuation_eq_one_iff.1 (le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 (by simp))).1 h2))
+  obtain ⟨u, rfl⟩ := valuation_eq_one_iff.1 (le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 (by simp))).1 h2))
   rw [redK_scalar, h]
 
 theorem IsTameLift.extendsCentral [Nonempty n] {ω : kˣ →* ℂˣ} {ω₀ : 𝓀[k]ˣ →* ℂˣ} (h : IsTameLift ω ω₀)
@@ -548,8 +548,8 @@ theorem canonFun_mul (ρ : Representation ℂ (GL n 𝓀[k]) W) (ω : kˣ →* �
     (g : GL n k) (x : ZK k n) : canonFun ρ ω h w (g * x) = canonFun ρ ω h (extZK ρ ω h x w) g := by
   unfold canonFun
   by_cases hg : g ∈ ZK k n
-  · rw [dif_pos hg, dif_pos (mul_mem hg x.2), ← Module.End.mul_apply, ← map_mul]; rfl
-  · rw [dif_neg hg, dif_neg fun h' => hg ((Subgroup.mul_mem_cancel_right _ x.2).1 h')]
+  · rw [dite_eq_left hg, dite_eq_left (mul_mem hg x.2), ← Module.End.mul_apply, ← map_mul]; rfl
+  · rw [dite_eq_right hg, dite_eq_right fun h' => hg ((Subgroup.mul_mem_cancel_right _ x.2).1 h')]
 
 def canon (ρ : Representation ℂ (GL n 𝓀[k]) W) (ω : kˣ →* ℂˣ) (h : ExtendsCentral ω ρ) :
     (extZK ρ ω h).IntertwiningMap ((depthZero ρ ω h).comp (ZK k n).subtype) where
@@ -576,7 +576,7 @@ def canon (ρ : Representation ℂ (GL n 𝓀[k]) W) (ω : kˣ →* ℂˣ) (h : 
 theorem canon_injective (ρ : Representation ℂ (GL n 𝓀[k]) W) (ω : kˣ →* ℂˣ) (h : ExtendsCentral ω ρ) :
     Function.Injective (canon ρ ω h) := fun v w e => by
   have h1 : canonFun ρ ω h v 1 = canonFun ρ ω h w 1 := congrArg (fun f => f.1.1.1 1) e
-  have h2 : ∀ v, canonFun ρ ω h v 1 = v := fun v => (dif_pos (one_mem _)).trans (LinearMap.congr_fun (map_one _) v)
+  have h2 : ∀ v, canonFun ρ ω h v 1 = v := fun v => (dite_eq_left (one_mem _)).trans (LinearMap.congr_fun (map_one _) v)
   rwa [h2, h2] at h1
 
 theorem isUnram_mul {ν μ : kˣ →* ℂˣ} (h : IsUnram ν) (h' : IsUnram μ) : IsUnram (ν * μ) := fun x hx => by

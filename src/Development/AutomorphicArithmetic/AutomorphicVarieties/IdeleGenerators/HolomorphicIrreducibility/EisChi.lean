@@ -133,7 +133,7 @@ theorem UpperTheory.V.Sd.eisChi :
   have hg : gaussSum χ⁻¹ (ZMod.stdAddChar (N := N)) ≠ 0 :=
     eisChi_gauss_ne hi (ZMod.isPrimitive_stdAddChar N)
   set g := gaussSum χ⁻¹ (ZMod.stdAddChar (N := N)) with hgdef
-  haveI : Fact (1 < N) := ⟨hN⟩
+  have : Fact (1 < N) := ⟨hN⟩
   have h0 : χ⁻¹ (0 : ZMod N) = 0 := MulChar.map_nonunit _ not_isUnit_zero
   refine ⟨∑ a : ZMod N, ((2 * g)⁻¹ * χ⁻¹ a) • F a, ?_, ?_, ?_, ?_⟩
   · intro γ hγ

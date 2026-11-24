@@ -67,12 +67,12 @@ theorem detAlg_holds : DetAlgSt := by
   unfold Ideal.jacobson
   rw [Ideal.mem_sInf]
   rintro J ⟨hIJ, hJ⟩
-  haveI := hJ
-  letI : Field (MvPolynomial (Fin n) K ⧸ J) := Ideal.Quotient.field J
-  haveI : Algebra.FiniteType K (MvPolynomial (Fin n) K ⧸ J) :=
+  have := hJ
+  let : Field (MvPolynomial (Fin n) K ⧸ J) := Ideal.Quotient.field J
+  have : Algebra.FiniteType K (MvPolynomial (Fin n) K ⧸ J) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ K J)
       (Ideal.Quotient.mkₐ_surjective K J)
-  haveI : FiniteDimensional K (MvPolynomial (Fin n) K ⧸ J) :=
+  have : FiniteDimensional K (MvPolynomial (Fin n) K ⧸ J) :=
     finite_of_finite_type_of_isJacobsonRing K _
   have h := hr (MvPolynomial (Fin n) K ⧸ J) (Ideal.Quotient.factorₐ K hIJ)
   rw [← Ideal.Quotient.eq_zero_iff_mem]

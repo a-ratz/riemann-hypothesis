@@ -87,13 +87,13 @@ variable {k r : ℕ} in
 private lemma adjugate_upUni_last_apply {m : ℕ} {U : Matrix (Fin (m + 1)) (Fin (m + 1)) ℂ}
     (hU : _root_.GlobalTheory.LeadingMinorInv.UpUni U) (a : Fin (m + 1)) :
     U.adjugate (Fin.last m) a = if a = Fin.last m then 1 else 0 := by
-  rw [adjugate_apply, det_of_upperTriangular]
+  rw [adjugate_apply, det_of_isUpperTriangular]
   · simp [updateRow_apply, Pi.single_apply, hU.2]
   · intro i j hij
     simp only [updateRow_apply]
     split_ifs with h
     · subst h
-      rw [Pi.single_apply, if_neg]
+      rw [Pi.single_apply, ite_eq_right]
       exact (hij.trans_le (Fin.le_last _)).ne
     · exact hU.1 i j hij
 
@@ -141,7 +141,7 @@ private lemma prW_mulVec_eq_of_mem_nset_of_tail_eq_zero {z' : Fin (2 * r + k + 1
         simp
       · intro j _ hji
         by_cases hj : (j : ℕ) ≤ r + k
-        · rw [hNC i j hj (le_trans (min_le_right _ _) hi.1), if_neg (Ne.symm hji)]
+        · rw [hNC i j hj (le_trans (min_le_right _ _) hi.1), ite_eq_right (Ne.symm hji)]
           simp
         · rw [hp j (by omega)]
           simp
@@ -165,13 +165,13 @@ private lemma mulVec_adjugate_single_last_apply_eq_zero_of_lt (z' : Fin (2 * r +
       fun i l => _root_.PI.QuotSetU.UnitaryGroupMassFormula.SW.Hpk_apply i l
     rw [Matrix.mul_apply]
     simp only [hJa, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ,
-      if_true]
+      ite_true]
   have hj2 := j.isLt
   obtain ⟨b, hb⟩ : ∃ b : Fin r, (b : ℕ) = 2 * r + k - j := ⟨⟨2 * r + k - j, by omega⟩, rfl⟩
   have hpi : _root_.PI.QuotSetU.UnitaryGroupMassFormula.SW.piI k r (_root_.Formalism.QuantumDeterminants.eI k r b) = j := by
     have hb2 := b.isLt
     apply Fin.ext
-    rw [_root_.PI.QuotSetU.UnitaryGroupMassFormula.SW.piI_val, if_neg] <;> simp only [_root_.Formalism.QuantumDeterminants.eI] <;> omega
+    rw [_root_.PI.QuotSetU.UnitaryGroupMassFormula.SW.piI_val, ite_eq_right] <;> simp only [_root_.Formalism.QuantumDeterminants.eI] <;> omega
   have key : (_root_.Formalism.QuantumDeterminants.Hpk k r * _root_.GlobalTheory.LeadingMinorInv.flagMat k r z')ᴴ *
       (Q * (Qᴴ * (_root_.Formalism.QuantumDeterminants.Hpk k r * _root_.GlobalTheory.LeadingMinorInv.flagMat k r z')).adjugateᴴ) =
       ((Qᴴ * (_root_.Formalism.QuantumDeterminants.Hpk k r * _root_.GlobalTheory.LeadingMinorInv.flagMat k r z')).adjugate *
@@ -181,7 +181,7 @@ private lemma mulVec_adjugate_single_last_apply_eq_zero_of_lt (z' : Fin (2 * r +
   have h1 := congrFun (congrFun key (Fin.castSucc b)) (Fin.last r)
   rw [adjugate_mul] at h1
   simp only [conjTranspose_apply, Matrix.smul_apply, one_apply,
-    if_neg (Fin.castSucc_lt_last b).ne', smul_zero, star_zero] at h1
+    ite_eq_right (Fin.castSucc_lt_last b).ne', smul_zero, star_zero] at h1
   rw [conjTranspose_mul, hpk_conjTranspose_eq_self', Matrix.mul_assoc, Matrix.mul_apply,
     Finset.sum_eq_single (_root_.Formalism.QuantumDeterminants.eI k r b)] at h1
   · rw [hJP, hpi] at h1
@@ -189,10 +189,10 @@ private lemma mulVec_adjugate_single_last_apply_eq_zero_of_lt (z' : Fin (2 * r +
     have hF : (_root_.GlobalTheory.LeadingMinorInv.flagMat k r z')ᴴ (Fin.castSucc b) (_root_.Formalism.QuantumDeterminants.eI k r b) = 1 := by
       simp [conjTranspose_apply, _root_.GlobalTheory.LeadingMinorInv.flagMat, _root_.Formalism.QuantumDeterminants.fvec, _root_.Formalism.QuantumDeterminants.bvec]
     rw [hF, one_mul] at h1
-    simp only [Matrix.one_apply, if_neg (Fin.castSucc_lt_last b).ne', smul_zero, star_zero] at h1
+    simp only [Matrix.one_apply, ite_eq_right (Fin.castSucc_lt_last b).ne', smul_zero, star_zero] at h1
     rw [mulVec_mulVec]
     simp only [mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rcases mul_eq_zero.1 h1 with h | h
     · rw [h, zero_mul] at heps
       exact absurd heps zero_ne_one

@@ -244,7 +244,7 @@ theorem stab_vacuum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D
         rw [hp w, Pi.smul_apply, smul_eq_mul]
     rw [hset]
     exact isClosed_iInter fun w =>
-      isClosed_eq (hW.om_cont f hf w) ((continuous_subtype_val.comp hcont).mul continuous_const)
+      isClosed_eq (hW.om_cont f hf w) ((continuous_subtypeVal.comp hcont).mul continuous_const)
 
   have key : (g, h) ∈ eigSub om c f := by
     refine GlobalTheory.T.mem_closedSubgroup_of_localStabilizerPairs D S T βS βT (eigSub om c f) hclosed ?_ g h hg hh

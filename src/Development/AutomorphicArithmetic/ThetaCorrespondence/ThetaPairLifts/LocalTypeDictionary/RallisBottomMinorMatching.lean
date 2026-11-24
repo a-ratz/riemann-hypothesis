@@ -692,11 +692,11 @@ theorem exists_mem_inv_eq_of_twisted : ∀ {ι : Type} [Fintype ι] (a d : ℕ) 
   intro ι _ a d n Pr _ _ q hq P
   classical
   let S : Submodule ℂ (Pol ι d a) := restrictTotalDegree (Var ι d a) ℂ P.totalDegree
-  haveI : FiniteDimensional ℂ S :=
+  have : FiniteDimensional ℂ S :=
     inferInstanceAs (Module.Finite ℂ (restrictTotalDegree (Var ι d a) ℂ P.totalDegree))
-  letI : InnerProductSpace.Core ℂ S := fockCore S
-  letI : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
+  let : InnerProductSpace.Core ℂ S := fockCore S
+  let : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
   have hmemS : ∀ (g : ι → Matrix (Fin a) (Fin a) ℂ) (x : Pol ι d a), x ∈ S → colSub g x ∈ S := fun g x hx =>
     (mem_restrictTotalDegree _ _ _).2 ((colSub_totalDegree_le g x).trans ((mem_restrictTotalDegree _ _ _).1 hx))
   let gen : Set S := {w | ∃ (g : ι → Matrix.unitaryGroup (Fin a) ℂ) (x : S),
@@ -817,7 +817,7 @@ theorem GlobalTheory.MinorFrame.exists_unitary_detChar_ne : ∀ {ι : Type} [Fin
     intro m
     unfold GlobalTheory.MinorFrame.detChar
     rw [Finset.prod_eq_single τ₀]
-    · simp only [g, if_pos rfl, Matrix.det_diagonal, d]
+    · simp only [g, ite_eq_left rfl, Matrix.det_diagonal, d]
       rw [Finset.prod_update_of_mem (Finset.mem_univ _)]
       simp
     · intro b _ hb
@@ -1098,7 +1098,7 @@ theorem lowScal_mem_unitary {d a : ℕ} {t : ℂ} (ht : ‖t‖ = 1) : lowScal d
   funext i
   by_cases hi : (i : ℕ) < a
   · simp [hi]
-  · simp only [Pi.star_apply, hi, if_false, RCLike.star_def]
+  · simp only [Pi.star_apply, hi, ite_false, RCLike.star_def]
     rw [Complex.conj_mul', ht]; simp
 
 theorem rowSub_lowScal_zero_mem {a d : ℕ} (S : Submodule ℂ (Pol ι d a))
@@ -1169,7 +1169,7 @@ theorem rowSub_lowScal_zero_of_mem_inv {a d : ℕ} (h : a ≤ d) (n : ι → ℕ
 theorem exists_fockS_orth {σ : Type} (V N : Submodule ℂ (MvPolynomial σ ℂ)) [FiniteDimensional ℂ V] (hNV : N < V) :
     ∃ Q ∈ V, Q ≠ 0 ∧ ∀ P ∈ N, Formalism.L2.DIV.fockS P Q = 0 := by
   classical
-  haveI : FiniteDimensional ℂ N := Submodule.finiteDimensional_of_le hNV.le
+  have : FiniteDimensional ℂ N := Submodule.finiteDimensional_of_le hNV.le
   have hlt : Module.finrank ℂ N < Module.finrank ℂ V := Submodule.finrank_lt_finrank_of_lt hNV
   let b := Module.finBasis ℂ N
   let L : V →ₗ[ℂ] (Fin (Module.finrank ℂ N) → ℂ) :=
@@ -1193,7 +1193,7 @@ theorem exists_fockS_orth {σ : Type} (V N : Submodule ℂ (MvPolynomial σ ℂ)
 
 theorem inv_finiteDimensional (a d : ℕ) (n : ι → ℕ) : FiniteDimensional ℂ (inv (ι := ι) a d n) := by
   classical
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range (prodMinors (ι := ι) (a := a) (d := d) (n := n)))) :=
+  have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range (prodMinors (ι := ι) (a := a) (d := d) (n := n)))) :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   exact Submodule.finiteDimensional_of_le (inv_le_span_prodMinors a d n)
 
@@ -1233,7 +1233,7 @@ theorem inv_irreducible : ∀ {ι : Type} [Fintype ι] (a d : ℕ) (n : ι → �
   · exact Or.inl hN0
   refine Or.inr ?_
   by_contra hne
-  haveI := inv_finiteDimensional (ι := ι) a d n
+  have := inv_finiteDimensional (ι := ι) a d n
   obtain ⟨Q, hQI, hQ0, hQN⟩ := exists_fockS_orth (inv a d n) N (lt_of_le_of_ne hNI hne)
   let M : Submodule ℂ (GlobalTheory.MinorFrame.Pol ι d a) :=
     { carrier := {R | R ∈ GlobalTheory.MinorFrame.inv a d n ∧ ∀ P ∈ N, Formalism.L2.DIV.fockS P R = 0}
@@ -1390,7 +1390,7 @@ theorem quot_eq_zero_of_weight_ne {a d : ℕ} (ha : 0 < a) {n n₀ : ι → ℕ}
 
 theorem finiteDimensional_inv (a d : ℕ) (n : ι → ℕ) : FiniteDimensional ℂ (inv (ι := ι) a d n) := by
   have hfin : (Set.range (prodMinors (ι := ι) (a := a) (d := d) (n := n))).Finite := Set.finite_range _
-  haveI := FiniteDimensional.span_of_finite ℂ hfin
+  have := FiniteDimensional.span_of_finite ℂ hfin
   exact Submodule.finiteDimensional_of_le (GlobalTheory.MinorFrame.inv_le_span_prodMinors a d n)
 
 theorem exists_const_of_equivariant {a d : ℕ} (had : a ≤ d) (n₀ : ι → ℕ) (Pr : Type) [AddCommGroup Pr] [Module ℂ Pr]
@@ -1428,8 +1428,8 @@ theorem exists_const_of_equivariant {a d : ℕ} (had : a ≤ d) (n₀ : ι → �
       have : (P : Pol ι d a) ∈ V ⊓ LinearMap.ker q := by rw [hV']; exact P.2
       exact hx (hP.symm.trans (LinearMap.mem_ker.1 (Submodule.mem_inf.1 this).2))
   let e : V ≃ₗ[ℂ] Pr := LinearEquiv.ofBijective (q ∘ₗ V.subtype) ⟨hinj, hsurj⟩
-  haveI : FiniteDimensional ℂ V := finiteDimensional_inv a d n₀
-  haveI : Nontrivial V := e.toEquiv.nontrivial
+  have : FiniteDimensional ℂ V := finiteDimensional_inv a d n₀
+  have : Nontrivial V := e.toEquiv.nontrivial
   let E : Module.End ℂ V := e.symm.toLinearMap ∘ₗ F ∘ₗ V.subtype
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue E
   obtain ⟨v, hv⟩ := hc.exists_hasEigenvector

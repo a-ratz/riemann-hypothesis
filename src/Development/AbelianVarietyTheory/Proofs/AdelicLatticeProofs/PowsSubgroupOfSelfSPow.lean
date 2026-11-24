@@ -65,8 +65,8 @@ theorem _root_.GlobalTheory.CNorm.pTor_pIdx_sUnits : ∀ (p : ℕ) (F : Type) [F
       _root_.GlobalTheory.CNorm.pIdx p (_root_.GlobalTheory.QNorm.sUnits F S) =
         p ^ (S.card + Fintype.card (InfinitePlace F)) := by
   intro p F _ _ ζ S hp hζ
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : Group.FG (_root_.GlobalTheory.QNorm.sUnits F S) := _root_.GlobalTheory.QNorm.sUnits_fg F S
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : Group.FG (_root_.GlobalTheory.QNorm.sUnits F S) := _root_.GlobalTheory.QNorm.sUnits_fg F S
   obtain ⟨-, h2⟩ := _root_.GlobalTheory.CNorm.pIdx_top_of_fg p (_root_.GlobalTheory.QNorm.sUnits F S) hp.pos
   have hroots : ∀ x : Fˣ, x ^ p = 1 → x ∈ _root_.GlobalTheory.QNorm.sUnits F S := by
     intro x hx
@@ -74,7 +74,7 @@ theorem _root_.GlobalTheory.CNorm.pTor_pIdx_sUnits : ∀ (p : ℕ) (F : Type) [F
     intro v _
     have h := congrArg (fun y : Fˣ => HeightOneSpectrum.valuation F v (y : F)) hx
     simp only [Units.val_pow_eq_pow_val, map_pow, Units.val_one, map_one] at h
-    exact (pow_eq_one_iff_of_nonneg zero_le' hp.ne_zero).mp h
+    exact (pow_eq_one_iff_of_nonneg zero_le hp.ne_zero).mp h
   have htor : _root_.GlobalTheory.CNorm.pTor p (_root_.GlobalTheory.QNorm.sUnits F S) = p := by
     unfold _root_.GlobalTheory.CNorm.pTor
     refine (Nat.card_congr ?_).trans hζ.card_rootsOfUnity

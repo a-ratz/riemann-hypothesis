@@ -79,7 +79,7 @@ theorem val_inv_le_one (P : HeightOneSpectrum (𝓞 E)) {x : 𝓞 E} (hx : x ≠
   have h0 : P.valuation E (x : E) ≠ 0 := by
     rw [Ne, map_eq_zero]
     exact fun h => hx (RingOfIntegers.ext h)
-  rw [h2, map_inv₀, inv_le_one₀ (zero_lt_iff.2 h0), ← not_lt]
+  rw [h2, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h0), ← not_lt]
   exact not_congr (HeightOneSpectrum.valuation_lt_one_iff_mem (K := E) P x)
 
 theorem single_mul_inv (P : HeightOneSpectrum (𝓞 E)) {x : 𝓞 E} (hx : x ≠ 0) :

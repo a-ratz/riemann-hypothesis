@@ -107,7 +107,7 @@ theorem conj_series_twisted : Formalism.MainNotions.ModuliIntegralCharts.H1.Char
     refine ⟨m * n, Nat.mul_pos hm hn, ?_⟩
     rw [hζd, mul_pow, pow_mul, hpow, one_pow, one_mul, pow_mul', hxc, one_pow]
   obtain ⟨hfin, ⟨k, hk⟩, hsum⟩ := GlobalTheory.FlatVecSum.vecFlat_eq_sum D G Pl0 T0 A _ R F hC i B hB hBo
-  haveI : Fintype B.G.P.H := Fintype.ofFinite _
+  have : Fintype B.G.P.H := Fintype.ofFinite _
   obtain ⟨hk0, -⟩ := hsum k fun p => (hk p).1
   choose g0 hg0 using hk0
   have hlift : ∀ p, Lev.IsLevelLift (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG (R.eG.symm (g0 p))) (k p) := fun p => by

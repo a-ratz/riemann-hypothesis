@@ -102,7 +102,7 @@ theorem stCoord_cont (u' : D.what₂.Word) (w : Point D.host.E (D.R.rS + 1)) (γ
   refine continuous_pi fun v => continuous_pi fun p => continuous_const.mul ?_
   refine Continuous.dotProduct continuous_const (Continuous.matrix_mulVec continuous_const ?_)
   refine Continuous.matrix_mulVec ?_ continuous_const
-  exact Units.continuous_val.comp (continuous_subtype_val.comp ((continuous_apply v).comp
+  exact Units.continuous_val.comp (continuous_subtypeVal.comp ((continuous_apply v).comp
     ((continuous_const.mul continuous_id).mul continuous_const)))
 
 theorem muStab_compact (w : Point D.host.E (D.R.rS + 1)) {C : Set (InfinitePlace X.B.I.F → RealObj.FreeE w → ℂ)}

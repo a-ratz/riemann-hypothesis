@@ -80,7 +80,7 @@ def mulX (i : ι) : Module.End R (MvPolynomial ι R ⊗[R] V) :=
 
 lemma mulX_zv (i : ι) (α : ι →₀ ℕ) (v : V) :
     mulX i (zv (R := R) α v) = zv (Finsupp.single i 1 + α) v := by
-  simp [mulX, zv, X, monomial_mul]
+  simp [mulX, zv, X, monomial_mul_monomial]
 
 def degLt (R : Type*) [CommRing R] (ι : Type*) (V : Type*) [AddCommGroup V] [Module R V] (n : ℕ) :
     Submodule R (MvPolynomial ι R ⊗[R] V) :=
@@ -387,11 +387,11 @@ lemma defect_e (i : ι) (J : ι →₀ ℕ) (hJ : ∀ j ∈ J.support, i ≤ j) 
     suffices h : defect c δ (zv J v) (e j) (e i) = 0 by rw [h, smul_zero]
     rcases lt_trichotomy i j with h | rfl | h
     · rw [defect_apply, comm_high hce hf i J hJ _ fun k hk => by
-        rw [hce, if_neg (hk.trans_lt h).ne]]
+        rw [hce, ite_eq_right (hk.trans_lt h).ne]]
       abel
     · simp [defect_apply]
     · rw [defect_swap, defect_apply, comm_high hce hf j J (fun k hk => h.le.trans (hJ k hk)) _
-        fun k hk => by rw [hce, if_neg (hk.trans_lt h).ne]]
+        fun k hk => by rw [hce, ite_eq_right (hk.trans_lt h).ne]]
       abel
 
 omit hce hf [LinearOrder ι] in
@@ -742,7 +742,7 @@ theorem prod_X_eq_monomial (a : List (PIx p q)) :
   induction a with
   | nil => simp
   | cons x a ih =>
-    rw [List.map_cons, List.prod_cons, ih, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul,
+    rw [List.map_cons, List.prod_cons, ih, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul,
       ← Multiset.cons_coe, ← Multiset.singleton_add, Multiset.toFinsupp_add, Multiset.toFinsupp_singleton]
 
 theorem symProd_sub_mem (b : List (Mat p q)) {k : ℕ} (x : Fin k → Mat p q)
@@ -798,7 +798,7 @@ private lemma sum_unitP_apply (x : Mat p q) (c d : Ix p q) :
 
 private lemma isKC_sub_sum_unitP (x : Mat p q) : IsKC (x - ∑ ab : PIx p q, x ab.1.1 ab.1.2 • unitP ab) := by
   intro c d h
-  rw [Matrix.sub_apply, sum_unitP_apply, if_neg h, sub_self]
+  rw [Matrix.sub_apply, sum_unitP_apply, ite_eq_right h, sub_self]
 
 theorem mixed_mem (v : V) (l : List (Mat p q)) : ∀ a : List (PIx p q),
     cls act v (prodU (a.map unitP) * prodU l) -
@@ -1237,7 +1237,7 @@ private lemma prod_map_X_eq_monomial' (L : List (PIx p q)) :
   | cons a L ih =>
     rw [List.map_cons, List.prod_cons, ih, ← Multiset.cons_coe, ← Multiset.singleton_add,
       Multiset.toFinsupp_add, Multiset.toFinsupp_singleton, MvPolynomial.X,
-      MvPolynomial.monomial_mul, one_mul]
+      monomial_mul_monomial, one_mul]
 
 lemma exists_list (α : PIx p q →₀ ℕ) : ∃ l : List (Mat p q), l.length = α.degree ∧
     (l.map pLin).prod = monomial α 1 := by
@@ -1358,7 +1358,7 @@ lemma eq_zero_of_mem {k : ℕ} {z : MvPolynomial (PIx p q) ℂ ⊗[ℂ] V} (h1 :
     have hm : (monomial α (1 : ℂ)) ∈ homogeneousSubmodule (PIx p q) ℂ α.degree :=
       (mem_homogeneousSubmodule _ _).mpr (isHomogeneous_monomial 1 rfl)
     simp only [SetLike.mem_coe, LinearMap.mem_ker, zv, TensorProduct.mk_apply,
-      LinearMap.rTensor_tmul, homogeneousComponent_of_mem hm, if_neg (Nat.ne_of_gt hα),
+      LinearMap.rTensor_tmul, homogeneousComponent_of_mem hm, ite_eq_right (Nat.ne_of_gt hα),
       TensorProduct.zero_tmul]
   have h3 := hkill h2
   rw [LinearMap.mem_ker, hfix] at h3

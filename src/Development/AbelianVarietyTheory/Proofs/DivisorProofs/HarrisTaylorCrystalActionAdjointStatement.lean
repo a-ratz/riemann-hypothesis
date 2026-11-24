@@ -59,8 +59,8 @@ namespace GlobalTheory.HTCount
 
 theorem crysAct_adjoint : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ Sp R) (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β : R →+* k), t = spMap β → ∀ φ : LinearMap.BilinForm k (HdR o₀.A), GlobalTheory.AbDual.IsCorrForm (dp0 k) (𝟙 _) o₀.A o₀.A o₀.P φ → ∀ (c : D.O) x y, φ (GlobalTheory.HTCount.crysAct o₀ c x) y = φ x (GlobalTheory.HTCount.crysAct o₀ (D.star c).unop y) := by
   intro p _ D R _ b N _ _ k _ _ t o₀ β _ φ hφ c x y
-  haveI := o₀.act.hom c
-  haveI := o₀.act.hom (D.star c).unop
+  have := o₀.act.hom c
+  have := o₀.act.hom (D.star c).unop
   have hA := o₀.ab
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim k o₀.A hA
   have C := GlobalTheory.AbDual.cupSquare_of_free GlobalTheory.abelianDeRham.1

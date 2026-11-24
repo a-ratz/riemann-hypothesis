@@ -61,7 +61,7 @@ namespace GlobalTheory.DvrDom
 theorem exists_cdvr_dominating : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [CharZero R], ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsLocalRing V) (φ : R →+* V), GlobalTheory.LN.CDvr V ∧ Function.Injective φ ∧ IsLocalHom φ := by
   intro R _ _ _ _ _
   by_cases hR : IsField R
-  · letI : Field R := hR.toField
+  · let : Field R := hR.toField
     have hC : Function.Injective (PowerSeries.C (R := R)) := PowerSeries.C_injective
     have : CharZero (PowerSeries R) := charZero_of_injective_ringHom hC
     have hc : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries R)) (PowerSeries R) := by

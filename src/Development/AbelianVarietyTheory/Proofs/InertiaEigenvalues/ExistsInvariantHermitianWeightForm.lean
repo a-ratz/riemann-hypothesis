@@ -113,12 +113,12 @@ theorem exists_form_of_bounded {ι : Type} [Fintype ι] [DecidableEq ι]
   let K := H.topologicalClosure
   have hK : IsCompact (K : Set (Matrix.GeneralLinearGroup ι ℂ)) :=
     hS.of_isClosed_subset H.isClosed_topologicalClosure (closure_minimal hHS hS.isClosed)
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  letI : MeasurableSpace K := borel K
-  haveI : BorelSpace K := ⟨rfl⟩
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  let : MeasurableSpace K := borel K
+  have : BorelSpace K := ⟨rfl⟩
   let μ : Measure K := Measure.haar
   let N : K → Matrix ι ι ℂ := fun k => ((k⁻¹ : K) : Matrix.GeneralLinearGroup ι ℂ).val
-  have hN : Continuous N := Units.continuous_val.comp (continuous_subtype_val.comp continuous_inv)
+  have hN : Continuous N := Units.continuous_val.comp (continuous_subtypeVal.comp continuous_inv)
   let φ : K → (ι → ℂ) → (ι → ℂ) → ℂ := fun k x y => star (N k *ᵥ x) ⬝ᵥ (N k *ᵥ y)
   have hφc : ∀ x y, Continuous fun k => φ k x y := by
     intro x y
@@ -157,7 +157,7 @@ theorem exists_form_of_bounded {ι : Type} [Fintype ι] [DecidableEq ι]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [Complex.star_def, Complex.conj_mul']
       norm_cast
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
       (Complex.continuous_re.comp (hφc x x)) (HasCompactSupport.of_compactSpace _) ?_ ?_
     · intro k
       simp only [Pi.zero_apply, Function.comp_apply, hre]

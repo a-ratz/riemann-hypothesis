@@ -116,9 +116,9 @@ theorem exists_gal_of_apply_eq (X : Over (Sp K)) (a b : ptOver K (AlgebraicClosu
     exact Over.w u
   have hφ := key φ a ha
   have hψ := key ψ b hb
-  letI : Algebra K (X.left.residueField q) := c.hom.toAlgebra
-  letI : Algebra (X.left.residueField q) Ω := ψ.hom.toAlgebra
-  haveI : IsScalarTower K (X.left.residueField q) Ω := IsScalarTower.of_algebraMap_eq fun x =>
+  let : Algebra K (X.left.residueField q) := c.hom.toAlgebra
+  let : Algebra (X.left.residueField q) Ω := ψ.hom.toAlgebra
+  have : IsScalarTower K (X.left.residueField q) Ω := IsScalarTower.of_algebraMap_eq fun x =>
     (congrArg (fun f => f.hom x) hψ).symm
   let φ' : X.left.residueField q →ₐ[K] Ω :=
     { φ.hom with commutes' := fun x => congrArg (fun f => f.hom x) hφ }
@@ -150,8 +150,8 @@ theorem exists_finiteEtale_subgroup_of_points : ∀ (K : Type) [Field K] (A : Ab
     rw [Hom.one_def]
     congr 1
     exact toUnit_unique _ _
-  haveI : IsSplitMono η[A.X] := IsSplitMono.mk' ⟨toUnit _, toUnit_unique _ _⟩
-  haveI : Mono ι₀ := inferInstanceAs (Mono (pullback.fst _ _))
+  have : IsSplitMono η[A.X] := IsSplitMono.mk' ⟨toUnit _, toUnit_unique _ _⟩
+  have : Mono ι₀ := inferInstanceAs (Mono (pullback.fst _ _))
   have hpow : ∀ x ∈ G, x ^ n = 1 := fun x hx =>
     congrArg Subtype.val (pow_card_eq_one' (G := G) (x := ⟨x, hx⟩))
   let lt : ∀ {S : Over (Sp K)} (x : S ⟶ A.X), x ^ n = 1 → (S ⟶ T) := fun x hx =>
@@ -159,17 +159,17 @@ theorem exists_finiteEtale_subgroup_of_points : ∀ (K : Type) [Field K] (A : Ab
   have hlt : ∀ {S : Over (Sp K)} (x : S ⟶ A.X) (hx : x ^ n = 1), lt x hx ≫ ι₀ = x :=
     fun x hx => pullback.lift_fst _ _ _
   let U : Set T.left := {t | ∃ (x : A.Pt) (hx : x ∈ G) (p : Sp Ω), (lt x (hpow x hx)).left p = t}
-  haveI := discreteTopology_of_isFinite T
+  have := discreteTopology_of_isFinite T
   let V : T.left.Opens := ⟨U, isOpen_discrete U⟩
   let H : Over (Sp K) := Over.mk (V.ι ≫ T.hom)
   let j : H ⟶ T := Over.homMk V.ι rfl
   obtain ⟨ν, hνj⟩ : ∃ ν : H ⟶ A.X, ν = j ≫ ι₀ := ⟨_, rfl⟩
-  haveI : IsClosedImmersion V.ι := .of_isPreimmersion _ (by
+  have : IsClosedImmersion V.ι := .of_isPreimmersion _ (by
     rw [Scheme.Opens.range_ι]; exact isClosed_discrete _)
-  haveI hHf : IsFinite H.hom := by change IsFinite (V.ι ≫ T.hom); infer_instance
-  haveI hHe : Etale H.hom := by change Etale (V.ι ≫ T.hom); infer_instance
-  haveI : Mono j := (Over.forget _).mono_of_mono_map (by change Mono V.ι; infer_instance)
-  haveI : Mono ν := hνj ▸ mono_comp _ _
+  have hHf : IsFinite H.hom := by change IsFinite (V.ι ≫ T.hom); infer_instance
+  have hHe : Etale H.hom := by change Etale (V.ι ≫ T.hom); infer_instance
+  have : Mono j := (Over.forget _).mono_of_mono_map (by change Mono V.ι; infer_instance)
+  have : Mono ν := hνj ▸ mono_comp _ _
   have hν : ν ^ n = 1 := by
     rw [hνj, ← MonObj.comp_pow, hι₀, MonObj.comp_one]
   have lift : ∀ {S : Over (Sp K)} (f : S ⟶ A.X) (hf : f ^ n = 1),
@@ -218,8 +218,8 @@ theorem exists_finiteEtale_subgroup_of_points : ∀ (K : Type) [Field K] (A : Ab
       rw [this]; exact one_mem G)
   have hmul : (ν ⊗ₘ ν) ≫ μ[A.X] = (fst H H ≫ ν) * (snd H H ≫ ν) := by
     rw [Hom.mul_def, ← lift_map, lift_fst_snd, Category.id_comp]
-  haveI : IsFinite (H ⊗ H).hom := by rw [Over.tensorObj_hom]; infer_instance
-  haveI : Etale (H ⊗ H).hom := by rw [Over.tensorObj_hom]; infer_instance
+  have : IsFinite (H ⊗ H).hom := by rw [Over.tensorObj_hom]; infer_instance
+  have : Etale (H ⊗ H).hom := by rw [Over.tensorObj_hom]; infer_instance
   have hν' : ∀ {S : Over (Sp K)} (g : S ⟶ H), (g ≫ ν) ^ n = 1 := fun g => by
     rw [← MonObj.comp_pow ν n g, hν, MonObj.comp_one]
   obtain ⟨m, hm⟩ := lift ((ν ⊗ₘ ν) ≫ μ[A.X])

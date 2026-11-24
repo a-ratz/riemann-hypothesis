@@ -188,8 +188,8 @@ theorem exists_idem [Algebra.IsSeparable Qp K] (ε : A →ₐ[LL] LL) (τ : K �
     ∃ u : A ⊗[Qp] BdR, u ∈ FilV PD (LL := LL) (V := A) 0 ∧ (∀ g, gal PD (LL := LL) g u = u) ∧
       (∀ c : K, ((1 : A) ⊗ₜ algebraMap K BdR c) * u = τ c • u) ∧
       ∀ y : V ⊗[Qp] BdR, (∀ c : K, mulVdR (LL := LL) c y = τ c • y) → act V ε u y = y := by
-  haveI := PD.finK
-  haveI : Algebra.FormallyUnramified Qp K := Algebra.FormallyUnramified.of_isSeparable Qp K
+  have := PD.finK
+  have : Algebra.FormallyUnramified Qp K := Algebra.FormallyUnramified.of_isSeparable Qp K
   let f : K ⊗[Qp] K →ₐ[Qp] A ⊗[Qp] BdR :=
     Algebra.TensorProduct.map ((IsScalarTower.toAlgHom Qp LL A).comp τ) (IsScalarTower.toAlgHom Qp K BdR)
   have hf : ∀ a b, f (a ⊗ₜ b) = algebraMap LL A (τ a) ⊗ₜ algebraMap K BdR b := fun _ _ => rfl
@@ -226,15 +226,15 @@ theorem exists_idem [Algebra.IsSeparable Qp K] (ε : A →ₐ[LL] LL) (τ : K �
 theorem line_of_single_jump (ν : Representation LL G V) (τ : K →ₐ[Qp] LL) (b : ℤ)
     (h : ∀ a : ℤ, multV PD ν τ a = if a = b then 1 else 0) :
     ∃ d ∈ FildR PD ν τ b, ∀ a, ∀ y ∈ FildR PD ν τ a, ∃ c : LL, y = c • d ∧ (b < a → c = 0) := by
-  haveI := GlobalTheory.Cmp.SmallJumps.finite_ddRE_of_multV PD ν τ {b} (by simp) fun a => by
+  have := GlobalTheory.Cmp.SmallJumps.finite_ddRE_of_multV PD ν τ {b} (by simp) fun a => by
     rw [h, Multiset.count_singleton]; split_ifs <;> simp
-  haveI : ∀ a, FiniteDimensional LL (FildR PD ν τ a) := fun a =>
+  have : ∀ a, FiniteDimensional LL (FildR PD ν τ a) := fun a =>
     Submodule.finiteDimensional_of_le (S₂ := DdRE PD ν τ) inf_le_left
   have anti : Antitone (FildR PD ν τ) := fun a a' haa =>
     inf_le_inf_left _ (GlobalTheory.Cmp.SmallJumps.filV_anti PD haa)
   have st : ∀ a, a ≠ b → FildR PD ν τ (a + 1) = FildR PD ν τ a := fun a ha => by
     have := h a
-    rw [if_neg ha, multV] at this
+    rw [ite_eq_right ha, multV] at this
     exact Submodule.eq_of_le_of_finrank_eq (anti (by omega)) (by omega)
   have up : ∀ a, b + 1 ≤ a → FildR PD ν τ a = FildR PD ν τ (b + 1) := fun a ha => by
     obtain ⟨n, rfl⟩ : ∃ n : ℕ, a = b + 1 + n := by
@@ -267,7 +267,7 @@ theorem line_of_single_jump (ν : Representation LL G V) (τ : K →ₐ[Qp] LL) 
     · exact (up a ha ▸ hx : x ∈ FildR PD ν τ a).2
   have one : finrank LL (FildR PD ν τ b) = 1 := by
     have := h b
-    rw [if_pos rfl, multV, bot, finrank_bot] at this
+    rw [ite_eq_left rfl, multV, bot, finrank_bot] at this
     omega
   obtain ⟨d, -, hd⟩ := finrank_eq_one_iff'.1 one
   refine ⟨d, d.2, fun a y hy => ?_⟩
@@ -359,7 +359,7 @@ end Periods
 
 theorem multV_twist_char : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ ρ' : Representation ↥LL.1 ↥(GK K) V) (ν : Representation ↥LL.1 ↥(GK K) (Fin 1 → ↥LL.1)) (χ : ↥(GK K) → ↥LL.1), (∀ g x, ν g x = χ g • x) → (∀ g x, ρ' g x = χ g • ρ g x) → IsDR (P.PD K) ν → ∀ (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (b : ℤ), (∀ a : ℤ, multV (P.PD K) ν τ a = if a = b then 1 else 0) → ∀ a : ℤ, multV (P.PD K) ρ' τ (a + b) = multV (P.PD K) ρ τ a := by
   intro l _ P AI T K LL V _ _ _ _ _ ρ ρ' ν χ hν hρ hdR τ b h a
-  haveI := (P.PD K).finK
+  have := (P.PD K).finK
   obtain ⟨m, k, β, d, hd, h1⟩ := _root_.GlobalTheory.DRFil.deRham_filtered l P AI T K LL (Fin 1 → ↥LL.1) ν hdR 0 1
     ⟨1 ⊗ₜ ⟨1, (P.PD K).one_mem⟩, rfl⟩
   have key := finrank_twist (P.PD K) (Pi.evalAlgHom ↥LL.1 (fun _ : Fin 1 => ↥LL.1) 0) ρ ρ' ν χ hν hρ

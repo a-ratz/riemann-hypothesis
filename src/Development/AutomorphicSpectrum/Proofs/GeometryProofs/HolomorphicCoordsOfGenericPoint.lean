@@ -90,7 +90,7 @@ theorem holAt_of_isAffineOpen {N : Set V} {c : V → (Sp ℂ ⟶ X)} {A : X.Open
   refine ⟨?_, fun f => ?_⟩
   · filter_upwards [hMo.mem_nhds hb0M] with b hb
     exact (hD b hb).trans (Scheme.Hom.preimage_mono _ hrU)
-  · haveI := hA.isLocalization_basicOpen r
+  · have := hA.isLocalization_basicOpen r
     obtain ⟨⟨hh, s⟩, hk⟩ := IsLocalization.surj (Submonoid.powers r) (X.presheaf.map (homOfLE hrU).op f)
     obtain ⟨k, hks⟩ := s.2
     dsimp only at hk

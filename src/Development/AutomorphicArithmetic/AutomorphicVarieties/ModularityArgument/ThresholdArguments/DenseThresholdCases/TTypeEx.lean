@@ -396,8 +396,8 @@ private theorem gMainV (hLit : _root_.GlobalTheory.Mem.LiteralAutomorphy.LitLocA
       exact ⟨v', hu, hdim.trans (hv b).2.1, he⟩
     choose v' hu hdim he using hv'
     choose Xs instA instM σ hs hi hsph hrc using fun b => sphOfUnrV H (d b) (v' b) (hu b) (hdim b)
-    letI := instA
-    letI := instM
+    let := instA
+    let := instM
     have hs' : ∀ b, IsSmooth (twist (σ b) (detChar (Fin (d b)) (η b))) :=
       fun b => isSmooth_twist (hs b) (hη b).detChar
     have hi' : ∀ b, (twist (σ b) (detChar (Fin (d b)) (η b))).IsIrreducible := fun b => isIrreducible_twist (hi b) _
@@ -424,8 +424,8 @@ private theorem gMainV (hLit : _root_.GlobalTheory.Mem.LiteralAutomorphy.LitLocA
     obtain ⟨e⟩ := IrrGL.of_eq_of.1 e2
     exact ⟨Xs, instA, instM, fun b => twist (σ b) (detChar (Fin (d b)) (η b)), hs', hi', hdet, ⟨e.symm⟩⟩
   · rintro ⟨Xs, instA, instM, σ, hs, hi, hdet, ⟨e⟩⟩
-    letI := instA
-    letI := instM
+    let := instA
+    let := instM
     have hI : (multiProd (stdBlocks d hd) σ).IsIrreducible := GlobalTheory.Parabolic.isIrreducible_of_equiv e x.2.rep.irr
     have hx : x = IrrGL.of (multiProd (stdBlocks d hd) σ) (isSmooth_parInd _ _) hI :=
       (IrrGL.of_rep x).symm.trans (IrrGL.of_eq_of.2 ⟨e⟩)
@@ -494,11 +494,11 @@ theorem UpperTheory.V.Z.Win.T2.typeData_alt :
   obtain ⟨m, V0, e, he, hre, heq, hsm⟩ := a4 _ G.V0sp hfin (fun φ hφ k' => hst φ hφ k') (a7 _ n G hKCo h1KC)
   obtain ⟨v0, hv0⟩ : G.v0 ∈ LinearMap.range e := hre ▸ hv0m
   have hU : IsOpen {j : ↥(KO (w.adicCompletion E) (Fin n)) | (j : GL (Fin n) (w.adicCompletion E)) ∈ KC _ n G.lev} :=
-    hKCo.preimage continuous_subtype_val
+    hKCo.preimage continuous_subtypeVal
   refine ⟨J, lam, m, V0, v0, ?_, ?_, hsm, fun h0 => hv00 (by rw [← hv0, h0, map_zero]), fun j => he ?_, ?_, ?_⟩
   · exact Subgroup.isOpen_of_mem_nhds J (Filter.mem_of_superset (hU.mem_nhds (show (1 : ↥(KO (w.adicCompletion E) (Fin n))) ∈ _ from h1KC)) fun j hj => hKCJ hj)
   · exact Subgroup.isOpen_of_mem_nhds lam.ker (Filter.mem_of_superset
-      ((hU.preimage continuous_subtype_val).mem_nhds (show (1 : ↥J) ∈ _ from h1KC)) fun j hj => MonoidHom.mem_ker.2 (Units.ext (by
+      ((hU.preimage continuous_subtypeVal).mem_nhds (show (1 : ↥J) ∈ _ from h1KC)) fun j hj => MonoidHom.mem_ker.2 (Units.ext (by
         rw [hlamv]; exact hlam1 _ hj)))
   · rw [heq, hv0, hv0e _ j.2, map_smul, hv0, hlamv]
   · rintro π ⟨x, hx, hxj⟩
@@ -1054,7 +1054,7 @@ theorem UpperTheory.V.Z.Win.T2.typeConj_alt :
     _root_.UpperTheory.V.Hi.typeConj_s_ty := by
   intro P L Ω _ _ _ _ _ n w A h rc hrc γ σ σ' f hf1 hf2 χ _ ⟨b, hb, hN, hρ⟩
   obtain ⟨a, ha, ε, H⟩ := _root_.UpperTheory.V.Z.Win.toV' hrc
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   obtain ⟨B₀, ξ, hξ, hB₀⟩ := exists_chars b χ hρ
   choose ω₀ hω₀ e using fun j => ha.factor (ξ j) (hξ j)
   obtain ⟨p, ho⟩ := exists_order ω₀
@@ -1197,7 +1197,7 @@ private theorem te_loc (P : _root_.GlobalTheory.Mem.LiteralAutomorphy.Literature
 private theorem te_root {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [Finite (ResidueField O)] {a b : Oˣ}
     (ha : a ^ (Nat.card (ResidueField O) - 1) = 1) (hb : b ^ (Nat.card (ResidueField O) - 1) = 1)
     (h : residue O a = residue O b) : a = b := by
-  letI := Fintype.ofFinite (ResidueField O)
+  let := Fintype.ofFinite (ResidueField O)
   have hu : ((a * b⁻¹ : Oˣ) : O) ^ (Nat.card (ResidueField O) - 1) = 1 := by
     rw [← Units.val_pow_eq_pow_val, mul_pow, inv_pow, ha, hb]; simp
   have hr : residue O (a * b⁻¹ : Oˣ) = 1 := by
@@ -1219,14 +1219,14 @@ theorem UpperTheory.V.Z.Desc.P.exists_integral_type_for_residual_rep :
   swap
   · exact ⟨0, 1, fun t ht => absurd ⟨t, ht⟩ hex⟩
   obtain ⟨t, ht⟩ := hex
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
   let j : c.O →+* ℂ := ι.toRingHom.comp (algebraMap c.O (Qbar l))
-  letI : Algebra c.O ℂ := j.toAlgebra
+  let : Algebra c.O ℂ := j.toAlgebra
   have hj : Function.Injective j := ι.injective.comp Subtype.val_injective
-  haveI : FaithfulSMul c.O ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hj
-  haveI : Algebra.IsAlgebraic c.O ℂ := by
-    haveI : Algebra.IsAlgebraic ℤ_[l] (Qbar l) := (IsFractionRing.comap_isAlgebraic_iff (K := ℚ_[l])).2 inferInstance
-    haveI : Algebra.IsAlgebraic c.O (Qbar l) := Algebra.IsAlgebraic.extendScalars (R := ℤ_[l]) (FaithfulSMul.algebraMap_injective ℤ_[l] c.O)
+  have : FaithfulSMul c.O ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hj
+  have : Algebra.IsAlgebraic c.O ℂ := by
+    have : Algebra.IsAlgebraic ℤ_[l] (Qbar l) := (IsFractionRing.comap_isAlgebraic_iff (K := ℚ_[l])).2 inferInstance
+    have : Algebra.IsAlgebraic c.O (Qbar l) := Algebra.IsAlgebraic.extendScalars (R := ℤ_[l]) (FaithfulSMul.algebraMap_injective ℤ_[l] c.O)
     exact (AlgEquiv.ofRingEquiv (f := ι) fun _ => rfl : Qbar l ≃ₐ[c.O] ℂ).isAlgebraic
   have hker : ∀ i, (t i).ker = (r.chib i).ker := fun i => Subgroup.ext fun g => by
     rw [MonoidHom.mem_ker, MonoidHom.mem_ker]
@@ -1242,7 +1242,7 @@ theorem UpperTheory.V.Z.Desc.P.exists_integral_type_for_residual_rep :
           exact hg
         change Units.map _ (t i (V.pr g)) = 1
         rw [h1, map_one])
-      ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtype_val)))
+      ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtypeVal)))
     fun i g => ⟨_, rfl⟩
   choose m τ ho hτ using hloc
   obtain ⟨m', τ', hk, hM⟩ := @UpperTheory.piFamilyProdHom_bijective_characterization c.O _ j s.St _ (fun _ _ => Classical.propDecidable _) (fun u => GLw n (wt s u)) _ _ _
@@ -1254,7 +1254,7 @@ theorem UpperTheory.V.Z.Desc.P.exists_integral_type_for_residual_rep :
   · refine Subgroup.isOpen_of_mem_nhds _ (g := 1) (Filter.mem_of_superset (IsOpen.mem_nhds
       (isOpen_iInter_of_finite fun u => (ho u).preimage
         (f := fun k : KT n (wt s) => (⟨k.1 u, k.2 u trivial⟩ : KO ((wt s u).adicCompletion L) (Fin n)))
-        (((continuous_apply u).comp continuous_subtype_val).subtype_mk _)) ?_) fun k hk' => ?_)
+        (((continuous_apply u).comp continuous_subtypeVal).subtype_mk _)) ?_) fun k hk' => ?_)
     · exact Set.mem_iInter.2 fun u => (τ u).ker.one_mem
     · change Matrix.GeneralLinearGroup.map _ (τ' k) = 1
       rw [hk k (Set.mem_iInter.1 hk'), map_one]
@@ -1295,8 +1295,8 @@ theorem gMain_alt (h1 : DeterminantVectorProp) (h2 : UnramifiedTwistProp) (h3 : 
       exact ⟨v', hu, hdim.trans (hv b).2.1, he⟩
     choose v' hu hdim he using hv'
     choose Xs instA instM σ hs hi hsph hrc using fun b => h5 E Ω A w h a ha ε rc hL (d b) (v' b) (hu b) (hdim b)
-    letI := instA
-    letI := instM
+    let := instA
+    let := instM
     choose hs' hi' hrc' using fun b => h6 E Ω A w h a ha ε rc hL (d b) (Xs b) (σ b) (hs b) (hi b) (η b) (hη b)
     have hdet : ∀ b, HasDetVec (twist (σ b) (detChar (Fin (d b)) (η b))) (η b) :=
       fun b => (h1 _ (d b) (Xs b) (σ b) (η b)).1 (hsph b)
@@ -1317,8 +1317,8 @@ theorem gMain_alt (h1 : DeterminantVectorProp) (h2 : UnramifiedTwistProp) (h3 : 
     obtain ⟨e⟩ := IrrGL.of_eq_of.1 e2
     exact ⟨Xs, instA, instM, fun b => twist (σ b) (detChar (Fin (d b)) (η b)), hs', hi', hdet, ⟨e.symm⟩⟩
   · rintro ⟨Xs, instA, instM, σ, hs, hi, hdet, ⟨e⟩⟩
-    letI := instA
-    letI := instM
+    let := instA
+    let := instM
     have hI : (multiProd (stdBlocks d hd) σ).IsIrreducible := GlobalTheory.Parabolic.isIrreducible_of_equiv e x.2.rep.irr
     have hx : x = IrrGL.of (multiProd (stdBlocks d hd) σ) (isSmooth_parInd _ _) hI :=
       (IrrGL.of_rep x).symm.trans (IrrGL.of_eq_of.2 ⟨e⟩)
@@ -1456,7 +1456,7 @@ theorem step_spCount_alt {n : ℕ} (G : Grp k n) : G.Step_spCount_alt := by
       _ ≤ ∑ t : Fin N, ((if Good G (b t) then 1 else 0 : ℕ) : Cardinal) := Finset.sum_le_sum fun t _ => hr1 t
       _ = ((∑ t : Fin N, (if Good G (b t) then 1 else 0 : ℕ) : ℕ) : Cardinal) := (Nat.cast_sum _ _).symm
       _ ≤ 1 := by exact_mod_cast hsum
-  haveI : Module.Free ℂ ↥(eS (leviK k (fun a : Fin G.s => Fin (G.d a))) G.eta
+  have : Module.Free ℂ ↥(eS (leviK k (fun a : Fin G.s => Fin (G.d a))) G.eta
       (jac G.e (parInd (points (Fin n)) (ρc c)))) := Module.Free.of_divisionRing ℂ _
   have hfin : FiniteDimensional ℂ ↥(eS (leviK k (fun a : Fin G.s => Fin (G.d a))) G.eta
       (jac G.e (parInd (points (Fin n)) (ρc c)))) :=

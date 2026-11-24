@@ -129,11 +129,11 @@ theorem fibSF_support : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hker₁ := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ D.hCM (M + 1) 1 _ hJ' R D.hR d b lam D.hlam m₁ D.hm₁
   obtain ⟨hsf', -, -, hfib'⟩ := _root_.GlobalTheory.CompanionTheory.SW.StageF.gramFibFree_basic F E σ D.hCM M n J D.hJ R D.hR d b lam D.hlam m' D.hm'
   obtain ⟨-, hlf₁, -⟩ := hker₁
-  haveI := hbor (n + 1) (M + 1)
-  haveI := hbor n M
-  haveI := hbor 1 (M + 1)
-  haveI := hlf₁ (hermScal R σ (algebraMap F R t))
-  haveI := hsf' (schur R σ t a S)
+  have := hbor (n + 1) (M + 1)
+  have := hbor n M
+  have := hbor 1 (M + 1)
+  have := hlf₁ (hermScal R σ (algebraMap F R t))
+  have := hsf' (schur R σ t a S)
   let α : R ⊗[F] E := ((a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))) : Rˣ) : R) ⊗ₜ[F] (1 : E)
   let c := cvec R t a (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))
   let f : (Fin 1 → Fin (M + 1) → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) → (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) :=
@@ -179,7 +179,7 @@ theorem fibSF_support : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     intro p hp hpS
     exact hp hpS
   unfold fibSF
-  rw [Set.indicator_of_mem hS, Measure.smul_apply]
+  rw [Set.indicator_of_mem hS, smul_apply]
   change _ • (((m₁ (hermScal R σ (algebraMap F R t))).prod (m' (schur R σ t a S))).map f) _ = 0
   rw [hmap, smul_zero]
 
@@ -381,7 +381,7 @@ theorem measurableSet_usetF (D : HermitianMeasureData σ J t n b lam m₁ m' s B
   have hSC := D.hR.2.2.1
   have hT2 := D.hR.2.2.2.1
   obtain ⟨k1, k2, k3, k4, hsigc, htrc, -, hbw, -, hgramc⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
   obtain ⟨-, -, -, hbor, hg⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ D.hCM R (n + 1)
   obtain ⟨g, hgc, hg⟩ := hg (M + 1) _ hJ'
@@ -430,7 +430,7 @@ theorem first_step_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hSC := D.hR.2.2.1
   have hT2 := D.hR.2.2.2.1
   obtain ⟨k1, k2, k3, k4, -, -, -, hbw, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
   have hUm : MeasurableSet (UsetF σ J t B₀ : Set (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) :=
     measurableSet_usetF D
@@ -585,8 +585,8 @@ theorem chi_at_fibreF : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       refine ⟨g (vec (u ⊗ₜ[F] (1 : E)) c X), ?_, (hg _).symm⟩
       change s0 R _ ∈ B₀
       rw [h3.1]; exact hx
-  haveI := hBor n M
-  haveI := hBor (n + 1) (M + 1)
+  have := hBor n M
+  have := hBor (n + 1) (M + 1)
   have hUd : MeasurableSet {X : Fin n → Fin M → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} :=
     (_root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ D.hCM R D.hR n M).measurableSet
   have hψ : ∀ c : Fin n → R ⊗[F] E, Measurable fun X : Fin n → Fin M → R ⊗[F] E =>
@@ -649,13 +649,13 @@ theorem lintegral_UsetF_eq_MidF : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   obtain ⟨hm, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.StageF.gramFibFree_basic F E σ hCM M n J D.hJ R D.hR d b lam hlam m' D.hm'
   obtain ⟨-, -, h₃, -, h₅, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM (M + 1) _ hJ' R
   have hc := (hact (n + 1)).1
-  haveI := hBorel n M
-  haveI := hBorel (n + 1) (M + 1)
-  haveI := hBorel 1 (M + 1)
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
-  haveI : SigmaFinite (coordW R b lam n M) := inferInstance
-  haveI : SigmaFinite (m₁ (hermScal R σ (algebraMap F R t))) := inferInstance
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have := hBorel n M
+  have := hBorel (n + 1) (M + 1)
+  have := hBorel 1 (M + 1)
+  have : SigmaFinite (coordK R b lam) := inferInstance
+  have : SigmaFinite (coordW R b lam n M) := inferInstance
+  have : SigmaFinite (m₁ (hermScal R σ (algebraMap F R t))) := inferInstance
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
   haveI : SFinite (Measure.pi fun _ : Fin n => coordK R b lam) := inferInstance
   have hB : MeasurableSet B₀ := D.hB₀.measurableSet
   rw [_root_.GlobalTheory.CompanionTheory.SW.StageF.Unfold1F.first_step_free F E σ M J t n R d b lam m₁ m' s B₀ a κ₁ cm D φ hφ]
@@ -668,10 +668,10 @@ theorem lintegral_UsetF_eq_MidF : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       f p.1 p.2.1 p.2.2 := by
     have hcm : Measurable (fun p : HA R σ (blockOne (algebraMap F E t) J) × (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) =>
         actW R σ (blockOne (algebraMap F E t) J) p.1 p.2) := by
-      haveI : SecondCountableTopology (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
-      haveI : OpensMeasurableSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
-      haveI : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J)) := inferInstance
-      haveI : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J) × (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) :=
+      have : SecondCountableTopology (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
+      have : OpensMeasurableSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := inferInstance
+      have : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J)) := inferInstance
+      have : OpensMeasurableSpace (HA R σ (blockOne (algebraMap F E t) J) × (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) :=
         Prod.opensMeasurableSpace
       exact hc.measurable
     have hg : Measurable (fun p : (Fin 1 → Fin (M + 1) → R ⊗[F] E) × (Fin n → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) =>
@@ -828,38 +828,38 @@ open scoped TensorProduct ENNReal NNReal Matrix
 
 theorem cont_double_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (t : F) (n : ℕ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R] (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R) (m₁ : HermR R σ 1 → Measure (Fin 1 → Fin (M + 1) → R ⊗[F] E)) (m' : HermR R σ n → Measure (Fin n → Fin M → R ⊗[F] E)) (s : (Fin 1 → Fin (M + 1) → R ⊗[F] E) → HA R σ (blockOne (algebraMap F E t) J)) (B₀ : Set R) (a : R → Rˣ) (κ₁ cm : Rˣ → ℝ≥0), HermitianMeasureData σ J t n b lam m₁ m' s B₀ a κ₁ cm → ∀ φ : (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) → ℝ, Continuous φ → HasCompactSupport φ → tsupport φ ⊆ {X | LinearIndependent (R ⊗[F] E) X} → ContinuousOn (fun z : R × (Fin n → R ⊗[F] E) × HermR R σ n => Preal σ J t m₁ m' s φ z.1 z.2.1 z.2.2) ({α : R | IsUnit α} ×ˢ (Set.univ ×ˢ Set.univ)) := by
   intro F E _ _ _ _ _ σ M J t n R _ _ _ _ _ d b lam m₁ m' s B₀ a κ₁ cm D φ hφ hφc hfree
-  haveI iTR : IsTopologicalRing R := D.hR.1
-  haveI iLC : LocallyCompactSpace R := D.hR.2.1
-  haveI iSC : SecondCountableTopology R := D.hR.2.2.1
-  haveI iT2 : T2Space R := D.hR.2.2.2.1
+  have iTR : IsTopologicalRing R := D.hR.1
+  have iLC : LocallyCompactSpace R := D.hR.2.1
+  have iSC : SecondCountableTopology R := D.hR.2.2.1
+  have iT2 : T2Space R := D.hR.2.2.2.1
   have hval : IsOpenEmbedding (Units.val : Rˣ → R) := D.hR.2.2.2.2.2.2.1
   have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
   obtain ⟨kTR, kLC, kSC, kT2, -, -, -, kB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI := kTR
-  haveI := kLC
-  haveI := kSC
-  haveI := kT2
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have := kTR
+  have := kLC
+  have := kSC
+  have := kT2
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   obtain ⟨eLC, eSC, eT2, eB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ D.hCM R n
-  haveI := eLC
-  haveI := eSC
-  haveI := eT2
-  haveI := eB
+  have := eLC
+  have := eSC
+  have := eT2
+  have := eB
   obtain ⟨gTG, gLC, gSC, gT2, gB, hactall⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ D.hCM (M + 1) _ hJ' R
-  haveI := gTG
-  haveI := gLC
-  haveI := gSC
-  haveI := gT2
-  haveI := gB
+  have := gTG
+  have := gLC
+  have := gSC
+  have := gT2
+  have := gB
   obtain ⟨hact, hact1, hactm, -⟩ := hactall (n + 1)
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ D.hCM R d b lam D.hlam
-  haveI := hW n M
-  haveI := hH n
+  have := hW n M
+  have := hH n
   obtain ⟨-, -, hbd', -⟩ := _root_.GlobalTheory.CompanionTheory.SW.StageF.gramFibFree_basic F E σ D.hCM M n J D.hJ R D.hR d b lam D.hlam m' D.hm'
   obtain ⟨-, hloc₁, -, -, -, hgram₁⟩ :=
     _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ D.hCM (M + 1) 1 _ hJ' R D.hR d b lam D.hlam m₁ D.hm₁
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := kB n M
-  haveI : BorelSpace (Fin 1 → Fin (M + 1) → R ⊗[F] E) := kB 1 (M + 1)
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := kB n M
+  have : BorelSpace (Fin 1 → Fin (M + 1) → R ⊗[F] E) := kB 1 (M + 1)
   have hUo : IsOpen {X : Fin n → Fin M → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} :=
     _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ D.hCM R D.hR n M
 
@@ -937,7 +937,7 @@ theorem cont_double_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   obtain ⟨cD, hcD⟩ := hbd' C₂ Dc hC₂c hC₂f hDc
   obtain ⟨Bd, hBd⟩ := hφ.bounded_above_of_compact_support hφc
   have hBd0 : 0 ≤ Bd := (norm_nonneg _).trans (hBd 0)
-  haveI := hloc₁ (hermScal R σ (algebraMap F R t))
+  have := hloc₁ (hermScal R σ (algebraMap F R t))
   have eD : ∀ᶠ z : R × (Fin n → R ⊗[F] E) × HermR R σ n in 𝓝 (α₀, c₀, S₀), z.2.2 ∈ Dc :=
     (continuous_snd.comp continuous_snd).continuousAt hDn
   have eN : ∀ᶠ z : R × (Fin n → R ⊗[F] E) × HermR R σ n in 𝓝 (α₀, c₀, S₀), z.1 ∈ N :=
@@ -1112,31 +1112,31 @@ theorem measurable_PintF (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     Measurable (fun z : R × (Fin n → R ⊗[F] E) × HermR R σ n =>
       Pint σ J t m₁ m' s φ z.1 z.2.1 z.2.2) := by
   obtain ⟨iTR, iLR, iSR, iTR2, -⟩ := D.hR
-  haveI := iTR
-  haveI := iLR
-  haveI := iSR
-  haveI := iTR2
+  have := iTR
+  have := iLR
+  have := iSR
+  have := iTR2
   obtain ⟨iTK, iLK, iSK, iT2K, -, -, -, iBor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI := iTK
-  haveI := iLK
-  haveI := iSK
-  haveI := iT2K
+  have := iTK
+  have := iLK
+  have := iSK
+  have := iT2K
   have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
   obtain ⟨-, ⟨κ, hκs, hκm⟩, -, -⟩ :=
     _root_.GlobalTheory.CompanionTheory.SW.StageF.gramFibFree_basic F E σ D.hCM M n J D.hJ R D.hR d b lam D.hlam m' D.hm'
   obtain ⟨-, hloc₁, -⟩ :=
     _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ D.hCM (M + 1) 1 _ hJ' R D.hR d b lam D.hlam m₁ D.hm₁
   obtain ⟨-, -, iSH, -, iBH, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ D.hCM (M + 1) _ hJ' R
-  haveI := iSH
-  haveI := iBH
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := iBor n M
-  haveI : BorelSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := iBor (n + 1) (M + 1)
-  haveI : BorelSpace (Fin 1 → Fin (M + 1) → R ⊗[F] E) := iBor 1 (M + 1)
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have := iSH
+  have := iBH
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := iBor n M
+  have : BorelSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := iBor (n + 1) (M + 1)
+  have : BorelSpace (Fin 1 → Fin (M + 1) → R ⊗[F] E) := iBor 1 (M + 1)
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   have hact := (hH (n + 1)).1
   have hten : Measurable (fun r : R => r ⊗ₜ[F] (1 : E)) := by
-    haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R (R ⊗[F] E)
+    have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R (R ⊗[F] E)
     have hc : Continuous (fun r : R => r • (1 : R ⊗[F] E)) :=
       Continuous.smul (f := fun r : R => r) (g := fun _ : R => (1 : R ⊗[F] E))
         continuous_id continuous_const
@@ -1145,11 +1145,11 @@ theorem measurable_PintF (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       simp [Algebra.TensorProduct.one_def, TensorProduct.smul_tmul']
     rw [he]
     exact hc.measurable
-  haveI : IsSFiniteKernel κ := hκs
+  have : IsSFiniteKernel κ := hκs
   let κ' : Kernel ((R × (Fin n → R ⊗[F] E) × HermR R σ n) × (Fin 1 → Fin (M + 1) → R ⊗[F] E))
       (Fin n → Fin M → R ⊗[F] E) :=
     κ.comap (fun p => p.1.2.2) (measurable_snd.comp (measurable_snd.comp measurable_fst))
-  haveI := hloc₁ (hermScal R σ (algebraMap F R t))
+  have := hloc₁ (hermScal R σ (algebraMap F R t))
   have hvec : Measurable (fun q : ((R × (Fin n → R ⊗[F] E) × HermR R σ n) ×
       (Fin 1 → Fin (M + 1) → R ⊗[F] E)) × (Fin n → Fin M → R ⊗[F] E) =>
         (vec (q.1.1.1 ⊗ₜ[F] (1 : E)) q.1.1.2.1 q.2 : Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) :=
@@ -1187,29 +1187,29 @@ namespace GlobalTheory.CompanionTheory.SW.StageF.FoldF
 theorem foldF : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (t : F) (n : ℕ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R] (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R) (m₁ : HermR R σ 1 → Measure (Fin 1 → Fin (M + 1) → R ⊗[F] E)) (m' : HermR R σ n → Measure (Fin n → Fin M → R ⊗[F] E)) (s : (Fin 1 → Fin (M + 1) → R ⊗[F] E) → HA R σ (blockOne (algebraMap F E t) J)) (B₀ : Set R) (a : R → Rˣ) (κ₁ cm : Rˣ → ℝ≥0), HermitianMeasureData σ J t n b lam m₁ m' s B₀ a κ₁ cm → ∀ φ : (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) → ℝ≥0∞, Measurable φ → ∫⁻ S, ∫⁻ v, φ v ∂(fibSF σ J t m₁ m' s B₀ a κ₁ cm S) ∂(coordHerm R σ b lam (n + 1)) = MidF σ J t m₁ m' s B₀ a κ₁ b lam φ := by
   intro F E _ _ _ _ _ σ M J t n R _ _ _ _ _ d b lam m₁ m' s B₀ a κ₁ cm D φ hφ
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := D.hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   have hσ := D.hCM
   have hlam := D.hlam
-  haveI := hlam
+  have := hlam
   obtain ⟨hKring, hKlc, hKsc, hKt2, hsig, htr, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hKring
-  haveI := hKlc
-  haveI := hKsc
-  haveI := hKt2
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have := hKring
+  have := hKlc
+  have := hKsc
+  have := hKt2
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hκh, -, hνh⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam hlam
-  haveI := hκh
-  haveI hHb : ∀ m, BorelSpace (HermR R σ m) := fun _ => ⟨rfl⟩
-  haveI hHlc : ∀ m, LocallyCompactSpace (HermR R σ m) := fun m =>
+  have := hκh
+  have hHb : ∀ m, BorelSpace (HermR R σ m) := fun _ => ⟨rfl⟩
+  have hHlc : ∀ m, LocallyCompactSpace (HermR R σ m) := fun m =>
     (_root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R m).1
-  haveI hHsc : ∀ m, SecondCountableTopology (HermR R σ m) := fun m =>
+  have hHsc : ∀ m, SecondCountableTopology (HermR R σ m) := fun m =>
     (_root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R m).2.1
-  haveI : (coordHerm R σ b lam n).IsAddHaarMeasure := hνh n
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
-  haveI : SigmaFinite (coordHerm R σ b lam n) := inferInstance
+  have : (coordHerm R σ b lam n).IsAddHaarMeasure := hνh n
+  have : SigmaFinite (coordK R b lam) := inferInstance
+  have : SigmaFinite (coordHerm R σ b lam n) := inferInstance
   obtain ⟨e, he00, he0j, heij, hemap⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermSplit.herm_split F E σ hσ R d b lam hlam n
   obtain ⟨m₀, D₀⟩ := _root_.GlobalTheory.CompanionTheory.SW.StageF.ToOld.stageData_of_stageDataF F E σ M J t n R d b lam m₁ m' s B₀ a κ₁ cm D
   obtain ⟨hs0c, hacS, hcvc, hschc, -⟩ :=
@@ -1246,9 +1246,9 @@ theorem foldF : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
     refine measurable_of_restrict_of_restrict_compl hBopen.measurableSet ?_ ?_
     · have hsub : (BsetF R σ B₀ : Set (HermR R σ (n + 1))) ⊆
           {S | s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) ∈ B₀} := fun S h => h
-      have hk := continuousOn_iff_continuous_restrict.1 (hacS.mono hsub)
-      have hc := continuousOn_iff_continuous_restrict.1 (hcvc.mono hsub)
-      have hw := continuousOn_iff_continuous_restrict.1 (hschc.mono hsub)
+      have hk := continuousOn_iff_continuous_domRestrict.1 (hacS.mono hsub)
+      have hc := continuousOn_iff_continuous_domRestrict.1 (hcvc.mono hsub)
+      have hw := continuousOn_iff_continuous_domRestrict.1 (hschc.mono hsub)
       have hP := hmeas.comp (((Units.continuous_val.comp hk).prodMk (hc.prodMk hw)).measurable)
       have hE : (BsetF R σ B₀ : Set (HermR R σ (n + 1))).domRestrict G = _ :=
         funext fun S => hGon S S.2
@@ -1438,11 +1438,11 @@ theorem sigmaFinite_of_integrable {V : Type} [TopologicalSpace V] [LocallyCompac
     {μ : Measure V} (h0 : μ Uᶜ = 0)
     (hint : ∀ φ : V → ℝ, Continuous φ → HasCompactSupport φ → tsupport φ ⊆ U → Integrable φ μ) :
     SigmaFinite μ := by
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   let K := CompactExhaustion.choice U
   have hfin : ∀ n, μ (Subtype.val '' K n) < ∞ := by
     intro n
-    have hLc : IsCompact (Subtype.val '' K n) := (K.isCompact n).image continuous_subtype_val
+    have hLc : IsCompact (Subtype.val '' K n) := (K.isCompact n).image continuous_subtypeVal
     have hLU : Subtype.val '' K n ⊆ U := by
       rintro _ ⟨x, -, rfl⟩
       exact x.2
@@ -1532,7 +1532,7 @@ theorem fibre_block_stages_free : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     hact.comp ((hsm.comp measurable_fst).prodMk (measurable_consTup.comp measurable_snd))
   have hF : Measurable fun p : (Fin 1 → Fin (M + 1) → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) =>
       φ (actW R σ _ (s p.1) (consTup p.2)) := hφ.comp hframe
-  haveI hσ : SigmaFinite (m' (hermOf R σ T hT)) := by
+  have hσ : SigmaFinite (m' (hermOf R σ T hT)) := by
     refine sigmaFinite_of_integrable (_root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hCM R hR n M) ?_ ?_
     · exact measure_mono_null (Set.compl_subset_compl.2 Set.inter_subset_right) (hm'.1 _)
     · intro f hfc hfs hft

@@ -83,15 +83,15 @@ theorem evenNorms_of_le_four (h2 : (2 : K) ≠ 0)
   have h4 : (4 : K) ≠ 0 := by
     have : (4 : K) = 2 * 2 := by norm_num
     rw [this]; exact mul_ne_zero h2 h2
-  have hw4 : 0 < w 4 := zero_lt_iff.2 ((Valuation.ne_zero_iff w).2 h4)
+  have hw4 : 0 < w 4 := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff w).2 h4)
   set ρ : K := (δ - 1) / 4 with hρ
   have hδρ : δ = 1 + 4 * ρ := by rw [hρ]; field_simp; ring
-  have hρ1 : w ρ ≤ 1 := by rw [hρ, map_div₀]; exact div_le_one_of_le₀ h zero_le'
+  have hρ1 : w ρ ≤ 1 := by rw [hρ, map_div₀]; exact div_le_one_of_le₀ h zero_le
   rw [hδρ]
   refine _root_.GlobalTheory.QNorm.evenNorms_one_add_four_mul K w ρ h2 hρ1 fun x hx => ?_
   have hle : w (x ^ 2 + x - ρ) ≤ 1 := by
     refine w.map_sub_le (w.map_add_le ?_ hx) hρ1
-    rw [map_pow]; exact pow_le_one₀ zero_le' hx
+    rw [map_pow]; exact pow_le_one₀ zero_le hx
   refine le_antisymm hle (not_lt.1 fun hlt => hns ?_)
   have e1 : δ - (1 + 2 * x) ^ 2 = -(4 * (x ^ 2 + x - ρ)) := by rw [hδρ]; ring
   have l1 : w (δ - (1 + 2 * x) ^ 2) < w 4 := by
@@ -126,7 +126,7 @@ private theorem evenNorms_of_valuation_sub_one_le_four (F : Type) [Field F]
   have h2 : (2 : v.adicCompletion F) ≠ 0 := by
     rw [← map_ofNat (algebraMap F (v.adicCompletion F)) 2]
     exact (map_ne_zero _).mpr (by norm_num)
-  have hw4 : 0 < Valued.v (4 : v.adicCompletion F) := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr h4)
+  have hw4 : 0 < Valued.v (4 : v.adicCompletion F) := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr h4)
   have hw4le : Valued.v (4 : v.adicCompletion F) ≤ 1 := by
     rw [show (4 : v.adicCompletion F) = 1 + 1 + 1 + 1 by norm_num]
     exact Valuation.map_add_le _ (Valuation.map_add_le _ (Valuation.map_add_le _
@@ -135,12 +135,12 @@ private theorem evenNorms_of_valuation_sub_one_le_four (F : Type) [Field F]
   have heρ : e = 1 + 4 * ρ := by rw [hρ_def]; field_simp; ring
   have hρ : Valued.v ρ ≤ 1 := by
     rw [hρ_def, map_div₀]
-    exact div_le_one_of_le₀ hle zero_le'
+    exact div_le_one_of_le₀ hle zero_le
   rw [heρ]
   refine _root_.GlobalTheory.QNorm.evenNorms_one_add_four_mul _ Valued.v ρ h2 hρ ?_
   intro x hx
   have hint : Valued.v (x ^ 2 + x - ρ) ≤ 1 :=
-    Valuation.map_sub_le _ (Valuation.map_add_le _ (by rw [map_pow]; exact pow_le_one₀ zero_le' hx) hx) hρ
+    Valuation.map_sub_le _ (Valuation.map_add_le _ (by rw [map_pow]; exact pow_le_one₀ zero_le hx) hx) hρ
   refine le_antisymm hint ?_
   by_contra hlt
   push_neg at hlt
@@ -241,12 +241,12 @@ private theorem exists_sq_near_of_valuation_two_lt_one {K : Type} [Field K] (w :
             have : a.1 - c.1 = (a.1 - b.1) + (b.1 - c.1) := by ring
             rw [this]; exact Valuation.map_add_lt w hab hbc } }
   let sq : {a : K // w a ≤ 1} → {a : K // w a ≤ 1} :=
-    fun a => ⟨a.1 ^ 2, by rw [map_pow]; exact pow_le_one₀ zero_le' a.2⟩
+    fun a => ⟨a.1 ^ 2, by rw [map_pow]; exact pow_le_one₀ zero_le a.2⟩
   have hsq : ∀ a b, S.r a b → S.r (sq a) (sq b) := by
     intro a b hab
     show w (a.1 ^ 2 - b.1 ^ 2) < 1
     rw [show a.1 ^ 2 - b.1 ^ 2 = (a.1 - b.1) * (a.1 + b.1) by ring, map_mul]
-    exact lt_of_le_of_lt (mul_le_of_le_one_right zero_le' (Valuation.map_add_le w a.2 b.2)) hab
+    exact lt_of_le_of_lt (mul_le_of_le_one_right zero_le (Valuation.map_add_le w a.2 b.2)) hab
   let g : Quotient S → Quotient S := Quotient.map sq hsq
   have hfin : Finite (Quotient S) := by
     refine Finite.of_surjective (fun r : R => Quotient.mk S ⟨r.1, hR r.1 r.2⟩) ?_
@@ -272,7 +272,7 @@ private theorem exists_sq_near_of_valuation_two_lt_one {K : Type} [Field K] (w :
       rw [Valuation.map_neg, map_mul, map_mul]
       refine lt_of_le_of_lt ?_ h2
       rw [mul_assoc]
-      exact mul_le_of_le_one_right zero_le'
+      exact mul_le_of_le_one_right zero_le
         (mul_le_one' b.2 (Valuation.map_sub_le w a.2 b.2))
     by_contra hge
     push_neg at hge

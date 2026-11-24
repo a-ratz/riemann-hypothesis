@@ -96,11 +96,11 @@ theorem ConeRadialIntegral.proof : ConeRadialIntegral.Statement := by
       congr 1
       rw [hd_def, NNReal.rpow_natCast, ENNReal.ofReal_pow hr.le, ENNReal.coe_pow]
       congr 1
-      rw [Real.nnnorm_of_nonneg hr.le, ENNReal.ofReal_eq_coe_nnreal hr.le]
+      rw [Real.nnNorm_of_nonneg hr.le, ENNReal.ofReal_eq_coe_nnreal hr.le]
 
   have hρIio : ∀ r : ℝ, ρ (Iio r) = ENNReal.ofReal (max r 0 ^ (2 * m)) * c := by
     intro r
-    rw [hρ_def, Measure.smul_apply, smul_eq_mul, withDensity_apply _ measurableSet_Iio,
+    rw [hρ_def, smul_apply, smul_eq_mul, withDensity_apply _ measurableSet_Iio,
       Measure.restrict_restrict measurableSet_Iio, mul_comm]
     congr 1
     rcases le_or_gt r 0 with hr | hr

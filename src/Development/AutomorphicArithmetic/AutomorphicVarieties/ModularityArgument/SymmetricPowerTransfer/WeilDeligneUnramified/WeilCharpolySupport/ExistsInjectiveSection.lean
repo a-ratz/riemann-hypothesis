@@ -85,13 +85,13 @@ theorem open_ker_of_pow {Γ K : Type} [Group Γ] [TopologicalSpace Γ] [Field K]
     IsOpen (ph.ker : Set Γ) := by
   classical
   let S : Set K := ((Polynomial.nthRootsFinset k (1 : K) : Finset K) : Set K) \ {1}
-  have hS : IsClosed S := (Finset.finite_toSet _).subset Set.diff_subset |>.isClosed
+  have hS : IsClosed S := (Finset.finite_toSet _).subset Set.sdiff_subset |>.isClosed
   have e : (ph.ker : Set Γ) = (fun s => (ph s : K)) ⁻¹' Sᶜ := by
     ext s
     have h1 : (ph s : K) ^ k = 1 := by rw [← Units.val_pow_eq_pow_val, hp, Units.val_one]
     have h2 : (ph s : K) ∈ ((Polynomial.nthRootsFinset k (1 : K) : Finset K) : Set K) :=
       Finset.mem_coe.2 ((Polynomial.mem_nthRootsFinset hk 1).2 h1)
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_compl_iff, S, Set.mem_diff, Set.mem_singleton_iff, not_and, not_not]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_compl_iff, S, Set.mem_sdiff, Set.mem_singleton_iff, not_and, not_not]
     exact ⟨fun h _ => by rw [h, Units.val_one], fun h => Units.ext (h h2)⟩
   rw [e]
   exact hS.isOpen_compl.preimage hc
@@ -103,7 +103,7 @@ variable {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAl
 
 theorem algPow_add (d e : (L →+* Qbar l) → ℤ) (x : (w.adicCompletion L)ˣ) :
     algPow w (d + e) (x : w.adicCompletion L) = algPow w d (x : w.adicCompletion L) * algPow w e (x : w.adicCompletion L) := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
   unfold algPow
   rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
   exact finprod_congr fun j => by rw [Pi.add_apply, zpow_add₀ ((_root_.map_ne_zero j.1).2 x.ne_zero)]
@@ -111,15 +111,15 @@ theorem algPow_add (d e : (L →+* Qbar l) → ℤ) (x : (w.adicCompletion L)ˣ)
 theorem algPow_const (c : ℤ) (x : (w.adicCompletion L)ˣ) :
     algPow w (fun _ : L →+* Qbar l => c) (x : w.adicCompletion L) =
       algPow w (fun _ : L →+* Qbar l => 1) (x : w.adicCompletion L) ^ c := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite {j : w.adicCompletion L →+* Qbar l // Continuous j}
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite {j : w.adicCompletion L →+* Qbar l // Continuous j}
   unfold algPow
   rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, ← Finset.prod_zpow]
   exact Finset.prod_congr rfl fun j _ => by rw [zpow_one]
 
 theorem eps_cont (A : ValuationSubring Ω) : Continuous ((cycBar L Ω l).comp (Dec (F := L) A).subtype) :=
   ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ L Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ L Ω l)).comp continuous_subtypeVal
 
 theorem flag_cont' {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] {n : ℕ} {r : Γ →* GL (Fin n) (Qbar l)}
     (hr : Continuous r) {ψ : Fin n → Γ →* (Qbar l)ˣ} (hf : W.HasFlag r ψ) (i : Fin n) : Continuous (ψ i) := by
@@ -135,7 +135,7 @@ theorem locAlg (H : GlobalTheory.Published.GlobalArtinReciprocity) (h : IsPlaceO
   let ε := (cycBar L Ω l).comp (Dec (F := L) A).subtype
   let d : Ine (F := L) A →* Dec (F := L) A := (Subgroup.inclusion (Weil_le_Dec h)).comp (ineIncl h)
   have hdv : ∀ σ : Ine (F := L) A, ((d σ : Dec (F := L) A) : G L Ω) = σ := fun _ => rfl
-  have hd : Continuous d := Topology.IsEmbedding.subtypeVal.continuous_iff.2 continuous_subtype_val
+  have hd : Continuous d := Topology.IsEmbedding.subtypeVal.continuous_iff.2 continuous_subtypeVal
   refine ⟨((ε ^ c) * κ⁻¹).comp d, ?_, fun a ha σ => ?_⟩
   · refine open_ker_of_pow _ ?_ hk fun σ => ?_
     · have h1 : Continuous (fun s : Dec (F := L) A => ((ε ^ c * κ⁻¹) s)) :=
@@ -173,8 +173,8 @@ theorem sum_zero [Fintype (W.Emb l w)] (ha : IsLocalArtin h a) (d : (L →+* Qba
     (χ : Dec (F := L) A →* (Qbar l)ˣ) (hχ : Continuous χ)
     (hv : ∀ s : Weil h, (χ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = algPow w d (a s : w.adicCompletion L)) :
     ∑ j : W.Emb l w, d (j.1.comp (algebraMap L _)) = 0 := by
-  haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hl : (l : Qbar l) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
   obtain ⟨s, hs⟩ := ha.surj (Units.mk0 (l : w.adicCompletion L) (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero))
   have h1 := norm_one χ (Units.continuous_val.comp hχ) (Subgroup.inclusion (Weil_le_Dec h) s)
@@ -191,8 +191,8 @@ theorem not_linked (H : GlobalTheory.Published.GlobalArtinReciprocity) (ι : Qba
     (hO : ∀ j, OrdChar ι a (ω j) (hh j) (ψ j))
     (hne : ∀ i j, ψ i ≠ ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype) (i j : Fin n) (hij : i ≠ j) :
     ω i ≠ ω j ∧ ω i ≠ ω j * absPow (w.adicCompletion L) 1 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   let inc := Subgroup.inclusion (Weil_le_Dec h)
   let ε := (cycBar L Ω l).comp (Dec (F := L) A).subtype
   have hεc : Continuous ε := eps_cont A
@@ -202,8 +202,8 @@ theorem not_linked (H : GlobalTheory.Published.GlobalArtinReciprocity) (ι : Qba
     fun k s => (hO k).val s _ rfl (Set.mem_univ _)
   have hN : Nonempty (W.Emb l w) := by
     by_contra hE
-    haveI : IsEmpty (W.Emb l w) := not_nonempty_iff.1 hE
-    haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+    have : IsEmpty (W.Emb l w) := not_nonempty_iff.1 hE
+    have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
     have h1 := norm_one ε (Units.continuous_val.comp hεc) (inc (frob h))
     rw [hε, deg_frob, zpow_one, algPow, finprod_of_isEmpty, mul_one, GlobalTheory.Pst.normV_eq_pow (l := l) hw, Nat.cast_pow, norm_pow] at h1
     have h2 := (pow_eq_one_iff_of_nonneg (norm_nonneg _) (fun h0 => by

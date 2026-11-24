@@ -196,7 +196,7 @@ theorem l2_upwardLift {F : Face D A} (hI : InnerProductFormulaC R F) (hFo : Fock
         (upLift R i ω (ptAt R i σ BW f (io (PiTensorProduct.tprod ℂ e) w)) (U₂ fun ρ => e ρ)) =
       ((ν 𝓕).toReal : ℂ) * (Formalism.E.fock (deltaAtEmb D i σ) (deltaAtEmb D i σ) * (∏ ρ, (δ ρ : ℂ)) * K * cst) := by
   refine (hI i t σ s P cμ cη m ω BW f₀ f c io hd ν 𝓕 hν μ 𝓧 hμ Fr hFr mR hmR U₁ h₁ U₂ h₂ e e _ _).2.2.2.trans (congrArg _ ?_)
-  haveI : ∀ ρ, SigmaFinite (mR ρ) := fun ρ => sigmaFinite_haar _ (hmR ρ).1
+  have : ∀ ρ, SigmaFinite (mR ρ) := fun ρ => sigmaFinite_haar _ (hmR ρ).1
   let v : (∀ ρ, Upq (Wc D i) ρ) → (R.MW i σ).Vec := fun b ρ =>
     ⟨(R.MW i σ).rep ρ (realMat (Wc D i) Fr ρ (b ρ)) ((e ρ : (R.MW i σ).sm ρ) : (R.MW i σ).H ρ),
       rep_mem_sm (R.MW i σ) ρ _ (realMat_mem i hFr ρ (b ρ)) _ (e ρ : (R.MW i σ).sm ρ).2⟩
@@ -433,8 +433,8 @@ theorem scalar_of_data {F : Face D A} (hS : SourceLevelLawC R F) (hI : InnerProd
   refine (hZ i t σ s P cμ cη m ω BW f₀ f c io hd μ 𝓧 hμ ev hev).elim fun B hB => ?_
   have hL' := hL i t σ s P cμ cη m ω BW f₀ f c io hd
   have hvol := vol_mul_nrm R (hp i) hν hL'.1 (hL'.2 μ 𝓧 hμ)
-  haveI : Nontrivial c.W := hd.2.2.2.2.2.2.2.2.2.1.2.2.2.1
-  haveI : Finite P.H := inferInstance
+  have : Nontrivial c.W := hd.2.2.2.2.2.2.2.2.2.1.2.2.2.1
+  have : Finite P.H := inferInstance
   have h1 : (0 : ℝ) < Module.finrank ℂ c.W := by exact_mod_cast Module.finrank_pos
   have h2 : (0 : ℝ) < Nat.card P.H := by exact_mod_cast Nat.card_pos
   refine (scalar_real th _ hev _ (mul_pos (mul_pos (ha i σ) h1) h2) _ hB.2.2.1.ne_zero fun y₁ hy₁ y₂ => ?_).elim

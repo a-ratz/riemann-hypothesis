@@ -145,13 +145,13 @@ private theorem Jpq_equiv_apply_eq_ite_sign {n p q : ℕ} (d : Fin n → ℝ) (e
   unfold Formalism.UG.Jpq
   by_cases hij : i = j
   · subst hij
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hi := he i
     revert hi
     generalize e i = x
     rcases x with a | a <;> intro hi <;> simp_all
   · have hne : e i ≠ e j := fun h => hij (e.injective h)
-    rw [if_neg hij]
+    rw [ite_eq_right hij]
     revert hne
     generalize e i = x
     generalize e j = y
@@ -169,11 +169,11 @@ private theorem conjTranspose_mul_diagonal_mul_inv_sqrt_eq_Jpq {n p q : ℕ} (d 
   · rw [Matrix.mul_diagonal, Matrix.conjTranspose_apply, hC, hC]
     simp only [↓reduceIte]
     by_cases hab : e.symm a = e.symm b
-    · rw [if_pos hab.symm, if_pos hab, hab]
+    · rw [ite_eq_left hab.symm, ite_eq_left hab, hab]
       exact star_inv_sqrt_abs_mul_mul_inv_sqrt_abs_eq_sign _ (hd _)
-    · rw [if_neg (Ne.symm hab), if_neg hab, star_zero, zero_mul, zero_mul]
+    · rw [ite_eq_right (Ne.symm hab), ite_eq_right hab, star_zero, zero_mul, zero_mul]
   · intro i _ hi
-    rw [hC i b, if_neg hi, mul_zero]
+    rw [hC i b, ite_eq_right hi, mul_zero]
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -192,13 +192,13 @@ private theorem conjTranspose_mul_Jpq_mul_sqrt_eq_diagonal {n p q : ℕ} (d : Fi
       · subst hij
         simp only [↓reduceIte]
         exact star_sqrt_abs_mul_sign_mul_sqrt_abs_eq _ (hd _)
-      · rw [if_neg hij, if_neg hij, mul_zero, zero_mul]
+      · rw [ite_eq_right hij, ite_eq_right hij, mul_zero, zero_mul]
     · intro b _ hb
-      rw [Matrix.conjTranspose_apply, hB, if_neg hb, star_zero, zero_mul]
+      rw [Matrix.conjTranspose_apply, hB, ite_eq_right hb, star_zero, zero_mul]
     · intro h
       exact absurd (Finset.mem_univ _) h
   · intro a _ ha
-    rw [hB a j, if_neg ha, mul_zero]
+    rw [hB a j, ite_eq_right ha, mul_zero]
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -409,7 +409,7 @@ theorem val_inf (D : D7) [Fintype D.what₂.Tau] (c : IdC D) (χ : HChar D.host.
     ((c x : Circle) : ℂ) = ∏ τ, (θ τ (infPart D (x : AE D)) / (‖θ τ (infPart D (x : AE D))‖ : ℂ)) ^ n τ := by
   obtain ⟨s, hs⟩ := GlobalTheory.FockCompare.exists_chart hθ
   obtain ⟨-, a, b, -, -, hab, ha, hb⟩ := GlobalTheory.IdeleParts.congr_open_and_parts D
-  haveI : Nonempty D.what₂.Tau := ⟨D.eTau.symm 1⟩
+  have : Nonempty D.what₂.Tau := ⟨D.eTau.symm 1⟩
   have ext : ∀ a b : AE D, finPart D a = finPart D b → (∀ τ, θ τ (infPart D a) = θ τ (infPart D b)) → a = b := by
     intro a b h1 h2
     rw [← sub_eq_zero]
@@ -440,7 +440,7 @@ theorem val_inf (D : D7) [Fintype D.what₂.Tau] (c : IdC D) (χ : HChar D.host.
   have key : ∀ z : D.what₂.Tau → ℂˣ, ((c (U.toHomUnits z) : Circle) : ℂ) = ∏ τ, ((z τ : ℂ) / (‖(z τ : ℂ)‖ : ℂ)) ^ n τ := by
     intro z
     refine (GlobalTheory.HeckeFinTrivial.denseRange_units (tauE D) hd).induction_on z
-      (isClosed_eq (continuous_subtype_val.comp (hc.1.1.comp Uc)) ?_) fun k => ?_
+      (isClosed_eq (continuous_subtypeVal.comp (hc.1.1.comp Uc)) ?_) fun k => ?_
     · refine continuous_finsetProd _ fun τ _ => ?_
       have h1 : Continuous fun z : D.what₂.Tau → ℂˣ => (z τ : ℂ) := Units.continuous_val.comp (continuous_apply τ)
       have h3 : ∀ z : D.what₂.Tau → ℂˣ, (‖(z τ : ℂ)‖ : ℂ) ≠ 0 := fun z => by
@@ -473,7 +473,7 @@ theorem exists_char : ∀ (D : D7) (j : Fin D.R.m),
     ∃ χ : IdC D, IsHeckeChar D χ ∧ (∀ τ, HasInfExp D χ τ (-(D.hc τ).e j)) ∧ ResEta D χ 0 := by
   intro D j
   classical
-  letI : Fintype D.what₂.Tau := Fintype.ofEquiv _ D.eTau.symm
+  let : Fintype D.what₂.Tau := Fintype.ofEquiv _ D.eTau.symm
   choose z hz using fun τ => (D.hc τ).e_int j
   obtain ⟨χ, hu, ht, hi, T, hT⟩ := exists_hchar D.R D.host D.what₂.Tau D.eTau z
   obtain ⟨c, hc⟩ := GlobalTheory.T.exists_cmAdeleUnitCharacter_reading_heckeChar D χ hu
@@ -776,11 +776,11 @@ theorem closed_range {m : ℕ} (hε : ε * ε = ε) {M : Matrix (Fin n) (Fin m) 
 
 theorem closed_supp (hφ : Continuous φ) : IsClosed {x | ∀ i j, ε * (φ x - 1) i j = (φ x - 1) i j} := by
   have hm : ∀ a b, Continuous fun g => (φ g - 1) a b := fun a b => (hφ.sub continuous_const).matrix_elem a b
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   exact isClosed_iInter fun a => isClosed_iInter fun b => isClosed_eq (continuous_const.mul (hm a b)) (hm a b)
 
 theorem closed_forall {ι : Sort*} {p : ι → X → Prop} (h : ∀ i, IsClosed {x | p i x}) : IsClosed {x | ∀ i, p i x} := by
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   exact isClosed_iInter h
 
 end Pure
@@ -867,7 +867,7 @@ theorem isClosed_ex {ε : AE D} (hε : ε * ε = ε) (i : Fin (d.ρ + 1)) : IsCl
   have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
   have : T2Space (AE D) := e.isEmbedding.t2Space
-  have hm : Continuous (mt B) := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous (mt B) := Units.continuous_val.comp continuous_subtypeVal
   obtain ⟨L, hL⟩ := exists_leftInverse d
   rw [ex_eq]
   have hz : ∀ v, IsClosed {g | ε • (actV B g v - vecA B v) = 0} := fun v => closed_fix hm (vecA B v)

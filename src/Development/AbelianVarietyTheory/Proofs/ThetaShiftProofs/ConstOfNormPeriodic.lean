@@ -283,8 +283,8 @@ variable {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} {u : HolUnif A
 
 theorem const_of_norm_periodic (u : HolUnif A L g) {F : (Fin g → ℂ) → ℂ} (hF : Differentiable ℂ F)
     (hp : ∀ (l : u.Λ) z, ‖F (z + l)‖ = ‖F z‖) (z w : Fin g → ℂ) : F z = F w := by
-  haveI := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
   have hc := (IsZLattice.isCompact_range_of_periodic u.Λ (fun z => ‖F z‖) hF.continuous.norm
     (fun z l hl => hp ⟨l, hl⟩ z)).isBounded
   obtain ⟨C, hC⟩ := hc.exists_norm_le

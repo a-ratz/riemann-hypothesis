@@ -174,7 +174,7 @@ theorem sphereMeasure_univ : sphereMeasure Set.univ = 1 := by
   have h1 : (volume : Measure E3).toSphere Set.univ ≠ ⊤ := by
     rw [Measure.toSphere_apply_univ]
     exact ENNReal.mul_ne_top (by simp) measure_ball_lt_top.ne
-  rw [sphereMeasure, Measure.smul_apply, smul_eq_mul]
+  rw [sphereMeasure, smul_apply, smul_eq_mul]
   exact ENNReal.inv_mul_cancel h0 h1
 
 end

@@ -62,7 +62,7 @@ private theorem qo_inj : Function.Injective (algebraMap ℤ_[l] O) := by
   have hint : Algebra.IsIntegral ℤ_[l] O := Algebra.IsIntegral.of_finite ℤ_[l] O
   have hm : (⊥ : Ideal O) < IsLocalRing.maximalIdeal O :=
     bot_lt_iff_ne_bot.mpr (IsDiscreteValuationRing.not_a_field O)
-  have hlt := Ideal.IsIntegral.comap_lt_comap (R := ℤ_[l]) hm
+  have hlt := Ideal.IsIntegral.under_lt_under (R := ℤ_[l]) hm
   have hP : ((⊥ : Ideal O).comap (algebraMap ℤ_[l] O)).IsPrime := Ideal.comap_isPrime _ _
   have hQ : (IsLocalRing.maximalIdeal O).comap (algebraMap ℤ_[l] O) ≠ ⊤ :=
     Ideal.comap_ne_top _ (IsLocalRing.maximalIdeal.isMaximal O).ne_top
@@ -78,7 +78,7 @@ private theorem exists_padicInt_multiple_of_ne_zero (b : O) (hb : b ≠ 0) :
   have hint : Algebra.IsIntegral ℤ_[l] O := Algebra.IsIntegral.of_finite ℤ_[l] O
   have hne : Ideal.span {b} ≠ ⊥ := by
     rwa [Ne, Ideal.span_singleton_eq_bot]
-  have h := Ideal.IsIntegral.comap_ne_bot ℤ_[l] hne
+  have h := Ideal.IsIntegral.under_ne_bot ℤ_[l] hne
   obtain ⟨c, hc, hc0⟩ := (Submodule.ne_bot_iff _).mp h
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hc
   obtain ⟨d, hd⟩ := hc

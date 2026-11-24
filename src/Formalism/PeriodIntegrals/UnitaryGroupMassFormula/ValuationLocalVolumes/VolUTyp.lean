@@ -157,7 +157,7 @@ theorem volUZZAt_of (v : PlX X) (hv : TypAt X v)
     (hH : VolTHermCnt X.B.I.cm.sig ψ v (gAt X v) D.R.rS)
     (hC : VolTTFCong X u u' v) : VolTZZAt X u u' ψ v := by
   unfold VolTZZAt ZZX volS
-  rw [if_pos hv]
+  rw [ite_eq_left hv]
   have hset : ZZTyp X.B.I.cm.sig v (gAt X v) D.R.rS (TFv X u v) (TFv X u' v) =
       {z | (fun p => locZ (E := X.B.I.E) v z p.1 p.2) ∈
         {w | (fun p => (w p - TFv X u v p.1 p.2) * sc (E := X.B.I.E) v (gAt X v : Fv X.B.I.F v)⁻¹) ∈
@@ -176,7 +176,7 @@ theorem volume_deep_congruence_of_fubini (v : PlX X) (hv : TypAt X v)
     (hP : VolTProdU (E := X.B.I.E) ψ v (gAt X v) D.R.rS)
     (hO : VolTOne (E := X.B.I.E) ψ v (UIdx D.R.rS)) : VolumeDeepCongruenceSubgroup X ψ v := by
   unfold VolumeDeepCongruenceSubgroup localVolumeUnit volU
-  rw [if_pos hv, hE, hP, hO, one_mul, ENNReal.toReal_inv, ENNReal.toReal_pow, ENNReal.toReal_natCast,
+  rw [ite_eq_left hv, hE, hP, hO, one_mul, ENNReal.toReal_inv, ENNReal.toReal_pow, ENNReal.toReal_natCast,
     volU_two_card_uidx, zpow_neg, zpow_natCast]
 
 def VolUSteps (v : PlX X) : Prop :=
@@ -289,8 +289,8 @@ theorem locDeg_one (l : ℕ) [hl : Fact l.Prime]
     refine Set.ncard_congr (fun w _ => w.asIdeal) (fun w hw => ⟨w.isPrime, liesOver_span_of_natCast_mem' l w.asIdeal hw⟩)
       (fun a b _ _ hab => HeightOneSpectrum.ext hab) ?_
     intro Q hQ
-    haveI := hQ.1
-    haveI := hQ.2
+    have := hQ.1
+    have := hQ.2
     have hmem : ((l : ℕ) : 𝓞 K) ∈ Q := by
       have h3 : ((l : ℕ) : ℤ) ∈ Q.under ℤ := by
         rw [← Ideal.over_def Q (Ideal.span {((l : ℕ) : ℤ)})]
@@ -320,11 +320,11 @@ theorem locDeg_one_below (l : ℕ) [hl : Fact l.Prime]
     (h : {w : HeightOneSpectrum (𝓞 E) | ((l : ℕ) : 𝓞 E) ∈ w.asIdeal}.ncard = Module.finrank ℚ E)
     (p : HeightOneSpectrum (𝓞 F)) (hp : ((l : ℕ) : 𝓞 F) ∈ p.asIdeal) :
     p.asIdeal.ramificationIdx ℤ = 1 ∧ p.asIdeal.inertiaDeg ℤ = 1 := by
-  haveI := p.isPrime
+  have := p.isPrime
   obtain ⟨Q, -, hQ, hc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := 𝓞 E) p.asIdeal ⊥
     (by rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ (FaithfulSMul.algebraMap_injective _ _))]; exact bot_le)
-  haveI := hQ
-  haveI : Q.LiesOver p.asIdeal := ⟨hc.symm⟩
+  have := hQ
+  have : Q.LiesOver p.asIdeal := ⟨hc.symm⟩
   have hQ0 : Q ≠ ⊥ := by
     intro hb
     apply p.ne_bot
@@ -350,14 +350,14 @@ theorem arith_of_loc (l : ℕ) [hl : Fact l.Prime] (p : HeightOneSpectrum (𝓞 
     (hf : p.asIdeal.inertiaDeg ℤ = 1) :
     Nat.card (𝓞 F ⧸ p.asIdeal) = l ∧ ((l : ℕ) : 𝓞 F) ∉ p.asIdeal ^ 2 := by
   have hmaxl := Int.ideal_span_isMaximal_of_prime l
-  haveI := p.isMaximal
+  have := p.isMaximal
   have hunder : Ideal.span {((l : ℕ) : ℤ)} = p.asIdeal.under ℤ := by
     refine hmaxl.eq_of_le (Ideal.IsPrime.ne_top (Ideal.IsPrime.under ℤ p.asIdeal)) ?_
     rw [Ideal.span_le, Set.singleton_subset_iff]
     show _ ∈ Ideal.comap (algebraMap ℤ (𝓞 F)) p.asIdeal
     rw [Ideal.mem_comap]
     simpa using hp
-  haveI : p.asIdeal.LiesOver (Ideal.span {((l : ℕ) : ℤ)}) := ⟨hunder⟩
+  have : p.asIdeal.LiesOver (Ideal.span {((l : ℕ) : ℤ)}) := ⟨hunder⟩
   constructor
   · have h := Ideal.cardQuot_pow_inertiaDeg (Ideal.span {((l : ℕ) : ℤ)}) p.asIdeal
     rw [hf, pow_one, Submodule.cardQuot_apply, Submodule.cardQuot_apply] at h
@@ -479,7 +479,7 @@ theorem gAt_split (v : PlX X) : {w : HeightOneSpectrum (𝓞 X.B.I.E) |
 
 theorem typ_arith (v : PlX X) (hv : TypAt X v) :
     absV v (gAt X v : Fv X.B.I.F v) = (gAt X v : ℝ)⁻¹ ∧ Valued.v (dV v) = 1 ∧ absV v (dV v) = 1 := by
-  haveI : Fact (gAt X v).Prime := ⟨gAt_prime X v⟩
+  have : Fact (gAt X v).Prime := ⟨gAt_prime X v⟩
   have hmem := gAt_mem X v hv
   obtain ⟨he, hf⟩ := VolUAr.locDeg_one_below (F := X.B.I.F) (E := X.B.I.E) (gAt X v) (gAt_split X v) v hmem
   obtain ⟨hc, hn⟩ := VolUAr.arith_of_loc (gAt X v) v hmem he hf

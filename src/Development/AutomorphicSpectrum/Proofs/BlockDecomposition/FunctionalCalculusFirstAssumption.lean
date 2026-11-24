@@ -190,7 +190,7 @@ theorem sec_pres (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] 
   have h2 : S (cls μ f') = cls μ f' := by
     rw [hcl]
     have := congrArg (fun L : Lp E.V 2 μ →L[ℂ] Lp E.V 2 μ => L (cls μ f)) hc
-    simp only [ContinuousLinearMap.mul_apply] at this
+    simp only [mul_apply_eq_comp] at this
     rw [this, hfix]
   have hu := cls_eq_of_sob hC hU (hsob f' hf') hf' ((hS f' hf').symm.trans h2) y hy
   have : (kk k).val = k.1 := rfl
@@ -342,7 +342,7 @@ theorem core (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] Msob
   have hstep : ∀ N j t, j + 2 ≤ 4 * N →
       F.Φ (toC0 (wv c (N + 1) j t)) (cls μ (Bn f (N + 1))) = F.Φ (toC0 (wv c N j t)) (cls μ (Bn f N)) := by
     intro N j t hj
-    rw [wv_step hW F (hC0 N j t hj) (hC0 (N + 1) j t (by omega)), ContinuousLinearMap.mul_apply]
+    rw [wv_step hW F (hC0 N j t hj) (hC0 (N + 1) j t (by omega)), mul_apply_eq_comp]
     exact congrArg _ (T_B hC hO hL hU hR hΩ hT (hbS N))
   have hpres := fun g (N : ℕ) => pres hC hO hL hU hR hSG hP F hrep hΩ g (hbS N)
   have hex : ∀ (j : ℕ) (t : ℝ), ∃ u, Sob μ u ∧ IsSec E u ∧
@@ -411,13 +411,13 @@ theorem core (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] Msob
         congr 1
         rw [one_mul, pow_two (1 + y ^ 2), mul_inv]
     have hr : F.Φ (toC0 rf * toC0 rf) (cls μ (Bn f 2)) = cls μ f := by
-      rw [F.map_mul, F.res (toC0 rf) (fun y => by rw [coe_toC0 resolvent_function_vanishes_at_infinity]; rfl), ContinuousLinearMap.mul_apply]
+      rw [F.map_mul, F.res (toC0 rf) (fun y => by rw [coe_toC0 resolvent_function_vanishes_at_infinity]; rfl), mul_apply_eq_comp]
       have a1 : T (cls μ (Bn f 2)) = cls μ (Bn f 1) := T_B hC hO hL hU hR hΩ hT (hbS 1)
       have a2 : T (cls μ (Bn f 1)) = cls μ (Bn f 0) := T_B hC hO hL hU hR hΩ hT (hbS 0)
       rw [a1, a2]
       rfl
     have hw : F.Φ (toC0 (wv c 2 0 0)) (cls μ (Bn f 2)) = cls μ f := by
-      rw [map_sub, ContinuousLinearMap.sub_apply, hr, sub_eq_zero] at hcut
+      rw [map_sub, sub_apply, hr, sub_eq_zero] at hcut
       exact hcut.symm
     exact cls_eq_of_sob hC hU (hUS 0 0) (hbS 0) ((hUc 0 0).trans hw)
 
@@ -425,12 +425,12 @@ end Main
 
 theorem asm1 : Asm1 := by
   intro hFC hAC hFc hW hC hO hCp hSB hP hCT hCJ hFr hOF hIbp hD hL hU hR hSG n E f hf hcf
-  letI : MeasurableSpace (G n) := borel _
-  haveI : BorelSpace (G n) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (G n) := inferInstanceAs (LocallyCompactSpace (Mat n)ˣ)
+  let : MeasurableSpace (G n) := borel _
+  have : BorelSpace (G n) := ⟨rfl⟩
+  have : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
+  have : LocallyCompactSpace (G n) := inferInstanceAs (LocallyCompactSpace (Mat n)ˣ)
   let μ : Measure (G n) := Measure.haar
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨c, hc⟩ := hSB n μ E hL hU hR
   obtain ⟨hrep, Ω, T, hden, hsym, hinv, hT, hΩ⟩ := hCT n μ E.V hL hU hR hSG hP hFr hC hO hCp hOF hIbp hD
   obtain ⟨F⟩ := hFC (Lp E.V 2 μ) (Msob μ E.V) Ω T hden hsym hinv hT

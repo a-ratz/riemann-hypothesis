@@ -57,18 +57,18 @@ theorem dual_gens {A K W : Type} [CommRing A] [IsDomain A] [IsDedekindDomain A] 
     ∃ (m : ℕ) (g : Fin m → W) (Φ : Fin m → W →ₗ[K] K), (∀ i, g i ∈ M) ∧
       (∀ i, ∀ x ∈ M, Φ i x ∈ (algebraMap A K).range) ∧ ∀ x, x = ∑ i, Φ i x • g i := by
   classical
-  haveI hfin : Module.Finite A M := Module.Finite.iff_fg.2 hfg
+  have hfin : Module.Finite A M := Module.Finite.iff_fg.2 hfg
   have hcancel : ∀ (d : A) (x : W), d ≠ 0 → d • x = 0 → x = 0 := by
     intro d x hd h
     rw [← IsScalarTower.algebraMap_smul K d x] at h
     exact (smul_eq_zero.1 h).resolve_left ((map_ne_zero_iff _ (IsFractionRing.injective A K)).2 hd)
-  haveI hflat : Module.Flat A M := by
+  have hflat : Module.Flat A M := by
     rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
     rintro x ⟨d, hd⟩
     have : (d : A) • (x : W) = 0 := congrArg Subtype.val hd
     exact Subtype.ext (hcancel d x (nonZeroDivisors.coe_ne_zero d) this)
-  haveI hfp : Module.FinitePresentation A M := Module.finitePresentation_of_finite _ _
-  haveI hproj : Module.Projective A M := Module.Flat.projective_of_finitePresentation
+  have hfp : Module.FinitePresentation A M := Module.finitePresentation_of_finite _ _
+  have hproj : Module.Projective A M := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, π, hπ⟩ := Module.Finite.exists_fin' A M
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property π LinearMap.id hπ
   let g : Fin m → W := fun i => (π (Pi.single i 1) : W)
@@ -97,7 +97,7 @@ theorem dual_gens {A K W : Type} [CommRing A] [IsDomain A] [IsDedekindDomain A] 
     (isLocalizedModule_id (nonZeroDivisors A) W K).map_units
   have hunitK : ∀ x : nonZeroDivisors A, IsUnit (algebraMap A (Module.End A K) x) :=
     (isLocalizedModule_id (nonZeroDivisors A) K K).map_units
-  haveI hloc : IsLocalizedModule (nonZeroDivisors A) M.subtype := by
+  have hloc : IsLocalizedModule (nonZeroDivisors A) M.subtype := by
     refine ⟨hunitW, fun v => ?_, fun {x y} h => ⟨1, by simpa using Subtype.ext h⟩⟩
     obtain ⟨d, hd, hv⟩ := hden v
     exact ⟨(⟨d • v, hv⟩, ⟨d, mem_nonZeroDivisors_of_ne_zero hd⟩), rfl⟩
@@ -220,7 +220,7 @@ theorem mem_of_mem_latV : ∀ (D : D7) (S : HSp D) (L : Lat S), Submodule.IsFull
       refine Submodule.sum_mem _ fun k _ => ?_
       rw [← Int.cast_smul_eq_zsmul (𝓞 D.host.F)]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
-  haveI hloc : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 D.host.E) (nonZeroDivisors (𝓞 D.host.F)))
+  have hloc : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 D.host.E) (nonZeroDivisors (𝓞 D.host.F)))
       D.host.E := IsIntegralClosure.isLocalization (𝓞 D.host.F) D.host.F D.host.E (𝓞 D.host.E)
   have hden : ∀ v : Fin S.rank → D.host.E, ∃ d : 𝓞 D.host.F, d ≠ 0 ∧ d • v ∈ M := by
     intro v

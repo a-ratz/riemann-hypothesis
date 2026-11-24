@@ -52,7 +52,7 @@ namespace GlobalTheory.UnitLemma
 
 theorem finite_quot_span_of_ne_zero (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [Finite (IsLocalRing.ResidueField O)] (c : O) (hc : c ≠ 0) : Finite (O ⧸ Ideal.span {c}) := by
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
     inferInstanceAs (Finite (IsLocalRing.ResidueField O))
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨n, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hc hϖ
@@ -65,12 +65,12 @@ theorem finite_quot_span_of_ne_zero (O : Type) [CommRing O] [IsDomain O] [IsDisc
 theorem finite_between_mulLat (K : UQ) (B : InvAlg K) (L : Submodule K.O B.A) (hL : IsLat K.O K.E L)
     (c : K.O) (hc : c ≠ 0) :
     {M : Submodule K.O B.A | mulLat K.O (algebraMap K.O B.A c) L ≤ M ∧ M ≤ L}.Finite := by
-  haveI := finite_quot_span_of_ne_zero K.O c hc
-  haveI : Module.Finite K.O L := Module.Finite.iff_fg.mpr hL.1
+  have := finite_quot_span_of_ne_zero K.O c hc
+  have : Module.Finite K.O L := Module.Finite.iff_fg.mpr hL.1
   have hfg : (⊤ : Submodule K.O L).FG := Module.Finite.fg_top
   set S : Submodule K.O L := Ideal.span {c} • (⊤ : Submodule K.O L) with hS
-  haveI : Finite (L ⧸ S) := Submodule.finite_quotient_smul _ hfg
-  haveI : Finite (Submodule K.O (L ⧸ S)) :=
+  have : Finite (L ⧸ S) := Submodule.finite_quotient_smul _ hfg
+  have : Finite (Submodule K.O (L ⧸ S)) :=
     Finite.of_injective (fun P : Submodule K.O (L ⧸ S) => (P : Set (L ⧸ S))) SetLike.coe_injective
   let f : Submodule K.O B.A → Submodule K.O (L ⧸ S) := fun M => (M.comap L.subtype).map S.mkQ
   have hSle : ∀ M : Submodule K.O B.A, mulLat K.O (algebraMap K.O B.A c) L ≤ M → S ≤ M.comap L.subtype := by

@@ -186,6 +186,6 @@ theorem colAt_movedPt_conj : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Const
     rw [Function.update_of_ne h1, Function.update_of_ne h2, colAt_eq S t w _ hi, colAt_eq S t w x hi, hm]
   · simp only [colMove]
     rw [Function.update_of_ne h1, Function.update_of_ne h2]
-    simp only [GridChoice.colAt, dif_neg hi]
+    simp only [GridChoice.colAt, dite_eq_right hi]
 
 end GlobalTheory.TopLevelInv

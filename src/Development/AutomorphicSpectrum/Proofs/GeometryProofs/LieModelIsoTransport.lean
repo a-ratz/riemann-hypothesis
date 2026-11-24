@@ -249,7 +249,7 @@ end Isomove
 theorem lie_model_transport_isomorphism : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X X' : Scheme.{0}) (e : X' ≅ X) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (ξ' : Sp Ω ⟶ X') (t : SAB H X) (t' : SAB H X') (m : SABMap t' t e.hom) (V : Type) [AddCommGroup V] [Module Ω V] (M : LieModel t.G ξ V), ξ' ≫ e.hom = ξ → ∃ M' : LieModel t'.G ξ' V, (∀ v, (M'.pt v).left ≫ m.φ = (M.pt v).left) ∧ (∀ n, FullTorsion t.G ξ n → FullTorsion t'.G ξ' n) ∧ (IsCptGen ξ → IsCptGen ξ') ∧ ∀ (q : Cpt ξ') (h : genPt ξ ⤳ e.hom q.1), regAt ξ' q = regAt ξ ⟨e.hom q.1, h⟩ ∧ (M'.lat q : Set V) = M.lat ⟨e.hom q.1, h⟩ ∧ ∀ n, (M'.htOm t'.PP.L n q : Set (Module.Dual Ω V)) = M.htOm t.PP.L n ⟨e.hom q.1, h⟩ := by
   intro E _ _ _ H X X' e Ω _ ξ ξ' t t' m V _ _ M hξ
   have hφ : IsGrpPullback t'.G t.G e.hom m.φ := m.cart
-  haveI : IsIso m.φ := hφ.1.isIso_fst_of_isIso
+  have : IsIso m.φ := hφ.1.isIso_fst_of_isIso
   have φψ : m.φ ≫ inv m.φ = 𝟙 _ := IsIso.hom_inv_id _
   have ψφ : inv m.φ ≫ m.φ = 𝟙 _ := IsIso.inv_hom_id _
   have fg : e.hom ≫ e.inv = 𝟙 X' := e.hom_inv_id

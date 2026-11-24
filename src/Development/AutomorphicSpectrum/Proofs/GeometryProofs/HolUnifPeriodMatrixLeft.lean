@@ -110,9 +110,9 @@ theorem exists_isAbLift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   obtain ⟨hA, h₁, h₂⟩ := tangent_of_isGrpPullback A φ hφ hP u Hm χ hu
   obtain ⟨p, hp⟩ := GlobalTheory.CMSpreadCompare.exists_pointEquiv P.m.cart (𝟙_ _) (s := spMap (ψ b)) (Category.id_comp _).symm
   obtain ⟨c, hc⟩ := GlobalTheory.CMSpreadCompare.exists_pointEquiv hφ (𝟙_ _) (s := 𝟙 _) (Category.comp_id _).symm
-  letI := P.τ.grpB
-  haveI : IsMonHom P.τ.q := P.τ.q_hom
-  haveI : IsMonHom P.e.hom := P.e_hom
+  let := P.τ.grpB
+  have : IsMonHom P.τ.q := P.τ.q_hom
+  have : IsMonHom P.e.hom := P.e_hom
   let r : (Fin g → ℂ) → (𝟙_ (Over (Sp ℂ)) ⟶ P.tB.G) := fun y => p.symm (e.ex b y) ≫ P.τ.q ≫ P.e.hom
   let G : (Fin g → ℂ) → (𝟙_ (Over (Sp ℂ)) ⟶ A) := fun y => c.symm (r y)
   have hr : ∀ z w, r (z + w) = r z * r w := fun z w => by

@@ -260,7 +260,7 @@ theorem glob_stab {F : Type} [Field F] [Algebra F E] (b : Module.Basis (Fin M) E
       linear_combination hj
     show (algebraMap (𝓞 E) E s) * ∑ j, Y i0 j * x j = _
     simp only [Finset.mul_sum, ← mul_assoc, hsplit, add_mul, Finset.sum_add_distrib, Matrix.one_apply,
-      mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+      mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
       Algebra.smul_def, map_natCast]
     rw [add_comm]
     congr 1
@@ -275,7 +275,7 @@ theorem glob_stab {F : Type} [Field F] [Algebra F E] (b : Module.Basis (Fin M) E
     congr 1
     simp only [Finset.sum_apply, Pi.single_apply]
     rw [Finset.sum_comm]
-    simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [hvec]
   exact add_mem_crdOf b L0 (algebraMap_smul_mem_crdOf b L0 s hx)
     (sum_mem_crdOf b L0 _ _ fun i _ => sum_mem_crdOf b L0 _ _ fun j _ =>
@@ -474,7 +474,7 @@ theorem local_integral_of_substitution : LocInt := by
     have hnm' : t.intValuation n ≤ t.intValuation m := by
       rw [← hnm, map_div₀, HeightOneSpectrum.valuation_of_algebraMap,
         HeightOneSpectrum.valuation_of_algebraMap] at hv
-      exact (div_le_one₀ (zero_lt_iff.2 hvm)).1 hv
+      exact (div_le_one₀ (pos_iff_ne_zero.2 hvm)).1 hv
     have hI0 : Ideal.span {m} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact hm0
@@ -485,7 +485,7 @@ theorem local_integral_of_substitution : LocInt := by
       have hdn := (HeightOneSpectrum.intValuation_le_pow_iff_dvd t n k).1 (hnm'.trans hdm)
       exact Ideal.dvd_span_singleton.1 hdn
     have hJ : ¬ J ≤ t.asIdeal := fun h => hJt (Ideal.dvd_iff_le.2 h)
-    obtain ⟨d, hdJ, hdt⟩ := SetLike.not_le_iff_exists.1 hJ
+    obtain ⟨d, hdJ, hdt⟩ := IsConcreteLE.not_le_iff_exists.1 hJ
     have hdn : d * n ∈ Ideal.span {m} := by
       rw [hmJ, mul_comm d n]
       exact Ideal.mul_mem_mul hnk hdJ
@@ -527,7 +527,7 @@ namespace PI.UnitaryGroupMassFormula.UJClassMass
 theorem wPlace : WPlace := by
   intro F E _ _ _ _ _ p hp h
   exact Ring.ne_bot_of_isMaximal_of_not_isField hp (NumberField.RingOfIntegers.not_isField E)
-    (Ideal.eq_bot_of_comap_eq_bot h)
+    (Ideal.eq_bot_of_under_eq_bot h)
 
 theorem bcU : BcU := by
   intro F E _ _ _ σ M J R _ _ g hg
@@ -541,7 +541,7 @@ theorem bcU : BcU := by
   have hg' : PI.UnitaryApproxDefs.cT (σ : E →+* E) (g : Matrix (Fin M) (Fin M) E) * J *
       (g : Matrix (Fin M) (Fin M) E) = J := hg
   change PI.UnitaryApproxDefs.cT _ _ * _ * _ = _
-  simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+  simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
     RingHom.mapMatrix_apply]
   rw [key, ← Matrix.map_mul, ← Matrix.map_mul, hg']
 
@@ -608,7 +608,7 @@ theorem local_switching_lattice : LocSw := by
     intro s hs
     obtain ⟨c, hc, rfl⟩ := Submonoid.mem_map.1 hs
     apply Submonoid.subset_closure
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     have hcp : algebraMap (𝓞 F) (𝓞 E) c ∉ p := by
       intro h'
       apply Ideal.mem_primeCompl_iff.1 hc
@@ -772,7 +772,7 @@ private theorem exists_int_mul_isIntegral' {E : Type} [Field E] [NumberField E] 
   have hI : Ideal.span {d} ≠ ⊥ := by
     rwa [Ne, Ideal.span_singleton_eq_bot]
   have hc : (Ideal.span {d}).comap (algebraMap ℤ (𝓞 E)) ≠ ⊥ := fun h =>
-    hI (Ideal.eq_bot_of_comap_eq_bot h)
+    hI (Ideal.eq_bot_of_under_eq_bot h)
   obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hm
   obtain ⟨k, hk⟩ := hm
@@ -837,7 +837,7 @@ open HX in
 theorem tensLocX_of (hI : LocInt) : TensLoc := by
   intro F E _ _ _ _ _
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let B := Module.finBasis F E
   obtain ⟨m, hm0, hm⟩ := coordBound B
   obtain ⟨n, hn0, hn⟩ := basisInt B

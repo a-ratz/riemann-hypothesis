@@ -78,7 +78,7 @@ private theorem ka_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
 
 theorem mvComp : MvComp := by
   intro Ω _ _ _ ε X m hm τ τ' s s' hadm hadm' u v P Q R hP hQ hR f f' hf hf'
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   obtain ⟨σ, hσ, θ, hθ, hkθ⟩ := hf
   obtain ⟨σ', hσ', θ', hθ', hkθ'⟩ := hf'
   obtain ⟨-, -, -, -, -, -, hcyc⟩ := lgB Ω ε X m hm

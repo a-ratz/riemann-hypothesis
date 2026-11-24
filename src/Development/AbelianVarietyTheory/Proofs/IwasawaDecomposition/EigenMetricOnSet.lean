@@ -89,7 +89,7 @@ theorem smoothOn_of_locally {σ : c.F →+* ℂ} (G : EigMet Z σ) (S : Set (CxP
     if h : y ∈ ptsIn (genStr Z) σ V.1 then G.gram y (hex h).choose τ a b else 0
   have hg : ∀ y (hy : y ∈ ptsIn (genStr Z) σ V.1) (f : EigFrame Z σ (y.1 ≫ genι Z)),
       (_root_.GlobalTheory.ShFam.EigFrame.IsMap F) (evHom hy) f → G.gram y f τ a b = g y := fun y hy f hf => by
-    simp only [g, dif_pos hy]
+    simp only [g, dite_eq_left hy]
     rw [gram_eq_of_isMap G (hex hy).choose_spec hf τ]
   let ι := {y₀ // y₀ ∈ S ∧ y₀ ∈ ptsIn (genStr Z) σ V.1}
   choose T gl hT hmem hre him hagree using fun j : ι => hloc V φ F τ a b hV j.1 j.2.1 j.2.2

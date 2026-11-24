@@ -125,7 +125,7 @@ private theorem conj_entry (x : kˣ) (a : Fin n → ℤ) (w : Equiv.Perm (Fin n)
 private theorem bd_conj (x : kˣ) (a : Fin n → ℤ) (w : Equiv.Perm (Fin n))
     (hw : ∀ i j, (if w j < w i then 1 else 0 : ℤ) = (a i - a j) + (if j < i then 1 else 0)) (g : GL (Fin n) k) :
     Bd x (pm k n w * pw x a * g * (pm k n w * pw x a)⁻¹) ↔ Bd x g := by
-  have h0 : 0 < valuation k (x : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 (by simp)
   unfold Bd
   rw [w.surjective.forall₂]
   refine forall₂_congr fun i j => ?_
@@ -149,7 +149,7 @@ private theorem exists_rot (n m : ℕ) (hm : m ≤ n) : ∃ w : Equiv.Perm (Fin 
 
 private theorem dom_zpow {x : kˣ} (hx : IsUnif x) {a : Fin n → ℤ} (ha : Antitone a) : Dom fun i => x ^ a i := by
   intro i j hij
-  have h0 : 0 < valuation k (x : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
+  have h0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact (zpow_le_zpow_iff_right_of_lt_one₀ h0 ((unif_lt hx x).2 le_rfl)).2 (ha hij)
 
@@ -200,7 +200,7 @@ private theorem invLen_eq (a : Fin n → ℤ) (w : Equiv.Perm (Fin n))
   rw [invLen, ← Finset.filter_filter, Finset.card_filter]
   refine Finset.sum_congr rfl fun p hp => ?_
   have h := hw p.1 p.2
-  rw [if_neg (lt_asymm (Finset.mem_filter.1 hp).2), add_zero] at h
+  rw [ite_eq_right (lt_asymm (Finset.mem_filter.1 hp).2), add_zero] at h
   rw [← h]
   split_ifs <;> rfl
 

@@ -59,7 +59,7 @@ theorem gal_id_apply {F : Type} [Field F] (n : ℕ) (y : GL (Fin n) F) : gal (Ri
 theorem hc_isChar : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ), IsChar ℂ ℂ α → IsChar ℂ ℂ β → IsChar ℂ ℂ (hc a b α β n) := by
   intro F _ _ a b n hn α β hα hβ
   obtain ⟨H, π, hH, -, hπ, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
-  haveI : Finite (GL (Fin n) F) := inferInstance
+  have : Finite (GL (Fin n) F) := inferInstance
   have h1 : IsChar ℂ ℂ (fun p : H => α (π p).1) := by
     obtain ⟨m, ρ, hρ⟩ := hα
     exact ⟨m, ρ.comp ((MonoidHom.fst _ _).comp π), fun p => hρ _⟩
@@ -81,7 +81,7 @@ theorem hc_isChar : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = 
   rw [gal_id_apply]
   unfold ext0
   by_cases hy : y⁻¹ * x * y ∈ H
-  · rw [dite_eq_left hy, if_pos ((hH _).1 hy), Pi.mul_apply, hπ]
-  · rw [dite_eq_right hy, if_neg (fun e => hy ((hH _).2 e))]
+  · rw [dite_eq_left hy, ite_eq_left ((hH _).1 hy), Pi.mul_apply, hπ]
+  · rw [dite_eq_right hy, ite_eq_right (fun e => hy ((hH _).2 e))]
 
 end GlobalTheory.Shin.HCChar

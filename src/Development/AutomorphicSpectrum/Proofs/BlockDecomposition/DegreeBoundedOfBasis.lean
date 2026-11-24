@@ -67,13 +67,13 @@ theorem exists_normal_basis {K : Type} [Field K] {n : ℕ} (W : Submodule K (Fin
   have hrk : M₀.rank = Module.finrank K W := by
     rw [← Matrix.rank_transpose, LinearIndependent.rank_matrix (M := M₀ᵀ) hli0, Fintype.card_fin]
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' K M₀.row
-  haveI : Finite κ := Finite.of_injective a ha
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  let : Fintype κ := Fintype.ofFinite κ
   have hκ : Fintype.card κ = Module.finrank K W := by
     rw [← finrank_span_eq_card hli, hsp, ← Matrix.rank_eq_finrank_span_row, hrk]
   let f : Fin (Module.finrank K W) ≃ κ := (Fintype.equivFinOfCardEq hκ).symm
   let Q : Matrix (Fin (Module.finrank K W)) (Fin (Module.finrank K W)) K := M₀.submatrix (a ∘ f) id
-  have hQ : IsUnit Q := Matrix.linearIndependent_rows_iff_isUnit.1 (hli.comp f f.injective)
+  have hQ : IsUnit Q := linearIndependent_row_iff_isUnit.1 (hli.comp f f.injective)
   have hdet : IsUnit Q.det := (Matrix.isUnit_iff_isUnit_det _).1 hQ
   let M : Matrix (Fin n) (Fin (Module.finrank K W)) K := M₀ * Q⁻¹
   have hs : M.submatrix (a ∘ f) id = 1 := by
@@ -247,7 +247,7 @@ theorem degG_le (hF : MulF) (hI : MulI) (hW : WedgeI) (hS : SzFin) (hFS : FinSup
     Finset.sum_le_sum fun v _ => neg_log_inf hI hW x v A s hY hk
   have b2 : ∑ᶠ w, -Real.log (nF (A.map (cW w))) ≤
       ∑ᶠ w : HeightOneSpectrum (𝓞 E), (n : ℝ) * Real.posLog (⨆ p : Fin n × Fin n, ‖cW w (x.val p.1 p.2)‖) :=
-    finsum_le_finsum' hfin1 hfin3 fun w => neg_log_fin hF x w A s hY hk
+    finsum_le_finsum hfin1 hfin3 fun w => neg_log_fin hF x w A s hY hk
   rw [e1]
   refine (add_le_add b1 b2).trans (le_of_eq ?_)
   rw [logSizeM, ← mul_finsum (fun w : HeightOneSpectrum (𝓞 E) =>
@@ -281,11 +281,11 @@ def intGA (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComp
 
 theorem isOpen_intGA : IsOpen (intGA E n) := by
   have h1 : IsOpen {u : GA E n | ∀ i j, u.val i j ∈ intAd E} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
       isOpen_intAd.preimage (Units.continuous_val.matrix_elem i j)
   have h2 : IsOpen {u : GA E n | ∀ i j, (u⁻¹ : GA E n).val i j ∈ intAd E} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
       isOpen_intAd.preimage ((Units.continuous_val.comp continuous_inv).matrix_elem i j)
   exact h1.inter h2

@@ -115,7 +115,7 @@ theorem linearIndependent_values {Ω C E EC : Type} [Field Ω] [Field C] [AddCom
       exact Finset.sum_comm
     have hz : ∑ j, (((∑ k, a i k * d k j : A) : Ω) - if i = j then 1 else 0) • c j = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [sub_eq_zero]
       exact hexp
     have := Fintype.linearIndependent_iff.1 hc _ hz j
@@ -166,7 +166,7 @@ theorem finrank_eq_of_isFrameAt {X : Scheme.{0}} {G : Over X} [GrpObj G] [IsComm
     rw [Module.finrank_eq_card_basis BC, Fintype.card_fin]
   have hΩ : Module.finrank Ω E = n' := by
     rw [Module.finrank_eq_card_basis B, Fintype.card_fin]
-  haveI : Module.Finite Ω E := Module.Finite.of_basis B
+  have : Module.Finite Ω E := Module.Finite.of_basis B
   obtain ⟨U, hU, b₂, hsp, hfr⟩ := (lieLat_isVB_of_smooth X Ω ξ G E M hξ inferInstance).1 ⟨centre z, h⟩ (Set.mem_univ _)
   have h₂ := (hfr ⟨centre z, h⟩ (Set.mem_univ _) hU).2
   have hspan : ⊤ ≤ Submodule.span Ω (Set.range b) := by

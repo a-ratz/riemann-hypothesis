@@ -101,7 +101,7 @@ private theorem mem_range_of_sum [CharZero k] (a b : Fin n → H →* kˣ) (h : 
   have hv : L (c (a i)) = 0 := by rw [hL]; rfl
   have h2 : ∑ j, (Finsupp.single (c (b j)) (1 : k)) (c (a i)) = 0 :=
     Finset.sum_eq_zero fun j _ => by
-      rw [Finsupp.single_apply, if_neg fun e => hne j (hc e).symm]
+      rw [Finsupp.single_apply, ite_eq_right fun e => hne j (hc e).symm]
   have h1 : ∑ j, (Finsupp.single (c (a j)) (1 : k)) (c (a i)) = ((Finset.univ.filter fun j => a j = a i).card : k) := by
     simp only [Finsupp.single_apply, hc.eq_iff, Finset.sum_boole]
   have h3 : (Finset.univ.filter fun j => a j = a i).card ≠ 0 :=

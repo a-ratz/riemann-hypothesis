@@ -330,10 +330,10 @@ theorem mp_toVec {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) (lam : Measu
         (Measure.pi fun _ : {p : Fin n × Fin n // p.1 < p.2} => coordK R b lam))
       (Measure.pi fun _ : Idx n d => lam) := by
   obtain ⟨t1, t2, t3, t4, -, -, t7, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   let cK : R ⊗[F] E ≃ₜ (Fin d → R) := (t7 d b).homeomorph _
   have hH := (GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm R d b lam inferInstance).1
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
+  have : SigmaFinite (coordK R b lam) := inferInstance
   have hcK : MeasurePreserving cK (coordK R b lam) (Measure.pi fun _ => lam) :=
     mp_comap cK.toMeasurableEquiv _
   have mp1 := (MeasurePreserving.id (Measure.pi fun _ : Fin n => lam)).prod
@@ -356,10 +356,10 @@ theorem mp_hermVec {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) (lam : Mea
       (Measure.pi fun _ : Idx n d => lam) := by
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hcm
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
   let hc := (HaarCoord.hermCoord_isHomeomorph R hinv hcm.2.2.1 hδ hσδ n t5 t6).homeomorph _
   have := (mp_toVec hcm R b n lam).comp (mp_comap hc.toMeasurableEquiv
     ((Measure.pi fun _ : Fin n => lam).prod
@@ -378,8 +378,8 @@ theorem hermVec_isHomeomorph {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) 
     IsHomeomorph (hermVec R σ b n) := by
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hcm
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
   have h1 := HaarCoord.hermCoord_isHomeomorph R hinv hcm.2.2.1 hδ hσδ n t5 t6
   have h2 := toVec_isHomeomorph hcm R b n
   exact ((h1.homeomorph _).trans (h2.homeomorph _)).isHomeomorph
@@ -395,8 +395,8 @@ theorem sd_core {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) (lam : Measur
     SdHerm F E σ R ψR n ν ↔ ν = c • coordHerm R σ b lam n := by
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hcm
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; omega)
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; omega)
   let hh := (hermVec_isHomeomorph hcm R b n).homeomorph _
   let e : HermR R σ n ≃ₜ+ (Idx n d → R) :=
     { AddEquiv.mk' hh.toEquiv (hermVec_add R b n) with
@@ -430,18 +430,18 @@ namespace GlobalTheory.CompanionTheory.SW
 theorem sdHerm_eq_coord : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (laminf : Measure (Ainf F)) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), IsStdInf laminf → (∀ v, IsStdV v (lam v)) → ∀ ψ, IsCharAF F ψ → ∀ n : ℕ, ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (∀ ν, SdHerm F E σ (Ainf F) (psiInf F ψ) n ν ↔ ν = cinf • coordHerm (Ainf F) σ b laminf n) ∧ ∀ v : HeightOneSpectrum (𝓞 F), (∀ ν, SdHerm F E σ (Fv F v) (psiV F ψ v) n ν ↔ ν = c v • coordHerm (Fv F v) σ b (lam v) n) := by
   intro F E _ _ _ _ _ σ hcm d b laminf lam hinf hv ψ hψ n
   obtain ⟨hinv, -⟩ := HaarCoord.conj_facts hcm
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; omega)
   obtain ⟨cinf, c, hu, h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.SW.SdCoord.selfDual_coord F hcm.1 laminf lam hinf hv ψ hψ
     (HermSd.Idx n d) (HermSd.formB σ b n) (HermSd.formB_isSymm hinv b n)
     (HermSd.formB_det hinv b n)
   refine ⟨cinf, c, hu, ?_, fun v => ?_⟩
   · obtain ⟨a1, a2, a3, a4, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hcm.1
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-    haveI := hinf.1
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := hinf.1
     exact HermSd.sd_core hcm (Ainf F) b n laminf (psiInf F ψ) cinf h1
   · obtain ⟨a1, a2, a3, a4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-    haveI := (hv v).1
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := (hv v).1
     exact HermSd.sd_core hcm (Fv F v) b n (lam v) (psiV F ψ v) (c v) (h2 v)
 
 end GlobalTheory.CompanionTheory.SW

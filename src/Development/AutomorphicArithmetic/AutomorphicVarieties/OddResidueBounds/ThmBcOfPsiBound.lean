@@ -156,7 +156,7 @@ private theorem signTop {O W Q N : Type} [CommRing O] [IsDomain O] [Group W] [Gr
   subst ha
   let s' : Oˣ := Units.map (Int.castRingHom O).toMonoidHom s
   have hs' : (s' : O) = ((s : ℤ) : O) := rfl
-  letI : CommGroup Q := { (inferInstance : Group Q) with mul_comm := fun a b => IsMulCommutative.is_comm.comm a b }
+  let : CommGroup Q := { (inferInstance : Group Q) with mul_comm := fun a b => IsMulCommutative.is_comm.comm a b }
   exact lenEigSign O (⊤ : Subgroup W) Q N (π.comp (⊤ : Subgroup W).subtype) (p.comp (⊤ : Subgroup W).subtype)
     (fun q => by
       obtain ⟨g, hg⟩ := hp q
@@ -243,16 +243,16 @@ private theorem divE {ι : Type} (T : Finset ι) (m r : ℕ∞) (f : ι → ℕ�
     m ≠ ⊤ ∧ (m.toNat : ℝ) * L ≤ ∑ i ∈ T, g i := by
   have hfe : ∑ i ∈ T, f i = ((∑ i ∈ T, (f i).toNat : ℕ) : ℕ∞) := by
     rw [Nat.cast_sum]
-    exact Finset.sum_congr rfl (fun i hi => (ENat.coe_toNat (hf i hi).1).symm)
+    exact Finset.sum_congr rfl (fun i hi => (ENat.natCast_toNat (hf i hi).1).symm)
   lift r to ℕ using hr
   have hm : m ≠ ⊤ := by
     rintro rfl
     rw [hfe, ENat.top_mul hr0] at h
-    exact ENat.coe_ne_top _ (top_le_iff.1 h)
+    exact ENat.natCast_ne_top _ (top_le_iff.1 h)
   lift m to ℕ using hm
-  refine ⟨ENat.coe_ne_top _, ?_⟩
+  refine ⟨ENat.natCast_ne_top _, ?_⟩
   rw [hfe, ← Nat.cast_mul, Nat.cast_le] at h
-  simp only [ENat.toNat_coe] at hf ⊢
+  simp only [ENat.toNat_natCast] at hf ⊢
   have hrpos : (0 : ℝ) < r := by
     have : r ≠ 0 := by exact_mod_cast hr0
     exact_mod_cast Nat.pos_of_ne_zero this
@@ -275,7 +275,7 @@ private theorem keyO (E Ω : Type) [Field E] [NumberField E] [IsCMField E] [Fiel
     (hc : c * c = 1) (hcE : c.toRingEquiv = cE E) (T : Finset ((E ≃ₐ[ℚ] E) →* Oˣ))
     (hT : ∀ ψ, ((ψ c : Oˣ) : O) = (-1) ^ (e + 1) → ψ ∈ T) :
     minusLen D e * eO l O ≤ ∑ ψ ∈ T, psiLen (l := l) Ω e ψ := by
-  haveI : Fintype ((E ≃ₐ[ℚ] E) →* Oˣ) := Fintype.ofFinite _
+  have : Fintype ((E ≃ₐ[ℚ] E) →* Oˣ) := Fintype.ofFinite _
   have key := shaDecompSign ℚ E Ω l O D (e : ℤ) hl2 c ((-1) ^ (e + 1)) hc T (fun ψ h => hT ψ (by simpa using h))
   have hsgn : ((((-1) ^ (e + 1) : ℤˣ) : ℤ) : ℤ_[l]) = (-1) ^ (e + 1) := by simp
   rw [hcE, hsgn] at key
@@ -286,16 +286,16 @@ theorem UpperTheory.V.Odd.atPrime :
   classical
   intro hPB E Ω _ _ _ _ _ _ N _ ρ hρ l _ D hl2 hld e he
   obtain ⟨hsurj, hab, -, -, -⟩ := UpperTheory.V.Odd.actFacts E Ω N ρ hρ
-  haveI := hab
+  have := hab
   obtain ⟨hcE, -⟩ := UpperTheory.V.Odd.actConj E Ω N ρ hρ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ E Ω
-  haveI : NeZero (Monoid.exponent (E ≃ₐ[ℚ] E)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ E Ω
+  have : NeZero (Monoid.exponent (E ≃ₐ[ℚ] E)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   obtain ⟨O, hO1, hO2, hO3⟩ := UpperTheory.V.Base.existsO l (Monoid.exponent (E ≃ₐ[ℚ] E))
-  haveI := hO1
-  haveI := hO2
-  haveI := hO3
-  haveI := Fintype.ofFinite ((E ≃ₐ[ℚ] E) →* Oˣ)
+  have := hO1
+  have := hO2
+  have := hO3
+  have := Fintype.ofFinite ((E ≃ₐ[ℚ] E) →* Oˣ)
   obtain ⟨-, -, -, -, -, heO0, heOle, -, -⟩ := UpperTheory.V.Base.dvrFacts l O
   have hc : ρ (-1) * ρ (-1) = 1 := by
     rw [← map_mul]
@@ -311,7 +311,7 @@ theorem UpperTheory.V.Odd.atPrime :
     rw [Units.val_neg, Units.val_one] at h1
     rw [h1, hψ']
     simp
-  have hfin : eO l O ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) heOle
+  have hfin : eO l O ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) heOle
   have hL : 0 ≤ Real.log l := Real.log_nonneg (by exact_mod_cast (Fact.out : l.Prime).one_lt.le)
   obtain ⟨hm, hle⟩ := divE T (minusLen D e) (eO l O) (fun ψ => psiLen (l := l) Ω e ψ)
     (fun ψ => -Real.log ‖alN (e + 1) (chiOf ρ ψ)‖) (Real.log l) hL heO0 hfin hkey
@@ -344,7 +344,7 @@ private theorem deg_jac {a p n : ℕ} (h : a.Coprime p) : jacobiSym ((a ^ (2 * n
   exact jacobiSym.sq_one' hc
 
 private theorem deg_ker (A : AbF) {a : ℕ} (n : ℕ) (h : a.Coprime A.m) : A.ker (a ^ (A.deg * n)) := by
-  haveI : NeZero A.m := ⟨A.pos.ne'⟩
+  have : NeZero A.m := ⟨A.pos.ne'⟩
   let u : (ZMod A.m)ˣ := ZMod.unitOfCoprime a h
   refine ⟨u ^ (A.deg * n), ?_, ?_⟩
   · rw [pow_mul]
@@ -364,9 +364,9 @@ theorem UpperTheory.V.Odd.deg :
     ∀ (M : AbF) (e q d : ℕ), PrimePair M.m q d → ∀ (E : Type) [Field E] [NumberField E], IsCompField M e q d E → ∀ l : ℕ, l.Prime → l ≠ 2 → l ∣ Module.finrank ℚ E → l ∣ M.deg := by
   intro M e q d _ E _ _ hE l hl hl2 hldvd
   obtain ⟨N, hN, j, ζ, h1, h2, h3, h4, hζ, hfix⟩ := hE
-  haveI : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.ne⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
-  haveI : IsGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isGalois {N} ℚ _
+  have : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.ne⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  have : IsGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isGalois {N} ℚ _
   have hpowζ : ∀ (τ : Gal(CyclotomicField N ℚ/ℚ)) (a n : ℕ), τ ζ = ζ ^ a → (τ ^ n) ζ = ζ ^ (a ^ n) := by
     intro τ a n hτ
     induction n with
@@ -391,7 +391,7 @@ theorem UpperTheory.V.Odd.deg :
     intro σ τ
     apply IsPrimitiveRoot.autToPow_injective ℚ hζ
     rw [map_mul, map_mul, mul_comm]
-  haveI hKn : F.fixingSubgroup.Normal :=
+  have hKn : F.fixingSubgroup.Normal :=
     ⟨fun n hn g => by rw [hcomm g n, mul_assoc, mul_inv_cancel, mul_one]; exact hn⟩
   have hKmem : ∀ τ : Gal(CyclotomicField N ℚ/ℚ), τ ^ (2 ^ (e + 1) * M.deg) ∈ F.fixingSubgroup := by
     intro τ
@@ -412,7 +412,7 @@ theorem UpperTheory.V.Odd.deg :
     rw [e1]
     rw [e3, e4, ← e2, mul_comm (Module.finrank ℚ F)] at e5
     exact Nat.eq_of_mul_eq_mul_left hpos e5
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hcard : l ∣ Nat.card (Gal(CyclotomicField N ℚ/ℚ) ⧸ F.fixingSubgroup) := by
     show l ∣ F.fixingSubgroup.index
     rw [hindex]
@@ -441,9 +441,9 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.Odd.logDisc :
     ∀ (E : Type) [Field E] [NumberField E] (N : ℕ), 0 < N → Nonempty (E →ₐ[ℚ] CyclotomicField N ℚ) → (discr E).natAbs ≤ N ^ Module.finrank ℚ E ∧ Module.finrank ℚ E ≤ N := by
   intro E _ _ N hN ⟨φ⟩
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
   let F := φ.fieldRange
   have e : E ≃ₐ[ℚ] F := AlgEquiv.ofInjectiveField φ
   have hrank : Module.finrank ℚ E = Module.finrank ℚ F := e.toLinearEquiv.finrank_eq
@@ -452,7 +452,7 @@ theorem UpperTheory.V.Odd.logDisc :
   obtain ⟨hcard, -⟩ := KStar.Ram.card_fieldChars (N := N) (K := CyclotomicField N ℚ) F
   constructor
   · rw [hdisc, hprod, hrank, ← hcard]
-    haveI : Fintype (KStar.Ram.fieldChars N F) := Fintype.ofFinite _
+    have : Fintype (KStar.Ram.fieldChars N F) := Fintype.ofFinite _
     rw [finprod_eq_prod_of_fintype, Nat.card_eq_fintype_card, ← Finset.card_univ]
     exact Finset.prod_le_pow_card _ _ _
       (fun ψ _ => Nat.le_of_dvd hN (DirichletCharacter.conductor_dvd_level _))
@@ -539,14 +539,14 @@ theorem UpperTheory.V.Odd.selCard :
     ∀ (E : Type) [Field E] [NumberField E] (l : ℕ) [Fact l.Prime], Finite (SelK (Above E l) l ⧸ (powK E l).subgroupOf (SelK (Above E l) l)) ∧ Nat.card (SelK (Above E l) l ⧸ (powK E l).subgroupOf (SelK (Above E l) l)) ≤ l ^ (2 * Module.finrank ℚ E) * classNumber E := by
   intro E _ _ l hl
   have hn : l.Prime := hl.out
-  haveI : NeZero l := ⟨hn.ne_zero⟩
+  have : NeZero l := ⟨hn.ne_zero⟩
   obtain ⟨hfin, hcard⟩ := above_card E l
   have h := cardSel E (Above E l) l hn.ne_zero
   rw [cardSUnit E (Above E l) l hfin] at h
   have hsurj : Function.Surjective (QuotientGroup.mk : ClassGroup (𝓞 E) → ClS (Above E l)) :=
     QuotientGroup.mk_surjective
-  haveI : Finite (ClS (Above E l)) := Finite.of_surjective _ hsurj
-  haveI : Nonempty {c : ClS (Above E l) // c ^ l = 1} := ⟨⟨1, one_pow _⟩⟩
+  have : Finite (ClS (Above E l)) := Finite.of_surjective _ hsurj
+  have : Nonempty {c : ClS (Above E l) // c ^ l = 1} := ⟨⟨1, one_pow _⟩⟩
   have h1 : Nat.card {c : ClS (Above E l) // c ^ l = 1} ≤ classNumber E := by
     refine (Nat.card_le_card_of_injective _ Subtype.val_injective).trans ?_
     refine (Nat.card_le_card_of_surjective _ hsurj).trans ?_
@@ -580,7 +580,7 @@ theorem UpperTheory.Reformulated.B.CocycleCoboundaryFiniteIndex.coboundary_of_va
           H.index ≠ (0 : ℕ) → ∃ (m : M), ∀ (g : Q), f g = ((π : Q → M →ₗ[R] M) g : M → M) m - m := by
   intro R Q M _ _ _ _ π H f hf hH hu hn
   classical
-  haveI : Fintype (Q ⧸ H) := Subgroup.fintypeOfIndexNeZero hn
+  have : Fintype (Q ⧸ H) := Subgroup.fintypeOfIndexNeZero hn
   have hconst : ∀ a b : Q, (a : Q ⧸ H) = (b : Q ⧸ H) → f a = f b := by
     intro a b hab
     have hmem : a⁻¹ * b ∈ H := QuotientGroup.eq.mp hab
@@ -632,13 +632,13 @@ private theorem coboundary_of_vanishing_on_finite_index {R Q M : Type} [CommRing
 theorem UpperTheory.V.Odd.cobOne :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (l : ℕ) [Fact l.Prime] (D : LData E Ω l) (e : ℤ) (z : Z1 (qzTw D e)), (∀ g ∈ galOf E (Fn E Ω l 1) Ω, z.1 (toGS Ω _ g) = 0) → (Submodule.Quotient.mk z : H1 (qzTw D e)) = 0 := by
   intro E Ω _ _ _ _ _ l hl D e z hz
-  haveI : NeZero l := ⟨hl.out.ne_zero⟩
+  have : NeZero l := ⟨hl.out.ne_zero⟩
   have h0 := (fnCyc E Ω l 1).1
   rw [pow_one] at h0
-  haveI : FiniteDimensional E (Fn E Ω l 1) := IsCyclotomicExtension.finiteDimensional {l} E _
-  haveI : NumberField (Fn E Ω l 1) := NumberField.of_module_finite E _
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : IsAlgClosure (Fn E Ω l 1) Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := E) _⟩
+  have : FiniteDimensional E (Fn E Ω l 1) := IsCyclotomicExtension.finiteDimensional {l} E _
+  have : NumberField (Fn E Ω l 1) := NumberField.of_module_finite E _
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosure (Fn E Ω l 1) Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := E) _⟩
   have hi : (galOf E (Fn E Ω l 1) Ω).index ∣ l - 1 := by
     rw [(galEmbTop E (Fn E Ω l 1) Ω).2.2]
     exact (fnOne E Ω l).1
@@ -716,7 +716,7 @@ theorem UpperTheory.V.Odd.unrInj :
   classical
   obtain ⟨ι, hinj, hrange, -⟩ := UpperTheory.V.Kum.zmodToQZ l 1
   let eq1 := ZMod.ringEquivCongr (pow_one l)
-  haveI hcyc := (UpperTheory.V.Kum.fnCyc E Ω l 1).1
+  have hcyc := (UpperTheory.V.Kum.fnCyc E Ω l 1).1
   have hgal : galOf E (Fn E Ω l 1) Ω = levU l (galOf E E Ω) 1 :=
     UpperTheory.V.Kum.galOfCyc E Ω l 1 E (Fn E Ω l 1)
   have key : ∀ z : Z1 (qzTw D e), (∀ g, (l : ℤ_[l]) • (z : GS Ω (↑D.S : Set (HeightOneSpectrum (𝓞 E))) → QZ l) g = 0) →
@@ -814,8 +814,8 @@ theorem UpperTheory.V.Odd.unrSel :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (l : ℕ) [Fact l.Prime], (∃ ζ : E, IsPrimitiveRoot ζ l) → ∃ f : UnrHom E Ω l → SelK (Above E l) l ⧸ (powK E l).subgroupOf (SelK (Above E l) l), Function.Injective f := by
   intro E Ω _ _ _ _ _ l _ hζE
   obtain ⟨ζ₀, hζ₀⟩ := hζE
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI : Fact (1 < l) := ⟨(Fact.out : l.Prime).one_lt⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : Fact (1 < l) := ⟨(Fact.out : l.Prime).one_lt⟩
   have hζ : IsPrimitiveRoot (algebraMap E Ω ζ₀) l := hζ₀.map_of_injective (algebraMap E Ω).injective
   have hgζ : ∀ g : G E Ω, g (algebraMap E Ω ζ₀) = algebraMap E Ω ζ₀ := fun g => g.commutes ζ₀
   have hdata : ∀ φ : UnrHom E Ω l, ∃ β : Ω, ∃ a : Eˣ, β ^ l = algebraMap E Ω a ∧
@@ -893,7 +893,7 @@ theorem UpperTheory.V.Odd.gen :
   obtain ⟨f', hf'⟩ := unrSel (Fn E Ω l 1) Ω l hζ
   obtain ⟨hfin, hcard⟩ := selCard (Fn E Ω l 1) l
   have hH := logH (Fn E Ω l 1) (l * N) (by nlinarith) (hemb N hN hE)
-  haveI := Finite.of_injective _ (hf'.comp hf)
+  have := Finite.of_injective _ (hf'.comp hf)
   obtain ⟨k, hk, hc⟩ := lenOfCard l (Submodule.torsionBy ℤ_[l] (H1 (qzTw D e)) (l : ℤ_[l]))
   have h1 := (Nat.card_le_card_of_injective _ (hf'.comp hf)).trans hcard
   rw [hc] at h1
@@ -1102,15 +1102,15 @@ theorem UpperTheory.V.Bern.b_ratprod :
     ∀ {N : ℕ} [NeZero N] (P : Set (Subgroup (ZMod N)ˣ)) (F : ∀ (Ω : Type) [Field Ω] [CharZero Ω], DirichletCharacter Ω N → Ω), (∀ (K Ω : Type) [Field K] [CharZero K] [Field Ω] [CharZero Ω] (f : K →+* Ω) (χ : DirichletCharacter K N), f (F K χ) = F Ω (χ.ringHomComp f)) → ∃ q : ℚ, ∀ (Ω : Type) [Field Ω] [CharZero Ω] [HasEnoughRootsOfUnity Ω (Monoid.exponent (ZMod N)ˣ)], ∏ᶠ χ ∈ charSet Ω P, F Ω χ = (q : Ω) := by
   intro N _ P F hF
   set e := Monoid.exponent (ZMod N)ˣ with he_def
-  haveI he : NeZero e := ⟨Monoid.exponent_ne_zero_of_finite⟩
-  haveI : NeZero (e : ℚ) := ⟨by exact_mod_cast he.out⟩
-  haveI hcyc : IsCyclotomicExtension {e} ℚ (CyclotomicField e ℚ) :=
+  have he : NeZero e := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (e : ℚ) := ⟨by exact_mod_cast he.out⟩
+  have hcyc : IsCyclotomicExtension {e} ℚ (CyclotomicField e ℚ) :=
     CyclotomicField.isCyclotomicExtension e ℚ
-  haveI : IsGalois ℚ (CyclotomicField e ℚ) := IsCyclotomicExtension.isGalois {e} ℚ _
-  haveI : FiniteDimensional ℚ (CyclotomicField e ℚ) :=
+  have : IsGalois ℚ (CyclotomicField e ℚ) := IsCyclotomicExtension.isGalois {e} ℚ _
+  have : FiniteDimensional ℚ (CyclotomicField e ℚ) :=
     IsCyclotomicExtension.finiteDimensional {e} ℚ _
   have hζ := IsCyclotomicExtension.zeta_spec e ℚ (CyclotomicField e ℚ)
-  haveI : HasEnoughRootsOfUnity (CyclotomicField e ℚ) e :=
+  have : HasEnoughRootsOfUnity (CyclotomicField e ℚ) e :=
     ⟨⟨_, hζ⟩, rootsOfUnity.isCyclic (CyclotomicField e ℚ) e⟩
   have hfin : ∀ (Ω : Type) [Field Ω], (charSet Ω P).Finite := fun Ω _ => Set.toFinite _
   have hfix : ∀ σ : CyclotomicField e ℚ ≃ₐ[ℚ] CyclotomicField e ℚ,
@@ -1125,7 +1125,7 @@ theorem UpperTheory.V.Bern.b_ratprod :
   have hbot := (IsGalois.mem_bot_iff_fixed _).2 hfix
   obtain ⟨q, hq⟩ := IntermediateField.mem_bot.1 hbot
   refine ⟨q, fun Ω _ _ _ => ?_⟩
-  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω e
+  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω e
   have hmin : Polynomial.aeval ω (minpoly ℚ (hζ.powerBasis ℚ).gen) = 0 := by
     rw [IsPrimitiveRoot.powerBasis_gen, ← hζ.minpoly_eq_cyclotomic_of_irreducible
       (Polynomial.cyclotomic.irreducible_rat (NeZero.pos e)), Polynomial.aeval_def,
@@ -1160,7 +1160,7 @@ theorem UpperTheory.V.Bern.b_prodint :
     simp only [map_mul, map_natCast]
     rw [b_primmap f f.injective])
   have hfin : (charSet ℂ P).Finite := Set.toFinite _
-  haveI : NeZero (Monoid.exponent (ZMod N)ˣ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (Monoid.exponent (ZMod N)ˣ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   have hC := hq ℂ
   rw [finprod_mem_eq_finite_toFinset_prod _ hfin] at hC
   have hint : IsIntegral ℤ (q : ℂ) := by
@@ -1284,9 +1284,9 @@ private theorem stick_of (hK : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E Ω : Type) [Field
   have h1 : minusLen D e ≤ ((r * g : ℕ) : ℕ∞) := by
     push_cast
     exact (hL _ _ (ShaMinus D e) _ r hk).trans (by gcongr)
-  have h2 : minusLen D e ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) h1
+  have h2 : minusLen D e ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) h1
   refine ⟨h2, ?_⟩
-  have h3 : ((minusLen D e).toNat : ℝ) ≤ r * g := by exact_mod_cast ENat.toNat_le_of_le_coe h1
+  have h3 : ((minusLen D e).toNat : ℝ) ≤ r * g := by exact_mod_cast ENat.toNat_le_of_le_natCast h1
   have hl : (1 : ℝ) ≤ l := by exact_mod_cast (Fact.out : l.Prime).one_le
   have hN' : (1 : ℝ) ≤ N := by exact_mod_cast hN
   have he' : (1 : ℝ) ≤ e := by exact_mod_cast he
@@ -1307,7 +1307,7 @@ private theorem ncard_charSet_le_ker_index {E : Type} [Field E] [NumberField E] 
   classical
   have hS : ∀ χ ∈ charSet ℂ (parE ρ k), ρ.ker ≤ (MulChar.toUnitHom χ).ker := by
     intro χ hχ
-    simp only [charSet, Set.mem_setOf_eq, parE] at hχ
+    simp only [charSet, Set.mem_ofPred_eq, parE] at hχ
     exact hχ.1
   let f : charSet ℂ (parE ρ k) → ((ZMod N)ˣ ⧸ ρ.ker →* ℂˣ) :=
     fun χ => QuotientGroup.lift ρ.ker (MulChar.toUnitHom χ.1) (hS χ.1 χ.2)
@@ -1331,7 +1331,7 @@ private theorem ncard_charSet_le_ker_index {E : Type} [Field E] [NumberField E] 
 private theorem prime_of (hA : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (N : ℕ) [NeZero N], Nonempty (E →ₐ[ℚ] CyclotomicField N ℚ) → ∃ ρ : (ZMod N)ˣ →* (E ≃ₐ[ℚ] E), IsCycAct Ω N ρ) (hF : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (N : ℕ) [NeZero N] (ρ : (ZMod N)ˣ →* (E ≃ₐ[ℚ] E)), IsCycAct Ω N ρ → Function.Surjective ρ ∧ IsAbelianGalois ℚ E ∧ Nat.card (Gq ρ) = Module.finrank ℚ E ∧ ρ.ker.index = Module.finrank ℚ E ∧ ∀ (M : ℕ) [NeZero M] (h : N ∣ M), IsCycAct Ω M (ρ.comp (ZMod.unitsMap h))) (hV : ∀ (N : ℕ) [NeZero N] (k : ℕ) (P : Set (Subgroup (ZMod N)ˣ)), 1 ≤ k → P ⊆ parKer N k → ∃ w : ℕ → ℕ, (∀ T : Finset ℕ, (∀ l ∈ T, l.Prime) → ∑ l ∈ T, (w l : ℝ) * Real.log l ≤ (charSet ℂ P).ncard * Real.log (bnd N k)) ∧ ∀ (l : ℕ) [Fact l.Prime] (T : Finset (DirichletCharacter (PadicAlgCl l) N)), (T : Set _) ⊆ charSet (PadicAlgCl l) P → ∑ χ ∈ T, -Real.log ‖alN k χ‖ ≤ (w l : ℝ) * Real.log l) (hP : PsiBound → ∀ (E Ω : Type) [Field E] [NumberField E] [IsCMField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (N : ℕ) [NeZero N] (ρ : (ZMod N)ˣ →* (E ≃ₐ[ℚ] E)), IsCycAct Ω N ρ → ∀ (l : ℕ) [Fact l.Prime] (D : LData E Ω l), l ≠ 2 → ¬ l ∣ Module.finrank ℚ E → ∀ e : ℕ, 1 ≤ e → minusLen D e ≠ ⊤ ∧ ∃ T : Finset (DirichletCharacter (PadicAlgCl l) N), (T : Set _) ⊆ charSet (PadicAlgCl l) (parE ρ (e + 1)) ∧ ((minusLen D e).toNat : ℝ) * Real.log l ≤ ∑ χ ∈ T, -Real.log ‖alN (e + 1) χ‖)
     (h : PsiBound) : PrimeBound := by
   intro E Ω _ _ _ _ _ _ N hN hemb ld e he
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   obtain ⟨ρ, hρ⟩ := hA E Ω N hemb
   obtain ⟨-, -, -, hidx, -⟩ := hF E Ω N ρ hρ
   have key : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ¬ p ∣ Module.finrank ℚ E →
@@ -1345,7 +1345,7 @@ private theorem prime_of (hA : ∀ (E Ω : Type) [Field E] [NumberField E] [Fiel
   have hterm : ∀ l ∈ S, Real.log ((l : ℕ) : ℝ) * ((minusLen (ld (l : ℕ)) e).toNat : ℝ) ≤
       (w l : ℝ) * Real.log ((l : ℕ) : ℝ) := by
     intro l hl
-    haveI : Fact (l : ℕ).Prime := ⟨l.2⟩
+    have : Fact (l : ℕ).Prime := ⟨l.2⟩
     obtain ⟨-, T, hT, hle⟩ := key l (hS l hl).1 (hS l hl).2
     have h2 := hw2 l T hT
     nlinarith
@@ -1421,7 +1421,7 @@ private theorem thmBc_of (hD : ∀ (M : AbF) (e q d : ℕ), PrimePair M.m q d �
   obtain ⟨hFpos, hemb⟩ := hmem
   have hdvd : ∀ l : ℕ, l.Prime → l ≠ 2 → l ∣ Module.finrank ℚ E → l ∣ M.deg :=
     hD M e q d hpp E hcomp
-  haveI : NeZero M.m := NeZero.of_pos M.pos
+  have : NeZero M.m := NeZero.of_pos M.pos
   have hdeg : M.deg ≠ 0 := by
     unfold AbF.deg
     exact Subgroup.index_ne_zero_of_finite
@@ -1480,7 +1480,7 @@ private theorem thmBc_of (hD : ∀ (M : AbF) (e q d : ℕ), PrimePair M.m q d �
             Real.log (t * ((l : ℕ) : ℝ) * F) ^ 2) := by
         intro l hl
         rw [Finset.mem_filter, not_not] at hl
-        haveI : Fact (l : ℕ).Prime := ⟨l.2⟩
+        have : Fact (l : ℕ).Prime := ⟨l.2⟩
         have hp2 := hS2 l hl.1
         have hpc : Procyc E Ω (l : ℕ) := by
           unfold Procyc

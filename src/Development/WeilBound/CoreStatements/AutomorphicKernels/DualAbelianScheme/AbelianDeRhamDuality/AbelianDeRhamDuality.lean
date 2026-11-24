@@ -143,8 +143,8 @@ theorem toPicard_surjective (s : X ⟶ Sp R) (h₁ : Function.Surjective (cmp1 s
 
 theorem surjAll_of_hodge (hC : CrystallineSmoothLift) (hH : AbelianHodgeDeRham) : SurjAll := by
   intro R _ A _ g hAb hsm
-  haveI := hAb
-  haveI : IsProper A.hom := IsAbelianScheme.proper
+  have := hAb
+  have : IsProper A.hom := IsAbelianScheme.proper
   have hs : A.hom ≫ 𝟙 (Sp R) = A.hom := Category.comp_id _
   refine toPicard_surjective _ ?_ ?_
   · rw [hs]
@@ -178,8 +178,8 @@ theorem allPrim_of_abelianDeRhamFree (h : GlobalTheory.Published.AbelianDeRhamFr
     (A : Over (Sp R)) [GrpObj A] (g : ℕ) (hA : IsAbelianScheme A)
     (hg : SmoothOfRelativeDimension g A.hom) : AllPrim (dp0 R) (𝟙 _) A := by
   have hdim : SmoothOfRelativeDimension (g + g) (A ⊗ A).hom := by
-    haveI := hg
-    haveI : SmoothOfRelativeDimension g (pullback.fst A.hom A.hom) :=
+    have := hg
+    have : SmoothOfRelativeDimension g (pullback.fst A.hom A.hom) :=
       (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback
         (IsPullback.of_hasPullback _ _).flip hg
     exact inferInstanceAs (SmoothOfRelativeDimension (g + g) (pullback.fst A.hom A.hom ≫ A.hom))

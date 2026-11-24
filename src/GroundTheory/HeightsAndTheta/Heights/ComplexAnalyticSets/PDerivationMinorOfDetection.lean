@@ -113,7 +113,7 @@ theorem DerivationMinorOfDetection.proof : DerivationMinorOfDetection.Statement 
   let e : Fin h ≃ κ := (finCongr hκ.symm).trans (Finite.equivFin κ).symm
   refine ⟨fun j => a (e j), fun hmem => ?_⟩
   have hunit : IsUnit (Matrix.of fun i j => v (a (e j)) i) := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     exact hli.comp e e.injective
   have hne : π (Matrix.of fun i j => a (e j) (f i)).det ≠ 0 := by
     rw [RingHom.map_det]

@@ -51,7 +51,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Num
 theorem intNumL_perm_of_perm (F : Type) [Field F] (K : Type) [DecidableEq K] (ι : K → Type)
     (V : Ideal (MRing ι F)) (l l' : List (K → ℤ)) (h : l.Perm l') :
     intNumL F V l = intNumL F V l' := by
-  haveI : LeftCommutative (diffStep : (K → ℤ) → ((K → ℤ) → ℤ) → ((K → ℤ) → ℤ)) := by
+  have : LeftCommutative (diffStep : (K → ℤ) → ((K → ℤ) → ℤ) → ((K → ℤ) → ℤ)) := by
     constructor
     intro a b g
     funext m

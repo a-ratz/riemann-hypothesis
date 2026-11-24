@@ -117,7 +117,7 @@ private theorem near_prod {r : ValueGroupWithZero E} (h0 : 0 < r) (h1 : r < 1) {
 private theorem small_prod {r : ValueGroupWithZero E} {ι : Type} (s : Finset ι) (f : ι → E) (hs : ∀ i ∈ s, valuation E (f i) ≤ 1)
     (a : ι) (ha : a ∈ s) (hr : valuation E (f a) ≤ r) : valuation E (∏ i ∈ s, f i) ≤ r := by
   rw [← Finset.mul_prod_erase s f ha, map_mul, map_prod]
-  exact (mul_le_of_le_one_right' (Finset.prod_le_one' fun i hi => hs i (Finset.mem_of_mem_erase hi))).trans hr
+  exact (mul_le_of_le_one_right' (Finset.prod_le_one fun i hi => hs i (Finset.mem_of_mem_erase hi))).trans hr
 
 private theorem det_near {r : ValueGroupWithZero E} (h0 : 0 < r) (h1 : r < 1) {M : Matrix (Fin n) (Fin n) E}
     (hM : ∀ i j, valuation E (M i j - (1 : Matrix (Fin n) (Fin n) E) i j) ≤ r) : valuation E (M.det - 1) ≤ r := by
@@ -150,7 +150,7 @@ private theorem diag_cont (E : Type) [Field E] [ValuativeRel E] [TopologicalSpac
 theorem elemTest : ElemTest := by
   intro E _ _ _ _ n r h0 h1 A hA
   obtain ⟨K, hK, hKo, hKc⟩ := UpperTheory.ConvolutionTheory.Loc.ballSub E n r h0 h1
-  haveI := (UpperTheory.V.Z.Tf.Orb.gLTop E n).2.2.1
+  have := (UpperTheory.V.Z.Tf.Orb.gLTop E n).2.2.1
   have mK : ∀ g : GL (Fin n) E, g ∈ ball n r ↔ g ∈ K := fun g => by rw [← hK]; rfl
   have e : elemSet r A = (fun z : GL (Fin n) E × (Fin n → Eˣ) × GL (Fin n) E => z.1 * diagT E (Fin n) z.2.1 * z.2.2) ''
       ((K : Set (GL (Fin n) E)) ×ˢ (A ×ˢ (K : Set (GL (Fin n) E)))) := by
@@ -294,8 +294,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.elemPair :
   have hx : x0 = inst8 := Algebra.algebra_ext _ _ fun a => (hinc a).symm.trans (hmap a)
   subst hx
   obtain ⟨⟨mE0, bE, mF0, bF, mE, mF, hmE, hmF, h1, h2⟩, hone⟩ := UpperTheory.ConvolutionTheory.GM.matchOne F E σ n v
-  letI : MeasurableSpace (GL (Fin n) (HeightOneSpectrum.adicCompletion E w.1)) := borel _
-  haveI : BorelSpace (GL (Fin n) (HeightOneSpectrum.adicCompletion E w.1)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (HeightOneSpectrum.adicCompletion E w.1)) := borel _
+  have : BorelSpace (GL (Fin n) (HeightOneSpectrum.adicCompletion E w.1)) := ⟨rfl⟩
   obtain ⟨hμE, k2⟩ :=
     UpperTheory.V.Z.Tf.Orb.placeOfLocal_holds F E σ hσ v w hw s hs hfin hinc hgal n mE mF hmE hmF
   obtain ⟨r₀, hr₀0, hr₀1, hr₀⟩ := UpperTheory.Gal.InertialTypesAlt.L.elemLoc _ _ s hs n _ mF hμE hmF r hr0 hr1
@@ -378,7 +378,7 @@ private theorem diag_ball {r : ValueGroupWithZero k} {a : GL (Fin n) k} (ha : a 
     have := ha i i
     rwa [Matrix.one_apply_eq] at this
   · rw [Matrix.diagonal_apply_ne _ hij, Matrix.one_apply_ne hij, sub_zero, map_zero]
-    exact zero_le'
+    exact zero_le
 
 end
 
@@ -556,7 +556,7 @@ private theorem sig_eq {n : ℕ} (hn : 0 < n) (σ : E ≃ₐ[F] E) {v : Pl F} (w
     (x : w.1.adicCompletion E) : σw x = s x := by
   by_cases hx : x = 0
   · simp [hx]
-  letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
+  let : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
   let e : CompletionsOver E v ≃+* w.1.adicCompletion E :=
     RingEquiv.piUnique fun u : PlacesOver E v => u.1.adicCompletion E
   have he : ∀ z, (e.symm z) w = z := fun z => e.apply_symm_apply z
@@ -811,7 +811,7 @@ private theorem tr_eq [Finite Γ] (ρ : Representation ℂ G V) (ι : H →* G) 
     (hA : ∀ x ∈ fixed ρ (p.ker.map ι), A x ∈ fixed ρ (p.ker.map ι)) :
     GlobalTheory.BCT.twTr ρ ι.range (p.ker.map ι) f A =
       (Nat.card Γ : ℂ)⁻¹ * LinearMap.trace ℂ _ (∑ᶠ g, fb g • (rp ρ ι p hp g ∘ₗ A.restrict hA)) := by
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   have hL : ∀ v ∈ fixed ρ (p.ker.map ι),
       GlobalTheory.BCT.levOp ρ ι.range (p.ker.map ι) f A v ∈ fixed ρ (p.ker.map ι) := by
     intro v hv
@@ -910,14 +910,14 @@ namespace UpperTheory.Gal.InertialTypesAlt.L
 
 private theorem finsum_smul_comp {G W : Type} [Finite G] [AddCommGroup W] [Module ℂ W] (a : G → ℂ) (L : G → W →ₗ[ℂ] W)
     (R : W →ₗ[ℂ] W) : ∑ᶠ g, a g • (L g ∘ₗ R) = (∑ᶠ g, a g • L g) ∘ₗ R := by
-  letI := Fintype.ofFinite G
+  let := Fintype.ofFinite G
   simp only [finsum_eq_sum_of_fintype]
   refine LinearMap.ext fun x => ?_
   simp only [LinearMap.sum_apply, LinearMap.comp_apply, LinearMap.smul_apply]
 
 private theorem trace_finsum_smul {G W : Type} [Finite G] [AddCommGroup W] [Module ℂ W] (a : G → ℂ) (L : G → W →ₗ[ℂ] W) :
     LinearMap.trace ℂ W (∑ᶠ g, a g • L g) = ∑ᶠ g, a g * LinearMap.trace ℂ W (L g) := by
-  letI := Fintype.ofFinite G
+  let := Fintype.ofFinite G
 
   simp only [finsum_eq_sum_of_fintype, map_sum, map_smul, smul_eq_mul]
 
@@ -962,7 +962,7 @@ private theorem twTr_level (hAct : FinAct) {k : Type} [Field k] [ValuativeRel k]
     (hA : ∀ x ∈ fixed ρ (GlobalTheory.SplitWeil.KOne k (Fin n)), A x ∈ fixed ρ (GlobalTheory.SplitWeil.KOne k (Fin n))) :
     GlobalTheory.BCT.twTr ρ (KO k n) (K1 (IsLocalRing.residue 𝒪[k]) n) (infl (IsLocalRing.residue 𝒪[k]) fb) A =
       (Nat.card (GL (Fin n) 𝓀[k]) : ℂ)⁻¹ * LinearMap.trace ℂ _ (∑ᶠ g, fb g • (GlobalTheory.LocGL.levelZero ρ g ∘ₗ A.restrict hA)) := by
-  letI := Fintype.ofFinite 𝓀[k]
+  let := Fintype.ofFinite 𝓀[k]
   obtain ⟨hl, r, hr, hT⟩ := hAct k 𝓀[k] (IsLocalRing.residue 𝒪[k]) IsLocalRing.residue_surjective n V ρ
   have er : r = GlobalTheory.LocGL.levelZero ρ := by
     ext g x
@@ -1041,15 +1041,15 @@ theorem finTrace :
   intro hRes hAct hInfl hFrob hIT F E _ _ _ _ _ _ _ _ hp n hn π P hcj hbc v w hsp hu τ τ' hτ hτ' _ hinc s hs f hf hne
   obtain ⟨w', hw'⟩ := UpperTheory.V.Z.Tf.Orb.placeUniq_holds F E hp v hsp
   have hw : ∀ x : PlacesOver E v, x = w := fun x => (hw' x).trans (hw' w).symm
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos hp.pos
-  haveI : Fact (Module.finrank F E).Prime := ⟨hp⟩
-  haveI : IsCyclic (E ≃ₐ[F] E) := by
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos hp.pos
+  have : Fact (Module.finrank F E).Prime := ⟨hp⟩
+  have : IsCyclic (E ≃ₐ[F] E) := by
     apply isCyclic_of_prime_card (p := Module.finrank F E)
     exact IsGalois.card_aut_eq_finrank F E
   obtain ⟨σ, hσ⟩ := IsCyclic.exists_generator (α := E ≃ₐ[F] E)
   obtain ⟨i1, i2, i3, i4, s0, hs0, hr, h1, h2, h3⟩ := UpperTheory.V.Z.Tf.Orb.placeData_holds F E σ hσ v w hw
-  letI := Fintype.ofFinite 𝓀[v.adicCompletion F]
-  letI := Fintype.ofFinite 𝓀[w.1.adicCompletion E]
+  let := Fintype.ofFinite 𝓀[v.adicCompletion F]
+  let := Fintype.ofFinite 𝓀[w.1.adicCompletion E]
   have hcm : ∀ x, completionMap v w.1 x = algebraMap _ (w.1.adicCompletion E) x := h1
   obtain ⟨t, ht⟩ := exists_isRes hRes (h3 (hu w))
     (fun x y hy => hinc x y (hy.trans (hcm x).symm)) s hs
@@ -1120,8 +1120,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.resEx :
     UpperTheory.Gal.InertialTypesAlt.L.ResEx := by
   intro k K _ _ _ _ _ _ _ _ _ _ _ _ hu
   have h1 := ramOne k K hu
-  letI : Fintype 𝓀[k] := Fintype.ofFinite _
-  letI : Fintype 𝓀[K] := Fintype.ofFinite _
+  let : Fintype 𝓀[k] := Fintype.ofFinite _
+  let : Fintype 𝓀[K] := Fintype.ofFinite _
   refine ⟨𝓀[k], 𝓀[K], inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     IsLocalRing.residue _, IsLocalRing.residue _, GroundTheory.LocalField.frobenius k K h1,
     GroundTheory.LocalField.residueAlgEquiv k K (GroundTheory.LocalField.frobenius k K h1), ?_⟩

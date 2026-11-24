@@ -141,7 +141,7 @@ theorem conductor_mem_nhds : D1 (E := E) v ψ ∈ 𝓝 (0 : Fv F v ⊗[F] E) := 
       (continuous_tr v).comp (continuous_const.mul continuous_id)
     exact hc.continuousAt.preimage_mem_nhds (by simpa using hA)
   refine Filter.mem_of_superset hN fun y hy x hx => ?_
-  simp only [Set.mem_iInter, Set.mem_setOf_eq] at hy
+  simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hy
   obtain ⟨c, hc, rfl⟩ := hgen x hx
 
   rw [Finset.sum_mul, map_sum, psiV_sum]
@@ -207,10 +207,10 @@ theorem scale_prod (μ0 : Measure V) [μ0.IsAddHaarMeasure] (c : Fv F v) (hc : c
     rw [e1, Measure.map_smul s1 hm'.aemeasurable, e2, smul_smul] at h
     rw [one_mul]
     conv_rhs => rw [← h]
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.coe_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.coe_mul]
   have hs : (s1 : ENNReal) * s2 = 1 := (ENNReal.mul_left_inj hA0 hAt).1 hss
   rw [← Measure.map_apply hm hA, ← Measure.map_apply hm' hB, e1, e2]
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
   calc (s1 : ENNReal) * μ0 A * (s2 * μ0 B) = ((s1 : ENNReal) * s2) * (μ0 A * μ0 B) := by ring
     _ = μ0 A * μ0 B := by rw [hs, one_mul]
 
@@ -234,7 +234,7 @@ theorem ann_Mk (ι : Type) [Fintype ι] (k : ℕ) :
   have hpk : piu v ^ k ≠ 0 := pow_ne_zero k (piu_ne v)
   rw [← ann_obox]
   ext y
-  simp only [Set.mem_preimage, ann, Set.mem_setOf_eq, coe_Mk]
+  simp only [Set.mem_preimage, ann, Set.mem_ofPred_eq, coe_Mk]
   constructor
   · intro hy x hx
     have := hy ((piu v ^ k)⁻¹ • x) (by simpa [smul_smul, mul_inv_cancel₀ hpk] using hx)

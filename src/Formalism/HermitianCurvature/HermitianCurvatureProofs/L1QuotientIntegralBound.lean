@@ -102,7 +102,7 @@ theorem be_enorm_le {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 
     ‖be z c π σ μW μN (σ g x) v‖ₑ ≤
       ∫⁻ p, ‖⟪v, σ (Matrix.of p.1 * Matrix.of p.2 * g) x⟫_ℂ‖ₑ ∂(μW.prod μN) := by
   unfold be
-  refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono_ae ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono_ae ?_)
   filter_upwards [prod_ae hW hN] with p hp
   rw [← ofReal_norm, ← ofReal_norm]
   exact ENNReal.ofReal_le_ofReal (beInt_norm_le hds hT hπ hg hp)
@@ -125,7 +125,7 @@ theorem l1_quotient_integral_bound {ε : Fin (2 * r + k + 1) → Bool} {lam : Fi
   have hfm : Measurable f := by
     have hc : Continuous (fun y : Formalism.QuantumDeterminants.Mt k r => e (Matrix.of y)) :=
       he.comp (show Continuous (fun y : Formalism.QuantumDeterminants.Mt k r => (Matrix.of y : Mx k r)) from continuous_id)
-    have : Measurable (fun y : Formalism.QuantumDeterminants.Mt k r => ‖e (Matrix.of y)‖ₑ) := hc.measurable.enorm
+    have : Measurable (fun y : Formalism.QuantumDeterminants.Mt k r => ‖e (Matrix.of y)‖ₑ) := hc.measurable.eNorm
     exact this.indicator uh_mem_measurableSet
   have hφ : Continuous (fun p : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r =>
       (fun i j => (Matrix.of p.1 * Matrix.of p.2) i j : Formalism.QuantumDeterminants.Mt k r)) := by

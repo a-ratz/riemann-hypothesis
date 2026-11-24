@@ -78,7 +78,7 @@ theorem momInt_add (ι : ℂ ≃+* ℂ_[q]) {κ : Type} [Fintype κ] (v : κ →
   obtain ⟨ν, hν, eν⟩ := mG
   refine ⟨μ + ν, ?_, fun k j f hf => ?_⟩
   · refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun f => ?_
-    rw [one_mul, ContinuousLinearMap.add_apply]
+    rw [one_mul, add_apply]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ ?_)
     · simpa using μ.le_of_opNorm_le hμ f
     · simpa using ν.le_of_opNorm_le hν f
@@ -86,8 +86,8 @@ theorem momInt_add (ι : ℂ ≃+* ℂ_[q]) {κ : Type} [Fintype κ] (v : κ →
         iteratedFDeriv ℂ k F 0 + iteratedFDeriv ℂ k G 0 :=
       iteratedFDeriv_add_apply (hF.contDiffAt.of_le (by exact_mod_cast le_top))
         (hG.contDiffAt.of_le (by exact_mod_cast le_top))
-    rw [h, ContinuousMultilinearMap.add_apply, map_add (f := _), eμ k j f hf, eν k j f hf,
-      ContinuousLinearMap.add_apply]
+    rw [h, add_apply, map_add (f := _), eμ k j f hf, eν k j f hf,
+      add_apply]
 
 theorem momInt_const_mul (ι : ℂ ≃+* ℂ_[q]) {κ : Type} [Fintype κ] (v : κ → V) {c : ℂ} {G : V → ℂ}
     (hG : ContDiff ℂ ⊤ G) (hc : ‖ι c‖ ≤ 1) (mG : MomInt ι v G) :
@@ -95,14 +95,14 @@ theorem momInt_const_mul (ι : ℂ ≃+* ℂ_[q]) {κ : Type} [Fintype κ] (v : 
   obtain ⟨μ, hμ, eμ⟩ := mG
   refine ⟨ι c • μ, ?_, fun k j f hf => ?_⟩
   · refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun f => ?_
-    rw [one_mul, ContinuousLinearMap.smul_apply, norm_smul]
+    rw [one_mul, smul_apply, norm_smul]
     exact (mul_le_of_le_one_left (norm_nonneg _) hc).trans (μ.le_of_opNorm_le hμ f |>.trans (by simp))
   · have h : iteratedFDeriv ℂ k (fun z => c * G z) 0 = c • iteratedFDeriv ℂ k G 0 := by
       have := iteratedFDeriv_const_smul_apply (𝕜 := ℂ) (a := c) (f := G) (i := k) (x := (0 : V))
         (hG.contDiffAt.of_le (by exact_mod_cast le_top))
       simpa [Pi.smul_def, smul_eq_mul] using this
-    rw [h, ContinuousMultilinearMap.smul_apply, smul_eq_mul, map_mul, eμ k j f hf,
-      ContinuousLinearMap.smul_apply, smul_eq_mul]
+    rw [h, smul_apply, smul_eq_mul, map_mul, eμ k j f hf,
+      smul_apply, smul_eq_mul]
 
 theorem latInt_mul (ι : ℂ ≃+* ℂ_[q]) (ω : ℂ_[q]) (Λ : AddSubgroup V) {F G : V → ℂ}
     (hF : ContDiff ℂ ⊤ F) (hG : ContDiff ℂ ⊤ G) (mF : LatInt ι ω Λ F) (mG : LatInt ι ω Λ G) :

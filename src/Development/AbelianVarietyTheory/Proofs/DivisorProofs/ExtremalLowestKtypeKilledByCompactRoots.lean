@@ -126,7 +126,7 @@ theorem orth_of_not_cdom (hσ : IsURepOn (UJset ε) σ) {Λ μ : Fin n → ℝ} 
     apply sSup_le
     intro S hS x hx
     obtain ⟨hfd, hst, -, -, hmax⟩ := hS
-    haveI := hfd
+    have := hfd
     have hp := isWtOn_proj hσ S hst hw
     rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
     by_cases h0 : S.starProjection w = 0
@@ -232,8 +232,8 @@ private theorem single_ct_lemma (a c : Fin n) : (Matrix.single a c (1 : ℂ))ᴴ
   ext i j
   simp only [Matrix.conjTranspose_apply, Matrix.single, Matrix.of_apply]
   by_cases h : c = i ∧ a = j
-  · rw [if_pos ⟨h.2, h.1⟩, if_pos h, star_one]
-  · rw [if_neg (fun h' => h ⟨h'.2, h'.1⟩), if_neg h, star_zero]
+  · rw [ite_eq_left ⟨h.2, h.1⟩, ite_eq_left h, star_one]
+  · rw [ite_eq_right (fun h' => h ⟨h'.2, h'.1⟩), ite_eq_right h, star_zero]
 
 theorem conjH_single {a c : Fin n} (h : ε a = ε c) :
     conjH (Formalism.REAL.Jm ε) (Matrix.single a c 1) = -Matrix.single c a 1 := by
@@ -301,7 +301,7 @@ theorem dRepC_diag (hσ : IsURepOn (UJset ε) σ) {μ : Fin n → ℝ} {v : H} (
         · simp [Matrix.single, hia, Ne.symm hia]
       · rw [Matrix.diagonal_apply_ne _ hij]
         simp only [Matrix.smul_apply, Matrix.single, Matrix.of_apply]
-        rw [if_neg (fun h' => hij (h'.1.symm.trans h'.2))]
+        rw [ite_eq_right (fun h' => hij (h'.1.symm.trans h'.2))]
         simp
     rw [hs, Matrix.exp_diagonal]
     congr 1
@@ -385,7 +385,7 @@ theorem isWtOn_root [CompleteSpace H] (hσ : IsURepOn (UJset ε) σ) {μ : Fin n
 theorem extremal_killed : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Mt n → (H →L[ℂ] H)), IsDS ε lam σ → ∀ v ∈ lowKSub ε lam σ, SmoothVec (lieH (Formalism.REAL.Jm ε)) σ v → IsWtOn (Formalism.REAL.Kset ε) σ (fun a => Formalism.QuantumDeterminants.lowK ε lam (revNeg ε a)) v → (∀ a, dRepC (Formalism.REAL.Jm ε) σ (Matrix.single a a 1) v = ((Formalism.QuantumDeterminants.lowK ε lam (revNeg ε a) : ℝ) : ℂ) • v) ∧ ∀ a c : Fin n, ε a = ε c → revNeg ε a < revNeg ε c → dRepC (Formalism.REAL.Jm ε) σ (Matrix.single a c 1) v = 0 := by
   intro n ε lam H _ _ σ hDS v hvL hs hv
   obtain ⟨hC, -, hσ, -⟩ := hDS
-  haveI := hC
+  have := hC
   refine ⟨fun a => dRepC_diag hσ hv a, ?_⟩
   intro a c hac hlt
   set s := revNeg ε with hs_def

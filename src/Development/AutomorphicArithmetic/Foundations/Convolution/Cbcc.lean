@@ -67,11 +67,11 @@ open NumberField in
 theorem UpperTheory.ConvolutionTheory.T.cbcc :
     UpperTheory.ConvolutionTheory.T.Places → UpperTheory.ConvolutionTheory.T.LiftStep → UpperTheory.ConvolutionTheory.T.LiftAll → UpperTheory.ConvolutionTheory.T.DescStep → UpperTheory.ConvolutionTheory.T.SplitStrong → UpperTheory.V.Z.Bc.CBCc := by
   intro hPl hLS hLA hDS hSS K M _ _ _ _ _ _ hp hK n hn
-  haveI := hK
-  haveI hM : IsTotallyComplex M := isTotallyComplex_of_algebra K M
-  haveI : Fact (Module.finrank K M).Prime := ⟨hp⟩
-  haveI : FiniteDimensional K M := Module.finite_of_finrank_pos hp.pos
-  haveI : IsCyclic (M ≃ₐ[K] M) := isCyclic_of_prime_card (IsGalois.card_aut_eq_finrank K M)
+  have := hK
+  have hM : IsTotallyComplex M := isTotallyComplex_of_algebra K M
+  have : Fact (Module.finrank K M).Prime := ⟨hp⟩
+  have : FiniteDimensional K M := Module.finite_of_finrank_pos hp.pos
+  have : IsCyclic (M ≃ₐ[K] M) := isCyclic_of_prime_card (IsGalois.card_aut_eq_finrank K M)
   obtain ⟨σ, hσ⟩ := IsCyclic.exists_generator (α := M ≃ₐ[K] M)
   refine ⟨fun π => ?_, fun P hP => ?_, fun π P _ hw => UpperTheory.ConvolutionTheory.R.fibre_holds K M hp n hn π P hw⟩
   · rcases π with @⟨_, π⟩ | @⟨hR, π⟩

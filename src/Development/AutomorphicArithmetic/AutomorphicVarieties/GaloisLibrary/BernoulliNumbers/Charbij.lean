@@ -61,7 +61,7 @@ theorem UpperTheory.V.Bern.b_charbij :
       rw [h, map_one]
   refine ⟨?_, ?_, ?_⟩
   · intro χ hχ
-    simp only [charSet, Set.mem_setOf_eq] at hχ ⊢
+    simp only [charSet, Set.mem_ofPred_eq] at hχ ⊢
     rw [hker]
     exact hχ
   · intro χ₁ _ χ₂ _ h
@@ -71,7 +71,7 @@ theorem UpperTheory.V.Bern.b_charbij :
     exact hf h'
   · intro χ' hχ'
     have he : NeZero (Monoid.exponent (ZMod N)ˣ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K (Monoid.exponent (ZMod N)ˣ)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K (Monoid.exponent (ZMod N)ˣ)
     have hne : (primitiveRoots (Monoid.exponent (ZMod N)ˣ) K).Nonempty :=
       ⟨ζ, (mem_primitiveRoots (NeZero.pos _)).mpr hζ⟩
     have hmem : ∀ u, MulChar.toUnitHom χ' u ∈ rootsOfUnity (Monoid.exponent (ZMod N)ˣ) Ω := by
@@ -87,6 +87,6 @@ theorem UpperTheory.V.Bern.b_charbij :
       rw [rootsOfUnityEquivOfPrimitiveRoots_symm_apply]
       simp [MulChar.coe_toUnitHom]
     refine ⟨MulChar.ofUnitHom ψ, ?_, hcomp⟩
-    simp only [charSet, Set.mem_setOf_eq] at hχ' ⊢
+    simp only [charSet, Set.mem_ofPred_eq] at hχ' ⊢
     rw [← hker, hcomp]
     exact hχ'

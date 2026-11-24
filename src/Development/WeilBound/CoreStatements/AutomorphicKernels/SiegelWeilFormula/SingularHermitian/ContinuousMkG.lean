@@ -78,19 +78,19 @@ theorem mR_mkG (M : M2 n) (hM : InG M) : mR (mkG M hM) = M := rfl
 
 theorem mkG_mR (y : GR n) : mkG (mR y) y.2 = y := Subtype.ext (Units.ext rfl)
 
-theorem toGR'_of {M : M2 n} (hM : InG M) : toGR' M = mkG M hM := dif_pos hM
+theorem toGR'_of {M : M2 n} (hM : InG M) : toGR' M = mkG M hM := dite_eq_left hM
 
 theorem toGR'_mR (y : GR n) : toGR' (mR y) = y := (toGR'_of (M := mR y) y.2).trans (mkG_mR y)
 
-theorem continuous_mR : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_mR : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_mkG : Continuous (fun p : {M : M2 n | InG M} => mkG p.1 p.2) := by
   apply Continuous.subtype_mk
   rw [Units.continuous_iff]
-  refine ⟨continuous_subtype_val, ?_⟩
+  refine ⟨continuous_subtypeVal, ?_⟩
   show Continuous fun p : {M : M2 n | InG M} => invG p.1
   unfold invG
-  exact ((continuous_const.matrix_mul continuous_subtype_val.matrix_conjTranspose).matrix_mul continuous_const).neg
+  exact ((continuous_const.matrix_mul continuous_subtypeVal.matrix_conjTranspose).matrix_mul continuous_const).neg
 
 theorem mR_mul' (y y' : GR n) : mR (y * y') = mR y * mR y' := rfl
 

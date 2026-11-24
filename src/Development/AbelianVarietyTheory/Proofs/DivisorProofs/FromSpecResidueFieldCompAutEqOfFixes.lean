@@ -67,7 +67,7 @@ theorem fromSpecResidueField_comp_eq_of_fixes (X : Scheme.{0}) [IsIntegral X] (�
     (ρ : Γ →* Aut X) (γ : Γ) (x : X) (hx : (ρ γ).asIso.hom x = x)
     (h : ∀ u : X.functionFieldˣ, RegAt x u → ZeroAt x ((fnAct ρ γ u : X.functionField) - u)) :
     X.fromSpecResidueField x ≫ (ρ γ).asIso.hom = X.fromSpecResidueField x := by
-  haveI : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
+  have : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
   set φ := (ρ γ).asIso.hom with hφ
   have key : (X.residueFieldCongr hx.symm).hom ≫ φ.residueFieldMap x = 𝟙 _ := by
     rw [← cancel_epi (X.residue x), Category.comp_id, X.residue_residueFieldCongr_assoc,

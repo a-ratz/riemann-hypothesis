@@ -164,7 +164,7 @@ theorem exists_orthonormal {n : ℕ} (P : Submodule ℝ (Matrix (Fin n) (Fin n) 
     ∃ E : Fin d → Matrix (Fin n) (Fin n) ℂ,
       (∀ i k, ((E i * (E k)ᴴ).trace).re = if i = k then 1 else 0) ∧
       P = Submodule.span ℝ (Set.range E) := by
-  letI : InnerProductSpace ℝ (EuclideanSpace ℂ (Fin n × Fin n)) := InnerProductSpace.complexToReal
+  let : InnerProductSpace ℝ (EuclideanSpace ℂ (Fin n × Fin n)) := InnerProductSpace.complexToReal
   let e : Matrix (Fin n) (Fin n) ℂ ≃ₗ[ℝ] EuclideanSpace ℂ (Fin n × Fin n) :=
     { toFun := fun X => WithLp.toLp 2 fun p => X p.1 p.2
       invFun := fun v => Matrix.of fun i k => v (i, k)
@@ -204,7 +204,7 @@ theorem finrank_fixed {M : Type} [AddCommGroup M] [Module ℂ M] [Module ℝ M] 
     (σ : M →+ M) (hσ : ∀ x, σ (σ x) = x) (hc : ∀ (c : ℂ) x, σ (c • x) = star c • σ x)
     (S : Submodule ℂ M) (hS : ∀ x ∈ S, σ x ∈ S) (P : Submodule ℝ M)
     (hP : ∀ x, x ∈ P ↔ x ∈ S ∧ σ x = x) : Module.finrank ℝ P = Module.finrank ℂ S := by
-  haveI : FiniteDimensional ℝ M := Module.Finite.trans ℂ M
+  have : FiniteDimensional ℝ M := Module.Finite.trans ℂ M
   let m : M ≃ₗ[ℝ] M := (LinearEquiv.smulOfNeZero ℂ M Complex.I Complex.I_ne_zero).restrictScalars ℝ
   have hm : ∀ x, m x = Complex.I • x := fun x => rfl
   let P' := P.map (m : M →ₗ[ℝ] M)
@@ -456,7 +456,7 @@ theorem exists_algebra_flagN : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j 
       zero_mem' := ⟨S.zero_mem, map_zero _⟩
       smul_mem' := fun c X hX => by
         have e : c • X = (c : ℂ) • X := rfl
-        rw [Set.mem_setOf_eq, e]
+        rw [Set.mem_ofPred_eq, e]
         exact ⟨S.smul_mem _ hX.1, by rw [negAdj_smul, hX.2]; simp⟩ }
   have hst : ∀ X ∈ S, negAdj ε X ∈ S := by
     intro X hX
@@ -483,6 +483,6 @@ theorem exists_algebra_flagN : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j 
   · ext g
     change (flagN ε W).Mem g ↔ uMat g - 1 ∈ A
     rw [hA, mem_lowering]
-    simp only [flagN, Set.mem_setOf_eq, mem_mapsInto, mem_perp, Matrix.toLin'_apply, sub_mulVec, one_mulVec]
+    simp only [flagN, Set.mem_ofPred_eq, mem_mapsInto, mem_perp, Matrix.toLin'_apply, sub_mulVec, one_mulVec]
 
 end GlobalTheory.RadicalAlg

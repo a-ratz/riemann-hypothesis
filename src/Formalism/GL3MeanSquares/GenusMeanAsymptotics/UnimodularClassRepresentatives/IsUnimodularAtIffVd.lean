@@ -187,7 +187,7 @@ theorem finite_vd_ne_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
   have hD := LocF.discrIdeal_ne_bot (LocF.aniso_of_totPosDef hd) hL hLi
   have hD' : (discrIdeal h L).comap (algebraMap (𝓞 F) (𝓞 K)) ≠ ⊥ := by
     obtain ⟨z, hz, hz0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hD
-    exact Ideal.comap_ne_bot_of_integral_mem hz0 hz (Algebra.IsIntegral.isIntegral z)
+    exact Ideal.under_ne_bot_of_integral_mem hz0 hz (Algebra.IsIntegral.isIntegral z)
   refine ((Ideal.finite_factors hD').image (fun v =>
     (⟨v.asIdeal, v.isMaximal⟩ : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}))).subset ?_
   intro 𝔭 h𝔭
@@ -215,11 +215,11 @@ theorem exists_unique_patch (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
     if h : 𝔭 ∈ s then (hT 𝔭 h).2.choose else L₀
   have hB1 : ∀ 𝔭 (h : 𝔭 ∈ s), Submodule.IsFullLattice K (B 𝔭) ∧ locF 𝔭.1 (B 𝔭) = T 𝔭 := by
     intro 𝔭 h
-    simp only [B, dif_pos h]
+    simp only [B, dite_eq_left h]
     exact (hT 𝔭 h).2.choose_spec
   have hB2 : ∀ 𝔭 ∉ s, B 𝔭 = L₀ := by
     intro 𝔭 h
-    simp only [B, dif_neg h]
+    simp only [B, dite_eq_right h]
   have hB : ∀ 𝔭, Submodule.IsFullLattice K (B 𝔭) := by
     intro 𝔭
     by_cases h : 𝔭 ∈ s

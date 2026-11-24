@@ -71,7 +71,7 @@ private theorem one' (s t : Set ℝ) (hs : MeasurableSet s) (ht : MeasurableSet 
     rw [P_app, M.J.norm_map, one_mul]
     exact (c4 _).trans_eq (M.J.symm.norm_map h)
   · ext h
-    simp only [P_app, c3 hd, ContinuousLinearMap.add_apply, map_add (f := _)]
+    simp only [P_app, c3 hd, add_apply, map_add (f := _)]
   · ext h
     obtain ⟨u, rfl⟩ := M.J.surjective h
     simp only [ContinuousLinearMap.comp_apply, P_app, M.J.symm_apply_apply, M.hJ]
@@ -113,7 +113,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.projLaws :
       rw [inter_eq_right.2 (Ioi_subset_Ioi (by linarith))] at hc
       have e : M.P' (Ioi T') h = M.J' (cut W (Ioi (2 * M.T₀ - T)) (cut W (Ioi T') (M.J'.symm h))) :=
         congrArg M.J' (DFunLike.congr_fun hc _).symm
-      rw [ContinuousLinearMap.mul_apply, ← a2.isSymmetric.apply_clm, e, P_app, M.causal]; simp
+      rw [mul_apply_eq_comp, ← a2.isSymmetric.apply_clm, e, P_app, M.causal]; simp
     have o2 : M.P' (Ioi T') * M.P (Ioi T) = 0 := by
       have := congrArg star o1
       rwa [star_mul, a2.star_eq, b2.star_eq, star_zero] at this

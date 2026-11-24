@@ -89,7 +89,7 @@ theorem zeroSet_null_of_dense_nz : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y]
     refine ⟨hxU, fun h => hxn ?_⟩
     exact (hiff _ x hxU.1).2 h.2
   rw [A.mu_chart (A.pick y) _ (hUo.measurableSet.diff hTo.measurableSet)
-    (Set.diff_subset.trans Set.inter_subset_left)]
+    (Set.sdiff_subset.trans Set.inter_subset_left)]
   apply setLIntegral_measure_zero
   obtain ⟨y', hy'U, hy'M⟩ := hd.inter_open_nonempty _ hUo ⟨y, hyU⟩
   have hnull := hN (A.chart (A.pick y) y) r (τ (A.pick y) ∘ (A.chart (A.pick y)).symm)
@@ -99,7 +99,7 @@ theorem zeroSet_null_of_dense_nz : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y]
   refine measure_mono_null ?_ hnull
   rintro _ ⟨x, ⟨hxU, hxn⟩, rfl⟩
   refine ⟨hxU.2, ?_⟩
-  simp only [Set.mem_setOf_eq, Function.comp, (A.chart _).left_inv hxU.1]
+  simp only [Set.mem_ofPred_eq, Function.comp, (A.chart _).left_inv hxU.1]
   by_contra h
   exact hxn ⟨hxU, h⟩
 

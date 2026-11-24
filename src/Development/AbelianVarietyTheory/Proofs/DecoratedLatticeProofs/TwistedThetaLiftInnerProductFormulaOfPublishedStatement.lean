@@ -978,7 +978,7 @@ theorem continuous_realPt {θ : InfFam D} (hθ : IsInfFam θ) {W : HSp D} (hW : 
   unfold realElt
   refine continuous_list_prod _ fun ρ _ => ?_
   have hm : Continuous fun b : (∀ ρ, Upq W ρ) => UpqT.mat (b ρ) :=
-    (Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply ρ)
+    (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply ρ)
   refine (GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ W ρ).comp_continuous
     (continuous_const.matrix_mul ((continuous_const.matrix_mul hm).matrix_mul continuous_const)) fun b => ?_
   refine conjFrame_mem_UH _ _ _ (sig_sum W hW (tauE D ρ)) _ _ (hFr ρ) ?_ (b ρ)
@@ -1003,9 +1003,9 @@ theorem integral_eq_cosetSum : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
   intro D θ hθ W hW K ν hν hO Fr hFr mR hmR Z hZc hZi hZinv
   obtain ⟨h1, h2, h3⟩ := Formalism.IndefR.Eqv.G5.af_facts D.host.F
   obtain ⟨i0, -, -, i3, i4⟩ := Formalism.IndefR.Eqv.G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig W.gram
-  haveI := i0; haveI := i3; haveI := i4
-  haveI : ν.IsHaarMeasure := hν.1
-  haveI : SecondCountableTopology (GfC W) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have := i0; have := i3; have := i4
+  have : ν.IsHaarMeasure := hν.1
+  have : SecondCountableTopology (GfC W) := Topology.IsInducing.subtypeVal.secondCountableTopology
   set O : Set (GA D W) := {h | finE W h ∈ K} with hOdef
   have hOm : MeasurableSet O := hO.measurableSet
   set φ : (∀ ρ, Upq W ρ) → GA D W := fun b => realElt θ W fun ρ => realMat W Fr ρ (b ρ) with hφdef
@@ -1017,9 +1017,9 @@ theorem integral_eq_cosetSum : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
     exact and_iff_right y.2
   have hL'o : IsOpen (L' : Set (GfC W)) := by
     have : (L' : Set (GfC W)) = Subtype.val ⁻¹' O := Set.ext fun y => hmemL y
-    rw [this]; exact hO.preimage continuous_subtype_val
+    rw [this]; exact hO.preimage continuous_subtypeVal
 
-  haveI : Countable (GfC W ⧸ L') := by
+  have : Countable (GfC W ⧸ L') := by
     have hpd : (Set.univ : Set (GfC W ⧸ L')).PairwiseDisjoint
         (fun q => (fun x => (Quotient.out q : GfC W)⁻¹ * x) ⁻¹' (L' : Set (GfC W))) := by
       intro q _ q' _ hne
@@ -1058,9 +1058,9 @@ theorem integral_eq_cosetSum : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
     hZc.comp (continuous_const.mul hφ)
 
   have hlin : ∫⁻ b, ∑' x : FinCos W (levA W K), ‖Z (x.rep * φ b)‖ₑ ∂(Measure.pi mR) = ∫⁻ g, ‖Z g‖ₑ ∂ν := by
-    rw [lintegral_tsum fun q => (hcm q).measurable.enorm.aemeasurable]
+    rw [lintegral_tsum fun q => (hcm q).measurable.eNorm.aemeasurable]
     rw [← Measure.restrict_univ (μ := ν), ← hU, lintegral_iUnion hsm hd]
-    refine tsum_congr fun q => (key q (fun g => ‖Z g‖ₑ) hZm.enorm fun g k hk => by rw [hZinv g k hk]).symm
+    refine tsum_congr fun q => (key q (fun g => ‖Z g‖ₑ) hZm.eNorm fun g k hk => by rw [hZinv g k hk]).symm
   have hfin : ∫⁻ b, ∑' x : FinCos W (levA W K), ‖Z (x.rep * φ b)‖ₑ ∂(Measure.pi mR) < ⊤ := by
     rw [hlin]; exact hZi.2
   refine ⟨hfin, ?_⟩
@@ -1072,7 +1072,7 @@ theorem integral_eq_cosetSum : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
   have hsum := hasSum_integral_iUnion hsm hd (by rw [hU]; exact hZi.integrableOn)
   rw [hU, Measure.restrict_univ] at hsum
   rw [← hsum.tsum_eq, integral_tsum (fun q => (hcm q).aestronglyMeasurable)
-    (by rw [← lintegral_tsum fun q => (hcm q).measurable.enorm.aemeasurable]; exact hfin.ne)]
+    (by rw [← lintegral_tsum fun q => (hcm q).measurable.eNorm.aemeasurable]; exact hfin.ne)]
   exact tsum_congr hint
 
 end GlobalTheory.CosetDisint
@@ -1288,16 +1288,16 @@ theorem value_laws (hP : GlobalTheory.Published.CuspRapidDecay) {θ : D.what₂.
     obtain ⟨c1, ⟨C1, b1⟩, i1⟩ := h v
     obtain ⟨c2, ⟨C2, b2⟩, i2⟩ := h' v
     refine ⟨by simpa using c1.add c2, ⟨C1 + C2, fun g => ?_⟩, fun k hk g => ?_⟩
-    · simp only [MultilinearMap.add_apply, Pi.add_apply]
+    · simp only [add_apply, Pi.add_apply]
       exact (norm_add_le _ _).trans (add_le_add (b1 g) (b2 g))
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, i1 k hk g, i2 k hk g]
+    · simp only [add_apply, Pi.add_apply, i1 k hk g, i2 k hk g]
   | smul a U _ h =>
     intro v
     obtain ⟨c1, ⟨C1, b1⟩, i1⟩ := h v
     refine ⟨by simpa using c1.const_smul a, ⟨‖a‖ * C1, fun g => ?_⟩, fun k hk g => ?_⟩
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, norm_mul]
+    · simp only [smul_apply, Pi.smul_apply, smul_eq_mul, norm_mul]
       exact mul_le_mul_of_nonneg_left (b1 g) (norm_nonneg _)
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, i1 k hk g]
+    · simp only [smul_apply, Pi.smul_apply, i1 k hk g]
 
 variable {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m}
   {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
@@ -1336,7 +1336,7 @@ theorem petW_continuous_rightInv : GlobalTheory.Published.CuspRapidDecay → ∀
     have hμ := (hC.models.νW i).1.1
     have hfin : R.νW i (R.fdW i) < ⊤ :=
       GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol (Wc D i) (R.νW i) (R.fdW i) hμ (hC.models.νW i).2
-    haveI : IsFiniteMeasure ((R.νW i).restrict (R.fdW i)) := isFiniteMeasure_restrict.2 hfin.ne
+    have : IsFiniteMeasure ((R.νW i).restrict (R.fdW i)) := isFiniteMeasure_restrict.2 hfin.ne
     have hC₁ : 0 ≤ C₁ := (norm_nonneg _).trans (b₁ 1)
     show Continuous fun g => ∫ x in R.fdW i, rTr (Wc D i) g (U₁ v₁) x * starRingEnd ℂ (U₂ v₂ x) ∂(R.νW i)
     refine continuous_of_dominated (bound := fun _ => C₁ * C₂) (fun g => ?_) (fun g => ?_) (integrable_const _) ?_
@@ -1548,9 +1548,9 @@ theorem innerProductFormulaC_of_convergent : GlobalTheory.Published.CuspRapidDec
   have hFo₁ := GlobalTheory.T.thetaDatum_fockVectors_areFockVectors R F i t σ s P cμ cη m ω BW f₀ f c io hL Q₁
   have hFo₂ := GlobalTheory.T.thetaDatum_fockVectors_areFockVectors R F i t σ s P cμ cη m ω BW f₀ f c io hL Q₂
   have hW := hCore.models.νW i
-  haveI : (R.νW i).IsHaarMeasure := hW.1.1
+  have : (R.νW i).IsHaarMeasure := hW.1.1
   have hFDW : IsFundamentalDomain (GQ (Wc D i)) (R.fdW i) (R.νW i) := hW.2
-  haveI : ν.IsHaarMeasure := hν.1.1
+  have : ν.IsHaarMeasure := hν.1.1
   have hFDV : IsFundamentalDomain (GQ (Vc D i)) 𝓕 ν := hν.2
   have hF₁ : F₁ ∈ GlobalTheory.Cusp.A0 R.θ (Wc D i) cA := hA0 U₁ hU₁ v₁
   have hF₂ : F₂ ∈ GlobalTheory.Cusp.A0 R.θ (Wc D i) cA := hA0 U₂ hU₂ v₂

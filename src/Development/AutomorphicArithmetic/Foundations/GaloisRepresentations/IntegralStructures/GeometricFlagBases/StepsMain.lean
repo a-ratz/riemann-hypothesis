@@ -187,8 +187,8 @@ open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Cut
 theorem UpperTheory.Gal.Int.Geo.Cut.stalkDom :
     UpperTheory.Gal.Int.Geo.Cut.StalkDom := by
   intro O _ _ _ Y p hp y
-  haveI : Smooth p := hp
-  haveI := GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth p y
+  have : Smooth p := hp
+  have := GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth p y
   exact GroundTheory.Arith.SchemeCoh.IsRegularLocalRing.isDomain
 end -- clump:auto
 end -- clump:auto
@@ -256,12 +256,12 @@ private theorem exists_isPreirreducible_nhd (Y : Scheme.{0}) [IsLocallyNoetheria
     (hY : ∀ y : Y, IsDomain (Y.presheaf.stalk y)) (y : Y) :
     ∃ W : Set Y, IsOpen W ∧ y ∈ W ∧ IsPreirreducible W := by
   obtain ⟨U, hU, hyU, -⟩ := exists_isAffineOpen_mem_and_subset (x := y) (U := ⊤) trivial
-  haveI : IsNoetherianRing Γ(Y, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  haveI hN : TopologicalSpace.NoetherianSpace (U : Scheme) := noetherianSpace_of_isAffineOpen U hU
+  have : IsNoetherianRing Γ(Y, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have hN : TopologicalSpace.NoetherianSpace (U : Scheme) := noetherianSpace_of_isAffineOpen U hU
   have hdom : ∀ z : (U : Scheme), IsDomain ((U : Scheme).presheaf.stalk z) := by
     intro z
     have e := (Scheme.Opens.stalkIso U z).commRingCatIsoToRingEquiv
-    haveI := hY z.1
+    have := hY z.1
     exact Function.Injective.isDomain e.toRingHom e.injective
   let z : (U : Scheme) := ⟨y, hyU⟩
   have hC : IsOpen (irreducibleComponent z) := by
@@ -305,14 +305,14 @@ namespace UpperTheory.Gal.Int.Geo.Cut
 
 theorem corrCut : CorrCut := by
   intro l Y' Y T' j T i s' t' hj hr hcond
-  haveI := hj.op
-  haveI := hr.op
+  have := hj.op
+  have := hr.op
   have hcl : IsClosed (Set.range i) := by
     rw [hr.rng]
     exact (hj.cl.preimage T.p.continuous).inter (hj.cl.preimage T.r.continuous)
-  haveI : IsClosedImmersion i := .of_isPreimmersion _ hcl
-  haveI := T.fin
-  haveI : IsFinite (s' ≫ j) := by rw [hr.es]; infer_instance
+  have : IsClosedImmersion i := .of_isPreimmersion _ hcl
+  have := T.fin
+  have : IsFinite (s' ≫ j) := by rw [hr.es]; infer_instance
   refine ⟨IsFinite.of_comp s' j, ?_, ?_⟩
   · have hV : j ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤)) = Y'.basicOpen (l : Γ(Y', ⊤)) := by
       rw [Scheme.Hom.preimage_basicOpen, map_natCast]
@@ -331,7 +331,7 @@ theorem corrCut : CorrCut := by
       rw [IsOpenImmersion.lift_fac]
       infer_instance
     haveI : Etale (IsOpenImmersion.lift _ a ha) := Etale.of_comp _ (T.p ⁻¹ᵁ Y.basicOpen (l : Γ(Y, ⊤))).ι
-    haveI := T.et
+    have := T.et
     have e1 : (s' ∣_ Y'.basicOpen (l : Γ(Y', ⊤))) ≫ (Y'.basicOpen (l : Γ(Y', ⊤))).ι ≫ j =
         IsOpenImmersion.lift _ a ha ≫ (T.p ∣_ Y.basicOpen (l : Γ(Y, ⊤))) ≫ (Y.basicOpen (l : Γ(Y, ⊤))).ι := by
       rw [morphismRestrict_ι, ← Category.assoc (IsOpenImmersion.lift _ a ha), IsOpenImmersion.lift_fac,
@@ -398,7 +398,7 @@ private theorem splits_cancel {A B Z : Scheme.{0}} (m : A ⟶ B) [Mono m] (f : Z
   let e' : pullback (f ≫ m) (f ≫ m) ⟶ pullback f f :=
     pullback.lift (pullback.fst _ _) (pullback.snd _ _)
       (by rw [← cancel_mono m, Category.assoc, Category.assoc, pullback.condition])
-  haveI : IsIso e := ⟨⟨e', by
+  have : IsIso e := ⟨⟨e', by
     apply pullback.hom_ext
     · simp only [e, e', Category.assoc, Category.id_comp]
       repeat' rw [pullback.lift_fst]
@@ -458,7 +458,7 @@ theorem UpperTheory.Gal.Int.Geo.Cut.coverCut :
     · rw [pullback.lift_snd]
       exact IsPullback.of_hasPullback (V.ι ≫ C.p) (gen O k)
     · rw [pullback.lift_fst]
-  haveI hmo : IsOpenImmersion m :=
+  have hmo : IsOpenImmersion m :=
     MorphismProperty.IsStableUnderBaseChange.of_isPullback (P := @IsOpenImmersion) hsq
       (inferInstanceAs (IsOpenImmersion V.ι))
   let L' : H.Z ⟶ pullback (V.ι ≫ C.p) (gen O k) := pullback.lift π' H.q ov'
@@ -468,13 +468,13 @@ theorem UpperTheory.Gal.Int.Geo.Cut.coverCut :
       rw [pullback.lift_fst, pullback.lift_fst, ← Category.assoc, pullback.lift_fst, hπ']
     · simp only [L', m, Category.assoc]
       rw [pullback.lift_snd, pullback.lift_snd, pullback.lift_snd]
-  haveI : Smooth C.p := C.smooth
-  haveI : IsClosedImmersion V.ι :=
+  have : Smooth C.p := C.smooth
+  have : IsClosedImmersion V.ι :=
     .of_isPreimmersion _ (by rw [Scheme.Opens.range_ι]; exact hVcl)
-  haveI hfin : IsFinite (L' ≫ m) := by
+  have hfin : IsFinite (L' ≫ m) := by
     rw [hLm]
     exact C.finπ
-  haveI het : Etale (L' ≫ m) := by
+  have het : Etale (L' ≫ m) := by
     rw [hLm]
     exact C.etπ
   have spl' : GlobalTheory.GalV.Splits L' L' C.a := by
@@ -483,7 +483,7 @@ theorem UpperTheory.Gal.Int.Geo.Cut.coverCut :
     exact C.spl
   have hproj : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsProjOver (V.ι ≫ C.p) := by
     obtain ⟨N, i, hi, hic⟩ := C.proj
-    haveI := hi
+    have := hi
     exact ⟨N, V.ι ≫ i, inferInstance, by rw [Category.assoc, hic]⟩
   have hdim : ∃ d, SmoothOfRelativeDimension d (V.ι ≫ C.p) := by
     obtain ⟨d, hd⟩ := C.dim
@@ -521,8 +521,8 @@ open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Cut
 theorem UpperTheory.Gal.Int.Geo.Cut.fEtCut :
     UpperTheory.Gal.Int.Geo.Cut.FEtCut := by
   intro Y' Y T' T j s t i s' t' d hj hr hst hs
-  haveI := hj.op
-  haveI := hr.op
+  have := hj.op
+  have := hr.op
   have hpre : s ⁻¹ᵁ j.opensRange = i.opensRange := by
     apply SetLike.coe_injective
     change s ⁻¹' Set.range j = Set.range i
@@ -732,8 +732,8 @@ private theorem bijective_sec_comp_of_ne_zero {l : ℕ} {Y' Y : Scheme} (j : Y' 
     (V : Type) [CommRing V] [IsDomain V] (hl : (l : V) ≠ 0) (y' : Spec (CommRingCat.of V) ⟶ Y') :
     Function.Bijective (fun u : T'.Sec y' => (⟨u.1 ≫ i, by
       rw [Category.assoc, ← hR.es, ← Category.assoc, u.2]⟩ : T.Sec (y' ≫ j))) := by
-  haveI := hP.op
-  haveI := hR.op
+  have := hP.op
+  have := hR.op
   constructor
   · intro u v h
     apply Subtype.ext
@@ -750,7 +750,7 @@ theorem ptIdCut : PtIdCut := by
   intro l q n Y' Y j π T T' i hP hR hr hT
   unfold crystallineComparison.PtId at hT ⊢
   intro V _ _ _ _ hl y' hg φ hφ I _ z' hz'
-  haveI := hP.op
+  have := hP.op
   let w : (a : Fin (n + 1)) → I a → (T a).Sec (y' ≫ j) := fun a b =>
     ⟨(z' a b).1 ≫ i a, by rw [Category.assoc, ← (hR a).es, ← Category.assoc, (z' a b).2]⟩
   have hw : ∀ a, Function.Bijective (w a) := fun a =>
@@ -786,7 +786,7 @@ open UpperTheory.Gal.Int.Geo UpperTheory.Gal.Int.Geo.Cut
 theorem UpperTheory.Gal.Int.Geo.Cut.resEx :
     UpperTheory.Gal.Int.Geo.Cut.ResEx := by
   intro Y' Y T j s t hj
-  haveI := hj.op
+  have := hj.op
   let U : T.Opens := s ⁻¹ᵁ j.opensRange ⊓ t ⁻¹ᵁ j.opensRange
   have hs : Set.range (U.ι ≫ s) ⊆ Set.range j := by
     rw [Scheme.Hom.comp_base, TopCat.coe_comp, Set.range_comp, Scheme.Opens.range_ι]
@@ -822,8 +822,8 @@ private theorem cut {k L O : Type} [Field k] [Field L] [CommRing O] [IsDomain O]
     [IsFractionRing O k] {H : HTower k} {θ : H.Γ → L} (C : Cover H θ O) :
     ∃ (C' : Cover H θ O) (j : C'.Y ⟶ C.Y), Part j ∧ C'.p = j ≫ C.p ∧ C'.π ≫ j = C.π ∧ C'.Onto ∧
       ∀ y ∈ Set.range j, (C.p y).asIdeal = ⊥ → y ∈ Set.range C.π := by
-  haveI := C.finπ
-  haveI := C.etπ
+  have := C.finπ
+  have := C.etπ
   have hU : IsClopen (Set.range (pullback.lift C.π H.q C.ov)) :=
     ⟨(Scheme.Hom.isClosedMap _).isClosed_range, (Scheme.Hom.isOpenMap _).isOpen_range⟩
   obtain ⟨V, hVc, hVpre⟩ := clopenExt O k C.Y C.p C.smooth _ hU
@@ -858,9 +858,9 @@ private theorem mem_range_of_fEt_of_lies_of_mem_range {k L O : Type} [Field k] [
     (hπ : C'.π ≫ j = C.π) (hgen : ∀ y ∈ Set.range j, (C.p y).asIdeal = ⊥ → y ∈ Set.range C.π)
     {g : H.Γ} {T : Scheme} {s t : T ⟶ C.Y} {d m : ℕ} (hs : FEt s d) (hl : C.Lies g s t m) :
     ∀ x, s x ∈ Set.range j → t x ∈ Set.range j := by
-  haveI : Etale s := hs.2.1
-  haveI := C.smooth
-  haveI := hj.op
+  have : Etale s := hs.2.1
+  have := C.smooth
+  have := hj.op
   have hD := genDense O T (s ≫ C.p) inferInstance
   by_contra hne
   push_neg at hne
@@ -869,7 +869,7 @@ private theorem mem_range_of_fEt_of_lies_of_mem_range {k L O : Type} [Field k] [
     IsOpen.inter (j.isOpenEmbedding.isOpen_range.preimage s.continuous)
       (hj.cl.preimage t.continuous).isOpen_compl
   obtain ⟨y, ⟨hy1, hy2⟩, hyg⟩ := hD.inter_open_nonempty _ hopen ⟨x, hx, hxt⟩
-  rw [Set.mem_setOf_eq, Scheme.Hom.comp_apply] at hyg
+  rw [Set.mem_ofPred_eq, Scheme.Hom.comp_apply] at hyg
   exact hy2 (mem_range_of_lies_of_mem_range_of_asIdeal_bot hj hπ hgen hl y hy1 hyg)
 
 private theorem asIdeal_eq_bot_of_mem_basicOpen_natCast {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) {Y : Scheme}
@@ -1019,15 +1019,15 @@ private theorem exists_place {Ω : Type} [Field Ω] {l : ℕ} [Fact l.Prime] (j 
     ∃ A : ValuationSubring Ω, ∀ x, x ∈ A ↔ ‖j x‖ ≤ 1 :=
   ⟨{ carrier := {x | ‖j x‖ ≤ 1}
      mul_mem' := fun {a b} ha hb => by
-       simp only [Set.mem_setOf_eq, map_mul, norm_mul] at *; exact mul_le_one₀ ha (norm_nonneg _) hb
+       simp only [Set.mem_ofPred_eq, map_mul, norm_mul] at *; exact mul_le_one₀ ha (norm_nonneg _) hb
      one_mem' := by simp
      add_mem' := fun {a b} ha hb => by
-       simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+       simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
        exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
      zero_mem' := by simp
      neg_mem' := fun {a} ha => by simpa using ha
      mem_or_inv_mem' := fun x => by
-       simp only [Set.mem_setOf_eq, map_inv₀, norm_inv]
+       simp only [Set.mem_ofPred_eq, map_inv₀, norm_inv]
        rcases le_total ‖j x‖ 1 with h | h
        · exact Or.inl h
        · exact Or.inr (inv_le_one_of_one_le₀ h) }, fun _ => Iff.rfl⟩
@@ -1042,8 +1042,8 @@ theorem UpperTheory.Gal.Int.Geo.richOf :
     ext x
     simp [τ₀]
   have hsmall : ∀ x ∈ v.asIdeal, ‖τ₀ (x : E)‖ < 1 := hover
-  letI : Algebra E (Om l) := τ₀.toAlgebra
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  let : Algebra E (Om l) := τ₀.toAlgebra
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   let jA : Ω →ₐ[E] Om l := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1132,8 +1132,8 @@ theorem UpperTheory.Gal.Int.Geo.twJ :
     simp [UpperTheory.V.Af.tw_val]
   have j2 := j1 τ LL' τ' hi
   rw [e1] at j2
-  have cs : Continuous (ρ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hρ.comp continuous_subtype_val
-  have cμ : Continuous (χ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hχ.comp continuous_subtype_val
+  have cs : Continuous (ρ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hρ.comp continuous_subtypeVal
+  have cμ : Continuous (χ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hχ.comp continuous_subtypeVal
   refine ⟨J.map (· + m (ι.toRingHom.comp τ)), ?_, fun j hj' => ?_⟩
   · rw [e2]
     exact UpperTheory.Gal.TP.Sub.twJumps_holds l P AI hT E Ω A O Bw dd _ _ cs cμ τ J _ hJ j2

@@ -151,7 +151,7 @@ private theorem cont_el (D : Dat ℚ E) : Continuous fun p : ↥(IdeleGroup.norm
     gl p.2 * sZ D (p.1 : IdeleGroup E) := by
   have hgl : Continuous (gl : G1 E → GL (Fin 2) (A E)) := by fun_prop
   obtain ⟨-, hsc, -⟩ := szLaws E D
-  exact (hgl.comp continuous_snd).mul (hsc.comp (continuous_subtype_val.comp continuous_fst))
+  exact (hgl.comp continuous_snd).mul (hsc.comp (continuous_subtypeVal.comp continuous_fst))
 
 private theorem meas_proj (δ : ℚ) : Measurable fun y : Y E δ => ((y.1, y.2.1) : ↥(IdeleGroup.normOneSubgroup E) × G1 E) :=
   measurable_fst.prodMk (measurable_fst.comp measurable_snd)
@@ -161,7 +161,7 @@ private theorem meas_pY (D : Dat ℚ E) : Measurable (pY D) := by
   have hcact : ∀ v, Continuous fun x : GL (Fin 2) (A E) => D.act x v := fun v => by
     simp only [hρ]
     exact (Units.continuous_val.comp hρc).matrix_mulVec continuous_const
-  haveI : MeasurableSingletonClass (Orb D.δ) := ⟨fun _ => trivial⟩
+  have : MeasurableSingletonClass (Orb D.δ) := ⟨fun _ => trivial⟩
   have hc : ∀ ξ : Orb D.δ, Continuous fun x : ↥(IdeleGroup.normOneSubgroup E) × G1 E =>
       D.act (gl x.2 * sZ D (x.1 : IdeleGroup E))⁻¹ (rp ξ.1) := fun ξ => (hcact (rp ξ.1)).comp (cont_el D).inv
   have hf : Measurable fun p : (↥(IdeleGroup.normOneSubgroup E) × G1 E) × Orb D.δ =>
@@ -197,18 +197,18 @@ private theorem fin_int (D : Dat ℚ E) (N : MeasE E) (f : GL (Fin 2) (A E) → 
       (∑' ξ : Fin 4 → ℚ, wt K n (D.act (gl h * sZ D (z : IdeleGroup E))⁻¹ (rp ξ))) *
         ‖f (gl h * sZ D (z : IdeleGroup E))‖ ≤ B) :
     Integrable (fun y => (wt K n (pY D y) : ℂ) * f (el D y)) (mY D.δ N) := by
-  haveI : MeasurableSingletonClass (Orb D.δ) := ⟨fun _ => trivial⟩
+  have : MeasurableSingletonClass (Orb D.δ) := ⟨fun _ => trivial⟩
   have hwm : Measurable fun y : Y E D.δ => wt K n (pY D y) := (wt_meas K hK n).comp (meas_pY D)
   have hwc : Measurable fun y : Y E D.δ => ((wt K n (pY D y) : ℝ) : ℂ) := Complex.measurable_ofReal.comp hwm
   have hm : Measurable fun y : Y E D.δ => ((wt K n (pY D y) : ℝ) : ℂ) * f (el D y) := hwc.mul (meas_el D f hf)
   refine ⟨hm.aestronglyMeasurable, ?_⟩
   obtain ⟨hZ, hDz, -⟩ := zDom E
-  haveI : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) :=
+  have : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact hZ⟩
-  haveI : IsFiniteMeasure (N.μ.restrict N.D) :=
+  have : IsFiniteMeasure (N.μ.restrict N.D) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact volE E N⟩
   let g : Y E D.δ → ℝ≥0∞ := fun y => ‖((wt K n (pY D y) : ℝ) : ℂ) * f (el D y)‖ₑ
-  have hg : Measurable g := hm.enorm
+  have hg : Measurable g := hm.eNorm
   have key : ∀ z ∈ normOneFundamentalDomain E, ∀ h : G1 E,
       ∫⁻ ξ : Orb D.δ, g (z, (h, ξ)) ∂Measure.count ≤ ENNReal.ofReal B := by
     intro z hz h

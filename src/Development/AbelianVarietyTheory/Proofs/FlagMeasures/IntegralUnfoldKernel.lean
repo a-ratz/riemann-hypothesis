@@ -61,12 +61,12 @@ theorem unfold_smul {Γ X : Type} [Group Γ] [Countable Γ] [MulAction Γ X] [Me
     rw [← hs.lintegral_eq_tsum'' (fun z => ‖f z‖ₑ)]
     exact hf.hasFiniteIntegral.ne
   have hae : ∀ᵐ z ∂μ.restrict s, ∑' γ : Γ, ‖f (γ • z)‖ₑ < ⊤ := by
-    apply ae_lt_top' (AEMeasurable.tsum fun γ => (hmeas γ).restrict.enorm)
-    rw [lintegral_tsum fun γ => (hmeas γ).restrict.enorm]
+    apply ae_lt_top' (AEMeasurable.tsum fun γ => (hmeas γ).restrict.eNorm)
+    rw [lintegral_tsum fun γ => (hmeas γ).restrict.eNorm]
     exact hfin
   have hsm : ∀ᵐ z ∂μ.restrict s, Summable fun γ : Γ => f (γ • z) := by
     filter_upwards [hae] with z hz
-    exact Summable.of_norm (tsum_enorm_ne_top_iff_summable_norm.1 hz.ne)
+    exact Summable.of_norm (tsum_eNorm_ne_top_iff_summable_norm.1 hz.ne)
   have hasm : AEStronglyMeasurable (fun z => ∑' γ : Γ, f (γ • z)) (μ.restrict s) := by
     refine aestronglyMeasurable_of_tendsto_ae (u := (Filter.atTop : Filter (Finset Γ)))
       (f := fun t z => ∑ γ ∈ t, f (γ • z)) (fun t => ?_) ?_
@@ -76,9 +76,9 @@ theorem unfold_smul {Γ X : Type} [Group Γ] [Countable Γ] [MulAction Γ X] [Me
     · filter_upwards [hsm] with z hz using hz.hasSum
   refine ⟨⟨hasm, ?_⟩, ?_⟩
   · calc ∫⁻ z in s, ‖∑' γ : Γ, f (γ • z)‖ₑ ∂μ ≤ ∫⁻ z in s, ∑' γ : Γ, ‖f (γ • z)‖ₑ ∂μ :=
-          lintegral_mono fun z => enorm_tsum_le_tsum_enorm
+          lintegral_mono fun z => eNorm_tsum_le_tsum_eNorm
       _ = ∑' γ : Γ, ∫⁻ z in s, ‖f (γ • z)‖ₑ ∂μ :=
-          lintegral_tsum fun γ => (hmeas γ).restrict.enorm
+          lintegral_tsum fun γ => (hmeas γ).restrict.eNorm
       _ < ⊤ := hfin.lt_top
   · rw [integral_tsum (fun γ => (hmeas γ).restrict) hfin]
     exact hs.integral_eq_tsum'' f hf

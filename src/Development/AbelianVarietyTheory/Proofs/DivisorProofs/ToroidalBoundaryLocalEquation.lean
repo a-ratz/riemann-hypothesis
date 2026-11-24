@@ -97,7 +97,7 @@ theorem exists_section {X : Scheme.{0}} [IsIntegral X] (D : CartierDiv X) (hD : 
   obtain ⟨U, hyU, g, hg⟩ := D.exists_isEqn_nhds y
   obtain ⟨a, ha⟩ := (hg y hyU).regularAt_iff.1 (hD y)
   rw [one_mul] at ha
-  obtain ⟨W, hyW, s, rfl⟩ := X.presheaf.germ_exist a
+  obtain ⟨W, hyW, s, rfl⟩ := X.presheaf.exists_germ_eq a
   have inj := fun z : X => IsFractionRing.injective (X.presheaf.stalk z) X.functionField
   have key : ∀ z (hz : z ∈ W ⊓ U), algebraMap _ X.functionField
       (ger z hz (X.presheaf.map (homOfLE inf_le_left).op s)) = g := fun z hz => by

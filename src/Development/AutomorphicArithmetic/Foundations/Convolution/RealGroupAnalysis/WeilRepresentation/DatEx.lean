@@ -81,15 +81,15 @@ theorem UpperTheory.ConvolutionTheory.R2.datAlg :
     ∀ (F E : Type) [Field F] [CharZero F] [Field E] [Algebra F E], Module.finrank F E = 2 →
       ∃ (δ : F) (θ : E) (σ : E ≃ₐ[F] E) (b : Module.Basis (Fin 2) F E), b 0 = 1 ∧ b 1 = θ ∧ θ ^ 2 = algebraMap F E δ ∧ σ θ = -θ := by
   intro F E _ _ _ _ h2
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
-  haveI : IsGalois F E := inferInstance
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : IsGalois F E := inferInstance
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
   have hcard : Nat.card (E ≃ₐ[F] E) = 2 := by
     rw [IsGalois.card_aut_eq_finrank, h2]
   obtain ⟨σ, hσ⟩ : ∃ σ : E ≃ₐ[F] E, σ ≠ 1 := by
-    haveI : Finite (E ≃ₐ[F] E) := inferInstance
-    haveI : Nontrivial (E ≃ₐ[F] E) := by
+    have : Finite (E ≃ₐ[F] E) := inferInstance
+    have : Nontrivial (E ≃ₐ[F] E) := by
       apply Finite.one_lt_card_iff_nontrivial.mp
       omega
     exact exists_ne 1
@@ -98,7 +98,7 @@ theorem UpperTheory.ConvolutionTheory.R2.datAlg :
     by_contra hc
     push_neg at hc
     have h3 : 3 ≤ Nat.card (E ≃ₐ[F] E) := by
-      haveI : Fintype (E ≃ₐ[F] E) := Fintype.ofFinite _
+      have : Fintype (E ≃ₐ[F] E) := Fintype.ofFinite _
       rw [Nat.card_eq_fintype_card]
       have : ({1, σ, τ} : Finset (E ≃ₐ[F] E)).card = 3 := by
         rw [Finset.card_eq_three]
@@ -179,8 +179,8 @@ theorem UpperTheory.ConvolutionTheory.R2.datNeg :
   intro F E _ _ _ _ _ _ δ θ b h0 h1 hθ φ
   by_contra hneg
   have hpos : 0 ≤ φ δ := not_lt.mp hneg
-  haveI : Module.Finite F E := Module.Finite.of_basis b
-  haveI : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
+  have : Module.Finite F E := Module.Finite.of_basis b
+  have : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
   let ψ : F →+* ℂ := Complex.ofRealHom.comp φ
   let τ : E →+* ℂ := NumberField.ComplexEmbedding.lift E ψ
   have hτ : ∀ x : F, τ (algebraMap F E x) = ((φ x : ℝ) : ℂ) := by

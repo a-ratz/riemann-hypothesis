@@ -221,7 +221,7 @@ lemma Sep.conjCoord {N : ℕ} (i j : Fin N) :
   simp [Matrix.star_apply]
 
 lemma sep_of_mem {N : ℕ} {f : C(UG N, ℂ)} (hf : f ∈ algA N) : Sep (⇑f) := by
-  letI : Star (Set C(UG N, ℂ)) := Set.star
+  let : Star (Set C(UG N, ℂ)) := Set.star
   have hf' : f ∈ Algebra.adjoin ℂ ((Set.range fun ij : Fin N × Fin N => coordC ij.1 ij.2) ∪
       star (Set.range fun ij : Fin N × Fin N => coordC ij.1 ij.2)) := by
     rw [← StarAlgebra.adjoin_toSubalgebra]; exact hf

@@ -117,7 +117,7 @@ theorem UpperTheory.V.Af.Smo.schOfClosed :
       have hfd : fderiv ℝ f = fun x => ∑ i, L i (g i x) := by
         funext x
         ext v
-        rw [ContinuousLinearMap.sum_apply]
+        rw [sum_apply]
         simp only [hL, hg, hc]
         conv_lhs => rw [← b.sum_repr v]
 

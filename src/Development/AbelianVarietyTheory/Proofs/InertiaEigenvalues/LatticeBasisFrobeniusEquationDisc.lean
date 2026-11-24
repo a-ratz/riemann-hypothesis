@@ -77,7 +77,7 @@ theorem iA_per_mem_nonZeroDivisors : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l)
     bk.IsPer τ → bk.iA τ ∈ nonZeroDivisors (bk.DA bk.ρ₀) := by
   intro l _ K bk τ hτ
   obtain ⟨h0, h1, -, -⟩ := _root_.GlobalTheory.BSP.norm_E_le_radius l K bk (Ainf l) bk.ev
-  haveI : IsDomain (bk.DA bk.ρ₀) := (discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
+  have : IsDomain (bk.DA bk.ρ₀) := (discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
   obtain ⟨ι, ⟨tb⟩⟩ := _root_.GlobalTheory.BSP.AinfTopBasis.main l K bk
   have hinj : Function.Injective bk.iA := (_root_.GlobalTheory.BSP.topBasis_disc_regular l K bk (Ainf l) bk.ev ι tb).1
   refine mem_nonZeroDivisors_of_ne_zero ?_

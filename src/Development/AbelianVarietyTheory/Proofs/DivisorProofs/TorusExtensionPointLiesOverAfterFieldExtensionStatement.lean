@@ -231,8 +231,8 @@ theorem sumF_algebraMap {R : Type} [CommRing R] [IsDomain R] (I : Ideal R) (F : 
     [Algebra (FractionRing R) F] {Ix : Type} (x : Ix → FractionRing R) (s : FractionRing R)
     (h : SumF I (FractionRing R) x s) :
     SumF I F (fun i => algebraMap (FractionRing R) F (x i)) (algebraMap (FractionRing R) F s) := by
-  letI : Module R (FractionRing R) := Module.compHom (FractionRing R) (algebraMap R (FractionRing R))
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R (FractionRing R) := Module.compHom (FractionRing R) (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   obtain ⟨N, hN, hs, hx, hS⟩ := h
   let φ : FractionRing R →ₗ[R] F :=
     { toFun := algebraMap (FractionRing R) F

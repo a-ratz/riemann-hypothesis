@@ -102,7 +102,7 @@ theorem act_equiv (hWE : WaveEx) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ 
     congr 1
     funext y
     rw [h]
-    simp only [GLs, Set.mem_setOf_eq, one_mul]
+    simp only [GLs, Set.mem_ofPred_eq, one_mul]
     exact ((Matrix.isUnit_iff_isUnit_det _).mp y.isUnit).ne_zero
   rw [key (fun x => A (f x)) (fun x => A (u 0 x)) (fun x hx => by simp only [hu0 x hx]),
     key f (u 0) (fun x hx => (hu0 x hx).symm),

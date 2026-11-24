@@ -126,7 +126,7 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
       by_cases hab : a = b
       · subst hab
         simp
-      · rw [Finset.sum_eq_zero fun k _ => if_neg fun h => hab (h.1.symm.trans h.2)]
+      · rw [Finset.sum_eq_zero fun k _ => ite_eq_right fun h => hab (h.1.symm.trans h.2)]
         simp [hab]
     · intro s _ hs
       rw [Finset.sum_apply]
@@ -140,9 +140,9 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
       simp only [a, Finset.mul_sum, ← mul_assoc, ← map_mul]
       rw [Finset.sum_eq_single t]
       · rw [Finset.sum_eq_single q]
-        · rw [hsame, if_pos rfl]
+        · rw [hsame, ite_eq_left rfl]
         · intro k _ hk
-          rw [hsame, if_neg (Ne.symm hk), map_zero, zero_mul]
+          rw [hsame, ite_eq_right (Ne.symm hk), map_zero, zero_mul]
         · intro h
           exact absurd (Finset.mem_univ _) h
       · intro s _ hs
@@ -154,9 +154,9 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
         = j (u t p (i0 t)) * D (u t (i0 t) q) := by
       rw [Finset.sum_eq_single t]
       · rw [Finset.sum_eq_single p]
-        · rw [hsame, if_pos rfl]
+        · rw [hsame, ite_eq_left rfl]
         · intro k _ hk
-          rw [hsame, if_neg hk, map_zero, mul_zero]
+          rw [hsame, ite_eq_right hk, map_zero, mul_zero]
         · intro h
           exact absurd (Finset.mem_univ _) h
       · intro s _ hs
@@ -165,7 +165,7 @@ theorem UpperTheory.V.AlgebraTools.der_inner :
       · intro h
         exact absurd (Finset.mem_univ _) h
     have hS2 : ∑ s, ∑ k, j (u s k (i0 s)) * j (u s (i0 s) k) = 1 := by
-      simp only [← map_mul, hsame, eq_self_iff_true, if_true]
+      simp only [← map_mul, hsame, eq_self_iff_true, ite_true]
 
       simp only [← map_sum]
       rw [hone, map_one]
@@ -361,7 +361,7 @@ theorem UpperTheory.V.Th.Det.detG :
     ∀ {K G : Type} [Field K] [IsAlgClosed K] [Group G] {n : ℕ} (ρ : G →* GL (Fin n) K) (χ : G →* Kˣ) (N : Subgroup G) (z : G → Matrix (Fin n) (Fin n) K), 1 ≤ n → commutator G ≤ N → N ≤ χ.ker → χ ≠ 1 → U3.MatIrr N (W.mat ρ) → (∀ g g', z (g * g') = z g + (χ g : K) • (W.mat ρ g * z g' * W.mat ρ g⁻¹)) → (∀ g ∈ N, (z g * W.mat ρ g).trace = 0) → ∃ Y, ∀ g, z g = (χ g : K) • (W.mat ρ g * Y * W.mat ρ g⁻¹) - Y := by
   intro K G _ _ _ n ρ χ N z hn hc hk hχ hirr hz htr
   generalize W.mat ρ = m at hirr hz htr ⊢
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   have hone : ∀ x ∈ N, (χ x : K) = 1 := fun x hx => by
     have : χ x = 1 := hk hx
     rw [this, Units.val_one]
@@ -498,10 +498,10 @@ private theorem padicAlgCl_norm_le_one_of_isIntegral {l : ℕ} [Fact l.Prime] (x
 
 private theorem cf_field {l : ℕ} [Fact l.Prime] (c : Coef l) :
     ∃ E : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] E ∧ ∀ x ∈ c.O, x ∈ E ∧ ‖x‖ ≤ 1 := by
-  haveI := c.fin
+  have := c.fin
   obtain ⟨S, hS⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := c.O)
   let T : Set (PadicAlgCl l) := Subtype.val '' (S : Set c.O)
-  haveI : Finite T := (S.finite_toSet.image _).to_subtype
+  have : Finite T := (S.finite_toSet.image _).to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] T,
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x), ?_⟩
   have key : ∀ y ∈ Submodule.span ℤ_[l] (S : Set c.O),
@@ -575,8 +575,8 @@ theorem UpperTheory.V.Th.Det.cocField :
   intro l _ c G _ _ _ _ _ m σ z hσ hz hc
   obtain ⟨E1, hE1, hz1⟩ := cf_entries (W.mat σ) z (Units.continuous_val.comp hσ) hz hc
   obtain ⟨E2, hE2, hO⟩ := cf_field c
-  haveI := hE1
-  haveI := hE2
+  have := hE1
+  have := hE2
   obtain ⟨c', hc'⟩ := X.So.coefOf l (E1 ⊔ E2)
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hz.continuousOn
   obtain ⟨N, hN⟩ := cf_small (l := l) C
@@ -698,8 +698,8 @@ private theorem cocycles_finitely_generated (l : ℕ) [Fact l.Prime] {R G M : Ty
           exact (ha1 N).comp (fun q => r • q)
         · simp only [Pi.smul_apply, ha2, smul_add, map_smul] }
   have hZC : Z ≤ C := fun z hz => hZ z hz
-  haveI : Finite (R ⧸ Ideal.span {t}) := hfq
-  haveI hM'fin : Finite (M ⧸ Ideal.span {t} • (⊤ : Submodule R M)) := Module.finite_of_finite (R ⧸ Ideal.span {t})
+  have : Finite (R ⧸ Ideal.span {t}) := hfq
+  have hM'fin : Finite (M ⧸ Ideal.span {t} • (⊤ : Submodule R M)) := Module.finite_of_finite (R ⧸ Ideal.span {t})
   let ρ' : G →* AddMonoid.End (M ⧸ Ideal.span {t} • (⊤ : Submodule R M)) :=
     { toFun := fun g => ((Ideal.span {t} • (⊤ : Submodule R M)).mapQ _ (ρ g)
         (Submodule.smul_top_le_comap_smul_top _ _)).toAddMonoidHom
@@ -783,10 +783,10 @@ private theorem cocycles_finitely_generated (l : ℕ) [Fact l.Prime] {R G M : Ty
         ∀ g h, z (g * h) = z g + ρ' g (z h)} := by
       rintro _ ⟨z, rfl⟩
       exact hrange z
-    haveI : Finite (LinearMap.range Ψ) := (hS.subset hsub).to_subtype
+    have : Finite (LinearMap.range Ψ) := (hS.subset hsub).to_subtype
     exact Finite.of_equiv _ Ψ.quotKerEquivRange.symm.toEquiv
   rw [hker] at hfin
-  haveI : IsHausdorff (Ideal.span {t}) C := by
+  have : IsHausdorff (Ideal.span {t}) C := by
     refine ⟨fun x hx => ?_⟩
     apply Subtype.ext
     funext g
@@ -797,10 +797,10 @@ private theorem cocycles_finitely_generated (l : ℕ) [Fact l.Prime] {R G M : Ty
     rw [SModEq.sub_mem, sub_zero] at h1
     obtain ⟨y, hy⟩ := (mem_pow_smul t n x).mp h1
     exact ⟨y.1 g, by rw [← hy]; rfl⟩
-  haveI : Module.Finite R (C ⧸ Ideal.span {t} • (⊤ : Submodule R C)) := Module.Finite.of_finite
+  have : Module.Finite R (C ⧸ Ideal.span {t} • (⊤ : Submodule R C)) := Module.Finite.of_finite
   have hCfin : Module.Finite R C := (UpperTheory.V.abelian₂.nakayama R (Ideal.span {t}) C).2 this
   have hCfg : C.FG := Module.Finite.iff_fg.mp hCfin
-  haveI := isNoetherian_of_fg_of_noetherian C hCfg
+  have := isNoetherian_of_fg_of_noetherian C hCfg
   have hZ'fg : (Z.comap C.subtype).FG := IsNoetherian.noetherian _
   have hZeq : Submodule.map C.subtype (Z.comap C.subtype) = Z :=
     Submodule.map_comap_eq_of_le (by rwa [Submodule.range_subtype])
@@ -812,7 +812,7 @@ theorem UpperTheory.V.Th.Det.continuousCocycles_fg_integral_of_phiCond :
   intro l _ c G _ _ _ _ _ m σ Z hΦ hσ hZ
   obtain ⟨hc, hf, hl, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible c.O
-  haveI : IsPrecomplete (maximalIdeal c.O) c.O := hc.toIsPrecomplete
+  have : IsPrecomplete (maximalIdeal c.O) c.O := hc.toIsPrecomplete
   let ρ : G →* Module.End c.O (Fin m → c.O) :=
     (Matrix.toLinAlgEquiv' (R := c.O) (n := Fin m)).toAlgHom.toRingHom.toMonoidHom.comp (W.mat σ)
   have hρ : ∀ g x, ρ g x = W.mat σ g *ᵥ x := fun g x => rfl
@@ -841,7 +841,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem zc_norm {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) : ‖(x : PadicAlgCl l)‖ ≤ 1 := by
   have hi : IsIntegral ℤ_[l] (x : PadicAlgCl l) := by
-    haveI := c.fin
+    have := c.fin
     exact (IsIntegral.of_finite ℤ_[l] x).map c.O.val
   have h0 : ‖(x : PadicAlgCl l)‖ = spectralValue (minpoly ℚ_[l] (x : PadicAlgCl l)) := rfl
   rw [h0, spectralValue_le_one_iff (minpoly.monic (Algebra.IsIntegral.isIntegral _))]
@@ -875,14 +875,14 @@ private theorem zc_split {l : ℕ} [hl : Fact l.Prime] (c c' : Coef l) (hcc : c.
         ∀ g h, w k (g * h) = w k g + W.mat σ g *ᵥ w k h) ∧
       ∀ g i, z g i = ∑ k, b k * (w k g i : PadicAlgCl l) := by
   obtain ⟨-, -, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  letI : Algebra c.O c'.O := (Subalgebra.inclusion hcc).toRingHom.toAlgebra
+  let : Algebra c.O c'.O := (Subalgebra.inclusion hcc).toRingHom.toAlgebra
   have ha : ∀ (a : c.O) (x : c'.O), ((a • x : c'.O) : PadicAlgCl l) = a * x := fun _ _ => rfl
-  haveI : IsScalarTower ℤ_[l] c.O c'.O := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite c.O c'.O := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
-  haveI : FaithfulSMul c.O c'.O := (faithfulSMul_iff_algebraMap_injective _ _).2 (Subalgebra.inclusion_injective hcc)
-  haveI : Module.IsTorsionFree c.O c'.O := FaithfulSMul.to_isTorsionFree c.O c'.O
+  have : IsScalarTower ℤ_[l] c.O c'.O := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Finite c.O c'.O := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
+  have : FaithfulSMul c.O c'.O := (faithfulSMul_iff_algebraMap_injective _ _).2 (Subalgebra.inclusion_injective hcc)
+  have : Module.IsTorsionFree c.O c'.O := FaithfulSMul.to_isTorsionFree c.O c'.O
   set_option synthInstance.maxHeartbeats 200000 in
-  haveI : Module.Free c.O c'.O := Module.free_of_finite_type_torsion_free'
+  have : Module.Free c.O c'.O := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis c.O c'.O
   let f : G → Fin m → c'.O := fun g i => ⟨z g i, hm g i⟩
   refine ⟨_, fun k => b k, fun k g i => b.coord k (f g i), fun k => ⟨fun i N => ?_, fun g h => ?_⟩, fun g i => ?_⟩
@@ -1050,7 +1050,7 @@ theorem UpperTheory.V.Th.Det.finite_cocycles_matrixRepresentation_of_phiCond :
     funext g
     have e := congrFun (congrArg Subtype.val hxy) g
     exact (matrixFlattenLinearEquiv (Qbar l) n).injective e
-  haveI : IsNoetherian (Qbar l) (Z1 (UpperTheory.V.Loc.colRep σ)) := IsNoetherian.iff_fg.mpr hfin
+  have : IsNoetherian (Qbar l) (Z1 (UpperTheory.V.Loc.colRep σ)) := IsNoetherian.iff_fg.mpr hfin
   exact Module.Finite.of_injective (Φ.restrict hmem) hinj
 end -- clump:auto
 end -- clump:auto
@@ -1067,7 +1067,7 @@ theorem UpperTheory.V.Th.regDet :
     ∀ {l : ℕ} [Fact l.Prime] (F : W.GFrame l) (O : Type) [CommRing O] [Algebra ℤ_[l] O] [Algebra O (Qbar l)] [IsScalarTower ℤ_[l] O (Qbar l)] {n : ℕ} (ρ : F.G₀ →* GL (Fin n) (Qbar l)) (P : GL (Fin n) (Qbar l)), 1 ≤ n → PhiCond F.G₀ l → (∃ g : F.G₀, F.ε g ≠ 1) → Continuous ρ → Th.TypeI F ρ → Th.N3 F ρ → Th.RegDet F O ρ P := by
   intro l _ F O _ _ _ _ n ρ P hn hΦ hε hρ hI h3
   classical
-  haveI : CompactSpace F.G₀ :=
+  have : CompactSpace F.G₀ :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   have halg : ∀ x : ℤ_[l], algebraMap ℤ_[l] (Qbar l) x = algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l]) :=
     fun x => IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l) x
@@ -1078,8 +1078,8 @@ theorem UpperTheory.V.Th.regDet :
   have hχc : Continuous fun g : F.G₀ => ((F.eps O (Qbar l) g : (Qbar l)ˣ) : Qbar l) := by
     simp only [hχ]
     have h1 : Continuous fun g : F.G₀ => ((F.ε g : ℤ_[l]ˣ) : ℤ_[l]) :=
-      Units.continuous_val.comp (F.ε_cont.comp continuous_subtype_val)
-    exact (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtype_val.comp h1)
+      Units.continuous_val.comp (F.ε_cont.comp continuous_subtypeVal)
+    exact (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtypeVal.comp h1)
   have hm : Continuous fun g => W.mat ρ g := Units.continuous_val.comp hρ
   have hm' : Continuous fun g : F.G₀ => W.mat ρ g⁻¹ := hm.comp continuous_inv
   let R : Representation (Qbar l) F.G₀ (Matrix (Fin n) (Fin n) (Qbar l)) :=
@@ -1090,7 +1090,7 @@ theorem UpperTheory.V.Th.regDet :
       rw [← map_inv ρ g]; rfl
     rw [e]
     rfl
-  haveI : Module.Finite (Qbar l) (Z1 R) := Det.finite_cocycles_matrixRepresentation_of_phiCond R hΦ fun X => by
+  have : Module.Finite (Qbar l) (Z1 R) := Det.finite_cocycles_matrixRepresentation_of_phiCond R hΦ fun X => by
     simp only [hR]
     exact hχc.smul ((hm.mul continuous_const).mul hm')
   let S : Type := {σ : F.G₀ // σ ∈ F.G' ∧ (W.mat ρ σ).charpoly.Separable}
@@ -1106,7 +1106,7 @@ theorem UpperTheory.V.Th.regDet :
   have hzZ : z ∈ Z1 R := (mem_Z1_iff_cocycle _ _).2 ⟨hzc, fun g h => by rw [hR]; exact hz g h⟩
   have hall := hT ⟨z, hzZ⟩ fun s hs k =>
     htr s.1 ⟨T.equivFin ⟨s, hs⟩, by simp only [Equiv.symm_apply_apply]⟩ k
-  refine Det.detG ρ (F.eps O (Qbar l)) F.G' z hn (Abelianization.commutator_subset_ker _) ?_ ?_ hI hz ?_
+  refine Det.detG ρ (F.eps O (Qbar l)) F.G' z hn (Group.Abelianization.commutator_le_ker _) ?_ ?_ hI hz ?_
   · intro g hg
     have h1 : F.ε g = 1 := hg
     rw [MonoidHom.mem_ker]

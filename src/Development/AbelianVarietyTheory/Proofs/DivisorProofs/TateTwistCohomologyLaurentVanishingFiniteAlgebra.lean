@@ -159,8 +159,8 @@ theorem GlobalTheory.EtC.laurent_vanishing_finite : ∀ (q : ℕ) [NeZero q] (n 
   · intro T₁ T₂ _ _ _ _ _ _ h₁ h₂ s i h2 hs
     exact subsingleton_laurent_prod q s i T₁ T₂ (h₁ s i h2 hs) (h₂ s i h2 hs)
   · intro T _ _ hfin hT s i h2 hs
-    haveI : IsNoetherian A T := isNoetherian_of_isNoetherianRing_of_finite A T
-    haveI : IsNoetherianRing T := isNoetherian_of_tower A inferInstance
+    have : IsNoetherian A T := isNoetherian_of_isNoetherianRing_of_finite A T
+    have : IsNoetherianRing T := isNoetherian_of_tower A inferInstance
     have hqT : IsUnit (q : T) := by
       simpa using hq.map (algebraMap A T)
     exact hyp T hT hqT s i h2 hs

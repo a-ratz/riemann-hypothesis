@@ -90,7 +90,7 @@ private theorem form_mulCh (ho : IsOpen (χ.ker : Set (UA E n))) (hr : ∀ g ∈
   · change (χ (γ * g) : ℂ) * φ (γ * g) = (χ g : ℂ) * φ g
     rw [map_mul, hr γ hγ, one_mul, h.left γ hγ]
   · refine isOpen_stab_of_mem_nhds ((RU E n).comp (finU (E := E) (n := n)).subtype) (mulCh χ φ) ?_
-    have h2 : IsOpen ((Subtype.val : finU (E := E) (n := n) → UA E n) ⁻¹' (χ.ker : Set (UA E n))) := ho.preimage continuous_subtype_val
+    have h2 : IsOpen ((Subtype.val : finU (E := E) (n := n) → UA E n) ⁻¹' (χ.ker : Set (UA E n))) := ho.preimage continuous_subtypeVal
     refine Filter.mem_of_superset ((h.level.inter h2).mem_nhds ⟨?_, ?_⟩) fun k hk => ?_
     · change RU E n 1 φ = φ
       simp
@@ -99,7 +99,7 @@ private theorem form_mulCh (ho : IsOpen (χ.ker : Set (UA E n))) (hr : ∀ g ∈
       have h3 : χ k = 1 := hk.2
       change RU E n k (mulCh χ φ) = mulCh χ φ
       rw [RU_mulCh, h1, h3]; simp
-  · haveI := h.kfin
+  · have := h.kfin
     refine Submodule.finiteDimensional_of_le (S₂ := (Submodule.span ℂ (Set.range fun k : infU E n => RU E n k φ)).map
       (mulCh χ).toLinearMap) (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩

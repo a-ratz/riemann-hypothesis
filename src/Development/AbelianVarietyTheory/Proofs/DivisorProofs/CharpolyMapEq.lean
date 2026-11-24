@@ -447,8 +447,8 @@ theorem GlobalTheory.Dieu.le_colength_of_htOne : ∀ (p : ℕ) [Fact p.Prime] (T
   intro p _ T k _ _ _ G H q q' e h1 h2 hF he
   have h3 := le_finrank_coker_omegaMap G H q q' e h1 hF he
   have hp0 : (p : k) = 0 := CharP.cast_eq_zero k p
-  haveI := GlobalTheory.PDivGroup.finite_omega_of_eq_zero hp0 G
-  haveI := GlobalTheory.PDivGroup.finite_omega_of_eq_zero hp0 H
+  have := GlobalTheory.PDivGroup.finite_omega_of_eq_zero hp0 G
+  have := GlobalTheory.PDivGroup.finite_omega_of_eq_zero hp0 H
   have hiso : IsIsog q := by
     unfold IsIsog
     exact ⟨1, q', by simpa only [pow_one] using h1, by simpa only [pow_one] using h2⟩
@@ -551,7 +551,7 @@ theorem exists_step {X Y : PDivGroup p k} (f : X ⟶ Y) (hω : ¬ Function.Surje
   have e1 := (_root_.GlobalTheory.PDivGroup.cot_kernel_eq_coker_omegaMap p k X Q q₁ C π hπs).2.1 (by rw [hk1]; exact le_sup_left) (by rw [hk1])
   have e2 := (_root_.GlobalTheory.PDivGroup.cot_kernel_eq_coker_omegaMap p k X Y f C π hπs).2.1 (by rw [hker]; exact sup_le_sup_left hfrob _)
     (by rw [hker]; exact le_sup_left)
-  haveI := finite_omega_of_eq_zero (CharP.cast_eq_zero k p) X
+  have := finite_omega_of_eq_zero (CharP.cast_eq_zero k p) X
   have h0 : Module.finrank k (X.omega ⧸ LinearMap.range (omegaMap X Q q₁)) = 0 := by
     rw [LinearMap.range_eq_top.2 hs]
     exact Module.finrank_zero_of_subsingleton
@@ -569,7 +569,7 @@ theorem one_le_deg {X Q : PDivGroup p k} (q₁ : X ⟶ Q) (q₁' : Q ⟶ X)
   rcases Nat.eq_zero_or_pos e₁ with h | h
   · subst h
     have hI : IsIsog q₁ := ⟨1, q₁', by rw [pow_one]; exact h1, by rw [pow_one]; exact h2⟩
-    haveI := ((_root_.GlobalTheory.Dieu.isog_basics p k X).2.2.2 Q q₁ hI).1 he₁
+    have := ((_root_.GlobalTheory.Dieu.isog_basics p k X).2.2.2 Q q₁ hI).1 he₁
     exact absurd (omegaMap_surjective_of_isIso q₁) hns
   · exact h
 
@@ -580,7 +580,7 @@ theorem kernelDegree_le_dieudonneColength_of_colength_eq (n : ℕ) : ∀ (G H : 
   intro G H q e hq he hn
   by_cases hA : Function.Surjective (omegaMap G H q)
   · by_cases hB : Function.Surjective (omegaMap H.dual G.dual (dualHom G H q))
-    · haveI := _root_.GlobalTheory.Dieu.isIso_of_isIsog_of_omegaMap_surjective p k G H q hq hA hB
+    · have := _root_.GlobalTheory.Dieu.isIso_of_isIsog_of_omegaMap_surjective p k G H q hq hA hB
       have h0 : HasLogDeg q 0 := ((_root_.GlobalTheory.Dieu.isog_basics p k G).2.2.2 H q hq).2 inferInstance
       have := (_root_.GlobalTheory.Dieu.existsUnique_hasLogDeg p k G H q hq).unique he h0
       omega
@@ -779,8 +779,8 @@ theorem isIsog_hasLogDeg_map : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k]
       rw [← hu, mul_left_comm, Units.inv_mul, mul_one]
     have eA : ((p ^ a * m) • 𝟙 A : A ⟶ A).hom = 𝟙 A.X ^ (p ^ a * m) := by simp
     have eB : ((p ^ a * m) • 𝟙 B : B ⟶ B).hom = 𝟙 B.X ^ (p ^ a * m) := by simp
-    haveI : IsMonHom (𝟙 A.X ^ (p ^ a * m)) := eA ▸ inferInstance
-    haveI : IsMonHom (𝟙 B.X ^ (p ^ a * m)) := eB ▸ inferInstance
+    have : IsMonHom (𝟙 A.X ^ (p ^ a * m)) := eA ▸ inferInstance
+    have : IsMonHom (𝟙 B.X ^ (p ^ a * m)) := eB ▸ inferInstance
     have h1 : t.map t' f.hom ≫ t'.map t g.hom = ((p ^ a * m : ℕ) : ℤ_[p]) • 𝟙 G := by
       rw [← TorsionTower.map_comp, ← t.map_pow_id]
       exact t.map_congr t (by rw [← comp_hom, hfg, eA])
@@ -931,7 +931,7 @@ theorem kernel_killed_of_deg_ne_zero (K : Type) [Field K] (A B : AbVar K) (f : A
       · rw [MonObj.pow_comp, hx, one_pow]
       · rw [← pow_mul, mul_comm]; exact hkill T x hx
   · subst hp0
-    haveI : CharZero K := CharP.charP_to_charZero K
+    have : CharZero K := CharP.charP_to_charZero K
     exact ⟨n0, by exact_mod_cast hn0.ne', hkill⟩
 
 end GlobalTheory.AV.KerInv
@@ -1082,10 +1082,10 @@ theorem end_isogeny_algebra_finrank_le : ∀ (K : Type) [Field K] (A : AbVar K),
   intro K _ A
   obtain ⟨hfin, hfree, hrk⟩ := GlobalTheory.T.hom_finite_free_finrank_le_four_mul_dim K A A
   let e : End A ≃ₗ[ℤ] (A ⟶ A) := End.addEquiv.toIntLinearEquiv
-  haveI : Module.Finite ℤ (A ⟶ A) := hfin
-  haveI : Module.Free ℤ (A ⟶ A) := hfree
-  haveI : Module.Finite ℤ (End A) := Module.Finite.equiv e.symm
-  haveI : Module.Free ℤ (End A) := Module.Free.of_equiv e.symm
+  have : Module.Finite ℤ (A ⟶ A) := hfin
+  have : Module.Free ℤ (A ⟶ A) := hfree
+  have : Module.Finite ℤ (End A) := Module.Finite.equiv e.symm
+  have : Module.Free ℤ (End A) := Module.Free.of_equiv e.symm
   refine ⟨inferInstance, ?_⟩
   rw [Module.finrank_baseChange]
   rw [e.finrank_eq]
@@ -1153,7 +1153,7 @@ theorem toEnd0_apply {K : Type} [Field K] (A : AbVar K) (f : End A) :
 theorem toEnd0_injective_and_fraction : ∀ (K : Type) [Field K] (A : AbVar K),
     Function.Injective (toEnd0 A) ∧ ∀ x : End0 A, ∃ (n : ℕ) (f : End A), 0 < n ∧ n • x = toEnd0 A f := by
   intro K _ A
-  haveI := isLocalizedModule_ratTensor (End A)
+  have := isLocalizedModule_ratTensor (End A)
   refine ⟨fun f g h => ?_, fun x => ?_⟩
   · rw [toEnd0_apply, toEnd0_apply] at h
     obtain ⟨c, hc⟩ := IsLocalizedModule.exists_of_eq (S := nonZeroDivisors ℤ) h
@@ -1238,14 +1238,14 @@ theorem colength_det : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP 
     by_contra h0
     have h1 := addVal_map ψ h0
     rw [hx, AddValuation.map_zero] at h1
-    exact ENat.top_ne_coe _ h1
+    exact ENat.top_ne_natCast _ h1
   have hlen := GlobalTheory.length_quot_range_eq_addVal_det u
   refine ⟨fun e he => ?_, fun hu => ?_, hψ⟩
   · rw [hlen, hdet] at he
     have hd : d ≠ 0 := by
       rintro rfl
       rw [map_zero, AddValuation.map_zero] at he
-      exact ENat.top_ne_coe _ he
+      exact ENat.top_ne_natCast _ he
     rw [addVal_map ψ hd] at he
     have he' : d.valuation = e := by exact_mod_cast he
     rw [PadicInt.norm_eq_zpow_neg_valuation hd, he']
@@ -1572,7 +1572,7 @@ theorem prod_aeval_aroots_padic_eq_det : ∀ (p : ℕ) [Fact p.Prime] (S : Type)
   have hψ' : ψ'.comp (algebraMap ℤ_[p] ℚ_[p]) = (algebraMap S K).comp ψ :=
     IsLocalization.lift_comp _
   let Ω := AlgebraicClosure K
-  letI : Algebra ℚ_[p] Ω := ((algebraMap K Ω).comp ψ').toAlgebra
+  let : Algebra ℚ_[p] Ω := ((algebraMap K Ω).comp ψ').toAlgebra
   have hΩ : algebraMap ℚ_[p] Ω = (algebraMap K Ω).comp ψ' := rfl
   let j : PadicAlgCl p →ₐ[ℚ_[p]] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -1695,7 +1695,7 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
     by_contra hx0
     rw [PadicInt.unitCoeff_spec hx0, map_mul, map_pow, map_natCast] at hx
     have hu : IsUnit (ψ (PadicInt.unitCoeff hx0 : ℤ_[p])) := (Units.isUnit _).map ψ
-    have hpn : ((p : WittVector p k)) ^ x.valuation ≠ 0 := pow_ne_zero _ (WittVector.p_nonzero p k)
+    have hpn : ((p : WittVector p k)) ^ x.valuation ≠ 0 := pow_ne_zero _ (WittVector.p_ne_zero p k)
     exact hpn ((hu.mul_right_eq_zero).1 hx)
   have hrank : Module.finrank (WittVector p k) (T.M G) = 2 * A.dim :=
     hfun.2.2.2.2.2.2.2.1.trans ((GlobalTheory.T.exists_torsionTower_and_height_eq_two_dim p k A).2 G t)
@@ -1724,8 +1724,8 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
       rw [hQ, Polynomial.aroots_map]
       erw [← h2]
       rw [PadicAlgCl.norm_extends, map_natCast, ← map_natCast (algebraMap ℚ_[p] (PadicAlgCl p)), PadicAlgCl.norm_extends]
-      rw [PadicInt.padic_norm_e_of_padicInt, habs]
-      rw [← PadicInt.padic_norm_e_of_padicInt]; push_cast; rfl
+      rw [PadicInt.norm_coe, habs]
+      rw [← PadicInt.norm_coe]; push_cast; rfl
   have hP' : P = (charpoly f).map (Int.castRingHom ℤ_[p]) := by
     apply Polynomial.map_injective (algebraMap ℤ_[p] ℚ_[p]) (IsFractionRing.injective ℤ_[p] ℚ_[p])
     rw [key, Polynomial.map_map]; congr 1 <;> exact RingHom.ext_int _ _

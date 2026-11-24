@@ -305,10 +305,10 @@ theorem charForm_kills_linear_mul : ∀ (V : Type) [NormedAddCommGroup V] [Norme
   have hft : ∀ t x, ft t x = Complex.exp ((I * t) * (L x : ℂ)) * f x := fun t x => by
     simp only [ft, SchwartzMap.smulLeftCLM_apply_apply (hasTemperateGrowth_char L t), smul_eq_mul]
   have hTft : ∀ t : ℝ, T (ft t) = T f := fun t => hT (t • L) f (ft t) (fun x => by
-    rw [hft, ContinuousLinearMap.smul_apply, smul_eq_mul, Complex.ofReal_mul, mul_assoc])
+    rw [hft, smul_apply, smul_eq_mul, Complex.ofReal_mul, mul_assoc])
   let u : ℝ → SchwartzMap V ℂ := fun t => (t : ℂ)⁻¹ • (ft t - f) - I • g
   have hu : ∀ t : ℝ, ∀ x, u t x = rem t (L x) * f x := fun t x => by
-    simp only [u, SchwartzMap.sub_apply, SchwartzMap.smul_apply, hft, hg, rem, smul_eq_mul]
+    simp only [u, sub_apply, smul_apply, hft, hg, rem, smul_eq_mul]
     ring
   have hTu : ∀ t : ℝ, T (u t) = -I * T g := fun t => by
     simp only [u, map_sub, map_smul, hTft, sub_self, smul_zero, smul_eq_mul, zero_sub]

@@ -120,7 +120,7 @@ theorem isAdmOn_iff [CompleteSpace H] : GlobalTheory.LinRed.IsAdmOn (UJset ε) �
   refine ⟨fun h Λ => ?_, fun h S hfin hst hirr => ?_⟩
   · by_cases he : ∃ S₀, IsKTypeOf ε π Λ S₀
     · obtain ⟨S₀, hS₀⟩ := he
-      haveI := h S₀ hS₀.1 hS₀.2.1 hS₀.2.2.1
+      have := h S₀ hS₀.1 hS₀.2.1 hS₀.2.2.1
       refine Submodule.finiteDimensional_of_le (sSup_le_sSup (t := {S' | ∃ T : H →ₗ[ℂ] H, S' = S₀.map T ∧
         ∀ k ∈ Kset ε, ∀ w ∈ S₀, T (π k w) = π k (T w)}) fun S hS => ?_)
       obtain ⟨B, hB1, hB2⟩ := hB Λ S₀ S hS₀ hS.2
@@ -131,7 +131,7 @@ theorem isAdmOn_iff [CompleteSpace H] : GlobalTheory.LinRed.IsAdmOn (UJset ε) �
       rintro _ ⟨T, rfl, -⟩
       rw [h0, Submodule.map_bot]
     · obtain ⟨Λ, hΛ⟩ := hA S hfin h0 hst hirr
-      haveI := h Λ
+      have := h Λ
       refine Submodule.finiteDimensional_of_le (S₂ := sSup {S | S ≤ ⊤ ∧ IsKTypeOf ε π Λ S}) (sSup_le ?_)
       rintro _ ⟨T, rfl, hT⟩
       rcases isKTypeOf_map hΛ T hT with hb | hk

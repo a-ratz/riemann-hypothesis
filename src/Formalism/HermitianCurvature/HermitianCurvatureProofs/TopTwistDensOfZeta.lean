@@ -147,7 +147,7 @@ theorem zeta_entries (hZ : NF.ActualZetaSmooth) {P : M.Par} {z z' : Fin (2 * P.r
       Complex.exp (s * ζ - conj s * conj ζ) * (s - conj s) := by
     intro ζ
     rw [hfun2, (hder ζ).fderiv]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.coe_id',
+    simp only [smul_apply, sub_apply, ContinuousLinearMap.coe_id',
         id_eq, Complex.conjCLE_apply, map_one, Complex.conj_I, smul_eq_mul, ContinuousLinearMap.coe_coe,
         ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, map_one, Complex.conj_I]
     ring
@@ -155,7 +155,7 @@ theorem zeta_entries (hZ : NF.ActualZetaSmooth) {P : M.Par} {z z' : Fin (2 * P.r
       Complex.exp (s * ζ - conj s * conj ζ) * ((s + conj s) * Complex.I) := by
     intro ζ
     rw [hfun2, (hder ζ).fderiv]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.coe_id',
+    simp only [smul_apply, sub_apply, ContinuousLinearMap.coe_id',
         id_eq, Complex.conjCLE_apply, map_one, Complex.conj_I, smul_eq_mul, ContinuousLinearMap.coe_coe,
         ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, map_one, Complex.conj_I]
     ring

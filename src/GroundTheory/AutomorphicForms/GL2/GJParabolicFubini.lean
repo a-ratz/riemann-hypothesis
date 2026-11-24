@@ -160,7 +160,7 @@ theorem isOpenEmbedding_toLieLevi : IsOpenEmbedding (toLieLevi F n β) := by
       rw [hu]
       exact A.2 i j h
   rw [this]
-  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtype_val
+  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtypeVal
 
 def mulLeftLieLevi (m : levi F n β) : lieLevi F n β ≃ₗ[F] lieLevi F n β :=
   (Units.mulLeftLinearEquiv F _ (m : GL (Fin n) F)).ofSubmodules _ _ (by
@@ -273,10 +273,10 @@ theorem parabolicMk_leviProj_unipCoord (p : blockUpper F n β) :
   ext i j
   rw [coe_parabolicMk, Matrix.add_apply, leviProj_apply]
   rcases lt_trichotomy (β i) (β j) with h | h | h
-  · rw [if_neg (ne_of_lt h), unipMatrix_apply_of_lt _ h, zero_add]
+  · rw [ite_eq_right (ne_of_lt h), unipMatrix_apply_of_lt _ h, zero_add]
     rfl
-  · rw [if_pos h, unipMatrix_apply_of_not_lt _ (by rw [h]; exact lt_irrefl _), add_zero]
-  · rw [if_neg (ne_of_gt h), unipMatrix_apply_of_not_lt _ (not_lt.2 h.le), add_zero]
+  · rw [ite_eq_left h, unipMatrix_apply_of_not_lt _ (by rw [h]; exact lt_irrefl _), add_zero]
+  · rw [ite_eq_right (ne_of_gt h), unipMatrix_apply_of_not_lt _ (not_lt.2 h.le), add_zero]
     exact ((mem_blockUpper F n).1 p.2 h).symm
 
 end ParabolicMk
@@ -311,7 +311,7 @@ theorem continuous_leviRatio : Continuous (leviRatio (F := F) β) := by
   refine Continuous.div (LinearChart.continuous_leftModulus _) ?_ fun m =>
     (LinearChart.leftModulus_pos _ _).ne'
   exact (LinearChart.continuous_leftModulus _).comp
-    (continuous_subtype_val.subtype_mk _ : Continuous fun m : levi F n β => leviIncl m)
+    (continuous_subtypeVal.subtype_mk _ : Continuous fun m : levi F n β => leviIncl m)
 
 end Ratio
 
@@ -364,10 +364,10 @@ theorem continuous_leviProj : Continuous (leviProj F n β) := by
   have : (leviChart β).toFun ∘ leviProj F n β = fun (p : blockUpper F n β) (s : LeviIndex n β) =>
       ((p : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) s.1.1 s.1.2 := by
     funext p s
-    simp only [Function.comp_apply, leviChart_apply, leviProj_apply, if_pos s.2]
+    simp only [Function.comp_apply, leviChart_apply, leviProj_apply, ite_eq_left s.2]
   rw [this]
   exact continuous_pi fun s =>
-    (Units.continuous_val.comp continuous_subtype_val).matrix_elem s.1.1 s.1.2
+    (Units.continuous_val.comp continuous_subtypeVal).matrix_elem s.1.1 s.1.2
 
 theorem parabolicChart_parabolicMk (m : levi F n β) (u : UnipotentIndex n β → F) :
     (parabolicChart F n β).toFun (parabolicMk β m u) = coordAddEquiv β ((leviChart β).toFun m, u) := by
@@ -462,7 +462,7 @@ theorem parabolicChart_leftModulus_of_mem {p : blockUpper F n β}
     { toFun := fun x => ⟨x, hle x⟩
       map_one' := rfl
       map_mul' := fun _ _ => rfl }
-  have hφ : Continuous φ := continuous_induced_rng.2 continuous_subtype_val
+  have hφ : Continuous φ := continuous_induced_rng.2 continuous_subtypeVal
   have := eq_one_of_mem_compact (((parabolicChart F n β).leftModulusHom).comp φ)
     ((LinearChart.continuous_leftModulus _).comp hφ) hKc (hK _ (Finset.mem_singleton_self _))
   exact this
@@ -513,7 +513,7 @@ theorem comap_parabolicMeasure (μ𝔪 : Measure (LeviIndex n β → F))
     simp only [coe_coordEquiv, AddEquiv.symm_apply_apply] at e
     rw [← e]
     funext s
-    rw [leviChart_apply, leviProj_apply, if_pos s.2]
+    rw [leviChart_apply, leviProj_apply, ite_eq_left s.2]
     rfl
   rw [show (fun x : levi F n β => μ𝔫 (Prod.mk x ⁻¹' (parabolicMkHomeomorph β ⁻¹' S))) =
       fun m => G ((leviChart β).toFun m) from funext hslice,

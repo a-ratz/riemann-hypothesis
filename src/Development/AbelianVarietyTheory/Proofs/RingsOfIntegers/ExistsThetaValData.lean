@@ -80,7 +80,7 @@ theorem descend (Xo : Moduli Dw l) {K : Type} [Field K] (x : Sp K ⟶ Xo.X) (M :
       ∀ w : ptO Xo (spMap φ ≫ x) ⟶ Xo.univ.t.G, w ^ M = 1 → ∃ a, g₂ ≫ a = g₁ ≫ w := by
   have : Nontrivial B := hφ.injective.nontrivial
   obtain ⟨m, hm⟩ := Ideal.exists_maximal B
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
   let χ : B →+* B ⧸ m := Ideal.Quotient.mk m
   have hc : spMap (χ.comp φ) = spMap χ ≫ spMap φ := by
     rw [spMap, spMap, spMap, ← Spec.map_comp]

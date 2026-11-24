@@ -391,7 +391,7 @@ theorem exists_isFirstMax : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     have hM0 : valuation k (minor Y M) = 0 := by rw [← hJ, h0, map_zero]
     have h1 := hM J0 (Finset.mem_univ _)
     rw [hM0] at h1
-    exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le')
+    exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le)
   · rw [hJ]; exact hM J' (Finset.mem_univ _)
   · rw [hJ]
     refine lt_of_le_of_ne (hM J' (Finset.mem_univ _)) fun heq => ?_
@@ -465,8 +465,8 @@ theorem rank_eq_iff_exists_minor_ne_zero (k : Type) [Field k] [ValuativeRel k] [
   constructor
   · intro hr
     obtain ⟨κ, f, hinj, hspan, hli⟩ := exists_linearIndependent' k Y.col
-    haveI : Finite κ := Finite.of_injective f hinj
-    haveI : Fintype κ := Fintype.ofFinite κ
+    have : Finite κ := Finite.of_injective f hinj
+    have : Fintype κ := Fintype.ofFinite κ
     have hcard : Fintype.card κ = a := by
       rw [← finrank_span_eq_card hli, hspan, Matrix.finrank_span_range_col, hr]
     let e : κ ≃ Fin a := Fintype.equivFinOfCardEq hcard
@@ -476,11 +476,11 @@ theorem rank_eq_iff_exists_minor_ne_zero (k : Type) [Field k] [ValuativeRel k] [
       funext j i; rfl
     have hli' : LinearIndependent k (Y.submatrix id J).col := by
       rw [hc]; exact hli.comp e.symm e.symm.injective
-    have hu := Matrix.linearIndependent_cols_iff_isUnit.mp hli'
+    have hu := linearIndependent_col_iff_isUnit.mp hli'
     exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
   · rintro ⟨J, hJ⟩
     have hu : IsUnit (Y.submatrix id J) := (Matrix.isUnit_iff_isUnit_det _).mpr (Ne.isUnit hJ)
-    have hli' := Matrix.linearIndependent_rows_iff_isUnit.mpr hu
+    have hli' := linearIndependent_row_iff_isUnit.mpr hu
     have hr : (Y.submatrix id J).row = (LinearMap.funLeft k k J) ∘ Y.row := by
       funext i j; rfl
     rw [hr] at hli'
@@ -635,9 +635,9 @@ theorem sec_inv_mul_mem_slice : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   · rw [minor_mul, hdet, map_mul, map_inv₀]
     have h0 : valuation k (minor Y J) ≠ 0 := by simpa using hJ.1
     constructor
-    · rw [inv_mul_le_iff₀ (zero_lt_iff.2 h0), mul_one]; exact (hJ.2 J').1
+    · rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 h0), mul_one]; exact (hJ.2 J').1
     · intro hl
-      rw [inv_mul_lt_iff₀ (zero_lt_iff.2 h0), mul_one]; exact (hJ.2 J').2 hl
+      rw [inv_mul_lt_iff₀ (pos_iff_ne_zero.2 h0), mul_one]; exact (hJ.2 J').2 hl
 
 end GlobalTheory.RankFibreKer
 end -- clump:auto

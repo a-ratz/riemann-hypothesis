@@ -215,9 +215,9 @@ theorem crossOp_eig_gap (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW
     (0 < h - n + 1 ∧ h - n + 1 ≤ θ) ∨ (θ ≤ -h - 1 ∧ -h - 1 < 0) := by
   classical
   have hVfd : FiniteDimensional ℂ V := hV.1
-  haveI := finiteDimensional_ncV (ε := ε) hVfd 1
+  have := finiteDimensional_ncV (ε := ε) hVfd 1
   set S := Module.End.eigenspace (crossOp ε E 1 0) (θ : ℂ) ⊓ ncV ε V 1 with hSdef
-  haveI hfd : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le inf_le_right
+  have hfd : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le inf_le_right
 
   have hSst : IsKStableSub ε (bAct E 1) S := by
     intro a b hab v hv
@@ -233,7 +233,7 @@ theorem crossOp_eig_gap (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW
 
   have hCS : ∀ x ∈ S, casimirK ε (bAct E 1) x ∈ S := fun x hx => casimirK_mem_of_kStable hSst hx
   let T : Module.End ℂ S := (casimirK ε (bAct E 1)).restrict hCS
-  haveI : Nontrivial S := ⟨⟨⟨y, hy⟩, 0, fun h => hy0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial S := ⟨⟨⟨y, hy⟩, 0, fun h => hy0 (congrArg Subtype.val h)⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue T
   obtain ⟨v, hv⟩ := hc.exists_hasEigenvector
   have hvT := Module.End.mem_eigenspace_iff.1 hv.1
@@ -268,7 +268,7 @@ theorem crossOp_eig_gap (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW
       · exact absurd (h1.symm.trans h2) hrs
       all_goals ring
     simp only [e, Finset.sum_add_distrib, Finset.sum_sub_distrib, ← Finset.mul_sum,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
   have hcas : casValK ε μ - casValK ε (lowK ε lam) =
       2 * ((lowK ε lam + rhoC ε) r - (lowK ε lam + rhoC ε) s) + 2 := by
@@ -355,7 +355,7 @@ theorem ncV_one_decomp (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW 
     (hmono : StrictAnti lam) {h : ℝ} (hh : GapAtLeast ε lam h)
     (hbig : (n : ℝ) * (pOf ε : ℝ) * (qOf ε : ℝ) + 1 < h) {x : Big n 1 M} (hx : x ∈ ncV ε V 1) :
     ∃ xm ∈ Wm ε E V, ∃ xp ∈ Wp ε E V, x = xm + xp := by
-  haveI : FiniteDimensional ℂ (ncV ε V 1) := finiteDimensional_ncV hV.1 1
+  have : FiniteDimensional ℂ (ncV ε V 1) := finiteDimensional_ncV hV.1 1
   have hstab : ∀ y ∈ ncV ε V 1, crossOp ε E 1 0 y ∈ ncV ε V 1 :=
     fun y hy => crossOp_mem_ncV hV.2.1 1 0 hy
   let T : Module.End ℂ (ncV ε V 1) := (crossOp ε E 1 0).restrict hstab

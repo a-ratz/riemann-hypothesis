@@ -1066,7 +1066,7 @@ theorem flag_stab : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ 
   obtain ⟨A, hA⟩ : ∃ A : GL (Fin ρ) (AE D), A.1 = a := ⟨⟨a, _, hab, hba⟩, rfl⟩
 
   have hdet : IsUnit a.det := Matrix.isUnit_det_of_left_inverse hba
-  rw [Matrix.det_of_upperTriangular (M := a) (fun ⦃i j⦄ h => hup i j h)] at hdet
+  rw [det_of_isUpperTriangular (M := a) (fun ⦃i j⦄ h => hup i j h)] at hdet
   have hu : ∀ i, IsUnit (a i i) := fun i =>
     isUnit_of_dvd_unit (Finset.dvd_prod_of_mem (fun k => a k k) (Finset.mem_univ i)) hdet
   obtain ⟨t, ht1, htinv⟩ : ∃ t : GL (Fin ρ) (AE D), t.1 = diagonal (fun i => a i i) ∧

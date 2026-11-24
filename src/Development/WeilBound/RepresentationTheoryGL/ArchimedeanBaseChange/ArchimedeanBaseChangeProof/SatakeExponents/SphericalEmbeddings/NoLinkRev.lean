@@ -88,7 +88,7 @@ theorem prin_irr (χ : Fin 2 → kˣ →* ℂˣ) (hχ : ∀ i, IsSmoothChar (χ 
   let q := multiProdEquiv (stdBlocks (fun i => (x i).1) hd) fun i => equivRep (IrrRep.det (Fin 1) (χ i) (hχ i))
   have hM : (multiProd (Equiv.sigmaUnique (Fin 2) fun _ => Fin 1) fun i => detRep (Fin 1) (χ i)).IsIrreducible :=
     GlobalTheory.Parabolic.isIrreducible_of_equiv (p.trans q).symm hP
-  haveI := nontrivial_of_irreducible hM
+  have := nontrivial_of_irreducible hM
   haveI : Nontrivial (IndSp (points (Fin 2)) _) := by
     obtain ⟨S, f, hf⟩ := GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries (Equiv.sigmaUnique (Fin 2) fun _ => Fin 1) χ
     have := hf.nontrivial
@@ -141,8 +141,8 @@ theorem iso2 (a b : ℂˣ) (hI1 : (iP (k := k) ![a, b]).IsIrreducible) (hI2 : (i
     (μ := Measure.haar)
   have hA' := GroundTheory.Automorphic.Spherical.isSatakeParameter_comp hA (Equiv.swap (0 : Fin 2) 1)
   rw [swap_param] at hA'
-  haveI := hI1
-  haveI := hI2
+  have := hI1
+  have := hI2
   exact GroundTheory.Automorphic.Spherical.nonempty_equiv_of_isSatakeParameter (fun v => isSmooth_parInd _ _ v)
     (fun v => isSmooth_parInd _ _ v)
     ((GlobalTheory.CompanionTheory.SphSupp.isSpherical_iff_fixedVectors _).1 (iP_sph ![a, b]))

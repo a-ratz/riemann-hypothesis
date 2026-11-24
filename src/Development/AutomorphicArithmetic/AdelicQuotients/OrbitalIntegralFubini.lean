@@ -60,7 +60,7 @@ open MeasureTheory in
 theorem UpperTheory.ConvolutionTheory.G.quotFub_of :
     UpperTheory.ConvolutionTheory.G.NormEx → UpperTheory.ConvolutionTheory.G.QuotEq → UpperTheory.ConvolutionTheory.G.QuotFub := by
   intro _ hE G _ _ _ _ _ _ _ _ T _ _ _ _ _ _ _ _ μ j ν hP X _ m _ F hF hinv ρ hρ hfin
-  haveI : μ.IsHaarMeasure := hP.1.1
+  have : μ.IsHaarMeasure := hP.1.1
   have hρm : Measurable (fun x => ((ρ x).toReal : ℂ)) :=
     Complex.measurable_ofReal.comp hρ.1.ennreal_toReal
   have hH : Measurable (Function.uncurry fun (a : X) (x : G) => F a x * ((ρ x).toReal : ℂ)) :=
@@ -68,12 +68,12 @@ theorem UpperTheory.ConvolutionTheory.G.quotFub_of :
   have hint : Integrable (Function.uncurry fun (a : X) (x : G) => F a x * ((ρ x).toReal : ℂ)) (m.prod μ) := by
     refine ⟨hH.aestronglyMeasurable, ?_⟩
     unfold HasFiniteIntegral
-    rw [lintegral_prod _ hH.enorm.aemeasurable]
+    rw [lintegral_prod _ hH.eNorm.aemeasurable]
     refine lt_of_le_of_lt ?_ (lt_top_iff_ne_top.2 hfin)
     refine lintegral_mono fun a => lintegral_mono fun x => ?_
-    simp only [Function.uncurry, enorm_mul]
+    simp only [Function.uncurry, eNorm_mul]
     gcongr
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
     exact ENNReal.ofReal_toReal_le
   have hGm : Measurable (fun g => ∫ a, F a g ∂m) :=
     (hF.stronglyMeasurable.integral_prod_left).measurable
@@ -106,7 +106,7 @@ open MeasureTheory Pointwise in
 theorem UpperTheory.orbital_integral_fubini :
     Fub := by
   intro G _ _ _ _ _ _ _ _ T _ _ _ _ _ _ _ _ μ j ν hP θ δ z hθ hz hinv hC hB φ hφ hφc
-  haveI : μ.IsHaarMeasure := hP.1.1
+  have : μ.IsHaarMeasure := hP.1.1
   obtain ⟨ρ, hρc, hρn, hρD⟩ := normEx G T μ j ν hP
   have hw : Continuous fun x : G => x⁻¹ * δ * θ x :=
     (continuous_inv.mul continuous_const).mul hθ
@@ -149,7 +149,7 @@ theorem UpperTheory.orbital_integral_fubini :
     have hx : x ∈ D := hDm x (hsupp s x h0).2 h1
     rw [Set.indicator_of_mem hx]
     refine mul_le_mul' ?_ ?_
-    · rw [← ofReal_norm_eq_enorm]
+    · rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hM _)
     · rw [← ENNReal.ofReal_coe_nnreal]
       exact ENNReal.ofReal_le_ofReal ((Real.le_norm_self _).trans (hR x hx))

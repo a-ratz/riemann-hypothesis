@@ -82,7 +82,7 @@ private theorem valuation_lt_one_iff_mem_and_inv_not_mem {L : Type} [Field L] (B
     have h4 : 1 ≤ B.valuation z := by
       by_contra h5
       push_neg at h5
-      have h6 := one_lt_inv₀ (zero_lt_iff.2 hne) |>.2 h5
+      have h6 := one_lt_inv₀ (pos_iff_ne_zero.2 hne) |>.2 h5
       exact absurd h3 (not_le.2 h6)
     exact absurd h (not_lt.2 h4)
   · rintro ⟨hz, h0 | hi⟩
@@ -190,8 +190,8 @@ theorem exists_inertia (hk : IsAlgClosed (ResidueField O)) {l : ℕ} (hl : l ≠
       ∀ τ : AlgebraicClosure (FractionRing O) ≃ₐ[FractionRing O] AlgebraicClosure (FractionRing O),
         ∃ g : G K Ω, g ∈ Ine (F := K) A ∧ ∀ x, J (g x) = τ (J x) := by
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   set A : ValuationSubring Ω := (intBar O).comap J with hA
   have hint : ∀ x : 𝓞 K, algebraMap K Ω (x : K) ∈ A := by
     intro x
@@ -224,7 +224,7 @@ theorem exists_inertia (hk : IsAlgClosed (ResidueField O)) {l : ℕ} (hl : l ≠
     intro h
     rw [h] at hlP
     exact hl0 ((Submodule.mem_bot _).1 hlP)
-  haveI : P.IsPrime := Ideal.comap_isPrime f _
+  have : P.IsPrime := Ideal.comap_isPrime f _
   let v : HeightOneSpectrum (𝓞 K) := ⟨P, inferInstance, hP0⟩
   refine ⟨v, A, hlP, fun x => (hPmem x).symm, fun τ => ?_⟩
   have hfix : τ.toAlgHom.toRingHom.comp (J.comp (algebraMap K Ω)) = J.comp (algebraMap K Ω) := by
@@ -285,7 +285,7 @@ section Fourier
 
 theorem eq_one_of_chars {Δ Ω : Type} [CommGroup Δ] [Finite Δ] [Field Ω] [IsAlgClosed Ω] [CharZero Ω] {a : Δ}
     (h : ∀ r : Δ →* Ωˣ, r a = 1) : a = 1 := by
-  haveI : NeZero ((Monoid.exponent Δ : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero ((Monoid.exponent Δ : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
   by_contra ha
   obtain ⟨r, hr⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity Δ Ω ha
   exact hr (h r)
@@ -294,8 +294,8 @@ theorem exists_fixed {Δ Ω C : Type} [CommGroup Δ] [Fintype Δ] [Field Ω] [Is
     (P : Δ → C) (ρ : (Δ →* Ωˣ) → Ω) (h : ∀ r, j (ρ r) = ∑ δ, j (r δ) * P δ) (δ : Δ) :
     ∃ z, j z = P δ ∧ ∀ g : Ω ≃+* Ω, (∀ r, g (ρ r) = ρ ((Units.map g.toMonoidHom).comp r)) → g z = z := by
   classical
-  haveI : NeZero ((Monoid.exponent Δ : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
-  haveI : Fintype (Δ →* Ωˣ) := Fintype.ofFinite _
+  have : NeZero ((Monoid.exponent Δ : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
+  have : Fintype (Δ →* Ωˣ) := Fintype.ofFinite _
   set N : ℕ := Fintype.card (Δ →* Ωˣ) with hNdef
   have hN : (N : Ω) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   have hNC : (N : C) ≠ 0 := by rw [← map_natCast j]; exact (map_ne_zero j).2 hN
@@ -368,13 +368,13 @@ theorem finPart_mem {I : Type} [Fintype I] {φ : I → E →+* ℂ} {m : I → �
   let H : Subgroup ℂˣ :=
     { carrier := {z | (z : ℂ) ∈ M}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, Units.val_mul] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, Units.val_mul] at ha hb ⊢
         exact M.mul_mem ha hb
       one_mem' := by
-        simp only [Set.mem_setOf_eq, Units.val_one]
+        simp only [Set.mem_ofPred_eq, Units.val_one]
         exact M.one_mem
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq, Units.val_inv_eq_inv_val] at ha ⊢
+        simp only [Set.mem_ofPred_eq, Units.val_inv_eq_inv_val] at ha ⊢
         exact M.inv_mem ha }
   have hH : ∀ z : ℂˣ, z ∈ H ↔ (z : ℂ) ∈ M := fun z => Iff.rfl
   let ψ : (Af E)ˣ →* ℂˣ ⧸ H := (QuotientGroup.mk' H).comp (finPart χ)
@@ -402,7 +402,7 @@ theorem finPart_mem {I : Type} [Fintype I] {φ : I → E →+* ℂ} {m : I → �
       exact M.one_mem
   let ψb : PicO c →* ℂˣ ⧸ H := QuotientGroup.lift _ ψ hker
   have hψb : ∀ z, ψb (QuotientGroup.mk z) = ψ z := fun z => QuotientGroup.lift_mk' _ hker z
-  haveI : Finite ψb.range := Finite.of_surjective ψb.rangeRestrict ψb.rangeRestrict_surjective
+  have : Finite ψb.range := Finite.of_surjective ψb.rangeRestrict ψb.rangeRestrict_surjective
   have hmem : ψ y ∈ ψb.range := ⟨QuotientGroup.mk y, hψb y⟩
   have key : ∀ r : ψb.range →* ℂˣ, r ⟨ψ y, hmem⟩ = 1 := by
     intro r

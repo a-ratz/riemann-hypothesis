@@ -150,7 +150,7 @@ theorem UpperTheory.V.Af.Tw.frobInert :
       rw [← hg, hy g hg1, ← hy c hc1, hcw]
   have hf : w.asIdeal.inertiaDeg (𝓞 F) = 2 := by
     have := v.isPrime
-    letI : Unique (v.asIdeal.primesOver (𝓞 L)) :=
+    let : Unique (v.asIdeal.primesOver (𝓞 L)) :=
       ⟨⟨⟨w.asIdeal, w.isPrime, hwv⟩⟩, fun P => Subtype.ext (huniq P.1 P.2.1 P.2.2)⟩
     have hs := Ideal.sum_ramification_inertia_eq_card (p := v.asIdeal) (S := 𝓞 L) (G := L ≃ₐ[F] L)
     rw [Fintype.sum_unique, IsGalois.card_aut_eq_finrank, h2] at hs

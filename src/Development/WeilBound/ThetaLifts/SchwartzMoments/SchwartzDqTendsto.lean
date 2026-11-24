@@ -94,7 +94,7 @@ theorem schwartz_dq_tendsto (g : 𝓢(V, ℂ)) (a : V) :
         SchwartzMap.compSubConstCLM ℂ (-((0 : ℝ) • a)) g - t • ∂_{a} g) := by
     ext x
     have : (t : ℂ) ≠ 0 := by exact_mod_cast ht0
-    simp only [SchwartzMap.sub_apply, SchwartzMap.smul_apply, SchwartzMap.compSubConstCLM_apply, zero_add, zero_smul,
+    simp only [sub_apply, smul_apply, SchwartzMap.compSubConstCLM_apply, zero_add, zero_smul,
       neg_zero, sub_zero, Complex.real_smul, smul_eq_mul, Complex.ofReal_inv]
     field_simp
   rw [SchwartzMap.schwartzSeminormFamily_apply, e, map_smul_eq_mul, Complex.norm_real, norm_inv]

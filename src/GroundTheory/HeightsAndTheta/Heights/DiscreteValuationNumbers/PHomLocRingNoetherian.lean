@@ -235,8 +235,8 @@ theorem HomLocRingNoetherian.proof (hmem : HomLocRingMem.Statement.{u}) :
   have hmono' : Monotone (fun I : Ideal (homLocRing P W) => I.map j) := fun _ _ h => Ideal.map_mono h
   have hmono : StrictMono (fun I : Ideal (homLocRing P W) => I.map j) :=
     hmono'.strictMono_of_injective hinj
-  have : WellFoundedGT (Ideal B) := isNoetherian_iff'.mp (isNoetherianRing_iff.mp inferInstance)
-  exact isNoetherianRing_iff.mpr (isNoetherian_iff'.mpr hmono.wellFoundedGT)
+  have : WellFoundedGT (Ideal B) := isNoetherian_iff.mp (isNoetherianRing_iff.mp inferInstance)
+  exact isNoetherianRing_iff.mpr (isNoetherian_iff.mpr hmono.wellFoundedGT)
 
 end
 

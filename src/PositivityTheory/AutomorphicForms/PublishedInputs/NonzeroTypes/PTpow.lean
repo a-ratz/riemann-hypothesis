@@ -271,13 +271,13 @@ theorem finite_all {ϖ : kˣ} (hϖ : IsUnif ϖ) (h1 : Finite (↥G.NO ⧸ G.zN �
     Finite (↥G.NO ⧸ G.zN ϖ m) := by
   induction m with
   | zero =>
-    haveI := sub0 G ϖ
+    have := sub0 G ϖ
     exact Finite.of_subsingleton
   | succ m ih => exact Finite.of_equiv _ (psiEquiv G hϖ m)
 
 theorem infinite_succ {ϖ : kˣ} (hϖ : IsUnif ϖ) (h1 : Infinite (↥G.NO ⧸ G.zN ϖ 1)) (m : ℕ) :
     Infinite (↥G.NO ⧸ G.zN ϖ (m + 1)) := by
-  haveI : Nonempty (↥G.NO ⧸ G.zN ϖ m) := ⟨QuotientGroup.mk 1⟩
+  have : Nonempty (↥G.NO ⧸ G.zN ϖ m) := ⟨QuotientGroup.mk 1⟩
   exact Infinite.of_injective _ (psiEquiv G hϖ m).injective
 
 section Op
@@ -297,8 +297,8 @@ theorem summand_out (ϖ : kˣ) (x : V) (hfix : ∀ h ∈ G.NO, π h x = x) (m : 
   simp only [rep_mul_apply, rep_inv_apply, hfix b hb]
 
 theorem tz_zero (ϖ : kˣ) (x : V) (hfix : ∀ h ∈ G.NO, π h x = x) : G.Tz π ϖ 0 x = x := by
-  haveI := sub0 G ϖ
-  haveI : Unique (↥G.NO ⧸ G.zN ϖ 0) := uniqueOfSubsingleton (QuotientGroup.mk 1)
+  have := sub0 G ϖ
+  have : Unique (↥G.NO ⧸ G.zN ϖ 0) := uniqueOfSubsingleton (QuotientGroup.mk 1)
   unfold Tz
   rw [finsum_unique]
   rw [pow_zero, map_one]
@@ -306,12 +306,12 @@ theorem tz_zero (ϖ : kˣ) (x : V) (hfix : ∀ h ∈ G.NO, π h x = x) : G.Tz π
 
 theorem tz_succ {ϖ : kˣ} (hϖ : IsUnif ϖ) (x : V) (hfix : ∀ h ∈ G.NO, π h x = x) (m : ℕ)
     (h1 : Finite (↥G.NO ⧸ G.zN ϖ 1)) : G.Tz π ϖ (m + 1) x = G.Tz π ϖ 1 (G.Tz π ϖ m x) := by
-  haveI := h1
-  haveI := finite_all G hϖ h1 m
-  haveI := finite_all G hϖ h1 (m + 1)
-  letI := Fintype.ofFinite (↥G.NO ⧸ G.zN ϖ 1)
-  letI := Fintype.ofFinite (↥G.NO ⧸ G.zN ϖ m)
-  letI := Fintype.ofFinite (↥G.NO ⧸ G.zN ϖ (m + 1))
+  have := h1
+  have := finite_all G hϖ h1 m
+  have := finite_all G hϖ h1 (m + 1)
+  let := Fintype.ofFinite (↥G.NO ⧸ G.zN ϖ 1)
+  let := Fintype.ofFinite (↥G.NO ⧸ G.zN ϖ m)
+  let := Fintype.ofFinite (↥G.NO ⧸ G.zN ϖ (m + 1))
   unfold Tz
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
     ← Equiv.sum_comp (psiEquiv G hϖ m), Fintype.sum_prod_type]
@@ -334,8 +334,8 @@ theorem tz_iter {ϖ : kˣ} (hϖ : IsUnif ϖ) (x : V) (hfix : ∀ h ∈ G.NO, π 
     cases m with
     | zero => rw [Function.iterate_zero_apply]; exact tz_zero G π ϖ x hfix
     | succ m =>
-      haveI := hfin
-      haveI := infinite_succ G hϖ hfin m
+      have := hfin
+      have := infinite_succ G hϖ hfin m
       rw [Function.iterate_succ_apply']
       unfold Tz
       rw [finsum_rep_of_infinite π _ _, finsum_rep_of_infinite π _ _]

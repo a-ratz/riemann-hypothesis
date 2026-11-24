@@ -78,13 +78,13 @@ lemma isOpen_omega : IsOpen (OmegaSet n) := by
     isOpen_ne_fun (contDiff_lead (m := 0) _).continuous continuous_const
 
 lemma continuous_toMK : Continuous fun k : KG ε => toMK k :=
-  (continuous_toM ε).comp continuous_subtype_val
+  (continuous_toM ε).comp continuous_subtypeVal
 
 lemma continuous_toMK_inv : Continuous fun k : KG ε => toMK k⁻¹ :=
   continuous_toMK.comp continuous_inv
 
 lemma continuous_P (T : KType ε Λ) : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ := by
-  have h : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have h : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   exact (h.mul continuous_const).mul (h.comp continuous_inv)
 
 lemma continuous_cline (a b : Matrix (Fin n) (Fin n) ℂ) :

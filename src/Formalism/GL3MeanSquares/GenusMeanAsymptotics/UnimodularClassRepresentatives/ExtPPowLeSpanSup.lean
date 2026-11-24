@@ -117,7 +117,7 @@ theorem mul_notMem (hP : P.IsPrime) (hP0 : P ≠ ⊥) {a b : R} {i j : ℕ} (ha 
 theorem pow_le_span_mul_sup (hP : P.IsPrime) (hP0 : P ≠ ⊥) {g : R} {c k : ℕ} (hg : g ∉ P ^ (c + 1))
     (hck : c ≤ k) : P ^ k ≤ Ideal.span {g} * P ^ (k - c) ⊔ P ^ (k + 1) := by
   have hpr : Prime P := Ideal.prime_of_isPrime hP0 hP
-  obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt
+  obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt
     (Ideal.pow_right_strictAnti P hP0 hP.ne_top (by omega : k - c < k - c + 1))
   have hdvd : Ideal.span {g} * P ^ (k - c) ⊔ P ^ (k + 1) ∣ P ^ (k + 1) :=
     Ideal.dvd_iff_le.mpr le_sup_right

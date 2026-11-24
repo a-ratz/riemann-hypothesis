@@ -93,13 +93,13 @@ theorem section_sum_integral_expand {f : d.G → ℂ} {s₁ z : ℂ} {lam : Meas
     refine integral_congr_ae (ae_of_all _ fun p => ?_)
     simp only [g, kq, E2, th]
     rw [tsum_mul_right]
-  · have hm : ∀ q, AEMeasurable (fun p => ‖g q p‖ₑ) μ := fun q => (hgi q).aemeasurable.enorm
+  · have hm : ∀ q, AEMeasurable (fun p => ‖g q p‖ₑ) μ := fun q => (hgi q).aemeasurable.eNorm
     have e1 : ∫⁻ p, ∑' q : {q : Cs d // ¬ LagrangianCondition L (rep q)}, ‖phz d f s₁ z (rep q.1 * (nb p.2 * (uM p.1 * x))) * th T p.2‖ₑ ∂μ =
         ∑' q, ENNReal.ofReal (∫ p, ‖g q p‖ ∂μ) := by
       rw [show (fun p => ∑' q : {q : Cs d // ¬ LagrangianCondition L (rep q)},
           ‖phz d f s₁ z (rep q.1 * (nb p.2 * (uM p.1 * x))) * th T p.2‖ₑ) = fun p => ∑' q, ‖g q p‖ₑ from rfl,
         lintegral_tsum hm]
-      exact tsum_congr fun q => (ofReal_integral_norm_eq_lintegral_enorm (hgi q)).symm
+      exact tsum_congr fun q => (ofReal_integral_norm_eq_lintegral_eNorm (hgi q)).symm
     rw [e1, ← ENNReal.ofReal_tsum_of_nonneg (fun q => integral_nonneg fun p => norm_nonneg _) hgs]
     exact ENNReal.ofReal_lt_top
 

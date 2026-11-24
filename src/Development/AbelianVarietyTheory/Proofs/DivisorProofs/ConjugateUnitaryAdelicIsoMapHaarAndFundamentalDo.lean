@@ -101,8 +101,8 @@ theorem continuous_conjUInv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.
     (h : J = c • V.gram) : Continuous (conjUInv V c hc h) := by
   have : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact (Units.continuous_val.comp continuous_subtype_val).matrix_map (continuous_conj D)
-  · exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_map (continuous_conj D)
+  · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_map (continuous_conj D)
+  · exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_map (continuous_conj D)
 
 theorem cA_inclR (a : D.host.E) :
     cA D (inclR (F := D.host.F) (AF D.host.F) a) = inclR (F := D.host.F) (AF D.host.F) (D.sp.cm.sig a) := rfl

@@ -132,7 +132,7 @@ theorem exists_grpObj [GrpObj G] [IsCommMonObj G] (hc : IsGaloisCover Ga ρ π)
     rw [up_comp, hm, MonObj.comp_mul, ← up_comp, ← up_comp]
   have he' {T : Over Y} (u : T ⟶ 𝟙_ _) : up H (u ≫ e) = 1 := by
     rw [up_comp, he, MonObj.comp_one]
-  letI : GrpObj G' :=
+  let : GrpObj G' :=
     { one := e
       mul := m
       one_mul := inj (by

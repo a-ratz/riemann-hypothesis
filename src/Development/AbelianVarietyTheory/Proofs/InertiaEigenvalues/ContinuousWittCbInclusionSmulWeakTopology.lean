@@ -170,13 +170,13 @@ end GlobalTheory.WeakTop
 
 theorem GlobalTheory.WeakClosed.continuous_zl_smul : ∀ {l : ℕ} [Fact l.Prime] {K LL : FinExt l} (T : Lt K LL) {d : ℕ} (b : LatB T d) (m : TW (RW LL) T), letI := twTop T b; Continuous fun c : ℤ_[l] => algebraMap ℤ_[l] ↥(OL LL) c • m := by
   intro l _ K LL T d b m
-  letI := twTop T b
-  letI := zlMod T
-  haveI := zlTower T
-  letI := cbTop l
-  letI := cbValued l
-  letI := wTop l
-  haveI : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
+  let := twTop T b
+  let := zlMod T
+  have := zlTower T
+  let := cbTop l
+  let := cbValued l
+  let := wTop l
+  have : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
   have hW : Continuous (algebraMap ℤ_[l] (WCb l)) := GlobalTheory.WeakTop.continuous_padicInt_witt _
   refine continuous_induced_rng.2 (continuous_pi fun i => ?_)
   simp only [Function.comp_apply, GlobalTheory.WeakTop.coords_algebraMap_smul]
@@ -263,7 +263,7 @@ theorem main {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (s : �
   refine ⟨fun h => ?_, fun a ha => ?_⟩
   · have h1 := (h.pow (l ^ s)).map (PreTilt.coeff 0)
     rw [εroot_sub_pow', map_sub, AI.ε_coeff, AI.ζ_zero, map_one, map_one, sub_self] at h1
-    haveI : Nontrivial (ModP (OC l) l) := CharP.nontrivial_of_char_ne_one (Fact.out : l.Prime).ne_one
+    have : Nontrivial (ModP (OC l) l) := CharP.nontrivial_of_char_ne_one (Fact.out : l.Prime).ne_one
     exact not_isUnit_zero h1
   · by_contra h
     exact ha (eq_zero_of_forall_dvd AI s a fun m =>
@@ -372,7 +372,7 @@ theorem lt_of_mem_span_pow {l : ℕ} [Fact l.Prime] (ϖ : OCb l) (hϖ : ¬ IsUni
     (hdiv : ∀ a : OCb l, a ≠ 0 → ∃ m : ℕ, a ∣ ϖ ^ m) (c : Cb l) (hc : c ≠ 0) :
     ∃ m : ℕ, ∀ x ∈ Ideal.span {ϖ ^ m},
       (cbValued l).v (algebraMap (OCb l) (Cb l) x) < (cbValued l).v c := by
-  letI := cbValued l
+  let := cbValued l
   have hle : ∀ x y : Cb l, Valued.v x ≤ Valued.v y ↔
       ∃ e : OCb l, algebraMap (OCb l) (Cb l) e * y = x := by
     intro x y
@@ -406,8 +406,8 @@ theorem weakly_small : ∀ {l : ℕ} [Fact l.Prime] (ϖ : OCb l), ¬ IsUnit ϖ �
        ∀ U ∈ 𝓝 (0 : WCb l), ∃ N m : ℕ, ∀ w : Ainf l,
          (∀ n < N, w.coeff n ∈ Ideal.span {ϖ ^ m}) → inclW l w ∈ U) := by
   intro l _ ϖ hϖ hdiv
-  letI := wTop l
-  letI := cbTop l
+  let := wTop l
+  let := cbTop l
   intro U hU
   rw [nhds_induced] at hU
   obtain ⟨t, ht, htU⟩ := Filter.mem_comap.1 hU
@@ -525,11 +525,11 @@ theorem exists_pow_wittCoords_inclR_smul_mem_nhds {l : ℕ} [Fact l.Prime] {P : 
     ∃ k : ℕ, ∀ z : RA LL, letI := zlMod T; haveI := zlTower T;
       GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b (inclR LL ((((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]]
         (WittVector.teichmuller l (AI.εroot s) - 1)) : RA LL) ^ k * z) • y) ∈ V := by
-  letI := zlMod T
-  haveI := zlTower T
-  letI := cbValued l
-  letI := wTop l
-  haveI : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
+  let := zlMod T
+  have := zlTower T
+  let := cbValued l
+  let := wTop l
+  have : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
   set x : Ainf l := WittVector.teichmuller l (AI.εroot s) - 1 with hx
   let Y : Fin m → TW (RW LL) T := fun α => ((bO α ⊗ₜ[ℤ_[l]] (1 : WCb l) : RW LL)) • y
   let F : (Fin m → WCb l) → (Fin d → WCb l) := fun w i =>
@@ -554,11 +554,11 @@ theorem exists_pow_wittCoords_inclR_smul_mem_nhds {l : ℕ} [Fact l.Prime] {P : 
 
 theorem exists_pow_inclR_smul_mem : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (s : ℕ) {K LL : FinExt l} (T : Lt K LL) {d : ℕ} (b : LatB T d) (y : TW (RW LL) T), letI := twTop T b; ∀ U ∈ 𝓝 (0 : TW (RW LL) T), ∃ k : ℕ, ∀ z : RA LL, inclR LL ((((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] (WittVector.teichmuller l (AI.εroot s) - 1)) : RA LL) ^ k * z) • y ∈ U := by
   intro l _ P AI s K LL T d b y
-  letI := zlMod T
-  haveI := zlTower T
-  letI := cbValued l
-  letI := wTop l
-  haveI : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
+  let := zlMod T
+  have := zlTower T
+  let := cbValued l
+  let := wTop l
+  have : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
   intro U hU
   obtain ⟨-, -, -, -, hfree, hfin, -⟩ := GlobalTheory.Per.integers_completeDVR l LL
   have hU' : U ∈ Filter.comap (GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b)
@@ -599,7 +599,7 @@ theorem linearMap_pi_continuous_coord : ∀ {l : ℕ} [Fact l.Prime] {O M ι : T
         inferInstance f := by
   intro l _ O M ι _ _ _ _ _ _ _ e bO hcont f
   classical
-  letI : TopologicalSpace O := TopologicalSpace.induced bO.equivFun inferInstance
+  let : TopologicalSpace O := TopologicalSpace.induced bO.equivFun inferInstance
   have key : ∀ c : ι → O, f c = ∑ i, ∑ α, algebraMap ℤ_[l] O (bO.equivFun (c i) α) • (bO α • f (Pi.single i 1)) := by
     intro c
     rw [LinearMap.pi_apply_eq_sum_univ f c]

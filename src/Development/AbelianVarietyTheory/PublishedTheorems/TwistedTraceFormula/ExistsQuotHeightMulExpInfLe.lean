@@ -154,8 +154,8 @@ theorem expInf_zero_smul (R : RealPoints θ V) (X : LieInf V) : expInf θ V ((0 
 theorem continuous_infNorm_expInf (R : RealPoints θ V) (X : LieInf V) (τ : D.what₂.Tau) :
     Continuous fun t : ℝ => infNorm θ V τ (expInf θ V (t • X : LieInf V)) := by
   have h1 : Continuous fun t : ℝ => NormedSpace.exp (t • (X τ).1) := by
-    have : CompleteSpace (AlgInf V) := FiniteDimensional.complete ℝ _
-    letI : NormedAlgebra ℚ (AlgInf V) := NormedAlgebra.restrictScalars ℚ ℝ _
+    have : CompleteSpace (AlgInf V) := FiniteDimensional.completeSpace ℝ _
+    let : NormedAlgebra ℚ (AlgInf V) := NormedAlgebra.restrictScalars ℚ ℝ _
     have h0 : Continuous fun t : ℝ => (NormedSpace.exp (t • jInf V X) : AlgInf V) :=
       NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
     have h3 : Continuous fun u : AlgInf V => u τ := continuous_apply τ
@@ -163,7 +163,7 @@ theorem continuous_infNorm_expInf (R : RealPoints θ V) (X : LieInf V) (τ : D.w
   have h2 : Continuous (Matrix.toEuclideanCLM (n := Fin V.rank) (𝕜 := ℂ)) :=
     LinearMap.continuous_of_finiteDimensional
       (Matrix.toEuclideanCLM (n := Fin V.rank) (𝕜 := ℂ)).toAlgEquiv.toLinearMap
-  refine (h2.comp h1).nnnorm.congr fun t => ?_
+  refine (h2.comp h1).nnNorm.congr fun t => ?_
   rw [infNorm, (isExpFam_expInf R _).2]
   rfl
 

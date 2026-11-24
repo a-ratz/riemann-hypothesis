@@ -70,7 +70,7 @@ private theorem hop_one {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Mea
   have hs : {c : GL (Fin n) (w.adicCompletion K) ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * 1)} =
       {QuotientGroup.mk 1} := by
     ext c
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, mul_one]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, mul_one]
     constructor
     · rintro ⟨k, hk, rfl⟩
       exact QuotientGroup.eq.mpr (by simpa using hk)

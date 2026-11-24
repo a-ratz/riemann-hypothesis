@@ -245,13 +245,13 @@ theorem sections_restrict_bijective (U Ω k : Type) [CommRing U] [IsDomain U] [V
       (⟨spMap h ≫ s.1, by rw [Category.assoc, s.2, Category.comp_id]⟩ : {x : Sp k ⟶ X // x ≫ p = spMap h})) := by
     rintro ⟨s₁, h₁⟩ ⟨s₂, h₂⟩ e
     have e' : spMap h ≫ s₁ = spMap h ≫ s₂ := congrArg Subtype.val e
-    haveI : LocallyOfFiniteType (Over.mk p).hom := inferInstanceAs (LocallyOfFiniteType p)
-    haveI : FormallyUnramified (Over.mk p).hom := inferInstanceAs (FormallyUnramified p)
-    haveI : IsSeparated (Over.mk p).hom := inferInstanceAs (IsSeparated p)
+    have : LocallyOfFiniteType (Over.mk p).hom := inferInstanceAs (LocallyOfFiniteType p)
+    have : FormallyUnramified (Over.mk p).hom := inferInstanceAs (FormallyUnramified p)
+    have : IsSeparated (Over.mk p).hom := inferInstanceAs (IsSeparated p)
     let f₁ : Over.mk (𝟙 (Sp U)) ⟶ Over.mk p := Over.homMk s₁ h₁
     let f₂ : Over.mk (𝟙 (Sp U)) ⟶ Over.mk p := Over.homMk s₂ h₂
     have hr := (FinEt.comp_eq_comp_iff_range f₁ f₂ (spMap h)).1 e'
-    haveI : PreconnectedSpace (Over.mk (𝟙 (Sp U))).left := inferInstanceAs (PreconnectedSpace (Sp U))
+    have : PreconnectedSpace (Over.mk (𝟙 (Sp U))).left := inferInstanceAs (PreconnectedSpace (Sp U))
     have hc : IsClopen (Set.range (FinEt.agreeι f₁ f₂)) :=
       ⟨(FinEt.agreeι f₁ f₂).isClosedEmbedding.isClosed_range, (FinEt.agreeι f₁ f₂).isOpenEmbedding.isOpen_range⟩
     obtain ⟨z⟩ : Nonempty (Sp k) := inferInstance
@@ -263,7 +263,7 @@ theorem sections_restrict_bijective (U Ω k : Type) [CommRing U] [IsDomain U] [V
   obtain ⟨w⟩ : Nonempty (Sp Ω) := inferInstance
   obtain ⟨hBfin, hB⟩ := FinEt.card_points_eq_finrank p (spMap h) z
   obtain ⟨-, hC⟩ := FinEt.card_points_eq_finrank p (spMap (algebraMap U Ω)) w
-  haveI := hBfin
+  have := hBfin
   haveI : Finite {s : Sp U ⟶ X // s ≫ p = 𝟙 _} := Finite.of_injective _ inj
   have hv : ValuativeCriterion p := by
     have hp : IsProper p := inferInstance
@@ -286,9 +286,9 @@ theorem sections_restrict_bijective (U Ω k : Type) [CommRing U] [IsDomain U] [V
 
 theorem torsion_lift_unique : ∀ (U Ω k : Type) [CommRing U] [IsDomain U] [ValuationRing U] [Field Ω] [IsAlgClosed Ω] [Algebra U Ω] [IsFractionRing U Ω] [Field k] [IsAlgClosed k] (h : U →+* k) (S : Scheme.{0}) (G : Over S) [GrpObj G], IsAbelianScheme G → ∀ (u : Sp U ⟶ S) (n : ℕ), IsUnit (n : U) → ∀ y : Over.mk (spMap h ≫ u) ⟶ G, y ^ n = 1 → ∃! P : Over.mk u ⟶ G, P ^ n = 1 ∧ y.left = spMap h ≫ P.left := by
   intro U Ω k _ _ _ _ _ _ _ _ _ h S G _ hA u n hn y hy
-  letI : GrpObj ((Over.pullback u).obj G) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback u).obj G) := Functor.grpObjObj
   have hgp : IsGrpPullback ((Over.pullback u).obj G) G u (pullback.fst G.hom u) := isGrpPullback_pullback G u
-  haveI : IsAbelianScheme ((Over.pullback u).obj G) := GlobalTheory.isAbelianScheme_pullback_obj u G hA
+  have : IsAbelianScheme ((Over.pullback u).obj G) := GlobalTheory.isAbelianScheme_pullback_obj u G hA
   have hnU : IsUnit (n : Γ(Sp U, ⊤)) := by
     simpa using hn.map (Scheme.ΓSpecIso (CommRingCat.of U)).inv.hom
   obtain ⟨-, hfin, het⟩ := GrpTangent.finiteEtale_mulN_torsion ((Over.pullback u).obj G) hnU
@@ -426,7 +426,7 @@ theorem exists_ext_local (Ω k : Type) [Field Ω] [Field k] (A : Subring Ω) (h 
     ∃ (B : Subring Ω) (hAB : A ≤ B) (h' : B →+* k), (∀ b : B, h' b ≠ 0 → (b : Ω)⁻¹ ∈ B) ∧
       ∀ a : A, h' (Subring.inclusion hAB a) = h a := by
   let p := RingHom.ker h
-  haveI : p.IsPrime := RingHom.ker_isPrime h
+  have : p.IsPrime := RingHom.ker_isPrime h
   let L := Localization.AtPrime p
   have hs : ∀ s : p.primeCompl, h s ≠ 0 := fun s e => s.2 (RingHom.mem_ker.2 e)
   have hs' : ∀ s : p.primeCompl, ((s : A) : Ω) ≠ 0 := fun s e =>
@@ -489,25 +489,25 @@ theorem exists_ext_adjoin (Ω k : Type) [Field Ω] [Field k] [IsAlgClosed k] (A 
     (hloc : ∀ a : A, h a ≠ 0 → (a : Ω)⁻¹ ∈ A) (y : Ω) (M : Ideal (Algebra.adjoin A {y})) [M.IsMaximal]
     (hM : RingHom.ker h ≤ M.comap (algebraMap A (Algebra.adjoin A {y}))) :
     ∃ h' : Algebra.adjoin A {y} →+* k, ∀ a : A, h' (algebraMap A _ a) = h a := by
-  haveI := ker_isMaximal Ω k A h hloc
+  have := ker_isMaximal Ω k A h hloc
   let K₀ := A ⧸ RingHom.ker h
   let K₁ := (Algebra.adjoin A {y}) ⧸ M
-  letI : Field K₁ := Ideal.Quotient.field M
-  letI : Field K₀ := Ideal.Quotient.field _
+  let : Field K₁ := Ideal.Quotient.field M
+  let : Field K₀ := Ideal.Quotient.field _
   let f₀ : K₀ →+* K₁ := Ideal.quotientMap M (algebraMap A (Algebra.adjoin A {y})) hM
-  letI : Algebra K₀ K₁ := f₀.toAlgebra
+  let : Algebra K₀ K₁ := f₀.toAlgebra
   let hb : K₀ →+* k := Ideal.Quotient.lift (RingHom.ker h) h (fun a ha => ha)
-  letI : Algebra K₀ k := hb.toAlgebra
-  haveI : IsScalarTower A K₀ K₁ := IsScalarTower.of_algebraMap_eq (fun a => rfl)
-  haveI : Algebra.FiniteType A (Algebra.adjoin A {y}) := .adjoin_of_finite (Set.finite_singleton y)
-  haveI : Algebra.FiniteType A K₁ :=
+  let : Algebra K₀ k := hb.toAlgebra
+  have : IsScalarTower A K₀ K₁ := IsScalarTower.of_algebraMap_eq (fun a => rfl)
+  have : Algebra.FiniteType A (Algebra.adjoin A {y}) := .adjoin_of_finite (Set.finite_singleton y)
+  have : Algebra.FiniteType A K₁ :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ A M) Ideal.Quotient.mk_surjective
-  haveI : Algebra.FiniteType K₀ K₁ := Algebra.FiniteType.of_restrictScalars_finiteType A K₀ K₁
-  haveI : Module.Finite K₀ K₁ := finite_of_finite_type_of_isJacobsonRing K₀ K₁
-  haveI : Algebra.IsIntegral K₀ K₁ := Algebra.IsIntegral.of_finite K₀ K₁
-  haveI : Module.IsTorsionFree K₀ K₁ := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : Module.IsTorsionFree K₀ k := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : Algebra.IsAlgebraic K₀ K₁ := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.FiniteType K₀ K₁ := Algebra.FiniteType.of_restrictScalars_finiteType A K₀ K₁
+  have : Module.Finite K₀ K₁ := finite_of_finite_type_of_isJacobsonRing K₀ K₁
+  have : Algebra.IsIntegral K₀ K₁ := Algebra.IsIntegral.of_finite K₀ K₁
+  have : Module.IsTorsionFree K₀ K₁ := DivisionSemiring.to_moduleIsTorsionFree
+  have : Module.IsTorsionFree K₀ k := DivisionSemiring.to_moduleIsTorsionFree
+  have : Algebra.IsAlgebraic K₀ K₁ := Algebra.IsIntegral.isAlgebraic
   let L : K₁ →ₐ[K₀] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -532,7 +532,7 @@ theorem dichotomy (Ω k : Type) [Field Ω] [Field k] (A : Subring Ω) (h : A →
     rw [this]
     exact J.mul_mem_left _ haJ
   by_cases hT : (RingHom.ker h).map (algebraMap A (Algebra.adjoin A {x})) = ⊤
-  · letI := invertibleOfNonzero hx
+  · let := invertibleOfNonzero hx
     have htop : (RingHom.ker h).map (algebraMap A (Algebra.adjoin A {x})) ⊔
         Ideal.span {⟨x, Algebra.subset_adjoin rfl⟩} = ⊤ := by rw [hT]; exact top_sup_eq _
     obtain ⟨p, hp, hpx⟩ :=
@@ -553,7 +553,7 @@ theorem dichotomy (Ω k : Type) [Field Ω] [Field k] (A : Subring Ω) (h : A →
       · rw [← Polynomial.aeval_def, map_mul]
         rw [invOf_eq_inv] at hpx
         rw [hpx, mul_zero]
-    haveI : Algebra.IsIntegral A (Algebra.adjoin A {x⁻¹}) := Algebra.IsIntegral.adjoin (by simpa using hint)
+    have : Algebra.IsIntegral A (Algebra.adjoin A {x⁻¹}) := Algebra.IsIntegral.adjoin (by simpa using hint)
     have hker : RingHom.ker (algebraMap A (Algebra.adjoin A {x⁻¹})) ≤ RingHom.ker h := by
       intro a ha
       have e := congrArg Subtype.val (RingHom.mem_ker.1 ha)

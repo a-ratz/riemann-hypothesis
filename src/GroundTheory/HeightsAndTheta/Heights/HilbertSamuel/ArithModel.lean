@@ -103,9 +103,9 @@ theorem isMultiHomog_X (p : Σ k, ι k) [DecidableEq K] :
   by_cases hk : k = k₀
   · subst hk
     simp [Finsupp.single_apply]
-  · simp only [hk, if_false]
+  · simp only [hk, ite_false]
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     exact hk (congrArg Sigma.fst h).symm
 
@@ -188,7 +188,7 @@ theorem leviForm_log_fs_nonneg {z : J → ℂ} (hz : z ≠ 0) (w : J → ℂ) :
       (normSqE z)⁻¹ * inner ℝ (eL v) (eL v) - 2 * (normSqE z ^ 2)⁻¹ * inner ℝ (eL z) (eL v) ^ 2 := by
     intro v
     rw [hev.fderiv_eq, hGd.fderiv]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    simp only [add_apply, smul_apply,
       ContinuousLinearMap.smulRight_apply, smul_eq_mul, nsmul_eq_mul, reInner_apply]
     push_cast
     ring

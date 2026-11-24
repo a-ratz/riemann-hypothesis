@@ -179,7 +179,7 @@ def lin {σ : Type} (c : (σ →₀ ℕ) → ℂ) : MvPolynomial σ ℂ →+ ℂ
 theorem lin_monomial {σ : Type} (c : (σ →₀ ℕ) → ℂ) (m : σ →₀ ℕ) (a : ℂ) : lin c (monomial m a) = a * c m := by
   classical
   show ∑ k ∈ (monomial m a).support, (monomial m a).coeff k * c k = _
-  rw [sum_support_eq c _ {m} MvPolynomial.support_monomial_subset, Finset.sum_singleton, coeff_monomial, if_pos rfl]
+  rw [sum_support_eq c _ {m} MvPolynomial.support_monomial_subset, Finset.sum_singleton, coeff_monomial, ite_eq_left rfl]
 
 def LJ (v : κ → V) (f : V → ℂ) : MvPolynomial κ ℂ →+ ℂ := lin (monoJet v f)
 
@@ -208,7 +208,7 @@ theorem mahler_eq (v : κ → V) (f : V → ℂ) (n : κ → ℕ) : mahler v f n
 theorem LJ_mul_X (v : κ → V) {f : V → ℂ} (hf : ContDiff ℂ ∞ f) (p : MvPolynomial κ ℂ) (i : κ) :
     LJ v f (p * X i) = LJ v (dd (v i) f) p := by
   induction p using MvPolynomial.induction_on' with
-  | monomial m c => rw [X, monomial_mul, LJ_monomial, LJ_monomial, mul_one, monoJet_add_single v hf]
+  | monomial m c => rw [X, monomial_mul_monomial, LJ_monomial, LJ_monomial, mul_one, monoJet_add_single v hf]
   | add p q hp hq => rw [add_mul, map_add (f := _), map_add (f := _), hp, hq]
 
 theorem LJ_fun_add (v : κ → V) {F G : V → ℂ} (hF : ContDiff ℂ ∞ F) (hG : ContDiff ℂ ∞ G)
@@ -234,13 +234,13 @@ theorem split_single_inr (e : κ ⊕ κ →₀ ℕ) (i : κ) :
 theorem BJ_mul_X_inl (v : κ → V) {F : V → ℂ} (G : V → ℂ) (hF : ContDiff ℂ ∞ F) (Q : MvPolynomial (κ ⊕ κ) ℂ) (i : κ) :
     BJ v F G (Q * X (Sum.inl i)) = BJ v (dd (v i) F) G Q := by
   induction Q using MvPolynomial.induction_on' with
-  | monomial m c => rw [X, monomial_mul, BJ_monomial, BJ_monomial, mul_one, split_single_inl, monoJet_add_single v hF]
+  | monomial m c => rw [X, monomial_mul_monomial, BJ_monomial, BJ_monomial, mul_one, split_single_inl, monoJet_add_single v hF]
   | add p q hp hq => rw [add_mul, map_add (f := _), map_add (f := _), hp, hq]
 
 theorem BJ_mul_X_inr (v : κ → V) (F : V → ℂ) {G : V → ℂ} (hG : ContDiff ℂ ∞ G) (Q : MvPolynomial (κ ⊕ κ) ℂ) (i : κ) :
     BJ v F G (Q * X (Sum.inr i)) = BJ v F (dd (v i) G) Q := by
   induction Q using MvPolynomial.induction_on' with
-  | monomial m c => rw [X, monomial_mul, BJ_monomial, BJ_monomial, mul_one, split_single_inr, monoJet_add_single v hG]
+  | monomial m c => rw [X, monomial_mul_monomial, BJ_monomial, BJ_monomial, mul_one, split_single_inr, monoJet_add_single v hG]
   | add p q hp hq => rw [add_mul, map_add (f := _), map_add (f := _), hp, hq]
 
 theorem LJ_mul (v : κ → V) (P : MvPolynomial κ ℂ) : ∀ (F G : V → ℂ), ContDiff ℂ ∞ F → ContDiff ℂ ∞ G →
@@ -313,9 +313,9 @@ theorem split_rename (a b : κ →₀ ℕ) :
     Finsupp.sumFinsuppAddEquivProdFinsupp (Finsupp.mapDomain Sum.inl a + Finsupp.mapDomain Sum.inr b) = (a, b) := by
   ext j
   · simp [Finsupp.fst_sumFinsuppAddEquivProdFinsupp, Finsupp.mapDomain_apply_of_injective Sum.inl_injective,
-      Finsupp.mapDomain_notin_range]
+      Finsupp.mapDomain_of_notMem_range]
   · simp [Finsupp.snd_sumFinsuppAddEquivProdFinsupp, Finsupp.mapDomain_apply_of_injective Sum.inr_injective,
-      Finsupp.mapDomain_notin_range]
+      Finsupp.mapDomain_of_notMem_range]
 
 theorem BJ_rename (v : κ → V) (F G : V → ℂ) (p q : MvPolynomial κ ℂ) :
     BJ v F G (rename Sum.inl p * rename Sum.inr q) = LJ v F p * LJ v G q := by
@@ -323,7 +323,7 @@ theorem BJ_rename (v : κ → V) (F G : V → ℂ) (p q : MvPolynomial κ ℂ) :
   | monomial a c =>
     induction q using MvPolynomial.induction_on' with
     | monomial b d =>
-      rw [rename_monomial, rename_monomial, monomial_mul, BJ_monomial, LJ_monomial, LJ_monomial, split_rename]
+      rw [rename_monomial, rename_monomial, monomial_mul_monomial, BJ_monomial, LJ_monomial, LJ_monomial, split_rename]
       ring
     | add q q' hq hq' => rw [map_add (f := _), mul_add, map_add (f := _), hq, hq', map_add (f := _), mul_add]
   | add p p' hp hp' => rw [map_add (f := _), add_mul, map_add (f := _), hp, hp', map_add (f := _), add_mul]

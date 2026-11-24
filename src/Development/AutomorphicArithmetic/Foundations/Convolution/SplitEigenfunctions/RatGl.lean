@@ -79,7 +79,7 @@ private theorem isClosed_vle {K Γ : Type*} [Field K] [LinearOrderedCommGroupWit
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro p hp
   have hp' : (Valued.v p.1 : Γ) < Valued.v p.2 := not_le.1 hp
-  have hne : (Valued.v p.2 : Γ) ≠ 0 := (lt_of_le_of_lt zero_le' hp').ne'
+  have hne : (Valued.v p.2 : Γ) ≠ 0 := (lt_of_le_of_lt zero_le hp').ne'
   have hB : IsOpen {x : K | (Valued.v x : Γ) < Valued.v p.2} := by
     have := Valued.isOpen_ball K (Valued.v.restrict p.2)
     simpa only [Valuation.restrict_lt_iff] using this
@@ -128,13 +128,13 @@ private theorem pF_ne (h : G1 E) (w : HeightOneSpectrum (𝓞 E)) : pF h w ≠ 0
   split_ifs with hc
   · intro h0
     rw [h0, map_zero] at hc
-    have hd : (h 1 1).2 w = 0 := (map_eq_zero _).1 (le_zero_iff.1 hc)
+    have hd : (h 1 1).2 w = 0 := (map_eq_zero _).1 (nonpos_iff_eq_zero.1 hc)
     have := det_F h w
     rw [h0, hd] at this
     simp at this
   · intro h0
     rw [h0, map_zero] at hc
-    exact hc zero_le'
+    exact hc zero_le
 
 private theorem pF_one (h : G1 E) : ∀ᶠ w : HeightOneSpectrum (𝓞 E) in cofinite, Valued.v (pF h w) = 1 := by
   filter_upwards [(h 0 0).2.2, (h 0 1).2.2, (h 1 0).2.2, (h 1 1).2.2] with w ha hb hc hd
@@ -194,7 +194,7 @@ private theorem injective_co : Function.Injective (co : IdeleGroup E → _) := b
   exact Prod.ext h1 (Subtype.ext <| funext fun w => congrFun h2 w)
 
 private theorem cont_e (i j : Fin 2) : Continuous fun h : G1 E => (h i j : A E) :=
-  Continuous.matrix_elem continuous_subtype_val i j
+  Continuous.matrix_elem continuous_subtypeVal i j
 
 private theorem cont_I (i j : Fin 2) (v : InfinitePlace E) : Continuous fun h : G1 E => (h i j).1 v :=
   (continuous_apply v).comp (continuous_fst.comp (cont_e i j))
@@ -203,10 +203,10 @@ private theorem cont_F (i j : Fin 2) (w : HeightOneSpectrum (𝓞 E)) : Continuo
   (RestrictedProduct.continuous_eval w).comp (continuous_snd.comp (cont_e i j))
 
 private theorem measurable_al : Measurable (al : G1 E → IdeleGroup E) := by
-  letI : ∀ v : InfinitePlace E, MeasurableSpace v.Completion := fun _ => borel _
-  haveI : ∀ v : InfinitePlace E, BorelSpace v.Completion := fun _ => ⟨rfl⟩
-  letI : ∀ w : HeightOneSpectrum (𝓞 E), MeasurableSpace (w.adicCompletion E) := fun _ => borel _
-  haveI : ∀ w : HeightOneSpectrum (𝓞 E), BorelSpace (w.adicCompletion E) := fun _ => ⟨rfl⟩
+  let : ∀ v : InfinitePlace E, MeasurableSpace v.Completion := fun _ => borel _
+  have : ∀ v : InfinitePlace E, BorelSpace v.Completion := fun _ => ⟨rfl⟩
+  let : ∀ w : HeightOneSpectrum (𝓞 E), MeasurableSpace (w.adicCompletion E) := fun _ => borel _
+  have : ∀ w : HeightOneSpectrum (𝓞 E), BorelSpace (w.adicCompletion E) := fun _ => ⟨rfl⟩
   have hc := comap_eq_borel_of_continuous_injective (continuous_co (E := E)) (injective_co (E := E))
   have hm : Measurable ((co : IdeleGroup E → _) ∘ (al : G1 E → IdeleGroup E)) := by
     refine Measurable.prodMk (measurable_pi_iff.2 fun v => ?_) (measurable_pi_iff.2 fun w => ?_)
@@ -261,8 +261,8 @@ private theorem pI_mD (t : (A E)ˣ) (h : G1 E) (v : InfinitePlace E) :
     exact mul_le_mul_iff_of_pos_left (norm_pos_iff.2 hs)
   unfold pI
   by_cases hc : ‖(h 1 1).1 v‖ ≤ ‖(h 1 0).1 v‖
-  · rw [if_pos hc, if_pos (key.2 hc), e']
-  · rw [if_neg hc, if_neg (fun x => hc (key.1 x)), e']
+  · rw [ite_eq_left hc, ite_eq_left (key.2 hc), e']
+  · rw [ite_eq_right hc, ite_eq_right (fun x => hc (key.1 x)), e']
 
 private theorem pF_mD (t : (A E)ˣ) (h : G1 E) (w : HeightOneSpectrum (𝓞 E)) :
     pF (mD t * h) w = ((t⁻¹ : (A E)ˣ) : A E).2 w * pF h w := by
@@ -281,8 +281,8 @@ private theorem pF_mD (t : (A E)ˣ) (h : G1 E) (w : HeightOneSpectrum (𝓞 E)) 
       exact mul_le_mul_right x _
   unfold pF
   by_cases hc : Valued.v ((h 1 1).2 w) ≤ Valued.v ((h 1 0).2 w)
-  · rw [if_pos hc, if_pos (key.2 hc), e']
-  · rw [if_neg hc, if_neg (fun x => hc (key.1 x)), e']
+  · rw [ite_eq_left hc, ite_eq_left (key.2 hc), e']
+  · rw [ite_eq_right hc, ite_eq_right (fun x => hc (key.1 x)), e']
 
 private theorem al_mD (t : (A E)ˣ) (h : G1 E) : al (mD t * h) = t * al h := by
   apply Units.ext
@@ -496,9 +496,9 @@ theorem UpperTheory.exists_unipotentInvariant_set_unique_row_scaling :
     rw [hTq] at hg
     obtain ⟨t, rfl⟩ := hg
     exact M.mD_diag_mem t
-  haveI : DiscreteTopology Tq := by
+  have : DiscreteTopology Tq := by
     refine DiscreteTopology.of_continuous_injective (f := fun g : Tq => (⟨mD g.1, hmem g⟩ : Gam E)) ?_ ?_
-    · exact (M.continuous_mD.comp continuous_subtype_val).subtype_mk _
+    · exact (M.continuous_mD.comp continuous_subtypeVal).subtype_mk _
     · intro a b hab
       have h1 : mD a.1 = mD b.1 := congrArg (·.1) hab
       have h2 := congrArg (fun g : G1 E => g.1 0 0) h1
@@ -570,7 +570,7 @@ private theorem Nq_le : Nq E ≤ Gam E := by
 
 private theorem Nq_disc : DiscreteTopology (Nq E) :=
   DiscreteTopology.of_continuous_injective (f := Subgroup.inclusion Nq_le)
-    (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective Nq_le)
+    (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective Nq_le)
 
 private theorem Nq_count : Countable (Nq E) :=
   (Subgroup.inclusion_injective Nq_le).countable
@@ -587,7 +587,7 @@ private theorem nU_comm (a b : A E) : nU a * nU b = nU b * nU a := by
 
 private theorem exDN : ∃ S : Set (G1 E), MeasurableSet S ∧ M.NWt (S.indicator 1) ∧
     ∀ μ : Measure (G1 E), IsFundamentalDomain (Nq E) S μ := by
-  haveI := Nq_disc (E := E)
+  have := Nq_disc (E := E)
   obtain ⟨D, hD, hu, hf⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (Nq E)
   refine ⟨D, hD, ⟨measurable_one.indicator hD, fun g => ?_⟩, hf⟩
   obtain ⟨n, hn, huniq⟩ := hu g
@@ -608,7 +608,7 @@ private theorem cosetE (N₀ : MeasE E) (σ) (β u : G1 E → ℝ≥0∞) (hσ :
     (hu : Measurable u) (hinv : ∀ (ξ : E) g, u (nU (rt ξ) * g) = u g) :
     ∫⁻ g, u g * β g ∂N₀.μ = ∫⁻ g in N₀.D, ∑' r, u (ratS E (σ r) * g) ∂N₀.μ := by
   have hc := (UpperTheory.ConvolutionTheory.R2.M.rowCosets E).2 σ hσ
-  haveI := N₀.haar
+  have := N₀.haar
   let e : ({r : Fin 2 → E // r ≠ 0} × E) → Gam E := fun p =>
     ⟨nU (rt p.2) * ratS E (σ p.1), (Gam E).mul_mem (M.nU_rt_mem _) ⟨_, rfl⟩⟩
   have he : Function.Bijective e := by
@@ -651,7 +651,7 @@ private theorem moveInt (μ : Measure (G1 E)) [μ.IsHaarMeasure] {S : Set (G1 E)
     (hS : IsFundamentalDomain (Nq E) S μ) (b : A E) (w : G1 E → ℂ)
     (hw : ∀ (ξ : E) g, w (nU (rt ξ) * g) = w g) :
     ∫ x in S, w (nU b * x) ∂μ = ∫ x in S, w x ∂μ := by
-  haveI := Nq_count (E := E)
+  have := Nq_count (E := E)
   rw [← (measurePreserving_mul_left μ (nU b)).setIntegral_image_emb
     (MeasurableEquiv.mulLeft (nU b)).measurableEmbedding w S]
   refine (shiftFd μ hS b).setIntegral_eq hS ?_
@@ -662,7 +662,7 @@ private theorem moveL (μ : Measure (G1 E)) [μ.IsHaarMeasure] {S : Set (G1 E)}
     (hS : IsFundamentalDomain (Nq E) S μ) (b : A E) (w : G1 E → ℝ≥0∞)
     (hw : ∀ (ξ : E) g, w (nU (rt ξ) * g) = w g) :
     ∫⁻ x in S, w (nU b * x) ∂μ = ∫⁻ x in S, w x ∂μ := by
-  haveI := Nq_count (E := E)
+  have := Nq_count (E := E)
   rw [(measurePreserving_mul_left μ (nU b)).setLIntegral_comp_emb
     (MeasurableEquiv.mulLeft (nU b)).measurableEmbedding w S]
   refine (shiftFd μ hS b).setLIntegral_eq hS w ?_
@@ -677,7 +677,7 @@ private theorem van (μ : Measure (G1 E)) [μ.IsHaarMeasure] {S : Set (G1 E)}
   let f : G1 E → ℂ := fun x => a x * c x
   have hfI : ∀ (ξ : E) g, f (nU (rt ξ) * g) = f g := fun ξ g => by simp only [f, haI, hcI]
   let ρ : Measure (A E) := (adeleMeasure E).restrict (fundamentalSet E)
-  haveI : IsProbabilityMeasure ρ := ⟨by simp [ρ, adeleMeasure_fundamentalSet]⟩
+  have : IsProbabilityMeasure ρ := ⟨by simp [ρ, adeleMeasure_fundamentalSet]⟩
   let F : A E → G1 E → ℂ := fun b x => a x * c (nU b * x)
   have hFm : Measurable (Function.uncurry F) := by
     have hg : Measurable fun p : A E × G1 E => nU p.1 * p.2 :=
@@ -687,7 +687,7 @@ private theorem van (μ : Measure (G1 E)) [μ.IsHaarMeasure] {S : Set (G1 E)}
   have hInt : Integrable (Function.uncurry F) (ρ.prod (μ.restrict S)) := by
     refine ⟨hFm.aestronglyMeasurable, ?_⟩
     have h1 : ∫⁻ p, ‖Function.uncurry F p‖ₑ ∂(ρ.prod (μ.restrict S)) = ∫⁻ x in S, ‖f x‖ₑ ∂μ := by
-      rw [lintegral_prod _ hFm.enorm.aemeasurable]
+      rw [lintegral_prod _ hFm.eNorm.aemeasurable]
       have h2 : ∀ b, ∫⁻ x, ‖Function.uncurry F (b, x)‖ₑ ∂(μ.restrict S) = ∫⁻ x in S, ‖f x‖ₑ ∂μ := fun b => by
         simp only [Function.uncurry, hF]
         exact moveL μ hS b (fun x => ‖f x‖ₑ) (fun ξ g => by simp only [hfI])
@@ -708,8 +708,8 @@ end SlopeTestRemainingChoices
 theorem UpperTheory.integral_tsum_rowSection_eq_zero_of_constantTerm_eq_zero :
     ∀ {E : Type} [Field E] [NumberField E] (N : MeasE E) (σ : {r : Fin 2 → E // r ≠ 0} → Matrix.SpecialLinearGroup (Fin 2) E) (A c : G1 E → ℂ), M.RowSec σ → Measurable A → Measurable c → (∀ b x, A (nU b * x) = A x) → (∀ γ x, c (ratS E γ * x) = c x) → (∀ x, ∫ b in fundamentalSet E, c (nU b * x) ∂(adeleMeasure E) = 0) → (∫⁻ x in N.D, ∑' r, ‖A (ratS E (σ r) * x) * c x‖ₑ ∂N.μ) ≠ ⊤ → ∫ x in N.D, ∑' r, A (ratS E (σ r) * x) * c x ∂N.μ = 0 := by
   intro E _ _ N σ A c hσ hA hc hAI hcI hc0 hfin
-  haveI : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI := N.haar
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
+  have := N.haar
   obtain ⟨S, hSm, hβ, hS⟩ := exDN (E := E)
   have hcN : ∀ (ξ : E) x, c (nU (rt ξ) * x) = c x := fun ξ x => by
     rw [← M.ratS_up ξ]
@@ -727,7 +727,7 @@ theorem UpperTheory.integral_tsum_rowSection_eq_zero_of_constantTerm_eq_zero :
     simp only [f, hcI]
   simp only [hsw] at hfin ⊢
   have hfinS : ∫⁻ x in S, ‖f x‖ₑ ∂N.μ ≠ ⊤ := by
-    rw [← hL (fun x => ‖f x‖ₑ) hf.enorm (fun ξ g => by simp only [hfI])]
+    rw [← hL (fun x => ‖f x‖ₑ) hf.eNorm (fun ξ g => by simp only [hfI])]
     exact hfin
   let e : {r : Fin 2 → E // r ≠ 0} → G1 E → G1 E := fun r g => ratS E (σ r) * g
   have he : ∀ r, Measurable (e r) := fun r => measurable_const_mul _
@@ -860,23 +860,23 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.rank1 :
             rw [hind]
             by_cases h : r ∈ {r' : {r : Fin 2 → E // r ≠ 0} | ratS E (σ r') * x ∈ T}
             · rw [Set.indicator_of_mem h, Set.indicator_of_mem h]
-            · rw [Set.indicator_of_notMem h, Set.indicator_of_notMem h, enorm_zero]
+            · rw [Set.indicator_of_notMem h, Set.indicator_of_notMem h, eNorm_zero]
         _ = ∑' r : ↥{r' : {r : Fin 2 → E // r ≠ 0} | ratS E (σ r') * x ∈ T}, ‖u (ratS E (σ r.1) * x)‖ₑ :=
             (tsum_subtype _ (fun r => ‖u (ratS E (σ r) * x)‖ₑ)).symm
         _ ≤ ∑' r : ↥{r' : {r : Fin 2 → E // r ≠ 0} | ratS E (σ r') * x ∈ T}, ∑' s : ℚˣ, ‖F x (e (r, s)).1‖ₑ := by
-            refine ENNReal.tsum_le_tsum fun r => enorm_tsum_le_tsum_enorm.trans_eq (tsum_congr fun s => ?_)
+            refine ENNReal.tsum_le_tsum fun r => eNorm_tsum_le_tsum_eNorm.trans_eq (tsum_congr fun s => ?_)
             rw [hact x (σ r.1) _ _ (he r s)]
         _ = ∑' p, ‖F x (e p).1‖ₑ := ENNReal.tsum_prod.symm
         _ = ∑' ξ : ↥{ξ : Fin 4 → ℚ | ξ ≠ 0 ∧ qr D.δ ξ = 0}, ‖F x ξ.1‖ₑ := e.tsum_eq fun ξ => ‖F x ξ.1‖ₑ
         _ ≤ ∑' ξ : Fin 4 → ℚ, ‖F x ξ‖ₑ := (by refine' _root_.le_trans _ (_root_.tsum_comp_le_tsum_of_injective Subtype.val_injective _); exact _root_.le_rfl)
     have h2 : ∑' ξ : Fin 4 → ℚ, ‖F x ξ‖ₑ = ENNReal.ofReal (∑' ξ : Fin 4 → ℚ, ‖F x ξ‖) := by
       rw [ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hb x).1]
-      exact tsum_congr fun ξ => (ofReal_norm_eq_enorm _).symm
+      exact tsum_congr fun ξ => (ofReal_norm _).symm
     calc ∑' r, ‖Aa (ratS E (σ r) * x) * c x‖ₑ = (∑' r, ‖Aa (ratS E (σ r) * x)‖ₑ) * ‖c x‖ₑ := by
-          simp only [enorm_mul]; exact ENNReal.tsum_mul_right
+          simp only [eNorm_mul]; exact ENNReal.tsum_mul_right
       _ ≤ ENNReal.ofReal (∑' ξ : Fin 4 → ℚ, ‖F x ξ‖) * ‖c x‖ₑ := by rw [← h2]; gcongr
       _ = ENNReal.ofReal ((∑' ξ : Fin 4 → ℚ, ‖F x ξ‖) * ‖c x‖) := by
-          rw [ENNReal.ofReal_mul (tsum_nonneg fun _ => norm_nonneg _), ofReal_norm_eq_enorm]
+          rw [ENNReal.ofReal_mul (tsum_nonneg fun _ => norm_nonneg _), ofReal_norm]
       _ ≤ ENNReal.ofReal (B * ab a0 ^ 2) := ENNReal.ofReal_le_ofReal (hb x).2
   have hfin : (∫⁻ x in N.D, ∑' r, ‖Aa (ratS E (σ r) * x) * c x‖ₑ ∂N.μ) ≠ ⊤ := by
     refine ne_of_lt (lt_of_le_of_lt (lintegral_mono hbd) ?_)

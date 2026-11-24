@@ -75,17 +75,17 @@ theorem coreDesc_of (hAbs : AbsLast) (hPull : PullBack) (hUnit : UnitTrace) (hOn
   obtain ⟨u, hu, hu0⟩ := (Submodule.ne_bot_iff _).1 htyped
   obtain ⟨m, hm, D, s, hs, νE, iE, νF, iF, b, a, aE, aF, hposition, harch, hAE, hAF, hpair, hua⟩ :=
     hPI F E σ hσ hp n hn μE μF u hu0
-  letI : ∀ x : Pl E, MeasurableSpace (Gw n x) := fun _ => borel _
-  haveI : ∀ x : Pl E, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
-  letI : ∀ x : Pl F, MeasurableSpace (Gw n x) := fun _ => borel _
-  haveI : ∀ x : Pl F, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
+  let : ∀ x : Pl E, MeasurableSpace (Gw n x) := fun _ => borel _
+  have : ∀ x : Pl E, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
+  let : ∀ x : Pl F, MeasurableSpace (Gw n x) := fun _ => borel _
+  have : ∀ x : Pl F, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
   have hmE : ∀ x : Pl E, ∃ mm : Measure (Gw n x), mm.IsHaarMeasure := fun x => (haar_norm E n x).imp fun _ h => h.1
   have hmF : ∀ x : Pl F, ∃ mm : Measure (Gw n x), mm.IsHaarMeasure ∧ mm (GLnLocal.integralGL (x.adicCompletion F) n) = 1 :=
     fun x => haar_norm F n x
   choose mE hmE using hmE
   choose mF hmF using hmF
   have hτ : ∀ x : Pl E, ∃ τ : SmIrr (Gw n x), Occurs μE V x τ := fun x => by
-    haveI := hmE x
+    have := hmE x
     exact (hOcc E n μE V x (mE x) hV).1
   choose τ₁ hτ₁ using hτ
   obtain ⟨τ, hτ, hτw⟩ : ∃ τ : ∀ x : Pl E, SmIrr (Gw n x), (∀ x, Occurs μE V x (τ x)) ∧ τ (T.mk' v).1 = τ' := by
@@ -124,13 +124,13 @@ theorem coreDesc_of (hAbs : AbsLast) (hPull : PullBack) (hUnit : UnitTrace) (hOn
   have hL₁S : L₁.S = S := hfit₁.S_eq.trans hTS
   have hs₁ : ∀ i (y : Pl F), ∃ z : ℂ, y ∈ S → HasTrace (mF y) (τ₀ i y).ρ (L₁.f y) z := fun i y => by
     by_cases hy : y ∈ S
-    · haveI := (hmF y).1
+    · have := (hmF y).1
       have ht := L₁.test y (hL₁S ▸ hy)
       obtain ⟨z, hz⟩ := (hOcc F n μF (V₀ i) y (mF y) (hι i).1).2.2 _ ((hι i).2.2.2 y) (L₁.f y) ⟨ht.2.2.1, ht.2.2.2⟩
       exact ⟨z, fun _ => hz⟩
     · exact ⟨0, fun h => absurd h hy⟩
   choose s₁ hs₁ using hs₁
-  haveI := (hmF v).1
+  have := (hmF v).1
   obtain ⟨i, hi⟩ := hAbs F n v (mF v) (UF v) hCO ι (fun i => τ₀ i v)
     (fun i => (κ * ∏ y ∈ S, c y) * bF i * ∏ y ∈ S.erase v, s₁ i y) Z τv (cE * r * ∏ y ∈ T.sp.erase v, su y) Z₀
     (mul_ne_zero (mul_ne_zero hcE hr) (Finset.prod_ne_zero_iff.2 fun y hy => (hsu y (Finset.mem_of_mem_erase hy)).1))

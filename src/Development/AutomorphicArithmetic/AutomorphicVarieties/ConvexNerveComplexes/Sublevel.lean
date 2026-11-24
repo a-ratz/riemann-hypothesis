@@ -51,7 +51,7 @@ open Set UpperTheory.V.ConeExtensionAcyclic
 theorem UpperTheory.V.ConeExtensionAcyclic.sublevel :
     ∀ {E Y : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {q : Y → E →L[ℝ] ℝ} {T : Set E}, Good q T → ∀ x ∈ posDual T, ∀ c : ℝ, IsCompact {h | h ∈ poly q ∧ x h ≤ c} := by
   intro E Y _ _ _ q T hG x hx c
-  haveI : ProperSpace E := FiniteDimensional.proper_real E
+  have : ProperSpace E := FiniteDimensional.proper_real E
   have hpoly : IsClosed (poly q) := by
     have e : poly q = ⋂ y, {h : E | 1 ≤ q y h} := by
       ext h

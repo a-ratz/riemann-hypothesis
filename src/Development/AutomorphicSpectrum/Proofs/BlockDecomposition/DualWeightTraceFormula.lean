@@ -305,9 +305,9 @@ theorem exists_isURep_of_core {K : Type} [Group K] [TopologicalSpace K] [IsTopol
     (c : InnerProductSpace.Core ℂ V) (hc : ∀ k u v, c.inner (ρ k u) (ρ k v) = c.inner u v) :
     ∃ (d : ℕ) (τ : K → (EuclideanSpace ℂ (Fin d) →L[ℂ] EuclideanSpace ℂ (Fin d)))
       (e : V ≃ₗ[ℂ] EuclideanSpace ℂ (Fin d)), GlobalTheory.Dec.IsURep τ ∧ ∀ k v, e (ρ k v) = τ k (e v) := by
-  letI cd : InnerProductSpace.Core ℂ V := c
-  letI : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ cd
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore cd.toCore
+  let cd : InnerProductSpace.Core ℂ V := c
+  let : NormedAddCommGroup V := @InnerProductSpace.Core.toNormedAddCommGroup ℂ V _ _ _ cd
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore cd.toCore
   let b := stdOrthonormalBasis ℂ V
   let e : V ≃ₗ[ℂ] EuclideanSpace ℂ (Fin (Module.finrank ℂ V)) := b.repr.toLinearEquiv
   let τ : K → (EuclideanSpace ℂ (Fin (Module.finrank ℂ V)) →L[ℂ] EuclideanSpace ℂ (Fin (Module.finrank ℂ V))) :=
@@ -565,19 +565,19 @@ theorem xu_glRel : ∀ (n : ℕ) (lam : Fin n → ℤ), HolRm lam → Formalism.
   have hsq : (Matrix.single a b (1:ℂ) : Mat n) * Matrix.single a b 1 =
       (if b = a then (1:ℂ) else 0) • Matrix.single a b 1 := by
     by_cases h : b = a
-    · subst h; rw [if_pos rfl, one_smul, Matrix.single_mul_single_same, one_mul]
-    · rw [if_neg h, zero_smul, Matrix.single_mul_single_of_ne _ _ _ _ h]
+    · subst h; rw [ite_eq_left rfl, one_smul, Matrix.single_mul_single_same, one_mul]
+    · rw [ite_eq_right h, zero_smul, Matrix.single_mul_single_of_ne _ _ _ _ h]
   have key := comm_XA hD (Matrix.single c d (1:ℂ)) hsq
   have hEB : XA lam ((Matrix.single a b (1:ℂ) : Mat n) * Matrix.single c d 1) =
       if b = c then XA lam (Matrix.single a d 1) else 0 := by
     by_cases h : b = c
-    · subst h; rw [if_pos rfl, Matrix.single_mul_single_same, one_mul]
-    · rw [if_neg h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
+    · subst h; rw [ite_eq_left rfl, Matrix.single_mul_single_same, one_mul]
+    · rw [ite_eq_right h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
   have hBE : XA lam ((Matrix.single c d (1:ℂ) : Mat n) * Matrix.single a b 1) =
       if d = a then XA lam (Matrix.single c b 1) else 0 := by
     by_cases h : d = a
-    · subst h; rw [if_pos rfl, Matrix.single_mul_single_same, one_mul]
-    · rw [if_neg h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
+    · subst h; rw [ite_eq_left rfl, Matrix.single_mul_single_same, one_mul]
+    · rw [ite_eq_right h, Matrix.single_mul_single_of_ne _ _ _ _ h, XA_zero]
   simp only [Xu]
   rw [key, hEB, hBE]
 
@@ -635,7 +635,7 @@ theorem Rm_one (lam : Fin n → ℤ) : Rm lam (1 : Matrix.unitaryGroup (Fin n) �
 
 theorem continuous_unitaryIncl : Continuous (GlobalTheory.Branching.unitaryIncl n) := by
   rw [Units.continuous_iff]
-  exact ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩
+  exact ⟨continuous_subtypeVal, continuous_subtypeVal.matrix_conjTranspose⟩
 
 theorem continuous_Rm (lam : Fin n → ℤ) :
     Continuous fun k : Matrix.unitaryGroup (Fin n) ℂ => Rm lam k.1 := by
@@ -773,7 +773,7 @@ theorem fix_of_killed (ν : Fin n → ℤ) (c : Jd n ν → ℂ) (hc : ∀ a b, 
   have hGm : ∀ t, G t ∈ GLs n := fun t => mem_GLs_of_isUnit (hGu t)
   have hinv : ∀ t i j, j < i → (G t)⁻¹ i j = 0 := by
     intro t i j hij
-    haveI := Matrix.invertibleOfIsUnitDet (G t) (hGu t)
+    have := Matrix.invertibleOfIsUnitDet (G t) (hGu t)
     exact Matrix.blockTriangular_inv_of_blockTriangular (hGt t) hij
   let B : ℂ → Mat n := fun t => (G t)⁻¹ * N
   have hB : ∀ t i j, j ≤ i → B t i j = 0 := by
@@ -1243,7 +1243,7 @@ theorem expU_two_pi (a : Fin n) (hX : (Matrix.single a a Complex.I)ᴴ = -(Matri
         simp
       · simp [Matrix.single_apply, hc, Ne.symm hc]
     · rw [Matrix.diagonal_apply_ne _ hij, Matrix.smul_apply, Matrix.single_apply,
-        if_neg (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
+        ite_eq_right (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
   rw [e, Matrix.exp_diagonal, ← Matrix.diagonal_one]
   congr 1
   funext c
@@ -1288,7 +1288,7 @@ theorem eigen_int (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
         rw [← expU_add]
         congr 1
         ring
-      simp only [hL, hφ, this, map_mul, ContinuousLinearMap.mul_apply]
+      simp only [hL, hφ, this, map_mul, mul_apply_eq_comp]
     rw [e] at h3
     have e2 : L ((Complex.I * r) • v) = (Complex.I * r) • φ s := by
       rw [hL, map_smul]

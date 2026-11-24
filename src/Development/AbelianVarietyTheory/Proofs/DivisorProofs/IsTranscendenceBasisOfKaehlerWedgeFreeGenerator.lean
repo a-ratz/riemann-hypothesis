@@ -70,25 +70,25 @@ theorem trBasis_of_isFreeGen_dForm : ∀ {L : Type} [Field L] (cL : ℂ →+* L)
     (hQ : IsLocModel cL Q) (D : ℕ) (x : Fin D → Q), 0 < D →
     IsFreeGen Q (dForm (cL.codRestrict Q hQ.const_mem) x) → TrBasis cL (fun i => (x i : L)) := by
   intro L _ cL Q hQ D x hD hx
-  letI := cL.toAlgebra
+  let := cL.toAlgebra
   let c0 : ℂ →+* Q := cL.codRestrict Q hQ.const_mem
-  letI := c0.toAlgebra
-  haveI : IsScalarTower ℂ Q L := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsFractionRing Q L := IsFractionRing.of_field Q L fun z => by
+  let := c0.toAlgebra
+  have : IsScalarTower ℂ Q L := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsFractionRing Q L := IsFractionRing.of_field Q L fun z => by
     obtain ⟨a, ha, b, hb, hb0, e⟩ := hQ.frac z
     refine ⟨⟨a, ha⟩, ⟨b, hb⟩, ?_⟩
     change z = a / b
     rw [eq_div_iff hb0, e]
-  haveI : Algebra.FormallyEtale Q L := .of_isLocalization (nonZeroDivisors Q)
+  have : Algebra.FormallyEtale Q L := .of_isLocalization (nonZeroDivisors Q)
   have hL : IsFreeGen L (TopForm.formMap D Q.subtype rfl (dForm c0 x)) :=
     hx.of_isBaseChange (isBaseChange_exteriorPower
       (KaehlerDifferential.isBaseChange_of_formallyEtale ℂ Q L) D)
   rw [TopForm.formMap_dForm] at hL
   change IsFreeGen L (dForm cL fun i => (x i : L)) at hL
 
-  haveI : Algebra.EssFiniteType ℂ Q := hQ.essFiniteType
-  haveI : Algebra.EssFiniteType Q L := .of_isLocalization L (nonZeroDivisors Q)
-  haveI : Algebra.EssFiniteType ℂ L := .comp ℂ Q L
+  have : Algebra.EssFiniteType ℂ Q := hQ.essFiniteType
+  have : Algebra.EssFiniteType Q L := .of_isLocalization L (nonZeroDivisors Q)
+  have : Algebra.EssFiniteType ℂ L := .comp ℂ Q L
   have h1 : Module.finrank L (Forms cL D) = 1 := by
     have e : L ≃ₗ[L] Forms cL D := LinearEquiv.ofBijective (LinearMap.toSpanSingleton L _ _) hL
     rw [← e.finrank_eq, Module.finrank_self]

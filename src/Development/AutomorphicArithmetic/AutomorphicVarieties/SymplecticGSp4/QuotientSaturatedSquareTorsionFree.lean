@@ -125,7 +125,7 @@ private theorem crLin_wt (h : IsChart 𝒜 x wt φ) (i : τ) {j : X} (hij : wt i
 private theorem crLin_const (φ : A →ₐ[O] MvPowerSeries τ (FractionRing O)) (i : τ) (c : O) :
     crLin φ i (algebraMap O A c) = 0 := by
   classical
-  rw [crLin_apply, AlgHom.commutes, MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, if_neg (by simp)]
+  rw [crLin_apply, AlgHom.commutes, MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, ite_eq_right (by simp)]
 
 private theorem cr_fixed (h : IsChart 𝒜 x wt φ) {j : X} (hj : j ≠ 0) {f : A} (hf : f ∈ 𝒜 j) : x f = 0 := by
   have h1 := h.graded j f hf 0 (by simpa using hj.symm)
@@ -267,18 +267,18 @@ theorem UpperTheory.V.Alg.cot_fg :
       simp only [map_smul, coeff_X, smul_eq_mul, mul_ite, mul_one, mul_zero]
       by_cases hw : Finsupp.weight W.wt m = j
       · rcases deg_lt_two m (not_le.1 fun h2 => hm ⟨hw, h2⟩) with rfl | ⟨s, rfl⟩
-        · rw [Finset.sum_eq_zero fun s _ => if_neg (Finsupp.single_ne_zero.2 one_ne_zero).symm]
+        · rw [Finset.sum_eq_zero fun s _ => ite_eq_right (Finsupp.single_ne_zero.2 one_ne_zero).symm]
           simpa using h0
         · have hs : W.wt s = j := by simpa [Finsupp.weight_single] using hw
-          rw [Finset.sum_eq_single (⟨s, hs⟩ : {s // W.wt s = j}), if_pos rfl, sub_self]
+          rw [Finset.sum_eq_single (⟨s, hs⟩ : {s // W.wt s = j}), ite_eq_left rfl, sub_self]
           · intro t _ ht
-            rw [if_neg]
+            rw [ite_eq_right]
             intro h2
             exact ht (Subtype.ext (Finsupp.single_left_injective one_ne_zero h2).symm)
           · simp
       · rw [hf m hw, Finset.sum_eq_zero, sub_self]
         intro s _
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro rfl
         exact hw (by simpa [Finsupp.weight_single] using s.2)
     have h2 : (satSq (W.originA h)).mkQ x = (satSq (W.originA h)).mkQ
@@ -344,7 +344,7 @@ theorem UpperTheory.V.Alg.spans_of_der :
       (∀ D ∈ PtDer x O, HasWt 𝒜 j D → (∀ i, D (F i) = 0) → D = 0) → SpansCot x 𝒜 j F := by
   intro O A X _ _ _ _ _ _ _ 𝒜 _ x hx j hfg ι F hF hD p hp
   by_contra hcon
-  haveI : Module.Finite O (cotLat x 𝒜 j) := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite O (cotLat x 𝒜 j) := Module.Finite.iff_fg.2 hfg
   obtain ⟨φ, hφS, hφp⟩ := exists_form_of_not_torsion ((cotSpan x F).comap (cotLat x 𝒜 j).subtype) ⟨p, hp⟩
     (fun c hc h => hcon ⟨c, hc, h⟩)
   have hq := ker_isHomogeneous 𝒜 x hx
@@ -434,9 +434,9 @@ private theorem prj_fst {O : Type} [CommRing O] (c : Fin 4 → O) (X : M4 (DualN
     by_cases hai : a = i
     · subst hai
       simp
-    · rw [if_pos rfl, if_neg (fun h => hai h.1)]
+    · rw [ite_eq_left rfl, ite_eq_right (fun h => hai h.1)]
       exact Finset.prod_eq_zero (Finset.mem_erase.2 ⟨hai, Finset.mem_univ _⟩) (sub_self _)
-  · rw [if_neg hab, if_neg (fun h => hab (h.1.trans h.2.symm))]
+  · rw [ite_eq_right hab, ite_eq_right (fun h => hab (h.1.trans h.2.symm))]
 
 private theorem triple {O : Type} [CommRing O] (A B C : M4 (DualNumber O)) (p q : Fin 4) (α γ : O) (β : Fin 4 → O)
     (hA : ∀ a b, (A a b).fst = if a = p ∧ b = p then α else 0)
@@ -657,7 +657,7 @@ variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
 
 private theorem hom_zero {K : Type} [Field K] [TopologicalSpace K] [T2Space K] (z : G ℚ Ω → K) (hc : Continuous z)
     (hz : ∀ g h, z (g * h) = z g + z h) (h : ∀ A : ValuationSubring Ω, ∀ g ∈ Ine (F := ℚ) A, z g = 0) (g : G ℚ Ω) : z g = 0 := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   let δ : G ℚ Ω →* Multiplicative K := MonoidHom.mk' (fun g => Multiplicative.ofAdd (z g)) fun a b => by rw [hz]; rfl
   have hcl : IsClosed (δ.ker : Set (G ℚ Ω)) := show IsClosed {g | z g = 0} from isClosed_eq hc continuous_const
   have key : δ.ker = _ := ProfiniteGrp.closedSubgroup_eq_sInf_open (G := G ℚ Ω) ⟨δ.ker, hcl⟩
@@ -665,7 +665,7 @@ private theorem hom_zero {K : Type} [Field K] [TopologicalSpace K] [T2Space K] (
   rw [key, Subgroup.mem_sInf]
   rintro U ⟨hU, hle⟩
   have hle' : δ.ker ≤ U := hle
-  have hn : U.Normal := Subgroup.Normal.of_commutator_le _ ((Abelianization.commutator_subset_ker _).trans hle')
+  have hn : U.Normal := Subgroup.Normal.of_commutator_le _ ((Group.Abelianization.commutator_le_ker _).trans hle')
   rw [B3.minkowski Ω U hn hU fun B x hx => hle' (h B x hx)]
   trivial
 
@@ -674,11 +674,11 @@ variable {l : ℕ} [Fact l.Prime] {c : Coef l}
 private theorem unr_all (D : Raw Ω c) (hD : D.Good) {K : Type} [Field K] [CharZero K] (θ : G ℚ Ω →* K) (z : G ℚ Ω → K)
     (hz : ∀ g h, z (g * h) = z g + θ g * z h) (h1 : D.UnrT z 0) (h2 : ∀ p ∈ D.Sb, ∀ g ∈ D.Ip p, g ∈ D.ψ.ker → z g = 0)
     (h3 : ∃ m, ∀ g ∈ D.Ip l, z g = θ g * m - m) (A : ValuationSubring Ω) : ∃ m, ∀ g ∈ Ine (F := ℚ) A, z g = θ g * m - m := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   obtain ⟨f1, -, -, -, -, -, -, -, -, -, -, f12, -⟩ := facts D hD
   obtain ⟨-, -, -, -, -, -, -, b8, -, b10⟩ := ML.placeBasic Ω
   have hI : ∀ U : Subgroup (G ℚ Ω), IsOpen (U : Set (G ℚ Ω)) → U.index ≠ 0 := fun U hU => by
-    haveI : Finite (G ℚ Ω ⧸ U) := U.quotient_finite_of_isOpen hU
+    have : Finite (G ℚ Ω ⧸ U) := U.quotient_finite_of_isOpen hU
     exact Subgroup.index_ne_zero_of_finite
   by_cases hA : Raw.Away D.T A
   · exact cob_fin θ z hz _ _ (hI _ f12) (h1 A hA)
@@ -751,7 +751,7 @@ private theorem zOf_tan (D : Raw Ω c) (hD : D.Good) (r' : G ℚ Ω →* M4 (Dua
     (hf : ∀ g i j, (r' g i j).fst = D.r0 g i j) (w : ℤ × ℤ) (hw : ∀ g i j, wt i j ≠ w → (r' g i j).snd = 0) :
     (fun g : D.Gp l => zOf D r' g) ∈ D.tanSet l (fun _ _ _ ρ => D.eqL ρ) w := by
   obtain ⟨p1, -, -, p4, -⟩ := ptIn D hD _ r' hr
-  refine ⟨fun g => ⟨zOf_sp D hD r' hf p1 g, ?_⟩, fun i j N => (zOf_adic D hD r' hr i j N).comp_continuous continuous_subtype_val,
+  refine ⟨fun g => ⟨zOf_sp D hD r' hf p1 g, ?_⟩, fun i j N => (zOf_adic D hD r' hr i j N).comp_continuous continuous_subtypeVal,
     _, p4, fun g i j => ⟨hf g i j, ?_⟩⟩
   · simp only [SetLike.mem_coe, Submodule.mem_iInf]
     intro i j h
@@ -1030,14 +1030,14 @@ private theorem factor_through_quotient_by_generators (M : Model D) {K : Type} [
     (Ideal.quotientKerAlgEquivOfSurjective M.surj).symm.toAlgHom, fun f => ?_⟩
   have : (Ideal.quotientKerAlgEquivOfSurjective M.surj).symm (M.π f) = Ideal.Quotient.mk _ f := by
     rw [AlgEquiv.symm_apply_eq]; rfl
-  simp only [AlgHom.comp_apply, AlgEquiv.coe_algHom]
+  simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
   erw [this]
   rfl
 
 private theorem derivation_zero_of_killing_generators (hD : D.Good) (hSo : SoV Ω l) (M : Model D) (w : ℤ × ℤ) (hw : w = -wPs ∨ w = 0)
     (δ : M.R →ₗ[c.O] c.O) (hδ : δ ∈ PtDer (M.W.origin M.org) c.O) (hwt : HasWt M.W.part w δ)
     (hF : ∀ i, δ (M.F i) = 0) (hE : ∀ i, δ (M.E i) = 0) (hZ : ∀ i, δ (M.Z i) = 0) : δ = 0 := by
-  haveI : IsCO c.O (DualNumber c.O) := co_sqz c.O c.O c.O fun _ => rfl
+  have : IsCO c.O (DualNumber c.O) := co_sqz c.O c.O c.O fun _ => rfl
   obtain ⟨y, hy⟩ := (der_hom c.O M.R c.O c.O (M.W.origin M.org) δ).1 ⟨δ, hδ, rfl⟩
   obtain ⟨y0, hy0⟩ := (der_hom c.O M.R c.O c.O (M.W.origin M.org) (0 : M.R →ₗ[c.O] c.O)).1 ⟨0, zero_mem _, rfl⟩
   obtain ⟨y', hy'⟩ := factor_through_quotient_by_generators M (K := DualNumber c.O) y
@@ -1074,7 +1074,7 @@ private theorem spans_cotangent_of_derivation_test (hD : D.Good) (hSo : SoV Ω l
     (h : ∀ δ : M.R →ₗ[c.O] c.O, HasWt M.W.part w δ → (∀ i, δ (F i) = 0) →
       (∀ i, δ (M.F i) = 0) ∧ (∀ i, δ (M.E i) = 0) ∧ ∀ i, δ (M.Z i) = 0) :
     SpansCot (M.W.originA M.org) M.W.gr w F := by
-  haveI := c.dvr
+  have := c.dvr
   refine spans_of_der c.O M.W.A (ℤ × ℤ) M.W.gr _ (fun i hi f hf => origin_nonzero_weight_eq_zero M.W M.org hi hf) w ?_ κ F hF
     fun δ hδ hwt h0 => ?_
   · rw [cot_fg]
@@ -1089,7 +1089,7 @@ set_option synthInstance.maxHeartbeats 100000 in
 private theorem cotangent_rank_at_weight_eq_dims (M : Model D) (w : ℤ × ℤ) :
     Module.rank c.O (cotLat (M.W.originA M.org) M.W.gr w) = (tDims M.r M.r' M.m w : ℕ) := by
   obtain ⟨τ, _, wt, φ, hc, hn⟩ := M.smooth
-  haveI : Module.Finite c.O (cotLat (M.W.originA M.org) M.W.gr w) := by
+  have : Module.Finite c.O (cotLat (M.W.originA M.org) M.W.gr w) := by
     rw [Module.Finite.iff_fg, cot_fg]
     exact Submodule.fg_span (Set.finite_range _)
   rw [← Module.finrank_eq_rank, ← hn w]

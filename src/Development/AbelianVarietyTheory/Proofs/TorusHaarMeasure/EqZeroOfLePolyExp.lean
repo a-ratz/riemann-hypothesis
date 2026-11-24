@@ -80,7 +80,7 @@ private lemma det_mat_ne_zero_of_mem_dom {r : ℕ} (X : _root_.ReciprocityTheory
     (hx : x ∈ X.dom) (τ : X.Ψ) : (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat x τ).det ≠ 0 := by
   have h := hx
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.dom _root_.ReciprocityTheory.ChartRestriction.G.FD.GG at h
-  simp only [Set.mem_setOf_eq] at h
+  simp only [Set.mem_ofPred_eq] at h
   exact (h τ).1
 
 open NumberField MeasureTheory Topology in
@@ -113,7 +113,7 @@ private lemma flow_mem_dom_of_im_nonneg' {r : ℕ} (X : _root_.ReciprocityTheory
   have hflow : X.flow ξ s x = X.flowV (fun τ => _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.emb (↑τ) ξ) s x := rfl
   have h := hx
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.dom _root_.ReciprocityTheory.ChartRestriction.G.FD.GG at h ⊢
-  simp only [Set.mem_setOf_eq] at h ⊢
+  simp only [Set.mem_ofPred_eq] at h ⊢
   intro τ
   obtain ⟨hdet, hsg⟩ := h τ
   have hiso := hermC_emb_self_eq_zero_of_isIso X hξ τ
@@ -400,7 +400,7 @@ theorem _root_.GlobalTheory.ModeDecay.fj_eq_zero_of_decay :
   have hGG := HGG
   unfold _root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.LineBundleFirstBoundGlobalGeneration at hGG
   obtain ⟨-, -, hpos⟩ := hGG r X hr
-  haveI := _root_.GlobalTheory.ModeDecay.nonempty_cmType X
+  have := _root_.GlobalTheory.ModeDecay.nonempty_cmType X
   have hmaj0 : ∀ τ, 0 ≤ X.c τ * X.maj x τ (_root_.ReciprocityTheory.ChartRestriction.G.FD.Data.emb (↑τ) ξ) := fun τ =>
     mul_nonneg (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ).le (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantConjugateTransfer.maj_nonneg X hx τ _)
   set K := ∑ τ, X.c τ * X.maj x τ (_root_.ReciprocityTheory.ChartRestriction.G.FD.Data.emb (↑τ) ξ) with hK_def

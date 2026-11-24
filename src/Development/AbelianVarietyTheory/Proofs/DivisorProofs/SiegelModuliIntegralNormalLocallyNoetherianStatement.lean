@@ -119,8 +119,8 @@ theorem exists_unif_riemannForm : ∀ (h : ℕ) (P : Out.PolAV (Sp ℂ)), P.g = 
   subst hg
   obtain ⟨rig, hrig⟩ := P.rigid
   obtain ⟨u, Hm, χ, Ef, hAH, -, -, -, -, -, hE, hbij, hW⟩ := GlobalTheory.thetaUnifAV_all P rig hrig
-  haveI : DiscreteTopology u.Λ := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have : DiscreteTopology u.Λ := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
   refine ⟨u, Hm, χ, Ef, hAH, hE, hbij, fun x => ?_, ZLattice.module_free ℝ u.Λ, ZLattice.module_finite ℝ u.Λ, ?_, hW⟩
   · have h1 := hE x x
     rw [hermForm_self_im hAH.1] at h1
@@ -384,7 +384,7 @@ theorem exists_siegel_of_symplectic : ∀ (h : ℕ) (Hm : Matrix (Fin h) (Fin h)
       rw [Matrix.map_apply, hermForm_cols]
       refine (hv (.inl i) (.inl j)).trans ?_
       simp [omegaStd])
-  letI : Invertible M := Matrix.invertibleOfIsUnitDet M hM
+  let : Invertible M := Matrix.invertibleOfIsUnitDet M hM
   refine ⟨M⁻¹ * L, M.toLinearEquiv' inferInstance, hs, hp, fun a => ?_⟩
   change M.mulVec (per (M⁻¹ * L) a) = _
   rw [per, Matrix.mulVec_add, Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv_cancel_left _ _ hM]
@@ -552,9 +552,9 @@ theorem holUnif_transport_linearEquiv : ∀ (h : ℕ) (A : Over (Sp ℂ)) [GrpOb
   let Λ' : Submodule ℤ (Fin h → ℂ) := u.Λ.comap ((T.restrictScalars ℤ).toLinearMap)
   have hmem : ∀ z, z ∈ Λ' ↔ T z ∈ u.Λ := fun z => Iff.rfl
   have hdisc : DiscreteTopology Λ' := by
-    haveI := u.discrete
+    have := u.discrete
     let f : Λ' → u.Λ := fun z => ⟨T z, (hmem z).1 z.2⟩
-    have hf : Continuous f := (hc.comp continuous_subtype_val).subtype_mk _
+    have hf : Continuous f := (hc.comp continuous_subtypeVal).subtype_mk _
     have hi : Function.Injective f := fun a b hab =>
       Subtype.ext (T.injective (congrArg Subtype.val hab))
     exact DiscreteTopology.of_continuous_injective hf hi
@@ -652,10 +652,10 @@ theorem weilIs_lev_of_sqOf : ∀ (h k : ℕ) (K : Type) [Field K] (ζ : K) (σ :
   let z : ℂˣ := Units.mk0 (σ ζ) (by rw [hζ]; exact Complex.exp_ne_zero _)
   have hz : (z : ℂ) = σ ζ := rfl
   have hzk : z ^ k = 1 := Units.ext (by
-    rw [Units.val_pow_eq_pow_val, hz, hζ, ← Complex.exp_nat_mul, mul_div_cancel₀ _ hk0, Complex.exp_neg,
+    rw [Units.val_pow_eq_pow_val, hz, hζ, ← Complex.exp_natCast_mul, mul_div_cancel₀ _ hk0, Complex.exp_neg,
       Complex.exp_two_pi_mul_I, inv_one, Units.val_one])
   have hez : e = z ^ omegaStd a b := Units.ext (by
-    rw [Units.val_zpow_eq_zpow_val, hz, hζ, ← Complex.exp_int_mul, he]
+    rw [Units.val_zpow_eq_zpow_val, hz, hζ, ← Complex.exp_intCast_mul, he]
     congr 1
     ring)
   have lam : (abelian₂ P.A P.L).IsLB := LB.isLB_linComb P.isLB _ _
@@ -966,7 +966,7 @@ theorem conjEmb_zeta (n : ℕ) :
 theorem preconnected_of_complex (g n : ℕ) (hg : 1 ≤ g) (hn : 3 ≤ n) (hodd : Odd n)
     (F : SFam g n (conjEmb n (zetaAway n))) : PreconnectedSpace F.X := by
   have hL := GlobalTheory.abelianSchemeLaws_all
-  haveI := F.smooth
+  have := F.smooth
   have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
   rw [preconnectedSpace_iff_clopen]
   intro W hW
@@ -997,17 +997,17 @@ theorem GlobalTheory.SiegelIntegral.integral_normal_noetherian : ∀ (g n : ℕ)
     IsIntegral F.X ∧ Geo.Tor.IsNormalScheme F.X ∧ IsLocallyNoetherian F.X := by
   intro g n hg hn hodd F
   have hn0 : n ≠ 0 := by omega
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
   have hB : Geo.Tor.IsNormalScheme (Sp (cycAway n)) := GlobalTheory.ZJ.isNormalScheme_sp _
-  haveI := F.smooth
+  have := F.smooth
   have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
   have hN : Geo.Tor.IsNormalScheme F.X :=
     GlobalTheory.SmoothNormal.isNormalScheme_of_smoothOfRelativeDimension _ _ F.s (g * (g + 1) / 2) hB
-  haveI hLN : IsLocallyNoetherian F.X := LocallyOfFiniteType.isLocallyNoetherian F.s
+  have hLN : IsLocallyNoetherian F.X := LocallyOfFiniteType.isLocallyNoetherian F.s
   refine ⟨?_, hN, hLN⟩
-  haveI : GlobalTheory.IsNormalScheme F.X := GlobalTheory.IsNormalScheme.of_pred hN
+  have : GlobalTheory.IsNormalScheme F.X := GlobalTheory.IsNormalScheme.of_pred hN
   obtain ⟨F', π, hpb, -⟩ := F.exists_baseChange (conjEmb n) (conjEmb_injective n) rfl
-  haveI := preconnected_of_complex g n hg hn hodd F'
+  have := preconnected_of_complex g n hg hn hodd F'
   have hgen : {x : F.X | (F.s x).asIdeal = ⊥} ⊆ Set.range π := by
     intro x hx
     have hx' : x ∈ Set.range (pullback.fst F.s (spMap (conjEmb n))) := by
@@ -1024,8 +1024,8 @@ theorem GlobalTheory.SiegelIntegral.integral_normal_noetherian : ∀ (g n : ℕ)
       exact closure_mono hgen)
   obtain ⟨c, hc, -⟩ := GlobalTheory.exists_principal_siegPre_complex g n (Nat.pos_of_ne_zero hn0) (cycAway n)
     (cycAway n).subtype (zetaAway n) (Complex.isPrimitiveRoot_exp n hn0)
-  haveI := F.nonempty _ Subtype.val_injective c hc
-  haveI : ConnectedSpace F.X := { toPreconnectedSpace := ⟨hpre⟩, toNonempty := inferInstance }
+  have := F.nonempty _ Subtype.val_injective c hc
+  have : ConnectedSpace F.X := { toPreconnectedSpace := ⟨hpre⟩, toNonempty := inferInstance }
   exact GlobalTheory.IsNormalScheme.isIntegral_of_connectedSpace F.X
 end -- clump:auto
 end -- clump:auto

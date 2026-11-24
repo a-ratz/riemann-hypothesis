@@ -447,7 +447,7 @@ theorem botConst_of_inputs_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
   obtain ⟨u₂, N₁, N₂, hu₂, hu₂q, hu₂n, hr₂⟩ := H μ₀ _ P₀ P₀' (hmod ▸ hB₀)
   obtain ⟨S', del, hE, hCo, -, rfl⟩ := hI
   obtain ⟨p, hp, hpw⟩ := exists_prime_under w
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hpQ : ¬ p ∣ Qn G t := fun hd => hw (by
     obtain ⟨k, hk⟩ := hd
     rw [hk, Nat.cast_mul]

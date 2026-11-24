@@ -88,9 +88,9 @@ theorem isDual1_dot {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K�
 theorem loc_cont (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E))
     (hw : w ∈ placesOver D.host.E (D.nd.l i)) {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i))
     (hM : Continuous fun g => M g) : Continuous (Br.loc D.nbr i w hw M) := by
-  have hfc : Continuous (D.nbr i w hw).toLL := continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+  have hfc : Continuous (D.nbr i w hw).toLL := continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
   have h1 : Continuous fun g : Br.G D.nbr i w hw => M ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd) :=
-    hM.comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw))
+    hM.comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw))
   exact h1.matrix_map hfc
 
 theorem loc_dual (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E))

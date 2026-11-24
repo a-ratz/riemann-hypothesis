@@ -103,7 +103,7 @@ theorem heckeOn_rep_of_not (M : DSModel V S) {P : Pl D.host.E} {d : List ℤ} (h
 
 theorem postOn_single (M : DSModel V S) (P : Pl D.host.E) (d : List ℤ) (U : MMap M) :
     postOn M (hk V P (Finsupp.single d 1)) U = heckeOn M (GlobalTheory.Hk3.rep V P d) U := by
-  rw [GlobalTheory.LevOp.postOn_hk, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same,
+  rw [GlobalTheory.LevOp.postOn_hk, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same,
     one_smul]
 
 section Model

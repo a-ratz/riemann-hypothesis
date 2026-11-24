@@ -64,8 +64,8 @@ section
 variable (K : Type*) [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
 
 theorem t2Space_isNonarchimedeanLocalField_singleBlock : T2Space K := by
-  letI := IsTopologicalAddGroup.rightUniformSpace K
-  haveI := isUniformAddGroup_of_addCommGroup (G := K)
+  let := IsTopologicalAddGroup.rightUniformSpace K
+  have := isUniformAddGroup_of_addCommGroup (G := K)
   infer_instance
 
 theorem exists_pow_lt_value {a γ : ValueGroupWithZero K} (ha : a < 1) (hγ : γ ≠ 0) :
@@ -181,14 +181,14 @@ theorem continuous_algebraMap_of_lt_one [ValuativeExtension k E] {π : k}
 
 theorem continuous_linearMap [FiniteDimensional k E] [ContinuousSMul k E] (f : E →ₗ[k] E) :
     Continuous f := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
-  letI : NontriviallyNormedField k := Valued.toNontriviallyNormedField k (ValueGroupWithZero k)
-  haveI := t2Space_isNonarchimedeanLocalField_singleBlock E
+  let : NontriviallyNormedField k := Valued.toNontriviallyNormedField k (ValueGroupWithZero k)
+  have := t2Space_isNonarchimedeanLocalField_singleBlock E
   exact f.continuous_of_finiteDimensional
 
 theorem value_lt_one_of_continuous (τ : E ≃ₐ[k] E) (hτ : Continuous τ) {x : E}
@@ -220,7 +220,7 @@ theorem value_le_one_of_continuous (hc : ∀ τ : E ≃ₐ[k] E, Continuous τ) 
     intro h0
     have : x = 0 := (Valuation.zero_iff _).1 h0
     simp [this] at hy0
-  exact absurd ((inv_lt_one₀ (zero_lt_iff.2 hx0)).1 h3) (not_lt.2 hx)
+  exact absurd ((inv_lt_one₀ (pos_iff_ne_zero.2 hx0)).1 h3) (not_lt.2 hx)
 
 theorem value_eq_one_of_continuous (hc : ∀ τ : E ≃ₐ[k] E, Continuous τ) (τ : E ≃ₐ[k] E) {x : E}
     (hx : valuation E x = 1) : valuation E (τ x) = 1 := by
@@ -232,7 +232,7 @@ theorem value_eq_one_of_continuous (hc : ∀ τ : E ≃ₐ[k] E, Continuous τ) 
   have h2 := value_le_one_of_continuous hc τ h1
   rw [map_inv₀, map_inv₀] at h2
   have hy0 : valuation E (τ x) ≠ 0 := by simpa using hx0
-  exact (inv_le_one₀ (zero_lt_iff.2 hy0)).1 h2
+  exact (inv_le_one₀ (pos_iff_ne_zero.2 hy0)).1 h2
 
 theorem value_map_eq (hc : ∀ τ : E ≃ₐ[k] E, Continuous τ) {π : k}
     (h0 : valuation E (algebraMap k E π) ≠ 0) (h1 : valuation E (algebraMap k E π) < 1)
@@ -260,9 +260,9 @@ theorem unramifiedDictionary_a : PositivityTheory.Rg.Tf.Loc.D0a := by
     intro h
     have := hmax r hr1
     rw [h] at this
-    exact hr0 ((Valuation.zero_iff _).1 (le_antisymm this zero_le'))
+    exact hr0 ((Valuation.zero_iff _).1 (le_antisymm this zero_le))
   have hcont := continuous_algebraMap_of_lt_one h0 h1
-  haveI : ContinuousSMul k E := continuousSMul_of_algebraMap k E hcont
+  have : ContinuousSMul k E := continuousSMul_of_algebraMap k E hcont
   have hc : ∀ τ : E ≃ₐ[k] E, Continuous τ := fun τ => continuous_linearMap τ.toLinearMap
   have hval := value_map_eq hc h0 h1 hmax
   have hint : ∀ a : k, algebraMap k E a ∈ intO E ↔ a ∈ intO k := by

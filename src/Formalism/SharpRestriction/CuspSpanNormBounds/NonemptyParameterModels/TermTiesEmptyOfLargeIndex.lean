@@ -61,7 +61,7 @@ open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNo
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem tie_star (D : D7) (x : D.host.E) : star x = D.host.conj x := by
-  haveI : IsCMField D.host.E := D.host.der.cm
+  have : IsCMField D.host.E := D.host.der.cm
   have hc : D.host.conj = (IsCMField.complexConj D.host.E).restrictScalars ℚ := by
     have hg := (D.host.der.conj_iff D.host.φ₀ ((IsCMField.complexConj D.host.E).restrictScalars ℚ)).1
       (fun y => IsCMField.complexEmbedding_complexConj _ D.host.φ₀ y)

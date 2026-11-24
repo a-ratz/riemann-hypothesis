@@ -150,13 +150,13 @@ theorem exists_lamC_eq {l : ℕ} [Fact l.Prime] (σ : K →+* ℂ) (φ : K →+*
   have hmem : ∀ x : K, σ x ∈ Qbar := fun x =>
     mem_algebraicClosure_iff.2 ((Algebra.IsAlgebraic.isAlgebraic (R := ℚ) x).algHom σ.toRatAlgHom)
   let σ' : K →+* Qbar := σ.codRestrict Qbar hmem
-  letI : Algebra K Qbar := σ'.toAlgebra
-  letI : Algebra K ℂ_[l] := φ.toAlgebra
-  haveI : IsScalarTower ℚ K Qbar := IsScalarTower.of_algebraMap_eq fun q =>
+  let : Algebra K Qbar := σ'.toAlgebra
+  let : Algebra K ℂ_[l] := φ.toAlgebra
+  have : IsScalarTower ℚ K Qbar := IsScalarTower.of_algebraMap_eq fun q =>
     ((eq_ratCast (algebraMap ℚ Qbar) q).trans (map_ratCast σ' q).symm).trans
       (congrArg σ' (eq_ratCast (algebraMap ℚ K) q).symm)
-  haveI : Algebra.IsAlgebraic ℚ Qbar := algebraicClosure.isAlgebraic ℚ ℂ
-  haveI : Algebra.IsAlgebraic K Qbar := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  have : Algebra.IsAlgebraic ℚ Qbar := algebraicClosure.isAlgebraic ℚ ℂ
+  have : Algebra.IsAlgebraic K Qbar := Algebra.IsAlgebraic.tower_top (K := ℚ) K
   let lam : Qbar →ₐ[K] ℂ_[l] := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

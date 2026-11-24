@@ -110,7 +110,7 @@ theorem evenNorms_of_unit_nonsquare {K : Type} [Field K] (w : Valuation K ℤᵐ
         field_simp; ring
       have hs : IsSquare (δ * (b / a) ^ 2) := by
         apply hsq
-        rw [e, Valuation.map_neg, map_div₀, ha2, div_lt_one₀ (pow_pos (zero_lt_iff.2 ha0) 2)]
+        rw [e, Valuation.map_neg, map_div₀, ha2, div_lt_one₀ (pow_pos (pos_iff_ne_zero.2 ha0) 2)]
         exact hlt
       obtain ⟨r, hr⟩ := hs
       refine ⟨r * a / b, ?_⟩

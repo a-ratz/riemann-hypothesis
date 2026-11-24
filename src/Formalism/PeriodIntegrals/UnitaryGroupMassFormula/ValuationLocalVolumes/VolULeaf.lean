@@ -88,7 +88,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem norm_sc (hfin : Module.finrank F E = 2) (x : Fv F v) :
     Algebra.norm (Fv F v) (sc (E := E) v x) = x ^ 2 := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   have h1 : sc (E := E) v x = algebraMap (Fv F v) (Fv F v ⊗[F] E) x := by
     simp [PI.LocJacTyp.sc, Algebra.TensorProduct.algebraMap_apply]
   rw [h1, Algebra.norm_algebraMap, Module.finrank_baseChange, hfin]
@@ -211,7 +211,7 @@ theorem sd_facts (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (hann : A
   have hnt : ∃ r : Fv F v, psiV F ψ v r ≠ 1 := by
     obtain ⟨t0, ht0⟩ := PI.UnitaryGroupMassFormula.LocJacTyp.Sd.exists_not_mem_oev (E := E) v
     have : t0 ∉ PI.UnitaryGroupMassFormula.LocJacTyp.Sd.D1 (E := E) v ψ := by rw [hD1]; exact ht0
-    simp only [PI.UnitaryGroupMassFormula.LocJacTyp.Sd.D1, Set.mem_setOf_eq, not_forall] at this
+    simp only [PI.UnitaryGroupMassFormula.LocJacTyp.Sd.D1, Set.mem_ofPred_eq, not_forall] at this
     obtain ⟨x, _, hx⟩ := this
     exact ⟨_, hx⟩
   have hex := PI.UnitaryGroupMassFormula.LocJacTyp.Sd.exists_sd (E := E) v ψ hOK hnt ι
@@ -221,7 +221,7 @@ theorem sd_facts (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (hann : A
     unfold sdE
     rw [dite_eq_left hex']
     exact hex'.choose_spec
-  haveI : (sdE (E := E) ψ v ι).IsAddHaarMeasure := hsd.1
+  have : (sdE (E := E) ψ v ι).IsAddHaarMeasure := hsd.1
   refine ⟨inferInstance, inferInstance, ?_⟩
   have hDO : PI.UnitaryGroupMassFormula.LocJacTyp.Sd.Dbox (E := E) v ψ ι = PI.UnitaryGroupMassFormula.LocJacTyp.Obox v ι := by
     simp only [PI.UnitaryGroupMassFormula.LocJacTyp.Sd.Dbox, PI.UnitaryGroupMassFormula.LocJacTyp.Obox, hD1]
@@ -255,7 +255,7 @@ theorem volTAff_of (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (hann :
     rw [← this]
     congr 1
     ext w
-    simp only [hT, Set.mem_setOf_eq, mul_comm]
+    simp only [hT, Set.mem_ofPred_eq, mul_comm]
   have h2 := Formalism.L2.SG.Pf.NcVal.VolUH.sc_pre (E := E) v ι μ hV (fun _ => ((g : Fv F v))⁻¹) (fun _ => hgne) S
   rw [h1, hT, h2]
   congr 1
@@ -272,7 +272,7 @@ theorem volTAff_of (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (hann :
   have hsub : (Set.univ.pi fun _ : ι => {c : Fv F v ⊗[F] E | sc (E := E) v ((g : Fv F v))⁻¹ * c ∈ OEv (E := E) v})
       ⊆ PI.UnitaryGroupMassFormula.LocJacTyp.Obox v ι := by
     intro w hw
-    simp only [Set.mem_pi, Set.mem_univ, Set.mem_setOf_eq, forall_true_left] at hw
+    simp only [Set.mem_pi, Set.mem_univ, Set.mem_ofPred_eq, forall_true_left] at hw
     simp only [PI.UnitaryGroupMassFormula.LocJacTyp.Obox, Set.mem_pi, Set.mem_univ, forall_true_left]
     intro i
     have := Formalism.L2.SG.Pf.NcVal.VolTU.sc_mul_mem (E := E) v (Formalism.L2.SG.Pf.NcVal.VolTU.natCast_memO v g) (hw i)
@@ -310,7 +310,7 @@ theorem volTLocPres_of (hψ : IsCharAF F ψ) (hfin : Module.finrank F E = 2) (ha
   have hset : {w : Fin (r + 1) × Fin (r + 1) → Fv F v ⊗[F] E |
       ∀ i, sc (E := E) v (alp v r i.1 * alp v r i.2) * w i ∈ OEv (E := E) v} = VolTO (E := E) v _ := by
     ext w
-    simp only [Set.mem_setOf_eq, VolTO]
+    simp only [Set.mem_ofPred_eq, VolTO]
     refine forall_congr' fun i => ?_
     apply Formalism.L2.SG.Pf.NcVal.VolTU.unit_mul_mem_iff
     rw [map_mul, Formalism.L2.SG.Pf.NcVal.VolTU.val_alp v hunit, Formalism.L2.SG.Pf.NcVal.VolTU.val_alp v hunit, one_mul]
@@ -328,11 +328,11 @@ theorem volTUSet_meas {g : ℕ} (hg0 : g ≠ 0) (r : ℕ) : MeasurableSet (VolTU
     simp_rw [mul_comm _ (sc (E := E) v _), Formalism.L2.SG.Pf.NcVal.VolTU.sc_mul_eq_smul]
     exact continuous_const_smul _
   apply IsOpen.measurableSet
-  simp only [VolTUSet, Set.setOf_and]
+  simp only [VolTUSet, Set.ofPred_and]
   apply IsOpen.inter
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun q => hO.preimage ((continuous_apply q).comp continuous_fst)
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun q => hO.preimage
       (hc.comp (((continuous_apply q).comp continuous_snd).sub ((continuous_apply q).comp continuous_fst)))
 

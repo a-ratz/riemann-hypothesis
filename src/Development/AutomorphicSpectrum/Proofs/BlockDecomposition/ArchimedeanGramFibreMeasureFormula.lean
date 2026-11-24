@@ -103,7 +103,7 @@ theorem exists_integral_ne_zero_of_carried_by_isOpen
     have huniv : (Set.univ : Set X) = U ∪ Uᶜ := (Set.union_compl_self U).symm
     rw [huniv]
     exact measure_union_null h0 hc
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   have hσ : IsSigmaCompact U := isSigmaCompact_iff_sigmaCompactSpace.2 inferInstance
   obtain ⟨K, hK, hKU⟩ := hσ
   have hex : ∃ n, m (K n) ≠ 0 := by
@@ -232,21 +232,21 @@ theorem fib_scale_core (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
         HeckeCharacterZeroLocus.SiegelWeilU.cT (HeckeCharacterZeroLocus.SiegelWeilU.sigR R σ) g * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * g →
       m S' = κ • (m S).map (fun X => GlobalTheory.CompanionTheory.SW.rmul R X g) := by
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hTK
-  haveI := hLK
-  haveI := hSK
-  haveI := hTK2
-  haveI := hBor n M
+  have := hTK
+  have := hLK
+  have := hSK
+  have := hTK2
+  have := hBor n M
   obtain ⟨hLH, hSH, hT2H, hBH, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R n
-  haveI := hLH
-  haveI := hSH
-  haveI := hT2H
-  haveI := hBH
+  have := hLH
+  have := hSH
+  have := hT2H
+  have := hBH
   obtain ⟨-, hcomp, hone, hmem, -⟩ := GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hσ M J hJ R n
   have hg1 : g * g⁻¹ = 1 := Matrix.mul_nonsing_inv g hg
   have hg2 : g⁻¹ * g = 1 := Matrix.nonsing_inv_mul g hg
@@ -288,7 +288,7 @@ theorem fib_scale_core (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       Continuous fun S : HeckeCharacterZeroLocus.SiegelWeilU.HermR R σ n =>
         HeckeCharacterZeroLocus.SiegelWeilU.cT (HeckeCharacterZeroLocus.SiegelWeilU.sigR R σ) h *
           (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * h := fun h =>
-    (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   let t : HeckeCharacterZeroLocus.SiegelWeilU.HermR R σ n ≃+ HeckeCharacterZeroLocus.SiegelWeilU.HermR R σ n :=
     { toFun := fun S => ⟨HeckeCharacterZeroLocus.SiegelWeilU.cT (HeckeCharacterZeroLocus.SiegelWeilU.sigR R σ) g *
         (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * g, hmem S g⟩
@@ -302,8 +302,8 @@ theorem fib_scale_core (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   have hes : Continuous e.symm := hrc g⁻¹
   have htc : Continuous t := (hcj g).subtype_mk _
   have hts : Continuous t.symm := (hcj g⁻¹).subtype_mk _
-  haveI hμe : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ hec hes
-  haveI hνt : (ν.map t).IsAddHaarMeasure := t.isAddHaarMeasure_map ν htc hts
+  have hμe : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ hec hes
+  have hνt : (ν.map t).IsAddHaarMeasure := t.isAddHaarMeasure_map ν htc hts
   obtain ⟨a, ha0, hmu⟩ : ∃ a : ℝ≥0, a ≠ 0 ∧ μ.map e = a • μ :=
     ⟨_, (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure (μ.map e) μ).ne',
       Measure.isAddLeftInvariant_eq_smul _ _⟩
@@ -672,21 +672,21 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hloc := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   obtain ⟨ρ, e0, -, he0, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hCM.1
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, hsc, -, hrepr, hB, -, hgc⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-  haveI := hB n M
+  have := hB n M
   obtain ⟨hLH, hSH, hT2H, hBH, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Ainf F) n
-  haveI := hLH
-  haveI := hSH
-  haveI := hT2H
-  haveI := hBH
+  have := hLH
+  have := hSH
+  have := hT2H
+  have := hBH
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b laminf hlH
-  haveI := hW n M
-  haveI := hH n
+  have := hW n M
+  have := hH n
   obtain ⟨halg, hcomp, hone, hmem, -⟩ := GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hCM M J hJ (Ainf F) n
   have hKu := GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hCM (Ainf F) hloc
   obtain ⟨N, e, he, hes, f, hf⟩ := hφ
@@ -733,7 +733,7 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     (Matrix.mul_nonsing_inv _ hc) (Matrix.nonsing_inv_mul _ hc) (hherm c)
   have hι : Filter.Tendsto (fun s : HermR (Ainf F) σ n => (s : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E))) (nhds c)
       (nhdsWithin (c : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) {s | ad s = s}) :=
-    tendsto_nhdsWithin_iff.2 ⟨continuous_subtype_val.tendsto c, Filter.Eventually.of_forall hherm⟩
+    tendsto_nhdsWithin_iff.2 ⟨continuous_subtypeVal.tendsto c, Filter.Eventually.of_forall hherm⟩
   have hT1 := ht1.comp hι
   have hT2' := hι.eventually ht2
 
@@ -744,13 +744,13 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       ext S
       rfl
     rw [this]
-    exact hKu.isOpen_range.preimage continuous_subtype_val.matrix_det
+    exact hKu.isOpen_range.preimage continuous_subtypeVal.matrix_det
   have hev := hT2'.and (hBo.mem_nhds hc)
   obtain ⟨O, hOs, hOo, hcO⟩ := eventually_nhds_iff.1 hev
   set μ := GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b laminf n M with hμ
   set ν := GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b laminf n with hν
   have hm' : IsFibreFamily μ (gramR (Ainf F) σ J) Subtype.val {X | IsUnit (gramR (Ainf F) σ J X).det} ν Bl minf := hm
-  haveI hμe : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
+  have hμe : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
   let W0 : (Fin N → ℝ) → ℝ := fun y => (1 + ‖y‖) ^ (-((N + 1 : ℕ) : ℝ))
   have hW0m : Measurable W0 := (measurable_const.add measurable_norm).pow_const _
   have hWi : Integrable W0 (μ.map e) := integrable_one_add_norm (by simp)
@@ -793,7 +793,7 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       _ = ad (t s) * ((ad g0⁻¹ * ad g0) * c * (g0 * g0⁻¹)) * t s := by rw [h1, hgi1, one_mul, mul_one]
       _ = _ := by simp only [mul_assoc]
   choose! κ hκ0 hκ using hκ
-  haveI : T2Space (Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) := inferInstanceAs (T2Space (Fin n → Fin n → Ainf F ⊗[F] E))
+  have : T2Space (Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) := inferInstanceAs (T2Space (Fin n → Fin n → Ainf F ⊗[F] E))
   have htc : t (c : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) = 1 :=
     tendsto_nhds_unique (tendsto_pure_nhds _ c) (hT1.mono_left (pure_le_nhds c))
   have hrc : ∀ h : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E),
@@ -834,7 +834,7 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   by_cases h0 : minf c = 0
   · have hc0 : (minf s0).map (A c) Set.univ = 0 := by
       have h1 := congrArg (fun m : Measure _ => m Set.univ) (hκ c hcO)
-      simp only [h0, Measure.coe_zero, Pi.zero_apply, Measure.smul_apply] at h1
+      simp only [h0, FunLike.coe_zero, Pi.zero_apply, smul_apply] at h1
       have h2 := h1.symm
       rw [ENNReal.smul_def, smul_eq_mul, mul_eq_zero] at h2
       rcases h2 with h2 | h2
@@ -874,7 +874,7 @@ theorem fibre_schwartzN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     have hev2 : ∀ᶠ s in nhds c, minf s = κ s • (minf s0).map (A s) := by
       filter_upwards [hOo.mem_nhds hcO] with s hs
       exact hκ s hs
-    haveI : SecondCountableTopology (HermR (Ainf F) σ n) := hSH
+    have : SecondCountableTopology (HermR (Ainf F) σ n) := hSH
     rw [hφe]
     exact family_core _ _ N e he hes c minf (minf s0) A κ hAc hAt hAinj hev2 hs0fin χ hχc hχs hχt hχ0 f
 

@@ -590,8 +590,8 @@ theorem der_act [IsNoetherianRing (CR O y c')] [IsIntegrallyClosed (CR O y c')] 
     (a : 𝓞 E) (f : augIdeal (P.Γ₁.btOrder ⊤)) (u : Module.Dual (CR O y c') P.L)
     (hu : θ u = (augIdeal (P.Γ₁.btOrder ⊤)).toCotangent f) : ∃ f' : augIdeal (P.Γ₁.btOrder ⊤),
       (∀ t, f'.1.1 t = f.1.1 (mulT _ p a t)) ∧ θ (u ∘ₗ P.ρ a) = (augIdeal (P.Γ₁.btOrder ⊤)).toCotangent f' := by
-  haveI := 𝔐.t.act.hom a
-  haveI := frac_epi (CR O y c')
+  have := 𝔐.t.act.hom a
+  have := frac_epi (CR O y c')
   have hα : ∀ t, (P.Γ₁.pt (mulT _ p a t)).left ≫ P.i₁ = (P.Γ₁.pt t).left ≫ P.i₁ ≫ (𝔐.t.act.act a).left := by
     intro t
     obtain ⟨x, rfl⟩ := qmk_surj _ p t
@@ -619,9 +619,9 @@ theorem PositivityTheory.Xgn.teichmuller_test_function : ∀ (E : Type) [Field E
   obtain ⟨-, -, -, hsurj, hσ, -⟩ := hOrb
   obtain ⟨h1, h2, h3, h4⟩ := PositivityTheory.Xgn.function_family_chart_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr p hpS A m
     hpm O c' hc'
-  haveI := finite_tors (E := E) (D.p + D.q) (Fact.out : p.Prime).ne_zero
-  haveI := P.fin
-  haveI := P.proj
+  have := finite_tors (E := E) (D.p + D.q) (Fact.out : p.Prime).ne_zero
+  have := P.fin
+  have := P.proj
   obtain ⟨θ, ⟨-, hθ⟩, hθp, -⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ _ 𝔐.t.G P.x p P.i₁ P.tors₁
     𝔐.t.semi.smooth).2.2.2.2.2 P.L P.M
   have hid := PositivityTheory.Xgn.function_family_idempotent E H D l Xo c O₀ β Y S Ω K J y 𝔐 p G O c' P F pq sc hsurj hSec

@@ -155,7 +155,7 @@ theorem corollary_five_four_of_explicit (D : D7) (sc : Scale) (C0 CY : ℝ) (h5 
   have hX : Real.exp (logXuD D u) ^ (D.R.f * D.R.k) = DstarD D / duStarU D u := by
     have hfR : (0 : ℝ) < D.R.f := by exact_mod_cast hf
     have hkR : (0 : ℝ) < D.R.k := by exact_mod_cast (by omega : 0 < D.R.k)
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     unfold logXuD logXu
     push_cast
     rw [show (D.R.f : ℝ) * D.R.k * (1 / ((D.R.f : ℝ) * D.R.k) * Real.log (DstarD D / duStarU D u)) =

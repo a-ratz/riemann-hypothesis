@@ -339,10 +339,10 @@ theorem Emb.pullback_iso_of_closed (R : Type) [CommRing R] [IsLocalRing R] (S : 
     ∃ (e : pullback G'.hom t ≅ pullback E.Y.hom k) (l : pullback G'.hom t ⟶ E.H.toScheme),
       e.hom ≫ pullback.snd _ _ = pullback.snd _ _ ∧ l ≫ E.H.ι = pullback.fst _ _ ∧
       l ≫ E.f = e.hom ≫ pullback.fst _ _ ≫ E.j := by
-  haveI := hG
-  haveI : IsClosedImmersion (spMap (residue R)) := IsClosedImmersion.spec_of_surjective _ residue_surjective
-  haveI : IsImmersion E.j := E.imm
-  haveI : Smooth E.Y.hom := E.smooth
+  have := hG
+  have : IsClosedImmersion (spMap (residue R)) := IsClosedImmersion.spec_of_surjective _ residue_surjective
+  have : IsImmersion E.j := E.imm
+  have : Smooth E.Y.hom := E.smooth
   have hclosed : ∀ w : (pullback G'.hom t : Scheme.{0}), π (G'.hom (pullback.fst G'.hom t w)) = closedPoint R := by
     intro w
     have h1 : π (G'.hom (pullback.fst G'.hom t w)) = (pullback.fst G'.hom t ≫ G'.hom ≫ π) w := by simp
@@ -355,7 +355,7 @@ theorem Emb.pullback_iso_of_closed (R : Type) [CommRing R] [IsLocalRing R] (S : 
     exact E.H_all _ (hclosed w)
   let l : pullback G'.hom t ⟶ E.H.toScheme := IsOpenImmersion.lift E.H.ι (pullback.fst G'.hom t) hrng
   have hl : l ≫ E.H.ι = pullback.fst G'.hom t := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsReduced (pullback G'.hom t) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.snd G'.hom t)
+  have : IsReduced (pullback G'.hom t) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.snd G'.hom t)
   have hrj : Set.range (l ≫ E.f) ⊆ Set.range E.j := by
     rintro _ ⟨w, rfl⟩
     obtain ⟨y, hy⟩ := (GlobalTheory.T.closedPoint_range_eq_fixedGroup_image R S π G' E).1 (l w) (by
@@ -369,7 +369,7 @@ theorem Emb.pullback_iso_of_closed (R : Type) [CommRing R] [IsLocalRing R] (S : 
   let h : pullback G'.hom t ⟶ pullback E.Y.hom k := pullback.lift g (pullback.snd G'.hom t) hgY
   have hh : h ≫ pullback.snd E.Y.hom k = pullback.snd G'.hom t := pullback.lift_snd _ _ _
   have hhf : h ≫ pullback.fst E.Y.hom k = g := pullback.lift_fst _ _ _
-  haveI : IsIso h := by
+  have : IsIso h := by
     refine GlobalTheory.T.isIso_of_isIso_on_geometric_fibres_of_smooth T _ _ (pullback.snd G'.hom t) (pullback.snd E.Y.hom k) h hh inferInstance inferInstance ?_
     intro s
     let Ω := T.residueField s

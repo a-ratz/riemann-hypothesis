@@ -91,8 +91,8 @@ private theorem nzd_rs {U V : Y.Opens} (hU : IsAffineOpen U) (hV : IsAffineOpen 
     simp only [Scheme.Hom.appLE, Scheme.Hom.id_app]
     rfl
   rw [e] at hf
-  letI : Algebra Γ(Y, U) Γ(Y, V) := (rs h).toAlgebra
-  haveI : Module.Flat Γ(Y, U) Γ(Y, V) := hf
+  let : Algebra Γ(Y, U) Γ(Y, V) := (rs h).toAlgebra
+  have : Module.Flat Γ(Y, U) Γ(Y, V) := hf
   have hr : IsSMulRegular Γ(Y, U) s := fun a b e => (mul_cancel_left_mem_nonZeroDivisors hs).1 e
   have hr' := IsSMulRegular.of_flat (S := Γ(Y, V)) hr
   rw [mem_nonZeroDivisors_iff_right]
@@ -212,25 +212,25 @@ end
 
 theorem exDiv : ExDiv := by
   intro R _ _ Z W D _ _ π hπ
-  haveI : Smooth Z.hom := SmoothOfRelativeDimension.smooth D Z.hom
+  have : Smooth Z.hom := SmoothOfRelativeDimension.smooth D Z.hom
   obtain ⟨hp, hcl, -⟩ := blOff R π hπ
-  haveI : IsProper π.left := hp
-  haveI : IsClosedImmersion (dg Z).left := by
+  have : IsProper π.left := hp
+  have : IsClosedImmersion (dg Z).left := by
     change IsClosedImmersion (pullback.diagonal Z.hom)
     infer_instance
-  haveI : IsSeparated (XX Z).hom := by
+  have : IsSeparated (XX Z).hom := by
     change IsSeparated (pullback.fst Z.hom Z.hom ≫ Z.hom)
     infer_instance
-  haveI : IsSeparated W.hom := by
+  have : IsSeparated W.hom := by
     rw [← Over.w π]
     infer_instance
-  haveI : W.left.IsSeparated := by
+  have : W.left.IsSeparated := by
     constructor
     have : terminal.from W.left = W.hom ≫ terminal.from _ := terminal.hom_ext _ _
     rw [this]
     infer_instance
   obtain ⟨L, s, a, h1, h2, h3⟩ := exists_coc (X := W) _ hπ.1
-  haveI : IsClosedImmersion (exI π).left := hcl
+  have : IsClosedImmersion (exI π).left := hcl
   refine ⟨L, s, hcl, fun j => ?_, h2, h3⟩
   have e : (exI π).left.ker = (dg Z).left.ker.comap π.left :=
     Scheme.IdealSheafData.ker_fst_of_isClosedImmersion (dg Z).left π.left
@@ -355,7 +355,7 @@ private lemma sigma_section {I : Type} (V : I → Scheme.{0}) (s : ∀ i, Γ(V i
   let φ (i : I) : R ⟶ Γ(V i, ⊤) := CommRingCat.ofHom (Polynomial.eval₂RingHom (Int.castRingHom _) (s i))
   let m (i : I) : V i ⟶ Spec R := (V i).toSpecΓ ≫ Spec.map (φ i)
   refine ⟨(Sigma.desc m).appTop.hom ((Scheme.ΓSpecIso R).inv.hom Polynomial.X), fun i => ?_⟩
-  rw [← appTop_comp, Sigma.ι_desc]
+  rw [← appTop_comp, Sigma.ι_comp_desc]
   have e : m i = (V i).toSpecΓ ≫ Spec.map (φ i) := rfl
   rw [e, appTop_comp]
   have h1 : (Spec.map (φ i)).appTop.hom ((Scheme.ΓSpecIso R).inv.hom Polynomial.X) = (Scheme.ΓSpecIso _).inv.hom ((φ i).hom Polynomial.X) :=
@@ -392,7 +392,7 @@ private lemma local_div {Y : Scheme.{0}} {I : Type} (U : I → Y.Opens) (s : ∀
     (hab : a ≫ Sigma.desc (fun i => (U i).ι) = b ≫ Sigma.desc (fun i => (U i).ι)) (x : X) :
     ∃ (O : X.Opens) (w : Γ(O, ⊤)), x ∈ O ∧ O.ι.appTop.hom (a.appTop.hom s0) = w * O.ι.appTop.hom (b.appTop.hom s0) := by
   let F : (∐ fun i => (U i : Scheme.{0})) ⟶ Y := Sigma.desc (fun i => (U i).ι)
-  have hF (i) : Sigma.ι (fun i => (U i : Scheme.{0})) i ≫ F = (U i).ι := Sigma.ι_desc _ _
+  have hF (i) : Sigma.ι (fun i => (U i : Scheme.{0})) i ≫ F = (U i).ι := Sigma.ι_comp_desc _ _
   obtain ⟨⟨i, p⟩, hp⟩ := (sigmaMk fun i => (U i : Scheme.{0})).surjective (a x)
   obtain ⟨⟨i', p'⟩, hp'⟩ := (sigmaMk fun i => (U i : Scheme.{0})).surjective (b x)
   rw [sigmaMk_mk] at hp hp'
@@ -510,7 +510,7 @@ private lemma line_core {Y : Scheme.{0}} {I : Type} (U : I → Y.Opens) (s : ∀
       ∀ i, ∃ σ : (U i : Scheme.{0}) ⟶ D.Y, σ ≫ D.f = (U i).ι ∧ f σ = (U i).topIso.inv.hom (s i) := by
   let C : Scheme.{0} := ∐ fun i => (U i : Scheme.{0})
   let F : C ⟶ Y := Sigma.desc fun i => (U i).ι
-  have hF (i) : Sigma.ι (fun i => (U i : Scheme.{0})) i ≫ F = (U i).ι := Sigma.ι_desc _ _
+  have hF (i) : Sigma.ι (fun i => (U i : Scheme.{0})) i ≫ F = (U i).ι := Sigma.ι_comp_desc _ _
   have hEt : Etale F := IsZariskiLocalAtSource.sigmaDesc fun i => inferInstance
   have hFl : Flat F := IsZariskiLocalAtSource.sigmaDesc fun i => inferInstance
   have hSm : Smooth F := IsZariskiLocalAtSource.sigmaDesc fun i => inferInstance
@@ -651,7 +651,7 @@ private theorem etale_map {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B
   algebraize [φ]
   let := MvPolynomial.algebraMvPolynomial (σ := σ) (R := A) (S := B)
   have hp : Algebra.IsPushout A (MvPolynomial σ A) B (MvPolynomial σ B) := inferInstance
-  haveI := hp.symm
+  have := hp.symm
   exact RingHom.Etale.isStableUnderBaseChange A B (MvPolynomial σ A) (MvPolynomial σ B) h
 
 private theorem etale_sum {R B C : Type} [CommRing R] [CommRing B] [CommRing C] (φ : R →+* B) (ψ : B →+* C)
@@ -708,7 +708,7 @@ theorem blowOfBl : BlowOfBl := by
     obtain ⟨c, -, -, h⟩ := (dChartEx R Z d).1 U u hc z hz
     exact ⟨c, h⟩
   choose c hc using hex
-  haveI : CompactSpace Z.left := QuasiCompact.compactSpace_of_compactSpace Z.hom
+  have : CompactSpace Z.left := QuasiCompact.compactSpace_of_compactSpace Z.hom
   obtain ⟨T, hT⟩ := isCompact_univ.elim_finite_subcover (fun z => (((dg Z).left ⁻¹ᵁ (c z).N : Z.left.Opens) : Set Z.left))
     (fun z => ((dg Z).left ⁻¹ᵁ (c z).N).isOpen) (fun z _ => Set.mem_iUnion.2 ⟨z, hc z⟩)
   have hb : ∀ α : T, BChart π (c α).N (c α).s := fun α => (blChart R π hπ d (c α)).some
@@ -719,7 +719,7 @@ theorem blowOfBl : BlowOfBl := by
     exact hσ ((hb α).V k) _ ((hb α).aff k) ((hb α).nzd k) ((ker_app (exI π) _).trans hk)
   choose σ σ_f f_σ using hσ'
   have hopen : IsOpen (Set.range (dg Z).left)ᶜ := by
-    haveI : IsClosedImmersion (dg Z).left := by
+    have : IsClosedImmersion (dg Z).left := by
       change IsClosedImmersion (pullback.diagonal Z.hom)
       infer_instance
     exact (IsClosedImmersion.isClosedEmbedding (dg Z).left).isClosed_range.isOpen_compl

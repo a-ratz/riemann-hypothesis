@@ -102,7 +102,7 @@ theorem unitEquiv_of_dsUnique : GlobalTheory.Dec.DSUnique → ∀ (p q : ℕ), 1
     obtain ⟨σ', hσ', hP'⟩ := (GlobalTheory.RealPar.hasParam_half_iff R' h0 P h).1 hR'
     obtain ⟨V, hV⟩ := hU (p + q) P.sgn P.lam R.U.H σ R'.U.H σ' P.hc hP hP'
     refine ⟨V, fun x v => ?_⟩
-    rw [hσ x, hσ' x, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, map_smul]
+    rw [hσ x, hσ' x, smul_apply, smul_apply, map_smul]
     rw [hV _ (h.cov_mem T x) v]
 
 end GlobalTheory.CoverDS
@@ -463,7 +463,7 @@ theorem ht_drop_cons (r : PosRoot p q) (l : List (PosRoot p q)) :
     ∑ x, ht x * drop l x < ∑ x, ht x * drop (r :: l) x := by
   have hr := ht_lt r.2
   simp only [drop_cons, mul_add, Finset.sum_add_distrib, mul_sub, mul_ite, mul_one, mul_zero,
-    Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   linarith
 
 theorem ht_drop_nonneg (l : List (PosRoot p q)) : 0 ≤ ∑ x, ht x * drop l x := by
@@ -538,7 +538,7 @@ theorem isKTypeOf_span (h : BlockOrd e ε) (hσ : Factors R.U e σ) (μ : Ix p q
   refine ⟨inferInstance, hKs, ?_, ?_, ?_⟩
   · intro S' hS'le hS'
     have hS'f : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'le
-    have : CompleteSpace S' := FiniteDimensional.complete ℂ S'
+    have : CompleteSpace S' := FiniteDimensional.completeSpace ℂ S'
     have hCK : IsKStableOn ε σ (S'ᗮ ⊓ W.map R.ι) := fun g hg x hx =>
       Submodule.mem_inf.2 ⟨kstable_orthogonal R h hσ hS' g hg x (Submodule.mem_inf.1 hx).1,
         hKs g hg x (Submodule.mem_inf.1 hx).2⟩
@@ -628,7 +628,7 @@ theorem finrank_hwSub_eq_one : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin n) (ε : Fi
   obtain ⟨v, hv⟩ := isHW_of_isKTypeOf R h hσ μ hS
   have hlie : IsLieAct R.HK.act := R.HK.lie
   obtain ⟨hvw, -⟩ := (mem_hwSub R.HK.act μ v).1 hv.2
-  rw [finrank_eq_one_iff_of_nonzero' (⟨v, hv.2⟩ : hwSub R.HK.act μ)
+  rw [finrank_eq_one_iff_of_ne_zero' (⟨v, hv.2⟩ : hwSub R.HK.act μ)
     (fun h0 => hv.1 (congrArg Subtype.val h0))]
   rintro ⟨w, hw⟩
   by_cases hw0 : w = 0
@@ -832,7 +832,7 @@ theorem casimir_twAct (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (v : V) :
     intro a b
     by_cases hab : a = b
     · subst hab
-      simp only [Cover.twAct_apply, if_true, Eab, Matrix.trace_single_eq_same, map_sub, map_smul]
+      simp only [Cover.twAct_apply, ite_true, Eab, Matrix.trace_single_eq_same, map_sub, map_smul]
       module
     · simp [Cover.twAct_apply, hab, Eab, Matrix.trace_single_eq_of_ne _ _ _ hab,
         Matrix.trace_single_eq_of_ne _ _ _ (Ne.symm hab)]
@@ -841,7 +841,7 @@ theorem casimir_twAct (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (v : V) :
     rw [← Matrix.sum_single_one, map_sum, LinearMap.sum_apply]
     rfl
   simp only [casimir, LinearMap.sum_apply, Module.End.mul_apply, hterm, Finset.sum_sub_distrib,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, h1, Finset.sum_const, Finset.card_univ]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, h1, Finset.sum_const, Finset.card_univ]
   module
 
 theorem hwSub_twAct (act : Mat p q →ₗ[ℂ] Module.End ℂ V) (μ : Ix p q → ℚ) :

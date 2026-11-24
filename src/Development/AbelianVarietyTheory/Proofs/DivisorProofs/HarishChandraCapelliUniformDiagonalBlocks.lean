@@ -383,7 +383,7 @@ theorem monicFactorFiniteMod_of (H : MonicFactorFinite) : MonicFactorFiniteMod :
     (fun u u' => (show Commute (qS u) (qS u') from Subtype.ext (hqq u u').eq).map ρ)
     (fun u u' => (show Commute (pS u) (qS u') from Subtype.ext (hpq u u').eq).map ρ) v' ?_
   ·
-    haveI := key
+    have := key
     unfold FinMod
     refine Submodule.finiteDimensional_of_le (?_ : _ ≤ Submodule.map (quotIncl M' K)
       (Submodule.span ℂ {y | ∃ a ∈ adjoin ℂ (Set.range fun u => ρ (pS u)), y = a v'}))
@@ -395,7 +395,7 @@ theorem monicFactorFiniteMod_of (H : MonicFactorFinite) : MonicFactorFiniteMod :
     refine Submodule.subset_span ⟨ρ b v', ⟨ρ b, ?_, rfl⟩, quotIncl_quotRep b v hv⟩
     rw [hrho pS]
     exact Subalgebra.mem_map.2 ⟨b, hb, rfl⟩
-  · haveI : FiniteDimensional ℂ (Submodule.span ℂ {y : M ⧸ K | ∃ a ∈ adjoin ℂ (Set.range c), y = K.mkQ (a v)}) := hfin
+  · have : FiniteDimensional ℂ (Submodule.span ℂ {y : M ⧸ K | ∃ a ∈ adjoin ℂ (Set.range c), y = K.mkQ (a v)}) := hfin
     set T := Submodule.span ℂ {y | ∃ a ∈ adjoin ℂ (Set.range fun u => ρ (pS u) * ρ (qS u)), y = a v'}
     have hle : T.map (quotIncl M' K) ≤
         Submodule.span ℂ {y : M ⧸ K | ∃ a ∈ adjoin ℂ (Set.range c), y = K.mkQ (a v)} := by
@@ -408,7 +408,7 @@ theorem monicFactorFiniteMod_of (H : MonicFactorFinite) : MonicFactorFiniteMod :
       refine Submodule.subset_span ⟨b.1, ?_, quotIncl_quotRep b v hv⟩
       rw [← hval c hcB]
       exact Subalgebra.mem_map.2 ⟨b, hb, rfl⟩
-    haveI := Submodule.finiteDimensional_of_le hle
+    have := Submodule.finiteDimensional_of_le hle
     exact LinearEquiv.finiteDimensional (Submodule.equivMapOfInjective _ hj T).symm
 
 end GlobalTheory.LeviHC.QuotMonic
@@ -439,7 +439,7 @@ theorem finMod_mono {K₁ K₂ : Submodule ℂ M} (h : K₁ ≤ K₂) {A : Subal
     rw [Submodule.map_span]
     congr 1
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨a, ha, rfl⟩
       exact ⟨K₁.mkQ (a v), ⟨a, ha, rfl⟩, Submodule.factor_mk h _⟩
@@ -928,7 +928,7 @@ theorem core (M : Type) [AddCommGroup M] [Module ℂ M] (r m : ℕ) (X : Fin (r 
       rw [Submodule.map_span]
       congr 1
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_image]
+      simp only [Set.mem_ofPred_eq, Set.mem_image]
       constructor
       · rintro ⟨a, ha, rfl⟩; exact ⟨a w, ⟨a, ha, rfl⟩, rfl⟩
       · rintro ⟨_, ⟨a, ha, rfl⟩, rfl⟩; exact ⟨a, ha, rfl⟩

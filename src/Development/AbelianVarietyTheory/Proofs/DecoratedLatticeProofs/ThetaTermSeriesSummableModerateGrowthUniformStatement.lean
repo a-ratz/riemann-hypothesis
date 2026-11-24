@@ -137,7 +137,7 @@ theorem GlobalTheory.Unf.sum_term_bound : ∀ (D : D7) (ψ : AddChar (AF D.host.
     exact h5
 
   obtain ⟨K, hK, hcov⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D V ρ d.e (isIsoSub_e d)).1
-  obtain ⟨c, hc⟩ := exists_height_le_of_isCompact V (hK.image continuous_subtype_val)
+  obtain ⟨c, hc⟩ := exists_height_le_of_isCompact V (hK.image continuous_subtypeVal)
   set c' := max c 1 with hc'
   set C₀ := max C 0 with hC₀
   have hc'1 : 1 ≤ c' := le_max_right _ _

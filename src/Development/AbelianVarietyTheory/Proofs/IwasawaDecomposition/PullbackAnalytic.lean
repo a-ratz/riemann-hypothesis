@@ -70,7 +70,7 @@ theorem IsLatFam.pullback_analytic : ∀ (m n g : ℕ) (B : Set (Fin n → ℂ))
     have hopen := hcont.isOpen_inter_preimage (hB'.prod isOpen_univ) h3
     convert hopen using 1
     ext q
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_prod, Set.mem_univ, and_true, Set.mem_preimage, Ψ]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_prod, Set.mem_univ, and_true, Set.mem_preimage, Ψ]
     constructor
     · rintro ⟨h1, h2⟩
       exact ⟨h1, hmaps h1, h2⟩

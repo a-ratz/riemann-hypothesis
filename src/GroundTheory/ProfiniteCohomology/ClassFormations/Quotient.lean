@@ -151,7 +151,7 @@ theorem continuous_quotPreimageEquiv (S : Subgroup (U ⧸ V.subgroupOf U)) :
 omit [IsTopologicalGroup G] in
 theorem isOpen_subgroupOf {V : Subgroup G} (hV : IsOpen (V : Set G)) (W : Subgroup G) :
     IsOpen (V.subgroupOf W : Set W) :=
-  hV.preimage continuous_subtype_val
+  hV.preimage continuous_subtypeVal
 
 
 omit [(V.subgroupOf U).Normal] in

@@ -287,14 +287,14 @@ theorem chz_norm {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (
 
 theorem continuous_chz {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) :
     Continuous (chz ψ b₀ : hermA D ρ → ℂ) :=
-  hψ.1.comp (continuous_halfTr.comp (Continuous.matrix_trace (continuous_const.matrix_mul continuous_subtype_val)))
+  hψ.1.comp (continuous_halfTr.comp (Continuous.matrix_trace (continuous_const.matrix_mul continuous_subtypeVal)))
 
 theorem cont_dom {X Y : Type} [TopologicalSpace X] [FirstCountableTopology X] [LocallyCompactSpace X]
     [MeasurableSpace Y] (ν : Measure Y) (hν : ν Set.univ < ⊤) (f : X → Y → ℂ)
     (h1 : ∀ x, AEStronglyMeasurable (f x) ν) (h2 : ∀ y, Continuous fun x => f x y)
     (hb : ∀ Q : Set X, IsCompact Q → ∃ B : ℝ, ∀ y, ∀ x ∈ Q, ‖f x y‖ ≤ B) :
     Continuous fun x => ∫ y, f x y ∂ν := by
-  haveI : IsFiniteMeasure ν := ⟨hν⟩
+  have : IsFiniteMeasure ν := ⟨hν⟩
   refine continuous_iff_continuousAt.2 fun g => ?_
   obtain ⟨Q, hQ, hgQ⟩ := exists_compact_mem_nhds g
   obtain ⟨B, hB⟩ := hb Q hQ
@@ -335,8 +335,8 @@ include hψ in
 theorem zc_cont (F : G D n → ℂ) (hF : Continuous F)
     (hb : ∀ Q : Set (G D n), IsCompact Q → ∃ B : ℝ, ∀ z, ∀ h ∈ Q, ‖F (M.nzx z 0 * h)‖ ≤ B) :
     Continuous (zc M m ψ b₀ F) := by
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
   have hcz : ∀ h : G D n, Continuous fun z : hermA D ρ => F (M.nzx z 0 * h) * conj (chz ψ b₀ z) := fun h =>
     (hF.comp ((continuous_nz M).mul continuous_const)).mul
       (Complex.continuous_conj.comp (continuous_chz hψ b₀))
@@ -350,7 +350,7 @@ theorem zc_cont (F : G D n → ℂ) (hF : Continuous F)
 theorem pc_cont (F : G D n → ℂ) (hF : Continuous (zc M m ψ b₀ F))
     (hb : ∀ Q : Set (G D n), IsCompact Q → ∃ B : ℝ, ∀ x, ∀ h ∈ Q, ‖zc M m ψ b₀ F (M.nzx 0 x * h)‖ ≤ B) :
     Continuous (pc M m ψ b₀ F) := by
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
   exact cont_dom (m.μ.restrict m.𝓕) (by rw [Measure.restrict_apply_univ, m.hμ.2.2]; exact ENNReal.one_lt_top) _
     (fun h => (hF.comp ((continuous_nx M).mul continuous_const)).aestronglyMeasurable)
     (fun x => hF.comp (continuous_const.mul continuous_id)) (fun Q hQ => hb Q hQ)

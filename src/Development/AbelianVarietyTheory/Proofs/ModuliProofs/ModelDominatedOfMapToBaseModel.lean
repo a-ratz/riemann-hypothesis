@@ -87,9 +87,9 @@ theorem eq_of_overring {T : Scheme.{0}} {O O' F : Type} [CommRing O] [CommRing O
   rw [toRing_comp, toRing_comp] at h'
   rw [toRing_comp]
   ext x
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have hinj : Function.Injective β' := by
-    letI := β'.toAlgebra
+    let := β'.toAlgebra
     exact IsFractionRing.injective O' F
   obtain ⟨p, q, hq, e⟩ := IsFractionRing.div_surjective (A := O) (β' x)
   have hq0 : β q ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hq
@@ -191,7 +191,7 @@ theorem dominates_of_map_to_base : Out.Laws → Out.Laws2 → Out.Laws3 → ∀ 
     rw [Category.assoc, hκ, hm]
   have hover : (e ≫ f) ≫ B.C.s = C.s ≫ spMap ((RingHom.id O').comp b₀) := by
     obtain ⟨⟨_, _⟩, -, hfr⟩ := hβ'
-    letI := β'.toAlgebra
+    let := β'.toAlgebra
     obtain ⟨-, -, -, -, -, h3, -⟩ :=
       GlobalTheory.genericPart_dense_proOpen O' c.F C.X _ C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
     have : IsDominant C.j := h3

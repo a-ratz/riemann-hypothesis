@@ -70,7 +70,7 @@ theorem cB_alg (a b : ℕ) (c D : ℂ) (t : ℝ) :
   have e1 : star (Complex.exp ((t : ℂ) * c)) = Complex.exp ((t : ℂ) * conj c) := by
     rw [Complex.star_def, ← Complex.exp_conj, map_mul, Complex.conj_ofReal]
   rw [star_mul', e1, mul_inv, mul_inv, mul_pow, mul_pow, ← Complex.exp_neg, ← Complex.exp_neg,
-    ← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+    ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul]
   have : Complex.exp ((t : ℂ) * -((a : ℂ) * c + (b : ℂ) * conj c)) =
       Complex.exp ((a : ℂ) * -((t : ℂ) * c)) * Complex.exp ((b : ℂ) * -((t : ℂ) * conj c)) := by
     rw [← Complex.exp_add]; ring_nf

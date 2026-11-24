@@ -525,7 +525,7 @@ theorem pow_mul_bound_le_exp (f r : ℕ) {d ℓ M : ℝ} (hf : 16 ≤ f) (hℓ :
           gcongr
           exacts [e hfℓ, e hr, e hd]
       _ = _ := by
-          simp only [← Real.exp_nat_mul, ← Real.exp_add]
+          simp only [← Real.exp_natCast_mul, ← Real.exp_add]
           congr 1
           push_cast
           ring
@@ -540,7 +540,7 @@ theorem pow_mul_bound_le_exp (f r : ℕ) {d ℓ M : ℝ} (hf : 16 ≤ f) (hℓ :
         · exact h3.trans (by gcongr)
         · exact e hr
     _ = Real.exp ((2 * f * r ^ 2 * ℓ) * (56 + 16 * f)) := by
-        simp only [← Real.exp_nat_mul, ← Real.exp_add]
+        simp only [← Real.exp_natCast_mul, ← Real.exp_add]
         congr 1
         push_cast
         ring

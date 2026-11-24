@@ -248,7 +248,7 @@ private theorem clsDecayW_lemma_2 (hR : RadDecay) (S : Type) [Fintype S] [Decida
     (hΨ : HerD.IsWaveJ P z z' π π' D l Ψ) (c : Fin P.r → ℂ) (hc : c ∈ OmX P.r) (n : ℕ) :
     ∃ C : ℝ, ∀ (s : ℂ) (Wv : Module.End ℂ (RadSp P.k P.r z z' π π')), multiplicationOperator Wv (fun c' _ => fsv s (c' l)) →
       ‖LocFacts₂ μ l.castSucc (Wv Φ) Ψ c‖ ≤ C * (1 + ‖s‖) ^ (-((n : ℝ) + 3)) := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hD.2.1.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hD.2.1.finite_compact⟩
   obtain ⟨_, s0, ε, G, hε, hG, hΦG⟩ := hΦ
   obtain ⟨_, s1, ε', H, hε', hH, hΨH⟩ := hΨ
   obtain ⟨Wm0, hWm0⟩ := exists_isMulOp_fsv_coord (z := z) (z' := z') (π := π) (π' := π') l (-s0)
@@ -298,7 +298,7 @@ theorem clsDecayW (hR : RadDecay) (S : Type) [Fintype S] [DecidableEq S] (P : M.
     (c : Fin P.r → ℂ) (hc : c ∈ OmX P.r) (n : ℕ) :
     ∃ C : ℝ, ∀ (s : ℂ) (Wv : Module.End ℂ (RadSp P.k P.r z z' π π')), multiplicationOperator Wv (fun c' _ => fsv s (c' l)) →
       ‖LocFacts₂ μ l.castSucc (Wv Φ) Ψ c‖ ≤ C * (1 + ‖s‖) ^ (-((n : ℝ) + 3)) := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hD.2.1.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hD.2.1.finite_compact⟩
   have hμ := hD.2.1
   have hl0 : l.castSucc = 0 := Fin.ext (by simp [hl])
   have hL2 := wave_operator_le_l2_subspace P z z' π π' μ hμ D hz hz' hπ hπ' l
@@ -397,7 +397,7 @@ private theorem decayPair3_of_lemma (hW : WaveOutJ) (hC : ClsDecayJ) (Wp Wq : Ty
     (u v : Ix S → RadSp P.k P.r z z' π π') (hu : ∀ a, u a ∈ waveJ P z z' π π' D l)
     (hv : ∀ a, v a ∈ waveJ P z z' π π' D l) (c : Fin P.r → ℂ) (hc : c ∈ OmX P.r) (n : ℕ) :
     ∃ C : ℝ, ∀ s : ℂ, ‖∫ t : ℂ, fsv s t * Dens μ l u v c t‖ ≤ C * (1 + ‖s‖) ^ (-((n : ℝ) + 3)) := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hD.2.1.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hD.2.1.finite_compact⟩
   have hμ := hD.2.1
   have hl0 : l.castSucc = 0 := Fin.ext (by simp [hl])
   have hb := fun a => hC Wp Wq S P z z' π π' X μ L st l0 D hD h1 h2 hz hz' hπ hπ' l hl
@@ -773,7 +773,7 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Fo
 theorem wave_outgoing_orbital : WaveOutJ := by
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' X μ L st l0 D hdat hl0 hle hz hz' hπ hπ' l hl u v hu hv c hc s Wv hW
   have hμ : B.IsHaarOn (Glev P.k P.r (Fin.last P.r)) μ := hdat.2.1
-  haveI := sfinite_of_isHaarOn _ μ hμ
+  have := sfinite_of_isHaarOn _ μ hμ
 
   have hl2u := fun b => wave_operator_le_l2_subspace P z z' π π' μ hμ D hz hz' hπ hπ' l (hu b)
   have hl2v := fun b => wave_operator_le_l2_subspace P z z' π π' μ hμ D hz hz' hπ hπ' l (hv b)

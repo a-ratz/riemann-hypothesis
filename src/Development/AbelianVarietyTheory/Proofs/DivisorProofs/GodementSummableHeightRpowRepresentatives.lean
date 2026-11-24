@@ -114,9 +114,9 @@ theorem measure_fund_le_card_mul_of_cover : ∀ (G : Type) [Group G] [Topologica
   intro G _ _ _ _ _ _ _ _ N Λ _ ν DN b κ V Y hν hD hV hconj hY hcov
   have hVm : MeasurableSet V := hV.isClosed.measurableSet
   have hconjm : Measurable fun u : N => b * (u : G) * b⁻¹ :=
-    (measurable_const.mul measurable_subtype_coe).mul measurable_const
+    (measurable_const.mul measurable_subtypeVal).mul measurable_const
   have hS₀m : MeasurableSet {u : N | b * (u : G) * b⁻¹ ∈ V} := hconjm hVm
-  have hVNm : MeasurableSet {u : N | (u : G) ∈ V} := measurable_subtype_coe hVm
+  have hVNm : MeasurableSet {u : N | (u : G) ∈ V} := measurable_subtypeVal hVm
   have hS₀ : ν {u : N | b * (u : G) * b⁻¹ ∈ V} = κ * ν {u : N | (u : G) ∈ V} := by
     have h := hconj (V.indicator 1) (measurable_one.indicator hVm)
     have e1 : (fun u : N => V.indicator (1 : G → ℝ≥0∞) (b * u * b⁻¹))
@@ -223,13 +223,13 @@ namespace GlobalTheory.SphEis
 theorem lintegral_conj_eq_const_mul :
   ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (N : Subgroup G) (ν : Measure N) (b : G), IsClosed (N : Set G) → ν.IsHaarMeasure → (∀ u, u ∈ N ↔ b * u * b⁻¹ ∈ N) → ∃ κ : ℝ≥0∞, ∀ f : G → ℝ≥0∞, Measurable f → ∫⁻ u : N, f (b * u * b⁻¹) ∂ν = κ * ∫⁻ u : N, f u ∂ν := by
   intro G _ _ _ _ _ _ _ _ N ν b hN hν h
-  haveI : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let e := GlobalTheory.ResLine.conjNormalEquiv N b h
-  haveI : (ν.map e).IsHaarMeasure := e.isHaarMeasure_map ν
+  have : (ν.map e).IsHaarMeasure := e.isHaarMeasure_map ν
   have hc := Measure.isMulLeftInvariant_eq_smul (ν.map e) ν
   have he : Measurable e := e.continuous.measurable
   refine ⟨(Measure.haarScalarFactor (ν.map e) ν : ℝ≥0∞), fun g hg => ?_⟩
-  have hg' : Measurable fun u : N => g u := hg.comp measurable_subtype_coe
+  have hg' : Measurable fun u : N => g u := hg.comp measurable_subtypeVal
   have h1 := lintegral_map (μ := ν) hg' he
   rw [hc, lintegral_smul_measure] at h1
   exact h1.symm
@@ -377,7 +377,7 @@ namespace GlobalTheory.SphEis
 
 theorem card_le_mul_of_unip_cover : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (N M Λ Γ Q : Subgroup G) [Countable Λ] (ν : Measure N) (π : Measure M) (DN : Set N) (DM : Set M) (μ : Measure G) (D V W : Set G), SemiLat N M Λ ν π DN DM → Λ ≤ Γ → Λ ≤ Q → IsClosed (Q : Set G) → (∀ q ∈ Q, ∃ u ∈ N, ∃ x ∈ M, q = u * x) → (∀ K : Set G, IsCompact K → (K ∩ Γ).Finite) → μ.IsHaarMeasure → IsFundamentalDomain Λ D μ → IsCompact V → IsCompact W → ∃ B : ℝ, 0 ≤ B ∧ ∀ (a : G) (Y T : Finset G), (∀ x ∈ M, a * x = x * a) → (∀ u, u ∈ N ↔ a⁻¹ * u * a ∈ N) → (∀ y ∈ Y, y ∈ N) → (∀ u ∈ N, ∃ γ ∈ Λ, γ ∈ N ∧ ∃ y ∈ Y, ∃ w ∈ V, γ * u = y * a * w * a⁻¹) → (∀ t ∈ T, t ∈ Γ) → (∀ t ∈ T, ∀ t' ∈ T, t' * t⁻¹ ∈ Λ → t = t') → (∀ t ∈ T, ∃ q ∈ Q, ∃ w ∈ W, t = q * a * w) → (T.card : ℝ) ≤ B * Y.card := by
   intro G _ _ _ _ _ _ _ _ N M Λ Γ Q _ ν π DN DM μ D V W H hΛΓ hΛQ hQ hQd hdisc hμ hD hV hW
-  haveI := H.haarN
+  have := H.haarN
   obtain ⟨U, hUc, hU1⟩ := exists_compact_mem_nhds (1 : G)
   have hU0 : μ U ≠ 0 := (lt_of_lt_of_le (isOpen_interior.measure_pos μ ⟨1, mem_interior_iff_mem_nhds.2 hU1⟩) (measure_mono interior_subset)).ne'
   have hUt : μ U ≠ ⊤ := hUc.measure_ne_top
@@ -459,7 +459,7 @@ theorem compact_inter_ratPts_finite : ∀ (F E : Type) [Field F] [NumberField F]
     IsCompact K → (K ∩ ratPts σ J).Finite := by
   intro F E _ _ _ _ _ σ n J K hK
   have hd : DiscreteTopology (ratPts σ J) := inferInstance
-  have hcl : IsClosed ((ratPts σ J : Subgroup (GAd σ J)) : Set (GAd σ J)) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed ((ratPts σ J : Subgroup (GAd σ J)) : Set (GAd σ J)) := Subgroup.isClosed_of_discreteTopology
   exact (hK.inter_right hcl).finite
     (IsDiscrete.mono (isDiscrete_iff_discreteTopology.2 hd) Set.inter_subset_right)
 
@@ -554,8 +554,8 @@ theorem inclR_alg (c : F) : inclR (F := F) (AF F) (algebraMap F E c) = algebraMa
   (Algebra.TensorProduct.includeRight (R := F) (A := AF F) (B := E)).commutes c
 
 theorem continuous_sigR (σ : E →ₐ[F] E) : Continuous (sigR (AF F) σ) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   have : (sigR (AF F) σ : AF F ⊗[F] E → AF F ⊗[F] E) = LinearMap.baseChange (AF F) σ.toLinearMap := by
     funext z
     induction z using TensorProduct.induction_on with
@@ -571,8 +571,8 @@ theorem cT_apply {A : Type} [CommRing A] (s : A →+* A) {m p : Type} (M : Matri
 theorem cover (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (hσ : IsCMExt F E σ) (j : ℕ) : ∃ (Ω : Set (AF F ⊗[F] E)) (B : ℝ), IsCompact Ω ∧ ∀ μ : Fin j → ℕ, ∃ Y : Finset (Matrix (Fin j) (Fin j) (AF F ⊗[F] E)), (Y.card : ℝ) ≤ B * ∏ i, bse F ^ (j * μ i) ∧ (∀ y ∈ Y, cT (sigR (AF F) σ) y = -y) ∧ ∀ x : Matrix (Fin j) (Fin j) (AF F ⊗[F] E), cT (sigR (AF F) σ) x = -x → ∃ x₀ : Matrix (Fin j) (Fin j) E, cT (σ : E →+* E) x₀ = -x₀ ∧ ∃ y ∈ Y, ∃ ω : Matrix (Fin j) (Fin j) (AF F ⊗[F] E), cT (sigR (AF F) σ) ω = -ω ∧ (∀ i k, ω i k ∈ Ω) ∧ x = adMat F x₀ + (y + (tor F E fun i => (μ i : ℤ)).1 * ω * cT (sigR (AF F) σ) (tor F E fun i => (μ i : ℤ)).1) := by
   classical
-  haveI := hσ.1
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := hσ.1
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨Ω₀, C₀, hΩ₀, hcov⟩ := _root_.GlobalTheory.Eis.ConvCover.exists_cover F
   obtain ⟨Ω, C, hΩ, h⟩ := _root_.GlobalTheory.Eis.Conv.CovSkew.cover_skew F E σ hσ _ _ _ hΩ₀ hcov j
   set s := sigR (AF F) σ with hs_def
@@ -824,8 +824,8 @@ theorem cover_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   intro F E _ _ _ _ _ σ n J j m C D Z J₀ hFr lv hlv
   classical
   have hcm := hFr.cm
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
 
   have hs : ∀ x, sigR (AF F) σ (sigR (AF F) σ x) = x := fun a => by
     induction a using TensorProduct.induction_on with
@@ -891,7 +891,7 @@ theorem cover_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hf : ∀ b z, cT (sigR (AF F) σ) z = -z → f (b, z) ∈ unipRad σ J C ∧
       Crd σ J C D Z J₀ (f (b, z)) b (z - (2⁻¹ : F) • (b * plus σ J₀ b)) := by
     intro b z hz
-    simp only [f, dif_pos hz]
+    simp only [f, dite_eq_left hz]
     exact Classical.choose_spec (crd2 b _ (hrel b z hz))
   refine ⟨(Y₁ ×ˢ Y₂).image f, ?_, ?_, fun u hu => ?_⟩
   · refine (Nat.cast_le.mpr Finset.card_image_le).trans ?_
@@ -991,9 +991,9 @@ theorem semiLat_fixG : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
     exact ⟨fun e => e.1, fun e => ⟨e, h x.2⟩⟩
   obtain ⟨hC, -, cM, cN, hN, hP, hd, hn, -⟩ := _root_.GlobalTheory.SphEis.frame_facts F E σ n J j m C D Z J₀ H
-  haveI := locallyCompact_unipRad H.cm H.herm hC
+  have := locallyCompact_unipRad H.cm H.herm hC
   obtain ⟨ν, DN, hν, hDN, h1⟩ := exists_mass_one (cocompact_unipRad H.cm H.herm hC)
-  haveI : LocallyCompactSpace (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)) := cM.locallyCompactSpace
+  have : LocallyCompactSpace (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)) := cM.locallyCompactSpace
   have hDM := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom
     ((ratPts σ J).subgroupOf (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J))) Measure.haar
   refine ⟨ν, Measure.haar, DN, _,
@@ -1039,8 +1039,8 @@ theorem card_ratPts_fixG_tor_le : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   obtain ⟨V, B₁, hV, hcov⟩ := _root_.GlobalTheory.SphEis.cover_unipRad F E σ n J j m C D Z J₀ hF lv hlv
   obtain ⟨ν, π, DN, DM, hSL⟩ := _root_.GlobalTheory.SphEis.semiLat_fixG F E σ n J j m C D Z J₀ hF
   let Λ : Subgroup (GAd σ J) := ratPts σ J ⊓ fixG σ J C
-  haveI : DiscreteTopology Λ := inferInstance
-  haveI : Countable Λ := inferInstance
+  have : DiscreteTopology Λ := inferInstance
+  have : Countable Λ := inferInstance
   have hDom := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom Λ (Measure.haar : Measure (GAd σ J))
   obtain ⟨B, hB0, hB⟩ := _root_.GlobalTheory.SphEis.card_le_mul_of_unip_cover (GAd σ J) (unipRad σ J C) (fixG σ J C ⊓ fixG σ J D) Λ (ratPts σ J) (fixG σ J C)
     ν π DN DM Measure.haar _ V W hSL inf_le_left inf_le_right hQc

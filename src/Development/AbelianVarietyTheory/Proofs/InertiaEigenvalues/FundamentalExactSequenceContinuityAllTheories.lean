@@ -149,7 +149,7 @@ theorem continuous_chi : Continuous fun g : GQ l => (P.χQ g : ℚ_[l]) := by
   obtain ⟨χ, h1, h2, -⟩ := exists_integral_cyclotomicChar l P
   simp only [← h1]
   have h3 : Continuous fun g => (χ g : ℤ_[l]) := Units.continuous_val.comp h2
-  exact continuous_subtype_val.comp h3
+  exact continuous_subtypeVal.comp h3
 
 theorem latCont_orbit (T : LocTied l P AI) (b : P.R.BdR)
     {c : X → ℚ_[l]} (hc : Continuous c) {γ : X → GQ l} (hγ : Continuous γ) :
@@ -256,7 +256,7 @@ theorem contCore_of_tied (T : LocTied l P AI) (K : FinExt l) : contCore (P.PD K)
           rw [← ιB_act, ← hΦ, ← P.PD_actB]
           rfl
         simp only [e]
-        exact latCont_orbit AI T (P.ιB b) ((hV φ).comp (A.cont v)) continuous_subtype_val
+        exact latCont_orbit AI T (P.ιB b) ((hV φ).comp (A.cont v)) continuous_subtypeVal
       | add y y' ih ih' =>
         simp only [map_add (f := _)]
         exact ih.add AI ih'
@@ -268,14 +268,14 @@ theorem contCore_of_tied (T : LocTied l P AI) (K : FinExt l) : contCore (P.PD K)
       rwa [hΦ, map_one, mul_one, map_add, map_sum, map_sub, sub_eq_add_neg] at this
     simp only [e]
     exact (LatCont.sum AI _ _ fun i => h1 (x i) i).add AI ((h2 x').add AI (latCont_const AI _))
-  haveI : Module.Finite ℚ_[l] A.V := Module.Finite.trans LL A.V
+  have : Module.Finite ℚ_[l] A.V := Module.Finite.trans LL A.V
   let b := Module.finBasis ℚ_[l] A.V
   have : f = fun g => ∑ j, algebraMap ℚ_[l] LL (b.coord j (f g)) • b j := by
     funext g
     simp [b.sum_repr]
   rw [this]
-  haveI : ContinuousSMul LL A.V := IsModuleTopology.toContinuousSMul LL A.V
-  haveI : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
+  have : ContinuousSMul LL A.V := IsModuleTopology.toContinuousSMul LL A.V
+  have : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
   exact continuous_finsetSum _ fun j _ =>
     ((continuous_algebraMap ℚ_[l] LL).comp (key (b.coord j))).smul continuous_const
 

@@ -320,9 +320,9 @@ open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalC
 theorem htChartExists : HTChartExists := by
   intro R K _ _ _ _ _ _ _ _ E _ _ c p n N _ T _ _ Γ S G _ _ x i hTor hSm act hmon L _ _ M ρ hρ Ω _ _ _ _ j hj
     π hπ hker hact ζ hζ e halt hadj hsurj hinj
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   have hpn : ((p ^ n : ℕ) : R) ≠ 0 := Nat.cast_ne_zero.2 (pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
-  haveI : Smooth G.hom := hSm
+  have : Smooth G.hom := hSm
   obtain ⟨hfin, hproj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G R x L M
 
   have hex : ∀ χ : T →* Rˣ, ∃ w, Γ.IsHT i M (p ^ n) χ w := fun χ =>
@@ -385,7 +385,7 @@ theorem htChartExists : HTChartExists := by
       rw [ofAdd_toAdd] at this
       rw [this]
       exact hact _ _
-    haveI := hmon (RingOfIntegers.mapRingEquiv c a)
+    have := hmon (RingOfIntegers.mapRingEquiv c a)
     have h1 : Γ.IsHT i M (p ^ n) (χ (a • y)) (dualAct ρ (RingOfIntegers.mapRingEquiv c) a (h y)) := by
       rw [hαc, dualAct_apply]
       exact _root_.GlobalTheory.CompanionTheory.Ar.BT.hodgeTate_endo R T Γ S G x (p ^ n) i hTor L M (act (RingOfIntegers.mapRingEquiv c a)) _

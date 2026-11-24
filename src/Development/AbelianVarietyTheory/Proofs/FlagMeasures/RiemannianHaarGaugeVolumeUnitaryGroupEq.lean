@@ -75,7 +75,7 @@ private theorem volume_complex_unit_ball_toReal (n : ℕ) :
   have hset : {y : Fin (n + 1) → ℂ | Real.sqrt (∑ i, ‖y i‖ ^ 2) < 1} =
       {y : Fin (n + 1) → ℂ | ∑ i, ‖y i‖ ^ (2 : ℝ) < 1} := by
     ext y
-    simp only [Set.mem_setOf_eq, Real.rpow_two]
+    simp only [Set.mem_ofPred_eq, Real.rpow_two]
     rw [Real.sqrt_lt' one_pos, one_pow]
   rw [hset, Complex.volume_sum_rpow_lt_one (Fin (n + 1)) (by norm_num : (1 : ℝ) ≤ 2)]
   have h2 : (2 : ℝ) / 2 + 1 = 2 := by norm_num
@@ -90,7 +90,7 @@ theorem integral_radial (n : ℕ) (f : ℝ → ℝ) :
 
   let e := MeasurableEquiv.toLp 2 (Fin (n + 1) → ℂ)
   let μ : Measure (EuclideanSpace ℂ (Fin (n + 1))) := (volume : Measure (Fin (n + 1) → ℂ)).map e
-  haveI : μ.IsAddHaarMeasure := by
+  have : μ.IsAddHaarMeasure := by
     have h := (PiLp.continuousLinearEquiv 2 ℝ (fun _ : Fin (n + 1) => ℂ)).symm.isAddHaarMeasure_map
       (volume : Measure (Fin (n + 1) → ℂ))
     exact h

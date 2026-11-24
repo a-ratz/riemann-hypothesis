@@ -148,9 +148,9 @@ theorem map_vec_smul {ι : Type} [Fintype ι] (a : ι → (Ad E)ˣ) :
   rw [vecMeasure, h]
   simp_rw [hm]
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun p _ => ?_
-  rw [Measure.smul_apply]
+  rw [smul_apply]
   rfl
 
 theorem lintegral_vec_smul {ι : Type} [Fintype ι] (a : ι → (Ad E)ˣ) (G : (ι → Ad E) → ℝ≥0∞) (hG : Measurable G) :
@@ -294,7 +294,7 @@ theorem colS_eq (l : Fin k → ℤ) (c : Fin k) : colS l c = ∑ i : Fin k, if i
   rw [Finset.sum_eq_single c]
   · simp only [le_refl, and_true, Fin.val_fin_lt]
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨-, h1, h2⟩
     have h1' : (c : ℕ) ≤ b := h1
     have h2' : (b : ℕ) ≤ c := h2

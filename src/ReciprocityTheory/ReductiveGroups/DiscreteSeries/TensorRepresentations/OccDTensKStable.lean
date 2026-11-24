@@ -69,7 +69,7 @@ theorem occD_genSub_K {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ 
   have hs := KTypeIsomorphism.orbit_hasSum hσ hD hf (layer_kStable hD.glRep hVk m) hZ ⟨x, hm⟩
   let P : Submodule ℂ H := LinearMap.range (D.subtype ∘ₗ (layer ε E V m).subtype)
   have hmem : σ (NormedSpace.exp Z) (x : H) ∈ P :=
-    P.closed_of_finiteDimensional.mem_of_tendsto hs (Filter.Eventually.of_forall fun t =>
+    P.isClosed_of_finiteDimensional.mem_of_tendsto hs (Filter.Eventually.of_forall fun t =>
       P.sum_mem fun j _ => P.smul_mem _ ⟨_, rfl⟩)
   obtain ⟨w, hw⟩ := hmem
   exact ⟨w, layer_le_genSub m w.2, hw⟩

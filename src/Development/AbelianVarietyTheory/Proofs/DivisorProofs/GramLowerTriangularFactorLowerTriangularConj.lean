@@ -93,7 +93,7 @@ theorem submatrix_mul_conjTranspose_lt (g M : Matrix (Fin s) (Fin s) ℂ) (hg : 
   ext a c
   simp only [Matrix.submatrix_apply, Matrix.mul_apply]
   refine sum_eq_sum_lt_of_zero m _ fun l hl => ?_
-  rw [Matrix.conjTranspose_apply, hg c.1 l (by have := c.2; rw [Fin.lt_iff_val_lt_val]; omega), star_zero, mul_zero]
+  rw [Matrix.conjTranspose_apply, hg c.1 l (by have := c.2; rw [Fin.lt_def]; omega), star_zero, mul_zero]
 
 theorem submatrix_mul_lt (g M : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j → g i j = 0)
     {κ : Type} (ν : κ → Fin s) (m : ℕ) :
@@ -103,12 +103,12 @@ theorem submatrix_mul_lt (g M : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j
   ext a c
   simp only [Matrix.submatrix_apply, Matrix.mul_apply]
   refine sum_eq_sum_lt_of_zero m _ fun l hl => ?_
-  rw [hg a.1 l (by have := a.2; rw [Fin.lt_iff_val_lt_val]; omega), zero_mul]
+  rw [hg a.1 l (by have := a.2; rw [Fin.lt_def]; omega), zero_mul]
 
 theorem det_submatrix_lt (g : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j → g i j = 0) (m : ℕ) :
     (g.submatrix (Subtype.val : {a : Fin s // (a : ℕ) < m} → Fin s) Subtype.val).det =
       ∏ a : {a : Fin s // (a : ℕ) < m}, g a a := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · rfl
   · intro a b h
     exact hg a.1 b.1 h
@@ -157,12 +157,12 @@ theorem updateRow_mul_lower (g X : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i 
       omega
     rw [Matrix.updateRow_ne h, Matrix.submatrix_apply, Matrix.mul_apply, Matrix.mul_apply]
     rw [sum_eq_sum_lt_of_zero ((j : ℕ) + 1) _ fun l hl => by
-      rw [hg a.1 l (by rw [Fin.lt_iff_val_lt_val]; omega), zero_mul]]
+      rw [hg a.1 l (by rw [Fin.lt_def]; omega), zero_mul]]
     refine Finset.sum_congr rfl fun b _ => ?_
     rw [Matrix.updateRow_ne h, Matrix.submatrix_apply, Matrix.updateRow_apply]
     by_cases hb : b = ldTop j
     · subst hb
-      rw [ldTop_val, hg a.1 j (by rw [Fin.lt_iff_val_lt_val]; exact ha)]
+      rw [ldTop_val, hg a.1 j (by rw [Fin.lt_def]; exact ha)]
       simp
     · simp [hb]
 
@@ -170,7 +170,7 @@ theorem det_frameRow (g : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j → g
     ((g.submatrix (Subtype.val : {a : Fin s // (a : ℕ) < j + 1} → Fin s) Subtype.val).updateRow
       (ldTop j) (Pi.single (ldTop j) 1)).det =
       ∏ a : {a : Fin s // (a : ℕ) < j}, g a a := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · have e : ∀ a : {a : Fin s // (a : ℕ) < j + 1},
         ((g.submatrix Subtype.val Subtype.val).updateRow (ldTop j) (Pi.single (ldTop j) 1)) a a =
           (fun b : Fin s => if b = j then 1 else g b b) a := by
@@ -180,7 +180,7 @@ theorem det_frameRow (g : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j → g
       · have : a.1 ≠ j := fun e => h ((eq_ldTop_iff a).2 e)
         simp [Matrix.updateRow_ne h, this]
     rw [Fintype.prod_congr _ _ e, prod_lt_succ j (fun b : Fin s => if b = j then 1 else g b b)]
-    simp only [if_true, mul_one]
+    simp only [ite_true, mul_one]
     refine Fintype.prod_congr (fun a : {a : Fin s // (a : ℕ) < j} => if (a : Fin s) = j then (1 : ℂ) else g a a)
       (fun a => g a a) fun a => ?_
     have : a.1 ≠ j := fun e => by have := a.2; rw [e] at this; omega
@@ -193,7 +193,7 @@ theorem det_frameRow (g : Matrix (Fin s) (Fin s) ℂ) (hg : ∀ i j, i < j → g
       simp at hab'
       omega
     · rw [Matrix.updateRow_ne h, Matrix.submatrix_apply]
-      exact hg a.1 b.1 (Fin.lt_iff_val_lt_val.mpr hab')
+      exact hg a.1 b.1 (Fin.lt_def.mpr hab')
 
 end GlobalTheory.ChernCalc
 
@@ -218,7 +218,7 @@ theorem ldPart_conj_lower : ∀ (s : ℕ) (G g : Matrix (Fin s) (Fin s) ℂ), G.
     IsUnit g.det → ldPart (g * G * gᴴ) = g * ldPart G * (Matrix.diagonal fun i => g i i)ᴴ ∧
       ∀ i, grD (g * G * gᴴ) i = ‖g i i‖ ^ 2 * grD G i := by
   intro s G g hG hg hdet
-  have hgd : g.det = ∏ a, g a a := Matrix.det_of_lowerTriangular g (fun a b h => hg a b h)
+  have hgd : g.det = ∏ a, g a a := Matrix.det_of_isLowerTriangular g (fun a b h => hg a b h)
   have hdiag : ∀ a, g a a ≠ 0 := by
     intro a
     have h := hdet.ne_zero

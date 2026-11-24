@@ -441,7 +441,7 @@ theorem exists_gens {B : Type} [Ring B] [Algebra O B] [IsNoetherian O B] (A : Su
     ∃ (g : ℕ) (γ : Fin g → Γ), ∀ (m : ℕ) (a : Fin m → B) (s : Fin m → Γ), (∀ k, a k ∈ A) →
       ∃ θ : Fin g → A, ∑ k, a k * y (s k) = ∑ q, (θ q : B) * y (γ q) := by
   classical
-  haveI : IsNoetherian A B := isNoetherian_of_tower O inferInstance
+  have : IsNoetherian A B := isNoetherian_of_tower O inferInstance
   obtain ⟨t, ht, hsp⟩ := (Submodule.fg_span_iff_fg_span_finset_subset (R := A) (Set.range y)).1
     (IsNoetherian.noetherian _)
   choose σ hσ using fun b : t => ht b.2

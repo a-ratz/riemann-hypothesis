@@ -50,7 +50,7 @@ noncomputable section
 namespace GlobalTheory.CompanionTheory.Ar.PB.FMX.YBase
 
 theorem det_genU (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) (s : S) : (genU Ω r s).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     simp [genU]
   · intro l k hlk
@@ -85,7 +85,7 @@ theorem full_of_noBlock (K₀ : Type) (t : StepIx Ψ p q)
     have hp : IsProperStep (p + q) p (⟨i, by omega⟩ : Fin (p + q)) := ⟨hne', by
       show (i : ℕ) + 1 ≠ p + q
       omega⟩
-    simp only [blkF, if_pos hp, stepOf]
+    simp only [blkF, ite_eq_left hp, stepOf]
     simp [hi]
     rfl
   · have hi : (i : ℕ) < q := i.2
@@ -97,7 +97,7 @@ theorem full_of_noBlock (K₀ : Type) (t : StepIx Ψ p q)
       omega, by
       show p + (i : ℕ) + 1 ≠ p + q
       omega⟩
-    simp only [blkF, if_pos hp, stepOf]
+    simp only [blkF, ite_eq_left hp, stepOf]
     simp
     rfl
 

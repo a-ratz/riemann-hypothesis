@@ -58,8 +58,8 @@ private theorem lift_coprime {n N b : ℕ} [NeZero N] (h : n ∣ N) (hb : b.Copr
 
 private theorem exists_aut {N a : ℕ} [NeZero N] (ha : a.Coprime N) :
     ∃ τ : CyclotomicField N ℚ ≃ₐ[ℚ] CyclotomicField N ℚ, ∀ x : CyclotomicField N ℚ, x ^ N = 1 → τ x = x ^ a := by
-  haveI : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
   have hirr := Polynomial.cyclotomic.irreducible_rat (NeZero.pos N)
   have hζ := IsCyclotomicExtension.zeta_spec N ℚ (CyclotomicField N ℚ)
   set ζ := IsCyclotomicExtension.zeta N ℚ (CyclotomicField N ℚ)
@@ -84,8 +84,8 @@ theorem UpperTheory.V.abelianField_hasMu_iff_exists_primitiveRoot :
       (A.HasMu l ↔ ∃ z : L, IsPrimitiveRoot z l) := by
   intro A l hl hl2 L _ _ hL
   obtain ⟨N, hN, j, ζ, hdvd, hζ, hfix⟩ := hL
-  haveI : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
   have hl3 : 3 ≤ l := by
     have := hl.two_le
     omega
@@ -103,7 +103,7 @@ theorem UpperTheory.V.abelianField_hasMu_iff_exists_primitiveRoot :
     have hord : orderOf (ζ ^ (N / l)) = l := hz.eq_orderOf.symm
     have hfin : IsOfFinOrder (ζ ^ (N / l)) := isOfFinOrder_iff_pow_eq_one.2 ⟨l, hl.pos, hz.pow_eq_one⟩
     have hmem : ζ ^ (N / l) ∈ j.fieldRange := by
-      haveI : IsGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isGalois {N} ℚ (CyclotomicField N ℚ)
+      have : IsGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isGalois {N} ℚ (CyclotomicField N ℚ)
       rw [← IsGalois.fixedField_fixingSubgroup j.fieldRange, IntermediateField.mem_fixedField_iff]
       intro τ hτ
       rw [IntermediateField.mem_fixingSubgroup_iff] at hτ

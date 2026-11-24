@@ -92,7 +92,7 @@ lemma dhpr_pow_ratio (m : ℕ) : ((m : ℝ) + 1) ^ m ≤ Real.exp 1 * (m : ℝ) 
         _ ≤ m * Real.exp (1 / m) := mul_le_mul_of_nonneg_left h1 hm.le
     calc ((m:ℝ) + 1) ^ m ≤ ((m:ℝ) * Real.exp (1 / m)) ^ m := by gcongr
       _ = Real.exp 1 * (m:ℝ) ^ m := by
-        rw [mul_pow, ← Real.exp_nat_mul, mul_one_div_cancel hm', mul_comm]
+        rw [mul_pow, ← Real.exp_natCast_mul, mul_one_div_cancel hm', mul_comm]
 
 lemma dhpr_wsup (m : ℕ) {η : ℝ} (hη : 0 < η) (hη1 : η ≤ 1) (v : ℕ) :
     ((v : ℝ) + 1) ^ m * Real.exp (-(η * v)) ≤ Real.exp 1 * m.factorial / η ^ m := by
@@ -162,7 +162,7 @@ lemma dhpr_wsum (m : ℕ) {η : ℝ} (hη : 0 < η) (hη1 : η ≤ 1) (v0 V : �
     exact Finset.sum_le_sum (fun v _ => hterm v)
   have hG : (∑ v ∈ Ico v0 V, Real.exp (-(δ * v))) * δ ≤ 1 + δ := by
     have hrw : ∀ v : ℕ, Real.exp (-(δ * v)) = Real.exp (-δ) ^ v := by
-      intro v; rw [← Real.exp_nat_mul]; congr 1; ring
+      intro v; rw [← Real.exp_natCast_mul]; congr 1; ring
     simp only [hrw]
     have hr0 : 0 < Real.exp (-δ) := Real.exp_pos _
     have hsub : ∑ v ∈ Ico v0 V, Real.exp (-δ) ^ v ≤ ∑ v ∈ range V, Real.exp (-δ) ^ v := by
@@ -220,7 +220,7 @@ lemma dhpr_esum (v0 V : ℕ) :
           mul_le_mul_of_nonneg_right (by linarith) (Real.exp_pos _).le
       _ = 4 * (Real.exp ((v:ℝ) / 4) * Real.exp (-((v:ℝ) / 2))) := by ring
       _ = 4 * Real.exp (-(1/4:ℝ)) ^ v := by
-          rw [← Real.exp_add, ← Real.exp_nat_mul]
+          rw [← Real.exp_add, ← Real.exp_natCast_mul]
           congr 2
           ring
   have h15 : (1:ℝ) / 5 ≤ 1 - Real.exp (-(1/4:ℝ)) := by
@@ -248,7 +248,7 @@ lemma dhpr_esum (v0 V : ℕ) :
     _ = 4 * ∑ v ∈ Ico v0 V, Real.exp (-(1/4:ℝ)) ^ v := by rw [Finset.mul_sum]
     _ ≤ 4 * (5 * Real.exp (-(1/4:ℝ)) ^ v0) := mul_le_mul_of_nonneg_left hgeo (by norm_num)
     _ = 20 * Real.exp (-((v0 : ℝ) / 4)) := by
-        rw [← Real.exp_nat_mul]
+        rw [← Real.exp_natCast_mul]
         have e : (v0:ℝ) * -(1/4) = -((v0:ℝ) / 4) := by ring
         rw [e]; ring
 

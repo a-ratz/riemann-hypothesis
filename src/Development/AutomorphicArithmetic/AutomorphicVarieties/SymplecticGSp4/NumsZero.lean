@@ -178,7 +178,7 @@ private theorem ker_open {k Γ M : Type} [Field k] [Group Γ] [TopologicalSpace 
   let b := Module.finBasis k M
   have hset : (ρ.ker : Set Γ) = ⋂ i, {g | ρ g (b i) = b i} := by
     ext g
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
     constructor
     · intro hg i
       rw [hg]
@@ -199,7 +199,7 @@ private theorem finite_compactly_supported_H1 {k Γ M : Type} [Field k] [Group �
     show (LinearMap.range (d0 ρ)).FG
     rw [LinearMap.range_eq_map]
     exact (Module.Finite.fg_top).map _
-  haveI : IsNoetherian k ↥(B1 ρ) := isNoetherian_of_fg_of_noetherian _ hB
+  have : IsNoetherian k ↥(B1 ρ) := isNoetherian_of_fg_of_noetherian _ hB
   have hK : (Submodule.comap (Z1 ρ).subtype (B1 ρ)).FG :=
     Submodule.fg_of_fg_map_injective (Z1 ρ).subtype Subtype.val_injective
       (Submodule.FG.of_le_of_isNoetherian (Submodule.map_comap_le _ _))
@@ -208,10 +208,10 @@ private theorem finite_compactly_supported_H1 {k Γ M : Type} [Field k] [Group �
     · exact IsNoetherian.noetherian _
     · rw [top_inf_eq, Submodule.ker_mkQ]
       exact hK
-  haveI : Module.Finite k ↥(Z1 ρ) := ⟨hZ⟩
+  have : Module.Finite k ↥(Z1 ρ) := ⟨hZ⟩
   have hZ1 : (Z1 ρ).FG := Module.Finite.iff_fg.mp inferInstance
   have hP : ((Z1 ρ).prod (⊤ : Submodule k (F.T → M))).FG := hZ1.prod Module.Finite.fg_top
-  haveI := isNoetherian_of_fg_of_noetherian _ hP
+  have := isNoetherian_of_fg_of_noetherian _ hP
   have hle : F.H1c ρ ≤ (Z1 ρ).prod ⊤ := by
     rintro x ⟨hlc, hcoc, -, -, -⟩
     exact ⟨⟨hlc.continuous, hcoc⟩, trivial⟩
@@ -330,9 +330,9 @@ private theorem count [Module.Finite k A] [Module.Finite k L] [Module.Finite k S
   have e : LinearMap.ker h ≃ₗ[k] (L ⧸ LinearMap.range f) :=
     (LinearEquiv.ofEq _ _ h2).trans (g.quotKerEquivRange.symm.trans
       ((Submodule.quotEquivOfEq _ _ hk).trans (LinearMap.quotKerEquivOfSurjective _ hs)))
-  haveI : Module.Finite k (LinearMap.ker h) := Module.Finite.equiv e.symm
-  haveI : Module.Finite k (O ⧸ LinearMap.ker h) := Module.Finite.equiv h.quotKerEquivRange.symm
-  haveI hO : Module.Finite k O := Module.Finite.of_submodule_quotient (LinearMap.ker h)
+  have : Module.Finite k (LinearMap.ker h) := Module.Finite.equiv e.symm
+  have : Module.Finite k (O ⧸ LinearMap.ker h) := Module.Finite.equiv h.quotKerEquivRange.symm
+  have hO : Module.Finite k O := Module.Finite.of_submodule_quotient (LinearMap.ker h)
   refine ⟨hO, ?_⟩
   have a1 := h.finrank_range_add_finrank_ker
   have a2 := f.finrank_range_add_finrank_ker
@@ -697,9 +697,9 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.X.galCount :
     HcPublished → ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] {SP : Set (HeightOneSpectrum (𝓞 ℚ))} {T Q : Finset ℕ} (v0 : T) {pl : ℕ → ValuationSubring Ω} {K : Subgroup (G ℚ Ω)}, GalData l SP T Q pl K → ∀ (k : Type) [Field k] [Finite k] [CharP k l] (M : Type) [AddCommGroup M] [Module k M] [Module.Finite k M] (ρ : Representation k (GS Ω SP) M), (∀ m, IsLocallyConstant fun g => ρ g m) → (∀ q ∈ Q, ∀ g ∈ Ine (F := ℚ) (pl q), g ∈ K → ρ (toGS Ω SP g) = 1) → ∀ σ : G ℚ Ω, IsCC σ → Module.Finite k ((galFrame SP T Q v0 pl K).Ob ρ) ∧ Module.Finite k ((galFrame SP T Q v0 pl K).H1c ρ) ∧ finrank k ((galFrame SP T Q v0 pl K).Ob ρ) = finrank k ((galFrame SP T Q v0 pl K).H1c ρ) + finrank k (LinearMap.ker (ρ (toGS Ω SP σ) - 1)) + finrank k (Loc.H0dual (cycK Ω l k) (ρ.comp (toGS Ω SP))) := by
   intro P Ω _ _ _ l _ SP T Q v0 pl K hD k _ _ _ M _ _ _ ρ hlc hN σ hσ
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
-  haveI : Finite M := Module.finite_of_finite k
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
+  have : Finite M := Module.finite_of_finite k
   have hρ : ContAction ρ := by
     unfold ReciprocityTheory.Gal.ContAction
     rw [continuous_prod_of_discrete_right]
@@ -725,7 +725,7 @@ theorem UpperTheory.V.X.galCount :
     rw [Finset.sum_eq_single ⟨l, hD.l_mem⟩]
     · simp
     · intro b _ hb
-      exact if_neg fun h => hb (Subtype.ext h)
+      exact ite_eq_right fun h => hb (Subtype.ext h)
     · simp
   have hQ : ∑ q : Q, finrank k (H1 (ρ.comp (locHom SP (pl q)))) =
       ∑ q : Q, finrank k (H1ur (ρ.comp (locHom SP (pl q))) ((Ine (F := ℚ) (pl q) ⊓ K).subgroupOf (Dec (F := ℚ) (pl q)))) +
@@ -734,7 +734,7 @@ theorem UpperTheory.V.X.galCount :
     refine Finset.sum_congr rfl fun q _ => ?_
     have hql : (q : ℕ) ≠ l := fun h => Finset.disjoint_left.1 hD.disj hD.l_mem (h ▸ q.2)
     obtain ⟨φ, h1, h2⟩ := decZhat Ω q (hD.prime _ (.inr q.2)) (pl q) (hD.isOver _ (.inr q.2))
-    rw [(loc q.1 (.inr q.2)).2.2.1, if_neg hql, add_zero,
+    rw [(loc q.1 (.inr q.2)).2.2.1, ite_eq_right hql, add_zero,
       urIndex l _ (hc q) ((Ine (F := ℚ) (pl q)).subgroupOf (Dec (F := ℚ) (pl q))) ((Ine (F := ℚ) (pl q) ⊓ K).subgroupOf (Dec (F := ℚ) (pl q)))
         (Subgroup.comap_mono inf_le_left) ?_,
       urAbs _ (hc q) _ φ h1 h2]
@@ -1075,7 +1075,7 @@ private theorem nums_gen (P : CohomologyHyp) {Ω : Type} [Field Ω] [Algebra ℚ
 private theorem nums_zero {k Γ M : Type} [Field k] [Group Γ] [TopologicalSpace Γ] [AddCommGroup M] [Module k M]
     [Module.Finite k M] (F : Frame Γ) (ρ : Representation k Γ M) (h : Module.finrank k M = 0) :
     Module.finrank k (F.H1c ρ) = 0 := by
-  haveI : Subsingleton M := Module.finrank_zero_iff.1 h
+  have : Subsingleton M := Module.finrank_zero_iff.1 h
   exact Module.finrank_zero_of_subsingleton
 
 private theorem nums_all (P : CohomologyHyp) {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime]
@@ -1109,7 +1109,7 @@ private theorem nums_all (P : CohomologyHyp) {Ω : Type} [Field Ω] [Algebra ℚ
     rw [a2 e, hdim]
     congr 1
     rcases hj with rfl | rfl | rfl <;> decide
-  rw [if_neg fun e => hj (Or.inl e), if_neg fun e => hj (Or.inr e), add_zero]
+  rw [ite_eq_right fun e => hj (Or.inl e), ite_eq_right fun e => hj (Or.inr e), add_zero]
   by_cases ho : j ∈ oddRoots
   · obtain ⟨o1, hne⟩ := hodd ho
     have o2 : ∀ j ∈ oddRoots, j.1 = 1 ∨ j.1 = -1 := by decide
@@ -1122,7 +1122,7 @@ private theorem nums_all (P : CohomologyHyp) {Ω : Type} [Field Ω] [Algebra ℚ
   · have e : j ∉ wts := by
       simp only [wts, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton]
       tauto
-    rw [dimP, if_neg fun e => hj (Or.inl e), if_neg e] at hdim
+    rw [dimP, ite_eq_right fun e => hj (Or.inl e), ite_eq_right e] at hdim
     obtain ⟨a1, -, a2⟩ := key (Or.inl hdim)
     exact ⟨a1, a2 (Or.inl hdim), fun _ _ _ => nums_zero _ _ hdim⟩
 
@@ -1131,12 +1131,12 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.nums :
   intro Ω _ _ _ l hl c D hD P
   obtain ⟨-, f2, -, -, -, -, -, ⟨fc, -⟩, -, -, -, fo, -⟩ := facts D hD
   obtain ⟨hN, hI, hK⟩ := X.spKer D
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
     obtain ⟨-, -, -, -, -, h0, -, hval, -⟩ := dvrFacts l c.O
     rw [hval, Ne, IsDiscreteValuationRing.addVal_eq_zero_iff] at h0
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact h0)
-  haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
   have hTS : D.T ⊆ D.S := Finset.insert_subset hD.l_mem (by
     classical
     exact Finset.filter_subset _ _)

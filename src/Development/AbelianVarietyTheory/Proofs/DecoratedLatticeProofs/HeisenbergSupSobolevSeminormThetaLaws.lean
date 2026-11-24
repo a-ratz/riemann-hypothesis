@@ -65,7 +65,7 @@ theorem supSob_laws : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
   · refine GlobalTheory.Size.wordSum_ne_top_iff.2 fun l _ => ?_
     obtain ⟨C, hC⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ (GlobalTheory.Size.theta_word hψ hθ l hf)
     refine ne_top_of_le_ne_top (ENNReal.ofReal_ne_top (r := C)) (iSup_le fun w => ?_)
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hC w)
   · refine ⟨Real.toNNReal (∑ i, ∑ j, (|(z i j).re| + |(z i j).im|)), fun k f hf => ?_⟩
     exact GlobalTheory.Size.SupWord.ws_dRho_le hψ hθ ha hs hf τ z k

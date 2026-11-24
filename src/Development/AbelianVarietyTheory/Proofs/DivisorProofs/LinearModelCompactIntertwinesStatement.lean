@@ -1740,9 +1740,9 @@ theorem dblLin : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F]
   have hψ1 : ∀ x, ‖B.ψ x‖ = 1 := GlobalTheory.StdCharFromIsStd.norm_psi hpair.base.std
   have hψc : Continuous B.ψ := hpair.base.std.1
   have hψv : ∀ x, ‖GlobalTheory.LatVac.psiAt B.ψ v x‖ = 1 := fun x => hψ1 _
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin d → Fv F v))
   obtain ⟨ιd, hbij, hprod⟩ := _root_.GlobalTheory.SBProdExt.exists_linear_bijOn_prod (Homeomorph.sumArrowHomeomorphProdArrow (X := Fv F v)
     (ι := Fin n × Fin d) (ι' := Fin n × Fin d)) (colsHomeo (Fin n) (Fin d) (Fin d) (Fv F v)) ι (conjLin ι) hι.bij

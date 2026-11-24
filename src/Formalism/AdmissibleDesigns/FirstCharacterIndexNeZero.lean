@@ -224,7 +224,7 @@ theorem coc_ine (c : coZ1s (qzE i e)) (hx : Submodule.Quotient.mk c ∈ selZ i d
     have hwP : idx i dc v ∈ Pall i dc := Finset.mem_union_left _ (Finset.mem_union_right _ hwq)
     have h1 := hP _ hwP
     unfold Fsha at h1
-    rw [if_pos hwq] at h1
+    rw [ite_eq_left hwq] at h1
     intro g hg
     have hgD : g ∈ decs D.host.E (Aw i dc) (idx i dc v) := by
       show g ∈ (Aw i dc (idx i dc v)).decompositionSubgroup D.host.E
@@ -268,7 +268,7 @@ theorem coc_loc (c : coZ1s (qzE i e)) (hx : Submodule.Quotient.mk c ∈ selZ i d
   obtain ⟨-, -, -, hP⟩ := selZ_mem i dc e hx
   have h1 := hP _ hwP
   unfold Fsha at h1
-  rw [if_neg hnq, Submodule.mem_bot] at h1
+  rw [ite_eq_right hnq, Submodule.mem_bot] at h1
   obtain ⟨m0, hm0⟩ := (Submodule.Quotient.mk_eq_zero _).1 h1
   have hAw : Aw i dc (idx i dc v.1) = D.nd.plOm.1 v.1 := by unfold Aw; rw [plOf_idx i dc hvP]
   have hcob : ∀ k ∈ Dec (F := D.host.E) (D.nd.plOm.1 v.1),
@@ -730,7 +730,7 @@ theorem coefChange (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O]
   have hΦ : ∀ g m j, Φ (ρO g m) j = ρZ g (Φ m j) := by
     intro g m j
     simp only [ρO, ρZ, ψO, scalRep_apply, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map,
-      RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, algebraMap_smul, map_smul, Pi.smul_apply]
+      RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, algebraMap_smul, map_smul, Pi.smul_apply]
   have h1 := len_sel_le_of_equiv ρO ρZ Φ hΦ J JS D Iq qs P
   have h2 := IsLocalRing.length_restrictScalars ℤ_[l] (B := O) (M := ↥(selRep2 ρO J JS D (Fsha ρO D Iq qs) P))
   have h3 := IsLocalRing.length_restrictScalars ℤ_[l] (B := O) (M := O ⧸ Ideal.span {((l : ℕ) : O)})

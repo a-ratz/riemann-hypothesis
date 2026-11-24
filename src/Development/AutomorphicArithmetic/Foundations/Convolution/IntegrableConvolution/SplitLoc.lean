@@ -176,7 +176,7 @@ private theorem diag_fac (hs : Function.Surjective (completionMap v w)) (ν : Fi
     (fun i j => by
       by_cases h : i = j
       · subst h; rw [Matrix.diagonal_apply_eq]; exact (hz _).le
-      · rw [Matrix.diagonal_apply_ne _ h, map_zero]; exact zero_le')
+      · rw [Matrix.diagonal_apply_ne _ h, map_zero]; exact zero_le)
     (fun i j hij => by
       rw [Matrix.diagonal_apply_ne _ hij.ne', map_zero]; exact zero_lt_one)
     (fun i => by rw [Matrix.diagonal_apply_eq]; exact hz _)

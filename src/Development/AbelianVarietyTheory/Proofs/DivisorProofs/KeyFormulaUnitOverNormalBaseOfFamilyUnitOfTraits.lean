@@ -163,7 +163,7 @@ theorem residueField_map_adicCompletion_surjective (W : Type*) [CommRing W] [IsD
   intro hu
   have h1 := hu.map (AdicCompletion.evalₐ (maximalIdeal W) 1)
   rw [map_sub, AlgHom.commutes, ← hw, Ideal.Quotient.algebraMap_eq, sub_self] at h1
-  haveI : Nontrivial (W ⧸ maximalIdeal W ^ 1) :=
+  have : Nontrivial (W ⧸ maximalIdeal W ^ 1) :=
     Ideal.Quotient.nontrivial_iff.mpr (by rw [pow_one]; exact (maximalIdeal.isMaximal W).ne_top)
   exact not_isUnit_zero h1
 
@@ -174,9 +174,9 @@ theorem finite_residueField_of_dominating (D : Type*) [CommRing D] [IsDomain D] 
     [IsLocalHom ((algebraMap D (FractionRing D)).codRestrict V h1)] :
     Finite (ResidueField V) := by
   set f := (algebraMap D (FractionRing D)).codRestrict V h1 with hf
-  letI : Algebra D V := f.toAlgebra
-  haveI : IsLocalHom (algebraMap D V) := ‹IsLocalHom f›
-  haveI : FaithfulSMul D V := (faithfulSMul_iff_algebraMap_injective _ _).mpr
+  let : Algebra D V := f.toAlgebra
+  have : IsLocalHom (algebraMap D V) := ‹IsLocalHom f›
+  have : FaithfulSMul D V := (faithfulSMul_iff_algebraMap_injective _ _).mpr
     fun a b hab => IsFractionRing.injective D (FractionRing D) (congrArg Subtype.val hab)
   have hB : ∀ x : V, ∃ c : D, c ≠ 0 ∧ ∃ b : D, algebraMap D V c * x = algebraMap D V b := by
     intro x
@@ -187,7 +187,7 @@ theorem finite_residueField_of_dominating (D : Type*) [CommRing D] [IsDomain D] 
     rw [mul_comm]; exact hbc
   have hm : maximalIdeal D ≠ ⊥ := fun h => hD (isField_iff_maximalIdeal_eq.mpr h)
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hm
-  haveI := finite_quotient_span_of_birational hB ha0
+  have := finite_quotient_span_of_birational hB ha0
   have hle : Ideal.span {algebraMap D V a} ≤ maximalIdeal V := by
     rw [Ideal.span_le, Set.singleton_subset_iff]
     exact map_nonunit (algebraMap D V) a ha
@@ -195,8 +195,8 @@ theorem finite_residueField_of_dominating (D : Type*) [CommRing D] [IsDomain D] 
     intro y
     obtain ⟨v, rfl⟩ := Ideal.Quotient.mk_surjective y
     exact ⟨Ideal.Quotient.mk _ v, rfl⟩
-  haveI : Module.Finite D (ResidueField V) := Module.Finite.of_surjective _ hsurj
-  haveI : Module.Finite (ResidueField D) (ResidueField V) :=
+  have : Module.Finite D (ResidueField V) := Module.Finite.of_surjective _ hsurj
+  have : Module.Finite (ResidueField D) (ResidueField V) :=
     Module.Finite.of_restrictScalars_finite D _ _
   exact Module.finite_of_finite (ResidueField D)
 
@@ -204,8 +204,8 @@ theorem exists_complete_dvr_finite_residueField : ∀ (D : Type) [CommRing D] [I
   intro D _ _ _ hN hdim hF
   have hD : ¬ IsField D := fun h => by
     rw [ringKrullDim_eq_zero_of_isField h] at hdim; exact zero_ne_one hdim
-  haveI : Ring.KrullDimLE 1 D := Ring.krullDimLE_iff.mpr (by simp [hdim])
-  haveI : Ring.DimensionLEOne D :=
+  have : Ring.KrullDimLE 1 D := Ring.krullDimLE_iff.mpr (by simp [hdim])
+  have : Ring.DimensionLEOne D :=
     ⟨fun hp hpr => Ring.krullDimLE_one_iff_of_noZeroDivisors.mp this _ hp hpr⟩
   obtain ⟨V, hV, h⟩ :=
     exists_discreteValuationSubring_dominating D (FractionRing D) (FractionRing D) hD
@@ -254,34 +254,34 @@ theorem exists_trait_finite_residueField_charZero_avoiding : ∀ (B : Type) [Com
   intro B _ _ _ _ m h hm hh
   classical
 
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
-  haveI : IsJacobsonRing ℤ := isJacobsonRing_int_of_dim_one
-  haveI : Algebra.FiniteType ℤ (B ⧸ m) :=
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
+  have : IsJacobsonRing ℤ := isJacobsonRing_int_of_dim_one
+  have : Algebra.FiniteType ℤ (B ⧸ m) :=
     .of_surjective (Ideal.Quotient.mkₐ ℤ _) (Ideal.Quotient.mkₐ_surjective ℤ _)
-  haveI : Module.Finite ℤ (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℤ (B ⧸ m)
+  have : Module.Finite ℤ (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℤ (B ⧸ m)
   set p := ringChar (B ⧸ m) with hpdef
   have hp0 : p ≠ 0 := by
     intro h0
-    haveI : CharP (B ⧸ m) 0 := h0 ▸ ringChar.charP (B ⧸ m)
-    haveI : CharZero (B ⧸ m) := CharP.charP_to_charZero _
-    haveI : Algebra.IsIntegral ℤ (B ⧸ m) := Algebra.IsIntegral.of_finite ℤ _
+    have : CharP (B ⧸ m) 0 := h0 ▸ ringChar.charP (B ⧸ m)
+    have : CharZero (B ⧸ m) := CharP.charP_to_charZero _
+    have : Algebra.IsIntegral ℤ (B ⧸ m) := Algebra.IsIntegral.of_finite ℤ _
     exact Int.not_isField
       (isField_of_isIntegral_of_isField (algebraMap ℤ (B ⧸ m)).injective_int (Field.toIsField _))
-  haveI : CharP (B ⧸ m) p := ringChar.charP (B ⧸ m)
-  haveI : Fact p.Prime := ⟨(CharP.char_is_prime_or_zero (B ⧸ m) p).resolve_right hp0⟩
-  letI : Algebra (ZMod p) (B ⧸ m) := ZMod.algebra (B ⧸ m) p
-  haveI : IsScalarTower ℤ (ZMod p) (B ⧸ m) := AddCommGroup.intIsScalarTower
-  haveI : Algebra.FiniteType (ZMod p) (B ⧸ m) :=
+  have : CharP (B ⧸ m) p := ringChar.charP (B ⧸ m)
+  have : Fact p.Prime := ⟨(CharP.char_is_prime_or_zero (B ⧸ m) p).resolve_right hp0⟩
+  let : Algebra (ZMod p) (B ⧸ m) := ZMod.algebra (B ⧸ m) p
+  have : IsScalarTower ℤ (ZMod p) (B ⧸ m) := AddCommGroup.intIsScalarTower
+  have : Algebra.FiniteType (ZMod p) (B ⧸ m) :=
     Algebra.FiniteType.of_restrictScalars_finiteType ℤ (ZMod p) (B ⧸ m)
-  haveI : Module.Finite (ZMod p) (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing (ZMod p) (B ⧸ m)
-  haveI hfin : Finite (B ⧸ m) := Module.finite_of_finite (ZMod p)
+  have : Module.Finite (ZMod p) (B ⧸ m) := finite_of_finite_type_of_isJacobsonRing (ZMod p) (B ⧸ m)
+  have hfin : Finite (B ⧸ m) := Module.finite_of_finite (ZMod p)
   have hpm : (p : B) ∈ m := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]; exact CharP.cast_eq_zero _ p
   have hpB : (p : B) ≠ 0 := Nat.cast_ne_zero.mpr hp0
 
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℤ B
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℤ B
   let R := Localization.AtPrime m
-  haveI hRn : IsNoetherianRing R := IsLocalization.isNoetherianRing m.primeCompl R inferInstance
+  have hRn : IsNoetherianRing R := IsLocalization.isNoetherianRing m.primeCompl R inferInstance
   have hinj : Function.Injective (algebraMap B R) :=
     IsLocalization.injective R (Ideal.primeCompl_le_nonZeroDivisors m)
   have hx0 : algebraMap B R (h * p) ≠ 0 := by
@@ -290,8 +290,8 @@ theorem exists_trait_finite_residueField_charZero_avoiding : ∀ (B : Type) [Com
     (IsLocalization.AtPrime.to_map_mem_maximal_iff R m _).mpr (m.mul_mem_left h hpm)
   obtain ⟨q, hq, hnq, hdim⟩ := GlobalTheory.T.exists_prime_not_mem_ringKrullDim_quotient_eq_one R (algebraMap B R (h * p)) hx0 hxm
   let D := R ⧸ q
-  haveI : IsDomain D := Ideal.Quotient.isDomain q
-  haveI : IsLocalRing D := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
+  have : IsDomain D := Ideal.Quotient.isDomain q
+  have : IsLocalRing D := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
   let φ : B →+* D := (Ideal.Quotient.mk q).comp (algebraMap B R)
   have hcompR : Ideal.comap (Ideal.Quotient.mk q) (IsLocalRing.maximalIdeal D) = IsLocalRing.maximalIdeal R :=
     IsLocalRing.eq_maximalIdeal (Ideal.comap_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective)
@@ -303,8 +303,8 @@ theorem exists_trait_finite_residueField_charZero_avoiding : ∀ (B : Type) [Com
   have hφp : φ (p : B) ≠ 0 := by
     intro e; apply hnq
     rw [map_mul]; exact q.mul_mem_left _ ((Ideal.Quotient.eq_zero_iff_mem).mp e)
-  haveI hD0 : CharZero D := by
-    haveI : CharP D (ringChar D) := ringChar.charP D
+  have hD0 : CharZero D := by
+    have : CharP D (ringChar D) := ringChar.charP D
     rcases CharP.char_is_prime_or_zero D (ringChar D) with hl | hl
     · exfalso
       have hlm' : ((ringChar D : ℕ) : B) ∈ Ideal.comap φ (IsLocalRing.maximalIdeal D) := by
@@ -315,7 +315,7 @@ theorem exists_trait_finite_residueField_charZero_avoiding : ∀ (B : Type) [Com
       have hpl : p = ringChar D :=
         ((Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) hl).mp hdvd)
       apply hφp; rw [map_natCast, hpl, CharP.cast_eq_zero]
-    · haveI : CharP D 0 := hl ▸ ringChar.charP D
+    · have : CharP D 0 := hl ▸ ringChar.charP D
       exact CharP.charP_to_charZero D
 
   have hsurj : Function.Surjective ((IsLocalRing.residue D).comp φ) := by
@@ -338,12 +338,12 @@ theorem exists_trait_finite_residueField_charZero_avoiding : ∀ (B : Type) [Com
   have hker : ∀ b ∈ m, ((IsLocalRing.residue D).comp φ) b = 0 := by
     intro b hb
     rw [RingHom.comp_apply, IsLocalRing.residue_eq_zero_iff, ← Ideal.mem_comap, hcomp]; exact hb
-  haveI hresfin : Finite (IsLocalRing.ResidueField D) :=
+  have hresfin : Finite (IsLocalRing.ResidueField D) :=
     Finite.of_surjective (Ideal.Quotient.lift m _ hker) (by
       intro y; obtain ⟨b, rfl⟩ := hsurj y; exact ⟨Ideal.Quotient.mk m b, rfl⟩)
   obtain ⟨V, _, _, _, hcV, g, hg, hgl, hVfin⟩ :=
     GlobalTheory.exists_complete_dvr_finite_residueField D inferInstance hdim hresfin
-  haveI : CharZero V := ⟨fun a b e => by
+  have : CharZero V := ⟨fun a b e => by
     apply Nat.cast_injective (R := D); apply hg; rw [map_natCast, map_natCast]; exact e⟩
   refine ⟨V, inferInstance, inferInstance, inferInstance, inferInstance, g.comp φ, hcV, hVfin, ?_, ?_⟩
   · rw [RingHom.comp_apply]; intro e; apply hφh; apply hg; rw [e, map_zero]
@@ -540,18 +540,18 @@ theorem keyLoc_of_famUnit_keyTrait : ∀ κ : Rule, FamUnit κ → KeyTrait κ �
   intro κ hFU hKT A _ _ _ _ _ G _ _ L σ x y hG hsm hopen hsym hpol hunif hy hσ hkey
   have hkey0 := hkey
   obtain ⟨φ, -, -, -, hpb, -⟩ := hkey
-  haveI : IsProper x.P.A.hom := x.P.isAb.proper
+  have : IsProper x.P.A.hom := x.P.isAb.proper
   have hab := GlobalTheory.range_subset_abLocus_of_isProper hG hpb.1
   obtain ⟨f, hf0, hfab⟩ := exists_away_subset (abLocus G) hopen hab
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing ℤ A
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing ℤ A
   have hle : Submonoid.powers f ≤ nonZeroDivisors A := powers_le_nonZeroDivisors_of_noZeroDivisors hf0
-  haveI : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing (Localization.Away f) :=
+  have : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing (Localization.Away f) :=
     IsLocalization.isNoetherianRing (Submonoid.powers f) (Localization.Away f) inferInstance
-  haveI : IsIntegrallyClosed (Localization.Away f) :=
+  have : IsIntegrallyClosed (Localization.Away f) :=
     isIntegrallyClosed_of_isLocalization (Localization.Away f) (Submonoid.powers f) hle
   have hinj : Function.Injective (algebraMap A (Localization.Away f)) := IsLocalization.injective _ hle
-  haveI : CharZero (Localization.Away f) := charZero_of_injective_algebraMap hinj
+  have : CharZero (Localization.Away f) := charZero_of_injective_algebraMap hinj
   obtain ⟨xB, hgB, hkB⟩ := GlobalTheory.T.exists_keyDatum_abelianLocus_point A (Localization.Away f) (algebraMap A _) G L σ x.P.g y x.g_pos hG hsm hopen
     hsym hpol hy hσ hfab
   obtain ⟨u, hu⟩ := hFU (Localization.Away f) xB

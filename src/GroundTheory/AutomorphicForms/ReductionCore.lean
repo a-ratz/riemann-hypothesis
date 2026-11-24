@@ -374,7 +374,7 @@ theorem exists_reduced_of {C : ℝ} (hC : 0 < C)
       | last =>
         exfalso
         have := j.isLt
-        simp only [Fin.coe_castSucc, Fin.val_last] at hij
+        simp only [Fin.val_castSucc, Fin.val_last] at hij
         omega
       | cast i =>
         rw [hBn_cc, hBn_cc]

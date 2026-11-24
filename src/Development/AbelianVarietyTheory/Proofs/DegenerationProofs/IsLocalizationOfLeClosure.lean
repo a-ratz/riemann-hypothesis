@@ -119,8 +119,8 @@ theorem isLocalization_of_le_closure {Ω : Type} [Field Ω] {n : ℕ} (h0 : (n :
 theorem dedekind_closure {Ω K : Type} [Field Ω] [CharZero Ω] [Field K] [CharZero K] {n a : ℕ} (hn : n.Prime)
     [IsCyclotomicExtension {n ^ a} ℚ K] (φ : K →+* Ω) {ζ : K} (hζ : IsPrimitiveRoot ζ (n ^ a)) :
     IsDedekindDomain (Subring.closure {φ ζ, (n : Ω)⁻¹}) ∧ Algebra.FiniteType ℤ (Subring.closure {φ ζ, (n : Ω)⁻¹}) := by
-  haveI := Fact.mk hn
-  haveI : NumberField K := IsCyclotomicExtension.numberField {n ^ a} ℚ _
+  have := Fact.mk hn
+  have : NumberField K := IsCyclotomicExtension.numberField {n ^ a} ℚ _
   have h0 : (n : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hn.ne_zero
   set T : Subring Ω := Subring.closure {φ ζ, (n : Ω)⁻¹} with hTdef
   let io : 𝓞 K →+* Ω := φ.comp (algebraMap _ K)
@@ -141,7 +141,7 @@ theorem dedekind_closure {Ω K : Type} [Field Ω] [CharZero Ω] [Field K] [CharZ
     have h3 : io x = φ y := congrArg φ hy.symm
     rw [h3]
     exact h2 h1
-  letI : Algebra (𝓞 K) T := (io.codRestrict _ hmem).toAlgebra
+  let : Algebra (𝓞 K) T := (io.codRestrict _ hmem).toAlgebra
   have hL : IsLocalization (Submonoid.powers (n : 𝓞 K)) T := by
     refine isLocalization_of_le_closure h0 _ _ (fun x y h => hio (congrArg (fun z : T => (z : Ω)) h))
       (Subring.subset_closure (Or.inr rfl)) (Subring.closure_mono ?_)
@@ -158,11 +158,11 @@ theorem dedekind_closure {Ω K : Type} [Field Ω] [CharZero Ω] [Field K] [CharZ
 
 theorem exists_base : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [CharZero Ω] (n a : ℕ), n.Prime → ∃ (o : Subring Ω) (ze : oˣ), IsDedekindDomain o ∧ Algebra.FiniteType ℤ o ∧ IsUnit (n : o) ∧ IsPrimitiveRoot (Units.map o.subtype.toMonoidHom ze) (n ^ a) ∧ o = Subring.closure {((ze : o) : Ω), (n : Ω)⁻¹} := by
   intro Ω _ _ _ n a hn
-  haveI := Fact.mk hn
+  have := Fact.mk hn
   have h0 : (n : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hn.ne_zero
   let K := CyclotomicField (n ^ a) ℚ
-  haveI : IsCyclotomicExtension {n ^ a} ℚ K := CyclotomicField.isCyclotomicExtension (n ^ a) ℚ
-  haveI : NumberField K := IsCyclotomicExtension.numberField {n ^ a} ℚ _
+  have : IsCyclotomicExtension {n ^ a} ℚ K := CyclotomicField.isCyclotomicExtension (n ^ a) ℚ
+  have : NumberField K := IsCyclotomicExtension.numberField {n ^ a} ℚ _
   let φ : K →+* Ω := (IsAlgClosed.lift (R := ℚ) (S := K) (M := Ω)).toRingHom
   have hζ := IsCyclotomicExtension.zeta_spec (n ^ a) ℚ K
   set ζ := IsCyclotomicExtension.zeta (n ^ a) ℚ K

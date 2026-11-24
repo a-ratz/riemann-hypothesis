@@ -65,8 +65,8 @@ theorem conj_conj {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : E) : σ (σ x) 
 
 theorem exists_of_conj_eq {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {x : E} (hx : σ x = x) :
     ∃ t : F, algebraMap F E t = x := by
-  haveI := Subalgebra.isSimpleOrder_of_finrank h.2.2.1
-  haveI := h.2.1
+  have := Subalgebra.isSimpleOrder_of_finrank h.2.2.1
+  have := h.2.1
   rcases eq_bot_or_eq_top (AlgHom.equalizer σ (AlgHom.id F E)) with h1 | h1
   · have : x ∈ AlgHom.equalizer σ (AlgHom.id F E) := hx
     rw [h1] at this
@@ -212,7 +212,7 @@ theorem inv_mem_iff (Q : HeightOneSpectrum (𝓞 E)) {x : 𝓞 E} (hx : x ≠ 0)
     algebraMap E (Q.adicCompletion E) ((x : E)⁻¹) ∈ Q.adicCompletionIntegers E ↔ x ∉ Q.asIdeal := by
   rw [HeightOneSpectrum.mem_adicCompletionIntegers, Formalism.UG.P.levelaf_valued_algebraMap, map_inv₀,
     ← HeightOneSpectrum.valuation_lt_one_iff_mem (K := E), not_lt]
-  refine inv_le_one₀ (zero_lt_iff.2 ?_)
+  refine inv_le_one₀ (pos_iff_ne_zero.2 ?_)
   rw [Ne, Valuation.zero_iff]
   exact_mod_cast hx
 

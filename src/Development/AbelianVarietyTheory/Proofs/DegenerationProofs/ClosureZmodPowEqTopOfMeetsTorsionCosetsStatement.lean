@@ -64,7 +64,7 @@ namespace GlobalTheory.ThetaReal
 
 theorem zmod_pow_exists_nsmul_of_nsmul_eq_zero (n J : ℕ) (hn : 1 ≤ n) (hJ : 2 ≤ J)
     (y : ZMod (n ^ J)) (hy : n • y = 0) : ∃ w : ZMod (n ^ J), y = n • w := by
-  haveI : NeZero (n ^ J) := ⟨pow_ne_zero _ (by omega)⟩
+  have : NeZero (n ^ J) := ⟨pow_ne_zero _ (by omega)⟩
   obtain ⟨k, rfl⟩ := ZMod.natCast_zmod_surjective y
   rw [nsmul_eq_mul, ← Nat.cast_mul, ZMod.natCast_eq_zero_iff] at hy
   obtain ⟨j, rfl⟩ : ∃ j, J = j + 2 := ⟨J - 2, by omega⟩

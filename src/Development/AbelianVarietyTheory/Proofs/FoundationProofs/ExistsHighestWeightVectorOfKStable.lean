@@ -73,7 +73,7 @@ lemma inf_eig_ne_bot_iff (f : Module.End ℂ V) (N : Submodule ℂ V) (hf : ∀ 
 
 lemma exists_eig (f : Module.End ℂ V) (N : Submodule ℂ V) [FiniteDimensional ℂ N] (hN : N ≠ ⊥)
     (hf : ∀ x ∈ N, f x ∈ N) : ∃ t, N ⊓ f.eigenspace t ≠ ⊥ := by
-  haveI : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 hN
+  have : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 hN
   obtain ⟨t, ht⟩ := Module.End.exists_eigenvalue (f.restrict hf)
   exact ⟨t, (inf_eig_ne_bot_iff f N hf t).2 ht⟩
 
@@ -91,7 +91,7 @@ lemma exists_common {ι : Type*} (E : ι → Module.End ℂ V) (hE : ∀ a b x, 
   | empty => exact ⟨N, le_rfl, hN, hst, by simp⟩
   | insert b s _ ih =>
     obtain ⟨N', h1, h2, h3, h4⟩ := ih
-    haveI : FiniteDimensional ℂ N' := Submodule.finiteDimensional_of_le h1
+    have : FiniteDimensional ℂ N' := Submodule.finiteDimensional_of_le h1
     obtain ⟨t, ht⟩ := exists_eig (E b) N' h2 (h3 b)
     refine ⟨N' ⊓ (E b).eigenspace t, inf_le_left.trans h1, ht, ?_, ?_⟩
     · rintro a x ⟨hx1, hx2⟩
@@ -125,7 +125,7 @@ theorem exists_highestWeight (p q : ℕ) (M : GKMod p q) (W : Submodule ℂ M.V)
   obtain ⟨t, ht, hmax⟩ := Set.exists_max_image _ Complex.re (finite_eig H W hHW)
     (exists_eig H W h0 hHW)
   set N := W ⊓ H.eigenspace t with hN
-  haveI : FiniteDimensional ℂ N := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ N := Submodule.finiteDimensional_of_le inf_le_left
   have hkill : ∀ a b, posC a b → ∀ x ∈ N, M.act (Eab a b) x = 0 := by
     intro a b hab x hx
     by_contra hne

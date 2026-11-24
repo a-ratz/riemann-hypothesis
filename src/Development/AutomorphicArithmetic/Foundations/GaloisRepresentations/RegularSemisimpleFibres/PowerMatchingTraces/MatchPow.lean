@@ -74,7 +74,7 @@ private theorem norm_incl {v : Pl F} (w : PlacesOver E v) (hw : ∀ u : PlacesOv
   clear hw
   obtain ⟨w, hwv⟩ := w
   obtain rfl : GroundTheory.Global.AdeleBaseChange.below F w = v := (GroundTheory.Global.AdeleBaseChange.below_eq_iff w v).2 hwv
-  haveI := hwv
+  have := hwv
   let y : (w.adicCompletion E)ˣ := Units.map (algebraMap ((GroundTheory.Global.AdeleBaseChange.below F w).adicCompletion F) (w.adicCompletion E)).toMonoidHom x
   have hn : GroundTheory.LocalField.normUnits ((GroundTheory.Global.AdeleBaseChange.below F w).adicCompletion F) (w.adicCompletion E) y = x ^ Module.finrank F E := by
     apply Units.ext

@@ -86,7 +86,7 @@ namespace GlobalTheory.Unf.FlatForm
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ}
 
 theorem enorm_psi (hψ : IsStdChar D ψ (-1)) (a : AF D.host.F) : ‖ψ a‖ₑ = 1 := by
-  rw [← ofReal_norm_eq_enorm, hψ.1.2.1 a, ENNReal.ofReal_one]
+  rw [← ofReal_norm, hψ.1.2.1 a, ENNReal.ofReal_one]
 
 section
 variable {V V₀ W W₀ : HSp D} {ρ σ : ℕ} (dV : HypDec V V₀ ρ) (dW : HypDec W W₀ σ)
@@ -96,10 +96,10 @@ theorem enorm_evalAt_le (hψ : IsStdChar D ψ (-1)) (hT : μT 𝓕T = 1) (f : WO
     (hM : ∀ w', ‖dV.mixS W ψ μS 𝓕S f x w'‖ₑ ≤ M) (y : Mx D V₀.rank σ) (w : WO V₀ W₀) :
     ‖evalAt ψ dV dW μS 𝓕S μT 𝓕T f x y w‖ₑ ≤ M := by
   unfold evalAt _root_.I195MixedCoordinates_14b5fd3aa93c7f4842f1a892.target
-  refine (enorm_integral_le_lintegral_enorm _).trans ((lintegral_mono (g := fun _ => M) fun ξ => ?_).trans (le_of_eq ?_))
+  refine (eNorm_integral_le_lintegral_eNorm _).trans ((lintegral_mono (g := fun _ => M) fun ξ => ?_).trans (le_of_eq ?_))
   · have ht := dW.integrandT_eq (ψ := ψ) (_root_.I195MixedCoordinates_14b5fd3aa93c7f4842f1a892.source dV W ψ μS 𝓕S f x) y ξ w
     simp only [HypDec.incX, HypDec.incAdj, HypDec.incY, HypDec.inc0, AddMonoidHom.coe_mk, ZeroHom.coe_mk] at ht
-    rw [ht, enorm_mul, enorm_psi hψ, one_mul]; exact hM _
+    rw [ht, eNorm_mul, enorm_psi hψ, one_mul]; exact hM _
   · rw [setLIntegral_const, hT, mul_one]
 
 theorem enorm_flatFun_le (hψ : IsStdChar D ψ (-1)) (hT : μT 𝓕T = 1) (f : WO V W → ℂ) (x : Mx D W.rank ρ)
@@ -107,8 +107,8 @@ theorem enorm_flatFun_le (hψ : IsStdChar D ψ (-1)) (hT : μT 𝓕T = 1) (f : W
     (w : WO V₀ W₀) (u : UX D ρ) :
     ‖flatFun ψ dV dW μS 𝓕S μT 𝓕T x y f w u‖ₑ ≤ M (x ⬝ u.1.1) := by
   unfold flatFun
-  rw [enorm_mul, show ‖star (psiUni ψ u.1)‖ₑ = 1 by
-    rw [← ofReal_norm_eq_enorm, norm_star, psiUni, psiE, hψ.1.2.1, ENNReal.ofReal_one], one_mul]
+  rw [eNorm_mul, show ‖star (psiUni ψ u.1)‖ₑ = 1 by
+    rw [← ofReal_norm, norm_star, psiUni, psiE, hψ.1.2.1, ENNReal.ofReal_one], one_mul]
   exact enorm_evalAt_le dV dW hψ hT f _ _ (hM _) y w
 
 end
@@ -127,8 +127,8 @@ theorem integrable_integrandT (hψ : IsStdChar D ψ (-1)) (hT : μT 𝓕T = 1) (
     (hB : ∀ w', ‖g w'‖ ≤ B) (hg : Continuous g) (y : Mx D V₀.rank σ) (w : WO V₀ W₀) :
     Integrable (fun ξ => ψ (symplOH V₀ W (dW.incX V₀ ξ) (dW.incAdj V₀ y)) *
       g (dW.incX V₀ ξ + dW.incAdj V₀ y + dW.inc0 V₀ w)) (μT.restrict 𝓕T) := by
-  haveI : BorelSpace (Mx D σ V₀.rank) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μT.restrict 𝓕T) := ⟨by rw [Measure.restrict_apply_univ, hT]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (Mx D σ V₀.rank) := ⟨rfl⟩
+  have : IsFiniteMeasure (μT.restrict 𝓕T) := ⟨by rw [Measure.restrict_apply_univ, hT]; exact ENNReal.one_lt_top⟩
   have hcX : Continuous (dW.incX V₀) := continuous_const.matrix_mul continuous_id
   have hc : Continuous fun ξ : Mx D σ V₀.rank => ψ (symplOH V₀ W (dW.incX V₀ ξ) (dW.incAdj V₀ y)) *
       g (dW.incX V₀ ξ + dW.incAdj V₀ y + dW.inc0 V₀ w) :=
@@ -141,11 +141,11 @@ theorem continuous_evalAt (hψ : IsStdChar D ψ (-1)) (hT : μT 𝓕T = 1) (f : 
     (hB : ∀ x w', ‖dV.mixS W ψ μS 𝓕S f x w'‖ ≤ B)
     (hc : Continuous fun p : Mx D W.rank ρ × WO V₀ W => (_root_.I195MixedCoordinates_4dbac5b45bba9ccd847c7fca.source dV) W ψ μS 𝓕S f p.1 p.2) (y : Mx D V₀.rank σ)
     (w : WO V₀ W₀) : Continuous fun x => evalAt ψ dV dW μS 𝓕S μT 𝓕T f x y w := by
-  haveI : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
-  haveI : SecondCountableTopology (Mx D W.rank ρ) := inferInstanceAs (SecondCountableTopology (Fin W.rank → Fin ρ → AE D))
-  haveI : FirstCountableTopology (Mx D W.rank ρ) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
-  haveI : BorelSpace (Mx D σ V₀.rank) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μT.restrict 𝓕T) := ⟨by rw [Measure.restrict_apply_univ, hT]; exact ENNReal.one_lt_top⟩
+  have : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
+  have : SecondCountableTopology (Mx D W.rank ρ) := inferInstanceAs (SecondCountableTopology (Fin W.rank → Fin ρ → AE D))
+  have : FirstCountableTopology (Mx D W.rank ρ) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : BorelSpace (Mx D σ V₀.rank) := ⟨rfl⟩
+  have : IsFiniteMeasure (μT.restrict 𝓕T) := ⟨by rw [Measure.restrict_apply_univ, hT]; exact ENNReal.one_lt_top⟩
   have hcX : Continuous (dW.incX V₀) := continuous_const.matrix_mul continuous_id
   have hj : Continuous (Function.uncurry fun (x : Mx D W.rank ρ) (ξ : Mx D σ V₀.rank) =>
       ψ (symplOH V₀ W (dW.incX V₀ ξ) (dW.incAdj V₀ y)) *
@@ -166,18 +166,18 @@ theorem continuous_evalAt (hψ : IsStdChar D ψ (-1)) (hT : μT 𝓕T = 1) (f : 
 
 theorem continuous_upSum : Continuous fun u : UX D ρ => upSum (u.1.1 : Mx D ρ ρ) := by
   have hval : Continuous fun u : UX D ρ => (u.1.1 : Matrix (Fin ρ) (Fin ρ) (AE D)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   unfold upSum
   refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
   by_cases h : j.1 = i.1 + 1
-  · simp only [h, if_true]; exact (continuous_apply j).comp ((continuous_apply i).comp hval)
-  · simp only [h, if_false]; exact continuous_const
+  · simp only [h, ite_true]; exact (continuous_apply j).comp ((continuous_apply i).comp hval)
+  · simp only [h, ite_false]; exact continuous_const
 
 theorem continuous_flatFun (hψ : IsStdChar D ψ (-1)) (f : WO V W → ℂ) (x : Mx D W.rank ρ) (y : Mx D V₀.rank σ)
     (w : WO V₀ W₀) (hc : Continuous fun x' => evalAt ψ dV dW μS 𝓕S μT 𝓕T f x' y w) :
     Continuous (flatFun ψ dV dW μS 𝓕S μT 𝓕T x y f w) := by
   have hval : Continuous fun u : UX D ρ => (u.1.1 : Matrix (Fin ρ) (Fin ρ) (AE D)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
   unfold flatFun psiUni psiE
   exact (continuous_star.comp (hψ.1.1.comp (ht.comp continuous_upSum))).mul
@@ -245,7 +245,7 @@ theorem mixS_bounded (hψ : IsStdChar D ψ (-1)) {θ : InfFam D} (hθ : IsInfFam
     (hC f hmem x w').trans (by
       calc (↑C * supSob ψ θ 0 f) * ENNReal.ofReal (maj θ K 0 x) ≤ (↑C * supSob ψ θ 0 f) * 1 := by gcongr
         _ = _ := mul_one _)
-  rw [← ofReal_norm_eq_enorm] at h2
+  rw [← ofReal_norm] at h2
   exact (ENNReal.ofReal_le_iff_le_toReal (ENNReal.mul_ne_top ENNReal.coe_ne_top hfin)).1 h2
 
 end GlobalTheory.Unf.FlatForm
@@ -280,7 +280,7 @@ theorem flatAt_isSobForm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdC
   intro D ψ hψ θ hθ V V₀ W W₀ ρ σ dV dW vS vT vU x hx y
   have hT := vT.covol.2.2
   have hS := vS.covol
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
 
   have hB : ∀ Ψ, IsThetaFunO ψ V W Ψ → ∃ B : ℝ, ∀ x' w', ‖dV.mixS W ψ vS.μ vS.𝓕 Ψ x' w'‖ ≤ B :=
     fun Ψ hΨ => mixS_bounded hψ hθ dV vS hΨ
@@ -330,7 +330,7 @@ theorem flatAt_isSobForm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdC
     simp_rw [hsmul c f w]
     exact integral_const_mul c _
   · obtain ⟨N, C, hb⟩ := lintegral_flatFun_le hψ hθ dV dW vS vT vU x hx y U hU
-    exact ⟨N, C, fun f hf => (enorm_integral_le_lintegral_enorm _).trans (hb f hf w)⟩
+    exact ⟨N, C, fun f hf => (eNorm_integral_le_lintegral_eNorm _).trans (hb f hf w)⟩
 
 end GlobalTheory.Unf.FlatForm
 

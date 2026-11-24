@@ -155,7 +155,7 @@ theorem _root_.GlobalTheory.CM.two_mul_deg_dual_line : ∀ (E K V : Type) [Field
     rw [FractionalIdeal.mem_inv_iff h𝔟]
     constructor
     · intro H y hy
-      rw [← FractionalIdeal.mem_coe, h𝔟span] at hy
+      rw [← FractionalIdeal.mem_coeToSubmodule, h𝔟span] at hy
       induction hy using Submodule.span_induction with
       | mem x hx =>
         obtain ⟨x, hx, rfl⟩ := hx
@@ -168,16 +168,16 @@ theorem _root_.GlobalTheory.CM.two_mul_deg_dual_line : ∀ (E K V : Type) [Field
         exact (_root_.GlobalTheory.mem_one_fractionalIdeal_iff).2 key
       | zero => simp
       | add x y _ _ hx hy =>
-        rw [mul_add, ← FractionalIdeal.mem_coe]
-        rw [← FractionalIdeal.mem_coe] at hx hy
+        rw [mul_add, ← FractionalIdeal.mem_coeToSubmodule]
+        rw [← FractionalIdeal.mem_coeToSubmodule] at hx hy
         exact add_mem hx hy
       | smul a x _ hx =>
-        rw [mul_smul_comm, ← FractionalIdeal.mem_coe]
+        rw [mul_smul_comm, ← FractionalIdeal.mem_coeToSubmodule]
         exact Submodule.smul_mem _ a hx
     · intro H b hb
       rw [← _root_.GlobalTheory.mem_one_fractionalIdeal_iff]
       apply H
-      rw [← FractionalIdeal.mem_coe, h𝔟span]
+      rw [← FractionalIdeal.mem_coeToSubmodule, h𝔟span]
       apply Submodule.subset_span
       refine ⟨β * IsCMField.complexConj E b, ?_, rfl⟩
       rw [SetLike.mem_coe, h𝔞'def, FractionalIdeal.mem_singleton_mul]

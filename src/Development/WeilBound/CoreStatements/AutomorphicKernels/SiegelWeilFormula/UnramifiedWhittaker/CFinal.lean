@@ -236,19 +236,19 @@ theorem integrable_iff_and_integral_eq (G : Type) [AddCommGroup G] [MeasurableSp
     simp only [fib, mem_preimage, mem_singleton_iff] at hx
     simp [hf, hx]
   have hiff : (Integrable f ν ↔ Summable fun c => ‖fbar c‖) := by
-    rw [Integrable, hasFiniteIntegral_iff_enorm, hlin]
+    rw [Integrable, hasFiniteIntegral_iff_eNorm, hlin]
     simp only [hmeas.aestronglyMeasurable, true_and]
     rw [lt_top_iff_ne_top]
     simp only [← ofReal_norm]
     constructor
     · intro h
       have h' : (∑' c, ((‖fbar c‖₊ : ℝ≥0) : ℝ≥0∞)) ≠ ⊤ := by
-        simpa [ofReal_norm, enorm_eq_nnnorm] using h
+        simpa [ofReal_norm, eNorm_eq_nnNorm] using h
       have := ENNReal.tsum_coe_ne_top_iff_summable.mp h'
       exact NNReal.summable_coe.mpr this |>.congr fun c => by simp
     · intro h
       have h' : Summable fun c => ‖fbar c‖₊ := NNReal.summable_coe.mp (by simpa using h)
-      simpa [ofReal_norm, enorm_eq_nnnorm] using ENNReal.tsum_coe_ne_top_iff_summable.mpr h'
+      simpa [ofReal_norm, eNorm_eq_nnNorm] using ENNReal.tsum_coe_ne_top_iff_summable.mpr h'
   refine ⟨hiff, fun hs => ?_⟩
   have hint : Integrable f ν := hiff.mpr hs
   rw [← setIntegral_univ, ← fib_union H, integral_iUnion (fib_meas H hm) (fib_disj H) hint.integrableOn]
@@ -320,17 +320,17 @@ theorem isOpen_integral_hermitian (σ : E →ₐ[F] E) (n : ℕ) {v : HeightOneS
     rfl
   rw [this]
   exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
-    hS.preimage (continuous_subtype_val.matrix_elem i j)
+    hS.preimage (continuous_subtypeVal.matrix_elem i j)
 
 theorem cosetMeas : CosetMeas := by
   intro F E _ _ _ _ _ σ M n d J T bs v ψv S σS ϖ ε hG
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := continuousAdd_tens v
-  haveI : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
+  have : ContinuousAdd (Fv F v ⊗[F] E) := continuousAdd_tens v
+  have : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
   have hS : IsOpen (S : Set (Fv F v ⊗[F] E)) := by
     rw [hG.carrier]
     exact isOpen_Rv bs v
-  haveI : ContinuousAdd (HermR (Fv F v) σ n) := ⟨continuous_induced_rng.2
-    ((continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd))⟩
+  have : ContinuousAdd (HermR (Fv F v) σ n) := ⟨continuous_induced_rng.2
+    ((continuous_subtypeVal.comp continuous_fst).add (continuous_subtypeVal.comp continuous_snd))⟩
   refine ⟨⟨fun c => (continuous_const.add continuous_id).measurable,
     fun c => (continuous_id.add continuous_const).measurable⟩, fun g => ?_⟩
   have hc : Continuous fun x : HermR (Fv F v) σ n => x + -g := continuous_id.add continuous_const
@@ -491,7 +491,7 @@ theorem measure_eq_one_of_selfDual {V : Type} [AddCommGroup V] [TopologicalSpace
     (hcont : ∀ y, Continuous fun x => χ x y) (hann : ∀ y, (∀ x ∈ L, χ x y = 1) ↔ y ∈ L) : μ L = 1 := by
   classical
   obtain ⟨hH, hinv⟩ := hμ
-  haveI := hH
+  have := hH
   have hmeas : MeasurableSet (L : Set V) := hO.measurableSet
   have hclosed : IsClosed (L : Set V) := AddSubgroup.isClosed_of_isOpen L hO
   have hfin : μ L ≠ ⊤ := hC.measure_lt_top.ne
@@ -592,9 +592,9 @@ theorem trace_sigR (bs : Module.Basis (Fin d) F E) (σ : E →ₐ[F] E) (v : Hei
 
 theorem continuous_sigR_Fv (bs : Module.Basis (Fin d) F E) (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) :
     Continuous (sigR (Fv F v) σ : Fv F v ⊗[F] E → Fv F v ⊗[F] E) := by
-  haveI := isModTop_Fv (E := E) v
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
+  have := isModTop_Fv (E := E) v
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
   have h := IsModuleTopology.continuous_of_linearMap (sigEquiv bs σ v).toLinearMap
   have e : (sigR (Fv F v) σ : Fv F v ⊗[F] E → Fv F v ⊗[F] E) = (sigEquiv bs σ v).toLinearMap := by
     funext x
@@ -604,17 +604,17 @@ theorem continuous_sigR_Fv (bs : Module.Basis (Fin d) F E) (σ : E →ₐ[F] E) 
 
 theorem exists_coord_homeo (bs : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) :
     ∃ e : (Fv F v ⊗[F] E) ≃ₜ (Fin d → Fv F v), ∀ x k, e x k = (Algebra.TensorProduct.basis (Fv F v) bs).repr x k := by
-  haveI := isModTop_Fv (E := E) v
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
+  have := isModTop_Fv (E := E) v
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
   let L := (Algebra.TensorProduct.basis (Fv F v) bs).equivFun
   refine ⟨⟨L.toEquiv, IsModuleTopology.continuous_of_linearMap L.toLinearMap,
     IsModuleTopology.continuous_of_linearMap L.symm.toLinearMap⟩, fun x k => ?_⟩
   rfl
 
 theorem isTopAdd_tens (v : HeightOneSpectrum (𝓞 F)) : IsTopologicalAddGroup (Fv F v ⊗[F] E) := by
-  haveI := isModTop_Fv (E := E) v
-  exact IsModuleTopology.topologicalAddGroup (Fv F v) _
+  have := isModTop_Fv (E := E) v
+  exact IsModuleTopology.isTopologicalAddGroup (Fv F v) _
 
 theorem t2_tensor_product (bs : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) : T2Space (Fv F v ⊗[F] E) := by
   obtain ⟨e, -⟩ := exists_coord_homeo bs v
@@ -622,11 +622,11 @@ theorem t2_tensor_product (bs : Module.Basis (Fin d) F E) (v : HeightOneSpectrum
 
 theorem isClosed_herm (bs : Module.Basis (Fin d) F E) (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (n : ℕ) :
     IsClosed (HermR (Fv F v) σ n : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) := by
-  haveI := t2_tensor_product bs v
+  have := t2_tensor_product bs v
   have : (HermR (Fv F v) σ n : Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) =
       ⋂ a, ⋂ b, {X | sigR (Fv F v) σ (X b a) = X a b} := by
     ext X
-    simp only [Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
     exact Iff.rfl
   rw [this]
   exact isClosed_iInter fun a => isClosed_iInter fun b =>
@@ -638,7 +638,7 @@ theorem isOpen_Rv (bs : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F
   have hO : IsOpen ((v.adicCompletionIntegers F : Set (Fv F v))) := Valued.isOpen_integer _
   have h : Rv bs v = e ⁻¹' (Set.pi Set.univ fun _ : Fin d => (v.adicCompletionIntegers F : Set (Fv F v))) := by
     ext x
-    simp only [Rv, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff, he, SetLike.mem_coe]
+    simp only [Rv, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff, he, SetLike.mem_coe]
   rw [h]
   exact (isOpen_set_pi Set.finite_univ fun _ _ => hO).preimage e.continuous
 
@@ -648,7 +648,7 @@ theorem isCompact_Rv (bs : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (�
     PI.AdicCompletionValuation.isCompact_adicCompletionIntegers F v
   have h : Rv bs v = e ⁻¹' (Set.pi Set.univ fun _ : Fin d => (v.adicCompletionIntegers F : Set (Fv F v))) := by
     ext x
-    simp only [Rv, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff, he, SetLike.mem_coe]
+    simp only [Rv, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff, he, SetLike.mem_coe]
   rw [h]
   exact e.isClosedEmbedding.isCompact_preimage (isCompact_univ_pi fun _ => hO)
 
@@ -672,7 +672,7 @@ theorem coe_integral_hermitian_box (S : Subring (Fv F v ⊗[F] E)) (σ : E →�
 
 theorem isOpen_integral_hermitian (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) : IsOpen (H0 S σ n : Set (HermR (Fv F v) σ n)) := by
   rw [coe_integral_hermitian_box]
-  refine IsOpen.preimage continuous_subtype_val ?_
+  refine IsOpen.preimage continuous_subtypeVal ?_
   have hS : IsOpen (S : Set (Fv F v ⊗[F] E)) := by rw [hG.carrier]; exact isOpen_Rv bs v
   exact isOpen_set_pi Set.finite_univ fun _ _ => isOpen_set_pi Set.finite_univ fun _ _ => hS
 
@@ -720,7 +720,7 @@ theorem testMat_mem (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) (a b : Fin n) {s 
 theorem sum_testMat (σ : E →ₐ[F] E) (a b : Fin n) (s : Fv F v ⊗[F] E) (Y : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :
     ∑ i, ∑ j, testMat σ a b s i j * Y j i = s * Y b a + sigR (Fv F v) σ s * Y a b := by
   simp only [testMat, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul, ite_and, Finset.sum_ite_eq', Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   have key : ∀ (p q : Fin n) (t : Fv F v ⊗[F] E),
       (∑ x, ∑ x_1, if x = p then if x_1 = q then t * Y x_1 x else 0 else 0) = t * Y q p := by
     intro p q t
@@ -749,16 +749,16 @@ theorem pair_add (x x' y : HermR (Fv F v) σ n) :
 
 theorem continuous_pair (y : HermR (Fv F v) σ n) (bs : Module.Basis (Fin d) F E) :
     Continuous fun x : HermR (Fv F v) σ n => pairHerm (Fv F v) σ n x y := by
-  haveI := isModTop_Fv (E := E) v
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
-  haveI : Module.Finite (Fv F v) (Fv F v ⊗[F] E) := Module.Finite.of_basis (Algebra.TensorProduct.basis (Fv F v) bs)
+  have := isModTop_Fv (E := E) v
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul _ _
+  have : Module.Finite (Fv F v) (Fv F v ⊗[F] E) := Module.Finite.of_basis (Algebra.TensorProduct.basis (Fv F v) bs)
   unfold pairHerm
   refine continuous_const.mul ((IsModuleTopology.continuous_of_linearMap (Algebra.trace (Fv F v) (Fv F v ⊗[F] E))).comp ?_)
   refine continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun b _ => ?_
   exact (IsModuleTopology.continuous_of_linearMap (LinearMap.mulRight (Fv F v)
     ((y : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) b a))).comp
-      ((continuous_apply_apply a b).comp continuous_subtype_val)
+      ((continuous_apply_apply a b).comp continuous_subtypeVal)
 
 theorem annihilator (hG : GoodLoc σ J T bs v ψv S σS ϖ ε) (y : HermR (Fv F v) σ n) :
     (∀ x ∈ H0 S σ n, ψv (pairHerm (Fv F v) σ n x y) = 1) ↔ y ∈ H0 S σ n := by
@@ -797,8 +797,8 @@ end Local
 
 theorem volume_integral_hermitian_one : HermitianLatticeVolumeOne := by
   intro F E _ _ _ _ _ σ M n d J T bs v ψv S σS ϖ ε hG νv hν
-  haveI := isTopAdd_tens (E := E) v
-  haveI : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
+  have := isTopAdd_tens (E := E) v
+  have : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
   refine measure_eq_one_of_selfDual νv _ hν (H0 S σ n) (isOpen_integral_hermitian hG) (isCompact_integral_hermitian hG) ?_ ?_ (annihilator hG)
   · intro x x' y
     rw [pair_add, hG.psi_add]
@@ -1099,7 +1099,7 @@ theorem GlobalTheory.CompanionTheory.GunrNuBound.nuBound : PositivityTheory.Sieg
   have hfin : Finite (hermMod σ ϖ n k) :=
     Nat.finite_of_card_ne_zero
       (by rw [GlobalTheory.CompanionTheory.UnrDens.card_hermMod R σ ϖ q ε h n k]; exact (pow_pos hq _).ne')
-  haveI := Fintype.ofFinite (hermMod σ ϖ n k)
+  have := Fintype.ofFinite (hermMod σ ϖ n k)
   rw [tsum_fintype]
   have hq1 : (1 : ℝ) ≤ (q : ℝ) ^ (n ^ 2) := one_le_pow₀ (by exact_mod_cast hq)
   have hr1 : r ≤ 1 := by nlinarith
@@ -1248,7 +1248,7 @@ theorem card_hermitian_resAlg (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ)
     (hE : ResAlg E τ q ε) (n : ℕ) :
     Nat.card {H : Matrix (Fin n) (Fin n) E // cT τ H = H} = q ^ (n ^ 2) := by
   have hq : q ≠ 0 := by have := hE.one_lt; omega
-  haveI : Finite E := Nat.finite_of_card_ne_zero (by rw [hE.card]; exact pow_ne_zero 2 hq)
+  have : Finite E := Nat.finite_of_card_ne_zero (by rw [hE.card]; exact pow_ne_zero 2 hq)
   obtain ⟨u, hu, -⟩ := hE.basis
   have key := GlobalTheory.GramCount.card_hermitian_dvd_sq τ hE.inv u hu 1 (map_one τ) n
   have hiff : ∀ H : Matrix (Fin n) (Fin n) E,
@@ -1439,7 +1439,7 @@ section Generic
 theorem card_of_fibres {α β : Type*} [Finite α] [Finite β] (f : α → β) (c : ℕ)
     (h : ∀ b, Nat.card {a // f a = b} = c) : Nat.card α = Nat.card β * c := by
   classical
-  haveI := Fintype.ofFinite β
+  have := Fintype.ofFinite β
   rw [Nat.card_congr (Equiv.sigmaFiberEquiv f).symm, Nat.card_sigma]
   simp [h, Nat.card_eq_fintype_card, mul_comm]
 
@@ -1659,10 +1659,10 @@ theorem GlobalTheory.CompanionTheory.UnrDens.solCount_succ : ∀ (R : Type) [Com
     Nat.finite_of_card_ne_zero (by
       rw [GlobalTheory.CompanionTheory.UnrDens.card_quot_lev R σ ϖ q ε h j]
       exact pow_ne_zero _ (by have := h.one_lt; omega))
-  haveI := hfin k
-  haveI := hfin (k + 1)
-  haveI : Finite (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)) := by unfold Matrix; infer_instance
-  haveI : Finite (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ (k + 1))) := by unfold Matrix; infer_instance
+  have := hfin k
+  have := hfin (k + 1)
+  have : Finite (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)) := by unfold Matrix; infer_instance
+  have : Finite (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ (k + 1))) := by unfold Matrix; infer_instance
   unfold solCount
   refine card_of_fibres (down σ ϖ S T k) _ ?_
   rintro ⟨s, x, hx, rfl⟩
@@ -1873,8 +1873,8 @@ theorem locC_of_steps (hP : UnrPoly) (hCI : CosetInt) (hTE : TsumExhaust) (hNP :
   have hq0 : (q : ℂ) ≠ 0 := by exact_mod_cast (by omega : q ≠ 0)
   have hfin : ∀ k, Finite (S ⧸ lev hG.pS k) := fun k => Nat.finite_of_card_ne_zero (by
     rw [_root_.GlobalTheory.CompanionTheory.UnrDens.card_quot_lev S σS hG.pS q ε hR k]; exact pow_ne_zero _ (by omega))
-  letI : ∀ k, Fintype (S ⧸ lev hG.pS k) := fun k => Fintype.ofFinite _
-  letI : ∀ k, Fintype (hermMod σS hG.pS n k) := fun k => Fintype.ofFinite _
+  let : ∀ k, Fintype (S ⧸ lev hG.pS k) := fun k => Fintype.ofFinite _
+  let : ∀ k, Fintype (hermMod σS hG.pS n k) := fun k => Fintype.ofFinite _
   have hε1 : ‖(ε : ℂ)‖ = 1 := by
     rcases hR.eps with ⟨rfl, -⟩ | ⟨rfl, -⟩ <;> simp
 
@@ -1947,8 +1947,8 @@ theorem locC_of_steps (hP : UnrPoly) (hCI : CosetInt) (hTE : TsumExhaust) (hNP :
     filter_upwards [eventually_ge_atTop 1] with k hk
     exact (hpoly k hk).symm
 
-  haveI := hν.1
-  haveI := hCM F E σ M n d J T bs v ψv S σS ϖ ε hG |>.1
+  have := hν.1
+  have := hCM F E σ M n d J T bs v ψv S σS ϖ ε hG |>.1
   have hcount : Countable (HermR (Fv F v) σ n ⧸ H0 S σ n) := by
     have : (Set.univ : Set (HermR (Fv F v) σ n ⧸ H0 S σ n)) ⊆ ⋃ k, Set.range (hG.iota k) := fun c _ => by
       obtain ⟨k, B, rfl⟩ := hG.iota_surj hCL hEx c

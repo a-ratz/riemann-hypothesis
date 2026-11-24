@@ -92,8 +92,8 @@ theorem mem_genus {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGr
     have hle : dual h N ≤ M := by
       rw [← hdM]
       exact (dualBasic (𝓞 K) K V h hs hstar).1 M N le_sup_left
-    letI : Submodule.IsFullLattice K (dual h N) := hNd
-    letI : Submodule.IsLattice K M := hM
+    let : Submodule.IsFullLattice K (dual h N) := hNd
+    let : Submodule.IsLattice K M := hM
     exact Submodule.IsFullLattice.of_le K hle
   have hLf := full L hL hd
   have hL'f := full L' hL' hd'

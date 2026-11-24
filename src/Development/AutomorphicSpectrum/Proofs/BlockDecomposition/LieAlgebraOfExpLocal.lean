@@ -102,8 +102,8 @@ theorem pow_mem_of_mul_closed {G : Set A} (h1 : (1 : A) ∈ G) (hmul : ∀ g ∈
 
 theorem exp_neg_mem {G : Set A} (hinv : ∀ g ∈ G, ∃ h ∈ G, h * g = 1 ∧ g * h = 1) {x : A}
     (hx : NormedSpace.exp x ∈ G) : NormedSpace.exp (-x) ∈ G := by
-  haveI : CompleteSpace A := FiniteDimensional.complete ℝ A
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   obtain ⟨h, hh, hhg, -⟩ := hinv _ hx
   have hone : NormedSpace.exp x * NormedSpace.exp (-x) = 1 := by
     rw [← NormedSpace.exp_add_of_commute (Commute.neg_right (Commute.refl x)), add_neg_cancel,
@@ -118,8 +118,8 @@ theorem exp_smul_limit_mem {G : Set A} (hc : IsClosed G) (h1 : (1 : A) ∈ G)
     (hε0 : ∀ k, 0 < ε k) (hε : Tendsto ε atTop (𝓝 0)) (ha : Tendsto a atTop (𝓝 Y))
     (hG : ∀ k, NormedSpace.exp (ε k • a k) ∈ G) {t : ℝ} (ht : 0 ≤ t) :
     NormedSpace.exp (t • Y) ∈ G := by
-  haveI : CompleteSpace A := FiniteDimensional.complete ℝ A
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   have hm : Tendsto (fun k => (⌊t / ε k⌋₊ : ℝ) * ε k) atTop (𝓝 t) := by
     have hlo : ∀ k, t - ε k ≤ (⌊t / ε k⌋₊ : ℝ) * ε k := by
       intro k
@@ -160,7 +160,7 @@ theorem exists_nhds_kernel_eq_zero {G : Set A} (hc : IsClosed G) (h1 : (1 : A) �
   have hsph : ∀ k, (‖Y k‖)⁻¹ • Y k ∈ Metric.sphere (0 : A) 1 := by
     intro k
     rw [mem_sphere_zero_iff_norm, norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ (hpos k).ne']
-  haveI : ProperSpace A := FiniteDimensional.proper ℝ A
+  have : ProperSpace A := FiniteDimensional.proper ℝ A
   obtain ⟨b, hb, φ, hφ, hlim⟩ := (isCompact_sphere (0 : A) 1).tendsto_subseq hsph
   have hε : Tendsto (fun k => ‖Y k‖) atTop (𝓝 0) :=
     squeeze_zero (fun _ => norm_nonneg _) (fun k => (hYn k).le)
@@ -197,8 +197,8 @@ theorem eventually_exp_of_mem {G : Set A} (hc : IsClosed G) (h1 : (1 : A) ∈ G)
     {S : Submodule ℝ A} (hS : ∀ X, X ∈ S ↔ ∀ t : ℝ, NormedSpace.exp (t • X) ∈ G)
     {W : Set A} (hW : W ∈ 𝓝 (0 : A)) :
     ∀ᶠ g in 𝓝 (1 : A), g ∈ G → ∃ X ∈ S, X ∈ W ∧ NormedSpace.exp X = g := by
-  haveI : CompleteSpace A := FiniteDimensional.complete ℝ A
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   obtain ⟨f, hf⟩ := S.subtype.exists_leftInverse_of_injective (by simp)
   let p : A →L[ℝ] A := LinearMap.toContinuousLinearMap (S.subtype ∘ₗ f)
   have hpS : ∀ Z, p Z ∈ S := fun Z => (f Z).2
@@ -351,7 +351,7 @@ theorem tendsto_pow_of_hasDerivAt (h1 : ‖(1 : A)‖ ≤ 1) (γ : ℝ → A) (Y
           rw [add_comm]
           exact Real.add_one_le_exp _
       _ = Real.exp c := by
-          rw [← Real.exp_nat_mul]
+          rw [← Real.exp_natCast_mul]
           congr 1
           field_simp
   have hD : HasDerivAt (fun s => γ s - E s) 0 0 := by
@@ -390,7 +390,7 @@ theorem tendsto_pow_of_hasDerivAt (h1 : ‖(1 : A)‖ ≤ 1) (γ : ℝ → A) (Y
     linarith
   have hEk : NormedSpace.exp (t • Y) = E (t / k) ^ k := by
     simp only [hE]
-    letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+    let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
     rw [← NormedSpace.exp_nsmul]
     congr 1
     rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul]
@@ -410,9 +410,9 @@ theorem matrix_tendsto (n : ℕ) (γ : ℝ → Matrix (Fin n) (Fin n) ℂ) (Y : 
     (h0 : γ 0 = 1) (hd : HasDerivAt γ Y 0) (t : ℝ) :
     Tendsto (fun k : ℕ => γ (t / k) ^ k) atTop (𝓝 (NormedSpace.exp ((t : ℂ) • Y))) := by
   have hs := hasDerivAt_iff_tendsto_slope.1 hd
-  letI R : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI Al : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  let R : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let Al : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h1 : ‖(1 : Matrix (Fin n) (Fin n) ℂ)‖ ≤ 1 := by
     rw [← Matrix.diagonal_one, Matrix.linfty_opNorm_diagonal]
     exact (pi_norm_le_iff_of_nonneg zero_le_one).2 fun _ => by simp
@@ -460,7 +460,7 @@ namespace GlobalTheory.CompanionTheory.MatrixLie
 theorem hasDerivAt_exp_mul_exp_of_finiteDimensional {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
     [FiniteDimensional ℝ A] (X Y : A) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp (t • X) * NormedSpace.exp (t • Y)) (X + Y) 0 := by
-  haveI : CompleteSpace A := FiniteDimensional.complete ℝ A
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
   have hX := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
   have hY := hasDerivAt_exp_smul_const (𝕂 := ℝ) Y (0 : ℝ)
   have hXY := hX.mul hY
@@ -586,7 +586,7 @@ theorem isClosedEmbedding_blk (e : n ⊕ n ≃ Fin m) : Topology.IsClosedEmbeddi
 
 theorem exp_blk (e : n ⊕ n ≃ Fin m) (a b : Matrix n n ℂ) :
     NormedSpace.exp (blk e (a, b)) = blk e (NormedSpace.exp a, NormedSpace.exp b) := by
-  letI : NormedAlgebra ℚ (Matrix n n ℂ) := NormedAlgebra.restrictScalars ℚ ℝ (Matrix n n ℂ)
+  let : NormedAlgebra ℚ (Matrix n n ℂ) := NormedAlgebra.restrictScalars ℚ ℝ (Matrix n n ℂ)
   rw [← NormedSpace.map_exp (blk e) (continuous_blk e) (a, b)]
   congr 1
   exact Prod.ext (Prod.fst_exp _) (Prod.snd_exp _)

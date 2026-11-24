@@ -93,7 +93,7 @@ theorem phase_mem (h : IsLat Λ) {x y : ℂ} (hx : InRationalLattice Λ x) (hy :
   simp only [map_mul, map_natCast, Complex.conj_conj] at e
   push_cast at e
   have hp : phase Λ x y ^ (2 * m * n) = 1 := by
-    rw [phase, ← Complex.exp_nat_mul, ← Complex.exp_int_mul_two_pi_mul_I k]
+    rw [phase, ← Complex.exp_natCast_mul, ← Complex.exp_int_mul_two_pi_mul_I k]
     congr 1
     push_cast
     field_simp

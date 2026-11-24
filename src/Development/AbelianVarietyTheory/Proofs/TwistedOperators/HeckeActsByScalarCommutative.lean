@@ -186,7 +186,7 @@ theorem orbitMap_surjective (hρ : ρ.IsIrreducible) (hx : x ∈ fixed ρ K) (h0
     show x ∈ LinearMap.range (orbitMap ρ K x)
     refine LinearMap.mem_range.2 ⟨Finsupp.single ((1 : G) : G ⧸ K) 1, ?_⟩
     rw [orbitMap_single hx, one_smul, map_one, Module.End.one_apply]
-  haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+  have : IsSimpleOrder (Subrepresentation ρ) := hρ
   rcases eq_bot_or_eq_top S with h | h
   · rw [h] at hxS
     exact absurd ((Submodule.mem_bot ℂ).1 hxS) h0

@@ -112,7 +112,7 @@ theorem finite_of (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop) (π' Eπ :
         (letE c : LetA O n) * (π' * Eπ ^ (2 * h') * s)) :
     Module.Finite O (QL W T Pt π' Eπ h' c) := by
   classical
-  haveI := hLfin
+  have := hLfin
   obtain ⟨m, gL, hgL⟩ := Module.Finite.exists_fin (R := O) (M := LcQ W T π' c)
   set u : W.EEˣ := hEu.unit with hu
   set Ei : W.EE := ((u⁻¹ ^ h' : W.EEˣ) : W.EE) with hEi

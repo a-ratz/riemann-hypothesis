@@ -140,10 +140,10 @@ theorem indicator_mem_span : ∀ {R : Type} [CommRing R] [TopologicalSpace R] [I
   have hHopen : IsOpen (Hs : Set (κ → R)) :=
     hLopen.preimage (continuous_const_smul (((u⁻¹ : Rˣ)) : R))
   let H : AddSubgroup Gs := Hs.addSubgroupOf Gs
-  have hHopen' : IsOpen (H : Set Gs) := hHopen.preimage continuous_subtype_val
-  haveI : CompactSpace Gs := isCompact_iff_compactSpace.mp hGcpt
-  haveI : Finite (Gs ⧸ H) := AddSubgroup.quotient_finite_of_isOpen H hHopen'
-  letI : Fintype (Gs ⧸ H) := Fintype.ofFinite _
+  have hHopen' : IsOpen (H : Set Gs) := hHopen.preimage continuous_subtypeVal
+  have : CompactSpace Gs := isCompact_iff_compactSpace.mp hGcpt
+  have : Finite (Gs ⧸ H) := AddSubgroup.quotient_finite_of_isOpen H hHopen'
+  let : Fintype (Gs ⧸ H) := Fintype.ofFinite _
   have hfun : (Set.indicator {x : κ → R | ∀ i, ((v⁻¹ : Rˣ) : R) * x i ∈ O} fun _ => (1 : ℂ)) =
       ∑ q : Gs ⧸ H, ((Fintype.card (Gs ⧸ H) : ℂ)⁻¹) •
         schr ψ (0, ((q.out : Gs) : κ → R)) (Set.indicator {x : κ → R | ∀ i, x i ∈ O} fun _ => (1 : ℂ)) := by
@@ -262,7 +262,7 @@ theorem mem_span_cosets {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopo
     (hinv : ∀ y ∈ tsupport f, ∀ u ∈ H, f (y + u) = f y) :
     f ∈ Submodule.span ℂ (Set.range fun a : G => fun x : G => (H : Set G).indicator (fun _ => (1 : ℂ)) (x + a)) := by
   classical
-  haveI : DiscreteTopology (G ⧸ H) := QuotientAddGroup.discreteTopology hH
+  have : DiscreteTopology (G ⧸ H) := QuotientAddGroup.discreteTopology hH
   have hfin : ((QuotientAddGroup.mk : G → G ⧸ H) '' tsupport f).Finite :=
     (hf.isCompact.image QuotientAddGroup.continuous_mk).finite_of_discrete
   have key : ∀ c ∈ hfin.toFinset, ∀ x : G, (QuotientAddGroup.mk x : G ⧸ H) = c →
@@ -387,7 +387,7 @@ theorem mem_span_schr [LocallyCompactSpace R] [T2Space R] {ψ : AddChar R ℂ} {
     exact hIt hwI
   have hbox_open : IsOpen ((box O v κ : AddSubgroup (κ → R)) : Set (κ → R)) := by
     show IsOpen {x : κ → R | ∀ i, ((v⁻¹ : Rˣ) : R) * x i ∈ O}
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i =>
       h.isOpen.preimage (continuous_const.mul (continuous_apply i))
   have hmem := mem_span_cosets hsb.2 (box O v κ) hbox_open (fun y hy w hw => hboxU w hw y hy)
@@ -474,13 +474,13 @@ theorem exists_std : ∀ {R : Type} [CommRing R] [TopologicalSpace R] [IsTopolog
     rw [hrho, Submodule.coe_smul]
     funext x
     simp only [GlobalTheory.WeilM.Darboux.rho, schr, Pi.smul_apply, smul_eq_mul, ind, Set.indicator_apply,
-      Set.mem_setOf_eq, AddChar.map_neg_eq_inv, inv_inv]
+      Set.mem_ofPred_eq, AddChar.map_neg_eq_inv, inv_inv]
     by_cases hx : ∀ i, x i ∈ O
     · have hxa : ∀ i, (x + (d.e γ).1) i ∈ O := fun i => O.add_mem (hx i) (ha i)
-      rw [if_pos hxa, if_pos hx, AddChar.map_add_eq_mul, psi_dot h hx hb, one_mul]
+      rw [ite_eq_left hxa, ite_eq_left hx, AddChar.map_add_eq_mul, psi_dot h hx hb, one_mul]
     · have hxa : ¬ ∀ i, (x + (d.e γ).1) i ∈ O := fun h' => hx fun i => by
         simpa using O.sub_mem (h' i) (ha i)
-      rw [if_neg hxa, if_neg hx, mul_zero, mul_zero]
+      rw [ite_eq_right hxa, ite_eq_right hx, mul_zero, mul_zero]
   · show Submodule.span ℂ (Set.range fun x => S.rho x ⟨ind O κ, ind_mem_SB h.compact h.isOpen⟩) = ⊤
     rw [eq_top_iff]
     rintro g -

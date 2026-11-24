@@ -134,11 +134,11 @@ noncomputable def tateCohomologyNegOneIsoHomology :
     (subCompNormHom A σ).moduleCatHomologyIso.symm
 
 theorem odd_of_even_negSucc {i : ℕ} (h : Even (Int.negSucc i)) : Odd i := by
-  rw [Int.negSucc_eq, even_neg, ← Nat.cast_succ, Int.even_coe_nat, Nat.even_add_one] at h
+  rw [Int.negSucc_eq, even_neg, ← Nat.cast_succ, Int.even_natCast, Nat.even_add_one] at h
   exact Nat.not_even_iff_odd.1 h
 
 theorem even_of_odd_negSucc {i : ℕ} (h : Odd (Int.negSucc i)) : Even i := by
-  rw [Int.negSucc_eq, odd_neg, ← Nat.cast_succ, Int.odd_coe_nat, Nat.odd_add_one] at h
+  rw [Int.negSucc_eq, odd_neg, ← Nat.cast_succ, Int.odd_natCast, Nat.odd_add_one] at h
   exact Nat.not_odd_iff_even.1 h
 
 variable [DecidableEq G]

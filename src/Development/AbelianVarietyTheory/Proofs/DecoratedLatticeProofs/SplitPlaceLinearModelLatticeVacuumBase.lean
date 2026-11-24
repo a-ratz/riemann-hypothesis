@@ -142,9 +142,9 @@ theorem base_enlarge {g : GA D S} {h : GA D T} (hg : SuppAt e S g) (hh : SuppAt 
     om (g, h) f₀ = ((splitFacO χS χT x y : ℂ) * ((Real.sqrt ((((latO S T ΛS ΛT fun _ => True) ⊓ half S T e).relIndex
       ((latO S T ΛS ΛT fun _ => True).comap (actAdd S T g⁻¹ h⁻¹) ⊓ half S T e) : ℕ) : ℝ) : ℝ) : ℂ)⁻¹) •
       Tm fun t => halfInd a (latO S T ΛS ΛT fun _ => True) (actO S T g⁻¹ h⁻¹ t) := by
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
-  haveI := finite_enlarge inferInstance inferInstance he.1 hle
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  have := finite_enlarge inferInstance inferInstance he.1 hle
   obtain ⟨R, r1, r2, r3⟩ := exists_reps ((latO S T ΛS ΛT fun _ => True) ⊓ half S T e)
     ((latO S T ΛS ΛT fun _ => True).comap (actAdd S T g⁻¹ h⁻¹) ⊓ half S T e)
   have hR : ∀ u ∈ R, actO S T g⁻¹ h⁻¹ u ∈ latO S T ΛS ΛT (fun _ => True) ∧ IsHalf e u := fun u hu =>
@@ -163,15 +163,15 @@ theorem law_enlarge' {g : GA D S} {h : GA D T} (hg : SuppAt e S g) (hh : SuppAt 
     Law om a (latO S T ΛS ΛT fun _ => True) Tm g h (fac S T χS χT (detAt e he.1 S g) (detAt e he.1 T h)) := by
   have h1 := base_enlarge hW hS hT ha hinf hc hf hTm he hae hfix hg hh
     (isDetAt_detAt e he.1 S g) (isDetAt_detAt e he.1 T h) hle
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
   rw [← Complex.ofReal_inv, sqrt_index inferInstance inferInstance he (isDetAt_detAt e he.1 S g) (isDetAt_detAt e he.1 T h) hle] at h1
   exact om_model_of_base D ψ S T χS χT om ΛS ΛT a f₀ Tm hW hS hT ha hinf hf hTm g h _ h1
 
 theorem law_place' {g : GA D S} {h : GA D T} (hg : SuppAt e S g) (hh : SuppAt e T h) :
     Law om a (latO S T ΛS ΛT fun _ => True) Tm g h (fac S T χS χT (detAt e he.1 S g) (detAt e he.1 T h)) := by
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
   obtain ⟨N, hN, h1⟩ := exists_nsmul_actO (ΛS := ΛS) (ΛT := ΛT) inferInstance inferInstance g⁻¹ h⁻¹
   obtain ⟨z, z1, z2⟩ := exists_scalar he T hN
   have z4 : SuppAt e T z⁻¹ := suppAt_of (GlobalTheory.SplitScalar.off_smul_mt_inv z1)
@@ -312,7 +312,7 @@ theorem absFin_idl (p : SplitPt D k) {a : kˣ} (ha : (a : k) ∈ 𝒪[k]) (ha' :
   rw [MonoidHom.map_inv, MonoidHom.map_inv] at a2
   generalize Units.map π.toMonoidHom (idl p a) = y at a1 a2 ⊢
   have hne : Valued.v (y : Fv D.host.F v) ≠ 0 := by simp
-  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (zero_lt_iff.mpr hne)] at a2
+  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.mpr hne)] at a2
   simp [GlobalTheory.IndefiniteRowSideFullHecke.SplitLinearModelNorm.absV, le_antisymm a1 a2]
 
 theorem lam_unram : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -376,8 +376,8 @@ theorem idOff_mul_eq_zero {v : Pl D} {ε : AF D.host.F} (hε : IsPlaceIdem D v �
     intro w
     rw [hc w]
     by_cases h : w = v
-    · subst h; rw [if_pos rfl, hv]; rfl
-    · rw [if_neg h, hw w h, TensorProduct.zero_tmul]
+    · subst h; rw [ite_eq_left rfl, hv]; rfl
+    · rw [ite_eq_right h, hw w h, TensorProduct.zero_tmul]
   have hx0 := (SetCut.mem_idOff_iff_mul (· = v) _ h0 hc' x).1 hx
   rw [← hy, ← mul_assoc, mul_comm x, hx0, zero_mul]
 
@@ -557,14 +557,14 @@ theorem extFunAct : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
   intro D k _ _ _ _ p S T n n' _ _ _ _ α β Ψ g h t
   unfold extFun
   by_cases ht : IsHalf p.e t
-  · rw [if_pos (isHalf_actO _ _ ht), if_pos ht]
+  · rw [ite_eq_left (isHalf_actO _ _ ht), ite_eq_left ht]
     congr 1
     rw [← GlobalTheory.SplitLinear.subst_eq]
     unfold rd GlobalTheory.IndefiniteRowSideFullHecke.SplitLinearModelNorm.subst
     rw [← map_inv, Matrix.map_mul, Matrix.map_mul, β.gl_mat, α.gl_mat]
     simp only [Matrix.mul_assoc]
     rw [α.b'b, Matrix.mul_one, ← Matrix.mul_assoc β.b' β.b, β.b'b, Matrix.one_mul]
-  · rw [if_neg (fun h' => ht (isHalf_of_act _ _ h')), if_neg ht]
+  · rw [ite_eq_right (fun h' => ht (isHalf_of_act _ _ h')), ite_eq_right ht]
 
 theorem sbSubst {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     {n n' : Type} [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] {Ψ : Matrix n n' k → ℂ}

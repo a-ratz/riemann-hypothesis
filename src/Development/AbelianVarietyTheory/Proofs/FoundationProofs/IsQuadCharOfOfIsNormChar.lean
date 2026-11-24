@@ -73,7 +73,7 @@ theorem fixes_or {F E Ω : Type} [Field F] [Field E] [Field Ω] [Algebra F E] [A
     [IsScalarTower F E Ω] [IsAlgClosed Ω] [CharZero F] (h2 : Module.finrank F E = 2) (σ : G F Ω)
     (hσ : ∃ e : E, σ (algebraMap E Ω e) ≠ algebraMap E Ω e) (τ : G F Ω) :
     τ ∈ (res F Ω E).range ∨ σ⁻¹ * τ ∈ (res F Ω E).range := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hfix : ∀ ρ : G F Ω, (∀ e : E, ρ (algebraMap E Ω e) = algebraMap E Ω e) → ρ ∈ (res F Ω E).range :=
     fun ρ hρ => ⟨AlgEquiv.ofRingEquiv (f := ρ.toRingEquiv) hρ, AlgEquiv.ext fun _ => rfl⟩
   let f : G F Ω → (E →ₐ[F] Ω) := fun ρ => (ρ : Ω →ₐ[F] Ω).comp (IsScalarTower.toAlgHom F E Ω)

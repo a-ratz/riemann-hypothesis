@@ -94,11 +94,11 @@ theorem isIndEtale_of_etale_of_isIndEtale : ∀ (A W O : Type) [CommRing A] [Com
   have hidem : IsIdempotentElem e := by
     show e * e = e
     rw [hkey e, hμe, Algebra.TensorProduct.one_def.symm, mul_one]
-  letI : Algebra (W ⊗[A] O) O := μ.toRingHom.toAlgebra
+  let : Algebra (W ⊗[A] O) O := μ.toRingHom.toAlgebra
   have hmap : ∀ x, algebraMap (W ⊗[A] O) O x = μ x := fun _ => rfl
-  haveI : IsScalarTower W (W ⊗[A] O) O :=
+  have : IsScalarTower W (W ⊗[A] O) O :=
     IsScalarTower.of_algebraMap_eq (fun w => by rw [hmap, μ.commutes])
-  haveI : IsLocalization.Away e O := by
+  have : IsLocalization.Away e O := by
     refine IsLocalization.away_of_isIdempotentElem_of_mul hidem (fun x y => ?_) ?_
     · rw [hmap, hmap]
       constructor

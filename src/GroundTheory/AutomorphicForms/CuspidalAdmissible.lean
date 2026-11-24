@@ -173,9 +173,9 @@ theorem diagPow_conj_mem_congruenceSubgroup {μ : Fin n → ℤ} {u : GL (Fin n)
     · by_cases hij : i = j
       · subst hij
         rw [hx, sub_self, zpow_zero, one_mul, one_apply_eq, sub_self, map_zero]
-        exact ⟨one_mem _, zero_le'⟩
+        exact ⟨one_mem _, zero_le⟩
       · rw [hx, one_apply_ne hij, mul_zero, sub_zero, map_zero]
-        exact ⟨zero_mem _, zero_le'⟩
+        exact ⟨zero_mem _, zero_le⟩
     · have hij : i ≠ j := by
         rintro rfl
         omega
@@ -329,7 +329,7 @@ instance secondCountableTopology_levi : SecondCountableTopology (levi F n β) :=
 theorem isAdmissible_of_isCuspidal {σ : Representation ℂ (levi F n β) W} [σ.IsIrreducible]
     (hσ : IsSmooth σ) (hc : IsCuspidal σ) : IsAdmissible σ := by
   classical
-  haveI : LocallyCompactSpace (levi F n β) :=
+  have : LocallyCompactSpace (levi F n β) :=
     isClosed_levi.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let KM : ℕ → Subgroup (levi F n β) := fun m => (congruenceSubgroup F n m).subgroupOf (levi F n β)
   have hKMc : ∀ m, IsCompact (KM m : Set (levi F n β)) := fun m =>
@@ -374,7 +374,7 @@ theorem isAdmissible_of_isCuspidal {σ : Representation ℂ (levi F n β) W} [σ
   have hQ : Finite (K₀ ⧸ K.subgroupOf K₀) := by
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
-    exact (hKMo m).preimage continuous_subtype_val
+    exact (hKMo m).preimage continuous_subtypeVal
   have := Fintype.ofFinite (K₀ ⧸ K.subgroupOf K₀)
   let R : Finset (levi F n β) :=
     Finset.univ.image fun q : K₀ ⧸ K.subgroupOf K₀ => ((Quotient.out q : K₀) : levi F n β)
@@ -481,11 +481,11 @@ theorem isAdmissible_of_isCuspidal {σ : Representation ℂ (levi F n β) W} [σ
           exact ⟨μ k, Finset.mem_image_of_mem _ (by simp [hk])⟩) else 0
       have hcb_le : ∀ k, cb (β k) ≤ μ k := by
         intro k
-        simp only [cb, dif_pos (⟨k, rfl⟩ : ∃ j, β j = β k)]
+        simp only [cb, dite_eq_left (⟨k, rfl⟩ : ∃ j, β j = β k)]
         exact Finset.min'_le _ _ (Finset.mem_image_of_mem _ (by simp))
       have hcb_mem : ∀ j, ∃ k, β k = β j ∧ cb (β j) = μ k := by
         intro j
-        simp only [cb, dif_pos (⟨j, rfl⟩ : ∃ k, β k = β j)]
+        simp only [cb, dite_eq_left (⟨j, rfl⟩ : ∃ k, β k = β j)]
         obtain ⟨k, hk, hkeq⟩ := Finset.mem_image.1
           (Finset.min'_mem ((Finset.univ.filter fun k => β k = β j).image μ) _)
         exact ⟨k, (Finset.mem_filter.1 hk).2, hkeq.symm⟩

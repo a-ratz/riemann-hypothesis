@@ -770,7 +770,7 @@ theorem Fr.dec (hσ : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ 
     (hp : p ∈ minPar σ J X) :
     ∃ g', ∃ q₀ ∈ minParOne σ J X, ∃ s₁ : ℝ, p = q₀ * a (Fin.cons s₁ 0) * h.iG g' ∧
       ∀ h', (h.iG h')⁻¹ * q₀ * h.iG h' ∈ minParOne σ J X := by
-  haveI := hσ.1
+  have := hσ.1
   have hF := pfrA hσ hJ hW
   have hp' := inv_mem_minPar hσ hJ hW hp
   have matInv : ∀ {k : ℕ} {K : Matrix (Fin k) (Fin k) E} (q : GAd σ K),

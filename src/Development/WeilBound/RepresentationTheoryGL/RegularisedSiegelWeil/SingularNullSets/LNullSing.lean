@@ -168,8 +168,8 @@ theorem distribHaarChar_eq_absE (F E : Type) [Field F] [NumberField F] [Field E]
     { (adeleTensorAlgEquivLeft F E).toAddEquiv with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap (adeleTensorAlgEquivLeft F E).toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap (adeleTensorAlgEquivLeft F E).symm.toLinearMap }
-  haveI : SecondCountableTopology (AdeleRing (𝓞 E) E) := φ.symm.toHomeomorph.secondCountableTopology
-  haveI : T2Space (AdeleRing (𝓞 E) E) := φ.symm.toHomeomorph.isEmbedding.t2Space
+  have : SecondCountableTopology (AdeleRing (𝓞 E) E) := φ.symm.toHomeomorph.secondCountableTopology
+  have : T2Space (AdeleRing (𝓞 E) E) := φ.symm.toHomeomorph.isEmbedding.t2Space
   have h1 : distribHaarChar (AdeleRing (𝓞 E) E) (GlobalTheory.IdeleLogHom.toE F E t) = distribHaarChar (AE F E) t :=
     GlobalTheory.JR.ModuleNorm.distribHaarChar_transport φ t (GlobalTheory.IdeleLogHom.toE F E t) (fun x => by
       change adeleTensorAlgEquivLeft F E ((t : AE F E) * x) = _
@@ -182,14 +182,14 @@ theorem map_mul_eq_absE_inv_smul : ∀ (F E : Type) [Field F] [NumberField F] [F
   ∀ [MeasurableSpace (AE F E)] [BorelSpace (AE F E)] (ν : Measure (AE F E)), ν.IsAddHaarMeasure →
   ∀ t : (AE F E)ˣ, ν.map (fun x => (t : AE F E) * x) = ((absE F E t : ENNReal))⁻¹ • ν := by
   intro F E _ _ _ _ _ σ _ _ _ ν _ t
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E) := e.secondCountableTopology
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
   have h := map_smul_eq_inv_smul ν t
   rw [distribHaarChar_eq_absE] at h
   exact h
@@ -224,7 +224,7 @@ theorem exists_isFieldDec_one (R : Type) [CommRing R] [IsArtinianRing R] [IsRedu
     ∃ (ι : Type) (_ : Fintype ι) (g : ι → R), IsFieldDec (1 : R) g := by
   classical
   let φ := IsArtinianRing.equivPi R
-  letI : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
+  let : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
   have hmax : ∀ m : MaximalSpectrum R, m.asIdeal.IsMaximal := fun m => m.isMaximal
   have hnt : ∀ m : MaximalSpectrum R, (1 : R ⧸ m.asIdeal) ≠ 0 := fun m => by
     have := hmax m
@@ -387,11 +387,11 @@ theorem singleInf_continuous [FiniteDimensional F E] (w : InfinitePlace F) : Con
   GlobalTheory.AutFunCompare.continuous_tensNU (E := E) _ _ (continuous_infJ w)
 
 theorem neBot_fin (v : HeightOneSpectrum (𝓞 F)) : (𝓝[≠] (0 : Fv F v)).NeBot := by
-  letI : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField _ _
   exact NormedField.nhdsNE_neBot (0 : Fv F v)
 
 theorem neBot_inf (w : InfinitePlace F) : (𝓝[≠] (0 : w.Completion)).NeBot := by
-  letI : NontriviallyNormedField w.Completion :=
+  let : NontriviallyNormedField w.Completion :=
     { (inferInstance : NormedField w.Completion) with
       non_trivial := ⟨2, by
         rw [← (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _), map_ofNat]
@@ -486,7 +486,7 @@ end Places
 
 theorem exists_isFieldDec (D : D7) (S : Finset (Pl D)) (e : AE D) (h : IsIdem S e) :
     ∃ (ι : Type) (_ : Fintype ι) (f : ι → AE D), IsFieldDec e f ∧ ∀ j, NonDiscreteAt (f j) :=
-  exists_dec_adeles S h.1 (fun v hv => (h.2 v).trans (if_pos hv)) fun v hv => (h.2 v).trans (if_neg hv)
+  exists_dec_adeles S h.1 (fun v hv => (h.2 v).trans (ite_eq_left hv)) fun v hv => (h.2 v).trans (ite_eq_right hv)
 
 end GlobalTheory.CompanionTheory.NullFr.FieldDec
 end -- clump:auto
@@ -588,10 +588,10 @@ theorem alt_of_field {K : Type} [Field K] (π : A →+* K) (hs : Function.Surjec
             intro k
             by_cases h : k = i
             · subst h
-              simp only [hb, if_true]
+              simp only [hb, ite_true]
               field_simp
               ring
-            · simp only [hb, if_neg h]
+            · simp only [hb, ite_eq_right h]
               field_simp
               ring
           rw [Finset.sum_congr rfl fun k _ => hsplit k, Finset.sum_add_distrib,
@@ -614,8 +614,8 @@ theorem exists_dependent_column {A : Type} [CommRing A] {ι : Type} [Fintype ι]
         ∀ p, f j * v p i = ∑ k, c k * v p k := by
     intro j
     have hj := hd.field j
-    haveI := isMaximal_span hj
-    letI : Field (A ⧸ Ideal.span ({1 - f j} : Set A)) := Ideal.Quotient.field _
+    have := isMaximal_span hj
+    let : Field (A ⧸ Ideal.span ({1 - f j} : Set A)) := Ideal.Quotient.field _
     refine alt_of_field (Ideal.Quotient.mk (Ideal.span ({1 - f j} : Set A)))
       Ideal.Quotient.mk_surjective hj.idem ?_ ?_ v
     · rw [← map_one (Ideal.Quotient.mk (Ideal.span ({1 - f j} : Set A)))]
@@ -797,7 +797,7 @@ variable {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A] [T2S
 theorem infinite_factor_points {f : A} (hf : NonDiscreteAt f) {W : Set A} (hW : W ∈ 𝓝 (0 : A)) :
     {x | x ∈ W ∧ f * x = x}.Infinite := by
   intro hfin
-  have hfin' : ({x | x ∈ W ∧ f * x = x} \ {0}).Finite := hfin.subset Set.diff_subset
+  have hfin' : ({x | x ∈ W ∧ f * x = x} \ {0}).Finite := hfin.subset Set.sdiff_subset
   have hV : ({x | x ∈ W ∧ f * x = x} \ {0})ᶜ ∈ 𝓝 (0 : A) :=
     hfin'.isClosed.isOpen_compl.mem_nhds (by simp)
   obtain ⟨x, hx, hx0, hfx⟩ := hf _ (inter_mem hW hV)
@@ -896,7 +896,7 @@ theorem exists_unit_small_module {A : Type} [CommRing A] [TopologicalSpace A] [I
     have hWm : MeasurableSet W := hWc.isClosed.measurableSet
     have hg : Measurable (fun z : A => ((u⁻¹ : Aˣ) : A) * z) := (by fun_prop : Continuous _).measurable
     have hpre : h ((fun z : A => ((u⁻¹ : Aˣ) : A) * z) ⁻¹' W) = (md u : ℝ≥0∞) * h W := by
-      rw [← Measure.map_apply hg hWm, hmap, Measure.smul_apply, smul_eq_mul]
+      rw [← Measure.map_apply hg hWm, hmap, smul_apply, smul_eq_mul]
       congr 1
       have hm : md u⁻¹ * md u = 1 := by rw [← map_mul]; simp
       have : (md u⁻¹ : ℝ≥0∞) * (md u : ℝ≥0∞) = 1 := by exact_mod_cast hm
@@ -952,7 +952,7 @@ theorem measure_unit_image {A : Type} [CommRing A] [TopologicalSpace A] [IsTopol
   have key := congrArg (fun μ : Measure A => μ ((fun x : A => (u : A) * x) '' K))
     (hmd h inferInstance u)
   rw [Measure.map_apply hc.measurable hKu.measurableSet, Set.preimage_image_eq _ hinj,
-    Measure.smul_apply, smul_eq_mul] at key
+    smul_apply, smul_eq_mul] at key
   have hmd0 : ((md u : ℝ≥0) : ℝ≥0∞) ≠ 0 := by
     have h1 : md u * md u⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel, map_one]
     intro h0
@@ -1213,12 +1213,12 @@ theorem mul_gU_apply' {m : ℕ} (M : Fx A m t) (i : Fin t) (d : Fin t → A) (p 
   rw [GlobalTheory.CompanionTheory.NullFr.gU, Matrix.mul_add, Matrix.mul_one, Matrix.add_apply, Matrix.mul_apply]
   congr 1
   by_cases h : j = i
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     refine Finset.sum_congr rfl fun k _ => ?_
-    rw [Matrix.of_apply, if_pos h, mul_comm]
-  · rw [if_neg h]
+    rw [Matrix.of_apply, ite_eq_left h, mul_comm]
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun k _ => ?_
-    rw [Matrix.of_apply, if_neg h, mul_zero]
+    rw [Matrix.of_apply, ite_eq_right h, mul_zero]
 
 theorem mul_gD_apply' {m : ℕ} (M : Fx A m t) (i : Fin t) (u : A) (p : Fin m) (j : Fin t) :
     (M * gD i u) p j = if j = i then u * M p i else M p j := by
@@ -1234,9 +1234,9 @@ theorem mul_gU_gD_apply {m : ℕ} (M : Fx A m t) (i : Fin t) (c : Fin t → A) (
       if j = i then u' * (M p i - ∑ k, c k * M p k) else M p j := by
   rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gD_apply', GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_apply', GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_apply']
   by_cases h : j = i
-  · rw [if_pos h, if_pos h, if_pos rfl]
+  · rw [ite_eq_left h, ite_eq_left h, ite_eq_left rfl]
     simp only [Pi.neg_apply, neg_mul, Finset.sum_neg_distrib, sub_eq_add_neg]
-  · simp only [if_neg h, add_zero]
+  · simp only [ite_eq_right h, add_zero]
 
 theorem gU_neg_mul (i : Fin t) (c : Fin t → A) (hc : c i = 0) : gU i (-c) * gU i c = 1 := by
   refine Matrix.ext fun p j => ?_
@@ -1276,7 +1276,7 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
     ∃ w ∈ Piece e f P i C, z = (w.1, w.2 * gD i (u : A) * gU i c₀ + w.1 * yU i y₀) := by
   intro A _ a r t e f he hfe hff P i C z hz hz1 hY hKo hKi c hci hfc hfK u hu c₀ c₁ hc₀i hfc₀
     hc₁i hc₁ hc y₀ y₁ hfy₀ hy₁ hy
-  simp only [GlobalTheory.CompanionTheory.NullFr.admitted, Set.mem_setOf_eq] at hz
+  simp only [GlobalTheory.CompanionTheory.NullFr.admitted, Set.mem_ofPred_eq] at hz
   obtain ⟨hez1, hez2, hP⟩ := hz
   have hey₀ : ∀ l, e * y₀ l = y₀ l := fun l => by
     rw [← hfy₀ l, ← mul_assoc, mul_comm e f, hfe]
@@ -1323,14 +1323,14 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
     (GlobalTheory.CompanionTheory.NullFr.gD i ((u⁻¹ : Aˣ) : A))
   refine ⟨(z.1, (z.2 - z.1 * GlobalTheory.CompanionTheory.NullFr.yU i y₀) * GlobalTheory.CompanionTheory.NullFr.gU i (-c₀) *
     GlobalTheory.CompanionTheory.NullFr.gD i ((u⁻¹ : Aˣ) : A)), ?_, ?_⟩
-  · simp only [GlobalTheory.CompanionTheory.NullFr.Piece, GlobalTheory.CompanionTheory.NullFr.admitted, Set.mem_setOf_eq]
+  · simp only [GlobalTheory.CompanionTheory.NullFr.Piece, GlobalTheory.CompanionTheory.NullFr.admitted, Set.mem_ofPred_eq]
     rw [hco, hcm]
     refine ⟨⟨hez1, ?_, hP⟩, hz1, ?_, ?_, ?_, c₁, hc₁i, hc₁, ?_⟩
     · rw [← Matrix.smul_mul, ← Matrix.smul_mul, smul_sub, ← Matrix.smul_mul, hez2, hez1]
     · intro l k
       rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply]
       by_cases hk : k = i
-      · rw [if_pos hk, hsum l, Matrix.sub_apply, hY₀i l]
+      · rw [ite_eq_left hk, hsum l, Matrix.sub_apply, hY₀i l]
         refine ⟨?_, ?_⟩
         · rw [mul_left_comm, key l, ← mul_assoc, Units.inv_mul, one_mul]
           exact (hy₁ l).2
@@ -1339,13 +1339,13 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
       · have hE : (GlobalTheory.CompanionTheory.NullFr.yc P z - GlobalTheory.CompanionTheory.NullFr.yU i y₀) l k =
             GlobalTheory.CompanionTheory.NullFr.yc P z l k := by
           simp [GlobalTheory.CompanionTheory.NullFr.yU, hk]
-        rw [if_neg hk, hE]
+        rw [ite_eq_right hk, hE]
         exact hY l k
     · intro p k hk
-      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, if_neg hk]
+      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, ite_eq_right hk]
       exact hKo p k hk
     · intro p
-      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, if_pos rfl, ← mul_assoc, hu', mul_sub,
+      rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, ite_eq_left rfl, ← mul_assoc, hu', mul_sub,
         Finset.mul_sum]
       simp_rw [← mul_assoc, h1fc₀, zero_mul, Finset.sum_const_zero, sub_zero]
       exact hKi p
@@ -1356,13 +1356,13 @@ theorem point_eq_translate : ∀ {A : Type} [CommRing A] {a r t : ℕ} (e f : A)
         rw [GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply]
         by_cases hk : k = i
         · simp [hk, hc₁i]
-        · rw [if_neg hk]
+        · rw [ite_eq_right hk]
       have hL : f * (GlobalTheory.CompanionTheory.NullFr.vc P z p i - ∑ k, c₀ k * GlobalTheory.CompanionTheory.NullFr.vc P z p k) =
           (u : A) * ∑ k, c₁ k * GlobalTheory.CompanionTheory.NullFr.vc P z p k := by
         rw [mul_sub, hfK p, Finset.mul_sum, Finset.mul_sum, ← Finset.sum_sub_distrib]
         refine Finset.sum_congr rfl fun k _ => ?_
         rw [← mul_assoc, hfc₀, ← sub_mul, hc k, add_sub_cancel_left, mul_assoc]
-      rw [hR, GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, if_pos rfl, mul_left_comm, hL,
+      rw [hR, GlobalTheory.CompanionTheory.NullFr.CoverStep.mul_gU_gD_apply, ite_eq_left rfl, mul_left_comm, hL,
         ← mul_assoc, Units.inv_mul, one_mul]
   · refine Prod.ext rfl ?_
     dsimp only
@@ -1394,7 +1394,7 @@ theorem scale_image {Z : Type} [TopologicalSpace Z] [MeasurableSpace Z] [BorelSp
     rw [h3] at h2
     exact h2
   rw [h] at h1
-  rw [← h1, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [← h1, smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 section
 variable {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A] {a r t : ℕ}
@@ -1508,7 +1508,7 @@ theorem piece_null (md : Aˣ →* ℝ≥0) (hmd : IsHaarMod md) (e f : A) (he : 
       simp only at this
       rw [this]
       exact eq_of_f _ (hN₁ _ (h1 _)).1
-  haveI : Nonempty ((Fx A a r × Fx A a t) ≃ₜ (Fx A a r × Fx A a t)) := ⟨Homeomorph.refl _⟩
+  have : Nonempty ((Fx A a r × Fx A a t) ≃ₜ (Fx A a r × Fx A a t)) := ⟨Homeomorph.refl _⟩
   choose! T hT1 hT2 using hTq
   obtain ⟨gd, hgd, hdetd⟩ := GlobalTheory.CompanionTheory.NullFr.exists_gl_gD i u
   have hue : e * ((u : A) - 1) = (u : A) - 1 := by
@@ -1689,19 +1689,19 @@ namespace GlobalTheory.CompanionTheory.NullFr
 
 theorem nullSing_of_idemEx : IdemEx → NullSing := by
   intro hI D r t V b₀ hb S e he ν hν
-  haveI : IsTopologicalRing (AE D) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
+  have : IsTopologicalRing (AE D) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
   obtain ⟨eh⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
-  haveI : LocallyCompactSpace (AE D) := eh.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE D) := eh.secondCountableTopology
-  haveI : T2Space (AE D) := eh.isEmbedding.t2Space
-  haveI : BorelSpace (AE D) := ⟨rfl⟩
-  haveI b1 : BorelSpace (Mx D V.rank r) := @BorelSpace.mk _ _ (measMx _ _) rfl
-  haveI b2 : BorelSpace (Mx D V.rank t) := @BorelSpace.mk _ _ (measMx _ _) rfl
-  haveI s1 : SecondCountableTopology (Mx D V.rank r) := inferInstanceAs (SecondCountableTopology (Fin V.rank → Fin r → AE D))
-  haveI s2 : SecondCountableTopology (Mx D V.rank t) := inferInstanceAs (SecondCountableTopology (Fin V.rank → Fin t → AE D))
-  haveI b3 : BorelSpace (Mx D V.rank r × Mx D V.rank t) := Prod.borelSpace
+  have : LocallyCompactSpace (AE D) := eh.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE D) := eh.secondCountableTopology
+  have : T2Space (AE D) := eh.isEmbedding.t2Space
+  have : BorelSpace (AE D) := ⟨rfl⟩
+  have b1 : BorelSpace (Mx D V.rank r) := @BorelSpace.mk _ _ (measMx _ _) rfl
+  have b2 : BorelSpace (Mx D V.rank t) := @BorelSpace.mk _ _ (measMx _ _) rfl
+  have s1 : SecondCountableTopology (Mx D V.rank r) := inferInstanceAs (SecondCountableTopology (Fin V.rank → Fin r → AE D))
+  have s2 : SecondCountableTopology (Mx D V.rank t) := inferInstanceAs (SecondCountableTopology (Fin V.rank → Fin t → AE D))
+  have b3 : BorelSpace (Mx D V.rank r × Mx D V.rank t) := Prod.borelSpace
   obtain ⟨ι, _, f, hd, hnd⟩ := GlobalTheory.CompanionTheory.NullFr.FieldDec.exists_isFieldDec D S e he
   have hmd : IsHaarMod (absA D) := fun h hh u =>
     GlobalTheory.AdeleUnitModule.map_mul_eq_absE_inv_smul _ _ D.sp.cm.sig (isCMExt_host D) h hh u

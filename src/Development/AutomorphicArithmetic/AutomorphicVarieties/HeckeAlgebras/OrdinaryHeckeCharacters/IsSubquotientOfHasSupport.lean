@@ -89,7 +89,7 @@ private theorem exists_char {z : WD h} (hz : IsIrrWD z) {n : ℕ} (η : Fin n �
     rcases hirr.eq_bot_or_eq_top ⟨S, fun g v hv => hS g v hv⟩ with h | h
     · exact Or.inl (congrArg Subrepresentation.toSubmodule h)
     · exact Or.inr (congrArg Subrepresentation.toSubmodule h)
-  haveI : Nontrivial (Fin m → ℂ) := nontrivial_of_irreducible hirr
+  have : Nontrivial (Fin m → ℂ) := nontrivial_of_irreducible hirr
   have hsc : ∀ g, ∃ c : ℂ, ∀ v, b.ρ g v = c • v := fun g => by
     obtain ⟨c, hcv⟩ := Module.End.exists_eigenvalue (b.ρ g)
     refine ⟨c, fun v => ?_⟩
@@ -222,7 +222,7 @@ theorem UpperTheory.V.Hi.psRec :
     obtain ⟨art, hart⟩ := P.aut.art L Ω
     have hinj := GlobalTheory.ArtinLocalInj.artin_localIdele_injective P.loc.chev L Ω art hart w
     exact MonoidHom.ext fun σ => hinj ((ha'.glob art hart _).trans (ha.glob art hart _).symm)
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hμ : ∀ i, IsSmoothChar (ω i * absPow (w.adicCompletion L) (((n : ℂ) - 1) / 2)) :=
     fun i => (hω i).mul (isSmoothChar_absPow _)
   have e0 : ((n : ℂ) - 1) / 2 + (((1 - (n : ℝ)) / 2 : ℝ) : ℂ) = 0 := by push_cast; ring

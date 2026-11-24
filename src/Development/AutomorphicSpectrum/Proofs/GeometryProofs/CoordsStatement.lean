@@ -145,24 +145,24 @@ theorem kaehler_atPrime_of_away (K A : Type) [Field K] [CommRing A] [Algebra K A
   have hle : Submonoid.powers t ≤ P.primeCompl := by
     rintro _ ⟨n, rfl⟩
     exact fun hm => htP (‹P.IsPrime›.mem_of_pow_mem n hm)
-  letI : Algebra (Localization.Away t) (Localization.AtPrime P) :=
+  let : Algebra (Localization.Away t) (Localization.AtPrime P) :=
     IsLocalization.localizationAlgebraOfSubmonoidLe _ _ (Submonoid.powers t) P.primeCompl hle
-  haveI : IsScalarTower A (Localization.Away t) (Localization.AtPrime P) :=
+  have : IsScalarTower A (Localization.Away t) (Localization.AtPrime P) :=
     IsLocalization.localization_isScalarTower_of_submonoid_le _ _ _ _ hle
-  haveI : IsScalarTower K (Localization.Away t) (Localization.AtPrime P) :=
+  have : IsScalarTower K (Localization.Away t) (Localization.AtPrime P) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       rw [IsScalarTower.algebraMap_apply K A (Localization.Away t),
         ← IsScalarTower.algebraMap_apply A (Localization.Away t) (Localization.AtPrime P),
         ← IsScalarTower.algebraMap_apply K A (Localization.AtPrime P)]
-  haveI := IsLocalization.isLocalization_of_submonoid_le (Localization.Away t) (Localization.AtPrime P)
+  have := IsLocalization.isLocalization_of_submonoid_le (Localization.Away t) (Localization.AtPrime P)
     (Submonoid.powers t) P.primeCompl hle
-  haveI : Algebra.FormallyEtale (Localization.Away t) (Localization.AtPrime P) :=
+  have : Algebra.FormallyEtale (Localization.Away t) (Localization.AtPrime P) :=
     Algebra.FormallyEtale.of_isLocalization
       (P.primeCompl.map (algebraMap A (Localization.Away t)))
-  haveI := h t ht
-  haveI : Nontrivial (Localization.Away t) :=
+  have := h t ht
+  have : Nontrivial (Localization.Away t) :=
     (algebraMap (Localization.Away t) (Localization.AtPrime P)).domain_nontrivial
-  haveI : Algebra.IsStandardSmooth K (Localization.Away t) :=
+  have : Algebra.IsStandardSmooth K (Localization.Away t) :=
     Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth D
   have r := Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := K)
     (S := Localization.Away t) D
@@ -178,8 +178,8 @@ theorem finitePresentation_of_away (K A : Type) [Field K] [CommRing A] [Algebra 
     Algebra.FinitePresentation K A := by
   refine RingHom.finitePresentation_algebraMap.1
     (RingHom.finitePresentation_ofLocalizationSpanTarget (algebraMap K A) s hs fun r => ?_)
-  haveI := h r.1 r.2
-  haveI : Algebra.IsStandardSmooth K (Localization.Away r.1) :=
+  have := h r.1 r.2
+  have : Algebra.IsStandardSmooth K (Localization.Away r.1) :=
     Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth D
   rw [← IsScalarTower.algebraMap_eq K A (Localization.Away r.1)]
   exact (RingHom.finitePresentation_algebraMap).2 inferInstance
@@ -193,7 +193,7 @@ theorem finitePresentation_and_kaehler_atPrime :
         Module.Finite (Localization.AtPrime P) Ω[Localization.AtPrime P⁄K] ∧
         Module.finrank (Localization.AtPrime P) Ω[Localization.AtPrime P⁄K] = D := by
   intro K _ D Y g hg U P _
-  letI := secAlgebra g U.1
+  let := secAlgebra g U.1
   obtain ⟨s, hs, h'⟩ := HasRingHomProperty.appLE (@SmoothOfRelativeDimension D) g hg
     ⟨⊤, isAffineOpen_top _⟩ U (fun _ _ => trivial)
   have key : ∀ t ∈ s, Algebra.IsStandardSmoothOfRelativeDimension D K (Localization.Away t) := by
@@ -245,8 +245,8 @@ theorem stalk_to_localization : ∀ (Y : Scheme.{0}) (U : Y.affineOpens) (y : Y)
       (fun i => algebraMap Γ(Y, U.1) _ (f i)) ∧
     ∀ s : Γ(Y, U.1), y ∈ Y.basicOpen s ↔ s ∉ (U.2.primeIdealOf ⟨y, hy⟩).asIdeal := by
   intro Y U y hy hreg m f hr
-  letI := TopCat.Presheaf.algebra_section_stalk Y.presheaf (⟨y, hy⟩ : U.1)
-  haveI hloc : IsLocalization.AtPrime (Y.presheaf.stalk y) (U.2.primeIdealOf ⟨y, hy⟩).asIdeal :=
+  let := TopCat.Presheaf.algebra_section_stalk Y.presheaf (⟨y, hy⟩ : U.1)
+  have hloc : IsLocalization.AtPrime (Y.presheaf.stalk y) (U.2.primeIdealOf ⟨y, hy⟩).asIdeal :=
     U.2.isLocalization_stalk ⟨y, hy⟩
   let e : Y.presheaf.stalk y ≃+* Localization.AtPrime (U.2.primeIdealOf ⟨y, hy⟩).asIdeal :=
     (IsLocalization.algEquiv (U.2.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl (Y.presheaf.stalk y)
@@ -287,11 +287,11 @@ theorem isCoords_basicOpen_of_away :
               KaehlerDifferential.D K B (algebraMap Γ(Y, U.1) B (x i))) = ⊤) →
         IsCoords g (Y.basicOpen s) (fun i => Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op (x i)) := by
   intro K _ Y g U s n x h
-  letI aU : Algebra K Γ(Y, U.1) := secAlgebra g U.1
-  letI aB : Algebra K Γ(Y, Y.basicOpen s) := secAlgebra g (Y.basicOpen s)
-  letI aUB : Algebra Γ(Y, U.1) Γ(Y, Y.basicOpen s) :=
+  let aU : Algebra K Γ(Y, U.1) := secAlgebra g U.1
+  let aB : Algebra K Γ(Y, Y.basicOpen s) := secAlgebra g (Y.basicOpen s)
+  let aUB : Algebra Γ(Y, U.1) Γ(Y, Y.basicOpen s) :=
     (Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op).hom.toAlgebra
-  haveI tower : IsScalarTower K Γ(Y, U.1) Γ(Y, Y.basicOpen s) := by
+  have tower : IsScalarTower K Γ(Y, U.1) Γ(Y, Y.basicOpen s) := by
     refine IsScalarTower.of_algebraMap_eq' ?_
     change ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ g.appLE ⊤ (Y.basicOpen s) (fun _ _ => trivial)).hom = _
     have e : g.appLE ⊤ U.1 (fun _ _ => trivial) ≫ Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op =
@@ -299,7 +299,7 @@ theorem isCoords_basicOpen_of_away :
       exact Scheme.Hom.appLE_map _ _ _
     rw [← e]
     rfl
-  haveI loc : IsLocalization.Away s Γ(Y, Y.basicOpen s) := U.2.isLocalization_basicOpen s
+  have loc : IsLocalization.Away s Γ(Y, Y.basicOpen s) := U.2.isLocalization_basicOpen s
   exact h Γ(Y, Y.basicOpen s)
 
 end GlobalTheory.CompanionTheory.Glob.ResKCoords
@@ -428,7 +428,7 @@ theorem exists_perm_first {D : ℕ} (E : Finset (Fin D)) :
 
 theorem isCoords_comp_equiv {K : Type} [Field K] {Y : Scheme.{0}} (g : Y ⟶ Sp K) (V : Y.Opens) {D : ℕ}
     (z : Fin D → Γ(Y, V)) (σ : Fin D ≃ Fin D) (h : IsCoords g V z) : IsCoords g V (z ∘ σ) := by
-  letI := secAlgebra g V
+  let := secAlgebra g V
   obtain ⟨h1, h2⟩ := h
   refine ⟨?_, ?_⟩
   · exact h1.comp σ σ.injective
@@ -485,7 +485,7 @@ theorem point_coords (K : Type) [Field K] [CharZero K] (D : ℕ) (Y : Scheme.{0}
   refine ⟨⟨Y.basicOpen s, U.2.basicOpen s⟩, r ∘ σ, (J.map e).card, hys,
     by simpa using (J.map e).card_le_univ, isCoords_comp_equiv g _ r σ hco, ?_⟩
   ext w
-  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Function.comp_apply]
+  simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Function.comp_apply]
   constructor
   · rintro ⟨hw, hwT⟩
     have hwU : w ∈ U.1 := Y.basicOpen_le s hw

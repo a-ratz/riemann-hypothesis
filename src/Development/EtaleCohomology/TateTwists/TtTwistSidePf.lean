@@ -71,14 +71,14 @@ theorem sec_sub {F : Shv R} (h : IsZero F) (U : Scheme.{0}) : Subsingleton (Sec 
 theorem flat_zero {F : Shv R} (h : IsZero F) : FlatS F := by
   refine ⟨F.obj, 𝟙 _, fun U y => LateralTheory.EtaleFoundations.TensFam.loc_top fun V g => ⟨Sec.res g y, rfl⟩,
     fun U x _ => LateralTheory.EtaleFoundations.TensFam.loc_top fun V g => @Subsingleton.elim _ (sec_sub h V) _ _, fun U _ => ?_⟩
-  haveI := sec_sub h U
+  have := sec_sub h U
   infer_instance
 
 open ZeroObject in
 theorem flat_sgl {F : Shv R} (hF : FlatS F) (t : ℤ) : FlatS ((sgl F).X t) := by
   by_cases ht : t = 0
   · subst ht
-    exact (show FlatS (if (0:ℤ) = 0 then F else 0) by rw [if_pos rfl]; exact hF)
+    exact (show FlatS (if (0:ℤ) = 0 then F else 0) by rw [ite_eq_left rfl]; exact hF)
   · exact flat_zero (HomologicalComplex.isZero_single_obj_X _ _ _ _ ht)
 
 theorem sgl_sub (F : Shv R) {t : ℤ} (ht : t ≠ 0) (U : Scheme.{0}) : Subsingleton (Sec ((sgl F).X t) U) :=
@@ -167,9 +167,9 @@ theorem twist_side (htm : tw_mul) (htf : tw_flat) (hfl : flip_ex) (hqis : tens_q
     rcases p with ⟨⟨s, t⟩, hst⟩
     by_cases hs : s = 0
     · have ht : t < 0 := by simp only at hst; omega
-      haveI := sec_sub (CochainComplex.isZero_of_isStrictlyGE J 0 t (by omega)) V
+      have := sec_sub (CochainComplex.isZero_of_isStrictlyGE J 0 t (by omega)) V
       rw [Subsingleton.elim b 0, map_zero]
-    · haveI := sgl_sub (tw q i) hs V
+    · have := sgl_sub (tw q i) hs V
       rw [Subsingleton.elim a 0, map_zero, LinearMap.zero_apply]
   let b : ∀ U : Scheme.{0}, Tens (sgl (tw q i)) (sgl (tw q j)) U 0 →+ Sec (M.X 0) U :=
     fun U => ((σ.lift U 0).comp (T ε' U 0)).toAddMonoidHom
@@ -221,16 +221,16 @@ theorem twist_side (htm : tw_mul) (htf : tw_flat) (hfl : flip_ex) (hqis : tens_q
         have := hφlift U (DirectSum.lof (ULift.{1} (ZMod q)) _ _ ⟨(0,0), h⟩ (a ⊗ₜ c))
         rw [lift_lof] at this
         rw [this, hbv]
-      · haveI := sgl_sub (tw q j) ht U
+      · have := sgl_sub (tw q j) ht U
         rw [Subsingleton.elim c 0]
         simp only [map_zero]
-    · haveI := sgl_sub (tw q i) hs U
+    · have := sgl_sub (tw q i) hs U
       rw [Subsingleton.elim a 0]
       simp only [map_zero, LinearMap.zero_apply]
   obtain ⟨μf, hμf, -, hμfT⟩ := hfl (ZMod q) μ
   obtain ⟨σf, hσf, -, hσfT⟩ := hfl (ZMod q) σ
-  haveI := hJge
-  haveI := hε'
+  have := hJge
+  have := hε'
   have hcomp : μf.Compat σf ε' (𝟙 _) u := by
     intro U s t w h a c
     rw [HomologicalComplex.id_f]

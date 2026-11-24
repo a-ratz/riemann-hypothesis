@@ -593,7 +593,7 @@ theorem iterate (T : LocTied l P AI) (K : FinExt l) {s : ℕ} (hs : Lev l s) {e 
 theorem logChi_coe (LT : LocTheory) (g : GQ l) :
     ((logChi LT g : ℤ_[l]) : ℚ_[l]) = logZl l ((LT l).χQ g : ℚ_[l]) := by
   have h := (GlobalTheory.PadicLogUnits.logZl_hom l).2.2.1 _ ((cyc_basic l _ (LT l).χQ_cyc).1 g)
-  exact congrArg Subtype.val (dif_pos h : logChi LT g = ⟨_, h⟩)
+  exact congrArg Subtype.val (dite_eq_left h : logChi LT g = ⟨_, h⟩)
 
 theorem norm_zeta : ‖P.ζQ 1 - 1‖ = (l : ℝ) ^ (-(1 : ℝ) / ((l : ℝ) - 1)) := by
   have h2 : P.ζQ 1 ^ l = 1 := by rw [← P.ζQ_zero]; exact P.ζQ_succ 0
@@ -731,7 +731,7 @@ theorem exponent_le (s e : ℕ) :
   · have h3 : padicValNat l (e + 1).factorial = padicValNat l (e + 1) + padicValNat l e.factorial := by
       rw [Nat.factorial_succ, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (by omega) (Nat.factorial_ne_zero _)]
     rw [h3]
-    simp only [betaE, Nat.add_sub_cancel, Nat.succ_ne_zero, if_false]
+    simp only [betaE, Nat.add_sub_cancel, Nat.succ_ne_zero, ite_false]
     generalize padicValNat l (e + 1) = u
     generalize padicValNat l e.factorial = v
     push_cast at h1 ⊢
@@ -827,13 +827,13 @@ theorem mem_layer_iff (K : FinExt l) (s : ℕ) (σ : GQ l) :
   unfold Gj Ks
   rw [IntermediateField.fixingSubgroup_sup, Subgroup.mem_inf,
     IntermediateField.mem_fixingSubgroup_iff, ← Subgroup.zpowers_le,
-    ← IntermediateField.le_iff_le, IntermediateField.adjoin_le_iff]
+    ← IntermediateField.le_fixedField_iff_le_fixingSubgroup, IntermediateField.adjoin_le_iff]
   exact and_congr Iff.rfl ⟨fun h x hx => (key x).mp (h hx), fun h x hx => (key x).mpr (h x hx)⟩
 
 private theorem absoluteGalois_apply_eq_self_of_mem_maxUnramified (K : FinExt l) {τ : GQ l} (hτ : τ ∈ GK K) {x : Om l} (hx : x ∈ K0 K) :
     τ x = x := by
   unfold K0 at hx
-  exact (IntermediateField.mem_fixingSubgroup_iff K.1 τ).mp hτ x (SetLike.le_def.mp inf_le_left hx)
+  exact (IntermediateField.mem_fixingSubgroup_iff K.1 τ).mp hτ x (IsConcreteLE.le_iff.mp inf_le_left hx)
 
 theorem normal_layer (K : FinExt l) (s : ℕ) : ((Gj K s).subgroupOf (GK K)).Normal := by
 
@@ -871,7 +871,7 @@ theorem layer_group : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ), K.1
     rw [h0, zero_mul, ← hKs] at hmul
     omega
   refine ⟨normal_layer K s, ⟨hidx⟩, ?_, ?_⟩
-  · exact (IntermediateField.fixingSubgroup_isOpen (Ks K s)).preimage continuous_subtype_val
+  · exact (IntermediateField.fixingSubgroup_isOpen (Ks K s)).preimage continuous_subtypeVal
   · rw [hKs, ← hmul, ← hK, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) hidx hKpos.ne']
     omega
 
@@ -935,7 +935,7 @@ theorem index_smul_mem_HfD [CharZero LL] (L : Lattice (O := O) ρ) (hρ : ∀ g,
     (h₀ : ∀ g h, f₀ (g * h) - (f₀ g + ρ g (f₀ h)) ∈ L.T) (hZf : ∀ h ∈ H, Z h - f₀ h ∈ L.T) :
     (fun g => H.index • (Submodule.Quotient.mk (f₀ g) : V ⧸ L.T)) ∈ HfD PD L := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   obtain ⟨F, hF, hFc, ⟨x, hx⟩, hY⟩ := exists_corestriction_cocycle O G V (corHfRepO ρ O) H hH hρ hρ'
     Z hZ hc
   obtain ⟨x', hx'⟩ := hY L.T L.stable f₀ 0 h₀ (by simpa using hZf)
@@ -997,7 +997,7 @@ theorem corHf_exists_mul_eq_pow (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O]
     obtain ⟨m, hm⟩ : l ^ padicValNat l n ∣ n := (_root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat _ _))
     have hlm : ¬ l ∣ m := by
       rintro ⟨c, rfl⟩
-      apply pow_succ_padicValNat_not_dvd (p := l) hn
+      apply pow_succ_multiplicity_not_dvd (p := l) hn
       exact ⟨c, by rw [pow_succ, mul_assoc]; simpa only [Nat.padicValNat_def] using hm⟩
     have hu : IsUnit (m : ℤ_[l]) := by
       rw [PadicInt.isUnit_iff]
@@ -1023,8 +1023,8 @@ theorem corHf_nsmul_mem {O G M : Type} [CommRing O] [AddCommGroup M] [Module O M
 set_option synthInstance.maxHeartbeats 400000 in
 theorem pow_smul_mem_HfD_of_restriction : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K LL : FinExt l) (V : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (H : Subgroup ↥(GK K)) [H.Normal] [H.FiniteIndex], IsOpen (H : Set ↥(GK K)) → ∀ (Z f₀ : ↥(GK K) → V.V), ContinuousOn Z H → (∀ g ∈ H, ∀ h ∈ H, Z (g * h) = Z g + V.ρ g (Z h)) → (∃ X : TensorProduct ℚ_[l] V.V P.R.B, ∀ h ∈ H, Z h ⊗ₜ[ℚ_[l]] (1 : P.R.B) = actVB (P.PD K) V.ρ h X - X) → (∀ g h, f₀ (g * h) - (f₀ g + V.ρ g (f₀ h)) ∈ V.L.T) → (∀ h ∈ H, Z h - f₀ h ∈ V.L.T) → ∀ k : ℕ, padicValNat l H.index ≤ k → (fun g => (l ^ k : ℕ) • (Submodule.Quotient.mk (f₀ g) : V.V ⧸ V.L.T)) ∈ HfD (P.PD K) V.L := by
   intro l _ P K LL V H _ _ hH Z f₀ hZ hc hX h₀ hZf k hk
-  haveI : IsTopologicalAddGroup V.V := IsModuleTopology.topologicalAddGroup ↥LL.1 V.V
-  haveI : ContinuousSMul ↥LL.1 V.V := IsModuleTopology.toContinuousSMul ↥LL.1 V.V
+  have : IsTopologicalAddGroup V.V := IsModuleTopology.isTopologicalAddGroup ↥LL.1 V.V
+  have : ContinuousSMul ↥LL.1 V.V := IsModuleTopology.toContinuousSMul ↥LL.1 V.V
   exact corHf_nsmul_mem _ _ H.index _
     (corHf_exists_mul_eq_pow l _ _ k Subgroup.FiniteIndex.index_ne_zero hk)
     (index_smul_mem_HfD (P.PD K) V.ρ V.L
@@ -1339,10 +1339,10 @@ theorem cob_of_rational (AI : LocAinf l P) (K LL : FinExt l)
     ∃ k : ℕ, IsCob (repQ AI (Gj K j) ((actTZ LL T).comp (Subgroup.inclusion hle)) 0 ((e : ℤ) + 1))
       (fun g => (l : ℤ_[l]) ^ k • (f (Subgroup.inclusion hle g) ⊗ₜ[ℤ_[l]]
         (Submodule.Quotient.mk one : Qab (AinfSub l) (xiU AI) 0 ((e : ℤ) + 1)))) := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI := modTopLL LL
-  haveI := finOL LL
-  letI := zlMod LL T
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have := modTopLL LL
+  have := finOL LL
+  let := zlMod LL T
   obtain ⟨n, bT, bV, hb⟩ := lat_bases (R := ℤ_[l]) (F := ℚ_[l]) (LL := ↥LL.1) (O := ↥(OL LL))
     (fun _ => rfl) (denom LL) T
   have hX : XiOK (AinfSub l) (AI.actWCbHom.comp (Gj K j).subtype) (xiU AI) :=
@@ -1454,8 +1454,8 @@ theorem exists_coords {G : Type} [Group G] [TopologicalSpace G] {LL O : Type} [F
     ∃ (Φ : ↥Y.L.T →+ V.V) (ψ : Fin n → (↥Y.L.T →ₗ[ℤ_[l]] ℚ_[l])) (r : ℕ),
       (∀ y, (Submodule.Quotient.mk (Φ y) : V.V ⧸ V.L.T) = φ y) ∧
       (∀ i y, ψ i y = w.repr (Φ y) i) ∧ ∀ i y, ‖ψ i y‖ ≤ (l : ℝ) ^ r := by
-  letI : Module ℤ_[l] ↥Y.L.T := Module.compHom ↥Y.L.T (algebraMap ℤ_[l] O)
-  haveI := Y.L.free
+  let : Module ℤ_[l] ↥Y.L.T := Module.compHom ↥Y.L.T (algebraMap ℤ_[l] O)
+  have := Y.L.free
   obtain ⟨Φ, hΦ⟩ := Module.projective_lifting_property V.L.T.mkQ φ (Submodule.mkQ_surjective _)
   have hs : ∀ (a : ℤ_[l]) (y : ↥Y.L.T), Φ (a • y) = (a : ℚ_[l]) • Φ y := fun a y => by
     change Φ (algebraMap ℤ_[l] O a • y) = _
@@ -1525,7 +1525,7 @@ theorem mem_HfD_of_coords (P : LocPrime l) (K LL : FinExt l) (s : ℕ) (hK : K.1
   refine GlobalTheory.pow_smul_mem_HfD_of_restriction l P K LL V ((Gj K s).subgroupOf (GK K)) hO
     (fun g => w.equivFun.symm fun i => z i g) f₀ ?_ ?_ ⟨∑ i, w i ⊗ₜ[ℚ_[l]] x i, ?_⟩ hf₀ ?_ _ hI.le
   · refine hwc.comp_continuousOn (continuousOn_pi.2 fun i => ?_)
-    exact (hz i).1.comp continuous_subtype_val.continuousOn fun g hg => hg
+    exact (hz i).1.comp continuous_subtypeVal.continuousOn fun g hg => hg
   · intro g hg h hh
     rw [hV, ← map_smul, ← map_add (f := _)]
     congr 1
@@ -1622,7 +1622,7 @@ theorem scalar_of_isCob (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : Arch
           (s + padicValNat l (e + 1))) * ψ (f g)‖ ≤ 1 := by
   classical
   obtain ⟨c, hc⟩ : ∃ c : GQ l → ℚ_[l], ∀ (σ : GQ l) (h : σ ∈ GK K), c σ = ψ (f ⟨σ, h⟩) :=
-    ⟨fun σ => if h : σ ∈ GK K then ψ (f ⟨σ, h⟩) else 0, fun σ h => dif_pos h⟩
+    ⟨fun σ => if h : σ ∈ GK K then ψ (f ⟨σ, h⟩) else 0, fun σ h => dite_eq_left h⟩
   have H1 : ∀ σ ∈ Gj K s, ‖c σ‖ ≤ (l : ℝ) ^ r := fun σ hσ => by
     rw [hc σ (hle hσ)]; exact hψr _
   have H2 : ∀ σ ∈ Gj K s, ∀ τ ∈ Gj K s, ‖c (σ * τ) - c σ -
@@ -1636,7 +1636,7 @@ theorem scalar_of_isCob (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : Arch
     have h1 := hfl r ⟨σ, hle hσ⟩
     have h3 : nhdsWithin σ (GK K : Set (GQ l)) =
         Filter.map Subtype.val (nhds (⟨σ, hle hσ⟩ : ↥(GK K))) :=
-      nhdsWithin_eq_map_subtype_coe (hle hσ)
+      nhdsWithin_eq_map_subtypeVal (hle hσ)
     rw [h3, Filter.eventually_map]
     filter_upwards [h1] with τ ⟨y, hy⟩
     rw [hc σ (hle hσ), hc τ τ.2, ← ψ.map_sub]
@@ -1743,7 +1743,7 @@ theorem mem_HfD_of_lattice (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : A
           (Submodule.Quotient.mk one : Qab (AinfSub l) (xiU (D.locA l)) 0 ((e : ℤ) + 1))))) :
     (fun g => (l ^ cTB l s e (padicValNat l (Module.finrank ℚ_[l] ↥(Ks K s)) -
       padicValNat l (Module.finrank ℚ_[l] ↥K.1)) N : ℕ) • φ (f g)) ∈ HfD ((D.loc l).PD K) V.L := by
-  letI := zlMod LL Y
+  let := zlMod LL Y
   choose n w hw hw' hwc using GlobalTheory.Cyc.LatBasis.exists_basis l ↥(GK K) LL V
   choose m u hu hu' huc using GlobalTheory.Cyc.LatBasis.exists_basis l ↥(GK K) LL Y
   choose Φ ψ r hΦ hψ hψr using exists_coords (l := l) (LL := ↥LL.1) (O := ↥(OL LL)) (fun _ => rfl) Y V φ w u hu
@@ -1768,7 +1768,7 @@ theorem class_bound : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F :
   let one : ↥(Mxi (AinfSub l) (xiU (D.locA l)) 0) := ⟨1, 1, (AinfSub l).one_mem, by simp⟩
   have hone : (one : WCb l) = 1 := rfl
   obtain ⟨hc1, hc2⟩ := GlobalTheory.ConnCoc.conn l ↥(GK K) LL Y Yt ι hses.1 yt f hf
-  letI := zlMod LL Y
+  let := zlMod LL Y
   have hcoc := GlobalTheory.TensorOneCoc.isCoc_tmul_one l (D.loc l) (D.locA l) (Gj K s) ↥Y.L.T
     ((actTZ LL Y).comp (Subgroup.inclusion hle)) ((e : ℤ) + 1)
     (fun g => f (Subgroup.inclusion hle g))

@@ -90,7 +90,7 @@ theorem dc_mulVec_mem {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) {s
     rw [val_torusElt, mulVec_diagonal, map_mul]
     have hle : valuation k ((ϖ : k) ^ indic s i) ≤ 1 := by
       rw [map_zpow₀]
-      exact zpow_le_one₀ (zero_lt_iff.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
+      exact zpow_le_one₀ (pos_iff_ne_zero.2 (by simp)) hlt.le (by unfold indic; split_ifs <;> norm_num)
     exact lt_of_le_of_lt (mul_le_of_le_one_left' hle) (h1 i)
   have h3 := ko_mulVec_mem κ hκ _ h2
   rw [Units.val_mul, Units.val_mul, ← mulVec_mulVec, ← mulVec_mulVec]

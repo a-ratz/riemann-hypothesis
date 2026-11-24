@@ -105,7 +105,7 @@ theorem charDot_kill : ∀ {K : Type} [CommRing K] [TopologicalSpace K] [IsTopol
     hO.mem_nhds (by simp [K₀.zero_mem])
   rw [nhds_prod_eq, Filter.mem_prod_iff] at hP
   obtain ⟨U, hU, V, hV, hUV⟩ := hP
-  haveI : NonarchimedeanAddGroup (κ → K) := nonarchimedean_pi
+  have : NonarchimedeanAddGroup (κ → K) := nonarchimedean_pi
   obtain ⟨H, hH⟩ := NonarchimedeanAddGroup.is_nonarchimedean _
     (Filter.inter_mem (Filter.inter_mem hU hV) hW)
   refine ⟨H, fun z hz a ha b hb => hK₀ _ (K₀.add_mem ?_ ?_)⟩

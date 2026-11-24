@@ -108,16 +108,16 @@ theorem pbF_eq_TI (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n Wp
 theorem isLowerUni_one {d : ℕ} : G.IsLowerUni (1 : Matrix (Fin d) (Fin d) ℂ) := by
   refine ⟨fun i => by simp, fun i j hij => ?_⟩
   simp only [Matrix.transpose_apply, Matrix.one_apply]
-  rw [if_neg (ne_of_lt hij)]
+  rw [ite_eq_right (ne_of_lt hij)]
 
 theorem leftFactor_mem (Bj : B.RealPlaceData k ρ Wp Wq) (x : PBQ.XP k p ρ) :
     PBQ.sP Bj x ∈ Sset k (p + ρ) (liftVec k p ρ Bj.z) := by
   by_cases hx : PBQ.GoodP Bj x
-  · rw [PBQ.sP, if_pos hx]
+  · rw [PBQ.sP, ite_eq_left hx]
     have h := Formalism.FourierDecayAlt.P.LeftFubiniLemmas.left_factor_mem k p ρ Bj.z (-x.2) 1 (Matrix.of x.1.1) (Matrix.of x.1.2) Bj.z_mem
       isLowerUni_one hx.1 hx.2
     rwa [Matrix.conjTranspose_one, inv_one, Formalism.FourierDecayAlt.P.PBH.muP_one', Matrix.mul_one] at h
-  · rw [PBQ.sP, if_neg hx]
+  · rw [PBQ.sP, ite_eq_right hx]
     exact Formalism.FourierDecayAlt.P.PBG.one_mem_Sset k (p + ρ) _
 
 theorem sP_GV (Bj : B.RealPlaceData k ρ Wp Wq) (x : PBQ.XP k p ρ) : PBQ.sP Bj x ∈ B.GV k (p + ρ) :=
@@ -151,7 +151,7 @@ theorem leftFactor_continuousOn (Bj : B.RealPlaceData k ρ Wp Wq) :
       U.embG k p ρ ((Matrix.of x.1.1 : B.Mat k ρ)⁻¹ * (Matrix.of x.1.2 : B.Mat k ρ)⁻¹)) {x | PBQ.GoodP Bj x} :=
     h1.continuousOn.mul ((Formalism.FourierDecayAlt.P.Dx2.SplitF.embg_cont (k := k) p ρ).comp_continuousOn (hi1.mul hi2))
   refine hf.congr (fun x hx => ?_)
-  simp only [PBQ.sP, if_pos (show PBQ.GoodP Bj x from hx)]
+  simp only [PBQ.sP, ite_eq_left (show PBQ.GoodP Bj x from hx)]
 
 theorem sE_contOn (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) :
     ContinuousOn (fun x : PBQ.XP k p ρ => sE Bj e x) {x | PBQ.GoodP Bj x} := by
@@ -294,7 +294,7 @@ theorem rdV_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
       RdV X (TI Bj e Ψ) y = TI Bj e (RdV X Ψ) y := by
   have := fmoc_XP (p := p) Bj
   have := xp_borel (k := k) (p := p) (ρ := ρ)
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   obtain ⟨V, hVo, hyV, K, hK, hvan⟩ := hv y hyU
   have hΨ1 : CkOn 1 (GV k n) Ψ := Formalism.FourierDecayAlt.P.B5.ckOn_mono le_top hΨ
   have hΨc : ContinuousOn Ψ (GV k n) := Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn hΨ
@@ -330,7 +330,7 @@ theorem rdV_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
       by_cases hx : PBQ.GoodP Bj x
       · exact (norm_gI_le Bj e _ x _).trans ((hM2 _ (hSmem x hxK hx _ (hmemKc t ht))).trans
           (le_trans (le_max_right _ _) (le_max_left _ _)))
-      · simp only [gI, if_neg hx, norm_zero]; exact le_max_right _ _
+      · simp only [gI, ite_eq_right hx, norm_zero]; exact le_max_right _ _
     · rw [hβdef, Set.indicator_of_notMem hxK]
       by_cases hx : PBQ.GoodP Bj x
       · have hz : RdV X Ψ (sE Bj e x * cv false X t y) = 0 :=
@@ -347,7 +347,7 @@ theorem rdV_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
           have := hmemKc 0 (Metric.mem_ball_self hε2); rwa [cv_zero] at this
         exact (norm_gI_le Bj e Ψ x y).trans ((hM1 _ (hSmem x hxK hx y hyKc)).trans
           (le_trans (le_max_left _ _) (le_max_left _ _)))
-      · simp only [gI, if_neg hx, norm_zero]; exact le_max_right _ _
+      · simp only [gI, ite_eq_right hx, norm_zero]; exact le_max_right _ _
     · rw [hβdef, Set.indicator_of_notMem hxK]
       by_cases hx : PBQ.GoodP Bj x
       · simp [gI, hx, hvan y hyV hy x hx hxK]
@@ -386,7 +386,7 @@ theorem gI_top (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) (Ψ : B.Mat k 
       (if a = b then u • gI Bj e Ψ x g else 0) +
         (gI Bj e (RdV (Xa k n a b) Ψ) x g + Complex.I • gI Bj e (RdV (Xb k n a b) Ψ) x g) := by
   by_cases hx : PBQ.GoodP Bj x
-  · simp only [gI, if_pos hx, top_apply', EH_apply]
+  · simp only [gI, ite_eq_left hx, top_apply', EH_apply]
     split_ifs <;> simp [ContinuousLinearMap.comp_add]
   · simp [gI, hx]
 
@@ -407,12 +407,12 @@ theorem ckOn_top {Ψ : B.Mat k n → (Wq →L[ℂ] Wp)} (hΨ : CkOn ⊤ (GV k n)
   have hB : CkOn ⊤ (GV k n) (RdV (Xb k n a b) Ψ) := Formalism.FourierDecayAlt.P.B5.ckOn_RdV (Xb_unit a b).1 (by simpa using hΨ)
   by_cases hab : a = b
   · have e1 : Top (Q.EH k n) u a b Ψ = u • Ψ + (RdV (Xa k n a b) Ψ + Complex.I • RdV (Xb k n a b) Ψ) := by
-      funext g; rw [top_apply', EH_apply, if_pos hab]; rfl
+      funext g; rw [top_apply', EH_apply, ite_eq_left hab]; rfl
     rw [e1]
     exact Formalism.FourierDecayAlt.P.JCx2.ckOn_add' (Formalism.FourierDecayAlt.P.JCx2.ckOn_smul' _ hΨ)
       (Formalism.FourierDecayAlt.P.JCx2.ckOn_add' hA (Formalism.FourierDecayAlt.P.JCx2.ckOn_smul' _ hB))
   · have e1 : Top (Q.EH k n) u a b Ψ = RdV (Xa k n a b) Ψ + Complex.I • RdV (Xb k n a b) Ψ := by
-      funext g; rw [top_apply', EH_apply, if_neg hab, zero_add]; rfl
+      funext g; rw [top_apply', EH_apply, ite_eq_right hab, zero_add]; rfl
     rw [e1]
     exact Formalism.FourierDecayAlt.P.JCx2.ckOn_add' hA (Formalism.FourierDecayAlt.P.JCx2.ckOn_smul' _ hB)
 
@@ -448,7 +448,7 @@ theorem int_gI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
   · rw [Set.indicator_of_mem hxK]
     by_cases hx : PBQ.GoodP Bj x
     · exact (norm_gI_le Bj e Ψ x y).trans ((hM1 _ (hSmem x hxK hx y (Set.mem_singleton y))).trans (le_max_left _ _))
-    · simp only [gI, if_neg hx, norm_zero]; exact le_max_right _ _
+    · simp only [gI, ite_eq_right hx, norm_zero]; exact le_max_right _ _
   · rw [Set.indicator_of_notMem hxK]
     by_cases hx : PBQ.GoodP Bj x
     · simp [gI, hx, hvan y hyV hy x hx hxK]
@@ -463,7 +463,7 @@ theorem foldT_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat 
   induction ts with
   | nil => exact ⟨hΨ, hv, fun _ _ _ => rfl⟩
   | cons t ts hts =>
-    have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+    have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
     obtain ⟨hc, hvv, ih⟩ := hts
     have e0 : ∀ f : B.Mat k n → (Wq →L[ℂ] Wp), foldT (t :: ts) f = Top (Q.EH k n) t.1 t.2.1 t.2.2 (foldT ts f) :=
       fun f => rfl
@@ -530,7 +530,7 @@ theorem gI_sum (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {ι : Type*} (
     (F : ι → B.Mat k n → (Wq →L[ℂ] Wp)) (x : PBQ.XP k p ρ) (g : B.Mat k n) :
     gI Bj e (fun g' => ∑ i ∈ s, c i • F i g') x g = ∑ i ∈ s, c i • gI Bj e (F i) x g := by
   by_cases hx : PBQ.GoodP Bj x
-  · simp only [gI, if_pos hx]; exact comp_fsum _ s c _
+  · simp only [gI, ite_eq_left hx]; exact comp_fsum _ s c _
   · simp [gI, hx]
 
 theorem int_comb {α : Type*} [MeasurableSpace α] {μ : Measure α} {V : Type*} [NormedAddCommGroup V]
@@ -577,7 +577,7 @@ theorem qminor_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat
     (a b : Fin t → Fin (2 * n + k + 1)) (u : ℂ) {y : B.Mat k n} (hyU : y ∈ U) (hy : y ∈ GV k n) :
     Integrable (fun x => PBQ.cP Bj x • gI Bj e (qminorOp (EabH (Hpk k n)) a b u Ψ) x y) (PBQ.muXP Bj) ∧
       qminorOp (EabH (Hpk k n)) a b u (TI Bj e Ψ) y = TI Bj e (qminorOp (EabH (Hpk k n)) a b u Ψ) y := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   set ts : Equiv.Perm (Fin t) → List (ℂ × Fin (2 * n + k + 1) × Fin (2 * n + k + 1)) :=
     fun σ => List.ofFn fun j : Fin t => (u - ((j : ℕ) : ℂ), a (σ j), b j) with hts
   have hq : ∀ f : B.Mat k n → (Wq →L[ℂ] Wp), qminorOp (EabH (Hpk k n)) a b u f =
@@ -609,7 +609,7 @@ theorem AA_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k n
     (u : ℂ) {y : B.Mat k n} (hyU : y ∈ U) (hy : y ∈ GV k n) :
     C3.AAop k n m hm u (TI Bj e Ψ) y = ∫ x, PBQ.cP Bj x • (if PBQ.GoodP Bj x then
       (Bj.π (Matrix.of x.1.1)).comp (C3.AAop k n m hm u (fun g => Ψ (sE Bj e x * g)) y) else 0) ∂(PBQ.muXP Bj) := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hI := fun c => qminor_TI Bj e hΨ hU hv (C3.xR k n m hm) c u hyU hy
   have hpt : ∀ x, PBQ.cP Bj x • (if PBQ.GoodP Bj x then
       (Bj.π (Matrix.of x.1.1)).comp (C3.AAop k n m hm u (fun g => Ψ (sE Bj e x * g)) y) else 0) =
@@ -617,7 +617,7 @@ theorem AA_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k n
         (PBQ.cP Bj x • gI Bj e (qminorOp (EabH (Hpk k n)) (C3.xR k n m hm) c u Ψ) x y) := by
     intro x
     by_cases hx : PBQ.GoodP Bj x
-    · rw [if_pos hx, AAop_sum, comp_fsum, one_smul, Finset.smul_sum]
+    · rw [ite_eq_left hx, AAop_sum, comp_fsum, one_smul, Finset.smul_sum]
       refine Finset.sum_congr rfl fun c _ => ?_
       rw [qminor_transl, smul_comm]
       simp [gI, hx]
@@ -634,7 +634,7 @@ theorem AAv_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
     C3.AAvop k n m hm ell (TI Bj e Ψ) y = ∫ x, PBQ.cP Bj x • (if PBQ.GoodP Bj x then
       (Bj.π (Matrix.of x.1.1)).comp (C3.AAvop k n m hm ell (fun g => Ψ (sE Bj e x * g)) y) else 0)
         ∂(PBQ.muXP Bj) := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hI := fun c => qminor_TI Bj e hΨ hU hv c (C3.sR k n m hm) (ell + (m : ℂ) - 1) hyU hy
   have hpt : ∀ x, PBQ.cP Bj x • (if PBQ.GoodP Bj x then
       (Bj.π (Matrix.of x.1.1)).comp (C3.AAvop k n m hm ell (fun g => Ψ (sE Bj e x * g)) y) else 0) =
@@ -642,7 +642,7 @@ theorem AAv_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
         (PBQ.cP Bj x • gI Bj e (qminorOp (EabH (Hpk k n)) c (C3.sR k n m hm) (ell + (m : ℂ) - 1) Ψ) x y) := by
     intro x
     by_cases hx : PBQ.GoodP Bj x
-    · rw [if_pos hx, AAvop_sum, comp_fsum, one_smul, Finset.smul_sum]
+    · rw [ite_eq_left hx, AAvop_sum, comp_fsum, one_smul, Finset.smul_sum]
       refine Finset.sum_congr rfl fun c _ => ?_
       rw [qminor_transl, smul_comm]
       simp [gI, hx]
@@ -667,22 +667,22 @@ theorem vLet_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k
     D.vLet k n z z' i hi l ε (TI Bj e Ψ) y = ∫ x, PBQ.cP Bj x • (if PBQ.GoodP Bj x then
       (Bj.π (Matrix.of x.1.1)).comp (D.vLet k n z z' i hi l ε (fun g => Ψ (sE Bj e x * g)) y) else 0)
         ∂(PBQ.muXP Bj) := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   by_cases h0 : ε = 1 ∧ i = 0
   · simp [D.vLet, h0]
   · by_cases hl : l.1 = true
-    · simp only [D.vLet, h0, hl, if_false, if_true]
+    · simp only [D.vLet, h0, hl, ite_false, ite_true]
       rw [AA_TI Bj e hΨ hU hv _ _ _ hyU hy, ← integral_smul]
       refine integral_congr_ae (Eventually.of_forall fun x => ?_)
       by_cases hx : PBQ.GoodP Bj x
-      · simp only [if_pos hx]
+      · simp only [ite_eq_left hx]
         rw [ContinuousLinearMap.comp_smul, smul_comm]
       · simp [hx]
-    · simp only [D.vLet, h0, hl, if_false]
+    · simp only [D.vLet, h0, hl, ite_false]
       rw [AAv_TI Bj e hΨ hU hv _ _ _ hyU hy, ← integral_smul]
       refine integral_congr_ae (Eventually.of_forall fun x => ?_)
       by_cases hx : PBQ.GoodP Bj x
-      · simp only [if_pos hx, Bool.false_eq_true, if_false]
+      · simp only [ite_eq_left hx, Bool.false_eq_true, ite_false]
         rw [ContinuousLinearMap.comp_smul, smul_comm]
       · simp [hx]
 
@@ -700,7 +700,7 @@ theorem vLet_pb (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n Wp W
     D.vLet k n B0.z B0.z' i hi l ε (PBQ.pbF Bj B0 e Ht) y =
       PBQ.pbF Bj B0 e (D.vLet k n B0.z B0.z' i hi l ε Ht) y := by
   classical
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hK : CkOn ⊤ (GV k n) (PBG.Kr B0 Ht) := fun g hg => Formalism.FourierDecayAlt.P.PBG.kr_loc_cpt B0 hHt hCs hS g hg
   have hKs : SmoothOnH (Hpk k n) (PBG.Kr B0 Ht) := smoothOnH_of_ckOn hK
   obtain ⟨R, hR⟩ := hCs.exists_bound_of_continuousOn (Formalism.FourierDecayAlt.P.B6.gN_continuous.continuousOn (s := Cs))
@@ -718,7 +718,7 @@ theorem vLet_pb (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n Wp W
   unfold TI
   refine integral_congr_ae (Eventually.of_forall fun x => ?_)
   by_cases hx : PBQ.GoodP Bj x
-  · simp only [gI, if_pos hx]
+  · simp only [gI, ite_eq_left hx]
     have hs : sE Bj e x ∈ Sset k n B0.z := hzS ▸ sE_mem_S Bj e x
     have hs1 : (1 : B.Mat k n) ∈ Sset k n B0.z' := Formalism.FourierDecayAlt.P.PBG.one_mem_Sset k n B0.z'
     have hmem : sE Bj e x * y ∈ B.GV k n := Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (sE_GV Bj e x) hy

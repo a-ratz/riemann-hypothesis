@@ -115,7 +115,7 @@ theorem frob_tr_basis (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d : �
     ∃ r : ℕ, (t : Q.A) ^ r • (BK.hf g bk.E ^ a • m - (t : Q.A) ^ k •
       ∑ i, (A.map (BK.hf g)).mulVec (fun j => Q.D.φ (y j)) i • M.tr g (e i)) = 0 := by
   have hreg : IsSMulRegular (M.M Q) (BK.hf g bk.E) := by
-    haveI := M.proj Q
+    have := M.proj Q
     exact Module.Flat.isSMulRegular_of_nonZeroDivisors (_root_.GlobalTheory.BSP.hf_E_span_and_regular l K bk Q g).2
 
   have key : ∀ j : Fin d, LocalizedModule.mk (M.tr g (∑ i, bk.toP (A i j) • e i)) (1 : Submonoid.powers (t : Q.A)) =

@@ -156,21 +156,21 @@ theorem free_rmul (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M : ℕ} (J : Mat
     (hmu : μ.map (fun X => rmul R X g) = a • μ) (hnu : ν.map τ = c • ν) (S : HermR R σ n) :
     a • m (τ S) = c • (m S).map (fun X => rmul R X g) := by
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hTK
-  haveI := hLK
-  haveI := hSK
-  haveI := hTK2
-  haveI := hBor n M
+  have := hTK
+  have := hLK
+  have := hSK
+  have := hTK2
+  have := hBor n M
   obtain ⟨hLH, hSH, hT2H, hBH, hG⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R n
-  haveI := hLH
-  haveI := hSH
-  haveI := hT2H
-  haveI := hBH
+  have := hLH
+  have := hSH
+  have := hT2H
+  have := hBH
   obtain ⟨G, hGc, hGe⟩ := hG M J hJ
   obtain ⟨halg, hcomp, hone, hmem, -⟩ := GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hσ M J hJ R n
   have hg1 : g * g⁻¹ = 1 := Matrix.mul_nonsing_inv g hg
@@ -207,7 +207,7 @@ theorem free_rmul (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M : ℕ} (J : Mat
     ⟨cT (sigR R σ) g⁻¹ * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * g⁻¹, hmem S g⁻¹⟩
   have hcj : ∀ h : Matrix (Fin n) (Fin n) (R ⊗[F] E), Continuous fun S : HermR R σ n =>
       cT (sigR R σ) h * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * h := fun h =>
-    (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   let τh : HermR R σ n ≃ₜ HermR R σ n :=
     { toFun := τ
       invFun := τ'
@@ -264,8 +264,8 @@ theorem free_rmul (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M : ℕ} (J : Mat
       rw [τh.measurableEmbedding.map_apply, Set.preimage_univ]
     rw [h0] at h1
     exact (isOpen_univ.measure_pos ν Set.univ_nonempty).ne h1
-  haveI hμa : (a • μ).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul μ ha0
-  haveI hνc : (c • ν).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul ν hc0
+  have hμa : (a • μ).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul μ ha0
+  have hνc : (c • ν).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul ν hc0
   have hres := GlobalTheory.CompanionTheory.SW.Rescale.isFibreFamily_rescale _ _ _ μ ν _ _ _ _ m hm a c hc0
   have huq := PI.AprimeInfW.FU.fib_eq hres htr hGc hGe Subtype.val_injective hfree
   have h5 := congrFun huq (τ S)
@@ -356,27 +356,27 @@ theorem coord_rescale (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (J :
     ∃ k : ℝ≥0, k ≠ 0 ∧
       IsGramFibFree R σ J n (coordW R b' lam n M) (coordHerm R σ b' lam n) (fun S => k • m S) := by
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI := hTK
-  haveI := hLK
-  haveI := hSK
-  haveI := hTK2
-  haveI := hBor n M
+  have := hTK
+  have := hLK
+  have := hSK
+  have := hTK2
+  have := hBor n M
   obtain ⟨hLH, hSH, hT2H, hBH, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hcm R n
-  haveI := hLH
-  haveI := hSH
-  haveI := hT2H
-  haveI := hBH
+  have := hLH
+  have := hSH
+  have := hT2H
+  have := hBH
   obtain ⟨-, hW, hH⟩ := coord_measures_haar F E σ hcm R d b lam hlam
   obtain ⟨-, hW', hH'⟩ := coord_measures_haar F E σ hcm R d b' lam hlam
-  haveI := hW n M
-  haveI := hW' n M
-  haveI := hH n
-  haveI := hH' n
+  have := hW n M
+  have := hW' n M
+  have := hH n
+  have := hH' n
   obtain ⟨c1, hc1, e1⟩ : ∃ c : ℝ≥0, c ≠ 0 ∧ coordW R b' lam n M = c • coordW R b lam n M :=
     ⟨_, (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne',
       Measure.isAddLeftInvariant_eq_smul _ _⟩
@@ -483,7 +483,7 @@ theorem sw_free_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   intro F E _ _ _ _ _ σ hcm M J hJ n T hT g T' hT' hrel hSW d b laminf lam hinf hv μ 𝓕 hH hF minf m
     hminf hm
   have hinv := (HaarCoord.conj_facts hcm).1
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; norm_num)
   obtain ⟨G, hG⟩ : ∃ G : Matrix (Fin n) (Fin n) E, G = (g : Matrix (Fin n) (Fin n) E) := ⟨_, rfl⟩
   obtain ⟨H, hHd⟩ : ∃ H : Matrix (Fin n) (Fin n) E, H = ((g⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) :=
     ⟨_, rfl⟩
@@ -507,8 +507,8 @@ theorem sw_free_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   obtain ⟨hci0, hc0, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F ci ai c a hcu hau
   have hrI : IsLocR (Ainf F) := isLocR_Ainf F hcm.1
   have hrV : ∀ v, IsLocR (Fv F v) := fun v => LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hfI : IsOpen {X : Fin n → Fin M → Ainf F ⊗[F] E | LinearIndependent (Ainf F ⊗[F] E) X} :=
     isOpen_free b (Ainf F) hrI (PI.VolStabSW.lip_ainf F)
   have hfV : ∀ v, IsOpen {X : Fin n → Fin M → Fv F v ⊗[F] E | LinearIndependent (Fv F v ⊗[F] E) X} :=
@@ -542,11 +542,11 @@ theorem sw_free_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     intro v
     obtain ⟨r1, r2, r3, r4, -⟩ := id (hrV v)
     obtain ⟨-, -, -, -, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Fv F v)
-    haveI := hBor n M
+    have := hBor n M
     have hL : MeasurableSet (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) := (hlat.1 v).2.measurableSet
     have hs : ∀ (q : ℝ≥0) (ρ : Measure (Fin n → Fin M → Fv F v ⊗[F] E)) (s : Set _),
         (q • ρ) s = (q : ℝ≥0∞) * ρ s := fun q ρ s => by
-      rw [Measure.smul_apply]
+      rw [smul_apply]
       rfl
     have h1 : (k v • m v (hermOf (Fv F v) σ T' hT')) (latV (scaleB b c₀ hc₀) v) < ⊤ := hE'.1 v
     have h2 : m v (hermOf (Fv F v) σ T' hT') (latV (scaleB b c₀ hc₀) v) < ⊤ := by

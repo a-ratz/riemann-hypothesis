@@ -71,7 +71,7 @@ theorem badBound_tail (eps C : ℝ) (he : 0 < eps) :
   have hsplit : x ^ (eps / 6) = x ^ (eps / 6 - eps / 7) * x ^ (eps / 7) := by
     rw [← Real.rpow_add hx0]; ring_nf
   have hpow : (x ^ C) ^ 3 = Real.exp (3 * (Real.log x * C)) := by
-    rw [Real.rpow_def_of_pos hx0, ← Real.exp_nat_mul]; norm_num
+    rw [Real.rpow_def_of_pos hx0, ← Real.exp_natCast_mul]; norm_num
   rw [hpow, show (612 : ℝ) = Real.exp (Real.log 612) from (Real.exp_log (by norm_num)).symm,
     ← Real.exp_add, ← Real.exp_add, Real.exp_le_exp]
   have hC1 : Real.log x * C ≤ Real.log x * |C| := mul_le_mul_of_nonneg_left (le_abs_self C) hlog

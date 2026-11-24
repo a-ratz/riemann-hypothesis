@@ -76,10 +76,10 @@ theorem card_le_of_separated {G E : Type} [NormedAddCommGroup E] [NormedSpace �
     (hT : ∀ h ∈ T, ‖φ h‖ ≤ R) (hsep : ∀ a ∈ T, ∀ b ∈ T, a ≠ b → 2 * r < ‖φ a - φ b‖) :
     (T.card : ℝ) ≤ ((R + r) / r) ^ Module.finrank ℝ E := by
   classical
-  letI : MeasurableSpace E := borel E
-  haveI : BorelSpace E := ⟨rfl⟩
+  let : MeasurableSpace E := borel E
+  have : BorelSpace E := ⟨rfl⟩
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure E, μ.IsAddHaarMeasure := ⟨Measure.addHaar, inferInstance⟩
-  haveI := hμ
+  have := hμ
   set d := Module.finrank ℝ E
   have hdisj : Set.PairwiseDisjoint (T : Set G) (fun h => Metric.ball (φ h) r) := by
     intro a ha b hb hab

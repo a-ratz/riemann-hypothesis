@@ -116,7 +116,7 @@ theorem fixedFrameOfWord_isotropicSpan_eq : (GlobalTheory.TypeAsm.F0 X u).X = Su
   unfold Formalism.HermitianLatticeCounting.S6.FlagD.X Formalism.HermitianLatticeCounting.S6.FlagD.Xa
   congr 1
   ext v
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range, fixedFrameOfWord_castSucc_eq_hyperbolic]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range, fixedFrameOfWord_castSucc_eq_hyperbolic]
   exact ⟨fun ⟨b, _, h⟩ => ⟨b, h⟩, fun ⟨b, h⟩ => ⟨b, b.isLt, h⟩⟩
 
 theorem hT_span_left {v : (VS D).V} (hv : ∀ a, (VS D).hT (X.eX a) v = 0) {y : (VS D).V}
@@ -202,7 +202,7 @@ theorem GlobalTheory.RowsOrb.ub_equiv_model : ∀ (D : D7) (X : HidaSetting D) (
     · set_option synthInstance.maxHeartbeats 100000 in
         rw [map_sub, corr_apply, map_sum]
         simp only [map_smul, hT_f_e, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-          if_true, sub_self]
+          ite_true, sub_self]
   have hmUb : ∀ w : W, (⟨(w : (VS D).V) - corr X W w, hmWb w⟩ : GlobalTheory.RowsOrb.Wb X) ∈ GlobalTheory.RowsOrb.Ub X u := by
     intro w
     rw [GlobalTheory.RowsOrb.mem_Ub]
@@ -308,7 +308,7 @@ theorem eq_zero_of_mem_span_eX (X : HidaSetting D) (w : (VS D).V)
       intro a
       rw [a_herm, X.ef a b]
       split_ifs <;> simp
-    simp only [hfe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    simp only [hfe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     exact h
   simp [hc]
 
@@ -891,7 +891,7 @@ private theorem full_of_unimodular {K V : Type} [Field K] [NumberField K] [StarR
     [IsScalarTower (𝓞 K) K V] (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm)
     {L : Submodule (𝓞 K) V} (hL : Submodule.IsLattice K L) (hu : IsUnimodular h L) :
     Submodule.IsFullLattice K L := by
-  letI := hL
+  let := hL
   refine { span_eq_top := ?_ }
   let W := Submodule.span K (L : Set V)
   change W = ⊤
@@ -916,8 +916,8 @@ private theorem full_of_unimodular {K V : Type} [Field K] [NumberField K] [StarR
     simp [LinearMap.map_smul, hz']
   let i : K →ₗ[𝓞 K] L :=
     ((LinearMap.toSpanSingleton K _ (e x)).restrictScalars (𝓞 K)).codRestrict L hm
-  letI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL.fg
-  letI : Module.Finite (𝓞 K) K := Module.Finite.of_injective i fun a b hab =>
+  let : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.mpr hL.fg
+  let : Module.Finite (𝓞 K) K := Module.Finite.of_injective i fun a b hab =>
     smul_left_injective K (fun hzero => hx0 (e.map_eq_zero_iff.mp hzero))
       (congrArg Subtype.val hab)
   exact RingOfIntegers.not_isField K
@@ -1532,7 +1532,7 @@ theorem mass_le_orbMass (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 
         ENat.card (Formalism.ThetaLiftIndependence.autL h M.1) :=
       ENat.card_congr (((MulAction.stabilizerEquivStabilizerOfOrbitRel (hrel M.1)).toEquiv).trans
         (stabEquiv h M.1))
-    haveI : Nonempty (Formalism.ThetaLiftIndependence.autL h M.1) := ⟨stabEquiv h M.1 1⟩
+    have : Nonempty (Formalism.ThetaLiftIndependence.autL h M.1) := ⟨stabEquiv h M.1 1⟩
     rw [e1, inv_card_eq]
   simp_rw [hterm]
   exact (Finset.sum_image (s := hs.choose.attach) (g := qm)

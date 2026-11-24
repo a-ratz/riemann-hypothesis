@@ -53,8 +53,8 @@ theorem avg_linear_translate_const : ∀ (H : Type) [Group H] (u v : H → ℂ) 
   intro H _ u v c g hu hv
   set S : Subgroup H := rStab u ⊓ rStab v with hS
   have hSi : S.index ≠ 0 := Subgroup.index_inf_ne_zero hu hv
-  haveI : S.FiniteIndex := ⟨hSi⟩
-  haveI : (rStab u).FiniteIndex := ⟨hu⟩
+  have : S.FiniteIndex := ⟨hSi⟩
+  have : (rStab u).FiniteIndex := ⟨hu⟩
   have hSu : S ≤ rStab u := inf_le_left
   have hSv : S ≤ rStab v := inf_le_right
   have hSuv : S ≤ rStab (u + v) := by

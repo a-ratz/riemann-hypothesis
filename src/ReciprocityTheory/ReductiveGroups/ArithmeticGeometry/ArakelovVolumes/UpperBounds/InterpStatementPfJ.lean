@@ -206,7 +206,7 @@ private theorem eq_zero_on_ball_of_eventuallyEq_zero {F : V n → ℂ} {w : V n}
 
 theorem ident_preconn (hU : IsOpen U) (hc : IsPreconnected U) {F : V n → ℂ}
     (hF : DifferentiableOn ℂ F U) {a : V n} (ha : a ∈ U) (h0 : F =ᶠ[𝓝 a] 0) : Set.EqOn F 0 U := by
-  have hS : IsOpen {z : V n | F =ᶠ[𝓝 z] 0} := isOpen_setOf_eventually_nhds
+  have hS : IsOpen {z : V n | F =ᶠ[𝓝 z] 0} := isOpen_setOfPred_eventually_nhds
   have hcl : closure {z : V n | F =ᶠ[𝓝 z] 0} ∩ U ⊆ {z : V n | F =ᶠ[𝓝 z] 0} := by
     rintro z ⟨hzc, hzU⟩
     obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.1 hU z hzU
@@ -274,7 +274,7 @@ theorem coord_ne_of_det {f : V n → V n} (hn : 1 ≤ n) (hdet : (fderiv ℂ f 0
   rw [hd]
   have hfr : Module.finrank ℂ (V n) = n := finrank_euclideanSpace_fin
   show LinearMap.det ((0 : V n →L[ℂ] V n) : V n →ₗ[ℂ] V n) = 0
-  rw [ContinuousLinearMap.coe_zero, LinearMap.det_zero, hfr]
+  rw [ContinuousLinearMap.toLinearMap_zero, LinearMap.det_zero, hfr]
   exact zero_pow (by omega)
 
 end

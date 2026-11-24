@@ -82,7 +82,7 @@ private theorem X_true_mul_X_false_pow_mem_Pol (x : X.TT) (a : Fin (X.m + 1)) (P
   classical
   rw [show (MvPolynomial.X ((x, true), a) * MvPolynomial.X ((x, false), a) : RHH O X) ^ P =
       monomial (P • (Finsupp.single ((x, true), a) 1 + Finsupp.single ((x, false), a) 1)) 1 by
-    rw [MvPolynomial.X, MvPolynomial.X, monomial_mul, monomial_pow, one_mul, one_pow]]
+    rw [MvPolynomial.X, MvPolynomial.X, monomial_mul_monomial, monomial_pow, one_mul, one_pow]]
   rw [Pol, MvPolynomial.mem_restrictSupport_iff]
   intro m hm
   have hm' := support_monomial_subset hm
@@ -124,7 +124,7 @@ private theorem X_mem_intSub' (v : VarH X) : (MvPolynomial.X v : RHH O X) ∈ in
   classical
   change ∀ m, ∃ a : O, (MvPolynomial.X v : RHH O X).coeff m = algebraMap O (KK O) ((1 : O) ^ (0 : ℕ) * a)
   intro m
-  rw [MvPolynomial.coeff_X']
+  rw [coeff_X]
   split_ifs
   · exact ⟨1, by simp⟩
   · exact ⟨0, by simp⟩
@@ -191,7 +191,7 @@ theorem hpow_congr (S : UniformizedDVR X.p O) (hS : S.SqP) (x : X.TT) (e : ℕ) 
   have hp0 : ((X.p : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
     exact S.p_mem
-  haveI : CharP (IsLocalRing.ResidueField O) X.p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hp0
+  have : CharP (IsLocalRing.ResidueField O) X.p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hp0
   rw [hDdef]
 
   simp only [map_sub, map_pow, map_sum, map_mul, map_X]

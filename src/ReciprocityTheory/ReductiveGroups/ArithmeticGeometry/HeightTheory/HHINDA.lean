@@ -111,7 +111,7 @@ theorem opToKT_injective : Function.Injective (OpToKT D N la) := by
 theorem op_isFractionRing :
     letI := (OpToKT D N la).toAlgebra
     IsFractionRing (Op D N la) (KTf K D N) := by
-  letI := (OpToKT D N la).toAlgebra
+  let := (OpToKT D N la).toAlgebra
   have hinj : Function.Injective (algebraMap (Op D N la) (KTf K D N)) := opToKT_injective D N la
   have hC : ∀ s : 𝓞 K, OTtoKT K D N (MvPolynomial.C s) = MvPolynomial.C (algebraMap (𝓞 K) K s) :=
     fun s => MvPolynomial.map_C _ _
@@ -315,29 +315,29 @@ theorem norm_at_la_A (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (la : IsDedekindDomai
           (∑ᶠ (w : AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ)) (_ : w ∈ d.PlOver la c),
             (d.fze h c w : ℤ) * WithTop.untopD 0 (w y)) * OpToKT d.D d.N la u := by
   set_option synthInstance.maxHeartbeats 200000 in
-    letI iF : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-    letI iO : Algebra (Op d.D d.N la) (KTf K d.D d.N) := (OpToKT d.D d.N la).toAlgebra
-    letI iOL : Algebra (Op d.D d.N la) (OmS (Ω c) d.D d.N) := (d.OpToS h la c).toAlgebra
-    haveI : IsScalarTower (Op d.D d.N la) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+    let iF : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+    let iO : Algebra (Op d.D d.N la) (KTf K d.D d.N) := (OpToKT d.D d.N la).toAlgebra
+    let iOL : Algebra (Op d.D d.N la) (OmS (Ω c) d.D d.N) := (d.OpToS h la c).toAlgebra
+    have : IsScalarTower (Op d.D d.N la) (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
       IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-    haveI : IsDiscreteValuationRing (Op d.D d.N la) := Op_isDVR d.D d.N la
-    haveI : IsFractionRing (Op d.D d.N la) (KTf K d.D d.N) := NPA.op_isFractionRing d.D d.N la
-    haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
-    haveI : CharZero (KTf K d.D d.N) :=
+    have : IsDiscreteValuationRing (Op d.D d.N la) := Op_isDVR d.D d.N la
+    have : IsFractionRing (Op d.D d.N la) (KTf K d.D d.N) := NPA.op_isFractionRing d.D d.N la
+    have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
+    have : CharZero (KTf K d.D d.N) :=
       charZero_of_injective_algebraMap (algebraMap K (KTf K d.D d.N)).injective
-    haveI : Algebra.IsSeparable (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := inferInstance
-    haveI : IsDedekindDomain (integralClosure (Op d.D d.N la) (OmS (Ω c) d.D d.N)) :=
+    have : Algebra.IsSeparable (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := inferInstance
+    have : IsDedekindDomain (integralClosure (Op d.D d.N la) (OmS (Ω c) d.D d.N)) :=
       integralClosure.isDedekindDomain (Op d.D d.N la) (KTf K d.D d.N) _
-    haveI : IsFractionRing (integralClosure (Op d.D d.N la) (OmS (Ω c) d.D d.N)) (OmS (Ω c) d.D d.N) :=
+    have : IsFractionRing (integralClosure (Op d.D d.N la) (OmS (Ω c) d.D d.N)) (OmS (Ω c) d.D d.N) :=
       integralClosure.isFractionRing_of_finite_extension (KTf K d.D d.N) _
     obtain ⟨u, hu, hn⟩ := ValPl.norm_eq_places (O := Op d.D d.N la) (F := KTf K d.D d.N) y hy
       (NPA.op_irreducible d.D d.N la ϖ hϖ hϖ2)
-    letI iT : Algebra (OT K d.D d.N) (OmS (Ω c) d.D d.N) := (d.OTtoS c).toAlgebra
-    haveI : IsScalarTower (OT K d.D d.N) (Op d.D d.N la) (OmS (Ω c) d.D d.N) :=
+    let iT : Algebra (OT K d.D d.N) (OmS (Ω c) d.D d.N) := (d.OTtoS c).toAlgebra
+    have : IsScalarTower (OT K d.D d.N) (Op d.D d.N la) (OmS (Ω c) d.D d.N) :=
       IsScalarTower.of_algebraMap_eq (fun x => (d.opToS_alg h la c x).symm)
     have hpl : ValPl.PlacesOver (Op d.D d.N la) (OmS (Ω c) d.D d.N) = d.PlOver la c := by
       ext w
-      simp only [ValPl.PlacesOver, Data.PlOver, Set.mem_setOf_eq]
+      simp only [ValPl.PlacesOver, Data.PlOver, Set.mem_ofPred_eq]
       rw [← ValPl.placesOver_iff_loc (R := OT K d.D d.N) (laT d.D d.N la) w]
       rfl
     refine ⟨u, hu, ?_⟩
@@ -514,8 +514,8 @@ theorem gaussAbs_C (w : NumberField.FinitePlace K) {σ : Type*} (c : K) :
   by_cases hc : c = 0
   · subst hc
     simp
-  · rw [MvPolynomial.support_C, if_neg hc]
-    simp only [Finset.sup_singleton, MvPolynomial.coeff_C, if_true]
+  · rw [MvPolynomial.support_C, ite_eq_right hc]
+    simp only [Finset.sup_singleton, MvPolynomial.coeff_C, ite_true]
     exact Real.coe_toNNReal _ (by positivity)
 
 end ReciprocityTheory.ChartRestriction.G.T0.HeightMultiplicativity
@@ -641,7 +641,7 @@ theorem pf_fin (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (y : OmS (Ω c) d.D d.N) (h
     (la : HeightOneSpectrum (𝓞 K)) :
     Real.log (gaussAbs (FinitePlace.mk la) PA) - Real.log (gaussAbs (FinitePlace.mk la) PB) =
       -((d.nLa h c la y : ℝ) * logNorm la) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
   obtain ⟨ϖ, hϖ1, hϖ2, hϖ⟩ := exists_unif la
   obtain ⟨u, hu, hN⟩ := d.norm_at_la hd h c la ϖ hϖ1 hϖ2 y hy
   obtain ⟨⟨x, s⟩, rfl⟩ := IsLocalization.mk'_surjective (laT d.D d.N la).primeCompl u

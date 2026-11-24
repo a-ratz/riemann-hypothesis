@@ -657,11 +657,11 @@ theorem generic_dense {n : ℕ} (P : Ideal (MvPolynomial (Fin n) ℚ)) (hP : P.I
     have : V = ⋂ g ∈ P, {z | aeval z g = 0} := by ext z; simp [V]
     rw [this]
     exact isClosed_biInter fun g _ => isClosed_eq (continuous_aeval g) continuous_const
-  haveI : CompleteSpace V := hV.completeSpace_coe
-  haveI : Countable (MvPolynomial (Fin n) ℚ) := (basisMonomials (Fin n) ℚ).repr.injective.countable
+  have : CompleteSpace V := hV.completeSpace_coe
+  have : Countable (MvPolynomial (Fin n) ℚ) := (basisMonomials (Fin n) ℚ).repr.injective.countable
   let O : {f : MvPolynomial (Fin n) ℚ // f ∉ P} → Set V := fun f => {z | aeval z.1 f.1 ≠ 0}
   have hO : ∀ f, IsOpen (O f) := fun f =>
-    isOpen_ne_fun ((continuous_aeval f.1).comp continuous_subtype_val) continuous_const
+    isOpen_ne_fun ((continuous_aeval f.1).comp continuous_subtypeVal) continuous_const
   have hD : ∀ f, Dense (O f) := fun f => by
     rw [Subtype.dense_iff]
     refine (ratPrimeDense (Fin n) P f.1 hP f.2).trans (closure_mono ?_)
@@ -669,7 +669,7 @@ theorem generic_dense {n : ℕ} (P : Ideal (MvPolynomial (Fin n) ℚ)) (hP : P.I
     exact ⟨⟨z, h1⟩, h2, rfl⟩
   obtain ⟨u, hu, hl⟩ := mem_closure_iff_seq_limit.1 (dense_iInter_of_isOpen hO hD ⟨z₀, hz₀⟩)
   refine ⟨fun m => (u m).1, fun m g => ⟨fun h => ?_, fun h => (u m).2 g h⟩,
-    (continuous_subtype_val.tendsto _).comp hl⟩
+    (continuous_subtypeVal.tendsto _).comp hl⟩
   by_contra hg
   exact Set.mem_iInter.1 (hu m) ⟨g, hg⟩ h
 
@@ -815,7 +815,7 @@ theorem final_ineq {a Q t : ℝ} {τ : ℕ} (hQ : 0 ≤ Q) (h : a ≤ Real.exp (
   · subst h0
     rw [Real.log_zero, mul_zero, neg_zero, Real.exp_zero, mul_one]
     exact h.trans (mul_le_of_le_one_right (Real.exp_pos _).le (pow_le_one₀ le_rfl zero_le_one))
-  · rw [Real.exp_neg, Real.exp_nat_mul, Real.exp_log h0, mul_inv_le_iff₀ (pow_pos h0 τ)]
+  · rw [Real.exp_neg, Real.exp_natCast_mul, Real.exp_log h0, mul_inv_le_iff₀ (pow_pos h0 τ)]
     exact h
 
 theorem norm_le_of_emb {K V Ω : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V] [Module (𝓞 K) V]
@@ -886,7 +886,7 @@ theorem norm_le_of_emb {K V Ω : Type} [Field K] [NumberField K] [AddCommGroup V
       have h2 := pow_le_pow_left₀ (norm_nonneg _) h1 2
       have e5 : (Real.exp (τ * t) * GlobalTheory.Adelic.archSize (A σ') (fun i => (ρ.comp ψ) (ev (b i))) ^ τ) ^ 2 =
           Real.exp (2 * (τ : ℝ) * t) * (∑ a, ‖∑ m, A σ' m a * ρ (ψ (ev (b m)))‖ ^ 2) ^ τ := by
-        rw [mul_pow, ← Real.exp_nat_mul, ← pow_mul, mul_comm τ 2, pow_mul]
+        rw [mul_pow, ← Real.exp_natCast_mul, ← pow_mul, mul_comm τ 2, pow_mul]
         unfold GlobalTheory.Adelic.archSize
         simp only [RingHom.comp_apply]
         rw [Real.sq_sqrt hS]
@@ -1216,13 +1216,13 @@ theorem projCycle_eq_fundCycle {k : Type} [Field k] {N : ℕ} (J : Ideal (MvPoly
   ext Q
   rw [GroundTheory.Heights₂.Heights.fundCycle, Finsupp.onFinset_apply]
   by_cases hQ : Q ∈ GroundTheory.Heights₂.Heights.relComps J
-  · haveI hp : Q.IsPrime := hQ.1.1.1
+  · have hp : Q.IsPrime := hQ.1.1.1
     have h1 := GlobalTheory.ChowHt.cast_projCycle_apply (J := J) (Q := Q) hQ
-    rw [if_pos hQ, GroundTheory.Heights₂.Heights.localMult, dite_eq_left hp]
+    rw [ite_eq_left hQ, GroundTheory.Heights₂.Heights.localMult, dite_eq_left hp]
     have h2 := congrArg ENat.toNat h1
-    rw [ENat.toNat_coe] at h2
+    rw [ENat.toNat_natCast] at h2
     exact h2
-  · rw [if_neg hQ]
+  · rw [ite_eq_right hQ]
     exact GlobalTheory.ChowHt.projCycle_apply_of_notMem hQ
 
 theorem hyperplane_section_divCycle : ∀ (k : Type) [Field k] (N B : ℕ) (P : Ideal (MvPolynomial (Fin N) k)) (u : Fin N → k) (f : MvPolynomial (Fin (B + 1) × Fin N) k), GlobalTheory.ChowHt.hyperplaneSection P u = GroundTheory.Heights₂.Heights.divCycle P u ∧ GlobalTheory.ChowHt.fixFirstBlock u f = GroundTheory.Heights₂.Heights.specFirst f u := by

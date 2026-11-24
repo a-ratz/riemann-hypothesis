@@ -176,7 +176,7 @@ theorem IsNef.isPsEff_pull_red_of_dim_le (k : Type) [Field k] [Infinite k] (d : 
     (X : Scheme.{0}) [Algebra k Γ(X, ⊤)] (hX : IsProjOver (strHom k (X := X))) (M : LB X)
     (hM : IsNef k M) (Z : Closeds X) (hZ : IsIrreducible (Z : Set X))
     (hd : topologicalKrullDim (Z : Set X) ≤ (d : ℕ)) : IsPsEff (M.pull (redι Z)) := by
-  letI := algebraΓAlong k (redι Z)
+  let := algebraΓAlong k (redι Z)
   have := isIntegral_red hZ
   obtain ⟨B, hB⟩ := exists_isAmpleLB_of_isProjOver hX
   have : IsProper (strHom k (X := X)) := by
@@ -349,11 +349,11 @@ theorem interNum_cons_nef_ample_nonneg :
     ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) [Algebra k Γ(X, ⊤)], IsProjOver (strHom k (X := X)) → ∀ (d : ℕ) (F : X.Modules) [IsFiniteQC F], suppDim F ≤ (d + 1 : ℕ) → ∀ (N : LB X) (P : Fin d → LB X), IsNef k N → (∀ i, IsAmpleLB (P i)) → 0 ≤ interNum k F (Fin.cons N P : Fin (d + 1) → LB X) := by
   intro k _ _ X _ hp d
   have hf := algebraMap_eq_strHom k X
-  haveI := isNoetherian_of_isProjOver hp
+  have := isNoetherian_of_isProjOver hp
   induction d with
   | zero =>
     intro F _ hF N P hN _
-    haveI : IsProper (strHom k (X := X)) := (isProper_and_exists_isAmpleLB_of_isProjOver hp).1
+    have : IsProper (strHom k (X := X)) := (isProper_and_exists_isAmpleLB_of_isProjOver hp).1
     have hN' := (isNef_iff hf).1 hN
     have e : (Fin.cons N P : Fin (0 + 1) → LB X) = ![N] := by
       ext i; fin_cases i; rfl
@@ -762,7 +762,7 @@ theorem withBot_eq_succ_of_le_of_not_le {t : WithBot ℕ∞} {d : ℕ} (h1 : t �
     induction t using ENat.recTopCoe with
     | top =>
       have h1' : (⊤ : ℕ∞) ≤ ((d + 1 : ℕ) : ℕ∞) := by exact_mod_cast h1
-      exact absurd h1' (ENat.coe_lt_top (d + 1)).not_ge
+      exact absurd h1' (ENat.natCast_lt_top (d + 1)).not_ge
     | coe n =>
       have h1' : n ≤ d + 1 := by exact_mod_cast h1
       have h2' : ¬ n ≤ d := fun h => h2 (by exact_mod_cast h)
@@ -774,12 +774,12 @@ theorem isAmpleLB_tens_of_isNef_succ : ∀ (k : Type) [Field k] [Infinite k] (d 
   refine IsAmpleLB.tens_of_forall_isPsEff k Y (strHom k Y) hproj A N hA hN.isLB ?_
   intro Z hZ
   let Z' := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme
-  letI : Algebra k Γ(Z', ⊤) := ((redι Z).appTop.hom.comp (algebraMap k Γ(Y, ⊤))).toAlgebra
+  let : Algebra k Γ(Z', ⊤) := ((redι Z).appTop.hom.comp (algebraMap k Γ(Y, ⊤))).toAlgebra
   have compat : ∀ r : k, (redι Z).appTop.hom (algebraMap k Γ(Y, ⊤) r) = algebraMap k Γ(Z', ⊤) r :=
     fun r => rfl
-  haveI hirr : IrreducibleSpace Z' := Subtype.irreducibleSpace (by simpa using hZ)
-  haveI hred : IsReduced Z' := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
-  haveI hint : IsIntegral Z' := isIntegral_of_irreducibleSpace_of_isReduced Z'
+  have hirr : IrreducibleSpace Z' := Subtype.irreducibleSpace (by simpa using hZ)
+  have hred : IsReduced Z' := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
+  have hint : IsIntegral Z' := isIntegral_of_irreducibleSpace_of_isReduced Z'
   have hdim : topologicalKrullDim Z' ≤ topologicalKrullDim Y :=
     (redι Z).isClosedEmbedding.isInducing.topologicalKrullDim_le
   have hpZ : IsProjOver (strHom k (X := Z')) := by
@@ -787,12 +787,12 @@ theorem isAmpleLB_tens_of_isNef_succ : ∀ (k : Type) [Field k] [Infinite k] (d 
     refine ⟨n, redι Z ≫ i, ?_, ?_⟩
     · exact IsClosedImmersion.comp _ _
     · rw [Category.assoc, hcomp, comp_strHom compat]
-  haveI hne : Nonempty Z' := by
+  have hne : Nonempty Z' := by
     obtain ⟨y, hy⟩ := hZ.nonempty
     rw [← range_redι Z] at hy
     obtain ⟨z, _⟩ := hy
     exact ⟨z⟩
-  haveI hnoeth : IsNoetherian Z' := isNoetherian_of_isProjOver hpZ
+  have hnoeth : IsNoetherian Z' := isNoetherian_of_isProjOver hpZ
   have hAZ : IsAmpleLB (A.pull (redι Z)) := hA.pull_of_isClosedImmersion _
   have hNZ : IsNef k (N.pull (redι Z)) := hN.pull_of_isClosedImmersion (redι Z) compat
   refine ⟨hNZ.isLB, A.pull (redι Z), hAZ, fun m hm => ?_⟩

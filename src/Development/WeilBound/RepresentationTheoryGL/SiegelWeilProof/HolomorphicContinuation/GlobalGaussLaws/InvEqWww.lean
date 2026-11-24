@@ -177,10 +177,10 @@ theorem hloc_away {θ : InfFam D} (hθ : IsInfFam θ) {τ : D.what₂.Tau} {fr :
     by_cases hz : piF θ τ fr z ∈ K
     · rw [Set.indicator_of_mem hz, Pi.one_apply, one_mul]
       have h1 : tens θ τ fr (gs 1) Ψ z = gs (n := n) 1 (piF θ τ fr z) * Ψ z := rfl
-      rw [h1, enorm_mul, ← mul_assoc]
+      rw [h1, eNorm_mul, ← mul_assoc]
       conv_lhs => rw [← one_mul ‖Ψ z‖ₑ]
       gcongr
-      rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (inv_nonneg.2 hδ.le), ← ENNReal.ofReal_one]
+      rw [← ofReal_norm, ← ENNReal.ofReal_mul (inv_nonneg.2 hδ.le), ← ENNReal.ofReal_one]
       apply ENNReal.ofReal_le_ofReal
       rw [← div_eq_inv_mul, one_le_div hδ]
       exact hu0 hz
@@ -201,7 +201,7 @@ theorem hint_int {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what₂
   have hΨc := cont_of_away hθ hΨ
   have hπ := continuous_piF (n := n) hθ τ fr
   obtain ⟨c, hc⟩ := Fib.fib_meas μ (piF θ τ fr) hπ (sIns τ fr) (piF_sIns hθ τ hdet) (fun z => ‖Ψ z‖ₑ)
-    hΨc.enorm.measurable (fun z u => by simp only [away_add hθ hΨ]) (hloc_away hθ μ hΨ)
+    hΨc.eNorm.measurable (fun z u => by simp only [away_add hθ hΨ]) (hloc_away hθ μ hΨ)
   have hρc : Continuous fun u : Fin V.rank → Fin n → ℂ => (1 + ‖u‖) ^ (-rr V.rank n) :=
     (continuous_const.add continuous_norm).rpow_const fun u => Or.inl (add_pos_of_pos_of_nonneg one_pos (norm_nonneg u)).ne'
   refine ⟨((hρc.comp hπ).mul (continuous_Bw hθ hψ hΨ x).norm).aestronglyMeasurable, ?_⟩
@@ -209,14 +209,14 @@ theorem hint_int {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what₂
   have e1 : ∀ z, ‖(1 + ‖piF θ τ fr z‖) ^ (-rr V.rank n) * ‖Bw ψ V θ τ fr Ψ x z‖‖ₑ =
       ENNReal.ofReal ((1 + ‖piF θ τ fr z‖) ^ (-rr V.rank n)) * ‖Ψ z‖ₑ := by
     intro z
-    rw [enorm_mul, norm_Bw hψ, ← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm (Ψ z), Real.norm_of_nonneg (Real.rpow_nonneg (by positivity) _),
-      enorm_norm, ofReal_norm_eq_enorm]
+    rw [eNorm_mul, norm_Bw hψ, ← ofReal_norm, ← ofReal_norm (Ψ z), Real.norm_of_nonneg (Real.rpow_nonneg (by positivity) _),
+      eNorm_norm, ofReal_norm]
   simp_rw [e1]
   have e2 : ∫⁻ z, ENNReal.ofReal ((1 + ‖piF θ τ fr z‖) ^ (-rr V.rank n)) * ‖Ψ z‖ₑ ∂μ =
       ∫⁻ u, ENNReal.ofReal ((1 + ‖u‖) ^ (-rr V.rank n)) ∂((μ.withDensity fun z => ‖Ψ z‖ₑ).map (piF θ τ fr)) := by
     rw [lintegral_map (f := fun u : Fin V.rank → Fin n → ℂ => ENNReal.ofReal ((1 + ‖u‖) ^ (-rr V.rank n)))
       (ENNReal.measurable_ofReal.comp hρc.measurable) hπ.measurable]
-    have e := lintegral_withDensity_eq_lintegral_mul μ hΨc.enorm.measurable
+    have e := lintegral_withDensity_eq_lintegral_mul μ hΨc.eNorm.measurable
       ((ENNReal.measurable_ofReal.comp hρc.measurable).comp hπ.measurable)
     simp only [Function.comp_def] at e
     rw [e]
@@ -226,7 +226,7 @@ theorem hint_int {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} {τ : D.what₂
   have hI := (integrable_rho (m := V.rank) (n := n)).hasFiniteIntegral
   refine lt_of_le_of_lt (le_of_eq ?_) hI
   congr 1; ext u
-  rw [← ofReal_norm_eq_enorm, Real.norm_of_nonneg (Real.rpow_nonneg (by positivity) _)]
+  rw [← ofReal_norm, Real.norm_of_nonneg (Real.rpow_nonneg (by positivity) _)]
 
 end PositivityTheory.Rg.Sw.Glob.FTH
 end -- clump:auto
@@ -457,7 +457,7 @@ theorem compAt_sub_sIns {θ : InfFam D} (hθ : IsInfFam θ) {τ : D.what₂.Tau}
   have hp : Matrix.of (piF θ τ fr y) = fr⁻¹ * compAt θ τ y := rfl
   rw [Matrix.map_sub (psiT D τ) (fun a b => map_sub (psiT D τ) a b), ← PlaceFactsH.compAt_eq_psiT hθ,
     ← PlaceFactsH.compAt_eq_psiT hθ, show sIns (D := D) τ fr (piF θ τ fr y) = insT τ (fr * Matrix.of (piF θ τ fr y)) from rfl,
-    compAt_insT hθ, if_pos rfl, hp, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hdet, Matrix.one_mul, sub_self]
+    compAt_insT hθ, ite_eq_left rfl, hp, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hdet, Matrix.one_mul, sub_self]
 
 
 

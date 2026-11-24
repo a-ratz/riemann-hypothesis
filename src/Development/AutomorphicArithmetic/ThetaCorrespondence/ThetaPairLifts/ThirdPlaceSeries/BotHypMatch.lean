@@ -86,7 +86,7 @@ theorem botHyp_match_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi
   · intro k hk
     have hm := (key k).1.1 hk
     rw [← (key k).2 hk]
-    simp only [rowJ, Set.mem_preimage, Set.mem_setOf_eq] at hm
+    simp only [rowJ, Set.mem_preimage, Set.mem_ofPred_eq] at hm
     simp only [rowChi]
     intro h0
     have hn := hK.2.2.2.2 _ hm.2

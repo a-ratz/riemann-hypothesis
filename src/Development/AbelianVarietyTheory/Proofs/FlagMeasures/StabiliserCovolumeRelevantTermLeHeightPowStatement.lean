@@ -386,7 +386,7 @@ theorem exists_isUpUni_isMatOn {e : Fin r → Fin n → ℂ} {z : Fin n → ℂ}
       have e1 : ∑ x : Fin r, (1 : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) (Fin.castSucc x) (Fin.castSucc a) • e x
           = e a := by
         simp only [Matrix.one_apply, Fin.castSucc_inj, ite_smul, one_smul, zero_smul,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true]
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rw [e1, ← hcae a, Matrix.sub_mulVec, Matrix.one_mulVec, add_sub_cancel]
 
 end GlobalTheory.FrameStab
@@ -466,14 +466,14 @@ theorem ofRoots_eq (R : Finset (Fin N × Fin N)) (hR : ∀ q ∈ R, q.1 < q.2) (
   · rw [dite_eq_left h, Matrix.one_apply_ne (hR _ h).ne, zero_add, Finset.sum_eq_single ⟨(i, j), h⟩]
     · simp
     · intro q _ hq
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       exact hq (Subtype.ext h')
     · intro h'
       exact absurd (Finset.mem_univ _) h'
   · rw [dite_eq_right h, Finset.sum_eq_zero, add_zero, Matrix.one_apply]
     intro q _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h'
     apply h
     rw [← h']
@@ -602,7 +602,7 @@ theorem frame_linearIndependent (D : D7) (X : HidaSetting D) (u : D.what₂.Word
   refine Fin.lastCases hlast (fun j => ?_) i
   have h := congrArg (hJ (X.B.I.ε v) (rv X.B.I v (X.fR j))) hg
   rw [hJ_lin, hfz] at h
-  simp only [hfe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, add_zero] at h
+  simp only [hfe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, add_zero] at h
   unfold hJ at h
   simp only [mulVec_zero, dotProduct_zero] at h
   exact h
@@ -786,7 +786,7 @@ theorem ratCoord_eq_matOn : ∀ (D : D7) (X : HidaSetting D) (u' : D.what₂.Wor
     unfold Formalism.L2.SG.RealObj.frm Formalism.L2.SG.RealObj.famSc Formalism.L2.SG.RealObj.fam
     simp only [Fin.snoc_last, Complex.ofReal_one, one_pow, inv_one, one_smul]
     exact (Formalism.L2.SG.PoincareInHH.Cut.hJ_crd X _ _ _).trans (by rw [(X.zu_orth u' _).2]; simp)
-  simp only [hfe, hfz, mul_ite, mul_one, mul_zero, add_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [hfe, hfz, mul_ite, mul_one, mul_zero, add_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   congr 1
 
 end GlobalTheory.LoopVol
@@ -852,14 +852,14 @@ theorem exists_upUni_of_inS {r n : ℕ} (e : Fin r → Fin n → ℂ) (z : Fin n
     constructor
     · intro hji
       have hne : i ≠ j := fun h => (lt_irrefl j) (h ▸ hji)
-      simp only [hne, if_false, zero_add]
+      simp only [hne, ite_false, zero_add]
       split_ifs with h
       · apply hD0
-        simp only [Set.mem_setOf_eq, not_lt]
+        simp only [Set.mem_ofPred_eq, not_lt]
         exact le_of_lt hji
       · rfl
     · rintro rfl
-      simp only [if_true]
+      simp only [ite_true]
       split_ifs with h
       · rw [hD0 i ⟨i.1, h⟩ (by simp)]
         ring
@@ -869,7 +869,7 @@ theorem exists_upUni_of_inS {r n : ℕ} (e : Fin r → Fin n → ℂ) (z : Fin n
       rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_add_cancel]
     rw [hg1, hDs b]
     simp only [add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [add_comm, Fin.sum_univ_castSucc]
     simp [hf]
 
@@ -1365,7 +1365,7 @@ theorem pi_smul_ne_top {ι : Type} [Fintype ι] {α : ι → Type} [∀ i, Measu
     Measure.pi (fun i => c i • μ i) = (∏ i, c i) • Measure.pi μ := by
   have : ∀ i, SigmaFinite (c i • μ i) := fun i => sigmaFinite_smul (μ i) (hc i)
   refine Measure.pi_eq (fun s hs => ?_)
-  simp only [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, Finset.prod_mul_distrib]
+  simp only [smul_apply, Measure.pi_pi, smul_eq_mul, Finset.prod_mul_distrib]
 
 theorem measurePreserving_inv_mul (r : ℝ) (hr : 0 < r) :
     MeasurePreserving (fun z : ℂ => ((r : ℂ))⁻¹ * z) volume
@@ -1447,10 +1447,10 @@ theorem measure_preimage_reindex_scale_le : ∀ (ι ι' κ κ' : Type) [Fintype 
     rfl
   have hgm : Measurable (fun (x : ι' → κ' → ℂ) (i : ι) (q : κ) => ((ρ : ℂ) ^ d q)⁻¹ * x (e i) (f q)) :=
     Measurable.of_eval (fun i => hinm.comp (measurable_pi_apply (e i)))
-  rw [← Measure.map_apply hgm hA, hout, Measure.smul_apply, smul_eq_mul, mul_comm]
+  rw [← Measure.map_apply hgm hA, hout, smul_apply, smul_eq_mul, mul_comm]
   have hC1 : C ≤ 1 := ENNReal.ofReal_le_one.mpr hc
   have hK1 : K ≤ ∏ q, ENNReal.ofReal ((ρ ^ d q) ^ 2) := by
-    refine Finset.prod_le_prod' (fun q _ => ?_)
+    refine Finset.prod_le_prod (fun q _ => ?_)
     calc w q = C * ENNReal.ofReal ((ρ ^ d q) ^ 2) := rfl
       _ ≤ 1 * ENNReal.ofReal ((ρ ^ d q) ^ 2) := by gcongr
       _ = ENNReal.ofReal ((ρ ^ d q) ^ 2) := one_mul _
@@ -1725,7 +1725,7 @@ theorem GlobalTheory.LoopVol.packing_pinned {D : D7} {X : HidaSetting D} {Y : Fu
     (μw.map fun y => g * y * g⁻¹) K ≤ (μw.map fun y => g * y * g⁻¹) B := by
   obtain ⟨-, -, hconc, hinvw⟩ := hH
   obtain ⟨hKm, hKu⟩ := hK
-  haveI := Formalism.L2.SG.TermOp.Vanish.ROsub_countable X (X.Fu u) (X.Fu u') s.lam s.lam' s.lin
+  have := Formalism.L2.SG.TermOp.Vanish.ROsub_countable X (X.Fu u) (X.Fu u') s.lam s.lam' s.lin
   set Γ := Formalism.L2.SG.TermOp.Vanish.ROsub X (X.Fu u) (X.Fu u') s.lam s.lam' s.lin with hΓ
   set μR := μw.map fun y => g * y * g⁻¹ with hμR
   have hcm : Measurable fun y : X.B.I.Ginf => g * y * g⁻¹ :=

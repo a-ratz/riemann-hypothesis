@@ -107,8 +107,8 @@ theorem exists_eq_sum_X {O σ : Type} [CommRing O] [Fintype σ] (p : MvPowerSeri
     rw [map_add (f := _), map_sum, coeff_C]
     simp only [hq]
     by_cases h : n ≠ 0
-    · simp [dif_pos h, if_neg h]
-    · simp only [dif_neg h, Finset.sum_const_zero]
+    · simp [dite_eq_left h, ite_eq_right h]
+    · simp only [dite_eq_right h, Finset.sum_const_zero]
       push Not at h
       subst h
       simp
@@ -162,7 +162,7 @@ theorem isHomog_Tr {O σ : Type} [CommRing O] (a : Ideal O) (N : ℕ) (wt : σ �
 
 theorem finite_quot_Tr {O σ : Type} [CommRing O] [Finite σ] (a : Ideal O) (N : ℕ) [Finite (O ⧸ a ^ N)] :
     Finite (MvPowerSeries σ O ⧸ Tr σ a N) := by
-  haveI : Finite {n : σ →₀ ℕ | Finsupp.degree n < N} := (Finsupp.finite_of_degree_lt N).to_subtype
+  have : Finite {n : σ →₀ ℕ | Finsupp.degree n < N} := (Finsupp.finite_of_degree_lt N).to_subtype
   choose s hs using Ideal.Quotient.mk_surjective (I := Tr σ a N)
   refine Finite.of_injective (fun x (n : {n : σ →₀ ℕ | Finsupp.degree n < N}) =>
     Ideal.Quotient.mk (a ^ N) (coeff n.1 (s x))) fun x y h => ?_
@@ -199,9 +199,9 @@ theorem exists_sub_sum_mem_Tr {O σ : Type} [CommRing O] [Finite σ] (a : Ideal 
   · set_option synthInstance.maxHeartbeats 100000 in
       rw [map_sub, map_sum]
     simp only [coeff_wcomp]
-    rw [Finset.sum_eq_single (Finsupp.weight wt n), if_pos rfl, sub_self]
+    rw [Finset.sum_eq_single (Finsupp.weight wt n), ite_eq_left rfl, sub_self]
     · exact zero_mem _
-    · exact fun j _ hj => if_neg hj.symm
+    · exact fun j _ hj => ite_eq_right hj.symm
     · exact fun h => absurd (Finset.mem_image_of_mem _ (by simpa using hn)) h
   · rw [show N - Finsupp.degree n = 0 by omega]
     simp
@@ -222,7 +222,7 @@ theorem nonempty_gradedAlgebra_map {O A B : Type} [CommRing O] [CommRing A] [Alg
     have h3 := hk j (f - g) (by rw [map_sub]; exact sub_eq_zero.2 hfg.symm)
     rw [map_sub, h1 j f hf, LinearMap.mem_ker.1 hg, sub_zero] at h3
     exact h3
-  haveI : SetLike.GradedMonoid fun j => (𝒜 j).map φ.toLinearMap :=
+  have : SetLike.GradedMonoid fun j => (𝒜 j).map φ.toLinearMap :=
     { one_mem := ⟨1, SetLike.GradedOne.one_mem, map_one φ⟩
       mul_mem := by
         rintro i j _ _ ⟨f, hf, rfl⟩ ⟨g, hg, rfl⟩
@@ -233,8 +233,8 @@ theorem isCO_of_surj {O A B : Type} [CommRing O] [IsLocalRing O] [CommRing A] [A
     [IsLocalHom (algebraMap O A)] (hr : ∀ x : A, ∃ a : O, x - algebraMap O A a ∈ maximalIdeal A)
     [CommRing B] [Algebra O B] [Finite B] [Nontrivial B] (φ : A →ₐ[O] B) (hφ : Function.Surjective φ) :
     IsCO O B := by
-  haveI : IsLocalRing B := IsLocalRing.of_surjective' (φ : A →+* B) hφ
-  haveI : IsLocalHom (φ : A →+* B) := IsLocalHom.of_surjective _ hφ
+  have : IsLocalRing B := IsLocalRing.of_surjective' (φ : A →+* B) hφ
+  have : IsLocalHom (φ : A →+* B) := IsLocalHom.of_surjective _ hφ
   have hl : IsLocalHom (algebraMap O B) := by
     rw [← φ.comp_algebraMap]
     infer_instance
@@ -250,8 +250,8 @@ theorem exists_span_of_card_le {O M : Type} [CommRing O] [IsLocalRing O] [Finite
     (hc : Nat.card M ≤ Nat.card (ResidueField O) ^ n) :
     ∃ f : Fin n → M, Submodule.span O (Set.range f) = ⊤ := by
   have ht : Module.IsTorsionBySet O M (maximalIdeal O) := fun x a => hk a.1 a.2 x
-  letI : Module (ResidueField O) M := ht.module
-  haveI : IsScalarTower O (ResidueField O) M := ht.isScalarTower
+  let : Module (ResidueField O) M := ht.module
+  have : IsScalarTower O (ResidueField O) M := ht.isScalarTower
   rw [Module.natCard_eq_pow_finrank (K := ResidueField O)] at hc
   have hd := (Nat.pow_le_pow_iff_right Finite.one_lt_card).1 hc
   let b := Module.finBasis (ResidueField O) M
@@ -354,7 +354,7 @@ theorem exists_gens_wt [Finite A] [Finite (ResidueField O)] {J : Ideal A} (hJ : 
     rw [← e]
     exact (Ideal.Quotient.eq.2 (sub_decompose_mem_Kj 𝒜 hJ j hx)).symm
   choose s hs hs' using hl
-  haveI : Finite (A ⧸ Kj 𝒜 J j) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+  have : Finite (A ⧸ Kj 𝒜 J j) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
   obtain ⟨g, hg⟩ := exists_span_of_card_le (O := O) (M := I) (fun c hc y => Subtype.ext (by
     rw [Submodule.coe_smul_of_tower, ← hs' y, Submodule.coe_zero, ← Ideal.Quotient.mkₐ_eq_mk O, ← map_smul,
       Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem, Algebra.smul_def]
@@ -478,7 +478,7 @@ private theorem card_ker_le
     have : φ f ∈ RingHom.ker p := hker ▸ Ideal.mem_map_of_mem _ hf
     exact this
   have hψ : ∀ f, ψ (W.π f) = p (φ f) := fun f => AlgHom.liftOfSurjective_apply _ _ _ _ f
-  haveI : IsLocalHom ψ := ⟨fun x hx => by
+  have : IsLocalHom ψ := ⟨fun x hx => by
     by_contra hn
     have h1 : x ∈ maximalIdeal R := hn
     rw [← res_eq_zero_iff O, ← res_map ψ, res_eq_zero_iff] at h1
@@ -515,7 +515,7 @@ private theorem card_ker_le
       rw [← map_mul, this, map_zero]
     · have e : q (s (W.π f)) = ψ (W.π f) := AlgHom.congr_fun hqs _
       rw [RingHom.mem_ker, map_sub, AlgHom.comp_apply, AlgHom.comp_apply, e, hq', hψ, sub_self]
-    · haveI := IsLocalHom.of_surjective ((p₁.comp φ : MvPowerSeries W.σ O →ₐ[O] R'') : MvPowerSeries W.σ O →+* R'')
+    · have := IsLocalHom.of_surjective ((p₁.comp φ : MvPowerSeries W.σ O →ₐ[O] R'') : MvPowerSeries W.σ O →+* R'')
         (hp₁.comp hφ)
       exact map_nonunit ((p₁.comp φ : MvPowerSeries W.σ O →ₐ[O] R'') : MvPowerSeries W.σ O →+* R'') f hf
   refine hinj ((injective_iff_map_eq_zero q).2 fun y hy => ?_)
@@ -551,14 +551,14 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_relations :
     mem_pow_of_coeff _ _ C_mem_max X_mem_max N f hf
   have hTm : Tr W.σ (maximalIdeal O) N ≤ maximalIdeal P := hT.trans (Ideal.pow_le_self hN0)
   have hJm : J ≤ maximalIdeal P := le_maximalIdeal (RingHom.ker_ne_top _)
-  haveI : Finite (O ⧸ maximalIdeal O) := inferInstanceAs (Finite (ResidueField O))
-  haveI : Finite (O ⧸ maximalIdeal O ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
+  have : Finite (O ⧸ maximalIdeal O) := inferInstanceAs (Finite (ResidueField O))
+  have : Finite (O ⧸ maximalIdeal O ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
   set T := Tr W.σ (maximalIdeal O) N with hTdef
-  haveI : Finite (P ⧸ T) := finite_quot_Tr _ N
-  haveI : Nontrivial (P ⧸ T) := Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal P).ne_top hTm)
+  have : Finite (P ⧸ T) := finite_quot_Tr _ N
+  have : Nontrivial (P ⧸ T) := Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal P).ne_top hTm)
   have h5 : ∀ c : O, (MvPowerSeries.C c : P) = algebraMap O _ c := fun c => by
     simp [P, MvPowerSeries.algebraMap_apply]
-  haveI : IsLocalHom (algebraMap O P) := ⟨fun c h => by
+  have : IsLocalHom (algebraMap O P) := ⟨fun c h => by
     by_contra hn
     exact C_mem_max c hn (h5 c ▸ h)⟩
   have hres : ∀ x : P, ∃ a : O, x - algebraMap O P a ∈ maximalIdeal P := fun x =>
@@ -568,7 +568,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_relations :
   let φ : P →ₐ[O] P ⧸ T := Ideal.Quotient.mkₐ O T
   have hφ : Function.Surjective φ := Ideal.Quotient.mk_surjective
   have hφ0 : ∀ x, φ x = 0 ↔ x ∈ T := fun x => Ideal.Quotient.eq_zero_iff_mem
-  haveI : IsCO O (P ⧸ T) := isCO_of_surj hres φ hφ
+  have : IsCO O (P ⧸ T) := isCO_of_surj hres φ hφ
   let 𝒜 : ℤ → Submodule O (P ⧸ T) := fun j => (wtPart O W.wt j).map φ.toLinearMap
   have hsum : ∀ x : P, ∃ S : Finset ℤ, φ x = ∑ j ∈ S, φ (wcomp O W.wt j x) := fun x => by
     obtain ⟨S, hS⟩ := exists_sub_sum_mem_Tr (maximalIdeal O) N W.wt x
@@ -591,20 +591,20 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_relations :
       exact Ideal.sum_mem _ fun j _ => Ideal.subset_span
         ⟨⟨_, j, ⟨_, wcomp_mem O W.wt j x, rfl⟩⟩, Ideal.mem_map_of_mem φ (W.homog x hx j), rfl⟩
     · exact Ideal.span_le.2 (by rintro _ ⟨x, hx, rfl⟩; exact hx)
-  haveI hφl : IsLocalHom (φ : P →+* P ⧸ T) := IsLocalHom.of_surjective _ hφ
+  have hφl : IsLocalHom (φ : P →+* P ⧸ T) := IsLocalHom.of_surjective _ hφ
   have hJbm : J.map φ ≤ maximalIdeal (P ⧸ T) :=
     Ideal.map_le_iff_le_comap.2 fun x hx => map_nonunit (φ : P →+* P ⧸ T) x (hJm hx)
   obtain ⟨f, hf, hle⟩ := exists_gens 𝒜 hJb (fun j => Module.finrank (ResidueField O) (F.Ob j)) fun j => by
     set K := Kj 𝒜 (J.map φ) j with hK
     have hKJ : K ≤ J.map φ := Kj_le 𝒜 _ j
     have hne : J.map φ ≠ ⊤ := ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top hJbm
-    haveI : Finite ((P ⧸ T) ⧸ K) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
-    haveI : Finite ((P ⧸ T) ⧸ J.map φ) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
-    haveI : Nontrivial ((P ⧸ T) ⧸ K) := Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top hne hKJ)
-    haveI : Nontrivial ((P ⧸ T) ⧸ J.map φ) := Ideal.Quotient.nontrivial_iff.2 hne
-    haveI : IsCO O ((P ⧸ T) ⧸ K) :=
+    have : Finite ((P ⧸ T) ⧸ K) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+    have : Finite ((P ⧸ T) ⧸ J.map φ) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+    have : Nontrivial ((P ⧸ T) ⧸ K) := Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top hne hKJ)
+    have : Nontrivial ((P ⧸ T) ⧸ J.map φ) := Ideal.Quotient.nontrivial_iff.2 hne
+    have : IsCO O ((P ⧸ T) ⧸ K) :=
       isCO_of_surj IsCO.res_surj (Ideal.Quotient.mkₐ O K) Ideal.Quotient.mk_surjective
-    haveI : IsCO O ((P ⧸ T) ⧸ J.map φ) :=
+    have : IsCO O ((P ⧸ T) ⧸ J.map φ) :=
       isCO_of_surj IsCO.res_surj (Ideal.Quotient.mkₐ O (J.map φ)) Ideal.Quotient.mk_surjective
     obtain ⟨gr'⟩ := nonempty_gradedAlgebra_quot 𝒜 (Ideal.Quotient.mkₐ O K) Ideal.Quotient.mk_surjective
       (by

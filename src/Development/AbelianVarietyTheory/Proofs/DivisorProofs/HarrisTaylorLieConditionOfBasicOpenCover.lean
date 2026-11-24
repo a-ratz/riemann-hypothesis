@@ -104,7 +104,7 @@ theorem decomp_of_kill {a : ℕ} (τ : Fin a → O →+* R')
     (hv : ∀ c : Fin a → O, (List.ofFn fun i => μ (c i) - algebraMap R' _ (τ i (c i))).prod v = 0) :
     ∃ w : Fin a → M, (∀ i c, μ c (w i) = τ i c • w i) ∧ v = ∑ i, w i := by
   classical
-  letI : Module (R' ⊗[ℤ] O) M := Module.compHom M (lam μ).toRingHom
+  let : Module (R' ⊗[ℤ] O) M := Module.compHom M (lam μ).toRingHom
   have hsm : ∀ (b : R' ⊗[ℤ] O) (m : M), b • m = lam μ b m := fun _ _ => rfl
   let I : Fin a → Ideal (R' ⊗[ℤ] O) := fun i => Ideal.span (Set.range (gen (τ i)))
   have hp : ((Finset.univ : Finset (Fin a)) : Set (Fin a)).Pairwise fun i j => I i ⊔ I j = ⊤ :=

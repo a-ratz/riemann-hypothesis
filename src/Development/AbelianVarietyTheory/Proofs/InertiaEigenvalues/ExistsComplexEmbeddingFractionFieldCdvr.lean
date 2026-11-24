@@ -105,7 +105,7 @@ theorem exists_embedding_fractionField :
     ∀ (K : Type) [Field K] [NumberField K] (σ : K →+* ℂ) (T : CDVR), T.FinRes →
       ∀ io : K →+* T.Fr, ∃ ι : T.Fr →+* ℂ, ι.comp io = σ := by
   intro K _ _ σ T hT io
-  haveI : Finite (ResidueField T.V) := hT
+  have : Finite (ResidueField T.V) := hT
   have hV := mk_le_continuum_of_finite_residueField T.V
   have hF : #T.Fr ≤ 𝔠 := by
     rw [show #T.Fr = #T.V from IsFractionRing.cardinalMk T.V T.Fr]

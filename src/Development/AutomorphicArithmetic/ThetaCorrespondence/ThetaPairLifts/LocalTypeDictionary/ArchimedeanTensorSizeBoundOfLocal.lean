@@ -126,9 +126,9 @@ theorem absLe_integral [MeasurableSpace X] [OpensMeasurableSpace X] [MeasurableA
     (hv : ∀ x, f x ≠ 0 → AbsLe σ (f x) a) : AbsLe σ (∫ x, f x ∂μ) (a + b) := by
   classical
   have hT : IsCompact (tsupport f) := hc
-  haveI : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hT
+  have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hT
   have hfin : (f '' tsupport f).Finite := by
-    have := (hf.comp_continuous (continuous_subtype_val : Continuous (Subtype.val : tsupport f → X))).range_finite
+    have := (hf.comp_continuous (continuous_subtypeVal : Continuous (Subtype.val : tsupport f → X))).range_finite
     rwa [Set.range_comp, Subtype.range_coe] at this
   set V : Finset ℂ := hfin.toFinset.erase 0 with hV
   have hmem : ∀ x, f x ≠ 0 → f x ∈ V := fun x hx =>
@@ -201,7 +201,7 @@ theorem exists_pow_eq_one {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) (a :
   have h1 : valuation k ((resCard k : ℕ) : k) < 1 := by
     have h2 : IsLocalRing.residue 𝒪[k] ((resCard k : ℕ) : 𝒪[k]) = 0 := by
       rw [map_natCast]
-      haveI := Fintype.ofFinite 𝓀[k]
+      have := Fintype.ofFinite 𝓀[k]
       rw [resCard, Nat.card_eq_fintype_card]
       exact Nat.cast_card_eq_zero _
     rw [IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff,
@@ -266,9 +266,9 @@ theorem absLe_sqrt_pow {q : ℕ} (hq : q ≠ 0) (h : ((Real.sqrt q : ℝ) : ℂ)
   have h3 : ‖σ s‖ = Real.exp (Real.log q / 2) := by
     have h4 : ‖σ s‖ ^ 2 = q := by rw [← norm_pow, ← map_pow, h2, map_natCast, Complex.norm_natCast]
     refine (pow_left_inj₀ (norm_nonneg _) (Real.exp_pos _).le two_ne_zero).1 ?_
-    rw [h4, ← Real.exp_nat_mul]
+    rw [h4, ← Real.exp_natCast_mul]
     rw [show ((2 : ℕ) : ℝ) * (Real.log q / 2) = Real.log q by push_cast; ring, Real.exp_log hq0]
-  have h5 : ‖σ (s ^ n)‖ = Real.exp (n * (Real.log q / 2)) := by rw [map_pow, norm_pow, h3, Real.exp_nat_mul]
+  have h5 : ‖σ (s ^ n)‖ = Real.exp (n * (Real.log q / 2)) := by rw [map_pow, norm_pow, h3, Real.exp_natCast_mul]
   refine ⟨⟨s ^ n, by rw [map_pow, hs], h5.le⟩, (s ^ n)⁻¹, by rw [map_inv₀, map_pow, hs], ?_⟩
   rw [map_inv₀, norm_inv, h5, ← Real.exp_neg]
   have : 0 ≤ n * (Real.log q / 2) := by have := Real.log_natCast_nonneg q; positivity
@@ -383,8 +383,8 @@ theorem absLe_flatTensor {G : Grid k} (hs : 1 ≤ G.s) {ψ : AddChar k Circle} (
     AbsLe σ (flatTensor hs ψ ν (moved G false g T) x y) (3 * G.m * (a * N ^ 2 * Real.log (resCard k)) + B) := by
   classical
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := k)
-  haveI := hν.1
-  haveI : (varsVol G ν).IsAddLeftInvariant := by unfold varsVol; infer_instance
+  have := hν.1
+  have : (varsVol G ν).IsAddLeftInvariant := by unfold varsVol; infer_instance
   have hmv : Continuous (G.moveArgs .one g) := continuous_pi fun b =>
     (continuous_const.matrix_mul (continuous_apply b)).matrix_mul continuous_const
   have hψ' : IsLocallyConstant fun v => ((ψ (-phase x v) : Circle) : ℂ) :=
@@ -436,9 +436,9 @@ theorem isDiag_stair {G : Grid k} (hs : 1 ≤ G.s) (J : G.Level) (ϖ : kˣ) (e :
     | zero => exact exists_diag_stair hs ϖ e 0
     | succ j =>
       by_cases hj : j < G.m - 2
-      · simp only [Reps.through, dif_pos hj, if_true]
+      · simp only [Reps.through, dite_eq_left hj, ite_true]
         exact exists_diag_stair hs ϖ e (j + 1)
-      · simp only [dif_neg hj]
+      · simp only [dite_eq_right hj]
         exact exists_diag_one _ _ _
   · have : (Reps.through hs J (stair G ϖ e)).elt (fun i => DoubleCoset.mk _ _ (stair G ϖ e (i + 1))) (i, j) = 1 := by
       simp [Reps.elt, onColumn, hi]
@@ -488,7 +488,7 @@ theorem absLe_datum {μ₀ μ₁ : T} (hL : L.Is μ₀) (S : GridChoice W Set.un
     rw [h1, h2]
   have hm : 0 < D.R.m := by have := D.R.two_le_m; omega
   have h00 := ((Good.locGrid_isGood hL G W t hde hc).1 P hl).square 0 hm 0 hm
-  haveI := (isUnitVol_unitVol P).1
+  have := (isUnitVol_unitVol P).1
   have hT := isTensor_Tflip hL W S.B t Φ hde hc hl
   rw [hdep] at hT
   have hO := oneCoset hs (psiAt W P) (unitVol P) (givenLevel G t P) (Tflip W S.B t Φ P) (unifAt P) (cosExp G P) D.R.m_even
@@ -632,7 +632,7 @@ theorem coef_le_of_chosen {μ₀ : T} (hL : L.Is μ₀) (S : GridChoice W U) (t 
     rw [h1, h2]
   have hm : 0 < D.R.m := by have := D.R.two_le_m; omega
   have h00 := ((Good.locGrid_isGood hL G W t hde hc).1 P hl).square 0 hm 0 hm
-  haveI := (isUnitVol_unitVol P).1
+  have := (isUnitVol_unitVol P).1
   have hT := isTensor_Tflip hL W S.B t Φ hde hc hl
   rw [hdep] at hT
   have hO := oneCoset hs (psiAt W P) (unitVol P) (givenLevel G t P) (Tflip W S.B t Φ P) (unifAt P) (cosExp G P) D.R.m_even

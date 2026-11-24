@@ -159,7 +159,7 @@ theorem exists_linear_of_char {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ)) [Di
     (hmul : ∀ l m, ρ (l + m) = ρ l * ρ m) :
     ∃ φ : (Fin g → ℂ) →ₗ[ℝ] ℝ, ∀ l : Λ,
       ρ l = Complex.exp (2 * Real.pi * Complex.I * (φ (l : Fin g → ℂ) : ℂ)) := by
-  haveI : IsZLattice ℝ Λ := ⟨hsp⟩
+  have : IsZLattice ℝ Λ := ⟨hsp⟩
   let b := Module.Free.chooseBasis ℤ Λ
   let B := b.ofZLatticeBasis ℝ Λ
   let φ : (Fin g → ℂ) →ₗ[ℝ] ℝ := B.constr ℝ (fun j => Complex.arg (ρ (b j)) / (2 * Real.pi))
@@ -180,17 +180,17 @@ theorem exists_linear_of_char {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ)) [Di
     { carrier := {l | ρ l = Complex.exp (2 * Real.pi * Complex.I * (φ (l : Fin g → ℂ) : ℂ))}
       add_mem' := by
         intro l m hl hm
-        simp only [Set.mem_setOf_eq] at hl hm ⊢
+        simp only [Set.mem_ofPred_eq] at hl hm ⊢
         rw [hmul, hl, hm, ← Complex.exp_add]
         congr 1
         simp only [Submodule.coe_add, map_add (f := _)]
         push_cast; ring
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, map_zero]
+        simp only [Set.mem_ofPred_eq, ZeroMemClass.coe_zero, map_zero]
         simp [h0]
       neg_mem' := by
         intro l hl
-        simp only [Set.mem_setOf_eq] at hl ⊢
+        simp only [Set.mem_ofPred_eq] at hl ⊢
         have h1 : ρ (-l) * ρ l = 1 := by rw [← hmul, neg_add_cancel, h0]
         have h2 : ρ (-l) = (ρ l)⁻¹ := eq_inv_of_mul_eq_one_left h1
         rw [h2, hl, ← Complex.exp_neg]
@@ -225,7 +225,7 @@ theorem exists_shift_of_semichar : ∀ (g : ℕ) (Λ Λ₁ : Submodule ℤ (Fin 
     ∃ a : Fin g → ℂ, ∀ l : Λ,
       χ l = χ₁ (Submodule.inclusion h l) * Complex.exp (2 * Real.pi * Complex.I * (hermForm Hm a l).im) := by
   intro g Λ Λ₁ Hm χ χ₁ h hdisc hsp _hH hpos hχ hχ₁ hc hc₁
-  haveI := hdisc
+  have := hdisc
   have hne : ∀ l, χ₁ l ≠ 0 := fun l e => by simpa [e] using hχ₁ l
   have hne' : ∀ l, χ l ≠ 0 := fun l e => by simpa [e] using hχ l
   let ρ : Λ → ℂ := fun l => χ l / χ₁ (Submodule.inclusion h l)
@@ -398,9 +398,9 @@ theorem exists_nsmul_mem_of_dual {g : ℕ} {Hm : Matrix (Fin g) (Fin g) ℂ} (hH
     (hint : ∀ a ∈ Λ, ∀ b ∈ Λ, ∃ n : ℤ, imForm Hm a b = n) :
     ∃ N : ℕ, 0 < N ∧ ∀ x, (∀ l ∈ Λ, ∃ n : ℤ, imForm Hm x l = n) → N • x ∈ Λ := by
   classical
-  haveI : IsZLattice ℝ Λ := ⟨hsp⟩
-  haveI := ZLattice.module_finite ℝ Λ
-  haveI := ZLattice.module_free ℝ Λ
+  have : IsZLattice ℝ Λ := ⟨hsp⟩
+  have := ZLattice.module_finite ℝ Λ
+  have := ZLattice.module_free ℝ Λ
   set b := Module.Free.chooseBasis ℤ Λ with hb_def
   set e := b.ofZLatticeBasis ℝ Λ with he_def
   have he : ∀ i, e i = (b i : Fin g → ℂ) := fun i => b.ofZLatticeBasis_apply ℝ Λ i
@@ -478,13 +478,13 @@ theorem exists_unimodular_overlattice : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g
     rw [imForm_apply]; exact hint a ha b hb
   obtain ⟨Λ₁, hle, hint₁, hdual₁⟩ :=
     exists_selfDual_overlattice (imForm Hm) (fun x y => imForm_swap hH x y) Λ hint'
-  haveI := hdisc
+  have := hdisc
   obtain ⟨N, hN, hNx⟩ := exists_nsmul_mem_of_dual hH hpos Λ hsp hint'
   have hNΛ₁ : ∀ x ∈ Λ₁, N • x ∈ Λ := fun x hx => hNx x fun l hl => hint₁ x hx l (hle hl)
   have hdisc₁ : DiscreteTopology Λ₁ := by
     let f : Λ₁ → Λ := fun x => ⟨N • (x : Fin g → ℂ), hNΛ₁ x x.2⟩
     refine DiscreteTopology.of_continuous_injective (f := f) ?_ ?_
-    · exact Continuous.subtype_mk (continuous_subtype_val.nsmul N) _
+    · exact Continuous.subtype_mk (continuous_subtypeVal.nsmul N) _
     · intro x y hxy
       have hxy' : N • (x : Fin g → ℂ) = N • (y : Fin g → ℂ) := congrArg Subtype.val hxy
       rw [← Nat.cast_smul_eq_nsmul ℝ, ← Nat.cast_smul_eq_nsmul ℝ] at hxy'
@@ -516,9 +516,9 @@ theorem exists_unimodular_overlattice : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g
       simpa using this
     exact Subtype.ext (imForm_sepLeft hpos a fun w => by rw [h0]; rfl)
   · intro φ
-    haveI : IsZLattice ℝ Λ₁ := ⟨hsp₁⟩
-    haveI := ZLattice.module_finite ℝ Λ₁
-    haveI := ZLattice.module_free ℝ Λ₁
+    have : IsZLattice ℝ Λ₁ := ⟨hsp₁⟩
+    have := ZLattice.module_finite ℝ Λ₁
+    have := ZLattice.module_free ℝ Λ₁
     set b := Module.Free.chooseBasis ℤ Λ₁ with hb_def
     set e := b.ofZLatticeBasis ℝ Λ₁ with he_def
     have he : ∀ i, e i = (b i : Fin g → ℂ) := fun i => b.ofZLatticeBasis_apply ℝ Λ₁ i
@@ -630,9 +630,9 @@ theorem isAffineHom_of_lift : ∀ (g : ℕ) (A : Over (Sp ℂ)) [GrpObj A], IsAb
   have : IsProper (ψ ≫ B.hom) := by rw [hψ]; infer_instance
   have : IsProper ψ := IsProper.of_comp ψ B.hom
   have : JacobsonSpace A.left := LocallyOfFiniteType.jacobsonSpace A.hom
-  haveI := u'.discrete
-  haveI := holUnif_isZLattice u'
-  haveI : Module.Finite ℤ u'.Λ := ZLattice.module_finite ℝ u'.Λ
+  have := u'.discrete
+  have := holUnif_isZLattice u'
+  have : Module.Finite ℤ u'.Λ := ZLattice.module_finite ℝ u'.Λ
   let K : Submodule ℤ u'.Λ := u.Λ.comap u'.Λ.subtype
   have hQ : Finite (u'.Λ ⧸ K) := by
     refine Module.finite_of_fg_torsion _ fun q => ?_

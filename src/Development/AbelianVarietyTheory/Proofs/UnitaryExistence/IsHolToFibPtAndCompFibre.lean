@@ -69,7 +69,7 @@ theorem isHolTo_const {W : Set E} (hW : IsOpen W) {X : Scheme.{0}} (x : Sp ℂ �
   by_cases h : ⊤ ≤ x ⁻¹ᵁ U
   · simp only [h, and_true]
     exact hW
-  · simp only [h, and_false, Set.setOf_false, isOpen_empty]
+  · simp only [h, and_false, Set.ofPred_false, isOpen_empty]
 
 theorem isHolTo_of_isPullback {W : Set E} {S X Y Z : Scheme.{0}}
     {p : Z ⟶ X} {q : Z ⟶ Y} {s : X ⟶ S} {t : Y ⟶ S} (H : IsPullback p q s t) {c : E → (Sp ℂ ⟶ Z)}

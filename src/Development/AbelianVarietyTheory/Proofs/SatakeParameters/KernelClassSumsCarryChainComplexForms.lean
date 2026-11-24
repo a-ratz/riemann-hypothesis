@@ -410,7 +410,7 @@ theorem ramificationIdxIn_eq_one : ∀ (D : D7) (X : Fields) (s : Seam D X), X.O
     exact hun
   have h1 : v.asIdeal.map (algebraMap (𝓞 X.F) (𝓞 X.E)) ≤ Q ^ 1 := by
     rw [pow_one, Ideal.map_le_iff_le_comap, hcomap]
-  have he : v.asIdeal.ramificationIdx' Q = 1 := Ideal.ramificationIdx_spec h1 hun'
+  have he : v.asIdeal.ramificationIdx' Q = 1 := Ideal.ramificationIdx'_spec h1 hun'
   have := hQ.isPrime
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx _ Q (X.E ≃ₐ[X.F] X.E),
     ← Ideal.ramificationIdx'_eq_ramificationIdx _ _ v.ne_bot]
@@ -482,11 +482,11 @@ theorem isIntegral_det_of_stable {R E : Type} [CommRing R] [IsNoetherianRing R] 
 theorem prod_emb_det_eq_one (D : D7) (χ : IdE D → ℂ) (hχ : IsChi D χ) (n : ℕ)
     (L : Submodule (𝓞 D.host.E) (Fin n → D.host.E)) (hL : SD D L) (γ : Matrix (Fin n) (Fin n) D.host.E)
     (hu : γ * adj D γ = 1) (hs : ∀ v, v ∈ L ↔ γ.mulVec v ∈ L) : ∏ τ, embT D τ γ.det = 1 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨hfg, hsp, -⟩ := hL
   have hstar : ∀ x : D.host.E, star x = D.host.conj x := by
     intro x
-    haveI := D.host.isCMField_hostE
+    have := D.host.isCMField_hostE
     apply D.host.φ₀.injective
     rw [Formalism.HC.HostAx.conjE_apply]
     exact IsCMField.complexEmbedding_complexConj D.host.E D.host.φ₀ x
@@ -551,7 +551,7 @@ theorem det_of_stab : ∀ (D : D7) (X : Fields) (s : Seam D X) (χ : TaylorLogMe
   set M := matOf s γ.1 with hM
 
   have hMM : GlobalTheory.RatEqui.adj D M * M = 1 ∧ M * GlobalTheory.RatEqui.adj D M = 1 := by
-    letI := D.host.cmStar
+    let := D.host.cmStar
     have e : star M = GlobalTheory.RatEqui.adj D M := by
       ext i j
       simp [GlobalTheory.RatEqui.adj, Matrix.star_apply, star_conj]

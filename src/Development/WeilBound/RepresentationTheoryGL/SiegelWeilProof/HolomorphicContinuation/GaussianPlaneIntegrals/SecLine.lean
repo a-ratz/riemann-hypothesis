@@ -86,7 +86,7 @@ theorem one_add_pow_mul_exp_neg_le_of_mul_le (K : ℕ) {a β s : ℝ} (ha : 0 < 
       le_trans h1 (mul_le_mul_of_nonneg_left h2 (by linarith))
     exact pow_le_pow_left₀ (by linarith) h4 K
   have h5 : Real.exp (a * s) ^ K * Real.exp (-β * s) ≤ 1 := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
     rw [Real.exp_le_one_iff]
     have : (K : ℝ) * (a * s) = ((K : ℝ) * a) * s := by ring
     rw [this]
@@ -220,7 +220,7 @@ lemma continuous_evX (P : PX m n) : Continuous (fun x : Fin m → Fin n → ℂ 
   unfold evX
   refine (MvPolynomial.continuous_eval P).comp (continuous_pi fun k => ?_)
   by_cases h : k.2.2
-  · simp only [h, if_true]
+  · simp only [h, ite_true]
     exact continuous_star.comp ((continuous_apply k.2.1).comp (continuous_apply k.1))
   · simp only [h]
     exact (continuous_apply k.2.1).comp (continuous_apply k.1)

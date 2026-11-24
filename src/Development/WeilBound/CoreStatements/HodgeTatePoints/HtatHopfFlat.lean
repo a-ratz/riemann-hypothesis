@@ -333,13 +333,13 @@ lemma mem_btOrder_iff [Finite T] (Γ : QFGroup R T) (f : T → R) :
 lemma pushout_induction {A B C D : CommRingCat.{0}} {a : A ⟶ B} {c : A ⟶ C} {b : B ⟶ D} {d : C ⟶ D}
     (h : IsPushout a c b d) (P : D → Prop) (h0 : P 0) (h1 : ∀ x, P (b.hom x))
     (h2 : ∀ s n, P n → P (d.hom s * n)) (h3 : ∀ x y, P x → P y → P (x + y)) (x : D) : P x := by
-  letI : Algebra A B := a.hom.toAlgebra
-  letI : Algebra A C := c.hom.toAlgebra
-  letI : Algebra B D := b.hom.toAlgebra
-  letI : Algebra C D := d.hom.toAlgebra
-  letI : Algebra A D := (a ≫ b).hom.toAlgebra
-  haveI : IsScalarTower A B D := .of_algebraMap_eq fun r => rfl
-  haveI : IsScalarTower A C D := .of_algebraMap_eq fun r => congr($(h.w).hom r)
+  let : Algebra A B := a.hom.toAlgebra
+  let : Algebra A C := c.hom.toAlgebra
+  let : Algebra B D := b.hom.toAlgebra
+  let : Algebra C D := d.hom.toAlgebra
+  let : Algebra A D := (a ≫ b).hom.toAlgebra
+  have : IsScalarTower A B D := .of_algebraMap_eq fun r => rfl
+  have : IsScalarTower A C D := .of_algebraMap_eq fun r => congr($(h.w).hom r)
   have hpo : Algebra.IsPushout A C B D := CommRingCat.isPushout_iff_isPushout.mp h.flip
   induction x using hpo.out.inductionOn with
   | tmul y => exact h1 y
@@ -355,9 +355,9 @@ theorem val_mem_span [Finite T] [Module.Flat R R'] (Γ : QFGroup R T) (Γ' : QFG
     (x : Γ(Γ'.G.left, ⊤)) :
     (fun t => valAt (Γ'.pt t).left ⊤ (top_le_pre _) x) ∈
       Submodule.span R' {w : T → FractionRing R' | ∃ n ∈ secFn Γ, w = fun h => κ (n h)} := by
-  haveI := Γ.quasiCompact
-  haveI := Γ.separated
-  haveI : Flat (Spec.map (CommRingCat.ofHom (algebraMap R R'))) :=
+  have := Γ.quasiCompact
+  have := Γ.separated
+  have : Flat (Spec.map (CommRingCat.ofHom (algebraMap R R'))) :=
     Flat.SpecMap_iff.mpr (RingHom.flat_algebraMap_iff.mpr inferInstance)
   have H := hbc.cart
   have po := (isIso_pushoutSection_iff H (US := ⊤) (UT := ⊤) (UX := ⊤) (UY := ⊤) (top_le_pre _) (top_le_pre _)

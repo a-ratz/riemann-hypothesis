@@ -79,7 +79,7 @@ theorem finiteDimensional_fixed_of_equiv {G V W : Type} [Group G] [AddCommGroup 
 theorem exists_gelfand_anti : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (n : ℕ) (w : Pl E), ∃ θ : UL n w → UL n w, (∀ x y, θ (x * y) = θ y * θ x) ∧ (∀ x, θ (θ x) = x) ∧ ∀ g, ∃ a ∈ KL n w, ∃ b ∈ KL n w, θ g = a * g * b := by
   intro E _ _ _ hU n w
   by_cases hs : IsSplitAt w
-  · have hUL : UL n w = ⊤ := if_pos hs
+  · have hUL : UL n w = ⊤ := ite_eq_left hs
     have hm : ∀ g : GLw n w, g ∈ UL n w := fun g => by rw [hUL]; trivial
     refine ⟨fun g => ⟨Formalism.UG.P.heckecomm_tr g.1, hm _⟩, fun x y => Subtype.ext (Formalism.UG.P.heckecomm_tr_mul _ _),
       fun x => Subtype.ext (Formalism.UG.P.heckecomm_tr_tr _), fun g => ?_⟩
@@ -87,7 +87,7 @@ theorem exists_gelfand_anti : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     exact ⟨⟨a, hm _⟩, Subgroup.mem_subgroupOf.2 a.2, ⟨b, hm _⟩, Subgroup.mem_subgroupOf.2 b.2, Subtype.ext e⟩
   · obtain ⟨-, -, -, hns, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨-, ⟨ϖ, q, hq, -⟩, -⟩ := hns hs
-    have hUL : UL n w = UJ (cj w) 1 := if_neg hs
+    have hUL : UL n w = UJ (cj w) 1 := ite_eq_right hs
     refine ⟨fun g => g⁻¹, fun x y => mul_inv_rev x y, fun x => inv_inv x, fun g => ?_⟩
     have hg : (g : GLw n w) ∈ UJ (cj w) ((1 : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
       rw [Units.val_one, ← hUL]; exact g.2
@@ -97,7 +97,7 @@ theorem exists_gelfand_anti : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rw [Units.val_one, Matrix.one_apply, Matrix.one_apply]
       by_cases h : i = j
       · subst h; simp
-      · rw [if_neg h, if_neg (Ne.symm h), map_zero]
+      · rw [ite_eq_right h, ite_eq_right (Ne.symm h), map_zero]
     obtain ⟨k₁, hk₁, k₂, hk₂, e⟩ := GlobalTheory.UnitarySwap.inv_mem_doubleCoset hq (one_mem _) hJ hg
     have m1 : k₁ ∈ UL n w := by rw [hUL]; have := hk₁.1; rwa [Units.val_one] at this
     have m2 : k₂ ∈ UL n w := by rw [hUL]; have := hk₂.1; rwa [Units.val_one] at this
@@ -113,11 +113,11 @@ theorem finrank_fixed_KL_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       one_mem' := by simp
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := n))) := (hπ.aut φ hφ).level
@@ -129,7 +129,7 @@ theorem finrank_fixed_KL_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     obtain ⟨⟨σ₀, hσ₀, hfd⟩, huniq⟩ := GlobalTheory.BCT.LocCompU.exists_unique_locComp E hU n hn π hπ w
     obtain ⟨T⟩ := huniq σ₀ (σ w) hσ₀ (hσ w)
     refine ⟨(σ w).smooth, fun K hKo _ => ?_⟩
-    haveI := hfd K hKo
+    have := hfd K hKo
     exact finiteDimensional_fixed_of_equiv T K
   filter_upwards [hunr] with w hw
   have hne := GlobalTheory.T.unramifiedVector_gives_localComponent_sphericalVector E hU n π hπ w (σ w) (hσ w) hw

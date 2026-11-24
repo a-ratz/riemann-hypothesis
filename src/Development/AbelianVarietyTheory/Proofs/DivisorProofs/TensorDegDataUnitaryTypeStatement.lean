@@ -112,8 +112,8 @@ theorem rank_le_of_smul_sub_eq_zero {R : Type} [CommRing R] [Finite R] {r : ℕ}
     (hc : c ≠ 0) (h : ∀ x, c • (x - φ (ψ x)) = 0) : r ≤ Fintype.card ι := by
   classical
   let S := {y : R // ∃ z, y = c * z}
-  haveI : Fintype S := Fintype.ofFinite _
-  haveI : Nontrivial S := ⟨⟨⟨c, 1, by simp⟩, ⟨0, 0, by simp⟩, fun h => hc (congrArg Subtype.val h)⟩⟩
+  have : Fintype S := Fintype.ofFinite _
+  have : Nontrivial S := ⟨⟨⟨c, 1, by simp⟩, ⟨0, 0, by simp⟩, fun h => hc (congrArg Subtype.val h)⟩⟩
   have key : ∀ s : Fin r → S, ∃ x : Fin r → R, (fun i => (s i).1) = c • x := by
     intro s
     choose z hz using fun i => (s i).2
@@ -140,7 +140,7 @@ theorem rank_le_of_smul_sub_eq_zero {R : Type} [CommRing R] [Finite R] {r : ℕ}
 
 theorem exists_eq_one {n : ℕ} [NeZero n] {V : Type} [AddCommGroup V] [Module (ZMod n) V]
     (f : V →ₗ[ZMod n] ZMod n) (h : ∀ c : ZMod n, (∀ y, c * f y = 0) → c = 0) : ∃ y, f y = 1 := by
-  haveI : IsPrincipalIdealRing (ZMod n) :=
+  have : IsPrincipalIdealRing (ZMod n) :=
     IsPrincipalIdealRing.of_surjective (Int.castRingHom (ZMod n)) (ZMod.ringHom_surjective _)
   obtain ⟨d, hd⟩ := (IsPrincipalIdealRing.principal (LinearMap.range f)).principal
   have hreg : d ∈ nonZeroDivisors (ZMod n) := by
@@ -248,14 +248,14 @@ theorem exists_level {F : Type} [Field F] {ζ : Fˣ} {n : ℕ} (hn : 0 < n)
     ∃ ev : ((Fin g → ℤ) × (Fin g → ℤ)) →+ G,
       ∀ a b, e (ev a) (ev b) = ζ ^ (a.1 ⬝ᵥ b.2 - a.2 ⬝ᵥ b.1) := by
   classical
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let χ : ZMod n → Fˣ := fun a => ((Additive.toMul (hζ.zmodEquivZPowers a) : Subgroup.zpowers ζ) : Fˣ)
   have χadd : ∀ a b, χ (a + b) = χ a * χ b := by intro a b; simp [χ]
   have χinj : Function.Injective χ := by
     intro a b h
     exact hζ.zmodEquivZPowers.injective (Additive.toMul.injective (Subtype.ext h))
   have χint : ∀ i : ℤ, χ i = ζ ^ i := by
-    intro i; simp only [χ, hζ.zmodEquivZPowers_apply_coe_int]; rfl
+    intro i; simp only [χ, hζ.zmodEquivZPowers_apply_intCast]; rfl
   have χ0 : χ 0 = 1 := by simpa using χint 0
   have hpow : ∀ x y, e x y ^ n = 1 := by
     intro x y
@@ -319,7 +319,7 @@ theorem ker_and_surj {F : Type} [Field F] {ζ : Fˣ} {n : ℕ} (hn : 0 < n)
     (hev : ∀ a b, e (ev a) (ev b) = ζ ^ (a.1 ⬝ᵥ b.2 - a.2 ⬝ᵥ b.1)) :
     (∀ a b, ev a = ev b ↔ ∃ e', a = b + n • e') ∧ Function.Surjective ev := by
   classical
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have hnx : ∀ x : G, n • x = 0 := fun x => Φ.injective (by
       rw [map_nsmul, map_zero, ← Nat.cast_smul_eq_nsmul (ZMod n), ZMod.natCast_self, zero_smul])
   have h0 : ∀ y, e 0 y = 1 := by
@@ -362,7 +362,7 @@ theorem ker_and_surj {F : Type} [Field F] {ζ : Fˣ} {n : ℕ} (hn : 0 < n)
         simpa [sub_eq_zero] using this
       · have := (ZMod.intCast_zmod_eq_zero_iff_dvd _ n).2 (hb i)
         simpa [sub_eq_zero] using this
-    haveI : Fintype G := Fintype.ofEquiv _ Φ.symm.toEquiv
+    have : Fintype G := Fintype.ofEquiv _ Φ.symm.toEquiv
     have hb : Function.Bijective f := (Fintype.bijective_iff_injective_and_card f).2 ⟨hf, by
       rw [Fintype.card_congr Φ.toEquiv]
       simp [two_mul, pow_add]⟩
@@ -396,8 +396,8 @@ theorem exists_compatible_symplectic : ∀ (F : Type) [Field F] (ζ : ℕ → F�
       ∀ a, ∀ᶠ k in (U : Filter ℕ), π k.factorial n (E k a) = f a := by
     intro n
     by_cases hn : 0 < n
-    · haveI : NeZero n := ⟨hn.ne'⟩
-      haveI : Finite (G n) := Finite.of_equiv _ (hG n hn).some.symm.toEquiv
+    · have : NeZero n := ⟨hn.ne'⟩
+      have : Finite (G n) := Finite.of_equiv _ (hG n hn).some.symm.toEquiv
       have : ∀ a, ∃ x, ∀ᶠ k in (U : Filter ℕ), π k.factorial n (E k a) = x := by
         intro a
         obtain ⟨x, hx⟩ := (U.map fun k => π k.factorial n (E k a)).eq_pure_of_finite
@@ -448,7 +448,7 @@ theorem qq_free_of_torsion {C : Type} [Field C] [IsAlgClosed C] (N : NumD C) {k 
     (hdiv : ∀ x : N.A, ∃ y, y ^ k = x)
     (e : (powMonoidHom k : N.A →* N.A).ker ≃* Multiplicative (Fin a → ZMod k)) :
     Nonempty (Qq N k ≃* Multiplicative (Fin (Module.finrank ℤ N.X + (a + Module.finrank ℤ N.X)) → ZMod k)) := by
-  haveI : NeZero k := ⟨by rintro rfl; simp at hk⟩
+  have : NeZero k := ⟨by rintro rfl; simp at hk⟩
   have hk0 : k ≠ 0 := NeZero.ne k
   obtain ⟨f⟩ := QStr.ker_struct N hk a e
   let v := Module.finBasis ℤ N.X
@@ -519,10 +519,10 @@ theorem qq_free_of_torsion {C : Type} [Field C] [IsAlgClosed C] (N : NumD C) {k 
 theorem qq_free : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (D : DegData R (maximalIdeal R)) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (N : GlobalTheory.Ex.NumD F) (ν : GlobalTheory.Ex.NumOf D.toPre F N) (n : ℕ), 0 < n → Nonempty (Additive (GlobalTheory.SympQ.Qq N n) ≃+ (Fin (2 * (D.toPre.P.g + Module.finrank ℤ D.toPre.X)) → ZMod n)) := by
   intro R _ _ _ hR D F _ _ _ N ν n hn
   have hL : Laws := GlobalTheory.allSixLaws.1
-  haveI : IsNoetherianRing R := hR.1.1
-  haveI : CharZero R := hR.2
-  haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
+  have : IsNoetherianRing R := hR.1.1
+  have : CharZero R := hR.2
+  have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
   have hk : (n : F) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
   have tor : ∀ (b : N.A) (k : ℕ), ν.eA b ^ k = 1 ↔ b ^ k = 1 := fun b k => by
     rw [← map_pow, MulEquiv.map_eq_one_iff]
@@ -769,7 +769,7 @@ theorem GlobalTheory.SympQ.compatible_symplectic_bases : ∀ (R : Type) [CommRin
   have hL : Laws := GlobalTheory.allSixLaws.1
   have gt : GlobalTheory.Ex.BrGtSt := GlobalTheory.Ex.GtValues.points_correspond
   have wp : GlobalTheory.Ex.BrWpSt := GlobalTheory.WeilValues.weil_eq_values gt (GlobalTheory.Ex.brFam hL GlobalTheory.allSixLaws.2.1)
-  haveI : IsNoetherianRing R := hR.1.1
+  have : IsNoetherianRing R := hR.1.1
   obtain ⟨N, ν, -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL R D.toPre D.psi_even D.tau_bimult F ⊤ (fun _ => trivial)
   obtain ⟨-, -, gAdd, -, gQ⟩ := gt R D.toPre D.psi_even D.tau_bimult F N ν
   have hW := wp R D.toPre D.psi_even D.tau_bimult F N ν
@@ -917,25 +917,25 @@ theorem repTrace_eq_mul_trace {E : Type} [Field E] [NumberField E] {r : ℕ} (ρ
     (Matrix.toLinAlgEquiv' : Matrix (Fin r) (Fin r) ℚ ≃ₐ[ℚ] _).toRingEquiv.toRingHom.comp
       ((Int.castRingHom ℚ).mapMatrix.comp ρ)
   let A := Algebra.adjoin ℚ (Set.range g)
-  haveI : IsMulCommutative A := Algebra.isMulCommutative_adjoin ℚ (s := Set.range g) (by
+  have : IsMulCommutative A := Algebra.isMulCommutative_adjoin ℚ (s := Set.range g) (by
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ _
     change g x * g y = g y * g x
     rw [← map_mul, ← map_mul, mul_comm])
-  letI : CommRing A := open scoped IsMulCommutative in inferInstance
+  let : CommRing A := open scoped IsMulCommutative in inferInstance
   let g' : 𝓞 E →+* A := g.codRestrict A (fun x => Algebra.subset_adjoin ⟨x, rfl⟩)
   let φ : E →+* Module.End ℚ (Fin r → ℚ) :=
     (A.val : A →ₐ[ℚ] Module.End ℚ (Fin r → ℚ)).toRingHom.comp
       (IsLocalization.lift (M := nonZeroDivisors (𝓞 E)) (S := E) (g := g')
         (fun y => RepTrace.isUnit_of_ne_zero g' y (nonZeroDivisors.ne_zero y.2)))
-  letI : Module E (Fin r → ℚ) := Module.compHom (Fin r → ℚ) φ
+  let : Module E (Fin r → ℚ) := Module.compHom (Fin r → ℚ) φ
   have hφq : φ.comp (algebraMap ℚ E) = algebraMap ℚ (Module.End ℚ (Fin r → ℚ)) := Subsingleton.elim _ _
-  haveI : IsScalarTower ℚ E (Fin r → ℚ) := ⟨fun q x v => by
+  have : IsScalarTower ℚ E (Fin r → ℚ) := ⟨fun q x v => by
     change φ (q • x) v = q • φ x v
     rw [Algebra.smul_def, map_mul, Module.End.mul_apply]
     have := RingHom.congr_fun hφq q
     simp only [RingHom.comp_apply] at this
     rw [this, Module.algebraMap_end_apply]⟩
-  haveI : FiniteDimensional E (Fin r → ℚ) := Module.Finite.of_restrictScalars_finite ℚ E _
+  have : FiniteDimensional E (Fin r → ℚ) := Module.Finite.of_restrictScalars_finite ℚ E _
   have hfin : Module.finrank E (Fin r → ℚ) = s := by
     have h := Module.finrank_mul_finrank ℚ E (Fin r → ℚ)
     rw [Module.finrank_fin_fun] at h
@@ -1064,7 +1064,7 @@ theorem form_cx_baseChange_pos (S : Matrix (Fin r) (Fin r) ℤ) (hS : (S.map (In
       ∑ α, v α ⬝ᵥ ((S.map (Int.cast : ℤ → ℝ)).mulVec (v α)) := by
     rw [key, Finset.sum_comm]
     simp only [Fintype.sum_prod_type, Int.cast_ite, Int.cast_zero, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, dotProduct, Matrix.mulVec,
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, dotProduct, Matrix.mulVec,
       Matrix.map_apply, Finset.mul_sum, hv]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun α _ => Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -1138,7 +1138,7 @@ theorem finrank_eq (s : ℕ) (hr : r = s * Module.finrank ℚ E) :
 
 theorem smul_ne_zero' {c : 𝓞 E} {x : Lat ρ g} (hc : c ≠ 0) (hx : x ≠ 0) : c • x ≠ 0 := by
   intro h
-  obtain ⟨m, hm, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_nonzero_dvd
+  obtain ⟨m, hm, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero hc)
   have : m • x = 0 := by
     rw [← algebraMap_smul (𝓞 E) m x, hα, mul_comm, mul_smul, h, smul_zero]
@@ -1345,16 +1345,16 @@ namespace GlobalTheory
 theorem finrank_dvd_of_ringOfIntegers_to_matrix (E : Type) [Field E] [NumberField E] {r : ℕ}
     (ρ : 𝓞 E →+* Matrix (Fin r) (Fin r) ℤ) : ∃ s : ℕ, r = s * Module.finrank ℚ E := by
   classical
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 E) (nonZeroDivisors ℤ)) E :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 E) (nonZeroDivisors ℤ)) E :=
     IsIntegralClosure.isLocalization ℤ ℚ E (𝓞 E)
   let g : 𝓞 E →+* Matrix (Fin r) (Fin r) ℚ := (Int.castRingHom ℚ).mapMatrix.comp ρ
   let S : Subalgebra ℚ (Matrix (Fin r) (Fin r) ℚ) := Algebra.adjoin ℚ (Set.range g)
-  letI : IsMulCommutative S := Algebra.isMulCommutative_adjoin ℚ (by
+  let : IsMulCommutative S := Algebra.isMulCommutative_adjoin ℚ (by
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ _
     change g a * g b = g b * g a
     rw [← map_mul, mul_comm, map_mul])
   open scoped IsMulCommutative in
-  letI : CommRing S := inferInstance
+  let : CommRing S := inferInstance
   let g₁ : 𝓞 E →+* S := g.codRestrict S (fun a => Algebra.subset_adjoin ⟨a, rfl⟩)
   have hg : ∀ y : Algebra.algebraMapSubmonoid (𝓞 E) (nonZeroDivisors ℤ), IsUnit (g₁ y) := by
     rintro ⟨_, m, hm, rfl⟩
@@ -1366,11 +1366,11 @@ theorem finrank_dvd_of_ringOfIntegers_to_matrix (E : Type) [Field E] [NumberFiel
     rw [this]
     exact (IsUnit.mk0 _ hm0).map _
   let ρ' : E →+* Matrix (Fin r) (Fin r) ℚ := S.val.toRingHom.comp (IsLocalization.lift hg)
-  letI : Module E (Fin r → ℚ) :=
+  let : Module E (Fin r → ℚ) :=
     Module.compHom (Fin r → ℚ)
       ((Matrix.toLinAlgEquiv' : Matrix (Fin r) (Fin r) ℚ ≃ₐ[ℚ] _).toRingEquiv.toRingHom.comp ρ')
   have hq : ρ'.comp (algebraMap ℚ E) = algebraMap ℚ (Matrix (Fin r) (Fin r) ℚ) := RingHom.ext_rat _ _
-  haveI : IsScalarTower ℚ E (Fin r → ℚ) := by
+  have : IsScalarTower ℚ E (Fin r → ℚ) := by
     refine ⟨fun q e v => ?_⟩
     show Matrix.toLin' (ρ' (q • e)) v = q • Matrix.toLin' (ρ' e) v
     rw [Algebra.smul_def, map_mul, ← RingHom.comp_apply, hq, Algebra.algebraMap_eq_smul_one,
@@ -1404,7 +1404,7 @@ theorem isTorsionFree_ringOfIntegers_of_isTorsionFree_int (E : Type) [Field E] [
   · exact Or.inl hc
   · right
     have halg : IsAlgebraic ℤ c := (Algebra.IsIntegral.isIntegral (R := ℤ) c).isAlgebraic
-    obtain ⟨m, hm, d, hd⟩ := halg.exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero hc)
+    obtain ⟨m, hm, d, hd⟩ := halg.exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero hc)
     have h1 : m • x = 0 := by
       rw [← Int.cast_smul_eq_zsmul (𝓞 E)]
       have : ((m : ℤ) : 𝓞 E) = d * c := by
@@ -1511,7 +1511,7 @@ theorem lieMult_int {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] (a
   have b := Lie.basis (a.pullback t) hv
   rw [eig_eq_top]
   refine ⟨?_, ?_⟩
-  · haveI := Module.Finite.of_basis b
+  · have := Module.Finite.of_basis b
     exact Module.Finite.equiv (LinearEquiv.ofTop ⊤ rfl).symm
   · rw [finrank_top, Module.finrank_eq_card_basis b, Fintype.card_fin]
 
@@ -1551,9 +1551,9 @@ theorem lieMult_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R],
     rw [← h1]
     ring
   · intro F _ _ _ τ
-    letI := H.starRing
-    haveI : CharZero R := hB.2
-    haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
+    let := H.starRing
+    have : CharZero R := hB.2
+    have : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F).injective
     let p : IsPowGrp D'.toPre.P.A D.toPre.P.A r := ⟨T.pr, T.pr_hom, T.lim⟩
     let a₀ : OAct (𝓞 ℚ) D.toPre.P.A := comapAct (intAct D.toPre.P.A) (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ)
     let h₀ := IsTensor.pow p a₀
@@ -1564,7 +1564,7 @@ theorem lieMult_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R],
     have key : ∀ c : 𝓞 E, (h.algAct (𝓞 E)).act c = o.onB.act c := by
       intro c
       have e1 : (h.algAct (𝓞 E)).act c = h₀.mapLeft h₀ (Matrix.toLin' ((ρ c).map (Int.cast : ℤ → 𝓞 ℚ))) := by
-        haveI := (h.algAct (𝓞 E)).hom c
+        have := (h.algAct (𝓞 E)).hom c
         refine h.hom_ext fun m => ?_
         rw [IsTensor.tmul_algAct, IsTensor.congrLeft_tmul, IsTensor.congrLeft_tmul, IsTensor.tmul_mapLeft]
         rfl

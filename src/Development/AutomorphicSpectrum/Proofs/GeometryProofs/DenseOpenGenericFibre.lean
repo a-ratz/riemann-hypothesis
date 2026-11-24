@@ -58,12 +58,12 @@ namespace GlobalTheory.CompanionTheory.Ar.GeoModel.OpenLocus
 theorem exists_dense_open : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Ω : Type) [Field Ω] (κ : Type) [Finite κ] (x : κ → Ω) (M : PModel ℤ x) (f : M.X ⟶ Y.X) (y₀ : Sp Ω ⟶ Xo.XF c), M.ξ ≫ f = y₀ ≫ Y.j → ∃ U : (pullback (f ≫ Y.s) (spMap (algebraMap (𝓞 c.F) c.F))).Opens, Dense (U : Set ((pullback (f ≫ Y.s) (spMap (algebraMap (𝓞 c.F) c.F)) : Scheme.{0}))) ∧ pullback.fst (f ≫ Y.s) (spMap (algebraMap (𝓞 c.F) c.F)) ⁻¹' (f ⁻¹' abLocus Y.t.G) = U := by
   intro E _ _ _ H D l Xo c Y Ω _ κ _ x M f y₀ hξ
   set π := spMap (algebraMap (𝓞 c.F) c.F) with hπ
-  haveI : IsOpenImmersion Y.jQ := Y.jQ_open
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
-  haveI hpre : IsPreimmersion π :=
+  have : IsOpenImmersion Y.jQ := Y.jQ_open
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
+  have hpre : IsPreimmersion π :=
     IsPreimmersion.of_isLocalization (R := 𝓞 c.F) (S := c.F) (nonZeroDivisors (𝓞 c.F))
-  haveI hfst : IsPreimmersion (pullback.fst (f ≫ Y.s) π) := inferInstance
+  have hfst : IsPreimmersion (pullback.fst (f ≫ Y.s) π) := inferInstance
   have hcond : (pullback.fst (f ≫ Y.s) π ≫ f) ≫ Y.s = pullback.snd (f ≫ Y.s) π ≫ π := by
     rw [Category.assoc, pullback.condition]
   set g := pullback.lift (pullback.fst (f ≫ Y.s) π ≫ f) (pullback.snd (f ≫ Y.s) π) hcond with hg

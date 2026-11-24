@@ -123,8 +123,8 @@ private theorem exists_algHom_of_etale (k B : Type) [Field k] [IsSepClosed k] [C
     have : Subsingleton (Π i, Ai i) := inferInstance
     exact not_subsingleton B e.toEquiv.subsingleton
   obtain ⟨i⟩ := hI
-  haveI := (hA i).1
-  haveI := (hA i).2
+  have := (hA i).1
+  have := (hA i).2
   let u : k ≃ₐ[k] Ai i := AlgEquiv.ofBijective (Algebra.ofId k (Ai i))
     ⟨(algebraMap k (Ai i)).injective, IsSepClosed.algebraMap_surjective k (Ai i)⟩
   exact ⟨(u.symm.toAlgHom.comp (Pi.evalAlgHom k Ai i)).comp e.toAlgHom⟩
@@ -136,17 +136,17 @@ private theorem exists_section_of_etale_field {k : Type} [Field k] [IsSepClosed 
   obtain ⟨p, -⟩ := q.surjective x0
   let U := P.affineOpenCover
   let j := U.idx p
-  haveI : IsOpenImmersion (U.f j) := U.map_prop j
+  have : IsOpenImmersion (U.f j) := U.map_prop j
   let φ : CommRingCat.of k ⟶ U.X j := Spec.preimage (U.f j ≫ q)
   have hφ : Spec.map φ = U.f j ≫ q := Spec.map_preimage _
   have hE : Etale (Spec.map φ) := by
     rw [hφ]
     infer_instance
   have het : φ.hom.Etale := HasRingHomProperty.Spec_iff.mp hE
-  letI : Algebra k (U.X j) := φ.hom.toAlgebra
-  haveI : Algebra.Etale k (U.X j) := het
+  let : Algebra k (U.X j) := φ.hom.toAlgebra
+  have : Algebra.Etale k (U.X j) := het
   obtain ⟨y, -⟩ := U.covers p
-  haveI : Nontrivial (U.X j) := by
+  have : Nontrivial (U.X j) := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact y.isPrime.ne_top (Subsingleton.elim _ _)
@@ -263,7 +263,7 @@ theorem aic_intClosed (T : Type) [CommRing T] [IsDomain T] (hT : AIC T) : IsInte
 
 theorem aic_root (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] (hT : AIC T) (hq : IsUnit (q : T)) :
     ∃ ζ : T, IsPrimitiveRoot ζ q := by
-  haveI : NeZero (q : T) := ⟨hq.ne_zero⟩
+  have : NeZero (q : T) := ⟨hq.ne_zero⟩
   obtain ⟨ζ, hζ⟩ := hT (Polynomial.cyclotomic q T) (Polynomial.cyclotomic.monic q T) (by
     rw [Polynomial.natDegree_cyclotomic]
     exact Nat.totient_pos.2 (Nat.pos_of_ne_zero (NeZero.ne q)))
@@ -271,8 +271,8 @@ theorem aic_root (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] (hT :
 
 theorem root_map (q : ℕ) [NeZero q] {T A : Type} [CommRing T] [IsDomain T] [CommRing A] [IsDomain A] (f : T →+* A)
     (hqT : IsUnit (q : T)) (hq : IsUnit (q : A)) {ζ : T} (hζ : IsPrimitiveRoot ζ q) : IsPrimitiveRoot (f ζ) q := by
-  haveI : NeZero (q : T) := ⟨hqT.ne_zero⟩
-  haveI : NeZero (q : A) := ⟨hq.ne_zero⟩
+  have : NeZero (q : T) := ⟨hqT.ne_zero⟩
+  have : NeZero (q : A) := ⟨hq.ne_zero⟩
   have h0 : (Polynomial.cyclotomic q T).IsRoot ζ := Polynomial.isRoot_cyclotomic_iff.2 hζ
   have h1 := h0.map (f := f)
   rw [Polynomial.map_cyclotomic] at h1
@@ -287,14 +287,14 @@ theorem indEt_isDomain [IsDomain T] [IsIntegrallyClosed T] [Algebra.Smooth T B] 
   obtain ⟨J, _, _, D, t, s, hs, hj⟩ := h
   have key : ∀ (l : J) (x y : D.obj l), x * y = 0 → (s.app l).hom x = 0 ∨ (s.app l).hom y = 0 := by
     intro l x y hxy
-    letI : Algebra B (D.obj l) := (t.app l).hom.toAlgebra
-    haveI : Algebra.Etale B (D.obj l) := (hj l).1
-    letI : Algebra T (D.obj l) := ((algebraMap B (D.obj l)).comp (algebraMap T B)).toAlgebra
-    haveI : IsScalarTower T B (D.obj l) := .of_algebraMap_eq' rfl
-    haveI : Algebra.Smooth T (D.obj l) := Algebra.Smooth.comp T B (D.obj l)
+    let : Algebra B (D.obj l) := (t.app l).hom.toAlgebra
+    have : Algebra.Etale B (D.obj l) := (hj l).1
+    let : Algebra T (D.obj l) := ((algebraMap B (D.obj l)).comp (algebraMap T B)).toAlgebra
+    have : IsScalarTower T B (D.obj l) := .of_algebraMap_eq' rfl
+    have : Algebra.Smooth T (D.obj l) := Algebra.Smooth.comp T B (D.obj l)
     let p : Ideal (D.obj l) := (IsLocalRing.maximalIdeal A).comap (s.app l).hom
-    haveI : p.IsPrime := Ideal.comap_isPrime _ _
-    haveI := (GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_smooth T p (Localization.AtPrime p)).1
+    have : p.IsPrime := Ideal.comap_isPrime _ _
+    have := (GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_smooth T p (Localization.AtPrime p)).1
     have hz : ∀ z : D.obj l, algebraMap (D.obj l) (Localization.AtPrime p) z = 0 → (s.app l).hom z = 0 := by
       intro z hz
       obtain ⟨u, hu⟩ := (IsLocalization.map_eq_zero_iff p.primeCompl _ z).1 hz
@@ -314,7 +314,7 @@ theorem indEt_isDomain [IsDomain T] [IsIntegrallyClosed T] [Algebra.Smooth T B] 
     have := s.naturality f
     simp only [Functor.const_obj_map, Category.comp_id] at this
     exact congrArg (fun g => g.hom x) this
-  haveI : NoZeroDivisors A := ⟨by
+  have : NoZeroDivisors A := ⟨by
     intro a b hab
     obtain ⟨i, x, hx⟩ := Concrete.isColimit_exists_rep D hs a
     obtain ⟨i', y, hy⟩ := Concrete.isColimit_exists_rep D hs b
@@ -337,10 +337,10 @@ theorem indEt_comp {P : Type} [CommRing P] [Algebra P B] [Algebra.Etale P B] [Al
     (h : IndEt B A) : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap P A) := by
   obtain ⟨J, i1, i2, D, t, s, hs, hj⟩ := h
   refine ⟨J, i1, i2, D, (Functor.const J).map (CommRingCat.ofHom (algebraMap P B)) ≫ t, s, hs, fun j => ⟨?_, ?_⟩⟩
-  · letI : Algebra B (D.obj j) := (t.app j).hom.toAlgebra
-    haveI : Algebra.Etale B (D.obj j) := (hj j).1
-    letI : Algebra P (D.obj j) := ((algebraMap B (D.obj j)).comp (algebraMap P B)).toAlgebra
-    haveI : IsScalarTower P B (D.obj j) := .of_algebraMap_eq' rfl
+  · let : Algebra B (D.obj j) := (t.app j).hom.toAlgebra
+    have : Algebra.Etale B (D.obj j) := (hj j).1
+    let : Algebra P (D.obj j) := ((algebraMap B (D.obj j)).comp (algebraMap P B)).toAlgebra
+    have : IsScalarTower P B (D.obj j) := .of_algebraMap_eq' rfl
     have : Algebra.Etale P (D.obj j) := Algebra.Etale.comp P B (D.obj j)
     exact this
   · have h2 := (hj j).2
@@ -358,8 +358,8 @@ variable {T B A : Type} [CommRing T] [CommRing B] [CommRing A] [Algebra T B] [Al
 
 theorem indEt_inj [IsDomain T] [Algebra.Smooth T B] [Algebra T A] [IsScalarTower T B A] [Nontrivial A]
     (h : IndEt B A) : Function.Injective (algebraMap T A) := by
-  haveI : Module.Flat B A := GlobalTheory.IndEtaleLocal.flat_of_isIndEtale h
-  haveI : Module.Flat T A := Module.Flat.trans T B A
+  have : Module.Flat B A := GlobalTheory.IndEtaleLocal.flat_of_isIndEtale h
+  have : Module.Flat T A := Module.Flat.trans T B A
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro t ht
   by_contra h0
@@ -375,8 +375,8 @@ theorem indEt_elem {P : Type} [CommRing P] [Algebra P B] [Algebra.Etale P B] [Al
     ∃ (E : Type) (_ : CommRing E) (_ : Algebra P E) (_ : Algebra.Etale P E) (φ : E →ₐ[P] A), a ∈ φ.range := by
   obtain ⟨J, _, _, D, t, s, hs, hj⟩ := indEt_comp (P := P) h
   obtain ⟨j, x, hx⟩ := Concrete.isColimit_exists_rep D hs a
-  letI : Algebra P (D.obj j) := (t.app j).hom.toAlgebra
-  haveI : Algebra.Etale P (D.obj j) := (hj j).1
+  let : Algebra P (D.obj j) := (t.app j).hom.toAlgebra
+  have : Algebra.Etale P (D.obj j) := (hj j).1
   have hc : ∀ r : P, (s.app j).hom (algebraMap P (D.obj j) r) = algebraMap P A r := fun r =>
     congrArg (fun g => g.hom r) (hj j).2
   exact ⟨D.obj j, inferInstance, inferInstance, inferInstance,
@@ -404,30 +404,30 @@ theorem local_eqv (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [IsL
     (hinj : Function.Injective (algebraMap T A)) (i : ℤ) :
     Eqv _ (spMap (Algebra.TensorProduct.includeRight (R := T) (A := FractionRing T) (B := A)).toRingHom) (tw q i) := by
   have hqA : IsUnit (q : A) := by simpa using hq.map (algebraMap T A)
-  letI : Algebra A (FractionRing T ⊗[T] A) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid A (nonZeroDivisors T)) (FractionRing T ⊗[T] A) :=
+  let : Algebra A (FractionRing T ⊗[T] A) := Algebra.TensorProduct.rightAlgebra
+  have : IsLocalization (Algebra.algebraMapSubmonoid A (nonZeroDivisors T)) (FractionRing T ⊗[T] A) :=
     IsLocalization.tensorRight (FractionRing T) (nonZeroDivisors T)
   have hle : Algebra.algebraMapSubmonoid A (nonZeroDivisors T) ≤ nonZeroDivisors A := by
     rintro _ ⟨t, ht, rfl⟩
     exact mem_nonZeroDivisors_of_ne_zero
       (fun h => nonZeroDivisors.ne_zero ht (hinj (by rw [map_zero]; exact h)))
-  haveI hdK : IsDomain (FractionRing T ⊗[T] A) := IsLocalization.isDomain_of_le_nonZeroDivisors (FractionRing T ⊗[T] A) hle
+  have hdK : IsDomain (FractionRing T ⊗[T] A) := IsLocalization.isDomain_of_le_nonZeroDivisors (FractionRing T ⊗[T] A) hle
   intro n
   rcases lt_trichotomy n 0 with hn | rfl | hn
-  · haveI := h_neg (ZMod q) (sp A) (tw q i) n hn
-    haveI := h_neg (ZMod q) (sp (FractionRing T ⊗[T] A)) (tw q i) n hn
+  · have := h_neg (ZMod q) (sp A) (tw q i) n hn
+    have := h_neg (ZMod q) (sp (FractionRing T ⊗[T] A)) (tw q i) n hn
     exact bij_of_subsingleton _
   · obtain ⟨ζ, hζ⟩ := aic_root q T hT hq
     refine GlobalTheory.T.h_zero_pullback_twist_bijective q A (FractionRing T ⊗[T] A) _ hqA ⟨algebraMap T A ζ, ?_⟩
       hdK.toNontrivial (fun e he => IsIdempotentElem.iff_eq_zero_or_one.1 he)
       (fun e he => IsIdempotentElem.iff_eq_zero_or_one.1 he) i
     have h1 := root_map q (algebraMap T A) hq hqA hζ
-    haveI : NeZero (q : A) := ⟨hqA.ne_zero⟩
+    have : NeZero (q : A) := ⟨hqA.ne_zero⟩
     have h2 := Polynomial.isRoot_cyclotomic_iff.2 h1
     rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
     exact h2
-  · haveI := UpperTheory.etaleCohomology_functorialityAxioms_hold_of_sheafAxioms (ZMod q) A hSH (tw q i) n hn
-    haveI : Subsingleton (Ht q (sp (FractionRing T ⊗[T] A)) n i) := by
+  · have := UpperTheory.etaleCohomology_functorialityAxioms_hold_of_sheafAxioms (ZMod q) A hSH (tw q i) n hn
+    have : Subsingleton (Ht q (sp (FractionRing T ⊗[T] A)) n i) := by
       rcases eq_or_lt_of_le (show 1 ≤ n by omega) with rfl | h2
       · exact GlobalTheory.T.subsingleton_ht_one_genericFibre_of_sh_etale_cover q T hT hq A hSH hel i
       · exact GlobalTheory.T.subsingleton_etaleCohomology_genericFibre_henselianLine q T hT hq A hSH hind n i (by omega)
@@ -459,25 +459,25 @@ end UpperTheory.Cb.C3
 open UpperTheory.Cb.C3 in
 theorem UpperTheory.Cb.etale_cohomology_ind_etale_base_change : GlobalTheory.EtC.C3 := by
   intro q _ T _ _ _ hT hq B _ _ _ _ _ i
-  haveI := aic_intClosed T hT
-  haveI : Algebra.FormallySmooth T (Polynomial T) := Algebra.FormallySmooth.of_equiv (MvPolynomial.uniqueAlgEquiv.{0, 0} T PUnit)
-  haveI : Algebra.Smooth T (Polynomial T) := ⟨inferInstance, inferInstance⟩
-  haveI : Algebra.Smooth T B := Algebra.Smooth.comp T (Polynomial T) B
+  have := aic_intClosed T hT
+  have : Algebra.FormallySmooth T (Polynomial T) := Algebra.FormallySmooth.of_equiv (MvPolynomial.uniqueAlgEquiv.{0, 0} T PUnit)
+  have : Algebra.Smooth T (Polynomial T) := ⟨inferInstance, inferInstance⟩
+  have : Algebra.Smooth T B := Algebra.Smooth.comp T (Polynomial T) B
   have hqB : IsUnit (q : B) := by simpa using hq.map (algebraMap T B)
   refine _root_.GlobalTheory.LocGlobIndEt.main q B (Spec.map (CommRingCat.ofHom
     (Algebra.TensorProduct.includeRight (R := T) (A := FractionRing T) (B := B)).toRingHom)) hqB i ?_
   intro A _ _ hSH hInd
-  letI : Algebra T A := ((algebraMap B A).comp (algebraMap T B)).toAlgebra
-  haveI : IsScalarTower T B A := .of_algebraMap_eq' rfl
-  letI : Algebra (Polynomial T) A := ((algebraMap B A).comp (algebraMap (Polynomial T) B)).toAlgebra
-  haveI : IsScalarTower (Polynomial T) B A := .of_algebraMap_eq' rfl
-  haveI : IsScalarTower T (Polynomial T) A := .of_algebraMap_eq' (by
+  let : Algebra T A := ((algebraMap B A).comp (algebraMap T B)).toAlgebra
+  have : IsScalarTower T B A := .of_algebraMap_eq' rfl
+  let : Algebra (Polynomial T) A := ((algebraMap B A).comp (algebraMap (Polynomial T) B)).toAlgebra
+  have : IsScalarTower (Polynomial T) B A := .of_algebraMap_eq' rfl
+  have : IsScalarTower T (Polynomial T) A := .of_algebraMap_eq' (by
     ext x
     change algebraMap B A (algebraMap T B x) = algebraMap B A (algebraMap (Polynomial T) B (algebraMap T (Polynomial T) x))
     exact congrArg (algebraMap B A) (IsScalarTower.algebraMap_apply T (Polynomial T) B x))
   obtain ⟨hH, hS⟩ := id hSH
-  haveI : IsLocalRing A := hH.toIsLocalRing
-  haveI := indEt_isDomain (T := T) hInd
+  have : IsLocalRing A := hH.toIsLocalRing
+  have := indEt_isDomain (T := T) hInd
   have L := local_eqv q T hT hq A hSH (indEt_elem (P := Polynomial T) hInd) (indEt_comp (P := Polynomial T) hInd)
     (indEt_inj (T := T) hInd) i
   have PB := pullback_square T B A

@@ -83,7 +83,7 @@ private theorem exists_nil {ρ : Representation ℂ G V} (hl : HasFiniteLength �
     (hxc : ∀ t, ∃ m : ℕ, ((ρ t - algebraMap ℂ (Module.End ℂ V) (c t)) ^ m) x = 0) :
     ∃ N : Subrepresentation ρ, N ≠ ⊤ ∧
       ∀ t, ∃ m : ℕ, ∀ v, ((ρ t - algebraMap ℂ (Module.End ℂ V) (c t)) ^ m) v ∈ N.toSubmodule := by
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨N, hN, hmax⟩ := (wellFounded_gt (α := Subrepresentation ρ)).has_min {N | x ∉ N.toSubmodule}
     ⟨⊥, fun h => hx ((Submodule.mem_bot ℂ).1 h)⟩
   refine ⟨N, fun h => hN (by rw [h]; trivial), fun t => ?_⟩
@@ -126,7 +126,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
     (hxc : ∀ t, ∃ m : ℕ, ((ρ t - algebraMap ℂ (Module.End ℂ V) (χ t : ℂ)) ^ m) x = 0) :
     IsSmoothChar χ ∧ ∃ l : V →ₗ[ℂ] ℂ, l ≠ 0 ∧ ∀ g v, l (ρ g v) = (χ g : ℂ) * l v := by
   obtain ⟨T, hT, hnil⟩ := exists_nil hl hx hxc
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, hTM⟩ := (eq_top_or_exists_le_coatom T).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=
@@ -195,7 +195,7 @@ private theorem sdom_of_step {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (s 
   have hj := j.2
   have hij' : (i : ℕ) < j := hij
   have e : n - (i : ℕ) = 1 + ((n - j) + (j - i - 1)) := by omega
-  have hc0 : 0 < valuation k (c : k) := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 c.ne_zero)
+  have hc0 : 0 < valuation k (c : k) := pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 c.ne_zero)
   beta_reduce
   rw [e]
   simp only [Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow, pow_add, pow_one]
@@ -235,7 +235,7 @@ private theorem exists_sdom {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
       rw [← map_mul, ← Units.val_mul]
       congr 2
       simp
-    have hj0 : 0 < valuation k (t j : k) := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 (t j).ne_zero)
+    have hj0 : 0 < valuation k (t j : k) := pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 (t j).ne_zero)
     rw [Units.val_mul, map_mul, ← mul_assoc]
     calc valuation k (t i : k) * valuation k (c₀ : k) * valuation k (x : k)
         ≤ valuation k (t j : k) * valuation k (x : k) := mul_le_mul_left hle _
@@ -318,8 +318,8 @@ private theorem reps (d : Fin n → kˣ) : ∃ s : Finset (GL (Fin n) k), (∀ u
     ∀ (M : Type) [AddCommGroup M] [Module ℂ M] (ρ : Representation ℂ (GL (Fin n) k) M) (v : M),
       (glIwa k n).uOp ρ (Sig.dg d) v = ∑ u ∈ s, ρ u (ρ (Sig.dg d) v) := by
   classical
-  haveI := quot_finite d
-  letI : Fintype ((glIwa k n).N ⧸ ((glIwa k n).Nconj (Sig.dg d)).subgroupOf (glIwa k n).N) := Fintype.ofFinite _
+  have := quot_finite d
+  let : Fintype ((glIwa k n).N ⧸ ((glIwa k n).Nconj (Sig.dg d)).subgroupOf (glIwa k n).N) := Fintype.ofFinite _
   have hinj : Function.Injective fun q : (glIwa k n).N ⧸ ((glIwa k n).Nconj (Sig.dg d)).subgroupOf (glIwa k n).N =>
       ((q.out : (glIwa k n).N) : GL (Fin n) k) := fun q q' h => by
     have h1 : q.out = q'.out := Subtype.ext h
@@ -474,7 +474,7 @@ theorem UpperTheory.V.Z.Sym.W.locSubD :
   have hl : HasFiniteLength (jacB τ) :=
     (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).2
       ((H.loc.bz k).2.1 _ _ _ (points (Fin n)) _ τ hs (hasFiniteLength_of_isIrreducible hi))
-  haveI := GlobalTheory.TorusEigenform.secondCountableTopology_units k
+  have := GlobalTheory.TorusEigenform.secondCountableTopology_units k
   obtain ⟨-, l, hl0, hle⟩ := exists_form (χ := torusChar ψ) (isSmooth_jacB hs) hl hx fun t =>
     ⟨1, by rw [pow_one, LinearMap.sub_apply, Module.algebraMap_end_apply, ht t, sub_self]⟩
   exact GlobalTheory.SatakeExists.isSubquotient_of_eigenform hs hi (torusChar ψ) l hl0 hle

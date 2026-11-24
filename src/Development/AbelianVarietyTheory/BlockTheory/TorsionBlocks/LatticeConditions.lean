@@ -138,15 +138,15 @@ theorem toOk_inj (i : tw.Tw) (k : ℕ) : Function.Injective (toOk tw i k) :=
   (tw.Ok_inj i k).comp (tw.O_inj i)
 
 theorem twO_inj (a : N.Loc) : Function.Injective (tw.twist₂ a) := by
-  haveI : CharZero (FractionRing (N.O a)) := (N.embK a).charZero_iff (N.embK a).injective |>.1 inferInstance
-  haveI : CharZero (N.O a) := (algebraMap (N.O a) (FractionRing (N.O a))).charZero
+  have : CharZero (FractionRing (N.O a)) := (N.embK a).charZero_iff (N.embK a).injective |>.1 inferInstance
+  have : CharZero (N.O a) := (algebraMap (N.O a) (FractionRing (N.O a))).charZero
   rw [RingHom.injective_iff_ker_eq_bot]
   by_contra hne
   have hp : (RingHom.ker (tw.twist₂ a)).IsPrime := RingHom.ker_isPrime _
   have hm : (RingHom.ker (tw.twist₂ a)).IsMaximal := hp.isMaximal hne
   have he := IsLocalRing.eq_maximalIdeal hm
-  haveI := tw.twistBaseCoefficientRing_residueField_finite (tw.twOf a)
-  haveI := Fintype.ofFinite (IsLocalRing.ResidueField (tw.O0 (tw.twOf a)))
+  have := tw.twistBaseCoefficientRing_residueField_finite (tw.twOf a)
+  have := Fintype.ofFinite (IsLocalRing.ResidueField (tw.O0 (tw.twOf a)))
   have h0 : ((Fintype.card (IsLocalRing.ResidueField (tw.O0 (tw.twOf a))) : ℕ) :
       IsLocalRing.ResidueField (tw.O0 (tw.twOf a))) = 0 := FiniteField.cast_card_eq_zero _
   have h1 : ((Fintype.card (IsLocalRing.ResidueField (tw.O0 (tw.twOf a))) : ℕ) :

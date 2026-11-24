@@ -108,7 +108,7 @@ theorem integral_kG {μ : Measure G} [μ.IsMulLeftInvariant] [SFinite μ] {σ : 
     obtain ⟨hI, hE⟩ := hrep x
     have hin : ∀ g, ⟪σ g w, σ x w⟫_ℂ = conj ⟪w, σ (x⁻¹ * g) w⟫_ℂ := by
       intro g
-      rw [inner_conj_symm, ← hunit x (σ (x⁻¹ * g) w) w, ← ContinuousLinearMap.mul_apply, ← hmul,
+      rw [inner_conj_symm, ← hunit x (σ (x⁻¹ * g) w) w, ← mul_apply_eq_comp, ← hmul,
         mul_inv_cancel_left]
     have heq : (fun g => ((d : ℂ) * ⟪σ g w, σ x w⟫_ℂ) • W g)
         = fun g => (fun y => ((d : ℂ) * conj ⟪w, σ y w⟫_ℂ) • W (x * y)) (x⁻¹ * g) := by
@@ -124,7 +124,7 @@ theorem integral_kG {μ : Measure G} [μ.IsMulLeftInvariant] [SFinite μ] {σ : 
         = fun g => (StrongDual.smulRightL ℂ V' V (innerSL ℂ (W' g')))
           (((d : ℂ) * ⟪σ g w, σ (γ * g') w⟫_ℂ) • W g) := by
       funext g
-      simp only [kG, map_smul, ← rankOne_eq_smulRightL, hmul, ContinuousLinearMap.mul_apply]
+      simp only [kG, map_smul, ← rankOne_eq_smulRightL, hmul, mul_apply_eq_comp]
     rw [hk, ContinuousLinearMap.integral_comp_comm _ (hF _).1, (hF _).2, ← rankOne_eq_smulRightL]
   simp_rw [hin]
   have h := integral_mul_left_eq_self (μ := μ) (fun x => rk1A (W x) (W' (γ⁻¹ * x))) γ
@@ -169,9 +169,9 @@ theorem coef_shift {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w : HH) 
     ⟪σ (u⁻¹ * z) w, σ γ (σ (u'⁻¹ * z') w)⟫_ℂ = ⟪σ z w, σ (u * γ * u'⁻¹) (σ z' w)⟫_ℂ := by
   obtain ⟨h1, hmul, hinn, -⟩ := hσ
   have e : ∀ a : HH, σ u (σ u⁻¹ a) = a := fun a => by
-    rw [← ContinuousLinearMap.mul_apply, ← hmul, mul_inv_cancel, h1, ContinuousLinearMap.one_apply]
-  rw [← hinn u, hmul u⁻¹ z, ContinuousLinearMap.mul_apply, e]
-  simp only [hmul, ContinuousLinearMap.mul_apply]
+    rw [← mul_apply_eq_comp, ← hmul, mul_inv_cancel, h1, one_apply_eq_self]
+  rw [← hinn u, hmul u⁻¹ z, mul_apply_eq_comp, e]
+  simp only [hmul, mul_apply_eq_comp]
 
 theorem norm_W_shift {σ : G → (HH →L[ℂ] HH)} {μ ν : Measure G} {d : ℝ} {w : HH} {S : Set G}
     {τ : G → (V →L[ℂ] V)} {W : G → V} (hW : IsWAbs μ σ d w S τ ν W) (hinv : ∀ a ∈ S, a⁻¹ ∈ S)
@@ -182,7 +182,7 @@ theorem norm_W_shift {σ : G → (HH →L[ℂ] HH)} {μ ν : Measure G} {d : ℝ
 
 theorem enorm_rk1A_le (a : V) (b : V') : ‖rk1A a b‖ₑ ≤ ‖a‖ₑ * ‖b‖ₑ := by
   have h := norm_rk1A_le a b
-  rw [enorm_eq_nnnorm, enorm_eq_nnnorm, enorm_eq_nnnorm, ← ENNReal.coe_mul, ENNReal.coe_le_coe,
+  rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm, eNorm_eq_nnNorm, ← ENNReal.coe_mul, ENNReal.coe_le_coe,
     ← NNReal.coe_le_coe]
   push_cast
   exact h
@@ -196,7 +196,7 @@ theorem continuous_coef5 {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w 
   have e : (fun q : G × G × G × G => ⟪σ q.1 w, σ (q.2.2.1 * γ * q.2.2.2⁻¹) (σ q.2.1 w)⟫_ℂ) =
       fun q => ⟪σ q.1 w, σ (q.2.2.1 * γ * q.2.2.2⁻¹ * q.2.1) w⟫_ℂ := by
     funext q
-    rw [hmul (q.2.2.1 * γ * q.2.2.2⁻¹) q.2.1, ContinuousLinearMap.mul_apply]
+    rw [hmul (q.2.2.1 * γ * q.2.2.2⁻¹) q.2.1, mul_apply_eq_comp]
   rw [e]
   have hg : Continuous fun q : G × G × G × G => q.2.2.1 * γ * q.2.2.2⁻¹ * q.2.1 := by fun_prop
   exact ((hc w).comp continuous_fst).inner ((hc w).comp hg)
@@ -233,11 +233,11 @@ theorem measurable_bInt {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (w :
   unfold bInt
   have h1 : Measurable fun q : G × G × G × G =>
       ‖⟪σ q.1 w, σ (q.2.2.1 * γ * q.2.2.2⁻¹) (σ q.2.1 w)⟫_ℂ‖ₑ :=
-    (continuous_enorm.comp (continuous_coef5 hσ w γ)).measurable
+    (continuous_eNorm.comp (continuous_coef5 hσ w γ)).measurable
   have h2 : Measurable fun q : G × G × G × G => ‖W q.1‖ₑ :=
-    (continuous_enorm.comp (hW.comp continuous_fst)).measurable
+    (continuous_eNorm.comp (hW.comp continuous_fst)).measurable
   have h3 : Measurable fun q : G × G × G × G => ‖W' q.2.1‖ₑ :=
-    (continuous_enorm.comp (hW'.comp (continuous_fst.comp continuous_snd))).measurable
+    (continuous_eNorm.comp (hW'.comp (continuous_fst.comp continuous_snd))).measurable
   exact (h1.mul h2).mul h3
 
 theorem ae_mem_four {ν μS ν' μS' : Measure G} [SFinite ν] [SFinite μS] [SFinite ν'] [SFinite μS'] {S S' : Set G}
@@ -264,18 +264,18 @@ theorem enorm_kG_shift_le {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) {�
     (hinv : ∀ a ∈ S, a⁻¹ ∈ S) (hinv' : ∀ a ∈ S', a⁻¹ ∈ S') (γ z u z' u' : G) (hu : u ∈ S) (hu' : u' ∈ S') :
     ‖kG σ d w W W' γ (u⁻¹ * z, u'⁻¹ * z')‖ₑ ≤ ‖(d : ℂ)‖ₑ * bInt σ w W W' γ z z' u u' := by
   have e1 : ‖W (u⁻¹ * z)‖ₑ = ‖W z‖ₑ := by
-    rw [enorm_eq_nnnorm, enorm_eq_nnnorm]
+    rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm]
     congr 1
     exact NNReal.eq ((norm_W_shift hW) hinv hu z)
   have e2 : ‖W' (u'⁻¹ * z')‖ₑ = ‖W' z'‖ₑ := by
-    rw [enorm_eq_nnnorm, enorm_eq_nnnorm]
+    rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm]
     congr 1
     exact NNReal.eq ((norm_W_shift hW') hinv' hu' z')
   have hR : ‖Formalism.L2.SG.Pf.EnergyAbs.rk1A (W (u⁻¹ * z)) (W' (u'⁻¹ * z'))‖ₑ ≤ ‖W z‖ₑ * ‖W' z'‖ₑ := by
     rw [← e1, ← e2]
     exact enorm_rk1A_le _ _
   simp only [kG, bInt]
-  rw [coef_shift hσ, enorm_smul, enorm_mul]
+  rw [coef_shift hσ, eNorm_smul, eNorm_mul]
   calc ‖(d : ℂ)‖ₑ * ‖⟪σ z w, σ (u * γ * u'⁻¹) (σ z' w)⟫_ℂ‖ₑ * ‖Formalism.L2.SG.Pf.EnergyAbs.rk1A (W (u⁻¹ * z)) (W' (u'⁻¹ * z'))‖ₑ
       ≤ ‖(d : ℂ)‖ₑ * ‖⟪σ z w, σ (u * γ * u'⁻¹) (σ z' w)⟫_ℂ‖ₑ * (‖W z‖ₑ * ‖W' z'‖ₑ) := by gcongr
     _ = _ := by simp only [mul_assoc]
@@ -301,17 +301,17 @@ private theorem measurable_bInt_prod {σ : G → (HH →L[ℂ] HH)} (hσ : Forma
       fun p => ‖⟪σ p.1.1 w, σ (p.1.2 * γ * p.2.2⁻¹ * p.2.1) w⟫_ℂ‖ₑ * ‖W p.1.1‖ₑ * ‖W' p.2.1‖ₑ := by
     funext p
     unfold bInt
-    rw [hmul (p.1.2 * γ * p.2.2⁻¹) p.2.1, ContinuousLinearMap.mul_apply]
+    rw [hmul (p.1.2 * γ * p.2.2⁻¹) p.2.1, mul_apply_eq_comp]
   rw [e]
   have hg : Continuous fun p : (G × G) × (G × G) => p.1.2 * γ * p.2.2⁻¹ * p.2.1 := by fun_prop
   have h1 : Measurable fun p : (G × G) × (G × G) =>
       ‖⟪σ p.1.1 w, σ (p.1.2 * γ * p.2.2⁻¹ * p.2.1) w⟫_ℂ‖ₑ :=
-    (continuous_enorm.comp
+    (continuous_eNorm.comp
       (((hc w).comp (continuous_fst.comp continuous_fst)).inner ((hc w).comp hg))).measurable
   have h2 : Measurable fun p : (G × G) × (G × G) => ‖W p.1.1‖ₑ :=
-    (continuous_enorm.comp (hW.comp (continuous_fst.comp continuous_fst))).measurable
+    (continuous_eNorm.comp (hW.comp (continuous_fst.comp continuous_fst))).measurable
   have h3 : Measurable fun p : (G × G) × (G × G) => ‖W' p.2.1‖ₑ :=
-    (continuous_enorm.comp (hW'.comp (continuous_fst.comp continuous_snd))).measurable
+    (continuous_eNorm.comp (hW'.comp (continuous_fst.comp continuous_snd))).measurable
   exact (h1.mul h2).mul h3
 
 
@@ -339,7 +339,7 @@ theorem lintegral_kG_shift_lt_top {ν μS ν' μS' : Measure G} [SFinite ν] [SF
   have hle := ae_enorm_kG_le_bInt hσ hW hW' hinv hinv' h0 h0' γ
   have h2 := lintegral_const_mul_bInt_eq_iterated (ν := ν) (μS := μS) (ν' := ν') (μS' := μS') hσ w
     hW.2.2.2.2.1 hW'.2.2.2.2.1 γ ‖(d : ℂ)‖ₑ
-  have hd : ‖(d : ℂ)‖ₑ ≠ ⊤ := enorm_ne_top
+  have hd : ‖(d : ℂ)‖ₑ ≠ ⊤ := eNorm_ne_top
   refine lt_of_le_of_lt (lintegral_mono_ae hle) ?_
   rw [h2]
   exact (ENNReal.mul_ne_top hd hB.ne).lt_top
@@ -358,7 +358,7 @@ theorem integrable_kG {μ ν μS ν' μS' : Measure G} [SFinite ν] [SFinite μS
   have hF : Measurable (Prod.map φinv φinv : (G × G) × (G × G) → G × G) :=
     (continuous_φinv.prodMap continuous_φinv).measurable
   have hg : Measurable fun q : G × G => ‖kG σ d w W W' γ q‖ₑ :=
-    (continuous_enorm.comp hK).measurable
+    (continuous_eNorm.comp hK).measurable
   show ∫⁻ q, ‖kG σ d w W W' γ q‖ₑ ∂(μ.prod μ) < ⊤
   rw [prod_map_φinv hm hm', lintegral_map hg hF]
   exact lintegral_kG_shift_lt_top hσ hW hW' hinv hinv' h0 h0' γ hB

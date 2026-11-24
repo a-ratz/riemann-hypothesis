@@ -196,7 +196,7 @@ theorem nonempty_splitCore (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x)
   have hl' : w'.1.LiesOver v.asIdeal := w'.2.2
   have hwmax : w.1.IsMaximal := hw1.isMaximal (Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot w.1)
   have hnle : ¬ w.1 ≤ w'.1 := fun hle => hne (Subtype.ext (hwmax.eq_of_le hw1'.ne_top hle))
-  obtain ⟨a, haw, haw'⟩ := SetLike.not_le_iff_exists.mp hnle
+  obtain ⟨a, haw, haw'⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
   have hsa : IsIntegral ℤ (σ (a : E)) := (RingOfIntegers.isIntegral_coe a).map (σ.restrictScalars ℤ)
   let sa : 𝓞 E := ⟨σ a, hsa⟩
   have hsa' : (sa : E) = σ a := rfl
@@ -304,7 +304,7 @@ theorem split_place : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     have := v.isMaximal
     have hlo := liesOver_span_of_natCast_mem_flag_measures p hp v.asIdeal hv
     rw [Ideal.inertiaDeg_eq_of_isMaximal (Ideal.span {(p : ℤ)}) v.asIdeal] at hf
-    letI := Ideal.Quotient.field (Ideal.span {(p : ℤ)})
+    let := Ideal.Quotient.field (Ideal.span {(p : ℤ)})
     have : Module.Finite (ℤ ⧸ Ideal.span {(p : ℤ)}) (𝓞 F ⧸ v.asIdeal) := Module.finite_of_finrank_eq_succ hf
     let e := LinearEquiv.ofFinrankEq (ℤ ⧸ Ideal.span {(p : ℤ)}) (𝓞 F ⧸ v.asIdeal)
       (by rw [Module.finrank_self, hf])

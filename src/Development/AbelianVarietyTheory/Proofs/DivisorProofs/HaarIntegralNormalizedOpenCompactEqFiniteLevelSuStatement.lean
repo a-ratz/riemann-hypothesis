@@ -62,7 +62,7 @@ theorem finsum_prod_fst {A T : Type} [Finite T] [Nonempty T] (f : A → ℂ) :
       exact ⟨hx, Set.mem_univ _⟩
     rw [finsum_curry _ hg, mul_finsum]
     refine finsum_congr fun a => ?_
-    haveI := Fintype.ofFinite T
+    have := Fintype.ofFinite T
     rw [finsum_eq_sum_of_fintype]
     show ∑ _i : T, f a = _
     rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, Nat.card_eq_fintype_card]
@@ -89,7 +89,7 @@ theorem sum_level (H : Type) [Group H] (S L : Subgroup H) (u : H → ℂ) (hLS :
       conv_lhs => rw [← QuotientGroup.out_eq' q]
       rfl
     rw [this, hinv]
-  haveI : Finite (S ⧸ L.subgroupOf S) := Subgroup.index_ne_zero_iff_finite.1 hfin
+  have : Finite (S ⧸ L.subgroupOf S) := Subgroup.index_ne_zero_iff_finite.1 hfin
   rw [finsum_congr hfst, finsum_comp_equiv (Subgroup.quotientEquivProdOfLE hLS)
     (f := fun x : (H ⧸ S) × (S ⧸ L.subgroupOf S) => u x.1.out)]
   exact finsum_prod_fst (fun p : H ⧸ S => u p.out)

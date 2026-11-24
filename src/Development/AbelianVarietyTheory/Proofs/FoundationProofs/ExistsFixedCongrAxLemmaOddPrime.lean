@@ -85,7 +85,7 @@ variable {A : ValuationSubring K} {ϖ : K} in
 theorem _root_.GlobalTheory.AxSen.ge_zero (q : ℚ) : _root_.GlobalTheory.AxSen.Ge A ϖ 0 q := by
   intro a b hb _
   rw [map_zero, zero_pow hb.ne']
-  exact zero_le'
+  exact zero_le
 
 variable {K : Type} [Field K] in
 variable {A : ValuationSubring K} {ϖ : K} in
@@ -158,9 +158,9 @@ theorem _root_.GlobalTheory.AxSen.Ge.mul (h0 : ϖ ≠ 0) (h1 : A.valuation ϖ �
       _ = A.valuation ϖ ^ (q.num * q'.den * b + q'.num * q.den * b) := by
           rw [← zpow_add₀ hv]
       _ ≤ A.valuation ϖ ^ (a * ((q.den * q'.den : ℕ) : ℤ)) :=
-          zpow_le_zpow_right_of_le_one₀ (zero_lt_iff.2 hv) h1 hexp
+          zpow_le_zpow_right_of_le_one₀ (pos_iff_ne_zero.2 hv) h1 hexp
       _ = (A.valuation ϖ ^ a) ^ (q.den * q'.den) := by rw [zpow_mul, zpow_natCast]
-  exact (pow_le_pow_iff_left₀ zero_le' zero_le' (by positivity)).1 key
+  exact (pow_le_pow_iff_left₀ zero_le zero_le (by positivity)).1 key
 
 variable {K : Type} [Field K] in
 variable {A : ValuationSubring K} {ϖ : K} in
@@ -171,7 +171,7 @@ theorem _root_.GlobalTheory.AxSen.Ge.root {w : K} {q : ℚ} {N : ℕ} (hN : 0 < 
     push_cast
     calc (a : ℚ) * N ≤ q * b * N := mul_le_mul_of_nonneg_right hab (Nat.cast_nonneg N)
       _ = q * N * b := by ring)
-  refine (pow_le_pow_iff_left₀ zero_le' zero_le' hN.ne').1 ?_
+  refine (pow_le_pow_iff_left₀ zero_le zero_le hN.ne').1 ?_
   calc (A.valuation w ^ b) ^ N = A.valuation (w ^ N) ^ b := by
         rw [map_pow, ← pow_mul, ← pow_mul, mul_comm]
     _ ≤ A.valuation ϖ ^ (a * (N : ℤ)) := h₁
@@ -188,13 +188,13 @@ theorem _root_.GlobalTheory.AxSen.Ge.div (h0 : ϖ ≠ 0) (h1 : A.valuation ϖ �
   have hc0 : A.valuation c ≠ 0 := by
     intro hc0
     rw [hc0] at hc
-    exact pow_ne_zero e hv (le_zero_iff.1 hc)
+    exact pow_ne_zero e hv (nonpos_iff_eq_zero.1 hc)
   have h₁ := h (a + e * b) b hb (by push_cast; linarith [hab, sub_mul q (e : ℚ) b])
   rw [map_mul, mul_pow, zpow_add₀ hv] at h₁
   have h₂ : A.valuation ϖ ^ ((e : ℤ) * (b : ℤ)) ≤ A.valuation c ^ b := by
     rw [zpow_mul, zpow_natCast, zpow_natCast]
     exact pow_le_pow_left' hc b
-  refine (mul_le_mul_iff_of_pos_right (zero_lt_iff.2 (pow_ne_zero b hc0))).1 ?_
+  refine (mul_le_mul_iff_of_pos_right (pos_iff_ne_zero.2 (pow_ne_zero b hc0))).1 ?_
   calc A.valuation w ^ b * A.valuation c ^ b = A.valuation c ^ b * A.valuation w ^ b := mul_comm _ _
     _ ≤ A.valuation ϖ ^ a * A.valuation ϖ ^ ((e : ℤ) * (b : ℤ)) := h₁
     _ ≤ A.valuation ϖ ^ a * A.valuation c ^ b := mul_le_mul' le_rfl h₂
@@ -210,7 +210,7 @@ theorem _root_.GlobalTheory.AxSen.ge_natCast_iff (h0 : ϖ ≠ 0) (h1 : A.valuati
     rw [pow_one, zpow_natCast, ← map_pow] at h₁
     refine ⟨w / ϖ ^ m, ?_, by field_simp⟩
     rw [← ValuationSubring.valuation_le_one_iff, map_div₀]
-    exact (div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (pow_ne_zero m h0)))).2 h₁
+    exact (div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (pow_ne_zero m h0)))).2 h₁
   · rintro ⟨z, hz, rfl⟩ a b hb hab
     have hz' : A.valuation z ≤ 1 := (ValuationSubring.valuation_le_one_iff A z).2 hz
     have hab' : a ≤ ((m * b : ℕ) : ℤ) := by
@@ -220,7 +220,7 @@ theorem _root_.GlobalTheory.AxSen.ge_natCast_iff (h0 : ϖ ≠ 0) (h1 : A.valuati
     calc (A.valuation ϖ ^ m) ^ b * A.valuation z ^ b ≤ (A.valuation ϖ ^ m) ^ b * 1 :=
           mul_le_mul' le_rfl (pow_le_one' hz' b)
       _ = A.valuation ϖ ^ ((m * b : ℕ) : ℤ) := by rw [mul_one, ← pow_mul, zpow_natCast]
-      _ ≤ A.valuation ϖ ^ a := zpow_le_zpow_right_of_le_one₀ (zero_lt_iff.2 hv) h1 hab'
+      _ ≤ A.valuation ϖ ^ a := zpow_le_zpow_right_of_le_one₀ (pos_iff_ne_zero.2 hv) h1 hab'
 
 
 variable {K : Type} [Field K] in
@@ -231,7 +231,7 @@ theorem _root_.GlobalTheory.AxSen.Ge.map (h0 : ϖ ≠ 0) (f : K →+* K)
   intro a b hb hab
   have hv : A.valuation ϖ ≠ 0 := (Valuation.ne_zero_iff _).2 h0
   have h₁ := h a b hb hab
-  have hpos : 0 < A.valuation ϖ ^ a := zero_lt_iff.2 (zpow_ne_zero a hv)
+  have hpos : 0 < A.valuation ϖ ^ a := pos_iff_ne_zero.2 (zpow_ne_zero a hv)
   rw [← div_le_one₀ hpos, ← map_pow, ← map_zpow₀, ← map_div₀,
     ValuationSubring.valuation_le_one_iff] at h₁ ⊢
   have := hf _ h₁
@@ -251,7 +251,7 @@ namespace GlobalTheory
 
 private lemma not_dvd_choose_prime_pow_of_between {p : ℕ} (hp : p.Prime) :
     ∀ (k N : ℕ), p ^ k ≤ N → N < p ^ (k + 1) → ¬ p ∣ N.choose (p ^ k) := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   intro k
   induction k with
   | zero =>
@@ -450,7 +450,7 @@ theorem exists_fixed [IsAlgClosed K] {p : ℕ} (hp : p.Prime) (h1 : A.valuation 
     ∀ (α : K) (a : ℚ) (S : Finset K), S.card ≤ n → (∀ h ∈ H, h α ∈ S) → (∀ h ∈ H, Ge A (p : K) (h α - α) a) →
       ∃ y, (∀ h ∈ H, h y = y) ∧ Ge A (p : K) (α - y) (a - loss p n) := by
   classical
-  haveI : CharZero K := algebraRat.charZero K
+  have : CharZero K := algebraRat.charZero K
   have h0 : (p : K) ≠ 0 := by exact_mod_cast hp.ne_zero
   induction n using Nat.strong_induction_on with
   | _ n ih =>
@@ -509,8 +509,8 @@ theorem exists_fixed_congr (l : ℕ) [Fact l.Prime] (hl : l ≠ 2) (Ω : Type) [
     ∃ y ∈ A, (∀ h ∈ H, h y = y) ∧ GlobalTheory.Glue.CgA A l m x y := by
   classical
   have hp : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   have h0 : (l : Ω) ≠ 0 := by exact_mod_cast hp.ne_zero
   obtain ⟨v, hv, hlv⟩ := hA
   have h1 : A.valuation (l : Ω) < 1 := by simpa using (hv _).mpr hlv

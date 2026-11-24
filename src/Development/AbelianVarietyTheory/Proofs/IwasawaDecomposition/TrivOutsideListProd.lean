@@ -183,10 +183,10 @@ theorem exists_local (s : SplitPlace L) (r t p : ℕ) [Fact p.Prime]
   · intro a b
     rw [hx2, hval, hM]
     by_cases hab : a.val < r ∧ b.val < r
-    · rw [dif_pos hab, Matrix.map_apply]
-      simp [bz, dif_pos hab]
-    · rw [dif_neg hab, Matrix.map_apply]
-      simp only [bz, dif_neg hab]
+    · rw [dite_eq_left hab, Matrix.map_apply]
+      simp [bz, dite_eq_left hab]
+    · rw [dite_eq_right hab, Matrix.map_apply]
+      simp only [bz, dite_eq_right hab]
       split_ifs <;> simp
 
 end Local2
@@ -236,7 +236,7 @@ theorem main : ∀ (D : D7) (n : ℕ), D.R.r ≤ n → ∃ Lf : G0g D.nd → For
       ∃ x : Formalism.AUTREP.GAf D.host.E (D.R.r + t), TrivOutside {(s kv).v} x ∧ x ∈ Umax D.host.E (D.R.r + t) ∧
         GlobalTheory.PendOf.IsLiftAt (s kv) D.R.r (D.host.g kv.1) γ ((s kv).loc (D.R.r + t) x) := by
     intro kv γ
-    haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
+    have : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
     exact exists_local (s kv) D.R.r t (D.host.g kv.1) (hp kv) γ
   choose x hx1 hx2 hx3 using hloc
   have hinj : Function.Injective (fun kv : (Σ k : Fin 2, D.nd.PlG k) => (s kv).v) :=

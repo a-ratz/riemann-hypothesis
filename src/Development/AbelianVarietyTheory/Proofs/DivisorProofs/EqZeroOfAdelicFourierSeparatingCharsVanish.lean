@@ -68,15 +68,15 @@ theorem secondCountable_completion (v : InfinitePlace F) : SecondCountableTopolo
   (InfinitePlace.Completion.isometry_extensionEmbedding v).isEmbedding.secondCountableTopology
 
 theorem secondCountable_inf : SecondCountableTopology (InfiniteAdeleRing F) := by
-  haveI := secondCountable_completion F
+  have := secondCountable_completion F
   exact inferInstanceAs (SecondCountableTopology ((v : InfinitePlace F) → v.Completion))
 
 theorem t2Space_adeleRing_of_numberField : T2Space (AF F) := by
-  haveI := t2Space_infiniteAdeleRing_of_numberField F
+  have := t2Space_infiniteAdeleRing_of_numberField F
   exact inferInstanceAs (T2Space (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))
 
 theorem secondCountable_AF : SecondCountableTopology (AF F) := by
-  haveI := secondCountable_inf F
+  have := secondCountable_inf F
   exact inferInstanceAs (SecondCountableTopology (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))
 
 theorem continuousAdd_AE : ContinuousAdd (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) :=
@@ -90,18 +90,18 @@ def homAE : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (
     continuous_invFun := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap }
 
 theorem t2Space_cm_host_adeles : T2Space (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := by
-  haveI := t2Space_adeleRing_of_numberField F
+  have := t2Space_adeleRing_of_numberField F
   exact (homAE F E).isEmbedding.t2Space
 
 theorem secondCountable_AE : SecondCountableTopology (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := by
-  haveI := secondCountable_AF F
+  have := secondCountable_AF F
   exact (homAE F E).isEmbedding.secondCountableTopology
 
 theorem locallyCompact_AE : LocallyCompactSpace (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) :=
   (homAE F E).isClosedEmbedding.locallyCompactSpace
 
 theorem topAddGroup_AE : IsTopologicalAddGroup (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) :=
-  IsModuleTopology.topologicalAddGroup (R := AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))
+  IsModuleTopology.isTopologicalAddGroup (R := AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))
 
 end GlobalTheory.AdelicFourierUniq
 
@@ -113,12 +113,12 @@ theorem GlobalTheory.AdelicFourierUniq.eq_zero : ∀ (F E : Type) [Field F] [Num
     ∀ μ : @Measure (Fin d → AE F E) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
     ∀ N : (Fin d → AE F E) → ℂ, Continuous N → Integrable N μ → (∀ a, ∫ u, ψ (p a u) * N u ∂μ = 0) → N = 0 := by
   intro F E _ _ _ _ _ ψ hψ d A _ p hp hsep μ hμ N hN hi h
-  letI : MeasurableSpace (Fin d → AE F E) := borel _
-  haveI : BorelSpace (Fin d → AE F E) := ⟨rfl⟩
-  haveI := t2Space_cm_host_adeles F E
-  haveI := secondCountable_AE F E
-  haveI := locallyCompact_AE F E
-  haveI := topAddGroup_AE F E
+  let : MeasurableSpace (Fin d → AE F E) := borel _
+  have : BorelSpace (Fin d → AE F E) := ⟨rfl⟩
+  have := t2Space_cm_host_adeles F E
+  have := secondCountable_AE F E
+  have := locallyCompact_AE F E
+  have := topAddGroup_AE F E
   have hp0 : p 0 = 0 := by simpa using hp 0 0
   refine GlobalTheory.CharFourierInj.eq_zero (fun a u => ψ (p a u))
     (fun a => hψ.1.comp (IsModuleTopology.continuous_of_linearMap (R := AF F) (p a)))

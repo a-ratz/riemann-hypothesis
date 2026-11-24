@@ -72,16 +72,16 @@ theorem minor_mul_upper {B : Type} [CommRing B] {N i : ℕ} (hi : i ≤ N) (g U 
         push_neg at hlt
         exact hk (Finset.mem_map.2 ⟨⟨k, hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
       have hlt : Fin.castLE hi b < k := by
-        rw [Fin.lt_def, Fin.coe_castLE]
+        rw [Fin.lt_def, Fin.val_castLE]
         omega
       rw [hU k (Fin.castLE hi b) hlt, mul_zero]
   have hT : (U.submatrix (Fin.castLE hi) (Fin.castLE hi)).IsUpperTriangular := by
     intro a b hab
     have hab' : Fin.castLE hi b < Fin.castLE hi a := by
-      rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
+      rw [Fin.lt_def, Fin.val_castLE, Fin.val_castLE]
       exact hab
     exact hU _ _ hab'
-  rw [h, Matrix.det_mul, Matrix.det_of_upperTriangular hT]
+  rw [h, Matrix.det_mul, Matrix.det_of_isUpperTriangular hT]
   rfl
 
 private theorem cb_lemma {B : Type} [CommRing B] {i N : ℕ} (A : Matrix (Fin i) (Fin N) B)

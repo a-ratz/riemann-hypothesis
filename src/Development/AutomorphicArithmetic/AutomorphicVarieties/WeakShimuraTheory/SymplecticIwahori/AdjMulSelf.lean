@@ -63,7 +63,7 @@ theorem IsUp_adj {X : M4 R} (hX : IsUp X) : IsUp (adj X) := fun i j h => by
 
 theorem IsUp_inv {b : (M4 R)ˣ} (hb : IsUp (b : M4 R)) : IsUp ((b⁻¹ : (M4 R)ˣ) : M4 R) := by
   rw [isUp_iff] at hb ⊢
-  haveI := b.invertible
+  have := b.invertible
   rw [Matrix.coe_units_inv]
   exact Matrix.blockTriangular_inv_of_blockTriangular hb
 

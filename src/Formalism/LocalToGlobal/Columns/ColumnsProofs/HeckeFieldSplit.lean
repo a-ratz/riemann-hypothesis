@@ -143,7 +143,7 @@ theorem hfs_splitAll_sq_reidx {SG₁ SG₂ : Finset (HeightOneSpectrum (𝓞 X.E
     SplitOver (heckeFamAll (formPts (X := X.coefExt L ι) (squarePk (X.coefExt L ι) lam fun d : DecoSet (E := X.E) (n := n) (ST := ∅) (SG := SG₁) => d.1.N)
       ((Λ.coefMap ι).reidx h).inv) S0) := by
   subst h
-  haveI := hfd
+  have := hfd
   have e : ((Λ.coefMap ι).reidx rfl).inv = Λ.inv.coefMap ι := LevFam.coefMap_inv (ι := ι) Λ
   rw [e]
   exact hfs_splitAll_formPts ι (squarePk X lam fun d : DecoSet (E := X.E) (n := n) (ST := ∅) (SG := SG₁) => d.1.N) Λ.inv S0 hc hp hsp
@@ -162,7 +162,7 @@ theorem hfs_splitAll_rd_reidx {SG₁ SG₂ : Finset (HeightOneSpectrum (𝓞 X.E
     SplitOver (heckeFamAll (formPts (X := X.coefExt L ι) (roundPk (X.coefExt L ι) lam fun d : DecoSet (E := X.E) (n := n) (ST := ∅) (SG := SG₁) => d.1.N)
       ((Λ.coefMap ι).reidx h).inv) S0) := by
   subst h
-  haveI := hfd
+  have := hfd
   have e : ((Λ.coefMap ι).reidx rfl).inv = Λ.inv.coefMap ι := LevFam.coefMap_inv (ι := ι) Λ
   rw [e]
   exact hfs_splitAll_formPts ι (roundPk X lam fun d : DecoSet (E := X.E) (n := n) (ST := ∅) (SG := SG₁) => d.1.N) Λ.inv S0 hc hp hsp

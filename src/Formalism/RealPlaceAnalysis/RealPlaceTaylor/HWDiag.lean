@@ -197,7 +197,7 @@ theorem HWDiag_charpoly {n : ℕ} (l : Fin n → ℂ) :
     (Amat l).charpoly = ∏ s : Fin n, (Polynomial.X - Polynomial.C (l s)) := by
   have hU := HWDiag_Amat_upper l
   first
-  | (rw [Matrix.charpoly_of_upperTriangular _ hU]
+  | (rw [Matrix.charpoly_of_isUpperTriangular _ hU]
      simp [Amat])
 
 private theorem sum_Amat_smul_eq_smul_sub_sum_gt {V : Type*} [AddCommGroup V] [Module ℂ V] {n : ℕ}

@@ -119,7 +119,7 @@ theorem nc_of_roots {D : D7} (P : PairedCharacterCondition.Pend D) (k : Fin 2) (
       ∀ x, x ::ₘ {x} ≤ Formalism.CyclotomicNorms.rootsBar (D.naut.items₂ k w y) → x ^ (D.host.g k - 1) = 1) :
     Nc D.nd D.naut y := by
   classical
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   refine ⟨fun σ hσ hwild => ?_, hm, fun γ hγ z hz => ?_⟩
   · rw [P.inertiaCharpoly_eigenvalues k w hw _ hdeg σ hσ,
       Multiset.map_congr rfl (fun x hx => by rw [P.om_wild k w hw x (hnz x hx) σ hwild, C_1]),
@@ -141,7 +141,7 @@ theorem nc_of_label {D : D7} (P : PairedCharacterCondition.Pend D) (hDZ : Paired
     (w : PlE D.host) (hw : w = D.naut.plGw k v ∨ IsConjPl D.host (D.naut.plGw k v) w) :
     Nc D.nd D.naut (D.naut.locV i PI w) := by
   classical
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨u, hu, hm0, hlab, hconj⟩ := hDZ i k v PI τ hτ hsq hroot
   obtain ⟨Pa, -, -, hr, hs, -⟩ := h1 i PI
   have hdim : ∀ w, IsSplitPl D.host w → D.naut.lpDim (D.naut.locV i PI w) = D.R.nV := fun w h => by

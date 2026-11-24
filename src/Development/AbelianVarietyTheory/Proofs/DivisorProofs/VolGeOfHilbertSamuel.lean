@@ -334,7 +334,7 @@ theorem mem_Bl_of_mul_pow : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInte
         _ ≤ Real.exp C * P.nu 0 1 σ y s :=
           mul_le_mul this hy hρ.le (Real.exp_pos _).le
     have h3 : 1 ≤ Real.exp (C * m) * P.nu 0 1 σ y s ^ m := by
-      rw [mul_comm C, Real.exp_nat_mul, ← mul_pow]
+      rw [mul_comm C, Real.exp_natCast_mul, ← mul_pow]
       exact one_le_pow₀ h1
     calc P.nu N 0 σ y f ≤ P.nu N 0 σ y f * (Real.exp (C * m) * P.nu 0 1 σ y s ^ m) :=
           le_mul_of_one_le_right hn h3

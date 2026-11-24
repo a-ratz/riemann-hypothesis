@@ -60,7 +60,7 @@ theorem finiteDimensional_prodSpan_of_fd : ∀ {A B : Type} (U₁ : Submodule �
     refine Submodule.span_le.2 ?_
     rintro F ⟨a, ha, b, hb, rfl⟩
     exact ⟨(⟨a, ha⟩ : U₁) ⊗ₜ[ℂ] (⟨b, hb⟩ : U₂), by simp [T, φ]⟩
-  haveI : FiniteDimensional ℂ (LinearMap.range T) := LinearMap.finiteDimensional_range T
+  have : FiniteDimensional ℂ (LinearMap.range T) := LinearMap.finiteDimensional_range T
   exact Submodule.finiteDimensional_of_le hle
 
 end GlobalTheory.CompanionTheory.LimV

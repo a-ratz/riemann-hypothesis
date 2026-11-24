@@ -130,7 +130,7 @@ theorem unitsLevel_zero :
   · rintro ⟨h1, h2⟩
     have hx0 : Valued.v (x : v.adicCompletion K) ≠ 0 := by simp
     have h3 : 1 ≤ Valued.v (x : v.adicCompletion K) := by
-      exact (inv_le_one₀ (zero_lt_iff.2 hx0)).1 h2
+      exact (inv_le_one₀ (pos_iff_ne_zero.2 hx0)).1 h2
     refine ⟨le_antisymm h1 h3, ?_⟩
     rw [Nat.cast_zero, neg_zero, exp_zero]
     exact Valuation.map_sub_le _ h1 (by simp)

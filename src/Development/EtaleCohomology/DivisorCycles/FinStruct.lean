@@ -371,7 +371,7 @@ lemma eig [IsAlgClosed C] (A P : Mat C N) (hP : P * P = P) (hP0 : P ≠ 0) (hA :
   have hW : ∀ x ∈ W, Matrix.toLin' A x ∈ W := by
     rintro _ ⟨u, rfl⟩
     exact ⟨A *ᵥ u, by simp [Matrix.toLin'_apply, Matrix.mulVec_mulVec, hA]⟩
-  haveI : Nontrivial W := by
+  have : Nontrivial W := by
     rw [Submodule.nontrivial_iff_ne_bot]
     intro h
     apply hP0
@@ -415,7 +415,7 @@ lemma key {p : Fin n → Mat C N} {y : Mat C N} {π : Equiv.Perm (Fin n)} (hp : 
       · simp [S, hv]
       · intro m hm hm0
         simp only [S, Matrix.mulVec_smul, comp hp h r v hv]
-        rw [if_neg, smul_zero]
+        rw [ite_eq_right, smul_zero]
         intro hr
         have hper : Function.IsPeriodicPt π m r := by
           show (⇑π)^[m] r = r
@@ -442,7 +442,7 @@ lemma key {p : Fin n → Mat C N} {y : Mat C N} {π : Equiv.Perm (Fin n)} (hp : 
   · intro q hq
     rw [Matrix.mulVec_sum]
     refine Finset.sum_eq_zero fun m _ => ?_
-    simp only [S, Matrix.mulVec_smul, comp hp h r v hv, if_neg (hq m), smul_zero]
+    simp only [S, Matrix.mulVec_smul, comp hp h r v hv, ite_eq_right (hq m), smul_zero]
 
 theorem CycSpec_of : LateralTheory.DivDb.CycleCountPf.CycSpec := by
   intro C _ _ _ N n p y π hp hy hyp hd
@@ -474,8 +474,8 @@ theorem CycSpec_of : LateralTheory.DivDb.CycleCountPf.CycSpec := by
   have hZ : ∀ r, ∃ z : C, z ^ k r = β r := fun r => IsAlgClosed.exists_pow_nat_eq _ (kpos r)
   choose ζ hζ using hZ
   have hO : ∀ r, ∃ ω : C, IsPrimitiveRoot ω (k r) := fun r => by
-    haveI : NeZero ((k r : ℕ) : C) := ⟨Nat.cast_ne_zero.mpr (kpos r).ne'⟩
-    exact HasEnoughRootsOfUnity.exists_primitiveRoot C (k r)
+    have : NeZero ((k r : ℕ) : C) := ⟨Nat.cast_ne_zero.mpr (kpos r).ne'⟩
+    exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot C (k r)
   choose ω hω using hO
   have hM : ∀ j, ∃ m, m < k (R j) ∧ (π ^ m) (R j) = j := fun j => by
     obtain ⟨i, -, hi⟩ := (hR j).exists_pow_eq'

@@ -73,7 +73,7 @@ namespace GlobalTheory.Henselisation
 
 theorem EtNbhd.flat_B : ∀ (R : Type) [CommRing R] [IsLocalRing R] (i : EtNbhd R), Module.Flat R i.B := by
   intro R _ _ i
-  haveI : Module.Flat i.A i.B := IsLocalization.flat i.B i.q.primeCompl
+  have : Module.Flat i.A i.B := IsLocalization.flat i.B i.q.primeCompl
   exact Module.Flat.trans R i.A i.B
 
 end GlobalTheory.Henselisation
@@ -194,9 +194,9 @@ namespace GlobalTheory.Henselisation
 
 theorem exists_henselisation : ∀ (R : Type) [CommRing R] [IsLocalRing R], ∃ (S : Type) (_ : CommRing S) (_ : Algebra R S) (_ : HenselianLocalRing S) (_ : IsLocalHom (algebraMap R S)), Module.Flat R S ∧ (maximalIdeal R).map (algebraMap R S) = maximalIdeal S ∧ Function.Bijective (ResidueField.map (algebraMap R S)) ∧ (∃ (ι : Type) (_ : Preorder ι) (_ : IsDirected ι (· ≤ ·)) (_ : Nonempty ι) (Si : ι → Subalgebra R S), Monotone Si ∧ (∀ s : S, ∃ i, s ∈ Si i) ∧ ∀ i, ∃ (A : Type) (_ : CommRing A) (_ : Algebra R A) (_ : Algebra.Etale R A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[R] Si i)) := by
   intro R _ _
-  haveI : IsDirected (EtNbhd R) (· ≤ ·) := _root_.GlobalTheory.Henselisation.etNbhd_isDirected R
+  have : IsDirected (EtNbhd R) (· ≤ ·) := _root_.GlobalTheory.Henselisation.etNbhd_isDirected R
   obtain ⟨hloc, hofloc⟩ := _root_.GlobalTheory.Henselisation.hens_isLocalRing_and_isLocalHom_of R
-  haveI : HenselianLocalRing (Hens R) := _root_.GlobalTheory.Henselisation.henselianLocalRing_hens R
+  have : HenselianLocalRing (Hens R) := _root_.GlobalTheory.Henselisation.henselianLocalRing_hens R
   let ofA : ∀ i : EtNbhd R, i.B →ₐ[R] Hens R := fun i =>
     { toRingHom := Hens.of i, commutes' := _root_.GlobalTheory.Henselisation.Hens.of_algebraMap R i }
   have hof_trans : ∀ {i j : EtNbhd R} (h : i ≤ j) (x : i.B),
@@ -207,12 +207,12 @@ theorem exists_henselisation : ∀ (R : Type) [CommRing R] [IsLocalRing R], ∃ 
     have hm : algebraMap R i.B r ∈ maximalIdeal i.B := by
       rw [_root_.GlobalTheory.Henselisation.EtNbhd.maximalIdeal_B_eq_map R i]; exact Ideal.mem_map_of_mem _ ((mem_maximalIdeal r).2 hn)
     exact (mem_maximalIdeal _).1 hm hr⟩
-  haveI : IsLocalHom (algebraMap R (Hens R)) := by
+  have : IsLocalHom (algebraMap R (Hens R)) := by
     have e : algebraMap R (Hens R) =
         (Hens.of EtNbhd.base).comp (algebraMap R (EtNbhd.base (R := R)).B) := rfl
     rw [e]
-    haveI := hlocB EtNbhd.base
-    haveI := hofloc EtNbhd.base
+    have := hlocB EtNbhd.base
+    have := hofloc EtNbhd.base
     infer_instance
   have hmax : (maximalIdeal R).map (algebraMap R (Hens R)) = maximalIdeal (Hens R) := by
     apply le_antisymm

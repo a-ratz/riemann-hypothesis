@@ -64,9 +64,9 @@ theorem measurable_actW_consTup : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   intro F E _ _ _ _ _ σ hCM R _ _ _ _ _ hR n M J g
   obtain ⟨h1, h2, h3, h4, -⟩ := hR
   have hk := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI : IsTopologicalRing (R ⊗[F] E) := hk.1
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := hk.2.2.2.2.2.2.2.1 n M
-  haveI : BorelSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := hk.2.2.2.2.2.2.2.1 (n + 1) (M + 1)
+  have : IsTopologicalRing (R ⊗[F] E) := hk.1
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := hk.2.2.2.2.2.2.2.1 n M
+  have : BorelSpace (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) := hk.2.2.2.2.2.2.2.1 (n + 1) (M + 1)
   have hc : Continuous (fun X : Fin n → Fin M → R ⊗[F] E => actW R σ J g (consTup X)) := by
     refine continuous_pi fun a => continuous_pi fun i => ?_
     simp only [actW, actTup, Matrix.mulVec, dotProduct]

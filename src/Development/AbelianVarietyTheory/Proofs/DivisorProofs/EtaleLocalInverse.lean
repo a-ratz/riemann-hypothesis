@@ -86,7 +86,7 @@ theorem etale_local_inverse : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2S
   have hf' : HasFDerivAt g (f' : V n →L[ℂ] V n) (A.chart i (e.symm v : U)) := by
     rw [hf'coe]; exact (hg.differentiableAt (by simp)).hasFDerivAt
   have hn : (∞ : WithTop ℕ∞) ≠ 0 := by simp
-  have hstrict := hg.hasStrictFDerivAt' hf' hn
+  have hstrict := hg.hasStrictFDerivAt hf' hn
 
   have hgv : g (A.chart i (e.symm v : U)) = v := by
     have h1 : z (e.symm v : U) = e (e.symm v) := he (e.map_target hv)
@@ -95,7 +95,7 @@ theorem etale_local_inverse : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2S
 
   set h : V n → V n := fun v' => A.chart i (e.symm v' : U) with hh_def
   have hcoe : ContinuousAt (fun v' => ((e.symm v' : U) : Y)) v :=
-    continuous_subtype_val.continuousAt.comp (e.continuousAt_symm hv)
+    continuous_subtypeVal.continuousAt.comp (e.continuousAt_symm hv)
   have hhc : ContinuousAt h v :=
     ContinuousAt.comp (g := A.chart i) (f := fun v' => ((e.symm v' : U) : Y)) (x := v)
       ((A.chart i).continuousAt hi) hcoe

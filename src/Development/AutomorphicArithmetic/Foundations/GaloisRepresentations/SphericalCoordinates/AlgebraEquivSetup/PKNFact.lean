@@ -77,7 +77,7 @@ theorem UpperTheory.Gal.W2.Seed.pKNFact :
   have hcs : IsSplitAt (CertificateRingHomMap.cj w.1) := hw.2.2.2.1
   have hqc : (q : 𝓞 E) ∈ (CertificateRingHomMap.cj w.1).asIdeal := by
     by_contra hc
-    haveI : Fact q.Prime := ⟨hq⟩
+    have : Fact q.Prime := ⟨hq⟩
     have h1 : GlobalTheory.Cong.Apart w.1 (CertificateRingHomMap.cj w.1) := apart_of_not_mem (p := q) hc hqw
     exact (((hL E n (CertificateRingHomMap.cj w.1) hcs).2.1 w.1).1 h1).2 hw.2.2.2.2.1.symm
   have hcw := F.a_int w.1 q hq hgood hqw

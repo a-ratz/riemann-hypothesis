@@ -62,10 +62,10 @@ variable {Ω : Type} [Field Ω] [CharZero Ω] {κ : Type} [Fintype κ] {D : ℕ}
 theorem exists_isSecBasis (x : Ix κ → Ω) (n : ℕ) :
     ∃ b : Fin (finrank ℤ (sec ℤ x n)) → MvPolynomial (Ix κ) ℚ, IsSecBasis x n b := by
   classical
-  haveI : Module.Finite ℤ (sec ℤ x n) := by
+  have : Module.Finite ℤ (sec ℤ x n) := by
     rw [Module.finite_def, Submodule.fg_top]
     exact (homogeneousSubmodule_fg (Ix κ) ℤ n).map _
-  haveI : Module.Free ℤ (sec ℤ x n) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (sec ℤ x n) := Module.free_of_finite_type_torsion_free'
   let bas := Module.finBasis ℤ (sec ℤ x n)
   have hmem : ∀ k, ∃ f : MvPolynomial (Ix κ) ℤ, f.IsHomogeneous n ∧ aeval x f = ((bas k : sec ℤ x n) : Ω) := by
     intro k

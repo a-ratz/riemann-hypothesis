@@ -105,7 +105,7 @@ theorem mem_of_appLE_mem (R : Type) [CommRing R] (I : Ideal R)
     have hy' : y ∈ RingHom.ker ((β e).app V).hom := hy
     rw [hker] at hy'
     exact Ideal.map_mono (Ideal.pow_le_self (Nat.succ_ne_zero e)) hy'
-  exact SetLike.le_def.1 (sup_le le_rfl hle) hx'
+  exact IsConcreteLE.le_iff.1 (sup_le le_rfl hle) hx'
 
 theorem lifted_ratios_mod : ∀ (R : Type) [CommRing R] (I : Ideal R), ∀ (Y : ∀ e : ℕ, Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1))))) (β : ∀ e, (Y e).left ⟶ (Y (e + 1)).left), (∀ e, IsPullback (β e) (Y e).hom (Y (e + 1)).hom (thickTrans R I e)) → ∀ (n : ℕ) (C : Charts I Y β n), (∀ e i j, (Y e).left.basicOpen (C.ρ e i j) = C.D e i ⊓ C.D e j) ∧ (∀ e i, C.ρ e i i - 1 ∈ towerIdeal Y e I (C.D e i)) ∧ ∀ e i j l, rs (Y e).left (inf_le_left : C.D e i ⊓ C.D e j ≤ C.D e i) (C.ρ e i l) - rs (Y e).left (inf_le_left : C.D e i ⊓ C.D e j ≤ C.D e i) (C.ρ e i j) * rs (Y e).left (inf_le_right : C.D e i ⊓ C.D e j ≤ C.D e j) (C.ρ e j l) ∈ towerIdeal Y e I (C.D e i ⊓ C.D e j) := by
   intro R _ I Y β hβ n C

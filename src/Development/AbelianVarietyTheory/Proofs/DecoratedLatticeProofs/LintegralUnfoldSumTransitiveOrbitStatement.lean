@@ -74,7 +74,7 @@ namespace Unf
 theorem lintegral_integral_unfold_transitive : ∀ (H : Type) [Group H] [MeasurableSpace H] [MeasurableMul H] (ν : Measure H) [ν.IsMulLeftInvariant] (Γ : Subgroup H) [Countable Γ] (Y : Type) [Countable Y] [MulAction Γ Y] (y₀ : Y), (∀ y, ∃ γ : Γ, γ • y₀ = y) → ∀ (𝓕 𝓖 : Set H), IsFundamentalDomain Γ 𝓕 ν → IsFundamentalDomain ((MulAction.stabilizer Γ y₀).map Γ.subtype) 𝓖 ν → ∀ Φ : Y → H → ℂ, (∀ y, Measurable (Φ y)) → (∀ (γ : Γ) y h, Φ (γ • y) ((γ : H) * h) = Φ y h) → (∫⁻ h in 𝓖, ‖Φ y₀ h‖ₑ ∂ν = ∫⁻ h in 𝓕, ∑' y, ‖Φ y h‖ₑ ∂ν) ∧ (∫⁻ h in 𝓕, ∑' y, ‖Φ y h‖ₑ ∂ν ≠ ⊤ → ∫ h in 𝓖, Φ y₀ h ∂ν = ∫ h in 𝓕, ∑' y, Φ y h ∂ν) := by
   intro H _ _ _ ν _ Γ _ Y _ _ y₀ htr 𝓕 𝓖 hF hG Φ hΦ hinv
   set S : Subgroup H := (MulAction.stabilizer Γ y₀).map Γ.subtype with hSdef
-  haveI : Countable S := by
+  have : Countable S := by
     have hle : S ≤ Γ := Subgroup.map_subtype_le _
     exact Function.Injective.countable (Subgroup.inclusion_injective hle)
   choose σ hσ using htr
@@ -144,7 +144,7 @@ theorem lintegral_integral_unfold_transitive : ∀ (H : Type) [Group H] [Measura
     rw [lintegral_iUnion₀ (fun y => hnull _) hd]
     simp only [hlint]
   have hL3 : ∫⁻ h in 𝓕, ∑' y, ‖Φ y h‖ₑ ∂ν = ∑' y, ∫⁻ h in 𝓕, ‖Φ y h‖ₑ ∂ν :=
-    lintegral_tsum fun y => (hΦ y).enorm.aemeasurable
+    lintegral_tsum fun y => (hΦ y).eNorm.aemeasurable
   have hmain : ∫⁻ h in 𝓖, ‖Φ y₀ h‖ₑ ∂ν = ∫⁻ h in 𝓕, ∑' y, ‖Φ y h‖ₑ ∂ν := by
     rw [hL1, hL2, hL3]
   refine ⟨hmain, fun hfin => ?_⟩

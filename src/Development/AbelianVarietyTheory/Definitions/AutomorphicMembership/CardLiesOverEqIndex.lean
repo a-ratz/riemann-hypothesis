@@ -110,11 +110,11 @@ theorem exists_eq_mul {n : ℕ+} {z : Zhat} (h : Zhat.red n z = 0) : ∃ w : Zha
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H}
 
 theorem exists_basis (D : Datum H) : ∃ k : ℕ, Nonempty (Module.Basis (Fin k) ℤ D.La) := by
-  haveI := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.IsTorsionFree ℤ D.La :=
+  have := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.IsTorsionFree ℤ D.La :=
     Function.Injective.moduleIsTorsionFree D.EF D.unimod.1 (fun r x => map_smul _ r x)
-  haveI : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
   exact ⟨_, ⟨Module.finBasis ℤ D.La⟩⟩
 
 def mulSub (D : Datum H) (n : ℕ) : Submodule Zhat (Lhat D) := LinearMap.range (LinearMap.lsmul Zhat (Lhat D) n)
@@ -180,14 +180,14 @@ theorem exists_approx {n : ℕ} (hn : 0 < n) (x : Lhat D) : ∃ a : D.La, x - 1 
 theorem tmul_mem_hatSub {n : ℕ} (hn : 0 < n) {𝔞 : Ideal (𝓞 E)} (h : (n : 𝓞 E) ∈ 𝔞) {a : D.La} :
     (1 : Zhat) ⊗ₜ[ℤ] a ∈ hatSub D 𝔞 ↔ a ∈ 𝔞 • (⊤ : Submodule (𝓞 E) D.La) := by
   refine ⟨fun ha => ?_, fun ha => Submodule.subset_span ⟨a, ha, rfl⟩⟩
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let Q := D.La ⧸ 𝔞 • (⊤ : Submodule (𝓞 E) D.La)
   have hQ : ∀ x : Q, n • x = 0 := fun x => by
     obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     rw [← Nat.cast_smul_eq_nsmul (𝓞 E), ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
     exact Submodule.smul_mem_smul h trivial
-  letI : Module (ZMod n) Q := AddCommMonoid.zmodModule hQ
-  letI : Module Zhat Q := Module.compHom Q (show Zhat →+* ZMod n from Zhat.red ⟨n, hn⟩)
+  let : Module (ZMod n) Q := AddCommMonoid.zmodModule hQ
+  let : Module Zhat Q := Module.compHom Q (show Zhat →+* ZMod n from Zhat.red ⟨n, hn⟩)
   let q : Lhat D →ₗ[Zhat] Q :=
     LinearMap.liftBaseChange Zhat ((𝔞 • (⊤ : Submodule (𝓞 E) D.La)).mkQ.toAddMonoidHom.toIntLinearMap)
   have hq : ∀ b : D.La, q (1 ⊗ₜ b) = Submodule.Quotient.mk b := fun b => by simp [q]
@@ -256,7 +256,7 @@ theorem exists_endo (f : ℕ → D.La →ₗ[𝓞 E] D.La)
 
 theorem exists_lift (φ : Lhat D →ₗ[Zhat] Lhat D) (hφ : ∀ c x, φ (hatMul D c x) = hatMul D c (φ x)) {n : ℕ}
     (hn : 0 < n) : ∃ f : D.La →ₗ[𝓞 E] D.La, ∀ a, φ (1 ⊗ₜ a) - 1 ⊗ₜ f a ∈ mulSub D n := by
-  haveI := D.proj
+  have := D.proj
   choose c hc using fun a : D.La => exists_approx hn (φ (1 ⊗ₜ a))
   let P := Ideal.span {(n : 𝓞 E)} • (⊤ : Submodule (𝓞 E) D.La)
   have key : ∀ u v : D.La, P.mkQ u = P.mkQ v ↔ (1 : Zhat) ⊗ₜ[ℤ] u - 1 ⊗ₜ v ∈ mulSub D n := fun u v => by
@@ -441,7 +441,7 @@ theorem Matches.levAut_iff {g : Sim D} {u : Lhat D ≃ₗ[Zhat] Lhat D} (h : Mat
       fun k a => k a _ ((e₂ a _).2 (by simp))⟩
 
 theorem isReduced (Xo : Moduli D l) : IsReduced Xo.X := by
-  haveI := Xo.smooth
+  have := Xo.smooth
   exact (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ Xo.s
     (SmoothOfRelativeDimension.smooth D.dim _)).1
 

@@ -627,7 +627,7 @@ theorem finrank_twInv_mul_of_free {G : Type} [Group G] {E : Type} [AddCommGroup 
     intro h0
     rw [h0, zero_mul] at hcard
     exact hΓ.index_ne_zero hcard.symm
-  letI : Fintype R := Fintype.ofFinite R
+  let : Fintype R := Fintype.ofFinite R
 
   let ev : twInv Γ g A →ₗ[ℂ] (R → E) :=
     { toFun := fun f c => (f : G → E) c.out

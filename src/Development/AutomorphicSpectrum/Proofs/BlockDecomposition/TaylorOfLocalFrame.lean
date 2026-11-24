@@ -102,9 +102,9 @@ theorem taylor_alg {K A B : Type} [CommRing K] [CommRing A] [Algebra K A] [CommR
       have : S (t i) = e i := by simp [S, hD, e]
       rw [this]
       simp [e]
-  letI algA : Algebra (MvPolynomial (Fin d) K) A := f.toAlgebra
-  letI algC : Algebra (MvPolynomial (Fin d) K) (B ⧸ P) := (π.comp ((a : A →+* B).comp f)).toAlgebra
-  haveI : Algebra.FormallyUnramified (MvPolynomial (Fin d) K) A := hf
+  let algA : Algebra (MvPolynomial (Fin d) K) A := f.toAlgebra
+  let algC : Algebra (MvPolynomial (Fin d) K) (B ⧸ P) := (π.comp ((a : A →+* B).comp f)).toAlgebra
+  have : Algebra.FormallyUnramified (MvPolynomial (Fin d) K) A := hf
   let g₁ : A →ₐ[MvPolynomial (Fin d) K] B ⧸ P :=
     { toRingHom := π.comp (a : A →+* B), commutes' := fun _ => rfl }
   let g₂ : A →ₐ[MvPolynomial (Fin d) K] B ⧸ P :=
@@ -138,7 +138,7 @@ theorem taylor_loc : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q :
     ∀ (D : Fin d → Derivation K Γ(X, W) Γ(X, W)), (∀ k j, D k (c.t j) = if k = j then 1 else 0) →
     Taylor (sFil (KS q s {W})) E (fun k x => ε (D k (ε.symm x))) := by
   intro K _ _ X q W d c s E ε h
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   intro D hD
   obtain ⟨-, -, h3, h4, h5⟩ := h
   intro T u v x
@@ -161,8 +161,8 @@ theorem taylor_loc : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q :
   have hf : (MvPolynomial.eval₂Hom (algebraMap K Γ(X, W)) c.t : MvPolynomial (Fin d) K →+* Γ(X, W)).FormallyUnramified :=
     by
       have he := c.etale
-      letI := (MvPolynomial.eval₂Hom (strV q W) c.t : MvPolynomial (Fin d) K →+* Γ(X, W)).toAlgebra
-      haveI : Algebra.Etale (MvPolynomial (Fin d) K) Γ(X, W) := he
+      let := (MvPolynomial.eval₂Hom (strV q W) c.t : MvPolynomial (Fin d) K →+* Γ(X, W)).toAlgebra
+      have : Algebra.Etale (MvPolynomial (Fin d) K) Γ(X, W) := he
       exact (inferInstance : Algebra.FormallyUnramified (MvPolynomial (Fin d) K) Γ(X, W))
   have key := taylor_alg c.t hf D hD _ _ hNP (ev' u) (ev' v) hab y
   have e : ∀ k, E.τ k v u = ev' u (c.t k) - ev' v (c.t k) := fun k => h5 k v u

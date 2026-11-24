@@ -195,7 +195,7 @@ theorem exists_prim [IsDomain R] {n r : ℕ} {v : Fin n → (epsR R ⟶ A)} (hv 
   have eig : ∀ k (x : Fin n → R), ((comb v x ≫ g k).left = spMap (epsScaleR (z k)) ≫ (comb v x).left) ↔
       (Matrix.of fun i j => ρ k j i).mulVec x = z k • x := by
     intro k x
-    haveI := hg k
+    have := hg k
     rw [← (comb_injective hv).eq_iff, ← epsScale_comb,
       ← comb_comp hv.1 (g k) (Matrix.of fun i j => ρ k j i) (fun j => (isLieComb_iff_comb _ _ _).1 (hρ k j)) x]
     exact ⟨fun h => Over.OverMorphism.ext h, fun h => congrArg CommaMorphism.left h⟩

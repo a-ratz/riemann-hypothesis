@@ -254,7 +254,7 @@ theorem exists_matching_finiteData_bottomLevel : GlobalTheory.Published.HoweDual
   intro W i j A A' WW X hX FA FA' FW t hf hf'
   obtain ⟨Pi, rf, rl, p, p', hm, hc⟩ := hA W i j A A' WW X hX FA FA' FW t hf hf'
   refine ⟨Pi, rf, rl, p, p', hm, fun Pr Pf q q' r r' e hq hq' hp hp' => ?_⟩
-  haveI : Nontrivial Pi := hm.irred.1
+  have : Nontrivial Pi := hm.irred.1
   exact exists_smul_of_factor q q' e hq (r (X.f t)) (r' (X.f' t)) (fun P => p (fockF W.ψ W.θ true FA FW (X.f t) P))
     (fun P' => p' (fockF W.ψ W.θ false FA' FW (X.f' t) P')) (hp _ hf) (hp' _ hf') hc
 end GlobalTheory.BotFinRef
@@ -468,7 +468,7 @@ theorem bottomLevel_unique_of_triple (hH : GlobalTheory.Published.HoweDualityRea
   have hT' : ∀ x, EB.symm (EA x) = c • x := fun x => by
     have := LinearMap.congr_fun hc x
     simpa using this
-  haveI : Nontrivial Pi₀ := hm₀.irred.1
+  have : Nontrivial Pi₀ := hm₀.irred.1
   have hc0 : c ≠ 0 := by
     rintro rfl
     obtain ⟨x, hx⟩ := exists_ne (0 : Pi₀)

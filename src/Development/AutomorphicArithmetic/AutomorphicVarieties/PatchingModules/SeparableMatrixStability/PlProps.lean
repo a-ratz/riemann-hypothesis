@@ -109,7 +109,7 @@ theorem UpperTheory.V.Pa.pl_props :
     let c : H →* H := (MulAut.conjNormal g).toMonoidHom
     have hc : Continuous c := by
       apply Continuous.subtype_mk
-      exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+      exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
     refine Subgroup.mem_map.mpr ⟨c y, mem_proLRes.mpr ?_, ?_⟩
     · intro N hN
       let M : OpenNormalSubgroup H :=
@@ -132,7 +132,7 @@ theorem UpperTheory.V.Pa.pl_props :
     classical
     have : CompactSpace H := isCompact_iff_compactSpace.mp hHc.isCompact
     let K := U.toSubgroup.comap H.subtype
-    have hKo : IsOpen (K : Set H) := U.isOpen.preimage continuous_subtype_val
+    have hKo : IsOpen (K : Set H) := U.isOpen.preimage continuous_subtypeVal
     have hleK : proLRes l H ≤ K := Subgroup.map_le_iff_le_comap.mp hU
     let ι := {N : OpenNormalSubgroup H // IsPGroup l (H ⧸ N.toSubgroup)}
     let t : ι → Set H := fun i => i.1.toSubgroup
@@ -176,7 +176,7 @@ theorem UpperTheory.V.Pa.pl_props :
       intro U hU
       let N : OpenNormalSubgroup H :=
         { toOpenSubgroup := ⟨U.toSubgroup.comap H.subtype,
-            U.toOpenSubgroup.isOpen.preimage continuous_subtype_val⟩
+            U.toOpenSubgroup.isOpen.preimage continuous_subtypeVal⟩
           isNormal' := Subgroup.Normal.comap U.isNormal' _ }
       have : N.toSubgroup.Normal := N.isNormal'
       have hpg : IsPGroup l (H ⧸ N.toSubgroup) :=
@@ -194,7 +194,7 @@ theorem UpperTheory.V.Pa.pl_props :
       let K : Subgroup Γ := N.toSubgroup.map H.subtype
       have hKo : IsOpen (K : Set Γ) := by
         rw [Subgroup.coe_map]
-        exact hHo.isOpenMap_subtype_val _ N.toOpenSubgroup.isOpen
+        exact hHo.isOpenMap_subtypeVal _ N.toOpenSubgroup.isOpen
       obtain ⟨U, -, hUK⟩ := exists_core K ⊥ hKo bot_le
       obtain ⟨e, he⟩ := (hiff U).mp (by rw [hb]; exact bot_le) g g.2
       refine ⟨e, ?_⟩
@@ -212,7 +212,7 @@ theorem UpperTheory.V.Pa.pl_props :
         intro h hh
         let N : OpenNormalSubgroup H :=
           { toOpenSubgroup := ⟨W.toSubgroup.comap H.subtype,
-              W.toOpenSubgroup.isOpen.preimage continuous_subtype_val⟩
+              W.toOpenSubgroup.isOpen.preimage continuous_subtypeVal⟩
             isNormal' := Subgroup.Normal.comap W.isNormal' _ }
         obtain ⟨k, hk⟩ := hP N ⟨h, hh⟩
         exact ⟨k, hk⟩

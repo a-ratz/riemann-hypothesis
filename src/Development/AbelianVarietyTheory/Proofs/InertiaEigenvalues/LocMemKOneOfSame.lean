@@ -58,7 +58,7 @@ namespace GlobalTheory.UniDepthZero
 theorem algHom_eq_or_conj {L K : Type} [Field L] [NumberField L] [IsCMField L] [Field K] [Algebra (maximalRealSubfield L) K]
     (φ ψ : L →ₐ[(maximalRealSubfield L)] K) : φ = ψ ∨ φ = ψ.comp (IsCMField.complexConj L).toAlgHom := by
   let e : L ≃ₐ[(maximalRealSubfield L)] ψ.fieldRange := AlgEquiv.ofInjectiveField ψ
-  haveI : Normal (maximalRealSubfield L) ψ.fieldRange := Normal.of_algEquiv e
+  have : Normal (maximalRealSubfield L) ψ.fieldRange := Normal.of_algEquiv e
   have hR : φ.fieldRange = ψ.fieldRange := by
     have h := AlgHom.fieldRange_of_normal (E := ψ.fieldRange) (φ.comp e.symm.toAlgHom)
     rw [← h]

@@ -53,7 +53,7 @@ open ValuativeRel Matrix GlobalTheory.SmGL GlobalTheory.SplitWeil UpperTheory.V.
 private theorem finOrb_of_compact {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     {K K' L : Subgroup G} (hL : IsCompact (L : Set G)) (hK : K ≤ L) (hK' : IsOpen (K' : Set G)) (x : G) :
     FinOrb K K' x := by
-  haveI : DiscreteTopology (G ⧸ K') := QuotientGroup.discreteTopology hK'
+  have : DiscreteTopology (G ⧸ K') := QuotientGroup.discreteTopology hK'
   have hc : Continuous fun g : G => ((g * x : G) : G ⧸ K') :=
     QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   refine ((hL.image hc).finite_of_discrete).subset ?_

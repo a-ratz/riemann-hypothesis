@@ -125,11 +125,11 @@ variable (F : Frame Γ)
 
 omit [IsTopologicalGroup Γ] in
 private theorem finite_compactly_supported_H1 [Module.Finite k M] [Module.Finite k (H1 ρ)] : Module.Finite k (F.H1c ρ) := by
-  haveI : Module.Finite k (B1 ρ) := LinearMap.finiteDimensional_range _
-  haveI : Module.Finite k ((B1 ρ).comap (Z1 ρ).subtype) :=
+  have : Module.Finite k (B1 ρ) := LinearMap.finiteDimensional_range _
+  have : Module.Finite k ((B1 ρ).comap (Z1 ρ).subtype) :=
     Module.Finite.of_injective ((Z1 ρ).subtype.restrict (q := B1 ρ) (fun x hx => hx))
       (fun x y h => Subtype.ext (Subtype.ext (congrArg (fun z : B1 ρ => z.1) h)))
-  haveI : Module.Finite k (Z1 ρ) := Module.Finite.of_submodule_quotient ((B1 ρ).comap (Z1 ρ).subtype)
+  have : Module.Finite k (Z1 ρ) := Module.Finite.of_submodule_quotient ((B1 ρ).comap (Z1 ρ).subtype)
   let f : F.H1c ρ →ₗ[k] (Z1 ρ × (F.T → M)) :=
     { toFun := fun x => (⟨x.1.1, x.2.1.continuous, x.2.2.1⟩, x.1.2)
       map_add' := fun _ _ => rfl
@@ -226,7 +226,7 @@ private theorem kernel_restriction_sha_selmer : LinearMap.ker (res1 ρ F) = Sha1
 omit [IsTopologicalGroup Γ] [DiscreteTopology M] in
 private theorem mk_mem_ur (N : Subgroup Γ) (hN : ∀ n ∈ N, ρ n = 1) (z : Z1 ρ) :
     (Submodule.Quotient.mk z : H1 ρ) ∈ H1ur ρ N ↔ ∀ n ∈ N, z.1 n = 0 := by
-  show Submodule.Quotient.mk (restrictCocycles1 ρ N.subtype continuous_subtype_val z) = (0 : H1 (ρ.comp N.subtype)) ↔ _
+  show Submodule.Quotient.mk (restrictCocycles1 ρ N.subtype continuous_subtypeVal z) = (0 : H1 (ρ.comp N.subtype)) ↔ _
   rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap, mem_coboundaries1]
   constructor
   · rintro ⟨m, hm⟩ n hn
@@ -359,10 +359,10 @@ theorem UpperTheory.V.Alg.frame_count :
       ∑ v, Module.finrank k (ReciprocityTheory.Gal.H0 (ρ.comp (F.φ v) : Representation k _ M)) + Module.finrank k (ReciprocityTheory.Gal.H1 ρ) + ∑ q, Module.finrank k (ReciprocityTheory.Gal.H1ur (ρ.comp (F.ψ q) : Representation k _ M) (F.N q)) + Module.finrank k (F.Ob ρ)
         + ∑ v, Module.finrank k (ReciprocityTheory.Gal.H2 (ρ.comp (F.φ v) : Representation k _ M)) + ∑ q, Module.finrank k (ReciprocityTheory.Gal.H2 (ρ.comp (F.ψ q) : Representation k _ M)) := by
   intro k Γ M _ _ _ _ _ _ _ _ _ _ _ ρ hρ F _ _ hN h1 h2 hv hq
-  haveI := fun v => (hv v).1
-  haveI := fun v => (hv v).2
-  haveI := fun q => (hq q).1
-  haveI := fun q => (hq q).2
+  have := fun v => (hv v).1
+  have := fun v => (hv v).2
+  have := fun q => (hq q).1
+  have := fun q => (hq q).2
   have e0 := UpperTheory.V.Alg.finrank_compact_support_H1 k Γ M ρ hρ F hN h1
   rw [← FrameCount.kernel_restriction_sha_selmer] at e0
   have e1 := (FrameCount.res1 ρ F).finrank_range_add_finrank_ker
@@ -376,8 +376,8 @@ theorem UpperTheory.V.Alg.frame_count :
     rw [← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun q _ => Submodule.finrank_quotient_add_finrank _
   rw [← FrameCount.ker_fgt] at f2 e2
-  haveI fOb : Module.Finite k (F.Ob ρ) := by
-    haveI := Module.Finite.equiv (FrameCount.fgt ρ F).quotKerEquivRange.symm
+  have fOb : Module.Finite k (F.Ob ρ) := by
+    have := Module.Finite.equiv (FrameCount.fgt ρ F).quotKerEquivRange.symm
     exact Module.Finite.of_submodule_quotient (LinearMap.ker (FrameCount.fgt ρ F))
   have e4 := (FrameCount.fgt ρ F).finrank_range_add_finrank_ker
   rw [FrameCount.range_fgt] at e4
@@ -413,7 +413,7 @@ private theorem cocycle_coboundary_averaging {k G M : Type} [Field k] [Group G] 
     ∃ m, ∀ g, f g = ρ g m - m := by
   classical
   have hfi : N.FiniteIndex := ⟨fun h => hN (by rw [h, Nat.cast_zero])⟩
-  letI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  let : Fintype (G ⧸ N) := Fintype.ofFinite _
   have hout : ∀ g : G, f (QuotientGroup.mk g : G ⧸ N).out = f g := fun g => by
     have h1 : ((QuotientGroup.mk g : G ⧸ N).out)⁻¹ * g ∈ N := QuotientGroup.eq.1 (Quotient.out_eq _)
     have h2 := hf (QuotientGroup.mk g : G ⧸ N).out (((QuotientGroup.mk g : G ⧸ N).out)⁻¹ * g)
@@ -491,8 +491,8 @@ private theorem unipotent_restriction_surjective (l : ℕ) [hl : Fact l.Prime] {
   classical
   have core : ∀ W : Subgroup Γ, IsOpen (W : Set Γ) → IsOpen (W.normalCore : Set Γ) := by
     intro W hW
-    haveI : Finite (Γ ⧸ W) := W.quotient_finite_of_isOpen hW
-    haveI : W.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : Finite (Γ ⧸ W) := W.quotient_finite_of_isOpen hW
+    have : W.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     exact Subgroup.isOpen_of_isClosed_of_finiteIndex _ (W.normalCore_isClosed (W.isClosed_of_isOpen hW))
   have gen : ∀ W : Subgroup Γ, IsOpen (W : Set Γ) → I ≤ W → fr ∈ W → W = ⊤ := by
     intro W hW h1 h2
@@ -524,7 +524,7 @@ private theorem unipotent_restriction_surjective (l : ℕ) [hl : Fact l.Prime] {
     obtain ⟨i, hi, h, hh, rfl⟩ := hv'
     have hρ : ρ h = 1 := hh
     simp only [map_mul, hρ, mul_one, hb n i hi]
-  haveI : Finite (Γ ⧸ V1) := V1.quotient_finite_of_isOpen hV1
+  have : Finite (Γ ⧸ V1) := V1.quotient_finite_of_isOpen hV1
   let r := orderOf (fr : Γ ⧸ V1)
   have hr0 : r ≠ 0 := (orderOf_pos _).ne'
   have hfrr : fr ^ r ∈ V1 := by
@@ -540,7 +540,7 @@ private theorem unipotent_restriction_surjective (l : ℕ) [hl : Fact l.Prime] {
   let V : Subgroup Γ := V1 ⊓ U1
   have hV : IsOpen (V : Set Γ) := hV1.inter hU1
   have hIV : I ≤ V := le_inf le_sup_left hIU1
-  haveI : Finite (Γ ⧸ V) := V.quotient_finite_of_isOpen hV
+  have : Finite (Γ ⧸ V) := V.quotient_finite_of_isOpen hV
   have wd : ∀ i j : ℕ, ((fr ^ i : Γ) : Γ ⧸ V) = (fr ^ j : Γ) → powerCocycleSum ρ fr m i = powerCocycleSum ρ fr m j := by
     intro i j hij
     have hij' := QuotientGroup.eq.1 hij
@@ -637,7 +637,7 @@ theorem UpperTheory.cohomology_of_finite_representation :
       obtain ⟨f, h1, h2, h3, h4⟩ := unipotent_restriction_surjective l ρ hker I fr hfr hU m.1 m.2
       exact ⟨⟨⟨f, h1, h2⟩, h3⟩, Subtype.ext h4⟩
   let E := LinearEquiv.ofBijective ev hev
-  haveI : Module.Finite k Z := Module.Finite.equiv E.symm
+  have : Module.Finite k Z := Module.Finite.equiv E.symm
   let π : Z →ₗ[k] ReciprocityTheory.Gal.H1 ρ := (Submodule.mkQ _).comp Z.subtype
   let δ : P →ₗ[k] Z :=
     { toFun := fun m => ⟨⟨ReciprocityTheory.Gal.d0 ρ m.1, hd m.1⟩, fun i hi => by
@@ -648,7 +648,7 @@ theorem UpperTheory.cohomology_of_finite_representation :
   have hπr : LinearMap.range π = H1ur ρ N := by
     apply le_antisymm
     · rintro _ ⟨f, rfl⟩
-      show Submodule.Quotient.mk (restrictCocycles1 ρ N.subtype continuous_subtype_val f.1) =
+      show Submodule.Quotient.mk (restrictCocycles1 ρ N.subtype continuous_subtypeVal f.1) =
         (0 : ReciprocityTheory.Gal.H1 (ρ.comp N.subtype))
       rw [Submodule.Quotient.mk_eq_zero]
       refine (ReciprocityTheory.Gal.mem_coboundaries1 _ _).2 ⟨0, fun j => ?_⟩
@@ -656,7 +656,7 @@ theorem UpperTheory.cohomology_of_finite_representation :
       rw [f.2 j (hNI j.2), map_zero, sub_zero]
     · intro x hx
       obtain ⟨f, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-      have hx' : Submodule.Quotient.mk (restrictCocycles1 ρ N.subtype continuous_subtype_val f) =
+      have hx' : Submodule.Quotient.mk (restrictCocycles1 ρ N.subtype continuous_subtypeVal f) =
         (0 : ReciprocityTheory.Gal.H1 (ρ.comp N.subtype)) := hx
       rw [Submodule.Quotient.mk_eq_zero] at hx'
       obtain ⟨m0, hm0⟩ := (ReciprocityTheory.Gal.mem_coboundaries1 _ _).1 hx'
@@ -722,7 +722,7 @@ theorem UpperTheory.global_euler_char_rat_of_ne_two :
           Module.Finite k (H1 ρ) ∧ Module.Finite k (H2 ρ) ∧
           Module.finrank k (H0 ρ) + Module.finrank k (H2 ρ) + Module.finrank k M = Module.finrank k (H1 ρ) + Module.finrank k (LinearMap.ker (ρ (toGS Ω _ σ) - 1)) := by
   intro hf he Ω _ _ _ l _ k M _ _ _ _ _ _ _ _ _ _ hl S hS ρ hρ σ hσ
-  haveI : Finite M := Module.finite_of_finite k
+  have : Finite M := Module.finite_of_finite k
   have hcc : IsCC σ := hσ
   obtain ⟨h1, h2, h3⟩ := UpperTheory.global_euler_characteristic_rationals_odd_prime hf he Ω l hl k M S ρ hS hρ σ hcc
   exact ⟨h1, h2, h3.symm⟩
@@ -745,7 +745,7 @@ theorem UpperTheory.global_euler_characteristic_odd :
                      ∀ v, resH2 ρ ((toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))).comp (Dec (F := ℚ) (A v)).subtype) ((continuous_toGS Ω _).comp continuous_subtype_val) z = x v := by
   intro hPT Ω _ _ _ l _ k M _ _ _ _ _ _ _ _ _ _ hl S A hS hA ρ hρ hg x
   obtain ⟨g, hg1, hg2⟩ := hg
-  haveI : Finite M := Module.finite_of_finite k
+  have : Finite M := Module.finite_of_finite k
   have hp : l.Prime := Fact.out
   choose κ hκ using fun v => Submodule.Quotient.mk_surjective _ (x v)
   have hn : ((l - 1 : ℕ) : ZMod (l ^ 1)) = (cycMod ℚ Ω l 1 g : (ZMod (l ^ 1))ˣ) := by
@@ -894,11 +894,11 @@ theorem UpperTheory.local_euler_characteristic_of_prime_not_mem :
           ∀ ρ : Representation k (Dec (F := ℚ) A) M, ContAction ρ →
           Module.Finite k (H1 ρ) ∧ Module.Finite k (H2 ρ) ∧ Module.finrank k (H1 ρ) = Module.finrank k (H0 ρ) + Module.finrank k (H2 ρ) := by
   intro hfin hec Ω _ _ _ l _ k M _ _ _ _ _ _ _ _ _ _ A v hv hl ρ hc
-  haveI : Finite M := Module.finite_of_finite k
-  haveI : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
-  letI : Algebra (ZMod (l ^ 1)) k := ZMod.algebra k (l ^ 1)
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom M (algebraMap (ZMod (l ^ 1)) k)
-  haveI : IsScalarTower (ZMod (l ^ 1)) k M := ⟨fun a b m => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  have : Finite M := Module.finite_of_finite k
+  have : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
+  let : Algebra (ZMod (l ^ 1)) k := ZMod.algebra k (l ^ 1)
+  let : Module (ZMod (l ^ 1)) M := Module.compHom M (algebraMap (ZMod (l ^ 1)) k)
+  have : IsScalarTower (ZMod (l ^ 1)) k M := ⟨fun a b m => by rw [Algebra.smul_def, mul_smul]; rfl⟩
   let ρ₀ := resC (ZMod (l ^ 1)) ρ
   have hc₀ : ContAction ρ₀ := hc
   obtain ⟨-, hF1, hF2, -⟩ := hfin ℚ Ω l 1 M A ρ₀ v one_pos hv hc₀
@@ -907,8 +907,8 @@ theorem UpperTheory.local_euler_characteristic_of_prime_not_mem :
   obtain ⟨e0⟩ := invariants_equiv ρ₀ ρ (MulEquiv.refl _) hr
   obtain ⟨e1⟩ := first_cohomology_equiv ρ₀ ρ (MulEquiv.refl _) continuous_id continuous_id hr
   obtain ⟨e2⟩ := second_cohomology_equiv ρ₀ ρ (MulEquiv.refl _) continuous_id continuous_id hr
-  haveI : Finite (H1 ρ) := Finite.of_equiv _ e1
-  haveI : Finite (H2 ρ) := Finite.of_equiv _ e2
+  have : Finite (H1 ρ) := Finite.of_equiv _ e1
+  have : Finite (H2 ρ) := Finite.of_equiv _ e2
   refine ⟨Module.Finite.of_finite, Module.Finite.of_finite, ?_⟩
   have hcard : Nat.card (H1 ρ) = Nat.card (H0 ρ) * Nat.card (H2 ρ) := by
     rw [← Nat.card_congr e1, ← Nat.card_congr e0, ← Nat.card_congr e2]
@@ -916,8 +916,8 @@ theorem UpperTheory.local_euler_characteristic_of_prime_not_mem :
   have pw : ∀ (V : Type) [AddCommGroup V] [Module k V] [Finite V],
       Nat.card V = Nat.card k ^ Module.finrank k V := by
     intro V _ _ _
-    haveI := Fintype.ofFinite V
-    haveI := Fintype.ofFinite k
+    have := Fintype.ofFinite V
+    have := Fintype.ofFinite k
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     exact Module.card_eq_pow_finrank
   rw [pw (H1 ρ), pw (H0 ρ), pw (H2 ρ), ← pow_add] at hcard
@@ -987,29 +987,29 @@ theorem UpperTheory.V.U3.box_count (hI : CohInp) (Ω : Type) [Field Ω] [CharZer
       finrank k ((unitFrame (toGS Ω _) (continuous_toGS Ω _) ι hι (fun q : {v : S // v ≠ v₀} => Dec (F := ℚ) (A q.1)) N).Ob ρ) =
         finrank k ((unitFrame (toGS Ω _) (continuous_toGS Ω _) ι hι (fun q : {v : S // v ≠ v₀} => Dec (F := ℚ) (A q.1)) N).H1c ρ) +
           finrank k (LinearMap.ker (ρ (toGS Ω _ σ) - 1)) := by
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup M :=
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
+  have : IsTopologicalAddGroup M :=
     { continuous_add := continuous_of_discreteTopology, continuous_neg := continuous_of_discreteTopology }
-  haveI : ContinuousConstSMul k M := ⟨fun _ => continuous_of_discreteTopology⟩
-  letI : Algebra ℤ_[l] k := ((ZMod.castHom (dvd_refl l) k).comp PadicInt.toZMod).toAlgebra
+  have : ContinuousConstSMul k M := ⟨fun _ => continuous_of_discreteTopology⟩
+  let : Algebra ℤ_[l] k := ((ZMod.castHom (dvd_refl l) k).comp PadicInt.toZMod).toAlgebra
   have hπ := continuous_toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))
   have hc := contAction_of_open ρ hρ
   set F := unitFrame (toGS Ω _) (continuous_toGS Ω _) ι hι (fun q : {v : S // v ≠ v₀} => Dec (F := ℚ) (A q.1)) N with hF
   obtain ⟨g1, g2, g3⟩ := UpperTheory.global_euler_char_rat_of_ne_two hI.gf hI.ge Ω l k M hl S hS ρ hc σ hσ
   obtain ⟨l1, l2, l3, -⟩ := Loc.tateFin hI.loc (MonoidHom.id (GQ l)) Topology.IsOpenEmbedding.id k M
     (ρ.comp ((toGS Ω _).comp ι)) (contAction_comp ρ hc _ (hπ.comp hι))
-  rw [if_pos rfl, MonoidHom.range_eq_top.2 Function.surjective_id, Subgroup.index_top, one_mul] at l3
+  rw [ite_eq_left rfl, MonoidHom.range_eq_top.2 Function.surjective_id, Subgroup.index_top, one_mul] at l3
   have hq : ∀ q : {v : S // v ≠ v₀}, _ := fun q => UpperTheory.local_euler_characteristic_of_prime_not_mem hI.loc.lf hI.loc.le Ω l k M (A q) q.1.1 (hA q)
     (fun h => q.2 ((hv q).1 h)) (ρ.comp ((toGS Ω _).comp (Dec (F := ℚ) (A q)).subtype))
-    (contAction_comp ρ hc _ (hπ.comp continuous_subtype_val))
+    (contAction_comp ρ hc _ (hπ.comp continuous_subtypeVal))
   have hur : ∀ q : {v : S // v ≠ v₀}, finrank k (H1ur (ρ.comp (F.ψ q) : Representation k _ M) (F.N q)) =
       finrank k (H0 (ρ.comp (F.ψ q) : Representation k _ M)) := fun q => by
     obtain ⟨d1, d2, d3, d4, d5⟩ := UpperTheory.exists_decompositionField_frobenius_data Ω (A q) q.1.1 (hA q)
-    haveI := hN2 q
-    refine UpperTheory.cohomology_of_finite_representation l k M (Dec (F := ℚ) (A q)) (ρ.comp (F.ψ q)) (hρ.preimage (F.hψ q)) _ _ (d3.preimage continuous_subtype_val)
-      ((hN3 q).preimage continuous_subtype_val) (fun x hx => hN1 q hx) (fun x hx => hN4 q x hx) ?_ d4
+    have := hN2 q
+    refine UpperTheory.cohomology_of_finite_representation l k M (Dec (F := ℚ) (A q)) (ρ.comp (F.ψ q)) (hρ.preimage (F.hψ q)) _ _ (d3.preimage continuous_subtypeVal)
+      ((hN3 q).preimage continuous_subtypeVal) (fun x hx => hN1 q hx) (fun x hx => hN4 q x hx) ?_ d4
       fun n => d5 _ (pow_pos (Fact.out : l.Prime).pos n)
     rw [Subgroup.relIndex_subgroupOf (Ine_le_Dec _)]
     exact hN5 q

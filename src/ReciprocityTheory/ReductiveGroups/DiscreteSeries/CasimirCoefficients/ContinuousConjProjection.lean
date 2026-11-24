@@ -123,12 +123,12 @@ private lemma kType_schur_lemma (T : KType ε Λ) (A : T.V →L[ℂ] T.V) (hA : 
     have := T.w_norm
     rw [h, norm_zero] at this
     exact zero_ne_one this
-  haveI : Nontrivial T.V := ⟨⟨T.w, 0, hw⟩⟩
+  have : Nontrivial T.V := ⟨⟨T.w, 0, hw⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (A : Module.End ℂ T.V)
   refine ⟨c, ?_⟩
   have key : ∀ k v, A (T.op k v) = T.op k (A v) := fun k v => by
     have := congrArg (fun B : T.V →L[ℂ] T.V => B v) (hA k)
-    simp only [ContinuousLinearMap.mul_apply] at this
+    simp only [mul_apply_eq_comp] at this
     exact this.symm
   have hinv : ∀ k : KG ε, ∀ v ∈ Module.End.eigenspace (A : Module.End ℂ T.V) c,
       ((T.τ k : unitary (T.V →L[ℂ] T.V)) : T.V →L[ℂ] T.V) v ∈
@@ -152,7 +152,7 @@ private lemma kType_schur_lemma (T : KType ε Λ) (A : T.V →L[ℂ] T.V) (hA : 
     rw [Module.End.mem_eigenspace_iff] at hv
     simpa using hv
 
-private lemma continuous_kType_op (T : KType ε Λ) : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+private lemma continuous_kType_op (T : KType ε Λ) : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
 
 private lemma continuous_conj_projection (T : KType ε Λ) :
     Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ := ((continuous_kType_op T).mul continuous_const).mul ((continuous_kType_op T).comp continuous_inv)
@@ -160,7 +160,7 @@ private lemma continuous_conj_projection (T : KType ε Λ) :
 private lemma integral_conj_equivariant (T : KType ε Λ) (μ : Fin n → ℤ) (k : KG ε) (x : Matrix (Fin n) (Fin n) ℂ) :
     ∫ k', PhiM μ (toMK k'⁻¹ * (toMK k * x * toMK k⁻¹) * toMK k') • (T.op k' * projW T * T.op k'⁻¹) ∂(muK ε) =
       ps2C T k (∫ k', PhiM μ (toMK k'⁻¹ * x * toMK k') • (T.op k' * projW T * T.op k'⁻¹) ∂(muK ε)) := by
-  haveI : (muK ε).IsMulLeftInvariant := by
+  have : (muK ε).IsMulLeftInvariant := by
     unfold muK
     infer_instance
   rw [← ContinuousLinearEquiv.integral_comp_comm (ps2C T k)]
@@ -191,9 +191,9 @@ theorem psM_one (T : KType ε Λ) (μ : Fin n → ℤ) : psM T μ 1 = 1 := by
     have := T.w_norm
     rw [h, norm_zero] at this
     exact zero_ne_one this
-  haveI : Nontrivial T.V := ⟨⟨T.w, 0, hw⟩⟩
-  haveI : CompactSpace (KG ε) := compactSpace_KG ε
-  haveI : IsFiniteMeasureOnCompacts (muK ε) := by
+  have : Nontrivial T.V := ⟨⟨T.w, 0, hw⟩⟩
+  have : CompactSpace (KG ε) := compactSpace_KG ε
+  have : IsFiniteMeasureOnCompacts (muK ε) := by
     unfold muK
     infer_instance
   have hPhi1 : PhiM μ (1 : Matrix (Fin n) (Fin n) ℂ) = 1 := by

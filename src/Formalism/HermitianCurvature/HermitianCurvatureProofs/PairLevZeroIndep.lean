@@ -984,8 +984,8 @@ theorem word_transfer_mem_entrywise (QQ : ℂ → M2 A) (w : List (Letter ℂ S)
     exact io_mem (hQ a b)
   | cons l w ih =>
     by_cases hp : l.plus
-    · rw [TTw, if_pos hp]; exact entries_mem_mul ih (reflection_entries_mem _ _)
-    · rw [TTw, if_neg hp]; exact entries_mem_mul (reflection_transpose_entries_mem _ _) ih
+    · rw [TTw, ite_eq_left hp]; exact entries_mem_mul ih (reflection_entries_mem _ _)
+    · rw [TTw, ite_eq_right hp]; exact entries_mem_mul (reflection_transpose_entries_mem _ _) ih
 
 theorem rrw_mem_at (QQ : ℂ → M2 A) (w : List (Letter ℂ S)) (hw : ∀ l ∈ w, ∀ a b, QQ l.pt a b ∈ 𝒜) :
     RRw QQ w ∈ entSub 𝒜 := by
@@ -1103,7 +1103,7 @@ theorem tprod_top (L : R.LevelData (Pr (RadSp k r z z' π π')) r) (Y : ℂ) : P
 theorem QQi_step (L : R.LevelData (Pr (RadSp k r z z' π π')) r) (st : Fr.Start (Pr (RadSp k r z z' π π')))
     (l : Fin r) : QQi L st l.castSucc = fun Y => Matrix.conjTranspose (Ts (site L l) (star Y)) * QQi L st l.succ Y * Ts (site L l) Y := by
   funext Y
-  simp only [QQi, Fin.coe_castSucc, Fin.val_succ]
+  simp only [QQi, Fin.val_castSucc, Fin.val_succ]
   rw [tprod_succ L (star Y) l, tprod_succ L Y l, Matrix.conjTranspose_mul]
   simp only [Matrix.mul_assoc]
 
@@ -1117,7 +1117,7 @@ def bet (μ : MeasureTheory.Measure (Mt k r)) (Φ Ψ : RadSp k r z z' π π') : 
 theorem pairAt_zero_left (μ : MeasureTheory.Measure (Mt k r)) (Ψ : RadSp k r z z' π π') (c : Fin r → ℂ) :
     pairAt μ 0 Ψ c = 0 := by
   have h0 : ∀ A : Wq →L[ℂ] Wp, B.hsInner 0 A = 0 := fun A => by
-    simp only [B.hsInner, B.hsVec, ContinuousLinearMap.zero_apply]
+    simp only [B.hsInner, B.hsVec, zero_apply]
     rw [show (fun _ : Fin (Module.finrank ℂ Wq) => (0 : Wp)) = 0 from rfl, WithLp.toLp_zero,
       inner_zero_right]
   simp [P5.pairAt, h0]
@@ -1125,7 +1125,7 @@ theorem pairAt_zero_left (μ : MeasureTheory.Measure (Mt k r)) (Ψ : RadSp k r z
 theorem pairAt_zero_right (μ : MeasureTheory.Measure (Mt k r)) (Φ : RadSp k r z z' π π') (c : Fin r → ℂ) :
     pairAt μ Φ 0 c = 0 := by
   have h0 : ∀ A : Wq →L[ℂ] Wp, B.hsInner A 0 = 0 := fun A => by
-    simp only [B.hsInner, B.hsVec, ContinuousLinearMap.zero_apply]
+    simp only [B.hsInner, B.hsVec, zero_apply]
     rw [show (fun _ : Fin (Module.finrank ℂ Wq) => (0 : Wp)) = 0 from rfl, WithLp.toLp_zero,
       inner_zero_left]
   simp [P5.pairAt, h0]

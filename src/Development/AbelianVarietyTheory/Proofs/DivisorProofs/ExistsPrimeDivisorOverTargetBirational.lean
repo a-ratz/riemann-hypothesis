@@ -78,10 +78,10 @@ theorem DivOver.exists_over_of_bijective : ∀ (k : Type) [Field k] (X Y : Schem
   have hess : ((Cartier.constFn p).codRestrict _ hc).EssFiniteType := by
     rw [← hcomp]
     have h1 := E'.essFiniteType
-    letI := ((Cartier.constFn (s ≫ p)).codRestrict E'.ring E'.const_mem).toAlgebra
-    letI := (eq.symm.toRingHom.comp
+    let := ((Cartier.constFn (s ≫ p)).codRestrict E'.ring E'.const_mem).toAlgebra
+    let := (eq.symm.toRingHom.comp
       ((Cartier.constFn (s ≫ p)).codRestrict E'.ring E'.const_mem)).toAlgebra
-    haveI : Algebra.EssFiniteType k E'.ring := h1
+    have : Algebra.EssFiniteType k E'.ring := h1
     let f : E'.ring →ₐ[k] E'.ring.comap (functionFieldMap s) :=
       { eq.symm.toRingHom with commutes' := fun _ => rfl }
     exact Algebra.EssFiniteType.of_surjective f eq.symm.surjective

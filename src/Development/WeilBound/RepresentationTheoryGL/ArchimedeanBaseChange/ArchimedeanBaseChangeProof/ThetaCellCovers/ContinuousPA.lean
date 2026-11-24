@@ -98,7 +98,7 @@ theorem degCell_of (h1 : DegBasis) (h2 : DegAdelic) (h3 : DegBdd) (h4 : TorNorm)
       funext i j
       simp [Matrix.one_apply, Pi.single_apply, eq_comm]
     have hl : LinearIndependent E (1 : Matrix (Fin n) (Fin n) E)ᵀ :=
-      Matrix.linearIndependent_cols_iff_isUnit.2 isUnit_one
+      linearIndependent_col_iff_isUnit.2 isUnit_one
     have e := h2 E n n o (An.tor E x) (An.tor E x) 1 hl (by
       rw [Matrix.map_one _ (map_zero _) (map_one _), Matrix.mul_one, Matrix.one_mul])
     rw [h1 E n n _ 1 hl, h1 E n n _ 1 hl, hr, ((h4 E).2 n _).1] at e
@@ -202,7 +202,7 @@ theorem logSizeM_tor {n : ℕ} (x : Fin n → ℝ) : logSizeM (An.tor E x : GA E
       refine Real.iSup_le (fun p => ?_) (Real.exp_pos _).le
       rw [tor_val, diagonal_apply]
       split_ifs
-      · rw [posIdele_val, cV_pA, Complex.norm_real, Real.norm_eq_abs, Real.abs_exp, ← Real.exp_nat_mul]
+      · rw [posIdele_val, cV_pA, Complex.norm_real, Real.norm_eq_abs, Real.abs_exp, ← Real.exp_natCast_mul]
         have := (le_abs_self _).trans (norm_le_pi_norm x p.1)
         exact Real.exp_le_exp.2 (by push_cast; linarith)
       · simp [(Real.exp_pos _).le]

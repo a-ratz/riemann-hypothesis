@@ -252,7 +252,7 @@ theorem r_conj (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈ S) {Q Q'
   have h3 := htO _ h2
   rw [map_inv₀, ht, hσ, ← ValuationSubring.valuation_le_one_iff, map_inv₀] at h3
   have h4 : Z.p Q s ≠ 0 := by rw [← hσ s, ← ht]; exact (map_ne_zero t).2 h0
-  have h5 : 0 < (Z.O Q).valuation (Z.p Q s) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h4)
+  have h5 : 0 < (Z.O Q).valuation (Z.p Q s) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h4)
   exact absurd hs (not_lt.2 ((inv_le_one₀ h5).1 h3))
 
 end PlaceSys

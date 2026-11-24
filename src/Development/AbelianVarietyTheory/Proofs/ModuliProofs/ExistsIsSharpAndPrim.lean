@@ -200,7 +200,7 @@ theorem exists_isSharp (hG : Out.GlobalFnsSt) (a : J → Matrix (Fin 8) (Fin 8) 
     simp only [Module.finrank_pi_fintype, Module.finrank_self, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
       Fintype.card_sum, smul_eq_mul] at this
     omega
-  haveI : NeZero k := ⟨hk.pos.ne'⟩
+  have : NeZero k := ⟨hk.pos.ne'⟩
   obtain ⟨G, _, pr, hA, hdim, hpr, hu⟩ := exists_power c.A c.ab hd 8
   have := hA.comm
   have hb := isSymBilin hG c hc.1
@@ -288,7 +288,7 @@ theorem prim_of_isSharp (hG : Out.GlobalFnsSt) {a : J → Matrix (Fin 8) (Fin 8)
     have := congrArg Matrix.transpose hw
     rwa [Matrix.transpose_mul, Matrix.transpose_add, Matrix.transpose_transpose, add_comm W.transpose] at this
   refine ⟨(hu t.A pr).unique (fun u => ?_) (fun u => Category.id_comp _), ?_, ?_⟩
-  · haveI := hpr u
+  · have := hpr u
     rw [MonObj.mul_comp, ha', ha', ← Finset.prod_mul_distrib, ← hone u, ← h₁]
     exact Finset.prod_congr rfl fun v _ => (zpow_add _ _ _).symm
   · refine (cls_eq_iff (LB.isLB_linComb t.isLB _ _) (LB.isLB_linComb t.isLB _ _)).1

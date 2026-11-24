@@ -200,12 +200,12 @@ theorem finrank_eq_mul {R : Type*} [CommRing R] (hR : IsField R) {I A M B M' : T
     [AddCommGroup M'] [Module R M'] [Module.Finite R A] [Module.Finite R M']
     (hM : Module.finrank R M = 1) (e : A ≃ₗ[R] (I → M)) (e' : B ≃ₗ[R] (I → M')) :
     Module.finrank R B = Module.finrank R A * Module.finrank R M' := by
-  letI := hR.toField
-  haveI : Nontrivial M := Module.nontrivial_of_finrank_eq_succ hM
-  haveI : Module.Finite R M := Module.finite_of_finrank_eq_succ hM
-  haveI : Module.Finite R (I → M) := Module.Finite.equiv e
-  haveI : Finite I := finite_index (R := R) (M := M)
-  letI := Fintype.ofFinite I
+  let := hR.toField
+  have : Nontrivial M := Module.nontrivial_of_finrank_eq_succ hM
+  have : Module.Finite R M := Module.finite_of_finrank_eq_succ hM
+  have : Module.Finite R (I → M) := Module.Finite.equiv e
+  have : Finite I := finite_index (R := R) (M := M)
+  let := Fintype.ofFinite I
   rw [e.finrank_eq, e'.finrank_eq, Module.finrank_pi_fintype, Module.finrank_pi_fintype]
   simp [hM]
 
@@ -217,9 +217,9 @@ theorem sec_ne_zero {X : Scheme.{0}} [IsIntegral X] {M : LB X} (s : LB.Sec M) {i
     have e : M.U i₀ = ⊥ := by
       ext x
       exact ⟨fun hx => (hn ⟨⟨x, hx⟩⟩).elim, fun hx => hx.elim⟩
-    haveI : Subsingleton Γ(X, M.U i₀) := by rw [e]; infer_instance
+    have : Subsingleton Γ(X, M.U i₀) := by rw [e]; infer_instance
     exact h₀ (Subsingleton.elim _ _)
-  haveI : Nonempty (M.U i₀ ⊓ M.U i : X.Opens) := by
+  have : Nonempty (M.U i₀ ⊓ M.U i : X.Opens) := by
     obtain ⟨a⟩ := hi₀
     obtain ⟨b⟩ := hi
     obtain ⟨x, hx⟩ := nonempty_preirreducible_inter (M.U i₀).isOpen (M.U i).isOpen ⟨a.1, a.2⟩ ⟨b.1, b.2⟩
@@ -270,12 +270,12 @@ theorem mulSec_injective [IsIntegral (T ⊗ A).left] (a b : ℤ) (s : SecM A L b
   by_cases hi : Nonempty ((LPow A L b T).U i)
   · have h1 : (SecM.toSec A s).f i ≠ 0 := sec_ne_zero (SecM.toSec A s) (i₀ := i₀) h₀ i
     have h2 := congrFun (congrArg Subtype.val hf) i
-    haveI : IsDomain Γ((T ⊗ A).left, (LPow A L b T).U i) := inferInstance
+    have : IsDomain Γ((T ⊗ A).left, (LPow A L b T).U i) := inferInstance
     exact (mul_eq_zero (M₀ := Γ((T ⊗ A).left, (LPow A L b T).U i)).1 h2).resolve_right h1
   · have e : (LPow A L a T).U i = ⊥ := by
       ext x
       exact ⟨fun hx => (hi ⟨⟨x, hx⟩⟩).elim, fun hx => hx.elim⟩
-    haveI : Subsingleton Γ((T ⊗ A).left, (LPow A L a T).U i) := by rw [e]; infer_instance
+    have : Subsingleton Γ((T ⊗ A).left, (LPow A L a T).U i) := by rw [e]; infer_instance
     exact Subsingleton.elim _ _
 
 theorem isField_base (K : Type) [Field K] :
@@ -287,13 +287,13 @@ theorem finrank_sections_lineBundlePow_eq_pow : (∀ (X S : Scheme.{0}) (f : X �
   intro hint hone hrel hgrow _ K _ _ P
   obtain ⟨hfin, N, c, C, hN, -, hgr⟩ := hgrow K P
   have hF := isField_base K
-  haveI : Nontrivial Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) := hF.nontrivial
-  haveI : GeometricallyIntegral P.A.hom := hint _ _ _ P.isAb.smooth P.isAb.geomConnected
-  haveI : IsIntegral (baseOver (Spec (CommRingCat.of K)) ⊗ P.A).left :=
+  have : Nontrivial Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) := hF.nontrivial
+  have : GeometricallyIntegral P.A.hom := hint _ _ _ P.isAb.smooth P.isAb.geomConnected
+  have : IsIntegral (baseOver (Spec (CommRingCat.of K)) ⊗ P.A).left :=
     GeometricallyIntegral.geometrically_isIntegral (f := P.A.hom) _ _ _
       (IsPullback.of_hasPullback (𝟙 (Spec (CommRingCat.of K))) P.A.hom).flip
   have h1 := hone K P
-  haveI : Nontrivial (SecM P.A P.L 1 (baseOver (Spec (CommRingCat.of K)))) :=
+  have : Nontrivial (SecM P.A P.L 1 (baseOver (Spec (CommRingCat.of K)))) :=
     Module.nontrivial_of_finrank_eq_succ h1
   obtain ⟨s, hs⟩ := exists_ne (0 : SecM P.A P.L 1 (baseOver (Spec (CommRingCat.of K))))
   intro n hn
@@ -306,15 +306,15 @@ theorem finrank_sections_lineBundlePow_eq_pow : (∀ (X S : Scheme.{0}) (f : X �
       simp [hm]
     · exact Or.inl hm
   · refine monotone_nat_of_le_succ fun j => ?_
-    haveI : Module.Finite Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤)
+    have : Module.Finite Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤)
       (SecM P.A P.L ((j : ℤ) + 1) (baseOver (Spec (CommRingCat.of K)))) := hfin (j + 1)
     exact LinearMap.finrank_le_finrank_of_injective (mulSec_injective P.A P.L _ (j : ℤ) 1 s hs)
   · intro m j hm hj
     obtain ⟨e⟩ := hrel K P m 1 hm le_rfl
     obtain ⟨e'⟩ := hrel K P m j hm hj
     rw [Nat.mul_one] at e
-    haveI := hfin (m ^ 2)
-    haveI := hfin j
+    have := hfin (m ^ 2)
+    have := hfin j
     exact finrank_eq_mul hF h1 e e'
 
 end GlobalTheory.FinrankGrowthBounds

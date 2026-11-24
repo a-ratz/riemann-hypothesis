@@ -68,7 +68,7 @@ def shellU {σ : L →+* L} {n : ℕ} (k : Fin (n / 2)) (y : GU σ n) (j : ℤ) 
 theorem mem_shellU_iff_depth {σ : L →+* L} {n : ℕ} (k : Fin (n / 2)) (y : GU σ n) (j : ℕ) (u : cellU y) :
     u ∈ shellU k y j ↔ depthU k (u : GU σ n) ≤ j := by
   unfold shellU depthU
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   by_cases h0 : cornerU k (u : GU σ n) = 0
   · rw [h0]; simp [ordL]
   · rw [GlobalTheory.BorelUMod.v_eq_exp h0, WithZero.exp_le_exp]

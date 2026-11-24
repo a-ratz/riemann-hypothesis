@@ -102,8 +102,8 @@ theorem mtSub_finite (hC : PartCompl B) (i : LocT B) : Module.Finite (OOf B i) (
   Module.Finite.iff_fg.2 (mtSub_fg hC i)
 
 theorem mtSub_free (hC : PartCompl B) (i : LocT B) : Module.Free (OOf B i) (MtSub B hC i) := by
-  haveI := mtSub_finite hC i
-  haveI : NoZeroSMulDivisors (OOf B i) (partOf B i) := by
+  have := mtSub_finite hC i
+  have : NoZeroSMulDivisors (OOf B i) (partOf B i) := by
     refine ⟨fun {c x} h => ?_⟩
     have h1 : c • (x : B.V (jOf B i) (wOf B i)) = 0 := by
       have := congrArg (fun z : partOf B i => (z : B.V (jOf B i) (wOf B i))) h

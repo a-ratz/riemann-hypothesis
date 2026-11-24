@@ -55,7 +55,7 @@ section SlopeTestRemainingChoices
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
 private theorem co_mkE (D : Dat F E) (u t : A F) : D.co (D.mkE u t) = ![u, t] := by
-  letI : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
+  let : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
   have h : D.mkE u t = u • AdeleBaseChange.adeleBasis D.b 0 + t • AdeleBaseChange.adeleBasis D.b 1 := by
     rw [AdeleBaseChange.adeleBasis_apply, AdeleBaseChange.adeleBasis_apply, D.b0, D.b1,
       Algebra.smul_def, Algebra.smul_def, map_one, mul_one]
@@ -79,7 +79,7 @@ private theorem finrank_two (D : Dat F E) : Module.finrank F E = 2 := by
   simpa using Module.finrank_eq_card_basis D.b
 
 private theorem galois (D : Dat F E) : IsGalois F E := by
-  haveI : FiniteDimensional F E := Module.Basis.finiteDimensional_of_finite D.b
+  have : FiniteDimensional F E := Module.Basis.finiteDimensional_of_finite D.b
   apply IsGalois.of_card_aut_eq_finrank
   rw [finrank_two D]
   apply le_antisymm
@@ -91,10 +91,10 @@ private theorem galois (D : Dat F E) : IsGalois F E := by
 
 private theorem mul_bar (D : Dat F E) (α : (A E)ˣ) :
     AdeleBaseChange.adeleMap F E ((ideleNorm F E α : (A F)ˣ) : A F) = (α : A E) * D.bar α := by
-  haveI := galois D
+  have := galois D
   rw [coe_ideleNorm, AdeleBaseChange.adeleMap_norm]
   have hu : (Finset.univ : Finset (E ≃ₐ[F] E)) = {1, D.σ} := by
-    haveI : FiniteDimensional F E := Module.Basis.finiteDimensional_of_finite D.b
+    have : FiniteDimensional F E := Module.Basis.finiteDimensional_of_finite D.b
     symm
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
     rw [Finset.card_pair (Ne.symm (sigma_ne D)), Finset.card_univ, ← Nat.card_eq_fintype_card,

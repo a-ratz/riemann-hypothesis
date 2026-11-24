@@ -120,7 +120,7 @@ theorem zeta_sum_GL : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (E : T
     {a | a.out ∈ DoubleCoset.doubleCoset (T d) (KGL w (n := r) : Set (GL (Fin r) (w.adicCompletion E))) (KGL w (n := r))}
   have hSfin : ∀ d, (S d).Finite := fun d =>
     (Formalism.UG.P.finite_support_cosets hK (hmem (T d)).2).subset fun a ha => by
-      simp only [Set.mem_setOf_eq, dosetInd]; rw [Set.indicator_of_mem (s := DoubleCoset.doubleCoset _ _ _) ha]; exact one_ne_zero
+      simp only [Set.mem_ofPred_eq, dosetInd]; rw [Set.indicator_of_mem (s := DoubleCoset.doubleCoset _ _ _) ha]; exact one_ne_zero
   have hsumS : ∀ d, ∑ᶠ a ∈ S d, ρ a.out x = c d • x := fun d => by
     rw [← (hc d).1, heckeVec, finsum_mem_def]
     refine finsum_congr fun a => ?_
@@ -140,7 +140,7 @@ theorem zeta_sum_GL : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (E : T
         have h1 : D a = d := hDu d a ha
         subst h1
         rfl }
-  haveI : ∀ d, Fintype (S d) := fun d => (hSfin d).fintype
+  have : ∀ d, Fintype (S d) := fun d => (hSfin d).fintype
   have hsumF : ∀ d, ∑ a : S d, ρ (a : GL (Fin r) (w.adicCompletion E) ⧸ KGL w (n := r)).out x = c d • x := fun d => by
     rw [← hsumS d, ← finsum_set_coe_eq_finsum_mem, finsum_eq_sum_of_fintype]
 
@@ -176,7 +176,7 @@ theorem zeta_sum_GL : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (E : T
     have hfin : (Set.pi Set.univ fun _ : Fin r => Set.Icc (-(k : ℤ)) k).Finite :=
       Set.Finite.pi fun _ => Set.finite_Icc _ _
     refine (hfin.preimage Subtype.val_injective.injOn).subset fun d hd => ?_
-    simp only [Set.mem_setOf_eq, deg] at hd
+    simp only [Set.mem_ofPred_eq, deg] at hd
     simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, Set.mem_Icc, forall_const]
     intro i
     have h1 : |d.1 i| ≤ ∑ j, |d.1 j| := Finset.single_le_sum (fun j _ => abs_nonneg (d.1 j)) (Finset.mem_univ i)

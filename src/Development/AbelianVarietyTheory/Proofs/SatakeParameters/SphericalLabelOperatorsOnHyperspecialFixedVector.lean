@@ -374,20 +374,20 @@ theorem exists_real_unif (D : D7) (P : HeightOneSpectrum (𝓞 D.host.E)) :
     ∃ x : 𝓞 D.host.F, ∃ y : 𝓞 D.host.E, (y : D.host.E) = algebraMap D.host.F D.host.E (x : D.host.F) ∧
       y ∈ P.asIdeal ∧ y ∉ P.asIdeal ^ 2 := by
   have hu : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) := by
-    haveI := D.host.isCMField_hostE
+    have := D.host.isCMField_hostE
     exact GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
-  haveI := P.isPrime
-  haveI : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
+  have := P.isPrime
+  have : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
     Algebra.unramified_iff_forall.1 hu ⟨P.asIdeal, P.isPrime⟩
   have hle : (P.asIdeal.under (𝓞 D.host.F)).map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ P.asIdeal :=
     Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff P.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 D.host.F) (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal).1 ‹_›).2
   have h2 : ¬ (P.asIdeal.under (𝓞 D.host.F)).map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ P.asIdeal ^ 2 :=
     fun h => (Ideal.ramificationIdx'_ne_one_iff hle).2 h h1
-  rw [Ideal.map_le_iff_le_comap, SetLike.not_le_iff_exists] at h2
+  rw [Ideal.map_le_iff_le_comap, IsConcreteLE.not_le_iff_exists] at h2
   obtain ⟨x, hx, hx2⟩ := h2
   exact ⟨x, algebraMap _ _ x, rfl, hx, hx2⟩
 
@@ -468,7 +468,7 @@ theorem exists_dual {R : Finset (GA D V)} (hR : SphOp V P d R) :
   obtain ⟨he, v, hf⟩ := idem_of_isPrimeIdem hef
   obtain ⟨a, rfl⟩ := (GlobalTheory.HeckeDual.suppF_iff V hf α).1 hα
   obtain ⟨δ, hδ, hσδ⟩ := exists_skew D
-  haveI : Submodule.IsFullLattice D.host.E (GlobalTheory.AdelicU.frameLat V) :=
+  have : Submodule.IsFullLattice D.host.E (GlobalTheory.AdelicU.frameLat V) :=
     GlobalTheory.AdelicU.SelfDual.isLattice_frameLat V
   have hK : ∀ g, g ∈ {k | k ∈ KsphC V ∅ ∧ SuppF V f k} ↔
       ∃ k ∈ GlobalTheory.AdelicU.stabLoc D.sp.cm.sig V.gram (GlobalTheory.AdelicU.frameLat V) v,
@@ -530,7 +530,7 @@ theorem label_operators : ∀ {D : D7} (V : HSp D) (P : Pl D.host.E), (∀ d R, 
     · obtain ⟨g, r1, -⟩ := exists_reps hK (sphOp_rep hd)
       rw [← r1.sum_eq r1 (k := k) (by rwa [hK] at hk) (fun x => π x u) (fix M π u hu)]
       simp only [map_mul, Module.End.mul_apply]
-    · simp only [Hk3.rep, dif_neg hd, Finset.sum_empty]
+    · simp only [Hk3.rep, dite_eq_right hd, Finset.sum_empty]
   · obtain ⟨e, f, h⟩ := (supported_group_and_prime_idempotents V).2.1 P
     have hD := divAt_one V (GlobalTheory.HeckeDual.idem_of_isPrimeIdem h).1 (tie_of_isPrimeIdem h) (ϖ : D.host.E)
     have hg : SuppF V f 1 := (one_mem (suppGroup V f) :)
@@ -550,7 +550,7 @@ theorem label_operators : ∀ {D : D7} (V : HSp D) (P : Pl D.host.E), (∀ d R, 
     by_cases hd : IsLab V P d
     · obtain ⟨R', r1, r2⟩ := exists_dual (sphOp_rep hd)
       rw [← (c1 _ _ r1).1, r2]
-    · rw [Hk3.rep, Hk3.rep, dif_neg hd, dif_neg (_root_.mt hi.2 hd)]
+    · rw [Hk3.rep, Hk3.rep, dite_eq_right hd, dite_eq_right (_root_.mt hi.2 hd)]
   · have he := (GlobalTheory.HeckeDual.idem_of_isPrimeIdem h).1
     obtain ⟨d, hd, hD⟩ := exists_divAt V he (tie_of_isPrimeIdem h) h1 h2 g
     have hl := isLab_of_divAt h h1 h2 hd hg hD

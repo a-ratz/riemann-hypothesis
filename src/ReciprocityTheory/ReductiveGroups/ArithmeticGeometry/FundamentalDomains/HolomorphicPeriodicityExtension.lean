@@ -111,7 +111,7 @@ theorem holomorphic_periodicity_extension : HolomorphicPeriodicityExtension (E :
     have hVo : IsOpen V := isOpen_lt continuous_const (by fun_prop)
     have hVc : Convex ℝ V := by
       intro z hz w hw a b ha hb hab
-      simp only [hVdef, Set.mem_setOf_eq] at hz hw ⊢
+      simp only [hVdef, Set.mem_ofPred_eq] at hz hw ⊢
       have him : (a • z + b • w).im = a * z.im + b * w.im := by simp
       have h1 : 1 + (a * z.im + b * w.im) / X.ttV e x τ0 =
           a * (1 + z.im / X.ttV e x τ0) + b * (1 + w.im / X.ttV e x τ0) := by

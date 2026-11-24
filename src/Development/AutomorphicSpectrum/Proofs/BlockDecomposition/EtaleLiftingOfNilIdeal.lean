@@ -118,9 +118,9 @@ end GlobalTheory.CompanionTheory.EtNil
 theorem GlobalTheory.CompanionTheory.EtNil.etLift_of_nil : ∀ {B : Type} [CommRing B] (J : Ideal B),
     (∀ x ∈ J, IsNilpotent x) → EtLift J := by
   intro B _ J hJ P E _ _ ψ hψ f g hg
-  letI := ψ.toAlgebra
-  letI := f.toAlgebra
-  haveI : Algebra.Etale P E := hψ
+  let := ψ.toAlgebra
+  let := f.toAlgebra
+  have : Algebra.Etale P E := hψ
   let gA : E →ₐ[P] B ⧸ J :=
     { g with commutes' := fun p => DFunLike.congr_fun hg p }
   obtain ⟨h, hh⟩ := GlobalTheory.CompanionTheory.EtNil.exists_lift J hJ gA

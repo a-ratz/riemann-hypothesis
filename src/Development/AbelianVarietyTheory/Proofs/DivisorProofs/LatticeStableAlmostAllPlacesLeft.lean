@@ -115,7 +115,7 @@ theorem almost_all_stable : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     intro M M' h h'
     refine (h.union h').subset fun w hw => ?_
     by_contra hc
-    simp only [Set.mem_union, not_or, bad, Set.mem_setOf_eq, not_not] at hc hw
+    simp only [Set.mem_union, not_or, bad, Set.mem_ofPred_eq, not_not] at hc hw
     exact hw fun γ hγ => by rw [Matrix.add_mul]; exact add_mem (hc.1 γ hγ) (hc.2 γ hγ)
   have hzero : (bad 0).Finite := by
     refine Set.finite_empty.subset fun w hw => hw fun γ _ => ?_

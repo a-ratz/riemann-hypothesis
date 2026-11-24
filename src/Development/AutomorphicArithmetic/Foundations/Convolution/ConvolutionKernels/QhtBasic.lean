@@ -60,8 +60,8 @@ private theorem continuous_locHeight {E : Type*} [NormedField E] {n : ℕ} :
   refine continuous_const.max (NNReal.continuous_coe.comp ?_)
   refine Continuous.finset_sup_apply fun p _ => ?_
   refine Continuous.max ?_ ?_
-  · exact (continuous_GL_apply p.1 p.2).nnnorm
-  · exact ((continuous_GL_apply p.1 p.2).comp continuous_inv).nnnorm
+  · exact (continuous_GL_apply p.1 p.2).nnNorm
+  · exact ((continuous_GL_apply p.1 p.2).comp continuous_inv).nnNorm
 
 private theorem locHeight_mul_integral {K : Type} [Field K] [NumberField K] {n : ℕ}
     {v : HeightOneSpectrum (𝓞 K)} (x k : GL (Fin n) (v.adicCompletion K))
@@ -107,10 +107,10 @@ private theorem continuous_height {K : Type} [Field K] [NumberField K] {n : ℕ}
 private theorem measurable_qht {K : Type} [Field K] [NumberField K] {n : ℕ} :
     Measurable (qht : G1 K n → ℝ) := by
   set_option synthInstance.maxHeartbeats 400000 in
-  haveI : Countable (Gam K n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (Gam K n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   unfold qht
   refine Measurable.iInf fun γ => Continuous.measurable ?_
-  exact continuous_height.comp (continuous_subtype_val.comp (continuous_const.mul continuous_id))
+  exact continuous_height.comp (continuous_subtypeVal.comp (continuous_const.mul continuous_id))
 
 private theorem qht_mul_left {K : Type} [Field K] [NumberField K] {n : ℕ} (γ : G1 K n)
     (hγ : γ ∈ Gam K n) (x : G1 K n) : qht (γ * x) = qht x := by

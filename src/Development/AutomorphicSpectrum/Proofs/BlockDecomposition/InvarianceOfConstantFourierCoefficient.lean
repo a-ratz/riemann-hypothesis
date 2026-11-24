@@ -82,11 +82,11 @@ theorem nb_inv_of_const (D : D7) (p : ℕ) (ψ : AddChar (AF D.host.F) ℂ) (nb 
     (hfc : ∀ g, fc ψ lam 𝓖 nb F β g = F g) (b : hermA D p) (g : G D p) : F (nb b * g) = F g := by
   obtain ⟨hnb, hlam, hFD, -⟩ := hC
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D p p
-  haveI : BorelSpace (Mx D p p) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D p) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D p) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : DiscreteTopology (ratHerm D p) := discrete_ratHerm
-  haveI : Countable (ratHerm D p) := countable_of_Lindelof_of_discrete
+  have : BorelSpace (Mx D p p) := ⟨rfl⟩
+  have : BorelSpace (hermA D p) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D p) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : DiscreteTopology (ratHerm D p) := discrete_ratHerm
+  have : Countable (ratHerm D p) := countable_of_Lindelof_of_discrete
   have hone : ∀ h : G D p, fc ψ lam 𝓖 nb F β h = ∫ x in 𝓖, F (nb x * h) ∂lam := by
     intro h
     refine integral_congr_ae (.of_forall fun x => ?_)

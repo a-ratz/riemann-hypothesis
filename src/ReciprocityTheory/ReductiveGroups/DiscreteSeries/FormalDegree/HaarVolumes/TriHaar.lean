@@ -304,7 +304,7 @@ theorem upMat_triCoOf_mul (t t0 : TriCo N) :
     fun s a b => rfl
   have hz : ∀ (s : TriCo N) (a b : Fin N), b < a → upMat s a b = 0 := by
     intro s a b h
-    rw [hU s a b, if_neg (ne_of_gt h), dite_eq_right (not_lt.mpr h.le)]
+    rw [hU s a b, ite_eq_right (ne_of_gt h), dite_eq_right (not_lt.mpr h.le)]
   have hlow : ∀ a b : Fin N, b < a → (upMat t * upMat t0) a b = 0 := by
     intro a b hba
     rw [Matrix.mul_apply]
@@ -315,7 +315,7 @@ theorem upMat_triCoOf_mul (t t0 : TriCo N) :
   have hdiag : ∀ a, (upMat t * upMat t0) a a = ((t.1 a * t0.1 a : ℝ) : ℂ) := by
     intro a
     rw [Matrix.mul_apply, Finset.sum_eq_single a]
-    · rw [hU t a a, hU t0 a a, if_pos rfl, if_pos rfl, Complex.ofReal_mul]
+    · rw [hU t a a, hU t0 a a, ite_eq_left rfl, ite_eq_left rfl, Complex.ofReal_mul]
     · intro k _ hka
       rcases lt_or_gt_of_ne hka with h | h
       · rw [hz t a k h, zero_mul]
@@ -325,13 +325,13 @@ theorem upMat_triCoOf_mul (t t0 : TriCo N) :
   refine ⟨?_, fun j => ?_⟩
   · ext a b
     rcases lt_trichotomy a b with h | h | h
-    · rw [hU _ a b, if_neg (ne_of_lt h), dite_eq_left h]
+    · rw [hU _ a b, ite_eq_right (ne_of_lt h), dite_eq_left h]
       rfl
     · subst h
-      rw [hU _ a a, if_pos rfl]
+      rw [hU _ a a, ite_eq_left rfl]
       show (((upMat t * upMat t0) a a).re : ℂ) = (upMat t * upMat t0) a a
       rw [hdiag, Complex.ofReal_re]
-    · rw [hU _ a b, if_neg (ne_of_gt h), dite_eq_right (not_lt.mpr h.le), hlow a b h]
+    · rw [hU _ a b, ite_eq_right (ne_of_gt h), dite_eq_right (not_lt.mpr h.le), hlow a b h]
   · show ((upMat t * upMat t0) j j).re = t.1 j * t0.1 j
     rw [hdiag, Complex.ofReal_re]
 
@@ -346,15 +346,15 @@ theorem triMeas_map_mul_right (t0 : TriCo N) (h0 : t0 ∈ triPos N) :
   set D : ℝ := ∏ j : Fin N, t0.1 j ^ (2 * (j : ℕ) + 1) with hD
   have hDpos : 0 < D := Finset.prod_pos fun j _ => pow_pos (h0 j) _
   have hLm : Measurable L := L.continuous_of_finiteDimensional.measurable
-  haveI hC : (volume : Measure ({ab : Fin N × Fin N // ab.1 < ab.2} → ℂ)).IsAddHaarMeasure := by
+  have hC : (volume : Measure ({ab : Fin N × Fin N // ab.1 < ab.2} → ℂ)).IsAddHaarMeasure := by
     first
       | infer_instance
       | exact Measure.pi.isAddHaarMeasure _
-  haveI hR : (volume : Measure (Fin N → ℝ)).IsAddHaarMeasure := by
+  have hR : (volume : Measure (Fin N → ℝ)).IsAddHaarMeasure := by
     first
       | infer_instance
       | exact Measure.pi.isAddHaarMeasure _
-  haveI hT : (volume : Measure (TriCo N)).IsAddHaarMeasure := by
+  have hT : (volume : Measure (TriCo N)).IsAddHaarMeasure := by
     first
       | exact Measure.prod.instIsAddHaarMeasure volume volume
       | infer_instance

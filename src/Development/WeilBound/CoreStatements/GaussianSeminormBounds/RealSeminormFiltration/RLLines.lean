@@ -144,14 +144,14 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 theorem exists_gen_matrix (A : ℝ → Matrix ι ι ℂ) (hc : Continuous A) (h0 : A 0 = 1)
     (hm : ∀ s t, A (s + t) = A s * A t) (J : Matrix ι ι ℂ) (hJ : ∀ t, (A t)ᴴ * J * A t = J) :
     ∃ Y : Matrix ι ι ℂ, Yᴴ * J + J * Y = 0 ∧ ∀ t : ℝ, A t = NormedSpace.exp (t • Y) := by
-  have : CompleteSpace (Matrix ι ι ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix ι ι ℂ) := FiniteDimensional.completeSpace ℝ _
   have : @ContinuousStar (Matrix ι ι ℂ) PseudoMetricSpace.toUniformSpace.toTopologicalSpace _ :=
     ⟨continuous_id.matrix_conjTranspose⟩
   exact exists_gen A hc h0 hm J hJ
 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem continuous_exp_smul (Y : Matrix ι ι ℂ) : Continuous fun t : ℝ => NormedSpace.exp (t • Y) := by
-  have : CompleteSpace (Matrix ι ι ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix ι ι ℂ) := FiniteDimensional.completeSpace ℝ _
   exact continuous_iff_continuousAt.2 fun t => (hasDerivAt_exp_smul_const' (𝕂 := ℝ) Y t).continuousAt
 
 theorem exp_add_smul (Y : Matrix ι ι ℂ) (s t : ℝ) :
@@ -528,7 +528,7 @@ theorem genEx : GlobalTheory.RealLift.GenEx := by
     obtain ⟨C', h1, h2⟩ := frame_inv (hC w)
     let g : ℝ → Matrix β β ℂ := fun t => ((γ (Multiplicative.ofAdd t)).1 : Matrix β β (AE F E)).map (piInf (τ w))
     have hg : Continuous g :=
-      ((Units.continuous_val.comp continuous_subtype_val).comp (hγ.1.comp continuous_ofAdd)).matrix_map
+      ((Units.continuous_val.comp continuous_subtypeVal).comp (hγ.1.comp continuous_ofAdd)).matrix_map
         (continuous_piInf (τ w))
     have hg0 : g 0 = 1 := by
       simp only [g, ofAdd_zero, map_one]

@@ -1025,9 +1025,9 @@ private theorem torsVal_lift {R₀ : Type} [CommRing R₀] {X Y : Over (Spec (Co
     (x : sp (R₀ := R₀) O ⟶ Y) (z : sp (R₀ := R₀) C ⟶ X)
     (h : z ≫ m = spMap (IsScalarTower.toAlgHom R₀ O C) ≫ x) :
     ∃! y : sp (R₀ := R₀) O ⟶ X, y ≫ m = x ∧ spMap (IsScalarTower.toAlgHom R₀ O C) ≫ y = z := by
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI : ValuationRing O := torsVal_valuationRing hv
-  haveI : IsFractionRing O C := hv.isFractionRing
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : ValuationRing O := torsVal_valuationRing hv
+  have : IsFractionRing O C := hv.isFractionRing
   have hE : ValuativeCriterion.Existence m.left := by
     have h : UniversallyClosed m.left := inferInstance
     rw [UniversallyClosed.eq_valuativeCriterion] at h
@@ -1185,9 +1185,9 @@ theorem points_fibre_product :
     ∃! c : sp (R₀ := R₀) (F : Type) ⟶ X, spMap p₁.1 ≫ c = a ∧ spMap p₂.1 ≫ c = b) := by
   intro R₀ _ X F R₁ R₂ R p₁ p₂ f₁ f₂ hsq a b hab
   obtain ⟨hc, -, -, hex⟩ := hsq
-  haveI : IsLocalHom p₁.1.toRingHom := p₁.2
-  haveI : IsLocalHom f₁.1.toRingHom := f₁.2
-  haveI : IsLocalHom f₂.1.toRingHom := f₂.2
+  have : IsLocalHom p₁.1.toRingHom := p₁.2
+  have : IsLocalHom f₁.1.toRingHom := f₁.2
+  have : IsLocalHom f₂.1.toRingHom := f₂.2
   have hinj : ∀ s t, p₁.1.toRingHom s = p₁.1.toRingHom t → p₂.1.toRingHom s = p₂.1.toRingHom t →
       s = t := fun s t h1 h2 =>
     (hex (p₁.1 t) (p₂.1 t) (AlgHom.congr_fun hc t)).unique ⟨h1, h2⟩ ⟨rfl, rfl⟩
@@ -1760,7 +1760,7 @@ end SlopeTestRemainingChoices
 theorem main : (∀ (p : ℕ) [Fact p.Prime] {C : Type} [Field C] [IsAlgClosed C] [CharZero C] {v : Valuation C NNReal} (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] (hv : v.Integers O) (ε : PreTilt O p) (hε : IsPrimitiveRoot (((frobeniusEquiv (PreTilt O p) p).symm ε).untilt) p) (g : ℕ) (G : Over (Spec (CommRingCat.of (Ainf.R0 p O ε)))) [GrpObj G] [IsCommMonObj G] (P : ReciprocityTheory.ChartRestriction.G.Semi.LB (G ⊗ G).left), ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme G → SmoothOfRelativeDimension g G.hom → P.IsLB → (∃ θ : LB.Gen (Theta (G ⊗ G) P), θ.IsGen) → (∃ t : (P.pull (lift (1 : G ⟶ G) (𝟙 G)).left).Gen, t.IsGen) → (∃ t : (P.pull (lift (𝟙 G) (1 : G ⟶ G)).left).Gen, t.IsGen) → ReciprocityTheory.ChartRestriction.G.Geo.Tor.LBIso P (P.pull (lift (snd G G) (fst G G)).left) → IsFinite ((𝟙 G) ^ p : G ⟶ G).left → Flat ((𝟙 G) ^ p : G ⟶ G).left → Surjective ((𝟙 G) ^ p : G ⟶ G).left → ∀ [Algebra ((Ainf.ainfTowerL p O hv ε hε).O : Type) C] [Algebra (Ainf.R0 p O ε) C] [IsScalarTower (Ainf.R0 p O ε) ((Ainf.ainfTowerL p O hv ε hε).O : Type) C], v.Integers ((Ainf.ainfTowerL p O hv ε hε).O : Type) → (∀ x : sp (R₀ := (Ainf.R0 p O ε)) C ⟶ G, (∃ t : (P.pull (lift (snd G (sp (R₀ := (Ainf.R0 p O ε)) C) ≫ x) (fst G (sp (R₀ := (Ainf.R0 p O ε)) C))).left).Gen, t.IsGen) → x = 1) → Nat.card {z : sp (R₀ := (Ainf.R0 p O ε)) C ⟶ G // z ^ p = 1} = p ^ (2 * g) → ∀ (G' : Over (Spec (CommRingCat.of ((Ainf.ainfTowerL p O hv ε hε).O : Type)))) [GrpObj G'] [IsCommMonObj G'] (φ : G'.left ⟶ G.left) (φ₂ : (G' ⊗ G').left ⟶ (G ⊗ G).left), ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme G' → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback G' G (Spec.map (CommRingCat.ofHom (algebraMap (Ainf.R0 p O ε) ((Ainf.ainfTowerL p O hv ε hε).O : Type)))) φ → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsSquare φ φ₂ → ∀ [Algebra ℤ_[p] ((Ainf.ainfTowerL p O hv ε hε).O : Type)] (O₀ : Type) [CommRing O₀] (cj : O₀ ≃ₐ[ℤ] O₀) (ρ : ReciprocityTheory.ChartRestriction.G.Out.RingAct G' O₀), (∀ a, cj (cj a) = a) → (∀ a, (∃ t : ReciprocityTheory.ChartRestriction.G.Semi.LB.Gen (ReciprocityTheory.ChartRestriction.G.Semi.LB.LinComb P (K := Fin 2) ![(lift (fst G' G' ≫ ρ.act a) (snd G' G')).left ≫ φ₂, (lift (fst G' G') (snd G' G' ≫ ρ.act (cj a))).left ≫ φ₂] ![1, -1]), t.IsGen)) → ∃ (B : BX (Ainf.R0 p O ε)) (e : ∀ R : LAlg (Ainf.R0 p O ε), B.G R → (sp (R₀ := (Ainf.R0 p O ε)) (R : Type) ⟶ G)) (Ad : O₀ → OAdj B (Ainf.ainfTowerL p O hv ε hε).O), (∀ R, Function.Bijective (e R)) ∧ (∀ R x y, e R (x + y) = e R x * e R y) ∧ (∀ {R S : LAlg (Ainf.R0 p O ε)} (f : LHom R S) (x : B.G R), e S (B.map f x) = spMap f.1 ≫ e R x) ∧ (∀ a, (∀ {R : LAlg (Ainf.R0 p O ε)} (s : LHom (Ainf.ainfTowerL p O hv ε hε).O R) (x : B.G R) (x' : Over.mk (Spec.map (CommRingCat.ofHom s.1.toRingHom)) ⟶ G'), x'.left ≫ φ = (e R x).left → (x' ≫ ρ.act a).left ≫ φ = (e R ((Ad a).a.f s x)).left)) ∧ ∃ (Dt : DualTower (Ainf.ainfTowerL p O hv ε hε)) (D : Dat p g B (Ainf.ainfTowerL p O hv ε hε) Dt (ℤ_[p] ⊗[ℤ] O₀) (Algebra.TensorProduct.congr (AlgEquiv.refl : ℤ_[p] ≃ₐ[ℤ_[p]] ℤ_[p]) cj) (Ainf.ainfTowerL p O hv ε hε).c), D.H.P = 0 ∧ D.H.PL = 0 ∧ (∀ a {R S : LAlg (Ainf.R0 p O ε)} (s : LHom (Ainf.ainfTowerL p O hv ε hε).O R) (π : LHom R S) (hπ : π.SqZero) (l : Fin g) (i : π.ker) (m : Fin g → π.ker), (∀ k, (m k : (R : Type)) = s.1 (D.H.ρL (1 ⊗ₜ[ℤ] a) k l) * i) → (Ad a).a.f s (B.tg π hπ (D.ch.gb l ⊗ₜ[(Ainf.R0 p O ε)] i)) = B.tg π hπ (∑ k, D.ch.gb k ⊗ₜ[(Ainf.R0 p O ε)] m k)) ∧ ∀ a j n, (Ad a).a.f (LHom.id (Ainf.ainfTowerL p O hv ε hε).O) (D.L.τ j n) = ∑ k, (PadicInt.toZModPow (n + 1) (D.H.ρ (1 ⊗ₜ[ℤ] a) k j)).val • D.L.τ k n) := by
   intro p _ C _ _ _ v O _ _ _ _ hv ε hε g G _ _ P hA hsm hP hθ h1 h2 hsym hf hfl hsu _ _ _ hvi hnd hcard
     G' _ _ φ φ₂ hA' gp sq _ O₀ _ cj ρ hcj hros
-  haveI : IsLocalRing (Ainf.R0 p O ε) := GlobalTheory.WdAinf.ainf_thetaQuotRing_isLocalRing p O hv ε hε
+  have : IsLocalRing (Ainf.R0 p O ε) := GlobalTheory.WdAinf.ainf_thetaQuotRing_isLocalRing p O hv ε hε
   obtain ⟨β⟩ := GlobalTheory.nonempty_isBiext_of_cube_gen _ G hA P hP hθ h1 h2
   obtain ⟨s, hs⟩ := GlobalTheory.BiextSym.main GlobalTheory.globalFns_holds _ G hA P β hsym
   obtain ⟨B, e, hb, hm, hn, b, J, hJ, ha1, ha2⟩ := @GlobalTheory.BXOf.main

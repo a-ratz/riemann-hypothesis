@@ -101,7 +101,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem finite_quotient_unif_pow (m : ℕ) : Finite (𝒪[k] ⧸ Ideal.span {Zls.unif k ^ m}) := by
   have hmax : IsLocalRing.maximalIdeal 𝒪[k] = Ideal.span {Zls.unif k} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer _).1 Zls.irreducible_unif
-  haveI : Finite (𝒪[k] ⧸ Ideal.span {Zls.unif k}) := by
+  have : Finite (𝒪[k] ⧸ Ideal.span {Zls.unif k}) := by
     rw [← hmax]
     exact (inferInstance : Finite 𝓀[k])
   have := Ideal.finite_quotient_pow (I := Ideal.span {Zls.unif k}) ⟨{Zls.unif k}, by simp⟩ m
@@ -124,7 +124,7 @@ theorem Km_anti (N : ℕ) {m m' : ℕ} (h : m ≤ m') : Zls.Km k N m' ≤ Zls.Km
 theorem exists_pow_mem_Km (N m' : ℕ) {m : ℕ} {x : GL (Fin N) k} (hx : x ∈ Zls.Km k N m) :
     ∃ M : ℕ, 0 < M ∧ x ^ M ∈ Zls.Km k N m' := by
   obtain ⟨g, -, rfl⟩ := Subgroup.mem_map.1 hx
-  haveI := finite_quotient_unif_pow (k := k) m'
+  have := finite_quotient_unif_pow (k := k) m'
   set f := Matrix.GeneralLinearGroup.map (n := Fin N) (Ideal.Quotient.mk (Ideal.span {Zls.unif k ^ m'}))
     with hf
   refine ⟨orderOf (f g), orderOf_pos _, ?_⟩
@@ -328,7 +328,7 @@ theorem exists_quotient_character : ∀ (Λ : Type) [Group Λ] (M : Type) [AddCo
     rw [eq_top_iff]
     intro w _
     obtain ⟨m, hm⟩ := hex w
-    haveI := hfd m
+    have := hfd m
     have hst : ∀ l, ∀ x ∈ (⨅ u : U m, LinearMap.ker (ρ (u : Λ) - 1)), ρ l x ∈
         (⨅ u : U m, LinearMap.ker (ρ (u : Λ) - 1)) := by
       intro l x hx
@@ -378,11 +378,11 @@ theorem exists_quotient_character : ∀ (Λ : Type) [Group Λ] (M : Type) [AddCo
     · have h1 : ξ' u = 1 := hξ1 u hu
       rw [h1, one_smul] at hr
       exact hr
-  haveI : FiniteDimensional ℂ N := by
-    haveI := hfd m0
+  have : FiniteDimensional ℂ N := by
+    have := hfd m0
     exact Submodule.finiteDimensional_of_le (S₂ := ⨅ u : U m0, LinearMap.ker (ρ (u : Λ) - 1))
       fun w hw => (hmem m0 w).2 (hNfix w hw)
-  haveI : Nontrivial N := ⟨⟨⟨v, hvN⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial N := ⟨⟨⟨v, hvN⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
   have hNS : ∀ l, ∀ x ∈ N, ρ l x ∈ N := htS ξ'
   let T : Λ → End ℂ N := fun l => (ρ l : End ℂ M).restrict (hNS l)
   let A : Λ → End ℂ N := fun l => T l - ξ l • (1 : End ℂ N)
@@ -404,9 +404,9 @@ theorem exists_quotient_character : ∀ (Λ : Type) [Group Λ] (M : Type) [AddCo
     exact this
   obtain ⟨φ, hφ0, hφ⟩ := exists_functional_of_commuting_nilpotent A hAc hAn
   let P : M →ₗ[ℂ] N := Submodule.linearProjOfIsCompl N C hIC
-  have hPN : ∀ x : N, P x = x := fun x => Submodule.linearProjOfIsCompl_apply_left hIC x
+  have hPN : ∀ x : N, P x = x := fun x => Submodule.projectionOnto_apply_left hIC x
   have hPC : ∀ x ∈ C, P x = 0 := fun x hx =>
-    (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hIC).2 hx
+    (Submodule.projectionOnto_apply_eq_zero_iff hIC).2 hx
   refine ⟨φ ∘ₗ P, ?_, ?_⟩
   · intro h
     apply hφ0
@@ -633,9 +633,9 @@ theorem continuous_contractMat (l : Fin N → ℤ) {X : Type} [TopologicalSpace 
     Continuous fun x => contractMat l (f x) (g x) := by
   refine continuous_matrix fun i j => ?_
   by_cases h : l j < l i
-  · simp only [contractMat, Matrix.of_apply, h, if_true]
+  · simp only [contractMat, Matrix.of_apply, h, ite_true]
     exact (hf.pow _).mul (hg.matrix_elem i j)
-  · simp only [contractMat, Matrix.of_apply, h, if_false]
+  · simp only [contractMat, Matrix.of_apply, h, ite_false]
     exact continuous_const
 
 theorem contractMat_zero (l : Fin N → ℤ) (m : Matrix (Fin N) (Fin N) k) : contractMat l 0 m = 1 := by
@@ -654,7 +654,7 @@ theorem val_conj_eq (l : Fin N → ℤ) (c : ℕ) (y : GL (Fin N) k)
   ext i j
   rw [conj_apply]
   by_cases h : l j < l i
-  · simp only [contractMat, Matrix.of_apply, h, if_true]
+  · simp only [contractMat, Matrix.of_apply, h, ite_true]
     congr 1
     have he : ((l i - l j).toNat : ℤ) = l i - l j := Int.toNat_of_nonneg (by omega)
     have : ((c : ℤ) • l) i - ((c : ℤ) • l) j = ((c * (l i - l j).toNat : ℕ) : ℤ) := by
@@ -664,7 +664,7 @@ theorem val_conj_eq (l : Fin N → ℤ) (c : ℕ) (y : GL (Fin N) k)
       ring
     rw [this, zpow_natCast, Units.val_pow_eq_pow_val, pow_mul]
   · have h' : l i ≤ l j := not_lt.1 h
-    simp only [contractMat, Matrix.of_apply, h, if_false]
+    simp only [contractMat, Matrix.of_apply, h, ite_false]
     rw [hy i j h']
     by_cases hij : i = j
     · subst hij
@@ -1008,11 +1008,11 @@ theorem jacquet_surjective : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
   obtain ⟨a, hac, hstrict, hshrink⟩ := _root_.GlobalTheory.CompanionTheory.CentralDom.exists_central_strictlyDominant k N h d hd J hJo hJc hI hpos
   obtain ⟨T, hT⟩ := _root_.GlobalTheory.CompanionTheory.HeckeExist.exists_heckeOp k N J hJo hJc V π hπ.1 (leviEmb k (stdBlocks d hd) a)
   have hC2 := _root_.GlobalTheory.CompanionTheory.Lbc.jacquet_hecke_operator_compat k N h d hd J hJo hJc hI hpos V π hπ.1 a hstrict.1 T hT
-  haveI : FiniteDimensional ℂ (fixed π J) := hπ.2 J hJo hJc
+  have : FiniteDimensional ℂ (fixed π J) := hπ.2 J hJo hJc
   set q := twKer π (unipRad k (stdBlocks d hd)) 1 with hq
   let p : fixed π J →ₗ[ℂ] (V ⧸ q) := q.mkQ.comp (fixed π J).subtype
   let S : Submodule ℂ (V ⧸ q) := LinearMap.range p
-  haveI : FiniteDimensional ℂ S := inferInstanceAs (FiniteDimensional ℂ (LinearMap.range p))
+  have : FiniteDimensional ℂ S := inferInstanceAs (FiniteDimensional ℂ (LinearMap.range p))
   let A : Module.End ℂ (V ⧸ q) := jac (stdBlocks d hd) π a
   have hAinj : Function.Injective A := rep_injective _ a
   have hAS : ∀ x ∈ S, A x ∈ S := by
@@ -1239,9 +1239,9 @@ namespace GlobalTheory.CompanionTheory.ExpandN
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem nhdsNE_zero_neBot : (𝓝[≠] (0 : k)).NeBot := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -1312,7 +1312,7 @@ theorem exists_pow_conj_mem_KN : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
   have h1O : (1 : Matrix (Fin N) (Fin N) k) ∈ O := by
     simpa using (memJ 1).1 J.one_mem
   set X : Matrix (Fin N) (Fin N) k := (n : Matrix (Fin N) (Fin N) k) - 1 with hX
-  haveI := nhdsNE_zero_neBot (k := k)
+  have := nhdsNE_zero_neBot (k := k)
   have hcont : Continuous fun c : k => (1 : Matrix (Fin N) (Fin N) k) + c • X :=
     continuous_const.add (continuous_id.smul continuous_const)
   have hev : ∀ᶠ c in 𝓝[≠] (0 : k), (1 : Matrix (Fin N) (Fin N) k) + c • X ∈ O := by
@@ -1560,7 +1560,7 @@ theorem finiteDimensional_fixed_jac :
   obtain ⟨hopen, hcompact, hfact⟩ := h0 n m n (fun _ : Fin n => 1) hd hm
   obtain ⟨-, hsurj, -⟩ := h3 n n (fun _ : Fin n => 1) hd (Zls.Km k n m) hopen hcompact hfact
     (fun _ => Nat.one_pos) V π hπ
-  haveI : FiniteDimensional ℂ ↥(fixed π (Zls.Km k n m)) := hπ.2 _ hopen hcompact
+  have : FiniteDimensional ℂ ↥(fixed π (Zls.Km k n m)) := hπ.2 _ hopen hcompact
   let f : ↥(fixed π (Zls.Km k n m)) →ₗ[ℂ]
       Jacquet π (unipRad k (stdBlocks (fun _ : Fin n => 1) hd)) :=
     (Submodule.mkQ _).comp (Submodule.subtype _)
@@ -1632,7 +1632,7 @@ theorem exists_mem_Km {N m : ℕ} (hm : 1 ≤ m) {M : Matrix (Fin N) (Fin N) k}
     ∃ g ∈ Zls.Km k N m, g.val = M := by
   have hlt : valuation k (((Zls.unifU k : kˣ) : k) ^ m) < 1 := by
     rw [map_pow]
-    exact pow_lt_one₀ zero_le' (val_unif_lt_one k) (by omega)
+    exact pow_lt_one₀ zero_le (val_unif_lt_one k) (by omega)
   obtain ⟨g, -, hg⟩ := GlobalTheory.StepData.exists_mem_KOne (k := k) (n := Fin N) (M := M)
     fun i j => by
       rw [Matrix.sub_apply]
@@ -1664,14 +1664,14 @@ theorem exists_mul_mem_parab {N m : ℕ} (hm : 1 ≤ m) (e : (Σ a, μ a) ≃ Fi
     exact this
   have h1 : ∀ i j, blk e i ≤ blk e j → c.val i j = (1 : Matrix (Fin N) (Fin N) k) i j := fun i j h => by
     have := key i j
-    simp only [if_neg h.not_gt] at this
+    simp only [ite_eq_right h.not_gt] at this
     rwa [← Matrix.mul_apply, Matrix.one_mul] at this
   refine ⟨c, ⟨hc, (mem_unipRadLower k).2 ⟨(mem_parabLower_iff k).2 fun a b i j h => ?_, fun a i j => ?_⟩⟩,
     mem_parab_iff.2 fun a b i j h => ?_⟩
   · rw [h1 _ _ (by simpa using h.le), one_ne e h.ne]
   · rw [h1 _ _ (by simp), one_same]
   · have := key (e ⟨a, i⟩) (e ⟨b, j⟩)
-    simp only [blk_apply, if_pos h] at this
+    simp only [blk_apply, ite_eq_left h] at this
     rw [Units.val_mul, Matrix.mul_apply, this, one_ne e h.ne']
 
 theorem leviEmb_leviProj_mem_Km {N m : ℕ} (hm : 1 ≤ m) (e : (Σ a, μ a) ≃ Fin N) (p : parab k e)
@@ -1813,7 +1813,7 @@ theorem embedding_of_exponent : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   have hfd : ∀ m, FiniteDimensional ℂ ↥(⨅ u : PositivityTheory.Lbc.KM k n (Zls.Km k n (m + 1)) (fun _ : Fin n => 1) hd1,
       LinearMap.ker (jac (stdBlocks (fun _ : Fin n => 1) hd1) π (u : Levi k (fun _ : Fin n => Fin 1)) - 1)) := by
     intro m
-    haveI := _root_.GlobalTheory.CompanionTheory.Jacquet.finiteDimensional_fixed_jac (k := k) n hd1 π ha h0 h3 (m + 1) (by omega)
+    have := _root_.GlobalTheory.CompanionTheory.Jacquet.finiteDimensional_fixed_jac (k := k) n hd1 π ha h0 h3 (m + 1) (by omega)
     refine Submodule.finiteDimensional_of_le (S₂ := fixed (jac (stdBlocks (fun _ : Fin n => 1) hd1) π)
       (PositivityTheory.Lbc.KM k n (Zls.Km k n (m + 1)) (fun _ : Fin n => 1) hd1)) ?_
     intro w hw u

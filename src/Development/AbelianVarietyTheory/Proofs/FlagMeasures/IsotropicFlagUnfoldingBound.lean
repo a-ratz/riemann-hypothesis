@@ -1136,7 +1136,7 @@ theorem prod_formula : ∀ (ι : Type) [Fintype ι] (G : ι → Type) [∀ i, Gr
           (fun i m' => δ i m' * ∫⁻ k, (s i).indicator 1 (u i * m' * k) ∂(μK i)) (fun i => hA i (u i))
       simp_rw [hM]
       exact GlobalTheory.SnMass.Push.lintegral_fintype_prod _ hB
-    simp only [Measure.smul_apply, smul_eq_mul]
+    simp only [smul_apply, smul_eq_mul]
     rw [hbox, ← Finset.prod_mul_distrib, Finset.prod_congr rfl fun i _ => (hX i).symm,
       Finset.prod_mul_distrib, ← mul_assoc, ENNReal.inv_mul_cancel hC0' hCt', one_mul]
   rw [hpi, lintegral_smul_measure, lintegral_smul_measure, smul_eq_mul, smul_eq_mul, ← mul_assoc,
@@ -1486,7 +1486,7 @@ theorem bound : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf) (a : �
   choose μN hσN hμN using fun v => (hex v).1
   choose μM hσM hμM using fun v => (hex v).2.1
   choose μK hK0 hK1 hKl using fun v => (hex v).2.2
-  haveI : ∀ v, IsProbabilityMeasure (μK v) := fun v => ⟨hK1 v⟩
+  have : ∀ v, IsProbabilityMeasure (μK v) := fun v => ⟨hK1 v⟩
   have hgN := fun v => _root_.GlobalTheory.FlagMeas.UnipRad.flagN_subgroup_closed_keeps I.n (I.ε v) a j _ (hiso v)
   have hgM := fun v => _root_.GlobalTheory.FlagLeviGroup.levi_compact_subgroups I.n (I.ε v) a (flagAt I S v)
   choose N hN using fun v => (hgN v).1
@@ -1498,8 +1498,8 @@ theorem bound : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf) (a : �
     simp only [Subgroup.mem_pi, Set.mem_univ, true_imp_iff, ← hM, SetLike.mem_coe]
   have mK : ∀ x : I.Ginf, x ∈ Subgroup.pi Set.univ K ↔ ∀ v, x v ∈ maxK (I.ε v) := fun x => by
     simp only [Subgroup.mem_pi, Set.mem_univ, true_imp_iff, ← hK, SetLike.mem_coe]
-  haveI : ∀ v, PolishSpace (Formalism.REAL.UJ (I.ε v)) := fun v => by
-    haveI : PolishSpace (Matrix (Fin I.n) (Fin I.n) ℂ) := inferInstanceAs (PolishSpace (Fin I.n → Fin I.n → ℂ))
+  have : ∀ v, PolishSpace (Formalism.REAL.UJ (I.ε v)) := fun v => by
+    have : PolishSpace (Matrix (Fin I.n) (Fin I.n) ℂ) := inferInstanceAs (PolishSpace (Fin I.n → Fin I.n → ℂ))
     exact (Formalism.REAL.isClosedEmbeddingMatrix I.n (I.ε v)).1.polishSpace
   have hiw := fun v => _root_.GlobalTheory.RealIwasawa.iwasawa I.n (I.ε v) a j _ (hiso v)
   have hdec : ∀ g : I.Ginf, ∃ u ∈ Subgroup.pi Set.univ N, ∃ m ∈ Subgroup.pi Set.univ M,
@@ -1598,7 +1598,7 @@ theorem bound : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf) (a : �
     (fun m ⟨h1, g, hg, u, hu, h2⟩ => ⟨(mM _).2 h1, g, hg, u, (mN _).2 hu, h2⟩)
     (fun x ⟨γ, h1, h2, h3, h4⟩ => (mN _).2 h4)
     (fun γ hγ g hg => by
-      rw [Set.mem_setOf_eq, _root_.GlobalTheory.FlagSizeInv.sizesAt_mul I xf a j S hsat γ hγ g]
+      rw [Set.mem_ofPred_eq, _root_.GlobalTheory.FlagSizeInv.sizesAt_mul I xf a j S hsat γ hγ g]
       exact hg)
     (fun u hu m hm k hk h => by
       rw [Set.mem_preimage, hs u hu m hm k hk]
@@ -1647,7 +1647,7 @@ theorem tsum_pi_prod_le {ι : Type} [Fintype ι] {α : ι → Type} (f : ∀ i, 
         refine Finset.sum_le_sum_of_subset fun t ht => ?_
         exact Fintype.mem_piFinset.2 fun i => Finset.mem_image_of_mem _ ht
     _ = ∏ i, ∑ x ∈ s.image (fun t => t i), f i x := (Finset.prod_univ_sum _ _).symm
-    _ ≤ _ := Finset.prod_le_prod' fun i _ => ENNReal.sum_le_tsum _
+    _ ≤ _ := prod_le_prod fun i _ => ENNReal.sum_le_tsum _
 
 abbrev latRel (E : Type) [Field E] [NumberField E] (j : ℕ) :
     {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ} →

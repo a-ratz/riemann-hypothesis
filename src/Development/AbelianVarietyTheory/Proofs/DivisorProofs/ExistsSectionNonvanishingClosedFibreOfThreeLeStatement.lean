@@ -623,7 +623,7 @@ theorem _root_.GlobalTheory.Mum.exists_secB_zero_mem_basicOpen : ∀ (R : Type) 
       D.toPre.P.A.hom x = closedPoint R →
       ∃ (σ : D.toPre.SecB k 0) (j : Fin 4 → D.toPre.P.L.ι), x ∈ D.toPre.P.A.left.basicOpen (σ.f j) := by
   intro R _ _ _ hB D k hk x hx
-  haveI : IsNoetherianRing R := hB.1.1
+  have : IsNoetherianRing R := hB.1.1
   have hL : Laws := GlobalTheory.abelianSchemeLaws_all.1
   have hTW : DVR.TwistBCSpanStatement := DVR.twistBCSpan_of GlobalTheory.twistBaseChange
   let P := D.toPre.P
@@ -761,7 +761,7 @@ theorem thick_zero_apply (R : Type) [CommRing R] [IsLocalRing R]
   show Ideal.comap _ z.asIdeal = maximalIdeal R
   symm
   apply (IsLocalRing.maximalIdeal.isMaximal R).eq_of_le (by
-    haveI := z.isPrime
+    have := z.isPrime
     exact Ideal.IsPrime.ne_top inferInstance)
   intro a ha
   show _ ∈ z.asIdeal

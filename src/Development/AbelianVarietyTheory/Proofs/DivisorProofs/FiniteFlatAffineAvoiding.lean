@@ -68,44 +68,44 @@ theorem exists_basicOpen_free_avoiding_finite : ∀ {X Y : Scheme.{0}} (f : Y �
   refine ⟨X.basicOpen a, hxa, X.basicOpen_le a, fun y hy hya => (haO hya).2 hy, hV.basicOpen a,
     ?_, ?_⟩
   · rw [Scheme.preimage_basicOpen]; exact hV'.basicOpen _
-  letI : Algebra Γ(X, V) Γ(Y, f ⁻¹ᵁ V) := (f.app V).hom.toAlgebra
+  let : Algebra Γ(X, V) Γ(Y, f ⁻¹ᵁ V) := (f.app V).hom.toAlgebra
   obtain ⟨hF, hFin, hr⟩ := hfree
-  letI : Algebra Γ(X, X.basicOpen a) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
+  let : Algebra Γ(X, X.basicOpen a) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
     (f.app (X.basicOpen a)).hom.toAlgebra
   let iX : X.basicOpen a ⟶ V := homOfLE (X.basicOpen_le a)
   let iY : f ⁻¹ᵁ X.basicOpen a ⟶ f ⁻¹ᵁ V := homOfLE (fun y hy => X.basicOpen_le a hy)
-  letI : Algebra Γ(X, V) Γ(X, X.basicOpen a) := (X.presheaf.map iX.op).hom.toAlgebra
-  letI : Algebra Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a) := (Y.presheaf.map iY.op).hom.toAlgebra
-  letI : Algebra Γ(X, V) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
+  let : Algebra Γ(X, V) Γ(X, X.basicOpen a) := (X.presheaf.map iX.op).hom.toAlgebra
+  let : Algebra Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a) := (Y.presheaf.map iY.op).hom.toAlgebra
+  let : Algebra Γ(X, V) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
     ((algebraMap Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a)).comp
       (algebraMap Γ(X, V) Γ(Y, f ⁻¹ᵁ V))).toAlgebra
-  haveI : IsScalarTower Γ(X, V) Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
+  have : IsScalarTower Γ(X, V) Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hcomm : (algebraMap Γ(X, X.basicOpen a) Γ(Y, f ⁻¹ᵁ X.basicOpen a)).comp
       (algebraMap Γ(X, V) Γ(X, X.basicOpen a)) =
       (algebraMap Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a)).comp
         (algebraMap Γ(X, V) Γ(Y, f ⁻¹ᵁ V)) :=
     congrArg CommRingCat.Hom.hom (f.naturality iX.op)
-  haveI : IsScalarTower Γ(X, V) Γ(X, X.basicOpen a) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
+  have : IsScalarTower Γ(X, V) Γ(X, X.basicOpen a) Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
     IsScalarTower.of_algebraMap_eq' hcomm.symm
-  haveI : IsLocalization.Away a Γ(X, X.basicOpen a) := hV.isLocalization_basicOpen a
-  haveI : IsLocalization.Away (algebraMap Γ(X, V) Γ(Y, f ⁻¹ᵁ V) a)
+  have : IsLocalization.Away a Γ(X, X.basicOpen a) := hV.isLocalization_basicOpen a
+  have : IsLocalization.Away (algebraMap Γ(X, V) Γ(Y, f ⁻¹ᵁ V) a)
       Γ(Y, f ⁻¹ᵁ X.basicOpen a) :=
     hV'.isLocalization_of_eq_basicOpen _ iY (Scheme.preimage_basicOpen f a)
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid Γ(Y, f ⁻¹ᵁ V) (Submonoid.powers a))
+  have : IsLocalization (Algebra.algebraMapSubmonoid Γ(Y, f ⁻¹ᵁ V) (Submonoid.powers a))
       Γ(Y, f ⁻¹ᵁ X.basicOpen a) := by
     rw [Algebra.algebraMapSubmonoid_powers]; infer_instance
-  haveI : IsLocalizedModule (Submonoid.powers a)
+  have : IsLocalizedModule (Submonoid.powers a)
       (IsScalarTower.toAlgHom Γ(X, V) Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a)).toLinearMap :=
     isLocalizedModule_iff_isLocalization.mpr this
   have hbc : IsBaseChange Γ(X, X.basicOpen a)
       (IsScalarTower.toAlgHom Γ(X, V) Γ(Y, f ⁻¹ᵁ V) Γ(Y, f ⁻¹ᵁ X.basicOpen a)).toLinearMap :=
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers a) Γ(X, X.basicOpen a) _).mp
       inferInstance
-  haveI : Nonempty V := ⟨⟨x, hx⟩⟩
-  haveI : Nonempty (X.basicOpen a) := ⟨⟨x, hxa⟩⟩
-  haveI : Nontrivial Γ(X, V) := Scheme.component_nontrivial X V
-  haveI : Nontrivial Γ(X, X.basicOpen a) := Scheme.component_nontrivial X _
+  have : Nonempty V := ⟨⟨x, hx⟩⟩
+  have : Nonempty (X.basicOpen a) := ⟨⟨x, hxa⟩⟩
+  have : Nontrivial Γ(X, V) := Scheme.component_nontrivial X V
+  have : Nontrivial Γ(X, X.basicOpen a) := Scheme.component_nontrivial X _
   let b := Module.Free.chooseBasis Γ(X, V) Γ(Y, f ⁻¹ᵁ V)
   let b' := hbc.basis b
   refine ⟨Module.Free.of_basis b', Module.Finite.of_basis b', ?_⟩

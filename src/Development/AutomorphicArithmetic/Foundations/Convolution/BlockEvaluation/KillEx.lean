@@ -169,7 +169,7 @@ theorem UpperTheory.ConvolutionTheory.FX.killing0 :
     ∀ (ι κ B : Type) [Fintype ι] [DecidableEq ι] [Fintype B] (W : Subgroup (Equiv.Perm ι)) (b : B → Fam ι κ) (Λ₀ : ι → ℂ) (h₀ : κ → ℂ), (∀ w ∈ W, ∀ i, ¬ (b i).Mem (Λ₀ ∘ w) h₀) → ∃ F : KF ι κ, (∀ w ∈ W, map (ren (w : ι → ι)) F = F) ∧ (∀ i, (b i).sub F = 0) ∧ evK Λ₀ h₀ F ≠ 0 := by
   intro ι κ B _ _ _ W b Λ₀ h₀ hW
   classical
-  haveI : Fintype W := Fintype.ofFinite W
+  have : Fintype W := Fintype.ofFinite W
   have hG : ∀ i, ∃ G : KF ι κ, (b i).sub G = 0 ∧ ∀ w : W, evK (Λ₀ ∘ (w : Equiv.Perm ι)) h₀ G ≠ 0 := by
     intro i
     by_contra hc
@@ -438,7 +438,7 @@ private theorem ke_bc {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     rw [Multiset.map_map]
     congr 1
     funext i
-    rw [Function.comp_apply, mul_pow, ← Complex.exp_nat_mul]
+    rw [Function.comp_apply, mul_pow, ← Complex.exp_natCast_mul]
     push_cast
     rw [mul_assoc]
   constructor

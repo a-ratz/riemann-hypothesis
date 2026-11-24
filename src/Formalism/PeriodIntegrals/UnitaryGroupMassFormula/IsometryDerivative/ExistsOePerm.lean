@@ -100,7 +100,7 @@ theorem cauchyBinet {R : Type*} [CommRing R] {h n : ℕ}
       have h1 : Set.range (fun i => I (σ i)) = Set.range I := σ.surjective.range_comp I
       have h2 : Set.range (fun i => I' (σ' i)) = Set.range I' := σ'.surjective.range_comp I'
       rw [← h1, ← h2, e']
-    have hI : I = I' := OrderEmbedding.range_inj.mp hr
+    have hI : I = I' := OrderEmbedding.range_inj_of_wellFoundedLT.mp hr
     subst hI
     have : σ = σ' := by
       ext i

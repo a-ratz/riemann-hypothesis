@@ -401,14 +401,14 @@ theorem inv_mem_ZP {p m : ℕ} (k : ℕ) (hm : m.Coprime p) : (m : ℂ)⁻¹ ∈
 open CycBase in
 theorem isDedekindDomain_ZP {n p : ℕ} (e : ℕ) (hn : n.Prime) (hp : p.Prime) : IsDedekindDomain (ZP p (n ^ e)) := by
   open GlobalTheory.ZM.CycBase in
-  haveI := Fact.mk hn
+  have := Fact.mk hn
   have hk : n ^ e ≠ 0 := NeZero.ne _
-  haveI : IsCyclotomicExtension {n ^ e} ℚ (CF (n ^ e)) := cyc
-  haveI : NumberField (CF (n ^ e)) := IsCyclotomicExtension.numberField {n ^ e} ℚ _
+  have : IsCyclotomicExtension {n ^ e} ℚ (CF (n ^ e)) := cyc
+  have : NumberField (CF (n ^ e)) := IsCyclotomicExtension.numberField {n ^ e} ℚ _
   let io : 𝓞 (CF (n ^ e)) →+* ℂ := (CF (n ^ e)).val.toRingHom.comp (algebraMap _ (CF (n ^ e)))
   have hio : Function.Injective io :=
     Subtype.val_injective.comp (RingOfIntegers.coe_injective (K := CF (n ^ e)))
-  letI : Algebra (𝓞 (CF (n ^ e))) (ZP p (n ^ e)) := (io.codRestrict _ (mem_ZP p n e hn)).toAlgebra
+  let : Algebra (𝓞 (CF (n ^ e))) (ZP p (n ^ e)) := (io.codRestrict _ (mem_ZP p n e hn)).toAlgebra
   have : IsLocalization (coprimeNat p (𝓞 (CF (n ^ e)))) (ZP p (n ^ e)) := by
     refine isLocalization_of_le_closure hp _ _ (fun x y h => hio (congrArg (fun z : ZP p (n ^ e) => (z : ℂ)) h))
       (fun m hm => inv_mem_ZP _ hm) (Subring.closure_mono ?_)
@@ -423,7 +423,7 @@ theorem isDedekindDomain_RZ_of_dvd {E : Type} [Field E] [NumberField E] [IsCMFie
   exact GlobalTheory.BaseRing.isDedekindDomain_RZ l hS h
 
 theorem flat_inclusion {S T : Subring ℂ} (h : S ≤ T) [IsDedekindDomain S] : Flat (spMap (Subring.inclusion h)) := by
-  letI : Algebra S T := (Subring.inclusion h).toAlgebra
+  let : Algebra S T := (Subring.inclusion h).toAlgebra
   have htf : Module.IsTorsionFree S T := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]
     exact fun x y h => Subtype.ext (congrArg (fun z : T => (z : ℂ)) h)
@@ -433,7 +433,7 @@ theorem noetherian_preimmersion {p : ℕ} (hp : p.Prime) {S T : Subring ℂ} (h 
     (hinv : ∀ m : ℕ, m.Coprime p → (m : ℂ)⁻¹ ∈ T)
     (hT : T ≤ Subring.closure ((S : Set ℂ) ∪ {x | ∃ n : ℕ, n.Coprime p ∧ x = (n : ℂ)⁻¹})) :
     IsNoetherianRing T ∧ IsPreimmersion (spMap (Subring.inclusion h)) := by
-  letI : Algebra S T := (Subring.inclusion h).toAlgebra
+  let : Algebra S T := (Subring.inclusion h).toAlgebra
   have hL : IsLocalization (coprimeNat p S) T := by
     refine isLocalization_of_le_closure hp _ _ (fun x y h => Subtype.ext (congrArg (fun z : T => (z : ℂ)) h))
       hinv (hT.trans (Subring.closure_mono ?_))
@@ -1544,7 +1544,7 @@ theorem isThetaPt_of_normalised (hG : GlobalFnsSt) {R : Type} [CommRing R] [IsDo
     rw [← Category.assoc, Scheme.toIso_inv_ι, Category.id_comp])
   have hh : r ≫ overResι (T := T) ⊤ = 𝟙 T := Over.OverMorphism.ext T.left.toIso_inv_ι
   have hi : overResι (T := T) ⊤ ≫ r = 𝟙 _ := by
-    haveI : Mono (overResι (T := T) ⊤) := Over.mono_of_mono_left _ (hk := inferInstanceAs (Mono (⊤ : T.left.Opens).ι))
+    have : Mono (overResι (T := T) ⊤) := Over.mono_of_mono_left _ (hk := inferInstanceAs (Mono (⊤ : T.left.Opens).ι))
     rw [← cancel_mono (overResι (T := T) ⊤), Category.assoc, hh, Category.comp_id, Category.id_comp]
   refine ⟨hm, ?_, fun _ => ⟨⊤, trivial, ThetaCoord.isThetaPtOver_pull A H _ r hi⟩⟩
   have := (IsUnit.mk0 _ hu).map (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom
@@ -1586,8 +1586,8 @@ theorem subsingleton_characters (h₁ : Out.Laws) (h₂ : Out.Laws2) (hT : Globa
   have hd : n ^ (i + 1) / n = n ^ i := by rw [pow_succ, Nat.mul_div_cancel _ (by omega)]
   have hm : Odd (n ^ (i + 1)) := ho.pow
   have hM : 1 ≤ (n ^ (i + 1)) ^ 2 := pow_pos hm.pos 2
-  haveI : NeZero ((n ^ (i + 1)) ^ 2) := ⟨by omega⟩
-  haveI := t.ab.comm
+  have : NeZero ((n ^ (i + 1)) ^ 2) := ⟨by omega⟩
+  have := t.ab.comm
   obtain ⟨ua₁, ua₂⟩ := GlobalTheory.T.theta_constant_valuations_units_every_coset hL k₁ k₂ k₃ k₄ W hc ϖ hϖ D Q hQ F ν hν t.pol G hG U w₀ ρ hw th ϑ hE hP _ hm hu
   obtain ⟨f, f₁, f₂, -, f₄, -⟩ := hT W hc t.pol G D U F _ hM
   let z : Out.TFK (R := W) F ⟶ Out.baseOver (Sp (FractionRing W)) :=
@@ -1860,15 +1860,15 @@ theorem semistablePol_of_padic : GlobalTheory.Published.SemistableReductionSt �
   obtain ⟨K', h, hloc, hK', G, gG, hG, hE, φ, hφ⟩ :=
     GlobalTheory.exists_semiAbelian_model_split_specialFibre H p K₀ P
   obtain ⟨hdvr, hfr, hc, f, hf, hlf, hfx⟩ := GlobalTheory.completeDVR_eq_integralClosure_padicInt.2 p K₀ K' h hK'
-  letI aV : Algebra V (integralClosure ℤ_[p] K') := (f.comp e₀.toRingHom).toAlgebra
-  letI aK : Algebra K K' := ((IntermediateField.inclusion h).toRingHom.comp e.toRingHom).toAlgebra
+  let aV : Algebra V (integralClosure ℤ_[p] K') := (f.comp e₀.toRingHom).toAlgebra
+  let aK : Algebra K K' := ((IntermediateField.inclusion h).toRingHom.comp e.toRingHom).toAlgebra
   refine ⟨integralClosure ℤ_[p] K', K', inferInstance, inferInstance, hdvr, inferInstance, aV, inferInstance, aK, hfr,
     ?_, ?_, ?_, hc, G, gG, ?_, hG, hE⟩
   · ext1 x
     change ((f (e₀ x) : integralClosure ℤ_[p] K') : K') = IntermediateField.inclusion h (e (algebraMap V K x))
     rw [hfx, he]
   · exact RingHom.Finite.comp hf (RingHom.Finite.of_surjective _ e₀.surjective)
-  · haveI : IsLocalHom e₀.toRingHom := isLocalHom_of_leftInverse e₀.symm.toRingHom e₀.left_inv
+  · have : IsLocalHom e₀.toRingHom := isLocalHom_of_leftInverse e₀.symm.toRingHom e₀.left_inv
     exact RingHom.isLocalHom_comp f e₀.toRingHom
   · obtain ⟨i, hi, -⟩ := grpPullback_iso
       ((hφ.comp hψ).congr (GlobalTheory.SplitReduction.spMap_comp _ _) rfl)

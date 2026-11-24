@@ -168,9 +168,9 @@ theorem UpperTheory.V.Loc.existsUnique_unramified_cocycle_frobenius_value :
     ∀ {v l : ℕ} [Fact v.Prime] [Fact l.Prime] {A : Type} [CommRing A] [Algebra ℚ_[l] A] {V : Type} [AddCommGroup V] [Module A V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] A V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul A V] (ρ : Representation A (GQ v) V), ContAction ρ → (∀ g ∈ Iq v, ρ g = 1) → ∀ σ : GQ v, UpperTheory.V.Loc.IsFrob σ → ∀ x : V, ∃! c : GQ v → V, c ∈ Z1 ρ ∧ (∀ g ∈ Iq v, c g = 0) ∧ c σ = x := by
   intro v l _ _ A _ _ V _ _ _ _ _ _ _ _ _ ρ hc hI σ hσ x
   obtain ⟨hT2, hTD, L, hLc, hxL, hLs⟩ := exists_lattice (l := l) ρ hc x
-  haveI : IsTopologicalGroup (SD ρ) := topGroup_SD ρ hc
-  haveI : T2Space (SD ρ) := inferInstanceAs (T2Space (V × GQ v))
-  haveI : TotallyDisconnectedSpace (SD ρ) := inferInstanceAs (TotallyDisconnectedSpace (V × GQ v))
+  have : IsTopologicalGroup (SD ρ) := topGroup_SD ρ hc
+  have : T2Space (SD ρ) := inferInstanceAs (T2Space (V × GQ v))
+  have : TotallyDisconnectedSpace (SD ρ) := inferInstanceAs (TotallyDisconnectedSpace (V × GQ v))
   have hS : IsCompact ((SDsub ρ L hLs : Subgroup (SD ρ)) : Set (SD ρ)) := by
     have h0 : IsCompact ((L : Set V) ×ˢ (Set.univ : Set (GQ v))) := hLc.prod isCompact_univ
     have e0 : ((SDsub ρ L hLs : Subgroup (SD ρ)) : Set (SD ρ)) =
@@ -179,9 +179,9 @@ theorem UpperTheory.V.Loc.existsUnique_unramified_cocycle_frobenius_value :
       exact ⟨fun h => ⟨h, trivial⟩, fun h => h.1⟩
     rw [e0]
     exact h0
-  haveI : CompactSpace (SDsub ρ L hLs) := isCompact_iff_compactSpace.1 hS
+  have : CompactSpace (SDsub ρ L hLs) := isCompact_iff_compactSpace.1 hS
   obtain ⟨f, hfc, hf1, hfσ⟩ := frobFree σ hσ (SDsub ρ L hLs) ⟨((x, σ) : V × GQ v), hxL⟩
-  have hfv : Continuous fun g => ((f g : SD ρ)) := continuous_subtype_val.comp hfc
+  have hfv : Continuous fun g => ((f g : SD ρ)) := continuous_subtypeVal.comp hfc
   have hmul : ∀ g h, ((f (g * h) : SD ρ)) = (f g : SD ρ) * (f h : SD ρ) := fun g h => by
     rw [map_mul]
     rfl
@@ -207,10 +207,10 @@ theorem UpperTheory.V.Loc.existsUnique_unramified_cocycle_frobenius_value :
     { carrier := {g | ∀ w, ρ (k g) w = ρ g w}
       one_mem' := fun w => by simp [hk1]
       mul_mem' := fun {a b} ha hb w => by
-        simp only [Set.mem_setOf_eq] at ha hb
+        simp only [Set.mem_ofPred_eq] at ha hb
         rw [hkm, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hb, ha]
       inv_mem' := fun {a} ha w => by
-        simp only [Set.mem_setOf_eq] at ha
+        simp only [Set.mem_ofPred_eq] at ha
         rw [hki]
         calc ρ (k a)⁻¹ w = ρ (k a)⁻¹ (ρ a (ρ a⁻¹ w)) := by rw [happ]
           _ = ρ (k a)⁻¹ (ρ (k a) (ρ a⁻¹ w)) := by rw [ha]

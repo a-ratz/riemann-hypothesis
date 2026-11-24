@@ -81,7 +81,7 @@ theorem cases (g : K ≃ₐ[K⁺] K) : g = 1 ∨ g = IsCMField.complexConj K := 
   have h2 : Nat.card (K ≃ₐ[K⁺] K) = 2 := by
     rw [IsGalois.card_aut_eq_finrank]
     exact Algebra.IsQuadraticExtension.finrank_eq_two _ _
-  haveI : Fintype (K ≃ₐ[K⁺] K) := Fintype.ofFinite _
+  have : Fintype (K ≃ₐ[K⁺] K) := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card] at h2
   have h3 : ({1, IsCMField.complexConj K, g} : Finset (K ≃ₐ[K⁺] K)).card = 3 :=
     Finset.card_eq_three.mpr ⟨1, IsCMField.complexConj K, g,
@@ -181,7 +181,7 @@ def cQ (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) : hostE ζ a b ≃ₐ
 
 theorem galE_cQ (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) :
     galE e ζ a b (cQ hqd h) = cc e := by
-  haveI := isCMField_hostE hqd h
+  have := isCMField_hostE hqd h
   obtain ⟨-, -, hmul, hbij⟩ := hostGalois e q d hqd L ζ a b h
   obtain ⟨σ0, hσ0⟩ := hbij.2 (cc e)
   have hfix := fun x => ((hostReal_at hqd h).2 x).1
@@ -207,7 +207,7 @@ open Eta
 theorem hostEta : HostEta := by
   intro e q d hH L _ _ ζ a b hL
   have hqd : HypOdd q d := hH.toHypOdd
-  haveI hCM : IsCMField (hostE ζ a b) := isCMField_hostE hqd hL
+  have hCM : IsCMField (hostE ζ a b) := isCMField_hostE hqd hL
   obtain ⟨-, -, hmul, hbij⟩ := hostGalois e q d hqd L ζ a b hL
   have hc := galE_cQ hqd hL
   have hunr : ∀ P : Ideal (𝓞 (hostE ζ a b)), P.IsPrime → P ≠ ⊥ →
@@ -224,7 +224,7 @@ theorem hostEta : HostEta := by
       exact_mod_cast hp.out.ne_zero
     exact Ideal.ne_bot_of_liesOver_of_ne_bot hne P
   refine ⟨fun 𝔭 h𝔭 h0 => ?_, ?_, ?_⟩
-  · haveI := h𝔭
+  · have := h𝔭
     exact Eta.split_or_inert (hostE ζ a b) hunr 𝔭 h0
   · intro p _ hp2 hpq hpd P _ _ σ hσ
     have hF := hostFrob_of hostGalois hostGalSpec e q d hqd L ζ a b hL p hp2 hpq hpd P

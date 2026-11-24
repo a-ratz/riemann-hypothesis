@@ -137,7 +137,7 @@ theorem exists_generic_pullback : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : 
       α ≫ ((Over.pullback (jK T.V)).obj T.G).hom = B.hom ≫ spMap fK :=
     ⟨he.1.lift _ _ w, he.1.lift_fst _ _ _, he.1.lift_snd _ _ _⟩
   have gα := he.cancel (gB.congr rfl h₁.symm) h₂
-  haveI := T.U.gen_hom
+  have := T.U.gen_hom
   refine ⟨α ≫ T.U.gen.hom.left, (gα.comp (isGrpPullback_of_iso T.U.gen)).congr (Category.comp_id _) rfl, ?_⟩
   rw [Category.assoc, ← Category.assoc T.U.gen.hom.left, ← Over.comp_left, Iso.hom_inv_id, Over.id_left, Category.id_comp]
   exact h₁
@@ -384,7 +384,7 @@ theorem polAV_of_lam_univ : ∀ (o : Type) [CommRing o] (ζ : o) (g n : ℕ) (F 
   have hB : IsAbelianScheme B := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback F.univ.ab hpb
   have := hB.comm
   have laws : Out.Laws := GlobalTheory.allSixLaws.1
-  haveI : IsProper F.univ.A.hom := F.univ.ab.proper
+  have : IsProper F.univ.A.hom := F.univ.ab.proper
   have hP' : (F.univ.P.pull α₂).IsLB := pull_isLB F.univ.isLB α₂
   have hrefl : LBIso (F.univ.P.pull α₂) (F.univ.P.pull α₂) := (GlobalTheory.CechPic.cls_eq_iff hP' hP').1 rfl
   have hn := GlobalTheory.SiegelPull.nondeg_pull hpb hsq F.univ.isLB hP' hrefl F.princ.2
@@ -710,7 +710,7 @@ theorem val_cubP {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (D : DegPr
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (I : Ideal R) (D : DegData R I)
     (y : D.toPre.X) (r s : R), PsiCoord D.toPre y r → PsiCoord D.toPre (2 • y) s → Associated s (r ^ 4) := by
   intro R _ _ _ I D y r s hr hs
-  haveI : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
+  have : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨J, hJ, hJc⟩ := exists_good_integral ξ D.toPre.P.isLB D.toPre.P.A.hom
   have b1 := (val_mul hJ _ _ _).symm.trans ((val_corr hJ (D.tau_bimult 0 0 y) (𝟙 _)).trans (val_mul hJ _ _ _))
@@ -814,8 +814,8 @@ theorem associated_of_pow {R : Type} [CommRing R] [IsDomain R] [IsIntegrallyClos
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], IsCN R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D D' : DegData R (maximalIdeal R)) (A A' : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (U' : Unif (maximalIdeal R) D' A' G), LBIso (LB.LinComb U'.LG.L (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => 2)) (LB.LinComb U.LG.L (K := Fin 1) (fun _ => 𝟙 G.left) (fun _ => 2)) → ∃ ε : D'.toPre.X ≃+ D.toPre.X, ∀ y r r', PsiCoord D.toPre (ε y) r → PsiCoord D'.toPre y r' → Associated (r ^ 2) (r' ^ 2) := by
   intro R _ _ _ hR G _ _ hsa D D' A A' U U' hL
   have hA := admissibleBase_of_completeNormalLocalCharZero hR
-  haveI : CharZero R := hR.2.2.2
-  haveI : IsIntegrallyClosed R := hR.2.1
+  have : CharZero R := hR.2.2.2
+  have : IsIntegrallyClosed R := hR.2.1
   obtain ⟨xe, hxe⟩ := unifPre_characterGroup_iso R _ hA D D' A A' G hsa U.toUnifPre U'.toUnifPre
   obtain ⟨Φ, w, wL, hw, hwL, hm, hp⟩ := GlobalTheory.T.polarisedAbelianPart_iso_of_bundleSquare_iso R hR G hsa D D' A A' U U' hL
   have hc := GlobalTheory.T.degenerationCharMap_eq_on_even_characters R hR G hsa D D' A A' U U' hL Φ w hw hm (fun e => (hp e).1) xe hxe
@@ -1009,7 +1009,7 @@ theorem traitUniq : TraitUniqSt := by
     · intro Ω _ _ q
       obtain ⟨E⟩ := h.fibres Ω (q ≫ f)
       exact ⟨torusExtOfIso (pullCompIso q f G) E⟩
-  haveI := hdvr
+  have := hdvr
   have hWC := isCN_of_base hW
   have hs₁ : IsSemiAbelian ((Over.pullback (spMap f)).obj T.G) := semiPull (spMap f) T.G T.semi
   have hs₂ : IsSemiAbelian ((Over.pullback (spMap f')).obj T'.G) := semiPull (spMap f') T'.G T'.semi

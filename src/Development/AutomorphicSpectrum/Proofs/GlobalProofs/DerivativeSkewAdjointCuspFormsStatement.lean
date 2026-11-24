@@ -86,7 +86,7 @@ theorem setIntegral_der_mul_conj {μ : Measure (GA D V)} [μ.IsHaarMeasure] {�
   obtain ⟨-, -, -, _, _, -, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   have hH : μ.IsHaarMeasure := inferInstance
   have hfin : μ 𝓕 ≠ ⊤ := (GlobalTheory.Mem.QuotVol.quot_volume_ne_zero_ne_top D V μ 𝓕 ⟨hH, h𝓕⟩).2
-  haveI := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ hH).1
+  have := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ hH).1
   obtain ⟨c0, B0, b0⟩ := cont_bdd hθ φ
   obtain ⟨c1, B1, b1⟩ := cont_bdd hθ ψ
   obtain ⟨c2, B2, b2⟩ := cont_bdd hθ (der hθ τ hX φ)

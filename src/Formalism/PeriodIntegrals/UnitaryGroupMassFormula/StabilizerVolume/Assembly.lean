@@ -393,7 +393,7 @@ theorem posTest_of (hN : TestNear) : PosTest := by
   have hs : ∀ y, (∃ g : HA (AF F) σ J, g • ratTup (AF F) X0 = y) →
       s y • ratTup (AF F) X0 = y := by
     intro y h
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec
   have hf : Measurable (U.indicator (1 : HA (AF F) σ J → ENNReal)) :=
     measurable_one.indicator hUo.measurableSet
@@ -688,7 +688,7 @@ theorem continuous_pairHerm_left (σ : E →ₐ[F] E) (n : ℕ) (T : HermR R σ 
     (∑ a, ∑ b, (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) a b * (T : Matrix (Fin n) (Fin n) _) b a)
   refine continuous_const.mul ((continuous_trace_tens R).comp ?_)
   refine continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun b _ => ?_
-  exact (Continuous.matrix_elem continuous_subtype_val a b).mul continuous_const
+  exact (Continuous.matrix_elem continuous_subtypeVal a b).mul continuous_const
 
 end Top
 
@@ -1092,11 +1092,11 @@ theorem lint_fibre {Γ H : Subgroup G} [Countable Γ] (μ' : Measure H) [μ'.IsM
   have : Countable ((Γ ⊓ H).subgroupOf H) := countable_subgroupOf
   have : MeasurableSMul ((Γ ⊓ H).subgroupOf H) H :=
     { measurable_const_smul := fun c => measurable_const_mul (c : H)
-      measurable_smul_const := fun x => (measurable_mul_const x).comp measurable_subtype_coe }
+      measurable_smul_const := fun x => (measurable_mul_const x).comp measurable_subtypeVal }
   have : SMulInvariantMeasure ((Γ ⊓ H).subgroupOf H) H μ' :=
     ⟨fun c t _ => measure_preimage_mul μ' (c : H) t⟩
   have hg : Measurable fun k : H => s * (k : G)⁻¹ :=
-    (measurable_const_mul s).comp (measurable_inv.comp measurable_subtype_coe)
+    (measurable_const_mul s).comp (measurable_inv.comp measurable_subtypeVal)
   set F : H → ℝ≥0∞ := fun k =>
     cfun Γ A y0 (s * (k : G)⁻¹) * ρ ((s * (k : G)⁻¹)⁻¹) with hF
   have hFm : Measurable F := by
@@ -1175,7 +1175,7 @@ theorem unfold_abs {Γ H : Subgroup G} [Countable Γ]
     ∫⁻ h in 𝓕, ∑' x : orbS Γ y0, Φ (h⁻¹ • (x : Y)) ∂μ = μ' 𝓕' * ∫⁻ y, Φ y ∂ν := by
   classical
 
-  haveI hcnt : Countable (orbS Γ y0) := by
+  have hcnt : Countable (orbS Γ y0) := by
     have hsub : orbS Γ y0 ⊆ Set.range (fun γ : Γ => (γ : G) • y0) := by
       intro x hx
       obtain ⟨γ, hγ, rfl⟩ := hx
@@ -1225,7 +1225,7 @@ theorem unfold_abs {Γ H : Subgroup G} [Countable Γ]
       rw [ae_iff]
       refine measure_mono_null ?_ h0
       intro g hg
-      simp only [Set.mem_setOf_eq, Classical.not_imp, not_not] at hg
+      simp only [mem_ofPred_eq, Classical.not_imp, not_not] at hg
       obtain ⟨-, h1, h2⟩ := hg
       constructor
       · rw [Set.mem_smul_set_iff_inv_smul_mem, inv_inv]
@@ -1248,13 +1248,13 @@ theorem unfold_abs {Γ H : Subgroup G} [Countable Γ]
 
   let s : Y → G := fun y => if h : ∃ g : G, g • y0 = y then h.choose else 1
   have hs : ∀ y, (∃ g : G, g • y0 = y) → s y • y0 = y := fun y h => by
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec
   have hsk : ∀ y, (∃ g : G, g • y0 = y) → ∀ k : H, Φ ((s y * (k : G)) • y0) = Φ y := by
     intro y hy k
     rw [mul_smul, (hH k).1 k.2, hs y hy]
   have hsm : ∀ y, Measurable fun k : H => s y * (k : G) :=
-    fun y => (measurable_const_mul _).comp measurable_subtype_coe
+    fun y => (measurable_const_mul _).comp measurable_subtypeVal
   have hyae : ∀ᵐ y ∂ν, ∃ g : G, g • y0 = y := ae_iff.2 hcov
 
   have hmx : ∀ x : orbS Γ y0, Measurable fun h : G => Φ (h⁻¹ • (x : Y)) := by
@@ -1299,7 +1299,7 @@ theorem unfold_abs {Γ H : Subgroup G} [Countable Γ]
     have hρi : ∀ γ ∈ Γ, ∀ g, (Zᶜ.indicator fun _ : G => (1 : ℝ≥0∞)) (γ * g) =
         (Zᶜ.indicator fun _ : G => (1 : ℝ≥0∞)) g := by
       intro γ hγ g
-      simp only [Set.indicator, Set.mem_compl_iff, hZ, Set.mem_setOf_eq, hc0i γ hγ g]
+      simp only [Set.indicator, Set.mem_compl_iff, hZ, mem_ofPred_eq, hc0i γ hγ g]
     have eq1 : ∫⁻ g, cfun Γ F0 y0 g * Φ (g • y0) ∂μ = ∫⁻ g, cfun Γ F0 y0 g *
         (Zᶜ.indicator fun _ : G => (1 : ℝ≥0∞)) g⁻¹ * Φ (g • y0) ∂μ := by
       refine lintegral_congr_ae ?_
@@ -1365,12 +1365,12 @@ theorem unfold_abs {Γ H : Subgroup G} [Countable Γ]
       refine lintegral_congr fun k => ?_
       simp [mul_inv_rev]
     have hbm : Measurable fun k : H => (Z.indicator fun _ : G => (1 : ℝ≥0∞)) ((k : G) * (s y)⁻¹) :=
-      hιm.comp ((measurable_mul_const _).comp measurable_subtype_coe)
+      hιm.comp ((measurable_mul_const _).comp measurable_subtypeVal)
     have hm2 : Measurable fun k : H => cfun Γ F0 y0 (s y * (k : G)) := hcfm.comp (hsm y)
     have hm3 : Measurable fun k : H => (Z.indicator fun _ : G => (1 : ℝ≥0∞)) (s y * (k : G))⁻¹ :=
       (hιm.comp measurable_inv).comp (hsm y)
     have hm4 : Measurable fun k : H => cntN Γ F0 ((k : G) * (s y)⁻¹) :=
-      hc0m.comp ((measurable_mul_const _).comp measurable_subtype_coe)
+      hc0m.comp ((measurable_mul_const _).comp measurable_subtypeVal)
     rw [lintegral_add_left hm2, hfib, lintegral_const_mul _ hm3, hinv]
     calc μ' 𝓕' = ∫⁻ k in 𝓕', 1 ∂μ' := by rw [setLIntegral_one]
       _ ≤ ∫⁻ k in 𝓕', cntN Γ F0 ((k : G) * (s y)⁻¹) +
@@ -1460,22 +1460,22 @@ theorem unfold_of (hW : Witt) (hFT : FinTheta) (hI : InvInv) (hMO : MeasOrb) (hM
     Unfold := by
   intro F E _ _ _ _ _ σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet ψ hψ μ hμ 𝓕 h𝓕 νX hν μ' hμ'H hμ'C
     𝓕' h𝓕' φ hφ0 hadm hθ
-  haveI : MeasurableMul (HA (AF F) σ J) := (hMG F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).1
-  haveI : MeasurableInv (HA (AF F) σ J) := (hMG F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).2
-  haveI : μ.IsHaarMeasure := hμ
-  haveI : μ'.IsHaarMeasure := hμ'H
-  haveI : μ.IsInvInvariant := (hI F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).1 μ hμ
-  haveI : μ'.IsInvInvariant :=
+  have : MeasurableMul (HA (AF F) σ J) := (hMG F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).1
+  have : MeasurableInv (HA (AF F) σ J) := (hMG F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).2
+  have : μ.IsHaarMeasure := hμ
+  have : μ'.IsHaarMeasure := hμ'H
+  have : μ.IsInvInvariant := (hI F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).1 μ hμ
+  have : μ'.IsInvInvariant :=
     (hI F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet).2 ψ hψ μ hμ νX hν μ' hμ'H hμ'C
-  haveI : Countable (HFinIn (AF F) σ J) := um_countable_HFinIn F E σ M J
-  haveI hΓc : Countable (GamA σ J) := um_countable_HFinIn F E σ M J
+  have : Countable (HFinIn (AF F) σ J) := um_countable_HFinIn F E σ M J
+  have hΓc : Countable (GamA σ J) := um_countable_HFinIn F E σ M J
   obtain ⟨e, he⟩ := gram_orbit_equiv σ J X0 (hW F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet)
   have hsub : orbS (GamA σ J) (ratTup (F := F) (AF F) X0) ⊆
       Set.range (fun γ : (GamA σ J) =>
         (γ : HA (AF F) σ J) • ratTup (F := F) (AF F) X0) := by
     rintro x ⟨γ, hγ, e⟩
     exact ⟨⟨γ, hγ⟩, e⟩
-  haveI hcO : Countable (orbS (GamA σ J)
+  have hcO : Countable (orbS (GamA σ J)
       (ratTup (F := F) (AF F) X0)) := ((Set.countable_range _).mono hsub).to_subtype
   have hmφ : Measurable fun g : HA (AF F) σ J => φ (g • ratTup (F := F) (AF F) X0) := by
     have := hMO F E σ hE M J hJ ha hc a ha1 ha2 X0 hT hdet _ hadm
@@ -1598,7 +1598,7 @@ theorem us_invInv [SigmaCompactSpace G] (μ : Measure G) [IsHaarMeasure μ]
   have hc : μ.inv = haarScalarFactor μ.inv μ • μ := um_eq_smul_of_sigmaCompact _ _
   obtain ⟨U, hUo, -, hUi, hpos, hfin⟩ := us_exists_open μ
   have h : μ.inv U = μ U := by rw [Measure.inv_apply, hUi]
-  rw [hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+  rw [hc, smul_apply, ENNReal.smul_def, smul_eq_mul] at h
   have hc1 : haarScalarFactor μ.inv μ = 1 := by
     have : ((haarScalarFactor μ.inv μ : ℝ≥0) : ℝ≥0∞) = 1 := by
       rw [← ENNReal.mul_left_inj hpos.ne' hfin.ne, one_mul]
@@ -1660,7 +1660,7 @@ theorem us_isClosed_stab (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     unfold actTup HA.mat
     refine continuous_pi fun b => Continuous.matrix_mulVec ?_ continuous_const
     exact Units.continuous_val.comp
-      (continuous_subtype_val : Continuous fun g : HR (AF F) σ J => (g : GL (Fin M) (AF F ⊗[F] E)))
+      (continuous_subtypeVal : Continuous fun g : HR (AF F) σ J => (g : GL (Fin M) (AF F ⊗[F] E)))
   have : ((stabT (AF F) σ J X0 : Subgroup (HA (AF F) σ J)) : Set (HA (AF F) σ J)) =
       {g | g • ratTup (F := F) (AF F) X0 = ratTup (F := F) (AF F) X0} := by
     ext g
@@ -1693,7 +1693,7 @@ theorem unimodStab_holds : UnimodStab := by
   have hs : ∀ y, (∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) X0 = y) →
       s y • ratTup (F := F) (AF F) X0 = y := by
     intro y h
-    simp only [s, dif_pos h]
+    simp only [s, dite_eq_left h]
     exact h.choose_spec
   exact us_rightInv_of_compat μ (stabT (AF F) σ J X0).subtype μ' νX s
     (fun f hf => hC.2 f hf s hs)

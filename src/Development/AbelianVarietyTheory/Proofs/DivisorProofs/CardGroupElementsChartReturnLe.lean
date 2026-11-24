@@ -186,9 +186,9 @@ theorem encard_le (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (
   set Q : (Fin r → E) → ℝ := fun v => ∑ τ, X.maj x τ (Data.emb τ.1 v) with hQ
   set S : Set (Fin r → E) := {v | v ∈ X.L' ∧ Q v ≤ R} with hS
   set B : ℝ := (1 + 2 * Real.sqrt (R / ε)) ^ (2 * fdeg E * r) with hB
-  letI core : InnerProductSpace.Core ℝ (MajV X.toData x) := majCore X.toData hx
-  letI : NormedAddCommGroup (MajV X.toData x) := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℝ)
-  letI : InnerProductSpace ℝ (MajV X.toData x) := InnerProductSpace.ofCore core.toCore
+  let core : InnerProductSpace.Core ℝ (MajV X.toData x) := majCore X.toData hx
+  let : NormedAddCommGroup (MajV X.toData x) := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℝ)
+  let : InnerProductSpace ℝ (MajV X.toData x) := InnerProductSpace.ofCore core.toCore
   let g : (Fin r → E) → MajV X.toData x := fun v τ => Data.emb τ.1 v
   have hg : ∀ v, ‖g v‖ = Real.sqrt (Q v) := by
     intro v
@@ -278,11 +278,11 @@ theorem blk_det_ne (X : Data E r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ
     (blk X b τ).det ≠ 0 := by
   have hup : (mat b τ).BlockTriangular id := fun a c h => (hb τ).2 a c h
   have hd := (hb τ).1
-  rw [Matrix.det_of_upperTriangular hup] at hd
+  rw [det_of_isUpperTriangular hup] at hd
   have hup' : (blk X b τ).BlockTriangular id := fun a c h => by
     simp only [blk, Matrix.of_apply]
     exact (hb τ).2 _ _ (by rw [Fin.lt_def]; simp only [Fin.val_castLE]; exact h)
-  rw [Matrix.det_of_upperTriangular hup', Finset.prod_ne_zero_iff]
+  rw [det_of_isUpperTriangular hup', Finset.prod_ne_zero_iff]
   intro k _
   rw [Finset.prod_ne_zero_iff] at hd
   exact hd _ (Finset.mem_univ _)
@@ -414,7 +414,7 @@ theorem chart_mult_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     linarith
   have hinj : Set.InjOn f S := by
     intro γ _ γ' _ h
-    haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+    have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
     let bw := basisOfLinearIndependentOfCardEqFinrank hli (by simp)
     have hlin : Matrix.toLin' (γ : Matrix (Fin r) (Fin r) E) = Matrix.toLin' (γ' : Matrix (Fin r) (Fin r) E) :=
       bw.ext fun i => by

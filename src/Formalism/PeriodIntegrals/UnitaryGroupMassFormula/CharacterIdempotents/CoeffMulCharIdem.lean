@@ -64,7 +64,7 @@ theorem coeff_mul_charIdem (W : FDRep ℂ G) (x : MonoidAlgebra ℂ G) (h : G) :
         LinearMap.trace ℂ W (W.ρ h⁻¹ * act W x) := by
   induction x using MonoidAlgebra.induction_on with
   | of g =>
-    rw [MonoidAlgebra.of_apply, MonoidAlgebra.single_mul_apply, coeff_charIdem, act_single]
+    rw [MonoidAlgebra.of_apply, MonoidAlgebra.coeff_single_mul_apply, coeff_charIdem, act_single]
     simp only [one_smul, mul_inv_rev, inv_inv, one_mul]
     rw [← map_mul, FDRep.character]
   | add x y hx hy =>

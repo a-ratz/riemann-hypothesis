@@ -324,14 +324,14 @@ theorem phisB_rename_mul (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (y 
       Fin.castSucc (⟨G.T.pos i, by have := hlt i; omega⟩ : Fin N) := by
     intro i
     apply Fin.ext
-    simp only [Formalism.GM.M.finPos, Fin.coe_castSucc]
+    simp only [Formalism.GM.M.finPos, Fin.val_castSucc]
     have := hlt i
     omega
   have hfin1 : ∀ i : Fin G.T.t, Formalism.GM.M.finPos N (G.T.pos i + 1) =
       Fin.castSucc (⟨G.T.pos i + 1, hlt i⟩ : Fin N) := by
     intro i
     apply Fin.ext
-    simp only [Formalism.GM.M.finPos, Fin.coe_castSucc]
+    simp only [Formalism.GM.M.finPos, Fin.val_castSucc]
     have := hlt i
     omega
   have hlet0 : ∀ i : Fin G.T.t, G.letterAt (G.T.pos i) = (⟨G.T.pos i, by have := hlt i; omega⟩ : Fin N) := by
@@ -355,7 +355,7 @@ theorem phisB_rename_mul (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (y 
   · congr 1
     unfold Formalism.GM.M.TieData.phis
     refine foldr_rename _ _ _ _ (fun i _ F => ?_) y
-    simp only [Formalism.GM.M.TieData.phi, dif_pos (hlt i), Formalism.GM.M.tiePhiAt]
+    simp only [Formalism.GM.M.TieData.phi, dite_eq_left (hlt i), Formalism.GM.M.tiePhiAt]
     rw [hfin0, hfin1, hlet0, hlet1]
     exact Formalism.CountingSumsFrames.TO.tiePhi_rename (Formalism.GM.M.chainEmb N r G.T.t) hinj
       (fun c : Fin r => ((⟨G.T.pos i, by have := hlt i; omega⟩ : Fin N), c))
@@ -489,7 +489,7 @@ theorem plusAW_of_blockOK (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (D
         ∏ a, (((G.lettersAt j jp).deg a).factorial : ℚ_[p]) = if i = i' then (p : ℚ_[p]) ^ D else 0 := hxy i i'
     by_cases hmm : m = m'
     · subst hmm
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       have hcf := cf_mul p (r := r) G (G.B - jp) m hm
       have hdeg : (degFact G j jp : ℚ_[p]) =
           (∏ a, (((G.lettersAt j jp).deg a).factorial : ℚ_[p])) * ((G.B - jp).factorial : ℚ_[p]) := by
@@ -514,9 +514,9 @@ theorem plusAW_of_blockOK (hB : G.BlockOK) (j : Fin G.T.t → ℕ) (jp : ℕ) (D
         field_simp
       rw [key, hxy']
       by_cases hii : i = i'
-      · rw [if_pos hii, if_pos (hkk.2 ⟨hii, rfl⟩)]
-      · rw [if_neg hii, if_neg (fun h => hii (hkk.1 h).1)]
-    · rw [if_neg hmm, if_neg (fun h => hmm (hkk.1 h).2)]
+      · rw [ite_eq_left hii, ite_eq_left (hkk.2 ⟨hii, rfl⟩)]
+      · rw [ite_eq_right hii, ite_eq_right (fun h => hii (hkk.1 h).1)]
+    · rw [ite_eq_right hmm, ite_eq_right (fun h => hmm (hkk.1 h).2)]
       simp
   have hmem := le_csSup (gcL_bdd p (r := r) G j jp D) ⟨fun k => _, fun k => _, hXm, hYm, hpair⟩
   rw [Fintype.card_prod, Fintype.card_fin, Fintype.card_coe, hcard] at hmem
@@ -784,7 +784,7 @@ private theorem finrank_span_blockData_gens {p : ℕ} [Fact (Nat.Prime p)] {O : 
   classical
   let W : Submodule ℚ_[p] (MvPolynomial (GM.M.BVar N r D.T.t) ℚ_[p]) :=
     Submodule.span ℚ_[p] (SetLike.coe (Ljj (r := r) p (gmB D) j jp))
-  haveI hWfd : FiniteDimensional ℚ_[p] W := Ljj_span_fd (p := p) (r := r) (gmB D) j jp
+  have hWfd : FiniteDimensional ℚ_[p] W := Ljj_span_fd (p := p) (r := r) (gmB D) j jp
   let Pk : MvPolynomial (BVar N r D.T.t) (KK O) :=
     ((∏ i : Fin D.T.t, BlockData.Ehat (r := r) O D i ^ j i) * BlockData.Eplus (r := r) O D ^ jp *
       ∏ i : Fin D.T.t, MvPolynomial.X (scalZ N r D.T.t i.castSucc) ^ D.T.z i) *
@@ -821,7 +821,7 @@ private theorem finrank_span_blockData_gens {p : ℕ} [Fact (Nat.Prime p)] {O : 
   haveI : FiniteDimensional (KK O)
       (Submodule.span (KK O) (Set.range fun i => fA (bW i : MvPolynomial _ ℚ_[p]))) :=
     FiniteDimensional.span_of_finite (KK O) (Set.finite_range _)
-  haveI : FiniteDimensional (KK O) T :=
+  have : FiniteDimensional (KK O) T :=
     Submodule.finiteDimensional_of_le hTle
   have hbase : ∀ y0 ∈ GM.M.YZ (r := r) p ((gmB D).lettersAt j jp) D.T.J D.T.thr,
       ∀ g0 ∈ GM.M.XiPolZ p N r D.T.t (D.B - jp),

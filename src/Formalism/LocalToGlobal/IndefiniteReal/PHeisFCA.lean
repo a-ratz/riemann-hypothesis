@@ -180,7 +180,7 @@ theorem ad_exU (x : AdeleRing (𝓞 F) F) : ∃! q : F, algebraMap F (AdeleRing 
     | exact Formalism.L2.GlobalTheoryTheory.FiltrationBoundaryCriterion.CompactFixesLatticeTheory.exists_sub_mem_intAd x.2
   obtain ⟨a, ha, hauniq⟩ := inf_exU F (algebraMap F (InfiniteAdeleRing F) (-u) + x.1)
   refine ⟨-u + (a : F), ?_, ?_⟩
-  · simp only [F0, Set.mem_setOf_eq]
+  · simp only [F0, Set.mem_ofPred_eq]
     constructor
     · change algebraMap F (InfiniteAdeleRing F) (-u + (a : F)) + x.1 ∈ Pinf F
       have e : algebraMap F (InfiniteAdeleRing F) (-u + (a : F)) + x.1 =
@@ -193,7 +193,7 @@ theorem ad_exU (x : AdeleRing (𝓞 F) F) : ∃! q : F, algebraMap F (AdeleRing 
         rw [map_add (f := _), map_neg]; abel
       rw [e]; exact add_mem hu (hOa a)
   · intro q hq
-    simp only [F0, Set.mem_setOf_eq] at hq
+    simp only [F0, Set.mem_ofPred_eq] at hq
     obtain ⟨h1, h2⟩ := hq
     have h2' : algebraMap F (FiniteAdeleRing (𝓞 F) F) q + x.2 ∈ Formalism.L2.GlobalTheoryTheory.FiltrationBoundaryCriterion.CompactFixesLatticeTheory.intAd F := h2
     have h1' : algebraMap F (InfiniteAdeleRing F) q + x.1 ∈ Pinf F := h1
@@ -217,7 +217,7 @@ theorem fundamental_set_subset_compact : ∃ K : Set (AdeleRing (𝓞 F) F), IsC
   obtain ⟨K1, hK1, hsub⟩ := Pinf_sub_compact F
   refine ⟨K1 ×ˢ Ohat F, hK1.prod (isCompact_Ohat F), ?_⟩
   intro x hx
-  simp only [F0, Set.mem_setOf_eq] at hx
+  simp only [F0, Set.mem_ofPred_eq] at hx
   exact ⟨hsub hx.1, hx.2⟩
 
 instance instT2SpaceFiniteAdeles : T2Space (FiniteAdeleRing (𝓞 F) F) :=

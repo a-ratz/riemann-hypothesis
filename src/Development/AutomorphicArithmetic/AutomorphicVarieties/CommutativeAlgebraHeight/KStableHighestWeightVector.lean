@@ -78,16 +78,16 @@ private theorem dim_quot_eq_of_flat {A B : Type} [CommRing A] [CommRing B] [IsLo
   have hIm : J.map (algebraMap A B) ≤ maximalIdeal B := hm ▸ Ideal.map_mono hJm
   have hI : J.map (algebraMap A B) ≠ ⊤ :=
     ne_top_of_le_ne_top (Ideal.IsMaximal.ne_top inferInstance) hIm
-  haveI : Nontrivial (A ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
-  haveI : Nontrivial (B ⧸ J.map (algebraMap A B)) := Ideal.Quotient.nontrivial_iff.mpr hI
-  haveI : IsLocalRing (A ⧸ J) := .of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
-  haveI : IsLocalRing (B ⧸ J.map (algebraMap A B)) :=
+  have : Nontrivial (A ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
+  have : Nontrivial (B ⧸ J.map (algebraMap A B)) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have : IsLocalRing (A ⧸ J) := .of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
+  have : IsLocalRing (B ⧸ J.map (algebraMap A B)) :=
     .of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
-  haveI : Module.Flat (A ⧸ J) (B ⧸ J.map (algebraMap A B)) := by
+  have : Module.Flat (A ⧸ J) (B ⧸ J.map (algebraMap A B)) := by
     have e : (B ⧸ J.map (algebraMap A B)) ≃ₗ[A] TensorProduct A (A ⧸ J) B :=
       ((Algebra.TensorProduct.quotIdealMapEquivTensorQuot B J).toLinearEquiv.restrictScalars A).trans
         (TensorProduct.comm A B (A ⧸ J))
-    haveI := Module.Flat.baseChange A (A ⧸ J) B
+    have := Module.Flat.baseChange A (A ⧸ J) B
     exact Module.Flat.of_linearEquiv (LinearEquiv.extendScalarsOfSurjective Ideal.Quotient.mk_surjective e)
   apply dim_eq_of_flat
   have hmA : maximalIdeal (A ⧸ J) = (maximalIdeal A).map (Ideal.Quotient.mk J) :=
@@ -104,8 +104,8 @@ theorem UpperTheory.V.CA.c3c :
     ∀ {C R : Type} [CommRing C] [IsNoetherianRing C] [CommRing R] [Algebra C R] [IsLocalRing R] (x : Ideal C) [x.IsMaximal], IsCplAt x R → (∀ I : Ideal C, ringKrullDim (R ⧸ I.map (algebraMap C R)) = dimAt x I) ∧ ∀ (I : Ideal C) (q : Ideal R), I ≤ q.comap (algebraMap C R) → ringKrullDim (R ⧸ q) ≤ dimAt x I := by
   intro C R _ _ _ _ _ x _ hR
   obtain ⟨_, ⟨e⟩, hmap⟩ := cpl_uniq x hR
-  haveI := hR.noeth
-  haveI : IsNoetherianRing (Cpl x) := isNoetherianRing_of_ringEquiv R e.toRingEquiv
+  have := hR.noeth
+  have : IsNoetherianRing (Cpl x) := isNoetherianRing_of_ringEquiv R e.toRingEquiv
   have hmapI : ∀ I : Ideal C,
       I.map (algebraMap C (Cpl x)) = (I.map (algebraMap C R)).map (e.toRingEquiv : R →+* Cpl x) := by
     intro I

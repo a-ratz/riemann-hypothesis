@@ -118,7 +118,7 @@ theorem expCritN_of [NeZero n] (hA : Formalism.MainNotions.LiftingTheory.CaseA W
           (x ∈ W.N T ↔ ∀ k, d k ∈ Formalism.MainNotions.WachCoordinates.FilLev W T i 0 (-k))) := by
   intro T hT i ζ hζ x d hDL hd ⟨k, hk⟩
   have hs : W.s = 1 := hA.2.1
-  haveI := hdom
+  have := hdom
   have hp := p_ne_zero_LL W
   have hFl : Antitone (Formalism.MainNotions.WachCoordinates.FilLev W T i 0) := Formalism.MainNotions.UnusedSlot80.LevR.filLev_anti W T i 0
   constructor

@@ -151,8 +151,8 @@ theorem jetRel_equivariant : ∀ (V W : Type) [NormedAddCommGroup V] [InnerProdu
       ((sum_update_first_index_swap i c d (fun α β => B (List.ofFn α).reverse y (G β))).trans ?_)
     refine Finset.sum_congr rfl fun β _ => ?_
     by_cases h : (β i).1 = d
-    · rw [if_pos h, if_pos h.symm]
-    · rw [if_neg h, if_neg (Ne.symm h)]
+    · rw [ite_eq_left h, ite_eq_left h.symm]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
   · exact ((Finset.sum_congr rfl fun α _ =>
       (apply_ite (B (List.ofFn α).reverse y) _ _ _).trans (by rw [map_zero]))).trans
       (sum_update_second_index_swap i c d (fun α β => B (List.ofFn α).reverse y (G β)))
@@ -399,8 +399,8 @@ end
 theorem jetRel_eq_zero_of_nil :
     ∀ (V W : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [NormedAddCommGroup W] [InnerProductSpace ℂ W] (n : ℕ) (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ V) (lam : Fin n → ℝ) (u : V) (j : W →ₗᵢ[ℂ] V) (B : List (Fin n × Fin n) → W →ₗ⋆[ℂ] W →ₗ[ℂ] ℂ), LowData ε E (LamOf ε lam) u j → (∀ a b : Fin n, a < b → ε a ≠ ε b → 2 * (n : ℝ) + 1 ≤ lam a - lam b) → JetRel ε E (LamOf ε lam) u j B → B [] = 0 → ∀ l, B l = 0 := by
   intro V W _ _ _ _ n ε E lam u j B hL hgap hB hnil
-  haveI := hL.finiteDimensional
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have := hL.finiteDimensional
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have key : ∀ m : ℕ, ∀ l : List (Fin n × Fin n), l.length ≤ m → B l = 0 := by
     intro m
     induction m with

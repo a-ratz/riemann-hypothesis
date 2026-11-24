@@ -55,7 +55,7 @@ universe u v
 private theorem exists_factor {W : Scheme.{0}} {J : Type} (Ω : Type) [Field Ω]
     (p : UpperTheory.Gal.G3.sp Ω ⟶ ∐ (fun _ : J => W)) :
     ∃ (j : J) (x : UpperTheory.Gal.G3.sp Ω ⟶ W), p = x ≫ Sigma.ι (fun _ : J => W) j := by
-  haveI : Subsingleton ↑(UpperTheory.Gal.G3.sp Ω) := inferInstanceAs (Subsingleton (PrimeSpectrum Ω))
+  have : Subsingleton ↑(UpperTheory.Gal.G3.sp Ω) := inferInstanceAs (Subsingleton (PrimeSpectrum Ω))
   have pt : ↑(UpperTheory.Gal.G3.sp Ω) := show PrimeSpectrum Ω from ⟨⊥, Ideal.isPrime_bot⟩
   obtain ⟨⟨j, y⟩, hq⟩ : ∃ q, (sigmaMk (fun _ : J => W)).symm (p pt) = q := ⟨_, rfl⟩
   have hy : Sigma.ι (fun _ : J => W) j y = p pt := by
@@ -74,17 +74,17 @@ theorem UpperTheory.Gal.G3.pSplitsPts :
     pullback.lift (σ j) (𝟙 W) (by rw [Category.id_comp]; exact hσ j))
   have hι : ∀ j, Sigma.ι (fun _ : J => W) j ≫ e =
       pullback.lift (σ j) (𝟙 W) (by rw [Category.id_comp]; exact hσ j) :=
-    fun j => Sigma.ι_desc _ _
+    fun j => Sigma.ι_comp_desc _ _
   have hlift : ∀ j, Etale (pullback.lift (σ j) (𝟙 W)
       (by rw [Category.id_comp]; exact hσ j) : W ⟶ pullback s c) := by
     intro j
-    haveI : Etale (pullback.lift (σ j) (𝟙 W) (by rw [Category.id_comp]; exact hσ j) ≫
+    have : Etale (pullback.lift (σ j) (𝟙 W) (by rw [Category.id_comp]; exact hσ j) ≫
         pullback.snd s c) := by
       rw [pullback.lift_snd]; infer_instance
     exact Etale.of_comp _ (pullback.snd s c)
-  haveI : IsZariskiLocalAtSource @Etale :=
+  have : IsZariskiLocalAtSource @Etale :=
     HasRingHomProperty.instIsZariskiLocalAtSource (Q := RingHom.Etale)
-  haveI : Etale e := IsZariskiLocalAtSource.sigmaDesc (P := @Etale) hlift
+  have : Etale e := IsZariskiLocalAtSource.sigmaDesc (P := @Etale) hlift
   show IsIso e
   apply hIso e
   intro Ω _ _ z

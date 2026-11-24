@@ -111,7 +111,7 @@ theorem exists_chart : ∀ (n N : ℕ) (X Y : Scheme.{0}) (sX : X ⟶ Sp (cycAwa
     rw [← this, e]
   obtain ⟨_, ⟨U, hU, rfl⟩, hηU, -⟩ := Y.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ η') isOpen_univ
   replace hU : IsAffineOpen U := hU
-  haveI : LocallyOfFiniteType sY := inferInstance
+  have : LocallyOfFiniteType sY := inferInstance
   let P : PrimeSpectrum Γ(Y, U) := hU.primeIdealOf ⟨η', hηU⟩
   have hP : hU.fromSpec P = η' := hU.fromSpec_primeIdealOf _
   let ψ : cycAway N →+* Γ(Y, U) := (Spec.preimage (hU.fromSpec ≫ sY)).hom
@@ -123,25 +123,25 @@ theorem exists_chart : ∀ (n N : ℕ) (X Y : Scheme.{0}) (sX : X ⟶ Sp (cycAwa
     have h1 : spMap ψ P = sY (hU.fromSpec P) := by rw [hψ]; rfl
     change (spMap ψ P).asIdeal = ⊥
     rw [h1, hP]; exact hgen
-  letI : Algebra (cycAway N) Γ(Y, U) := ψ.toAlgebra
+  let : Algebra (cycAway N) Γ(Y, U) := ψ.toAlgebra
   let Ω := FractionRing (Γ(Y, U) ⧸ P.asIdeal)
   let φ : Γ(Y, U) →+* Ω := (algebraMap (Γ(Y, U) ⧸ P.asIdeal) Ω).comp (Ideal.Quotient.mk P.asIdeal)
   have hφker : ∀ a, φ a = 0 ↔ a ∈ P.asIdeal := fun a => by
     simp only [φ, RingHom.comp_apply]
     rw [(IsFractionRing.injective (Γ(Y, U) ⧸ P.asIdeal) Ω).eq_iff' (map_zero _), Ideal.Quotient.eq_zero_iff_mem]
-  letI : Algebra (cycAway N) Ω := (φ.comp ψ).toAlgebra
+  let : Algebra (cycAway N) Ω := (φ.comp ψ).toAlgebra
   let f : Γ(Y, U) →ₐ[cycAway N] Ω := { φ with commutes' := fun _ => rfl }
   have hinj : Function.Injective (algebraMap (cycAway N) Ω) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     have : x ∈ Ideal.comap ψ P.asIdeal := (hφker (ψ x)).1 hx
     rwa [hker, Ideal.mem_bot] at this
-  haveI : CharZero Ω := charZero_of_injective_algebraMap hinj
-  haveI : ArithBase (cycAway N) Ω := ⟨GlobalTheory.CycAwayReg.isDedekindDomain_cycAway N, finiteType_cycAway N, inferInstance, hinj⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap hinj
+  have : ArithBase (cycAway N) Ω := ⟨GlobalTheory.CycAwayReg.isDedekindDomain_cycAway N, finiteType_cycAway N, inferInstance, hinj⟩
   refine ⟨Ω, inferInstance, inferInstance, inferInstance, f.range, spMap f.rangeRestrict.toRingHom ≫ hU.fromSpec,
     ?_, ?_, ?_, ?_, ?_⟩
   · rw [← Algebra.map_top]
-    haveI : Algebra.FiniteType (cycAway N) Γ(Y, U) := hft
+    have : Algebra.FiniteType (cycAway N) Γ(Y, U) := hft
     exact Algebra.FiniteType.out.map f
   · intro z
     obtain ⟨x, s, -, rfl⟩ := IsFractionRing.div_surjective (A := Γ(Y, U) ⧸ P.asIdeal) z

@@ -52,7 +52,7 @@ open PositivityTheory.Rg.Sw PositivityTheory.Rg.Sw.AbsSt
 variable {n : ℕ}
 
 theorem continuous_mR : Continuous (mR : GR n → M2 n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 def KMat (n : ℕ) : Set (M2 n) := {M | Mᴴ * M = 1 ∧ Mᴴ * JJ n * M = JJ n}
 
@@ -76,7 +76,7 @@ theorem isCompact_KR : IsCompact ((KR n : Subgroup (GR n)) : Set (GR n)) := by
     ⟨⟨M.1, M.1ᴴ, (mul_eq_one_comm).mp M.2.1, M.2.1⟩, M.2.2⟩
   have hφ : Continuous φ :=
     Continuous.subtype_mk (Units.continuous_iff.mpr
-      ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩) _
+      ⟨continuous_subtypeVal, continuous_subtypeVal.matrix_conjTranspose⟩) _
   have hK : IsCompact (univ : Set (KMat n)) := isCompact_iff_isCompact_univ.mp isCompact_KMat
   have himg : φ '' univ = ((KR n : Subgroup (GR n)) : Set (GR n)) := by
     ext k

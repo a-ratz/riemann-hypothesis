@@ -65,7 +65,7 @@ private theorem eq_specMap_comp_of_apply_eq {X : Scheme.{0}} {B K Ω : Type} [Co
     exact (PrimeSpectrum.ext ((Ideal.eq_bot_of_prime p'.asIdeal).trans
       (Ideal.eq_bot_of_prime q'.asIdeal).symm) : p' = q')
   obtain ⟨W, hW, hbW, -⟩ := exists_isAffineOpen_mem_and_subset (TopologicalSpace.Opens.mem_top (s b))
-  haveI := hW.isOpenImmersion_fromSpec
+  have := hW.isOpenImmersion_fromSpec
   have hrange : ∀ {Y : Scheme.{0}} (e : Y ⟶ X) (z : Y), (∀ z', z' = z) → e z ∈ W →
       Set.range e ⊆ Set.range hW.fromSpec := by
     intro Y e z hz he

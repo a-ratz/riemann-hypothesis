@@ -84,10 +84,10 @@ theorem exists_invariant_form : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   intro F E _ _ _ _ _ σ B hB nS nT JS JT _ _ ξ₀ _ _ M hM μ 𝓕 hμ h𝓕
   have hψ : IsCharAF F B.ψ := GlobalTheory.StdCharFromIsStd.isCharAF hB.std
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : Countable (ratLF F E nS nT) := countable_of_discrete_addSubgroup _
-  haveI := hμ
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : Countable (ratLF F E nS nT) := countable_of_discrete_addSubgroup _
+  have := hμ
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
     rw [Measure.restrict_apply_univ]
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WOF F E nS nT) (ratLF F E nS nT) hK hKc μ h𝓕⟩
   have hb : ∀ f ∈ M, ∃ C : ℝ, ∀ w, ‖f w‖ ≤ C := fun f hf => by

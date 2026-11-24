@@ -121,10 +121,10 @@ theorem datum_character_eq_zpow {E : Type} [Field E] [NumberField E] [IsCMField 
     {F : Type} [Field F] {M : ℕ} (hM : 0 < M) {ζ : Fˣ} (hζ : IsPrimitiveRoot ζ M)
     (φ : Dw.La →+ Additive Fˣ) (hφ : ∀ a, φ (M • a) = 0) :
     ∃ d : Dw.La, ∀ a, Additive.toMul (φ a) = ζ ^ Dw.EF a d := by
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : Module.Projective ℤ Dw.La := by
+  have : NeZero M := ⟨hM.ne'⟩
+  have : Module.Projective ℤ Dw.La := by
     obtain ⟨s, hs⟩ := Module.projective_def'.1 Dw.proj
-    haveI : Module.Free ℤ (Dw.La →₀ 𝓞 E) := inferInstance
+    have : Module.Free ℤ (Dw.La →₀ 𝓞 E) := inferInstance
     exact Module.Projective.of_split (s.restrictScalars ℤ)
       ((Finsupp.linearCombination (𝓞 E) id).restrictScalars ℤ)
       (LinearMap.ext fun x => LinearMap.congr_fun hs x)
@@ -236,9 +236,9 @@ theorem subst_add_sqZero {σ τ S : Type} [Fintype σ] [CommRing S]
     (ha0 : ∀ s, IsNilpotent (constantCoeff (a s))) (g : MvPowerSeries σ S) :
     subst (fun s => a s + e * b s) g = subst a g + e * ∑ s, b s * subst a (pderiv s g) := by
   classical
-  letI : TopologicalSpace S := ⊥
-  letI : UniformSpace S := ⊥
-  haveI : DiscreteUniformity S := ⟨rfl⟩
+  let : TopologicalSpace S := ⊥
+  let : UniformSpace S := ⊥
+  have : DiscreteUniformity S := ⟨rfl⟩
   have ha : HasSubst a := hasSubst_of_constantCoeff_nilpotent ha0
   have hb : HasSubst (fun s => a s + e * b s) := hasSubst_add_sqZero a b e he ha0
   have continuousPderiv (i : σ) : Continuous (fun f : MvPowerSeries σ S => pderiv i f) := by
@@ -276,7 +276,7 @@ theorem subst_add_sqZero {σ τ S : Type} [Fintype σ] [CommRing S]
         intro i
         by_cases h : i = s
         · subst h; simp
-        · rw [if_neg h, pderiv_X_of_ne]
+        · rw [ite_eq_right h, pderiv_X_of_ne]
           intro h'
           exact h h'.symm
       have hterm : ∀ i : σ, b i * subst a (pderiv i ((MvPolynomial.toMvPowerSeries p) * X s)) =
@@ -289,7 +289,7 @@ theorem subst_add_sqZero {σ τ S : Type} [Fintype σ] [CommRing S]
         · rw [hs1]; ring
         · rw [hs0]; ring
       rw [Finset.sum_congr rfl (fun i _ => hterm i), Finset.sum_add_distrib, Finset.sum_ite_eq',
-        if_pos (Finset.mem_univ _), ← Finset.mul_sum]
+        ite_eq_left (Finset.mem_univ _), ← Finset.mul_sum]
       linear_combination (b s * ∑ i, b i * subst a (pderiv i (MvPolynomial.toMvPowerSeries p))) * he
   have := (MvPowerSeries.WithPiTopology.denseRange_toMvPowerSeries).equalizer hcb c2 (funext fun p => hpoly p)
   exact congrFun this g
@@ -732,8 +732,8 @@ theorem dof_baseChange (hJ : JetAlgSt) (hRep : RepSt) (hSer : SerSt) [IsLocalRin
     exact ((congrArg τ (Ψ.commutes (c i))).trans (τ.commutes (c i))).symm
   refine EigenDer.dof_eq_of_eigen hJ hRep hSer R G' d x' hx'' (FBMap.mapLaw (algebraMap V R) Gl) hlaw _ hU' _ _ hcomb
     v y (dualLift v) (dualLift_zR v) fun A _ _ θ r h₁ h₂ => ?_
-  letI : Algebra V A := ((algebraMap R A).comp (algebraMap V R)).toAlgebra
-  haveI : IsScalarTower V R A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra V A := ((algebraMap R A).comp (algebraMap V R)).toAlgebra
+  have : IsScalarTower V R A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have e₀ : ((dualLift v).restrictScalars V).comp (ChartBaseChange.jetCoeff V R (Fin d) 1) = φ :=
     jet_ext fun j => by
       rw [hφ, AlgHom.comp_apply, ChartBaseChange.jetCoeff_zR]
@@ -1153,7 +1153,7 @@ theorem dof_of_tangent (hJ : JetSer.JetAlgSt) (hRep : JetSer.RepSt) (hSer : JetS
         (MvPowerSeries.map (Ideal.Quotient.mk I) (∑ i, MvPowerSeries.C (c i) * MvPowerSeries.map β (S i))) =
       MvPowerSeries.C (Ideal.Quotient.mk I yy) *
         MvPowerSeries.map (Ideal.Quotient.mk I) (∑ i, MvPowerSeries.C (c i) * MvPowerSeries.map β (S i)) := by
-  letI : Algebra V (O ⧸ I) := ((Ideal.Quotient.mk I).comp β).toAlgebra
+  let : Algebra V (O ⧸ I) := ((Ideal.Quotient.mk I).comp β).toAlgebra
   have hc : φ.comp (algebraMap V _) = (algebraMap O (DualNumber (O ⧸ I))).comp β := by
     have h₁ : Spec.map (CommRingCat.ofHom φ) ≫ Spec.map (CommRingCat.ofHom (algebraMap V _)) =
         Spec.map (CommRingCat.ofHom (algebraMap O (DualNumber (O ⧸ I)))) ≫ Spec.map (CommRingCat.ofHom β) := by

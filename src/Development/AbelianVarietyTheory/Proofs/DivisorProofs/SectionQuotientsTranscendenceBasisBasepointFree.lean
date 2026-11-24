@@ -91,7 +91,7 @@ theorem trBasis_of_integral_ratR (K : Type) [Field K] [CharZero K] (D : ℕ) (x 
     (hfr : ∀ w : K, ∃ a ∈ A, ∃ b ∈ A, b ≠ 0 ∧ w = a / b) :
     (∀ j, x j ≠ 0) ∧ AlgebraicIndependent ℤ (fun j : Fin D => x j.succ / x 0) ∧
       FiniteDimensional (ratF x) K := by
-  haveI : FaithfulSMul ℤ K := (faithfulSMul_iff_algebraMap_injective ℤ K).mpr Int.cast_injective
+  have : FaithfulSMul ℤ K := (faithfulSMul_iff_algebraMap_injective ℤ K).mpr Int.cast_injective
   set y : Fin (D + 1) → K := fun j => x j / x l with hy
   have hle : ratR x l ≤ (Algebra.adjoin ℤ (Set.range y)).toSubring :=
     Subring.closure_le.2 Algebra.subset_adjoin
@@ -157,7 +157,7 @@ theorem trBasis_of_integral_ratR (K : Type) [Field K] [CharZero K] (D : ℕ) (x 
     ⟨fun w => (hAlgU.isAlgebraic w).ringHom_of_comp_eq ψ (RingHom.id K) hψ (by ext; rfl)⟩
   obtain ⟨t, ht⟩ := hA.out
   let T : Set K := (Subtype.val : A → K) '' (t : Set A)
-  haveI : Finite T := (t.finite_toSet.image _).to_subtype
+  have : Finite T := (t.finite_toSet.image _).to_subtype
   have hfd : FiniteDimensional (ratF x) (IntermediateField.adjoin (ratF x) T) :=
     IntermediateField.finiteDimensional_adjoin fun w _ => (hAlgF.isAlgebraic w).isIntegral
   have hmemA : ∀ a : A, (a : K) ∈ IntermediateField.adjoin (ratF x) T := by

@@ -78,18 +78,18 @@ theorem exists_primary_complement (Z : Type) [CommGroup Z] [Finite Z] (ℓ : ℕ
     ∃ P Q : Subgroup Z, (∀ u, u ∈ P ↔ ∃ j : ℕ, u ^ (ℓ ^ j) = 1) ∧ Nat.Coprime (Nat.card Q) ℓ ∧
       (Function.Bijective fun y : P × Q => (y.1 : Z) * (y.2 : Z)) ∧
       Nat.card P = ℓ ^ (Nat.card Z).factorization ℓ := by
-  haveI : Fact ℓ.Prime := ⟨hℓ⟩
+  have : Fact ℓ.Prime := ⟨hℓ⟩
   obtain ⟨S⟩ : Nonempty (Sylow ℓ Z) := inferInstance
-  haveI : (S : Subgroup Z).Normal := Subgroup.normal_of_isMulCommutative _
+  have : (S : Subgroup Z).Normal := Subgroup.normal_of_isMulCommutative _
   obtain ⟨Q, hQ⟩ := Subgroup.exists_right_complement'_of_coprime (N := (S : Subgroup Z)) S.card_coprime_index
   refine ⟨S, Q, fun u => ⟨fun hu => ?_, fun hu => ?_⟩, ?_, hQ, S.card_eq_multiplicity⟩
-  · obtain ⟨k, hk⟩ := S.isPGroup' ⟨u, hu⟩
+  · obtain ⟨k, hk⟩ := S.isPGroup ⟨u, hu⟩
     exact ⟨k, by simpa using congrArg Subtype.val hk⟩
   · obtain ⟨j, hj⟩ := hu
     have hp : IsPGroup ℓ (Subgroup.zpowers u) :=
       IsPGroup.of_card_dvd_pow (n := j) (by rw [Nat.card_zpowers]; exact orderOf_dvd_of_pow_eq_one hj)
     obtain ⟨T, hT⟩ := hp.exists_le_sylow
-    letI := Sylow.unique_of_normal S ‹_›
+    let := Sylow.unique_of_normal S ‹_›
     have hTS : T = S := Subsingleton.elim _ _
     subst hTS
     exact hT (Subgroup.mem_zpowers u)
@@ -97,7 +97,7 @@ theorem exists_primary_complement (Z : Type) [CommGroup Z] [Finite Z] (ℓ : ℕ
     exact Nat.Coprime.symm ((Nat.Prime.coprime_iff_not_dvd hℓ).2 S.not_dvd_index)
 
 theorem epi_spMap_of_fields {K k : Type} [Field K] [Field k] (β : K →+* k) : Epi (spMap β) := by
-  letI : Algebra K k := β.toAlgebra
+  let : Algebra K k := β.toAlgebra
   have hff : (CommRingCat.ofHom β).hom.FaithfullyFlat := by
     change Module.FaithfullyFlat K k
     infer_instance
@@ -147,7 +147,7 @@ theorem enumeration_bijective (Xo : Moduli Dw l) {K : Type} [Field K] (x : Sp K 
       (fun i b => g ≫ z i b) hw (hinj (AlgebraicClosure K) ψ g rfl) (fun b => g ≫ a b)
       (ZhStable.inZh_comp Xo Λ N g a ha)
     refine ⟨i, funext fun b => ?_⟩
-    haveI := epi_spMap_of_fields ψ
+    have := epi_spMap_of_fields ψ
     have hb := congrArg CommaMorphism.left (congrFun hi b)
     simp only [Over.comp_left] at hb
     exact Over.OverMorphism.ext ((cancel_epi (spMap ψ)).1 hb)
@@ -167,7 +167,7 @@ theorem isotropic_primary_decomposition :
     ⟨fun i j h => hzinj (congrArg Subtype.val h), fun u => by
       obtain ⟨i, hi⟩ := hzon u.1 u.2
       exact ⟨i, Subtype.ext hi⟩⟩
-  haveI : Finite (zhSubgroup Xo Λ N hN (ptO Xo x)) := Finite.of_surjective e he.2
+  have : Finite (zhSubgroup Xo Λ N hN (ptO Xo x)) := Finite.of_surjective e he.2
   obtain ⟨P, Q, hP, hQ, hPQ, hcard⟩ := exists_primary_complement (zhSubgroup Xo Λ N hN (ptO Xo x)) ℓ hℓ
   refine ⟨P, Q, Fintype.ofFinite _, Fintype.ofFinite _, fun p => ((p : zhSubgroup Xo Λ N hN (ptO Xo x)) : Fin n → _),
     fun q => ((q : zhSubgroup Xo Λ N hN (ptO Xo x)) : Fin n → _),

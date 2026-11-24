@@ -71,7 +71,7 @@ theorem adAt_eps_of_under (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectru
   have h0 := eq_zero_of_valued_le w (adAt F w (afsplitEps E v) - algebraMap E _ (algebraMap F E 1))
     (fun n => by
       rw [he]
-      exact hspec _ 1 w n (by rw [h, afsplitI_self, map_one, sub_self, map_zero]; exact zero_le'))
+      exact hspec _ 1 w n (by rw [h, afsplitI_self, map_one, sub_self, map_zero]; exact zero_le))
   rw [sub_eq_zero, map_one, map_one] at h0
   exact h0
 
@@ -86,7 +86,7 @@ theorem adAt_eps_of_ne (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (
   have h0 := eq_zero_of_valued_le w (adAt F w (afsplitEps E v) - algebraMap E _ (algebraMap F E 0))
     (fun n => by
       rw [he]
-      exact hspec _ 0 w n (by rw [afsplitI_ne v _ h, map_zero, sub_zero, map_zero]; exact zero_le'))
+      exact hspec _ 0 w n (by rw [afsplitI_ne v _ h, map_zero, sub_zero, map_zero]; exact zero_le))
   rw [sub_eq_zero, map_zero, map_zero] at h0
   exact h0
 
@@ -138,7 +138,7 @@ theorem prV_zero_int_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       rw [hcomp]
       split_ifs with hw
       · exact h w hw
-      · rw [map_zero]; exact zero_le'
+      · rw [map_zero]; exact zero_le
     have h2 := afsplit_prV_int v _ h1
     rwa [← hdec, afsplit_prV_IE] at h2
 

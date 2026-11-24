@@ -57,11 +57,11 @@ theorem UpperTheory.V.Tower.cycRange :
     ∀ (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (l : ℕ) [Fact l.Prime], HasMuQ l L → (cycZ L Ω l).range = KStar.TotallyRealRoots.princ l (cZero l L) := by
   intro L Ω _ _ _ _ _ l _ hq
   have hmu := muQ L Ω l
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
-  haveI : IsGalois L Ω := inferInstance
-  haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : IsGalois L Ω := inferInstance
+  have : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hinj := (algebraMap L Ω).injective
   have key : ∀ (σ : G L Ω) (n : ℕ) (t : Ω), t ^ l ^ n = 1 →
       σ t = t ^ ((cycZ L Ω l σ : ℤ_[l]).toZModPow n).val := by
@@ -87,7 +87,7 @@ theorem UpperTheory.V.Tower.cycRange :
     rw [key σ _ _ hζ'.pow_eq_one] at hfix
     exact (hmem _ _).2 (hfixed _ _ _ hζ' hfix)
   apply le_antisymm hle
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ (cZero l L + 1))
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ (cZero l L + 1))
   have hnot : ξ ∉ Set.range (algebraMap L Ω) := by
     rintro ⟨x, rfl⟩
     have hx : IsPrimitiveRoot x (l ^ (cZero l L + 1)) := hξ.of_map_of_injective hinj

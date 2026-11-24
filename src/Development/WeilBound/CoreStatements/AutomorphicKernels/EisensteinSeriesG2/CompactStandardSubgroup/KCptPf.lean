@@ -66,7 +66,7 @@ theorem isCompact_intHat : IsCompact (intHat F E : Set (AE F E)) := by
     change Continuous fun a : Fin m → GlobalTheory.ThK.Dbl.St.intF F => ∑ j, (a j : AF F) • inclR (F := F) (AF F) ((s j : 𝓞 E) : E)
     refine continuous_finsetSum _ fun j _ => ?_
     have h1 : Continuous fun a : Fin m → GlobalTheory.ThK.Dbl.St.intF F => (a j : AF F) :=
-      Continuous.subtype_val (continuous_apply j)
+      Continuous.subtypeVal (continuous_apply j)
     exact h1.fun_smul continuous_const
   have e : intHat F E = f.range := by
     refine le_antisymm ((AddSubgroup.closure_le _).2 ?_) ?_

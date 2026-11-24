@@ -103,7 +103,7 @@ theorem fderiv_eq_of_quot {n : ℕ} {f g : V n → ℂ} {z0 v : V n} (hf : Diffe
     filter_upwards [hg.continuousAt.eventually_ne h0] with z hz
     field_simp
   rw [hev.fderiv_eq, fderiv_fun_mul hq hg]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, h]
+  simp only [add_apply, smul_apply, smul_eq_mul, h]
   field_simp
   ring
 

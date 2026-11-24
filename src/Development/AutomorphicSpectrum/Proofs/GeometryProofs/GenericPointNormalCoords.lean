@@ -101,8 +101,8 @@ theorem spMap_field_pt {R K : Type} [CommRing R] [Field K] (δ : R →+* K) (z :
 
 theorem preimm_frac {O F : Type} [CommRing O] [Field F] (β : O →+* F)
     (h : letI := β.toAlgebra; IsFractionRing O F) : IsPreimmersion (spMap β) := by
-  letI := β.toAlgebra
-  haveI := h
+  let := β.toAlgebra
+  have := h
   exact IsPreimmersion.of_isLocalization (nonZeroDivisors O)
 
 theorem generic_max {X : Type} [TopologicalSpace X] [T0Space X] {v v' : X} (h : v ∈ genericPoints X)
@@ -126,8 +126,8 @@ theorem mem_of_dense_of_max {X : Type} [TopologicalSpace X] [TopologicalSpace.No
 private theorem isLocallyNoetherian_of_closedImmersion_pSpace (O F : Type) [CommRing O] [Field F] (β : O →+* F) (X : Scheme.{0}) (s : X ⟶ Sp O)
     (hp : IsProjOver s) : TopologicalSpace.NoetherianSpace ↥(pullback (C := Scheme.{0}) s (spMap β)) := by
   obtain ⟨N, i, hi, hs⟩ := hp
-  haveI := hi
-  haveI : Algebra.FiniteType ((MvPolynomial.homogeneousSubmodule (Fin (N + 1)) O) 0)
+  have := hi
+  have : Algebra.FiniteType ((MvPolynomial.homogeneousSubmodule (Fin (N + 1)) O) 0)
       (MvPolynomial (Fin (N + 1)) O) :=
     haveI : IsScalarTower O ((MvPolynomial.homogeneousSubmodule (Fin (N + 1)) O) 0)
         (MvPolynomial (Fin (N + 1)) O) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
@@ -139,26 +139,26 @@ private theorem isLocallyNoetherian_of_closedImmersion_pSpace (O F : Type) [Comm
       ((MvPolynomial.mem_homogeneousSubmodule _ _).mp hp)
     refine ⟨p.coeff 0, Subtype.ext ?_⟩
     exact (MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp h0).symm
-  haveI : LocallyOfFiniteType (spMap (algebraMap O ((MvPolynomial.homogeneousSubmodule (Fin (N + 1)) O) 0))) := by
+  have : LocallyOfFiniteType (spMap (algebraMap O ((MvPolynomial.homogeneousSubmodule (Fin (N + 1)) O) 0))) := by
     rw [spMap, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
     exact RingHom.FiniteType.of_surjective _ hsurj
-  haveI : LocallyOfFiniteType (PSpace.str O N) := by
+  have : LocallyOfFiniteType (PSpace.str O N) := by
     unfold PSpace.str
     infer_instance
-  haveI : QuasiCompact (PSpace.str O N) := by
+  have : QuasiCompact (PSpace.str O N) := by
     unfold PSpace.str
     infer_instance
-  haveI : LocallyOfFiniteType s := by
+  have : LocallyOfFiniteType s := by
     rw [← hs]
     infer_instance
-  haveI : QuasiCompact s := by
+  have : QuasiCompact s := by
     rw [← hs]
     infer_instance
-  haveI : IsLocallyNoetherian (pullback s (spMap β)) :=
+  have : IsLocallyNoetherian (pullback s (spMap β)) :=
     LocallyOfFiniteType.isLocallyNoetherian (pullback.snd s (spMap β))
-  haveI : CompactSpace ↥(pullback (C := Scheme.{0}) s (spMap β)) :=
+  have : CompactSpace ↥(pullback (C := Scheme.{0}) s (spMap β)) :=
     QuasiCompact.compactSpace_of_compactSpace (pullback.snd s (spMap β))
-  haveI : IsNoetherian (pullback s (spMap β)) := {}
+  have : IsNoetherian (pullback s (spMap β)) := {}
   infer_instance
 
 theorem generic_points_range_local : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β), IsDomain O → (letI := β.toAlgebra; IsFractionRing O c.F) → genericPoints Y.X ⊆ Set.range Y.j := by
@@ -201,7 +201,7 @@ theorem exists_eq_div_genMap {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec 
   obtain ⟨U, hU, hpU, -⟩ := exists_isAffineOpen_mem_and_subset (x := p.1) (U := ⊤) trivial
   have heU : genPt ξ ∈ U := p.2.mem_open U.isOpen hpU
   obtain ⟨g, hg⟩ : ∃ g : X.presheaf.stalk (genPt ξ), (Scheme.stalkClosedPointTo ξ).hom g = a := hξ.bij.2 a
-  letI alg : Algebra Γ(X, U) (X.presheaf.stalk (genPt ξ)) :=
+  let alg : Algebra Γ(X, U) (X.presheaf.stalk (genPt ξ)) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨genPt ξ, heU⟩ : U)
   have hloc : IsLocalization.AtPrime (X.presheaf.stalk (genPt ξ)) (hU.primeIdealOf ⟨genPt ξ, heU⟩).asIdeal :=
     hU.isLocalization_stalk ⟨genPt ξ, heU⟩
@@ -224,15 +224,15 @@ theorem normalCpt_of_isCptGen {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec
     (hξ : IsCptGen ξ) (hX : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X) : Flat.NormalCpt ξ := by
   intro p a ha
   obtain ⟨hd, hc⟩ := hX p.1
-  letI : Algebra (X.presheaf.stalk p.1) Ω := (genMap ξ p).toAlgebra
+  let : Algebra (X.presheaf.stalk p.1) Ω := (genMap ξ p).toAlgebra
   have hinj : Function.Injective (algebraMap (X.presheaf.stalk p.1) Ω) := hξ.inj p
-  haveI : FaithfulSMul (X.presheaf.stalk p.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : IsFractionRing (X.presheaf.stalk p.1) Ω := IsFractionRing.of_field _ _ fun z => by
+  have : FaithfulSMul (X.presheaf.stalk p.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have : IsFractionRing (X.presheaf.stalk p.1) Ω := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨u, v, -, e⟩ := exists_eq_div_genMap hξ p z
     exact ⟨u, v, e⟩
-  letI : Algebra (X.presheaf.stalk p.1) (regAt ξ p) := (genMap ξ p).rangeRestrict.toAlgebra
-  haveI : IsScalarTower (X.presheaf.stalk p.1) (regAt ξ p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsIntegral (X.presheaf.stalk p.1) (regAt ξ p) :=
+  let : Algebra (X.presheaf.stalk p.1) (regAt ξ p) := (genMap ξ p).rangeRestrict.toAlgebra
+  have : IsScalarTower (X.presheaf.stalk p.1) (regAt ξ p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsIntegral (X.presheaf.stalk p.1) (regAt ξ p) :=
     Algebra.IsIntegral.of_surjective (R := X.presheaf.stalk p.1) (A := X.presheaf.stalk p.1)
       (Algebra.ofId _ _) (genMap ξ p).rangeRestrict_surjective
   obtain ⟨b, hb⟩ := (IsIntegrallyClosed.isIntegral_iff (R := X.presheaf.stalk p.1) (K := Ω)).1
@@ -241,8 +241,8 @@ theorem normalCpt_of_isCptGen {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec
 
 theorem exists_cpt_of_genericPoint : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H), ∀ (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)), ∀ e ∈ genericPoints Y.X, ∃ (K : Type) (_ : Field K) (_ : CharZero K) (n : ℕ) (x : Fin n → K) (y : Sp K ⟶ Xo.XF c), CoordTie ℤ (y ≫ Y.j) x ∧ Flat.NormalCpt (y ≫ Y.j) ∧ GlobalTheory.CompanionTheory.Ar.genPt (y ≫ Y.j) = e := by
   intro E _ _ _ H D l Xo c Y e he
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   have hfrac : (letI := (algebraMap (𝓞 c.F) c.F).toAlgebra; IsFractionRing (𝓞 c.F) c.F) := by
     have : (algebraMap (𝓞 c.F) c.F).toAlgebra = (inferInstance : Algebra (𝓞 c.F) c.F) :=
       Algebra.algebra_ext _ _ fun _ => rfl

@@ -70,9 +70,9 @@ variable {l : ℕ} [Fact l.Prime]
 
 theorem sqrt_mem (p : ℕ) (hp : p.Prime) (h4 : p % 4 = 3) (S : IntermediateField ℚ_[l] (Loc.Om l))
     (hS : ∀ z : Loc.Om l, z ^ p = 1 → z ∈ S) (x : Loc.Om l) (hx : x ^ 2 = -(p : Loc.Om l)) : x ∈ S := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  obtain ⟨w, hw⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Loc.Om l) p
+  have : Fact p.Prime := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
+  obtain ⟨w, hw⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Loc.Om l) p
   let ψ : AddChar (ZMod p) (Loc.Om l) := AddChar.zmodChar p hw.pow_eq_one
   have hψ : ψ.IsPrimitive := AddChar.zmodChar_primitive_of_primitive_root p hw
   let χ : MulChar (ZMod p) (Loc.Om l) := (quadraticChar (ZMod p)).ringHomComp (Int.castRingHom (Loc.Om l))

@@ -77,7 +77,7 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
   have hrev : ∀ {s : ℕ} (hs : s ≤ n) (a : Fin n) (r : Fin s),
       a = Fin.rev (Fin.castLE hs r) ↔ (a : ℕ) + r + 1 = n := by
     intro s hs a r
-    rw [Fin.ext_iff, Fin.val_rev, Fin.coe_castLE]
+    rw [Fin.ext_iff, Fin.val_rev, Fin.val_castLE]
     have := a.isLt
     have := r.isLt
     omega
@@ -116,11 +116,11 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
         intro r q hqr
         simp only [id, Matrix.of_apply] at hqr ⊢
         apply hx
-        rw [Fin.lt_iff_val_lt_val] at hqr ⊢
-        simp only [Fin.val_rev, Fin.coe_castLE]
+        rw [Fin.lt_def] at hqr ⊢
+        simp only [Fin.val_rev, Fin.val_castLE]
         have := r.isLt
         omega
-      have hdU := Matrix.det_of_upperTriangular hU
+      have hdU := Matrix.det_of_isUpperTriangular hU
       simp only [Matrix.of_apply] at hdU
       rw [← hdU, ← Matrix.det_mul]
       congr 1
@@ -131,21 +131,21 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
       by_cases h : (J p : ℕ) + s < n
       · rw [Finset.sum_eq_zero]
         · apply hx
-          rw [Fin.lt_iff_val_lt_val]
-          simp only [Fin.val_rev, Fin.coe_castLE]
+          rw [Fin.lt_def]
+          simp only [Fin.val_rev, Fin.val_castLE]
           omega
         · intro r _
-          rw [if_neg]
+          rw [ite_eq_right]
           have := r.isLt
           omega
       · rw [Finset.sum_eq_single (⟨n - 1 - (J p : ℕ), by omega⟩ : Fin s)]
-        · rw [if_pos (by simp only; omega)]
+        · rw [ite_eq_left (by simp only; omega)]
           congr 1
           ext
-          simp only [Fin.val_rev, Fin.coe_castLE]
+          simp only [Fin.val_rev, Fin.val_castLE]
           omega
         · intro b _ hb
-          rw [if_neg]
+          rw [ite_eq_right]
           intro h'
           apply hb
           ext
@@ -169,7 +169,7 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb
         refine ⟨⟨(Fin.rev b : ℕ), hb⟩, Finset.mem_univ _, ?_⟩
         ext
-        simp only [Fin.val_rev, Fin.coe_castLE]
+        simp only [Fin.val_rev, Fin.val_castLE]
         have := b.isLt
         omega
       · intro q _
@@ -213,7 +213,7 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
       apply Matrix.det_eq_zero_of_row_eq_zero p
       intro q
       simp only [Matrix.of_apply]
-      rw [if_neg]
+      rw [ite_eq_right]
       have := q.isLt
       omega
     have hA : ∀ d : ℕ, ∀ a b : Fin (sz k), (b : ℕ) = a + d → (I k a : ℕ) + d ≤ I k b := by
@@ -230,8 +230,8 @@ theorem UpperTheory.bideterminant_antidiag_eval_weight_unit_support :
           have := b.isLt
           omega
         have h1 := ih a ⟨a + d, hb'⟩ rfl
-        have h2 : I k ⟨a + d, hb'⟩ < I k b := hmono k (by rw [Fin.lt_iff_val_lt_val]; simp only; omega)
-        rw [Fin.lt_iff_val_lt_val] at h2
+        have h2 : I k ⟨a + d, hb'⟩ < I k b := hmono k (by rw [Fin.lt_def]; simp only; omega)
+        rw [Fin.lt_def] at h2
         omega
     have hs : 0 < sz k := by
       have := p.isLt
@@ -256,14 +256,14 @@ private theorem sum_ite_eq_of_shifted_index {n m : ℕ} (g : Fin m → Fin n) (h
     (hm : m ≤ n) (i : Fin n) :
     (∑ p : Fin m, if g p = i then 1 else 0 : ℕ) = if n - m ≤ (i : ℕ) then 1 else 0 := by
   by_cases h : n - m ≤ (i : ℕ)
-  · rw [if_pos h, Finset.sum_eq_single (⟨i - (n - m), by have := i.isLt; omega⟩ : Fin m)]
-    · rw [if_pos]
+  · rw [ite_eq_left h, Finset.sum_eq_single (⟨i - (n - m), by have := i.isLt; omega⟩ : Fin m)]
+    · rw [ite_eq_left]
       ext
       rw [hg]
       show n - m + ((i : ℕ) - (n - m)) = (i : ℕ)
       omega
     · intro p _ hp
-      rw [if_neg]
+      rw [ite_eq_right]
       intro he
       apply hp
       ext
@@ -273,10 +273,10 @@ private theorem sum_ite_eq_of_shifted_index {n m : ℕ} (g : Fin m → Fin n) (h
       omega
     · intro hn
       exact absurd (Finset.mem_univ _) hn
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     intro p _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro he
     apply h
     have := hg p
@@ -288,8 +288,8 @@ private theorem sum_ite_pair_castLE_eq_of_shifted_index {n m : ℕ} (hm : m ≤ 
     (∑ p : Fin m, if (g p, Fin.castLE hm p) = (i, j) then 1 else 0 : ℕ)
       = if m + (i : ℕ) = n + j then 1 else 0 := by
   by_cases h : m + (i : ℕ) = n + j
-  · rw [if_pos h, Finset.sum_eq_single (⟨j, by have := i.isLt; omega⟩ : Fin m)]
-    · rw [if_pos]
+  · rw [ite_eq_left h, Finset.sum_eq_single (⟨j, by have := i.isLt; omega⟩ : Fin m)]
+    · rw [ite_eq_left]
       refine Prod.ext (Fin.ext ?_) (Fin.ext ?_)
       · show ((g _ : Fin n) : ℕ) = (i : ℕ)
         rw [hg]
@@ -297,25 +297,25 @@ private theorem sum_ite_pair_castLE_eq_of_shifted_index {n m : ℕ} (hm : m ≤ 
         omega
       · simp
     · intro p _ hp
-      rw [if_neg]
+      rw [ite_eq_right]
       intro he
       apply hp
       ext
       have := congrArg (fun x => (x.2 : ℕ)) he
-      simp only [Fin.coe_castLE] at this
+      simp only [Fin.val_castLE] at this
       show (p : ℕ) = (j : ℕ)
       exact this
     · intro hn
       exact absurd (Finset.mem_univ _) hn
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     apply Finset.sum_eq_zero
     intro p _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro he
     apply h
     have h1 := congrArg (fun x => (x.1 : ℕ)) he
     have h2 := congrArg (fun x => (x.2 : ℕ)) he
-    simp only [Fin.coe_castLE] at h1 h2
+    simp only [Fin.val_castLE] at h1 h2
     rw [hg] at h1
     have := p.isLt
     omega
@@ -367,8 +367,8 @@ private theorem shapeDeg_rev_eq_count_of_shifted {n K : ℕ} (sz : Fin K → ℕ
   rw [Fin.val_rev]
   have := i.isLt
   by_cases h : n - sz k ≤ (i : ℕ)
-  · rw [if_pos h, if_pos (by omega)]
-  · rw [if_neg h, if_neg (by omega)]
+  · rw [ite_eq_left h, ite_eq_left (by omega)]
+  · rw [ite_eq_right h, ite_eq_right (by omega)]
 
 private theorem bidetExp_apply_eq_card_of_canonical {n K : ℕ} (sz : Fin K → ℕ) (hsz : ∀ k, sz k ≤ n)
     (I : ∀ k, Fin (sz k) → Fin n) (hcan : ∀ k p, (I k p : ℕ) + sz k = n + p) (i j : Fin n) :
@@ -526,7 +526,7 @@ private theorem prod_wt {K : Type} [Field K] {n : ℕ} (t : Fin n → K) (ht : �
 
 private theorem detPow_eq {K : Type} [Field K] {n : ℕ} (g : GL (Fin n) K) (hg : ∀ i j, j < i → g.val i j = 0) (s : ℤ) :
     detPow K n g s = (∏ i, g.val i i) ^ s ∧ ∀ i, g.val i i ≠ 0 := by
-  have h : g.val.det = ∏ i, g.val i i := det_of_upperTriangular fun i j h => hg i j h
+  have h : g.val.det = ∏ i, g.val i i := det_of_isUpperTriangular fun i j h => hg i j h
   refine ⟨?_, fun i => Finset.prod_ne_zero_iff.1 (h.symm.trans_ne g.det_ne_zero) i (Finset.mem_univ _)⟩
   unfold detPow
   rw [Units.val_zpow_eq_zpow_val, ← h]
@@ -546,8 +546,8 @@ theorem sqBasis (O K : Type) [CommRing O] [IsDomain O] [Field K] [Algebra O K] (
       ∀ j, j ≠ k0 → ∑ i : Fin n, ((n : ℤ) - 1 - (i : ℕ)) * μ k0 i < ∑ i : Fin n, ((n : ℤ) - 1 - (i : ℕ)) * μ j i := by
   classical
   obtain ⟨bO, hb, hb'⟩ := sSBasis O n n lam.natW
-  haveI : Finite (ssIdx n n lam.natW) := (sSIdxFinite n n _).to_subtype
-  letI := Fintype.ofFinite (ssIdx n n lam.natW)
+  have : Finite (ssIdx n n lam.natW) := (sSIdxFinite n n _).to_subtype
+  let := Fintype.ofFinite (ssIdx n n lam.natW)
   have hli := ldlat_linInd_base hinj hb.1
   have hsp := span_map_weightBasis_eq_dualWeyl (K := K) hb
   let b : Module.Basis (ssIdx n n lam.natW) K (nablaSq K n lam) :=

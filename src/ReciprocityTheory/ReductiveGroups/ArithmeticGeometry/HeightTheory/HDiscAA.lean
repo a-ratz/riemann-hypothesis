@@ -84,14 +84,14 @@ theorem det_blockDiagonal' {ι R : Type*} [Fintype ι] [DecidableEq ι] [CommRin
     first
       | exact Matrix.blockDiagonal'_apply_eq M c k k'
       | simp [Matrix.blockDiagonal'_apply]
-  letI : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
+  let : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
   first
     | rw [(Matrix.blockTriangular_blockDiagonal' M).det]
     | rw [Matrix.BlockTriangular.det (Matrix.blockTriangular_blockDiagonal' M)]
   rw [Finset.prod_congr rfl (fun c _ => hblk c)]
   refine Finset.prod_subset (Finset.subset_univ _) ?_
   intro c _ hc
-  haveI : IsEmpty (κ c) :=
+  have : IsEmpty (κ c) :=
     ⟨fun k => hc (Finset.mem_image.2 ⟨⟨c, k⟩, Finset.mem_univ _, rfl⟩)⟩
   exact Matrix.det_isEmpty
 

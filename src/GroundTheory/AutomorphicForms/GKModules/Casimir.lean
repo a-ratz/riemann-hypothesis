@@ -185,17 +185,17 @@ theorem exists_aeval_laplacian_eq_zero [DecidableEq ι] (K : Subgroup G)
       exact LinearMap.congr_fun (h.rightUAction_comp_rightTranslate a z) f
     rw [e]
     exact Submodule.mem_map_of_mem (Submodule.subset_span ⟨_, h.AdU_mem_centerU a⁻¹ hz, rfl⟩)
-  haveI : FiniteDimensional ℂ (zSpan f) := by
+  have : FiniteDimensional ℂ (zSpan f) := by
     change FiniteDimensional ℂ (Submodule.span ℂ ((fun z => h.rightUAction z f) '' (h.centerU : Set _)))
     exact hfZ
   let W : Submodule ℂ (h.smoothFuns (F := F)) :=
     Submodule.span ℂ (Set.range fun k : K => h.rightTranslateEnd (k : G) f)
-  haveI : FiniteDimensional ℂ W := by
+  have : FiniteDimensional ℂ W := by
     have hW : W.map (h.smoothFuns (F := F)).subtype =
         Submodule.span ℂ (Set.range fun k : K => rightTranslate (k : G) (f : G → F)) := by
       rw [Submodule.map_span, ← Set.range_comp]
       rfl
-    haveI : FiniteDimensional ℂ (W.map (h.smoothFuns (F := F)).subtype) := by
+    have : FiniteDimensional ℂ (W.map (h.smoothFuns (F := F)).subtype) := by
       rw [hW]
       exact hfK
     exact (Submodule.equivMapOfInjective _ (h.smoothFuns (F := F)).injective_subtype W).symm.finiteDimensional
@@ -231,11 +231,11 @@ theorem exists_aeval_laplacian_eq_zero [DecidableEq ι] (K : Subgroup G)
         dsimp only
         rw [SetLike.mem_coe, map_smul]
         exact Submodule.smul_mem _ c (Submodule.subset_span ⟨z, hz, rfl⟩)
-  haveI : Module.Free ℂ W := Module.Free.of_divisionRing ℂ W
+  have : Module.Free ℂ W := Module.Free.of_divisionRing ℂ W
   let wb := Module.finBasis ℂ W
-  haveI : ∀ i, FiniteDimensional ℂ (zSpan (wb i : h.smoothFuns (F := F))) :=
+  have : ∀ i, FiniteDimensional ℂ (zSpan (wb i : h.smoothFuns (F := F))) :=
     fun i => hfin _ (wb i).2
-  haveI : FiniteDimensional ℂ V := by
+  have : FiniteDimensional ℂ V := by
     refine Submodule.finiteDimensional_of_le
       (S₂ := ⨆ i, zSpan (wb i : h.smoothFuns (F := F))) ?_
     rw [Submodule.span_le]

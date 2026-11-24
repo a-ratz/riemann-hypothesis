@@ -60,17 +60,17 @@ namespace GlobalTheory.DiagLoc
 
 theorem formallyEtale_eval₂Hom_of_trBasis {F : Type} [Field F] (c : ℂ →+* F) {r : ℕ}
     {τ : Fin r → F} (hτ : TrBasis c τ) : (MvPolynomial.eval₂Hom c τ).FormallyEtale := by
-  letI := c.toAlgebra
+  let := c.toAlgebra
   have hτ' : IsTranscendenceBasis ℂ τ := hτ
   have hv := hτ'.1
   let P := MvPolynomial (Fin r) ℂ
   let A := Algebra.adjoin ℂ (Set.range τ)
   let Lf := IntermediateField.adjoin ℂ (Set.range τ)
-  haveI := hτ'.isAlgebraic_field
-  haveI : Algebra.IsSeparable Lf F := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have := hτ'.isAlgebraic_field
+  have : Algebra.IsSeparable Lf F := Algebra.IsAlgebraic.isSeparable_of_perfectField
   let f1 : P →+* A := hv.aevalEquiv.toAlgHom.toRingHom
   have h1 : f1.FormallyEtale := by
-    letI : Algebra P A := f1.toAlgebra
+    let : Algebra P A := f1.toAlgebra
     show Algebra.FormallyEtale P A
     exact .of_equiv (AlgEquiv.ofBijective (Algebra.ofId P A) hv.aevalEquiv.bijective)
   open scoped IntermediateField.algebraAdjoinAdjoin in
@@ -98,10 +98,10 @@ theorem formallyEtale_eval₂Hom_of_trBasis {F : Type} [Field F] (c : ℂ →+* 
 theorem exists_basis_omega_of_trBasis {F : Type} [Field F] (c : ℂ →+* F) {n : ℕ}
     {x : Fin n → F} (hx : TrBasis c x) :
     ∃ b : Module.Basis (Fin n) F (Omega c), ∀ i, b i = dFun c (x i) := by
-  letI := c.toAlgebra
+  let := c.toAlgebra
   have hx' : IsTranscendenceBasis ℂ x := hx
-  haveI := hx'.isAlgebraic_field
-  haveI : Algebra.IsSeparable (IntermediateField.adjoin ℂ (Set.range x)) F :=
+  have := hx'.isAlgebraic_field
+  have : Algebra.IsSeparable (IntermediateField.adjoin ℂ (Set.range x)) F :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
   exact exists_basis_kaehler_of_algebraicIndependent hx'.1
 

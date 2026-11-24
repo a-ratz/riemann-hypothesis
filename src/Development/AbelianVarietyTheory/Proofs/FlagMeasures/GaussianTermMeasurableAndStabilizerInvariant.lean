@@ -70,7 +70,7 @@ theorem gaussAt_meas_inv : ∀ (I : AutInst) (x : Fin I.n → I.E), IsOpen {h : 
   · refine Continuous.measurable (ENNReal.continuous_ofReal.comp ?_)
     have hc : Continuous fun g : Formalism.REAL.UJ (I.ε v) => (uMat g)⁻¹ := by
       simp only [uMat_inv_eq]
-      exact Units.continuous_coe_inv.comp continuous_subtype_val
+      exact Units.continuous_coe_inv.comp continuous_subtypeVal
     have hc2 := hc.matrix_mulVec (continuous_const (y := infVec I v x))
     unfold gauss
     refine Real.continuous_exp.comp (Continuous.neg (continuous_finsetSum _ fun i _ => ?_))

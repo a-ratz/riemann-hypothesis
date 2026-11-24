@@ -271,7 +271,7 @@ private theorem col_zero (T P : M4 B) (hT : ∀ i j, j < i → T i j = 0) (hP : 
 
 private theorem charpoly_tri (c : Fin 4 → B) (T : M4 B) (hT : ∀ i j, j < i → T i j = 0) (hd : ∀ i, T i i = c i) :
     T.charpoly = ∏ j, (Polynomial.X - C (c j)) := by
-  rw [Matrix.charpoly_of_upperTriangular T (fun i j h => hT i j h)]
+  rw [Matrix.charpoly_of_isUpperTriangular T (fun i j h => hT i j h)]
   simp only [hd]
 
 private theorem tri_zero (c : Fin 4 → B) (hc : ∀ i j, i ≠ j → IsUnit (c i - c j)) (T R : M4 B)
@@ -350,7 +350,7 @@ private theorem tb_avg {k G W : Type} [Field k] [CharZero k] [Group G] [AddCommG
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → W := fun g => f g - (a g x - x) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
     intro g h
@@ -496,7 +496,7 @@ private theorem tb_uniq {K H : Type} [Field K] (r : H → M4 K) (U U' V V' : M4 
   have hdet : (U * V').det ≠ 0 := by
     rw [Matrix.det_mul]
     exact mul_ne_zero (Matrix.isUnit_det_of_right_inverse hU').ne_zero (Matrix.isUnit_det_of_right_inverse hV).ne_zero
-  rw [Matrix.det_of_upperTriangular (fun i j h => hP i j h)] at hdet
+  rw [Matrix.det_of_isUpperTriangular (fun i j h => hP i j h)] at hdet
   have h3 := congrFun (congrFun (e g) i) i
   rw [tb_tri_diag (h1 g) hP, tb_tri_diag hP (h2 g), mul_comm] at h3
   exact mul_left_cancel₀ (Finset.prod_ne_zero_iff.1 hdet i (Finset.mem_univ i)) h3
@@ -505,10 +505,10 @@ private theorem tb_sub {l : ℕ} [Fact l.Prime] {Γ A : Type} [Group Γ] [Topolo
     [CommGroup A] (φ : Γ →* Formalism.BasicNotions.Loc.GQ l) (hφ : Continuous φ) (σ : Γ) (hσ : Loc.IsFrob (φ σ)) (χ : Γ →* A)
     (hχ : IsOpen (χ.ker : Set Γ)) :
     ∃ U : Subgroup Γ, U.Normal ∧ IsOpen (U : Set Γ) ∧ σ ∈ U ∧ ∀ g ∈ U, φ g ∈ Loc.Iq l → χ g = 1 := by
-  haveI := Subgroup.quotient_finite_of_isOpen _ hχ
-  haveI : Finite χ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange χ).toEquiv
-  letI : TopologicalSpace χ.range := ⊥
-  haveI : DiscreteTopology χ.range := ⟨rfl⟩
+  have := Subgroup.quotient_finite_of_isOpen _ hχ
+  have : Finite χ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange χ).toEquiv
+  let : TopologicalSpace χ.range := ⊥
+  have : DiscreteTopology χ.range := ⟨rfl⟩
   obtain ⟨f, hf, hfI, hfσ⟩ := Loc.frobFree (φ σ) hσ χ.range (χ.rangeRestrict σ)
   refine ⟨(χ.rangeRestrict * (f.comp φ)⁻¹).ker, inferInstance, ?_, ?_, fun g hg hI => ?_⟩
   · refine Subgroup.isOpen_mono (H₁ := χ.ker ⊓ (f.comp φ).ker) (fun g hg => ?_)
@@ -533,10 +533,10 @@ private theorem tb_loc (hP : Loc.LocalPublishedTheorems) {l : ℕ} [Fact l.Prime
     (h3 : ∀ i, ∀ g ∈ U, φ g ∈ Loc.Iq l → κ i g = Loc.cycA l l (DualNumber E) (φ g) ^ w i)
     (h4 : ∀ i j, i < j → ∃ g ∈ U, (κ i g : DualNumber E).fst ≠ (κ j g : DualNumber E).fst * (Loc.cycA l l E (φ g) : E)) :
     (fun g => tbSnd (r' g) * r g⁻¹) ∈ Loc.finiteCocycles φ (Loc.adGL r.toHomUnits) := by
-  haveI : IsModuleTopology ℚ_[l] (M4 E) := inferInstanceAs (IsModuleTopology ℚ_[l] (Fin 4 → Fin 4 → E))
+  have : IsModuleTopology ℚ_[l] (M4 E) := inferInstanceAs (IsModuleTopology ℚ_[l] (Fin 4 → Fin 4 → E))
   have hri : Continuous fun g => r g⁻¹ := hr.comp continuous_inv
   refine (Loc.pr6 hP φ hφ (Loc.adGL r.toHomUnits) ?_ _ ⟨hr'.matrix_mul hri, tb_coc r r' h⟩ U hU
-    (r.toHomUnits.comp U.subtype) (hr.comp continuous_subtype_val) LinearMap.id LinearMap.id (fun _ => rfl)
+    (r.toHomUnits.comp U.subtype) (hr.comp continuous_subtypeVal) LinearMap.id LinearMap.id (fun _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (r'.toHomUnits.comp U.subtype) (fun g i j => ?_) u
     (fun i => (κ i).comp U.subtype) w (fun g => ⟨h1 g, h2 g⟩) hw (fun i g => h3 i g g.2) fun i j hij => ?_).2.2
   · simp only [ReciprocityTheory.Gal.ContAction, tb_ad]
@@ -575,7 +575,7 @@ private theorem tb_place (D : Raw Ω c) (hD : D.Good) (K : Type) [CommRing K] [A
   obtain ⟨f1, -, -, -, -, -, -, -, -, -, -, f2, -⟩ := facts D hD
   by_cases hS : ∃ p ∈ D.Sb, ((p : ℕ) : 𝓞 ℚ) ∈ w.asIdeal
   · obtain ⟨p, hp1, hp2⟩ := hS
-    haveI : Fact p.Prime := ⟨(f1 p hp1).1⟩
+    have : Fact p.Prime := ⟨(f1 p hp1).1⟩
     obtain ⟨w', hw', hAw⟩ := GlobalTheory.DecLocal.exists_place_below (p := p) (F := ℚ) (D.pl p) (hD.pl_over p Fact.out)
     obtain ⟨j, hj⟩ := (Loc.decEmb (F := ℚ) (Ω := Ω) (v := p)).1 _ w' hAw hw'
     refine ⟨D.pl p, D.ψ.ker, ?_, hD.psi_open, fun g hg hg' => (hp p hp1).2 ⟨g, hg.1⟩ ⟨hg, hg'⟩⟩
@@ -596,7 +596,7 @@ private theorem tb_desc (D : Raw Ω c) (r' : G ℚ Ω →* M4 (DualNumber (Padic
   have hO : ∀ x : c.O, algebraMap c.O (PadicAlgCl l) x ∈ K := fun x => by
     have := (hE (algebraMap c.O R x)).1
     rwa [F.commutes] at this
-  letI : Algebra c.O ↥K := ((algebraMap c.O (PadicAlgCl l)).codRestrict K hO).toAlgebra
+  let : Algebra c.O ↥K := ((algebraMap c.O (PadicAlgCl l)).codRestrict K hO).toAlgebra
   let F' : R →ₐ[c.O] DualNumber ↥K :=
     { toFun := fun a => ⟨⟨(F a).fst, (hE a).1⟩, ⟨(F a).snd, (hE a).2⟩⟩
       map_one' := TrivSqZeroExt.ext (Subtype.ext (congrArg TrivSqZeroExt.fst (map_one F)))
@@ -625,8 +625,8 @@ private theorem tb_atL (D : Raw Ω c) (hD : D.Good) (hP : Loc.LocalPublishedTheo
   have hcr := (eptInt D hD r hr).1
   have hcr' := tb_cont D r' hr'
   obtain ⟨K, _, _, r₁, hO, hr₁, he⟩ := tb_desc D r' hr'
-  haveI : IsModuleTopology ℚ_[l] ↥K := isModuleTopologyOfFiniteDimensional
-  haveI : CompactSpace (D.Gp l) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
+  have : IsModuleTopology ℚ_[l] ↥K := isModuleTopologyOfFiniteDimensional
+  have : CompactSpace (D.Gp l) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
   have hOi : Function.Injective (algebraMap c.O K) := fun a b e => Subtype.ext (by rw [← hO, ← hO, e])
   obtain ⟨-, -, -, ⟨-, hord⟩, -⟩ := ptIn D hD _ r₁ hr₁
   obtain ⟨u, h1, h2⟩ := (ordLocal _ (DualNumber K) _ D.s0 _ hD.decompSigma_mem.1.1 fun i j hij => by
@@ -636,7 +636,7 @@ private theorem tb_atL (D : Raw Ω c) (hD : D.Good) (hP : Loc.LocalPublishedTheo
   let σ : D.Gp l := ⟨D.sg l, (hT l (Finset.mem_insert_self _ _)).1⟩
   obtain ⟨U, hUn, hU, hσ, hUI⟩ := tb_sub φ hφ.continuous σ (hF σ rfl) ((D.ψ.prod D.om).comp (D.Gp l).subtype) (by
     rw [← MonoidHom.comap_ker, MonoidHom.ker_prod]
-    exact (hD.psi_open.inter hom).preimage continuous_subtype_val)
+    exact (hD.psi_open.inter hom).preimage continuous_subtypeVal)
   obtain ⟨v, κ', hv, hκI, -, -, -, hne⟩ := Loc.spPtL D hD (r.comp (D.Gp l).subtype) (by
     obtain ⟨R, i1, i2, i3, ρ, y, hpt, rfl⟩ := hr
     exact ⟨R, i1, i2, i3, D.loc ρ l, y, hpt.atL, rfl⟩)
@@ -670,10 +670,10 @@ private theorem tb_atL (D : Raw Ω c) (hD : D.Good) (hP : Loc.LocalPublishedTheo
     fin_cases i <;> fin_cases j <;> simp [Raw.wts4] at hij ⊢ <;> omega
   have key := tb_loc hP φ hφ (r₀.comp (D.Gp l).subtype) (r₁.comp (D.Gp l).subtype) (fun g => rfl)
     (continuous_matrix fun i j => continuous_induced_rng.2 (by
-      refine ((hcr.comp (continuous_subtype_val (p := (· ∈ D.Gp l)))).matrix_elem i j).congr fun g => ?_
+      refine ((hcr.comp (continuous_subtypeVal (p := (· ∈ D.Gp l)))).matrix_elem i j).congr fun g => ?_
       exact (congrFun (congrFun (hr₀ g) i) j).symm))
     (continuous_matrix fun i j => continuous_induced_rng.2 (by
-      refine ((hcr'.comp (continuous_subtype_val (p := (· ∈ D.Gp l)))).matrix_elem i j).congr fun g => ?_
+      refine ((hcr'.comp (continuous_subtypeVal (p := (· ∈ D.Gp l)))).matrix_elem i j).congr fun g => ?_
       exact (he g i j).2.symm))
     U hU u κ _ hw h1 hκ (fun i g hg hgI => by
       have e := hUI g hg hgI
@@ -695,7 +695,7 @@ private theorem tb_atL (D : Raw Ω c) (hD : D.Good) (hP : Loc.LocalPublishedTheo
       simp only [Loc.cycA, MonoidHom.comp_apply, hc]
       rfl)
   have key2 := Loc.z1fCoef φ _ ((Loc.adGL r.toHomUnits).comp (D.Gp l).subtype) K.val.toLinearMap.mapMatrix
-    (continuous_id.matrix_map continuous_subtype_val) (fun g X => by
+    (continuous_id.matrix_map continuous_subtypeVal) (fun g X => by
       rw [tb_ad, MonoidHom.comp_apply (Loc.adGL r.toHomUnits), tb_ad, ← hr₀, ← hr₀]
       exact (Matrix.map_mul (f := (K.val : K →+* PadicAlgCl l))).trans
         (congrArg (· * _) (Matrix.map_mul (f := (K.val : K →+* PadicAlgCl l))))) _ key
@@ -713,8 +713,8 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.tanBK :
     ⟨(tb_cont D r' hr').matrix_mul ((eptInt D hD r hr).1.comp continuous_inv), tb_coc r r' h'⟩
   refine ⟨hZ, ⟨fun w hw => ?_, fun τ => ?_⟩, fun g => ?_⟩
   · obtain ⟨A, N, hA, hN, h1⟩ := tb_place D hD _ r' hr' w hw
-    haveI := Subgroup.quotient_finite_of_isOpen N hN
-    haveI : N.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have := Subgroup.quotient_finite_of_isOpen N hN
+    have : N.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     obtain ⟨y, hy⟩ := tb_avg (k := PadicAlgCl l) (G := Ine (F := ℚ) A)
       (fun g => Loc.adGL r.toHomUnits g) (fun g h x => by simp)
       (fun g => tbSnd (r' g) * r (g : G ℚ Ω)⁻¹) (fun g h => hZ.2 g h) (N.subgroupOf _) 0 (fun g hg => by

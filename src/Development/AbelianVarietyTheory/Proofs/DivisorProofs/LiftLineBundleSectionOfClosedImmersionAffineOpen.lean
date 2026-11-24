@@ -98,9 +98,9 @@ theorem lift_section_of_closedImm : ∀ (X' Z' : Scheme.{0}) (i' : Z' ⟶ X') [I
       ∀ k, (i'.app (L'.U k ⊓ Y')).hom (θ k) = τ k := by
   intro X' Z' i' _ L' hL Y' hY τ hτ
   have hL' := ReciprocityTheory.ChartRestriction.G.Semi.LB.isLB_pull hL i'
-  haveI := GlobalTheory.LB.isQuasicoherent_toMod hL
-  haveI := GlobalTheory.LB.isQuasicoherent_toMod hL'
-  haveI := epi_toPushforward_of_closedImm i' hL
+  have := GlobalTheory.LB.isQuasicoherent_toMod hL
+  have := GlobalTheory.LB.isQuasicoherent_toMod hL'
+  have := epi_toPushforward_of_closedImm i' hL
   have hsurj := GlobalTheory.QCoh.app_surjective_of_epi_of_isAffineOpen (GlobalTheory.LB.toPushforward L' i') hY
   have le1 : ∀ m : (L'.pull i').ι, i' ⁻¹ᵁ Y' ⊓ (L'.pull i').U m ≤ i' ⁻¹ᵁ (L'.U (m PUnit.unit) ⊓ Y') :=
     fun m z hz => ⟨GlobalTheory.LB.pull_U_le i' m hz.2, hz.1⟩

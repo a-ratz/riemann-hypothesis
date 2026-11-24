@@ -63,7 +63,7 @@ attribute [local instance] Over.cartesianMonoidalCategory in
 variable {S : Scheme.{0}} in
 theorem _root_.GlobalTheory.DivisibleHom.cancel_of_flat_surjective {X Y Z : Over S} (e : X ⟶ Y) [Flat e.left]
     [Surjective e.left] {f g : Y ⟶ Z} (h : e ≫ f = e ≫ g) : f = g := by
-  haveI := Flat.epi_of_flat_of_surjective e.left
+  have := Flat.epi_of_flat_of_surjective e.left
   ext1
   rw [← cancel_epi e.left]
   simpa using congrArg CommaMorphism.left h
@@ -168,14 +168,14 @@ theorem _root_.GlobalTheory.DivisibleHom.isMonHom_of_factor {A B : Over S} [GrpO
   apply _root_.GlobalTheory.DivisibleHom.isMonHom_of_mul_points
   intro T x y
   obtain ⟨T₁, e₁, x', he₁, hs₁, hx'⟩ := _root_.GlobalTheory.DivisibleHom.exists_lift_point (_root_.ReciprocityTheory.ChartRestriction.G.Out.mulA A M) x
-  haveI := he₁
-  haveI := hs₁
+  have := he₁
+  have := hs₁
   obtain ⟨T₂, e₂, y', he₂, hs₂, hy'⟩ :=
     _root_.GlobalTheory.DivisibleHom.exists_lift_point (_root_.ReciprocityTheory.ChartRestriction.G.Out.mulA A M) (e₁ ≫ y)
-  haveI := he₂
-  haveI := hs₂
-  haveI : Flat (e₂ ≫ e₁).left := by rw [Over.comp_left]; infer_instance
-  haveI : Surjective (e₂ ≫ e₁).left := by rw [Over.comp_left]; infer_instance
+  have := he₂
+  have := hs₂
+  have : Flat (e₂ ≫ e₁).left := by rw [Over.comp_left]; infer_instance
+  have : Surjective (e₂ ≫ e₁).left := by rw [Over.comp_left]; infer_instance
   have hxe : (e₂ ≫ e₁) ≫ x = (e₂ ≫ x') ≫ _root_.ReciprocityTheory.ChartRestriction.G.Out.mulA A M := by
     rw [Category.assoc, ← hx', Category.assoc]
   have hye : (e₂ ≫ e₁) ≫ y = y' ≫ _root_.ReciprocityTheory.ChartRestriction.G.Out.mulA A M := by
@@ -205,13 +205,13 @@ theorem _root_.GlobalTheory.DivisibleHom.exists_eq_pow_of_torsion_comp_eq_one :
           (∃ φ : P.A ⟶ B, IsMonHom φ ∧ u = φ ^ M) ∧ (u ^ M = 1 → u = 1) := by
   intro H S _ P B _ _ M hM u hu hkill
   obtain ⟨hfin, hflat, hsurj, -⟩ := H S P M hM
-  haveI := hfin
-  haveI := hflat
-  haveI := hsurj
-  haveI := hu
+  have := hfin
+  have := hflat
+  have := hsurj
+  have := hu
   obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.DivisibleHom.exists_factor M u hkill
-  haveI : IsMonHom (_root_.ReciprocityTheory.ChartRestriction.G.Out.mulA P.A M ≫ φ) := by rw [hφ]; infer_instance
-  haveI := _root_.GlobalTheory.DivisibleHom.isMonHom_of_factor M φ
+  have : IsMonHom (_root_.ReciprocityTheory.ChartRestriction.G.Out.mulA P.A M ≫ φ) := by rw [hφ]; infer_instance
+  have := _root_.GlobalTheory.DivisibleHom.isMonHom_of_factor M φ
   refine ⟨⟨φ, inferInstance, ?_⟩, fun h => ?_⟩
   · rw [← hφ, _root_.GlobalTheory.DivisibleHom.mulA_comp]
   · apply _root_.GlobalTheory.DivisibleHom.cancel_of_flat_surjective (_root_.ReciprocityTheory.ChartRestriction.G.Out.mulA P.A M)

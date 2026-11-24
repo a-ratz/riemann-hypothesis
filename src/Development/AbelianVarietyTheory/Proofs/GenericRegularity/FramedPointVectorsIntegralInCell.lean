@@ -120,7 +120,7 @@ theorem cell_columns_saturated_and_triangular :
   intro V L _ _ _ _ _ n r ι u ⟨h0, h1⟩
   set A : Matrix (Fin r) (Fin r) V := u.submatrix ι id with hA
   have hdet : A.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular A (fun i j hij => h0 i j hij)]
+    rw [det_of_isLowerTriangular A (fun i j hij => h0 i j hij)]
     simp [hA, h1]
   have hAu : IsUnit A.det := hdet ▸ isUnit_one
   have hinj : Function.Injective (algebraMap V L) := IsFractionRing.injective V L

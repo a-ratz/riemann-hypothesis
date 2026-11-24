@@ -298,7 +298,7 @@ theorem typesIn_fd (ε : Fin n → Bool) {H : Type} [NormedAddCommGroup H] [Inne
   have hσ' : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ := by
     rw [mir_isURepOn_iff, mir_UJset_eq]; exact hσ
   have hadm := GlobalTheory.PsCo.TrAdm.isAdmissibleSub_top n ε H σ hσ' hirr
-  haveI : Finite A := hA.to_subtype
+  have : Finite A := hA.to_subtype
   have : ∀ μ : A,
       FiniteDimensional ℂ (sSup {S : Submodule ℂ H | S ≤ ⊤ ∧ Formalism.MainNotions.S.IsKTypeOf ε σ μ S} : Submodule ℂ H) :=
     fun μ => hadm μ

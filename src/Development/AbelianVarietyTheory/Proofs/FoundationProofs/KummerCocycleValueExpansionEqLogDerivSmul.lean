@@ -249,7 +249,7 @@ theorem smul_D_psi : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebr
       refine hψ.sub _ _ (fun j => ?_) (fun r hr => ?_)
       · simp [dn]
       · have h2 : ¬ ((p ^ L : ℕ) : ℤ) ∣ r := by simpa using hr
-        exact if_neg h2
+        exact ite_eq_right h2
     rw [h1]
     exact D.map_algebraMap _
   let E : Lau p →+ KaehlerDifferential (O0 p) (integralClosure (O0 p) Ω) :=
@@ -353,7 +353,7 @@ theorem towerAlg_le_iSup (T : Tower p Ω) : towerAlg T ≤ ⨆ m, levelAlg T (m 
 theorem exists_level (hC : IsClo p Ω) (T : Tower p Ω) (n : ℕ) (hn : 1 ≤ n) :
     ∃ D : integralClosure (O0 p) Ω → Frac p Ω, IsDerOn (levelAlg T n) D ∧ D (zS T n) = 0 ∧
       D (qS T n) = Submodule.Quotient.mk (T.qq n / (p : Ω) ^ n) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap hC.inj
+  have : CharZero Ω := charZero_of_injective_algebraMap hC.inj
   have hp0 : (p : Ω) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero
   refine _root_.GlobalTheory.AlmostEt.LevDer.exists_derOn_levelAlg p Ω hC T n hn (Frac p Ω) 0 _ (smul_zero _) ?_
   rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
@@ -371,7 +371,7 @@ theorem smul_mk_eq (hC : IsClo p Ω) (T : Tower p Ω) (m : ℕ) :
     ((p : integralClosure (O0 p) Ω) * qS T (m + 1) ^ (p - 1)) •
         (Submodule.Quotient.mk (T.qq (m + 1) / (p : Ω) ^ (m + 1)) : Frac p Ω) =
       Submodule.Quotient.mk (T.qq m / (p : Ω) ^ m) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap hC.inj
+  have : CharZero Ω := charZero_of_injective_algebraMap hC.inj
   have hp0 : (p : Ω) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero
   have hpn : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   rw [← Submodule.Quotient.mk_smul]
@@ -446,7 +446,7 @@ theorem dlog_indep_pow_three : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field �
     (∃ t, (p : (integralClosure (O0 p) Ω)) ^ 3 * y = (p : (integralClosure (O0 p) Ω)) ^ n * t) := by
   intro p _ Ω _ _ hp2 hclo T n hn x y zi qi hz hq hrel
   have hpΩ : (p : Ω) ≠ 0 := by
-    haveI := GlobalTheory.K5.Basic.charZero_of_isClo hclo
+    have := GlobalTheory.K5.Basic.charZero_of_isClo hclo
     exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hrel' : ∑ i, (![x * zi, y * qi] : Fin 2 → integralClosure (O0 p) Ω) i •
       KaehlerDifferential.D (O0 p) (integralClosure (O0 p) Ω)
@@ -744,7 +744,7 @@ theorem torsion_span_and_indep : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c
   intro Ω _ _ hΩ T n hn z qn zi qi hz hq hzi hqi
   obtain rfl : z = zS T n := Subtype.ext hz
   obtain rfl : qn = qS T n := Subtype.ext hq
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hΩ
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hΩ
   have hP : (p : integralClosure (O0 p) Ω) ≠ 0 := by
     intro h
     have h2 : (p : Ω) = 0 := by simpa using congrArg Subtype.val h
@@ -786,8 +786,8 @@ theorem kaehler_map_ex (R A B : Type) [CommRing R] [CommRing A] [CommRing B] [Al
     [Algebra R B] (f : A →ₐ[R] B) :
     ∃ φ : KaehlerDifferential R A →+ KaehlerDifferential R B, ∀ a x : A,
       φ (a • KaehlerDifferential.D R A x) = f a • KaehlerDifferential.D R B (f x) := by
-  letI : Algebra A B := f.toRingHom.toAlgebra
-  haveI : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq (fun r => (f.commutes r).symm)
+  let : Algebra A B := f.toRingHom.toAlgebra
+  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq (fun r => (f.commutes r).symm)
   refine ⟨(KaehlerDifferential.map R R A B).toAddMonoidHom, fun a x => ?_⟩
   simp only [LinearMap.toAddMonoidHom_coe, LinearMap.map_smul_of_tower, KaehlerDifferential.map_D]
   rw [← algebraMap_smul B a]
@@ -827,7 +827,7 @@ theorem psi_fix {T : Tower p Ω} {L : ℕ} {ψ : O0 p →+* Ω} (hψ : IsReb T L
 
 theorem exists_root_alg (hΩ : IsClo p Ω) {e : Ω} (he : IsIntegral (O0 p) e) (hea : IsAlgZp p e)
     (N : ℕ) (hN : 0 < N) : ∃ y : Ω, y ^ N = e ∧ IsIntegral (O0 p) y ∧ IsAlgZp p y := by
-  haveI := hΩ.clo
+  have := hΩ.clo
   obtain ⟨y, hy⟩ := IsAlgClosed.exists_pow_nat_eq e hN
   refine ⟨y, hy, IsIntegral.of_pow hN (hy ▸ he), ?_⟩
   obtain ⟨P, hP, hPe⟩ := hea

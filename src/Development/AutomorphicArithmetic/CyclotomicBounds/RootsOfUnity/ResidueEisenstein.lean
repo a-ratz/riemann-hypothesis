@@ -100,13 +100,13 @@ theorem torsion_reduce_injective (L : Type) [Field L] [NumberField L] (v : Heigh
 
 theorem tame_ext : ∀ (L : Type) [Field L] [NumberField L] (v : HeightOneSpectrum (𝓞 L)), ((NumberField.Units.torsionOrder L : ℕ) : 𝓞 L) ∉ v.asIdeal → NumberField.Units.torsionOrder L + 1 < Ideal.absNorm v.asIdeal → ∀ ε : NumberField.Units.torsion L →* ℂˣ, ∃ θ : (𝓞 L ⧸ v.asIdeal)ˣ →* ℂˣ, θ ≠ 1 ∧ ∀ ζ : NumberField.Units.torsion L, θ (Units.map (Ideal.Quotient.mk v.asIdeal).toMonoidHom (ζ : (𝓞 L)ˣ)) = ε ζ := by
   intro L _ _ v hw hN ε
-  haveI := v.isMaximal
+  have := v.isMaximal
   have hf := torsion_reduce_injective L v hw
   set f := (Units.map (Ideal.Quotient.mk v.asIdeal).toMonoidHom).comp
     (NumberField.Units.torsion L).subtype with hf_def
   have hcardk : Nat.card (𝓞 L ⧸ v.asIdeal) = Ideal.absNorm v.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 L ⧸ v.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcardk]; omega)
+  have : Finite (𝓞 L ⧸ v.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcardk]; omega)
   let e := MonoidHom.ofInjective hf
   obtain ⟨θ0, hθ0⟩ := MonoidHom.domRestrict_surjective (M := ℂ) f.range (ε.comp e.symm.toMonoidHom)
   have hext : ∀ θ : (𝓞 L ⧸ v.asIdeal)ˣ →* ℂˣ,
@@ -123,7 +123,7 @@ theorem tame_ext : ∀ (L : Type) [Field L] [NumberField L] (v : HeightOneSpectr
     rw [← Nat.card_congr e.toEquiv]
     rfl
   have hG : Nat.card (𝓞 L ⧸ v.asIdeal)ˣ = Ideal.absNorm v.asIdeal - 1 := by
-    letI : Field (𝓞 L ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+    let : Field (𝓞 L ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
     have h := Nat.card_units (𝓞 L ⧸ v.asIdeal)
     rw [hcardk] at h
     exact h
@@ -136,8 +136,8 @@ theorem tame_ext : ∀ (L : Type) [Field L] [NumberField L] (v : HeightOneSpectr
   have hker : 2 ≤ Nat.card (MonoidHom.domRestrictHom f.range ℂˣ).ker := by
     rw [CommGroup.card_domRestrictHom_ker]
     exact hq
-  haveI : Finite (MonoidHom.domRestrictHom f.range ℂˣ).ker := Nat.finite_of_card_ne_zero (by omega)
-  haveI : Nontrivial (MonoidHom.domRestrictHom f.range ℂˣ).ker :=
+  have : Finite (MonoidHom.domRestrictHom f.range ℂˣ).ker := Nat.finite_of_card_ne_zero (by omega)
+  have : Nontrivial (MonoidHom.domRestrictHom f.range ℂˣ).ker :=
     Finite.one_lt_card_iff_nontrivial.1 (by omega)
   obtain ⟨χ, hχ⟩ := exists_ne (1 : (MonoidHom.domRestrictHom f.range ℂˣ).ker)
   by_cases h0 : θ0 = 1

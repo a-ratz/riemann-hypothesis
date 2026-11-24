@@ -477,8 +477,8 @@ theorem fix_pow (l : ℕ) [Fact l.Prime] (C : Core l) (r : ℕ) (x : Per.Acris l
     exact ⟨z, 0, by simpa using hz⟩
   | succ r ih =>
     have he := _root_.GlobalTheory.MemLoc.core_isEps l C
-    haveI := (_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).1
-    haveI : IsDomain (Per.Acris l) := (_root_.GlobalTheory.MemLoc.crisP_injective l C.j C.j_cris).isDomain C.j
+    have := (_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).1
+    have : IsDomain (Per.Acris l) := (_root_.GlobalTheory.MemLoc.crisP_injective l C.j C.j_cris).isDomain C.j
     obtain ⟨hFil, -⟩ := _root_.GlobalTheory.MemLoc.filtration_eq_xi_pow l C.ε he
     obtain ⟨-, hk, -, hth, -⟩ := _root_.GlobalTheory.MemLoc.thetaD_props l
     obtain ⟨w, hw⟩ := exists_w C.ε he.1

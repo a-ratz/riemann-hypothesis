@@ -186,7 +186,7 @@ private theorem line_exp (k L : ℕ) [NeZero L] (f : CuspForm (Gamma1 L) (k : �
     rw [hc, mul_assoc]
     unfold coef ex Function.Periodic.qParam
     congr 1
-    rw [← Complex.exp_nat_mul, Complex.ofReal_exp, ← Complex.exp_add]
+    rw [← Complex.exp_natCast_mul, Complex.ofReal_exp, ← Complex.exp_add]
     congr 1
     push_cast
     linear_combination (-(2 * (Real.pi : ℂ) * n * y)) * Complex.I_sq

@@ -157,13 +157,13 @@ theorem lDiag_box_ne : ∃ f : SInf F κ, lDiag F κ (boxFun (pure f (stdF κ)) 
     integral_prod_mul (fun u => (((b (eI F κ u)) ^ 2 : ℝ) : ℂ)) (fun y => ((‖g y‖ : ℝ) : ℂ)), integral_complex_ofReal,
     integral_complex_ofReal]
   refine mul_ne_zero (Complex.ofReal_ne_zero.2 (ne_of_gt ?_)) (Complex.ofReal_ne_zero.2 (ne_of_gt ?_))
-  · refine ((b.continuous.comp (eI F κ).continuous).pow 2).integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 0)
+  · refine ((b.continuous.comp (eI F κ).continuous).pow 2).integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 0)
       ?_ (fun u => sq_nonneg _) ?_
     · exact (b.hasCompactSupport.comp_homeomorph (eI F κ).toHomeomorph).comp_left (g := fun x : ℝ => x ^ 2) (by simp)
     · simp only [Function.comp_apply, map_zero]
       rw [b.one_of_mem_closedBall (Metric.mem_closedBall_self zero_le_one)]
       simp
-  · exact hg.1.continuous.norm.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 0) hg.2.norm
+  · exact hg.1.continuous.norm.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 0) hg.2.norm
       (fun _ => norm_nonneg _) (by simp [g0])
 
 open Classical in

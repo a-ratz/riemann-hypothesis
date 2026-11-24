@@ -292,11 +292,11 @@ theorem sq_chart_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     rw [hTiT, hc1, Matrix.one_mul, Matrix.mul_one, hcT, sub_self, add_zero]
   rw [hy0] at hgc hg0 hgev
   refine ⟨Subtype.val ⁻¹' {y | Bq (g y) (g y) + Lq (g y) = y}, fun T => Ti * g T.val, ?_, ?_, ?_, ?_⟩
-  · exact continuous_subtype_val.continuousAt.preimage_mem_nhds hgev
+  · exact continuous_subtypeVal.continuousAt.preimage_mem_nhds hgev
   · show Ti * g Tm = 1
     rw [hg0, hTiT]
   · exact (continuous_const.matrix_mul continuous_id).continuousAt.comp
-      (ContinuousAt.comp_of_eq hgc continuous_subtype_val.continuousAt rfl)
+      (ContinuousAt.comp_of_eq hgc continuous_subtypeVal.continuousAt rfl)
   · intro T hT'
     have hT'' : Bq (g T.val) (g T.val) + Lq (g T.val) = T.val := hT'
     show gramR (Ainf F) σ J (fun b i => ∑ c, (Ti * g T.val) c b * ratTup (Ainf F) Y c i) = T.val
@@ -326,8 +326,8 @@ theorem sq_chart_core {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
 
 theorem sqChart_holds : SqChart := by
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
-  haveI : FiniteDimensional X.B.I.F X.B.I.E :=
+  have : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
+  have : FiniteDimensional X.B.I.F X.B.I.E :=
     Module.finite_of_finrank_pos (by rw [X.B.I.cm.deg2]; norm_num)
   have hσ : ∀ x, X.B.I.cm.sig (X.B.I.cm.sig x) = x := fun x => star_star x
   have hdet := detNZ_holds X u' ψ hT μinf νinf fibInf hP

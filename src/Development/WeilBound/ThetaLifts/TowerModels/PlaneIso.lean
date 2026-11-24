@@ -98,18 +98,18 @@ theorem exists_pos_neg (h : IsCMExt F E σ) (e : E →+* ℂ) {n r s : ℕ} {M :
     rw [gram_vec, hA, ← Pi.single_star]; simp
   constructor
   · exact hd.exists_mem_open (isOpen_lt continuous_const hc)
-      ⟨A *ᵥ Pi.single (Sum.inl ⟨0, hr⟩) 1, by simp only [Set.mem_setOf_eq, ent]; simp⟩
+      ⟨A *ᵥ Pi.single (Sum.inl ⟨0, hr⟩) 1, by simp only [Set.mem_ofPred_eq, ent]; simp⟩
   · exact hd.exists_mem_open (isOpen_lt hc continuous_const)
-      ⟨A *ᵥ Pi.single (Sum.inr ⟨0, hs⟩) 1, by simp only [Set.mem_setOf_eq, ent]; simp⟩
+      ⟨A *ᵥ Pi.single (Sum.inr ⟨0, hs⟩) 1, by simp only [Set.mem_ofPred_eq, ent]; simp⟩
 
 theorem exists_isotropic (h : IsCMExt F E σ) (emb : ∀ w : InfinitePlace F, EmbOver E w) {n r s : ℕ} (hn : 3 ≤ n)
     (hr : 1 ≤ r) (hs : 1 ≤ s) {J : Matrix (Fin n) (Fin n) E} (hdet : J.det ≠ 0) {ε : E} (hε : ε = 1 ∨ ε = -1)
     (hJ : ∀ i j, σ (J j i) = ε * J i j) {κ : ℂ} (hκ0 : κ ≠ 0) (hκ : ∀ e : E →+* ℂ, star κ * e ε = κ)
     (hsig : ∀ w, HasSig (κ • J.map (emb w).1) r s) : ∃ x : Fin n → E, x ≠ 0 ∧ form σ J x x = 0 := by
-  haveI := h.1
-  haveI := h.2.1
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have := h.1
+  have := h.2.1
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : IsCMField E := IsCMField.ofCMExtension F E
   obtain ⟨δ₀, hδ₀0, hδ₀⟩ := exists_skew h
   obtain ⟨δ, hδ0, hδ⟩ : ∃ δ : E, δ ≠ 0 ∧ σ δ * ε = δ := by
     rcases hε with rfl | rfl

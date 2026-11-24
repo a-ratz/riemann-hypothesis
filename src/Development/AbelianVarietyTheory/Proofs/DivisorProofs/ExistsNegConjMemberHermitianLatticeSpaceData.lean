@@ -168,7 +168,7 @@ theorem negConj_isHerm : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
     let N := G.Λ (.grid (i : ℕ) (j : ℕ))
     have hN : Submodule.IsFullLattice D.host.E N :=
       Formalism.IndefR.Fin.PDA.selfDual_isFullLattice _ _ hsd
-    letI : Submodule.IsLattice D.host.E (Formalism.L2.Col.starLat D.host.E N) :=
+    let : Submodule.IsLattice D.host.E (Formalism.L2.Col.starLat D.host.E N) :=
       Formalism.L2.Col.brp_starLat_lattice D.host.E N hsd.1
     refine ⟨?_⟩
     have heq : star '' (N : Set (Fin (spW₁ G i j).rank → D.host.E)) =

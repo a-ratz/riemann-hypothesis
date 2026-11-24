@@ -129,7 +129,7 @@ lemma rt_prim (n : ℕ) : IsPrimitiveRoot (rt q n) (q ^ n) :=
 
 lemma rt_succ (n : ℕ) : rt q (n + 1) ^ q = rt q n := by
   unfold rt
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   have : (q : ℂ) ≠ 0 := by exact_mod_cast hq.out.ne_zero
   push_cast
@@ -139,7 +139,7 @@ lemma rt_succ (n : ℕ) : rt q (n + 1) ^ q = rt q n := by
 lemma kap_eq {d : ℕ} (hd : 0 < d) (n : ℕ) (u b : ℤ) :
     kap1 d 1 (((u : ℂ) + (b : ℂ) * wK d) / (q : ℂ) ^ n) = rt q n ^ b := by
   unfold kap1 rt
-  rw [← Complex.exp_int_mul]
+  rw [← Complex.exp_intCast_mul]
   congr 1
   have hs : 0 < Real.sqrt d := Real.sqrt_pos.2 (by exact_mod_cast hd)
   have hq0 : (q : ℝ) ≠ 0 := by exact_mod_cast hq.out.ne_zero

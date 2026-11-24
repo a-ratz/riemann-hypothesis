@@ -131,12 +131,12 @@ end Gen
 
 theorem norm_int (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU : IsUnrExt K K' d φ) (hd : d ≠ 0) (z : K'.O) :
     ∃ a : K.O, algebraMap K.O K.E a = @Algebra.norm K.E K'.E _ _ φ.toAlgebra (algebraMap K'.O K'.E z) := by
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
-  haveI : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FiniteDimensional K.E K'.E :=
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
+  have : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional K.E K'.E :=
     Module.finite_of_finrank_pos (by rw [hU.2.2.2.2]; exact Nat.pos_of_ne_zero hd)
-  haveI : Algebra.IsSeparable K.E K'.E := Algebra.IsSeparable.of_integral _ _
+  have : Algebra.IsSeparable K.E K'.E := Algebra.IsSeparable.of_integral _ _
   have h := Algebra.isIntegral_norm (R := K.O) K.E (intO K K' d φ hU hd z)
   obtain ⟨a, ha⟩ := IsIntegrallyClosed.isIntegral_iff.mp h
   exact ⟨a, ha⟩
@@ -144,7 +144,7 @@ theorem norm_int (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU : IsUnrExt K K'
 theorem val_norm : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → ∀ y : K'.E,
     val K.O (@Algebra.norm K.E K'.E _ _ φ.toAlgebra y) = (d : ℤ) * val K'.O y := by
   intro K K' d φ hφ y
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   have hd : d ≠ 0 := by
     intro hd0
     have h1 : Nat.card (IsLocalRing.ResidueField K'.O) = 1 := by
@@ -152,7 +152,7 @@ theorem val_norm : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K
     have h2 := Finite.one_lt_card (α := IsLocalRing.ResidueField K'.O)
     omega
   have hfr : Module.finrank K.E K'.E = d := hφ.2.2.2.2
-  haveI : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (by omega)
   by_cases hy : y = 0
   · subst hy
     rw [Algebra.norm_zero]
@@ -221,7 +221,7 @@ theorem intMap_isIntegral_of_unr : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.
   intro K K' d φ hU
   obtain ⟨φO, hφO⟩ := exists_intMap_of_unr hU
   refine ⟨φO, hφO, ?_⟩
-  letI : Algebra K.O K'.O := φO.toAlgebra
+  let : Algebra K.O K'.O := φO.toAlgebra
   obtain ⟨u, hu⟩ := exists_int_basis_of_unr K K' d φ hU
   have hspan : Submodule.span K.O (Set.range u) = ⊤ := by
     refine eq_top_iff.2 fun y _ => ?_
@@ -236,7 +236,7 @@ theorem intMap_isIntegral_of_unr : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.
       rw [hφO]
     rw [hy]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : Module.Finite K.O K'.O := ⟨Submodule.fg_def.2 ⟨_, Set.finite_range u, hspan⟩⟩
+  have : Module.Finite K.O K'.O := ⟨Submodule.fg_def.2 ⟨_, Set.finite_range u, hspan⟩⟩
   exact Algebra.IsIntegral.of_finite K.O K'.O
 
 end GlobalTheory.UnitLemma.Unr
@@ -273,7 +273,7 @@ theorem not_isRoot_cofactor : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), I
     intro a ha
     rw [← map_maximalIdeal hU]
     exact Ideal.mem_map_of_mem _ ha
-  haveI : IsLocalHom φO := ⟨fun a ha => by
+  have : IsLocalHom φO := ⟨fun a ha => by
     by_contra h
     exact (IsLocalRing.mem_maximalIdeal _).1 (hmax a ((IsLocalRing.mem_maximalIdeal _).2 h)) ha⟩
   let k := IsLocalRing.ResidueField K.O
@@ -281,9 +281,9 @@ theorem not_isRoot_cofactor : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), I
   let ψ : k →+* k' := IsLocalRing.ResidueField.map φO
   have hψ : ∀ a : K.O, ψ (IsLocalRing.residue K.O a) = IsLocalRing.residue K'.O (φO a) :=
     fun a => IsLocalRing.ResidueField.map_residue φO a
-  letI : Algebra k k' := ψ.toAlgebra
-  letI : Fintype k := Fintype.ofFinite k
-  letI : Fintype k' := Fintype.ofFinite k'
+  let : Algebra k k' := ψ.toAlgebra
+  let : Fintype k := Fintype.ofFinite k
+  let : Fintype k' := Fintype.ofFinite k'
   set Q := Fintype.card k with hQdef
   have hQ : Q = K.q ^ 2 := by rw [hQdef, ← Nat.card_eq_fintype_card]; exact K.card_res
   have hQ' : Fintype.card k' = Q ^ d := by
@@ -434,7 +434,7 @@ theorem residue_generates : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsU
     by_contra h; exact hz ((IsLocalRing.mem_maximalIdeal _).2 h)
   set z := y - f.eval₂ (intMap hU) s with hzdef
   set R := Algebra.adjoin K.O ({B.g} : Set B.A) with hRdef
-  haveI := hnt
+  have := hnt
 
   have hΨz : Ψ z = aeval B.g f - aeval (Ψ s) f := by
     rw [hzdef, map_sub, hf, Polynomial.hom_eval₂]
@@ -488,7 +488,7 @@ theorem residue_generates : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsU
     rw [mul_pow, hpow] at this
     rw [← this]; ring
 
-  letI : Algebra K'.O B.A := Ψ.toAlgebra
+  let : Algebra K'.O B.A := Ψ.toAlgebra
   have hgint : IsIntegral K'.O B.g := ⟨Q, hQm, hQg⟩
   have hRint : ∀ w ∈ R, IsIntegral K'.O w := by
     intro w hw
@@ -604,9 +604,9 @@ theorem aeval_P {K : UQ} (B : InvAlg K) : aeval B.g B.P = 0 := by
 theorem norm_tower {K K' : UQ} (φ : K.E →+* K'.E) (B : InvAlg K) (ψ : K'.E →+* B.A)
     (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (x : B.A) :
     Algebra.norm K.E x = @Algebra.norm K.E K'.E _ _ φ.toAlgebra (@Algebra.norm K'.E B.A _ _ ψ.toAlgebra x) := by
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K'.E B.A := ψ.toAlgebra
-  haveI : IsScalarTower K.E K'.E B.A := IsScalarTower.of_algebraMap_eq fun e => (hψ e).symm
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K'.E B.A := ψ.toAlgebra
+  have : IsScalarTower K.E K'.E B.A := IsScalarTower.of_algebraMap_eq fun e => (hψ e).symm
   rw [Algebra.norm_apply K.E x, Algebra.norm_apply K'.E x, ← LinearMap.det_restrictScalars]
   rfl
 
@@ -622,16 +622,16 @@ theorem val_resultant_unr : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsU
   set B₂' := overExt φ B₂ ψ₂ h₂ h₂' with hB₂'
   by_cases t₁ : Subsingleton B₁.A
   · have e1 : B₁.P = 1 := charpoly_subsingleton B₁.g
-    haveI : Subsingleton B₁'.A := t₁
+    have : Subsingleton B₁'.A := t₁
     have e1' : B₁'.P = 1 := charpoly_subsingleton (E := K'.E) (A := B₁'.A) B₁'.g
     simp [e1, e1', val]
   by_cases t₂ : Subsingleton B₂.A
   · have e2 : B₂.P = 1 := charpoly_subsingleton B₂.g
-    haveI : Subsingleton B₂'.A := t₂
+    have : Subsingleton B₂'.A := t₂
     have e2' : B₂'.P = 1 := charpoly_subsingleton (E := K'.E) (A := B₂'.A) B₂'.g
     simp [e2, e2', val]
-  haveI : Nontrivial B₁.A := not_subsingleton_iff_nontrivial.1 t₁
-  haveI : Nontrivial B₂.A := not_subsingleton_iff_nontrivial.1 t₂
+  have : Nontrivial B₁.A := not_subsingleton_iff_nontrivial.1 t₁
+  have : Nontrivial B₂.A := not_subsingleton_iff_nontrivial.1 t₂
   have hPm₁ : B₁'.P.Monic := LinearMap.charpoly_monic _
   have hPm₂ : B₂'.P.Monic := LinearMap.charpoly_monic _
   have hinj' := IsFractionRing.injective K'.O K'.E
@@ -656,12 +656,12 @@ theorem val_resultant_unr : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsU
   obtain ⟨φO, hφO, hint⟩ := int_lift K K' d φ hU
   have hφc : (algebraMap K'.O K'.E).comp φO = φ.comp (algebraMap K.O K.E) := RingHom.ext hφO
   have hg₂ : IsIntegral K.O B₂.g := by
-    letI : Algebra K.O K'.O := φO.toAlgebra
-    letI : Algebra K'.O B₂.A := (ψ₂.comp (algebraMap K'.O K'.E)).toAlgebra
-    haveI : IsScalarTower K.O K'.O B₂.A := IsScalarTower.of_algebraMap_eq fun x => by
+    let : Algebra K.O K'.O := φO.toAlgebra
+    let : Algebra K'.O B₂.A := (ψ₂.comp (algebraMap K'.O K'.E)).toAlgebra
+    have : IsScalarTower K.O K'.O B₂.A := IsScalarTower.of_algebraMap_eq fun x => by
       change algebraMap K.O B₂.A x = ψ₂ (algebraMap K'.O K'.E (φO x))
       rw [hφO, h₂, ← IsScalarTower.algebraMap_apply]
-    haveI : Algebra.IsIntegral K.O K'.O := hint
+    have : Algebra.IsIntegral K.O K'.O := hint
     have h2 : IsIntegral K'.O B₂.g := ⟨r₂, hr₂m, by
       change eval₂ (ψ₂.comp (algebraMap K'.O K'.E)) B₂.g r₂ = 0
       rw [← eval₂_map, hr₂]
@@ -709,9 +709,9 @@ theorem val_resultant_unr : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsU
     have a2 : r₂.natDegree = @Module.finrank K'.E B₂.A _ _ ψ₂.toAlgebra.toModule := by
       rw [← natDegree_map_eq_of_injective hinj' r₂, hr₂]; exact LinearMap.charpoly_natDegree _
     rw [a1, a2, ← hU.2.2.2.2]
-    letI : Algebra K.E K'.E := φ.toAlgebra
-    letI : Algebra K'.E B₂.A := ψ₂.toAlgebra
-    haveI : IsScalarTower K.E K'.E B₂.A := IsScalarTower.of_algebraMap_eq fun e => (h₂ e).symm
+    let : Algebra K.E K'.E := φ.toAlgebra
+    let : Algebra K'.E B₂.A := ψ₂.toAlgebra
+    have : IsScalarTower K.E K'.E B₂.A := IsScalarTower.of_algebraMap_eq fun e => (h₂ e).symm
     exact (Module.finrank_mul_finrank K.E K'.E B₂.A).symm
   have hmap : p₂.map (φ.comp (algebraMap K.O K.E)) = (r₂ * c₂).map (algebraMap K'.O K'.E) := by
     rw [← hfrc, Polynomial.map_map, hφc]

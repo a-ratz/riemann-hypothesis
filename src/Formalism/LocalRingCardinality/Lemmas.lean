@@ -532,7 +532,7 @@ theorem isUnit_toO_iff (a : A) : IsUnit (toO w σ hσ a) ↔ a ∉ w.asIdeal := 
     rw [map_inv₀] at h2
     have h3 : (1 : WithZero (Multiplicative ℤ)) ≤ w.valuation K (algebraMap A K a) := by
       have hv0 : w.valuation K (algebraMap A K a) ≠ 0 := (Valuation.ne_zero_iff _).2 ha0
-      exact (inv_le_one₀ (zero_lt_iff.2 hv0)).1 h2
+      exact (inv_le_one₀ (pos_iff_ne_zero.2 hv0)).1 h2
     exact absurd hlt (not_lt.2 h3)
   · intro ha
     exact isUnit_of_val_one w σ hσ _ ((HeightOneSpectrum.valuation_eq_one_iff_notMem w).2 ha) _ (toO_spec w σ hσ a)
@@ -572,7 +572,7 @@ theorem map_toO_eq (ϖ : A) (hϖ : w.intValuation ϖ = WithZero.exp (-1 : ℤ)) 
     rw [Ideal.mem_comap, Ideal.mem_span_singleton]
     have h1 : w.valuation K (algebraMap A K a / algebraMap A K ϖ) ≤ 1 := by
       rw [map_div₀, hϖK, HeightOneSpectrum.valuation_of_algebraMap]
-      exact (div_le_one₀ (by simp [zero_lt_iff])).2 ((hmem a).1 ha)
+      exact (div_le_one₀ (by simp [pos_iff_ne_zero])).2 ((hmem a).1 ha)
     obtain ⟨s, hs⟩ := (hσ _).1 h1
     refine ⟨s, ?_⟩
     apply IsFractionRing.injective O Kf
@@ -865,7 +865,7 @@ theorem addVal_toO_uniformizer (hsurj : ∀ c : O, ∃ x : K, σ x = algebraMap 
         omega
     have h1 : w.valuation K (x / algebraMap A K ϖ) ≤ 1 := by
       rw [map_div₀, hϖK]
-      exact (div_le_one₀ (by simp [zero_lt_iff])).2 hx3
+      exact (div_le_one₀ (by simp [pos_iff_ne_zero])).2 hx3
     obtain ⟨s, hs⟩ := (hσ _).1 h1
     refine ⟨s, ?_⟩
     apply IsFractionRing.injective O Kf
@@ -1490,8 +1490,8 @@ theorem lenLoc_atT {L : SizeData₂ D} (hAtT : NuAtTDef D L) (u : D.what₂.Word
     (hw : D.what₂.places.resChar w = (D.mem u).A.T) :
     DV.lenLoc (D.plEq w) (L.NuLat u) (DV.MramL D u) =
       Module.length (LT.Ow D w) (↥(LT.Sram D u w) ⧸ (LT.Nlam D u w).comap (LT.Sram D u w).subtype) := by
-  haveI := D.intW_dvr w
-  haveI := D.intW_frac w
+  have := D.intW_dvr w
+  have := D.intW_frac w
   have hσ : ∀ x : D.what₂.LL, (D.plEq w).valuation D.what₂.LL x ≤ 1 ↔
       (RingHom.id D.what₂.LL) x ∈ Set.range (algebraMap (intW D.what₂.places w) D.what₂.LL) := by
     intro x

@@ -107,8 +107,8 @@ theorem rrg_countable_field (E : Type) [Field E] [NumberField E] : Countable E :
   (Module.Free.chooseBasis ℚ E).equivFun.injective.countable
 
 theorem rrg_countable_GL (E : Type) [Field E] [NumberField E] (n : ℕ) : Countable (GL (Fin n) E) := by
-  haveI := rrg_countable_field E
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have := rrg_countable_field E
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
   exact Function.Injective.countable (f := fun u : GL (Fin n) E => (u : Matrix (Fin n) (Fin n) E))
     (fun a b h => Units.ext h)
 

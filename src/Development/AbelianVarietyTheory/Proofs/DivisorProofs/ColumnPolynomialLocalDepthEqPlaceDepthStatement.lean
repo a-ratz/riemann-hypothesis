@@ -655,12 +655,12 @@ theorem mfact_add_single [Fintype σ] (α : σ →₀ ℕ) (l : σ) :
         ((α s).factorial : C) * (if s = l then ((α l : C) + 1) else 1) := by
       intro s
       by_cases hs : s = l
-      · rw [if_pos hs]
+      · rw [ite_eq_left hs]
         subst hs
         rw [Finsupp.add_apply, Finsupp.single_eq_same, Nat.factorial_succ]
         push_cast
         ring
-      · rw [if_neg hs, mul_one]
+      · rw [ite_eq_right hs, mul_one]
         simp [Finsupp.single_apply, Ne.symm hs]
      rw [mfact_eq_prod, mfact_eq_prod, Finset.prod_congr rfl (fun s _ => h s), Finset.prod_mul_distrib]
      simp
@@ -671,7 +671,7 @@ theorem derivAt0_monomial (α : σ →₀ ℕ) (a : C) (S : MvPowerSeries σ C) 
   classical
   first
   | (rw [derivAt0_eq_sum_of_subset _ _ MvPolynomial.support_monomial_subset, Finset.sum_singleton,
-      MvPolynomial.coeff_monomial, if_pos rfl]; done)
+      MvPolynomial.coeff_monomial, ite_eq_left rfl]; done)
 
 private lemma hasSubst_lemma {ι τ : Type} [Finite ι] {a : ι → MvPowerSeries τ C}
     (ha : ∀ i, constantCoeff (a i) = 0) : HasSubst a := by
@@ -853,7 +853,7 @@ theorem constantCoeff_dpolyN_eq_derivAt0 : ∀ (C : Type) [Field C] [CharZero C]
   have hC : ∀ (a : C) (f : PS C n d), DpolyN G.F cp u (MvPolynomial.C a) f = MvPowerSeries.C a * f := by
     intro a f
     rw [hsub (MvPolynomial.C a) {0} f (by rw [MvPolynomial.C_apply]; exact MvPolynomial.support_monomial_subset),
-      Finset.sum_singleton, MvPolynomial.coeff_C, if_pos rfl, hmon0]
+      Finset.sum_singleton, MvPolynomial.coeff_C, ite_eq_left rfl, hmon0]
   have hfin : ∀ (Q : Fin n → MvPolynomial ι C) (f : PS C n d),
       DpolyN G.F cp u (∑ j, Q j) f = ∑ j, DpolyN G.F cp u (Q j) f := fun Q f =>
     map_sum (AddMonoidHom.mk' (fun Q => DpolyN G.F cp u Q f) (fun Q1 Q2 => hadd Q1 Q2 f)) Q Finset.univ
@@ -1326,14 +1326,14 @@ theorem lin_col {C : Type} [Field C] {d m : ℕ} {κ : Type} [Fintype κ] {ι : 
 
 theorem exists_germ_cols : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (la : PointsOfFlagModel.abelian₂ p c) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la.1 T.V io e → ∀ (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p) (cx : Lt1 Dw → ℕ) (n : ℕ) (B : ∀ f : Lt1 Dw, Fin (rk f) → Fin n → T.V), IsCols c T io p cx B → ∀ (N k : ℕ) (g : PS X.C n (chD Ch.ch)), MvIsInt (vX_vp X) g → ∃ f : MvPowerSeries (Σ _ : GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.Col cx, Fin (chD Ch.ch)) X.C, MvIsInt (vX_vp X) f ∧ (((N : ℝ) : ℝ) : WithTop ℝ) ≤ vX_vp X (GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nabX Ch X cx B k g - derivAt0 (GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.polyH X.C cx) (MvPowerSeries.subst (GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.expH Ch X cx) f)) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ la T io e _ y Ch X cx n B hB N k g hg
   classical
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨BT, -, -, -, -, -, -, e7⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y Ch
-  letI : Algebra T.Fr X.C := X.ιF.toAlgebra
-  letI : Algebra T.V X.C := (X.ιF.comp (algebraMap T.V T.Fr)).toAlgebra
-  haveI : IsScalarTower T.V T.Fr X.C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra T.Fr X.C := X.ιF.toAlgebra
+  let : Algebra T.V X.C := (X.ιF.comp (algebraMap T.V T.Fr)).toAlgebra
+  have : IsScalarTower T.V T.Fr X.C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨h1, h2, h3, h4⟩ := e7 X.C
   have hc := (h3 _).2 h4
   let eC := Fintype.equivFin (Col cx)
@@ -1445,7 +1445,7 @@ theorem nuFac_eq_nuFacC_and_nuProd_eq_nuP :
         (∀ (f : Lt1 Dw) (k : ℕ), nuFac p y f k = nuFacC Ch X f k) ∧
           ∀ cx : Lt1 Dw → ℕ, nuProd p y cx = nuP p y cx := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y Ch X
   have hc : ∀ (Ch' : IntegralChartA3 Xo c T io y) (X' : ValExt T p) (f : Lt1 Dw) (k : ℕ),
       nuFacC Ch' X' f k = nuFacC Ch X f k := fun Ch' X' f k =>
@@ -1511,7 +1511,7 @@ theorem prodP_eq_rename_polyH {E : Type} [Field E] [NumberField E] [IsCMField E]
 theorem nuH_vp_eq_nuP : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p) (cx : Lt1 Dw → ℕ), GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nuH_vp Ch X cx = nuP p y cx ∧ 0 ≤ nuP p y cx ∧ nuP p y cx ≠ ⊤ := by
   intro E _ _ _ H Dw l Xo c
   classical
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y Ch X cx
   have hfac := (_root_.GlobalTheory.FactorDepth.nuFac_eq_nuFacC_and_nuProd_eq_nuP E H Dw l Xo c p T io y Ch X).1
   have hsum : nuP p y cx = ∑ f, nuFacC Ch X f (cx f) :=
@@ -1585,14 +1585,14 @@ open GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns
 
 theorem nuLocOf_eq_nuLocX_vp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (la : PointsOfFlagModel.abelian₂ p c) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la.1 T.V io e → ∀ (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X : ValExt T p) (cx : Lt1 Dw → ℕ) (n : ℕ) (B : ∀ f : Lt1 Dw, Fin (rk f) → Fin n → T.V), ∀ k : ℕ, nuLocOf Ch (vV T.V (p : T.Fr)).toNat k (polyT B cx) = GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nuLocX_vp Ch X cx B k := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ la T io e ho y Ch X cx n B k
   have hp0 : 0 ≤ vV T.V (p : T.Fr) := by
     have := GlobalTheory.vV_algebraMap_nonneg_dvr T (p : T.V)
     rwa [map_natCast] at this
   have he : vV T.V (p : T.Fr) = (((vV T.V (p : T.Fr)).toNat : ℕ) : ℤ) := (Int.toNat_of_nonneg hp0).symm
-  letI := io.toAlgebra
-  letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+  let := io.toAlgebra
+  let : Algebra T.Fr X.C := X.ιF.toAlgebra
   have hh : MvPowerSeries.constantCoeff Ch.ch.h = 0 :=
     ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.coeff_eq_zero_of_vanish_first_axis _ Ch.ch.gauge.ax0 0 fun _ => rfl
   have hu : (fun (ℓ : LtN Dw n) => lieVec Ch X ⟨ℓ.1, ℓ.2.1⟩) =
@@ -1739,7 +1739,7 @@ end Ultra
 
 theorem nuLocOf_eq_nuP : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (la : PointsOfFlagModel.abelian₂ p c) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la.1 T.V io e → ∀ (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (cx : Lt1 Dw → ℕ) (n : ℕ) (B : ∀ f : Lt1 Dw, Fin (rk f) → Fin n → T.V), IsCols c T io p cx B → ∀ k : ℕ, nuLocOf Ch (vV T.V (p : T.Fr)).toNat k (polyT B cx) = nuP p y cx := by
   intro E _ _ _ H Dw l Xo c p _ la T io e ho y Ch cx n B hB k
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨X⟩ := nonempty_valExt_of_overLa la ho
   have hmid : GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nuLocX_vp Ch X cx B k = GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nuH_vp Ch X cx := by
     unfold GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nuLocX_vp GlobalTheory.IndefiniteRowSideFullHecke.LocalValuationColumns.nuH_vp GlobalTheory.FGDepth.depth

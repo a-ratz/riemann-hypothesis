@@ -246,7 +246,7 @@ theorem UpperTheory.Reformulated.B.RestrictAutomorphism.exists_alg :
                         W) ∧
                     ∀ (i j : Fin r) (n : ℕ), ∃ (m : ℕ), (0 : ℕ) < m ∧ (W i j).coeff n ^ p ^ m = (W i j).coeff n := by
   intro p hp G _ R _ ρ _ _ _ _ _ hopen r M hM hker
-  haveI : CharP (algPart p R) p := inferInstance
+  have : CharP (algPart p R) p := inferInstance
   obtain ⟨V, hV, hVeq⟩ := UpperTheory.Reformulated.B.WittVectorTrivializingMatrix.exists_alg (p := p) (restrictHom p ρ)
     (fun y m hm hy => (hopen y m hm (by simpa using congrArg Subtype.val hy)).mono
       fun g hg => Subtype.ext hg)
@@ -321,7 +321,7 @@ theorem UpperTheory.exists_algebraic_vector_spanning_subspace :
   intro l _ P AI K r M hM hI
   have := GlobalTheory.UnramifiedCrys.compactSpace_GK K
   exact exists_alg (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (GlobalTheory.UnramifiedCrys.eventually_actT_eq AI y m hm hy)) M hM
     (fun g hg => hI g (Subgroup.subset_closure fun x hx =>
       GlobalTheory.UnramifiedCrys.norm_sub_lt_one_of_fix AI g hg x hx))
@@ -344,8 +344,8 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
     [IsModuleTopology ℚ_[l] V] (ρ : Representation ℚ_[l] G V) (hρ : ∀ x, Continuous fun g => ρ g x) :
     ∃ (n : ℕ) (e : Basis (Fin n) ℚ_[l] V), ∀ g i j, ‖e.repr (ρ g (e j)) i‖ ≤ 1 := by
   classical
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let e₀ := Module.finBasis ℚ_[l] V
   let Λ : Submodule ℤ_[l] V := Submodule.span ℤ_[l] (Set.range fun p : G × Fin (finrank ℚ_[l] V) => ρ p.1 (e₀ p.2))
   have hc : Continuous fun g : G => (fun i j => e₀.repr (ρ g (e₀ j)) i) :=
@@ -372,16 +372,16 @@ private theorem exists_int_basis {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [
       rw [smul_smul, div_mul_cancel₀ _ hc0]
     rw [h2]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : Submodule.IsLattice ℚ_[l] Λ :=
+  have : Submodule.IsLattice ℚ_[l] Λ :=
     Submodule.IsLattice.of_fg ℚ_[l] ((Submodule.fg_span (Set.finite_range _)).of_le hle)
-  haveI : Submodule.IsFullLattice ℚ_[l] Λ :=
+  have : Submodule.IsFullLattice ℚ_[l] Λ :=
     { span_eq_top := by
         rw [eq_top_iff, ← e₀.span_eq]
         refine Submodule.span_mono ?_
         rintro _ ⟨i, rfl⟩
         exact Submodule.subset_span ⟨(1, i), by simp⟩ }
-  haveI : Module.Free ℤ_[l] Λ := Submodule.IsLattice.free ℚ_[l] Λ
-  haveI : Module.Finite ℤ_[l] Λ := Submodule.IsLattice.finite ℚ_[l] Λ
+  have : Module.Free ℤ_[l] Λ := Submodule.IsLattice.free ℚ_[l] Λ
+  have : Module.Finite ℤ_[l] Λ := Submodule.IsLattice.finite ℚ_[l] Λ
   let b := Module.finBasis ℤ_[l] Λ
   have hst : ∀ g, ∀ x ∈ Λ, ρ g x ∈ Λ := by
     intro g x hx
@@ -467,9 +467,9 @@ private theorem period {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l
       rw [← map_one M]
       ext i j
       rw [hM, hM, h, map_one, Module.End.one_apply])
-  haveI : Nontrivial P.R.B := nontrivial_B P
-  haveI : Nontrivial (Ainf l) := AI.ιA.domain_nontrivial
-  haveI : Nonempty (Fin n) := e.index_nonempty
+  have : Nontrivial P.R.B := nontrivial_B P
+  have : Nontrivial (Ainf l) := AI.ιA.domain_nontrivial
+  have : Nonempty (Fin n) := e.index_nonempty
   obtain ⟨i0, j0, hij⟩ : ∃ i j, W i j ≠ 0 := by
     by_contra hc
     push Not at hc
@@ -501,7 +501,7 @@ private theorem period {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l
     have h2 := congrArg (fun y => TensorProduct.lid ℚ_[l] _ (LinearMap.rTensor (Bst P) (e.coord i0) y)) h1
 
     simp only [x, map_sum, LinearMap.rTensor_tmul, lid_tmul, Module.Basis.coord_apply, Module.Basis.repr_self,
-    Finsupp.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_zero,
+    Finsupp.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_zero,
     Polynomial.C_eq_zero] at h2
     exact AI.ιA_inj (h2.trans (map_zero _).symm)
   · rw [coe_actD, Submodule.coe_smul, coe_phiD_pow, coe_phiD_pow]
@@ -590,7 +590,7 @@ theorem UpperTheory.V.Loc.wdPotUnr :
     simp [LocBridge.repE, hm0, Matrix.mulVec, dotProduct]
   obtain ⟨V, hV1, hV2⟩ := isOpen_induced_iff.1 hs
   have ho2 : IsOpen {g : GK Bw.Kw | ((Bw.e.symm g : Dec (F := F) A) : G F Ω) ∈ V} :=
-    hV1.preimage (continuous_subtype_val.comp Bw.e_symm_cont)
+    hV1.preimage (continuous_subtypeVal.comp Bw.e_symm_cont)
   obtain ⟨U, hU, hU'⟩ := isOpen_induced_iff.1 ho2
   have h1 : (1 : GQ l) ∈ U := by
     have h0 : (1 : Ine (F := F) A) ∈ Subtype.val ⁻¹' V := by rw [hV2]; simp

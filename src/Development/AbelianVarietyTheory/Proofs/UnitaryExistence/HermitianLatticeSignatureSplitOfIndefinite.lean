@@ -80,7 +80,7 @@ omit [IsCMField E] in
 theorem exists_matrix {M : Type} [AddCommGroup M] [Module (𝓞 E) M] (φ ψ : M →ₗ[𝓞 E] (Fin r → E))
     (hf : Function.Injective φ) (hspan : Submodule.span E (Set.range φ) = ⊤) :
     ∃ A : Matrix (Fin r) (Fin r) E, ∀ x, A *ᵥ φ x = ψ x := by
-  haveI : IsLocalizedModule (𝓞 E)⁰ φ :=
+  have : IsLocalizedModule (𝓞 E)⁰ φ :=
     { map_units := fun s => (isLocalizedModule_id (𝓞 E)⁰ (Fin r → E) E).map_units s
       surj := fun v => by
         have hv : v ∈ Submodule.span E (Set.range φ) := by rw [hspan]; trivial
@@ -285,9 +285,9 @@ theorem exists_projector (D₀ : Datum H) (G : Matrix (Fin r) (Fin r) E) (φ₀ 
       ∀ y, π *ᵥ φ₀ y = 0 → y ∈ Lm := by
   let P : D₀.La →ₗ[𝓞 E] D₀.La := Lp.subtype ∘ₗ Lp.linearProjOfIsCompl Lm hc
   have hP1 : ∀ y, P y ∈ Lp := fun y => (Lp.linearProjOfIsCompl Lm hc y).2
-  have hP2 : ∀ y ∈ Lp, P y = y := fun y hy => congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨y, hy⟩)
+  have hP2 : ∀ y ∈ Lp, P y = y := fun y hy => congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨y, hy⟩)
   have hP3 : ∀ y, P y = 0 ↔ y ∈ Lm := fun y => by
-    rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff hc]
+    rw [← Submodule.projectionOnto_apply_eq_zero_iff hc]
     exact Submodule.coe_eq_zero
   have hP4 : ∀ y, y - P y ∈ Lm := fun y => by rw [← hP3, map_sub, hP2 _ (hP1 y), sub_self]
   obtain ⟨π, hπ⟩ := exists_matrix φ₀ (φ₀ ∘ₗ P) hinj hspan

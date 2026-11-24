@@ -208,7 +208,7 @@ theorem eSerO_eq_zero {C : LabelConv (ZMod g)} (O : LabelMap (ZMod g) C) (r : �
   intro z
   have hne : ¬ ∃ τ : FDRep ℂ (GL (Fin r) (ZMod g)), Simple τ ∧ zIdem τ = z ∧ HasLabelO O τ f :=
     fun ⟨_, _, _, hτ⟩ => hf (hasLabelO_spec O hτ)
-  haveI : IsEmpty (∃ τ : FDRep ℂ (GL (Fin r) (ZMod g)), Simple τ ∧ zIdem τ = z ∧ HasLabelO O τ f) := ⟨hne⟩
+  have : IsEmpty (∃ τ : FDRep ℂ (GL (Fin r) (ZMod g)), Simple τ ∧ zIdem τ = z ∧ HasLabelO O τ f) := ⟨hne⟩
   exact finsum_of_isEmpty _
 
 end Formalism.L2.NT

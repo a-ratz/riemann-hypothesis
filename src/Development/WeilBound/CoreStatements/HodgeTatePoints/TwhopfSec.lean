@@ -192,7 +192,7 @@ theorem sub_order : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed
   intro R _ _ _ T _ _ Γ U hF
   open GlobalTheory.CompanionTheory.Ar.BT.SubOrder in
   have hU := isAffineOpen_of_fin Γ hF
-  letI : Algebra R Γ(Γ.G.left, U) := (secRho Γ hU).toAlgebra
+  let : Algebra R Γ(Γ.G.left, U) := (secRho Γ hU).toAlgebra
   have hρ : hU.fromSpec ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, U))) :=
     fromSpec_hom Γ hU
   have hfin := sec_finite hρ hF

@@ -188,7 +188,7 @@ private theorem B_slash [H.FiniteIndex] {α : GL (Fin 2) ℝ} (hα : 0 < α.det.
     (hG' : Good H k (G ∣[k] α)) :
     quotInt H (petersson k (F ∣[k] α) (G ∣[k] α)) = (α.det.val : ℂ) ^ (k - 2) * quotInt H (petersson k F G) := by
   have e : ∀ z, petersson k (F ∣[k] α) (G ∣[k] α) z = (α.det.val : ℂ) ^ (k - 2) * petersson k F G (α • z) := fun z => by
-    rw [petersson_slash, σ, if_pos hα, abs_of_pos hα]; rfl
+    rw [petersson_slash, σ, ite_eq_left hα, abs_of_pos hα]; rfl
   have h0 : (α.det.val : ℂ) ^ (k - 2) ≠ 0 := zpow_ne_zero _ (by exact_mod_cast hα.ne')
   obtain ⟨C, hC⟩ := hF.pbd hG
   rw [funext e, quotInt_mul, quotInt_conj H α h1 h2 (hF.cont hG) hC (hF.pinv hG) fun γ hγ z => ?_]
@@ -249,7 +249,7 @@ private theorem dg_fin' (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] (m n : ℕ) (h
 private theorem dg_slash (m n : ℕ) (h : m * n ≠ 0) (k : ℤ) (F : ℍ → ℂ) (z : ℍ) :
     (F ∣[k] dg m n h) z = ((m * n : ℕ) : ℂ) ^ (k - 1) * (n : ℂ) ^ (-k) * F (ofComplex (m * (z : ℂ) / n)) := by
   have hpos : 0 < (dg m n h).det.val := by rw [dg_det]; exact_mod_cast Nat.pos_of_ne_zero h
-  rw [slash_apply, σ, if_pos hpos, dg_det, ← ofComplex_apply (dg m n h • z), coe_smul_of_det_pos hpos]
+  rw [slash_apply, σ, ite_eq_left hpos, dg_det, ← ofComplex_apply (dg m n h • z), coe_smul_of_det_pos hpos]
   simp [num, denom, dg_val]
   ring
 
@@ -266,7 +266,7 @@ private theorem dg_mul (m n : ℕ) (h : m * n ≠ 0) (h' : n * m ≠ 0) (k : ℤ
   ring
 
 private theorem B_symm [H.FiniteIndex] : quotInt H (petersson k G F) = conj (quotInt H (petersson k F G)) := by
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
 
   simp only [quotInt, finsum_eq_sum_of_fintype, map_sum, ← integral_conj, ← petersson_symm]
 
@@ -419,14 +419,14 @@ theorem pet_heckeT_adj : ∀ (N l q : ℕ) (k : ℤ) (σ σ' : SL(2, ℤ)), 0 < 
     IsDia N l q σ → IsDia N l q σ' → ∀ f g : CuspForm (lev N l) k,
     pet (lev N l) k (heckeT k q σ ⇑f) (dia k σ' ⇑g) = pet (lev N l) k ⇑f (heckeT k q σ ⇑g) := by
   intro N l q k s s' hN hl hq hqNl hs hs' f g
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
   have hq0 : q ≠ 0 := hq.ne_zero
   have ha : q * 1 ≠ 0 := by simpa using hq0
   have hb : 1 * q ≠ 0 := by simpa using hq0
-  haveI : (lev N l).FiniteIndex := levFin N l
-  haveI := dg_fin (lev N l) q 1 ha
-  haveI := dg_fin (lev N l) 1 q hb
+  have : (lev N l).FiniteIndex := levFin N l
+  have := dg_fin (lev N l) q 1 ha
+  have := dg_fin (lev N l) 1 q hb
   set H := (lev N l ⊓ conjGL (lev N l) (dg q 1 ha) ⊓ conjGL (lev N l) (dg 1 q hb)).normalCore with hH
   have hle := (lev N l ⊓ conjGL (lev N l) (dg q 1 ha) ⊓ conjGL (lev N l) (dg 1 q hb)).normalCore_le
   rw [← hH, le_inf_iff, le_inf_iff] at hle
@@ -505,8 +505,8 @@ namespace GlobalTheory.Hk
 
 theorem lev_finiteIndex : ∀ (N l : ℕ), 0 < N → 0 < l → (GlobalTheory.Hk.lev N l).FiniteIndex := by
   intro N l hN hl
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
   unfold lev
   infer_instance
 
@@ -538,9 +538,9 @@ namespace GlobalTheory.Hk
 theorem pet_self_pos (N l : ℕ) (k : ℤ) (hN : 0 < N) (hl : 0 < l) (f : CuspForm (lev N l) k)
     (hf : f ≠ 0) :
     0 < (pet (lev N l) k ⇑f ⇑f).re ∧ (pet (lev N l) k ⇑f ⇑f).im = 0 := by
-  haveI := lev_finiteIndex N l hN hl
-  haveI : Finite (SL(2, ℤ) ⧸ lev N l) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : Fintype (SL(2, ℤ) ⧸ lev N l) := Fintype.ofFinite _
+  have := lev_finiteIndex N l hN hl
+  have : Finite (SL(2, ℤ) ⧸ lev N l) := Subgroup.finite_quotient_of_finiteIndex
+  have : Fintype (SL(2, ℤ) ⧸ lev N l) := Fintype.ofFinite _
   set r : ℍ → ℝ := fun z => ‖f z‖ ^ 2 * z.im ^ k with hr_def
   have hr0 : ∀ z, 0 ≤ r z := fun z => mul_nonneg (sq_nonneg _) (zpow_nonneg z.im_pos.le _)
   have hrc : Continuous r := by
@@ -609,8 +609,8 @@ open scoped MatrixGroups ModularForm Manifold
 namespace GlobalTheory.Hk
 
 theorem lev_finiteIndex' (N l : ℕ) (hN : 0 < N) (hl : 0 < l) : (lev N l).FiniteIndex := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
   unfold lev
   infer_instance
 
@@ -619,8 +619,8 @@ theorem pet_eq_quotInt (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f g : ℍ → ℂ) 
 
 theorem pet_sesq : ∀ (N l : ℕ) (k : ℤ), 0 < N → 0 < l → ∀ (f g h : CuspForm (GlobalTheory.Hk.lev N l) k) (c : ℂ), GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k ⇑f (⇑g + c • ⇑h) = GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k ⇑f ⇑g + c * GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k ⇑f ⇑h ∧ GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k ⇑g ⇑f = (starRingEnd ℂ) (GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k ⇑f ⇑g) := by
   intro N l k hN hl f g h c
-  haveI := lev_finiteIndex' N l hN hl
-  haveI : Fintype (SL(2, ℤ) ⧸ lev N l) := Fintype.ofFinite _
+  have := lev_finiteIndex' N l hN hl
+  have : Fintype (SL(2, ℤ) ⧸ lev N l) := Fintype.ofFinite _
   refine ⟨?_, ?_⟩
   · have e : petersson k ⇑f (⇑g + c • ⇑h) = fun z => petersson k f g z + c * petersson k f h z := by
       funext z
@@ -677,19 +677,19 @@ local notation "P" => GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k
 theorem pet_zero_right (hN : 0 < N) (hl : 0 < l) (f : CuspForm (GlobalTheory.Hk.lev N l) k) :
     P ⇑f 0 = 0 := by
   have h := (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f 0 0 1).1
-  simp only [CuspForm.coe_zero, smul_zero, add_zero, one_mul] at h
+  simp only [FunLike.coe_zero, smul_zero, add_zero, one_mul] at h
   linear_combination -h
 
 theorem pet_smul_right (hN : 0 < N) (hl : 0 < l) (f h : CuspForm (GlobalTheory.Hk.lev N l) k) (c : ℂ) :
     P ⇑f (c • ⇑h) = c * P ⇑f ⇑h := by
   have e := (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f 0 h c).1
-  simp only [CuspForm.coe_zero, zero_add] at e
+  simp only [FunLike.coe_zero, zero_add] at e
   rw [e, pet_zero_right hN hl f, zero_add]
 
 theorem pet_lin_right (hN : 0 < N) (hl : 0 < l) (f g h : CuspForm (GlobalTheory.Hk.lev N l) k) (a b : ℂ) :
     P ⇑f (a • ⇑g - b • ⇑h) = a * P ⇑f ⇑g - b * P ⇑f ⇑h := by
   have e := (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f (a • g) h (-b)).1
-  rw [CuspForm.coe_smul, _root_.neg_smul, ← sub_eq_add_neg] at e
+  rw [FunLike.coe_smul, _root_.neg_smul, ← sub_eq_add_neg] at e
   rw [e, pet_smul_right hN hl]
   ring
 
@@ -700,8 +700,8 @@ theorem pet_conj (hN : 0 < N) (hl : 0 < l) (f g : CuspForm (GlobalTheory.Hk.lev 
 theorem pet_lin_left (hN : 0 < N) (hl : 0 < l) (f g h : CuspForm (GlobalTheory.Hk.lev N l) k) (a b : ℂ) :
     P (a • ⇑g - b • ⇑h) ⇑f = (starRingEnd ℂ) a * P ⇑g ⇑f - (starRingEnd ℂ) b * P ⇑h ⇑f := by
   have e : a • ⇑g - b • ⇑h = ⇑(a • g - b • h) := by
-    rw [CuspForm.coe_sub, CuspForm.coe_smul, CuspForm.coe_smul]
-  rw [e, pet_conj hN hl, CuspForm.coe_sub, CuspForm.coe_smul, CuspForm.coe_smul,
+    rw [FunLike.coe_sub, FunLike.coe_smul, FunLike.coe_smul]
+  rw [e, pet_conj hN hl, FunLike.coe_sub, FunLike.coe_smul, FunLike.coe_smul,
     pet_lin_right hN hl, map_sub, map_mul, map_mul, ← pet_conj hN hl, ← pet_conj hN hl]
 
 theorem eq_zero_of_pet_self (hN : 0 < N) (hl : 0 < l) (f : CuspForm (GlobalTheory.Hk.lev N l) k)
@@ -719,7 +719,7 @@ theorem eigen_dia (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.
     rw [hv]; exact _root_.GlobalTheory.Hk.pet_dia_dia N l k q σ hN hl hσ u u
   have h2 : (starRingEnd ℂ) c * P ⇑u ⇑v = c * P ⇑u ⇑u := by
     have h := _root_.GlobalTheory.Hk.pet_heckeT_adj N l q k σ σ hN hl hq hqN hσ hσ u u
-    rw [hu, ← hv, pet_smul_right hN hl, ← CuspForm.coe_smul, pet_conj hN hl, CuspForm.coe_smul,
+    rw [hu, ← hv, pet_smul_right hN hl, ← FunLike.coe_smul, pet_conj hN hl, FunLike.coe_smul,
       pet_smul_right hN hl, map_mul, ← pet_conj hN hl] at h
     exact h
   have h3 : c * P ⇑v ⇑u = (starRingEnd ℂ) c * P ⇑u ⇑u := by
@@ -727,14 +727,14 @@ theorem eigen_dia (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.
     rw [map_mul, map_mul, ← pet_conj hN hl, ← pet_conj hN hl, Complex.conj_conj] at h
     exact h
   have e : ⇑(c • u - (starRingEnd ℂ) c • v) = c • ⇑u - (starRingEnd ℂ) c • ⇑v := by
-    rw [CuspForm.coe_sub, CuspForm.coe_smul, CuspForm.coe_smul]
+    rw [FunLike.coe_sub, FunLike.coe_smul, FunLike.coe_smul]
   have hw : c • u - (starRingEnd ℂ) c • v = 0 := by
     apply eq_zero_of_pet_self hN hl
     have := pet_lin_left hN hl (c • u - (starRingEnd ℂ) c • v) u v c ((starRingEnd ℂ) c)
     rw [← e] at this
     rw [this, e, pet_lin_right hN hl, pet_lin_right hN hl, h1, h2, h3]
     ring
-  rw [hw, CuspForm.coe_zero] at e
+  rw [hw, FunLike.coe_zero] at e
   exact (sub_eq_zero.mp e.symm)
 
 theorem ker_sq (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.Prime)
@@ -775,11 +775,11 @@ theorem heckeT_semisimple : ∀ (N l q : ℕ) (k : ℤ) (σ : SL(2, ℤ)) (c : �
     intro f hf
     obtain ⟨sf, hsf⟩ := _root_.GlobalTheory.Hk.heckeT_cuspForm N l q k σ hN hq hqN hσ f
     have e : ⇑(sf - c • f) = GlobalTheory.Hk.heckeT k q σ ⇑f - c • ⇑f := by
-      rw [CuspForm.coe_sub, CuspForm.coe_smul, hsf]
+      rw [FunLike.coe_sub, FunLike.coe_smul, hsf]
     rw [Function.iterate_succ_apply] at hf
     have hu := ih (sf - c • f) (by rw [e]; exact hf)
     have h0 := ker_sq hN hl hq hqN hσ c f (sf - c • f) e hu
-    rw [h0, CuspForm.coe_zero] at e
+    rw [h0, FunLike.coe_zero] at e
     exact sub_eq_zero.mp e.symm
 
 end GlobalTheory.Hk.Semisimple

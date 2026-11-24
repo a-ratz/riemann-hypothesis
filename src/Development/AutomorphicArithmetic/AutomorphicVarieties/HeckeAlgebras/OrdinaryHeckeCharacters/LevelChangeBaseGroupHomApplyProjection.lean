@@ -140,7 +140,7 @@ def fh : W.FHom V.frame V0.frame where
 
 def p0 : V.frame.G₀ →* V0.frame.G₀ := (fh h).π₀
 
-theorem continuous_levelChangeBaseGroupHom : Continuous (p0 h) := (h.cont.comp continuous_subtype_val).subtype_mk _
+theorem continuous_levelChangeBaseGroupHom : Continuous (p0 h) := (h.cont.comp continuous_subtypeVal).subtype_mk _
 
 theorem surjective_levelChangeBaseGroupHom : Function.Surjective (p0 h) := by
   intro g

@@ -125,13 +125,13 @@ private theorem isSemisimple_of_commute_of_integral_bezout {R : Type} [CommRing 
     · rw [Set.mem_singleton_iff.1 ha]; exact (hc c').symm
     · rw [Set.mem_singleton_iff.1 ha, Set.mem_singleton_iff.1 hb]
   let A := Algebra.adjoin ℂ S
-  letI : IsMulCommutative A := Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hS a ha b hb)
-  letI : CommRing A := { (inferInstance : Ring A) with
+  let : IsMulCommutative A := Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hS a ha b hb)
+  let : CommRing A := { (inferInstance : Ring A) with
     mul_comm := isMulCommutative_iff.mp inferInstance }
   have hfA : ∀ c, f c ∈ A := fun c => Algebra.subset_adjoin (Or.inl ⟨c, rfl⟩)
   have hhA : h ∈ A := Algebra.subset_adjoin (Or.inr rfl)
   let fA : R →+* A := f.codRestrict A hfA
-  letI : Algebra R A := fA.toAlgebra
+  let : Algebra R A := fA.toAlgebra
   obtain ⟨n, hn, s, hs, hnil, hss, hns⟩ := Module.End.exists_isNilpotent_isSemisimple (f := h)
   have hsub : Algebra.adjoin ℂ {h} ≤ A := Algebra.adjoin_mono Set.subset_union_right
   let x : A := ⟨h, hhA⟩

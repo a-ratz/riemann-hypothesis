@@ -71,10 +71,10 @@ theorem lowPart_eq_iff {m : ℕ} (M : Mx D m m) :
   · intro h i j
     refine ⟨fun hji => ?_, ?_⟩
     · have := congrFun (congrFun h i) j
-      simp only [lowPart, Matrix.of_apply, if_pos hji.le] at this
+      simp only [lowPart, Matrix.of_apply, ite_eq_left hji.le] at this
       rwa [Matrix.one_apply_ne hji.ne'] at this
     · have := congrFun (congrFun h i) i
-      simp only [lowPart, Matrix.of_apply, if_pos (le_refl i), Matrix.one_apply_eq] at this
+      simp only [lowPart, Matrix.of_apply, ite_eq_left (le_refl i), Matrix.one_apply_eq] at this
       exact this
   · intro h
     ext i j
@@ -119,13 +119,13 @@ theorem mem_jacGrp_iff_mat (g : GA D S) : g ∈ jacGrp d ↔
     exact mul_mem (Subgroup.mem_sup_left (mul_mem (d.levi_mem_NFlag hu) hn')) (Subgroup.mem_sup_right ⟨h, rfl⟩)
 
 theorem jacGrp_closed : IsClosed (jacGrp d : Set (GA D S)) := by
-  haveI : T2Space (Mx D S₀.rank ρ) := (lattice_Mx D _ _).2.2.2.1
-  haveI : T2Space (Mx D ρ ρ) := (lattice_Mx D _ _).2.2.2.1
+  have : T2Space (Mx D S₀.rank ρ) := (lattice_Mx D _ _).2.2.2.1
+  have : T2Space (Mx D ρ ρ) := (lattice_Mx D _ _).2.2.2.1
   have hc : Continuous fun g : GA D S => mt S g ⬝ d.jX := (continuous_mt S).matrix_mul continuous_const
   have e : (jacGrp d : Set (GA D S)) = {g | d.p0 ⬝ (mt S g ⬝ d.jX) = 0} ∩ {g | d.pY ⬝ (mt S g ⬝ d.jX) = 0} ∩
       {g | lowPart (d.pX ⬝ (mt S g ⬝ d.jX)) = lowPart 1} := by
     ext g
-    simp only [SetLike.mem_coe, mem_jacGrp_iff_mat, Set.mem_inter_iff, Set.mem_setOf_eq, lowPart_eq_iff, and_assoc]
+    simp only [SetLike.mem_coe, mem_jacGrp_iff_mat, Set.mem_inter_iff, Set.mem_ofPred_eq, lowPart_eq_iff, and_assoc]
   rw [e]
   exact ((isClosed_eq (continuous_const.matrix_mul hc) continuous_const).inter
     (isClosed_eq (continuous_const.matrix_mul hc) continuous_const)).inter
@@ -204,7 +204,7 @@ theorem besGrp_isClosed : ∀ (D : D7) (S S₀ A L : HSp D) (ρ : ℕ) (d : HypD
     IsClosed (besGrp d o : Set (GA D S)) := by
   intro D S S₀ A L ρ d o
   rw [besGrp_eq_inter]
-  haveI : T2Space (Mx D S₀.rank L.rank) := (lattice_Mx D _ _).2.2.2.1
+  have : T2Space (Mx D S₀.rank L.rank) := (lattice_Mx D _ _).2.2.2.1
   exact (jacGrp_closed d).inter (isClosed_eq
     ((continuous_const.matrix_mul ((continuous_mt S).matrix_mul continuous_const)).matrix_mul continuous_const)
     continuous_const)

@@ -71,11 +71,11 @@ theorem isRegularLocalRing_quotient_of_not_mem_sq [IsRegularLocalRing R] {x : R}
   have hxle : Ideal.span {x} ≤ maximalIdeal R := (Ideal.span_singleton_le_iff_mem _).mpr hx
   have hxne : Ideal.span {x} ≠ ⊤ := fun htop =>
     (IsLocalRing.maximalIdeal.isMaximal R).ne_top (top_le_iff.mp (htop ▸ hxle))
-  haveI : Nontrivial (R ⧸ Ideal.span {x}) := by
+  have : Nontrivial (R ⧸ Ideal.span {x}) := by
     refine ⟨⟨0, 1, fun h => hxne ((Ideal.eq_top_iff_one _).mpr ?_)⟩⟩
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_one]
     exact h.symm
-  haveI : IsLocalRing (R ⧸ Ideal.span {x}) :=
+  have : IsLocalRing (R ⧸ Ideal.span {x}) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
 
   have hFG : (maximalIdeal R).FG := IsNoetherian.noetherian _
@@ -86,7 +86,7 @@ theorem isRegularLocalRing_quotient_of_not_mem_sq [IsRegularLocalRing R] {x : R}
     have h := hs_fin.cast_ncard_eq
     rw [hs_card] at h
     exact_mod_cast h
-  haveI : Fintype s := hs_fin.fintype
+  have : Fintype s := hs_fin.fintype
   have hxs : x ∈ Submodule.span R (Set.range ((↑) : s → R)) := by
     rw [Subtype.range_coe, hs_span]
     exact hx
@@ -163,12 +163,12 @@ theorem isRegularLocalRing_quotient_of_not_mem_sq [IsRegularLocalRing R] {x : R}
       exact (IsLocalRing.maximalIdeal.isMaximal R).ne_top ((Ideal.eq_top_iff_one _).mpr h3)
 
   have hk : Submodule.spanFinrank (maximalIdeal (R ⧸ Ideal.span {x})) ≤ n - 1 := by
-    have hfin : (s \ {(i0 : R)}).Finite := hs_fin.subset Set.diff_subset
+    have hfin : (s \ {(i0 : R)}).Finite := hs_fin.subset Set.sdiff_subset
     rw [hmQ]
     calc _ ≤ ((Ideal.Quotient.mk (Ideal.span {x})) '' (s \ {(i0 : R)})).ncard :=
           Submodule.spanFinrank_span_le_ncard_of_finite (hfin.image _)
       _ ≤ (s \ {(i0 : R)}).ncard := Set.ncard_image_le hfin
-      _ = s.ncard - 1 := Set.ncard_diff_singleton_of_mem i0.2
+      _ = s.ncard - 1 := Set.ncard_sdiff_singleton_of_mem i0.2
       _ = n - 1 := by rw [hs_ncard]
   have hn1 : 1 ≤ n := by
     rw [← hs_ncard]
@@ -206,7 +206,7 @@ theorem isRegularLocalRing_quotient_of_not_mem_sq [IsRegularLocalRing R] {x : R}
 theorem prime_of_not_mem_sq [IsRegularLocalRing R] {x : R}
     (hx : x ∈ maximalIdeal R) (hx2 : x ∉ maximalIdeal R ^ 2) : Prime x := by
 
-  haveI hreg : IsRegularLocalRing (R ⧸ Ideal.span {x}) :=
+  have hreg : IsRegularLocalRing (R ⧸ Ideal.span {x}) :=
     (isRegularLocalRing_quotient_of_not_mem_sq hx hx2).1
   have hdom : IsDomain (R ⧸ Ideal.span {x}) := isDomain_of_isRegularLocalRing
   have hprime : (Ideal.span {x}).IsPrime := (Ideal.Quotient.isDomain_iff_prime _).mp hdom

@@ -148,11 +148,11 @@ theorem exists_re_of_levi_zero {e : ℕ} {d : (Fin e → ℂ) → ℝ} {c : Fin 
       have h1 := hL (u + v)
       have h2 := hL u
       have h3 := hL v
-      simp only [smul_add, map_add (f := _), ContinuousLinearMap.add_apply] at h1
+      simp only [smul_add, map_add (f := _), add_apply] at h1
       have e1 := hS u v
       have e2 := hS (Complex.I • u) (Complex.I • v)
       linarith
-    simp only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.comp_apply, hP]
+    simp only [neg_apply, ContinuousLinearMap.comp_apply, hP]
     have k1 := hB x (Complex.I • y)
     rw [smul_smul, Complex.I_mul_I, neg_one_smul, map_neg] at k1
     have k2 := hS (Complex.I • x) y

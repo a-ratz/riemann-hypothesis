@@ -99,7 +99,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 theorem emb_factor {l : Level H} (c : Coeff l) {Ω : Type} [Field Ω] (inc : c.F →+* Ω) :
     Nat.card (E →+* Ω) = Module.finrank ℚ E ∧
       ∀ s : E →+* Ω, ∃ τ : E →+* ℂ, ∀ a : 𝓞 E, s (a : E) = inc (tauIn c τ a) := by
-  haveI : CharZero Ω := charZero_of_injective_ringHom inc.injective
+  have : CharZero Ω := charZero_of_injective_ringHom inc.injective
   let g : (E →+* ℂ) → (E →+* c.F) := fun τ => τ.codRestrict c.F.toSubfield (c.conj τ)
   let f₁ : (E →+* ℂ) → (E →+* Ω) := fun τ => inc.comp (g τ)
   let f₂ : (E →+* Ω) → (E →+* AlgebraicClosure Ω) := fun s => (algebraMap Ω (AlgebraicClosure Ω)).comp s
@@ -240,7 +240,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat
 open CptHodge in
 theorem hodgeLat_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (ϖ : O) (p : ℕ), Irreducible ϖ → p.Prime → ϖ ∣ (p : O) → Function.Injective β → (∀ x : c.F, x ∈ β.range ∨ x⁻¹ ∈ β.range) → Y.SplitFibres → Y.N3 → ∃ 𝓗 : HodgeLat Z.M.lat Z.ρ H.bar (D.p + D.q), ∀ σ : E →+* Z.Ω, 𝓗.DegZero σ (Z.inc (β ϖ)) := by
   intro E _ _ _ H D l Xo c O _ _ _ β Y U Z τ ϖ p hϖ hp hdvd hβ hval hsplit hN3
-  letI : StarRing (𝓞 E) := H.starRing
+  let : StarRing (𝓞 E) := H.starRing
   have hstar : ∀ a : 𝓞 E, star a = H.bar a := fun _ => rfl
   have hfrac : ∀ x : c.F, ∃ a b : O, b ≠ 0 ∧ x * β b = β a := by
     intro x
@@ -253,9 +253,9 @@ theorem hodgeLat_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
           rw [map_zero] at hb
           exact inv_ne_zero hx hb.symm
         · rw [hb, mul_inv_cancel₀ hx, map_one]
-  letI algF : Algebra O c.F := β.toAlgebra
-  haveI : FaithfulSMul O c.F := (faithfulSMul_iff_algebraMap_injective O c.F).2 hβ
-  haveI : IsFractionRing O c.F := IsFractionRing.of_field O c.F fun z => by
+  let algF : Algebra O c.F := β.toAlgebra
+  have : FaithfulSMul O c.F := (faithfulSMul_iff_algebraMap_injective O c.F).2 hβ
+  have : IsFractionRing O c.F := IsFractionRing.of_field O c.F fun z => by
     obtain ⟨a, b, hb, h⟩ := hfrac z
     refine ⟨a, b, ?_⟩
     have hb' : β b ≠ 0 := fun h0 => hb (hβ (by rw [h0, map_zero]))
@@ -265,18 +265,18 @@ theorem hodgeLat_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     Y.jQ_open Y.jQ_dense
   have hdense : Dense (Set.range Y.j) := hdom.denseRange
   have hFib := GlobalTheory.T.model_fibres_power_free E H D l Xo c O β Y hdense hsplit hN3
-  haveI : ∀ x : Y.X, _root_.IsReduced (Y.X.presheaf.stalk x) := fun x => by
+  have : ∀ x : Y.X, _root_.IsReduced (Y.X.presheaf.stalk x) := fun x => by
     have := (Y.normal x).1
     infer_instance
   have hred : AlgebraicGeometry.IsReduced Y.X := isReduced_of_isReduced_stalk Y.X
   have hPow : PowFns Y.t := GlobalTheory.T.powFns_of_abelian_generic E H Y.X Y.t hred hLN (fun z hz => generic_mem_abLocus (O := O) Y z hz)
-  haveI : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
+  have : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
   obtain ⟨hcard, hfac⟩ := emb_factor (E := E) c Z.inc
   have facts := fun τ' h => GlobalTheory.T.proper_normal_compactification E H D l Xo c O β Y U Z τ' hβ hfrac h
   have hτ₀ : ∃ τ₀ : E →+* ℂ, τ₀ (H.rt : E) = H.rt0 := (rt_cases τ).elim (fun h => ⟨τ, h⟩) fun h => ⟨_, h⟩
   obtain ⟨τ₀, hτ₀⟩ := hτ₀
   obtain ⟨hprop, -, hover, -, hfd, -, -⟩ := facts τ₀ hτ₀
-  haveI : IsProper Y.s := hprop
+  have : IsProper Y.s := hprop
   obtain ⟨d, M, ⟨S⟩⟩ := GlobalTheory.T.exists_germ_system E H hstar Y.X Y.t Z.Ω (Z.ξ₀ ≫ Y.j) hPow Z.gen
   obtain ⟨e, he, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_existsUnique_equiv Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) (Fin d → Z.Ω) Z.V M Z.M
   let ρ' : 𝓞 E →+* Module.End Z.Ω (Fin d → Z.Ω) := (e.symm.conjRingEquiv : _ ≃+* _).toRingHom.comp Z.ρ
@@ -306,7 +306,7 @@ theorem hodgeLat_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hfree := GlobalTheory.T.germ_system_height_free E H hstar Y.X Y.t Z.Ω (Z.ξ₀ ≫ Y.j) d (D.p + D.q) M S hPow Z.gen hC
     (fun q p' hp' h => hFib p' hp' q.1 h)
   obtain ⟨𝓗, hG⟩ := GlobalTheory.T.exists_hodge_lattice_germ_system E H hstar Y.X Y.t Z.Ω (Z.ξ₀ ≫ Y.j) d (D.p + D.q) M S ρ' Z.gen hact hfree
-  letI algΩ : Algebra O Z.Ω := (Z.inc.comp β).toAlgebra
+  let algΩ : Algebra O Z.Ω := (Z.inc.comp β).toAlgebra
   have hint : ∀ (s' : E →+* Z.Ω) (a : 𝓞 E), s' (a : E) ∈ (algebraMap O Z.Ω).range := by
     intro s' a
     obtain ⟨τ', hτ'⟩ := hfac s'

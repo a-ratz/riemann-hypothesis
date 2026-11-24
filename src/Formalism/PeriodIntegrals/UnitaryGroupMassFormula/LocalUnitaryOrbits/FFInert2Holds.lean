@@ -213,18 +213,18 @@ theorem card_norm2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : 
     by_cases hc0 : c = 0
     · have h1 : Nat.card {x : V // h x x = c} = 1 :=
         Nat.card_eq_one_iff_exists.mpr ⟨⟨0, by rw [h00, hc0]⟩, fun y => Subtype.ext (hV y.1)⟩
-      rw [h1, if_pos hc0]
+      rw [h1, ite_eq_left hc0]
       simp only [Nat.cast_zero, mul_zero, zero_sub, zpow_neg_one, pow_zero, one_mul, Nat.cast_one]
       field_simp
       try ring
-    · haveI : IsEmpty {x : V // h x x = c} :=
+    · have : IsEmpty {x : V // h x x = c} :=
         ⟨fun y => hc0 (by rw [← y.2, hV y.1, h00])⟩
-      rw [Nat.card_of_isEmpty, if_neg hc0]
+      rw [Nat.card_of_isEmpty, ite_eq_right hc0]
       simp only [Nat.cast_zero, mul_zero, zero_sub, zpow_neg_one, pow_zero, one_mul]
       ring
   | succ m ih =>
     intro V _ _ _ h hs hm c hc
-    haveI : Finite V := Module.finite_of_finite K
+    have : Finite V := Module.finite_of_finite K
     have hpos : 0 < finrank K V := by omega
     obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := finrank_pos_iff_exists_ne_zero.mp hpos
     obtain ⟨e, he⟩ := exists_aniso2 h2 hs x hx
@@ -274,9 +274,9 @@ theorem card_norm2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : 
     simp_rw [hfib]
     rw [hsum, hN0, hKr, e2, e3, zpow_add₀ hq, zpow_add₀ hq, zpow_two, zpow_one]
     by_cases hc0 : c = 0
-    · rw [if_pos hc0, if_pos hc0]
+    · rw [ite_eq_left hc0, ite_eq_left hc0]
       ring
-    · rw [if_neg hc0, if_neg hc0]
+    · rw [ite_eq_right hc0, ite_eq_right hc0]
       ring
 
 theorem card_diag2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : ∀ x, σ (σ x) = x)
@@ -299,7 +299,7 @@ theorem card_diag2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : 
     simp
   | succ a ih =>
     intro m ham V _ _ _ h hs hm d hd hd0
-    haveI : Finite V := Module.finite_of_finite K
+    have : Finite V := Module.finite_of_finite K
     let e : {Y : Fin (a + 1) → V // ∀ i j, h (Y i) (Y j) = if i = j then d i else 0} ≃
         Σ y : {x : V // h x x = d 0}, {Y' : Fin a → perp hs.toIsSq y.1 //
           ∀ i j, h (Y' i : V) (Y' j) = if i = j then d i.succ else 0} :=
@@ -314,13 +314,13 @@ theorem card_diag2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : 
             | zero => simpa using p.1.2
             | succ j =>
               simp only [Fin.cons_zero, Fin.cons_succ]
-              rw [if_neg (Fin.succ_ne_zero j).symm]
+              rw [ite_eq_right (Fin.succ_ne_zero j).symm]
               exact (mem_perp hs.toIsSq _ _).mp (p.2.1 j).2
           | succ i =>
             cases j using Fin.cases with
             | zero =>
               simp only [Fin.cons_zero, Fin.cons_succ]
-              rw [if_neg (Fin.succ_ne_zero i), hs.herm, (mem_perp hs.toIsSq _ _).mp (p.2.1 i).2,
+              rw [ite_eq_right (Fin.succ_ne_zero i), hs.herm, (mem_perp hs.toIsSq _ _).mp (p.2.1 i).2,
                 map_zero]
             | succ j =>
               simp only [Fin.cons_succ]
@@ -333,7 +333,7 @@ theorem card_diag2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : 
         right_inv := fun p => by
           rcases p with ⟨⟨y, hy⟩, ⟨Y', hY'⟩⟩
           rfl }
-    haveI : Fintype {x : V // h x x = d 0} := Fintype.ofFinite _
+    have : Fintype {x : V // h x x = d 0} := Fintype.ofFinite _
     have hfib : ∀ y : {x : V // h x x = d 0},
         (Nat.card {Y' : Fin a → perp hs.toIsSq y.1 //
           ∀ i j, h (Y' i : V) (Y' j) = if i = j then d i.succ else 0} : ℝ) =
@@ -347,7 +347,7 @@ theorem card_diag2 (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : 
         ((if d 0 = 0 then (q : ℝ) else 0) - 1) =
         (q : ℝ) ^ (2 * (m - ((0 : Fin (a + 1)) : ℕ)) - 1) -
           (-1) ^ (m - ((0 : Fin (a + 1)) : ℕ)) * (q : ℝ) ^ (m - ((0 : Fin (a + 1)) : ℕ) - 1) := by
-      rw [if_neg (hd0 0), Fin.val_zero, Nat.sub_zero]
+      rw [ite_eq_right (hd0 0), Fin.val_zero, Nat.sub_zero]
       have e1 : (2 * (m : ℤ) - 1) = ((2 * m - 1 : ℕ) : ℤ) := by omega
       have e2 : ((m : ℤ) - 1) = ((m - 1 : ℕ) : ℤ) := by omega
       rw [e1, e2, zpow_natCast, zpow_natCast]
@@ -386,10 +386,10 @@ theorem exists_tr_ne {k K : Type} [Field k] [Field K] [Algebra k K] (σ : K ≃�
 theorem fFInert2_holds : FFInert2 := by
   intro k K _ _ _ _ σ hσ hrank hne M a haM J hJ hJd T hT hTd
   classical
-  haveI : Fintype k := Fintype.ofFinite k
-  haveI : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
-  haveI : Finite K := Module.finite_of_finite k
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Fintype k := Fintype.ofFinite k
+  have : FiniteDimensional k K := Module.finite_of_finrank_pos (by omega)
+  have : Finite K := Module.finite_of_finite k
+  have : Fintype K := Fintype.ofFinite K
   have hq0 : 0 < Fintype.card k := Fintype.card_pos
   have hK : Fintype.card K = Fintype.card k ^ 2 := by
     rw [Module.card_eq_pow_finrank (K := k), hrank]
@@ -403,7 +403,7 @@ theorem fFInert2_holds : FFInert2 := by
   obtain ⟨f, hf1, hf2⟩ := exists_orth2 h2 a (Fin a → K) (ffH (σ : K →+* K) T) hTs
     (Module.finrank_fin_fun K)
   have hPu : IsUnit (Matrix.of f) :=
-    (Matrix.linearIndependent_rows_iff_isUnit (A := Matrix.of f)).mp
+    (Matrix.linearIndependent_row_iff_isUnit (A := Matrix.of f)).mp
       (linIndep_orth hTs.toIsSq f hf1 hf2)
   have hPdet : IsUnit (Matrix.of f).det := (Matrix.isUnit_iff_isUnit_det _).mp hPu
   have hPm : IsUnit ((Matrix.of f).map (σ : K →+* K)) :=
@@ -423,9 +423,9 @@ theorem fFInert2_holds : FFInert2 := by
     intro i j
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       rfl
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       exact hf1 i j hij
   let E : (Fin a → Fin M → K) ≃ (Fin a → Fin M → K) :=
     { toFun := fun X => (Matrix.of f * Matrix.of X : Matrix (Fin a) (Fin M) K)

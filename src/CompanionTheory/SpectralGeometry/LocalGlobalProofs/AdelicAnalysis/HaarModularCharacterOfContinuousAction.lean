@@ -62,7 +62,7 @@ theorem exists_continuous_modulus_of_continuous_action :
       [TopologicalSpace Q] [IsTopologicalGroup Q] [DistribMulAction Q V] [ContinuousSMul Q V],
       ∃ χ : Q →* ℝ≥0, Continuous χ ∧ ∀ q : Q, μ.map (fun v => q • v) = χ q • μ := by
   intro V _ _ _ _ _ _ _ _ μ _ Q _ _ _ _ _
-  letI : SMul Q (Set V) := Set.smulSet
+  let : SMul Q (Set V) := Set.smulSet
 
   obtain ⟨K, hK, hK0⟩ := exists_compact_mem_nhds (0 : V)
   have hKint : (interior K).Nonempty := ⟨0, mem_interior_iff_mem_nhds.2 hK0⟩

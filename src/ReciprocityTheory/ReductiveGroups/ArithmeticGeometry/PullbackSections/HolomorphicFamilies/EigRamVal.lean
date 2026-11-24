@@ -248,7 +248,7 @@ theorem w_eq_count (ψ : E →+* k) (hψ : Function.Injective ψ) (hP0 : primeOf
     have h1 : P * P = P * ⊤ := by rw [← sq, heq, Ideal.mul_top]
     exact hPp.ne_top (mul_left_cancel₀ (by rwa [Ne, Ideal.zero_eq_bot]) h1)
 
-  obtain ⟨π, hπP, hπ2⟩ := SetLike.exists_of_lt hP2
+  obtain ⟨π, hπP, hπ2⟩ := IsConcreteLE.exists_of_lt hP2
   have hπ0 : π ≠ 0 := by rintro rfl; exact hπ2 (Submodule.zero_mem _)
   have hcπ : (normalizedFactors (Ideal.span {π})).count P = 1 := by
     have h1 := mem_factors_of_mem hPp hP0 hπ0 hπP
@@ -320,7 +320,7 @@ theorem exists_delta_count {P : Ideal (𝓞 E)} (hP : P.IsPrime) (hP0 : P ≠ �
     have h1 : Dif * P = Dif * ⊤ := by rw [heq, Ideal.mul_top]
     have := mul_left_cancel₀ (by rwa [Ne, Ideal.zero_eq_bot]) h1
     exact hP.ne_top this
-  obtain ⟨δ, hδD, hδP⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨δ, hδD, hδP⟩ := IsConcreteLE.exists_of_lt hlt
   have hδ0 : δ ≠ 0 := by rintro rfl; exact hδP (Submodule.zero_mem _)
   refine ⟨δ, hδD, hδ0, ?_⟩
 

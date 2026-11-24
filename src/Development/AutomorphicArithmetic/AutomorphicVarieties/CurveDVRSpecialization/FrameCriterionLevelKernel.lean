@@ -76,7 +76,7 @@ private theorem ker_pr_le {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [Numb
       exact h1
     exact ⟨t, hI A hM' htI, ht⟩
   have hNSle : NS Ω V.S' ≤ Kp := by
-    letI : MulAction (G (W.Lp L) Ω) (ValuationSubring Ω) := ValuationSubring.pointwiseMulAction
+    let : MulAction (G (W.Lp L) Ω) (ValuationSubring Ω) := ValuationSubring.pointwiseMulAction
     unfold NS
     apply Subgroup.topologicalClosure_minimal _ _ hKp
     rw [Subgroup.normalClosure, Subgroup.closure_le]
@@ -169,7 +169,7 @@ theorem UpperTheory.frame_criterion_level_kernel :
     rw [hκ g]
     rfl
   · rw [(X.So.adicCont l c₁).2]
-    haveI : IsClosed (NS Ω V.S' : Set (G (W.Lp L) Ω)) := isClosed_NS Ω V.S'
+    have : IsClosed (NS Ω V.S' : Set (G (W.Lp L) Ω)) := isClosed_NS Ω V.S'
     have hprc : Continuous V.pr := V.pr_cont W.continuous_resP
     have hq : Topology.IsQuotientMap V.pr := IsClosedMap.isQuotientMap hprc.isClosedMap hprc hsurj
     have hfun : (fun g : ↥V.η.ker => ((κ g : (c₁.O)ˣ) : c₁.O)) ∘ V.pr =

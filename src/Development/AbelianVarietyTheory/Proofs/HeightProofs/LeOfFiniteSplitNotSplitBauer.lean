@@ -257,8 +257,8 @@ theorem stabilizer_fixes_iff (K M N : Type) [Field K] [NumberField K] [Field M] 
     [IsGalois K N] (P : Ideal (𝓞 N)) [P.IsPrime] (hP : P ≠ ⊥) :
     (∀ σ : N ≃ₐ[K] N, σ • P = P → ∀ x : M, σ (algebraMap M N x) = algebraMap M N x) ↔
       (P.under (𝓞 M)).ramificationIdx (𝓞 K) * (P.under (𝓞 M)).inertiaDeg (𝓞 K) = 1 := by
-  haveI : IsGalois M N := IsGalois.tower_top_of_isGalois K M N
-  haveI : P.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hP
+  have : IsGalois M N := IsGalois.tower_top_of_isGalois K M N
+  have : P.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hP
   have h1 := Ideal.card_stabilizer_eq (G := N ≃ₐ[K] N) (P.under (𝓞 K)) P
   have h2 := Ideal.card_stabilizer_eq (G := N ≃ₐ[M] N) (P.under (𝓞 M)) P
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx _ P (N ≃ₐ[K] N),
@@ -311,13 +311,13 @@ theorem ncard_eq_finrank_iff (K M : Type) [Field K] [NumberField K] [Field M] [N
     [Algebra K M] (v : HeightOneSpectrum (𝓞 K)) :
     (v.asIdeal.primesOver (𝓞 M)).ncard = Module.finrank K M ↔
       ∀ Q ∈ v.asIdeal.primesOver (𝓞 M), Q.ramificationIdx (𝓞 K) * Q.inertiaDeg (𝓞 K) = 1 := by
-  haveI := v.isPrime
-  haveI := v.isMaximal
-  haveI : Fintype (v.asIdeal.primesOver (𝓞 M)) :=
+  have := v.isPrime
+  have := v.isMaximal
+  have : Fintype (v.asIdeal.primesOver (𝓞 M)) :=
     (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 M)).fintype
   have h := Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 M)
   have h' : Module.finrank (𝓞 K) (𝓞 M) = Module.finrank K M :=
-    (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 K) K (𝓞 M) M).symm
+    (IsFractionRing.finrank_eq (𝓞 K) K (𝓞 M) M).symm
   have h1 : (v.asIdeal.primesOver (𝓞 M)).ncard = ∑ _q : v.asIdeal.primesOver (𝓞 M), 1 := by
     rw [Finset.sum_const, smul_eq_mul, mul_one, Finset.card_univ, ← Nat.card_eq_fintype_card,
       Nat.card_coe_set_eq]
@@ -338,16 +338,16 @@ theorem ef_eq_one_of_generate (K R M T : Type) [Field K] [NumberField K] [Field 
     (hM : (Q.under (𝓞 M)).ramificationIdx (𝓞 K) * (Q.under (𝓞 M)).inertiaDeg (𝓞 K) = 1) :
     Q.ramificationIdx (𝓞 K) * Q.inertiaDeg (𝓞 K) = 1 := by
   let N := IntermediateField.normalClosure K T (AlgebraicClosure T)
-  haveI : NumberField N := NumberField.of_module_finite K N
-  haveI : IsGalois K N := IsGalois.normalClosure K T (AlgebraicClosure T)
-  letI : Algebra R N := ((algebraMap T N).comp (algebraMap R T)).toAlgebra
-  letI : Algebra M N := ((algebraMap T N).comp (algebraMap M T)).toAlgebra
-  haveI : IsScalarTower R T N := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower M T N := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K R N := IsScalarTower.of_algebraMap_eq fun x => by
+  have : NumberField N := NumberField.of_module_finite K N
+  have : IsGalois K N := IsGalois.normalClosure K T (AlgebraicClosure T)
+  let : Algebra R N := ((algebraMap T N).comp (algebraMap R T)).toAlgebra
+  let : Algebra M N := ((algebraMap T N).comp (algebraMap M T)).toAlgebra
+  have : IsScalarTower R T N := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower M T N := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K R N := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply R T N, ← IsScalarTower.algebraMap_apply K R T,
       ← IsScalarTower.algebraMap_apply K T N]
-  haveI : IsScalarTower K M N := IsScalarTower.of_algebraMap_eq fun x => by
+  have : IsScalarTower K M N := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply M T N, ← IsScalarTower.algebraMap_apply K M T,
       ← IsScalarTower.algebraMap_apply K T N]
   obtain ⟨⟨P, hP, hPQ⟩⟩ := Q.nonempty_primesOver (S := 𝓞 N)
@@ -378,7 +378,7 @@ theorem finrank_le_one_of_generate (K R M T : Type) [Field K] [NumberField K] [F
   rw [not_le] at hlt
   have hS1 : ((fun v : HeightOneSpectrum (𝓞 R) => v.under (𝓞 K)) ⁻¹' F).Finite := by
     refine hF.preimage' fun p _ => ?_
-    haveI := p.isMaximal
+    have := p.isMaximal
     refine Set.Finite.of_finite_image (f := HeightOneSpectrum.asIdeal)
       ((IsDedekindDomain.primesOver_finite p.asIdeal (𝓞 R)).subset ?_)
       (fun _ _ _ _ h => HeightOneSpectrum.ext h)
@@ -388,13 +388,13 @@ theorem finrank_le_one_of_generate (K R M T : Type) [Field K] [NumberField K] [F
     Ideal.finite_factors differentIdeal_ne_bot
   refine not_forall_two_liesOver R T _ (summable_finite_union_not_prime R _ (hS1.union hS2)) ?_
   intro v hv
-  simp only [Set.mem_union, Set.mem_preimage, Set.mem_setOf_eq, not_or, not_not] at hv
+  simp only [Set.mem_union, Set.mem_preimage, Set.mem_ofPred_eq, not_or, not_not] at hv
   obtain ⟨⟨hvF, hvd⟩, hvp⟩ := hv
-  haveI := v.isPrime
+  have := v.isPrime
   set p : HeightOneSpectrum (𝓞 K) := v.under (𝓞 K) with hp
-  haveI := p.isPrime
-  haveI : v.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  haveI : Algebra.IsUnramifiedAt (𝓞 K) v.asIdeal := not_dvd_differentIdeal_iff.1 hvd
+  have := p.isPrime
+  have : v.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  have : Algebra.IsUnramifiedAt (𝓞 K) v.asIdeal := not_dvd_differentIdeal_iff.1 hvd
   have he : v.asIdeal.ramificationIdx (𝓞 K) = 1 := Ideal.ramificationIdx_eq_one _ _
   have hn := Ideal.absNorm_pow_inertiaDeg p.asIdeal v.asIdeal
   have hf : v.asIdeal.inertiaDeg (𝓞 K) = 1 := (hn ▸ hvp).eq_one_of_pow
@@ -409,7 +409,7 @@ theorem finrank_le_one_of_generate (K R M T : Type) [Field K] [NumberField K] [F
   have hT : ∀ Q ∈ v.asIdeal.primesOver (𝓞 T),
       Q.ramificationIdx (𝓞 R) * Q.inertiaDeg (𝓞 R) = 1 := by
     rintro Q ⟨hQ, hQv⟩
-    haveI : Q.LiesOver p.asIdeal := Ideal.LiesOver.trans Q v.asIdeal p.asIdeal
+    have : Q.LiesOver p.asIdeal := Ideal.LiesOver.trans Q v.asIdeal p.asIdeal
     have h1 := ef_eq_one_of_generate K R M T hgen Q
       (Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q) (by rw [← hQv.over, he, hf])
       (hM _ ⟨inferInstance, inferInstance⟩)
@@ -422,8 +422,8 @@ theorem finrank_le_one_of_generate (K R M T : Type) [Field K] [NumberField K] [F
     rw [← Ideal.absNorm_pow_inertiaDeg v.asIdeal Q, h1, pow_one]
   rw [← (ncard_eq_finrank_iff R T v).2 hT, Set.one_lt_ncard_iff_nontrivial_and_finite] at hlt
   obtain ⟨⟨Q, hQ, Q', hQ', hne⟩, -⟩ := hlt
-  haveI := hQ.2
-  haveI := hQ'.2
+  have := hQ.2
+  have := hQ'.2
   exact ⟨⟨Q, hQ.1, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q⟩,
     ⟨Q', hQ'.1, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q'⟩,
     fun e => hne (congrArg HeightOneSpectrum.asIdeal e), hQ.2, hQ'.2, hN Q hQ, hN Q' hQ'⟩
@@ -432,11 +432,11 @@ theorem le_of_finite_split_not_split :
     ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] (R M : IntermediateField K Ω) [NumberField R] [NumberField M] [IsGalois K R], {𝔭 : HeightOneSpectrum (𝓞 K) | (Ideal.absNorm 𝔭.asIdeal).Prime ∧ {Q : HeightOneSpectrum (𝓞 R) | Q.asIdeal.comap (algebraMap (𝓞 K) (𝓞 R)) = 𝔭.asIdeal}.ncard = Module.finrank K R ∧ ¬ {Q : HeightOneSpectrum (𝓞 M) | Q.asIdeal.comap (algebraMap (𝓞 K) (𝓞 M)) = 𝔭.asIdeal}.ncard = Module.finrank K M}.Finite → M ≤ R := by
   intro K Ω _ _ _ _ R M _ _ _ hfin
   let T : IntermediateField K Ω := R ⊔ M
-  haveI : NumberField T := NumberField.of_module_finite K T
-  letI : Algebra R T := (IntermediateField.inclusion (le_sup_left : R ≤ T)).toRingHom.toAlgebra
-  letI : Algebra M T := (IntermediateField.inclusion (le_sup_right : M ≤ T)).toRingHom.toAlgebra
-  haveI : IsScalarTower K R T := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K M T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : NumberField T := NumberField.of_module_finite K T
+  let : Algebra R T := (IntermediateField.inclusion (le_sup_left : R ≤ T)).toRingHom.toAlgebra
+  let : Algebra M T := (IntermediateField.inclusion (le_sup_right : M ≤ T)).toRingHom.toAlgebra
+  have : IsScalarTower K R T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K M T := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have h1 : Module.finrank R T ≤ 1 := by
     refine finrank_le_one_of_generate K R M T ?_ _ hfin ?_
     · intro N _ _ φ ψ hR hM
@@ -449,7 +449,7 @@ theorem le_of_finite_split_not_split :
       by_contra hM
       exact hp ⟨hpp, hR, hM⟩
   have h2 : Module.finrank K T ≤ Module.finrank K R := by
-    haveI : Module.Free R T := Module.Free.of_divisionRing R T
+    have : Module.Free R T := Module.Free.of_divisionRing R T
     rw [← Module.finrank_mul_finrank K R T]
     exact mul_le_of_le_one_right' h1
   have h3 : R = T := IntermediateField.eq_of_le_of_finrank_le le_sup_left h2

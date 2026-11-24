@@ -87,7 +87,7 @@ theorem aux8 : ∀ (R : Type) [inst : CommRing R] {α n : Type} {m : α → Type
   intro R _ α n m _ _ _ e x hx
   change Matrix.BlockTriangular (x⁻¹ : Matrix.GeneralLinearGroup n R).val _
   rw [Matrix.coe_units_inv]
-  letI := x.invertible
+  let := x.invertible
   exact Matrix.blockTriangular_inv_of_blockTriangular hx
 
 noncomputable def parab : (R : Type) →
@@ -204,8 +204,8 @@ theorem zero_contDiffOn_supported : ∀ {F : Type} [inst : Field F]
   [inst_1 : NumberField F] (p : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)),
   IsNonarchimedeanLocalField (IsDedekindDomain.HeightOneSpectrum.adicCompletion F p) := by
   intro F _ _ p
-  letI := complRel p
-  haveI : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := complRel p
+  have : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact
     { toIsValuativeTopology :=

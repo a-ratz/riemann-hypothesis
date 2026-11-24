@@ -101,10 +101,10 @@ theorem mem_fixed_iff (σ : Representation ℂ G W) (H : Subgroup G) (v : W) :
 theorem exists_fixed_avg (σ : Representation ℂ G W) (hs : GlobalTheory.PRep.IsSmooth σ) (K : Subgroup G)
     (hK : IsCompact (K : Set G)) (x : W) :
     ∃ x₀ ∈ GlobalTheory.PRep.fixed σ K, ∀ ℓ : W →ₗ[ℂ] ℂ, (∀ k ∈ K, ∀ v, ℓ (σ k v) = ℓ v) → ℓ x = ℓ x₀ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have hSo : IsOpen ((stab σ x : Subgroup G) : Set G) := hs x
-  haveI : Finite (K ⧸ (stab σ x).subgroupOf K) :=
-    Subgroup.quotient_finite_of_isOpen _ (hSo.preimage continuous_subtype_val)
+  have : Finite (K ⧸ (stab σ x).subgroupOf K) :=
+    Subgroup.quotient_finite_of_isOpen _ (hSo.preimage continuous_subtypeVal)
   let f : K ⧸ (stab σ x).subgroupOf K → W := fun q => Quotient.liftOn' q (fun k : K => σ k x) (by
     intro a b hab
     rw [QuotientGroup.leftRel_apply, Subgroup.mem_subgroupOf] at hab
@@ -211,7 +211,7 @@ theorem exists_intertwiner : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTo
     have hSo : IsOpen ((stab σ' y : Subgroup G) : Set G) := hσ' y
     have hKo' : IsOpen (K' : Set G) := hKo.inter hSo
     have hKc' : IsCompact (K' : Set G) := hKc.inter_right (Subgroup.isClosed_of_isOpen _ hSo)
-    haveI := hσ.2 K' hKo' hKc'
+    have := hσ.2 K' hKo' hKc'
     obtain ⟨z, hz⟩ := exists_rep (GlobalTheory.PRep.fixed σ K') B hB ((C.flip y).comp (GlobalTheory.PRep.fixed σ K').subtype)
     refine ⟨z, fun x => ?_⟩
     obtain ⟨x₀, hx₀, hℓ⟩ := exists_fixed_avg σ hσ.1 K' hKc' x

@@ -323,7 +323,7 @@ namespace GlobalTheory.RowStart
 theorem setIntegral_fd_eq {D : D7} (V : HSp D) (μ : Measure (GA D V)) (hμ : μ.IsHaarMeasure) (𝓕 𝓕' : Set (GA D V))
     (h1 : IsFundamentalDomain (GQ V) 𝓕 μ) (h2 : IsFundamentalDomain (GQ V) 𝓕' μ) (f : GA D V → ℂ)
     (hf : ∀ γ ∈ GQ V, ∀ g, f (γ * g) = f g) : ∫ g in 𝓕, f g ∂μ = ∫ g in 𝓕', f g ∂μ := by
-  haveI := hμ
+  have := hμ
   exact h1.setIntegral_eq h2 fun γ g => by
     simp only [Subgroup.smul_def, smul_eq_mul]
     exact hf γ γ.2 g
@@ -445,7 +445,7 @@ theorem typedBy_value (θ : InfFam D) (hHC : GlobalTheory.Published.HarishChandr
     (M : DSModel V Sp) {J : Set (GA D V)} {χ : GA D V → ℂ} {T : MMap M} (hT : IsMultMap θ M J χ T) (v : M.Vec)
     (τ : D.what₂.Tau) : TypedBy θ M τ (T v) := by
   have hD := M.ds τ
-  haveI : CompleteSpace (M.H τ) := hD.1
+  have : CompleteSpace (M.H τ) := hD.1
   have hσ : Std (M.ε τ) (M.σ τ) := std_of_isDS hHC hD
   intro x
   obtain ⟨ℓ, hℓ, hℓv⟩ := hT.cont τ v x
@@ -772,9 +772,9 @@ theorem zconv : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridD
 
   have hWl := (hM.vtx (.grid i j) ⟨i.2.le, j.2.le⟩).haar_fund
   have hVl := (hM.vtx (.grid i (j + 1)) ⟨i.2.le, j.2⟩).haar_fund
-  haveI : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
+  have : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol _ _ _ hWl.1 hWl.2).ne
-  haveI : IsFiniteMeasure ((M.ν (.grid i (j + 1))).restrict (M.fd (.grid i (j + 1)))) :=
+  have : IsFiniteMeasure ((M.ν (.grid i (j + 1))).restrict (M.fd (.grid i (j + 1)))) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol _ _ _ hVl.1 hVl.2).ne
   have hcont := GlobalTheory.T.continuous_translates_kernel_route_small_vertex hL W B ρ t i j Θ Θ' hΘ g₁ z
   have hRD := GlobalTheory.Grow.rapidDec_of_cuspForm (GlobalTheory.Grow.cuspRapidDecay_of_bound hP) W.θ_is hF hFc
@@ -878,10 +878,10 @@ theorem sum_integral_translates_outer_eq : ∀ {D : D7} {T : Type} {L : LevCh D 
   classical
   have hσ : ∀ X : Node, X.InRange D.R.m → SigmaFinite (M.ν X) := fun X hX => by
     obtain ⟨h1, h2, -⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D (G.V X)
-    haveI := (hM.vtx X hX).haar_fund.1
+    have := (hM.vtx X hX).haar_fund.1
     infer_instance
-  haveI := hσ (.grid i (j + 1)) ⟨i.2.le, j.2⟩
-  haveI := hσ (.grid i j) ⟨i.2.le, j.2.le⟩
+  have := hσ (.grid i (j + 1)) ⟨i.2.le, j.2⟩
+  have := hσ (.grid i j) ⟨i.2.le, j.2.le⟩
   have hpt : ∀ u, ∫ g in M.fd (.grid i (j + 1)), F g * translates z (kerSmall W Θ' g g₁) u ∂M.ν (.grid i (j + 1)) =
       Θ'.sum fun d c => c * translates z (outer W M d F g₁) u := by
     intro u
@@ -1362,7 +1362,7 @@ theorem opNorm_blk {m n ι : Type} [Fintype m] [DecidableEq m] [Fintype n] [Deci
     (e : m ⊕ n ≃ ι) (x : Matrix m m ℂ) (y : Matrix n n ℂ) :
     ‖Matrix.toEuclideanCLM (n := ι) (𝕜 := ℂ) (GlobalTheory.Doubling.blkMat e x y)‖₊ ≤
       max ‖Matrix.toEuclideanCLM (n := m) (𝕜 := ℂ) x‖₊ ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℂ) y‖₊ := by
-  rw [← NNReal.coe_le_coe, NNReal.coe_max, coe_nnnorm, coe_nnnorm, coe_nnnorm]
+  rw [← NNReal.coe_le_coe, NNReal.coe_max, coe_nnNorm, coe_nnNorm, coe_nnNorm]
   set a := ‖Matrix.toEuclideanCLM (n := m) (𝕜 := ℂ) x‖ with ha
   set b := ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℂ) y‖ with hb
   have ha0 : 0 ≤ a := norm_nonneg _
@@ -1452,7 +1452,7 @@ theorem finNorm_blk (V V₁ : HSp D) (v : HeightOneSpectrum (𝓞 D.host.F)) (g 
     unfold GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finCoord
     rw [map_zero]; rfl
   show ‖evalV D.host.F v (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finCoord D 0 k)‖₊ = 0
-  rw [hz, map_zero, nnnorm_zero]
+  rw [hz, map_zero, nnNorm_zero]
 
 theorem blk_inv (V V₁ : HSp D) (g : GA D V) (g₁ : GA D V₁) :
     (blk V V₁ (g, g₁))⁻¹ = blk V V₁ (g⁻¹, g₁⁻¹) := (map_inv (blk V V₁) (g, g₁)).symm
@@ -1466,12 +1466,12 @@ theorem CompanionTheory.Member.unitaryAdelicHeight_blockDiagonal_le_mul : ∀ (D
   have f2 := GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finHt_mulSupport_finite V₁ g₁
   unfold GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height
   rw [mul_mul_mul_comm, ← Finset.prod_mul_distrib, ← finprod_mul_distrib f1 f2]
-  refine mul_le_mul' (Finset.prod_le_prod' fun τ _ => ?_) ?_
+  refine mul_le_mul' (Finset.prod_le_prod fun τ _ => ?_) ?_
   · unfold GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.infHt
     rw [CompanionTheory.Member.BlockMatrixNorms.blk_inv]
     exact CompanionTheory.Member.BlockMatrixNorms.key (CompanionTheory.Member.BlockMatrixNorms.infNorm_blk _ _ _ _ _ _)
       (CompanionTheory.Member.BlockMatrixNorms.infNorm_blk _ _ _ _ _ _)
-  · refine finprod_le_finprod' f0 ((f1.union f2).subset (Function.mulSupport_mul _ _)) fun v => ?_
+  · refine finprod_le_finprod f0 ((f1.union f2).subset (Function.mulSupport_mul _ _)) fun v => ?_
     show GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finHt _ _ _ ≤ GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finHt _ _ _ * GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finHt _ _ _
     unfold GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finHt
     rw [CompanionTheory.Member.BlockMatrixNorms.blk_inv]
@@ -1624,10 +1624,10 @@ theorem lift_eq_integral_kerBig : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : 
   classical
   have hσ : ∀ X : Node, X.InRange D.R.m → SigmaFinite (M.ν X) := fun X hX => by
     obtain ⟨h1, h2, -⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D (G.V X)
-    haveI := (hM.vtx X hX).haar_fund.1
+    have := (hM.vtx X hX).haar_fund.1
     infer_instance
-  haveI := hσ (.grid i (j + 1)) ⟨i.2.le, j.2⟩
-  haveI := hσ (.grid (i + 1) (j + 1)) ⟨i.2, j.2⟩
+  have := hσ (.grid i (j + 1)) ⟨i.2.le, j.2⟩
+  have := hσ (.grid (i + 1) (j + 1)) ⟨i.2, j.2⟩
   have hK1 : ∀ g, IntegrableOn (kerBig W Θ g g₁) (M.fd (.grid (i + 1) (j + 1))) (M.ν (.grid (i + 1) (j + 1))) := GlobalTheory.T.bigRoute_kernel_integrableOn_unitary_quotient hWC hL W B ρ t i j hT M hM Θ Θ' hΘ g₁
   have hmeas : AEStronglyMeasurable (fun p : GA D (G.V (.grid i (j + 1))) × GA D (G.V (.grid (i + 1) (j + 1))) =>
       kerBig W Θ p.1 g₁ p.2) (((M.ν (.grid i (j + 1))).restrict (M.fd (.grid i (j + 1)))).prod

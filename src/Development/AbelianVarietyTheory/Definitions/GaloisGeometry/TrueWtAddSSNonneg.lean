@@ -335,7 +335,7 @@ theorem K_emb (hc : X.Tau → HCParam R) (i : ℕ) (hi : i < R.m) (φ : (A.F i).
   have hL : (A.chain σ hc).K i (A.emb σ i φ) c' =
       @Finset.sum _ _ _ (@Finset.univ _ (A.ok i).fintypeCl) fun c : (A.F i).Cl =>
         (A.chain σ hc).wt i c • (A.chain σ hc).Kmap i c c' (A.emb σ i φ c) := rfl
-  letI : ∀ b, Fintype ((A.F i).mem b).Cl := fun b => (A.ok i b).fintypeCl
+  let : ∀ b, Fintype ((A.F i).mem b).Cl := fun b => (A.ok i b).fintypeCl
 
   rw [hL, hR, map_sum]
   refine (Fintype.sum_sigma _).trans (Finset.sum_congr rfl fun b _ => ?_)
@@ -368,9 +368,9 @@ theorem trueWt_old (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.T
     (trueWt hc (i + 1) τ).w a = (trueWt hc i τ).w ⟨a.1, h⟩ + sS hc i τ - sD hc i τ := by
   have h0 := Wts.lamTrue_old (⟨fun τ => RowPar.of (hc τ), fun _ => hc, ∅⟩ : Wts X Unit R) () hi τ a h
   have h1 : ((sS hc i τ : ℤ) : ℚ) = sExp' R ((hc τ).e ⟨i, hi⟩) (i + 1) := by
-    rw [sS, dif_pos hi]; exact zOf_spec R _ ((hc τ).e_int _) _
+    rw [sS, dite_eq_left hi]; exact zOf_spec R _ ((hc τ).e_int _) _
   have h2 : ((sD hc i τ : ℤ) : ℚ) = sExp R ((hc τ).e ⟨i, hi⟩) (i + 1) := by
-    rw [sD, dif_pos hi]; exact zOf_spec R _ ((hc τ).e_int _) _
+    rw [sD, dite_eq_left hi]; exact zOf_spec R _ ((hc τ).e_int _) _
   apply Int.cast_injective (α := ℚ)
   push_cast
   rw [h1, h2]
@@ -380,7 +380,7 @@ theorem trueWt_new (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.T
     (trueWt hc (i + 1) τ).w a = -sD hc i τ := by
   have h0 := Wts.lamTrue_new (⟨fun τ => RowPar.of (hc τ), fun _ => hc, ∅⟩ : Wts X Unit R) () hi τ a h
   have h2 : ((sD hc i τ : ℤ) : ℚ) = sExp R ((hc τ).e ⟨i, hi⟩) (i + 1) := by
-    rw [sD, dif_pos hi]; exact zOf_spec R _ ((hc τ).e_int _) _
+    rw [sD, dite_eq_left hi]; exact zOf_spec R _ ((hc τ).e_int _) _
   apply Int.cast_injective (α := ℚ)
   push_cast
   rw [h2]
@@ -553,24 +553,24 @@ theorem nuEnd_cast (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.T
     (nuEnd hc i τ : ℤ) = (trueWt hc i τ).detShift + sS hc i τ := by
   have := trueWt_add_sS_nonneg hc hi τ ⟨R.N i - 1, by have := R.N_pos i; omega⟩
   rw [nuEnd, Int.toNat_of_nonneg]
-  rwa [DomWeight.detShift, dif_pos (R.N_pos i)]
+  rwa [DomWeight.detShift, dite_eq_left (R.N_pos i)]
 
 theorem nuEnd_eq {Pr : Primes X} (W : Wts X Pr.Word R) (u : Pr.Word) {i : ℕ} (hi : i < R.m) :
     nuEnd (W.hc u) i = Formalism.L2.Ker.nuLast W u i := by
   funext τ
   have h1 : ((sS (W.hc u) i τ : ℤ) : ℚ) = sExp' R ((W.hc u τ).e ⟨i, hi⟩) (i + 1) := (by
-    rw [sS, dif_pos hi]; exact zOf_spec R _ ((W.hc u τ).e_int _) _)
+    rw [sS, dite_eq_left hi]; exact zOf_spec R _ ((W.hc u τ).e_int _) _)
   have h0 := W.nuW_eq_true u hi τ ⟨R.N i - 1, by have := R.N_pos i; omega⟩
   rw [← h1] at h0
-  have h2 : (W.nuW u (i + 1) τ).detShift = (W.nuW u (i + 1) τ).w ⟨R.N i - 1, Nat.sub_lt (R.N_pos i) one_pos⟩ := dif_pos (R.N_pos i)
-  rw [nuEnd, Formalism.L2.Ker.nuLast, h2, DomWeight.detShift, dif_pos (R.N_pos i), trueWt_eq]
+  have h2 : (W.nuW u (i + 1) τ).detShift = (W.nuW u (i + 1) τ).w ⟨R.N i - 1, Nat.sub_lt (R.N_pos i) one_pos⟩ := dite_eq_left (R.N_pos i)
+  rw [nuEnd, Formalism.L2.Ker.nuLast, h2, DomWeight.detShift, dite_eq_left (R.N_pos i), trueWt_eq]
   congr 1
   exact_mod_cast h0.symm
 
 theorem trueWt_detShift_succ (hc : X.Tau → HCParam R) {i : ℕ} (hi : i < R.m) (τ : X.Tau) :
     (trueWt hc (i + 1) τ).detShift = -sD hc i τ := by
   have hN : R.N i < R.N (i + 1) := by unfold Ranks.N; rw [add_mul]; omega
-  rw [DomWeight.detShift, dif_pos (R.N_pos _)]
+  rw [DomWeight.detShift, dite_eq_left (R.N_pos _)]
   exact trueWt_new hc hi τ _ (by simp only; omega)
 
 def sharpPol (hc : X.Tau → HCParam R) (i : ℕ) (x : (A.F i).V) : Formalism.L2.DIV.Pol ℂ X.Tau (R.N i) :=

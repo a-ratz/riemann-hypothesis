@@ -80,7 +80,7 @@ def UI (σ : E →ₐ[F] E) : Subgroup (AF F ⊗[F] E)ˣ where
 theorem eta_fin {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {η : (AF F ⊗[F] E)ˣ →* Circle} (hη : ResEtaF η 1)
     (a : (AF F)ˣ) (h1 : (idFF F E a : AF F ⊗[F] E) ∈ SE F E) (h2 : (idFF F E a⁻¹ : AF F ⊗[F] E) ∈ SE F E) :
     η (idFF F E (finU F (sndU F a))) = 1 := by
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := hB.cm.2.2.1 }
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := hB.cm.2.2.1 }
   have hint : ∀ t : AF F, algebraMap (AF F) (AF F ⊗[F] E) t ∈ SE F E → ∀ v : HeightOneSpectrum (𝓞 F),
       2 * t.2 v ∈ v.adicCompletionIntegers F := by
     intro t ht v
@@ -254,7 +254,7 @@ theorem exists_eta : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     (B : Base F E), B.IsGood σ → ∃ η : (AF F ⊗[F] E)ˣ →* Circle,
       IsHeckeCharF η ∧ ResEtaF η 1 ∧ HasExp B.emb η (fun _ => 1) ∧ UnramInert σ η := by
   intro F E _ _ _ _ _ σ B hB
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨η, h1, h2, h3⟩ := GlobalTheory.EtaCMType.exists_eta_cmType F E σ B hB
   obtain ⟨N, hN, hk⟩ := key hB h1.1 h2
   obtain ⟨ν, hV, hU⟩ := exists_ext _ _ η hk

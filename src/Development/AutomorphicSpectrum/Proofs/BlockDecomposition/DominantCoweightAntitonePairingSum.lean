@@ -119,7 +119,7 @@ theorem lamOf_antitone_gap_sum (N : ℕ) (g : Fin (N - 1) → ℕ) :
       · symm
         refine Finset.sum_eq_zero fun j _ => ?_
         have hn : ¬ ((i : ℕ) < (i' : ℕ)) := hlt
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨h1, h2⟩
         omega
     calc (∑ i : Fin N, ∑ i' : Fin N,

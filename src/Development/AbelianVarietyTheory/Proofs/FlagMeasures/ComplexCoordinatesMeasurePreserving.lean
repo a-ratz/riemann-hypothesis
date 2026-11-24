@@ -99,7 +99,7 @@ theorem measurePreserving_reImLinear (ι : Type) [Fintype ι] (n : ℕ) :
       Set.univ.pi fun v => Set.univ.pi fun i =>
         {z : ℂ | z.re ∈ s (v, i, true) ∧ z.im ∈ s (v, i, false)} := by
     ext y
-    simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff, Set.mem_ofPred_eq]
     constructor
     · intro h v i
       exact ⟨h (v, i, true), h (v, i, false)⟩

@@ -185,7 +185,7 @@ private theorem eqv_tw_map_closedImmersion_surjective_spec (hE1 : E1) (q : ℕ) 
       (congrArg PrimeSpectrum.asIdeal hy).symm
     rw [hy', Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.mpr ha]
     exact y.asIdeal.zero_mem
-  haveI := henselianRing_of_le_nilradical I hI
+  have := henselianRing_of_le_nilradical I hI
   have h1 : Eqv (ZMod q) (spMap (Ideal.Quotient.mk I)) (tw q i) := hE1 q A' I hq i
   rw [hδ, Functor.map_comp]
   exact (hcomp _ _ _ _ _).1 (hiso _ _ _ inferInstance) h1
@@ -198,8 +198,8 @@ private theorem eqv_tw_map_closedImmersion_surjective (hB3 : B3) (hE1 : E1) (q :
   intro A' _ s _
   have hqA : IsUnit (q : A') := by
     simpa using (unit_map q s hq).map (Scheme.ΓSpecIso (CommRingCat.of A')).hom.hom
-  haveI : IsClosedImmersion (pullback.snd (δ ≫ 𝟙 Z) s) := inferInstance
-  haveI : Surjective (pullback.snd (δ ≫ 𝟙 Z) s) := inferInstance
+  have : IsClosedImmersion (pullback.snd (δ ≫ 𝟙 Z) s) := inferInstance
+  have : Surjective (pullback.snd (δ ≫ 𝟙 Z) s) := inferInstance
   have h1 := eqv_tw_map_closedImmersion_surjective_spec hE1 q i hqA (pullback.snd (δ ≫ 𝟙 Z) s)
   have hM : pullback.map (δ ≫ 𝟙 Z) s (𝟙 Z) s δ (𝟙 _) (𝟙 Z) (by simp) (by simp) ≫ pullback.snd (𝟙 Z) s =
       pullback.snd (δ ≫ 𝟙 Z) s := by
@@ -216,14 +216,14 @@ private theorem eqv_tw_map_integral_univInjective_surjective (hA3 : A3) (hB3 : B
   have hd : Eqv (ZMod q) (dg h) (tw q i) := by
     apply hA3 (ZMod q) (dg h) (tw q i)
     intro n
-    haveI : MorphismProperty.IsStableUnderBaseChange (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) :=
+    have : MorphismProperty.IsStableUnderBaseChange (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) :=
       MorphismProperty.IsStableUnderBaseChange.inf
-    haveI : MorphismProperty.IsMultiplicative (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) :=
+    have : MorphismProperty.IsMultiplicative (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) :=
       MorphismProperty.IsMultiplicative.inf
     obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) V W h
       ⟨inferInstance, inferInstance⟩ n
-    haveI : IsIntegralHom π := hπ.1
-    haveI : UniversallyInjective π := hπ.2
+    have : IsIntegralHom π := hπ.1
+    have : UniversallyInjective π := hπ.2
     let pr0 : Z ⟶ V := Yoneda.fullyFaithful.preimage (e.hom ≫ prj h n 0)
     let δ : V ⟶ Z := Yoneda.fullyFaithful.preimage (dgk h n ≫ e.inv)
     have hδ : yoneda.map δ = dgk h n ≫ e.inv := Yoneda.fullyFaithful.map_preimage _
@@ -235,14 +235,14 @@ private theorem eqv_tw_map_integral_univInjective_surjective (hA3 : A3) (hB3 : B
       apply Yoneda.fullyFaithful.map_injective
       rw [Functor.map_comp, hpr, Category.assoc, prj_f, ← he]
       rfl
-    haveI : IsSeparated (pr0 ≫ h) := by rw [h2]; infer_instance
-    haveI : IsSeparated pr0 := IsSeparated.of_comp pr0 h
-    haveI : IsClosedImmersion (δ ≫ pr0) := by rw [h1]; infer_instance
-    haveI : IsClosedImmersion δ := IsClosedImmersion.of_comp δ pr0
+    have : IsSeparated (pr0 ≫ h) := by rw [h2]; infer_instance
+    have : IsSeparated pr0 := IsSeparated.of_comp pr0 h
+    have : IsClosedImmersion (δ ≫ pr0) := by rw [h1]; infer_instance
+    have : IsClosedImmersion δ := IsClosedImmersion.of_comp δ pr0
     have key : δ ≫ π ≫ h = h := by rw [← h2, ← Category.assoc, h1, Category.id_comp]
-    haveI : UniversallyInjective (π ≫ h) :=
+    have : UniversallyInjective (π ≫ h) :=
       MorphismProperty.comp_mem @UniversallyInjective π h ‹_› ‹_›
-    haveI : Surjective δ := by
+    have : Surjective δ := by
       constructor
       intro z
       refine ⟨pr0 z, (π ≫ h).injective ?_⟩
@@ -262,8 +262,8 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
   obtain ⟨-, -, hA3, -, -, -, -, -, -, -, -, -, hB3, hB4, -, -, -, -, -, -, -, -, -, -, hE1, hE2, -⟩ := hH
   obtain ⟨hiso, hcomp, hqi, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
   obtain ⟨hHL, hsep⟩ := id hA
-  haveI := hHL
-  haveI := hsep
+  have := hHL
+  have := hsep
   let k := IsLocalRing.ResidueField A
   let K := AlgebraicClosure k
   let r : Spec (CommRingCat.of k) ⟶ Sp A := Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))
@@ -273,8 +273,8 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
   have hqA : IsUnit (q : Γ(Sp A, ⊤)) := by
     simpa using hq.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
   have hqk : IsUnit (q : Γ(Spec (CommRingCat.of k), ⊤)) := unit_map q r hqA
-  haveI : IsIntegralHom u := IsIntegralHom.SpecMap_iff.mpr (fun x => Algebra.IsIntegral.isIntegral x)
-  haveI : UniversallyInjective u := by
+  have : IsIntegralHom u := IsIntegralHom.SpecMap_iff.mpr (fun x => Algebra.IsIntegral.isIntegral x)
+  have : UniversallyInjective u := by
     refine ((tfae_universallyInjective u).out 1 2).mpr ?_
     intro L _ g₁ g₂ hg
     simp only at hg
@@ -284,7 +284,7 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
     congr 1
     exact CommRingCat.hom_ext
       (IsPurelyInseparable.injective_comp_algebraMap k K L (congrArg CommRingCat.Hom.hom h3 :))
-  haveI : Surjective u := ⟨fun x => ⟨IsLocalRing.closedPoint K, Subsingleton.elim _ _⟩⟩
+  have : Surjective u := ⟨fun x => ⟨IsLocalRing.closedPoint K, Subsingleton.elim _ _⟩⟩
   have hu := eqv_tw_map_integral_univInjective_surjective hA3 hB3 hB4 hE1 q i u hqk
   have hr : Eqv (ZMod q) (sch.map r) (tw q i) := hE1 q A (IsLocalRing.maximalIdeal A) hq i
   have hbE : Eqv (ZMod q) (sch.map (bpt A)) (tw q i) := by
@@ -299,16 +299,16 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
     have s0 := IsPullback.of_hasPullback p (bpt A)
     rw [← IsPullback.isoIsPullback_hom_fst _ _ s0 s12, Functor.map_comp, Functor.map_comp]
     have hf1 : Eqv (ZMod q) (sch.map (pullback.fst p r)) (tw q i) := hE2 q A hA hq p i
-    haveI : IsIntegralHom (pullback.fst (pullback.snd p r) u) := inferInstance
-    haveI : UniversallyInjective (pullback.fst (pullback.snd p r) u) :=
+    have : IsIntegralHom (pullback.fst (pullback.snd p r) u) := inferInstance
+    have : UniversallyInjective (pullback.fst (pullback.snd p r) u) :=
       MorphismProperty.of_isPullback (P := @UniversallyInjective) (IsPullback.of_hasPullback (pullback.snd p r) u).flip inferInstance
-    haveI : Surjective (pullback.fst (pullback.snd p r) u) := inferInstance
+    have : Surjective (pullback.fst (pullback.snd p r) u) := inferInstance
     have hf2 := eqv_tw_map_integral_univInjective_surjective hA3 hB3 hB4 hE1 q i (pullback.fst (pullback.snd p r) u)
       (unit_map q (pullback.snd p r) hqk)
     exact (hcomp _ _ _ _ _).1 (hiso _ _ _ inferInstance) ((hcomp _ _ _ _ _).1 hf2 hf1)
-  haveI : IsProper (pullback.snd g (bpt A)) := inferInstance
-  haveI : Surjective (pullback.snd g (bpt A)) := inferInstance
-  haveI : CompactSpace ↑(pullback g (bpt A) : Scheme.{0}) := by
+  have : IsProper (pullback.snd g (bpt A)) := inferInstance
+  have : Surjective (pullback.snd g (bpt A)) := inferInstance
+  have : CompactSpace ↑(pullback g (bpt A) : Scheme.{0}) := by
     rw [← isCompact_univ_iff]
     simpa using QuasiCompact.isCompact_preimage (f := pullback.snd g (bpt A)) _ isOpen_univ isCompact_univ
   obtain ⟨y0, -⟩ := (pullback.snd g (bpt A)).surjective (IsLocalRing.closedPoint K)
@@ -330,7 +330,7 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
     intro n
     have hmn := hm.map ((evaluation SimplexCategoryᵒᵖ PSh).obj n)
     obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsProper Y (Sp A) g inferInstance n
-    haveI : IsProper π := hπ
+    have : IsProper π := hπ
     have sq0 := (IsPullback.of_hasPullback (π ≫ g) (bpt A)).map yoneda
     have sq : IsPullback (yoneda.map (pullback.fst (π ≫ g) (bpt A)) ≫ e.hom)
         (yoneda.map (pullback.snd (π ≫ g) (bpt A))) ((cechAug g).app n) (yoneda.map (bpt A)) :=
@@ -370,7 +370,7 @@ private theorem qcqs_cech {Y X : Scheme.{0}} (f : Y ⟶ X) [IsProper f] :
     QcqsOver (cechAug f ≫ 𝟙 (sch.obj X)) := by
   intro k
   obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsProper Y X f inferInstance k
-  haveI := hπ
+  have := hπ
   refine ⟨Z, π ≫ f, e, inferInstance, inferInstance, ?_⟩
   simpa using he
 

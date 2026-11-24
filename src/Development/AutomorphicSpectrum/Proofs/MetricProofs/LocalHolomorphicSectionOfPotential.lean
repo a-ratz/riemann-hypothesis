@@ -97,7 +97,7 @@ theorem smoothOn_log_sec {M : CxModel P d} {U : Set M.Xc} {s : M.Xc → (Σ k, �
   have hm := (hs.sec _ hy.2).1.1
   have hn : {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} ∈ 𝓝 (s ((M.atlas.chart j).symm y)) := by
     refine IsOpen.mem_nhds ?_ hm
-    simp only [Set.setOf_forall, Set.setOf_exists]
+    simp only [Set.ofPred_forall, Set.ofPred_exists]
     exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i =>
       isOpen_ne_fun (continuous_apply _) continuous_const
   have h1 : ContDiffAt ℝ ∞ (fun y' => Real.log (B.h (s ((M.atlas.chart j).symm y')))) y :=

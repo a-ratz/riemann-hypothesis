@@ -232,7 +232,7 @@ theorem eq_tmul_of_contract {z : V ⊗[ℂ] W} {L : Submodule ℂ V} (hL : Modul
     simp [this] at hψ
   rw [← sub_eq_zero]
   refine eq_zero_of_contract fun φ => ?_
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hv0).1 hL ⟨_, h φ⟩
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hv0).1 hL ⟨_, h φ⟩
   have hc' : c • v = TensorProduct.rid ℂ V (LinearMap.lTensor V φ z) := congrArg Subtype.val hc
   have key : ∀ z : V ⊗[ℂ] W, ψ (TensorProduct.rid ℂ V (LinearMap.lTensor V φ z)) =
       φ (TensorProduct.lid ℂ W (LinearMap.rTensor W ψ z)) := by
@@ -449,7 +449,7 @@ theorem jointHW_line (X : ProvA) (h2 : admH2 X) {p q r s : ℕ} {μ : Ix p q →
     (h' : IsHW (fockAct2 p q r s) μ' P) (hΦ : JointHW (X.fock p q r s) μ μ' Φ) :
     ∃ c : ℂ, P = c • Φ := by
   have h1 := ((h2 p q r s).2.2.2.2.1 μ μ').1 (jointHW_shape X h2 hJ h h')
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero'
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero'
     ⟨Φ, ⟨hΦ.2.1.2, hΦ.2.2.1.2⟩, Submodule.subset_span hΦ.1⟩
     (fun h0 => hΦ.2.1.1 (congrArg Subtype.val h0))).1 h1 ⟨P, ⟨h.2, h'.2⟩, Submodule.subset_span hJ⟩
   exact ⟨c, (congrArg Subtype.val hc).symm⟩
@@ -542,7 +542,7 @@ theorem general (X : ProvA) (h2 : admH2 X) (hD : DiscreteSeriesBlattner X) (h5 :
     obtain ⟨u, hu, hfu, -⟩ := image_eq_tmul (a₁ := fockAct1 p q r s) (a₂ := fockAct2 p q r s) _ _ hr hv
       (hc v) hΦ₀.2.1.2 hΦ₀.2.2.1.2 (_root_.GlobalTheory.fock_casimir_apply p q r s Φ₀) f hf.1 hf.2
     have hu0 : u₀ ≠ 0 := fun h => hne (by rw [hfu₀, h, TensorProduct.tmul_zero])
-    obtain ⟨c, hcu⟩ := (finrank_eq_one_iff_of_nonzero' ⟨u₀, hu₀⟩
+    obtain ⟨c, hcu⟩ := (finrank_eq_one_iff_of_ne_zero' ⟨u₀, hu₀⟩
       (fun h => hu0 (congrArg Subtype.val h))).1 hr' ⟨u, hu⟩
     have hcu' : c • u₀ = u := congrArg Subtype.val hcu
     refine ⟨c, sub_eq_zero.1 (keyU Φ₀ hΦ₀ _ _ (Intw.sub_smul hf hf₀ c) ?_)⟩

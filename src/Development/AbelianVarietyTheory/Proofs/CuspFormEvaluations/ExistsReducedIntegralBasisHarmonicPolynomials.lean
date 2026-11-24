@@ -283,7 +283,7 @@ theorem exists_short_basis_of_ratSpan {V E ι : Type*} [AddCommGroup V] [Module 
     rw [hx', norm_zero] at this
     linarith
   let L : Submodule ℤ E := LinearMap.range ψ
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     refine discreteTopology_of_isOpen_singleton_zero ?_
     have : ({0} : Set L) = Metric.ball 0 ε := by
       ext y
@@ -297,7 +297,7 @@ theorem exists_short_basis_of_ratSpan {V E ι : Type*} [AddCommGroup V] [Module 
       exact absurd (hφ x x.2 hx) (not_le.2 h)
     rw [this]; exact Metric.isOpen_ball
   obtain ⟨κ, a, -, hspan, hli⟩ := exists_linearIndependent' ℝ (fun j => φ (v j))
-  haveI : Finite κ := hli.finite
+  have : Finite κ := hli.finite
   obtain ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin κ
   have hli' := hli.comp e.symm e.symm.injective
   have hL : ∀ i, (((fun j => φ (v j)) ∘ a) ∘ e.symm) i ∈ L := fun i => ⟨⟨_, hvH _⟩, rfl⟩
@@ -581,8 +581,8 @@ theorem mult_add_mult_conjugate (Dw : Datum H) (τ : E →+* ℂ) :
     simpa using h
   simp only [Datum.mult, ComplexEmbedding.conjugate_coe_eq]
   rcases sq_eq_sq_iff_eq_or_eq_neg.1 hs with h | h
-  · rw [if_pos h, if_neg (by rw [h, hc]; exact hne.symm)]
-  · rw [if_neg (by rw [h]; exact hne.symm), if_pos (by rw [h, map_neg, hc, neg_neg]), add_comm]
+  · rw [ite_eq_left h, ite_eq_right (by rw [h, hc]; exact hne.symm)]
+  · rw [ite_eq_right (by rw [h]; exact hne.symm), ite_eq_left (by rw [h, map_neg, hc, neg_neg]), add_comm]
 
 theorem card_LtN (Dw : Datum H) (n : ℕ) :
     Fintype.card (LtN Dw n) = FD.fdeg E * (Dw.p + Dw.q) * n := by
@@ -621,7 +621,7 @@ theorem bound_le_exp {R d D N : ℕ} {L x Δ : ℝ} (hR : 1 ≤ R) (hd : 1 ≤ d
     congr 1
     ring
   have h3 : Real.exp (4 * Real.log d) = √d * √d * (d : ℝ) ^ 3 := by
-    rw [Real.mul_self_sqrt hd0.le, show (4 : ℝ) = (4 : ℕ) by norm_num, Real.exp_nat_mul, Real.exp_log hd0]
+    rw [Real.mul_self_sqrt hd0.le, show (4 : ℝ) = (4 : ℕ) by norm_num, Real.exp_natCast_mul, Real.exp_log hd0]
     ring
   have h4 : Real.exp (Real.log Δ / d) = Δ ^ (1 / (d : ℝ)) := by
     rw [Real.rpow_def_of_pos hΔ, mul_one_div]

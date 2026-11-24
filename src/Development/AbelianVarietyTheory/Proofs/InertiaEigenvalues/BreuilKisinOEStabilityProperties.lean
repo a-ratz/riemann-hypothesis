@@ -104,7 +104,7 @@ theorem frob (w : WCb l) (hw : w ∈ bk.OE) : frobW l w ∈ bk.OE := by
 
 theorem gal (g : ↥(GK K)) (hg : bk.FixFlat g) (w : WCb l) (hw : w ∈ bk.OE) : galW l (g : GQ l) w = w := by
   obtain ⟨-, -, -, hflat, -, hcomp, -⟩ := _root_.GlobalTheory.BSP.AinfDiv.main l K bk
-  haveI := (_root_.GlobalTheory.WittTeichComplete.main l (OCb l) bk.flat hflat hcomp).1
+  have := (_root_.GlobalTheory.WittTeichComplete.main l (OCb l) bk.flat hflat hcomp).1
   have hteich : Per.σA (g : GQ l) (WittVector.teichmuller l bk.flat) = WittVector.teichmuller l bk.flat := by
     rw [sigmaA_eq_map_pt, WittVector.map_teichmuller]
     exact congrArg _ hg
@@ -137,7 +137,7 @@ theorem gal (g : ↥(GK K)) (hg : bk.FixFlat g) (w : WCb l) (hw : w ∈ bk.OE) :
     _ = _ := by rw [e]; ring
 
 theorem inv (w : WCb l) (hw : w ∈ bk.OE) (hu : IsUnit w) : ∃ w' ∈ bk.OE, w * w' = 1 := by
-  haveI := perfect_Cb (l := l)
+  have := perfect_Cb (l := l)
   obtain ⟨-, -, -, -, hinv⟩ := _root_.GlobalTheory.BSP.oe_mod_l l K bk
   obtain ⟨u, rfl⟩ := hu
   have hy : WittVector.constantCoeff (p := l) (R := Cb l) u ∈

@@ -86,10 +86,10 @@ theorem exists_basicOpen_isUnit_of_notMem_map :
           ∀ i, IsUnit (φ (m i)) := by
   intro S _ f₀ q hq hf₀ J _ m hm
   classical
-  haveI := Fintype.ofFinite J
+  have := Fintype.ofFinite J
   have hdisj : Disjoint (↑(Submonoid.powers f₀) : Set S) ↑q :=
     (Ideal.disjoint_powers_iff_notMem f₀ hq.isRadical).2 hf₀
-  haveI hq' : (Ideal.map (algebraMap S (Localization.Away f₀)) q).IsPrime :=
+  have hq' : (Ideal.map (algebraMap S (Localization.Away f₀)) q).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers f₀) (Localization.Away f₀) q hq hdisj
   set d : (Localization.Away f₀) := ∏ i, m i with hd
   have hdq : d ∉ Ideal.map (algebraMap S (Localization.Away f₀)) q := by

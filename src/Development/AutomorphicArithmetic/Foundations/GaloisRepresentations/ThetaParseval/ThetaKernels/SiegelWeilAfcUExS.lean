@@ -245,7 +245,7 @@ theorem ratV_discrete_k : DiscreteTopology L.ratV := by
     exact (continuous_apply i).continuousAt.preimage_mem_nhds (by simpa using hV)
   obtain ⟨O, hOW, hO, h0⟩ := mem_nhds_iff.1 hW
   refine discreteTopology_of_isOpen_singleton_zero ?_
-  convert hO.preimage (continuous_subtype_val (p := fun x => x ∈ L.ratV)) using 1
+  convert hO.preimage (continuous_subtypeVal (p := fun x => x ∈ L.ratV)) using 1
   ext ⟨x, hx⟩
   constructor
   · intro h
@@ -265,7 +265,7 @@ theorem ratV_cocompact_k : ∃ K : Set (Fin L.n → AE F E), IsCompact K ∧ ∀
   choose e he using fun i => hCx (x i)
   exact ⟨GlobalTheory.ThK.incV F e, (_root_.PositivityTheory.SiegelWeilFormula.Afc.mem_ratV_k L _).2 ⟨e, rfl⟩, fun i _ => he i⟩
 theorem exists_udata_k : ∃ uM ν 𝓤, L.UData uM ν 𝓤 := by
-  haveI := _root_.PositivityTheory.SiegelWeilFormula.Afc.ratV_discrete_k L
+  have := _root_.PositivityTheory.SiegelWeilFormula.Afc.ratV_discrete_k L
   obtain ⟨K, hK, hc⟩ := _root_.PositivityTheory.SiegelWeilFormula.Afc.ratV_cocompact_k L
   obtain ⟨ν, 𝓤, hν, h𝓤, h1⟩ :=
     (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (Fin L.n → AE F E) L.ratV K hK hc).1
@@ -390,7 +390,7 @@ theorem uEx_k : _root_.PositivityTheory.SiegelWeilFormula.UEx_k := by
   intro uM ν 𝓤 hU w φ hφ hrat hw u x
   have he := _root_.PositivityTheory.SiegelWeilFormula.Afc.uM_eq_k L hU
   subst he
-  haveI := (kfour.doubled_group_topological_properties σ d.Y).1
+  have := (kfour.doubled_group_topological_properties σ d.Y).1
   let S : AddSubgroup (Fin L.n → AE F E) :=
     { carrier := {u | ∀ x, φ (_root_.PositivityTheory.SiegelWeilFormula.Afc.unipotentOfVector L u * x) = φ x}
       add_mem' := fun {a b} ha hb x => by
@@ -407,7 +407,7 @@ theorem uEx_k : _root_.PositivityTheory.SiegelWeilFormula.UEx_k := by
   have hS : IsClosed (S : Set (Fin L.n → AE F E)) := by
     have : (S : Set (Fin L.n → AE F E)) = ⋂ x, {u | φ (_root_.PositivityTheory.SiegelWeilFormula.Afc.unipotentOfVector L u * x) = φ x} := by
       ext u
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       rfl
     rw [this]
     exact isClosed_iInter fun x => isClosed_eq (hφ.comp ((_root_.PositivityTheory.SiegelWeilFormula.Afc.continuous_unipotentOfVector L).mul continuous_const)) continuous_const

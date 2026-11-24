@@ -294,9 +294,9 @@ theorem exists_std (s : X ⟶ Sp ℂ) [Smooth s] (q : X) (M : X.Opens) (hq : q �
 
 theorem isDomain_of_le {Z V : X.Opens} [AlgebraicGeometry.IsIntegral Z.toScheme] (h : V ≤ Z) {q : X} (hq : q ∈ V) :
     IsDomain Γ(X, V) := by
-  haveI : Nonempty V.toScheme := ⟨⟨q, hq⟩⟩
-  haveI : AlgebraicGeometry.IsIntegral V.toScheme := isIntegral_of_isOpenImmersion (X.homOfLE h)
-  haveI : Nonempty (⊤ : V.toScheme.Opens) := ⟨⟨⟨q, hq⟩, trivial⟩⟩
+  have : Nonempty V.toScheme := ⟨⟨q, hq⟩⟩
+  have : AlgebraicGeometry.IsIntegral V.toScheme := isIntegral_of_isOpenImmersion (X.homOfLE h)
+  have : Nonempty (⊤ : V.toScheme.Opens) := ⟨⟨⟨q, hq⟩, trivial⟩⟩
   exact MulEquiv.isDomain Γ(V.toScheme, ⊤) (Scheme.Opens.topIso V).symm.commRingCatIsoToRingEquiv.toMulEquiv
 
 theorem exists_chart : (∀ (A : Type) [CommRing A] [IsDomain A] [Algebra ℂ A] (D : ℕ)
@@ -309,13 +309,13 @@ theorem exists_chart : (∀ (A : Type) [CommRing A] [IsDomain A] [Algebra ℂ A]
       Y b₁ = x ∧ (∀ b ∈ B, centre (Y b) ∈ N ∧ genPt ξ ⤳ centre (Y b)) ∧
       ∀ O : Set (Fin d → ℂ), IsOpen O → O ⊆ B → O.Nonempty → ∃ b ∈ O, centre (Y b) ∈ W := by
   intro hring X s Ω _ ξ W N x hs hξ hW hxs hgx hxN
-  haveI := hs
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have := hs
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   obtain ⟨Z, hZ, -, hZi⟩ := cpt_open_integral X Ω ξ hξ
   obtain ⟨V, hV, D, hVM, hxV, hstd⟩ := exists_std s (centre x) (N ⊓ Z) ⟨hxN, (hZ _).2 hgx⟩
-  letI alg : Algebra ℂ Γ(X, V) := (cst s V).toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D ℂ Γ(X, V) := hstd
-  haveI : IsDomain Γ(X, V) := isDomain_of_le (hVM.trans inf_le_right) hxV
+  let alg : Algebra ℂ Γ(X, V) := (cst s V).toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension D ℂ Γ(X, V) := hstd
+  have : IsDomain Γ(X, V) := isDomain_of_le (hVM.trans inf_le_right) hxV
   have hxt : ⊤ ≤ x ⁻¹ᵁ V := (top_le_iff_centre x V).2 hxV
   have h₀ : (valHom x V hxt).comp (algebraMap ℂ Γ(X, V)) = RingHom.id ℂ := comp_cst s hV x hxt hxs
   obtain ⟨M, g, f, B₀, ε, Ψ, ε0, o, a₁, a₂, a₃⟩ := anChart_alg D (RingHom.id ℂ) (valHom x V hxt) h₀
@@ -362,10 +362,10 @@ theorem exists_algHom_eq_zero_of_not_isUnit {T : Type} [CommRing T] [Algebra ℂ
     (a : T) (h : ¬ IsUnit a) : ∃ χ : T →ₐ[ℂ] ℂ, χ a = 0 := by
   obtain ⟨M, hM, haM⟩ := Ideal.exists_le_maximal (Ideal.span {a}) (by rwa [Ne, Ideal.span_singleton_eq_top])
   have hmem : a ∈ M := haM (Ideal.mem_span_singleton_self a)
-  letI := Ideal.Quotient.field M
-  haveI : Algebra.FiniteType ℂ (T ⧸ M) :=
+  let := Ideal.Quotient.field M
+  have : Algebra.FiniteType ℂ (T ⧸ M) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℂ M) (Ideal.Quotient.mkₐ_surjective ℂ M)
-  haveI : Module.Finite ℂ (T ⧸ M) := finite_of_finite_type_of_isJacobsonRing ℂ (T ⧸ M)
+  have : Module.Finite ℂ (T ⧸ M) := finite_of_finite_type_of_isJacobsonRing ℂ (T ⧸ M)
   have hbij : Function.Bijective (algebraMap ℂ (T ⧸ M)) :=
     ⟨(algebraMap ℂ (T ⧸ M)).injective, IsSepClosed.algebraMap_surjective ℂ (T ⧸ M)⟩
   let e : ℂ ≃ₐ[ℂ] T ⧸ M := AlgEquiv.ofBijective (Algebra.ofId ℂ (T ⧸ M)) hbij
@@ -396,8 +396,8 @@ theorem isUnit_res_of_forall_point {X : Scheme.{0}} (s : X ⟶ Sp ℂ) [LocallyO
   by_contra hr
   let φ : CommRingCat.of ℂ ⟶ Γ(X, V) :=
     (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv ≫ s.appLE ⊤ V (fun _ _ => trivial)
-  letI : Algebra ℂ Γ(X, V) := φ.hom.toAlgebra
-  haveI : Algebra.FiniteType ℂ Γ(X, V) := by
+  let : Algebra ℂ Γ(X, V) := φ.hom.toAlgebra
+  have : Algebra.FiniteType ℂ Γ(X, V) := by
     have h1 : (s.appLE ⊤ V (fun _ _ => trivial)).hom.FiniteType :=
       HasRingHomProperty.appLE @LocallyOfFiniteType s inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨V, hV⟩ _
     have h2 : (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom.FiniteType :=
@@ -431,7 +431,7 @@ theorem isUnit_of_forall_complexPoint (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (U : X
     (h : ∀ x : Sp ℂ ⟶ X, x ≫ s = 𝟙 _ → centre x ∈ U → valAt' x U a ≠ 0) : IsUnit a := by
   refine RingedSpace.isUnit_of_isUnit_germ X.toRingedSpace U a fun p hp => ?_
   obtain ⟨V, hV, hpV, hVU⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.mp X.isBasis_affineOpens) hp
-  haveI := hs
+  have := hs
   have hu := isUnit_res_of_forall_point s hV hVU a h
   have e := TopCat.Presheaf.germ_res_apply X.presheaf (homOfLE hVU) p hpV a
   have := hu.map (X.presheaf.germ V p hpV).hom
@@ -689,9 +689,9 @@ theorem eq_zero_of_forall_points_eq_zero :
   have htr : Algebra.trdeg ℂ A = D := GlobalTheory.AffinePoints.trdeg_eq_of_etale e he
   have hbasis : IsTranscendenceBasis ℂ f :=
     hind.isTranscendenceBasis_of_trdeg_le_of_finite (by simp [htr])
-  haveI := hbasis.isAlgebraic
+  have := hbasis.isAlgebraic
   obtain ⟨r, hr, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic
-    (R := Algebra.adjoin ℂ (Set.range f)) a).exists_nonzero_dvd
+    (R := Algebra.adjoin ℂ (Set.range f)) a).exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero ha0)
   have hmem : (r : A) ∈ (MvPolynomial.aeval f : MvPolynomial (Fin D) ℂ →ₐ[ℂ] A).range := by
     rw [← Algebra.adjoin_range_eq_range_aeval]
@@ -754,8 +754,8 @@ theorem gaga_rat_C : GagaSections → ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (�
   have hch := _root_.GlobalTheory.CompanionTheory.Ar.Flat.GagaC.exists_hChart_of_extendsUnitAt
   have cmp := _root_.GlobalTheory.CompanionTheory.Ar.Flat.GagaC.Compare.eq_val_mul
   intro hG X s Ω _ _ ξ L W F hp hs hξs hgen hcl hVB hW h1 hext
-  haveI : Smooth s := hs
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : Smooth s := hs
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   obtain ⟨Z, hZ, hZc, -⟩ := cpt_open_integral X Ω ξ hgen
   have spid : spMap (RingHom.id ℂ) = 𝟙 (Sp ℂ) := by simp
   choose Uo hUo b hb hfr using fun p : Cpt ξ => hVB p trivial
@@ -819,7 +819,7 @@ theorem gaga_rat_C : GagaSections → ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (�
   let h0 : Cpt ξ → (Sp ℂ ⟶ X) → ℂ := fun p x => if hh : ∃ c, Rel p x c then hh.choose else 0
   have h0s : ∀ p x c, Rel p x c → h0 p x = c := fun p x c hc => by
     have hh : ∃ c, Rel p x c := ⟨c, hc⟩
-    simp only [h0, dif_pos hh]
+    simp only [h0, dite_eq_left hh]
     exact relU p x _ _ hh.choose_spec hc
   let h : Option (Cpt ξ) → (Sp ℂ ⟶ X) → ℂ := fun o => o.elim (fun _ => 0) h0
   let LL : LB X := LB.mk (Option (Cpt ξ)) V g

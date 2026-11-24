@@ -83,13 +83,13 @@ theorem frame_compact_nhd {g k : ℕ} (M₀ : Matrix (Fin g) (Fin k) ℂ) (h : M
     exact this
   have hU : IsOpen {M : Matrix (Fin g) (Fin k) ℂ | 0 < ((Mᵀ * M.map star).det).re} :=
     isOpen_lt continuous_const subframe_continuous_det
-  haveI : LocallyCompactSpace (Matrix (Fin g) (Fin k) ℂ) :=
+  have : LocallyCompactSpace (Matrix (Fin g) (Fin k) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin g → Fin k → ℂ))
   obtain ⟨S, hS, hSU, hSc⟩ := local_compact_nhds (hU.mem_nhds hpos)
   refine ⟨S, hSc, hS, fun M hM => frame_rank_of_gram_det_ne_zero M ?_⟩
   intro h0
   have := hSU hM
-  rw [Set.mem_setOf_eq, h0] at this
+  rw [Set.mem_ofPred_eq, h0] at this
   simp at this
 
 theorem continuousAt_matrix_inv {X : Type*} [TopologicalSpace X] {g : ℕ}

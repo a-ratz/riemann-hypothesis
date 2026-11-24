@@ -131,7 +131,7 @@ theorem exists_aniso_gram (V : HSp D) (hV : 0 < V.rank) :
     apply GlobalTheory.LevelSubgroup.gram_det_ne_zero V
     have h0 : V.gram = 0 := Matrix.ext fun a b => hne b a
     rw [h0]
-    haveI : Nonempty (Fin V.rank) := ⟨⟨0, hV⟩⟩
+    have : Nonempty (Fin V.rank) := ⟨⟨0, hV⟩⟩
     exact Matrix.det_zero
   exact exists_aniso _ (fun a => star_star a) _ (fun a b => GlobalTheory.DualPairCheck.gram_star V b a) hij
 

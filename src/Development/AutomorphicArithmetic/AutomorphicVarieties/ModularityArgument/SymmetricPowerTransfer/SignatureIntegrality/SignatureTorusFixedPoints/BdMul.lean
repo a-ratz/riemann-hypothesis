@@ -112,7 +112,7 @@ theorem UpperTheory.V.Z.Sym.Sig.memJ : UpperTheory.V.Z.Sym.Sig.MemJ := by
       show valuation k _ ≤ 1
       rw [map_div₀, h4, div_one]; exact h1 i j⟩ else if i = j then 1 else 0
     have hU : U.det = 1 := by
-      rw [Matrix.det_of_upperTriangular (fun i j h => by
+      rw [det_of_isUpperTriangular (fun i j h => by
         have h' : j < i := h
         simp [U, h'.ne', h'.le.not_gt])]
       simp [U]

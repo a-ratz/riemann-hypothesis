@@ -313,7 +313,7 @@ private theorem fockF_sum_smul_right {σ ι : Type} (s : Finset ι) (c : ι → 
 theorem inf_orth_ne_bot {σ : Type} (U K : Submodule ℂ (MvPolynomial σ ℂ)) [FiniteDimensional ℂ U] (h : K < U) :
     U ⊓ orth K ≠ ⊥ := by
   classical
-  haveI : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le h.le
+  have : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le h.le
   have hlt : Module.finrank ℂ K < Module.finrank ℂ U := Submodule.finrank_lt_finrank_of_lt h
   let b := Module.finBasis ℂ K
 
@@ -691,7 +691,7 @@ theorem pairLmul_hw {n n' k : ℕ} (hn : k ≤ n) (hn' : k ≤ n') (ν : Fin k �
   rw [Finset.sum_eq_single (Fin.castLE (by have := s.2; omega) p)]
   · simp
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     · simp
     · intro e
       exact hb (Fin.ext (by simpa using e.symm))
@@ -743,7 +743,7 @@ private theorem rowGen_eval_C_eq_rowAct_transvection {n n' : ℕ} (a b : Fin n')
       · subst h
         simp [rowGen, rowAct, Matrix.transvection, Matrix.single, Matrix.one_apply, add_mul,
           Finset.sum_add_distrib, ite_and, add_comm]
-        rw [Finset.sum_eq_single a (fun x _ hx => by simp [Ne.symm hx]) (by simp), if_pos rfl, mul_comm]
+        rw [Finset.sum_eq_single a (fun x _ hx => by simp [Ne.symm hx]) (by simp), ite_eq_left rfl, mul_comm]
       · simp [rowGen, rowAct, Matrix.transvection, Matrix.single, Matrix.one_apply, add_mul,
           Finset.sum_add_distrib, h, Ne.symm h]
   exact RingHom.congr_fun key f
@@ -782,7 +782,7 @@ theorem rowDiv_eq_zero_of_matRep_unipotent_fixed : ∀ (n n' : ℕ) (v : MvPolyn
     rintro _ ⟨t, rfl⟩
     simp [Polynomial.IsRoot, hroot t]
   show (rowGen ℂ a b v).coeff k = 0
-  rw [hconst, Polynomial.coeff_C, if_neg (by omega)]
+  rw [hconst, Polynomial.coeff_C, ite_eq_right (by omega)]
 
 end GlobalTheory.GLDuality
 end -- clump:auto
@@ -963,7 +963,7 @@ theorem matRep_diagGL_monomial {n n' : ℕ} (t : Fin n → ℂˣ) (d : Fin n' ×
   | zero => simp [matRep_apply]
   | add d e hd he =>
     have h1 : (monomial (d + e) c : MvPolynomial (Fin n' × Fin n) ℂ) = monomial d c * monomial e 1 := by
-      rw [monomial_mul, mul_one]
+      rw [monomial_mul_monomial, mul_one]
     have hd' := hd c
     have he' := he 1
     rw [matRep_apply] at hd' he'
@@ -1127,12 +1127,12 @@ theorem colAdd_matRep_diag {n n' : ℕ} (t : Fin n → ℂˣ) (l j : Fin n) (c :
     rw [AlgHom.comp_apply, AlgHom.comp_apply, hX]
     by_cases hs : s = j
     · subst hs
-      simp only [colAdd, map_mul, algHom_C, aeval_X, if_true, map_add (f := _), hX, algebraMap_eq]
+      simp only [colAdd, map_mul, algHom_C, aeval_X, ite_true, map_add (f := _), hX, algebraMap_eq]
       have : (C ((t l)⁻¹ : ℂ) : MvPolynomial (Fin n' × Fin n) ℂ) * C (t l : ℂ) = 1 := by
         rw [← map_mul]; simp
       simp only [Units.val_inv_eq_inv_val] at this ⊢
       linear_combination (-(C c * C (t s : ℂ) * X (a, l))) * this
-    · simp only [colAdd, map_mul, algHom_C, aeval_X, if_neg hs, hX, algebraMap_eq]
+    · simp only [colAdd, map_mul, algHom_C, aeval_X, ite_eq_right hs, hX, algebraMap_eq]
   exact DFunLike.congr_fun e v
 
 theorem exists_mem_dualWeyl_of_stable (n n' : ℕ) (N : Submodule ℂ (MvPolynomial (Fin n' × Fin n) ℂ)) (hN : N ≠ ⊥)
@@ -1151,7 +1151,7 @@ theorem exists_mem_dualWeyl_of_stable (n n' : ℕ) (N : Submodule ℂ (MvPolynom
   have hw := GlobalTheory.GLDuality.weightedHomogeneousComponent_colW_mem n n' M hM (Finsupp.weight (colW n' n) d) v ⟨hv, hf⟩
   refine ⟨_, _, hw.1, ne_zero_iff.2 ⟨d, ?_⟩, (dualWeylPoint ℂ n' n _ _).2
     ⟨weightedHomogeneousComponent_isWeightedHomogeneous _ _, hw.2⟩⟩
-  rwa [coeff_weightedHomogeneousComponent, if_pos rfl]
+  rwa [coeff_weightedHomogeneousComponent, ite_eq_left rfl]
 
 theorem exists_highest_of_stable (n n' : ℕ) (N : Submodule ℂ (MvPolynomial (Fin n' × Fin n) ℂ)) (hN : N ≠ ⊥)
     (hst : ∀ p : GL (Fin n) ℂ × GL (Fin n') ℂ, ∀ v ∈ N, matRep n n' p v ∈ N) :

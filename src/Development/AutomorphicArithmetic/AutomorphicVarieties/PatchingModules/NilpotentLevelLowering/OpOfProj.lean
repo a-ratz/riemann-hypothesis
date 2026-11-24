@@ -73,8 +73,8 @@ private theorem opOf_proj {Λ Γ Q M : Type} [CommRing Λ] [Group Γ] [Group Q] 
     | zero => simp
     | add a b ha hb => rw [map_add (f := _), map_add (f := _), map_add (f := _), ha, hb]
     | single g c => simp [σ, ρ']
-  haveI := RingHomInvPair.of_ringEquiv σ
-  haveI := RingHomInvPair.of_ringEquiv_symm σ
+  have := RingHomInvPair.of_ringEquiv σ
+  have := RingHomInvPair.of_ringEquiv_symm σ
   let f : ρ.asModule ≃ₛₗ[(σ : MonoidAlgebra Λ Q →+* MonoidAlgebra Λ Γ)] ρ'.asModule :=
     { ρ.asModuleEquiv.toAddEquiv.trans ρ'.asModuleEquiv.symm.toAddEquiv with
       map_smul' := fun a m => by
@@ -115,8 +115,8 @@ private theorem opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Alge
     (Y : σ → Module.End R (fixd ρ K1)) (hY : ∀ p m, ρ' (e (γ p)) m = m + Y p m)
     (tr : fixd ρ K1 →ₗ[R] fixd ρ K) (htr : ∀ m, (tr m : P) = dc ρ K K1 1 m) :
     Function.Surjective tr ∧ LinearMap.ker tr = ⨆ p, LinearMap.range (Y p) := by
-  haveI : Finite (K ⧸ K1.subgroupOf K) := Finite.of_equiv Γ e.toEquiv
-  letI := Fintype.ofFinite (K ⧸ K1.subgroupOf K)
+  have : Finite (K ⧸ K1.subgroupOf K) := Finite.of_equiv Γ e.toEquiv
+  let := Fintype.ofFinite (K ⧸ K1.subgroupOf K)
   obtain ⟨h1, h2⟩ := projNorm Λ _ _ ρ' hP
   have hs : ∀ m, (tr m : P) = (∑ g, ρ' g m : fixd ρ K1) := fun m => by
     rw [htr, opOf_dc ρ K K1 m m.2, AddSubmonoidClass.coe_finsetSum]
@@ -150,7 +150,7 @@ private theorem opOf_tr {Λ R G P Γ σ : Type} [CommRing Λ] [CommRing R] [Alge
 
 private theorem opOf_gen {l q n : ℕ} (hl : l.Prime) (a : Fin q → ℕ) :
     Subgroup.closure (Set.range fun p : Fin q × Fin n => (Pi.mulSingle p (Multiplicative.ofAdd 1) : Del l n a)) = ⊤ := by
-  haveI : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
   refine eq_top_iff.2 fun g _ => ?_
   rw [← Finset.univ_prod_mulSingle g]
   refine Subgroup.prod_mem _ fun s _ => ?_
@@ -175,8 +175,8 @@ private theorem opOf_cop {L : Type} [Field L] [NumberField L] (w : Plc L) {l : �
     simpa using (h3.map (residue 𝒪[w.adicCompletion L])).ne_zero
   rw [hl.coprime_iff_not_dvd]
   intro hd
-  letI := Fintype.ofFinite 𝓀[w.adicCompletion L]
-  haveI := Fact.mk hl
+  let := Fintype.ofFinite 𝓀[w.adicCompletion L]
+  have := Fact.mk hl
   rw [resCard, Nat.card_eq_fintype_card] at hd
   exact h4 ((ringChar.spec _ _).2 (by
     have h5 := (prime_dvd_char_iff_dvd_card l).2 hd

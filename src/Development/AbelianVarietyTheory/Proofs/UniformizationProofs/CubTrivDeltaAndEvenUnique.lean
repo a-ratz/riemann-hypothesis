@@ -143,7 +143,7 @@ theorem eq_one_of_even [ConnectedSpace S] [Module.Free ℤ X] (u : Γ((splitToru
         gm (x * y).left z ⊤ u * gm (x * w).left z ⊤ u * gm (y * w).left z ⊤ u)
     (h₁ : ∀ (Z : Over S) (z : Z.left), gm (1 : Z ⟶ splitTorus S X).left z ⊤ u = 1)
     (he : ∀ (Z : Over S) (x : Z ⟶ splitTorus S X) (z : Z.left), gm (x⁻¹).left z ⊤ u = gm x.left z ⊤ u) : u = 1 := by
-  haveI : ConnectedSpace (splitTorus S X).left := connectedSpace_torus
+  have : ConnectedSpace (splitTorus S X).left := connectedSpace_torus
   haveI hS : ConnectedSpace (𝟙_ (Over S)).left := ‹ConnectedSpace S›
 
   obtain ⟨ρ, hρ⟩ : ∃ ρ : Γ((splitTorus S X ⊗ splitTorus S X).left, ⊤)ˣ, ∀ (Z : Over S) (x y : Z ⟶ splitTorus S X)
@@ -284,7 +284,7 @@ variable [ConnectedSpace S] [Module.Free ℤ X] {G : Over S} [GrpObj G] [IsCommM
 theorem val_mul_eq {L : RigLB G} {c : CubicalStr G L} (s : BiTriv c i) (σ : CubTriv c i) (T : Over S)
     (t t' : T ⟶ splitTorus S X) (z : T.left) (J) (hJ : Good L.L z J) : val σ.s (t * t').left z J =
       val s.s (lift t (t' ≫ i)).left z J * val σ.s t.left z J * val σ.s t'.left z J := by
-  haveI : ConnectedSpace (splitTorus S X).left := connectedSpace_torus
+  have : ConnectedSpace (splitTorus S X).left := connectedSpace_torus
   obtain ⟨a, ha⟩ := exists_unit_delta s σ
   have hmul : ∀ (Z : Over S) (t₁ t₂ y : Z ⟶ splitTorus S X) (z : Z.left),
       gm (lift (t₁ * t₂) y).left z ⊤ a = gm (lift t₁ y).left z ⊤ a * gm (lift t₂ y).left z ⊤ a := by

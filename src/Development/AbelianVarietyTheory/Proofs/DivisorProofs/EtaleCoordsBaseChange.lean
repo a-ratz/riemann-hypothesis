@@ -82,8 +82,8 @@ theorem etale_coords_baseChange (H : IsPullback r p' p (spMap ρ)) {U : Y.Opens}
     {x : Fin D → Γ(Y, U)} (hx : (MvPolynomial.eval₂Hom (algX p U) x).Etale) :
     (MvPolynomial.eval₂Hom (algX p' (r ⁻¹ᵁ U ⊓ p' ⁻¹ᵁ ⊤))
       fun a => (r.appLE U _ inf_le_left).hom (x a)).Etale := by
-  letI := ρ.toAlgebra
-  letI := MvPolynomial.algebraMvPolynomial (R := k) (S := k') (σ := Fin D)
+  let := ρ.toAlgebra
+  let := MvPolynomial.algebraMvPolynomial (R := k) (S := k') (σ := Fin D)
   have h₁ := (CommRingCat.isPushout_of_isPushout k k' (MvPolynomial (Fin D) k) (MvPolynomial (Fin D) k')).flip
   have h₂ := isPushout_sections p p' r H U hU
   have e₁ : CommRingCat.ofHom (algX p U) = CommRingCat.ofHom (algebraMap k (MvPolynomial (Fin D) k)) ≫

@@ -120,8 +120,8 @@ theorem exists_moved (l : ℕ) [hl : Fact l.Prime] {r k : ℕ} (hk0 : 0 < k) (hk
   have h1N : 1 < l ^ (s + 1) - 1 := by omega
   have hd : ¬ l ∣ l ^ (s + 1) - 1 := fun h => hl.out.one_lt.ne' (Nat.dvd_one.mp
     ((Nat.dvd_sub_iff_right (by omega) (dvd_pow_self l (by omega))).mp h))
-  haveI : NeZero (l ^ (s + 1) - 1) := ⟨hN0.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ (s + 1) - 1)
+  have : NeZero (l ^ (s + 1) - 1) := ⟨hN0.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ (s + 1) - 1)
   have hmem : z ∈ MaximalUnramifiedExtension l := IntermediateField.subset_adjoin _ _ ⟨_, hN0, hd, hz.pow_eq_one⟩
   have h1 : (⟨z, hmem⟩ : ↥(MaximalUnramifiedExtension l)) ^ (l ^ (s + 1) - 1) = 1 := Subtype.ext hz.pow_eq_one
   refine ⟨⟨z, hmem⟩, ?_, fun h => ?_⟩
@@ -166,7 +166,7 @@ theorem fixed_field_deg : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r → ∃ 
     rw [hk, AlgEquiv.one_apply] at this
     exact hm this.symm
   have hfin : IsOfFinOrder τ := isOfFinOrder_iff_pow_eq_one.2 ⟨r, hr, hrτ⟩
-  haveI : Finite ↥(Subgroup.zpowers τ) := hfin.finite_zpowers
+  have : Finite ↥(Subgroup.zpowers τ) := hfin.finite_zpowers
   have hbot : IntermediateField.fixedField (Subgroup.zpowers τ) = ⊥ := by
     rw [eq_bot_iff]
     intro c hc
@@ -176,11 +176,11 @@ theorem fixed_field_deg : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r → ∃ 
     rw [pow_one] at h2
     obtain ⟨x, hx⟩ := (GlobalTheory.MemLoc.frob_laws l (frobUr l) frobUr_root).2.2 c (h2.symm.trans h1)
     exact ⟨x, Subtype.ext hx⟩
-  haveI h1 : FiniteDimensional ↥(IntermediateField.fixedField (Subgroup.zpowers τ)) ↥F :=
+  have h1 : FiniteDimensional ↥(IntermediateField.fixedField (Subgroup.zpowers τ)) ↥F :=
     inferInstanceAs (FiniteDimensional ↥(FixedPoints.subfield (Subgroup.zpowers τ) ↥F) ↥F)
-  haveI h2 : FiniteDimensional ℚ_[l] ↥(IntermediateField.fixedField (Subgroup.zpowers τ)) := by
+  have h2 : FiniteDimensional ℚ_[l] ↥(IntermediateField.fixedField (Subgroup.zpowers τ)) := by
     rw [hbot]; infer_instance
-  haveI h3 : FiniteDimensional ℚ_[l] ↥F := Module.Finite.trans ↥(IntermediateField.fixedField (Subgroup.zpowers τ)) ↥F
+  have h3 : FiniteDimensional ℚ_[l] ↥F := Module.Finite.trans ↥(IntermediateField.fixedField (Subgroup.zpowers τ)) ↥F
   have hdeg : Module.finrank ℚ_[l] ↥F = r := by
     have h := IntermediateField.finrank_fixedField_eq_card (Subgroup.zpowers τ)
     rw [hbot, IntermediateField.finrank_bot', Nat.card_zpowers] at h

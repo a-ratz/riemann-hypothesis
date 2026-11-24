@@ -299,31 +299,31 @@ theorem eq_of_orbit_const {N : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     rw [Submodule.Quotient.mk_sub, map_sub, this, sub_self]
   obtain ⟨U, hU, hUz⟩ := exists_nhds_cosetSum_eq_zero hsm hmem
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  haveI : NonarchimedeanAddGroup k := ⟨fun W hW => by
+  have : NonarchimedeanAddGroup k := ⟨fun W hW => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hW
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin N → Fin N → k))
-  haveI : TotallyDisconnectedSpace (GL (Fin N) k) :=
+  have : TotallyDisconnectedSpace (GL (Fin N) k) :=
     ⟨(isTotallyDisconnected_of_image (f := fun g : GL (Fin N) k => g.val)
       GlobalTheory.SplitFlip.isEmbedding_val_GL.continuous.continuousOn
       GlobalTheory.SplitFlip.isEmbedding_val_GL.injective (isTotallyDisconnected_of_totallyDisconnectedSpace _))⟩
   obtain ⟨M, -, -, hMU, hnorm, hfin⟩ :=
     exists_normal_subgroup (K := KO k (Fin N)) GlobalTheory.SplitFlip.isCompact_KO GlobalTheory.SplitFlip.isOpen_KO hU
-  haveI : (M.subgroupOf (KO k (Fin N))).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : (M.subgroupOf (KO k (Fin N))).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have h2 : (M.subgroupOf (KO k (Fin N))).comap (Subgroup.inclusion hK) = M.subgroupOf K := by
     ext g
     simp [Subgroup.mem_subgroupOf]
-  haveI : (M.subgroupOf K).FiniteIndex := by
+  have : (M.subgroupOf K).FiniteIndex := by
     rw [← h2]
     refine ⟨?_⟩
     rw [Subgroup.index_comap]
     exact (inferInstance : (((M.subgroupOf (KO k (Fin N))).subgroupOf
       (Subgroup.inclusion hK).range).FiniteIndex)).index_ne_zero
-  haveI : Finite (K ⧸ M.subgroupOf K) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (K ⧸ M.subgroupOf K) := Fintype.ofFinite _
+  have : Finite (K ⧸ M.subgroupOf K) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (K ⧸ M.subgroupOf K) := Fintype.ofFinite _
   have h0 := hUz M hMU (fun g hg n hn => hnorm g (hK hg) n hn) inferInstance
   rw [map_sub, cosetSum_of_mem π (v := y) hy, sub_eq_zero, cosetSum_apply] at h0
   have h1 := congrArg f h0

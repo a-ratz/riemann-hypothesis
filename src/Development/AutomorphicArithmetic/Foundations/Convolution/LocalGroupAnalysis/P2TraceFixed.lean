@@ -203,7 +203,7 @@ private lemma UpperTheory.exists_nat_point_avoiding_polynomials {W : Type} [Fini
     (P : ∀ w, MvPolynomial (Fin m) (K w)) (hP : ∀ w, P w ≠ 0) :
     ∃ a : Fin m → ℕ, ∀ w, eval (fun i => (a i : K w)) (P w) ≠ 0 := by
   classical
-  haveI := Fintype.ofFinite W
+  have := Fintype.ofFinite W
   choose Q hQ hQ' using fun w => UpperTheory.rational_polynomial_vanishing_naturals (P w) (hP w)
   have hprod : ∏ w, Q w ≠ 0 := Finset.prod_ne_zero_iff.mpr fun w _ => hQ w
   by_contra h
@@ -251,7 +251,7 @@ section -- clump:auto
 private theorem UpperTheory.commute_of_commute_of_charpoly_separable {E : Type} [Field E] [CharZero E] {n : ℕ}
     (γ a b : Matrix (Fin n) (Fin n) E) (h : γ.charpoly.Separable)
     (ha : a * γ = γ * a) (hb : b * γ = γ * b) : a * b = b * a := by
-  haveI : Infinite E := Infinite.of_injective _ (Nat.cast_injective (R := E))
+  have : Infinite E := Infinite.of_injective _ (Nat.cast_injective (R := E))
   have hsep : (LinearMap.charpoly (Matrix.toLinAlgEquiv' γ : Module.End E (Fin n → E))).Separable := by
     have : (Matrix.toLinAlgEquiv' γ : Module.End E (Fin n → E)) = Matrix.toLin' γ := rfl
     rw [this, Matrix.charpoly_toLin']
@@ -321,7 +321,7 @@ theorem UpperTheory.isOpenEmbedding_units_val_generalLinearPi :
   · have : Set.range (Units.val : GL (Fin n) (∀ w, K w) → Matrix (Fin n) (Fin n) (∀ w, K w))
         = ⋂ w, {M : Matrix (Fin n) (Fin n) (∀ w, K w) | M.det w ≠ 0} := by
       ext M
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       exact hU M
     rw [this]
     exact isOpen_iInter_of_finite fun w =>
@@ -615,7 +615,7 @@ theorem UpperTheory.ConvolutionTheory.G.p2_of :
   refine ⟨fun v γ δ hγ hδ D hD => ?_, fun γ δ hγ hδ D hD => ?_⟩
   · exact p2_pi hP (PlacesOver E v) (fun w => w.1.adicCompletion E) (incFin E v) (galFin σ v) _ (p2_cont_fin σ v)
       (p2_gal (tensorEquiv' E v) σ hσ _ fun a => by rw [tensorEquiv'_tmul, map_one, one_mul]; rfl) γ δ hγ hδ D hD
-  · haveI : ∀ w : InfinitePlace E, CharZero w.Completion := fun w =>
+  · have : ∀ w : InfinitePlace E, CharZero w.Completion := fun w =>
       charZero_of_injective_algebraMap (algebraMap E w.Completion).injective
     exact p2_pi hP (InfinitePlace E) (fun w => w.Completion) infiniteAdeleRingMap (galInf σ) _ (p2_cont_inf σ)
       (p2_gal tensorInfiniteAdeleRingEquiv σ hσ _ fun a => by

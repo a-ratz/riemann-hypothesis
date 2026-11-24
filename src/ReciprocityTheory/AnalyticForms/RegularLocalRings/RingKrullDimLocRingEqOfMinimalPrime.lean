@@ -122,7 +122,7 @@ theorem regular_point_unique_minimalPrime (K : Ideal (MvPolynomial (Fin n) ℂ))
         exact hPmax.ne_top ((Ideal.eq_top_iff_one (I := P)).mpr ((hmem 1).mp h1))
       · exact h
     let f : A ⧸ 𝔮 →+* S ⧸ I := Ideal.quotientMap I (algebraMap A S) le_rfl
-    letI : Algebra (A ⧸ 𝔮) (S ⧸ I) := f.toAlgebra
+    let : Algebra (A ⧸ 𝔮) (S ⧸ I) := f.toAlgebra
     have hf : ∀ a : A, algebraMap (A ⧸ 𝔮) (S ⧸ I) (Ideal.Quotient.mk 𝔮 a) =
         Ideal.Quotient.mk I (algebraMap A S a) := fun a => Ideal.quotientMap_mk
     have hloc : IsLocalization.AtPrime (S ⧸ I) 𝔪 := by

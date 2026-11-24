@@ -251,7 +251,7 @@ end UpperTheory.V.Z.Inf.LocalUnramifiedTorus
 theorem UpperTheory.V.Z.Inf.locUnr :
     UpperTheory.V.Z.Inf.LocUnr := by
   intro K _ _ n hn v V _ _ π hirr hadm hK z hz t
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have hq : qs (v.adicCompletion K) t = ((Ideal.absNorm v.asIdeal : ℕ) : ℂ) ^ (-t) := by
     rw [qs, GroundTheory.Global.residueCard_adicCompletion]
   rw [← hq]

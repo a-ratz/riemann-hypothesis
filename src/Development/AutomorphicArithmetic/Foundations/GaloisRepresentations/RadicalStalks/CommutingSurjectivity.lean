@@ -78,7 +78,7 @@ private theorem laurent_adjoin_eq_of_image_eq {F O : Type} [Field F] [NumberFiel
     rw [smul_zero, zsmul_eq_mul, _root_.mul_one]
     exact_mod_cast h1
   have h3 : (1 : O) = 0 := smul_right_injective O (by exact_mod_cast hn0) h2
-  haveI : Subsingleton O := subsingleton_of_zero_eq_one h3.symm
+  have : Subsingleton O := subsingleton_of_zero_eq_one h3.symm
   rw [Module.finrank_zero_of_subsingleton] at h0
   exact lt_irrefl 0 h0
 
@@ -177,14 +177,14 @@ private theorem exists_finset_adjoin_laurent_preimage {F O : Type} [Field F] [Nu
       _ = algebraMap (𝓞 F) O (c' * c) := by rw [_root_.mul_comm c c']
       _ = (b • y) * (a • x) := by rw [hc, hc', map_mul]
       _ = (a * b) • (y * x) := by rw [smul_mul_smul_comm, _root_.mul_comm b a]
-  letI : CommRing O := { (inferInstance : Ring O) with mul_comm := hcomm }
+  let : CommRing O := { (inferInstance : Ring O) with mul_comm := hcomm }
   exact surj_comm hinj hs
 
 theorem UpperTheory.Gal.Ord.surjO :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p), D.m = 1 → Function.Surjective (algebraMap (𝓞 D.F) D.O) := by
   intro p _ D hm
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeO
+  have := D.finO
   apply exists_finset_adjoin_laurent_preimage
   rw [D.rankO, hm]
   simp

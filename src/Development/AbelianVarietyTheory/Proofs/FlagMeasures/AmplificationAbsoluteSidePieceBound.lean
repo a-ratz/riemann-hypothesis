@@ -167,7 +167,7 @@ theorem offBlock_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (g�
     (fun i j h => Matrix.one_apply_ne h.ne) (fun i => by simp [hU, upperOff, upper])
     (fun i j h => by
       simp only [hU, upperOff, upper]
-      rw [dite_eq_right (not_lt.2 h.le), if_neg h.ne'])
+      rw [dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne'])
     (fun i j hi hj => hZ0 i j ⟨fun _ => not_lt.2 hj, fun _ => hi⟩) ⟨c.val, hcl⟩ b
     (fun c' hc' => by
       by_contra h
@@ -478,7 +478,7 @@ theorem radical_coords_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ
   classical
   have UH_mul : ∀ {g h : Mat k r}, g ∈ UH (Hpk k r) → h ∈ UH (Hpk k r) → g * h ∈ UH (Hpk k r) := by
     intro g h hg hh
-    simp only [UH, Set.mem_setOf_eq] at hg hh ⊢
+    simp only [UH, Set.mem_ofPred_eq] at hg hh ⊢
     rw [Matrix.conjTranspose_mul,
       show hᴴ * gᴴ * Hpk k r * (g * h) = hᴴ * (gᴴ * Hpk k r * g) * h by simp only [Matrix.mul_assoc],
       hg, hh]
@@ -673,7 +673,7 @@ theorem radical_coords_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ
     rw [e, eucl_neg]
     exact (eucl_comp_le (wI k r) (fun j j' h => (Rad.wI_inj j j').1 h) _).trans (hEbd b)
   · have e : q.2.1 p = skewM q.2.1 q.2.2 p.1.1 p.1.2 := by
-      simp only [skewM, dif_pos p.2]
+      simp only [skewM, dite_eq_left p.2]
     rw [e]
     exact hskew _ _
   · have e : skewM q.2.1 q.2.2 b b = (q.2.2 b : ℂ) * Complex.I := by
@@ -881,10 +881,10 @@ theorem rS_u (u : Matrix (Fin r) (Fin r) ℂ) (v : Fin (2 * r + k + 1) → ℂ) 
     Fin.ext (by have := b.2; simp only [esI]; omega)
   have h1 : ∀ b, uEmb k r u (esI k r a) (eI k r b) = 0 := fun b => by
     have := b.2
-    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [eI]; omega), if_neg (esI_ne_eI _ _)]
+    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [eI]; omega), ite_eq_right (esI_ne_eI _ _)]
   have h2 : ∀ b, uEmb k r u (esI k r a) (wI k r b) = 0 := fun b => by
     have := b.2
-    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [wI]; omega), if_neg (esI_ne_wI _ _)]
+    unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_right (by simp only [wI]; omega), ite_eq_right (esI_ne_wI _ _)]
   have h3 : ∀ b, uEmb k r u (esI k r a) (esI k r b) = star (u⁻¹ b a) := fun b => by
     have := b.2
     unfold uEmb; rw [dite_eq_right (by simp only [esI]; omega), dite_eq_left (by simp only [esI]; omega)]
@@ -1129,7 +1129,7 @@ theorem mem_pos (p : Fin (2 * r + k + 1) → ℂ) : p ∈ LinearMap.ker (Matrix.
     refine ⟨funext fun a => ?_, ?_⟩
     · have := congrFun h (esI k r a); rwa [besselHermForm_mulVec_dualIsotropicIndex] at this
     · have := congrFun h (wI k r (Fin.last k)); rw [H_w] at this
-      simp only [sg, if_true] at this
+      simp only [sg, ite_true] at this
       show p _ = 0
       linear_combination (-1 / 2 : ℂ) * this
   · rintro ⟨h1, h2⟩
@@ -1643,7 +1643,7 @@ theorem fibre_volume : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (�
   refine ⟨?_, ?_⟩
   · have hset : {n : Mt k r | Yv k r z z' (n₁ * g₀ * n₂) (Matrix.of n * g₁) = 0} =
         e ⁻¹' {ν | Yv k r z z' g₀ (Matrix.of ν * A) = 0} := by
-      ext n; simp only [Set.mem_setOf_eq, Set.mem_preimage, key n, hYv]
+      ext n; simp only [Set.mem_ofPred_eq, Set.mem_preimage, key n, hYv]
     rw [hset, ← MeasurableEquiv.map_apply, he_map]
     exact hB.1
   · intro φ hφ R₀ y hR₀ hy
@@ -1682,7 +1682,7 @@ theorem fibre_volume : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (�
     have hmem : ∀ n : Mt k r, rmulM g₁ n ∈ Eset k r z z' (n₁ * g₀ * n₂) R₀ y ↔
         rmulM A (e n) ∈ Eset k r z z' g₀ R₀ y := by
       intro n
-      simp only [Eset, Set.mem_setOf_eq, GlobalTheory.SgInf.of_rmulM]
+      simp only [Eset, Set.mem_ofPred_eq, GlobalTheory.SgInf.of_rmulM]
       rw [key n]
       generalize Matrix.of (e n) * A = W
       rw [hGGW W, hYv W]
@@ -1771,7 +1771,7 @@ theorem mem_GG_of_mul {s x : Mat k r} (hs : s ∈ GG k r) (h : s * x ∈ GG k r)
 
 theorem continuousOn_sq {X E : Type} [TopologicalSpace X] [NormedAddCommGroup E] {g : X → E} {s : Set X}
     (hg : ContinuousOn g s) : ContinuousOn (fun x => (‖g x‖₊ : ℝ≥0∞) ^ 2) s :=
-  (ENNReal.continuous_pow 2).comp_continuousOn (ENNReal.continuous_coe.comp_continuousOn hg.nnnorm)
+  (ENNReal.continuous_pow 2).comp_continuousOn (ENNReal.continuous_coe.comp_continuousOn hg.nnNorm)
 
 theorem lintegral_muProd {μW μN : Measure (Mt k r)} [SFinite μN] {F : Mt k r → ℝ≥0∞} (hF : Measurable F)
     (x : Mt k r) : ∫⁻ s, F (fun i j => (Matrix.of s * Matrix.of x) i j) ∂(muProd μW μN) =
@@ -1783,7 +1783,7 @@ theorem lintegral_muProd {μW μN : Measure (Mt k r)} [SFinite μN] {F : Mt k r 
 theorem quot_conc {z : Fin (2 * r + k + 1) → ℂ} {μG μW μN νS : Measure (Mt k r)} (hG : IsHaarOn (GG k r) μG)
     (hW : IsHaarOn (UWset k r z) μW) (hW1 : μW Set.univ = 1) (hN : IsHaarOn (Nset k r) μN)
     (hq : IsQuotMeas μG (muProd μW μN) νS) : νS {x | Matrix.of x ∉ GG k r} = 0 := by
-  haveI := hN.1
+  have := hN.1
   have aeW : ∀ᵐ x ∂μW, Matrix.of x ∈ UWset k r z := ae_iff.2 hW.2.2.1
   have aeN : ∀ᵐ x ∂μN, Matrix.of x ∈ Nset k r := ae_iff.2 hN.2.2.1
   set A : Set (Mt k r) := {x | Matrix.of x ∉ GG k r} with hA
@@ -1814,7 +1814,7 @@ theorem null_of_fibres {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT :
     (hW : IsHaarOn (UWset k r z) μW) (hW1 : μW Set.univ = 1) (hN : IsHaarOn (Nset k r) μN)
     (hq : IsQuotMeas μG (muProd μW μN) νS) {A : Set (Mt k r)} (hAm : MeasurableSet A)
     (hA : ∀ g ∈ GG k r, μN {n | rmulM g n ∈ A} = 0) : μG A = 0 := by
-  haveI := hN.1
+  have := hN.1
   have aeW : ∀ᵐ x ∂μW, Matrix.of x ∈ UWset k r z := ae_iff.2 hW.2.2.1
   have aeS : ∀ᵐ x ∂νS, Matrix.of x ∈ GG k r := ae_iff.2 (quot_conc hG hW hW1 hN hq)
   have hf : Measurable (A.indicator (1 : Mt k r → ℝ≥0∞)) := measurable_one.indicator hAm
@@ -1881,7 +1881,7 @@ theorem abs_side : ∀ (k r : ℕ) {Wq : Type} [NormedAddCommGroup Wq] [InnerPro
   · have hAm : MeasurableSet {x : Mt k r | Matrix.of x ∉ GG k r ∨ Yv k r z z' γ (Matrix.of x) = 0} := by
       convert hYm (measurableSet_singleton 0) using 1
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_singleton_iff, Set.indicator_apply_eq_zero]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_singleton_iff, Set.indicator_apply_eq_zero]
       tauto
     refine hnull _ hAm (fun ρ hρ x hx => ?_) (null_of_fibres hz' hT' hG hW hW1 hN hq hAm fun g hg => ?_)
     · have h3 := (GlobalTheory.Amp.YInv.yv_invariant k r z z' γ hz hz' hγ _ hx).2.2 ρ hρ
@@ -1891,7 +1891,7 @@ theorem abs_side : ∀ (k r : ℕ) {Wq : Type} [NormedAddCommGroup Wq] [InnerPro
       rw [h3]
       simp only [h4, hx]
     · have h2 : (ENNReal.ofReal κ • lebN k r) {n | Yv k r z z' γ (Matrix.of n * g) = 0} = 0 := by
-        rw [Measure.smul_apply, (hP g hg).1, smul_zero]
+        rw [smul_apply, (hP g hg).1, smul_zero]
       refine measure_mono_null (fun n hn => ?_) (measure_union_null hN.2.2.1 h2)
       rcases hn with hn | hn
       · exact Or.inl fun h => hn (mul_mem h.1 hg)
@@ -1908,9 +1908,9 @@ theorem abs_side : ∀ (k r : ℕ) {Wq : Type} [NormedAddCommGroup Wq] [InnerPro
     ext x
     by_cases hx : Matrix.of x ∈ GG k r
     · have : x ∈ {x : Mt k r | Matrix.of x ∈ GG k r} := hx
-      simp only [hQdef, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_union, Set.mem_preimage, Set.mem_Ioi,
+      simp only [hQdef, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_union, Set.mem_preimage, Set.mem_Ioi,
         Set.indicator_of_mem this]
-    · simp only [hQdef, Set.mem_setOf_eq, Set.mem_inter_iff, hx, false_and]
+    · simp only [hQdef, Set.mem_ofPred_eq, Set.mem_inter_iff, hx, false_and]
   have hQS : ∀ s ∈ Sset k r z', ∀ x, Matrix.of x ∈ GG k r → (lmulM s x ∈ Q ↔ x ∈ Q) := by
     intro s hs x hx
     have h4 : s * Matrix.of x ∈ GG k r := mul_mem ((isClosedSub_Sset hz' hT').1 hs) hx
@@ -1939,7 +1939,7 @@ theorem abs_side : ∀ (k r : ℕ) {Wq : Type} [NormedAddCommGroup Wq] [InnerPro
       rw [Matrix.one_mul, hU.1.1] at h2
       have hψ' : ‖ψ' ρ‖₊ = 1 := NNReal.eq (hψ ρ hρ.1)
       show (‖⟪w, Φ' (ρ * Matrix.of x)⟫_ℂ‖₊ : ℝ≥0∞) ^ 2 = _
-      rw [h2, inner_smul_right, nnnorm_mul, hψ', one_mul]
+      rw [h2, inner_smul_right, nnNorm_mul, hψ', one_mul]
       rfl
     · rw [Set.indicator_of_notMem h, Set.indicator_of_notMem fun h' => h (h1.1 h')]
   have hfm : Measurable fun x => φ x * E.indicator 1 x := hφ.1.mul (measurable_one.indicator (hEm R₀ y))
@@ -1958,7 +1958,7 @@ theorem abs_side : ∀ (k r : ℕ) {Wq : Type} [NormedAddCommGroup Wq] [InnerPro
       = ∫⁻ x, (E ∩ Q).indicator a x ∂νR := by
         rw [lintegral_indicator hEQm]
         refine setLIntegral_congr_fun hEQm fun x hx => ?_
-        rw [haG x hx.2.1, ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+        rw [haG x hx.2.1, ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
         rfl
     _ = ∫⁻ x, φ x * (E ∩ Q).indicator a x ∂μG := hcut _ (ham.indicator hEQm) hinv
     _ = ∫⁻ x in Q, φ x * E.indicator 1 x * (‖⟪w, Φ' (Matrix.of x)⟫_ℂ‖₊ : ℝ≥0∞) ^ 2 ∂μG := by

@@ -196,7 +196,7 @@ theorem twincl_smul {R R' : Type} [CommRing R] [CommRing R'] [Algebra O R] [Alge
 
 theorem twincl_injective {R R' : Type} [CommRing R] [CommRing R'] [Algebra O R] [Algebra O R'] (f : R →ₐ[O] R')
     (hf : Function.Injective f) : Function.Injective (TWincl f T) := by
-  haveI : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Free O ↥T.L.T := T.L.free
   exact Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T) f.toLinearMap hf
 
 theorem inclL_smul' (r : OA l O) (d : ι → OA l O) : inclL t ϖ P (r • d) = inclO l O r • inclL t ϖ P d := by

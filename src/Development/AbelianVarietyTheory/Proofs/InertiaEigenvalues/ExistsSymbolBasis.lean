@@ -104,8 +104,8 @@ theorem exists_adapted {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field
       (∀ i, ∑ k, algebraMap K BdR (c k) * x k i ∈ PD.Fil (a + 1)) → ∀ k, c k = 0 := by
   rcases Nat.eq_zero_or_pos d with rfl | hd
   · exact ⟨Fin.elim0, Fin.elim0, fun k => k.elim0, fun _ _ _ _ k => k.elim0⟩
-  haveI : Nontrivial V := ⟨⟨b ⟨0, hd⟩, 0, b.ne_zero _⟩⟩
-  haveI := PD.finK
+  have : Nontrivial V := ⟨⟨b ⟨0, hd⟩, 0, b.ne_zero _⟩⟩
+  have := PD.finK
   have hfin : Module.Finite LL ↥(DdR PD ρ) := by
     apply Module.finite_of_finrank_pos
     rw [hDR]

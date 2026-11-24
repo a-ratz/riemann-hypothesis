@@ -135,14 +135,14 @@ theorem selfDual_any : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     Unit 1 (Matrix.isSymm_one) (by simp)
   refine ⟨cinf, c, hU, fun ν => ?_, fun v ν => ?_⟩
   · obtain ⟨a1, a2, a3, a4, -, -, -, -⟩ := isLocR_Ainf F hCM.1
-    haveI := a1; haveI := a2; haveI := a3; haveI := a4
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-    haveI := hinf.1
+    have := a1; have := a2; have := a3; have := a4
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := hinf.1
     exact iff_of_unit (psiInf F ψ) laminf cinf _ (Matrix.map_one _ (map_zero _) (map_one _)) h1 ν
   · obtain ⟨a1, a2, a3, a4, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := a1; haveI := a2; haveI := a3; haveI := a4
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-    haveI := (hlam v).1
+    have := a1; have := a2; have := a3; have := a4
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := (hlam v).1
     exact iff_of_unit (psiV F ψ v) (lam v) (c v) _ (Matrix.map_one _ (map_zero _) (map_one _)) (h2 v) ν
 
 end GlobalTheory.CompanionTheory.SW.SdAny

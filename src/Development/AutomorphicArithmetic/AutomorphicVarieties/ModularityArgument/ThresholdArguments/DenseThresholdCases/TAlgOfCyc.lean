@@ -144,7 +144,7 @@ private theorem unit_pow {v : HeightOneSpectrum (𝓞 E)} {p : ℕ} (hp : ((p : 
   have hM : ∃ M : ℕ, 0 < M ∧ Valued.v ((x : v.adicCompletion E) ^ M - 1) < 1 := by
     let O := v.adicCompletionIntegers E
     let y : O := ⟨x, hx.le⟩
-    haveI : Finite (IsLocalRing.ResidueField O) := inferInstance
+    have : Finite (IsLocalRing.ResidueField O) := inferInstance
     obtain ⟨a, b, hab, e⟩ := Finite.exists_ne_map_eq_of_infinite fun n : ℕ => IsLocalRing.residue O (y ^ n)
     wlog hlt : a < b generalizing a b
     · exact this b a hab.symm e.symm (lt_of_le_of_ne (not_lt.1 hlt) hab.symm)
@@ -239,7 +239,7 @@ private theorem nhd_loc (V : Set (Ideles E)) (hV : V ∈ 𝓝 (1 : Ideles E)) : 
       exact (eq_inv_of_mul_eq_one_right (congrArg (fun y : AdeleRing (𝓞 E) E => y.2 v) u.mul_inv)).symm)
     refine ⟨le_antisymm k1 ?_, hTV (hTT ⟨?_, ?_⟩)⟩
     · rw [Units.val_inv_eq_inv_val, map_inv₀] at k2
-      exact (inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero))).1 k2
+      exact (inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero))).1 k2
     · change ((localIdele E v x : Ideles E) : AdeleRing (𝓞 E) E) ∈ T1
       rw [e]; exact (hNW b hb).1
     · change MulOpposite.op (((localIdele E v x)⁻¹ : Ideles E) : AdeleRing (𝓞 E) E) ∈ T2
@@ -326,7 +326,7 @@ private theorem exists_type (ι : Qbar l ≃+* ℂ) (a : HeightOneSpectrum (𝓞
   let P : (E →+* ℂ) → HeightOneSpectrum (𝓞 E) → Prop := fun φ v =>
     ∃ j : v.adicCompletion E →+* Qbar l, Continuous j ∧ φ = (ι.toRingHom.comp j).comp (algebraMap E (v.adicCompletion E))
   refine ⟨fun φ => if h : ∃ v, P φ v then a h.choose else 0, fun v y => ?_⟩
-  haveI : Fintype {j : v.adicCompletion E →+* Qbar l // Continuous j} := @Fintype.ofFinite _ (finite_contEmb v)
+  have : Fintype {j : v.adicCompletion E →+* Qbar l // Continuous j} := @Fintype.ofFinite _ (finite_contEmb v)
   unfold locPow
   rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, ← Finset.prod_zpow]
   refine Finset.prod_congr rfl fun j _ => ?_
@@ -334,7 +334,7 @@ private theorem exists_type (ι : Qbar l ≃+* ℂ) (a : HeightOneSpectrum (𝓞
   obtain ⟨j', hj', e⟩ := h.choose_spec
   have h1 : v = h.choose := place_eq_of_contEmb_comp_eq E l v _ j.1 j' j.2 hj'
     (RingHom.ext fun b => ι.injective (DFunLike.congr_fun e b))
-  simp only [dif_pos h, zpow_one, ← h1]
+  simp only [dite_eq_left h, zpow_one, ← h1]
 private theorem alg_of_open {art : Ideles E →* Gab E Ω} [IsAlgClosure E Ω] (ha : IsGlobalArtin art) (ι : Qbar l ≃+* ℂ)
     (κ : G E Ω →* (Qbar l)ˣ) (hκ : Continuous κ) (n : (E →+* ℂ) → ℤ)
     (h : ∀ v : HeightOneSpectrum (𝓞 E), ((l : ℕ) : 𝓞 E) ∈ v.asIdeal → ∀ x : (v.adicCompletion E)ˣ, IsUnitAt v x →

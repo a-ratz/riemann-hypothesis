@@ -145,7 +145,7 @@ theorem addVal_le_vAdd (p : MvPolynomial (Idx D j N) B.KO) (β : Idx D j N →�
     obtain ⟨γ, -, rfl⟩ := MvPolynomial.mem_coeffs_iff.mp hy
     have hm : algebraMap B.KO (X.Kl la) (c0⁻¹ * p.coeff γ) ∈ la.adicCompletionIntegers B.KO := by
       rw [HeightOneSpectrum.mem_adicCompletionIntegers, val_algebraMap, map_mul, map_inv₀]
-      exact (inv_mul_le_one₀ (zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hc0))).mpr (hle γ)
+      exact (inv_mul_le_one₀ (pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hc0))).mpr (hle γ)
     exact ⟨⟨_, hm⟩, by rw [MvPolynomial.coeff_map, MvPolynomial.coeff_C_mul]; rfl⟩
   obtain ⟨q, hq⟩ := hq
   have hq1 : q.coeff β0 = 1 := by
@@ -204,7 +204,7 @@ theorem addVal_le_vAdd (p : MvPolynomial (Idx D j N) B.KO) (β : Idx D j N →�
     exact hϖ.not_isUnit ((Valuation.Integers.isUnit_iff_valuation_eq_one
       (Valuation.valuationSubring.integers (Valued.v : Valuation (X.Kl la) _))).mpr h)
   have hv2 : la.valuation B.KO c0 ≤ Valued.v (ϖ : X.Kl la) ^ (n + 1) :=
-    by simpa using (mul_inv_le_iff₀ (zero_lt_iff.mpr (pow_ne_zero _ hvϖ0))).mp hv
+    by simpa using (mul_inv_le_iff₀ (pos_iff_ne_zero.mpr (pow_ne_zero _ hvϖ0))).mp hv
   have hvβ0 : la.valuation B.KO (p.coeff β) ≠ 0 := (Valuation.ne_zero_iff _).mpr hβ
   have h3 : WithZero.log (la.valuation B.KO (p.coeff β)) ≤ WithZero.log (Valued.v (ϖ : X.Kl la) ^ (n + 1)) :=
     (WithZero.log_le_log hvβ0 (pow_ne_zero _ hvϖ0)).mpr ((hle β).trans hv2)

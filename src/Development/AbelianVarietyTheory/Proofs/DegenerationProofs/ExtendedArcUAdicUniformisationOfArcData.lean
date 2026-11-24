@@ -221,7 +221,7 @@ theorem exists_wit_of_pull (h5 : Out.Laws5) (hQ : QkPullExistsSt) {Y : Model Xo 
     (el : letI := H.starRing; ∀ x, P.oD.onB.act x ≫ hD.e.hom =
       hD.e.hom ≫ (Over.pullback (Out.specOf (RingHom.id R))).map (W.P.oD.onB.act x)) :
     ∃ W' : ArcWit Y a I f u χ, W'.t = t ∧ HEq W'.m m ∧ HEq W'.P P := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨he, w, e, -, -, d1, d2, d3, d4, d5, d6⟩ := ArcWit.witMove h5 hQ hR W P.U P.oD bc hD hPU xl el
   refine ⟨⟨t, m, P, _, he, w, e, d1, d2, d3, d4, d5, fun F _ _ _ _ uF h1 h2 => ⟨(d6 F uF h1 h2).1,
     fun yF hyF k p₀ σ hσ q₀ q x e1 e2 e3 e4 => (d6 F uF h1 h2).2 yF hyF k p₀ σ hσ q₀ q x e1 e2 e3 ?_⟩⟩,
@@ -235,7 +235,7 @@ theorem exists_wit (hU : Out.UnifBaseChangeSt) (h5 : Out.Laws5) (h6 : Out.UnifUn
     [CommRing R] [IsDomain R] [IsLocalRing R] {I : Ideal R} (hR : Out.AdmBase R I) {f : O' →+* R} {u : R}
     {χ : Sp R ⟶ Y.X} (W : ArcWit Y a I f u χ) (t : SAB H (Sp R)) (m : SABMap t Y.t χ) (P : PELUnif I t) :
     ∃ W' : ArcWit Y a I f u χ, W'.t = t ∧ HEq W'.m m ∧ HEq W'.P P := by
-  letI := H.starRing
+  let := H.starRing
   have hs := specOf_id R
   obtain ⟨ψ, hψ, hφ, hact, -⟩ := sabMap_iso m W.m rfl rfl
   obtain ⟨bc, D'', hD₂, U'', mod'', oD'', mbc, hbc, hLG, -, hPU₂, xl₂, el₂, lin'', w0''⟩ :=
@@ -329,7 +329,7 @@ namespace GlobalTheory.ArcDataDescent
 theorem hasArcData_descends : Laws → Laws2 → Laws3 → Laws4 → Laws5 → Laws6 → HomExtSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (W₀ : ValuationSubring ℂ) (Y : Model Xo c (c.V W₀).subtype) (O' : Type) [CommRing O'] [IsDomain O'] [CharZero O'] (b : c.V W₀ →+* O') (a : ArcIn D l (c.V W₀).subtype O' b) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CharZero R] (I : Ideal R) (f : O' →+* R) (u : R), AdmBase R I → I ≠ ⊤ → Function.Injective f → ∀ (χ : Sp R ⟶ Y.X) (y : Sp (FractionRing R) ⟶ Xo.XF c), y ≫ Y.j = jK R ≫ χ → ∀ (t : SAB H (Sp R)) (m : SABMap t Y.t χ) (P : PELUnif I t), P.TorsionIso → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], CDvr V → ∀ g : R →+* V, Function.Injective g → I.map g ≤ IsLocalRing.maximalIdeal V → ¬ IsUnit (g u) → (∀ x, x ≠ 0 → IsUnit (g (f x))) → Y.HasArcData a (IsLocalRing.maximalIdeal V) (g.comp f) (g u) (spMap g ≫ χ) → Y.HasArcData a I f u χ := by
   intro hL h2 h3 h4 h5 h6 hH E _ _ _ H D l Xo c W₀ Y O' _ _ _ b a R _ _ _ _ I f u hR _ hf χ y hy t m P hT V _ _ _ hV g hg hI
     _ _ hA
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨hV₁, hV₂, -⟩ := hV
   have hV : AdmBase V (IsLocalRing.maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hV₂⟩
   have := hR.1
@@ -390,9 +390,9 @@ theorem hasArcData_descends : Laws → Laws2 → Laws3 → Laws4 → Laws5 → L
       refine ((Category.assoc _ _ _).symm.trans (congrArg (· ≫ φ) k.symm)).trans ?_
       rw [Category.assoc, hφ, s5 z, spMap_comp, Category.assoc]
   · obtain ⟨F', _, _, σ, ρ, hσρ⟩ := exists_common_field (algebraMap (FractionRing R) F) gam
-    letI : Algebra (FractionRing R) F' := (σ.comp (algebraMap (FractionRing R) F)).toAlgebra
-    letI : Algebra (FractionRing O') F' := (σ.comp (algebraMap (FractionRing O') F)).toAlgebra
-    letI : Algebra (FractionRing V) F' := ρ.toAlgebra
+    let : Algebra (FractionRing R) F' := (σ.comp (algebraMap (FractionRing R) F)).toAlgebra
+    let : Algebra (FractionRing O') F' := (σ.comp (algebraMap (FractionRing O') F)).toAlgebra
+    let : Algebra (FractionRing V) F' := ρ.toAlgebra
     have hF : ∀ r : R, algebraMap (FractionRing R) F' (algebraMap R (FractionRing R) r) =
         algebraMap (FractionRing V) F' (algebraMap V (FractionRing V) (g r)) := fun r =>
       (RingHom.congr_fun hσρ _).trans (congrArg ρ (hgam r))
@@ -520,8 +520,8 @@ theorem exists_isSemiAbelian_isGt :
     GlobalFnsSt → ∀ (S : Scheme.{0}) (E : SplitExt S),
       ∃ (G : Over S) (_ : GrpObj G), IsSemiAbelian G ∧ E.IsGt G := by
   intro hG S E
-  letI := E.free
-  letI := E.finite
+  let := E.free
+  let := E.finite
   have hN : ∀ k, (E.O (E.basis k)).L.IsLB := fun k => (E.O (E.basis k)).isLB
   obtain ⟨G, q, u, hu⟩ := exists_generatorScheme E.B.left _ (fun k => (E.O (E.basis k)).L) hN
   obtain ⟨h₁, h₂, h₃, -, -⟩ :=
@@ -722,7 +722,7 @@ theorem exists_iso_of_generic (h : HomExtSt) (T K : Type) [CommRing T] [IsDomain
     (hG : IsSemiAbelian G) (hG' : IsSemiAbelian G')
     (f : (Over.pullback (spMap (algebraMap T K))).obj G ≅ (Over.pullback (spMap (algebraMap T K))).obj G')
     (hf : IsMonHom f.hom) : ∃ F : G ≅ G', IsMonHom F.hom := by
-  letI := hK.toField
+  let := hK.toField
   obtain ⟨F, ⟨hF, eF⟩, -⟩ := h T K G G' hG hG' f.hom hf
   obtain ⟨F', ⟨hF', eF'⟩, -⟩ := h T K G' G hG' hG f.inv inferInstance
   refine ⟨⟨F, F', (h T K G G hG hG (𝟙 _) inferInstance).unique ⟨inferInstance, ?_⟩
@@ -769,7 +769,7 @@ theorem splitOver_of_hasArcData : Laws → Laws2 → Laws3 → HomExtSt → ∀ 
   have hb := bijective_mk_C K'
   let ε : K' ≃+* K := RingEquiv.ofBijective _ hb
   have hK : IsField K := ε.symm.toMulEquiv.isField (Field.toIsField K')
-  letI : Algebra O' K := ((Ideal.Quotient.mk (I ^ (0 + 1))).comp f).toAlgebra
+  let : Algebra O' K := ((Ideal.Quotient.mk (I ^ (0 + 1))).comp f).toAlgebra
   have : IsFractionRing O' K :=
     IsLocalization.isLocalization_of_algEquiv (nonZeroDivisors O') (AlgEquiv.ofRingEquiv (f := ε) fun _ => rfl)
   have hX : PowerSeries.X ∈ I ^ (0 + 1) := by
@@ -856,7 +856,7 @@ theorem polAt_of_point {D : Datum H} {l : Level H} {Xo : Moduli D l} {c : Coeff 
 theorem admissible_maximal_ideal_of_complete_dvr_char_zero {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] (h : CDvr V) :
     admitted V (IsLocalRing.maximalIdeal V) ∧ IsPrincipalIdealRing (V ⧸ IsLocalRing.maximalIdeal V) := by
   obtain ⟨h₁, h₂, h₃⟩ := h
-  letI := Ideal.Quotient.field (IsLocalRing.maximalIdeal V)
+  let := Ideal.Quotient.field (IsLocalRing.maximalIdeal V)
   exact ⟨⟨⟨inferInstance, inferInstance, inferInstance, h₂⟩, h₂, h₃, inferInstance, inferInstance⟩, inferInstance⟩
 
 theorem cdvr_powerSeries (K : Type) [Field K] [CharZero K] : CDvr (PowerSeries K) := by
@@ -913,16 +913,16 @@ theorem hasArcData_trait (h₁ : Laws) (h₂ : Laws2) (h₃ : Laws3) (h₄ : Law
 theorem hasArcData_of_traitData : Laws → Laws2 → Laws3 → Laws4 → Laws5 → Laws6 → Ega → USt → PelSt → HomExtSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (W₀ : ValuationSubring ℂ) (Y : Model Xo c (c.V W₀).subtype) (O' : Type) [CommRing O'] [IsDomain O'] [CharZero O'] (b : c.V W₀ →+* O') (a : ArcIn D l (c.V W₀).subtype O' b) (ϖ : O'), ArcBase O' ϖ → PushInvertible Y.t.G Y.t.PP.L → ∀ (y : Sp (FractionRing (PowerSeries O')) ⟶ Xo.XF c) (χ : Sp (PowerSeries O') ⟶ Y.X), jK _ ≫ χ = y ≫ Y.j → TraitData Y a (RingHom.id _) y → Y.HasArcData a (Ideal.span {(PowerSeries.X : PowerSeries O')}) (PowerSeries.C (R := O')) PowerSeries.X χ := by
   intro h₁ h₂ h₃ h₄ h₅ h₆ hE hU hP hH E _ _ _ H D l Xo c W₀ Y O' _ _ _ b a ϖ hb hp y χ hχ hT
   rcases hb with ⟨hf, -⟩ | ⟨hd, hϖ, hc⟩
-  · letI := hf.toField
+  · let := hf.toField
     have h := hasArcData_trait h₁ h₂ h₃ h₄ h₅ h₆ hE hU hP hH Y a hp y χ hχ hT (cdvr_powerSeries O') (RingHom.id _)
-      Function.injective_id PowerSeries.X_prime.not_unit (fun x hx => (IsUnit.mk0 x hx).map (PowerSeries.C (R := O')))
+      Function.injective_id PowerSeries.prime_X.not_isUnit (fun x hx => (IsUnit.mk0 x hx).map (PowerSeries.C (R := O')))
     have e : spMap (RingHom.id (PowerSeries O')) = 𝟙 _ := Spec.map_id _
     rw [e, Category.id_comp, PowerSeries.maximalIdeal_eq_span_X] at h
     exact h
   · have hi := IsFractionRing.injective O' (FractionRing O')
     have hX : ¬ IsUnit (PowerSeries.map (algebraMap O' (FractionRing O')) PowerSeries.X) := by
       rw [PowerSeries.map_X]
-      exact PowerSeries.X_prime.not_unit
+      exact PowerSeries.prime_X.not_isUnit
     have hC : ∀ x, x ≠ 0 → IsUnit (PowerSeries.map (algebraMap O' (FractionRing O')) (PowerSeries.C x)) := fun x hx => by
       rw [PowerSeries.map_C]
       exact (IsUnit.mk0 _ ((map_ne_zero_iff _ hi).2 hx)).map _

@@ -469,7 +469,7 @@ private lemma filt_mem_higher {t : ℕ} (ht : t ≤ N.factorization l) (g : (ZMo
 
 private lemma filt_card_ker {d : ℕ} (hd : d ∣ N) :
     Nat.card (ZMod.unitsMap hd).ker * Nat.totient d = Nat.totient N := by
-  haveI : NeZero d := ⟨ne_zero_of_dvd_ne_zero (NeZero.ne N) hd⟩
+  have : NeZero d := ⟨ne_zero_of_dvd_ne_zero (NeZero.ne N) hd⟩
   have h := Subgroup.card_mul_index (ZMod.unitsMap hd).ker
   rw [Subgroup.index_ker, MonoidHom.range_eq_top.mpr (ZMod.unitsMap_surjective hd),
     Subgroup.card_top] at h
@@ -580,7 +580,7 @@ theorem avgCondExp_annihilator (H : Subgroup (ZMod N)ˣ) :
         (1 - (Nat.card ↥(higherUnits N l t ⊓ H) : ℚ) / (Nat.card (higherUnits N l t) : ℚ)) := by
   classical
   set X := annihilator ℂ (H : Set (ZMod N)ˣ) with hX
-  haveI : Fintype X := Fintype.ofFinite X
+  have : Fintype X := Fintype.ofFinite X
   have hX0 : (Nat.card X : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
   have hc : ∀ ψ : DirichletCharacter ℂ N, (condExp l ψ : ℚ) =
       ∑ t ∈ Finset.range (N.factorization l),
@@ -594,8 +594,8 @@ theorem avgCondExp_annihilator (H : Subgroup (ZMod N)ˣ) :
       intro t ht
       have := filt_mem_ann l (Finset.mem_range.mp ht).le ψ
       by_cases h : t < condExp l ψ
-      · rw [if_neg (by rw [this]; omega), if_pos h, sub_zero]
-      · rw [if_pos (by rw [this]; omega), if_neg h, sub_self]
+      · rw [ite_eq_right (by rw [this]; omega), ite_eq_left h, sub_zero]
+      · rw [ite_eq_left (by rw [this]; omega), ite_eq_right h, sub_self]
     rw [Finset.sum_congr rfl h1, Finset.sum_boole]
     have : (Finset.range (N.factorization l)).filter (fun t => t < condExp l ψ) =
         Finset.range (condExp l ψ) := by
@@ -729,7 +729,7 @@ theorem padicValNat_absNorm_one_sub {K : Type*} [Field K] [NumberField K] (l : �
     {m : ℕ} (hm : 2 ≤ m) {η : 𝓞 K} (hη : IsPrimitiveRoot η m) :
     (padicValNat l (Ideal.absNorm (Ideal.span {1 - η})) : ℚ) =
       Module.finrank ℚ K * rootWeight l m := by
-  haveI : NeZero m := ⟨by omega⟩
+  have : NeZero m := ⟨by omega⟩
   have hηK : IsPrimitiveRoot (η : K) m :=
     hη.map_of_injective (FaithfulSMul.algebraMap_injective (𝓞 K) K)
   obtain ⟨k, hk, hnorm⟩ := rootNorm_field (η : K)
@@ -747,17 +747,17 @@ theorem padicValNat_absNorm_one_sub {K : Type*} [Field K] [NumberField K] (l : �
       m.totient * rootWeight l m := by
     by_cases hpp : ∃ p j, p.Prime ∧ m = p ^ (j + 1)
     · obtain ⟨p, j, hp, rfl⟩ := hpp
-      haveI := Fact.mk hp
+      have := Fact.mk hp
       rw [Polynomial.eval_one_cyclotomic_prime_pow, Int.natAbs_natCast]
       have hne : p ^ (j + 1) ≠ 1 := fun h => by rw [h] at hm; norm_num at hm
       by_cases hpl : p = l
       · subst hpl
         rw [Nat.padicValNat_def, Nat.Prime.multiplicity_self, rootWeight,
-          if_pos ⟨hne, j + 1, rfl⟩]
+          ite_eq_left ⟨hne, j + 1, rfl⟩]
         have ht : ((p ^ (j + 1)).totient : ℚ) ≠ 0 := by
           exact_mod_cast (Nat.totient_pos.mpr (by positivity)).ne'
         rw [Nat.cast_one, mul_one_div, div_self ht]
-      · rw [Nat.padicValNat_def, multiplicity_primes (Ne.symm hpl), rootWeight, if_neg]
+      · rw [Nat.padicValNat_def, multiplicity_primes (Ne.symm hpl), rootWeight, ite_eq_right]
         · simp
         · rintro ⟨-, s, hs⟩
           apply hpl
@@ -775,7 +775,7 @@ theorem padicValNat_absNorm_one_sub {K : Type*} [Field K] [NumberField K] (l : �
         · rw [pow_zero] at hj
           omega
         · exact hpp ⟨p, j, hp, hj.symm⟩
-      rw [h1, rootWeight, if_neg]
+      rw [h1, rootWeight, ite_eq_right]
       · simp [_root_.Nat.padicValNat_def (n := 1)]
       · rintro ⟨-, s, hs⟩
         rcases s with _ | s
@@ -894,7 +894,7 @@ theorem natAbs_discr_eq_finprod_conductor (E : IntermediateField ℚ K) :
     by_cases hl : l.Prime
     · have : Fact l.Prime := ⟨hl⟩
       have h := vdField_eq_avg (N := N) E l
-      rw [vdField, avgCondExp, hcard, div_left_inj' p1, finsum_eq_sum_of_fintype, padicValInt] at h
+      rw [vdField, avgCondExp, hcard, div_left_inj₀ p1, finsum_eq_sum_of_fintype, padicValInt] at h
       rw [Nat.factorization_prod fun ψ _ => hc _, Finsupp.finsetSum_apply,
         Nat.factorization_def _ hl]
       exact_mod_cast h

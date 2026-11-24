@@ -95,7 +95,7 @@ private theorem core0 {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSp
     (hμ : ∀ j k, j ≠ k → ∃ s, μ j (ineIncl h s) ≠ μ k (ineIncl h s))
     (hP : ∀ σ, (wdPst P ι Bw h hj ρ).charPol σ = ∏ j, (X - C (μ j σ : ℂ))) :
     wdN P ι ρ = 0 ∧ ∀ j, μ j = 1 → ∃ z : ↥(Dpst P ρ), z ≠ 0 ∧ phiD P ρ z = z ∧ ∀ g, actD P ρ g z = z := by
-  haveI := hV.finite
+  have := hV.finite
   have hc : ∀ σ, (wdRho P ι Bw h hj ρ σ).charpoly = ∏ j, (X - C (μ j σ : ℂ)) :=
     fun σ => (DpstMap.charPol_wdPst P ι Bw h hj ρ hV σ).symm.trans (hP σ)
   obtain ⟨hN, hL⟩ := UpperTheory.inertia_eigenvector_extends_of_distinct_characters (ineIncl h) (wdRho P ι Bw h hj ρ) μ
@@ -294,7 +294,7 @@ theorem UpperTheory.V.Hi.coreH :
   have hdr := Y.atL v (ω v) (hsm v) hdist ⟨φ⟩ rc hrc ((UpperTheory.V.Lev.ssCalc L Ω _ _ (H.ovr v)).1 n _ (fun j => (ω v j).comp (H.art v)) hpol)
   rw [funext hpol] at hdr
   refine UpperTheory.V.Loc.ordFlag hL L Ω l hA.odd ι n (H.Sl v) (hA.Sl_over v) (H.pl v) (H.ovr v) (H.art v) (hA.art_spec v)
-    _ (Y.cont.comp (hA.prj_cont.comp continuous_subtype_val)) (htW lam) (fun τ i j hij => ?_) (ω v) _ hO
+    _ (Y.cont.comp (hA.prj_cont.comp continuous_subtypeVal)) (htW lam) (fun τ i j hij => ?_) (ω v) _ hO
     (fun i j hij => ?_) hdr
   · have h1 := (lam τ).anti (Fin.rev_le_rev.2 hij.le)
     have h2 : (i : ℕ) < j := hij

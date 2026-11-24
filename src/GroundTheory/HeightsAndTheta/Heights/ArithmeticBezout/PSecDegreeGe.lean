@@ -137,7 +137,7 @@ theorem SecDegreeGe.proof (hFin : SecFiniteUnit.Statement) (hSpec : SecRankSpeci
     have h1 := map_eval_specRest (algebraMap k R) (algebraMap R E) g Y
     rw [hπk, hπY] at h1
     have hker : RingHom.ker (algebraMap R E) = IsLocalRing.maximalIdeal R := by
-      haveI := RingHom.ker_isMaximal_of_surjective _ hsurj
+      have := RingHom.ker_isMaximal_of_surjective _ hsurj
       exact IsLocalRing.eq_maximalIdeal this
     by_contra hu
     have hm : eval (fun j => Y (.inr j)) (Vertical.specRest (algebraMap k R) g Y) ∈

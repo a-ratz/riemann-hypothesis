@@ -75,7 +75,7 @@ theorem dpE_mul (f : W →+* B) (ξ : W) (l M i j : ℕ) :
 theorem mem_span_of_mem_sub (f : W →+* B) (ξ : W) (l M : ℕ) (x : B) (hx : x ∈ Lat.sub f ξ l M) :
     letI : Algebra W B := f.toAlgebra;
     x ∈ Submodule.span W (Set.range (Lat.dpE f ξ l M)) := by
-  letI : Algebra W B := f.toAlgebra
+  let : Algebra W B := f.toAlgebra
   have hsm : ∀ (w : W) (b : B), w • b = f w * b := fun w b => Algebra.smul_def w b
   have h0 : Lat.dpE f ξ l M 0 = 1 := by simp [Lat.dpE]
   have hgen : ∀ i, Lat.dpE f ξ l M i ∈ Submodule.span W (Set.range (Lat.dpE f ξ l M)) :=
@@ -125,7 +125,7 @@ theorem mem_sub_iff : ∀ {W B : Type} [CommRing W] [CommRing B] [Algebra ℚ B]
   intro W B _ _ _ f ξ l M x
   constructor
   · intro hx
-    letI : Algebra W B := f.toAlgebra
+    let : Algebra W B := f.toAlgebra
     have hsm : ∀ (w : W) (b : B), w • b = f w * b := fun w b => Algebra.smul_def w b
     obtain ⟨c, rfl⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 (mem_span_of_mem_sub f ξ l M x hx)
     refine ⟨c.support.sup id + 1, fun i => c i, ?_⟩

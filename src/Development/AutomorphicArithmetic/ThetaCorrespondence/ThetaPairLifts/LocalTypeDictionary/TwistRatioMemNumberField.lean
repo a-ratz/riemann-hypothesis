@@ -61,7 +61,7 @@ theorem twistRatio_mem_numberField : _root_.GlobalTheory.FunPr.ThetaLocalInputs 
   obtain ⟨C0, x₀, hF⟩ := hF ε CF hCF
   refine ⟨x₀, fun D large₂ he hx Γ _ _ Pl0 T A Ks _ _ _ R F hS ch _ hsc => ?_⟩
   have hRec : GlobalTheory.SqTop.Rec large₂ := (GlobalTheory.SqTop.Model.rec_iff large₂).2 ⟨hS.size, hS.host⟩
-  haveI : Finite T := hS.fin
+  have : Finite T := hS.fin
   have key : ∀ (sc : Consts) (G : GridData R.toLevCh sc), sc = ⟨1, CF, large₂.sc.b⟩ →
       InNF fun _ σ => ∀ i j, LRatiosIn G σ A.μ0 i j := by
     rintro sc G rfl

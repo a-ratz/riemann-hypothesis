@@ -119,7 +119,7 @@ theorem ιLev_eq (g : Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1)) ℂ) 
   · have hb := b.isLt
     have ha := a'.isLt
     have h1 : ¬(i ≤ ((split k i r').symm (Sum.inr b)).val ∧ ((split k i r').symm (Sum.inr b)).val < 2 * r' + k + 1 + i) := by rw [split_symm_inr]; split_ifs <;> omega
-    rw [dite_eq_right h1, fromBlocks_apply₂₁, Matrix.zero_apply, if_neg]
+    rw [dite_eq_right h1, fromBlocks_apply₂₁, Matrix.zero_apply, ite_eq_right]
     intro e
     exact Sum.inr_ne_inl ((split k i r').symm.injective e)
   · have hb := b.isLt
@@ -130,7 +130,7 @@ theorem ιLev_eq (g : Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1)) ℂ) 
       simp
     · have hne : (split k i r').symm (Sum.inr b) ≠ (split k i r').symm (Sum.inr b') :=
         fun h => e (Sum.inr_injective ((split k i r').symm.injective h))
-      rw [if_neg hne, if_neg e]
+      rw [ite_eq_right hne, ite_eq_right e]
 
 theorem liftVec_eq (v : Fin (2 * r' + k + 1) → ℂ) :
     liftVec k i r' v = (Sum.elim v 0) ∘ (split k i r') := by
@@ -301,7 +301,7 @@ theorem col_fix (g : Matrix (Fin (2 * r' + k + 1)) (Fin (2 * r' + k + 1)) ℂ) (
     by_cases hp : i ≤ p.val ∧ p.val < 2 * r' + k + 1 + i
     · rw [ιLev_apply_in_out g p q hp hq]
       simp only [bvec, Pi.single_apply]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       rw [e] at hp
       exact hq hp
@@ -325,7 +325,7 @@ theorem level_group_unitary_hermitian : LevUH := by
 
 theorem level_group_nilpotent : LevN := by
   intro k i r' g hg
-  simp only [Nset, Set.mem_setOf_eq] at hg ⊢
+  simp only [Nset, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hU, h2, h3⟩ := hg
   refine ⟨level_group_unitary_hermitian k i r' g hU, ?_, ?_⟩
   · intro a p hap
@@ -361,7 +361,7 @@ theorem level_group_nilpotent : LevN := by
 
 theorem level_group_unitary_weyl : LevUW := by
   intro k i r' z g hg
-  simp only [UWset, Set.mem_setOf_eq] at hg ⊢
+  simp only [UWset, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hU, hfix, hz⟩ := hg
   refine ⟨level_group_unitary_hermitian k i r' g hU, fun a => ⟨?_, ?_⟩, ?_⟩
   · apply col_fix
@@ -407,12 +407,12 @@ theorem level_group_ellipticity : LevEll := by
     have ha := a.isLt
     have hp : ¬ (i ≤ (eI k (i + r') (Fin.castAdd r' a)).val ∧
         (eI k (i + r') (Fin.castAdd r' a)).val < 2 * r' + k + 1 + i) := by
-      simp only [eI, Fin.val_mk, Fin.coe_castAdd]; omega
+      simp only [eI, Fin.val_mk, Fin.val_castAdd]; omega
     split_ifs with h
-    · rw [ιLev_apply_out g _ _ hp, if_neg]
+    · rw [ιLev_apply_out g _ _ hp, ite_eq_right]
       intro e
       have := congrArg Fin.val e
-      simp only [eI, Fin.val_mk, Fin.coe_castAdd] at this
+      simp only [eI, Fin.val_mk, Fin.val_castAdd] at this
       omega
     · rw [mulVec_lift, liftVec_apply_out _ _ hp]
   · rw [zero_add]
@@ -420,16 +420,16 @@ theorem level_group_ellipticity : LevEll := by
     intro b _
     have hb := b.isLt
     split_ifs with h1 h2 h3
-    · apply ιLev_apply_in <;> simp only [eI, Fin.val_mk, Fin.coe_natAdd] <;> omega
+    · apply ιLev_apply_in <;> simp only [eI, Fin.val_mk, Fin.val_natAdd] <;> omega
     · exfalso
-      simp only [Fin.coe_natAdd] at h1
+      simp only [Fin.val_natAdd] at h1
       omega
     · exfalso
-      simp only [Fin.coe_natAdd] at h1
+      simp only [Fin.val_natAdd] at h1
       omega
     · rw [mulVec_lift]
       apply liftVec_apply_in
-      simp only [eI, Fin.val_mk, Fin.coe_natAdd]
+      simp only [eI, Fin.val_mk, Fin.val_natAdd]
       omega
 
 end PI.QnLevBasicsW

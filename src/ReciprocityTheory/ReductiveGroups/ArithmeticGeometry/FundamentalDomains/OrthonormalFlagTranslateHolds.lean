@@ -70,7 +70,7 @@ lemma upper_of_bor {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) : (mat
 
 lemma bdiag_ne {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) (j : Fin r) : b τ j j ≠ 0 := by
   have h1 := (hb τ).1
-  rw [Matrix.det_of_upperTriangular (upper_of_bor X hb τ)] at h1
+  rw [det_of_isUpperTriangular (upper_of_bor X hb τ)] at h1
   exact (Finset.prod_ne_zero_iff.1 h1) j (Finset.mem_univ _)
 
 private theorem sum_eq_sum_castLE_of_eq_zero {n m : ℕ} (h : m ≤ n) (f : Fin n → ℂ)
@@ -110,7 +110,7 @@ lemma dmin_rmul (x : Frame X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (�
   set e : Fin i → Fin r := Fin.castLE (Nat.le_of_lt_succ i.isLt) with he
   have hlt : ∀ (a : Fin i) (j : Fin r), (i : ℕ) ≤ j.val → e a < j := by
     intro a j hj
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE]
+    rw [Fin.lt_def, he, Fin.val_castLE]
     have := a.isLt
     omega
   have hsub : (Bᵀ * A * B.map (starRingEnd ℂ)).submatrix e e =
@@ -129,12 +129,12 @@ lemma dmin_rmul (x : Frame X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (�
     intro j k hjk
     apply hB
     show e k < e j
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
+    rw [Fin.lt_def, he, Fin.val_castLE, Fin.val_castLE]
     exact hjk
   rw [hsub, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose,
     show ((B.submatrix e e).map (starRingEnd ℂ)).det = starRingEnd ℂ (B.submatrix e e).det from
       (RingHom.map_det _ _).symm,
-    Matrix.det_of_upperTriangular hBe]
+    det_of_isUpperTriangular hBe]
   rfl
 
 lemma ratio_rmul (x : Frame X.Ψ r) (hx : x ∈ X.dom) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) (k : Fin r) :

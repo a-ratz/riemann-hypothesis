@@ -59,7 +59,7 @@ theorem exists_fd_any : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     ∃ (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), ν.IsAddHaarMeasure ∧
       IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν := by
   intro F E _ _ _ _ _ nS nT
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
   have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
@@ -74,7 +74,7 @@ theorem exists_fd_any : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have : SecondCountableTopology (WOF F E nS nT) :=
     inferInstanceAs (SecondCountableTopology (Fin nT → Fin nS → AF F ⊗[F] E))
   have : T2Space (WOF F E nS nT) := inferInstanceAs (T2Space (Fin nT → Fin nS → AF F ⊗[F] E))
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
   have hdisc : DiscreteTopology (ratLF F E nS nT) := by
     obtain ⟨U, hU, hx⟩ := GlobalTheory.AdelicMatrixLattice.discrete_tensor (F := F) (E := E) (AF F)
       (GlobalTheory.AdeleDiscrete.exists_nhds_zero_principal_eq_zero F)
@@ -85,7 +85,7 @@ theorem exists_fd_any : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     rw [isOpen_singleton_iff_nhds_eq_pure]
     refine le_antisymm (Filter.le_pure_iff.2 ?_) (pure_le_nhds _)
     have hc : ContinuousAt (fun x : ratLF F E nS nT => (x : WOF F E nS nT)) 0 :=
-      continuous_subtype_val.continuousAt
+      continuous_subtypeVal.continuousAt
     refine Filter.mem_of_superset (hc.preimage_mem_nhds hN) ?_
     rintro ⟨_, y, rfl⟩ hy
     have hy0 : y = 0 := by

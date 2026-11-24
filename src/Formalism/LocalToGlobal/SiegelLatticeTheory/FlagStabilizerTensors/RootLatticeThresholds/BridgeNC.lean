@@ -191,9 +191,9 @@ theorem isXv_eq (v : Fin (2 * r + k + 1) → ℂ) (hv : IsXv v) :
   by_cases h : i.val < r
   · rw [Finset.sum_eq_single ⟨i.val, h⟩]
     · have e : i = Formalism.QuantumDeterminants.eI k r ⟨i.val, h⟩ := Fin.ext rfl
-      rw [if_pos e, ← e]
+      rw [ite_eq_left e, ← e]
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hh
       apply hb
       have hv' := congrArg Fin.val hh
@@ -204,7 +204,7 @@ theorem isXv_eq (v : Fin (2 * r + k + 1) → ℂ) (hv : IsXv v) :
     symm
     apply Finset.sum_eq_zero
     intro a _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hh
     apply h
     rw [hh]
@@ -296,7 +296,7 @@ theorem psiR_of {g : Matrix (Fin n) (Fin n) ℂ} (hg : NLike F g) (gg : ℕ) : F
     unfold Formalism.L2.SG.HidaSetting.rootCoord Formalism.L2.SG.HidaSetting.nxt
     split_ifs with h
     · rw [hg.he, F.fe]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e; have := congrArg Fin.val e; simp at this
     · rw [hg.hz, F.fz]
   unfold Formalism.L2.SG.HidaSetting.psiR

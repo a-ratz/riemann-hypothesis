@@ -132,7 +132,7 @@ theorem fg_of_int (L : Submodule (𝓞 E) (Fin n → E)) (h : ∀ x ∈ L, ∀ j
     intro x hx
     choose r hr using h x hx
     exact ⟨r, funext fun j => (hr j).symm⟩
-  haveI : IsNoetherian (𝓞 E) (LinearMap.range f) := isNoetherian_of_isNoetherianRing_of_finite _ _
+  have : IsNoetherian (𝓞 E) (LinearMap.range f) := isNoetherian_of_isNoetherianRing_of_finite _ _
   have := (isNoetherian_submodule.1 (inferInstance : IsNoetherian (𝓞 E) (LinearMap.range f))) L hle
   exact this
 
@@ -190,7 +190,7 @@ theorem sup_dual_eq_std (t c : 𝓞 E) (ht : t ≠ 0) (hc : (c : E) = star (t : 
         obtain ⟨d, rfl⟩ := hdiv hk
         obtain ⟨s, hs⟩ := star_int d
         refine ⟨s * r k, ?_⟩
-        simp only [w, hk, if_true, hq]
+        simp only [w, hk, ite_true, hq]
         rw [map_mul, hr k, show algebraMap (𝓞 E) E s = (s : E) from rfl, hs]
         push_cast
         rw [star_mul', ← hr k]
@@ -199,7 +199,7 @@ theorem sup_dual_eq_std (t c : 𝓞 E) (ht : t ≠ 0) (hc : (c : E) = star (t : 
     have hxe : x = x' + c • w := by
       funext j
       by_cases hj : j.1 + 1 = n
-      · simp only [x', w, hj, if_true, Pi.add_apply, Pi.smul_apply, zero_add]
+      · simp only [x', w, hj, ite_true, Pi.add_apply, Pi.smul_apply, zero_add]
         rw [Algebra.smul_def, show algebraMap (𝓞 E) E c = (c : E) from rfl, hc]
         field_simp
       · simp [x', w, hj]
@@ -745,7 +745,7 @@ theorem reads : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins
   have nQ : ∀ v, ¬ I.UnderQ I.mu0 v := fun v ⟨P, hP', _⟩ => by
     rw [I.twistPrimes_reference_tuple_eq_empty] at hP'
     simp at hP'
-  letI := StepZero.idxUnique (hI.idx_ok a)
+  let := StepZero.idxUnique (hI.idx_ok a)
   refine ⟨K0, ⟨fun _ => k (), ⟨?key, ?onto, ?lb, ?kstd, ?koff, ?kT, ?pt, ?lev, ?chr, ?stab⟩, ?off⟩, ?levs, ?ys⟩
   case key =>
     intro c c'
@@ -828,7 +828,7 @@ theorem GlobalTheory.TwU.AtTrue.charts_zero_good : ∀ {B : Base} {X : PreX B.to
     (fun i => (I.rec7 l Z).host.g_prime i) (fun i => ⟨_, Complex.isPrimitiveRoot_exp _ ((I.rec7 l Z).host.g_prime i).ne_zero⟩)
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
-  haveI : NeZero (B.R.N 0) := ⟨(B.R.N_pos 0).ne'⟩
+  have : NeZero (B.R.N 0) := ⟨(B.R.N_pos 0).ne'⟩
   obtain ⟨-, -, -, hc⟩ := TC.spaces_in_coordinates I hI hP l Z
   obtain ⟨hgr, -, -⟩ := hc 0 (Nat.zero_le _)
   have hB := basePi_of_ok hX hPr u

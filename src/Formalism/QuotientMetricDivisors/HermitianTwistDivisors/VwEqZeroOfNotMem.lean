@@ -70,7 +70,7 @@ theorem vw_eq_zero_of_not_mem (w : HeightOneSpectrum (𝓞 K)) (s : 𝓞 K) (hs 
   push_neg at hc
   unfold vw
   rw [show (s : K) = algebraMap (𝓞 K) K s from rfl, ← FractionalIdeal.coeIdeal_span_singleton,
-    FractionalIdeal.count_coe K w hJ, Nat.cast_eq_zero]
+    FractionalIdeal.count_coeIdeal K w hJ, Nat.cast_eq_zero]
   convert hc
 
 end ValuationZeroReduction

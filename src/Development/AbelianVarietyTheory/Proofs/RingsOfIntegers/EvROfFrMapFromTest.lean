@@ -85,8 +85,8 @@ theorem GlobalTheory.PlaceInt.exists_ext_intChart_unif : ∀ (E : Type) [Field E
       (letI := io.toAlgebra; letI := io'.toAlgebra; φ.toRingHom) = iT := ⟨_, rfl⟩
   have hio : io' = iT.comp io := by
     subst hiT
-    letI := io.toAlgebra
-    letI := io'.toAlgebra
+    let := io.toAlgebra
+    let := io'.toAlgebra
     exact RingHom.ext fun a => (φ.commutes a).symm
   have hv' : ∀ a : T.Fr, vV T'.V (iT a) = (e : ℤ) * vV T.V a := by
     intro a
@@ -358,16 +358,16 @@ theorem GlobalTheory.PlaceInt.short_value_on_cover : ∀ (E : Type) [Field E] [N
   have hN : 0 < N := hL.1.pos
   obtain ⟨T₂, i₂, e₂, z₂, C, ⟨he₂, hv₂, φ₂, hφ₂, hm₂⟩, hfin₂, hgood, hrat⟩ :=
     GlobalTheory.T.exists_finiteExt_uniformisedChart_rationalTorsion E H Dw d.l₂ d.Xo₂ d.c₂ hnab.1 T₁ io₁ z₁ hfin₁ (N ^ 2) (pow_pos hN 2)
-  letI a0 : Algebra c.F T.Fr := io.toAlgebra
-  letI a1 : Algebra c.F T₁.Fr := (i₁.comp io).toAlgebra
-  letI b1 : Algebra d.c₂.F T₁.Fr := io₁.toAlgebra
-  letI b2 : Algebra d.c₂.F T₂.Fr := (i₂.comp io₁).toAlgebra
+  let a0 : Algebra c.F T.Fr := io.toAlgebra
+  let a1 : Algebra c.F T₁.Fr := (i₁.comp io).toAlgebra
+  let b1 : Algebra d.c₂.F T₁.Fr := io₁.toAlgebra
+  let b2 : Algebra d.c₂.F T₂.Fr := (i₂.comp io₁).toAlgebra
   obtain ⟨z, tp, F, hz, hinj, htp, hF⟩ :=
     (GlobalTheory.RatData.exists_thetaVal_data E H Dw d.l₂ d.Xo₂ d.c₂ T₂.Fr z₂.1).2 n Λ N hU hL hrat
   obtain ⟨k, _, _, jk, -⟩ : ∃ (k : Type) (_ : Field k) (_ : IsAlgClosed k) (jk : T₂.Fr →+* k), True :=
     ⟨AlgebraicClosure T₂.Fr, inferInstance, inferInstance, algebraMap _ _, trivial⟩
-  letI ak : Algebra c.F k := ((jk.comp i₂).comp (i₁.comp io)).toAlgebra
-  letI bk : Algebra d.c₂.F k := (jk.comp (i₂.comp io₁)).toAlgebra
+  let ak : Algebra c.F k := ((jk.comp i₂).comp (i₁.comp io)).toAlgebra
+  let bk : Algebra d.c₂.F k := (jk.comp (i₂.comp io₁)).toAlgebra
   let ψ₁ : T₁.Fr →ₐ[c.F] k := { jk.comp i₂ with commutes' := fun _ => rfl }
   let ψ₂ : T₂.Fr →ₐ[d.c₂.F] k := { jk with commutes' := fun _ => rfl }
   obtain ⟨yk, hyk⟩ := GlobalTheory.FramedBaseChange.exists_frMap laws E H Dw l Xo c _ _ ψ₁ y₁.1

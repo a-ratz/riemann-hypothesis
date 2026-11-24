@@ -86,7 +86,7 @@ end GlobalTheory.EisM
 theorem GlobalTheory.EisM.cuspForm_of_CF : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (a : ℕ → ℂ), 1 ≤ k → 0 < L → N ∣ L →
     CF k L (ch ε) a → ∃ f : CuspForm (Gamma1 L) (k : ℤ), ⇑f = qs a := by
   intro k L N ε a hk hL hNL hcf
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨f, hf⟩ := _root_.GlobalTheory.EisM.modularForm_gammaOne_of_MF k L N ε a hL hNL hcf.1
   obtain ⟨C, hC⟩ := hcf.2
   have hall : ∀ γ : SL(2, ℤ), IsZeroAtImInfty ((f : ℍ → ℂ) ∣[(k : ℤ)] γ) := by

@@ -249,7 +249,7 @@ theorem norm_coords {E : Type} [Field E] [NumberField E] [StarRing E] (W : HSpac
 
 theorem emb_star (D : D7) (τ : D.host.E →+* ℂ) (a : D.host.E) :
     letI := D.host.cmStar; τ (star a) = star (τ a) := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   exact IsCMField.complexEmbedding_complexConj D.host.E τ a
 
 theorem fundamentalDomain_ne_zero {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
@@ -266,7 +266,7 @@ theorem unfoldAt_iff (D : D7) : letI := D.host.cmStar
       W.hT x x = (if s then 1 else -1) →
       (IndefiniteRowSideFullHecke.InfiniteCoordinateUnfold.UnfoldAt D W W' P Q P' Q' (if s then 1 else -1) x ↔
         IndefiniteRowSideFullHecke.LatticeTensorUnfolding.UnfoldAt D W W' P Q P' Q' s x) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro W W' P Q P' Q' s x hc hx
   have key : ∀ (μ : Measure (HA (AF D.host.F) D.sp.cm.sig W.gram))
       (𝓕 : Set (HA (AF D.host.F) D.sp.cm.sig W.gram)) (m : ℝ≥0∞), m ≠ 0 → m ≠ ⊤ →
@@ -318,10 +318,10 @@ theorem unfoldAt_iff (D : D7) : letI := D.host.cmStar
         Measurable (fun _ => 0) measurable_const _ hm hm'
   constructor
   · intro h μ μ' hμ hμ' 𝓕 𝓕' h1 h2 h3 h4
-    haveI := hμ'.1
+    have := hμ'.1
     exact (key μ 𝓕 _ (fundamentalDomain_ne_zero _ _ μ' h2) h4.ne).1 (h μ μ' 𝓕 𝓕' hμ hμ' h1 h2 h3 h4)
   · intro h μ μ' 𝓕 𝓕' hμ hμ' h1 h2 h3 h4
-    haveI := hμ'.1
+    have := hμ'.1
     exact (key μ 𝓕 _ (fundamentalDomain_ne_zero _ _ μ' h2) h4.ne).2 (h μ μ' hμ hμ' 𝓕 𝓕' h1 h2 h3 h4)
 
 theorem setting_iff (D : D7) : letI := D.host.cmStar
@@ -336,7 +336,7 @@ theorem setting_iff (D : D7) : letI := D.host.cmStar
           (if s then 1 else -1) x) ↔
     ∀ (W W' : HSpace D.host.E) (P Q P' Q' : ℕ) (s : Bool) (x : W.V) (ι : W'.V →ₗ[D.host.E] W.V),
       IndefiniteRowSideFullHecke.LatticeTensorUnfolding.HidaSetting W W' P Q P' Q' s x ι → R W W' ι → IndefiniteRowSideFullHecke.LatticeTensorUnfolding.UnfoldAt D W W' P Q P' Q' s x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro R
   constructor
   · rintro h W W' P Q P' Q' s x ι ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10⟩ hR

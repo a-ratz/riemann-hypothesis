@@ -94,8 +94,8 @@ private theorem clFin_key {Γ Ga Gp : Type} [Group Γ] [Group Ga] [Group Gp] (X 
       (∀ x ∈ S, ∀ i k, (((W.ξ x.2)⁻¹).val *ᵥ F i x) k ∈ L) → ∀ g i k, (((W.ξ g.2)⁻¹).val *ᵥ F i g) k ∈ L := by
   classical
   obtain ⟨s, hs⟩ := hU
-  haveI : Finite (X.I.Iw 0 ⧸ (X.I.I1 c).subgroupOf (X.I.Iw 0)) := Nat.finite_of_card_ne_zero (iwFin Gp X.I c).2
-  haveI := Fintype.ofFinite (X.I.Iw 0 ⧸ (X.I.I1 c).subgroupOf (X.I.Iw 0))
+  have : Finite (X.I.Iw 0 ⧸ (X.I.I1 c).subgroupOf (X.I.Iw 0)) := Nat.finite_of_card_ne_zero (iwFin Gp X.I c).2
+  have := Fintype.ofFinite (X.I.Iw 0 ⧸ (X.I.I1 c).subgroupOf (X.I.Iw 0))
   refine ⟨(s ×ˢ (Finset.univ : Finset (X.I.Iw 0 ⧸ (X.I.I1 c).subgroupOf (X.I.Iw 0)))).image
     (fun p => p.1 * (1, ((p.2.out : X.I.Iw 0) : Gp))), ?_⟩
   rintro F ⟨⟨hA, hU⟩, hN, hM, hT⟩ L hL g i
@@ -512,15 +512,15 @@ private theorem wtRep_inv_mulVec_zero_eq_chi_inv {O Ω : Type} [Field Ω] [CommR
     rw [← map_inv, _root_.mul_inv_rev, map_mul]; rfl
   rw [h1, Units.val_mul, ← Matrix.mulVec_mulVec]
   simp only [Matrix.mulVec, dotProduct]
-  simp only [W.torusAction, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  simp only [W.row_N _ (X.I.Nf.inv_mem hx), ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [W.torusAction, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+  simp only [W.row_N _ (X.I.Nf.inv_mem hx), ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   simp [map_inv]
 
 private theorem ctrl_UF_eq_U_ctrl {O Ω : Type} [Field Ω] [CommRing O] [IsLocalRing O] [Algebra O Ω]
     (W : WtRep X.I O Ω) {m : ℕ} (a : X.I.P) (F : Fin m → X.Fn Ω (W.d + 1)) :
     X.ctrl m W (X.UF m W a F) = X.U Ω m a (X.ctrl m W F) := by
-  haveI : ((X.I.Nconj a).subgroupOf X.I.N).FiniteIndex := ⟨X.I.fin_N a a.2⟩
-  haveI := Fintype.ofFinite (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N)
+  have : ((X.I.Nconj a).subgroupOf X.I.N).FiniteIndex := ⟨X.I.fin_N a a.2⟩
+  have := Fintype.ofFinite (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N)
   have key : ∀ q : X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N,
       X.ctrl m W (X.rpF Ω (W.d + 1) m ((Quotient.out q : X.I.N) * a) F) =
         (W.χ ⟨a, X.I.P_le a a.2⟩ : Ω) • X.rp Ω m ((Quotient.out q : X.I.N) * a) (X.ctrl m W F) := by
@@ -734,7 +734,7 @@ theorem absSpec {A O Ω : Type} [CommRing A] [IsCNL A] [CommRing O] [IsDomain O]
   have hsp : ∀ F f, Good F f → sp f = F := by
     intro F f hG
     have h : ∃ F, Good F f := ⟨F, hG⟩
-    simp only [sp, dif_pos h]
+    simp only [sp, dite_eq_left h]
     exact huniq _ _ _ h.choose_spec hG
   have hspec : ∀ K e, c ≤ e → ∀ f ∈ X.Ord τ θ (U K),
       sp f ∈ X.ClOrd W τ' (U K) e φ' ∧ X.ctrl m W (sp f) = X.mapFn (B := Ω) f := by

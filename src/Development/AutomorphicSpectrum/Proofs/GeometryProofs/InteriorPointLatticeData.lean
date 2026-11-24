@@ -238,8 +238,8 @@ theorem period_lattice_fibre_and_conj : ∀ (E : Type) [Field E] [NumberField E]
       finrank_eigSp_conj R.B (s.comp (algebraMap (𝓞 E) E))
     rw [h1, hrk, (FU.sig i).1, (FU.sig i).2]
     by_cases h : s (H.rt : E) = H.rt0
-    · rw [if_pos h, if_neg (fun h' => (conj_rt_iff H s).1 h' h)]
-    · rw [if_neg h, if_pos ((conj_rt_iff H s).2 h)]
+    · rw [ite_eq_left h, ite_eq_right (fun h' => (conj_rt_iff H s).1 h' h)]
+    · rw [ite_eq_right h, ite_eq_left ((conj_rt_iff H s).2 h)]
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.FamEx
 end -- clump:auto
@@ -298,7 +298,7 @@ variable {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ}
 theorem surjective_of_add_mem {g₀ : ℕ} (Λ : Submodule ℤ (Fin g₀ → ℂ)) (hd : DiscreteTopology Λ)
     (F : (Fin g → ℂ) →ₗ[ℂ] (Fin g₀ → ℂ)) (h : ∀ y, ∃ z, y - F z ∈ Λ) : Function.Surjective F := by
   have hc : (Λ : Set (Fin g₀ → ℂ)).Countable := by
-    haveI := hd
+    have := hd
     have : Countable Λ := countable_of_Lindelof_of_discrete
     exact Set.countable_coe_iff.1 this
   intro y
@@ -319,7 +319,7 @@ theorem exists_isDiff {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
   obtain ⟨u₀, hc⟩ := GlobalTheory.CompanionTheory.Ar.AVExp.exists_holUnif t'.G t'.PP.L g₀ hab hA hg
   obtain ⟨ht₁, ht₂⟩ := @GlobalTheory.TangentOrigin.tangent_bijection_of_values @GlobalTheory.valAt'_rules t'.G _ _ g₀ u₀ hc
   obtain ⟨e, hmon, -⟩ := grpPullback_iso hp m.cart
-  haveI := hmon
+  have := hmon
   have hol : IsHolTo (Set.univ : Set (Fin g → ℂ)) (fun w => (u.ex w ≫ e.hom).left) := by
     simpa only [Over.comp_left] using GlobalTheory.HolTorsion.isHolTo_comp (isHolTo_ex u) e.hom.left
   obtain ⟨F, hF, -⟩ := GlobalTheory.existsUnique_linear_lift_of_isHolTo t'.G hab _ g₀ g u₀ ht₁ ht₂
@@ -467,7 +467,7 @@ theorem exists_fibreLat_rank : Top.Given → ∀ (E : Type) [Field E] [NumberFie
 theorem exists_riemLat_of_interior : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (z : Sp ℂ ⟶ 𝔐.X), 1 ≤ D.p + D.q → 𝔐.Interior z → Top.Given → ∀ (A₀ : Type) (v : A₀ → (epsAt z ⟶ 𝔐.t.G)), (∀ i, IsTanAt 𝔐.t.G z (v i)) → ∃ (g : ℕ) (Λ : Type) (_ : AddCommGroup Λ) (_ : Module (𝓞 E) Λ) (R : RiemLat E g Λ) (x : A₀ → Fin g → ℂ), FibreLatVec 𝔐.t z R x v ∧ (∀ i j, HodgeIP 𝔐.t.G 𝔐.t.PP.L z (v i) (v j) (Real.pi * R.ip (x i) (x j))) ∧ ∀ σ, 𝔐.LabVal z id σ → ∀ s, Module.finrank ℂ (eigSp R.B (σ s)) = labelRk D s := by
   intro _ E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 z hD hz hG A₀ v hv
   obtain ⟨κ, p, g, Λ, i₁, i₂, R, hO, hF, hr⟩ := exists_fibreLat_rank hG E H D l Xo c Y S Ω K J y 𝔐 z hD hz
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   have hpol := HodgeMetric.polarisedAt_of_interior E H D l Xo c Y S Ω K J y 𝔐 z hz
   obtain ⟨x, hx⟩ := fibreLatVec_of_fibreLat hpol hF v hv
   refine ⟨g, Λ, i₁, i₂, R, x, hx, fun i j => hodgeInnerProduct_eq_pi_mul_riemannForm hx hv i j, fun σ hσ s => ?_⟩

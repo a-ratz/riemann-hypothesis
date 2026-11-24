@@ -271,7 +271,7 @@ theorem lattice_of_point (hLaw : GlobalTheory.ThetaExh.ParamLaws N A) (hO : Form
       (((ρ₀ σ : GL _ _) : Matrix (Fin R.r) (Fin R.r) (Qbar (N.l a))).map (A.iotaQC a).toRingHom).charpoly =
         galPol A (A.lpTw (A.locG π w) ((1 - (R.r : ℝ)) / 2))) :
     ∃ ρ : G H.E N.Om →* GL (Fin R.r) (N.O a), IsRepOfSig N A a [⟨R.r, π, 1⟩] ρ := by
-  haveI : IsGalois H.E N.Om := {}
+  have : IsGalois H.E N.Om := {}
   obtain ⟨ξ, hξc, hξ⟩ := hXi a
   have hιc : Continuous (iotaOQ N A a) := GlobalTheory.CoeffEmbedding.continuous_iotaOQ_of_data N A a
   have hcomp : iotaO N A a = (A.iotaQC a).toRingHom.comp (iotaOQ N A a) := rfl
@@ -352,8 +352,8 @@ theorem lattice_of_point (hLaw : GlobalTheory.ThetaExh.ParamLaws N A) (hO : Form
     exact GlobalTheory.Proof.SemisimpleRepresentationIntegralConjugate.isSSRep_conj (ρ := (Rq : G H.E N.Om →* GL (Fin R.nV) (Qbar (N.l a)))) Pm⁻¹
       (fun g => hPm g) hRqs
 
-  haveI : CharZero (Qbar (N.l a)) := (RingHom.charZero_iff (A.iotaQC a).toRingHom.injective).2 inferInstance
-  haveI : CharZero (Kf N a) := (RingHom.charZero_iff (A.iotaQ a).injective).2 inferInstance
+  have : CharZero (Qbar (N.l a)) := (RingHom.charZero_iff (A.iotaQC a).toRingHom.injective).2 inferInstance
+  have : CharZero (Kf N a) := (RingHom.charZero_iff (A.iotaQ a).injective).2 inferInstance
   have hkey' : ∀ g, (((rf g : GL _ _) : Matrix (Fin R.nV) (Fin R.nV) (N.O a))).charpoly.map (iotaOQ N A a) =
       ((R1 g : GL _ _) : Matrix (Fin R.r) (Fin R.r) (Qbar (N.l a))).charpoly *
         ∏ c : Fin R.t, (X - C (iotaOQ N A a ((N.chi a ((c : ℕ) + 1) g : (N.O a)ˣ) : N.O a))) := by

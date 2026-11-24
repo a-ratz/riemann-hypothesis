@@ -115,9 +115,9 @@ open Polynomial
 
 theorem sqrt_neg_moved_by_inertia : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (p : ℕ), p.Prime → p ≠ 2 → ¬ (p : ℤ) ∣ discr F → ∀ (δ : Ω), δ ^ 2 = -(p : Ω) → ∀ (v : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω), ((p : ℕ) : 𝓞 F) ∈ v.asIdeal → IsPlaceOver A v → ∃ s ∈ Ine (F := F) A, s δ ≠ δ := by
   intro F Ω _ _ _ _ _ p hp _ hd δ hδ v A hv hA
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   have KL := valuation_mul_ne_one hp hd hδ hv hA
   have hp0 : (p : Ω) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
   have hδ0 : δ ≠ 0 := by
@@ -157,11 +157,11 @@ theorem sqrt_neg_moved_by_inertia : ∀ (F Ω : Type) [Field F] [NumberField F] 
   obtain ⟨σ₀, hσ₀⟩ := (Normal.minpoly_eq_iff_mem_orbit Ω).1 (hmin'.symm.trans hmin)
   have hσ₀' : σ₀ δ = -δ := hσ₀
   let M : IntermediateField F Ω := IntermediateField.adjoin F (f.rootSet Ω)
-  haveI : Polynomial.IsSplittingField F M f :=
+  have : Polynomial.IsSplittingField F M f :=
     IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-  haveI : Normal F M := Normal.of_isSplittingField f
-  haveI : FiniteDimensional F M := Polynomial.IsSplittingField.finiteDimensional M f
-  haveI : IsGalois F M := ⟨⟩
+  have : Normal F M := Normal.of_isSplittingField f
+  have : FiniteDimensional F M := Polynomial.IsSplittingField.finiteDimensional M f
+  have : IsGalois F M := ⟨⟩
   let τ : M ≃ₐ[F] M := σ₀.restrictNormal M
   have hδM : δ ∈ M := IntermediateField.subset_adjoin _ _
     (by rw [Polynomial.mem_rootSet]; exact ⟨hmon.ne_zero, (hf_root δ).2 hδ⟩)

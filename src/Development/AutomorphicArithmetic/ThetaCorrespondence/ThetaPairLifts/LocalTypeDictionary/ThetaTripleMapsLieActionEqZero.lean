@@ -116,7 +116,7 @@ theorem exists_sum_pure {F E : Type} [Field F] [NumberField F] [Field E] [Number
       Ψ = ∑ i, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f i) (φ i) := by
   obtain ⟨m, c, g, hg⟩ := Submodule.mem_span_set'.1 hΨ
   have hg' := fun i => (g i).2
-  simp only [Set.mem_setOf_eq] at hg'
+  simp only [Set.mem_ofPred_eq] at hg'
   choose f φ hf hφ hφv hfe using hg'
   refine ⟨m, fun i => c i • f i, φ, fun i => ⟨Submodule.smul_mem _ _ (hf i), hφ i, hφv i⟩, ?_⟩
   rw [← hg]

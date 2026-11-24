@@ -72,7 +72,7 @@ theorem commensurated_of_isOpen_isCompact {G : Type} [Group G] [TopologicalSpace
   have : CompactSpace K := isCompact_iff_compactSpace.mp hc
   have hso : IsOpen (((K.map (MulAut.conj x).toMonoidHom).subgroupOf K : Subgroup K) : Set K) := by
     rw [Subgroup.coe_subgroupOf]
-    exact hmo.preimage continuous_subtype_val
+    exact hmo.preimage continuous_subtypeVal
   have : Finite (K ⧸ (K.map (MulAut.conj x).toMonoidHom).subgroupOf K) :=
     Subgroup.quotient_finite_of_isOpen _ hso
   exact Subgroup.index_ne_zero_of_finite

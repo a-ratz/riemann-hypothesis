@@ -115,7 +115,7 @@ private theorem mem_X_mul_unit_sigma_iff (B : _root_.GlobalTheory.UnitLemma.InvA
     (L : Submodule K.O B.A) :
     L ∈ B.X (x * (u * B.σ (u : B.A))) ↔ _root_.GlobalTheory.UnitLemma.mulLat K.O (u : B.A) L ∈ B.X x := by
   unfold _root_.GlobalTheory.UnitLemma.InvAlg.X
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine and_congr ?_ (and_congr ?_ ?_)
   · refine ⟨isLat_mulLat_unit u L, fun h => ?_⟩
     have := isLat_mulLat_unit (u⁻¹) _ h

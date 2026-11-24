@@ -306,20 +306,20 @@ variable {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [CommRing R] [Algebr
 private theorem res_k (x : ResidueField O) :
     haveI := (co_res O).1
     res O (ResidueField O) x = x := by
-  haveI := (co_res O).1
+  have := (co_res O).1
   obtain ⟨a, rfl⟩ := residue_surjective x
   exact (res O (ResidueField O)).commutes a
 
 private theorem res_dual (x : DualNumber (ResidueField O)) :
     haveI := (co_res O).2
     res O (DualNumber (ResidueField O)) x = x.fst := by
-  haveI := (co_res O).1
-  haveI := (co_res O).2
+  have := (co_res O).1
+  have := (co_res O).2
   rw [← res_map (TrivSqZeroExt.fstHom O (ResidueField O) (ResidueField O)), res_k]
   rfl
 
 private theorem fst_map (f : R →ₐ[O] DualNumber (ResidueField O)) (y : R) : (f y).fst = res O R y := by
-  haveI := (co_res O).2
+  have := (co_res O).2
   rw [← res_dual, res_map]
 
 private theorem snd_mul (f : R →ₐ[O] DualNumber (ResidueField O)) (y z : R) :
@@ -400,7 +400,7 @@ private theorem dual_basis {k H S : Type} [Field k] [AddCommGroup H] [Module k H
     ∃ (κ : Type) (a : κ → S), Function.Injective a ∧ Nat.card κ = Module.finrank k H ∧
       (∀ x, (∀ t, l (a t) x = 0) → x = 0) ∧ ∀ t, ∃ x, l (a t) x = 1 ∧ ∀ t', t' ≠ t → l (a t') x = 0 := by
   classical
-  haveI : FiniteDimensional k H :=
+  have : FiniteDimensional k H :=
     FiniteDimensional.of_injective (LinearMap.pi l) ((injective_iff_map_eq_zero _).2 fun x hx =>
       hl x fun s => congrFun hx s)
   obtain ⟨κ, a, ha, h1, h2⟩ := exists_linearIndependent' k l
@@ -465,7 +465,7 @@ private theorem abstract {S X : Type} (z : S → R) (hz : ∀ s, z s ∈ maximal
       · exact hx ⟨⟨s, hs⟩, e⟩
       · exact ha j s x e
   choose κ a a1 a2 a3 a4 using fun j => dual_basis (fun s : {s : S0 // wt s = j} => l j s.1) (h2 j)
-  haveI : Finite (Σ j, κ j) := by
+  have : Finite (Σ j, κ j) := by
     refine Finite.of_injective (fun t : Σ j, κ j => (a t.1 t.2).1) ?_
     rintro ⟨j, t⟩ ⟨j', t'⟩ e
     have e' : (a j t).1 = (a j' t').1 := e
@@ -582,11 +582,11 @@ private theorem mask_mul (j : X) (Y : Matrix ι ι k) {A : Matrix ι ι k} (hA :
   split_ifs with e
   · refine Finset.sum_congr rfl fun c _ => ?_
     by_cases n : w c = w b
-    · rw [if_pos (by rw [n, e])]
+    · rw [ite_eq_left (by rw [n, e])]
     · simp [hA c b n]
   · refine (Finset.sum_eq_zero fun c _ => ?_).symm
     by_cases n : w c = w b
-    · rw [if_neg (by rw [n]; exact e), zero_mul]
+    · rw [ite_eq_right (by rw [n]; exact e), zero_mul]
     · simp [hA c b n]
 
 omit [DecidableEq ι] in
@@ -597,11 +597,11 @@ private theorem mul_mask (j : X) (Y : Matrix ι ι k) {A : Matrix ι ι k} (hA :
   split_ifs with e
   · refine Finset.sum_congr rfl fun c _ => ?_
     by_cases n : w a = w c
-    · rw [if_pos (by rw [← n, e])]
+    · rw [ite_eq_left (by rw [← n, e])]
     · simp [hA a c n]
   · refine (Finset.sum_eq_zero fun c _ => ?_).symm
     by_cases n : w a = w c
-    · rw [if_neg (by rw [← n]; exact e), mul_zero]
+    · rw [ite_eq_right (by rw [← n]; exact e), mul_zero]
     · simp [hA a c n]
 
 variable {O : Type} [CommRing O] [Algebra O k] {w} (Φ : FormData O w)
@@ -624,19 +624,19 @@ private theorem mask_mem (j : X) {Y : Matrix ι ι k} (hY : Y ∈ Φ.g k) : mask
   · rw [← h]
     congr 1 <;> refine Finset.sum_congr rfl fun c _ => ?_
     · by_cases n : w c + w b = Φ.c
-      · rw [if_pos (by rw [← e, ← n]; abel)]
+      · rw [ite_eq_left (by rw [← e, ← n]; abel)]
       · simp [hJ _ _ n]
     · by_cases n : w a + w c = Φ.c
-      · rw [if_pos (by rw [← e, ← n]; abel)]
+      · rw [ite_eq_left (by rw [← e, ← n]; abel)]
       · simp [hJ _ _ n]
   · rw [Finset.sum_eq_zero, Finset.sum_eq_zero, add_zero]
     · intro c _
       by_cases n : w a + w c = Φ.c
-      · rw [if_neg (fun m => e (by rw [← m, ← n]; abel)), mul_zero]
+      · rw [ite_eq_right (fun m => e (by rw [← m, ← n]; abel)), mul_zero]
       · simp [hJ _ _ n]
     · intro c _
       by_cases n : w c + w b = Φ.c
-      · rw [if_neg (fun m => e (by rw [← m, ← n]; abel)), zero_mul]
+      · rw [ite_eq_right (fun m => e (by rw [← m, ← n]; abel)), zero_mul]
       · simp [hJ _ _ n]
 
 end Mat
@@ -818,8 +818,8 @@ theorem UpperTheory.V.Alg.framed_tangent :
         (∀ c : τ → O, ∑ t, c t • z t ∈ (maximalIdeal B).map i ⊔ maximalIdeal R ^ 2 → ∀ t, c t ∈ maximalIdeal O) ∧
         ∀ j, Nat.card {t // wt t = j} = Module.finrank (ResidueField O) (F.H1c (FormData.adRep hbar j)) := by
   intro O _ _ _ _ ι X _ _ _ w Φ _ Γ _ _ _ rbar r0 hbar _ F L _ hL h0 B _ _ _ ρ _ R _ _ _ i r α ⟨hF, hU⟩
-  haveI := (co_res O).1
-  haveI := (co_res O).2
+  have := (co_res O).1
+  have := (co_res O).2
   let z : (Γ × ι × ι) ⊕ (F.T × ι × ι) → R :=
     Sum.elim (fun p => r.hom p.1 p.2.1 p.2.2 - algebraMap O R (r0.hom p.1 p.2.1 p.2.2)) fun p => (α p.1 - 1) p.2.1 p.2.2
   let wt : (Γ × ι × ι) ⊕ (F.T × ι × ι) → X := Sum.elim (fun p => w p.2.1 - w p.2.2) fun p => w p.2.1 - w p.2.2
@@ -881,7 +881,7 @@ theorem UpperTheory.V.Alg.framed_tangent :
   · rintro j (⟨s, a, b⟩ | ⟨v, a, b⟩) x e
     · show ((x.1.1 s).1 * rbar s) a b = 0
       rw [← mask_fix Φ (x.1.1 s).2, ← mask_mul w j _ (hbar.2.2 s)]
-      exact if_neg e
+      exact ite_eq_right e
     · exact neg_eq_zero.2 ((x.1.2 v).2.2 a b e)
   · intro j x hx
     refine Subtype.ext (Prod.ext (funext fun s => Subtype.ext ?_) (funext fun v => Subtype.ext ?_))
@@ -933,10 +933,10 @@ theorem UpperTheory.V.Alg.framed_tangent :
     · rintro (⟨s, a, b⟩ | ⟨v, a, b⟩) e
       · show (mask w j (((r.map f).hom s).map snd * rbar s⁻¹) * rbar s) a b = _
         rw [z1, ← mask_mul w j _ (hbar.2.2 s), mul_assoc, inv1, mul_one]
-        exact if_pos e
+        exact ite_eq_left e
       · show -(mask w j _ a b) = _
         rw [z2, neg_eq_iff_eq_neg]
-        exact if_pos e
+        exact ite_eq_left e
   · intro f hf hz y
     let f0 : R →ₐ[O] DualNumber (ResidueField O) := (inlAlgHom O (ResidueField O) (ResidueField O)).comp (res O R)
     have key : ∀ y, (f y).snd = 0 → f0 y = f y := fun y hy => by
@@ -975,8 +975,8 @@ private theorem quot_univ {A K : Type} [CommRing A] [Algebra O A] [IsCO O A] [Co
   have hne : I ≠ ⊤ := fun e => by
     have := h0 1 (e ▸ Submodule.mem_top)
     simp at this
-  haveI := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsCO O (A ⧸ I) := co_quot O A _ (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
+  have := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsCO O (A ⧸ I) := co_quot O A _ (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
   refine ⟨A ⧸ I, inferInstance, inferInstance, inferInstance, Ideal.Quotient.mkₐ O I,
     fun x hx => Ideal.Quotient.eq_zero_iff_mem.2 hx, fun R' _ _ f hf => ⟨Ideal.Quotient.liftₐ I f hf, rfl, fun g hg => ?_⟩⟩
   refine Ideal.Quotient.algHom_ext _ ?_
@@ -988,7 +988,7 @@ private theorem pres [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O]
     ∃ (n : ℕ) (π : MvPowerSeries (Fin n) O →ₐ[O] A), Function.Surjective π := by
   obtain ⟨n, a, ha⟩ := Submodule.fg_iff_exists_fin_generating_family.1 (IsNoetherian.noetherian (maximalIdeal A))
   have ham : ∀ s, a s ∈ maximalIdeal A := fun s => ha ▸ Submodule.subset_span ⟨s, rfl⟩
-  haveI := co_mvps O O (Fin n)
+  have := co_mvps O O (Fin n)
   obtain ⟨F, ⟨-, hF⟩, -⟩ := co_ev O O A (Fin n) (Algebra.ofId O A) a ham
   refine ⟨n, F, co_surj O _ A F (le_trans ?_ le_sup_left)⟩
   rw [← ha, Submodule.span_le]
@@ -1014,9 +1014,9 @@ private theorem coprod2 [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O]
       ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (j' : A →ₐ[O] R') (i' : B →ₐ[O] R'),
         ∃! f : S →ₐ[O] R', f.comp j = j' ∧ f.comp i = i' := by
   obtain ⟨n, π, hπ⟩ := pres (O := O) A
-  haveI := co_mvps O O (Fin n)
-  haveI := co_mvps O B (Fin n)
-  haveI := (co_res O).1
+  have := co_mvps O O (Fin n)
+  have := co_mvps O B (Fin n)
+  have := (co_res O).1
   obtain ⟨e, ⟨-, he⟩, -⟩ := co_ev O O (MvPowerSeries (Fin n) B) (Fin n) (Algebra.ofId O _) X X_mem
   have ext0 : ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (F G : MvPowerSeries (Fin n) O →ₐ[O] R'),
       (∀ s, F (X s) = G (X s)) → F = G := fun R' _ _ _ F G h =>
@@ -1168,7 +1168,7 @@ private theorem all_univ {R0 : Type} [CommRing R0] [Algebra O R0] [IsCO O R0] (u
         (α' : T → Matrix ι ι R'), (∀ v, (α' v).map (res O R') = 1) →
         ∃! f : A →ₐ[O] R', f.comp i = i' ∧ r.map f = r' ∧ ∀ v, (α v).map f = α' v := by
   obtain ⟨S, _, _, _, j, i, hS⟩ := coprod2 (O := O) R0 B
-  haveI := co_mvps O S (T × ι × ι)
+  have := co_mvps O S (T × ι × ι)
   let Y : T → Matrix ι ι (MvPowerSeries (T × ι × ι) S) := fun v => Matrix.of fun a b => X (v, a, b)
   have hY : ∀ (R' : Type) [CommRing R'] [Algebra O R'] (f : MvPowerSeries (T × ι × ι) S →ₐ[O] R') v,
       (1 + Y v).map f = 1 + Matrix.of fun a b => f (X (v, a, b)) := fun R' _ _ f v => by
@@ -1202,7 +1202,7 @@ private theorem framed_of_univ {X : Type} [AddCommGroup X] {w : ι → X} (Φ : 
     (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (ρ : ∀ v, Lift O (rbar.comp (F.φ v)) B) :
     ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (i : B →ₐ[O] R) (r : Lift O rbar R)
       (α : F.T → Matrix ι ι R), IsUnivFramed Φ r0.hom F L ρ i r α := by
-  haveI := (co_res O).1
+  have := (co_res O).1
   obtain ⟨A, _, _, _, i, r, α, hα, hA⟩ := all_univ u hu F.T B
   have c1 : Cut O A fun R' _ _ _ f => Φ.InH r0.hom R' (r.map f) ∧ (∀ v, Φ.HH ((α v).map f)) ∧ (α F.v0).map f = 1 ∧
       ∀ v s, (r.map f).hom (F.φ v s) * (α v).map f = (α v).map f * ((ρ v).hom s).map (f.comp i) := by
@@ -1393,7 +1393,7 @@ theorem UpperTheory.V.Alg.rel_pres :
     · exact AlgHom.commutes _ x
   have hcomm' : ∀ x, W.π (MvPowerSeries.rename (fun s => e (.inl s)) x) = i (WB.π x) :=
     fun x => AlgHom.congr_fun hcomm x
-  haveI : IsCO O (MvPowerSeries W.σ O) := co_mvps O O W.σ
+  have : IsCO O (MvPowerSeries W.σ O) := co_mvps O O W.σ
   obtain ⟨n, g, c, hg, hK⟩ := ker_gen O X W.σ W.wt _ W.homog
   have hle : (RingHom.ker WB.π).map (MvPowerSeries.rename fun s => e (.inl s)) ≤ RingHom.ker W.π := by
     rw [Ideal.map_le_iff_le_comap]
@@ -1426,13 +1426,13 @@ private theorem lp_wcomp_mul {O σ X : Type} [CommRing O] [AddCommGroup X] (wt :
   · refine Finset.sum_congr rfl fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = c
-    · rw [coeff_wcomp, if_pos]
+    · rw [coeff_wcomp, ite_eq_left]
       rw [← h, ← hp', map_add (f := _), h2, add_sub_cancel_right]
     · rw [ha _ h2, mul_zero, mul_zero]
   · refine (Finset.sum_eq_zero fun p hp => ?_).symm
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = c
-    · rw [coeff_wcomp, if_neg, zero_mul]
+    · rw [coeff_wcomp, ite_eq_right, zero_mul]
       intro h1
       exact h (by rw [← hp', map_add (f := _), h1, h2, sub_add_cancel])
     · rw [ha _ h2, mul_zero]
@@ -1515,7 +1515,7 @@ private theorem lp_pad {X κ : Type} [Fintype κ] (wf : κ → X) (n : X → ℕ
     rw [Nat.card_congr e, Nat.card_eq_fintype_card (α := Fin _), Fintype.card_fin]
     have := h j
     omega
-  · haveI : IsEmpty {x : (Σ j : S, Fin (n j - Nat.card {u // wf u = j})) // (x.1 : X) = j} :=
+  · have : IsEmpty {x : (Σ j : S, Fin (n j - Nat.card {u // wf u = j})) // (x.1 : X) = j} :=
       ⟨fun x => hj (x.2 ▸ x.1.1.2)⟩
     have := h j
     rw [hS j hj] at this ⊢
@@ -1548,8 +1548,8 @@ private theorem lp_detect {O B A R κ : Type} [CommRing O] [IsLocalRing O] [Comm
   let p' : A →ₐ[O] A ⧸ I := Ideal.Quotient.mkₐ O I
   have hp' : Function.Surjective p' := Ideal.Quotient.mk_surjective
   have hpp : ∀ x, p'' (p' x) = p x := fun x => rfl
-  haveI : Nontrivial (A ⧸ I) := p''.toRingHom.domain_nontrivial
-  haveI : IsCO O (A ⧸ I) := co_quot O A _ p' hp'
+  have : Nontrivial (A ⧸ I) := p''.toRingHom.domain_nontrivial
+  have : IsCO O (A ⧸ I) := co_quot O A _ p' hp'
   obtain ⟨s, hs1, hs2⟩ := H (A ⧸ I) p' p'' (p' (d • ε u0)) hp' (AlgHom.ext hpp)
     (fun x hx => by
       obtain ⟨x, rfl⟩ := hp' x
@@ -1592,13 +1592,13 @@ private theorem lp_detect {O B A R κ : Type} [CommRing O] [IsLocalRing O] [Comm
     rw [sub_mul, sub_eq_zero] at this
     rw [this, Algebra.smul_def]
   have h7 := hind (fun u => b u - if u = u0 then 1 + ∑ v, b v * (c v * d) else 0) (by
-    simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
       add_smul, one_smul, Finset.sum_smul]
     simp only [δ, smul_sub, Finset.sum_sub_distrib, smul_smul] at h6
     linear_combination h6)
   have h8 : ∑ u, (b u - if u = u0 then 1 + ∑ v, b v * (c v * d) else 0) * (c u * d) ∈ maximalIdeal O :=
     Ideal.sum_mem _ fun u _ => Ideal.mul_mem_right _ _ (h7 u)
-  simp only [sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+  simp only [sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     hd, mul_one] at h8
   rw [sub_add_cancel_right, neg_mem_iff] at h8
   exact (maximalIdeal.isMaximal O).ne_top ((Ideal.eq_top_iff_one _).2 h8)
@@ -1611,7 +1611,7 @@ private theorem lp_ker {O B A R σ σB τ : Type} [CommRing O] [IsLocalRing O] [
     (h2 : ∀ c : τ → O, ∑ t, c t • p (π (X (e (.inr t)))) ∈ (maximalIdeal B).map (p.comp i) ⊔ maximalIdeal R ^ 2 →
       ∀ t, c t ∈ maximalIdeal O) :
     RingHom.ker p ≤ (maximalIdeal B).map i ⊔ maximalIdeal A ^ 2 := by
-  haveI : IsCO O (MvPowerSeries σ O) := co_mvps O O σ
+  have : IsCO O (MvPowerSeries σ O) := co_mvps O O σ
   intro x hx
   obtain ⟨g, rfl⟩ := hπ x
   have hx' : p (π g) = 0 := hx
@@ -1654,9 +1654,9 @@ private theorem lp_ob_zero {O ι X Γ : Type} [CommRing O] [IsLocalRing O] [Fint
     {w : ι → X} (Φ : FormData O w) [Group Γ] [TopologicalSpace Γ] {rbar : Γ →* Matrix ι ι (ResidueField O)}
     (hbar : Φ.Normalises rbar) (F : Frame Γ) (j : X) (hj : ∀ a b, w a - w b ≠ j) :
     Module.finrank (ResidueField O) (F.Ob (FormData.adRep hbar j)) = 0 := by
-  haveI : Subsingleton (Φ.gw (ResidueField O) j) :=
+  have : Subsingleton (Φ.gw (ResidueField O) j) :=
     ⟨fun x y => Subtype.ext (Matrix.ext fun a b => (x.2.2 a b (hj a b)).trans (y.2.2 a b (hj a b)).symm)⟩
-  haveI : Subsingleton (F.Ob (FormData.adRep hbar j)) := (Submodule.mkQ_surjective _).subsingleton
+  have : Subsingleton (F.Ob (FormData.adRep hbar j)) := (Submodule.mkQ_surjective _).subsingleton
   exact Module.finrank_zero_of_subsingleton
 
 theorem UpperTheory.V.Alg.lemmaP :
@@ -1697,8 +1697,8 @@ theorem UpperTheory.V.Alg.lemmaP :
   obtain ⟨W, κ, _, e, f, wf, hrel, p1, p2, p3⟩ := rel_pres O X B R WB W₀ i hWB g1 g2 τ z wt hz t2
   obtain ⟨q1, q2, q3, q4⟩ := hrel
   have bound : ∀ j, Nat.card {u // wf u = j} ≤ Module.finrank (ResidueField O) (F.Ob (FormData.adRep hbar j)) := by
-    haveI : IsCO O (MvPowerSeries W.σ O) := co_mvps O O _
-    haveI : IsCO O (MvPowerSeries WB.σ O) := co_mvps O O _
+    have : IsCO O (MvPowerSeries W.σ O) := co_mvps O O _
+    have : IsCO O (MvPowerSeries WB.σ O) := co_mvps O O _
     have hX : ∀ (σ : Type) (s : σ), (MvPowerSeries.X s : MvPowerSeries σ O) ∈ maximalIdeal _ := fun σ s => by
       rw [lp_mem_max]; simp
     set ren : MvPowerSeries WB.σ O →ₐ[O] MvPowerSeries W.σ O := MvPowerSeries.rename fun s => e (.inl s) with hren
@@ -1724,8 +1724,8 @@ theorem UpperTheory.V.Alg.lemmaP :
     have hπ0 : ∀ x, π x = 0 ↔ x ∈ N := fun x => Ideal.Quotient.eq_zero_iff_mem
     let p : (MvPowerSeries W.σ O ⧸ N) →ₐ[O] R := Ideal.Quotient.liftₐ N W.π hNK
     have hpπ : ∀ x, p (π x) = W.π x := fun x => rfl
-    haveI : Nontrivial (MvPowerSeries W.σ O ⧸ N) := p.toRingHom.domain_nontrivial
-    haveI : IsCO O (MvPowerSeries W.σ O ⧸ N) := co_quot O _ _ π hπ
+    have : Nontrivial (MvPowerSeries W.σ O ⧸ N) := p.toRingHom.domain_nontrivial
+    have : IsCO O (MvPowerSeries W.σ O ⧸ N) := co_quot O _ _ π hπ
     let WA : WPres O X (MvPowerSeries W.σ O ⧸ N) :=
       { σ := W.σ, wt := W.wt, π := π, surj := hπ
         homog := fun x hx j => (hπ0 _).2 (hNh x ((hπ0 _).1 hx) j) }
@@ -1785,7 +1785,7 @@ theorem UpperTheory.V.Alg.lemmaP :
         exact ⟨_, hrp _ _ hy, rfl⟩)
       (fun s a b => hpart _ _ (g3 s a b)) (fun v a b => hpart _ _ (g4 v a b))
     intro j
-    haveI := hfin j
+    have := hfin j
     have hli : LinearIndependent (ResidueField O) (o j) := by
       rw [Fintype.linearIndependent_iff]
       intro cb hcb

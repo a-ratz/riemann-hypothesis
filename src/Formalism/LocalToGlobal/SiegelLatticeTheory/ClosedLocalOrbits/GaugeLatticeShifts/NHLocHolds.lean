@@ -67,10 +67,10 @@ theorem NHLoc_holds : JacobianCoordinates.NHLoc := by
   have hNH := hN
   obtain ⟨⟨hσN, hneN, hcN, hinvN⟩, hfinN⟩ := hN
   obtain ⟨⟨hσH, hneH, hcH, hinvH⟩, hfinH⟩ := hH
-  haveI := hσN
-  haveI := hσH
-  haveI := hfinN
-  haveI := hfinH
+  have := hσN
+  have := hσH
+  have := hfinN
+  have := hfinH
   have hmult : Measurable (fun q : UJ ε × UJ ε => q.1 * q.2) := measurable_fst.mul measurable_snd
   set NH : Set (UJ ε × UJ ε) := (NG ε e z : Set (UJ ε)) ×ˢ (HG ε e p z : Set (UJ ε)) with hNHdef
   have hPout : (μN.prod μH) NHᶜ = 0 := by
@@ -97,11 +97,11 @@ theorem NHLoc_holds : JacobianCoordinates.NHLoc := by
     rw [hPout, add_zero, Measure.prod_prod]
     exact ENNReal.mul_lt_top (hK.mul hHc.inv).measure_lt_top hHfin
   refine ⟨⟨?_, ?_, ?_, fun s hs => ?_⟩, hfin⟩
-  · haveI := hfin
+  · have := hfin
     infer_instance
   · intro h0
     have := congrArg (fun m : Measure (UJ ε) => m Set.univ) h0
-    simp only [Measure.map_apply hmult MeasurableSet.univ, Set.preimage_univ, Measure.coe_zero,
+    simp only [Measure.map_apply hmult MeasurableSet.univ, Set.preimage_univ, FunLike.coe_zero,
       Pi.zero_apply, ← Set.univ_prod_univ, Measure.prod_prod] at this
     rcases mul_eq_zero.1 this with h1 | h1
     · exact hneN (Measure.measure_univ_eq_zero.1 h1)
@@ -119,8 +119,8 @@ theorem NHLoc_holds : JacobianCoordinates.NHLoc := by
     have hg : μH.map (fun x => h0 * x) = μH := hinvH h0 hh0
     have hfm : Measurable (fun x => m0 * conjH h0 x) := (conjH h0).continuous.measurable.const_mul m0
     have hgm : Measurable (fun x : UJ ε => h0 * x) := measurable_const_mul h0
-    haveI : SFinite (μN.map (fun x => m0 * conjH h0 x)) := by rw [hf]; infer_instance
-    haveI : SFinite (μH.map (fun x => h0 * x)) := by rw [hg]; infer_instance
+    have : SFinite (μN.map (fun x => m0 * conjH h0 x)) := by rw [hf]; infer_instance
+    have : SFinite (μH.map (fun x => h0 * x)) := by rw [hg]; infer_instance
     have hfun : (fun x => m0 * h0 * x) ∘ (fun q : UJ ε × UJ ε => q.1 * q.2) =
         (fun q : UJ ε × UJ ε => q.1 * q.2) ∘ Prod.map (fun x => m0 * conjH h0 x) (fun x => h0 * x) := by
       funext q

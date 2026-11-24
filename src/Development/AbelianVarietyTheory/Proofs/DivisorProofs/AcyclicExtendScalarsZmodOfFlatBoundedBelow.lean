@@ -400,11 +400,11 @@ theorem flat_loc : ∀ (Q q e : ℕ) [NeZero Q], q * e = Q → ∀ (M : Shv (ZMo
     rw [← map_nsmul, hx, map_zero]
   refine loc_mono V _ _ (hinj V (e • p) hep) fun W k hk => ?_
   by_cases hW : Nonempty W
-  · haveI := hflat W hW
+  · have := hflat W hW
     obtain ⟨p', hp'⟩ := flat_dvd Q q e hQ _ ((P.map k.op).hom p) (by rw [← map_nsmul]; exact hk)
     refine ⟨(φ.app (op W)).hom p', ?_⟩
     rw [← hres, ← hp, ← hnat, hp', map_nsmul]
-  · haveI : IsEmpty W := not_nonempty_iff.mp hW
+  · have : IsEmpty W := not_nonempty_iff.mp hW
     refine ⟨0, ?_⟩
     rw [smul_zero]
     exact (sec_ext_glue (ZMod Q) M W).1 _ _ (loc_of_isEmpty W _)

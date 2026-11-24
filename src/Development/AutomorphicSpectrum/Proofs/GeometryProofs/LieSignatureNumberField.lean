@@ -119,8 +119,8 @@ theorem exists_lift {A B : CommRingCat.{0}} (ψ : A ⟶ B) [IsDomain A] [Valuati
     (hf : letI := ψ.hom.toAlgebra; IsFractionRing A B) {Y S : Scheme.{0}} (sY : Y ⟶ S) [IsProper sY]
     (φ : Spec B ⟶ Y) (t : Spec A ⟶ S) (h : φ ≫ sY = Spec.map ψ ≫ t) :
     ∃ m : Spec A ⟶ Y, Spec.map ψ ≫ m = φ ∧ m ≫ sY = t := by
-  letI : Algebra A B := ψ.hom.toAlgebra
-  letI : Field B := hB.toField
+  let : Algebra A B := ψ.hom.toAlgebra
+  let : Field B := hB.toField
   have hv : ValuativeCriterion.Existence sY :=
     (IsProper.eq_valuativeCriterion ▸ (inferInstance : IsProper sY) :
       (ValuativeCriterion ⊓ @QuasiCompact ⊓ @QuasiSeparated ⊓ @LocallyOfFiniteType) sY).1.1.1.existence
@@ -138,8 +138,8 @@ theorem extend_functionField {X Y S : Scheme.{0}} [IsIntegral X] [Y.IsSeparated]
   have hlift : ∀ x : X, ∃ m : Spec (X.presheaf.stalk x) ⟶ Y,
       Spec.map (X.presheaf.stalkSpecializes (hs x)) ≫ m = φ ∧ m ≫ sY = X.fromSpecStalk x ≫ sX := by
     intro x
-    haveI := hv x
-    letI : Algebra (X.presheaf.stalk x) X.functionField :=
+    have := hv x
+    let : Algebra (X.presheaf.stalk x) X.functionField :=
       (X.presheaf.stalkSpecializes (hs x)).hom.toAlgebra
     have hfr : IsFractionRing (X.presheaf.stalk x) X.functionField := by
       convert (inferInstance : IsFractionRing (X.presheaf.stalk x) X.functionField) using 1
@@ -199,18 +199,18 @@ private theorem valuationRing_localization_atPrime_dedekind (R : Type) [CommRing
       unfold IsFractionRing
       convert h1 using 1
       exact Ideal.primeCompl_bot.symm
-    letI : Field (Localization.AtPrime (⊥ : Ideal R)) := IsFractionRing.toField R
+    let : Field (Localization.AtPrime (⊥ : Ideal R)) := IsFractionRing.toField R
     rw [ValuationRing.iff_dvd_total]
     refine ⟨fun a b => ?_⟩
     by_cases ha : a = 0
     · right; rw [ha]; exact dvd_zero b
     · left; exact ⟨a⁻¹ * b, by rw [← _root_.mul_assoc, mul_inv_cancel₀ ha, _root_.one_mul]⟩
-  · haveI := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R h0 (Localization.AtPrime p)
+  · have := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R h0 (Localization.AtPrime p)
     infer_instance
 
 theorem stalk_valuationRing (R : Type) [CommRing R] [IsDedekindDomain R] (x : Sp R) :
     ValuationRing ((Sp R).presheaf.stalk x) := by
-  haveI : (PrimeSpectrum.asIdeal (R := R) x).IsPrime := PrimeSpectrum.isPrime (R := R) x
+  have : (PrimeSpectrum.asIdeal (R := R) x).IsPrime := PrimeSpectrum.isPrime (R := R) x
   have e := (Spec.stalkIso (CommRingCat.of R) x).commRingCatIsoToRingEquiv
   have hL := valuationRing_localization_atPrime_dedekind R (PrimeSpectrum.asIdeal (R := R) x)
   rw [ValuationRing.iff_dvd_total] at hL ⊢
@@ -222,10 +222,10 @@ theorem extend_dedekind (R K : Type) [CommRing R] [IsDedekindDomain R] [Field K]
     {Y S : Scheme.{0}} [Y.IsSeparated] (sX : Sp R ⟶ S) (sY : Y ⟶ S) [IsProper sY] (y : Sp K ⟶ Y)
     (h : y ≫ sY = spMap (algebraMap R K) ≫ sX) : ∃ g : Sp R ⟶ Y, spMap (algebraMap R K) ≫ g = y := by
   classical
-  haveI : IsDomain (CommRingCat.of R) := inferInstanceAs (IsDomain R)
-  letI : Algebra (CommRingCat.of R) (Spec (CommRingCat.of R)).functionField :=
+  have : IsDomain (CommRingCat.of R) := inferInstanceAs (IsDomain R)
+  let : Algebra (CommRingCat.of R) (Spec (CommRingCat.of R)).functionField :=
     instAlgebraCarrierFunctionFieldSpec (CommRingCat.of R)
-  haveI : IsFractionRing (CommRingCat.of R) (Spec (CommRingCat.of R)).functionField :=
+  have : IsFractionRing (CommRingCat.of R) (Spec (CommRingCat.of R)).functionField :=
     functionField_isFractionRing_of_affine (CommRingCat.of R)
   let eK : (Spec (CommRingCat.of R)).functionField ≃ₐ[CommRingCat.of R] K :=
     IsLocalization.algEquiv (nonZeroDivisors (CommRingCat.of R)) _ K
@@ -277,11 +277,11 @@ end PositivityTheory.Xgn.IntegralPointExtension
 theorem PositivityTheory.Xgn.integral_point_extends_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (_ : FiniteDimensional ℚ c.F) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (F : Type) [Field F] [NumberField F] (f : c.F →+* F) (y : Sp F ⟶ Xo.XF c), y ≫ pullback.snd _ _ = spMap f → ∃ yt : Sp (𝓞 F) ⟶ Y.X, spMap (algebraMap (𝓞 F) F) ≫ yt = y ≫ Y.j := by
   intro E _ _ _ H D l Xo c _ Y F _ _ f y hy
   obtain ⟨N, i, hi, hs⟩ := Y.proj
-  haveI : IsProper Y.s := by
+  have : IsProper Y.s := by
     rw [← hs]
-    haveI := isProper_str (𝓞 c.F) N
+    have := isProper_str (𝓞 c.F) N
     infer_instance
-  haveI : Y.X.IsSeparated := by
+  have : Y.X.IsSeparated := by
     refine ⟨?_⟩
     have e : terminal.from Y.X = Y.s ≫ terminal.from _ := terminal.hom_ext _ _
     rw [e]
@@ -529,10 +529,10 @@ namespace PositivityTheory.Xgn.ModelSectionsTransport
 
 theorem exists_common {F K L : Type} [Field F] [Field K] [Field L] (g : F →+* K) (h : F →+* L) :
     ∃ (Ω : Type) (_ : Field Ω) (_ : IsAlgClosed Ω) (i : K →+* Ω) (j : L →+* Ω), i.comp g = j.comp h := by
-  letI := g.toAlgebra
-  letI := h.toAlgebra
+  let := g.toAlgebra
+  let := h.toAlgebra
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[F] L)
-  letI : Field ((K ⊗[F] L) ⧸ m) := Ideal.Quotient.field m
+  let : Field ((K ⊗[F] L) ⧸ m) := Ideal.Quotient.field m
   let q : K ⊗[F] L →+* AlgebraicClosure ((K ⊗[F] L) ⧸ m) :=
     (algebraMap ((K ⊗[F] L) ⧸ m) (AlgebraicClosure ((K ⊗[F] L) ⧸ m))).comp (Ideal.Quotient.mk m)
   refine ⟨AlgebraicClosure ((K ⊗[F] L) ⧸ m), inferInstance, inferInstance,
@@ -551,8 +551,8 @@ theorem exists_transport {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
       (fun n g g' c => Out.WeilIs t.G t.PP.L n g g' (unitOn c)),
       ∀ n, 0 < n → ∀ v (s : 𝟙_ (Over (Sp F)) ⟶ t.G), toUnit _ ≫ s = I.ev n v → toUnit _ ≫ s = J.ev n v := by
   obtain ⟨Ω, _, _, i, j, hij⟩ := exists_common g h
-  haveI : CharZero K := charZero_of_injective_ringHom g.injective
-  haveI : CharZero L := charZero_of_injective_ringHom h.injective
+  have : CharZero K := charZero_of_injective_ringHom g.injective
+  have : CharZero L := charZero_of_injective_ringHom h.injective
   let uK : Over.mk (spMap (i.comp g)) ⟶ Over.mk (spMap g) :=
     Over.homMk (spMap i) (spMap_comp g i).symm
   let uL : Over.mk (spMap (i.comp g)) ⟶ Over.mk (spMap h) :=
@@ -676,15 +676,15 @@ theorem exists_field_ring (L : Type) [Field L] [NumberField L] (B : Type) [CommR
     (φ : L →+* B) (hφ : φ.Finite) :
     ∃ F : IntermediateField ℚ ℂ, FiniteDimensional ℚ F ∧ (∀ (σ : L →+* ℂ) (c : L), σ c ∈ F) ∧
       ∀ (ψ : B →+* ℂ) (c : B), ψ c ∈ F := by
-  letI : Algebra L B := φ.toAlgebra
-  letI : Algebra ℚ B := (φ.comp (algebraMap ℚ L)).toAlgebra
-  haveI : IsScalarTower ℚ L B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Module.Finite L B := hφ
-  haveI : Module.Finite ℚ B := Module.Finite.trans L B
+  let : Algebra L B := φ.toAlgebra
+  let : Algebra ℚ B := (φ.comp (algebraMap ℚ L)).toAlgebra
+  have : IsScalarTower ℚ L B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Module.Finite L B := hφ
+  have : Module.Finite ℚ B := Module.Finite.trans L B
   obtain ⟨F₁, hF₁, h₁⟩ := exists_field_alg L
   obtain ⟨F₂, hF₂, h₂⟩ := exists_field_alg B
-  haveI := hF₁
-  haveI := hF₂
+  have := hF₁
+  have := hF₂
   exact ⟨F₁ ⊔ F₂, inferInstance, fun σ c => le_sup_left (a := F₁) (h₁ σ c),
     fun ψ c => le_sup_right (a := F₁) (h₂ ψ c)⟩
 
@@ -693,7 +693,7 @@ theorem exists_field_scheme (L : Type) [Field L] [NumberField L] (σ : L →+* �
     ∃ (F : IntermediateField ℚ ℂ) (_ : FiniteDimensional ℚ F) (e : L →+* F),
       (∀ x, ((e x : F) : ℂ) = σ x) ∧ ∀ w : Sp ℂ ⟶ W, w ≫ p = spMap σ →
         ∃ y : Sp F ⟶ W, y ≫ p = spMap e ∧ spMap (algebraMap F ℂ) ≫ y = w := by
-  haveI : IsAffine W := isAffine_of_isAffineHom p
+  have : IsAffine W := isAffine_of_isAffineHom p
   obtain ⟨q, hq⟩ : ∃ q : CommRingCat.of L ⟶ Γ(W, ⊤), Spec.map q = W.isoSpec.inv ≫ p :=
     ⟨_, Spec.map_preimage _⟩
   have hfin : q.hom.Finite := by
@@ -738,14 +738,14 @@ private theorem comp_mulN_lemma {S : Scheme} {G : Over S} [GrpObj G] {X : Over S
 
 theorem PositivityTheory.Xgn.torsion_field_of_definition : ∀ (L : Type) [Field L] [NumberField L] (σ : L →+* ℂ) (P : Out.PolAV (Sp L)) (n : ℕ), 0 < n → ∃ (F : IntermediateField ℚ ℂ) (_ : FiniteDimensional ℚ F) (e : L →+* F), (∀ x, ((e x : F) : ℂ) = σ x) ∧ ∀ x : Over.mk (spMap σ) ⟶ P.A, x ^ n = 1 → ∃ y : Sp F ⟶ P.A.left, y ≫ P.A.hom = spMap e ∧ spMap (algebraMap F ℂ) ≫ y = x.left := by
   intro L _ _ σ P n hn
-  haveI := P.isAb.comm
-  haveI := P.isAb.smooth
-  haveI := P.isAb.proper
+  have := P.isAb.comm
+  have := P.isAb.smooth
+  have := P.isAb.proper
   have hu : IsUnit ((n : ℕ) : Γ(Sp L, ⊤)) := by
     have h0 : IsUnit ((n : ℕ) : L) := (Nat.cast_ne_zero.mpr hn.ne').isUnit
     have h1 := h0.map (Scheme.ΓSpecIso (CommRingCat.of L)).inv.hom
     rwa [map_natCast] at h1
-  haveI hfin : IsFinite (torsion P.A n).hom := GlobalTheory.GrpTangent.isFinite_torsion P.A hu
+  have hfin : IsFinite (torsion P.A n).hom := GlobalTheory.GrpTangent.isFinite_torsion P.A hu
   obtain ⟨F, hF, e, he, hlift⟩ :=
     PositivityTheory.Xgn.TorsionFieldOfDefinition.exists_field_scheme L σ (torsion P.A n).left (torsion P.A n).hom
   refine ⟨F, hF, e, he, fun x hx => ?_⟩
@@ -917,11 +917,11 @@ theorem exists_sab_model : N1ab → PartI → ∀ (E : Type) [Field E] [NumberFi
     let Xo : ∀ l : Level H, Moduli D l := fun l => (hN E H D l hD).some
     obtain ⟨l, hA, hg⟩ := GlobalTheory.GlobalModelGuards.exists_good_level H
     obtain ⟨c⟩ := GlobalTheory.ModuliProbe.coeff_nonempty l
-    haveI := c.fin
+    have := c.fin
     obtain ⟨Yl, -, h6⟩ := hP.2 E H D hD Xo
     obtain ⟨Y, -, -⟩ := h6 l c hg hA
     obtain ⟨F, hfin, hF, e, o, -, ⟨m⟩⟩ := exists_obj_ext E H D l L t ht hA ρ σ hσ hs I c.F c.fin c.le
-    haveI : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := hfin }
+    have : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := hfin }
     obtain ⟨f, ⟨hf, ⟨mf⟩⟩, -⟩ := (Xo l).rep (Sp F) _ inferInstance o
     let bF : c.F →+* F := (IntermediateField.inclusion hF).toRingHom
     let y : Sp F ⟶ (Xo l).XF c := pullback.lift f (spMap bF) (by

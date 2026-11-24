@@ -291,7 +291,7 @@ theorem pfa_n_nonneg (hP : IsPair A Ai Ci mu lam) (hr : 2 * s + 1 ≤ r) (i : Fi
     rw [wb_last (r - s + i.val - 1) (by omega)]
     congr 1
     apply Fin.ext
-    simp only [Fin.coe_castSucc]
+    simp only [Fin.val_castSucc]
     omega
   have hle : wbK mu (2 * s + 1) (r - s + i.val - 1) ≤ 0 := by
     rcases Nat.eq_zero_or_pos i.val with h0 | h0

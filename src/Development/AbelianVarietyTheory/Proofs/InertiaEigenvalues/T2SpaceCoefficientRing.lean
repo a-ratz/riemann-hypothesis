@@ -216,7 +216,7 @@ theorem eq_univ_of_frob (hC : GlobalTheory.TwSys.Cheb) (i : N.Loc) (s : Set (GE 
     Ideal.finite_factors (by simpa using (N.lPrime i).out.ne_zero)
   obtain ⟨v, hv, hf, -, B, hB, -, σ, hσ, hU⟩ := hC H.E N.Om L.fixingSubgroup L.fixingSubgroup_isOpen
     ((InfiniteGalois.normal_iff_isGalois L).2 hgal) g (f1.toFinset ∪ f2.toFinset ∪ N.S i ∪ N.Q i)
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton,
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton,
     not_or] at hv
   obtain ⟨⟨⟨h1, h2⟩, h3⟩, h4⟩ := hv
   obtain ⟨n, hx⟩ := exists_int_sub_mem v hf x

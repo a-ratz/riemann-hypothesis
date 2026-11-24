@@ -361,7 +361,7 @@ theorem PreSys.ident (P : PreSys C0 CE1 CE2 X O w mu β L G Std) (nC : ∀ j, P.
       monomial P.R 1 * ((∏ j, ∏ a, (monomial (P.pl j a) (1 : KK O) : RHH O X) ^ nC j a) *
         ∏ a, (monomial (P.aM a) (1 : KK O) : RHH O X) ^ nM a) * monomial M 1 := by
     rw [← mono_sum, ← Finset.prod_congr rfl (fun j _ => mono_sum (O := O) Finset.univ (nC j) (P.pl j)), ← monomial_sum_eq_prod_tensor]
-    simp only [monomial_mul, one_mul]
+    simp only [monomial_mul_monomial, one_mul]
   rw [e1]
   unfold PreSys.sgR PreSys.sgC PreSys.sgH LvDat.head
   simp only [map_mul, map_prod, map_pow, mul_pow, Finset.prod_mul_distrib]
@@ -600,7 +600,7 @@ theorem PreSys.core (D : Formalism.BasicNotions.D7) [CharZero (KK O)]
             refine Finset.sum_le_sum fun i _ => ?_
             by_cases hv : (L.LL j).vec i = true
             · simp [hv]
-            · simp only [hv, if_false, one_mul, Bool.false_eq_true]
+            · simp only [hv, ite_false, one_mul, Bool.false_eq_true]
               refine Finset.sum_le_sum fun a _ => ?_
               calc uC j a * P.dK j a i ≤ uC j a * 1 := Nat.mul_le_mul_left _ (P.digit_le_one j a i)
                 _ = uC j a := mul_one _
@@ -729,7 +729,7 @@ theorem IsMono.X (v : σ) : IsMono (MvPolynomial.X v : MvPolynomial σ K) := ⟨
 theorem IsMono.mul {P Q : MvPolynomial σ K} (hP : IsMono P) (hQ : IsMono Q) : IsMono (P * Q) := by
   obtain ⟨a, rfl⟩ := hP
   obtain ⟨b, rfl⟩ := hQ
-  exact ⟨a + b, by rw [monomial_mul, one_mul]⟩
+  exact ⟨a + b, by rw [monomial_mul_monomial, one_mul]⟩
 
 theorem IsMono.pow {P : MvPolynomial σ K} (hP : IsMono P) (n : ℕ) : IsMono (P ^ n) := by
   obtain ⟨a, rfl⟩ := hP
@@ -834,8 +834,8 @@ theorem facSysAt_of {D : Formalism.BasicNotions.D7} (hA2 : Formalism.MainNotions
     FacSysAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc := by
   intro X _ _ O _ _ _ _ S hSq hD1 hHI hCB mm hmm n hn1 hnc β hβ s hs
   have hp : X.p.Prime := Fact.out
-  haveI hKz : CharZero (KK O) := dvr_fraction_field_charZero S hp
-  simp only [colGens, Set.mem_setOf_eq] at hs
+  have hKz : CharZero (KK O) := dvr_fraction_field_charZero S hp
+  simp only [colGens, Set.mem_ofPred_eq] at hs
   choose lv jp hOK y hy γ hγ hx using hs
   let L : LvDat C0 CE1 CE2 (mm + (n : ℝ) * ka1 X) X β := ⟨lv, jp, hOK, γ, hγ⟩
   have hs' : s = fun j => L.word O j (psiR (KK O) (L.LL j) (y j)) := funext fun j => hx j

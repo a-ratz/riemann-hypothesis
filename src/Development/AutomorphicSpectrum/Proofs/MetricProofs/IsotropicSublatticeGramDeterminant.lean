@@ -128,7 +128,7 @@ theorem emb_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   have hc : (RingHom.ker s).comap (algebraMap ℤ (𝓞 E)) = ⊥ := by
     rw [RingHom.comap_ker]
     exact (RingHom.injective_iff_ker_eq_bot _).1 (RingHom.injective_int _)
-  exact (RingHom.injective_iff_ker_eq_bot s).2 (Ideal.eq_bot_of_comap_eq_bot hc)
+  exact (RingHom.injective_iff_ker_eq_bot s).2 (Ideal.eq_bot_of_under_eq_bot hc)
 
 def extEmb (s : 𝓞 E →+* ℂ) : E →+* ℂ := IsFractionRing.lift (emb_injective s)
 
@@ -222,9 +222,9 @@ theorem gram_tower (R : RiemLat E g Λ) {I : Submodule (𝓞 E) Λ} (hI : IsIsoS
   simp only [Matrix.mul_apply, conjTranspose_apply, kroneckerMap_apply, Matrix.one_apply, transpose_apply,
     blockDiagonal_apply, Fintype.sum_prod_type, basisMatrix_apply']
   simp only [ite_mul, one_mul, zero_mul, mul_ite, mul_zero, star_zero, apply_ite star,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Fintype.sum_eq_single b fun x hx ↦ by simp [hx]]
-  simp only [if_true]
+  simp only [ite_true]
   rfl
 
 section CM
@@ -343,8 +343,8 @@ theorem card_basis_eq (htf : ∀ (n : ℕ) (x : Λ), n ≠ 0 → n • x = 0 →
   set J := Submodule.span (𝓞 E) (Set.range v) with hJdef
   have hJI : J ≤ I := Submodule.span_le.2 (by rintro _ ⟨a, rfl⟩; exact hvI a)
   let B := towerZBasis hli
-  haveI : Module.Finite ℤ J := Module.Finite.of_basis B
-  haveI : Module.Finite ℤ I := Module.Finite.of_basis b
+  have : Module.Finite ℤ J := Module.Finite.of_basis B
+  have : Module.Finite ℤ I := Module.Finite.of_basis b
   have hJ : Module.finrank ℤ J = ρ * Module.finrank ℚ E := by
     rw [Module.finrank_eq_card_basis B, Fintype.card_prod, Fintype.card_fin, NumberField.Embeddings.card]
   have hIr : Module.finrank ℤ I = m := by

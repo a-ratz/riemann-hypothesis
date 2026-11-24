@@ -94,7 +94,7 @@ theorem ideleModule_expIdele (t : ℝ) :
   change (∏ v : InfinitePlace E, ‖(expIdele E t : Ad E).1 v‖ ^ v.mult) *
     ∏ᶠ v : IsDedekindDomain.HeightOneSpectrum (𝓞 E), ‖(expIdele E t : Ad E).2 v‖ = _
   simp only [h1, h2, finprod_one, mul_one]
-  rw [Finset.prod_pow_eq_pow_sum, InfinitePlace.sum_mult_eq, ← Real.exp_nat_mul]
+  rw [Finset.prod_pow_eq_pow_sum, InfinitePlace.sum_mult_eq, ← Real.exp_natCast_mul]
 
 theorem det_splitCentre (t : ℝ) : AdelicGLn.det E a (splitCentre E a t) = expIdele E t ^ a := by
   rw [splitCentre_eq_scalar]
@@ -105,7 +105,7 @@ theorem det_splitCentre (t : ℝ) : AdelicGLn.det E a (splitCentre E a t) = expI
 theorem ideleModule_det_splitCentre (t : ℝ) :
     (IdeleGroup.ideleModule E (AdelicGLn.det E a (splitCentre E a t)) : ℝ) =
       Real.exp ((a * Module.finrank ℚ E : ℝ) * t) := by
-  rw [det_splitCentre, map_pow, Positive.val_pow, ideleModule_expIdele, ← Real.exp_nat_mul]
+  rw [det_splitCentre, map_pow, Positive.val_pow, ideleModule_expIdele, ← Real.exp_natCast_mul]
   congr 1
   ring
 
@@ -114,7 +114,7 @@ def splitDeg (E : Type) [Field E] [NumberField E] (a : ℕ) (g : GA E a) : ℝ :
 
 theorem continuous_splitDeg : Continuous (splitDeg E a) := by
   refine Continuous.div_const (Continuous.log ?_ fun g => ?_) _
-  · exact continuous_subtype_val.comp
+  · exact continuous_subtypeVal.comp
       (IdeleGroup.continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
   · exact (IdeleGroup.ideleModule E (AdelicGLn.det E a g)).2.ne'
 
@@ -157,7 +157,7 @@ theorem exists_homeomorph (E : Type) [Field E] [NumberField E] [_root_.NumberFie
     change splitCentre E a (splitDeg E a g) * (splitCentre E a (-splitDeg E a g) * g) = g
     simpa using splitCentre_neg_mul_self (-splitDeg E a g) g
   · exact (continuous_splitCentre.comp continuous_snd).mul
-      (continuous_subtype_val.comp continuous_fst)
+      (continuous_subtypeVal.comp continuous_fst)
   · refine Continuous.prodMk (Continuous.subtype_mk ?_ _) continuous_splitDeg
     exact (continuous_splitCentre.comp continuous_splitDeg.neg).mul continuous_id
 

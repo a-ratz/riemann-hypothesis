@@ -61,11 +61,11 @@ theorem finite_and_finrank_le {k V : Type} [Field k] [AddCommGroup V] [Module k 
   let b := Module.Basis.ofVectorSpace k V
   have hemb : ∀ e : Fin (g + 1) ↪ Module.Basis.ofVectorSpaceIndex k V, False :=
     fun e => h _ (b.linearIndependent.comp e e.injective)
-  haveI : Finite (Module.Basis.ofVectorSpaceIndex k V) := by
+  have : Finite (Module.Basis.ofVectorSpaceIndex k V) := by
     by_contra hinf
     rw [not_finite_iff_infinite] at hinf
     exact hemb (Fin.valEmbedding.trans (Infinite.natEmbedding _))
-  haveI hfin : Module.Finite k V := Module.Finite.of_basis b
+  have hfin : Module.Finite k V := Module.Finite.of_basis b
   refine ⟨hfin, ?_⟩
   rw [Module.finrank_eq_nat_card_basis b]
   by_contra hlt
@@ -74,8 +74,8 @@ theorem finite_and_finrank_le {k V : Type} [Field k] [AddCommGroup V] [Module k 
 
 theorem h1Le : DescentSt → LowSt → SteinSt → VanSt → HopfSt → HopfLeSt → PositivityTheory.ObstructionTrivialLocus.H1StructureDimLe := by
   intro hD hL hS hV hH hHL k _ A _ g hA hsm
-  haveI : AlgebraicGeometry.IsProper A.hom := ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme.proper (self := hA)
-  haveI : CompactSpace A.left := AlgebraicGeometry.QuasiCompact.compactSpace_of_compactSpace A.hom
+  have : AlgebraicGeometry.IsProper A.hom := ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme.proper (self := hA)
+  have : CompactSpace A.left := AlgebraicGeometry.QuasiCompact.compactSpace_of_compactSpace A.hom
   obtain ⟨P, _, _, ⟨S⟩⟩ := GlobalTheory.CompanionTheory.Hodge.WedgeField.exists_finite_sys A.hom
   have hfield : IsField k := Field.toIsField k
   have hq : MainStatements.Hodge.AllQIso (MainStatements.Hodge.resSys A.hom S) := hD k A.left A.hom inferInstance P S

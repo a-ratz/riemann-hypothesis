@@ -96,10 +96,10 @@ theorem isUp_mul {m : ℕ} {u u' : Matrix (Fin m) (Fin m) E} (h : IsUp u) (h' : 
 theorem isUp_inv {m : ℕ} {u : Matrix (Fin m) (Fin m) E} (h : IsUp u) : IsUp u⁻¹ ∧ u * u⁻¹ = 1 := by
   rw [isUp_iff_bt] at h
   have hdet : u.det = 1 := by
-    rw [Matrix.det_of_upperTriangular h.1]
+    rw [det_of_isUpperTriangular h.1]
     exact Finset.prod_eq_one fun i _ => h.2 i
-  letI : Invertible u.det := { invOf := 1, invOf_mul_self := by simp [hdet], mul_invOf_self := by simp [hdet] }
-  letI : Invertible u := Matrix.invertibleOfDetInvertible u
+  let : Invertible u.det := { invOf := 1, invOf_mul_self := by simp [hdet], mul_invOf_self := by simp [hdet] }
+  let : Invertible u := Matrix.invertibleOfDetInvertible u
   have hbt : u⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular h.1
   have hui : u⁻¹ * u = 1 := Matrix.nonsing_inv_mul u (by rw [hdet]; exact isUnit_one)
   refine ⟨(isUp_iff_bt _).2 ⟨hbt, fun i => ?_⟩, Matrix.mul_nonsing_inv u (by rw [hdet]; exact isUnit_one)⟩

@@ -205,7 +205,7 @@ private theorem ine_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
   rw [← coe_discr, map_intCast] at h2
   have h3 : A.valuation ((discr K : ℤ) : Ω) < 1 := by
     rw [h2, map_pow]
-    exact pow_lt_one₀ zero_le' h1 two_ne_zero
+    exact pow_lt_one₀ zero_le h1 two_ne_zero
   have hc : IsCoprime (l : ℤ) (discr K) := by
     rw [Int.isCoprime_iff_gcd_eq_one]
     exact (Nat.Prime.coprime_iff_not_dvd hl).2 hd
@@ -236,7 +236,7 @@ private theorem det_tri {k : Type} [Field k] {n : ℕ} (u X : GL (Fin n) k) (d :
   have e : (u : Matrix (Fin n) (Fin n) k) * (a • (X : Matrix (Fin n) (Fin n) k) - 1) * (u⁻¹ : GL (Fin n) k) =
       a • ((u * X * u⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) - 1 := by
     rw [mul_sub, sub_mul, mul_one, Units.mul_inv, Units.val_mul, Units.val_mul, Matrix.mul_smul, Matrix.smul_mul]
-  rw [e, Matrix.det_of_upperTriangular]
+  rw [e, Matrix.det_of_isUpperTriangular]
   · refine Finset.prod_congr rfl fun i _ => ?_
     rw [Matrix.sub_apply, Matrix.smul_apply, h.2 i, Matrix.one_apply_eq, smul_eq_mul]
   · intro i j hij
@@ -317,8 +317,8 @@ private theorem matIrr (D : Raw Ω c) (hD : D.Good) (r : G ℚ Ω →* M4 (Padic
     (U : Subgroup (G ℚ Ω)) (h2 : U.index = 2) (hU : ∀ p ∈ D.S, D.Ip p ≤ U) :
     U3.MatIrr (U ⊓ (cycZ ℚ Ω l).ker) fun g => r g := by
   by_contra hred
-  haveI : IsGalois ℚ Ω := {}
-  haveI : U.Normal := Subgroup.normal_of_index_eq_two h2
+  have : IsGalois ℚ Ω := {}
+  have : U.Normal := Subgroup.normal_of_index_eq_two h2
   have hirr := ((irrIff (PadicAlgCl l)).1 r).1 hi
   obtain ⟨φ, hφ1, hH, h4, M, hM⟩ := U3.exists_selfTwist r.toHomUnits (U ⊓ (cycZ ℚ Ω l).ker)
     (fun a b => ⟨by
@@ -336,8 +336,8 @@ private theorem matIrr (D : Raw Ω c) (hD : D.Good) (r : G ℚ Ω →* M4 (Padic
     have : (φ.ker : Set (G ℚ Ω)) = {g | (M : M4 (PadicAlgCl l)) * r g = r g * M} := Set.ext hiff
     rw [this]
     exact isClosed_eq (continuous_const.mul hc) (hc.mul continuous_const)
-  haveI : φ.ker.FiniteIndex := by
-    haveI : Finite φ.range := Finite.of_injective
+  have : φ.ker.FiniteIndex := by
+    have : Finite φ.range := Finite.of_injective
       (fun x => (⟨x.1, by
         obtain ⟨_, g, rfl⟩ := x
         exact DFunLike.congr_fun h4 g⟩ : rootsOfUnity 4 (PadicAlgCl l)))
@@ -345,7 +345,7 @@ private theorem matIrr (D : Raw Ω c) (hD : D.Good) (r : G ℚ Ω →* M4 (Padic
     exact Subgroup.finiteIndex_ker φ
   have hTS : D.T ⊆ D.S := Finset.insert_subset hD.l_mem (Finset.filter_subset _ _)
   have key := B1.ineSpan Ω φ.ker D.S D.pl (Subgroup.isOpen_of_isClosed_of_finiteIndex _ hcl)
-    (Abelianization.commutator_subset_ker _) (fun p hp => ⟨hD.S_prime p hp, hD.pl_over p (hD.S_prime p hp)⟩)
+    (Group.Abelianization.commutator_le_ker _) (fun p hp => ⟨hD.S_prime p hp, hD.pl_over p (hD.S_prime p hp)⟩)
     (fun A hA g hg => by
       have h0 : D.r0 g = 1 := by
         have : ∀ i, D.ps i g = 1 := fun i => f14 i A hA hg
@@ -372,14 +372,14 @@ open UpperTheory.V.GradeZeroInterpolatingElement.ResidualIrreducibilityUnramifie
 theorem UpperTheory.V.GradeZeroInterpolatingElement.irrK :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ r, D.EPt r → Irr r → ∃ (K : Type) (_ : Field K) (_ : NumberField K) (_ : IsCMField K) (_ : Algebra K Ω) (_ : IsScalarTower ℚ K Ω) (_ : IsAlgClosure K Ω), Module.finrank ℚ K = 2 ∧ Af.IsIrr ((r.toHomUnits.comp (AlgEquiv.restrictScalarsHom ℚ : G K Ω →* G ℚ Ω)).comp (GlobalTheory.GalOfCusp.cycBar K Ω l).ker.subtype) := by
   intro Ω _ _ _ l _ c D hD r hr hi
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   obtain ⟨q, hqS, hq, hq4⟩ := Nat.forall_exists_prime_gt_and_modEq (D.S.sup id) (q := 4) (a := 3) (by norm_num) (by norm_num)
   obtain ⟨hd, htc, h2, -⟩ := HV.kstar q hq hq4
-  letI : Algebra (Kstar q) Ω := (IsAlgClosed.lift (R := ℚ) (S := Kstar q) (M := Ω)).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ (Kstar q) Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : IsAlgClosure (Kstar q) Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
-  haveI : Algebra.IsQuadraticExtension ℚ (Kstar q) := ⟨h2⟩
+  let : Algebra (Kstar q) Ω := (IsAlgClosed.lift (R := ℚ) (S := Kstar q) (M := Ω)).toRingHom.toAlgebra
+  have : IsScalarTower ℚ (Kstar q) Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : IsAlgClosure (Kstar q) Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : Algebra.IsQuadraticExtension ℚ (Kstar q) := ⟨h2⟩
   refine ⟨Kstar q, inferInstance, inferInstance, IsCMField.ofCMExtension ℚ _, inferInstance, inferInstance, inferInstance,
     h2, ?_⟩
   have key := matIrr D hD r hr hi (galOf ℚ (Kstar q) Ω) ((galEmbTop ℚ _ Ω).2.2.trans h2) fun p hp => by
@@ -443,7 +443,7 @@ private theorem rg_sign {K Ω : Type} [Field K] [NumberField K] [IsCMField K] (h
   set d : Ω := algebraMap K Ω δ with hd
   have hd0 : d ≠ 0 := by simpa [hd] using hδ0
   have hdd : d * d = algebraMap ℚ Ω q := by rw [IsScalarTower.algebraMap_apply ℚ K Ω, hq', map_mul]
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hne : -d ≠ d := fun e => hd0 (by linear_combination (-1 / 2 : Ω) * e)
   have hpm : ∀ g : G ℚ Ω, g d = d ∨ g d = -d := fun g => by
     have : g d * g d = d * d := by rw [← map_mul, hdd, AlgEquiv.commutes]
@@ -677,7 +677,7 @@ end Transfer
 
 private theorem enough_of_le {l : ℕ} [Fact l.Prime] {c c' : Coef l} (h : c.O ≤ c'.O) (n : ℕ) [NeZero n]
     [HasEnoughRootsOfUnity c.O n] : HasEnoughRootsOfUnity c'.O n := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot c.O n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot c.O n
   exact ⟨⟨_, hζ.map_of_injective (f := Subalgebra.inclusion h) (Subalgebra.inclusion_injective h)⟩, inferInstance⟩
 
 private theorem main_big (hA : Aut.Sp4In) (hP : CohomologyHyp) (hM : LemmaM) (hM' : LemmaM') (hLP : LemmaP) (hN : Af.NumberSp4)

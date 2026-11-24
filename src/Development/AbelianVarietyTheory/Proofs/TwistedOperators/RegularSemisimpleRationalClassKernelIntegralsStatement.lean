@@ -87,7 +87,7 @@ theorem nilpotent_eq_zero_of_commute_sep_alg {K : Type} [Field K] [IsAlgClosed K
     · simp [h0]
     have h2 : Module.finrank K (Module.End.maxGenEigenspace f μ) = 1 := le_antisymm h1
         (Module.finrank_pos_iff_exists_ne_zero.2 ⟨⟨v, hv⟩, fun h => h0 (congrArg Subtype.val h)⟩)
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨v, hv⟩ : Module.End.maxGenEigenspace f μ)
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨v, hv⟩ : Module.End.maxGenEigenspace f μ)
         fun h => h0 (congrArg Subtype.val h)).1 h2 ⟨_, Module.End.mapsTo_maxGenEigenspace_of_comm hfg μ hv⟩
     have hc' : Matrix.toLin' N v = c • v := (congrArg Subtype.val hc).symm
     have hpow : ∀ m : ℕ, (Matrix.toLin' N ^ m) v = c ^ m • v := by
@@ -135,7 +135,7 @@ theorem GlobalTheory.regSS_conjClass_isSSClass : ∀ {D : D7} {V : HSp D} (γ : 
   have hs : γ.1.1.charpoly.Separable := hγ
   refine ⟨γ, isSemisimple_of_charpoly_separable hs, ?_⟩
   ext x
-  simp only [Set.mem_setOf_eq]
+  simp only [mem_ofPred_eq]
   constructor
   · intro hx
     refine ⟨x, ⟨isSemisimple_of_charpoly_separable ?_, Commute.refl _, by simp⟩, hx⟩

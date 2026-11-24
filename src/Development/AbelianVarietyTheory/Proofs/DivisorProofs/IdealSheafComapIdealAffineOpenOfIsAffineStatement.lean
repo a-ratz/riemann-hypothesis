@@ -59,7 +59,7 @@ namespace GlobalTheory
 theorem IdealSheafData.ideal_comap_affineOpen_of_isAffine {X Y : Scheme.{0}} [IsAffine Y]
     (f : X ⟶ Y) (K : Y.IdealSheafData) (W : X.affineOpens) :
     (K.comap f).ideal W = Ideal.map (f.appLE ⊤ W (by simp)).hom (K.ideal ⟨⊤, isAffineOpen_top Y⟩) := by
-  haveI : IsAffine (W.1 : Scheme) := W.2
+  have : IsAffine (W.1 : Scheme) := W.2
   have h1 := Scheme.IdealSheafData.ideal_comap_of_isOpenImmersion (K.comap f) W.1.ι
     ⟨⊤, isAffineOpen_top _⟩
   rw [← Scheme.IdealSheafData.comap_comp, IdealSheafData.ideal_comap_top_of_isAffine] at h1

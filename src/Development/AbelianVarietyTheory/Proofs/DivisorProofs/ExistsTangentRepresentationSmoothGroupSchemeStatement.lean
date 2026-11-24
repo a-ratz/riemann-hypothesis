@@ -320,9 +320,9 @@ theorem isBaseChange_pullbackSections {X Y : Scheme.{0}} (f : X ⟶ Y) (G : Y.Mo
     letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
     haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
     IsBaseChange Γ(X, U) (pullbackSections f G e) := by
-  letI := appLEAlgebra f e
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
-  haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
+  let := appLEAlgebra f e
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G) e
+  have := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
   obtain ⟨a, ha⟩ := exists_equiv_pullback_Spec (f.appLE V U e) (G.restrict hV.fromSpec)
   have w := IsAffineOpen.SpecMap_appLE_fromSpec f hV hU e
   let κ : Γ((Scheme.Modules.pullback (Spec.map (f.appLE V U e))).obj (G.restrict hV.fromSpec), ⊤)
@@ -346,12 +346,12 @@ variable {S X : Scheme.{0}} {π : X ⟶ S} {e : S ⟶ X} (he : e ≫ π = 𝟙 S
   {W : X.Opens}
 
 theorem ofAugCot_bijective (c : IsChart π e U W) : Function.Bijective (c.ofAugCot he) := by
-  letI := c.algebra
-  letI := GlobalTheory.QCoh.appLEAlgebra e c.le
-  letI := GlobalTheory.QCoh.appLEModule e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
-  haveI := GlobalTheory.QCoh.appLE_isScalarTower e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
-  haveI := AugCot.isScalarTower_of_algebraMap_eq (c.aug he) fun _ => rfl
-  haveI := isQuasicoherent_restrict_ideal he c
+  let := c.algebra
+  let := GlobalTheory.QCoh.appLEAlgebra e c.le
+  let := GlobalTheory.QCoh.appLEModule e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
+  have := GlobalTheory.QCoh.appLE_isScalarTower e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
+  have := AugCot.isScalarTower_of_algebraMap_eq (c.aug he) fun _ => rfl
+  have := isQuasicoherent_restrict_ideal he c
   have hb := isBaseChange_pullbackSections e (ideal e) c.affine_base c.affine c.le
   let g : Γ(ideal e, W) →ₗ[Γ(X, W)] AugCot (c.aug he) := (RingHom.ker (c.aug he)).toCotangent ∘ₗ
     (GlobalTheory.QCoh.appLinear (idealSub e).incl W).codRestrict (RingHom.ker (c.aug he)) fun s =>
@@ -376,7 +376,7 @@ theorem exists_isFrame [Smooth π] (x : S) :
     ∃ (U : S.Opens) (n : ℕ) (s : Fin n → Γ(conormal e, U)), x ∈ U ∧ IsFrame s := by
   have := isQuasicoherent_conormal he
   obtain ⟨U, W, hx, -, c⟩ := exists_isChart he (x := x) (V := ⊤) trivial
-  letI := c.algebra
+  let := c.algebra
   have : Algebra.Smooth Γ(S, U) Γ(X, W) := Smooth.smooth_appLE π c.affine_base c.affine c.le_base
   let E := LinearEquiv.ofBijective (c.ofAugCot he) (ofAugCot_bijective he c)
   have := Module.Finite.equiv E
@@ -822,7 +822,7 @@ theorem exists_Phi_eq_of_linearMap : ∀ (O : Type) [CommRing O] (A : Over (Sp O
           exact (toTsze_base O M (cst O a)).trans (congrArg _ (Iso.inv_hom_id_apply _ _))
         refine Eq.trans ?_ (congrArg₂ (fun x y : TrivSqZeroExt O M => x * y) hb (hT _)).symm
         ext <;> simp [TrivSqZeroExt.algebraMap_eq_inl] }
-  haveI := hqc
+  have := hqc
   obtain ⟨φ, hφ⟩ := (appLinear_top_bijective (omega A) (pushO O M)).2 g
   have hφw (w : Γ(omega A, ⊤)) : φ.app ⊤ w = g w := congr($hφ w)
   have hφ0 : φ ≫ toBase = 0 := by
@@ -897,7 +897,7 @@ theorem finite_projective_top {O : Type} [CommRing O] (F : (Sp O).Modules)
     (h : ∀ x : Sp O, ∃ (U : (Sp O).Opens) (n : ℕ) (s : Fin n → Γ(F, U)),
       x ∈ U ∧ GlobalTheory.VB.IsFrame s) :
     Module.Finite Γ(Sp O, ⊤) Γ(F, ⊤) ∧ Module.Projective Γ(Sp O, ⊤) Γ(F, ⊤) := by
-  haveI : F.IsQuasicoherent := GlobalTheory.OmegaGlobal.isQuasicoherent_of_frames h
+  have : F.IsQuasicoherent := GlobalTheory.OmegaGlobal.isQuasicoherent_of_frames h
   choose U n e hx he using h
   have hU := isAffineOpen_top (Sp O)
   let s : Set Γ(Sp O, ⊤) := {f | ∃ x, (Sp O).basicOpen f ≤ U x}
@@ -906,24 +906,24 @@ theorem finite_projective_top {O : Type} [CommRing O] (F : (Sp O).Modules)
     intro y _
     obtain ⟨f, hf, hyf⟩ := hU.exists_basicOpen_le (V := U y) ⟨y, hx y⟩ (by simp)
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨f, y, hf⟩, hyf⟩
-  haveI (g : s) := hU.isLocalization_basicOpen g.1
-  haveI (g : s) := GlobalTheory.QCoh.isLocalizedModule_resBasicOpen F hU g.1
+  have (g : s) := hU.isLocalization_basicOpen g.1
+  have (g : s) := GlobalTheory.QCoh.isLocalizedModule_resBasicOpen F hU g.1
   let b (g : s) : Module.Basis (Fin (n g.2.choose)) Γ(Sp O, (Sp O).basicOpen g.1)
       Γ(F, (Sp O).basicOpen g.1) := (he g.2.choose).basis g.2.choose_spec
-  haveI (g : s) : Module.Free Γ(Sp O, (Sp O).basicOpen g.1) Γ(F, (Sp O).basicOpen g.1) :=
+  have (g : s) : Module.Free Γ(Sp O, (Sp O).basicOpen g.1) Γ(F, (Sp O).basicOpen g.1) :=
     .of_basis (b g)
-  haveI (g : s) : Module.Finite Γ(Sp O, (Sp O).basicOpen g.1) Γ(F, (Sp O).basicOpen g.1) :=
+  have (g : s) : Module.Finite Γ(Sp O, (Sp O).basicOpen g.1) Γ(F, (Sp O).basicOpen g.1) :=
     .of_basis (b g)
-  haveI (g : s) : Module.Flat Γ(Sp O, ⊤) Γ(F, (Sp O).basicOpen g.1) := by
-    haveI : Module.Flat Γ(Sp O, ⊤) Γ(Sp O, (Sp O).basicOpen g.1) :=
+  have (g : s) : Module.Flat Γ(Sp O, ⊤) Γ(F, (Sp O).basicOpen g.1) := by
+    have : Module.Flat Γ(Sp O, ⊤) Γ(Sp O, (Sp O).basicOpen g.1) :=
       IsLocalization.flat _ (Submonoid.powers g.1)
     exact Module.Flat.trans Γ(Sp O, ⊤) Γ(Sp O, (Sp O).basicOpen g.1) _
-  haveI hfp : Module.FinitePresentation Γ(Sp O, ⊤) Γ(F, ⊤) :=
+  have hfp : Module.FinitePresentation Γ(Sp O, ⊤) Γ(F, ⊤) :=
     Module.FinitePresentation.of_localizationSpan' s hs
       (Mₚ := fun g : s => Γ(F, (Sp O).basicOpen g.1))
       (Rₚ := fun g : s => Γ(Sp O, (Sp O).basicOpen g.1))
       (fun g => GlobalTheory.QCoh.resBasicOpen F g.1) fun _ => Module.finitePresentation_of_projective _ _
-  haveI : Module.Flat Γ(Sp O, ⊤) Γ(F, ⊤) :=
+  have : Module.Flat Γ(Sp O, ⊤) Γ(F, ⊤) :=
     Module.flat_of_isLocalized_span Γ(Sp O, ⊤) Γ(F, ⊤) s hs
       (fun g : s => Γ(F, (Sp O).basicOpen g.1)) (fun g => GlobalTheory.QCoh.resBasicOpen F g.1)
       fun _ => inferInstance
@@ -936,20 +936,20 @@ theorem GlobalTheory.FramesFGP.finite_projective_wmod : ∀ (O : Type) [CommRing
       x ∈ U ∧ GlobalTheory.VB.IsFrame s) → Module.Finite O (Wmod A) ∧ Module.Projective O (Wmod A) := by
   intro O _ A _ h
   obtain ⟨h1, h2⟩ := GlobalTheory.FramesFGP.finite_projective_top (GlobalTheory.LieVB.omega A) h
-  letI : Module Γ(Sp O, ⊤) (Wmod A) := inferInstanceAs (Module Γ(Sp O, ⊤) Γ(GlobalTheory.LieVB.omega A, ⊤))
-  haveI : Module.Finite Γ(Sp O, ⊤) (Wmod A) := h1
-  haveI : Module.Projective Γ(Sp O, ⊤) (Wmod A) := h2
+  let : Module Γ(Sp O, ⊤) (Wmod A) := inferInstanceAs (Module Γ(Sp O, ⊤) Γ(GlobalTheory.LieVB.omega A, ⊤))
+  have : Module.Finite Γ(Sp O, ⊤) (Wmod A) := h1
+  have : Module.Projective Γ(Sp O, ⊤) (Wmod A) := h2
   have hb : Function.Bijective (GlobalTheory.LieVB.cst O) :=
     ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of O)).inv
   let E : O ≃+* Γ(Sp O, ⊤) := RingEquiv.ofBijective (GlobalTheory.LieVB.cst O) hb
-  letI : Algebra O Γ(Sp O, ⊤) := (GlobalTheory.LieVB.cst O).toAlgebra
-  haveI : IsScalarTower O Γ(Sp O, ⊤) (Wmod A) := .of_algebraMap_smul fun _ _ => rfl
-  haveI : Module.Finite O Γ(Sp O, ⊤) :=
+  let : Algebra O Γ(Sp O, ⊤) := (GlobalTheory.LieVB.cst O).toAlgebra
+  have : IsScalarTower O Γ(Sp O, ⊤) (Wmod A) := .of_algebraMap_smul fun _ _ => rfl
+  have : Module.Finite O Γ(Sp O, ⊤) :=
     Module.Finite.of_surjective (Algebra.linearMap O Γ(Sp O, ⊤)) hb.2
   refine ⟨Module.Finite.trans Γ(Sp O, ⊤) (Wmod A), ?_⟩
-  haveI : RingHomInvPair (E.symm : Γ(Sp O, ⊤) →+* O) (E : O →+* Γ(Sp O, ⊤)) :=
+  have : RingHomInvPair (E.symm : Γ(Sp O, ⊤) →+* O) (E : O →+* Γ(Sp O, ⊤)) :=
     ⟨RingHom.ext E.apply_symm_apply, RingHom.ext E.symm_apply_apply⟩
-  haveI : RingHomInvPair (E : O →+* Γ(Sp O, ⊤)) (E.symm : Γ(Sp O, ⊤) →+* O) := .symm _ _
+  have : RingHomInvPair (E : O →+* Γ(Sp O, ⊤)) (E.symm : Γ(Sp O, ⊤) →+* O) := .symm _ _
   let e : Wmod A ≃ₛₗ[(E.symm : Γ(Sp O, ⊤) →+* O)] Wmod A :=
     { toFun := id
       invFun := id
@@ -1100,7 +1100,7 @@ theorem uniq : ∀ (R : Type) [CommRing R] (B M : Type) [CommRing B] [Algebra R 
     change ((spMap (TrivSqZeroExt.fstHom R R M).toRingHom).resLE _ _ le_rfl ≫ g) ⟨w, hwV⟩ ∈ (U.1 : Set X)
     rw [hg]
     exact hU hwV
-  haveI : IsAffine U.1.toScheme := U.2
+  have : IsAffine U.1.toScheme := U.2
   have f₁ := IsOpenImmersion.lift_fac U.1.ι g₁ (hrange g₁ h₁)
   have f₂ := IsOpenImmersion.lift_fac U.1.ι g₂ (hrange g₂ h₂)
   have ei : (spMap (TrivSqZeroExt.fstHom R R M).toRingHom).resLE _ _ le_rfl ≫ IsOpenImmersion.lift U.1.ι g₁ (hrange g₁ h₁) =
@@ -1324,8 +1324,8 @@ theorem surjective_sec_zeroSec : Function.Surjective (sec (zeroSec O M)) := by
   exact ht
 
 theorem kappa_injective : Function.Injective (kappa O M) := by
-  letI := (isChart O M).algebra
-  letI := topModule O M
+  let := (isChart O M).algebra
+  let := topModule O M
   refine (injective_iff_map_eq_zero _).2 fun x hx => ?_
   obtain ⟨y, rfl⟩ := ((isChart O M).augCotEquiv (sec_hom _)).surjective x
   obtain ⟨y, rfl⟩ := (RingHom.ker ((isChart O M).aug (sec_hom _))).toCotangent_surjective y
@@ -1450,7 +1450,7 @@ theorem eq_of_Phi_eq : ∀ (O : Type) [CommRing O] (A : Over (Sp O)) [GrpObj A],
         (z.left.appLE W (preimTop M U) kz f - z'.left.appLE W (preimTop M U) kz' f) = 0 := by
       rw [map_sub, ← cotMap_d z h c.le c₀.le kz f, ← cotMap_d z' h' c.le c₀.le kz' f, hcot,
         sub_self]
-    letI := c₀.algebra
+    let := c₀.algebra
     have h₁ : AugCot.d (c₀.aug (sec_hom _))
         (z.left.appLE W (preimTop M U) kz f - z'.left.appLE W (preimTop M U) kz' f) = 0 :=
       (c₀.ofAugCot_bijective (sec_hom _)).1 (by rw [c₀.ofAugCot_d, map_zero]; exact hd)
@@ -1694,7 +1694,7 @@ theorem exists_tanRep : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A]
     ∃ (W : Type) (_ : AddCommGroup W) (_ : Module R W), Module.Finite R W ∧ Module.Projective R W ∧
       Nonempty (TanRep A W) := by
   intro R _ A _ hs
-  haveI := hs
+  have := hs
   have hfr := GlobalTheory.T.exists_cotangent_frame_smooth_groupScheme R A
   have hq : (GlobalTheory.LieVB.omega A).IsQuasicoherent := GlobalTheory.OmegaGlobal.isQuasicoherent_of_frames hfr
   obtain ⟨hfin, hproj⟩ := GlobalTheory.T.finite_projective_cotangentGlobalSections_groupScheme R A hfr

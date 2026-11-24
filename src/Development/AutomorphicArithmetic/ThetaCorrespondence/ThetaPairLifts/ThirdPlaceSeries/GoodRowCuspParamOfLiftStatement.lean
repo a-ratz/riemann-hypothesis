@@ -573,7 +573,7 @@ theorem mu_block_mem_alt : ∀ (D : D7) (Rw : RowSide D), _root_.GlobalTheory.He
   have hg0 : ((∀ p ∈ Pa, D.naut.unr (D.naut.locG p.π w0)) ∧ D.naut.unr (D.naut.locG μ w0)) ∧
       ∀ k : Fin 2, w0 ∉ placesOver D.host.E (D.host.g k) := by
     have h := hw0
-    simp only [Set.mem_setOf_eq, not_not] at h
+    simp only [Set.mem_ofPred_eq, not_not] at h
     exact h
   obtain ⟨⟨p0, hp0, hpt⟩, -⟩ := _root_.GlobalTheory.MuBlockLoc.split_step_o_alt D Rw hL j σ π μ Pa hA hR hB w0 hs0 hg0.2 hg0.1.1 hg0.1.2
   have hall : ∀ w, (((∀ p ∈ Pa, D.naut.unr (D.naut.locG p.π w)) ∧ D.naut.unr (D.naut.locG μ w)) ∧

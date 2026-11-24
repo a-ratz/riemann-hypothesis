@@ -99,7 +99,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : �
 theorem Xflag_mono (F : LFlag S r T) (j : ℕ) : Xflag F j ≤ Xflag F (j + 1) := by
   show Submodule.span E (F.fl.e '' {i | i.1 < j}) ≤ Submodule.span E (F.fl.e '' {i | i.1 < j + 1})
   exact Submodule.span_mono (Set.image_mono fun i hi => by
-    simp only [Set.mem_setOf_eq] at hi ⊢
+    simp only [Set.mem_ofPred_eq] at hi ⊢
     omega)
 
 theorem X_le_orth (F : LFlag S r T) : Xsp F ≤ orth S (Xsp F) := by
@@ -119,7 +119,7 @@ theorem NLam_mul (Λ : Submodule (𝓞 E) S.V) (F : LFlag S r T) {n₁ n₂ : S.
 theorem modG_of_mem (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {x : S.V}
     (hx : x ∈ Ideal.span {(g : 𝓞 E)} • Λ) : ModG S Λ g x := by
   intro P hP
-  haveI := P.isPrime
+  have := P.isPrime
   show ∃ s ∈ P.asIdeal.primeCompl, s • x ∈ Ideal.span {(g : 𝓞 E)} • Λ
   exact ⟨1, Submonoid.one_mem _, by rwa [one_smul]⟩
 
@@ -132,7 +132,7 @@ theorem modG_map (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (n : S.V ≃ₗ[E] S.V)
     {x : S.V} (hx : ModG S Λ g x) : ModG S Λ g (n x) := by
   intro P hP
   have hx' := hx P hP
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨s, hs, hsx⟩ : ∃ s ∈ P.asIdeal.primeCompl, s • x ∈ Ideal.span {(g : 𝓞 E)} • Λ := hx'
   show ∃ s ∈ P.asIdeal.primeCompl, s • n x ∈ Ideal.span {(g : 𝓞 E)} • Λ
   refine ⟨s, hs, ?_⟩
@@ -171,7 +171,7 @@ theorem exists_undo (Λ : Submodule (𝓞 E) S.V) (hint : IntLat Λ) (F : LFlag 
     (ξ : Matrix (Fin (r + 1)) (Fin (r + 1)) (𝓞 E)) (hξ : UniUp ξ) :
     ∃ n ∈ NLam Λ F, ∃ M, ActsBy n (frame F) M ∧ ∃ Q, M * ξ = 1 + g • Q := by
   have hone : (1 : S.V ≃ₗ[E] S.V) ∈ NLam Λ F := by
-    simp only [NLam, IsAutLam, Set.mem_setOf_eq]
+    simp only [NLam, IsAutLam, Set.mem_ofPred_eq]
     refine ⟨⟨Subgroup.one_mem _, ?_⟩, fun j x _ => ?_, fun x _ => ?_⟩
     · rw [gmap_eq_iff]
       exact ⟨fun y hy => hy, fun y hy => ⟨y, hy, rfl⟩⟩
@@ -196,9 +196,9 @@ theorem exists_undo (Λ : Submodule (𝓞 E) S.V) (hint : IntLat Λ) (F : LFlag 
     have hw : ∀ c, S.hT v (frame F c) = (w c : E) := by
       intro c
       by_cases hc : a < c
-      · simp only [w, dif_pos hc]
+      · simp only [w, dite_eq_left hc]
         exact hq c hc
-      · simp only [w, dif_neg hc]
+      · simp only [w, dite_eq_right hc]
         have hcr : c.val < r := by
           have h' : ¬ a.val < c.val := fun h => hc (Fin.lt_def.mpr h)
           omega
@@ -211,9 +211,9 @@ theorem exists_undo (Λ : Submodule (𝓞 E) S.V) (hint : IntLat Λ) (F : LFlag 
           exact Fin.le_def.mpr (by simp only; omega)
         rw [hfc, hperp c' hle]
         simp
-    refine ⟨w, fun c hc => ?_, fun c hc => ⟨q c hc, by simp only [w, dif_pos hc]⟩, ?_⟩
+    refine ⟨w, fun c hc => ?_, fun c hc => ⟨q c hc, by simp only [w, dite_eq_left hc]⟩, ?_⟩
     · have hnc : ¬ a < c := not_lt.mpr hc
-      simp only [w, dif_neg hnc]
+      simp only [w, dite_eq_right hnc]
     · refine ⟨tvEquiv (F.fl.e ⟨a.val, ha⟩) v (l : E) hee hev hve,
         tv_mem_NLam Λ hint F ⟨a.val, ha⟩ (hfe _) v hv hperp l hl hee hev hve, ?_⟩
       have hact := tv_actsBy F ⟨a.val, ha⟩ v (l : E) hee hev hve w hw
@@ -359,8 +359,8 @@ include hU hint hind he hloc in
 theorem residue_onto (c : Fin r) :
     ∃ y ∈ Λ, ∃ o : Fin r → 𝓞 E, (∀ i, S.hT y (e i) = (o i : E)) ∧
       ∀ i, (o i - if i = c then 1 else 0) ∈ P.asIdeal := by
-  haveI := P.isMaximal
-  letI : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
   let mk := Ideal.Quotient.mk P.asIdeal
   let U : Submodule (𝓞 E ⧸ P.asIdeal) (Fin r → 𝓞 E ⧸ P.asIdeal) :=
     { carrier := {φ | ∃ y ∈ Λ, ∃ o : Fin r → 𝓞 E, (∀ i, S.hT y (e i) = (o i : E)) ∧ ∀ i, φ i = mk (o i)}
@@ -418,8 +418,8 @@ theorem residue_onto (c : Fin r) :
   have := hφ i
   simp only at this
   by_cases hic : i = c
-  · simp only [hic, if_true] at this ⊢; rw [map_one]; exact this.symm
-  · simp only [hic, if_false] at this ⊢; rw [map_zero]; exact this.symm
+  · simp only [hic, ite_true] at this ⊢; rw [map_one]; exact this.symm
+  · simp only [hic, ite_false] at this ⊢; rw [map_zero]; exact this.symm
 
 include hU hint hind he hloc in
 theorem exact_dual (c : Fin r) :
@@ -548,12 +548,12 @@ theorem pre_rowvec (Λ : Submodule (𝓞 E) S.V) (hint : IntLat Λ) (Tn : ℕ) (
 
     rw [map_sum, LinearMap.sum_apply, Finset.sum_eq_single i]
     · by_cases hai : a < i
-      · rw [if_pos hai, if_pos hai, hT_cj_left, hq]
-      · rw [if_neg hai, if_neg hai, zero_smul, map_zero, LinearMap.zero_apply]
+      · rw [ite_eq_left hai, ite_eq_left hai, hT_cj_left, hq]
+      · rw [ite_eq_right hai, ite_eq_right hai, zero_smul, map_zero, LinearMap.zero_apply]
     · intro c _ hci
       by_cases hac : a < c
-      · rw [if_pos hac, hT_cj_left, h0 c i (Ne.symm hci), mul_zero]
-      · rw [if_neg hac, zero_smul, map_zero, LinearMap.zero_apply]
+      · rw [ite_eq_left hac, hT_cj_left, h0 c i (Ne.symm hci), mul_zero]
+      · rw [ite_eq_right hac, zero_smul, map_zero, LinearMap.zero_apply]
     · intro h; exact absurd (Finset.mem_univ i) h
   obtain ⟨ζ, hζ⟩ := hint v₀ hv₀ F.fl.z hz
   obtain ⟨x, y', hxy⟩ := hTg
@@ -567,7 +567,7 @@ theorem pre_rowvec (Λ : Submodule (𝓞 E) S.V) (hint : IntLat Λ) (Tn : ℕ) (
   have hve : ∀ i, S.hT v (F.fl.e i) = S.hT v₀ (F.fl.e i) := by
     intro i; simp only [v, map_add (f := _), LinearMap.add_apply, hT_cj_left, hze, mul_zero, add_zero]
   refine ⟨v, Λ.add_mem hv₀ (Λ.smul_mem _ hz), fun i hi => ?_, fun c hc => ?_⟩
-  · rw [hve, hv0e, if_neg (not_lt.mpr hi)]
+  · rw [hve, hv0e, ite_eq_right (not_lt.mpr hi)]
   · induction c using Fin.lastCases with
     | last =>
       refine ⟨y' * (ζ - t (Fin.last r)), ?_⟩
@@ -580,7 +580,7 @@ theorem pre_rowvec (Λ : Submodule (𝓞 E) S.V) (hint : IntLat Λ) (Tn : ℕ) (
       have hai : a < i := Fin.castSucc_lt_castSucc_iff.mp hc
       refine ⟨t i.castSucc * q i, ?_⟩
       have hfi : frame F (Fin.castSucc i) = F.fl.e i := by simp [frame, FlagG.fvec]
-      rw [hfi, hve, hv0e, if_pos hai]
+      rw [hfi, hve, hv0e, ite_eq_left hai]
       push_cast; ring
 
 theorem coe_nat (N : ℕ) : ((N : 𝓞 E) : E) = (N : E) := map_natCast (algebraMap (𝓞 E) E) N
@@ -648,7 +648,7 @@ theorem rowVec_of (D : D7) (u : D.what₂.Word) (T' : ℕ) (htr : Odd (gS D) ∨
       ∀ x ∈ Λ, x ∈ Submodule.span D.host.E (Set.range F0.e) →
         ∃ s : 𝓞 D.host.E, s ∉ P.asIdeal ∧ s • x ∈ Submodule.span (𝓞 D.host.E) (Set.range F0.e) := by
     intro P hg x hx hxE
-    haveI := P.isPrime
+    have := P.isPrime
     obtain ⟨c, _, hc1, hceq⟩ := hΛ.2.1.2.2.2.1 P
     have hxX : x ∈ XLam Λ (lf D F0) := Submodule.mem_inf.mpr ⟨hx, hxE⟩
     have hxl : x ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (XLam Λ (lf D F0)) :=

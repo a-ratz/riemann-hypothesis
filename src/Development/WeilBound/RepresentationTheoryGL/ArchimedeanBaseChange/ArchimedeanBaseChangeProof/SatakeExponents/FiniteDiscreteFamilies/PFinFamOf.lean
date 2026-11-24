@@ -176,7 +176,7 @@ theorem finFamOf : FinFamOf := by
       (∀ w, GlobalTheory.LGrp.IsSpherical (locProd D'.h w (D'.σ · w)) (K w)) ∧
       ∀ i, HasKType (W (D'.N i)) (D'.V i)} := by
     have hfin := bounded_finite (E := E) n m
-    haveI := hfin.to_subtype
+    have := hfin.to_subtype
     refine cov_of_cover (ι := bounded E n m) (fun t => {D' : Pre E n | shape D' = t.1 ∧
       (∀ w, GlobalTheory.LGrp.IsSpherical (locProd D'.h w (D'.σ · w)) (K w)) ∧
       ∀ i, HasKType (W (D'.N i)) (D'.V i)}) (fun t => cov_fibre hL hF K W hK hW t.1) ?_

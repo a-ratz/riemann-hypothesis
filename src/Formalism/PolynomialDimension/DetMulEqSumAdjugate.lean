@@ -130,7 +130,7 @@ lemma frob_row {p : ℕ} [Fact p.Prime] {F : Type} [Field F] [CharP F p] {k : �
     (h : Matrix (Fin k) (Fin k) F) (a s : ℕ) (ha : a ≤ s) (t : Fin k → F) (c : Fin k) :
     ((t ᵥ* h.map (fun x => x ^ p ^ a)) c) ^ p ^ (s - a) =
       ((fun i => t i ^ p ^ (s - a)) ᵥ* h.map (fun x => x ^ p ^ s)) c := by
-  haveI : ExpChar F p := ExpChar.prime (Fact.out)
+  have : ExpChar F p := ExpChar.prime (Fact.out)
   simp only [Matrix.vecMul, dotProduct, Matrix.map_apply]
   rw [sum_pow_char_pow]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -315,7 +315,7 @@ theorem detMulEqSumAdjugate : Formalism.CountingSumsFrames.DetMulEqSumAdjugate :
 theorem keyVanish : Formalism.CountingSumsFrames.KeyVanish := by
   intro p _ F _ _ r k h hdet s
   classical
-  haveI : ExpChar F p := ExpChar.prime (Fact.out : p.Prime)
+  have : ExpChar F p := ExpChar.prime (Fact.out : p.Prime)
   have hpne : ∀ n, p ^ n ≠ 0 := fun n => pow_ne_zero _ (Fact.out : p.Prime).ne_zero
   have hHmap : h.map (fun x => x ^ p ^ s) = (iterateFrobenius F p s).mapMatrix h := by
     ext i j

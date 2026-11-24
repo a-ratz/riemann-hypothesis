@@ -98,7 +98,7 @@ theorem inner_rep (π : G →* (H →L[ℂ] H)) (hπ : ∀ g v, ‖π g v‖ = �
   let e : H →ₗᵢ[ℂ] H := ⟨(π g : H →ₗ[ℂ] H), hπ g⟩
   have h1 := e.inner_map_map (π g⁻¹ a) b
   have h2 : π g (π g⁻¹ a) = a := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
   rw [← h1]
   change _ = ⟪π g (π g⁻¹ a), π g b⟫_ℂ
   rw [h2]
@@ -133,13 +133,13 @@ theorem schur_orthogonality [Nontrivial H] [TopologicalSpace G] [MeasurableMul G
         intro g
         ext v
         refine ext_inner_left ℂ fun v' => ?_
-        rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, inner_rep π hπ, hI, hI]
+        rw [mul_apply_eq_comp, mul_apply_eq_comp, inner_rep π hπ, hI, hI]
         simp only [I]
         rw [← integral_mul_right_eq_self _ g]
         congr 1
         ext x
-        rw [← ContinuousLinearMap.mul_apply (π (x * g)) (π g⁻¹), ← map_mul, mul_inv_cancel_right,
-          map_mul, ContinuousLinearMap.mul_apply])
+        rw [← mul_apply_eq_comp (π (x * g)) (π g⁻¹), ← map_mul, mul_inv_cancel_right,
+          map_mul, mul_apply_eq_comp])
     refine ⟨c, fun v v' => ?_⟩
     rw [← hI, hc]
     simp [inner_smul_right]
@@ -158,7 +158,7 @@ theorem schur_orthogonality [Nontrivial H] [TopologicalSpace G] [MeasurableMul G
     intro g
     rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq]
   have hpos : 0 < ∫ g, ‖⟪u, π g u⟫_ℂ‖ ^ 2 ∂μ := by
-    refine integral_pos_of_integrable_nonneg_nonzero (x := 1) ?_ ?_ (fun g => by positivity) ?_
+    refine integral_pos_of_integrable_nonneg_ne_zero (x := 1) ?_ ?_ (fun g => by positivity) ?_
     · exact ((continuous_const.inner (hc u)).norm).pow 2
     · exact (h u u).integrable_norm_pow (by norm_num)
     · simp [hu]
@@ -184,8 +184,8 @@ theorem schur_orthogonality_unitary : ∀ (n : ℕ) (ε : Fin n → Bool) (H : T
     { toFun := fun g => σ (umat g)
       map_one' := h1
       map_mul' := fun a b => hmul _ (hmem a) _ (hmem b) }
-  haveI : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
-  haveI : (Formalism.REAL.muG ε).IsInvInvariant :=
+  have : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
+  have : (Formalism.REAL.muG ε).IsInvInvariant :=
     ⟨Formalism.REAL.invInvariant_of Formalism.REAL.indefinite_unitary_unimodular n ε⟩
   exact SchurOrth.schur_orthogonality (μ := Formalism.REAL.muG ε) π (fun g v => hiso _ (hmem g) v)
     (fun v => (hcont v).comp_continuous (Formalism.REAL.continuous_coeMatrix ε) hmem)

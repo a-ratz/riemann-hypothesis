@@ -274,7 +274,7 @@ variable {K W : Type} [Field K] [NumberField K] [AddCommGroup W] [Module K W]
 theorem exists_gen (h1 : Module.finrank K W = 1) {B C : Submodule (𝓞 K) W}
     (hB : Submodule.IsFullLattice K B) (hBC : B ≤ C) (hC : C.FG) :
     ∃ y, C = B ⊔ Submodule.span (𝓞 K) {y} := by
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨t, ht, e⟩ := (LatticeGens.gens_and_count K W B C hBC
     (DiscOrder.idxN_ne_zero hB hC)).1 hC
   rw [h1] at ht
@@ -400,7 +400,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
     have hBB' : B ≤ B' := fun w hw => (mB' w).2 ⟨0, by simpa using (mB w).1 hw⟩
     have hB'fg : B'.FG := hL.1.fg.map π
     have hB'l : Submodule.IsFullLattice K B' := by
-      letI := hB.1
+      let := hB.1
       exact Submodule.IsFullLattice.of_le_of_fg K hBB' hB'fg
     have mC : ∀ x : perp h U, x ∈ dual (hRes h (perp h U)) B' ↔ (x : V) ∈ dual h L := by
       intro x
@@ -498,7 +498,7 @@ theorem sum_encard_fibre_le {α ι : Type*} (S : Set α) (f : α → ι) (s : Fi
     rw [Finset.sum_insert ha]
     have e : S ∩ {x | f x ∈ insert a s} = (S ∩ {x | f x = a}) ∪ (S ∩ {x | f x ∈ s}) := by
       ext x
-      simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Finset.mem_insert, Set.mem_union]
+      simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Finset.mem_insert, Set.mem_union]
       tauto
     rw [e, Set.encard_union_eq]
     · gcongr
@@ -929,7 +929,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       discN (hRes h U) M = p.1 ^ 2 ∧ p.1 ∣ de
   let f : ℕ × Finset (Ideal (𝓞 K)) → Submodule K V := fun I => if hI : ∃ U, Q I U then hI.choose else ⊥
   have hf : ∀ I, (∃ U, Q I U) → Q I (f I) := fun I hI => by
-    simp only [f, dif_pos hI]
+    simp only [f, dite_eq_left hI]
     exact hI.choose_spec
   let A : Finset (ℕ × Finset (Ideal (𝓞 K))) :=
     ((Finset.Icc 1 de).sigma T).map ⟨fun x => (x.1, x.2), by
@@ -1061,7 +1061,7 @@ theorem orbMass_stabilizer_le (K V : Type) [Field K] [NumberField K] [StarRing K
   have hp1 := hRes_pd h hp U
   have hs2 := hRes_symm h hs (perp h U)
   have hp2 := hRes_pd h hp (perp h U)
-  letI act : MulAction (MulAction.stabilizer (isom h) U)
+  let act : MulAction (MulAction.stabilizer (isom h) U)
       (Submodule (𝓞 K) U × Submodule (𝓞 K) (perp h U)) :=
     { smul := fun γ p => ((φ γ).1 • p.1, (φ γ).2 • p.2)
       one_smul := fun p => by
@@ -1083,7 +1083,7 @@ theorem orbMass_stabilizer_le (K V : Type) [Field K] [NumberField K] [StarRing K
   have memB : ∀ M, M ∈ B ↔ IsIntLat (hRes h (perp h U)) M ∧
       1 ≤ discN (hRes h (perp h U)) M ∧ discN (hRes h (perp h U)) M ≤ n * N₀ := by
     intro M
-    simp only [hB, Set.mem_iUnion, Finset.mem_Icc, latsDisc, Set.mem_setOf_eq]
+    simp only [hB, Set.mem_iUnion, Finset.mem_Icc, latsDisc, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨i, hi, h1, rfl⟩
       exact ⟨h1, hi⟩
@@ -1124,8 +1124,8 @@ theorem orbMass_stabilizer_le (K V : Type) [Field K] [NumberField K] [StarRing K
       exact k3
   have fY : ∀ p ∈ A ×ˢ B, Finite (MulAction.stabilizer (MulAction.stabilizer (isom h) U) p) := by
     rintro p ⟨h1, h2⟩
-    haveI := fA _ h1
-    haveI := fB _ h2
+    have := fA _ h1
+    have := fB _ h2
     refine Finite.of_injective
       (β := MulAction.stabilizer (isom (hRes h U)) p.1 ×
         MulAction.stabilizer (isom (hRes h (perp h U))) p.2)
@@ -1268,7 +1268,7 @@ namespace GlobalTheory.Mass.PrimMeanCorankOne
 
 theorem main : ∀ (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (C' Cl Cg cb Cu cT CT C0 A : ℝ), UnitaryVolumeMass.stMassRatio D → Formalism.MainNotions.BridgeLemma₂.PrimitiveMeanCorankOne D large₂ u u' C' Cl Cg cb Cu cT CT C0 A := by
   intro D large₂ u u' C' Cl Cg cb Cu cT CT C0 A hR
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro hyp F0 he hz what₂ hrows de hde HH hdH hNH
   obtain ⟨-, ⟨-, hTp, -, hT3, -, hTs, -⟩, -⟩ := hyp
   unfold Cnt.MeanLe

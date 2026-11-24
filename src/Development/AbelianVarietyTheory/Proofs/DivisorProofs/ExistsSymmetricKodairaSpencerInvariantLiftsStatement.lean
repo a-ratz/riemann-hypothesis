@@ -130,7 +130,7 @@ theorem isInv_comb : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [I
   intro R _ G _ _ g w e hw a
   refine ⟨isField_comb g e (fun c => (hw c).1) a, ?_⟩
   intro S _ φ x w' O f hx hO htr
-  letI : Algebra R S := φ.toAlgebra
+  let : Algebra R S := φ.toAlgebra
   have hG := GlobalTheory.Heat.CoeffWt.isGrpPullback_self G
   choose u hu using fun c => PullbackSections.push_surj hG (tv (w c))
   have hul : ∀ c, (u c).left = (tv (w c)).left := fun c =>
@@ -410,7 +410,7 @@ theorem exists_basis_pull_matrix : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
   have hB : Smooth Dd.toPre.P.A.hom := Dd.toPre.P.isAb.smooth
   obtain ⟨g, ⟨w⟩⟩ := GlobalTheory.RayBasis.exists_basis hB
   choose e he using fun c => GlobalTheory.RayBasis.exists_isInv (w c)
-  haveI : IsMonHom Y.q := Y.q_linear.isMonHom
+  have : IsMonHom Y.q := Y.q_linear.isMonHom
   have hq : Smooth Y.q.left := Y.smooth_q
   let L := lieMap Y.q
   choose s hs using fun c => GlobalTheory.T.smooth_commGroupSchemeHom_tangentAtOrigin_surjective R Y.H Dd.toPre.P.A Y.q hq (w c)
@@ -539,7 +539,7 @@ theorem exists_lift (hinj : ∀ (O : B.left.Opens) (f f' : Γ(B.left, O)),
   have hB : ∀ O, O ≤ V → ∀ f : Γ(B.left, O),
       pbT q.left (dB O f) (q.left ⁻¹ᵁ O) = d _ (pbT q.left f (q.left ⁻¹ᵁ O)) := by
     intro O h f
-    simp only [dB, dif_pos h]
+    simp only [dB, dite_eq_left h]
     exact (hdesc O h f).choose_spec
   obtain ⟨⟨h1, h2, h3⟩, h4⟩ := hd
   refine ⟨dB, ⟨⟨fun O h f f' => hinj O _ _ ?_, fun O h f f' => hinj O _ _ ?_, fun O O' h' h f => hinj O' _ _ ?_⟩,

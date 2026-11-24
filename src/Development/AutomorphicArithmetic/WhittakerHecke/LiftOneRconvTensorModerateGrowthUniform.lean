@@ -198,7 +198,7 @@ theorem UpperTheory.liftOne_rconv_tensor_moderateGrowth_uniform :
     obtain ⟨_, -, hs, -⟩ := UpperTheory.ConvolutionTheory.Tf.lactSpec K n _ h₁
     obtain ⟨Y, hY, hYb, -⟩ := UpperTheory.ConvolutionTheory.Tf.htCompact K n
       ((fun a => (archP K n a : AdelicGLn.AdelicGL K n)) '' tsupport (lact u β₁))
-      ((lact u β₁).hasCompactSupport.isCompact.image (continuous_subtype_val.comp continuous_archP))
+      ((lact u β₁).hasCompactSupport.isCompact.image (continuous_subtypeVal.comp continuous_archP))
     refine ⟨(∫ a, ‖lact u β₁ a‖ ∂ν) * (|C| * (heightConst K n * D * Y) ^ N), fun φ g => ?_⟩
     rw [(UpperTheory.ConvolutionTheory.Tf.lactConv K n ν β₁ β₂ h₁).2.1 u, liftOne,
       (UpperTheory.ConvolutionTheory.Tf.rconvSlice K n hn μ ν m hC (lact u β₁) β₂ e φ (hs u).1).1]

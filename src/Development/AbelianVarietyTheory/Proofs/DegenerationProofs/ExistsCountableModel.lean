@@ -466,7 +466,7 @@ theorem exists_pre (hL : Laws) {K : Type} [Field K] [IsAlgClosed K] {O : Type} [
   obtain ⟨D₀, ψ, hψ, h₀, rfl, e⟩ := GlobalTheory.T.exists_degenerationPreData_over_subfield hL K₀ K _ D P₀ Φ gp hw c₀ hc₀ hc₁
   obtain rfl := eq_of_heq e
   obtain ⟨a, Ha⟩ := GlobalTheory.T.exists_ratio_descends_degenerationPsiFamily K D ψ hψ
-  have : Countable D.X := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have : Countable D.X := Countable.of_moduleFinite (R := ℤ)
   obtain ⟨F₁, _, _, _, α, β, hαβ, hβ⟩ := exists_countable_closed K₀ a
   obtain ⟨D', h₁, -, -⟩ := DegPull.exists_isPullDeg hL.polBaseChange K₀ F₁ α D₀ ⊤ (nonempty_psiOn_field D₀) trivial
   generalize K₀.subtype = i at h₀ ho₀ hαβ
@@ -490,7 +490,7 @@ theorem exists_data (hL : Laws) {K : Type} [Field K] [IsAlgClosed K] {O : Type} 
       (∀ a, (oa.onB.act a).left ≫ proj hD = proj hD ≫ (oa₁.onB.act a).left) ∧ (D.PsiEven → D₁.PsiEven) ∧
       (D.TauBimult → D₁.TauBimult) ∧ ∀ w, TraceFormTwistIso D oa w → TraceFormTwistIso D₁ oa₁ w := by
   obtain ⟨F₁, _, _, _, β, D₁, hD, o₁, ho⟩ := exists_pre hL D oa.onB
-  letI : Module O D₁.X := hD.xe.symm.module O
+  let : Module O D₁.X := hD.xe.symm.module O
   have hx : ∀ (a : O) y, hD.xe (a • y) = a • hD.xe y := fun a y => by
     show _ = hD.xe (a • hD.xe.symm (hD.xe y))
     rw [AddEquiv.symm_apply_apply]
@@ -593,8 +593,8 @@ namespace GlobalTheory.QkDescent
 theorem exists_qkExt_of_isAlgClosed : Laws → ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] (D : DegPre R), D.TauBimult → ∀ (F F' : Type) [Field F] [IsAlgClosed F] [CharZero F] [Field F'] [IsAlgClosed F'] [Algebra (FractionRing R) F] [Algebra (FractionRing R) F'] (f : F →+* F'), f.comp (algebraMap (FractionRing R) F) = algebraMap (FractionRing R) F' → ∀ k : ℕ, 1 ≤ k → ∀ p' : QkPt D F' k, ∃ p : QkPt D F k, QkExt f p p' := by
   intro hL R _ _ _ D hB F F' _ _ _ _ _ _ _ f hf k hk p'
   have hk' : (k : F) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
-  letI := GlobalTheory.TorusExt.gtGroup (D := D) (F := F)
-  letI := GlobalTheory.TorusExt.gtGroup (D := D) (F := F')
+  let := GlobalTheory.TorusExt.gtGroup (D := D) (F := F)
+  let := GlobalTheory.TorusExt.gtGroup (D := D) (F := F')
   have hk0 : k ≠ 0 := by omega
   obtain ⟨q, hq⟩ := GlobalTheory.TorusExt.exists_qkPt (F := F) hL.mulN (Or.inr hL.polBaseChange) hB hk0 p'.y
   obtain ⟨h₀, h₁, h₂⟩ := q.eq

@@ -521,10 +521,10 @@ private theorem logAt_le_chartForms_of_isLogChart {X : Scheme.{0}} [IsIntegral X
     intro k b hb
     by_cases hk : k ∈ J
     · have h1 : dK (x k : X.functionField) = (x k : X.functionField) • frame x J k := by
-        rw [frame, if_pos hk, dK_units_eq_smul_dlog]
+        rw [frame, ite_eq_left hk, dK_units_eq_smul_dlog]
       rw [h1, smul_smul]
       exact hfr k _ ((locRing y).mul_mem hb (hch.mem k))
-    · have h1 : dK (x k : X.functionField) = frame x J k := by rw [frame, if_neg hk]
+    · have h1 : dK (x k : X.functionField) = frame x J k := by rw [frame, ite_eq_right hk]
       rw [h1]
       exact hfr k b hb
   rw [dlog_mul', dlog_prod_zpow]
@@ -540,7 +540,7 @@ private theorem logAt_le_chartForms_of_isLogChart {X : Scheme.{0}} [IsIntegral X
     exact sum_mem fun k _ => by
       rw [smul_smul]
       exact hdK k _ ((locRing y).mul_mem huiA (hcf k))
-  · have h1 : dlog (x k) = (1 : X.functionField) • frame x J k := by rw [frame, if_pos hk, one_smul]
+  · have h1 : dlog (x k) = (1 : X.functionField) • frame x J k := by rw [frame, ite_eq_left hk, one_smul]
     rw [h1]
     exact hfr k 1 (locRing y).one_mem
 
@@ -563,9 +563,9 @@ private theorem chartForms_le_logAt_of_isLogChart {X : Scheme.{0}} [IsIntegral X
       refine (hc.logUnit y hy (x k)).2 ⟨1, fun i => if i = k then 1 else 0, ⟨1, isUnit_one, by simp⟩, ?_⟩
       rw [one_mul, Finset.prod_eq_single k (fun b _ hb => by simp [hb]) (fun h => absurd hk h)]
       simp
-    rw [frame, if_pos hk, ← one_smul X.functionField (dlog (x k))]
+    rw [frame, ite_eq_left hk, ← one_smul X.functionField (dlog (x k))]
     exact AddSubgroup.subset_closure ⟨1, (locRing y).one_mem, _, ⟨x k, hlu, rfl⟩, rfl⟩
-  · rw [frame, if_neg hk]
+  · rw [frame, ite_eq_right hk]
     obtain ⟨u, hu, b, hb, hd⟩ := exists_unitAt_dK_eq_smul_dlog_of_regAt (mem_locRing.1 ((hc.chart y hy).mem k))
     rw [hd]
     exact AddSubgroup.subset_closure ⟨b, mem_locRing.2 hb, _, ⟨u, logUnit_of_unitAt Z hu, rfl⟩, rfl⟩
@@ -597,7 +597,7 @@ private theorem isEqn_smul_add_sum_smul {X : Scheme.{0}} [IsIntegral X] {C : Typ
     · simp
     · have hj0 : j0 ∈ J := (hJ j0).2 ⟨c, hc⟩
       simp only [Option.some.injEq, Option.elim_some]
-      rw [Finset.prod_ite_eq J j0 (fun j => x j ^ r c), if_pos hj0]
+      rw [Finset.prod_ite_eq J j0 (fun j => x j ^ r c), ite_eq_left hj0]
   rw [hprod]
   exact (ht.nsmul p).add (hs _)
 
@@ -635,7 +635,7 @@ theorem cartierAt_atlas_inter : ∀ (p : ℕ) [Fact p.Prime] {X : Scheme.{0}} [I
   have hG' : ∀ w ∈ 𝒜.U j, (p • G + ∑ c, r c • E c).IsEqn w
       (tG w ^ p * ∏ j' ∈ 𝒜.J j, 𝒜.x j j' ^ (∑ c ∈ Finset.univ.filter (fun c => e c = some j'), r c)) :=
     fun w hw => isEqn_smul_add_sum_smul E G r p (𝒜.x j) (𝒜.J j) e hJ w (tG w) (htG w) (fun c => heqn c w hw)
-  haveI hY : Nonempty {w : X // w ∈ inter 𝒜.U s} :=
+  have hY : Nonempty {w : X // w ∈ inter 𝒜.U s} :=
     ⟨⟨genericPoint X, mem_inter_of_forall _ _ _ (fun i _ => 𝒜.gen i)⟩⟩
   have hfam := fun a η => logCartier_rounding_family X.functionField p n (𝒜.x j) (𝒜.J j) γ
     {w : X // w ∈ inter 𝒜.U s} (fun w => locRing w.1) (fun w => tG w.1)
@@ -745,7 +745,7 @@ open FrobTwist in
 theorem exists_isGamma {K : Type} [CommRing K] {V : Type} [AddCommGroup V] [Module K V] (p : ℕ)
     [Fact p.Prime] [CharP K p] (f : V →+ V) (hf : ∀ (c : K) v, f (c • v) = c ^ p • f v) :
     ∃ γ : ExteriorAlgebra K V →+* ExteriorAlgebra K V, IsGamma p f γ := by
-  letI : Algebra K (Tw K V) := twAlg p
+  let : Algebra K (Tw K V) := twAlg p
   let g : V →ₗ[K] Tw K V :=
     { toFun := fun v => (ExteriorAlgebra.ι K (f v) : ExteriorAlgebra K V)
       map_add' := fun v w => by

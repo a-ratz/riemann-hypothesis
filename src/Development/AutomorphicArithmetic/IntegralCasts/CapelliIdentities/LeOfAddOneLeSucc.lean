@@ -59,7 +59,7 @@ theorem UpperTheory.Reformulated.B.Qn14.le_of_add_one_le_succ :
         rw [← WithBot.coe_le_coe]
         exact h
       rw [top_add, top_le_iff] at h1
-      exact ENat.coe_ne_top _ h1
+      exact ENat.natCast_ne_top _ h1
     | coe n =>
       have h1 : ((n : ℕ∞) + 1 : ℕ∞) ≤ ((k + 1 : ℕ) : ℕ∞) := by
         rw [← WithBot.coe_le_coe]

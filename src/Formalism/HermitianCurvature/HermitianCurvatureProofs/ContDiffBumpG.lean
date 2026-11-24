@@ -269,7 +269,7 @@ theorem slice_bound (hp : 1 ≤ p) (σ : Equiv.Perm (Fin p)) (d : Fin p → ℂ)
     exact isClosed_eq (Formalism.FourierDecayAlt.P.JCTx6.Pos.cont_DjU k (p + 0) ρ) continuous_const
   have hKsub : K ⊆ {x | x ∈ B.GV k (p + 0 + ρ) ∧ U.DjU k (p + 0) ρ x ≠ 0} := by
     rintro x ⟨⟨hx1, -⟩, hx3⟩
-    exact ⟨hx1, by rw [Set.mem_setOf_eq.mp hx3]; exact hδ0ne⟩
+    exact ⟨hx1, by rw [Set.mem_ofPred_eq.mp hx3]; exact hδ0ne⟩
   obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn (hHc.mono hKsub)
   set c1 : ℝ := max C1 0 with hc1
   set c2 : ℝ := max C2 0 with hc2

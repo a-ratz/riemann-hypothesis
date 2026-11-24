@@ -107,11 +107,11 @@ theorem kill_of_pow [IsDedekindDomain R] [IsNoetherian R Q] (𝔴 𝔟 : Ideal R
   let 𝔞 : Ideal R :=
     { carrier := {x | ∀ y ∈ 𝔴, (x * y) • t = 0}
       add_mem' := fun {a b} ha hb y hy => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [add_mul, add_smul, ha y hy, hb y hy, add_zero]
       zero_mem' := fun y _ => by simp
       smul_mem' := fun c x hx y hy => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at hx ⊢
         rw [mul_assoc, mul_smul, hx y hy, smul_zero] }
   have mem𝔞 : ∀ x, x ∈ 𝔞 ↔ ∀ y ∈ 𝔴, (x * y) • t = 0 := fun x => Iff.rfl
   have hs𝔞 : s ∈ 𝔞 := (mem𝔞 s).2 fun y hy => kill y hy t
@@ -270,7 +270,7 @@ theorem Setup.core1 [IsDedekindDomain R] [IsNoetherian R La] (S : Setup Λ ι H�
     obtain ⟨z, hz⟩ := (S.ps_zero _).1 hc
     have hz' : c • x = M • z := hz
     rw [← ev_lin, hz', ev_ker']
-  haveI : IsNoetherian R (Qt Λ H₀) :=
+  have : IsNoetherian R (Qt Λ H₀) :=
     isNoetherian_of_surjective _ (LinearMap.range_eq_top.2 (S.ps_surj))
   apply hback
   refine kill_of_pow 𝔴 𝔟 h𝔟 s hs (S.kill_Q 𝔴 s kill) ?_ _ (fun b hb' => hkill b (hb b hb')) y hy
@@ -439,12 +439,12 @@ theorem lat_main (q : ℕ) (r : ℤ) (𝔴 : Ideal (𝓞 D.F)) (i : ℕ) (h₀ u
     (∀ g, Kp g → (∃ e : ℕ, ∀ x ∈ uId D q r ^ e, act x g = 1) → ∀ y ∈ 𝔴, act y g = 1) ∧
     Nat.card {g // Kp g ∧ ∀ y ∈ 𝔴, act y g = 1} = Ideal.absNorm 𝔴 ^ i := by
   subst hMe
-  haveI := hA.max
-  haveI := D.finLa
+  have := hA.max
+  have := D.finLa
   obtain ⟨s, hs, hk⟩ := hT.kill
-  letI iLa : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  letI iV : Module (𝓞 D.F) (AfP p ⊗[ℚ] VQ D) := Module.compHom (AfP p ⊗[ℚ] VQ D) (rho L)
-  haveI : Module.Finite (𝓞 D.F) D.La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 D.F) D.La
+  let iLa : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  let iV : Module (𝓞 D.F) (AfP p ⊗[ℚ] VQ D) := Module.compHom (AfP p ⊗[ℚ] VQ D) (rho L)
+  have : Module.Finite (𝓞 D.F) D.La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 D.F) D.La
   have hsm : ∀ (c : 𝓞 D.F) (v : AfP p ⊗[ℚ] VQ D), c • v = mulF D c v := fun c v => by
     show rho L c v = _
     rw [rho_apply]
@@ -612,7 +612,7 @@ theorem UpperTheory.trace_identity_of_tjElement :
     rw [inAf_zero']
     exact zero_add _
   · intro g hg
-    haveI := hmon'
+    have := hmon'
     have e1 : g ≫ ψ ≫ ψ' = g ^ d := by rw [h1, comp_pow, Category.comp_id]
     have e0 : g ≫ ψ ≫ ψ' = 1 := by
       rw [← Category.assoc, hg]

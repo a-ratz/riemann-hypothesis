@@ -63,7 +63,7 @@ theorem rdU_eq_zero_iff (hL : GlobalTheory.Reg.EvLaws Xo c) (U : Unf Xo c σ r) 
     (Z : Comp Xo c) (x : (U.X k).dom) (φ : Om Z →ₐ[c.F] CAt σ) (y' : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ)
     (hm : FrMap φ (genFr h Z) y') (hb : FrBor t (U.un k x) y') {u : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {f : Rul Xo c}
     (hf : f ∈ sec Xo c u n) : rdU U f k x = 0 ↔ evC h Z f = 0 := by
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   have h1 : evR Xo c f y' = φ (evC h Z f) := by
     obtain ⟨q, χ, y₀, hy₀⟩ := hL.test (Om Z) (genFr h Z)
     unfold evC

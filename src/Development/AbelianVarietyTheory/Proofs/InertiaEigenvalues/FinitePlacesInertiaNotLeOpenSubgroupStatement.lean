@@ -75,7 +75,7 @@ theorem finite_not_ine_le_of_isOpen : ∀ (Ω : Type) [Field Ω] (k : Type) [Fie
     {w : HeightOneSpectrum (𝓞 k) | ∃ A : ValuationSubring Ω, IsPlaceOver A w ∧ ¬ Ine (F := k) A ≤ N}.Finite := by
   intro Ω _ k _ _ _ _ N hN
   obtain ⟨L, hL, hLN⟩ := (krullTopology_mem_nhds_one_iff k Ω (N : Set (G k Ω))).1 (hN.mem_nhds N.one_mem)
-  haveI : FiniteDimensional k L := hL
+  have : FiniteDimensional k L := hL
   refine (GlobalTheory.InertiaAlmostAll.finite_ramified k Ω L).subset ?_
   rintro w ⟨B, hB, h⟩
   exact ⟨B, hB, fun h' => h fun x hx => hLN (h' hx)⟩

@@ -73,11 +73,11 @@ theorem UpperTheory.ConvolutionTheory.R2.Fo.fkBasic :
     | zero => exact hN
     | succ k ih =>
       rw [hs]
-      haveI := ih
-      haveI : ∀ w : InfinitePlace F, FiniteDimensional ℂ
+      have := ih
+      have : ∀ w : InfinitePlace F, FiniteDimensional ℂ
           (⨆ i, (O.Fk N k).map (O.x w i) : Submodule ℂ (S4 F)) := fun w =>
         Submodule.finiteDimensional_iSup _
-      haveI : FiniteDimensional ℂ
+      have : FiniteDimensional ℂ
           (⨆ w, ⨆ i, (O.Fk N k).map (O.x w i) : Submodule ℂ (S4 F)) :=
         Submodule.finiteDimensional_iSup _
       exact Submodule.finiteDimensional_sup _ _

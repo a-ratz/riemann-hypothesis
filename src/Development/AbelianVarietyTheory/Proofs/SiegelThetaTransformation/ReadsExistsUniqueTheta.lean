@@ -132,7 +132,7 @@ theorem reads_existsUnique_theta : ∀ (E : Type) [Field E] [NumberField E] [IsC
     have h3 := mul_right_cancel₀ (hne _ _ _ hj') h2
     have hχ : A.χ v ≠ 0 := fun h0 => by simpa [h0] using A.χ_norm v hv
     simp only [Pi.smul_apply, fock, smul_eq_mul]
-    rw [← h3, hx_add_smul, zpow_natCast, mul_pow, ← Complex.exp_nat_mul]
+    rw [← h3, hx_add_smul, zpow_natCast, mul_pow, ← exp_natCast_mul]
     set a := hx X bas idx x z (pv X idx x v)
     set b := hx X bas idx x (pv X idx x v) (pv X idx x v)
     have h4 : cexp (-((k : ℂ) * Real.pi * (a + 1 / 2 * b))) * cexp (k * (Real.pi * a + Real.pi / 2 * b)) = 1 := by

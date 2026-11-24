@@ -63,7 +63,7 @@ theorem wI_mul (L Q : A) (W : ℕ) {e e' : ℕ} {z z' : A} (hz : z ∈ wI L Q W 
     (hz' : z' ∈ wI L Q W e') : z * z' ∈ wI L Q W (e + e') := by
   have hle : wI L Q W e * wI L Q W e' ≤ wI L Q W (e + e') := by
     unfold wI
-    rw [Ideal.span_mul_span']
+    rw [Ideal.span_mul_span]
     apply Ideal.span_mono
     rintro _ ⟨x, ⟨a, b, hab, rfl⟩, y, ⟨a', b', hab', rfl⟩, rfl⟩
     refine ⟨a + a', b + b', ?_, by ring⟩
@@ -164,7 +164,7 @@ theorem sign_character_at_j_holds : StatSigJ := by
   have hfin : x * (x ^ r' * (∏ k ∈ Finset.range j, p k ^ (ℓ - 1)) ^ (r' + 1)) ∈
       Ideal.span {(ℓ : A) ^ c * x, x * (x + (ℓ : A)) ^ y} := by
     have h1 := Ideal.mul_mem_mul (Ideal.mem_span_singleton_self x) hin
-    rw [Ideal.span_mul_span'] at h1
+    rw [Ideal.span_mul_span] at h1
     refine Ideal.span_mono ?_ h1
     rintro _ ⟨u, hu, v, hv, rfl⟩
     rw [Set.mem_singleton_iff] at hu

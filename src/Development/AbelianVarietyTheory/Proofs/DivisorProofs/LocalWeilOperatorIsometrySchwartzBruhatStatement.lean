@@ -159,8 +159,8 @@ theorem exists_cofactor : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [
         ∫⁻ x, K.indicator 1 (fun i => evFin F v (x i)) * ‖r x‖ₑ ^ 2 ∂μA ≠ 0 ∧
         ∫⁻ x, K.indicator 1 (fun i => evFin F v (x i)) * ‖r x‖ₑ ^ 2 ∂μA ≠ ⊤ := by
   intro F _ _ κ _ v
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   obtain ⟨f, hfc, hf0⟩ := exists_bump F κ
   let φ : ∀ w : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F w) → ℂ := fun w => (intPts κ w).indicator 1
   have hφ : ∀ w, φ w ∈ GlobalTheory.WeilM.SB _ := fun w => indicator_mem_SB (isCompact_intPts w) (isOpen_intPts w)
@@ -225,7 +225,7 @@ theorem exists_cofactor : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [
   rw [hI]
   have hPP : Continuous (P * P) := hPc.mul hPc
   refine ⟨fun h => ?_, (hPP.integrable_of_hasCompactSupport hPs.mul_left).2.ne⟩
-  rw [lintegral_eq_zero_iff hPP.measurable.enorm] at h
+  rw [lintegral_eq_zero_iff hPP.measurable.eNorm] at h
   have h3 : (P * P) =ᵐ[μ] 0 := h.mono fun x hx => by simpa using hx
   have h4 := congrFun ((hPP.ae_eq_iff_eq μ continuous_zero).1 h3) 0
   simp [hP0] at h4
@@ -297,24 +297,24 @@ theorem lintegral_tens_eq_const_mul : ∀ {F : Type} [Field F] [NumberField F] {
     ∃ C : ENNReal, C ≠ 0 ∧ C ≠ ⊤ ∧ ∀ φ : (κ → Fv F v) → ℂ, Continuous φ → HasCompactSupport φ →
       ∫⁻ x, ‖GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (evFin F v) φ r x‖ₑ ^ 2 ∂μA = C * ∫⁻ y, ‖φ y‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ _ v r hr hinv μA hμA μ hμ K hK hKi hK0 hKt
-  letI mA : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mV : MeasurableSpace (κ → Fv F v) := borel _
-  haveI : BorelSpace (κ → Fv F v) := ⟨rfl⟩
+  let mA : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mV : MeasurableSpace (κ → Fv F v) := borel _
+  have : BorelSpace (κ → Fv F v) := ⟨rfl⟩
   have hcont : Continuous (evFin F v) := by
     change Continuous fun a => _
     exact (PI.LevelKSplit.W.Cont.continuous_evalV v).comp continuous_snd
   let evK : (κ → AF F) → (κ → Fv F v) := fun x i => evFin F v (x i)
   have hevKm : Measurable evK := (continuous_pi fun i => hcont.comp (continuous_apply i)).measurable
   let ρ : (κ → AF F) → ENNReal := fun x => ‖r x‖ₑ ^ 2
-  have hρ : Measurable ρ := hr.enorm.pow_const 2
+  have hρ : Measurable ρ := hr.eNorm.pow_const 2
   let ν : Measure (κ → Fv F v) := (μA.withDensity ρ).map evK
   have hνA : ∀ A, MeasurableSet A → ν A = ∫⁻ x, A.indicator 1 (evK x) * ρ x ∂μA := by
     intro A hA
     rw [Measure.map_apply hevKm hA, withDensity_apply _ (hevKm hA), ← lintegral_indicator (hevKm hA)]
     refine lintegral_congr fun x => ?_
     by_cases h : evK x ∈ A <;> simp [Set.indicator, h]
-  haveI : ν.IsAddLeftInvariant := by
+  have : ν.IsAddLeftInvariant := by
     constructor
     intro y
     ext A hA
@@ -328,7 +328,7 @@ theorem lintegral_tens_eq_const_mul : ∀ {F : Type} [Field F] [NumberField F] {
     simp only [hev, ρ, hinv x z hz]
     by_cases h : y + evK x ∈ A <;> simp [Set.indicator, h]
   have hKm : MeasurableSet K := hK.isClosed.measurableSet
-  haveI : ν.IsAddHaarMeasure := Measure.isAddHaarMeasure_of_isCompact_nonempty_interior ν K hK hKi
+  have : ν.IsAddHaarMeasure := Measure.isAddHaarMeasure_of_isCompact_nonempty_interior ν K hK hKi
     (by rw [hνA K hKm]; exact hK0) (by rw [hνA K hKm]; exact hKt)
   have hsc : ∀ s : Set (κ → Fv F v), IsCompact (closure s) →
       ν s = (Measure.addHaarScalarFactor ν μ : ENNReal) * μ s := fun s hs => by
@@ -343,10 +343,10 @@ theorem lintegral_tens_eq_const_mul : ∀ {F : Type} [Field F] [NumberField F] {
   let T := tsupport φ
   have hrest : ν.restrict T = C • μ.restrict T := by
     ext s hs
-    rw [Measure.restrict_apply hs, Measure.smul_apply, Measure.restrict_apply hs, smul_eq_mul]
+    rw [Measure.restrict_apply hs, smul_apply, Measure.restrict_apply hs, smul_eq_mul]
     exact hsc _ (hφc.isCompact.of_isClosed_subset isClosed_closure
       (closure_minimal Set.inter_subset_right (isClosed_tsupport φ)))
-  have hf : Measurable fun y => ‖φ y‖ₑ ^ 2 := hφ.measurable.enorm.pow_const 2
+  have hf : Measurable fun y => ‖φ y‖ₑ ^ 2 := hφ.measurable.eNorm.pow_const 2
   have hsupp : Function.support (fun y => ‖φ y‖ₑ ^ 2) ⊆ T := by
     intro y hy
     by_contra h
@@ -354,7 +354,7 @@ theorem lintegral_tens_eq_const_mul : ∀ {F : Type} [Field F] [NumberField F] {
   calc ∫⁻ x, ‖GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (evFin F v) φ r x‖ₑ ^ 2 ∂μA
       = ∫⁻ x, (ρ * fun x => (fun y => ‖φ y‖ₑ ^ 2) (evK x)) x ∂μA := by
         refine lintegral_congr fun x => ?_
-        simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens, Pi.mul_apply, ρ, evK, enorm_mul, mul_pow, mul_comm]
+        simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens, Pi.mul_apply, ρ, evK, eNorm_mul, mul_pow, mul_comm]
     _ = ∫⁻ x, (fun y => ‖φ y‖ₑ ^ 2) (evK x) ∂(μA.withDensity ρ) :=
         (lintegral_withDensity_eq_lintegral_mul _ hρ (hf.comp hevKm)).symm
     _ = ∫⁻ y, ‖φ y‖ₑ ^ 2 ∂ν := (lintegral_map hf hevKm).symm
@@ -432,8 +432,8 @@ theorem lintegral_sq_eq_of_acts : ∀ {F E : Type} [Field F] [NumberField F] [Fi
         ∫⁻ y, ‖φ₁ y‖ₑ ^ 2 ∂μ = ∫⁻ y, ‖φ y‖ₑ ^ 2 ∂μ := by
   intro F E _ _ _ _ _ σ a a' Bs Γ X om om' hTr v x _ φ φ₁ hφ hφ₁ hact μ hμ
   obtain ⟨r, K, hrm, hinv, hsch, hK, hKi, hint⟩ := GlobalTheory.T.exists_periodic_measurable_schwartz_bound (κ := Fin a' × Fin (a + a')) v
-  letI mA : MeasurableSpace (Fin a' × Fin (a + a') → AF F) := borel _
-  haveI : BorelSpace (Fin a' × Fin (a + a') → AF F) := ⟨rfl⟩
+  let mA : MeasurableSpace (Fin a' × Fin (a + a') → AF F) := borel _
+  have : BorelSpace (Fin a' × Fin (a + a') → AF F) := ⟨rfl⟩
   have hμA : MeasureTheory.Measure.IsAddHaarMeasure
       (MeasureTheory.Measure.addHaar : MeasureTheory.Measure (Fin a' × Fin (a + a') → AF F)) := inferInstance
   obtain ⟨C, hC0, hCt, hC⟩ := GlobalTheory.T.lintegral_normSq_componentTensor_eq_const_mul v r hrm hinv _ hμA μ hμ K hK hKi (hint _ hμA).1 (hint _ hμA).2

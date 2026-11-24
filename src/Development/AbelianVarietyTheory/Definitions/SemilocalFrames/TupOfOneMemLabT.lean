@@ -178,7 +178,7 @@ theorem ES_eq_finsum (S : Set (Tup2 D)) : ES D S = ∑ᶠ t ∈ S, zTup D t := b
   rw [ES_eq_sum]
   symm
   refine finsum_mem_eq_sum_of_inter_support_eq _ (Set.ext fun t => ?_)
-  simp only [Set.mem_inter_iff, Finset.coe_filter, Set.mem_setOf_eq, Function.mem_support]
+  simp only [Set.mem_inter_iff, Finset.coe_filter, Set.mem_ofPred_eq, Function.mem_support]
   exact ⟨fun h => ⟨⟨by_contra fun h' => h.2 (zTup_eq_zero h'), h.1⟩, h.2⟩, fun h => ⟨h.1.2, h.2⟩⟩
 
 theorem ES_coe (S : Finset (Tup2 D)) : ES D (S : Set (Tup2 D)) = ∑ t ∈ S, zTup D t := by
@@ -197,7 +197,7 @@ theorem ES_congr {S T : Set (Tup2 D)} (h : ∀ t ∈ labT D, t ∈ S ↔ t ∈ T
 theorem ES_univ : ES D Set.univ = 1 := by
   classical
   rw [ES_eq_sum_coef]
-  simp only [Set.mem_univ, if_true]
+  simp only [Set.mem_univ, ite_true]
   refine (PrimeDegreeVariant.Ten.sum_tens (PrimeDegreeVariant.Ten.ESer D)).trans ?_
   simp only [PrimeDegreeVariant.Ten.ESer_sum]
   exact PrimeDegreeVariant.Ten.tens_one

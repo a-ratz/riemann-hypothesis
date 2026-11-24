@@ -121,7 +121,7 @@ theorem hchar_eq_one (H : GlobalTheory.Published.HeckeLEntireAndNonzeroAtOne) (�
           · rw [norm_one]; exact Real.exp_le_one_iff.2 (by linarith [x0 w])
       · push Not at hw
         have hl := h w (by simpa using hw.2) (not_not.1 hw.1)
-        rw [Set.indicator_of_notMem hw.1, Set.indicator_of_notMem hw.2, eulerFactor, if_pos (show χ.UnrAt w from fun y _ => hl y),
+        rw [Set.indicator_of_notMem hw.1, Set.indicator_of_notMem hw.2, eulerFactor, ite_eq_left (show χ.UnrAt w from fun y _ => hl y),
           show χ.val w = 1 from hl _, xc]
         simpa using exp_le_inv (x1 w)
     refine le_trans (Real.exp_le_exp.2 ?_) (le_of_tendsto_of_tendsto' s1.rexp (hP s hs).norm fun T =>
@@ -163,8 +163,8 @@ theorem closed_eq_top [_root_.NumberField.IsTotallyComplex K] (H : GlobalTheory.
   have cc : Continuous c := χ.continuous.comp QuotientGroup.continuous_mk
   have c1 : ∀ y ∈ M, Circle.toUnits (c y) = 1 := fun y hy => by
     rw [show c y = χ (y : Ideles K ⧸ M) from rfl, (QuotientGroup.eq_one_iff y).2 hy, map_one, map_one]
-  let X : HChar K := ⟨Circle.toUnits.comp c, Units.continuous_iff.2 ⟨continuous_subtype_val.comp cc,
-    (continuous_subtype_val.comp cc.inv).congr fun x => Circle.coe_inv (c x)⟩, fun k => c1 _ (h1 k)⟩
+  let X : HChar K := ⟨Circle.toUnits.comp c, Units.continuous_iff.2 ⟨continuous_subtypeVal.comp cc,
+    (continuous_subtypeVal.comp cc.inv).congr fun x => Circle.coe_inv (c x)⟩, fun k => c1 _ (h1 k)⟩
   have := hchar_eq_one H X (fun x => Circle.norm_coe (c x)) hS fun w a b x => c1 _ (h w a b x)
   exact hχ (Circle.ext (congrArg (fun Y : HChar K => ((Y.1 z : ℂˣ) : ℂ)) this))
 

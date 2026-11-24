@@ -1222,7 +1222,7 @@ theorem isUnitarisable_twist_one (hu : IsUnitarisable ρ) (χ : G →* ℂˣ) (h
 
 theorem le_of_subsingleton_subQuot {S T : Subrepresentation ρ}
     [Subsingleton (S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype T.toSubmodule)] : S ≤ T := by
-  rw [SetLike.le_def]
+  rw [IsConcreteLE.le_iff]
   intro x hx
   have hx' : x ∈ S.toSubmodule := hx
   have := (Submodule.Quotient.mk_eq_zero
@@ -1352,14 +1352,14 @@ theorem subsingleton_piTwo {V W : Type} [AddCommGroup V] [Module ℂ V] [AddComm
 
 theorem subsingleton_prod {r t : ℕ} (A : GRep k r) (B : GRep k t) (h : Subsingleton A.V ∨ Subsingleton B.V) :
     Subsingleton (A.prod B).V := by
-  haveI := subsingleton_piTwo h
+  have := subsingleton_piTwo h
   show Subsingleton (IndSp _ _)
   infer_instance
 
 theorem nontrivial_prod {r t : ℕ} (A : GRep k r) (B : GRep k t) (hA : IsSmooth A.ρ) (hB : IsSmooth B.ρ)
     [Nontrivial A.V] [Nontrivial B.V] : Nontrivial (A.prod B).V := by
-  haveI : ∀ x, Nontrivial (TwoT A.V B.V x) := fun x => by cases x <;> assumption
-  haveI := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_piTensorProduct (X := TwoT A.V B.V)
+  have : ∀ x, Nontrivial (TwoT A.V B.V x) := fun x => by cases x <;> assumption
+  have := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_piTensorProduct (X := TwoT A.V B.V)
   exact GlobalTheory.CompanionTheory.AdjQuot.nontrivial_indSp _ (isSmooth_piTensor fun x => by cases x; exacts [hA, hB])
 
 end Prod
@@ -1477,8 +1477,8 @@ variable (k) in
 theorem topProd_of : DerivTop k → DerivPos k → GlobalTheory.RgGu.Leib.LeibnizOrd k → LFDeriv k → CentralSub k → EigProd k →
     EigFilt k → TopProdD k := by
   intro hT _ hL _ _ _ _ ψ hc h1 r t π₁ π₂ s₁ i₁ u₁ s₂ i₂ u₂ hrt
-  haveI := nontrivial_of_irr i₁
-  haveI := nontrivial_of_irr i₂
+  have := nontrivial_of_irr i₁
+  have := nontrivial_of_irr i₂
   obtain ⟨h₁, T₁⟩ := exists_isTop ψ π₁
   obtain ⟨h₂, T₂⟩ := exists_isTop ψ π₂
   have p₁ : 0 < r → 1 ≤ h₁ := isTop_pos ψ hc h1 π₁ s₁ T₁

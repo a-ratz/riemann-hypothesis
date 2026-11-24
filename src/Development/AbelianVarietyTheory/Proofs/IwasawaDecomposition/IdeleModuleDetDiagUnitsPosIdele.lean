@@ -101,7 +101,7 @@ theorem continuous_posIdele_pos :
     Continuous fun r : {r : ℝ // 0 < r} => (posIdele (K := E) r.1 r.2 : IdeleGroup E) := by
   unfold posIdele
   exact continuous_finsetProd _ fun w _ => (continuous_moduleSection w).comp
-    (Continuous.subtype_mk ((continuous_subtype_val).pow _) _)
+    (Continuous.subtype_mk ((continuous_subtypeVal).pow _) _)
 
 
 omit [_root_.NumberField.IsTotallyComplex E] in
@@ -134,7 +134,7 @@ theorem cuspFormsBounded_of_rapidDecay (h : GlobalTheory.Published.CuspRapidDeca
   set f : AdelicGLn.AdelicGL E a → AdelicGLn.AdelicGL E a :=
     fun b => b * (diagUnits a (fun _ : Fin a => posIdele (K := E) (s b) (hspos b)))⁻¹ with hf
   have hmc : Continuous m :=
-    continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
+    continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
   have hsc : Continuous fun b => (⟨s b, hspos b⟩ : {r : ℝ // 0 < r}) :=
     Continuous.subtype_mk (hmc.rpow_const fun b => Or.inl (hmpos b).ne') _
   have hfc : Continuous f := continuous_id.mul ((continuous_diagUnits a).comp

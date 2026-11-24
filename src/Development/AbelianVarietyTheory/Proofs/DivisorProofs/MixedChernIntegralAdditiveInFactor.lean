@@ -137,7 +137,7 @@ theorem GlobalTheory.Mix.part_le_add_of_dens_add {k : Type} [CommRing k] {X : Sc
       (volume.restrict (c.e '' (c.e.source ∩ A))) :=
     (((hcont.aemeasurable c.e.open_target.measurableSet).const_mul _).ennreal_ofReal).mono_measure
       (Measure.restrict_mono hsub le_rfl)
-  rw [Measure.add_apply, chartMeas_apply _ _ hA, chartMeas_apply _ _ hA, chartMeas_apply _ _ hA,
+  rw [add_apply, chartMeas_apply _ _ hA, chartMeas_apply _ _ hA, chartMeas_apply _ _ hA,
     ← lintegral_add_left' hm]
   refine setLIntegral_mono' hI fun v hv => ?_
   beta_reduce
@@ -180,7 +180,7 @@ namespace GlobalTheory.Mix
 
 theorem int_update_tens : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k) (σ : k →+* ℂ), IsProjOver p → ∀ (D : ℕ) (L : Fin D → MLine p σ) (i : Fin D) (A B : MLine p σ) (f : CxPts p σ → ℝ), Intg (Function.update L i A) f → Intg (Function.update L i B) f → Intg (Function.update L i (A.tens B)) f ∧ Mix.int (Function.update L i (A.tens B)) f = Mix.int (Function.update L i A) f + Mix.int (Function.update L i B) f := by
   intro k _ X p σ hp D L i A B f hA hB
-  haveI : SecondCountableTopology (CxPts p σ) := CxPts.secondCountableTopology_of_isProjOver σ hp
+  have : SecondCountableTopology (CxPts p σ) := CxPts.secondCountableTopology_of_isProjOver σ hp
   have h := _root_.GlobalTheory.Mix.int_add_of_dens_add k X p σ D _ _ _ (fun c => _root_.GlobalTheory.Mix.dens_update_tens k X p σ D L i A B c) f
   exact ⟨h.1 hA hB, h.2 (h.1 hA hB) hA hB⟩
 

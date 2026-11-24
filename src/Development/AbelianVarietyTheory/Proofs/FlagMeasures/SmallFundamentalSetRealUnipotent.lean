@@ -1114,7 +1114,7 @@ theorem exists_lift : ∀ (n : ℕ) (ε : Fin n → Bool) (H G D : Matrix (Fin n
     rw [star_mulVec, ← dotProduct_mulVec, p1]
   have hperp : ∀ v, G *ᵥ v ∈ perpSet (starRingEnd ℂ) H W ↔ (P * Jm ε) *ᵥ v = 0 := by
     intro v
-    simp only [perpSet, Set.mem_setOf_eq]
+    simp only [perpSet, Set.mem_ofPred_eq]
     constructor
     · intro h
       apply dotProduct_star_self_eq_zero.mp

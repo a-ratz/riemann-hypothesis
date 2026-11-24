@@ -99,7 +99,7 @@ theorem psi_symplO_std {D : D7} {δ t0 : ℂ} {Q : ℕ} (P : Pair D ⊤ δ t0 Q)
 theorem unitBlock_mem (D : D7) (o a d : ℕ) :
     unitBlock D o a d ∈ Formalism.MainNotions.TaylorLogMetric.YYl D (Formalism.MainNotions.StandardLatticesGL3.stdL D a) (Formalism.MainNotions.StandardLatticesGL3.stdL D d) := by
   refine Submodule.subset_span ⟨1, ?_, _, Submodule.subset_span fun x hx i _ => ?_, (one_smul _ _).symm⟩
-  · refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
+  · refine FractionalIdeal.one_mem_inv_coeIdeal fun h => ?_
     have h2 := D.host.𝔟_spec.2
     rw [h, Ideal.smul_bot, sup_bot_eq] at h2
     exact bot_ne_top h2
@@ -167,8 +167,8 @@ theorem exists_sum_eq {D : D7} (𝔫 : Ideal (𝓞 D.host.F)) {α : Af D.host.F}
       exact (Finset.sum_eq_zero fun n _ => by rw [mul_zero, mul_zero, mul_zero]).symm
     · have hn : (g v : D.host.F) ≠ 0 := fun e => (hg v h).2 (by
         rw [show g v = 0 from by exact_mod_cast e]; exact zero_mem _)
-      rw [Finset.sum_eq_single (g v) (fun n _ hn => by rw [if_neg fun h => hn h.2.symm, zero_mul, mul_zero, mul_zero])
-        (fun h' => absurd (hg v h).1 h'), if_pos ⟨h, rfl⟩, one_mul, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hn, map_one, one_mul]
+      rw [Finset.sum_eq_single (g v) (fun n _ hn => by rw [ite_eq_right fun h => hn h.2.symm, zero_mul, mul_zero, mul_zero])
+        (fun h' => absurd (hg v h).1 h'), ite_eq_left ⟨h, rfl⟩, one_mul, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hn, map_one, one_mul]
 
 theorem smul_mem_std {D : D7} {𝔪 : Ideal (𝓞 D.host.E)} (hm : 𝔪 ≠ ⊥) {b : 𝓞 D.host.E} (hb : b ∈ D.host.conj • 𝔪) {a d : ℕ}
     {z : Matrix (Fin d) (Fin a) D.host.E} (hz : z ∈ Formalism.MainNotions.TaylorLogMetric.YYl D (Formalism.MainNotions.StandardLatticesGL3.stdL D a) (skewLat D 𝔪 d)) :
@@ -183,7 +183,7 @@ theorem smul_mem_std {D : D7} {𝔪 : Ideal (𝓞 D.host.E)} (hm : 𝔪 ≠ ⊥)
     | mem A hA =>
       refine Submodule.subset_span fun x hx i _ => ?_
       have h2 := (FractionalIdeal.mem_div_iff_of_ne_zero (FractionalIdeal.coeIdeal_ne_zero.2 hc)).1
-        (FractionalIdeal.mem_coe.1 (hA x hx i trivial)) _ (FractionalIdeal.mem_coeIdeal_of_mem _ hb)
+        (FractionalIdeal.mem_coeToSubmodule.1 (hA x hx i trivial)) _ (FractionalIdeal.mem_coeIdeal_of_mem _ hb)
       have h3 := FractionalIdeal.coeIdeal_le_one h2
       rw [Matrix.smul_mulVec, Pi.smul_apply, Algebra.smul_def, mul_comm]
       exact Submodule.mem_one.2 ((FractionalIdeal.mem_one_iff _).1 h3)

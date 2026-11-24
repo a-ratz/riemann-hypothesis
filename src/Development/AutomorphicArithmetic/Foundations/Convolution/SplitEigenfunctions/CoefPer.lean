@@ -84,8 +84,8 @@ private theorem fub3 {X Y Z : Type} [MeasurableSpace X] [MeasurableSpace Y] [Mea
 theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.yEq :
     UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.YEq := by
   intro E _ _ _ D W M N P φ hφ ph hph
-  haveI := N.haar
-  haveI : SigmaFinite N.μ := inferInstance
+  have := N.haar
+  have : SigmaFinite N.μ := inferInstance
   obtain ⟨hp, hw, hint⟩ := UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.yInt E D W M N P φ hφ
   obtain ⟨hc, K, hK, hB⟩ := UpperTheory.ConvolutionTheory.R2.Ff.wtBound ℚ ph
   obtain ⟨n, hn⟩ := hint K hK
@@ -146,19 +146,19 @@ private theorem continuous_em : Continuous (em E) := by
   exact Continuous.units_map _ hM
 
 private theorem secondCountable_gl : SecondCountableTopology (GL (Fin 2) (A E)) := by
-  haveI : SecondCountableTopology (A E) := GroundTheory.Automorphic.secondCountableTopology_adeleRing E
-  haveI : SecondCountableTopology (Matrix (Fin 2) (Fin 2) (A E)) :=
+  have : SecondCountableTopology (A E) := GroundTheory.Automorphic.secondCountableTopology_adeleRing E
+  have : SecondCountableTopology (Matrix (Fin 2) (Fin 2) (A E)) :=
     inferInstanceAs (SecondCountableTopology (Fin 2 → Fin 2 → A E))
-  haveI : SecondCountableTopology (Matrix (Fin 2) (Fin 2) (A E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin 2) (Fin 2) (A E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
 private theorem continuous_inner (M : Meas ℚ) {f : GL (Fin 2) (A E) → ℂ} (hf : Continuous f)
     (hb : ∀ C : Set (GL (Fin 2) (A E)), IsCompact C → ∃ B : ℝ, ∀ g : G1 ℚ, ∀ k ∈ C, ‖f (em E (gl g) * k)‖ ≤ B) :
     Continuous fun k : GL (Fin 2) (A E) => ∫ g in M.D, f (em E (gl g) * k) ∂M.μ := by
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
-  haveI := secondCountable_gl (E := E)
-  haveI : FirstCountableTopology (GL (Fin 2) (A E)) := by
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
+  have := secondCountable_gl (E := E)
+  have : FirstCountableTopology (GL (Fin 2) (A E)) := by
 
     infer_instance
   have hin : ∀ k, Continuous fun g : G1 ℚ => f (em E (gl g) * k) := fun k =>
@@ -188,12 +188,12 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.perCont :
   have hΦ := continuous_inner M hc hbd
   set Φ : GL (Fin 2) (A E) → ℂ := fun k => ∫ g in M.D, φ.1 (em E (gl g) * k) ∂M.μ with hΦdef
   obtain ⟨hfin, hmeas, CZ, hCZ, hmem⟩ := zDom E
-  haveI : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) :=
+  have : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) :=
     ⟨by simpa using hfin⟩
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
   have hs : Continuous (sZ D) := (szLaws E D).2.1
   have hsz : Continuous fun z : ↥(IdeleGroup.normOneSubgroup E) => sZ D (z : IdeleGroup E) :=
-    hs.comp continuous_subtype_val
+    hs.comp continuous_subtypeVal
   have key : ∀ h : G1 E, (UPer D M fun x => φ.1 (x * gl h)) =
       ∫ z in normOneFundamentalDomain E, Φ (sZ D (z : IdeleGroup E) * gl h) ∂normOneMeasure E := by
     intro h
@@ -274,7 +274,7 @@ private theorem unf {G H ι : Type} [Group G] [TopologicalSpace G] [IsTopologica
     (f : G × G → ℝ≥0∞) (hf : Measurable f) (hinv : ∀ γ ∈ Γ', ∀ x y, f (γ * x, y) = f (x, y)) :
     ∫⁻ p : G × ι, ∫⁻ g, f (p.1, j g * ((r p.2)⁻¹ * p.1)) ∂ν ∂((μ.restrict DG).prod Measure.count) =
       ∫⁻ y, ∫⁻ g in DH, f (j g * y, y) ∂ν ∂μ := by
-  haveI := invInvariant ν
+  have := invInvariant ν
   have hjm : Measurable j := hj.measurable
   have hrm : Measurable r := Measurable.of_discrete
   let e : ι × Γ → Γ' := fun q => ⟨r q.1 * j q.2, Γ'.mul_mem (hr _) (hjΓ _ q.2.2)⟩
@@ -348,12 +348,12 @@ theorem absUnf : AbsUnf := by
         ≤ ∫⁻ p : G × ι, ∫⁻ g, ‖c (j g * ((r p.2)⁻¹ * p.1)) * φ p.1‖ₑ ∂ν ∂((μ.restrict DG).prod Measure.count) := by
           refine lintegral_mono fun p => ?_
           rw [← integral_mul_const]
-          exact enorm_integral_le_lintegral_enorm _
+          exact eNorm_integral_le_lintegral_eNorm _
       _ = ∫⁻ y, ∫⁻ g in DH, ‖c y * φ (j g * y)‖ₑ ∂ν ∂μ :=
           U (fun q => ‖c q.2 * φ q.1‖ₑ) (by fun_prop) (fun γ hγ x y => by simp only [hφinv γ hγ x])
       _ ≤ ∫⁻ y, ∫⁻ g in DH, ‖c y‖ₑ * ENNReal.ofReal B ∂ν ∂μ := by
           refine lintegral_mono fun y => lintegral_mono fun g => ?_
-          rw [enorm_mul]
+          rw [eNorm_mul]
           gcongr
           exact hBe _
       _ = ENNReal.ofReal B * ν DH * ∫⁻ y, ‖c y‖ₑ ∂μ := by
@@ -382,7 +382,7 @@ theorem absUnf : AbsUnf := by
       exact hu
     let h : ℂ × G → ℂ := fun w => c w.2 * w.1
     have hh : Measurable h := by fun_prop
-    haveI : IsFiniteMeasure (ν.restrict DH) := ⟨by simpa using hfin⟩
+    have : IsFiniteMeasure (ν.restrict DH) := ⟨by simpa using hfin⟩
     have hI₂ : Integrable (h ∘ T₂) P₂ := by
       refine ((hci.comp_fst (ν.restrict DH)).norm.mul_const B₀).mono' (hh.comp hT₂).aestronglyMeasurable
         (ae_of_all _ fun q => ?_)
@@ -487,12 +487,12 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zOne :
   obtain ⟨j', r, hj', hjc, hji, hr, hjΓ, hu⟩ := UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.reps E D
   have hjj : j' = j := MonoidHom.ext fun g => gl_injective ((hj' g).trans (hj g).symm)
   subst hjj
-  haveI := N.haar
-  haveI := N.right
-  haveI := M.haar
-  haveI := M.right
-  haveI : DiscreteMeasurableSpace (Orb D.δ) := ⟨fun _ => trivial⟩
-  haveI : Countable (Orb D.δ) := inferInstance
+  have := N.haar
+  have := N.right
+  have := M.haar
+  have := M.right
+  have : DiscreteMeasurableSpace (Orb D.δ) := ⟨fun _ => trivial⟩
+  have : Countable (Orb D.δ) := inferInstance
   obtain ⟨hcont, hleft⟩ := (UpperTheory.ConvolutionTheory.RankTwoDescent.decE E P φ hφ).1
   simp only [pY_eq, el_eq]
   generalize ((z : IdeleGroup E) : (A E)ˣ) = zz
@@ -571,7 +571,7 @@ private theorem int_prod {Z P : Type} [MeasurableSpace Z] [MeasurableSpace P] (m
     (h : ∀ᵐ z ∂m, ∫⁻ p, ‖F (z, p)‖ₑ ∂n ≤ K) : Integrable F (m.prod n) := by
   refine ⟨hF.aestronglyMeasurable, ?_⟩
   unfold HasFiniteIntegral
-  rw [lintegral_prod _ hF.enorm.aemeasurable]
+  rw [lintegral_prod _ hF.eNorm.aemeasurable]
   refine (lintegral_mono_ae h).trans_lt ?_
   rw [lintegral_const]
   exact ENNReal.mul_lt_top hK (measure_lt_top _ _)
@@ -585,7 +585,7 @@ private theorem swap_int {Z X T : Type} [MeasurableSpace Z] [MeasurableSpace X] 
   have h2 : Integrable (fun p : Z × X => B * l.real Set.univ * ‖c p.2‖) (m.prod n) :=
     (hc.norm.comp_snd m).const_mul _
   have h3 : ∀ᵐ p : Z × X ∂(m.prod n), p.1 ∈ S :=
-    Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hS
+    QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst hS
   rw [integral_integral_swap]
   · refine integral_congr_ae (ae_of_all _ fun y => ?_)
     exact integral_const_mul _ _
@@ -616,10 +616,10 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zAll :
   have hsZ : Continuous (sZ D) := (szLaws E D).2.1
   have hφc : Continuous φ.1 := (decE E P φ hφ).1.1
   have hone := zOne E D W M N P φ hφ j hj c hc hcs Ψ hΨc
-  haveI := N.haar
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
-  haveI : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) := ⟨by simpa using hfin⟩
-  haveI : Countable (Orb D.δ) := inferInstance
+  have := N.haar
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
+  have : IsFiniteMeasure ((normOneMeasure E).restrict (normOneFundamentalDomain E)) := ⟨by simpa using hfin⟩
+  have : Countable (Orb D.δ) := inferInstance
   have hci : Integrable c N.μ := hc.integrable_of_hasCompactSupport hcs
   obtain ⟨B, hB⟩ := bddE E P φ hφ _ (hC.image hsZ)
   obtain ⟨B', hB'⟩ := bddE E P φ hφ _
@@ -634,7 +634,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zAll :
   have hG : Continuous fun p : (↥(IdeleGroup.normOneSubgroup E) × G1 E) × G1 ℚ =>
       φ.1 (em E (gl p.2) * sZ D (p.1.1 : IdeleGroup E) * gl p.1.2) :=
     hφc.comp (((cont_em.comp (UpperTheory.ConvolutionTheory.R2.M.continuous_gl.comp continuous_snd)).mul
-      (hsZ.comp (continuous_subtype_val.comp (continuous_fst.comp continuous_fst)))).mul
+      (hsZ.comp (continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)))).mul
       (UpperTheory.ConvolutionTheory.R2.M.continuous_gl.comp (continuous_snd.comp continuous_fst)))
   have hsw := swap_int ((normOneMeasure E).restrict (normOneFundamentalDomain E)) N.μ (M.μ.restrict M.D) hc.measurable hci
     hG.measurable (ae_restrict_mem hS) (B := B') (fun z hz y hy g => by
@@ -664,11 +664,11 @@ open UpperTheory.ConvolutionTheory.RankTwoDescent UpperTheory.ConvolutionTheory.
 theorem UpperTheory.ConvolutionTheory.RankTwoDescent.coefPer :
     DecE → Maj → OrbS → MomKill → OrbFn → CoefPer := by
   intro _ _ _ momKill orbFn E _ _ _ D W M N P φ hφ h0 h
-  haveI := N.haar
+  have := N.haar
   obtain ⟨j, -, hj, -⟩ := reps E D
   obtain ⟨hp, hw, hi⟩ := yInt E D W M N P φ hφ
   have hδ : D.δ < 0 := by simpa using D.neg (Rat.castHom ℝ)
-  haveI : SFinite (mY D.δ N) := by unfold mY; infer_instance
+  have : SFinite (mY D.δ N) := by unfold mY; infer_instance
   have hU := perCont E D W M N P φ hφ
   set U : G1 E → ℂ := fun h : G1 E => UPer D M fun x => φ.1 (x * gl h) with hUd
   have key : ∀ c : G1 E → ℂ, Continuous c → HasCompactSupport c → ∫ y, c y * U y ∂N.μ = 0 := fun c hc hs => by
@@ -687,7 +687,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.coefPer :
     push_cast
     rfl
   simp only [e, integral_complex_ofReal, Complex.ofReal_eq_zero] at h2
-  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := N.μ) (x := h) (χ.continuous.mul (hU.norm.pow 2))
+  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := N.μ) (x := h) (χ.continuous.mul (hU.norm.pow 2))
     hs.mul_right (fun y => mul_nonneg (h01 y).1 (sq_nonneg ‖U y‖)) ?_).ne' h2
   have : χ h = 1 := h1 rfl
   change χ h * ‖U h‖ ^ 2 ≠ 0

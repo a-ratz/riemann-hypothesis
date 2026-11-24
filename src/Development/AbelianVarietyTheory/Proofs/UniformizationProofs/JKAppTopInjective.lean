@@ -142,12 +142,12 @@ theorem exists_defect
 theorem psiRel_integral : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (ga : ∀ χ : D.X, LB.Gen (LB.LinComb D.P.L (K := PUnit) (fun _ => (D.c χ).left) (fun _ => -1))) (a : D.X → (FractionRing R)ˣ) (f : ∀ α, SecBT D (𝟙_ _) 1 α), PsiScal D ga a → PsiRel D (𝟙_ _) f → ∀ (χ : D.X) (p q : R), algebraMap R (FractionRing R) q * (a χ).val = algebraMap R (FractionRing R) p → ∀ (T : Over (Spec (CommRingCat.of R))) (y : T ⟶ D.P.A) (z : T.left) (J), Good D.P.L z J → gs (𝟙 _) z ⊤ (scal T.hom q) * sval (f χ) (lift (toUnit T) y).left z J = gs (𝟙 _) z ⊤ (scal T.hom p) * ((val (ga χ) (toUnit T).left z J * rigV D z J).val * sval (f 0) (lift (toUnit T) (y * cT D T χ)).left z J) := by
   intro R _ _ D ga a f hS hR χ p q hpq T y z J hJ
   obtain ⟨d, hd⟩ := exists_defect D ga f χ (hS χ).1 p q
-  haveI : Flat D.P.A.hom := by
-    haveI := D.P.smoothDim
-    haveI : Smooth D.P.A.hom := SmoothOfRelativeDimension.smooth D.P.g _
+  have : Flat D.P.A.hom := by
+    have := D.P.smoothDim
+    have : Smooth D.P.A.hom := SmoothOfRelativeDimension.smooth D.P.g _
     infer_instance
   haveI : IsAffine (𝟙_ (Over (Spec (CommRingCat.of R)))).left := inferInstanceAs (IsAffine (Spec _))
-  haveI : IsAffine (TK R).left := inferInstanceAs (IsAffine (Spec _))
+  have : IsAffine (TK R).left := inferInstanceAs (IsAffine (Spec _))
   have hinj : Function.Injective (toUnit (TK R)).left.appTop.hom := by
     have e : (toUnit (TK R)).left = jK R := by simp
     rw [e]

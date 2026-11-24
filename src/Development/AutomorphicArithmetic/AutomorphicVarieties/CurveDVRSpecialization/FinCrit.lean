@@ -108,7 +108,7 @@ private theorem fc_point (D : Type) [CommRing D] [IsDomain D] [IsNoetherianRing 
   let φ : D →+* V := (algebraMap D (FractionRing D)).codRestrict V.toSubring hV
   have hφ : Function.Injective φ := fun a b h =>
     IsFractionRing.injective D (FractionRing D) (congrArg Subtype.val h)
-  letI : Algebra D V := φ.toAlgebra
+  let : Algebra D V := φ.toAlgebra
   have : FaithfulSMul D V := (faithfulSMul_iff_algebraMap_injective _ _).mpr hφ
   have hl : IsLocalHom (algebraMap D V) := hloc
   obtain ⟨h1, h2, h3⟩ := fc_abs D V hm fun x => by
@@ -173,7 +173,7 @@ theorem UpperTheory.V.Pr.finCrit :
     UpperTheory.V.Pr.FinCrit := by
   intro O R _ _ _ _ _ _ _ _ W hz H
   classical
-  haveI hB : IsCO O (W.gr 0) := UpperTheory.V.Alg.wPres_gr_zero_isCO_of_mem_maximalIdeal O ℤ R W hz
+  have hB : IsCO O (W.gr 0) := UpperTheory.V.Alg.wPres_gr_zero_isCO_of_mem_maximalIdeal O ℤ R W hz
   obtain ⟨h1, u, hu, hmax⟩ := UpperTheory.V.Alg.wPres_maximalIdeal_gr_zero_eq_sup_span_monomials O ℤ R W hz
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hmO := hϖ.maximalIdeal_eq
@@ -249,12 +249,12 @@ theorem UpperTheory.V.Pr.finCrit :
         (le_trans le_add_self (Ideal.height_add_one_le_of_lt_of_isPrime hlt))
       rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim, ← show m = maximalIdeal (R ⧸ p) from rfl, hm1]
       rfl
-    haveI : IsCO O (R ⧸ p) := UpperTheory.V.Alg.co_quot O R (R ⧸ p) (Ideal.Quotient.mkₐ O p)
+    have : IsCO O (R ⧸ p) := UpperTheory.V.Alg.co_quot O R (R ⧸ p) (Ideal.Quotient.mkₐ O p)
       Ideal.Quotient.mk_surjective
-    haveI := fc_finres O (R ⧸ p)
+    have := fc_finres O (R ⧸ p)
     obtain ⟨A, _, _, _, hc, hf, φ, hφ, hl⟩ := fc_point (R ⧸ p) hd
-    letI : Algebra O A := (φ.comp (algebraMap O (R ⧸ p))).toAlgebra
-    haveI : UpperTheory.V.Pr.IsCD O A :=
+    let : Algebra O A := (φ.comp (algebraMap O (R ⧸ p))).toAlgebra
+    have : UpperTheory.V.Pr.IsCD O A :=
       { complete := hc
         isLocalHom := inferInstanceAs (IsLocalHom (φ.comp (algebraMap O (R ⧸ p))))
         fin := hf }
@@ -262,7 +262,7 @@ theorem UpperTheory.V.Pr.finCrit :
     have hker : ∀ x, f x = 0 ↔ x ∈ p := fun x => by
       rw [← Ideal.Quotient.eq_zero_iff_mem, ← map_eq_zero_iff φ hφ]
       rfl
-    haveI := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
+    have := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
     have hfl : IsLocalHom f := ⟨fun a ha =>
       IsLocalHom.map_nonunit (f := φ.comp (Ideal.Quotient.mk p)) a ha⟩
     obtain ⟨h0, hs⟩ := H A f hfl fun a ha => by
@@ -284,14 +284,14 @@ theorem UpperTheory.V.Pr.finCrit :
     obtain ⟨N, hN⟩ := hrad b hb
     exact ⟨N, hJ ▸ fc_contract W ϖ (b ^ N) hN⟩
   obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hrad' (IsNoetherian.noetherian _)
-  haveI : Finite (W.gr 0 ⧸ maximalIdeal (W.gr 0)) := fc_finres O (W.gr 0)
-  haveI := Ideal.finite_quotient_pow (IsNoetherian.noetherian (maximalIdeal (W.gr 0))) N
-  haveI : Finite (W.gr 0 ⧸ (maximalIdeal O).map (algebraMap O (W.gr 0))) :=
+  have : Finite (W.gr 0 ⧸ maximalIdeal (W.gr 0)) := fc_finres O (W.gr 0)
+  have := Ideal.finite_quotient_pow (IsNoetherian.noetherian (maximalIdeal (W.gr 0))) N
+  have : Finite (W.gr 0 ⧸ (maximalIdeal O).map (algebraMap O (W.gr 0))) :=
     Finite.of_surjective _ (Ideal.Quotient.factor_surjective hN)
-  haveI : IsHausdorff ((maximalIdeal O).map (algebraMap O (W.gr 0))) (W.gr 0) :=
+  have : IsHausdorff ((maximalIdeal O).map (algebraMap O (W.gr 0))) (W.gr 0) :=
     IsHausdorff.of_isLocalRing _ _ (ne_top_of_le_ne_top (maximalIdeal.isMaximal (W.gr 0)).ne_top
       (le_sup_left.trans hmax.ge))
-  haveI : Module.Finite O (W.gr 0) := GlobalTheory.FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal O)
+  have : Module.Finite O (W.gr 0) := GlobalTheory.FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal O)
   let e : W.gr 0 →ₗ[O] W.part 0 :=
     { toFun := fun b => ⟨((b : W.A) : R), b.2⟩
       map_add' := fun _ _ => rfl

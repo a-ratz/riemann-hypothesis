@@ -112,7 +112,7 @@ theorem resHom_eq_zero (a : 𝓞 F) (ha : a ∈ v.asIdeal) : resHom v a = 0 := b
   exact (valuation_lt_one_iff_mem v a).mpr ha
 
 theorem finite_residueField : Finite (Valued.ResidueField (v.adicCompletion F)) := by
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
   let g := Ideal.Quotient.lift v.asIdeal (resHom v) (fun a ha => resHom_eq_zero v a ha)
   have hg : Function.Surjective g := by
     intro y
@@ -128,7 +128,7 @@ theorem compactSpace_integer : CompactSpace (Valued.integer (v.adicCompletion F)
 
 theorem isCompact_adicCompletionIntegers :
     IsCompact ((v.adicCompletionIntegers F : Set (v.adicCompletion F))) := by
-  haveI := compactSpace_integer v
+  have := compactSpace_integer v
   exact isCompact_iff_compactSpace.mpr this
 
 instance compactSpace_set : CompactSpace ((v.adicCompletionIntegers F : Set (v.adicCompletion F))) :=

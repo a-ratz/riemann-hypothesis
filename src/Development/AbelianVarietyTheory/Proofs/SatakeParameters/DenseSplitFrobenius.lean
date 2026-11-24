@@ -63,9 +63,9 @@ theorem isSplitAt_of_inertiaDeg_eq_one {E : Type} [Field E] [NumberField E] [IsC
   classical
   set v := w.under (𝓞 (maximalRealSubfield E)) with hv
   set p : Ideal (𝓞 (maximalRealSubfield E)) := v.asIdeal with hp
-  haveI : p.IsPrime := v.isPrime
-  haveI : w.asIdeal.IsPrime := w.isPrime
-  haveI hlo : w.asIdeal.LiesOver p := ⟨rfl⟩
+  have : p.IsPrime := v.isPrime
+  have : w.asIdeal.IsPrime := w.isPrime
+  have hlo : w.asIdeal.LiesOver p := ⟨rfl⟩
   by_contra hns
   have hfin : (p.primesOver (𝓞 E)).Finite := Algebra.QuasiFinite.finite_primesOver p
   let _ : Fintype (p.primesOver (𝓞 E)) := hfin.fintype

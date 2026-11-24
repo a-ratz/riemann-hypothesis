@@ -61,14 +61,14 @@ open GlobalTheory.NormalApprox
 
 theorem essFiniteType_loc {T : Type} [CommRing T] [IsDomain T] [IsIntegrallyClosed T] (S : Finset T) :
     Algebra.EssFiniteType ℤ (loc S) := by
-  haveI : Module.Finite (gen S) (integralClosure (gen S) (FractionRing (gen S))) :=
+  have : Module.Finite (gen S) (integralClosure (gen S) (FractionRing (gen S))) :=
     GlobalTheory.finite_integralClosure_of_essFiniteType_int (gen S)
-  haveI : Algebra.EssFiniteType ℤ (gen S) := Algebra.EssFiniteType.of_finiteType ℤ _
-  haveI : Algebra.EssFiniteType (gen S) (integralClosure (gen S) (FractionRing (gen S))) := by
+  have : Algebra.EssFiniteType ℤ (gen S) := Algebra.EssFiniteType.of_finiteType ℤ _
+  have : Algebra.EssFiniteType (gen S) (integralClosure (gen S) (FractionRing (gen S))) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
   set_option synthInstance.maxHeartbeats 200000 in
-    haveI h1 : Algebra.EssFiniteType ℤ (integralClosure (gen S) (FractionRing (gen S))) :=
+    have h1 : Algebra.EssFiniteType ℤ (integralClosure (gen S) (FractionRing (gen S))) :=
       Algebra.EssFiniteType.comp ℤ (gen S) _
   have h2 : (algebraMap ℤ (norm S)).EssFiniteType := by
     have e : algebraMap ℤ (norm S) =
@@ -77,9 +77,9 @@ theorem essFiniteType_loc {T : Type} [CommRing T] [IsDomain T] [IsIntegrallyClos
     rw [e]
     exact RingHom.EssFiniteType.comp (RingHom.essFiniteType_algebraMap.2 h1)
       (RingHom.FiniteType.essFiniteType (RingHom.FiniteType.of_surjective (normEquiv S).symm.toRingHom (normEquiv S).symm.surjective))
-  haveI : Algebra.EssFiniteType ℤ (norm S) := RingHom.essFiniteType_algebraMap.1 h2
-  haveI := loc_isLocalization S
-  haveI : Algebra.EssFiniteType (norm S) (loc S) := Algebra.EssFiniteType.of_isLocalization _ (unitsIn S)
+  have : Algebra.EssFiniteType ℤ (norm S) := RingHom.essFiniteType_algebraMap.1 h2
+  have := loc_isLocalization S
+  have : Algebra.EssFiniteType (norm S) (loc S) := Algebra.EssFiniteType.of_isLocalization _ (unitsIn S)
   exact Algebra.EssFiniteType.comp ℤ (norm S) (loc S)
 
 end GlobalTheory.VertUnitsNoeth
@@ -118,18 +118,18 @@ theorem exists_model {T : Type} [CommRing T] [IsDomain T]
     · exact ⟨⟨_, mem_loc_of_mem S (Finset.mem_insert_of_mem (Finset.mem_biUnion.2
         ⟨p, hfin.mem_toFinset.2 hp, Polynomial.coeff_mem_coeffs h⟩))⟩, rfl⟩
   refine ⟨S, mem_loc_of_mem S (Finset.mem_insert_self _ _), ?_⟩
-  letI : Algebra (Polynomial (loc S)) (Polynomial T) := (Polynomial.mapRingHom (loc S).subtype).toAlgebra
-  letI : Algebra (Polynomial (loc S)) E :=
+  let : Algebra (Polynomial (loc S)) (Polynomial T) := (Polynomial.mapRingHom (loc S).subtype).toAlgebra
+  let : Algebra (Polynomial (loc S)) E :=
     ((algebraMap (Polynomial T) E).comp (algebraMap (Polynomial (loc S)) (Polynomial T))).toAlgebra
-  haveI : IsScalarTower (Polynomial (loc S)) (Polynomial T) E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : P.HasCoeffs (Polynomial (loc S)) := ⟨fun p hp => hcoef p (Or.inl hp)⟩
-  haveI : FaithfulSMul (Polynomial (loc S)) (Polynomial T) :=
+  have : IsScalarTower (Polynomial (loc S)) (Polynomial T) E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : P.HasCoeffs (Polynomial (loc S)) := ⟨fun p hp => hcoef p (Or.inl hp)⟩
+  have : FaithfulSMul (Polynomial (loc S)) (Polynomial T) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (Polynomial.map_injective _ Subtype.val_injective)
   let Q := P.ofHasCoeffs (Polynomial (loc S))
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension 0 (Polynomial (loc S))
+  have : Algebra.IsStandardSmoothOfRelativeDimension 0 (Polynomial (loc S))
       (P.ModelOfHasCoeffs (Polynomial (loc S))) :=
     Q.isStandardSmoothOfRelativeDimension (by rw [← hP]; rfl)
-  haveI : Algebra.Etale (Polynomial (loc S)) (P.ModelOfHasCoeffs (Polynomial (loc S))) := inferInstance
+  have : Algebra.Etale (Polynomial (loc S)) (P.ModelOfHasCoeffs (Polynomial (loc S))) := inferInstance
   let e : P.ModelOfHasCoeffs (Polynomial (loc S)) →+* E :=
     (P.tensorModelOfHasCoeffsEquiv (Polynomial (loc S))).toRingHom.comp
       (Algebra.TensorProduct.includeRight (R := Polynomial (loc S)) (A := Polynomial T)).toRingHom
@@ -260,7 +260,7 @@ theorem exists_noetherian_model_of_mul_eq : ∀ (T O : Type) [CommRing T] [IsDom
         bA * cA = algebraMap A (Localization.AtPrime QA) sA ∧ jA bA = j b₁ := by
   classical
   intro T O _ _ _ _ _ _ _ _ hT E _ _ _ _ _ Q _ hQ j hj b₁ c₁ s hs0 hbc
-  haveI : IsIntegrallyClosed T := isIntegrallyClosed_of_absIntClosed' T hT
+  have : IsIntegrallyClosed T := isIntegrallyClosed_of_absIntClosed' T hT
   obtain ⟨⟨x, u⟩, rfl⟩ := IsLocalization.mk'_surjective Q.primeCompl b₁
   obtain ⟨⟨x', u'⟩, rfl⟩ := IsLocalization.mk'_surjective Q.primeCompl c₁
   rw [← IsLocalization.mk'_mul, IsLocalization.mk'_eq_iff_eq_mul,
@@ -269,17 +269,17 @@ theorem exists_noetherian_model_of_mul_eq : ∀ (T O : Type) [CommRing T] [IsDom
   obtain ⟨v, hv⟩ := hbc
   obtain ⟨S, hsS, EA, _, _, _, e, hecomp, heinj, hrange⟩ :=
     exists_model E {x, x', (u : E), (u' : E), (v : E)} s
-  letI : Algebra (loc S) EA :=
+  let : Algebra (loc S) EA :=
     ((algebraMap (Polynomial (loc S)) EA).comp (algebraMap (loc S) (Polynomial (loc S)))).toAlgebra
-  haveI : IsScalarTower (loc S) (Polynomial (loc S)) EA := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI hloc : IsLocalHom (loc S).subtype := ⟨fun a ha => isUnit_of_isUnit_coe S a ha⟩
-  haveI := loc_isLocalRing S
+  have : IsScalarTower (loc S) (Polynomial (loc S)) EA := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have hloc : IsLocalHom (loc S).subtype := ⟨fun a ha => isUnit_of_isUnit_coe S a ha⟩
+  have := loc_isLocalRing S
   have hN : IsNoetherianRing (loc S) := by
-    haveI := loc_isLocalization S
+    have := loc_isLocalization S
     exact IsLocalization.isNoetherianRing (unitsIn S) _ (norm_isNoetherianRing S)
   have hIC : IsIntegrallyClosed (loc S) := by
-    haveI := loc_isLocalization S
-    haveI := norm_isIntegrallyClosed S
+    have := loc_isLocalization S
+    have := norm_isIntegrallyClosed S
     exact isIntegrallyClosed_of_isLocalization (loc S) (unitsIn S) (unitsIn_le S)
   have heA : ∀ a : loc S, e (algebraMap (loc S) EA a) = algebraMap T E a := by
     intro a

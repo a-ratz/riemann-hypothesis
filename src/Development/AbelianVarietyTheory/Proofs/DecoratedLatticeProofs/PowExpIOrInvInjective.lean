@@ -67,7 +67,7 @@ theorem int_eq_zero_of_exp_I_mul (m : ℤ) (h : Complex.exp (Complex.I * m) = 1)
 
 theorem exp_I_pow_injective (a b : ℕ)
     (h : Complex.exp Complex.I ^ a = Complex.exp Complex.I ^ b) : a = b := by
-  rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul] at h
+  rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul] at h
   have h2 : Complex.exp (Complex.I * (((a : ℤ) - b : ℤ) : ℂ)) = 1 := by
     have : Complex.I * (((a : ℤ) - b : ℤ) : ℂ) = a * Complex.I - b * Complex.I := by
       push_cast; ring

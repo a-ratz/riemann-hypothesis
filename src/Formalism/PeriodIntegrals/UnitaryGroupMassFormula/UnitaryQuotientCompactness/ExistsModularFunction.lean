@@ -93,9 +93,9 @@ private theorem measurableEmbedding_MG_val :
 
 theorem onG_eq (μ : Measure (MtM m)) (hμ : IsHaarOnM G μ) :
     ∃ c : ℝ≥0∞, onG hG μ = c • (Measure.haar : Measure (MG G hG)) := by
-  haveI := hμ.1
+  have := hμ.1
   have hMe : MeasurableEmbedding (MG.val : MG G hG → MtM m) := measurableEmbedding_MG_val
-  haveI : SigmaFinite (onG hG μ) := by
+  have : SigmaFinite (onG hG μ) := by
     refine ⟨⟨⟨fun n => MG.val ⁻¹' spanningSets μ n, fun _ => Set.mem_univ _, fun n => ?_, ?_⟩⟩⟩
     · show μ.comap MG.val _ < ⊤
       rw [hMe.comap_apply]
@@ -106,7 +106,7 @@ theorem onG_eq (μ : Measure (MtM m)) (hμ : IsHaarOnM G μ) :
     show MG.toM (h * z) = _
     rw [toM_mul']
     rfl
-  haveI : Measure.IsMulLeftInvariant (onG hG μ) := by
+  have : Measure.IsMulLeftInvariant (onG hG μ) := by
     refine ⟨fun h => Measure.ext fun s hs => ?_⟩
     have hA : Measurable (lmulQ (MG.toM h) : MtM m → MtM m) := by
       refine Continuous.measurable (continuous_pi fun i => continuous_pi fun j => ?_)
@@ -255,7 +255,7 @@ theorem modF_bdd (V : Set (MG G hG)) (hV : IsCompact V) :
     fun v hv => ?_⟩
   have h := (MeasurableEquiv.mulRight v).map_apply (μ := (Measure.haar : Measure (MG G hG)))
     (K : Set (MG G hG))
-  rw [MeasurableEquiv.coe_mulRight, map_mul_right_haar v, Measure.smul_apply, ENNReal.smul_def] at h
+  rw [MeasurableEquiv.coe_mulRight, map_mul_right_haar v, smul_apply, ENNReal.smul_def] at h
   have hsub : (fun x => x * v) ⁻¹' (K : Set (MG G hG)) ⊆ C := by
     intro x hx
     exact ⟨(x * v, v), ⟨hx, hv⟩, by simp⟩

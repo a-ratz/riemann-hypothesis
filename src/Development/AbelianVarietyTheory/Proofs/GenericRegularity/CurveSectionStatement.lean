@@ -124,7 +124,7 @@ theorem valV_lt_of_nval_lt {T : CDVR} {x y : T.Fr} (hx : x ≠ 0) (h : nval T.V 
   by_cases hy : y = 0
   · subst hy
     rw [map_zero]
-    exact zero_lt_iff.2 (valV_ne_zero hx)
+    exact pos_iff_ne_zero.2 (valV_ne_zero hx)
   rw [nval_of_ne hx, nval_of_ne hy, EReal.coe_lt_coe_iff, Nat.cast_one, div_one, div_one, Int.cast_lt] at h
   refine (WithZero.log_lt_log (valV_ne_zero hy) (valV_ne_zero hx)).1 ?_
   simp only [vV] at h
@@ -162,7 +162,7 @@ theorem exists_forms_val {P C Wt : Type} [Finite P] (Ω : C → Type) [∀ Z, Fi
       obtain ⟨w, F, F', a1, a2, a3, a4⟩ := h4 ζ ζ' hne hZ
       refine ⟨fun Z => e Z w F / e Z w F', ?_, ?_⟩
       · rw [Valuation.comap_apply, hratio ζ w F F' a1, map_div₀]
-        exact (div_lt_one₀ (zero_lt_iff.2 (valV_ne_zero a1))).2 (valV_lt_of_nval_lt a1 a3)
+        exact (div_lt_one₀ (pos_iff_ne_zero.2 (valV_ne_zero a1))).2 (valV_lt_of_nval_lt a1 a3)
       · rw [Valuation.comap_apply, hratio ζ' w F F' a2, map_div₀]
         have := Valuation.map_add_eq_of_lt_left _ (valV_lt_of_nval_lt a2 a4)
         rw [add_sub_cancel] at this

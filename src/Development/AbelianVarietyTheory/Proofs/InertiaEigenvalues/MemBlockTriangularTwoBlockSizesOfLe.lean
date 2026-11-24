@@ -68,13 +68,13 @@ theorem blkOf_eq_zero {n r t : ℕ} (h : n ≤ r) : (blkOf r t : Fin n → ℕ) 
   funext a
   have := a.2
   simp only [blkOf]
-  rw [if_pos (by omega)]
+  rw [ite_eq_left (by omega)]
 
 theorem twoBlockSizes_eq_zero_of_le {n r : ℕ} (h : n ≤ r) : (blk2 r : Fin n → ℕ) = fun _ => 0 := by
   funext a
   have := a.2
   simp only [blk2]
-  rw [if_pos (by omega)]
+  rw [ite_eq_left (by omega)]
 
 theorem mem_blockTriangular_twoBlockSizes_of_le {n r : ℕ} {κ : Type} [CommRing κ] (h : n ≤ r) (g : GL (Fin n) κ) : g ∈ blockTri (blk2 r) := by
   intro i k hik
@@ -98,13 +98,13 @@ theorem hasType_of_mem_wall {σ : D.what₂.LL →+* ℂ} {F : MMap (Rl.MW j σ)
     intro F' hF'
     induction hF' using Submodule.span_induction with
     | mem x hx => exact fun v κ hκ h => hx.lev v κ hκ h
-    | zero => intro v κ _ h; simp only [MultilinearMap.zero_apply, Pi.zero_apply, mul_zero]
+    | zero => intro v κ _ h; simp only [zero_apply, Pi.zero_apply, mul_zero]
     | add x y _ _ hx hy =>
       intro v κ hκ h
-      rw [MultilinearMap.add_apply, Pi.add_apply, Pi.add_apply, hx v κ hκ h, hy v κ hκ h, mul_add]
+      rw [add_apply, Pi.add_apply, Pi.add_apply, hx v κ hκ h, hy v κ hκ h, mul_add]
     | smul a x _ hx =>
       intro v κ hκ h
-      rw [MultilinearMap.smul_apply, Pi.smul_apply, Pi.smul_apply, hx v κ hκ h, smul_eq_mul, smul_eq_mul, mul_left_comm]
+      rw [smul_apply, Pi.smul_apply, Pi.smul_apply, hx v κ hκ h, smul_eq_mul, smul_eq_mul, mul_left_comm]
   exact fun κ hκ h => key F hF v κ hκ h
 
 theorem isLift_transfer {cG : G0 Rl.Pg D.R.r ≃* G0g D.nd} {ρ : Setup D.ntw} (hp : RealPin Rl cG ρ) (i : D.ntw.Tw) (b : Bool)

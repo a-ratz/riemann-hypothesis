@@ -79,9 +79,9 @@ theorem UpperTheory.V.Hi.ctrlEq :
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => ?_
     ring
-  · haveI : Finite (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N) :=
+  · have : Finite (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N) :=
       Nat.finite_of_card_ne_zero (X.I.fin_N a a.2)
-    haveI := Fintype.ofFinite (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N)
+    have := Fintype.ofFinite (X.I.N ⧸ (X.I.Nconj a).subgroupOf X.I.N)
 
     simp only [Frame.UF, Frame.U, Iwa.uOp, finsum_eq_sum_of_fintype, LinearMap.smul_apply, LinearMap.sum_apply,
     map_smul, map_sum, Finset.smul_sum]

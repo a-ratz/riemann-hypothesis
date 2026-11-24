@@ -691,7 +691,7 @@ theorem test_clause (N : Type) [AddCommGroup N] [Module (Ob l) N] (M : ℕ) (hN 
   let s : Ob l →+* T := g.comp (algebraMap (Ob l) B)
   have hs0 : s (pFlat l) = g (algebraMap (Ob l) B (rt l 0)) := by
     simp only [s, RingHom.comp_apply, hr.2]
-  letI : Algebra (Ob l) T := s.toAlgebra
+  let : Algebra (Ob l) T := s.toAlgebra
   let P0 : PAlg l :=
     { A := T, s := s, perf := ⟨hPf.bij⟩
       compl := by rw [hs0]; exact hcompl

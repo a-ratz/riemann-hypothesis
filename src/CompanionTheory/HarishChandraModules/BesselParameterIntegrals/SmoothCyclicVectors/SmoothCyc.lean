@@ -121,7 +121,7 @@ theorem cyc_of_smooth (k r : ℕ) (ε : Fin (2 * r + k + 1) → Bool) (lam : Fin
     rw [← hcg]
     exact Finset.sum_congr rfl fun i _ => by rw [← hag i]
   rw [e]
-  have hle := List.sum_le_card_nsmul
+  have hle := List.sum_le_length_nsmul
     (Ws.map fun w' => ‖dsigW (k := k) (r := r) σ w' (x - y)‖) (δ / (Ws.length + 1)) (by
       intro t ht
       obtain ⟨W, hW, rfl⟩ := List.mem_map.1 ht

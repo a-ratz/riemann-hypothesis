@@ -202,7 +202,7 @@ theorem isClosed_minors {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] {
     IsClosed {q : X × Y | Minors (lam q.1 q.1) (mu q.2 q.2)} := by
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   rintro ⟨x, y⟩ h
-  simp only [mem_compl_iff, mem_setOf_eq, Minors, not_forall] at h
+  simp only [mem_compl_iff, mem_ofPred_eq, Minors, not_forall] at h
   obtain ⟨k, i, j, h⟩ := h
   have c1 : ∀ p, ContinuousAt (fun q : X × Y => lam x q.1 p) (x, y) := fun p =>
     ContinuousAt.comp (g := fun y => lam x y p) (hl x p) continuousAt_fst

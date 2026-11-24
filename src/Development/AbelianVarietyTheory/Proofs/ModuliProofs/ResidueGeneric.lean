@@ -164,7 +164,7 @@ theorem residue_generic : ∀ (o : Type) [CommRing o] (g n N' : ℕ) (I : Ideal 
       simp [hev, h0]
     rintro P ⟨hP, hJ⟩ hle
     let e : (MvPolynomial (Ix g (N' ^ 2)) o ⧸ P) →+* K := Ideal.Quotient.lift P ev fun a ha => hle ha
-    haveI : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
+    have : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
     let L := Localization.AtPrime (RingHom.ker e)
     have hu : ∀ s : (RingHom.ker e).primeCompl, IsUnit (e s) := fun s => IsUnit.mk0 _ s.2
     let ψ : L →+* K := IsLocalization.lift (M := (RingHom.ker e).primeCompl) hu

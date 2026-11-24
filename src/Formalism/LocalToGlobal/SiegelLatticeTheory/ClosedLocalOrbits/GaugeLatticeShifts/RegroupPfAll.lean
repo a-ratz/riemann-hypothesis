@@ -286,7 +286,7 @@ theorem slabAbsC_of (hW : PhWellDefC) (hSC : Formalism.L2.SG.Pf.Slab.SlabCoverC)
   set ph' := Ph X u' Y.hK T' with hph'
   set g : X.B.I.GA → ℝ≥0∞ := fun x => ‖ph x‖ₑ * ∑' δ : Y.Dt u', ‖ph' ((δ : X.B.I.GA) * x)‖ₑ with hg
   have hgm : Measurable g :=
-    hFD.1.enorm.mul (Measurable.tsum fun δ => hFD'.1.enorm.comp (measurable_const_mul _))
+    hFD.1.eNorm.mul (Measurable.tsum fun δ => hFD'.1.eNorm.comp (measurable_const_mul _))
 
   have hb := foldBound_holds X.B.I.GA (X.B.I.muA X.B.μf) (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I) (Srat X u')
     inferInstance inf_le_left (Ω₀ ∪ Ω₀') hΩc.isClosed.measurableSet a' ph' hFD'.1 hFD'.2.1 hFD'.2.2 F' hF'
@@ -336,10 +336,10 @@ theorem slabAbsC_of (hW : PhWellDefC) (hSC : Formalism.L2.SG.Pf.Slab.SlabCoverC)
     have hn : ‖X.chi2 k‖ₑ = 1 := by
       rw [← ofReal_norm, Y.hK.2.2.2.2 k hk, ENNReal.ofReal_one]
     simp only [hg]
-    rw [hyk, hph, ph_right_K X u Y.hK hWD T _ k hk, enorm_mul, hn, one_mul]
+    rw [hyk, hph, ph_right_K X u Y.hK hWD T _ k hk, eNorm_mul, hn, one_mul]
     congr 1
     refine tsum_congr fun δ => ?_
-    rw [hph', ← mul_assoc, ph_right_K X u' Y.hK hWD' T' _ k hk, enorm_mul, hn, one_mul]
+    rw [hph', ← mul_assoc, ph_right_K X u' Y.hK hWD' T' _ k hk, eNorm_mul, hn, one_mul]
   have hEq := lintegral_slab X.B.I X.B.μf X.K2 hKm (Ωs ρ) (hΩ ρ).1 (aC (Y.cs u) ρ) g hgm hK2
   have hlt : X.B.μf X.K2 * ∫⁻ y in Ωs ρ, g (y, aC (Y.cs u) ρ) ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) < ⊤ := by
     rw [← hEq]
@@ -527,13 +527,13 @@ theorem frame_congruence_holds : FrameCongC := by
           have hbj : b < j := Fin.castSucc_lt_castSucc_iff.1 ha
           have hj : τ j = 0 := hτ0 j (fun h => lt_asymm hbj h)
           have hjb : j ≠ b := fun h => by subst h; exact lt_irrefl _ hbj
-          simp only [Fin.snoc_castSucc, hj, if_neg hjb, add_zero]
+          simp only [Fin.snoc_castSucc, hj, ite_eq_right hjb, add_zero]
       · have e : X.B.I.fmat κ *ᵥ e0v (Fin.castSucc b) -
             ∑ a, (Fin.snoc (α := fun _ => X.B.I.E ⊗[X.B.I.F] Af X.B.I.F)
               (fun j => τ j + if j = b then 1 else 0) 0 a) • e0v a =
             (X.B.I.fmat κ - 1) *ᵥ X.e0 b - ∑ j, τ j • X.e0 j := by
           simp only [Fin.sum_univ_castSucc, he0v, Fin.snoc_castSucc, Fin.snoc_last, zero_smul, add_zero, add_smul,
-            Finset.sum_add_distrib, ite_smul, one_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+            Finset.sum_add_distrib, ite_smul, one_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
             Matrix.sub_mulVec, Matrix.one_mulVec]
           abel
         rw [e]; exact hτ
@@ -559,19 +559,19 @@ theorem frame_congruence_holds : FrameCongC := by
     intro a c
     rcases lt_trichotomy a c with h | h | h
     · refine ⟨y0 c a, hy0 c a, ?_⟩
-      simp only [hξd, if_pos h]
+      simp only [hξd, ite_eq_left h]
       exact hξ0 c a
     · subst h
       refine ⟨0, zero_mem _, ?_⟩
-      simp only [hξd, lt_irrefl, if_false, if_pos rfl, ht1, mul_zero, add_zero, hs]
+      simp only [hξd, lt_irrefl, ite_false, ite_eq_left rfl, ht1, mul_zero, add_zero, hs]
       simp
     · refine ⟨0, zero_mem _, ?_⟩
       have hna : ¬ a < c := not_lt.2 h.le
       have hne : a ≠ c := ne_of_gt h
-      simp only [hξd, if_neg hna, if_neg hne, ht0 c a h, mul_zero, add_zero, hs]
+      simp only [hξd, ite_eq_right hna, ite_eq_right hne, ht0 c a h, mul_zero, add_zero, hs]
       simp
   refine ⟨ξ, fun a b hab => ?_, fun a => ?_, fun b => ?_⟩
-  · simp only [hξd, if_neg (not_lt.2 hab.le), if_neg (ne_of_gt hab)]
+  · simp only [hξd, ite_eq_right (not_lt.2 hab.le), ite_eq_right (ne_of_gt hab)]
   · simp [hξd]
 
   set Yv : Fin (D.R.rS + 1) → VA X.B.I := fun a => X.B.I.fmat g1⁻¹ *ᵥ incl X.B.I (X.crd ((X.Fu u).fvec a)) with hY

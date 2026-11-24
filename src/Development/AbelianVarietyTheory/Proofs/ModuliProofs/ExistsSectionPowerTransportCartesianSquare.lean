@@ -261,7 +261,7 @@ theorem transport : ∀ (Z Z' : Scheme.{0}) (G : Over Z) (G' : Over Z') (f : Z' 
   refine (val_iff hL' _ _ _ _ _ hm' b _ s).trans (Iff.trans ?_ (val_iff hL _ _ _ _ _ hm _ c _).symm)
   constructor
   · intro H W r z p hz
-    haveI := totMap_isIso hp u₂ h₂
+    have := totMap_isIso hp u₂ h₂
     obtain ⟨r', rfl⟩ : ∃ r', r = r' ≫ totMap hp u₂ h₂ := ⟨r ≫ inv (totMap hp u₂ h₂), by simp⟩
     obtain ⟨q, hq⟩ := exists_chart hL' ((snd T₂' G').left (r' z))
     refine (key W r' z p q ?_ hq).1 (H W r' z q hq)

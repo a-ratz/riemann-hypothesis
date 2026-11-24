@@ -97,7 +97,7 @@ def NB (k : ℕ) (x : UT r → ℂ) : (Fin r → Fin (k + 1) → ℂ) →ₗ[ℝ
 
 theorem unip_NB (x : UT r → ℂ) :
     MeasurePreserving (fun v => v + NB k x v) volume volume ∧ Function.Bijective fun v => v + NB k x v := by
-  haveI : (volume : Measure (Fin r → Fin (k + 1) → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin r → Fin (k + 1) → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   refine unip _ _ (fun n C => ∀ a : Fin r, r ≤ a.val + n → C a = 0) r (fun v a h => by omega) ?_
     fun v h => funext fun a => h a (by omega)
   intro n C h a ha
@@ -133,7 +133,7 @@ def NS (x : UT r → ℂ) : ((UT r → ℂ) × (Fin r → ℝ)) →ₗ[ℝ] ((UT
 
 theorem unip_NS (x : UT r → ℂ) :
     MeasurePreserving (fun v => v + NS x v) volume volume ∧ Function.Bijective fun v => v + NS x v := by
-  haveI : (volume : Measure ((UT r → ℂ) × (Fin r → ℝ))).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : (volume : Measure ((UT r → ℂ) × (Fin r → ℝ))).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   refine unip _ _ (fun n v => (∀ p : UT r, 2 * r ≤ 2 * p.1.1.val + 1 + n → v.1 p = 0) ∧
     ∀ a : Fin r, 2 * r ≤ 2 * a.val + n → v.2 a = 0) (2 * r)
     (fun v => ⟨fun p h => by have := p.1.1.2; omega, fun a h => by omega⟩) ?_
@@ -244,7 +244,7 @@ theorem nCoords_coord (q : (UT r → ℂ) × PPar k r) :
     · simp only [glue, Equiv.symm_apply_apply, Sum.elim_inr]
       show NHaar.coord k r q (eI k r p.1) (wI k r p.2) = cj q.2.1 p.1 p.2 + ∑ c, (upper q.1 - 1) p.1 c * cj q.2.1 c p.2
       simp only [coord_e, pOf, Rad.pEl_ew, Matrix.sub_apply, sub_mul, Finset.sum_sub_distrib, Matrix.one_apply, ite_mul,
-        one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, cj]
+        one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, cj]
       ring
   · show co (Matrix.of fun a b => NHaar.coord k r q (eI k r a) (esI k r b)) = shift q.1 q.2.1 + (q.2.2 + co ((upper q.1 - 1) * skewM q.2.2.1 q.2.2.2))
     have e : ∀ S, q.2.2 + co S = co (skewM q.2.2.1 q.2.2.2 + S) := fun S => by rw [co_add, co_skewM]

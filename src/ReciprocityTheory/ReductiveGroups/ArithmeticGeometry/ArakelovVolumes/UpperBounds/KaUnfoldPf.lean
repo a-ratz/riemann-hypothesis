@@ -61,9 +61,9 @@ noncomputable section
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
 theorem countable_Γ (X : Data E r) : Countable X.Γ := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
-  haveI : Countable (GL (Fin r) E) := Function.Injective.countable (f := (Units.val : GL (Fin r) E → Matrix (Fin r) (Fin r) E)) (fun _ _ h => Units.ext h)
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+  have : Countable (GL (Fin r) E) := Function.Injective.countable (f := (Units.val : GL (Fin r) E → Matrix (Fin r) (Fin r) E)) (fun _ _ h => Units.ext h)
   infer_instance
 
 def Hg (X : Data E r) (x0 : Frame X.Ψ r) (FF : Set (V (nd X))) (bb : ℝ) (φ : Frame X.Ψ r → ℝ≥0∞)

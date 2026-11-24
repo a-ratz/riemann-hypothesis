@@ -148,7 +148,7 @@ theorem relLength_irreducible_pow_smul_self (hA : A.FG) {ϖ : R} (hϖ : Irreduci
 theorem relLength_smul_self_ne_top (hA : A.FG) {a : R} (ha : a ≠ 0) :
     relLength A (a • A) ≠ ⊤ := by
   rw [relLength_smul_self hA]
-  exact WithTop.mul_ne_top (addVal_eq_top_iff.not.mpr ha) (ENat.coe_ne_top _)
+  exact WithTop.mul_ne_top (addVal_eq_top_iff.not.mpr ha) (ENat.natCast_ne_top _)
 
 theorem lengthCommensurable_smul_self (hA : A.FG) {a : R} (ha : a ≠ 0) :
     LengthCommensurable A (a • A) :=
@@ -157,13 +157,13 @@ theorem lengthCommensurable_smul_self (hA : A.FG) {a : R} (ha : a ≠ 0) :
 
 theorem signedLength_smul_self_of_addVal_eq (hA : A.FG) {a : R} {n : ℕ} (hn : addVal R a = n) :
     signedLength A (a • A) = (n : ℤ) * (Module.finrank R A : ℤ) := by
-  have ha : a ≠ 0 := addVal_eq_top_iff.not.mp (hn ▸ ENat.coe_ne_top n)
+  have ha : a ≠ 0 := addVal_eq_top_iff.not.mp (hn ▸ ENat.natCast_ne_top n)
   rw [← Nat.cast_mul, (lengthCommensurable_smul_self hA ha).signedLength_eq_natCast_iff_of_ge
     (Submodule.smul_le_self_of_tower a A), relLength_smul_self_of_addVal_eq hA hn]
 
 theorem signedLength_smul_self (hA : A.FG) {a : R} (ha : a ≠ 0) :
     signedLength A (a • A) = ((addVal R a).toNat : ℤ) * (Module.finrank R A : ℤ) :=
-  signedLength_smul_self_of_addVal_eq hA (ENat.coe_toNat (addVal_eq_top_iff.not.mpr ha)).symm
+  signedLength_smul_self_of_addVal_eq hA (ENat.natCast_toNat (addVal_eq_top_iff.not.mpr ha)).symm
 
 end DVR
 

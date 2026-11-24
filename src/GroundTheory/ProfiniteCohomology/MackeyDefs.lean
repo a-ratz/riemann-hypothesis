@@ -140,7 +140,7 @@ def mackeyOpenSubgroup (x : G) : OpenSubgroup H :=
 
 include hι in
 theorem continuous_mackeyConj (x : G) : Continuous (mackeyConj (V : Subgroup G) ι x) :=
-  Continuous.subtype_mk ((continuous_const.mul (hι.comp continuous_subtype_val)).mul
+  Continuous.subtype_mk ((continuous_const.mul (hι.comp continuous_subtypeVal)).mul
     continuous_const) _
 
 include hι in

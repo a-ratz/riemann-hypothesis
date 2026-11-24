@@ -143,8 +143,8 @@ theorem gidx_dual {A B : Submodule (𝓞 K) V} (hA : Submodule.IsFullLattice K A
     gidx (Formalism.HermitianLatticesTheory.dual h A) (Formalism.HermitianLatticesTheory.dual h B) = gidx B A := by
   have dl := Formalism.HermitianLatticesTheory.dualLattice (𝓞 K) K V h hs hn Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range
   have an := (Formalism.HermitianLatticesTheory.dualBasic (𝓞 K) K V h hs Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range).1
-  haveI : Submodule.IsFullLattice K A := hA
-  haveI : Submodule.IsFullLattice K B := hB
+  have : Submodule.IsFullLattice K A := hA
+  have : Submodule.IsFullLattice K B := hB
   have hL : Submodule.IsFullLattice K (A ⊔ B) :=
     Submodule.IsFullLattice.of_le K (le_sup_left : A ≤ A ⊔ B)
   rw [gidx_of_le (an _ _ (le_sup_left : A ≤ A ⊔ B)) (an _ _ (le_sup_right : B ≤ A ⊔ B))

@@ -186,10 +186,10 @@ private theorem surjective_appTop_of_iso' {X Y : Scheme.{0}} (f : X ≅ Y) : Fun
 
 theorem surj_fst_of_proper (hA : IsSemiAbelian A) (T : Over S) (hT : IsProper (pullback.snd A.hom T.hom)) :
     Function.Surjective (fst T A).left.appTop.hom := by
-  haveI := hA.comm
-  haveI := hA.smooth
-  haveI := hA.geomConnected
-  haveI hAb : IsAbelianScheme ((Over.pullback T.hom).obj A) :=
+  have := hA.comm
+  have := hA.smooth
+  have := hA.geomConnected
+  have hAb : IsAbelianScheme ((Over.pullback T.hom).obj A) :=
     ⟨inferInstance, (inferInstance : Smooth (pullback.snd A.hom T.hom)), hT,
       (inferInstance : GeometricallyConnected (pullback.snd A.hom T.hom))⟩
   have hb := (GlobalTheory.ExpansionTotal.globalFns T.left ((Over.pullback T.hom).obj A) hAb).2
@@ -262,7 +262,7 @@ theorem weilIs_pull_of_proper (hA : IsSemiAbelian A) (hL : L.IsLB) {T T' : Over 
     have hl := congrArg Over.Hom.left key
     simp only [Over.comp_left, overResι, Over.homMk_left] at hl
     ext
-    simp only [unitRes, Units.coe_map, MonoidHom.coe_coe]
+    simp only [unitRes, Units.coe_map, MonoidHom.coe_ofClass]
     have hv := congrArg (fun f => f.appTop.hom (c : Γ(T.left, ⊤))) hl
     simp only [Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.comp_apply] at hv
     exact hv.symm
@@ -285,8 +285,8 @@ open scoped CategoryTheory.Obj
 theorem exists_section_of_finite {Z : Scheme.{0}} {k K : Type} [Field k] [IsAlgClosed k] [Field K] (i : k →+* K)
     (f : Z ⟶ Sp k) [LocallyOfFiniteType f] (hf : Finite {p : Sp k ⟶ Z // p ≫ f = 𝟙 _}) (w : Sp K ⟶ Z)
     (hw : w ≫ f = spMap i) : ∃ p : Sp k ⟶ Z, p ≫ f = 𝟙 _ ∧ w = spMap i ≫ p := by
-  haveI : JacobsonSpace Z := LocallyOfFiniteType.jacobsonSpace f
-  haveI : Finite (closedPoints Z) := Finite.of_equiv _ (pointEquivClosedPoint f)
+  have : JacobsonSpace Z := LocallyOfFiniteType.jacobsonSpace f
+  have : Finite (closedPoints Z) := Finite.of_equiv _ (pointEquivClosedPoint f)
   have hz : IsClosed ({w (IsLocalRing.closedPoint K)} : Set Z) := by
     set z := w (IsLocalRing.closedPoint K)
     have h1 := JacobsonSpace.closure_inter_closedPoints_eq_closure
@@ -338,10 +338,10 @@ theorem torsion_desc {X : Scheme.{0}} (G : Over X) [GrpObj G] [LocallyOfFiniteTy
       rw [hc]
       infer_instance
     exact locallyOfFiniteType_of_comp _ G.hom
-  haveI hπlft : LocallyOfFiniteType π.left :=
+  have hπlft : LocallyOfFiniteType π.left :=
     MorphismProperty.of_isPullback (P := @LocallyOfFiniteType)
       ((IsPullback.of_hasPullback ((𝟙 G) ^ n) (1 : 𝟙_ (Over X) ⟶ G)).map (Over.forget X)).flip h1lft
-  haveI : LocallyOfFiniteType Kn.hom := by
+  have : LocallyOfFiniteType Kn.hom := by
     rw [← Over.w π]
     infer_instance
   let fZ : pullback Kn.hom x ⟶ Sp k := pullback.snd Kn.hom x
@@ -400,7 +400,7 @@ open scoped CategoryTheory.Obj
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.tate_iso_base_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H), ∀ (X : Scheme.{0}) (t : SAB H X) (k k' : Type) [Field k] [IsAlgClosed k] [CharZero k] [Field k'] [IsAlgClosed k'] (i : k →+* k') (x : Sp k ⟶ X), IsProper (pullback.snd t.G.hom x) → ∀ I : TateIsoAt D t x, ∃ I' : TateIsoAt D t (spMap i ≫ x), ∀ n, 0 < n → (I'.ζ n : k') = i (I.ζ n) ∧ ∀ a, (I'.ev n a).left = spMap i ≫ (I.ev n a).left := by
   intro E _ _ _ H D X t k k' _ _ _ _ _ i x hprop I
-  haveI : Smooth t.G.hom := t.semi.smooth
+  have : Smooth t.G.hom := t.semi.smooth
   obtain ⟨_, _, -⟩ := PositivityTheory.HtPt.Mg.finrank_La D
   let e := PositivityTheory.HtPt.Mg.extPt i x
   have hprop' : IsProper (pullback.snd t.G.hom (spMap i ≫ x)) :=
@@ -415,7 +415,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.tate_iso_base_change : ∀ (E 
   have hfinT : ∀ n, 0 < n → Finite {y : Over.mk x ⟶ t.G // y ^ n = 1} := by
     intro n hn
     let N : Submodule ℤ D.La := LinearMap.range ((n : ℤ) • (LinearMap.id : D.La →ₗ[ℤ] D.La))
-    haveI : Finite (D.La ⧸ N) := Module.finite_of_fg_torsion _ (by
+    have : Finite (D.La ⧸ N) := Module.finite_of_fg_torsion _ (by
       intro q
       refine ⟨⟨(n : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hn.ne')⟩, ?_⟩
       induction q using Submodule.Quotient.induction_on with
@@ -564,7 +564,7 @@ theorem exists_reps (M : Type) [AddCommGroup M] [Module.Finite ℤ M] (N : ℕ) 
 
 theorem exists_extend {L K C : Type} [Field L] [Field K] [Algebra L K] [Algebra.IsAlgebraic L K] [Field C] [IsAlgClosed C]
     (f : L →+* C) : ∃ g : K →+* C, ∀ x, g (algebraMap L K x) = f x := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact ⟨(IsAlgClosed.lift : K →ₐ[L] C), fun x => (IsAlgClosed.lift : K →ₐ[L] C).commutes x⟩
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
@@ -582,7 +582,7 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
       FiniteDimensional K Ω ∧ IsFullLevelAt D Y.t (spMap (algebraMap K Ω) ≫ y ≫ Y.j) N z ev := by
   classical
   have hN0 : 0 < N := hN
-  haveI := Y.oF.proper
+  have := Y.oF.proper
 
   let q : pullback Y.oF.t.G.hom y ⟶ Sp K := pullback.snd _ _
   have hw : ∀ a, (I.ev N a).left ≫ Y.oF.t.G.hom = spMap (algebraMap K L) ≫ y := fun a =>
@@ -591,17 +591,17 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
     pullback.lift (I.ev N a).left (spMap (algebraMap K L)) (hw a)
   have hg : ∀ a, g a ≫ q = spMap (algebraMap K L) := fun a => pullback.lift_snd _ _ _
   have hgf : ∀ a, g a ≫ pullback.fst _ _ = (I.ev N a).left := fun a => pullback.lift_fst _ _ _
-  haveI := finite_La D
+  have := finite_La D
   obtain ⟨T, _, r, u, hru⟩ := exists_reps D.La N hN0
   choose F hF e he using fun τ : T => exists_finite_subfield q (g (u τ)) (hg _)
 
   let Fz : IntermediateField K L := IntermediateField.adjoin K {((I.ζ N : Lˣ) : L)}
-  haveI : FiniteDimensional K Fz := IntermediateField.finiteDimensional_adjoin fun x _ =>
+  have : FiniteDimensional K Fz := IntermediateField.finiteDimensional_adjoin fun x _ =>
     (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
-  haveI : ∀ τ, FiniteDimensional K (F τ) := hF
+  have : ∀ τ, FiniteDimensional K (F τ) := hF
   let Ω : IntermediateField K L := Fz ⊔ ⨆ τ, F τ
   have hΩfin : FiniteDimensional K Ω := by
-    haveI : FiniteDimensional K (⨆ τ, F τ : IntermediateField K L) :=
+    have : FiniteDimensional K (⨆ τ, F τ : IntermediateField K L) :=
       IntermediateField.finiteDimensional_iSup_of_finite
     exact IntermediateField.finiteDimensional_sup _ _
   have hFΩ : ∀ τ, F τ ≤ Ω := fun τ => (le_iSup F τ).trans le_sup_right
@@ -615,7 +615,7 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
     simp only [eΩ]
     rw [← Category.assoc, spMap_comp_spMap]
     rfl
-  haveI := epi_spMap (algebraMap Ω L)
+  have := epi_spMap (algebraMap Ω L)
   have hover : ∀ τ, eΩ τ ≫ q = spMap (algebraMap K Ω) := fun τ => by
     rw [← cancel_epi (spMap (algebraMap Ω L)), ← Category.assoc, heΩ, hg, spMap_comp_spMap]
     rfl
@@ -635,7 +635,7 @@ theorem exists_of_tateIso {D : Datum H} {l : Geo.Tor.Level H} {Xo : Moduli D l} 
   refine ⟨Ω, inferInstance, inferInstance, z, ev, hΩfin, ?_⟩
   intro k _ _ i
 
-  haveI : Algebra.IsAlgebraic Ω L := Algebra.IsAlgebraic.tower_top (K := K) Ω
+  have : Algebra.IsAlgebraic Ω L := Algebra.IsAlgebraic.tower_top (K := K) Ω
   obtain ⟨i', hi'⟩ : ∃ i' : L →+* k, ∀ x : Ω, i' (algebraMap Ω L x) = i x := exists_extend i
   have hcomp : i'.comp (algebraMap Ω L) = i := RingHom.ext hi'
   have hprop : IsProper (pullback.snd Y.oF.t.G.hom (spMap (algebraMap K L) ≫ y)) := inferInstance
@@ -672,10 +672,10 @@ namespace GlobalTheory.CompanionTheory.Ar.XR
 theorem exists_fullLevel_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β), ∀ (K : Type) [Field K] (y : Sp K ⟶ Xo.XF c) (N : ℕ), 1 ≤ N → ∃ (Ω : Type) (_ : Field Ω) (_ : Algebra K Ω) (z : Ωˣ) (ev : D.La → (Over.mk (spMap (algebraMap K Ω) ≫ y ≫ Y.j) ⟶ Y.t.G)), FiniteDimensional K Ω ∧ IsFullLevelAt D Y.t (spMap (algebraMap K Ω) ≫ y ≫ Y.j) N z ev := by
   intro E _ _ _ H D l Xo c O _ β Y K _ y N hN
 
-  haveI hK : CharZero K := by
+  have hK : CharZero K := by
     let f : c.F →+* K := (Spec.preimage (y ≫ pullback.snd _ _)).hom
     exact charZero_of_injective_ringHom f.injective
-  haveI : CharZero (AlgebraicClosure K) :=
+  have : CharZero (AlgebraicClosure K) :=
     charZero_of_injective_algebraMap (algebraMap K (AlgebraicClosure K)).injective
   let xb : Sp (AlgebraicClosure K) ⟶ Xo.XF c := spMap (algebraMap K (AlgebraicClosure K)) ≫ y
   let f : CommRingCat.of (KA l) ⟶ CommRingCat.of (AlgebraicClosure K) :=
@@ -855,8 +855,8 @@ theorem levelCover : LevelCoverSt := by
   intro E _ _ _ H D l Xo c Y e he N hN
   obtain ⟨K, _, _, n0, x0, y0, htie, -, hgen⟩ := _root_.GlobalTheory.CompanionTheory.Ar.XR.exists_cpt_of_genericPoint E H D l Xo c Y e he
   obtain ⟨Ω, _, _, z, ev, hfd, hfull⟩ := _root_.GlobalTheory.CompanionTheory.Ar.XR.exists_fullLevel_finite E H D l Xo c _ _ Y K y0 N hN
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
-  haveI : NumberField c.F :=
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : NumberField c.F :=
     { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   have hproj : IsProjOver (Y.s ≫ spMap (Int.castRingHom (𝓞 c.F))) :=
     _root_.GlobalTheory.CompanionTheory.Ar.XR.isProjOver_comp_spMap_int _ Y.X Y.s Y.proj
@@ -902,11 +902,11 @@ namespace GlobalTheory.CompanionTheory.Ar.ChgField
 theorem exists_compositum (κ Ω₁ Ω' : Type) [Field κ] [Field Ω₁] [Field Ω'] (i₁ : κ →+* Ω₁) (i₂ : κ →+* Ω')
     (h : i₂.Finite) :
     ∃ (Ω : Type) (_ : Field Ω) (a : Ω₁ →+* Ω) (b : Ω' →+* Ω), a.Finite ∧ a.comp i₁ = b.comp i₂ := by
-  letI := i₁.toAlgebra
-  letI := i₂.toAlgebra
-  haveI : Module.Finite κ Ω' := h
-  haveI : Module.Finite Ω₁ (TensorProduct κ Ω₁ Ω') := inferInstance
-  haveI : Nontrivial (TensorProduct κ Ω₁ Ω') := inferInstance
+  let := i₁.toAlgebra
+  let := i₂.toAlgebra
+  have : Module.Finite κ Ω' := h
+  have : Module.Finite Ω₁ (TensorProduct κ Ω₁ Ω') := inferInstance
+  have : Nontrivial (TensorProduct κ Ω₁ Ω') := inferInstance
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (TensorProduct κ Ω₁ Ω')
   let q := Ideal.Quotient.mk m
   refine ⟨TensorProduct κ Ω₁ Ω' ⧸ m, Ideal.Quotient.field m,
@@ -926,9 +926,9 @@ theorem exists_compositum (κ Ω₁ Ω' : Type) [Field κ] [Field Ω₁] [Field 
 
 theorem exists_root (K : Type) [Field K] [CharZero K] (N : ℕ) (hN : N ≠ 0) :
     ∃ (L : Type) (_ : Field L) (j : K →+* L), j.Finite ∧ ∃ ζ : L, IsPrimitiveRoot ζ N := by
-  haveI : NeZero N := ⟨hN⟩
-  haveI : NeZero ((N : ℕ) : K) := ⟨Nat.cast_ne_zero.2 hN⟩
-  haveI : Module.Finite K (CyclotomicField N K) := by
+  have : NeZero N := ⟨hN⟩
+  have : NeZero ((N : ℕ) : K) := ⟨Nat.cast_ne_zero.2 hN⟩
+  have : Module.Finite K (CyclotomicField N K) := by
     first
       | exact IsCyclotomicExtension.finiteDimensional {N} K _
       | exact IsCyclotomicExtension.finite {N} K _
@@ -968,7 +968,7 @@ theorem exists_field : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     Finset.prod_ne_zero_iff.2 fun p hp => pow_ne_zero _ (hS p hp).ne_zero
   obtain ⟨Ω', _, _, n, x, M, f, y, t, m, z, ev, -, hfin, hfe, -, -, htor, -⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.XR.levelCover E H D l Xo c Y _ he (∏ p ∈ S, p ^ 4) (Nat.one_le_iff_ne_zero.2 hN0)
-  haveI := hfin
+  have := hfin
   obtain ⟨i₁, h₁⟩ := exists_factor ξ₁ _ rfl
   obtain ⟨i₂, h₂⟩ := exists_factor (M.ξ ≫ f) (genPt ξ₁) (by
     rw [← hfe]
@@ -978,9 +978,9 @@ theorem exists_field : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hdom : GlobalTheory.CompanionTheory.Ar.Dominates M.ξ (Y.X.fromSpecResidueField (genPt ξ₁)) f i₂ := h₂
   have hi₂ : i₂.Finite := HodgeExists.finite_of_dominates M.tie.gen f hdom
   obtain ⟨Ω₂, _, a, b, ha, hab⟩ := exists_compositum _ Ω₁ Ω' i₁ i₂ hi₂
-  haveI : CharZero Ω₂ := charZero_of_injective_ringHom a.injective
+  have : CharZero Ω₂ := charZero_of_injective_ringHom a.injective
   obtain ⟨Ω, _, j, hj, ζ, hζ⟩ := exists_root Ω₂ _ hN0
-  haveI : CharZero Ω := charZero_of_injective_ringHom j.injective
+  have : CharZero Ω := charZero_of_injective_ringHom j.injective
   have hsp : ∀ {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (u : R →+* R') (v : R' →+* R''),
       spMap (v.comp u) = spMap v ≫ spMap u := by
     intro R R' R'' _ _ _ u v

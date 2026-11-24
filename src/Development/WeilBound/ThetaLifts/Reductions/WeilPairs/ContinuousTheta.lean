@@ -58,7 +58,7 @@ theorem theta_inc {τ : E →+* ℂ} {θ : Ainf F ⊗[F] E →+* ℂ} (h : IsInf
 
 theorem continuous_theta {τ : E →+* ℂ} {θ : Ainf F ⊗[F] E →+* ℂ} (h : IsInfEmbF τ θ) :
     Continuous (θ.comp (infPartF F E)) := by
-  haveI := isModuleTopology_AE F E
+  have := isModuleTopology_AE F E
   refine IsModuleTopology.continuous_of_ringHom (R := AF F) _ ?_
   exact h.2.comp (continuous_fst (X := Ainf F) (Y := Af F))
 

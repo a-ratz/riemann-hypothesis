@@ -179,7 +179,7 @@ private theorem exists_ne_zero_act_eq_mul_of_cocycle {K : Type} [Field K] {Q : T
   let tt : (E →* K) → K := fun s => if h : ∃ p, res p = s then t h.choose else 0
   have htt : ∀ q, tt (res q) = t q := fun q => by
     have h : ∃ p, res p = res q := ⟨q, rfl⟩
-    simp only [tt, dif_pos h]
+    simp only [tt, dite_eq_left h]
     exact hwd _ _ h.choose_spec
   obtain ⟨y, hy⟩ : ∃ y : E, ∑ s ∈ S, tt s * s y ≠ 0 := by
     by_contra hcon
@@ -223,7 +223,7 @@ private theorem exists_ne_zero_act_eq_mul_of_cocycle {K : Type} [Field K] {Q : T
 private theorem sl_apply_eq_of_pow_eq_one {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ}
     (X : Tower Ω ε) (g : GQ) (m : ℕ) (hm : 0 < m) (r : X.K) (hr : r ^ m = 1) :
     X.sl g r = r := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hint : IsIntegral Ω r := IsIntegral.of_pow hm (by rw [hr]; exact isIntegral_one)
   have hdeg : (minpoly Ω r).natDegree = 1 :=
     Polynomial.natDegree_eq_of_degree_eq_some
@@ -246,7 +246,7 @@ theorem UpperTheory.Kd.K4.h90 :
   obtain ⟨Ma, hMa, hfixa⟩ := X.level (a : X.K)
   set W0 := M * Ma with hW0
   have hW0pos : 0 < W0 := Nat.mul_pos hM hMa
-  haveI : NeZero W0 := ⟨hW0pos.ne'⟩
+  have : NeZero W0 := ⟨hW0pos.ne'⟩
   set π0 : SL(2, ℤ) →* SL(2, ZMod W0) :=
     Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod W0)) with hπ0
   have hrep : ∀ w : SL(2, ZMod W0), ∃ g : SL(2, ℤ), (∃ γ ∈ H, π0 γ = w) → (g ∈ H ∧ π0 g = w) := by
@@ -312,14 +312,14 @@ theorem UpperTheory.Kd.K4.h90 :
     rw [← hmul, ← hmul]
     have : γ * z = (γ * z * γ⁻¹ * z⁻¹) * (z * γ) := by group
     rw [this, hmul, hx _ (hcomm γ)]
-  haveI : NeZero W := ⟨hWpos.ne'⟩
+  have : NeZero W := ⟨hWpos.ne'⟩
   set πW : SL(2, ℤ) →* SL(2, ZMod W) :=
     Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod W)) with hπW
   let E : Submonoid X.K :=
     { carrier := {x | ∀ c ∈ CongruenceSubgroup.Gamma W, X.sl (ofSL c) x = x}
       mul_mem' := by
         intro x y hx hy c hc
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [map_mul, hx c hc, hy c hc]
       one_mem' := by
         intro c _
@@ -339,7 +339,7 @@ theorem UpperTheory.Kd.K4.h90 :
     have hg : ∀ q, res q = g (πW q) := by
       intro q
       have h : ∃ q' : H, πW q' = πW q := ⟨q, rfl⟩
-      simp only [g, dif_pos h]
+      simp only [g, dite_eq_left h]
       ext x
       have hc : (h.choose : SL(2, ℤ)) * (q : SL(2, ℤ))⁻¹ ∈ CongruenceSubgroup.Gamma W := by
         show _ ∈ πW.ker
@@ -486,7 +486,7 @@ private theorem near_one {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* 
   rcases hw1 with e | e
   · have e' : φ w = φ' w := e
     rw [e']
-    simp only [Set.mem_setOf_eq, max_lt_iff] at hw3
+    simp only [Set.mem_ofPred_eq, max_lt_iff] at hw3
     exact (hB w hw3.1.2).trans (hs _ hw3.1.1.le)
   · exact absurd hw2 e
 
@@ -975,13 +975,13 @@ private theorem mem_and_inv_mem_of_pow_div_pow_of_orders {Ω : Type} [Field Ω] 
   · rw [analyticOrderAt_mul (hb1'.pow E) (hg'.pow m1), analyticOrderAt_pow hb1', analyticOrderAt_pow hg',
       hB, he]
     simp only [nsmul_eq_mul]
-    exact_mod_cast ENat.coe_ne_top (E * nB + m1 * ne)
+    exact_mod_cast ENat.natCast_ne_top (E * nB + m1 * ne)
 
 open UpperTheory.Kd.K4.EisensteinBasis in
 theorem UpperTheory.Kd.K4.eb :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), ∃ E : ℕ, 0 < E ∧ ∀ W : ValuationSubring X.K, X.OverY W → ∀ x : X.K, x ≠ 0 → ∃ y ∈ lev X ⊤, y ≠ 0 ∧ W.valuation (x ^ E / y) = 1 := by
   intro Ω _ _ _ ε X
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨φ, E0, hφ, hφd, hsurj, hord⟩ := jan ε X
   have hJ : H3.JHol X := ⟨φ, hφ, hφd⟩
   refine ⟨E0.factorial, Nat.factorial_pos _, ?_⟩
@@ -991,10 +991,10 @@ theorem UpperTheory.Kd.K4.eb :
     intro Γ g
     simp [lev, Subfield.mem_iInf, RingHom.mem_eqLocusField]
   have hxL : x ∈ lev X (CongruenceSubgroup.Gamma M) := (hmemlev _ _).2 hMx
-  letI := algRat X (CongruenceSubgroup.Gamma M)
-  haveI : FiniteDimensional (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M)) :=
+  let := algRat X (CongruenceSubgroup.Gamma M)
+  have : FiniteDimensional (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M)) :=
     _root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X _ M hM le_rfl
-  haveI : IsGalois (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M)) := by
+  have : IsGalois (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M)) := by
     apply IsGalois.of_fixedField_eq_bot
     rw [eq_bot_iff]
     intro u hu
@@ -1084,7 +1084,7 @@ theorem UpperTheory.Kd.K4.eb :
         funext s
         simp [hτc]
       rwa [h'] at h
-    obtain ⟨ne, he⟩ := ENat.ne_top_iff_exists.1 (ne_top_of_le_ne_top (ENat.coe_ne_top E0) hgle)
+    obtain ⟨ne, he⟩ := ENat.ne_top_iff_exists.1 (ne_top_of_le_ne_top (ENat.natCast_ne_top E0) hgle)
     have hne0 : ne ≠ 0 := by
       intro h0
       apply (hg'.analyticOrderAt_eq_zero).1 (by rw [← he, h0, Nat.cast_zero])
@@ -1273,7 +1273,7 @@ theorem UpperTheory.Kd.K4.liftH :
   · refine ⟨0, Submodule.zero_mem _, fun u => ?_⟩
     rw [← one_smul ℤ_[l] (_ - _)]
     apply ev_smul
-    haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
     exact Subsingleton.elim _ _
   have hm1 : (-1 : SL(2, ℤ)) ∉ H := by
     intro h

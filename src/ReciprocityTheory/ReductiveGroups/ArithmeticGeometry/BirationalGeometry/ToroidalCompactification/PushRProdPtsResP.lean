@@ -240,17 +240,17 @@ theorem frameLieBC {S : Type} [CommRing S] (G : Over (Spec (CommRingCat.of S))) 
     (h : Geo.Tor.IsGrpPullback G' G (Geo.Tor.spMap φ) F) {u' : Fin d → (Geo.Tor.epsR k ⟶ G')}
     (hu' : ∀ i, (u' i).left ≫ F = Geo.Tor.spMap (dualMapR φ) ≫ (u i).left) : Geo.Tor.IsLieBasis u' := by
   classical
-  haveI : ∀ s : S, Smooth (Gs G s).hom := fun s => by
+  have : ∀ s : S, Smooth (Gs G s).hom := fun s => by
     show Smooth (pullback.snd G.hom (fB S (Localization.Away s)))
     first
     | infer_instance
     | exact MorphismProperty.pullback_snd (P := @Smooth) _ _ (inferInstance : Smooth G.hom)
-  haveI hpr : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have hpr : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   let φp : Localization.AtPrime (RingHom.ker φ) →+* k :=
     IsLocalization.lift (M := (RingHom.ker φ).primeCompl) (S := Localization.AtPrime (RingHom.ker φ)) (g := φ)
       (fun s => isUnit_iff_ne_zero.2 fun h0 => s.2 (RingHom.mem_ker.2 h0))
   have hφ : φp.comp (algebraMap S (Localization.AtPrime (RingHom.ker φ))) = φ := IsLocalization.lift_comp _
-  haveI : Smooth (Gp (G := G) (RingHom.ker φ)).hom := by
+  have : Smooth (Gp (G := G) (RingHom.ker φ)).hom := by
     show Smooth (pullback.snd G.hom (fB S (Localization.AtPrime (RingHom.ker φ))))
     first
     | infer_instance

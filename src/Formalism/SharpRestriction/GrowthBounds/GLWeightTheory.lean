@@ -292,7 +292,7 @@ theorem frame_matrix_mul_inverse {k : Type} [CommRing k] {r : ℕ} [NeZero r] (c
   simp only [Matrix.mul_apply, embed_GL2_standard_swap, frameMatrixInverse, Matrix.one_apply, add_mul, mul_sub, Finset.sum_add_distrib,
     Finset.sum_sub_distrib]
   simp only [ite_mul, mul_ite, one_mul, zero_mul, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   by_cases h1 : a = lastIdx r
   · subst h1
     by_cases h2 : b = lastIdx r
@@ -329,7 +329,7 @@ theorem frame_evaluation_comp_change {R : Type} [CommRing R] {ι : Type} {r : �
     by_cases hS : i ∈ S
     · by_cases hv : LL.vec i = true
 
-      · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, if_true, map_sum, map_mul,
+      · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, ite_true, map_sum, map_mul,
           eval₂Hom_C, RingHom.id_apply]
         calc ∑ a, g0inv a c * ∑ b, ph (X (i, b)) * g0 b a
             = ∑ b, ph (X (i, b)) * ∑ a, g0 b a * g0inv a c := by
@@ -338,8 +338,8 @@ theorem frame_evaluation_comp_change {R : Type} [CommRing R] {ι : Type} {r : �
               refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun a _ => by ring
           _ = ph (X (i, c)) := by simp [hh]
 
-      · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, if_true, map_sum, map_mul,
-          eval₂Hom_C, RingHom.id_apply, if_false, Bool.false_eq_true]
+      · simp only [RingHom.comp_apply, eBeta, frameCoordinateEvaluation, eval₂Hom_X', hS, hv, ite_true, map_sum, map_mul,
+          eval₂Hom_C, RingHom.id_apply, ite_false, Bool.false_eq_true]
         calc ∑ a, g0 c a * ∑ b, g0inv a b * ph (X (i, b))
             = ∑ b, (∑ a, g0 c a * g0inv a b) * ph (X (i, b)) := by
               simp only [Finset.mul_sum, Finset.sum_mul]
@@ -430,14 +430,14 @@ theorem last_column_weight_bound {ι : Type} [Fintype ι] {r : ℕ} [NeZero r] (
         · subst hl
           simp [hS, hv]
         · have := h0 l hl
-          simp only [hS, hv, if_true, this]
+          simp only [hS, hv, ite_true, this]
           split_ifs <;> simp
       · have hne : i ≠ A (lastIdx r) := fun h => hr ⟨_, h.symm⟩
-        simp only [hS, hv, hr, hne, if_true, if_false, not_false_eq_true, and_self, zero_add]
+        simp only [hS, hv, hr, hne, ite_true, ite_false, not_false_eq_true, and_self, zero_add]
         exact hle i
-    · simp only [hS, hv, if_true, if_false, Bool.false_eq_true, false_and, and_false, Nat.cast_zero, add_zero]
+    · simp only [hS, hv, ite_true, ite_false, Bool.false_eq_true, false_and, and_false, Nat.cast_zero, add_zero]
       split_ifs <;> omega
-  · simp only [hS, if_false, false_and, Nat.cast_zero, add_zero]
+  · simp only [hS, ite_false, false_and, Nat.cast_zero, add_zero]
     split_ifs <;> omega
 
 theorem frame_evaluation_monomial_sum {R : Type} [CommRing R] {ι : Type} [Fintype ι] {r : ℕ} (LL : Letters ι) (S : Set ι)
@@ -497,11 +497,11 @@ theorem height_bound_of_weights (hS : HSupp) (hC : HCop) : E1 := by
       have h5 := Finset.dvd_prod_of_mem
         (fun v => (frameCoordinateEvaluation LL S ph (embed_GL2_standard_swap cc) (frameMatrixInverse cc u) (X v)) ^ (m v))
         (Finset.mem_univ (A (lastIdx r), lastIdx r))
-      simp only [hX, if_true] at h5
+      simp only [hX, ite_true] at h5
       exact h5
     · push Not at h0
       obtain ⟨l, hl, hml⟩ := h0
-      rw [Finset.prod_eq_zero (Finset.mem_univ (A l, lastIdx r)) (by rw [hX, if_neg hl]; exact zero_pow hml)]
+      rw [Finset.prod_eq_zero (Finset.mem_univ (A l, lastIdx r)) (by rw [hX, ite_eq_right hl]; exact zero_pow hml)]
       exact dvd_zero _
   obtain ⟨z, hz⟩ := hdvd
   obtain ⟨⟨w, s⟩, hws⟩ := IsLocalization.surj
@@ -1106,18 +1106,18 @@ theorem raising_shifts_weight_by_root (E : GLOps n K V)
   by_cases hca : c = a
   · subst hca
     have hbc : ¬ b = c := fun h => hab h.symm
-    simp only [if_true, if_neg hbc, LinearMap.zero_apply, sub_zero, rootW, Pi.add_apply, Pi.sub_apply,
+    simp only [ite_true, ite_eq_right hbc, LinearMap.zero_apply, sub_zero, rootW, Pi.add_apply, Pi.sub_apply,
       Pi.single_eq_same, Pi.single_eq_of_ne hab]
     push_cast
     rw [add_smul, one_smul, add_comm]
   · by_cases hcb : c = b
     · subst hcb
-      simp only [if_neg hca, if_true, LinearMap.zero_apply, zero_sub, rootW, Pi.add_apply, Pi.sub_apply,
+      simp only [ite_eq_right hca, ite_true, LinearMap.zero_apply, zero_sub, rootW, Pi.add_apply, Pi.sub_apply,
         Pi.single_eq_same, Pi.single_eq_of_ne hca]
       push_cast
       rw [add_smul, neg_smul, one_smul, add_comm]
     · have hbc : ¬ b = c := fun h => hcb h.symm
-      simp only [if_neg hca, if_neg hbc, LinearMap.zero_apply, sub_zero, rootW, Pi.add_apply, Pi.sub_apply,
+      simp only [ite_eq_right hca, ite_eq_right hbc, LinearMap.zero_apply, sub_zero, rootW, Pi.add_apply, Pi.sub_apply,
         Pi.single_eq_of_ne hca, Pi.single_eq_of_ne hcb, zero_add, add_zero]
 
 def weightHeight (mu : Fin n → ℤ) : ℤ := ∑ c : Fin n, ((c : ℕ) : ℤ) * mu c
@@ -1211,14 +1211,14 @@ open Formalism.MainNotions.G Formalism.MainNotions.CovariantDegrees
 
 theorem exponent_condition_holds (D : Formalism.BasicNotions.D7) : adm3 D := by
   intro p hp m k b hkm hb
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rw [Nat.padicValNat_def]
   exact multiplicity_choose hkm hb
 
 theorem key_positivity_condition (D : Formalism.BasicNotions.D7) : ArchimedeanSignatureMatching D := by
   intro A _ _ _ σ w hw F G h
   have hp : Prime w := UniqueFactorizationMonoid.irreducible_iff_prime.mp hw
-  haveI : (Ideal.span {w}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).mpr hp
+  have : (Ideal.span {w}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).mpr hp
 
   have key : ∀ H : MvPolynomial σ A,
       C w ∣ H ↔ MvPolynomial.map (Ideal.Quotient.mk (Ideal.span {w})) H = 0 := by
@@ -1321,7 +1321,7 @@ theorem invariant_projection_of_product_formula (D : Formalism.BasicNotions.D7) 
 
 theorem product_formula_of_extremal_projector (D : Formalism.BasicNotions.D7) (h5 : adm5 D) : InvariantProductFormula := by
   intro p n' O _ _ _ S hG n V _ _ _ _ _ E hE M hM hMQ Inv hInv π hπ ord hord T hT
-  haveI := dvr_fraction_field_charZero_prime S hG.prime
+  have := dvr_fraction_field_charZero_prime S hG.prime
   exact invariant_projection_extremal_formula D (weight_condition_from_integral_form D) h5 E hE Inv hInv π hπ ord hord T hT
 
 theorem counting_statement_of_block_form (D : Formalism.BasicNotions.D7) (h : InvariantProductFormula) : Conclusion1 D := show ProjectionTheorems D ∧ ValuationLemmaField D ∧ ConclusionE D ∧ UnitProductLemmas D ∧ DerivativeLemmaField D from

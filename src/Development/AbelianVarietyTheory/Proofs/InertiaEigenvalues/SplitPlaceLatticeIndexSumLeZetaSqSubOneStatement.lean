@@ -669,7 +669,7 @@ theorem sum_ideal_le [Finite (IsLocalRing.ResidueField O)] (σ : ℝ) (hσ : 0 <
     intro I hI h
     apply hD I hI
     rw [h, Submodule.bot_toAddSubgroup, AddSubgroup.index_bot]
-    haveI := infinite_of_dvr (O := O)
+    have := infinite_of_dvr (O := O)
     exact Nat.card_eq_zero_of_infinite
   choose! e he using fun I hI => IsDiscreteValuationRing.ideal_eq_span_pow_irreducible (hne I hI) hϖ
   have hinj : Set.InjOn e D := fun I hI J hJ h => by rw [he I hI, he J hJ, h]
@@ -771,8 +771,8 @@ theorem fiber_card_le {r : ℕ} (I : Ideal O) (M' : Submodule O (Fin r → O))
     obtain ⟨w, hw, hw0⟩ := Submodule.mem_map.mp this
     exact ⟨w, hw, hw0⟩
   choose! w hwM hw0 using hex
-  haveI : Finite ((Fin r → O) ⧸ M'.toAddSubgroup) := Nat.finite_of_card_ne_zero hM'
-  haveI := Fintype.ofFinite ((Fin r → O) ⧸ M'.toAddSubgroup)
+  have : Finite ((Fin r → O) ⧸ M'.toAddSubgroup) := Nat.finite_of_card_ne_zero hM'
+  have := Fintype.ofFinite ((Fin r → O) ⧸ M'.toAddSubgroup)
   have hinj : Set.InjOn (fun M => (QuotientAddGroup.mk (Fin.tail (w M)) :
       (Fin r → O) ⧸ M'.toAddSubgroup)) S := by
     intro M1 h1 M2 h2 heq
@@ -991,7 +991,7 @@ theorem exists_matrix_of_index_ne_zero {r : ℕ} (M : Submodule O (Fin r → O))
   rw [h0, IsDiscreteValuationRing.addVal_zero, hB] at hl
   obtain ⟨n, hn, -⟩ := GlobalTheory.exists_length_eq_and_card_eq_pow O ((Fin r → O) ⧸ M)
   rw [hn] at hl
-  exact ENat.coe_ne_top n hl
+  exact ENat.natCast_ne_top n hl
 
 end Index
 
@@ -1414,7 +1414,7 @@ theorem latIndex_eq_split : ∀ {D : D7} (e : AE D) (v : HeightOneSpectrum (𝓞
         (stdLat (Ov D v) (Fv D.host.F v) W.rank).toAddSubgroup.relIndex
           (movLat (Ov D v) (Fv D.host.F v) (rho W π β g)).toAddSubgroup := by
   intro D e v π he hπ W β hβ g hg
-  haveI := Formalism.UG.P.glint_finite_residueField (F := D.host.F) v
+  have := Formalism.UG.P.glint_finite_residueField (F := D.host.F) v
   rw [GlobalTheory.T.lattice_index_split_place_eq_product_local e v π he hπ W β hβ g hg, map_inv, _root_.GlobalTheory.IndexTranspose.relIndex_transpose_inv]
 
 theorem indexSum_split : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ n → ∀ (v : HeightOneSpectrum (𝓞 D.host.F)) (f : Formalism.L2.Theta.AE D), IsFinIdem D v f → (∃ e, Formalism.L2.Theta.IsSplitIdem D e ∧ e + Formalism.L2.Theta.cA D e = f) → ∀ C : Finset (GA D W), (∀ g ∈ C, SuppF W f g ∧ g ∉ KsphC W ∅) → (∀ g ∈ C, ∀ g' ∈ C, g⁻¹ * g' ∈ KsphC W ∅ → g = g') → ∑ g ∈ C, (latIndex W g : ℝ) ^ (-(n : ℝ) / 2) ≤ (∏ i ∈ Finset.range W.rank, (1 - (Ideal.absNorm v.asIdeal : ℝ) ^ ((i : ℝ) - (n : ℝ) / 2))⁻¹) ^ 2 - 1 := by
@@ -1423,7 +1423,7 @@ theorem indexSum_split : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ 
   subst hef
   obtain ⟨π, hπ⟩ := chart_of_finIdem hf he
   obtain ⟨β, hβ⟩ := GlobalTheory.SplitFrame.exists_frame e v π he hπ W
-  haveI := Formalism.UG.P.glint_finite_residueField (F := D.host.F) v
+  have := Formalism.UG.P.glint_finite_residueField (F := D.host.F) v
   set O := Ov D v
   set K := Fv D.host.F v
   set σ : ℝ := (n : ℝ) / 2 with hσ

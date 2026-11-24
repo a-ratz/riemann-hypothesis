@@ -262,8 +262,8 @@ open UpperTheory.V.Z.Sym in
 theorem UpperTheory.V.Z.Sym.Tf.gqMass :
     UpperTheory.V.Z.Sym.Tf.GqMass := by
   intro H T G _ _ _ φ ι H₀ C θ U f δ hf hδ hfin h0 h1 h2 h3 hle
-  letI iT : MulAction T (G ⧸ U) := MulAction.compHom _ ι
-  letI iH : MulAction H (G ⧸ U) := MulAction.compHom _ (ι.comp φ)
+  let iT : MulAction T (G ⧸ U) := MulAction.compHom _ ι
+  let iH : MulAction H (G ⧸ U) := MulAction.compHom _ (ι.comp φ)
   have hsmul : ∀ (t : T) (g : G), t • (QuotientGroup.mk g : G ⧸ U) = QuotientGroup.mk (ι t * g) :=
     fun t g => rfl
   let k : G ⧸ U → ℂ := fun y => f ((Quotient.out y)⁻¹ * δ * θ (Quotient.out y))
@@ -354,10 +354,10 @@ private lemma glue {I G : Type} [Group G] {Gv : I → Type} [∀ v, Group (Gv v)
     intro v hv
     by_contra hvS
     rw [Finset.mem_coe] at hvS
-    exact hv (by simp only [dif_neg hvS]; exact (K v).one_mem))
+    exact hv (by simp only [dite_eq_right hvS]; exact (K v).one_mem))
   refine ⟨g, fun v => ?_, fun v hv => ?_⟩
-  · rw [hg, dif_pos v.2]
-  · rw [hg, dif_neg hv]
+  · rw [hg, dite_eq_left v.2]
+  · rw [hg, dite_eq_right hv]
 
 private lemma mem_box {I G : Type} [Group G] {Gv : I → Type} [∀ v, Group (Gv v)] {K : ∀ v, Subgroup (Gv v)} (P : RPG G Gv K)
     (U : ∀ v, Subgroup (Gv v)) (g : G) : g ∈ P.box U ↔ ∀ v, P.p v g ∈ U v := by
@@ -430,7 +430,7 @@ theorem orbProd : OrbProd := by
     refine (hae.union S.finite_toSet).subset ?_
     intro v hv
     by_contra hvn
-    simp only [Set.mem_union, Set.mem_setOf_eq, Finset.mem_coe, not_or, not_not] at hvn
+    simp only [Set.mem_union, Set.mem_ofPred_eq, Finset.mem_coe, not_or, not_not] at hvn
     rw [Function.mem_mulSupport] at hv
     apply hv
     obtain ⟨hK, -, -, h1, -⟩ := hout v hvn.2
@@ -458,9 +458,9 @@ theorem orbProd : OrbProd := by
       refine (hae.union S.finite_toSet).subset ?_
       intro v hv
       by_contra hvn
-      simp only [Set.mem_union, Set.mem_setOf_eq, Finset.mem_coe, not_or, not_not] at hvn
+      simp only [Set.mem_union, Set.mem_ofPred_eq, Finset.mem_coe, not_or, not_not] at hvn
       apply hv
-      simp only [tv, dif_neg hvn.2, if_pos hvn.1]
+      simp only [tv, dite_eq_right hvn.2, ite_eq_left hvn.1]
       exact (C₀ v).one_mem)
     refine ⟨t, c, Fintype.mem_piFinset.2 hc, (ι t * x c)⁻¹ * y, ?_, by group⟩
     rw [mem_box]
@@ -469,13 +469,13 @@ theorem orbProd : OrbProd := by
     by_cases hv : v ∈ S
     · have e1 : P.p v (x c) = c ⟨v, hv⟩ := hx1 c ⟨v, hv⟩
       have e2 : P.p v y = ιv v (tS ⟨v, hv⟩) * c ⟨v, hv⟩ * uS ⟨v, hv⟩ := heS ⟨v, hv⟩
-      simp only [tv, dif_pos hv, e1, e2]
+      simp only [tv, dite_eq_left hv, e1, e2]
       simpa [mul_assoc] using huS ⟨v, hv⟩
     · rw [hx2 c v hv]
       by_cases hK : P.p v y ∈ K v
-      · simp only [tv, dif_neg hv, if_pos hK, map_one, mul_one, inv_one, one_mul]
+      · simp only [tv, dite_eq_right hv, ite_eq_left hK, map_one, mul_one, inv_one, one_mul]
         exact (hout v hv).1 hK
-      · simp only [tv, dif_neg hv, if_neg hK, mul_one]
+      · simp only [tv, dite_eq_right hv, ite_eq_right hK, mul_one]
         obtain ⟨uv, huv, euv⟩ := (hB v hv).choose_spec
         have e3 : (ιv v (hB v hv).choose)⁻¹ * P.p v y = uv := by
           rw [inv_mul_eq_iff_eq_mul]

@@ -129,11 +129,11 @@ theorem mixS_decay : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
     have hs : supSob ψ θ 0 f = ⨆ w, ‖f w‖ₑ := GlobalTheory.Size.wordSum_zero _ _ _
     rw [hs]
     calc _ ≤ ∫⁻ a in v.𝓕, ‖heisO ψ S T (d.extY T a) (heisO ψ S T (d.extX T x) (heisO ψ S T (d.ext0 T w) f)) 0‖ₑ ∂v.μ :=
-          enorm_integral_le_lintegral_enorm _
+          eNorm_integral_le_lintegral_eNorm _
       _ ≤ ∫⁻ _ in v.𝓕, (⨆ w, ‖f w‖ₑ) ∂v.μ := lintegral_mono fun a => by
-          rw [d.integrandS_eq, enorm_mul]
+          rw [d.integrandS_eq, eNorm_mul]
           have h1 : ‖ψ (symplOH S T (d.extY T a) (d.extX T x))‖ₑ = 1 := by
-            rw [← ofReal_norm_eq_enorm, hψ.1.2.1, ENNReal.ofReal_one]
+            rw [← ofReal_norm, hψ.1.2.1, ENNReal.ofReal_one]
           rw [h1, one_mul]
           exact le_iSup (fun w => ‖f w‖ₑ) _
       _ = _ := by rw [setLIntegral_const, v.covol.2.2, mul_one]
@@ -161,10 +161,10 @@ theorem mixS_decay : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
         ((compAt θ (τs i) x)ᴴ * gramAt D T (τs i) * zs i).trace).re| * (‖M‖ₑ * ENNReal.ofReal ((1 + R) ^ N)) ≤
         C * Cd i * s := fun i => by
       have hDf := GlobalTheory.OrientedHeis.theta_dRho hθ hψ (τs i) (Z i) hf
-      rw [← mul_assoc, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (abs_nonneg _)]
+      rw [← mul_assoc, ← ofReal_norm, ← ENNReal.ofReal_mul (abs_nonneg _)]
       calc _ ≤ ‖d.mixS T ψ v.μ v.𝓕 (dRho (heisO ψ S T) θ (τs i) (Z i) f) x w‖ₑ * ENNReal.ofReal ((1 + R) ^ N) := by
             gcongr
-            rw [← ofReal_norm_eq_enorm]
+            rw [← ofReal_norm]
             exact ENNReal.ofReal_le_ofReal (hZ i f hf x w)
         _ ≤ C * supSob ψ θ N (dRho (heisO ψ S T) θ (τs i) (Z i) f) := hC _ hDf x w
         _ ≤ C * (Cd i * s) := by gcongr; exact hCd i N f hf

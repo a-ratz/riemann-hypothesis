@@ -162,7 +162,7 @@ theorem restrict_cover_affine_pull1_bijective (R : Type) [CommRing R] (X : Schem
 theorem restrict_bijective : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R) (J : Type) [Finite J] [SemilatticeInf J] (U : J → X.affineOpens) (hU : Monotone U), (∀ i j, (U (i ⊓ j)).1 = (U i).1 ⊓ (U j).1) → ⨆ i, (U i).1 = ⊤ → Function.Bijective (CoefMap.restrict (OAff s) hU.functor.op).pull1 := by
   intro R _ X s J _ _ U hU hinf hcov
   classical
-  haveI := Fintype.ofFinite J
+  have := Fintype.ofFinite J
   let B : Type := {V : X.affineOpens // ∃ i, V.1 ≤ (U i).1}
   have hne : ∀ V : B, (Finset.univ.filter fun i => V.1.1 ≤ (U i).1).Nonempty := fun V => by
     obtain ⟨i, hi⟩ := V.2

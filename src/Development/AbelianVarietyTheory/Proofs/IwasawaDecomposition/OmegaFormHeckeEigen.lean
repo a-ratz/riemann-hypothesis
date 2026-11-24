@@ -501,7 +501,7 @@ theorem compare {σ : c.F →+* ℂ} (hA : l.A = 1) {ψ : AddChar (AF D.host.F) 
               ∏ b, th (Ker.zR X idx x (rePt θ hr eT w) b)) ∧
           ∀ (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)),
             IsWeilDatumO ψ S T χS χT om → ∀ f, IsThetaFunO ψ S T f → om (1, δ * a') f w = om (1, a') f w' := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   intro y y' A A' th th' hth hth' mk mk' hmk hmk' hm hm' hAm hAm'
   have hX : SameSp X' X := sameSp_of_isSet hS hS' hp
   have hsy := symm_eq_of_isSet hS.2.2.2.2.2.2.1 hS'.2.2.2.2.2.2.1
@@ -543,7 +543,7 @@ theorem compare {σ : c.F →+* ℂ} (hA : l.A = 1) {ψ : AddChar (AF D.host.F) 
 
 theorem rdU_eq {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (f : Rul Xo c) (k : U.Comp) {x : Frame (U.X k).Ψ r}
     (hx : x ∈ (U.X k).dom) : rdU U f k x = @evR _ _ _ _ _ _ _ Xo c f ℂ _ σ.toAlgebra (ptC U k ⟨x, hx⟩) :=
-  dif_pos hx
+  dite_eq_left hx
 
 end GlobalTheory.OneMapRef.Equivar
 end -- clump:auto

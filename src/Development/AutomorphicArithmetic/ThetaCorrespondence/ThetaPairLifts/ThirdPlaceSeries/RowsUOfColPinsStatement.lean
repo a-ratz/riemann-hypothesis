@@ -89,7 +89,7 @@ namespace GlobalTheory.ClassSumCoord
 
 theorem ipAt_eq_gram : ∀ {K : Type} [Field K] [NumberField K] [StarRing K] (T : Formalism.L2.Col.GSD K) (h : T.Ok), T.Rat → ∀ (v : InfinitePlace K) (φ : T.EqFun), T.ipAt h v φ.1 φ.1 = star (fun i => v.embedding ((T.toCSD h).basis.equivFun (T.res h φ) i)) ⬝ᵥ ((T.toCSD h).H.map v.embedding *ᵥ fun i => v.embedding ((T.toCSD h).basis.equivFun (T.res h φ) i)) := by
   intro K _ _ _ T h R v φ
-  letI := h.fintypeCl
+  let := h.fintypeCl
   have hRc : (T.toCSD h).Rat := T.toCSDOf_rat h R T.outSec
   have hb := csd_hasRatBasis _ hRc
   have e : GlobalTheory.PeriodClassSum.coordAt T v φ.1 = GlobalTheory.PeriodOnStep.coAt (T.toCSD h) v (T.res h φ).1 := rfl
@@ -201,7 +201,7 @@ theorem sum_fiber (ι : H →* G) (hinj : Function.Injective ι)
       = (ι.range.index : ℂ) / Nat.card (stabilizer G (Quotient.out c')) := by
   classical
   set x := Quotient.out c' with hx
-  haveI : Fintype (G ⧸ ι.range) := Fintype.ofFinite _
+  have : Fintype (G ⧸ ι.range) := Fintype.ofFinite _
   have hS0 : 0 < Nat.card (stabilizer G x) := Nat.card_pos
   have hidx : (ι.range.index : ℂ) / Nat.card (stabilizer G x) =
       ∑ _ω : G ⧸ ι.range, ((Nat.card (stabilizer G x) : ℂ))⁻¹ := by
@@ -264,7 +264,7 @@ theorem mass_formula : ∀ {G H D : Type} [Group G] [Group H] [MulAction G D] [M
     rw [← hg]
     change _ * f (g • Quotient.out c') = _
     rw [hf]
-  haveI := hfin (Quotient.out c')
+  have := hfin (Quotient.out c')
   rw [Finset.sum_congr rfl hconst, ← Finset.sum_mul, sum_fiber ι hinj hc c', div_eq_mul_inv, mul_assoc]
 
 end GlobalTheory.OrbitMass
@@ -431,16 +431,16 @@ theorem range_blkMap : (blkMap Ch sel mu P).range = P.grp := by
       · have e2 := rowTy_inL Ch sel mu P ⟨w.1, hw⟩
         change rowTy Ch sel mu P w = _ at e2
         rw [e2]
-        have hh : h w = diagEmb _ (r_le_X' R) (p ⟨w.1, hw⟩) := dif_pos hw
+        have hh : h w = diagEmb _ (r_le_X' R) (p ⟨w.1, hw⟩) := dite_eq_left hw
         rw [hh]
         exact mem_HPar.mpr ⟨diagEmb_mem_blockUT _ _ _, by
           rw [GlobalTheory.RowLevIndex.firstDiagonalBlock_of_diagonal_embedding _ _ (p ⟨w.1, hw⟩) _ _ rfl]; exact hp ⟨w.1, hw⟩ (Set.mem_univ _)⟩
-      · have hh : h w = 1 := dif_neg hw
+      · have hh : h w = 1 := dite_eq_right hw
         rw [hh]
         exact Subgroup.one_mem _
     refine ⟨((1 : UF X.E (R.N R.m - 1)), ⟨h, hmem⟩), ?_⟩
     funext v
-    exact GlobalTheory.RowLevIndex.firstDiagonalBlock_of_diagonal_embedding _ _ (p v) _ _ (dif_pos v.2)
+    exact GlobalTheory.RowLevIndex.firstDiagonalBlock_of_diagonal_embedding _ _ (p v) _ _ (dite_eq_left v.2)
 
 end Rows2
 

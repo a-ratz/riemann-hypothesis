@@ -167,7 +167,7 @@ theorem overring {R₀ R Ω : Type} [CommRing R₀] [IsDomain R₀] [CommRing R]
       have hu : IsUnit (f s) := hs
       rw [h, map_zero] at hu
       exact not_isUnit_zero hu
-  letI : Algebra R₀ R := f.toAlgebra
+  let : Algebra R₀ R := f.toAlgebra
   have hloc : IsLocalization M R := by
     refine (isLocalization_iff _ _).2 ⟨fun s => s.2, fun z => ?_, fun {x z} h => ⟨1, by rw [hfi h]⟩⟩
     obtain ⟨s, x, u, hu, hx⟩ := hden z
@@ -175,7 +175,7 @@ theorem overring {R₀ R Ω : Type} [CommRing R₀] [IsDomain R₀] [CommRing R]
     refine ⟨(x, ⟨s, hs⟩), hinj ?_⟩
     change algebraMap R Ω (z * f s) = algebraMap R Ω (f x)
     rw [map_mul, hf, hf, hx]
-  haveI : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).2 hinj
+  have : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).2 hinj
   refine ⟨isIntegrallyClosed_of_isLocalization R M hM, IsFractionRing.of_field _ _ fun ω => ?_⟩
   obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := R₀) ω
   exact ⟨f a, f b, by rw [hf, hf]⟩
@@ -278,14 +278,14 @@ end PositivityTheory.Xgn.FunctionOnChart
 
 theorem PositivityTheory.Xgn.exists_function_on_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω] (c' : ∀ k, J k), mseg y c' ≠ 0 → IsNoetherianRing (CR O y c') ∧ IsIntegrallyClosed (CR O y c') ∧ IsFractionRing (CR O y c') Ω := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hV p _ hpS A _ _ _ m _ hp O _ _ _ _ _ _ _ c' hc'
-  haveI : CharZero Ω := GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.charZero_of_isArithVar hV
+  have : CharZero Ω := GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.charZero_of_isArithVar hV
   obtain ⟨-, -, -, hA, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.const_closure E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hV A
   obtain ⟨-, -, -, -, -, -, hch⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS
     (PositivityTheory.Xgn.FunctionOnChart.zloc Ω p) (PositivityTheory.Xgn.FunctionOnChart.zloc_range Ω p)
   obtain ⟨-, h1, h2, -⟩ := hch c' hc'
   refine ⟨?_, PositivityTheory.Xgn.FunctionOnChart.main m O (Set.range fun j => mseg y j / mseg y c')
     (PositivityTheory.Xgn.FunctionOnChart.zloc_le m O p hp) (fun a => ?_) h1 h2⟩
-  · haveI : Algebra.FiniteType O (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c')) :=
+  · have : Algebra.FiniteType O (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c')) :=
       Algebra.FiniteType.adjoin_of_finite (Set.finite_range _)
     exact Algebra.FiniteType.isNoetherianRing O (Algebra.adjoin O (Set.range fun j => mseg y j / mseg y c'))
   · have h : algebraMap A Ω a ∈ Algebra.adjoin ℤ (Set.range fun j => mseg y j / mseg y c') := hA c' hc' a
@@ -371,7 +371,7 @@ theorem translate_mem {A : Subalgebra R (T → R)} (hA : IsHopfOrder A) {f : T �
 
 theorem augIdeal_fg {A : Subalgebra R (T → R)} (hA : IsHopfOrder A) : (augIdeal A).FG := by
   classical
-  haveI := hA.finite
+  have := hA.finite
   obtain ⟨s, hs⟩ := (Module.Finite.fg_top : (⊤ : Submodule R A).FG)
   let π : A →ₗ[R] A := LinearMap.id - (Algebra.linearMap R A) ∘ₗ (evalAt A 1).toLinearMap
   have hπ : ∀ a : A, π a = a - algebraMap R A ((a : T → R) 1) := fun a => rfl
@@ -403,7 +403,7 @@ theorem augIdeal_fg {A : Subalgebra R (T → R)} (hA : IsHopfOrder A) : (augIdea
 
 theorem det_trick {B : Type} [CommRing B] (J : Ideal B) (hfg : J.FG) (c : B) (h : ∀ x ∈ J, c * x ∈ J ^ 2) :
     ∃ (u : B) (k : ℕ), (∀ x ∈ J, u * x = 0) ∧ u - c ^ k ∈ J := by
-  haveI : Module.Finite B J := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite B J := Module.Finite.iff_fg.2 hfg
   let fJ : Module.End B J := algebraMap B (Module.End B J) c
   have hfx : ∀ x : J, fJ x = c • x := fun x => Module.algebraMap_end_apply B B J c x
   have hrange : LinearMap.range fJ ≤ J • (⊤ : Submodule B J) := by
@@ -441,7 +441,7 @@ theorem mul_mem_sq_of_smul_eq_zero {A : Subalgebra R (T → R)} (n : R) (hn : �
 theorem exists_pow_smul_mem [IsDomain R] [Finite T] {A : Subalgebra R (T → R)} (hA : IsHopfOrder A) (n : R)
     (hn : ∀ x : omega A, n • x = 0) : ∃ k : ℕ, ∀ f : T → R, n ^ k • f ∈ A := by
   classical
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   obtain ⟨u, k, hu, huk⟩ := det_trick (augIdeal A) (augIdeal_fg hA) (algebraMap R A n)
     (mul_mem_sq_of_smul_eq_zero n hn)
   have hu1 : (u : T → R) 1 = n ^ k := by
@@ -564,9 +564,9 @@ theorem lat_clauses [Finite T] [Fintype W] {A : Subalgebra R (T → R)} (hA : Is
     simp [stdLat, AddSubgroup.mem_pi]
   refine ⟨?_, fun g hg => (hpm g).2 (hle g hg), fun h hh => h3 h ((hpm h).1 hh),
     (hM _).2 ⟨1, A.one_mem, fun a => rfl⟩⟩
-  haveI := hA.finite
-  haveI := hA.projective
-  haveI : Module.Finite R (Subalgebra.toSubmodule A) := hA.finite
+  have := hA.finite
+  have := hA.projective
+  have : Module.Finite R (Subalgebra.toSubmodule A) := hA.finite
   have hfin : Module.Finite R Ms := Module.Finite.map _ _
   let s : A →ₗ[R] Ms := ((resMap R toN).comp A.val.toLinearMap).codRestrict Ms fun f => ⟨f.1, f.2, rfl⟩
   have hi : ∀ g : Ms, (fun t => (⟨(g : W → Ω) (fromN t), hle _ ((hMs _).1 g.2) _⟩ : R)) ∈ A := by
@@ -942,9 +942,9 @@ theorem lat_eq_span [Smooth 𝔐.t.G.hom] (P : ChartPack G O c') (q : Cpt 𝔐.�
     P.M Mq
   have hcomp : ∀ e, jq (b₀ e) = P.toLi e := fun e => pt_left_inj 𝔐.M (by
     rw [hjq, hb₀, ← Category.assoc, spMap_dual_comp, h2, P.toLi_pt])
-  letI : Algebra (CR O y c') (𝔐.X.presheaf.stalk q.1) := ψ.toAlgebra
-  letI : Module (CR O y c') Fq := Module.compHom Fq ψ
-  haveI : IsScalarTower (CR O y c') (𝔐.X.presheaf.stalk q.1) Fq :=
+  let : Algebra (CR O y c') (𝔐.X.presheaf.stalk q.1) := ψ.toAlgebra
+  let : Module (CR O y c') Fq := Module.compHom Fq ψ
+  have : IsScalarTower (CR O y c') (𝔐.X.presheaf.stalk q.1) Fq :=
     ⟨fun s r e => by
       change (ψ s * r) • e = ψ s • r • e
       rw [mul_smul]⟩
@@ -1032,8 +1032,8 @@ theorem mem_range_toLi_iff [Smooth 𝔐.t.G.hom] (P : ChartPack G O c') (hpt : D
     rw [lat_eq_span P q ψ h1 h2]
     exact Submodule.subset_span ⟨v, rfl⟩
   · intro he
-    haveI := P.fin
-    haveI := P.proj
+    have := P.fin
+    have := P.proj
     obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' (CR O y c') P.L
     obtain ⟨h, hh⟩ := Module.projective_lifting_property f LinearMap.id hf
     have hv : ∀ v, v = ∑ i, h v i • f (Pi.single i 1) := by
@@ -1241,19 +1241,19 @@ theorem chartD_fun_clauses : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨-, -, -, -, hres, -, ⟨-, -, hpnu⟩, -⟩ := hO
   have hpp : p.Prime := Fact.out
   obtain ⟨hnoeth, hint, -⟩ := GlobalTheory.CompanionTheory.Ar.Num.FamEx.chartRing_noetherian_normal_fraction E H D l Xo c O₀ β Y S Ω K J y 𝔐 d harith p hpS A m hpm O c' hc
-  haveI := hnoeth
-  haveI := hint
-  haveI hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have := hnoeth
+  have := hint
+  have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   have hpΩ : (p : Ω) ≠ 0 := Nat.cast_ne_zero.2 hpp.ne_zero
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
+  have : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
     simpa [Ideal.span_singleton_eq_bot] using hpp.ne_zero)
-  haveI : Finite (TorsT E (D.p + D.q) p) := inferInstanceAs (Finite (Multiplicative _))
+  have : Finite (TorsT E (D.p + D.q) p) := inferInstanceAs (Finite (Multiplicative _))
   obtain ⟨hHopf, -, -, hend, -, hθ⟩ := GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ 𝔐.X 𝔐.t.G P.x p P.i₁
     P.tors₁ hsm
   obtain ⟨θ, ⟨hsurj, hder⟩, hker, -⟩ := hθ P.L P.M
   obtain ⟨ε, hε1, hε⟩ := exists_eps hsc
-  haveI : IsMonHom (𝔐.t.act.act ε) := 𝔐.t.act.hom ε
+  have : IsMonHom (𝔐.t.act.act ε) := 𝔐.t.act.hom ε
   have hst : ∀ f ∈ P.Γ₁.btOrder ⊤, (fun t => f (toN sc (fromN pq t))) ∈ P.Γ₁.btOrder ⊤ := fun f hf =>
     hend (𝔐.t.act.act ε) (idem pq sc) (pts_idem P hε) f hf
   have hn : ∀ x : omega (P.Γ₁.btOrder ⊤), (p : CR O y c') • x = 0 := by

@@ -279,7 +279,7 @@ lemma char_zero (lam : Measure Z) [lam.IsAddHaarMeasure] (h : Z → ℝ) (hc : C
 lemma real_zero (lam : Measure Z) [lam.IsAddHaarMeasure] (h : Z → ℝ) (hc : Continuous h) (K a : ℝ)
     (ha : 0 < a) (hK : 0 ≤ K) (hb : ∀ z, ‖h z‖ ≤ K * Real.exp (-a * ‖z‖ ^ 2))
     (hm : ∀ (ℓ : Z →L[ℝ] ℝ) (n : ℕ), ∫ z, (ℓ z) ^ n * h z ∂lam = 0) (z : Z) : h z = 0 := by
-  haveI : ProperSpace Z := FiniteDimensional.proper ℝ Z
+  have : ProperSpace Z := FiniteDimensional.proper ℝ Z
   have hi : Integrable h lam := by
     have := int_mom lam h hc K a ha hK hb 0 0
     simpa using this
@@ -287,9 +287,9 @@ lemma real_zero (lam : Measure Z) [lam.IsAddHaarMeasure] (h : Z → ℝ) (hc : C
   let fm : Z → ℝ≥0 := fun z => Real.toNNReal (-h z)
   have cfp : Continuous fp := continuous_real_toNNReal.comp hc
   have cfm : Continuous fm := continuous_real_toNNReal.comp hc.neg
-  haveI : IsFiniteMeasure (lam.withDensity fun z => (fp z : ℝ≥0∞)) :=
+  have : IsFiniteMeasure (lam.withDensity fun z => (fp z : ℝ≥0∞)) :=
     isFiniteMeasure_withDensity_ofReal hi.2
-  haveI : IsFiniteMeasure (lam.withDensity fun z => (fm z : ℝ≥0∞)) :=
+  have : IsFiniteMeasure (lam.withDensity fun z => (fm z : ℝ≥0∞)) :=
     isFiniteMeasure_withDensity_ofReal hi.neg.2
   have key : ∀ (f : Z → ℝ≥0), Continuous f → (∀ z, (f z : ℝ) ≤ ‖h z‖) → ∀ ℓ : Z →L[ℝ] ℝ,
       Integrable (fun z => f z • Complex.exp (ℓ z * Complex.I)) lam := by
@@ -438,8 +438,8 @@ theorem total_of_split {G Z Y : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
     (u : G → ℂ) (hu : Continuous u) (hB : ∃ B : ℝ, ∀ x, ‖u x‖ ≤ B)
     (h : ∀ t ∈ T, ∀ k ∈ GlobalTheory.WeilM.SB Y, ∫ x, u x * conj (t (e x).1 * k (e x).2) ∂m = 0) : u = 0 := by
   obtain ⟨B, hB⟩ := hB
-  haveI : (lam.prod ν).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure lam ν
-  haveI : (m.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map m
+  have : (lam.prod ν).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure lam ν
+  have : (m.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map m
   have hmap := Measure.isAddLeftInvariant_eq_smul (m.map e) (lam.prod ν)
   have hcpos := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure (m.map e) (lam.prod ν)
   have hemb : MeasurableEmbedding e := e.toHomeomorph.measurableEmbedding
@@ -646,23 +646,23 @@ end Gauss
 
 theorem fockTotal_of_eucTotal : EucTotal → FockTotal := by
   intro hEuc D p θ hθ l hl μ 𝓕 hμ u hu hB horth
-  haveI := hμ.1
-  haveI : IsModuleTopology (Af D.host.F) (GlobalTheory.RegSch.IkSchwartz.AEf D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (GlobalTheory.RegSch.IkSchwartz.AEf D) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.F
-  haveI : TotallyDisconnectedSpace (Af D.host.F) := GlobalTheory.TamePartR.totallyDisconnected_finiteAdele D.host.F
+  have := hμ.1
+  have : IsModuleTopology (Af D.host.F) (GlobalTheory.RegSch.IkSchwartz.AEf D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (GlobalTheory.RegSch.IkSchwartz.AEf D) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.F
+  have : TotallyDisconnectedSpace (Af D.host.F) := GlobalTheory.TamePartR.totallyDisconnected_finiteAdele D.host.F
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (Af D.host.F)
-  haveI : LocallyCompactSpace (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.secondCountableTopology
-  haveI : T2Space (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.isEmbedding.t2Space
-  haveI : TotallyDisconnectedSpace (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.symm.totallyDisconnectedSpace
-  letI : MeasurableSpace (Fin (V1 D).rank → Fin p → GlobalTheory.RegSch.IkSchwartz.AEf D) := borel _
-  haveI : BorelSpace (Fin (V1 D).rank → Fin p → GlobalTheory.RegSch.IkSchwartz.AEf D) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D (V1 D).rank p) := ⟨rfl⟩
-  haveI := (lattice_Mx D (V1 D).rank p).1
+  have : LocallyCompactSpace (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.secondCountableTopology
+  have : T2Space (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.isEmbedding.t2Space
+  have : TotallyDisconnectedSpace (GlobalTheory.RegSch.IkSchwartz.AEf D) := e0.symm.totallyDisconnectedSpace
+  let : MeasurableSpace (Fin (V1 D).rank → Fin p → GlobalTheory.RegSch.IkSchwartz.AEf D) := borel _
+  have : BorelSpace (Fin (V1 D).rank → Fin p → GlobalTheory.RegSch.IkSchwartz.AEf D) := ⟨rfl⟩
+  have : BorelSpace (Mx D (V1 D).rank p) := ⟨rfl⟩
+  have := (lattice_Mx D (V1 D).rank p).1
   obtain ⟨e, he⟩ := GlobalTheory.RegSch.IkSchwartz.exists_split hθ (V1 D).rank p
   let lam : Measure (D.what₂.Tau → Fin (V1 D).rank → Fin p → ℂ) := Measure.addHaar
   let ν : Measure (Fin (V1 D).rank → Fin p → GlobalTheory.RegSch.IkSchwartz.AEf D) := Measure.addHaar
@@ -922,9 +922,9 @@ theorem gram_rank_one_one : (V1 D).gram = 1 := by
   by_cases hab : a = b
   · subst hab
     rw [Matrix.one_apply_eq]
-    exact (if_pos rfl).trans (by simp [Formalism.BasicNotions.Examples₂.sgn])
+    exact (ite_eq_left rfl).trans (by simp [Formalism.BasicNotions.Examples₂.sgn])
   · rw [Matrix.one_apply_ne hab]
-    exact if_neg hab
+    exact ite_eq_right hab
 
 theorem gram_at_place_rank_one (τ : D.what₂.Tau) : gramAt D (V1 D) τ = 1 := by
   unfold gramAt
@@ -961,8 +961,8 @@ theorem mm_inv {r n : ℕ} (y : Mx D r n) (a : GL (Fin n) (AE D)) : mm (mm y a.1
   rw [Matrix.mul_assoc, h, Matrix.mul_one]
 
 theorem topRing : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
   exact IsModuleTopology.isTopologicalRing (Af D.host.F) _
 
 theorem hom_sum {R S ι : Type*} [Semiring R] [Semiring S] (f : R →+* S) (s : Finset ι) (g : ι → R) :
@@ -971,7 +971,7 @@ theorem hom_sum {R S ι : Type*} [Semiring R] [Semiring S] (f : R →+* S) (s : 
 theorem exists_clopen_superset {m n : ℕ} (T : Set (Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E)) (hT : IsCompact T) :
     ∃ U : Set (Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E), IsClopen U ∧ IsCompact U ∧
       (0 : Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) ∈ U ∧ T ⊆ U := by
-  haveI := topRing (D := D)
+  have := topRing (D := D)
   obtain ⟨U₀, hc, hk, h0⟩ := GlobalTheory.AfTensNbhd.exists_clopen_compact_nbhd_zero D m n
   obtain ⟨t, ht⟩ := hT.elim_finite_subcover (fun x => (fun u => -x + u) ⁻¹' U₀)
     (fun x => hc.isOpen.preimage (by fun_prop)) (fun x hx => Set.mem_iUnion.2 ⟨x, by simpa using h0⟩)
@@ -990,7 +990,7 @@ theorem exists_supp_clopen {n : ℕ} (g : (Fin (V1 D).rank → Fin n → Af D.ho
       (0 : Fin (V1 D).rank → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) ∈ U ∧
       ∀ (a : GL (Fin n) (AE D)), (a⁻¹).1 ∈ A₂ → ∀ y : Mx D (V1 D).rank n,
         g (fun i j => finPart D ((mm y a.1) i j)) ≠ 0 → (fun i j => finPart D (y i j)) ∈ U := by
-  haveI := topRing (D := D)
+  have := topRing (D := D)
   let fp : Mx D n n → (Fin n → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) := fun b i j => finPart D (b i j)
   have hfp : Continuous fp := by
     refine continuous_pi fun i => continuous_pi fun j => ?_
@@ -1236,7 +1236,7 @@ theorem rank_one_majorant_of_parts : WeilCont → WeilKFin → OrbitMaj → IwaC
     fun τ => GlobalTheory.AdForm.VacStd.cartan_of_gram (GlobalTheory.AdForm.VacStd.gram_of_eq _ _ 1 rfl) τ
   obtain ⟨W, hWfd, hWle, hWK⟩ :=
     hFin D n (V1 D) ψ hψ χ hχ hRes θ hθ μ 𝓕 hμ ω hω l hl (fun _ => 1) hcart Φ hΦ
-  haveI := hWfd
+  have := hWfd
   obtain ⟨N, x, f, hfW, hrep⟩ := exists_eval_points W
   have hcont := hCont D n (V1 D) ψ hψ χ hχ hRes θ hθ μ 𝓕 hμ ω hω Φ
   have hB : ∀ i, ∃ B : ℝ, 0 ≤ B ∧ ∀ k ∈ K D n, ‖(ω k Φ).1 (x i)‖ ≤ B := by
@@ -1382,20 +1382,20 @@ theorem stepTotal : ProdTh → ProdMeas → StepTotal := by
   obtain ⟨B, hB⟩ := hbd
   have hμ := hM D r s p μr Fr μs Fs μ F hr hs h
   subst hμ
-  haveI : SecondCountableTopology (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.2.1
-  haveI : SecondCountableTopology (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.2.1
-  haveI : SecondCountableTopology (Mx D (r + s) p) := (GlobalTheory.MixModel.lattice_Mx D (r + s) p).2.2.1
-  haveI : FirstCountableTopology (Mx D r p) :=
+  have : SecondCountableTopology (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.2.1
+  have : SecondCountableTopology (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.2.1
+  have : SecondCountableTopology (Mx D (r + s) p) := (GlobalTheory.MixModel.lattice_Mx D (r + s) p).2.2.1
+  have : FirstCountableTopology (Mx D r p) :=
     TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
-  haveI : IsTopologicalAddGroup (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).1
-  haveI : IsTopologicalAddGroup (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).1
-  haveI : LocallyCompactSpace (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.1
-  haveI : LocallyCompactSpace (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.1
-  haveI : BorelSpace (Mx D r p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D s p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D (r + s) p) := ⟨rfl⟩
-  haveI := hr.1
-  haveI := hs.1
+  have : IsTopologicalAddGroup (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).1
+  have : IsTopologicalAddGroup (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).1
+  have : LocallyCompactSpace (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.1
+  have : LocallyCompactSpace (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.1
+  have : BorelSpace (Mx D r p) := ⟨rfl⟩
+  have : BorelSpace (Mx D s p) := ⟨rfl⟩
+  have : BorelSpace (Mx D (r + s) p) := ⟨rfl⟩
+  have := hr.1
+  have := hs.1
   have hcJ := continuous_rowJ (D := D) (r := r) (s := s) (p := p)
   have hcF : Continuous fun w : Mx D r p × Mx D s p => u (rowJ w.1 w.2) := hu.comp hcJ
   have key : ∀ Ωr Ωs, IsTh ψ χr θ br μr Ωr → IsTh ψ χs θ bs μs Ωs →

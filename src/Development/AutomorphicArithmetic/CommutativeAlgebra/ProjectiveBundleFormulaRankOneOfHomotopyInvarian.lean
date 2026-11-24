@@ -96,12 +96,12 @@ private theorem pa_val {n : ℕ} (i : Fin (n + 1)) (k : Fin (n + 2)) :
   · have h' : i.castSucc < k := by
       rw [Fin.lt_def]
       simpa using h
-    rw [Fin.predAbove_of_castSucc_lt _ _ h', Fin.coe_pred, if_pos h]
+    rw [Fin.predAbove_of_castSucc_lt _ _ h', Fin.val_pred, ite_eq_left h]
   · have h' : k ≤ i.castSucc := by
       rw [Fin.le_def]
       simp
       omega
-    rw [Fin.predAbove_of_le_castSucc _ _ h', Fin.coe_castPred, if_neg h]
+    rw [Fin.predAbove_of_le_castSucc _ _ h', Fin.coe_castPred, ite_eq_right h]
 
 private theorem hT_val {A : Type} [One A] {n : ℕ} (i : Fin (n + 1)) (v : Fin (n + 1) → A) (k : Fin (n + 2)) (a : Fin (n + 1))
     (h : (k : ℕ) ≤ i) (ha : (a : ℕ) = k) : hT i v k = v a := by
@@ -135,60 +135,60 @@ private theorem hT_eq_hT_of_le_iff_of_apply_eq {A : Type} [One A] {n m : ℕ} (a
 
 private theorem hT_c {A : Type} [One A] {n : ℕ} (i : Fin (n + 2)) (j : Fin (n + 1)) (hij : i ≤ j.castSucc) (v : Fin (n + 2) → A)
     (k : Fin (n + 2)) : hT j.succ v (i.castSucc.succAbove k) = hT j (v ∘ i.succAbove) k := by
-  rw [Fin.le_def, Fin.coe_castSucc] at hij
+  rw [Fin.le_def, Fin.val_castSucc] at hij
   refine hT_eq_hT_of_le_iff_of_apply_eq _ _ _ _ _ _ ?_ ?_
-  · simp only [sa_val, Fin.coe_castSucc, Fin.val_succ]
+  · simp only [sa_val, Fin.val_castSucc, Fin.val_succ]
     split_ifs <;> omega
   · intro hx hy
     simp only [Function.comp_apply]
     congr 1
     apply Fin.ext
-    simp only [sa_val, Fin.coe_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
+    simp only [sa_val, Fin.val_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
     all_goals (split_ifs at hx hy ⊢ <;> omega)
 
 private theorem hT_d {A : Type} [One A] {n : ℕ} (j : Fin (n + 1)) (v : Fin (n + 2) → A)
     (k : Fin (n + 2)) : hT j.succ v (j.castSucc.succ.succAbove k) = hT j.castSucc v (j.castSucc.succ.succAbove k) := by
   refine hT_eq_hT_of_le_iff_of_apply_eq _ _ _ _ _ _ ?_ (fun _ _ => rfl)
-  simp only [sa_val, Fin.coe_castSucc, Fin.val_succ]
+  simp only [sa_val, Fin.val_castSucc, Fin.val_succ]
   split_ifs <;> omega
 
 private theorem hT_e {A : Type} [One A] {n : ℕ} (i : Fin (n + 2)) (j : Fin (n + 1)) (hji : j.castSucc < i) (v : Fin (n + 2) → A)
     (k : Fin (n + 2)) : hT j.castSucc v (i.succ.succAbove k) = hT j (v ∘ i.succAbove) k := by
-  rw [Fin.lt_def, Fin.coe_castSucc] at hji
+  rw [Fin.lt_def, Fin.val_castSucc] at hji
   refine hT_eq_hT_of_le_iff_of_apply_eq _ _ _ _ _ _ ?_ ?_
-  · simp only [sa_val, Fin.coe_castSucc, Fin.val_succ]
+  · simp only [sa_val, Fin.val_castSucc, Fin.val_succ]
     split_ifs <;> omega
   · intro hx hy
     simp only [Function.comp_apply]
     congr 1
     apply Fin.ext
-    simp only [sa_val, Fin.coe_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
+    simp only [sa_val, Fin.val_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
     split_ifs at hx hy ⊢ <;> omega
 
 private theorem hT_f {A : Type} [One A] {n : ℕ} (i j : Fin (n + 1)) (hij : i ≤ j) (v : Fin (n + 1) → A)
     (k : Fin (n + 3)) : hT j v (i.castSucc.predAbove k) = hT j.succ (v ∘ i.predAbove) k := by
   rw [Fin.le_def] at hij
   refine hT_eq_hT_of_le_iff_of_apply_eq _ _ _ _ _ _ ?_ ?_
-  · simp only [pa_val, Fin.coe_castSucc, Fin.val_succ]
+  · simp only [pa_val, Fin.val_castSucc, Fin.val_succ]
     split_ifs <;> omega
   · intro hx hy
     simp only [Function.comp_apply]
     congr 1
     apply Fin.ext
-    simp only [pa_val, Fin.coe_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
+    simp only [pa_val, Fin.val_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
     all_goals (split_ifs at hx hy ⊢ <;> omega)
 
 private theorem hT_g {A : Type} [One A] {n : ℕ} (i j : Fin (n + 1)) (hji : j ≤ i) (v : Fin (n + 1) → A)
     (k : Fin (n + 3)) : hT j v (i.succ.predAbove k) = hT j.castSucc (v ∘ i.predAbove) k := by
   rw [Fin.le_def] at hji
   refine hT_eq_hT_of_le_iff_of_apply_eq _ _ _ _ _ _ ?_ ?_
-  · simp only [pa_val, Fin.coe_castSucc, Fin.val_succ]
+  · simp only [pa_val, Fin.val_castSucc, Fin.val_succ]
     split_ifs <;> omega
   · intro hx hy
     simp only [Function.comp_apply]
     congr 1
     apply Fin.ext
-    simp only [pa_val, Fin.coe_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
+    simp only [pa_val, Fin.val_castSucc, Fin.val_succ, Fin.val_mk] at hx hy ⊢
     split_ifs at hx hy ⊢ <;> omega
 
 private theorem hT_map {A B : Type} [One A] [One B] {n : ℕ} (f : A → B) (hf : f 1 = 1) (i : Fin (n + 1)) (v : Fin (n + 1) → A)
@@ -474,7 +474,7 @@ private theorem chains_qi (R : Type) [CommRing R] (E : Spc) : QuasiIso ((chains 
   exact e.quasiIso_hom
 
 private theorem eqv1 (R : Type) [CommRing R] (E : Spc) (F : Shv R) : Eqv R (fst1 E) F := by
-  haveI := chains_qi R E
+  have := chains_qi R E
   exact fun n => GlobalTheory.T.quasiIso_hypercohomology_bijective R ((chains R).map (fst1 E)) F n
 
 section

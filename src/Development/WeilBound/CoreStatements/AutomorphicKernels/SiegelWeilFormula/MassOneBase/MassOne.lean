@@ -595,14 +595,14 @@ theorem dens_exact (lam : Measure (Fv F v)) (hlam : IsStdV v lam) (h2 : Valued.v
         (Ideal.absNorm v.asIdeal : ℝ≥0∞)⁻¹ ^ (Fintype.card ι - 1)) * lam A := by
   classical
   have hLoc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : SecondCountableTopology (Fv F v) := hLoc.2.2.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : SecondCountableTopology (Fv F v) := hLoc.2.2.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨-, -, -, hcard⟩ := _root_.GlobalTheory.CompanionTheory.SW.Vol.volumes_in_completion F v lam hlam
   have hq0 : Ideal.absNorm v.asIdeal ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]
     exact v.ne_bot
-  haveI : Finite 𝓴 := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq0)
-  letI : Fintype 𝓴 := Fintype.ofFinite _
+  have : Finite 𝓴 := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq0)
+  let : Fintype 𝓴 := Fintype.ofFinite _
   have hBint : ∀ i j, (BO.map phi) i j ∈ v.adicCompletionIntegers F := fun i j => (BO i j).2
   have h20 : (2 : Fv F v) ≠ 0 := by
     intro h0

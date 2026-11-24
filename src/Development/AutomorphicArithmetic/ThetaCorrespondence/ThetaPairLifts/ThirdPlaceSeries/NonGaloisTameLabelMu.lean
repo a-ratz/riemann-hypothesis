@@ -90,7 +90,7 @@ theorem exists_int_cong_tg : ∀ (D : D7) (k : Fin 2) (v : D.nd.PlG k), ∃ (u :
   have hN : normV w = D.host.g k := GlobalTheory.TameLabels.normV_eq_of_split hp (D.nd.g_split k) (D.naut.plGw_over k v)
   have hgw : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ w.asIdeal := D.naut.plGw_over k v
   have hn : 0 < normV w - 1 := by rw [hN]; have := hp.two_le; omega
-  obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt
+  obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt
     (Ideal.pow_lt_self w.asIdeal w.ne_bot w.isPrime.ne_top 2 le_rfl)
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap D.host.E D.nd.Om (ϖ : D.host.E)) hn
   have hϖ0 : ϖ ≠ 0 := by rintro rfl; exact h2 (zero_mem _)
@@ -107,13 +107,13 @@ theorem exists_int_cong_tg : ∀ (D : D7) (k : Fin 2) (v : D.nd.PlG k), ∃ (u :
     exact pow_left_injective hn.ne' heq
 
   have hζA : ζ ∈ A := (A.valuation_le_one_iff ζ).mp hv1.le
-  haveI hcp : CharP (IsLocalRing.ResidueField A) (D.host.g k) := by
+  have hcp : CharP (IsLocalRing.ResidueField A) (D.host.g k) := by
     refine (CharP.charP_iff_prime_eq_zero hp).2 ?_
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff,
       ValuationSubring.valuation_lt_one_iff]
     have := (hA _).mpr hgw
     simpa using this
-  haveI : Fact (D.host.g k).Prime := ⟨hp⟩
+  have : Fact (D.host.g k).Prime := ⟨hp⟩
   set z := IsLocalRing.residue A ⟨ζ, hζA⟩ with hz
   have hzp : z ^ (D.host.g k) - z = 0 := by
     have e : (⟨ζ, hζA⟩ : A) ^ (normV w - 1) = 1 := Subtype.ext (by simpa using hζn)

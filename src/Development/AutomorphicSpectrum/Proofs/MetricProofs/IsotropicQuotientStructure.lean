@@ -435,8 +435,8 @@ theorem riemLat_basis_periods_linearIndependent : ∀ (E : Type) [Field E] [Numb
     exact hmem x
   have hcard : Fintype.card (Fin n) = Module.finrank ℝ (Fin g → ℂ) := by
     have h1 : Module.finrank ℤ Λ = Fintype.card (Fin n) := by
-      haveI := R.free
-      haveI := R.fin
+      have := R.free
+      have := R.fin
       exact Module.finrank_eq_card_basis b
     have h2 : Module.finrank ℝ (Fin g → ℂ) = 2 * g := by
       simp [Module.finrank_pi_fintype, Complex.finrank_real_complex, mul_comm]
@@ -479,7 +479,7 @@ theorem mem_span_part_of_period_real_comb :
     simp only [d, Finset.sum_smul, ite_smul, zero_smul]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun i _ => ?_
-    rw [Finset.sum_ite_eq, if_pos (Finset.mem_univ _), Complex.coe_smul]
+    rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _), Complex.coe_smul]
   have hcoef : ∀ j, ((b.repr x j : ℤ) : ℝ) = d j := by
     have h0 : ∑ j, (((b.repr x j : ℤ) : ℝ) - d j) • P (b j) = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib]
@@ -490,7 +490,7 @@ theorem mem_span_part_of_period_real_comb :
     intro j hj
     have hd : d j = 0 := by
       refine Finset.sum_eq_zero fun i _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hj ⟨i, h⟩
     have := hcoef j
     rw [hd] at this
@@ -560,7 +560,7 @@ theorem exists_retraction {R M : Type} [CommRing R] [IsDomain R] [IsPrincipalIde
     ∃ (k : ℕ) (i : Fin k → M) (φ : Fin k → M →ₗ[R] R), (∀ b, i b ∈ N) ∧ (∀ x ∈ N, x = ∑ b, φ b x • i b) ∧
       ∀ a b, φ a (i b) = if b = a then 1 else 0 := by
   classical
-  haveI : NoZeroSMulDivisors R (M ⧸ N) := by
+  have : NoZeroSMulDivisors R (M ⧸ N) := by
     refine ⟨fun {c} {q} hcq => ?_⟩
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective N q
     by_cases hc : c = 0
@@ -568,9 +568,9 @@ theorem exists_retraction {R M : Type} [CommRing R] [IsDomain R] [IsPrincipalIde
     · right
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hcq
       exact (Submodule.Quotient.mk_eq_zero N).2 (hs x c hc hcq)
-  haveI : Module.Free R (M ⧸ N) := Module.free_of_finite_type_torsion_free'
-  haveI : Module.Finite R N := Module.Finite.of_injective N.subtype Subtype.val_injective
-  haveI : Module.Free R N := Module.free_of_finite_type_torsion_free'
+  have : Module.Free R (M ⧸ N) := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite R N := Module.Finite.of_injective N.subtype Subtype.val_injective
+  have : Module.Free R N := Module.free_of_finite_type_torsion_free'
   obtain ⟨g, hg⟩ := Module.projective_lifting_property N.mkQ (LinearMap.id) (Submodule.mkQ_surjective N)
   have hq : ∀ x : M, x - g (N.mkQ x) ∈ N := by
     intro x
@@ -715,14 +715,14 @@ theorem commGroup_mul_mul_eq_mul_inv_mul_mul_mul (hb : Function.Bijective form) 
       abel
     rw [e]
     exact I.sub_mem (hrI _) (I.smul_mem a (hrI _))
-  haveI : Module.Finite ℤ Λ' := Module.Finite.of_injective s hs_inj
-  haveI : Module.IsTorsionFree ℤ Λ' := ⟨fun n hn x y hxy => by
+  have : Module.Finite ℤ Λ' := Module.Finite.of_injective s hs_inj
+  have : Module.IsTorsionFree ℤ Λ' := ⟨fun n hn x y hxy => by
     change n • x = n • y at hxy
     apply hs_inj
     apply Module.IsTorsionFree.isSMulRegular (M := Λ) hn
     change n • s x = n • s y
     rw [← map_smul, ← map_smul, hxy]⟩
-  haveI : Module.Free ℤ Λ' := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ Λ' := Module.free_of_finite_type_torsion_free'
   have hdecomp : ∀ x, ∃ w, ∃ y ∈ I, ∃ c : Fin k → ℤ, x = s w + y + ∑ a, c a • f a := by
     intro x
     have hp : ∀ y ∈ I, form (x - ∑ a, form x (i a) • f a) y = 0 := by
@@ -861,7 +861,7 @@ theorem exists_quot (hb : Function.Bijective form) (halt : ∀ x, form x x = 0) 
     { carrier := {x | ∀ y ∈ I, form x y = 0}
       add_mem' := by
         intro x z hx hz y hy
-        simp only [Set.mem_setOf_eq, map_add (f := _), LinearMap.add_apply, hx y hy, hz y hy, add_zero]
+        simp only [Set.mem_ofPred_eq, map_add (f := _), LinearMap.add_apply, hx y hy, hz y hy, add_zero]
       zero_mem' := by
         intro y _
         simp
@@ -1293,8 +1293,8 @@ end
 theorem exists_univ_quot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (g : ℕ) (Λ : Type) [AddCommGroup Λ] [Module (𝓞 E) Λ] (R₀ : RiemLat E g Λ) (I : Submodule (𝓞 E) Λ), IsSaturated I → IsIsoSub R₀.form I → ∃ (g' k : ℕ) (Λ' : Type) (_ : AddCommGroup Λ') (_ : Module (𝓞 E) Λ') (e : Fin k → Λ) (form' : Λ' →ₗ[ℤ] Λ' →ₗ[ℤ] ℤ) (π : Λ → Λ'), k + g' = g ∧ (∀ x', ∃ x, (∀ y ∈ I, R₀.form x y = 0) ∧ π x = x') ∧ ∀ R : RiemLat E g Λ, R.form = R₀.form → LinearIndependent ℂ (fun i => R.P (e i)) ∧ Submodule.span ℂ (R.P '' I) = Submodule.span ℂ (Set.range fun i => R.P (e i)) ∧ ∀ q : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ), Function.Surjective q → LinearMap.ker q = Submodule.span ℂ (R.P '' I) → ∃ R' : RiemLat E g' Λ', R'.form = form' ∧ (∀ x, (∀ y ∈ I, R.form x y = 0) → R'.P (π x) = q (R.P x)) ∧ ∀ x y, (∀ v ∈ I, R.ip (R.P v) x = 0) → R'.ip (q x) (q y) = R.ip x y := by
   intro E _ _ _ g Λ _ _ R₀ I hsat hiso
   classical
-  haveI := R₀.free
-  haveI := R₀.fin
+  have := R₀.free
+  have := R₀.fin
   obtain ⟨g', Λ', i1, i2, R₀', q₀, hq₀s, hq₀k, hq₀B, hq₀r, hq₀m⟩ := _root_.GlobalTheory.CompanionTheory.Relay.quotient_lattice_by_isotropic_submodule E g Λ Unit R₀ I hsat hiso
   obtain ⟨k, n, b, f, hf, hN⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Lattice.exists_basis_span_eq_of_saturated Λ (AddSubgroup.toIntSubmodule I.toAddSubgroup) (fun v m hm h => hsat v m hm h)
   have hI : ∀ v, v ∈ I ↔ v ∈ Submodule.span ℤ (Set.range fun i => b (f i)) := fun v => by
@@ -1319,7 +1319,7 @@ theorem exists_univ_quot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   let π : Λ → Λ' := fun x => if h : x ∈ D then (hex x h).choose else 0
   have hπ : ∀ x ∈ D, R₀'.P (π x) = q₀ (R₀.P x) := by
     intro x h
-    simp only [π, dif_pos h]
+    simp only [π, dite_eq_left h]
     exact (hex x h).choose_spec
   have hinj : Function.Injective R₀'.P := (_root_.GlobalTheory.CompanionTheory.Relay.riemann_lattice_eigen_projection E g' Λ' Unit R₀').1
   have hπs : ∀ x', ∃ x ∈ D, π x = x' := by

@@ -55,7 +55,7 @@ open scoped TensorProduct ENNReal
 namespace GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef
 
 theorem placesCountable (F : Type) [Field F] [NumberField F] : Countable (HeightOneSpectrum (𝓞 F)) := by
-  have : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ) (M := F)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ) (M := F)
   have : Countable (𝓞 F) := inferInstanceAs (Countable {x : F // x ∈ integralClosure ℤ F})
   have hs : Function.Surjective (fun s : Finset (𝓞 F) => Ideal.span (s : Set (𝓞 F))) := by
     intro I

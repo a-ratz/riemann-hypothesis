@@ -100,7 +100,7 @@ theorem pow_eq_one_eq_of_residue {S : Type*} [CommRing S] [IsLocalRing S] {n : �
 theorem card_sub_one_isUnit (S : Type*) [CommRing S] [IsLocalRing S] [Finite (ResidueField S)] :
     IsUnit ((Nat.card (ResidueField S) - 1 : ℕ) : S) := by
   rw [← IsLocalRing.residue_ne_zero_iff_isUnit, map_natCast, Nat.cast_sub Nat.card_pos, Nat.cast_one]
-  haveI := Fintype.ofFinite (ResidueField S)
+  have := Fintype.ofFinite (ResidueField S)
   rw [Nat.card_eq_fintype_card, FiniteField.cast_card_eq_zero]
   simp
 
@@ -122,20 +122,20 @@ theorem exists_unr_embedding_any : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g =
     rw [hq', one_pow] at hcardR
     have : Subsingleton (ResidueField R) := (Nat.card_eq_one_iff_unique.1 hcardR).1
     exact not_subsingleton (ResidueField R) this
-  haveI : Finite (ResidueField R) := Nat.finite_of_card_ne_zero (by rw [hcardR, hq']; exact pow_ne_zero _ (pow_ne_zero _ hq0))
+  have : Finite (ResidueField R) := Nat.finite_of_card_ne_zero (by rw [hcardR, hq']; exact pow_ne_zero _ (pow_ne_zero _ hq0))
 
-  haveI : Module.Finite K.O R := Algebra.finite_adjoin_simple_of_isIntegral hi
-  haveI : HenselianLocalRing K.O := GlobalTheory.henselianLocalRing_of_henselianRing K.O
-  haveI : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_finite K.O R
+  have : Module.Finite K.O R := Algebra.finite_adjoin_simple_of_isIntegral hi
+  have : HenselianLocalRing K.O := GlobalTheory.henselianLocalRing_of_henselianRing K.O
+  have : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_finite K.O R
   have h1q : 1 < K'.q ^ 2 := by rw [← K'.card_res]; exact Finite.one_lt_card
   have hN : N ≠ 0 := by omega
   have hNR : IsUnit (N : R) := by
     have := card_sub_one_isUnit R
     rwa [hcardR] at this
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
-  haveI : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FaithfulSMul K.O K'.E := (faithfulSMul_iff_algebraMap_injective _ _).2
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
+  have : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FaithfulSMul K.O K'.E := (faithfulSMul_iff_algebraMap_injective _ _).2
     (φ.injective.comp (IsFractionRing.injective K.O K.E))
   have hzN : z ^ N = 1 := hzp.pow_eq_one
   have hzint : IsIntegral K.O z :=
@@ -164,7 +164,7 @@ theorem exists_unr_embedding_any : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g =
   let ψ : K'.E →+* B.A := (pb.lift (yR : B.A) hy).toRingHom
   have hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e := fun e => (pb.lift (yR : B.A) hy).commutes e
   have hψz : ψ z = yR := pb.lift_gen _ hy
-  haveI : Nontrivial B.A := nontrivial_of_ne (0 : B.A) 1 fun h => zero_ne_one (Subtype.ext h : (0 : R) = 1)
+  have : Nontrivial B.A := nontrivial_of_ne (0 : B.A) 1 fun h => zero_ne_one (Subtype.ext h : (0 : R) = 1)
   have hψi : Function.Injective ψ := ψ.injective
 
   let τR : R →+* R := (B.σ : B.A →+* B.A).restrict R R fun x hx => Orbit.adjoin_stable B hu hi hx
@@ -237,7 +237,7 @@ theorem exists_unr_embedding_any : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g =
     | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
     | mul x y _ _ hx hy => rw [map_mul]; exact mul_mem hx hy
   refine ⟨ψ, hψ, hσ, hO, ?_⟩
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   have hcoe : ∀ n : ℕ, ((yR ^ n : R) : B.A) = ψ (z ^ n) := fun n => by rw [map_pow, hψz]; rfl
   have hwp : IsPrimitiveRoot (residue R yR) N := by
     refine ⟨by rw [← map_pow, hyN, map_one], fun l hl => hzp.dvd_of_pow_eq_one l ?_⟩
@@ -250,7 +250,7 @@ theorem exists_unr_embedding_any : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g =
   have hgu : gR * τR gR = 1 := Subtype.ext hu
   have hg0 : residue R gR ≠ 0 := (IsUnit.map (residue R) (⟨⟨gR, τR gR, hgu, by rw [mul_comm]; exact hgu⟩, rfl⟩ : IsUnit gR)).ne_zero
   have hgN : residue R gR ^ N = 1 := by
-    haveI := Fintype.ofFinite (ResidueField R)
+    have := Fintype.ofFinite (ResidueField R)
     have := FiniteField.pow_card_sub_one_eq_one _ hg0
     rwa [← Nat.card_eq_fintype_card, hcardR] at this
   obtain ⟨j, -, hj⟩ := hwp.eq_pow_of_pow_eq_one hgN

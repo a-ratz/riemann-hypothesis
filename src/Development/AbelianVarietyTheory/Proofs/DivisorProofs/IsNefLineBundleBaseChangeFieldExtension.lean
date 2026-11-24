@@ -83,7 +83,7 @@ theorem isNef_pull (hN : Published.NefNumerics) [IsProper (strHom k (X := X))] {
     rw [Scheme.Hom.ker_comp, Scheme.IdealSheafData.ker_subschemeι, Scheme.IdealSheafData.ker_subschemeι,
       Scheme.IdealSheafData.map_vanishingIdeal]), IsClosedImmersion.lift_fac _ _ _⟩
 
-  letI := algebraΓAlong k (redι Z)
+  let := algebraΓAlong k (redι Z)
   have := isIntegral_red hi
   have hZp : IsProper (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by
     rw [← comp_strHom (appTop_algebraMap_along k (redι Z))]
@@ -92,7 +92,7 @@ theorem isNef_pull (hN : Published.NefNumerics) [IsProper (strHom k (X := X))] {
   have hproj := hHZ.isProjOver (strHom k _)
   have hLZ : IsNef k (L.pull (redι Z)) := h.pull_of_isClosedImmersion (redι Z) (appTop_algebraMap_along k (redι Z))
 
-  letI := algebraΓAlong E (redι C)
+  let := algebraΓAlong E (redι C)
   have := hC.isProper_strHom
   have := isIntegral_red hC.1
 
@@ -151,8 +151,8 @@ theorem isNef_baseChange : GlobalTheory.Published.NefNumerics → ∀ (k E : Typ
     (p : Y ⟶ Sp k) (q : X ⟶ Sp E) (π : X ⟶ Y), IsPullback π q p (spMap (algebraMap k E)) → IsProjOver p →
     letI := algebraΓOfHom p; letI := algebraΓOfHom q; ∀ L : LB Y, IsNef k L → IsNef E (L.pull π) := by
   intro hN k E _ _ _ Y X p q π H hp
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom p
+  let := algebraΓOfHom q
   intro L hL
   obtain ⟨hpp, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp
   have : IsProper (strHom k (X := Y)) := by rw [strHom_eq (f := p) fun _ => rfl]; exact hpp

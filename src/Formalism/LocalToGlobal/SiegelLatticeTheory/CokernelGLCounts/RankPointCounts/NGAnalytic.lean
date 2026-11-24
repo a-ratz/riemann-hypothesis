@@ -230,7 +230,7 @@ theorem nuQOK_sc (s : X.B.I.Ginf → NNReal) (hs1 : ∀ γ, Formalism.L2.SG.Real
   · show ((s γ : NNReal) : ENNReal) • ν γ = _
     rw [hs1 γ hr, ENNReal.coe_one, one_smul]
     exact hreg hr
-  · haveI := hsf
+  · have := hsf
     infer_instance
   · intro h0
     apply hne
@@ -310,7 +310,7 @@ theorem ampVanish_of_term {D : D7} {X : HidaSetting D} (Y : Full X) (u u' : D.wh
     intro t
     rw [Set.indicator_apply]
     split_ifs with ht
-    · simp only [Set.mem_inter_iff, Set.mem_setOf_eq] at ht
+    · simp only [Set.mem_inter_iff, Set.mem_ofPred_eq] at ht
       apply h t ht.1
       rw [ht.2.2.1]
       exact h0

@@ -206,8 +206,8 @@ def phaseForm (hF : IsTotallyReal F) (lam : InfinitePlace F → ℝ) (B : Fin N 
 theorem phaseForm_apply (hF : IsTotallyReal F) (lam : InfinitePlace F → ℝ)
     (B q : Fin N → mixedEmbedding.mixedSpace F) :
     phaseForm hF lam B q = ∑ w, lam w * ∑ l, coord hF w (q l) * coord hF w (B l) := by
-  simp only [phaseForm, ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
-    Pi.smul_apply, smul_eq_mul, ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simp only [phaseForm, FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
+    Pi.smul_apply, smul_eq_mul, ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.proj_apply]
   refine Finset.sum_congr rfl fun w _ => ?_
   rw [Finset.mul_sum]
@@ -226,7 +226,7 @@ theorem phase_line [Invertible (2 : AF F)] (hF : IsTotallyReal F) {ψ : AddChar 
         ((s * phaseForm hF lam (fun l => arch ((M 1).2 l)) (fun l => arch (z l)) +
           s ^ 2 * ∑ w, lam w * (re (fstA F ⅟(2 : AF F)) w *
             ∑ l, coord hF w (arch ((M 1).1 l)) * coord hF w (arch ((M 1).2 l))) : ℝ) : ℂ)) := by
-  haveI : IsTotallyReal F := hF
+  have : IsTotallyReal F := hF
   have hy0 : ∀ l, sndA F ((M s).2 l) = 0 := fun l => congrFun (hM.2 s).2 l
   have hsnd : sndA F (z ⬝ᵥ (M s).2 + ⅟(2 : AF F) * ((M s).1 ⬝ᵥ (M s).2)) = 0 := by
 
@@ -340,7 +340,7 @@ theorem GlobalTheory.CompanionTheory.SchrLine.exists_hasDerivAt_schr_pureA :
   rw [show (fun s : ℝ => GlobalTheory.WeilM.schr ψ (M s) (GlobalTheory.WeilM.pureA F f g) z) = _ from funext hfun]
   refine (hasDerivAt_exp_quadratic_mul_schwartz_line_zero f q v _ _ (g zf)).congr_deriv ?_
   show _ = (SchwartzMap.smulLeftCLM ℂ (⇑L) f + LineDeriv.lineDerivOp v f) q * g zf
-  rw [SchwartzMap.add_apply, SchwartzMap.smulLeftCLM_apply_apply L.hasTemperateGrowth,
+  rw [add_apply, SchwartzMap.smulLeftCLM_apply_apply L.hasTemperateGrowth,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   first
     | rfl

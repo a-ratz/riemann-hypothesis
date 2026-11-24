@@ -57,7 +57,7 @@ private theorem lt_imp_mul_prod_le_of_b_le_one_le_a_mul_le {G : Type} [CommGroup
       Finset.mul_prod_erase _ _ (Finset.mem_univ i)]
   calc a i * ∏ l, b l = (a i * b i) * (b j * ∏ l ∈ (Finset.univ.erase i).erase j, b l) := by
         rw [hsplit, mul_assoc]
-    _ ≤ 1 * (b j * 1) := mul_le_mul' (hab i) (mul_le_mul' le_rfl (Finset.prod_le_one' (fun l _ => hb1 l)))
+    _ ≤ 1 * (b j * 1) := mul_le_mul' (hab i) (mul_le_mul' le_rfl (Finset.prod_le_one (fun l _ => hb1 l)))
     _ ≤ a j := by rw [one_mul, mul_one]; exact hba j
 
 private theorem le_imp_mul_pow_sub_le_of_c_le_one_mul_le {G : Type} [CommGroup G] [LinearOrder G] [IsOrderedMonoid G] {n : ℕ}
@@ -65,7 +65,7 @@ private theorem le_imp_mul_pow_sub_le_of_c_le_one_mul_le {G : Type} [CommGroup G
     (hij : i ≤ j) : a i * c ^ (n - (i : ℕ)) ≤ a j * c ^ (n - (j : ℕ)) := by
   rcases lt_or_eq_of_le hij with h | h
   · obtain ⟨d, hd⟩ : ∃ d, n - (i : ℕ) = (n - (j : ℕ)) + d + 1 :=
-      ⟨(j : ℕ) - i - 1, by have := j.isLt; have := Fin.lt_iff_val_lt_val.mp h; omega⟩
+      ⟨(j : ℕ) - i - 1, by have := j.isLt; have := Fin.lt_def.mp h; omega⟩
     calc a i * c ^ (n - (i : ℕ)) = (a i * c) * c ^ d * c ^ (n - (j : ℕ)) := by
           rw [hd, pow_add, pow_add, pow_one]; ac_rfl
       _ ≤ a j * 1 * c ^ (n - (j : ℕ)) := mul_le_mul' (mul_le_mul' (hc i j h) (pow_le_one' hc1 d)) le_rfl
@@ -98,7 +98,7 @@ private theorem thetaMap_split {k : Type} [Field k] [ValuativeRel k] {n : ℕ} (
     · rw [map_inv, mul_inv_cancel]
   refine ⟨∏ l, w l, ?_⟩
   have hC : φ (∏ l, w l) = ∏ l, φ (w l) := map_prod φ _ _
-  have hc1 : ∏ l, φ (w l) ≤ 1 := Finset.prod_le_one' (fun l _ => hw1 l)
+  have hc1 : ∏ l, φ (w l) ≤ 1 := Finset.prod_le_one (fun l _ => hw1 l)
   intro s hs i j hij
   rw [hφ, hφ, Units.val_le_val, map_mul, map_mul, map_pow, map_pow, hC]
   rcases hs with h | h
@@ -113,7 +113,7 @@ private theorem thetaMap_dc {A M A' M' G : Type} [CommRing A] [AddCommGroup M] [
     [Module A' M'] [Group G] (ρ : Representation A G M) (ρ' : Representation A' G M') (K K' : Subgroup G) (x : G)
     (hx : FinOrb K K' x) (f : M →+ M') (hf : ∀ g m, f (ρ g m) = ρ' g (f m)) (m : M) :
     dc ρ' K K' x (f m) = f (dc ρ K K' x m) := by
-  haveI := hx.fintype
+  have := hx.fintype
 
   simp only [dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply, map_sum, hf]
 

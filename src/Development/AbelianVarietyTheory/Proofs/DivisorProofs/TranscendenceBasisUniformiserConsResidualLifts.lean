@@ -97,15 +97,15 @@ theorem trBasis_uniformiser_cons : ∀ {L K : Type} [Field L] [Field K] (cL : �
       (fun ω => @dite ℤ (∃ a, S.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (dForm cL (Fin.cons (f : L) (fun i => (w i : L)) : Fin (n + 1) → L)) = 0 ∧
       S.ord (f : L) = 1 ∧ ∀ g : S.ring, ψ g ≠ 0 → S.ord (g : L) = 0 := by
   intro L K _ _ cL cK n S ψ f w hψ hc hf hwK
-  letI : Algebra ℂ S.ring := S.const.toAlgebra
-  letI : Algebra ℂ L := cL.toAlgebra
-  letI : Algebra ℂ K := cK.toAlgebra
-  haveI : IsScalarTower ℂ S.ring L := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra ℂ S.ring := S.const.toAlgebra
+  let : Algebra ℂ L := cL.toAlgebra
+  let : Algebra ℂ K := cK.toAlgebra
+  have : IsScalarTower ℂ S.ring L := IsScalarTower.of_algebraMap_eq' rfl
   have hcomp : ψ.comp (algebraMap ℂ S.ring) = algebraMap ℂ K := RingHom.ext hc
-  haveI : Algebra.EssFiniteType ℂ S.ring := S.essFiniteType
-  haveI := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ S.ring
+  have : Algebra.EssFiniteType ℂ S.ring := S.essFiniteType
+  have := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ S.ring
   have hker : RingHom.ker ψ = maximalIdeal S.ring := by
-    haveI := RingHom.ker_isMaximal_of_surjective ψ hψ
+    have := RingHom.ker_isMaximal_of_surjective ψ hψ
     exact IsLocalRing.eq_maximalIdeal this
   have hunit : ∀ g : S.ring, ψ g ≠ 0 → IsUnit g := by
     intro g hg

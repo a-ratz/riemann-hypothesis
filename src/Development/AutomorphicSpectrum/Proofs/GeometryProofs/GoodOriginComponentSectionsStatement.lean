@@ -89,11 +89,11 @@ theorem ModelDimension.geo_core (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFram
     letI := Small.cstAlg Or
     ∃ (φ : Om Z →ₐ[c.F] RM.Ω) (P : FrPt Xo c RM.Ω) (t : Ix Dw → (RM.Ω)ˣ), FrMap φ (genFr h Z) P ∧ FrBor t P Fr.y₀ ∧
       (letI := φ.toRingHom.toAlgebra; Module.finrank (Om Z) RM.Ω = Or.Fl.deg) := by
-  letI algΩ := Small.cstAlg Or
+  let algΩ := Small.cstAlg Or
   obtain ⟨ψ, hψ, hc⟩ := GlobalTheory.T.root_origin_component_generic_point E H Dw l Xo c Y SS RM Sys Fx Or Z hZ
   obtain ⟨hgx, y₀, hy₀, hy₀c⟩ := isGenFr_genFr h Z
   obtain ⟨N, ec, hx, hb, hj, hli₀, hli, hmem⟩ := flags_setup Or Fr Z ψ hψ hc y₀ hy₀
-  letI algfn : Algebra Or.𝔐.Ω₀ RM.Ω := Or.𝔐.fn.toAlgebra
+  let algfn : Algebra Or.𝔐.Ω₀ RM.Ω := Or.𝔐.fn.toAlgebra
   have hg' := generic_cast Or.Fl.j (labelRk Dw) (fun s => Dw.mult (Small.labelC s)) (Small.mult_labelC Dw) Or.Fl.V₀
     Or.Fl.b Or.Fl.deg Or.Fl.generic
   obtain ⟨v, Tm, hv1, hv0, hvi, hvd, hbT, hT0, hTd⟩ := lin_core Or.Fl.j Or.Fl.V₀ _ Or.Fl.deg hg'
@@ -228,7 +228,7 @@ theorem isIntegral_of_forall_valuationSubring {L : Type} [Field L] (A : Subring 
     rw [Algebra.adjoin_singleton_eq_range_aeval] at hxB
     obtain ⟨p, hp⟩ := hxB
     apply hx
-    letI : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
+    let : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
     have e1 := Polynomial.eval₂_reverse_mul_pow (algebraMap A L) x⁻¹ p
     have e2 : ⅟(x⁻¹) = x := by simp
     rw [e2] at e1
@@ -265,15 +265,15 @@ theorem exists_chart {K : Type} {ι : K → Type} [∀ k, Finite (ι k)] {Ω : T
     ∃ cc : (k : K) → ι k, (∀ k, y ⟨k, cc k⟩ ≠ 0) ∧ ∀ k i, y ⟨k, i⟩ / y ⟨k, cc k⟩ ∈ V := by
   have key : ∀ k, ∃ c : ι k, y ⟨k, c⟩ ≠ 0 ∧ ∀ i, y ⟨k, i⟩ / y ⟨k, c⟩ ∈ V := fun k => by
     obtain ⟨i₀, hi₀⟩ := hy k
-    haveI : Nonempty (ι k) := ⟨i₀⟩
+    have : Nonempty (ι k) := ⟨i₀⟩
     obtain ⟨c, hc⟩ := Finite.exists_max fun i => V.valuation (y ⟨k, i⟩)
     have hc0 : y ⟨k, c⟩ ≠ 0 := fun e => by
       have := hc i₀
       rw [e, map_zero] at this
-      exact hi₀ ((V.valuation).zero_iff.1 (le_zero_iff.1 this))
+      exact hi₀ ((V.valuation).zero_iff.1 (nonpos_iff_eq_zero.1 this))
     refine ⟨c, hc0, fun i => ?_⟩
     rw [← V.valuation_le_one_iff, map_div₀]
-    exact div_le_one_of_le₀ (hc i) zero_le'
+    exact div_le_one_of_le₀ (hc i) zero_le
   choose cc h1 h2 using key
   exact ⟨cc, h1, h2⟩
 
@@ -359,7 +359,7 @@ theorem mem_val_of_chart (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     ∀ (φ : Om C.Z →ₐ[c.F] RM.Ω) (P : FrPt Xo c RM.Ω) (t : Ix Dw → (RM.Ω)ˣ), FrMap φ (genFr h C.Z) P → FrBor t P Fr.y₀ →
     ∀ (u : GlobalTheory.AllWt.Weight Dw), ∀ s ∈ chartLatNm RM.y (degOf RM u) 1, ∀ V : ValuationSubring RM.Ω, (∀ a : C.R, φ a ∈ V) →
       φ ((∏ i, C.t i ^ GlobalTheory.AllWt.exOf Dw u 0 i : (Om C.Z)ˣ) : Om C.Z) * (s / gaugeT Or t u) ∈ V := by
-  letI := Small.cstAlg Or
+  let := Small.cstAlg Or
   intro φ P t hP hbor u s hs V hV
   obtain ⟨hL, -, -, -⟩ := GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   have hGr := GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c RM.Ω
@@ -451,9 +451,9 @@ namespace GlobalTheory.CompanionTheory.Ar.Plug.BirEx
 
 theorem surjective_of_finrank_one {K L : Type} [Field K] [Field L] (f : K →+* L)
     (h : letI := f.toAlgebra; Module.finrank K L = 1) : Function.Surjective f := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   intro w
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (1 : L) one_ne_zero).1 h w
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : L) one_ne_zero).1 h w
   exact ⟨a, by rw [← ha, Algebra.smul_def, mul_one]; rfl⟩
 
 theorem adjoin_eq_top_of_ratios {F A B W : Type} [Field F] [Field A] [Field B] [Field W] [Algebra F A] (φ : A →+* B)
@@ -513,12 +513,12 @@ theorem exists_rule_of_frame (E : Type) [Field E] [NumberField E] [IsCMField E] 
     ∀ (φ : Om Z →ₐ[c.F] RM.Ω) (P : FrPt Xo c RM.Ω) (t : Ix Dw → (RM.Ω)ˣ), FrMap φ (genFr h Z) P → FrBor t P Fr.y₀ →
     Function.Surjective φ → ∀ (u : GlobalTheory.AllWt.Weight Dw), ∀ s ∈ chartLatNm RM.y (degOf RM u) 1,
       ∃ f ∈ GlobalTheory.AllWt.secZ Xo c (GlobalTheory.AllWt.exOf Dw u 0), φ (evC h Z f) = s / gaugeT Or t u := by
-  letI := Small.cstAlg Or
+  let := Small.cstAlg Or
   intro φ P t hP hb hsurj u s hs
   classical
   obtain ⟨x, hx⟩ := hsurj (s / gaugeT Or t u)
   let bb : ∀ Z' : Comp Xo c, Om Z' := fun Z' => if hZ : Z' = Z then hZ ▸ x else 0
-  have hbb : bb Z = x := dif_pos rfl
+  have hbb : bb Z = x := dite_eq_left rfl
   obtain ⟨g, hg, hgv⟩ := GlobalTheory.SecGlueInt.exists_secZ_of_regular E H Dw l Xo c h (GlobalTheory.AllWt.exOf Dw u 0) bb (fun C => by
     by_cases hZ : C.Z = Z
     · subst hZ
@@ -526,9 +526,9 @@ theorem exists_rule_of_frame (E : Type) [Field E] [NumberField E] [IsCMField E] 
       set a0 : Om C.Z := ((∏ i, C.t i ^ GlobalTheory.AllWt.exOf Dw u 0 i : (Om C.Z)ˣ) : Om C.Z) with ha0
       let eq : Om C.Z ≃+* RM.Ω := RingEquiv.ofBijective (φ : Om C.Z →+* RM.Ω) ⟨φ.toRingHom.injective, hsurj⟩
       have hR : ∀ a : Om C.Z, IsIntegral C.R.toSubring a → a ∈ C.R.toSubring := fun a ha => by
-        haveI := C.sm
-        haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-        haveI : IsFractionRing C.R (Om C.Z) := IsFractionRing.of_field _ _ fun x => by
+        have := C.sm
+        have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+        have : IsFractionRing C.R (Om C.Z) := IsFractionRing.of_field _ _ fun x => by
           obtain ⟨p, hp, q, hq, hq0, e'⟩ := C.frac x
           exact ⟨⟨p, hp⟩, ⟨q, hq⟩, by
             show x = p / q
@@ -546,7 +546,7 @@ theorem exists_rule_of_frame (E : Type) [Field E] [NumberField E] [IsCMField E] 
       rw [ValuationSubring.mem_comap, ← hx, ← map_mul] at h1
       have : (eq.symm : RM.Ω →+* Om C.Z) (φ (a0 * x)) = a0 * x := eq.symm_apply_apply _
       rwa [this] at h1
-    · have : bb C.Z = 0 := dif_neg hZ
+    · have : bb C.Z = 0 := dite_eq_right hZ
       rw [this, mul_zero]
       exact zero_mem _)
   exact ⟨g, hg, by rw [hgv Z, hbb, hx]⟩
@@ -559,7 +559,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Plug.BirEx
 theorem bir_of_origin (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c) (hC : CompLaws U h e) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (S : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y S RM Fx) (Fr : Small.GenFrame Or) (nu : Top.Wt (CMType H) (Dw.p + Dw.q)) (hnu : ∀ r : RootIx Dw, (Fx.n r : ℝ) = ((Fx.kA * Fx.q' : ℕ) : ℝ) * nu r.1 r.2) (hd1 : Or.Fl.deg = 1) (Z : Comp Xo c) (hb : GlobalTheory.CompanionTheory.Ar.genPt Fx.ξf = Y.j (Formalism.L2.Pj.genPt Z)) :
     ∃ (a : WZ E) (N : ℕ) (g : Fin (N + 1) → Rul Xo c), (∀ j, g j ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c a) ∧ BirOn h Z g := by
   classical
-  letI := Small.cstAlg Or
+  let := Small.cstAlg Or
   obtain ⟨φ, P, t, hP, hbor, hrk⟩ := GlobalTheory.T.comp_laws_root_model_relay E H Dw l Xo c r U h e hC Y S RM Sys Fx Or Fr Z hb
   have hφs : Function.Surjective φ := surjective_of_finrank_one φ.toRingHom (hrk.trans hd1)
   have hgs : Function.Surjective Or.g := surjective_of_finrank_one _ (Or.g_deg.trans hd1)
@@ -609,9 +609,9 @@ theorem bir_of_origin (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Re
     rw [h1, h2]
     by_cases hk : k = Or.k₀
     · subst hk
-      rw [Or.A_deg.1, if_pos rfl]
+      rw [Or.A_deg.1, ite_eq_left rfl]
       ring
-    · rw [Or.A_deg.2 k hk, if_neg hk]
+    · rw [Or.A_deg.2 k hk, ite_eq_right hk]
       ring
   obtain ⟨c', hc'⟩ := Or.𝔐.tie.cover ⟨GlobalTheory.CompanionTheory.Ar.genPt Or.𝔐.ξ, specializes_rfl⟩
   have hy0 : RM.y ⟨Or.k₀, c' Or.k₀⟩ ≠ 0 := (Finset.prod_ne_zero_iff.1 hc'.1) _ (Finset.mem_univ _)

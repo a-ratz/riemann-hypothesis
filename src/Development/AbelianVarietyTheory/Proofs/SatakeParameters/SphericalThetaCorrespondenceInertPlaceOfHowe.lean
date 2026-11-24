@@ -112,8 +112,8 @@ theorem fixed_comb {K : Subgroup G} {ι : Type} (s : Finset ι) (g : ι → G) (
   let St : ι → Subgroup K := fun i => MulAction.stabilizer K (QuotientGroup.mk (g i) : G ⧸ K)
   have hSt : (⨅ i ∈ s, St i).FiniteIndex := Subgroup.finiteIndex_iInf' St fun i hi => finiteIndex_stab (hR i hi)
   let N : Subgroup K := (⨅ i ∈ s, St i).normalCore
-  haveI : N.FiniteIndex := Subgroup.finiteIndex_normalCore _
-  haveI : Fintype (K ⧸ N) := Fintype.ofFinite _
+  have : N.FiniteIndex := Subgroup.finiteIndex_normalCore _
+  have : Fintype (K ⧸ N) := Fintype.ofFinite _
   have hN : ∀ i ∈ s, ∀ n ∈ N, ∀ x : G, π (x * (n : G) * g i) u = π (x * g i) u := by
     intro i hi n hn x
     have h1 : n ∈ St i := (iInf₂_le i hi : (⨅ i ∈ s, St i) ≤ St i) (Subgroup.normalCore_le _ hn)
@@ -292,8 +292,8 @@ theorem exists_locPair : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HS
     fun n i j => by
       rw [Matrix.one_apply, Matrix.one_apply]
       by_cases hij : i = j
-      · rw [if_pos hij, if_pos hij.symm, σ.map_one]
-      · rw [if_neg hij, if_neg (Ne.symm hij), σ.map_zero]
+      · rw [ite_eq_left hij, ite_eq_left hij.symm, σ.map_one]
+      · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij), σ.map_zero]
   refine ⟨ϖ, σ, q, δ, 1, 1, ψ', thetaSub ψ S T, ρ, ω, ιS, ιT,
     ⟨hU, odd_of_v_two hU h2, one_mem _, one_mem _, hone _, hone _, hδ, p1, p2, ?_, fun x y => ?_, ?_, fun g k x => ?_,
       fun g k hg hk s hs => ?_⟩,
@@ -457,7 +457,7 @@ theorem sphCorr_of_inert : HoweUnram → ∀ {D : D7} (ψ : AddChar (AF D.host.F
   obtain ⟨e, he⟩ := exists_idem_of_conj_eq P hP
   obtain ⟨ϖ, σ, q, δ, JS, JT, ψ', M, ρ, ω, ιS, ιT, hL, rS, rT, kS, kT, hω, hM, hvac⟩ :=
     GlobalTheory.T.exists_unramifiedLocalPair_of_inertWeilDatum ψ S T χS χT om P hW hP hV e he
-  haveI : CharZero (P.adicCompletion D.host.E) := algebraRat.charZero _
+  have : CharZero (P.adicCompletion D.host.E) := algebraRat.charZero _
   obtain ⟨h1, h2⟩ := GlobalTheory.T.howeUnramified_all_vacua hH _ ϖ σ q δ _ _ JS JT ψ' M ρ ω hL
   have oneS : (1 : GA D S) ∈ hyp S P := by
     rw [← map_one ιS, kS]; exact one_mem _

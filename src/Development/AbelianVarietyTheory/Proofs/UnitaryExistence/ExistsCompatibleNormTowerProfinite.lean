@@ -72,10 +72,10 @@ theorem exists_sq_sub_mul_sq {p : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (h0 : (p :
   have loc : ∀ m : MaximalSpectrum R, ∃ a b : R ⧸ m.asIdeal,
       a ^ 2 - Ideal.Quotient.mk _ D * b ^ 2 = Ideal.Quotient.mk _ ν := by
     intro m
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
-    haveI : Finite (R ⧸ m.asIdeal) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
-    letI : Fintype (R ⧸ m.asIdeal) := Fintype.ofFinite _
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
+    have : Finite (R ⧸ m.asIdeal) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+    let : Fintype (R ⧸ m.asIdeal) := Fintype.ofFinite _
     have hp0 : (p : R ⧸ m.asIdeal) = 0 := by
       have := congrArg (Ideal.Quotient.mk m.asIdeal) h0
       simpa using this
@@ -218,7 +218,7 @@ open scoped TensorProduct
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E)
 
 theorem span_sub_bar : Ideal.span (Set.range fun b : 𝓞 E => b - H.bar b) = ⊤ := by
-  haveI := H.unram
+  have := H.unram
   let σ := IsCMField.ringOfIntegersComplexConj E
   have hσ : ∀ a, σ a = H.bar a := fun a => by
     apply RingOfIntegers.ext
@@ -259,7 +259,7 @@ theorem exists_norm_mod_prime {p : ℕ} (hp : p.Prime) {ν : ℤ} (hν : IsCopri
   have hI : I ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hp.ne_zero
-  haveI : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
   let σ : 𝓞 E ⧸ I →+* 𝓞 E ⧸ I := Ideal.quotientMap I (H.bar : 𝓞 E →+* 𝓞 E) (by
     rw [Ideal.span_le]
     rintro _ rfl
@@ -405,7 +405,7 @@ theorem exists_eventually_dvd_sub {E : Type} [Field E] [NumberField E] (U : Ultr
   have hI : Ideal.span {(n : 𝓞 E)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hn.ne'
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
+  have : Finite (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
   obtain ⟨c, hc⟩ := Ultrafilter.eq_pure_of_finite
     (U.map fun j => Ideal.Quotient.mk (Ideal.span {(n : 𝓞 E)}) (s j))
   obtain ⟨t, rfl⟩ := Ideal.Quotient.mk_surjective c

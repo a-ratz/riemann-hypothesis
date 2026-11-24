@@ -62,7 +62,7 @@ theorem ialg_one {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)
   intro m hm k
   have : m = 0 := by
     by_contra h
-    rw [mem_support_iff, coeff_one, if_neg (Ne.symm h)] at hm
+    rw [mem_support_iff, coeff_one, ite_eq_right (Ne.symm h)] at hm
     exact hm rfl
   simp [this]
 
@@ -108,7 +108,7 @@ theorem ialg_rename {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι
     refine (Fintype.sum_bijective e hb _ _ fun i => ?_).symm
     rw [← he, Finsupp.mapDomain_apply_of_injective hv.2.1]
   · rw [Function.extend_apply' _ _ _ hk]
-    refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨p, hp⟩
     refine hk ⟨p.1, ?_⟩
     rw [← hv.2.2.1 p, hp]

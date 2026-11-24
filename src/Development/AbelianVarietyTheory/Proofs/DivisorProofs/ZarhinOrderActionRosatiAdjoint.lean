@@ -294,11 +294,11 @@ theorem adj_actZ : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway M))
   have e2 : la ≫ mu = y := huniq _ (hiso _ fun Y b a => by
     rw [hdd, hlm, comp_one_pow, hpowL])
   obtain ⟨-, -, het, hsurj⟩ := GlobalTheory.abelianScheme_id_pow_finite_etale_surjective S B d hB hdu
-  haveI : Flat (𝟙 B ^ d).left := inferInstance
-  haveI : Epi (𝟙 B ^ d).left := Flat.epi_of_flat_of_surjective _
-  haveI : Epi (𝟙 B ^ d) := (Over.forget S).epi_of_epi_map this
-  haveI : Epi (mu ≫ la) := by rw [hml]; infer_instance
-  haveI : Epi la := epi_of_epi mu la
+  have : Flat (𝟙 B ^ d).left := inferInstance
+  have : Epi (𝟙 B ^ d).left := Flat.epi_of_flat_of_surjective _
+  have : Epi (𝟙 B ^ d) := (Over.forget S).epi_of_epi_map this
+  have : Epi (mu ≫ la) := by rw [hml]; infer_instance
+  have : Epi la := epi_of_epi mu la
   have hx : x1 = mu := (cancel_epi la).1 (e1.trans e2.symm)
   have hm : ∀ (Y : Over S) (b b' : Y ⟶ B), evc hQ (b ≫ mu) b' = evc hQ (b' ≫ mu) b := by
     intro Y b b'

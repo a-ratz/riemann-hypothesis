@@ -69,7 +69,7 @@ theorem isThetaFunOF_heisOF_k : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
         IsThetaFunOF σ JS JT ξ₀ B.ψ (heisOF σ JS JT ξ₀ B.ψ w₀ f) := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT ξ₀ w₀ f hf
   have hψ : Continuous B.ψ := hB.std.1
-  haveI := isTopologicalRing_AEF (F := F) (E := E)
+  have := isTopologicalRing_AEF (F := F) (E := E)
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro γ w
     simp only [heisOF]

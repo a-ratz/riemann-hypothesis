@@ -96,7 +96,7 @@ theorem desc {ι : Type} [Fintype ι] {A P Z : Type} {Y Q : ι → Type} [AddCom
   rw [ml_congr (l (s₀ (p f))) S (fun v => LinearMap.ker (q v)) (fun ψ h1 h2 => h _ (hs₀ _) ψ h1 (Or.inr h2)) _ ψ
     (fun v => hs v _) hψ (fun v => by rw [LinearMap.mem_ker, map_sub, hs' v _ (hψ v), sub_self])]
   have := h (s₀ (p f) - f) (sub_mem (hs₀ _) hf) ψ hψ (Or.inl (by rw [map_sub, hs₀' f hf, sub_self]))
-  rwa [map_sub, MultilinearMap.sub_apply, sub_eq_zero] at this
+  rwa [map_sub, sub_apply, sub_eq_zero] at this
 
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
 
@@ -146,7 +146,7 @@ theorem ext_of {w φ : ∀ v : Pl F, (κ → Fv F v) → ℂ} {T : Finset (Pl F)
   exacts [rfl, (h v hv).symm]
 
 theorem ext_off (w : ∀ v : Pl F, (κ → Fv F v) → ℂ) (T : Finset (Pl F)) (ψ) : ∀ v ∉ T, ext w T ψ v = w v :=
-  fun _ hv => dif_neg hv
+  fun _ hv => dite_eq_right hv
 
 theorem pure_ext {w : ∀ v : Pl F, (κ → Fv F v) → ℂ} (hw : Std w) (T : Finset (Pl F)) (f : SInf F κ) (ψ) (x : κ → AF F) :
     pure f (ext w T ψ) x = f (fun i => evI F (x i)) * ((∏ v : T, ψ v fun i => evFin F v (x i)) *

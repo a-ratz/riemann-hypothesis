@@ -96,9 +96,9 @@ theorem polarization_dividedPowerTerm (sg : ι → R) (src dst : ι → σ) (hs 
     by_cases hv : src l = v
     · subst hv
       have h3 := hd l l
-      simp only [h1, h2, h3, if_true, if_false]
+      simp only [h1, h2, h3, ite_true, ite_false]
       omega
-    · simp only [hv, if_false]
+    · simp only [hv, ite_false]
       omega
   have he : dividedPowerExponent src dst m f (src l) = m (src l) - f l := by
     simp [dividedPowerExponent, h1, h2]
@@ -123,7 +123,7 @@ theorem polarization_dividedPowerTerm (sg : ι → R) (src dst : ι → σ) (hs 
     linear_combination (-(sg l ^ f l * sg l * Er)) * hc
   simp only [polarizationDerivation, dividedPowerMonomialTerm, LinearMap.smul_apply, LinearMap.comp_apply, LinearMap.mulLeft_apply,
     Derivation.coeFn_coe, pderiv_monomial]
-  rw [X, monomial_mul, hexp, one_mul, smul_monomial, smul_eq_mul, hcf, ← nsmul_eq_mul, map_nsmul]
+  rw [X, monomial_mul_monomial, hexp, one_mul, smul_monomial, smul_eq_mul, hcf, ← nsmul_eq_mul, map_nsmul]
 
 theorem finsuppAntidiag_succ_reindex {N : Type*} [AddCommMonoid N] (s : Finset ι) (k : ℕ) (l : ι) (hl : l ∈ s)
     (F : (ι →₀ ℕ) → N) :

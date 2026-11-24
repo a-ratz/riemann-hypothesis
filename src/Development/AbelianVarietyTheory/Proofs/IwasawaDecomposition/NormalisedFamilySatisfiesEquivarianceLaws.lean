@@ -64,7 +64,7 @@ theorem chi_smulLat {χ : IdE D → ℂ} (hχ : IsChi D χ) {n : ℕ} {L : Submo
     ∀ γ : Matrix.unitaryGroup (Fin n) D.host.E,
       χ (detId D (stdL D n) (SDLat.smulLat (γ : Matrix (Fin n) (Fin n) D.host.E) L)) =
         (∏ τ : D.what₂.Tau, (embT D τ (γ : Matrix (Fin n) (Fin n) D.host.E).det)⁻¹) * χ (detId D (stdL D n) L) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ
   have hst : ∀ x : D.host.E, star x = D.host.conj x := GlobalTheory.NormSum.AdLattice.star_eq_conj D
   let z : unitary D.host.E := ⟨_, Matrix.det_of_mem_unitary γ.2⟩
@@ -104,7 +104,7 @@ theorem chiFac_left {χ : IdE D → ℂ} (hχ : IsChi D χ) {N N' : ℕ} {L L₁
 theorem eqP : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Formalism.L2.Ker.Base D cc δ) (χ : IdE D → ℂ),
     IsCurveIdeal D cc → IsDiscriminantTwelfthRootOfIdealLattice D cc δ → IsChi D χ → B.EqP χ := by
   intro D cc δ B χ hc hδ hχ
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hC : Crv D cc δ := ⟨hc, hδ⟩
   obtain ⟨χ', e, hχ', hv, q1, q2, q3⟩ := _root_.GlobalTheory.TrueTheta.exists_family_of_curve D cc δ hC
   have key : ∀ N N', Even N → Even N' → ∃ a : ℂ, ∀ L L', SD D L → SD D L' → B.eNat χ N N' L L' =

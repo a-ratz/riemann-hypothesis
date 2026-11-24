@@ -88,7 +88,7 @@ theorem continuous_pair (ξ : ι → K) : Continuous (pair ξ) :=
 
 theorem continuous_adelicChar_neg_pair (ξ : ι → K) :
     Continuous fun x : ι → 𝔸[K] => (GroundTheory.Global.adelicChar K (-pair ξ x) : ℂ) :=
-  continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_pair ξ).neg)
+  continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_pair ξ).neg)
 
 def vecCoeff (f : (ι → 𝔸[K]) → ℂ) (ξ : ι → K) : ℂ :=
   ∫ x in vecDomain K ι, f x * (GroundTheory.Global.adelicChar K (-pair ξ x) : ℂ) ∂vecMeasure K ι

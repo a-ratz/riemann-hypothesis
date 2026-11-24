@@ -146,7 +146,7 @@ private theorem phi_bij (σ : E ≃ₐ[F] E) (hσ : ∀ τ : E ≃ₐ[F] E, τ �
           rw [Finset.sum_comm]
           exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
       _ = f k := by
-          simp only [h1, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [h1, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   have hadd : ∀ f g, Ψ (f + g) = Ψ f + Ψ g := fun f g => by
     simp only [Ψ, Pi.add_apply, mul_add, Finset.sum_add_distrib, TensorProduct.tmul_add]
   have hl : Function.LeftInverse Ψ (phi σ p m) := by
@@ -197,7 +197,7 @@ open UpperTheory.ConvolutionTheory.L1 in
 theorem UpperTheory.ConvolutionTheory.L1.galSplit :
     UpperTheory.ConvolutionTheory.L1.GalSplit := by
   intro F E _ _ _ _ _ _ σ hσ m hm A B _ _ _ _ e₀ p
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   refine ⟨e₀.symm.toRingEquiv.trans (RingEquiv.ofBijective (phi σ p m) (phi_bij σ hσ hm p)),
     fun x a i => ?_, fun b i => ?_⟩
   · show phi σ p m (e₀.symm (e₀ (x ⊗ₜ a))) i = _

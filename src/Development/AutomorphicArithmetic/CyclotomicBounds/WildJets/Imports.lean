@@ -150,7 +150,7 @@ theorem UpperTheory.WildA.depthDrop :
   rw [hfn]
   congr 1
   ext x
-  simp only [GlobalTheory.RowTest.halfCoset, Set.mem_setOf_eq]
+  simp only [GlobalTheory.RowTest.halfCoset, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨u, hu, huH, rfl⟩
     refine ⟨(l ^ a) • u, AddSubgroup.nsmul_mem _ hu _, hhalf _ _ huH, ?_⟩

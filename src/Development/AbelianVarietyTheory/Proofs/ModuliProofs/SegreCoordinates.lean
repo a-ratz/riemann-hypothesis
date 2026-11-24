@@ -310,7 +310,7 @@ theorem projRep_box {R : Type} [CommRing R] {f : X ⟶ Sp R} {g : Y ⟶ Sp R} (s
   refine ⟨hB, fun T _ β x w hx hw => ⟨?_, fun F hF => ?_⟩, fun T _ β w hw hI => ?_⟩
   · by_contra hne
     obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hne
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     obtain ⟨a, b, ha, hb, e⟩ := split_local p q s t h₁.1 h₂.1 _ _ (bc hB hw (Ideal.Quotient.mk m))
     have ua := (h₁.2.1 _ ((Ideal.Quotient.mk m).comp β) _ a
       (by rw [Category.assoc, Category.assoc, hx, spc]) ha).1

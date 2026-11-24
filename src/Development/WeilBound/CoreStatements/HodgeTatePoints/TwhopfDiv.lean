@@ -102,15 +102,15 @@ theorem flat_of_flatOver_fields {X Y S : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ S)
   rw [Flat.SpecMap_iff] at h1 ⊢
   rw [HasRingHomProperty.Spec_iff (P := @LocallyQuasiFinite)] at h2
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation)] at hY h0
-  letI : Algebra R A := g.hom.toAlgebra
-  letI : Algebra A B := f.hom.toAlgebra
-  letI : Algebra R B := (g ≫ f).hom.toAlgebra
-  haveI : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Flat R B := h1
-  haveI : Algebra.QuasiFinite A B := h2
-  haveI : Algebra.FinitePresentation R A := hY
-  haveI : Algebra.FinitePresentation R B := h0
-  haveI : Algebra.FinitePresentation A B :=
+  let : Algebra R A := g.hom.toAlgebra
+  let : Algebra A B := f.hom.toAlgebra
+  let : Algebra R B := (g ≫ f).hom.toAlgebra
+  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Flat R B := h1
+  have : Algebra.QuasiFinite A B := h2
+  have : Algebra.FinitePresentation R A := hY
+  have : Algebra.FinitePresentation R B := h0
+  have : Algebra.FinitePresentation A B :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation R A B
   refine GlobalTheory.flat_of_quasiFinite_of_flat_fibres R A B fun k C _ _ _ t h e => ?_
   have sq := isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_tensorProduct A C B)

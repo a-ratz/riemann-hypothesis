@@ -274,7 +274,7 @@ theorem conj_gen : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 �
     rw [h0, zero_pow hn.ne'] at hpow
     exact zero_ne_one hpow
   obtain ⟨hfin, ⟨k, hk⟩, hsum⟩ := GlobalTheory.FlatVecSum.vecFlat_eq_sum D G Pl0 T0 A _ R F hC i B hB hBo
-  haveI : Fintype B.G.P.H := Fintype.ofFinite _
+  have : Fintype B.G.P.H := Fintype.ofFinite _
   obtain ⟨hk0, -⟩ := hsum k fun p => (hk p).1
   choose g0 hg0 using hk0
   have hlift : ∀ p, Lev.IsLevelLift (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG (R.eG.symm (g0 p))) (k p) := fun p => by

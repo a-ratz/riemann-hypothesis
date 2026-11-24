@@ -127,7 +127,7 @@ theorem ideleModule_infId (d : (UpperTheory.V.TR.Rinf F)ˣ) :
   refine Finset.prod_congr rfl fun w _ => ?_
   have hm : w.mult = 1 := by
     unfold InfinitePlace.mult
-    rw [if_pos (IsTotallyReal.isReal w)]
+    rw [ite_eq_left (IsTotallyReal.isReal w)]
   have e : ((UpperTheory.V.TR.infId F d : Ideles F) : Ad F).1 w = (UpperTheory.V.TR.infEq F d.val) w := by
     rw [infId_fst]
   rw [hm, pow_one, e, norm_infEq_apply]
@@ -232,7 +232,7 @@ theorem exists_D {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (hyp : 
   refine ⟨a * b, mul_ne_zero ha0 hb0, fun w x hx => ?_⟩
   have hva : w.intValuation a ≤ WithZero.exp (-(dd w)) := by
     have := GroundTheory.Global.intValuation_le_of_mem_ideal w hdiff ha
-    rwa [FractionalIdeal.count_coe F w hdiff] at this
+    rwa [FractionalIdeal.count_coeIdeal F w hdiff] at this
   have hvb : w.intValuation b ≤ WithZero.exp (-(c w : ℤ)) := by
     by_cases hw : w ∈ S
     · have hle : 𝔠 ≤ w.asIdeal ^ c w := by
@@ -257,7 +257,7 @@ theorem lintegral_min_lt_top :
     ∫⁻ t, ENNReal.ofReal (min (t : ℝ) (t : ℝ)⁻¹) ∂posRealMeasure < ⊤ := by
   have hmeas : Measurable fun t : {r : ℝ // 0 < r} => ENNReal.ofReal (min (t : ℝ) (t : ℝ)⁻¹) :=
     ENNReal.measurable_ofReal.comp
-      ((continuous_subtype_val.min (continuous_subtype_val.inv₀ fun t => t.2.ne')).measurable)
+      ((continuous_subtypeVal.min (continuous_subtypeVal.inv₀ fun t => t.2.ne')).measurable)
   rw [posRealMeasure_eq_map_expPos, lintegral_map hmeas measurable_expPos]
   have key : ∀ y : ℝ, 0 ≤ y → (Real.exp y)⁻¹ ≤ 2 * (1 + y ^ 2)⁻¹ := fun y hy => by
     have h1 := Real.quadratic_le_exp_of_nonneg hy
@@ -287,9 +287,9 @@ theorem norm_Eis_le (ω : HChar F) (Ψ : (Fin 2 → Ad F) → ℂ) (h : GA F 2) 
   have hI : I ≠ ⊤ := lintegral_min_lt_top.ne
   have key : ‖Eis ω Ψ h‖ₑ ≤ ENNReal.ofReal K * mE * I := by
     calc ‖Eis ω Ψ h‖ₑ ≤ ∫⁻ t, ‖∫ u in normOneFundamentalDomain F, eisInt ω Ψ h t u ∂normOneMeasure F‖ₑ
-          ∂posRealMeasure := enorm_integral_le_lintegral_enorm _
+          ∂posRealMeasure := eNorm_integral_le_lintegral_eNorm _
       _ ≤ ∫⁻ t, ∫⁻ u in normOneFundamentalDomain F, ‖eisInt ω Ψ h t u‖ₑ ∂normOneMeasure F
-          ∂posRealMeasure := lintegral_mono fun t => enorm_integral_le_lintegral_enorm _
+          ∂posRealMeasure := lintegral_mono fun t => eNorm_integral_le_lintegral_eNorm _
       _ ≤ ∫⁻ t, ENNReal.ofReal K * mE * ENNReal.ofReal (min (t : ℝ) (t : ℝ)⁻¹) ∂posRealMeasure := by
           refine lintegral_mono fun t => ?_
           rw [mul_right_comm, ← ENNReal.ofReal_mul hK, ← setLIntegral_const]

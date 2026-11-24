@@ -146,10 +146,10 @@ theorem s_comp : X₁.M.s ≫ spMap X₁.κ = X₁.π ≫ X₁.z := by
   exact (Spec.map_comp (CommRingCat.ofHom X₁.κ) (CommRingCat.ofHom (algebraMap X₁.o₁ X₁.Ω₁))).symm
 
 theorem projM : IsProjOver X₁.M.s := by
-  haveI := X₁.fin
+  have := X₁.fin
   obtain ⟨h1, L, hL⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB X₁.z).1 X₁.proj
-  haveI : IsProper (X₁.M.s ≫ spMap X₁.κ) := by rw [s_comp]; infer_instance
-  haveI : IsProper X₁.M.s := IsProper.of_comp X₁.M.s (spMap X₁.κ)
+  have : IsProper (X₁.M.s ≫ spMap X₁.κ) := by rw [s_comp]; infer_instance
+  have : IsProper X₁.M.s := IsProper.of_comp X₁.M.s (spMap X₁.κ)
   exact (isProjOver_iff_isProper_and_exists_isAmpleLB _).2 ⟨this, _, hL.pull_of_isFinite X₁.π⟩
 
 end Setup
@@ -195,7 +195,7 @@ theorem scale_pos (c : CTrait X₁ p z₁) : 0 < c.sc := by
 
 theorem exp_neg_sc_mul (c : CTrait X₁ p z₁) (a : ℕ) :
     Real.exp (-(c.sc * a)) = ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)‖ ^ a := by
-  rw [CTrait.sc, neg_mul, neg_neg, mul_comm, Real.exp_nat_mul, Real.exp_log c.norm_uniformiser_pos]
+  rw [CTrait.sc, neg_mul, neg_neg, mul_comm, Real.exp_natCast_mul, Real.exp_log c.norm_uniformiser_pos]
 
 end CTrait
 

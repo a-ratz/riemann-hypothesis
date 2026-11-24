@@ -87,7 +87,7 @@ theorem projective_coker_of_approx [IsNoetherianRing R] {A B : Type} [AddCommGro
     (hyp : ∀ (m : Ideal R) [m.IsMaximal] (n : ℕ) (a : A), f a ∈ m • (⊤ : Submodule R B) →
       ∃ y : A, f y ∈ m ^ (n + 1) • (⊤ : Submodule R B) ∧ f a - f y ∈ m • LinearMap.range f) :
     Module.Projective R (B ⧸ LinearMap.range f) := by
-  haveI : IsNoetherian R B := isNoetherian_of_isNoetherianRing_of_finite R B
+  have : IsNoetherian R B := isNoetherian_of_isNoetherianRing_of_finite R B
   have hinjq : ∀ (m : Ideal R) [m.IsMaximal],
       Function.Injective ((LinearMap.range f).subtype.lTensor (R ⧸ m)) := by
     intro m _
@@ -126,7 +126,7 @@ theorem projective_coker_of_approx [IsNoetherianRing R] {A B : Type} [AddCommGro
   have hinj : ∀ (m : Ideal R) [m.IsMaximal],
       Function.Injective ((LinearMap.range f).subtype.lTensor m.ResidueField) := by
     intro m _
-    letI : Field (R ⧸ m) := Ideal.Quotient.field m
+    let : Field (R ⧸ m) := Ideal.Quotient.field m
     have hL : RingHom.ker (algebraMap R (R ⧸ m)) = m := by
       rw [Ideal.Quotient.algebraMap_eq, Ideal.mk_ker]
     have := GlobalTheory.exact_lTensor_iff_residueField m (R ⧸ m) hL
@@ -152,15 +152,15 @@ theorem GlobalTheory.AbCoh.projective_coker_of_liftsAt :
         (k : Type) [Field k] [Algebra R k] (α : R' →ₐ[R] k), Function.Surjective α → LiftsAt K α i) →
       ∀ i, i ≤ 2 → Module.Projective R (K.X (i + 1) ⧸ LinearMap.range (K.d i (i + 1)).hom) := by
   intro R _ _ K hK _ hL i hi
-  haveI := (hK (i + 1)).1
-  haveI := (hK (i + 1)).2
+  have := (hK (i + 1)).1
+  have := (hK (i + 1)).2
   refine projective_coker_of_approx (K.d i (i + 1)).hom ?_
   intro m _ n a ha
   obtain ⟨h0, h1⟩ := krullDimLE_isLocalRing_quot_pow m n
-  haveI := h1
-  haveI : IsArtinianRing (R ⧸ m ^ (n + 1)) :=
+  have := h1
+  have : IsArtinianRing (R ⧸ m ^ (n + 1)) :=
     isArtinianRing_iff_isNoetherianRing_krullDimLE_zero.2 ⟨inferInstance, h0⟩
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
   have hle : m ^ (n + 1) ≤ m := Ideal.pow_le_self (Nat.succ_ne_zero n)
   let α : (R ⧸ m ^ (n + 1)) →ₐ[R] (R ⧸ m) := Ideal.Quotient.factorₐ R hle
   have hα : Function.Surjective α := by

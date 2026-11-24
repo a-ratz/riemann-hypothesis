@@ -106,7 +106,7 @@ private theorem sum_amat_first_index_eq {n : ℕ} (l : Fin n → ℂ) (j : Fin n
     · subst h1
       simp
     · simp [h1]
-  simp only [h, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [h, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_const, Finset.filter_gt_eq_Iio,
     Fin.card_Iio]
   simp [sub_eq_add_neg]
@@ -120,7 +120,7 @@ private theorem sum_amat_second_index_eq {n : ℕ} (l : Fin n → ℂ) (j : Fin 
     · subst h1
       simp
     · simp [h1]
-  simp only [h, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [h, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_const, Finset.filter_lt_eq_Ioi,
     Fin.card_Ioi]
   simp [sub_eq_add_neg]
@@ -380,7 +380,7 @@ namespace GlobalTheory.CompanionTheory.WaveMult
 
 theorem conv_eq_sum_of_kernels : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (E : KMod n) {ι ι' : Type} [Fintype ι] [Fintype ι'] (c : ι → ℂ) (c' : ι' → ℂ) (ks : ι → Mat n → (E.V →L[ℂ] E.V)) (ks' : ι' → Mat n → (E.V →L[ℂ] E.V)) (k k' : Mat n → (E.V →L[ℂ] E.V)), (∀ i, KReg (ks i)) → (∀ j, KReg (ks' j)) → (∀ y ∈ GLs n, k y = ∑ i, c i • ks i y) → (∀ y ∈ GLs n, k' y = ∑ j, c' j • ks' j y) → ∀ x ∈ GLs n, conv μ E k k' x = ∑ i, ∑ j, (c i * c' j) • conv μ E (ks i) (ks' j) x := by
   intro hL n _ _ μ _ E ι ι' _ _ c c' ks ks' k k' hks hks' hk hk' x hx
-  haveI : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   have hval : ∀ y : G n, y.val ∈ GLs n := fun y => by
     have := (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
     exact this.ne_zero
@@ -566,7 +566,7 @@ variable [MeasurableSpace (G n)] (μ : Measure (G n)) (E : KMod n)
 theorem act_of_isKer {w : List (Bool × ℕ)} {g : ℝ → ℝ} {ks : Mat n → (E.V →L[ℂ] E.V)}
     (hK : IsKer μ E w g ks) {χ : Inf n} {f : Mat n → E.V} (hf : f ∈ CE E) (he : IsEig χ f) {x : Mat n}
     (hx : x ∈ GLs n) : act μ E ks f x = (zVal w χ * coshT g (cas χ)) • f x := by
-  have := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   have ha : ((cas χ) ^ (1 / 2 : ℂ)) ^ 2 = cas χ := by
     have := Complex.cpow_nat_inv_pow (cas χ) (n := 2) two_ne_zero
     simpa [one_div] using this
@@ -636,7 +636,7 @@ namespace GlobalTheory.CompanionTheory.WaveMult
 
 theorem conv_right_equivariant : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (E : KMod n) (k k' : Mat n → (E.V →L[ℂ] E.V)), KReg k → KReg k' → (∀ y ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ, k' (y * k₂.1) = k' y * E.ρ k₂) → ∀ x ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ, conv μ E k k' (x * k₂.1) = conv μ E k k' x * E.ρ k₂ := by
   intro _ n _ _ μ _ E k k' _ _ hk' x hx k₂
-  haveI : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   have hinv : E.ρ k₂ * E.ρ k₂⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel, map_one]
   have hinv' : E.ρ k₂⁻¹ * E.ρ k₂ = 1 := by rw [← map_mul, inv_mul_cancel, map_one]
   let L : (E.V →L[ℂ] E.V) ≃L[ℂ] (E.V →L[ℂ] E.V) :=
@@ -738,7 +738,7 @@ theorem act_conv : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace
     (E : KMod n) (k k' : Mat n → (E.V →L[ℂ] E.V)) (f : Mat n → E.V), KReg k → KReg k' →
     ContinuousOn f (GLs n) → ∀ x ∈ GLs n, act μ E (conv μ E k k') f x = act μ E k (act μ E k' f) x := by
   intro hL n _ _ μ _ E k k' f hk hk' hf x hx
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨X, rfl⟩ : ∃ X : G n, X.val = x :=
     (Matrix.isUnit_iff_isUnit_det x).2 (isUnit_iff_ne_zero.2 hx)
   have hφ : Continuous fun z : G n => f (X.val * z.val) :=
@@ -776,7 +776,7 @@ theorem kReg_conv : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpac
   obtain ⟨hsub, -, -, -, hcG, -, -⟩ := hL n
   obtain ⟨hkc, R, hR⟩ := hk
   obtain ⟨hkc', R', hR'⟩ := hk'
-  haveI : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   have hval : ∀ y : G n, y.val ∈ GLs n := fun y => by
     have : IsUnit y.val.det := (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
     exact this.ne_zero
@@ -881,7 +881,7 @@ theorem wave_compose : RCalc → WaveSpeed → ∀ (n : ℕ) (E : KMod n) (u : �
       ∀ x ∈ GLs n, zOp w (fun x' => ∫ t, (g t : ℂ) • v t x') x =
         zOp (w ++ w') (fun x' => ∫ t, (gconv g g' t : ℂ) • u t x') x := by
   intro hR hS n E u w w' g g' T T' hu hg hg'
-  have : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   have hu' : IsWave E (fun t => zOp w' (u t)) := WaveZ.isWave_zOp hR n E u w' hu
   have hv := WaveAvg.isWave_avg hS n E (fun t => zOp w' (u t)) g' T' hu' hg'
   refine ⟨_, hv, ?_, ?_⟩
@@ -1162,7 +1162,7 @@ theorem asmMult_main : AsmMult := by
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     rw [zVal_append, ← GlobalTheory.T.cosh_transform_convolution _ _ _ _ _ (hb i).1 (hb' j).1]
     ring
-  · haveI := FiniteDimensional.complete ℂ E.V
+  · have := FiniteDimensional.completeSpace ℂ E.V
     choose N d w₁ K₁ hK₁ hadj hval using fun i =>
       GlobalTheory.T.wave_kernel_decomposition hL hU hR hS hE hQ h1 n μ E (w i) (g i) T (ks i) (hb i).1 (hb i).2
     refine ⟨fun χ => ∑ q : (Σ i, Fin (N i)), (conj (c q.1) * d q.1 q.2) * zVal (w₁ q.1 q.2) χ * coshT (g q.1) (cas χ), ?_, ?_⟩

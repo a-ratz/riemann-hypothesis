@@ -106,7 +106,7 @@ theorem isIso_transl_right {B : Over S} [GrpObj B] (x : 𝟙_ (Over S) ⟶ B) :
 
 theorem eq_genericPoint {W V : Scheme.{0}} [IsIntegral W] (π : W ⟶ V) [IsFinite π] (w : W)
     (h : π w = π (genericPoint W)) : w = genericPoint W := by
-  obtain ⟨O, hO, hOw⟩ := isDiscrete_iff_forall_exists_isOpen.mp (π.isDiscrete_preimage_singleton (π w)) w rfl
+  obtain ⟨O, hO, hOw⟩ := isDiscrete_iff_forall_mem_exists_isOpen.mp (π.isDiscrete_preimage_singleton (π w)) w rfl
   have hw : w ∈ O ∩ π ⁻¹' {π w} := by rw [hOw]; rfl
   have hg : genericPoint W ∈ O ∩ π ⁻¹' {π w} :=
     ⟨(genericPoint_specializes w).mem_open hO hw.1, h.symm⟩

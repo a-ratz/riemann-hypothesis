@@ -70,17 +70,17 @@ namespace GlobalTheory.Models.Point
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem isProjOver_id (R : Type) [CommRing R] : IsProjOver (𝟙 (Sp R)) := by
-  haveI : Unique (Fin (0 + 1)) := ⟨⟨0⟩, fun i => Fin.ext (by have := i.isLt; omega)⟩
-  haveI : IsIso (PSpace.str R 0) := by
-    haveI : IsIso (GlobalTheory.ProjSpace.chartι R 0 0) := by
+  have : Unique (Fin (0 + 1)) := ⟨⟨0⟩, fun i => Fin.ext (by have := i.isLt; omega)⟩
+  have : IsIso (PSpace.str R 0) := by
+    have : IsIso (GlobalTheory.ProjSpace.chartι R 0 0) := by
       refine isIso_of_isOpenImmersion_of_opensRange_eq_top _ ?_
       rw [GlobalTheory.ProjSpace.opensRange_chartι, ← GlobalTheory.ProjSpace.iSup_chart R 0]
       apply le_antisymm (le_iSup _ 0)
       apply iSup_le
       intro i
       rw [Subsingleton.elim i 0]
-    haveI : IsEmpty {j : Fin (0 + 1) // j ≠ 0} := ⟨fun j => j.2 (Subsingleton.elim _ _)⟩
-    haveI : IsIso (GlobalTheory.ProjSpace.chartι R 0 0 ≫ PSpace.str R 0) := by
+    have : IsEmpty {j : Fin (0 + 1) // j ≠ 0} := ⟨fun j => j.2 (Subsingleton.elim _ _)⟩
+    have : IsIso (GlobalTheory.ProjSpace.chartι R 0 0 ≫ PSpace.str R 0) := by
       rw [GlobalTheory.ProjSpace.chartι_str]
       exact inferInstanceAs (IsIso (Spec.map
         (MvPolynomial.isEmptyRingEquiv R {j : Fin (0 + 1) // j ≠ 0}).toCommRingCatIso.inv))
@@ -341,14 +341,14 @@ theorem vDeg_div_projSpace {g : O} (hg : g ≠ 0) :
     (projSpace O (N + 1)).vDeg ((projSpace O (N + 1)).div g hg)
       (c1 (formalTwistingSheaf O (N + 1)) (O1_isLB O _) ^ (N + 1)) =
       (IsDiscreteValuationRing.addVal O g).toNat := by
-  rw [← Fin.prod_const, div, vDeg_ofEff_prod, if_pos (by simp),
+  rw [← Fin.prod_const, div, vDeg_ofEff_prod, ite_eq_left (by simp),
     interLen_eq_multiDiff O _ fun _ => O1_isLB O _, multiDiff_apply, Finset.sum_eq_single ∅]
   · have := chiLen_projSpace N hg (j := 0) (by omega)
-    simp only [Nat.cast_zero, neg_zero, zero_smul, if_true] at this
+    simp only [Nat.cast_zero, neg_zero, zero_smul, ite_true] at this
     simp [this]
   · intro S _ hS
     have := chiLen_projSpace N hg (j := S.card) (by simpa using S.card_le_univ)
-    rw [if_neg (by simpa using hS), neg_smul, natCast_zsmul] at this
+    rw [ite_eq_right (by simpa using hS), neg_smul, natCast_zsmul] at this
     simp [this]
   · simp
 

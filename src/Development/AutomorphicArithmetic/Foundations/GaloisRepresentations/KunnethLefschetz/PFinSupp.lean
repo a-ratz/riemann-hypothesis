@@ -110,7 +110,7 @@ private theorem step {l : ℕ} [Fact l.Prime] {k : Type} [Field k] (hP : Pairs) 
   have hnat := G.nat hpt hpy U'.ι (𝟙 _) rfl hpb (zero_add _) (oneV l (S k))
   rw [pbi] at hnat
   have hpt' : G.pt d y = G.g hpy (zero_add _) (oneV l (S k)) := by
-    simp only [GysQ.cls, dif_pos hpy]
+    simp only [GysQ.cls, dite_eq_left hpy]
   rw [map_sub, map_smul, hpt', hnat, ← map_smul, ← hra, ha, sub_self]
 
 end UpperTheory.Gal.KunnethLefschetz
@@ -136,14 +136,14 @@ theorem UpperTheory.Gal.KunnethLefschetz.finSupp_holds :
   | insert y s hy ih =>
     intro U hU z hz
     have hcl : ∀ t : Pt p, IsClosed (Set.range t.1) := fun t => by
-      haveI := ((hP k d p hsep hsm).2 t).1.cl
+      have := ((hP k d p hsep hsm).2 t).1.cl
       exact t.1.isClosedEmbedding.isClosed_range
     have hopen : IsOpen ((⋃ t ∈ s, Set.range t.1)ᶜ) :=
       (s.finite_toSet.isClosed_biUnion fun t _ => hcl t).isOpen_compl
     let U' : X.Opens := ⟨_, hopen⟩
     have hU' : OffPts s U' := rfl
     have hU2 : (U : Set X) = (U' : Set X) \ Set.range y.1 := by
-      rw [hU, Finset.set_biUnion_insert, Set.compl_union, Set.diff_eq, Set.inter_comm]; rfl
+      rw [hU, Finset.set_biUnion_insert, Set.compl_union, Set.sdiff_eq, Set.inter_comm]; rfl
     by_cases hin : Set.range y.1 ⊆ (U' : Set X)
     · obtain ⟨r, hr⟩ := step hP hL G d p hsep hsm y U' U hU2 hin z hz
       have h1 := ih U' hU' _ hr

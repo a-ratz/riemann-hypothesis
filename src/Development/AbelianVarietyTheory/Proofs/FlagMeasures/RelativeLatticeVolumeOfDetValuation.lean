@@ -284,7 +284,7 @@ theorem UpperTheory.Reformulated.B.Yzb5.relIndex_map :
   have hlt : ValuativeRel.valuation F (ϖ : F) < 1 :=
     Valuation.Integer.not_isUnit_iff_valuation_lt_one.mp hϖ.not_isUnit
   have hpos : 0 < ValuativeRel.valuation F (ϖ : F) := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     exact (Valuation.ne_zero_iff _).mpr hϖ0
   have ham : a = (m : ℤ) := by
     have h1 : (ϖ : F) ^ a * ((u : (ValuativeRel.valuation F).integer) : F)
@@ -367,7 +367,7 @@ namespace GlobalTheory.HL.LatDet
 theorem card_quot_pow {R : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] {p : R}
     (hp : Irreducible p) (k : ℕ) :
     Nat.card (R ⧸ Ideal.span {p ^ k}) = Nat.card (R ⧸ Ideal.span {p}) ^ k := by
-  haveI : (Ideal.span {p}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp.prime
+  have : (Ideal.span {p}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).2 hp.prime
   have hq := cardQuot_pow_of_prime (P := Ideal.span {p})
     (by rw [Ne, Ideal.span_singleton_eq_bot]; exact hp.ne_zero) (i := k)
   rw [Submodule.cardQuot_apply, Submodule.cardQuot_apply, Ideal.span_singleton_pow] at hq
@@ -387,7 +387,7 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 theorem resQ_ne_zero {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ) : resQ ϖ ≠ 0 := by
   unfold resQ
   rw [← hϖ.maximalIdeal_eq]
-  haveI : Finite (𝒪[F] ⧸ IsLocalRing.maximalIdeal 𝒪[F]) := inferInstanceAs (Finite 𝓀[F])
+  have : Finite (𝒪[F] ⧸ IsLocalRing.maximalIdeal 𝒪[F]) := inferInstanceAs (Finite 𝓀[F])
   exact Nat.card_pos.ne'
 
 theorem relIndex_map {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ) {W : Type} [AddCommGroup W] [Module F W]
@@ -401,8 +401,8 @@ theorem relVol_map : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
   intro F _ _ _ _ ϖ hϖ W _ _ ι _ b φ a u hd W0 hW
   have h0 : (ϖ : F) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
   have hq := resQ_ne_zero hϖ
-  haveI := Module.Finite.of_basis b
-  haveI := Module.Free.of_basis b
+  have := Module.Finite.of_basis b
+  have := Module.Free.of_basis b
   obtain ⟨c, hc⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors 𝒪[F])
     (fun ij : ι × ι => b.repr (φ (b ij.2)) ij.1)
   obtain ⟨n, v, hv⟩ := IsDiscreteValuationRing.associated_pow_irreducible

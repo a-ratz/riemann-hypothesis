@@ -126,8 +126,8 @@ theorem hasFDerivAt_prim (hS : IsOpen S) (hc : Convex ℝ S) (hw₀ : w₀ ∈ S
     have h := hc1.clm_apply hu
     refine h.congr_fderiv ?_
     ext h'
-    simp only [hF', ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply,
-      ContinuousLinearMap.flip_apply, ContinuousLinearMap.smul_apply]
+    simp only [hF', add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply,
+      ContinuousLinearMap.flip_apply, smul_apply]
     rw [show ((t : ℂ) • h' : ℂ) = (t : ℝ) • h' from by rw [Complex.real_smul]; rfl, map_smul]
     simp
   have hseg_cont : ∀ x ∈ closedBall w δ', ContinuousOn (fun t : ℝ => seg w₀ x t) (Icc 0 1) := fun x _ =>

@@ -58,27 +58,27 @@ open scoped Pointwise
 theorem exists_extension {A B K : Type} [CommRing A] [CommRing B] [Field K] [IsAlgClosed K]
     [Algebra A B] [Algebra.IsIntegral A B] (hinj : Function.Injective (algebraMap A B))
     (ev : A →+* K) : ∃ ev' : B →+* K, ∀ a, ev' (algebraMap A B a) = ev a := by
-  haveI hP : (RingHom.ker ev).IsPrime := RingHom.ker_isPrime ev
+  have hP : (RingHom.ker ev).IsPrime := RingHom.ker_isPrime ev
   obtain ⟨Q, -, hQ, hQP⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := B)
     (RingHom.ker ev) ⊥ (by
       intro a ha
       have : a = 0 := hinj (by simpa using ha)
       simp [this])
-  haveI : Q.LiesOver (RingHom.ker ev) := ⟨hQP.symm⟩
-  letI : Algebra (A ⧸ RingHom.ker ev) K := (RingHom.kerLift ev).toAlgebra
-  haveI : FaithfulSMul (A ⧸ RingHom.ker ev) K :=
+  have : Q.LiesOver (RingHom.ker ev) := ⟨hQP.symm⟩
+  let : Algebra (A ⧸ RingHom.ker ev) K := (RingHom.kerLift ev).toAlgebra
+  have : FaithfulSMul (A ⧸ RingHom.ker ev) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.kerLift_injective ev)
-  haveI : Algebra.IsIntegral (A ⧸ RingHom.ker ev) (B ⧸ Q) := inferInstance
-  haveI : FaithfulSMul (A ⧸ RingHom.ker ev) (B ⧸ Q) := inferInstance
-  haveI : Module.IsTorsionFree (A ⧸ RingHom.ker ev) (B ⧸ Q) :=
+  have : Algebra.IsIntegral (A ⧸ RingHom.ker ev) (B ⧸ Q) := inferInstance
+  have : FaithfulSMul (A ⧸ RingHom.ker ev) (B ⧸ Q) := inferInstance
+  have : Module.IsTorsionFree (A ⧸ RingHom.ker ev) (B ⧸ Q) :=
     Module.IsTorsionFree.of_smul_eq_zero fun r x h => by
       rw [Algebra.smul_def, mul_eq_zero] at h
       exact h.imp_left fun h => FaithfulSMul.algebraMap_injective _ (B ⧸ Q) (by rw [h, map_zero])
-  haveI : Module.IsTorsionFree (A ⧸ RingHom.ker ev) K :=
+  have : Module.IsTorsionFree (A ⧸ RingHom.ker ev) K :=
     Module.IsTorsionFree.of_smul_eq_zero fun r x h => by
       rw [Algebra.smul_def, mul_eq_zero] at h
       exact h.imp_left fun h => FaithfulSMul.algebraMap_injective _ K (by rw [h, map_zero])
-  haveI : Algebra.IsAlgebraic (A ⧸ RingHom.ker ev) (B ⧸ Q) :=
+  have : Algebra.IsAlgebraic (A ⧸ RingHom.ker ev) (B ⧸ Q) :=
     ⟨fun x => (Algebra.IsIntegral.isIntegral x).isAlgebraic⟩
   let f : (B ⧸ Q) →ₐ[A ⧸ RingHom.ker ev] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -93,7 +93,7 @@ theorem norm_le_one_of_extension {p : ℕ} [Fact p.Prime] {A B : Type} [CommRing
     [Algebra A B] [Algebra.IsIntegral A B] (ev : A →+* PadicAlgCl p) (h : ∀ a, ‖ev a‖ ≤ 1)
     (ev' : B →+* PadicAlgCl p) (hev : ∀ a, ev' (algebraMap A B a) = ev a) (b : B) :
     ‖ev' b‖ ≤ 1 := by
-  haveI : IsUltrametricDist (PadicAlgCl p) :=
+  have : IsUltrametricDist (PadicAlgCl p) :=
     IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm (PadicAlgCl.isNonarchimedean p)
   obtain ⟨q, hqm, hq⟩ := Algebra.IsIntegral.isIntegral (R := A) b
   have hcomp : ev'.comp (algebraMap A B) = ev := RingHom.ext hev
@@ -156,14 +156,14 @@ theorem main : ∀ (p : ℕ) [Fact (Nat.Prime p)] (A B : Type) [CommRing A] [IsL
     intro a ha
     rw [Ideal.mem_comap, hm, he]
     exact h2 a ha
-  haveI hmm : m.IsPrime := ⟨hmne, fun {a b} hab => by
+  have hmm : m.IsPrime := ⟨hmne, fun {a b} hab => by
     rw [hm, map_mul, norm_mul] at hab
     by_contra hc
     rw [not_or, hm, hm, not_lt, not_lt] at hc
     exact absurd hab (not_lt.2 (one_le_mul_of_one_le_of_one_le hc.1 hc.2))⟩
   have hzu : 𝔷.under A = IsLocalRing.maximalIdeal A :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := A) 𝔷)
-  haveI : Algebra.IsInvariant A B (B ≃ₐ[A] B) := ⟨fun b hb => hfix b hb⟩
+  have : Algebra.IsInvariant A B (B ≃ₐ[A] B) := ⟨fun b hb => hfix b hb⟩
   obtain ⟨g, hg⟩ := Algebra.IsInvariant.exists_smul_of_under_eq A B (B ≃ₐ[A] B) 𝔷 m
     (hzu.trans hmu.symm)
   refine ⟨e.comp (g : B →+* B), fun a => ?_, fun b => hle _, fun b hb => ?_⟩

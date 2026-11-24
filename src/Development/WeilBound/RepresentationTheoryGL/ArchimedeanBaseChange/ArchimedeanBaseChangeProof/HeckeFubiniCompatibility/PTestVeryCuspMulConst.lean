@@ -296,7 +296,7 @@ theorem pTest_main {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ
       obtain ⟨h1, h2⟩ := mul_ne_zero_iff.1 h12
       exact ⟨pTest_prod_ne h1, pTest_prod_ne h2, h3⟩
   have hsupp : HasCompactSupport φ := by
-    haveI : T2Space (H E a b) := inferInstanceAs (T2Space (GA E a × GA E b))
+    have : T2Space (H E a b) := inferInstanceAs (T2Space (GA E a × GA E b))
     let Ka : Set (InfinitePlace E → G a) := Set.pi Set.univ fun _ => {y : G a | lg y.val ≤ R}
     let Kb : Set (InfinitePlace E → G b) := Set.pi Set.univ fun _ => {y : G b | lg y.val ≤ R}
     have hKa : IsCompact Ka := isCompact_univ_pi fun _ => GlobalTheory.CompanionTheory.SobGL.isCompact_lg_le R

@@ -121,7 +121,7 @@ end UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.rSep :
     UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.RSep := by
   intro hP E _ _ _ n S hS Z I _ B C h
-  haveI := Fintype.ofFinite I
+  have := Fintype.ofFinite I
   choose t e₁ e₂ htS hts htZ hB₁ hB₂ hC using fun j => sep_at hP n S hS Z B (C j) (h j)
   refine ⟨Finset.univ.image t, comb t e₁, comb t e₂, ?_, ?_, ?_, ?_⟩
   · intro w hw
@@ -147,5 +147,5 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.rSep :
     refine Finset.prod_eq_zero (Finset.mem_image_of_mem t (Finset.mem_univ j)) ?_
     rw [evaluation_combined_test_function, evaluation_combined_test_function]
     rcases mul_eq_zero.1 (hC j) with h0 | h0
-    · exact mul_eq_zero.2 (Or.inl (Finset.prod_eq_zero (Finset.mem_univ j) (by rw [if_pos rfl]; exact h0)))
-    · exact mul_eq_zero.2 (Or.inr (Finset.prod_eq_zero (Finset.mem_univ j) (by rw [if_pos rfl]; exact h0)))
+    · exact mul_eq_zero.2 (Or.inl (Finset.prod_eq_zero (Finset.mem_univ j) (by rw [ite_eq_left rfl]; exact h0)))
+    · exact mul_eq_zero.2 (Or.inr (Finset.prod_eq_zero (Finset.mem_univ j) (by rw [ite_eq_left rfl]; exact h0)))

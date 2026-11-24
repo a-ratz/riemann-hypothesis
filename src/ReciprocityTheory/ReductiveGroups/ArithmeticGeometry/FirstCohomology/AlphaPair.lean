@@ -97,7 +97,7 @@ theorem act_nat_apply (x : T ⟶ A) (n : ℕ) : x ≫ ρ.act (n : O) = x ^ n := 
 theorem pow_eq_one_of_kill {a b : O} {N : ℕ} (hab : a * b = (N : O)) (x : T ⟶ A) (hx : x ≫ ρ.act b = 1) :
     x ^ N = 1 := by
   rw [← act_nat_apply ρ x N, ← hab, act_mul_apply, hx]
-  haveI := ρ.hom a
+  have := ρ.hom a
   exact one_compMon (ρ.act a)
 
 end Act

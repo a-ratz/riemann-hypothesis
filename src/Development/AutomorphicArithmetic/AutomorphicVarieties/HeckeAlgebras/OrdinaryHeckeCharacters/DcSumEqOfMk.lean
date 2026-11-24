@@ -64,7 +64,7 @@ private theorem dcSum_apply {A H M : Type} [CommRing A] [Group H] [AddCommGroup 
 theorem UpperTheory.V.Hi.dcSum :
     ∀ (A H M : Type) [CommRing A] [Group H] [AddCommGroup M] [Module A M] (ρ : Representation A H M) (K K' : Subgroup H) (x : H), (MulAction.orbit K (x : H ⧸ K')).Finite → (∀ s : Finset H, (∀ y ∈ s, (y : H ⧸ K') ∈ MulAction.orbit K (x : H ⧸ K')) → (∀ q ∈ MulAction.orbit K (x : H ⧸ K'), ∃! y, y ∈ s ∧ (y : H ⧸ K') = q) → ∀ v ∈ fixd ρ K', dc ρ K K' x v = ∑ y ∈ s, ρ y v) ∧ (∀ v ∈ fixd ρ K', dc ρ K K' x v ∈ fixd ρ K) ∧ (∀ V : Subgroup H, (∀ u ∈ V, u * x = x * u ∧ ∀ k ∈ K, u * k = k * u) → ∀ v ∈ fixd ρ K', v ∈ fixd ρ V → dc ρ K K' x v ∈ fixd ρ V) ∧ ∀ (A' M' : Type) [CommRing A'] [AddCommGroup M'] [Module A' M'] (ρ' : Representation A' H M') (f : M →+ M'), (∀ h v, f (ρ h v) = ρ' h (f v)) → ∀ v, f (dc ρ K K' x v) = dc ρ' K K' x (f v) := by
   intro A H M _ _ _ _ ρ K K' x hfin
-  letI : Fintype (MulAction.orbit K (x : H ⧸ K')) := hfin.fintype
+  let : Fintype (MulAction.orbit K (x : H ⧸ K')) := hfin.fintype
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro s hs hu v hv
     rw [dcSum_apply]

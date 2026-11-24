@@ -77,7 +77,7 @@ theorem continuous_cycLL_period : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) 
   rw [e]
   refine Continuous.subtype_mk (f := fun g : ↥(GK K) =>
     algebraMap ℚ_[l] (Om l) (P.χQ (g : GQ l) : ℚ_[l])) ?_ _
-  exact (continuous_algebraMap ℚ_[l] (Om l)).comp (h.comp continuous_subtype_val)
+  exact (continuous_algebraMap ℚ_[l] (Om l)).comp (h.comp continuous_subtypeVal)
 
 end GlobalTheory.HTW.Rec
 end -- clump:auto
@@ -155,7 +155,7 @@ namespace GlobalTheory.HTW.Rec
 
 theorem tateDual_matRep_crys : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K LL : FinExt l) {k : ℕ} (M : ↥(GK K) →* Matrix (Fin k) (Fin k) ↥LL.1), (∀ (A A' : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (Pr : A.V →ₗ[↥LL.1] A'.V →ₗ[↥LL.1] ↥LL.1), IsDual1 (P.PD K) A.ρ A'.ρ Pr → IsCrys (P.PD K) A.ρ → IsCrys (P.PD K) A'.ρ) → Continuous M → IsCrys (P.PD K) (matRep M) → Continuous (twistM (dualM M) (cycLL (P.PD K) ↥LL.1)) ∧ IsCrys (P.PD K) (matRep (twistM (dualM M) (cycLL (P.PD K) ↥LL.1))) := by
   intro l _ P K LL k M hT hM hC
-  haveI : IsTopologicalRing ↥LL.1 := by
+  have : IsTopologicalRing ↥LL.1 := by
     first
       | infer_instance
       | exact Subring.instIsTopologicalRing LL.1.toSubring

@@ -78,9 +78,9 @@ theorem sqrt_sq' {D : D7} : D.host.sqrtMinusD ^ 2 = -(D.host.d : D.host.E) := by
 
 theorem exists_conj_tauE_over (D : D7) (w : InfinitePlace D.host.F) : ∃ τ : D.what₂.Tau,
     ((starRingEnd ℂ).comp (tauE D τ)).comp (algebraMap D.host.F D.host.E) = w.embedding := by
-  letI : Algebra D.host.F ℂ := w.embedding.toAlgebra
-  haveI : Algebra.IsAlgebraic D.host.F D.host.E := inferInstance
-  haveI : Module.IsTorsionFree D.host.F ℂ := by
+  let : Algebra D.host.F ℂ := w.embedding.toAlgebra
+  have : Algebra.IsAlgebraic D.host.F D.host.E := inferInstance
+  have : Module.IsTorsionFree D.host.F ℂ := by
     infer_instance
   let ψ : D.host.E →ₐ[D.host.F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_

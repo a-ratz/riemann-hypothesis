@@ -87,7 +87,7 @@ variable {V : HSpace E} (Φ : WittFrame V)
 
 theorem linearIndependent_e : LinearIndependent E Φ.e :=
   LinearIndependent.of_pairwise_dual_eq_zero_one _ (fun j => V.hT (Φ.f j))
-    (fun j i h => (Φ.ef i j).trans (if_neg h.symm)) fun i => (Φ.ef i i).trans (if_pos rfl)
+    (fun j i h => (Φ.ef i j).trans (ite_eq_right h.symm)) fun i => (Φ.ef i i).trans (ite_eq_left rfl)
 
 def flag0 : IsoFlag V := .ofVectors Φ.e Φ.linearIndependent_e Φ.ee
 
@@ -116,7 +116,7 @@ theorem coef_eq_zero (i : Fin (wittIndex V)) {y : Fin V.rank → R ⊗[F] E}
   rintro _ ⟨x, hx, rfl⟩
   have : V.hT (Φ.f i) x = 0 := (Submodule.span_le (p := LinearMap.ker (V.hT (Φ.f i)))).2 (by
     rintro _ ⟨j, hj, rfl⟩
-    exact (Φ.ef j i).trans (if_neg (Fin.ne_of_val_ne (ne_of_lt hj)))) hx
+    exact (Φ.ef j i).trans (ite_eq_right (Fin.ne_of_val_ne (ne_of_lt hj)))) hx
   exact (Φ.coef_coordR hc R i x).trans (by rw [HSpace.hD, this, map_zero])
 
 theorem sub_coef_mem (i : Fin (wittIndex V)) {y : Fin V.rank → R ⊗[F] E}

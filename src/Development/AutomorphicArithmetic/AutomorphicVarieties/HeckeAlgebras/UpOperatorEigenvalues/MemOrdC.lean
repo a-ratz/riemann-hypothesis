@@ -145,7 +145,7 @@ theorem meet {I M : Type} [Finite I] [AddCommGroup M] [Module ℂ M] (S : I → 
     (hZ : ∀ j (Z : Submodule ℂ M), Z ≤ Y → Z ≠ ⊥ → (∀ φ ∈ S j, ∀ y ∈ Z, φ y ∈ Z) → Z ⊓ C j ≠ ⊥) :
     ∃ F ∈ Y, F ≠ 0 ∧ ∀ i, F ∈ C i := by
   classical
-  letI := Fintype.ofFinite I
+  let := Fintype.ofFinite I
   have key : ∀ s : Finset I, Y ⊓ (⨅ i ∈ s, C i) ≠ ⊥ := by
     intro s
     induction s using Finset.induction_on with

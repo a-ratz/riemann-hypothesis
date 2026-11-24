@@ -140,7 +140,7 @@ theorem exists_isHolW_iteratedDeriv (H : Hyps) {d : SD σ} (R : RD d) (hmn : d.m
     · left; rw [h1, h2, cnt_true, cnt_false]; exact ⟨rfl, rfl⟩
     · right; rw [h1, h2, cnt_true, cnt_false]; exact ⟨rfl, rfl⟩
   refine ⟨pp, qq, e, hpq, ?_⟩
-  haveI := hTG; haveI := hLC; haveI := hT2; haveI := hSC
+  have := hTG; have := hLC; have := hT2; have := hSC
   refine H.holLead d.m d.n pp qq e d.ok.hm hmn hpq d.G (par2 σ d.Y) (rat2 σ d.Y) (R.ι w) (s0 d.m d.n) d.Ht (d.sec0 Φ)
     (R.cont w) ?_ U p Ê t hUo hR hs hd hcont (fun z hz => ⟨(hfar z hz).1, fun g => (hfar z hz).2 g⟩) j hlow ?_
   · intro g

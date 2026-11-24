@@ -342,7 +342,7 @@ theorem eq_one_of_ker (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ w.asI
   refine Units.val_eq_one.mp (eq_one_of_pow_near h1 fun ε hε => ?_)
   obtain ⟨U, hn, hU, hsub⟩ := exists_open_normal (near_mem_nhds hr hε)
   obtain ⟨m, hm, H⟩ := exists_pow_mem_of_ker h hl ht hσ (U.subgroupOf _)
-    (hU.preimage continuous_subtype_val)
+    (hU.preimage continuous_subtypeVal)
   refine ⟨m, ?_, ?_⟩
   · rw [← map_natCast (algebraMap ℚ_[l] (Qbar l)), norm_algebraMap', Padic.norm_natCast_eq_one_iff]
     exact (Fact.out : l.Prime).coprime_iff_not_dvd.mpr hm
@@ -363,7 +363,7 @@ theorem exists_isMonodromy (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ 
   have := compactSpace_Ine (E := E) A
   obtain ⟨U, hn, hU, hsub⟩ := exists_open_normal (near_mem_nhds hr one_pos)
   set U' := U.subgroupOf (Ine (F := E) A)
-  have hU' : IsOpen (U' : Set (Ine (F := E) A)) := hU.preimage continuous_subtype_val
+  have hU' : IsOpen (U' : Set (Ine (F := E) A)) := hU.preimage continuous_subtypeVal
   have inj : ∀ σ τ : Ine (F := E) A, tval t σ = tval t τ → t σ = t τ := fun σ τ e =>
     Multiplicative.toAdd.injective (Subtype.ext ((algebraMap ℚ_[l] (Qbar l)).injective e))
   have key : ∀ σ ∈ U', ∀ τ ∈ U', t σ = t τ → r σ = r τ := fun σ hσ τ hτ e => by
@@ -388,7 +388,7 @@ theorem exists_isMonodromy (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ 
   have ce : Continuous fun σ => exp (tval t σ • N) := by
     obtain ⟨k, hk⟩ := hNn
     have c1 : Continuous (tval t) :=
-      (continuous_algebraMap _ _).comp (continuous_subtype_val.comp ct)
+      (continuous_algebraMap _ _).comp (continuous_subtypeVal.comp ct)
     have : ∀ σ, exp (tval t σ • N) =
         ∑ i ∈ Finset.range k, tval t σ ^ i • (((i.factorial : ℚ)⁻¹) • N ^ i) := fun σ => by
       rw [exp_eq_sum (k := k) (by rw [_root_.smul_pow, hk, smul_zero])]
@@ -399,7 +399,7 @@ theorem exists_isMonodromy (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ 
     (U' : Set _) ∩ {σ | (r σ : Matrix n n (Qbar l)) = exp (tval t σ • N)}
   have hS : IsClosed ((fun σ => (t σ).toAdd) '' S) :=
     (((U'.isClosed_of_isOpen hU').inter
-      (isClosed_eq (hr.comp continuous_subtype_val) ce)).isCompact.image ct).isClosed
+      (isClosed_eq (hr.comp continuous_subtypeVal) ce)).isCompact.image ct).isClosed
   have hk : ∀ k : ℕ, σ₀ ^ k ∈ S := fun k => ⟨pow_mem h0 k, by
     show _ = _
     induction k with
@@ -502,7 +502,7 @@ theorem weilDeligneParam_monodromy_eq_zero_iff :
     refine hN.unique ht (.of_nhds IsNilpotent.zero ?_)
     have hc : IsClosed (Units.val '' (r '' (Ine (F := E) A : Set (G E Ω))) \ {1}) :=
       ((H.image _).sdiff).isClosed
-    filter_upwards [(hc.isOpen_compl.preimage (hr.comp continuous_subtype_val)).mem_nhds
+    filter_upwards [(hc.isOpen_compl.preimage (hr.comp continuous_subtypeVal)).mem_nhds
       (show (1 : Ine (F := E) A) ∈ _ by simp)] with σ hσ
     by_contra hne
     exact hσ ⟨⟨_, ⟨σ, σ.2, rfl⟩, rfl⟩, by simpa using hne⟩

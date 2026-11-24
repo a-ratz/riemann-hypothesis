@@ -59,7 +59,7 @@ namespace GlobalTheory.RegCodimOne
 theorem regAt_iff_ord_nonneg {X : Scheme.{0}} [IsIntegral X] [IsLocallyNoetherian X]
     [GlobalTheory.IsNormalScheme X] {z : X} (hz : Order.coheight z = 1) {g : X.functionField} (hg : g ≠ 0) :
     RegAt z g ↔ 0 ≤ Scheme.ord g z := by
-  haveI := IsNormalScheme.isDiscreteValuationRing_stalk hz
+  have := IsNormalScheme.isDiscreteValuationRing_stalk hz
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible (X.presheaf.stalk z)
   have h := le_ordTop_vw_iff (F := X.functionField) ht 0 g
   rw [ordTop_vw_of_ne_zero _ hg, WithTop.coe_le_coe] at h

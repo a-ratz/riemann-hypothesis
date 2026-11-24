@@ -67,7 +67,7 @@ private theorem one_mem_strictPeriods_map_gamma1 (M : ℕ) :
   exact AddSubgroup.mem_zmultiples 1
 
 theorem no_weight_zero (g : Newform 0) : False := by
-  haveI : NeZero g.M := ⟨g.pos.ne'⟩
+  have : NeZero g.M := ⟨g.pos.ne'⟩
   let F : ModularForm (Subgroup.map (Matrix.SpecialLinearGroup.mapGL ℝ) (Gamma1 g.M)) 0 :=
     { toFun := g.f
       holo' := ModularFormClass.holo g.f
@@ -87,12 +87,12 @@ theorem no_weight_zero (g : Newform 0) : False := by
 
 theorem expand (k : ℕ) (g : Newform k) (τ : ℍ) :
     HasSum (fun m : ℕ => g.a m * Function.Periodic.qParam 1 τ ^ m) (g.f τ) := by
-  haveI : NeZero g.M := ⟨g.pos.ne'⟩
+  have : NeZero g.M := ⟨g.pos.ne'⟩
   have := ModularForm.hasSum_qExpansion (f := g.f) one_pos (one_mem_strictPeriods_map_gamma1 g.M) τ
   simpa [Newform.a, UpperTheory.V.Af.coef, Nat.cast_one] using this
 
 theorem a_zero (k : ℕ) (g : Newform k) : g.a 0 = 0 := by
-  haveI : NeZero g.M := ⟨g.pos.ne'⟩
+  have : NeZero g.M := ⟨g.pos.ne'⟩
   simpa [Newform.a, UpperTheory.V.Af.coef] using CuspFormClass.qExpansion_coeff_zero g.f one_pos (one_mem_strictPeriods_map_gamma1 g.M)
 
 theorem im_shift (z : ℍ) (b p : ℕ) (hp : 0 < p) : (((z : ℂ) + b) / p).im = z.im / p := by
@@ -111,7 +111,7 @@ theorem qParam_shift (z : ℍ) (b p : ℕ) (hp : 0 < p) (m : ℕ) :
         (Complex.exp (2 * Real.pi * Complex.I / p) ^ m) ^ b := by
   have e : Function.Periodic.qParam 1 (((z : ℂ) + b) / p) =
       Complex.exp (2 * Real.pi * Complex.I * z / p) * Complex.exp (2 * Real.pi * Complex.I / p) ^ b := by
-    rw [Function.Periodic.qParam, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    rw [Function.Periodic.qParam, ← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     ring
@@ -167,14 +167,14 @@ theorem sum_shift (k : ℕ) (g : Newform k) (p : ℕ) (hp : p.Prime) (z : ℍ) :
   have hz : ∀ x ∉ Set.range (fun n : ℕ => p * n), (if p ∣ x then
       (p : ℂ) * g.a x * Complex.exp (2 * Real.pi * Complex.I * z / p) ^ x else 0) = 0 := by
     intro x hx
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨n, rfl⟩
     exact hx ⟨n, rfl⟩
   have := (hinj.hasSum_iff hz).mpr hs'
   convert this using 1
   funext n
-  simp only [Function.comp_apply, dvd_mul_right, if_true]
-  rw [pow_mul, ← Complex.exp_nat_mul, Function.Periodic.qParam]
+  simp only [Function.comp_apply, dvd_mul_right, ite_true]
+  rw [pow_mul, ← Complex.exp_natCast_mul, Function.Periodic.qParam]
   congr 2
   have : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne_zero
   push_cast
@@ -198,14 +198,14 @@ theorem scale (k : ℕ) (g : Newform k) (p : ℕ) (hp : p.Prime) (z : ℍ) :
   have hz : ∀ x ∉ Set.range (fun n : ℕ => p * n),
       (if p ∣ x then g.a (x / p) else 0) * Function.Periodic.qParam 1 z ^ x = 0 := by
     intro x hx
-    rw [if_neg, zero_mul]
+    rw [ite_eq_right, zero_mul]
     rintro ⟨n, rfl⟩
     exact hx ⟨n, rfl⟩
   refine (hinj.hasSum_iff hz).mp ?_
   convert h0 using 1
   funext n
-  simp only [Function.comp_apply, dvd_mul_right, if_true, Nat.mul_div_cancel_left _ hp.pos]
-  rw [pow_mul, Function.Periodic.qParam, Function.Periodic.qParam, ← Complex.exp_nat_mul]
+  simp only [Function.comp_apply, dvd_mul_right, ite_true, Nat.mul_div_cancel_left _ hp.pos]
+  rw [pow_mul, Function.Periodic.qParam, Function.Periodic.qParam, ← Complex.exp_natCast_mul]
   congr 2
   push_cast
   ring
@@ -237,7 +237,7 @@ namespace GlobalTheory.HeckeBd
 theorem norm_a_le : ∀ (k : ℕ) (g : Newform k) (p : ℕ), p.Prime → ¬ p ∣ g.M →
     ‖g.a p‖ ≤ (p : ℝ) ^ ((k : ℝ) / 2) + (p : ℝ) ^ ((k : ℝ) / 2 - 1) := by
   intro k g p hp hpM
-  haveI : NeZero g.M := ⟨g.pos.ne'⟩
+  have : NeZero g.M := ⟨g.pos.ne'⟩
   have hk : 1 ≤ k := by
     rcases Nat.eq_zero_or_pos k with rfl | h
     · exact (no_weight_zero g).elim

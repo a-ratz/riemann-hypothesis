@@ -130,7 +130,7 @@ theorem evInf_alg (v : InfinitePlace X.B.I.F) (a : X.B.I.F) :
 theorem trace_one_tmul (e : X.B.I.E) :
     Algebra.trace (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) ((1 : Ainf X.B.I.F) ⊗ₜ[X.B.I.F] e) =
       algebraMap X.B.I.F (Ainf X.B.I.F) (Algebra.trace X.B.I.F X.B.I.E e) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   rw [Algebra.trace_apply, ← Algebra.baseChange_lmul, LinearMap.trace_baseChange, ← Algebra.trace_apply]
 
 theorem evInf_trace (v : InfinitePlace X.B.I.F) (z : Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :
@@ -154,7 +154,7 @@ theorem theta_alg (v : InfinitePlace X.B.I.F) (q : X.B.I.F) :
 theorem theta_surj (z : InfinitePlace X.B.I.F → ℂ) :
     ∃ y : Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E, ∀ v, PI.AprimeInfU.thetaInf X v y = z v := by
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   let b : Module.Basis (Fin 2) X.B.I.F X.B.I.E := Module.finBasisOfFinrankEq X.B.I.F X.B.I.E X.B.I.cm.deg2
   have hr : ∀ v : InfinitePlace X.B.I.F, ∃ r : Fin 2 → ℝ,
       (r 0 : ℂ) * X.B.I.φ v (b 0) + (r 1 : ℂ) * X.B.I.φ v (b 1) = z v := by
@@ -286,8 +286,8 @@ theorem half_emb {D : D7} (X : HidaSetting D) (v : InfinitePlace X.B.I.F) : v.em
 theorem nuBridge : NuBridge := by
   classical
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
   let Kr : Submodule ℝ (EuclideanSpace ℝ (InfinitePlace X.B.I.F × Fin (D.R.rS + 1 + D.R.rS) ×
       Fin (D.R.rS + 1 + D.R.rS) × Bool)) :=
     (hermFam (InfinitePlace X.B.I.F) (D.R.rS + 1 + D.R.rS)).map (reimVE : _ ≃ₗ[ℝ] _).toLinearMap
@@ -322,7 +322,7 @@ theorem nuBridge : NuBridge := by
       rw [thH_add, map_add (f := _)])
     exact (congrArg bK.repr e).trans (map_add bK.repr _ _)
   have hθc : ∀ v i j, Continuous fun S : HmI X => PI.AprimeInfU.thetaInf X v (S.1 i j) :=
-    fun v i j => (continuous_thetaInf X v).comp (continuous_subtype_val.matrix_elem i j)
+    fun v i j => (continuous_thetaInf X v).comp (continuous_subtypeVal.matrix_elem i j)
   have hcont : Continuous TcF := by
     refine bK.repr.continuous.comp (Continuous.subtype_mk ?_ _)
     show Continuous fun S => (EuclideanSpace.equiv _ ℝ).symm (fun p : InfinitePlace X.B.I.F × Fin (D.R.rS + 1 + D.R.rS) ×
@@ -480,9 +480,9 @@ theorem pi_smul_measure {V : Type} [Fintype V] {X : V → Type} [∀ v, Measurab
     (μ : ∀ v, Measure (X v)) [∀ v, SigmaFinite (μ v)] (c : V → ℝ≥0) :
     Measure.pi (fun v => c v • μ v) = (∏ v, (c v : ℝ≥0∞)) • Measure.pi μ := by
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun v _ => ?_
-  rw [Measure.smul_apply]
+  rw [smul_apply]
   rfl
 
 theorem pi_map_smul {V : Type} [Fintype V] {X Y : V → Type} [∀ v, MeasurableSpace (X v)]
@@ -490,7 +490,7 @@ theorem pi_map_smul {V : Type} [Fintype V] {X Y : V → Type} [∀ v, Measurable
     (f : ∀ v, X v → Y v) (hf : ∀ v, Measurable (f v)) (c : V → ℝ≥0)
     (hc : ∀ v, (μ v).map (f v) = c v • ν v) :
     (Measure.pi μ).map (fun x v => f v (x v)) = (∏ v, (c v : ℝ≥0∞)) • Measure.pi ν := by
-  haveI : ∀ v, SigmaFinite (μ v) := fun v =>
+  have : ∀ v, SigmaFinite (μ v) := fun v =>
     SigmaFinite.of_map (μ v) (hf v).aemeasurable (by rw [hc v]; infer_instance)
   rw [← pi_smul_measure]
   symm
@@ -513,14 +513,14 @@ theorem bij_of_map {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [Fini
   have key : ∀ s : Set F, MeasurableSet s → μ ((f : E → F) ⁻¹' s) = c * ν s := by
     intro s hs
     have h1 := congrArg (fun ρ : Measure F => ρ s) h
-    simp only [Measure.smul_apply, smul_eq_mul] at h1
+    simp only [smul_apply, smul_eq_mul] at h1
     rwa [Measure.map_apply (LinearMap.continuous_of_finiteDimensional f).measurable hs] at h1
   have hsurj : Function.Surjective f := by
     by_contra hns
     have hr : LinearMap.range f ≠ ⊤ := fun hh => hns (LinearMap.range_eq_top.mp hh)
     have h0 : ν (LinearMap.range f : Set F) = 0 := Measure.addHaar_submodule ν _ hr
     have hm : MeasurableSet (LinearMap.range f : Set F) :=
-      (Submodule.closed_of_finiteDimensional (LinearMap.range f)).measurableSet
+      (Submodule.isClosed_of_finiteDimensional (LinearMap.range f)).measurableSet
     have h1 := key _ hm
     rw [h0, mul_zero] at h1
     have hpre : (f : E → F) ⁻¹' (LinearMap.range f : Set F) = Set.univ := by

@@ -84,8 +84,8 @@ theorem fderiv_prod_iteratedDeriv {g : ℕ} (f : Fin g → ℂ → ℂ) (hf : �
   rw [smul_smul, ← Finset.prod_erase_mul _ _ (Finset.mem_univ a)]
   congr 2
   · refine Finset.prod_congr rfl fun i hi => ?_
-    rw [if_neg (Finset.ne_of_mem_erase hi).symm, add_zero]
-  · rw [if_pos rfl]
+    rw [ite_eq_right (Finset.ne_of_mem_erase hi).symm, add_zero]
+  · rw [ite_eq_left rfl]
 
 theorem iteratedFDeriv_prod_coord_at {g : ℕ} (f : Fin g → ℂ → ℂ)
     (hf : ∀ i, Differentiable ℂ (f i)) (k : ℕ) :
@@ -114,7 +114,7 @@ theorem iteratedFDeriv_prod_coord_at {g : ℕ} (f : Fin g → ℂ → ℂ)
     rw [h3.fderiv]
     rw [← (Fin.consEquiv (fun _ : Fin (k + 1) => Fin g)).sum_comp, Fintype.sum_prod_type,
       Finset.sum_comm]
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+    simp only [sum_apply, smul_apply, smul_eq_mul,
       ContinuousLinearMap.proj_apply, Finset.mul_sum]
     refine Finset.sum_congr rfl fun σ _ => Finset.sum_congr rfl fun a _ => ?_
     have e2 : (Fin.consEquiv (fun _ : Fin (k + 1) => Fin g)) (a, σ) = Fin.cons a σ := rfl

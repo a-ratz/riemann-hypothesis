@@ -72,7 +72,7 @@ theorem exists_finite_sys {R : Type} [CommRing R] {X : Scheme.{0}} (s : X ⟶ Sp
   have hfin : (infClosure A).Finite := (t.finite_toSet.image _).infClosure
   have haff : infClosure A ⊆ {V : X.Opens | IsAffineOpen V} :=
     infClosure_min (by rintro _ ⟨U, _, rfl⟩; exact U.2) fun a ha b hb => hinter a b ha hb
-  letI inst : SemilatticeInf (infClosure A) :=
+  let inst : SemilatticeInf (infClosure A) :=
     Subtype.semilatticeInf fun x y hx hy => infClosed_infClosure hx hy
   refine ⟨infClosure A, inst, hfin.to_subtype, ⟨⟨fun p => ⟨p.1, haff p.2⟩, fun a b => rfl, ?_⟩⟩⟩
   refine eq_top_iff.2 fun x _ => ?_

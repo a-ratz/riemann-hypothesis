@@ -138,7 +138,7 @@ theorem IsJet.add {x x' : V → ℂ⟦X⟧} {y y' : DualNumber ℂ⟦X⟧} (h : 
   · simp only [map_add (f := _)]
     exact (h.1 n).fun_add (h'.1 n)
   · simp only [map_add (f := _), TrivSqZeroExt.snd_add]
-    rw [fderiv_fun_add (h.1 n) (h'.1 n), h.2.2, h'.2.2, ContinuousLinearMap.add_apply]
+    rw [fderiv_fun_add (h.1 n) (h'.1 n), h.2.2, h'.2.2, add_apply]
 
 theorem IsJet.sum {K : Type} (s : Finset K) {x : K → V → ℂ⟦X⟧} {y : K → DualNumber ℂ⟦X⟧}
     (h : ∀ i ∈ s, IsJet (x i) z (y i)) : IsJet (fun v => ∑ i ∈ s, x i v) z (∑ i ∈ s, y i) := by
@@ -156,7 +156,7 @@ theorem IsJet.const_mul {x : V → ℂ⟦X⟧} {y : DualNumber ℂ⟦X⟧} (h : 
     exact DifferentiableAt.fun_sum fun p _ => (h.1 _).const_mul _
   · have e : (TrivSqZeroExt.inl r * y : DualNumber ℂ⟦X⟧).snd = r * y.snd := by simp [TrivSqZeroExt.snd_mul]
     simp only [e, PowerSeries.coeff_mul]
-    rw [fderiv_fun_sum fun p _ => (h.1 _).const_mul _, ContinuousLinearMap.sum_apply]
+    rw [fderiv_fun_sum fun p _ => (h.1 _).const_mul _, sum_apply]
     refine Finset.sum_congr rfl fun p _ => ?_
     rw [fderiv_const_mul (h.1 _), h.2.2]
     rfl
@@ -215,7 +215,7 @@ theorem IsJet.dualMapR_eq {x : V → ℂ⟦X⟧} {y : DualNumber ℂ⟦X⟧} (h 
   simp only [PowerSeries.coeff_coe]
   by_cases hk : k < 0
   · simp [hk]
-  · simp only [if_neg hk]
+  · simp only [ite_eq_right hk]
     exact h.2.2 _
 
 end Jet

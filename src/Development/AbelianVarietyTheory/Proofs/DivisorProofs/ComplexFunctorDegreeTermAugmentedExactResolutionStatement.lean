@@ -81,7 +81,7 @@ theorem augmented_exact_iff (C : Type 2) [Category.{1} C] [Abelian C] (K : Simpl
   let e := (SimplicialObject.Augmented.ExtraDegeneracy.const B).homotopyEquiv
   let g : (AlgebraicTopology.alternatingFaceMapComplex C).obj ((SimplicialObject.const C).obj B) ⟶
       (ChainComplex.single₀ C).obj B := e.hom
-  haveI : QuasiIso g := e.quasiIso_hom
+  have : QuasiIso g := e.quasiIso_hom
   have hg : g.f 0 = 𝟙 B := AlgebraicTopology.AlternatingFaceMapComplex.ε_app_f_zero _
   rw [← quasiIso_iff_comp_right _ g, quasiIso_iff]
   set φ := (AlgebraicTopology.alternatingFaceMapComplex C).map f ≫ g with hφ
@@ -219,7 +219,7 @@ theorem wExact_preadditiveYoneda_of_injective (R : Type) [CommRing R] (T : Type 
   let B : Shv R := (free R).obj (Ψ.obj U).unop
   let f : K ⟶ (SimplicialObject.const (Shv R)).obj B :=
     ((SimplicialObject.whiskering _ _).obj (free R)).map (lev Ψ a) ≫ (Functor.constComp _ _ _).hom
-  haveI h1 : QuasiIso ((chainsN R).map (lev Ψ a)) :=
+  have h1 : QuasiIso ((chainsN R).map (lev Ψ a)) :=
     (HomologicalComplex.quasiIso_extendMap_iff _ _).1 hq
   have hq' : QuasiIso ((AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map f) := by
     have e : (AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map f =
@@ -227,10 +227,10 @@ theorem wExact_preadditiveYoneda_of_injective (R : Type) [CommRing R] (T : Type 
         (AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map (Functor.constComp _ _ _).hom :=
       Functor.map_comp _ _ _
     rw [e]
-    haveI : IsIso ((AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map (Functor.constComp SimplexCategoryᵒᵖ (Ψ.obj U).unop (free R)).hom) :=
+    have : IsIso ((AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map (Functor.constComp SimplexCategoryᵒᵖ (Ψ.obj U).unop (free R)).hom) :=
       Functor.map_isIso _ _
     haveI h2 : QuasiIso ((AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map (((SimplicialObject.whiskering _ _).obj (free R)).map (lev Ψ a))) := h1
-    haveI h3 : QuasiIso ((AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map (Functor.constComp SimplexCategoryᵒᵖ (Ψ.obj U).unop (free R)).hom) :=
+    have h3 : QuasiIso ((AlgebraicTopology.alternatingFaceMapComplex (Shv R)).map (Functor.constComp SimplexCategoryᵒᵖ (Ψ.obj U).unop (free R)).hom) :=
       quasiIso_of_isIso _
     exact quasiIso_comp (hφ := h2) (hφ' := h3) _ _
   obtain ⟨hepi, ⟨w, hex⟩, hn⟩ := (GlobalTheory.T.face_map_complex_quasi_iso_iff_epi_exact _ K B f).1 hq'

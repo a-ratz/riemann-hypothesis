@@ -114,7 +114,7 @@ theorem mem_lowKer {ι : Type} {A : ι → Module.End ℂ (MvPolynomial σ ℂ)}
 theorem coe_lowKer {ι : Type} (A : ι → Module.End ℂ (MvPolynomial σ ℂ)) (c : ι → Prop) :
     (lowKer A c : Set (MvPolynomial σ ℂ)) = {P | ∀ Z, c Z → minusPart (A Z) P = 0} := by
   ext P
-  simp only [SetLike.mem_coe, mem_lowKer, Set.mem_setOf_eq, minusPart_eq_zero_iff]
+  simp only [SetLike.mem_coe, mem_lowKer, Set.mem_ofPred_eq, minusPart_eq_zero_iff]
 
 theorem hc_mem_lowKer {ι : Type} {A : ι → Module.End ℂ (MvPolynomial σ ℂ)} {c : ι → Prop}
     {P : MvPolynomial σ ℂ} (hP : P ∈ lowKer A c) (e : ℕ) :

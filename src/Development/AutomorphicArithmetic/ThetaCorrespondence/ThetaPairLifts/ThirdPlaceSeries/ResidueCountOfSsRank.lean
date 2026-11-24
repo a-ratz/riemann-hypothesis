@@ -77,7 +77,7 @@ theorem span_top_of_irred_algClosed {Γ : Type} [Group Γ] {k K : Type} [Field k
     {r : ℕ} (hr : 1 ≤ r) (rb : Γ →* GL (Fin r) k) (ι : k →+* K)
     (h : ∀ W : Submodule K (Fin r → K), IsInv (mapRep ι rb) W → W = ⊥ ∨ W = ⊤) :
     Submodule.span k (Set.range fun g => (rb g : Matrix (Fin r) (Fin r) k)) = ⊤ := by
-  letI : Algebra k K := ι.toAlgebra
+  let : Algebra k K := ι.toAlgebra
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   have hirr : IsIrrSub (mapRep ι rb) ⊤ :=
     ⟨top_ne_bot, fun _ _ _ => Submodule.mem_top, fun W _ hW => h W hW⟩
@@ -105,7 +105,7 @@ theorem absIrr_of_algClosed {Γ : Type} [Group Γ] {k K k' : Type} [Field k] [Fi
     (h : ∀ W : Submodule K (Fin r → K), IsInv (mapRep ι rb) W → W = ⊥ ∨ W = ⊤) (φ : k →+* k') :
     AbsIrrSub (mapRep φ rb) ⊤ := by
   have hsp := span_top_of_irred_algClosed hr rb ι h
-  letI : Algebra k (AlgebraicClosure k') := ((algebraMap k' (AlgebraicClosure k')).comp φ).toAlgebra
+  let : Algebra k (AlgebraicClosure k') := ((algebraMap k' (AlgebraicClosure k')).comp φ).toAlgebra
   have hirr := GlobalTheory.BurnsideIff.eq_bot_or_top_of_span_eq_top (K := AlgebraicClosure k') _ hsp
   have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   rw [AbsIrrSub, span_image_top]

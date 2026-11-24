@@ -118,7 +118,7 @@ theorem nk_pos (hdet : Zm.det ≠ 0) : 0 < nk Zm := by
 theorem sum_kap_al (hT : 0 < T) (hT' : 0 < T') :
     ∑ b, kap Zm b * al T T' Zm b = -Zm.det / ((Real.sqrt (T * T') : ℝ) : ℂ) := by
   have h := mul_kap Zm (Fin.last r)
-  rw [if_pos rfl] at h
+  rw [ite_eq_left rfl] at h
   rw [neg_div, ← h, Finset.sum_div, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl (fun b _ => ?_)
   unfold al
@@ -173,9 +173,9 @@ theorem Rm_herm : (Rm T T' Zm)ᴴ = Rm T T' Zm := by
     intro b c
     unfold Ap
     by_cases h : b = Fin.last r ∧ c = Fin.last r
-    · rw [if_pos ⟨h.2, h.1⟩, if_pos h]
+    · rw [ite_eq_left ⟨h.2, h.1⟩, ite_eq_left h]
       simp
-    · rw [if_neg (fun h' => h ⟨h'.2, h'.1⟩), if_neg h, star_zero]
+    · rw [ite_eq_right (fun h' => h ⟨h'.2, h'.1⟩), ite_eq_right h, star_zero]
   have hH : ∀ b c : Fin (r + 1), star (Heta T T' Zm c b) = Heta T T' Zm b c := by
     intro b c
     unfold Heta
@@ -214,7 +214,7 @@ theorem kap_Pm (hdet : Zm.det ≠ 0) (e : Fin (r + 1)) : ∑ d, conj (kap Zm d) 
     rw [← Complex.ofReal_sum]
     rfl
   simp only [Pm, Matrix.sub_apply, Matrix.one_apply, Qm, Matrix.of_apply, mul_sub, Finset.sum_sub_distrib,
-    mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   have h2 : ∑ d, conj (kap Zm d) * (kap Zm d * conj (kap Zm e) / ((nk Zm : ℝ) : ℂ)) =
       (∑ d, conj (kap Zm d) * kap Zm d) * conj (kap Zm e) / ((nk Zm : ℝ) : ℂ) := by
     rw [Finset.sum_mul, Finset.sum_div]
@@ -257,7 +257,7 @@ theorem quad_zero (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gP
   have hA : ∑ d, ∑ e, conj (k d) * Ap T' e d * k e = -((T' : ℝ) : ℂ) * (conj (k (Fin.last r)) * k (Fin.last r)) := by
     rw [Fintype.sum_eq_single (Fin.last r)]
     · rw [Fintype.sum_eq_single (Fin.last r)]
-      · simp only [Ap, and_self, if_true]
+      · simp only [Ap, and_self, ite_true]
         ring
       · intro e he
         simp [Ap, he]
@@ -405,7 +405,7 @@ theorem fco_gram (hT : 0 < T) (hT' : 0 < T') (a a' : Fin (r + 1)) :
   simp only [hco, fco, Pi.zero_apply, map_zero, mul_zero, zero_mul, Finset.sum_const_zero, add_zero, zero_add]
   by_cases ha : a = Fin.last r <;> by_cases ha' : a' = Fin.last r
   · subst ha ha'
-    simp only [if_true, and_self]
+    simp only [ite_true, and_self]
     have hT0 : ((T' : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hT'.ne'
     rw [mul_assoc, hs]; push_cast; field_simp; ring
   · simp [ha, ha']
@@ -435,7 +435,7 @@ theorem dual_coordinates_kronecker (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det �
   rw [h]
   by_cases hc : c = b.castSucc
   · subst hc; simp
-  · rw [if_neg hc, if_neg (Ne.symm hc)]; simp
+  · rw [ite_eq_right hc, ite_eq_right (Ne.symm hc)]; simp
 
 theorem ysco_xco (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gPoly (T * T') Zm) (b : Fin r)
     (d : Fin (r + 1)) : hco T' (ysco T T' Zm b) (xco T T' Zm d) = if d = b.castSucc then 1 else 0 := by
@@ -455,9 +455,9 @@ theorem ysco_ysco (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gP
   have hxx : ∀ (c d : Fin r), hco T' (xco T T' Zm c.castSucc) (xco T T' Zm d.castSucc) = 0 := by
     intro c d; rw [xco_gram T T' Zm hT hT' hdet hG, Ap_cs]
   simp only [ysco, hco_sub_left, hco_sub_right, hco_smul_left, hco_smul_right, hco_sum_left, hco_sum_right, hx, hy,
-    hxx, mul_zero, Finset.sum_const_zero, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    hxx, mul_zero, Finset.sum_const_zero, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     Finset.sum_ite_eq]
-  simp only [sub_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [sub_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← hco_symm T' (y0 T T' Zm e) (y0 T T' Zm b)]
   simp only [map_div₀, map_one, map_ofNat]
   ring
@@ -471,14 +471,14 @@ theorem cofco_xco (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (b : Fin (r 
   rw [h]
   by_cases hb : b = Fin.last r
   · subst hb; simp
-  · rw [if_neg (Ne.symm hb), if_neg hb]; simp
+  · rw [ite_eq_right (Ne.symm hb), ite_eq_right hb]; simp
 
 theorem cofco_self (hT : 0 < T) (hT' : 0 < T') :
     hco T' (cofco T T' Zm) (cofco T T' Zm) = -((T : ℝ) : ℂ) * ((Complex.normSq (kap Zm (Fin.last r)) : ℝ) : ℂ) := by
   simp only [cofco, hco_sum_left, hco_sum_right, hco_smul_left, hco_smul_right, fco_gram T T' hT hT']
   simp only [mul_ite, mul_zero, Finset.sum_ite_irrel, Finset.sum_const_zero]
   rw [Finset.sum_eq_single (Fin.last r), Finset.sum_eq_single (Fin.last r)]
-  · simp only [and_self, if_true, kap, Complex.conj_conj, Complex.normSq_eq_conj_mul_self]; ring
+  · simp only [and_self, ite_true, kap, Complex.conj_conj, Complex.normSq_eq_conj_mul_self]; ring
   · intro a _ ha; simp [ha]
   · simp
   · intro a _ ha; simp [ha]
@@ -491,20 +491,20 @@ theorem pco_xco (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gPol
     mul_zero, Finset.sum_const_zero, sub_zero, ysco_xco T T' Zm hT hT' hdet hG]
   induction d using Fin.lastCases with
   | last =>
-    simp only [Ap_last, if_false]
+    simp only [Ap_last, ite_false]
     simp only [mul_ite, mul_one, mul_zero, Finset.sum_const_zero, sub_zero]
     have : ∀ b : Fin r, ¬ (Fin.last r = b.castSucc) := fun b h => Fin.castSucc_ne_last b h.symm
-    simp only [this, if_false, Finset.sum_const_zero, sub_zero]
+    simp only [this, ite_false, Finset.sum_const_zero, sub_zero]
     field_simp; ring
   | cast d =>
     simp only [Ap_cs', mul_zero, add_zero, mul_ite, mul_one, Fin.castSucc_inj, Finset.sum_ite_eq',
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
 
 theorem pco_ysco (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gPoly (T * T') Zm) (e : Fin r) :
     hco T' (pco T T' Zm) (ysco T T' Zm e) = 0 := by
   simp only [pco, hco_add_left, hco_sub_left, hco_smul_left, hco_sum_left, xco_ysco T T' Zm hT hT' hdet hG,
     ysco_ysco T T' Zm hT hT' hdet hG, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one,
-    Fin.castSucc_inj, Finset.sum_ite_eq, Finset.mem_univ, if_true, if_false, add_zero]
+    Fin.castSucc_inj, Finset.sum_ite_eq, Finset.mem_univ, ite_true, ite_false, add_zero]
   simp [Fin.castSucc_ne_last, eq_comm]
 
 theorem pco_self (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gPoly (T * T') Zm) :
@@ -518,8 +518,8 @@ theorem pco_self (hT : 0 < T) (hT' : 0 < T') (hdet : Zm.det ≠ 0) (hG : 0 < gPo
     intro d; rw [hco_symm, cofco_xco T T' Zm hT hT' hdet]; split_ifs <;> simp
   rw [h1]
   simp only [pco, hco_add_left, hco_sub_left, hco_smul_left, hco_sum_left, hxc, cofco_xco T T' Zm hT hT' hdet,
-    cofco_self T T' Zm hT hT', Fin.castSucc_ne_last, if_false, mul_zero, zero_mul, Finset.sum_const_zero,
-    sub_zero, if_true]
+    cofco_self T T' Zm hT hT', Fin.castSucc_ne_last, ite_false, mul_zero, zero_mul, Finset.sum_const_zero,
+    sub_zero, ite_true]
   rw [kap_last]
   simp only [gPoly]
   push_cast
@@ -800,7 +800,7 @@ theorem secM_spec (S : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) →
           exact Finset.sum_congr rfl (fun a _ => Finset.sum_congr rfl (fun b _ => by ring))
         · exact Finset.sum_congr rfl (fun b _ => by ring)
       rw [hsplit] at hsum
-      simp only [mul_kap, Fin.castSucc_ne_last, if_false, mul_zero, Finset.sum_const_zero, zero_add,
+      simp only [mul_kap, Fin.castSucc_ne_last, ite_false, mul_zero, Finset.sum_const_zero, zero_add,
         sum_kap_be T T' Zm hdet] at hsum
       have hsG : 0 < sGT T T' Zm := Real.sqrt_pos.2 (div_pos hG hT)
       have hsG0 : ((sGT T T' Zm : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hsG.ne'
@@ -919,16 +919,16 @@ theorem mp_rearr (S : B.RealPlaceData k r Wp Wq) (w : Equiv.Perm (Fin (r + 1))) 
     MeasurePreserving (rearr k r w) (OD.nuR S w μ0 μ0')
       (((volume : Measure (C2.LPidx w → ℂ)).prod (volume : Measure (G.UT (r + 1) → ℂ))).prod
         ((S.μW.prod μ0).prod (S.μW'.prod μ0'))) := by
-  haveI : IsFiniteMeasureOnCompacts S.μW := ⟨fun K hK => S.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts S.μW' := ⟨fun K hK => S.haarW'.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts μ0' := ⟨fun K hK => hμ0'.finite_compact K hK⟩
-  haveI t1 : SFinite S.μW := inferInstance
-  haveI t2 : SFinite μ0 := inferInstance
-  haveI t5 : SFinite S.μW' := inferInstance
-  haveI t6 : SFinite μ0' := inferInstance
-  haveI t3 : SFinite (volume : Measure (C2.LPidx w → ℂ)) := inferInstance
-  haveI t4 : SFinite (volume : Measure (G.UT (r + 1) → ℂ)) := inferInstance
+  have : IsFiniteMeasureOnCompacts S.μW := ⟨fun K hK => S.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts S.μW' := ⟨fun K hK => S.haarW'.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ0' := ⟨fun K hK => hμ0'.finite_compact K hK⟩
+  have t1 : SFinite S.μW := inferInstance
+  have t2 : SFinite μ0 := inferInstance
+  have t5 : SFinite S.μW' := inferInstance
+  have t6 : SFinite μ0' := inferInstance
+  have t3 : SFinite (volume : Measure (C2.LPidx w → ℂ)) := inferInstance
+  have t4 : SFinite (volume : Measure (G.UT (r + 1) → ℂ)) := inferInstance
   have h1 := (inE_mp S.μW (volume : Measure (C2.LPidx w → ℂ)) μ0).prod
     (inE_mp S.μW' (volume : Measure (G.UT (r + 1) → ℂ)) μ0')
   have h2 := measurePreserving_swap4 (volume : Measure (C2.LPidx w → ℂ)) (S.μW.prod μ0)
@@ -967,14 +967,14 @@ private theorem herm_hpk_bvec_esI (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) 
     Finset.sum_eq_single (eI k r a)]
   · have h1 : Hpk k r (esI k r a) (eI k r a) = 1 := by
       simp only [Hpk]
-      rw [if_neg (fun h => absurd h.1 (by omega)), if_pos ⟨by omega, by omega⟩]
+      rw [ite_eq_right (fun h => absurd h.1 (by omega)), ite_eq_left ⟨by omega, by omega⟩]
     rw [h1, one_mul]
   · intro j _ hj
     have hj' : j.val ≠ a.val := fun h => hj (Fin.ext (h.trans he.symm))
     have h0 : Hpk k r (esI k r a) j = 0 := by
       simp only [Hpk]
-      rw [if_neg (fun h => absurd h.1 (by omega)), if_neg (fun h => hj' (by have := h.2; omega)),
-        if_neg (fun h => absurd h.2.1 (by omega))]
+      rw [ite_eq_right (fun h => absurd h.1 (by omega)), ite_eq_right (fun h => hj' (by have := h.2; omega)),
+        ite_eq_right (fun h => absurd h.2.1 (by omega))]
     rw [h0, zero_mul]
   · simp
 
@@ -1112,10 +1112,10 @@ theorem fibInt_left (Bs : B.RealPlaceData k r Wp Wq) {μ0 μ0' : Measure (Mt k r
     (F : B.Mat k r → (Wq →L[ℂ] Wp)) (g : B.Mat k r) {n1 : B.Mat k r} (hn1 : n1 ∈ C2.N0set k r Bs.z) :
     PBI.fibInt Bs μ0 μ0' F (n1⁻¹ * g) = PBI.fibInt Bs μ0 μ0' F g := by
   have hdet : IsUnit n1.det := Formalism.FourierDecayAlt.P.StabilizerDisintegration.A.isUnit_N hn1.1
-  haveI := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
-  haveI := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
-  haveI := Formalism.FourierDecayAlt.P.B7.sf hμ0
-  haveI := Formalism.FourierDecayAlt.P.B7.sf hμ0'
+  have := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  have := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
+  have := Formalism.FourierDecayAlt.P.B7.sf hμ0
+  have := Formalism.FourierDecayAlt.P.B7.sf hμ0'
   let e : B.SS k r ≃ᵐ B.SS k r :=
     MeasurableEquiv.prodCongr (MeasurableEquiv.prodCongr (MeasurableEquiv.refl _) (lmulE n1 hdet))
       (MeasurableEquiv.refl _)
@@ -1142,10 +1142,10 @@ theorem fibInt_right (Bs : B.RealPlaceData k r Wp Wq) {μ0 μ0' : Measure (Mt k 
     (F : B.Mat k r → (Wq →L[ℂ] Wp)) (g : B.Mat k r) {n1 : B.Mat k r} (hn1 : n1 ∈ C2.N0set k r Bs.z') :
     PBI.fibInt Bs μ0 μ0' F (g * n1) = PBI.fibInt Bs μ0 μ0' F g := by
   have hdet : IsUnit n1.det := Formalism.FourierDecayAlt.P.StabilizerDisintegration.A.isUnit_N hn1.1
-  haveI := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
-  haveI := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
-  haveI := Formalism.FourierDecayAlt.P.B7.sf hμ0
-  haveI := Formalism.FourierDecayAlt.P.B7.sf hμ0'
+  have := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  have := Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
+  have := Formalism.FourierDecayAlt.P.B7.sf hμ0
+  have := Formalism.FourierDecayAlt.P.B7.sf hμ0'
   let e : B.SS k r ≃ᵐ B.SS k r :=
     MeasurableEquiv.prodCongr (MeasurableEquiv.refl _)
       (MeasurableEquiv.prodCongr (MeasurableEquiv.refl _) (lmulE n1 hdet))
@@ -1206,7 +1206,7 @@ theorem conj_fix {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {v : Mat
 
   obtain ⟨Ut, hlow, hdiag, hUt⟩ := Formalism.QuantumDeterminants.S_F hz.1 (hS τ hτN)
   have hUdet : IsUnit Ut.det := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => hlow i j hij)]
+    rw [det_of_isUpperTriangular (fun i j hij => hlow i j hij)]
     simp [hdiag]
   have hinv : τ⁻¹ * Fm k r z = Fm k r z * Ut⁻¹ := by
     calc τ⁻¹ * Fm k r z = τ⁻¹ * (Fm k r z * Ut * Ut⁻¹) := by
@@ -1330,12 +1330,12 @@ theorem gPoly_of (TT : ℝ) (M : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) :
 
 private theorem det_eq_one_of_lower_unitriangular' {m : ℕ} {L : Matrix (Fin m) (Fin m) ℂ} (h0 : ∀ i j, i < j → L i j = 0)
     (h1 : ∀ i, L i i = 1) : L.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular L (fun i j hij => h0 i j hij)]
+  rw [det_of_isLowerTriangular L (fun i j hij => h0 i j hij)]
   simp [h1]
 
 private theorem det_eq_one_of_upper_unitriangular {m : ℕ} {U : Matrix (Fin m) (Fin m) ℂ} (h0 : ∀ i j, j < i → U i j = 0)
     (h1 : ∀ i, U i i = 1) : U.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => h0 i j hij)]
+  rw [det_of_isUpperTriangular (fun i j hij => h0 i j hij)]
   simp [h1]
 
 theorem gPoly_LU (TT : ℝ) {L M U : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (hL : L ∈ C2.LTset (r + 1))
@@ -1426,7 +1426,7 @@ theorem fibre_integral_cells : PBI.FibIntCells := by
         G.Mat (P.r + 1))) := by
       rw [FK.gPoly_of, hgP Y]; exact hG
     unfold PBI.phi0
-    rw [if_pos hZp]
+    rw [ite_eq_left hZp]
     obtain ⟨hsG, hsZ, hsD⟩ := hsec.2 _ hZp
     have hv := lowPH_UT (w := w) Y.1
     have hu := UC.upper_mem Y.2
@@ -1445,7 +1445,7 @@ theorem fibre_integral_cells : PBI.FibIntCells := by
     refine integral_eq_zero_of_ae (Filter.Eventually.of_forall fun Y => ?_)
     simp only [Pi.smul_apply, Pi.zero_apply]
     unfold PBI.phi0
-    rw [if_neg (by rw [FK.gPoly_of, hgP Y]; exact hG), smul_zero, smul_zero]
+    rw [ite_eq_right (by rw [FK.gPoly_of, hgP Y]; exact hG), smul_zero, smul_zero]
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

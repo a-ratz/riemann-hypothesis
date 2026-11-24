@@ -341,7 +341,7 @@ theorem iXc_eq (hS : SpStd d.toColBase) : CF.iXc (d.colRec a) = padL d.host.E (d
     congr 1
     exact propext ⟨fun e => Fin.ext (show (j : ℕ) = k from congrArg (fun z : Fin (d.R.N d.R.m) => (z : ℕ)) e),
       fun e => Fin.ext (show (j : ℕ) = k from congrArg (fun z : Fin (d.R.N d.R.m - 1) => (z : ℕ)) e)⟩
-  · rw [dite_eq_right h, if_neg]
+  · rw [dite_eq_right h, ite_eq_right]
     rintro rfl
     exact h k.2
 
@@ -403,7 +403,7 @@ theorem xp_tilH_f {N n : ℕ} (hN : N = n + 1) [NeZero N] {ST SG : Finset (Pl E)
     exact le_locP _ _ hy'
   show (DecoSet.til (ST := ST) pi d).1.f P y = _
   rw [DecoSet.til_val d hT hG] at h1 ⊢
-  have h2 : (d.1.til (ST := ST) pi).f P y = redP P.1 (hStd E (n + 1) (z0 E n (algebraMap (𝓞 E) E pi)) y) := if_pos h1
+  have h2 : (d.1.til (ST := ST) pi).f P y = redP P.1 (hStd E (n + 1) (z0 E n (algebraMap (𝓞 E) E pi)) y) := ite_eq_left h1
   rw [h2, lastVector_eq_single, ← hr, reduction_coe]
 
 theorem xp_til_f_core {N n : ℕ} (hN : N = n + 1) [NeZero N] {ST SG SG' : Finset (Pl E)} (hSG : SG ⊆ SG') {H : Subgroup (GLG (E := E) (n := N) (SG := SG))}

@@ -92,8 +92,8 @@ theorem exists_lift (X : Over (Spec (CommRingCat.of R₀))) [Smooth X.hom]
   have hφα : α ≫ φ = CommRingCat.ofHom (algebraMap R₀ C) := by
     apply Spec.map_injective
     rw [Spec.map_comp, hα, ← Category.assoc, hφ', hw]
-  letI : Algebra R₀ Γ(X.left, V) := α.hom.toAlgebra
-  haveI : Algebra.Smooth R₀ Γ(X.left, V) := hs
+  let : Algebra R₀ Γ(X.left, V) := α.hom.toAlgebra
+  have : Algebra.Smooth R₀ Γ(X.left, V) := hs
   let φ' : Γ(X.left, V) →ₐ[R₀] C := ⟨φ.hom, fun r => congr($hφα r)⟩
   let ψ := Algebra.FormallySmooth.liftOfSurjective φ' π hπ hk
   have hψ : π.comp ψ = φ' := Algebra.FormallySmooth.comp_liftOfSurjective φ' π hπ hk
@@ -179,8 +179,8 @@ open TrivSqZeroExt in
 theorem Coord.mul_eq (h : Coord G g x) {S : Type} [CommRing S] [Algebra R₀ S]
     (K : Submodule R₀ S) (hK : ∀ a ∈ K, ∀ b ∈ K, a * b = 0) (a b : Fin g → K) :
     x S (fun i => a i) * x S (fun i => b i) = x S (fun i => (a i : S) + b i) := by
-  letI : Module R₀ᵐᵒᵖ K := Module.compHom K ((RingHom.id R₀).fromOpposite mul_comm)
-  haveI : IsCentralScalar R₀ K := ⟨fun _ _ => rfl⟩
+  let : Module R₀ᵐᵒᵖ K := Module.compHom K ((RingHom.id R₀).fromOpposite mul_comm)
+  have : IsCentralScalar R₀ K := ⟨fun _ _ => rfl⟩
   let l : K × K →ₗ[R₀] S := K.subtype ∘ₗ (LinearMap.fst R₀ K K + LinearMap.snd R₀ K K)
   let φ : TrivSqZeroExt R₀ (K × K) →ₐ[R₀] S :=
     liftEquivOfComm ⟨l, fun u v => hK _ (u.1 + u.2).2 _ (v.1 + v.2).2⟩
@@ -360,7 +360,7 @@ theorem main :
       (∀ {R S : LAlg R₀} (f : LHom R S) (x : B.G R), e S (B.map f x) = spMap f.1 ≫ e R x)) := by
   intro hnil hfib R₀ _ G _ _ _ g hg
   obtain ⟨x, h0, h1, h2, h3⟩ := hnil G g hg
-  haveI : Smooth G.hom := SmoothOfRelativeDimension.smooth g G.hom
+  have : Smooth G.hom := SmoothOfRelativeDimension.smooth g G.hom
   refine ⟨ptBX (G := G) ⟨h0, h1, h2, h3⟩
     (fun p₁ p₂ f₁ f₂ hf a b e => hfib G p₁ p₂ f₁ f₂ hf a.toMul b.toMul e),
     fun R z => Additive.toMul z, fun R => Additive.toMul.bijective, fun R x y => rfl,

@@ -175,7 +175,7 @@ theorem continuous_psi_symp_atPlace : ∀ {F E : Type} [Field F] [NumberField F]
     rfl
   simp_rw [hexp]
   have hc : ∀ m, Continuous fun a : M → v.adicCompletionIntegers F => GlobalTheory.EmbChart.atPlace v (a m : Fv F v) :=
-    fun m => (GlobalTheory.VacAny.continuous_atPlace v).comp (continuous_subtype_val.comp (continuous_apply m))
+    fun m => (GlobalTheory.VacAny.continuous_atPlace v).comp (continuous_subtypeVal.comp (continuous_apply m))
   refine hψ.comp (continuous_const.mul (continuous_finsetSum _ fun m _ => (hc m).mul (continuous_finsetSum _ fun m' _ =>
     (hc m').mul continuous_const)))
 

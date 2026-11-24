@@ -120,9 +120,9 @@ theorem card_parity_sign_length_of_eq (D : D7) (n : ℕ) : ∀ (M : Type) [AddCo
         rcases eq_top_or_exists_le_coatom (⊥ : Submodule (𝓞 D.host.E) M) with h | ⟨N, hN, -⟩
         · exact absurd h bot_ne_top
         · exact ⟨N, hN⟩
-      haveI : Finite (M ⧸ N) := Finite.of_surjective _ N.mkQ_surjective
-      haveI : IsSimpleModule (𝓞 D.host.E) (M ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
-      haveI : Nontrivial (M ⧸ N) := IsSimpleModule.nontrivial (𝓞 D.host.E) (M ⧸ N)
+      have : Finite (M ⧸ N) := Finite.of_surjective _ N.mkQ_surjective
+      have : IsSimpleModule (𝓞 D.host.E) (M ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
+      have : Nontrivial (M ⧸ N) := IsSimpleModule.nontrivial (𝓞 D.host.E) (M ⧸ N)
       have hc : Nat.card M = Nat.card N * Nat.card (M ⧸ N) := Submodule.card_eq_card_quotient_mul_card N
       have hq : 1 < Nat.card (M ⧸ N) := Finite.one_lt_card
       have hp : 0 < Nat.card N := Nat.card_pos

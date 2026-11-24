@@ -246,7 +246,7 @@ theorem cont_hz (hD : CayleyBlocksInvertible) (hL : LocData ε c t p q e sL ρ) 
     rw [split_mul, (h _).1, (h _).2]
   rw [hfun]
   have hcy : Continuous fun k : KR n => y * ((k : GR n) * b) :=
-    continuous_const.mul (continuous_subtype_val.mul continuous_const)
+    continuous_const.mul (continuous_subtypeVal.mul continuous_const)
   refine Continuous.mul ?_ (continuous_const.mul ((hL.cont 1).comp hcy))
   refine Continuous.cpow ?_ continuous_const
     (fun k => Complex.ofReal_mem_slitPlane.2 (mul_pos hr (hLoc_pos hD _)))
@@ -314,9 +314,9 @@ theorem farId [MeasurableSpace (KR n)] [BorelSpace (KR n)] (hD : CayleyBlocksInv
     ∫ k, κ k * GlobalTheory.Eis.cosetSum Pp Γ (hz Ht sec s₀ z 1) (g * ι ((k : GR n) * yy i)) ∂ν =
       ∑ j, M (z - s₀) i j * GlobalTheory.Eis.cosetSum Pp Γ (hz Ht sec s₀ z (QQ j)) g := by
   classical
-  haveI := hν
+  have := hν
   have hcK : IsCompact (Set.range fun k : KR n => g * ι ((k : GR n) * yy i)) :=
-    isCompact_range (continuous_const.mul (hG.ιcont.comp (continuous_subtype_val.mul continuous_const)))
+    isCompact_range (continuous_const.mul (hG.ιcont.comp (continuous_subtypeVal.mul continuous_const)))
   obtain ⟨u, hu, hbd⟩ := hmaj _ hcK
   obtain ⟨B, hB⟩ := (isCompact_univ (X := KR n)).exists_bound_of_continuousOn hκ.continuousOn
   let F : GlobalTheory.Eis.Cosets Pp Γ → KR n → ℂ := fun q' k =>
@@ -352,7 +352,7 @@ theorem farId [MeasurableSpace (KR n)] [BorelSpace (KR n)] (hD : CayleyBlocksInv
     rw [h0, mul_zero] at h1
     exact norm_le_zero_iff.mp h1
   let S : Set (GlobalTheory.Eis.Cosets Pp Γ) := Function.support u
-  haveI : Countable S := hu.countable_support.to_subtype
+  have : Countable S := hu.countable_support.to_subtype
   have hout : ∀ q', q' ∉ S → u q' = 0 := fun q' h => Function.notMem_support.mp h
   have e1 : ∀ k, ∑' q', F q' k = ∑' q' : S, F q' k := by
     intro k

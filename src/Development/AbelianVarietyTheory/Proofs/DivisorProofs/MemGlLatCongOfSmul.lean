@@ -74,7 +74,7 @@ theorem conj_mem_glLatCong {Λ Λ' : Submodule 𝒪[k] (D → k)} {u : kˣ} (G :
 theorem vecMul_diagGL_mem (b c d : D → kˣ) (h : ∀ j, d j = b j * c j) (x : D → k) :
     x ᵥ* (diagGL c).val ∈ diagLat d ↔ x ∈ diagLat b := by
   refine forall_congr' fun j => ?_
-  have h0 : 0 < valuation k (c j : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (c j : k) := pos_iff_ne_zero.2 (by simp)
   rw [diagGL_val, vecMul_diagonal, map_mul, h, Units.val_mul, map_mul]
   exact mul_le_mul_iff_left₀ h0
 
@@ -128,7 +128,7 @@ theorem hasDepth_phiA (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     HasDepth ϖ e (latA ϖ e (diagLat c)) (phiA μ σ ν ϖ e (diagLat c) Ψ) := by
   have hlt : valuation k ((ϖ ^ e : kˣ) : k) < 1 := by
     rw [Units.val_pow_eq_pow_val, map_pow]
-    exact pow_lt_one₀ zero_le' (hϖ ▸ uniformizer_lt_one) (by omega)
+    exact pow_lt_one₀ zero_le (hϖ ▸ uniformizer_lt_one) (by omega)
   have key : ∀ X Z : Matrix A D k, IsPrimFrame (latA ϖ e (diagLat c)) X →
       Z ∈ matLat A (ϖ ^ e • latA ϖ e (diagLat c)) → ∃ κ ∈ glLatCong (ϖ ^ e) (latA ϖ e (diagLat c)),
         X + Z = X * κ.val := by
@@ -140,10 +140,10 @@ theorem hasDepth_phiA (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     obtain ⟨κ, hκ, h⟩ := key X Z hX hZ
     rw [h]
     exact GlobalTheory.SplitFlip.Model.isPrimFrame_mul hX κ hκ.1
-  refine ⟨fun X hX => if_neg fun h => hX h.2.1, fun X Z hZ => ?_⟩
+  refine ⟨fun X hX => ite_eq_right fun h => hX h.2.1, fun X Z hZ => ?_⟩
   by_cases hX : IsPrimFrame (latA ϖ e (diagLat c)) X
   · unfold phiA
-    rw [if_pos hX, if_pos (prim X Z hX hZ)]
+    rw [ite_eq_left hX, ite_eq_left (prim X Z hX hZ)]
     obtain ⟨κ, hκ, h⟩ := key X Z hX hZ
     obtain ⟨h1, h2⟩ := invT_mem_of_dual (mem_glLatCong_of_smul hκ)
     obtain ⟨g, rfl⟩ := (rank_eq_card_iff_exists_frameMatrixFirstColumnBlock σ X).1 hX.1
@@ -157,6 +157,6 @@ theorem hasDepth_phiA (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
   · have hX' : ¬ IsPrimFrame (latA ϖ e (diagLat c)) (X + Z) := fun h => hX (by
       simpa using prim _ (-Z) h (neg_mem hZ))
     unfold phiA
-    rw [if_neg hX, if_neg hX']
+    rw [ite_eq_right hX, ite_eq_right hX']
 
 end GlobalTheory.FrameDepth

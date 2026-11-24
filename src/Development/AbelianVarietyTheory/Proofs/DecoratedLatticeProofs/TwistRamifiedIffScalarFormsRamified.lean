@@ -204,8 +204,8 @@ theorem GlobalTheory.AdForm.diaSum_eq_zero_of_reps : ∀ {B : Base} {X : PreX B.
   intro B X I hok hpins l Z u a Ch A hA θ hθ k _ _ _ _ ι p β Q L hS j hj φ hφ i v _ g hg b y h0 x
   have hinj := GlobalTheory.AdForm.StdT.places_injective I hok hpins l Z u p β Q L hS
   obtain ⟨e, -⟩ := hS.1
-  haveI : Finite ι := Finite.of_equiv _ e.symm
-  haveI : Fintype ι := Fintype.ofFinite ι
+  have : Finite ι := Finite.of_equiv _ e.symm
+  have : Fintype ι := Fintype.ofFinite ι
   obtain ⟨hst, hdec⟩ := _root_.GlobalTheory.AdForm.twLev_prime I hok hpins l Z u a Ch A hA k ι p β Q L hS (Finset.univ.toList) (Finset.nodup_toList _)
     (fun i => Finset.mem_toList.2 (Finset.mem_univ i)) j hj b
   obtain ⟨γ, hγ, c, r, hr, κ, hκ, rfl⟩ := (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hok hpins l Z u a Ch A hA j hj b).1.dec x
@@ -794,7 +794,7 @@ theorem row_of_smul_eq {n : ℕ} (Q : GlobalTheory.LatPair.Pair k (Fin n)) (b b'
   by_cases h : m = r₀
   · subst h
     simp
-  · rw [if_neg (Ne.symm h), if_neg h]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
     simp
 
 end GlobalTheory.AdForm.RowModPrime
@@ -882,7 +882,7 @@ theorem GlobalTheory.AdForm.lastRow_inv_frame : ∀ {B : Base} {X : PreX B.toPre
   convert h using 2
   by_cases h' : r' = r
   · subst h'; simp
-  · rw [if_neg h', if_neg (fun h'' => h' (e.symm.injective h'')), map_zero]
+  · rw [ite_eq_right h', ite_eq_right (fun h'' => h' (e.symm.injective h'')), map_zero]
 
 end
 end -- clump:auto
@@ -979,11 +979,11 @@ theorem decoratedLattice_unitScale_functional_keeps_frames {X : Formalism.L2.Col
   by_cases h : (∀ (P₁ : Q) (x : Formalism.L2.Col.Sp X.E n), p.1.1.1.2 P₁ x ∈ (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco).1.at P₁.1 ↔
       x ∈ Formalism.L2.Col.stdAt X.E n P₁.1) ∧ p.1.2 ∈ y.ys (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco).1.N
   · have e : p.mv (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco) =
-        ⟨(⟨(Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco, p.1.1.1.2), h.1⟩, p.1.2), h.2⟩ := dif_pos h
+        ⟨(⟨(Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco, p.1.1.1.2), h.1⟩, p.1.2), h.2⟩ := dite_eq_left h
     rw [e]
     unfold ptFr
     rfl
-  · have e : p.mv (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco) = p := dif_neg h
+  · have e : p.mv (Formalism.L2.Col.DecoSet.dia1 P c p.1.1.deco) = p := dite_eq_right h
     rw [e]
 
 theorem finM_mul' {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) (g h : GA D V) :
@@ -1238,7 +1238,7 @@ namespace GlobalTheory.SeeSaw
 
 theorem ramIff_all : ∀ D : D7, RamIff D := by
   intro D k _ _ _ _ p n _ _ S β P g hg φ
-  letI := Fintype.ofFinite 𝓀[k]ˣ
+  let := Fintype.ofFinite 𝓀[k]ˣ
   have rp : ∀ x (F : GA D S → ℂ), β.rep x F = rTrans (β.gl x) F := fun _ _ => rfl
   rw [finsum_eq_sum_of_fintype]
   constructor
@@ -1355,13 +1355,13 @@ theorem rd_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
     if h : GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g) ∈ A.U j b then ((A.chi j b ⟨_, h⟩ : ℂˣ) : ℂ) else 0
   have hG : ContinuousAt G g0 := by
     have hc : ContinuousOn G O := by
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       have e : (fun x : O => G x.1) = fun x : O => ((A.chi j b ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * x.1), x.2⟩ : ℂˣ) : ℂ) := by
         funext x
-        exact dif_pos x.2
+        exact dite_eq_left x.2
       show Continuous fun x : O => G x.1
       rw [e]
-      exact hchi.comp ((hpc.comp continuous_subtype_val).subtype_mk _)
+      exact hchi.comp ((hpc.comp continuous_subtypeVal).subtype_mk _)
     exact hc.continuousAt (hO.mem_nhds hg0)
   let M : GA (I.rec7 l Z) V → (I.rec7 l Z).what₂.Tau → Matrix (Fin (B.R.N j)) (Fin (B.R.N j)) ℂ :=
     fun g τ => (show Matrix (Fin (B.R.N j)) (Fin (B.R.N j)) ℂ from infM θ V hn k τ * infM θ V hn (g0⁻¹ * g) τ) * y.1 τ
@@ -1410,7 +1410,7 @@ theorem rd_continuous : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok →
   rw [show A.rd θ j hj b φ y g = _ from (congrArg (A.rd θ j hj b φ y) eg).trans key]
   have e1 : (⟨κ * GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), mul_mem hκ hU⟩ : A.U j b) =
       ⟨κ, hκ⟩ * ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), hU⟩ := rfl
-  have e2 : G g = ((A.chi j b ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), hU⟩ : ℂˣ) : ℂ) := dif_pos hU
+  have e2 : G g = ((A.chi j b ⟨GlobalTheory.AdForm.RdLaw.pf V (g0⁻¹ * g), hU⟩ : ℂˣ) : ℂ) := dite_eq_left hU
   have e3 : Φ g = φ c.1 y' := congrFun hP ⟨M g, hMu g⟩
   rw [e1, map_mul, Units.val_mul, e2, e3, mul_assoc]
 
@@ -1477,7 +1477,7 @@ theorem ram_iff_scalar_ram : TwRam' := by
   refine ⟨hcont, ?_⟩
   obtain ⟨e, he⟩ := hStd.1
   have : Finite ι := Finite.of_equiv _ e.symm
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have hlev := _root_.GlobalTheory.AdForm.twLev_prime I hOk hP l Z u a Ch A hA k ι p β Q L hStd (Finset.univ.toList) (Finset.nodup_toList _)
     (fun i => Finset.mem_toList.2 (Finset.mem_univ i)) j hj
   have hfix : ∀ b y i (x : GL (Fin ((I.rec7 l Z).sp.X j).rank) k), x • Q j i = Q j i →

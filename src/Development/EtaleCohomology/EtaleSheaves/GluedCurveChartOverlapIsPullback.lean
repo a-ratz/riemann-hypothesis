@@ -129,7 +129,7 @@ theorem away {Ω L : Type} [Field Ω] [Field L] [Algebra Ω L] (B D : Subalgebra
     (hu : u ≠ 0) (huB : u⁻¹ ∈ B) (huD : u ∈ D) (hD : D ≤ Algebra.adjoin Ω ((B : Set L) ∪ {u})) :
     letI : Algebra B D := (Subalgebra.inclusion hB).toRingHom.toAlgebra
     IsLocalization.Away (⟨u⁻¹, huB⟩ : B) D := by
-  letI : Algebra B D := (Subalgebra.inclusion hB).toRingHom.toAlgebra
+  let : Algebra B D := (Subalgebra.inclusion hB).toRingHom.toAlgebra
   refine ⟨?_, ?_, ?_⟩
   · rintro ⟨y, n, rfl⟩
     show IsUnit (algebraMap B D ((⟨u⁻¹, huB⟩ : B) ^ n))
@@ -152,13 +152,13 @@ theorem away {Ω L : Type} [Field Ω] [Field L] [Algebra Ω L] (B D : Subalgebra
 set_option backward.isDefEq.respectTransparency false in
 theorem glued_curve_chart_overlap_is_pullback : LeafGluePullback := by
   intro Ω L _ _ _ A B u h G
-  haveI := G.hiA; haveI := G.hiB
+  have := G.hiA; have := G.hiB
   have hadj := h.2.2.2.2.2.2.2.2.2.2.2.1
   have huD : u ∈ Dr Ω A u := Algebra.subset_adjoin (Or.inl h.2.1)
   have hD : Dr Ω A u ≤ Algebra.adjoin Ω ((B : Set L) ∪ {u}) := hadj.le
-  haveI hjB : IsOpenImmersion (Spec.map (CommRingCat.ofHom (Subalgebra.inclusion (le_Dr_B A B u hadj)).toRingHom)) := by
-    letI : Algebra B (Dr Ω A u) := (Subalgebra.inclusion (le_Dr_B A B u hadj)).toRingHom.toAlgebra
-    haveI := away B (Dr Ω A u) (le_Dr_B A B u hadj) u h.1 h.2.2.1 huD hD
+  have hjB : IsOpenImmersion (Spec.map (CommRingCat.ofHom (Subalgebra.inclusion (le_Dr_B A B u hadj)).toRingHom)) := by
+    let : Algebra B (Dr Ω A u) := (Subalgebra.inclusion (le_Dr_B A B u hadj)).toRingHom.toAlgebra
+    have := away B (Dr Ω A u) (le_Dr_B A B u hadj) u h.1 h.2.2.1 huD hD
     exact IsOpenImmersion.of_isLocalization (S := Dr Ω A u) (⟨u⁻¹, h.2.2.1⟩ : B)
   refine IsOpenImmersion.isPullback _ _ _ _ G.agree.symm ?_
   ext x

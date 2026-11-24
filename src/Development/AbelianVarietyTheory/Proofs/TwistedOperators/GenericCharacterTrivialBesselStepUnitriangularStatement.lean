@@ -119,7 +119,7 @@ theorem GlobalTheory.AscFin.coef_superdiag : OnStd fun {D} _ _ {sc} {G} W F => �
     rw [e1]
     have e2 : G.Λ (.grid (2 * ρ + 2) 0) = _ := hlatB
     rw [e2]
-    exact GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.coe_castLE]; omega) (hx _) v a
+    exact GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.val_castLE]; omega) (hx _) v a
   have lineJ : ∀ (p : Fin ρ) (a : AE D), GlobalTheory.FinPl.colMul (F.dJ ρ h).jX p a ∈ latV _ (G.Λ (.grid (2 * ρ + 1) 0)) (· = v) ↔
       a ∈ idV (𝔟J p) v := by
     intro p a
@@ -130,7 +130,7 @@ theorem GlobalTheory.AscFin.coef_superdiag : OnStd fun {D} _ _ {sc} {G} W F => �
     rw [e1]
     have e2 : G.Λ (.grid (2 * ρ + 1) 0) = _ := hlatJ
     rw [e2]
-    exact GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.coe_castLE]; omega) (hx _) v a
+    exact GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.val_castLE]; omega) (hx _) v a
   have hN : ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FI D) ≠ 0 :=
     FractionalIdeal.coeIdeal_ne_zero.2 (G.pl.modul_ne_bot sc)
   have hN' : ((G.pl.modulBar sc : Ideal (𝓞 D.host.E)) : FI D) ≠ 0 :=
@@ -155,7 +155,7 @@ theorem GlobalTheory.AscFin.coef_superdiag : OnStd fun {D} _ _ {sc} {G} W F => �
     show FractionalIdeal.spanSingleton _ _ * stairId _ _ _ _ = _ * (FractionalIdeal.spanSingleton _ _ * stairId _ _ _ _)
     rw [e2, ← FractionalIdeal.spanSingleton_mul_spanSingleton, hneg]
     unfold stairId
-    simp only [Fin.coe_castLE]
+    simp only [Fin.val_castLE]
     have e3 : 2 * ρ + 1 - 1 - i.1 = 2 * ρ + 2 - 1 - j.1 := by omega
     rw [e3, hij, pow_succ (G.pl.stAbar sc) (i.1 + 1), mul_inv]
     conv_lhs => rw [show (G.pl.stAbar sc ^ (i.1 + 1))⁻¹ = G.pl.stAbar sc * ((G.pl.stAbar sc ^ (i.1 + 1))⁻¹ * (G.pl.stAbar sc)⁻¹) by
@@ -338,7 +338,7 @@ theorem idem_smul_latA {S : HSp D} {L : Lat S} {P : GlobalTheory.FinPl.Pl D → 
     obtain ⟨α, hαi, hα, a, ha, x, hx, rfl⟩ := hy
     refine AddSubgroup.subset_closure ⟨GlobalTheory.FinPlLoc.ePl D (· = v) * α, fun w => ?_, fun w hw => ?_, a, ha, x, hx, ?_⟩
     · rw [map_mul]; exact mul_mem (GlobalTheory.FinPlLoc.ePl_int _ w) (hαi w)
-    · rw [map_mul, GlobalTheory.FinPlLoc.evalV_ePl, if_neg hw, zero_mul]
+    · rw [map_mul, GlobalTheory.FinPlLoc.evalV_ePl, ite_eq_right hw, zero_mul]
     · funext i
       rw [Pi.smul_apply, smul_eq_mul]
       unfold GlobalTheory.FinPlLoc.idem
@@ -705,7 +705,7 @@ theorem idem_smul_mem_latMul_at : ∀ (D : D7) (S : HSp D) (𝔞 : Set D.host.E)
     refine AddSubgroup.subset_closure ⟨ePl D (· = v) * α, fun w => ?_, fun w hw => ?_, a, ha, x, hx, ?_⟩
     · rw [map_mul]
       exact mul_mem (ePl_int _ w) (hαi w)
-    · rw [map_mul, evalV_ePl, if_neg hw, zero_mul]
+    · rw [map_mul, evalV_ePl, ite_eq_right hw, zero_mul]
     · funext i
       rw [Pi.smul_apply, smul_eq_mul]
       unfold idem
@@ -780,14 +780,14 @@ theorem incA_neg_xi0_pow_mul_pX_mulVec_eq_sum : ∀ {D : D7} {A B B₀ : HSp D} 
   have hle : ρ ≤ c := by omega
   have hj : ∀ hle : ρ ≤ c, (Fin.castLE hle i).rev = (⟨2 * ρ - 1 - i.1, hi⟩ : Fin c) := fun hle => by
     ext
-    simp only [Fin.val_rev, Fin.coe_castLE]
+    simp only [Fin.val_rev, Fin.val_castLE]
     omega
   have g1 := congrFun (congrFun a.gram ⟨2 * ρ - 1 - i.1, hi⟩) (Fin.castLE hle i)
   have g2 := congrFun (congrFun d.e'e i) i
   rw [he, he'] at g2
   simp only [antiDiagonalSignGramMatrix, cT_sig_eq_conjTranspose', Matrix.mul_apply, Matrix.conjTranspose_apply, colsOf, star_mul', Matrix.one_apply_eq, hj,
-    Fin.coe_castLE] at g1 g2
-  rw [if_pos (by omega), if_neg (fun h => by have := congrArg Fin.val h; simp only [Fin.coe_castLE] at this; omega)] at g1
+    Fin.val_castLE] at g1 g2
+  rw [ite_eq_left (by omega), ite_eq_right (fun h => by have := congrArg Fin.val h; simp only [Fin.val_castLE] at this; omega)] at g1
   have g3 : ∑ l, (∑ k, star (s i) * star (a.a k ⟨2 * ρ - 1 - i.1, hi⟩) * HSpace.gram B k l) *
       ((-D.host.xi0) ^ (i.1 + 1) * a.a l (Fin.castLE hle i)) =
       star (s i) * (-D.host.xi0) ^ (i.1 + 1) *
@@ -862,7 +862,7 @@ theorem exists_mem_modul_notMem {D : D7} {T : Type} {L : LevCh D T} (P : Places 
     · exact ⟨1, (Ideal.ne_top_iff_one _).1 v.isPrime.ne_top, fun h => absurd h h'⟩
   choose x hx hx' using h
   refine ⟨∏ v' ∈ P.S0, x v' ^ P.depth sc v', fun hu => ?_, ?_⟩
-  · haveI := v.isPrime
+  · have := v.isPrime
     obtain ⟨v', -, h'⟩ := Ideal.IsPrime.prod_mem_iff.1 hu
     exact hx v' (v.isPrime.mem_of_pow_mem _ h')
   · rw [map_prod]
@@ -1122,7 +1122,7 @@ theorem gen_mem {D : D7} (S : HSp D) (𝔞 : Set D.host.E) (L : GlobalTheory.Fin
     (P : GlobalTheory.FinPl.Pl D → Prop) (hP : ∀ w, ¬ P w → w ≠ v) {a : D.host.E} (ha : a ∈ 𝔞) {x : Fin S.rank → D.host.E}
     (hx : x ∈ L) : (fun m => idem D (· = v) * incA D (a * x m)) ∈ GlobalTheory.FinPl.latMul S 𝔞 L P := by
   apply AddSubgroup.subset_closure
-  refine ⟨ePl D (· = v), ePl_int _, fun w hw => by rw [evalV_ePl, if_neg (hP w hw)], a, ha, x, hx, ?_⟩
+  refine ⟨ePl D (· = v), ePl_int _, fun w hw => by rw [evalV_ePl, ite_eq_right (hP w hw)], a, ha, x, hx, ?_⟩
   funext m
   exact idem_incA _ _
 

@@ -172,10 +172,10 @@ theorem bijOn_twist : ∀ {k : Type} [Field k] {V : Type} [AddCommGroup V] [Modu
       map_zero' := by ext; simp
       map_add' := fun a b => by ext; simp }
   have hT : ∀ m, ((T m : sh s N) : V) = E m := fun _ => rfl
-  haveI : Module.Finite k⟦X⟧ (sh s N) := Module.Finite.iff_fg.2 (hL.shift s).1
-  haveI : IsPrecomplete (Ideal.span {(PowerSeries.X : k⟦X⟧)}) (sh s N) :=
+  have : Module.Finite k⟦X⟧ (sh s N) := Module.Finite.iff_fg.2 (hL.shift s).1
+  have : IsPrecomplete (Ideal.span {(PowerSeries.X : k⟦X⟧)}) (sh s N) :=
     ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isPrecomplete_finite_module _ _
-  haveI : IsHausdorff (Ideal.span {(PowerSeries.X : k⟦X⟧)}) (sh s N) := by
+  have : IsHausdorff (Ideal.span {(PowerSeries.X : k⟦X⟧)}) (sh s N) := by
     rw [← PowerSeries.maximalIdeal_eq_span_X]; infer_instance
   have hXs : ∀ (i : ℕ) (x : V), (PowerSeries.X ^ i : k⟦X⟧) • x = vv k ^ (i : ℤ) • x := by
     intro i x

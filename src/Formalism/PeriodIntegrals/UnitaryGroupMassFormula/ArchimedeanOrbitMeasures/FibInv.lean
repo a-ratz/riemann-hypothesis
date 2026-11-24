@@ -106,7 +106,7 @@ def gramHI {D : D7} (X : HidaSetting D) (y : TupI X) : HermR (Ainf X.B.I.F) X.B.
     gramR_memP (Ainf X.B.I.F) X.B.I.cm.sig (sig_invI X) X.B.I.J (J_hermI X) y⟩
 
 theorem continuous_gramHI {D : D7} (X : HidaSetting D) : Continuous (gramHI X) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   exact (continuous_gramRP (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J).subtype_mk _
 
 def smulH {D : D7} (X : HidaSetting D) (g : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) : TupI X ≃ₜ TupI X where

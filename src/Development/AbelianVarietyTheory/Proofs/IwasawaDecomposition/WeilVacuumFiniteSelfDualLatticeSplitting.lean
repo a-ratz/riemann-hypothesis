@@ -168,7 +168,7 @@ theorem eig_limit {G H U W ι : Type} [Group G] [Group H] [Monoid U] [Topologica
     om (g₀, h₀) f = ((((χ x₀)⁻¹ * χ' y₀ : Circle)) : ℂ) • f := by
   funext w
   have t1 := ((hom w).tendsto (g₀, h₀)).comp (tg.prodMk_nhds th)
-  have t2 := ((continuous_subtype_val.tendsto _).comp
+  have t2 := ((continuous_subtypeVal.tendsto _).comp
     ((((hχ.tendsto x₀).comp tx).inv).mul ((hχ'.tendsto y₀).comp ty))).mul_const (f w)
   exact tendsto_nhds_unique t1 (t2.congr fun s => (congrFun (he s) w).symm)
 
@@ -379,7 +379,7 @@ theorem unram_cut {ε : AF D.host.F} {χ : (AE D)ˣ →* Circle} (hχ : UnramAt 
 
 private theorem selfDual_full {D : D7} (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : Submodule.IsFullLattice D.host.E Λ := by
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr

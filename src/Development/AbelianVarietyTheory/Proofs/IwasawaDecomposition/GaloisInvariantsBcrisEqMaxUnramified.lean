@@ -187,8 +187,8 @@ theorem exists_period (σ : ↥(MaximalUnramifiedExtension l) →ₐ[ℚ_[l]] �
     have := (Nat.dvd_sub h2 h)
     rw [Nat.sub_sub_self h1.le, Nat.dvd_one] at this
     omega
-  haveI : NeZero ((l ^ N - 1 : ℕ) : Om l) := ⟨by exact_mod_cast hm.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ N - 1)
+  have : NeZero ((l ^ N - 1 : ℕ) : Om l) := ⟨by exact_mod_cast hm.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ N - 1)
   have hzm : z ∈ MaximalUnramifiedExtension l := IntermediateField.subset_adjoin _ _ ⟨_, hm, hd, hz.pow_eq_one⟩
   set ζ : ↥(MaximalUnramifiedExtension l) := ⟨z, hzm⟩ with hζ
   have hp : IsPrimitiveRoot ζ (l ^ N - 1) :=

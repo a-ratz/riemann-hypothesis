@@ -185,10 +185,10 @@ theorem coords_mem {O : Type*} [CommRing O] [Algebra O Ω] (R : Subalgebra O Ω)
           · have hne : (⟨k, hk⟩ : Fin N) ≠ j := fun e => by
               rw [← e] at h
               exact lt_irrefl _ h
-            rw [hv j h, if_neg hne, mul_zero, sub_zero]
+            rw [hv j h, ite_eq_right hne, mul_zero, sub_zero]
           · have he : (⟨k, hk⟩ : Fin N) = j := Fin.ext h
             subst he
-            rw [if_pos rfl, mul_one, sub_self]
+            rw [ite_eq_left rfl, mul_one, sub_self]
         intro i
         have hi := ih _ hv'L hv' i
         rw [hrep i] at hi
@@ -606,13 +606,13 @@ theorem trivFlagOnHodge_of_fargues : GlobalTheory.CompanionTheory.Ar.HT.FarguesH
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hd Fl x e hRL p hpS hHT A _ _ _
   unfold AtPlacesOver
   intro m _ hpm O _ _ _ _ _ _ _ τ W hW
-  haveI : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
+  have : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hflag : TrivFlagMod O ϖ y (D.p + D.q) (fun i => x (τ, i)) := by
     rcases Nat.eq_zero_or_pos (D.p + D.q) with h0 | hpos
     · exact trivFlagMod_of_eq_zero O ϖ y _ h0 _
     · have hint := intCast_injective_of_isArithVar hd
-      haveI : CharZero Ω := ⟨fun a b hab => by
+      have : CharZero Ω := ⟨fun a b hab => by
         have : Int.castRingHom Ω (a : ℤ) = Int.castRingHom Ω (b : ℤ) := by simpa using hab
         exact_mod_cast hint this⟩
       have h1 := _root_.GlobalTheory.CompanionTheory.Ar.HT.trivFlagMod_rootLines_model hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hpos (zpLocSubalg Ω p)

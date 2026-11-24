@@ -82,7 +82,7 @@ theorem continuous_cosetAvg [LocallyCompactSpace G] [BorelSpace G] (H : Subgroup
     hH.isClosedEmbedding_subtypeVal.isCompact_preimage (t_comp.smul_set hψc.inv)
   have A : ContinuousOn (cosetAvg H ν ψ) t := by
     apply continuousOn_integral_of_compact_support hk
-    · exact (hψ.comp ((continuous_subtype_val.comp continuous_snd).inv.mul continuous_fst)).continuousOn
+    · exact (hψ.comp ((continuous_subtypeVal.comp continuous_snd).inv.mul continuous_fst)).continuousOn
     · intro p x hp hx
       contrapose! hx
       refine ⟨p, hp, p⁻¹ * (x : G), ?_, by simp⟩
@@ -184,7 +184,7 @@ theorem integral_mul_eq_zero_of_coset_integral_eq_zero : ∀ (G : Type) [Group G
     LocallyIntegrable w μ → (∀ u ∈ H, (fun g => w (u * g)) =ᵐ[μ] w) →
     (∀ g, ∫ u : H, f (u * g) ∂ν = 0) → ∫ g, f g * w g ∂μ = 0 := by
   intro G _ _ _ _ _ _ _ _ H hH ν _ μ _ f w hf hfc hw hinv hzero
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨ψ₀, hψ1, -, hψc, hψ01⟩ := exists_continuous_one_zero_of_isCompact
     (show IsCompact (tsupport f) from hfc) isClosed_empty (Set.disjoint_empty _)
   have hJc : Continuous (cosetAvg H ν ψ₀) := continuous_cosetAvg H hH ν ψ₀.continuous hψc

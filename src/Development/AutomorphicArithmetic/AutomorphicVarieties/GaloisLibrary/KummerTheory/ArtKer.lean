@@ -148,6 +148,6 @@ theorem UpperTheory.V.Kum.artKer :
     (∀ c : G K Ω, IsConjOm c.toRingEquiv → χ c = 1) → (artCl K Ω).ker ≤ χ.ker := by
   intro K Ω _ _ _ _ _ C _ χ ho hI hc g hg
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  refine hilbert_le χ.ker ho (Abelianization.commutator_subset_ker χ) hI hc ?_
+  refine hilbert_le χ.ker ho (Group.Abelianization.commutator_le_ker χ) hI hc ?_
   rw [← IntermediateField.restrictNormalHom_ker, MonoidHom.mem_ker]
   exact (GroundTheory.Global.hilbertClassFieldArtinEquiv K Ω).symm.map_eq_one_iff.1 hg

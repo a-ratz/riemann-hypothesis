@@ -92,10 +92,10 @@ theorem coeff_rename_zero {σ τ : Type} [Finite σ] (φ : σ → τ) (F : MvPow
     MvPowerSeries.hasSubst_of_constantCoeff_zero (fun a => by simp)
   rw [MvPowerSeries.coeff_subst hA]
   refine finsum_eq_zero_of_forall_eq_zero fun d => ?_
-  rw [prod_X_rename, MvPowerSeries.coeff_monomial, if_neg, smul_zero]
+  rw [prod_X_rename, MvPowerSeries.coeff_monomial, ite_eq_right, smul_zero]
   intro h
   apply hs
-  rw [h, Finsupp.mapDomain_notin_range]
+  rw [h, Finsupp.mapDomain_of_notMem_range]
   rintro ⟨a, ha⟩
   exact hsr a ha
 
@@ -123,7 +123,7 @@ theorem FBChart.rawCol_sg (v : Fin dd → C) : Y.rawCol.sg v = un1 (Y.sgP v) := 
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   congr 1
-  rw [MvPowerSeries.coeff_pderiv, Finsupp.mapDomain_notin_range]
+  rw [MvPowerSeries.coeff_pderiv, Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨x, hx⟩
     simp at hx
@@ -244,7 +244,7 @@ theorem coeff_inCol_sg (c : Fin 2) (v : Fin 2 × Fin dd → C) (μ : Fin 2 × Fi
     have hne : (μ.mapDomain (fun x => ((0 : Fin 2), x)) + Finsupp.single ((1 : Fin 2), x) 1 : Fin 2 × (Fin 2 × Fin dd) →₀ ℕ)
         ((0 : Fin 2), x0) ≠ 0 := by
       rw [Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective (fun a b h => (Prod.ext_iff.1 h).2), Finsupp.single_apply,
-        if_neg (by simp)]
+        ite_eq_right (by simp)]
       simpa using hx0
     rw [coeff_rename_zero (fun q : Fin 2 × Fin dd => (q.1, (c, q.2))) _ _ ((0 : Fin 2), x0) hne, mul_zero]
     intro q hq

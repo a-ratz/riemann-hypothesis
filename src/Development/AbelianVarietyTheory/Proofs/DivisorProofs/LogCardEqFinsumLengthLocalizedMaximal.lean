@@ -86,7 +86,7 @@ theorem lenAt_quot_ne (w m : Ideal R) [hw : w.IsMaximal] [hm : m.IsMaximal] (h :
   refine Module.length_eq_zero_iff.2 ((IsLocalizedModule.subsingleton_iff w.primeCompl
     (LocalizedModule.mkLinearMap w.primeCompl (R ⧸ m))).2 ?_)
   have hnle : ¬ m ≤ w := fun hle => h (hm.eq_of_le hw.ne_top hle).symm
-  obtain ⟨s, hsm, hsw⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨s, hsm, hsw⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   intro x
   refine ⟨s, hsw, ?_⟩
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -155,8 +155,8 @@ theorem card_eq_prod_lenAt : ∀ (n : ℕ) (Q : Type) [AddCommGroup Q] [Module R
           Finsupp.single_apply]
         by_cases hw : (⟨m0, hm0⟩ : MaximalSpectrum R) = w
         · subst hw
-          rw [if_pos rfl, lenAt_quot_self]; simp
-        · rw [if_neg hw, lenAt_quot_ne w.asIdeal m0
+          rw [ite_eq_left rfl, lenAt_quot_self]; simp
+        · rw [ite_eq_right hw, lenAt_quot_ne w.asIdeal m0
             (fun h => hw (MaximalSpectrum.ext h.symm))]; simp
       · have hz : ∀ w : MaximalSpectrum R, Nat.card (R ⧸ w.asIdeal) ^ 0 = 1 :=
           fun _ => pow_zero _

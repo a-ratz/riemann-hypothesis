@@ -259,12 +259,12 @@ theorem hasTypes_zero {T : GrpData 0 0} (R : DSRep T) (lam : Ix 0 0 → ℚ) : H
       have h1 : ((T.sq g : ℂˣ) : ℂ)⁻¹ • R.U.π g = 1 := h g hg
       rw [← h1, smul_smul, mul_inv_cancel₀ (Units.ne_zero _), one_smul]
   have h0 : R.ι v ≠ 0 := fun h => hv (R.ι_inj (h.trans (map_zero _).symm))
-  have htop := (R.irred (Submodule.span ℂ {R.ι v}) (Submodule.closed_of_finiteDimensional _) fun g x hx => by
+  have htop := (R.irred (Submodule.span ℂ {R.ι v}) (Submodule.isClosed_of_finiteDimensional _) fun g x hx => by
     obtain ⟨c, hc⟩ := hs g
     rw [hc]
     exact Submodule.smul_mem _ c hx).resolve_left (by simpa using h0)
   have hw : hwSub R.HK.act (blattner lam) = ⊤ := by simp [hwSub, wtSub]
-  rw [hw, finrank_top, finrank_eq_one_iff_of_nonzero' v hv]
+  rw [hw, finrank_top, finrank_eq_one_iff_of_ne_zero' v hv]
   intro w
   obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.1 (htop.symm ▸ Submodule.mem_top : R.ι w ∈ Submodule.span ℂ {R.ι v})
   exact ⟨c, R.ι_inj (by rw [map_smul, hc])⟩

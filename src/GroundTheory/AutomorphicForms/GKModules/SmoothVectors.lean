@@ -133,7 +133,7 @@ theorem Ad_inv_Ad (g : G) (X : 𝔤) : h.Ad g⁻¹ (h.Ad g X) = X := by
   rw [← LinearMap.comp_apply, ← Ad_mul, inv_mul_cancel, Ad_one, LinearMap.id_apply]
 
 theorem contMDiff_expG : (letI := h.chartedSpace; ContMDiff 𝓘(ℝ, 𝔤) 𝓘(ℝ, 𝔤) ∞ h.expG) := by
-  letI := h.chartedSpace
+  let := h.chartedSpace
   intro X
   exact h.contMDiffAt_of_val (f := h.expG)
     (((contDiff_exp ℝ 𝔸).comp 𝔤.subtypeL.contDiff).contMDiff X)
@@ -141,14 +141,14 @@ theorem contMDiff_expG : (letI := h.chartedSpace; ContMDiff 𝓘(ℝ, 𝔤) 𝓘
 theorem contMDiff_expG_comp {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] {φ : V → 𝔤}
     (hφ : ContDiff ℝ ∞ φ) : (letI := h.chartedSpace;
     ContMDiff 𝓘(ℝ, V) 𝓘(ℝ, 𝔤) ∞ (fun p => h.expG (φ p))) := by
-  letI := h.chartedSpace
+  let := h.chartedSpace
   exact h.contMDiff_expG.comp hφ.contMDiff
 
 theorem contMDiff_iff_expG {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] (f : G → F) :
     (letI := h.chartedSpace; ContMDiff 𝓘(ℝ, 𝔤) 𝓘(ℝ, F) ∞ f) ↔
       ∀ g : G, ContDiff ℝ ∞ (fun Y : 𝔤 => f (g * h.expG Y)) := by
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   constructor
   · intro hf g
     have : ContMDiff 𝓘(ℝ, 𝔤) 𝓘(ℝ, 𝔤) ∞ (fun Y : 𝔤 => g * h.expG Y) :=
@@ -273,8 +273,8 @@ theorem contDiff_orbit_expG_mul {v : E} (hv : h.IsSmoothVector π v) {V : Type*}
     [NormedAddCommGroup V] [NormedSpace ℝ V] {φ₁ φ₂ φ₃ : V → 𝔤} (h₁ : ContDiff ℝ ∞ φ₁)
     (h₂ : ContDiff ℝ ∞ φ₂) (h₃ : ContDiff ℝ ∞ φ₃) :
     ContDiff ℝ ∞ (fun p => π (h.expG (φ₁ p) * h.expG (φ₂ p) * h.expG (φ₃ p)) v) := by
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   have hm : ContMDiff 𝓘(ℝ, V) 𝓘(ℝ, 𝔤) ∞
       (fun p => h.expG (φ₁ p) * h.expG (φ₂ p) * h.expG (φ₃ p)) :=
     ((h.contMDiff_expG_comp h₁).mul (h.contMDiff_expG_comp h₂)).mul (h.contMDiff_expG_comp h₃)
@@ -369,7 +369,7 @@ theorem derivOp_bracket {v : E} (hv : h.IsSmoothVector π v) (X Y : 𝔤) :
     (h.hasDerivAt_Ad_expG X Y)
   have e := hg.unique (hg'.congr_of_eventuallyEq (Eventually.of_forall fun s => ?_))
   · change D2 (er + eu) et = h.derivOp π (h.bracket X Y) v at e
-    rw [← e, map_add (f := _), ContinuousLinearMap.add_apply, db, hsymm, dd, sub_eq_add_neg]
+    rw [← e, map_add (f := _), add_apply, db, hsymm, dd, sub_eq_add_neg]
   · simp only [zero_add, Function.comp_apply]
     rw [diag]
     rfl

@@ -193,7 +193,7 @@ theorem sint_eq_inner_be : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [In
     ((uHGroup _ (Hpk k r) (Matrix.isUnit_det_of_left_inverse (hpkFacts k r).2.1)).2.2 _ hGG).1
   have hadj := ((_root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hz hT hπ).2.2.1 _ ht).2
   simp only [hL, f, coef, of_invM, Matrix.nonsing_inv_nonsing_inv _ hu,
-    ContinuousLinearMap.smul_apply, inner_smul_right]
+    smul_apply, inner_smul_right]
   rw [← hadj, ContinuousLinearMap.adjoint_inner_left]
 
 end GlobalTheory.SgInf.SInt
@@ -241,7 +241,7 @@ theorem afun_inner_eq_integral : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup 
     show ⟪v, σ (Matrix.of s) (σ (Matrix.of x) u)⟫_ℂ = ⟪v, σ (Matrix.of s * Matrix.of x) u⟫_ℂ
     rw [hmul]; rfl
   have hadj := ((hPi.2.2.1) _ hs).2
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, hcoef]
+  rw [smul_apply, inner_smul_right, hcoef]
   congr 1
   rw [← hadj, ContinuousLinearMap.adjoint_inner_right]
   congr 1
@@ -414,7 +414,7 @@ theorem integrable_Afun_quotMeas : ∀ (k r : ℕ) {H : Type} [NormedAddCommGrou
     refine h1.trans ?_
     rw [mul_comm]
     gcongr
-    refine (enorm_integral_le_lintegral_enorm _).trans ?_
+    refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
     refine lintegral_mono_ae ?_
     filter_upwards [haeS] with s hs
     have hsG : Matrix.of s ∈ GG k r := hS.1 hs
@@ -424,7 +424,7 @@ theorem integrable_Afun_quotMeas : ∀ (k r : ℕ) {H : Type} [NormedAddCommGrou
       exact ENNReal.ofReal_le_ofReal (hPi.2.2.1 _ hsi).1
     have hc : coef σ (σ (Matrix.of x) u) v (Matrix.of s) = coef σ u v (Matrix.of s * Matrix.of x) := by
       simp only [coef, hrep.1.2 _ hsG _ hx, ContinuousLinearMap.comp_apply]
-    rw [enorm_smul]
+    rw [eNorm_smul]
     calc _ ≤ ‖coef σ (σ (Matrix.of x) u) v (Matrix.of s)‖ₑ * 1 := by gcongr
       _ = ‖coef σ u v (Matrix.of s * Matrix.of x)‖ₑ := by rw [mul_one, hc]
       _ ≤ ENNReal.ofReal (max C 0 * opn (Matrix.of s * Matrix.of x : Mat k r) ^ (-a)) :=
@@ -445,8 +445,8 @@ theorem integrable_Afun_quotMeas : ∀ (k r : ℕ) {H : Type} [NormedAddCommGrou
   unfold HasFiniteIntegral
   calc _ ≤ ∫⁻ x, ‖ξ‖ₑ * ∫⁻ s, f (fun i j => (Matrix.of s * Matrix.of x) i j) ∂μS ∂ν :=
         lintegral_mono_ae (haeG.mono fun x hx => hpt x hx)
-    _ = ‖ξ‖ₑ * ∫⁻ x, f x ∂μG := by rw [lintegral_const_mul' _ _ enorm_ne_top, hν f hfm]
-    _ < ⊤ := ENNReal.mul_lt_top enorm_lt_top hfin
+    _ = ‖ξ‖ₑ * ∫⁻ x, f x ∂μG := by rw [lintegral_const_mul' _ _ eNorm_ne_top, hν f hfm]
+    _ < ⊤ := ENNReal.mul_lt_top eNorm_lt_top hfin
 
 end GlobalTheory.SgInf
 end -- clump:auto
@@ -489,7 +489,7 @@ theorem coef_mul_inner_Afun_eq_integral : ∀ (k r : ℕ) {H : Type} [NormedAddC
   filter_upwards [hae] with s hs
   have hmul : σ (Matrix.of s * Matrix.of y) = (σ (Matrix.of s)).comp (σ (Matrix.of y)) :=
     hStd.2.1.1.2 _ (hSG hs) _ hy
-  simp only [ContinuousLinearMap.smul_apply, inner_smul_left]
+  simp only [smul_apply, inner_smul_left]
   have hc : coef σ (σ (Matrix.of y) u₁) v (Matrix.of s) = coef σ u₁ v (Matrix.of s * Matrix.of y) := by
     simp only [coef, hmul, ContinuousLinearMap.comp_apply]
   rw [hc, mul_assoc]
@@ -517,8 +517,8 @@ theorem phiIntegral_besselCoef : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup 
   intro k r H _ _ _ Wp _ _ _ _ σ w a μG d z c π μS hStd hSide u hu u₁ hu₁ v hv ξ
   have hHaarG : IsHaarOn (GG k r) μG := hStd.2.2.2.2.1
   have hHaarS : IsHaarOn (Sset k r z) μS := hSide.2.2.2.1
-  haveI : SigmaFinite μG := hHaarG.1
-  haveI : SigmaFinite μS := hHaarS.1
+  have : SigmaFinite μG := hHaarG.1
+  have : SigmaFinite μS := hHaarS.1
   have hcl := _root_.GlobalTheory.SgInf.closedSub_groups k r z hSide.1 hSide.2.1
   have hF := _root_.GlobalTheory.SgInf.prod_integrand_integrable k r σ w a μG d z c π μS hStd hSide u hu u₁ hu₁ v hv ξ
   have haeG : ∀ᵐ y ∂μG, Matrix.of y ∈ GG k r := ae_iff.2 hHaarG.2.2.1
@@ -567,7 +567,7 @@ theorem normIdentity_besselCoef : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup
   have hcl := _root_.GlobalTheory.SgInf.closedSub_groups k r z hSide.1 hSide.2.1
   have hwD : w ∈ DD σ w := by
     have h1 := mem_DD σ w hcl.1.2.2.1
-    rwa [hStd.2.1.1.1, ContinuousLinearMap.one_apply] at h1
+    rwa [hStd.2.1.1.1, one_apply_eq_self] at h1
   have hAi := _root_.GlobalTheory.SgInf.integrable_Afun_quotMeas k r σ w a μG d z c π μS hStd hSide ν hν u hu v hv ξ
   obtain ⟨hIi, -⟩ := innerIntegral_besselCoef k r σ w a μG d z c π μS hStd hSide ν hν u hu u hu v hv ξ
   have hIe := (innerIntegral_besselCoef k r σ w a μG d z c π μS hStd hSide ν hν u hu u₁ hu₁ v hv ξ).2

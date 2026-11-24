@@ -201,7 +201,7 @@ theorem exists_chart_partition {M : Type*} [TopologicalSpace M] [T2Space M] (n :
     have hi : g (t.equivFin ⟨x', hx't⟩) = x' := by simp [g]
     have h0 : ∏ i, (1 - ψ (g i) x) = 0 := by
       apply Finset.prod_eq_zero (Finset.mem_univ (t.equivFin ⟨x', hx't⟩))
-      simp only [Set.mem_setOf_eq] at hx'
+      simp only [mem_ofPred_eq] at hx'
       rw [hi, hx', sub_self]
     rw [h0, sub_zero]
 

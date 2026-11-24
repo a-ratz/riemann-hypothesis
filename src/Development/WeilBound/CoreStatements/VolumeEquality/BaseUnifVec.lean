@@ -127,7 +127,7 @@ theorem liftFam {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} 
   have p := m.cart.1
   have ex : ∀ b ∈ V, ∀ ζ, ∃ e' : Sp ℂ ⟶ t'.G.left, e' ≫ m.φ = e b ζ ∧ e' ≫ t'.G.hom = z b := fun b hb ζ =>
     ⟨p.lift (e b ζ) (z b) (((G b hb).vert ζ).trans (hf b hb).symm), p.lift_fst _ _ _, p.lift_snd _ _ _⟩
-  haveI : Nonempty (Sp ℂ ⟶ t'.G.left) := ⟨(ex t₀ ht₀ 0).choose⟩
+  have : Nonempty (Sp ℂ ⟶ t'.G.left) := ⟨(ex t₀ ht₀ 0).choose⟩
   choose! e' a₁ b₁ using ex
   have base : IsHolTo (V ×ˢ Set.univ) (fun bz : (Fin n → ℂ) × (Fin g → ℂ) => z bz.1) :=
     vecHolPre (φ := Prod.fst) hz (hV.prod isOpen_univ) (by fun_prop) fun b hb => hb.1
@@ -162,10 +162,10 @@ theorem vecAt_of_goodExp (HC : HolCoord) {E : Type} [Field E] [NumberField E] [I
   let ψ : (Fin n → ℂ) → (Γ(𝔐.X, W) →+* ℂ) := fun t =>
     if k : ⊤ ≤ z t ⁻¹ᵁ W then Flat.BdryModel.evalHom _ W k else Flat.BdryModel.evalHom _ W hW0
   have hψ : ∀ a, DifferentiableOn ℂ (fun t => ψ t a) B := fun a => (hz W a).2.congr fun t ht => by
-    simp only [ψ, valAt', dif_pos ht.2]
+    simp only [ψ, valAt', dite_eq_left ht.2]
     rfl
   have hψz : ∀ t ∈ B, spMap (ψ t) ≫ hW.fromSpec = z t := fun t ht => by
-    simp only [ψ, dif_pos ht.2]
+    simp only [ψ, dite_eq_left ht.2]
     exact Flat.BdryModel.spMap_evalHom _ _ _ _
   have hco : ∀ a, ∀ t ∈ B, ∃ w, IsDerivAt0 (e₂ t) w (spMap (dualMap (ψ t)) ≫ (v a).left) := fun a t ht => by
     obtain ⟨u, hu, e⟩ := hval (ψ t) (z t) (hψz t ht) (𝔐.all _) a

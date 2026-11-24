@@ -88,10 +88,10 @@ section Groups
 variable {m : ℕ} (J : Matrix (Fin m) (Fin m) E)
 
 theorem totallyDisconnectedSpace_GLoc (v : HeightOneSpectrum (𝓞 F)) : TotallyDisconnectedSpace (GLoc σ J v) := by
-  haveI : TotallyDisconnectedSpace (Fv F v ⊗[F] E) := by
+  have : TotallyDisconnectedSpace (Fv F v ⊗[F] E) := by
     obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Fv F v)
     exact e.symm.totallyDisconnectedSpace
-  haveI : TotallyDisconnectedSpace (Matrix (Fin m) (Fin m) (Fv F v ⊗[F] E)) :=
+  have : TotallyDisconnectedSpace (Matrix (Fin m) (Fin m) (Fv F v ⊗[F] E)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin m → Fin m → Fv F v ⊗[F] E))
   exact ⟨isTotallyDisconnected_of_image (f := fun g => (matHom _ σ J g).1)
     (Units.continuous_val.comp (isEmbedding_matHom _ σ J).continuous).continuousOn

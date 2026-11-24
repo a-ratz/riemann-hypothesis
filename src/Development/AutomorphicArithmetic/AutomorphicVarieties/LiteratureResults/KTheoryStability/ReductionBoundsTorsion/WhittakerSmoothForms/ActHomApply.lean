@@ -91,15 +91,15 @@ theorem nr_eventually {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ}
   have hn : (⟨A γ⁻¹ h, hp⟩ : U) ∉ closure {x : U | φ x ≠ 0} := fun hc => hγ ⟨hp, hc⟩
   let g : U → U := fun x => ⟨A γ⁻¹ x, H.mapsTo _ x x.2⟩
   have hg : Continuous g :=
-    ((A γ⁻¹).continuous.comp continuous_subtype_val).subtype_mk _
+    ((A γ⁻¹).continuous.comp continuous_subtypeVal).subtype_mk _
   have h1 : ∀ᶠ x in 𝓝 (⟨h, hh⟩ : U), g x ∈ (closure {x : U | φ x ≠ 0})ᶜ :=
     hg.continuousAt (isClosed_closure.isOpen_compl.mem_nhds hn)
   have h2 : ∀ᶠ x in 𝓝 (⟨h, hh⟩ : U), psi A φ γ x.1 = 0 := h1.mono fun x hx => by
     have h3 : g x ∉ {x : U | φ x ≠ 0} := fun h' => hx (subset_closure h')
-    simp only [Set.mem_setOf_eq, not_not] at h3
+    simp only [mem_ofPred_eq, not_not] at h3
     exact h3
   have h4 : ∀ᶠ x in Filter.map (fun x : U => (x : V)) (𝓝 (⟨h, hh⟩ : U)), psi A φ γ x = 0 := h2
-  rw [map_nhds_subtype_val, H.isOpen.nhdsWithin_eq hh] at h4
+  rw [map_nhds_subtypeVal, H.isOpen.nhdsWithin_eq hh] at h4
   exact h4
 
 theorem nr_fderiv {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} (H : Hyp U A φ) {h : V}
@@ -114,7 +114,7 @@ theorem nr_mul {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} {O : S
   obtain ⟨hm1, hc1⟩ := h1
   obtain ⟨hm2, hc2⟩ := h2
   have key : A (γ⁻¹ * γ')⁻¹ (A γ⁻¹ h) = A γ'⁻¹ h := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul]
+    rw [← mul_apply_eq_comp, ← map_mul]
     rw [show (γ⁻¹ * γ')⁻¹ * γ⁻¹ = γ'⁻¹ by group]
   have hm : A (γ⁻¹ * γ')⁻¹ (A γ⁻¹ h) ∈ U := by rw [key]; exact hm2
   refine hOv (γ⁻¹ * γ') ⟨A γ⁻¹ h, hm1⟩ hc1 hm ?_
@@ -221,7 +221,7 @@ theorem claim {U : Set V} {A : Γ →* (V →L[ℝ] V)} {φ : V → ℝ} (hL : P
     have hcard : (s.filter (Nr U A φ h)).card ≤ hO.toFinset.card := by
       apply Finset.card_le_card_of_injOn (fun γ => γ0⁻¹ * γ)
       · intro γ hγ
-        simp only [Finset.coe_filter, Finset.mem_filter, Set.mem_setOf_eq, Finset.mem_coe] at hγ
+        simp only [Finset.coe_filter, Finset.mem_filter, mem_ofPred_eq, Finset.mem_coe] at hγ
         simp only [Finset.coe_filter, Set.Finite.coe_toFinset, Set.Finite.mem_toFinset, Finset.mem_coe]
         exact nr_mul hOv hγ0 hγ.2
       · intro a _ b _ hab
@@ -354,7 +354,7 @@ theorem chain (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : P
   have hK : ∀ i, a + 1 ≤ i → Kf A φ (eta A φ c j) (skip i g) = ω := by
     intro i hi
     rw [hω]
-    exact kf_dep hD c j _ _ (fun n hn => by simp only [skip]; rw [if_pos (by omega)])
+    exact kf_dep hD c j _ _ (fun n hn => by simp only [skip]; rw [ite_eq_left (by omega)])
   have hF2 : ∀ x ∈ U, (∑ i ∈ Finset.range (a + 2),
       ((-1 : ℝ) ^ i) • Kf A φ (eta A φ c j) (skip i g)) x = eta A φ c j g x := by
     intro x hx
@@ -383,7 +383,7 @@ theorem chain (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : P
     congr 1
     funext l
     simp only [skip]
-    rw [if_neg (by omega), show a + j - j + ↑l + 1 = a + 1 + ↑l by omega]
+    rw [ite_eq_right (by omega), show a + j - j + ↑l + 1 = a + 1 + ↑l by omega]
   have hBB : ∀ m : Fin (j + 1), Bf A φ c o j (skip (a + 1 + ↑m) g) =
       intS' ω (fun l => Y (m.succ.succAbove l)) := by
     intro m
@@ -538,9 +538,9 @@ private theorem apply_add_succAbove_eq_skip (g : ℕ → Γ) (a : ℕ) {n : ℕ}
     g (a + ↑(i.succAbove l)) = skip (a + ↑i) g (a + ↑l) := by
   simp only [skip]
   rcases lt_or_ge l.val i.val with hl | hl
-  · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hl), if_pos (by omega)]
+  · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hl), ite_eq_left (by omega)]
     rfl
-  · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simpa using hl), if_neg (by omega)]
+  · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simpa using hl), ite_eq_right (by omega)]
     simp only [Fin.val_succ, Nat.add_assoc]
 
 theorem tele (H : Hyp U A φ) (hH : PHom U A φ) (hSm : PSmooth U A φ) (hD : PDep A φ)

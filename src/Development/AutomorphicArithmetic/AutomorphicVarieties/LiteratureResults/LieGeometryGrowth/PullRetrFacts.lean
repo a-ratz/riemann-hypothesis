@@ -103,7 +103,7 @@ theorem UpperTheory.V.Lit.Geo.retrFacts :
   refine ⟨retr_split, retr_left, fun C => ?_⟩
   have hc : Continuous fun h : GL (Fin a) (Cinf E) =>
       Real.log (Reduction.detModule E a (infGL E a h)).1 / (a * Module.finrank ℚ E) :=
-    ((continuous_subtype_val.comp (Reduction.continuous_detModule.comp cont_inf)).log
+    ((continuous_subtypeVal.comp (Reduction.continuous_detModule.comp cont_inf)).log
       fun h => (Reduction.detModule E a (infGL E a h)).2.ne').div_const _
   obtain ⟨T, hT⟩ := (compact_box (E := E) (a := a) C).exists_bound_of_continuousOn hc.continuousOn
   refine ⟨T, fun g h h1 h2 => ⟨_, hT h ⟨h1, h2⟩, ?_⟩⟩

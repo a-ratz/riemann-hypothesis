@@ -62,7 +62,7 @@ theorem UpperTheory.V.Fr.ep_basis :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O], IsUnit (2 : O) → ∀ (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (σ : R →ₐ[O] R), (∀ y, σ (σ y) = y) → ∀ J N : Ideal R, (∀ y ∈ J, σ y ∈ J) → (∀ y ∈ N, σ y ∈ N) → maximalIdeal R * J ≤ N → ∃ (a g : ℕ) (z : Fin a ⊕ Fin g → R), (∀ s, z s ∈ J ∧ z s ∈ evp σ (Space.Loc.par a g s)) ∧ J ≤ Ideal.span (Set.range z) ⊔ N ∧ ∀ c : Fin a ⊕ Fin g → O, ∑ s, c s • z s ∈ N → ∀ s, c s ∈ maximalIdeal O := by
   classical
   intro O _ _ _ _ h2 R _ _ _ σ hσ J N hJ hN hmJ
-  haveI : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
   obtain ⟨T, hT⟩ := (IsNoetherian.noetherian J : J.FG)
   obtain ⟨u, hu2, hucomm⟩ : ∃ u : R, u * 2 = 1 ∧ ∀ x, σ (u * x) = u * σ x :=
     ⟨algebraMap O R ↑h2.unit⁻¹, by

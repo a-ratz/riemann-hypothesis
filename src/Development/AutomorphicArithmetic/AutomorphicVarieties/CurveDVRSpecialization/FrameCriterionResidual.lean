@@ -60,12 +60,12 @@ theorem UpperTheory.frame_criterion_residual :
         exact mul_mul_mul_comm _ _ _ _ }
   have hψ : IsOpen ((F.Ψ.comp (F.del.ker.subtype.comp π)).ker : Set G.G₀) := by
     rw [← MonoidHom.comap_ker, Subgroup.coe_comap]
-    exact hk.preimage (continuous_subtype_val.comp hπ)
+    exact hk.preimage (continuous_subtypeVal.comp hπ)
   have hκo : IsOpen ((W.pushCh (residue O) κ).ker : Set G.G₀) := by
     have h1 := (hκ 1).isOpen_fiber (Ideal.Quotient.mk (maximalIdeal O ^ 1) 1)
     convert h1 using 1
     ext g
-    rw [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_setOf_eq, Ideal.Quotient.eq, pow_one, Units.ext_iff]
+    rw [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_ofPred_eq, Ideal.Quotient.eq, pow_one, Units.ext_iff]
     show residue O (κ g : O) = 1 ↔ _
     rw [← map_one (residue O)]
     exact Ideal.Quotient.eq

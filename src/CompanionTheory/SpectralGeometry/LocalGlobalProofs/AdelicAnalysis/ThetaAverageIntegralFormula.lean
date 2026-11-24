@@ -72,9 +72,9 @@ theorem thTerm_zero {F : Type} [Field F] [NumberField F] {ι : Type} [Fintype ι
 
 theorem main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → ∀ (Ω : Type) [MeasurableSpace Ω] (Pr : Measure Ω) (gf : Ω → Matrix ι ι (A F)) (gi : Ω → InfinitePlace F → Matrix ι ι ℝ), CountData M B ρ Pr gf gi → ∀ φ τ, SB φ → (∀ w, 0 < (τ w).im) → Integrable (fun ω => theta B ρ P (gf ω) (gi ω) φ τ) Pr ∧ ENNReal.ofReal ‖(∫ ω, theta B ρ P (gf ω) (gi ω) φ τ ∂Pr) - φ 0‖ ≤ ∫⁻ ω, ∑' x : {x : ι → F // x ≠ 0}, ‖thTerm B ρ P (gf ω) (gi ω) φ τ x.1‖ₑ ∂Pr := by
   intro F _ _ _ _ lf _ _ ψ _ ι _ _ M B ρ P hQ Ω _ Pr gf gi hC φ τ hφ hτ
-  haveI : IsProbabilityMeasure Pr := hC.1
+  have : IsProbabilityMeasure Pr := hC.1
   have horth : ∀ ω, IsOrth B ρ (gf ω) (gi ω) := hC.2.2.2.1
-  haveI : Countable F :=
+  have : Countable F :=
     Function.Injective.countable (Module.finBasis ℚ F).equivFun.injective
   obtain ⟨w0, -, h0⟩ := Finset.exists_min_image Finset.univ (fun w => (τ w).im) Finset.univ_nonempty
   obtain ⟨w1, -, h1⟩ := Finset.exists_max_image Finset.univ (fun w => (τ w).im) Finset.univ_nonempty
@@ -112,14 +112,14 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] 
       (tendsto_pi_nhds.2 fun ω => (hsub ω).hasSum)
   have hgI : ∫⁻ ω, ‖g ω‖ₑ ∂Pr ≤
       ∫⁻ ω, ∑' x : {x : ι → F // x ≠ 0}, ‖thTerm B ρ P (gf ω) (gi ω) φ τ x.1‖ₑ ∂Pr :=
-    lintegral_mono fun ω => enorm_tsum_le_tsum_enorm
+    lintegral_mono fun ω => eNorm_tsum_le_tsum_eNorm
   have hgint : Integrable g Pr := ⟨hgm.aestronglyMeasurable, lt_of_le_of_lt hgI hfin.lt_top⟩
   have hth : (fun ω => theta B ρ P (gf ω) (gi ω) φ τ) = fun ω => φ 0 + g ω := funext hsplit
   refine ⟨by rw [hth]; exact (integrable_const _).add hgint, ?_⟩
   have hint : (∫ ω, theta B ρ P (gf ω) (gi ω) φ τ ∂Pr) - φ 0 = ∫ ω, g ω ∂Pr := by
     rw [hth, integral_add (integrable_const _) hgint]
     simp
-  rw [hint, ofReal_norm_eq_enorm]
-  exact (enorm_integral_le_lintegral_enorm g).trans hgI
+  rw [hint, ofReal_norm]
+  exact (eNorm_integral_le_lintegral_eNorm g).trans hgI
 
 end GlobalTheory.CompanionTheory.SW.Core.ThetaIntegral

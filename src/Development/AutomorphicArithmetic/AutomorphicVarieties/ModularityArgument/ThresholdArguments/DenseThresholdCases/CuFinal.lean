@@ -307,7 +307,7 @@ theorem twistIne : TwistIne := by
     refine ⟨x, ?_, ?_⟩
     · rw [hL.loc x σ e, hYw x hx, Units.val_one, map_one, one_mul]
     · rw [hM.loc x σ e, (GlobalTheory.HeckeGal.Model.absPow_isAbsPow K' ((1 : ℕ) : ℝ)).1 w x hx, Units.val_one, map_one, one_mul]
-  haveI : Subsingleton {j : w.adicCompletion K' →+* Qbar l // Continuous j} :=
+  have : Subsingleton {j : w.adicCompletion K' →+* Qbar l // Continuous j} :=
     ⟨fun j j' => Subtype.ext (emb_unique K' hdeg hsplit A hA w hw j.1 j'.1 j.2 j'.2)⟩
   rcases isEmpty_or_nonempty {j : w.adicCompletion K' →+* Qbar l // Continuous j} with hJ | hJ
   · right
@@ -320,7 +320,7 @@ theorem twistIne : TwistIne := by
   · obtain ⟨j0⟩ := hJ
     have hlp : ∀ (n : (K' →+* ℂ) → ℤ) (y : w.adicCompletion K'), locPow ι n w y =
         j0.1 y ^ n ((ι.toRingHom.comp j0.1).comp (algebraMap K' (w.adicCompletion K'))) := fun n y => by
-      haveI : Unique {j : w.adicCompletion K' →+* Qbar l // Continuous j} := uniqueOfSubsingleton j0
+      have : Unique {j : w.adicCompletion K' →+* Qbar l // Continuous j} := uniqueOfSubsingleton j0
       unfold locPow
       rw [finprod_unique, Subsingleton.elim (default : {j : w.adicCompletion K' →+* Qbar l // Continuous j}) j0]
     rcases emb_two hdeg τ ((ι.toRingHom.comp j0.1).comp (algebraMap K' (w.adicCompletion K'))) with he | he
@@ -586,7 +586,7 @@ private theorem UpperTheory.V.Cu.FiberPointBoundedGenerators.fib_gen {O Γ : Typ
     ∃ T : Finset K, T.card ≤ 2 + 4 * Nat.card Φ.ι ∧ ∀ E : Subfield K, (∀ b, y (algebraMap X.B X.A b) ∈ E) → (∀ t ∈ T, t ∈ E) →
       (∀ (p : K[X]) (x : K), p.Monic → (∀ n, p.coeff n ∈ E) → p.IsRoot x → x ∈ E) → ∀ z, y z ∈ E := by
   classical
-  haveI := Fintype.ofFinite Φ.ι
+  have := Fintype.ofFinite Φ.ι
   have hp := X.pair.map y
   obtain ⟨s, t, hst⟩ := hTor (mapRep y X.P.r) Φ.g0 hp.nrm hne hS e1 e2 e3 e4
   let u : Φ.ι × Fin 4 → K := fun x => y (X.P.n x.1 (![1, 2, 3, 2] x.2) (![0, 0, 0, 1] x.2))
@@ -623,10 +623,10 @@ theorem UpperTheory.V.Cu.fibY_of : TorusY → FibY := by
   unfold FibY
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hΦ X c hc R _ _ _ f hf q hq r hr hS e1 e2 e3 e4
   subst hr
-  haveI := X.noeth
-  haveI := X.ft
-  letI : Algebra X.A R := (f : X.A →+* R).toAlgebra
-  haveI : IsScalarTower Λ X.A R := IsScalarTower.of_algebraMap_eq fun z => (f.commutes z).symm
+  have := X.noeth
+  have := X.ft
+  let : Algebra X.A R := (f : X.A →+* R).toAlgebra
+  have : IsScalarTower Λ X.A R := IsScalarTower.of_algebraMap_eq fun z => (f.commutes z).symm
   have hff : IsScalarTower.toAlgHom Λ X.A R = f := AlgHom.ext fun _ => rfl
   obtain ⟨hx, hR⟩ := fibCpl (Λ := Λ) (A := X.A) (R := R) (fun R' _ _ _ g hg => by
     rw [hff] at hg ⊢
@@ -638,7 +638,7 @@ theorem UpperTheory.V.Cu.fibY_of : TorusY → FibY := by
     ext b
     show (f.comp (IsScalarTower.toAlgHom Λ X.B X.A)) b ∈ maximalIdeal R ↔ _
     rw [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
-  haveI hη : (q.comap (algebraMap X.A R)).IsPrime := Ideal.comap_isPrime _ q
+  have hη : (q.comap (algebraMap X.A R)).IsPrime := Ideal.comap_isPrime _ q
   obtain ⟨t, h1, h2⟩ := UpperTheory.V.CA.c3b Λ _ (UpperTheory.V.CA.IsCL.of_isCO Λ X.B) hxB (q.comap (algebraMap X.A R))
     (Ideal.comap_mono (le_maximalIdeal hq.ne_top))
   obtain ⟨T, hT, hE⟩ := FiberPointBoundedGenerators.fib_gen X _ (fun i j hij e => by
@@ -725,14 +725,14 @@ theorem UpperTheory.V.Cu.redA_of : RedTanA → RedA := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hstd d C hB c hc hA hent R _ _ _ P hP S hS hY
   set I := redIdeal S P.r with hI
   by_cases htop : I = ⊤
-  · haveI : Subsingleton (R ⧸ I) := Ideal.Quotient.subsingleton_iff.2 htop
+  · have : Subsingleton (R ⧸ I) := Ideal.Quotient.subsingleton_iff.2 htop
     rw [ringKrullDim_eq_bot_of_subsingleton]
     exact bot_le
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 htop
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 htop
   let p : R →ₐ[Λ] R ⧸ I := Ideal.Quotient.mkₐ Λ I
   have hp : Function.Surjective p := Ideal.Quotient.mkₐ_surjective Λ I
-  haveI : IsCO Λ (R ⧸ I) := co_quot Λ R (R ⧸ I) p hp
-  haveI : IsCO Λ (DualNumber (ResidueField Λ)) := (co_res Λ).2
+  have : IsCO Λ (R ⧸ I) := co_quot Λ R (R ⧸ I) p hp
+  have : IsCO Λ (DualNumber (ResidueField Λ)) := (co_res Λ).2
   have hr : ∀ g i j, res Λ R (P.r g i j) = c.r g i j := fun g i j =>
     congrArg (fun Q : PD Φ.ι Γ (ResidueField Λ) => Q.r g i j) hP.1.red
   have hn : ∀ v i j, res Λ R (P.n v i j) = c.n v i j := fun v i j =>
@@ -1454,7 +1454,7 @@ theorem cong_of_mem {l : ℕ} [Fact l.Prime] {x : (Qbar l)ˣ} (hx : x ∈ W l) :
 theorem exists_pow_cong {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     {l : ℕ} [Fact l.Prime] (f : Γ →* (Qbar l)ˣ) (hf : Continuous f) : ∃ d : ℕ, 0 < d ∧ ∀ g, f g ^ d ∈ W l := by
   have hU : IsOpen (((W l).comap f : Subgroup Γ) : Set Γ) := (isOpen_kappaOpenNeighbourhood l).preimage hf
-  haveI := Subgroup.quotient_finite_of_isOpen _ hU
+  have := Subgroup.quotient_finite_of_isOpen _ hU
   have hi : ((W l).comap f).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   refine ⟨((W l).comap f).index.factorial, Nat.factorial_pos _, fun g => ?_⟩
   rw [← map_pow]
@@ -1517,7 +1517,7 @@ theorem kapEx_alt (h1 : TwistIne) (h2 : AlgType) : _root_.UpperTheory.V.Cu2.KapE
     fun A h hh => ⟨hh.1, hh.2⟩
   have hεc : Continuous (cycBar K' Ω l) := by
     have hf : Continuous (((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom : ℤ_[l] → Qbar l) :=
-      (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val
+      (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal
     exact (Units.continuous_map hf).comp (continuous_cycZ K' Ω l)
   have hεunr : ∀ A : ValuationSubring Ω, ¬ A.valuation (l : Ω) < 1 → ∀ h ∈ Ine (F := K') A, cycBar K' Ω l h = 1 := by
     intro A hA h hh
@@ -1641,13 +1641,13 @@ private theorem ce_char {l : ℕ} [Fact l.Prime] (Γ : Type) [Group Γ] [Topolog
 theorem tauEx' (h1 : _root_.UpperTheory.V.Cu2.KapExAlt) (h2 : TauOf) : _root_.UpperTheory.V.Cu.TauExAlt := by
   intro hP Ω _ _ _ l _ ι K' _ hl2 hK hTC hdisc hdec hcc g0 hg0
   obtain ⟨m, κ, hκ⟩ := h1 hP Ω l ι K' hl2 hK hTC hdisc hdec hcc
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : IsGalois K' Ω := IsGalois.tower_top_of_isGalois ℚ K' Ω
-  haveI : CompactSpace (G K' Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[K'] Ω))
-  haveI : T2Space (G K' Ω) := inferInstanceAs (T2Space (Ω ≃ₐ[K'] Ω))
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois K' Ω := IsGalois.tower_top_of_isGalois ℚ K' Ω
+  have : CompactSpace (G K' Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[K'] Ω))
+  have : T2Space (G K' Ω) := inferInstanceAs (T2Space (Ω ≃ₐ[K'] Ω))
   have hc : Continuous κ := by simpa using (hκ 1 le_rfl).cont
   obtain ⟨E, hE, hmE⟩ := ce_char (G K' Ω) κ hc
-  haveI := hE
+  have := hE
   obtain ⟨c₁, hc₁⟩ := UpperTheory.V.X.So.coefOf l E
   refine ⟨m, c₁, κ, fun c₂ hc₂ j hj => ?_⟩
   refine h2 Ω l ι K' hl2 hK hdec g0 hg0 (m * j) (κ ^ j) (hκ j hj) c₂ fun h => ?_
@@ -1729,9 +1729,9 @@ private theorem last_step (hCh : _root_.UpperTheory.V.Cu.ChainRankFour) (hCD : C
   obtain ⟨c', b₁, b₂⟩ := (coefSup l).1 d₁ d₂
   have e₁ : c₁.O ≤ c'.O := a₁.trans b₁
   have h : c.O ≤ c'.O := h₁.trans e₁
-  haveI : Finite (ResidueField c'.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c'.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
   have hS := (std hC D T hF ∅ c' h).1 (Finset.notMem_empty 0)
   obtain ⟨X⟩ := spaceEx (T.fr ∅) l (inc h) hS

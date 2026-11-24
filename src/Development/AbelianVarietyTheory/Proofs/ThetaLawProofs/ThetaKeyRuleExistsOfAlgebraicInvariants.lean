@@ -137,10 +137,10 @@ theorem exists_isSymm_mulVec_add_diag_mod_two :
       by_cases hi : i = p
       · subst hi
         simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib,
-          if_true, hm', h2, hk]
+          ite_true, hm', h2, hk]
         exact ⟨m + n' i * k + n' i, by ring⟩
       · simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib,
-          if_neg hi, h2, hk, zero_mul, Finset.sum_const_zero]
+          ite_eq_right hi, h2, hk, zero_mul, Finset.sum_const_zero]
         exact ⟨n' i * k, by ring⟩
 
 end GlobalTheory
@@ -390,7 +390,7 @@ theorem exists_block_basis {G' G : Over (Sp R)} [GrpObj G'] [IsCommMonObj G'] [G
             (finProdFinEquiv (i', k'))) ≫ u (finProdFinEquiv (i', k'))) =
           sc (if i = i' then M k k' else 0) ≫ v k' := fun k' => by
         change (sc _ ≫ u _) ≫ p.pr i' = _
-        rw [Category.assoc, hu', if_pos rfl]
+        rw [Category.assoc, hu', ite_eq_left rfl]
         congr 2
         simp [e, Matrix.blockDiagonal_apply]
       rw [Finset.prod_congr rfl fun k' _ => h₁ k']
@@ -400,7 +400,7 @@ theorem exists_block_basis {G' G : Over (Sp R)} [GrpObj G'] [IsCommMonObj G'] [G
     · intro i'' _ hi
       refine Finset.prod_eq_one fun k' _ => ?_
       change (sc _ ≫ u _) ≫ p.pr i' = _
-      rw [Category.assoc, hu', if_neg hi, comp_one]
+      rw [Category.assoc, hu', ite_eq_right hi, comp_one]
     · simp
   · rw [Matrix.det_reindex_self, Matrix.det_blockDiagonal]
     simp
@@ -442,8 +442,8 @@ theorem isKeyPow_change : ∀ (K : Type) [Field K] (P : Out.PolAV (Sp K)) (hg ri
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
     rw [ha i, constFn, map_zero, map_zero, zero_mul, Scheme.basicOpen_zero] at hi
     exact hi
-  haveI := y.P.isAb.comm
-  haveI := P.isAb.comm
+  have := y.P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨w, M', hw, hw', hM', hdet⟩ := exists_block_basis p.toIsPowGrp hj hv hv' M hM y.v h₃
   refine ⟨constMul y.P.A.hom (a ^ j) y.th, fun s => ?_, w, hw, M', ⟨p, hj, h₁, fun jj b h => ?_, hw'⟩,
     fun _ => rfl, hM', hdet⟩
@@ -585,7 +585,7 @@ theorem const_rat_unit (hT : ThetaUnifAV) {g n M : ℕ} (hg : 1 ≤ g)
     IsLocalization.ringHom_ext (Submonoid.powers W.Δ) (RingHom.ext_int _ _)
   have hlift : ∀ {T : Type} [CommRing T], IsUnit (W.Δ : T) → Nonempty (S →+* T) := fun {T} _ hu =>
     ⟨IsLocalization.Away.lift (g := Int.castRingHom T) W.Δ hu⟩
-  haveI : (W.map (algebraMap ℤ S)).IsElliptic :=
+  have : (W.map (algebraMap ℤ S)).IsElliptic :=
     ⟨by rw [WeierstrassCurve.map_Δ]; exact IsLocalization.Away.algebraMap_isUnit W.Δ⟩
   have hQ : (W.Δ : ℚ) ≠ 0 := Int.cast_ne_zero.2 hW
   obtain ⟨i⟩ := hlift (T := ℚ) hQ.isUnit

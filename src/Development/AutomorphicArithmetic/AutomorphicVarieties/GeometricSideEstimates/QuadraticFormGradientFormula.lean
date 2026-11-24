@@ -85,7 +85,7 @@ private theorem fderiv_pg {P : (Fin a → Cinf E) → ℂ} (hP : P ∈ poly E a)
   have h4 := h3.fderiv
   rw [pg_eq, hg]
   erw [h4]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 end

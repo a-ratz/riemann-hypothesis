@@ -80,7 +80,7 @@ theorem witt_R {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] 
     (by simp) (hform sE T) hh
   set P : Matrix (Fin a) (Fin a) E := tM v with hP
   have hPu : IsUnit P.det := by
-    have h1 : IsUnit (Matrix.of v) := Matrix.linearIndependent_rows_iff_isUnit.mp hvli
+    have h1 : IsUnit (Matrix.of v) := linearIndependent_row_iff_isUnit.mp hvli
     have h2 : P = (Matrix.of v)ᵀ := rfl
     rw [h2, det_transpose]
     exact (Matrix.isUnit_iff_isUnit_det _).mp h1

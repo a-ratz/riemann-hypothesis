@@ -154,7 +154,7 @@ theorem mulVec_col (M N : Matrix n n K) (j : n) : (M *ᵥ fun i => N i j) = fun 
   simp [Matrix.mulVec, dotProduct, Matrix.mul_apply]
 
 theorem tv_mem (j : n) : tv θ P j ∈ Lat O θ J P := by
-  simp only [Lat, Set.mem_setOf_eq]
+  simp only [Lat, Set.mem_ofPred_eq]
   refine ⟨?_, ?_⟩
   · rw [firstSplit_tensor_vector, mulVec_col]
     have hP : ((P⁻¹ : GL n K) : Matrix n n K) * (P : Matrix n n K) = 1 := by simp
@@ -170,7 +170,7 @@ theorem conjP_int (g : GL n T) (hg : ∀ x, x ∈ Lat O θ J P → (g : Matrix n
     IntM O (conjPrime₂ θ P g) := by
   intro i j
   have h := hg _ (tv_mem O θ J P j)
-  simp only [Lat, Set.mem_setOf_eq] at h
+  simp only [Lat, Set.mem_ofPred_eq] at h
   have h1 := h.1
   rw [firstSplit_mulVec, firstSplit_tensor_vector, mulVec_col, mulVec_col] at h1
   have e : conjPrime₂ θ P g i j =

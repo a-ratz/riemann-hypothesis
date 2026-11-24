@@ -257,7 +257,7 @@ theorem d_zero_pt (h : PS R 2 d) (j : Fin d) :
     by_cases hx : x = j
     · subst hx
       simp
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact pderiv_X_of_ne (by simpa using hx)
   rw [pderiv_ev_local noConst_0x, Fin.sum_univ_two]
   simp [pt, e]
@@ -332,7 +332,7 @@ theorem pd_pt_eq {n : ℕ} (j : Fin n) (i x : Fin d) :
   by_cases hx : x = i
   · subst hx
     simp
-  · rw [if_neg hx]
+  · rw [ite_eq_right hx]
     exact pderiv_X_of_ne (by simpa using hx)
 
 theorem partial_derivative_first_evaluation (h : PS R 2 d) (b : Pt R 3 d) (hb0 : ∀ l, constantCoeff (b l) = 0)
@@ -855,13 +855,13 @@ theorem top_coeff_eq (hp : 1 ≤ p) (b : Fin (p + 1) → B) (v : B)
     rw [Finset.sum_eq_single (Fin.last p)]
     · simp
     · intro i _ hi
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       exact hi (Fin.ext (by simpa using h'.symm))
     · simp
   rw [e₁] at hc
   simp only [Polynomial.coeff_sub, Polynomial.coeff_add, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow,
-    Polynomial.coeff_one, if_neg hp0, e₂, if_true, zero_add] at hc
+    Polynomial.coeff_one, ite_eq_right hp0, e₂, ite_true, zero_add] at hc
   exact sub_eq_zero.1 hc
 
 end Ring
@@ -1005,7 +1005,7 @@ private theorem coeff_eq_zero_of_mem_span_X_pow_of_degree_lt {σ k : Type} [Comm
         rw [MvPolynomial.coeff_mul]
         refine Finset.sum_eq_zero fun x hx => ?_
         rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
-        rw [MvPolynomial.coeff_X']
+        rw [MvPolynomial.coeff_X]
         split_ifs with hxi
         · have hx1 : x.1.degree + 1 = e.degree := by
             rw [← hx, map_add (f := _), ← hxi, Finsupp.degree_single]
@@ -1132,7 +1132,7 @@ theorem cocycle_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     change pullback.fst t.G.hom x (xkZ t.G x (g.x m) q) ∈ t.PP.L.U j₀
     rw [e₁, e₂]
     exact hj₀ trivial
-  haveI : Nonempty (pullback.fst t.G.hom x ⁻¹ᵁ t.PP.L.U j₀) :=
+  have : Nonempty (pullback.fst t.G.hom x ⁻¹ᵁ t.PP.L.U j₀) :=
     ⟨⟨_, hU 0 (show (spMap ((jetAug : Jet k (Fin 1 × Fin d) 0 →ₐ[k] k) : Jet k (Fin 1 × Fin d) 0 →+* k) s) ∈ ⊤ from trivial)⟩⟩
   have main := PositivityTheory.HtPt.Qam.core_firstOrder X0 t.G k x p hp hN t.PP.L hL _ _ (prZ_fst t.G x p).symm (secZ_pa t.G x _ hy0) C hC hnorm j₀
     (fun c h hc => by

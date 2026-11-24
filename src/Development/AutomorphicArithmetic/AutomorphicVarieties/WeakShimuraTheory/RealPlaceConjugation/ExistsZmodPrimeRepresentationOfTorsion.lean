@@ -73,6 +73,6 @@ private theorem UpperTheory.V.Ws.exists_zmod_representation (n : ℕ) (Γ : Type
 theorem UpperTheory.V.Ws.exists_zmod_prime_representation_of_torsion :
     ∀ (l : ℕ) (Γ : Type) [Group Γ] (R M : Type) [CommRing R] [AddCommGroup M] [Module R M], (∀ m : M, l • m = 0) → ∀ ρ : Representation R Γ M, ∃ (_ : Module (ZMod (l ^ 1)) M) (ρ' : Representation (ZMod (l ^ 1)) Γ M), ∀ g m, ρ' g m = ρ g m := by
   intro l Γ _ R M _ _ _ hl ρ
-  letI : Module (ZMod (l ^ 1)) M := AddCommGroup.zmodModule (fun m => by simpa using hl m)
+  let : Module (ZMod (l ^ 1)) M := AddCommGroup.zmodModule (fun m => by simpa using hl m)
   obtain ⟨ρ', hρ'⟩ := UpperTheory.V.Ws.exists_zmod_representation (l ^ 1) Γ R M ρ
   exact ⟨this, ρ', hρ'⟩

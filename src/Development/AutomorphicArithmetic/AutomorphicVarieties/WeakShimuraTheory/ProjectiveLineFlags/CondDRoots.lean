@@ -63,7 +63,7 @@ theorem UpperTheory.V.Ws.P1.condD :
   obtain ⟨hrange, -, -, -, hres, -⟩ := P1.towerGal D T
   rw [← hrange] at hgL
   obtain ⟨g', hg'⟩ := hgL
-  haveI : IsLocalHom (inc h) := (P1.coefRes c).2.2.1 c' h
+  have : IsLocalHom (inc h) := (P1.coefRes c).2.2.1 c' h
   have hΦ : (T.fr ∅).χ 0 g * (T.fr ∅).χ 3 g = (T.fr ∅).χ 1 g * (T.fr ∅).χ 2 g := by
     simp only [Tower.fr, chi, lab]
     cases T.pr <;> simp [Raw.ps, Raw.th, mul_comm]

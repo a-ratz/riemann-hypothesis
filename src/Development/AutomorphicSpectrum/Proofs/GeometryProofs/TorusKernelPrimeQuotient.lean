@@ -255,7 +255,7 @@ theorem exists_ideal_eq_iff {S : Scheme.{0}} {Y : Over S} [IsSeparated Y.hom] {R
     {c : Sp R ⟶ S} (f g : Over.mk c ⟶ Y) :
     ∃ J : Ideal R, ∀ (A : Type) [CommRing A] (ρ : R →+* A),
       spMap ρ ≫ f.left = spMap ρ ≫ g.left ↔ J ≤ RingHom.ker ρ := by
-  haveI hcl : IsClosedImmersion (equalizer.ι f g).left := isClosedImmersion_equalizer_ι_left _ _
+  have hcl : IsClosedImmersion (equalizer.ι f g).left := isClosedImmersion_equalizer_ι_left _ _
   obtain ⟨I, e, he⟩ := IsClosedImmersion.Spec_iff.1 hcl
   have hcond : (equalizer.ι f g).left ≫ f.left = (equalizer.ι f g).left ≫ g.left := by
     rw [← Over.comp_left, ← Over.comp_left, equalizer.condition]
@@ -296,8 +296,8 @@ theorem exists_span_of_coideal (k X : Type) [Field k] [AddCommGroup X] (J : Idea
     (h2 : ∀ f ∈ J, TensorProduct.map (J.restrictScalars k).mkQ (J.restrictScalars k).mkQ
       (Coalgebra.comul (R := k) f) = 0) :
     ∃ Y : AddSubgroup X, J = Ideal.span {f | ∃ y ∈ Y, f = AddMonoidAlgebra.single y (1 : k) - 1} := by
-  haveI : (J.restrictScalars k).IsCoideal := ⟨fun x hx => h1 x hx, fun x hx => h2 x hx⟩
-  haveI : Nontrivial (AddMonoidAlgebra k X ⧸ J) := by
+  have : (J.restrictScalars k).IsCoideal := ⟨fun x hx => h1 x hx, fun x hx => h2 x hx⟩
+  have : Nontrivial (AddMonoidAlgebra k X ⧸ J) := by
     refine Ideal.Quotient.nontrivial_iff.2 fun h => ?_
     have := h1 1 (h ▸ Submodule.mem_top)
     simp at this
@@ -315,7 +315,7 @@ theorem exists_ringHom_of_point {A : Type} [CommRing A] (g : k →+* A) {a : Sp 
     ∃ ρ : AddMonoidAlgebra k X →+* A, ρ.comp (algebraMap k (AddMonoidAlgebra k X)) = g ∧
       ∀ χ, ρ (AddMonoidAlgebra.single χ 1) = charVal t χ := by
   obtain ⟨h0, hadd⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).2.2.2.1 t
-  letI : Algebra k A := g.toAlgebra
+  let : Algebra k A := g.toAlgebra
   let w : Multiplicative X →* A :=
     { toFun := fun x => charVal t x.toAdd
       map_one' := h0

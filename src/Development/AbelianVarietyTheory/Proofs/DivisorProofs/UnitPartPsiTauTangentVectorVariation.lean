@@ -253,7 +253,7 @@ theorem exists_sec_nonempty : ∀ (S : Scheme.{0}) (P : PolAV S) (K : Type) [Fie
     exact zero_ne_one ((Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm.injective
       ((map_zero _).trans ((congrFun this i₀).trans (map_one _).symm)))
   obtain ⟨j, hj⟩ := nz
-  haveI : IsReduced (T ⊗ P.A).left := inferInstance
+  have : IsReduced (T ⊗ P.A).left := inferInstance
   obtain ⟨y, hy⟩ : ∃ y, y ∈ (T ⊗ P.A).left.basicOpen ((b i₀).f j) := by
     by_contra h
     push_neg at h
@@ -426,7 +426,7 @@ theorem ker_descend {k K : Type} [Field k] [Field K] [Algebra k K] {a b : ℕ}
       ∀ j, v j = ∑ l, e l * algebraMap k K (u l j) := by
   classical
   let V := Submodule.span k (Set.range v)
-  haveI : Module.Finite k V := FiniteDimensional.span_of_finite k (Set.finite_range v)
+  have : Module.Finite k V := FiniteDimensional.span_of_finite k (Set.finite_range v)
   let bV := Module.finBasis k V
   have hv' : ∀ j, v j ∈ V := fun j => Submodule.subset_span ⟨j, rfl⟩
   have hli : LinearIndependent k (fun l => (bV l : K)) :=
@@ -497,11 +497,11 @@ theorem exists_sec_of_baseChange : ∀ (S : Scheme.{0}) (P : PolAV S) (k : Type)
   let f' : (Over.mk (ιK ≫ t) ⊗ P.A).left ⟶ Spec (CommRingCat.of K) := (fst (Over.mk (ιK ≫ t)) P.A).left
   have H : IsPullback π f' f ιK := GlobalTheory.AbLaw.SecBC.isPullback_whisker P.A h
   have hpb := GlobalTheory.AbLaw.SecBC.isPullback_snd P.A T
-  haveI : IsProper f := MorphismProperty.of_isPullback (P := @IsProper) hpb P.isAb.proper
-  haveI : Smooth f := MorphismProperty.of_isPullback (P := @Smooth) hpb P.isAb.smooth
-  haveI : Flat f := inferInstance
+  have : IsProper f := MorphismProperty.of_isPullback (P := @IsProper) hpb P.isAb.proper
+  have : Smooth f := MorphismProperty.of_isPullback (P := @Smooth) hpb P.isAb.smooth
+  have : Flat f := inferInstance
   obtain ⟨Q⟩ := GlobalTheory.ProperFinite.nonempty_perf_of_isProper f hM
-  haveI hι : Surjective ιK := ⟨fun p => ⟨⟨⊥, Ideal.isPrime_bot⟩, Subsingleton.elim _ _⟩⟩
+  have hι : Surjective ιK := ⟨fun p => ⟨⟨⊥, Ideal.isPrime_bot⟩, Subsingleton.elim _ _⟩⟩
   have hπ : Surjective π := MorphismProperty.of_isPullback (P := @Surjective) H.flip hι
   obtain ⟨z, rfl⟩ := hπ.surj y
   by_contra hy
@@ -926,10 +926,10 @@ theorem monomial_eq_of_mul_unit {W : Type} [CommRing W] [Nontrivial W] {σ : Typ
       MvPowerSeries.monomial P (1 : W) * x = MvPowerSeries.monomial M 1 * x' → P ≤ M := by
     intro P M x x' hx' he
     have hc := congrArg (MvPowerSeries.coeff M) he
-    rw [MvPowerSeries.coeff_monomial_mul, MvPowerSeries.coeff_monomial_mul, if_pos le_rfl, tsub_self,
+    rw [MvPowerSeries.coeff_monomial_mul, MvPowerSeries.coeff_monomial_mul, ite_eq_left le_rfl, tsub_self,
       MvPowerSeries.coeff_zero_eq_constantCoeff_apply] at hc
     by_contra hPM
-    rw [if_neg hPM, _root_.one_mul] at hc
+    rw [ite_eq_right hPM, _root_.one_mul] at hc
     exact (hx'.map (MvPowerSeries.constantCoeff (σ := σ) (R := W))).ne_zero hc.symm
   exact le_antisymm (h1 _ _ _ _ hx' he) (h1 _ _ _ _ hx he.symm)
 
@@ -1041,7 +1041,7 @@ theorem exps_eq {σ k : Type} [Field k] [IsDomain (MvPowerSeries σ k)] {m : ℕ
     rw [Finsupp.finsetSum_apply, Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       exact fun e => hj (hv e)
     · simp
   rw [hmon, hmon] at he''
@@ -1595,9 +1595,9 @@ namespace GlobalTheory.Heat
 
 theorem heat_div_monomial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (k : Type) [Field k] [CharZero k] (m d : ℕ) (t : SAB H (Sp (ChartRing k m d))) (P : PELUnif (maximalIdeal (ChartRing k m d)) t) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre (bdParam k m d) gam → LinearIndependent ℤ gam → (∀ p : Sp (ChartRing k m d), p ∈ abLocus t.G ↔ ∏ i, bdParam k m d i ∉ p.asIdeal) → letI := H.starRing; ∀ (Y : Ray P.oD) (n' : ℕ) (v' : Module.Basis (Fin n') (ChartRing k m d) (TanM (𝟙 (Sp (ChartRing k m d))) Y.H)) (dd : Fin n' → Fld Y.H.left), (∀ a, IsInv Y.H (v' a) (dd a)) → ∀ (D : Derivation ℤ (ChartRing k m d) (ChartRing k m d)) (q : Fin m → ChartRing k m d), (∀ i, D (bdParam k m d i) = q i * bdParam k m d i) → ∀ h : Heat Y.H Y.q.left P.D.toPre.P.L dd ⇑D, IsBasic Y h → HasDefect Y h (fun _ _ _ => 0) → (∀ a b, h.Θ a b ∈ maximalIdeal (ChartRing k m d)) → ∀ ρ : ChartRing k m d →+* DualNumber k, (∀ r, ρ r = TrivSqZeroExt.inl (MvPowerSeries.constantCoeff r) + TrivSqZeroExt.inr (MvPowerSeries.constantCoeff (D r))) → ∀ (B' : Over (Sp (DualNumber k))) [GrpObj B'] (π₁ π₂ : B'.left ⟶ P.D.toPre.P.A.left) (c' : P.D.toPre.X → (Sp (DualNumber k) ⟶ B'.left)), IsGrpPullback B' P.D.toPre.P.A (spMap ρ) π₁ → IsGrpPullback B' P.D.toPre.P.A (spMap (constHom ρ)) π₂ → (∀ (Z : Scheme.{0}) (x : Z ⟶ B'.left) (y : Z ⟶ Sp k), x ≫ B'.hom = y ≫ spMap (TrivSqZeroExt.fstHom k k k).toRingHom → x ≫ π₁ = x ≫ π₂) → (∀ y, c' y ≫ B'.hom = 𝟙 _ ∧ c' y ≫ π₁ = spMap ρ ≫ (P.D.toPre.c y).left ∧ c' y ≫ π₂ = spMap (constHom ρ) ≫ (P.D.toPre.c y).left) → ∀ (e : ℕ), 1 ≤ e → ∀ (mu α : P.D.toPre.X) (N : Fin m → ℕ) (σ σ' : P.D.toPre.SecB e α) (σ₁ σ₁u σ₁' σ₁u' : P.D.toPre.SecB e (α + e • mu)), TActs Y h e α σ σ' → ShiftEq P.D.toPre e mu α σ σ₁ 0 σ₁ → ShiftEq P.D.toPre e mu α σ' σ₁' 0 σ₁' → (∀ (Z : Scheme.{0}) (x : Z ⟶ P.D.toPre.P.A.left) (z : Z) J, Good P.D.toPre.P.L z J → sval σ₁ x z J = gs (x ≫ P.D.toPre.P.A.hom) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of (ChartRing k m d))).inv.hom (∏ i, bdParam k m d i ^ N i)) * sval σ₁u x z J) → (∀ (Z : Scheme.{0}) (x : Z ⟶ P.D.toPre.P.A.left) (z : Z) J, Good P.D.toPre.P.L z J → sval σ₁' x z J = gs (x ≫ P.D.toPre.P.A.hom) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of (ChartRing k m d))).inv.hom (∏ i, bdParam k m d i ^ N i)) * sval σ₁u' x z J) → ∃ σ₁u'' : P.D.toPre.SecB e (α + e • mu), TActs Y h e (α + e • mu) σ₁u σ₁u'' ∧ ∀ (Z : Scheme.{0}) (x : Z ⟶ P.D.toPre.P.A.left) (z : Z) J, Good P.D.toPre.P.L z J → sval σ₁u'' x z J = sval σ₁u' x z J - gs (x ≫ P.D.toPre.P.A.hom) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of (ChartRing k m d))).inv.hom (2 * (e : ChartRing k m d) * ∑ i, (N i : ChartRing k m d) * q i)) * sval σ₁u x z J := by
   intro E _ _ _ H k _ _ m d t P gam hmon hli hab Y n' v' dd hdd D q hq h hb hdef hΘ ρ hρ B' _ π₁ π₂ c' h1 h2 h3 h4 e he mu α N σ σ' σ₁ σ₁u σ₁' σ₁u' hT hS hS' hv hv'
-  letI := H.starRing
-  haveI : IsAdicComplete (maximalIdeal k) k := by rw [maximalIdeal_eq_bot]; infer_instance
-  haveI : IsAdicComplete (maximalIdeal (ChartRing k m d)) (ChartRing k m d) :=
+  let := H.starRing
+  have : IsAdicComplete (maximalIdeal k) k := by rw [maximalIdeal_eq_bot]; infer_instance
+  have : IsAdicComplete (maximalIdeal (ChartRing k m d)) (ChartRing k m d) :=
     GlobalTheory.PlaceInt.isAdicComplete_mvPowerSeries_finite (V := k) _
 
   clear hρ h1 h2 h3 h4 hΘ hmon hli hab
@@ -1606,7 +1606,7 @@ theorem heat_div_monomial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have f3 : D 1 = 0 := D.map_one_eq_zero
   have f4 : ∀ x y, D (x * y) = x • D y + y • D x := D.leibniz
   generalize (⇑D : ChartRing k m d → ChartRing k m d) = f at f1 f2 f3 f4 hq h hb hdef ⊢
-  letI : Algebra ℤ (ChartRing k m d) := Ring.toIntAlgebra _
+  let : Algebra ℤ (ChartRing k m d) := Ring.toIntAlgebra _
   let D' : Derivation ℤ (ChartRing k m d) (ChartRing k m d) :=
     { toFun := f, map_add' := f1, map_smul' := fun z x => f2 z x, map_one_eq_zero' := f3, leibniz' := f4 }
   have hA1 := heat_acts_on_terms (ChartRing k m d) P.D (𝓞 E) P.oD Y n' v' dd hdd D' h hb e (α + e • mu) σ₁
@@ -1844,7 +1844,7 @@ theorem alg_eval {k S : Type} [Field k] [CharZero k] [CommRing S] (φ : DualNumb
     ext <;> simp <;> ring
   have hWt' : Wt.val * W0.val = Wi.val := by rw [← Units.val_mul, hWt]
   apply Units.ext
-  simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+  simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
   apply hY.mul_right_cancel
   linear_combination (-Uρ.val) * hi + (-(Uρ.val * Aρ)) * hWt' + Wt.val * hii +
     (Wt.val * Uc.val * Ac) * d1 + (Wt.val * Uc.val * A'c) * d2
@@ -1900,9 +1900,9 @@ theorem units_eval : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
   have hle₁ : e₁ ≤ e := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) he
   have hle₂ : e₂ ≤ e := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) he
   obtain ⟨σ, hσu⟩ := he₁ e hle₁ mu α
-  letI := H.starRing
-  haveI : IsAdicComplete (maximalIdeal k) k := by rw [maximalIdeal_eq_bot]; infer_instance
-  haveI : IsAdicComplete (maximalIdeal (ChartRing k m d)) (ChartRing k m d) :=
+  let := H.starRing
+  have : IsAdicComplete (maximalIdeal k) k := by rw [maximalIdeal_eq_bot]; infer_instance
+  have : IsAdicComplete (maximalIdeal (ChartRing k m d)) (ChartRing k m d) :=
     GlobalTheory.PlaceInt.isAdicComplete_mvPowerSeries_finite (V := k) _
   obtain ⟨σ', hσσ'⟩ := exists_acts' P.D Y v' dd hdd _ D h hB e α σ
   obtain ⟨hN, hσ₁⟩ := he₂ e hle₂

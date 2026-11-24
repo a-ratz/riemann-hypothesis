@@ -65,7 +65,7 @@ private theorem key {T Z S : Scheme.{0}} {p : Z ⟶ S} {π : T ⟶ S} {ι : Type
     (hτr : ∀ j, τ j ≫ A.r = g) (x1 : gp Ω ⟶ U1) :
     ∑ j, m j * φ (τ j (pt x1)) = ∑ᶠ z ∈ fib A.r (x1 ≫ g), w Ω (z ≫ A.v) * φ (pt z) := by
   classical
-  haveI : IsFinite A.r := A.finite
+  have : IsFinite A.r := A.finite
   have hfin := hFib A.r Ω (x1 ≫ g)
   have hmem : ∀ j, x1 ≫ τ j ∈ fib A.r (x1 ≫ g) := fun j => by
     show (x1 ≫ τ j) ≫ A.r = x1 ≫ g
@@ -91,10 +91,10 @@ private theorem key {T Z S : Scheme.{0}} {p : Z ⟶ S} {π : T ⟶ S} {ι : Type
     intro j _
     by_cases h : x1 ≫ τ j = z
     · rw [Set.indicator_of_mem
-        (show j ∈ {j | (x1 ≫ f) ≫ σ j = z ≫ A.v} from (hiff z hz j).mpr h) m, if_pos h]
+        (show j ∈ {j | (x1 ≫ f) ≫ σ j = z ≫ A.v} from (hiff z hz j).mpr h) m, ite_eq_left h]
     · rw [Set.indicator_of_notMem
         (show j ∉ {j | (x1 ≫ f) ≫ σ j = z ≫ A.v} from fun h' => h ((hiff z hz j).mp h')) m,
-        if_neg h]
+        ite_eq_right h]
   rw [finsum_mem_eq_finite_toFinset_sum _ hfin]
   rw [Finset.sum_congr rfl
     (g := fun z => (∑ j, if x1 ≫ τ j = z then m j else 0) * φ (pt z))
@@ -104,20 +104,20 @@ private theorem key {T Z S : Scheme.{0}} {p : Z ⟶ S} {π : T ⟶ S} {ι : Type
   apply Finset.sum_congr rfl
   intro j _
   simp only [ite_mul, zero_mul]
-  rw [Finset.sum_ite_eq, if_pos (hfin.mem_toFinset.mpr (hmem j)), pt_comp]
+  rw [Finset.sum_ite_eq, ite_eq_left (hfin.mem_toFinset.mpr (hmem j)), pt_comp]
 
 theorem UpperTheory.Gal.TranscendenceTraces.countWt_of :
     PtEx → PtLift → FibFin → CountWt := by
   intro hPE hPL hFib T Z S p π _ _ _ ι _ σ m w hσ hC
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   intro A φ hφ
   let f : pullback π A.u ⟶ T := pullback.fst π A.u
   let g : pullback π A.u ⟶ A.U := pullback.snd π A.u
   have hfg : f ≫ π = g ≫ A.u := pullback.condition
   have hpb1 : IsPullback f g π A.u := IsPullback.of_hasPullback π A.u
-  haveI : Surjective g := MorphismProperty.of_isPullback (P := @Surjective) hpb1 inferInstance
-  haveI : IsIntegralHom g :=
+  have : Surjective g := MorphismProperty.of_isPullback (P := @Surjective) hpb1 inferInstance
+  have : IsIntegralHom g :=
     MorphismProperty.of_isPullback (P := @IsIntegralHom) hpb1 inferInstance
   let τ : ι → (pullback π A.u ⟶ A.V) := fun j =>
     A.pb.lift (f ≫ σ j) g (by rw [Category.assoc, hσ j, hfg])
@@ -130,8 +130,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.countWt_of :
   have hconst : ∀ t1 t2, g t1 = g t2 → χ t1 = χ t2 := by
     intro t1 t2 h
     obtain ⟨Ω, hF, hA, x1, hx1⟩ := hPE _ t1
-    letI := hF
-    haveI := hA
+    let := hF
+    have := hA
     obtain ⟨z, hz, hzt⟩ := hPL g Ω (x1 ≫ g) t2 (by rw [pt_comp, hx1, h])
     have k1 := key hFib σ m w hC A φ Ω f g hfg τ hτv hτr x1
     have k2 := key hFib σ m w hC A φ Ω f g hfg τ hτv hτr z

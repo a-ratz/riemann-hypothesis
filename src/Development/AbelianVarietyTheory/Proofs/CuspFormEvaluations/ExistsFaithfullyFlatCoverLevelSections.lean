@@ -89,7 +89,7 @@ theorem exists_faithfullyFlat_isVtOver :
     rw [levPt, Category.assoc, (moduli_univ_eta_killed hL E H Dw l Xo a).1 b hb, MonObj.comp_one]
   obtain ⟨B, _, φ, w, hφ, hw⟩ := GlobalTheory.T.exists_faithfullyFlat_nthRoots_of_torsion hL E H Dw l Xo S y.x l.M l.M hM hM (Fin n)
     (fun b => levPt Xo y.x (x b)) (fun b => hpow _ _)
-  letI : Algebra c.F B := (φ.comp (algebraMap c.F S)).toAlgebra
+  let : Algebra c.F B := (φ.comp (algebraMap c.F S)).toAlgebra
   let ψ : S →ₐ[c.F] B := { φ with commutes' := fun _ => rfl }
   obtain ⟨y', hy'⟩ := GlobalTheory.T.exists_framedPoint_baseChange_algHom hL E H Dw l Xo c S B ψ y
   have hx : spMap φ ≫ y.x = y'.x := hy'.1.symm

@@ -65,7 +65,7 @@ theorem isOpen_inf_isCompact : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
     ext x; simp [Subgroup.mem_subgroupOf]
   refine ⟨?_, ?_, ?_⟩
   · rw [Subgroup.coe_inf, eC, eK]
-    exact (h1.inter GlobalTheory.SplitFlip.isOpen_KO).preimage continuous_subtype_val
+    exact (h1.inter GlobalTheory.SplitFlip.isOpen_KO).preimage continuous_subtypeVal
   · rw [eC]; exact hemb.isCompact_preimage h2
   · rw [eK]; exact hemb.isCompact_preimage GlobalTheory.SplitFlip.isCompact_KO
 

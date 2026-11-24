@@ -176,10 +176,10 @@ theorem sum_comap (K K' : Type) [Field K] [NumberField K] [_root_.NumberField.Is
     [Algebra K K'] (g : InfinitePlace K → ℝ) :
     ∑ w : InfinitePlace K', g (w.comap (algebraMap K K')) = finrank K K' * ∑ v, g v := by
   classical
-  haveI : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
+  have : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
   have h0 : ∀ τ : K →+* ℂ, Nat.card {σ : K' →+* ℂ // σ.comp (algebraMap K K') = τ} = finrank K K' := fun τ => by
-    letI : Algebra K ℂ := τ.toAlgebra
-    haveI : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+    let : Algebra K ℂ := τ.toAlgebra
+    have : Module.Finite K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
     rw [← AlgHom.card K K' ℂ, ← Nat.card_eq_fintype_card]
     exact Nat.card_congr ⟨fun σ => { σ.1 with commutes' := fun x => RingHom.congr_fun σ.2 x },
       fun φ => ⟨φ.toRingHom, RingHom.ext fun x => φ.commutes x⟩, fun σ => rfl, fun φ => rfl⟩
@@ -294,12 +294,12 @@ theorem rk_mul_mu_eq {K V ι : Type} [Field K] [NumberField K] [StarRing K] [_ro
 
 theorem slope_sq_sub_le_slope_sq_span : ∀ (K K' V V' : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [Field K'] [NumberField K'] [Algebra K K'] [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [AddCommGroup V'] [Module K' V'] [Module (𝓞 K') V'] [IsScalarTower (𝓞 K') K' V'] (N : (K →+* ℂ) → V → ℝ) (N' : (K' →+* ℂ) → V' → ℝ) (ι : V →ₛₗ[algebraMap K K'] V') (L : Submodule (𝓞 K) V) (c : ℝ), HasGram N → HasGram N' → (∀ σ x, N ((starRingEnd ℂ).comp σ) x = N σ x) → (∀ (n : ℕ) (b : Fin n → V), LinearIndependent K b → LinearIndependent K' (fun k => ι (b k))) → L.FG → L ≠ ⊥ → (∀ σ' x, N' σ' (ι x) ≤ Real.exp c * N (σ'.comp (algebraMap K K')) x) → slope_sq N L - 2 * c ≤ slope_sq N' (Submodule.span (𝓞 K') (ι '' (L : Set V))) := by
   intro K K' V V' _ _ _ _ _ _ _ _ _ _ _ _ _ _ N N' ι L c ⟨⟨n, ⟨b, X⟩, hG⟩⟩ ⟨⟨n', ⟨b', X'⟩, hG'⟩⟩ hc hli hL h0 hN
-  letI : StarRing K := starRingOfComm
-  letI : StarRing K' := starRingOfComm
-  haveI : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
-  haveI : Module.Finite K V := Module.Finite.of_basis b
-  letI : Module (𝓞 K) V' := Module.compHom V' (algebraMap (𝓞 K) (𝓞 K'))
-  haveI : IsScalarTower (𝓞 K) (𝓞 K') V' := ⟨fun a s x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  let : StarRing K := starRingOfComm
+  let : StarRing K' := starRingOfComm
+  have : IsTotallyComplex K' := isTotallyComplex_of_algebra K K'
+  have : Module.Finite K V := Module.Finite.of_basis b
+  let : Module (𝓞 K) V' := Module.compHom V' (algebraMap (𝓞 K) (𝓞 K'))
+  have : IsScalarTower (𝓞 K) (𝓞 K') V' := ⟨fun a s x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
   let l : L →ₗ[𝓞 K] V' :=
     { toFun := fun x => ι x
       map_add' := fun x y => by simp
@@ -311,7 +311,7 @@ theorem slope_sq_sub_le_slope_sq_span : ∀ (K K' V V' : Type) [Field K] [Number
     ext y; simp [l]
   set L' := Submodule.span (𝓞 K') (ι '' (L : Set V)) with hL'
   have hL'fg : L'.FG := by
-    haveI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.2 hL
+    have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.2 hL
     obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := 𝓞 K) (M := L)
     refine ⟨(s.finite_toSet.image l).toFinset, ?_⟩
     rw [Set.Finite.coe_toFinset, ← Submodule.span_span_of_tower (𝓞 K), ← Submodule.map_span, hs,
@@ -350,7 +350,7 @@ theorem slope_sq_sub_le_slope_sq_span : ∀ (K K' V V' : Type) [Field K] [Number
       Nat.card (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := by
     rw [AddSubgroup.relIndex, hsub]; rfl
   rw [hidx] at i1 m1
-  haveI : Finite (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := Nat.finite_of_card_ne_zero i1
+  have : Finite (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) := Nat.finite_of_card_ne_zero i1
   have hidx' := relIndex_span (S := 𝓞 K') l eL (he'.restrict_scalars' (𝓞 K'))
     (Nat.card (L ⧸ Submodule.span (𝓞 K) (Set.range eL)) : 𝓞 K)
     (fun x hx => by

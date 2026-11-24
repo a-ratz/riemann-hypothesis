@@ -236,17 +236,17 @@ theorem step {κ : Type} [Fintype κ] [DecidableEq κ] (hR : HasStableRangeOne R
   obtain ⟨u, hu⟩ := hu
   obtain ⟨E₂, hE₂, H₂⟩ := colOpLeft l (fun a => - M₁ a l * ↑u⁻¹) s hls
   refine of_left hE₂ hM₁ fun hM₂ => ?_
-  have hu₂ : (E₂ * M₁) l l = u := by rw [H₂, if_neg hls, add_zero, hu]
+  have hu₂ : (E₂ * M₁) l l = u := by rw [H₂, ite_eq_right hls, add_zero, hu]
   have hc₂ : ∀ i : κ, (E₂ * M₁) (Sum.inl i) l = 0 := fun i => by
-    rw [H₂, if_pos (hin i), ← hu, mul_assoc, Units.inv_mul]; ring
+    rw [H₂, ite_eq_left (hin i), ← hu, mul_assoc, Units.inv_mul]; ring
   generalize E₂ * M₁ = M₂ at hM₂ hu₂ hc₂
   obtain ⟨E₃, hE₃, H₃⟩ := colOpRight l (fun b => - M₂ l b * ↑u⁻¹) s hls
   refine of_right hE₃ hM₂ fun hM₃ => ?_
-  have hu₃ : (M₂ * E₃) l l = u := by rw [H₃, if_neg hls, add_zero, hu₂]
+  have hu₃ : (M₂ * E₃) l l = u := by rw [H₃, ite_eq_right hls, add_zero, hu₂]
   have hc₃ : ∀ i : κ, (M₂ * E₃) (Sum.inl i) l = 0 := fun i => by
-    rw [H₃, if_neg hls, add_zero, hc₂]
+    rw [H₃, ite_eq_right hls, add_zero, hc₂]
   have hr₃ : ∀ i : κ, (M₂ * E₃) l (Sum.inl i) = 0 := fun i => by
-    rw [H₃, if_pos (hin i), hu₂, mul_assoc, Units.inv_mul]; ring
+    rw [H₃, ite_eq_left (hin i), hu₂, mul_assoc, Units.inv_mul]; ring
   generalize M₂ * E₃ = M₃ at hM₃ hu₃ hc₃ hr₃
   have hform : M₃ = (diagonal fun i => ((Sum.elim (fun _ => 1) (fun _ => u) : κ ⊕ Unit → Rˣ) i : R)) *
       fromBlocks M₃.toBlocks₁₁ 0 0 (1 : Matrix Unit Unit R) := by
@@ -311,15 +311,15 @@ theorem sr1_field (k : Type) [Field k] : GlobalTheory.HaarLin.HasStableRangeOne 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem isAddHaar_muD (t : ℕ) : @Measure.IsAddHaarMeasure _ _ _ (_root_.borel _) (muD k t) := by
-  letI : MeasurableSpace (Fin t → k) := _root_.borel _
-  haveI : BorelSpace (Fin t → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin t → k) := _root_.borel _
+  have : BorelSpace (Fin t → k) := ⟨rfl⟩
   unfold muD
   infer_instance
 
 theorem map_muD (t : ℕ) (A : GL (Fin t) k) :
     @Measure.map _ _ (_root_.borel _) (_root_.borel _) (fun d : Fin t → k => (A⁻¹ : GL (Fin t) k).val *ᵥ d) (muD k t) =
       (distribHaarChar k (Matrix.GeneralLinearGroup.det A)) • muD k t := by
-  haveI : SecondCountableTopology k := GlobalTheory.HaarScaleMatrix.secondCountable_of_localField k
+  have : SecondCountableTopology k := GlobalTheory.HaarScaleMatrix.secondCountable_of_localField k
   have h := GlobalTheory.HaarLin.map_mulVec_of_mem_TD k (Fin t) (A⁻¹ : GL (Fin t) k).val
     (GlobalTheory.HaarLin.Gauss.mem_TD_of_isUnit_det k (sr1_field k) (Fin t) _
       (Matrix.GeneralLinearGroup.det (A⁻¹ : GL (Fin t) k)).isUnit)
@@ -338,9 +338,9 @@ theorem smInt_mulVec (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
     @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (_root_.borel _) _ _ (muD k t) (fun d => φ ((A⁻¹ : GL (Fin t) k).val *ᵥ d)) =
       ((dpow t 1 A : ℂˣ) : ℂ) • @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (_root_.borel _) _ _ (muD k t) φ := by
   classical
-  letI : MeasurableSpace (Fin t → k) := _root_.borel _
-  haveI : BorelSpace (Fin t → k) := ⟨rfl⟩
-  haveI : (muD k t).IsAddHaarMeasure := isAddHaar_muD t
+  let : MeasurableSpace (Fin t → k) := _root_.borel _
+  have : BorelSpace (Fin t → k) := ⟨rfl⟩
+  have : (muD k t).IsAddHaarMeasure := isAddHaar_muD t
   set f : (Fin t → k) → (Fin t → k) := fun d => (A⁻¹ : GL (Fin t) k).val *ᵥ d with hf
   have fc : Continuous f := Continuous.matrix_mulVec continuous_const continuous_id
   have fm : Measurable f := fc.measurable

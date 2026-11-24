@@ -65,9 +65,9 @@ theorem semilinear_basis_image_indep_of_basis :
       LinearIndependent ℂ (fun i => j (b' i)) ∧
         Submodule.span ℂ (Set.range fun i => j (b' i)) = ⊤ := by
   intro K _ e V _ _ W _ _ j ι κ b b' ⟨hli, hsp⟩
-  letI : Algebra K ℂ := e.toAlgebra
-  letI : Module K W := Module.compHom W e
-  haveI : IsScalarTower K ℂ W := ⟨fun k c w => by
+  let : Algebra K ℂ := e.toAlgebra
+  let : Module K W := Module.compHom W e
+  have : IsScalarTower K ℂ W := ⟨fun k c w => by
     change (e k * c) • w = e k • c • w
     exact mul_smul _ _ _⟩
   let j' : V →ₗ[K] W :=

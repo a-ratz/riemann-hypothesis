@@ -64,10 +64,10 @@ theorem IsUnrExt.ne_zero {K K' : UQ} {d : ℕ} {φ : K.E →+* K'.E} (hU : IsUnr
 theorem trace_int_of_isIntegral {K K' : UQ} {d : ℕ} {φ : K.E →+* K'.E} (hU : IsUnrExt K K' d φ) (z : K'.E)
     (hz : @IsIntegral K.O K'.E _ _ (φ.comp (algebraMap K.O K.E)).toAlgebra z) :
     ∃ a : K.O, @Algebra.trace K.E K'.E _ _ φ.toAlgebra z = algebraMap K.O K.E a := by
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
-  haveI : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FiniteDimensional K.E K'.E :=
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
+  have : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional K.E K'.E :=
     Module.finite_of_finrank_pos (by rw [hU.2.2.2.2]; exact Nat.pos_of_ne_zero hU.ne_zero)
   have h := Algebra.isIntegral_trace (R := K.O) (L := K.E) hz
   obtain ⟨a, ha⟩ := IsIntegrallyClosed.isIntegral_iff.mp h

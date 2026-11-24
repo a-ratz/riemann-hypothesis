@@ -182,7 +182,7 @@ theorem choose_rank_ratio_le :
     rw [← hDy]; exact mul_nonneg (Nat.cast_nonneg _) hy0
   have hpow : (1 + (2 * D + 5 + ρ * T) / ((1 - ρ) * (T - D))) ^ D
       ≤ Real.exp ((D : ℝ) * (2 * D + 5 + ρ * T) / ((1 - ρ) * (T - D))) := by
-    rw [← hDy, Real.exp_nat_mul]
+    rw [← hDy, Real.exp_natCast_mul]
     exact pow_le_pow_left₀ (by linarith)
       (by linarith [Real.add_one_le_exp ((2 * D + 5 + ρ * T) / ((1 - ρ) * (T - D)))]) D
   have hexp := exp_le_one_add_of_le_tenth _ hε0 hε
@@ -269,7 +269,7 @@ theorem le_gap_bar {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Recip
   have h := hu (show (⟨Dw.p - 1, by omega⟩ : Fin (Dw.p + Dw.q)) ≤ ⟨Dw.p - 1 + 1, by omega⟩ from Nat.le_succ _)
   rw [gap, dite_eq_left (by omega)]
   simp only [hodgeWt, CompHt.barWt, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-  rw [if_pos (by omega), if_neg (by omega)]
+  rw [ite_eq_left (by omega), ite_eq_right (by omega)]
   linarith
 
 theorem bir_gap_le (d N : ℕ) (hd : 3 ≤ d) : (d + 3) ^ 2 + 2 * N ≤ (d + 3) * ((d + 1).choose 2 + 4 * N + d + 3) := by
@@ -449,7 +449,7 @@ theorem rk_le_alt_alt : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.
       (uW p i + (s * cZero (Fm.D x ι) ((i : ℕ) + 1)) • hodgeWt (dat p i)) τ) := fun τ => by
     rw [ew]
     have := (hanti (s + 1) (by omega) τ).2
-    rwa [if_neg (Nat.succ_ne_zero s)] at this
+    rwa [ite_eq_right (Nat.succ_ne_zero s)] at this
   have hl3 : ∀ τ, 1 ≤ gap ((uW p i + (s * cZero (Fm.D x ι) ((i : ℕ) + 1)) • hodgeWt (dat p i)) τ) ((dat p i).p - 1) :=
     fun τ => by
       rw [ew]
@@ -471,7 +471,7 @@ theorem rk_le_alt_alt : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.
   first
     | have hJ := _root_.GlobalTheory.T.jet_rank_complex_le hX hP hSi hTo hG hQ hN
     | have hJ := _root_.GlobalTheory.T.jet_rank_complex_le hP hSi hTo hG hQ hN
-  letI := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
+  let := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Finset.mul_sum]
   refine Finset.sum_le_sum fun Z _ => ?_
   have d0 : 0 < Y.dg u1 Z := hδ.trans_le (hdg Z).1

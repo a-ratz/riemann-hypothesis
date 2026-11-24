@@ -120,7 +120,7 @@ lemma exp_fix (Y : Mx k r) (c : Fin (2 * r + k + 1)) (hY : ∀ x, Y x c = 0) :
 
 lemma glev_mul {i : Fin (r + 1)} {g h : Mx k r} (hg : g ∈ Glev k r i) (hh : h ∈ Glev k r i) :
     g * h ∈ Glev k r i := by
-  simp only [Glev, UH, Set.mem_setOf_eq] at hg hh ⊢
+  simp only [Glev, UH, Set.mem_ofPred_eq] at hg hh ⊢
   obtain ⟨hgU, hgF⟩ := hg
   obtain ⟨hhU, hhF⟩ := hh
   refine ⟨?_, fun a ha => ⟨?_, ?_⟩⟩
@@ -132,7 +132,7 @@ lemma glev_mul {i : Fin (r + 1)} {g h : Mx k r} (hg : g ∈ Glev k r i) (hh : h 
 lemma exp_mem_glev (i : Fin (r + 1)) (X : Mx k r) (hX : Xᴴ = -(Hpk k r * X * Hpk k r))
     (hc : ∀ a : Fin r, a.val < i.val → ∀ x, X x (eI k r a) = 0 ∧ X x (esI k r a) = 0) (t : ℝ) :
     NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i := by
-  simp only [Glev, Set.mem_setOf_eq]
+  simp only [Glev, Set.mem_ofPred_eq]
   refine ⟨exp_mem_UH _ (skew_real X hX t), fun a ha => ⟨exp_fix _ _ fun x => ?_, exp_fix _ _ fun x => ?_⟩⟩
   · rw [Matrix.smul_apply, (hc a ha x).1, smul_zero]
   · rw [Matrix.smul_apply, (hc a ha x).2, smul_zero]
@@ -309,7 +309,7 @@ variable {E E' : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [NormedAddCom
 
 private lemma Glev_mul_mem {g h : Mx k r} (hg : g ∈ Glev k r i) (hh : h ∈ Glev k r i) :
     g * h ∈ Glev k r i := by
-  simp only [Glev, UH, Set.mem_setOf_eq] at hg hh ⊢
+  simp only [Glev, UH, Set.mem_ofPred_eq] at hg hh ⊢
   refine ⟨?_, fun a ha => ?_⟩
   · rw [Matrix.conjTranspose_mul]
     calc hᴴ * gᴴ * Hpk k r * (g * h) = hᴴ * (gᴴ * Hpk k r * g) * h := by

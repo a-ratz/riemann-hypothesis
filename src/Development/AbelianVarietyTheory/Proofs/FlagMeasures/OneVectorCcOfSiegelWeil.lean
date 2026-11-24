@@ -460,7 +460,7 @@ theorem oneVectorCc_of_siegelWeil (hP : HeckeCharacterZeroLocus.SiegelWeilU.Sieg
   · have hS : {X : Fin 1 → Fin M → E | gramE σ J X = fun _ _ => algebraMap F E β} =
         {x | hE σ J (x 0) (x 0) = algebraMap F E β} := by
       ext X
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · intro hX
         exact congrFun (congrFun hX 0) 0

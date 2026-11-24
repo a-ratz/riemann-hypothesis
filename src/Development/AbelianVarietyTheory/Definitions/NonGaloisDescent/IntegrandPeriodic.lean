@@ -111,10 +111,10 @@ theorem swPair_rank_zero {νV 𝓗 νW 𝓖 μ 𝓕 fr} (hs : SWSetup ψ V W χV
     (f₁ f₂ : WO V W → ℂ) :
     HasSum (fun Y : Lag W => ((νV 𝓗).toReal : ℂ) * lagTerm μ 𝓕 (fr Y) f₁ f₂)
       (∫ h in 𝓗, thetaKO om h 1 f₁ * star (thetaKO om h 1 f₂) ∂νV) := by
-  haveI : IsEmpty (Fin W.rank) := by rw [h]; infer_instance
-  haveI : Subsingleton (WO V W) := ⟨fun a b => by funext i; exact isEmptyElim i⟩
-  haveI : Subsingleton (Lag W) := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
-  haveI : Unique (Lag W) := uniqueOfSubsingleton default
+  have : IsEmpty (Fin W.rank) := by rw [h]; infer_instance
+  have : Subsingleton (WO V W) := ⟨fun a b => by funext i; exact isEmptyElim i⟩
+  have : Subsingleton (Lag W) := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
+  have : Unique (Lag W) := uniqueOfSubsingleton default
   have hμ : μ 𝓕 = 1 := hs.covol.2.2
   have hc : ∀ g : WO V W → ℂ, g = fun _ => g 0 := fun g => funext fun w => by rw [Subsingleton.elim w 0]
   have z : ∀ x y : WO V W, symplOH V W x y = 0 := fun x y => by simp [symplOH, symplO, hO]
@@ -128,10 +128,10 @@ theorem swPair_rank_zero {νV 𝓗 νW 𝓖 μ 𝓕 fr} (hs : SWSetup ψ V W χV
   have nm : ∀ p, om p (fun _ => 1) 0 * star (om p (fun _ => 1) 0) = 1 := fun p => by
     have u := hs.weil.om_unit μ 𝓕 hs.covol.1 hs.covol.2.1 p _ one
     rw [hc (om p fun _ => 1)] at u
-    simp only [setLIntegral_const, hμ, mul_one, enorm_one, one_pow] at u
+    simp only [setLIntegral_const, hμ, mul_one, eNorm_one, one_pow] at u
     have u2 : ‖om p (fun _ => 1) 0‖ ^ 2 = 1 := by
       have := congrArg ENNReal.toReal u
-      rwa [ENNReal.toReal_pow, toReal_enorm, ENNReal.toReal_one] at this
+      rwa [ENNReal.toReal_pow, toReal_eNorm, ENNReal.toReal_one] at this
     have := Complex.mul_conj' (om p (fun _ => 1) 0)
     rw [← Complex.ofReal_pow, u2] at this
     simpa using this

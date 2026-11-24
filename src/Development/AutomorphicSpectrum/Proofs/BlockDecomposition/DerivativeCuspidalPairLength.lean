@@ -464,7 +464,7 @@ theorem exists_col {x : IrrGL (k := k)} (hx : x.IsCusp) {h : ℕ} {c : Fin h →
     rfl
   have hU : unipRad k e = ⊥ := by
     by_contra hU
-    haveI := hx.2.2 h _ e hU
+    have := hx.2.2 h _ e hU
     refine hne (Representation.IntertwiningMap.ext (LinearMap.ext fun v => ?_))
     rw [Subsingleton.elim v 0, map_zero]
     rfl
@@ -511,7 +511,7 @@ theorem exists_cell_data (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {
   obtain ⟨hG, hC⟩ := GlobalTheory.CompanionTheory.GeoLink.geometricLemma k
   let M : Fin h → Type := fun i => Fin (x i).1
   let M' : Fin c → Type := fun j => Fin (y j).1
-  haveI : Fintype (SizeMatrix M M') := Fintype.ofFinite _
+  have : Fintype (SizeMatrix M M') := Fintype.ofFinite _
   have hr : ∀ (b : SizeMatrix M M') i, ∑ j, b.1 i j = (x i).1 := fun b i => by simpa [M] using b.2.1 i
   let fR : ∀ (b : SizeMatrix M M') i, (Σ j, Fin (b.1 i j)) ≃ M i := fun b i => stdBlocks (b.1 i) (hr b i)
   let gC : ∀ (b : SizeMatrix M M') j, (Σ i, Fin (b.1 i j)) ≃ M' j := fun b => b.nonempty_cols.some
@@ -568,7 +568,7 @@ theorem exists_row (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {p c : 
   have hjm : 1 ≤ jm y' hsum x.rep := ENat.one_le_iff_ne_zero.2 (jhMult_ne_zero_iff.2
     ((GlobalTheory.JacStages.isSubquotient_of_equiv φ.symm).trans hdrop))
   obtain ⟨ψ⟩ := hu
-  haveI := GlobalTheory.ProdSupport.nontrivial_piTensor (fun a => (s a).2.rep.V)
+  have := GlobalTheory.ProdSupport.nontrivial_piTensor (fun a => (s a).2.rep.V)
     fun a => GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible (s a).2.rep.irr
   obtain ⟨t, ht⟩ := exists_ne (0 : PiTensorProduct ℂ fun a => (s a).2.rep.V)
   obtain ⟨F, hF⟩ := (GlobalTheory.SmGL.Model.evalOne_bijective (stdBlocks (fun i => (s i).1) hs) x.2.rep.smooth _).2

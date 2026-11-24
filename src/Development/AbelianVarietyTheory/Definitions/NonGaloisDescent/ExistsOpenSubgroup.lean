@@ -222,7 +222,7 @@ theorem exists_isTm {g : ℕ} [Fact g.Prime] (h : IsPlaceOver A w) (hw : normV w
   have hχ : IsTm χ := by
     refine ⟨?_, fun σ hσ => ?_⟩
     · have := (isOpen_setOf_apply (F := E) x fun t => t = x).preimage
-        (continuous_subtype_val (p := fun σ => σ ∈ Ine (F := E) A))
+        (continuous_subtypeVal (p := fun σ => σ ∈ Ine (F := E) A))
       convert this using 1
       ext σ
       simpa using hker σ 1

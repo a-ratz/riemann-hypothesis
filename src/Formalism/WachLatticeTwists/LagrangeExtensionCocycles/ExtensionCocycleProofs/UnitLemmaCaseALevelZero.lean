@@ -98,7 +98,7 @@ theorem prod_sub_one_dvd (ℓ : ℕ) [Fact ℓ.Prime] (hℓ : ℓ ≠ 2) (u : �
   have hp := (Fact.out : ℓ.Prime)
   have hodd : Odd ℓ := hp.odd_of_ne_two hℓ
   have hnd_unit : ∀ w : ℤ_[ℓ], IsUnit w → ¬ (ℓ : ℤ_[ℓ]) ∣ w := fun w hw hd =>
-    hπ.not_unit (isUnit_of_dvd_unit hd hw)
+    hπ.not_isUnit (isUnit_of_dvd_unit hd hw)
   have hunit_of : ∀ w : ℤ_[ℓ], ¬ (ℓ : ℤ_[ℓ]) ∣ w → IsUnit w := by
     intro w hw
     by_contra hnu
@@ -133,7 +133,7 @@ theorem prod_sub_one_dvd (ℓ : ℕ) [Fact ℓ.Prime] (hℓ : ℓ ≠ 2) (u : �
       rfl
     have h1 := congrArg (Int.cast : ℤ → ℤ_[ℓ]) hz
     push_cast at h1
-    apply hπ.not_unit
+    apply hπ.not_isUnit
     apply isUnit_of_dvd_one
     rw [h1]
     exact dvd_add (dvd_mul_right _ _) (dvd_mul_of_dvd_left hd _)

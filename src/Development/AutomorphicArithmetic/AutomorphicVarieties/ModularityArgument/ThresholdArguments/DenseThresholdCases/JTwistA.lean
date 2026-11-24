@@ -151,7 +151,7 @@ theorem UpperTheory.V.Z.Desc.W.ordTw :
   have hs : IsSmoothChar (κ.loc w) := GlobalTheory.HeckeComp.smooth_loc κ w
   obtain ⟨E⟩ := ps_tw ω hs
   refine ⟨fun i => ω i * κ.loc w, ⟨(e'.trans (twistEquiv e _)).trans E⟩, fun i => ⟨(ho i).smooth.mul hs, ?_, ?_⟩⟩
-  · exact (ho i).cont.mul (hμ.comp continuous_subtype_val)
+  · exact (ho i).cont.mul (hμ.comp continuous_subtypeVal)
   · intro s g hg _
     have v := (ho i).val s g hg trivial
     have m := hL.loc_away (Or.inr rfl) (a s) (g : G K Ω) (by rw [hg]; exact ha.glob art hart s)
@@ -569,7 +569,7 @@ private theorem part_tw {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     {ph : Ine (F := F) A →* (Qbar l)ˣ} (H : W.IsWtPart h κ wt ph) {β : G F Ω →* (Qbar l)ˣ} (hβ : IsOpen (β.ker : Set (G F Ω))) :
     W.IsWtPart h (κ * β.comp (Dec (F := F) A).subtype) wt (ph * (β.comp (Ine (F := F) A).subtype)⁻¹) := by
   refine ⟨Subgroup.isOpen_mono (H₁ := ph.ker ⊓ β.ker.comap (Ine (F := F) A).subtype) (fun g hg => ?_)
-    (H.1.inter (hβ.preimage continuous_subtype_val)), fun a ha g => ?_⟩
+    (H.1.inter (hβ.preimage continuous_subtypeVal)), fun a ha g => ?_⟩
   · have h1 : ph g = 1 := hg.1
     have h2 : β g = 1 := hg.2
     change ph g * (β g)⁻¹ = 1

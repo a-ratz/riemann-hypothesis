@@ -90,8 +90,8 @@ theorem exists_isEv (u : HolUnif A L g) (U : A.left.Opens) {z : Fin g → ℂ} (
   let N := (Fin g → ℂ) →L[ℂ] ℂ
   let e : Sec (str A) U →+* ℂ := valAtHom (u.ex z).left U hz
   have he : ∀ a, e a = val u.ex U a z := fun a => (valAt'_eq_valAtHom (u.ex z).left hz a).symm
-  letI : Module (Sec (str A) U) N := Module.compHom N e
-  haveI : IsScalarTower ℂ (Sec (str A) U) N := ⟨fun c a n => by
+  let : Module (Sec (str A) U) N := Module.compHom N e
+  have : IsScalarTower ℂ (Sec (str A) U) N := ⟨fun c a n => by
     show e (c • a) • n = c • (e a • n)
     rw [Algebra.smul_def, map_mul, mul_smul, he (algebraMap ℂ _ c), holUnif_val_algebraMap u U z hz]⟩
   have hc : ∀ (c : ℂ) (b : Sec (str A) U), val u.ex U (c • b) =ᶠ[nhds z] fun w => c * val u.ex U b w := by

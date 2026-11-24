@@ -75,7 +75,7 @@ theorem UpperTheory.Reformulated.B.Qk10.exists_w :
     have h1 : IsUnit (algebraMap ℤ (NumberField.RingOfIntegers K) (p : ℤ)) := by
       simpa using h
     have h2 : IsUnit (p : ℤ) := (isUnit_map_iff _ _).mp h1
-    exact (Nat.prime_iff_prime_int.mp hp).not_unit h2
+    exact (Nat.prime_iff_prime_int.mp hp).not_isUnit h2
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal
     (Ideal.span {(p : NumberField.RingOfIntegers K)})
     (by rwa [Ne, Ideal.span_singleton_eq_top])
@@ -99,7 +99,7 @@ open UpperTheory.V UpperTheory.V.Base UpperTheory.V.HV UpperTheory.V.Alg UpperTh
 
 private theorem isCM (K : Type) [Field K] [NumberField K] (h : Module.finrank ℚ K = 2) (h' : IsTotallyComplex K) :
     IsCMField K := by
-  haveI : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := h }
+  have : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := h }
   exact IsCMField.ofCMExtension ℚ K
 
 private theorem exists_w (K : Type) [Field K] [NumberField K] {p : ℕ} (hp : p.Prime) :
@@ -163,7 +163,7 @@ private theorem card_orb {N : ℕ} [NeZero N] (H : Subgroup (ZMod N)ˣ) :
     obtain ⟨h1, -, -, h2⟩ := orbFacts ℂ N χ
     rw [h1, ← h2]
     exact le_rfl
-  · haveI : IsEmpty {χ : DirichletCharacter ℂ N // χ.toUnitHom.ker = H} := ⟨fun x => h ⟨x.1, x.2⟩⟩
+  · have : IsEmpty {χ : DirichletCharacter ℂ N // χ.toUnitHom.ker = H} := ⟨fun x => h ⟨x.1, x.2⟩⟩
     rw [Nat.card_of_isEmpty]
     exact Nat.zero_le _
 

@@ -184,7 +184,7 @@ theorem isClosed_twCent_thF (m : ℕ) (δ : GL (Fin m) (Af E)) : IsClosed (twCen
   have e : (twCent (thF E m) δ : Set (GL (Fin m) (Af E))) = {g | (g * δ).val = (δ * thF E m g).val} := by
     ext g; exact Units.ext_iff
   rw [e]
-  haveI : T2Space (Af E) :=
+  have : T2Space (Af E) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 E) => v.adicCompletion E)
       (fun v => (v.adicCompletionIntegers E : Set (v.adicCompletion E))) Filter.cofinite))
   exact isClosed_eq (Units.continuous_val.comp (continuous_id.mul continuous_const))
@@ -238,9 +238,9 @@ theorem mass_eq_of_charpoly (m : ℕ) (δ₁ δ₂ : GL (Fin m) E)
       right_inv := fun s => Subtype.ext (by simp [mul_assoc])
       map_mul' := fun a b => Subtype.ext (by simp [mul_assoc])
       continuous_toFun := Continuous.subtype_mk
-        ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+        ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
       continuous_invFun := Continuous.subtype_mk
-        ((continuous_const.mul continuous_subtype_val).mul continuous_const) _ }
+        ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _ }
   have hyΓ : y ∈ (ratF E m).range := ⟨x, rfl⟩
   refine GlobalTheory.T.twistedCentralizerMass_eq_of_topEquiv _ _ (thF E m) (thF E m) _ _ (ratF E m δ₂) (ratF E m δ₁) (isClosed_twCent_thF E m _)
     (isClosed_twCent_thF E m _) e fun t => ?_

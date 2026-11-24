@@ -440,10 +440,10 @@ private theorem lift_squareZero_general {B R' R : Type} [CommRing B] [CommRing R
     AdjoinRoot.lift_mk _ _
   have hα : ∀ g : ℤ[X], α (AdjoinRoot.mk f g) = Polynomial.aeval z' g := fun g =>
     AdjoinRoot.lift_mk _ _
-  letI : Algebra (AdjoinRoot f) B := φ.toAlgebra
+  let : Algebra (AdjoinRoot f) B := φ.toAlgebra
   have halg : algebraMap (AdjoinRoot f) B = φ := rfl
   let S' : Submonoid (AdjoinRoot f) := S.map (Nat.castRingHom (AdjoinRoot f))
-  haveI : IsLocalization S' B := by
+  have : IsLocalization S' B := by
     refine (isLocalization_iff _ _).mpr ⟨?_, fun b => ?_, fun {a c} h => ⟨1, ?_⟩⟩
     · rintro ⟨_, n, hn, rfl⟩
       simpa using hS n hn
@@ -556,7 +556,7 @@ private theorem formallySmooth_stalk {B : CommRingCat.{0}} {X : Scheme.{0}} (s :
   refine ⟨τ ≫ s.stalkMap y, ?_, ?_⟩
   · have hs : (s.stalkMap y).hom.FormallySmooth :=
       Scheme.Hom.mem_smoothLocus.mp (s.smoothLocus_eq_top.ge (Set.mem_univ y))
-    letI : Algebra B ((Spec B).presheaf.stalk (s y)) := StructureSheaf.stalkAlgebra B (s y)
+    let : Algebra B ((Spec B).presheaf.stalk (s y)) := StructureSheaf.stalkAlgebra B (s y)
     have := (s y).isPrime
     have : IsLocalization.AtPrime ((Spec B).presheaf.stalk (s y)) (s y).asIdeal :=
       StructureSheaf.IsLocalization.to_stalk B (s y)
@@ -570,10 +570,10 @@ private theorem ring_lift {B A O R' : Type} [CommRing B] [CommRing A] [CommRing 
     (hα : α.FormallySmooth) (π : R' →+* O) (hs : Function.Surjective π) (hk : RingHom.ker π ^ 2 = ⊥)
     (β' : B →+* R') (χ : A →+* O) (hc : χ.comp α = π.comp β') :
     ∃ χ' : A →+* R', π.comp χ' = χ ∧ χ'.comp α = β' := by
-  letI := α.toAlgebra
-  letI := β'.toAlgebra
-  letI := (π.comp β').toAlgebra
-  haveI : Algebra.FormallySmooth B A := hα
+  let := α.toAlgebra
+  let := β'.toAlgebra
+  let := (π.comp β').toAlgebra
+  have : Algebra.FormallySmooth B A := hα
   let π₁ : R' →ₐ[B] O := { π with commutes' := fun _ => rfl }
   let χ₁ : A →ₐ[B] O := { χ with commutes' := fun b => RingHom.congr_fun hc b }
   have hn : IsNilpotent (RingHom.ker (π₁ : R' →+* O)) := ⟨2, hk⟩
@@ -652,10 +652,10 @@ private theorem zpMap_general {B R : Type} [CommRing B] [CommRing R]
     AdjoinRoot.lift_mk _ _
   have hα : ∀ g : ℤ[X], α (AdjoinRoot.mk f g) = Polynomial.aeval z g := fun g =>
     AdjoinRoot.lift_mk _ _
-  letI : Algebra (AdjoinRoot f) B := φ.toAlgebra
+  let : Algebra (AdjoinRoot f) B := φ.toAlgebra
   have halg : algebraMap (AdjoinRoot f) B = φ := rfl
   let S' : Submonoid (AdjoinRoot f) := S.map (Nat.castRingHom (AdjoinRoot f))
-  haveI : IsLocalization S' B := by
+  have : IsLocalization S' B := by
     refine (isLocalization_iff _ _).mpr ⟨?_, fun b => ?_, fun {a c} h => ⟨1, ?_⟩⟩
     · rintro ⟨_, n, hn, rfl⟩
       simpa using hS n hn
@@ -732,7 +732,7 @@ private theorem zpMap_main (p : ℕ) (C : Type) [Field C] [IsAlgClosed C] [CharZ
     ∃ β : Geo.Tor.ZP p M →+* O, Function.Injective β ∧ IsUnit (M : O) ∧
       ∀ (k : Type) [Field k] (gk : O →+* k), IsPrimitiveRoot (gk (β (Geo.Tor.zetaZP p M))) M := by
   have hpos : 0 < M := Nat.pos_of_ne_zero hM
-  haveI : NeZero M := ⟨hM⟩
+  have : NeZero M := ⟨hM⟩
   have hprim : IsPrimitiveRoot ((Geo.Tor.zetaZP p M : Geo.Tor.ZP p M) : ℂ) M :=
     Complex.isPrimitiveRoot_exp M hM
   have hmin := cyclotomic_eq_minpoly hprim hpos
@@ -743,7 +743,7 @@ private theorem zpMap_main (p : ℕ) (C : Type) [Field C] [IsAlgClosed C] [CharZ
     apply Subtype.ext
     rw [hcoe, hmin]
     exact minpoly.aeval _ _
-  obtain ⟨w, hw⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C M
+  obtain ⟨w, hw⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C M
   have hvw : v w ≤ 1 := by
     have h1 : v w ^ M = 1 := by rw [← map_pow, hw.pow_eq_one, map_one]
     exact ((pow_eq_one_iff_of_nonneg zero_le hM).mp h1).le
@@ -779,7 +779,7 @@ private theorem zpMap_main (p : ℕ) (C : Type) [Field C] [IsAlgClosed C] [CharZ
     rw [map_mul, h0, zero_mul] at hg
     exact ((zpMap_isUnit p M n hn).mul_left_eq_zero).mp hg
   · intro k _ gk
-    haveI : NeZero (M : k) := ⟨by simpa using (hMu.map gk).ne_zero⟩
+    have : NeZero (M : k) := ⟨by simpa using (hMu.map gk).ne_zero⟩
     rw [← isRoot_cyclotomic_iff, hβ, IsRoot.def, ← map_cyclotomic_int, ← algebraMap_int_eq,
       eval_map_algebraMap, ← zpMap_map_aeval, hz, map_zero]
 

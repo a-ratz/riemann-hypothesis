@@ -115,7 +115,7 @@ theorem levi_comp {φ : (κ → ℂ) → ℝ} {τ : (ι → ℂ) → (κ → ℂ
   have hI := sndDeriv_I_I hτ w
   unfold levi
   rw [hev.fderiv_eq, hD.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.compL_apply, ContinuousLinearMap.flip_apply, hI, map_neg, hB,
     ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.map_smul]
   ring
@@ -127,7 +127,7 @@ theorem levi_smul_dir (φ : (ι → ℂ) → ℝ) (z w : ι → ℂ) (t : ℝ) :
     levi φ z (t • w) = t ^ 2 * levi φ z w := by
   unfold levi
   rw [smul_comm Complex.I t w]
-  simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_smul, smul_apply, smul_eq_mul]
   ring
 
 theorem levi_add_smul {f g : (ι → ℂ) → ℝ} {z : ι → ℂ} (c : ℝ) (hf : ContDiffAt ℝ 2 f z)
@@ -150,7 +150,7 @@ theorem levi_add_smul {f g : (ι → ℂ) → ℝ} {z : ι → ℂ} (c : ℝ) (h
       (fderiv ℝ (fderiv ℝ f) z + c • fderiv ℝ (fderiv ℝ g) z) z :=
     hdf.hasFDerivAt.add (hdg.hasFDerivAt.const_smul c)
   rw [hev.fderiv_eq, hD.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem levi_clm (L : (ι → ℂ) →L[ℝ] ℝ) (z w : ι → ℂ) : levi (⇑L) z w = 0 := by

@@ -137,7 +137,7 @@ theorem isOpenEmbedding_toLie : IsOpenEmbedding (toLie F n β) := by
       rw [hu]
       exact A.2
   rw [this]
-  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtype_val
+  exact (isOpenEmbedding_val F n).isOpen_range.preimage continuous_subtypeVal
 
 noncomputable def mulLeftLie (p : blockUpper F n β) : lieParabolic F n β ≃ₗ[F] lieParabolic F n β :=
   (Units.mulLeftLinearEquiv F _ (p : GL (Fin n) F)).ofSubmodules _ _ (by
@@ -224,11 +224,11 @@ theorem coe_parabolicCoord_symm_single (t : ParabolicIndex n β) :
   · obtain ⟨h1, h2⟩ := hij
     have ht : (⟨(i, j), h1 ▸ h2 ▸ t.2⟩ : ParabolicIndex n β) = t := by
       ext <;> simp [← h1, ← h2]
-    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), if_pos ⟨h1, h2⟩, ht, Pi.single_eq_same]
-  · rw [if_neg hij]
+    rw [dite_eq_left (h1 ▸ h2 ▸ t.2), ite_eq_left ⟨h1, h2⟩, ht, Pi.single_eq_same]
+  · rw [ite_eq_right hij]
     split_ifs with h
     · rfl
-    · rw [Pi.single_apply, if_neg]
+    · rw [Pi.single_apply, ite_eq_right]
       rintro rfl
       exact hij ⟨rfl, rfl⟩
 
@@ -388,7 +388,7 @@ theorem modularCharacter_eq_one_of_mem_integralGL (p : blockUpper F n β)
   borelize F ↥(blockUpper F n β)
   let V : OpenSubgroup (blockUpper F n β) :=
     ⟨(GLnLocal.integralGL F n).subgroupOf (blockUpper F n β),
-      (GLnLocal.isOpen_integralGL F n).preimage continuous_subtype_val⟩
+      (GLnLocal.isOpen_integralGL F n).preimage continuous_subtypeVal⟩
   have hV : IsCompact (V : Set (blockUpper F n β)) :=
     (isClosed_blockUpper F n β).isClosedEmbedding_subtypeVal.isCompact_preimage
       (GLnLocal.isCompact_integralGL F n)

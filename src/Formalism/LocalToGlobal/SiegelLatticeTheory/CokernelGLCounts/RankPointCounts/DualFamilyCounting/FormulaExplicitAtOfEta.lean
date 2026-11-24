@@ -239,7 +239,7 @@ theorem densMultIntAt_of (D : Formalism.BasicNotions.D7) (hF : DualityBasisChang
   have hs : Summable (fun p : PlF D => densP L δ ϖ (Tn u) (Tn u') Z p - 1) := by
     refine Summable.of_norm_bounded_eventually ((PI.UnitaryGroupMassFormula.CntFormula.prime_zeta_two D.host.F).mul_left 6) ?_
     filter_upwards [(absNorm_small_finite D).compl_mem_cofinite] with p hp
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt] at hp
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_lt] at hp
     have hcle : cJ (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal ≤ 2 * (D.R.rS + 1) := by
       have := Formalism.L2.SG.Pf.Asm.cJ_le (VS D).hT (UPair D F0 F') (MMof D F0 F') p.asIdeal
       rw [hUr, hm] at this

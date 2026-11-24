@@ -70,8 +70,8 @@ theorem matrix_oneParamGroup_eq_exp : ∀ (ι : Type) [Fintype ι] [DecidableEq 
     (M : ℝ → Matrix ι ι ℝ), Continuous M → M 0 = 1 → (∀ s t, M (s + t) = M s * M t) →
     ∃ X : Matrix ι ι ℝ, ∀ t, M t = NormedSpace.exp (t • X) := by
   intro ι _ _ M hc h0 hm
-  letI : NormedRing (Matrix ι ι ℝ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix ι ι ℝ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix ι ι ℝ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix ι ι ℝ) := Matrix.linftyOpNormedAlgebra
   obtain ⟨X, hX⟩ := banach_oneParamGroup_eq_exp M hc h0 hm
   exact ⟨X, fun t => (hX t).symm⟩
 

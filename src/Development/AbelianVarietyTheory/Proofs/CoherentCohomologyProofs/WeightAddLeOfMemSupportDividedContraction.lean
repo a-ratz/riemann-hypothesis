@@ -157,10 +157,10 @@ theorem coeff_dividedDeriv (β m : σ →₀ ℕ) (P : MvPolynomial σ R) :
     rw [dividedDeriv_monomial, AddMonoidAlgebra.coeff_smul_apply, coeff_monomial, coeff_monomial]
     by_cases h : n = m + β
     · subst h; simp
-    · rw [if_neg h, smul_zero]
+    · rw [ite_eq_right h, smul_zero]
       by_cases h0 : multiChoose n β = 0
       · rw [h0, zero_smul]
-      · rw [if_neg, smul_zero]
+      · rw [ite_eq_right, smul_zero]
         rintro rfl
         exact h (tsub_add_cancel_of_le (le_of_multiChoose_ne_zero h0)).symm
   | add P Q hP hQ =>
@@ -287,7 +287,7 @@ theorem dividedContraction_succ_rename_inr (γ : ι → κ → R) (n : ℕ) (q :
     have : multiChoose (t.mapDomain (Sum.inr : κ → ι ⊕ κ)) (α.mapDomain Sum.inl) = 0 := by
       by_contra h
       have := le_of_multiChoose_ne_zero h (Sum.inl i)
-      rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective, Finsupp.mapDomain_notin_range _ _ (by simp)]
+      rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective, Finsupp.mapDomain_of_notMem_range _ _ (by simp)]
         at this
       exact hi (Nat.le_zero.mp this)
     rw [this, zero_smul]

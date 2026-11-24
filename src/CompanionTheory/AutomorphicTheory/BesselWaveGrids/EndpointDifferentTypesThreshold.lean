@@ -343,7 +343,7 @@ theorem evQ_trJB_FF (p : KB.Pl P Wp Wq) {e : M.Ty P → ℂ → (Wq →L[ℂ] Wp
 theorem qdom (p : KB.Pl P Wp Wq) {x : MA.E P.r} :
     x ∈ MA.Qset P.r P.TT ↔ x ∈ JF.QDom P.k P.r p.T.base.z p.T.base.z' := by
   obtain ⟨_, _, _, h1, h2, _, _⟩ := p.hP
-  simp only [MA.Qset, JF.QDom, Set.mem_setOf_eq, M.Par.TT, h1, h2]
+  simp only [MA.Qset, JF.QDom, Set.mem_ofPred_eq, M.Par.TT, h1, h2]
 
 theorem thrW_exists (k r m : ℕ) : ∃ A : ℝ, WeakThresholdClauses.WeakDominationThreshold k r A m := by
   refine ⟨6 * r * m + |(r : ℝ) * (4 * r + 2 * k - 1) * (6 * r + 1)| + 1, ?_⟩
@@ -415,7 +415,7 @@ theorem pd_mono {E : Type} [AddCommGroup E] [Module ℂ E] {o n : ℕ} (hn : n �
     PD o fun s => (s : ℂ) ^ n • x := by
   refine ⟨fun m => if m = n then x else 0, fun s => ?_⟩
   simp only [smul_ite, smul_zero]
-  rw [Finset.sum_ite_eq' (Finset.range (o + 1)) n, if_pos (Finset.mem_range.2 (by omega))]
+  rw [Finset.sum_ite_eq' (Finset.range (o + 1)) n, ite_eq_left (Finset.mem_range.2 (by omega))]
 
 theorem scoef_zero (p : KB.Pl P Wp Wq) {w : List C.Letter} {a : Wd.Ix (Fin w.length)} {Q o : ℕ}
     {L : Fin (Q + 1) → B.DiffOp P.k P.r Wp Wq} (hS : IsSCoef p w a Q L) {Dop : B.DiffOp P.k P.r Wp Wq}
@@ -459,10 +459,10 @@ theorem scoef_zero (p : KB.Pl P Wp Wq) {w : List C.Letter} {a : Wd.Ix (Fin w.len
       simp only [smul_sub, Finset.sum_sub_distrib]
       rw [nf_sum_pad (by omega) _ fun q => B.opApply (L q) F g, hc s, sub_eq_zero,
         ← Finset.sum_subset (Finset.range_subset_range.2 (show o + 1 ≤ Q + 1 + (o + 1) by omega))]
-      · exact Finset.sum_congr rfl fun i hi => by rw [if_pos (Finset.mem_range.1 hi)]
+      · exact Finset.sum_congr rfl fun i hi => by rw [ite_eq_left (Finset.mem_range.1 hi)]
       · intro i _ hi
-        rw [if_neg (by simpa using hi), smul_zero]) qq (by omega)
-  simpa only [dif_pos qq.2, if_neg (show ¬ (qq : ℕ) < o + 1 by omega), sub_zero] using key
+        rw [ite_eq_right (by simpa using hi), smul_zero]) qq (by omega)
+  simpa only [dite_eq_left qq.2, ite_eq_right (show ¬ (qq : ℕ) < o + 1 by omega), sub_zero] using key
 
 end
 

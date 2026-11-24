@@ -71,7 +71,7 @@ variable {K : Type*} [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchi
 theorem isUnramifiedSubextension_iff' (E : IntermediateField K Ω) [FiniteDimensional K E] :
     IsUnramifiedSubextension E ↔ (_root_.Ideal.ramificationIdx (_root_.IsLocalRing.maximalIdeal (_root_.Valuation.integer (_root_.ValuativeRel.valuation E))) (_root_.Valuation.integer (_root_.ValuativeRel.valuation K))) = 1 :=
   by
-    letI : IsNonarchimedeanLocalField E :=
+    let : IsNonarchimedeanLocalField E :=
       intermediateField_isNonarchimedeanLocalField_of_finiteDimensional E
     exact ⟨fun h ↦ h.ramificationIndex_eq_one, fun h ↦ (isUnramifiedSubextension_iff_exists E).2
       ⟨inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, h⟩⟩

@@ -153,7 +153,7 @@ theorem exists_nat_mul_intAf {F : Type} [Field F] [NumberField F] (t : Af F) :
       = t v * algebraMap (𝓞 F) (v.adicCompletion F) b * algebraMap (𝓞 F) (v.adicCompletion F) c by ring]
     exact mul_mem hbt ((HeightOneSpectrum.coe_mem_adicCompletionIntegers (v := v) c))
   choose mv hmv hmt using hloc
-  refine ⟨∏ v ∈ hfin.toFinset, mv v, Finset.one_le_prod' fun v _ => hmv v, fun v => ?_⟩
+  refine ⟨∏ v ∈ hfin.toFinset, mv v, Finset.one_le_prod fun v _ => hmv v, fun v => ?_⟩
   have hev : evalV F v (((∏ w ∈ hfin.toFinset, mv w : ℕ) : Af F) * t) =
       ((∏ w ∈ hfin.toFinset, mv w : ℕ) : v.adicCompletion F) * t v := by
     rw [map_mul, map_natCast]
@@ -187,7 +187,7 @@ lemma exists_nat_mem_AA : ∃ N : ℕ, 0 < N ∧ ((N : D.host.E)) ∈ (D.host.AA
       ((D.host.ccE : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) *
         ((D.host.𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E))⁻¹) := by
     have hm := FractionalIdeal.mul_mem_mul ((FractionalIdeal.mem_coeIdeal_of_mem (S := nonZeroDivisors (𝓞 D.host.E)) (P := D.host.E) h2))
-      (FractionalIdeal.one_mem_inv_coe_ideal (K := D.host.E) hb)
+      (FractionalIdeal.one_mem_inv_coeIdeal (K := D.host.E) hb)
     simpa using hm
   exact h3
 

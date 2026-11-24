@@ -401,7 +401,7 @@ theorem rgl_E (ν : Fin n → ℕ) (a b : Fin r) : (GR p r ν).E a b = glAct p (
 
 theorem rgl_glAct_X (ν : Fin n → ℕ) (a b c : Fin r) (s : Fin n) :
     glAct p (vecL ν) n a b (X (s, c)) = if c = b then X (s, a) else 0 := by
-  rw [glAct_X_gen, if_pos s.isLt]
+  rw [glAct_X_gen, ite_eq_left s.isLt]
   rfl
 
 theorem rgl_wt (ν : Fin n → ℕ) (a : Fin r) (m : Fin r × Fin n →₀ ℕ) :
@@ -409,7 +409,7 @@ theorem rgl_wt (ν : Fin n → ℕ) (a : Fin r) (m : Fin r × Fin n →₀ ℕ) 
   unfold wt rowDeg
   push_cast
   refine Finset.sum_congr rfl fun s _ => ?_
-  rw [if_pos s.isLt, rgl_mapDomain_apply]
+  rw [ite_eq_left s.isLt, rgl_mapDomain_apply]
   rfl
 
 theorem rgl_div_X (ν : Fin n → ℕ) (a b : Fin r) (hab : a ≠ b) (k : ℕ) (v : Fin r × Fin n) :
@@ -530,7 +530,7 @@ lemma spr_count_le {r s : ℕ} (I : Fin s → Fin r) (hI : Function.Injective I)
     · simp [h, Ne.symm h]
   rw [h1]
   by_cases hs : 0 < s
-  · rw [if_pos hs, Finset.card_le_one]
+  · rw [ite_eq_left hs, Finset.card_le_one]
     intro x hx y hy
     exact hI ((Finset.mem_filter.mp hx).2.trans (Finset.mem_filter.mp hy).2.symm)
   · have hs0 : s = 0 := by omega
@@ -575,9 +575,9 @@ lemma spr_le_bidet (R : Type*) [CommRing R] {n K : ℕ} (sz : Fin K → ℕ) (hs
   rw [Finset.card_filter]
   refine Finset.sum_le_sum fun k _ => ?_
   by_cases hk : n - 1 < sz k
-  · rw [if_pos hk]
+  · rw [ite_eq_left hk]
     exact spr_one_le_count (I k) (hI k) (by have := hsz k; omega) a
-  · rw [if_neg hk]
+  · rw [ite_eq_right hk]
     exact Nat.zero_le _
 
 lemma spr_support_induction (R : Type) [CommRing R] [IsDomain R] (r n : ℕ) (ν : Fin n → ℕ)
@@ -690,7 +690,7 @@ theorem cor_latData (h1 : RowGlOne) (hw : SwpWt) (hP : SwpPol) (ν : Fin n → �
   let e : Fin r ↪o Fin r := (OrderIso.refl (Fin r)).toOrderEmbedding
   have D : LatData p (GAe p (vecL ν) n e) (Pol p r (vecL ν))
       (IntPol p (Fin n × Fin r)).toAddSubgroup (vecL ν).total := by
-    letI := pol_fd (p := p) (r := r) (vecL ν)
+    let := pol_fd (p := p) (r := r) (vecL ν)
     refine ⟨GAe_pol_stable _ _ _ _, inferInstance, GAe_pol_finW _ _ _ _,
       GAe_pol_bound _ _ _ _, intPol_zpClosed _, ?_, ?_, ?_⟩
     · intro a b hab k x hx
@@ -707,7 +707,7 @@ theorem cor_latData (h1 : RowGlOne) (hw : SwpWt) (hP : SwpPol) (ν : Fin n → �
   exact
     { stable := cor_stable h1 ν
       fd := by
-        letI := D.fd
+        let := D.fd
         exact Submodule.finiteDimensional_of_le (cor_W_le_pol hP ν)
       finW := by
         obtain ⟨S, hS'⟩ := D.finW

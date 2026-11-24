@@ -120,7 +120,7 @@ theorem inter_top_pos : ∀ (K : Type) [Field K] (A : AbVar K) (c : Pic A.X.left
   have h1 : inter A (fun _ : J => cls L hL) = inter A (fun _ : Fin A.dim => cls L hL) :=
     (inter_comp_equiv A e (fun _ : J => cls L hL)).symm
   rw [h1, GlobalTheory.T.abelianVariety_intersection_eq_lineBundleIntersection K A (Fin A.dim) (fun _ => L) (fun _ => hL)]
-  letI := A.algΓ
+  let := A.algΓ
   obtain ⟨hI, -, -⟩ := GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K A
   obtain ⟨hs, hp⟩ := GlobalTheory.AV.AbVarProj.strHom_eq_and_isProjOver K A
   have hp' : IsProjOver (strHom K (X := A.X.left)) := by rw [hs]; exact hp
@@ -186,9 +186,9 @@ theorem hom_genericPoint_ne {K : Type} [Field K] {A B : AbVar K} (f : A ⟶ B) [
 
 theorem inter_pull_eq_zero_of_not_surjective : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), A.dim = B.dim → ¬ Surjective f.hom.left → ∀ (J : Type) [Fintype J], Fintype.card J = A.dim → ∀ c : J → Pic B.X.left, inter A (fun j => CechPic.pull f.hom.left (c j)) = 0 := by
   intro K _ A B f hdim hns J _ hJ c
-  haveI := (GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K A).1
-  haveI := (GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K B).1
-  letI := A.algΓ
+  have := (GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K A).1
+  have := (GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K B).1
+  let := A.algΓ
   obtain ⟨hs, hp⟩ := GlobalTheory.AV.AbVarProj.strHom_eq_and_isProjOver K A
   choose L hL hc using fun j => cls_surj (c j)
   have hne := hom_genericPoint_ne f hns
@@ -254,7 +254,7 @@ namespace GlobalTheory.GenFree
 
 theorem exists_free_away (A M : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] [AddCommGroup M] [Module A M]
     [Module.Finite A M] : ∃ g : A, g ≠ 0 ∧ Module.Free (Localization.Away g) (LocalizedModule.Away g M) := by
-  haveI : Module.FinitePresentation A M := Module.finitePresentation_of_finite A M
+  have : Module.FinitePresentation A M := Module.finitePresentation_of_finite A M
   obtain ⟨g, hg, hfree, -⟩ := Module.FinitePresentation.exists_free_localizedModule_powers
     (nonZeroDivisors A) (LocalizedModule.mkLinearMap (nonZeroDivisors A) M) (FractionRing A)
   exact ⟨g, nonZeroDivisors.ne_zero hg, hfree⟩
@@ -265,29 +265,29 @@ theorem free_basicOpen {X Y : Scheme.{0}} (f : X ⟶ Y) {V : Y.Opens} (hV : IsAf
       Module.Free (Localization.Away g) (LocalizedModule.Away g Γ(X, f ⁻¹ᵁ V))) :
     letI := (f.app (Y.basicOpen g)).hom.toAlgebra
     Module.Free Γ(Y, Y.basicOpen g) Γ(X, f ⁻¹ᵁ Y.basicOpen g) := by
-  letI : Algebra Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := (f.app V).hom.toAlgebra
+  let : Algebra Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := (f.app V).hom.toAlgebra
   have hpre : f ⁻¹ᵁ Y.basicOpen g = X.basicOpen (f.app V g) := Scheme.preimage_basicOpen _ _
   let A := Γ(Y, V)
   let M := Γ(X, f ⁻¹ᵁ V)
   let R := Γ(Y, Y.basicOpen g)
   let N := Γ(X, f ⁻¹ᵁ Y.basicOpen g)
-  letI : Algebra A R := (Y.presheaf.map (homOfLE (Y.basicOpen_le g)).op).hom.toAlgebra
-  haveI : IsLocalization.Away g R := hV.isLocalization_basicOpen g
+  let : Algebra A R := (Y.presheaf.map (homOfLE (Y.basicOpen_le g)).op).hom.toAlgebra
+  have : IsLocalization.Away g R := hV.isLocalization_basicOpen g
   have hle : f ⁻¹ᵁ Y.basicOpen g ≤ f ⁻¹ᵁ V := f.preimage_mono (Y.basicOpen_le g)
-  letI : Algebra M N := (X.presheaf.map (homOfLE hle).op).hom.toAlgebra
-  haveI : IsLocalization.Away (algebraMap A M g) N :=
+  let : Algebra M N := (X.presheaf.map (homOfLE hle).op).hom.toAlgebra
+  have : IsLocalization.Away (algebraMap A M g) N :=
     hV'.isLocalization_of_eq_basicOpen (f.app V g) (homOfLE hle) hpre
-  letI : Algebra R N := (f.app (Y.basicOpen g)).hom.toAlgebra
-  letI : Algebra A N := ((algebraMap R N).comp (algebraMap A R)).toAlgebra
-  haveI : IsScalarTower A R N := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower A M N := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra R N := (f.app (Y.basicOpen g)).hom.toAlgebra
+  let : Algebra A N := ((algebraMap R N).comp (algebraMap A R)).toAlgebra
+  have : IsScalarTower A R N := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower A M N := IsScalarTower.of_algebraMap_eq fun a => by
     change (f.app _).hom ((Y.presheaf.map (homOfLE (Y.basicOpen_le g)).op).hom a) =
       (X.presheaf.map (homOfLE hle).op).hom ((f.app V).hom a)
     rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, Scheme.Hom.naturality]
     rfl
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid M (Submonoid.powers g)) N := by
+  have : IsLocalization (Algebra.algebraMapSubmonoid M (Submonoid.powers g)) N := by
     rw [Algebra.algebraMapSubmonoid, Submonoid.map_powers]; infer_instance
-  haveI : IsLocalizedModule (Submonoid.powers g) (IsScalarTower.toAlgHom A M N).toLinearMap :=
+  have : IsLocalizedModule (Submonoid.powers g) (IsScalarTower.toAlgHom A M N).toLinearMap :=
     isLocalizedModule_iff_isLocalization.2 inferInstance
   let l := IsLocalizedModule.linearEquiv (Submonoid.powers g)
     (LocalizedModule.mkLinearMap (Submonoid.powers g) M) (IsScalarTower.toAlgHom A M N).toLinearMap
@@ -301,10 +301,10 @@ theorem exists_dim_eq (F : Type) [Field F] {Y : Scheme.{0}} [IsIntegral Y] (q : 
     ∃ n : ℕ, topologicalKrullDim Y = n := by
   obtain ⟨U, hU, hxU, -⟩ := Opens.isBasis_iff_nbhd.1 Y.isBasis_affineOpens (Opens.mem_top (genericPoint Y))
   replace hU : IsAffineOpen U := hU
-  haveI : Nonempty U := ⟨⟨_, hxU⟩⟩
+  have : Nonempty U := ⟨⟨_, hxU⟩⟩
   let φ := Spec.preimage (hU.fromSpec ≫ q)
   have hφ : Spec.map φ = hU.fromSpec ≫ q := Spec.map_preimage _
-  letI : Algebra F Γ(Y, U) := φ.hom.toAlgebra
+  let : Algebra F Γ(Y, U) := φ.hom.toAlgebra
   have : Algebra.FiniteType F Γ(Y, U) :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) (φ := φ)).mp (hφ ▸ inferInstance)
   obtain ⟨d, h₁, -⟩ := exists_ringKrullDim_eq_and_trdeg_eq F Γ(Y, U)
@@ -331,11 +331,11 @@ theorem exists_affine_finite_free : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) 
       fun y hy => GenFiniteEtale.eq_genericPoint f hη hd hy)
   obtain ⟨V, hV, hxV, hle⟩ := Opens.isBasis_iff_nbhd.1 Y.isBasis_affineOpens hV₀
   replace hV : IsAffineOpen V := hV
-  haveI : Nonempty V := ⟨⟨_, hxV⟩⟩
+  have : Nonempty V := ⟨⟨_, hxV⟩⟩
   obtain ⟨hW, hf⟩ := GenFiniteEtale.finite_app_of_le f hV hle
-  letI := (f.app V).hom.toAlgebra
-  haveI : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
-  haveI : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hf
+  let := (f.app V).hom.toAlgebra
+  have : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hf
   obtain ⟨g, hg, hfree⟩ := exists_free_away Γ(Y, V) Γ(X, f ⁻¹ᵁ V)
   have hU := hV.basicOpen g
   have hxU := GenFiniteEtale.genericPoint_mem_basicOpen hg
@@ -368,10 +368,10 @@ theorem inter_pull_isogeny_eq_deg_mul : ∀ (K : Type) [Field K] (A B : AbVar K)
     inter A (fun j => CechPic.pull f.hom.left (c j)) = deg f * inter B c := by
   intro K _ A B f hf J _ hJ c
   obtain ⟨hdim, hflat, -, hrank⟩ := isogeny_flat_finrank K A B f hf
-  haveI : IsFinite f.hom.left := hf.1
-  haveI : Surjective f.hom.left := hf.2
-  haveI := (isIntegral_isLocallyNoetherian_compactSpace K A).1
-  haveI := (isIntegral_isLocallyNoetherian_compactSpace K B).1
+  have : IsFinite f.hom.left := hf.1
+  have : Surjective f.hom.left := hf.2
+  have := (isIntegral_isLocallyNoetherian_compactSpace K A).1
+  have := (isIntegral_isLocallyNoetherian_compactSpace K B).1
   have hAproj := (GlobalTheory.AV.AbVarProj.strHom_eq_and_isProjOver K A).2
   have hBproj := (GlobalTheory.AV.AbVarProj.strHom_eq_and_isProjOver K B).2
   have hw : f.hom.left ≫ B.X.hom = A.X.hom := Over.w f.hom
@@ -388,11 +388,11 @@ theorem inter_pull_isogeny_eq_deg_mul : ∀ (K : Type) [Field K] (A B : AbVar K)
   set n := f.hom.left.residueDegree (genericPoint A.X.left)
 
   have hn : deg f = n := by
-    letI := (f.hom.left.app V).hom.toAlgebra
+    let := (f.hom.left.app V).hom.toAlgebra
     obtain ⟨hfr, hfin, hrk⟩ := hfree
-    haveI := hfr
-    haveI := hfin
-    haveI : Module.Flat Γ(B.X.left, V) Γ(A.X.left, f.hom.left ⁻¹ᵁ V) := inferInstance
+    have := hfr
+    have := hfin
+    have : Module.Flat Γ(B.X.left, V) Γ(A.X.left, f.hom.left ⁻¹ᵁ V) := inferInstance
     obtain ⟨z, -⟩ : genericPoint B.X.left ∈ Set.range hV.fromSpec := by rwa [hV.range_fromSpec]
     have e := Scheme.Hom.finrank_of_isPullback _ _ _ _ (GlobalTheory.isPullback_fromSpec_app f.hom.left hV hV') z
     rw [hrank] at e
@@ -408,8 +408,8 @@ theorem inter_pull_isogeny_eq_deg_mul : ∀ (K : Type) [Field K] (A B : AbVar K)
   rw [hw] at key
   rw [hn]
   have hL' : ∀ i, ((fun i => L (e i)) i).pull f.hom.left |>.IsLB := fun i => Semi.LB.isLB_pull (hL (e i)) _
-  letI := GlobalTheory.algebraΓOfHom A.X.hom
-  letI := GlobalTheory.algebraΓOfHom B.X.hom
+  let := GlobalTheory.algebraΓOfHom A.X.hom
+  let := GlobalTheory.algebraΓOfHom B.X.hom
   rw [interNum_eq_multiDiff K _ hL', interNum_eq_multiDiff K _ (fun i => hL (e i))] at key
   unfold inter
   rw [← multiDiff_comp_equiv e, ← multiDiff_comp_equiv e (fun j => cls (L j) (hL j))]
@@ -462,7 +462,7 @@ theorem inter_pull_eq_deg_mul_inter : ∀ (K : Type) [Field K] (A B : AbVar K) (
   · have hs : ¬ Surjective f.hom.left := by
       intro hs
       exact hi ⟨GlobalTheory.AV.AbVar.isFinite_of_surjective_of_dim_eq K A B f hd hs, hs⟩
-    rw [GlobalTheory.T.intersection_number_pullback_not_surjective_eq_zero K A B f hd hs J hJ c, deg, if_neg hi]
+    rw [GlobalTheory.T.intersection_number_pullback_not_surjective_eq_zero K A B f hd hs J hJ c, deg, ite_eq_right hi]
     simp
 
 end GlobalTheory.AV.AbVar

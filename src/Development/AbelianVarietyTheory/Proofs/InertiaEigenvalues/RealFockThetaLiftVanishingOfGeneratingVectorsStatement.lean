@@ -194,10 +194,10 @@ theorem GlobalTheory.DownLift.downInt_realEquiv : ∀ (D : D7) (G : Type) [Group
   intro D G _ _ Pl0 T A Ks _ _ _ R F hG hP i t y u hu f hf l g
   have hM : R.IsModels := hG.core.models
   have hν := hM.νV i t
-  haveI := Formalism.IndefR.Eqv.measurableMul_GA D (Vc D i)
-  haveI := Formalism.IndefR.Eqv.gQ_countable D (Vc D i)
-  haveI : (R.νV i t).IsHaarMeasure := hν.1.1
-  haveI : (R.νV i t).IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds (Vc D i) _ hν.1.1
+  have := Formalism.IndefR.Eqv.measurableMul_GA D (Vc D i)
+  have := Formalism.IndefR.Eqv.gQ_countable D (Vc D i)
+  have : (R.νV i t).IsHaarMeasure := hν.1.1
+  have : (R.νV i t).IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds (Vc D i) _ hν.1.1
   have hx := mem_of_hmodIs _ _ _ (hM.HV i t) y
   have hW := (hP i t).datum
   let Ψ : GA D (Vc D i) → ℂ := fun h =>
@@ -723,7 +723,7 @@ theorem real_points_fock : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
       refine Units.ext ?_
       change infMat D.sp.cm.sig (Vc D i).gram (R.θ ρ) (GlobalTheory.AdelicScalar.realElt R.θ (Vc D i) fun τ => (g τ).val) = (g ρ).val
       rw [GlobalTheory.AdelicScalar.realElt, GlobalTheory.RealTransSm.infMat_list_prod hθ _ hU ρ _ (Finset.nodup_toList _),
-        if_pos (Finset.mem_toList.2 (Finset.mem_univ ρ))]
+        ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ ρ))]
 
 end GlobalTheory.RealPtsFock
 
@@ -1411,7 +1411,7 @@ theorem decomp : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A
   have hC := hgiv.core
   have hinj : Function.Injective (R.ptP i t) := (GlobalTheory.CoefActIo.thetaVector_laws (i := i) hC t).2.2
   have hcV : (R.cV i).Is := hC.models.cV i
-  haveI : Nontrivial (R.cV i).W := hcV.2.2.2.1
+  have : Nontrivial (R.cV i).W := hcV.2.2.2.1
   choose p c U hU hω using fun g : GinfC (Vc D i) => om_ptP_fock D G Pl0 T A Ks R F hC i t g.1 g.2
   let actL : GinfC (Vc D i) → Module.End ℂ (PolF D (Wc D i).rank (Vc D i).rank) :=
     fun g => c g • (GlobalTheory.ExportSeries.fockSubst (p g) (U g)).toLinearMap
@@ -1428,9 +1428,9 @@ theorem decomp : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A
   have hS : ∀ g, ∀ Q ∈ S, actL g Q ∈ S := fun g Q hQ => by
     rw [MvPolynomial.mem_restrictTotalDegree] at hQ ⊢
     exact (MvPolynomial.totalDegree_smul_le _ _).trans ((totalDegree_fockSubst_le _ _ _).trans hQ)
-  letI : InnerProductSpace.Core ℂ S := fisCore S
-  letI : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
+  let : InnerProductSpace.Core ℂ S := fisCore S
+  let : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
   let actS : GinfC (Vc D i) →* Module.End ℂ S :=
     { toFun := fun g => (actL g).restrict (hS g)
       map_one' := LinearMap.ext fun x => Subtype.ext (hone x.1)
@@ -1628,7 +1628,7 @@ theorem downInt_lie : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Typ
       rw [Prod.mk_mul_mk, one_mul]
     rw [e, map_mul, Module.End.mul_apply]
     exact hom.om_aut γ hγ 1 (one_mem _) _ (hom.om_pres _ _ hf')
-  haveI : BorelSpace (GA D (Vc D i)) := ⟨rfl⟩
+  have : BorelSpace (GA D (Vc D i)) := ⟨rfl⟩
 
   obtain ⟨C, hC, hcov⟩ := GlobalTheory.DefiniteQuotient.exists_compact (Vc D i) hpos
   have hΨ : Continuous fun p : GA D (Vc D i) × ℝ =>
@@ -1646,11 +1646,11 @@ theorem downInt_lie : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Typ
     exact hB (c, x) (Set.mk_mem_prod hc (Metric.ball_subset_closedBall hxb))
 
   have hfin : R.νV i t (R.fdV i t) < ⊤ := by
-    haveI : Countable (GQ (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
-    haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-    haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-    haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-    haveI : IsTopologicalGroup (GA D (Vc D i)) :=
+    have : Countable (GQ (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
+    have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+    have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+    have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+    have : IsTopologicalGroup (GA D (Vc D i)) :=
       inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig (Vc D i).gram))
     have h1 := GlobalTheory.integrableOn_fundamentalDomain_of_cocompact (GA D (Vc D i)) (GQ (Vc D i)) C hC
       (fun h => by

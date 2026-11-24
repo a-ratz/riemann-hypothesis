@@ -88,7 +88,7 @@ theorem mem_GG_of_mul {s x : Mat k r} (hs : s ∈ GG k r) (h : s * x ∈ GG k r)
 
 theorem continuousOn_sq {X E : Type} [TopologicalSpace X] [NormedAddCommGroup E] {g : X → E} {s : Set X}
     (hg : ContinuousOn g s) : ContinuousOn (fun x => (‖g x‖₊ : ℝ≥0∞) ^ 2) s :=
-  ((ENNReal.continuous_pow 2).comp (ENNReal.continuous_coe.comp continuous_nnnorm)).comp_continuousOn hg
+  ((ENNReal.continuous_pow 2).comp (ENNReal.continuous_coe.comp continuous_nnNorm)).comp_continuousOn hg
 
 private theorem mul_mem_UH_Hpk' {a b : Mat k r} (ha : a ∈ GG k r) (hb : b ∈ GG k r) : a * b ∈ GG k r := by
   have ha' : aᴴ * Hpk k r * a = Hpk k r := ha
@@ -116,13 +116,13 @@ private theorem ofReal_one_sq_mul_norm_sq_div {E : Type} [NormedAddCommGroup E] 
     ENNReal.ofReal ((1 : ℝ) ^ 2 * ‖v‖ ^ 2 / d) = (d : ℝ≥0∞)⁻¹ * (‖v‖₊ : ℝ≥0∞) ^ 2 := by
   have hd' : (0 : ℝ) < d := Nat.cast_pos.2 hd
   rw [one_pow, one_mul, div_eq_inv_mul, ENNReal.ofReal_mul (inv_nonneg.2 hd'.le),
-    ENNReal.ofReal_inv_of_pos hd', ENNReal.ofReal_natCast, ← coe_nnnorm v, ← NNReal.coe_pow,
+    ENNReal.ofReal_inv_of_pos hd', ENNReal.ofReal_natCast, ← coe_nnNorm v, ← NNReal.coe_pow,
     ENNReal.ofReal_coe_nnreal, ENNReal.coe_pow]
 
 theorem one_piece : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] (z : (Fin (2 * r + k + 1) → ℂ)) (π : Mat k r → (Wp →L[ℂ] Wp)) (ψ : Mat k r → ℂ) (μG μW μN νS : Measure (Mt k r)) (Φ : Mat k r → Wp) (c : ℝ), OneSide z π ψ μG μW μN νS Φ c → ∀ (f : Mt k r → ℝ≥0∞) (Q : Set (Mt k r)) (Vol : ℝ≥0∞), Measurable f → MeasurableSet Q → (∀ s ∈ Sset k r z, ∀ x, Matrix.of x ∈ GG k r → (lmulM s x ∈ Q ↔ x ∈ Q)) → (∀ g ∈ GG k r, ∫⁻ n, f (rmulM g n) ∂μN ≤ Vol) → ∀ w : Wp, ‖w‖ = 1 → ∫⁻ x in Q, f x * (‖⟪w, Φ (Matrix.of x)⟫_ℂ‖₊ : ℝ≥0∞) ^ 2 ∂μG ≤ Vol * (Module.finrank ℂ Wp : ℝ≥0∞)⁻¹ * ∫⁻ x in Q, (‖Φ (Matrix.of x)‖₊ : ℝ≥0∞) ^ 2 ∂νS := by
   intro k r Wp _ _ _ z π ψ μG μW μN νS Φ c hOS f Q Vol hf hQ hQinv hVol w hw
   obtain ⟨hz, hT, hnt, hU, hI, hG, hW, hW1, hN, hQm, hψ, hE, hΦ, -, -⟩ := hOS
-  haveI := hnt
+  have := hnt
   have hd : 0 < Module.finrank ℂ Wp := Module.finrank_pos
   have hinC : Continuous fun v : Wp => ⟪w, v⟫_ℂ := continuous_const.inner continuous_id
   set A : Mt k r → ℝ≥0∞ := (grp k r).indicator fun y => (‖⟪w, Φ (Matrix.of y)⟫_ℂ‖₊ : ℝ≥0∞) ^ 2
@@ -202,7 +202,7 @@ theorem one_piece : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPr
           have hψ1 : ‖ψ (Matrix.of n)‖₊ = 1 := by ext; simpa using hψ _ hn
           rw [hFdef, hAdef]
           simp only [Set.indicator_of_mem hSQ, Set.indicator_of_mem hSG, hΦS, inner_smul_right,
-            nnnorm_mul, hψ1, one_mul]
+            nnNorm_mul, hψ1, one_mul]
         have hfib : ∀ h : Mt k r, Matrix.of h ∈ UWset k r z →
             ∫⁻ n, f (lmulM (Matrix.of h * Matrix.of n) x) ∂μN ≤ Vol := by
           intro h hh

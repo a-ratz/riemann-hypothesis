@@ -108,7 +108,7 @@ theorem pow_mul_mem_intAd (v : HeightOneSpectrum (𝓞 F)) (p : ℕ) (hp : (p : 
     (hβ : ∀ w, w ≠ v → evalV F w β = 0) : ∃ c : ℕ, (p : FiniteAdeleRing (𝓞 F) F) ^ c * β ∈ Formalism.UG.intAd F := by
   obtain ⟨c, hc⟩ : ∃ c : ℕ, Valued.v (evalV F v β) ≤ WithZero.exp (c : ℤ) := by
     by_cases hx : Valued.v (evalV F v β) = 0
-    · exact ⟨0, hx ▸ zero_le'⟩
+    · exact ⟨0, hx ▸ zero_le⟩
     · exact ⟨(WithZero.log (Valued.v (evalV F v β))).toNat, by
         rw [← WithZero.exp_log hx]; exact WithZero.exp_le_exp.2 (by rw [WithZero.log_exp]; exact Int.self_le_toNat _)⟩
   refine ⟨c, fun w => ?_⟩

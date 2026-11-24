@@ -117,7 +117,7 @@ theorem integral_mul_right_of_conj {w : G → ℝ} (hw : Continuous w) (hc : Has
     ∫ x, F (x * k) ∂μ = ∫ x, F x ∂μ := by
   have hm := Measure.map_right_mul_eq_modularCharacterFun_smul μ k
   have hemb : MeasurableEmbedding fun x : G => x * k := (MeasurableEquiv.mulRight k).measurableEmbedding
-  have hpos := hw.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) hc h0 h1
+  have hpos := hw.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) hc h0 h1
   have e1 : ∫ x, w (x * k) ∂μ = ∫ x, w x ∂μ := by
     rw [← integral_mul_left_eq_self (fun x => w (x * k)) k⁻¹]
     simp only [hk]
@@ -168,7 +168,7 @@ theorem exists_nhds_close (ρ : G → H →L[ℂ] H) (hρ : ∀ u, Continuous fu
 theorem eq_zero_of_alt_alt (ρ : G → H →L[ℂ] H) (hρ : ∀ u, Continuous fun x => ρ x u)
     {w : G → ℝ} (hw : Continuous w) (hc : HasCompactSupport w) (h0 : 0 ≤ w) (h1 : w 1 ≠ 0)
     (y : H) (hy : ∀ x, w x ≠ 0 → ‖ρ x y - y‖ ≤ 1 / 2 * ‖y‖) (hT : ∫ x, w x • ρ x y ∂μ = 0) : y = 0 := by
-  have hpos := hw.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) hc h0 h1
+  have hpos := hw.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) hc h0 h1
   have hwi : Integrable w μ := hw.integrable_of_hasCompactSupport hc
   have e : ∫ x, w x • (ρ x y - y) ∂μ = -((∫ x, w x ∂μ) • y) := by
     simp only [smul_sub]

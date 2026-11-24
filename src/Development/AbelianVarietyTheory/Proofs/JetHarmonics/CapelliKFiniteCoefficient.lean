@@ -58,7 +58,7 @@ theorem comp_eq_sum_inner_smul_rankOne {H Wp Wq : Type} [NormedAddCommGroup H] [
       (innerSL ℂ (c p.2)).smulRight (b p.1) := by
   ext x
   simp only [ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+    sum_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
     innerSL_apply_apply, Fintype.sum_prod_type, smul_smul]
   conv_lhs => rw [← c.sum_repr' x]
 
@@ -100,7 +100,7 @@ theorem isCoef_of_translate_smul_exists : PI.KFinSmooth → ∀ (k r : ℕ) (ε 
   · rintro F s t ⟨m, x, y, X, hxy, hF, hs⟩
     refine ⟨m, x, y, fun i => t • X i, hxy, fun g hg => ?_, ?_⟩
     · simp only [hF g hg, Finset.smul_sum, smul_smul, mul_comm]
-    · simp only [hs, Finset.mul_sum, ContinuousLinearMap.smul_apply, inner_smul_right]
+    · simp only [hs, Finset.mul_sum, smul_apply, inner_smul_right]
   · rintro ⟨x, hx, hx0⟩ ⟨y, hy, hy0⟩ s
     have h1 : ⟪l x, l x⟫_ℂ ≠ 0 := fun h => hx0 (inner_self_eq_zero.mp h)
     have h2 : ⟪l' y, l' y⟫_ℂ ≠ 0 := fun h => hy0 (inner_self_eq_zero.mp h)
@@ -109,7 +109,7 @@ theorem isCoef_of_translate_smul_exists : PI.KFinSmooth → ∀ (k r : ℕ) (ε 
       1, fun _ => x, fun _ => y,
       fun _ => (s / (⟪l' y, l' y⟫_ℂ * ⟪l x, l x⟫_ℂ)) • (innerSL ℂ (l' y)).smulRight (l x),
       fun _ => ⟨hx, hy⟩, fun g _ => rfl, ?_⟩
-    rw [Fin.sum_univ_one, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+    rw [Fin.sum_univ_one, smul_apply, ContinuousLinearMap.smulRight_apply,
       innerSL_apply_apply, inner_smul_right, inner_smul_right, div_mul_cancel₀ _ (mul_ne_zero h2 h1)]
 
 end GlobalTheory

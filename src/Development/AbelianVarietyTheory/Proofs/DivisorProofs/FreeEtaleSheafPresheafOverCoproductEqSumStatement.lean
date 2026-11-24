@@ -101,7 +101,7 @@ theorem pullback_isColimit {U : Scheme.{0}} {ι : Type} {V : ι → Scheme.{0}} 
 
 theorem sec_subsingleton_of_isEmpty {R : Type} [CommRing R] (G : Shv R) (W : Scheme.{0}) [IsEmpty W] :
     Subsingleton (Sec G W) := by
-  haveI : ∀ e : PEmpty.{1}, IsOpenImmersion (PEmpty.elim e : (PEmpty.elim e : Scheme.{0}) ⟶ W) :=
+  have : ∀ e : PEmpty.{1}, IsOpenImmersion (PEmpty.elim e : (PEmpty.elim e : Scheme.{0}) ⟶ W) :=
     fun e => e.elim
   obtain ⟨hc⟩ := nonempty_isColimit_cofanMk_of (X := fun e : PEmpty.{1} => (PEmpty.elim e : Scheme.{0})) (S := W)
     (fun e => PEmpty.elim e) (by rw [eq_top_iff]; rintro z -; exact isEmptyElim z) (fun e => PEmpty.elim e)
@@ -190,9 +190,9 @@ theorem main : ∀ (R : Type) [CommRing R] (U : Scheme.{0}) (ι : Type) (V : ι 
       · rw [hqa, NatTrans.naturality_apply, ← hx]
       · rw [hqb, NatTrans.naturality_apply]
         change _ = pullback.fst (y W x) (j k) ≫ ((b k).app _ q0 : W ⟶ V k)
-        haveI := ho k
+        have := ho k
         rw [← cancel_mono (j k), Category.assoc, ← pullback.condition, hwx]
-    · haveI : IsEmpty ((pullback (y W x) (j k) : Scheme.{0}) : Type) := by
+    · have : IsEmpty ((pullback (y W x) (j k) : Scheme.{0}) : Type) := by
         refine ⟨fun z => hki (hdis k i (pullback.snd (y W x) (j k) z)
           ((pullback.fst (y W x) (j k) ≫ ((b i).app _ q0 : W ⟶ V i)) z) ?_)⟩
         rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, ← pullback.condition, Category.assoc, ← hwx]

@@ -122,12 +122,12 @@ theorem eq_zero_of_map (H : Host E) (p q : ℕ) {R : Type} [CommRing R] [IsDomai
     (hM : ∀ (K : Type) [Field K] (f : R →+* K), ∃ M' : 𝓞 E →+* Module.End K (Fin n → K), ∀ a c, f ∘ M a c = M' a (f ∘ c))
     (r : R) (hr : r ^ 2 = -(H.d : R)) (a : 𝓞 E) {K : Type} [Field K] (f : R →+* K)
     (hf : f (defect H p q M r a) = 0) : defect H p q M r a = 0 := by
-  letI : Algebra ℚ R := hQ.toAlgebra
+  let : Algebra ℚ R := hQ.toAlgebra
   let L := AlgebraicClosure (FractionRing R)
   let emb : R →+* L := (algebraMap (FractionRing R) L).comp (algebraMap R (FractionRing R))
   have hemb : Function.Injective emb :=
     (algebraMap (FractionRing R) L).injective.comp (IsFractionRing.injective R (FractionRing R))
-  haveI : CharZero L := ((RingHom.charZero_iff (emb.comp hQ).injective).1 inferInstance)
+  have : CharZero L := ((RingHom.charZero_iff (emb.comp hQ).injective).1 inferInstance)
   obtain ⟨ML, hML⟩ := hM L emb
   have hs : emb r ∈ integralClosure ℚ L := by
     have h2 : (emb r) ^ 2 = algebraMap ℚ L (-(H.d : ℚ)) := by
@@ -169,7 +169,7 @@ theorem detCond_iff_defect {H : Host E} (D : Datum H) {A : Type} [CommRing A] (G
           ∀ a, f (defect H D.p D.q M (algebraMap A _ ρ) a) = 0) := by
   let R := Localization.Away r
   let j : Sp R ⟶ Sp A := spMap (algebraMap A R)
-  haveI : SmoothOfRelativeDimension d ((Over.pullback j).obj G).hom :=
+  have : SmoothOfRelativeDimension d ((Over.pullback j).obj G).hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange d).of_isPullback (IsPullback.of_hasPullback _ _) hd
   have hs : Smooth ((Over.pullback j).obj G).hom := SmoothOfRelativeDimension.smooth d _
   obtain ⟨act', hact'⟩ := GlobalTheory.DetExtend.exists_oAct_pullback j act
@@ -206,10 +206,10 @@ theorem detCond_of_point : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
         (Over.pullback (spMap (algebraMap A (Localization.Away r)))).obj G), IsLieBasis v) →
       DetCond D act (spMap g₁) (g₁ ρ) → DetCond D act (spMap g₂) (g₂ ρ) := by
     intro K₁ _ _ g₁ K₂ _ _ g₂ r h₁ h₂ ⟨v, hv⟩ hdet
-    haveI := cz K₁ g₁
-    haveI := cz K₂ g₂
+    have := cz K₁ g₁
+    have := cz K₂ g₂
     have hr0 : r ≠ 0 := fun e => h₁ (by rw [e, map_zero])
-    haveI : IsDomain (Localization.Away r) :=
+    have : IsDomain (Localization.Away r) :=
       IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors hr0)
     obtain ⟨M, hM, hiff⟩ := detCond_iff_defect D G act d hd r v hv
     let f₁ : Localization.Away r →+* K₁ := IsLocalization.Away.lift r (isUnit_iff_ne_zero.2 h₁)
@@ -373,7 +373,7 @@ theorem exists_levelIsometry_of_point : ∀ (E : Type) [Field E] [NumberField E]
     fun h x y => by rw [MonObj.comp_mul, GrpObj.comp_inv, mul_inv_eq_one]
   choose C1 hC1 HC1 using fun (b : 𝓞 E) (a : D.La) =>
     TorsionCover.exists_clopen_eq_one P.A P.isAb hn' (et (b • a) * (et a ≫ act b)⁻¹) (by
-      haveI := hact b
+      have := hact b
       rw [mul_pow, inv_pow, hpow', ← MonObj.pow_comp, hpow', MonObj.one_comp, inv_one, _root_.mul_one])
   choose C2 hC2 HC2 using fun (a a' : D.La) => GlobalTheory.exists_clopen_weilIs_iff hL (Sp A) P n Y (et a) (et a')
     (c ^ D.EF a a') hn hu (hpow' _) (hpow' _)

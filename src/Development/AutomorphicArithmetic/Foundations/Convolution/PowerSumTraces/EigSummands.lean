@@ -57,7 +57,7 @@ private theorem exists_adapted {H ι : Type} [NormedAddCommGroup H] [InnerProduc
     (U : ι → Submodule ℂ H) (hc : ∀ i, IsClosed (U i : Set H)) (ho : Pairwise fun i j => U i ⟂ U j)
     (ht : ∀ x : H, (∀ i, x ∈ (U i)ᗮ) → x = 0) :
     ∃ (κ : ι → Type) (b : HilbertBasis (Σ i, κ i) ℂ H), ∀ i k, b ⟨i, k⟩ ∈ U i := by
-  haveI : ∀ i, CompleteSpace (U i) := fun i => (hc i).completeSpace_coe
+  have : ∀ i, CompleteSpace (U i) := fun i => (hc i).completeSpace_coe
   choose w b hb using fun i => exists_hilbertBasis ℂ (U i)
   have hfam : OrthogonalFamily ℂ (fun i => U i) fun i => (U i).subtypeₗᵢ :=
     OrthogonalFamily.of_pairwise ho
@@ -167,11 +167,11 @@ variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSp
 
 private theorem isHS_prj (E : Submodule ℂ H) [FiniteDimensional ℂ E] : IsHilbertSchmidt (prj E) := by
   have hcl : E.topologicalClosure = E :=
-    (Submodule.closed_of_finiteDimensional E).submodule_topologicalClosure_eq
-  haveI : FiniteDimensional ℂ E.topologicalClosure := by rw [hcl]; infer_instance
+    (Submodule.isClosed_of_finiteDimensional E).submodule_topologicalClosure_eq
+  have : FiniteDimensional ℂ E.topologicalClosure := by rw [hcl]; infer_instance
   have h1 : IsHilbertSchmidt (E.topologicalClosure.subtypeL) := by
     rw [isHilbertSchmidt_iff (stdOrthonormalBasis ℂ E.topologicalClosure).toHilbertBasis, tsum_fintype]
-    exact ENNReal.sum_lt_top.2 fun i _ => ENNReal.pow_lt_top enorm_lt_top
+    exact ENNReal.sum_lt_top.2 fun i _ => ENNReal.pow_lt_top eNorm_lt_top
   exact h1.comp_right E.topologicalClosure.orthogonalProjection
 
 private theorem mem_eigIn {W : Submodule ℂ H} {A : H →L[ℂ] H} {x : ℝ} {v : H} :

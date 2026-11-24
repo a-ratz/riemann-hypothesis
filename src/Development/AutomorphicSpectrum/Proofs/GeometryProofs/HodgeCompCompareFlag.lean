@@ -111,7 +111,7 @@ theorem exists_ext {S : Scheme.{0}} {G : Over S} [GrpObj G] (hs : Smooth G.hom) 
     ∃ j : E →+ E', (∀ e, (M'.pt (j e)).left = spMap (dualMap i) ≫ (M.pt e).left) ∧ IsExtOver i j ∧
       Submodule.span R' (Set.range j) = ⊤ := by
   subst hy
-  letI := i.toAlgebra
+  let := i.toAlgebra
   obtain ⟨j, hj, hl, hsp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G R R' x E E' M M'
   have hbc := hsp hs
   obtain ⟨m, ⟨b₁⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieFreeSmooth.lieModel_free_of_smooth S G hs R x E M

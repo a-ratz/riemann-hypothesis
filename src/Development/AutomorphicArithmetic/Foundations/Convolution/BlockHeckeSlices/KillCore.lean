@@ -106,7 +106,7 @@ private theorem norm_pow_apply_le (T : H →L[ℂ] H) (c : ℝ) (hc : 0 ≤ c) (
   induction k with
   | zero => simp
   | succ k ih =>
-    rw [pow_succ', ContinuousLinearMap.mul_apply]
+    rw [pow_succ', mul_apply_eq_comp]
     calc ‖T ((T ^ k) v)‖ ≤ ‖T‖ * ‖(T ^ k) v‖ := T.le_opNorm _
       _ ≤ c * (c ^ k * ‖v‖) := mul_le_mul hT ih (norm_nonneg _) hc
       _ = c ^ (k + 1) * ‖v‖ := by ring
@@ -163,9 +163,9 @@ theorem UpperTheory.ConvolutionTheory.BW.bandRep :
           _ = D ^ (k + 1) * ‖y‖ := by ring
       · have e1 : (MvPolynomial.monomial (Finsupp.single x 1 + β) (1 : ℂ)) =
             MvPolynomial.monomial β 1 * MvPolynomial.X x := by
-          rw [MvPolynomial.X, MvPolynomial.monomial_mul, add_comm, one_mul]
+          rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, add_comm, one_mul]
         have e2 : (𝔞.A ^ (k + 1)) y = 𝔞.A ((𝔞.A ^ k) y) := by
-          rw [pow_succ', ContinuousLinearMap.mul_apply]
+          rw [pow_succ', mul_apply_eq_comp]
         have e3 : 𝔞.Z x ((𝔞.A ^ k) y) = (𝔞.A ^ k) (𝔞.Z x y) :=
           (congrArg (fun T : LL μ →L[ℂ] LL μ => T y) ((hAZ x).pow_left k).eq).symm
         rw [e1, zop_mul, e2, Module.End.mul_apply, hstep, e3, hzw]
@@ -175,14 +175,14 @@ theorem UpperTheory.ConvolutionTheory.BW.bandRep :
   set v₀ : LL μ := fcalc χ 𝔞.A u with hv₀
   have hv : (𝔞.A * T) v₀ = v₀ := congrArg (fun S : LL μ →L[ℂ] LL μ => S u) hF
   have hpw : ∀ k : ℕ, (𝔞.A ^ k) ((T ^ k) v₀) = v₀ := fun k => by
-    rw [← ContinuousLinearMap.mul_apply, ← hAT.mul_pow]
+    rw [← mul_apply_eq_comp, ← hAT.mul_pow]
     induction k with
     | zero => simp
-    | succ k ih => rw [pow_succ, ContinuousLinearMap.mul_apply, hv, ih]
+    | succ k ih => rw [pow_succ, mul_apply_eq_comp, hv, ih]
   have hφ : ∀ k : ℕ, L ((𝔞.A ^ k) ((T ^ (k + 1)) v₀)) = φ := fun k => by
     refine uniq _ _ ?_
     have e : 𝔞.A ((𝔞.A ^ k) ((T ^ (k + 1)) v₀)) = v₀ := by
-      rw [← ContinuousLinearMap.mul_apply, ← pow_succ']
+      rw [← mul_apply_eq_comp, ← pow_succ']
       exact hpw (k + 1)
     rw [e]
     exact hrep
@@ -249,7 +249,7 @@ theorem ev_comm (a b : PR K n) : Commute (ev a) (ev b) := by
 theorem zm_zero : zm ev 0 = 1 := by simp [zm]
 
 theorem zm_add (α β : Ix K n →₀ ℕ) : zm ev (α + β) = zm ev α * zm ev β := by
-  rw [zm, zm, zm, ← map_mul, ← map_mul, ← map_mul, monomial_mul, one_mul]
+  rw [zm, zm, zm, ← map_mul, ← map_mul, ← map_mul, monomial_mul_monomial, one_mul]
 
 theorem zm_single (x : Ix K n) : zm ev (Finsupp.single x 1) = ev (C (X (some x))) := by
   rw [zm, ← X, rename_X]
@@ -448,7 +448,7 @@ private theorem app_abs {M : Type} [AddCommGroup M] [Module ℂ M] (S : Set (Upp
     intro V hV x
     refine hz _ _ _ ?_
     have := fix_mul hB hV (T := zm ev (Finsupp.single x 1)) (ev_comm ev _ _) (hB _).symm
-    rw [← zm_single, ← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, mul_assoc B, ← mul_assoc, this]
+    rw [← zm_single, ← mul_apply_eq_comp, ← mul_apply_eq_comp, mul_assoc B, ← mul_assoc, this]
   have h2 : ∀ (α : Ix K n →₀ ℕ) (V : H →L[ℂ] H), am ev * B * V = V →
       L ((B ^ α.degree * zm ev α * V) u) = z (monomial α 1) (L (V u)) := by
     have fx : ∀ (α : Ix K n →₀ ℕ) (V : H →L[ℂ] H), am ev * B * V = V →
@@ -463,7 +463,7 @@ private theorem app_abs {M : Type} [AddCommGroup M] [Module ℂ M] (S : Set (Upp
         have hc : Commute (B ^ b.degree) (zm ev a) := (hB _).pow_left _
         rw [map_add (f := _), pow_add, zm_add, mul_assoc (B ^ a.degree), ← mul_assoc (B ^ b.degree), hc.eq]
         simp only [mul_assoc]
-      have e2 : (monomial (a + b) 1 : MvPolynomial (Ix K n) ℂ) = monomial a 1 * monomial b 1 := by rw [monomial_mul, one_mul]
+      have e2 : (monomial (a + b) 1 : MvPolynomial (Ix K n) ℂ) = monomial a 1 * monomial b 1 := by rw [monomial_mul_monomial, one_mul]
       rw [e, ha _ (fx b V hV), hb V hV, e2, map_mul, Module.End.mul_apply]
     have z0 : ∀ (V : H →L[ℂ] H), am ev * B * V = V →
         L ((B ^ (0 : Ix K n →₀ ℕ).degree * zm ev 0 * V) u) = z (monomial 0 1) (L (V u)) := by
@@ -491,14 +491,14 @@ private theorem app_abs {M : Type} [AddCommGroup M] [Module ℂ M] (S : Set (Upp
       refine Finset.sum_congr rfl fun α _ => ?_
       rw [← map_smul, smul_monomial, smul_eq_mul, mul_one]
 
-    rw [e, tp_eq, Finset.sum_mul, ContinuousLinearMap.sum_apply, map_sum, LinearMap.sum_apply]
+    rw [e, tp_eq, Finset.sum_mul, sum_apply, map_sum, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun α _ => ?_
-    rw [smul_mul_assoc, ContinuousLinearMap.smul_apply, map_smul, h2 α V hV, LinearMap.smul_apply]
+    rw [smul_mul_assoc, smul_apply, map_smul, h2 α V hV, LinearMap.smul_apply]
   have h5 : ∀ p : UpperTheory.ConvolutionTheory.Pl K × Fin n, p.1 ∉ S → ∀ (e : ℕ) v, L (ev (X p ^ e) v) = (h p ^ e) (L v) := by
     intro p hp e
     induction e with
     | zero => simp
-    | succ e ih => intro v; rw [pow_succ, pow_succ, map_mul, ContinuousLinearMap.mul_apply, ih, h4 p hp, Module.End.mul_apply]
+    | succ e ih => intro v; rw [pow_succ, pow_succ, map_mul, mul_apply_eq_comp, ih, h4 p hp, Module.End.mul_apply]
   have h6 : ∀ (β : (UpperTheory.ConvolutionTheory.Pl K × Fin n) →₀ ℕ) (l : List (UpperTheory.ConvolutionTheory.Pl K × Fin n)), (∀ p ∈ l, p.1 ∉ S) → ∀ v,
       L (ev (l.map fun p => X p ^ β p).prod v) = (l.map fun p => h p ^ β p).prod (L v) := by
     intro β l
@@ -506,12 +506,12 @@ private theorem app_abs {M : Type} [AddCommGroup M] [Module ℂ M] (S : Set (Upp
     | nil => simp
     | cons p l ih =>
       intro hl v
-      rw [List.map_cons, List.map_cons, List.prod_cons, List.prod_cons, map_mul, ContinuousLinearMap.mul_apply,
+      rw [List.map_cons, List.map_cons, List.prod_cons, List.prod_cons, map_mul, mul_apply_eq_comp,
         h5 p (hl p List.mem_cons_self), ih fun q hq => hl q (List.mem_cons_of_mem _ hq), Module.End.mul_apply]
 
-  rw [yk, ContinuousLinearMap.sum_apply, map_sum, LinearMap.sum_apply]
+  rw [yk, sum_apply, map_sum, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun β hβ => ?_
-  rw [mul_assoc, h3 _ _ (fix_mul hB hW (ev_comm ev _ _) (hB _).symm), Module.End.mul_apply, ContinuousLinearMap.mul_apply,
+  rw [mul_assoc, h3 _ _ (fix_mul hB hW (ev_comm ev _ _) (hB _).symm), Module.End.mul_apply, mul_apply_eq_comp,
     ← h6 β _ fun p hp => hg β hβ p (Finset.mem_toList.1 hp), Finset.prod_map_toList, monomial_eq, C_1, one_mul]
   rfl
 
@@ -554,19 +554,19 @@ private theorem core_abs {M : Type} [AddCommGroup M] [Module ℂ M] (S : Set (Up
     have c2 := hcY P hP
     have hp : Pc (A (Y (Q u))) = A (Y (Q u)) := by
       refine hcusp (Q u) ((B * X₀) (Q u)) _ (fun e => (Y - ∑ k ∈ Finset.range e, yk ev B (B * X₀) (G k)) (Q u)) ?_ ?_ ?_ fun e => ?_
-      · rw [← ContinuousLinearMap.mul_apply, ← mul_assoc, hBX]
-      · rw [← ContinuousLinearMap.mul_apply, c2.2.eq, ContinuousLinearMap.mul_apply, hq2, map_zero]
+      · rw [← mul_apply_eq_comp, ← mul_assoc, hBX]
+      · rw [← mul_apply_eq_comp, c2.2.eq, mul_apply_eq_comp, hq2, map_zero]
       · have t1 : Tendsto (fun e : ℕ => ‖(Y - ∑ k ∈ Finset.range e, yk ev B (B * X₀) (G k)) (Q u)‖) atTop (𝓝 (‖(Y - Y) (Q u)‖)) :=
           (((ContinuousLinearMap.apply ℂ H (Q u)).continuous.tendsto _).comp
             (tendsto_const_nhds.sub hsum.hasSum.tendsto_sum_nat)).norm
-        simpa only [sub_self, ContinuousLinearMap.zero_apply, norm_zero] using t1
+        simpa only [sub_self, zero_apply, norm_zero] using t1
 
-      · rw [ContinuousLinearMap.sub_apply, map_sub, ContinuousLinearMap.sum_apply, map_sum]
+      · rw [sub_apply, map_sub, sum_apply, map_sum]
         congr 1
         exact Finset.sum_congr rfl fun k _ => app_abs S ev L z h hz h4 B hB _ hW' _ (hoff k) _
     show A (Y (Q u)) = 0
-    rw [← hp, ← ContinuousLinearMap.mul_apply A, ← ContinuousLinearMap.mul_apply, (c1.1.mul_right c1.2).eq,
-      ContinuousLinearMap.mul_apply, hq1, map_zero]
+    rw [← hp, ← mul_apply_eq_comp A, ← mul_apply_eq_comp, (c1.1.mul_right c1.2).eq,
+      mul_apply_eq_comp, hq1, map_zero]
   refine ⟨C', fun d => le_trans ?_ (hC' d)⟩
   have e : ev (trunc d G) ∘L X₀ ∘L Q = A ^ (d + 1) * ((∑ k ∈ Finset.range (d + 1), yk ev B (B * X₀) (G k) - Y) * Q) := by
     show ev (trunc d G) * (X₀ * Q) = _

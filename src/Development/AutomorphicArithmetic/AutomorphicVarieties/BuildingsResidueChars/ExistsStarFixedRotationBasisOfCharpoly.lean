@@ -95,7 +95,7 @@ private lemma trace_inverseGram_conj_smul_eq {K : Type} [Field K] [CharZero K] (
   have e1 := hp 1
   have em := hp (-1)
   simp only [Matrix.det_fin_three, Matrix.sub_apply, Matrix.scalar_apply, Matrix.diagonal_apply] at e0 e1 em
-  simp only [Fin.isValue, Fin.reduceEq, if_true, if_false, eq_self_iff_true] at e0 e1 em
+  simp only [Fin.isValue, Fin.reduceEq, ite_true, ite_false, eq_self_iff_true] at e0 e1 em
   constructor
   · rw [Matrix.trace_fin_three]
     linear_combination e0 - e1 / 2 - em / 2
@@ -249,7 +249,7 @@ theorem UpperTheory.exists_fixed_rotation_basis_of_charpoly :
       have h0 := hle hmem
       rw [LinearMap.mem_ker, Matrix.toLin'_apply, hEe] at h0
       exact he0 h0
-    have hu : IsUnit (Matrix.of ![e, v, M *ᵥ v]) := Matrix.linearIndependent_rows_iff_isUnit.mp hli
+    have hu : IsUnit (Matrix.of ![e, v, M *ᵥ v]) := linearIndependent_row_iff_isUnit.mp hli
     exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
 end -- clump:auto
 end -- clump:auto

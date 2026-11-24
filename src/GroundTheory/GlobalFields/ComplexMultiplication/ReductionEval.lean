@@ -143,7 +143,7 @@ theorem reducePoint_genEval
         (Point.map (genEval (W.baseChange K) _ hRg) Q)) =
       pointCongr (map_fieldEvalRed_eq W W' j hxy hx)
         (pointMapRing (fieldEvalRed W j hxy hx) _ (reduceFF K W W' Q)) := by
-  haveI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  have : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
   set σ := genEval (W.baseChange K) _ hRg
   have hσ : σ.toRingHom.comp (algebraMap (gaussRing W) (W.baseChange K).toAffine.FunctionField) =
       (algebraMap Λ M).comp (gaussLift W j hxy hx) := by

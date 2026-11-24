@@ -90,11 +90,11 @@ lemma Hpk_eq (k r : ℕ) (i j : Fin (2 * r + k + 1)) :
 lemma Hpk_sq (k r : ℕ) : Formalism.QuantumDeterminants.Hpk k r * Formalism.QuantumDeterminants.Hpk k r = 1 := by
   ext i j
   rw [Matrix.mul_apply]
-  simp only [Hpk_eq k r i, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Hpk_eq k r i, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Hpk_eq, sig_sig, sgn_sig, Matrix.one_apply]
   by_cases h : j = i
-  · rw [if_pos h, if_pos h.symm]; unfold sgn; split_ifs <;> norm_num
-  · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm]; unfold sgn; split_ifs <;> norm_num
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), mul_zero]
 
 variable {k r : ℕ}
 
@@ -208,7 +208,7 @@ theorem nu_conc {μG μS ν : Measure (Formalism.QuantumDeterminants.Mt k r)} {T
   rw [lintegral_indicator_const hE, ← hw] at h2
   have hpos : μS Set.univ ≠ 0 := by
     intro h0; exact hS0 (Measure.measure_univ_eq_zero.mp h0)
-  exact (mul_eq_zero.mp (le_zero_iff.mp h2)).resolve_left hpos
+  exact (mul_eq_zero.mp (nonpos_iff_eq_zero.mp h2)).resolve_left hpos
 
 end Unfold
 

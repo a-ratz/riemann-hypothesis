@@ -103,7 +103,7 @@ theorem card_out_mem (𝔭 : Ideal (𝓞 F)) {j k : ℕ} (hjk : j ≤ k) :
     intro n'
     rw [AddMonoidHom.mem_ker]
     conv_rhs => rw [← Ideal.Quotient.mk_out n']
-    simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, f,
+    simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, f,
       Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem]
   have e1 : Nat.card {n' : 𝓞 F ⧸ 𝔭 ^ k // Quotient.out n' ∈ 𝔭 ^ j} =
       Nat.card f.toAddMonoidHom.ker := Nat.card_congr (Equiv.subtypeEquivRight hset)
@@ -121,9 +121,9 @@ theorem sum_nkCount (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
     ∑ᶠ n' : 𝓞 F ⧸ 𝔭 ^ k, nkCount h L 𝔭 k (Quotient.out n') =
       Ideal.absNorm 𝔭 ^ (2 * finrank K V * k) := by
   classical
-  haveI := MeanC.finite_quot_pow h𝔭 k
+  have := MeanC.finite_quot_pow h𝔭 k
   have hN := MeanC.one_lt_absNorm h𝔭
-  haveI : Finite (↥L ⧸ ((extP K 𝔭) ^ k • ⊤ : Submodule (𝓞 K) ↥L)) :=
+  have : Finite (↥L ⧸ ((extP K 𝔭) ^ k • ⊤ : Submodule (𝓞 K) ↥L)) :=
     Nat.finite_of_card_ne_zero (by
       rw [MeanB.card_quot_extP hK hF hL h𝔭 k]; exact pow_ne_zero _ (by omega))
   let nv : ↥L → 𝓞 F := fun y => (MeanB.exists_val hF hs hLi y).choose
@@ -156,7 +156,7 @@ theorem sum_nkCount (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
       rw [hnv, MeanB.congrP_algebraMap_iff_sub_mem h𝔭]
       rw [← Ideal.Quotient.eq, Ideal.Quotient.mk_out]
       exact hx
-  letI := Fintype.ofFinite (𝓞 F ⧸ 𝔭 ^ k)
+  let := Fintype.ofFinite (𝓞 F ⧸ 𝔭 ^ k)
   rw [finsum_eq_sum_of_fintype]
   simp_rw [hfib]
   rw [← Nat.card_sigma, Nat.card_congr (Equiv.sigmaFiberEquiv φ),
@@ -208,8 +208,8 @@ theorem tendsto_mean_alphaN (hK : Formalism.HermitianLatticesTheory.IsCMUnram K)
       ∑ᶠ n' : 𝓞 F ⧸ 𝔭 ^ k, alphaN h L 𝔭 (Quotient.out n') - 1| ≤
         (2 * max C0 0 + |alphaN h L 𝔭 0|) * ((Ideal.absNorm 𝔭 : ℝ)⁻¹) ^ (j k) := by
     intro k
-    haveI := MeanC.finite_quot_pow h𝔭 k
-    letI := Fintype.ofFinite (𝓞 F ⧸ 𝔭 ^ k)
+    have := MeanC.finite_quot_pow h𝔭 k
+    let := Fintype.ofFinite (𝓞 F ⧸ 𝔭 ^ k)
     have hsumr : ∑ n' : 𝓞 F ⧸ 𝔭 ^ k, (nkCount h L 𝔭 k (Quotient.out n') : ℝ) /
         (Ideal.absNorm 𝔭 : ℝ) ^ (k * (2 * finrank K V - 1)) = (Ideal.absNorm 𝔭 : ℝ) ^ k := by
       have hS := sum_nkCount hK hF hs hd hL hLi h𝔭 k

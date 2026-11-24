@@ -220,8 +220,8 @@ theorem mean_smul {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D m n)} (h : IsCovol
     {c : D.host.E} (hc : c ≠ 0) (φ : Mx D m n → ℂ) (hφ : ∀ γ ∈ ratMx D m n, ∀ a, φ (γ + a) = φ a) :
     ∫ a in 𝓕, φ (incA D c • a) ∂μ = ∫ a in 𝓕, φ a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hcc : incA D c * incA D c⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel₀ hc, map_one]
   have hcc' : incA D c⁻¹ * incA D c = 1 := by rw [mul_comm, hcc]
   let e : Mx D m n ≃+ Mx D m n :=

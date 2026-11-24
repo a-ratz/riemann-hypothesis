@@ -133,7 +133,7 @@ theorem exists_frameRing_reduced {K : Type} [Field K] {J : Type} [Fintype J] (m 
           · have a1 := congrFun (congrFun (h2 τ) i) j
             have a2 := congrFun (congrFun (hφY τ) i) j
             exact a1.trans a2.symm
-      apply AlgHom.coe_ringHom_injective
+      apply AlgHom.toRingHom_injective
       apply IsLocalization.ringHom_ext (Submonoid.powers d)
       rw [key]
       ext x

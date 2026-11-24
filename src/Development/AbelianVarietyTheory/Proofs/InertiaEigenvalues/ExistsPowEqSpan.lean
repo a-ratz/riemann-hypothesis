@@ -70,10 +70,10 @@ theorem exists_pow_eq_span {L : Type} [Field L] [NumberField L] (v : HeightOneSp
 
 private theorem exists_pow_sub_one_lemma {L : Type} [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L))
     (a : 𝓞 L) (hw : a ∉ w.asIdeal) : ∃ m : ℕ, 0 < m ∧ ∀ k : ℕ, a ^ (m * k) - 1 ∈ w.asIdeal := by
-  haveI := w.isMaximal
-  letI : Field (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
-  haveI : Finite (𝓞 L ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
-  letI : Fintype (𝓞 L ⧸ w.asIdeal) := Fintype.ofFinite _
+  have := w.isMaximal
+  let : Field (𝓞 L ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+  have : Finite (𝓞 L ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
+  let : Fintype (𝓞 L ⧸ w.asIdeal) := Fintype.ofFinite _
   have hne : Ideal.Quotient.mk w.asIdeal a ≠ 0 := by
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   refine ⟨Fintype.card (𝓞 L ⧸ w.asIdeal) - 1, Nat.sub_pos_of_lt Fintype.one_lt_card, fun k => ?_⟩
@@ -249,7 +249,7 @@ theorem unitOff_val : ∀ (L : Type) [Field L] [NumberField L] (χ : Formalism.L
   have hfp : (∏ᶠ (w : HeightOneSpectrum (𝓞 L)) (_ : w ∉ S), χ.val w ^ ordF w k) =
       χ.val v ^ ordF v k := by
     rw [finprod_eq_single _ v (fun w hw => by simp only [hord w hw, zpow_zero, finprod_one]),
-      finprod_eq_if, if_pos hvS]
+      finprod_eq_if, ite_eq_left hvS]
   have e1 : ∀ (w : HeightOneSpectrum (𝓞 L)) (x : L),
       Valued.v (algebraMap L (w.adicCompletion L) x) = w.valuation L x := fun w x =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' (v := w) x

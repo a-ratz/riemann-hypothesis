@@ -105,7 +105,7 @@ theorem exists_clear_coeff_at_prime : ∀ (E : Type) [Field E] [NumberField E] [
   obtain ⟨T, iK, hT, hiK⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff z.K p
   obtain ⟨M⟩ := (_root_.GlobalTheory.LamT.locMod_exists E H Dw l Xo c z T iK).1 fun a => (hiK _).2 (p.valuation_le_one a)
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let φ : z.K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ φ z.y
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hz.2.2.2.1]
@@ -161,7 +161,7 @@ theorem exists_clear_coeff_at_prime : ∀ (E : Type) [Field E] [NumberField E] [
     hG y'' Y 1 hY (by rw [Units.val_one]; exact hc)
   have hdeg := _root_.GlobalTheory.FrameHom.frPoly_secZ_degree_eq E H Dw l Xo c z.K z.y e k he F hF G hG1 μ hμ
   have hμS : μ ∈ S := by
-    simp only [S, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [S, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     omega
   obtain ⟨w, hw⟩ := hloc F hF hv G hG1 μ
   obtain ⟨r, hr⟩ := hd (yμ μ) (Finset.mem_image_of_mem yμ hμS)

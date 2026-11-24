@@ -74,7 +74,7 @@ private theorem isRepOf_of_split (D : D7) {l : ℕ} [Fact l.Prime] (ι : Qbar l 
   have hcp := GlobalTheory.TwistLG.charpoly_eq_of_dense ρ₁ ρ₂ c₁ c₂ _ (hC hfin.toFinset).closure_eq (by
     rintro g ⟨w, hw, hs, B, hB, hg⟩
     rw [Set.Finite.mem_toFinset] at hw
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hw
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hw
     apply Polynomial.map_injective ι.toRingHom ι.injective
     rw [hw.1 hs B g hB hg, hw.2 B g hB hg])
   refine ⟨c₁, s₁, f₂.mono fun w hw B σ hB hσ => ?_⟩

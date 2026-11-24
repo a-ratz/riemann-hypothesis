@@ -505,7 +505,7 @@ theorem main : ∀ (D : D7) (L : SizeData₂ D) (r : FamilyRepresentationConstan
     push_cast
     refine Finset.sum_congr rfl fun e he => ?_
     have he' := Finset.mem_Ioo.1 he
-    rw [GlobalTheory.NLink.RowE.toReal_enat, D.nd.sha_eq (D.nd.l i) e he'.1 he'.2 _ (ENat.coe_toNat (hsha e he)).symm]
+    rw [GlobalTheory.NLink.RowE.toReal_enat, D.nd.sha_eq (D.nd.l i) e he'.1 he'.2 _ (ENat.natCast_toNat (hsha e he)).symm]
     push_cast
     rfl
 
@@ -802,7 +802,7 @@ theorem excOK_at (P : ParameterChoice' D L) (hS : SizesAt L) :
   have hBS : ∀ W, W ∈ BS ↔ W ∈ baseSizes L := by
     intro W
     simp only [BS, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton, Finset.mem_image,
-      Finset.mem_univ, true_and, baseSizes, Set.mem_setOf_eq]
+      Finset.mem_univ, true_and, baseSizes, Set.mem_ofPred_eq]
     constructor
     · rintro ((h | h) | ⟨t, h⟩)
       · exact Or.inl h
@@ -829,7 +829,7 @@ theorem excOK_at (P : ParameterChoice' D L) (hS : SizesAt L) :
   let win : ℝ → Finset ℤ := fun W => Finset.Icc ⌈lo W⌉ ⌊hi W⌋
   have hwin : ∀ W n, n ∈ win W ↔ n ∈ window L W := by
     intro W n
-    simp only [win, lo, hi, Finset.mem_Icc, Int.ceil_le, Int.le_floor, window, Set.mem_setOf_eq]
+    simp only [win, lo, hi, Finset.mem_Icc, Int.ceil_le, Int.le_floor, window, Set.mem_ofPred_eq]
   have hwincard : ∀ W, ((win W).card : ℝ) ≤ L.Sc + 3 * L.etaSz + 4 * (sgPlus L : ℝ) + 8 := by
     intro W
     refine (card_Icc_ceil_floor_le (lo W) (hi W)).trans (max_le (le_of_eq (by simp only [lo, hi]; ring)) ?_)
@@ -850,7 +850,7 @@ theorem excOK_at (P : ParameterChoice' D L) (hS : SizesAt L) :
       refine ⟨W, (hBS W).2 hW, n, (hwin W n).2 hn, ⟨hp, hd, by omega⟩, hl⟩
   refine ⟨exc, ?_, ?_, ?_⟩
   · ext l
-    simp only [Finset.mem_coe, hmem, Exc, Set.mem_setOf_eq]
+    simp only [Finset.mem_coe, hmem, Exc, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨W, hW, n, hn, -, -, hp, hd, hl⟩
       exact ⟨hp, hl, W, hW, n, hn, Int.ofNat_dvd_left.2 hd⟩
@@ -947,7 +947,7 @@ theorem polyVal_le_sum_mul_pow (Q : MvPolynomial (Fin 3) ℕ) (f r t : ℕ) (hf 
       simpa using Nat.mul_le_mul (Nat.mul_le_mul hf hr) (le_refl t)
   have hpos : 0 < f * r * t := by positivity
   calc ∏ i, (![f, r, t] : Fin 3 → ℕ) i ^ m i ≤ ∏ i : Fin 3, (f * r * t) ^ m i :=
-        Finset.prod_le_prod' fun i _ => Nat.pow_le_pow_left (hM i) _
+        Finset.prod_le_prod fun i _ => Nat.pow_le_pow_left (hM i) _
     _ = (f * r * t) ^ (∑ i, m i) := Finset.prod_pow_eq_pow_sum _ _ _
     _ ≤ (f * r * t) ^ Q.totalDegree := by
         apply Nat.pow_le_pow_right hpos
@@ -993,7 +993,7 @@ theorem starG_of_thmB : ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D
   have hsha : ∀ e ∈ Finset.Ioo 0 D.R.t, Formalism.GaloisCohomology.shaLen (D.nd.ldat (D.nd.l i)) (e : ℤ) < ⊤ := by
     intro e he
     rw [Finset.mem_Ioo] at he
-    haveI : Fact (D.nd.l i).Prime := ⟨hlp⟩
+    have : Fact (D.nd.l i).Prime := ⟨hlp⟩
     exact lt_top_iff_ne_top.2 (hSha (D.nd.l i) e he.1 he.2)
   have hK' := (hK i hi).1 π hπ
   have h := hB i hl hi hlbig π hπ hK'.1 hsha

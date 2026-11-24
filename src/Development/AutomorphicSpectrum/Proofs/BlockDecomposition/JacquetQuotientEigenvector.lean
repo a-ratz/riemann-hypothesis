@@ -68,7 +68,7 @@ variable {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
 theorem exists_atom_le {ρ : Representation ℂ G V} (h : HasFiniteLength ρ) {E : Subrepresentation ρ}
     (hE : E ≠ ⊥) : ∃ S : Subrepresentation ρ, IsAtom S ∧ S ≤ E := by
   obtain ⟨-, hw⟩ := (hasFiniteLength_iff_wellFounded ρ).1 h
-  haveI : IsAtomic (Subrepresentation ρ) := isAtomic_of_orderBot_wellFounded_lt hw
+  have : IsAtomic (Subrepresentation ρ) := isAtomic_of_orderBot_wellFounded_lt hw
   obtain h' | ⟨S, hS, hle⟩ := eq_bot_or_exists_atom_le E
   · exact absurd h' hE
   · exact ⟨S, hS, hle⟩
@@ -140,7 +140,7 @@ theorem omegaLevi_comm (d : Fin 2 → ℕ) (h : Levi k (fun a => Fin (d a))) :
   funext a
   apply Units.ext
   simp only [omegaLevi, Matrix.GeneralLinearGroup.scalar, Pi.mul_apply, Units.val_mul, Units.coe_map,
-    MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   exact Matrix.scalar_commute _ (fun r => Commute.all _ _) _
 
 theorem diagPow_val (N : ℕ) (lam : Fin N → ℤ) :

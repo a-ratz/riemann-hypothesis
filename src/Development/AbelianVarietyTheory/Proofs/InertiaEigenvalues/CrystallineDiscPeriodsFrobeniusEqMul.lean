@@ -120,7 +120,7 @@ theorem Seed.crystallineDiscPeriods_frobenius_eq_mul : ∀ (l : ℕ) [Fact l.Pri
         s.W * (s.X' * s.F.map (C : Wq l bk.a →+* bk.S) * s.X.map (frobS l bk.a)).map bk.iS := by
   intro l _ K bk τ hτ d ρ _ s Φ hΦ
   obtain ⟨h0, h1⟩ := bk.ρ₀_pos_lt_one
-  haveI : IsDomain (bk.DA bk.ρ₀) := (_root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
+  have : IsDomain (bk.DA bk.ρ₀) := (_root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
   obtain ⟨ι, ⟨tb⟩⟩ := _root_.GlobalTheory.BSP.AinfTopBasis.main l K bk
   have hinj : Function.Injective bk.iA := (_root_.GlobalTheory.BSP.toDisc_injective_of_topBasis l K bk (Ainf l) bk.ev ι tb bk.ρ₀ h0 h1).1
   have hΦS : ∀ x, Φ (bk.iS x) = bk.iS (frobS l bk.a x) := fun x => by
@@ -131,7 +131,7 @@ theorem Seed.crystallineDiscPeriods_frobenius_eq_mul : ∀ (l : ℕ) [Fact l.Pri
     rw [bk.ev_frob, ← map_zero bk.iA]
     exact fun h => bk.frobenius_ev_E_ne_zero hτ (hinj h)
   have hL0 : (l : bk.DA bk.ρ₀) ≠ 0 := fun h =>
-    WittVector.p_nonzero l (OCb l) (hinj (by rw [map_natCast, map_zero]; exact h))
+    WittVector.p_ne_zero l (OCb l) (hinj (by rw [map_natCast, map_zero]; exact h))
   have hQP : s.X.map (bk.iS.comp (frobS l bk.a)) * s.X'.map (bk.iS.comp (frobS l bk.a)) =
       ((l : bk.DA bk.ρ₀) ^ s.c₂ * bk.iS (frobS l bk.a bk.E) ^ (2 * s.N)) • (1 : Matrix (Fin d) (Fin d) (bk.DA bk.ρ₀)) := by
     rw [← Matrix.map_mul, s.X_mul, Matrix.map_smul' _ _ _ (map_mul _), Matrix.map_one _ (map_zero _) (map_one _)]

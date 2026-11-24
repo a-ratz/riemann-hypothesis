@@ -131,7 +131,7 @@ theorem exists_ratPt [Nontrivial A] (c : E →ₐ[F] E) (J : Matrix β β E) (g 
     ∃ g₀, ratPt A c J g₀ = g := by
   have hi : Function.Injective (inc (F := F) (E := E) A) :=
     Algebra.TensorProduct.includeRight_injective (algebraMap F A).injective
-  haveI : Nontrivial (A ⊗[F] E) := hi.nontrivial
+  have : Nontrivial (A ⊗[F] E) := hi.nontrivial
   have hd : γ.det ≠ 0 := by
     intro h0
     have hu : IsUnit ((g : GL β (A ⊗[F] E)) : Matrix β β (A ⊗[F] E)).det :=
@@ -195,7 +195,7 @@ theorem lagr_iff [CharZero F] {c : E →ₐ[F] E} {ξ : E} (hq : IsQuad c ξ) {J
     simp
   · intro h
     obtain ⟨b, -, -⟩ := hq.basis
-    haveI : Module.Finite F E := Module.Finite.of_basis b
+    have : Module.Finite F E := Module.Finite.of_basis b
     have h3 : JAᵀ * (x * JB * Cy.map c) = 0 := by
       ext i j
       by_contra hne
@@ -252,11 +252,11 @@ def rmul (R : Type) [CommRing R] {S : Type} [CommRing S] [Algebra R S] (α : Typ
 theorem theta_split_inc : ∀ (F : Type) [Field F] [NumberField F] [LocallyCompactSpace (AdeleRing (𝓞 F) F)] [Invertible (2 : AdeleRing (𝓞 F) F)] (E : Type) [Field E] [Algebra F E] (c : E →ₐ[F] E) (ξ : E) (α β κ : Type) [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β] [Fintype κ] (JA : Matrix α α E) (JB : Matrix β β E) (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ), Continuous ψ → ψ ≠ 1 → (∀ a : F, ψ (algebraMap F (AdeleRing (𝓞 F) F) a) = 1) → IsQuad c ξ → IsHerm c JA → IsHerm c JB → ∀ (d : Darboux (symp (Algebra.TensorProduct.map (AlgHom.id (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F)) c) ((1 : AdeleRing (𝓞 F) F) ⊗ₜ[F] ξ) (JA.map (inc (F := F) (AdeleRing (𝓞 F) F))) (JB.map (inc (F := F) (AdeleRing (𝓞 F) F)))) κ) (d₀ : Matrix α β E ≃ₗ[F] (κ → F) × (κ → F)), (∀ x, d.e (x.map (inc (F := F) (AdeleRing (𝓞 F) F))) = (fun i => algebraMap F (AdeleRing (𝓞 F) F) ((d₀ x).1 i), fun i => algebraMap F (AdeleRing (𝓞 F) F) ((d₀ x).2 i))) → ∀ (χ : (AdeleRing (𝓞 F) F ⊗[F] E)ˣ →* Circle) (ν : Type) [Fintype ν] [DecidableEq ν] (Cy : Matrix β ν E) (om : UG (Algebra.TensorProduct.map (AlgHom.id (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F)) c) (JB.map (inc (F := F) (AdeleRing (𝓞 F) F))) →* Module.End ℂ ((κ → AdeleRing (𝓞 F) F) → ℂ)), (∀ (z : E) (u : (AdeleRing (𝓞 F) F ⊗[F] E)ˣ), (u : AdeleRing (𝓞 F) F ⊗[F] E) = (1 : AdeleRing (𝓞 F) F) ⊗ₜ[F] z → χ u = 1) → IsLagr c JB Cy → IsSplitting (adeleClass F) ψ d (actB (Algebra.TensorProduct.map (AlgHom.id (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F)) c)) om → SiegelRule (Algebra.TensorProduct.map (AlgHom.id (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F)) c) (adeleClass F) ψ ((1 : AdeleRing (𝓞 F) F) ⊗ₜ[F] ξ) (JA.map (inc (F := F) (AdeleRing (𝓞 F) F))) (JB.map (inc (F := F) (AdeleRing (𝓞 F) F))) d χ (Cy.map (inc (F := F) (AdeleRing (𝓞 F) F))) om → ∀ g : UG (Algebra.TensorProduct.map (AlgHom.id (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F)) c) (JB.map (inc (F := F) (AdeleRing (𝓞 F) F))), (∃ γ : Matrix β β E, ((g : GL β (AdeleRing (𝓞 F) F ⊗[F] E)) : Matrix β β (AdeleRing (𝓞 F) F ⊗[F] E)) = γ.map (inc (F := F) (AdeleRing (𝓞 F) F))) → ∀ Φ ∈ schA F κ, thetaSum F (om g Φ) = thetaSum F Φ := by
   intro F _ _ _ _ E _ _ c ξ α β κ _ _ _ _ _ JA JB ψ hψc hψ1 hψF hq hA hB d d₀ hd χ ν _ _ Cy om hχ hL hS hR g
     ⟨γ, hγ⟩ Φ hΦ
-  haveI : Nontrivial (AdeleRing (𝓞 F) F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
-  haveI : Module.Finite F E := by
+  have : Nontrivial (AdeleRing (𝓞 F) F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have : Module.Finite F E := by
     obtain ⟨b, -, -⟩ := hq.basis
     exact Module.Finite.of_basis b
-  letI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  let : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   obtain ⟨g₀, rfl⟩ := exists_ratPt (AdeleRing (𝓞 F) F) c JB g γ hγ
   obtain ⟨-, ⟨l₀, hl₀, hl₀Θ⟩, Φ₀, hΦ₀, hΦ₀ne⟩ := _root_.GlobalTheory.CompanionTheory.ThetaAdm.theta_adm F κ
   obtain ⟨hpres, hrat⟩ := _root_.GlobalTheory.CompanionTheory.AdelicHeis.schr_mem_and_thetaSum F κ ψ hψc hψ1 hψF

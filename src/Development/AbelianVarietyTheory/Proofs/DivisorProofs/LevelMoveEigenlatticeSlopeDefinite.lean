@@ -169,14 +169,14 @@ theorem freeOrbit_projector_eigen : ∀ (K V G C : Type) [Field K] [AddCommGroup
       rw [map_sum, Finset.sum_eq_single_of_mem o ho]
       · set_option synthInstance.maxHeartbeats 100000 in
           rw [map_sum, Fintype.sum_eq_single g]
-        · rw [key o ho g, if_pos ⟨rfl, rfl⟩]
+        · rw [key o ho g, ite_eq_left ⟨rfl, rfl⟩]
         · intro g' hg'
-          rw [key o ho g', if_neg (fun h => hg' h.1)]
+          rw [key o ho g', ite_eq_right (fun h => hg' h.1)]
       · intro o' ho' hne
 
         rw [map_sum]
         refine Finset.sum_eq_zero (fun g' _ => ?_)
-        rw [key o' ho' g', if_neg (fun h => hne h.2)]
+        rw [key o' ho' g', ite_eq_right (fun h => hne h.2)]
 
 end GlobalTheory
 end -- clump:auto
@@ -266,7 +266,7 @@ theorem le_slope_sq_of_sum : ∀ (K : Type) [Field K] [NumberField K] [_root_.Nu
   have hG := hasGram_sumNorm Y hY
   let P : O → Submodule (𝓞 K) (∀ o, ι o → K) := fun o => (L o).map ((inc o).restrictScalars (𝓞 K))
   have hsp : ∀ o, Submodule.span K (P o : Set (∀ o, ι o → K)) = LinearMap.range (inc (K := K) (ι := ι) o) := fun o => by
-    letI := hL o
+    let := hL o
     have hspan : Submodule.span K (L o : Set (ι o → K)) = ⊤ := Submodule.IsFullLattice.span_eq_top
     rw [LinearMap.range_eq_map, ← hspan, ← Submodule.span_image]
     rfl
@@ -520,8 +520,8 @@ theorem homN_actLev (hC : DefCase U ξ) (hL : ActLev (Xo := Xo) c lev) (hD : Dom
     (fun k k' τ => (hC.xi σ hσ k τ).trans (hC.xi σ hσ k' τ).symm) hm hb hx₀ hx'
   refine ⟨⟨k', x'.1⟩, ⟨x'.2, hZ'⟩, ?_⟩
   have hsec := hU.2.2.2.2.1 a n hD _ (actLev_mem_sec hL g hf) k
-  have v1 : rdU (U σ) (actLev c lev g f) k x₀.1 = toC (evR Xo c (actLev c lev g f) ((U σ).un k x₀)) := dif_pos x₀.2
-  have v2 : rdU (U σ) f k' x'.1 = toC (evR Xo c f ((U σ).un k' x')) := dif_pos x'.2
+  have v1 : rdU (U σ) (actLev c lev g f) k x₀.1 = toC (evR Xo c (actLev c lev g f) ((U σ).un k x₀)) := dite_eq_left x₀.2
+  have v2 : rdU (U σ) f k' x'.1 = toC (evR Xo c f ((U σ).un k' x')) := dite_eq_left x'.2
   have v3 := (GlobalTheory.Frames.algebraic_laws GlobalTheory.lawsFieldsSeparately.2.1 _ H Dw l Xo c).2.2.2.2.2.2 (CAt σ)
     (inferInstanceAs (IsReduced ℂ)) a n f hf t _ y' hb
   have v4 : ‖toC (wchar (ex Dw a n) t : CAt σ)‖ = 1 := by
@@ -568,15 +568,15 @@ theorem slope_eig {K V G C : Type} [Field K] [NumberField K] [_root_.NumberField
     (hs : ∀ o, s ≤ slope_sq (matNorm (Y o)) (L o)) : M ≠ ⊥ ∧ s ≤ slope_sq Nv M := by
   obtain ⟨O, hO, hdec, hsum⟩ := GlobalTheory.freeOrbit_projector_eigen K V G C e ρ χ hfree h₁ h₂ h₃ h₄
   obtain ⟨-, o₀, ho₀, -⟩ := hO (Classical.arbitrary C)
-  haveI : Nonempty O := ⟨⟨o₀, ho₀⟩⟩
+  have : Nonempty O := ⟨⟨o₀, ho₀⟩⟩
   let Φ : (∀ o : O, ι o → K) →ₗ[K] V :=
     ∑ o : O, ∑ g : G, (((χ g)⁻¹ : Kˣ) : K) • (ρ g ∘ₗ φ o ∘ₗ LinearMap.proj o)
   let f : (∀ o : O, ι o → K) → C → V := fun x o => if h : o ∈ O then φ o (x ⟨o, h⟩) else 0
-  have hf : ∀ x (o : O), f x o = φ o (x o) := fun x o => dif_pos o.2
+  have hf : ∀ x (o : O), f x o = φ o (x o) := fun x o => dite_eq_left o.2
   have hfe : ∀ x o, e o (f x o) = f x o := fun x o => by
     by_cases h : o ∈ O
     · rw [hf x ⟨o, h⟩]; exact (hr _ _).1 ⟨_, rfl⟩
-    · rw [show f x o = 0 from dif_neg h, map_zero]
+    · rw [show f x o = 0 from dite_eq_right h, map_zero]
   have hΦ' : ∀ x, Φ x = ∑ o : O, ∑ g, ((χ g)⁻¹ : Kˣ) • ρ g (φ o (x o)) := fun x => by
     simp only [Φ, LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.comp_apply, LinearMap.proj_apply,
       Units.smul_def]
@@ -615,10 +615,10 @@ theorem slope_eig {K V G C : Type} [Field K] [NumberField K] [_root_.NumberField
     exact hx0 this
   · have hMle : M ≤ M₀ := fun v hv => ((hM v).1 hv).1
     have hMfg : M.FG := by
-      haveI : IsNoetherian (𝓞 K) M₀ := isNoetherian_of_fg_of_noetherian M₀ hM₀
+      have : IsNoetherian (𝓞 K) M₀ := isNoetherian_of_fg_of_noetherian M₀ hM₀
       exact isNoetherian_submodule.1 inferInstance M hMle
     refine GlobalTheory.SumSlope.le_slope_sq_of_sum K V O (fun o => ι o) Nv M (fun o => Y o) (fun o => L o) Φ s hG hMfg
-      (fun o => hY o) (fun o => by letI := hL o; infer_instance) hinj hmem (fun v hv => ?_) (fun σ x => ?_) fun o => hs o
+      (fun o => hY o) (fun o => by let := hL o; infer_instance) hinj hmem (fun v hv => ?_) (fun σ x => ?_) fun o => hs o
     · choose x hx using fun o : O => (hr o (e o v)).2 (h₁ o v)
       refine ⟨x, ?_⟩
       rw [hΦ']
@@ -673,7 +673,7 @@ def proj (hC : DefCase U ξ) (W : WTZ D.host.E) (Z : Comp Xo c) : cuspW Xo c U W
 theorem homN_idem_mul {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (W : WTZ D.host.E) (f : Rul Xo c) {Z : Comp Xo c}
     {z : Σ k, Frame (U.X k).Ψ r} (hz : z ∈ framesOn U Z) : homN U ξ W (idem Z * f) z = homN U ξ W f z := by
   obtain ⟨hx, hZ⟩ := hz
-  have v1 : ∀ f : Rul Xo c, rdU U f z.1 z.2 = toC (evR Xo c f (U.un z.1 ⟨z.2, hx⟩)) := fun f => dif_pos hx
+  have v1 : ∀ f : Rul Xo c, rdU U f z.1 z.2 = toC (evR Xo c f (U.un z.1 ⟨z.2, hx⟩)) := fun f => dite_eq_left hx
   have e : rdU U (idem Z * f) z.1 z.2 = rdU U f z.1 z.2 := by
     rw [v1, v1]
     congr 1
@@ -682,7 +682,7 @@ theorem homN_idem_mul {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (W : WTZ D.host.E
         evalAt_mul (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) (idem Z) f _
       rw [e, evR_idem hZ ht, one_mul]
     · unfold evR Formalism.L2.Pj.evalAt
-      rw [dif_neg ht, dif_neg ht]
+      rw [dite_eq_right ht, dite_eq_right ht]
   unfold homN ptN Data.pnorm
   rw [e]
 
@@ -708,9 +708,9 @@ end Main
 set_option synthInstance.maxHeartbeats 400000 in
 theorem eigLat_slope : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (ξ : ℝ) (V : (c.F →+* ℂ) → HSp D) (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r) (G : Type) [Group G] [Finite G] (lev : G → (Dw.La →ₗ[𝓞 D.host.E] Dw.La) × (Dw.La →ₗ[𝓞 D.host.E] Dw.La)) (χ : G →* (c.F)ˣ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ) (s : ℝ), DefCase U ξ → Finite (Comp Xo c) → Nonempty (Comp Xo c) → (∀ σ, GoodEmb c σ → ∀ g, (dict σ g).2 ∈ ((U σ).X (dict σ g).1).dom) → ActLev (Xo := Xo) c lev → FreePt Xo c lev → Dom a n → GoodW U ξ V dict (wtZ a n) → (∀ Z : Comp Xo c, FibreAt U ξ Z (wtZ a n) s) → eigLat U lev χ (wtZ a n) ≠ ⊥ ∧ s ≤ slope_sq (normW U ξ V dict (wtZ a n)) (eigLat U lev χ (wtZ a n)) / 2 := by
   intro D H Dw l Xo c r U ξ V dict G _ _ lev χ a n s hC _ _ hd hL hfr hD hW hF
-  haveI := Fintype.ofFinite G
-  haveI := Fintype.ofFinite (Comp Xo c)
-  haveI : IsTotallyComplex c.F := ⟨fun v => by
+  have := Fintype.ofFinite G
+  have := Fintype.ofFinite (Comp Xo c)
+  have : IsTotallyComplex c.F := ⟨fun v => by
     rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_iff]
     exact fun h => conj_comp_ne v.embedding h⟩
   obtain ⟨_, hact⟩ := exists_mulAction hL hC.q hC.geo

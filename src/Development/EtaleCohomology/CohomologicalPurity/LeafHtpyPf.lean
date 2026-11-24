@@ -101,7 +101,7 @@ theorem span_cons {A : Type} [CommRing A] (x : A) (t : List A) :
 
 theorem span_mul {A : Type} [CommRing A] (x : A) (t : List A) :
     Ideal.span {x} * Ideal.span {a | a ∈ t} = Ideal.span {a | a ∈ t.map (x * ·)} := by
-  rw [Ideal.span_mul_span']; congr 1; ext a; simp [Set.singleton_mul]
+  rw [Ideal.span_mul_span]; congr 1; ext a; simp [Set.singleton_mul]
 
 theorem main (hZ : LeafHtpyZero) (hO : LeafHtpyOne) (hMV : LeafHtpyMV) (a1 : A1) (a4 : A4) (c4 : C4)
     (q : ℕ) [NeZero q] (A : Type) [CommRing A] (hq : IsUnit (q : A)) (i : ℤ) :

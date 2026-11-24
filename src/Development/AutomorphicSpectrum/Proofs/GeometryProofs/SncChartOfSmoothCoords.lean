@@ -179,8 +179,8 @@ theorem snc_on_basicOpen {Ω : Type} [Field Ω] [CharZero Ω] {Z : Scheme.{0}} (
   have hDaff : IsAffineOpen (Z.basicOpen v) := hV.basicOpen v
   have hDW : Z.basicOpen v ≤ W := huv ▸ Z.basicOpen_le u
   have hDV : Z.basicOpen v ≤ V := Z.basicOpen_le v
-  letI iV := secAlgebra g V
-  letI iD := secAlgebra g (Z.basicOpen v)
+  let iV := secAlgebra g V
+  let iD := secAlgebra g (Z.basicOpen v)
   let ψ := (valMap ζ (Z.basicOpen v) hD).hom
   have hψ : ∀ x, ψ x ∈ S := fun x => by
     have : ψ x ∈ Set.range ψ := ⟨x, rfl⟩
@@ -194,21 +194,21 @@ theorem snc_on_basicOpen {Ω : Type} [Field Ω] [CharZero Ω] {Z : Scheme.{0}} (
     obtain ⟨x, hx⟩ := hs
     exact ⟨x, Subtype.ext hx⟩)
   have hφ : ∀ x, (φ x : Ω) = ψ x := fun _ => rfl
-  haveI hs0 : Algebra.Smooth ℚ Γ(Z, Z.basicOpen v) := smooth_secAlgebra g e hsm hDaff
+  have hs0 : Algebra.Smooth ℚ Γ(Z, Z.basicOpen v) := smooth_secAlgebra g e hsm hDaff
   have hsmooth : Algebra.Smooth ℚ S := Algebra.Smooth.of_equiv φ.toRatAlgEquiv
   refine ⟨hsmooth, ?_⟩
 
-  haveI := hV.isLocalization_basicOpen v
-  haveI : Algebra.FormallyEtale Γ(Z, V) Γ(Z, Z.basicOpen v) :=
+  have := hV.isLocalization_basicOpen v
+  have : Algebra.FormallyEtale Γ(Z, V) Γ(Z, Z.basicOpen v) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers v)
-  haveI : IsScalarTower ℚ Γ(Z, V) Γ(Z, Z.basicOpen v) :=
+  have : IsScalarTower ℚ Γ(Z, V) Γ(Z, Z.basicOpen v) :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   obtain ⟨c1, c2⟩ := coords_of_formallyEtale (R := Γ(Z, V)) (S := Γ(Z, Z.basicOpen v)) z hz.1 hz.2
 
-  letI iS : Algebra Γ(Z, Z.basicOpen v) S := φ.toRingHom.toAlgebra
-  haveI : Algebra.FormallyEtale Γ(Z, Z.basicOpen v) S :=
+  let iS : Algebra Γ(Z, Z.basicOpen v) S := φ.toRingHom.toAlgebra
+  have : Algebra.FormallyEtale Γ(Z, Z.basicOpen v) S :=
     Algebra.FormallyEtale.of_equiv (AlgEquiv.ofRingEquiv (f := φ) fun _ => rfl)
-  haveI : IsScalarTower ℚ Γ(Z, Z.basicOpen v) S :=
+  have : IsScalarTower ℚ Γ(Z, Z.basicOpen v) S :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   obtain ⟨d1, d2⟩ := coords_of_formallyEtale (R := Γ(Z, Z.basicOpen v)) (S := S) _ c1 c2
   refine ⟨_, k, hk, d1, d2, fun q hq => ?_⟩

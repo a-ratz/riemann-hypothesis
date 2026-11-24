@@ -168,7 +168,7 @@ theorem cutProd : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGr
   set ψ := mulEquivSub A B R hc e he hR
   have hψ : Measurable ψ := ψ.continuous.measurable
   have hmx : Measurable fun r : R => ((βB (e.symm ((r : G) * x)).2 * βA (e.symm ((r : G) * x)).1 : NNReal) : ℝ≥0∞) :=
-    (hmeas.comp (measurable_subtype_coe.mul_const x)).coe_nnreal_ennreal
+    (hmeas.comp (measurable_subtypeVal.mul_const x)).coe_nnreal_ennreal
   rw [← hm, lintegral_map hmx hψ]
   have key : ∀ p : R.subgroupOf B × R.subgroupOf A, e.symm ((ψ p : G) * x) = ((p.2 : A) * (e.symm x).1, (p.1 : B) * (e.symm x).2) := by
     intro p
@@ -184,8 +184,8 @@ theorem cutProd : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGr
           simp only [mul_assoc]
       _ = _ := by rw [h2]; simp only [Subgroup.coe_mul, mul_assoc]
   simp only [key, ENNReal.coe_mul]
-  refine (lintegral_prod _ ((hB.1.coe_nnreal_ennreal.comp ((measurable_subtype_coe.comp measurable_fst).mul_const _)).mul
-    (hA.1.coe_nnreal_ennreal.comp ((measurable_subtype_coe.comp measurable_snd).mul_const _))).aemeasurable).trans ?_
+  refine (lintegral_prod _ ((hB.1.coe_nnreal_ennreal.comp ((measurable_subtypeVal.comp measurable_fst).mul_const _)).mul
+    (hA.1.coe_nnreal_ennreal.comp ((measurable_subtypeVal.comp measurable_snd).mul_const _))).aemeasurable).trans ?_
   simp only [Pi.mul_apply, Function.comp_apply, lintegral_const_mul' _ _ ENNReal.coe_ne_top, hA.2, mul_one, hB.2]
 
 end GlobalTheory.CommProd
@@ -200,8 +200,8 @@ theorem GlobalTheory.CommProd.quot_vanish_of_prod : ∀ (G : Type) [Group G] [To
   intro G _ _ _ _ _ _ _ _ A B R hA hB hR hc ⟨e, he⟩ hdec μR μG ρ μ _ _ _ _ _ _ f z hf hz
   have : LocallyCompactSpace A := hA.locallyCompactSpace
   have : LocallyCompactSpace B := hB.locallyCompactSpace
-  have hRA : IsClosed ((R.subgroupOf A : Subgroup A) : Set A) := hR.preimage continuous_subtype_val
-  have hRB : IsClosed ((R.subgroupOf B : Subgroup B) : Set B) := hR.preimage continuous_subtype_val
+  have hRA : IsClosed ((R.subgroupOf A : Subgroup A) : Set A) := hR.preimage continuous_subtypeVal
+  have hRB : IsClosed ((R.subgroupOf B : Subgroup B) : Set B) := hR.preimage continuous_subtypeVal
   have : LocallyCompactSpace (R.subgroupOf A) := hRA.locallyCompactSpace
   have : LocallyCompactSpace (R.subgroupOf B) := hRB.locallyCompactSpace
   have : LocallyCompactSpace R := hR.locallyCompactSpace

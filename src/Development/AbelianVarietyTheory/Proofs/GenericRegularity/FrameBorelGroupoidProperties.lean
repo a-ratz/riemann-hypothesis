@@ -76,7 +76,7 @@ theorem lower_of_mul_eq_one (A B : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < 
     (hB : B * A = 1) : ∀ i j, i < j → B i j = 0 := by
   have h : A.BlockTriangular OrderDual.toDual := fun i j hij => hA i j hij
   have hd : IsUnit A.det := Matrix.isUnit_det_of_left_inverse hB
-  letI := Matrix.invertibleOfIsUnitDet A hd
+  let := Matrix.invertibleOfIsUnitDet A hd
   have h' := Matrix.blockTriangular_inv_of_blockTriangular h
   rw [Matrix.inv_eq_left_inv hB] at h'
   exact fun i j hij => h' hij

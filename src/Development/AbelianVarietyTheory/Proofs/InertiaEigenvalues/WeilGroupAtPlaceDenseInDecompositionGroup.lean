@@ -90,7 +90,7 @@ theorem exists_pow_of_algHom {k F : Type} [Field k] [Field F] [Fintype F] [Algeb
     refine (Polynomial.finite_setOfPred_isRoot hP).subset fun x hx => ?_
     have := (hL x).mp hx
     simp [Polynomial.IsRoot, this]
-  haveI : Finite L := hfin.to_subtype
+  have : Finite L := hfin.to_subtype
   let σ : L →ₐ[F] L := (τ.comp L.val).codRestrict L.toSubalgebra fun x => by
     show τ (x : k) ∈ L
     rw [hL, ← map_pow, (hL x).mp x.2]
@@ -135,8 +135,8 @@ theorem exists_pow_cong_of_mem {K Ω : Type} [Field K] [NumberField K] [Field Ω
       A.valuation_lt_one_iff]
     simpa using hrA
   have hpp : p' = p := by
-    haveI := hchar p hp hpA
-    haveI := hchar p' hp' hp'A
+    have := hchar p hp hpA
+    have := hchar p' hp' hp'A
     exact CharP.eq (IsLocalRing.ResidueField A) ‹CharP _ p'› ‹CharP _ p›
   subst hpp
   refine ⟨c, hc, fun z hz => ?_⟩
@@ -160,21 +160,21 @@ theorem exists_field_cong_pow : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
     ∀ d ∈ Dec (F := E) A, ∀ y : Ω, ∃ K : IntermediateField E Ω, FiniteDimensional E K ∧ y ∈ K ∧
       ∃ j : ℕ, ∀ z ∈ K, A.valuation z ≤ 1 → A.valuation (d z - z ^ (normV w ^ j)) < 1 := by
   intro E Ω _ _ _ _ _ A w h d hd y
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   set K := IntermediateField.adjoin E ({y} : Set Ω) with hK
-  haveI hKfin : FiniteDimensional E K :=
+  have hKfin : FiniteDimensional E K :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral y)
-  haveI : FiniteDimensional ℚ K := Module.Finite.trans E K
-  haveI : NumberField K := ⟨⟩
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
+  have : FiniteDimensional ℚ K := Module.Finite.trans E K
+  have : NumberField K := ⟨⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
   refine ⟨K, hKfin, IntermediateField.mem_adjoin_simple_self E y, ?_⟩
   obtain ⟨p, b, hp, hb, hq, hpA⟩ := GlobalTheory.FrobTeich.exists_prime_pow_normV A w h
   obtain ⟨c, hc, hcK⟩ := exists_pow_cong_of_mem (K := K) A hp hpA
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  letI : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  let : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+  let : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hcard : Fintype.card (𝓞 E ⧸ w.asIdeal) = normV w := Fintype.card_eq_nat_card
   let gE : 𝓞 E →+* A := ((algebraMap E Ω).comp (algebraMap (𝓞 E) E)).codRestrict A fun x =>
     ReciprocityTheory.Gal.mem_of_isIntegral_int A (x.2.algebraMap (B := Ω))
@@ -183,7 +183,7 @@ theorem exists_field_cong_pow : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
       show IsLocalRing.residue A (gE x) = 0
       rw [IsLocalRing.residue_eq_zero_iff, A.valuation_lt_one_iff]
       exact (h x).mpr hx)
-  letI : Algebra (𝓞 E ⧸ w.asIdeal) (IsLocalRing.ResidueField A) := ι.toAlgebra
+  let : Algebra (𝓞 E ⧸ w.asIdeal) (IsLocalRing.ResidueField A) := ι.toAlgebra
   let D : A.decompositionSubgroup E := ⟨d, hd⟩
   let τ0 : IsLocalRing.ResidueField A →+* IsLocalRing.ResidueField A :=
     MulSemiringAction.toRingHom (A.decompositionSubgroup E) (IsLocalRing.ResidueField A) D
@@ -279,15 +279,15 @@ theorem lift_resAut_of_fixes (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
     (hK : ∀ z ∈ K, A.valuation z ≤ 1 → A.valuation (σ₀ z - z) < 1) :
     ∃ ρ : G E Ω, (∀ z ∈ K, ρ z = z) ∧ ρ ∈ Dec (F := E) A ∧
       ∀ b : Ω, IsIntegral ℤ b → A.valuation (ρ b - σ₀ b) < 1 := by
-  haveI : NumberField K := NumberField.of_module_finite E K
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
-  letI : TopologicalSpace (IntCl K Ω) := ⊥
-  haveI : DiscreteTopology (IntCl K Ω) := ⟨rfl⟩
-  haveI := continuousSMul_intCl K Ω
-  haveI := isInvariant_intCl K Ω
+  have : NumberField K := NumberField.of_module_finite E K
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) K⟩
+  let : TopologicalSpace (IntCl K Ω) := ⊥
+  have : DiscreteTopology (IntCl K Ω) := ⟨rfl⟩
+  have := continuousSMul_intCl K Ω
+  have := isInvariant_intCl K Ω
   set Q := primeBelow (F := K) A with hQ
   set P := Q.under (𝓞 K) with hP
-  haveI : Q.LiesOver P := ⟨rfl⟩
+  have : Q.LiesOver P := ⟨rfl⟩
 
   have hint : ∀ (g : G E Ω) (b : IntCl K Ω), IsIntegral (𝓞 K) (g (b : Ω)) := fun g b =>
     ((isIntegral_int_of_isIntegral b.2).map (g.toAlgHom.restrictScalars ℤ)).tower_top

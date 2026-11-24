@@ -1050,7 +1050,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (C : Type
         (U : X.Opens) (z : Sp A) (ht : ⊤ ≤ x ⁻¹ᵁ U) (a : Γ(X, U)ˣ) :
         toStkA z (valR x U a.val) = (Geo.Tor.gm x z U a).val := by
       have hz : x z ∈ U := ht (show z ∈ (⊤ : (Sp A).Opens) from trivial)
-      rw [valR, dif_pos ht, Geo.Tor.gm, dif_pos hz]
+      rw [valR, dite_eq_left ht, Geo.Tor.gm, dite_eq_left hz]
       show ((Sp A).presheaf.germ ⊤ z trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
         ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ ht).hom a.val))) = _
       rw [Iso.hom_inv_id_apply]
@@ -1120,7 +1120,7 @@ namespace GlobalTheory.MBLow.Adapt
 
 theorem main : AllVC fun {V} _ _ _ {D} {A} {G} _ _ U {C} _ _ {N} ν => ∃ (vB : Fin D.toPre.P.g → (epsR V ⟶ D.toPre.P.A)) (r : ℕ) (bX : Module.Basis (Fin r) ℤ N.X) (σ : Fin A.g ≃ Fin D.toPre.P.g ⊕ Fin r) (y : Fin A.g → (epsR V ⟶ G)) (gm₀ : Fin A.g → GtPt D.toPre (epsR V)) (gm : Fin A.g → GtPt D.toPre (TE V C)), IsLieBasis y ∧ Adapted ν vB bX σ gm ∧ ∀ j, TanRel U.toUnifPre (y j) (gm₀ j) ∧ GtTan (gm₀ j) ∧ GtPt.IsPull (spMap (dualMap (toF V C))) (gm₀ j) (gm j) := by
   intro V _ _ _ _ hV D A G _ _ hS U C _ _ _ _ _ _ hC N ν hν
-  haveI := hV
+  have := hV
   have hG : GlobalFnsSt := GlobalTheory.SemiRigid.globalFns
   obtain ⟨H, _, _, hH⟩ := GlobalTheory.TorusModel.exists_isGt hG (GlobalTheory.TorusModel.splitExt D.toPre)
   obtain ⟨Φ, hp, ha⟩ := GlobalTheory.TorusModel.exists_points hG hH

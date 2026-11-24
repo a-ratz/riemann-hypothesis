@@ -455,13 +455,13 @@ theorem index_integral_image : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolo
       smul_mem' := fun c x hx r q => by
         rw [Matrix.smul_apply, Algebra.smul_def]
         exact mul_mem c.2 (hx r q) }
-  haveI : Submodule.IsLattice k M := by
+  have : Submodule.IsLattice k M := by
     apply Submodule.IsLattice.of_fg k
     let φ : Matrix Y Y' 𝒪[k] →ₗ[𝒪[k]] Matrix Y Y' k := (Algebra.linearMap 𝒪[k] k).mapMatrix
     refine Submodule.FG.of_le (Submodule.fg_range φ) fun m hm => ⟨Matrix.of fun i j => ⟨m i j, hm i j⟩, ?_⟩
     ext i j
     rfl
-  haveI : Submodule.IsFullLattice k M := by
+  have : Submodule.IsFullLattice k M := by
     constructor
     apply top_unique
     rw [← (Matrix.stdBasis k Y Y').span_eq]
@@ -500,8 +500,8 @@ theorem index_integral_image : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolo
   set A := M.toAddSubgroup with hA
   set Bs := AddSubgroup.comap Bl.toAddMonoidHom A with hBs
   have hne : A.relIndex Bs ≠ 0 := by rw [e2, hq]; exact pow_ne_zero _ hq0.ne'
-  haveI : (A.addSubgroupOf Bs).FiniteIndex := ⟨hne⟩
-  haveI : Finite (Bs ⧸ A.addSubgroupOf Bs) := AddSubgroup.finite_quotient_of_finiteIndex
+  have : (A.addSubgroupOf Bs).FiniteIndex := ⟨hne⟩
+  have : Finite (Bs ⧸ A.addSubgroupOf Bs) := AddSubgroup.finite_quotient_of_finiteIndex
   obtain ⟨R, hRc, hRB, hRu⟩ := GlobalTheory.SplitLinear.exists_reps A Bs
   have hmemB : ∀ w, w ∈ Bs ↔ ∀ r q, ((↑(hk⁻¹) : Matrix Y Y k) * w * (↑gk : Matrix Y' Y' k)) r q ∈ 𝒪[k] := by
     intro w
@@ -599,7 +599,7 @@ theorem om_sum_scale_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : H
   intro D ψ S T χS χT ω hW g h f hf hf0 c hc r hr R hpair hom
   have hψ := hW.std.1
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ⟩, c', hc'⟩ := GlobalTheory.exists_normalise_meanSquare_of_cocompact (WO S T) (ratL T S) K hK hKc f hf.cont hf0
     (by
       rintro _ ⟨γ, rfl⟩ w
@@ -733,7 +733,7 @@ theorem vacuum_move : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
   let ind : GL Y' k → GL Y k → Matrix Y Y' k → SB (Matrix Y Y' k) := fun a b v => ⟨_, indicator_mem_sb k Y Y' a b v⟩
   have ind_apply : ∀ a b v t, (ind a b v).1 t =
       if (∀ r q, ((b : Matrix Y Y k) * (t + v) * (a : Matrix Y' Y' k)) r q ∈ 𝒪[k]) then 1 else 0 := fun a b v t => by
-    simp only [ind, Set.indicator_apply, Set.mem_setOf_eq]
+    simp only [ind, Set.indicator_apply, Set.mem_ofPred_eq]
   have hΦ₀ : ∀ t, (ind 1 1 0).1 t = if (∀ r q, t r q ∈ 𝒪[k]) then 1 else 0 := fun t => by
     rw [ind_apply]; simp
   have hΦv : ∀ v t, (ind 1 1 v).1 t = (ind 1 1 0).1 (t + v) := fun v t => by
@@ -756,7 +756,7 @@ theorem vacuum_move : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
     refine (hTm.modul u huh _ _ fun t => ?_).symm
     by_cases ht : ∀ r q, t r q ∈ 𝒪[k]
     · rw [hchalf u hu huh t ht, one_mul]
-    · rw [hΦ₀, if_neg ht, mul_zero]
+    · rw [hΦ₀, ite_eq_right ht, mul_zero]
   have key := hom _ (hTm.theta _) hf1 hf2
   have hsum : ∑ u ∈ R₀.image (p.up FS FT), heisO ψ S T u (Tm (ind 1 1 0)) = Tm (ind gk hk⁻¹ 0) := by
     rw [Finset.sum_image fun a _ b _ hab => up_inj hab]
@@ -775,12 +775,12 @@ theorem vacuum_move : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
       have iff1 : ∀ v', (∀ r q, (-t - v') r q ∈ 𝒪[k]) ↔ (∀ r q, (t + v') r q ∈ 𝒪[k]) := fun v' => by
         refine forall_congr' fun r => forall_congr' fun q => ?_
         rw [show -t - v' = -(t + v') by abel, Matrix.neg_apply, neg_mem_iff]
-      rw [Finset.sum_eq_single_of_mem v hv, if_pos ((iff1 v).1 hv2)]
+      rw [Finset.sum_eq_single_of_mem v hv, ite_eq_left ((iff1 v).1 hv2)]
       intro v' hv' hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       exact hne (hvu v' ⟨hv', (iff1 v').2 h'⟩)
-    · refine Finset.sum_eq_zero fun v hv => if_neg fun h' => htB fun r q => ?_
+    · refine Finset.sum_eq_zero fun v hv => ite_eq_right fun h' => htB fun r q => ?_
       have h2 := he _ h' r q
       have h3 := hsub _ _ (he _ h') (hR₀ v hv) r q
       rwa [← Matrix.sub_mul, ← Matrix.mul_sub, add_sub_cancel_right] at h3

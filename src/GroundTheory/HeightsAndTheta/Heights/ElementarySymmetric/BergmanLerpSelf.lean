@@ -248,7 +248,7 @@ lemma tendsto_inv_gaussDiscMass {lam : ℝ} (hl : 0 ≤ lam) :
     Tendsto (fun R => 1 / gaussDiscMass lam R) atTop (𝓝 (lam / Real.pi)) := by
   rcases hl.eq_or_lt with h | h
   · subst h
-    have h0 : ∀ R, gaussDiscMass 0 R = Real.pi * R ^ 2 := fun R => if_pos rfl
+    have h0 : ∀ R, gaussDiscMass 0 R = Real.pi * R ^ 2 := fun R => ite_eq_left rfl
     simp only [h0, zero_div, one_div]
     exact ((tendsto_pow_atTop two_ne_zero).const_mul_atTop Real.pi_pos).inv_tendsto_atTop
   · have he : Tendsto (fun R : ℝ => Real.exp (-lam * R ^ 2)) atTop (𝓝 0) :=
@@ -260,7 +260,7 @@ lemma tendsto_inv_gaussDiscMass {lam : ℝ} (hl : 0 ≤ lam) :
         (by simp [Real.pi_ne_zero])
     rw [sub_zero, mul_one] at h2
     refine h2.congr fun R => ?_
-    simp only [gaussDiscMass, h.ne', if_false, one_div_div]
+    simp only [gaussDiscMass, h.ne', ite_false, one_div_div]
 
 lemma det_smul_re {D : ℕ} {H : Matrix (Fin D) (Fin D) ℂ} {lam : Fin D → ℝ}
     (hdet : H.det = ∏ j, (lam j : ℂ)) :
@@ -426,10 +426,10 @@ theorem ChartBergmanBound.proof (hP : PolydiscSubmean.Statement) (hT : ComplexTa
         Real.exp (-(n : ℝ) * ∑ j, lam j * ‖w j‖ ^ 2)) ≤
       ∫⁻ w in B, ENNReal.ofReal (‖G w‖ ^ 2 * Real.exp (-(n : ℝ) * ∑ j, lam j * ‖w j‖ ^ 2)) := by
     calc _ ≤ ‖∫ w in B, ‖G w‖ ^ 2 * Real.exp (-(n : ℝ) * ∑ j, lam j * ‖w j‖ ^ 2)‖ₑ := by
-          rw [Real.enorm_eq_ofReal_abs]; exact ENNReal.ofReal_le_ofReal (le_abs_self _)
+          rw [Real.eNorm_eq_ofReal_abs]; exact ENNReal.ofReal_le_ofReal (le_abs_self _)
       _ ≤ ∫⁻ w in B, ‖‖G w‖ ^ 2 * Real.exp (-(n : ℝ) * ∑ j, lam j * ‖w j‖ ^ 2)‖ₑ :=
-          enorm_integral_le_lintegral_enorm _
-      _ = _ := lintegral_congr fun w => Real.enorm_eq_ofReal (by positivity)
+          eNorm_integral_le_lintegral_eNorm _
+      _ = _ := lintegral_congr fun w => Real.eNorm_eq_ofReal (by positivity)
   have hmain : ENNReal.ofReal (k * (‖F y₀‖ ^ 2 * ((n : ℝ) ^ D)⁻¹ *
         ∏ j, gaussDiscMass (lam j) R)) ≤
       ∫⁻ y in U, ENNReal.ofReal (‖F y‖ ^ 2 * Real.exp (-(n : ℝ) * ψ y) * ρ y) := by

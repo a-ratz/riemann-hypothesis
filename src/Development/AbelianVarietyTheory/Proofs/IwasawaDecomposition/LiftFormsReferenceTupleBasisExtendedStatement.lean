@@ -314,10 +314,10 @@ theorem gsdbc_lift_span (b : GSDBC ι S S') {κ : Type} [Fintype κ] (v : Module
 
 theorem gsdbc_lift_li (b : GSDBC ι S S') {κ : Type} [Fintype κ] (v : Module.Basis κ K S.EqFun) :
     LinearIndependent L (fun k => b.lift (v k)) := by
-  letI : Algebra K L := ι.toAlgebra
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun q => by
+  let : Algebra K L := ι.toAlgebra
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun q => by
     rw [RingHom.algebraMap_toAlgebra, eq_ratCast (algebraMap ℚ L) q, eq_ratCast (algebraMap ℚ K) q, map_ratCast]
-  haveI : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  have : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
   let e := Module.finBasis K L
   rw [Fintype.linearIndependent_iff]
   intro c hc k

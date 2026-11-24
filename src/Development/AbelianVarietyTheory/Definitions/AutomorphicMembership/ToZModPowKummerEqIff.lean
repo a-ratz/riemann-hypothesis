@@ -298,7 +298,7 @@ def kummerChar (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ w.asIdeal) (
 
 theorem continuous_kummerChar (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ w.asIdeal) (a : Eˣ) :
     Continuous (kummerChar h hl a) :=
-  continuous_ofAdd.comp ((continuous_kummer l a).comp continuous_subtype_val)
+  continuous_ofAdd.comp ((continuous_kummer l a).comp continuous_subtypeVal)
 
 theorem kummerChar_ineConj {h : IsPlaceOver A w} (hl : ((l : ℕ) : 𝓞 E) ∉ w.asIdeal) (a : Eˣ)
     (g : Weil h) (σ : Ine (F := E) A) :

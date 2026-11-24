@@ -409,9 +409,9 @@ theorem pairing_eq (s : ℂ) (hs : s ≠ 0) (hω : ‖s / ‖s‖‖ = 1) (u v :
 
 theorem exists_scale (m n : ℕ) : ∃ κ : ℝ, 0 < κ ∧ ∀ F : EuclideanSpace ℂ (Fin m × Fin n) → ℂ,
     ∫ u : Fin m → Fin n → ℂ, F (matEquiv m n u) = κ * ∫ y, F y := by
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI hH : (Measure.map (matEquiv m n) (volume : Measure (Fin m → Fin n → ℂ))).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have hH : (Measure.map (matEquiv m n) (volume : Measure (Fin m → Fin n → ℂ))).IsAddHaarMeasure :=
     (matEquiv m n).isAddHaarMeasure_map _
   have he := Measure.isAddLeftInvariant_eq_smul
     (Measure.map (matEquiv m n) (volume : Measure (Fin m → Fin n → ℂ)))

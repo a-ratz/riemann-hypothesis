@@ -92,7 +92,7 @@ theorem factorisation_of_two_partial_integrations : ∀ (T Wp Wq : Type) [Normed
   refine ⟨((⟪l' y₀, l' y₀⟫_ℂ)⁻¹ * (⟪l x₀, l x₀⟫_ℂ)⁻¹) •
     J x₀ y₀ ((innerSL ℂ (l' y₀)).smulRight (l x₀)), fun x y X => ?_⟩
   ext c
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, hJB x₀,
+  rw [smul_apply, smul_apply, hJB x₀,
     ContinuousLinearMap.smulRight_apply, hB, innerSL_apply_apply, hJA, key,
     ContinuousLinearMap.adjoint_inner_left, smul_smul, smul_smul]
   congr 1

@@ -52,7 +52,7 @@ variable {E K K' : Type} [Field E] [NumberField E] [Field K] [NumberField K] [Fi
 theorem ringOfIntegers_hom_injective (τ : 𝓞 E →+* 𝓞 K) : Function.Injective τ := by
   rw [RingHom.injective_iff_ker_eq_bot]
   have : (RingHom.ker τ).IsPrime := RingHom.ker_isPrime τ
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   rw [eq_bot_iff]
   intro n hn
   rw [Ideal.mem_comap, RingHom.mem_ker] at hn

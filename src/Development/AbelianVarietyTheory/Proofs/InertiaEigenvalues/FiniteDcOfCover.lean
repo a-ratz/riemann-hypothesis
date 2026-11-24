@@ -81,13 +81,13 @@ theorem finite_dc_of_cover {Γ K : Subgroup G} (hT : ∃ T : Finset G, ∀ g, �
 
 theorem stabCard_pos {Γ K : Subgroup G} (t : G) (h : Finite {γ : Γ // t⁻¹ * (γ : G) * t ∈ K}) :
     0 < stabCard Γ K t := by
-  haveI := h
-  haveI : Nonempty {γ : Γ // t⁻¹ * (γ : G) * t ∈ K} := ⟨⟨1, by simp [K.one_mem]⟩⟩
+  have := h
+  have : Nonempty {γ : Γ // t⁻¹ * (γ : G) * t ∈ K} := ⟨⟨1, by simp [K.one_mem]⟩⟩
   exact Nat.card_pos
 
 theorem mass_pos {Γ K : Subgroup G} [Finite (DC Γ K)]
     (hfin : ∀ t : G, Finite {γ : Γ // t⁻¹ * (γ : G) * t ∈ K}) : 0 < mass Γ K := by
-  haveI := Fintype.ofFinite (DC Γ K)
+  have := Fintype.ofFinite (DC Γ K)
   rw [mass, finsum_eq_sum_of_fintype]
   have hne : (Finset.univ : Finset (DC Γ K)).Nonempty := ⟨Quotient.mk'' 1, Finset.mem_univ _⟩
   refine Finset.sum_pos (fun c _ => ?_) hne

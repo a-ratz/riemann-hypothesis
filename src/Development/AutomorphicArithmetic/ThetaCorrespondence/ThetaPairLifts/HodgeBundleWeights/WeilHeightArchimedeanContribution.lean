@@ -349,7 +349,7 @@ theorem tw_of_dec {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (κ : 
   set a : (E →+* ℂ) × ℕ → ℕ := fun x => if x.2 < D.mult x.1 then (G.1 x + (M + 1)).toNat else 0 with ha
   have haZ : ∀ (τ : E →+* ℂ) (i : ℕ), i < D.mult τ → (a (τ, i) : ℤ) = G.1 (τ, i) + (M + 1) := fun τ i hi => by
     show ((if i < D.mult τ then (G.1 (τ, i) + (M + 1)).toNat else 0 : ℕ) : ℤ) = _
-    rw [if_pos hi, Int.toNat_of_nonneg (by linarith [hMb τ i hi])]
+    rw [ite_eq_left hi, Int.toNat_of_nonneg (by linarith [hMb τ i hi])]
   have hDa : Dom a (2 * ((M + 1) * m)) := by
     refine ⟨fun τ i j hij => ?_, even_two_mul _⟩
     simp only [ha]
@@ -411,7 +411,7 @@ theorem exists_residue_eval : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y �
   obtain ⟨i, hzi⟩ : ∃ i, z ∈ B.U i := Opens.mem_iSup.1 (by rw [hB.cover]; trivial)
   obtain ⟨U, hU, hzU, hUi⟩ := Opens.isBasis_iff_nbhd.1 Y.isBasis_affineOpens hzi
   replace hU : IsAffineOpen U := hU
-  letI : Algebra F Γ(Y, U) := (algX p U).toAlgebra
+  let : Algebra F Γ(Y, U) := (algX p U).toAlgebra
   have hft : (algX p U).FiniteType :=
     (HasRingHomProperty.appLE @LocallyOfFiniteType p ‹_› ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top).comp
       (RingHom.FiniteType.of_surjective _
@@ -432,7 +432,7 @@ theorem exists_residue_eval : ∀ (F : Type) [Field F] (Y : Scheme.{0}) (p : Y �
     exact h1
   have hmax : x0.asIdeal.IsMaximal := (PrimeSpectrum.isClosed_singleton_iff_isMaximal _).1 hcl
   let P := x0.asIdeal
-  letI : Field (Γ(Y, U) ⧸ P) := Ideal.Quotient.field P
+  let : Field (Γ(Y, U) ⧸ P) := Ideal.Quotient.field P
   have : Algebra.FiniteType F (Γ(Y, U) ⧸ P) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ F P) Ideal.Quotient.mk_surjective
   have hfin : Module.Finite F (Γ(Y, U) ⧸ P) := finite_of_finite_type_of_isJacobsonRing F _
@@ -718,7 +718,7 @@ open CategoryTheory AlgebraicGeometry NumberField ReciprocityTheory.ChartRestric
 theorem DifferentiableLines.holomorphic_extension_sections : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (r : ℕ) (σ : c.F →+* ℂ) (V : Unf Xo c σ r) (T : GlobalTheory.CompHS.TorFlag Xo c) (e : Ix D → ℤ) (k : V.Comp) (P : Frame (V.X k).Ψ r → ℂ) (h : (T.X.LL e).ι → GlobalTheory.CxPts (GlobalTheory.CompHS.flagStr T.X) σ → ℂ), GlobalTheory.CompanionTheory.Ar.HolExt.Reads V T e k P h → ∀ (m : ℕ) (as : Fin m → ℂ) (ss : Fin m → (T.X.LL e).Sec), h = ∑ j, as j • GlobalTheory.CxPts.secVal (GlobalTheory.CompHS.flagStr T.X) σ (ss j) → ∀ x ∈ (V.X k).dom, P x = ∑ j, as j * rdU V (GlobalTheory.CompanionTheory.Ar.OntoDef.ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (GlobalTheory.CompHS.flagStr T.X) ⊤ (ss j))) k x := by
   intro E _ _ _ H D l Xo c r σ V T e k P h hR m as ss he x hx
   classical
-  haveI : IsLocalRing (CAt σ) := (inferInstance : IsLocalRing ℂ)
+  have : IsLocalRing (CAt σ) := (inferInstance : IsLocalRing ℂ)
   obtain ⟨i, hz⟩ := GlobalTheory.FlagMod.exists_chart_of_isLocalRing T.X.F.cover (T.X.ptY (V.un k ⟨x, hx⟩))
   have hl := T.X.lies_ptY (V.un k ⟨x, hx⟩)
   obtain ⟨Q, hQ⟩ := T.X.top.exists_chartFr (GlobalTheory.FlagMod.frX_snd (V.un k ⟨x, hx⟩)) hl.1 i hz
@@ -728,14 +728,14 @@ theorem DifferentiableLines.holomorphic_extension_sections : ∀ (E : Type) [Fie
     exact GlobalTheory.FlagMod.le_preimage_map T.X.inc (top_le_inc T.X) le_top
   let y : GlobalTheory.CxPts (flagStr T.X) σ := ⟨(T.X.ptY (S := CAt σ) (V.un k ⟨x, hx⟩) :), ptY_str (S := CAt σ) T.X (V.un k ⟨x, hx⟩)⟩
   have hy : y ∈ GlobalTheory.CxPts.ptsIn (flagStr T.X) σ ((T.X.LL e).U i) := hz
-  haveI : _root_.IsReduced (CAt σ) := (inferInstance : _root_.IsReduced ℂ)
+  have : _root_.IsReduced (CAt σ) := (inferInstance : _root_.IsReduced ℂ)
   have hs : h i y = ∑ j, as j * GlobalTheory.CxPts.secVal (flagStr T.X) σ (ss j) i y := by
     rw [he]
     exact (congrFun (Finset.sum_apply (show (T.X.LL e).ι from i) _ _) y).trans (Finset.sum_apply y _ _)
   rw [hR x hx i y hz Q t rfl hQ ht, hs, Finset.mul_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
   have a : rdU V (ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j))) k x =
-      toC (evR Xo c (ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j))) (V.un k ⟨x, hx⟩)) := dif_pos hx
+      toC (evR Xo c (ruleTop T.X e (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j))) (V.un k ⟨x, hx⟩)) := dite_eq_left hx
   have b : GlobalTheory.CxPts.secVal (flagStr T.X) σ (ss j) i y = _ := GlobalTheory.CxPts.ev_eq hy _
   have d := evR_ruleTop (GlobalTheory.Vanishing.H0.ofSec (flagStr T.X) ⊤ (ss j)) hO hQ ht
   have f := GlobalTheory.Vanishing.H0.val_ofSec (p := flagStr T.X) (O := ⊤) (B := T.X.LL e) (T.X.ptY (V.un k ⟨x, hx⟩)) i le_top hz (ss j)
@@ -1140,7 +1140,7 @@ theorem exists_eigFrame_tau (T : TorFlag Xo c) {W : T.X.YY.Opens} (hW : IsAffine
   subst hx
   let A : Type := Γ(T.X.YY, W)
   let K : Type := FractionRing A
-  letI : Algebra c.F K := ((algebraMap A K).comp φ).toAlgebra
+  let : Algebra c.F K := ((algebraMap A K).comp φ).toAlgebra
   let z : Sp K ⟶ T.X.YY := spMap (algebraMap A K) ≫ GlobalTheory.FlagMod.tau hW
   have hO : ⊤ ≤ z ⁻¹ᵁ flagOpen T.X := by
     intro s _
@@ -1223,7 +1223,7 @@ theorem tendsto_arc_readsZ {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf 
   have hb0 : (0 : ℂ) ∈ Metric.ball (0 : ℂ) ρ := Metric.mem_ball_self hρ
   let ψ : ℂ → (A →+* ℂ) := fun u => if hu : u ∈ Metric.ball (0 : ℂ) ρ then
     GlobalTheory.FlagMod.ev (s u).1 W (hsW u hu) else GlobalTheory.FlagMod.ev (s 0).1 W (hsW 0 hb0)
-  have hψ : ∀ u (hu : u ∈ Metric.ball (0 : ℂ) ρ), ψ u = GlobalTheory.FlagMod.ev (s u).1 W (hsW u hu) := fun u hu => dif_pos hu
+  have hψ : ∀ u (hu : u ∈ Metric.ball (0 : ℂ) ρ), ψ u = GlobalTheory.FlagMod.ev (s u).1 W (hsW u hu) := fun u hu => dite_eq_left hu
   have hψq : ∀ u ∈ Metric.ball (0 : ℂ) ρ, spMap (ψ u) ≫ q = (s u).1 := fun u hu => by
     rw [hψ u hu]
     exact GlobalTheory.FlagMod.spMap_ev (s u).1 hW _
@@ -1411,7 +1411,7 @@ theorem exists_comb {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (T :
     ∃ (m : ℕ) (as : Fin m → ℂ) (fs : Fin m → Rul Xo c), (∀ i, fs i ∈ extVanZ T.X e) ∧
       ∀ k, ∀ x ∈ (V.X k).dom, P k x = ∑ i, as i * rdU V (fs i) k x := by
   classical
-  letI := V.fin
+  let := V.fin
   obtain ⟨-, g1, g2, -⟩ := GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H D l Xo c (CAt σ)
   obtain ⟨d, hsm, hpr⟩ := GlobalTheory.T.toroidal_flag_smooth_projective E H D l Xo c T
   let R : GlobalTheory.AnRead (flagStr T.X) σ d := GlobalTheory.AnRead.all _ _ _
@@ -1439,8 +1439,8 @@ theorem exists_comb {V : Unf Xo c σ r} (hσ : GoodEmb c σ) (hU : IsUnf V) (T :
   obtain ⟨xC, hx⟩ := (GlobalTheory.AnRead.bijective_valC hpr R hB).2 ⟨h, hh'⟩
   have hxv : GlobalTheory.SecC.val xC = h := congrArg Subtype.val hx
   have hlft : LocallyOfFiniteType (flagStr T.X) := by
-    haveI := hsm
-    haveI : Smooth (flagStr T.X) := SmoothOfRelativeDimension.smooth d _
+    have := hsm
+    have : Smooth (flagStr T.X) := SmoothOfRelativeDimension.smooth d _
     infer_instance
   obtain ⟨m, as, ss, hss, hsum⟩ := _root_.GlobalTheory.CompanionTheory.VanDescent.vanish_descent c.F T.X.YY (flagStr T.X) σ hlft _ hB (flagOpen T.X) xC
     (fun i y hy => by rw [hxv]; exact hv i y hy)
@@ -1541,7 +1541,7 @@ theorem cusp_form_extension_vanishing : ∀ (D : D7) (T : Core D) (j : ℕ) (Y :
   obtain ⟨k, y⟩ := w
   obtain ⟨hd, hl⟩ := hw
   have h := evR_eq_of_sec₀_eq TF.X Z ⟨f, hfs⟩ ⟨g.1, GlobalTheory.CompHS.cusp_le_secZ Z Y.U u g.2⟩ (hsf.symm.trans hg.symm) _ hl
-  simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos hd]
+  simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left hd]
   exact congrArg _ h
 
 end ModelDimension
@@ -1681,7 +1681,7 @@ theorem norm_small_le (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ))
       (F.fac x G ^ τ * (Real.exp (τ * t) * S ^ τ)) ^ 2 := by
     refine h3.trans_eq ?_
     have : Real.exp (2 * τ * t) = Real.exp (τ * t) ^ 2 := by
-      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+      rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
     rw [this]
     ring
   have h5 := (pow_le_pow_iff_left₀ (by positivity) (by positivity) two_ne_zero).1 h4

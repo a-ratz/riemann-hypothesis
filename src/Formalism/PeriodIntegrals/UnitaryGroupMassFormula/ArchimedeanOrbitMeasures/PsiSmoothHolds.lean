@@ -82,7 +82,7 @@ theorem psiSmooth_holds : PsiSmoothU := by
   set P := EuclideanSpace ℝ ι
   set Q := EuclideanSpace ℝ η
   set_option synthInstance.maxHeartbeats 200000 in
-    letI : ContinuousSMul ℝ (P × Q) := inferInstance
+    let : ContinuousSMul ℝ (P × Q) := inferInstance
   set A : P × Q →L[ℝ] Matrix (Fin n) (Fin n) ℂ :=
     (unrLin n).toContinuousLinearMap ∘L m.subtypeL ∘L (L₀.toContinuousLinearEquiv : P →L[ℝ] m) ∘L
       ContinuousLinearMap.fst ℝ P Q with hA
@@ -151,7 +151,7 @@ theorem psiSmooth_holds : PsiSmoothU := by
     have h2 : (L₀ x : EuclideanSpace ℝ (Fin n × Fin n × Bool)) ∈ hᗮ := by
       rw [Submodule.mem_orthogonal]; intro u hu; rw [real_inner_comm]; exact horth _ (L₀ x).2 u hu
     simp only [hGm, ContinuousLinearMap.comp_apply, ContinuousLinearMap.prod_apply, ContinuousLinearMap.id_apply,
-      ContinuousLinearMap.add_apply, LinearMap.coe_toContinuousLinearMap']
+      add_apply, LinearMap.coe_toContinuousLinearMap']
     rw [hre]
     refine Prod.ext ?_ ?_
     · show L₀.symm (m.orthogonalProjectionOnto ((L₀ x : EuclideanSpace ℝ (Fin n × Fin n × Bool)) + (L₁ y : _))) = x

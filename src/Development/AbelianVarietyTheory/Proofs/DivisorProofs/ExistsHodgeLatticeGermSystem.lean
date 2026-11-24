@@ -76,7 +76,7 @@ theorem eventually_int_of_isCompact (K : Set (AfP p)) (hK : IsCompact K) :
   let S : Finset (AwayP p) := t.biUnion id
   rw [Filter.eventually_cofinite]
   refine S.finite_toSet.subset fun w hw => ?_
-  simp only [Set.mem_setOf_eq, not_forall] at hw
+  simp only [Set.mem_ofPred_eq, not_forall] at hw
   obtain ⟨x, hxK, hxw⟩ := hw
   obtain ⟨F, hF, hxF⟩ := Set.mem_iUnion₂.1 (ht hxK)
   by_contra hwS
@@ -96,31 +96,31 @@ theorem repr_map_eval (G : HTGroup p) (w : AwayP p) (x : AfP p ⊗[ℚ] G.C) (i 
 theorem continuous_coord (G : HTGroup p) (i : Fin (Module.finrank ℚ G.C)) :
     Continuous fun x : G.GAf => (Algebra.TensorProduct.basis (AfP p) (Module.finBasis ℚ G.C)).repr
       (((x : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : AfP p ⊗[ℚ] G.C)) i := by
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
   exact (IsModuleTopology.continuous_of_linearMap
     ((Algebra.TensorProduct.basis (AfP p) (Module.finBasis ℚ G.C)).coord i)).comp
-    (Units.continuous_val.comp (continuous_fst.comp continuous_subtype_val))
+    (Units.continuous_val.comp (continuous_fst.comp continuous_subtypeVal))
 
 theorem continuous_coord_inv (G : HTGroup p) (i : Fin (Module.finrank ℚ G.C)) :
     Continuous fun x : G.GAf => (Algebra.TensorProduct.basis (AfP p) (Module.finBasis ℚ G.C)).repr
       ((((x : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1)⁻¹ : (AfP p ⊗[ℚ] G.C)ˣ) : AfP p ⊗[ℚ] G.C) i := by
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) (AfP p ⊗[ℚ] G.C)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (AfP p ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (AfP p) (AfP p ⊗[ℚ] G.C)
   exact (IsModuleTopology.continuous_of_linearMap
     ((Algebra.TensorProduct.basis (AfP p) (Module.finBasis ℚ G.C)).coord i)).comp
-    (Units.continuous_coe_inv.comp (continuous_fst.comp continuous_subtype_val))
+    (Units.continuous_coe_inv.comp (continuous_fst.comp continuous_subtypeVal))
 
 theorem continuous_sim (G : HTGroup p) :
     Continuous fun x : G.GAf => (((x : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).2 : (AfP p)ˣ) : AfP p) := by
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  exact Units.continuous_val.comp (continuous_snd.comp continuous_subtype_val)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  exact Units.continuous_val.comp (continuous_snd.comp continuous_subtypeVal)
 
 theorem continuous_sim_inv (G : HTGroup p) :
     Continuous fun x : G.GAf => ((((x : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).2)⁻¹ : (AfP p)ˣ) : AfP p) := by
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  exact Units.continuous_coe_inv.comp (continuous_snd.comp continuous_subtype_val)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  exact Units.continuous_coe_inv.comp (continuous_snd.comp continuous_subtypeVal)
 
 theorem eventually_mem_intPts (G : HTGroup p) (Ω : Set G.GAf) (hΩ : IsCompact Ω) :
     ∀ᶠ w in Filter.cofinite, ∀ h ∈ Ω, compL G w h ∈ intPts G w := by

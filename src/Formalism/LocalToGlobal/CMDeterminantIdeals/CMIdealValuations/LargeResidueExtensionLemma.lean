@@ -390,7 +390,7 @@ theorem isAdicComplete_of_basis {R M ι : Type} [CommRing R] [AddCommGroup M] [M
     intro n x y
     rw [SModEq.sub_mem, mem_smul_top_iff_repr b]
     simp only [map_sub, Finsupp.sub_apply, SModEq.sub_mem, mem_smul_top_self_iff]
-  haveI := h
+  have := h
   have hH : IsHausdorff I M := by
     refine ⟨fun x hx => ?_⟩
     have h0 : ∀ i, b.repr x i = 0 := fun i =>
@@ -431,7 +431,7 @@ theorem largeResidueExtension : BigResExt := by
   have hM0 : M0.IsMaximal := (Ideal.Quotient.maximal_ideal_iff_isField_quotient _).2
     (MulEquiv.isField (Field.toIsField (AdjoinRoot (g.map (residue V)))) (quotResidueEquiv g).toMulEquiv)
   have hloc : IsLocalRing W := IsLocalRing.of_unique_max_ideal ⟨M0, hM0, fun M hM => by
-    letI := hM
+    let := hM
     have hc : (M.comap (algebraMap V W)).IsMaximal :=
       Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap V W)
         (fun x => Algebra.IsIntegral.isIntegral x) M

@@ -53,12 +53,12 @@ theorem continuous_norm_coefChar : ∀ (D : D7) (n : ℕ) (ψ : AddChar (AF D.ho
   intro D n ψ hψ β
   refine ⟨?_, fun b => hψ.2.1 _⟩
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D n n
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
   unfold GlobalTheory.StdUnn.halfTr
   exact hψ.1.comp ((continuous_const.mul (ht.comp
-    ((continuous_const.matrix_mul continuous_subtype_val).matrix_trace))).neg)
+    ((continuous_const.matrix_mul continuous_subtypeVal).matrix_trace))).neg)
 
 end GlobalTheory.CompanionTheory.CoefWeight

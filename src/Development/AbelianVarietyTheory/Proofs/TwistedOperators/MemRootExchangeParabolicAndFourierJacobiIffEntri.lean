@@ -97,7 +97,7 @@ theorem Par.mul_right {L : ℕ} {b : Fin c → ℕ} {M M' : Matrix (n ⊕ Fin c)
 
 theorem Par.blockTri_inv {L : ℕ} {b : Fin c → ℕ} {g : GL (n ⊕ Fin c) k} (h : Par L b g.val) :
     (g⁻¹).val.BlockTriangular (Sum.elim (fun _ => L) b) := by
-  letI : Invertible g.val := g.invertible
+  let : Invertible g.val := g.invertible
   rw [Matrix.coe_units_inv]
   exact Matrix.blockTriangular_inv_of_blockTriangular h.blockTri
 

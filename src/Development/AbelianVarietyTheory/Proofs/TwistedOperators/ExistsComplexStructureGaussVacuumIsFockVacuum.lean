@@ -296,7 +296,7 @@ theorem GlobalTheory.FockPair.exists_fock_cx : ∀ (F E : Type) [Field F] [Numbe
           (∀ w, J₀ (J₀ w) = -w) ∧ ∀ w x, GlobalTheory.GaussLine.dHeis (GlobalTheory.GaussLine.pairInf F (Fin n × Fin d)) (J₀ w) ⇑f₀ x =
             Complex.I * GlobalTheory.GaussLine.dHeis (GlobalTheory.GaussLine.pairInf F (Fin n × Fin d)) w ⇑f₀ x := by
   intro F E _ _ _ _ _ σ hcm n d X W M ψ χX χW om hψ _ _ _ _ _ _ _ _ _ τ hX hW f₀ hf₀
-  haveI := hcm.1
+  have := hcm.1
   obtain ⟨ξ, hξ⟩ := GlobalTheory.RealLift.OneParam.exists_moved hcm
   have hξ' : ∀ w, ((τ w).1 ξ).im ≠ 0 := fun w => GlobalTheory.RealLift.OneParam.im_ne_zero hcm hξ (τ w).1
   obtain ⟨ε, hε⟩ := (GlobalTheory.ThK.EvAt0.PolEv.isGauss_iff hψ M τ f₀).1 hf₀
@@ -308,7 +308,7 @@ theorem GlobalTheory.FockPair.exists_fock_cx : ∀ (F E : Type) [Field F] [Numbe
   change dOp (jF M τ ξ ε w).1 (jF M τ ξ ε w).2 f₀ = Complex.I • dOp (crd M (pt M w)).1 (crd M (pt M w)).2 f₀ at e
   rw [crd_pt] at e
   have e2 := congrArg (fun g : SInf F (Fin n × Fin d) => g x) e
-  simp only [SchwartzMap.smul_apply, smul_eq_mul, dOp_apply, lin] at e2
+  simp only [smul_apply, smul_eq_mul, dOp_apply, lin] at e2
   show GlobalTheory.GaussLine.dHeis _ (jF M τ ξ ε w) _ x = _
   simp only [GlobalTheory.GaussLine.dHeis, GlobalTheory.GaussLine.pairInf_apply]
   exact e2

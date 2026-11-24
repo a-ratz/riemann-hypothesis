@@ -477,8 +477,8 @@ theorem finsum_prod (B C : InvAlg K) [Finite B.Cl] [Finite C.Cl] (F : (B.prod C)
     conv_rhs => rw [← Quot.out_eq k]
     exact h _ _ (Units.isUnit (fixProd B C k.out).1.1) (Units.isUnit (fixProd B C k.out).2.1)
       (fixProd B C k.out).1.2 (fixProd B C k.out).2.2
-  haveI := Fintype.ofFinite B.Cl
-  haveI := Fintype.ofFinite C.Cl
+  have := Fintype.ofFinite B.Cl
+  have := Fintype.ofFinite C.Cl
   simp only [e, onCl_rep B G hG, onCl_rep C H hH]
   rw [finsum_comp_equiv (clProd B C) (f := fun k => onCl B G hG k.1 * onCl C H hH k.2)]
   simp only [finsum_eq_sum_of_fintype]
@@ -500,8 +500,8 @@ theorem kap_inv (B C : InvAlg K) (x : (B.prod C).A) (u : (B.prod C).Aˣ) :
 theorem stSum_prod (B C : InvAlg K) (hs : (B.P * C.P).Separable)
     (he : ((1, 0) : B.A × C.A) ∈ Algebra.adjoin K.O ({(B.g, C.g)} : Set (B.A × C.A))) :
     (B.prod C).stSum = B.stSum * C.stSum := by
-  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K B hs.of_mul_left
-  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K C hs.of_mul_right
+  have := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K B hs.of_mul_left
+  have := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K C hs.of_mul_right
   exact finsum_prod B C (B.prod C).N B.N C.N (fun x u => (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K B x u).1)
     (fun x u => (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K C x u).1) (_root_.GlobalTheory.UnitLemma.ProdCount.N_prod K B C he hs)
 
@@ -509,8 +509,8 @@ theorem kapSum_prod (B₁ B₂ C₁ C₂ : InvAlg K) (hs : ((B₁.prod B₂).P *
     (he : ((1, 0) : (B₁.prod B₂).A × (C₁.prod C₂).A) ∈ Algebra.adjoin K.O
       ({((B₁.prod B₂).g, (C₁.prod C₂).g)} : Set ((B₁.prod B₂).A × (C₁.prod C₂).A))) :
     InvAlg.kapSum (B₁.prod C₁) (B₂.prod C₂) = InvAlg.kapSum B₁ B₂ * InvAlg.kapSum C₁ C₂ := by
-  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K _ hs.of_mul_left
-  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K _ hs.of_mul_right
+  have := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K _ hs.of_mul_left
+  have := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K _ hs.of_mul_right
   unfold InvAlg.kapSum
   rw [(isIso_swap4 B₁ B₂ C₁ C₂).finsum_eq
     (fun x => K.eta ((B₁.prod C₁).gramDet x.1) * ((B₁.prod C₁).prod (B₂.prod C₂)).N x) (kap_inv _ _)]

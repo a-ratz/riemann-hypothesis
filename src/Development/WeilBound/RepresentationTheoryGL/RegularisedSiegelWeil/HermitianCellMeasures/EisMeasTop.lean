@@ -277,43 +277,43 @@ theorem good_zero : Good S e (fun _ : Mx D a n => (0 : ℂ)) := fun x => by simp
 
 theorem good_add {Φ Ψ : Mx D a n → ℂ} (h₁ : Good S e Φ) (h₂ : Good S e Ψ) : Good S e (fun x => Φ x + Ψ x) := fun x => by
   by_cases h : IntOff S x
-  · simp only [if_pos h]
-    rw [h₁ x, h₂ x, if_pos h, if_pos h]
-  · simp only [if_neg h]
-    rw [h₁ x, h₂ x, if_neg h, if_neg h, add_zero]
+  · simp only [ite_eq_left h]
+    rw [h₁ x, h₂ x, ite_eq_left h, ite_eq_left h]
+  · simp only [ite_eq_right h]
+    rw [h₁ x, h₂ x, ite_eq_right h, ite_eq_right h, add_zero]
 
 theorem good_smul {Φ : Mx D a n → ℂ} (c : ℂ) (h₁ : Good S e Φ) : Good S e (fun x => c * Φ x) := fun x => by
   by_cases h : IntOff S x
-  · simp only [if_pos h]
-    rw [h₁ x, if_pos h]
-  · simp only [if_neg h]
-    rw [h₁ x, if_neg h, mul_zero]
+  · simp only [ite_eq_left h]
+    rw [h₁ x, ite_eq_left h]
+  · simp only [ite_eq_right h]
+    rw [h₁ x, ite_eq_right h, mul_zero]
 
 theorem good_factor {M B : Mx D a n → ℂ} (hM : ∀ x, M (e • x) = M x) (h₁ : Good S e B) :
     Good S e (fun x => M x * B x) := fun x => by
   by_cases h : IntOff S x
-  · simp only [if_pos h]
-    rw [h₁ x, if_pos h, hM]
-  · simp only [if_neg h]
-    rw [h₁ x, if_neg h, mul_zero]
+  · simp only [ite_eq_left h]
+    rw [h₁ x, ite_eq_left h, hM]
+  · simp only [ite_eq_right h]
+    rw [h₁ x, ite_eq_right h, mul_zero]
 
 theorem good_mul {Φ Ψ : Mx D a n → ℂ} (h₁ : Good S e Φ) (h₂ : Good S e Ψ) : Good S e (fun x => Φ x * Ψ x) := fun x => by
   by_cases h : IntOff S x
-  · simp only [if_pos h]
-    rw [h₁ x, h₂ x, if_pos h, if_pos h]
-  · simp only [if_neg h]
-    rw [h₁ x, if_neg h, zero_mul]
+  · simp only [ite_eq_left h]
+    rw [h₁ x, h₂ x, ite_eq_left h, ite_eq_left h]
+  · simp only [ite_eq_right h]
+    rw [h₁ x, ite_eq_right h, zero_mul]
 
 theorem good_conj {Φ : Mx D a n → ℂ} (h₁ : Good S e Φ) : Good S e (fun x => conj (Φ x)) := fun x => by
   by_cases h : IntOff S x
-  · simp only [if_pos h]
-    rw [h₁ x, if_pos h]
-  · simp only [if_neg h]
-    rw [h₁ x, if_neg h, map_zero]
+  · simp only [ite_eq_left h]
+    rw [h₁ x, ite_eq_left h]
+  · simp only [ite_eq_right h]
+    rw [h₁ x, ite_eq_right h, map_zero]
 
 theorem intOff_of_smul (hid : IsIdem S e) {x : Mx D a n} (hx : e • x = x) : IntOff S x := by
   intro v hv i j
-  have h0 : cv D v e = 0 := by rw [hid.2 v, if_neg hv]
+  have h0 : cv D v e = 0 := by rw [hid.2 v, ite_eq_right hv]
   have : x i j = e * x i j := by
     conv_lhs => rw [← hx]
     rfl
@@ -328,22 +328,22 @@ theorem good_row {Φ : Mx D a n → ℂ} {φ : Mx D 1 n → ℂ} (h₁ : Good S 
     have a2 : IntOff S (x.submatrix (fun _ : Fin 1 => Fin.last a) id) := fun v hv i j => h v hv _ _
     have b1 := h₁ (x.submatrix Fin.castSucc id)
     have b2 := h₂ (x.submatrix (fun _ : Fin 1 => Fin.last a) id)
-    rw [if_pos a1] at b1
-    rw [if_pos a2] at b2
-    rw [if_pos h]
+    rw [ite_eq_left a1] at b1
+    rw [ite_eq_left a2] at b2
+    rw [ite_eq_left h]
     exact congrArg₂ (· * ·) b1 b2
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simp only [IntOff, not_forall] at h
     obtain ⟨v, hv, i, j, hij⟩ := h
     refine Fin.lastCases (motive := fun i => cv D v (x i j) ∉ intLoc D.host.F D.host.E v → _) (fun hij => ?_) (fun i hij => ?_) i hij
     · have a2 : ¬ IntOff S (x.submatrix (fun _ : Fin 1 => Fin.last a) id) := fun h' => hij (h' v hv 0 j)
       have b2 := h₂ (x.submatrix (fun _ : Fin 1 => Fin.last a) id)
-      rw [if_neg a2] at b2
+      rw [ite_eq_right a2] at b2
       show _ * φ _ = 0
       rw [b2, mul_zero]
     · have a1 : ¬ IntOff S (x.submatrix Fin.castSucc id) := fun h' => hij (h' v hv i j)
       have b1 := h₁ (x.submatrix Fin.castSucc id)
-      rw [if_neg a1] at b1
+      rw [ite_eq_right a1] at b1
       show Φ _ * _ = 0
       rw [b1, zero_mul]
 
@@ -362,8 +362,8 @@ theorem row_prod {θ : InfFam D} : ∀ (a : ℕ) (η : Fin a → Mx D 1 n → �
     rw [e1]
     refine ⟨GlobalTheory.CompanionTheory.ThTot.one_mem_schwartzA_zero θ, fun x => ?_, ?_⟩
     · have : IntOff S x := fun v _ i => i.elim0
-      rw [if_pos this]
-    · haveI : Subsingleton (Mx D 0 n) := GlobalTheory.CompanionTheory.ThTot.mx_zero_subsingleton
+      rw [ite_eq_left this]
+    · have : Subsingleton (Mx D 0 n) := GlobalTheory.CompanionTheory.ThTot.mx_zero_subsingleton
       exact (Set.subsingleton_of_subsingleton).isCompact
   | succ a ih =>
     intro η hη
@@ -423,7 +423,7 @@ theorem clopen_sep (D : D7) {x y : Af D.host.F ⊗[D.host.F] D.host.E} (h : x �
   have hne : GlobalTheory.AfTensNbhd.coordEquiv D.host.F D.host.E x ≠ GlobalTheory.AfTensNbhd.coordEquiv D.host.F D.host.E y :=
     fun h' => h ((GlobalTheory.AfTensNbhd.coordEquiv D.host.F D.host.E).injective h')
   obtain ⟨k, hk⟩ := Function.ne_iff.1 hne
-  haveI : T2Space (Af D.host.F) := GlobalTheory.IntegralFinAdele.t2Space_finiteAdeleRing' D.host.F
+  have : T2Space (Af D.host.F) := GlobalTheory.IntegralFinAdele.t2Space_finiteAdeleRing' D.host.F
   have hd : GlobalTheory.AfTensNbhd.coordEquiv D.host.F D.host.E y k - GlobalTheory.AfTensNbhd.coordEquiv D.host.F D.host.E x k ≠ 0 :=
     sub_ne_zero.2 hk.symm
   obtain ⟨G, hGo, hGs⟩ := GlobalTheory.SmallLevel.exists_open_subgroup D.host.F
@@ -441,8 +441,8 @@ theorem clopen_sep (D : D7) {x y : Af D.host.F ⊗[D.host.F] D.host.E} (h : x �
 
 theorem continuous_mul_left_fin (D : D7) (c : Af D.host.F ⊗[D.host.F] D.host.E) :
     Continuous fun y : Af D.host.F ⊗[D.host.F] D.host.E => c * y := by
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (Af D.host.F) _
   exact continuous_const.mul continuous_id
 
@@ -519,7 +519,7 @@ theorem isClosedEmbedding_jn (hn : r + t = n) (e : AE D) :
   obtain ⟨-, -, h2, -⟩ := GlobalTheory.CompanionTheory.OrbUniq.mx_facts D a (r + t)
   obtain ⟨-, -, h2r, -⟩ := GlobalTheory.CompanionTheory.OrbUniq.mx_facts D a r
   obtain ⟨-, -, h2t, -⟩ := GlobalTheory.CompanionTheory.OrbUniq.mx_facts D a t
-  haveI : IsTopologicalRing (AE D) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : IsTopologicalRing (AE D) := GlobalTheory.Doubling.isTopologicalRing_tens
   have hcl : IsClosed {z : Mx D a r × Mx D a t | e • z.1 = z.1 ∧ e • z.2 = z.2} :=
     (isClosed_eq ((continuous_const_smul e).comp continuous_fst) continuous_fst).inter
       (isClosed_eq ((continuous_const_smul e).comp continuous_snd) continuous_snd)
@@ -650,16 +650,16 @@ theorem char_restr [IsTopologicalAddGroup M] [LocallyCompactSpace M] [SecondCoun
     (hPc : Continuous P) (hPm : ∀ x, P x ∈ S) (hPs : ∀ s ∈ S, P s = s)
     (U : M ≃ₜ+ M) (hU : ∀ s ∈ S, U s ∈ S) (hU' : ∀ s ∈ S, U.symm s ∈ S) (hfix : ∀ x, P x = 0 → U x = x) :
     addEquivAddHaarChar (GlobalTheory.CompanionTheory.CgMod.restr S U hU hU') = addEquivAddHaarChar U := by
-  haveI : SecondCountableTopology S := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space S := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : SecondCountableTopology P.ker := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space P.ker := Topology.IsEmbedding.subtypeVal.t2Space
+  have : SecondCountableTopology S := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space S := Topology.IsEmbedding.subtypeVal.t2Space
+  have : SecondCountableTopology P.ker := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space P.ker := Topology.IsEmbedding.subtypeVal.t2Space
   have hcl : IsClosed (P.ker : Set M) := by
     have : (P.ker : Set M) = P ⁻¹' {0} := by
       ext x; simp [AddMonoidHom.mem_ker]
     rw [this]
     exact isClosed_singleton.preimage hPc
-  haveI : LocallyCompactSpace P.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace P.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   set Ψ := imKer S P hPc hPm hPs with hΨ
   set T := GlobalTheory.CompanionTheory.CgMod.restr S U hU hU' with hT
   have e : ((Ψ.symm.trans (GlobalTheory.ModuLR.prodCE T (ContinuousAddEquiv.refl P.ker))).trans Ψ) = U := by
@@ -687,12 +687,12 @@ theorem char_herm [BorelSpace (Mx D n n)] [LocallyCompactSpace (hermA D n)] (a :
     addEquivAddHaarChar (restr (hermA D n) (GlobalTheory.ModuLR.lrCE a (ad a)⁻¹) (lr_herm a) (lr_herm_symm a)) =
       absA D (Matrix.GeneralLinearGroup.det a : (AE D)ˣ) ^ n := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
-  haveI : LocallyCompactSpace (Mx D n n) := i2
-  haveI : SecondCountableTopology (Mx D n n) := i3
-  haveI : T2Space (Mx D n n) := i4
-  haveI : SecondCountableTopology (hermA D n) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (hermA D n) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : IsTopologicalAddGroup (Mx D n n) := i1
+  have : LocallyCompactSpace (Mx D n n) := i2
+  have : SecondCountableTopology (Mx D n n) := i3
+  have : T2Space (Mx D n n) := i4
+  have : SecondCountableTopology (hermA D n) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (hermA D n) := Topology.IsEmbedding.subtypeVal.t2Space
   obtain ⟨d, e, hde, hd, he⟩ := exists_anti_units D
   have hsq := char_sq (hermA D n) (hermPartHom D n) continuous_hermPart hermPart_mem
     (fun s hs => hermPart_of_mem hs) (mulCE d e hde)
@@ -718,7 +718,7 @@ def smulH (e : AE D) (hc : cA D e = e) : hermA D n →+ hermA D n where
 
 
 theorem continuous_smulH (e : AE D) (hc : cA D e = e) : Continuous (smulH (n := n) e hc) :=
-  ((continuous_const_smul e).comp continuous_subtype_val).subtype_mk _
+  ((continuous_const_smul e).comp continuous_subtypeVal).subtype_mk _
 
 theorem smul_sandwich (e : AE D) (A B x : Mx D n n) (h : e • x = x) : e • (A * x * B) = A * x * B := by
   rw [← Matrix.smul_mul, ← Matrix.mul_smul, h]
@@ -772,21 +772,21 @@ theorem hermScale_main : PositivityTheory.Rg.Rsw.L.IdemEx → PositivityTheory.R
   intro hid htop D t S e he lam hlam g hg
   obtain ⟨hee, hce⟩ := (hid D S).2 e he
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D t t
-  haveI : IsTopologicalAddGroup (Mx D t t) := i1
-  haveI : LocallyCompactSpace (Mx D t t) := i2
-  haveI : SecondCountableTopology (Mx D t t) := i3
-  haveI : T2Space (Mx D t t) := i4
-  haveI : BorelSpace (Mx D t t) := ⟨rfl⟩
-  haveI : SecondCountableTopology (hermA D t) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (hermA D t) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : LocallyCompactSpace (hermA D t) :=
+  have : IsTopologicalAddGroup (Mx D t t) := i1
+  have : LocallyCompactSpace (Mx D t t) := i2
+  have : SecondCountableTopology (Mx D t t) := i3
+  have : T2Space (Mx D t t) := i4
+  have : BorelSpace (Mx D t t) := ⟨rfl⟩
+  have : SecondCountableTopology (hermA D t) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (hermA D t) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : LocallyCompactSpace (hermA D t) :=
     (isClosed_hermA (D := D) (r := t)).isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨-, -, -, -, -, -, hb, hs2, hlc⟩ := htop D 0 0 t e
-  haveI : BorelSpace (hermS D t e) := hb
-  haveI : SecondCountableTopology (hermS D t e) := hs2
-  haveI : LocallyCompactSpace (hermS D t e) := hlc
-  haveI : T2Space (hermS D t e) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : lam.IsAddHaarMeasure := hlam
+  have : BorelSpace (hermS D t e) := hb
+  have : SecondCountableTopology (hermS D t e) := hs2
+  have : LocallyCompactSpace (hermS D t e) := hlc
+  have : T2Space (hermS D t e) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : lam.IsAddHaarMeasure := hlam
   set U := restr (hermA D t) (GlobalTheory.ModuLR.lrCE g (ad g)⁻¹) (lr_herm g) (lr_herm_symm g) with hUdef
   have hU : ∀ s ∈ hermS D t e, U s ∈ hermS D t e := fun s hs =>
     smul_sandwich e _ _ s.1 hs
@@ -890,7 +890,7 @@ private theorem schw {D : D7} (θ : InfFam D) {a n : ℕ} (h : GL (Fin a) (AE D)
   | smul c f _ i => exact Submodule.smul_mem _ c i
   | mem Φ hm =>
     obtain ⟨f, k, hk, rfl⟩ := hm
-    haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := by first | infer_instance | exact GlobalTheory.AdelicU.isTopologicalRing_tens | exact isTopologicalRing_tens
+    have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := by first | infer_instance | exact GlobalTheory.AdelicU.isTopologicalRing_tens | exact isTopologicalRing_tens
     let ρ : D.what₂.Tau → (AE D →+* ℂ) := fun τ => (θ τ).comp (infPart D)
     let L := famEquiv (fun τ => h.1.map (ρ τ)) (fun τ => h.2.map (ρ τ)) (fun τ => g.1.map (ρ τ)) (fun τ => g.2.map (ρ τ))
       (fun τ => map_inv _ h.3) (fun τ => map_inv _ h.4) (fun τ => map_inv _ g.3) (fun τ => map_inv _ g.4)
@@ -918,7 +918,7 @@ theorem GlobalTheory.CompanionTheory.AlgStab.algStab : IdemEx → AlgStab := by
   refine ⟨schw θ h g hΦ, fun X => ?_, ?_⟩
   · have hI : IntOff S (mm (mm h.1 X) g.1) ↔ IntOff S X := by
       refine forall_congr' fun v => forall_congr' fun hv => ?_
-      have h0 : cv D v e = 0 := by rw [he.2 v, if_neg hv]
+      have h0 : cv D v e = 0 := by rw [he.2 v, ite_eq_right hv]
       have : (h.1 * X * g.1).map (cv D v) = X.map (cv D v) := by
         rw [Matrix.map_mul, Matrix.map_mul, map_eq_one _ h0 hh, map_eq_one _ h0 hg, Matrix.one_mul, Matrix.mul_one]
       refine forall_congr' fun i => forall_congr' fun j => ?_
@@ -928,13 +928,13 @@ theorem GlobalTheory.CompanionTheory.AlgStab.algStab : IdemEx → AlgStab := by
       rw [Matrix.mul_smul, Matrix.smul_mul]
     have := hG (mm (mm h.1 X) g.1)
     by_cases hX : IntOff S X
-    · rw [if_pos (hI.2 hX), hs] at this
-      rw [if_pos hX]
+    · rw [ite_eq_left (hI.2 hX), hs] at this
+      rw [ite_eq_left hX]
       exact this
-    · rw [if_neg (fun c => hX (hI.1 c))] at this
-      rw [if_neg hX]
+    · rw [ite_eq_right (fun c => hX (hI.1 c))] at this
+      rw [ite_eq_right hX]
       exact this
-  · haveI : IsTopologicalRing (AE D) := by first | infer_instance | exact GlobalTheory.AdelicU.isTopologicalRing_tens | exact isTopologicalRing_tens
+  · have : IsTopologicalRing (AE D) := by first | infer_instance | exact GlobalTheory.AdelicU.isTopologicalRing_tens | exact isTopologicalRing_tens
     exact hC.comp_homeomorph (twoSide h.1 h.2 g.1 g.2 h.3 h.4 g.3 g.4)
 end -- clump:auto
 end -- clump:auto
@@ -1029,7 +1029,7 @@ def offS (S : Finset (Pl D)) : AddSubgroup (AE D) where
   neg_mem' := fun hx v hv => by rw [RingHom.map_neg]; exact neg_mem (hx v hv)
 
 theorem isOpen_offS (S : Finset (Pl D)) : IsOpen (offS S : Set (AE D)) := by
-  haveI := topRing D
+  have := topRing D
   have h0 : IsOpen {z : AE D | ∀ v : Pl D, cv D v z ∈ intLoc D.host.F D.host.E v} :=
     GlobalTheory.ThK.ConeEuler.UnitsOpen.isOpen_integral_everywhere
   refine AddSubgroup.isOpen_of_mem_nhds _ (g := 0) (Filter.mem_of_superset (h0.mem_nhds ?_) ?_)
@@ -1042,7 +1042,7 @@ theorem isOpen_offS (S : Finset (Pl D)) : IsOpen (offS S : Set (AE D)) := by
 theorem isOpen_intOff (S : Finset (Pl D)) : IsOpen {x : Mx D a b | IntOff S x} := by
   have h : {x : Mx D a b | IntOff S x} = ⋂ i, ⋂ j, (fun x : Mx D a b => x i j) ⁻¹' (offS S : Set (AE D)) := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
     exact ⟨fun h i j v hv => h v hv i j, fun h v hv i j => h i j v hv⟩
   rw [h]
   exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
@@ -1061,8 +1061,8 @@ theorem exists_box (S : Finset (Pl D)) {e : AE D} (hS : IsIdem S e) (a b : ℕ) 
   have hL : ∀ v : Pl D, IsCompact (if v ∈ S then ({0} : Set (Fv D.host.F v ⊗[D.host.F] D.host.E))
       else (intLoc D.host.F D.host.E v : Set (Fv D.host.F v ⊗[D.host.F] D.host.E))) := fun v => by
     by_cases h : v ∈ S
-    · rw [if_pos h]; exact isCompact_singleton
-    · rw [if_neg h]; exact (GlobalTheory.ThK.isCompact_isOpen_intLoc v).1
+    · rw [ite_eq_left h]; exact isCompact_singleton
+    · rw [ite_eq_right h]; exact (GlobalTheory.ThK.isCompact_isOpen_intLoc v).1
   have hfin : ∀ᶠ v : Pl D in Filter.cofinite, (if v ∈ S then ({0} : Set (Fv D.host.F v ⊗[D.host.F] D.host.E))
       else (intLoc D.host.F D.host.E v : Set (Fv D.host.F v ⊗[D.host.F] D.host.E))) ⊆
         (intLoc D.host.F D.host.E v : Set (Fv D.host.F v ⊗[D.host.F] D.host.E)) := by
@@ -1070,7 +1070,7 @@ theorem exists_box (S : Finset (Pl D)) {e : AE D} (hS : IsIdem S e) (a b : ℕ) 
     by_contra h
     apply hv
     have h' : v ∉ S := h
-    rw [if_neg h']
+    rw [ite_eq_right h']
   obtain ⟨K, hK, hz⟩ := GlobalTheory.IdeleCyl.exists_isCompact_box D.host.F D.host.E (fun _ => {0}) _
     (fun _ => isCompact_singleton) hL hfin
   refine ⟨{x | ∀ i j, x i j ∈ K}, ?_, fun x hx i j => ?_⟩
@@ -1086,15 +1086,15 @@ theorem exists_box (S : Finset (Pl D)) {e : AE D} (hS : IsIdem S e) (a b : ℕ) 
     · change cv D v ((1 - e) * x i j) ∈ _
       have hv := hS.2 v
       by_cases h : v ∈ S
-      · rw [if_pos h] at hv
-        rw [rh_one _ hv, if_pos h]
+      · rw [ite_eq_left h] at hv
+        rw [rh_one _ hv, ite_eq_left h]
         exact rfl
-      · rw [if_neg h] at hv
-        rw [rh_zero _ hv, if_neg h]
+      · rw [ite_eq_right h] at hv
+        rw [rh_zero _ hv, ite_eq_right h]
         exact hx v h i j
 
 theorem measurable_toX {e : AE D} (he : e * e = e) : Measurable (toX (a := a) (r := r) (t := t) he) := by
-  haveI := topRing D
+  have := topRing D
   obtain ⟨g1, g2⟩ := top_pair (D := D) a r t
   have o : OpensMeasurableSpace (Mx D a r × Mx D a t) := g1.opensMeasurable
   exact Measurable.subtype_mk
@@ -1178,7 +1178,7 @@ theorem map_lr (g : GL (Fin a) (AE D)) (k : GL (Fin b) (AE D)) (ν : Measure (Mx
     ν.map (fun U => mm (mm g.1 U) k.1) =
       ((absA D (Matrix.GeneralLinearGroup.det g)) ^ b * (absA D (Matrix.GeneralLinearGroup.det k)) ^ a)⁻¹ • ν := by
   obtain ⟨i1, i2, i3, i4, i5⟩ := top_mx (D := D) a b
-  haveI := topRing D
+  have := topRing D
   have hc : addEquivAddHaarChar (GlobalTheory.ModuLR.lrCE g k) =
       absA D (Matrix.GeneralLinearGroup.det g) ^ b * absA D (Matrix.GeneralLinearGroup.det k) ^ a :=
     GlobalTheory.ResidueEisenstein.ModMat.addEquivAddHaarChar_lrCE D.host.F D.host.E D.sp.cm.sig (isCMExt_host D) a b g k
@@ -1248,7 +1248,7 @@ theorem cv_of_idem {S : Finset (Pl D)} {e : AE D} (hS : IsIdem S e) {v : Pl D} (
     (h : e • x = x) (i : Fin a) (j : Fin b) : cv D v (x i j) = 0 := by
   have h0 : cv D v e = 0 := by
     have := hS.2 v
-    rwa [if_neg hv] at this
+    rwa [ite_eq_right hv] at this
   exact rh_of_idem _ h0 (congrFun (congrFun h i) j)
 
 theorem cv_left {S : Finset (Pl D)} {e : AE D} (hS : IsIdem S e) {v : Pl D} (hv : v ∉ S) {M : Mx D a a}
@@ -1291,7 +1291,7 @@ theorem sig_finite (S : Finset (Pl D)) {e : AE D} (hS : IsIdem S e) (he : e * e 
   have c2 : ContinuousAdd (Mx D a t) := q2.toContinuousAdd
   have c3 : ContinuousAdd (Mx D a r × Mx D a t) := Prod.continuousAdd
   have t3 : T2Space (Mx D a r × Mx D a t) := Prod.t2Space
-  refine abs_finite (toX he) (measurable_toX he) Subtype.val continuous_subtype_val (measurableSet_box S) P
+  refine abs_finite (toX he) (measurable_toX he) Subtype.val continuous_subtypeVal (measurableSet_box S) P
     (T₁ ×ˢ T₂) (hT₁.prod hT₂) (fun z hz => ?_)
   have e1 : z - ((toX he z).1 : Mx D a r × Mx D a t) = ((1 - e) • z.1, (1 - e) • z.2) :=
     Prod.ext (mod_sub e z.1) (mod_sub e z.2)
@@ -1300,7 +1300,7 @@ theorem sig_finite (S : Finset (Pl D)) {e : AE D} (hS : IsIdem S e) (he : e * e 
 
 theorem continuous_ip (V : HSp D) :
     Continuous fun x : Mx D V.rank a => ip V x x := by
-  haveI := topRing D
+  have := topRing D
   have hc : Continuous (cA D) := GlobalTheory.FockCompare.ThetaCont.continuous_conj
   have h1 : Continuous (adj : Mx D V.rank a → Mx D a V.rank) := (continuous_id.matrix_map hc).matrix_transpose
   exact h1.matrix_mul (continuous_const.matrix_mul continuous_id)
@@ -1311,7 +1311,7 @@ theorem sig_supp (S : Finset (Pl D)) {e : AE D} (he : e * e = e) (hc : cA D e = 
     sig S he (fib.prod μt) {z | ip V z.1.1 z.1.1 = e • rat b₀.1}ᶜ = 0 := by
   obtain ⟨-, -, -, w1, -⟩ := top_mx (D := D) r r
   have hcl : IsClosed {z : XS D V.rank r t e | ip V z.1.1 z.1.1 = e • rat b₀.1} :=
-    isClosed_eq ((continuous_ip V).comp (continuous_fst.comp continuous_subtype_val)) continuous_const
+    isClosed_eq ((continuous_ip V).comp (continuous_fst.comp continuous_subtypeVal)) continuous_const
   have oX : OpensMeasurableSpace (XS D V.rank r t e) := BorelSpace.opensMeasurable
   have hm := measurable_toX (a := V.rank) (r := r) (t := t) he
   have hAc := hcl.measurableSet.compl
@@ -1341,7 +1341,7 @@ theorem sig_integral (S : Finset (Pl D)) {e : AE D} (he : e * e = e) [BorelSpace
     (Integrable Ξ P → Integrable (fun z : XS D a r t e => Ξ z.1) (sig S he P)) ∧
     ∫ z, Ξ z ∂P = ∫ z, Ξ z.1 ∂(sig S he P) := by
   have oX : OpensMeasurableSpace (XS D a r t e) := BorelSpace.opensMeasurable
-  have hf : Continuous fun z : XS D a r t e => Ξ z.1 := hc.comp continuous_subtype_val
+  have hf : Continuous fun z : XS D a r t e => Ξ z.1 := hc.comp continuous_subtypeVal
   exact abs_integral (toX he) (measurable_toX he) (measurableSet_box S) P (fun z => Ξ z.1)
     hf.aestronglyMeasurable Ξ (fun z hz => (h z).1 hz) (fun z hz => (h z).2 hz)
 
@@ -1352,12 +1352,12 @@ namespace GlobalTheory.CompanionTheory.SigL
 variable {D : D7} {a b c r t : ℕ}
 
 theorem measurable_left (M : Mx D a a) : Measurable fun x : Mx D a b => mm M x := by
-  haveI := topRing D
+  have := topRing D
   obtain ⟨-, -, -, -, h5⟩ := top_mx (D := D) a b
   exact (continuous_const.matrix_mul continuous_id).measurable
 
 theorem measurable_right (M : Mx D b b) : Measurable fun x : Mx D a b => mm x M := by
-  haveI := topRing D
+  have := topRing D
   obtain ⟨-, -, -, -, h5⟩ := top_mx (D := D) a b
   exact (continuous_id.matrix_mul continuous_const).measurable
 
@@ -1382,7 +1382,7 @@ theorem sig_S (S : Finset (Pl D)) {e : AE D} (hS : IsIdem S e) (he : e * e = e)
     (hμ : μt.IsAddHaarMeasure) (y : Mx D r t) (hy : e • y = y) (Θ : XS D a r t e ≃ₜ XS D a r t e)
     (hΘ : ∀ z, (Θ z).1 = (z.1.1, z.1.2 + mm z.1.1 y)) :
     (sig S he (fib.prod μt)).map Θ = sig S he (fib.prod μt) := by
-  haveI := topRing D
+  have := topRing D
   obtain ⟨q2, -, -, -, b2⟩ := top_mx (D := D) a t
   obtain ⟨g1, g2⟩ := top_pair (D := D) a r t
   have oM : OpensMeasurableSpace (Mx D a r × Mx D a t) := g1.opensMeasurable
@@ -1717,8 +1717,8 @@ theorem orbEx : IdemEx → ApproxId → Dens → TopX → AlgRich → AlgStab �
       obtain ⟨U, W, hU, hW, hxU, hyW, hUW⟩ := t2_separation (x := f x) (y := f y)
         (fun h => hxy (congrArg (fun w => (Subtype.val w).2) h))
       exact ⟨f ⁻¹' U, f ⁻¹' W, hU.preimage hf, hW.preimage hf, hxU, hyW, hUW.preimage f⟩
-    haveI := hT2 t t
-    haveI := hT2 r r
+    have := hT2 t t
+    have := hT2 r r
     obtain ⟨hσfin, hσY, -, hσU, hσS, hσG⟩ :=
       hSL D r t V b₀ S e hS he fib μt hfib hfibs hfibi hμt
     obtain ⟨gk, Gk, hgG, htend, hdec⟩ := hAI D t ψ hψ S e hS lam hlam
@@ -1729,16 +1729,16 @@ theorem orbEx : IdemEx → ApproxId → Dens → TopX → AlgRich → AlgStab �
     have hkc : Continuous (fun p : ↥(PositivityTheory.Rg.Rsw.L.hermS D t e) × PositivityTheory.Rg.Rsw.Em.XS D V.rank r t e =>
         PositivityTheory.Rg.Rsw.L.pch ψ (Subtype.val (Subtype.val p.1)) (PositivityTheory.Rg.Rsw.L.qv V b₀ (Subtype.val p.2))) :=
       GlobalTheory.CompanionTheory.OrbExist.continuous_pch₂ hψ
-        (continuous_subtype_val.comp (continuous_subtype_val.comp continuous_fst))
-        ((GlobalTheory.CompanionTheory.OrbExist.continuous_qv V b₀).comp (continuous_subtype_val.comp continuous_snd))
+        (continuous_subtypeVal.comp (continuous_subtypeVal.comp continuous_fst))
+        ((GlobalTheory.CompanionTheory.OrbExist.continuous_qv V b₀).comp (continuous_subtypeVal.comp continuous_snd))
     have hD := hDens (PositivityTheory.Rg.Rsw.Em.XS D V.rank r t e) (↥(PositivityTheory.Rg.Rsw.L.hermS D t e))
       (PositivityTheory.Rg.Rsw.Em.sig S he (fib.prod μt)) lam k (PositivityTheory.Rg.Rsw.Em.algA θ hn S e)
       {z | PositivityTheory.Rg.Rsw.L.qv V b₀ (Subtype.val z) = 0}
       {z | PositivityTheory.Rg.Rsw.L.ip V (Subtype.val z).1 (Subtype.val z).1 = e • GlobalTheory.MixModel.rat (Subtype.val b₀)}
       gk (fun j z => Gk j (PositivityTheory.Rg.Rsw.L.qv V b₀ (Subtype.val z)))
       hσfin hkc.measurable (fun x z => (hψ.2.1 _).le) hRich.1
-      (isClosed_eq ((GlobalTheory.CompanionTheory.OrbExist.continuous_qv V b₀).comp continuous_subtype_val) continuous_const)
-      (isClosed_eq ((GlobalTheory.CompanionTheory.OrbExist.continuous_ip_fst (r := r) (t := t) V).comp continuous_subtype_val)
+      (isClosed_eq ((GlobalTheory.CompanionTheory.OrbExist.continuous_qv V b₀).comp continuous_subtypeVal) continuous_const)
+      (isClosed_eq ((GlobalTheory.CompanionTheory.OrbExist.continuous_ip_fst (r := r) (t := t) V).comp continuous_subtypeVal)
         continuous_const)
       hσY
       (fun j => ⟨(hgG j).1, (hgG j).2.1, fun z _ => (hgG j).2.2 _ (GlobalTheory.CompanionTheory.OrbExist.qv_mem V b₀ _)⟩)
@@ -1746,7 +1746,7 @@ theorem orbEx : IdemEx → ApproxId → Dens → TopX → AlgRich → AlgStab �
       (fun C hC _ hCZ ε hε => by
         have hC' : IsCompact ((fun z : PositivityTheory.Rg.Rsw.Em.XS D V.rank r t e =>
             PositivityTheory.Rg.Rsw.L.qv V b₀ (Subtype.val z)) '' C) :=
-          hC.image ((GlobalTheory.CompanionTheory.OrbExist.continuous_qv V b₀).comp continuous_subtype_val)
+          hC.image ((GlobalTheory.CompanionTheory.OrbExist.continuous_qv V b₀).comp continuous_subtypeVal)
         filter_upwards [hdec _ hC'.isClosed (by
           rintro _ ⟨z, hz, rfl⟩
           exact ⟨GlobalTheory.CompanionTheory.OrbExist.qv_mem V b₀ _, GlobalTheory.CompanionTheory.OrbExist.qv_smul V b₀ e _ z.2.2,
@@ -1872,29 +1872,29 @@ namespace GlobalTheory.CompanionTheory.RswEmTop
 theorem topX : PositivityTheory.Rg.Rsw.Em.TopX := by
   intro D a r t e
   obtain ⟨h1, h2, h3, h4, -⟩ := Formalism.IndefR.Eqv.ae_facts D
-  haveI : IsTopologicalRing (AE D) := h1
-  haveI : T2Space (AE D) := h2
-  haveI : LocallyCompactSpace (AE D) := h3
-  haveI : SecondCountableTopology (AE D) := h4
+  have : IsTopologicalRing (AE D) := h1
+  have : T2Space (AE D) := h2
+  have : LocallyCompactSpace (AE D) := h3
+  have : SecondCountableTopology (AE D) := h4
   obtain ⟨s1, -, s3, s4, -⟩ := GlobalTheory.CompanionTheory.MuC.hermS_facts D t e
-  haveI b1 : BorelSpace (Mx D a r) := ⟨rfl⟩
-  haveI b2 : BorelSpace (Mx D a t) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Mx D a r) := inferInstanceAs (LocallyCompactSpace (Fin a → Fin r → AE D))
-  haveI : LocallyCompactSpace (Mx D a t) := inferInstanceAs (LocallyCompactSpace (Fin a → Fin t → AE D))
-  haveI : T2Space (Mx D a r) := inferInstanceAs (T2Space (Fin a → Fin r → AE D))
-  haveI : T2Space (Mx D a t) := inferInstanceAs (T2Space (Fin a → Fin t → AE D))
-  haveI : SecondCountableTopology (Mx D a r) :=
+  have b1 : BorelSpace (Mx D a r) := ⟨rfl⟩
+  have b2 : BorelSpace (Mx D a t) := ⟨rfl⟩
+  have : LocallyCompactSpace (Mx D a r) := inferInstanceAs (LocallyCompactSpace (Fin a → Fin r → AE D))
+  have : LocallyCompactSpace (Mx D a t) := inferInstanceAs (LocallyCompactSpace (Fin a → Fin t → AE D))
+  have : T2Space (Mx D a r) := inferInstanceAs (T2Space (Fin a → Fin r → AE D))
+  have : T2Space (Mx D a t) := inferInstanceAs (T2Space (Fin a → Fin t → AE D))
+  have : SecondCountableTopology (Mx D a r) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin r → AE D))
-  haveI : SecondCountableTopology (Mx D a t) :=
+  have : SecondCountableTopology (Mx D a t) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin t → AE D))
-  haveI bP : BorelSpace (Mx D a r × Mx D a t) := Prod.borelSpace
+  have bP : BorelSpace (Mx D a r × Mx D a t) := Prod.borelSpace
   have c1 : Continuous fun z : Mx D a r × Mx D a t => e • z.1 := continuous_fst.const_smul e
   have c2 : Continuous fun z : Mx D a r × Mx D a t => e • z.2 := continuous_snd.const_smul e
   have hC : IsClosed {z : Mx D a r × Mx D a t | e • z.1 = z.1 ∧ e • z.2 = z.2} :=
     (isClosed_eq c1 continuous_fst).inter (isClosed_eq c2 continuous_snd)
   have hE := hC.isClosedEmbedding_subtypeVal
   exact ⟨inferInstance, hE.locallyCompactSpace, hE.isEmbedding.secondCountableTopology,
-    Subtype.borelSpace _, bP, MeasurableEmbedding.subtype_coe hC.measurableSet, s4, s3, s1⟩
+    Subtype.borelSpace _, bP, MeasurableEmbedding.subtypeVal hC.measurableSet, s4, s3, s1⟩
 
 end GlobalTheory.CompanionTheory.RswEmTop
 end -- clump:auto

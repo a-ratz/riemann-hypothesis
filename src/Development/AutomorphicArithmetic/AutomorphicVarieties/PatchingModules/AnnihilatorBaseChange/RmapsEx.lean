@@ -91,7 +91,7 @@ private theorem adic_map {O : Type} [CommRing O] [IsLocalRing O] {R R' : Type} [
 private theorem map_X_mem {O : Type} [CommRing O] [IsLocalRing O] {R R' : Type} [CommRing R] [Algebra O R] [IsCO O R]
     [CommRing R'] [Algebra O R'] [IsCO O R'] {σ : Type} [Finite σ] (f : MvPowerSeries σ R →ₐ[O] R') (a : σ) :
     f (MvPowerSeries.X a) ∈ maximalIdeal R' := by
-  haveI : IsCO O (MvPowerSeries σ R) := co_mvps O R σ
+  have : IsCO O (MvPowerSeries σ R) := co_mvps O R σ
   apply mem_map f
   rw [mem_maximalIdeal, mem_nonunits_iff, MvPowerSeries.isUnit_iff_constantCoeff]
   simp [MvPowerSeries.constantCoeff_X]
@@ -142,7 +142,7 @@ theorem UpperTheory.V.Pa.Core.tupPi :
     · show f ↑(u.ψ v i g) = _
       rw [(u.psi v i).mu g, AlgHom.commutes]
   case smem =>
-    haveI : IsCO O O := IsCO.mk IsCoef.complete ⟨fun a ha => by simpa using ha⟩ (fun x => ⟨x, by simp⟩)
+    have : IsCO O O := IsCO.mk IsCoef.complete ⟨fun a ha => by simpa using ha⟩ (fun x => ⟨x, by simp⟩)
     exact _root_.mem_map f (map_X_mem A.b.lam (Sum.inl ()))
   case umem =>
     intro j i
@@ -171,11 +171,11 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.Core.sinfExt :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (D q n : ℕ) (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (a : Unit ⊕ Fin D → R) (y : Fin q × Fin n → R), (∀ k, a k ∈ maximalIdeal R) → (∀ p, y p ∈ maximalIdeal R) → ∃! s : Sinf O Unit D q n →ₐ[O] R, (∀ k, s (MvPowerSeries.C (MvPowerSeries.X k)) = a k) ∧ ∀ p, s (MvPowerSeries.X p) = y p := by
   intro O _ _ _ _ D q n R _ _ _ a y ha hy
-  haveI hO : IsCO O O :=
+  have hO : IsCO O O :=
     { complete := inferInstance
       isLocalHom := ⟨fun x hx => by simpa using hx⟩
       res_surj := fun x => ⟨x, by simp⟩ }
-  haveI hL : IsCO O (abelian₂ O Unit D) := co_mvps O O (Unit ⊕ Fin D)
+  have hL : IsCO O (abelian₂ O Unit D) := co_mvps O O (Unit ⊕ Fin D)
   obtain ⟨F1, ⟨hF1C, hF1X⟩, hF1u⟩ := co_ev O O R (Unit ⊕ Fin D) (Algebra.ofId O R) a ha
   obtain ⟨F2, ⟨hF2C, hF2X⟩, hF2u⟩ := co_ev O (abelian₂ O Unit D) R (Fin q × Fin n) F1 y hy
   refine ⟨F2, ⟨fun k => by rw [hF2C, hF1X], hF2X⟩, ?_⟩
@@ -235,13 +235,13 @@ private theorem tupN_X {R σ : Type} [CommRing R] [IsLocalRing R] (a : σ) :
 theorem UpperTheory.V.Pa.Core.tupN :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T), Adapted T (r := r) → ∀ N, ∃ t : Tup Λ A (A.A N).R, t.D = (A.A N).p.D.comap (πN0 Λ N) ∧ t.ψ = (A.A N).p.ψ ∧ t.s = (A.A N).s (MvPowerSeries.C (MvPowerSeries.X (.inl ()))) ∧ t.U = (A.A N).U ∧ t.y = fun j i => (A.A N).s (MvPowerSeries.X (j, i)) := by
   intro l _ L G0 T Λ n O _ _ _ _ _ r B _ _ _ u J D A hAd N
-  haveI : IsAdicComplete (maximalIdeal O) O := IsCoef.complete (l := l)
-  haveI hO : IsCO O O :=
+  have : IsAdicComplete (maximalIdeal O) O := IsCoef.complete (l := l)
+  have hO : IsCO O O :=
     { complete := inferInstance
       isLocalHom := ⟨fun x hx => by simpa using hx⟩
       res_surj := fun x => ⟨x, by simp⟩ }
-  haveI hL : IsCO O (abelian₂ O Unit D) := co_mvps O O (Unit ⊕ Fin D)
-  haveI hS : IsCO O (Sinf O Unit D T.q n) := co_mvps O (abelian₂ O Unit D) (Fin T.q × Fin n)
+  have hL : IsCO O (abelian₂ O Unit D) := co_mvps O O (Unit ⊕ Fin D)
+  have hS : IsCO O (Sinf O Unit D T.q n) := co_mvps O (abelian₂ O Unit D) (Fin T.q × Fin n)
   have hC : ∀ x : abelian₂ O Unit D, x ∈ maximalIdeal (abelian₂ O Unit D) →
       (MvPowerSeries.C x : Sinf O Unit D T.q n) ∈ maximalIdeal (Sinf O Unit D T.q n) := by
     intro x hx
@@ -324,7 +324,7 @@ private noncomputable def rm_cc (O : Type) [CommRing O] (D q n : ℕ) : Sinf O U
 theorem UpperTheory.V.Pa.Core.rmapsEx :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A), Adapted T (r := r) → Nonempty (RMaps W) := by
   intro l _ L G0 T Λ n O _ _ _ _ _ r B _ _ _ u J D A W hT
-  haveI : IsAdicComplete (maximalIdeal O) O := IsCoef.complete (l := l)
+  have : IsAdicComplete (maximalIdeal O) O := IsCoef.complete (l := l)
   have hw : ∀ k : Fin D, (algebraMap O W.R) (A.b.wt.c k) *
       ↑((W.t.ψ (A.b.wt.v k) (A.b.wt.i k)) (A.b.wt.γ k)) - 1 ∈ maximalIdeal W.R := by
     intro k
@@ -350,7 +350,7 @@ theorem UpperTheory.V.Pa.Core.rmapsEx :
     rw [hD, hψ, hs, hU, hy] at hf
     exact ⟨f, hf⟩
   choose ρ hρ using hρ
-  haveI : IsCO O (Spo A) := (spoCo l L G0 T Λ n O r B u J D A hT).1.1
+  have : IsCO O (Spo A) := (spoCo l L G0 T Λ n O r B u J D A hT).1.1
   obtain ⟨t, hD, hψ, hs, hU, hy⟩ := tupPi l L G0 T Λ n O r B u J D A
   obtain ⟨π, hπ, -⟩ := W.univ _ t
   rw [hD, hψ, hs, hU, hy] at hπ
@@ -362,7 +362,7 @@ theorem UpperTheory.V.Pa.Core.rmapsEx :
       · rw [hsa, Sum.elim_inr, (A.A N).s_w k, map_sub, map_mul, AlgHom.commutes, map_one]
         have := congrArg (fun χ => ((χ (A.b.wt.γ k) : (A.A N).Rˣ) : (A.A N).R))
           ((hρ N).2.1 (A.b.wt.v k) (A.b.wt.i k))
-        simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at this
+        simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass] at this
         rw [← this]
         rfl
     · intro p
@@ -378,7 +378,7 @@ theorem UpperTheory.V.Pa.Core.rmapsEx :
       · rw [hsa, Sum.elim_inr, map_sub, map_mul, AlgHom.commutes, map_one]
         have := congrArg (fun χ => ((χ (A.b.wt.γ k) : (Spo A)ˣ) : Spo A))
           (hπ.2.1 (A.b.wt.v k) (A.b.wt.i k))
-        simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at this
+        simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass] at this
         change algebraMap B (Spo A) (A.b.lam (MvPowerSeries.constantCoeff
           (MvPowerSeries.C (MvPowerSeries.X (Sum.inr k))))) = _
         rw [MvPowerSeries.constantCoeff_C, A.b.segmentWeightExponent, map_sub, map_mul, map_one,

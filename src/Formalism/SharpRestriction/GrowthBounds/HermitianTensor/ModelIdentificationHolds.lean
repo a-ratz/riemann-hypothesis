@@ -583,7 +583,7 @@ theorem qc_rowA_one {K : Type} [CommRing K] {k n : ℕ} (a : Fin k) : RowA a (1 
 private theorem rowA_X {K : Type} [CommRing K] {k n : ℕ} (a : Fin k) (v : Fin k × Fin n) :
     RowA a (X v : MvPolynomial (Fin k × Fin n) K) (if v.1 = a then 1 else 0) := by
   intro u hu
-  rw [coeff_X'] at hu
+  rw [coeff_X] at hu
   split_ifs at hu with h
   · subst h
     rcases v with ⟨b, q⟩
@@ -724,7 +724,7 @@ theorem qc_shapeC_om (r s : ℕ) (hs : s ≤ r) : shapeC 1 (qcOm r s) = qcOm (r 
   · subst h0
     simp
   · have h0' : t.val ≠ 0 := fun h => h0 (Fin.ext h)
-    rw [if_neg h0]
+    rw [ite_eq_right h0]
     unfold midOf
     by_cases h1 : 0 < t.val ∧ t.val < r + 1
     · rw [dite_eq_left h1]
@@ -778,7 +778,7 @@ theorem qc_lift_bidet (A : Type) [CommRing A] (r : ℕ) : ∀ (K : ℕ) (sz : Fi
       · intro t ht
         rw [qc_shapeDeg_succ, Pi.add_apply, hd t ht]
         simp only [qcOm, ht]
-        rw [if_pos (Nat.pos_of_ne_zero hz)]
+        rw [ite_eq_left (Nat.pos_of_ne_zero hz)]
         omega
       · intro hr
         exfalso
@@ -1008,12 +1008,12 @@ theorem qt_cnt (m : ℕ) (i a' : Fin (m + 1)) :
   simp only [Pi.single_apply]
   split_ifs with h
   · subst h
-    exact Finset.sum_eq_zero fun p _ => if_neg (Fin.succAbove_ne a' p).symm
+    exact Finset.sum_eq_zero fun p _ => ite_eq_right (Fin.succAbove_ne a' p).symm
   · obtain ⟨q, rfl⟩ := Fin.exists_succAbove_eq h
     rw [Finset.sum_eq_single q]
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
     · intro p _ hp
-      exact if_neg fun e => hp (Fin.succAbove_right_injective e).symm
+      exact ite_eq_right fun e => hp (Fin.succAbove_right_injective e).symm
     · intro hq
       exact absurd (Finset.mem_univ q) hq
 
@@ -1342,8 +1342,8 @@ theorem ta_sat (w : O) (hw : Irreducible w) (m : ℕ) (hm : 1 ≤ m) (b : MvPoly
   have hinjOK : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   have hW0 : algebraMap O K w ≠ 0 := fun h0 => hw0 (hinjOK (by rw [h0, map_zero]))
   obtain ⟨γ, hγ⟩ := h
-  haveI hmax : (Ideal.span {w}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hw
-  letI : Field (O ⧸ Ideal.span {w}) := Ideal.Quotient.field _
+  have hmax : (Ideal.span {w}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hw
+  let : Field (O ⧸ Ideal.span {w}) := Ideal.Quotient.field _
   have hind : Function.Injective (aeval (R := O ⧸ Ideal.span {w}) (covY (O ⧸ Ideal.span {w}) m)) := by
     have := Formalism.MainNotions.flipOneThree.Pf.ShapeCovering.signed_minors_alg_independent (O ⧸ Ideal.span {w}) m hm
     rw [covY_eq] at this

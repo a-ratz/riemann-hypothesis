@@ -55,7 +55,7 @@ namespace GlobalTheory.CompanionTheory.JacUnit
 
 theorem main (O O' R : Type) [CommRing O] [CommRing O'] [Algebra O O'] [Module.Finite O O'] [CommRing R] [Algebra O R] (x : O' ⊗[O] R) (hx : x ∈ Ideal.map (Algebra.TensorProduct.includeRight : R →ₐ[O] O' ⊗[O] R) (⊥ : Ideal R).jacobson) : IsUnit (1 + x) := by
   classical
-  letI : Algebra R (O' ⊗[O] R) := (Algebra.TensorProduct.includeRight : R →ₐ[O] O' ⊗[O] R).toRingHom.toAlgebra
+  let : Algebra R (O' ⊗[O] R) := (Algebra.TensorProduct.includeRight : R →ₐ[O] O' ⊗[O] R).toRingHom.toAlgebra
   have hint : Algebra.IsIntegral R (O' ⊗[O] R) := by
     let e : (R ⊗[O] O') ≃ₐ[O] (O' ⊗[O] R) := Algebra.TensorProduct.comm O R O'
     have hfin : (algebraMap R (R ⊗[O] O')).Finite := by
@@ -75,8 +75,8 @@ theorem main (O O' R : Type) [CommRing O] [CommRing O'] [Algebra O O'] [Module.F
     rintro m ⟨-, hm⟩
     have hc : (Ideal.comap (algebraMap R (O' ⊗[O] R)) m).IsMaximal :=
       by
-        letI : Algebra.IsIntegral R (O' ⊗[O] R) := hint
-        letI : Ideal.IsMaximal m := hm
+        let : Algebra.IsIntegral R (O' ⊗[O] R) := hint
+        let : Ideal.IsMaximal m := hm
         exact Ideal.isMaximal_under_of_isIntegral_of_isMaximal m
     rw [← Ideal.mem_comap]
     exact (sInf_le (show _ ∈ {J : Ideal R | (⊥ : Ideal R) ≤ J ∧ J.IsMaximal} from ⟨bot_le, hc⟩) : (⊥ : Ideal R).jacobson ≤ _) hr

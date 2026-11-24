@@ -118,7 +118,7 @@ theorem indep_on_closed_fibre : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRi
   obtain ⟨p, hp, y, hy, hyU⟩ := hC z hcl
   obtain ⟨y₀, t, c, ⟨tm⟩⟩ := hT p y hyU
   have hG := GlobalTheory.T.testModel_maps_into_openPart L o Ω S ρ M U₀ EE hB Q p y y₀ t c tm hBig
-  haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
+  have : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
   have hx : (rPt p ≫ y) (IsLocalRing.closedPoint (kb p)) = z := by
     exact (Scheme.Hom.comp_apply _ _ _).trans
       ((congrArg y (IsLocalRing.comap_closedPoint (IsLocalRing.residue (OO p)))).trans hy)

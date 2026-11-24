@@ -201,7 +201,7 @@ lemma exists_ringEquiv_eq_cj (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ]
     (hS : S.Countable) : ∃ σ : ℂ ≃+* ℂ, ∀ x ∈ S, x ∈ M → σ x = cj M ρ x := by
   let S' : Set M := Subtype.val ⁻¹' S
   have hS' : S'.Countable := hS.preimage Subtype.val_injective
-  haveI : Countable (Subfield.closure S') := by
+  have : Countable (Subfield.closure S') := by
     rw [← Cardinal.mk_le_aleph0_iff]
     refine (Subfield.cardinalMk_closure_le_max S').trans (max_le ?_ le_rfl)
     exact Cardinal.mk_le_aleph0_iff.2 hS'
@@ -342,7 +342,7 @@ theorem galStar_holds : ∀ D : D7, galStar D := by
     apply hd
     have h' : ρ (⟨g2 Λ, m₂⟩ ^ 3 - 27 * ⟨g3 Λ, m₃⟩ ^ 2) = 0 := by
       rw [map_sub, map_mul, map_pow, map_pow, map_ofNat]
-      simpa only [cj, TaylorLogMetric.liftM, dif_pos m₂, dif_pos m₃] using h
+      simpa only [cj, TaylorLogMetric.liftM, dite_eq_left m₂, dite_eq_left m₃] using h
     have h'' := congrArg Subtype.val ((map_eq_zero ρ).1 h')
     exact h'')
   obtain ⟨g₂e', g₃e', -, -, hwp', huniq, -⟩ :=

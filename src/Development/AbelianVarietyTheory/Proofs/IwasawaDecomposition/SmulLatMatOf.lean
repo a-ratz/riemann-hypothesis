@@ -258,7 +258,7 @@ theorem symm_single {n : ℕ} (γ : UF X.E n) (i k : Fin n) :
 theorem matOf_unitary (hok : s.Ok) {n : ℕ} (γ : UF X.E n) :
     letI := D.host.cmStar
     matOf s γ.1 ∈ Matrix.unitaryGroup (Fin n) D.host.E := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   rw [Matrix.mem_unitaryGroup_iff']
   refine Matrix.ext fun i j => ?_
   have h1 := stdH_vec s hok (γ.1 (Pi.single i 1)) (γ.1 (Pi.single j 1))
@@ -274,7 +274,7 @@ theorem matOf_unitary (hok : s.Ok) {n : ℕ} (γ : UF X.E n) :
 
 theorem vacEq_ambOf : ∀ (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Formalism.L2.Ker.Base D cc δ) (χ : TaylorLogMetric.IdE D → ℂ) (cD : D.what₂.Tau → ℂ) (a b : ℕ), s.Ok → B.EqP χ → Even a → Even b → VacEq (ambOf s B χ cD) a b := by
   intro D X s cc δ B χ cD a b hok hE ha hb γ γ' N N' hN hN' z
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h := hE.1 a b ⟨s.lat N, sd_lat s hok hN⟩ ⟨s.lat N', sd_lat s hok hN'⟩ ha hb
     ⟨matOf s γ.1, matOf_unitary s hok γ⟩ ⟨matOf s γ'.1, matOf_unitary s hok γ'⟩
   have h1 := smulLat_matOf s γ.1 N

@@ -99,9 +99,9 @@ theorem hecke_map {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (n q : 
 private theorem hecke_coeff {A : Type} [CommRing A] (n q : ℕ) (a : ℕ → A) (j : ℕ) (hj : j ≤ n) :
     (heckePol n q a).coeff (n - j) = (-1) ^ j * (q : A) ^ (j * (j - 1) / 2) * a j := by
   rw [heckePol, finsetSum_coeff, Finset.sum_eq_single j]
-  · rw [coeff_C_mul_X_pow, if_pos rfl]
+  · rw [coeff_C_mul_X_pow, ite_eq_left rfl]
   · intro i hi hij
-    rw [coeff_C_mul_X_pow, if_neg]
+    rw [coeff_C_mul_X_pow, ite_eq_right]
     have := Finset.mem_range.1 hi
     omega
   · intro h
@@ -130,8 +130,8 @@ private theorem ord_val (hN : GlobalTheory.Mem.LiteralAutomorphy.LitN) (hw : ((l
   have h1 : (ψ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = _ := ho.val s _ rfl (Set.mem_univ _)
   have h2 : algPow w (-htW lam i) (a s : w.adicCompletion F) * algPow w (fun _ => 1) (a s : w.adicCompletion F) ^ (i : ℕ) =
       (algPow w (lowW lam i) (a s : w.adicCompletion F))⁻¹ := by
-    haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-    haveI := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
+    have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+    have := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
     unfold algPow
     simp only [finprod_eq_prod_of_fintype]
     rw [← Finset.prod_pow, ← Finset.prod_mul_distrib, ← Finset.prod_inv_distrib]

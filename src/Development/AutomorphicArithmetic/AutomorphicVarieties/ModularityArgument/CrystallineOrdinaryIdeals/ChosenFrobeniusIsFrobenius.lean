@@ -61,22 +61,22 @@ theorem hl_isOpen' (D : Dat3 l O) : IsOpen (D.HL : Set (GQ l)) := by
   have e : (D.η.ker : Set (GQ l)) = (D.Kv.1.fixingSubgroup : Set (GQ l)) := by
     ext g; exact D.η_ker g
   have h1 : IsOpen (D.η.ker : Set (GQ l)) := by
-    rw [e]; haveI := D.Kv.2; exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
+    rw [e]; have := D.Kv.2; exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
   exact h1.inter D.τ_open
 
 theorem finiteIndex_of_open' (H : OpenSubgroup (GQ l)) : (H : Subgroup (GQ l)).FiniteIndex := by
-  haveI : CompactSpace (GQ l) := inferInstanceAs (CompactSpace (Om l ≃ₐ[ℚ_[l]] Om l))
+  have : CompactSpace (GQ l) := inferInstanceAs (CompactSpace (Om l ≃ₐ[ℚ_[l]] Om l))
   exact Subgroup.finiteIndex_of_finite_quotient
 
 theorem exists_isFr (D : Dat3 l O) : ∃ σ, IsFr D σ := by
-  haveI : CompactSpace (GQ l) := inferInstanceAs (CompactSpace (Om l ≃ₐ[ℚ_[l]] Om l))
-  haveI hHn : D.HL.Normal := hl_normal' D
+  have : CompactSpace (GQ l) := inferInstanceAs (CompactSpace (Om l ≃ₐ[ℚ_[l]] Om l))
+  have hHn : D.HL.Normal := hl_normal' D
   have hHo : IsOpen (D.HL : Set (GQ l)) := hl_isOpen' D
   obtain ⟨hIn, -, -, ⟨σ₀, hσ₀⟩, -⟩ := iqBasic l
-  haveI : D.HL.FiniteIndex := finiteIndex_of_open' ⟨D.HL, hHo⟩
+  have : D.HL.FiniteIndex := finiteIndex_of_open' ⟨D.HL, hHo⟩
   set N : Subgroup (GQ l) := D.HL ⊔ Iq l with hN
-  haveI : N.FiniteIndex := Subgroup.finiteIndex_of_le le_sup_left
-  haveI : N.Normal := Subgroup.sup_normal _ _
+  have : N.FiniteIndex := Subgroup.finiteIndex_of_le le_sup_left
+  have : N.Normal := Subgroup.sup_normal _ _
   set q : GQ l ⧸ N := (σ₀ : GQ l ⧸ N)
   set m := orderOf q with hm
   have hm1 : 1 ≤ m := orderOf_pos q

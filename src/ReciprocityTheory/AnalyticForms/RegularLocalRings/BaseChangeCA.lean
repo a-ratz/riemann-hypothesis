@@ -107,8 +107,8 @@ theorem isDomain_tensor_of_isFractionRing : IsDomain (F ⊗[ℚ] C) := by
   let e : MvPolynomial ι ℚ ⊗[ℚ] C ≃+* MvPolynomial ι C :=
     (Algebra.TensorProduct.comm ℚ (MvPolynomial ι ℚ) C).toRingEquiv.trans
       (MvPolynomial.algebraTensorAlgEquiv (σ := ι) ℚ C).toRingEquiv
-  haveI hD : IsDomain (MvPolynomial ι ℚ ⊗[ℚ] C) := Function.Injective.isDomain e e.injective
-  haveI : Nontrivial (F ⊗[ℚ] C) := hinj.nontrivial
+  have hD : IsDomain (MvPolynomial ι ℚ ⊗[ℚ] C) := Function.Injective.isDomain e e.injective
+  have : Nontrivial (F ⊗[ℚ] C) := hinj.nontrivial
   have hu : ∀ s ∈ nonZeroDivisors (MvPolynomial ι ℚ),
       IsUnit (algebraMap (MvPolynomial ι ℚ) F s ⊗ₜ[ℚ] (1 : C)) := by
     intro s hs
@@ -116,7 +116,7 @@ theorem isDomain_tensor_of_isFractionRing : IsDomain (F ⊗[ℚ] C) := by
       IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hs
     exact (isUnit_iff_ne_zero.mpr h0).map
       (Algebra.TensorProduct.includeLeftRingHom (R := ℚ) (A := F) (B := C))
-  haveI nzd : NoZeroDivisors (F ⊗[ℚ] C) := by
+  have nzd : NoZeroDivisors (F ⊗[ℚ] C) := by
     constructor
     intro a b hab
     obtain ⟨s₁, hs₁, w₁, e₁⟩ := fracTensor_exists_den ι F C a
@@ -170,7 +170,7 @@ theorem isReduced_tensor_of_essFiniteType (K : Type) [Field K] [Algebra ℚ K]
   have : Algebra.FormallyUnramified F0 K := Algebra.FormallyUnramified.of_isSeparable F0 K
   have : Algebra.EssFiniteType F0 K := Algebra.EssFiniteType.of_comp ℚ F0 K
   let e := hs.1.aevalEquivField
-  letI : Algebra (MvPolynomial s ℚ) F0 :=
+  let : Algebra (MvPolynomial s ℚ) F0 :=
     (e.toRingEquiv.toRingHom.comp (algebraMap (MvPolynomial s ℚ) (FractionRing (MvPolynomial s ℚ)))).toAlgebra
   have := IsScalarTower.of_algebraMap_eq' (R := ℚ) (S := MvPolynomial s ℚ) (A := F0)
     (Subsingleton.elim _ _)

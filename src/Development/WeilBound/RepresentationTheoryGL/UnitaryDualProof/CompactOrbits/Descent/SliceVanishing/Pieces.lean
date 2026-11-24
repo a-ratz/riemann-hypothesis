@@ -81,7 +81,7 @@ theorem mem_Bz_adj {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {s x : Matrix (
 
 theorem mem_Gz_adj_iff {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {s : Matrix (Fin n) (Fin n) k} {g : GL (Fin n) k} :
     g ∈ Gz (adj Z s) ↔ g ∈ Gz Z ∧ s * g.val = g.val * s := by
-  simp only [Gz, Set.mem_setOf_eq]
+  simp only [Gz, Set.mem_ofPred_eq]
   constructor
   · intro h
     exact ⟨fun a ha => h a (Algebra.subset_adjoin (Set.mem_insert_of_mem _ ha)),
@@ -123,10 +123,10 @@ theorem continuous_act : Continuous fun p : GL (Fin n) k × Sp k n => act p.1 p.
       (continuous_snd.comp continuous_snd)
 
 theorem continuousSMul_actX : @ContinuousSMul (GzS Z) (Xs F) (actX hFinv).toSMul _ _ := by
-  letI := actX hFinv
+  let := actX hFinv
   refine ⟨Continuous.subtype_mk ?_ _⟩
-  exact continuous_act.comp ((continuous_subtype_val.comp continuous_fst).prodMk
-    (continuous_subtype_val.comp continuous_snd))
+  exact continuous_act.comp ((continuous_subtypeVal.comp continuous_fst).prodMk
+    (continuous_subtypeVal.comp continuous_snd))
 
 end Act
 

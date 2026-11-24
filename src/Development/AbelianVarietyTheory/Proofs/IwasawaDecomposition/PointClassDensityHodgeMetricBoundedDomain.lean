@@ -634,7 +634,7 @@ theorem mem_range_of_graph (w : Equiv.Perm (Fin (p * q))) (u : Fin q × Fin p ×
     rw [← h] at h0
     by_contra hne
     apply h0
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨⟨b, i, j⟩, hy⟩
     rw [blockEmb_eq, Prod.mk.injEq] at hy
     apply hne
@@ -827,7 +827,7 @@ theorem prod_monomial' {κ : Type} (s : Finset κ) (f : κ → α × α →₀ �
   classical
   induction s using Finset.induction_on with
   | empty => simp
-  | insert a s ha ih => rw [Finset.prod_insert ha, ih, monomial_mul, Finset.sum_insert ha, Finset.prod_insert ha]
+  | insert a s ha ih => rw [Finset.prod_insert ha, ih, monomial_mul_monomial, Finset.sum_insert ha, Finset.prod_insert ha]
 
 end General
 
@@ -849,7 +849,7 @@ theorem glue_emb (D : ι → (γ × γ →₀ ℕ)) (τ : ι) (v : γ × γ) : g
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single τ]
   · exact Finsupp.mapDomain_apply_of_injective (emb_injective τ) _ _
   · intro τ' _ hτ'
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨u, hu⟩
     simp only [emb, Prod.mk.injEq] at hu
     exact hτ' hu.1.1
@@ -858,7 +858,7 @@ theorem glue_emb (D : ι → (γ × γ →₀ ℕ)) (τ : ι) (v : γ × γ) : g
 theorem glue_off (D : ι → (γ × γ →₀ ℕ)) (a b : ι × γ) (h : a.1 ≠ b.1) : glue D (a, b) = 0 := by
   unfold glue
   rw [Finsupp.finsetSum_apply]
-  refine Finset.sum_eq_zero fun τ _ => Finsupp.mapDomain_notin_range _ _ ?_
+  refine Finset.sum_eq_zero fun τ _ => Finsupp.mapDomain_of_notMem_range _ _ ?_
   rintro ⟨u, hu⟩
   simp only [emb, Prod.mk.injEq] at hu
   exact h (by rw [← hu.1, ← hu.2])
@@ -909,14 +909,14 @@ theorem tc_monomial_glue (D : ι → (γ × γ →₀ ℕ)) :
   have h1 : ∑ w, F w = ∑ w ∈ Finset.univ.image (fun σ : ι → Equiv.Perm γ => Equiv.prodCongrRight σ), F w := by
     refine (Finset.sum_subset (Finset.subset_univ _) fun w _ hw => ?_).symm
     simp only [hF]
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro hg
     apply hw
     have hb : ∀ a, (w a).1 = a.1 := by
       intro a
       by_contra hne
       have e1 := glue_off D a (w a) (Ne.symm hne)
-      rw [hg, graph_apply, if_pos rfl] at e1
+      rw [hg, graph_apply, ite_eq_left rfl] at e1
       exact one_ne_zero e1
     obtain ⟨σ, hσ⟩ := exists_prodCongrRight w hb
     exact Finset.mem_image.mpr ⟨σ, Finset.mem_univ _, hσ⟩
@@ -927,16 +927,16 @@ theorem tc_monomial_glue (D : ι → (γ × γ →₀ ℕ)) :
   push_cast
   congr 1
   by_cases hD : D = fun τ => graph (σ τ)
-  · rw [if_pos hD]
+  · rw [ite_eq_left hD]
     symm
-    exact Finset.prod_eq_one fun τ _ => if_pos (congrFun hD τ)
-  · rw [if_neg hD]
+    exact Finset.prod_eq_one fun τ _ => ite_eq_left (congrFun hD τ)
+  · rw [ite_eq_right hD]
     obtain ⟨τ, hτ⟩ : ∃ τ, D τ ≠ graph (σ τ) := by
       by_contra hall
       push_neg at hall
       exact hD (funext hall)
     symm
-    exact Finset.prod_eq_zero (Finset.mem_univ τ) (if_neg hτ)
+    exact Finset.prod_eq_zero (Finset.mem_univ τ) (ite_eq_right hτ)
 
 theorem tc_prod_rename (f : ι → MvPolynomial (γ × γ) ℂ) :
     tc (∏ τ, rename (emb τ) (f τ)) = ∏ τ, tc (f τ) := by
@@ -1248,17 +1248,17 @@ theorem eventually_frameAt_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     rw [h2] at h1
     exact h1
   have hcont : ContinuousOn (fun b => cxPt T.Z (U.un k (x b))) B := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     refine GlobalTheory.CxPts.continuous_iff.2 fun W => ⟨?_, fun g => ?_⟩
-    · have := (hY W 0).1.preimage (continuous_subtype_val (p := (· ∈ B)))
+    · have := (hY W 0).1.preimage (continuous_subtypeVal (p := (· ∈ B)))
       convert this using 1
       ext v
-      simp only [Set.mem_preimage, Set.restrict_apply, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.domRestrict_apply, Set.mem_ofPred_eq]
       exact ⟨fun h => ⟨v.2, h⟩, fun h => h.2⟩
     · intro v hv
       have hm : (v : Fin _ → ℂ) ∈ {b ∈ B | ⊤ ≤ (cxPt T.Z (U.un k (x b))).1 ⁻¹ᵁ W} := ⟨v.2, hv⟩
       have hca := (((hY W g).2).differentiableAt (((hY W g).1).mem_nhds hm)).continuousAt
-      exact (hca.comp continuous_subtype_val.continuousAt).continuousWithinAt
+      exact (hca.comp continuous_subtypeVal.continuousAt).continuousWithinAt
   have hκ := isOpenEmbedding_cxOf e σ hj
   have hLB : ∀ v ∈ DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p), L v ∈ B := fun v hv => by
     show L.symm (L v) ∈ DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p)
@@ -1375,7 +1375,7 @@ theorem isHolTo_cxPt_V {E : Type} [Field E] [NumberField E] [IsCMField E] {H : H
   have hset : {b ∈ B | ⊤ ≤ (cxPt Z (U.un k (x b))).1 ⁻¹ᵁ W} =
       L ⁻¹' {u ∈ L.symm ⁻¹' B | ⊤ ≤ (cxPt Z (U.un k (x (L.symm u)))).1 ⁻¹ᵁ W} := by
     ext b
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, ContinuousLinearEquiv.symm_apply_apply]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, ContinuousLinearEquiv.symm_apply_apply]
   rw [hset]
   refine ⟨ho.preimage L.continuous, ?_⟩
   have := hdf.comp L.differentiableOn (Set.mapsTo_preimage _ _)
@@ -1401,7 +1401,7 @@ theorem GlobalTheory.UnifFrameChange.exists_holomorphic_frame_change : ∀ (E : 
     exact this.symm
   let x : ReciprocityTheory.L2DbarEstimates.V X.dim → (U.X k).dom := fun b =>
     if hb : b ∈ B₀ then ⟨s b, hsB₀ b hb⟩ else ⟨s v, hsB₀ v hv₀⟩
-  have hxB : ∀ b (hb : b ∈ B₀), x b = ⟨s b, hsB₀ b hb⟩ := fun b hb => by simp only [x, dif_pos hb]
+  have hxB : ∀ b (hb : b ∈ B₀), x b = ⟨s b, hsB₀ b hb⟩ := fun b hb => by simp only [x, dite_eq_left hb]
   have hsd : DifferentiableOn ℂ s B₀ := fun b hb => (hB₀all b hb).2.differentiableAt.differentiableWithinAt
   have hd : ∀ τ a a', DifferentiableOn ℂ (fun b => ReciprocityTheory.ChartRestriction.G.FD.mat (x b).1 τ a a') B₀ := by
     intro τ a a'
@@ -1451,7 +1451,7 @@ theorem GlobalTheory.UnifFrameChange.exists_holomorphic_frame_change : ∀ (E : 
       fun i j hi => absurd hi (by simp)⟩
   have hratan : ∀ {g : X.Fn}, RegAt (under (pt v)) g → AnalyticAt ℂ (fun w => ratVal g (pt w)) v := by
     intro g hg
-    haveI : IsOpenImmersion j := hoi
+    have : IsOpenImmersion j := hoi
     obtain ⟨W, hW, a, rfl⟩ := hg.exists_fnOf
     set g' := (j.appIso W).inv.hom a
     have hvS : v ∈ {b ∈ B₀ | ⊤ ≤ (cxPt T.Z (U.un k (x b))).1 ⁻¹ᵁ (j ''ᵁ W)} := by

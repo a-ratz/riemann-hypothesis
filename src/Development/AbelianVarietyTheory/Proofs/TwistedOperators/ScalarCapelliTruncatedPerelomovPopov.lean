@@ -121,19 +121,19 @@ theorem pmat_eq : pmat m χ = (X - C (m : ℂ)) • (1 : Matrix (Fin (m + 1)) (F
   · simp [pmat, h1, Matrix.one_apply]
 
 theorem det_pmat : (pmat m χ).det = ∏ s, (X + C (χ s - (m : ℂ) / 2)) := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · exact Finset.prod_congr rfl fun s _ => by rw [pmat_apply]; simp
   · intro i j h
     have h' : j < i := h
-    rw [pmat_apply, if_neg (ne_of_gt h'), if_neg (not_lt_of_gt h')]
+    rw [pmat_apply, ite_eq_right (ne_of_gt h'), ite_eq_right (not_lt_of_gt h')]
 
 theorem det_pmat_add : (pmat m χ + Matrix.of fun _ _ => (1 : ℂ[X])).det =
     ∏ s, (X + C (χ s - (m : ℂ) / 2 + 1)) := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · exact Finset.prod_congr rfl fun s _ => by rw [Matrix.add_apply, pmat_apply]; simp; ring
   · intro i j h
     have h' : i < j := h
-    rw [Matrix.add_apply, pmat_apply, if_neg (ne_of_lt h'), if_pos h']
+    rw [Matrix.add_apply, pmat_apply, ite_eq_right (ne_of_lt h'), ite_eq_left h']
     simp
 
 theorem det_pmat_ne_zero : (pmat m χ).det ≠ 0 := by

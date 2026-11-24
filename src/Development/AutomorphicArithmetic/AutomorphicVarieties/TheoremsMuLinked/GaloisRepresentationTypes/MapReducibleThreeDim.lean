@@ -61,8 +61,8 @@ open UpperTheory.V UpperTheory.V.Base UpperTheory.V.HV UpperTheory.V.Alg UpperTh
 
 private theorem norm_lt_one_of_nonunit {l : ℕ} [Fact l.Prime] (c : Coef l) (b : c.O) (hb : ¬ IsUnit b) :
     ‖(b : PadicAlgCl l)‖ < 1 := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   by_cases h0 : b = 0
   · subst h0
     simp

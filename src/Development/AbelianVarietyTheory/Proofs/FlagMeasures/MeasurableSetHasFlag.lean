@@ -70,11 +70,11 @@ abbrev rho (I : AutInst) (x : I.GA) := Formalism.HermitianLatticesTheory.realize
 theorem continuous_frm (I : AutInst) (w : InfinitePlace I.E) :
     Continuous fun g : I.Ginf => frm I (g, 1) w := by
   have hc : Continuous fun g : I.Ginf => uMat (g (w.comap (algebraMap I.F I.E))) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply _))
+    Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply _))
   by_cases h : w.embedding = I.φ (w.comap (algebraMap I.F I.E))
-  · simp only [frm, if_pos h]
+  · simp only [frm, ite_eq_left h]
     exact continuous_const.mul hc
-  · simp only [frm, if_neg h]
+  · simp only [frm, ite_eq_right h]
     exact (continuous_const.mul hc).matrix_map Complex.continuous_conj
 
 theorem continuous_frm_inv (I : AutInst) (w : InfinitePlace I.E) :
@@ -94,7 +94,7 @@ private theorem exists_linearIndependent_span_le_rkK_eq (I : AutInst) (N : Submo
       Submodule.span (𝓞 I.E) (Set.range e) ≤ N ∧ rkK N = j := by
   obtain ⟨b, hbN, hspan, hli⟩ := exists_linearIndependent I.E (N : Set (Fin I.n → I.E))
   have : Finite b := hli.finite_of_isNoetherian
-  haveI : Fintype b := Fintype.ofFinite b
+  have : Fintype b := Fintype.ofFinite b
   have hli' : LinearIndependent I.E fun i : Fin (Fintype.card b) =>
       ((Fintype.equivFin b).symm i : Fin I.n → I.E) :=
     hli.comp _ (Fintype.equivFin b).symm.injective
@@ -502,7 +502,7 @@ theorem flag_unique (I : AutInst) (x : I.GA) {a : ℕ} {S S' : Fin (a + 1) → S
       exact hall' _ (hσ j).2.1
   obtain ⟨-, hm, -⟩ := (id h : HasFlag I x S τ)
   obtain ⟨-, hm', -⟩ := (id h' : HasFlag I x S' τ')
-  exact (StrictMono.range_inj hm hm').1 (Set.Subset.antisymm (sub h h') (sub h' h))
+  exact (StrictMono.range_inj_of_wellFoundedLT hm hm').1 (Set.Subset.antisymm (sub h h') (sub h' h))
 
 private theorem isSat_of_le_of_le (I : AutInst) (x : I.GA) {L A B : Submodule (𝓞 I.E) (Fin I.n → I.E)}
     (h : IsSat (rho I x) L B) (hBA : B ≤ A) (hAL : A ≤ L) : IsSat (rho I x) A B := by

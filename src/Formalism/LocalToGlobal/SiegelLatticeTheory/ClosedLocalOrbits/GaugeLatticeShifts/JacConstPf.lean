@@ -307,7 +307,7 @@ theorem jacConst_nonneg {T T' a a' κ : ℝ} (hT : 0 < T) (hT' : 0 < T') (ha : 0
 theorem sphere_null (t : ℝ) (ht : 0 ≤ t) : (volume : Measure ℂ) {ζ | Complex.normSq ζ = t} = 0 := by
   have e : {ζ : ℂ | Complex.normSq ζ = t} = Metric.sphere 0 (Real.sqrt t) := by
     ext ζ
-    simp only [Set.mem_setOf_eq, mem_sphere_iff_norm, sub_zero]
+    simp only [Set.mem_ofPred_eq, mem_sphere_iff_norm, sub_zero]
     constructor
     · intro h; rw [← h, Complex.normSq_eq_norm_sq, Real.sqrt_sq (norm_nonneg _)]
     · intro h; rw [Complex.normSq_eq_norm_sq, h, Real.sq_sqrt ht]
@@ -340,7 +340,7 @@ theorem aemeas_F {φ : Mt k r → ℝ≥0∞} (hφ : Measurable φ) (μW μW' : 
     rw [Measure.prod_prod, sphere_null _ (mul_pos hT hT').le, mul_zero]
   refine measure_mono_null ?_ hnull
   intro q hq
-  simp only [Set.mem_setOf_eq, Set.mem_prod, Set.mem_univ, true_and] at hq ⊢
+  simp only [Set.mem_ofPred_eq, Set.mem_prod, Set.mem_univ, true_and] at hq ⊢
   by_contra hne
   apply hq
   by_cases hin : q.2 ∈ U
@@ -348,10 +348,10 @@ theorem aemeas_F {φ : Mt k r → ℝ≥0∞} (hφ : Measurable φ) (μW μW' : 
       ext i j; simp [sM, Set.piecewise, hin]
     rw [this]
   · have hlt : Complex.normSq q.2 < Tz k r z * Tz k r z' := by
-      simp only [hU, Set.mem_setOf_eq, not_lt] at hin
+      simp only [hU, Set.mem_ofPred_eq, not_lt] at hin
       exact lt_of_le_of_ne hin hne
     have h0 : bcWeight k r (Tz k r z) (Tz k r z') q = 0 := by
-      unfold bcWeight; rw [if_neg (not_le.2 hlt)]
+      unfold bcWeight; rw [ite_eq_right (not_le.2 hlt)]
     simp [h0]
 
 theorem lhs_c {φ : Mt k r → ℝ≥0∞} (hφ : Measurable φ) (hW : WbHaar) {z z' : Fin (2 * r + k + 1) → ℂ} (hk : 1 ≤ k)

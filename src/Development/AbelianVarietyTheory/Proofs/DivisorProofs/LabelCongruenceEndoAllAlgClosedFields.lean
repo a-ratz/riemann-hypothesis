@@ -86,17 +86,17 @@ namespace GlobalTheory.LabelTransfer
 
 theorem main : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (eA : u.A.A ⟶ u.A.A) (s : u.D.toPre.X →+ u.D.toPre.X), (∀ (m : ℕ) (pk pk' : QkPt u.D.toPre (PadicAlgCl p) m) (x x' : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), 1 ≤ m → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk x → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk' x' → x'.left = x.left ≫ eA.left → CongMod m pk'.y (s pk.y)) → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing u.V) F] (k : ℕ), 1 ≤ k → IsUnit (k : u.V) → ∀ (q q' : QkPt u.D.toPre F k) (a a' : TFK (R := u.V) F ⟶ u.A.A), QkToAkU u.U.toUnifPre F k q a → QkToAkU u.U.toUnifPre F k q' a' → a.left = a'.left ≫ eA.left → CongMod k q.y (s q'.y) := by
   intro o Ω _ _ _ S ρ p _ y₀ u eA s H F _ _ _ k hk _ q q' a a' hq hq' haa
-  haveI : CharZero (FractionRing u.V) := (algebraMap (FractionRing u.V) (PadicAlgCl p)).charZero
-  haveI : CharZero u.V := (algebraMap u.V (FractionRing u.V)).charZero
-  haveI : Algebra.IsAlgebraic (FractionRing u.V) (PadicAlgCl p) :=
+  have : CharZero (FractionRing u.V) := (algebraMap (FractionRing u.V) (PadicAlgCl p)).charZero
+  have : CharZero u.V := (algebraMap u.V (FractionRing u.V)).charZero
+  have : Algebra.IsAlgebraic (FractionRing u.V) (PadicAlgCl p) :=
     isAlgebraic_padicAlgCl p u.V u.complete u.norm_le
   let emb : PadicAlgCl p →ₐ[FractionRing u.V] F := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra (PadicAlgCl p) F := emb.toRingHom.toAlgebra
-  haveI : IsScalarTower (FractionRing u.V) (PadicAlgCl p) F :=
+  let : Algebra (PadicAlgCl p) F := emb.toRingHom.toAlgebra
+  have : IsScalarTower (FractionRing u.V) (PadicAlgCl p) F :=
     IsScalarTower.of_algebraMap_eq fun c => (emb.commutes c).symm
   have hf : (algebraMap (PadicAlgCl p) F).comp (algebraMap (FractionRing u.V) (PadicAlgCl p)) =
       algebraMap (FractionRing u.V) F := (IsScalarTower.algebraMap_eq _ _ _).symm

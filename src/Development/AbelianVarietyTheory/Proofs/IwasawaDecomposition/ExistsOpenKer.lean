@@ -90,8 +90,8 @@ theorem exists_open_ker {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopo
 
 theorem isThetaFun_heis {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {V W : HSp D} {f : WA V W → ℂ}
     (hf : IsThetaFun ψ V W f) (u : WA V W) : IsThetaFun ψ V W (Heisenberg₂ ψ V W u f) := by
-  haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WA V W) := Pi.topologicalAddGroup
+  have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WA V W) := Pi.isTopologicalAddGroup
   have hc : Continuous ψ := hψ.1.1
   let φ₁ : WA V W →+ AF D.host.F := AddMonoidHom.mk' (fun w => symplH V W w u) fun a b => symplH_add_left V W a b u
   let φ₂ : WA V W →+ AF D.host.F := AddMonoidHom.mk' (fun w => symplH V W u w) fun a b => symplH_add_right V W u a b

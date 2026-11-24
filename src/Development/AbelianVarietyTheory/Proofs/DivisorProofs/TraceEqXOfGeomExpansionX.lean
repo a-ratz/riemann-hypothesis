@@ -185,7 +185,7 @@ theorem enum_fst {n : ℕ} {S : SPar} {lam : Fin n → ℝ} {ε : Fin n → Bool
   have h4 : Finset.univ.image q = Finset.univ.image f := by
     rw [← hS, Finset.image_image]; rfl
   have h5 : q = f := by
-    refine (h3.range_inj hf).1 ?_
+    refine (h3.range_inj_of_wellFoundedGT hf).1 ?_
     have := congrArg (fun s : Finset ℚ => (s : Set ℚ)) h4
     simpa [Finset.coe_image] using this
   rw [hq, h5]
@@ -242,7 +242,7 @@ theorem tauE_ne_conj' {D : D7} (τ ρ : D.what₂.Tau) : tauE D τ ≠ (starRing
   have e1 : (D.eTau τ).1.1.2 = ((D.eTau ρ).1 * D.R.cc).1.2 :=
     congrArg (fun g : D.R.GG => g.1.2) (Formalism.IndefR.Conj.emb_injective h)
   have hc := Formalism.IndefR.Conj.snd_side (D := D) false
-  simp only [Bool.false_eq_true, if_false] at hc
+  simp only [Bool.false_eq_true, ite_false] at hc
   rw [show ((D.eTau ρ).1 * D.R.cc).1.2 = (D.eTau ρ).1.1.2 * (D.R.cc).1.2 from rfl] at e1
   rw [(Formalism.HC.Frame.mem_Psi_iff _).1 (D.eTau τ).2, (Formalism.HC.Frame.mem_Psi_iff _).1 (D.eTau ρ).2, one_mul, hc] at e1
   exact absurd e1 (by decide)
@@ -274,7 +274,7 @@ theorem parAt_fst {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : 
     have hi := i.2
     rw [D.sp.W_sigval _ (Nat.le_add_left _ _) i.2]
     simp only [Ranks.sigW, Ranks.r]; omega
-  rw [parAt, if_pos (by rw [h1]; exact h2), kapAt, h1]
+  rw [parAt, ite_eq_left (by rw [h1]; exact h2), kapAt, h1]
   generalize ((Wc D i).sig (tauE D ρ)).1 = p at hpq ⊢
   generalize ((Wc D i).sig (tauE D ρ)).2 = q at hpq ⊢
   have ho : Odd (p + q) := hpq ▸ Formalism.L2.NTheta.odd_r D.R
@@ -387,7 +387,7 @@ theorem isClosed_levelAd {V : HSp D} (T : TypeDataG V) (U : AuxiliaryPlaceHermit
 
 theorem isOpen_level {V : HSp D} (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) : IsOpen (level T U : Set (GfC V)) := by
   rw [level, Subgroup.coe_subgroupOf]
-  exact (isOpen_levelAd T U).preimage continuous_subtype_val
+  exact (isOpen_levelAd T U).preimage continuous_subtypeVal
 
 theorem isCompact_level {V : HSp D} (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) : IsCompact (level T U : Set (GfC V)) := by
   let : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
@@ -494,7 +494,7 @@ theorem exists_isFinMeas {D : D7} (V : HSp D) (μf : ∀ v, Measure (GLoc D.sp.c
   refine ⟨ν, hν.2.2.1, fun ff hf => ?_⟩
   let S := (eventually_cofinite.1 (hf.2.and h1)).toFinset
   have hS : ∀ v ∉ S, ff v = unitLoc _ _ (frameLat V) v ∧ μf v (Kv V v) = 1 := fun v hv => by
-    simpa only [S, Finite.mem_toFinset, mem_setOf_eq, not_not] using hv
+    simpa only [S, Finite.mem_toFinset, mem_ofPred_eq, not_not] using hv
   rw [finprod_eq_prod_of_mulSupport_subset (s := S) _ fun v hv => by_contra fun h => hv (by
     rw [(hS v h).1, unitLoc]
     refine (integral_indicator_const _ (isOpen_stabLoc _ _ _ v).measurableSet).trans ?_
@@ -502,7 +502,7 @@ theorem exists_isFinMeas {D : D7} (V : HSp D) (μf : ∀ v, Measure (GLoc D.sp.c
   have hcount : Countable (HeightOneSpectrum (𝓞 D.host.F)) := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum _
   have hsf : ∀ w : Empty, SigmaFinite (w.elim : Measure PUnit.{1}) := fun w => w.elim
   have key := (GlobalTheory.RestrMeas.IsCylProd.integral_tensor_indicator (𝕜 := ℂ) (fa := fun w => w.elim) (ff := ff) hν.2.2.2
-    (fun w => w.elim) (fun v => ((continuous_proj _ _ v).comp continuous_subtype_val).measurable)
+    (fun w => w.elim) (fun v => ((continuous_proj _ _ v).comp continuous_subtypeVal).measurable)
     (fun v => (isOpen_stabLoc _ _ _ v).measurableSet) (fun x => eventually_proj_mem_stabLoc _ _ _ x.1)
     (S := S) (fun v hv => (hS v hv).2) (fun v hv => (hS v hv).1) (fun w => w.elim)
     fun v _ => (hf.1 v).1.continuous.integrable_of_hasCompactSupport (hf.1 v).2).2
@@ -517,10 +517,10 @@ theorem exists_prod_of_haar : ∀ (D : D7) (V : HSp D) (μ : Measure (GA D V)) [
     (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)), (∀ v, (μf v).IsHaarMeasure) → (∀ᶠ v in cofinite, μf v (Kv V v) = 1) →
     (∃ μa, IsRestrictedProd D.sp.cm.sig V.gram (frameLat V) μa μf μ) ∧ ∃ ν, IsFinMeas V μf ν := by
   intro D V μ _ μf hf h1
-  haveI := hf
+  have := hf
   refine ⟨?_, exists_isFinMeas V μf h1⟩
   obtain ⟨μ₀, h₀⟩ := (existsUnique_isRestrictedProd D.sp.cm.sig V.gram (frameLat V) (fun _ => Measure.haar) μf h1).exists
-  haveI := h₀.haar
+  have := h₀.haar
   have he : μ = Measure.haarScalarFactor μ μ₀ • μ₀ := Measure.isMulLeftInvariant_eq_smul μ μ₀
   have hc : Measure.haarScalarFactor μ μ₀ ≠ 0 := by
     intro h0
@@ -643,7 +643,7 @@ theorem bijective_vec (φ : k ⊗[F] Fld P ≃ₗ[k ⊗[F] E] (Fin r → k ⊗[F
   have hd : (pbL P).dim = r := (AdjoinRoot.powerBasis_dim _).trans P.2.2.2.1
   let ψ : k ⊗[F] Fld P ≃ₗ[k ⊗[F] E] (Fin (pbL P).dim → k ⊗[F] E) :=
     φ.trans (LinearEquiv.funCongrLeft _ _ (finCongr hd))
-  haveI : Module.Finite (k ⊗[F] E) (k ⊗[F] Fld P) := Module.Finite.equiv φ.symm
+  have : Module.Finite (k ⊗[F] E) (k ⊗[F] Fld P) := Module.Finite.equiv φ.symm
   have hi := OrzechProperty.injective_of_surjective_endomorphism
     ((Fintype.linearCombination (k ⊗[F] E) (vec P k)) ∘ₗ ψ.toLinearMap) (hs.comp ψ.surjective)
   refine ⟨fun y y' hyy => ?_, hs⟩
@@ -672,8 +672,8 @@ theorem charpoly_mul_alpha (φ : k ⊗[F] Fld P ≃ₗ[k ⊗[F] E] (Fin r → k 
     haveI := Module.Free.of_basis (bas P k φ)
     haveI := Module.Finite.of_basis (bas P k φ)
     (LinearMap.mul (k ⊗[F] E) (k ⊗[F] Fld P) ((1 : k) ⊗ₜ[F] alpha P)).charpoly = P.1.map (inclR (F := F) k) := by
-  haveI := Module.Free.of_basis (bas P k φ)
-  haveI := Module.Finite.of_basis (bas P k φ)
+  have := Module.Free.of_basis (bas P k φ)
+  have := Module.Finite.of_basis (bas P k φ)
   rw [← LinearMap.charpoly_toMatrix _ (bas P k φ)]
   have hM : LinearMap.toMatrix (bas P k φ) (bas P k φ)
       (LinearMap.mul (k ⊗[F] E) (k ⊗[F] Fld P) ((1 : k) ⊗ₜ[F] alpha P)) =
@@ -689,8 +689,8 @@ theorem charpoly_mul_alpha (φ : k ⊗[F] Fld P ≃ₗ[k ⊗[F] E] (Fin r → k 
 
 theorem charpoly_mulMat (φ : k ⊗[F] Fld P ≃ₗ[k ⊗[F] E] (Fin r → k ⊗[F] E)) :
     (mulMat φ ((1 : k) ⊗ₜ[F] alpha P)).charpoly = P.1.map (inclR (F := F) k) := by
-  haveI := Module.Free.of_basis (bas P k φ)
-  haveI := Module.Finite.of_basis (bas P k φ)
+  have := Module.Free.of_basis (bas P k φ)
+  have := Module.Finite.of_basis (bas P k φ)
   change (LinearMap.toMatrix' (φ.conj (LinearMap.mul (k ⊗[F] E) (k ⊗[F] Fld P) ((1 : k) ⊗ₜ[F] alpha P)))).charpoly = _
   rw [← LinearMap.toMatrix_eq_toMatrix', LinearMap.charpoly_toMatrix, LinearEquiv.charpoly_conj,
     charpoly_mul_alpha P k φ]
@@ -841,7 +841,7 @@ theorem map_isHaar_rightInv {F E : Type} [Field F] [Field E] [Algebra F E] {σ :
     [IsTopologicalGroup H] [MeasurableSpace H] [BorelSpace H] [MeasurableSpace (Tor P k)] [BorelSpace (Tor P k)]
     [IsTopologicalGroup (Tor P k)] (e : Tor P k ≃ₜ* H) (dt : Measure (Tor P k)) [dt.IsHaarMeasure] :
     (dt.map e).IsHaarMeasure ∧ (dt.map e).IsMulRightInvariant := by
-  haveI h1 : (dt.map e).IsHaarMeasure :=
+  have h1 : (dt.map e).IsHaarMeasure :=
     MulEquiv.isHaarMeasure_map dt e.toMulEquiv e.continuous e.symm.continuous
   refine ⟨h1, ⟨fun g => ?_⟩⟩
   have hc : (fun x : H => x * g) = fun x => g * x := funext fun x => by
@@ -869,11 +869,11 @@ theorem phi_map : ∀ (D : D7) (V V' : HSp D) (r : ℕ) (P : PPol D.sp.cm.sig r)
   obtain ⟨e, he, hme⟩ := _root_.GlobalTheory.TorCentTop.torEquiv_cent _ _ D.sp.cm.sig hcm r V.rank P V.gram (isHermND_gram V) (Fv D.host.F v) x φ h
   obtain ⟨e'', he'', hme''⟩ :=
     _root_.GlobalTheory.TorCentTop.torEquiv_cent _ _ D.sp.cm.sig hcm r V'.rank P V'.gram (isHermND_gram V') (Fv D.host.F v) x φ'' h''
-  haveI := hμ
-  haveI := hdt
+  have := hμ
+  have := hdt
   obtain ⟨i1, i2⟩ := map_isHaar_rightInv P (Fv D.host.F v) e dt
-  haveI : (centMeas h dt).IsHaarMeasure := by rw [hme dt]; exact i1
-  haveI : (centMeas h dt).IsMulRightInvariant := by rw [hme dt]; exact i2
+  have : (centMeas h dt).IsHaarMeasure := by rw [hme dt]; exact i1
+  have : (centMeas h dt).IsMulRightInvariant := by rw [hme dt]; exact i2
   have v1 := (hok.2 x φ h).orbInt_eq
   have v2 := (hok'.2 x φ'' h'').orbInt_eq
   have hm : centMeas h'' dt = (centMeas h dt).map (centEquiv j (gam h) hγ.symm) := by
@@ -946,15 +946,15 @@ theorem exists_reps_through : ∀ (G : Type) [Group G] [TopologicalSpace G] (m :
   have hf : ∀ i, R (f i) i := by
     intro i
     by_cases h : R i i₀
-    · simp only [f, if_pos h]; exact hsymm h
-    · simp only [f, if_neg h]; exact Quotient.mk_out (s := S) i
+    · simp only [f, ite_eq_left h]; exact hsymm h
+    · simp only [f, ite_eq_right h]; exact Quotient.mk_out (s := S) i
   have hfc : ∀ i j, R i j → f i = f j := by
     intro i j hij
     by_cases h : R i i₀
     · have h' : R j i₀ := htrans (hsymm hij) h
-      simp only [f, if_pos h, if_pos h']
+      simp only [f, ite_eq_left h, ite_eq_left h']
     · have h' : ¬ R j i₀ := fun h' => h (htrans hij h')
-      simp only [f, if_neg h, if_neg h']
+      simp only [f, ite_eq_right h, ite_eq_right h']
       rw [Quotient.sound (s := S) hij]
   let T : Finset (Fin m) := Finset.univ.image f
   let e : T ≃ Fin T.card := T.equivFin
@@ -969,7 +969,7 @@ theorem exists_reps_through : ∀ (G : Type) [Group G] [TopologicalSpace G] (m :
       exact htrans (hsymm (hf x)) (htrans h1 (hf y))
     have : (e.symm k).1 = (e.symm l).1 := by rw [← hx, ← hy]; exact hfc x y hxy
     exact e.symm.injective (Subtype.ext this)
-  · have hmem : i₀ ∈ T := Finset.mem_image.2 ⟨i₀, Finset.mem_univ _, by simp only [f, if_pos (hrefl i₀)]⟩
+  · have hmem : i₀ ∈ T := Finset.mem_image.2 ⟨i₀, Finset.mem_univ _, by simp only [f, ite_eq_left (hrefl i₀)]⟩
     exact ⟨e ⟨i₀, hmem⟩, by simp⟩
   · intro i
     have hmem : f i ∈ T := Finset.mem_image_of_mem f (Finset.mem_univ i)
@@ -1130,9 +1130,9 @@ theorem exists_levelOff_subset [Submodule.IsFullLattice E L] (N : Set (GAd σ J)
   push_neg at hcon
   obtain ⟨g, hg⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
     (fun S : Finset (HeightOneSpectrum (𝓞 F)) => (levelOff σ J L S : Set (GAd σ J)) \ N)
-    (fun S S' => ⟨S ∪ S', Set.diff_subset_diff_left (levelOff_anti σ J L Finset.subset_union_left),
-      Set.diff_subset_diff_left (levelOff_anti σ J L Finset.subset_union_right)⟩)
-    (fun S => Set.diff_nonempty.2 (hcon S))
+    (fun S S' => ⟨S ∪ S', sdiff_subset_sdiff_left (levelOff_anti σ J L Finset.subset_union_left),
+      sdiff_subset_sdiff_left (levelOff_anti σ J L Finset.subset_union_right)⟩)
+    (fun S => sdiff_nonempty.2 (hcon S))
     (fun S => (isCompact_levelOff σ J L S).diff hN)
     (fun S => ((isCompact_levelOff σ J L S).diff hN).isClosed)
   rw [Set.mem_iInter] at hg
@@ -1146,7 +1146,7 @@ end Density
 theorem dense_locFin (D : D7) (V : HSp D) :
     Dense ((⨆ v, (locFin V v).range : Subgroup (GfC V)) : Set (GfC V)) := by
   classical
-  haveI hL : Submodule.IsFullLattice D.host.E (stdLattice D.host.E V.rank) := isLattice_stdLattice
+  have hL : Submodule.IsFullLattice D.host.E (stdLattice D.host.E V.rank) := isLattice_stdLattice
   set H : Subgroup (GfC V) := ⨆ v, (locFin V v).range with hH
   have hemb : ∀ v x, GlobalTheory.AdelicU.emb D.sp.cm.sig V.gram v x ∈ H.map (GfC V).subtype := fun v x =>
     ⟨locFin V v x, Subgroup.mem_iSup_of_mem v ⟨x, rfl⟩, rfl⟩
@@ -1191,7 +1191,7 @@ theorem finLoc_transport {D : D7} {V V' : HSp D}
   let f₁ : GfC V →* Gv V' v := (finLoc V' v).comp Φ.toMulEquiv.toMonoidHom
   let f₂ : GfC V →* Gv V' v := (j v).toMulEquiv.toMonoidHom.comp (finLoc V v)
   have hc : ∀ {W : HSp D}, Continuous (finLoc W v) := fun {W} =>
-    (continuous_proj D.sp.cm.sig W.gram v).comp continuous_subtype_val
+    (continuous_proj D.sp.cm.sig W.gram v).comp continuous_subtypeVal
   have c₁ : Continuous f₁ := hc.comp Φ.continuous
   have c₂ : Continuous f₂ := (j v).continuous.comp hc
   have hle : (⨆ u, (locFin V u).range) ≤ MonoidHom.eqLocus f₁ f₂ := iSup_le fun u => by
@@ -1220,7 +1220,7 @@ theorem transport :
     simp only [finLoc, MonoidHom.comp_apply, Subgroup.coe_subtype] at this
     simp only [GlobalTheory.Orb.transfer, Function.comp_apply, this, ContinuousMulEquiv.symm_apply_apply]
   refine ⟨h1, fun μf ν hν => ?_⟩
-  haveI := hν.1
+  have := hν.1
   refine ⟨Φ.isHaarMeasure_map ν, fun ff' hff' => ?_⟩
   let ff : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ := fun v => ff' v ∘ j v
   have ht : GlobalTheory.Orb.transfer j ff = ff' := funext fun v => funext fun y => by
@@ -1473,8 +1473,8 @@ theorem exists_testArch (hL : LocalPC) (M : DSModel V S) (lam : D.what₂.Tau �
         frameMat M ρ (y⁻¹ * s * y) = Matrix.diagonal (fun a => Complex.exp (θ a * Complex.I)) →
         ∀ (dt : Measure (cent s)) [dt.IsHaarMeasure] [dt.IsMulRightInvariant],
         HasOrbInt (μa (placeOf D ρ)) s dt f (conj (dsChar (M.ε ρ) (M.lam ρ) θ) / dt.real univ) := fun ρ => by
-    haveI := (M.ds ρ).1
-    haveI : ((μa (placeOf D ρ)).map (frameEquiv M ρ)).IsHaarMeasure := (frameEquiv M ρ).isHaarMeasure_map _
+    have := (M.ds ρ).1
+    have : ((μa (placeOf D ρ)).map (frameEquiv M ρ)).IsHaarMeasure := (frameEquiv M ρ).isHaarMeasure_map _
     have e : M.lam ρ = fun a => (lam ρ a : ℝ) := funext (hlam ρ)
     obtain ⟨f, hf⟩ := hL V.rank hodd (M.ε ρ) (lam ρ) (hgap ρ) (M.H ρ) (M.σ ρ) (e ▸ M.ds ρ)
       ((μa (placeOf D ρ)).map (frameEquiv M ρ))
@@ -1794,7 +1794,7 @@ theorem trCusp'_of_steps (hL : LocalPC) (hF : SpecFin) (hT : GlobalTheory.TrMult
       ∀ (X : Type) [AddCommGroup X] [Module ℂ X] (ρ : Representation ℂ (GfC V) X), ρ.IsIrreducible → IsAdmissible ρ →
         mCuspDS μ ρ M ≠ 0 → ¬ GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp ν ρ (finFn V ff) 0 → ∃ i, Nonempty (ρ.Equiv (τ i)) := by
     intro ff hffin hKinv X _ _ ρ hi ha hm hz
-    haveI := hν.1
+    have := hν.1
     obtain ⟨x, hx0, hx⟩ := (GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V ν ff hffin X ρ ha).2 K hKo hKc hKinv hz
     obtain ⟨i, ⟨e⟩⟩ := hcov₁ X ρ hi ha hm ⟨x, hx0, hx⟩
     obtain ⟨k, ⟨e'⟩⟩ := hA i
@@ -1805,7 +1805,7 @@ theorem trCusp'_of_steps (hL : LocalPC) (hF : SpecFin) (hT : GlobalTheory.TrMult
         mCuspDS μ' ρ M' ≠ 0 → ¬ GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp (ν.map Φ) ρ (finFn V' (transfer j ff)) 0 →
           ∃ i, Nonempty (ρ.Equiv (τ' i)) := by
     intro ff hffin hKinv X _ _ ρ hi ha hm hz
-    haveI := hν'.1
+    have := hν'.1
     have hKinv' : ∀ k ∈ K', ∀ g, finFn V' (transfer j ff) (k * g) = finFn V' (transfer j ff) g := by
       intro k hk g
       obtain ⟨k₀, hk₀, rfl⟩ := Subgroup.mem_map.1 hk
@@ -1915,8 +1915,8 @@ theorem multEq_of_trCusp' : GlobalTheory.Published.CuspRapidDecay → GlobalTheo
   have hinf : IsInfFam R.θ := hG.core.models.inf
   let μ : Measure (GA D (Yc D 0)) := Measure.haar
   let μ' : Measure (GA D (Wc D i)) := Measure.haar
-  haveI : μ.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D _ μ inferInstance
-  haveI : μ'.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D _ μ' inferInstance
+  have : μ.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D _ μ inferInstance
+  have : μ'.IsMulRightInvariant := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D _ μ' inferInstance
   have hadm' : IsAdmissible (σ.comp Φ.symm.toMulEquiv.toMonoidHom) :=
     GlobalTheory.CuspMult.isAdmissible_comp_equiv σ Φ.symm hadm
   rw [GlobalTheory.T.cuspidalMultiplicity_eq_discreteSeriesModel_maps hRD hHC hDM D R.θ hinf (Yc D 0) _ M₀ μ W σ hadm.1,

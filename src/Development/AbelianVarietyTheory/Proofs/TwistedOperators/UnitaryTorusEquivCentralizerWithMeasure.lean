@@ -64,11 +64,11 @@ theorem isScalarTower_base : IsScalarTower k (k ⊗[F] E) (k ⊗[F] Fld P) :=
     rw [Algebra.TensorProduct.map_tmul, map_one]; rfl
 
 theorem continuous_mulMat (φ : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E] (Fin n → k ⊗[F] E)) : Continuous (mulMat φ) := by
-  haveI : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology k (k ⊗[F] Fld P) := ⟨rfl⟩
-  haveI : FiniteDimensional F (Fld P) := Module.Finite.trans E _
-  haveI : ContinuousAdd (k ⊗[F] E) := IsModuleTopology.toContinuousAdd k _
-  haveI := isScalarTower_base (k := k) (P := P)
+  have : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology k (k ⊗[F] Fld P) := ⟨rfl⟩
+  have : FiniteDimensional F (Fld P) := Module.Finite.trans E _
+  have : ContinuousAdd (k ⊗[F] E) := IsModuleTopology.toContinuousAdd k _
+  have := isScalarTower_base (k := k) (P := P)
   refine continuous_matrix fun i j => ?_
   have e : ∀ l, mulMat φ l i j = φ (l * φ.symm (Pi.single j 1)) i := fun l => by
     rw [← mulMat_mulVec, φ.apply_symm_apply, Matrix.mulVec_single_one, Matrix.col_apply]
@@ -92,7 +92,7 @@ theorem torUnit_eq {x : k ⊗[F] Fld P} {φ : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E
 
 theorem continuous_torEmb {x : k ⊗[F] Fld P} {φ : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E] (Fin n → k ⊗[F] E)}
     (h : IsIsom P k J x φ) : Continuous (torEmb h) := by
-  haveI : FiniteDimensional F (Fld P) := Module.Finite.trans E _
+  have : FiniteDimensional F (Fld P) := Module.Finite.trans E _
   refine (isEmbedding_matHom k σ J).continuous_iff.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
   · change Continuous fun t => (matHom k σ J (torEmb h t)).1
     simp only [matHom_torEmb]
@@ -103,20 +103,20 @@ theorem continuous_torEmb {x : k ⊗[F] Fld P} {φ : (k ⊗[F] Fld P) ≃ₗ[k �
 
 theorem continuous_back (φ : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E] (Fin n → k ⊗[F] E)) :
     Continuous fun g : HA k σ J => φ.symm ((matHom k σ J g).1 *ᵥ φ 1) := by
-  haveI : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology k (k ⊗[F] Fld P) := ⟨rfl⟩
-  haveI : FiniteDimensional F (Fld P) := Module.Finite.trans E _
-  haveI : IsTopologicalRing (k ⊗[F] E) := IsModuleTopology.isTopologicalRing k _
-  haveI := isScalarTower_base (k := k) (P := P)
-  haveI : ContinuousAdd (k ⊗[F] Fld P) := IsModuleTopology.toContinuousAdd k _
+  have : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology k (k ⊗[F] Fld P) := ⟨rfl⟩
+  have : FiniteDimensional F (Fld P) := Module.Finite.trans E _
+  have : IsTopologicalRing (k ⊗[F] E) := IsModuleTopology.isTopologicalRing k _
+  have := isScalarTower_base (k := k) (P := P)
+  have : ContinuousAdd (k ⊗[F] Fld P) := IsModuleTopology.toContinuousAdd k _
   have h1 : Continuous (φ.symm.toLinearMap.restrictScalars k) := IsModuleTopology.continuous_of_linearMap _
   refine h1.comp (Continuous.matrix_mulVec ?_ continuous_const)
   exact Units.continuous_val.comp (isEmbedding_matHom k σ J).continuous
 
 theorem torEquiv_cent : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (r n : ℕ) (P : PPol σ r) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (k : Type) [CommRing k] [Algebra F k] [TopologicalSpace k] [IsTopologicalRing k] [T2Space k] (x : plusUnits P k) (φ : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E] (Fin n → k ⊗[F] E)) (h : IsIsom P k J x.1.1 φ), ∃ e : Tor P k ≃ₜ* cent (gam h), (∀ t, (e t).1 = torEmb h t) ∧ ∀ dt : Measure (Tor P k), centMeas h dt = dt.map e := by
   intro F E _ _ _ _ _ σ hCM r n P J hJ k _ _ _ _ _ x φ h
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
-  haveI : FiniteDimensional F (Fld P) := Module.Finite.trans E _
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
+  have : FiniteDimensional F (Fld P) := Module.Finite.trans E _
   obtain ⟨-, -, hinj, hrange⟩ := _root_.GlobalTheory.TrEll.gam_charpoly_regular_cent F E σ hCM r n P J hJ k x φ h
   let e0 : Tor P k ≃* cent (gam h) := (MonoidHom.ofInjective hinj).trans (MulEquiv.subgroupCongr hrange.symm)
   have he : ∀ t, (e0 t).1 = torEmb h t := fun t => rfl
@@ -132,30 +132,30 @@ theorem torEquiv_cent : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
           rw [Subsingleton.elim i 0, Subsingleton.elim j 0]
           change Continuous fun s => (matHom k (star' P) (one₁ P) (e0.symm s)).1 0 0
           simp only [hback]
-          exact (GlobalTheory.TorCentTop.continuous_back φ).comp continuous_subtype_val
+          exact (GlobalTheory.TorCentTop.continuous_back φ).comp continuous_subtypeVal
         · refine continuous_matrix fun i j => ?_
           rw [Subsingleton.elim i 0, Subsingleton.elim j 0]
           change Continuous fun s => (matHom k (star' P) (one₁ P) (e0.symm s))⁻¹.1 0 0
           simp only [← map_inv, hback]
-          exact (GlobalTheory.TorCentTop.continuous_back φ).comp (continuous_subtype_val.comp continuous_inv) }
+          exact (GlobalTheory.TorCentTop.continuous_back φ).comp (continuous_subtypeVal.comp continuous_inv) }
   refine ⟨e, fun t => rfl, fun dt => ?_⟩
-  haveI : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (k ⊗[F] E) := IsModuleTopology.isTopologicalRing k _
+  have : IsModuleTopology k (k ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (k ⊗[F] E) := IsModuleTopology.isTopologicalRing k _
   have eh : (k ⊗[F] E) ≃ₜ (Fin (Module.finrank F E) → k) :=
     let b := (Algebra.TensorProduct.basis k (Module.finBasis F E)).equivFun
     { b.toEquiv with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap b.toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap b.symm.toLinearMap }
-  haveI : T2Space (k ⊗[F] E) := eh.isEmbedding.t2Space
-  haveI : T2Space (GL (Fin n) (k ⊗[F] E)) := Units.isEmbedding_embedProduct.t2Space
-  haveI : T2Space (HA k σ J) := (isEmbedding_matHom k σ J).t2Space
+  have : T2Space (k ⊗[F] E) := eh.isEmbedding.t2Space
+  have : T2Space (GL (Fin n) (k ⊗[F] E)) := Units.isEmbedding_embedProduct.t2Space
+  have : T2Space (HA k σ J) := (isEmbedding_matHom k σ J).t2Space
   have hset : (cent (gam h) : Set (HA k σ J)) = {g | gam h * g = g * gam h} := by
     ext g; simp [cent, Subgroup.mem_centralizer_iff]
   have hclosed : IsClosed (cent (gam h) : Set (HA k σ J)) := by
     rw [hset]; exact isClosed_eq (continuous_const.mul continuous_id) (continuous_id.mul continuous_const)
   have hf : (torEmb h : Tor P k → HA k σ J) = Subtype.val ∘ e := funext fun t => rfl
   unfold centMeas
-  rw [hf, ← Measure.map_map measurable_subtype_coe (map_continuous e).measurable]
-  exact (MeasurableEmbedding.subtype_coe hclosed.measurableSet).comap_map _
+  rw [hf, ← Measure.map_map measurable_subtypeVal (map_continuous e).measurable]
+  exact (MeasurableEmbedding.subtypeVal hclosed.measurableSet).comap_map _
 
 end GlobalTheory.TorCentTop

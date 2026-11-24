@@ -194,5 +194,5 @@ theorem GlobalTheory.HSNef.exists_isFS : ∀ (k : Type) [CommRing k] (X : Scheme
       rw [e]; exact ratVal_fnOf (U := (toLB (fsDiv hf)).U c) hy c.2.1 _
     rw [e2]
     rw [norm_mul, mul_pow, mul_comm, Complex.norm_real, Real.norm_eq_abs,
-      abs_of_pos (Real.exp_pos _), ← Real.exp_nat_mul]
+      abs_of_pos (Real.exp_pos _), ← Real.exp_natCast_mul]
     norm_num

@@ -79,7 +79,7 @@ def sm [MeasurableSpace (archGroup K n)] (ν : Measure (archGroup K n)) (β : ar
   ∫ y, (β y : ℂ) * f (x * infEmb K n y) ∂ν
 
 theorem continuous_mat : Continuous (mat : archGroup K n → ArchMatrix K n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem isCompact_ball {ρ : ℝ} (hρ : ρ < 1) :
     IsCompact {y : archGroup K n | ‖mat y - 1‖ ≤ ρ} := by
@@ -147,7 +147,7 @@ theorem exists_ker [MeasurableSpace (archGroup K n)] [BorelSpace (archGroup K n)
   have hcs : HasCompactSupport β₀ := (isCompact_ball hρ1).of_isClosed_subset (isClosed_tsupport _) hts
   have hnn : ∀ y, 0 ≤ β₀ y := fun y => le_max_left _ _
   have hpos : 0 < ∫ y, β₀ y ∂ν := by
-    refine hβc.integral_pos_of_hasCompactSupport_nonneg_nonzero hcs hnn (x := 1) ?_
+    refine hβc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs hnn (x := 1) ?_
     have : β₀ 1 = 1 := by simp [hβ₀, mat]
     rw [this]; exact one_ne_zero
   set c := ∫ y, β₀ y ∂ν with hcdef

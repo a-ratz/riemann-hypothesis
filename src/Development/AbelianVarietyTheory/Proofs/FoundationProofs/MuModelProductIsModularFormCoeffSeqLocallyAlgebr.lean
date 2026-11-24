@@ -100,7 +100,7 @@ open GlobalTheory.EisM.ZmChar in
 theorem GlobalTheory.zm_char_mf : ∀ (k j N l m : ℕ) (ε : DirichletCharacter ℂ N) (u : ℤ → ℂ) (θ ν : DirichletCharacter ℂ N) (ψ : DirichletCharacter ℂ (l ^ m)), j + 2 ≤ k → 0 < N → l.Prime → 1 ≤ m → ¬ l ∣ N → (∀ x, u (x + N) = u x) → (∀ d x : ℤ, IsCoprime d N → u (x * d) = ch θ⁻¹ d * u x) → ε = θ⁻¹ * ν → ψ (-1) * θ (-1) = (-1) ^ (k - 1 - j) → ψ (-1) * ν (-1) = (-1) ^ (j + 1) → MF k (N * l ^ (m + 1)) (ch ε) (Zm k l u (ch ν) (fun x y => ch ψ x * ch ψ⁻¹ y * ((y : ℂ) / x) ^ j)) := by
   intro k j N l m ε u θ ν ψ hjk hN hl hm hlN hu hmul hε hpar1 hpar2
   have hl1 : 1 < l ^ m := Nat.one_lt_pow (by omega) hl.one_lt
-  haveI : Fact (1 < l ^ m) := ⟨hl1⟩
+  have : Fact (1 < l ^ m) := ⟨hl1⟩
   have hlm : 0 < l ^ m := by omega
   have hup : ∀ K : ℕ, N ∣ K → ∀ x, u (x + K) = u x := by
     intro K hK x

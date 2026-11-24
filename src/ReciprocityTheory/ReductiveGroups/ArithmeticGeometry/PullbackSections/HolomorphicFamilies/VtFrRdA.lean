@@ -82,7 +82,7 @@ theorem vtf_val_res (p : Sp ℂ ⟶ Z) {U V : Z.Opens} (hVU : V ≤ U) (h : ⊤ 
   delta valAt res
   congr 1
   first
-  | (rw [Units.coe_map, MonoidHom.coe_coe, ← CommRingCat.comp_apply, Scheme.Hom.map_appLE])
+  | (rw [Units.coe_map, MonoidHom.coe_ofClass, ← CommRingCat.comp_apply, Scheme.Hom.map_appLE])
   | simp [← CommRingCat.comp_apply, Scheme.Hom.map_appLE]
 
 theorem vtf_val_pullU (p : Sp ℂ ⟶ Z) (f : Z ⟶ Z') (U : Z'.Opens) (u : Γ(Z', U)ˣ) :

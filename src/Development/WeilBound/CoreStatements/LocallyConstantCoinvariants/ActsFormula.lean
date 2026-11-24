@@ -87,8 +87,8 @@ theorem exists_eq_mul_apply_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [To
     (∀ y, ∀ φ ∈ SB (κ → k), l (schr ψ (0, y) φ) = l φ) → ∃ a : ℂ, ∀ φ ∈ SB (κ → k), l φ = a * φ 0 := by
   intro k _ _ _ _ _ κ _ ψ hψc hψ l hl
   classical
-  haveI : NonarchimedeanAddGroup k := GlobalTheory.WeilM.nonarch_field k
-  haveI : NonarchimedeanAddGroup (κ → k) := GlobalTheory.WeilM.nonarch_pi k κ
+  have : NonarchimedeanAddGroup k := GlobalTheory.WeilM.nonarch_field k
+  have : NonarchimedeanAddGroup (κ → k) := GlobalTheory.WeilM.nonarch_pi k κ
   have hψlc : IsLocallyConstant ψ := GlobalTheory.WeilM.isLocallyConstant_addChar ψ hψc
   have hχ : ∀ y : κ → k, IsLocallyConstant (fun x : κ → k => ψ (x ⬝ᵥ y)) := fun y =>
     hψlc.comp_continuous (continuous_id.dotProduct continuous_const)

@@ -46,9 +46,9 @@ open GroundTheory.Global.SemiLocal in
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.splitOfDec :
     UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.SplitOfDec := by
   intro K M Ω _ _ _ _ _ _ _ _ _ _ _ v h w
-  haveI : Module.Finite K M := Module.Finite.of_restrictScalars_finite ℚ K M
-  haveI : Algebra.IsAlgebraic M Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
+  have : Module.Finite K M := Module.Finite.of_restrictScalars_finite ℚ K M
+  have : Algebra.IsAlgebraic M Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
   obtain ⟨A, hA⟩ := exists_isPlaceOver Ω w.1
   have hv : IsPlaceOver A v := fun x => by
     rw [IsScalarTower.algebraMap_apply K M Ω, w.2.over]

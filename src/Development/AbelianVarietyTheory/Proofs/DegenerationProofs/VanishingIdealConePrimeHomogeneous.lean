@@ -136,14 +136,14 @@ end Alg
 
 theorem eq_zero_of_forall_algHom {k A : Type} [Field k] [IsAlgClosed k] [CommRing A] [Algebra k A]
     [_root_.IsReduced A] [Algebra.FiniteType k A] (a : A) (h : ∀ e : A →ₐ[k] k, e a = 0) : a = 0 := by
-  haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := k)
+  have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := k)
   have hrad : (⊥ : Ideal A).IsRadical := by
     rw [Ideal.isRadical_bot_iff]; infer_instance
   have hj : (⊥ : Ideal A).jacobson = ⊥ := IsJacobsonRing.out inferInstance hrad
   rw [← Ideal.mem_bot, ← hj, Ideal.jacobson, Ideal.mem_sInf]
   rintro m ⟨-, hm⟩
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite k (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ m)
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite k (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ m)
   have hb : Function.Bijective (algebraMap k (A ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let i : k ≃ₐ[k] (A ⧸ m) := AlgEquiv.ofBijective (Algebra.ofId k (A ⧸ m)) hb
@@ -165,18 +165,18 @@ theorem ringKrullDim_quotient_ker {k J A : Type} [Field k] [Fintype J] [CommRing
     (r : J → A) (i : J) (hi : r i = 1)
     (h : Subring.closure (Set.range (algebraMap k A) ∪ Set.range r) = ⊤) (g : ℕ) (hg : ringKrullDim A = g) :
     ringKrullDim (MvPolynomial J k ⧸ RingHom.ker (coneHom (algebraMap k A) r)) = (g + 1 : ℕ) := by
-  haveI := finiteType_of_closure r h
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing k A
+  have := finiteType_of_closure r h
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing k A
   let φ : MvPolynomial J k →ₐ[k] Polynomial A :=
     { coneHom (algebraMap k A) r with commutes' := fun a => by simp [coneHom] }
   let T := φ.range
   have e : (MvPolynomial J k ⧸ RingHom.ker (coneHom (algebraMap k A) r)) ≃+* T :=
     (Ideal.quotientKerEquivRange φ).toRingEquiv
   rw [ringKrullDim_eq_of_ringEquiv e]
-  haveI : Algebra.FiniteType k T := Algebra.FiniteType.of_surjective φ.rangeRestrict φ.rangeRestrict_surjective
+  have : Algebra.FiniteType k T := Algebra.FiniteType.of_surjective φ.rangeRestrict φ.rangeRestrict_surjective
   have hX : ∀ j, Polynomial.C (r j) * Polynomial.X ∈ T := fun j => ⟨MvPolynomial.X j, by simp [φ, coneHom]⟩
   have hX1 : (Polynomial.X : Polynomial A) ∈ T := by simpa [hi] using hX i
-  haveI : Algebra.IsAlgebraic T (Polynomial A) := by
+  have : Algebra.IsAlgebraic T (Polynomial A) := by
     have hT : ∀ q ∈ T, IsAlgebraic T q := fun q hq => isAlgebraic_algebraMap (⟨q, hq⟩ : T)
     have hC : ∀ a : A, IsAlgebraic T (Polynomial.C a) := by
       intro a
@@ -283,8 +283,8 @@ theorem vanishingIdeal_eq_ker [IsAlgClosed k] [Fintype J] [IsIntegral X] (p : X 
   rw [MvPolynomial.mem_vanishingIdeal_iff, RingHom.mem_ker]
   constructor
   · intro hf
-    letI : Algebra k Γ(X, Out.nonzeroLocus (s i)) := (constHom p _).toAlgebra
-    haveI := finiteType_of_closure (k := k) r hc
+    let : Algebra k Γ(X, Out.nonzeroLocus (s i)) := (constHom p _).toAlgebra
+    have := finiteType_of_closure (k := k) r hc
     ext n
     refine eq_zero_of_forall_algHom (k := k) _ fun e => ?_
     obtain ⟨x, h, hx, hxe⟩ := exists_point p haff e.toRingHom e.commutes
@@ -295,7 +295,7 @@ theorem vanishingIdeal_eq_ker [IsAlgClosed k] [Fintype J] [IsIntegral X] (p : X 
       refine ((Set.finite_singleton (0 : k)).infinite_compl).mono fun t ht' => ?_
       have ht : t ≠ 0 := ht'
       have h1 := hf _ ⟨x, hx, crd_smul (Units.mk0 t ht * u⁻¹) hv⟩
-      rw [Set.mem_setOf_eq, Polynomial.IsRoot.def, Polynomial.eval_map, eval₂_coneHom, ← hxe,
+      rw [Set.mem_ofPred_eq, Polynomial.IsRoot.def, Polynomial.eval_map, eval₂_coneHom, ← hxe,
         valHom_comp_constHom p x hx, ← h1]
       have : (fun j => valHom x _ h (r j) * t) = fun j => ((Units.mk0 t ht * u⁻¹ : kˣ) : k) * v j := by
         funext j
@@ -329,7 +329,7 @@ theorem isPrime_vanishingIdeal_cone : (∀ (k : Type) [Field k] [IsAlgClosed k] 
   simp only [TopologicalSpace.Opens.mem_iSup] at this
   obtain ⟨i, hi, hm⟩ := this
   obtain ⟨haff, r, hr, hc⟩ := him.2 i hi
-  haveI : Nonempty (Out.nonzeroLocus (s i)) := ⟨⟨_, hm⟩⟩
+  have : Nonempty (Out.nonzeroLocus (s i)) := ⟨⟨_, hm⟩⟩
   rw [vanishingIdeal_eq_ker p hH him i haff ⟨_, hm⟩ r hr hc]
   have hri : r i = 1 := by
     obtain ⟨K, _, y, hy⟩ := exists_generic (X := X)
@@ -343,7 +343,7 @@ theorem isPrime_vanishingIdeal_cone : (∀ (k : Type) [Field k] [IsAlgClosed k] 
     exact mul_right_cancel₀ hu (by rw [← this, _root_.one_mul])
   refine ⟨RingHom.ker_isPrime _, isHomogeneous_ker_coneHom _ _, ⟨i, ?_⟩, ?_⟩
   · simp [RingHom.mem_ker, coneHom, hri]
-  · letI : Algebra k Γ(X, Out.nonzeroLocus (s i)) := (constHom p _).toAlgebra
+  · let : Algebra k Γ(X, Out.nonzeroLocus (s i)) := (constHom p _).toAlgebra
     exact ringKrullDim_quotient_ker (k := k) r i hri hc g
       (GlobalTheory.SmoothDim.ringKrullDim_affineOpen k X p g hg _ haff ⟨_, hm⟩)
 

@@ -179,7 +179,7 @@ theorem hilb_cone_le_of_span {K : Type} [Field K] {X : Scheme.{0}} (p : X ⟶ Sp
       ∀ j, v.1 j = TorsionZero.val x _ h ((s j).f l) * c := by
     rintro ⟨v, x, hx, l, c, hl, hv⟩
     exact ⟨x, l, c, hx, hl, fun j => (hv j).trans ((_root_.mul_comm _ _).trans
-      (congrArg (· * (c : K)) (dif_pos hl)))⟩
+      (congrArg (· * (c : K)) (dite_eq_left hl)))⟩
   choose x l c hx hl hv using hC
   let β : Fin m → cone p (lbPow L N) s → K := fun i v =>
     TorsionZero.val (x v) _ (hl v) ((b i).f (l v)) * c v ^ d
@@ -463,7 +463,7 @@ theorem crd_down_of_isValueAt : ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Ou
     rw [P.isLB.cover]; trivial
   obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
   have hi' := (CrdCalc.top_le_iff (x.left : Sp K ⟶ P.A.left) _).2 hi
-  haveI : IsIso (snd (Out.baseOver (Sp K)) P.A).left :=
+  have : IsIso (snd (Out.baseOver (Sp K)) P.A).left :=
     inferInstanceAs (IsIso (pullback.snd (𝟙 (Sp K)) P.A.hom))
   have hp : (x.left : Sp K ⟶ P.A.left) ≫ ρ = (Out.ptSecT P.A x).left := by
     rw [← cancel_mono (snd (Out.baseOver (Sp K)) P.A).left]
@@ -526,7 +526,7 @@ theorem immBy_down_of_span : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed 
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₁).trans (pullback.condition.symm.trans
         ((Category.comp_id _).trans (Category.id_comp _).symm)))
     · exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) ρ₂).trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  haveI : IsIso ρ := ⟨_, ρ₂, ρ₃⟩
+  have : IsIso ρ := ⟨_, ρ₂, ρ₃⟩
   let b : J → SecM P.A P.L n T := fun a => SecM.ofSec P.A (t a)
   let D : SecM P.A P.L n T → (lbPow P.L n).Sec := fun v =>
     down P.L (snd T P.A).left ρ ρ₂ n (SecM.toSec P.A v)
@@ -551,7 +551,7 @@ theorem immBy_down_of_span : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed 
       (RingHom.comp (P.A.hom.appLE ⊤ _ le_top).hom (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom) r).2 fun f => ?_⟩
     obtain ⟨F, hF⟩ := hsurj f
     exact ⟨F, hF.symm⟩
-  haveI := P.isAb.proper
+  have := P.isAb.proper
   refine SpanImm.immBy_of_span K _ P.A.hom _ (LB.isLB_linComb P.isLB _ _) _ J s _ himm fun i => ?_
   obtain ⟨w, hw⟩ := down_surjective P.L (snd T P.A).left ρ ρ₂ n (s i)
   have hw' : D (SecM.ofSec P.A w) = s i := hw
@@ -872,7 +872,7 @@ theorem germ_origin : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (P :
         ((Category.comp_id _).trans (Category.id_comp _).symm))
   obtain rfl : ρ = ρ'.left := by
     rw [← Category.comp_id ρ, ← ρ₃, ← Category.assoc, e, Category.id_comp]
-  haveI : IsIso ρ'.left := ⟨_, ρ₂, ρ₃⟩
+  have : IsIso ρ'.left := ⟨_, ρ₂, ρ₃⟩
   refine ⟨?_, fun y k l hk hl => ?_⟩
   · by_contra hne
     push_neg at hne
@@ -976,7 +976,7 @@ theorem exists_ne_zero_in_coset : Out.Laws → ∀ (g n N' : ℕ), 2 ≤ n → n
   obtain ⟨H₁, H₂⟩ := theta_coordinates hLaw g 1 N' 1 N' (by norm_num) (by norm_num)
   obtain ⟨⟨th, t, hth, ht⟩, Hv⟩ := H₁ (Sp K) P hg ze lev v hv
   obtain ⟨-, hli, -⟩ := (H₂ K ho hK P hg ze lev).2.2 th t hth ht
-  haveI : Nontrivial Γ((Out.baseOver (Spec (CommRingCat.of K))).left, ⊤) :=
+  have : Nontrivial Γ((Out.baseOver (Spec (CommRingCat.of K))).left, ⊤) :=
     (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm.injective.nontrivial
   have h0 : Out.SecM.ofSec P.A (t 0) ≠ 0 := by
     have := hli.ne_zero (fun _ => 0)
@@ -1134,12 +1134,12 @@ namespace GlobalTheory
 open ThetaDet in
 theorem thetaPt_determines : Out.Laws → ThetaPtDeterminesSt := by
   intro h g n k j N N' hn hodd hk hN hN' hb K _ _ hn0 P P' hg hg' ze lev lev' v hv hv'
-  haveI := P.isAb
-  haveI := P'.isAb
-  haveI : IsProper P.A.hom := IsAbelianScheme.proper
-  haveI : IsProper P'.A.hom := IsAbelianScheme.proper
-  haveI : AlgebraicGeometry.IsIntegral P.A.left := polAV_isIntegral_of_isAlgClosed K P
-  haveI : AlgebraicGeometry.IsIntegral P'.A.left := polAV_isIntegral_of_isAlgClosed K P'
+  have := P.isAb
+  have := P'.isAb
+  have : IsProper P.A.hom := IsAbelianScheme.proper
+  have : IsProper P'.A.hom := IsAbelianScheme.proper
+  have : AlgebraicGeometry.IsIntegral P.A.left := polAV_isIntegral_of_isAlgClosed K P
+  have : AlgebraicGeometry.IsIntegral P'.A.left := polAV_isIntegral_of_isAlgClosed K P'
   have hN'' : N' = n ^ j * n ^ k * n ^ k := by rw [hN', hN]; ring
   have hn3 : 3 ≤ n := by
     have h2 := hn.two_le
@@ -1159,7 +1159,7 @@ theorem thetaPt_determines : Out.Laws → ThetaPtDeterminesSt := by
     rintro h0
     rw [h0, Nat.cast_zero] at hK
     exact hK rfl
-  haveI : NeZero (N' ^ 2) := ⟨pow_ne_zero 2 hN'0⟩
+  have : NeZero (N' ^ 2) := ⟨pow_ne_zero 2 hN'0⟩
   have hoddN' : Odd N' := hv.1
   obtain ⟨s, θ, hs, hcrd, hθ, hass⟩ := ThetaDet.exists_embedding h hN hN'' h4 hK P hg lev hv
   obtain ⟨s', θ', hs', hcrd', hθ', hass'⟩ := ThetaDet.exists_embedding h hN hN'' h4 hK P' hg' lev' hv'
@@ -1190,7 +1190,7 @@ theorem thetaPt_determines : Out.Laws → ThetaPtDeterminesSt := by
     have e2 : (1 : Out.baseOver (Sp K) ⟶ P'.A) = η := Over.OverMorphism.ext rfl
     rw [e1, e2] at h0
     exact h0
-  haveI hmon : IsMonHom φ.hom := h.rigidity (Sp K) P.A P'.A P.isAb P'.isAb φ.hom hη
+  have hmon : IsMonHom φ.hom := h.rigidity (Sp K) P.A P'.A P.isAb P'.isAb φ.hom hη
   have hLBiso := T.lbIso_pull_of_hom_preserving_coordinates h K P P' N (n ^ k) _ s s' 0 θ θ' φ.hom
     (Nat.one_le_iff_ne_zero.2 (pow_ne_zero _ (by omega))) hmon
     (by simpa only [Set.mem_univ, iSup_pos] using hs.1) (fun F _ y w hw => hφ F y w hw) hθ hass hass'

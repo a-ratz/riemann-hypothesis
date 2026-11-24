@@ -87,8 +87,8 @@ theorem res_eq_locK {PP : Formalism.L2.DIV.Pl D.host.E} {H : Formalism.L2.Host.H
   obtain ⟨r₀, s, hs, e⟩ := ha
   have hs0 : (algebraMap (𝓞 D.host.E) D.host.E s) ≠ 0 :=
     RingOfIntegers.coe_ne_zero_iff.2 (by rintro rfl; exact hs (zero_mem _))
-  haveI := PP.isMaximal
-  letI := Ideal.Quotient.field PP.asIdeal
+  have := PP.isMaximal
+  let := Ideal.Quotient.field PP.asIdeal
   have hu : Ideal.Quotient.mk PP.asIdeal s ≠ 0 := by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   have hsp := Formalism.L2.Col.reduction_spec PP hs e
   have h1 := hr s (Units.mk0 _ hs0) (Units.mk0 _ hu) rfl rfl
@@ -137,7 +137,7 @@ theorem prOU_lt {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) (z : �
   rw [h.2 z hz, ← q.sec_pr, ← q.int_iff]
   change (q.pr.comp (incA D)) _ ∉ _ ↔ _
   rw [map_inv₀, Valuation.mem_integer_iff, map_inv₀, not_le]
-  exact one_lt_inv₀ (a := valuation k (prOU q z)) (zero_lt_iff.2 ((map_ne_zero _).2 h0))
+  exact one_lt_inv₀ (a := valuation k (prOU q z)) (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))
 
 theorem prOU_le {PP : Formalism.L2.DIV.Pl D.host.E} (hi : ∀ x, (ofSplit q).pr x ∈ 𝒪[k] ↔ IntAt PP x)
     (z : 𝓞 D.host.E) : valuation k (prOU q z) ≤ 1 :=
@@ -174,8 +174,8 @@ theorem tame_and_res : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topol
         calc valuation k (prOU q s) * valuation k ((y : k) - 1) ≤ 1 * valuation k ((y : k) - 1) :=
               by gcongr; exact prOU_le q hi s
           _ < 1 := by rwa [one_mul]
-      haveI := PP.isMaximal
-      letI := Ideal.Quotient.field PP.asIdeal
+      have := PP.isMaximal
+      let := Ideal.Quotient.field PP.asIdeal
       have hu : Ideal.Quotient.mk PP.asIdeal s ≠ 0 := by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
       have e2 : Ideal.Quotient.mk PP.asIdeal r₀ = Ideal.Quotient.mk PP.asIdeal s :=
         Ideal.Quotient.eq.2 hrs

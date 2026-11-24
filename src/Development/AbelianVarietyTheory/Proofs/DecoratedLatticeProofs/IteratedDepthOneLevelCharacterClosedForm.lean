@@ -78,7 +78,7 @@ theorem iter_lam_closed : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
         refine ⟨(hD' i).1, ?_⟩
         rw [(hD' i).2, eu]; rfl
     · rw [Fin.prod_univ_castSucc]
-      simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
+      simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.val_castSucc, Fin.val_last]
       rw [← mul_assoc, ← el]
       exact e
 

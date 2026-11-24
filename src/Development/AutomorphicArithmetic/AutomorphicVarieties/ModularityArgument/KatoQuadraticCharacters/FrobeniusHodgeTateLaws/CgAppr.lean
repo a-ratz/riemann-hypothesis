@@ -183,15 +183,15 @@ theorem mem_of_pow_eq_one (A : ValuationSubring Ω) {y : Ω} {k : ℕ} (hk : k �
   exact lt_irrefl _ h
 
 theorem eOm_pow [IsAlgClosed Ω] (ε : Ω →+* ℂ) (x : ℚ) : eOm ε x ^ x.den = 1 := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hy : Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) ^ x.den = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have h' : (x : ℂ) * x.den = x.num := by exact_mod_cast Rat.mul_den_eq_num x
     have : (x.den : ℂ) * (2 * Real.pi * Complex.I * (x : ℂ)) = ((x.num : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
       linear_combination (2 * Real.pi * Complex.I) * h'
     rw [this, Complex.exp_int_mul_two_pi_mul_I]
-  haveI : NeZero x.den := ⟨x.den_nz⟩
-  haveI : NeZero (x.den : Ω) := ⟨Nat.cast_ne_zero.2 x.den_nz⟩
+  have : NeZero x.den := ⟨x.den_nz⟩
+  have : NeZero (x.den : Ω) := ⟨Nat.cast_ne_zero.2 x.den_nz⟩
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic x.den Ω)
     (ne_of_gt (Polynomial.degree_cyclotomic_pos x.den Ω x.den_pos))
   have hζ : IsPrimitiveRoot z x.den := Polynomial.isRoot_cyclotomic_iff.1 hz
@@ -278,7 +278,7 @@ open scoped MatrixGroups
 
 theorem _root_.GlobalTheory.T.logDerivQExpansion_mul_primePow_congr : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) (A : ValuationSubring Ω) (l : ℕ) [Fact l.Prime], (l : Ω) ∈ A.nonunits → ∀ (n : ℕ) (f u : X.K), f ≠ 0 → u ≠ 0 → X.sl (ofSL ModularGroup.T) u = u → ∀ φ φ' : HahnSeries ℚ Ω, IsDl X A l n 1 f φ → IsDl X A l n 1 (f * u ^ (l ^ n)) φ' → ∀ r, CgA A l n (φ.coeff r) (φ'.coeff r) := by
   intro Ω _ _ _
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   exact @GlobalTheory.Glue.DlPow.isDl_mul_lpow_cong Ω _ _ _
 end -- clump:auto
 end -- clump:auto
@@ -322,7 +322,7 @@ theorem exists_inv (q c : ℕ) (hc : 0 < c) (h : Nat.Coprime q c) : ∃ (a : ℕ
 
 theorem isAlgClosure_of_tower {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) :
     IsAlgClosure ℚ Ω := by
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   refine ⟨inferInstance, ⟨fun c => ?_⟩⟩
   obtain ⟨D, hD, hk⟩ := X.bdd (algebraMap Ω X.K c)
   obtain ⟨k, hk⟩ := hk 0
@@ -474,7 +474,7 @@ theorem perm_rep {N l q : ℕ} (hq : q.Prime) {σ : SL(2, ℤ)} (hσ : IsDiam N 
 
 theorem isDiam_one_of_mem {N l : ℕ} {g : SL(2, ℤ)} (hg : g ∈ Gam N l) : IsDiam N l 1 g := by
   obtain ⟨h1, h2⟩ := Subgroup.mem_inf.1 hg
-  refine ⟨Subgroup.mem_inf.2 ⟨CongruenceSubgroup.Gamma1_in_Gamma0 N h1, h2⟩, ?_⟩
+  refine ⟨Subgroup.mem_inf.2 ⟨CongruenceSubgroup.Gamma1_le_Gamma0 N h1, h2⟩, ?_⟩
   rw [CongruenceSubgroup.Gamma1_mem] at h1
   simpa [en] using h1.2.1
 
@@ -564,7 +564,7 @@ theorem hn_comm (X : Tower Ω ε) {M q : ℕ} {τ : SL(2, ℤ)} (hq : q.Prime) (
 theorem hn_inv (X : Tower Ω ε) {M q : ℕ} {τ : SL(2, ℤ)} (hq : q.Prime) (hτ : IsDiam M 1 q τ) {u : X.K}
     (hu : Inv X (CongruenceSubgroup.Gamma1 M) u) : Inv X (CongruenceSubgroup.Gamma1 M) (hn X q τ u) := by
   intro γ hγ
-  rw [hn_comm X hq hτ hu (CongruenceSubgroup.Gamma1_in_Gamma0 M hγ), hu γ hγ]
+  rw [hn_comm X hq hτ hu (CongruenceSubgroup.Gamma1_le_Gamma0 M hγ), hu γ hγ]
 
 theorem hn_eq (X : Tower Ω ε) {q : ℕ} (hq : 0 < q) (τ : SL(2, ℤ)) (u : X.K) :
     hn X q τ u = (∏ k ∈ Finset.range q, X.sl (toGQ !![1, (k : ℤ); 0, (q : ℤ)]) u) *
@@ -669,7 +669,7 @@ theorem dl_cong [IsAlgClosed Ω] (X : Tower Ω ε) (A : ValuationSubring Ω) {N 
     {ψ φ : HahnSeries ℚ Ω} (hψ : IsDl X A l n 1 (y : X.K) ψ) (hφ : IsDl X A l n 1 (f : X.K) φ) (r : ℚ) :
     CgA A l n (((k : Ω) • ψ).coeff r) (φ.coeff r) := by
   have hN : 1 ≤ N := Nat.pos_of_ne_zero (by rintro rfl; exact hlN (dvd_zero l))
-  haveI : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
+  have : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
   have hy0 : (y : X.K) ^ k ≠ 0 := pow_ne_zero _ y.ne_zero
   have hL : (u : X.K) ^ l ^ n = f / (y : X.K) ^ k := by rw [hu]; field_simp
   have hT := _root_.GlobalTheory.TInv.sl_T_eq X N l n hl.out hl2 hlN hN (u : X.K) u.ne_zero (by
@@ -714,7 +714,7 @@ theorem isThB_heckeT : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed 
   intro Ω _ _ _ ε X A N l hlF n w d q hqP hqNl hqA hlA hl2 hlN hd b hb φ φ' _ _ h₀ h'
   obtain ⟨f₀, hf₀I, hf₀c, hf₀δ, hf₀D⟩ := h₀
   obtain ⟨f', hf'I, hf'c, hf'δ, hf'D⟩ := h'
-  haveI : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
+  have : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
   have hl : l.Prime := hlF.out
   have hN0 : 0 < N := Nat.pos_of_ne_zero (by rintro rfl; exact hlN (dvd_zero l))
   have hNl : Nat.Coprime N l := ((Nat.Prime.coprime_iff_not_dvd hl).2 hlN).symm
@@ -978,14 +978,14 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω]
 
 theorem exists_pre_exp [IsAlgClosed Ω] (ε : Ω →+* ℂ) (x : ℚ) :
     ∃ ω : Ω, ε ω = Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hn : x.den ≠ 0 := x.den_nz
-  haveI : NeZero ((x.den : ℕ) : Ω) := ⟨by exact_mod_cast hn⟩
-  haveI : NeZero x.den := ⟨hn⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω x.den
+  have : NeZero ((x.den : ℕ) : Ω) := ⟨by exact_mod_cast hn⟩
+  have : NeZero x.den := ⟨hn⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω x.den
   have hζ' := hζ.map_of_injective ε.injective
   have hz : (Complex.exp (2 * Real.pi * Complex.I * (x : ℂ))) ^ x.den = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have hx : (x : ℂ) * (x.den : ℂ) = (x.num : ℂ) := by exact_mod_cast Rat.mul_den_eq_num x
     have : (x.den : ℂ) * (2 * Real.pi * Complex.I * (x : ℂ)) = (x.num : ℂ) * (2 * Real.pi * Complex.I) := by
       linear_combination (2 * Real.pi * Complex.I) * hx
@@ -1019,7 +1019,7 @@ theorem sum_eOm [IsAlgClosed Ω] (ε : Ω →+* ℂ) (q : ℕ) (hq : 0 < q) (s :
   apply ε.injective
   have hz : ∀ j : ℕ, ε (eOm ε (s * (j : ℚ))) = (Complex.exp (2 * Real.pi * Complex.I * (s : ℂ))) ^ j := by
     intro j
-    rw [eps_eOm, ← Complex.exp_nat_mul]
+    rw [eps_eOm, ← Complex.exp_natCast_mul]
     congr 1
     push_cast; ring
 
@@ -1028,7 +1028,7 @@ theorem sum_eOm [IsAlgClosed Ω] (ε : Ω →+* ℂ) (q : ℕ) (hq : 0 < q) (s :
   split_ifs with hd
   · have h1 : Complex.exp (2 * Real.pi * Complex.I * (s : ℂ)) = 1 := by
       have : (s : ℂ) = ((s.num : ℤ) : ℂ) := by
-        have := Rat.coe_int_num_of_den_eq_one hd
+        have := Rat.intCast_num_of_den_eq_one hd
         rw [← this]; push_cast; rfl
       rw [this, show 2 * (Real.pi : ℂ) * Complex.I * ((s.num : ℤ) : ℂ) = (s.num : ℂ) * (2 * Real.pi * Complex.I) by ring]
       exact Complex.exp_int_mul_two_pi_mul_I _
@@ -1044,8 +1044,8 @@ theorem sum_eOm [IsAlgClosed Ω] (ε : Ω →+* ℂ) (q : ℕ) (hq : 0 < q) (s :
       have : s = (n : ℚ) := by exact_mod_cast hsn
       exact hd (by rw [this]; rfl)
     have hpow : (Complex.exp (2 * Real.pi * Complex.I * (s : ℂ))) ^ q = 1 := by
-      rw [← Complex.exp_nat_mul]
-      have hx : ((q : ℚ) * s : ℚ) = ((((q : ℚ) * s).num : ℤ) : ℚ) := (Rat.coe_int_num_of_den_eq_one hs).symm
+      rw [← Complex.exp_natCast_mul]
+      have hx : ((q : ℚ) * s : ℚ) = ((((q : ℚ) * s).num : ℤ) : ℚ) := (Rat.intCast_num_of_den_eq_one hs).symm
       have hx' : (q : ℂ) * (s : ℂ) = ((((q : ℚ) * s).num : ℤ) : ℂ) := by exact_mod_cast hx
       rw [show (q : ℂ) * (2 * Real.pi * Complex.I * (s : ℂ)) = ((((q : ℚ) * s).num : ℤ) : ℂ) * (2 * Real.pi * Complex.I) by
         rw [← hx']; ring]
@@ -1056,7 +1056,7 @@ theorem hq_coeff_of_int : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClos
     (∀ r : ℚ, φ.coeff r ≠ 0 → r.den = 1) → ∀ s : ℚ,
       (hq ε q φ).coeff s = if s.den = 1 then φ.coeff ((q : ℚ) * s) else 0 := by
   intro Ω _ _ _ ε q hq0 φ hφ s
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   unfold hq
   rw [HahnSeries.coeff_smul, HahnSeries.coeff_sum, smul_eq_mul]
   simp only [GlobalTheory.HeckeInt.sub_coeff ε q hq0]
@@ -1096,7 +1096,7 @@ theorem eOm_mul_nat (x : ℚ) (k : ℕ) : eOm ε (x * k) = eOm ε x ^ k := by
 
 theorem eOm_of_den {x : ℚ} (h : x.den = 1) : eOm ε x = 1 := by
   apply ε.injective
-  rw [eOm_spec, map_one, ← Rat.coe_int_num_of_den_eq_one h]
+  rw [eOm_spec, map_one, ← Rat.intCast_num_of_den_eq_one h]
   have := Complex.exp_int_mul_two_pi_mul_I x.num
   rw [← this]; congr 1; push_cast; ring
 
@@ -1148,7 +1148,7 @@ theorem subHom_period (i : ℚ) (d : ℕ) [NeZero d] {φ : HahnSeries ℚ Ω} (h
 
 theorem theta_subHom (j : ℚ) (d : ℕ) [NeZero d] (φ : HahnSeries ℚ Ω) :
     theta 1 (subHom ε j d φ) = HahnSeries.C ((d : Ω)⁻¹) * subHom ε j d (theta 1 φ) := by
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   have h0 : (d : Ω) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne d)
   ext r
   rw [HahnSeries.C_mul_eq_smul, HahnSeries.coeff_smul, smul_eq_mul, coeff_subHom]
@@ -1223,7 +1223,7 @@ theorem tr_norm (l : ℕ) [NeZero l] {c : HahnSeries ℚ Ω} (h0 : c ≠ 0) (h :
 theorem dv_mean {A : ValuationSubring Ω} {n : ℕ} (l : ℕ) [NeZero l] {w : HahnSeries ℚ Ω} (hw : Dv A l n w)
     (h : subHom ε l 1 w = w) :
     Dv A l n (HahnSeries.C ((l : Ω)⁻¹) * ∑ j ∈ Finset.range l, subHom ε (j : ℕ) 1 w) := by
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   have h0 : (l : Ω) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne l)
   intro r
   rw [HahnSeries.C_mul_eq_smul, HahnSeries.coeff_smul, smul_eq_mul, HahnSeries.coeff_sum]
@@ -1344,7 +1344,7 @@ theorem isDl_norm : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω]
   X.sl (ofSL ModularGroup.T) f = f → (∀ r : ℚ, φ.coeff r ≠ 0 → r.den = 1) → IsDl X A l n 1 f φ →
   IsDl X A l n 1 (∏ j ∈ Finset.range l, X.sl (toGQ !![1, (j : ℤ); 0, (l : ℤ)]) f) (hq ε l φ) := by
   intro Ω _ _ _ ε X A l hl n f φ hf hφ h
-  haveI : NeZero l := ⟨hl.out.ne_zero⟩
+  have : NeZero l := ⟨hl.out.ne_zero⟩
   obtain ⟨a, b, κ, hκ, e, pa, pb, ta, tb, c⟩ := exists_inv_pres ε X A l n f φ hf h
   have tx : ∀ x : X.K, X.sl (ofSL ModularGroup.T) x = x → subHom ε 1 1 (X.exp x) = X.exp x := fun x hx => by
     have := modularTowerExp_slAction_T_pow ε X 1 x
@@ -1495,7 +1495,7 @@ theorem isThB_act_heckeU : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClo
   IsThB X A N l (n + 1) (X.act l (sgD N l d : Matrix (Fin 2) (Fin 2) ℤ) b) φ →
     IsThB X A N l n (X.act l (sgD N l d : Matrix (Fin 2) (Fin 2) ℤ) (X.heckeU l b)) (uq l φ) := by
   intro Ω _ _ _ ε X A N l _ n w d hAlg hj hl2 hN1 hw hlA hd hl b hb φ _ h
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, hAlg⟩
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, hAlg⟩
   have hl0 : 0 < l := Nat.Prime.pos Fact.out
   have hNl : Nat.Coprime N l := ((Nat.Prime.coprime_iff_not_dvd Fact.out).mpr hl).symm
   obtain ⟨φ', h', hlat'⟩ := GlobalTheory.ThEx.of_lift GlobalTheory.ThLift.exists_invariant_lift Ω ε X A N l hAlg hj hl2 hl hN1 hlA n w hw _
@@ -1577,7 +1577,7 @@ theorem isThB_cong [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) (
     (l2 : l ≠ 2) (hN : ¬ l ∣ N) (hN1 : 1 ≤ N) (hlA : (l : Ω) ∈ A.nonunits) (n : ℕ) (b : X.Fn l)
     (φ φ' : HahnSeries ℚ Ω) (h1 : IsThB X A N l n b φ) (h2 : IsThB X A N l n b φ') :
     ∀ r, CgA A l n (φ.coeff r) (φ'.coeff r) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨f, hfI, hfc, hfδ, hfD⟩ := h1
   obtain ⟨f', hf'I, hf'c, hf'δ, hf'D⟩ := h2
   obtain ⟨u, hu⟩ := GlobalTheory.Tower.cls_eq_pow X l n f f' (hfc.symm.trans hf'c)
@@ -1608,7 +1608,7 @@ theorem GlobalTheory.CyclotomicQExpansion.thN_hecke : ∀ (Ω : Type) [Field Ω]
   (∀ r, CgA A l n ((thN X A N l n d (X.heckeU l b)).coeff r) ((uq l (thN X A N l (n + 1) d b)).coeff r)) ∧
   (∀ a : ℕ, a.Coprime N → ∀ r, CgA A l n ((thN X A N l n d (X.diam N l a b)).coeff r) ((thN X A N l n (d * a) b).coeff r)) := by
   intro Ω _ _ _ ε X A N l _ hj hl2 hlN hN hlA n w d hw hd b hb
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have halg : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hl : l.Prime := Fact.out
   have stab : ∀ T : Letter, admitted N l T → ∀ c : X.Fn l, c ∈ X.B N l w → X.op N l T c ∈ X.B N l w :=
@@ -1699,7 +1699,7 @@ private theorem norm_appr_sub_le_norm_pow (n : ℕ) (c : ℤ_[l]) :
       = algebraMap ℚ_[l] (PadicAlgCl l) (((-(c - ((c.appr n : ℕ) : ℤ_[l])) : ℤ_[l]) : ℚ_[l])) := by
     simp
   have e2 : ((l : Qbar l)) ^ n = algebraMap ℚ_[l] (PadicAlgCl l) (((l : ℚ_[l])) ^ n) := by simp
-  rw [e, e2, PadicAlgCl.norm_extends, PadicAlgCl.norm_extends, PadicInt.padic_norm_e_of_padicInt, norm_neg]
+  rw [e, e2, PadicAlgCl.norm_extends, PadicAlgCl.norm_extends, PadicInt.norm_coe, norm_neg]
   have h := (PadicInt.norm_le_pow_iff_mem_span_pow _ n).2 (PadicInt.appr_spec n c)
   refine h.trans (le_of_eq ?_)
   rw [Padic.norm_p_pow]
@@ -1721,7 +1721,7 @@ private theorem diam_cg {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     (ha : a.Coprime N) (hb : InChi X N w χ b) (r : ℚ) :
     Cg n (j ((thN X A N l n 1 (X.diam N l a b)).coeff r))
       (((χ a : ℤ_[l]) : Qbar l) * j ((thN X A N l n 1 b).coeff r)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨hl, hl2, hlN, hN5, hw, hj⟩ := hS
   obtain ⟨hbB, hdiam⟩ := hb
   have hB1 : X.diam N l 1 b ∈ X.B N l w := by
@@ -1764,7 +1764,7 @@ private theorem coeff_div_prime_eq_zero_of_not_dvd_of_isLat {Ω : Type} [Field �
   by_contra h
   have hden := hL _ h
   rw [Nat.cast_one, one_mul] at hden
-  have key : (((i : ℚ) / q).num : ℚ) = (i : ℚ) / q := Rat.coe_int_num_of_den_eq_one hden
+  have key : (((i : ℚ) / q).num : ℚ) = (i : ℚ) / q := Rat.intCast_num_of_den_eq_one hden
   have hq0 : (q : ℚ) ≠ 0 := by exact_mod_cast hq.ne_zero
   have h2 : (i : ℚ) = q * ((i : ℚ) / q).num := by rw [key]; field_simp
   have h3 : (i : ℤ) = q * ((i : ℚ) / q).num := by exact_mod_cast h2
@@ -1774,7 +1774,7 @@ open UpperTheory.V.Z.Kato.Joint.ThetaOperator in
 theorem UpperTheory.V.Z.Kato.Joint.thOp :
     UpperTheory.V.Z.Kato.Joint.ThOp := by
   intro l _ Ω _ _ _ ε X A N w j χ hS n T b hT hb i
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hS' := hS
   obtain ⟨hl, hl2, hlN, hN5, hw, hj⟩ := hS'
   have hψ : ∀ m, IsThB X A N l m (X.act l (sgD N l 1) b) (thN X A N l m 1 b) ∧ IsLat 1 (thN X A N l m 1 b) :=
@@ -1790,7 +1790,7 @@ theorem UpperTheory.V.Z.Kato.Joint.thOp :
     rw [GlobalTheory.CyclotomicQExpansion.Api.hq_eq_uq_of_isAlgClosed hqp.pos (hψ n).2] at h1
     have h1' := cg_j hj h1
     simp only [HahnSeries.coeff_add, HahnSeries.coeff_smul, GlobalTheory.CyclotomicQExpansion.Api.coeff_uq hqp.pos,
-      GlobalTheory.CyclotomicQExpansion.Api.coeff_vq hqp.pos, map_add, Nat.cast_one, div_one, Rat.den_natCast, if_true,
+      GlobalTheory.CyclotomicQExpansion.Api.coeff_vq hqp.pos, map_add, Nat.cast_one, div_one, Rat.den_natCast, ite_true,
       one_mul, smul_eq_mul, nsmul_eq_mul, map_mul, map_pow, map_natCast] at h1'
     have hx : Cg n (j ((thN X A N l n q b).coeff ((i : ℚ) / q)))
         (((χ q : ℤ_[l]) : Qbar l) *
@@ -1813,7 +1813,7 @@ theorem UpperTheory.V.Z.Kato.Joint.thOp :
       (j ((thN X A N l n 1 b).coeff (((l * i : ℕ) : ℚ) / ((1 : ℕ) : ℚ))))
     have h2 := cg_j hj (hrel.2.1 ((i : ℚ) / (1 : ℕ)))
     simp only [GlobalTheory.CyclotomicQExpansion.Api.coeff_uq (Fact.out : l.Prime).pos, Nat.cast_one, div_one, Rat.den_natCast,
-      if_true] at h2
+      ite_true] at h2
     have h3 := cg_j hj (GlobalTheory.T.cgA_coeff_of_isThB_succ Ω ε X A N l hl2 hlN (by omega) hl n _ _ _ (hψ (n + 1)).1 (hψ n).1
       ((l : ℚ) * i))
     simp only [Nat.cast_one, div_one, Nat.cast_mul]

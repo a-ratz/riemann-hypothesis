@@ -59,7 +59,7 @@ private theorem pm_map_map (D : GDet n A G) (f : A →+* A') (g : A' →+* A'') 
 
 private theorem pm_chi_map (D : GDet n A G) (f : A →+* A') (y : MonoidAlgebra A G) :
     (D.map f).chi (MonoidAlgebra.mapRingHom G f y) = (D.chi y).map f := by
-  letI : Algebra A A'[X] := ((algebraMap A' A'[X]).comp f).toAlgebra
+  let : Algebra A A'[X] := ((algebraMap A' A'[X]).comp f).toAlgebra
   have h := D.nat A[X] A'[X]
     { (Polynomial.mapRingHom f : A[X] →+* A'[X]) with
       commutes' := fun a => by

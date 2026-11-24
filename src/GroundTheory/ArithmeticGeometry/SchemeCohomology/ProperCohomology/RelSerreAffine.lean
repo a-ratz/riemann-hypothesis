@@ -722,8 +722,8 @@ instance isClosedImmersion_embedProj [IsClosedImmersion i] [IsSeparated (X ↘ S
 lemma embedProj_isOver {V : X.Opens} (hV : IsAffineOpen V) :
     letI := overBase i ψ h hV
     (embedProj i ψ h hV).IsOver (Spec (.of Γ(X, V))) := by
-  letI := baseAlgebra A hV
-  letI := overBase i ψ h hV
+  let := baseAlgebra A hV
+  let := overBase i ψ h hV
   refine ⟨?_⟩
   change embedProj i ψ h hV ≫ ProjSpace.toSpecBase Γ(X, V) N =
     embed i ψ h hV ≫ pullback.snd _ _
@@ -732,7 +732,7 @@ lemma embedProj_isOver {V : X.Opens} (hV : IsAffineOpen V) :
 lemma embedProj_baseChangeMap {V : X.Opens} (hV : IsAffineOpen V) :
     letI := baseAlgebra A hV
     embedProj i ψ h hV ≫ ProjSpace.baseChangeMap A Γ(X, V) N = (ψ ⁻¹ᵁ V).ι ≫ i := by
-  letI := baseAlgebra A hV
+  let := baseAlgebra A hV
   rw [embedProj, Category.assoc, IsPullback.isoPullback_inv_fst, embed_fst]
 
 def twistRestrictIso {V : X.Opens} (hV : IsAffineOpen V) (G : X'.Modules) (k : ℤ) :
@@ -755,8 +755,8 @@ theorem exists_vanishing_finite [IsClosedImmersion i] [IsSeparated (X ↘ Spec (
         (Sheaf.H.{u} (modulesAb ((ProjScheme.twist i G n).restrict (ψ ⁻¹ᵁ V).ι)) (q + 1))) ∧
       Module.Finite Γ(X, V)
         (Sheaf.H.{u} (modulesAb ((ProjScheme.twist i G n).restrict (ψ ⁻¹ᵁ V).ι)) 0) := by
-  letI := overBase i ψ h hV
-  haveI := embedProj_isOver i ψ h hV
+  let := overBase i ψ h hV
+  have := embedProj_isOver i ψ h hV
   have hGr : IsCoherent (G.restrict (ψ ⁻¹ᵁ V).ι) := hG.restrict _
   obtain ⟨q₀, hq₀⟩ := ProjScheme.exists_subsingleton_H_twist.{u} (embedProj i ψ h hV) _ hGr
   refine ⟨q₀, fun n hn => ⟨fun q => ?_, ?_⟩⟩

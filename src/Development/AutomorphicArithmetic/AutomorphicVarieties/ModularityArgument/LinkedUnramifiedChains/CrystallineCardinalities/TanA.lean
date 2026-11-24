@@ -239,10 +239,10 @@ private theorem crys_model {l : ℕ} [Fact l.Prime] (K L₁ L₂ : FinExt l) {n 
 
 private theorem core_open {l : ℕ} [Fact l.Prime] (K : FinExt l) :
     IsOpen (((GK K).normalCore : Subgroup (GQ l)) : Set (GQ l)) := by
-  haveI := K.2
+  have := K.2
   have ho : IsOpen ((GK K : Subgroup (GQ l)) : Set (GQ l)) := K.1.fixingSubgroup_isOpen
-  haveI : (GK K).FiniteIndex := by
-    haveI : Finite (GQ l ⧸ GK K) := Subgroup.quotient_finite_of_isOpen _ ho
+  have : (GK K).FiniteIndex := by
+    have : Finite (GQ l ⧸ GK K) := Subgroup.quotient_finite_of_isOpen _ ho
     exact Subgroup.finiteIndex_of_finite_quotient
   exact Subgroup.isOpen_of_isClosed_of_finiteIndex _
     (Subgroup.normalCore_isClosed _ K.1.fixingSubgroup_isClosed)
@@ -329,7 +329,7 @@ private theorem exists_deg (l : ℕ) [Fact l.Prime] :
   obtain ⟨f, hf, hI, h1⟩ := frobFree σ hσ (Multiplicative ℤ_[l]) (Multiplicative.ofAdd 1)
   refine ⟨fun s => ((Multiplicative.toAdd (f s) : ℤ_[l]) : ℚ_[l]), σ, ?_, fun s s' => by simp, fun s hs => ?_,
     fun n hn => ?_⟩
-  · exact continuous_subtype_val.comp (continuous_toAdd.comp hf)
+  · exact continuous_subtypeVal.comp (continuous_toAdd.comp hf)
   · simp [hI s hs]
   · simp [h1, hn.ne']
 
@@ -349,7 +349,7 @@ omit [FiniteDimensional ℚ_[l] E] in
 private theorem cyc_cont [IsTopologicalRing E] : Continuous fun g : GQ l => (cycA l l E g : E) := by
   have h1 : Continuous (algebraMap ℤ_[l] E) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] E]
-    exact (IsModuleTopology.continuous_of_linearMap (Algebra.linearMap ℚ_[l] E)).comp continuous_subtype_val
+    exact (IsModuleTopology.continuous_of_linearMap (Algebra.linearMap ℚ_[l] E)).comp continuous_subtypeVal
   exact h1.comp (Units.continuous_val.comp (cycFacts l l).1)
 
 private theorem gk_case [IsTopologicalRing E] (hP : LocalPublishedTheorems) (K : FinExt l) (κ : ↥(GK K) → E)
@@ -359,13 +359,13 @@ private theorem gk_case [IsTopologicalRing E] (hP : LocalPublishedTheorems) (K :
     ∃ β : ↥(GK K) → E, Continuous β ∧
       ∀ s s', β (s * s') = β s + (cycA l l E (s : GQ l) : E) * β s' - d s' • κ s := by
   classical
-  haveI : ContinuousSMul ℚ_[l] E := IsModuleTopology.toContinuousSMul ℚ_[l] E
-  haveI := K.2
+  have : ContinuousSMul ℚ_[l] E := IsModuleTopology.toContinuousSMul ℚ_[l] E
+  have := K.2
   have hφ : IsOpenEmbedding (GK K).subtype :=
     (IntermediateField.fixingSubgroup_isOpen K.1).isOpenEmbedding_subtypeVal
   obtain ⟨T⟩ := tiedP l
   have hc : Continuous fun g : ↥(GK K) => (((cycA l l E).comp (GK K).subtype) g : E) :=
-    cyc_cont.comp continuous_subtype_val
+    cyc_cont.comp continuous_subtypeVal
   have hdR : IsDR ((PP l).PD K) (resCoef ℚ_[l] (chRep ((cycA l l E).comp (GK K).subtype))) :=
     (isCrIff K _).2.1 (charFil _ hφ _ hc 1 ⟨⊤, isOpen_univ, fun g _ _ => (zpow_one _).symm⟩).1
   have hρ : ∀ g x, resCoef ℚ_[l] (chRep ((cycA l l E).comp (GK K).subtype)) g x =
@@ -435,11 +435,11 @@ theorem UpperTheory.V.Z.J.cupUnr :
       refine LinearMap.ext fun y => ?_
       change (cycA l l E (φ (e.symm g)) : E) * _ = _
       rw [hφ']
-      rfl⟩ (fun g => d g) (hd.comp continuous_subtype_val) (fun s s' => hadd _ _) (fun s hs => hI _ hs)
+      rfl⟩ (fun g => d g) (hd.comp continuous_subtypeVal) (fun s s' => hadd _ _) (fun s hs => hI _ hs)
   refine ⟨fun s => algebraMap ℚ_[l] E (d (φ s)), β ∘ e,
     (IsModuleTopology.continuous_of_linearMap (Algebra.linearMap ℚ_[l] E)).comp (hd.comp hφ.continuous),
     hβ.comp he, fun s s' => by simp [hadd], fun s hs => by simp [hI _ hs], ?_, fun s s' => ?_⟩
-  · haveI := K.2
+  · have := K.2
     obtain ⟨n, hn, -, s, hs⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (H := φ.range)
       (by rw [hind]; exact Module.finrank_pos.ne') σ
     exact ⟨s, by simpa [hs] using hσ n hn⟩
@@ -522,9 +522,9 @@ private theorem crOn_map (φ : G →* GQ l) (hφ : IsOpenEmbedding φ)
     (Function.Injective f → CrOn φ ρ' H → CrOn φ ρ H) ∧ (Function.Surjective f → CrOn φ ρ H → CrOn φ ρ' H) := by
   have hφH : IsOpenEmbedding (φ.comp H.subtype) := hφ.comp hH.isOpenEmbedding_subtypeVal
   have hc : Continuous fun p : H × V => ((p.1 : G), p.2) :=
-    (continuous_subtype_val.comp continuous_fst).prodMk continuous_snd
+    (continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd
   have hc' : Continuous fun p : H × V' => ((p.1 : G), p.2) :=
-    (continuous_subtype_val.comp continuous_fst).prodMk continuous_snd
+    (continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd
   have key := isCrys_isDR_sub_quot (φ.comp H.subtype) hφH (ρ.comp H.subtype : Representation E H V)
     (ρ'.comp H.subtype : Representation E H V') (hρ.comp hc) (hρ'.comp hc') (f.restrictScalars ℚ_[l])
     (fun g x => hf g x)
@@ -625,8 +625,8 @@ private theorem crConj {l : ℕ} [Fact l.Prime] {D : Type} [Group D] [Topologica
     simp only [h, Units.val_mul]
     exact (continuous_const.matrix_mul hr).matrix_mul continuous_const
   have hψ : IsOpenEmbedding (φ.comp U.subtype) := hφ.comp hU.isOpenEmbedding_subtypeVal
-  have hr' : Continuous fun s : U => ((r.comp U.subtype) s : Matrix (Fin 3) (Fin 3) E) := hr.comp continuous_subtype_val
-  have ht' : Continuous fun s : U => ((t.comp U.subtype) s : Matrix (Fin 3) (Fin 3) E) := ht.comp continuous_subtype_val
+  have hr' : Continuous fun s : U => ((r.comp U.subtype) s : Matrix (Fin 3) (Fin 3) E) := hr.comp continuous_subtypeVal
+  have ht' : Continuous fun s : U => ((t.comp U.subtype) s : Matrix (Fin 3) (Fin 3) E) := ht.comp continuous_subtypeVal
   refine ((isCrys_isDR_sub_quot (φ.comp U.subtype) hψ (colRep (r.comp U.subtype)) (colRep (t.comp U.subtype)) (contAction_colRep hr') (contAction_colRep ht')
       ((Matrix.toLin' (g : Matrix (Fin 3) (Fin 3) E)).restrictScalars ℚ_[l]) (fun s x => ?_)).2 (fun y => ?_)).1 hc
   · simp only [LinearMap.restrictScalars_apply, Matrix.toLin'_apply, colRep_apply, Matrix.mulVec_mulVec, MonoidHom.comp_apply, Subgroup.subtype_apply, h,
@@ -662,8 +662,8 @@ private theorem stepCore (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] 
     (hlink : ∀ s, (t s : Matrix (Fin 3) (Fin 3) c.O) i.castSucc i.castSucc =
       algebraMap ℤ_[l] c.O (cyc l l (φ s)) * (t s : Matrix (Fin 3) (Fin 3) c.O) i.succ i.succ)
     (I : Subgroup D) (hI : ∀ s ∈ I, φ s ∈ Iq l) : UnitStep I ((cyc l l).comp φ) t i := by
-  haveI := E.2
-  haveI : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
+  have := E.2
+  have : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
   have hinv : ∀ s a b, ((((t' s)⁻¹ : GL (Fin 3) ↥E.1) : Matrix (Fin 3) (Fin 3) ↥E.1) a b : PadicAlgCl l) =
       ((((t s)⁻¹ : GL (Fin 3) c.O) : Matrix (Fin 3) (Fin 3) c.O) a b : c.O).1 := fun s a b => by
     rw [← map_inv, ← map_inv]; exact ht _ a b
@@ -675,7 +675,7 @@ private theorem stepCore (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] 
   obtain ⟨u, β, cu, cβ, ua, ui, ⟨s₀, hs₀⟩, ub⟩ := cupUnr hP φ hφ _ hZ
   have bd : ∀ x : ↥E.1, ∃ (m : ℕ) (a : c.O), (l : PadicAlgCl l) ^ m * (x : PadicAlgCl l) = a.1 := fun x => hE _ x.2
   obtain ⟨m, u', β', au, aβ, hu, hβ⟩ := clearDen c (fun s => (u s : PadicAlgCl l)) (fun s => (β s : PadicAlgCl l))
-    (continuous_subtype_val.comp cu) (continuous_subtype_val.comp cβ) (fun s => bd _) (fun s => bd _)
+    (continuous_subtypeVal.comp cu) (continuous_subtypeVal.comp cβ) (fun s => bd _) (fun s => bd _)
   have hl : (l : PadicAlgCl l) ^ m ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
   refine ⟨hlink, u', β', au, aβ, fun s s' => Subtype.ext ?_, fun s hs => Subtype.ext ?_, ⟨s₀, fun h => hs₀ ?_⟩, fun s s' => Subtype.ext ?_⟩
   · rw [AddMemClass.coe_add, hu, hu, hu, ua, AddMemClass.coe_add, mul_add]
@@ -720,7 +720,7 @@ private theorem fieldOf {l : ℕ} [Fact l.Prime] (c : Coef l) : ∃ E : FinExt l
   let S : Set (PadicAlgCl l) := (fun x : c.O => x.1) '' (s : Set c.O)
   have hS : S.Finite := s.finite_toSet.image _
   have halg : ∀ x ∈ S, IsIntegral ℚ_[l] x := fun x _ => Algebra.IsIntegral.isIntegral x
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
     IntermediateField.finiteDimensional_adjoin (S := S) halg
   refine ⟨⟨IntermediateField.adjoin ℚ_[l] S, inferInstance⟩, fun x => ?_, fun x hx => ?_⟩
   · have hx : x ∈ Submodule.span ℤ_[l] (s : Set c.O) := hs ▸ Submodule.mem_top
@@ -752,8 +752,8 @@ private theorem flagStep (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] 
   let y₀ : S.R →ₐ[c₁.O] Qbar l := (Algebra.ofId c₁.O (Qbar l)).comp ξ
   have hcont : ∀ a b, Continuous fun g => y₀ (S.ρ.r g a b) := fun a b => Hi.Up.pt_cont y₀ (S.lift.1.1 a b)
   obtain ⟨E, hE1, hE2⟩ := fieldOf c₁
-  haveI := E.2
-  haveI : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
+  have := E.2
+  have : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
   let f₀ : S.A →+* c₁.O := (ξ : S.R →+* c₁.O).comp (S.A.val : S.A →+* S.R)
   obtain ⟨g, hg⟩ := Fr.flag hF (Or.inr rfl) S c₁.O f₀ v
   let ρ₀ : F.Gv v →* GL (Fin 3) c₁.O := (((S.u.map f₀).r.comp (F.loc0 v))).toHomUnits
@@ -809,7 +809,7 @@ private theorem locEmb {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
     refine hE.continuous_iff.2 ?_
     have : (galEmb ℚ L Ω) ∘ ψ = fun s => (k.j v s).1 := funext hψ
     rw [this]
-    exact continuous_subtype_val.comp (k.j_cont v)
+    exact continuous_subtypeVal.comp (k.j_cont v)
   have hψi : Function.Injective ψ := fun a b h => by
     have h1 := congrArg (galEmb ℚ L Ω) h
     rw [hψ, hψ] at h1

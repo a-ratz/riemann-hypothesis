@@ -765,7 +765,7 @@ theorem UpperTheory.exists_nsmul_mem_sum_image_lattice_of_surjective_mod :
     show Φ x ∈ ΛB
     rw [hΦapp]
     exact Submodule.sum_mem _ (fun a _ => hJ a (x a) (Submodule.mem_pi.mp hx a (Set.mem_univ a)))
-  haveI : Countable ΛB := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+  have : Countable ΛB := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
   have hΦs : ∀ u, ∃ v, Φ v = u := by
     intro u
     by_contra hu
@@ -809,15 +809,15 @@ theorem UpperTheory.exists_nsmul_mem_sum_image_lattice_of_surjective_mod :
   obtain ⟨t, htS, htspan, hti⟩ := exists_linearIndependent ℝ (Sz : Set (Fin gB → ℂ))
   let b : Module.Basis t ℝ (Fin gB → ℂ) :=
     Module.Basis.mk hti (by simp only [Subtype.range_coe, htspan, hspan, le_refl])
-  haveI : Finite t := Module.Finite.finite_basis b
-  haveI : Fintype t := Fintype.ofFinite t
+  have : Finite t := Module.Finite.finite_basis b
+  have : Fintype t := Fintype.ofFinite t
   have hbS : ∀ i, b i ∈ Sz := fun i => by
     rw [Module.Basis.mk_apply]
     exact htS i.2
   have hzS : Submodule.span ℤ (Set.range b) ≤ Sz :=
     Submodule.span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hbS i)
-  haveI : DiscreteTopology ΛB.toAddSubgroup := ‹DiscreteTopology ΛB›
-  haveI : DiscreteTopology (ΛB : Set (Fin gB → ℂ)) := ‹DiscreteTopology ΛB›
+  have : DiscreteTopology ΛB.toAddSubgroup := ‹DiscreteTopology ΛB›
+  have : DiscreteTopology (ΛB : Set (Fin gB → ℂ)) := ‹DiscreteTopology ΛB›
   have hcl : IsClosed (ΛB : Set (Fin gB → ℂ)) := (ΛB.toAddSubgroup).isClosed_of_discreteTopology
   have hfin : ((ZSpan.fundamentalDomain b) ∩ (ΛB : Set (Fin gB → ℂ))).Finite :=
     Metric.finite_isBounded_inter_isClosed (isDiscrete_iff_discreteTopology.mpr ‹_›)
@@ -922,7 +922,7 @@ private theorem exists_unif (P : Out.PolAV S) : ∃ (L : LB ((Over.pullback f).o
     rigid := PolBaseChange.rigidified_pull h P.rigid
     sym := PolBaseChange.sym_pull h P.sym
     ample := by
-      haveI := P.isAb.proper
+      have := P.isAb.proper
       exact AmpleBaseChange.relAmple_of_isPullback P.isLB P.ample h.1
     ktriv := kTriv_pull h P.isLB (pull_isLB P.isLB _) ((isGen_iff _).1 (gen_refl (pull_isLB P.isLB _))) P.ktriv }
   obtain ⟨rig, hrig⟩ := Q.rigid
@@ -1672,16 +1672,16 @@ theorem weilEq_gram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       (X.A true).t.PP.L ((X.A true).t.act.act r) (𝟙 _) (spMap (σ₁.comp (algebraMap (𝓞 K) K))) := by
   intro E _ _ _ H _ K _ _ ρ σ₁ p X gP gQ hG m hm z f hf hfm x r hr
   have hL : Out.Laws := GlobalTheory.abelianSchemeLaws_all.1
-  haveI : IsLocallyNoetherian (Sp (𝓞 K)) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of (𝓞 K))))
+  have : IsLocallyNoetherian (Sp (𝓞 K)) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of (𝓞 K))))
   have hβ : Function.Injective (σ₁.comp (algebraMap (𝓞 K) K)) :=
     σ₁.injective.comp (FaithfulSMul.algebraMap_injective (𝓞 K) K)
   have lA : (X.A true).t.PP.L.IsLB := (X.A true).t.PP.isLB
   have lB : X.B.t.PP.L.IsLB := X.B.t.PP.isLB
   have tA := exists_thetaGen' hL (X.A true).pol
   have tB := exists_thetaGen' hL X.B.pol
-  haveI : IsMonHom f := hf.1
-  haveI hφ : ∀ a, IsMonHom (phiP X a) := fun a => (X.lin (Sum.inl a)).1
-  haveI hact : ∀ s, IsMonHom ((X.A true).t.act.act s) := (X.A true).t.act.hom
+  have : IsMonHom f := hf.1
+  have hφ : ∀ a, IsMonHom (phiP X a) := fun a => (X.lin (Sum.inl a)).1
+  have hact : ∀ s, IsMonHom ((X.A true).t.act.act s) := (X.A true).t.act.hom
   have toLam : ∀ (f₁ f₂ : (X.A true).t.G ⟶ X.B.t.G) (g₁ g₂ : (X.A true).t.G ⟶ (X.A true).t.G), IsMonHom f₁ →
       IsMonHom f₂ → IsMonHom g₁ → IsMonHom g₂ →
       WeilEq X.B.t.PP.L f₁ f₂ (X.A true).t.PP.L g₁ g₂ (spMap (σ₁.comp (algebraMap (𝓞 K) K))) →
@@ -1718,7 +1718,7 @@ theorem weilEq_gram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
 
   obtain ⟨r', hr'⟩ := GramExists.exists_weilEq_entry E H K ρ σ₁ (X.A true) X.B 1 0 X.ρ_sq rfl X.typeP f
     (∏ b, ((X.A true).t.act.act (x b) ≫ phiP X b)) hf (isLinearHom_prod X x)
-  haveI hψ : IsMonHom (∏ b, ((X.A true).t.act.act (x b) ≫ phiP X b)) := (isLinearHom_prod X x).1
+  have hψ : IsMonHom (∏ b, ((X.A true).t.act.act (x b) ≫ phiP X b)) := (isLinearHom_prod X x).1
   have R := toLam _ _ _ _ inferInstance hψ (hact r') inferInstance hr'
   have Rm : ∀ n : ℕ, LamEq X.B.t.PP.L (f ^ n) (∏ b, ((X.A true).t.act.act (x b) ≫ phiP X b)) (X.A true).t.PP.L
       ((X.A true).t.act.act ((n : 𝓞 E) * r')) (𝟙 _) := by

@@ -103,9 +103,9 @@ theorem monic_of_shifted_prod {V : Type} [AddCommGroup V] [Module ℂ V] {c : �
   have hcs : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := by
     rintro _ ⟨p, rfl⟩ _ ⟨q, rfl⟩
     exact (hcomm _ _ _ _).eq
-  letI : IsMulCommutative (Algebra.adjoin ℂ s) :=
+  let : IsMulCommutative (Algebra.adjoin ℂ s) :=
     Algebra.isMulCommutative_adjoin ℂ (fun x hx y hy _ => hcs x hx y hy)
-  letI : CommRing (Algebra.adjoin ℂ s) := by
+  let : CommRing (Algebra.adjoin ℂ s) := by
     open scoped IsMulCommutative in exact inferInstance
   have hpres : Algebra.adjoin ℂ s ≤ preserving I := by
     rw [Algebra.adjoin_le_iff]
@@ -255,7 +255,7 @@ theorem monic_relations_along_block : ∀ (W Q : Type) [AddCommGroup W] [Module 
     · refine GlobalTheory.CompanionTheory.CTFin.CapComm.commute_qdet_of (fun a b => ?_) u
       have := hX (GlobalTheory.SmGL.stdBlocks n h ⟨j, p⟩) (GlobalTheory.SmGL.stdBlocks n h ⟨j, q⟩)
         (GlobalTheory.SmGL.stdBlocks n h ⟨i, a⟩) (GlobalTheory.SmGL.stdBlocks n h ⟨i, b⟩)
-      rw [if_neg (hne _ _ _ _ hji), if_neg (hne _ _ _ _ (Ne.symm hji)), sub_self] at this
+      rw [ite_eq_right (hne _ _ _ _ hji), ite_eq_right (hne _ _ _ _ (Ne.symm hji)), sub_self] at this
       exact sub_eq_zero.1 this
   have hSR : ∀ x ∈ Sm, ∀ i u, Commute x (Rr i u) := fun x hx i u =>
     commute_of_mem_adjoin (hTR i u) hx

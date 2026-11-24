@@ -90,7 +90,7 @@ theorem cW_cons_plus (P : M.Par) (l0 : ℕ) (y : ℝ) (w : List C.Letter) (E : I
         else Fr.xs (fun Y => M.sgn P l0 * M.xC P ρ Y) (D.positionted w) (fun a => E a.succ) (y : ℂ)) := by
   unfold Top.cW
   rw [PBF.positioned_cons]
-  simp only [Fr.cs, if_true]
+  simp only [Fr.cs, ite_true]
   simp only [cs_upL, xs_upL, show qw (M.qC P) ((D.positionted w).map PBF.upL) = qw (M.qC P) (D.positionted w) from
     funext fun Y => PBF.qw_map_reindex _ Fin.succ _ Y]
 

@@ -101,8 +101,8 @@ theorem eventually_eq_of_lattice {B La V : Type} [TopologicalSpace B] [AddCommGr
     ∀ᶠ b in 𝓝 b₀, a b = a b₀ := by
   classical
   let L : Submodule ℤ V := (P b₀).range.toIntSubmodule
-  haveI : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨hs⟩
+  have : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨hs⟩
   let bz := Module.Free.chooseBasis ℤ L
   let bR := bz.ofZLatticeBasis ℝ L
   have hc : ∀ i, ∃ c, P b₀ c = bR i := fun i => by
@@ -198,7 +198,7 @@ theorem exists_periods_tendsto_span : ∀ (E : Type) [Field E] [NumberField E] [
     obtain ⟨a, ha⟩ := eventually_atTop.1 (eventually_comap.1 h1)
     exact ⟨max a T, fun w hw => ⟨(le_max_right _ _).trans_lt hw, ha _ ((le_max_left _ _).trans hw.le) w rfl⟩⟩
   let B := {w : ℂ // w ∈ {w : ℂ | T₁ < w.im}}
-  haveI : PreconnectedSpace B := Subtype.preconnectedSpace (convex_halfSpace_im_gt T₁).isPreconnected
+  have : PreconnectedSpace B := Subtype.preconnectedSpace (convex_halfSpace_im_gt T₁).isPreconnected
   have hdom : ∀ b : B, xx b ∈ (U.X k).dom := fun b => hxm b (hT₁ b b.2).1
   choose Pm hPm hper hpt hder hrest using fun b : B => hfr k ⟨xx b, hdom b⟩
   clear hrest
@@ -220,7 +220,7 @@ theorem exists_periods_tendsto_span : ∀ (E : Type) [Field E] [NumberField E] [
     exact w3 ▸ a3 _ w w1 hd
   choose a ha using key
   have hxc : Continuous fun b : B => xx b :=
-    (hxd.continuousOn.mono fun w hw => (hT₁ w hw).1).restrict
+    (hxd.continuousOn.mono fun w hw => (hT₁ w hw).1).domRestrict
   have hPc : ∀ z, Continuous fun b : B => Pm b z := fun z => continuous_pi fun jj => by
     simp only [hPm]
     exact continuous_perFr _ hdom hxc _ _ _
@@ -231,7 +231,7 @@ theorem exists_periods_tendsto_span : ∀ (E : Type) [Field E] [NumberField E] [
       ((IsLocallyConstant.iff_eventually_eq _).2 fun b' => ?_) b b₀
     refine eventually_eq_of_lattice Pm hPc b' (hper b').2.1 (hper b').2.2.1 (hper b').2.2.2.1 (fun b => a b j) ?_
     simp only [ha]
-    exact (hcont j).comp_continuous (hec.comp continuous_subtype_val) fun b => (hT₁ b b.2).2
+    exact (hcont j).comp_continuous (hec.comp continuous_subtypeVal) fun b => (hT₁ b b.2).2
   have hlim : ∀ j jj, Tendsto (fun w => perFr (U.X k) (xx w) (φL k (a b₀ j) : Fin N → E) (relab c σ (e jj).1) (e jj).2)
       imTop (𝓝 (lam j 0 jj)) := fun j jj => by
     have h1 : Tendsto (fun w => lam j (eTwoPi w) jj) imTop (𝓝 (lam j 0 jj)) :=
@@ -253,9 +253,9 @@ theorem exists_periods_tendsto_span : ∀ (E : Type) [Field E] [NumberField E] [
     · rw [Equiv.apply_symm_apply]
       exact ⟨rfl, rfl⟩
   choose sp hsp hsp' using fun τ : (U.X k).Ψ => hidx τ.1 (N - (U.X k).p0) (by
-    rw [if_pos (((hX k).2 _).1 τ.2), (hX k).1, hN, Nat.add_sub_cancel])
+    rw [ite_eq_left (((hX k).2 _).1 τ.2), (hX k).1, hN, Nat.add_sub_cancel])
   choose sm hsm hsm' using fun τ : (U.X k).Ψ => hidx (conjEmb τ.1) (U.X k).p0 (by
-    rw [if_neg fun h => ((U.X k).cmType τ.1).1 τ.2 (((hX k).2 (conjEmb τ.1)).2 h), (hX k).1])
+    rw [ite_eq_right fun h => ((U.X k).cmType τ.1).1 τ.2 (((hX k).2 (conjEmb τ.1)).2 h), (hX k).1])
   refine ⟨n, fun j => φL k (a b₀ j), fun j τ i => lam j 0 (sp τ i), fun j τ i => lam j 0 (sm τ i), fun j τ i => ?_,
     fun j τ i => ?_, fun τ => ⟨span_proj _ hspan _ (hsp τ), span_proj _ hspan _ (hsm τ)⟩⟩
   · have := hlim j (sp τ i)

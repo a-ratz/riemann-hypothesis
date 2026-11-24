@@ -64,7 +64,7 @@ theorem valuation_le_one_eventually {E : Type} [Field E] [NumberField E] (x : E)
   have hI : Ideal.span {b} ≠ (0 : Ideal (𝓞 E)) := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hb0
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors hI).subset fun w hw => ?_)
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   by_contra hd
   apply hw
   have h1 : w.valuation E (algebraMap (𝓞 E) E b) = 1 :=

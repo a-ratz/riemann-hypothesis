@@ -402,7 +402,7 @@ theorem eventually_eq_of_isMax {n : ℕ} {φ : (Fin n → ℂ) → ℝ} {O : Set
     fun t ht => (hF t ht).differentiableAt.cexp.differentiableWithinAt
   have hM : IsMaxOn (norm ∘ fun t => Complex.exp (F t)) (Metric.ball (0 : ℂ) R) 0 := by
     intro t ht
-    simp only [Set.mem_setOf_eq, Function.comp_apply]
+    simp only [Set.mem_ofPred_eq, Function.comp_apply]
     rw [hnorm t ht, hnorm 0 h0]
     simpa using hmax _ (hsub ht)
   have hEq := Complex.norm_eqOn_of_isPreconnected_of_isMaxOn
@@ -544,7 +544,7 @@ theorem flat_phT_bounded : ∀ (e : ℕ) (σ : Type) (S : PB.AnSys e σ) (a : σ
       chartAt := fun x => S.A.chart (S.A.cover x).choose
       mem_chart_source := fun x => (S.A.cover x).choose_spec
       chart_mem_atlas := fun _ => ⟨_, rfl⟩ }
-  haveI : LocallyConnectedSpace S.X := ChartedSpace.locallyConnectedSpace (Fin e → ℂ) S.X
+  have : LocallyConnectedSpace S.X := ChartedSpace.locallyConnectedSpace (Fin e → ℂ) S.X
   obtain ⟨ht₀, -, hreg⟩ := S.reg a
   have hdense := (GlobalTheory.CompanionTheory.Ar.Bdry.bdry_isClosed_dense_compl e S.X S.A S.L S.s S.nb S.m S.W
     S.sec S.snc).2
@@ -903,9 +903,9 @@ theorem exists_comparison (o₀ : RootOrigin Y S₀ R Fx) (h₀ : o₀.Fl.deg = 
     ∃ i : R.Ω →+* M.Ω, i.comp o₀.g = o.g := by
   have hb : Function.Bijective o₀.g := by
     refine ⟨o₀.g.injective, fun x => ?_⟩
-    letI := o₀.g.toAlgebra
+    let := o₀.g.toAlgebra
     have h1 : Module.finrank Fx.Ωf R.Ω = 1 := o₀.g_deg.trans h₀
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (1 : R.Ω) one_ne_zero).mp h1 x
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : R.Ω) one_ne_zero).mp h1 x
     refine ⟨a, ?_⟩
     rw [← ha, Algebra.smul_def, mul_one]
     rfl
@@ -946,7 +946,7 @@ theorem sum_bound {T : Top.RootTower (CMType H) (D.p + D.q)} [DecidableEq (CMTyp
       ring
   refine le_trans (Finset.sum_le_sum fun p hp => ?_) (hC B (by exact_mod_cast hB) _ hS)
   have hpp := (hS p hp).1
-  haveI : Fact p.Prime := ⟨hpp⟩
+  have : Fact p.Prime := ⟨hpp⟩
   refine mul_le_mul_of_nonneg_right ?_ (Real.log_nonneg (by exact_mod_cast hpp.one_lt.le))
   rw [padicValInt.mul hE h2M]
   simp only [primeWeight]

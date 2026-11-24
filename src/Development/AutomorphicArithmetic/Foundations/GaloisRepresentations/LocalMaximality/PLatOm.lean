@@ -96,12 +96,12 @@ theorem _root_.GlobalTheory.finite_projective_span_of_integralClosure :
   intro k F K _ _ _ _ _ _ _ A B hB hfin hproj W _ _ _ _ S hS hfinB hprojB
   have hAB : ∀ a : A, algebraMap A K a ∈ B := fun a =>
     (hB _).2 ((integralClosure A K).algebraMap_mem a)
-  letI : Algebra A B := ((algebraMap A K).codRestrict B hAB).toAlgebra
+  let : Algebra A B := ((algebraMap A K).codRestrict B hAB).toAlgebra
   have hcoe : ∀ (a : A) (b : B), ((a • b : B) : K) = algebraMap F K (a : F) * (b : K) := by
     intro a b
     rw [Algebra.smul_def]
     rfl
-  haveI : IsScalarTower A B W := ⟨fun a b w => by
+  have : IsScalarTower A B W := ⟨fun a b w => by
     rw [Subalgebra.smul_def, hcoe, mul_smul, algebraMap_smul, Subalgebra.smul_def,
       Subalgebra.smul_def]⟩
   let ψ : B ≃ₗ[A] integralClosure A K :=
@@ -113,10 +113,10 @@ theorem _root_.GlobalTheory.finite_projective_span_of_integralClosure :
         rfl
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-  haveI : Module.Finite A B := Module.Finite.equiv ψ.symm
-  haveI : Module.Projective A B := Module.Projective.of_equiv ψ.symm
-  haveI : Module.Finite A (Submodule.span B S) := Module.Finite.trans B _
-  haveI : Module.Projective A (Submodule.span B S) := projective_of_isScalarTower_projective A B _
+  have : Module.Finite A B := Module.Finite.equiv ψ.symm
+  have : Module.Projective A B := Module.Projective.of_equiv ψ.symm
+  have : Module.Finite A (Submodule.span B S) := Module.Finite.trans B _
+  have : Module.Projective A (Submodule.span B S) := projective_of_isScalarTower_projective A B _
   have hclosed : ∀ c : B, ∀ w ∈ Submodule.span A S, c • w ∈ Submodule.span A S := by
     intro c w hw
     induction hw using Submodule.span_induction with
@@ -436,7 +436,7 @@ namespace GlobalTheory.PD
 theorem projective_exteriorPower_of_projective (R V : Type) [CommRing R] [AddCommGroup V] [Module R V]
     [Module.Projective R V] (n : ℕ) : Module.Projective R (⋀[R]^n V) := by
   obtain ⟨s, hs⟩ := Module.projective_def'.1 (inferInstance : Module.Projective R V)
-  haveI : Module.Free R (⋀[R]^n (V →₀ R)) := exteriorPower.instFree R n
+  have : Module.Free R (⋀[R]^n (V →₀ R)) := exteriorPower.instFree R n
   refine Module.Projective.of_split (exteriorPower.map n s)
     (exteriorPower.map n (Finsupp.linearCombination R id)) ?_
   rw [← exteriorPower.map_comp, hs, exteriorPower.map_id]
@@ -480,7 +480,7 @@ theorem span_omB_comap_finite_projective : ∀ (k K : Type) [Field k] [Field K] 
       exact ⟨⟨w, hwT⟩, hw⟩
   let E : T ≃ₗ[B] ⋀[B]^p Ω[B⁄k] :=
     (LinearEquiv.ofInjective g hg).trans ((LinearEquiv.ofEq _ _ hrg).trans (LinearEquiv.ofInjective e' he').symm)
-  haveI : Module.Projective B (⋀[B]^p Ω[B⁄k]) := projective_exteriorPower_of_projective B _ p
+  have : Module.Projective B (⋀[B]^p Ω[B⁄k]) := projective_exteriorPower_of_projective B _ p
   exact ⟨Module.Finite.equiv E.symm, Module.Projective.of_equiv E.symm⟩
 
 end GlobalTheory.PD
@@ -528,16 +528,16 @@ theorem omB_isBundle : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field
         ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W)) := by
     intro i
     obtain ⟨hf1, hf2, hf3⟩ := GlobalTheory.T.finite_cover_chart_smooth_normal k F K d x hx {i} (Finset.singleton_nonempty i)
-    haveI := hf2
-    haveI := hf3
+    have := hf2
+    have := hf3
     obtain ⟨hB1, hB2⟩ := GlobalTheory.T.span_regularForms_finite_projective_smooth k K (rB k K x {i}) p W e he hr
     exact GlobalTheory.T.finite_projective_span_of_integralClosure' k F K (rA k x {i}) (rB k K x {i}) (fun y => Iff.rfl) hf1 (GlobalTheory.T.integralClosure_projective_over_standardOpenRing k F K d x hx i) W _
       (hstab {i}) hB1 hB2
   refine ⟨fun i => ?_, fun i => (key i).2, fun I i hi => GlobalTheory.T.pulledBackForms_intersection_eq_chart_localization k F K d x hx p W e I i hi⟩
   obtain ⟨hfin, -⟩ := key i
   obtain ⟨-, hf2, -⟩ := GlobalTheory.T.finite_cover_chart_smooth_normal k F K d x hx {i} (Finset.singleton_nonempty i)
-  haveI := hf2
-  haveI : FiniteDimensional F K := hx.fin
+  have := hf2
+  have : FiniteDimensional F K := hx.fin
   set S : Set W := ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W) with hSdef
   obtain ⟨s, hs⟩ := Module.Finite.iff_fg.1 hfin
   have hA : ∀ a : rA k x {i}, ∀ w ∈ S, a • w ∈ S := by
@@ -671,15 +671,15 @@ private theorem lat_of_isBundle {F : Type} [Field F] [Algebra ℂ F] {d : ℕ} {
     (hM : ∀ m ∈ M, ∃ w, e w = m) (hML : ∀ w, w ∈ L I ↔ e w ∈ M) :
     Lat (rA ℂ x I) M ∧ ∀ w, e w ∈ Submodule.span F (M : Set V) := by
   classical
-  haveI : IsFractionRing (rA ℂ x {i}) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing ℂ F d x hx {i} (Finset.singleton_nonempty i)).1
+  have : IsFractionRing (rA ℂ x {i}) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing ℂ F d x hx {i} (Finset.singleton_nonempty i)).1
   obtain ⟨s, hs, hsF⟩ := hL.fg i
   let P : Submodule (rA ℂ x {i}) W := Submodule.span (rA ℂ x {i}) (L {i} : Set W)
   have hPs : P = Submodule.span (rA ℂ x {i}) (s : Set W) := by
     change Submodule.span (rA ℂ x {i}) (L {i} : Set W) = _
     rw [hs]
     exact Submodule.span_eq _
-  haveI : Module.Finite (rA ℂ x {i}) P := Module.Finite.iff_fg.2 ⟨s, hPs.symm⟩
-  haveI : Module.Projective (rA ℂ x {i}) P := hL.proj i
+  have : Module.Finite (rA ℂ x {i}) P := Module.Finite.iff_fg.2 ⟨s, hPs.symm⟩
+  have : Module.Projective (rA ℂ x {i}) P := hL.proj i
   have hP : Submodule.span F (P : Set W) = ⊤ := by
     rw [eq_top_iff, ← hsF]
     refine Submodule.span_mono fun z hz => ?_

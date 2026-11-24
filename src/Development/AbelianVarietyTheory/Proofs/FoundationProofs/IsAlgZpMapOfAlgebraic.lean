@@ -96,13 +96,13 @@ namespace GlobalTheory.CuspDown
 
 theorem exists_restrict : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (p : ℕ) [Fact p.Prime] (A : ValuationSubring Ω) (Ωl : Type) [Field Ωl] [Algebra (O0 p) Ωl], IsClo p Ωl → ∀ j : Ω →+* Ωl, (∀ x, x ∈ A ↔ IsInt (p := p) (j x)) → ∀ g : Gal p Ωl, ∃ s : Ω ≃ₐ[ℚ] Ω, Stab A s ∧ ∀ x, g (j x) = j (s x) := by
   intro Ω _ _ _ p _ A Ωl _ _ hC j hA g
-  haveI : CharZero Ωl := GlobalTheory.K5.Basic.charZero_of_isClo hC
-  letI : Algebra Ω Ωl := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω Ωl := IsScalarTower.of_algebraMap_eq fun x => by
+  have : CharZero Ωl := GlobalTheory.K5.Basic.charZero_of_isClo hC
+  let : Algebra Ω Ωl := j.toAlgebra
+  have : IsScalarTower ℚ Ω Ωl := IsScalarTower.of_algebraMap_eq fun x => by
     rw [RingHom.algebraMap_toAlgebra, eq_ratCast (algebraMap ℚ Ωl), eq_ratCast (algebraMap ℚ Ω), map_ratCast]
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let gq : Ωl ≃ₐ[ℚ] Ωl := AlgEquiv.ofRingEquiv (f := g.toRingEquiv) (fun x => by
-    simp only [eq_ratCast, AlgEquiv.coe_toRingEquiv, RingEquiv.coe_toEquiv, AlgEquiv.coe_ringEquiv]
+    simp only [eq_ratCast, AlgEquiv.coe_toRingEquiv, RingEquiv.coe_toEquiv, AlgEquiv.coe_toRingEquiv]
     exact map_ratCast g x)
   have hc : ∀ x, g (j x) = j (gq.restrictNormal Ω x) := fun x => by
     have := AlgEquiv.restrictNormal_commutes gq Ω x
@@ -232,7 +232,7 @@ theorem exists_primitive_for_finset (k : Type) {Ω : Type} [Field k] [CharZero k
       φ.comp (algebraMap k Ω) = ψ.comp (algebraMap k Ω) → φ x = ψ x →
       ∀ y ∈ u, φ y = ψ y := by
   let F : IntermediateField k Ω := IntermediateField.adjoin k (u : Set Ω)
-  haveI : FiniteDimensional k F :=
+  have : FiniteDimensional k F :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   obtain ⟨α, hα⟩ := Field.exists_primitive_element k F
   refine ⟨α, fun {L} _ φ ψ hk hx y hy => ?_⟩
@@ -255,9 +255,9 @@ theorem exists_algEquiv_inducing_of_forall_conj :
       (s : Ω ≃ₐ[ℚ] Ω), (∀ x : Ω, ∃ g : L ≃ₐ[K] L, g (j x) = j (s x)) →
       ∃ g : L ≃ₐ[K] L, ∀ x : Ω, g (j x) = j (s x) := by
   intro Ω L K _ _ _ _ _ _ _ _ _ j s h
-  haveI : IsAlgClosure K L := ⟨inferInstance, inferInstance⟩
-  haveI : IsGalois K L := {}
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure K L := ⟨inferInstance, inferInstance⟩
+  have : IsGalois K L := {}
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hne := (isCompact_univ (X := L ≃ₐ[K] L)).inter_iInter_nonempty
     (fun x : Ω => {g : L ≃ₐ[K] L | g (j x) = j (s x)})
     (fun x => isClosed_setOf_algEquiv_apply_eq _ _)
@@ -291,9 +291,9 @@ theorem exists_algEquiv_apply_eq_of_fixes_preimage_base :
     ∀ (Ω L K : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [Field L] [IsAlgClosed L] [Field K] [CharZero K] [Algebra K L] [Algebra.IsAlgebraic K L] (j : Ω →+* L) (s : Ω ≃ₐ[ℚ] Ω), (∀ a : Ω, j a ∈ Set.range (algebraMap K L) → s a = a) → ∀ x : Ω, ∃ g : L ≃ₐ[K] L, g (j x) = j (s x) := by
   intro Ω L K _ _ _ _ _ _ _ _ _ j s hs x
   classical
-  haveI : IsAlgClosure K L := ⟨‹_›, ‹_›⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure K L := ⟨‹_›, ‹_›⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral K (j x) := Algebra.IsIntegral.isIntegral _
   have hxint : IsIntegral ℚ x := Algebra.IsIntegral.isIntegral _
   have hcomp : j.comp (algebraMap ℚ Ω) = (algebraMap K L).comp (algebraMap ℚ K) :=
@@ -484,10 +484,10 @@ namespace GlobalTheory
 theorem addVal_eq_zero_of_root_sub_const {k K : Type} [Field k] [Field K] (φ : k →+* K)
     (v : AddValuation K (WithTop ℤ)) (hv : ∀ a : k, a ≠ 0 → v (φ a) = 0) (f : K) (P : k[X])
     (hP : P ≠ 0) (hf : eval₂ φ f P = 0) (c : k) (h : f - φ c ≠ 0) : v (f - φ c) = 0 := by
-  letI : Algebra k K := φ.toAlgebra
+  let : Algebra k K := φ.toAlgebra
   have h1 : IsAlgebraic k f := ⟨P, hP, hf⟩
   have h2 : IsAlgebraic k (f - φ c) := h1.sub (isAlgebraic_algebraMap c)
-  haveI : Valuation.IsTrivialOn k (AddValuation.toValuation v) := ⟨fun a ha => hv a ha⟩
+  have : Valuation.IsTrivialOn k (AddValuation.toValuation v) := ⟨fun a ha => hv a ha⟩
   by_contra hne
   exact Valuation.transcendental_of_ne_one k (v := AddValuation.toValuation v) _ h hne h2
 
@@ -590,7 +590,7 @@ theorem res (h : IsClo p Ωl) (hv : ∀ x : Ωl, v x ≤ 1 ↔ IsInt (p := p) x)
   set y := aeval (T.qq n) f
   set b := ∑ i ∈ Finset.range (p ^ n), f.coeff i ^ (p ^ n) * qO p ^ i
   have hroot : ∃ P : ℤ[X], P.map (Int.castRingHom (ZMod p)) ≠ 0 ∧ (p : O0 p) ∣ aeval b P := by
-    haveI : CharZero Ωl := Basic.charZero_of_isClo h
+    have : CharZero Ωl := Basic.charZero_of_isClo h
     let z := y ^ p ^ n
     obtain ⟨Q, hQ, hQz⟩ := halg.pow (p ^ n)
     let P := Q.primPart
@@ -670,8 +670,8 @@ theorem approx (h : IsClo p Ωl) (hv : ∀ x : Ωl, v x ≤ 1 ↔ IsInt (p := p)
     (T : K5.Tower p Ωl) (n : ℕ) (j : Ω →+* Ωl) (s : Ω ≃ₐ[ℚ] Ω) (hs : ∀ x, v (j x) ≤ 1 → v (j (s x)) ≤ 1)
     (N : ℕ) : ∀ (f : (O0 p)[X]) (a : Ω), f.natDegree < p ^ n → aeval (T.qq n) f = j a →
       v (j (s a - a)) ≤ v (p : Ωl) ^ N := by
-  haveI := Basic.charZero_of_isClo h
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have := Basic.charZero_of_isClo h
+  have : CharZero Ω := algebraRat.charZero Ω
   induction N with
   | zero =>
     intro f a _ ha
@@ -702,7 +702,7 @@ theorem fixed (h : IsClo p Ωl) (hv : ∀ x : Ωl, v x ≤ 1 ↔ IsInt (p := p) 
     (T : K5.Tower p Ωl) (n : ℕ) (j : Ω →+* Ωl) (s : Ω ≃ₐ[ℚ] Ω) (hs : ∀ x, v (j x) ≤ 1 → v (j (s x)) ≤ 1)
     (f : (O0 p)[X]) (d : O0 p) (hd : d ≠ 0) (a : Ω)
     (ha : aeval (T.qq n) f = algebraMap (O0 p) Ωl d * j a) : s a = a := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain ⟨_, hdv, hirr⟩ := completed_laurent_isDVR p
   obtain ⟨m, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hd hirr
   have hpos := pow_pos hp.out.pos n
@@ -727,13 +727,13 @@ theorem fixed (h : IsClo p Ωl) (hv : ∀ x : Ωl, v x ≤ 1 ↔ IsInt (p := p) 
 theorem up (h : IsClo p Ωl) (hv : ∀ x : Ωl, v x ≤ 1 ↔ IsInt (p := p) x) (h1 : v (p : Ωl) < 1)
     (T : K5.Tower p Ωl) (n : ℕ) (j : Ω →+* Ωl) (s : Ω ≃ₐ[ℚ] Ω) (hs : ∀ x, v (j x) ≤ 1 → v (j (s x)) ≤ 1) :
     ∃ g : Gal p Ωl, g (T.qq n) = T.qq n ∧ ∀ x, g (j x) = j (s x) := by
-  haveI := h.clo
-  haveI := h.alg
-  haveI := Basic.charZero_of_isClo h
-  haveI : FaithfulSMul (O0 p) Ωl := (faithfulSMul_iff_algebraMap_injective _ _).2 h.inj
-  letI : Algebra (FractionRing (O0 p)) Ωl := FractionRing.liftAlgebra (O0 p) Ωl
-  haveI : IsScalarTower (O0 p) (FractionRing (O0 p)) Ωl := FractionRing.isScalarTower_liftAlgebra _ _
-  haveI : Algebra.IsAlgebraic (FractionRing (O0 p)) Ωl :=
+  have := h.clo
+  have := h.alg
+  have := Basic.charZero_of_isClo h
+  have : FaithfulSMul (O0 p) Ωl := (faithfulSMul_iff_algebraMap_injective _ _).2 h.inj
+  let : Algebra (FractionRing (O0 p)) Ωl := FractionRing.liftAlgebra (O0 p) Ωl
+  have : IsScalarTower (O0 p) (FractionRing (O0 p)) Ωl := FractionRing.isScalarTower_liftAlgebra _ _
+  have : Algebra.IsAlgebraic (FractionRing (O0 p)) Ωl :=
     (IsFractionRing.comap_isAlgebraic_iff (A := O0 p) (K := FractionRing (O0 p))).1 h.alg
   let K := IntermediateField.adjoin (FractionRing (O0 p)) {T.qq n}
   have hfix : ∀ a : Ω, j a ∈ Set.range (algebraMap K Ωl) → s a = a := by
@@ -758,13 +758,13 @@ theorem exists_gal_fix_qq_of_stab {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlg
     (hA : ∀ x, x ∈ A ↔ IsInt (p := p) (j x)) (T : GlobalTheory.K5.Tower p Ωl) (n : ℕ) (s : Ω ≃ₐ[ℚ] Ω) (hs : Stab A s) :
     ∃ g : Gal p Ωl, g (T.qq n) = T.qq n ∧ ∀ x, g (j x) = j (s x) := by
   obtain ⟨_, hdvr, hirr⟩ := completed_laurent_isDVR p
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
     rw [hirr.maximalIdeal_eq]
     exact _root_.GlobalTheory.K5.o0_isAdicComplete_span_p p
-  haveI := h.alg
+  have := h.alg
   obtain ⟨v, hv⟩ := _root_.GlobalTheory.valuation_le_one_iff_isIntegral_of_complete_dvr (O0 p) Ωl h.inj
   have h1 : v (p : Ωl) < 1 := by
-    haveI := Basic.charZero_of_isClo h
+    have := Basic.charZero_of_isClo h
     have hle : v (p : Ωl) ≤ 1 := by
       rw [← map_natCast (algebraMap (O0 p) Ωl)]
       exact (hv _).2 isIntegral_algebraMap
@@ -805,17 +805,17 @@ theorem isAlgZp_map_of_algebraic : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [
 
 theorem zt_prim_and_pow : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (l n : ℕ), 0 < l → IsPrimitiveRoot (zt ε l n) (l ^ n) ∧ zt ε l (n + 1) ^ l = zt ε l n := by
   intro Ω _ _ _ ε l n hl
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hkey : ∀ m : ℕ, ε (zt ε l m) = Complex.exp (2 * Real.pi * Complex.I / ((l ^ m : ℕ) : ℂ)) := by
     intro m
     have hN : l ^ m ≠ 0 := pow_ne_zero _ hl.ne'
     have hw : Complex.exp (2 * Real.pi * Complex.I * (((1 / (l : ℚ) ^ m : ℚ)) : ℂ)) =
         Complex.exp (2 * Real.pi * Complex.I / ((l ^ m : ℕ) : ℂ)) := by
       congr 1; push_cast; ring
-    haveI : NeZero ((l ^ m : ℕ) : Ω) := ⟨by exact_mod_cast hN⟩
-    haveI : NeZero (l ^ m) := ⟨hN⟩
-    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+    have : NeZero ((l ^ m : ℕ) : Ω) := ⟨by exact_mod_cast hN⟩
+    have : NeZero (l ^ m) := ⟨hN⟩
+    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
     have hz' : IsPrimitiveRoot (ε z) (l ^ m) := hz.map_of_injective ε.injective
     have hp := Complex.isPrimitiveRoot_exp (l ^ m) hN
     obtain ⟨i, -, hi⟩ := hz'.eq_pow_of_pow_eq_one hp.pow_eq_one
@@ -827,7 +827,7 @@ theorem zt_prim_and_pow : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClos
   · rw [← IsPrimitiveRoot.map_iff_of_injective (f := ε) ε.injective, hkey]
     exact Complex.isPrimitiveRoot_exp _ (pow_ne_zero _ hl.ne')
   · apply ε.injective
-    rw [map_pow, hkey, hkey, ← Complex.exp_nat_mul]
+    rw [map_pow, hkey, hkey, ← Complex.exp_natCast_mul]
     congr 1
     have : (l : ℂ) ≠ 0 := by exact_mod_cast hl.ne'
     push_cast
@@ -839,8 +839,8 @@ theorem exists_cusp_embedding : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsA
   intro Ω _ _ _ ε X _ p _ _ A hA
   let Ωl := AlgebraicClosure (FractionRing (O0 p))
   have hcl : IsClo p Ωl := GlobalTheory.K5.Basic.isClo_algebraicClosure p
-  haveI : CharZero Ωl := GlobalTheory.K5.Basic.charZero_of_isClo hcl
-  haveI : IsAlgClosed Ωl := hcl.clo
+  have : CharZero Ωl := GlobalTheory.K5.Basic.charZero_of_isClo hcl
+  have : IsAlgClosed Ωl := hcl.clo
   let j0 : Ω →+* Ωl := (IsAlgClosed.lift : Ω →ₐ[ℚ] Ωl).toRingHom
   have hBexists : ∃ B : ValuationSubring Ω, (p : Ω) ∈ B.nonunits ∧
       ∀ x, x ∈ B ↔ IsInt (p := p) (j0 x) := by

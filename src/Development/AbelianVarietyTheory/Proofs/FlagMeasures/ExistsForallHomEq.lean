@@ -69,11 +69,11 @@ open scoped ENNReal in
 private theorem exists_ringHom_zmod_ker_eq {E : Type} [Field E] [NumberField E] {T : ℕ}
     (hT : T.Prime) (P : Ideal (𝓞 E)) (hP : P.IsMaximal) (hN : Ideal.absNorm P = T) :
     ∃ φ : 𝓞 E →+* ZMod T, RingHom.ker φ = P := by
-  letI := Ideal.Quotient.field P
+  let := Ideal.Quotient.field P
   have hcard : Nat.card (𝓞 E ⧸ P) = T := by
     rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, hN]
-  haveI : Finite (𝓞 E ⧸ P) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hT.ne_zero)
-  letI := Fintype.ofFinite (𝓞 E ⧸ P)
+  have : Finite (𝓞 E ⧸ P) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hT.ne_zero)
+  let := Fintype.ofFinite (𝓞 E ⧸ P)
   let e := ZMod.ringEquivOfPrime (𝓞 E ⧸ P) hT (by rw [Fintype.card_eq_nat_card, hcard])
   refine ⟨(e.symm : (𝓞 E ⧸ P) →+* ZMod T).comp (Ideal.Quotient.mk P), ?_⟩
   ext x
@@ -119,7 +119,7 @@ open scoped ENNReal in
 theorem _root_.GlobalTheory.NormOneSplit.finite_hom {E : Type} [Field E] [NumberField E] {T : ℕ}
     (hT : T.Prime) :
     Finite (𝓞 E →+* ZMod T) := by
-  haveI : NeZero T := ⟨hT.ne_zero⟩
+  have : NeZero T := ⟨hT.ne_zero⟩
   let b := Module.Free.chooseBasis ℤ (𝓞 E)
   refine Finite.of_injective (fun φ : 𝓞 E →+* ZMod T => fun i => φ (b i)) ?_
   intro φ ψ h
@@ -136,8 +136,8 @@ theorem _root_.GlobalTheory.NormOneSplit.exists_forall_hom_eq {R : Type} [CommRi
   classical
   have hcop : Pairwise (Function.onFun IsCoprime (fun φ : R →+* ZMod T => RingHom.ker φ)) := by
     intro φ ψ hne
-    haveI := _root_.GlobalTheory.NormOneSplit.ker_isMaximal φ
-    haveI := _root_.GlobalTheory.NormOneSplit.ker_isMaximal ψ
+    have := _root_.GlobalTheory.NormOneSplit.ker_isMaximal φ
+    have := _root_.GlobalTheory.NormOneSplit.ker_isMaximal ψ
     exact Ideal.isCoprime_of_isMaximal (fun h => hne (ZMod.ringHom_eq_of_ker_eq φ ψ h))
   obtain ⟨y, hy⟩ := Ideal.quotientInfToPiQuotient_surj hcop
     (fun φ => Ideal.Quotient.mk (RingHom.ker φ) (((g φ).val : ℕ) : R))
@@ -156,8 +156,8 @@ private theorem card_solutions_mul_involution_eq_pow {H K : Type} [Finite H] [Fi
     ∃ m, 2 * m = Nat.card H ∧
       Nat.card {f : H → K // ∀ h, f h * f (ι h) = c h} = (Fintype.card K - 1) ^ m := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
-  letI : LinearOrder H := LinearOrder.lift' (Fintype.equivFin H) (Fintype.equivFin H).injective
+  let : Fintype H := Fintype.ofFinite H
+  let : LinearOrder H := LinearOrder.lift' (Fintype.equivFin H) (Fintype.equivFin H).injective
   have hlt : ∀ h, ¬ h < ι h → ι h < ι (ι h) := fun h hh => by
     rw [hι]; exact lt_of_le_of_ne (not_lt.1 hh) (hfix h)
   have hnlt : ∀ h, h < ι h → ¬ ι h < ι (ι h) := fun h hh => by
@@ -175,7 +175,7 @@ private theorem card_solutions_mul_involution_eq_pow {H K : Type} [Finite H] [Fi
           · simp [ha]
           · have : ¬ ι a < ι (ι a) := hnlt a ha
             dsimp only [Sum.elim_inr]
-            rw [dif_neg this]
+            rw [dite_eq_right this]
             exact congrArg Sum.inr (Subtype.ext (hι a)) }
     rw [Nat.card_congr e, Nat.card_sum]; ring
   · let e : {f : H → K // ∀ h, f h * f (ι h) = c h} ≃ ({h : H // h < ι h} → {x : K // x ≠ 0}) :=
@@ -184,14 +184,14 @@ private theorem card_solutions_mul_involution_eq_pow {H K : Type} [Finite H] [Fi
             else c h / (g ⟨ι h, hlt h hh⟩).1, fun h => by
           by_cases hh : h < ι h
           · dsimp only
-            rw [dite_eq_left hh, dif_neg (hnlt h hh)]
+            rw [dite_eq_left hh, dite_eq_right (hnlt h hh)]
             have hg := (g ⟨h, hh⟩).2
             have hs : (⟨ι (ι h), hlt (ι h) (hnlt h hh)⟩ : {h : H // h < ι h}) = ⟨h, hh⟩ :=
               Subtype.ext (hι h)
             rw [hs, hcι]
             field_simp
           · dsimp only
-            rw [dif_neg hh, dite_eq_left (hlt h hh)]
+            rw [dite_eq_right hh, dite_eq_left (hlt h hh)]
             have hg := (g ⟨ι h, hlt h hh⟩).2
             field_simp⟩
         left_inv := fun f => by
@@ -199,7 +199,7 @@ private theorem card_solutions_mul_involution_eq_pow {H K : Type} [Finite H] [Fi
           funext h
           by_cases hh : h < ι h
           · simp [hh]
-          · simp only [dif_neg hh]
+          · simp only [dite_eq_right hh]
             have hf := f.2 h
             have hne : f.1 (ι h) ≠ 0 := fun h0 => hc0 h (by rw [← hf, h0, mul_zero])
             rw [div_eq_iff hne, hf]
@@ -218,7 +218,7 @@ private theorem comp_mapRingHom_star_ne_of_split {F E : Type} [Field F] [NumberF
       Ideal.absNorm P = T ∧ (T : 𝓞 E) ∉ P ^ 2) (φ : 𝓞 E →+* ZMod T) :
     φ.comp (RingOfIntegers.mapRingHom (starRingEnd E)) ≠ φ := by
   intro hφ
-  haveI : Fact T.Prime := ⟨hT⟩
+  have : Fact T.Prime := ⟨hT⟩
   let σ : E ≃ₐ[F] E := AlgEquiv.ofRingEquiv (f := starRingAut)
     (fun x => (hcm.fixed _).2 ⟨x, rfl⟩)
   have hσ : ∀ a : E, σ a = star a := fun a => rfl
@@ -232,15 +232,15 @@ private theorem comp_mapRingHom_star_ne_of_split {F E : Type} [Field F] [NumberF
     have h1' := Subalgebra.bot_eq_top_iff_finrank_eq_one.1 hbot
     rw [hcm.deg2] at h1'
     norm_num at h1'
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hcm.deg2
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hcm.deg2
   have h2 : 1 < Nat.card (E ≃ₐ[F] E) := by
-    haveI : Nontrivial (E ≃ₐ[F] E) := ⟨⟨σ, 1, hσ1⟩⟩
+    have : Nontrivial (E ≃ₐ[F] E) := ⟨⟨σ, 1, hσ1⟩⟩
     exact Finite.one_lt_card
   have hle : Nat.card (E ≃ₐ[F] E) ≤ 2 := by
     rw [← hcm.deg2, Nat.card_eq_fintype_card]; exact AlgEquiv.card_le
-  haveI : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by rw [hcm.deg2]; omega)
+  have : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by rw [hcm.deg2]; omega)
   set P := RingHom.ker φ with hP
-  haveI hPm : P.IsMaximal := _root_.GlobalTheory.NormOneSplit.ker_isMaximal φ
+  have hPm : P.IsMaximal := _root_.GlobalTheory.NormOneSplit.ker_isMaximal φ
   have hmem : σ ∈ P.inertia (E ≃ₐ[F] E) := by
     intro x
     change σ • x - x ∈ RingHom.ker φ
@@ -252,7 +252,7 @@ private theorem comp_mapRingHom_star_ne_of_split {F E : Type} [Field F] [NumberF
     rw [Ideal.card_inertia_eq_ramificationIdxIn (P.under (𝓞 F)) P,
       Ideal.ramificationIdxIn_eq_ramificationIdx _ P (E ≃ₐ[F] E)]
   have h2le : 2 ≤ Nat.card (P.inertia (E ≃ₐ[F] E)) := by
-    haveI : Nontrivial (P.inertia (E ≃ₐ[F] E)) :=
+    have : Nontrivial (P.inertia (E ≃ₐ[F] E)) :=
       ⟨⟨⟨σ, hmem⟩, 1, fun h => hσ1 (congrArg Subtype.val h)⟩⟩
     exact Finite.one_lt_card
   have hTP : (T : 𝓞 E) ∈ P := by simp [hP, RingHom.mem_ker]
@@ -264,7 +264,7 @@ private theorem comp_mapRingHom_star_ne_of_split {F E : Type} [Field F] [NumberF
     intro hb
     rw [hb, Ideal.mem_bot] at hTmap
     exact (Nat.cast_ne_zero.mpr hT.ne_zero) hTmap
-  have hle2 := Ideal.le_pow_ramificationIdx (p := P.under (𝓞 F)) (P := P)
+  have hle2 := Ideal.le_pow_ramificationIdx' (p := P.under (𝓞 F)) (P := P)
   rw [Ideal.ramificationIdx'_eq_ramificationIdx' _ _ hne, ← hcard] at hle2
   exact (hs P hPm hTP).2 (Ideal.pow_le_pow_right h2le (hle2 hTmap))
 
@@ -273,8 +273,8 @@ open NumberField Module Matrix in
 open scoped ENNReal in
 theorem _root_.GlobalTheory.NormOneSplit.card_norm_classes : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E], _root_.Formalism.BasicNotions.CMData F E → ∀ T : ℕ, T.Prime → (∀ P : Ideal (𝓞 E), P.IsMaximal → ((T : 𝓞 E) ∈ P) → Ideal.absNorm P = T ∧ (T : 𝓞 E) ∉ P ^ 2) → ∀ c : 𝓞 E, star (c : E) = (c : E) → IsCoprime c (T : 𝓞 E) → Nat.card {a : 𝓞 E ⧸ Ideal.span {(T : 𝓞 E)} // ∃ x y : 𝓞 E, Ideal.Quotient.mk _ x = a ∧ (y : E) = star (x : E) ∧ x * y - c ∈ Ideal.span {(T : 𝓞 E)}} = (T - 1) ^ finrank ℚ F := by
   intro F E _ _ _ _ _ _ hcm T hT hs c hc hcop
-  haveI : Fact T.Prime := ⟨hT⟩
-  haveI := _root_.GlobalTheory.NormOneSplit.finite_hom (E := E) hT
+  have : Fact T.Prime := ⟨hT⟩
+  have := _root_.GlobalTheory.NormOneSplit.finite_hom (E := E) hT
   set τ := RingOfIntegers.mapRingHom (starRingEnd E) with hτdef
   have hτc : ∀ x : 𝓞 E, ((τ x : 𝓞 E) : E) = star (x : E) := fun x => rfl
   have hττ : ∀ x, τ (τ x) = x := fun x =>

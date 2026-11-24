@@ -256,13 +256,13 @@ theorem bwA_weyl_rowAct_closure (hn : n ≤ r) (ν : Fin n → ℕ) (g : Matrix 
   let S : Submonoid (Matrix (Fin r) (Fin r) R) :=
     { carrier := {g | ∀ f ∈ Formalism.GradedWeylDivisibility.weyl R r n hn ν, Formalism.GradedWeylDivisibility.rowAct R g f ∈ Formalism.GradedWeylDivisibility.weyl R r n hn ν}
       one_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         intro f hf
         rw [bwA_rowAct_one]
         exact hf
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         intro f hf
         rw [rowAct_mul_eq_rowAct_rowAct]
         exact hy _ (hx f hf) }
@@ -612,13 +612,13 @@ theorem bwA_span_closure (g : Matrix (Fin r) (Fin r) K)
   let S : Submonoid (Matrix (Fin r) (Fin r) K) :=
     { carrier := {g | ∀ f ∈ bwA_span O hn ν, Formalism.GradedWeylDivisibility.rowAct K g f ∈ bwA_span O hn ν}
       one_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         intro f hf
         rw [bwA_rowAct_one]
         exact hf
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         intro f hf
         rw [rowAct_mul_eq_rowAct_rowAct]
         exact hy _ (hx f hf) }
@@ -712,18 +712,18 @@ theorem bwA_ten_intSpan (D : D7) (w : D.what₂.places.Pl) {N : ℕ} (lam : D.wh
         D.what₂.embLL r' • (MvPolynomial.rename (Prod.mk τv) Q * R) ∈ Formalism.L2.Forms.IntSpan D w lam}
       add_mem' := by
         intro Q1 Q2 h1 h2
-        simp only [Set.mem_setOf_eq] at h1 h2 ⊢
+        simp only [Set.mem_ofPred_eq] at h1 h2 ⊢
         intro r' hr'
         rw [map_add (f := _), add_mul, smul_add]
         exact add_mem (h1 r' hr') (h2 r' hr')
       zero_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         intro r' _
         rw [map_zero, zero_mul, smul_zero]
         exact zero_mem _
       smul_mem' := by
         rintro ⟨o, ho⟩ Q hQ
-        simp only [Set.mem_setOf_eq] at hQ ⊢
+        simp only [Set.mem_ofPred_eq] at hQ ⊢
         intro r' hr'
         obtain ⟨s, hs, rfl⟩ := Subring.mem_map.mp ho
         show D.what₂.embLL r' • (MvPolynomial.rename (Prod.mk τv) (D.what₂.embLL s • Q) * R) ∈ _
@@ -748,10 +748,10 @@ theorem bwA_ten_intSpan (D : D7) (w : D.what₂.places.Pl) {N : ℕ} (lam : D.wh
     refine ⟨r', Function.update f τv g, hr', fun τ => ?_, rfl⟩
     by_cases h : τ = τv
     · subst h
-      rw [Function.update_apply, if_pos rfl]
+      rw [Function.update_apply, ite_eq_left rfl]
       simp only [delSq]
       exact hg
-    · rw [Function.update_apply, if_neg h]
+    · rw [Function.update_apply, ite_eq_right h]
       exact hf τ
   have hq' := hle hq
   rw [hR]

@@ -175,14 +175,14 @@ private theorem sgE_eq_sum_minusIdx_of_true (ε : Fin n → Bool) (cp cm : Fin n
     {a b : Fin n} (ha : ε a = true) (hb : ε b = true) :
     sgE ε cp cm a b = ∑ x ∈ minusIdx ε, cp a x * cm b x := by
   unfold sgE
-  rw [if_pos (And.intro ha hb)]
+  rw [ite_eq_left (And.intro ha hb)]
 
 private theorem sgE_eq_neg_sum_plusIdx_of_false (ε : Fin n → Bool) (cp cm : Fin n → Fin n → Module.End ℂ W)
     {a b : Fin n} (ha : ε a = false) (hb : ε b = false) :
     sgE ε cp cm a b = -∑ i ∈ plusIdx ε, cp i b * cm i a := by
   unfold sgE
   have h1 : ¬(ε a = true ∧ ε b = true) := by simp [ha]
-  rw [if_neg h1, if_pos (And.intro ha hb)]
+  rw [ite_eq_right h1, ite_eq_left (And.intro ha hb)]
 
 theorem sgE_comm {cp cm : Fin n → Fin n → Module.End ℂ W} (hC : IsCAR cp cm) (ε : Fin n → Bool)
     (a b c d : Fin n) (hab : ε a = ε b) (hcd : ε c = ε d) :
@@ -207,13 +207,13 @@ theorem sgE_comm {cp cm : Fin n → Fin n → Module.End ℂ W} (hC : IsCAR cp c
     have hd : ε d = false := by rw [← hcd]; exact hc'
     have hbc : b ≠ c := fun h => by simp [h, hc'] at hb
     have hda : d ≠ a := fun h => by simp [h, ha] at hd
-    rw [if_neg hbc, if_neg hda, sub_zero, sgE_eq_sum_minusIdx_of_true ε cp cm ha hb,
+    rw [ite_eq_right hbc, ite_eq_right hda, sub_zero, sgE_eq_sum_minusIdx_of_true ε cp cm ha hb,
       sgE_eq_neg_sum_plusIdx_of_false ε cp cm hc' hd]
     have e1 : ∑ x ∈ minusIdx ε, ∑ i ∈ plusIdx ε,
         (if b = i ∧ x = d then cp a x * cm i c else 0) = cp a d * cm b c := by
       refine (sum_sum_eq_apply_of_eq_zero_off_point _ _ d b (mem_minusIdx_iff_eq_false.mpr hd) (mem_plusIdx_iff_eq_true.mpr hb) _ ?_).trans ?_
       · intro x _ i _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, rfl⟩
         simp at hne
       · simp
@@ -221,7 +221,7 @@ theorem sgE_comm {cp cm : Fin n → Fin n → Module.End ℂ W} (hC : IsCAR cp c
         (if i = a ∧ c = x then cp i d * cm b x else 0) = cp a d * cm b c := by
       refine (sum_sum_eq_apply_of_eq_zero_off_point _ _ c a (mem_minusIdx_iff_eq_false.mpr hc') (mem_plusIdx_iff_eq_true.mpr ha) _ ?_).trans ?_
       · intro x _ i _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, rfl⟩
         simp at hne
       · simp
@@ -234,13 +234,13 @@ theorem sgE_comm {cp cm : Fin n → Fin n → Module.End ℂ W} (hC : IsCAR cp c
     have hd : ε d = true := by rw [← hcd]; exact hc
     have hbc : b ≠ c := fun h => by simp [h, hc] at hb
     have hda : d ≠ a := fun h => by simp [h, ha'] at hd
-    rw [if_neg hbc, if_neg hda, sub_zero, sgE_eq_neg_sum_plusIdx_of_false ε cp cm ha' hb,
+    rw [ite_eq_right hbc, ite_eq_right hda, sub_zero, sgE_eq_neg_sum_plusIdx_of_false ε cp cm ha' hb,
       sgE_eq_sum_minusIdx_of_true ε cp cm hc hd]
     have e1 : ∑ i ∈ plusIdx ε, ∑ y ∈ minusIdx ε,
         (if i = c ∧ a = y then cp i b * cm d y else 0) = cp c b * cm d a := by
       refine (sum_sum_eq_apply_of_eq_zero_off_point _ _ c a (mem_plusIdx_iff_eq_true.mpr hc) (mem_minusIdx_iff_eq_false.mpr ha') _ ?_).trans ?_
       · intro i _ y _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, rfl⟩
         simp at hne
       · simp
@@ -248,7 +248,7 @@ theorem sgE_comm {cp cm : Fin n → Fin n → Module.End ℂ W} (hC : IsCAR cp c
         (if d = i ∧ y = b then cp c y * cm i a else 0) = cp c b * cm d a := by
       refine (sum_sum_eq_apply_of_eq_zero_off_point _ _ d b (mem_plusIdx_iff_eq_true.mpr hd) (mem_minusIdx_iff_eq_false.mpr hb) _ ?_).trans ?_
       · intro i _ y _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨rfl, rfl⟩
         simp at hne
       · simp
@@ -287,7 +287,7 @@ theorem dOp_sq {E cp cm : Fin n → Fin n → Module.End ℂ W} (hE : IsGlRep E)
   have n2 : y.1 ≠ x.2 := fun h => by simp [h, hx2] at hy1
   have hAB : E x.2 x.1 * E y.2 y.1 = E y.2 y.1 * E x.2 x.1 := by
     have h := hE x.2 x.1 y.2 y.1
-    rw [if_neg n1, if_neg n2, sub_zero] at h
+    rw [ite_eq_right n1, ite_eq_right n2, sub_zero] at h
     exact sub_eq_zero.mp h
   exact car_anti_abs _ _ _ _ ((hEC y.2 y.1 x.1 x.2).1).symm ((hEC x.2 x.1 y.1 y.2).1).symm hAB
     (eq_neg_iff_add_eq_zero.mpr (hC x.1 x.2 y.1 y.2).1)
@@ -307,7 +307,7 @@ theorem dOp'_sq {E cp cm : Fin n → Fin n → Module.End ℂ W} (hE : IsGlRep E
   have n2 : y.2 ≠ x.1 := fun h => by simp [h, hx1] at hy2
   have hAB : E x.1 x.2 * E y.1 y.2 = E y.1 y.2 * E x.1 x.2 := by
     have h := hE x.1 x.2 y.1 y.2
-    rw [if_neg n1, if_neg n2, sub_zero] at h
+    rw [ite_eq_right n1, ite_eq_right n2, sub_zero] at h
     exact sub_eq_zero.mp h
   exact car_anti_abs _ _ _ _ ((hEC y.1 y.2 x.1 x.2).2).symm ((hEC x.1 x.2 y.1 y.2).2).symm hAB
     (eq_neg_iff_add_eq_zero.mpr (hC x.1 x.2 y.1 y.2).2.1)

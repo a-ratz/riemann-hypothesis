@@ -222,7 +222,7 @@ namespace GlobalTheory.SeeSaw.TwLev
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem cl_nonempty {B : Base} {X : PreX B.toPre} (I : TC B X) (a : I.ι) : Nonempty (I.stX a).Cl := by
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have := Formalism.L2.Col.rank_X'_eq B.R; have := B.R.m_add_three_le_k; unfold Ranks.r at *; omega⟩
   exact ⟨⟨(), Quotient.mk _ ⟨(DecoF.base _ _ _ _ _, ∅), Set.mem_singleton _⟩⟩⟩
 
@@ -262,7 +262,7 @@ theorem levIs_reads_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I
     have := congrArg (Matrix.reindex (finCongr (rankP (I.rec7 l Z))) (finCongr (rankP (I.rec7 l Z)))).symm gP
     rw [gramP, Equiv.symm_apply_apply] at this
     rw [this, Matrix.reindex_symm, Matrix.reindex_apply, Matrix.submatrix_one_equiv]
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have := Formalism.L2.Col.rank_X'_eq B.R; have := B.R.m_add_three_le_k; unfold Ranks.r at *; omega⟩
   have hLb : S.Lb = Formalism.L2.Col.stdLat B.fields.E (B.R.N B.R.m - 1) := by
     ext x
@@ -319,7 +319,7 @@ theorem chi_deep (hc : CMData F E) {n T f : ℕ} {J : Matrix (Fin n) (Fin n) E} 
   have hu : P.under (𝓞 F) = v := HeightOneSpectrum.ext (Eq.symm hv)
   have hover : ∀ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 F) = v → w = P ∨ w = conjPrime₂ P := fun w hw =>
     rll_over_cases hc hv (show IsOver v w from (congrArg HeightOneSpectrum.asIdeal hw).symm)
-  haveI : CharZero (P.adicCompletion E) := algebraRat.charZero _
+  have : CharZero (P.adicCompletion E) := algebraRat.charZero _
   set c : P.adicCompletion E := ((qOf P : ℕ) : P.adicCompletion E) ^ (N₀ + 1) with hcdef
   have hcv : Valued.v c = WithZero.exp (-((N₀ : ℤ) + 1)) := by
     rw [hcdef, map_pow, hq, ← WithZero.exp_nsmul]
@@ -481,16 +481,16 @@ theorem levRead_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (
     (fun c w x => by
       by_cases hc : c < B.R.m
       · obtain ⟨b, k, h1, h2⟩ := exists_rep w.1 x
-        have e1 : cg (c + 1) w.1 = chi (c + 1) w.1 := if_pos hc
-        have e2 : chiAt I.Ch w c = I.Ch.chi ⟨c, hc⟩ w := dif_pos hc
+        have e1 : cg (c + 1) w.1 = chi (c + 1) w.1 := ite_eq_left hc
+        have e2 : chiAt I.Ch w c = I.Ch.chi ⟨c, hc⟩ w := dite_eq_left hc
         have e3 := hchi ⟨c, hc⟩ w.1 w.2 b k x h1 h2
         have e4 := (hI.ch_tied.mu0 ⟨c, hc⟩).atg w k b x h1 h2
         have e5 := (congrArg (fun z : ℂˣ => (z : ℂ)) e3).trans e4
         rw [e1, e2]
         refine inv_injective ?_
         exact (Units.val_inv_eq_inv_val _).symm.trans (e5.trans ((congrArg B.embLL (Units.val_inv_eq_inv_val _)).trans (map_inv₀ _ _)))
-      · have e1 : cg (c + 1) w.1 = 1 := if_neg hc
-        have e2 : chiAt I.Ch w c = 1 := dif_neg hc
+      · have e1 : cg (c + 1) w.1 = 1 := ite_eq_right hc
+        have e2 : chiAt I.Ch w c = 1 := dite_eq_right hc
         rw [e1, e2]
         exact (map_one B.embLL).symm)
     (xiR t)
@@ -504,7 +504,7 @@ theorem levRead_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (
   refine ⟨key.1, fun h κ hκ => Eq.trans ?_ (key.2 h κ hκ)⟩
   refine congrArg (fun z : ℂˣ => (z : ℂ)) (congrArg₂ (· * ·) (congrArg₂ (· * ·) rfl ?_) rfl)
   refine Finset.prod_congr rfl fun PP _ => Finset.prod_congr rfl fun c hc => ?_
-  have e1 : cg (c + 1) PP = chi (c + 1) PP := if_pos (Finset.mem_range.1 hc)
+  have e1 : cg (c + 1) PP = chi (c + 1) PP := ite_eq_left (Finset.mem_range.1 hc)
   exact congrArg (fun f : (kP PP)ˣ →* ℂˣ => f _) e1.symm
 
 end Cols

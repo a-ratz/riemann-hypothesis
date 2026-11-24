@@ -351,8 +351,8 @@ theorem iwasawaKC : IwasawaKC := by
       (isClosed_iInter fun l => isClosed_le continuous_const (continuous_id.matrix_elem l l))
   have hcm : Continuous fun p : KC ε × Kset ε =>
       ((p.2 : Matrix (Fin n) (Fin n) ℂ)ᴴ * (p.1 : Matrix (Fin n) (Fin n) ℂ)) :=
-    ((continuous_subtype_val.comp continuous_snd).matrix_conjTranspose).matrix_mul
-      (continuous_subtype_val.comp continuous_fst)
+    ((continuous_subtypeVal.comp continuous_snd).matrix_conjTranspose).matrix_mul
+      (continuous_subtypeVal.comp continuous_fst)
   have hgraph : IsClosed {p : KC ε × Kset ε | p.2 = F p.1} := by
     have e : {p : KC ε × Kset ε | p.2 = F p.1} =
         (fun p : KC ε × Kset ε => ((p.2 : Matrix (Fin n) (Fin n) ℂ)ᴴ * (p.1 : Matrix (Fin n) (Fin n) ℂ))) ⁻¹'
@@ -380,7 +380,7 @@ theorem iwasawaKC : IwasawaKC := by
   have hF : Continuous F := continuous_of_closed_graph hgraph
   have hcont : ContinuousOn κ (KC ε) := by
     rw [continuousOn_iff_continuous_domRestrict]
-    exact continuous_subtype_val.comp hF
+    exact continuous_subtypeVal.comp hF
   refine ⟨κ, β, fun y hy => hκ y hy, hcont, ?_, ?_⟩
   · refine ContinuousOn.congr ?_ hβ
     exact (continuous_id.matrix_conjTranspose.comp_continuousOn hcont).mul continuousOn_id

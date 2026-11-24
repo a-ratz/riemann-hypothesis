@@ -235,12 +235,12 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem exists_pt (𝔐 : GlobalTheory.CompanionTheory.Ar.HodgeCpt Y S y) :
     ∃ z : Sp Ω ⟶ Xo.XF c, z ≫ Y.j = 𝔐.ξ ≫ 𝔐.f ∧ z ≫ pullback.snd _ _ = spMap 𝔐.cst := by
-  haveI := c.fin
-  haveI : NumberField c.F := {}
+  have := c.fin
+  have : NumberField c.F := {}
   have hfl : (Scheme.stalkClosedPointTo 𝔐.ξ₀).hom.Flat := RingHom.Flat.of_bijective 𝔐.gen₀.bij
   obtain ⟨v, hv⟩ := GlobalTheory.TorRef.DomFine.exists_generic_point (𝓞 c.F) c.F Y.X (Xo.XF c) Y.s Y.jQ Y.flat Y.proj
     Y.jQ_open Y.jQ_dense 𝔐.ξ₀ hfl
-  letI := 𝔐.fn.toAlgebra
+  let := 𝔐.fn.toAlgebra
   let qq : FractionRing 𝔐.Ω₀ →+* Ω := IsFractionRing.lift (g := 𝔐.fn) 𝔐.fn.injective
   have hq : qq.comp (algebraMap 𝔐.Ω₀ (FractionRing 𝔐.Ω₀)) = 𝔐.fn := RingHom.ext fun a => IsFractionRing.lift_algebraMap 𝔐.fn.injective a
   have hz : (spMap qq ≫ v) ≫ Y.j = 𝔐.ξ ≫ 𝔐.f := by
@@ -278,7 +278,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem flag_mem (𝔐 : GlobalTheory.CompanionTheory.Ar.HodgeCpt Y S y) (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) (k : Fin (labelRk D s)) :
     Fl.b s k ∈ 𝔐.Vgen s := by
-  letI := 𝔐.fn.toAlgebra
+  let := 𝔐.fn.toAlgebra
   obtain ⟨cc, u, h1, -, -, -, -, -, h7, -⟩ := Fl.generic
   have hc : ∀ l', Fl.j (cc s l') ∈ 𝔐.Vgen s := fun l' =>
     (Fl.V₀_mem s _).1 ((h1 s).2 ▸ Submodule.subset_span ⟨l', rfl⟩)
@@ -291,7 +291,7 @@ theorem flag_mem (𝔐 : GlobalTheory.CompanionTheory.Ar.HodgeCpt Y S y) (Fl : �
 
 theorem flag_indep (𝔐 : GlobalTheory.CompanionTheory.Ar.HodgeCpt Y S y) (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) :
     LinearIndependent Ω (Fl.b s) := by
-  letI := 𝔐.fn.toAlgebra
+  let := 𝔐.fn.toAlgebra
   obtain ⟨cc, u, -, -, -, h4, -⟩ := Fl.generic
   exact h4 s
 
@@ -350,7 +350,7 @@ variable {Y₁ : Model Xo c (algebraMap (𝓞 c.F) c.F)}
 
 omit [Field Ω] [Algebra c.F Ω] in
 theorem exists_genFrame (Or : RootOrigin Y₁ S RM Fx) : Nonempty (GenFrame Or) := by
-  letI := cstAlg Or
+  let := cstAlg Or
   obtain ⟨z, hz, hzs⟩ := exists_pt Or.𝔐
   have hx : (z ≫ pullback.fst _ _) ≫ Xo.s = sOf c RM.Ω := by
     rw [Category.assoc, pullback.condition, ← Category.assoc, hzs]

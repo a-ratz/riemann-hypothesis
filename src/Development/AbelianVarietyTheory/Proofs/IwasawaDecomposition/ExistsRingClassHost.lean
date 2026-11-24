@@ -310,7 +310,7 @@ theorem finiteIndex_ringKer [_root_.NumberField.IsTotallyComplex E] {a : Ideles 
     rw [ker_art]
     refine le_sInf ?_
     rintro _ ⟨B, _, _, φ, -, ho, -, -, rfl⟩
-    exact Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker φ) (φ.ker.isClosed_of_isOpen ho)
+    exact Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker φ) (φ.ker.isClosed_of_isOpen ho)
   let π : Gab E Ω →* RingClass c l Q := QuotientGroup.lift _ (art c l Q) hc
   have hπ : ∀ σ, π (toAb E Ω σ) = art c l Q σ := fun _ => rfl
   have hs : Function.Surjective (π.comp a) := fun x => by

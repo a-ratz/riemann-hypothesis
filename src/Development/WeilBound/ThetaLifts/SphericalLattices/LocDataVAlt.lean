@@ -211,7 +211,7 @@ theorem trace_tmul (R : Type) [CommRing R] [Algebra F R] [Module.Free F E] [Modu
 theorem trace_singleTens (v : HeightOneSpectrum (𝓞 F)) (y : Fv F v ⊗[F] E) :
     Algebra.trace (AF F) (AF F ⊗[F] E) (Supp.singleTens E v y) =
       GlobalTheory.EmbChart.atPlace v (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) y) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   induction y using TensorProduct.induction_on with
   | zero => simp
   | tmul a x =>
@@ -222,7 +222,7 @@ theorem trace_singleTens (v : HeightOneSpectrum (𝓞 F)) (y : Fv F v ⊗[F] E) 
 
 theorem trace_mem {v : HeightOneSpectrum (𝓞 F)} {y : Fv F v ⊗[F] E} (hy : y ∈ intLoc F E v) :
     Algebra.trace (Fv F v) (Fv F v ⊗[F] E) y ∈ v.adicCompletionIntegers F := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   refine intLoc_induction (p := fun y => Algebra.trace (Fv F v) (Fv F v ⊗[F] E) y ∈ v.adicCompletionIntegers F)
     (fun a ha x => ?_) (by simp) (fun y z hy hz => by rw [map_add]; exact add_mem hy hz)
     (fun y hy => by rw [map_neg]; exact neg_mem hy) hy
@@ -237,10 +237,10 @@ theorem odd_absNorm {v : HeightOneSpectrum (𝓞 F)} (h2 : (2 : 𝓞 F) ∉ v.as
   have hc : Nat.card (𝓞 F ⧸ v.asIdeal) = Ideal.absNorm v.asIdeal := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
   have h0 : Ideal.absNorm v.asIdeal ≠ 0 := by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact v.ne_bot
-  haveI := v.isMaximal
-  letI := Ideal.Quotient.field v.asIdeal
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Nat.finite_of_card_ne_zero (hc ▸ h0)
-  letI := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
+  have := v.isMaximal
+  let := Ideal.Quotient.field v.asIdeal
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Nat.finite_of_card_ne_zero (hc ▸ h0)
+  let := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
   by_contra hodd
   have h1 : ringChar (𝓞 F ⧸ v.asIdeal) = 2 := by
     rw [FiniteField.even_card_iff_char_two, ← Nat.card_eq_fintype_card, hc]
@@ -265,7 +265,7 @@ theorem exists_unif (hσ : IsCMExt F E σ) (hw : IsInertAt F E v w) (hc : IsConj
     ∃ s : F, IsUnramInv (complMap h (algebraMap F (Fv F v) s)) c (qV F v) := by
   have hval : ∀ a : E, Valued.v (algebraMap E (w.adicCompletion E) a) = w.valuation E a := fun a =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
-  obtain ⟨s, hs, hs2⟩ := SetLike.not_le_iff_exists.1 (mt Ideal.map_le_iff_le_comap.2 (not_map_le_sq hw))
+  obtain ⟨s, hs, hs2⟩ := IsConcreteLE.not_le_iff_exists.1 (mt Ideal.map_le_iff_le_comap.2 (not_map_le_sq hw))
   have hs1 : algebraMap (𝓞 F) (𝓞 E) s ∈ w.asIdeal := hw ▸ Ideal.mem_map_of_mem _ hs
   refine ⟨(s : F), ?_⟩
   have hϖ : complMap h (algebraMap F (Fv F v) (s : F)) =
@@ -323,7 +323,7 @@ theorem GlobalTheory.InertPsi.exists_field_data : ∀ (F E : Type) [Field F] [Nu
       (∃ z ∈ Formalism.UG.intL (w.adicCompletion E), σL z = z ∧ ψL (ϖ⁻¹ * z) ≠ 1) ∧
       ∀ z, ψL ((z + σL z) / 2) = B.ψ (⅟(2 : AF F) * Algebra.trace (AF F) (AE F E) (-1 * ptAt hw h z)) := by
   intro F E _ _ _ _ _ σ B hB v w hw h
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨c, hc, -⟩ := InertChart.existsUnique_isConjAt σ hw h
   obtain ⟨s, hU⟩ := exists_unif hB.cm hw hc
   obtain ⟨h2, -, hψ⟩ := hB.inert v w hw
@@ -401,7 +401,7 @@ theorem GlobalTheory.InertPsi.exists_field_data : ∀ (F E : Type) [Field F] [Nu
     let cE : AE F E ≃ₐ[AF F] AE F E := AlgEquiv.ofAlgHom (cA σ) (cA σ) (AlgHom.ext hcc) (AlgHom.ext hcc)
     have hT : ∀ x, Algebra.trace (AF F) (AE F E) (cA σ x) = Algebra.trace (AF F) (AE F E) x := fun x =>
       Algebra.trace_eq_of_algEquiv cE x
-    haveI : NeZero (2 : w.adicCompletion E) := ⟨fun h0 => two_ne_zero ((map_eq_zero_iff _ (algebraMap E (w.adicCompletion E)).injective).1 ((map_ofNat _ 2).trans h0))⟩
+    have : NeZero (2 : w.adicCompletion E) := ⟨fun h0 => two_ne_zero ((map_eq_zero_iff _ (algebraMap E (w.adicCompletion E)).injective).1 ((map_ofNat _ 2).trans h0))⟩
     set y := (z + c z) / 2
     have hy : y + y = z + c z := add_halves _
     have key : Algebra.trace (AF F) (AE F E) (ptAt hw h y) = Algebra.trace (AF F) (AE F E) (ptAt hw h z) := by
@@ -1088,7 +1088,7 @@ theorem kap_mem_latAtV_iff : ∀ (F E : Type) [Field F] [NumberField F] [Field E
           (A : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * xᵀ * (Bm : Matrix (Fin d) (Fin d) (w.adicCompletion E))ᵀ := by
         refine Matrix.ext fun k l => ?_
         simp only [AddMonoidHom.mapMatrix_apply, Matrix.map_apply, kap_apply, RingHom.toAddMonoidHom_eq_coe,
-          AddMonoidHom.coe_coe, locW_ptAt]
+          AddMonoidHom.coe_ofClass, locW_ptAt]
       simp only [Ψ, e2]
       rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.transpose_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one,
         Matrix.transpose_one, Matrix.mul_one, ← Matrix.mul_assoc, ← Units.val_mul, inv_mul_cancel, Units.val_one,

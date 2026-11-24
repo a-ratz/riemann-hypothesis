@@ -163,7 +163,7 @@ theorem aug_nil : ∀ (p : ℕ) (O : Type) [CommRing O] (G : PDivGroup p O) (d :
   have hR : (p : G.A 1) ∣ c.ev 1 (f - (P : MvPowerSeries (Fin d) O)) := by
     have h := hN₁ (f - P) (fun α hα => ?_)
     · simpa using h
-    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', if_pos, sub_self]
+    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', ite_eq_left, sub_self]
     intro i
     have : α i ≤ α.degree := by
       rw [Finsupp.degree]
@@ -176,7 +176,7 @@ theorem aug_nil : ∀ (p : ℕ) (O : Type) [CommRing O] (G : PDivGroup p O) (d :
       MvPolynomial.algHom_ext fun i => by simp [(c.isEval 1).1 i]
     exact congrArg (fun φ => φ P) this
   have hP0 : MvPolynomial.constantCoeff P = 0 := by
-    rw [MvPolynomial.constantCoeff_eq, hPdef, coeff_trunc', if_pos (zero_le')]
+    rw [MvPolynomial.constantCoeff_eq, hPdef, coeff_trunc', ite_eq_left (zero_le)]
     simpa using hf
   have ha := dvd_pow_of_mem_span (c.x 1) (p : G.A 1) N₀ hx _ (aeval_mem_span (c.x 1) P hP0)
   rw [← hP] at ha
@@ -405,7 +405,7 @@ theorem isBasis_map : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
       rw [h1, Pi.single_apply]
       split_ifs <;> simp
     have s1 : x l' = ∑ l, x l * F.θ (∑ m, M l m * N m l') := by
-      simp only [e1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [e1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have s2 : ∑ l, x l * F.θ (∑ m, M l m * N m l') = ∑ m, y m * F.θ (N m l') := by
 
       simp only [hydef, map_sum, map_mul, Finset.mul_sum, Finset.sum_mul]
@@ -818,7 +818,7 @@ namespace GlobalTheory.LevelOneIndep
 
 theorem defect_level_one_nonunit : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = c.μ i) → ∀ (k : ℕ) (e : Fin d ⊕ Fin k → MvPowerSeries (Fin d) F.Q), IsBasis μ' e → IsAdapted F.θ μ' e → ∀ (w : Fin d ⊕ Fin k → F.B) (a : MvPowerSeries (Fin d) F.B), map (algebraMap F.B F.Q) a = defect μ' p (comb w e) → c.ev 1 (map F.θ a) ∈ Ideal.span (algebraMap O (G.A 1) '' {o | ¬IsUnit o}) → ∀ j, ¬IsUnit (F.θ (w (Sum.inr j))) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F G d c μ' hlift hmap k e hbasis hadapt w a ha hev j
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   have hmem : ∀ o : O, o ∈ IsLocalRing.maximalIdeal O ↔ ¬IsUnit o := fun o =>
     IsLocalRing.mem_maximalIdeal o
   have hpm : (p : O) ∈ IsLocalRing.maximalIdeal O := (hmem _).2 Fact.out
@@ -1012,8 +1012,8 @@ theorem pow_sub_expand_mem (p : ℕ) [Fact p.Prime] {B : Type} [CommRing B] (t :
     coeff α (w ^ p - expand p (Fact.out : p.Prime).ne_zero (map t w)) ∈
       Ideal.span {(p : B)} := by
   set I : Ideal B := Ideal.span {(p : B)}
-  haveI : CharP (B ⧸ I) p := CharP.quotient B p (by simpa [mem_nonunits_iff] using hu)
-  haveI : ExpChar (B ⧸ I) p := ExpChar.prime Fact.out
+  have : CharP (B ⧸ I) p := CharP.quotient B p (by simpa [mem_nonunits_iff] using hu)
+  have : ExpChar (B ⧸ I) p := ExpChar.prime Fact.out
   have hw : map (Ideal.Quotient.mk I) (map t w) =
       map (frobenius (B ⧸ I) p) (map (Ideal.Quotient.mk I) w) := by
     ext n
@@ -1047,9 +1047,9 @@ theorem ev_one_subst_nmul (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
     [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O] (hv : v.Integers O) (G : PDivGroup p O)
     (d : ℕ) (c : QLog.Chart G d) (s : MvPowerSeries (Fin d) O) (hs : constantCoeff s = 0) :
     c.ev 1 (subst (nmul c.μ p) s) = 0 := by
-  haveI : IsAdicComplete (Ideal.span {(p : O)}) (G.A 1) :=
+  have : IsAdicComplete (Ideal.span {(p : O)}) (G.A 1) :=
     GlobalTheory.isAdicComplete_of_finite_projective _ _
-  haveI : IsAdicComplete (Ideal.span {(p : G.A 1)}) (G.A 1) := adicComplete_ring (O := O) p
+  have : IsAdicComplete (Ideal.span {(p : G.A 1)}) (G.A 1) := adicComplete_ring (O := O) p
   have hT := (GlobalTheory.CEval.continuous_eval p O (G.A 1) (Fin d) (c.x 1) (c.nil 1)).2
     (c.ev 1) (c.isEval 1)
   let E' : MvPowerSeries (Fin d) O →ₐ[O] G.A 1 :=

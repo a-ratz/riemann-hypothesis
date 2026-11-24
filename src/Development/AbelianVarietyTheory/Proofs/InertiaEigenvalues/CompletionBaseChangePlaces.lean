@@ -68,8 +68,8 @@ theorem exists_completion_map {L L' : Type} [Field L] [NumberField L] [Field L']
     (h : ∀ x : 𝓞 L, RingOfIntegers.mapRingHom jL x ∈ v'.asIdeal ↔ x ∈ v.asIdeal) :
     ∃ μ : v.adicCompletion L →+* v'.adicCompletion L', Continuous μ ∧
       ∀ x, μ (algebraMap L _ x) = algebraMap L' _ (jL x) := by
-  letI : Algebra L L' := jL.toAlgebra
-  haveI : v'.asIdeal.LiesOver v.asIdeal := ⟨by ext x; exact (h x).symm⟩
+  let : Algebra L L' := jL.toAlgebra
+  have : v'.asIdeal.LiesOver v.asIdeal := ⟨by ext x; exact (h x).symm⟩
   have hc := (HeightOneSpectrum.uniformContinuous_algebraMap_liesOver L L' v v').continuous
   let φ : v.adicCompletion L →+* v'.adicCompletion L' :=
     ((HeightOneSpectrum.adicCompletion.equiv L' v').symm.toRingHom.comp
@@ -111,15 +111,15 @@ theorem exists_ringEquiv_completion : ∀ (E L E' L' : Type) [Field E] [NumberFi
   have hspan : ∀ y : L', y ∈ Submodule.span E' (jL '' (s : Set L)) := fun y => by
     have hy : y ∈ Submodule.span E' (Set.range jL) := htop ▸ Submodule.mem_top
     exact (Submodule.span_le.2 hrange) hy
-  letI : Algebra (w'.adicCompletion E') (v'.adicCompletion L') := κ'.toAlgebra
-  haveI : ContinuousSMul (w'.adicCompletion E') (v'.adicCompletion L') :=
+  let : Algebra (w'.adicCompletion E') (v'.adicCompletion L') := κ'.toAlgebra
+  have : ContinuousSMul (w'.adicCompletion E') (v'.adicCompletion L') :=
     continuousSMul_of_algebraMap _ _ hκ'c
-  letI : NontriviallyNormedField (w'.adicCompletion E') := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (w'.adicCompletion E') := Valued.toNontriviallyNormedField _ _
   let M : Submodule (w'.adicCompletion E') (v'.adicCompletion L') :=
     Submodule.span _ ((fun y => algebraMap L' (v'.adicCompletion L') (jL y)) '' (s : Set L))
-  haveI : FiniteDimensional (w'.adicCompletion E') M :=
+  have : FiniteDimensional (w'.adicCompletion E') M :=
     FiniteDimensional.span_of_finite _ (s.finite_toSet.image _)
-  have hcl : IsClosed (M : Set (v'.adicCompletion L')) := Submodule.closed_of_finiteDimensional _
+  have hcl : IsClosed (M : Set (v'.adicCompletion L')) := Submodule.isClosed_of_finiteDimensional _
   have hM : ∀ y : L', algebraMap L' (v'.adicCompletion L') y ∈ M := fun y => by
     induction hspan y using Submodule.span_induction with
     | mem z hz =>

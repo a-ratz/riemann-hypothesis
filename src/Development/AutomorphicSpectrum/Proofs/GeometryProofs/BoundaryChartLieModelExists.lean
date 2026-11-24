@@ -76,9 +76,9 @@ theorem exists_model (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] [
   subst hy
   obtain ⟨F, _, _, ⟨M'⟩⟩ := lieModel_exists _ G R' (spMap c ≫ x)
   obtain ⟨j, hj, -⟩ := LieBaseChange.existsUnique_semilinear_lifts S G R R' c x _ F M M'
-  letI : Algebra R R' := c.toAlgebra
-  letI : Module R F := Module.compHom F c
-  haveI : IsScalarTower R R' F := ⟨fun r s f => by
+  let : Algebra R R' := c.toAlgebra
+  let : Module R F := Module.compHom F c
+  have : IsScalarTower R R' F := ⟨fun r s f => by
     change (c r * s) • f = c r • s • f
     rw [mul_smul]⟩
   let j' : (Fin g → R) →ₗ[R] F :=

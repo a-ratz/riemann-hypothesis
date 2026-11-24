@@ -163,7 +163,7 @@ theorem src_line (H : Hyp ε S m A ν τ r Z M c₁ R₀ C) (j : Fin m) (f₀ : 
     have hL : ‖f₀ (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * R * t)) =
         ENNReal.ofReal (b ^ 2 * Real.exp (2 * R * t)) := by
       rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _)]
-      simp only [hbdef, ofReal_norm_eq_enorm]
+      simp only [hbdef, ofReal_norm]
     have hR : (T.card : ℝ≥0∞) * ∑ h ∈ T, ‖h (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * ρ * t)) =
         ENNReal.ofReal ((T.card : ℝ) * ∑ h ∈ T, a h ^ 2 * Real.exp (2 * ρ * t)) := by
       rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_natCast,
@@ -171,14 +171,14 @@ theorem src_line (H : Hyp ε S m A ν τ r Z M c₁ R₀ C) (j : Fin m) (f₀ : 
       congr 1
       refine Finset.sum_congr rfl fun h _ => ?_
       rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _)]
-      simp only [ha, ofReal_norm_eq_enorm]
+      simp only [ha, ofReal_norm]
     rw [hL, hR]
     exact ENNReal.ofReal_le_ofReal hreal
   have hmeas : ∀ h ∈ T, Measurable fun t : ℝ =>
       ‖h (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * ρ * t)) := by
     intro h hh
     have hc := line_cont H j x h (H.cont h (hTS h hh))
-    exact (hc.enorm.measurable.pow_const 2).mul (by fun_prop)
+    exact (hc.eNorm.measurable.pow_const 2).mul (by fun_prop)
   calc ∫⁻ t in Set.Ioi (0 : ℝ), ‖f₀ (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (2 * R * t))
       ≤ ∫⁻ t in Set.Ioi (0 : ℝ), (T.card : ℝ≥0∞) * ∑ h ∈ T, ‖h (S7.toM (x : S7.UJ ε) * aT (A j) t)‖ₑ ^ 2 *
           ENNReal.ofReal (Real.exp (2 * ρ * t)) := setLIntegral_mono' measurableSet_Ioi hpt
@@ -495,7 +495,7 @@ theorem far_est (hLC : LineChain) (H : Hyp ε S m A ν τ r Z M c₁ R₀ C) (hn
   obtain ⟨κ, hκ0, hκT, hform⟩ := H.formula j
   set slab : Set (PSub ε (A j)) := {x : PSub ε (A j) | τ j x ∈ Set.Ico 0 1} with hslabdef
   have hslab : MeasurableSet slab :=
-    ((H.tauCont j).measurable.comp measurable_subtype_coe) measurableSet_Ico
+    ((H.tauCont j).measurable.comp measurable_subtypeVal) measurableSet_Ico
   have hJ : ∫⁻ x in slab,
       (∫⁻ t : ℝ, Ψt (S7.toM (x : S7.UJ ε) * aT (A j) t) * ENNReal.ofReal (Real.exp (2 * r j * t))) ∂(ν j) < ⊤ := by
     have e := hform Ψt hΨtm hΨtK
@@ -705,8 +705,8 @@ theorem level_mono (hn : 0 < n) (f : Matrix (Fin n) (Fin n) ℂ → ℂ) {s s' :
 
 theorem level_zero_dim (ε : Fin 0 → Bool) (f : Matrix (Fin 0) (Fin 0) ℂ → ℂ) (s : ℝ) : LevelF ε f s := by
   unfold LevelF
-  haveI : Subsingleton (S7.UJ ε) := ⟨fun a b => Subtype.ext (Units.ext (Subsingleton.elim _ _))⟩
-  haveI : CompactSpace (S7.UJ ε) := Finite.compactSpace
+  have : Subsingleton (S7.UJ ε) := ⟨fun a b => Subtype.ext (Units.ext (Subsingleton.elim _ _))⟩
+  have : CompactSpace (S7.UJ ε) := Finite.compactSpace
   set c : ℝ≥0∞ := ‖f (S7.toM (1 : S7.UJ ε))‖ₑ ^ 2 * ENNReal.ofReal (Formalism.REAL.hs (S7.toM (1 : S7.UJ ε)) ^ s)
   have : ∀ g : S7.UJ ε, ‖f (S7.toM g)‖ₑ ^ 2 * ENNReal.ofReal (Formalism.REAL.hs (S7.toM g) ^ s) = c := by
     intro g; rw [Subsingleton.elim g 1]

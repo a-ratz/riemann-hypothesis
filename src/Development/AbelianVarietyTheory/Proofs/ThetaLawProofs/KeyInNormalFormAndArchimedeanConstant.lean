@@ -112,7 +112,7 @@ theorem setIntegral_periodic_eq_measure_mul_cube {E I : Type} [NormedAddCommGrou
     simp only [Set.mem_preimage, ZSpan.mem_fundamentalDomain, hrepr, Set.mem_pi, Set.mem_univ,
       true_imp_iff]
   have hcount : Countable (Submodule.span ℤ (Set.range b)) := inferInstance
-  haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range b)) E ν :=
+  have : VAddInvariantMeasure (Submodule.span ℤ (Set.range b)) E ν :=
     ⟨fun c s _ => measure_preimage_add ν (c : E) s⟩
   have h1 : ∫ z in Fd, F z ∂ν = ∫ z in ZSpan.fundamentalDomain b, F z ∂ν :=
     hFd.setIntegral_eq hcell (fun l z => by
@@ -122,12 +122,12 @@ theorem setIntegral_periodic_eq_measure_mul_cube {E I : Type} [NormedAddCommGrou
   have h2 : ν Fd = ν (ZSpan.fundamentalDomain b) := hFd.measure_eq hcell
   let e : (I → ℝ) ≃ᵐ E := T.toHomeomorph.toMeasurableEquiv
   have he : (e : (I → ℝ) → E) = T := rfl
-  haveI : (Measure.map T (volume : Measure (I → ℝ))).IsAddHaarMeasure :=
+  have : (Measure.map T (volume : Measure (I → ℝ))).IsAddHaarMeasure :=
     T.isAddHaarMeasure_map _
   obtain ⟨c, hc⟩ : ∃ c : NNReal, ν = c • Measure.map e (volume : Measure (I → ℝ)) :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul ν (Measure.map T volume)⟩
   have h3 : ν (ZSpan.fundamentalDomain b) = c := by
-    rw [hc, Measure.smul_apply, e.map_apply, he, hpre, Real.volume_pi_Ico]
+    rw [hc, smul_apply, e.map_apply, he, hpre, Real.volume_pi_Ico]
     simp
   rw [h1, h2, h3, hc, Measure.restrict_smul, integral_smul_nnreal_measure, setIntegral_map_equiv,
     he, hpre]

@@ -88,9 +88,9 @@ lemma UT.inv {A : Matrix (Fin n) (Fin n) E} (hA : UT A) :
     ∃ B, UT B ∧ A * B = 1 ∧ B * A = 1 ∧ ∀ O : Subring E, IntM O A → IntM O B := by
   have h1 : A.BlockTriangular id := fun i j h => hA.1 i j h
   have hd : A.det = 1 := by
-    rw [Matrix.det_of_upperTriangular h1]; simp [hA.2]
+    rw [Matrix.det_of_isUpperTriangular h1]; simp [hA.2]
   have hu : IsUnit A.det := by rw [hd]; exact isUnit_one
-  letI := A.invertibleOfIsUnitDet hu
+  let := A.invertibleOfIsUnitDet hu
   have h2 : (A⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular h1
   have h3 : ∀ i j, j < i → A⁻¹ i j = 0 := fun i j h => h2 h
   refine ⟨A⁻¹, ⟨h3, fun i => ?_⟩, Matrix.mul_nonsing_inv A hu, Matrix.nonsing_inv_mul A hu, ?_⟩

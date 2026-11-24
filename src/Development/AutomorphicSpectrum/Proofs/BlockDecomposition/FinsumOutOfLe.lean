@@ -50,7 +50,7 @@ theorem finsum_out_of_le {H : Type} [Group H] {L S : Subgroup H} (u : H → ℂ)
     (hS : S ≤ rStab u) (hm : L.relIndex S ≠ 0) :
     ∑ᶠ q : H ⧸ L, u q.out = ((L.relIndex S : ℕ) : ℂ) * ∑ᶠ c : H ⧸ S, u c.out := by
   have hm' : Nat.card (S ⧸ L.subgroupOf S) ≠ 0 := hm
-  haveI : Finite (S ⧸ L.subgroupOf S) := Nat.finite_of_card_ne_zero hm'
+  have : Finite (S ⧸ L.subgroupOf S) := Nat.finite_of_card_ne_zero hm'
   let e := Subgroup.quotientEquivProdOfLE hLS
   have hfst : ∀ q : H ⧸ L, (e q).1 = ((q.out : H) : H ⧸ S) := by
     intro q
@@ -78,7 +78,7 @@ theorem finsum_out_of_le {H : Type} [Group H] {L S : Subgroup H} (u : H → ℂ)
     rw [finsum_curry _ hsupp]
     have hin : ∀ c : H ⧸ S, ∑ᶠ _ : S ⧸ L.subgroupOf S, u c.out = ((L.relIndex S : ℕ) : ℂ) * u c.out := by
       intro c
-      haveI := Fintype.ofFinite (S ⧸ L.subgroupOf S)
+      have := Fintype.ofFinite (S ⧸ L.subgroupOf S)
       rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
         ← Nat.card_eq_fintype_card]
       rfl

@@ -168,7 +168,7 @@ theorem not_dvd_different_of_psiUnr : ∀ {F : Type} [Field F] [NumberField F] {
   have h0 : differentIdeal ℤ (𝓞 F) ≠ 0 := differentIdeal_ne_bot
   have hD : ((differentIdeal ℤ (𝓞 F) : Ideal (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) = (codiff F)⁻¹ :=
     coeIdeal_differentIdeal ℤ ℚ F (𝓞 F)
-  have hcnt := FractionalIdeal.count_coe F v h0
+  have hcnt := FractionalIdeal.count_coeIdeal F v h0
   rw [hD, FractionalIdeal.count_inv] at hcnt
   have hne := (Associates.count_ne_zero_iff_dvd h0 v.irreducible).2 hdvd
   set c := FractionalIdeal.count F v (codiff F) with hc
@@ -184,7 +184,7 @@ theorem not_dvd_different_of_psiUnr : ∀ {F : Type} [Field F] [NumberField F] {
     · subst hu
       rw [show (GlobalTheory.AdelicU.singleFin u x) u = x from GlobalTheory.AdelicU.evalV_singleFin_self u x, hval]
     · rw [show (GlobalTheory.AdelicU.singleFin v x) u = 0 from GlobalTheory.AdelicU.evalV_singleFin_ne hu x, map_zero]
-      exact zero_le'
+      exact zero_le
   rw [GlobalTheory.SplitUnram.mem_adelicIdeal_codiff_iff hψ.1 (GlobalTheory.PsiNontriv.isStd_fin_rat hψ)] at hmem
   have hint : x ∈ v.adicCompletionIntegers F := by
     refine (hU x).1 fun y hy => ?_

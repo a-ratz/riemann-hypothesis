@@ -101,12 +101,12 @@ theorem lieBC {S : Scheme.{0}} {G : Over S} [GrpObj G] {A B : Type} [CommRing A]
       (∀ (a : A) e, j (a • e) = c a • j e) ∧ Submodule.span B (Set.range j) = ⊤ ∧
       ∀ l : Module.Dual A E, ∃ l' : Module.Dual B E', ∀ e, l' (j e) = c (l e) := by
   subst hy
-  letI : Algebra A B := c.toAlgebra
-  letI : Module A E' := Module.compHom E' c
-  haveI : IsScalarTower A B E' := ⟨fun a b e => by
+  let : Algebra A B := c.toAlgebra
+  let : Module A E' := Module.compHom E' c
+  have : IsScalarTower A B E' := ⟨fun a b e => by
     show (c a * b) • e = c a • b • e
     rw [mul_smul]⟩
-  haveI : Smooth G.hom := hsm
+  have : Smooth G.hom := hsm
   obtain ⟨j, h1, h2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A B x E E' M M'
   let β : E →ₗ[A] E' := { toFun := j, map_add' := map_add j, map_smul' := fun a e => h2 a e }
   have hbc : IsBaseChange B β := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G A x E M).2.2 B E' M' β h1
@@ -151,7 +151,7 @@ theorem char_descends {R R' : Type} [CommRing R] [CommRing R'] [IsDomain R'] (s 
     (hs : Function.Injective s) {T : Type} [CommGroup T] {N : ℕ} (hN : 0 < N) {z : R} (hz : IsPrimitiveRoot z N)
     (hT : ∀ t : T, t ^ N = 1) (χ' : T →* R'ˣ) :
     ∃ χ : T →* Rˣ, (Units.map (s : R →* R')).comp χ = χ' := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hz' : IsPrimitiveRoot (s z) N := hz.map_of_injective hs
   let zu : Rˣ := (hz.isUnit hN.ne').unit
   have hinj : Function.Injective (Units.map (s : R →* R')) := Units.map_injective hs
@@ -246,7 +246,7 @@ theorem forward (hs : Function.Injective (algebraMap R R'))
     (H : M.IsHTFormOver N x k w) : M'.IsHTFormOver N x' k' w' := by
   have hsm' : Smooth G'.hom := MorphismProperty.of_isPullback hφ.1 hsm
   obtain ⟨_, T, _, Γ, i₀, L, _, _, M₀, j₀, χ, w₀, tor, hj₀, hHT, hw⟩ := H
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup R T Γ
+  have := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup R T Γ
   obtain ⟨L', _, _, ⟨M₀'⟩⟩ := lieModel_exists X' G' R' x'
   obtain ⟨Γ', i', β, tor', hβ, hsp, hext, hcore⟩ := core hs x x' f hx φ hφ hsm Γ N i₀ tor M₀ M₀'
   obtain ⟨j', hj', hjs, -, -⟩ := lieBC k' x' ξ' hξ' hsm' M₀' M'
@@ -281,7 +281,7 @@ theorem backward [IsIntegrallyClosed R] [IsNoetherianRing R] (hs : Function.Inje
         (M'.pt e).left = Spec.map (CommRingCat.ofHom (dualMap k')) ≫ v.left → u' e ∈ k'.range := by
   have hsm' : Smooth G'.hom := MorphismProperty.of_isPullback hφ.1 hsm
   obtain ⟨_, T, _, Γ, i₀, L, _, _, M₀, -, -, -, tor, -, -, -⟩ := h0
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup R T Γ
+  have := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.finite_of_qfGroup R T Γ
   obtain ⟨_, T₂, _, Γ₂, i₂, L₂, _, _, M₂, j₂, χ₂, w₂, tor₂, hj₂, hHT₂, hw₂⟩ := H
   obtain ⟨L', _, _, ⟨M₀'⟩⟩ := lieModel_exists X' G' R' x'
   obtain ⟨Γ', i', β, tor', hβ, hsp, hext, hcore⟩ := core hs x x' f hx φ hφ hsm Γ N i₀ tor M₀ M₀'
@@ -332,11 +332,11 @@ theorem om_decomp {R : Type} [CommRing R] [IsLocalRing R] {X : Scheme.{0}} {x : 
         (M.pt e).left = Spec.map (CommRingCat.ofHom (dualMap k)) ≫ v.left → δ a e ∈ k.range) ∧
       ∀ u' : Module.Dual Ω' V', u' = ∑ a, u' (j (b a)) • jd (δ a) := by
   obtain ⟨L, _, _, ⟨M₀⟩⟩ := lieModel_exists X G R x
-  haveI : Smooth G.hom := hsm
+  have : Smooth G.hom := hsm
   obtain ⟨hfin, hproj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G R x L M₀
-  haveI := hfin
-  haveI := hproj
-  haveI : Module.Free R L := Module.free_of_flat_of_isLocalRing
+  have := hfin
+  have := hproj
+  have : Module.Free R L := Module.free_of_flat_of_isLocalRing
   let b := Module.finBasis R L
   obtain ⟨j₁, hj₁, hj₁s, hj₁sp, hj₁ext⟩ := lieBC k _ ξ hξ hsm M₀ M
   choose δ hδ using fun a => hj₁ext (b.coord a)
@@ -390,9 +390,9 @@ theorem GlobalTheory.CompanionTheory.Ar.HTPullK.main : ∀ (X X' : Scheme.{0}) (
   let k' := genMap ξ' p'
   have hkinj : Function.Injective k := gen.inj p
   have hk'inj : Function.Injective k' := gen'.inj p'
-  haveI : IsDomain (X.presheaf.stalk (f p'.1)) := hkinj.isDomain k
-  haveI : IsDomain (X'.presheaf.stalk p'.1) := hk'inj.isDomain k'
-  letI : Algebra (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1) := (f.stalkMap p'.1).hom.toAlgebra
+  have : IsDomain (X.presheaf.stalk (f p'.1)) := hkinj.isDomain k
+  have : IsDomain (X'.presheaf.stalk p'.1) := hk'inj.isDomain k'
+  let : Algebra (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1) := (f.stalkMap p'.1).hom.toAlgebra
   have hk : ∀ r, k' (algebraMap (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1) r) = i (k r) :=
     GlobalTheory.CompanionTheory.Ar.Flat.PullReg.stalkMap_comp_genMap dom p' h
   have hs : Function.Injective (algebraMap (X.presheaf.stalk (f p'.1)) (X'.presheaf.stalk p'.1)) := by
@@ -404,13 +404,13 @@ theorem GlobalTheory.CompanionTheory.Ar.HTPullK.main : ∀ (X X' : Scheme.{0}) (
   have hξ : ξ = Spec.map (CommRingCat.ofHom k) ≫ X.fromSpecStalk (f p'.1) := (RegAtDom.spec_genMap ξ _ h).symm
   have hξ' : ξ' = Spec.map (CommRingCat.ofHom k') ≫ X'.fromSpecStalk p'.1 :=
     (RegAtDom.spec_genMap ξ' p'.1 p'.2).symm
-  haveI := hic
-  haveI := hnoe
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have := hic
+  have := hnoe
+  have : NeZero N := ⟨hN.ne'⟩
 
   have hfr := RegAtRing.regAt_ring X Ω ξ gen p
-  haveI : IsFractionRing (regAt ξ p) Ω := hfr.1
-  haveI : IsIntegrallyClosed (regAt ξ p) := hfr.2.2 hic
+  have : IsFractionRing (regAt ξ p) Ω := hfr.1
+  have : IsIntegrallyClosed (regAt ξ p) := hfr.2.2 hic
   have hζint : IsIntegral (regAt ξ p) ζ :=
     IsIntegral.of_pow hN (by rw [hζ.pow_eq_one]; exact isIntegral_one)
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hζint

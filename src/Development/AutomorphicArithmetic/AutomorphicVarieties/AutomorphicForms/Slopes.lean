@@ -261,9 +261,9 @@ private theorem mem_aux {x : V ⊗[ℚ_[l]] P.R.B} : x ∈ Dcris (P.PD K) ρ ↔
 private theorem pullback_fin_relation [FiniteDimensional ↥LL.1 V] (hC : IsCrys (P.PD K) ρ) :
     FiniteDimensional ↥LL.1 ↥(Dcris (P.PD K) ρ) := by
   rcases subsingleton_or_nontrivial V with hs | hn
-  · haveI : Subsingleton (V ⊗[ℚ_[l]] P.R.B) := inferInstance
+  · have : Subsingleton (V ⊗[ℚ_[l]] P.R.B) := inferInstance
     infer_instance
-  · haveI := (P.PD K).finK₀
+  · have := (P.PD K).finK₀
     apply Module.finite_of_finrank_pos
     rw [hC]
     exact Nat.mul_pos Module.finrank_pos Module.finrank_pos
@@ -348,8 +348,8 @@ end SlopeTestRemainingChoices
 theorem UpperTheory.crystalline_of_place_over :
     ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (ι : Om l ≃+* ℂ) {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l E Ω (Dec (F := E) A) O) (h : IsPlaceOver A w) (hj : Induces Bw) {LL : FinExt l} {V : Type} [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK Bw.Kw) V), IsPst P ρ → IsCrys (P.PD Bw.Kw) ρ → ∀ σ : ↥(Weil h), deg σ = -1 → ∀ b ∈ (wdPst P ι Bw h hj ρ).eig σ, ∀ q : ℚ_[l][X], aeval (ι.symm b) q = 0 → ∃ x ∈ Dcris (P.PD Bw.Kw) ρ, x ≠ 0 ∧ aeval ((φVB (P.PD Bw.Kw) (LL := ℚ_[l]) (V := V) : Module.End ℚ_[l] (V ⊗[ℚ_[l]] P.R.B)) ^ resDeg l w) q x = 0 := by
   intro l _ P ι E Ω _ _ _ _ _ A w O _ _ _ Bw h hj LL V _ _ _ _ _ ρ hV hC σ hσ b hb q hq
-  haveI := hV.finite
-  haveI := pullback_fin_relation P ρ hC
+  have := hV.finite
+  have := pullback_fin_relation P ρ hC
   have hb' : b ∈ (wdRho P ι Bw h hj ρ σ).charpoly.roots := by
     rw [← GlobalTheory.Pst.DpstMap.charPol_wdPst P ι Bw h hj ρ hV σ]
     exact hb
@@ -509,7 +509,7 @@ private theorem slopeHi_inv {R S : Type} [Field R] [CommRing S] [Nontrivial S] (
 theorem UpperTheory.filtration_inverse_frobenius_matrix :
     ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (f : ℕ), 0 < f → (∀ x : ↥(K0 K), (((PP l).PD K).σ)^[f] x = x) → ∀ {d : ℕ} (M M' : Matrix (Fin d) (Fin d) (Bcr l)) (A F : Matrix (Fin d) (Fin d) ↥(K0 K)), M * M' = 1 → IsUnit A.det → M.map (PP l).φB = M * A.map (algebraMap ↥(K0 K) (Bcr l)) → M.map (((PP l).φB)^[f]) = M * F.map (algebraMap ↥(K0 K) (Bcr l)) → ∀ b : ℤ, (∀ i j, (PP l).ιB (M' i j) ∈ ((PP l).PD (botExt l)).Fil (-b)) → ∀ β ∈ spectrum (Om l) (F.map (algebraMap ↥(K0 K) (Om l))), ‖((l : Om l) ^ f) ^ b * β⁻¹‖ ≤ 1 := by
   intro l _ K f hf hσ d M M' A F hMM _ hA hF b hb β hβ
-  haveI : Nontrivial (Bcr l) := ⟨⟨1, 0, fun h => ((PP l).PD K).not_mem_filtration_two (by
+  have : Nontrivial (Bcr l) := ⟨⟨1, 0, fun h => ((PP l).PD K).not_mem_filtration_two (by
     rw [← mul_one ((PP l).PD K).t, h, mul_zero, map_zero]; exact Submodule.zero_mem _)⟩⟩
   have hc : ((PP l).φB)^[f] = ⇑((PP l).φB ^ f) := (AlgHom.coe_pow _ _).symm
   obtain ⟨hA1, hA2⟩ := slopeHi_inv (algebraMap ↥(K0 K) (Bcr l)) ((PP l).φB : Bcr l →+* Bcr l) M M' A hMM hA
@@ -676,8 +676,8 @@ theorem UpperTheory.V.Af.crysSlopes :
   obtain ⟨x, hx, h0, hq⟩ := UpperTheory.crystalline_of_place_over (PP p) ι Bw h hj (Bw.repE L r') hpst hc g hg b he _
     (minpoly.aeval ℚ_[p] (ι.symm b))
   obtain ⟨hf, hσ⟩ := UpperTheory.frobenius_residue_degree_fixes (PP p) Bw h hj
-  haveI := L.2
-  haveI : FiniteDimensional ℚ_[p] (Fin n → ↥L.1) := Module.Finite.trans ↥L.1 _
+  have := L.2
+  have : FiniteDimensional ℚ_[p] (Fin n → ↥L.1) := Module.Finite.trans ↥L.1 _
   obtain ⟨hlo, hhi⟩ := rep_slope Bw.Kw _ hf hσ (resQ (Bw.repE L r'))
     ((GlobalTheory.BSCoeff.isCrys_resQ_iff (PP p) _).2 hc) (ι.symm b) x (by rw [GlobalTheory.BSCoeff.Dcris_resQ]; exact hx) h0 hq
   have hsplit : ∀ (τ : ↥Bw.Kw.1 →ₐ[ℚ_[p]] Om p) (y : ↥Bw.Kw.1), τ y ∈ L.1 := fun τ y => hm.1 (Bw.LL_split τ y)
@@ -733,12 +733,12 @@ private theorem norm_normV {F : Type} [Field F] [NumberField F] (w : HeightOneSp
   have hl : l.Prime := Fact.out
   have hN : ¬ l ∣ normV w := by
     intro hdvd
-    letI := Ideal.Quotient.field w.asIdeal
-    haveI : Finite (𝓞 F ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-    letI := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
+    let := Ideal.Quotient.field w.asIdeal
+    have : Finite (𝓞 F ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
+    let := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
     obtain ⟨p, hchar⟩ := CharP.exists (𝓞 F ⧸ w.asIdeal)
     have hp : p.Prime := CharP.char_is_prime (𝓞 F ⧸ w.asIdeal) p
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 F ⧸ w.asIdeal) p
     have hcard : normV w = p ^ (n : ℕ) := by rw [normV, Nat.card_eq_fintype_card, hn]
     rw [hcard] at hdvd

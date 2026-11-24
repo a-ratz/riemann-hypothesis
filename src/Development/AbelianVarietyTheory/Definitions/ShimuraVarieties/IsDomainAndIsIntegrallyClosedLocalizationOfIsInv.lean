@@ -370,10 +370,10 @@ theorem etale (h : IsFreeRingAction G A) : Algebra.Etale B A :=
 theorem rankAtStalk_eq_card (h : IsFreeRingAction G A) (p : PrimeSpectrum B) :
     Module.rankAtStalk A p = Nat.card G := by
   cases nonempty_fintype G
-  haveI := (finite_and_projective B h).1
-  haveI := (finite_and_projective B h).2
+  have := (finite_and_projective B h).1
+  have := (finite_and_projective B h).2
   obtain ⟨q, rfl⟩ := Algebra.IsIntegral.comap_surjective B A p
-  haveI : Nontrivial A := q.nontrivial
+  have : Nontrivial A := q.nontrivial
   rw [← Module.rankAtStalk_baseChange,
     Module.rankAtStalk_eq_of_equiv (galoisEquiv B h).toLinearEquiv,
     Module.rankAtStalk_eq_finrank_of_free]
@@ -850,7 +850,7 @@ theorem exists_comp_eq (f : X ⟶ Z) (hf : ∀ g, (ρ g).asIso.hom ≫ f = f) : 
             rw [← cancel_mono (π.app (V W'.unop)), Category.assoc, Category.assoc, hc',
               π.naturality, reassoc_of% hc', Scheme.Hom.map_appLE, Scheme.Hom.appLE_map] } }
   let f' : Y ⟶ Z := ⟨m, fun y ↦ ⟨fun a ha ↦ by
-    obtain ⟨W, hW, s, rfl⟩ := Z.presheaf.germ_exist a
+    obtain ⟨W, hW, s, rfl⟩ := Z.presheaf.exists_germ_eq a
     erw [PresheafedSpace.stalkMap_germ_apply] at ha
     obtain ⟨x, rfl⟩ := π.surjective y
     have h₁ : π x ∈ Y.basicOpen (c W s) := (Y.mem_basicOpen (c W s) (π x) hW).mpr ha

@@ -67,8 +67,8 @@ namespace GlobalTheory.GLq.Opp
 
 theorem eq_zero_of_idem {G : Type} [Group G] [Fintype G] (E : MonoidAlgebra ℂ G) (h : E * E = E)
     (h1 : E.coeff 1 = 0) : E = 0 := by
-  haveI : Module.Finite ℂ (MonoidAlgebra ℂ G) := Module.Finite.of_basis (MonoidAlgebra.basis G ℂ)
-  haveI : Module.Free ℂ (MonoidAlgebra ℂ G) := Module.Free.of_basis (MonoidAlgebra.basis G ℂ)
+  have : Module.Finite ℂ (MonoidAlgebra ℂ G) := Module.Finite.of_basis (MonoidAlgebra.basis G ℂ)
+  have : Module.Free ℂ (MonoidAlgebra ℂ G) := Module.Free.of_basis (MonoidAlgebra.basis G ℂ)
   have hi : IsIdempotentElem (LinearMap.mulLeft ℂ E) := by
     refine LinearMap.ext fun x => ?_
     simp [← mul_assoc, h]

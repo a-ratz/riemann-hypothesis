@@ -103,11 +103,11 @@ theorem lemmaDN_core {d : ℕ} {T₁ T₂ : LocLat G Qp LL O} {F : LatHom T₁.L
         (L : ℝ) ≤ lenC (finrank LL T₂.V) m PD.p (hpar n b S + η) S * kO := by
   classical
   obtain ⟨hdom, hdvr, -⟩ := hS.2.2.2.1
-  haveI := hdom
-  haveI := hdvr
+  have := hdom
+  have := hdvr
   obtain ⟨ζ, hζ⟩ := hS.2.2.2.2.1
   have hp11 : 11 ≤ PD.p := hS.2.1
-  haveI : NeZero PD.p := ⟨by omega⟩
+  have : NeZero PD.p := ⟨by omega⟩
   have hpL : ((PD.p : ℕ) : LL) ≠ 0 := (hζ.neZero').out
   have hp0 : ((PD.p : ℕ) : O) ≠ 0 := by
     intro h

@@ -85,7 +85,7 @@ theorem isOpenImmersion_spMap_fractionRing (R K : Type) [CommRing R] [IsDomain R
     [IsDiscreteValuationRing R] [Field K] [Algebra R K] [IsFractionRing R K] :
     IsOpenImmersion (ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap R K)) := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
-  haveI : IsLocalization.Away ϖ K := by
+  have : IsLocalization.Away ϖ K := by
     refine IsLocalization.Away.mk ϖ ?_ ?_ ?_
     · exact IsUnit.mk0 _ (by
         simpa using (IsFractionRing.injective R K).ne_iff.2 hϖ.ne_zero)
@@ -104,18 +104,18 @@ theorem isOpenImmersion_spMap_fractionRing (R K : Type) [CommRing R] [IsDomain R
 
 theorem exists_lineBundle_extension_genericFibre : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Field K] [Algebra R K] [IsFractionRing R K] (X Y : Scheme.{0}) (s : X ⟶ Sp R) (t : Y ⟶ Sp K) (a : Y ⟶ X), Smooth s → QuasiCompact s → IsPullback a t s (spMap (algebraMap R K)) → ∀ L : LB Y, L.IsLB → ∃ M : LB X, M.IsLB ∧ LBIso (M.pull a) L := by
   intro R K _ _ _ _ _ _ X Y s t a hs hq hpb L hL
-  haveI := isOpenImmersion_spMap_fractionRing R K
+  have := isOpenImmersion_spMap_fractionRing R K
   have ha : IsOpenImmersion a := MorphismProperty.of_isPullback hpb.flip this
-  haveI : IsRegularRing R := inferInstance
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : IsRegularRing R := inferInstance
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
   have key : ∀ x : X, IsDomain (X.presheaf.stalk x) ∧
       UniqueFactorizationMonoid (X.presheaf.stalk x) := fun x => by
-    haveI : IsRegularRing (X.presheaf.stalk x) :=
+    have : IsRegularRing (X.presheaf.stalk x) :=
       GlobalTheory.ExtendRig.isRegularRing_stalk GlobalTheory.isRegularRing_of_smooth R s x
-    haveI : IsRegularLocalRing (X.presheaf.stalk x) :=
+    have : IsRegularLocalRing (X.presheaf.stalk x) :=
       IsRegularLocalRing.of_isRegularRing_of_isLocalRing _
-    haveI : IsDomain (X.presheaf.stalk x) := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
+    have : IsDomain (X.presheaf.stalk x) := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
     exact ⟨inferInstance, GlobalTheory.uniqueFactorizationMonoid_of_isRegularRing_of_isLocalRing
       GlobalTheory.exists_hasProjectiveDimensionLE_of_isRegularLocalRing
       GlobalTheory.isPrincipal_map_away_of_hasProjectiveDimensionLE _⟩

@@ -90,9 +90,9 @@ theorem resZ_of (g : ℕ) [hgp : Fact g.Prime] (hcard : Nat.card (𝓞 F ⧸ v.a
     (π := ((g : ℕ) : v.adicCompletionIntegers F)) hv
   have hc : Nat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) = g := by
     rw [ReciprocityTheory.Bridge.ResidueFieldCardinality.card_residue, hcard]
-  haveI : Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) :=
+  have : Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact hgp.out.ne_zero)
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField (v.adicCompletionIntegers F))
+  let := Fintype.ofFinite (IsLocalRing.ResidueField (v.adicCompletionIntegers F))
   let e := ZMod.ringEquivOfPrime (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) hgp.out
     (by rw [← Nat.card_eq_fintype_card]; exact hc)
   refine ⟨(e.symm : IsLocalRing.ResidueField (v.adicCompletionIntegers F) →+* ZMod g).comp
@@ -118,10 +118,10 @@ theorem stResZ_of {D : Formalism.BasicNotions.D7} (X : HidaSetting D) (p : TypX 
     apply h2
     rw [h0, Nat.cast_zero]
     exact zero_mem _
-  haveI := p.1.isMaximal
-  haveI : Finite (𝓞 X.B.I.F ⧸ p.1.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hc]; exact hg0)
-  letI : Fintype (𝓞 X.B.I.F ⧸ p.1.asIdeal) := Fintype.ofFinite _
-  letI : Field (𝓞 X.B.I.F ⧸ p.1.asIdeal) := Ideal.Quotient.field _
+  have := p.1.isMaximal
+  have : Finite (𝓞 X.B.I.F ⧸ p.1.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hc]; exact hg0)
+  let : Fintype (𝓞 X.B.I.F ⧸ p.1.asIdeal) := Fintype.ofFinite _
+  let : Field (𝓞 X.B.I.F ⧸ p.1.asIdeal) := Ideal.Quotient.field _
   obtain ⟨n, hl, hcard⟩ := FiniteField.card (𝓞 X.B.I.F ⧸ p.1.asIdeal) (ringChar (𝓞 X.B.I.F ⧸ p.1.asIdeal))
   rw [← Nat.card_eq_fintype_card, hc] at hcard
   have hlP : ((ringChar (𝓞 X.B.I.F ⧸ p.1.asIdeal) : ℕ) : 𝓞 X.B.I.F) ∈ p.1.asIdeal := by
@@ -135,7 +135,7 @@ theorem stResZ_of {D : Formalism.BasicNotions.D7} (X : HidaSetting D) (p : TypX 
     apply h2
     rw [hcard, Nat.cast_pow]
     exact Ideal.pow_le_pow_right h2n (Ideal.pow_mem_pow hlP n)
-  haveI : Fact (gOf p).Prime := ⟨by rw [hcard, hn, pow_one]; exact hl⟩
+  have : Fact (gOf p).Prime := ⟨by rw [hcard, hn, pow_one]; exact hl⟩
   exact MassDataIdxRes.resZ_of p.1 (gOf p) hc h1 h2
 
 end MassDataIdxSteps
@@ -182,10 +182,10 @@ theorem split_transport {K L : Type} [Field K] [NumberField K] [Field L] [Number
   let g : 𝓞 K ≃+* 𝓞 L := NumberField.RingOfIntegers.mapRingEquiv e
   refine Set.ncard_congr
     (fun w _ => (⟨w.asIdeal.comap (g.symm : 𝓞 L →+* 𝓞 K),
-      (by haveI := w.isPrime; infer_instance),
+      (by have := w.isPrime; infer_instance),
       comap_ringEquiv_ne_bot g.symm w.asIdeal w.ne_bot⟩ : HeightOneSpectrum (𝓞 L))) ?_ ?_ ?_
   · intro w hw
-    simp only [Set.mem_setOf_eq, Ideal.mem_comap] at hw ⊢
+    simp only [Set.mem_ofPred_eq, Ideal.mem_comap] at hw ⊢
     simpa using hw
   · intro a b _ _ hab
     have h1 := congrArg HeightOneSpectrum.asIdeal hab
@@ -194,9 +194,9 @@ theorem split_transport {K L : Type} [Field K] [NumberField K] [Field L] [Number
     have h2 := SetLike.ext_iff.mp h1 (g x)
     simpa [Ideal.mem_comap] using h2
   · intro w hw
-    refine ⟨⟨w.asIdeal.comap (g : 𝓞 K →+* 𝓞 L), (by haveI := w.isPrime; infer_instance),
+    refine ⟨⟨w.asIdeal.comap (g : 𝓞 K →+* 𝓞 L), (by have := w.isPrime; infer_instance),
       comap_ringEquiv_ne_bot g w.asIdeal w.ne_bot⟩, ?_, ?_⟩
-    · simp only [Set.mem_setOf_eq, Ideal.mem_comap] at hw ⊢
+    · simp only [Set.mem_ofPred_eq, Ideal.mem_comap] at hw ⊢
       simpa using hw
     · apply HeightOneSpectrum.ext
       ext x

@@ -278,8 +278,8 @@ theorem _root_.GlobalTheory.HostModel.unramified_E21_over_maximalRealSubfield : 
     have hb : b ∈ (⊥ : Submodule (𝓞 _root_.GlobalTheory.HostModel.E21) _) := htop ▸ Submodule.mem_top
     rw [Submodule.mem_bot] at ha hb
     rw [ha, hb]
-  haveI : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield _root_.GlobalTheory.HostModel.E21)) (𝓞 _root_.GlobalTheory.HostModel.E21) := ⟨hsub⟩
-  haveI : Algebra.FiniteType (𝓞 (maximalRealSubfield _root_.GlobalTheory.HostModel.E21)) (𝓞 _root_.GlobalTheory.HostModel.E21) :=
+  have : Algebra.FormallyUnramified (𝓞 (maximalRealSubfield _root_.GlobalTheory.HostModel.E21)) (𝓞 _root_.GlobalTheory.HostModel.E21) := ⟨hsub⟩
+  have : Algebra.FiniteType (𝓞 (maximalRealSubfield _root_.GlobalTheory.HostModel.E21)) (𝓞 _root_.GlobalTheory.HostModel.E21) :=
     Algebra.FiniteType.of_restrictScalars_finiteType ℤ _ _
   exact ⟨inferInstance, inferInstance⟩
 

@@ -264,7 +264,7 @@ theorem isPotential_phi_sub {s : G →* GQ l} {η H : ℕ} {D : BKDat O K l e a 
 theorem fix_Kur {F : FinExt l} {g : ↥(GK F)} (hg : g ∈ IK F) : (g : GQ l) ∈ (MaximalUnramifiedExtension l).fixingSubgroup := by
   refine (Subgroup.closure_le ((MaximalUnramifiedExtension l).fixingSubgroup.comap (GK F).subtype)).2 (fun σ hσ => ?_) hg
   change (σ : GQ l) ∈ (MaximalUnramifiedExtension l).fixingSubgroup
-  rw [← Subgroup.zpowers_le, ← IntermediateField.le_iff_le, MaximalUnramifiedExtension, IntermediateField.adjoin_le_iff]
+  rw [← Subgroup.zpowers_le, ← IntermediateField.le_fixedField_iff_le_fixingSubgroup, MaximalUnramifiedExtension, IntermediateField.adjoin_le_iff]
   rintro x ⟨m, hm, hlm, hx⟩
   have hx1 : ‖x‖ = 1 := (pow_eq_one_iff_of_nonneg (norm_nonneg x) hm.ne').1 (by rw [← norm_pow, hx, norm_one])
   have hx0 : x ≠ 0 := norm_ne_zero_iff.1 (by rw [hx1]; exact one_ne_zero)

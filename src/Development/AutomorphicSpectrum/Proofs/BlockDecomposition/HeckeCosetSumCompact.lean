@@ -137,7 +137,7 @@ theorem split_quotient_finsum_regroup : ∀ (P M N V : Type) [Group P] [Group M]
     have : Function.support
         (fun cx : (M ⧸ UM) × (N ⧸ UP.comap u) => Φ (s cx.1.out * u cx.2.out))
         = e ⁻¹' {q : P ⧸ UP | Φ q.out ≠ 0} := by
-      ext cx; simp only [Function.mem_support, Set.mem_preimage, Set.mem_setOf_eq, hval]
+      ext cx; simp only [Function.mem_support, Set.mem_preimage, Set.mem_ofPred_eq, hval]
     rw [this]; exact hfin.preimage e.injective.injOn
   rw [← finsum_comp_equiv e]
   rw [finsum_congr hval]
@@ -204,7 +204,7 @@ theorem iwasawa_parabolic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hk : Matrix.GeneralLinearGroup.map (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E)) k ∈
       GlobalTheory.LFun.KGL w (n := n) := ⟨k, rfl⟩
   have hc' : (c⁻¹).1.BlockTriangular id := by
-    haveI : Invertible c.1 := Units.invertible c
+    have : Invertible c.1 := Units.invertible c
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular hc
   obtain ⟨m₁, m₂, Y, hY⟩ := exists_blocks_of_upper h c⁻¹ hc'
@@ -253,7 +253,7 @@ theorem out_inv {S : Subgroup G} {u : G → ℂ} (hu : S ≤ rStab u) (g : G) :
 theorem finite_of_image {S K : Subgroup G} (hSK : S ≤ K) (hfin : S.relIndex K ≠ 0) (A : Set (G ⧸ S))
     (hA : ((fun q : G ⧸ S => (QuotientGroup.mk q.out : G ⧸ K)) '' A).Finite) : A.Finite := by
   have hm' : Nat.card (K ⧸ S.subgroupOf K) ≠ 0 := hfin
-  haveI : Finite (K ⧸ S.subgroupOf K) := Nat.finite_of_card_ne_zero hm'
+  have : Finite (K ⧸ S.subgroupOf K) := Nat.finite_of_card_ne_zero hm'
   let e := Subgroup.quotientEquivProdOfLE hSK
   have hfst : ∀ q : G ⧸ S, (e q).1 = (QuotientGroup.mk q.out : G ⧸ K) := by
     intro q
@@ -363,7 +363,7 @@ end Generic
 theorem finite_mk_support {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (S : Subgroup G)
     (hS : IsOpen (S : Set G)) (φ : G → ℂ) (hc : HasCompactSupport φ) :
     ((QuotientGroup.mk : G → G ⧸ S) '' Function.support φ).Finite := by
-  haveI : DiscreteTopology (G ⧸ S) := QuotientGroup.discreteTopology hS
+  have : DiscreteTopology (G ⧸ S) := QuotientGroup.discreteTopology hS
   exact (hc.isCompact.image QuotientGroup.continuous_mk).finite_of_discrete.subset
     (Set.image_mono (subset_tsupport φ))
 
@@ -456,7 +456,7 @@ theorem finite_lev (h : a + b = n) (w : Pl E) (Z : Set (GLw n w ⧸ GlobalTheory
       (QuotientGroup.mk m : (GLw a w × GLw b w) ⧸ (GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b))) = c.1 ∧
         (QuotientGroup.mk (blk h w m Y) : GLw n w ⧸ GlobalTheory.LFun.KGL w (n := n)) ∈ Z := fun c => hB c.1 c.2
   choose tm tY ht1 ht2 using hex
-  haveI := hZ.to_subtype
+  have := hZ.to_subtype
   have hinj : Function.Injective fun c : B => (⟨_, ht2 c⟩ : Z) := by
     intro c c' hcc
     have hc := congrArg Subtype.val hcc
@@ -464,7 +464,7 @@ theorem finite_lev (h : a + b = n) (w : Pl E) (Z : Set (GLw n w ⧸ GlobalTheory
     apply Subtype.ext
     rw [← ht1 c, ← ht1 c']
     exact QuotientGroup.eq.2 h1
-  haveI : Finite B := Finite.of_injective _ hinj
+  have : Finite B := Finite.of_injective _ hinj
   exact Set.toFinite B
 
 end Blocks

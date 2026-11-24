@@ -167,7 +167,7 @@ theorem sum_smul_eq_zero (hCB : PI.WwCauchyBinet.WwCauchyBinet) (l : ℕ) [Fact 
     (hph : ∀ y, ph (DeX N nu y) = 0) :
     ∑ J : ColChoice N nu, ph (map (Int.castRingHom ℂ_[l]) (nablaX N nu J)) •
       map (Int.castRingHom ℂ_[l]) (nablaX N nu J) = 0 := by
-  haveI : Infinite ℂ_[l] := Infinite.of_injective (Nat.cast : ℕ → ℂ_[l]) Nat.cast_injective
+  have : Infinite ℂ_[l] := Infinite.of_injective (Nat.cast : ℕ → ℂ_[l]) Nat.cast_injective
   apply MvPolynomial.funext
   intro x
   have hx := hph (fun s a i => x (s, i, a))

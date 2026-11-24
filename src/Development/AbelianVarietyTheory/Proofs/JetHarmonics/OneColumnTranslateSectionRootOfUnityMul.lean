@@ -122,14 +122,14 @@ theorem pow_eq_one_of_act {S : Scheme.{0}} {O : Type} [CommRing O] {G T : Over S
     induction n with
     | zero => rw [Nat.cast_zero, h0, pow_zero, MonObj.comp_one]
     | succ n ih => rw [Nat.cast_succ, a.add, MonObj.comp_mul, ih, a.one, Category.comp_id, pow_succ]
-  haveI := a.hom α
+  have := a.hom α
   rw [← hn, ← h, mul_comm, a.mul, ← Category.assoc, hb, MonObj.one_comp]
 
 theorem oneColumn_translate : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : letI := io.toAlgebra; FrPt Xo c T.Fr) (I : IntData Xo c T io y) (P : PELUnif (maximalIdeal T.V) I.G) (ϖ : T.V), Irreducible ϖ → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra T.Fr F], letI := io.toAlgebra; letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra; ∀ (φ : T.Fr →ₐ[c.F] F), φ.toRingHom = algebraMap T.Fr F → ∀ (yF : FrPt Xo c F), FrMap φ y yF → ∀ (α : 𝓞 E) (N : ℕ), Odd N → α * star α = (N : 𝓞 E) → ∃ (θ₁ : Fam P.D.toPre F 1) (θα₁ : Fam P.D.toPre F (1 * N)), ThFrame P.D ϖ F θ₁ ∧ PullAl P.D F P.oD α 1 N θ₁ θα₁ ∧ ∀ (p : QkPt P.D.toPre F (1 * N)) (w : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F p.g.b) (DegPre.lineε (1 * N)))) (ζ : F) (x : TFK (R := T.V) F ⟶ P.A.A) (r₀ r : Fam P.D.toPre F (1 * N)) (σ : P.U.toUnifPre.SecGF F N), w.IsGen → FinOrd P.D F (1 * N) p w ζ → P.ToA F (1 * N) p x → x ≫ P.oA.act (star α) = 1 → PhiRel P.D.toPre F (1 * N) p w θα₁ r₀ → Fam.IsSmul P.D.toPre F ζ r₀ r → P.U.toUnifPre.ExpandsG F N σ (PowGerm.famCast (Dp := P.D.toPre) (F := F) (one_mul N) r) → ∃ (u : F) (b : ptO Xo yF.x ⟶ Xo.univ.t.G) (hh : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (N : ℤ) (ptO Xo yF.x))) (σ₀ : P.U.toUnifPre.SecGF F N), (∃ m : ℕ, 0 < m ∧ u ^ m = 1) ∧ b ≫ Xo.univ.t.act.act (star α) = 1 ∧ IsTransPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act α) N yF.s b hh ∧ SecTieF I P F yF.x N σ₀ hh ∧ ∀ jj, σ.f jj = resTop ((LB.LinComb P.U.LG.L (K := Fin 1) (fun _ => UnifPre.gFK (R := T.V) (G := I.G.G) F) (fun _ => (N : ℤ))).U jj) (scal (fst (TFK (R := T.V) F) ((Over.pullback (jK T.V)).obj I.G.G)).left u) * σ₀.f jj := by
   intro E _ _ _ H Dw l Xo c T io y I P ϖ hϖ F _ _ _ φ hφ yF hyF α N hN hα
-  letI := H.starRing
-  letI := io.toAlgebra
-  letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
+  let : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
   have hLL := GlobalTheory.firstFiveLaws
   have hL : Laws := hLL.1
   have hN1 : 1 ≤ N := hN.pos

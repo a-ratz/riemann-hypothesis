@@ -253,7 +253,7 @@ theorem two_mul_dot_int {g : ℕ} {a : Fin g → ℝ} (ha : ∀ i, a i = 0 ∨ a
   simp only [dotProduct, ofRealVec, ofIntVec, Finset.mul_sum, Int.cast_sum, Int.cast_mul, ← hk, _root_.mul_assoc]
 
 theorem eC_nat_mul' (N : ℕ) (x : ℂ) : eC (N * x) = eC x ^ N := by
-  rw [eC, eC, ← Complex.exp_nat_mul]
+  rw [eC, eC, ← exp_natCast_mul]
   congr 1
   ring
 

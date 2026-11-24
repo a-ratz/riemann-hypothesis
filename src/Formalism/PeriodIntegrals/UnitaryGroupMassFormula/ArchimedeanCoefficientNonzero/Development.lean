@@ -146,7 +146,7 @@ theorem integrable_of_be_eq {k r : ℕ} {Wp H : Type} [NormedAddCommGroup Wp] [I
     exact integral_undef hI
   rw [hbe] at h0
   have h1 := congrArg (fun T : Wp →L[ℂ] Wp => T ξ) h0
-  simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, ContinuousLinearMap.zero_apply] at h1
+  simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, zero_apply] at h1
   have hw0 : w = 0 := by
     rcases smul_eq_zero.mp h1 with h | h
     · exact absurd h hw

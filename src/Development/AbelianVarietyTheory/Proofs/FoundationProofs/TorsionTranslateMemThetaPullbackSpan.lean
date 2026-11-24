@@ -56,7 +56,7 @@ theorem ee_mem_Qbar (x : ℝ) (n : ℕ) (hn : 0 < n) (k : ℤ) (h₀ : (n : ℝ)
   have h : (n : ℂ) * x = k := by exact_mod_cast h₀
   have h1 : ee x ^ n = 1 := by
     unfold ee
-    rw [← Complex.exp_nat_mul, ← Complex.exp_int_mul_two_pi_mul_I k, ← h]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_int_mul_two_pi_mul_I k, ← h]
     congr 1
     ring
   refine (mem_algebraicClosure_iff).2 ?_

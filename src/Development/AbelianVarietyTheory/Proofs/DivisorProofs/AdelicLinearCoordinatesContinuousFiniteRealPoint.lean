@@ -129,10 +129,10 @@ theorem coord : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
       (∀ x : Formalism.IndefR.DatumF.WOF F E nS nT, x.map (Formalism.IndefR.DatumF.infPartF F E) = 0 ↔
         GlobalTheory.SWQ.inf (e x).1 = 0 ∧ GlobalTheory.SWQ.inf (e x).2 = 0) := by
   intro F E _ _ _ _ _ nS nT N e
-  haveI h0 : IsModuleTopology (AF F) (AF F ⊗[F] E) := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.modTop
-  haveI hA : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) (AF F ⊗[F] E)
-  haveI h1 : IsModuleTopology (AF F) (Fin nS → AF F ⊗[F] E) := IsModuleTopology.instPi
-  haveI h2 : IsModuleTopology (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) := IsModuleTopology.instPi
+  have h0 : IsModuleTopology (AF F) (AF F ⊗[F] E) := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.modTop
+  have hA : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) (AF F ⊗[F] E)
+  have h1 : IsModuleTopology (AF F) (Fin nS → AF F ⊗[F] E) := IsModuleTopology.instPi
+  have h2 : IsModuleTopology (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) := IsModuleTopology.instPi
   refine ⟨IsModuleTopology.continuous_of_linearMap e.toLinearMap,
     IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap, fun x => ?_, fun x => ?_⟩
   · have key : x.map (Formalism.IndefR.DatumF.finPartF F E) = 0 ↔ pairA F 0 1 • x = 0 := by

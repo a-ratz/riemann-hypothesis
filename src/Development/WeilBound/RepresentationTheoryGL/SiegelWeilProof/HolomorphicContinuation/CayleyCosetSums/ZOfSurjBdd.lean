@@ -364,19 +364,19 @@ theorem zOf_surj_bdd' (W₀ : Fin n → Fin n → ℂ) (hW₀ : W₀ ∈ Dom n) 
   have hbdd : Bornology.IsBounded P' := by
     refine (Metric.isBounded_closedBall (x := 0) (r := R1 + Δ + δ⁻¹)).subset fun p hp => ?_
     obtain ⟨⟨⟨⟨⟨-, -⟩, -⟩, h1⟩, h2⟩, h3⟩ := hp
-    simp only [Set.mem_setOf_eq] at h1 h2 h3
+    simp only [Set.mem_ofPred_eq] at h1 h2 h3
     rw [Metric.mem_closedBall, dist_zero_right, Prod.norm_def, Prod.norm_def]
     have hΔ0 : 0 ≤ Δ := Real.sqrt_nonneg _
     have hδ0 : 0 ≤ δ⁻¹ := inv_nonneg.mpr (Real.sqrt_nonneg _)
     refine max_le ?_ (max_le ?_ ?_) <;> linarith
   have hcpt : IsCompact P' := Metric.isCompact_of_isClosed_isBounded hclosed hbdd
-  haveI : CompactSpace P' := isCompact_iff_compactSpace.mp hcpt
+  have : CompactSpace P' := isCompact_iff_compactSpace.mp hcpt
   let Ψ : P' → GR n := fun p => mkGR (nU (Matrix.of p.1.1) * mab (Matrix.of p.1.2.1) (Matrix.of p.1.2.2))
     (inG_nm p.2.1.1.1.1.1 p.2.1.1.1.1.2)
   have hval : Continuous fun p : P' => nU (Matrix.of p.1.1) * mab (Matrix.of p.1.2.1) (Matrix.of p.1.2.2) := by
-    have g1 : Continuous fun p : P' => Matrix.of p.1.1 := hc1.comp continuous_subtype_val
-    have g2 : Continuous fun p : P' => Matrix.of p.1.2.1 := hc2.comp continuous_subtype_val
-    have g3 : Continuous fun p : P' => Matrix.of p.1.2.2 := hc3.comp continuous_subtype_val
+    have g1 : Continuous fun p : P' => Matrix.of p.1.1 := hc1.comp continuous_subtypeVal
+    have g2 : Continuous fun p : P' => Matrix.of p.1.2.1 := hc2.comp continuous_subtypeVal
+    have g3 : Continuous fun p : P' => Matrix.of p.1.2.2 := hc3.comp continuous_subtypeVal
     exact (continuous_const.matrix_fromBlocks g1 continuous_const continuous_const).matrix_mul
       (g2.matrix_fromBlocks continuous_const continuous_const g3.matrix_conjTranspose)
   have hΨ : Continuous Ψ := by

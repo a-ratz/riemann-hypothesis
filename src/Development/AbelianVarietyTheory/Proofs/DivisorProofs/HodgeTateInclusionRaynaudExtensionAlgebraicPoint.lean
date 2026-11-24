@@ -141,11 +141,11 @@ theorem exists_localisation [IsAlgClosed C] [CharZero C] (hv : v.Integers O) (hp
     obtain ⟨a, ha⟩ := hv.exists_of_le_one (r := (w : C)) w.2
     exact ⟨a, Subtype.ext ha⟩⟩
   let e := RingEquiv.ofBijective f hf
-  letI : Algebra W O := e.symm.toRingHom.toAlgebra
-  letI : Algebra W A := ((algebraMap O A).comp e.symm.toRingHom).toAlgebra
-  haveI : IsScalarTower W O A := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite W O := Module.Finite.of_surjective (Algebra.linearMap W O) e.symm.surjective
-  haveI : Module.Finite W A := Module.Finite.trans O A
+  let : Algebra W O := e.symm.toRingHom.toAlgebra
+  let : Algebra W A := ((algebraMap O A).comp e.symm.toRingHom).toAlgebra
+  have : IsScalarTower W O A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Finite W O := Module.Finite.of_surjective (Algebra.linearMap W O) e.symm.surjective
+  have : Module.Finite W A := Module.Finite.trans O A
   let aug' : A →ₐ[W] W := ⟨e.toRingHom.comp aug.toRingHom, fun w => by
     show e (aug (algebraMap O A (e.symm w))) = w
     rw [aug.commutes]
@@ -155,7 +155,7 @@ theorem exists_localisation [IsAlgClosed C] [CharZero C] (hv : v.Integers O) (hp
     (fun a ha => exists_pow_mem hW ha (Nat.cast_ne_zero.2 hp)) A aug'
   rw [hk, map_natCast] at h2
   refine ⟨s, h1, h2, fun R _ _ w hw => ?_⟩
-  letI : Algebra W R := ((algebraMap O R).comp e.symm.toRingHom).toAlgebra
+  let : Algebra W R := ((algebraMap O R).comp e.symm.toRingHom).toAlgebra
   exact h3 R ⟨w.toRingHom, fun a => w.commutes _⟩ (hk ▸ hw)
 
 theorem exists_connected_part [IsAlgClosed C] [CharZero C] (hv : v.Integers O) (hp : p ≠ 0)
@@ -409,8 +409,8 @@ theorem exists_tangent_param {d : ℕ} {x : JetSer.Fam P.G (Fin d)} (hx : Chart.
     ∃ (tv : (Fin d → O) → LieG P.Gt) (co : LieG P.Gt → Fin d → O), (∀ w, tv (co w) = w) ∧
       (∀ b, Corr P (tv b).1 (Chart.tvec (x := x) b)) ∧
       ∀ f ∈ omega P.Gt, ∀ b, f (tv b) = ∑ j, f (tv (Pi.single j 1)) * b j := by
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp₀ : ¬ IsUnit (p : O) := Fact.out
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => hp₀ (by
     simpa using h.map (TrivSqZeroExt.fstHom O O O))
@@ -604,13 +604,13 @@ theorem exists_local_extension {p : ℕ} (hp : p ≠ 0) {C : Type} [Field C] [Is
     [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [CharZero W] (f : V →+* O) (hf : Function.Injective f)
     (φ : V →+* W) (hφ : Function.Injective φ) (hfin : φ.Finite) :
     ∃ g : W →+* O, g.comp φ = f ∧ IsLocalHom g := by
-  letI := φ.toAlgebra
-  letI := f.toAlgebra
-  letI : Algebra V C := ((algebraMap O C).comp f).toAlgebra
-  haveI : IsScalarTower V O C := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite V W := hfin
-  haveI : FaithfulSMul V W := (faithfulSMul_iff_algebraMap_injective _ _).2 hφ
-  haveI : FaithfulSMul V C := (faithfulSMul_iff_algebraMap_injective _ _).2 (hv.hom_inj.comp hf)
+  let := φ.toAlgebra
+  let := f.toAlgebra
+  let : Algebra V C := ((algebraMap O C).comp f).toAlgebra
+  have : IsScalarTower V O C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Finite V W := hfin
+  have : FaithfulSMul V W := (faithfulSMul_iff_algebraMap_injective _ _).2 hφ
+  have : FaithfulSMul V C := (faithfulSMul_iff_algebraMap_injective _ _).2 (hv.hom_inj.comp hf)
   let j : W →ₐ[V] C := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -649,12 +649,12 @@ theorem htChar_of_pointOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hkO : Function.Injective kO := fun a b h => IsFractionRing.injective T.V T.Fr (k.injective (by
     rw [← hk, ← hk, h]))
   obtain ⟨g, hg, hloc⟩ := exists_local_extension hp.out.ne_zero P.integers hO.out kO hkO φ hφ hfin
-  letI := g.toAlgebra
+  let := g.toAlgebra
   have e : spMap g ≫ spMap φ = spMap kO := by rw [spMap_spMap, hg]
   have w : π ≫ G.G.hom = (P.G.hom ≫ spMap g) ≫ spMap φ := by rw [Category.assoc, e, hπ.1.w]
   have hπ' : IsGrpPullback P.G t.G (spMap g) (m.cart.1.lift π _ w) :=
     m.cart.cancel (hπ.congr e.symm (m.cart.1.lift_fst _ _ _).symm) (m.cart.1.lift_snd _ _ _)
-  haveI := t.semi.smooth
+  have := t.semi.smooth
   obtain ⟨d, x, hx⟩ := Chart.univChartLoc t.G
   obtain ⟨F, hF⟩ := (JetSer.lawSt_of JetSer.jetAlg (JetSer.repSt_of_jetAlgSt JetSer.jetAlg) _ t.G d x hx).1
   obtain ⟨x', hx'⟩ := ChartCharacter.exists_isChartJ t.G x hx F hF

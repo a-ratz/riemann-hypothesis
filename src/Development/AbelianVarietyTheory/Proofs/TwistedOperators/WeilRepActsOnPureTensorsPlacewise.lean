@@ -99,7 +99,7 @@ theorem isPure_om : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
     hW.om_pres _ _ hx.2.1, fun w => ?_⟩
   · refine (hfin.union hx.1.2).subset fun p hp => ?_
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
     exact hp (by simp only [hc.2, hc.1])
   · have hy := GlobalTheory.T.heisenberg_operator_pure_tensor_place_by_place D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ _ hinv (actO S T g⁻¹ h⁻¹ w)
     have hp := GlobalTheory.T.pureTensor_innerProduct_eq_finprod_localInnerProducts D ψ θ S T sS sT ΛS ΛT f₀ μ 𝓕 hB hμ _ _ _ _ hx hy

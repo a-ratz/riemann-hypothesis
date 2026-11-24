@@ -278,8 +278,8 @@ private theorem exists_h0_restriction_eq_of_le_open {q : ℕ} [NeZero q] {X E : 
     ∃ a : Ht q (sch.obj O) 0 1, pl q 1 (E.homOfLE h) 0 a = c := by
   obtain ⟨-, e, he, -⟩ := _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero (ZMod q) (tw q 1)
   by_cases hP : Nonempty (P : Scheme.{0})
-  · haveI : IsIntegral (P : Scheme.{0}) := isIntegral_of_isOpenImmersion (P.ι ≫ j)
-    haveI : ConnectedSpace (P : Scheme.{0}) := inferInstance
+  · have : IsIntegral (P : Scheme.{0}) := isIntegral_of_isOpenImmersion (P.ι ≫ j)
+    have : ConnectedSpace (P : Scheme.{0}) := inferInstance
     obtain ⟨k, hk⟩ := UpperTheory.twisted_section_eq_nsmul_generator_of_connected q 1 (P : Scheme.{0}) (ζ.map (P.ι ≫ j).appTop.hom) ((e P).symm c)
     refine ⟨e O (k • twGen 1 (ζ.map (O.ι ≫ j).appTop.hom)), ?_⟩
     have h1 : c = e P (k • twGen 1 (ζ.map (P.ι ≫ j).appTop.hom)) := by
@@ -289,7 +289,7 @@ private theorem exists_h0_restriction_eq_of_le_open {q : ℕ} [NeZero q] {X E : 
     congr 1
   · have hb : P = ⊥ := le_bot_iff.1 fun p hp => (hP ⟨(⟨p, hp⟩ : P)⟩).elim
     subst hb
-    haveI := LateralTheory.E.E8.leafEmptyVanish (ZMod q) (X := E) (tw q 1) 0
+    have := LateralTheory.E.E8.leafEmptyVanish (ZMod q) (X := E) (tw q 1) 0
     exact ⟨0, Subsingleton.elim _ _⟩
 
 private theorem two {q : ℕ} [NeZero q] {X E : Scheme.{0}} [IsIntegral X] (ζ : Prim q Γ(X, ⊤))
@@ -340,7 +340,7 @@ theorem UpperTheory.h1_pl_eq_zero_of_le_iSup_of_local_zero :
     intro U V hV x _
     have hb : V = ⊥ := le_bot_iff.1 (hV.trans (iSup_of_empty U).le)
     subst hb
-    haveI := LateralTheory.E.E8.leafEmptyVanish (ZMod q) (X := X) (tw q 1) 1
+    have := LateralTheory.E.E8.leafEmptyVanish (ZMod q) (X := X) (tw q 1) 1
     exact Subsingleton.elim _ _
   | succ n ih =>
     intro U V hV x hx
@@ -784,7 +784,7 @@ private theorem van (q : ℕ) [NeZero q] (X : Scheme.{0}) [IsIntegral X] (hζ : 
     rw [← SetLike.mem_coe, ← P.range_ι]
     exact ⟨x, rfl⟩
   by_cases hne : Nonempty P.toScheme
-  · haveI : IsIntegral P.toScheme := isIntegral_of_isOpenImmersion P.ι
+  · have : IsIntegral P.toScheme := isIntegral_of_isOpenImmersion P.ι
     have hζ' : Nonempty (Prim q Γ(P.toScheme, ⊤)) := hζ.map (Prim.map P.ι.appTop.hom)
     have hq' : IsUnit (q : Γ(P.toScheme, ⊤)) := by simpa using hq.map P.ι.appTop.hom
     have key := UpperTheory.h1_pl_eq_zero_of_le_iSup_of_local_zero q P.toScheme hζ' hq' n (fun i => P.ι ⁻¹ᵁ A i) ⊤ (by
@@ -804,8 +804,8 @@ private theorem van (q : ℕ) [NeZero q] (X : Scheme.{0}) [IsIntegral X] (hζ : 
     have := congrArg (pl q 1 P.toScheme.topIso.inv 1) key
     rw [← pl_comp, w, map_zero] at this
     simpa [pl, pull_id] using this
-  · haveI : IsEmpty P.toScheme := not_nonempty_iff.1 hne
-    haveI := sub_empty q P.toScheme 1 1
+  · have : IsEmpty P.toScheme := not_nonempty_iff.1 hne
+    have := sub_empty q P.toScheme 1 1
     exact Subsingleton.elim _ _
 
 end UpperTheory.Cb.MuCohomologyGluing
@@ -1465,7 +1465,7 @@ theorem UpperTheory.isChart_affine_sections_of_isCurve :
   have hh : ∀ a, (h a : C.functionField) = f a := fun a => rfl
   unfold IsChart
   refine ⟨?_, ded_of_equiv h.symm, fun hf => hnf (MulEquiv.isField hf h.toMulEquiv), ?_, ?_⟩
-  · haveI : LocallyOfFiniteType c := @IsProper.toLocallyOfFiniteType _ _ _ hc.2.1
+  · have : LocallyOfFiniteType c := @IsProper.toLocallyOfFiniteType _ _ _ hc.2.1
     have g0 := c.finiteType_appLE (isAffineOpen_top (Sp k)) hW le_top
     have gi : (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom.FiniteType :=
       RingHom.FiniteType.of_surjective _ (fun y => ⟨(Scheme.ΓSpecIso (CommRingCat.of k)).hom y, by simp⟩)
@@ -1573,7 +1573,7 @@ open scoped TensorProduct
 private theorem exists_tensor_lift {k L K M : Type} [Field k] [Field L] [Field K] [CommRing M] [Algebra k L] [Algebra k K]
     (f : L →+* M) (g : K →+* M) (h : ∀ r : k, f (algebraMap k L r) = g (algebraMap k K r)) :
     ∃ θ : L ⊗[k] K →+* M, ∀ l a, θ (l ⊗ₜ[k] a) = f l * g a := by
-  letI : Algebra k M := (g.comp (algebraMap k K)).toAlgebra
+  let : Algebra k M := (g.comp (algebraMap k K)).toAlgebra
   let f' : L →ₐ[k] M := { f with commutes' := fun r => h r }
   let g' : K →ₐ[k] M := { g with commutes' := fun r => rfl }
   exact ⟨(Algebra.TensorProduct.productMap f' g').toRingHom, fun l a => by simp [f', g']⟩
@@ -1602,7 +1602,7 @@ private theorem core (k L : Type) [Field k] [Field L] [Algebra k L] {C X : Schem
   have chart : ∀ i, IsAffineOpen (u ⁻¹ᵁ U i) ∧ ∃ e : L ⊗[k] B i ≃+* Γ(X, u ⁻¹ᵁ U i),
       ∀ s, θ (inc L (B i) s) = X.germToFunctionField (u ⁻¹ᵁ U i) (e s) := by
     intro i
-    haveI := hne' i
+    have := hne' i
     obtain ⟨hV, e, he1, he2⟩ := UpperTheory.baseChange_affine_sections_subalgebra_tensor k L c u x hpb hK (U i) (hUa i) (B i) (hB i)
     refine ⟨hV, e, fun s => ?_⟩
     induction s using TensorProduct.induction_on with
@@ -1623,7 +1623,7 @@ private theorem core (k L : Type) [Field k] [Field L] [Algebra k L] {C X : Schem
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro t ht
     obtain ⟨hV0, e0, he0⟩ := chart ⟨0, hn⟩
-    haveI := hne' ⟨0, hn⟩
+    have := hne' ⟨0, hn⟩
     obtain ⟨s, β, hβ, hs⟩ := UpperTheory.tensor_fractionRing_exists_mul_eq_of_denominator k L C.functionField (B ⟨0, hn⟩) (hfr _) t
     have h1 : θ (inc L (B ⟨0, hn⟩) s) = 0 := by rw [← hs, map_mul, ht, zero_mul]
     rw [he0] at h1
@@ -1642,8 +1642,8 @@ private theorem core (k L : Type) [Field k] [Field L] [Algebra k L] {C X : Schem
   refine ⟨θ, by rw [hcomp]; exact hφgen, hinj, ?_, ?_⟩
   · intro h
     obtain ⟨hV, e, he⟩ := chart ⟨0, hn⟩
-    haveI := hne' ⟨0, hn⟩
-    haveI := functionField_isFractionRing_of_isAffineOpen X _ hV
+    have := hne' ⟨0, hn⟩
+    have := functionField_isFractionRing_of_isAffineOpen X _ hV
     obtain ⟨⟨p, q⟩, hpq⟩ := IsLocalization.surj (nonZeroDivisors Γ(X, u ⁻¹ᵁ U ⟨0, hn⟩)) h
     refine ⟨inc L (B ⟨0, hn⟩) (e.symm p), inc L (B ⟨0, hn⟩) (e.symm q), ?_, ?_⟩
     · intro h0
@@ -1656,13 +1656,13 @@ private theorem core (k L : Type) [Field k] [Field L] [Algebra k L] {C X : Schem
       exact hpq
   · intro y
     obtain ⟨i, hi⟩ := hUc (u y)
-    haveI := hne' i
+    have := hne' i
     obtain ⟨hV, e, he⟩ := chart i
     have hy : y ∈ u ⁻¹ᵁ U i := hi
     refine ⟨i, (hV.primeIdealOf ⟨y, hy⟩).asIdeal.comap e.toRingHom, inferInstance, fun s hs => ?_⟩
     have hsP : e s ∉ (hV.primeIdealOf ⟨y, hy⟩).asIdeal := hs
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨y, hy⟩
-    haveI := hV.isLocalization_stalk ⟨y, hy⟩
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨y, hy⟩
+    have := hV.isLocalization_stalk ⟨y, hy⟩
     refine ⟨(IsLocalization.map_units (X.presheaf.stalk y)
       (⟨e s, hsP⟩ : (hV.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl)).unit, ?_⟩
     rw [he]
@@ -1672,9 +1672,9 @@ theorem UpperTheory.isFunctionField_and_chart_cover_of_isCurve :
     ∀ (k : Type) [Field k] [IsAlgClosed k] {C : Scheme.{0}} [IsIntegral C] (c : C ⟶ Sp k), IsCurve c → ∀ [Algebra k C.functionField], Spec.map (CommRingCat.ofHom (algebraMap k C.functionField)) = (C.fromSpecStalk (genericPoint C)) ≫ c → IsFunctionField k C.functionField ∧ ∃ (n : ℕ) (B : Fin n → Subalgebra k C.functionField), (∀ i, IsChart (B i)) ∧ ∀ (L : Type) [Field L] [IsAlgClosed L] [Algebra k L], ∃ (X : Scheme.{0}) (_ : IsIntegral X) (u : X ⟶ C) (x : X ⟶ Sp L) (θ : L ⊗[k] C.functionField →+* X.functionField), IsPullback u x c (Spec.map (CommRingCat.ofHom (algebraMap k L))) ∧ (∀ y : X, IsIntegrallyClosed (X.presheaf.stalk y)) ∧ Spec.map (CommRingCat.ofHom (θ.comp Algebra.TensorProduct.includeRight.toRingHom)) ≫ (C.fromSpecStalk (genericPoint C)) = (X.fromSpecStalk (genericPoint X)) ≫ u ∧ Function.Injective θ ∧ (∀ h : X.functionField, ∃ a b, b ≠ 0 ∧ h * θ b = θ a) ∧ ∀ y : X, ∃ (i : Fin n) (m : Ideal (L ⊗[k] B i)), m.IsPrime ∧ ∀ s ∉ m, ∃ w : (X.presheaf.stalk y)ˣ, algebraMap (X.presheaf.stalk y) X.functionField w = θ (inc L (B i) s) := by
   intro k _ _ C _ c hcurve _ hK
   have hprop : IsProper c := hcurve.2.1
-  haveI : CompactSpace C := QuasiCompact.compactSpace_of_compactSpace c
+  have : CompactSpace C := QuasiCompact.compactSpace_of_compactSpace c
   obtain ⟨n, U, hUa, hUne, hn, hUc⟩ := UpperTheory.exists_finite_nonempty_affine_cover_of_integral C
-  haveI : ∀ i, Nonempty (U i) := hUne
+  have : ∀ i, Nonempty (U i) := hUne
   have hex : ∀ i, ∃ B : Subalgebra k C.functionField,
       (B : Set C.functionField) = Set.range (C.germToFunctionField (U i)) :=
     fun i => UpperTheory.exists_subalgebra_eq_range_germToFunctionField k c hK (U i)
@@ -1687,7 +1687,7 @@ theorem UpperTheory.isFunctionField_and_chart_cover_of_isCurve :
   let g := Spec.map (CommRingCat.ofHom (algebraMap k L))
   have hpb : IsPullback (pullback.fst c g) (pullback.snd c g) c g := IsPullback.of_hasPullback c g
   have hcurve' := UpperTheory.isCurve_pullback_of_isCurve_baseChange k L c hcurve
-  haveI hXint : IsIntegral (pullback c g) := hcurve'.1
+  have hXint : IsIntegral (pullback c g) := hcurve'.1
   have hstalk := (UpperTheory.isDedekindDomain_affine_sections_of_isCurve L (pullback.snd c g) hcurve').2
   obtain ⟨θ, h1, h2, h3, h4⟩ := core k L c (pullback.fst c g) (pullback.snd c g) hpb hK U hUa hUc hn
     B hB (fun i => (hchart i).2.2.2.1)

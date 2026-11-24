@@ -192,7 +192,7 @@ theorem exists_meanOne {n : ℕ} (hs : IsSympl X bas) (hn : Even n) {w : E} (hw 
     by_contra hne
     rcases Nat.eq_zero_or_pos g with rfl | hg
     · simp at hne
-    · haveI : Nonempty (Fin g) := ⟨⟨0, hg⟩⟩
+    · have : Nonempty (Fin g) := ⟨⟨0, hg⟩⟩
       rw [nonsing_inv_apply_not_isUnit _ hne, det_zero] at hh
       exact not_isUnit_zero hh
   generalize hh' : P⁻¹ = h at *
@@ -262,7 +262,7 @@ theorem exists_meanOne {n : ℕ} (hs : IsSympl X bas) (hn : Even n) {w : E} (hw 
     congr 2
     funext z
     unfold CanTh.canTh
-    rw [norm_mul, norm_mul, mul_pow, mul_pow, Complex.norm_exp, ← Real.exp_nat_mul,
+    rw [norm_mul, norm_mul, mul_pow, mul_pow, Complex.norm_exp, ← Real.exp_natCast_mul,
       Complex.norm_real, Real.norm_eq_abs, sq_abs, Real.sq_sqrt hpos.le, _root_.mul_assoc,
       mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
     congr 3
@@ -284,7 +284,7 @@ theorem norm_sq_periodic {w : E} {L : Lt E r} {x : Frame X.Ψ r} {c : Fin g → 
   simp only [Pi.smul_apply, smul_eq_mul, fock] at hp
   generalize pv X idx x u = p at hp ⊢
   rw [← hp, add_comm p z, norm_mul, norm_mul, hε, _root_.one_mul, mul_pow, Complex.norm_exp,
-      ← Real.exp_nat_mul, mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
+      ← Real.exp_natCast_mul, mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
   congr 2
   simp only [Nat.cast_one, _root_.one_mul, neg_re, re_ofReal_mul, hH, re_sum, Finset.mul_sum,
     ← Finset.sum_neg_distrib, ← Finset.sum_add_distrib]
@@ -325,12 +325,12 @@ theorem GlobalTheory.AdTh.norm_factor_eq_of_reads : ∀ (D : D7) (ψ : AddChar (
     have := hϑ.1.continuous
     simp only [φ, hH]
     fun_prop
-  haveI : Countable D.host.E := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI : Countable A := by
+  have : Countable D.host.E := Countable.of_moduleFinite (R := ℚ)
+  have : Countable A := by
     refine ((Set.countable_range (pv X idx x)).mono fun z hz => ?_).to_subtype
     obtain ⟨u, -, rfl⟩ := (hA z).1 hz
     exact ⟨u, rfl⟩
-  haveI := GlobalTheory.Ker.TorusMean.haar_WR X' (n := V.rank)
+  have := GlobalTheory.Ker.TorusMean.haar_WR X' (n := V.rank)
   have key := integral_prod_eq (μ := volume) (ν := volume) (e : GlobalTheory.Ker.WR X' V.rank →+ (Fin V.rank → Fin g → ℂ))
     e.continuous e.surjective hF hF' (fun γ hγ k => ?_) hc (fun z => by positivity) (fun p hp z => ?_) hmean
   · have h1 := hip F' hF' (fun v => ((‖κ‖ ^ 2 / ρ ^ 2 * ∏ k, φ (e v k) : ℝ) : ℂ)) fun w hw => ?_
@@ -351,7 +351,7 @@ theorem GlobalTheory.AdTh.norm_factor_eq_of_reads : ∀ (D : D7) (ψ : AddChar (
       congr 1
       simp only [φ, Finset.prod_mul_distrib, Finset.prod_pow, ← norm_prod, hκ₀, ← Real.exp_sum]
       rw [UnAct.thA_smul, Pi.smul_apply, smul_eq_mul, norm_mul, norm_mul, norm_mul, h₀, Complex.norm_exp, mul_pow,
-        ← Real.exp_nat_mul, show (-(Real.pi / 2 : ℂ)) = ((-(Real.pi / 2) : ℝ) : ℂ) by push_cast; ring,
+        ← Real.exp_natCast_mul, show (-(Real.pi / 2 : ℂ)) = ((-(Real.pi / 2) : ℝ) : ℂ) by push_cast; ring,
         re_ofReal_mul, re_sum, ← Finset.mul_sum,
         show ∀ t : ℝ, ((2 : ℕ) : ℝ) * (-(Real.pi / 2) * t) = -Real.pi * t from fun t => by push_cast; ring]
       field_simp

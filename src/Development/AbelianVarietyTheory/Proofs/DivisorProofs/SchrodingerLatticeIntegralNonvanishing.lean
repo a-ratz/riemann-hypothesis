@@ -97,9 +97,9 @@ theorem lagrForm_ne_zero : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddCha
     ∃ φ ∈ schA F κ, ∫ x, schr ψ (∑ j, x j • ((fun k => algebraMap F (AF F) ((u j).1 k)),
       (fun k => algebraMap F (AF F) ((u j).2 k)))) φ 0 ∂μ ≠ 0 := by
   intro F _ _ ψ hψ κ _ r u hu μ hμ
-  letI : MeasurableSpace (Fin r → AF F) := borel _
-  haveI : BorelSpace (Fin r → AF F) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (Fin r → AF F) := borel _
+  have : BorelSpace (Fin r → AF F) := ⟨rfl⟩
+  have := hμ
   obtain ⟨C, hC⟩ := exists_leftInv (fun j => (u j).1) hu
   set U : Fin r → (κ → AF F) × (κ → AF F) := fun j => ((fun k => algebraMap F (AF F) ((u j).1 k)),
     (fun k => algebraMap F (AF F) ((u j).2 k))) with hU

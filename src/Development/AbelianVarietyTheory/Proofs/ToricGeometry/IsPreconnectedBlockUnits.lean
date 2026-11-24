@@ -93,7 +93,7 @@ theorem _root_.GlobalTheory.PeriodConn.isPeriod_mulVec {D : _root_.ReciprocityTh
         rw [← hx]
         exact (hcancel (P x)).symm⟩
     refine DiscreteTopology.of_continuous_injective (f := f) ?_ ?_
-    · exact (continuous_const.matrix_mulVec continuous_subtype_val).subtype_mk _
+    · exact (continuous_const.matrix_mulVec continuous_subtypeVal).subtype_mk _
     · intro v w hvw
       apply Subtype.ext
       have := congrArg (fun u : P.range => A *ᵥ (u : Fin g → ℂ)) hvw

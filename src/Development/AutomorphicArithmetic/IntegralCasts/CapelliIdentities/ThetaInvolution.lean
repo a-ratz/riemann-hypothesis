@@ -59,10 +59,10 @@ theorem aux2 {R : Type u_1} [CommRing R] (m : ℕ) :
     Jmat R m * Jmat R m = (1 : Matrix (Fin m) (Fin m) R) := by
   ext i j
   rw [Matrix.mul_apply, Finset.sum_eq_single i.rev]
-  · simp only [Jmat, Matrix.one_apply, if_true, one_mul, Fin.rev_rev]
+  · simp only [Jmat, Matrix.one_apply, ite_true, one_mul, Fin.rev_rev]
     by_cases h : i = j
     · subst h; simp
-    · rw [if_neg (fun e => h e.symm), if_neg h]
+    · rw [ite_eq_right (fun e => h e.symm), ite_eq_right h]
   · intro k _ hk
     simp [Jmat, hk]
   · intro h; exact absurd (Finset.mem_univ _) h
@@ -109,8 +109,8 @@ private theorem trInv_Jgl (R : Type u_1) [CommRing R] (m : ℕ) : trInv (Jgl R m
   ext i j
   simp only [Matrix.transpose_apply, Jmat]
   by_cases h : j = i.rev
-  · rw [if_pos h, if_pos (by rw [h, Fin.rev_rev])]
-  · rw [if_neg h, if_neg (fun e => h (by rw [e, Fin.rev_rev]))]
+  · rw [ite_eq_left h, ite_eq_left (by rw [h, Fin.rev_rev])]
+  · rw [ite_eq_right h, ite_eq_right (fun e => h (by rw [e, Fin.rev_rev]))]
 
 theorem aux8 {m : ℕ} {R : Type u_1} [CommRing R] (g : GL (Fin m) R) : theta (theta g) = g := by
   have hJ := Jgl_mul_self R m
@@ -132,7 +132,7 @@ noncomputable def thetaAut (m : ℕ) (R : Type u_1) [CommRing R] : MulAut (GL (F
 theorem aux11 (m : ℕ) (R : Type u_1) [CommRing R] :
     (if (1 : ℤˣ) = (1 : ℤˣ) then (1 : MulAut (GL (Fin m) R)) else thetaAut m R) =
       (1 : MulAut (GL (Fin m) R)) :=
-  if_pos rfl
+  ite_eq_left rfl
 
 private theorem thetaAut_mul_self (m : ℕ) (R : Type u_1) [CommRing R] :
     thetaAut m R * thetaAut m R = 1 :=

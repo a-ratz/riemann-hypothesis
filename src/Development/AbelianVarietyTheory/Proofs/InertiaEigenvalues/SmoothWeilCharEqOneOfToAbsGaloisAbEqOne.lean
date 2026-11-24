@@ -124,14 +124,14 @@ theorem mem_of_toAb_eq_one (h : IsPlaceOver A w) (H : Subgroup (Weil h)) (hfin :
     (hop : IsOpen {σ : Ine (F := E) A | ineIncl h σ ∈ H}) (hcomm : ∀ σ τ : Weil h, σ * τ * σ⁻¹ * τ⁻¹ ∈ H)
     (σ : Weil h) (hσ : toAb E Ω σ = 1) : σ ∈ H := by
   obtain ⟨K, hK, hloc, hHK⟩ := GlobalTheory.T.exists_localExtension_of_finiteIndex_weilSubgroup E Ω A w h H hfin hop
-  haveI : NumberField K := NumberField.of_module_finite E K
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := E) K⟩
+  have : NumberField K := NumberField.of_module_finite E K
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := E) K⟩
   obtain ⟨W, h'⟩ := GlobalTheory.LocNormGrp.exists_place h K
   obtain ⟨ι, hι⟩ := GlobalTheory.LocDict.exists_isLocEmb E Ω A w h
   obtain ⟨ι', hι'⟩ := GlobalTheory.LocDict.exists_isLocEmb K Ω A W h'
   obtain ⟨f, b, hf, hb1, hb2, hfE, -, -, -, hNc, hNg⟩ := GlobalTheory.T.local_embeddings_tower_compatible E K Ω A w W h h' hloc ι ι' hι hι'
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have hN := GlobalTheory.T.completion_embedding_compatible_closures E K w W (fun x : K => ι (algebraMap K Ω x)) f b hf hb1
     (fun x => by rw [hb2, ι'.commutes, IsScalarTower.algebraMap_apply K (W.adicCompletion K)]) hfE
   obtain ⟨art, hart⟩ := _root_.CompanionTheory.FamInh.globalArtin E Ω
@@ -177,7 +177,7 @@ theorem mem_of_toAb_eq_one (h : IsPlaceOver A w) (H : Subgroup (Weil h)) (hfin :
     show θ _ = g
     rw [← e, θ.apply_symm_apply]
   have hHL : ∀ s : Weil h, s ∈ H ↔ ψ s ∈ L.fixingSubgroup := fun s => by
-    rw [hHK, ← Subgroup.zpowers_le, ← IntermediateField.le_iff_le, hL, IntermediateField.adjoin_le_iff]
+    rw [hHK, ← Subgroup.zpowers_le, ← IntermediateField.le_fixedField_iff_le_fixingSubgroup, hL, IntermediateField.adjoin_le_iff]
     constructor
     · rintro hs _ ⟨x, rfl⟩
       rw [SetLike.mem_coe, IntermediateField.mem_fixedField_iff]
@@ -197,7 +197,7 @@ theorem mem_of_toAb_eq_one (h : IsPlaceOver A w) (H : Subgroup (Weil h)) (hfin :
   have hnorm : L.fixingSubgroup.Normal := Subgroup.Normal.of_commutator_le _ hcl
   have hgal : IsGalois Kw L := (InfiniteGalois.normal_iff_isGalois L).1 hnorm
   have hab : IsAbelianGalois Kw L := GroundTheory.LocalField.isAbelianGalois_of_le_maximalAbelianExtension L (by
-    rw [GroundTheory.LocalField.maximalAbelianExtension, IntermediateField.le_iff_le]
+    rw [GroundTheory.LocalField.maximalAbelianExtension, IntermediateField.le_fixedField_iff_le_fixingSubgroup]
     exact Subgroup.topologicalClosure_minimal _ hcl (Subgroup.isClosed_of_isOpen _ hLo))
 
   have hHker : H = ((AlgEquiv.restrictNormalHom L).comp ψ).ker := by

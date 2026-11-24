@@ -149,7 +149,7 @@ theorem placesOver_finite (E : Type) [Field E] [NumberField E] {l : ℕ} (hl : l
     (placesOver E l).Finite := by
   classical
   have : Fact l.Prime := ⟨hl⟩
-  haveI := Int.ideal_span_isMaximal_of_prime l
+  have := Int.ideal_span_isMaximal_of_prime l
   have hfin : ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E)).Finite :=
     Set.toFinite _
   have hinj : Set.InjOn (fun v : HeightOneSpectrum (𝓞 E) => v.asIdeal)
@@ -230,7 +230,7 @@ theorem vdel_le (i : D.nd.Loc) {Λ : ℝ} (h : (D.nd.s0 i : ℝ) + 1 ≤ Λ) : (
   have h1 := LargeLevelLemmas.vdel_le i
   have hv : (padicValNat (D.nd.l i) D.R.t.factorial : ℚ) ≤ D.R.t := by
     rw [Nat.padicValNat_def]
-    exact_mod_cast padicValNat_factorial_le (D.nd.l i) D.R.t
+    exact_mod_cast multiplicity_factorial_le (D.nd.l i) D.R.t
   have h2 : D.nd.vdel i ≤ (D.R.t : ℚ) * ((D.nd.s0 i : ℚ) + 1) := by linarith
   have h3 : (D.nd.vdel i : ℝ) ≤ (D.R.t : ℝ) * ((D.nd.s0 i : ℝ) + 1) := by exact_mod_cast h2
   exact h3.trans (mul_le_mul_of_nonneg_left h (Nat.cast_nonneg _))

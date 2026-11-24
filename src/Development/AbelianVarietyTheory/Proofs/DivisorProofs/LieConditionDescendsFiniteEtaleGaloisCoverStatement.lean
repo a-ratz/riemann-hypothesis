@@ -131,7 +131,7 @@ theorem eigenProjections_of_comaximal :
       simp
   · rw [Finset.prod_eq_zero (Finset.mem_univ l)]
     · rw [TensorProduct.zero_tmul, map_zero]; rfl
-    rw [if_neg (Ne.symm hil)]
+    rw [ite_eq_right (Ne.symm hil)]
     unfold Finsupp.sum
 
     rw [map_sum]
@@ -177,7 +177,7 @@ def dualMap (g : A →+* B) : DualNumber A →+* DualNumber B :=
 
 theorem dualMap_apply (g : A →+* B) (x : DualNumber A) :
     dualMap g x = TrivSqZeroExt.inl (g x.fst) + TrivSqZeroExt.inr (g x.snd) := by
-  letI : Algebra A B := g.toAlgebra
+  let : Algebra A B := g.toAlgebra
   show (DualNumber.lift _ : DualNumber A →ₐ[A] DualNumber B) x = _
   rw [DualNumber.lift_apply_apply]
   ext <;> simp [Algebra.ofId_apply, TrivSqZeroExt.algebraMap_eq_inl', RingHom.algebraMap_toAlgebra]
@@ -193,7 +193,7 @@ variable {A B : Type} [CommRing A] [CommRing B]
 theorem isPushout_dualMap (g : A →+* B) :
     IsPushout (CommRingCat.ofHom (algebraMap A (DualNumber A))) (CommRingCat.ofHom g)
       (CommRingCat.ofHom (dualMap g)) (CommRingCat.ofHom (algebraMap B (DualNumber B))) := by
-  letI : Algebra A B := g.toAlgebra
+  let : Algebra A B := g.toAlgebra
   have hc : ∀ a : A, dualMap g (algebraMap A (DualNumber A) a) = algebraMap A (DualNumber B) a := by
     intro a
     ext <;> simp [dualMap_apply, TrivSqZeroExt.algebraMap_eq_inl', RingHom.algebraMap_toAlgebra]
@@ -255,8 +255,8 @@ theorem epi_spMap_dualMap {X Y : Scheme.{0}} {π : X ⟶ Y} {Ga : Type} [Group G
 
 theorem exists_dualCover : ∀ (X Y : Scheme.{0}) (π : X ⟶ Y) (Ga : Type) [Group Ga] (ρ : Ga → (X ⟶ X)), GlobalTheory.ZM.IsGaloisCover Ga ρ π → ∀ (R' : Type) [CommRing R'] (x : Sp R' ⟶ Y), ∃ (R'' : Type) (_ : CommRing R'') (g₁ : R' →+* R'') (x'' : Sp R'' ⟶ X) (d₁ : DualNumber R' →+* DualNumber R''), x'' ≫ π = spMap g₁ ≫ x ∧ d₁.comp (algebraMap R' (DualNumber R')) = (algebraMap R'' (DualNumber R'')).comp g₁ ∧ (TrivSqZeroExt.fstHom R'' R'' R'').toRingHom.comp d₁ = g₁.comp (TrivSqZeroExt.fstHom R' R' R').toRingHom ∧ (∀ r : R', d₁.comp (epsScaleR r) = (epsScaleR (g₁ r)).comp d₁) ∧ Epi (spMap d₁) := by
   intro X Y π Ga _ ρ hG R' _ x
-  haveI : IsFinite π := hG.fin
-  haveI : IsAffine (pullback x π) := isAffine_of_isAffineHom (pullback.fst x π)
+  have : IsFinite π := hG.fin
+  have : IsAffine (pullback x π) := isAffine_of_isAffineHom (pullback.fst x π)
   let X' := pullback x π
   let g₁ : R' →+* Γ(X', ⊤) := (Spec.preimage (X'.isoSpec.inv ≫ pullback.fst x π)).hom
   have hg₁ : spMap g₁ = X'.isoSpec.inv ≫ pullback.fst x π := Spec.map_preimage _
@@ -615,7 +615,7 @@ theorem lie_descends : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Da
     have h1 : P (Θ (e i) m) = m₃ i := by
 
       rw [hP, hPm, map_sum]
-      simp only [he _ _ i _ _ (eig₃ _), Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [he _ _ i _ _ (eig₃ _), Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact congrArg (fun z : TM A₀ (x'' ≫ π) => (Additive.toMul z).1) h1
   refine ⟨w, fun i c => ?_, ?_⟩
   · refine (isTanScal_iff' A₀ act₀ _ _ _ _).2 ⟨(Additive.toMul (Θ (e i) m)).2, jinj _ _ ?_⟩

@@ -175,8 +175,8 @@ theorem fixed_fd_of_conjT (π : NG.FinTyp L n) (N : ℕ)
     funext g
     have := congrFun (congrArg Subtype.val hab) g
     exact star_injective this
-  haveI : FiniteDimensional ℝ S2 := Module.Finite.trans ℂ S2
-  haveI : FiniteDimensional ℝ S1 := Module.Finite.of_injective c hc
+  have : FiniteDimensional ℝ S2 := Module.Finite.trans ℂ S2
+  have : FiniteDimensional ℝ S1 := Module.Finite.of_injective c hc
   exact Module.Finite.of_restrictScalars_finite ℝ ℂ S1
 
 theorem form_of_conjT (π : NG.FinTyp L n) (B' : (FinTyp.conjT π).S → (FinTyp.conjT π).S → ℂ)

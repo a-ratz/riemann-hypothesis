@@ -67,9 +67,9 @@ variable {G X V : Type} [Group G] [AddCommGroup X] [Module ℂ X] [AddCommGroup 
 theorem norm_le_card {ι : Type} {π : Representation ℂ G V} (hπ : IsUnitarisable π) {v : V} (hv : v ≠ 0)
     (S : Finset ι) (g : ι → G) (l : ℂ) (h : ∑ c ∈ S, π (g c) v = l • v) : ‖l‖ ≤ S.card := by
   obtain ⟨B, b1, b2, b3⟩ := hπ
-  letI : InnerProductSpace.Core ℂ V := UnitInd.core B b1 b2
-  letI : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore _
+  let : InnerProductSpace.Core ℂ V := UnitInd.core B b1 b2
+  let : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore _
   have hn : ∀ x : G, ‖π x v‖ = ‖v‖ := fun x => by
     rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), norm_eq_sqrt_re_inner (𝕜 := ℂ) v]
     exact congrArg (fun z : ℂ => √(RCLike.re z)) (b3 x v v)

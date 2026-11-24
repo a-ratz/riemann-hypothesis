@@ -262,15 +262,15 @@ theorem finite_mult (D : CartierDiv Y) (U : Set Y) [NoetherianSpace U] :
     {z | z ∈ U ∧ D.mult z ≠ 0}.Finite := by
   classical
   obtain ⟨S, hS, hc, hi, hU⟩ := NoetherianSpace.exists_finite_set_isClosed_irreducible
-    (D.supp.isClosed.preimage (continuous_subtype_val (p := (· ∈ U))))
+    (D.supp.isClosed.preimage (continuous_subtypeVal (p := (· ∈ U))))
   refine (hS.image fun T => if h : IsIrreducible ((Subtype.val : U → Y) '' T) then h.genericPoint
     else genericPoint Y).subset fun z hz => ?_
   obtain ⟨T, hT, hzT⟩ := Set.mem_sUnion.1 (hU.le
     (show (⟨z, hz.1⟩ : U) ∈ Subtype.val ⁻¹' (D.supp : Set Y) from mem_supp_of_mult_ne_zero hz.2))
   have hi' : IsIrreducible ((Subtype.val : U → Y) '' T) :=
-    (hi T hT).image _ continuous_subtype_val.continuousOn
+    (hi T hT).image _ continuous_subtypeVal.continuousOn
   refine ⟨T, hT, ?_⟩
-  simp only [dif_pos hi']
+  simp only [dite_eq_left hi']
   have hg := hi'.isGenericPoint_genericPoint_closure
   have h₁ : z ≤ hi'.genericPoint := hg.specializes (subset_closure ⟨_, hzT, rfl⟩)
   have hsub : closure ((Subtype.val : U → Y) '' T) ⊆ D.supp :=
@@ -298,7 +298,7 @@ theorem locally_finite (O : Set Y) (c : Y → ℤ) (h0 : ∀ z, z ∉ O → c z 
   have : NoetherianSpace (U : Set Y) := inferInstanceAs (NoetherianSpace U.toScheme)
   choose! N hN hzN E hE using hc
   have hK : IsCompact ((Subtype.val : ↥(U : Set Y) → Y) '' ((Subtype.val : ↥(U : Set Y) → Y) ⁻¹' O)) :=
-    (NoetherianSpace.isCompact _).image continuous_subtype_val
+    (NoetherianSpace.isCompact _).image continuous_subtypeVal
   have hKO : ∀ z ∈ ((Subtype.val : ↥(U : Set Y) → Y) '' ((Subtype.val : ↥(U : Set Y) → Y) ⁻¹' O)), z ∈ O := by
     rintro _ ⟨t, ht, rfl⟩; exact ht
   obtain ⟨t, ht, hcov⟩ := hK.elim_nhds_subcover N fun z hz =>
@@ -322,7 +322,7 @@ theorem exists_mult_eq (hY : ∀ y : Y, UniqueFactorizationMonoid (Y.presheaf.st
         · exact ⟨h, by simpa [h] using hz⟩
         · simp [h] at hz)
       fun z hz => h1 z fun h => hz (by simp [h])
-    exact ⟨E, fun z hz => by rw [hE z, if_pos hz]⟩
+    exact ⟨E, fun z hz => by rw [hE z, ite_eq_left hz]⟩
   choose E hE using hE
   let D : CartierDiv Y := show cartierGroup Y from ⟨fun y => (E y).germ y, fun y => by
     obtain ⟨U, hU, g, hg⟩ := (E y).exists_isEqn_nhds y
@@ -344,7 +344,7 @@ theorem GlobalTheory.Desc.exists_cartierDiv_closure : ∀ (Y V X : Scheme.{0}) [
   have : GlobalTheory.IsNormalScheme Y := ⟨fun x => inferInstance, fun x => by have := hY x; infer_instance⟩
   choose e he using fun v : V => D.exists_isEqn (φ v)
   let c : Y → ℤ := fun z => if h : z ∈ Set.range i then Scheme.ord (θ (e h.choose)) z else 0
-  have h0 : ∀ z, z ∉ Set.range i → c z = 0 := fun z hz => dif_neg hz
+  have h0 : ∀ z, z ∉ Set.range i → c z = 0 := fun z hz => dite_eq_right hz
   have h1 : ∀ z, c z ≠ 0 → Order.coheight z = 1 := fun z hz => by
     by_contra h
     apply hz
@@ -357,7 +357,7 @@ theorem GlobalTheory.Desc.exists_cartierDiv_closure : ∀ (Y V X : Scheme.{0}) [
     have hv : i v ∈ Set.range i := ⟨v, rfl⟩
     have e₀ : hv.choose = v := i.isOpenEmbedding.injective hv.choose_spec
     have hu := (unitAt_map i φ θ hθ v (hg.iff_unitAt.1 (he v))).ord_eq_zero
-    simp only [c, dif_pos hv, e₀]
+    simp only [c, dite_eq_left hv, e₀]
     rw [← div_mul_cancel₀ (e v : X.functionField) g.ne_zero, map_mul,
       Scheme.ord_mul ((map_ne_zero θ).2 (div_ne_zero (e v).ne_zero g.ne_zero))
         ((map_ne_zero θ).2 g.ne_zero), hu, zero_add]
@@ -483,9 +483,9 @@ theorem chart_part : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
 
   let Rf := Localization.Away (ρ f)
   have hle : Submonoid.powers (ρ f) ≤ nonZeroDivisors C.R := powers_le_nonZeroDivisors_of_noZeroDivisors hρf
-  haveI : IsDomain Rf := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing Rf := IsLocalization.isNoetherianRing (Submonoid.powers (ρ f)) Rf inferInstance
-  haveI : IsIntegrallyClosed Rf := isIntegrallyClosed_of_isLocalization Rf _ hle
+  have : IsDomain Rf := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing Rf := IsLocalization.isNoetherianRing (Submonoid.powers (ρ f)) Rf inferInstance
+  have : IsIntegrallyClosed Rf := isIntegrallyClosed_of_isLocalization Rf _ hle
   let ιf : C.R →+* Rf := algebraMap C.R Rf
   let g : Sp Rf ⟶ Sp (Localization.Away f) := spMap (Localization.awayMap ρ f)
   have sq2 := isPullback_away ρ f
@@ -493,11 +493,11 @@ theorem chart_part : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
   let K := FractionRing C.R
   have hu : IsUnit (algebraMap C.R K (ρ f)) :=
     IsUnit.mk0 _ ((map_ne_zero_iff _ (IsFractionRing.injective C.R K)).mpr hρf)
-  letI : Algebra Rf K := (Localization.awayLift (algebraMap C.R K) (ρ f) hu).toAlgebra
-  haveI : IsScalarTower C.R Rf K := IsScalarTower.of_algebraMap_eq fun r => by
+  let : Algebra Rf K := (Localization.awayLift (algebraMap C.R K) (ρ f) hu).toAlgebra
+  have : IsScalarTower C.R Rf K := IsScalarTower.of_algebraMap_eq fun r => by
     show algebraMap C.R K r = Localization.awayLift (algebraMap C.R K) (ρ f) hu (algebraMap C.R Rf r)
     exact (IsLocalization.Away.lift_eq (ρ f) hu r).symm
-  haveI : IsFractionRing Rf K :=
+  have : IsFractionRing Rf K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers (ρ f)) Rf K
   let j : Sp K ⟶ Sp Rf := spMap (algebraMap Rf K)
   have hjK : j ≫ spMap ιf = jK C.R := by
@@ -507,12 +507,12 @@ theorem chart_part : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
     rw [← cancel_mono (awayMap f), Category.assoc, sq2.w, ← Category.assoc, hjK, C.hy, hξ]
 
   let GK := (Over.pullback (jK C.R)).obj C.G
-  letI : GrpObj GK := Functor.grpObjObj
+  let : GrpObj GK := Functor.grpObjObj
   let G₁ := (Over.pullback (spMap ιf)).obj C.G
-  letI : GrpObj G₁ := Functor.grpObjObj
+  let : GrpObj G₁ := Functor.grpObjObj
   have hG₁ : IsSemiAbelian G₁ := IsSemiAbelian.pullback (spMap ιf) C.G C.semi
   let H₁ := (Over.pullback g).obj A
-  letI : GrpObj H₁ := Functor.grpObjObj
+  let : GrpObj H₁ := Functor.grpObjObj
   have hH₁ : IsSemiAbelian H₁ :=
     IsSemiAbelian.pullback g A (isSemiAbelian_of_isAbelianScheme A hAb)
   let i₁ : GK.left ⟶ G₁.left := pullback.lift (pullback.fst C.G.hom (jK C.R)) (pullback.snd _ _ ≫ j)
@@ -528,7 +528,7 @@ theorem chart_part : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
   obtain ⟨E, ⟨hEm, hE⟩, -⟩ := semiAbelianHomExtension_holds.generic_existsUnique_iso_of_extensions
     (GlobalTheory.IsNormalScheme.pred _) (IsGenericPointHom.fractionField Rf K) hG₁ hH₁ h₁ h₂
 
-  haveI : IsMonHom E.hom := hEm
+  have : IsMonHom E.hom := hEm
   let φ₁ : G₁.left ⟶ A.left := E.hom.left ≫ pullback.fst A.hom g
   have sq1 : IsPullback φ₁ G₁.hom A.hom g :=
     (((isGrpPullback_of_iso E).comp (isGrpPullback_pullback A g)).congr (Category.id_comp g) rfl).1
@@ -543,8 +543,8 @@ theorem chart_part : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
   have hcart : IsPullback φ (V.ι ≫ C.G.hom) (A.hom ≫ awayMap f) (spMap ρ) := by
     have := sq0.paste_horiz (sq1.paste_vert sq2)
     rwa [Category.id_comp] at this
-  haveI : Flat (spMap ρ) := HasRingHomProperty.Spec_iff.mpr hflat
-  haveI : Flat φ := MorphismProperty.of_isPullback hcart.flip inferInstance
+  have : Flat (spMap ρ) := HasRingHomProperty.Spec_iff.mpr hflat
+  have : Flat φ := MorphismProperty.of_isPullback hcart.flip inferInstance
 
   have hVne : (V : Set C.G.left).Nonempty := by
     let s : Sp C.R ⟶ C.G.left := (η[C.G] : 𝟙_ (Over (Sp C.R)) ⟶ C.G).left
@@ -651,7 +651,7 @@ theorem exists_isPullback_generic :
         (pullback.snd G.hom (jK R) x : PrimeSpectrum (FractionRing R)).asIdeal := hmem
     exact (pullback.snd G.hom (jK R) x : PrimeSpectrum (FractionRing R)).isPrime.ne_top
       (Ideal.eq_top_of_isUnit_mem _ hmem' hu)
-  haveI : IsOpenImmersion (GlobalTheory.Desc.awayMap f) := IsOpenImmersion.of_isLocalization f
+  have : IsOpenImmersion (GlobalTheory.Desc.awayMap f) := IsOpenImmersion.of_isLocalization f
   refine ⟨spMap ψ, IsOpenImmersion.lift V.ι _ hr, IsOpenImmersion.lift_fac _ _ _, ?_⟩
   have h1 := isPullback_of_fac_mono (IsPullback.of_hasPullback G.hom (jK R)) V.ι
     (IsOpenImmersion.lift V.ι _ hr) (IsOpenImmersion.lift_fac _ _ _)
@@ -709,7 +709,7 @@ theorem ffm_comp {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] {V : Y.Opens} 
     rw [CommRingCat.ofHom_comp, Spec.map_comp, Category.assoc]
     erw [← h₂]
     rw [← Category.assoc, e1]
-  haveI : Mono (gp X) := inferInstanceAs (Mono (X.fromSpecStalk (genericPoint X)))
+  have : Mono (gp X) := inferInstanceAs (Mono (X.fromSpecStalk (genericPoint X)))
   exact congrArg CommRingCat.Hom.hom (Spec.map_injective ((cancel_mono _).1 e2))
 
 theorem lbIso_pull : ∀ (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (V : Y.Opens) (φ : V.toScheme ⟶ X)
@@ -718,11 +718,11 @@ theorem lbIso_pull : ∀ (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (V : Y
   intro X Y _ _ V φ θ D D₁ hF hP
   obtain ⟨l, h₁, h₂⟩ := hF
   obtain ⟨q⟩ : Nonempty (Sp Y.functionField) := inferInstance
-  haveI : Nonempty V := ⟨l q⟩
-  haveI : IsIntegral V.toScheme := inferInstance
-  haveI : IsDominant V.ι := isDominant_of_gen V.ι (l q) (by
+  have : Nonempty V := ⟨l q⟩
+  have : IsIntegral V.toScheme := inferInstance
+  have : IsDominant V.ι := isDominant_of_gen V.ι (l q) (by
     rw [← Scheme.Hom.comp_apply, h₁, gp_apply])
-  haveI : IsDominant φ := isDominant_of_gen φ (l q) (by
+  have : IsDominant φ := isDominant_of_gen φ (l q) (by
     rw [← Scheme.Hom.comp_apply, h₂, Scheme.Hom.comp_apply, gp_apply])
   have key := ffm_comp (V := V) (φ := φ) ⟨l, h₁, h₂⟩
   have hE : pullback V.ι D₁ = pullback φ D := CartierDiv.ext_of_isEqn fun v => by
@@ -731,7 +731,7 @@ theorem lbIso_pull : ∀ (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (V : Y
     have := isEqn_pullback V.ι D₁ (hP v g hg)
     convert this using 1
     ext
-    simp only [unitsMap, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    simp only [unitsMap, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
     exact (congrArg (fun f : X.functionField →+* V.toScheme.functionField => f g) key).symm
   exact (presents_pullback V.ι D₁).lbIso (hE ▸ presents_pullback φ D)
 
@@ -845,9 +845,9 @@ theorem ampleDiv_closure_on_chart : ∀ (R₀ : Type) [CommRing R₀] [IsDomain 
   obtain ⟨g, l, hl, sq⟩ := GlobalTheory.GenericFibreChart.exists_isPullback_generic R₀ f A R ρ hρf G V φ hV hsq
   have hGK : IsAbelianScheme ((Over.pullback (jK R)).obj G) :=
     isAbelianScheme_pullback_of_isPullback _ _ _ G (jK R) A (l ≫ φ) g hG hA sq
-  haveI : IsProper ((Over.pullback (jK R)).obj G).hom := hGK.proper
-  haveI : IsProper A.hom := hA.proper
-  haveI : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
+  have : IsProper ((Over.pullback (jK R)).obj G).hom := hGK.proper
+  have : IsProper A.hom := hA.proper
+  have : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
   have hAD : IsAmpleLB (toLB D) := (ampleDiv_iff_isAmpleLB A.left D).1 hD
   have h1 : IsAmpleLB ((toLB D).pull (l ≫ φ)) := hAD.pull_of_isPullback sq
   have h3 : LBIso ((toLB D₁).pull V.ι) ((toLB D).pull φ) := GlobalTheory.Desc.PullOpen.lbIso_pull _ _ V φ θ D D₁ hff hpp
@@ -873,11 +873,11 @@ theorem ampleDiv_closure_on_chart : ∀ (R₀ : Type) [CommRing R₀] [IsDomain 
       ((toLB D₁).pull (pullback.fst G.hom (jK R))) :=
     LBIso.trans (LB.isLB_pull hK₁ _) (LB.isLB_pull hK _) hK₁ (GlobalTheory.Mum.UExt.lbIso_pull h4 _)
       (LBIso.trans (LB.isLB_pull hK _) hK hK₁ hs1 h4.symm)
-  haveI : IsIntegrallyClosed R := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing R).2
+  have : IsIntegrallyClosed R := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing R).2
   have hs3 := _root_.GlobalTheory.SymGenericExt.symm_of_generic R G hG (toLB D₁) hL₁ hs2
   have h7 := _root_.GlobalTheory.AmpleGenericSemiAb.isAmpleLB_of_generic R hR G hG hGK (toLB D₁) hL₁ h6 hs3
-  haveI : QuasiCompact G.hom := hG.quasiCompact
-  haveI : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
+  have : QuasiCompact G.hom := hG.quasiCompact
+  have : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
   exact (ampleDiv_iff_isAmpleLB G.left D₁).2 h7
 
 end GlobalTheory.Desc
@@ -1259,7 +1259,7 @@ theorem exists_semiAbelian_two {Y Y₀ Y₁ Y₂ : Scheme.{0}} {f₁ : Y₁ ⟶ 
     · exact ⟨false, y, hy⟩
     · exact ⟨true, y, hy⟩)
   let H : ∀ i : 𝒰.I₀, Over (𝒰.X i) := fun i => Bool.rec (motive := fun i => Over (T i)) G₁ G₂ i
-  letI iH : ∀ i : 𝒰.I₀, GrpObj (H i) := fun i => Bool.rec (motive := fun i => GrpObj (H i)) i₁ i₂ i
+  let iH : ∀ i : 𝒰.I₀, GrpObj (H i) := fun i => Bool.rec (motive := fun i => GrpObj (H i)) i₁ i₂ i
   let ψ : ∀ i : 𝒰.I₀, (H i).left ⟶ G.left := fun i => Bool.rec (motive := fun i => (H i).left ⟶ G.left) ψ₁ ψ₂ i
   have hψ : ∀ i, IsPullback (ψ i) (H i).hom G.hom (𝒰.f i) := by
     rintro (_ | _)

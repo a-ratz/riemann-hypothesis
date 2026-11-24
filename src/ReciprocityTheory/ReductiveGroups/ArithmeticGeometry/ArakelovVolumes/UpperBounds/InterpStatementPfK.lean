@@ -67,7 +67,7 @@ theorem bchar_ne_zero {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (la : Wt X.Ψ r
   unfold bchar
   refine Finset.prod_ne_zero_iff.2 fun τ _ => Finset.prod_ne_zero_iff.2 fun i _ => zpow_ne_zero _ ?_
   have h := (hb τ).1
-  rw [Matrix.det_of_upperTriangular (by intro a c hca; exact (hb τ).2 a c hca)] at h
+  rw [Matrix.det_of_isUpperTriangular (by intro a c hca; exact (hb τ).2 a c hca)] at h
   exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ _)
 
 theorem chi_ne {la : Wt X.Ψ r} {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ) : X.χ la γ ≠ 0 := by
@@ -140,7 +140,7 @@ theorem isOpen_dom : IsOpen X.dom := by
       | (unfold mat; fun_prop)
   show IsOpen {x : Frame X.Ψ r | ∀ τ : X.Ψ, (mat x τ).det ≠ 0 ∧
     ∀ i : Fin (r + 1), 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [Set.ofPred_forall, Set.ofPred_and]
   refine isOpen_iInter_of_finite fun τ => ?_
   refine (isOpen_ne_fun (hdet τ) continuous_const).inter (isOpen_iInter_of_finite fun i => ?_)
   exact isOpen_lt continuous_const (continuous_const.mul (Complex.continuous_re.comp (hd τ i)))
@@ -222,7 +222,7 @@ theorem etale_transfer (hLU : LUStatement (E := E)) {L : Wt X.Ψ r} {w0 : Frame 
   rw [h1', zero_mul]
 
 private lemma det_mat_nmat (z : V (nd X)) (τ : X.Ψ) : (mat (nmat X z) τ).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · apply Finset.prod_eq_one
     intro a _
     simp [mat, nmat]

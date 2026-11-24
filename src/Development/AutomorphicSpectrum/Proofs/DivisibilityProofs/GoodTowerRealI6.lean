@@ -347,7 +347,7 @@ theorem exists_proj (𝔐 : HodgeCpt Y S y) (s : CMType H ⊕ CMType H) (q : Cpt
     (hq : ∀ p ∈ S, ¬ InFibre 𝔐.ξ p q) (hd : ((discr E : ℤ) : Ω)⁻¹ ∈ regAt 𝔐.ξ q) :
     ∃ T : Module.End Ω 𝔐.Li, (∀ v ∈ eigSp 𝔐.ρ (𝔐.emb s), T v = v) ∧ (∀ e ∈ 𝔐.M.lat q, T e ∈ 𝔐.V s q) ∧
       ∀ e ∈ 𝔐.V s q, e ∈ 𝔐.M.lat q := by
-  haveI := Sandwich.charZero_of_hodgeCpt 𝔐
+  have := Sandwich.charZero_of_hodgeCpt 𝔐
   obtain ⟨n, a, cc, hsum, heq⟩ := ScaledCasimir.exists_scaledCasimir E
   have hV : 𝔐.V s q = 𝔐.dR s q := Lat.patch_of_not S _ _ hq
   have hd0 : ((discr E : ℤ) : Ω) ≠ 0 := Int.cast_ne_zero.2 (discr_ne_zero E)
@@ -494,8 +494,8 @@ theorem unit_off (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E)
     (h4 : ∀ k j, i (R.y ⟨k, j⟩ / R.y ⟨k, cR k⟩) ∈ W) (hS : ∀ p ∈ S, (p : M.Ω)⁻¹ ∈ W) :
     i ((∏ k, R.y ⟨k, cR k⟩ ^ R.xdeg r k) * o₀.e r) / ((∏ k, M.y ⟨k, cM k⟩ ^ M.xdeg r k) * o.e r) ∈ W ∧
       ((∏ k, M.y ⟨k, cM k⟩ ^ M.xdeg r k) * o.e r) / i ((∏ k, R.y ⟨k, cR k⟩ ^ R.xdeg r k) * o₀.e r) ∈ W := by
-  haveI : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
-  haveI : CharZero R.Ω := Sandwich.charZero_of_hodgeCpt o₀.𝔐
+  have : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
+  have : CharZero R.Ω := Sandwich.charZero_of_hodgeCpt o₀.𝔐
   obtain ⟨q, hqc, hq⟩ := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.exists_domBy_chart M.K M.ι M.Ω M.Ω M.y o.𝔐.X o.𝔐.ξ o.𝔐.all o.𝔐.tie (RingHom.id _) W cM h1 h3
   obtain ⟨q₀, hqc₀, hq₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.exists_domBy_chart R.K R.ι R.Ω M.Ω R.y o₀.𝔐.X o₀.𝔐.ξ o₀.𝔐.all o₀.𝔐.tie i W cR h2 h4
   have hξ : o.𝔐.ξ ≫ o.𝔐.f = spMap i ≫ o₀.𝔐.ξ ≫ o₀.𝔐.f := by
@@ -618,7 +618,7 @@ theorem val_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E
   obtain ⟨m₀, hm₀, hcore⟩ := OrVert.core E H D l Xo c Y Sys Fx R o₀
   refine ⟨Real.log m₀, ?_⟩
   intro S M o i hi hdisc hS
-  haveI : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
+  have : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
   obtain ⟨q, m, hq, hm, hlog, hnum⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ClearConstants.clear_constants S m₀ o.𝔐.S_prime hm₀
   obtain ⟨a, b, e, ha, hb⟩ := exists_split S m hm
   have ha0 : 0 < a := Nat.pos_of_mul_pos_right (e ▸ hm)
@@ -692,7 +692,7 @@ theorem ne_zero_of_prMap_diag {z : (Σ k, ι k) → ℂ} {k : K} {i : ι k}
 theorem isClosed_prMap_image {P : Ideal (MRing ι)} (hP : IsMultiHomogIdeal P) :
     IsClosed (prMap '' mcPts P) := by
   have hA : IsClosed {z : (Σ k, ι k) → ℂ | ∀ f ∈ P, eval z (map (Int.castRingHom ℂ) f) = 0} := by
-    simp only [setOf_forall]
+    simp only [ofPred_forall]
     exact isClosed_iInter fun f => isClosed_iInter fun _ =>
       isClosed_eq (MvPolynomial.continuous_eval _) continuous_const
   have hC := (isCompact_unitBlocks (K := K) (ι := ι)).inter_right hA
@@ -727,7 +727,7 @@ theorem exists_smooth_on_matrices {P : Ideal (MRing ι)} {u : ((Σ k, ι k) → 
         (mem_mcPts_of_sameOrbit hP (sameOrbit_colMap hz₀.1 hp) hz₀)
       have hO : IsOpen (colMap p ⁻¹' V ∩ {m | ∀ k, m ⟨k, (p k, p k)⟩ ≠ 0}) := by
         refine (hV.preimage (colMap_contDiff p (n := 0)).continuous).inter ?_
-        simp only [setOf_forall]
+        simp only [ofPred_forall]
         exact isOpen_iInter_of_finite fun k => isOpen_ne_fun (continuous_apply _) continuous_const
       refine ⟨_, hO.mem_nhds ⟨hmem, fun k => prMap_diag_ne_zero hz₀.1 (hp k)⟩, w ∘ colMap p, ?_, ?_⟩
       · exact contMDiffOn_iff_contDiffOn.2
@@ -775,9 +775,9 @@ theorem exists_hermLine_of_local_smooth : ∀ (K : Type) [Fintype K] (ι : K →
       Real.contDiff_exp.comp_contDiffOn
         (hg.comp_contDiffOn GlobalTheory.CompanionTheory.Ar.Flat.PlaceWeightSmooth.prMap_contDiffOn)
     refine h1.congr fun z hz => ?_
-    exact if_pos hz
+    exact ite_eq_left hz
   · have h2 : (CExt.expLine ι g).h z = Real.exp (g (GlobalTheory.CompanionTheory.Ar.Flat.PlaceWeightSmooth.prMap z)) :=
-      if_pos hz.1
+      ite_eq_left hz.1
     rw [h2, Real.log_exp, hgu z hz]
 
 end GlobalTheory.CompanionTheory.Ar.PB
@@ -1075,7 +1075,7 @@ theorem exists_line {K₀ K : Type} [Fintype K₀] [Fintype K] [DecidableEq K] {
     obtain ⟨w1, w2⟩ := hW2 (pullDeg κ a₀) (y ⟨ks, e j⟩) val C ⟨_, _, _, _, hG, hH, hD, hE, z2, z3⟩ hC
     obtain ⟨r1, r2⟩ := hW1 ks (C ks) (e j) (hC ks)
     have hint : IsIntegral (chartRingZ y₀ C₀) _ := hs (e.symm (C ks)) C₀ hy₀
-    letI : Algebra (chartRingZ y₀ C₀) Ω := (i.comp (chartRingZ y₀ C₀).val.toRingHom).toAlgebra
+    let : Algebra (chartRingZ y₀ C₀) Ω := (i.comp (chartRingZ y₀ C₀).val.toRingHom).toAlgebra
     let i' : Ω₀ →ₐ[chartRingZ y₀ C₀] Ω := { i with commutes' := fun _ => rfl }
     have hint' := hint.map i'
     have hAW : ∀ x : chartRingZ y₀ C₀, algebraMap (chartRingZ y₀ C₀) Ω x ∈ W := by
@@ -1210,8 +1210,8 @@ theorem level (hRes : ResExistsStatement) (II : IntersectionSystem) (hII : IsFul
         (Re.line a t) (Re'.line a t)) ∧
       (∀ p ∈ S, PB.NefAt P p Hl.a ∧ ∀ a, PB.NefAt P p ((Re.ref a).a + Hl.a) ∧ PB.NefAt P p ((Re'.ref a).a + Hl.a)) := by
   classical
-  haveI : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
-  haveI : CharZero R.Ω := Sandwich.charZero_of_hodgeCpt o₀.𝔐
+  have : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
+  have : CharZero R.Ω := Sandwich.charZero_of_hodgeCpt o₀.𝔐
   let K : Type := (M.K ⊕ R.K) ⊕ Unit
   let ι : K → Type := Cmp.joinIdx (Cmp.joinIdx M.ι R.ι) fun _ : Unit => Fin L
   let y : (Σ k, ι k) → M.Ω := Cmp.joinVec (Ht.joinOf M R i) fun p => i (s p.2)
@@ -1344,7 +1344,7 @@ theorem RootFieldNumerics.global_model_real_tower_smooth : Given → ∀ (E : Ty
     refine (o.S_iff B p).mpr ⟨hp, Or.inr ((o.bad_iff p).mpr ⟨hp, ?_⟩)⟩
     exact Dvd.dvd.mul_right (Dvd.dvd.mul_left hd 2) _
   have hsand : ∀ p ∈ o.S B, ∃ κ, HT.IsCp p κ ∧ HT.Sandwich (o.Or B a).𝔐 p κ := fun p hpS => by
-    haveI : Fact p.Prime := ⟨hSp p hpS⟩
+    have : Fact p.Prime := ⟨hSp p hpS⟩
     exact _root_.GlobalTheory.CompanionTheory.Ar.HT.ModelSandwich.sandwich_of_htFree hFar E H D l (Xo l) c _ _ Y _ _ _ _ _ (o.Or B a).𝔐 p hpS (by omega) (o.omVB B a p hpS)
   obtain ⟨q, m, hq0, hm0, hmS, hlog, hval⟩ := hC₀ a (o.S B) (T.M B a) (o.Or B a) i hi hdisc hsand
   obtain ⟨K, _, ι, _, P, Re, Re', Hl, h1, h2, h3, h4, h5, h6, h7⟩ := level hRes II hII (o.Or B a) (o.refOr a) hi

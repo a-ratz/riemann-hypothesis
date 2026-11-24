@@ -72,8 +72,8 @@ private theorem wt_mul {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
     [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} {h : IsPlaceOver A w}
     {κ κ' : ↥(Dec (F := F) A) →* (Qbar l)ˣ} {wt wt' : Emb l w → ℤ} {ph ph' : ↥(Ine (F := F) A) →* (Qbar l)ˣ}
     (H : IsWtPart h κ wt ph) (H' : IsWtPart h κ' wt' ph') : IsWtPart h (κ * κ') (wt + wt') (ph * ph') := by
-  haveI := finite_emb l w
-  haveI := Fintype.ofFinite (Emb l w)
+  have := finite_emb l w
+  have := Fintype.ofFinite (Emb l w)
   refine ⟨?_, fun a ha σ => ?_⟩
   · refine Subgroup.isOpen_mono (H₁ := ph.ker ⊓ ph'.ker) (fun x hx => ?_) (H.1.inter H'.1)
     have h1 : ph x = 1 := hx.1
@@ -90,8 +90,8 @@ private theorem wt_zpow {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} {h : IsPlaceOver A w}
     {κ : ↥(Dec (F := F) A) →* (Qbar l)ˣ} {wt : Emb l w → ℤ} {ph : ↥(Ine (F := F) A) →* (Qbar l)ˣ}
     (H : IsWtPart h κ wt ph) (m : ℤ) : IsWtPart h (κ ^ m) (m • wt) (ph ^ m) := by
-  haveI := finite_emb l w
-  haveI := Fintype.ofFinite (Emb l w)
+  have := finite_emb l w
+  have := Fintype.ofFinite (Emb l w)
   refine ⟨?_, fun a ha σ => ?_⟩
   · refine Subgroup.isOpen_mono (H₁ := ph.ker) (fun x hx => ?_) H.1
     have h1 : ph x = 1 := hx

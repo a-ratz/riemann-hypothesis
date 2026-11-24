@@ -143,7 +143,7 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
         ((ξ.locK P (Units.mk0 _ (hne hc2)) : ℂˣ) : ℂ) = ((ξ.val P : ℂˣ) : ℂ) := fun {c} hc hc2 => by
       refine congrArg _ (ξ.val_eq hunr _ ?_)
       show Valued.v (algebraMap E (P.adicCompletion E) (c : E)) = _
-      exact GlobalTheory.UnifConj.val_of_cong P _ c hc hc2 (by rw [sub_self, map_zero]; exact zero_le')
+      exact GlobalTheory.UnifConj.val_of_cong P _ c hc hc2 (by rw [sub_self, map_zero]; exact zero_le)
     obtain ⟨b, hb, hb2⟩ : ∃ b ∈ P.asIdeal, b ∉ P.asIdeal ^ 2 := by
       have := Ideal.exists_mem_pow_notMem_pow_succ P.asIdeal P.ne_bot P.isPrime.ne_top 1
       simpa using this

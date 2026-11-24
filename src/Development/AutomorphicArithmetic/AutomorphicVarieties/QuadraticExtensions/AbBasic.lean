@@ -53,8 +53,8 @@ private theorem ker_congr (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure 
 
 private theorem prim_lemma (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (m : ℕ) [NeZero m] :
     ∃ ζ : Ω, IsPrimitiveRoot ζ m := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic m Ω)
     (Polynomial.degree_cyclotomic_pos m Ω (NeZero.pos m)).ne'
   exact ⟨ζ, Polynomial.isRoot_cyclotomic_iff.mp hζ⟩
@@ -89,7 +89,7 @@ private theorem unitsMap_galChar_eq_galChar_of_dvd (Ω : Type) [Field Ω] [Algeb
 private theorem galChar_surjective (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (m : ℕ) [NeZero m] :
     Function.Surjective (galChar Ω m) := by
   intro u
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   obtain ⟨ζ, hζ⟩ := prim_lemma Ω m
   have hcop : Nat.Coprime (u : ZMod m).val m := ZMod.val_coe_unit_coprime u
   have hμ : IsPrimitiveRoot (ζ ^ (u : ZMod m).val) m := hζ.pow_of_coprime _ hcop
@@ -106,8 +106,8 @@ private theorem galChar_surjective (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAl
 private theorem isOpen_galChar_ker (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (m : ℕ) [NeZero m] :
     IsOpen ((galChar Ω m).ker : Set (G ℚ Ω)) := by
   obtain ⟨ζ, hζ⟩ := prim_lemma Ω m
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) :=
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) :=
     IntermediateField.adjoin.finiteDimensional (hζ.isIntegral (NeZero.pos m)).tower_top
   refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin ℚ {ζ}).fixingSubgroup) ?_
     (IntermediateField.fixingSubgroup_isOpen _)

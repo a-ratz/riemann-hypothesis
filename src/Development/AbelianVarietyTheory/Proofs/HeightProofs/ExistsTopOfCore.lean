@@ -304,7 +304,7 @@ theorem exists_equiv_two_models {O O' : Type} [CommRing O] [CommRing O'] {β : O
 
 theorem datIndep : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), DatIndep Xo c := by
   intro E _ _ _ H Dw l Xo c la Tw Tw' hTw hTw' T io e y ho hy z z' hz hz' A A'
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨y, hy1, G, t', m1, m2, hy2⟩ := y
   obtain ⟨v, C, P, Fl⟩ := z
   obtain ⟨v', C', P', Fl'⟩ := z'
@@ -761,7 +761,7 @@ theorem exists_coeff_containing :
   let S : Set ℂ := (s : Set ℂ) ∪ Set.range (fun p : (E →+* ℂ) × Fin (Module.finrank ℚ E) => p.1 (b p.2)) ∪
     {zeta l.M', H.rt0, zeta l.A}
   have hfin : S.Finite := ((s.finite_toSet).union (Set.finite_range _)).union (Set.toFinite _)
-  haveI : Finite S := hfin.to_subtype
+  have : Finite S := hfin.to_subtype
   have hint : ∀ x ∈ S, IsIntegral ℚ x := by
     rintro x ((hx | ⟨p, rfl⟩) | hx)
     · exact (hs x hx).isIntegral
@@ -810,7 +810,7 @@ theorem baseAt_of_eq {l : Level H} {c : Coeff l} {v : HeightOneSpectrum (𝓞 c.
 
 theorem exists_coeff_ge {l : Level H} (c : Coeff l) (l₂ : Level H) : ∃ c₂ : Coeff l₂, c.F ≤ c₂.F := by
   classical
-  haveI := c.fin
+  have := c.fin
   let b := Module.finBasis ℚ c.F
   obtain ⟨c₂, h⟩ := exists_coeff_containing E H l₂ (Finset.univ.image fun i => ((b i : c.F) : ℂ)) (by
     intro z hz

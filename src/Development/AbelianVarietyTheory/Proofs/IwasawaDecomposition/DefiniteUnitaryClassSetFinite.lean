@@ -112,10 +112,10 @@ theorem continuous_adMap : Continuous (GlobalTheory.AdeleBaseChange.adMap F E) :
     fun w => InertChart.continuous_complMap (rfl : w.under (𝓞 F) = _)
 
 theorem continuous_finAdEquiv : Continuous (finAdEquiv F E) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology 𝔸ᶠ[F] (𝔸ᶠ[F] ⊗[F] E) := ⟨rfl⟩
-  letI : Algebra 𝔸ᶠ[F] (FiniteAdeleRing (𝓞 E) E) := (GlobalTheory.AdeleBaseChange.adMap F E).toAlgebra
-  haveI : ContinuousSMul 𝔸ᶠ[F] (FiniteAdeleRing (𝓞 E) E) := continuousSMul_of_algebraMap _ _ continuous_adMap
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology 𝔸ᶠ[F] (𝔸ᶠ[F] ⊗[F] E) := ⟨rfl⟩
+  let : Algebra 𝔸ᶠ[F] (FiniteAdeleRing (𝓞 E) E) := (GlobalTheory.AdeleBaseChange.adMap F E).toAlgebra
+  have : ContinuousSMul 𝔸ᶠ[F] (FiniteAdeleRing (𝓞 E) E) := continuousSMul_of_algebraMap _ _ continuous_adMap
   let f : 𝔸ᶠ[F] ⊗[F] E →ₗ[𝔸ᶠ[F]] FiniteAdeleRing (𝓞 E) E :=
     { toFun := finAdEquiv F E
       map_add' := map_add _
@@ -254,7 +254,7 @@ theorem continuous_finGL : Continuous (finGL E n) :=
 theorem continuous_toFin : Continuous (toFin E n) := by
   have h1 : Continuous (GeneralLinearGroup.map (AEq (E := E)) : GL (Fin n) _ → GL (Fin n) (Af E)) :=
     Continuous.units_map _ (continuous_id.matrix_map continuous_finAdEquiv)
-  have h2 : Continuous (toGL E n) := h1.comp continuous_subtype_val
+  have h2 : Continuous (toGL E n) := h1.comp continuous_subtypeVal
   exact Continuous.subtype_mk (Continuous.subtype_mk (continuous_finGL.comp h2) _) _
 
 theorem toGL_rat (t : HF E n) (ht : t ∈ GlobalTheory.Mass.ratIn (AFr E) (sg E) (1 : Matrix (Fin n) (Fin n) E)) :
@@ -296,7 +296,7 @@ theorem classSet_finite (K : Subgroup (finU (E := E) (n := n))) (hK : IsOpen (K 
     ∃ S : Finset (UA E n), ∀ g : UA E n, ∃ γ ∈ ratU E n, ∃ s ∈ S, ∃ x ∈ infU E n, ∃ k ∈ K,
       g = γ * s * x * (k : UA E n) := by
   classical
-  haveI := GlobalTheory.Mass.topGroup_fin (sg E) (1 : Matrix (Fin n) (Fin n) E)
+  have := GlobalTheory.Mass.topGroup_fin (sg E) (1 : Matrix (Fin n) (Fin n) E)
   let K' : Subgroup (HF E n) := K.comap (toFin E n) ⊓ GlobalTheory.Mass.stdLevel (sg E) 1
   have ho : IsOpen (K' : Set (HF E n)) :=
     (hK.preimage continuous_toFin).inter (GlobalTheory.Mass.isOpen_stdLevel _ _)
@@ -311,7 +311,7 @@ theorem classSet_finite (K : Subgroup (finU (E := E) (n := n))) (hK : IsOpen (K 
   have hnd : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsHermND (sg E) (1 : Matrix (Fin n) (Fin n) E) :=
     ⟨fun i j => congrFun₂ hstd.1 i j, by simp⟩
   have hf := (GlobalTheory.Mass.finiteClasses_unitary hcm hnd hstd.2.1 hc ho).1
-  haveI := Fintype.ofFinite (ClassSet (GlobalTheory.Mass.ratIn (AFr E) (sg E) (1 : Matrix (Fin n) (Fin n) E)) K')
+  have := Fintype.ofFinite (ClassSet (GlobalTheory.Mass.ratIn (AFr E) (sg E) (1 : Matrix (Fin n) (Fin n) E)) K')
   refine ⟨Finset.univ.image fun c : ClassSet (GlobalTheory.Mass.ratIn (AFr E) (sg E) (1 : Matrix (Fin n) (Fin n) E)) K' =>
     ((toFin E n (Quotient.out c) : finU (E := E) (n := n)) : UA E n), fun g => ?_⟩
   let f : finU (E := E) (n := n) := ⟨⟨finGL E n (GeneralLinearGroup.map (pFin E) g.1), finGL_mem_UA _ (cT_pFin g)⟩, pInf_finGL _⟩

@@ -105,7 +105,7 @@ theorem GraphAreaIntegral.proof (h : GraphAreaHolomorphic.Statement) : GraphArea
       rw [← hpre]
       exact MeasurableSet.subtype_image hA (hf.measurable hS)
     rw [Measure.restrict_apply hS, Measure.map_apply hf.measurable hS,
-      (MeasurableEmbedding.subtype_coe hA).comap_apply, hpre, withDensity_apply _ hmS,
+      (MeasurableEmbedding.subtypeVal hA).comap_apply, hpre, withDensity_apply _ hmS,
       Set.inter_comm S, ← Set.image_inter_preimage]
     exact h d m n e Ω F hΩ hF _ (Set.inter_subset_left.trans hAΩ) hmS
   calc ∫⁻ y in G '' A, g y ∂ν = ∫⁻ y, g y ∂(M.map f) := by rw [hmeas]

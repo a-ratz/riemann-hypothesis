@@ -162,9 +162,9 @@ theorem frameM_coef_eq_chgB : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lm : Taylor
     rw [Fintype.sum_prod_type]
   rw [hJ, Fintype.sum_sigma]
   simp only [GlobalTheory.DFrame.coef, GlobalTheory.DFrame.gc, GlobalTheory.DFrame.pc]
-  simp only [mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const_zero]
+  simp only [mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const_zero]
   rw [Finset.sum_eq_single x.1 (fun z _ hz => by simp [hz]) (by simp)]
-  simp only [if_true, GlobalTheory.DFrame.vecF, GlobalTheory.DFrame.mat, GlobalTheory.DFrame.colR, GlobalTheory.DFrame.rowL, Matrix.of_apply, map_mul, RingEquiv.coe_toRingHom]
+  simp only [ite_true, GlobalTheory.DFrame.vecF, GlobalTheory.DFrame.mat, GlobalTheory.DFrame.colR, GlobalTheory.DFrame.rowL, Matrix.of_apply, map_mul, RingEquiv.coe_toRingHom]
   have hsum' := hsum x.1 (s.iT i.1)
   simp only [hι] at hsum'
   have e : ∀ k, ι (TaylorLogMetric.embT D (s.iT i.1) (a x.1 k)) *
@@ -177,7 +177,7 @@ theorem frameM_coef_eq_chgB : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lm : Taylor
       (r x.1 k * ι (TaylorLogMetric.embT D (s.iT i.1) (a x.1 k))) := fun k => by ring
   rw [Finset.sum_congr rfl fun k _ => e k, ← Finset.mul_sum, hsum']
   by_cases h : s.iT i.1 = tauPl D x.1
-  · rw [if_pos h, TaylorLogMetric.chgB, if_pos h.symm]
+  · rw [ite_eq_left h, TaylorLogMetric.chgB, ite_eq_left h.symm]
     simp only [h]
     set tp := tauPl D x.1 with htp
     have hm : ∀ {m : ℕ} (Q : Matrix (Fin m) (Fin m) D.host.E),
@@ -196,7 +196,7 @@ theorem frameM_coef_eq_chgB : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lm : Taylor
     rw [← htp] at h1 h2 ⊢
     field_simp
     try ring
-  · rw [if_neg h, TaylorLogMetric.chgB, if_neg (fun e => h e.symm)]
+  · rw [ite_eq_right h, TaylorLogMetric.chgB, ite_eq_right (fun e => h e.symm)]
     simp
 
 end GlobalTheory.DFrame
@@ -235,7 +235,7 @@ theorem hOK_vecF : ∀ (D : D7) (X : Fields) (s : Seam D X) (L : PeriodPair) (Λ
     unfold Formalism.L2.Th1.GD.hOK Formalism.L2.AlgTh.hSc
     show ((Formalism.L2.Th1.F.area L : ℝ) : ℂ) * ∑ i, ∑ j, _ = _
     simp only [Matrix.diagonal_apply, mul_ite, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.mem_univ, ite_true, Finset.mul_sum]
     rw [Fintype.sum_prod_type]
     refine Finset.sum_congr rfl fun τ _ => ?_
 
@@ -322,7 +322,7 @@ theorem pair_value_eq {D : D7} {p : ℕ} [Fact p.Prime] {ι : ℂ ≃+* ℂ_[p]}
     · rw [norm_div, norm_mul, h₂, one_mul]
       exact div_le_one_of_le₀ hc (norm_nonneg _)
     · subst hX
-      simp only [hab, if_true, mul_one, map_mul]
+      simp only [hab, ite_true, mul_one, map_mul]
       field_simp
       ring
   · refine ⟨0, by simp, ?_⟩
@@ -527,7 +527,7 @@ theorem tauSg_tauPl (D : D7) (b : Bool) (t : HH D) : TaylorLogMetric.tauSg D (ta
     cases b <;> refine Prod.ext (Prod.ext ?_ ?_) ?_ <;> simp [plGG, Formalism.HC.Frame.tau1, Formalism.HC.Frame.tau2, TaylorLogMetric.sgm]
   have hmem : (D.eTau (tauPl D (b, t)) : D.R.GG) * TaylorLogMetric.sgm D ∈ D.R.Psi := by
     rw [eTau_tauPl, hm]; exact plGG_mem_Psi D _
-  rw [show TaylorLogMetric.tauSg D (tauPl D (b, t)) = D.eTau.symm ⟨_, hmem⟩ from dif_pos hmem]
+  rw [show TaylorLogMetric.tauSg D (tauPl D (b, t)) = D.eTau.symm ⟨_, hmem⟩ from dite_eq_left hmem]
   refine (Equiv.symm_apply_eq _).2 (Subtype.ext ?_)
   simp only [eTau_tauPl, hm]
 
@@ -755,15 +755,15 @@ theorem norm_le_one : ∀ (D : D7) (p : ℕ) [Fact p.Prime], p = D.host.d → �
   let Q : Ideal (𝓞 D.host.E) :=
     { carrier := {y | ‖φ (y : D.host.E)‖ < 1}
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
         exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt hx hy)
       zero_mem' := by simp
       smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul] at *
         rw [norm_mul]
         exact lt_of_le_of_lt (mul_le_of_le_one_left (norm_nonneg _) (hint c)) hx }
   have hmem : ∀ y, y ∈ Q ↔ ‖φ (y : D.host.E)‖ < 1 := fun y => Iff.rfl
-  haveI hQ : Q.IsPrime := by
+  have hQ : Q.IsPrime := by
     refine ⟨fun h => ?_, fun {x y} hxy => ?_⟩
     · have h1 := (hmem 1).1 (h ▸ Submodule.mem_top)
       simp at h1
@@ -1054,10 +1054,10 @@ theorem eigenframe_at_d : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), 
         · rw [zero_mul]
       simp only [h1]
       rw [Finset.sum_eq_single τ]
-      · simp only [if_true, ← Finset.mul_sum]
+      · simp only [ite_true, ← Finset.mul_sum]
         have := hsum τ (tauPl D ρ)
         rw [htauR] at this
-        rw [this, if_neg (fun h => hne (hbij.1 h)), mul_zero]
+        rw [this, ite_eq_right (fun h => hne (hbij.1 h)), mul_zero]
       · intro b _ hb; simp [hb]
       · intro h; exact absurd (Finset.mem_univ τ) h
     have hd1 := (_root_.GlobalTheory.DFrame.dual_local_bases_pair D p ι _ hth0 hcong P σ hσ hdualP).1
@@ -1092,8 +1092,8 @@ theorem eigenframe_at_d : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), 
         intro i'
         simp only [act, LinearMap.coe_mk, AddHom.coe_mk, Pi.single_apply, mul_ite, mul_one, mul_zero]
       simp only [hfr, Formalism.L2.Th1.GD.mapVec, hact]
-      rw [Finset.sum_eq_single i (fun b _ hb => by rw [if_neg (Ne.symm hb), map_zero, zero_mul])
-        (fun h => absurd (Finset.mem_univ i) h), if_pos rfl]
+      rw [Finset.sum_eq_single i (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), map_zero, zero_mul])
+        (fun h => absurd (Finset.mem_univ i) h), ite_eq_left rfl]
       by_cases h : tauPl D x.1 = s.iT i.1
       · rw [← h]; rfl
       · simp [TaylorLogMetric.chgB, h]
@@ -1172,7 +1172,7 @@ theorem embSep : Formalism.L2.Th1.GD.EmbSep := by
     rw [h, Ideal.mem_bot] at this
     exact (Fact.out : p.Prime).ne_zero (by exact_mod_cast this)
   have : IsGaloisGroup (E ≃ₐ[K] E) (𝓞 K) (𝓞 E) := IsGaloisGroup.of_isFractionRing (E ≃ₐ[K] E) (𝓞 K) (𝓞 E) K E
-  have hp0 : (primeOf φ).under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot hP0
+  have hp0 : (primeOf φ).under (𝓞 K) ≠ ⊥ := mt Ideal.eq_bot_of_under_eq_bot hP0
 
   set r := ‖φ (algebraMap K E (π : K))‖ with hr
   have hr0 : 0 < r := by

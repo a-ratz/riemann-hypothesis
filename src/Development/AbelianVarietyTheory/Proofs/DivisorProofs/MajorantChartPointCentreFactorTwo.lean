@@ -128,7 +128,7 @@ theorem norm_chartMatrixTopBlock_sub_one_le (X : Data E r) (z : V (nd X)) (τ : 
   all_goals first
     | (rw [sub_zero]; exact norm_coord_le X z _)
     | (rw [sub_self, norm_zero]; exact norm_nonneg _)
-    | (exfalso; simp only [Fin.lt_def, Fin.ext_iff, Fin.coe_castLE] at *; omega)
+    | (exfalso; simp only [Fin.lt_def, Fin.ext_iff, Fin.val_castLE] at *; omega)
 
 theorem norm_chartBottomLeftBlock_le (X : Data E r) (z : V (nd X)) (τ : X.Ψ) (i : Fin (r - X.p0)) (j : Fin X.p0) :
     ‖chartBottomLeftBlock X z τ i j‖ ≤ ‖z‖ := by

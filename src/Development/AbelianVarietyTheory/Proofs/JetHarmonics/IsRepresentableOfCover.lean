@@ -108,7 +108,7 @@ theorem isRepresentable_of_cover (F : Scheme.{0}ᵒᵖ ⥤ Type)
       rw [morphismRestrict_ι]
       exact ConcreteCategory.congr_hom (p.naturality (q ⁻¹ᵁ W i).ι.op) x)
     refine ⟨(Sigma.ι (fun i => yoneda.obj (T i)) i).app _ c, ?_⟩
-    exact (ConcreteCategory.congr_hom (NatTrans.congr_app (Sigma.ι_desc f i) _) c).trans hc
+    exact (ConcreteCategory.congr_hom (NatTrans.congr_app (Sigma.ι_comp_desc f i) _) c).trans hc
   exact Scheme.LocalRepresentability.isRepresentable hf
 
 end GlobalTheory.GenTorsor

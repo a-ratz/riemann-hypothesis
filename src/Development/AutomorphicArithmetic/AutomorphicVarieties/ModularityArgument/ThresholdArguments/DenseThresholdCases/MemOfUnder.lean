@@ -178,8 +178,8 @@ private theorem pow_fix {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
 private theorem cyc_inf_over (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (l : ℕ) [hl : Fact l.Prime] (A : ValuationSubring Ω) (hA : A.valuation (l : Ω) < 1) :
     ∃ s ∈ Ine (F := F) A, ∀ k : ℕ, k ≠ 0 → cycBar F Ω l s ^ k ≠ 1 := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
   have hu : IsUnit ((l + 1 : ℕ) : ℤ_[l]) := by
     rw [PadicInt.isUnit_iff]
     exact PadicInt.norm_natCast_eq_one_iff.2 (by simp)
@@ -582,7 +582,7 @@ private theorem att_iso {F Ω : Type} [Field F] [NumberField F] [_root_.NumberFi
 theorem branch1W_alt : _root_.UpperTheory.V.Z.Sym.W.Branch1WAlt := by
   intro Pr L Ω _ _ _ _ _ _ l _ ι hl hU M m hM r σ hA hg P ψ hP hreg σ₃ hσ₃ hev
   obtain ⟨r3, hg3, hirr⟩ := _root_.UpperTheory.V.Z.Sym.W.galois_exists_w_statement Pr L Ω l ι hl hU 3 (by norm_num) σ₃ hσ₃
-  haveI : IsGalois L Ω := IsAlgClosure.isGalois L Ω
+  have : IsGalois L Ω := IsAlgClosure.isGalois L Ω
   obtain ⟨hcu, hce, hbad⟩ := Ga.badClosed L Ω l r hg.cont
   have hct : Continuous fun g : G L Ω => Ga.tr (r3 g) :=
     Continuous.matrix_trace (Units.continuous_val.comp hg3.cont)
@@ -756,11 +756,11 @@ private theorem adjoint_inertia_image_finite (hl : ((l : ℕ) : 𝓞 L) ∉ w.as
     apply Units.ext
     rw [ad0, tw_val, MonoidHom.inv_apply, MonoidHom.comp_apply, MonoidHom.comp_apply, h1]
     simp
-  haveI := compactSpace_Ine (E := L) A
+  have := compactSpace_Ine (E := L) A
   let f := (ad0 r).comp (Ine (F := L) A).subtype
-  haveI : Finite (Ine (F := L) A ⧸ f.ker) :=
+  have : Finite (Ine (F := L) A ⧸ f.ker) :=
     Subgroup.quotient_finite_of_isOpen _ (Subgroup.isOpen_mono (H₁ := U) (fun x hx => hu x hx) hU)
-  haveI : Finite f.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange f).toEquiv
+  have : Finite f.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange f).toEquiv
   refine (Set.toFinite (f.range : Set (GL (Fin 3) (Qbar l)))).subset ?_
   rintro _ ⟨s, hs, rfl⟩
   exact ⟨⟨s, hs⟩, rfl⟩

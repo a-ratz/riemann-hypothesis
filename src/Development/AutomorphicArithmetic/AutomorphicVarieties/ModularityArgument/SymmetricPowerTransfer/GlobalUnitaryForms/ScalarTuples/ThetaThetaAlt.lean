@@ -335,7 +335,7 @@ private theorem star_smul_lsq (c : O) (y : Lsq K Δ) : star (c • y) = c • st
 
 private theorem eq_of_smul_eq_smul_of_ne_zero (h : IsLoc O Δ) {N : O} (hN : N ≠ 0) {v w : Lsq K Δ}
     (hvw : N • v = N • w) : v = w := by
-  haveI := h.frac
+  have := h.frac
   have hNK : algebraMap O K N ≠ 0 := by
     rw [ne_eq, map_eq_zero_iff _ (IsFractionRing.injective O K)]
     exact hN
@@ -355,7 +355,7 @@ theorem fin_cosets (h : IsLoc O Δ) {N : O} (hN : N ≠ 0) :
     intro v hv
     exact (Submodule.mem_span_range_iff_exists_fun O).1 ((hmem v).2 hv)
   choose! coef hcoef using hrep
-  haveI : Finite (O ⧸ Ideal.span {N ^ 2}) := finite_quot_span h (pow_ne_zero 2 hN)
+  have : Finite (O ⧸ Ideal.span {N ^ 2}) := finite_quot_span h (pow_ne_zero 2 hN)
   let code : U3 Δ → Fin 3 → Fin 3 → Fin r → O ⧸ Ideal.span {N ^ 2} := fun x i j k =>
     Ideal.Quotient.mk _ (coef (N • (x : Matrix (Fin 3) (Fin 3) (Lsq K Δ)) i j) k)
   let P : U3 Δ → Prop := fun x =>
@@ -434,7 +434,7 @@ private theorem int_of_tr {a b : K} (e : QuadraticAlgebra K a b) (t n : O) (ht :
 
 private theorem int_of_norm (h : IsLoc O Δ) (hτ : ¬ IsSquare (τ ^ 2 - 4)) (e : Etau K τ) (n : O)
     (hn : algebraMap O K n = QuadraticAlgebra.norm e) : IsIntegral O e := by
-  haveI := h.frac
+  have := h.frac
   set t := QuadraticAlgebra.trace e with ht_def
   have key : 4 * algebraMap O K n = t ^ 2 - (τ ^ 2 - 4) * e.im ^ 2 := by
     rw [hn, ht_def, trace_def, norm_def]
@@ -499,7 +499,7 @@ private theorem exists_scale [IsFractionRing O K] {ι : Type} [Finite ι] (f g :
     rw [map_mul, hq j, inv_inv, Algebra.smul_def]
   push_neg at hall
   obtain ⟨i1, hi1⟩ := hall
-  haveI : Nonempty ι := ⟨i1⟩
+  have : Nonempty ι := ⟨i1⟩
   obtain ⟨i0, hi0⟩ := Finite.exists_min (fun i => IsDiscreteValuationRing.addVal O (p i))
   have hp0 : p i0 ≠ 0 := by
     intro h0
@@ -533,7 +533,7 @@ theorem tor_bound (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) (N : O) {ι : Type} 
     (hT : ∀ i j, IsIntegral O (N • (T i * star (T j)))) :
     ∃ z : (Etau K τ)ˣ, ∀ i, IsIntegral O (N • (quo z * T i)) := by
   classical
-  haveI := h.frac
+  have := h.frac
   have h2 : (2 : K) ≠ 0 := by
     have h3 := h.two.map (algebraMap O K)
     rw [map_ofNat] at h3
@@ -729,7 +729,7 @@ private theorem Bd.star {R : Type} [CommRing R] [Algebra O R] {a b : R} {f : ι 
 
 private theorem Bd.fin {κ : Type} [Finite κ] {F : κ → ι → A} (h : ∀ k, Bd O (F k)) : Bd O fun p : κ × ι => F p.1 p.2 := by
   classical
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   choose N hN hF using h
   refine ⟨∏ k, N k, Finset.prod_ne_zero_iff.2 fun k _ => hN k, fun p => ?_⟩
   rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ p.1), mul_smul]
@@ -783,11 +783,11 @@ private theorem step1 (h : IsLoc O Δ) {c : K} {d m : EL Δ τ} (hd : IsDat c d 
     (h0 : Bd O fun i => herm c m (x i) (y i)) (h1 : Bd O fun i => herm c m (semi d (semi d (x i))) (y i))
     (h2 : Bd O fun i => herm c m (semi d (semi d (semi d (semi d (x i))))) (y i)) :
     (Bd O fun i => (x i).1 * star (y i).1) ∧ Bd O fun i => (x i).2 * star (sigL (y i).2) := by
-  haveI := h.frac
+  have := h.frac
   have hτ : 2 - τ ≠ 0 := fun e => hd.reg (by linear_combination (-2 - τ) * e)
   simp only [semi_semi hd] at h1 h2
   have e1 : ∀ (w : EL Δ τ), trace (ω * (ω * w)) = algebraMap K (Lsq K Δ) τ * trace (ω * w) - trace w := fun w => by
-    simp only [trace_def, re_mul, im_mul, omega_re, omega_im]; ring
+    simp only [trace_def, re_mul, im_mul, re_omega, im_omega]; ring
   have hg : Bd O fun i => (x i).1 * star (y i).1 := by
     refine Bd.cancel K (u := algebraMap K (Lsq K Δ) ((2 - τ) * c)) ((mul_ne_zero hτ hd.c_ne).isUnit.map _) ?_
     refine ((h2.add h0).add ((Bd.const K (-algebraMap K (Lsq K Δ) τ)).mul h1)).congr fun i => ?_
@@ -815,13 +815,13 @@ private theorem step1 (h : IsLoc O Δ) {c : K} {d m : EL Δ τ} (hd : IsDat c d 
   generalize m * (x i).2 * star (sigL (y i).2) = w
   simp only [IsScalarTower.toAlgHom_apply]
   refine QuadraticAlgebra.ext ?_ ?_
-  · simp only [trace_def, re_mul, im_mul, re_add, omega_re, omega_im, algebraMap_re, algebraMap_im, τ']; ring
-  · simp only [trace_def, re_mul, im_mul, im_add, omega_re, omega_im, algebraMap_re, algebraMap_im, τ']; ring
+  · simp only [trace_def, re_mul, im_mul, re_add, re_omega, im_omega, algebraMap_re, algebraMap_im, τ']; ring
+  · simp only [trace_def, re_mul, im_mul, im_add, re_omega, im_omega, algebraMap_re, algebraMap_im, τ']; ring
 
 private theorem step2 (h : IsLoc O Δ) {d : EL Δ τ} (hd : IsUnit d) (x y : ι → EL Δ τ)
     (h0 : Bd O fun i => x i * star (sigL (y i))) (h1 : Bd O fun i => x i * star (sigL (d * sigL (y i)))) (b b' : Bool) :
     Bd O fun i => cmp b (x i) * star (cmp b' (y i)) := by
-  haveI := h.frac
+  have := h.frac
   have h2 : (2 : K) ≠ 0 := by
     have := (h.two.map (algebraMap O K)).ne_zero
     rwa [map_ofNat] at this
@@ -863,7 +863,7 @@ private theorem step2 (h : IsLoc O Δ) {d : EL Δ τ} (hd : IsUnit d) (x y : ι 
 
 private theorem step3 (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {e : ι → Etau K τ} (he : Bd O e) :
     (Bd O fun i => (e i).re) ∧ Bd O fun i => (e i).im := by
-  haveI := h.frac
+  have := h.frac
   have hinj : Function.Injective (IsScalarTower.toAlgHom O K (Etau K τ)) := algebraMap_injective
   have h1 : Bd O fun i => (e i).im := by
     refine Bd.cancel K hτ.isUnit (Bd.of_map _ hinj ?_)
@@ -875,7 +875,7 @@ private theorem step3 (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) {e : ι → Etau
 
 private theorem step4 (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) (φ : Sp Δ τ →ₗ[Lsq K Δ] Lsq K Δ) {w : ι → Sp Δ τ}
     (h1 : Bd O fun i => (w i).1) (h2 : ∀ b, Bd O fun i => cmp b (w i).2) : Bd O fun i => φ (w i) := by
-  haveI := h.frac
+  have := h.frac
   let j := IsScalarTower.toAlgHom O K (Lsq K Δ)
   have hre : Bd O fun i => (w i).2.re :=
     (((step3 h hτ (h2 true)).1.map j).add (((step3 h hτ (h2 false)).1.map j).mul (Bd.const K ω))).congr fun i => by
@@ -1066,12 +1066,12 @@ private theorem mem_iff_tor_mem_of_isFix_of_isIntegral_quo {O K : Type} [CommRin
       ω * x ∈ {a : Etau K τ | ((0 : Lsq K Δ), ↑y₀ * ofE Δ a) ∈ S} := by
     intro x hx
     have h := (UpperTheory.V.Z.Sym.Loc.One.splitS O K Δ τ hL hτ h2 c d m hD S hS).2.2.2 _ hx ω ⟨0, by simp⟩ ⟨1, by simp⟩
-    simp only [Set.mem_setOf_eq] at h ⊢
+    simp only [Set.mem_ofPred_eq] at h ⊢
     rw [ofE_mul, mul_left_comm]
     exact h
   obtain ⟨u₀, hu₀⟩ := UpperTheory.V.Z.Sym.Loc.One.princ O K Δ τ hL hu _
     (UpperTheory.V.Z.Sym.Loc.One.lat O K Δ τ hL c d m S hS y₀) hω
-  simp only [Set.mem_setOf_eq] at hu₀
+  simp only [Set.mem_ofPred_eq] at hu₀
   have hqq : quo z * quo z⁻¹ = 1 := by
     simp only [quo, inv_inv]
     have e1 : (z : Etau K τ) * ((z⁻¹ : (Etau K τ)ˣ) : Etau K τ) = 1 := Units.mul_inv z
@@ -1254,7 +1254,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqG :
   set_option synthInstance.maxHeartbeats 200000 in
   classical
   intro F _ _ Δ D hOk ι hιG θ hθ t hCone τ c d m δ i P hCM hdat hmod
-  haveI := hOk.real
+  have := hOk.real
   have hΔ : Δ ≠ 0 := hOk.ne0
   have hcz : ∀ v : Pl F, CharZero (Kv v) := fun v => (RingHom.charZero_iff (cv v).injective).mp inferInstance
   have hreg : τ ^ 2 - 4 ≠ 0 := cm_ne hCM
@@ -1271,11 +1271,11 @@ theorem UpperTheory.V.Z.Sym.Glob.gqG :
   have hlocF := fun v : Pl F => by
     haveI := hcz v
     exact modelFacts (Kv v) (cv v Δ) (cv v τ) (cv v c) _ _ _ (ιv v) (Pv v) (hΔv v) (hdatv v) (hMv v)
-  have hfS : ∀ v ∈ D.Sg, D.fGv t v = (D.S v).fG (t v) := fun v hv => funext fun g => if_pos hv
+  have hfS : ∀ v ∈ D.Sg, D.fGv t v = (D.S v).fG (t v) := fun v hv => funext fun g => ite_eq_left hv
   have hfN : ∀ v ∉ D.Sg, D.fGv t v = fun g => one (g ∈ KU (Ov v) (cv v Δ)) :=
-    fun v hv => funext fun g => if_neg hv
-  have hJS : ∀ v ∈ D.Sg, D.Jv v = (D.S v).J := fun v hv => if_pos hv
-  have hJN : ∀ v ∉ D.Sg, D.Jv v = KU (Ov v) (cv v Δ) := fun v hv => if_neg hv
+    fun v hv => funext fun g => ite_eq_right hv
+  have hJS : ∀ v ∈ D.Sg, D.Jv v = (D.S v).J := fun v hv => ite_eq_left hv
+  have hJN : ∀ v ∉ D.Sg, D.Jv v = KU (Ov v) (cv v Δ) := fun v hv => ite_eq_right hv
   obtain ⟨hphi⟩ : Nonempty (∃ φ, IsDiagT τ φ) := ⟨(iotaEx F Δ).2.2 τ⟩
   set φ := hphi.choose with hφdef
   have hφ : IsDiagT τ φ := hphi.choose_spec
@@ -1287,7 +1287,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqG :
   have hgood : ∀ v ∉ S, v ∉ D.Sg ∧ ((ι δ).1 v) ∈ KU (Ov v) (cv v Δ) ∧
       ∃ u : (Ov v)ˣ, algebraMap (Ov v) (Kv v) ↑u = cv v τ ^ 2 - 4 := by
     intro v hv
-    simp only [hSdef, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hv
+    simp only [hSdef, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not] at hv
     exact ⟨hv.1, hv.2⟩
   have hone := fun v (hv : v ∉ S) =>
     oneU (Ov v) (Kv v) (cv v Δ) (cv v τ) (hOk.off v (hgood v hv).1) (cv v c) _ _ (hdatv v) _ (ιv v) (Pv v)
@@ -1405,7 +1405,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqG :
       Finset.prod_congr rfl fun v hv => by simp [one, hAdm v hv]
     show mass φ (scalE τ) _ * ∏ v ∈ S, orb (ιv v) (Cint (Ov v) (cv v τ)) (theta (cv v Δ)) (D.Jv v) (D.fGv t v) ((ι δ).1 v) = _
     rw [hsplit, hprod, hms]
-    simp only [one, if_pos hAdm, Dat.nL]
+    simp only [one, ite_eq_left hAdm, Dat.nL]
     ring
   · have hz : ∀ y : GA Δ ⧸ D.UG,
         D.FG t ((Quotient.out y)⁻¹ * ι δ * θ (Quotient.out y)) = 0 := by

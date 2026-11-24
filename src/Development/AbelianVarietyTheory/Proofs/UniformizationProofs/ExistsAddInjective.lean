@@ -188,7 +188,7 @@ theorem exists_add_injective {X : Type} [AddCommGroup X] [Module.Free ℤ X] [Mo
     have fin : (f.charpoly.rootSet ℤ).Finite := Polynomial.rootSet_finite _ _
     refine Set.Finite.subset (fin.preimage (f := fun m : ℕ => -(m : ℤ)) (fun a _ b _ e => by simpa using e)) ?_
     intro m hm
-    simp only [Function.Injective, Set.mem_setOf_eq, not_forall] at hm
+    simp only [Function.Injective, Set.mem_ofPred_eq, not_forall] at hm
     obtain ⟨x, y, e, hxy⟩ := hm
     have ev : f.HasEigenvector (-(m : ℤ)) (x - y) := by
       refine ⟨Module.End.mem_eigenspace_iff.2 ?_, sub_ne_zero.2 hxy⟩
@@ -200,7 +200,7 @@ theorem exists_add_injective {X : Type} [AddCommGroup X] [Module.Free ℤ X] [Mo
     refine (Polynomial.mem_rootSet).2 ⟨f.charpoly_monic.ne_zero, ?_⟩
     simpa [sub_ne_zero.2 hxy] using this.symm
   obtain ⟨m, hm⟩ := ((key h).union (key h')).exists_notMem
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hm
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hm
   exact ⟨m, hm⟩
 
 end GlobalTheory.Balanced

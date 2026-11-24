@@ -77,7 +77,7 @@ theorem valuation_algebraMap_eq_count {r : R} (hr : r ≠ 0) :
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact hr
   rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg v hr,
-    ← coeIdeal_span_singleton, count_coe K v hJ]
+    ← coeIdeal_span_singleton, count_coeIdeal K v hJ]
 
 theorem valuation_eq_exp_neg_count {x : K} (hx : x ≠ 0) :
     v.valuation K x = WithZero.exp (-FractionalIdeal.count K v (spanSingleton R⁰ x)) := by
@@ -220,7 +220,7 @@ theorem mem_localIdeal_iff {I : FractionalIdeal R⁰ K} (hI : I ≠ 0) (v : Heig
     have hy1 : algebraMap K (v.adicCompletion K) y ≠ 0 := by
       intro h; rw [h] at hy0; simp at hy0
     have hm : x / algebraMap K (v.adicCompletion K) y ∈ v.adicCompletionIntegers K := by
-      rw [mem_adicCompletionIntegers, map_div₀, div_le_one₀ (zero_lt_iff.2 hy0), hvy]
+      rw [mem_adicCompletionIntegers, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 hy0), hvy]
       exact hx
     have : x = (⟨_, hm⟩ : v.adicCompletionIntegers K) • algebraMap K (v.adicCompletion K) y := by
       change x = x / _ * _
@@ -358,7 +358,7 @@ theorem mul_mem_localIdeal_smul (t : 𝔸ᶠ[R, K]ˣ) (I : FractionalIdeal R⁰ 
   rcases eq_or_ne I 0 with rfl | hI
   · simp [smul_def, localIdeal_zero, idele_apply_ne_zero]
   rw [mem_localIdeal_iff hI, mem_localIdeal_iff (smul_ne_zero t hI), count_smul t hI, map_mul,
-    valued_idele, neg_add, exp_add, mul_le_mul_iff_right₀ (zero_lt_iff.2 exp_ne_zero)]
+    valued_idele, neg_add, exp_add, mul_le_mul_iff_right₀ (pos_iff_ne_zero.2 exp_ne_zero)]
 
 theorem mul_mem_adelicIdeal_smul (t : 𝔸ᶠ[R, K]ˣ) (I : FractionalIdeal R⁰ K) (a : 𝔸ᶠ[R, K]) :
     (t : 𝔸ᶠ[R, K]) * a ∈ adelicIdeal (t • I) ↔ a ∈ adelicIdeal I := by
@@ -424,7 +424,7 @@ theorem setOf_valued_le_eq (v : HeightOneSpectrum R) (n : ℤ) :
     exact exp_ne_zero hc.symm
   refine ⟨c, by simp [hc0], ?_⟩
   ext y
-  simp only [Set.mem_setOf_eq, Valuation.restrict_le_iff, hc]
+  simp only [Set.mem_ofPred_eq, Valuation.restrict_le_iff, hc]
 
 theorem isOpen_valued_le (v : HeightOneSpectrum R) (n : ℤ) :
     IsOpen {y : v.adicCompletion K | Valued.v y ≤ exp n} := by
@@ -451,7 +451,7 @@ theorem exists_limit (v : HeightOneSpectrum R) (u : ℕ → v.adicCompletion K)
     obtain ⟨n, hn⟩ := exists_exp_neg_lt
       (γ := MonoidWithZeroHom.ValueGroup₀.embedding γ.1) (by simp)
     refine ⟨n, fun m hm => ?_⟩
-    simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+    simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
     rw [Valuation.map_sub_swap]
     exact (hu m n hm).trans_lt hn
   obtain ⟨t, ht⟩ := cauchySeq_tendsto_of_complete hc
@@ -709,7 +709,7 @@ theorem exists_adele_of_end_one
   refine (Valuation.map_add _ _ _).trans (max_le ?_ ?_)
   · rw [map_mul]; exact mul_le_one' (ht1 v) hx'
   · rw [map_mul, map_div₀]
-    refine mul_le_one' ?_ ((div_le_one₀ (zero_lt_iff.2 hb2)).2 (htb b hb0 v))
+    refine mul_le_one' ?_ ((div_le_one₀ (pos_iff_ne_zero.2 hb2)).2 (htb b hb0 v))
     simp only [ι]
     rw [valued_algebraMap]; exact v.valuation_le_one r
 
@@ -779,7 +779,7 @@ theorem ne_zero_of_linearEquiv {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0)
     field_simp
   have h1 := congrArg φ h0
   rw [map_smul, hq, map_zero, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero,
-    FractionalIdeal.mem_coe, FractionalIdeal.mem_zero_iff] at h1
+    FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_zero_iff] at h1
   simp [Algebra.smul_def, hb0, hc0] at h1
 
 theorem existsUnique_mulEquiv {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0)

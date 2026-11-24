@@ -106,7 +106,7 @@ open UpperTheory.V.Z.J.AdjointKernelOpen in
 theorem UpperTheory.V.Z.J.adOpen :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (F : Frame l (ResidueField O)) (C₀ : ℕ), F.Ok C₀ → (l : O) ≠ 0 → ∀ (B : Box F 3 O) (k : ℕ), B.Cont (maximalIdeal O) → IsOpen ((adK B k).ker : Set F.Γ) := by
   intro l _ O _ _ _ _ _ F C₀ hF hl B k hB
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   obtain ⟨N, hN⟩ := (okFin l O hl).2.2.2.2.1 k
   have hK : IsOpen ((boxK B k).r.ker : Set F.Γ) := by
     refine r_ker_open hF.del_open (boxK B k) fun i j => ?_
@@ -153,7 +153,7 @@ private theorem arch_gen {R : Type} [CommRing R] [Finite R] (h2 : IsUnit (2 : R)
       (X * (A * Jmat R 3))ᵀ = -(X * (A * Jmat R 3)) := by
     intro X hX
     have hX' : A * (-(Jmat R 3 * Xᵀ * Jmat R 3)) * A' = X := by
-      simpa only [GG.ad_apply, GG.adFun, GG.mat, h, if_false, thetaLie] using hX
+      simpa only [GG.ad_apply, GG.adFun, GG.mat, h, ite_false, thetaLie] using hX
     rw [Matrix.transpose_mul, hB]
     conv_rhs => rw [← hX']
     simp only [Matrix.mul_neg, Matrix.neg_mul, neg_neg, Matrix.mul_assoc]
@@ -198,7 +198,7 @@ theorem UpperTheory.V.Z.J.archUp :
     have hne : Ideal.span {(l : O) ^ k} ≠ ⊥ := by
       rw [Ne, Ideal.span_singleton_eq_bot]; exact pow_ne_zero _ hl0
     obtain ⟨n, hn⟩ := IsDiscreteValuationRing.ideal_eq_span_pow_irreducible hne hϖ
-    haveI : Finite (O ⧸ maximalIdeal O) := (inferInstance : Finite (ResidueField O))
+    have : Finite (O ⧸ maximalIdeal O) := (inferInstance : Finite (ResidueField O))
     have hf : Finite (O ⧸ maximalIdeal O ^ n) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) n
     rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow, ← hn] at hf
     exact hf
@@ -246,7 +246,7 @@ private theorem exists_nat_sub_mem_span_pow_and_toZModPow_eq_and_toZMod_eq (l : 
 theorem UpperTheory.V.Z.J.dualZero :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (F : Frame l (ResidueField O)) (C₀ : ℕ), F.Ok C₀ → (l : O) ≠ 0 → ∀ (ρ : NRep F 3 O) (B : Box F 3 O), UpperTheory.V.Fr.IsLift O ρ → B.Of ρ → B.Cont (maximalIdeal O) → ∀ k, 0 < k → HomMu l k F.eps (adK B k) = {0} := by
   intro l _ O _ _ _ _ _ F C₀ hF hl ρ B hL hB hC k hk
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   have hlm : (l : O) ∈ maximalIdeal O := by
     rw [← IsLocalRing.residue_eq_zero_iff, map_natCast, CharP.cast_eq_zero]
   have hI0m : Ideal.span {(l : O) ^ k} ≤ maximalIdeal O := by
@@ -379,7 +379,7 @@ theorem UpperTheory.V.Z.J.dualZero :
       intro s hs X
       show GG.adFun ((boxK B k).r s) X = _
       simp only [GG.adFun]
-      rw [if_pos (show ((boxK B k).r s).right = 1 from hs)]
+      rw [ite_eq_left (show ((boxK B k).r s).right = 1 from hs)]
       rfl
     have hG0 : ∀ (h : F.G0) (a b i j : Fin 3), φ (adK B k ↑h (Matrix.single a b 1) i j) =
         if a = i ∧ b = j then ((F.Ψ ↑h ^ (w 3 a - w 3 b) : (ResidueField O)ˣ) : ResidueField O)
@@ -402,17 +402,17 @@ theorem UpperTheory.V.Z.J.dualZero :
         have e := congrArg (fun A => IsLocalRing.residue O (A p q)) hinv
 
         simp only [Matrix.mul_apply, map_sum, map_mul, hD, ite_mul, zero_mul, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true, Matrix.one_apply, apply_ite (IsLocalRing.residue O), map_one,
+        Finset.mem_univ, ite_true, Matrix.one_apply, apply_ite (IsLocalRing.residue O), map_one,
         map_zero] at e
         have hu : ((F.Ψ ↑h ^ w 3 p : (ResidueField O)ˣ) : ResidueField O) ≠ 0 := Units.ne_zero _
         split_ifs with hpq
-        · rw [if_pos hpq] at e
+        · rw [ite_eq_left hpq] at e
           calc _ = (((F.Ψ ↑h ^ w 3 p)⁻¹ : (ResidueField O)ˣ) : ResidueField O) *
                 (((F.Ψ ↑h ^ w 3 p : (ResidueField O)ˣ) : ResidueField O) *
                   IsLocalRing.residue O ((↑(B.r ↑h).left⁻¹ : Matrix (Fin 3) (Fin 3) O) p q)) := by
                 rw [← mul_assoc, Units.inv_mul, one_mul]
             _ = _ := by rw [e, mul_one]
-        · rw [if_neg hpq] at e
+        · rw [ite_eq_right hpq] at e
           exact (mul_eq_zero.mp e).resolve_left hu
       have hDm : (IsLocalRing.residue O).mapMatrix (B.r ↑h).mat =
           Matrix.diagonal (fun p => ((F.Ψ ↑h ^ w 3 p : (ResidueField O)ˣ) : ResidueField O)) := by
@@ -457,7 +457,7 @@ theorem UpperTheory.V.Z.J.dualZero :
       have h2 : (B.r F.c).right ≠ 1 := by rw [B.nu, hF.del_c]; decide
       show GG.adFun ((boxK B k).r F.c) Y = _
       simp only [GG.adFun]
-      rw [if_neg (show ((boxK B k).r F.c).right ≠ 1 from h2)]
+      rw [ite_eq_right (show ((boxK B k).r F.c).right ≠ 1 from h2)]
       have h3 : ((boxK B k).r F.c).mat = 1 := by
         show π.mapMatrix (B.r F.c).mat = 1
         rw [hB.atc, map_one]
@@ -471,21 +471,21 @@ theorem UpperTheory.V.Z.J.dualZero :
       rcases hw with h0 | h1
       · obtain ⟨g, hg⟩ := hF.f2a
         apply hkey a b ↑g
-        · rw [hG0, if_pos ⟨rfl, rfl⟩, hom, h0, zpow_zero, Units.val_one]
+        · rw [hG0, ite_eq_left ⟨rfl, rfl⟩, hom, h0, zpow_zero, Units.val_one]
           intro heq
           exact hg (Units.val_eq_one.mp heq.symm)
         · intro i j hij
-          rw [hG0, if_neg hij]
+          rw [hG0, ite_eq_right hij]
       · obtain ⟨g, hg⟩ := hF.f2b (w 3 b - w 3 a) (by omega)
         apply hkey a b ↑g
-        · rw [hG0, if_pos ⟨rfl, rfl⟩, hom]
+        · rw [hG0, ite_eq_left ⟨rfl, rfl⟩, hom]
           intro heq
           apply hg
           apply Units.ext
           rw [Units.val_mul, ← heq, ← Units.val_mul, ← _root_.zpow_add, sub_add_sub_cancel, sub_self,
             zpow_zero]
         · intro i j hij
-          rw [hG0, if_neg hij]
+          rw [hG0, ite_eq_right hij]
     have L2 : ∀ a b : Fin 3, b = a.rev → (w 3 a - w 3 b = 2 ∨ w 3 a - w 3 b = -2) →
         Matrix.single a b (1 : Ok l O k) ∈ N ⊔ I • ⊤ := by
       intro a b hb hw
@@ -497,14 +497,14 @@ theorem UpperTheory.V.Z.J.dualZero :
         have hdk : ((F.delK (ResidueField O) g : (ResidueField O)ˣ) : ResidueField O) = 1 := by
           simp [Frame.delK, hd]
         apply hkey a a.rev g
-        · rw [eG, if_pos ⟨rfl, rfl⟩, hom]
+        · rw [eG, ite_eq_left ⟨rfl, rfl⟩, hom]
           intro heq
           apply hg
           apply Units.ext
           rw [Units.val_mul, Units.val_mul, hdk, mul_one, ← heq, ← Units.val_mul, ← _root_.zpow_add,
             sub_add_sub_cancel, sub_self, zpow_zero]
         · intro i j hij
-          rw [eG, if_neg hij]
+          rw [eG, ite_eq_right hij]
       · have hmem : F.c⁻¹ * g ∈ F.del.ker := by
           rw [MonoidHom.mem_ker, map_mul, map_inv, hF.del_c, hd]
           decide
@@ -521,7 +521,7 @@ theorem UpperTheory.V.Z.J.dualZero :
         have hdk : ((F.delK (ResidueField O) g : (ResidueField O)ˣ) : ResidueField O) = -1 := by
           simp [Frame.delK, hd]
         apply hkey a a.rev g
-        · rw [hsplit, htheta, Fin.rev_rev, map_neg, eG, if_pos ⟨rfl, rfl⟩, hom]
+        · rw [hsplit, htheta, Fin.rev_rev, map_neg, eG, ite_eq_left ⟨rfl, rfl⟩, hom]
           dsimp only
           rw [hΨ]
           intro heq
@@ -530,7 +530,7 @@ theorem UpperTheory.V.Z.J.dualZero :
           rw [Units.val_mul, Units.val_mul, hdk, ← heq, mul_neg_one, neg_mul, neg_neg,
             ← Units.val_mul, ← _root_.zpow_add, sub_add_sub_cancel, sub_self, zpow_zero]
         · intro i j hij
-          rw [hsplit, htheta, map_neg, eG, if_neg, neg_zero]
+          rw [hsplit, htheta, map_neg, eG, ite_eq_right, neg_zero]
           rintro ⟨h1, h2⟩
           apply hij
           refine ⟨Fin.rev_injective h2, ?_⟩
@@ -685,7 +685,7 @@ private theorem ad_cj {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalR
     MonoidHom.coe_mk, OneHom.coe_mk, AddEquiv.coe_mk, Equiv.coe_fn_mk, e1]
   show GG.adFun (m := 3) (R := Ok l O k) _ _ = _
   simp only [GG.adFun, GG.mat, SemidirectProduct.map_left, SemidirectProduct.map_right, MonoidHom.id_apply, hr,
-    if_true, map_mul, map_inv, _root_.mul_inv_rev, inv_inv, Units.val_mul, Matrix.mul_assoc,
+    ite_true, map_mul, map_inv, _root_.mul_inv_rev, inv_inv, Units.val_mul, Matrix.mul_assoc,
     Units.inv_mul_cancel_left, Units.mul_inv_cancel_left, Units.inv_mul, Units.mul_inv, Matrix.mul_one]
 
 theorem UpperTheory.V.Z.J.zvCnt :
@@ -693,7 +693,7 @@ theorem UpperTheory.V.Z.J.zvCnt :
   intro l _ O _ _ _ _ _ F C₀ hF hl ρ B hlift hOf hCont k hk v hfin
   classical
   obtain ⟨hfinOk, -⟩ := okFin l O hl
-  haveI : Finite (Ok l O k) := hfinOk k
+  have : Finite (Ok l O k) := hfinOk k
   have htri := (triOk l O F C₀ hF hl ρ B hlift hOf hCont v).1
   obtain ⟨⟨ρc, hρc, hker⟩, -, -, -, hup⟩ := cjFacts l O (F.Gv v) (triOf B v) k hl htri
   let A : AddSubgroup (F.Gv v → Matrix (Fin 3) (Fin 3) (Ok l O k)) :=
@@ -731,7 +731,7 @@ theorem UpperTheory.V.Z.J.zvCnt :
   have hA : (A : Set (F.Gv v → Matrix (Fin 3) (Fin 3) (Ok l O k))) ⊆ Zc ρc := by
     rintro z ⟨h1, h2, -, -⟩
     exact ⟨h1, fun s t => by rw [h2, hρc]⟩
-  haveI : Finite A := hfin.to_subtype
+  have : Finite A := hfin.to_subtype
   have hT : ∀ Y, (fun s => ρc s Y - Y) ∈ A → Y ∈ {Y : Matrix (Fin 3) (Fin 3) (Ok l O k) | UpT Y} := by
     rintro Y ⟨-, -, h3, -⟩
     exact hup Y fun s => by
@@ -776,14 +776,14 @@ private theorem lower_triangular_absorbs_torsion (l : ℕ) [Fact l.Prime] (D : T
     (p : Fin 2 → N →+ A) (hp : ∀ j s x, p j (ρ s x) = p j x) :
     (Zc ρ).Finite ∧ Nat.card A ^ (6 + 3 * d) ≤ {z | z ∈ Zc ρ ∧ ∀ j, ∀ s ∈ I, p j (z s) = 0}.ncard := by
   classical
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨hZfin, hZcard⟩ := hLE k hk N ρ hN hρ
   refine ⟨hZfin, ?_⟩
   have h0 : (0 : D → N) ∈ Zc ρ := ⟨IsLocallyConstant.const 0, fun s t => by simp⟩
   obtain ⟨hdA, hcA⟩ := dualCard l k A hA
   obtain ⟨hdN, -⟩ := dualCard l k N hN
-  haveI := hdA
-  haveI := hdN
+  have := hdA
+  have := hdN
   have hHom : Nat.card A ≤ (HomMu l k ε ρ).ncard := by
     rw [← hcA, ← Set.ncard_univ]
     refine Set.ncard_le_ncard_of_injOn (fun φ => φ.comp e) ?_ ?_ (Set.toFinite _)
@@ -805,7 +805,7 @@ private theorem lower_triangular_absorbs_torsion (l : ℕ) [Fact l.Prime] (D : T
       zero_mem' := h0
       neg_mem' := fun {a} ha => ⟨ha.1.neg, fun s t => by
         simp only [Pi.neg_apply, ha.2 s t, map_neg]; abel⟩ }
-  haveI : Finite Z := hZfin.to_subtype
+  have : Finite Z := hZfin.to_subtype
   have hpZ : ∀ z ∈ Z, IsLocallyConstant z ∧
       ∀ (j : Fin 2) (s s' : D), p j (z (s * s')) = p j (z s) + p j (z s') := by
     intro z hz
@@ -845,9 +845,9 @@ private theorem card_borel_torsion_lower_bound (A : Type) [AddCommGroup A] [Fini
         simp only [Prod.mk.injEq] at h
         rw [h.1, h.2] at hab
         exact lt_irrefl _ hab
-      simp only [F, dif_neg h1, if_neg h2]
+      simp only [F, dite_eq_right h1, ite_eq_right h2]
     · have h3 : ¬ (i.succ ≤ i.succ ∧ (i.succ, i.succ) ≠ (i.succ, i.succ)) := fun h => h.2 rfl
-      simp only [F, dif_pos hcc, dif_neg h3]
+      simp only [F, dite_eq_left hcc, dite_eq_right h3]
       simp
   let f : ({p : Fin 3 × Fin 3 // p.1 ≤ p.2 ∧ p ≠ (i.succ, i.succ)} → A) → b0 A i := fun g => ⟨F g, hF g⟩
   have hf : Function.Injective f := by
@@ -855,7 +855,7 @@ private theorem card_borel_torsion_lower_bound (A : Type) [AddCommGroup A] [Fini
     funext ⟨⟨a, b⟩, hp⟩
     have hp' : a ≤ b ∧ (a, b) ≠ (i.succ, i.succ) := hp
     have := congrArg (fun x : b0 A i => (x : Matrix (Fin 3) (Fin 3) A) a b) hgg
-    simp only [f, F, dif_pos hp'] at this
+    simp only [f, F, dite_eq_left hp'] at this
     exact this
   have h1 := Nat.card_le_card_of_injective f hf
   rw [Nat.card_fun] at h1
@@ -873,7 +873,7 @@ private theorem ent_surj (A : Type) [AddCommGroup A] (i : Fin 2) : Function.Surj
   have hlt : i.castSucc < i.succ := Fin.castSucc_lt_succ
   refine ⟨⟨Matrix.single i.castSucc i.succ a, ?_, ?_⟩, ?_⟩
   · intro x y h
-    rw [Matrix.single_apply, if_neg]
+    rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact absurd h (not_lt.mpr hlt.le)
   · simp [Matrix.single_apply, hlt.ne, hlt.ne']
@@ -893,7 +893,7 @@ theorem UpperTheory.V.Z.J.low0 :
     fin_cases i <;> fin_cases a <;> simp_all
   intro l _ O _ _ _ _ _ D _ _ _ _ I ε d t hl hLE hI hT i hU k hk
   obtain ⟨hfin, -, hkill, -, -, hsmul, -⟩ := okFin l O hl
-  haveI := hfin k
+  have := hfin k
   obtain ⟨⟨ρ, hρ, hker⟩, hinv, hcj, -⟩ := cjFacts l O D t k hl hT
   have hAm : ∀ x : Matrix (Fin 3) (Fin 3) (Ok l O k), l ^ k • x = 0 := fun x => by
     ext a b; simp [hkill]
@@ -957,10 +957,10 @@ theorem UpperTheory.V.Z.J.homBd :
   intro l _ O _ _ _ _ _ D _ ε k N _ ρ e χ s₀ hl hρ hc
   classical
   obtain ⟨hfinOk, hfinQ, hkill, -, -, hsm, -⟩ := okFin l O hl
-  haveI : Finite (Ok l O k) := hfinOk k
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Finite (Ok l O k) := hfinOk k
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   set c := χ s₀ - algebraMap ℤ_[l] O (ε s₀) with hcdef
-  haveI : Finite (O ⧸ Ideal.span {c}) := hfinQ c hc
+  have : Finite (O ⧸ Ideal.span {c}) := hfinQ c hc
   let I' : Ideal (Ok l O k) := Ideal.span {algebraMap O (Ok l O k) c}
   let π := Ideal.Quotient.mk I'
   have hπ : Function.Surjective π := Ideal.Quotient.mk_surjective
@@ -998,7 +998,7 @@ theorem UpperTheory.V.Z.J.homBd :
     ext x
     have := h1 (e.symm x)
     rwa [AddEquiv.apply_symm_apply] at this
-  haveI : Finite (Ok l O k ⧸ I') := Finite.of_surjective π hπ
+  have : Finite (Ok l O k ⧸ I') := Finite.of_surjective π hπ
   have hQk : ∀ q : Ok l O k ⧸ I', l ^ k • q = 0 := by
     intro q
     obtain ⟨y, rfl⟩ := hπ q
@@ -1066,7 +1066,7 @@ private theorem ker_le {D N : Type} [Group D] [TopologicalSpace D] [AddCommGroup
     have h1 : ZcQ ρ N' h z.1 = 0 := z.2
     have h2 : N'.mkQ (z.1.1 s) = 0 := congrFun (congrArg Subtype.val h1) s
     exact (Submodule.Quotient.mk_eq_zero N').1 h2
-  haveI : Finite (Zc (ρ.subrepresentation N' h)) := hf
+  have : Finite (Zc (ρ.subrepresentation N' h)) := hf
   rw [← Nat.card_coe_set_eq]
   refine Nat.card_le_card_of_injective (fun z => ⟨fun s => ⟨z.1.1 s, hm z s⟩,
     IsLocallyConstant.desc _ (Subtype.val) z.1.2.1 Subtype.val_injective, fun s t => Subtype.ext (z.1.2.2 s t)⟩) ?_
@@ -1077,8 +1077,8 @@ private theorem ker_le {D N : Type} [Group D] [TopologicalSpace D] [AddCommGroup
 private theorem homMu_le {D N : Type} [Group D] [AddCommGroup N] [Finite N] (l : ℕ) [Fact l.Prime] (k : ℕ) (ε : D →* ℤ_[l]ˣ)
     (ρ : Representation ℤ D N) (N' : Submodule ℤ N) (h : ∀ s, N' ≤ N'.comap (ρ s)) :
     (HomMu l k ε (ρ.quotient N' h)).ncard ≤ (HomMu l k ε ρ).ncard ∧ 0 < (HomMu l k ε ρ).ncard := by
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : Finite (N →+ ZMod (l ^ k)) := Finite.of_injective _ DFunLike.coe_injective
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Finite (N →+ ZMod (l ^ k)) := Finite.of_injective _ DFunLike.coe_injective
   refine ⟨Set.ncard_le_ncard_of_injOn (fun f => f.comp N'.mkQ.toAddMonoidHom) (fun f hf s x => hf s (N'.mkQ x)) ?_, ?_⟩
   · intro a _ b _ hab
     ext x
@@ -1091,7 +1091,7 @@ end UpperTheory.V.Z.J
 theorem UpperTheory.V.Z.J.lift :
     ∀ (l : ℕ) [Fact l.Prime] (D : Type) [Group D] [TopologicalSpace D] [IsTopologicalGroup D] (ε : D →* ℤ_[l]ˣ) (d k : ℕ), 0 < k → LE l D ε d → ∀ (N : Type) [AddCommGroup N] [Finite N] (ρ : Representation ℤ D N), (∀ x : N, l ^ k • x = 0) → IsOpen (ρ.ker : Set D) → ∀ (N' : Submodule ℤ N) (h : ∀ s, N' ≤ N'.comap (ρ s)) (C : ℕ), (HomMu l k ε (ρ.subrepresentation N' h)).ncard ≤ C → ∀ z : D → N, IsLocallyConstant z → (∀ s s', z (s * s') - z s - ρ s (z s') ∈ N') → ∃ y ∈ Zc ρ, ∀ s, y s - C.factorial • z s ∈ N' := by
   intro l _ D _ _ _ ε d k hk hLE N _ _ ρ hN hρ N' h C hC z hz hz'
-  haveI : Finite (N ⧸ N') := Finite.of_surjective _ N'.mkQ_surjective
+  have : Finite (N ⧸ N') := Finite.of_surjective _ N'.mkQ_surjective
   obtain ⟨-, e1⟩ := hLE k hk N ρ hN hρ
   obtain ⟨f2, e2⟩ := hLE k hk N' (ρ.subrepresentation N' h) (fun x => Subtype.ext (hN x.1))
     (Subgroup.isOpen_mono (H₁ := ρ.ker) (fun s hs => by
@@ -1121,7 +1121,7 @@ theorem UpperTheory.V.Z.J.lift :
     calc _ ≤ Nat.card (N ⧸ N') ^ (1 + d) * (HomMu l k ε ρ).ncard * (Nat.card N' ^ (1 + d) * C) :=
           Nat.mul_le_mul (Nat.mul_le_mul_left _ e6) (e5.trans (Nat.mul_le_mul_left _ hC))
       _ = _ := by rw [e8, mul_pow]; ring
-  haveI : Finite (ZcA (ρ.quotient N' h)) := f3
+  have : Finite (ZcA (ρ.quotient N' h)) := f3
   have hne : (ZcQ ρ N' h).range.index ≠ 0 := AddSubgroup.index_ne_zero_of_finite
   obtain ⟨c, hc⟩ := Nat.dvd_factorial (Nat.pos_of_ne_zero hne) hle
   let w : ZcA (ρ.quotient N' h) := ⟨fun s => N'.mkQ (z s), hz.comp N'.mkQ, fun s t => by
@@ -1157,7 +1157,7 @@ private def matrixEntryZeroTwoSubmodule (R : Type) [CommRing R] : Submodule ℤ 
 
 private theorem single_mem {R : Type} [CommRing R] (x : R) : Matrix.single (0 : Fin 3) (2 : Fin 3) x ∈ matrixEntryZeroTwoSubmodule R := by
   intro a b h
-  rw [Matrix.single_apply, if_neg]
+  rw [Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact h ⟨rfl, rfl⟩
 
@@ -1168,7 +1168,7 @@ private theorem eq_single {R : Type} [CommRing R] {X : Matrix (Fin 3) (Fin 3) R}
   by_cases hab : a = 0 ∧ b = 2
   · obtain ⟨rfl, rfl⟩ := hab
     simp
-  · rw [if_neg (fun h' => hab ⟨h'.1.symm, h'.2.symm⟩)]
+  · rw [ite_eq_right (fun h' => hab ⟨h'.1.symm, h'.2.symm⟩)]
     exact h a b hab
 
 private def e02 (R : Type) [CommRing R] : R ≃+ matrixEntryZeroTwoSubmodule R where
@@ -1217,12 +1217,12 @@ private theorem natCast_ne (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsD
   · exfalso
     have h1 : ((p : ℕ) : ResidueField O) = 0 := by
       rw [← map_natCast (residue O), CharP.cast_eq_zero O p, map_zero]
-    haveI : CharP (ResidueField O) l := IsCoef.char
+    have : CharP (ResidueField O) l := IsCoef.char
     rw [CharP.cast_eq_zero_iff (ResidueField O) l] at h1
     have hlp : l = p := (Nat.prime_dvd_prime_iff_eq (Fact.out : l.Prime) hpp).mp h1
     subst hlp
     exact hl (CharP.cast_eq_zero O l)
-  · haveI : CharZero O := CharP.charP_to_charZero O
+  · have : CharZero O := CharP.charP_to_charZero O
     exact_mod_cast hn
 
 end UpperTheory.V.Z.J.YEx
@@ -1269,7 +1269,7 @@ theorem UpperTheory.V.Z.J.yEx :
   intro k hk
   obtain ⟨⟨ρ, hρ, hρopen⟩, -, hcj, hsingle, -⟩ := cjFacts l O D t k hl hT
   obtain ⟨hfin, -, hlk, -, hpow, -, -⟩ := okFin l O hl
-  haveI := hfin k
+  have := hfin k
   obtain ⟨Nk, hNk⟩ := hpow k
   have hmk : ∀ f : D → O, AdicCont (maximalIdeal O) f →
       IsLocallyConstant (fun s => Ideal.Quotient.mk (Ideal.span {(l : O) ^ k}) (f s)) := by
@@ -1364,9 +1364,9 @@ theorem UpperTheory.V.Z.J.locHigh :
   intro l _ O _ _ _ _ _ D _ _ _ _ I ε d t hl hLE hG hT i hU
   obtain ⟨c, hc0, hy⟩ := yEx l O D I ε d t hl hLE hG hT i hU
   have hOk := okFin l O hl
-  haveI : Finite (O ⧸ Ideal.span {c}) := hOk.2.1 c hc0
+  have : Finite (O ⧸ Ideal.span {c}) := hOk.2.1 c hc0
   refine ⟨Nat.card (O ⧸ Ideal.span {c}), fun k hk => ?_⟩
-  haveI : Finite (Ok l O k) := hOk.1 k
+  have : Finite (Ok l O k) := hOk.1 k
   obtain ⟨hZfin, -⟩ := locLow l O D I ε d t hl hLE hG hT k hk
   have hW := low0 l O D I ε d t hl hLE hG hT i hU k hk
   obtain ⟨y, hyZ, s0, hys⟩ := hy k hk
@@ -1390,7 +1390,7 @@ theorem UpperTheory.V.Z.J.locHigh :
   have hg : ∀ b ∈ (J : Set (Ok l O k)), g b * mc = b := by
     intro b hb
     have h : ∃ a, a * mc = b := Ideal.mem_span_singleton'.mp hb
-    simp only [g, dif_pos h]
+    simp only [g, dite_eq_left h]
     exact h.choose_spec
   have hcount : (W ×ˢ (J : Set (Ok l O k))).ncard ≤ (ZF (l := l) I k t).ncard := by
     refine Set.ncard_le_ncard_of_injOn (fun p => p.1 + g p.2 • y) ?_ ?_ hZfin
@@ -1450,9 +1450,9 @@ private theorem count {A Q : Type} [AddCommGroup A] [AddCommGroup Q] [Finite Q] 
     (hH : (H : Set A) = S) (hS : S.Finite) (hT : T ⊆ S) (f : A →+ Q) (hf : ∀ x ∈ S, f x = 0 → x ∈ T) :
     S.ncard ≤ T.ncard * Nat.card Q := by
   subst hH
-  haveI : Finite H := hS.to_subtype
+  have : Finite H := hS.to_subtype
   have hTf : T.Finite := hS.subset hT
-  haveI : Finite T := hTf.to_subtype
+  have : Finite T := hTf.to_subtype
   let g : H →+ Q := f.comp H.subtype
   have h1 := AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup g.ker
   have h2 : Nat.card (H ⧸ g.ker) = Nat.card g.range :=
@@ -1482,11 +1482,11 @@ private theorem core {R Γ : Type} [CommRing R] [Group Γ] (r : Γ →* GG (m :=
       x.adFun X = x.mat * X * ((x.left⁻¹ : GL (Fin 3) R) : Matrix (Fin 3) (Fin 3) R) := by
     intro x X hx
     unfold GG.adFun
-    rw [if_pos hx]
+    rw [ite_eq_left hx]
   have adc : ∀ X, (r c).adFun X = thetaLie X := by
     intro X
     unfold GG.adFun
-    rw [if_neg (by rw [hc2]; exact hne), hc1, hleft, inv_one, Units.val_one, one_mul, mul_one]
+    rw [ite_eq_right (by rw [hc2]; exact hne), hc1, hleft, inv_one, Units.val_one, one_mul, mul_one]
   have ad0 : ∀ (x : GG (m := 3) (R := R)), x.adFun 0 = 0 := by
     intro x
     unfold GG.adFun thetaLie
@@ -1580,7 +1580,7 @@ end UpperTheory.V.Z.J
 theorem UpperTheory.V.Z.J.normCnt :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (F : Frame l (ResidueField O)) (C₀ : ℕ), F.Ok C₀ → (l : O) ≠ 0 → ∀ (ρ : NRep F 3 O) (B : Box F 3 O), UpperTheory.V.Fr.IsLift O ρ → B.Of ρ → B.Cont (maximalIdeal O) → ∀ k, 0 < k → (∀ v, ∃ Z : AddSubgroup (F.Gv v → Matrix (Fin 3) (Fin 3) (Ok l O k)), (Z : Set _) = Zv B k v) → (ZL F (adK B k) (Zv B k)).Finite → (ZL F (adK B k) (Zv B k)).ncard ≤ (ZN B k).ncard * Nat.card (Ok l O k) ^ 8 := by
   intro l _ O _ _ _ _ _ F C₀ hF hl ρ B _ hB _ k _ hZ hfin
-  haveI : Finite (Ok l O k) := (okFin l O hl).1 k
+  have : Finite (Ok l O k) := (okFin l O hl).1 k
   choose Z hZ using hZ
   have hc : F.c⁻¹ = F.c := inv_eq_of_mul_eq_one_right hF.c_sq
   have hs : ((F.star F.g0 : F.G0) : F.Γ) = F.c * (F.g0 : F.Γ)⁻¹ * F.c := by
@@ -1630,7 +1630,7 @@ private theorem sel_arith {V : Type} [Fintype V] (q C L N : ℕ) (hq : 0 < q) (d
     rw [hE, ← Finset.mul_prod_erase _ _ hv, ← Finset.mul_prod_erase _ _ hv]
     calc _ = q ^ (10 + 3 * d v) * ∏ w ∈ Finset.univ.erase v, q ^ (9 + 3 * d w) := by ring
       _ ≤ (C * z v) * ∏ w ∈ Finset.univ.erase v, z w :=
-          Nat.mul_le_mul h2 (Finset.prod_le_prod' fun w _ => h1 w)
+          Nat.mul_le_mul h2 (Finset.prod_le_prod fun w _ => h1 w)
       _ = _ := by ring
   have main : q ^ 2 * (q ^ 8 * E) ≤ (C * N) * (q ^ 8 * E) := by
     calc q ^ 2 * (q ^ 8 * E) = q ^ 9 * (q * E) := by ring
@@ -1666,9 +1666,9 @@ theorem UpperTheory.V.Z.J.selLow :
   have hlow := fun w => locLow l O (F.Gv w) (F.Iv w) _ (F.dv w) (triOf B w) hl (hE w) (T w).2.1 (T w).1 k hk
   choose Z hZ1 hZ2 hZ3 hZ4 using fun w => zvCnt l O F C₀ hF hl ρ B hρ hB hc k hk w (hlow w).1
   obtain ⟨hfin, -, hkill, -⟩ := okFin l O hl
-  haveI : Finite (Ok l O k) := hfin k
+  have : Finite (Ok l O k) := hfin k
   have hq : 0 < Nat.card (Ok l O k) := Nat.card_pos
-  haveI : Finite (Matrix (Fin 3) (Fin 3) (Ok l O k)) := inferInstanceAs (Finite (Fin 3 → Fin 3 → Ok l O k))
+  have : Finite (Matrix (Fin 3) (Fin 3) (Ok l O k)) := inferInstanceAs (Finite (Fin 3 → Fin 3 → Ok l O k))
   have hk2 : ∀ x : Matrix (Fin 3) (Fin 3) (Ok l O k), l ^ k • x = 0 := fun x => by
     ext a b
     exact hkill k (x a b)
@@ -1686,7 +1686,7 @@ theorem UpperTheory.V.Z.J.selLow :
   have harch : (∏ w, {x | adK B k (cw w) x = x}.ncard) ≤ (Nat.card (Ok l O k) ^ 3) ^ (∑ w, F.dv w) := by
     have e : ∑ w, F.dv w = Fintype.card F.Inf := hF.card_inf.symm
     rw [e, ← Finset.card_univ, ← Finset.prod_const]
-    refine Finset.prod_le_prod' fun w _ => ?_
+    refine Finset.prod_le_prod fun w _ => ?_
     exact archUp l O hl hF.l_odd (B.r (cw w)) (by rw [← map_mul, (hcw w).1, map_one])
       ((B.nu _).trans (hcw w).2) k hk
   refine ⟨hmain.1.subset fun z hz => hz.1, ?_⟩

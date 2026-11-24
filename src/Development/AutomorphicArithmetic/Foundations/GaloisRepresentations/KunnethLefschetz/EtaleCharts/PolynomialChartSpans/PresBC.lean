@@ -181,9 +181,9 @@ theorem presBC : PresBC := by
       simp only [Category.assoc, e1, Scheme.Hom.resLE_comp_ι]
       exact hs2.w.trans (by simp)
     have hsq := IsPullback.of_right hs2 hcomm (isPullback_morphismRestrict a V).flip
-    haveI : IsAffine (V : Scheme) := hV
-    haveI : IsAffine (a ⁻¹ᵁ V : Scheme) := hV'
-    haveI : IsAffine (C : Scheme) := hC
+    have : IsAffine (V : Scheme) := hV
+    have : IsAffine (a ⁻¹ᵁ V : Scheme) := hV'
+    have : IsAffine (C : Scheme) := hC
     exact IsAffine.of_isIso hsq.isoPullback.hom
   · rw [hcapp] at *
     exact res.1

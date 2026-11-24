@@ -88,7 +88,7 @@ private theorem eq_one_of_dvd [FiniteDimensional ℂ V] (f : Module.End ℂ V) (
 
 private theorem scalar_of_commute [FiniteDimensional ℂ V] {ρ : Representation ℂ G V} (hρ : ρ.IsIrreducible)
     (f : Module.End ℂ V) (hf : ∀ g, Commute (ρ g) f) : ∃ c : ℂ, ∀ v, f v = c • v := by
-  haveI := nontrivial_of_irr hρ
+  have := nontrivial_of_irr hρ
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue f
   have hS : f.eigenspace μ = ⊤ := stable_eq_top hρ _ (fun g v hv => by
     rw [Module.End.mem_eigenspace_iff] at hv ⊢
@@ -106,7 +106,7 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 private theorem dim_one {d : ℕ} (b : WDRep h (Fin d → ℂ)) (hb : b.ρ.IsIrreducible)
     (hu : ∀ (σ : Weil h) (t : Ine (F := E) A), ∃ m : ℕ,
       (b.ρ (σ * ineIncl h t * σ⁻¹ * (ineIncl h t)⁻¹)).charpoly ∣ (X - 1 : ℂ[X]) ^ m) : d = 1 := by
-  haveI := nontrivial_of_irr hb
+  have := nontrivial_of_irr hb
   have h1 : ∀ (σ : Weil h) (t : Ine (F := E) A), b.ρ (σ * ineIncl h t * σ⁻¹ * (ineIncl h t)⁻¹) = 1 := fun σ t => by
     obtain ⟨m, hm⟩ := hu σ t
     exact eq_one_of_dvd _ (b.semisimple _) m hm
@@ -169,7 +169,7 @@ open UpperTheory.Zero.LLC.AbC in
 theorem UpperTheory.Zero.LLC.abConv :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (rc : IrrGL (k := w.adicCompletion E) → WD h), UpperTheory.Zero.LLC.IsRecT h rc → ∀ x, UpperTheory.Zero.LLC.AbConverse (rc x) x := by
   rintro E Ω _ _ _ _ _ A w h rc ⟨a, ha, H⟩ x ξ hξ
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
   have hs : HasSupport x.rep (msupp 𝔪) := GlobalTheory.LocGL.hasSupport_msupp_of_isL Pr.zel _ 𝔪 x hm
   have hrc : rc x = segSum rc 𝔪.toList := H.langlands _ x (by rw [Multiset.coe_toList]; exact hm)

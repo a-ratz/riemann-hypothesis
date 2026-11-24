@@ -57,7 +57,7 @@ open PositivityTheory.Rg.Sw PositivityTheory.Rg.Sw.AbsSt
 variable {n : ℕ}
 
 theorem continuous_mR : Continuous (mR : GR n → M2 n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_group_lower_left_block : Continuous (fun g : GR n => (mR g).toBlocks₂₁) := by
   exact continuous_mR.matrix_submatrix Sum.inr Sum.inl

@@ -146,7 +146,7 @@ theorem X_mul_pderiv_monomial' {σ : Type*} (v : σ) (m : σ →₀ ℕ) (c : R)
   by_cases h : m v = 0
   · simp [h]
   · have hle : Finsupp.single v 1 ≤ m := Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 h)
-    rw [MvPolynomial.X, MvPolynomial.monomial_mul, one_mul, add_tsub_cancel_of_le hle,
+    rw [MvPolynomial.X, monomial_mul_monomial, one_mul, add_tsub_cancel_of_le hle,
       MvPolynomial.smul_monomial, smul_eq_mul, mul_comm]
 
 theorem glAct_diagonal_monomial (LL : Letters ι) (S : Set ι) (a : Fin n) (m : ι × Fin n →₀ ℕ) (c : R) :

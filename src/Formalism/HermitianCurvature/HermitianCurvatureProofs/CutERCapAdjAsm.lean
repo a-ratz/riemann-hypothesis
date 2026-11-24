@@ -158,7 +158,7 @@ end terms
 
 theorem capacity_adjoint_integral_scalar : CapAdjIntOfScalar := by
   intro hS k r Wp Wq _ _ _ _ _ _ s Y μ hμ φ ψ hφ hφc hψ hψc
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
   have hLw := (Classical.choose_spec (Formalism.FourierDecayAlt.P.capelli_word_sum k r Y)).1
   obtain ⟨L', hL', hCV'⟩ := Formalism.FourierDecayAlt.P.capelli_word_sum k r (conj Y)
   set a : Fin (Module.finrank ℂ Wq) → Fin (Module.finrank ℂ Wp) → B.Mat k r → ℂ :=

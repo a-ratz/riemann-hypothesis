@@ -265,7 +265,7 @@ open scoped InnerProductSpace ENNReal
 namespace GlobalTheory.KappaDual
 
 theorem mul_mem_GG {k r : ℕ} {g h : Mx k r} (hg : g ∈ GG k r) (hh : h ∈ GG k r) : g * h ∈ GG k r := by
-  simp only [GG, Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at hg hh ⊢
+  simp only [GG, Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at hg hh ⊢
   rw [Matrix.conjTranspose_mul]
   calc hᴴ * gᴴ * Formalism.QuantumDeterminants.Hpk k r * (g * h) = hᴴ * (gᴴ * Formalism.QuantumDeterminants.Hpk k r * g) * h := by
         simp only [Matrix.mul_assoc]
@@ -274,8 +274,8 @@ theorem mul_mem_GG {k r : ℕ} {g h : Mx k r} (hg : g ∈ GG k r) (hh : h ∈ GG
 theorem ae_pair {k r : ℕ} {U V : Set (Mx k r)} {μ ν : Measure (Formalism.QuantumDeterminants.Mt k r)}
     (hμ : PI.BesselPeriodGGP.IsHaarOn U μ) (hν : PI.BesselPeriodGGP.IsHaarOn V ν) :
     ∀ᵐ p ∂(μ.prod ν), Matrix.of p.1 ∈ U ∧ Matrix.of p.2 ∈ V := by
-  haveI := hμ.1
-  haveI := hν.1
+  have := hμ.1
+  have := hν.1
   have h1 : ∀ᵐ x ∂μ, Matrix.of x ∈ U := ae_iff.2 hμ.2.2.1
   have h2 : ∀ᵐ x ∂ν, Matrix.of x ∈ V := ae_iff.2 hν.2.2.1
   exact (Measure.quasiMeasurePreserving_fst.ae h1).and (Measure.quasiMeasurePreserving_snd.ae h2)
@@ -311,7 +311,7 @@ theorem kappa_dual : Hyps → ∀ (k r : ℕ) (ι κ : Type) [Fintype ι] [Decid
     rw [← hS_eq _ hs y hy, ← hev, hadj I _ (hIsm _ hg y hy) _ (fun c => hTKsm _ (htmTK c)), smul_smul, mul_assoc]
   rw [h1, h2, hκ v hvsm] at h3
   have h4 := congrArg (fun T : Wp →L[ℂ] Wp => T (l v)) h3
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply,
+  simp only [smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply,
     inner_smul_left] at h4
   have hne : ⟪l v, l v⟫_ℂ ≠ 0 := inner_self_ne_zero.2 hv0
   apply smul_right_injective Wp hne

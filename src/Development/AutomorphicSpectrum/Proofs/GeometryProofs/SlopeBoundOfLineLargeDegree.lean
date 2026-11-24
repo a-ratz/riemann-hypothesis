@@ -304,7 +304,7 @@ theorem saturatedLine_eq_ideal_div :
     have h1 := congrFun h j
     rw [hg_apply, hg_apply] at h1
     simp only [Pi.smul_apply, smul_eq_mul] at h1
-    exact RingOfIntegers.ext ((div_left_inj' hdK).mp (mul_right_cancel₀ hj h1))
+    exact RingOfIntegers.ext ((div_left_inj₀ hdK).mp (mul_right_cancel₀ hj h1))
   let I : Ideal (𝓞 K) := M.comap g
   have hmemI : ∀ t, t ∈ I ↔ ((t : K) / (d : K)) • v ∈ M := fun t => by
     change g t ∈ M ↔ _
@@ -702,8 +702,8 @@ theorem lattice_line (K : Type) [Field K] [NumberField K] (n : ℕ) (F : HermLat
   have htop : Submodule.span K' (M : Set (Fin n → K')) = ⊤ := ext_span_top F.lattice F.span_eq
   obtain ⟨I, d, hI, hd, hIv, hidx⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.SatLine.saturatedLine_eq_ideal_div K' n M hfg htop v hv
   obtain ⟨K'', _, _, _, y, hy0, hyI, hyN⟩ := _root_.GlobalTheory.CompanionTheory.Lines.exists_principal_extension K' I hI
-  letI algK : Algebra K K'' := ((algebraMap K' K'').comp (algebraMap K K')).toAlgebra
-  haveI tower : IsScalarTower K K' K'' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let algK : Algebra K K'' := ((algebraMap K' K'').comp (algebraMap K K')).toAlgebra
+  have tower : IsScalarTower K K' K'' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hdL : (d : K') ≠ 0 := by rwa [Ne, RingOfIntegers.coe_eq_zero_iff]
   have hyL : (y : K'') ≠ 0 := by rwa [Ne, RingOfIntegers.coe_eq_zero_iff]
   set d'' : K'' := algebraMap K' K'' (d : K') with hd''
@@ -848,10 +848,10 @@ theorem lattice_line (K : Type) [Field K] [NumberField K] (n : ℕ) (F : HermLat
 theorem short_vector_of_submodule : LineOfLargeDegree.Statement → ∀ (L : Type) [Field L] [NumberField L] (B : HermitianBundle.{0} L) (F : Submodule (𝓞 L) B.carrier), F ≠ ⊥ → ∃ (L' : Type) (_ : Field L') (_ : NumberField L') (_ : Algebra L L') (x : (B.baseChange L').carrier), x ≠ 0 ∧ B.slope F - 1 / 2 * Real.log (Module.finrank (𝓞 L) B.carrier) - 1 ≤ -mean L' (fun σ => Real.log (Real.sqrt (((B.baseChange L').metric.form σ).inner ((1 : ComplexAt σ) ⊗ₜ[𝓞 L'] x) ((1 : ComplexAt σ) ⊗ₜ[𝓞 L'] x) : ℂ).re)) := by
   intro hS L _ _ B F hF
   classical
-  haveI : Module.IsTorsionFree (𝓞 L) B.carrier := inferInstance
-  haveI : Module.IsTorsionFree (𝓞 L) F :=
+  have : Module.IsTorsionFree (𝓞 L) B.carrier := inferInstance
+  have : Module.IsTorsionFree (𝓞 L) F :=
     Function.Injective.moduleIsTorsionFree F.subtype Subtype.val_injective (fun _ _ => rfl)
-  haveI : Module.Finite (𝓞 L) F := inferInstance
+  have : Module.Finite (𝓞 L) F := inferInstance
   set i : ℕ := B.rank F with hi
   set f : Fin i → F := (HermitianBundle.exists_linearIndependent_rank B F).choose with hfdef
   have hf : LinearIndependent (𝓞 L) f := (HermitianBundle.exists_linearIndependent_rank B F).choose_spec

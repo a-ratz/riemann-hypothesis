@@ -105,7 +105,7 @@ theorem skewLat_nsmul_le (𝔫 : Ideal (𝓞 D.host.E)) (h : D.host.conj • �
   intro i
   rw [Pi.smul_apply]
   have hyi := hy i
-  rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_div_iff_of_ne_zero
+  rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_div_iff_of_ne_zero
     (by simpa using h)] at hyi
   have hmem := hyi (algebraMap (𝓞 D.host.E) D.host.E (Ideal.absNorm (D.host.conj • 𝔫) : 𝓞 D.host.E))
     ((FractionalIdeal.mem_coeIdeal _).2 ⟨_, Ideal.absNorm_mem _, rfl⟩)
@@ -128,7 +128,7 @@ theorem iop_mem_TT {D : D7} {δ : ℂ} (hc : Crv D ⊤ δ) {a d : ℕ} {B : AddS
     have := hlc.2.2.2 0 e0 heT
     rwa [zero_smul] at this
   by_cases hfin : Finite (B ⧸ A.addSubgroupOf B)
-  · haveI := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
+  · have := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
     have e : Iop D T A B e0 = ∑ q : B ⧸ A.addSubgroupOf B,
         ((((Real.sqrt ((A.addSubgroupOf B).index : ℝ))⁻¹ : ℂ) * al D T ((Quotient.out q : B) : VC D a d) *
           (wdPh D T ((Quotient.out q : B) : VC D a d))⁻¹) • Wd D T ((Quotient.out q : B) : VC D a d) e0) := by

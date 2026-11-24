@@ -63,7 +63,7 @@ theorem GlobalTheory.padicAlgCl_finite_dense_eq_adjoin : ∀ (l : ℕ) [Fact l.P
     Submodule.finiteDimensional_of_le (S₂ := K.toSubalgebra.toSubmodule) hle
   have hclosed : IsClosed ((IntermediateField.adjoin ℚ_[l] (Set.range c)).toSubalgebra.toSubmodule
       : Set (PadicAlgCl l)) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   apply le_antisymm _ hle
   intro y hy
   have h1 : closure (Set.range c) ⊆

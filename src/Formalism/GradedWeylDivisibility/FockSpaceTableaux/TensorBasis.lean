@@ -102,7 +102,7 @@ theorem ldtensor_glue_apply (α : S → (Fin k × Fin n →₀ ℕ)) (s : S) (v 
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single s]
   · exact Finsupp.mapDomain_apply_of_injective (fun x y h => by simpa using h) _ v
   · intro t _ hts
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨w, hw⟩
     exact hts (congrArg Prod.fst hw)
   · simp

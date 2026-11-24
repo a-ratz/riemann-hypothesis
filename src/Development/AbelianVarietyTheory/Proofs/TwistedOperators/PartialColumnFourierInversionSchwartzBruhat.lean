@@ -61,9 +61,9 @@ theorem fourier_pi_inversion_at {k : Type*} [Field k] [ValuativeRel k] [Topologi
     {g : (n → k) → ℂ} (hg : g ∈ SB (n → k)) (a : n → k) :
     ∫ y : n → k, (∫ x, g x * (ψ (x ⬝ᵥ y) : ℂ) ∂(Measure.pi fun _ => ν)) * (ψ⁻¹ (y ⬝ᵥ a) : ℂ)
       ∂(Measure.pi fun _ => ν) = g a := by
-  haveI := hν.1
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := hν.1
+  have := secondCountable k
+  have := t2Space k
   have hh : (fun x => g (x + a)) ∈ SB (n → k) :=
     ⟨hg.1.comp_continuous (by fun_prop), hg.2.comp_homeomorph (Homeomorph.addRight a)⟩
   have h1 := (FourierPi.fourier_pi_of_conductor h hν hh).2
@@ -81,9 +81,9 @@ theorem fourier_pi_inversion_at {k : Type*} [Field k] [ValuativeRel k] [Topologi
 theorem fourierInt_inv_fourierInt : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (A C : Type) [Fintype A] [DecidableEq A] [DecidableEq C] (ψ : AddChar k Circle) (m : Measure k), HasConductor ψ 1 → IsUnitVol m → ∀ (P : Finset C), ∀ Ξ ∈ SB (Matrix A C k), fourierInt ψ⁻¹ m P (fourierInt ψ m P Ξ) = Ξ := by
   intro k _ _ _ _ _ _ A C _ _ _ ψ m hψ hm P Ξ hΞ
   have hν : IsSelfDual ψ m := isSelfDual_of_isUnitVol m hψ hm
-  haveI := hν.1
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := hν.1
+  have := secondCountable k
+  have := t2Space k
   funext X
   have h0 := comp_setCols_mem_SB hΞ P X
   have hg : (fun x : (_ : A) × P → k => Ξ (setCols P X (Matrix.of fun i j => x ⟨i, j⟩))) ∈

@@ -87,7 +87,7 @@ theorem map_genericPoint_eq {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] (f 
 theorem functionFieldMap_finite {M W : Scheme.{0}} [IsIntegral M] [IsIntegral W] (f : M ⟶ W)
     [IsDominant f] (h : f.residueDegree (genericPoint M) ≠ 0) : (functionFieldMap f).Finite := by
   have hfin : (f.residueFieldMap (genericPoint M)).hom.Finite := by
-    letI := (f.residueFieldMap (genericPoint M)).hom.toAlgebra
+    let := (f.residueFieldMap (genericPoint M)).hom.toAlgebra
     change Module.finrank (W.residueField (f (genericPoint M))) (M.residueField (genericPoint M)) ≠ 0
       at h
     exact Module.finite_of_finrank_pos (Nat.pos_of_ne_zero h)
@@ -127,8 +127,8 @@ end GlobalTheory.FunctionFieldCoords
 
 theorem GlobalTheory.functionField_coords : ∀ (M W : Scheme.{0}) [IsIntegral M] [IsIntegral W] (f : M ⟶ W) [IsDominant f], f.residueDegree (genericPoint M) ≠ 0 → ∃ (r : ℕ) (co : Fin r → (M.functionField →+ W.functionField)), (∀ j c x, co j (GlobalTheory.functionFieldMap f c * x) = c * co j x) ∧ ∀ x, (∀ j, co j x = 0) → x = 0 := by
   intro M W _ _ f _ h
-  letI := (functionFieldMap f).toAlgebra
-  haveI : Module.Finite W.functionField M.functionField :=
+  let := (functionFieldMap f).toAlgebra
+  have : Module.Finite W.functionField M.functionField :=
     GlobalTheory.FunctionFieldCoords.functionFieldMap_finite f h
   let b := Module.finBasis W.functionField M.functionField
   refine ⟨Module.finrank W.functionField M.functionField, fun j => (b.coord j).toAddMonoidHom,
@@ -520,13 +520,13 @@ theorem finrank_sections_pullback_le_mul_twist_dominant : ∀ (F : Type) [Field 
   have hDE := hD.tens hE
   have hpull := presents_pull f hD
   have hτ : hE.rat t ≠ 0 := fun e => ht (hE.rat_injective (e.trans (map_zero _).symm))
-  letI iW : Algebra F Γ(W, ⊤) := algebraΓOfHom p
-  letI iM : Algebra F Γ(M, ⊤) := algebraΓOfHom (f ≫ p)
-  letI : Module F (B.pull f).Sec := Module.compHom _ (algebraMap F Γ(M, ⊤))
-  haveI : IsScalarTower F Γ(M, ⊤) (B.pull f).Sec := IsScalarTower.of_compHom _ _ _
-  letI : Module F (tens B A).Sec := Module.compHom _ (algebraMap F Γ(W, ⊤))
-  haveI : IsScalarTower F Γ(W, ⊤) (tens B A).Sec := IsScalarTower.of_compHom _ _ _
-  haveI : Module.Finite F (tens B A).Sec := by
+  let iW : Algebra F Γ(W, ⊤) := algebraΓOfHom p
+  let iM : Algebra F Γ(M, ⊤) := algebraΓOfHom (f ≫ p)
+  let : Module F (B.pull f).Sec := Module.compHom _ (algebraMap F Γ(M, ⊤))
+  have : IsScalarTower F Γ(M, ⊤) (B.pull f).Sec := IsScalarTower.of_compHom _ _ _
+  let : Module F (tens B A).Sec := Module.compHom _ (algebraMap F Γ(W, ⊤))
+  have : IsScalarTower F Γ(W, ⊤) (tens B A).Sec := IsScalarTower.of_compHom _ _ _
+  have : Module.Finite F (tens B A).Sec := by
     have := finite_coh_zero_twist_of_isProjOver (f := p) (fun _ => rfl) hp (isLB_tens hB hA)
     exact .equiv ((cohZeroTwistEquiv (tens B A)).restrictScalars F)
   have eW (c : F) : algebraMap F Γ(W, ⊤) c = ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p ⊤ c := by
@@ -603,10 +603,10 @@ theorem globalSectionsDim_pullback_le_generically_finite : ∀ (F : Type) [Field
   obtain ⟨r, co, hco, hinj⟩ := _root_.GlobalTheory.functionField_coords M W f hdeg
   obtain ⟨hpp, H, hH⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp
   obtain ⟨hfpp, L, hL⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB (f ≫ p)).1 hfp
-  haveI := hpp
-  haveI := hfpp
-  haveI : IsProper f := IsProper.of_comp f p
-  haveI : IsNoetherian W := isNoetherian_of_isProjOver hp
+  have := hpp
+  have := hfpp
+  have : IsProper f := IsProper.of_comp f p
+  have : IsNoetherian W := isNoetherian_of_isProjOver hp
   obtain ⟨n, hn, t, ht, htP⟩ := _root_.GlobalTheory.exists_sec_forall_local_condition W H hH
     (fun y c => ∀ (V' : W.Opens), y ∈ V' → ∀ (h : genericPoint M ∈ f ⁻¹ᵁ V')
       (z : Γ(M, f ⁻¹ᵁ V')) (j : Fin r), RegAt y (c * co j (fnOf (f ⁻¹ᵁ V') h z)))

@@ -104,16 +104,16 @@ theorem residue_uR (hv : v.Integers R) [IsLocalRing R] [CharP (IsLocalRing.Resid
 
 theorem isUnit_det_MuR (hv : v.Integers R) (hp1 : v (algebraMap R C (p : R)) < 1)
     (D : Lifts H U X) : IsUnit (MuR hv D).det := by
-  haveI : Nontrivial R := (algebraMap R C).domain_nontrivial
+  have : Nontrivial R := (algebraMap R C).domain_nontrivial
   have hlt : ∀ x : R, x ∈ nonunits R → v (algebraMap R C x) < 1 := fun x hx =>
     lt_of_le_of_ne (hv.map_le_one x) fun h => hx (hv.isUnit_iff_valuation_eq_one.mpr h)
-  letI : IsLocalRing R := IsLocalRing.of_nonunits_add fun a b ha hb hu => by
+  let : IsLocalRing R := IsLocalRing.of_nonunits_add fun a b ha hb hu => by
     have h1 := hv.isUnit_iff_valuation_eq_one.mp hu
     have h2 : v (algebraMap R C (a + b)) < 1 := by
       rw [map_add (f := _)]; exact v.map_add_lt (hlt a ha) (hlt b hb)
     rw [h1] at h2
     exact lt_irrefl _ h2
-  haveI : CharP (IsLocalRing.ResidueField R) p :=
+  have : CharP (IsLocalRing.ResidueField R) p :=
     (CharP.charP_iff_prime_eq_zero Fact.out).mpr (residue_p hv hp1)
   rw [← IsLocalRing.residue_ne_zero_iff_isUnit, RingHom.map_det]
   have hM : (IsLocalRing.residue R).mapMatrix (MuR hv D) =

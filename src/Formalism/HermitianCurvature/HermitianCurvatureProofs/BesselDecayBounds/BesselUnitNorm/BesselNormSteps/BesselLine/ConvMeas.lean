@@ -84,7 +84,7 @@ theorem uh_inv_eq {a : Mx k r} (ha : a ∈ UH (Hpk k r)) : a⁻¹ = Hpk k r * a�
 
 theorem isClosed_uw (z : Fin (2 * r + k + 1) → ℂ) : IsClosed {x : Mt k r | Matrix.of x ∈ UWset k r z} := by
   have hc : Continuous (fun x : Mt k r => (Matrix.of x : Mx k r)) := continuous_id
-  simp only [UWset, UH, Set.mem_setOf_eq, Set.setOf_and, Set.setOf_forall]
+  simp only [UWset, UH, Set.mem_ofPred_eq, Set.ofPred_and, Set.ofPred_forall]
   refine (isClosed_eq ((hc.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul hc)
     continuous_const).inter ((isClosed_iInter fun a => (isClosed_eq
       (hc.matrix_mulVec continuous_const) continuous_const).inter (isClosed_eq

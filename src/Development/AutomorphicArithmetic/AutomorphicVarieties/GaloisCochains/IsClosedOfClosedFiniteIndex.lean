@@ -51,7 +51,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem isClosed_of_closed_finite_index {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ]
     (I J : Subgroup Γ) (hJI : J ≤ I) (hJ : IsClosed (J : Set Γ)) (h : J.relIndex I ≠ 0) : IsClosed (I : Set Γ) := by
-  haveI : (J.subgroupOf I).FiniteIndex := ⟨h⟩
+  have : (J.subgroupOf I).FiniteIndex := ⟨h⟩
   have e : (I : Set Γ) = ⋃ q : I ⧸ J.subgroupOf I, (fun g : Γ => ((q.out : I) : Γ)⁻¹ * g) ⁻¹' (J : Set Γ) := by
     ext g
     simp only [Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe]
@@ -71,7 +71,7 @@ theorem UpperTheory.V.GC.H2_unramified_inflation :
     (I ⊔ Subgroup.zpowers φ).topologicalClosure = ⊤ → (∀ n : ℕ, 0 < n → ∃ d : Γ →* Multiplicative (ZMod n), IsLocallyConstant d ∧ (∀ s ∈ I, d s = 1) ∧ d φ = Multiplicative.ofAdd 1) →
     ∀ z : Z2 ρ, (∀ s t, ∀ j ∈ J, ∀ j' ∈ J, z.1 (s * j, t * j') = z.1 (s, t)) → ∃ b : Γ → M, IsLocallyConstant b ∧ (∀ s, ∀ j ∈ J, b (s * j) = b s) ∧ ∀ s t, z.1 (s, t) = ρ s (b t) - b (s * t) + b s := by
   intro l hl Γ _ _ _ _ _ _ k _ _ _ M _ _ _ _ _ ρ hρ I J _ _ φ hJI hJ hidx hJρ hφ hd z hz
-  haveI : Finite M := Module.finite_of_finite k
+  have : Finite M := Module.finite_of_finite k
   have hker : IsOpen (ρ.ker : Set Γ) := by
     have e : (ρ.ker : Set Γ) = ⋂ m : M, (fun g : Γ => ρ g m) ⁻¹' {m} := by
       ext g
@@ -85,7 +85,7 @@ theorem UpperTheory.V.GC.H2_unramified_inflation :
     (by
       intro n
       obtain ⟨d, hd1, hd2, hd3⟩ := hd (l ^ n) (pow_pos hl.out.pos n)
-      haveI : NeZero (l ^ n) := ⟨(pow_pos hl.out.pos n).ne'⟩
+      have : NeZero (l ^ n) := ⟨(pow_pos hl.out.pos n).ne'⟩
       refine ⟨d.ker, hd1.isOpen_fiber 1, fun s hs => hd2 s hs, ?_⟩
       have hs : d.range = ⊤ := by
         rw [eq_top_iff]

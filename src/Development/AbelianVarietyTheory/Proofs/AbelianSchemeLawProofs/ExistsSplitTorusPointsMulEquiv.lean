@@ -162,7 +162,7 @@ theorem toHom_bijective : Function.Bijective (toHom : (Z ⟶ splitTorus S X) →
     refine ringHom_ext_ZU fun y => ?_
     rw [← toHom_val, ← toHom_val, h]
   · intro u
-    letI : Algebra (ULift.{0} ℤ) Γ(Z.left, ⊤) := ULift.algebra' ℤ _
+    let : Algebra (ULift.{0} ℤ) Γ(Z.left, ⊤) := ULift.algebra' ℤ _
     obtain ⟨t, ht⟩ := exists_coord_eq (Z := Z) (X := X) (CommRingCat.ofHom
       (AddMonoidAlgebra.lift (ULift.{0} ℤ) Γ(Z.left, ⊤) X ((Units.coeHom _).comp u)).toRingHom)
     refine ⟨t, ?_⟩

@@ -101,10 +101,10 @@ theorem exists_op (ι : A →* G) (π : G →* A) (hι : Continuous ι) (hπ : C
       simp [MonoidHom.mem_ker]
     rw [hset]
     exact isClosed_singleton.preimage hπ
-  haveI : LocallyCompactSpace π.ker := hNc.locallyCompactSpace
+  have : LocallyCompactSpace π.ker := hNc.locallyCompactSpace
   let e : π.ker × A ≃ₜ* G :=
     { splitEquiv ι π hπι hc with
-      continuous_toFun := (continuous_subtype_val.comp continuous_fst).mul (hι.comp continuous_snd)
+      continuous_toFun := (continuous_subtypeVal.comp continuous_fst).mul (hι.comp continuous_snd)
       continuous_invFun := by
         refine Continuous.prodMk ?_ hπ
         exact (continuous_id.mul (hι.comp hπ).inv).subtype_mk _ }
@@ -112,12 +112,12 @@ theorem exists_op (ι : A →* G) (π : G →* A) (hι : Continuous ι) (hπ : C
   let μN : Measure π.ker := Measure.haar
   let P : Measure (π.ker × A) := μN.prod μ
   have hE : MeasurableEmbedding e := e.toHomeomorph.isClosedEmbedding.measurableEmbedding
-  haveI : (P.map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map P e
+  have : (P.map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map P e
   obtain ⟨c, hν⟩ : ∃ c : NNReal, ν = c • P.map e := ⟨_, Measure.isMulLeftInvariant_eq_smul ν (P.map e)⟩
   let σN : Representation ℂ π.ker W := σ.comp π.ker.subtype
-  have hσN : GlobalTheory.PRep.IsSmooth σN := fun x => (hσ x).preimage continuous_subtype_val
+  have hσN : GlobalTheory.PRep.IsSmooth σN := fun x => (hσ x).preimage continuous_subtypeVal
   let φN : π.ker → ℂ := fun h => φ h
-  have hφN1 : IsLocallyConstant φN := hφ'.1.comp_continuous continuous_subtype_val
+  have hφN1 : IsLocallyConstant φN := hφ'.1.comp_continuous continuous_subtypeVal
   have hφN2 : HasCompactSupport φN := hφ'.2.comp_isClosedEmbedding hNc.isClosedEmbedding_subtypeVal
   let T : W →ₗ[ℂ] W := smoothOp σN μN φN
   have hT : ∀ (l : Module.Dual ℂ W) (y : W), l (T y) = ∫ h, φN h * l (σN h y) ∂μN := by
@@ -241,16 +241,16 @@ theorem finFn_update_mul {V : HSp D} {ff : ∀ v, GLoc D.sp.cm.sig V.gram v → 
 
 theorem exists_offOp : ∀ (D : D7) (V : HSp D) (u : HeightOneSpectrum (𝓞 D.host.F)) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)), (∀ v, (μf v).IsHaarMeasure) → (∀ᶠ v in cofinite, μf v (Kv V v) = 1) → ∀ ν, IsFinMeas V μf ν → ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (σ : Representation ℂ (GfC V) W), GlobalTheory.PRep.IsSmooth σ → ∀ ff, IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff → ∃ (H : W →ₗ[ℂ] W) (K : Subgroup (GfC V)), IsOpen (K : Set (GfC V)) ∧ (∀ g x, H (σ (locFin V u g) x) = σ (locFin V u g) (H x)) ∧ (∀ x, ∀ k ∈ K, finLoc V u k = 1 → σ k (H x) = H x) ∧ ∀ f ∈ CcLoc D.sp.cm.sig V.gram u, ∀ B, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp (μf u) (σ.comp (locFin V u)) f B → GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp ν σ (finFn V (Function.update ff u f)) (H ∘ₗ B) := by
   intro D V u μf hμf hK ν hν W _ _ σ hσ ff hff
-  haveI := hμf u
-  haveI : LocallyCompactSpace (GfC V) := GlobalTheory.AdelicU.locallyCompactSpace_finPts D.sp.cm.sig V.gram
-  haveI : ν.IsHaarMeasure := hν.1
+  have := hμf u
+  have : LocallyCompactSpace (GfC V) := GlobalTheory.AdelicU.locallyCompactSpace_finPts D.sp.cm.sig V.gram
+  have : ν.IsHaarMeasure := hν.1
   have hu : unitLoc D.sp.cm.sig V.gram (frameLat V) u ∈ CcLoc D.sp.cm.sig V.gram u := unitLoc_mem u
   have hfam := isFinFamily_update hff u hu
   have hφ := (GlobalTheory.TrConv.conv_finFn D V μf hμf hK ν hν _ _ hfam hfam).2.2
   have hφ' : IsLocallyConstant (finFn V (Function.update ff u (unitLoc D.sp.cm.sig V.gram (frameLat V) u))) ∧
       HasCompactSupport (finFn V (Function.update ff u (unitLoc D.sp.cm.sig V.gram (frameLat V) u))) := hφ
   have hι : Continuous (locFin V u) := continuous_induced_rng.2 (continuous_emb D.sp.cm.sig V.gram u)
-  have hπ : Continuous (finLoc V u) := (continuous_proj D.sp.cm.sig V.gram u).comp continuous_subtype_val
+  have hπ : Continuous (finLoc V u) := (continuous_proj D.sp.cm.sig V.gram u).comp continuous_subtypeVal
   have hπι : ∀ a, finLoc V u (locFin V u a) = a := fun a => proj_emb_self D.sp.cm.sig V.gram u a
   have hc : ∀ a g, finLoc V u g = 1 → Commute (locFin V u a) g := fun a g hg =>
     Subtype.ext (commute_emb D.sp.cm.sig V.gram a hg).eq

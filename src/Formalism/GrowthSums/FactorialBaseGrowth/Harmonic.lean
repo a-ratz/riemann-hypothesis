@@ -91,7 +91,7 @@ theorem padicValNat_le_of_lt_pow {p t y : ℕ} [hp : Fact p.Prime] (hy : 1 ≤ y
 
 theorem padicValHarmonicPowerSum : HarmonicVal := by
   intro p t s hp
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hPpos : (0 : ℚ) < ((p ^ (t + 1) : ℕ) : ℚ) := by
     have : 0 < p ^ (t + 1) := pow_pos hp.pos _
     exact_mod_cast this
@@ -113,7 +113,7 @@ theorem padicValHarmonicPowerSum : HarmonicVal := by
     have hvy : padicValNat p y ≤ t := padicValNat_le_of_lt_pow hy.1 hy.2
     rw [padicValRat.mul (pow_ne_zero _ hP0) (one_div_ne_zero (pow_ne_zero _ hy0)),
       padicValRat.pow _, one_div, padicValRat.inv, padicValRat.pow _,
-      padicValRat.of_nat, padicValRat.of_nat, padicValNat.prime_pow]
+      padicValRat.of_nat, padicValRat.of_nat, Nat.multiplicity_prime_pow]
     have hm : (s : ℤ) * (padicValNat p y : ℤ) ≤ (s : ℤ) * (t : ℤ) :=
       mul_le_mul_of_nonneg_left (by exact_mod_cast hvy) (by positivity)
     push_cast

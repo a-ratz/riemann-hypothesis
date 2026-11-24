@@ -99,9 +99,9 @@ section Hol
 theorem continuous_lead (i : ℕ) : Continuous (lead i : Matrix (Fin n) (Fin n) ℂ → ℂ) := by
   unfold lead
   by_cases h : i ≤ n
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     exact (continuous_id.matrix_submatrix _ _).matrix_det
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact continuous_const
 
 theorem isOpen_OmegaSet (n : ℕ) : IsOpen (OmegaSet n) := by
@@ -119,25 +119,25 @@ theorem lop_add (Y : Matrix (Fin n) (Fin n) ℂ) {F G : Matrix (Fin n) (Fin n) �
     (hG : G ∈ OmF n) : lop Y (F + G) = lop Y F + lop Y G := by
   funext z
   by_cases hz : z ∈ OmegaSet n
-  · simp only [lop, if_pos hz, Pi.add_apply]
+  · simp only [lop, ite_eq_left hz, Pi.add_apply]
     have e : fderiv ℂ (F + G) z = fderiv ℂ F z + fderiv ℂ G z :=
       ((differentiableAt_of_mem_OmF hF hz).hasFDerivAt.add
         (differentiableAt_of_mem_OmF hG hz).hasFDerivAt).fderiv
     rw [e]
-    simp only [ContinuousLinearMap.add_apply]
+    simp only [add_apply]
     ring
-  · simp [lop, if_neg hz]
+  · simp [lop, ite_eq_right hz]
 
 theorem lop_smul (Y : Matrix (Fin n) (Fin n) ℂ) (c : ℂ) {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : F ∈ OmF n) :
     lop Y (c • F) = c • lop Y F := by
   funext z
   by_cases hz : z ∈ OmegaSet n
-  · simp only [lop, if_pos hz, Pi.smul_apply]
+  · simp only [lop, ite_eq_left hz, Pi.smul_apply]
     have e : fderiv ℂ (c • F) z = c • fderiv ℂ F z :=
       ((differentiableAt_of_mem_OmF hF hz).hasFDerivAt.const_smul c).fderiv
     rw [e]
     simp
-  · simp [lop, if_neg hz]
+  · simp [lop, ite_eq_right hz]
 
 def lopL (h1 : ∀ (Y : Matrix (Fin n) (Fin n) ℂ) (F : Matrix (Fin n) (Fin n) ℂ → ℂ), F ∈ OmF n → lop Y F ∈ OmF n)
     (Y : Matrix (Fin n) (Fin n) ℂ) : Module.End ℂ (OmF n) where
@@ -175,13 +175,13 @@ theorem lowAlg_model (hL : LowAlg) (hH : HolFacts) (μ : Fin n → ℤ) (η : Fi
     refine LinearMap.ext fun F => Subtype.ext ?_
     have h := h2 F a b c d F.2
     by_cases hbc : b = c <;> by_cases hda : d = a
-    · simp only [if_pos hbc, if_pos hda] at h ⊢
+    · simp only [ite_eq_left hbc, ite_eq_left hda] at h ⊢
       exact h
-    · simp only [if_pos hbc, if_neg hda] at h ⊢
+    · simp only [ite_eq_left hbc, ite_eq_right hda] at h ⊢
       exact h
-    · simp only [if_neg hbc, if_pos hda] at h ⊢
+    · simp only [ite_eq_right hbc, ite_eq_left hda] at h ⊢
       exact h
-    · simp only [if_neg hbc, if_neg hda] at h ⊢
+    · simp only [ite_eq_right hbc, ite_eq_right hda] at h ⊢
       exact h
   have hd : ∀ a, L a a Φ = (((μ a : ℤ) : ℝ) : ℂ) • Φ := by
     intro a
@@ -261,7 +261,7 @@ variable {ε : Fin n → Bool}
 theorem toMK_mem (k : KG ε) : toMK k ∈ UJset ε := k.1.2
 
 theorem continuous_toMK : Continuous (fun k : KG ε => toMK k) :=
-  (continuous_toM ε).comp continuous_subtype_val
+  (continuous_toM ε).comp continuous_subtypeVal
 
 theorem rreg_toMK_mul (k k' : KG ε) :
     rreg ε (toMK (k * k')) = (rreg ε (toMK k)).comp (rreg ε (toMK k')) :=
@@ -292,7 +292,7 @@ theorem exists_section (hSec : EquivSection) (hRho : RhoRep) (hAct : ActEquiv) (
     let Gs : Submodule ℂ (L2 ε) :=
       (genSub (smE ε (rreg ε)) (datumV ε Ψ T.w)).map (smD ε (rreg ε)).subtype
     let R : Submodule ℂ S := Gs.map S.orthogonalProjectionOnto.toLinearMap
-    have hRc : IsClosed (R : Set S) := Submodule.closed_of_finiteDimensional R
+    have hRc : IsClosed (R : Set S) := Submodule.isClosed_of_finiteDimensional R
     have hy' : (y : L2 ε) ∈ closure (Gs : Set (L2 ε)) := hy
     have hm : S.orthogonalProjectionOnto (y : L2 ε) ∈ closure (R : Set S) :=
       map_mem_closure S.orthogonalProjectionOnto.continuous hy' fun x hx => ⟨x, hx, rfl⟩
@@ -349,8 +349,8 @@ theorem toL2_zero_eq_zero (ε : Fin n → Bool) : toL2 ε (0 : Matrix (Fin n) (F
 theorem key_of_steps : LowAlg → HolFacts → EquivSection → RhoRep → ActEquiv → RhoTorus → TorW → Transfer →
     Exhaust → BetaWeight → PositivityTheory.RgDs.Key := by
   intro hLow hHol hSec hRho hAct _ _ hTr hEx hBeta n ε lam T μ hHC hMu hP S hfd hle hK
-  haveI := hfd
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have := hfd
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   obtain ⟨m, s, hs1, hs2⟩ := exists_section hSec hRho hAct hEx hP S hle hK
   have hwt : ∀ (η : Fin n → ℝ) (x : S),
       Formalism.MainNotions.S.IsWtOn (Formalism.REAL.Kset ε) (rreg ε) η (x : L2 ε) →

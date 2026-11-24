@@ -78,7 +78,7 @@ theorem nonempty_emb_of_splitsFully (hB : B.IsGood σ) {v : Pl F} (hv : SplitsFu
   have hu : w.under (𝓞 F) = v := (HeightOneSpectrum.ext (v.isMaximal.eq_of_le (w.under (𝓞 F)).isPrime.ne_top
     (Ideal.map_le_iff_le_comap.1 hw'.le))).symm
   obtain ⟨p, hp, hN, -⟩ := GlobalTheory.SplitFullyNorm.exists_prime_absNorm_eq_of_splitsFully F E w (hu ▸ hv)
-  rw [← hw', Ideal.absNorm_algebraMap, ← Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E, hB.cm.2.2.1] at hN
+  rw [← hw', Ideal.absNorm_algebraMap, ← IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E, hB.cm.2.2.1] at hN
   exact Nat.Prime.not_prime_pow le_rfl (hN ▸ hp)
 
 theorem nu_pow_ne_one (h : IsTriple B G X om om') {v : Pl F} (hv : X.Good v) (t : E →ₐ[F] Fv F v) {k : ℤ} (hk : k ≠ 0) :

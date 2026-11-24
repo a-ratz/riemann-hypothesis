@@ -144,11 +144,11 @@ theorem UpperTheory.Gal.Int.Core.autT_holds : UpperTheory.Gal.Int.Core.AutT := b
       one_mem' := by simp
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := a))) := (hU.aut φ hφ).level
@@ -577,7 +577,7 @@ theorem goodGuard_usPl (h1 : OneUs) (E Ω : Type) [Field E] [NumberField E] [IsC
   have hD := GlobalTheory.Published.ChebotarevDegreeOne.dense (F := E) (Ω := Ω) GlobalTheory.Published.chebotarevDegreeOne' hT
   refine (hD.preimage (Homeomorph.inv (G E Ω)).isOpenMap).mono ?_
   rintro g ⟨v, hv, hdeg, A, hA, hσ⟩
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hv
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hv
   have hp : (normV v).Prime := by
     simpa only [normV, Ideal.absNorm_apply, Submodule.cardQuot_apply] using
       (((GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified E).1 v).2 hdeg)
@@ -710,7 +710,7 @@ theorem stepDown_of (h2 : IsoOne) (hP : PatchOne) (hD : ∀ c, SphDown c) : Step
   obtain ⟨ρ, hρc, hρs, hev⟩ := hP E Ω l ι a (CG.mk π).HasSat (fun v B B' h h' => h.unique h') S hS r hr
   refine ⟨ρ, hρc, hρs, fun w B _ hB c => ?_⟩
   have hfin := (Filter.eventually_cofinite.1 hev).image Subtype.val
-  obtain ⟨Q, hQ, hQn⟩ := ((fam w).diff hfin).nonempty
+  obtain ⟨Q, hQ, hQn⟩ := ((fam w).sdiff hfin).nonempty
   have hiso : RepIso (r ⟨Q, famS w Q hQ⟩) (ρ.comp (res E Ω ↥Q.K)) := by
     by_contra hc
     exact hQn ⟨⟨Q, famS w Q hQ⟩, hc, rfl⟩
@@ -838,7 +838,7 @@ private theorem normV_under_eq_of_normV_prime {K M : Type} [Field K] [NumberFiel
     rwa [← Nat.card_congr (AddMonoidHom.ofInjective (f := f.toAddMonoidHom) hf).toEquiv] at h1
   rcases (Nat.dvd_prime hp).1 hd with h | h
   · exfalso
-    haveI : (w.under (𝓞 K)).asIdeal.IsPrime := (w.under (𝓞 K)).isPrime
+    have : (w.under (𝓞 K)).asIdeal.IsPrime := (w.under (𝓞 K)).isPrime
     have h2 := (Nat.card_eq_one_iff_unique.1 h).1
     exact not_subsingleton (𝓞 K ⧸ (w.under (𝓞 K)).asIdeal) h2
   · exact h
@@ -901,8 +901,8 @@ open UpperTheory.Gal.Int.Core
 
 private theorem exists_intCast_eq_of_card_prime (k : Type) [Ring k] (p : ℕ) (hp : Nat.Prime p) (hk : Nat.card k = p)
     (y : k) : ∃ n : ℤ, (n : k) = y := by
-  haveI : Finite k := Nat.finite_of_card_ne_zero (by rw [hk]; exact hp.ne_zero)
-  haveI : Nontrivial k := by
+  have : Finite k := Nat.finite_of_card_ne_zero (by rw [hk]; exact hp.ne_zero)
+  have : Nontrivial k := by
     rw [← Finite.one_lt_card_iff_nontrivial, hk]; exact hp.one_lt
   have htop : AddSubgroup.zmultiples (1 : k) = ⊤ := by
     apply AddSubgroup.eq_top_of_card_eq
@@ -1003,7 +1003,7 @@ theorem UpperTheory.Gal.Int.Core.oneUs_holds :
   rw [Filter.eventually_cofinite]
   refine (Ideal.finite_factors hne).subset ?_
   intro w hw
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   by_contra h2d
   apply hw
@@ -1053,7 +1053,7 @@ theorem UpperTheory.Gal.Int.Core.oneUs_holds :
       ext y
       exact congrArg Subtype.val (cO.commutes y)
   · intro q hq hqw
-    haveI := Fact.mk hq
+    have := Fact.mk hq
     unfold SqAt
     have hm : ((n ^ 2 + d : ℤ) : 𝓞 E) ∈ w.asIdeal := by
       have : ((n ^ 2 + d : ℤ) : 𝓞 E) = (xo - n) * (-(xo + n)) := by
@@ -1111,8 +1111,8 @@ private theorem uniq (hI : IsoOne) (F Ω : Type) [Field F] [NumberField F] [Fiel
 
 open GlobalTheory.RealGal.TrInv in
 private theorem trace_conj (hI : IsoOne) (hC : OneConj) (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (K : Type) [Field K] [NumberField K] [Algebra F K] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure K Ω] (h2 : Module.finrank F K = 2) (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ) (sat : HeightOneSpectrum (𝓞 F) → Multiset ℂˣ → Prop) (hu : ∀ v B B', sat v B → sat v B' → B = B') (r : G K Ω →* GL (Fin a) (Qbar l)) (hr : Continuous r) (hss : IsSSRep r) (hatt : AttOne sat ι K r) (g : G F Ω) (s s' : G K Ω) (hs : res F Ω K s' = g * res F Ω K s * g⁻¹) : ((r s' : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace = ((r s : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace := by
-  haveI : Algebra.IsQuadraticExtension F K := ⟨h2⟩
-  haveI : Normal F K := Algebra.IsQuadraticExtension.normal F K
+  have : Algebra.IsQuadraticExtension F K := ⟨h2⟩
+  have : Normal F K := Algebra.IsQuadraticExtension.normal F K
   have hsur := conj_surjective (F := F) (Ω := Ω) K g
   have hatt' : AttOne sat ι K (r.comp (conj K g)) :=
     hC F Ω K l ι a sat r g (conj K g) (res_conj K g) hsur hatt
@@ -1129,20 +1129,20 @@ private theorem trace_conj (hI : IsoOne) (hC : OneConj) (F Ω : Type) [Field F] 
 open GlobalTheory.RealGalCompat in
 private theorem trace_eq (hI : IsoOne) (hT : OneTower) (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (Q Q' : QCM F Ω) (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ) (sat : HeightOneSpectrum (𝓞 F) → Multiset ℂˣ → Prop) (hu : ∀ v B B', sat v B → sat v B' → B = B') (r : G ↥Q.K Ω →* GL (Fin a) (Qbar l)) (r' : G ↥Q'.K Ω →* GL (Fin a) (Qbar l)) (hr : Continuous r) (hr' : Continuous r') (hs : IsSSRep r) (hs' : IsSSRep r') (ha : AttOne sat ι ↥Q.K r) (ha' : AttOne sat ι ↥Q'.K r') (s : G ↥Q.K Ω) (s' : G ↥Q'.K Ω) (hss : res F Ω ↥Q.K s = res F Ω ↥Q'.K s') : ((r s : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace = ((r' s' : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace := by
   let M : IntermediateField F Ω := Q.K ⊔ Q'.K
-  haveI : FiniteDimensional F Q.K := Module.finite_of_finrank_pos (by rw [Q.two]; norm_num)
-  haveI : FiniteDimensional F Q'.K := Module.finite_of_finrank_pos (by rw [Q'.two]; norm_num)
-  haveI : NumberField M := NumberField.of_module_finite F M
-  haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed F,
+  have : FiniteDimensional F Q.K := Module.finite_of_finrank_pos (by rw [Q.two]; norm_num)
+  have : FiniteDimensional F Q'.K := Module.finite_of_finrank_pos (by rw [Q'.two]; norm_num)
+  have : NumberField M := NumberField.of_module_finite F M
+  have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed F,
     haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic; Algebra.IsAlgebraic.tower_top (K := F) _⟩
-  haveI : Algebra.IsQuadraticExtension F Q.K := { finrank_eq_two' := Q.two }
-  haveI : Algebra.IsQuadraticExtension F Q'.K := { finrank_eq_two' := Q'.two }
-  haveI : Normal F M := IntermediateField.normal_sup F Ω Q.K Q'.K
-  letI : Algebra Q.K M := (IntermediateField.inclusion (le_sup_left : Q.K ≤ M)).toRingHom.toAlgebra
-  letI : Algebra Q'.K M := (IntermediateField.inclusion (le_sup_right : Q'.K ≤ M)).toRingHom.toAlgebra
-  haveI : IsScalarTower F Q.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
-  haveI : IsScalarTower F Q'.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
-  haveI : IsScalarTower Q.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
-  haveI : IsScalarTower Q'.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : Algebra.IsQuadraticExtension F Q.K := { finrank_eq_two' := Q.two }
+  have : Algebra.IsQuadraticExtension F Q'.K := { finrank_eq_two' := Q'.two }
+  have : Normal F M := IntermediateField.normal_sup F Ω Q.K Q'.K
+  let : Algebra Q.K M := (IntermediateField.inclusion (le_sup_left : Q.K ≤ M)).toRingHom.toAlgebra
+  let : Algebra Q'.K M := (IntermediateField.inclusion (le_sup_right : Q'.K ≤ M)).toRingHom.toAlgebra
+  have : IsScalarTower F Q.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
+  have : IsScalarTower F Q'.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
+  have : IsScalarTower Q.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : IsScalarTower Q'.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
   have hA := hT F Ω Q.K M l ι a sat r ha
   have hA' := hT F Ω Q'.K M l ι a sat r' ha'
   have hS := UpperTheory.semisimple_restriction_to_normal_subgroup _ _ _ a r (res Q.K Ω M) (range_res_normal (F := F)) hs
@@ -1169,8 +1169,8 @@ private theorem trace_eq (hI : IsoOne) (hT : OneTower) (F Ω : Type) [Field F] [
 theorem patchOne_holds : IsoOne → OneTower → OneConj → PatchOne := by
   intro hI hT hC F Ω _ _ _ _ _ l _ ι a sat hu S hS r hr
   classical
-  haveI : Infinite ↥S := hS.to_subtype
-  haveI : Algebra.IsIntegral F Ω := (IsAlgClosure.isAlgebraic (R := F) (K := Ω)).isIntegral
+  have : Infinite ↥S := hS.to_subtype
+  have : Algebra.IsIntegral F Ω := (IsAlgClosure.isAlgebraic (R := F) (K := Ω)).isIntegral
   obtain ⟨η, hηinj, hη⟩ := GlobalTheory.RealGal.SignChar.main F Ω
   let e : ∀ Q : ↥S, G ↥Q.1.K Ω ≃* (η Q.1).ker := fun Q =>
     (MonoidHom.ofInjective (GlobalTheory.SatSysPatch.res_injective F Ω ↥Q.1.K)).trans (MulEquiv.subgroupCongr (hη Q.1).1.symm)
@@ -1181,7 +1181,7 @@ theorem patchOne_holds : IsoOne → OneTower → OneConj → PatchOne := by
   have hr' : ∀ Q : ↥S, ∀ (h : (η Q.1).ker), r' Q h = r Q ((e Q).symm h) := fun Q h => rfl
   have hcont : ∀ Q : ↥S, Continuous (r' Q) := by
     intro Q
-    haveI : CompactSpace (G ↥Q.1.K Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[↥Q.1.K] Ω))
+    have : CompactSpace (G ↥Q.1.K Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[↥Q.1.K] Ω))
     have hc : Continuous (e Q) := (UpperTheory.V.Af.continuous_restrictScalarsHom F ↥Q.1.K Ω).subtype_mk _
     let hm := hc.homeoOfEquivCompactToT2 (f := (e Q).toEquiv)
     exact (hr Q).1.comp hm.symm.continuous
@@ -1265,8 +1265,8 @@ namespace UpperTheory.Gal.Int.Core
 theorem ramUnr_holds : RamUnr := by
   intro F Ω _ _ _ _ _ T Q hQ
   obtain ⟨u, huT, A, hA, τ, hτ, hfix⟩ := hQ
-  haveI : Algebra.IsQuadraticExtension F ↥Q.K := ⟨Q.two⟩
-  haveI : IsGalois F ↥Q.K := inferInstance
+  have : Algebra.IsQuadraticExtension F ↥Q.K := ⟨Q.two⟩
+  have : IsGalois F ↥Q.K := inferInstance
   obtain ⟨w, hw, hwu⟩ := CompanionTheory.FamInh.exists_place_between (K := F) (L := ↥Q.K) hA
   have hunder : w.under (𝓞 F) = u :=
     ReciprocityTheory.Gal.eq_of_isPlaceOver (fun x => by
@@ -1379,11 +1379,11 @@ theorem UpperTheory.Gal.TP.Sub.satAE_holds :
       one_mem' := by simp
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := a))) := (hU.aut φ hφ).level

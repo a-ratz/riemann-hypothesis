@@ -189,7 +189,7 @@ theorem valR_iso_trans {w : LB.Iso M (M₀.pull φ)} (hw : w.IsGen) (x : Sp A �
     have hz : x z ∈ U := ht (show z ∈ (⊤ : (Sp A).Opens) from trivial)
     have e1 : ∀ c, (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom c) = c :=
       fun c => congrArg (fun f => CommRingCat.Hom.hom f c) (Iso.hom_inv_id (Scheme.ΓSpecIso (CommRingCat.of A)))
-    rw [valR, dif_pos ht, gm, dif_pos hz]
+    rw [valR, dite_eq_left ht, gm, dite_eq_left hz]
     show ((Sp A).presheaf.germ ⊤ z trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
         ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ ht).hom a.val))) =
       ((Sp A).presheaf.germ (x ⁻¹ᵁ U) z hz).hom ((x.app U).hom a.val)
@@ -214,7 +214,7 @@ theorem valR_g_self (hM : M.IsLB) (x : Sp A ⟶ B) {k : M.ι} (h : ⊤ ≤ x ⁻
     have hz : x z ∈ U := ht (show z ∈ (⊤ : (Sp A).Opens) from trivial)
     have e1 : ∀ c, (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom c) = c :=
       fun c => congrArg (fun f => CommRingCat.Hom.hom f c) (Iso.hom_inv_id (Scheme.ΓSpecIso (CommRingCat.of A)))
-    rw [valR, dif_pos ht, gm, dif_pos hz]
+    rw [valR, dite_eq_left ht, gm, dite_eq_left hz]
     show ((Sp A).presheaf.germ ⊤ z trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
         ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ ht).hom a.val))) =
       ((Sp A).presheaf.germ (x ⁻¹ᵁ U) z hz).hom ((x.app U).hom a.val)
@@ -293,7 +293,7 @@ theorem exists_constPoint (W : ArcWit Y a (Ideal.span {PowerSeries.X}) (PowerSer
         valR (A := ℂ⟦X⟧) g.b.left _ (W.w.s (fun _ => j₀, jM)).val * τ jL =
           (FormalValue.tau W.P.U.toUnifPre ((Ideal.span {(PowerSeries.X : ℂ⟦X⟧)}).map (algebraMap ℂ⟦X⟧ ℂ⟦X⟧))
             x.left jL jM).val * PowerSeries.C (u.fr j₀ z) := by
-  haveI : IsAdicComplete ((Ideal.span {(PowerSeries.X : ℂ⟦X⟧)}).map (algebraMap ℂ⟦X⟧ ℂ⟦X⟧)) ℂ⟦X⟧ := by
+  have : IsAdicComplete ((Ideal.span {(PowerSeries.X : ℂ⟦X⟧)}).map (algebraMap ℂ⟦X⟧ ℂ⟦X⟧)) ℂ⟦X⟧ := by
     rw [Algebra.algebraMap_self, Ideal.map_id]; infer_instance
   obtain ⟨g, hg⟩ := exists_gtPt_const W g₀
   obtain ⟨x, hx, -⟩ := FormalPoint.existsUnique_isPointOf W.P.U.toUnifPre (φ := algebraMap ℂ⟦X⟧ ℂ⟦X⟧) g

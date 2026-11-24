@@ -130,19 +130,19 @@ theorem exOf_flatWt_some (τ : Psi H) (σ : E →+* ℂ) (i : Fin (Dw.mult σ)) 
   by_cases h1 : σ = τ.1
   · subst h1
     have hi : (i : ℕ) < Dw.p := by
-      have := i.2; simp only [Datum.mult, if_pos τ.2] at this; exact this
-    rw [if_pos rfl]
+      have := i.2; simp only [Datum.mult, ite_eq_left τ.2] at this; exact this
+    rw [ite_eq_left rfl]
     show (wtOf Dw (flatWt Dw τ) 0).1 (τ.1, i) = -1
     rw [wtOf_big _ _ τ i hi]; simp [flatWt, parWt]
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     by_cases h2 : σ = conjEmb τ.1
     · subst h2
       have hi : (i : ℕ) < Dw.q := by
-        have := i.2; simp only [Datum.mult, if_neg (conj_not_mem τ)] at this; exact this
-      rw [if_pos rfl]
+        have := i.2; simp only [Datum.mult, ite_eq_right (conj_not_mem τ)] at this; exact this
+      rw [ite_eq_left rfl]
       show (wtOf Dw (flatWt Dw τ) 0).1 (conjEmb τ.1, i) = 1
       rw [wtOf_small _ _ τ i hi]; simp [flatWt, parWt]
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       show (wtOf Dw (flatWt Dw τ) 0).1 (σ, i) = 0
       simp only [wtOf]
       split_ifs with h h' h''
@@ -174,7 +174,7 @@ theorem evR_flat_frChg {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} (τ : Psi 
     evR Xo c f y = ((g τ.1).det)⁻¹ * (g (conjEmb τ.1)).det * evR Xo c f z := by
   classical
   have hdiag : ∀ σ, (g σ).det = ∏ i, g σ i i := fun σ =>
-    Matrix.det_of_lowerTriangular _ fun i j hij => hg σ i j hij
+    Matrix.det_of_isLowerTriangular _ fun i j hij => hg σ i j hij
   have hd : ∀ σ i, g σ i i ≠ 0 := fun σ i => by
     have hu := (hdet σ).ne_zero
     rw [hdiag σ] at hu
@@ -192,13 +192,13 @@ theorem evR_flat_frChg {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} (τ : Psi 
       if σ = τ.1 then ((g σ).det)⁻¹ else if σ = conjEmb τ.1 then (g σ).det else 1 := fun σ => by
     simp only [exOf_flatWt_some, t, Units.val_zpow_eq_zpow_val, Units.val_mk0]
     by_cases e1 : σ = τ.1
-    · simp only [if_pos e1, zpow_neg_one, Finset.prod_inv_distrib, hdiag]
+    · simp only [ite_eq_left e1, zpow_neg_one, Finset.prod_inv_distrib, hdiag]
     · by_cases e2 : σ = conjEmb τ.1
-      · simp only [if_neg e1, if_pos e2, zpow_one, hdiag]
-      · simp only [if_neg e1, if_neg e2, zpow_zero, Finset.prod_const_one]
+      · simp only [ite_eq_right e1, ite_eq_left e2, zpow_one, hdiag]
+      · simp only [ite_eq_right e1, ite_eq_right e2, zpow_zero, Finset.prod_const_one]
   simp only [hF, exOf_flatWt_none, zpow_zero, Units.val_one, one_mul]
-  rw [Fintype.prod_eq_mul τ.1 (conjEmb τ.1) (ne_conjEmb τ) fun σ hσ => by rw [if_neg hσ.1, if_neg hσ.2],
-    if_pos rfl, if_neg (ne_conjEmb τ).symm, if_pos rfl]
+  rw [Fintype.prod_eq_mul τ.1 (conjEmb τ.1) (ne_conjEmb τ) fun σ hσ => by rw [ite_eq_right hσ.1, ite_eq_right hσ.2],
+    ite_eq_left rfl, ite_eq_right (ne_conjEmb τ).symm, ite_eq_left rfl]
 
 end GlobalTheory.FlatFrameLaw
 end -- clump:auto
@@ -223,10 +223,10 @@ theorem poly_eval_eq_eval_zero_of_eq_inv {k : Type} [Field k] [Infinite k] (p q 
     apply Set.Infinite.mono (s := ({0}ᶜ : Set k))
     · intro x hx
       have hx0 : x ≠ 0 := hx
-      letI : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
+      let : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
       have hr := eval₂_reflect_mul_pow (RingHom.id k) x⁻¹ N q le_rfl
       rw [invOf_eq_inv, inv_inv] at hr
-      simp only [Set.mem_setOf_eq, eval_mul, eval_pow, eval_X, eval_C, h x hx0]
+      simp only [Set.mem_ofPred_eq, eval_mul, eval_pow, eval_X, eval_C, h x hx0]
       rw [← eval₂_id, ← eval₂_id, ← hr, inv_pow]
       field_simp
     · exact (Set.finite_singleton (0 : k)).infinite_compl
@@ -722,7 +722,7 @@ theorem archSec_denom (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A = 1) (s : ArchSec U x 
       (letI := io.toAlgebra; LiesOn Z y₀.1) →
       evI y₀ s.sig ∈ (algebraMap T.V T.Fr).range ∧ evI y₀ s.inv ∈ (algebraMap T.V T.Fr).range := by
     intro T io y₀ h1 h2
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have h3 := hs T io y₀ h1 h2
     have h4 : evI y₀ s.sig * evI y₀ s.inv = 1 := evR_sig_mul_inv s h2
     have h5 := left_ne_zero_of_mul_eq_one h4
@@ -870,12 +870,12 @@ theorem isAlgebraic_of_norm_bdd {K Ω : Type} [Field K] [CharZero K] [Field Ω] 
     hw.polynomial_aeval_of_transcendental fun _ => Polynomial.transcendental _
       (by rw [Polynomial.natDegree_C_mul_X _ hN0]; exact one_ne_zero)
       (by rw [Polynomial.leadingCoeff_C_mul_X]; exact mem_nonZeroDivisors_of_ne_zero hN0)
-  letI : Algebra (MvPolynomial T K) Ω := (MvPolynomial.aeval fun i : T => (i : Ω)).toRingHom.toAlgebra
-  letI : Algebra (MvPolynomial T K) ℂ := (MvPolynomial.aeval fun i : T =>
+  let : Algebra (MvPolynomial T K) Ω := (MvPolynomial.aeval fun i : T => (i : Ω)).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial T K) ℂ := (MvPolynomial.aeval fun i : T =>
     Polynomial.aeval (P₀ i) (Polynomial.C (N : K) * Polynomial.X)).toRingHom.toAlgebra
-  haveI : FaithfulSMul (MvPolynomial T K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hbas.1
-  haveI : FaithfulSMul (MvPolynomial T K) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hw2
-  haveI : Algebra.IsAlgebraic (MvPolynomial T K) Ω :=
+  have : FaithfulSMul (MvPolynomial T K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hbas.1
+  have : FaithfulSMul (MvPolynomial T K) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hw2
+  have : Algebra.IsAlgebraic (MvPolynomial T K) Ω :=
     haveI := hbas.isAlgebraic
     ⟨fun y => (IsAlgebraic.ringHom_of_comp_eq (f := hbas.1.aevalEquiv.symm.toRingHom) (g := RingHom.id Ω)
       (Algebra.IsAlgebraic.isAlgebraic y) hbas.1.aevalEquiv.symm.injective (RingHom.ext fun z => by
@@ -916,13 +916,13 @@ theorem exists_eq_smul_idem_of_bdd {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hσ
       ⟨x.2, liesOn_frBor ht (liesOn_frMap hm (liesOn_genFr h Z))⟩
     have h1 := hw _ hi
     have h2 : rdU U (idem Z) k x = 1 := by
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dif_pos]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dite_eq_left]
       exact evR_idem (S := CAt σ) hz.2 (haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ); hL.test _ _)
     have h3 : evC h Z (idem Z) = 1 := evR_idem (liesOn_genFr h Z) (hL.test _ _)
     rw [h2, h3, map_one, mul_one] at h1
     rw [← hw g hg, h1]
     exact (congrArg norm (one_mul _)).trans_le (hb _ hz)
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨a, ha⟩ := hF Z _ (isAlgebraic_of_norm_bdd (K := c.F) (b := evC h Z g) P₀ fun P => key P)
   refine ⟨a, sub_eq_zero.1 (GlobalTheory.Reg.sec_eq_zero_of_generic_values E H Dw l Xo c hL h (hA h) 0 0 _
     (sub_mem hg (Submodule.smul_mem _ _ hi)) fun Z' => ?_)⟩
@@ -1078,7 +1078,7 @@ theorem GlobalTheory.FlatDenom.unit_pow_clears_denominator_flat_model : _root_.G
         GlobalTheory.AllWt.homN (Y.U σ) (xiR D) 0 (i * s₀.sig) z ≤ C := by
     intro σ hσ
     obtain ⟨C, hC⟩ := hb σ hσ
-    have hgo : Formalism.L2.Pj.goodOf Y.d.c₂ σ = σ := if_pos hσ
+    have hgo : Formalism.L2.Pj.goodOf Y.d.c₂ σ = σ := ite_eq_left hσ
     have hN : ∀ σ'' (_ : Formalism.L2.Pj.goodOf Y.d.c₂ σ = σ''), ∀ z ∈ framesOn (Y.U σ'') Z,
         GlobalTheory.AllWt.homN (Y.U σ'') (xiR D) (wtOf (T.Q.Dw j) la 0) s₀.sig z = s₀.cInf σ ∧
         GlobalTheory.AllWt.homN (Y.U σ'') (xiR D) (wtOf (T.Q.Dw j) (-la) 0) s₀.inv z = (s₀.cInf σ)⁻¹ := by

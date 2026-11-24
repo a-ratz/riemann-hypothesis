@@ -171,13 +171,13 @@ theorem UpperTheory.V.Af.jumpsOpen {F Ω : Type} [Field F] [NumberField F] [Fiel
     (fun s i j h => Subtype.ext ((he _ i j).trans ((hg _).1 i j h))) (fun _ _ => rfl)
     (by rw [IsDR, Module.finrank_fin_fun]; exact hd)
   let U : Subgroup ↥(GK Bw.Kw) := H.comap ((Dec (F := F) A).subtype.comp Bw.e.symm.toMonoidHom)
-  have hU : IsOpen (U : Set ↥(GK Bw.Kw)) := hH.preimage (continuous_subtype_val.comp Bw.e_symm_cont)
+  have hU : IsOpen (U : Set ↥(GK Bw.Kw)) := hH.preimage (continuous_subtypeVal.comp Bw.e_symm_cont)
   have hcm : ∀ (s : ↥(GK Bw.Kw)) x, (s : GQ l) (Bw.j x) = Bw.j ((Bw.e.symm s : G F Ω) x) := fun s x => by
     rw [← Bw.e_comm, MulEquiv.apply_symm_apply]
   have key : ∀ i a, multV ((Loc.PP l).PD Bw.Kw) (Formalism.WeaklyAdmissibleFiltrations.charRep (κ' i)) τ' a = if a = -m i then 1 else 0 := fun i a => by
     refine char_mult Bw.Kw L (κ' i) (continuous_induced_rng.2 ?_) (m i) ⟨U, hU, fun s hs hq => ?_⟩ (d i) τ' a
     · have h1 : Continuous fun s : ↥(GK Bw.Kw) => g * r (Bw.e.symm s) * g⁻¹ :=
-        (continuous_const.mul (hr.comp (continuous_subtype_val.comp Bw.e_symm_cont))).mul continuous_const
+        (continuous_const.mul (hr.comp (continuous_subtypeVal.comp Bw.e_symm_cont))).mul continuous_const
       exact ((Units.continuous_val.comp h1).matrix_elem i i).congr fun s => (he _ i i).symm
     · have hine : (Bw.e.symm s : G F Ω) ∈ Ine (F := F) A := by
         refine ⟨(Bw.e.symm s).2, fun x hx => ?_⟩

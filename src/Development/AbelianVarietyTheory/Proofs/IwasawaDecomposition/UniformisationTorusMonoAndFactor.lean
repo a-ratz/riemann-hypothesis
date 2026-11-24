@@ -67,10 +67,10 @@ theorem mono_gtTorus_and_factor {R : Type} [CommRing R] [IsDomain R] {I : Ideal 
   have hk : IsPullback (gtTorus g hρ h) (toUnit _) q' η[_] := hk'
   have : IsProper ((Over.pullback (thickPt e hρ)).obj (Out.thickObj R I e D.P.A)).hom :=
     inferInstanceAs (IsProper (pullback.snd _ _))
-  haveI : ConnectedSpace (Sp A) := GlobalTheory.SplitTorus.connectedSpace_of_isLocalRing A
+  have : ConnectedSpace (Sp A) := GlobalTheory.SplitTorus.connectedSpace_of_isLocalRing A
   have hm : Mono (gtTorus g hρ h) := ⟨fun a b k => hk.hom_ext k (toUnit_unique _ _)⟩
   refine ⟨hm, fun X _ _ _ i hi => ?_⟩
-  haveI := hi; haveI := hq'
+  have := hi; have := hq'
   have ht : i ≫ q' = toUnit _ ≫ η[_] :=
     splitTorus_hom_proper_trivial_local A X _ (i ≫ q') inferInstance
   let u := hk.lift i (toUnit _) ht

@@ -201,7 +201,7 @@ end
 
 theorem expands_pull_of_four_le : Laws → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Geo.Tor.Host E) (t : Geo.Tor.SAB H (Spec (CommRingCat.of V))) (P : Geo.Tor.PELUnif (maximalIdeal V) t) (a : NumberField.RingOfIntegers E) (N : ℕ), (letI := H.starRing; a * star a = (N : NumberField.RingOfIntegers E)) → 0 < N → letI := H.starRing;  ∀ k : ℕ, 4 ≤ k → ∀ (s : P.U.SecK k) (F : Fam P.D.toPre (FractionRing V) k), P.U.Expands k s F → ∀ s' : P.U.SecK (k * N), IsPullByEnd P.U (t.act.act a) k N s s' → ∃ F' : Fam P.D.toPre (FractionRing V) (k * N), P.U.Expands (k * N) s' F' ∧ PullAl P.D (FractionRing V) P.oD a k N F F' := by
   intro hLaws V _ _ _ E _ _ _ H t P a N hN hN0
-  letI := H.starRing
+  let := H.starRing
   intro k hk s F hs s' hs'
   obtain ⟨uΨ, huΨ, -, -⟩ := P.w0
   have hM : P.D.toPre.P.L.IsLB := P.D.toPre.P.isLB
@@ -216,7 +216,7 @@ theorem expands_pull_of_four_le : Laws → ∀ (V : Type) [CommRing V] [IsDomain
   obtain rfl : F = Fx s := hFu s F hs
   refine ⟨Fp (Fx s), ?_, hFp _⟩
   obtain ⟨u, hu, hn, hrel⟩ := hs'
-  haveI : IsMonHom (t.act.act a) := t.act.hom a
+  have : IsMonHom (t.act.act a) := t.act.hom a
   have hF : FormEq (fun _ : Fin 1 => gK (G := t.G)) (fun _ => ((k * N : ℕ) : ℤ))
       (Sum.elim (fun _ : Fin 1 => endK (t.act.act a) ≫ gK) ![gK, endK (t.act.act a) ≫ gK])
       (Sum.elim (fun _ : Fin 1 => (k : ℤ)) ![((k * N : ℕ) : ℤ), -(k : ℤ)]) := fun U _ g => by

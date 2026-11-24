@@ -258,7 +258,7 @@ theorem shift_frob_exists : ∀ (l : ℕ) [Fact l.Prime] (K : Type) [NormedField
       (∀ f : K⟦X⟧, φ₂ (PowerSeries.C f) = PowerSeries.C (frob K l f)) ∧
       (∀ f : K⟦X⟧, φ₂ (sh f) = sh (frob K l f)) := by
   intro l _ K _ _
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hl : 1 ≤ l := (Fact.out : l.Prime).one_lt.le
   refine ⟨shift, frob2 l, fun f i => ?_, frobeniusTwoVariablePowerSeries_C l, fun f => ?_⟩
   · have h0 : (i.factorial : K) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)

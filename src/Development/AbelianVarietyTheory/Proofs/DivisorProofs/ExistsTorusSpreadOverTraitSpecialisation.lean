@@ -77,10 +77,10 @@ theorem exists_common_residue {R W V : Type} [CommRing R] [IsLocalRing R] [CommR
     [IsLocalRing V] (ψ : R →+* W) [IsLocalHom ψ] (g : R →+* V) [IsLocalHom g] :
     ∃ (κ : Type) (_ : Field κ) (c : W →+* κ) (b : V →+* κ), (∀ x ∈ maximalIdeal W, c x = 0) ∧
       (∀ x ∈ maximalIdeal V, b x = 0) ∧ c.comp ψ = b.comp g := by
-  letI : Algebra (ResidueField R) (ResidueField W) := (ResidueField.map ψ).toAlgebra
-  letI : Algebra (ResidueField R) (ResidueField V) := (ResidueField.map g).toAlgebra
+  let : Algebra (ResidueField R) (ResidueField W) := (ResidueField.map ψ).toAlgebra
+  let : Algebra (ResidueField R) (ResidueField V) := (ResidueField.map g).toAlgebra
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (ResidueField W ⊗[ResidueField R] ResidueField V)
-  letI := Ideal.Quotient.field M
+  let := Ideal.Quotient.field M
   let q := Ideal.Quotient.mk M
   refine ⟨_ ⧸ M, inferInstance, q.comp ((Algebra.TensorProduct.includeLeftRingHom).comp (residue W)),
     q.comp ((Algebra.TensorProduct.includeRight.toRingHom).comp (residue V)), fun x hx => ?_, fun x hx => ?_,
@@ -117,9 +117,9 @@ theorem spread₂_of_trait {B : Scheme.{0}} (H : Over B) [GrpObj H]
     (j : splitTorus (Sp W) D₁.toPre.X ⟶ (Over.pullback (spMap ψ₀)).obj HR) (hj : IsMonHom j)
     (ej : GlobalTheory.TorusPart.pullTorus hn j = GlobalTheory.TorusPart.gtTorus (U₁.gt 0) hb₁ hn₁) :
     ∃ ρ, Spread₂ H U₁ ξ₁ β₁ U₂ ξ₂ β₂ ρ := by
-  haveI := hψ
-  haveI := hg₂
-  haveI := hj
+  have := hψ
+  have := hg₂
+  have := hj
   obtain ⟨κ, _, c, b₂, hc0, hb0, ec⟩ := exists_common_residue ψ₀ g₂
   have hcl : IsLocalHom c := isLocalHom_of_map_maximalIdeal c hc0
   have hb₂ := GlobalTheory.TorusPart.map_pow_one_eq_zero hb0
@@ -141,13 +141,13 @@ theorem spread₂_of_trait {B : Scheme.{0}} (H : Over B) [GrpObj H]
 
 theorem exists_spread₂ : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonObj H], IsSemiAbelian H → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], GlobalTheory.Mum.Base V₁ → ∀ (G₁ : Over (Sp V₁)) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ (D₁ : DegData V₁ (maximalIdeal V₁)) (A₁ : PolAV (Sp (FractionRing V₁))) (U₁ : Unif (maximalIdeal V₁) D₁ A₁ G₁) (ξ₁ : Sp V₁ ⟶ B) (β₁ : G₁.left ⟶ H.left), IsGrpPullback G₁ H ξ₁ β₁ → ∀ (V₂ : Type) [CommRing V₂] [IsDomain V₂] [IsLocalRing V₂], GlobalTheory.Mum.Base V₂ → ∀ (G₂ : Over (Sp V₂)) [GrpObj G₂] [IsCommMonObj G₂], IsSemiAbelian G₂ → ∀ (D₂ : DegData V₂ (maximalIdeal V₂)) (A₂ : PolAV (Sp (FractionRing V₂))) (U₂ : Unif (maximalIdeal V₂) D₂ A₂ G₂) (ξ₂ : Sp V₂ ⟶ B) (β₂ : G₂.left ⟶ H.left), IsGrpPullback G₂ H ξ₂ β₂ → IsIntegral B → IsLocallyNoetherian B → ξ₁ (closedPoint V₁) ⤳ ξ₂ (closedPoint V₂) → ∃ ρ : D₂.toPre.X →+ D₁.toPre.X, Spread₂ H U₁ ξ₁ β₁ U₂ ξ₂ β₂ ρ := by
   intro B H _ _ hH V₁ _ _ _ hV₁ G₁ _ _ hG₁ D₁ A₁ U₁ ξ₁ β₁ hβ₁ V₂ _ _ _ hV₂ G₂ _ _ hG₂ D₂ A₂ U₂ ξ₂ β₂ hβ₂ hBi hBn hsp
-  haveI := hBi
-  haveI := hBn
+  have := hBi
+  have := hBn
   let R : Type := B.presheaf.stalk (ξ₂ (closedPoint V₂))
   let ιB : Sp R ⟶ B := B.fromSpecStalk (ξ₂ (closedPoint V₂))
   let HR := (Over.pullback ιB).obj H
   have hHR : IsSemiAbelian HR := IsSemiAbelian.pullback ιB H hH
-  haveI : IsCommMonObj HR := hHR.comm
+  have : IsCommMonObj HR := hHR.comm
   have hR := isGrpPullback_pullback H ιB
   let g₁ : R →+* V₁ := (B.presheaf.stalkSpecializes hsp ≫ Scheme.stalkClosedPointTo ξ₁).hom
   let g₂ : R →+* V₂ := (Scheme.stalkClosedPointTo ξ₂).hom
@@ -160,7 +160,7 @@ theorem exists_spread₂ : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommM
   obtain ⟨β₁', hβ₁', eβ₁⟩ := GlobalTheory.SpreadTrait.pull_cancel hR (spMap g₁) (hβ₁.congr hξ₁.symm rfl)
   obtain ⟨β₂', hβ₂', eβ₂⟩ := GlobalTheory.SpreadTrait.pull_cancel hR (spMap g₂) (hβ₂.congr hξ₂.symm rfl)
   by_cases hl : IsLocalHom g₁
-  · haveI := hl
+  · have := hl
     let κ₁ := ResidueField V₁
     have hC : IsLocalHom (PowerSeries.C (R := κ₁)) :=
       ⟨fun a ha => by simpa using ha.map (PowerSeries.constantCoeff (R := κ₁))⟩
@@ -189,7 +189,7 @@ theorem exists_spread₂ : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommM
       (GlobalTheory.TorusPart.gtTorus (U₁.gt 0) hc hmc) inferInstance
       (GlobalTheory.TorusPart.pullTorus_gtTorus (U₁.gt 0) hc hb hmc hn' hn rfl rfl)
   · obtain ⟨W, _, _, _, ψ₀, Ω, _, αK, b₁, hψ, hb, eα, hT⟩ := _root_.GlobalTheory.exists_trait_nonlocal_torusExtension R HR hHR V₁ g₁ hl
-    haveI := hψ
+    have := hψ
     let alg := algebraMap W (FractionRing W)
     have hα : Function.Injective (αK.comp alg) :=
       αK.injective.comp (IsFractionRing.injective W (FractionRing W))

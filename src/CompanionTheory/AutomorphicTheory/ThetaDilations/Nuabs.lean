@@ -174,7 +174,7 @@ theorem nuabs : ∀ (G N H T : Type) [Group G] [MeasurableSpace G] [MeasurableMu
   have hw : (χ t : ℝ≥0∞) • wd.map (fun x => t * x) = wd := by
     ext s hs
     have hχ' : Measurable fun s => (χ s : ℝ≥0∞) := hχ.coe_nnreal_ennreal
-    rw [Measure.smul_apply, Measure.map_apply (measurable_const_mul t) hs, hwd,
+    rw [smul_apply, Measure.map_apply (measurable_const_mul t) hs, hwd,
       withDensity_apply _ (measurable_const_mul t hs), withDensity_apply _ hs, smul_eq_mul, ← lintegral_const_mul _ hχ',
       ← (measurePreserving_mul_left μT t).setLIntegral_comp_preimage hs hχ']
     simp only [map_mul, ENNReal.coe_mul]

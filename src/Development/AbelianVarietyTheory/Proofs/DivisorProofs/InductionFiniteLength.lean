@@ -113,7 +113,7 @@ theorem mem_unipRad_iff_blk {e : (Σ a, m a) ≃ n} {g : GL n R} :
 omit [LinearOrder α] in
 theorem leviEmb_apply_of_blk_ne [DecidableEq α] (e : (Σ a, m a) ≃ n) (g : Levi R m) {i j : n}
     (h : blk e i ≠ blk e j) : (leviEmb R e g : Matrix n n R) i j = 0 := by
-  letI : DecidableEq α := Classical.typeDecidableEq α
+  let : DecidableEq α := Classical.typeDecidableEq α
   obtain ⟨⟨a, x⟩, rfl⟩ := e.surjective i
   obtain ⟨⟨b, y⟩, rfl⟩ := e.surjective j
   have hab : a ≠ b := by simpa using h

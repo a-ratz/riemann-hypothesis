@@ -212,7 +212,7 @@ theorem uni_exists {M I C : Type*} (L : M ≃ I) (c : M → C) (w : M → ℕ) (
       have hf : f n (L m) ≠ 0 := by
         intro hf0
         apply hvi
-        rw [hi', hv, Finsupp.sub_apply, hf0, sub_zero, Finsupp.single_apply, if_neg]
+        rw [hi', hv, Finsupp.sub_apply, hf0, sub_zero, Finsupp.single_apply, ite_eq_right]
         intro heq
         exact hne (L.injective heq).symm
       obtain ⟨hc, hw⟩ := hlt n m hf
@@ -233,7 +233,7 @@ theorem uni_exists {M I C : Type*} (L : M ≃ I) (c : M → C) (w : M → ℕ) (
     refine ⟨Finsupp.single n 1 + ∑ i ∈ v.support, v i • g i, ?_, ?_⟩
     · intro m hm
       rcases Finset.mem_union.1 (Finsupp.support_add hm) with hm1 | hm1
-      · rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hm1
+      · rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hm1
         rw [hm1]
       · have hex' : ∃ i ∈ v.support, m ∈ (v i • g i).support := by
           by_contra h

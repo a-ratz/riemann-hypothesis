@@ -760,7 +760,7 @@ variable {D : D7} {V : HSp D}
 
 theorem mem_of_approx {E : Submodule ℂ (GA D V → ℂ)} [FiniteDimensional ℂ E] {φ : GA D V → ℂ}
     (h : ∀ C : Set (GA D V), IsCompact C → ∀ δ : ℝ, 0 < δ → ∃ ψ ∈ E, ∀ x ∈ C, ‖φ x - ψ x‖ < δ) : φ ∈ E := by
-  have hE : IsClosed (E : Set (GA D V → ℂ)) := Submodule.closed_of_finiteDimensional E
+  have hE : IsClosed (E : Set (GA D V → ℂ)) := Submodule.isClosed_of_finiteDimensional E
   have key : ∀ p : Finset (GA D V) × ℕ, ∃ ψ ∈ E, ∀ x ∈ p.1, ‖φ x - ψ x‖ < 1 / ((p.2 : ℝ) + 1) :=
     fun p => h _ p.1.finite_toSet.isCompact _ (by positivity)
   choose u hu hu' using key
@@ -789,7 +789,7 @@ theorem avg_mem (hθ : IsInfFam (D := D) θ) (hP : IsUnit P) (hJ : Pᴴ * Jm ε 
       ∀ h ∈ W, rTr V (atTau θ V τ g) h ∈ W)
     {φ : GA D V → ℂ} (hφc : Continuous φ) (hφ : φ ∈ W) {e : KG ε → ℂ} (he : KFinFun ε e) :
     avg θ V τ ε P e φ ∈ W := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hk : Continuous fun k : KG ε => atTau θ V τ (P⁻¹ * toMK k * P) :=
     (continuousOn_atTau hθ V τ).comp_continuous continuous_conjK
       fun k => conj_inv_mem hP hJ (K_le_UJ (toMK_mem_K k))
@@ -881,14 +881,14 @@ theorem finite_sum_of_gKModule_maps : _root_.GlobalTheory.FunPr.ThetaLocalInputs
       (p : Fin m → GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.kFin (M.ε τ) (M.σ τ)),
       (∀ j, GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.IsGKMap θ V τ (M.ε τ) (M.σ τ) (M.fr τ) (T j)) ∧ φ = ∑ j, T j (p j) := by
   intro hPr D θ V S M hθ τ φ hφ hT ⟨W, hWf, hφW, hWK⟩
-  haveI := hWf
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have := hWf
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   obtain ⟨H', i1, i2, σ', lam', ε', P', hE', hD', hP', hJ', hx⟩ := hT
   obtain ⟨rfl, rfl⟩ := GlobalTheory.SignedParTest.isEnum_unique (M.enum τ) hE'
   obtain ⟨U, hU⟩ := hPr.discreteSeriesHermitianUnique _ (M.ε τ) (M.lam τ)
     (GlobalTheory.Published.HermitianUnique.isHCParam_of_isDS (M.enum τ).1 (M.ds τ)) _ (M.fr τ) P' (M.fr_unit τ) hP'
     (M.fr_gram τ) hJ' _ _ (M.σ τ) σ' (M.ds τ) hD'
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hσ : Std (M.ε τ) (M.σ τ) := std_of_isDS hPr.harishChandraModules (M.ds τ)
   have hP := M.fr_unit τ
   have hJ := M.fr_gram τ
@@ -996,8 +996,8 @@ theorem model (h : GlobalTheory.Published.KFiniteVectorsUnitary) {lam : Fin n �
     ∀ B : Submodule ℂ (kFinSub ε σ), B ≠ ⊥ →
       (∀ X : Matrix (Fin n) (Fin n) ℂ, Xᴴ * G + G * X = 0 → ∀ v w : kFinSub ε σ, v ∈ B →
         HasDerivAt (fun t : ℝ => σ (P * NormedSpace.exp (t • X) * P⁻¹) (v : H)) (w : H) 0 → w ∈ B) → B = ⊤ := by
-  haveI := hσ.1
-  haveI := hσ.2.1
+  have := hσ.1
+  have := hσ.2.1
   obtain ⟨-, -, hd, hst, hirr⟩ := h.of_isDS hσ
   have hdet := (isUnit_iff_isUnit_det _).1 hP
   have h1 : P⁻¹ * P = 1 := Matrix.nonsing_inv_mul _ hdet
@@ -1262,7 +1262,7 @@ theorem IsPartMult.partialMultiplicity_decomposition (hPr : _root_.GlobalTheory.
   have hinj : ∀ F₁ ∈ Hs, ∀ F₂ ∈ Hs, F₁ p0 = F₂ p0 → F₁ = F₂ := by
     intro F₁ h₁ F₂ h₂ e
     have h3 : F₁ - F₂ ∈ Hs := Hs.sub_mem h₁ h₂
-    have := IsPartMult.eq_zero h3 hp0 hsimple (by rw [MultilinearMap.sub_apply, e, sub_self])
+    have := IsPartMult.eq_zero h3 hp0 hsimple (by rw [sub_apply, e, sub_self])
     exact sub_eq_zero.1 this
   set E := Hs.map (evAt p0) with hE
   have hEloc : IsLocSub θ M τ E := by
@@ -1305,7 +1305,7 @@ theorem IsPartMult.partialMultiplicity_decomposition (hPr : _root_.GlobalTheory.
     rw [h1]
     rfl
   · refine hinj _ hF _ (Hs.sum_mem fun m _ => hT'mem m (p m)) ?_
-    rw [MultilinearMap.sum_apply]
+    rw [sum_apply]
     simp only [hT'ev]
     exact hsum
 end GlobalTheory.CuspGKId
@@ -1346,7 +1346,7 @@ theorem mem_span_partialMultiplicity (hPr : _root_.GlobalTheory.FunPr.ThetaLocal
     refine ih.trans (Submodule.span_le.2 ?_)
     rintro y ⟨F, u, hF, rfl⟩
     obtain ⟨n, T, q, hT, hK, hL, hsum⟩ := _root_.GlobalTheory.CuspGKId.IsPartMult.partialMultiplicity_decomposition hPr hθ hA hAf hp0 hsimple hF hτ
-    rw [hsum, MultilinearMap.sum_apply]
+    rw [hsum, sum_apply]
     refine Submodule.sum_mem _ fun m _ => ?_
     have h1 : T m (q m) u = lam τ (u τ) • glue τ (T m) (p0 τ) (Function.update u τ (q m)) := by
       rw [glue_apply, Function.update_self, Function.update_idem, ← (hT m (q m)).other τ hτ u (u τ),

@@ -83,10 +83,10 @@ theorem unfoldGenStep_of (hM : MassUnfoldGen) (hH : MassDataMassesW.HinfCompact)
         (X.measW u).μH := ⟨𝓕, h𝓕⟩
   have hcov : covol (X.measW u).μH = ((X.measW u).μH hex.choose).toReal := by
     unfold covol
-    exact dif_pos hex
+    exact dite_eq_left hex
   obtain ⟨-, hHi, hHf, -⟩ := hN
-  haveI := hHi
-  haveI := hHf
+  have := hHi
+  have := hHf
   have h1 : (X.measW u).μHinf Set.univ ≠ 0 := isOpen_univ.measure_ne_zero _ Set.univ_nonempty
   have h2 : (X.measW u).μHinf Set.univ ≠ ⊤ := (hHi.toIsFiniteMeasureOnCompacts.lt_top_of_isCompact (@isCompact_univ _ _ hC)).ne
   have h3 : (X.measW u).μHf (U : Set ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) ≠ 0 := IsOpen.measure_ne_zero (X.measW u).μHf hUo ⟨1, U.one_mem⟩

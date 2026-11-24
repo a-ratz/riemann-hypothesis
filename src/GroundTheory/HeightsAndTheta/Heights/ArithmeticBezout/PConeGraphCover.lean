@@ -75,7 +75,7 @@ theorem coneSet_hausdorff_null_of_dim_lt {n : ℕ} (h : HermNorm n) (J : Ideal (
   refine measure_mono_null hsub (nonpos_iff_eq_zero.1 ?_)
   calc Measure.hausdorffMeasure ((2 * d : ℕ) : ℝ) (g '' zeroSetEuc J)
       ≤ (‖g‖₊ : ℝ≥0∞) ^ ((2 * d : ℕ) : ℝ) * Measure.hausdorffMeasure ((2 * d : ℕ) : ℝ) (zeroSetEuc J) :=
-        g.lipschitz.hausdorffMeasure_image_le (by positivity) _
+        g.lipschitzWith.hausdorffMeasure_image_le (by positivity) _
     _ = 0 := by rw [NullSmaller.proof n d J hd, mul_zero]
 
 theorem ConeGraphCover.proof (hDim : ConeFiniteFibreDim.Statement) (hTan : ConeTangentDim.Statement)

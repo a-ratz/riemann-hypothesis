@@ -122,7 +122,7 @@ theorem UpperTheory.exists_closedEmbedding_normOneAdelicGL_baseChange :
   intro h5 F E _ _ _ _ _ _ σ hσ n hn
   obtain ⟨hemb, hdet, -⟩ := h5 F E σ hσ n hn
   have hpos : Module.finrank F E ≠ 0 := by
-    haveI : FiniteDimensional F E := Module.Finite.right ℚ F E
+    have : FiniteDimensional F E := Module.Finite.right ℚ F E
     exact Module.finrank_pos.ne'
   have key : ∀ t : AdelicGLn.AdelicGL F n,
       mapGL n (adeleMap F E) t ∈ normOneGL (K := E) (n := n) ↔ t ∈ normOneGL (K := F) (n := n) := by
@@ -161,7 +161,7 @@ private theorem finsum_norm_ne_zero {X : Type*} [Group X] [TopologicalSpace X] [
     (h : f (a * δ * b) ≠ 0) : ∑ᶠ γ : Γ, ((‖f (a * γ * b)‖ : ℝ) : ℂ) ≠ 0 := by
   have hc : IsCompact ((fun y => a⁻¹ * y * b⁻¹) '' tsupport f) := hf.isCompact.image (by fun_prop)
   have hfin : ((fun γ : Γ => (γ : X)) ⁻¹' ((fun y => a⁻¹ * y * b⁻¹) '' tsupport f)).Finite := by
-    have := Γ.tendsto_coe_cofinite_of_discrete ⟨inferInstance⟩ hc.compl_mem_cocompact
+    have := Γ.tendsto_coe_cofinite_of_isDiscrete ⟨inferInstance⟩ hc.compl_mem_cocompact
     simpa [Filter.mem_map, Filter.mem_cofinite] using this
   have hs : (Function.support fun γ : Γ => ‖f (a * γ * b)‖).Finite := by
     refine hfin.subset fun γ hγ => ⟨a * γ * b, subset_tsupport _ ?_, by group⟩
@@ -179,7 +179,7 @@ theorem UpperTheory.exists_height_bound_of_twistedElliptic_support :
   obtain ⟨C, c, hC⟩ := h2 F E σ hσ n hn
   have hcs : HasCompactSupport (f : G1 E n → ℂ) := f.hasCompactSupport
   obtain ⟨M, hM⟩ := GroundTheory.Automorphic.CuspidalSpectrum.exists_height_le_of_isCompact
-    (hcs.isCompact.image (continuous_subtype_val (p := fun g => g ∈ normOneGL (K := E) (n := n))))
+    (hcs.isCompact.image (continuous_subtypeVal (p := fun g => g ∈ normOneGL (K := E) (n := n))))
   let f' : PositivityTheory.Rg.Tf.Core.CC E n :=
     { toFun := fun g => ((‖f g‖ : ℝ) : ℂ)
       continuous_toFun := Complex.continuous_ofReal.comp (map_continuous f).norm
@@ -271,10 +271,10 @@ theorem UpperTheory.quotientIntegral_lt_top_of_invariant_closedEmbedding :
           (∀ ρ, IsNormAlong id i ν ρ → ∫⁻ x, ‖Φ x‖ₑ * ρ x ∂μ < ⊤) →
           quotInt μ (fun x : H => (x : G)) (fun t => ((i t : H) : G)) ν Φ = quotInt μ id i ν Φ := by
   intro q1 q2 G T _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ H _ hH μ _ ν _ _ _ i hi Φ hΦ hinv hfin
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨ρ, hρc, hρ, -⟩ := q2 H T ν i hi
   have hemb : MeasurableEmbedding (Subtype.val : H → G) :=
-    MeasurableEmbedding.subtype_coe hH.measurableSet
+    MeasurableEmbedding.subtypeVal hH.measurableSet
   have hex : ∃ ρ', IsNormAlong (fun x : H => (x : G)) (fun t => ((i t : H) : G)) ν ρ' := by
     refine ⟨Function.extend (Subtype.val : H → G) (fun x => (ρ x : ℝ≥0∞)) 0,
       hemb.measurable_extend hρ.1 measurable_zero, fun x => ?_⟩
@@ -282,7 +282,7 @@ theorem UpperTheory.quotientIntegral_lt_top_of_invariant_closedEmbedding :
     refine lintegral_congr fun t => ?_
     exact Subtype.val_injective.extend_apply (fun x => (ρ x : ℝ≥0∞)) 0 (i t * x)
   have hn : IsNormAlong id i ν (fun x : H => hex.choose (x : G)) :=
-    ⟨hex.choose_spec.1.comp measurable_subtype_coe, fun x => hex.choose_spec.2 x⟩
+    ⟨hex.choose_spec.1.comp measurable_subtypeVal, fun x => hex.choose_spec.2 x⟩
   have h1 := q1 H H T μ ν (MonoidHom.id H) i measurable_id hi.continuous Φ
     (fun x : H => hex.choose (x : G)) hΦ.measurable hinv hn (hfin _ hn)
   refine Eq.trans ?_ h1.symm
@@ -310,14 +310,14 @@ theorem UpperTheory.unimodular_finite_quotientMeasure_of_cocompact :
         ν.IsMulRightInvariant ∧ ν.IsInvInvariant ∧ quotientMeasure Λ ν Set.univ < ⊤ := by
   intro T _ _ _ _ _ _ _ _ Λ _ ν _ hC
   obtain ⟨C, hC, h⟩ := hC
-  haveI : CompactSpace (RightCosetSpace Λ) := by
+  have : CompactSpace (RightCosetSpace Λ) := by
     refine ⟨(hC.image (RightCosetSpace.continuous_mk Λ)).of_isClosed_subset isClosed_univ ?_⟩
     intro x _
     obtain ⟨t, rfl⟩ := RightCosetSpace.mk_surjective Λ x
     obtain ⟨g, hg, y, hy, rfl⟩ := h t
     exact ⟨y, hy, (RightCosetSpace.mk_mul_of_mem hg y).symm⟩
-  haveI hr : ν.IsMulRightInvariant := RightCosetSpace.isMulRightInvariant_of_compactSpace Λ ν
-  haveI := RightCosetSpace.isFiniteMeasure (Γ := Λ) ν
+  have hr : ν.IsMulRightInvariant := RightCosetSpace.isMulRightInvariant_of_compactSpace Λ ν
+  have := RightCosetSpace.isFiniteMeasure (Γ := Λ) ν
   exact ⟨hr, ⟨RightCosetSpace.inv_eq_self_of_isMulRightInvariant ν⟩, measure_lt_top _ _⟩
 end -- clump:auto
 end -- clump:auto
@@ -499,7 +499,7 @@ private theorem termE (hU : U2) (q1 : Q1) (q2 : Q2) (n3 : N3) (n5 : N5)
   · exact funext fun t => hj1 t
   · funext x
     rw [← hθ x, ext0]
-    exact (dif_pos (x⁻¹ * d1 δ * tw θ x).2 (t := fun h => f ⟨_, h⟩) (e := fun _ => 0)).symm
+    exact (dite_eq_left (x⁻¹ * d1 δ * tw θ x).2 (t := fun h => f ⟨_, h⟩) (e := fun _ => 0)).symm
 end
 
 private theorem norm_self {F : Type} [Field F] {n : ℕ} (γ : GL (Fin n) F) : normGL (1 : F ≃ₐ[F] F) γ = incl γ := by

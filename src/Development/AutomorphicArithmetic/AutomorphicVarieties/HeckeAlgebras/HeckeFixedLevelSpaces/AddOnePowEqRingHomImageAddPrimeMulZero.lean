@@ -116,7 +116,7 @@ theorem lev_sph (w : W.Plc L) (j : ℕ) : ∃ (κ : Type) (_ : Fintype κ) (u : 
       sphOp (ρ.comp (H.sec w)) j = ∑ q, ρ (u q) ∧ (H.Ax → w ∈ H.Wp →
       ∀ K, ∀ v ∈ fixd ρ (H.lev K), (∑ q, ρ (u q)) v ∈ fixd ρ (H.lev K)) := by
   have hfin := (sphComm (w.adicCompletion L) n ℤ ℤ 1).1 (al _ n j)
-  letI := hfin.fintype
+  let := hfin.fintype
   refine ⟨MulAction.orbit (KO (w.adicCompletion L) (Fin n)) ((al _ n j : GLw n w) : GLw n w ⧸ KO (w.adicCompletion L) (Fin n)),
     inferInstance, fun q => H.sec w q.1.out, fun A M _ _ _ ρ => ?_⟩
   have h1 : sphOp (ρ.comp (H.sec w)) j = ∑ q : MulAction.orbit (KO (w.adicCompletion L) (Fin n))

@@ -219,21 +219,21 @@ theorem tjcosets_entries (n j : ℕ) (ϖ : L) (hϖ : ϖ ≠ 0)
   constructor
   · intro hall a b ha hb
     have h1 := hall a b
-    rw [if_pos ha, if_neg (not_lt.2 hb), mul_one] at h1
+    rw [ite_eq_left ha, ite_eq_right (not_lt.2 hb), mul_one] at h1
     rw [tjcosets_bc_apply]
     exact (hmax _).1 h1
   · intro hpar a b
     by_cases ha : (a : ℕ) < j <;> by_cases hb : (b : ℕ) < j
-    · rw [if_pos ha, if_pos hb, mul_comm ϖ⁻¹, mul_assoc, inv_mul_cancel₀ hϖ, mul_one]
+    · rw [ite_eq_left ha, ite_eq_left hb, mul_comm ϖ⁻¹, mul_assoc, inv_mul_cancel₀ hϖ, mul_one]
       exact ((h : Matrix (Fin n) (Fin n) O) a b).2
-    · rw [if_pos ha, if_neg hb, mul_one]
+    · rw [ite_eq_left ha, ite_eq_right hb, mul_one]
       apply (hmax _).2
       have := hpar a b ha (not_lt.1 hb)
       rw [tjcosets_bc_apply] at this
       exact this
-    · rw [if_neg ha, if_pos hb, one_mul]
+    · rw [ite_eq_right ha, ite_eq_left hb, one_mul]
       exact O.mul_mem ((h : Matrix (Fin n) (Fin n) O) a b).2 hϖO
-    · rw [if_neg ha, if_neg hb, one_mul, mul_one]
+    · rw [ite_eq_right ha, ite_eq_right hb, one_mul, mul_one]
       exact ((h : Matrix (Fin n) (Fin n) O) a b).2
 
 theorem tjcosets_stab (n j : ℕ) (ϖ : L) (hϖO : ϖ ∈ O) (hϖ : ϖ ≠ 0)
@@ -441,7 +441,7 @@ theorem tjcosets_card_residue :
     rw [e, Valuation.map_neg]
     exact hr
   have := v.isMaximal
-  letI := Ideal.Quotient.field v.asIdeal
+  let := Ideal.Quotient.field v.asIdeal
   let ψ := Ideal.Quotient.lift v.asIdeal φ hker
   have hs : Function.Surjective ψ := Ideal.Quotient.lift_surjective_of_surjective _ _ hsurj
   have hi : Function.Injective ψ := RingHom.injective ψ
@@ -457,7 +457,7 @@ theorem tjcosets_tj_ne_zero {L : Type} [Field L] (O : Subring L) (n j : ℕ) (ϖ
       ∃ a ∈ GLint (Fin n) O, ∃ b ∈ GLint (Fin n) O, g = a * tjcosets_dG n j ϖ hϖ * b := by
   unfold Tj
   rw [Set.indicator_apply_ne_zero]
-  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Function.mem_support, Pi.one_apply, ne_eq,
+  simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Function.mem_support, Pi.one_apply, ne_eq,
     one_ne_zero, not_false_eq_true, and_true]
   constructor
   · rintro ⟨a, ha, b, hb, h⟩
@@ -468,7 +468,7 @@ theorem tjcosets_tj_ne_zero {L : Type} [Field L] (O : Subring L) (n j : ℕ) (ϖ
 theorem Tj_double_coset_decomposition : Formalism.UG.TjCosets := by
   intro F _ _ v n ϖ hϖO hϖ j hj
   have hϖ0 := tjcosets_ne_zero v ϖ hϖ
-  haveI := tjcosets_finite v
+  have := tjcosets_finite v
   have hmax := tjcosets_hmax v ϖ hϖ
   have hset : {x : GL (Fin n) (v.adicCompletion F) ⧸ GLint (Fin n) (Ov F v) |
       Tj ℤ n (Ov F v) ϖ j x.out ≠ 0} = {x | ∃ a ∈ GLint (Fin n) (Ov F v),
@@ -480,7 +480,7 @@ theorem Tj_double_coset_decomposition : Formalism.UG.TjCosets := by
       (tjcosets_par (𝔽 := IsLocalRing.ResidueField (Ov F v)) n j).index := by
     rw [hset]
     exact tjcosets_index (O := Ov F v) n j ϖ hϖO hϖ0 hmax
-  letI : Fintype (IsLocalRing.ResidueField (Ov F v)) := Fintype.ofFinite _
+  let : Fintype (IsLocalRing.ResidueField (Ov F v)) := Fintype.ofFinite _
   have hcount := tjcosets_ff_count (𝔽 := IsLocalRing.ResidueField (Ov F v)) n j hj
   have hq : Fintype.card (IsLocalRing.ResidueField (Ov F v)) = qV F v := by
     rw [Fintype.card_eq_nat_card]

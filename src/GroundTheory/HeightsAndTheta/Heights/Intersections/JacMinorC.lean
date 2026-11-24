@@ -106,7 +106,7 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
       Matrix.det (Matrix.of fun i j => pderiv (b j) (G (a i))) ∉ 𝔭 := by
   classical
   let A := MvPolynomial σ F ⧸ 𝔭
-  haveI : IsDomain A := Ideal.Quotient.isDomain 𝔭
+  have : IsDomain A := Ideal.Quotient.isDomain 𝔭
   let K := FractionRing A
   let π : MvPolynomial σ F →+* K := (algebraMap A K).comp (Ideal.Quotient.mk 𝔭)
   have hπ : ∀ f, π f = 0 ↔ f ∈ 𝔭 := by
@@ -119,29 +119,29 @@ theorem exists_jacobian_minor_not_mem_charZero {F : Type} [Field F] [CharZero F]
   have hmk' : ∀ f, Ideal.Quotient.mk 𝔭 f = aeval xb f := fun f => by
     rw [← hmk, Ideal.Quotient.mkₐ_eq_mk]
 
-  haveI : Algebra.FiniteType F A := inferInstance
+  have : Algebra.FiniteType F A := inferInstance
   obtain ⟨s0, hs1, hs2⟩ := ReciprocityTheory.CA.exists_dim_trdeg_field (K := F) (A := A)
   have hs0 : s0 = d := by
     have : (s0 : WithBot ℕ∞) = (d : WithBot ℕ∞) := hs1.symm.trans hd
     exact_mod_cast this
   subst hs0
 
-  haveI : FaithfulSMul F A :=
+  have : FaithfulSMul F A :=
     (faithfulSMul_iff_algebraMap_injective F A).mpr (algebraMap F A).injective
   have hadj : Algebra.adjoin F (Set.range xb) = ⊤ := by
     rw [Algebra.adjoin_range_eq_range_aeval, ← hmk]
     refine eq_top_iff.mpr fun x _ => ?_
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mkₐ_surjective F 𝔭 x
     exact ⟨y, rfl⟩
-  haveI : Algebra.IsAlgebraic (Algebra.adjoin F (Set.range xb)) A := by
+  have : Algebra.IsAlgebraic (Algebra.adjoin F (Set.range xb)) A := by
     constructor
     intro a
     have ha : a ∈ Algebra.adjoin F (Set.range xb) := by rw [hadj]; trivial
     exact isAlgebraic_algebraMap (R := Algebra.adjoin F (Set.range xb)) (A := A)
       (⟨a, ha⟩ : Algebra.adjoin F (Set.range xb))
   obtain ⟨u, hu, hub⟩ := exists_isTranscendenceBasis_subset (R := F) (Set.range xb)
-  haveI : Finite u := ((Set.finite_range xb).subset hu).to_subtype
-  haveI : Fintype u := Fintype.ofFinite u
+  have : Finite u := ((Set.finite_range xb).subset hu).to_subtype
+  have : Fintype u := Fintype.ofFinite u
   have hcardu : Fintype.card u = s0 := by
     have h1 := hub.cardinalMk_eq_trdeg
     rw [hs2, Cardinal.mk_fintype] at h1

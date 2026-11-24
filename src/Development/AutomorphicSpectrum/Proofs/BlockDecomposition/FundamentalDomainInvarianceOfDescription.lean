@@ -68,10 +68,10 @@ theorem exists_isHaarMeasure_isMulRightInvariant (hn : 0 < n) :
   set Φ := glNormOneSplitting (K := K) hn with hΦ
   let ν : Measure (normOneGL (K := K) (n := n)) := Measure.haar
   let ρ : Measure {r : ℝ // 0 < r} := Measure.haar
-  haveI : ν.IsMulRightInvariant := isMulRightInvariant_normOneGL ν
+  have : ν.IsMulRightInvariant := isMulRightInvariant_normOneGL ν
   let m : Measure (normOneGL (K := K) (n := n) × {r : ℝ // 0 < r}) := ν.prod ρ
-  haveI : m.IsHaarMeasure := inferInstanceAs (ν.prod ρ).IsHaarMeasure
-  haveI : m.IsMulRightInvariant := inferInstanceAs (ν.prod ρ).IsMulRightInvariant
+  have : m.IsHaarMeasure := inferInstanceAs (ν.prod ρ).IsHaarMeasure
+  have : m.IsMulRightInvariant := inferInstanceAs (ν.prod ρ).IsMulRightInvariant
   have hc : Measurable (Φ.symm : normOneGL (K := K) (n := n) × {r : ℝ // 0 < r} → AdelicGLn.AdelicGL K n) :=
     Φ.symm.continuous.measurable
   refine ⟨m.map Φ.symm, ContinuousMulEquiv.isHaarMeasure_map m Φ.symm, ⟨fun g => ?_⟩⟩
@@ -130,7 +130,7 @@ instance countable_GL_rat : Countable (GL (Fin 2) ℚ) :=
 theorem measure_inter_band_lt_top (μ : Measure Ad3.R.G2) [μ.IsHaarMeasure] {𝓕 : Set Ad3.R.G2}
     (hF : IsFundamentalDomain (AdelicGLn.diagonal ℚ 2).range 𝓕 μ) : μ (𝓕 ∩ Ad3.R.band) < ⊤ := by
   obtain ⟨E, hE, hcov⟩ := exists_measure_lt_top_slab (K := ℚ) (n := 2) μ
-  haveI : Countable (AdelicGLn.diagonal ℚ 2).range :=
+  have : Countable (AdelicGLn.diagonal ℚ 2).range :=
     Function.Surjective.countable (AdelicGLn.diagonal ℚ 2).rangeRestrict_surjective
   refine lt_of_le_of_lt ?_ hE
   calc μ (𝓕 ∩ Ad3.R.band) ≤ μ (⋃ γ : (AdelicGLn.diagonal ℚ 2).range, γ • E ∩ 𝓕) := by
@@ -149,8 +149,8 @@ theorem measure_inter_band_lt_top (μ : Measure Ad3.R.G2) [μ.IsHaarMeasure] {�
 
 theorem exists_probability_haar :
     ∃ m : Measure Ad3.R.KA, m.IsHaarMeasure ∧ IsProbabilityMeasure m := by
-  haveI : CompactSpace Ad3.R.KA := isCompact_iff_compactSpace.1 isCompact_maxCompact
-  haveI : WeaklyLocallyCompactSpace Ad3.R.KA := by
+  have : CompactSpace Ad3.R.KA := isCompact_iff_compactSpace.1 isCompact_maxCompact
+  have : WeaklyLocallyCompactSpace Ad3.R.KA := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact inferInstance
   let K₀ : TopologicalSpace.PositiveCompacts Ad3.R.KA := ⊤
@@ -165,7 +165,7 @@ theorem setup_of_ideleDomain : Ad3.R.D0 → Ad3.R.G0 := by
   rintro ⟨𝓓, h1, h2, h3⟩
   obtain ⟨μ, hμ, hr⟩ := exists_isHaarMeasure_isMulRightInvariant (K := ℚ) (n := 2) (by norm_num)
   obtain ⟨mK, hK, hP⟩ := exists_probability_haar
-  haveI : DiscreteTopology (AdelicGLn.rationalGL ℚ 2) := AdelicGLn.discreteTopology_rationalGL ℚ 2
+  have : DiscreteTopology (AdelicGLn.rationalGL ℚ 2) := AdelicGLn.discreteTopology_rationalGL ℚ 2
   have hF : IsFundamentalDomain (AdelicGLn.diagonal ℚ 2).range
       (RightCosetSpace.fundamentalDomain (AdelicGLn.rationalGL ℚ 2)) μ :=
     RightCosetSpace.isFundamentalDomain_fundamentalDomain (AdelicGLn.rationalGL ℚ 2) μ

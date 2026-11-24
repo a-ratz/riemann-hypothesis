@@ -175,7 +175,7 @@ theorem minusculeSet_eq_doubleCoset {j : ℕ} (hj : j ≤ n) :
     have hs : ∑ i, μ i = j := by
       have hv : valuation F (uniformizer F : F) ≠ 0 := valuation_uniformizer_ne_zero F
       rw [valuation_det_diagPow, ← zpow_natCast] at m3
-      exact (zpow_right_strictAnti₀ (zero_lt_iff.2 hv) (valuation_uniformizer_lt_one F)).injective m3
+      exact (zpow_right_strictAnti₀ (pos_iff_ne_zero.2 hv) (valuation_uniformizer_lt_one F)).injective m3
     have hμ : μ = fun i : Fin n => if (i : ℕ) < j then (1 : ℤ) else 0 := funext (eq_ite_of_antitone hdom h0 h1 hs)
     refine ⟨k₁, hk₁, k₂, hk₂, ?_⟩
     rw [hd, ← hμ]
@@ -206,7 +206,7 @@ theorem val_eq_of_mul {a c : WithZero (Multiplicative ℤ)} (ha : a < 1) (hc : c
   rw [this]
 
 theorem integer_eq : 𝒪[w.adicCompletion E] = Formalism.UG.Ov E w := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (valuation (w.adicCompletion E))
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
@@ -234,7 +234,7 @@ theorem isUnifV_uniformizer :
   have hπ1 : Valued.v (uniformizer (w.adicCompletion E) : w.adicCompletion E) ≤ 1 :=
     (hmem _).1 (uniformizer _).2
   have hlt : Valued.v (uniformizer (w.adicCompletion E) : w.adicCompletion E) < 1 := by
-    haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     exact (ValuativeRel.isEquiv (valuation (w.adicCompletion E))
       (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))).lt_one_iff_lt_one.1

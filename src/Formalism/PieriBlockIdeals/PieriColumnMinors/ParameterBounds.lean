@@ -1409,7 +1409,7 @@ theorem sum_J_mul_log_le_totalBound (rs3 : PrimeCountingBound) {P : Par} (H : P.
       XC + (XD + 2 * (P.k : ℝ) * (P.S + 1) * (P.L + 2)) := by
     intro τ hτ
     have e : ∑ l ∈ W, (if τ ∈ D.T2 then min (D.ex τ l : ℝ) (D.cW P τ l) else (D.ex τ l : ℝ)) * Real.log (l : ℝ) = ∑ l ∈ W, min (D.ex τ l : ℝ) (D.cW P τ l) * Real.log (l : ℝ) :=
-      Finset.sum_congr rfl (fun l _ => by rw [if_pos hτ])
+      Finset.sum_congr rfl (fun l _ => by rw [ite_eq_left hτ])
     rw [e]
     exact add_le_add (hXC τ hτ A memA)
       (hXD τ hτ W (fun l hl => ⟨(memW l hl).1, (memW l hl).2.1, (memW l hl).2.2.1⟩))
@@ -1417,7 +1417,7 @@ theorem sum_J_mul_log_le_totalBound (rs3 : PrimeCountingBound) {P : Par} (H : P.
       1.3 * (P.Nr : ℝ) ^ 2 * P.b' := by
     intro τ hτ
     have e : ∑ l ∈ W, (if τ ∈ D.T2 then min (D.ex τ l : ℝ) (D.cW P τ l) else (D.ex τ l : ℝ)) * Real.log (l : ℝ) = ∑ l ∈ W, (D.ex τ l : ℝ) * Real.log (l : ℝ) :=
-      Finset.sum_congr rfl (fun l _ => by rw [if_neg hτ])
+      Finset.sum_congr rfl (fun l _ => by rw [ite_eq_right hτ])
     rw [e, ← Finset.sum_union hdisj]
     refine thinSum_holds rs3 P H G ι D I.thinA I.widths τ hτ (A ∪ W) (fun l hl => ?_)
     rcases Finset.mem_union.1 hl with h | h
@@ -1471,7 +1471,7 @@ theorem sum_div_mul_log_le_log_factorial' (n : ℕ) :
     ∑ p ∈ Formalism.RankGapBounds.ChebyshevFactorialBounds.primesUpTo n, ((n / p : ℕ) : ℝ) * Real.log (p : ℝ) ≤
       Real.log ((n.factorial : ℕ) : ℝ) := by
   have hfac : n.factorial ≠ 0 := Nat.factorial_ne_zero n
-  have hprod := Nat.prod_pow_prime_padicValNat (n.factorial) hfac (n.factorial + 1) (Nat.lt_succ_self _)
+  have hprod := Nat.prod_pow_prime_multiplicity (n.factorial) hfac (n.factorial + 1) (Nat.lt_succ_self _)
   have hlog : Real.log ((n.factorial : ℕ) : ℝ) =
       ∑ p ∈ (Finset.range (n.factorial + 1)).filter Nat.Prime,
         (padicValNat p n.factorial : ℝ) * Real.log (p : ℝ) := by
@@ -1490,7 +1490,7 @@ theorem sum_div_mul_log_le_log_factorial' (n : ℕ) :
         have := Fact.mk hp'
         have hv : n / p ≤ padicValNat p n.factorial := by
           rw [Nat.padicValNat_def]
-          rw [padicValNat_factorial (b := max 2 (Nat.log p n + 1))
+          rw [multiplicity_factorial (b := max 2 (Nat.log p n + 1))
             (lt_of_lt_of_le (Nat.lt_succ_self _) (le_max_right _ _))]
           calc n / p = n / p ^ 1 := by rw [pow_one]
             _ ≤ ∑ i ∈ Finset.Ico 1 (max 2 (Nat.log p n + 1)), n / p ^ i :=

@@ -121,9 +121,9 @@ lemma exists_div {M : Submodule (𝓞 E) (Fin n → E)}
 
 lemma projective_of_fg (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) :
     Module.Projective (𝓞 E) L := by
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
-  haveI : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
-  haveI : Module.Flat (𝓞 E) L := inferInstance
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
+  have : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
+  have : Module.Flat (𝓞 E) L := inferInstance
   exact Module.Flat.projective_of_finitePresentation
 
 omit [NumberField E] in
@@ -171,7 +171,7 @@ theorem GlobalTheory.AdLat.exists_linear_approx_tower : ∀ (F E : Type) [Field 
     have := congrArg (fun t => ((g⁻¹ : GL (Fin n) (RA F E)) : Matrix (Fin n) (Fin n) (RA F E)) *ᵥ t) h
     simp only [hG, Matrix.mulVec_mulVec, Units.inv_mul, Matrix.one_mulVec] at this
     exact this
-  haveI := projective_of_fg L hL
+  have := projective_of_fg L hL
   have key : ∀ N : ℕ, ∃ f : L →ₗ[𝓞 E] Λ, 0 < N → ∀ a : L, ∃ w ∈ hat F (L : Set (Fin n → E)),
       fv F (f a : Fin n → E) = G *ᵥ (fv F (a : Fin n → E) + N • w) := by
     intro N

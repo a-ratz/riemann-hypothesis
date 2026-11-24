@@ -157,8 +157,8 @@ private theorem exists_place_notMem_not_isSquare (F : Type) [Field F] [NumberFie
   push_neg at hcon
   set d : Fˣ := Units.mk0 δ hδ0 with hd
   have hidx := (_root_.GlobalTheory.QNorm.two_pow_le_index_locNorm F δ S₀ hδ0).1
-  haveI : (_root_.GlobalTheory.QNorm.locNorm F δ S₀).FiniteIndex := ⟨hidx⟩
-  haveI := Fintype.ofFinite (Fˣ ⧸ _root_.GlobalTheory.QNorm.locNorm F δ S₀)
+  have : (_root_.GlobalTheory.QNorm.locNorm F δ S₀).FiniteIndex := ⟨hidx⟩
+  have := Fintype.ofFinite (Fˣ ⧸ _root_.GlobalTheory.QNorm.locNorm F δ S₀)
   let X : Finset Fˣ := insert d
     (Finset.univ.image fun q : Fˣ ⧸ _root_.GlobalTheory.QNorm.locNorm F δ S₀ => q.out)
   obtain ⟨S₁, -, hS₁⟩ := _root_.GlobalTheory.QNorm.exists_superset_mem_sUnits F X S₀
@@ -177,7 +177,7 @@ private theorem exists_place_notMem_not_isSquare (F : Type) [Field F] [NumberFie
     by_cases hv0 : v ∈ S₀
     · exact hx.1 v hv0
     · rw [_root_.GlobalTheory.QNorm.mem_normSub]
-      haveI : CharZero (v.adicCompletion F) :=
+      have : CharZero (v.adicCompletion F) :=
         charZero_of_injective_algebraMap (algebraMap F _).injective
       exact exists_sq_sub_mul_sq_of_isSquare ((map_ne_zero _).mpr hδ0) (hcon v hv0) _
   rw [eq_top_iff]

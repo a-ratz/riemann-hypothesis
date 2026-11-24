@@ -185,7 +185,7 @@ private theorem ratio_tau {r : ℕ} (X : Data E r) (e : X.Ψ → Fin r → ℂ) 
       norm_pos_iff.mpr (div_ne_zero (hdne _) (hdne _))
     have hY : 0 < a (i + 1) / a i := div_pos hs hc
     rw [hd', hd', mul_div_mul_comm, ← Complex.ofReal_div, norm_mul, Complex.norm_real]
-    simp only [Fin.val_succ, Fin.coe_castSucc]
+    simp only [Fin.val_succ, Fin.val_castSucc]
     rw [Real.norm_of_nonneg hY.le, Real.mul_rpow hX.le hY.le, div_mul_eq_div_div, div_self (Real.rpow_pos_of_pos hX _).ne', one_div,
       ← Real.rpow_neg hY.le]
     congr 1

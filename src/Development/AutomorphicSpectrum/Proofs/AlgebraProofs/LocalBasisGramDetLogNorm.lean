@@ -122,7 +122,7 @@ theorem gram_det_ne_zero_local_basis_cofinite : ∀ (E : Type) [Field E] [Number
   · refine (Set.finite_le_nat n).preimage (f := fun ℓ : Nat.Primes => (ℓ : ℕ))
       (fun a _ b _ h => Subtype.ext h) |>.subset ?_
     intro ℓ hℓ
-    simp only [Set.mem_setOf_eq] at hℓ ⊢
+    simp only [Set.mem_ofPred_eq] at hℓ ⊢
     by_contra hlt
     apply hℓ
     refine ⟨he, n, fun hd => hlt ?_, hsp⟩
@@ -149,8 +149,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 
 theorem card_local_basis_eq_rank (D : Datum H) {I : Type} [Fintype I] (x : I → D.La) (ℓ : ℕ) (h : IsLocBasis (𝓞 E) ℓ x) :
     Fintype.card I = D.p + D.q := by
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   obtain ⟨hli, n, hn, hspan⟩ := h
   have hn0 : (n : 𝓞 E) ≠ 0 := by
     have : n ≠ 0 := by

@@ -72,7 +72,7 @@ theorem weightHeightAscending_add_root (nu : Fin n → ℤ) (a b : Fin n) :
   unfold weightHeightAscending rootW
   simp only [Pi.add_apply, Pi.sub_apply, mul_add, mul_sub, Finset.sum_add_distrib,
     Finset.sum_sub_distrib, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 theorem irreducible_lowering_word_weight [NeZero n] {E : GLOps n (KK O) V} {lam : Fin n → ℤ} {v : V} (hI : IsIrrHW E lam v)
     {u : Module.End (KK O) V} (hu : u ∈ loweringOperatorMonoid E) :
@@ -95,7 +95,7 @@ theorem irreducible_lowering_word_weight [NeZero n] {E : GLOps n (KK O) V} {lam 
     · have ha0 : a ≠ 0 := by
         intro h; rw [h] at hba; exact absurd hba (Fin.not_lt_zero _)
       have : (nu + rootW a b) 0 ≤ nu 0 := by
-        simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_apply, if_neg (Ne.symm ha0)]
+        simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_apply, ite_eq_right (Ne.symm ha0)]
         split_ifs <;> omega
       exact this.trans h0
     · have hbl : b ≠ lastIdx n := by
@@ -105,7 +105,7 @@ theorem irreducible_lowering_word_weight [NeZero n] {E : GLOps n (KK O) V} {lam 
         have : (b : ℕ) < (a : ℕ) := hba
         omega
       have : nu (lastIdx n) ≤ (nu + rootW a b) (lastIdx n) := by
-        simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_apply, if_neg (Ne.symm hbl)]
+        simp only [rootW, Pi.add_apply, Pi.sub_apply, Pi.single_apply, ite_eq_right (Ne.symm hbl)]
         split_ifs <;> omega
       exact hl.trans this
 
@@ -172,11 +172,11 @@ theorem exists_highest_coordinate_functional [NeZero n] [CharZero (KK O)] {E : G
   let e := LinearEquiv.toSpanNonzeroSingleton (KK O) V v hv0
   refine ⟨e.symm.toLinearMap ∘ₗ P, ?_, ?_, ?_⟩
   · have h1 : P v = ⟨v, Submodule.mem_span_singleton_self v⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hc ⟨v, Submodule.mem_span_singleton_self v⟩
+      Submodule.projectionOnto_apply_left hc ⟨v, Submodule.mem_span_singleton_self v⟩
     show e.symm (P v) = 1
     rw [h1, LinearEquiv.symm_apply_eq, LinearEquiv.toSpanNonzeroSingleton_one]
   · intro w hw
-    have h2 : P w = 0 := Submodule.linearProjOfIsCompl_apply_right hc ⟨w, hw⟩
+    have h2 : P w = 0 := Submodule.projectionOnto_apply_right hc ⟨w, hw⟩
     show e.symm (P w) = 0
     rw [h2, map_zero]
   · intro x
@@ -188,11 +188,11 @@ theorem exists_highest_coordinate_functional [NeZero n] [CharZero (KK O)] {E : G
       rw [← h8, LinearEquiv.apply_symm_apply]
     show x - (e.symm (P x)) • v ∈ otherWts E lam
     rw [h3]
-    have hPP : P (P x : V) = P x := Submodule.linearProjOfIsCompl_apply_left hc (P x)
+    have hPP : P (P x : V) = P x := Submodule.projectionOnto_apply_left hc (P x)
     have h5 : P (x - (P x : V)) = 0 := by
       rw [map_sub, hPP, sub_self]
     have h6 := LinearMap.mem_ker.mpr h5
-    have h7 := Submodule.linearProjOfIsCompl_ker hc
+    have h7 := Submodule.ker_projectionOnto hc
     rw [SetLike.ext_iff] at h7
     exact (h7 _).mp h6
 

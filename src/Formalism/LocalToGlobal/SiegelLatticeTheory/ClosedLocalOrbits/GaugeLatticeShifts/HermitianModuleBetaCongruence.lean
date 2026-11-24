@@ -94,7 +94,7 @@ theorem par_of_ncong {x : X.B.I.Gf} (hx : x ∈ X.B.I.Kset) (hn : NCong X x) (hn
 theorem good_of_ncong {x : X.B.I.Gf} (hx : x ∈ X.B.I.Kset) (hn : NCong X x) : Good X x := by
   have hni := ncong_inv X hx hn
   have hxi : x⁻¹ ∈ X.B.I.Kset := by
-    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq] at hx ⊢
+    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq] at hx ⊢
     simpa using inv_mem hx
   exact ⟨par_of_ncong X hx hn hni, par_of_ncong X hxi hni (by simpa using hn)⟩
 

@@ -109,7 +109,7 @@ theorem relfinrank_restr [CharZero Ω₀] [CharZero Ω] (i : Ω₀ →+* Ω) {y�
     (hy : ∀ p, y (v p) = i (y₀ p)) (h₀ : blockFnField y₀ = ⊤) (h : blockFnField y = ⊤) :
     IntermediateField.relfinrank (blockFnField (y ∘ v)) (blockFnField y) =
       (letI := i.toAlgebra; Module.finrank Ω₀ Ω) := by
-  letI := i.toAlgebra
+  let := i.toAlgebra
   let φ : Ω₀ →ₐ[ℚ] Ω := i.toRatAlgHom
   have hS : φ '' {t : Ω₀ | ∃ p q : (Σ k, ι₀ k), p.1 = q.1 ∧ t = y₀ p / y₀ q} =
       {t : Ω | ∃ p q : (Σ k, ι₀ k), p.1 = q.1 ∧ t = (y ∘ v) p / (y ∘ v) q} := by

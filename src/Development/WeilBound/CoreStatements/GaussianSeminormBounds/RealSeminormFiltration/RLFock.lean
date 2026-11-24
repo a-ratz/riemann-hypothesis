@@ -81,7 +81,7 @@ theorem UpperTheory.Reformulated.B.Rc4.exists_bound_poly_mul_exp :
       ≤ Real.exp r ^ N * Real.exp (-(c * r ^ 2)) :=
         mul_le_mul_of_nonneg_right h1 (Real.exp_pos _).le
     _ = Real.exp ((N : ℝ) * r + -(c * r ^ 2)) := by
-        rw [Real.exp_add, Real.exp_nat_mul]
+        rw [Real.exp_add, Real.exp_natCast_mul]
     _ ≤ Real.exp ((N : ℝ) ^ 2 / (4 * c)) := Real.exp_le_exp.mpr h2
 end -- clump:auto
 end -- clump:auto
@@ -169,7 +169,7 @@ theorem exists_coercive [FiniteDimensional ℝ E] (B : E →L[ℝ] E →L[ℝ] �
       have h1 : B u u ≤ B x0 x0 := hmax hun
       have h2 : B x x = ‖x‖ ^ 2 * B u u := by
         conv_lhs => rw [hxu]
-        simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]; ring
+        simp only [map_smul, smul_apply, smul_eq_mul]; ring
       rw [h2]
       nlinarith [sq_nonneg ‖x‖]
 
@@ -225,8 +225,8 @@ theorem cis_temperate : Function.HasTemperateGrowth (fun t : ℝ => cexp (I * t)
     funext t
     simp [mul_comm I, exp_mul_I]
   rw [e]
-  exact (Function.Complex.hasTemperateGrowth_ofReal.comp cos_temperate).add
-    ((Function.Complex.hasTemperateGrowth_ofReal.comp sin_temperate).mul (Function.HasTemperateGrowth.const I))
+  exact (hasTemperateGrowth_ofReal.comp cos_temperate).add
+    ((hasTemperateGrowth_ofReal.comp sin_temperate).mul (Function.HasTemperateGrowth.const I))
 
 theorem exists_schwartz_cexp [FiniteDimensional ℝ E] (B B' : E →L[ℝ] E →L[ℝ] ℝ) (hB : ∀ x, x ≠ 0 → B x x < 0) :
     ∃ f : SchwartzMap E ℂ, ∀ x, f x = cexp ((B x x : ℝ) + I * (B' x x : ℝ)) := by
@@ -277,7 +277,7 @@ theorem exists_fock [DecidableEq L] (Z d : L → Module.End ℂ S) (hZ : ∀ l l
   have hc : ∀ a ∈ Set.range Z, ∀ b ∈ Set.range Z, a * b = b * a := by
     rintro _ ⟨l, rfl⟩ _ ⟨l', rfl⟩
     exact hZ l l'
-  letI : IsMulCommutative (Algebra.adjoin ℂ (Set.range Z)) :=
+  let : IsMulCommutative (Algebra.adjoin ℂ (Set.range Z)) :=
     Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hc a ha b hb)
   open scoped IsMulCommutative in
   let e : MvPolynomial L ℂ →ₐ[ℂ] Module.End ℂ S := (Algebra.adjoin ℂ (Set.range Z)).val.comp
@@ -398,13 +398,13 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] {L : Type} [Finty
 
 theorem D_add (c c' : L → ℂ) (f : 𝓢(V, ℂ)) : H.D (c + c') f = H.D c f + H.D c' f := by
   ext x
-  simp only [SchwartzMap.add_apply, H.hD, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [add_apply, H.hD, map_add (f := _), add_apply]
   push_cast
   ring
 
 theorem D_smul (t : ℝ) (c : L → ℂ) (f : 𝓢(V, ℂ)) : H.D (t • c) f = (t : ℂ) • H.D c f := by
   ext x
-  simp only [SchwartzMap.smul_apply, H.hD, map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul, real_smul]
+  simp only [smul_apply, H.hD, map_smul, smul_apply, smul_eq_mul, real_smul]
   push_cast
   ring
 
@@ -438,7 +438,7 @@ theorem ccr (c c' : L → ℂ) (f : 𝓢(V, ℂ)) :
     ((f.smooth 2).contDiffAt.isSymmSndFDerivAt (by simp)).eq _ _
   have hf := congrArg (fun t : ℝ => (t : ℂ)) (H.form c c')
   simp only [ofReal_sub, ofReal_mul, ofReal_neg, ofReal_ofNat] at hf
-  rw [SchwartzMap.add_apply, SchwartzMap.smul_apply, H.hD c, H.hD c' (H.D c f), fderiv_D, fderiv_D, H.hD, H.hD, hs, smul_eq_mul]
+  rw [add_apply, smul_apply, H.hD c, H.hD c' (H.D c f), fderiv_D, fderiv_D, H.hD, H.hD, hs, smul_eq_mul]
   linear_combination (-2 * Real.pi * I * f x) * hf
 
 theorem sum_self_im (c : L → ℂ) : (∑ l, c l * star ((I • c) l)).im = -∑ l, normSq (c l) := by
@@ -488,7 +488,7 @@ theorem eq_zero_of_ip (f : 𝓢(V, ℂ)) (h : ∫ x, normSq (f x) ∂μ ≤ 0) :
     by_contra hh
     push Not at hh
     exact hne (SchwartzMap.ext hh)
-  have := integral_pos_of_integrable_nonneg_nonzero (μ := μ) hc hi (fun x => normSq_nonneg _) (normSq_pos.2 hx).ne'
+  have := integral_pos_of_integrable_nonneg_ne_zero (μ := μ) hc hi (fun x => normSq_nonneg _) (normSq_pos.2 hx).ne'
   linarith
 
 end L2
@@ -499,7 +499,7 @@ theorem eq_zero_of_neg {c : L → ℂ} (hc : c ≠ 0) {f : 𝓢(V, ℂ)} (h : H.
   borelize V
   let μ : Measure V := Measure.addHaar
   have h1 := congrArg (fun g : 𝓢(V, ℂ) => ∫ x, star (f x) * g x ∂μ) (H.ccr c (I • c) f)
-  simp only [SchwartzMap.add_apply, mul_add] at h1
+  simp only [add_apply, mul_add] at h1
   rw [integral_add (integrable_ip μ _ _) (integrable_ip μ _ _), H.skew μ c f, H.skew μ (I • c) f, h, sum_self_im] at h1
   have k1 : ∀ (z : ℂ) (g : 𝓢(V, ℂ)), ∫ x, star (g x) * (z • g) x ∂μ = z * ((∫ x, normSq (g x) ∂μ : ℝ) : ℂ) := fun z g => by
     rw [← ip_self, ← integral_const_mul]

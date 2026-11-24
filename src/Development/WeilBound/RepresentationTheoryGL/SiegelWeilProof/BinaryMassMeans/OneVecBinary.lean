@@ -273,10 +273,10 @@ theorem exists_place {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (J : Matrix (Fi
       ∀ w : Fin 2 → ℂ, c * (star w ⬝ᵥ (J.map τ *ᵥ w)).re ≤ 0 := by
   by_contra hcon
   push_neg at hcon
-  haveI : IsTotallyReal F := hCM.1
-  haveI : IsTotallyComplex E := hCM.2.1
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hCM.2.2.1⟩
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have : IsTotallyReal F := hCM.1
+  have : IsTotallyComplex E := hCM.2.1
+  have : Algebra.IsQuadraticExtension F E := ⟨hCM.2.2.1⟩
+  have : IsCMField E := IsCMField.ofCMExtension F E
   have hcc : ∀ x : E, ReciprocityTheory.ChartRestriction.G.FD.cc x = σ x := fun x => by
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
     exact τ.injective ((GlobalTheory.Published.embedding_cc τ x).trans (hCM.2.2.2 τ x).symm)
@@ -356,7 +356,7 @@ theorem exists_place {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (J : Matrix (Fi
 theorem exists_hom {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (τ : E →+* ℂ) :
     ∃ Φ : Ainf F ⊗[F] E →+* ℂ, (∀ e, Φ (inclR (Ainf F) e) = τ e) ∧
       ∀ y, Φ (sigR (Ainf F) σ y) = star (Φ y) := by
-  haveI : IsTotallyReal F := hCM.1
+  have : IsTotallyReal F := hCM.1
   let φ : F →+* ℂ := τ.comp (algebraMap F E)
   let v : InfinitePlace F := InfinitePlace.mk φ
   have hv : v.IsReal := IsTotallyReal.isReal v
@@ -370,7 +370,7 @@ theorem exists_hom {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (τ : E →+* ℂ
         Algebra.algebraMap_self_apply]
       simpa using InfinitePlace.Completion.extensionEmbeddingOfIsReal_coe hv (WithAbs.toAbs v.1 x)
     rw [h1, InfinitePlace.embedding_of_isReal_apply, InfinitePlace.embedding_mk_eq_of_isReal hφ]
-  letI : Algebra F ℂ := φ.toAlgebra
+  let : Algebra F ℂ := φ.toAlgebra
   let f : Ainf F →ₐ[F] ℂ := { Complex.ofRealHom.comp ψ with commutes' := hψ }
   let g : E →ₐ[F] ℂ := { τ with commutes' := fun _ => rfl }
   refine ⟨(Algebra.TensorProduct.productMap f g).toRingHom, fun e => ?_, fun y => ?_⟩
@@ -602,7 +602,7 @@ theorem map_eq_sqrt_smul {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTop
     [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
     (e : G ≃ₜ+ G) (ν : Measure G) [ν.IsAddHaarMeasure] (c : ℝ≥0)
     (h : ν.map (e ∘ e) = c • ν) : ν.map e = NNReal.sqrt c • ν := by
-  haveI : (ν.map e).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν e
+  have : (ν.map e).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν e
   obtain ⟨b, hb⟩ : ∃ b : ℝ≥0, ν.map e = b • ν :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul (ν.map e) ν⟩
   have he : Measurable e := e.continuous.measurable
@@ -613,7 +613,7 @@ theorem map_eq_sqrt_smul {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTop
   have hfin : ν K ≠ ∞ := hK.measure_lt_top.ne
   have hbc : b * b = c := by
     have h3 : ((b * b : ℝ≥0) • ν) K = (c • ν) K := by rw [← h2, h]
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
     exact_mod_cast (ENNReal.mul_left_inj hpos hfin).1 h3
   rw [hb, ← hbc, NNReal.sqrt_mul_self]
 
@@ -682,17 +682,17 @@ theorem local_scal {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
         (oneByOne l : Matrix (Fin 1) (Fin 1) E).map (inclR R)) → ν.map τ = c • ν) :
     ν.map (scalH R σ (algebraMap F R l)) = NNReal.sqrt c • ν := by
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨iTR, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI := iTR
+  have := iTR
   obtain ⟨jLC, jSC, jT2, jB, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hcm R 1
-  haveI := jLC
-  haveI := jSC
-  haveI := jT2
-  haveI := jB
+  have := jLC
+  have := jSC
+  have := jT2
+  have := jB
   exact map_eq_sqrt_smul (scalEquiv σ hcm R 1 l hl) ν c (h _ (action_eq R σ l))
 
 theorem scal_module : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ l : F, l ≠ 0 → ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (∀ ν : Measure (HermR (Ainf F) σ 1), ν.IsAddHaarMeasure → ν.map (GlobalTheory.CompanionTheory.SW.MassSimil.scalH (Ainf F) σ (algebraMap F (Ainf F) l)) = cinf • ν) ∧ ∀ v : HeightOneSpectrum (𝓞 F), ∀ ν : Measure (HermR (Fv F v) σ 1), ν.IsAddHaarMeasure → ν.map (GlobalTheory.CompanionTheory.SW.MassSimil.scalH (Fv F v) σ (algebraMap F (Fv F v) l)) = c v • ν := by
@@ -701,8 +701,8 @@ theorem scal_module : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     rw [Matrix.det_fin_one]
     exact (map_ne_zero (algebraMap F E)).2 hl
   obtain ⟨ci, c, hu, hi, hv⟩ := _root_.GlobalTheory.CompanionTheory.SW.pf_herm F E σ hcm 1 (oneByOne l) hdet
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   refine ⟨NNReal.sqrt ci, fun v => NNReal.sqrt (c v), (PositivityTheory.PlacePermOperatorBicommutantSpan.up_alg F ci ci c c hu hu).2.2.2.2.2.1, ?_, ?_⟩
   · intro ν hν
     exact local_scal σ hcm (Ainf F) (GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hcm.1) l hl ci ν hν (hi ν hν)
@@ -762,8 +762,8 @@ theorem simil : PositivityTheory.Rg.Mass.Simil := by
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hcm.1
   have hLv : ∀ v, IsLocR (Fv F v) := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hWi := SWIsom.haar_of_loc σ hcm (Ainf F) hLi b li hli.1 1 2
   have hWv := fun v => SWIsom.haar_of_loc σ hcm (Fv F v) (hLv v) b (lam v) (hlam v).1 1 2
   have hJR : ∀ (R : Type) [CommRing R] [Algebra F R],
@@ -797,7 +797,7 @@ theorem simil : PositivityTheory.Rg.Mass.Simil := by
       exact SWIsom.map_actTup (evalV F v) γ (projFin X) a i
   have hfin : ∀ v, m v (hermScal (Fv F v) σ (algebraMap F _ β')) (latV b v) < ⊤ := by
     intro v
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm 2 J hJ (Fv F v) (hLv v) 1 _ _ (m v) (hWv v).1 (hWv v).2 (hm v)
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm 2 J hJ (Fv F v) (hLv v) 1 _ _ (m v) (hWv v).1 (hWv v).2 (hm v)
       (hermScal (Fv F v) σ (algebraMap F _ β'))).1
     exact ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 2).2.2.2.1 v).1.measure_lt_top
   have key := euler_move_c F E σ hcm d b 1 2 (thetaMeas σ J μ' 𝓕' (PositivityTheory.Rg.Mass.sph σ J β)) (mi (hermScal (Ainf F) σ (algebraMap F _ β)))
@@ -870,7 +870,7 @@ theorem half_trace_tmul (σ : E →ₐ[F] E) (hσ : HeckeCharacterZeroLocus.Sieg
   have h2 : algebraMap F R (1 / 2) * 2 = 1 := by
     rw [← (map_ofNat (algebraMap F R) 2), ← map_mul]
     norm_num
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
   have hc : Fintype.card (Fin (Module.finrank F E)) = 2 := by
     rw [Fintype.card_fin, hσ.2.2.1]
   rw [e, Algebra.trace_algebraMap_of_basis (Algebra.TensorProduct.basis R (Module.finBasis F E)), hc,
@@ -883,10 +883,10 @@ theorem coordHerm_map_unit (σ : E →ₐ[F] E) (hσ : HeckeCharacterZeroLocus.S
       algebraMap R (R ⊗[F] E) t * (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) i j) :
     (coordHerm R σ b lam 1).map τ = c • coordHerm R σ b lam 1 := by
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hK, -, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R d b lam ‹_›
-  haveI := hK
-  haveI := hH 1
+  have := hK
+  have := hH 1
   set φ : HeckeCharacterZeroLocus.SiegelWeilU.HermR R σ 1 → (Fin 1 → R) × ({p : Fin 1 × Fin 1 // p.1 < p.2} → R ⊗[F] E) :=
     fun S => ((fun i : Fin 1 => algebraMap F R (1 / 2) *
           Algebra.trace R (R ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) i i)),
@@ -934,7 +934,7 @@ end H
 
 theorem coordHerm_map_ainf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure (Ainf F)), lam.IsAddHaarMeasure → ∀ t : Ainf F, IsUnit t → ∀ c : ℝ≥0, lam.map (fun y => t * y) = c • lam → ∀ τ : HermR (Ainf F) σ 1 → HermR (Ainf F) σ 1, Measurable τ → (∀ S i j, (τ S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) i j = algebraMap (Ainf F) (Ainf F ⊗[F] E) t * (S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) i j) → (GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b lam 1).map τ = c • GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b lam 1 := by
   intro F E _ _ _ _ _ σ hσ d b lam hlam t ht c h τ hτm hτ
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   exact coordHerm_map_unit (Ainf F) σ hσ b lam t ht c h τ hτm hτ
 
 end GlobalTheory.CompanionTheory.SW.DilU
@@ -959,8 +959,8 @@ theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   intro F E _ _ _ _ _ σ hσ M J hJ hM d b lam hlam m hm e he s t ht
   have hloc : GlobalTheory.CompanionTheory.SW.IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   obtain ⟨i1, i2, i3, i4, i5, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Ainf F) d b lam hlam
   have hd : d = 2 := by
     rw [← hσ.2.2.1, Module.finrank_eq_card_basis b, Fintype.card_fin]
@@ -969,7 +969,7 @@ theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have hN0 : N ≠ 0 := by
     refine Finset.prod_ne_zero_iff.2 fun w _ => ?_
     have : IsUnit (e t) := ht.map e
-    exact nnnorm_ne_zero_iff.2 (Pi.isUnit_iff.1 this w).ne_zero
+    exact nnNorm_ne_zero_iff.2 (Pi.isUnit_iff.1 this w).ne_zero
   have hN2 : ∏ w, ‖e (t ^ 2) w‖₊ = N ^ 2 := by
     rw [hN, ← Finset.prod_pow]
     refine Finset.prod_congr rfl fun w _ => ?_
@@ -998,11 +998,11 @@ theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have hτe : ∀ S i j, (τ S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) i j =
       algebraMap (Ainf F) (Ainf F ⊗[F] E) (t ^ 2) * (S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) i j := fun _ _ _ => rfl
   have hτm : Measurable τ := by
-    haveI : BorelSpace (HermR (Ainf F) σ 1) := ⟨rfl⟩
+    have : BorelSpace (HermR (Ainf F) σ 1) := ⟨rfl⟩
     have : Continuous τ := by
       refine Continuous.subtype_mk ?_ _
       refine continuous_pi fun i => continuous_pi fun j => ?_
-      exact continuous_const.mul ((continuous_apply j).comp ((continuous_apply i).comp continuous_subtype_val))
+      exact continuous_const.mul ((continuous_apply j).comp ((continuous_apply i).comp continuous_subtypeVal))
     exact this.measurable
   have hc := _root_.GlobalTheory.CompanionTheory.SW.DilU.coordHerm_map_ainf F E σ hσ 2 b lam hlam (t ^ 2) (ht.pow 2) _ hs2 τ hτm hτe
   have hτ : ∀ S, (τ S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) = HeckeCharacterZeroLocus.SiegelWeilU.cT (sigR (Ainf F) σ) g * S * g := by
@@ -1040,7 +1040,7 @@ theorem dilation_inf_binary : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   intro F E _ _ _ _ _ σ hσ J hJ d b li hli mi hm θ hθ ε hε s φ hφ
   obtain ⟨-, e, -, he, -, habs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hσ.1
   obtain ⟨i1, i2, i3, i4, -, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI : BorelSpace (Fin 1 → Fin 2 → Ainf F ⊗[F] E) := hB 1 2
+  have : BorelSpace (Fin 1 → Fin 2 → Ainf F ⊗[F] E) := hB 1 2
   set t : Ainf F := θ ε with ht_def
   have ht : IsUnit t := (isUnit_iff_ne_zero.2 hε.ne').map θ
   have key := fibre_unit_dilation F E σ hσ 2 J hJ (by norm_num) d b li hli.1 mi hm e he s t ht
@@ -1050,7 +1050,7 @@ theorem dilation_inf_binary : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     have h1 := (PositivityTheory.PlacePermOperatorBicommutantSpan.theta_real F hσ.1).2 θ hθ ε w
     have h2 := habs t w
     apply NNReal.eq
-    rw [coe_nnnorm, Real.norm_eq_abs, h2, Real.coe_toNNReal _ hε.le]
+    rw [coe_nnNorm, Real.norm_eq_abs, h2, Real.coe_toNNReal _ hε.le]
     rw [show ‖t w‖ = ‖θ ε w‖ from rfl, h1, abs_of_pos hε]
   have hN : ∏ w, ‖e t w‖₊ = ε.toNNReal ^ n := by
     have hc : Fintype.card (InfinitePlace F) = n := by
@@ -1105,19 +1105,19 @@ theorem fibre_masses_standard_lattice : ∀ (F E : Type) [Field F] [NumberField 
   intro F E _ _ _ _ _ σ hCM J hJ d b v lam hlam m hm
   classical
   have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v) := hloc.1
-  haveI : LocallyCompactSpace (Fv F v) := hloc.2.1
-  haveI : SecondCountableTopology (Fv F v) := hloc.2.2.1
-  haveI : T2Space (Fv F v) := hloc.2.2.2.1
-  haveI := hlam.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v) := hloc.1
+  have : LocallyCompactSpace (Fv F v) := hloc.2.1
+  have : SecondCountableTopology (Fv F v) := hloc.2.2.1
+  have : T2Space (Fv F v) := hloc.2.2.2.1
+  have := hlam.1
   obtain ⟨-, -, -, hT2K, -, htr, -, hBorW, -, hgr⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
-  haveI := hT2K
+  have := hT2K
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b lam hlam.1
   obtain ⟨hLc, hLo, -, hL1⟩ := _root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b 1 2 v
   obtain ⟨hSh, -, hSm⟩ := GlobalTheory.CompanionTheory.SW.hermScal_main F E σ hCM (Fv F v) d b
-  haveI : BorelSpace (Fin 1 → Fin 2 → Fv F v ⊗[F] E) := hBorW 1 2
-  haveI : BorelSpace (HermR (Fv F v) σ 1) := ⟨rfl⟩
+  have : BorelSpace (Fin 1 → Fin 2 → Fv F v ⊗[F] E) := hBorW 1 2
+  have : BorelSpace (HermR (Fv F v) σ 1) := ⟨rfl⟩
   have hLm : MeasurableSet (latV (M := 2) (n := 1) b v) := hLo.measurableSet
   obtain ⟨φ, hφ⟩ : ∃ φ : (Fin 1 → Fin 2 → Fv F v ⊗[F] E) → ℂ,
       φ = (latV b v).indicator (fun _ => (1 : ℂ)) := ⟨_, rfl⟩
@@ -1148,7 +1148,7 @@ theorem fibre_masses_standard_lattice : ∀ (F E : Type) [Field F] [NumberField 
     simp [hval]
   refine ⟨hcont, ?_⟩
   have hfin : ∀ S, m S (latV b v) < ⊤ := fun S => by
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM 2 J hJ (Fv F v) hloc 1 _ _ m (hW 1 2) (hH 1) hm S).1
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM 2 J hJ (Fv F v) hloc 1 _ _ m (hW 1 2) (hH 1) hm S).1
     exact hLc.measure_lt_top
   obtain ⟨n1, n2⟩ := _root_.GlobalTheory.CompanionTheory.SW.NullV.null_nonunits F E σ hCM 2 J hJ (by norm_num) v (coordW (Fv F v) b lam 1 2) lam (hW 1 2) hlam.1
   have n1' : lam ({0}ᶜ : Set (Fv F v))ᶜ = 0 := by
@@ -1177,7 +1177,7 @@ theorem fibre_masses_standard_lattice : ∀ (F E : Type) [Field F] [NumberField 
   rw [hEmb.restrict_map, hEmb.lintegral_map] at hmass
   have hpre : hermScal (Fv F v) σ ⁻¹' {S | FibreRatio.qS (Fv F v) σ S ∈ ({0}ᶜ : Set (Fv F v))} = {0}ᶜ := by
     ext s
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, FibreRatio.qS_hermScal (Fv F v) hCM s]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, FibreRatio.qS_hermScal (Fv F v) hCM s]
   rw [hpre, hres] at hmass
   have hae : AEMeasurable (fun s : Fv F v => m (hermScal (Fv F v) σ s) (latV b v)) lam := by
     have h1 : AEMeasurable (fun s : Fv F v => ENNReal.ofReal (m (hermScal (Fv F v) σ s) (latV b v)).toReal)

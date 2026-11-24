@@ -123,7 +123,7 @@ theorem tor_mem (θ : Fin k → ℝ) : tor θ ∈ UJset (allPos k) := by
 
 theorem tor_det_zpow (θ : Fin k → ℝ) (x : ℤ) :
     (tor θ).det ^ x = Complex.exp (((∑ a, (x : ℝ) * θ a : ℝ) : ℂ) * Complex.I) := by
-  rw [Matrix.det_diagonal, ← Complex.exp_sum, ← Complex.exp_int_mul]
+  rw [Matrix.det_diagonal, ← Complex.exp_sum, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   rw [Finset.mul_sum, Finset.sum_mul]
@@ -224,9 +224,9 @@ theorem isURepOn_twist (hσ : IsURepOn (UJset (allPos k)) σ) (x : ℤ) :
     rw [hσ.1.2 _ (map_star_mem ha) _ (map_star_mem hb)]
     ext v
     simp [smul_smul, mul_comm]
-  · simp only [ContinuousLinearMap.smul_apply, norm_smul, norm_zpow, norm_det hg, _root_.one_zpow,
+  · simp only [smul_apply, norm_smul, norm_zpow, norm_det hg, _root_.one_zpow,
       one_mul, hσ.2.1 _ (map_star_mem hg)]
-  · simp only [ContinuousLinearMap.smul_apply]
+  · simp only [smul_apply]
     refine ContinuousOn.smul ?_ ?_
     · exact (continuous_id.matrix_det.continuousOn).zpow₀ x fun g hg => Or.inl (det_ne_zero hg)
     · exact (hσ.2.2 v).comp (continuous_id.matrix_map continuous_star).continuousOn

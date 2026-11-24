@@ -171,7 +171,7 @@ theorem dilation_mem_group : Formalism.FourierDecayAlt.B.DilMem := by
   intro k r t ht
   have hp : ∀ n : ℕ, t ^ n ≠ 0 := fun n => pow_ne_zero n ht
   unfold GV UH aDil
-  rw [Set.mem_setOf_eq, Matrix.diagonal_conjTranspose]
+  rw [Set.mem_ofPred_eq, Matrix.diagonal_conjTranspose]
   ext i j
   simp only [Matrix.mul_diagonal, Matrix.diagonal_mul, Pi.star_apply]
   unfold Hpk

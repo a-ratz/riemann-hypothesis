@@ -176,7 +176,7 @@ theorem inG_mul {p : ℕ} {δ : F} (hδ0 : δ ≠ 0) {γ γ' : GL (Fin 2) F} (h 
 
 theorem inG_one (p : ℕ) (δ : F) : InG p δ 1 := by
   have h1 : PInt p (1 : F) := fun w _ => by rw [map_one]
-  have h0 : PInt p (0 : F) := fun w _ => by rw [map_zero]; exact zero_le'
+  have h0 : PInt p (0 : F) := fun w _ => by rw [map_zero]; exact zero_le
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> simp [h1, h0]
   · intro w _; simp
   · exact tp_one
@@ -242,7 +242,7 @@ theorem rep_cmp {p : ℕ} [hp : Fact p.Prime] {δ : F} (hδ : IsDel p δ) (y y' 
     have h1 := hy w hw
     have h2 := hy' w hw
     have h3 := hξ w hw
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, map_mul] at h3
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, map_mul] at h3
     have hd0 : w.valuation F δ ≠ 0 := right_ne_zero_of_mul_eq_one h1
     refine ⟨?_, mul_right_cancel₀ hd0 (h2.trans h1.symm), h1⟩
     calc _ = Valued.v (pLoc F w (algebraMap F (Af F) ξ)) * Valued.v (pLoc F w (z : Af F)) *
@@ -280,13 +280,13 @@ theorem rep_cmp {p : ℕ} [hp : Fact p.Prime] {δ : F} (hδ : IsDel p δ) (y y' 
     · rw [hsd, sq]; exact tp_mul (tp_mul hξT hξT) hT
   obtain ⟨-, hmul, hone, hprod⟩ := UpperTheory.V.Sd.Hm.absf F
   obtain ⟨r, hr, hr1, hrz⟩ := GlobalTheory.HilbertThetaSeries.IdeleAbs.absF_eq_rat F p (Units.map (algebraMap F (Af F)).toMonoidHom ξ * z) fun w hw => by
-    simpa only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_mul] using (key w hw).1
+    simpa only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_mul] using (key w hw).1
   have hid : Units.map (algebraMap F (Af F)).toMonoidHom
         (Matrix.GeneralLinearGroup.det (Matrix.GeneralLinearGroup.scalar (Fin 2) ξ * γ)) * y =
       (Units.map (algebraMap F (Af F)).toMonoidHom ξ * z) * (Units.map (algebraMap F (Af F)).toMonoidHom ξ * z) * y' *
         Matrix.GeneralLinearGroup.det u := by
     apply Units.ext
-    simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe,
+    simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
       Matrix.GeneralLinearGroup.val_det_apply]
     rw [← Units.val_mul, hsd, map_mul, map_pow]
     linear_combination (algebraMap F (Af F) ξ) ^ 2 * edet

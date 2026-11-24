@@ -90,9 +90,9 @@ theorem UpperTheory.V.Lit.Geo.Cs.twOps :
     UpperTheory.V.Lit.Geo.Cs.TwOps := by
   intro E _ _ _ a ho U Ξ W hW g x
   have h1 : ∀ p : HV E a, sand g (sand g⁻¹ p) = p := fun p => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
   have h2 : ∀ p : HV E a, sand g⁻¹ (sand g p) = p := fun p => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl
   obtain ⟨k1, k2, k3⟩ := twOps_abs ho (sand g) (sand g⁻¹) (mulVecL (Ξ.mat g⁻¹)) (fun p hp => sand_mem_cone g hp)
     (fun p hp => sand_mem_cone g⁻¹ hp) h1 h2 (hW.field (QuotientGroup.mk x))
   refine ⟨k1, k2, fun q => ?_⟩

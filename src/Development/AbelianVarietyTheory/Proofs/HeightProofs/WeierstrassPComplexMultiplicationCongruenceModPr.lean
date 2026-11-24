@@ -189,7 +189,7 @@ theorem three_distinct_roots :
     refine ⟨x, ?_⟩
     simpa using hx
 
-  obtain ⟨s, hs⟩ := IsAlgClosed.exists_eq_mul_self (g₂ - 3 * x ^ 2)
+  obtain ⟨s, hs⟩ := IsAlgClosed.isSquare (g₂ - 3 * x ^ 2)
   obtain ⟨y, hy⟩ : ∃ y : K, 2 * y = s - x := ⟨(s - x) / 2, by field_simp⟩
   have hq : 4 * y ^ 2 + 4 * x * y + 4 * x ^ 2 - g₂ = 0 := by
     linear_combination (2 * y + x + s) * hy - hs
@@ -238,7 +238,7 @@ lemma coeff_of_dvd {k : Type} [Field k] (p : ℕ) [Fact p.Prime] [CharP k p] (g�
   let K := AlgebraicClosure k
   let ι : k →+* K := algebraMap k K
   have hι : Function.Injective ι := ι.injective
-  haveI : CharP K p := charP_of_injective_ringHom hι p
+  have : CharP K p := charP_of_injective_ringHom hι p
   have h2' : (2 : K) ≠ 0 := by
     have := (map_ne_zero_iff ι hι).mpr h2
     rwa [map_ofNat] at this
@@ -376,7 +376,7 @@ lemma exists_scaling (W : ValuationSubring ℂ) (A D : ℂ[X]) (hD : D ≠ 0) :
       · have h1 := hmax _ (hB (coeff_mem_coeffs h))
         refine ⟨⟨s⁻¹ * B.coeff n, ?_⟩, rfl⟩
         rw [← W.valuation_le_one_iff, map_mul, map_inv₀, inv_mul_le_one₀
-          (zero_lt_iff.mpr ((_root_.map_ne_zero _).mpr hs0))]
+          (pos_iff_ne_zero.mpr ((_root_.map_ne_zero _).mpr hs0))]
         exact h1
     obtain ⟨B₀, hB₀⟩ := (mem_lifts _).mp this
     refine ⟨B₀, hB₀, fun hsB h0 => ?_⟩
@@ -462,12 +462,12 @@ theorem weierstrassP_mul_congr_pow : ∀ (L : PeriodPair) (W : ValuationSubring 
     rintro rfl
     simp only [norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow] at hN
     exact hp.ne_zero (by exact_mod_cast hN.symm)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   set ρ := IsLocalRing.residue W with hρ
   have hpk : (p : IsLocalRing.ResidueField W) = 0 := by
     rw [← map_natCast ρ, residue_eq_zero_iff']
     simpa using hpW
-  haveI : CharP (IsLocalRing.ResidueField W) p := (CharP.charP_iff_prime_eq_zero hp).mpr hpk
+  have : CharP (IsLocalRing.ResidueField W) p := (CharP.charP_iff_prime_eq_zero hp).mpr hpk
   have hcop : ∀ m : ℕ, Odd m → (m : ℂ)⁻¹ ∈ W → p.Coprime m := by
     intro m hm hmW
     rw [hp.coprime_iff_not_dvd, ← CharP.cast_eq_zero_iff (IsLocalRing.ResidueField W) p,

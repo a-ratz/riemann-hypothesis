@@ -214,7 +214,7 @@ theorem dbar_sq_comp_eq {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V 
     rw [hK, hG]
     unfold wdb
     rw [hd1.fderiv, hd2.fderiv]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+    simp only [ContinuousLinearMap.comp_apply, smul_apply, smul_eq_mul,
       Complex.ofRealCLM_apply]
     rw [show ∀ a b c' : ℝ, (((a * b : ℝ) : ℂ) + Complex.I * ((a * c' : ℝ) : ℂ)) / 2 =
         (a : ℂ) * (((b : ℂ) + Complex.I * (c' : ℂ)) / 2) from fun a b c' => by push_cast; ring]
@@ -810,7 +810,7 @@ private theorem wdb_sum_mul_conj_eq_coord (n : ℕ) (k : Fin n) (p : V n) :
   rw [hF.fderiv]
   simp [bas, PiLp.single_apply]
   simp only [apply_ite (starRingEnd ℂ), map_zero, mul_ite, mul_zero, Complex.conj_I,
-    Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   linear_combination ((starRingEnd ℂ (p.ofLp k) - p.ofLp k) / 2) * Complex.I_sq
 
 theorem leviNormSq (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
@@ -1426,7 +1426,7 @@ theorem primedIneq (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
   calc ENNReal.ofReal (‖∫ x, I x ∂vol n z‖ ^ 2) = ‖∫ x, I x ∂vol n z‖ₑ ^ 2 := by
         rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     _ ≤ (∫⁻ x, ‖I x‖ₑ ∂vol n z) ^ 2 := by
-        gcongr; exact enorm_integral_le_lintegral_enorm _
+        gcongr; exact eNorm_integral_le_lintegral_eNorm _
     _ ≤ (∫⁻ x, Ff x ∂vol n z) * ∫⁻ x, Gf x ∂vol n z :=
         primed_lintegral_sq_le _ _ _ _ mF mG hpt
     _ ≤ _ := mul_le_mul' hF hG
@@ -1530,8 +1530,8 @@ private lemma fderiv_wdb_apply_eq {n : ℕ} (k : Fin n) (h : V n → ℂ) (y0 : 
     rw [heq]
     exact HasFDerivAt.fderiv hW
   rw [hF]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply, map_zero, zero_add,
+  simp only [smul_apply, add_apply,
+    ContinuousLinearMap.comp_apply, zero_apply, map_zero, zero_add,
     ContinuousLinearMap.flip_apply, smul_eq_mul]
   ring
 
@@ -1729,7 +1729,7 @@ theorem shell (n : ℕ) (M : Type*) [TopologicalSpace M] [T2Space M]
         apply ENNReal.ofReal_le_ofReal
         have hRx : Real.log (1 + C ⌈e x - a - 2⌉₊) + ⌈e x - a - 2⌉₊ ≤ χ (e x) := by
           have := hχR (e x) hx.le
-          simp only [hR, if_pos hx] at this
+          simp only [hR, ite_eq_left hx] at this
           exact this
         simp only [hg]
         rw [show -(ph x + χ (e x) - ψ x) = -(χ (e x)) + (-ph x + ψ x) by ring, Real.exp_add]

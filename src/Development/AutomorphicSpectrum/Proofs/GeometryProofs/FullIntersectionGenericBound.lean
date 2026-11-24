@@ -149,7 +149,7 @@ theorem cst_mem_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
       Algebra.adjoin ℚ (Set.range fun p : Σ k, J k => y p / y ⟨p.1, cc p.1⟩) := fun a =>
     segre_adjoin_le y cc ((𝔐.tie.ring cc hx _).2 fun p _ =>
       ringHom_mem_regAt 𝔐.ξ (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)) (𝔐.f ≫ Y.s) 𝔐.cst_over p a)
-  haveI : FiniteDimensional ℚ c.F := c.fin
+  have : FiniteDimensional ℚ c.F := c.fin
   have halg : IsAlgebraic ℤ r := (IsFractionRing.isAlgebraic_iff ℤ ℚ c.F).2 (Algebra.IsAlgebraic.isAlgebraic r)
   obtain ⟨n, hn, hr⟩ := halg.exists_integral_multiple
   have hn' : (n : Ω) ≠ 0 := Int.cast_ne_zero.2 hn
@@ -379,7 +379,7 @@ theorem exists_componentData_origin : Top.Given → Out.WeilSt → ∀ (E : Type
     rw [Datum.dim, ← h2, Nat.mul_div_cancel_left _ (by norm_num), _root_.mul_assoc, _root_.mul_assoc, hmul]
   rw [hn] at htr hsnc
   have htie : CoordTie ℤ 𝔐.ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) := 𝔐.tie
-  haveI := hK
+  have := hK
   obtain ⟨hbir, harith⟩ := _root_.GlobalTheory.CompanionTheory.Ar.coordTie_birational_isArithVar 𝔐.X Ω 𝔐.ξ K J y _ htie htr
   obtain ⟨hcl, htor, hconj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BdSym.boundary_closed_torus_conj 𝔐.X Ω 𝔐.ξ K J y (abLocus 𝔐.t.G) bd htie hbd
   obtain ⟨nc, χ, hcov'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SncCpt.exists_sncCharts K J Ω y _ bd hsnc harith htor

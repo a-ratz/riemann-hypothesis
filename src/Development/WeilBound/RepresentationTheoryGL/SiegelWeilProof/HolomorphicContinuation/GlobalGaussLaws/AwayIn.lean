@@ -93,7 +93,7 @@ theorem exists_schwartz_gauss_form {E : Type} [NormedAddCommGroup E] [NormedSpac
     have h2 := Complex.ofRealCLM.hasFDerivAt.comp s h1.exp
     have h3 := congrArg (fun f => fderiv ℝ f s) hfun
     rw [h3.trans h2.fderiv, hG]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+    simp only [ContinuousLinearMap.comp_apply, smul_apply, add_apply,
       ContinuousLinearMap.flip_apply, ContinuousLinearMap.id_apply, id, Complex.ofRealCLM_apply, hB, smul_eq_mul,
       hs v s]
     push_cast
@@ -324,7 +324,7 @@ theorem gen_sch (θ : InfFam D) (V : HSp D) (l : D.what₂.Tau → ℝ) (s : D.w
   have hpolyz : ∀ z : D.what₂.Tau → Fin V.rank → Fin n → ℂ,
       poly (fun t => z t.1) = evalPoly p (fun t => Matrix.of (z t)) := by
     intro z
-    rw [evalPoly_congr p τ hp (fun t => Matrix.of (z t)) (extF τ (fun t => z t.1)) (fun t ht => by simp only [extF, dif_neg ht]; rfl)]
+    rw [evalPoly_congr p τ hp (fun t => Matrix.of (z t)) (extF τ (fun t => z t.1)) (fun t ht => by simp only [extF, dite_eq_right ht]; rfl)]
     rfl
   have hGz : ∀ z : D.what₂.Tau → Fin V.rank → Fin n → ℂ,
       G (fun t => z t.1) = gAway V l s τ (fun t => Matrix.of (z t)) := by

@@ -131,7 +131,7 @@ theorem exists_skew_isUnit_det {F : Type} [Field F] (σ : F →+* F) {β : Type}
       by_cases hDj : D j = 0
       · rw [hDj, mul_zero]
       · have e := hE j
-        rw [if_neg hDj, mul_zero, add_zero] at e
+        rw [ite_eq_right hDj, mul_zero, add_zero] at e
         rw [(mul_eq_zero.1 e).resolve_right hDj, zero_mul]
     have hva : v ᵥ* a = 0 := by
       rw [hD, ← Matrix.vecMul_vecMul, ← Matrix.vecMul_vecMul, hwD, Matrix.zero_vecMul]
@@ -145,7 +145,7 @@ theorem exists_skew_isUnit_det {F : Type} [Field F] (σ : F →+* F) {β : Type}
       rw [Pi.zero_apply]
       by_cases hDj : D j = 0
       · have e := hE j
-        rw [if_pos hDj, hDj, mul_zero, zero_add] at e
+        rw [ite_eq_left hDj, hDj, mul_zero, zero_add] at e
         exact (mul_eq_zero.1 e).resolve_right hc
       · have e := congr_fun hud j
         rw [Matrix.vecMul_diagonal, Pi.zero_apply] at e
@@ -225,7 +225,7 @@ theorem iso_col {a b c d : Matrix β β A} (h : Iso σ (Wm A β) (Wm A β) (from
 theorem exists_skew [IsLocalRing A] (hσ : ∀ z, σ (σ z) = z) {w : A} (hw : w + σ w = 1) {z : A} (hz : IsUnit (z - σ z))
     {a b c d : Matrix β β A} (h : Iso σ (Wm A β) (Wm A β) (fromBlocks a b c d)) :
     ∃ s : Matrix β β A, s.map σ = -sᵀ ∧ IsUnit (a + s * c).det := by
-  haveI : IsLocalHom σ := ⟨fun x hx => by simpa [hσ] using hx.map σ⟩
+  have : IsLocalHom σ := ⟨fun x hx => by simpa [hσ] using hx.map σ⟩
   set π := IsLocalRing.residue A with hπ
   set τ := IsLocalRing.ResidueField.map σ with hτ
   have hc : ∀ x, τ (π x) = π (σ x) := fun x => IsLocalRing.ResidueField.map_residue σ x

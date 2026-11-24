@@ -201,8 +201,8 @@ theorem completeA [Module.Free ℤ OE] [Module.Finite ℤ OE] :
     rw [SModEq.sub_mem, key] at h
     obtain ⟨c, hc⟩ := h
     exact ⟨c, by rw [map_sub, Finsupp.sub_apply, bR.repr_sum_self, hc]⟩
-  haveI : IsHausdorff (Ideal.span {((l : ℕ) : ℤ_[l] ⊗[ℤ] OE)}) (ℤ_[l] ⊗[ℤ] OE) := ⟨haus⟩
-  haveI : IsPrecomplete (Ideal.span {((l : ℕ) : ℤ_[l] ⊗[ℤ] OE)}) (ℤ_[l] ⊗[ℤ] OE) := ⟨fun f hf => prec f hf⟩
+  have : IsHausdorff (Ideal.span {((l : ℕ) : ℤ_[l] ⊗[ℤ] OE)}) (ℤ_[l] ⊗[ℤ] OE) := ⟨haus⟩
+  have : IsPrecomplete (Ideal.span {((l : ℕ) : ℤ_[l] ⊗[ℤ] OE)}) (ℤ_[l] ⊗[ℤ] OE) := ⟨fun f hf => prec f hf⟩
   exact IsAdicComplete.mk
 
 variable {R : Type} [CommRing R] [IsLocalRing R] [Algebra ℤ_[l] R]
@@ -544,7 +544,7 @@ theorem chi_pow (hl : ((l : ℕ) : R) ∈ maximalIdeal R)
     have h := map_natCast (residue R) l
     rw [← h]
     exact hl0
-  haveI : CharP (IsLocalRing.ResidueField R) l := by
+  have : CharP (IsLocalRing.ResidueField R) l := by
     exact (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).2 hlk
   have hstep : ∀ (a : ZMod d) (x : OE), residue R (em (a + 1) x) = residue R (em a x) ^ l := by
     intro a x
@@ -746,10 +746,10 @@ theorem placeX_of [Module.Free ℤ OE] [Module.Finite ℤ OE] (hl : ((l : ℕ) :
     rw [h0, map_zero] at h1
     exact zero_ne_one h1
   have hprim := prim_e em hl hfrob hε2 hε3 hee he
-  haveI : Module.Free ℤ_[l] (ℤ_[l] ⊗[ℤ] OE) := inferInstance
-  haveI : Module.Finite ℤ_[l] (ℤ_[l] ⊗[ℤ] OE) := inferInstance
-  haveI : Module.Finite ℤ_[l] (LinearMap.range (LinearMap.mulLeft ℤ_[l] e)) := inferInstance
-  haveI : Module.Free ℤ_[l] (LinearMap.range (LinearMap.mulLeft ℤ_[l] e)) := by
+  have : Module.Free ℤ_[l] (ℤ_[l] ⊗[ℤ] OE) := inferInstance
+  have : Module.Finite ℤ_[l] (ℤ_[l] ⊗[ℤ] OE) := inferInstance
+  have : Module.Finite ℤ_[l] (LinearMap.range (LinearMap.mulLeft ℤ_[l] e)) := inferInstance
+  have : Module.Free ℤ_[l] (LinearMap.range (LinearMap.mulLeft ℤ_[l] e)) := by
     first
     | infer_instance
     | exact Module.free_of_finite_type_torsion_free'
@@ -757,7 +757,7 @@ theorem placeX_of [Module.Free ℤ OE] [Module.Finite ℤ OE] (hl : ((l : ℕ) :
   let b := Module.finBasis ℤ_[l] (LinearMap.range (LinearMap.mulLeft ℤ_[l] e))
 
   have hdn : d = n := le_antisymm (le_rank em hl hsep hε2 he b) (rank_le em hl hfrob hε3 hee he b)
-  haveI : NeZero n := ⟨by rw [← hdn]; exact NeZero.ne d⟩
+  have : NeZero n := ⟨by rw [← hdn]; exact NeZero.ne d⟩
 
   have hinj : Function.Injective (fun a : ZMod d => (⟨em a, hte a⟩ : EmbX (R := R) e)) :=
     fun a a' h => em_inj em hsep (congrArg Subtype.val h)
@@ -831,7 +831,7 @@ theorem echelon {C : Type} [Field C] (vm : Valuation C NNReal) (n : ℕ) :
     intro h
     have h1 : vm (v x₀) ≤ vm (v j) := hjmax x₀ (Finset.mem_univ _)
     rw [h, map_zero] at h1
-    exact hx₀ ((Valuation.zero_iff vm).1 (le_antisymm h1 zero_le'))
+    exact hx₀ ((Valuation.zero_iff vm).1 (le_antisymm h1 zero_le))
 
   set v₀ : Fin n → C := (v j)⁻¹ • v with hv₀
   have hv₀j : v₀ j = 1 := by simp [hv₀, hvj]
@@ -880,10 +880,10 @@ theorem echelon {C : Type} [Field C] (vm : Valuation C NNReal) (n : ℕ) :
     | zero =>
       induction i' using Fin.cases with
       | zero => simp [hbj]
-      | succ i' => simp only [Fin.cons_zero, Fin.cons_succ, hbJ]; rw [if_neg (Fin.succ_ne_zero i').symm]
+      | succ i' => simp only [Fin.cons_zero, Fin.cons_succ, hbJ]; rw [ite_eq_right (Fin.succ_ne_zero i').symm]
     | succ i =>
       induction i' using Fin.cases with
-      | zero => simp only [Fin.cons_zero, Fin.cons_succ, hB'j]; rw [if_neg (Fin.succ_ne_zero i)]
+      | zero => simp only [Fin.cons_zero, Fin.cons_succ, hB'j]; rw [ite_eq_right (Fin.succ_ne_zero i)]
       | succ i' => simp [hB'δ, Fin.succ_inj]
   · intro w hw
     rw [Fin.sum_univ_succ]
@@ -906,14 +906,14 @@ theorem eigFreeSt_holds : EigFreeSt := by
     { carrier := {w | ∀ a, ((L a).map f).mulVec w = f (χ a) • w}
       add_mem' := by
         intro w w' hw hw' a
-        simp only [Set.mem_setOf_eq] at hw hw' ⊢
+        simp only [Set.mem_ofPred_eq] at hw hw' ⊢
         rw [Matrix.mulVec_add, hw a, hw' a, smul_add]
       zero_mem' := by
         intro a
         simp
       smul_mem' := by
         intro c w hw a
-        simp only [Set.mem_setOf_eq] at hw ⊢
+        simp only [Set.mem_ofPred_eq] at hw ⊢
         rw [Matrix.mulVec_smul, hw a, smul_comm] }
   obtain ⟨s, J, B, hBM, hBle, hBδ, hspan⟩ := echelon vm n _ M rfl
   have hlift : ∀ i x, ∃ r : R, f r = B i x := fun i x => hI.exists_of_le_one (hBle i x)
@@ -1237,7 +1237,7 @@ end Zl
 
 theorem ringPkSt_holds : RingPkSt := by
   intro C _ _ V hc
-  haveI : Fact V.l.Prime := ⟨V.l_prime⟩
+  have : Fact V.l.Prime := ⟨V.l_prime⟩
   have hl : (V.l : C) ≠ 0 := by
     intro h
     have h1 := V.v_l
@@ -1280,9 +1280,9 @@ theorem ringPkSt_holds : RingPkSt := by
       exact (mem_nonunits_iff.mp hb) (hunit b h)
     exact mem_nonunits_iff.mpr (not_isUnit_of_mm (V := V) (x := a + b)
       (lt_of_lt_of_le (lt_min ha' hb') (V.v.map_add _ _))))
-  haveI hcpl : IsAdicComplete (Ideal.span {((V.l : ℕ) : V.RR)}) V.RR :=
+  have hcpl : IsAdicComplete (Ideal.span {((V.l : ℕ) : V.RR)}) V.RR :=
     { haus' := (hausdorff_RR (V := V)).haus', prec' := (precomplete_RR (V := V) hc).prec' }
-  haveI := hloc
+  have := hloc
   exact ⟨{ vm := vmOf V
            tie := valTie_vmOf
            int := integers_vmOf

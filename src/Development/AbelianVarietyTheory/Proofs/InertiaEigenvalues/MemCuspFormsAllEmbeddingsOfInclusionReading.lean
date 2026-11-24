@@ -93,7 +93,7 @@ theorem isSec_mul {la la' : Wt X.Ψ r} {P Q : Frame X.Ψ r → ℂ} (hP : X.IsSe
   refine ⟨hP.1.mul hQ.1, fun x hx b hb => ?_, fun γ hγ x hx => ?_⟩
   · have hne : ∀ τ i, b τ i i ≠ 0 := fun τ i => by
       have hdet := (hb τ).1
-      rw [Matrix.det_of_upperTriangular (M := mat b τ) (fun a c hac => (hb τ).2 a c hac)] at hdet
+      rw [Matrix.det_of_isUpperTriangular (M := mat b τ) (fun a c hac => (hb τ).2 a c hac)] at hdet
       exact Finset.prod_ne_zero_iff.1 hdet i (Finset.mem_univ _)
     have e : bchar (la + la') b = bchar la b * bchar la' b := by
       simp only [bchar, Pi.add_apply, zpow_add₀ (hne _ _), Finset.prod_mul_distrib]
@@ -234,7 +234,7 @@ theorem isSec_detPow (m : ℤ) (hdet : ∀ γ ∈ X.Γ, (γ : Matrix (Fin r) (Fi
       fun_prop
     exact ((hd y).zpow (Or.inl (Finset.prod_ne_zero_iff.2 fun τ _ => (hy τ).1))).differentiableWithinAt
   · have hd : ∀ τ, (mat b τ).det = ∏ i, b τ i i := fun τ =>
-      Matrix.det_of_upperTriangular (M := mat b τ) fun a c h => (hb τ).2 a c h
+      Matrix.det_of_isUpperTriangular (M := mat b τ) fun a c h => (hb τ).2 a c h
     have e : ∀ τ, (mat (rmul x b) τ).det = (mat x τ).det * ∏ i, b τ i i := fun τ => by
       rw [← hd, ← Matrix.det_mul]; rfl
     simp only [detPow, bchar, e, Finset.prod_mul_distrib, mul_zpow, Finset.prod_zpow]
@@ -258,7 +258,7 @@ theorem transfer {K R V W : Type} [Field K] [AddCommGroup R] [Module K R] [AddCo
     ∑ i, α (c i) • ρ (h i) = ∑ j, α (c' j) • ρ (h' j) := by
   classical
   let M : Submodule K R := Submodule.span K (Set.range (Sum.elim h h'))
-  haveI : FiniteDimensional K M := FiniteDimensional.span_of_finite K (Set.finite_range _)
+  have : FiniteDimensional K M := FiniteDimensional.span_of_finite K (Set.finite_range _)
   have hM : M ≤ S := Submodule.span_le.2 (by rintro _ ⟨i | j, rfl⟩; exacts [hh i, hh' j])
   let b := Module.finBasis K M
   have hb := hS _ (fun i => (b i : R)) (fun i => hM (b i).2) (b.linearIndependent.map' M.subtype (Submodule.ker_subtype _))
@@ -347,12 +347,12 @@ theorem exists_sec_ne_zero (Xo : Moduli Dw l) (c : Coeff l) : ∃ m : ℕ, ∀ (
   have hR : Odd 3 := by decide
   have h1 : 1 < 3 := by norm_num
   obtain ⟨hfG, hfL, -⟩ := GlobalTheory.EtaCard.card_levGrp_and_span E H Dw 3 h1
-  letI hFin : Fintype (GlobalTheory.EtaForm.LatMod Dw 3) := Fintype.ofFinite _
+  let hFin : Fintype (GlobalTheory.EtaForm.LatMod Dw 3) := Fintype.ofFinite _
   have hpos : 0 < Nat.card (GlobalTheory.EtaForm.LevGrp Dw (3 ^ 4)) := Nat.card_pos
   obtain ⟨m, hm⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
   refine ⟨m, fun σ r U k x₀ hx₀ => ?_⟩
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   obtain ⟨cf, -, hne⟩ := GlobalTheory.EtaForm.exists_small_coeff_etaValAt_ne_zero GlobalTheory.firstFiveLaws.1 E H Dw l Xo c 3 hR h1
     2 0 (CAt σ) 1 (fun _ => U.un k ⟨x₀, hx₀⟩)
   obtain ⟨⟨f, hrule, -⟩, hsec⟩ := GlobalTheory.EtaForm.isEtaRule_existsUnique_mem_sec GlobalTheory.firstFiveLaws.1 E H Dw l Xo c 3 hR
@@ -361,7 +361,7 @@ theorem exists_sec_ne_zero (Xo : Moduli Dw l) (c : Coeff l) : ∃ m : ℕ, ∀ (
   have hv := (GlobalTheory.EtaForm.etaValAt_evR_of_fromTest E H Dw l Xo c 3 hR _ _ _ _ f hrule (CAt σ) (U.un k ⟨x₀, hx₀⟩)
     (hT _ _)).1
   have h0 := hne 0 _ hv
-  have e1 : rdU U f k x₀ = toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dif_pos hx₀
+  have e1 : rdU U f k x₀ = toC (evR Xo c f (U.un k ⟨x₀, hx₀⟩)) := dite_eq_left hx₀
   rw [e1]
   exact h0
 
@@ -421,7 +421,7 @@ theorem la_shift {σ : c.F →+* ℂ} {U : Unf Xo c σ r} (hσ : GoodEmb c σ) (
     have := (hp _).2 h
     rw [Function.invFun_eq (hb.2 _), ← (hU.2.1 j).2] at this
     exact ((U.X j).cmType τ.1).1 τ.2 this
-  simp only [laU, shift, Pi.add_apply, h1, h2, if_pos p1, if_neg p2]
+  simp only [laU, shift, Pi.add_apply, h1, h2, ite_eq_left p1, ite_eq_right p2]
   split_ifs with h
   · have := ha _ p1 (i - (U.X j).p0) (by have := hU.1; have := (hU.2.1 j).1; have := i.2; omega)
     push_cast [this]
@@ -468,7 +468,7 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
   set σ₀ : c.F →+* ℂ := c.F.val.toRingHom with hσ₀
   have g₀ : GoodEmb c σ₀ := rfl
   refine (mem_cusp _ _ _ _ _ _).2 ⟨hfs, fun σ hσ => (mem_holSub _ _ _).2 fun k₀ => ?_⟩
-  haveI := c.fin
+  have := c.fin
   obtain ⟨α, hα⟩ := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.B5.extendEmb_holds c.F inferInstance σ.toRatAlgHom
   obtain ⟨K, hK, hKdet⟩ := exists_det_pow E
   obtain ⟨m, hm⟩ := exists_sec_ne_zero Xo c
@@ -483,18 +483,18 @@ theorem mem_cusp_of_span (hf : 1 < Module.finrank ℚ E / 2) (U : ∀ σ : c.F �
   have eW : Even nW := eA.add ((even_two_mul _).mul_left _)
   have e2 : ∀ {n'}, Even n' → Even (n' + 2 * k) := fun h => h.add (even_two_mul _)
   have hAge : ∀ τ, InPsi H τ → ∀ i < Dw.p, 2 * k + 1 ≤ A (τ, i) := fun τ hτ i hi => by
-    have hmu : Dw.mult τ = Dw.p := if_pos hτ
+    have hmu : Dw.mult τ = Dw.p := ite_eq_left hτ
     have h1 := hl τ hτ (by omega)
     have h2 : a (τ, Dw.mult τ - 1) ≤ a (τ, i) := hd.1 τ (by omega : i ≤ Dw.mult τ - 1)
     exact Nat.le_mul_of_pos_right _ (by omega)
   have lA : LastPos Dw A := fun τ hτ h => by
-    have hmu : Dw.mult τ = Dw.p := if_pos hτ
+    have hmu : Dw.mult τ = Dw.p := ite_eq_left hτ
     have := hAge τ hτ (Dw.mult τ - 1) (by omega)
     omega
   have lS : LastPos Dw (shift H k A) := fun τ hτ h => by
-    have hmu : Dw.mult τ = Dw.p := if_pos hτ
+    have hmu : Dw.mult τ = Dw.p := ite_eq_left hτ
     have := hAge τ hτ (Dw.mult τ - 1) (by omega)
-    simp only [shift, if_pos hτ]
+    simp only [shift, ite_eq_left hτ]
     omega
   have dS : ∀ n', Even n' → Dom (shift H k A) (n' + 2 * k) := fun n' h => dom_shift (dA _ h) (e2 h) k
   have hdet : ∀ (r : ℕ) (X : Data E r), ∀ γ ∈ X.Γ, (γ : Matrix (Fin r) (Fin r) E).det ^ (k : ℤ) = 1 :=
@@ -636,8 +636,8 @@ theorem mem_cuspA_of_rdU_mem_holSub0 : ∀ (D : D7) (T : CoreJ D), LawsJ T → �
     (fun a n hd hl hn => ?_) (dom_wtA w) (GlobalTheory.lastPos_wtA_of_pins D T.Q h.pins j hj w hw) hf hfh
   set_option synthInstance.maxHeartbeats 200000 in
   set S := T.cuspA j a n with hS
-  haveI : FiniteDimensional T.Q.c.F S := h.toLawsM.cuspFD j hj a n hd
-  haveI : Module.Free T.Q.c.F S := Module.Free.of_divisionRing _ _
+  have : FiniteDimensional T.Q.c.F S := h.toLawsM.cuspFD j hj a n hd
+  have : Module.Free T.Q.c.F S := Module.Free.of_divisionRing _ _
   let b := Module.finBasis T.Q.c.F S
   refine ⟨_, fun i => (b i : T.R j), fun i => (b i).2, fun σ hσ P hP => ?_⟩
   obtain ⟨hrk, hM⟩ := h.modelW j hj σ hσ

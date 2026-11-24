@@ -93,7 +93,7 @@ theorem UpperTheory.innerProduct_integral_fundamentalDomain_of_compact :
     obtain ⟨γ, hγ, hmem⟩ := hcov h
     rw [← hinv γ hγ h]
     exact hC _ hmem
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.mpr hfin.ne
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.mpr hfin.ne
   have intg : ∀ u : H → ℂ, Continuous u → (∀ γ ∈ Γ, ∀ h, u (γ * h) = u h) → IntegrableOn u 𝓕 μ := by
     intro u hu hinv
     obtain ⟨C, hC⟩ := bdd u hu hinv
@@ -149,7 +149,7 @@ theorem UpperTheory.innerProduct_integral_fundamentalDomain_of_compact :
         simp only [Subgroup.smul_def, smul_eq_mul, hfi γ γ.2]
         exact hl𝓕
       simp [this]
-    have hz := (lintegral_eq_zero_iff' hf.enorm.aemeasurable).mp hlall
+    have hz := (lintegral_eq_zero_iff' hf.eNorm.aemeasurable).mp hlall
     have hz' : f =ᵐ[μ] fun _ => (0 : ℂ) := by
       filter_upwards [hz] with h hh
       simpa using hh
@@ -193,8 +193,8 @@ theorem UpperTheory.Reformulated.B.Qh52.exists_orthonormal_basis_sesquilinear :
         have h2 : B x x = 0 := h
         rw [h2] at h1
         simp at h1 }
-  letI : NormedAddCommGroup V := c.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
+  let : NormedAddCommGroup V := c.toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
   have hB : ∀ x y : V, B x y = inner ℂ y x := fun _ _ => rfl
   let b := stdOrthonormalBasis ℂ V
   refine ⟨b, fun i => ?_, fun x y => ?_, fun x y => ?_⟩
@@ -483,17 +483,17 @@ theorem UpperTheory.TP.schurStep_k : _root_.UpperTheory.TP.Tools_k → _root_.Up
   obtain ⟨V, _, _, _, ρ, i, j, x₀, hirr, hi, hj, hjU, hA, hR⟩ := hS
   have C := T.cpt _ E (UpperTheory.TP.cj E) B n X n 0 P.base (Or.inl P.herm) (by simp)
   have D := _root_.UpperTheory.TP.decomp_k T _ E (UpperTheory.TP.cj E) B n X P.base P.herm ∅
-  haveI := C.lc
-  haveI := C.sc
-  haveI := C.t2
-  haveI := C.cnt
-  haveI : BorelSpace (UA (UpperTheory.TP.cj E) X.J) := ⟨rfl⟩
-  haveI hHaar : M.μ.IsHaarMeasure := P.good.haar
-  haveI := C.right _ hHaar
-  haveI : CompactSpace (UpperTheory.TP.gInf (UpperTheory.TP.cj E) X) := isCompact_iff_compactSpace.1 D.2.1
-  haveI : IsFiniteMeasure μA := inferInstance
+  have := C.lc
+  have := C.sc
+  have := C.t2
+  have := C.cnt
+  have : BorelSpace (UA (UpperTheory.TP.cj E) X.J) := ⟨rfl⟩
+  have hHaar : M.μ.IsHaarMeasure := P.good.haar
+  have := C.right _ hHaar
+  have : CompactSpace (UpperTheory.TP.gInf (UpperTheory.TP.cj E) X) := isCompact_iff_compactSpace.1 D.2.1
+  have : IsFiniteMeasure μA := inferInstance
   have hx₀ : x₀ ≠ 0 := fun h => hφ (by rw [← hj, h, map_zero])
-  haveI : Nontrivial V := ⟨x₀, 0, hx₀⟩
+  have : Nontrivial V := ⟨x₀, 0, hx₀⟩
   have hsymm : ∀ x : UpperTheory.TP.gInf (UpperTheory.TP.cj E) X, e.symm x.1 ∈ GlobalTheory.UnitaryBC.infU E n :=
     fun x => (he.inf _).1 (by simpa using x.2)
   let p : UpperTheory.TP.gInf (UpperTheory.TP.cj E) X →* GlobalTheory.UnitaryBC.infU E n :=
@@ -580,7 +580,7 @@ theorem UpperTheory.TP.schurStep_k : _root_.UpperTheory.TP.Tools_k → _root_.Up
     have h3 : (0 : ℝ) < Module.finrank ℂ V := by exact_mod_cast Module.finrank_pos
     exact Complex.ofReal_ne_zero.2 (div_pos h1 h3).ne'
   have hmain := UpperTheory.TP.assemble_pk M.μ (ratU (UpperTheory.TP.cj E) X.J) M.dom P.good.dom (C.fin _ _ hHaar P.good.dom) Ω hΩ hcov μA π hI
-    (UpperTheory.TP.gInf (UpperTheory.TP.cj E) X).subtype measurable_subtype_coe f hf0 hfc hleft hfr B₁ hB₁ x₀
+    (UpperTheory.TP.gInf (UpperTheory.TP.cj E) X).subtype measurable_subtypeVal f hf0 hfc hleft hfr B₁ hB₁ x₀
     (fun y => φ (e.symm (y * cc))) (hform.cont.comp (e.symm.continuous.comp (continuous_mul_const cc)))
     (fun γ hγ h => by
       show φ (e.symm (γ * h * cc)) = φ (e.symm (h * cc))

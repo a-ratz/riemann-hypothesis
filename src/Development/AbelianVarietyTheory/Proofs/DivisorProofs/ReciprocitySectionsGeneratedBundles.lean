@@ -241,7 +241,7 @@ theorem fubiniStudy_weight_pullback_chart_formula (j : Fin (N + 1)) (z : CxPts p
   have hm : ∀ z : CxPts p σ, (PtsOver.map i hi _ z).1 = z.1 ≫ i := fun _ => rfl
   refine (Weight.pull_φ _ _ _ _ _).trans ((Weight.fsBasis_φ _ _ _ _ _ _ _).trans
     (congrArg _ (Finset.sum_congr rfl fun a _ => ?_)))
-  simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← ev_of_comp hm]
   rfl
 
@@ -384,8 +384,8 @@ theorem exists_finset_closure_eq_top {k : Type} [CommRing k] {X : Scheme.{0}} (p
     ∃ s : Finset Γ(X, W), Subring.closure (Set.range (constFn p W) ∪ ↑s) = ⊤ := by
   have h := HasRingHomProperty.appLE @LocallyOfFiniteType p inferInstance
     ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ (fun _ _ => trivial)
-  letI := (p.appLE ⊤ W (fun _ _ => trivial)).hom.toAlgebra
-  haveI : Algebra.FiniteType Γ(Sp k, ⊤) Γ(X, W) := h
+  let := (p.appLE ⊤ W (fun _ _ => trivial)).hom.toAlgebra
+  have : Algebra.FiniteType Γ(Sp k, ⊤) Γ(X, W) := h
   obtain ⟨s, hs⟩ := Algebra.FiniteType.out (R := Γ(Sp k, ⊤)) (A := Γ(X, W))
   refine ⟨s, ?_⟩
   have e : Set.range (constFn p W) = Set.range (algebraMap Γ(Sp k, ⊤) Γ(X, W)) := by
@@ -409,8 +409,8 @@ theorem exists_cInf_bump (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp 
     (hp : IsProjOver p) (σ : k →+* ℂ) (y : CxPts p σ) (O : Set (CxPts p σ)) (hO : IsOpen O)
     (hy : y ∈ O) : ∃ χ : CxPts p σ → ℝ, (∀ z, CInfAt χ z) ∧ (∀ z, 0 ≤ χ z) ∧ 0 < χ y ∧
       tsupport χ ⊆ O := by
-  haveI : IsProper p := CommonModel.isProper_of_isProjOver hp
-  haveI : T2Space (CxPts p σ) := t2Space_cxPts_of_isProjOver σ hp
+  have : IsProper p := CommonModel.isProper_of_isProjOver hp
+  have : T2Space (CxPts p σ) := t2Space_cxPts_of_isProjOver σ hp
   obtain ⟨W, hW, hyW, -⟩ := exists_isAffineOpen_le y.1 (le_preimage_top y.1)
   have hyW' : y ∈ ptsIn p σ W := hyW
   obtain ⟨s, hs⟩ := exists_finset_closure_eq_top p hW
@@ -568,7 +568,7 @@ theorem cInfAt_cut {χ v : CxPts p σ → ℝ} {O : Set (CxPts p σ)} (hχ : ∀
 
 theorem glue : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k), IsProjOver p → ∀ (σ : k →+* ℂ) (T : Type) (m : T → CxPts p σ) (u : T → ℝ), (∀ x : CxPts p σ, ∃ (O : Set (CxPts p σ)) (v : CxPts p σ → ℝ), IsOpen O ∧ x ∈ O ∧ (∀ z ∈ O, CInfAt v z) ∧ ∀ t, m t ∈ O → v (m t) = u t) → ∃ v : CxPts p σ → ℝ, (∀ z, CInfAt v z) ∧ ∀ t, v (m t) = u t := by
   intro k _ X p hp σ T m u h
-  haveI : CompactSpace (CxPts p σ) := GlobalTheory.CxPts.compactSpace σ hp
+  have : CompactSpace (CxPts p σ) := GlobalTheory.CxPts.compactSpace σ hp
   choose O v hO hx hv hu using h
   choose χ hχ hχ0 hχx hχs using fun x => _root_.GlobalTheory.BumpPts.exists_cInf_bump k X p hp σ x (O x) (hO x) (hx x)
   have hc : ∀ x, Continuous (χ x) := fun x =>
@@ -723,7 +723,7 @@ open ReciprocityTheory.L2DbarEstimates (V leviV)
 
 theorem semiPosReg_pull : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) (p : X ⟶ Sp k) (q : Y ⟶ Sp k) (σ : k →+* ℂ) (π : Y ⟶ X) (hπ : π ≫ p = q) (D D' : ℕ), SmoothOfRelativeDimension D p → ∀ (B : LB X) (φ : Weight p σ B), φ.IsCInf → φ.SemiPosReg D → (φ.pull π hπ).SemiPosReg D' := by
   intro k _ X Y p q σ π hπ D D' hs B φ hC hSP
-  haveI := hs
+  have := hs
   intro i c y hy ξ
   set m := PtsOver.map π hπ (spMap σ)
   have hm : ∀ z, (m z).1 = z.1 ≫ π := fun _ => rfl
@@ -1104,14 +1104,14 @@ theorem mInt_cons_ofFun_symm {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶
 
 theorem int_cons_ofFun_symm : GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (e : ℕ), IsProjOver p → topologicalKrullDim X = (e + 1 : ℕ) → ∀ (L : Fin e → MLine p σ) (u v : CxPts p σ → ℝ) (hu : ∀ y, CInfAt u y) (hv : ∀ y, CInfAt v y), Mix.int (Fin.cons (MLine.ofFun u hu) L : Fin (e + 1) → MLine p σ) v = Mix.int (Fin.cons (MLine.ofFun v hv) L : Fin (e + 1) → MLine p σ) u := by
   intro hP F _ X _ _ p σ e hproj hdim L u v hu hv
-  haveI : CharZero F := RingHom.charZero σ
+  have : CharZero F := RingHom.charZero σ
   obtain ⟨Y, hY, π, hsm, hprojY, -, hgen, hdeg, -⟩ :=
     _root_.GlobalTheory.LogResProj.exists_logResolution hP F X p (e + 1) hproj hdim ⊥
       (by rw [← SetLike.mem_coe, TopologicalSpace.Closeds.coe_bot]; exact Set.notMem_empty _)
-  haveI := hsm
-  haveI : CompactSpace (CxPts (π ≫ p) σ) := CxPts.compactSpace σ hprojY
-  haveI : T2Space (CxPts (π ≫ p) σ) := CxPts.t2Space_cxPts_of_isProjOver σ hprojY
-  haveI : SecondCountableTopology (CxPts (π ≫ p) σ) := CxPts.secondCountableTopology_of_isProjOver σ hprojY
+  have := hsm
+  have : CompactSpace (CxPts (π ≫ p) σ) := CxPts.compactSpace σ hprojY
+  have : T2Space (CxPts (π ≫ p) σ) := CxPts.t2Space_cxPts_of_isProjOver σ hprojY
+  have : SecondCountableTopology (CxPts (π ≫ p) σ) := CxPts.secondCountableTopology_of_isProjOver σ hprojY
   have hA : IsAlgAtlas (AnRead.all (π ≫ p) σ (e + 1)).finAtlas := AnRead.isAlgAtlas_finAtlas _
   have hiso := _root_.GlobalTheory.Mix.isom_calculus F X Y p (π ≫ p) σ π rfl
   have hisoY := _root_.GlobalTheory.Mix.isom_calculus F Y Y (π ≫ p) (π ≫ p) σ (𝟙 Y) (Category.id_comp _)
@@ -1324,7 +1324,7 @@ theorem continuous_nsq {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ Sp k}
 
 theorem exists_nsq_le {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ Sp k} {σ : k →+* ℂ}
     (hp : IsProjOver p) (N : MLine p σ) (t : N.B.Sec) : ∃ C : ℝ, ∀ y, N.φ.nsq (secVal p σ t) y ≤ C := by
-  haveI : CompactSpace (CxPts p σ) := CxPts.compactSpace σ hp
+  have : CompactSpace (CxPts p σ) := CxPts.compactSpace σ hp
   obtain ⟨C, hC⟩ := (isCompact_univ.image (continuous_nsq N t)).bddAbove
   exact ⟨C, fun y => hC ⟨y, Set.mem_univ _, rfl⟩⟩
 
@@ -1345,7 +1345,7 @@ theorem GlobalTheory.Mix.tendsto_logReg : GlobalTheory.Published.Principalisatio
     have one (ε : ℤˣ) (hi : Integrable (N.logSec t) (part L ε)) :
         Tendsto (fun n : ℕ => ∫ y, Real.log (w y + 1 / ((n : ℝ) + 1)) ∂part L ε) atTop
           (𝓝 (2 * ∫ y, Real.log (w y) / 2 ∂part L ε)) := by
-      haveI := hfin ε
+      have := hfin ε
       have hnull := _root_.GlobalTheory.MixNull.part_compl_null F X p σ σ.injective hp (e + 1) L ε (nonzeroLocus t) hgen
       refine _root_.GlobalTheory.Mix.tendsto_integral_log_add_inv _ (part L ε) w C hcont.measurable hwC ?_ hi
       refine ae_iff.2 (measure_mono_null (fun y hy => ?_) hnull)
@@ -1354,7 +1354,7 @@ theorem GlobalTheory.Mix.tendsto_logReg : GlobalTheory.Published.Principalisatio
     have h2 := one (-1) hint.2
     simp only [Mix.int, MLine.logSec, mul_sub]
     exact h1.sub h2
-  · haveI : CompactSpace X := compactSpace_of_proj hp
+  · have : CompactSpace X := compactSpace_of_proj hp
     have hS := Δ.finite_support_mult
     have hsub (f : X → ℝ) : Function.support (fun z => (Δ.mult z : ℝ) * f z) ⊆ ↑hS.toFinset := by
       intro z hz
@@ -1376,7 +1376,7 @@ theorem GlobalTheory.Mix.tendsto_logReg : GlobalTheory.Published.Principalisatio
     have one (ε : ℤˣ) (hi : Integrable (fun y => N.logSec t (π y)) (part (fun i => (L i).pull (closι z) rfl) ε)) :
         Tendsto (fun n : ℕ => ∫ y, Real.log (w (π y) + 1 / ((n : ℝ) + 1)) ∂part (fun i => (L i).pull (closι z) rfl) ε)
           atTop (𝓝 (2 * ∫ y, Real.log (w (π y)) / 2 ∂part (fun i => (L i).pull (closι z) rfl) ε)) := by
-      haveI := hfin ε
+      have := hfin ε
       refine _root_.GlobalTheory.Mix.tendsto_integral_log_add_inv _ _ (fun y => w (π y)) C (hcont.comp hπc).measurable (fun y => hwC (π y)) ?_ hi
       refine ae_iff.2 (measure_mono_null (fun y hy => ?_) (hnull (nonzeroLocus t) hzt ε))
       exact fun h => hy ((hbasic.2.1 (π y)).2 h)
@@ -1435,7 +1435,7 @@ theorem int_cons_addFn : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶
 
 theorem int_logSec_le : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp F) (σ : F →+* ℂ), IsProjOver p → ∀ (D : ℕ) (L : Fin D → MLine p σ), (∀ i, (L i).φ.SemiPosReg D) → ∀ (M : MLine p σ) (s : M.B.Sec), genericPoint X ∈ nonzeroLocus s → ∀ δ : ℝ, 0 < δ → Intg L (M.logSec s) → Intg L (fun y => Real.log (M.φ.nsq (secVal p σ s) y + δ)) → Mix.int L (M.logSec s) ≤ Mix.int L (fun y => Real.log (M.φ.nsq (secVal p σ s) y + δ)) / 2 := by
   intro F _ X _ p σ hp D L hL M s hs δ hδ h₁ h₂
-  haveI : SecondCountableTopology (CxPts p σ) := CxPts.secondCountableTopology_of_isProjOver σ hp
+  have : SecondCountableTopology (CxPts p σ) := CxPts.secondCountableTopology_of_isProjOver σ hp
   have hneg := _root_.GlobalTheory.Mix.part_neg_eq_zero_of_semiPosReg F X p σ D L hL
   have hnull := _root_.GlobalTheory.MixNull.part_compl_null F X p σ σ.injective hp D L 1 _ hs
   have hpos := (_root_.GlobalTheory.Mix.SecNorm.logSec_basic F X p σ M s).2.1

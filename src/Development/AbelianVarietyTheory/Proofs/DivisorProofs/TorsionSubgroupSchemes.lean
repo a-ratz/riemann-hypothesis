@@ -177,7 +177,7 @@ theorem exists_finiteEtale_killedBy : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTh
   have hnS : IsUnit ((n : ℕ) : Γ(S, ⊤)) := by
     have := hnR.map ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ s.appTop).hom
     simpa using this
-  haveI := o.ab
+  have := o.ab
   obtain ⟨-, hTf, hTe⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion o.A hnS
   have hactN : ∀ k : ℕ, o.act.act (k : D.O) = mulN o.A k := by
     intro k
@@ -191,8 +191,8 @@ theorem exists_finiteEtale_killedBy : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTh
   have hc : ∀ a : D.O, o.act.act a ≫ mulN o.A n = mulN o.A n ≫ o.act.act a := by
     intro a
     rw [← hactN, ← o.act.mul, ← o.act.mul, Nat.cast_comm]
-  haveI : ∀ a, IsMonHom (o.act.act a) := o.act.hom
-  haveI : IsSeparated (torsion o.A n).hom := inferInstance
+  have : ∀ a, IsMonHom (o.act.act a) := o.act.hom
+  have : IsSeparated (torsion o.A n).hom := inferInstance
   have : Module.Finite ℤ D.O := D.finO
   have : IsNoetherian D.O D.O := isNoetherian_of_tower ℤ inferInstance
   obtain ⟨t, ht⟩ := IsNoetherian.noetherian (𝔟.map (algebraMap (𝓞 D.F) D.O))

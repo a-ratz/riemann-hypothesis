@@ -101,7 +101,7 @@ theorem exists_section [Algebra.FormallySmooth F L]
     (hj : ∀ a : F, j (algebraMap F L a) = AinfInv.theta p R (ι a)) :
     ∃ s : L →+* BdRPlus p R, (∀ x, theta p R (s x) = j x) ∧
       ∀ a : F, s (algebraMap F L a) = algebraMap (AinfInv p R) _ (ι a) := by
-  letI : Algebra F (AinfInv p R) := ι.toAlgebra
+  let : Algebra F (AinfInv p R) := ι.toAlgebra
   let e := RingHom.quotientKerEquivOfSurjective hθ
   let f : L →ₐ[F] AinfInv p R ⧸ AinfInv.kerTheta p R :=
     { e.symm.toRingHom.comp j with

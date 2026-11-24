@@ -184,7 +184,7 @@ theorem exists_reps {G : Type*} [Group G] (H U V : Subgroup G) [U.FiniteIndex]
     (hV : ∀ g ∈ H, g ∈ V ↔ g ∈ U) :
     ∃ S : Finset G, (∀ s ∈ S, s ∈ H) ∧ ∀ h ∈ H, ∃! s, s ∈ S ∧ s⁻¹ * h ∈ V := by
   classical
-  letI : Fintype (H ⧸ U.subgroupOf H) := Fintype.ofFinite _
+  let : Fintype (H ⧸ U.subgroupOf H) := Fintype.ofFinite _
   refine ⟨Finset.univ.image (fun q : H ⧸ U.subgroupOf H => (q.out : G)), ?_, ?_⟩
   · intro s hs
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hs
@@ -210,8 +210,8 @@ theorem exists_field (F : IntermediateField ℚ_[l] (Om l)) (W : Set (GQ l)) (hW
       (∀ h ∈ F.fixingSubgroup, ∃! s, s ∈ S ∧ s⁻¹ * h ∈ L.fixingSubgroup) ∧
       ∀ g ∈ L.fixingSubgroup, g ∈ W := by
   obtain ⟨E, hfd, hN, hE⟩ := (krullTopology_mem_nhds_one_iff_of_normal ℚ_[l] (Om l) W).1 hW
-  haveI : E.fixingSubgroup.FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
+  have : E.fixingSubgroup.FiniteIndex := by
+    have := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
     exact Subgroup.finiteIndex_of_finite_quotient
   have hsup : (F ⊔ E).fixingSubgroup = F.fixingSubgroup ⊓ E.fixingSubgroup :=
     IntermediateField.fixingSubgroup_sup

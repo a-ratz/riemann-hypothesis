@@ -217,7 +217,7 @@ theorem exists_divide : ∀ (l : ℕ) [Fact l.Prime] (C : Core l) (b : Per.Bcris
     apply h2
     refine (hF 2 _).2 ⟨w, ?_⟩
     rw [hv, hw, pow_two, mul_assoc]
-  haveI := hc.toIsHausdorff
+  have := hc.toIsHausdorff
   obtain ⟨m, n, b', y, e1, e2, e3⟩ := abstract C.ι (algebraMap (Per.BdRp l) (Per.BdR l)) hinj
     (aDp l (xi C.ε)) v hvu C.tB ht (by rw [← hv]; exact C.ι_j C.t) hD b hb
   exact ⟨m, n, b', y, e1, e2, hθ y e3⟩
@@ -324,11 +324,11 @@ namespace GlobalTheory.ProofStatement
 theorem main : ∀ (l : ℕ) [hl : Fact (Nat.Prime l)] (a : AlgebraicClosure (ZMod l)), a ≠ (0 : AlgebraicClosure (ZMod l)) → ∃ (m : ℕ), (0 : ℕ) < m ∧ ¬l ∣ m ∧ a ^ m = (1 : AlgebraicClosure (ZMod l)) := by
   intro l hl a ha
   set K := IntermediateField.adjoin (ZMod l) ({a} : Set (AlgebraicClosure (ZMod l))) with hK
-  haveI : FiniteDimensional (ZMod l) K :=
+  have : FiniteDimensional (ZMod l) K :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral a)
-  haveI : Finite K := Module.finite_of_finite (ZMod l)
-  letI : Fintype K := Fintype.ofFinite K
-  haveI : CharP K l := charP_of_injective_algebraMap (algebraMap (ZMod l) K).injective l
+  have : Finite K := Module.finite_of_finite (ZMod l)
+  let : Fintype K := Fintype.ofFinite K
+  have : CharP K l := charP_of_injective_algebraMap (algebraMap (ZMod l) K).injective l
   obtain ⟨n, _, hcard⟩ := FiniteField.card K l
   have ha' : (⟨a, IntermediateField.mem_adjoin_simple_self (ZMod l) a⟩ : K) ≠ 0 := by
     intro h; apply ha; exact congrArg Subtype.val h
@@ -373,8 +373,8 @@ theorem exists_pow_eq_one_of_algClosure_zmod (l : ℕ) [hl : Fact l.Prime] (a : 
 
 theorem exists_isPrimitiveRoot_tilt (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (hm : 0 < m) (hlm : ¬ l ∣ m) :
     ∃ e : Per.Fl l, IsPrimitiveRoot e m := by
-  haveI : NeZero m := ⟨hm.ne'⟩
-  obtain ⟨x, hx⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) m
+  have : NeZero m := ⟨hm.ne'⟩
+  obtain ⟨x, hx⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) m
   obtain ⟨e, he, hex⟩ := exists_tilt_root_of_unity l x m hm hlm hx.pow_eq_one
   refine ⟨e, he, fun d hd => hx.dvd_of_pow_eq_one d ?_⟩
   have h1 : e.untilt ^ d = 1 := by rw [← map_pow, hd, map_one]
@@ -388,15 +388,15 @@ theorem exists_isPrimitiveRoot_tilt (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (hm 
 theorem nonempty_algClosure_zmod_to_tilt :
     ∀ (l : ℕ) [Fact l.Prime], Nonempty (AlgebraicClosure (ZMod l) →+* Per.Fl l) := by
   intro l hl
-  haveI : IsDomain (Per.Fl l) := inferInstance
-  haveI : CharP (Per.Fl l) l := inferInstance
+  have : IsDomain (Per.Fl l) := inferInstance
+  have : CharP (Per.Fl l) l := inferInstance
   let Ω := AlgebraicClosure (FractionRing (Per.Fl l))
   let j : Per.Fl l →+* Ω :=
     (algebraMap (FractionRing (Per.Fl l)) Ω).comp (algebraMap (Per.Fl l) (FractionRing (Per.Fl l)))
   have hj : Function.Injective j :=
     (algebraMap (FractionRing (Per.Fl l)) Ω).injective.comp (IsFractionRing.injective _ _)
-  haveI : CharP Ω l := charP_of_injective_ringHom hj l
-  letI : Algebra (ZMod l) Ω := ZMod.algebra Ω l
+  have : CharP Ω l := charP_of_injective_ringHom hj l
+  let : Algebra (ZMod l) Ω := ZMod.algebra Ω l
   let f₀ : AlgebraicClosure (ZMod l) →ₐ[ZMod l] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -408,7 +408,7 @@ theorem nonempty_algClosure_zmod_to_tilt :
     · rw [ha, map_zero]; exact zero_mem _
     obtain ⟨m, hm, hlm, ham⟩ := exists_pow_eq_one_of_algClosure_zmod l a ha
     obtain ⟨e, he⟩ := exists_isPrimitiveRoot_tilt l m hm hlm
-    haveI : NeZero m := ⟨hm.ne'⟩
+    have : NeZero m := ⟨hm.ne'⟩
     obtain ⟨i, -, hi⟩ := (he.map_of_injective hj).eq_pow_of_pow_eq_one
       (ξ := (f₀ : AlgebraicClosure (ZMod l) →+* Ω) a) (by rw [← map_pow, ham, map_one])
     exact ⟨e ^ i, by rw [map_pow, hi]⟩
@@ -436,7 +436,7 @@ variable {l : ℕ} [Fact l.Prime]
 theorem σC_root_of_unity {m n : ℕ} {g : GQ l} (hm : 0 < m) (hg : ∀ x : Om l, x ^ m = 1 → g x = x ^ n)
     {x : ℂ_[l]} (hx : x ^ m = 1) : Per.σC g x = x ^ n := by
   have : NeZero m := ⟨hm.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) m
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) m
   have hζ' := hζ.map_of_injective (algebraMap (Om l) ℂ_[l]).injective
   obtain ⟨i, -, rfl⟩ := hζ'.eq_pow_of_pow_eq_one hx
   have h1 : (ζ ^ i) ^ m = 1 := by rw [← pow_mul, mul_comm, pow_mul, hζ.pow_eq_one, one_pow]
@@ -511,7 +511,7 @@ theorem exists_unit_frobenius_eq_mul (l : ℕ) [Fact l.Prime] (k : Type) [Field 
   refine ⟨WittVector.frobeniusRotation l h1 h2, ?_, ?_⟩
   · apply WittVector.isUnit_of_coeff_zero_ne_zero
     simpa [WittVector.frobeniusRotation, WittVector.frobeniusRotationCoeff] using
-      WittVector.RecursionBase.solution_nonzero l h1 h2
+      WittVector.RecursionBase.solution_ne_zero l h1 h2
   · have := WittVector.frobenius_frobeniusRotation l h1 h2
     rwa [mul_one, mul_comm] at this
 

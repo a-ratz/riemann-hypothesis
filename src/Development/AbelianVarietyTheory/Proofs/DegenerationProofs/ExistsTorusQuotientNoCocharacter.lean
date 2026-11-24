@@ -422,7 +422,7 @@ theorem isOpenImmersion_basicOpen [IsMonHom i] {U : G.left.Opens} (hU : GoodOpen
   have key : ∀ {R T : Type} [CommRing R] [CommRing T] (f : R →+* T) (r : R),
       (letI := f.toAlgebra; IsLocalization.Away r T) → IsOpenImmersion (Spec.map (CommRingCat.ofHom f)) :=
     fun {R T} _ _ f r hr => by
-      letI := f.toAlgebra
+      let := f.toAlgebra
       exact IsOpenImmersion.of_isLocalization (S := T) r
   exact key _ a ((graded_of_goodOpen hU).isLocalization hU.1 a W h e (graded_of_goodOpen hW))
 
@@ -554,7 +554,7 @@ theorem exists_frac_ev (R : Type) [CommRing R] (W : (Sp R).Opens) (s : Γ(Sp R, 
   have hb : (Sp R).basicOpen f =
       PrimeSpectrum.basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom f) :=
     basicOpen_eq_of_affine' f
-  haveI := hT.isLocalization_basicOpen f
+  have := hT.isLocalization_basicOpen f
   obtain ⟨⟨a, _, n, rfl⟩, ha⟩ := IsLocalization.surj (Submonoid.powers f)
     (((Sp R).presheaf.map (homOfLE hfW).op).hom s)
   set φ : Γ(Sp R, ⊤) →+* R := (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom with hφ

@@ -109,7 +109,7 @@ theorem integrable_comp {μ : Measure α} {𝓕 A : Set α} {c : ι → ℝ} (hc
     (hH : ∀ h ∈ H, ∀ x, B (h x) = B x) (i : ι) :
     Integrable (fun x => B (T i x)) (μ.restrict A) := by
   refine ⟨(hB.comp (hT i)).aestronglyMeasurable, ?_⟩
-  have h1 := hU (fun x => ‖B x‖ₑ) hB.enorm (fun h hh x => by simp [hH h hh x])
+  have h1 := hU (fun x => ‖B x‖ₑ) hB.eNorm (fun h hh x => by simp [hH h hh x])
   have hfin : ∫⁻ x in 𝓕, ‖B x‖ₑ ∂μ < ∞ := hBi.2
   have hle : ENNReal.ofReal (c i) * ∫⁻ x in A, ‖B (T i x)‖ₑ ∂μ ≤ ∫⁻ x in 𝓕, ‖B x‖ₑ ∂μ := by
     rw [h1]; exact ENNReal.le_tsum (f := fun i => ENNReal.ofReal (c i) * ∫⁻ x in A, ‖B (T i x)‖ₑ ∂μ) i
@@ -327,7 +327,7 @@ theorem existsUnique_ratUnip_mul_mem_fundamentalSet (E : Type) [Field E] [Number
   choose r h0 h1 hF using row_exists (u : Matrix (Fin n) (Fin n) (Ad E)) hl hd
   let M : Matrix (Fin n) (Fin n) E := Matrix.of fun i k => r i k
   have hM : IsUnit M.det := by
-    rw [Matrix.det_of_upperTriangular (show M.BlockTriangular id from fun i j hij => h0 i j hij)]
+    rw [det_of_isUpperTriangular (show M.BlockTriangular id from fun i j hij => h0 i j hij)]
     simp [M, h1]
   refine ⟨Matrix.nonsingInvUnit M hM,
     ⟨(GlobalTheory.SmGL.mem_unipB E).2 ⟨fun i j hij => h0 i j hij, fun i => h1 i⟩, fun i j hij => ?_⟩, ?_⟩
@@ -378,9 +378,9 @@ theorem isCompact_unip_entries_mem :
     constructor
     · intro h
       refine ⟨fun i j hji => ?_, fun i => ?_, fun i j hij => ?_⟩
-      · have := h i trivial j trivial; rw [if_pos hji] at this; exact this
-      · have := h i trivial i trivial; rw [if_neg (lt_irrefl i), if_pos rfl] at this; exact this
-      · have := h i trivial j trivial; rw [if_neg (not_lt.2 hij.le), if_neg hij.ne] at this; exact this
+      · have := h i trivial j trivial; rw [ite_eq_left hji] at this; exact this
+      · have := h i trivial i trivial; rw [ite_eq_right (lt_irrefl i), ite_eq_left rfl] at this; exact this
+      · have := h i trivial j trivial; rw [ite_eq_right (not_lt.2 hij.le), ite_eq_right hij.ne] at this; exact this
     · rintro ⟨h0, h1, hc⟩ i - j -
       split_ifs with hji hij
       · exact h0 i j hji
@@ -462,7 +462,7 @@ theorem exists_fundamentalDomain_NE (E : Type) [Field E] [NumberField E] (n : �
       rw [this]
       refine MeasurableSet.iInter fun i => MeasurableSet.iInter fun j => MeasurableSet.iInter fun _ => ?_
       refine (Continuous.measurable ?_) (GroundTheory.Global.measurableSet_fundamentalSet E)
-      exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem i j
+      exact (Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j
     · intro x
       obtain ⟨γ, ⟨hγ, hγD⟩, huniq⟩ := _root_.GlobalTheory.CellDec.existsUnique_ratUnip_mul_mem_fundamentalSet E n (x : GA E n) x.2
       refine ⟨⟨⟨ratGL E n γ, ratGL_mem_NA hγ⟩, Subgroup.mem_subgroupOf.2 (Subgroup.mem_map.2 ⟨γ, hγ, rfl⟩)⟩,
@@ -682,7 +682,7 @@ theorem modularCharacter_map_equiv {G : Type} [Group G] [TopologicalSpace G] [Is
     exact Measure.isMulLeftInvariant_eq_smul _ ρ
   let μ : Measure G := Measure.haar
   let ν : Measure G := μ.map φ
-  haveI : ν.IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ φ
+  have : ν.IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ φ
   have h1 : ν.map (· * φ g) = Measure.modularCharacterFun g • ν := by
     have e : (· * φ g) ∘ φ = φ ∘ (· * g) := funext fun x => (map_mul φ x g).symm
     simp only [ν]
@@ -721,19 +721,19 @@ open GlobalTheory.CellDec.Unimod in
 theorem NA_isInvInvariant : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) [MeasurableSpace (GA E n)]
     [BorelSpace (GA E n)] (ν : Measure (GlobalTheory.CellDec.NA E n)) [ν.IsHaarMeasure], ν.IsInvInvariant := by
   intro E _ _ n _ _ ν _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI : LocallyCompactSpace (GA E n) := by
-    haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Ad E)) :=
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have : LocallyCompactSpace (GA E n) := by
+    have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Ad E)) :=
       inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → Ad E))
-    haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
+    have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
       MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
     exact Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (GA E n) := by
-    haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E)) :=
+  have : SecondCountableTopology (GA E n) := by
+    have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E)) :=
       inferInstanceAs (SecondCountableTopology (Fin n → Fin n → Ad E))
-    haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
+    have : SecondCountableTopology (Matrix (Fin n) (Fin n) (Ad E))ᵐᵒᵖ :=
       MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
     exact Units.isEmbedding_embedProduct.secondCountableTopology
   have hcl : IsClosed ((NA E n : Subgroup (GA E n)) : Set (GA E n)) := by
@@ -743,13 +743,13 @@ theorem NA_isInvInvariant : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) [
         (⋂ i : Fin n, ⋂ j : Fin n, ⋂ (_ : j < i), {g : GA E n | (g : Matrix (Fin n) (Fin n) (Ad E)) i j = 0}) ∩
           ⋂ i : Fin n, {g : GA E n | (g : Matrix (Fin n) (Fin n) (Ad E)) i i = 1} := by
       ext g
-      simp only [SetLike.mem_coe, NA, GlobalTheory.SmGL.mem_unipB, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, NA, GlobalTheory.SmGL.mem_unipB, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [e]
     exact (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
       isClosed_eq (hc i j) continuous_const).inter
       (isClosed_iInter fun i => isClosed_eq (hc i i) continuous_const)
-  haveI : LocallyCompactSpace (NA E n) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (NA E n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (NA E n) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (NA E n) := TopologicalSpace.Subtype.secondCountableTopology _
 
   let c : (Ad E)ˣ := Units.map (algebraMap E (Ad E)).toMonoidHom (Units.mk0 2 two_ne_zero)
   have hc : (c : Ad E) = 2 := by
@@ -763,7 +763,7 @@ theorem NA_isInvInvariant : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) [
   have hΔ : ∀ g : NA E n, Measure.modularCharacter g = 1 :=
     hom_trivial c hc Measure.modularCharacter fun u =>
       modularCharacter_map_equiv (conjEquiv (NA E n) t h1 h2) u
-  haveI : ν.IsMulRightInvariant := ⟨fun g => by
+  have : ν.IsMulRightInvariant := ⟨fun g => by
     have := Measure.isMulLeftInvariant_eq_smul (ν.map (· * g)) ν
     rw [← Measure.modularCharacterFun_eq_haarScalarFactor ν g] at this
     rw [this, show Measure.modularCharacterFun g = 1 from hΔ g, one_smul]⟩
@@ -870,12 +870,12 @@ variable {R : Type} [CommRing R] {n : ℕ} [TopologicalSpace R] [IsTopologicalRi
 theorem continuous_mat : Continuous (mat : (Pos n → R) → Matrix (Fin n) (Fin n) R) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   by_cases h : i < j
-  · simp only [mat, dif_pos h]; exact continuous_apply _
-  · simp only [mat, dif_neg h]; exact continuous_const
+  · simp only [mat, dite_eq_left h]; exact continuous_apply _
+  · simp only [mat, dite_eq_right h]; exact continuous_const
 
 theorem continuous_coords : Continuous (coords : GlobalTheory.SmGL.unipB R (Fin n) → Pos n → R) :=
   continuous_pi fun p => (continuous_apply _).comp ((continuous_apply _).comp
-    ((Units.continuous_val (M := Matrix (Fin n) (Fin n) R)).comp continuous_subtype_val))
+    ((Units.continuous_val (M := Matrix (Fin n) (Fin n) R)).comp continuous_subtypeVal))
 
 theorem continuous_ofCoords : Continuous (ofCoords : (Pos n → R) → GlobalTheory.SmGL.unipB R (Fin n)) := by
   have h : Continuous (fun x : Pos n → R => unit x) :=
@@ -964,10 +964,10 @@ theorem coords_mul_row (x y : Pos n → R) (ρ : ℕ) (hx : ∀ p : Pos n, ¬ (p
   obtain ⟨⟨a, b⟩, hab⟩ := q
   change (mat x * mat y) a b = _
   by_cases h : (a : ℕ) = ρ
-  · rw [dif_pos h, mat_mul_apply_row x y a b hab]
+  · rw [dite_eq_left h, mat_mul_apply_row x y a b hab]
     simp only [rowG]
     ring
-  · rw [dif_neg h, mat_mul_apply_other x y a b (fun p hp => hx p (by rw [hp]; exact h)), mat_lt y hab]
+  · rw [dite_eq_right h, mat_mul_apply_other x y a b (fun p hp => hx p (by rw [hp]; exact h)), mat_lt y hab]
 
 end GlobalTheory.UnipCoord
 
@@ -979,9 +979,9 @@ theorem measurable_rowG (x : Pos n → R) (ρ : ℕ) : Measurable (rowG x ρ) :=
   refine Measurable.of_eval fun q => ?_
   refine Measurable.const_add (Finset.measurable_sum _ fun k _ => ?_) _
   by_cases h : q.1.1.1 < k ∧ k < q.1.1.2
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     exact (measurable_pi_apply _).const_mul _
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact measurable_const
 
 def coordMeasure (μR : Measure R) : Measure (GlobalTheory.SmGL.unipB R (Fin n)) :=
@@ -1029,7 +1029,7 @@ theorem ofCoords_eq_mul (x : Pos n → R) (ρ : ℕ) (hx : ∀ p : Pos n, (p.1.1
           · rcases lt_trichotomy i k with hik | rfl | hik
             · rw [mat_lt _ hik]
               have : (i : ℕ) < ρ := hk' ▸ Fin.lt_def.1 hik
-              rw [if_neg hi, hx ⟨(i, k), hik⟩ this, zero_mul]
+              rw [ite_eq_right hi, hx ⟨(i, k), hik⟩ this, zero_mul]
             · exact absurd hk' hi
             · rw [mat_gt _ hik, zero_mul]
           · simp [hk']
@@ -1066,7 +1066,7 @@ theorem map_mul_ofCoords (μR : Measure R) [SigmaFinite μR] [μR.IsAddLeftInvar
     have ha := ih (fun p => if (p.1.1 : ℕ) = n - (m + 1) then 0 else x p) fun p hp => by
       by_cases h : (p.1.1 : ℕ) = n - (m + 1)
       · simp [h]
-      · simp only [h, if_false]; exact hx p (by omega)
+      · simp only [h, ite_false]; exact hx p (by omega)
     have hw := map_mul_row μR (fun p => if (p.1.1 : ℕ) = n - (m + 1) then x p else 0) (n - (m + 1))
       fun p hp => by simp [hp]
     rw [hsplit]
@@ -1107,11 +1107,11 @@ theorem GlobalTheory.UnipCoord.map_coords_haar : ∀ (R : Type) [CommRing R] [To
     ∃ c : ℝ≥0∞, Measure.map (fun (u : GlobalTheory.SmGL.unipB R (Fin n)) (p : {p : Fin n × Fin n // p.1 < p.2}) =>
         ((u : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) p.1.1 p.1.2) ν = c • Measure.pi (fun _ => μR) := by
   intro R _ _ _ _ _ _ _ _ n _ _ μR _ ν _
-  haveI : LocallyCompactSpace (GlobalTheory.SmGL.unipB R (Fin n)) :=
+  have : LocallyCompactSpace (GlobalTheory.SmGL.unipB R (Fin n)) :=
     (homeo (R := R) (n := n)).isOpenEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (GlobalTheory.SmGL.unipB R (Fin n)) :=
+  have : SecondCountableTopology (GlobalTheory.SmGL.unipB R (Fin n)) :=
     (homeo (R := R) (n := n)).isInducing.secondCountableTopology
-  haveI : (coordMeasure (n := n) μR).IsHaarMeasure := Measure.IsHaarMeasure.mk
+  have : (coordMeasure (n := n) μR).IsHaarMeasure := Measure.IsHaarMeasure.mk
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0∞, ν = c • coordMeasure μR :=
     ⟨_, Measure.isMulLeftInvariant_eq_smul ν (coordMeasure μR)⟩
   refine ⟨c, ?_⟩
@@ -1144,7 +1144,7 @@ def strictUpper (x : {p : Fin n × Fin n // p.1 < p.2} → R) : Matrix (Fin n) (
 
 theorem det_one_add_strictUpper (x : {p : Fin n × Fin n // p.1 < p.2} → R) :
     (1 + strictUpper R n x).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     simp [strictUpper]
   · intro i j hij
@@ -1198,7 +1198,7 @@ theorem GlobalTheory.UnipCoords.unipCoordsHomeomorph : ∀ (R : Type) [CommRing 
   refine ⟨{ toEquiv := e, continuous_toFun := ?_, continuous_invFun := ?_ }, fun u => rfl⟩
   · refine continuous_pi fun p => ?_
     have hv : Continuous (fun u : GlobalTheory.SmGL.unipB R (Fin n) => ((u : GL (Fin n) R) : Matrix (Fin n) (Fin n) R)) :=
-      (Units.continuous_val (M := Matrix (Fin n) (Fin n) R)).comp continuous_subtype_val
+      (Units.continuous_val (M := Matrix (Fin n) (Fin n) R)).comp continuous_subtypeVal
     exact (continuous_apply_apply p.1.1 p.1.2).comp hv
   · refine Continuous.subtype_mk ?_ _
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
@@ -1266,7 +1266,7 @@ theorem modulus_conj : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) [Measu
   have htd : t = GlobalTheory.SmGL.diagT (Ad E) (Fin n) d := GlobalTheory.CellDec.tl_eq_diagT ϖ l
   let φ : GlobalTheory.CellDec.NA E n → GlobalTheory.CellDec.NA E n := fun u => ⟨t * u * t⁻¹, GlobalTheory.CellDec.tl_conj_mem ϖ l u.2⟩
   have hφc : Continuous φ :=
-    Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+    Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
   have hset : {u : GlobalTheory.CellDec.NA E n | ∃ a ∈ A, (a : GA E n) = t * (u : GA E n) * t⁻¹} = φ ⁻¹' A := by
     ext u
     constructor
@@ -1304,7 +1304,7 @@ theorem modulus_conj : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) [Measu
   let k : {p : Fin n × Fin n // p.1 < p.2} → ℝ≥0∞ := fun p => ENNReal.ofReal (∏ v ∈ l.support, (qV E v : ℝ) ^ (mm p v))
   have hk : ∀ p, Measure.map (fun x : Ad E => a p * x) μR = k p • μR := fun p =>
     _root_.GlobalTheory.AdeleScale.map_mul_finId_adl E ϖ hϖ (mm p) l.support (fun v hv => by simp [mm, Finsupp.notMem_support_iff.1 hv]) μR
-  haveI : ∀ p, SigmaFinite (k p • μR) := fun p => (inferInstance : SigmaFinite ((Real.toNNReal _) • μR))
+  have : ∀ p, SigmaFinite (k p • μR) := fun p => (inferInstance : SigmaFinite ((Real.toNNReal _) • μR))
   have hSm : Measurable S := by
     refine Measurable.of_eval fun p => ?_
     exact (measurable_const_mul (a p)).comp (measurable_pi_apply p)
@@ -1320,7 +1320,7 @@ theorem modulus_conj : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) [Measu
       rw [← hk p, Measure.map_apply (measurable_const_mul _) (hs p)]
     have h2 : Measure.pi (fun p => k p • μR) = (∏ p, k p) • Measure.pi fun _ : {p : Fin n × Fin n // p.1 < p.2} => μR := by
       refine Measure.pi_eq fun s hs => ?_
-      rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
+      rw [smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
       rfl
     rw [← h1, h2]
   have hK : (∏ p, k p) = ENNReal.ofReal (GlobalTheory.CellDec.dinv n l) := by
@@ -1384,7 +1384,7 @@ theorem ae_measure_slice_eq (S X : Type) [Group S] [MeasurableSpace S] [Measurab
     refine ⟨(hD.preimage (measurable_smul_const y)).nullMeasurableSet, ?_, ?_⟩
     · rw [ae_iff]
       refine measure_mono_null (fun s hs => ?_) hy0
-      simp only [Set.mem_setOf_eq, not_exists] at hs ⊢
+      simp only [Set.mem_ofPred_eq, not_exists] at hs ⊢
       rintro ⟨g, hg⟩
       refine hs g ?_
       simpa [Subgroup.smul_def, mul_smul] using hg
@@ -1436,13 +1436,13 @@ theorem lintegral_unfold_refold (S X : Type) [Group S] [MeasurableSpace S] [Meas
     (hEf : IsFundamentalDomain Γ E ν) (ψ : X → ℝ≥0∞) (hψ : Measurable ψ)
     (hinv : ∀ (s : S) (x : X), ψ (s • x) = ψ x) :
     ∫⁻ y, ψ y * ν (E ∩ {s | s⁻¹ • y ∈ D₁}) ∂μ = ∫⁻ y in D₂, ψ y * ν {s | s⁻¹ • y ∈ D₁} ∂μ := by
-  haveI : MeasurableConstSMul Γ X :=
+  have : MeasurableConstSMul Γ X :=
     ⟨fun c => (measurable_const_smul (c : S) : Measurable fun x : X => (c : S) • x)⟩
-  haveI : SMulInvariantMeasure Γ X μ :=
+  have : SMulInvariantMeasure Γ X μ :=
     ⟨fun c A hA => SMulInvariantMeasure.measure_preimage_smul (c : S) hA⟩
-  haveI : MeasurableConstSMul Γ S :=
+  have : MeasurableConstSMul Γ S :=
     ⟨fun c => (measurable_const_mul (c : S) : Measurable fun x : S => (c : S) * x)⟩
-  haveI : SMulInvariantMeasure Γ S ν :=
+  have : SMulInvariantMeasure Γ S ν :=
     ⟨fun c A _ => measure_preimage_mul ν (c : S) A⟩
   set F : X → ℝ≥0∞ := fun y => ψ y * ν (E ∩ {s | s⁻¹ • y ∈ D₁}) with hF
   have hQ : MeasurableSet {p : X × S | p.2 ∈ E ∧ p.2⁻¹ • p.1 ∈ D₁} :=
@@ -1463,7 +1463,7 @@ theorem lintegral_unfold_refold (S X : Type) [Group S] [MeasurableSpace S] [Meas
     refine tsum_congr fun γ => ?_
     congr 1
     ext s
-    simp only [Set.mem_inter_iff, Set.mem_smul_set_iff_inv_smul_mem, Set.mem_setOf_eq,
+    simp only [Set.mem_inter_iff, Set.mem_smul_set_iff_inv_smul_mem, Set.mem_ofPred_eq,
       Subgroup.smul_def, smul_eq_mul, mul_inv_rev, inv_inv, mul_smul]
     exact and_comm
   calc ∫⁻ y, F y ∂μ = ∑' γ : Γ, ∫⁻ y in D₂, F (γ • y) ∂μ := hD₂.lintegral_eq_tsum'' F
@@ -1642,7 +1642,7 @@ theorem isFundamentalDomain_of_map {G : Type} [Group G] [MeasurableSpace G] (μ 
     (H : Subgroup G) (Γ : Subgroup H) (𝓕 : Set G)
     (h : IsFundamentalDomain (Γ.map H.subtype) 𝓕 μ) : IsFundamentalDomain Γ 𝓕 μ := by
   let E := Subgroup.equivMapOfInjective Γ H.subtype H.subtype_injective
-  refine h.preimage_of_equiv (f := id) (e := E.symm) (Measure.QuasiMeasurePreserving.id μ)
+  refine h.preimage_of_equiv (f := id) (e := E.symm) (QuasiMeasurePreserving.id μ)
     E.symm.bijective (fun g x => ?_)
   show (((E.symm g : Γ) : H) : G) * x = (g : G) * x
   congr 1
@@ -1659,14 +1659,14 @@ theorem GlobalTheory.CellCompare.lintegral_comparison : ∀ {G : Type} [Group G]
     IsFundamentalDomain (Γ'.map H.subtype) 𝓕' μ → ∀ f : G → ℝ≥0∞, Measurable f → (∀ h : H, ∀ g, f (h * g) = f g) →
     ν D' * ∫⁻ g in 𝓕, f g ∂μ = ν D * ∫⁻ g in 𝓕', f g ∂μ := by
   intro G _ _ _ _ μ _ _ H ν _ _ _ Γ Γ' _ _ D D' hD hD' 𝓕 𝓕' h𝓕 h𝓕' f hf hinv
-  haveI : MeasurableSMul₂ H G := ⟨(measurable_subtype_coe.comp measurable_fst).mul measurable_snd⟩
-  haveI : SMulInvariantMeasure H G μ := inferInstance
-  haveI : MeasurableInv H := ⟨by
-    have : Measurable fun x : H => (((x : G)⁻¹ : G)) := measurable_subtype_coe.inv
+  have : MeasurableSMul₂ H G := ⟨(measurable_subtypeVal.comp measurable_fst).mul measurable_snd⟩
+  have : SMulInvariantMeasure H G μ := inferInstance
+  have : MeasurableInv H := ⟨by
+    have : Measurable fun x : H => (((x : G)⁻¹ : G)) := measurable_subtypeVal.inv
     exact Measurable.subtype_mk (f := fun x : H => ((x : G))⁻¹) (h := fun x => H.inv_mem x.2) this⟩
-  haveI : MeasurableMul₂ H := ⟨by
+  have : MeasurableMul₂ H := ⟨by
     have : Measurable fun p : H × H => ((p.1 : G) * (p.2 : G)) :=
-      (measurable_subtype_coe.comp measurable_fst).mul (measurable_subtype_coe.comp measurable_snd)
+      (measurable_subtypeVal.comp measurable_fst).mul (measurable_subtypeVal.comp measurable_snd)
     exact Measurable.subtype_mk (f := fun p : H × H => ((p.1 : G) * (p.2 : G)))
       (h := fun p => H.mul_mem p.1.2 p.2.2) this⟩
   exact GlobalTheory.CovolIndep.lintegral_mul_eq ν μ Γ Γ' 𝓕 𝓕' D D'
@@ -1710,13 +1710,13 @@ theorem secondCountable_GA_chv : SecondCountableTopology (GA E n) :=
   Units.isEmbedding_embedProduct.secondCountableTopology
 
 theorem isClosed_NA : IsClosed ((NA E n : Subgroup (GA E n)) : Set (GA E n)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
   have hv : Continuous fun g : GA E n => (g : Matrix (Fin n) (Fin n) (Ad E)) := Units.continuous_val
   have : ((NA E n : Subgroup (GA E n)) : Set (GA E n)) =
       (⋂ i : Fin n, ⋂ j : Fin n, ⋂ (_ : j < i), {g : GA E n | (g : Matrix (Fin n) (Fin n) (Ad E)) i j = 0}) ∩
       ⋂ i : Fin n, {g : GA E n | (g : Matrix (Fin n) (Fin n) (Ad E)) i i = 1} := by
     ext g
-    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     exact GlobalTheory.SmGL.mem_unipB (Ad E)
   rw [this]
   refine IsClosed.inter (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ => ?_)
@@ -1734,8 +1734,8 @@ theorem NE_le_NA : NE E n ≤ NA E n := by
     rw [h2 i, map_one]
 
 theorem countable_NE : Countable (NE E n) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (GL (Fin n) E) :=
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (GL (Fin n) E) :=
     Function.Injective.countable (f := fun (g : GL (Fin n) E) (i j : Fin n) => (g : Matrix (Fin n) (Fin n) E) i j)
       fun _ _ h => Units.ext (Matrix.ext fun i j => congrFun (congrFun h i) j)
   exact ((Set.countable_range (ratGL E n)).mono (by rintro _ ⟨u, -, rfl⟩; exact ⟨u, rfl⟩)).to_subtype
@@ -1759,21 +1759,21 @@ theorem lintegral_tl_inv_mul : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ
     (∀ u ∈ GlobalTheory.CellDec.NA E n, ∀ g, F (u * g) = F g) →
     ∫⁻ g in 𝓕, F ((GlobalTheory.CellDec.tl n ϖ l)⁻¹ * g) ∂μ = ENNReal.ofReal (GlobalTheory.CellDec.dinv n l) * ∫⁻ g in 𝓕, F g ∂μ := by
   intro E _ _ n _ _ μ _ ϖ hϖ l 𝓕 h𝓕 F hF hinv
-  haveI : LocallyCompactSpace (GA E n) := locallyCompact_GA_chv
-  haveI : SecondCountableTopology (GA E n) := secondCountable_GA_chv
-  haveI : SigmaCompactSpace (GA E n) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : SFinite μ := inferInstance
-  haveI : MeasurableMul₂ (GA E n) := inferInstance
-  haveI : MeasurableInv (GA E n) := inferInstance
-  haveI : LocallyCompactSpace (NA E n) := isClosed_NA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (NA E n) :=
+  have : LocallyCompactSpace (GA E n) := locallyCompact_GA_chv
+  have : SecondCountableTopology (GA E n) := secondCountable_GA_chv
+  have : SigmaCompactSpace (GA E n) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : SFinite μ := inferInstance
+  have : MeasurableMul₂ (GA E n) := inferInstance
+  have : MeasurableInv (GA E n) := inferInstance
+  have : LocallyCompactSpace (NA E n) := isClosed_NA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (NA E n) :=
     isClosed_NA.isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
-  haveI : SigmaCompactSpace (NA E n) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI := countable_NE (E := E) (n := n)
+  have : SigmaCompactSpace (NA E n) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have := countable_NE (E := E) (n := n)
   set ν : Measure (NA E n) := Measure.haar with hν
-  haveI : ν.IsInvInvariant := _root_.GlobalTheory.CellDec.NA_isInvInvariant E n ν
+  have : ν.IsInvInvariant := _root_.GlobalTheory.CellDec.NA_isInvInvariant E n ν
   set_option synthInstance.maxHeartbeats 200000 in
-    haveI : SFinite ν := inferInstance
+    have : SFinite ν := inferInstance
   obtain ⟨D, hD, hD0, hDtop⟩ := _root_.GlobalTheory.CellDec.exists_fundamentalDomain_NE E n ν
   set t := tl n ϖ l with ht
 
@@ -1786,14 +1786,14 @@ theorem lintegral_tl_inv_mul : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ
   have hcM : ∀ u : NA E n, ((cM u : NA E n) : GA E n) = t * u * t⁻¹ := fun _ => rfl
   let c : NA E n ≃ᵐ NA E n :=
     { toEquiv := cM.toEquiv
-      measurable_toFun := ((measurable_mul_const _).comp ((measurable_const_mul _).comp measurable_subtype_coe)).subtype_mk
-      measurable_invFun := ((measurable_mul_const _).comp ((measurable_const_mul _).comp measurable_subtype_coe)).subtype_mk }
+      measurable_toFun := ((measurable_mul_const _).comp ((measurable_const_mul _).comp measurable_subtypeVal)).subtype_mk
+      measurable_invFun := ((measurable_mul_const _).comp ((measurable_const_mul _).comp measurable_subtypeVal)).subtype_mk }
   have hmod : ∀ A, MeasurableSet A → ν (c ⁻¹' A) = ENNReal.ofReal (dinv n l) * ν A := by
     intro A hA
     rw [← _root_.GlobalTheory.CellDec.ModulusPf.modulus_conj E n ν ϖ hϖ l A hA]
     congr 1
     ext u
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     constructor
     · intro h; exact ⟨_, h, rfl⟩
     · rintro ⟨a, ha, hau⟩
@@ -1801,9 +1801,9 @@ theorem lintegral_tl_inv_mul : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ
       exact Subtype.ext hau.symm
   have hmap : Measure.map c ν = ENNReal.ofReal (dinv n l) • ν := by
     ext A hA
-    rw [Measure.map_apply c.measurable hA, hmod A hA, Measure.smul_apply, smul_eq_mul]
+    rw [Measure.map_apply c.measurable hA, hmod A hA, smul_apply, smul_eq_mul]
   have hmod' : ∀ A, ν (c ⁻¹' A) = ENNReal.ofReal (dinv n l) * ν A := fun A => by
-    rw [← c.map_apply, hmap, Measure.smul_apply, smul_eq_mul]
+    rw [← c.map_apply, hmap, smul_apply, smul_eq_mul]
 
   set Γ : Subgroup (NA E n) := (NE E n).subgroupOf (NA E n) with hΓ
   set Γ' : Subgroup (NA E n) := Γ.comap cM.toMonoidHom with hΓ'
@@ -1819,9 +1819,9 @@ theorem lintegral_tl_inv_mul : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ
         have := tl_inv_conj_mem ϖ l (NE_le_NA hx)
         rwa [show t⁻¹ * (t * x * t⁻¹) * t = x by group] at this
       exact ⟨⟨x, hxN⟩, Subgroup.mem_comap.2 (Subgroup.mem_subgroupOf.2 hx), rfl⟩
-  haveI : Countable Γ := Function.Injective.countable (f := fun g : Γ => (⟨(g : NA E n), g.2⟩ : NE E n))
+  have : Countable Γ := Function.Injective.countable (f := fun g : Γ => (⟨(g : NA E n), g.2⟩ : NE E n))
     fun a b h => Subtype.ext (Subtype.ext (congrArg (fun z : NE E n => (z : GA E n)) h))
-  haveI : Countable Γ' := Function.Injective.countable (f := fun g : Γ' => (⟨cM g, g.2⟩ : Γ))
+  have : Countable Γ' := Function.Injective.countable (f := fun g : Γ' => (⟨cM g, g.2⟩ : Γ))
     fun a b h => Subtype.ext (cM.injective (congrArg (fun z : Γ => (z : NA E n)) h))
 
   have hD' : IsFundamentalDomain Γ' (c ⁻¹' D) ν := by

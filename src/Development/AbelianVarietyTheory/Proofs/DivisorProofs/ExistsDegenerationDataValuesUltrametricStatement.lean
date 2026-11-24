@@ -67,7 +67,7 @@ theorem exists_ball (C : Type) [NormedField C] [IsUltrametricDist C] :
     ∃ S : ValuationSubring C, ∀ x, x ∈ S ↔ ‖x‖ ≤ 1 := by
   refine ⟨{ carrier := {x | ‖x‖ ≤ 1}
             mul_mem' := fun {a b} ha hb => by
-              simp only [Set.mem_setOf_eq, norm_mul] at *
+              simp only [Set.mem_ofPred_eq, norm_mul] at *
               exact mul_le_one₀ ha (norm_nonneg _) hb
             one_mem' := by simp
             add_mem' := fun {a b} ha hb => (IsUltrametricDist.norm_add_le_max a b).trans (max_le ha hb)

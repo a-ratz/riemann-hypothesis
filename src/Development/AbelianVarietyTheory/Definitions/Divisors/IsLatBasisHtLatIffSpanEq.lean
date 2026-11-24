@@ -105,10 +105,10 @@ open Classical in
 def val_vw (x : C) : EReal :=
   if x = 0 then ⊤ else (((vLa la (p : K) : ℝ) * (Real.log (v x) / Real.log (v (p : C))) : ℝ) : EReal)
 
-theorem val_vw_zero : val_vw la p v 0 = ⊤ := if_pos rfl
+theorem val_vw_zero : val_vw la p v 0 = ⊤ := ite_eq_left rfl
 
 theorem val_vw_of_ne {x : C} (hx : x ≠ 0) : val_vw la p v x =
-    (((vLa la (p : K) : ℝ) * (Real.log (v x) / Real.log (v (p : C))) : ℝ) : EReal) := if_neg hx
+    (((vLa la (p : K) : ℝ) * (Real.log (v x) / Real.log (v (p : C))) : ℝ) : EReal) := ite_eq_right hx
 
 theorem val_vw_ne_bot (x : C) : val_vw la p v x ≠ ⊥ := by
   unfold val_vw; split_ifs
@@ -289,15 +289,15 @@ theorem LieTie.unique {Y S : Scheme.{0}} {ψ : P.A.A.left ⟶ Y} {s : Y ⟶ S} {
   obtain ⟨xG, w, h1, h2, h3⟩ := h
   obtain ⟨xG', w', h1', h2', h3'⟩ := h'
   have e1 : w.left = w'.left := hψ.hom_ext (h2.trans h2'.symm) ((Over.w w).trans (Over.w w').symm)
-  haveI : IsSchemeTheoreticallyDominant (spMap (dualMap (algebraMap O C))) :=
+  have : IsSchemeTheoreticallyDominant (spMap (dualMap (algebraMap O C))) :=
     (schemeDominant_specMap_iff _).2 fun a b hab => TrivSqZeroExt.ext
       (P.integers.hom_inj (by simpa [dualMap] using congrArg TrivSqZeroExt.fst hab))
       (P.integers.hom_inj (by simpa [dualMap, Algebra.algebraMap_eq_smul_one] using congrArg TrivSqZeroExt.snd hab))
-  haveI := P.semi.separated
+  have := P.semi.separated
   have e2 : xG.1 = xG'.1 := Over.OverMorphism.ext (ext_of_schDom P.G.hom
     ((Over.w xG.1).trans (Over.w xG'.1).symm) _ (by rw [← h3, ← h3', e1]))
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => (Fact.out : ¬ IsUnit (p : O)) (by
     simpa using h.map (TrivSqZeroExt.fstHom O O O))
   exact Subtype.ext ((existsUnique_left hp (comp_isAdicComplete_dualNumber p) xG.1).unique h1 (e2 ▸ h1'))
@@ -435,7 +435,7 @@ variable {T : CDVR} {io : c.F →+* T.Fr} {y₀ : IntFr Xo c T io} {k : letI := 
 theorem IsHTFrame.val_vw_map (h : IsHTFrame p v O y₀ k y) {la : HeightOneSpectrum (𝓞 c.F)} {e : ℕ}
     (ho : OverLa la T.V io e) (x : T.Fr) : val_vw la p v (k x) = nval T.V e x := by
   obtain ⟨-, kO, P, _, _, hP, -⟩ := h
-  letI := io.toAlgebra
+  let := io.toAlgebra
   exact CompHt.val_vw_map la P.integers (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero) Fact.out ho k.toRingHom kO
     hP.1 x
 
@@ -443,7 +443,7 @@ theorem IsHTFrame.isVal (h : IsHTFrame p v O y₀ k y) {la : HeightOneSpectrum (
     (ho : OverLa la T.V io e) : IsVal la fun f : Rul Xo c => val_vw la p v (evR Xo c f y) := by
   have hm := h.val_vw_map ho
   obtain ⟨-, _, P, -⟩ := h
-  letI := io.toAlgebra
+  let := io.toAlgebra
   refine ⟨(congrArg _ (evalAt_zero _ _ y)).trans (val_vw_zero la p v), fun _ => val_vw_ne_bot la p v _,
     fun f g => ?_, fun a f ha => ?_, fun f g => (congrArg _ (evalAt_mul _ _ f g y)).trans (val_vw_mul la p v _ _)⟩
   · exact (val_vw_add la (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
@@ -498,8 +498,8 @@ theorem IsHTFrameCp.mem {p : ℕ} [Fact p.Prime] [Algebra c.F ℂ_[p]] {T : CDVR
     {y₀ : IntFr Xo c T io} {k : letI := io.toAlgebra; T.Fr →ₐ[c.F] ℂ_[p]} {y : FrPt Xo c ℂ_[p]}
     (h : IsHTFrameCp p y₀ k y) {la : HeightOneSpectrum (𝓞 c.F)} {e : ℕ} (ho : OverLa la T.V io e) :
     (p : 𝓞 c.F) ∈ la.asIdeal := by
-  letI := H.starRing
-  letI := io.toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
   obtain ⟨-, kO, P, _, _, hP, -⟩ := h
   obtain ⟨r, hr⟩ := exists_log_eq P.integers k.toRingHom kO hP.1
   have h0 : (p : ℂ_[p]) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero
@@ -525,7 +525,7 @@ theorem htPrimes_eq (B : ℝ) : htPrimes l B = ↑(((Finset.range (⌊B⌋₊ + 
   have h1 : 2 * (discr E).natAbs ≠ 0 := mul_ne_zero two_ne_zero (Int.natAbs_ne_zero.2 (discr_ne_zero E))
   have h2 : l.M' ≠ 0 := Nat.lcm_ne_zero (by have := l.three_le; omega) l.A_pos.ne'
   ext p
-  simp only [htPrimes, Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_union, Finset.mem_filter, Finset.mem_range,
+  simp only [htPrimes, Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_union, Finset.mem_filter, Finset.mem_range,
     Nat.mem_primeFactors, Nat.lt_succ_iff, h1, h2, ne_eq, not_false_eq_true, and_true]
   by_cases hp : p.Prime
   · simp only [hp, true_and, and_true, Nat.le_floor_iff' hp.ne_zero, hp.dvd_mul (m := 2 * (discr E).natAbs)]
@@ -539,11 +539,11 @@ def mixVals (B : ℝ) : ValFam Xo c := ValFam.patch (htPrimes l B) (htVals Xo c)
 
 theorem mixVals_of_mem {B : ℝ} {la : HeightOneSpectrum (𝓞 c.F)} {p : ℕ} (hp : p ∈ htPrimes l B)
     (h : (p : 𝓞 c.F) ∈ la.asIdeal) : (mixVals Xo c B).1 la = htValSet Xo c la :=
-  if_pos ⟨p, hp, h⟩
+  ite_eq_left ⟨p, hp, h⟩
 
 theorem mixVals_of_not_mem {B : ℝ} {la : HeightOneSpectrum (𝓞 c.F)} {p : ℕ} (hp : p.Prime) (hn : p ∉ htPrimes l B)
     (h : (p : 𝓞 c.F) ∈ la.asIdeal) : (mixVals Xo c B).1 la = valSet Xo c (algCls Xo c) la := by
-  refine if_neg fun ⟨q, hq, h'⟩ => hn ?_
+  refine ite_eq_right fun ⟨q, hq, h'⟩ => hn ?_
   by_contra hne
   have hc : IsCoprime (p : 𝓞 c.F) (q : 𝓞 c.F) :=
     Nat.Coprime.cast ((Nat.coprime_primes hp hq.1).2 fun e => hne (e ▸ hq))

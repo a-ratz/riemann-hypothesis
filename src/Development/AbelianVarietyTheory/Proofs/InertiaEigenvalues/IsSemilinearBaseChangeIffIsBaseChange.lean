@@ -64,7 +64,7 @@ theorem _root_.GlobalTheory.BSP.semiBC_iff_isBaseChange (A B : Type) [CommRing A
   constructor
   · intro hu
     refine IsBaseChange.of_lift_unique _ fun Q _ _ _ _ g => ?_
-    letI : AddCommGroup Q := Module.addCommMonoidToAddCommGroup B
+    let : AddCommGroup Q := Module.addCommMonoidToAddCommGroup B
     let v : M →ₛₗ[algebraMap A B] Q :=
       { toFun := g
         map_add' := g.map_add
@@ -76,8 +76,8 @@ theorem _root_.GlobalTheory.BSP.semiBC_iff_isBaseChange (A B : Type) [CommRing A
     · rw [← h]
       exact LinearMap.congr_fun hw₂ x
   · intro hb Q _ _ v
-    letI : Module A Q := Module.compHom Q (algebraMap A B)
-    haveI : IsScalarTower A B Q :=
+    let : Module A Q := Module.compHom Q (algebraMap A B)
+    have : IsScalarTower A B Q :=
       ⟨fun a b q => by
         show (a • b) • q = algebraMap A B a • b • q
         rw [Algebra.smul_def, mul_smul]⟩

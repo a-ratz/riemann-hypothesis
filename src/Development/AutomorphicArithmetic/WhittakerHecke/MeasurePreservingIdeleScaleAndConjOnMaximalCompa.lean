@@ -107,7 +107,7 @@ private lemma cD_mem_KK {t : (A ℚ)ˣ} (ht : t ∈ UU) {k : G1 ℚ} (hk : k ∈
 theorem UpperTheory.maximalCompact_measure_map_conjDiag_eq :
     ∀ (M₀ : Meas ℚ) (t : IdeleGroup ℚ), t ∈ UU → M₀.κ.map (cD t) = M₀.κ := by
   intro m t ht
-  haveI := m.prob
+  have := m.prob
   have hm : Measurable (cD t : G1 ℚ → G1 ℚ) := (M.continuous_cD t).measurable
   have hae : ∀ᵐ y ∂m.κ, y ∈ KK ℚ := by
     rw [ae_iff]
@@ -161,7 +161,7 @@ theorem UpperTheory.measurePreserving_idele_scale_and_conj_on_maximalCompact :
         MeasurePreserving (fun p : IdeleGroup ℚ × G1 ℚ => (Un.aa t u p.1, cD u p.2)) M₀.ν M₀.ν ∧
         MeasurableEmbedding (fun p : IdeleGroup ℚ × G1 ℚ => (Un.aa t u p.1, cD u p.2)) := by
   intro M₀ t u hu
-  haveI := M₀.prob
+  have := M₀.prob
   let c : IdeleGroup ℚ := (iy (Real.exp t) * u : (A ℚ)ˣ)
   have h1 : MeasurePreserving (fun z : IdeleGroup ℚ => c * z⁻¹) (ideleMeasure ℚ) (ideleMeasure ℚ) :=
     (measurePreserving_mul_left (ideleMeasure ℚ) c).comp (Measure.measurePreserving_inv (ideleMeasure ℚ))

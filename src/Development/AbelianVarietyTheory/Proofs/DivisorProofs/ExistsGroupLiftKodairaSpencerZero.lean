@@ -151,8 +151,8 @@ theorem isKSValue_one_of_rows {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] 
     refine (sub_eq_zero.1 (zero _ (sub_mem hg (sum_mem fun k _ => Submodule.smul_mem _ _ (hF k))) fun k' => ?_))
     have e : ∑ k, (ψ (ψ g (hb k) • F k)) (hb k') = ψ g (hb k') := by
       rw [Finset.sum_eq_single k' (fun b _ hb' => by
-        rw [map_smul, LinearMap.smul_apply, hδ, if_neg (Ne.symm hb'), smul_zero]) (by simp)]
-      rw [map_smul, LinearMap.smul_apply, hδ, if_pos rfl, smul_eq_mul, _root_.mul_one]
+        rw [map_smul, LinearMap.smul_apply, hδ, ite_eq_right (Ne.symm hb'), smul_zero]) (by simp)]
+      rw [map_smul, LinearMap.smul_apply, hδ, ite_eq_left rfl, smul_eq_mul, _root_.mul_one]
 
     rw [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, e, sub_self]
 
@@ -166,7 +166,7 @@ theorem isKSValue_one_of_rows {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] 
         rw [e1, map_sum, LinearMap.sum_apply]
         refine Finset.sum_eq_zero fun b _ => ?_
         have hne : (⟨cj k.1, b⟩ : Σ σ, Fin (m σ)) ≠ k' := fun e => hcj _ hk (by subst e; exact hk')
-        rw [map_smul, LinearMap.smul_apply, ← LinearMap.IsAlt.neg halt (F k') _, hδ, if_neg hne, neg_zero,
+        rw [map_smul, LinearMap.smul_apply, ← LinearMap.IsAlt.neg halt (F k') _, hδ, ite_eq_right hne, neg_zero,
           smul_zero]
       · have e1 := hsym _ _ _ _ (hkf k) (hkf k')
         rw [hiso _ (hF k) _ (hk0 k' hk'), zero_add] at e1
@@ -203,7 +203,7 @@ theorem ksFull : GlobalTheory.CovTop.Hypotheses₂ → ∀ (E : Type) [Field E] 
   have gA := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ.1 hg
   have hA' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hU hπ'
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1 hg
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   obtain ⟨a', ha'⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ'
   obtain ⟨a, ha⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ
   have hc : ∀ z, (a.act z).left ≫ i = i ≫ (a'.act z).left := fun z => by

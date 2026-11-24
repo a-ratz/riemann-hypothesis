@@ -264,7 +264,7 @@ theorem rank_le : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I J 
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun c _ => ?_
     by_cases hc : D.lev c = s
-    · simp only [hc, if_true, w, Finset.mul_sum, Finset.sum_mul]
+    · simp only [hc, ite_true, w, Finset.mul_sum, Finset.sum_mul]
       rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun ν _ => Finset.sum_congr rfl fun δ _ => by ring
     · simp [hc]
@@ -335,7 +335,7 @@ theorem exists_isUnit_det_mul_eq_neg_of_linearIndependent_residue {R : Type} [Co
     · simp [M, Matrix.col]
     · simp [M, Matrix.col, hs]
   have hu : IsUnit (M.map (IsLocalRing.residue R)) := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit, hcol]
+    rw [← Matrix.linearIndependent_col_iff_isUnit, hcol]
     exact hw.comp _ finSumFinEquiv.symm.injective
   have hdet : IsUnit M.det := by
     rw [Matrix.isUnit_iff_isUnit_det] at hu
@@ -353,8 +353,8 @@ theorem exists_isUnit_det_mul_eq_neg_of_linearIndependent_residue {R : Type} [Co
     simp only [Matrix.neg_apply, neg_mul, Finset.sum_neg_distrib]
     rw [hij, hinv, Matrix.one_apply]
     by_cases hbc : b.val = c.val
-    · rw [if_pos hbc, if_pos (Fin.ext hbc)]
-    · rw [if_neg hbc, if_neg (fun e => hbc (by rw [e]; rfl)), neg_zero]
+    · rw [ite_eq_left hbc, ite_eq_left (Fin.ext hbc)]
+    · rw [ite_eq_right hbc, ite_eq_right (fun e => hbc (by rw [e]; rfl)), neg_zero]
 
 theorem exists_unimodular_mul_eq_neg_of_indepMod : ∀ (C : Type) [Field C] (V : VF C) (n n0 : ℕ) (Φ : Fin n → Fin n0 → C), (∀ b c, V.Ge 0 (Φ b c)) → IndepMod V (fun c b => Φ b c) → n0 ≤ n ∧ ∃ Y : Matrix (Fin n) (Fin n) C, (∀ b b', V.Ge 0 (Y b b')) ∧ V.v Y.det = 0 ∧ ∀ (b : Fin n) (c : Fin n0), b.val < n0 → ∑ b', Y b b' * Φ b' c = if b.val = c.val then -1 else 0 := by
   intro C _ V n n0 Φ hΦ hind
@@ -478,7 +478,7 @@ theorem coeff_low_good : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) (I J : Ty
     (by
       intro c k x hk
       have hk' : k ≠ 0 := by omega
-      simp only [al, hk', if_false, Sys.al, S.cur_zero_inl]
+      simp only [al, hk', ite_false, Sys.al, S.cur_zero_inl]
       exact (S.co_spec (S.cur c k) x).symm)
   set T : I → MvPowerSeries (Fin N) C := fun c => linPull (fun δ => S.tan (em δ)) (t c) with hTdef
   set z : I → MvPowerSeries (Fin N) C := fun c =>
@@ -615,11 +615,11 @@ theorem linPull_coord_int_of_degree_lt :
     (fun c b => by simp)
     (fun c k x hk => by
       have hk' : k ≠ 0 := by omega
-      simp only [if_neg hk', Sys.al, S.cur_zero_inl]
+      simp only [ite_eq_right hk', Sys.al, S.cur_zero_inl]
       exact (S.co_spec (S.cur c k) x).symm)
   have h2 := h1 c μ
   rw [Finset.sum_range_succ', Finset.sum_eq_zero, zero_add] at h2
-  · simp only [if_true, pow_zero, pow_one, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
+  · simp only [ite_true, pow_zero, pow_one, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
       Finset.mem_univ] at h2
 
     rw [h2, map_sum]
@@ -995,7 +995,7 @@ theorem indepMod_first_coeff : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [Ne
       have hs : ∀ i ∈ s, V.Ge 0 (x i) := fun i hi => hx i (Finset.mem_insert_of_mem hi)
       have h := mm_add (mm_add_pow e (hx a (Finset.mem_insert_self a s)) (VF.Ge.sum hs)) (ih hs)
       convert h using 1 <;> ring
-  haveI := X.algClosed
+  have := X.algClosed
   have hl : V.l ≠ 0 := V.l_prime.ne_zero
   choose r hr using fun δ => IsAlgClosed.exists_pow_nat_eq (co δ) (Nat.pos_of_ne_zero hl)
   have hr0 : ∀ δ, V.Ge 0 (r δ) := fun δ => ge_of_pow hl (by rw [hr]; exact hco δ)
@@ -1088,19 +1088,19 @@ theorem chain_data {C : Type} [Field C] [CharZero C] {Z I : Type} [Fintype I] (D
       by_cases hn : n = 0
       · subst hn
         by_cases h : ε c = ε e <;> simp [h]
-      · simp only [if_neg hn]
+      · simp only [ite_eq_right hn]
         exact D.al_all _ _ _)
     (fun c hc => ⟨by
       funext e
       simpa using D.al_one _ hc (ε e), fun n e hn => by
-      simp only [if_neg (show n ≠ 0 by omega)]
+      simp only [ite_eq_right (show n ≠ 0 by omega)]
       have := D.al_good _ hc n (ε e) hn
       rwa [neg_sub] at this⟩)
     (fun s hs c hc e he => by
       obtain ⟨h1, h2⟩ := (Finset.mem_filter.1 hc).2
       have h3 : D.lev (ε e) ≠ D.lev (ε c) + 1 := fun h =>
         he (Finset.mem_filter.2 ⟨Finset.mem_univ _, by omega, by omega⟩)
-      simp only [if_neg (show (2 : ℕ) ≠ 0 by omega)]
+      simp only [ite_eq_right (show (2 : ℕ) ≠ 0 by omega)]
       rw [D.al_two _ (by omega), D.g_supp _ (by omega) _ h3, zero_add, inv_mul_cancel_left₀ hl0]
       exact D.lam_int _ _)
     (fun c j => by
@@ -1109,10 +1109,10 @@ theorem chain_data {C : Type} [Field C] [CharZero C] {Z I : Type} [Fintype I] (D
     (fun c hc => by
       funext j
       simp only [chainMat_zero, Pi.zero_apply]
-      refine if_neg fun h => hc (Finset.mem_filter.2 ⟨Finset.mem_univ _, ?_, by omega⟩)
+      refine ite_eq_right fun h => hc (Finset.mem_filter.2 ⟨Finset.mem_univ _, ?_, by omega⟩)
       rw [h, hem])
     (fun s e j => by
-      simp only [chainMat_succ, if_neg (show (2 : ℕ) ≠ 0 by omega)]
+      simp only [chainMat_succ, ite_eq_right (show (2 : ℕ) ≠ 0 by omega)]
       rw [Finset.sum_filter, Finset.sum_filter, ← ε.sum_comp])
     (fun c => ht _)
     (fun e => by
@@ -1158,7 +1158,7 @@ theorem weight_nonneg : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (d : �
     (fun c s b => if s = 0 then (if c = b then 1 else 0) else D.al c s b)
     (fun j x => by simp) (fun c b => by simp)
     (fun c k x hk => by
-      simp only [if_neg (show k ≠ 0 by omega)]
+      simp only [ite_eq_right (show k ≠ 0 by omega)]
       exact h.2.2.2.1 c k x hk)
   rw [← h.2.1] at h2
   obtain ⟨k1, k2⟩ := chain_data D em hem _ h1 h2
@@ -1282,7 +1282,7 @@ theorem IndepOn.indepMod {m : ℕ} {σ : Type} {Y : Fin m → σ → C} {T : Fin
       split_ifs
       · exact hc ν
       · exact VF.Ge.zero 0)
-    (fun δ hδ => Finset.sum_eq_zero fun ν _ => if_neg (by rintro rfl; exact hδ (hf ν)))
+    (fun δ hδ => Finset.sum_eq_zero fun ν _ => ite_eq_right (by rintro rfl; exact hδ (hf ν)))
     (fun s => by
       convert hs s using 1
       simp only [Finset.sum_mul]
@@ -1315,8 +1315,8 @@ theorem exists_relation {m : ℕ} {σ : Type} {Y : Fin m → σ → C} (hY : ∀
         rw [eq_sub_iff_add_eq, ← Finset.add_sum_erase _ _ (Finset.mem_univ δ),
           ← Finset.add_sum_erase _ (fun ε => c ε * Y ε s) (Finset.mem_univ δ)]
         rw [Finset.sum_congr rfl (g := fun ε => c ε * Y ε s)
-          (fun ε hε => by rw [if_neg (Finset.ne_of_mem_erase hε)])]
-        simp only [if_true]
+          (fun ε hε => by rw [ite_eq_right (Finset.ne_of_mem_erase hε)])]
+        simp only [ite_true]
         ring) ε₀
     by_cases h : ε₀ = δ
     · exact hε₀ (h ▸ hm)
@@ -1397,7 +1397,7 @@ theorem chain_rank (X : RowData C V d I J) (hA : X.Alt) (g : Fin 2) (a : ZMod d)
     (N : ℕ) (em : Fin N ↪ I g) (hem : ∀ δ, D.lev (em δ) = 0) (s : ℕ) (hs : s < Kn i) :
     ∃ (m : ℕ) (cc : Fin m ↪ Fin N), N ≤ m + s * X.j' ∧
       IndepMod V (fun δ c => if D.lev c = s then chainMat D s c (em (cc δ)) else 0) := by
-  haveI := X.algClosed
+  have := X.algClosed
   induction s with
   | zero =>
     refine ⟨N, Function.Embedding.refl _, by omega, fun co _ hco ν => ?_⟩
@@ -1465,8 +1465,8 @@ theorem both (X : RowData C V d I J) (hA : X.Alt) (h5 : 5 ≤ V.l) (g : Fin 2) (
     ∃ (n0 : ℕ) (e : Fin n0 → I g → C) (v' : Fin X.n → I (1 - g) → C) (Φ : Fin X.n → Fin n0 → C),
       X.MConcl g a i U U' n0 e v' Φ ∧ X.CurveSystemVanishing g a i n0 e v' Φ ∧
         (i = 1 → X.MPlusConcl g a n0 e v' Φ) := by
-  haveI := X.algClosed
-  haveI := X.charZero
+  have := X.algClosed
+  have := X.charZero
   obtain ⟨S, N1, D, hv, hl, hDi, hal, hty, hN1, A, hAint, hAeq⟩ :=
     _root_.GlobalTheory.AdaptedChain.adaptedChainData C V d I J X hA g a hb i hi hid U hU
   have h : Adapted S D a i := ⟨hv, hl, hDi, hal, hty⟩
@@ -1518,7 +1518,7 @@ theorem both (X : RowData C V d I J) (hA : X.Alt) (h5 : 5 ≤ V.l) (g : Fin 2) (
       (by intro c x; split_ifs; exacts [VF.Ge.one, VF.Ge.zero 0])
       (by
         intro c x hx
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro rfl
         exact hx rfl)
       (by

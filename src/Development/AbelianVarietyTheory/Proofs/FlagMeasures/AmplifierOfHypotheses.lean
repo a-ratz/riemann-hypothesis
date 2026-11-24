@@ -153,7 +153,7 @@ namespace GlobalTheory.AmpOrb
 
 theorem sfinite_of_lintegral {X : Type} [MeasurableSpace X] (ν : Measure X) (F : X → ℝ≥0∞) (hF : AEMeasurable F ν)
     (h0 : ∀ᵐ x ∂ν, F x ≠ 0) (h1 : ∫⁻ x, F x ∂ν ≠ ⊤) : SFinite ν := by
-  haveI := isFiniteMeasure_withDensity h1
+  have := isFiniteMeasure_withDensity h1
   rw [← withDensity_inv_same₀ hF h0 ((ae_lt_top' hF h1).mono fun x hx => hx.ne)]
   infer_instance
 
@@ -218,7 +218,7 @@ theorem integral_comm_of_norm {X E F : Type} [MeasurableSpace X] [NormedAddCommG
   push_neg at hc
   have ha : AntilipschitzWith (c⁻¹).toNNReal T := AddMonoidHomClass.antilipschitz_of_bound T fun e => by
     rw [hT, Real.coe_toNNReal _ (by positivity), ← mul_assoc, inv_mul_cancel₀ hc.ne', one_mul]
-  exact integral_undef fun h => hf ((T.lipschitz.integrable_comp_iff_of_antilipschitz ha (map_zero T)).1 h)
+  exact integral_undef fun h => hf ((T.lipschitzWith.integrable_comp_iff_of_antilipschitz ha (map_zero T)).1 h)
 
 section RankOne
 variable {E F : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [NormedAddCommGroup F] [InnerProductSpace ℂ F]
@@ -265,7 +265,7 @@ theorem integral_apply_of_norm [CompleteSpace E] {X : Type} [MeasurableSpace X] 
   · exact ContinuousLinearMap.integral_apply hf ξ
   by_cases hξ : ξ = 0
   · simp [hξ]
-  rw [integral_undef hf, integral_undef, ContinuousLinearMap.zero_apply]
+  rw [integral_undef hf, integral_undef, zero_apply]
   intro hi
   refine hf ((hi.norm.div_const ‖ξ‖).mono' hT ?_)
   filter_upwards [h] with x hx
@@ -376,7 +376,7 @@ theorem integral_side {H W : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ
     have hπ1 : ‖π (Matrix.of p.1 : MatKR k r)⁻¹‖ ≤ 1 :=
       ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun x => by rw [hπu _ hi, one_mul]
     unfold Formalism.FourierDecayAlt.ThreeDimData.beInt
-    rw [ContinuousLinearMap.smul_apply, norm_smul, norm_smul, hπu _ hi]
+    rw [smul_apply, norm_smul, norm_smul, hπu _ hi]
     exact mul_le_mul_of_nonneg_right (mul_le_of_le_one_right (norm_nonneg _) hπ1) (norm_nonneg _)
 
 def lA (γ : MatKR k r) (p : PairSp k r) : MatKR k r := (Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ * γ
@@ -436,8 +436,8 @@ theorem aesm_ker (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hpk k r)
     (contOn_intg L hγ continuousOn_const).comp continuous_fst.continuousOn fun q hq => hq.1
   have hc : ContinuousOn (ker L γ w v v' ξ ξ') U :=
     ((continuousOn_const.inner (𝕜 := ℂ) s1).mul (continuousOn_const.inner (𝕜 := ℂ) s2).star).smul cM
-  haveI : BorelSpace (PairSp k r) := Prod.borelSpace
-  haveI : BorelSpace (PairSp k r × Mt k r) := Prod.borelSpace
+  have : BorelSpace (PairSp k r) := Prod.borelSpace
+  have : BorelSpace (PairSp k r × Mt k r) := Prod.borelSpace
   have := hc.aestronglyMeasurable (μ := μ.prod ρ) hUm
   rwa [Measure.restrict_eq_self_of_ae_mem hUae] at this
 
@@ -490,7 +490,7 @@ theorem integral_ker_pair (L : LocBessel k r) (hk : 1 ≤ k) {γ : MatKR k r} (h
   ext η
   have h2 := Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_inner L.hz'.2 (u := L.u') L.hπ' (Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.uw_inv hp.2.2.1).1 ξ' η
   rw [Matrix.nonsing_inv_nonsing_inv _ (hG.unit _ hp.2.2.1.1)] at h2
-  simp only [ker, opM, besselIntg, side, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [ker, opM, besselIntg, side, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, map_smul, smul_smul, inner_smul_left, h2]
   rw [← hmul _ h1 _ (hG.mul_mem _ hγ _ hx),
     ← hmul _ (hG.mul_mem _ (hG.inv_mem _ hp.2.2.1.1) _ (hG.inv_mem _ hp.2.2.2.1)) _ hx, ← Matrix.mul_assoc]
@@ -525,7 +525,7 @@ theorem integral_ker_group (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH
   rw [integral_smul_const, e, lA_lB L γ hp, mul_smul]
   congr 1
   ext η
-  simp only [opM, besselIntg, coefF_eq, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, map_smul]
+  simp only [opM, besselIntg, coefF_eq, smul_apply, ContinuousLinearMap.comp_apply, map_smul]
   rw [smul_comm]
 
 theorem rpow_bound {s t u b e : ℝ} (hs : 1 ≤ s) (ht : 1 ≤ t) (hu : 1 ≤ u) (h : u ≤ s * t) (hb : 0 ≤ b) (he : b ≤ e) :
@@ -546,7 +546,7 @@ theorem integrable_ker (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hp
     (hC' : ∀ x ∈ UH (Hpk k r), ‖⟪v', L.σ x w⟫_ℂ‖ ≤ C' * Formalism.FourierDecayAlt.B.gN x ^ (-e)) :
     Integrable (ker L γ w v v' ξ ξ') (ν.prod μG) := by
   have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
-  haveI : SigmaFinite μG := hμ.1
+  have : SigmaFinite μG := hμ.1
   have aG : ∀ᵐ y ∂μG, Matrix.of y ∈ UH (Hpk k r) := by rw [ae_iff]; exact hμ.2.2.1
   have hAG : 0 ≤ Formalism.FourierDecayAlt.ThreeDimData.AG k r := by unfold Formalism.FourierDecayAlt.ThreeDimData.AG; positivity
   have i1 := hint.mul_prod (GlobalTheory.gN_rpow_neg_integrable_haar k r μG (e - b) hμ he)
@@ -604,9 +604,9 @@ theorem ampKF : BranchingSupport.Hyps → GlobalTheory.CellAmp.AmpKF := by
     rw [hd']
     show ⟪w, w⟫_ℂ * ⟪y, y'⟫_ℂ / _ = _
     rw [this, one_mul, div_eq_inv_mul]
-  haveI : SigmaFinite μG := hμ.1
-  haveI : SigmaFinite μR := hR.1
-  haveI : SFinite (pairMeas L) := by
+  have : SigmaFinite μG := hμ.1
+  have : SigmaFinite μR := hR.1
+  have : SFinite (pairMeas L) := by
     have : SFinite L.μN := by unfold LocBessel.μN haarLie; infer_instance
     have : SigmaFinite L.μW := L.hμW.1.1
     have : SigmaFinite L.μW' := L.hμW'.1.1
@@ -614,7 +614,7 @@ theorem ampKF : BranchingSupport.Hyps → GlobalTheory.CellAmp.AmpKF := by
   have aG : ∀ᵐ y ∂μG, Matrix.of y ∈ UH (Hpk k r) := by rw [ae_iff]; exact hμ.2.2.1
   have aR : ∀ᵐ y ∂μR, Matrix.of y ∈ RStab k r γ := by rw [ae_iff]; exact hR.2.2.1
   have aν := ae_quot L hR hQ
-  haveI : SFinite ν := sfinite_of_lintegral ν (fun p => ‖pairMaj γ b p‖ₑ) hint.1.enorm
+  have : SFinite ν := sfinite_of_lintegral ν (fun p => ‖pairMaj γ b p‖ₑ) hint.1.eNorm
     (aν.mono fun p hp => by
       have : 0 < pairMaj γ b p :=
         Real.rpow_pos_of_pos (one_pos.trans_le (PI.PolynomialProperness.GN.gN_ge_one (point_mem L hγ hp))) _
@@ -641,7 +641,7 @@ theorem ampKF : BranchingSupport.Hyps → GlobalTheory.CellAmp.AmpKF := by
     conv_lhs => rw [← hinv]
     rw [lintegral_map (f := fun s => f fun i j => (Matrix.of (cj s) * Matrix.of x) i j) (mf.comp mc) mi]
     rfl
-  haveI : SFinite νR := sfinite_of_weil μG νR μR hR.2.1 a₂ m2 hW2
+  have : SFinite νR := sfinite_of_weil μG νR μR hR.2.1 a₂ m2 hW2
   have m1 : Measurable fun q : PairSp k r × Mt k r => stabAct γ (Matrix.of q.2) q.1 :=
     (measurable_fst.fst.fst.prodMk (meas_mul measurable_snd measurable_fst.fst.snd)).prodMk
       (measurable_fst.snd.fst.prodMk (meas_mul (mc.comp measurable_snd) measurable_fst.snd.snd))
@@ -670,7 +670,7 @@ theorem ampKF : BranchingSupport.Hyps → GlobalTheory.CellAmp.AmpKF := by
       hl _ (Submodule.subset_span ⟨_, hG.mul_mem _ hγ _ hx, rfl⟩) v hv,
       hl' _ (Submodule.subset_span ⟨_, hx, rfl⟩) v' hv']
     ext η
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_smul,
+    simp only [smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_smul,
       inner_smul_left, inner_conj_symm]
     congr 1
     ring

@@ -79,7 +79,7 @@ theorem projectiveLine_locDens_first_chart (y : Fin 1 → ℂ) : locDens p1 (fun
   apply maDens_fs
   refine Filter.Eventually.of_forall fun y' => ?_
   show fsPot.φ ((y 0 : ℂ) : OnePoint ℂ) ((y' 0 : ℂ) : OnePoint ℂ) = _
-  simp only [fsPot, if_neg (coe_ne_infty _)]
+  simp only [fsPot, ite_eq_right (coe_ne_infty _)]
   rfl
 
 theorem projectiveLine_locDens_second_chart (y : Fin 1 → ℂ) : locDens p1 (fun _ => fsPot) p1i1 y = fsDens (y 0) := by
@@ -87,20 +87,20 @@ theorem projectiveLine_locDens_second_chart (y : Fin 1 → ℂ) : locDens p1 (fu
   · apply maDens_fs
     refine Filter.Eventually.of_forall fun y' => ?_
     show fsPot.φ ((p1.chart p1i1).symm y) ((p1.chart p1i1).symm y') = _
-    rw [projectiveLine_second_chart_symm, projectiveLine_second_chart_symm, if_pos hy]
+    rw [projectiveLine_second_chart_symm, projectiveLine_second_chart_symm, ite_eq_left hy]
     simp only [fsPot]
     by_cases hy' : y' 0 = 0
-    · rw [if_pos hy', hy']
+    · rw [ite_eq_left hy', hy']
       simp [crd1]
-    · rw [if_neg hy']
+    · rw [ite_eq_right hy']
       simp [crd1]
   · apply maDens_fs_inv _ _ hy
     have hne : ∀ᶠ y' in 𝓝 y, y' 0 ≠ 0 :=
       (continuous_apply 0).continuousAt.eventually_ne hy
     filter_upwards [hne] with y' hy'
     show fsPot.φ ((p1.chart p1i1).symm y) ((p1.chart p1i1).symm y') = _
-    rw [projectiveLine_second_chart_symm, projectiveLine_second_chart_symm, if_neg hy, if_neg hy']
-    simp only [fsPot, if_neg (coe_ne_infty _)]
+    rw [projectiveLine_second_chart_symm, projectiveLine_second_chart_symm, ite_eq_right hy, ite_eq_right hy']
+    simp only [fsPot, ite_eq_right (coe_ne_infty _)]
     rfl
 
 theorem projectiveLine_partition_continuous_coe (P : ChartPartition p1) (j : Fin p1.n) :
@@ -140,7 +140,7 @@ theorem projectiveLine_integralWith_eq_one (P : ChartPartition p1) :
     filter_upwards [compl_mem_ae_iff.mpr (measure_singleton (0 : ℂ))] with u hu
     have hu0 : u ≠ 0 := hu
     show P.χ p1i1 ((p1.chart p1i1).symm (fun _ => u)) * fsDens u = P.χ p1i1 (u⁻¹ : ℂ) * fsDens u
-    rw [projectiveLine_second_chart_symm, if_neg hu0]
+    rw [projectiveLine_second_chart_symm, ite_eq_right hu0]
   rw [e0, e1, ← integral_add (projectiveLine_partition_integrable P p1i0) (projectiveLine_partition_integrable P p1i1)]
   simp_rw [← add_mul]
   have hs : ∀ u : ℂ, P.χ p1i0 (u : OnePoint ℂ) + P.χ p1i1 (u : OnePoint ℂ) = 1 := fun u => by

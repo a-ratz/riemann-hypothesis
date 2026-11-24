@@ -196,7 +196,7 @@ namespace GlobalTheory
 
 theorem natCard_GL_zmod_le (r g : ℕ) (hg : 0 < g) :
     Nat.card (GL (Fin r) (ZMod g)) ≤ g ^ (r * r) := by
-  haveI : NeZero g := ⟨hg.ne'⟩
+  have : NeZero g := ⟨hg.ne'⟩
   have h1 : Nat.card (GL (Fin r) (ZMod g)) ≤ Nat.card (Matrix (Fin r) (Fin r) (ZMod g)) :=
     Nat.card_le_card_of_injective _ Units.val_injective
   have h2 : Nat.card (Matrix (Fin r) (Fin r) (ZMod g)) = g ^ (r * r) := by
@@ -334,7 +334,7 @@ theorem totCx (D : D7) : IsTotallyComplex D.host.E := by
 theorem log_hE_le_rd (D : D7) :
     Real.log (Formalism.MainNotions.N.hE D.host : ℝ) ≤ (D.R.f : ℝ) * Real.log D.host.rdE +
       2 * D.R.f * Real.log (1 + D.R.f * Real.log D.host.rdE) := by
-  haveI := totCx D
+  have := totCx D
   have hf := Formalism.MainNotions.TwistedPlaces.finrank_E_host D
   have h := GlobalTheory.log_classNumber_le_log_abs_discr_div D.host.E D.R.f hf
   have hd : 0 < |(discr D.host.E : ℝ)| := by

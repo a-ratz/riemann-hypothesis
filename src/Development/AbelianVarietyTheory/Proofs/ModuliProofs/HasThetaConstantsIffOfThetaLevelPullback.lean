@@ -274,7 +274,7 @@ theorem isThetaPt_iff {P₀ : PolAV S} {P : PolAV S'} {φ : P.A.left ⟶ P₀.A.
     forall_congr' fun p => exists_congr fun V => and_congr_right fun _ => ?_
   let V₀ : (Over.mk (T.hom ≫ f)).left.Opens := V
   let τ : (overRes V).left ⟶ (overRes V₀).left := 𝟙 V.toScheme
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 V.toScheme))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 V.toScheme))
   have hτ : τ ≫ (overRes V₀).hom = (overRes V).hom ≫ f := (Category.id_comp _).trans (Category.assoc _ _ _).symm
   have mv : ∀ i, τ ≫ (overResι V₀ ≫ x₀ i).left = (overResι V ≫ x i).left ≫ φ := fun i =>
     (Category.id_comp _).trans ((congrArg (V.ι ≫ ·) (hx i)).trans (Category.assoc _ _ _).symm)

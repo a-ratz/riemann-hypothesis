@@ -428,9 +428,9 @@ theorem logNear_holds : LogNear := by
   have hYn : ‖Y‖ ≤ δ := by rw [← hsn_eq_norm]; exact hgd
   have hY4 : ‖Y‖ ≤ 1 / 4 := hYn.trans hδ
   let S : Subalgebra ℂ (Mat m) := Algebra.elemental ℂ Y
-  letI : NormedCommRing S := { SubringClass.toNormedRing S with mul_comm := mul_comm' }
-  letI : NormedAlgebra ℂ S := inferInstance
-  haveI : CompleteSpace S := inferInstance
+  let : NormedCommRing S := { SubringClass.toNormedRing S with mul_comm := mul_comm' }
+  let : NormedAlgebra ℂ S := inferInstance
+  have : CompleteSpace S := inferInstance
   let y : S := ⟨Y, Algebra.elemental.self_mem ℂ Y⟩
   have hy : ‖y‖ = ‖Y‖ := rfl
   have hy1 : ‖-y‖ < 1 := (norm_neg y).trans_lt (hy.trans_lt (by linarith))
@@ -453,7 +453,7 @@ theorem logNear_holds : LogNear := by
   have hy'4 : ‖y'‖ ≤ 1 / 4 := by rw [hy']; exact hY4
   have e1 := exp_logS_comm y hy4
   have hneg : logS y' = -logS y := logS_inv y w hy4 hy'4 hw
-  have hval : Continuous S.val := continuous_subtype_val
+  have hval : Continuous S.val := continuous_subtypeVal
   have m1 : S.val (logS y) = logS Y := map_logS S.val hval (by linarith)
   have m2 : S.val (logS y') = logS (Jm ε * Yᴴ * Jm ε) := by
     rw [map_logS S.val hval (by linarith)]; exact congrArg logS hy'v
@@ -562,7 +562,7 @@ private theorem vol_arith (n : ℕ) (B : ℝ) (hn : 3 ≤ n) (hB : 1 ≤ B) :
           ring_nf
   have hexp : (8 * ((n : ℝ) + 1) * B) ^ (8 * n ^ 2 + 1)
       = Real.exp (((8 * n ^ 2 + 1 : ℕ) : ℝ) * Real.log (8 * ((n : ℝ) + 1) * B)) := by
-    rw [Real.exp_nat_mul, Real.exp_log hL0]
+    rw [Real.exp_natCast_mul, Real.exp_log hL0]
   have hN : ((8 * n ^ 2 + 1 : ℕ) : ℝ) ≤ 11 * ((n : ℝ) + 1) ^ 4 := by
     push_cast
     nlinarith [sq_nonneg ((n : ℝ) + 1), sq_nonneg (n : ℝ)]

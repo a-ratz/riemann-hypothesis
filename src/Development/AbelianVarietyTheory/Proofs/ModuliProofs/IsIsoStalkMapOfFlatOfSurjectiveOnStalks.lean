@@ -140,11 +140,11 @@ open scoped CategoryTheory.Obj TensorProduct Pointwise in
 theorem _root_.GlobalTheory.isIso_stalkMap_of_flat_of_surjectiveOnStalks {X U : Scheme.{0}} (j : U ⟶ X) [Flat j]
     [SurjectiveOnStalks j] (u : U) : IsIso (j.stalkMap u) := by
   have hs := j.stalkMap_surjective u
-  letI := (j.stalkMap u).hom.toAlgebra
+  let := (j.stalkMap u).hom.toAlgebra
   haveI : Module.Flat _ _ := Flat.stalkMap j u
-  haveI : IsLocalHom (algebraMap (X.presheaf.stalk (j u)) (U.presheaf.stalk u)) :=
+  have : IsLocalHom (algebraMap (X.presheaf.stalk (j u)) (U.presheaf.stalk u)) :=
     inferInstanceAs (IsLocalHom (j.stalkMap u).hom)
-  haveI := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have := Module.FaithfullyFlat.of_flat_of_isLocalHom
     (A := X.presheaf.stalk (j u)) (B := U.presheaf.stalk u)
   have hi : Function.Injective (j.stalkMap u).hom :=
     FaithfulSMul.algebraMap_injective (X.presheaf.stalk (j u)) (U.presheaf.stalk u)

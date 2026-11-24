@@ -173,7 +173,7 @@ theorem mem_frobKerIdeal_of_cobOne (p : ℕ) [Fact p.Prime] (K H : Type) [Field 
       rw [Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.tmul_pow, hmk,
         LinearMap.rTensor_tmul, TensorProduct.lid_tmul, map_smul, smul_pow, ← map_pow,
         Algebra.algebraMap_eq_smul_one, smul_tmul]
-  haveI : (frobKerIdeal p K H).IsHopfIdeal K := {
+  have : (frobKerIdeal p K H).IsHopfIdeal K := {
     counit_eq_zero x hx := frobKerIdeal_le_augIdeal (Fact.out : p.Prime).ne_zero K H hx
     map_mkQ_comul_eq_zero x hx := by
       have h : frobKerIdeal p K H ≤ RingHom.ker
@@ -199,7 +199,7 @@ theorem mem_frobKerIdeal_of_cobOne (p : ℕ) [Fact p.Prime] (K H : Type) [Field 
   set J := frobKerIdeal p K H with hJ
   let π : H →ₐc[K] H ⧸ J := Bialgebra.Quotient.mkBialgHom J
   have hπ : Function.Surjective π := Ideal.Quotient.mk_surjective
-  haveI : IsCocomm K (H ⧸ J) := by
+  have : IsCocomm K (H ⧸ J) := by
     constructor
     refine LinearMap.ext fun y => ?_
     obtain ⟨x, rfl⟩ := hπ y

@@ -224,7 +224,7 @@ theorem sub_eqF (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (a : ℝ) :
       {z | (∀ τ, (Am X z τ).PosSemidef) ∧
         Real.exp (Real.log (1 + ‖z‖ ^ 2) - a) ≤ ∏ τ, (Am X z τ).det.re} := by
   ext z
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hz, hle⟩
     have hpd := (mem_OmF_iff X x0 ho z).1 hz
@@ -263,7 +263,7 @@ theorem isClosed_psdF : IsClosed {z : V (nd X) | ∀ τ, (Am X z τ).PosSemidef}
   have hset : {z : V (nd X) | ∀ τ, (Am X z τ).PosSemidef} =
       ⋂ τ, ⋂ x : Fin X.p0 → ℂ, {z | 0 ≤ star x ⬝ᵥ (Am X z τ) *ᵥ x} := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     refine ⟨fun h τ x => (h τ).dotProduct_mulVec_nonneg x, fun h τ => ?_⟩
     exact Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
       (Matrix.isHermitian_one.sub (Matrix.isHermitian_mul_conjTranspose_self _)) (h τ)
@@ -277,7 +277,7 @@ theorem isClosed_psdF : IsClosed {z : V (nd X) | ∀ τ, (Am X z τ).PosSemidef}
   exact isClosed_le continuous_const hf
 
 theorem isCompact_subF (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (a : ℝ) : IsCompact {z : V (nd X) | z ∈ OmF X x0 ∧ eF X x0 z ≤ a} := by
-  rw [sub_eqF X x0 ho a, Set.setOf_and]
+  rw [sub_eqF X x0 ho a, Set.ofPred_and]
   apply Metric.isCompact_of_isClosed_isBounded
   · refine (isClosed_psdF X).inter (isClosed_le ?_ ?_)
     · exact Real.continuous_exp.comp ((Continuous.log (continuous_const.add (continuous_norm.pow 2))

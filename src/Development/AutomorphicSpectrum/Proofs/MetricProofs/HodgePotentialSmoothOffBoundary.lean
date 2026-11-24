@@ -107,7 +107,7 @@ theorem quotNormSq_le {j N : ℕ} (hj : j ≤ N) {G : Matrix (Fin N) (Fin N) ℂ
     exact (hG.1.apply _ _).symm
   have hAp : A.PosDef := hG.submatrix (Fin.castLE_injective hj)
   have hDp : D.PosSemidef := hG.posSemidef.submatrix _
-  letI : Invertible A := hAp.isUnit.invertible
+  let : Invertible A := hAp.isUnit.invertible
   have hS : (D - Bᴴ * A⁻¹ * B).PosSemidef := (PosDef.fromBlocks₁₁ B D hAp).1 (hb ▸ hG.posSemidef.submatrix e)
   have hT : (Bᴴ * A⁻¹ * B).PosSemidef := hAp.inv.posSemidef.conjTranspose_mul_mul_same B
   have hdet : G.det = A.det * (D - Bᴴ * A⁻¹ * B).det := by
@@ -307,7 +307,7 @@ theorem quot_bounds {j N : ℕ} (hj : j ≤ N) (hN : 0 < N) {t₀ : V} (hl : l �
   · have := (Gr.clm ((1 / 2 : ℝ) • ContinuousLinearMap.id ℝ ℝ) g1).add
       (Gr.clm ((-1 / 2 : ℝ) • ContinuousLinearMap.id ℝ ℝ) g2)
     convert this using 2 with t
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, Complex.reCLM_apply]
+    simp only [smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, Complex.reCLM_apply]
     ring
   · obtain ⟨B, hB⟩ := (Gr.det (M := fun t => ((S t)ᴴ * H t * S t).submatrix (tailIdx hj) (tailIdx hj))
       fun p q => hGg _ _).bdd.bound

@@ -364,7 +364,7 @@ theorem anFib_of_eq_marked (σ : c.F →+* ℂ) :
         (e : Fin g ≃ Lt1 Dw) (x : Frame X.Ψ r) (L : Lt E r) (A' : AnFib X bas idx e x L y'),
         ∃ A : AnFib X bas idx e x L y, (∀ mk, A'.Marked mk → A.Marked mk) ∧
           ∀ θ, A'.Reads 1 y'.s θ → A.Reads 1 y.s (fun z => t⁻¹ * θ z) := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   intro y y' hx hu
   obtain ⟨x', hover', u', tan', eig', basis', s', gen'⟩ := y'
   simp only at hx hu
@@ -415,8 +415,8 @@ open GlobalTheory.CoverFrameMod (midEmb)
 
 theorem exists_scalar_fib : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (σ : T.Q.c.F →+* ℂ) (C : Cover T j σ), C.d.IsLev → C.σ₂.comp C.inc = σ → ∀ (y : FrPt (T.Q.Xo j) T.Q.c (CAt σ)) (y₂ : FrPt C.d.Xo₂ C.d.c₂ (CAt C.σ₂)), (y₂.x : Sp ℂ ⟶ C.d.Xo₂.X) ≫ C.d.r = (y.x : Sp ℂ ⟶ (T.Q.Xo j).X) → (∀ τ i, (y₂.u τ i : Sp (DualNumber ℂ) ⟶ C.d.Xo₂.univ.t.G.left) ≫ C.d.m.φ = (y.u τ i : Sp (DualNumber ℂ) ⟶ (T.Q.Xo j).univ.t.G.left)) → ∃ t : ℂ, t ≠ 0 ∧ (∀ (n : ℕ) (a : (D.host.E →+* ℂ) × ℕ → ℕ), ∀ f ∈ sec (T.Q.Xo j) T.Q.c a n, ∀ f₂ : Rul C.d.Xo₂ C.d.c₂, C.IsPull f f₂ → toC (evR C.d.Xo₂ C.d.c₂ f₂ y₂) = t ^ n * toC (evR (T.Q.Xo j) T.Q.c f y)) ∧ ∀ (r g : ℕ) (X : Data D.host.E r) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (e : Fin g ≃ Lt1 (T.Q.Dw j)) (x : Frame X.Ψ r) (L : Lt D.host.E r) (mk : (T.Q.Dw j).La →ₗ[𝓞 D.host.E] (Fin r → D.host.E)), IsSympl X bas → x ∈ X.dom → SelfD X L → ∀ ϑ : (Fin g → ℂ) → ℂ, (letI : Algebra T.Q.c.F ℂ := σ.toAlgebra; ∃ A : AnFib X bas idx e x L y, A.Marked mk ∧ A.Reads 1 y.s ϑ) → (letI : Algebra C.d.c₂.F ℂ := C.σ₂.toAlgebra; ∃ A₂ : AnFib X bas idx e x L y₂, A₂.Reads 1 y₂.s (fun z => t * ϑ z)) := by
   intro D T j σ C hlev hσ y y₂ hx hu
-  letI a₂ : Algebra C.d.c₂.F (CAt (midEmb C)) := RingHom.toAlgebra (R := C.d.c₂.F) (S := CAt (midEmb C)) C.σ₂
-  letI a₀ : Algebra T.Q.c.F (CAt (midEmb C)) := RingHom.toAlgebra (R := T.Q.c.F) (S := CAt (midEmb C)) σ
+  let a₂ : Algebra C.d.c₂.F (CAt (midEmb C)) := RingHom.toAlgebra (R := C.d.c₂.F) (S := CAt (midEmb C)) C.σ₂
+  let a₀ : Algebra T.Q.c.F (CAt (midEmb C)) := RingHom.toAlgebra (R := T.Q.c.F) (S := CAt (midEmb C)) σ
   have hov : AlgOver T.Q.c C.c' C.hle (CAt (midEmb C)) := fun a => DFunLike.congr_fun hσ a
   have hc : ∀ a : C.c'.F, algebraMap C.d.c₂.F (CAt (midEmb C)) (C.d.eF a) = algebraMap C.c'.F (CAt (midEmb C)) a :=
     fun _ => rfl
@@ -438,11 +438,11 @@ theorem exists_scalar_fib : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (σ : T.Q.c.F �
     have e2 : toC (evR (T.Q.Xo j) T.Q.c f y) = u ^ n * toC (evR (T.Q.Xo j) T.Q.c f y₁) := h2
     rw [e2, ← mul_assoc, ← mul_pow, inv_mul_cancel₀ hu0, one_pow, one_mul]
     rfl
-  · letI : Algebra T.Q.c.F ℂ := σ.toAlgebra
+  · let : Algebra T.Q.c.F ℂ := σ.toAlgebra
     obtain ⟨A, hmk, hr⟩ := hA
     obtain ⟨A₁, hm₁, hr₁⟩ := hfib r g X bas idx e x L A
-    letI : Algebra C.c'.F ℂ := (midEmb C).toAlgebra
-    letI : Algebra C.d.c₂.F ℂ := C.σ₂.toAlgebra
+    let : Algebra C.c'.F ℂ := (midEmb C).toAlgebra
+    let : Algebra C.d.c₂.F ℂ := C.σ₂.toAlgebra
     let A₁' : AnFib X bas idx e x L (y' : FrPt (T.Q.Xo j) C.c' ℂ) :=
       ⟨A₁.ex, A₁.ex_add, A₁.ex_onto, A₁.ex_ker, A₁.ex_lin, A₁.hol, A₁.der, A₁.fr, A₁.fr_hol, A₁.fr_ne, A₁.fr_g,
         A₁.fr_0, A₁.χ, A₁.χ_norm, A₁.fr_per⟩
@@ -634,9 +634,9 @@ theorem const_cover : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, InR D j →
         ϑ z ^ V.rank ≠ 0 := mul_ne_zero (Complex.exp_ne_zero _) (pow_ne_zero _ hz)
     apply mul_right_cancel₀ hne
     linear_combination -v₁
-  have u₁ : rdU C.U₂ f₂ (C.dict₂ h).1 (C.dict₂ h).2 = toC (evR C.d.Xo₂ C.d.c₂ f₂ (C.U₂.un _ ⟨_, hx₂⟩)) := dif_pos hx₂
+  have u₁ : rdU C.U₂ f₂ (C.dict₂ h).1 (C.dict₂ h).2 = toC (evR C.d.Xo₂ C.d.c₂ f₂ (C.U₂.un _ ⟨_, hx₂⟩)) := dite_eq_left hx₂
   have u₂ : rdU (T.U j σ) f (T.dict j σ h).1 (T.dict j σ h).2 =
-      toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un _ ⟨_, hx₁⟩)) := dif_pos hx₁
+      toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un _ ⟨_, hx₁⟩)) := dite_eq_left hx₁
   rw [u₁, u₂, hval V.rank a f hf f₂ hp, ← key]
   ring
 

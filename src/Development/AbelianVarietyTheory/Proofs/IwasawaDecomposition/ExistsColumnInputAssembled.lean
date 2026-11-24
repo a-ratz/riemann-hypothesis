@@ -87,7 +87,7 @@ def cjO {R : Ranks} (H : Host R) : 𝓞 H.E →+* 𝓞 H.E := RingOfIntegers.map
 theorem cjO_coe {R : Ranks} (H : Host R) (x : 𝓞 H.E) : (cjO H x : H.E) = H.conj x := rfl
 
 theorem conj_conj {R : Ranks} (H : Host R) (x : H.E) : H.conj (H.conj x) = x := by
-  letI := H.cmStar
+  let := H.cmStar
   rw [← bridge_star_holds R H, ← bridge_star_holds R H, star_star]
 
 theorem exists_orient {R : Ranks} (H : Host R) {p : ℕ} (hp : p.Prime) {a : 𝓞 H.E} (hK : (a : H.E) ∈ H.K)
@@ -188,7 +188,7 @@ theorem exists_holds_one {E : Type} [Field E] [NumberField E] (n : ℕ) (ξ : HC
   · rcases Finset.mem_insert.1 hz with rfl | hz
     · exact isAlgebraic_exp _
     rcases Finset.mem_union.1 hz with h | h <;> obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 h
-    · exact IsAlgebraic.of_pow two_pos (by rw [hr]; exact isAlgebraic_nat _)
+    · exact IsAlgebraic.of_pow two_pos (by rw [hr]; exact isAlgebraic_natCast _)
     · exact isAlgebraic_exp _
   · refine root_mem σ hN.ne' (hS _ (Finset.mem_insert_self _ _)) ?_
     have h1 : ξ.1 a ^ N = 1 := congrArg (fun χ : HChar E => χ.1 a) hO
@@ -397,7 +397,7 @@ theorem lg_colIn (K : Ctx) : large₂ K fun B f T =>
     rcases Finset.mem_union.1 hz with h | h
     · exact hZ B Ξ z h
     · obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 h
-      exact IsAlgebraic.of_pow two_pos (by rw [hr]; exact isAlgebraic_nat _)
+      exact IsAlgebraic.of_pow two_pos (by rw [hr]; exact isAlgebraic_natCast _)
   obtain ⟨x, hx, ex⟩ := B.mem_LL0C.1 (hH.1 _ (Finset.mem_singleton_self _))
   have i0 := gα B.toPre f B.LL0 (B.embLL.comp B.LL0.val.toRingHom) ⟨⟨x, hx⟩, ex⟩
   have i1 := gα B.toPre f B.LL B.embLL ⟨x, ex⟩

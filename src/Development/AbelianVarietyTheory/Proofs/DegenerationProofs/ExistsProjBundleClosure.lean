@@ -102,8 +102,8 @@ theorem charts_of_universal {J : Type} [Fintype J] [DecidableEq J] (EE : M.Lat J
     refine Subalgebra.FG.sup ?_ (Subalgebra.fg_def.2 ⟨_, Set.finite_range _, rfl⟩)
     rw [← AlgHom.map_adjoin, Algebra.adjoin_eq]
     exact (fg_ringOn hW hne).map φ
-  haveI : Algebra.FiniteType o R := (Subalgebra.fg_iff_finiteType _).1 hfg
-  haveI : IsFractionRing R Ω' := by
+  have : Algebra.FiniteType o R := (Subalgebra.fg_iff_finiteType _).1 hfg
+  have : IsFractionRing R Ω' := by
     refine IsFractionRing.of_field _ _ fun x => ?_
     have hK : Subfield.closure (R : Set Ω') = ⊤ :=
       EE.eq_top_of_pairing_mem hs (hB _ hne.some_mem) hi

@@ -137,8 +137,8 @@ private theorem schur_vv (lam : ι → DomWeight n) (B : VV ℂ lam →ₗ⋆[�
     (hB : ∀ g : ι → GL (Fin n) ℂ, (∀ τ, (g τ : Matrix (Fin n) (Fin n) ℂ)ᴴ * 1 * g τ = 1) →
       ∀ x y, B (rhoK lam g x) (rhoK lam g y) = B x y) :
     ∃ c : ℂ, ∀ x y, B x y = c * pairK lam (fun _ => 1) x y := by
-  haveI : FiniteDimensional ℂ (Hilb lam posDef_one) := Module.Finite.of_basis (bVV ℂ lam)
-  haveI : Nontrivial (Hilb lam posDef_one) := Formalism.L2.Col.VV_nontrivial ℂ lam
+  have : FiniteDimensional ℂ (Hilb lam posDef_one) := Module.Finite.of_basis (bVV ℂ lam)
+  have : Nontrivial (Hilb lam posDef_one) := Formalism.L2.Col.VV_nontrivial ℂ lam
   exact schur_form (H := Hilb lam posDef_one)
     (Γ := {g : ι → GL (Fin n) ℂ // ∀ τ, (g τ : Matrix (Fin n) (Fin n) ℂ)ᴴ * 1 * g τ = 1})
     (fun g => rhoK lam g.1) (fun g x y => pairInv ℂ ι n lam _ g.1 g.2 x y)
@@ -327,7 +327,7 @@ private theorem herm_eq_csumAt (hb : S.HasRatBasis) (z : Fin S.dim → K) :
     star (fun i => σ (z i)) ⬝ᵥ (S.H.map σ).mulVec (fun i => σ (z i)) =
       csumAt S σ (S.basis.equivFun.symm z : S.Forms) (S.basis.equivFun.symm z : S.Forms) := by
   have hr : ∀ i, S.IsRat (S.basis i : S.Cl → S.V) := by
-    have : S.basis = hb.choose := by unfold CSD.basis; exact dif_pos hb
+    have : S.basis = hb.choose := by unfold CSD.basis; exact dite_eq_left hb
     rw [this]
     exact hb.choose_spec
   rw [Module.Basis.equivFun_symm_apply, Submodule.coe_sum]
@@ -544,7 +544,7 @@ variable {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : FamIn 
 
 private theorem idemOf_mem (h : R.grp_record) (g : Γ) : (idemOf A.X).coeff g ∈ cmMax D.what₂.LL := by
   obtain ⟨eR, -, -, he, -⟩ := h
-  letI : Fintype (G0g D.nd) := Fintype.ofEquiv Γ eR.toEquiv
+  let : Fintype (G0g D.nd) := Fintype.ofEquiv Γ eR.toEquiv
   refine idem_mem_cmMax D.what₂.embLL D.starLL_cx _ (fun u => ?_) (fun g h => ?_) g
   · simp only [he]
     conv_rhs => rw [← Formalism.BasicNotions.Examples₂.NZ.idempotent_sum D.ntypes, coeff_mul_fin]
@@ -679,7 +679,7 @@ private theorem prod_norm_le {E : Type} [Field E] [NumberField E] (S : Finset (H
 
 private theorem card_GL_le {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum (𝓞 E)) (r : ℕ) :
     Nat.card (GL (Fin r) (𝓞 E ⧸ P.asIdeal)) ≤ Ideal.absNorm P.asIdeal ^ (r * r) := by
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   have h1 : Nat.card (GL (Fin r) (𝓞 E ⧸ P.asIdeal)) ≤ Nat.card (Fin r → Fin r → (𝓞 E ⧸ P.asIdeal)) :=
     Nat.card_le_card_of_injective (fun g => (g.1 : Fin r → Fin r → _)) fun _ _ e => Units.ext e
   rw [Nat.card_fun, Nat.card_fun, Nat.card_eq_fintype_card (α := Fin r), Fintype.card_fin, ← pow_mul] at h1
@@ -691,7 +691,7 @@ private theorem card_levelQuotientGroup_le_prod_absNorm_pow_sq {E : Type} [Field
     Nat.card (G0 S r) ≤ n ^ (Module.finrank ℚ E * (r * r)) := by
   rw [Nat.card_pi, pow_mul]
   calc ∏ P : S, Nat.card (GL (Fin r) (kP P.1)) ≤ ∏ P : S, Ideal.absNorm P.1.asIdeal ^ (r * r) :=
-        Finset.prod_le_prod' fun P _ => card_GL_le P.1 r
+        Finset.prod_le_prod fun P _ => card_GL_le P.1 r
     _ = (∏ P ∈ S, Ideal.absNorm P.asIdeal) ^ (r * r) := by
         rw [Finset.prod_pow, Finset.prod_coe_sort S fun P => Ideal.absNorm P.asIdeal]
     _ ≤ _ := Nat.pow_le_pow_left (prod_norm_le S hn h) _
@@ -723,9 +723,9 @@ private theorem card_dvd_of_inj {E : Type} [Field E] [NumberField E] {N : ℕ} {
 
 private theorem exists_rat {D : D7} (V : HSp D) :
     ∃ ρ : GQ V →* Matrix (Fin V.rank) (Fin V.rank) D.host.E, Function.Injective ρ := by
-  haveI : Nontrivial (AF D.host.F) :=
+  have : Nontrivial (AF D.host.F) :=
     (NumberField.AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
-  haveI : Nontrivial (TensorProduct D.host.F (AF D.host.F) D.host.E) :=
+  have : Nontrivial (TensorProduct D.host.F (AF D.host.F) D.host.E) :=
     (Algebra.TensorProduct.includeLeft_injective (S := D.host.F) (algebraMap D.host.F D.host.E).injective :
       Function.Injective (Algebra.TensorProduct.includeLeft :
         AF D.host.F →ₐ[D.host.F] TensorProduct D.host.F (AF D.host.F) D.host.E)).nontrivial
@@ -795,17 +795,17 @@ private theorem num {g0 g1 f r ρ N N' m d a c : ℕ} {L b : ℝ} (hL : 1 ≤ L)
     have := Real.exp_one_gt_two
     calc (8 : ℝ) = 2 ^ 3 := by norm_num
       _ ≤ Real.exp L ^ 3 := by gcongr; exact this.le.trans (Real.exp_le_exp.2 hL)
-      _ = _ := by rw [← Real.exp_nat_mul]; norm_num
+      _ = _ := by rw [← Real.exp_natCast_mul]; norm_num
   have ha' : (a : ℝ) ≤ Real.exp (40 * f * (r * r) * L) :=
     calc (a : ℝ) ≤ ((g0 : ℝ) * g1) ^ (2 * f * (r * r)) := by exact_mod_cast ha
       _ ≤ (Real.exp (10 * L) * Real.exp (10 * L)) ^ (2 * f * (r * r)) := by gcongr
-      _ = _ := by rw [← Real.exp_add, ← Real.exp_nat_mul]; congr 1; push_cast; ring
+      _ = _ := by rw [← Real.exp_add, ← Real.exp_natCast_mul]; congr 1; push_cast; ring
   have hc1 : c ≤ 8 ^ (2 * f * ρ) * (2 * (2 * f * ρ)) ^ (2 * (2 * f * ρ)) :=
     (Nat.le_of_dvd (by positivity) hc).trans (Nat.mul_le_mul_left _ (Nat.factorial_le_pow _))
   have hc' : (c : ℝ) ≤ Real.exp (10 * f * ρ * L) :=
     calc (c : ℝ) ≤ (8 : ℝ) ^ (2 * f * ρ) * ((2 * (2 * f * ρ) : ℕ) : ℝ) ^ (2 * (2 * f * ρ)) := by exact_mod_cast hc1
       _ ≤ Real.exp (3 * L) ^ (2 * f * ρ) * Real.exp L ^ (2 * (2 * f * ρ)) := by gcongr
-      _ = _ := by rw [← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add]; congr 1; push_cast; ring
+      _ = _ := by rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add]; congr 1; push_cast; ring
   have hL0 : 0 ≤ L := by linarith
   have r1 : (r : ℝ) ≤ N' := by exact_mod_cast hr.trans hN
   have r2 : (r : ℝ) ≤ b := le_trans (by exact_mod_cast hr) k2'
@@ -984,7 +984,7 @@ private theorem hLat_full (V : HSp D) (g : Bridge.Gf V) :
   obtain ⟨Λ, hΛ, h1, h2, -⟩ := GlobalTheory.AdLat.exists_lattice_latOf
     D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) g.1 hfg hsp
   rw [SetLike.coe_injective ((GlobalTheory.RepsCompare.coe_hLat V g).trans hΛ.symm)]
-  letI : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
+  let : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
   exact ⟨h2⟩
 
 private theorem mem_hLat (V : HSp D) (g : Bridge.Gf V) (x : Fin V.rank → D.host.E) :

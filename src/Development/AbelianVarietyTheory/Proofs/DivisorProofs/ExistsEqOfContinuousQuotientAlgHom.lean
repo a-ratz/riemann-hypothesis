@@ -82,7 +82,7 @@ theorem isIntegrallyClosed_sections_of_isDomain {Y : Scheme.{0}}
   refine IsIntegrallyClosed.of_localization_maximal fun p _ hp ↦ ?_
   let P : Spec Γ(Y, U) := ⟨p, hp.isPrime⟩
   have hy : hU.fromSpec P ∈ U := hU.range_fromSpec.le ⟨P, rfl⟩
-  letI : Algebra Γ(Y, U) (Y.presheaf.stalk (hU.fromSpec P)) :=
+  let : Algebra Γ(Y, U) (Y.presheaf.stalk (hU.fromSpec P)) :=
     Y.presheaf.algebra_section_stalk (U := U) ⟨_, hy⟩
   have h : IsLocalization p.primeCompl (Y.presheaf.stalk (hU.fromSpec P)) :=
     hU.isLocalization_stalk' P hy

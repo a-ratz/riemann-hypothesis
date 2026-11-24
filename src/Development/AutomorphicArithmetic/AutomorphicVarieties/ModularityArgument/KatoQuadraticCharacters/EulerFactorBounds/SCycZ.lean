@@ -47,11 +47,11 @@ theorem UpperTheory.V.Z.Kato.Nb.sCycZ :
     UpperTheory.V.Z.Kato.Nb.SCycZ := by
   intro Ω _ _ _ l _ r s
   have hl : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
-    haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
+    have : NeZero (l ^ i) := ⟨pow_ne_zero _ hl.ne_zero⟩
     infer_instance
   have hval : ((ReciprocityTheory.Gal.cycMod ℚ Ω l r s : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)) =
       PadicInt.toZModPow r (cyclotomicCharacter Ω l s.toRingEquiv : ℤ_[l]) := rfl
@@ -61,7 +61,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sCycZ :
     rw [hval]
     exact cyclotomicCharacter.spec l s.toRingEquiv z hz
   have hM := cycM_spec (l ^ r) s ⟨_, hspec⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
   have heq : ReciprocityTheory.Gal.cycMod ℚ Ω l r s = cycM (l ^ r) s := by
     apply Units.ext
     apply ZMod.val_injective

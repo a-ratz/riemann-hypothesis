@@ -67,7 +67,7 @@ def ent {n : ℕ} (a b : Fin (n + 1)) (p : Mir k n) : k :=
   ((p : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) a b
 
 theorem continuous_ent {n : ℕ} (a b : Fin (n + 1)) : Continuous (ent (k := k) a b) :=
-  (Units.continuous_val.comp continuous_subtype_val).matrix_elem a b
+  (Units.continuous_val.comp continuous_subtypeVal).matrix_elem a b
 
 theorem ent_last_last {n : ℕ} (p : Mir k n) : ent (Fin.last n) (Fin.last n) p = 1 := by
   have hh := (mem_Mir_iff k _).1 p.2
@@ -98,7 +98,7 @@ theorem continuous_colMat_append (i t : ℕ) :
             (Fin.castSucc (Fin.natAdd (i + 1) a)) (Fin.last _) = d a := by
           intro d
           unfold colMat
-          rw [if_pos rfl, Fin.lastCases_castSucc, Fin.append_right]
+          rw [ite_eq_left rfl, Fin.lastCases_castSucc, Fin.append_right]
         exact (continuous_apply a).congr fun d => (e d).symm
   · simpa [colMat, hb] using continuous_const
 

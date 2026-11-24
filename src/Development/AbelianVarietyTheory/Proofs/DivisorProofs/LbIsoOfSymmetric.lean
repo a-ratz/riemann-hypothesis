@@ -259,7 +259,7 @@ theorem lbIso_of_symmetric : ∀ (K : Type) [Field K] [CharZero K] (A : Over (Sp
 
   have hsurj : Surjective i := by
     have : Surjective (GlobalTheory.DeRham.epsRed K) := ⟨fun x => by
-      haveI := ConstTheta.subsingleton_sp (K := K)
+      have := ConstTheta.subsingleton_sp (K := K)
       obtain ⟨t⟩ : Nonempty (Sp K) := inferInstance
       exact ⟨t, Subsingleton.elim _ _⟩⟩
     exact MorphismProperty.of_isPullback (P := @Surjective) hi.1.flip this

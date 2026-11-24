@@ -90,7 +90,7 @@ theorem rep_smul {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F
         c • ((toV G v β η : Matrix (Fin G.n) (Fin G.n) ℂ) *ᵥ
           Projectivization.rep (l : Projectivization ℂ (Fin G.n → ℂ))) := by
   set w := Projectivization.rep (l : Projectivization ℂ (Fin G.n → ℂ))
-  have hw : w ≠ 0 := Projectivization.rep_nonzero _
+  have hw : w ≠ 0 := Projectivization.rep_ne_zero _
   have hMw : (toV G v β η : Matrix (Fin G.n) (Fin G.n) ℂ) *ᵥ w ≠ 0 := by
     intro h0
     apply hw
@@ -105,7 +105,7 @@ theorem rep_smul {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F
     rfl
   rw [hl]
   have h2 := Projectivization.mk_rep (Projectivization.mk ℂ ((toV G v β η : Matrix (Fin G.n) (Fin G.n) ℂ) *ᵥ w) hMw)
-  obtain ⟨c, hc⟩ := (Projectivization.mk_eq_mk_iff ℂ _ _ (Projectivization.rep_nonzero _) hMw).1 h2
+  obtain ⟨c, hc⟩ := (Projectivization.mk_eq_mk_iff ℂ _ _ (Projectivization.rep_ne_zero _) hMw).1 h2
   exact ⟨c, c.ne_zero, by rw [← hc, Units.smul_def]⟩
 
 end GlobalTheory.CxUnfold

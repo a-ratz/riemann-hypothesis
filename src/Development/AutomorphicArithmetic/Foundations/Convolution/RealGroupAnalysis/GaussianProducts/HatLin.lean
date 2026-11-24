@@ -113,7 +113,7 @@ private theorem integrable_term (φ : S4 F) (v : V4 F) :
     Integrable (fun s : A F => φ.1 (Function.update v 1 s) * ψ (-(s * v 1))) (adeleMeasure F) := by
   have hs := integrable_slice φ v
   have hc : Continuous fun s : A F => ψ (-(s * v 1)) :=
-    continuous_subtype_val.comp ((continuous_adelicChar (K := F)).comp
+    continuous_subtypeVal.comp ((continuous_adelicChar (K := F)).comp
       (continuous_id.mul continuous_const).neg)
   exact hs.mono (hs.1.mul hc.aestronglyMeasurable)
     (Eventually.of_forall fun s => by rw [norm_mul, ψ, Circle.norm_coe, mul_one])

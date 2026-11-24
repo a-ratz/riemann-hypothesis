@@ -188,7 +188,7 @@ theorem chart_incA_mem {e : AE D} {P : HeightOneSpectrum (𝓞 D.host.E)} {v : H
       exact fun h => hx (Subtype.ext h)
     rw [he.2 x hx, hc.2.2.2, isInt_Ov]
     show ¬ Valued.v ((π.comp (incA D)) (x : D.host.E)⁻¹) ≤ 1 ↔ _
-    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
 
 theorem idemAt_mul_eq_zero {e f : AE D} {P Q : HeightOneSpectrum (𝓞 D.host.E)} (he : IsIdemAt e P)
     (hf : IsIdemAt f Q) (hPQ : P ≠ Q) : e * f = 0 := by

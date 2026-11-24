@@ -67,7 +67,7 @@ theorem main {L : Type} [Field L] [IsAlgClosed L] {ι V : Type} [AddCommGroup V]
   have key : ∀ b, ∃ μ : L, ∀ x ∈ W, f b x = μ • x := by
     intro b
     have hWb : ∀ x ∈ W, f b x ∈ W := hW.2 b
-    haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW.1
+    have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW.1
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ((f b).restrict hWb)
     obtain ⟨w, hw⟩ := hμ.exists_hasEigenvector
     have hw1 : (f b).restrict hWb w = μ • w := hw.apply_eq_smul

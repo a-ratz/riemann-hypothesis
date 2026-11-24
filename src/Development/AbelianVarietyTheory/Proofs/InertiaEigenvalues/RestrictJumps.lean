@@ -92,7 +92,7 @@ theorem base_setup (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (K : FinExt
     (h : Good K s LL) : ∃ (K' : FinExt l) (h' : Good K' s LL) (hle : K.1 ≤ K'.1), K0 K' = K0 K ∧
       ((HW l).W K' s LL h').GKs = ⊤ ∧
       ∀ g : ↥(GK K), g ∈ ((HW l).W K s LL h).GKs ↔ (g : GQ l) ∈ GK K' := by
-  haveI hfin : FiniteDimensional ℚ_[l] ↥(Ks K s) := GlobalTheory.InvariantLift.finKs K s
+  have hfin : FiniteDimensional ℚ_[l] ↥(Ks K s) := GlobalTheory.InvariantLift.finKs K s
   obtain ⟨K', hK'⟩ : ∃ K' : FinExt l, K'.1 = Ks K s := ⟨⟨_, hfin⟩, rfl⟩
   have hle : K.1 ≤ K'.1 := hK' ▸ h.2.2.1
   have h0le : K0 K ≤ K0 K' := inf_le_inf_right _ hle
@@ -128,7 +128,7 @@ theorem restrict_jumps (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (K : Fi
         IsJumpV ((D.loc l).PD K) T.ρ (τ'.comp (IntermediateField.inclusion hle)) a) :
     JumpsLet ((HW l).W K' s LL h') (resLt (K := K) (K' := K') (LL := LL) hle T) (fun _ => mx M) (fun _ => mx hh) := by
   have hnpos : 0 < Module.finrank ℚ_[l] ↥(K0 K) := Module.finrank_pos
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨hnpos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨hnpos.ne'⟩
   intro τ' i' _ a ha
   have ha2 := Ljumps τ' a ha
   obtain ⟨i, hi⟩ := ((HW l).W K s LL h).emb_bij.2
@@ -145,7 +145,7 @@ def eMap {K K' : FinExt l} (hle : K.1 ≤ K'.1) (H : Subgroup ↥(GK K)) (H' : S
 
 theorem eMap_cont {K K' : FinExt l} (hle : K.1 ≤ K'.1) (H : Subgroup ↥(GK K)) (H' : Subgroup ↥(GK K'))
     (hm : ∀ g : ↥(GK K'), (⟨(g : GQ l), GK_le hle g.2⟩ : ↥(GK K)) ∈ H) : Continuous (eMap hle H H' hm) :=
-  ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _).subtype_mk _
+  ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _).subtype_mk _
 
 theorem pull_cocycle {K K' LL : FinExt l} (hle : K.1 ≤ K'.1) (T : Lt K LL) (H : Subgroup ↥(GK K))
     (H' : Subgroup ↥(GK K')) (hm : ∀ g : ↥(GK K'), (⟨(g : GQ l), GK_le hle g.2⟩ : ↥(GK K)) ∈ H)
@@ -180,7 +180,7 @@ def fMap {K K' : FinExt l} (H : Subgroup ↥(GK K)) (H' : Subgroup ↥(GK K'))
 
 theorem fMap_cont {K K' : FinExt l} (H : Subgroup ↥(GK K)) (H' : Subgroup ↥(GK K'))
     (hm : ∀ g : ↥H, ((g : ↥(GK K)) : GQ l) ∈ GK K') (htop : H' = ⊤) : Continuous (fMap H H' hm htop) :=
-  ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _).subtype_mk _
+  ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _).subtype_mk _
 
 theorem resΓ_one_iff (P : LocPrime l) (K LL : FinExt l) (n : ℕ)
     (W : LocWach (P.PD K) ↥LL.1 ↥(OL LL) (P.v LL) n) (g : ↥(GK K)) :

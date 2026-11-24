@@ -56,11 +56,11 @@ theorem UpperTheory.cyclotomicCharacter_plusPart :
     UpperTheory.V.Af.AlgOfCyc → UpperTheory.V.Af.Sol.CycConj → UpperTheory.V.Af.Sol.ToPolC := by
   intro hA hC F Ω _ _ _ _ _ _ l _ ι n r hpol
   obtain ⟨F₀, _, _, _, _, _, _, hR, μ, c, P, hμ, hs, ⟨j, hj⟩, hp⟩ := hpol
-  haveI : IsAlgClosure (maximalRealSubfield F) Ω :=
+  have : IsAlgClosure (maximalRealSubfield F) Ω :=
     ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans (maximalRealSubfield F) F Ω⟩
-  letI : Algebra F₀ (maximalRealSubfield F) :=
+  let : Algebra F₀ (maximalRealSubfield F) :=
     ((algebraMap F₀ F).codRestrict (maximalRealSubfield F) mem_plus).toAlgebra
-  haveI : IsScalarTower F₀ (maximalRealSubfield F) Ω := IsScalarTower.of_algebraMap_eq fun x =>
+  have : IsScalarTower F₀ (maximalRealSubfield F) Ω := IsScalarTower.of_algebraMap_eq fun x =>
     IsScalarTower.algebraMap_apply F₀ F Ω x
   let c' : G (maximalRealSubfield F) Ω := AlgEquiv.ofRingEquiv (f := c.toRingEquiv) fun x => by
     apply j.injective

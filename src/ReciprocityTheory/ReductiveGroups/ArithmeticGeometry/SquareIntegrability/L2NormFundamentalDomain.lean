@@ -195,7 +195,7 @@ theorem eq_zero_of_l2_eq_zero (hP : Ext.PackingCount) {q : ℕ} (hq : 1 ≤ q) {
   set D := ZSpan.fundamentalDomain X.b with hD
   have hDm : MeasurableSet D := ZSpan.fundamentalDomain_measurableSet X.b
   have hDb : Bornology.IsBounded D := ZSpan.fundamentalDomain_isBounded X.b
-  haveI : MeasureTheory.VAddInvariantMeasure (Submodule.span ℤ (Set.range X.b)) (Vsp X.dim)
+  have : MeasureTheory.VAddInvariantMeasure (Submodule.span ℤ (Set.range X.b)) (Vsp X.dim)
       MeasureTheory.volume :=
     ⟨fun c s _ => by
       simpa [Submodule.vadd_def, vadd_eq_add] using
@@ -232,7 +232,7 @@ theorem eq_zero_of_l2_eq_zero (hP : Ext.PackingCount) {q : ℕ} (hq : 1 ≤ q) {
     intro γ
     ext y
     rw [Set.mem_vadd_set_iff_neg_vadd_mem]
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     have e : (-γ) +ᵥ y = y + -(γ : Vsp X.dim) := by
       first
       | (rw [Submodule.vadd_def, add_comm]; rfl)
@@ -264,7 +264,7 @@ theorem polyDeriv_smul_fun {σ W : Type*} [NormedAddCommGroup W] [NormedSpace �
   refine Finset.sum_congr rfl fun m _ => ?_
   first
   | rw [iteratedFDeriv_const_smul_apply ((hF.of_le (by exact_mod_cast le_top)).contDiffAt)]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 end

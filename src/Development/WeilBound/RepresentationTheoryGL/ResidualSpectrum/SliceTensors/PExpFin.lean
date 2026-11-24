@@ -130,10 +130,10 @@ theorem kl_lie {r : ℕ} {s : ℝ} {p : ℂ[X]} {F : Sm E N} (h : Kl r s p F.1) 
   have hz : (fun x => ∑ j ∈ Finset.range (p.natDegree + 1), p.coeff j • chart F.1 (aT E N r (s * j) * g) x) = 0 := by
     funext x
     by_cases hx : IsUnit (Matrix.of x)
-    · simp only [chart, dif_pos hx, smul_eq_mul, Pi.zero_apply]
+    · simp only [chart, dite_eq_left hx, smul_eq_mul, Pi.zero_apply]
       rw [← h (g * infGL E N hx.unit)]
       simp only [mul_assoc]
-    · simp [chart, dif_neg hx]
+    · simp [chart, dite_eq_right hx]
   have hs : HasFDerivAt (fun x => ∑ j ∈ Finset.range (p.natDegree + 1), p.coeff j • chart F.1 (aT E N r (s * j) * g) x)
       (∑ j ∈ Finset.range (p.natDegree + 1), p.coeff j • fderiv ℝ (chart F.1 (aT E N r (s * j) * g)) (oneL E N))
       (oneL E N) := by
@@ -152,7 +152,7 @@ theorem kl_eigen {r : ℕ} {s : ℝ} {p : ℂ[X]} {F : GA E N → ℂ} (h : Kl r
     exact h0 (funext hcon)
   have e : ∀ j : ℕ, Complex.exp (c * ((s * j : ℝ) : ℂ)) = Complex.exp (c * s) ^ j := by
     intro j
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     push_cast
     ring

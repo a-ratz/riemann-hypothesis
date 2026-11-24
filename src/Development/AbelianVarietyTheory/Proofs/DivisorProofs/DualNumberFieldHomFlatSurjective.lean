@@ -56,7 +56,7 @@ namespace GlobalTheory.DualOpen
 
 theorem dualNumber_map_flat_surjective : ∀ (k K : Type) [Field k] [Field K] (φ : k →+* K), ∃ ψ : DualNumber k →+* DualNumber K, ψ.comp (dnInl k) = (dnInl K).comp φ ∧ (dnFst K).comp ψ = φ.comp (dnFst k) ∧ Flat (spMap ψ) ∧ Surjective (spMap ψ) := by
   intro k K _ _ φ
-  letI : Algebra k K := φ.toAlgebra
+  let : Algebra k K := φ.toAlgebra
   let ψ₀ : DualNumber k →ₐ[k] DualNumber K :=
     DualNumber.lift ⟨(Algebra.ofId k (DualNumber K), DualNumber.eps),
       by simp, fun _ ↦ Commute.all _ _⟩

@@ -139,7 +139,7 @@ private lemma archPlace_core {C : Type} [Ring C] {n : ℕ} (hn : 0 < n)
     simp only [Matrix.mul_neg, Matrix.neg_mul, Matrix.mul_assoc]
   have hg0 : g ≠ 0 := by
     rintro rfl
-    haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+    have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     exact hgd Matrix.det_zero
   refine ⟨lam, ?_, hAl⟩
   rw [hAl, Matrix.conjTranspose_smul, hgH.eq] at hsk
@@ -217,7 +217,7 @@ theorem UpperTheory.finrank_archimedean_eq_two_mul_dim :
   have h3 : Module.finrank ℚ G.F = Module.finrank ℚ D.F :=
     (AlgEquiv.ofRingEquiv (f := L.e) (fun r => by simp)).toLinearEquiv.finrank_eq.symm
   have h4 : Module.finrank ℚ (VQ D) = D.m * D.n * Module.finrank ℚ D.F := by
-    haveI := D.freeLa
+    have := D.freeLa
     rw [← D.rankLa]
     exact Module.finrank_baseChange
   have hg : D.g = D.m * D.n * Module.finrank ℚ D.F / 2 := rfl

@@ -78,8 +78,8 @@ theorem continuous_setCols_left (P : Finset C) (T : Matrix A P k) :
     Continuous fun Y : Matrix A C k => setCols P Y T := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   by_cases h : j ∈ P
-  · simp only [setCols, of_apply, dif_pos h]; exact continuous_const
-  · simp only [setCols, of_apply, dif_neg h]
+  · simp only [setCols, of_apply, dite_eq_left h]; exact continuous_const
+  · simp only [setCols, of_apply, dite_eq_right h]
     exact continuous_id.matrix_elem i j
 
 omit [ValuativeRel k] [IsNonarchimedeanLocalField k] [Fintype A] in
@@ -88,9 +88,9 @@ theorem continuous_setCols_pair (P : Finset C) :
       setCols P q.1 (Matrix.of fun i j => q.2 ⟨i, j⟩) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   by_cases h : j ∈ P
-  · simp only [setCols, of_apply, dif_pos h]
+  · simp only [setCols, of_apply, dite_eq_left h]
     exact (continuous_apply (⟨i, ⟨j, h⟩⟩ : (Σ _ : A, P))).comp continuous_snd
-  · simp only [setCols, of_apply, dif_neg h]
+  · simp only [setCols, of_apply, dite_eq_right h]
     exact continuous_fst.matrix_elem i j
 
 omit [DecidableEq C] in
@@ -104,9 +104,9 @@ end GlobalTheory.ColFourier
 
 theorem GlobalTheory.ColFourier.fourierInt_mem_SB : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (A C : Type) [Fintype A] [DecidableEq A] [DecidableEq C] (ψ : AddChar k Circle) (m : Measure k), HasConductor ψ 1 → IsUnitVol m → ∀ (P : Finset C), ∀ Ξ ∈ SB (Matrix A C k), fourierInt ψ m P Ξ ∈ SB (Matrix A C k) := by
   intro k _ _ _ _ _ _ A C _ _ _ ψ m hψ hm P Ξ hΞ
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI := hm.1
+  have := secondCountable k
+  have := t2Space k
+  have := hm.1
   have hinv := GlobalTheory.LocFlat.PartialFourier.eventually_add_invariant hΞ
   refine ⟨(IsLocallyConstant.iff_eventually_eq _).mpr fun Y => ?_, ?_⟩
   · have hK : IsCompact (restrictCols P '' tsupport Ξ) := hΞ.2.image (continuous_restrictCols P)

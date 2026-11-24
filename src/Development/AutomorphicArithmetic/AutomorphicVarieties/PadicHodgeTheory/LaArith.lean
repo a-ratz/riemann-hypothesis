@@ -96,7 +96,7 @@ theorem UpperTheory.Reformulated.B.ContinuousCyclotomicCharacter₂.cyc_continuo
   intro F Ω _ _ _ _ l _
   have h1 : Continuous (UpperTheory.Reformulated.B.ContinuousCyclotomicCharacter₂.cycZ F Ω l) := cyclotomicCharacter.continuous l F Ω
   have h2 : Continuous ((algebraMap ℚ_[l] (UpperTheory.Reformulated.B.ContinuousCyclotomicCharacter₂.Qbar l)).comp PadicInt.Coe.ringHom) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal
   exact (Continuous.units_map _ h2).comp h1
 end -- clump:auto
 end -- clump:auto
@@ -117,9 +117,9 @@ theorem UpperTheory.V.Loc.laArith :
     GlobalArtinReciprocity → ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} (h : IsPlaceOver A w), ((l : ℕ) : 𝓞 F) ∈ w.asIdeal → ∀ (κ : ↥(Dec (F := F) A) →* (Qbar l)ˣ), Continuous κ → ∀ (m : ℤ) (k : ℕ), 0 < k → (∀ g : ↥(Dec (F := F) A), (g : G F Ω) ∈ Ine (F := F) A → (κ g * cycBar F Ω l g ^ (-m)) ^ k = 1) → IsLocAlg h κ fun _ => -m := by
   intro H F Ω _ _ _ _ _ l _ A w h hl κ hκ m k hk hpow
   set c : ↥(Dec (F := F) A) →* (Qbar l)ˣ := (cycBar F Ω l).comp (Dec (F := F) A).subtype with hc
-  have hcc : Continuous c := (cyc_continuous F Ω l).comp continuous_subtype_val
+  have hcc : Continuous c := (cyc_continuous F Ω l).comp continuous_subtypeVal
   let i : ↥(Ine (F := F) A) →* ↥(Dec (F := F) A) := (Subgroup.inclusion (Weil_le_Dec h)).comp (ineIncl h)
-  have hi : Continuous i := continuous_subtype_val.subtype_mk _
+  have hi : Continuous i := continuous_subtypeVal.subtype_mk _
   let χ : ↥(Dec (F := F) A) →* (Qbar l)ˣ := κ * c ^ (-m)
   have hχ : Continuous χ := hκ.mul ((continuous_zpow (-m)).comp hcc)
   have ho : IsOpen ((χ.comp i)⁻¹.ker : Set ↥(Ine (F := F) A)) := by

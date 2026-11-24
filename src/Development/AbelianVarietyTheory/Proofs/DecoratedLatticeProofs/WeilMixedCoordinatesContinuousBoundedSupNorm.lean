@@ -86,7 +86,7 @@ theorem continuous_covolOne_integral {P : Type} [TopologicalSpace P] {m n : ℕ}
     {𝓕 : Set (Mx D m n)} (h : IsCovolOne (ratMx D m n) μ 𝓕) (F : P → Mx D m n → ℂ) (hF : Continuous (Function.uncurry F))
     (hper : ∀ p, ∀ γ ∈ ratMx D m n, ∀ a, F p (γ + a) = F p a) : Continuous fun p => ∫ a in 𝓕, F p a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   have hc : ∀ p, Continuous (F p) := fun p => hF.comp (continuous_const.prodMk continuous_id)
   rw [continuous_iff_continuousAt]
   intro p₀

@@ -73,17 +73,17 @@ def IsStalkMap (σ : R →+* K) : Prop :=
 
 theorem isStalkMap_of [IsLocalRing K] (σ : R →+* K) (hi : Function.Injective σ)
     (hs : ∀ s : K, ∃ a b : R, IsUnit (σ b) ∧ s * σ b = σ a) : IsStalkMap σ := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   let x : PrimeSpectrum R := ⟨(maximalIdeal K).comap σ, inferInstance⟩
   have hx : ∀ a, a ∉ x.asIdeal ↔ IsUnit (σ a) := fun a => by
     show ¬ σ a ∈ maximalIdeal K ↔ _
     rw [mem_maximalIdeal, mem_nonunits_iff, not_not]
-  haveI : IsLocalization.AtPrime K x.asIdeal := by
+  have : IsLocalization.AtPrime K x.asIdeal := by
     refine (isLocalization_iff _ _).2 ⟨fun y => (hx _).1 y.2, fun s => ?_, fun {a b} h => ⟨1, by rw [hi h]⟩⟩
     obtain ⟨a, b, hb, e⟩ := hs s
     exact ⟨⟨a, ⟨b, (hx b).2 hb⟩⟩, e⟩
   let T := (Spec.structureSheaf R).presheaf.stalk x
-  haveI : IsLocalization x.asIdeal.primeCompl T := StructureSheaf.IsLocalization.to_stalk R x
+  have : IsLocalization x.asIdeal.primeCompl T := StructureSheaf.IsLocalization.to_stalk R x
   let e : T ≃ₐ[R] K := IsLocalization.algEquiv x.asIdeal.primeCompl T K
   refine ⟨x, asIso (Spec.map (e.toRingEquiv.toCommRingCatIso).hom), ?_, fun a ha => (hx a).1 ha⟩
   rw [Spec.fromSpecStalk_eq', asIso_hom, ← Spec.map_comp]
@@ -172,7 +172,7 @@ theorem exists_spread_grp {B Ω : Type} [CommRing B] [CommRing Ω] {σ : B →+*
   refine ⟨b₁ * b₂, by rw [map_mul]; exact hb₁.mul hb₂, fun B' _ g j hu hj e => ?_⟩
   rw [map_mul, IsUnit.mul_iff] at hu
   have e' : spMap j ≫ spMap g = spMap σ := by rw [← Spec.map_comp, ← e]; rfl
-  haveI : IsSchemeTheoreticallyDominant (spMap j) := ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hj
+  have : IsSchemeTheoreticallyDominant (spMap j) := ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hj
   obtain ⟨u, hu₁, hu₂⟩ := H₁ B' g hu.1 _ (pullback.fst _ _) (pullback.snd _ _) pullback.condition
   obtain ⟨v, hv₁, hv₂⟩ := H₂ B' g hu.2 _ (pullback.fst _ _) (pullback.snd _ _) pullback.condition
   have p₁ := isGrpPullback_pullback G₁ (spMap g)
@@ -199,13 +199,13 @@ theorem exists_spread_grp {B Ω : Type} [CommRing B] [CommRing Ω] {σ : B →+*
         (hv₂ _ (pullback.lift_fst _ _ _))).symm
     · exact (pullback.lift_snd _ _ _).trans (((Category.assoc _ _ _).trans (congrArg _ (Over.w V))).trans
         (pullback.lift_snd _ _ _)).symm
-  haveI : Flat ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (Flat (pullback.snd _ _))
-  haveI : Flat ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (Flat (pullback.snd _ _))
-  haveI : IsSeparated ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
-  haveI : IsSeparated ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
-  haveI : IsIso U := ExtUnique.isIso_of_isPullback q₁.1 q₂.1 (Iso.refl G) U V eU eV
-  haveI : IsMonHom (Iso.refl G).hom := inferInstanceAs (IsMonHom (𝟙 G))
-  haveI : IsMonHom (asIso U).hom := ExtUnique.isMonHom_of_isGrpPullback q₁ q₂ (Iso.refl G).hom U eU
+  have : Flat ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (Flat (pullback.snd _ _))
+  have : Flat ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (Flat (pullback.snd _ _))
+  have : IsSeparated ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
+  have : IsSeparated ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
+  have : IsIso U := ExtUnique.isIso_of_isPullback q₁.1 q₂.1 (Iso.refl G) U V eU eV
+  have : IsMonHom (Iso.refl G).hom := inferInstanceAs (IsMonHom (𝟙 G))
+  have : IsMonHom (asIso U).hom := ExtUnique.isMonHom_of_isGrpPullback q₁ q₂ (Iso.refl G).hom U eU
   exact ⟨u, _, ((isGrpPullback_of_iso (asIso U)).comp p₂).congr (Category.id_comp _) hU, q₁, pullback.lift_fst _ _ _,
     hu₂ _ (pullback.lift_fst _ _ _)⟩
 
@@ -295,7 +295,7 @@ theorem exists_spread_of_family {Xo : Moduli D l} {c : Coeff l} {S : Subalgebra 
     (Subalgebra.inclusion_injective _) rfl
   have g₁ := isGrpPullback_pullback ((Over.pullback (spMap (toRat R))).obj P.A)
     (spMap (Subalgebra.inclusion (ratHull_mono h₁)).toRingHom)
-  haveI := (PolPull.isAbelianScheme_of_isGrpPullback a₁ g₁).proper
+  have := (PolPull.isAbelianScheme_of_isGrpPullback a₁ g₁).proper
   have eα : φ ≫ pullback.fst _ _ ≫ pullback.fst P.A.hom (spMap (toRat R)) = α :=
     (Category.assoc _ _ _).symm.trans ((congrArg (· ≫ _) e₁).trans (pullback.lift_fst _ _ _))
   have eβ : φ ≫ β₁ ≫ pullback.fst Xo.univ.t.G.hom (u ≫ pullback.fst _ _) = β :=

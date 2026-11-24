@@ -71,7 +71,7 @@ theorem smooth_of_isPullback_of_surjective_of_flat :
   have hsq := (isPullback_fiberToSpecResidueField_of_isPullback h y).flip
 
   have hff : (π.residueFieldMap y).hom.FaithfullyFlat := by
-    letI := (π.residueFieldMap y).hom.toAlgebra
+    let := (π.residueFieldMap y).hom.toAlgebra
     show Module.FaithfullyFlat _ _
     infer_instance
   obtain ⟨hF, hS⟩ := (flat_and_surjective_SpecMap_iff _).2 hff

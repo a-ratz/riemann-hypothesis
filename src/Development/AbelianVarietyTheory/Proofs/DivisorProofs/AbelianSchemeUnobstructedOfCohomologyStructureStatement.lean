@@ -443,12 +443,12 @@ theorem specQuotIdemCoprod : ∀ (R : Type) [CommRing R] (e e' : R), IsIdempoten
   let ψ : R ≃+* A × B := RingEquiv.ofBijective φ hφ
   let g : Spec (CommRingCat.of A) ⨿ Spec (CommRingCat.of B) ⟶ Sp R :=
     coprodSpec A B ≫ Spec.map (CommRingCat.ofHom φ)
-  haveI : IsIso (Spec.map (CommRingCat.ofHom φ)) := by
+  have : IsIso (Spec.map (CommRingCat.ofHom φ)) := by
     have : IsIso (CommRingCat.ofHom φ) := by
       change IsIso (RingEquiv.toCommRingCatIso ψ).hom
       infer_instance
     infer_instance
-  haveI : IsIso g := by dsimp only [g]; infer_instance
+  have : IsIso g := by dsimp only [g]; infer_instance
   let i := asIso g
   refine ⟨IsColimit.ofIsoColimit (coprodIsCoprod (Spec (CommRingCat.of A)) (Spec (CommRingCat.of B)))
     (Cocone.ext i ?_)⟩
@@ -536,7 +536,7 @@ theorem isPullback_coprod_desc_of_pieces : ∀ {S S₁ S₂ T T₁ T₂ : Scheme
     refine Limits.BinaryCofan.IsColimit.hom_ext hY ?_ ?_
     · exact (hY.comp_coconePointUniqueUpToIso_hom hP ⟨.left⟩).symm
     · exact (hY.comp_coconePointUniqueUpToIso_hom hP ⟨.right⟩).symm
-  haveI : IsIso c := by rw [hc]; exact Iso.isIso_hom _
+  have : IsIso c := by rw [hc]; exact Iso.isIso_hom _
   exact IsPullback.of_iso_pullback ⟨w⟩ (asIso c) hcf hcs
 
 end GlobalTheory
@@ -825,7 +825,7 @@ theorem lift_of_split (hU : UnobDim) (n : ℕ) : ∀ (R : Type) [CommRing R] (I 
   | zero =>
     intro R _ I hI R₀ _ π hπ hk A₀ _ hA e he _
     have h01 : (0 : R₀) = 1 := by simpa using he.complete
-    haveI : Subsingleton R₀ := subsingleton_of_zero_eq_one h01
+    have : Subsingleton R₀ := subsingleton_of_zero_eq_one h01
     exact hU R I hI R₀ π hπ hk A₀ 0 hA (smooth_zero_of_subsingleton _)
   | succ n ih =>
     intro R _ I hI R₀ _ π hπ hk A₀ _ hA e he hsm
@@ -839,7 +839,7 @@ theorem lift_of_split (hU : UnobDim) (n : ℕ) : ∀ (R : Type) [CommRing R] (I 
     intro f hf
     obtain ⟨hρs, hρk, hρ2, hρc⟩ := qmap_facts I hI π hπ hk f
     let B : Over (Sp (R₀ ⧸ Ideal.span {π f})) := (Over.pullback (spMap (Ideal.Quotient.mk _))).obj A₀
-    letI : GrpObj B := Functor.grpObjObj
+    let : GrpObj B := Functor.grpObjObj
     have hB : IsGrpPullback B A₀ (spMap (Ideal.Quotient.mk _)) (pullback.fst _ _) := isGrpPullback_pullback A₀ _
     have hBa : IsAbelianScheme B := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hA hB
     suffices H : ∃ (A : Over (Sp (R ⧸ Ideal.span {f}))) (_ : GrpObj A) (i : B.left ⟶ A.left),
@@ -1125,10 +1125,10 @@ theorem tensHom_bijective : ∀ (R₀ R₁ : Type) [CommRing R₀] [CommRing R�
     (s₀ : X₀ ⟶ Sp R₀) (s₁ : X₁ ⟶ Sp R₁) (pr : X₁ ⟶ X₀) (hp : IsPullback pr s₁ s₀ (spMap (algebraMap R₀ R₁)))
     (U : X₀.affineOpens) (hU : IsAffineOpen (pr ⁻¹ᵁ U.1)), Function.Bijective (GlobalTheory.Obs.BC.tensHom hp.w U hU) := by
   intro R₀ R₁ _ _ _ X₀ X₁ s₀ s₁ pr hp U hU
-  letI : Algebra R₀ (Sec s₁ (pr ⁻¹ᵁ U.1)) := ((algebraMap R₁ _).comp (algebraMap R₀ R₁)).toAlgebra
-  haveI : IsScalarTower R₀ R₁ (Sec s₁ (pr ⁻¹ᵁ U.1)) := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
-  letI : Algebra (Sec s₀ U.1) (Sec s₁ (pr ⁻¹ᵁ U.1)) := (prSec hp.w U hU).toAlgebra
-  haveI : IsScalarTower R₀ (Sec s₀ U.1) (Sec s₁ (pr ⁻¹ᵁ U.1)) := IsScalarTower.of_algebraMap_eq fun r ↦
+  let : Algebra R₀ (Sec s₁ (pr ⁻¹ᵁ U.1)) := ((algebraMap R₁ _).comp (algebraMap R₀ R₁)).toAlgebra
+  have : IsScalarTower R₀ R₁ (Sec s₁ (pr ⁻¹ᵁ U.1)) := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let : Algebra (Sec s₀ U.1) (Sec s₁ (pr ⁻¹ᵁ U.1)) := (prSec hp.w U hU).toAlgebra
+  have : IsScalarTower R₀ (Sec s₀ U.1) (Sec s₁ (pr ⁻¹ᵁ U.1)) := IsScalarTower.of_algebraMap_eq fun r ↦
     ((semiHom_secPull hp.w (⟨(⟨pr ⁻¹ᵁ U.1, hU⟩, U), le_rfl⟩ : Pair pr)).map_algebraMap r).symm
   have hpo : Algebra.IsPushout R₀ R₁ (Sec s₀ U.1) (Sec s₁ (pr ⁻¹ᵁ U.1)) :=
     CommRingCat.isPushout_iff_isPushout.mp (isPushout_sec R₀ R₁ X₀ X₁ s₀ s₁ pr hp U).flip
@@ -1411,8 +1411,8 @@ theorem extendedCoefficients_pullback_compat (q : R₁ →ₐ[R₀] R₀) (hq : 
     (c : CatCoh.H1 (OAff s₁)) (c' : CatCoh.H1 (OAff t₁))
     (H : IsExtendedPullbackDegOne R₁ h₀ (trEquiv q hq X₀ X₁ s₀ s₁ pr hp c) (trEquiv q hq Y₀ Y₁ t₀ t₁ pr' hp' c')) :
     IsPullO h₁ c c' := by
-  haveI := isAffineHom_of_isPullback hp
-  haveI := isAffineHom_of_isPullback hp'
+  have := isAffineHom_of_isPullback hp
+  have := isAffineHom_of_isPullback hp'
   have kd := tens_trEquiv q hq hp c
   have kd' := tens_trEquiv q hq hp' c'
   let Φ := CoefMap.restrict (OPair f₁ t₁) (pairBC pr pr' e)
@@ -1496,7 +1496,7 @@ theorem axesE1_of_axesO1 : AxesVanishingStructureSheafDegOne → AxesVanishingEx
   intro hO R₀ R₁ _ _ _ q hq A _ g hab hsm c h₁ h₂
   obtain ⟨B, hB, pr, pr', habB, hsmB, hp, hp', -, -, -, hl, hr⟩ :=
     GlobalTheory.T.exists_abelianScheme_baseChange_and_square R₀ R₁ A g hab hsm
-  letI : GrpObj B := hB
+  let : GrpObj B := hB
   obtain ⟨e, he⟩ := GlobalTheory.T.h1_structure_base_change_extension R₀ R₁ q hq
   set c₁ := (e _ _ _ _ _ hp').symm c with hc₁
   have hc : e _ _ _ _ _ hp' c₁ = c := by simp [hc₁]

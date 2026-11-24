@@ -99,7 +99,7 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     (h : ∀ (M : Type) [AddCommGroup M] [Module (ZMod n) M] [TopologicalSpace M] [DiscreteTopology M] [Finite M]
       (ρ : Representation (ZMod n) Γ M), ContAction ρ → Finite (H1 ρ)) : PhiCond Γ n := by
   intro H hH
-  haveI : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
   obtain ⟨U₀, hU₀o, hU₀1, hU₀⟩ := core_lemma H H hH le_rfl
   have hρ : ContAction (permR (ZMod n) H) := by
     show Continuous fun p : Γ × (Γ ⧸ H → ZMod n) => permR (ZMod n) H p.1 p.2
@@ -125,7 +125,7 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     constructor
     · have hKo : IsOpen ((φ.ker.map H.subtype : Subgroup Γ) : Set Γ) := by
         rw [Subgroup.coe_map]
-        exact hH.isOpenMap_subtype_val _ hφ
+        exact hH.isOpenMap_subtypeVal _ hφ
       obtain ⟨U, hUo, hU1, hU⟩ := core_lemma H (φ.ker.map H.subtype) hKo (Subgroup.map_subtype_le _)
       apply IsLocallyConstant.continuous
       rw [IsLocallyConstant.iff_eventually_eq]
@@ -154,7 +154,7 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
         (x.out)⁻¹ * g * (g⁻¹ • x).out * (((g⁻¹ • x).out)⁻¹ * h * (h⁻¹ • (g⁻¹ • x)).out)
       rw [mul_inv_rev, mul_smul]
       group
-  haveI := h (Γ ⧸ H → ZMod n) (permR (ZMod n) H) hρ
+  have := h (Γ ⧸ H → ZMod n) (permR (ZMod n) H) hρ
   refine Finite.of_injective (fun χ : {φ : H →* Multiplicative (ZMod n) // IsOpen (φ.ker : Set H)} =>
     (Submodule.Quotient.mk ⟨_, hcoc χ.1 χ.2⟩ : H1 (permR (ZMod n) H))) ?_
   rintro ⟨φ, hφ⟩ ⟨ψ, hψ⟩ hEq
@@ -192,7 +192,7 @@ end UpperTheory.V.Pa
 theorem UpperTheory.V.Pa.phiGS :
     GlobalFiniteness → ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (V : s.Lev), PhiCond V.frame.Γ l := by
   intro hGF l _ L Ω _ _ _ _ _ _ s V
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   obtain ⟨S, hS⟩ : ∃ S : Finset (Plc (Lp L)), (S : Set (Plc (Lp L))) = V.S' :=
     ⟨V.fin.toFinset, V.fin.coe_toFinset⟩
   show PhiCond (ReciprocityTheory.Gal.GS Ω V.S') l

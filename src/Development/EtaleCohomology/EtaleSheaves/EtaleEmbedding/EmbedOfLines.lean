@@ -66,7 +66,7 @@ def Chart : Prop := ∀ (A : Type) [CommRing A] (n : ℕ), ∃ (P : Scheme.{0}) 
 
 theorem affClosed : AffClosed := by
   intro A _ X p _ V hV
-  haveI : IsAffine V.toScheme := hV
+  have : IsAffine V.toScheme := hV
   have hfT : LocallyOfFiniteType (V.ι ≫ p) := inferInstance
   have happ := HasRingHomProperty.appTop @LocallyOfFiniteType (V.ι ≫ p) hfT
   let g : CommRingCat.of A ⟶ Γ(V.toScheme, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of A)).inv ≫ (V.ι ≫ p).appTop
@@ -74,7 +74,7 @@ theorem affClosed : AffClosed := by
     have h1 : (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom.FiniteType :=
       RingHom.FiniteType.of_surjective _ (ConcreteCategory.bijective_of_isIso _).2
     exact RingHom.FiniteType.comp happ h1
-  letI : Algebra A Γ(V.toScheme, ⊤) := g.hom.toAlgebra
+  let : Algebra A Γ(V.toScheme, ⊤) := g.hom.toAlgebra
   have hft : Algebra.FiniteType A Γ(V.toScheme, ⊤) := hg
   obtain ⟨n, φ, hφ⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 hft
   refine ⟨n, V.toScheme.toSpecΓ ≫ Spec.map (CommRingCat.ofHom φ.toRingHom), ?_, ?_⟩
@@ -100,8 +100,8 @@ theorem Embed_of (hA : AffClosed) (hC : Chart) : LateralTheory.E.ChowGraphCut.Em
   intro A _ X p _ V hV
   obtain ⟨n, e, he, hep⟩ := hA A p V hV
   obtain ⟨P, q, j, hq, hj, hjq⟩ := hC A n
-  haveI := hj
-  haveI := he
+  have := hj
+  have := he
   refine ⟨P, q, j.opensRange, e ≫ j.isoOpensRange.hom, hq, inferInstance, ?_⟩
   rw [Category.assoc, Scheme.Hom.isoOpensRange_hom_ι_assoc, hjq, hep]
 

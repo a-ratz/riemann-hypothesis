@@ -57,8 +57,8 @@ open scoped Classical
 theorem UpperTheory.Gal.W2.Seed.pAvgK :
     ∀ (X V : Type) [Group X] [AddCommGroup V] [Module ℂ V] (K K₀ : Subgroup X), K₀ ≤ K → K₀.relIndex K ≠ 0 → ∀ Ψ : X → V, (∀ k ∈ K, ∀ g, Ψ (g * k) = Ψ g) → ∑ᶠ x : X ⧸ K₀, Ψ x.out = ((K₀.relIndex K : ℕ) : ℂ) • ∑ᶠ y : X ⧸ K, Ψ y.out := by
   intro X V _ _ _ K K₀ hle hidx Ψ hΨ
-  haveI : Finite (K ⧸ K₀.subgroupOf K) := Nat.finite_of_card_ne_zero hidx
-  haveI : Fintype (K ⧸ K₀.subgroupOf K) := Fintype.ofFinite _
+  have : Finite (K ⧸ K₀.subgroupOf K) := Nat.finite_of_card_ne_zero hidx
+  have : Fintype (K ⧸ K₀.subgroupOf K) := Fintype.ofFinite _
   let e := Subgroup.quotientEquivProdOfLE hle
   let F : X ⧸ K → V := fun y => Ψ y.out
   have he : ∀ x : X ⧸ K₀, Ψ x.out = F (e x).1 := by

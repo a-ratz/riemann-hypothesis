@@ -53,7 +53,7 @@ namespace GlobalTheory.LocDerExtK
 open GlobalTheory.LocDerExt
 
 theorem rsT_eq {Y : Scheme.{0}} {O₀ O : Y.Opens} (h : O ≤ O₀) (s : Γ(Y, O₀)) :
-    rsT s O = resG Y h s := dif_pos h
+    rsT s O = resG Y h s := dite_eq_left h
 
 theorem exists_locDerK : ∀ (K : Type) [Field K] (R : Type) [CommRing R] (Y X : Scheme.{0}) (q : Y ⟶ Sp K) (p : X ⟶ Sp R) (m : Y ⟶ X) (D : R → K) (W₀ : X.Opens), IsAffineOpen W₀ → ∀ d₀ : Γ(X, W₀) → Γ(Y, m ⁻¹ᵁ W₀), (∀ a b, d₀ (a + b) = d₀ a + d₀ b) → (∀ a b, d₀ (a * b) = (m.app W₀).hom a * d₀ b + (m.app W₀).hom b * d₀ a) → (∀ r, d₀ (constFn p W₀ r) = constFn q (m ⁻¹ᵁ W₀) (D r)) → ∃ d, LocDerK q p m D W₀ d ∧ d W₀ = d₀ := by
   intro K _ R _ Y X q p m D W₀ hW d₀ hadd hmul hbase
@@ -62,7 +62,7 @@ theorem exists_locDerK : ∀ (K : Type) [Field K] (R : Type) [CommRing R] (Y X :
       (∀ a b, δ (a * b) = (m.app _).hom a * δ b + (m.app _).hom b * δ a) ∧
       ∀ a, δ (resG X (X.basicOpen_le f) a) = resG Y (pre_le m (X.basicOpen_le f)) (d₀ a) := by
     intro f
-    haveI := hW.isLocalization_basicOpen f
+    have := hW.isLocalization_basicOpen f
     refine der_exists f (m.app (X.basicOpen f)).hom
       (fun a => resG Y (pre_le m (X.basicOpen_le f)) (d₀ a)) (fun a b => by simp only [hadd, map_add (f := _)])
       (fun a b => ?_)
@@ -75,7 +75,7 @@ theorem exists_locDerK : ∀ (K : Type) [Field K] (R : Type) [CommRing R] (Y X :
   have compat : ∀ (f g : Γ(X, W₀)) (k : X.basicOpen g ≤ X.basicOpen f) (s : Γ(X, X.basicOpen f)),
       resG Y (pre_le m k) (δ f s) = δ g (resG X k s) := by
     intro f g k s
-    haveI := hW.isLocalization_basicOpen f
+    have := hW.isLocalization_basicOpen f
     refine der_unique f ((m.app (X.basicOpen g)).hom.comp (resG X k))
       (fun s => resG Y (pre_le m k) (δ f s)) (fun s => δ g (resG X k s)) (fun a b => ?_)
       (fun a b => ?_) (fun a => ?_) s
@@ -107,25 +107,25 @@ theorem exists_locDerK : ∀ (K : Type) [Field K] (R : Type) [CommRing R] (Y X :
   classical
   refine ⟨fun W s => if h : W ≤ W₀ then t W h s else 0, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
   · intro W h a b
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     refine sep m hW h _ _ (fun f k => ?_)
     rw [map_add (f := _), ht W h _ f k, ht W h _ f k, ht W h _ f k, map_add (f := _), δadd]
   · intro W h a b
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     refine sep m hW h _ _ (fun f k => ?_)
     rw [map_add (f := _), map_mul, map_mul, ht W h _ f k, ht W h _ f k, ht W h _ f k, map_mul, δmul, app_res m k, app_res m k]
   · intro W W' h' h a
-    simp only [dif_pos h, dif_pos (h'.trans h)]
+    simp only [dite_eq_left h, dite_eq_left (h'.trans h)]
     refine sep m hW (h'.trans h) _ _ (fun f k => ?_)
     rw [rsT_eq (pre_le m h')]
     refine Eq.trans ?_ (res_res Y (pre_le m h') (pre_le m k) _).symm
     rw [ht W' _ _ f k, ht W h a f (k.trans h'), res_res X]
   · intro W h r
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     refine sep m hW h _ _ (fun f k => ?_)
     rw [ht W h _ f k, res_const, res_const, ← res_const p (X.basicOpen_le f), δres, hbase, res_const]
   · funext a
-    simp only [dif_pos (le_refl W₀)]
+    simp only [dite_eq_left (le_refl W₀)]
     refine sep m hW le_rfl _ _ (fun f k => ?_)
     rw [ht W₀ _ _ f k, δres]
 
@@ -136,7 +136,7 @@ theorem locDerK_unique {K : Type} [Field K] {R : Type} [CommRing R] {Y X : Schem
   funext s
   refine sep m hW hle _ _ (fun f k => ?_)
   rw [← rsT_eq (pre_le m k), ← rsT_eq (pre_le m k), ← h.res W _ k hle, ← h'.res W _ k hle]
-  haveI := hW.isLocalization_basicOpen f
+  have := hW.isLocalization_basicOpen f
   refine der_unique f (m.app (X.basicOpen f)).hom (d _) (d' _) (h.mul _ (X.basicOpen_le f))
     (h'.mul _ (X.basicOpen_le f)) (fun a => ?_) _
   change d _ (resG X (X.basicOpen_le f) a) = d' _ (resG X (X.basicOpen_le f) a)

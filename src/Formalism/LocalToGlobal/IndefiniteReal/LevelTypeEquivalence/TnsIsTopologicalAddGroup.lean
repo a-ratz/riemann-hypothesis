@@ -67,7 +67,7 @@ attribute [local instance] tns_isModuleTopology
 
 theorem tns_isTopologicalAddGroup : IsTopologicalAddGroup (AF F ⊗[F] E) := by
   first
-    | exact IsModuleTopology.topologicalAddGroup (AF F) (AF F ⊗[F] E)
+    | exact IsModuleTopology.isTopologicalAddGroup (AF F) (AF F ⊗[F] E)
     | infer_instance
 
 section Basis
@@ -100,7 +100,7 @@ private theorem exists_isOpen_nhd_zero_algebraMap_discrete : ∃ V : Set (AF F),
   refine ⟨{x : AF F | (∀ w, ‖x.1 w‖ < 1) ∧
      ∀ v, x.2 v ∈ IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers F v}, ?_, ?_, ?_⟩
   · have hA : IsOpen {x : AF F | ∀ w, ‖x.1 w‖ < 1} := by
-      rw [Set.setOf_forall]
+      rw [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun w =>
         isOpen_lt ((continuous_apply w).comp continuous_fst).norm continuous_const
     have hB : IsOpen {x : AF F |
@@ -172,7 +172,7 @@ private theorem exists_isOpen_nhd_zero_algebraMap_discrete : ∃ V : Set (AF F),
 theorem tns_disc : ∃ V : Set (AF F ⊗[F] E), IsOpen V ∧ (0 : AF F ⊗[F] E) ∈ V ∧
     ∀ e : E, inclR (AF F) e ∈ V → e = 0 := by
   obtain ⟨V0, hV0, h0, hV⟩ := exists_isOpen_nhd_zero_algebraMap_discrete (F := F)
-  haveI := module_finite_F_E (F := F) (E := E)
+  have := module_finite_F_E (F := F) (E := E)
   have b := Module.finBasis F E
   refine ⟨(tnsCoord b) ⁻¹' Set.univ.pi (fun _ => V0), ?_, ?_, ?_⟩
   · exact (isOpen_set_pi Set.finite_univ fun _ _ => hV0).preimage (tnsCoord_continuous b)
@@ -191,7 +191,7 @@ theorem tns_disc : ∃ V : Set (AF F ⊗[F] E), IsOpen V ∧ (0 : AF F ⊗[F] E)
 theorem tup_disc (M n : ℕ) :
     DiscreteTopology (Set.range (ratTup (F := F) (AF F) : (Fin n → Fin M → E) → _)) := by
   obtain ⟨V, hV, h0, hVe⟩ := tns_disc (F := F) (E := E)
-  haveI : IsTopologicalAddGroup (AF F ⊗[F] E) := tns_isTopologicalAddGroup
+  have : IsTopologicalAddGroup (AF F ⊗[F] E) := tns_isTopologicalAddGroup
   have key : ∀ p : Set.range (ratTup (F := F) (AF F) : (Fin n → Fin M → E) → _),
       IsOpen ({p} : Set _) := by
     rintro ⟨_, X, rfl⟩

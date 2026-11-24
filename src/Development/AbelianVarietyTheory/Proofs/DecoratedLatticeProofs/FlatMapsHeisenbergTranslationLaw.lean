@@ -85,12 +85,12 @@ theorem psiE_mul_star {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1
   rw [Complex.star_def, Complex.mul_conj', h1]; simp
 
 theorem measEmb_val (ρ : ℕ) : MeasurableEmbedding (fun u : UX D ρ => u.1.1) := by
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
   exact (GlobalTheory.UnitU.isClosedEmbedding_val D ρ).measurableEmbedding
 
 theorem measEmb_add {ρ : ℕ} (N : Mx D ρ ρ) : MeasurableEmbedding (fun m : Mx D ρ ρ => m + N) := by
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
   exact (Homeomorph.addRight N).isClosedEmbedding.measurableEmbedding
 
 theorem flatAt_shift {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {V V₀ W W₀ : HSp D} {ρ σ : ℕ}

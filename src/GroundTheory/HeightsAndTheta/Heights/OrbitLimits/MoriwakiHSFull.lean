@@ -509,7 +509,7 @@ theorem SublatticeExtension.linearIndependent_real_of_discrete {V : Type*} [Norm
   have hle : Submodule.span ℤ (Set.range v) ≤ L := Submodule.span_le.2 (Set.range_subset_iff.2 hv)
   have hdisc : DiscreteTopology (Submodule.span ℤ (Set.range v)) :=
     DiscreteTopology.of_continuous_injective (f := fun x => (⟨x.1, hle x.2⟩ : L))
-      (continuous_subtype_val.subtype_mk _) (fun x y h => Subtype.ext (by simpa using congrArg Subtype.val h))
+      (continuous_subtypeVal.subtype_mk _) (fun x y h => Subtype.ext (by simpa using congrArg Subtype.val h))
   rw [linearIndependent_iff_card_eq_finrank_span, Real.finrank_eq_int_finrank_of_discrete hdisc]
   exact (finrank_span_eq_card hz).symm
 

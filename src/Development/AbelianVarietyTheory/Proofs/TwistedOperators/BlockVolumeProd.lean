@@ -109,12 +109,12 @@ theorem GlobalTheory.blockVolume_prod : ∀ (k : Type) [Field k] [ValuativeRel k
         {x | x.toBlocks₁₁ ∈ S₁₁ ∧ x.toBlocks₁₂ ∈ S₁₂ ∧ x.toBlocks₂₁ ∈ S₂₁ ∧ x.toBlocks₂₂ ∈ S₂₂} =
       volM ν A A S₁₁ * volM ν A D S₁₂ * volM ν D A S₂₁ * volM ν D D S₂₂ := by
   intro k _ _ _ _ _ _ ν _ A D _ _ S₁₁ S₁₂ S₂₁ S₂₂
-  haveI := GlobalTheory.IndexVolume.secondCountable k
-  haveI : SigmaFinite ν := inferInstance
-  haveI hσ : ∀ (m n : Type) [Fintype m] [Fintype n], SigmaFinite (volM ν m n) := fun m n _ _ => by
+  have := GlobalTheory.IndexVolume.secondCountable k
+  have : SigmaFinite ν := inferInstance
+  have hσ : ∀ (m n : Type) [Fintype m] [Fintype n], SigmaFinite (volM ν m n) := fun m n _ _ => by
     exact (inferInstance : SigmaFinite (Measure.pi fun _ : m => Measure.pi fun _ : n => ν :
       Measure (m → n → k)))
-  haveI := hσ A A; haveI := hσ A D; haveI := hσ D A; haveI := hσ D D
+  have := hσ A A; have := hσ A D; have := hσ D A; have := hσ D D
   have hmp := GlobalTheory.BlockVolume.blockSplit_mp ν A D
   have hset : {x : Matrix (A ⊕ D) (A ⊕ D) k | x.toBlocks₁₁ ∈ S₁₁ ∧ x.toBlocks₁₂ ∈ S₁₂ ∧
       x.toBlocks₂₁ ∈ S₂₁ ∧ x.toBlocks₂₂ ∈ S₂₂} =

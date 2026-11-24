@@ -222,8 +222,8 @@ theorem Law.mul (hS : Submodule.IsFullLattice D.host.E ΛS) (hT : Submodule.IsFu
     {h h' : GA D T} {C C' : ℂ} (H : Law om a (latO S T ΛS ΛT fun _ => True) Tm g h C)
     (H' : Law om a (latO S T ΛS ΛT fun _ => True) Tm g' h' C') :
     Law om a (latO S T ΛS ΛT fun _ => True) Tm (g * g') (h * h') (C * C') := fun Φ hΦ => by
-  letI := hS
-  letI := hT
+  let := hS
+  let := hT
   rw [← Prod.mk_mul_mk, map_mul, Module.End.mul_apply, H' Φ hΦ, map_smul,
     H _ (isSBHalf_actO inferInstance inferInstance _ _ hΦ), smul_smul,
     mul_comm C']
@@ -232,8 +232,8 @@ theorem Law.mul (hS : Submodule.IsFullLattice D.host.E ΛS) (hT : Submodule.IsFu
 theorem Law.inv (hS : Submodule.IsFullLattice D.host.E ΛS) (hT : Submodule.IsFullLattice D.host.E ΛT) {g : GA D S}
     {h : GA D T} {C : ℂ} (hC : C ≠ 0) (H : Law om a (latO S T ΛS ΛT fun _ => True) Tm g h C) :
     Law om a (latO S T ΛS ΛT fun _ => True) Tm g⁻¹ h⁻¹ C⁻¹ := fun Φ hΦ => by
-  letI := hS
-  letI := hT
+  let := hS
+  let := hT
   have h1 := H _ (isSBHalf_actO inferInstance inferInstance g h hΦ)
   simp only [act_act_inv] at h1
   have h2 := congrArg (om (g⁻¹, h⁻¹)) h1
@@ -308,16 +308,16 @@ theorem law_enlarge {e : AE D} (he : IsSplitIdem D e) (hae : a * e = e) {g : GA 
     Law om a (latO S T ΛS ΛT fun _ => True) Tm g h (fac S T χS χT (detAt e he.1 S g) (detAt e he.1 T h)) := by
   have h1 := om_base_enlarge D ψ S T χS χT om ΛS ΛT a f₀ Tm hW hS hT ha hinf hf hTm hc hv e he hae g h hg hh _ _
     (isDetAt_detAt e he.1 S g) (isDetAt_detAt e he.1 T h) hle
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
   rw [← Complex.ofReal_inv, sqrt_index inferInstance inferInstance he (isDetAt_detAt e he.1 S g) (isDetAt_detAt e he.1 T h) hle] at h1
   exact om_model_of_base D ψ S T χS χT om ΛS ΛT a f₀ Tm hW hS hT ha hinf hf hTm g h _ h1
 
 theorem law_place {e : AE D} (he : IsSplitIdem D e) (hae : a * e = e) {g : GA D S} {h : GA D T} (hg : SuppAt e S g)
     (hh : SuppAt e T h) :
     Law om a (latO S T ΛS ΛT fun _ => True) Tm g h (fac S T χS χT (detAt e he.1 S g) (detAt e he.1 T h)) := by
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
   obtain ⟨N, hN, h1⟩ := exists_nsmul_actO (ΛS := ΛS) (ΛT := ΛT) inferInstance inferInstance g⁻¹ h⁻¹
   obtain ⟨z, z1, z2⟩ := exists_scalar he T hN
   have z4 : SuppAt e T z⁻¹ := suppAt_of (GlobalTheory.SplitScalar.off_smul_mt_inv z1)
@@ -389,8 +389,8 @@ theorem law_sum {ι : Type} (es : ι → AE D) (P : Finset ι) :
         exact d4 _ (hg i j)
     have r1 := law_place hW hS hT ha hinf hc hf hv hTm he (h4 i m0) (s1 S g) (s1 T h)
     have r2 := ih' _ _ (s2 S g hg) (s2 T h hh) _ _ (isDetAt_detAt e' a0 S _) (isDetAt_detAt e' a0 T _)
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
     have r3 := r1.mul inferInstance inferInstance r2
     exact r3.congr (GlobalTheory.WeilSplit.cut_mul_cut hb hc₁ hb' hc' S g) (GlobalTheory.WeilSplit.cut_mul_cut hb hc₁ hb' hc' T h)
       ((fac_mul _ _ _ _).symm.trans (congrArg₂ (fac S T χS χT)

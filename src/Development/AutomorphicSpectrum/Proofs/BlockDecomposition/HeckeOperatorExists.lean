@@ -133,12 +133,12 @@ theorem isCompact_Km (N m : ℕ) : IsCompact (Zls.Km k N m : Set (GL (Fin N) k))
 
 theorem totallyDisconnected_GL (N : ℕ) : TotallyDisconnectedSpace (GL (Fin N) k) := by
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin N → Fin N → k))
   exact ⟨(GlobalTheory.SplitFlip.isEmbedding_val_GL (k := k) (n := Fin N)).isTotallyDisconnected
     (isTotallyDisconnected_of_totallyDisconnectedSpace _)⟩
@@ -148,7 +148,7 @@ theorem exists_isHeckeOp : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
     ∀ (m : ℕ) (g : GL (Fin N) k), ∃ T : Module.End ℂ (fixed π (Zls.Km k N m)), Zls.IsHeckeOp π m g T := by
   intro k _ _ _ _ N V _ _ π hπ m g
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  haveI := totallyDisconnected_GL (k := k) N
+  have := totallyDisconnected_GL (k := k) N
   have hKc := isCompact_Km (k := k) N m
   have hKo := isOpen_Km (k := k) N m
   have hπ' : GroundTheory.Automorphic.IsSmooth π := fun v => hπ v

@@ -93,14 +93,14 @@ theorem row_expand (N M : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n)
 
 theorem Lm_up (M : Matrix (Fin n) (Fin n) ℂ) (i k : Fin n) (h : i < k) : Lm M i k = 0 := by
   simp only [Lm, Matrix.of_apply]
-  have h' : ¬ ((k : ℕ) < i) := by rw [Fin.lt_iff_val_lt_val] at h; omega
-  rw [dite_eq_right h', if_neg (ne_of_gt h)]
+  have h' : ¬ ((k : ℕ) < i) := by rw [Fin.lt_def] at h; omega
+  rw [dite_eq_right h', ite_eq_right (ne_of_gt h)]
 
 theorem Lm_diag (M : Matrix (Fin n) (Fin n) ℂ) (i : Fin n) : Lm M i i = 1 := by
   simp [Lm]
 
 theorem Lm_det (M : Matrix (Fin n) (Fin n) ℂ) : (Lm M).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular _ (fun i k h => Lm_up M i k (OrderDual.toDual_lt_toDual.mp h))]
+  rw [det_of_isLowerTriangular _ (fun i k h => Lm_up M i k (OrderDual.toDual_lt_toDual.mp h))]
   simp [Lm_diag]
 
 theorem row_sys (N M : Matrix (Fin n) (Fin n) ℂ) (i : Fin n)
@@ -110,7 +110,7 @@ theorem row_sys (N M : Matrix (Fin n) (Fin n) ℂ) (i : Fin n)
       -fun j : Fin i => M i (Fin.castLE i.isLt.le j) := by
   funext j'
   have hrow := row_expand N M i (Fin.castLE i.isLt.le j') hup hd
-  rw [hz _ (by simp [Fin.lt_iff_val_lt_val])] at hrow
+  rw [hz _ (by simp [Fin.lt_def])] at hrow
   simp only [vecMul, dotProduct, lb, submatrix_apply, Pi.neg_apply]
   linear_combination (-1 : ℂ) * hrow
 
@@ -162,15 +162,15 @@ theorem lminor_nb (N B : Matrix (Fin n) (Fin n) ℂ) (hup : ∀ i k : Fin n, i <
       by_contra hlt
       exact hc ⟨⟨c, by omega⟩, Fin.ext rfl⟩
     have hac : e a < c := by
-      rw [Fin.lt_iff_val_lt_val]
+      rw [Fin.lt_def]
       show (a : ℕ) < c
       omega
     rw [hup _ _ hac, zero_mul]
   have hNt : (N.submatrix e e).BlockTriangular OrderDual.toDual :=
     fun a b h => hup _ _ (hmono _ _ (OrderDual.toDual_lt_toDual.mp h))
   have hBt : (B.submatrix e e).BlockTriangular id := fun a b h => hB (hmono _ _ h)
-  rw [lminor, ← he, hsub, det_mul, Matrix.det_of_lowerTriangular _ hNt,
-    Matrix.det_of_upperTriangular hBt]
+  rw [lminor, ← he, hsub, det_mul, det_of_isLowerTriangular _ hNt,
+    det_of_isUpperTriangular hBt]
   simp [hd]
 
 end

@@ -72,7 +72,7 @@ open scoped Formalism.Per NNReal
 theorem GlobalTheory.BKLim.wseed_frob_inverse : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ainf l) (hτ : bk.IsPer τ) (d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) ℤ_[l]) (hρ : ∀ g, IsUnit (ρ g)) (s : WSeed bk d ρ τ), ∀ Φ : bk.DA bk.ρ₀ →+* bk.DA bk.ρ₀, IsDiscMap (l := _) (u := _) (ρ := _) WittVector.frobenius Φ → (s.X' * s.F.map (C : Wq l bk.a →+* bk.S) * s.X.map (frobS l bk.a)).map bk.iS * s.W'.map Φ = (((l : bk.DA bk.ρ₀) ^ (s.c₁ + s.c₂) * bk.iS (frobS l bk.a bk.E) ^ s.N) * bk.iS bk.E ^ (2 * s.N)) • s.W' := by
   intro l _ K bk τ hτ d ρ hρ s Φ hΦ
   obtain ⟨h0, h1⟩ := GlobalTheory.BSP.crystallineLattice_frobenius_inverse_matrix.radius_mem l K bk
-  haveI := (_root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
+  have := (_root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
   have hτ0 := (_root_.GlobalTheory.BSP.isUnit_inclW_of_isPer l K bk τ hτ).2.1
   refine GlobalTheory.BSP.crystallineLattice_frobenius_inverse_matrix.frob_inverse Φ s.W s.W' _ (bk.iA τ ^ (2 * s.N)) _ _ (pow_ne_zero _ hτ0) s.W_mul
     (_root_.GlobalTheory.BKLim.WSeed.crystallineDiscPeriods_frobenius_eq_mul l K bk τ hτ d ρ hρ s Φ hΦ) ?_
@@ -166,7 +166,7 @@ theorem wseed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     have h := ((hsum y).map (Φ : bk.DA bk.ρ₀ →+ bk.DA bk.ρ₀) hΦc).map L hLc
     convert (preTransparency := .reducible) h using 1
     · funext i
-      simp only [Function.comp_apply, AddMonoidHom.coe_coe]
+      simp only [Function.comp_apply, AddMonoidHom.coe_ofClass]
       rw [map_mul Φ, hΦA, hcomm, hLa, hcm, hc, map_mul, hjS]
     · rfl
   have stepA : HasSum (fun i => Φ ((s.W * (s.W'.map (cD i)).map j) a b) * c i)
@@ -176,7 +176,7 @@ theorem wseed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     refine hasSum_sum fun k _ => ?_
     simp_rw [mul_assoc]
     exact (key (s.W' k b)).mul_left (Φ (s.W a k))
-  haveI := hdom
+  have := hdom
   have hphi := _root_.GlobalTheory.BKLim.WSeed.crystallineDiscPeriods_frobenius_eq_mul l K bk τ hτ d ρ hρ s Φ hΦ
   have hwp := _root_.GlobalTheory.BKLim.wseed_frob_inverse l K bk τ hτ d ρ hρ s Φ hΦ
   have hmapL : ∀ (M : Matrix (Fin d) (Fin d) bk.S) (Y : Matrix (Fin d) (Fin d) (bk.DA bk.ρ₀)),
@@ -263,7 +263,7 @@ theorem exists_bounded_periods_wseed : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt 
     by_cases e : ab = ab'
     · subst e
       refine ⟨i₁, fun hm => hq ?_, rfl⟩
-      simp only [c, if_pos rfl]
+      simp only [c, ite_eq_left rfl]
       exact Ideal.mem_map_of_mem _ hm
     · exact (hq (by simp [c, e])).elim
   have hj0c : Continuous j0 :=

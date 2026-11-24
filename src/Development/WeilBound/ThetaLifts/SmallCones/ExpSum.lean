@@ -60,10 +60,10 @@ theorem summable_lat_wt {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [F
     ((ZLattice.summable_norm_pow_inv L k hk).add (hasSum_ite_eq (0 : L) (1 : ℝ)).summable)
   by_cases hz : z = 0
   · subst hz
-    simp only [if_pos rfl, norm_zero, add_zero, inv_one, one_pow]
+    simp only [ite_eq_left rfl, norm_zero, add_zero, inv_one, one_pow]
     exact le_add_of_nonneg_left (by positivity)
   · have h0 : 0 < ‖z‖ := norm_pos_iff.2 hz
-    simp only [hz, if_false, add_zero]
+    simp only [hz, ite_false, add_zero]
     gcongr
     linarith
 
@@ -85,12 +85,12 @@ theorem sz_pos {κ : Type} [Fintype κ] (y : κ → AF F) : 0 < sz y := lt_of_lt
 theorem summable_wt {κ : Type} [Fintype κ] {C : Set (κ → Af F)} (hC : IsCompact C) : ∃ N : ℕ, Summable fun ξ : κ → F =>
     if (fun j => (algebraMap F (AF F) (ξ j)).2) ∈ C then (sz (fun j => algebraMap F (AF F) (ξ j)) ^ N)⁻¹ else 0 := by
   obtain ⟨N, hN, hK⟩ := exists_nat_mul_integral_of_isCompact F hC
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   refine ⟨Module.finrank ℤ (denomLattice F κ N) + 1, ?_⟩
   let S : Set (κ → F) := {ξ | (fun i => mixedEmbedding F (ξ i)) ∈ denomLattice F κ N}
   refine ((Subtype.val_injective (p := fun ξ => ξ ∈ S)).summable_iff ?_).1 ?_
   · intro ξ hξ
-    refine if_neg fun h0 => hξ ⟨⟨ξ, fun i => ?_⟩, rfl⟩
+    refine ite_eq_right fun h0 => hξ ⟨⟨ξ, fun i => ?_⟩, rfl⟩
     obtain ⟨y, hy⟩ := (GlobalTheory.IntegralFinAdele.integral_finiteAdele_properties F).2.2.2.1 ((N : F) * ξ i) fun v => by
       rw [map_mul, map_natCast]
       exact hK _ h0 i v

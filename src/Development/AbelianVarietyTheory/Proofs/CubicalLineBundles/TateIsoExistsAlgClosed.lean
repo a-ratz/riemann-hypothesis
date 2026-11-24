@@ -68,13 +68,13 @@ theorem exists_torsion_fieldExt : Out.Laws → ∀ (S : Scheme.{0}) [IsLocallyNo
   let r : (Over.mk t ⟶ P.A) →* (Over.mk (spMap j ≫ t) ⟶ P.A) :=
     { toFun := fun x => h ≫ x, map_one' := comp_one _, map_mul' := fun x y => comp_mul _ _ _ }
   have hr : Function.Injective r := by
-    letI := j.toAlgebra
-    haveI : Flat (spMap j) := by
+    let := j.toAlgebra
+    have : Flat (spMap j) := by
       rw [HasRingHomProperty.Spec_iff (P := @Flat)]
       exact (inferInstance : Module.Flat k k')
-    haveI : Surjective (spMap j) := ⟨fun p => ⟨(⊥ : PrimeSpectrum k'), Subsingleton.elim (α := PrimeSpectrum k) _ _⟩⟩
-    haveI : Epi h.left := Flat.epi_of_flat_of_surjective (spMap j)
-    haveI : Epi h := Over.epi_of_epi_left _
+    have : Surjective (spMap j) := ⟨fun p => ⟨(⊥ : PrimeSpectrum k'), Subsingleton.elim (α := PrimeSpectrum k) _ _⟩⟩
+    have : Epi h.left := Flat.epi_of_flat_of_surjective (spMap j)
+    have : Epi h := Over.epi_of_epi_left _
     exact fun x y e => (cancel_epi h).1 e
   have hu : ∀ c : kˣ, Units.map h.left.appTop.hom.toMonoidHom (unitOn c) = unitOn (Units.map j.toMonoidHom c) :=
     fun c => Units.ext (congrArg (fun q => q.hom (c : k))
@@ -90,7 +90,7 @@ theorem exists_torsion_fieldExt : Out.Laws → ∀ (S : Scheme.{0}) [IsLocallyNo
     let f : {x : Over.mk t ⟶ P.A // x ^ n = 1} → {x : Over.mk (spMap j ≫ t) ⟶ P.A // x ^ n = 1} :=
       fun x => ⟨r x.1, by rw [← map_pow, x.2, map_one]⟩
     have hf : Function.Injective f := fun a b e => Subtype.ext (hr (congrArg Subtype.val e))
-    haveI : Finite {x : Over.mk (spMap j ≫ t) ⟶ P.A // x ^ n = 1} :=
+    have : Finite {x : Over.mk (spMap j ≫ t) ⟶ P.A // x ^ n = 1} :=
       Nat.finite_of_card_ne_zero (by rw [c₂]; positivity)
     obtain ⟨x, hx⟩ := (hf.bijective_of_nat_card_le (by rw [c₁, c₂])).2 ⟨y, hy⟩
     exact ⟨x.1, congrArg Subtype.val hx⟩
@@ -123,7 +123,7 @@ namespace GlobalTheory.CM
 
 theorem exists_algClosure_lift {K k : Type} [Field K] [Field k] [IsAlgClosed k] (β : K →+* k) :
     ∃ j : AlgebraicClosure K →+* k, j.comp (algebraMap K (AlgebraicClosure K)) = β := by
-  letI : Algebra K k := β.toAlgebra
+  let : Algebra K k := β.toAlgebra
   let f : AlgebraicClosure K →ₐ[K] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -190,7 +190,7 @@ theorem cmTorsionIsometry_transport_geometricPoint (hL : Out.Laws) {E : Type} [F
   obtain ⟨q, hq, qinj, qonto, qw⟩ := _root_.GlobalTheory.exists_torsion_fieldExt hL S P F k j x
   obtain ⟨I₀, h₀⟩ := TateIsoFieldExt.down D i r (act := fun c y => y ≫ act c)
     (e := OnTors fun n y y' c => Out.WeilIs P.A P.L n y y' (unitOn c)) rinj (onto_tors r rinj ronto)
-    (key Ω i r hr).1 (fun c => by haveI := hm c; exact MonObj.one_comp (act c))
+    (key Ω i r hr).1 (fun c => by have := hm c; exact MonObj.one_comp (act c))
     (onTors_iff i r rinj rw') (tateIsoCongr I fun _ _ _ _ _ _ _ h _ _ _ => h)
   obtain ⟨I', h'⟩ := TateIsoFieldExt.up D j q (act' := fun c y => y ≫ act c)
     (e' := OnTors fun n y y' c => Out.WeilIs P.A P.L n y y' (unitOn c)) qinj (onto_tors q qinj qonto)

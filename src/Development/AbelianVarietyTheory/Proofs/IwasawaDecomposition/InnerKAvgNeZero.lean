@@ -147,7 +147,7 @@ theorem inner_kAvg_ne_zero (hσ : IsURepOn (UJset ε) σ) {y : H} (hy : y ≠ 0)
   simp only [e]
   rw [integral_complex_ofReal]
   have hpos : 0 < ∫ k : KG ε, ‖⟪y, σ (toMK k) y⟫_ℂ‖ ^ 2 ∂(muK ε) := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (hc.norm.pow 2)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (hc.norm.pow 2)
       (HasCompactSupport.of_compactSpace _) (fun k => by positivity) ?_
     have : σ (toMK (1 : KG ε)) y = y := sigma_one hσ y
     rw [this]

@@ -170,7 +170,7 @@ lemma xn_part2 (ι : κ → Fin r) {p : ℕ} (hp : p + 1 ≤ n) (a : Fin p → �
     have hjv : (Fin.castLE hp j).val < p := by
       have h3 : (j : ℕ) ≠ p := fun h => hj (Fin.ext (by simpa using h))
       have h4 := j.isLt
-      simp only [Fin.coe_castLE]
+      simp only [Fin.val_castLE]
       omega
     simp_rw [mul_right_comm _ (xnCof ι hp a j) _]
     rw [← Finset.sum_mul, h0 (Fin.castLE hp j) hjv, zero_mul]
@@ -287,11 +287,11 @@ private lemma coeff_pderiv_eq_mul_coeff_single_add (v : Fin r × Fin n) (m : (Fi
     rw [MvPolynomial.pderiv_monomial, MvPolynomial.coeff_monomial, MvPolynomial.coeff_monomial]
     by_cases hu : u = Finsupp.single v 1 + m
     · subst hu
-      rw [add_tsub_cancel_left, if_pos rfl, if_pos rfl]
+      rw [add_tsub_cancel_left, ite_eq_left rfl, ite_eq_left rfl]
       simp only [Finsupp.add_apply, Finsupp.single_eq_same]
       push_cast
       ring
-    · rw [if_neg hu, mul_zero]
+    · rw [ite_eq_right hu, mul_zero]
       split_ifs with h2
       · have h3 : u v = 0 := by
           by_contra h4
@@ -671,7 +671,7 @@ lemma xn_sum_rows {k : ℕ} (hk : k ≤ r) {f : MvPolynomial (Fin r × Fin n) �
   refine xn_sum_castLE hk (fun b => X (b, t) * pderiv (b, s) f) ?_
   intro b hb
   show X (b, t) * pderiv (b, s) f = 0
-  rw [xn_pderiv_supported _ (b, s) (by intro h; simp only [Set.mem_setOf_eq] at h; omega) f hs, mul_zero]
+  rw [xn_pderiv_supported _ (b, s) (by intro h; simp only [Set.mem_ofPred_eq] at h; omega) f hs, mul_zero]
 
 end XiC
 
@@ -689,7 +689,7 @@ lemma xn_R (μ : ℕ → ℕ) (p i : ℕ) (hi : i < p) (h0 : ∀ j, p ≤ j → 
       (∏ j ∈ Finset.range m, xnT μ i j) * ((m : ℝ) - i + μ i) := by
   have hlt : ∀ j, j < p → xnT (xnAdd μ p) i j = xnT μ i j := by
     intro j hj
-    simp only [xnT, xnAdd, if_pos hi, if_pos hj]
+    simp only [xnT, xnAdd, ite_eq_left hi, ite_eq_left hj]
     split_ifs <;> push_cast <;> ring
   obtain ⟨d, rfl⟩ : ∃ d, m = p + d := ⟨m - p, by omega⟩
   clear hm
@@ -703,11 +703,11 @@ lemma xn_R (μ : ℕ → ℕ) (p i : ℕ) (hi : i < p) (h0 : ∀ j, p ≤ j → 
     have h2 : ¬ (p + d < p) := by omega
     have e1 : xnT (xnAdd μ p) i (p + d) =
         ((μ i : ℝ) + 1 + ((p : ℝ) + d) - i) / (((p : ℝ) + d) - i) := by
-      simp only [xnT, xnAdd, if_pos h1, if_pos hi, if_neg h2, hμ]
+      simp only [xnT, xnAdd, ite_eq_left h1, ite_eq_left hi, ite_eq_right h2, hμ]
       push_cast
       ring
     have e2 : xnT μ i (p + d) = ((μ i : ℝ) + ((p : ℝ) + d) - i) / (((p : ℝ) + d) - i) := by
-      simp only [xnT, if_pos h1, hμ]
+      simp only [xnT, ite_eq_left h1, hμ]
       push_cast
       ring
     rw [← Nat.add_assoc, Finset.prod_range_succ, Finset.prod_range_succ, e1, e2]
@@ -720,8 +720,8 @@ lemma xn_R' (μ : ℕ → ℕ) (p i : ℕ) (hi : p ≤ i) (m : ℕ) :
   have h1 : ¬ i < p := by omega
   by_cases hij : i < j
   · have h2 : ¬ j < p := by omega
-    simp only [xnT, xnAdd, if_pos hij, if_neg h1, if_neg h2, Nat.add_zero]
-  · simp only [xnT, if_neg hij]
+    simp only [xnT, xnAdd, ite_eq_left hij, ite_eq_right h1, ite_eq_right h2, Nat.add_zero]
+  · simp only [xnT, ite_eq_right hij]
 
 lemma xnC_ite (M : ℕ) (m : ℕ → ℕ) (p N : ℕ) (hp : p ≤ N) :
     xnC M m p = ∏ i ∈ Finset.range N, if i < p then ((M : ℝ) - i + m i) else 1 := by
@@ -739,9 +739,9 @@ lemma xn_W_ratio (N : ℕ) (μ : ℕ → ℕ) (p : ℕ) (hp : p ≤ N) (h0 : ∀
   rw [← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
   by_cases hi : i < p
-  · simp only [if_pos hi]
+  · simp only [ite_eq_left hi]
     exact xn_R μ p i hi h0 N hp
-  · simp only [if_neg hi, mul_one]
+  · simp only [ite_eq_right hi, mul_one]
     exact xn_R' μ p i (by omega) N
 
 lemma xnW_zero (N : ℕ) : xnW N (fun _ => 0) = 1 := by
@@ -759,7 +759,7 @@ lemma xnW_weylProd (n : ℕ) (μ : ℕ → ℕ) :
   rw [Finset.prod_filter, Fintype.prod_prod_type]
   simp only [Finset.prod_range]
   refine Finset.prod_congr rfl fun a _ => Finset.prod_congr rfl fun b _ => ?_
-  simp only [xnT, Fin.lt_iff_val_lt_val]
+  simp only [xnT, Fin.lt_def]
   split_ifs <;> push_cast <;> ring
 
 lemma xnC_nonneg (M : ℕ) (m : ℕ → ℕ) (p : ℕ) (hp : p ≤ M) : 0 ≤ xnC M m p := by
@@ -799,7 +799,7 @@ lemma xnInv_mono {k : ℕ} {μ : ℕ → ℕ} {x h : MvPolynomial (Fin r × Fin 
     xnInv (k + 1) μ x h := by
   exact { supp := fun q hq => H.supp q (by omega), xm := H.xm, hm := H.hm,
           hs := MvPolynomial.supported_mono
-            (fun v hv => by simp only [Set.mem_setOf_eq] at hv ⊢; omega) H.hs,
+            (fun v hv => by simp only [Set.mem_ofPred_eq] at hv ⊢; omega) H.hs,
           le := H.le }
 
 lemma xnInv_step {k : ℕ} {μ : ℕ → ℕ} {x h : MvPolynomial (Fin r × Fin n) ℂ} (H : xnInv k μ x h)
@@ -836,7 +836,7 @@ lemma xnInv_step {k : ℕ} {μ : ℕ → ℕ} {x h : MvPolynomial (Fin r × Fin 
   have hR := xn_W_ratio r μ k hkr H.supp
   have hC := xnC_nonneg r μ k hkr
   refine ⟨fun q hq => ?_, ?_, ?_, ?_, ?_⟩
-  · simp only [xnAdd, if_neg (show ¬ q < k by omega), Nat.add_zero]
+  · simp only [xnAdd, ite_eq_right (show ¬ q < k by omega), Nat.add_zero]
     exact H.supp q hq
   · rw [← hw]
     exact dualWeyl_mul (initMinor_mem J hk) H.xm
@@ -905,7 +905,7 @@ lemma xn_interlace {n : ℕ} (lam sg : Fin n → ℕ) (hI : Interlace (lamZ lam)
     (i : Fin n) : nuNext lam i ≤ sg i ∧ sg i ≤ lam i := by
   obtain ⟨h1, h2⟩ := hI i
   have hi := i.isLt
-  simp only [lamZ, Fin.coe_castSucc, Fin.val_succ] at h1 h2
+  simp only [lamZ, Fin.val_castSucc, Fin.val_succ] at h1 h2
   rw [dite_eq_left hi] at h1
   unfold nuNext
   constructor
@@ -969,10 +969,10 @@ lemma xn_stage (n : ℕ) (lam sg : Fin n → ℕ) (hI : Interlace (lamZ lam) (fu
       have a1 := xnLam_anti lam sg hI (Nat.le_succ k)
       by_cases hq : q < k + 1
       · have a2 := xnLam_anti lam sg hI (show q ≤ k by omega)
-        simp only [if_pos hq]
+        simp only [ite_eq_left hq]
         omega
       · have a2 := xnLam_anti lam sg hI (show k + 1 ≤ q by omega)
-        simp only [if_neg hq]
+        simp only [ite_eq_right hq]
         omega
     · rw [hf, Finset.prod_insert hnot]
       ring

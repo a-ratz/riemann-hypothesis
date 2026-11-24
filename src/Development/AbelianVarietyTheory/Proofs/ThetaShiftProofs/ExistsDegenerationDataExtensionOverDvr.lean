@@ -264,7 +264,7 @@ theorem exists_isPullDeg (hC : CubeSt) (P : PolAV (Sp V)) (D : DegPre K) (Φ : D
 theorem exists_isPullQk_surj (hG : GlobalFnsSt) {D₀ : DegPre V} {D : DegPre K} (hD : IsPullDeg (algebraMap V K) D₀ D)
     {k : ℕ} (q' : QkPt D (FractionRing K) k) : ∃ q, IsPullQk hD q q' := by
   have hi := IsFractionRing.injective V K
-  letI : Algebra (FractionRing V) (FractionRing K) := (fracMap hi).toAlgebra
+  let : Algebra (FractionRing V) (FractionRing K) := (fracMap hi).toAlgebra
   have hK : Compat (algebraMap V K) (FractionRing K) := fracMap_algebraMap hi
   obtain ⟨σ, h₁, h₂⟩ := exists_fracInv V K
   obtain ⟨q, hy, hg⟩ := qkPullExists hG V K _ D₀ D hD (FractionRing K) hK k q'

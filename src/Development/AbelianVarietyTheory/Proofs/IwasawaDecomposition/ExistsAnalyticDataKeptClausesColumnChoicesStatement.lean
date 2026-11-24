@@ -119,7 +119,7 @@ theorem xi_pickIxTw {B : Base} {px : PreX B.toPre} (I : Col2.ColIn B px) {χ : F
     (h : χ ∈ Set.range I.xi) : I.xi (pickIxTw I χ) = χ := by
   have h' : ∃ a, I.xi a = χ := h
   unfold pickIxTw
-  rw [dif_pos h']
+  rw [dite_eq_left h']
   exact h'.choose_spec
 
 theorem plc_eq_of_natCast_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) {p : ℕ} (hp : p.Prime)
@@ -128,7 +128,7 @@ theorem plc_eq_of_natCast_mem {F : Type} [Field F] [NumberField F] (v : HeightOn
     unfold Formalism.EigenvalueLevelCeiling.plc
     rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact h
-  haveI : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr v.isPrime.ne_top
+  have : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr v.isPrime.ne_top
   rcases (Nat.dvd_prime hp).1 hd with h1 | h1
   · exact absurd h1 (CharP.ringChar_ne_one)
   · exact h1
@@ -189,8 +189,8 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
     if h : w ∈ Wt then ⟨I.tup (pickIxTw I (T.xiTw I.C w)), Or.inr ((tup_mem_tuOf I).2 (hpickU w h))⟩
     else mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt))
   have muP_in : ∀ w (h : w ∈ Wt), muP w = ⟨I.tup (pickIxTw I (T.xiTw I.C w)), Or.inr ((tup_mem_tuOf I).2 (hpickU w h))⟩ :=
-    fun w h => dif_pos h
-  have muP_of_notMem : ∀ w, w ∉ Wt → muP w = mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt)) := fun w h => dif_neg h
+    fun w h => dite_eq_left h
+  have muP_of_notMem : ∀ w, w ∉ Wt → muP w = mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt)) := fun w h => dite_eq_right h
   have ix_in : ∀ w ∈ Wt, ixOf I (usedOf I T Wt) (muP w) = pickIxTw I (T.xiTw I.C w) := fun w h => by
     rw [muP_in w h]; exact ixOf_eq I rfl
   have hcc : ∀ w, X.B.places.conj (X.B.places.conj w) = w := fun w => by
@@ -222,8 +222,8 @@ theorem GlobalTheory.Mem.R3.tupL_of_twisted : ∀ (X : Stages) (px : PreX X.B.to
     · show I.xi (ixOf I (usedOf I T Wt) (muP (X.toD7.plEq.symm (X.toD7.plEq w)))) = _
       rw [hss]
       by_cases h : w ∈ Wt
-      · rw [if_pos h, ix_in w h, xi_pickIxTw I (hmemR w h)]
-      · rw [if_neg h, muP_of_notMem w h, ixOf_mu0F]
+      · rw [ite_eq_left h, ix_in w h, xi_pickIxTw I (hmemR w h)]
+      · rw [ite_eq_right h, muP_of_notMem w h, ixOf_mu0F]
         exact hI.trueColumnChoices_heckeChar_reference_eq_one
   · intro Xg tr
     have hμ0 : (famR X I hX (usedOf I T Wt) Xg tr).A.μ0 = mu0F (X := X.B.fields) (tuOf I (usedOf I T Wt)) := rfl
@@ -382,7 +382,7 @@ variable {D : D7}
 theorem val_le_of_lt_one {v : HeightOneSpectrum (𝓞 D.host.F)} (x : Fv D.host.F v) (h : Valued.v x < 1) :
     Valued.v x ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne (Valued.v x) 0 with h0 | h0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -418,7 +418,7 @@ theorem core (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (-1)) (k : F
     rw [psiTxt_apply, hx, zero_mul, map_zero, AddChar.map_zero_eq_one, ← map_one D.what₂.embLL] at h1
     rw [AddChar.one_apply]
     exact D.what₂.embLL.injective h1
-  haveI : PP.asIdeal.IsMaximal := PP.isMaximal
+  have : PP.asIdeal.IsMaximal := PP.isMaximal
   obtain ⟨c0, hc0⟩ := Ideal.Quotient.exists_inv (I := PP.asIdeal) (a := Ideal.Quotient.mk PP.asIdeal t)
     (by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem])
   have hxi : xiBar D PP = c0 :=
@@ -536,12 +536,12 @@ theorem edgeSum_eq_supSum {κ : Type} [CommRing κ] {r : ℕ} (g : GL (Fin r) κ
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs with h
   · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
-    · exact if_pos (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
+    · exact ite_eq_left (show supEdge i ⟨i.1 + 1, h⟩ from rfl)
     · intro j _ hj
-      exact if_neg (fun hj' => hj (Fin.ext hj'))
+      exact ite_eq_right (fun hj' => hj (Fin.ext hj'))
     · intro hn; exact absurd (Finset.mem_univ _) hn
   · refine Finset.sum_eq_zero fun j _ => ?_
-    refine if_neg (fun hj => ?_)
+    refine ite_eq_right (fun hj => ?_)
     have := j.2
     unfold supEdge at hj
     omega

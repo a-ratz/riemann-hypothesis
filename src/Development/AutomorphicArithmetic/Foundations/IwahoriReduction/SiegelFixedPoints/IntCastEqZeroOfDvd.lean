@@ -144,7 +144,7 @@ private theorem wit_core (X : Tower Ω ε) {l n N M w c₀ : ℕ} [Fact l.Prime]
     Inv X (CongruenceSubgroup.Gamma1 (N * l ^ n)) f ∧
       ∀ δ ∈ CongruenceSubgroup.Gamma1 N, -δ ∈ CongruenceSubgroup.Gamma (l ^ n) →
         ∃ g : X.K, Inv X (CongruenceSubgroup.Gamma1 (N * l ^ n)) g ∧ f * X.sl (ofSL δ) f = g ^ (l ^ n) := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero n (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero n (Fact.out : l.Prime).ne_zero⟩
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · have hv : ∀ a : ZMod (l ^ 0), a.val ^ w = 0 := fun a => by
       have h : a.val = 0 := Nat.lt_one_iff.1 (by simpa using ZMod.val_lt a)
@@ -221,7 +221,7 @@ private theorem cls_prod' (X : Tower Ω ε) (l n : ℕ) [Fact l.Prime] {ι : Typ
 
 private theorem ex_dvd (l n w : ℕ) [Fact l.Prime] (g : SL(2, ℤ)) :
     (l : ℤ_[l]) ^ n ∣ ((en g 0 0 : ℤ) : ℤ_[l]) ^ w - (ex l n w g : ℕ) := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero n (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero n (Fact.out : l.Prime).ne_zero⟩
   unfold ex
   rw [Nat.cast_pow]
   refine dvd_trans ?_ (sub_dvd_pow_sub_pow _ _ w)

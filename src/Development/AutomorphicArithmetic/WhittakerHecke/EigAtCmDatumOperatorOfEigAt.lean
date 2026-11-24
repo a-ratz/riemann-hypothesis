@@ -56,7 +56,7 @@ theorem UpperTheory.eigAt_cmDatumOperator_of_eigAt :
         ((AdeleBaseChange.continuous_adeleMap.comp (continuous_apply 1)).mul continuous_const)
     exact (UpperTheory.ConvolutionTheory.R2.M.continuous_gl.comp
       UpperTheory.ConvolutionTheory.R2.M.continuous_nU).comp hmkE
-  have hψ : Continuous (ψ (F := ℚ)) := continuous_subtype_val.comp continuous_adelicChar
+  have hψ : Continuous (ψ (F := ℚ)) := continuous_subtypeVal.comp continuous_adelicChar
   have hi : ∀ h : GL (Fin 2) (A E),
       IntegrableOn (fun x : Fin 2 → A ℚ => φ (nE D x * h) * ψ (x 1)) (FS2 ℚ) (adeleMeasurePi ℚ) := by
     intro h

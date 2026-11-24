@@ -210,7 +210,7 @@ variable {F : Type} [NontriviallyNormedField F] [IsUltrametricDist F] [CompleteS
 theorem exists_bound_local (y : Matrix (Fin n) (Fin n) F) (hs : y.charpoly.Separable) :
     ∃ M : ℝ, ∀ t : Matrix (Fin n) (Fin n) F, t * y = y * t →
       (∃ B : ℝ, ∀ k : ℕ, ∀ i j, ‖(t ^ k) i j‖ ≤ B) → ∀ i j, ‖t i j‖ ≤ M := by
-  letI : NormedField (AlgebraicClosure F) := spectralNorm.normedField F (AlgebraicClosure F)
+  let : NormedField (AlgebraicClosure F) := spectralNorm.normedField F (AlgebraicClosure F)
   let f : F →+* AlgebraicClosure F := algebraMap F _
   have hf : ∀ x : F, ‖f x‖ = ‖x‖ := fun x => spectralNorm_extends (L := AlgebraicClosure F) x
   obtain ⟨M, hM⟩ := exists_bound (y.map f) (by rw [Matrix.charpoly_map]; exact hs.map)
@@ -246,12 +246,12 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
     y.1.val.charpoly.Separable → ∃ Ω : Set (UL n w), IsCompact Ω ∧ ∀ t ∈ twCent (MonoidHom.id (UL n w)) y,
       IsCompact (closure (Subgroup.zpowers t : Set (UL n w))) → t ∈ Ω := by
   intro E _ _ _ _ n w y hs
-  letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
-  haveI : IsUltrametricDist (w.adicCompletion E) :=
+  let : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
+  have : IsUltrametricDist (w.adicCompletion E) :=
     inferInstanceAs (@IsUltrametricDist (w.adicCompletion E)
       (Valued.toNormedField (w.adicCompletion E) (WithZero (Multiplicative ℤ))).toDist)
-  haveI : CompleteSpace (w.adicCompletion E) := inferInstance
-  haveI : ProperSpace (w.adicCompletion E) :=
+  have : CompleteSpace (w.adicCompletion E) := inferInstance
+  have : ProperSpace (w.adicCompletion E) :=
     ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace (w.adicCompletion E)
   obtain ⟨M, hM⟩ := exists_bound_local (y.1.val) hs
   refine ⟨Subtype.val ⁻¹' {g : GLw n w | (∀ i j, ‖(g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j‖ ≤ M) ∧
@@ -263,7 +263,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
     have hcont : Continuous fun g : UL n w =>
         ∑ a, ∑ b, ‖(g.1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) a b‖ :=
       continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun b _ =>
-        ((Units.continuous_val.comp continuous_subtype_val).matrix_elem a b).norm
+        ((Units.continuous_val.comp continuous_subtypeVal).matrix_elem a b).norm
     obtain ⟨B, hB⟩ := (hcs.image hcont).bddAbove
     refine hM _ ?_ ⟨B, fun k a b => ?_⟩
     · have h1 : s * y = y * s := hs'

@@ -121,7 +121,7 @@ theorem iso_tensor_assoc (a : WDRep h V) (b : WDRep h V') (c : WDRep h V'') :
 
 theorem iso_zero_tensor (a : WDRep h V) (c : WDRep h V') [Subsingleton V] (b : WDRep h V'') [Subsingleton V''] :
     (a.tensor c).Iso b := by
-  haveI : Subsingleton (V ⊗[ℂ] V') := by
+  have : Subsingleton (V ⊗[ℂ] V') := by
     refine ⟨fun x y => ?_⟩
     have key : ∀ z : V ⊗[ℂ] V', z = 0 := fun z => by
       induction z using TensorProduct.induction_on with
@@ -135,7 +135,7 @@ theorem ρ_eq_one_of_line (c : WDRep h V') (hu : c.Unr) (hd : finrank ℂ V' = 1
     (hroot : (c.ρ (frob h)).charpoly.IsRoot 1) (σ : Weil h) : c.ρ σ = 1 := by
   obtain ⟨v, hv⟩ := ((Module.End.hasEigenvalue_iff_isRoot_charpoly _ _).mpr hroot).exists_hasEigenvector
   have hv1 : c.ρ (frob h) v = v := by simpa using hv.apply_eq_smul
-  have hspan := (finrank_eq_one_iff_of_nonzero' v hv.2).mp hd
+  have hspan := (finrank_eq_one_iff_of_ne_zero' v hv.2).mp hd
   have hF : c.ρ (frob h) = 1 := LinearMap.ext fun u => by
     obtain ⟨t, rfl⟩ := hspan u
     simp [hv1]

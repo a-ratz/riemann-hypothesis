@@ -323,9 +323,9 @@ open GlobalTheory.GLDoubling GlobalTheory.SplitWeil ValuativeRel MeasureTheory
 
 theorem hasSum_hecke_eigenvalues : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (r : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ (GL (Fin r) (w.adicCompletion E)) V) (x : V) (B : Multiset ℂˣ), IsSatVecGL w ρ x B → ∀ ϖ, IsUnifV E w ϖ → ∀ t : (Fin r → ℤ) → GL (Fin r) (w.adicCompletion E), (∀ d, (t d).1 = Matrix.diagonal fun i => ϖ ^ d i) → ∀ c : (Fin r → ℤ) → ℂ, (∀ d, heckeVec ρ (KGL w (n := r)) (dosetInd ℂ (KGL w (n := r)) (t d)) x = c d • x) → ∃ δ : ℝ, 0 < δ ∧ ∀ X : ℝ, 0 < X → X < δ → HasSum (fun d : {d : Fin r → ℤ // Antitone d} => c d.1 * (X : ℂ) ^ (∑ i, |d.1 i|).toNat) (eulerFac B ((qV E w : ℂ) ^ (((r : ℂ) - 1) / 2) * X) * eulerFac (B.map (·⁻¹)) ((qV E w : ℂ) ^ (((r : ℂ) - 1) / 2) * X) * ∏ i ∈ Finset.range r, (1 - (qV E w : ℂ) ^ i * (X : ℂ) ^ 2)) := by
   intro H E _ _ w r V _ _ ρ x B hx ϖ hϖ t ht c hc
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨ho, hcp⟩ := SatCompare.isOpen_isCompact_KGL w r
   have hcomm : IsCommensurated (KGL w (n := r)) := Formalism.UG.Final.GLintComm E w r
   have hKO : KO (w.adicCompletion E) (Fin r) = KGL w (n := r) := GlobalTheory.SmGL.SphCompletion.KO_completion w r
@@ -346,8 +346,8 @@ theorem hasSum_hecke_eigenvalues : GlobalTheory.Published.UnramifiedDoublingGL �
       exact this.trans (hc d)
     rw [← map_heckeVec hcomm hm f hf, e1, map_smul]
   obtain ⟨ω, hω, hval⟩ := exists_zonal hirr.1 hcp hcomm hy.2.1 hy.1
-  letI : MeasurableSpace (GL (Fin r) (w.adicCompletion E)) := borel _
-  haveI : BorelSpace (GL (Fin r) (w.adicCompletion E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin r) (w.adicCompletion E)) := borel _
+  have : BorelSpace (GL (Fin r) (w.adicCompletion E)) := ⟨rfl⟩
   obtain ⟨μ, hμH, hμ⟩ : ∃ μ : Measure (GL (Fin r) (w.adicCompletion E)), μ.IsHaarMeasure ∧ μ (KGL w (n := r) : Set _) = 1 := by
     let K₀ : TopologicalSpace.PositiveCompacts (GL (Fin r) (w.adicCompletion E)) :=
       ⟨⟨KGL w (n := r), hcp⟩, by rw [ho.interior_eq]; exact ⟨1, one_mem _⟩⟩

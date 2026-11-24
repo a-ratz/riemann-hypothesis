@@ -928,7 +928,7 @@ private theorem exists_eisensteinCombination_of_isModularForm {w : ℕ} {F : ℍ
     rw [Finset.sum_image (fun x _ y _ h => congrArg Prod.fst h), ← hf τ, ← hc]
     rw [Finset.sum_apply, ← Finset.sum_attach (_root_.ReciprocityTheory.PGsh.monoIdx w)]
     refine Finset.sum_congr rfl fun a _ => ?_
-    simp only [Pi.smul_apply, smul_eq_mul, a.2, dif_pos]
+    simp only [Pi.smul_apply, smul_eq_mul, a.2, dite_eq_left]
     rw [_root_.ReciprocityTheory.PGsh.coe_monoW a.2]
     rfl
 
@@ -1098,7 +1098,7 @@ theorem transport_of_separating : ∀ (g : ℂ ≃+* ℂ) (ι S : Type) [Fintype
       hρ (some s) (ρ.symm i')
     rw [Equiv.apply_symm_apply, ← hi s] at h1
     have h2 := g.injective h1
-    exact (div_left_inj' (pow_ne_zero _ hω)).1 h2
+    exact (div_left_inj₀ (pow_ne_zero _ hω)).1 h2
   have h3 : g (f (ρ.symm i') τ₀ / ω₀ ^ w) = f' (ρ (ρ.symm i')) τ₁ / ω₁ ^ w :=
     hρ none (ρ.symm i')
   rwa [Equiv.apply_symm_apply, hj] at h3
@@ -1125,8 +1125,8 @@ theorem wp_wpd_separate : ∀ (N : ℕ) [NeZero N] (τ : ℍ) (x y : Fin 2 → Z
   have hc : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := Complex.two_pi_I_ne_zero
   have hz : tors N τ x ∉ (tauPair τ).lattice := fun h => hx ((hmem x).1 h)
   have hw : tors N τ y ∉ (tauPair τ).lattice := fun h => hy ((hmem y).1 h)
-  rw [wp, wp, div_left_inj' (pow_ne_zero _ hc)] at h1
-  rw [wpd, wpd, div_left_inj' (pow_ne_zero _ hc)] at h2
+  rw [wp, wp, div_left_inj₀ (pow_ne_zero _ hc)] at h1
+  rw [wpd, wpd, div_left_inj₀ (pow_ne_zero _ hc)] at h2
   rcases (Formalism.L2.Th1.F.pInjective (tauPair τ) _ _ hz hw).1 h1 with h | h
   · exact (hsub x y).1 h
   · apply (hsub x y).1
@@ -1496,8 +1496,8 @@ theorem latConj : GlobalTheory.Published.SiegelKlingenDeligneRibet → GlobalThe
     simp at this
     exact τ₀.im_pos.ne' this
   obtain ⟨n, N, L₀, hn, hN, h2N, hLev, hmem⟩ := GlobalTheory.RoadE.exists_level E (algebraMap K E θ₀) (condQ 𝔣 Q) y 2 hc hθF two_pos
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : Fact (1 < N) := ⟨Nat.le_of_dvd hN h2N⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : Fact (1 < N) := ⟨Nat.le_of_dvd hN h2N⟩
   obtain ⟨hω₀, hω₁, h4, h6, hG, hA⟩ := _root_.GlobalTheory.WpFam.Transp.main K d δ ι g t Λ₀ Λ₁ Ω₀ Ω₁ hd hδ hTT 1 c₁ τ₀ τ₁ hT₀ hT₁ _ _ rfl rfl
   obtain ⟨A, hAt, hAw⟩ := hA N
   have hmem₁ := GlobalTheory.RoadE.ConjLat.twist_lattice K ι E (condQ 𝔣 Q) y t 𝔞 θ₀ (c₁ * θ₁) c₁ Λ₀ Λ₁ c₁ τ₀ τ₁ N A n L₀ hK2 hc hL0 hT₀ hθ₀ hinv hL1 hT₁

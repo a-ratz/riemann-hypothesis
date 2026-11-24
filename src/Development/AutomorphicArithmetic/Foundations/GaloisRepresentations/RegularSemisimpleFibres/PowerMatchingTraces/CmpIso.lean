@@ -78,7 +78,7 @@ theorem cmpIso : CmpIso := by
   refine ⟨⟨cmpEquiv n w hw, fun _ => rfl⟩, fun g => ⟨fun h => h w, fun h u => ?_⟩, fun h => funext fun g => ?_⟩
   · obtain rfl := hw u
     exact h
-  · letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
+  · let : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
     exact finprod_unique _
 
 end UpperTheory.Gal.InertialTypesAlt.G

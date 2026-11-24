@@ -64,13 +64,13 @@ theorem ae_zero_of_lintegral_eq {X : Type} [MeasurableSpace X] (ν : Measure X) 
     (hc : Measurable c) (hC : ∀ n x, ‖a n x‖ ≤ C) (ha0 : ∀ x, Tendsto (fun n => a n x) atTop (𝓝 0))
     (hbc : ∀ x, Tendsto (fun n => b n x) atTop (𝓝 (c x)))
     (he : ∀ n, ∫⁻ x, ‖b n x‖ₑ ^ 2 ∂ν = ∫⁻ x, ‖a n x‖ₑ ^ 2 ∂ν) : ∀ᵐ x ∂ν, c x = 0 := by
-  have hq : Continuous fun z : ℂ => ‖z‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp continuous_enorm
+  have hq : Continuous fun z : ℂ => ‖z‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp continuous_eNorm
   have h1 : Tendsto (fun n => ∫⁻ x, ‖a n x‖ₑ ^ 2 ∂ν) atTop (𝓝 (∫⁻ _, 0 ∂ν)) := by
     refine tendsto_lintegral_of_dominated_convergence (fun _ => ENNReal.ofReal C ^ 2)
       (fun n => hq.measurable.comp (ha n)) (fun n => Eventually.of_forall fun x => ?_) ?_
       (Eventually.of_forall fun x => ?_)
     · refine pow_le_pow_left' ?_ 2
-      rw [← ofReal_norm_eq_enorm]
+      rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hC n x)
     · rw [lintegral_const]
       exact ENNReal.mul_ne_top (ENNReal.pow_ne_top ENNReal.ofReal_ne_top) (measure_ne_top _ _)
@@ -84,7 +84,7 @@ theorem ae_zero_of_lintegral_eq {X : Type} [MeasurableSpace X] (ν : Measure X) 
     have e2 : (fun n => ∫⁻ x, ((fun z : ℂ => ‖z‖ₑ ^ 2) ∘ b n) x ∂ν) = fun n => ∫⁻ x, ‖a n x‖ₑ ^ 2 ∂ν := funext he
     rw [e2]
     exact h1.liminf_eq.le
-  have h3 := (lintegral_eq_zero_iff (hq.measurable.comp hc)).1 (le_antisymm h2 zero_le')
+  have h3 := (lintegral_eq_zero_iff (hq.measurable.comp hc)).1 (le_antisymm h2 zero_le)
   filter_upwards [h3] with x hx
   simpa using hx
 

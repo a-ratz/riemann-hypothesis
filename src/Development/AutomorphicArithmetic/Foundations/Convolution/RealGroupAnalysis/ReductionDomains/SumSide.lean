@@ -66,7 +66,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.sumSide :
     rw [lintegral_sum_measure, lintegral_tsum hm]
     exact tsum_congr fun i => lintegral_map hu (he i)
   refine ⟨hL, fun u hu hint => ?_⟩
-  have hum : Measurable fun x => ‖u x‖ₑ := hu.enorm
+  have hum : Measurable fun x => ‖u x‖ₑ := hu.eNorm
   have hfin : ∫⁻ x, ∑' i, ‖u (e i x)‖ₑ ∂m < ⊤ := by
     rw [← hL _ hum]
     exact hint.2
@@ -87,7 +87,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.sumSide :
       (fun s : Finset ι => Finset.aestronglyMeasurable_fun_sum s fun i _ => hsm i) hlim
   have hI : Integrable (fun x => ∑' i, u (e i x)) m := by
     refine ⟨hae, lt_of_le_of_lt (lintegral_mono fun x => ?_) hfin⟩
-    exact enorm_tsum_le_tsum_enorm
+    exact eNorm_tsum_le_tsum_eNorm
   refine ⟨hsum, hI, ?_⟩
   have hne : ∑' i, ∫⁻ x, ‖u (e i x)‖ₑ ∂m ≠ ⊤ := by
     have hm : ∀ i, AEMeasurable (fun x => ‖u (e i x)‖ₑ) m := fun i =>

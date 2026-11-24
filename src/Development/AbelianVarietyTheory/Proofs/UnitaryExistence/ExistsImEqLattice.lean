@@ -79,7 +79,7 @@ theorem mem_of_eigen {V : Type} [AddCommGroup V] (Λ Λ₁ : AddSubgroup V) (hle
       (∀ (a : Λ) z, G (z + a) = ψ a * j a z * G z) → G ∈ S) : F ∈ S := by
   classical
   set Q := Λ ⧸ Λ₁.addSubgroupOf Λ
-  haveI : Fintype Q := Fintype.ofFinite Q
+  have : Fintype Q := Fintype.ofFinite Q
   let T₀ : Λ → V → ℂ := fun a z => (j a z)⁻¹ * F (z + a)
   have hT₀ : ∀ a b : Λ, (QuotientAddGroup.leftRel (Λ₁.addSubgroupOf Λ)) a b → T₀ a = T₀ b := by
     intro a b hab
@@ -183,7 +183,7 @@ theorem span_eq_top (hH : Hm.PosDef) (Λ : AddSubgroup (Fin g → ℂ)) [Discret
 theorem exists_im_eq_lattice (hH : Hm.PosDef) (Λ : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology Λ]
     (hsp : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) (φ : Λ →ₗ[ℤ] ℝ) :
     ∃ y, ∀ a : Λ, (star y ⬝ᵥ Hm.mulVec a).im = φ a := by
-  haveI : IsZLattice ℝ Λ := ⟨hsp⟩
+  have : IsZLattice ℝ Λ := ⟨hsp⟩
   let b := Module.Free.chooseBasis ℤ Λ
   let f := (b.ofZLatticeBasis ℝ Λ).constr ℝ (fun i => φ (b i))
   obtain ⟨y, hy⟩ := exists_im_eq hH f
@@ -211,7 +211,7 @@ theorem exists_log_addChar {A : Type} [AddCommGroup A] [Module.Free ℤ A] (ψ :
   | add x y _ _ hx hy =>
     rw [AddChar.map_add_eq_mul, hx, hy, map_add (f := _), ← Complex.exp_add]; congr 1; push_cast; ring
   | smul t x _ hx =>
-    rw [AddChar.map_zsmul_eq_zpow, hx, map_zsmul, ← Complex.exp_int_mul]; congr 1
+    rw [AddChar.map_zsmul_eq_zpow, hx, map_zsmul, ← Complex.exp_intCast_mul]; congr 1
     simp; ring
 
 theorem herm_swap (hH : Hm.PosDef) (z u : Fin g → ℂ) :
@@ -226,7 +226,7 @@ theorem exists_eq_smul (hH : Hm.PosDef) (Λ : AddSubgroup (Fin g → ℂ)) [hd :
     (hGt : ∀ a ∈ Λ, ∀ z, G (z + a) = χ a * Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec z) +
       Real.pi / 2 * (star a ⬝ᵥ Hm.mulVec a)) * G z) : ∃ c : ℂ, G = c • θ := by
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Λ
-  haveI hL : DiscreteTopology L := hd
+  have hL : DiscreteTopology L := hd
   have hsp : Submodule.span ℝ (L : Set (Fin g → ℂ)) = ⊤ := span_eq_top hH Λ fun v => (hΛ v).1
   have htr : ∀ z u : Fin g → ℂ, z ⬝ᵥ Hmᵀ.mulVec (star u) = star u ⬝ᵥ Hm.mulVec z := fun z u => by
     rw [mulVec_transpose, dotProduct_comm, dotProduct_mulVec]
@@ -296,16 +296,16 @@ theorem exists_eq_smul (hH : Hm.PosDef) (Λ : AddSubgroup (Fin g → ℂ)) [hd :
 theorem mem_span_translates : ∀ (g : ℕ) (Hm : Matrix (Fin g) (Fin g) ℂ), Hm.PosDef → ∀ (Λ : AddSubgroup (Fin g → ℂ)), DiscreteTopology Λ → (∀ v, (∀ a ∈ Λ, ∃ k : ℤ, (star v ⬝ᵥ Hm.mulVec a).im = k) ↔ v ∈ Λ) → ∀ (χ θ : (Fin g → ℂ) → ℂ), Differentiable ℂ θ → θ ≠ 0 → (∀ a ∈ Λ, ‖χ a‖ = 1) → (∀ a ∈ Λ, ∀ z, θ (z + a) = χ a * Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec z) + Real.pi / 2 * (star a ⬝ᵥ Hm.mulVec a)) * θ z) → ∀ (M : ℕ) (Λ₁ : AddSubgroup (Fin g → ℂ)), 0 < M → Λ₁ ≤ Λ → (∀ v, (∀ a ∈ Λ₁, ∃ k : ℤ, (star v ⬝ᵥ Hm.mulVec a).im = M * k) ↔ v ∈ Λ₁) → ∀ F : (Fin g → ℂ) → ℂ, Differentiable ℂ F → (∀ a ∈ Λ₁, ∀ z, F (z + a) = χ a * Complex.exp (Real.pi * (star a ⬝ᵥ Hm.mulVec z) + Real.pi / 2 * (star a ⬝ᵥ Hm.mulVec a)) * F z) → F ∈ Submodule.span ℂ {G : (Fin g → ℂ) → ℂ | ∃ y : Fin g → ℂ, (M : ℂ) • y ∈ Λ₁ ∧ G = fun z => Complex.exp (-(Real.pi * (star y ⬝ᵥ Hm.mulVec z))) * θ (z + y)} := by
   intro g Hm hH Λ hd hΛ χ θ hθ h0 hχ hθt M Λ₁ hM hle hΛ₁ F hF hFt
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule Λ
-  haveI hL : DiscreteTopology L := hd
+  have hL : DiscreteTopology L := hd
   have hsp : Submodule.span ℝ (L : Set (Fin g → ℂ)) = ⊤ := span_eq_top hH Λ fun v => (hΛ v).1
-  haveI : Module.Finite ℤ Λ := (inferInstance : Module.Finite ℤ L)
-  haveI : Module.Free ℤ Λ := (inferInstance : Module.Free ℤ L)
+  have : Module.Finite ℤ Λ := (inferInstance : Module.Finite ℤ L)
+  have : Module.Free ℤ Λ := (inferInstance : Module.Free ℤ L)
   have hMs : ∀ y a : Fin g → ℂ, (star ((M : ℂ) • y) ⬝ᵥ Hm.mulVec a).im =
       M * (star y ⬝ᵥ Hm.mulVec a).im := fun y a => by
     rw [star_smul, smul_dotProduct]; simp
-  haveI : Finite (Λ ⧸ Λ₁.addSubgroupOf Λ) := by
-    haveI : AddGroup.FG Λ := Module.Finite.iff_addGroup_fg.1 inferInstance
-    refine AddCommGroup.finite_of_fg_torsion _ fun q => ?_
+  have : Finite (Λ ⧸ Λ₁.addSubgroupOf Λ) := by
+    have : AddGroup.FG Λ := Module.Finite.iff_addGroup_fg.1 inferInstance
+    refine AddCommGroup.finite_of_fg_isAddTorsion _ fun q => ?_
     induction q using QuotientAddGroup.induction_on with
     | H a =>
       refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨M, hM, ?_⟩

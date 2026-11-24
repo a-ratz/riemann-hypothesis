@@ -91,7 +91,7 @@ theorem twGen_gen : ∀ (q : ℕ) (i : ℤ) (S : Scheme.{0}) (ζ : Prim q Γ(S, 
     have hS := isEmpty_of_subsingleton S
     have hU : IsEmpty U := ⟨fun u => hS.elim (s u)⟩
     exact ⟨fun _ u => (hU.elim u), fun _ hne _ => (hU.elim hne.some)⟩
-  · haveI : NeZero q := ⟨hq.ne'⟩
+  · have : NeZero q := ⟨hq.ne'⟩
     obtain ⟨-, h2, h3, h4, -⟩ := GlobalTheory.T.tateTwist_sections_locally_generated q i
     refine ⟨fun x u => ?_, fun c hne hc => ?_⟩
     · obtain ⟨V, j, v, hj, hjv, c, hc⟩ := loc_point (h2 U (ζ.map s.appTop.hom) x) u
@@ -100,7 +100,7 @@ theorem twGen_gen : ∀ (q : ℕ) (i : ℤ) (S : Scheme.{0}) (ζ : Prim q Γ(S, 
         h4 V S (j ≫ s) ζ
       rw [e]
       exact hc.trans (smul_residue c _)
-    · haveI : Nonempty U := hne
+    · have : Nonempty U := hne
       have e : Sec.pull s (twGen i ζ) = twGen i (ζ.map s.appTop.hom) := h4 U S s ζ
       rw [e] at hc
       have h0 : c.val • twGen i (ζ.map s.appTop.hom) = 0 := by

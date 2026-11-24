@@ -58,7 +58,7 @@ open Topology TopologicalSpace Set
 theorem polish_of_lcsc (Y : Type) [TopologicalSpace Y] [LocallyCompactSpace Y] [T2Space Y]
     [SecondCountableTopology Y] : PolishSpace Y := by
 
-  haveI hS : SecondCountableTopology (OnePoint Y) := by
+  have hS : SecondCountableTopology (OnePoint Y) := by
 
     let K := CompactExhaustion.choice Y
     let B : Set (Set (OnePoint Y)) :=
@@ -89,18 +89,18 @@ theorem polish_of_lcsc (Y : Type) [TopologicalSpace Y] [LocallyCompactSpace Y] [
           exact ⟨_, Or.inl ⟨U, hU, rfl⟩, ⟨y, hyU, rfl⟩, by rintro _ ⟨z, hz, rfl⟩; exact hUu hz⟩
     exact hB.secondCountableTopology
       (((countable_countableBasis Y).image _).union (Set.countable_range _))
-  haveI hM : MetrizableSpace (OnePoint Y) := by
+  have hM : MetrizableSpace (OnePoint Y) := by
     first
     | infer_instance
     | exact TopologicalSpace.metrizableSpace_of_t3_secondCountable _
-  haveI hP : PolishSpace (OnePoint Y) := by
+  have hP : PolishSpace (OnePoint Y) := by
     first
     | infer_instance
-    | (letI := TopologicalSpace.metrizableSpaceMetric (OnePoint Y)
-       haveI : CompleteSpace (OnePoint Y) := complete_of_compact
+    | (let := TopologicalSpace.metrizableSpaceMetric (OnePoint Y)
+       have : CompleteSpace (OnePoint Y) := complete_of_compact
        infer_instance)
   have hO : IsOpen (Set.range ((↑) : Y → OnePoint Y)) := OnePoint.isOpen_range_coe
-  haveI := hO.polishSpace
+  have := hO.polishSpace
   first
   | exact (OnePoint.isOpenEmbedding_coe.toIsEmbedding.toHomeomorph).isClosedEmbedding.polishSpace
   | exact (OnePoint.isOpenEmbedding_coe.isEmbedding.toHomeomorph).isClosedEmbedding.polishSpace

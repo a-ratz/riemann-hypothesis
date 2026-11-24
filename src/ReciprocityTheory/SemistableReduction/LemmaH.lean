@@ -75,7 +75,7 @@ theorem exists_unitary_mul_upper {n : ℕ} (x : Matrix (Fin n) (Fin n) ℂ) :
     simp [colNormSq, f]
   refine ⟨std.toBasis.toMatrix e.toBasis, e.toBasis.toMatrix f, ?_, ?_, ?_, ?_⟩
   · simpa [OrthonormalBasis.coe_toBasis] using OrthonormalBasis.toMatrix_orthonormalBasis_mem_unitary std e
-  · exact gramSchmidtOrthonormalBasis_inv_blockTriangular hdim f
+  · exact gramSchmidtOrthonormalBasis_inv_isUpperTriangular hdim f
   · rw [Module.Basis.toMatrix_mul_toMatrix, hstd]
   · intro j
     rw [← hnorm j, Module.Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
@@ -100,9 +100,9 @@ private theorem P_ite_mul_eq_prod_triChar_mul {ι : Type} [Fintype ι] [Decidabl
     have hy : ∀ t, ((fun t => if t ∈ S then k t * b t else k t) t).det ≠ 0 := by
       intro t
       by_cases ht : t ∈ S
-      · simp only [ht, if_true, Matrix.det_mul]
+      · simp only [ht, ite_true, Matrix.det_mul]
         exact mul_ne_zero (hk t) (hb t)
-      · simp only [ht, if_false]
+      · simp only [ht, ite_false]
         exact hk t
     have heq : (fun t => if t ∈ insert s S then k t * b t else k t) =
         Function.update (fun t => if t ∈ S then k t * b t else k t) s

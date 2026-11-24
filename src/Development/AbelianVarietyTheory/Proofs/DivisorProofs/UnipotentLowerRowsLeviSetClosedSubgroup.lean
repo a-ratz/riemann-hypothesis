@@ -87,7 +87,7 @@ theorem _root_.GlobalTheory.JSW.levSet_closed_subgroup : ∀ (n r : ℕ),
   · rw [mem_levSet_iff_unitriangular_below_r] at hg hh ⊢
     intro i hi
     have hrow := mul_apply_eq_apply_of_unitriangular_index_le (hg i hi) (B := (h : Matrix (Fin n) (Fin n) ℂ))
-      fun k hk => (hh k (hi.trans (Fin.lt_iff_val_lt_val.mp hk).le)).1
+      fun k hk => (hh k (hi.trans (Fin.lt_def.mp hk).le)).1
     rw [Units.val_mul]
     refine ⟨fun j hj => ?_, ?_⟩
     · rw [hrow j hj.le]
@@ -111,7 +111,7 @@ theorem _root_.GlobalTheory.JSW.levSet_closed_subgroup : ∀ (n r : ℕ),
         have hrow := mul_apply_eq_apply_of_unitriangular_index_le (hg i hi)
           (B := ((g⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ))
           fun k hk => by
-            have hik := Fin.lt_iff_val_lt_val.mp hk
+            have hik := Fin.lt_def.mp hk
             exact (ih k (hi.trans hik.le) (by omega)).1
         refine ⟨fun j hj => ?_, ?_⟩
         · rw [← hrow j hj.le, hgh, Matrix.one_apply_ne hj.ne']
@@ -126,7 +126,7 @@ theorem _root_.GlobalTheory.JSW.levSet_closed_subgroup : ∀ (n r : ℕ),
           {g : GL (Fin n) ℂ | (g : Matrix (Fin n) (Fin n) ℂ) i i = 1}) := by
       ext g
       simp only [mem_levSet_iff_unitriangular_below_r, Set.mem_iInter, Set.mem_inter_iff,
-        Set.mem_setOf_eq]
+        Set.mem_ofPred_eq]
     rw [hset]
     exact isClosed_iInter fun i => isClosed_iInter fun _ =>
       (isClosed_iInter fun j => isClosed_iInter fun _ => isClosed_eq (hc i j) continuous_const).inter

@@ -330,7 +330,7 @@ theorem exists_space {ι : Type} [Fintype ι] [DecidableEq ι] {G : Type} [Group
     simp only [key]
     exact coeffSpan_rtrans (ρ τ) (κ₁ τ) (hf.2 τ _)
   · intro φ hφ hty g
-    refine ⟨hφ.comp (continuous_const.mul continuous_subtype_val), fun τ k₀ => ?_⟩
+    refine ⟨hφ.comp (continuous_const.mul continuous_subtypeVal), fun τ k₀ => ?_⟩
     have := hty τ (g * (k₀ : G))
     simpa only [Subgroup.coe_mul, hj, mul_assoc] using this
 
@@ -338,7 +338,7 @@ end GlobalTheory.SepTypes
 
 theorem GlobalTheory.typesFiniteSpace : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), IsInfFam θ → ∀ (V : HSp D), ∀ (ε : D.what₂.Tau → Fin V.rank → Bool) (fr : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ), IsFrameFam V ε fr → ∀ K : Subgroup (GA D V), (∃ j : (∀ τ, Formalism.REAL.KG (ε τ)) →* K, Function.Surjective j ∧ ∀ τ k, (j (Pi.mulSingle τ k) : GA D V) = kAt θ V τ (ε τ) (fr τ) k) → ∀ (W : D.what₂.Tau → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module ℂ (W τ)] [∀ τ, FiniteDimensional ℂ (W τ)] (ρ : ∀ τ, Representation ℂ (Formalism.REAL.KG (ε τ)) (W τ)), ∃ S : Submodule ℂ (K → ℂ), FiniteDimensional ℂ S ∧ (∀ f ∈ S, Continuous f) ∧ (∀ f ∈ S, ∀ k, (fun x => f (x * k)) ∈ S) ∧ ∀ φ : GA D V → ℂ, Continuous φ → (∀ τ, HasTypeAt θ V τ (ε τ) (fr τ) (ρ τ) φ) → ∀ g, (fun k : K => φ (g * k)) ∈ S := by
   intro D θ _ V ε fr _ K ⟨j, hjs, hj⟩ W _ _ _ ρ
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   exact GlobalTheory.SepTypes.exists_space K j hjs (fun τ k => kAt θ V τ (ε τ) (fr τ) k) hj W ρ
 end -- clump:auto
 end -- clump:auto
@@ -1035,7 +1035,7 @@ theorem continuous_finGL : Continuous (finGL E a) := by
 
 omit [NumberField E] in
 theorem continuous_toUnits_Kinf : Continuous fun k : Kinf E a => (Unitary.toUnits k : GL (Fin a) (Cinf E)) :=
-  Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_subtype_val.star⟩
+  Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_subtypeVal.star⟩
 
 theorem continuous_infGL_toUnits [_root_.NumberField.IsTotallyComplex E] :
     Continuous fun k : Kinf E a => infGL E a (Unitary.toUnits k) :=
@@ -1079,11 +1079,11 @@ theorem aeval_matDer_single {T : Type} {n : ℕ} (τ τ' : T) (a b c d : Fin n) 
   by_cases h : τ' = τ
   · subst h
 
-    simp only [if_true, map_sum, map_mul, MvPolynomial.aeval_X, MvPolynomial.aeval_C, Matrix.single_apply,
+    simp only [ite_true, map_sum, map_mul, MvPolynomial.aeval_X, MvPolynomial.aeval_C, Matrix.single_apply,
     Algebra.algebraMap_self, RingHom.id_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Prod.mk.injEq, true_and]
-  · simp only [h, if_false, map_zero]
-    rw [if_neg]; intro h'; exact h (congrArg Prod.fst h').symm
+    ite_true, Prod.mk.injEq, true_and]
+  · simp only [h, ite_false, map_zero]
+    rw [ite_eq_right]; intro h'; exact h (congrArg Prod.fst h').symm
 
 variable {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)} {V : HSp D}
 
@@ -1304,9 +1304,9 @@ theorem exists_measurable_addSection : ∀ (G : Type) [Group G] [TopologicalSpac
   have hH : ∀ h : H, ((h : N) : G) ∈ Γ := fun h => by
     have e : ((h : N) : G) = s (π h) := congrArg Subtype.val h.2.1
     rw [e]; exact hsΓ _ h.2.2
-  haveI : DiscreteTopology H :=
+  have : DiscreteTopology H :=
     .of_continuous_injective (f := fun h : H => (⟨((h : N) : G), hH h⟩ : Γ))
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
       fun a b e => Subtype.ext (Subtype.ext (congrArg (fun z : Γ => (z : G)) e))
   refine ⟨s' ⁻¹' stdDom H, (hsc.subtype_mk hs).measurable (measurableSet_stdDom H), fun v => ?_⟩
   obtain ⟨h, hh, hu⟩ := existsUnique_stdDom H (s' v)
@@ -1343,13 +1343,13 @@ theorem integral_section_eq_constTermOn : ∀ (G : Type) [Group G] [TopologicalS
   have hs'c : Continuous s' := hsc.subtype_mk _
   have hleft : Function.LeftInverse π s' := fun v => hπs _ v rfl
   have hemb : Topology.IsEmbedding s' := hleft.isEmbedding hπc hs'c
-  haveI : SecondCountableTopology V := hemb.secondCountableTopology
-  haveI : T2Space V := hemb.t2Space
-  haveI : Countable Λ := Function.Injective.countable (f := fun w : Λ => (⟨s w, hsΓ _ w.2⟩ : Γ)) fun a b h =>
+  have : SecondCountableTopology V := hemb.secondCountableTopology
+  have : T2Space V := hemb.t2Space
+  have : Countable Λ := Function.Injective.countable (f := fun w : Λ => (⟨s w, hsΓ _ w.2⟩ : Γ)) fun a b h =>
     Subtype.ext (hleft.injective (Subtype.ext (congrArg Subtype.val h : s a = s b)))
   let e := prodHomeo hle hs hsc hπc hπmul hπs hker
   let ν : Measure N := ((Measure.haar : Measure N').prod μ).map e
-  haveI : ν.IsHaarMeasure := isHaarMeasure_map_prodHomeo G Γ N N' hle hn hc hc' V s π hs hsc hπc hπmul hπs hker hmul μ hμ
+  have : ν.IsHaarMeasure := isHaarMeasure_map_prodHomeo G Γ N N' hle hn hc hc' V s π hs hsc hπc hπmul hπs hker hmul μ hμ
   obtain ⟨B, hBm, hB⟩ := exists_measurable_addSection G Γ N V Λ s π hsc hmul hs hπs hsΓ
   let A := stdDom (Γ.subgroupOf N')
   have hAm : MeasurableSet A := measurableSet_stdDom _
@@ -1442,8 +1442,8 @@ theorem isCuspidal_comp_blockEmb : ∀ (F E : Type) [Field F] [NumberField F] [F
   set U := GlobalTheory.StdPar.unip σ J X (insert k S) with hU
   set U₀ := GlobalTheory.StdPar.unip σ J X S with hU₀
   have hle : U₀ ≤ U := _root_.GlobalTheory.StdPar.unip_mono_of_subset F E σ hσ n J hJ r X Y hW _ S (Finset.subset_insert _ _)
-  haveI : LocallyCompactSpace U₀ := (GlobalTheory.StdPar.isClosed_unip S hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace U := (GlobalTheory.StdPar.isClosed_unip _ hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U₀ := (GlobalTheory.StdPar.isClosed_unip S hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U := (GlobalTheory.StdPar.isClosed_unip _ hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
   have cS := _root_.GlobalTheory.CuspCocpt.cocompact_unip F E σ hσ n J hJ r X Y hW S
   have cS' := _root_.GlobalTheory.CuspCocpt.cocompact_unip F E σ hσ n J hJ r X Y hW (insert k S)
   have esub : ∀ {N : Subgroup (GAd σ J)}, N ≤ U → (ratPts σ J ⊓ U).subgroupOf N = (ratPts σ J).subgroupOf N := by
@@ -1606,7 +1606,7 @@ theorem kfin_of_space {S : Submodule ℂ (K → ℂ)} [FiniteDimensional ℂ S] 
     FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : K => fun g => φ (g * i k))) := by
   let B := Module.finBasis ℂ S
   let c : Fin (Module.finrank ℂ S) → H → ℂ := fun a g => B.repr ⟨_, h g⟩ a
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range c)) := FiniteDimensional.span_of_finite ℂ (Set.finite_range c)
+  have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range c)) := FiniteDimensional.span_of_finite ℂ (Set.finite_range c)
   refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ (Set.range c)) (Submodule.span_le.2 ?_)
   rintro _ ⟨k, rfl⟩
   have e : (fun g => φ (g * i k)) = ∑ a, (B a).1 k • c a := by
@@ -1679,8 +1679,8 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
   classical
   have hcm := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND D.host.F D.host.E D.sp.cm).1
   have hJ := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND D.host.F D.host.E D.sp.cm).2 V
-  haveI := GlobalTheory.CuspRep.host_isCMField D.host
-  haveI : IsTotallyComplex D.host.E := inferInstance
+  have := GlobalTheory.CuspRep.host_isCMField D.host
+  have : IsTotallyComplex D.host.E := inferInstance
   obtain ⟨l, d, hl, hd, hkl, hblk, hprev⟩ := exists_block T k hk
   have hend : ∃ k' ∈ T, k'.val + 1 = l + d := ⟨k, hk, hkl⟩
   obtain ⟨ι, hι⟩ := GlobalTheory.BlockFormsEmb.exists_blockEmb _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW l d hl
@@ -1691,7 +1691,7 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
     ⟨⟨fun x hx => hKm.1 x hx, hKm.2.1⟩, fun K' hK' hle => (hKm.2.2 K' (fun x hx => hK'.1 hx) hK'.2 hle).le⟩
   obtain ⟨u, hu, -, y₁, g₀, hb, hg₀⟩ := GlobalTheory.T.parabolic_block_embedding_compact _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW K hK T l d hl ι hι hd hblk hend hprev b
   obtain ⟨S, hSf, hSc, hSt, hSφ⟩ := GlobalTheory.typesFiniteSpace D θ hθ V ε fr hfr K ⟨j, hjs, hj⟩ W ρ
-  haveI := hSf
+  have := hSf
   let α : Kinf D.host.E d →* K :=
     { toFun := fun κ => ⟨g₀⁻¹ * ι (infGL D.host.E d (Unitary.toUnits κ)) * g₀, hg₀ κ⟩
       map_one' := Subtype.ext (by simp)
@@ -1785,7 +1785,7 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
     { toFun := fun F t => F.1 (pre t * infGL D.host.E d y₁)
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  haveI := hfin
+  have := hfin
   refine Submodule.finiteDimensional_of_le
     (S₂ := (Submodule.span ℂ {F | F ∈ PositivityTheory.Affgl.genSpace L ρ' Js ∧ IsCuspidal F.1}).map Λ) (Submodule.span_le.2 ?_)
   rintro f ⟨φ, hφ, y, hy, hyc, rfl⟩

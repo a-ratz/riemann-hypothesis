@@ -144,10 +144,10 @@ theorem sum_single_sourceVar_apply (c : ι → ℕ) (v : ι × Fin n) :
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single v.1]
   · rw [Finsupp.single_apply]
     by_cases h : v = sourceVar LL a b v.1
-    · rw [if_pos h.symm, if_pos h]
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_left h.symm, ite_eq_left h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
   · intro l _ hl
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     apply hl
     rw [← h, sourceVar_fst]
@@ -182,7 +182,7 @@ theorem prod_monomial_eq_monomial_sum_prod {B σ α : Type*} [CommRing B] (s : F
   | classical
     refine Finset.induction_on s (by simp) ?_
     intro i s hi ih
-    rw [prod_insert hi, prod_insert hi, sum_insert hi, ih, monomial_mul]
+    rw [prod_insert hi, prod_insert hi, sum_insert hi, ih, monomial_mul_monomial]
 
 section mono
 
@@ -219,9 +219,9 @@ theorem sub_sourcePart_sourceVar (l : ι) (hl : l ∈ S) : (m - sourceVariableEx
   classical
   rw [Finsupp.tsub_apply]
   unfold sourceVariableExponent
-  rw [sum_single_sourceVar_apply, sourceVar_fst, if_pos rfl]
+  rw [sum_single_sourceVar_apply, sourceVar_fst, ite_eq_left rfl]
   unfold sourceExp
-  rw [if_pos hl]
+  rw [ite_eq_left hl]
   exact Nat.sub_self _
 
 variable {R : Type*} [CommRing R] (φ : R →+* B)
@@ -234,7 +234,7 @@ theorem matrixSubst_transvection_monomial_of_fixed (m0 : ι × Fin n →₀ ℕ)
   have hv' : ¬ (v.1 ∈ S ∧ v = sourceVar LL a b v.1) := by
     rintro ⟨hS, he⟩
     exact (Finsupp.mem_support_iff.1 hv) ((congrArg m0 he).trans (h0 _ hS))
-  rw [matrixSubst_transvection_X, if_neg hv']
+  rw [matrixSubst_transvection_X, ite_eq_right hv']
 
 theorem matrixSubst_transvection_monomial_prod :
     matrixSubst LL S φ (Matrix.transvection a b t) (Matrix.transvection a b (-t)) (monomial m 1) =
@@ -243,7 +243,7 @@ theorem matrixSubst_transvection_monomial_prod :
   classical
   have hsplit : (monomial m (1 : R) : MvPolynomial (ι × Fin n) R) =
       monomial (m - sourceVariableExponent LL S a b m) 1 * monomial (sourceVariableExponent LL S a b m) 1 := by
-    rw [monomial_mul, one_mul, tsub_add_cancel_of_le (sourcePart_le LL S a b m)]
+    rw [monomial_mul_monomial, one_mul, tsub_add_cancel_of_le (sourcePart_le LL S a b m)]
   have hprod : (monomial (sourceVariableExponent LL S a b m) (1 : R) : MvPolynomial (ι × Fin n) R) =
       ∏ l : ι, X (sourceVar LL a b l) ^ sourceExp LL S a b m l := by
     unfold sourceVariableExponent
@@ -256,10 +256,10 @@ theorem matrixSubst_transvection_monomial_prod :
   refine Finset.prod_congr rfl fun l _ => ?_
   rw [map_pow]
   by_cases hl : l ∈ S
-  · rw [matrixSubst_transvection_X, sourceVar_fst, if_pos ⟨hl, rfl⟩, add_comm]
+  · rw [matrixSubst_transvection_X, sourceVar_fst, ite_eq_left ⟨hl, rfl⟩, add_comm]
   · have he : sourceExp LL S a b m l = 0 := by
       unfold sourceExp
-      rw [if_neg hl]
+      rw [ite_eq_right hl]
     rw [he, pow_zero, pow_zero]
 
 private theorem letterSign_pow_mul_choose_sourceExp (p : ι → ℕ) (l : ι) (hpl : p l ≤ sourceExp LL S a b m l) :
@@ -269,13 +269,13 @@ private theorem letterSign_pow_mul_choose_sourceExp (p : ι → ℕ) (l : ι) (h
   by_cases hS : l ∈ S
   · have he : sourceExp LL S a b m l = m (sourceVar LL a b l) := by
       unfold sourceExp
-      rw [if_pos hS]
+      rw [ite_eq_left hS]
     rw [he]
     unfold sourceVar letterSign
     cases LL.vec l <;> simp
   · have he : sourceExp LL S a b m l = 0 := by
       unfold sourceExp
-      rw [if_neg hS]
+      rw [ite_eq_right hS]
     rw [he] at hpl ⊢
     have hp0 : p l = 0 := by omega
     rw [hp0]
@@ -295,11 +295,11 @@ theorem monomial_mul_prod_binomial_term (p : ι → ℕ) (hp : ∀ l, p l ≤ so
           Finsupp.single (sourceVar LL a b l) (sourceExp LL S a b m l - p l))
         ((letterSign B LL l * t) ^ (p l) * ((sourceExp LL S a b m l).choose (p l) : B)) := by
     intro l
-    rw [← monomial_mul, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial]
+    rw [← monomial_mul_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial]
     simp only [mul_pow, map_pow, map_mul, map_natCast]
     ring
   simp_rw [hfac]
-  rw [prod_monomial_eq_monomial_sum_prod, monomial_mul, C_mul_monomial, one_mul]
+  rw [prod_monomial_eq_monomial_sum_prod, monomial_mul_monomial, C_mul_monomial, one_mul]
   refine congrArg₂ (fun (s : ι × Fin n →₀ ℕ) (c : B) => (monomial s c : MvPolynomial (ι × Fin n) B)) ?_ ?_
   · have key : m - sourceVariableExponent LL S a b m +
         ∑ l : ι, Finsupp.single (sourceVar LL a b l) (sourceExp LL S a b m l - p l) =
@@ -418,7 +418,7 @@ theorem sum_finsuppAntidiag_eq_sum_piFinset (k : ℕ) :
     refine ⟨fun l => ?_, ?_⟩
     · rw [Nat.lt_succ_iff]
       by_cases hl : l ∈ S
-      · rw [sourceExp, if_pos hl]
+      · rw [sourceExp, ite_eq_left hl]
         exact hcf _ (hmon _ _ hne) l
       · rw [hz l hl]
         exact Nat.zero_le _
@@ -431,7 +431,7 @@ theorem sum_finsuppAntidiag_eq_sum_piFinset (k : ℕ) :
     have hle : ∀ l, p l ≤ sourceExp LL S a b m l := fun l => Nat.lt_succ_iff.mp (hp.1 l)
     have hz : ∀ l, l ∉ S → p l = 0 := fun l hl => by
       have h := hle l
-      rw [sourceExp, if_neg hl] at h
+      rw [sourceExp, ite_eq_right hl] at h
       omega
     refine ⟨Finsupp.equivFunOnFinite.symm p, ?_, ?_, ?_⟩
     · rw [Finset.mem_finsuppAntidiag, Finsupp.coe_equivFunOnFinite_symm]

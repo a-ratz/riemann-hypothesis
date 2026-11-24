@@ -172,8 +172,8 @@ theorem serre_algClosed :
     (∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (n : ℕ), 1 ≤ n → IsFinite (mulA P.A n).left ∧ Flat (mulA P.A n).left ∧ Surjective (mulA P.A n).left ∧ (IsUnit (n : Γ(S, ⊤)) → Etale (mulA P.A n).left)) → (∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (B : Over S) [GrpObj B] [IsCommMonObj B] (M : ℕ), 1 ≤ M → ∀ u : P.A ⟶ B, IsMonHom u → (∀ (T : Over S) (x : T ⟶ P.A), x ^ M = 1 → x ≫ u = 1) → (∃ φ : P.A ⟶ B, IsMonHom φ ∧ u = φ ^ M) ∧ (u ^ M = 1 → u = 1)) → (∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (q : ℕ), 2 ≤ q → ∀ u : P.A ⟶ P.A, (∀ k : ℕ, ∃ ψ : P.A ⟶ P.A, IsMonHom ψ ∧ u = ψ ^ (q ^ k)) → u = 1) → (∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (n : ℕ), Odd n → 5 ≤ n → (n : K) ≠ 0 → ∀ σ : P.A ≅ P.A, IsMonHom σ.hom → (∃ c : LB.Gen (LB.LinComb P.L (K := Fin 2) ![σ.hom.left, 𝟙 P.A.left] ![1, -1]), c.IsGen) → (∀ x : baseOver (Spec (CommRingCat.of K)) ⟶ P.A, x ^ n = 1 → x ≫ σ.hom = x) → σ.hom = 𝟙 P.A) → (∀ (E : Type) [Ring E] (M : ℕ), 3 ≤ M → (∀ (n : ℕ) (x : E), n ≠ 0 → (n : E) * x = 0 → x = 0) → (∀ (q : ℕ) (x : E), 2 ≤ q → (∀ k : ℕ, ∃ y : E, x = (q : E) ^ k * y) → x = 0) → ∀ (σ φ : E) (m : ℕ), m ≠ 0 → σ = 1 + (M : E) * φ → σ ^ m = 1 → σ = 1) → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (M : ℕ), 3 ≤ M → ∀ σ : P.A ≅ P.A, IsMonHom σ.hom → (∃ c : LB.Gen (LB.LinComb P.L (K := Fin 2) ![σ.hom.left, 𝟙 P.A.left] ![1, -1]), c.IsGen) → (∀ (T : Over (Spec (CommRingCat.of K))) (x : T ⟶ P.A), x ^ M = 1 → x ≫ σ.hom = x) → σ.hom = 𝟙 P.A := by
   intro hM hdiv hsep hfin hmink K _ _ P M hM3 σ hσ hL hfix
   obtain ⟨n, hodd, h5, hn⟩ := exists_odd_ne_zero K
-  haveI := (hM _ P n (by omega)).1
-  haveI := finite_torsion_of_isFinite_mul K P n
+  have := (hM _ P n (by omega)).1
+  have := finite_torsion_of_isFinite_mul K P n
   obtain ⟨m, hm0, hm⟩ := exists_iter_fix σ (baseOver (Spec (CommRingCat.of K))) n
   have hord : (iter σ m).hom = 𝟙 P.A :=
     hfin K P n hodd h5 hn (iter σ m) inferInstance (hasGen_iter P.isLB σ hL m) hm
@@ -189,7 +189,7 @@ theorem serre_algClosed :
       have h2 : u ^ k = 1 := h1
       have h3 : u = 1 := by
         obtain ⟨_, _, _, -⟩ := hM _ P k (by omega)
-        haveI : Epi (mulA P.A k).left := Flat.epi_of_flat_of_surjective _
+        have : Epi (mulA P.A k).left := Flat.epi_of_flat_of_surjective _
         refine Over.OverMorphism.ext ((cancel_epi (mulA P.A k).left).1 ?_)
         rw [← Over.comp_left, ← Over.comp_left, MonObj.comp_one, mulA, MonObj.pow_comp,
           Category.id_comp, h2]

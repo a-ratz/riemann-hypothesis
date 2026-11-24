@@ -90,7 +90,7 @@ theorem dvr_val (S : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
     generalize hu : WithZero.unitsWithZeroEquiv.toMonoidHom
       ((Units.map (v0.valuation K).toMonoidWithZeroHom.toMonoidHom) x) = u
     have hc : v0.valuation K x = (u : WithZero (Multiplicative ℤ)) := by
-      rw [← hu, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, WithZero.coe_unitsWithZeroEquiv_eq_units_val]
+      rw [← hu, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, WithZero.coe_unitsWithZeroEquiv_eq_units_val]
       rfl
     rw [hc, ← WithZero.coe_one (α := Multiplicative ℤ), WithZero.coe_le_coe, ← Multiplicative.toAdd_le, toAdd_one]
   rw [key]
@@ -110,7 +110,7 @@ theorem exists_val (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Is
     ∃ w : (FractionRing R)ˣ →* Multiplicative ℤ, ∀ x : (FractionRing R)ˣ,
       0 ≤ Multiplicative.toAdd (w x) ↔
         ∃ s ∉ P, algebraMap R (FractionRing R) s * x ∈ (algebraMap R (FractionRing R)).range := by
-  haveI : IsDiscreteValuationRing (Localization.AtPrime P) :=
+  have : IsDiscreteValuationRing (Localization.AtPrime P) :=
     GlobalTheory.localizationAtPrime_isDiscreteValuationRing_of_height_eq_one R P h1
   obtain ⟨w, hw⟩ := dvr_val (Localization.AtPrime P) (FractionRing R)
   refine ⟨w, fun x => (hw x).trans ⟨?_, ?_⟩⟩
@@ -148,7 +148,7 @@ theorem val_eq_zero_of_notMem (R : Type) [CommRing R] [IsDomain R] (P : Ideal R)
 theorem exists_vals : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] (J : Type) [Finite J] (g : J → (FractionRing R)ˣ), ∃ (s : ℕ) (v : Fin s → ((FractionRing R)ˣ →* Multiplicative ℤ)), (∀ i (x : (FractionRing R)ˣ) (r : R), (x : FractionRing R) = algebraMap R _ r → 0 ≤ Multiplicative.toAdd (v i x)) ∧ (∀ x ∈ Subgroup.closure (Set.range g), (∀ i, 0 ≤ Multiplicative.toAdd (v i x)) → ∃ r : R, (x : FractionRing R) = algebraMap R _ r) := by
   intro R _ _ _ _ J _ g
   classical
-  haveI := Fintype.ofFinite J
+  have := Fintype.ofFinite J
   have key : ∀ P : Ideal R, P.IsPrime → P.height = 1 →
       ∃ w : (FractionRing R)ˣ →* Multiplicative ℤ, ∀ x : (FractionRing R)ˣ,
         0 ≤ Multiplicative.toAdd (w x) ↔
@@ -288,7 +288,7 @@ theorem posquad_finite : ∀ (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (
     Set.Finite.pi (fun i => Set.finite_Icc _ _)
   refine (hfin.preimage φinj.injOn).subset ?_
   intro a ha
-  simp only [Set.mem_setOf_eq] at ha
+  simp only [Set.mem_ofPred_eq] at ha
   simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Icc]
   intro i
   have := Bbound a i
@@ -320,7 +320,7 @@ theorem dickson_fin {J : Type*} (n : ℕ) (f : J → Fin n → ℕ) :
   set s : Set (Fin n → ℕ) := Set.range f
   have hpwo : s.IsPWO := Set.isPWO_of_wellQuasiOrderedLE s
   set m : Set (Fin n → ℕ) := {x | Minimal (· ∈ s) x}
-  have hm : m.Finite := (setOf_minimal_antichain (· ∈ s)).finite_of_partiallyWellOrderedOn
+  have hm : m.Finite := (setOfPred_minimal_antichain (· ∈ s)).finite_of_partiallyWellOrderedOn
     (hpwo.mono (fun x hx => hx.prop))
   have hpre : ∀ x ∈ m, ∃ j, f j = x := fun x hx => hx.prop
   rcases isEmpty_or_nonempty J with hJ | hJ
@@ -411,7 +411,7 @@ theorem finite_not_mem_pow : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoether
   classical
   obtain ⟨S, hS⟩ := (Module.Finite.fg_top (R := ℤ) (M := X))
   have hcl : AddSubgroup.closure (Set.range (fun x : S => (x : X))) = ⊤ := by
-    rw [← Submodule.span_int_eq_addSubgroupClosure, Subtype.range_coe_subtype, Finset.setOf_mem, hS]; rfl
+    rw [← Submodule.span_int_eq_addSubgroupClosure, Subtype.range_coe_subtype, Finset.setOfPred_mem, hS]; rfl
   have hΓ := mem_closure_of_gen hneg hcube (fun x : S => (x : X)) hcl
   set gg := Sum.elim (fun i : S => κ (i : X)) (fun p : S × S => κ ((p.1 : X) + p.2))
   set Γ := Subgroup.closure (Set.range gg)

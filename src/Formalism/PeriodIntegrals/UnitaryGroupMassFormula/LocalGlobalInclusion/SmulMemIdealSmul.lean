@@ -64,7 +64,7 @@ theorem self_le_locP {W : Type} [AddCommGroup W] [Module (𝓞 K) W] (p : Ideal 
   fun x hx => (mem_localization_iff p L x).mpr ⟨1, p.primeCompl.one_mem, by rw [one_smul]; exact hx⟩
 
 theorem maximal_ne_bot (m : Ideal (𝓞 K)) (hm : m.IsMaximal) : m ≠ ⊥ := by
-  haveI := hm
+  have := hm
   exact (Ideal.bot_lt_of_maximal m (NumberField.RingOfIntegers.not_isField K)).ne'
 
 theorem mem_of_local {W : Type} [AddCommGroup W] [Module (𝓞 K) W] (N : Submodule (𝓞 K) W) (x : W)
@@ -111,9 +111,9 @@ theorem coe_prod_le (S : Finset (HeightOneSpectrum (𝓞 K))) (n : HeightOneSpec
   | empty => simp
   | insert v S hv ih =>
     rw [Finset.prod_insert hv, Finset.prod_insert hv, FractionalIdeal.coeIdeal_mul]
-    rw [← FractionalIdeal.coe_le_coe, FractionalIdeal.coe_mul, FractionalIdeal.coe_mul]
-    have h1 := FractionalIdeal.coe_le_coe.mpr (coe_pow_toNat_le v (n v))
-    have h2 := FractionalIdeal.coe_le_coe.mpr ih
+    rw [← FractionalIdeal.coeToSubmodule_le_coeToSubmodule, FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_mul]
+    have h1 := FractionalIdeal.coeToSubmodule_le_coeToSubmodule.mpr (coe_pow_toNat_le v (n v))
+    have h2 := FractionalIdeal.coeToSubmodule_le_coeToSubmodule.mpr ih
     first
       | exact mul_le_mul' h1 h2
       | exact Submodule.mul_le_mul' h1 h2
@@ -124,7 +124,7 @@ theorem exists_unit_at (w : HeightOneSpectrum (𝓞 K)) (S : Finset (HeightOneSp
     ∃ t : 𝓞 K, t ∉ w.asIdeal ∧
       algebraMap (𝓞 K) K t ∈ ∏ v ∈ S, (v.asIdeal : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) ^ n v := by
   classical
-  haveI : w.asIdeal.IsPrime := w.isPrime
+  have : w.asIdeal.IsPrime := w.isPrime
   have hP : ¬ (∏ v ∈ S, v.asIdeal ^ (n v).toNat) ≤ w.asIdeal := by
     intro hle
     rcases S.eq_empty_or_nonempty with hS | hS
@@ -136,7 +136,7 @@ theorem exists_unit_at (w : HeightOneSpectrum (𝓞 K)) (S : Finset (HeightOneSp
       have h2 : v.asIdeal = w.asIdeal := v.isMaximal.eq_of_le w.isPrime.ne_top h1
       have h3 : v = w := IsDedekindDomain.HeightOneSpectrum.ext h2
       exact hw (h3 ▸ hv)
-  obtain ⟨t, htP, htw⟩ := SetLike.not_le_iff_exists.mp hP
+  obtain ⟨t, htP, htw⟩ := IsConcreteLE.not_le_iff_exists.mp hP
   refine ⟨t, htw, ?_⟩
   exact coe_prod_le S n ((FractionalIdeal.mem_coeIdeal _).mpr ⟨t, htP, rfl⟩)
 
@@ -164,7 +164,7 @@ theorem main : PI.LocGlobIncl := by
   unfold Formalism.AtG.denIdeal
   apply mem_of_local
   intro w
-  haveI : w.asIdeal.IsPrime := w.isPrime
+  have : w.asIdeal.IsPrime := w.isPrime
   by_cases hw : w ∈ T
   · obtain ⟨s, hs, hsx⟩ := (mem_localization_iff w.asIdeal _ x).mp (hT w hw ((self_le_locP w.asIdeal M) hx))
     obtain ⟨t, ht, htJ⟩ := exists_unit_at w (T.erase w) (by simp) (fun v => -(a v))
@@ -189,7 +189,7 @@ theorem main : PI.LocGlobIncl := by
         ((1 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K) B := by
       apply Submodule.subset_span
       refine ⟨1, ?_, s • x, hsx, (one_smul K _).symm⟩
-      rw [FractionalIdeal.coe_one]
+      rw [FractionalIdeal.coeToSubmodule_one]
       exact Submodule.one_le.mp le_rfl
     have hm := smul_mem_idealSmul 1 _ B t htJ' hB
     rw [one_mul] at hm

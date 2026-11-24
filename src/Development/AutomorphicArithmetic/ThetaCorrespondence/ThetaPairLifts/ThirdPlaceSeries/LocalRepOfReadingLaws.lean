@@ -172,11 +172,11 @@ theorem avgN_indep (ρ : G →* Module.End ℂ V) (N N' : Subgroup G) [Fintype (
 
 theorem exists_normal (ρ : G →* Module.End ℂ V) (x : V) (hfin : (Set.range fun k => ρ k x).Finite) :
     ∃ N : Subgroup G, N.Normal ∧ N.FiniteIndex ∧ ∀ s ∈ N, ρ s x = x := by
-  letI : MulAction G V := MulAction.compHom V ρ
-  haveI : Finite (MulAction.orbit G x) := hfin.to_subtype
-  haveI : Finite (G ⧸ MulAction.stabilizer G x) :=
+  let : MulAction G V := MulAction.compHom V ρ
+  have : Finite (MulAction.orbit G x) := hfin.to_subtype
+  have : Finite (G ⧸ MulAction.stabilizer G x) :=
     Finite.of_equiv _ (MulAction.orbitEquivQuotientStabilizer G x)
-  haveI : (MulAction.stabilizer G x).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : (MulAction.stabilizer G x).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   exact ⟨(MulAction.stabilizer G x).normalCore, inferInstance, inferInstance,
     fun s hs => (MulAction.stabilizer G x).normalCore_le hs⟩
 
@@ -186,8 +186,8 @@ theorem exists_avg_top (ρ : G →* Module.End ℂ V) (hfin : ∀ x, (Set.range 
       ∀ x y, ∃ (ι : Type) (_ : Fintype ι) (k : ι → G) (c : ℂ),
         P x = c • ∑ i, ρ (k i) x ∧ P y = c • ∑ i, ρ (k i) y := by
   choose N hN1 hN2 hN3 using fun x => exists_normal ρ x (hfin x)
-  letI F1 : ∀ x, Fintype (G ⧸ N x) := fun x => Fintype.ofFinite _
-  letI F2 : ∀ x y, Fintype (G ⧸ (N x ⊓ N y)) := fun x y => Fintype.ofFinite _
+  let F1 : ∀ x, Fintype (G ⧸ N x) := fun x => Fintype.ofFinite _
+  let F2 : ∀ x y, Fintype (G ⧸ (N x ⊓ N y)) := fun x y => Fintype.ofFinite _
   have h2 : ∀ x y, avgN ρ (N x) x = avgN ρ (N x ⊓ N y) x ∧ avgN ρ (N y) y = avgN ρ (N x ⊓ N y) y :=
     fun x y => ⟨avgN_indep ρ _ _ (hN3 x) (fun s hs => hN3 x s hs.1),
       avgN_indep ρ _ _ (hN3 y) (fun s hs => hN3 y s hs.2)⟩
@@ -806,7 +806,7 @@ theorem kills_scalar {U : Submodule ℂ V} (hU : U ≠ ⊥) (r : ℂ) :
 theorem eig_drop (U : Submodule ℂ V) [FiniteDimensional ℂ U] (hU : U ≠ ⊥)
     (g : Module.End ℂ V) (hg : ∀ x ∈ U, g x ∈ U) :
     ∃ μ : ℂ, finrank ℂ (U.map (g - algebraMap ℂ (Module.End ℂ V) μ)) < finrank ℂ U := by
-  haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU
+  have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue (g.restrict hg)
   obtain ⟨z, hz⟩ := hμ.exists_hasEigenvector
   refine ⟨μ, ?_⟩
@@ -1098,7 +1098,7 @@ theorem main_ind (n : ℕ) : ∀ (C : ι → Subalgebra ℂ (Module.End ℂ V)) 
   | _ n ih =>
   intro C U₁ U₂ hfd hn h₁ h₂ hS₁ hS₂ hC₁ hC₂ hK hI₁ hI₂
   classical
-  haveI := hfd
+  have := hfd
   by_cases hB : ∀ v, ∀ a ∈ C v, ∃ μ : ℂ, ∀ x ∈ U₁, a x = μ • x
   · apply graph_of_scalars C U₁ U₂ h₁ h₂
     intro v a ha
@@ -1209,7 +1209,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
   have hF : ∀ u, F u = (T₁ u, T₂ (E u)) := fun u => rfl
   have hEint : ∀ g u, E (σ₁.ρ g u) = σ₂.ρ g (E u) := fun g u => LinearMap.congr_fun (E.isIntertwining' g) u
   have hnt : Nontrivial σ₁.V := by
-    haveI := σ₁.irr
+    have := σ₁.irr
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     apply (bot_ne_top : (⊥ : Subrepresentation σ₁.ρ) ≠ ⊤)
@@ -1612,7 +1612,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
   obtain ⟨M₂, hM₂, e₂⟩ := (h₂.1.le hg₂).2
   have hM : 0 < M₁ * M₂ := Nat.mul_pos hM₁ hM₂
   have H := placeSys L n hM
-  haveI : FiniteDimensional ℂ a.W := a.alg.1
+  have : FiniteDimensional ℂ a.W := a.alg.1
   obtain ⟨W, hW⟩ := graph_of_local H (irr_of h₁) (irr_of h₂) (orbit_fin h₁ h₂ fun k hk => hk.1)
     ((Submodule.ne_bot_iff _).2 ⟨g₁, ⟨hg₁, fun k hk => funext fun g => e₁ k (NG.Cong.of_mul_left L n hk) g⟩, hg₁0⟩)
     ((Submodule.ne_bot_iff _).2 ⟨g₂, ⟨hg₂, fun k hk => funext fun g => e₂ k (NG.Cong.of_mul_right L n hk) g⟩, hg₂0⟩)

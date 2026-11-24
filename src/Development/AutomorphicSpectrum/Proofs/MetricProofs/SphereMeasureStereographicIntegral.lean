@@ -238,7 +238,7 @@ theorem map_stereo :
       sphereMeasure.map (fun m : Sphere2 => (m : E3)) := by
   ext s hs
   rw [Measure.map_apply measurable_nE hs, withDensity_apply _ (measurable_nE hs),
-    Measure.map_apply measurable_subtype_coe hs, sphereMeasure, Measure.smul_apply, smul_eq_mul,
+    Measure.map_apply measurable_subtypeVal hs, sphereMeasure, smul_apply, smul_eq_mul,
     SphereLongitudeCoordinates.toSphere_preimage hs, toSphere_univ, ← per_conv,
     ← lintegral_stereo _ (measurable_one.indicator hs), ← lintegral_indicator (measurable_nE hs)]
   refine lintegral_congr fun a => ?_
@@ -291,7 +291,7 @@ theorem measure_part (f : (Fin 3 → ℝ) → ℝ) (hf : Measurable f) :
   have hnE := measurable_nE.aemeasurable (μ := volume.withDensity fun a : ℂ => (w a : ℝ≥0∞))
   have hco : AEMeasurable (fun m : GroundTheory.Heights₂.Heights.FlagBundles.Sphere2 =>
       (m : GroundTheory.Heights₂.Heights.FlagBundles.E3)) GroundTheory.Heights₂.Heights.FlagBundles.sphereMeasure :=
-    measurable_subtype_coe.aemeasurable
+    measurable_subtypeVal.aemeasurable
   constructor
   · rw [hpt, ← integrable_withDensity_iff_integrable_smul₀ hwm.aemeasurable]
     refine (integrable_map_measure (g := gE) hgm.aestronglyMeasurable hnE).symm.trans ?_

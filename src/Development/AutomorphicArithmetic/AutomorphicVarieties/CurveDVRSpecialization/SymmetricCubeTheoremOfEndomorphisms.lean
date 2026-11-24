@@ -131,7 +131,7 @@ private theorem tri_of_char {O G A : Type} [CommRing O] [IsLocalRing O] [Finite 
     (U : Subgroup G) (hU : U.FiniteIndex)
     (hch : ∀ g ∈ U, η g = 1 → (r g).mat.charpoly = (((r0 η Ψ g).mat).map (algebraMap O A)).charpoly) :
     Upper η r ∨ Lower η r := by
-  letI : Algebra (ResidueField O) A := (Ideal.Quotient.lift _ (algebraMap O A) h0).toAlgebra
+  let : Algebra (ResidueField O) A := (Ideal.Quotient.lift _ (algebraMap O A) h0).toAlgebra
   let Φ : G →* (ResidueField O)ˣ := (Units.map (residue O).toMonoidHom).comp Ψ
   have e : ∀ g, ((r0 η Φ g).mat).map (algebraMap (ResidueField O) A) = ((r0 η Ψ g).mat).map (algebraMap O A) := by
     intro g

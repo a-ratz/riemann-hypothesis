@@ -186,7 +186,7 @@ theorem UpperTheory.V.Z.Kato.Joint.admissibleFunctional_of_projection :
     by_cases h : g.χ (d : ZMod g.M) = 1
     · simp [χd, h]
     · have h' := (hq d (hcop d hd)).resolve_left h
-      simp only [χd, if_neg h]
+      simp only [χd, ite_eq_right h]
       rw [h']
       simp
   have hχd' : ∀ d : ℕ, d.Coprime N → ι ((χd d : ℤ_[l]) : Qbar l) = χ d := by
@@ -265,7 +265,7 @@ theorem UpperTheory.V.Z.Kato.Joint.aqBd :
   obtain ⟨S0, hS0⟩ := GlobalTheory.RhoAdm.frob_trace_det ι e W g χ hatt
   have hc := (Continuous.matrix_trace
     (Units.continuous_val.comp (GlobalTheory.RhoAdm.untw_cont e W χ hN.cont hχ))).norm
-  haveI : CompactSpace (Ω ≃ₐ[ℚ] Ω) := inferInstance
+  have : CompactSpace (Ω ≃ₐ[ℚ] Ω) := inferInstance
   obtain ⟨C, hC⟩ := (isCompact_range hc).bddAbove
   obtain ⟨k, hk⟩ := GlobalTheory.KummerEisensteinGalois.exists_le_l_pow l (max C (∑ q ∈ S0, ‖ι.symm (g.a q)‖))
   refine ⟨k, fun q hq => le_trans ?_ hk⟩
@@ -412,7 +412,7 @@ private theorem cont_of_apply [IsAlgClosure ℚ Ω] {Y : Type} [TopologicalSpace
     (h : ∀ s t : G ℚ Ω, s ζ = t ζ → f s = f t) : Continuous f := by
   have halg : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral ℚ ζ := (Algebra.IsAlgebraic.isAlgebraic ζ).isIntegral
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) := IntermediateField.adjoin.finiteDimensional hint
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) := IntermediateField.adjoin.finiteDimensional hint
   have hopen : IsOpen ((IntermediateField.adjoin ℚ {ζ}).fixingSubgroup : Set (Ω ≃ₐ[ℚ] Ω)) :=
     IntermediateField.fixingSubgroup_isOpen _
   apply IsLocallyConstant.continuous
@@ -455,10 +455,10 @@ private theorem det_of_charpoly {K : Type} [Field K] (ι : K ≃+* ℂ) {A : Mat
 
 private theorem exists_aut_pow [IsAlgClosure ℚ Ω] {n c : ℕ} (hn : n ≠ 0) (hc : c.Coprime n) :
     ∃ s : G ℚ Ω, ∀ z : Ω, z ^ n = 1 → s z = z ^ c := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
-  haveI : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.mpr hn⟩
-  haveI : NeZero n := ⟨hn⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
+  have : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.mpr hn⟩
+  have : NeZero n := ⟨hn⟩
   have hpos : 0 < n := Nat.pos_of_ne_zero hn
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic n Ω) (by
     rw [Polynomial.degree_cyclotomic]
@@ -490,11 +490,11 @@ theorem UpperTheory.V.Z.Kato.Joint.chiQuad :
   have hlp : Nat.Prime l := Fact.out
   have hM0 : g.M ≠ 0 := g.pos.ne'
   have hN0 : l * g.M ≠ 0 := mul_ne_zero hlp.ne_zero hM0
-  haveI : NeZero g.M := ⟨hM0⟩
-  haveI : NeZero (l * g.M) := ⟨hN0⟩
+  have : NeZero g.M := ⟨hM0⟩
+  have : NeZero (l * g.M) := ⟨hN0⟩
   obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ (l * g.M) := by
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-    haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+    have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
     obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic (l * g.M) Ω) (by
       rw [Polynomial.degree_cyclotomic]
       exact_mod_cast (Nat.totient_pos.mpr (Nat.pos_of_ne_zero hN0)).ne')
@@ -535,7 +535,7 @@ theorem UpperTheory.V.Z.Kato.Joint.chiQuad :
     · rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact_mod_cast hN0
     · intro w hw
-      simp only [Set.mem_setOf_eq, not_not] at hw ⊢
+      simp only [Set.mem_ofPred_eq, not_not] at hw ⊢
       exact Ideal.dvd_span_singleton.mpr hw
   have hev := hcof.and hAtt.2
   have hfeq : f = fun _ => 1 := by
@@ -677,7 +677,7 @@ private theorem uniform_continuity_galois_group (K Ω : Type) [Field K] [Field �
   let U : (Ω ≃ₐ[K] Ω) → Set (Ω ≃ₐ[K] Ω) := fun i => {h | i⁻¹ * h ∈ (E i).fixingSubgroup}
   have hUo : ∀ i, IsOpen (U i) := by
     intro i
-    haveI := hEf i
+    have := hEf i
     exact (IntermediateField.fixingSubgroup_isOpen (E i)).preimage (continuous_const.mul continuous_id)
   have hUc : Set.univ ⊆ ⋃ i, U i := by
     intro h _
@@ -688,7 +688,7 @@ private theorem uniform_continuity_galois_group (K Ω : Type) [Field K] [Field �
   obtain ⟨S, hS⟩ := isCompact_univ.elim_finite_subcover U hUo hUc
   have hT : ∀ i, ∃ T : Finset Ω, ∀ g : Ω ≃ₐ[K] Ω, (∀ x ∈ T, g x = x) → g ∈ (E i).fixingSubgroup := by
     intro i
-    haveI := hEf i
+    have := hEf i
     exact mem_fixingSubgroup_of_fixes_finite_set K Ω (E i)
   choose T hT using hT
   refine ⟨S.biUnion T, fun s s' hs' => ?_⟩
@@ -708,7 +708,7 @@ private theorem uniform_continuity_galois_group (K Ω : Type) [Field K] [Field �
 theorem UpperTheory.V.Z.Kato.Joint.unif :
     UpperTheory.V.Z.Kato.Joint.Unif := by
   intro l _ Ω _ _ _ f hf δ hδ
-  haveI : IsGalois ℚ Ω := inferInstance
+  have : IsGalois ℚ Ω := inferInstance
   exact uniform_continuity_galois_group ℚ Ω f hf δ hδ
 end -- clump:auto
 end -- clump:auto
@@ -1024,14 +1024,14 @@ private theorem extend {M : Type} [AddCommGroup M] [Module ℤ_[l] M] (B : Submo
       convert this using 2
       simp only [map_smul, Pi.smul_apply, Submodule.coe_smul, Algebra.smul_def]
       ring
-  haveI : Module.IsTorsionFree ℤ_[l] (Qbar l) := by
+  have : Module.IsTorsionFree ℤ_[l] (Qbar l) := by
     refine (Module.isTorsionFree_iff_algebraMap_injective).2 ?_
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro a ha
     have := norm_zl a
     rw [ha, norm_zero] at this
     exact norm_eq_zero.1 this.symm
-  haveI : Module.Flat ℤ_[l] (Qbar l) := inferInstance
+  have : Module.Flat ℤ_[l] (Qbar l) := inferInstance
   have hinj : Function.Injective (B.subtype.baseChange (Qbar l)) :=
     Module.Flat.lTensor_preserves_injective_linearMap (M := Qbar l) B.subtype B.injective_subtype
   obtain ⟨s, hs⟩ := LinearMap.exists_leftInverse_of_injective (B.subtype.baseChange (Qbar l))
@@ -1064,11 +1064,11 @@ theorem UpperTheory.V.Z.Kato.Joint.thLin :
     UpperTheory.V.Z.Kato.Joint.ThLin := by
   intro l _ Ω _ _ _ ε X A N w j hS n
   obtain ⟨hA, h2, hlN, h5, hw, hj⟩ := hS
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hcop : Nat.Coprime N l := ((Nat.Prime.coprime_iff_not_dvd Fact.out).2 hlN).symm
   have hhol : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero) := by
     obtain ⟨φ, h1, h2⟩ := X.j_hol; exact ⟨φ, h2, h1⟩
-  haveI := (_root_.GlobalTheory.KZ.B_free_finite ε X ε.injective hhol N l w h2 h5 hcop hw).1
+  have := (_root_.GlobalTheory.KZ.B_free_finite ε X ε.injective hhol N l w h2 h5 hcop hw).1
   have hth : ∀ b ∈ X.B N l w, IsThB X A N l n b (thN X A N l n 1 b) := by
     intro b hb
     have h := (_root_.GlobalTheory.CyclotomicQExpansion.thN_isThB Ω ε X A N l X.j_hol h2 hlN h5 hA n w 1 hw (Nat.coprime_one_left N) b hb).1

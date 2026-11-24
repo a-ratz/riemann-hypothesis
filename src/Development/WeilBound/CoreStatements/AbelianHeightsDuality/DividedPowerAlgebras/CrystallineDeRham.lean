@@ -87,7 +87,7 @@ theorem Sup.dpow_mem_fil (δ : DividedPowers J) {x : B} (hx : x ∈ J) (n : ℕ)
   Ideal.subset_span ⟨[(n, x)], by simpa using hx, by simp, by simp⟩
 
 theorem Sup.fil_mul_le (δ : DividedPowers J) (m n : ℕ) : fil δ m * fil δ n ≤ fil δ (m + n) := by
-  rw [fil, fil, Ideal.span_mul_span', Ideal.span_le]
+  rw [fil, fil, Ideal.span_mul_span, Ideal.span_le]
   rintro _ ⟨_, ⟨l, h1, h2, rfl⟩, _, ⟨l', h1', h2', rfl⟩, rfl⟩
   refine Ideal.subset_span ⟨l ++ l', fun p hp ↦ ?_, ?_, by simp⟩
   · rcases List.mem_append.1 hp with h | h
@@ -659,10 +659,10 @@ variable {P A B C : Type} [CommRing P] [CommRing A] [CommRing B] [CommRing C]
 theorem fe_lift (t : P →+* A) (ht : t.FormallyEtale) (π : B →+* C) (hπ : Function.Surjective π)
     (hn : IsNilpotent (RingHom.ker π)) (u : P →+* B) (f : A →+* C) (h : f.comp t = π.comp u) :
     ∃ g : A →+* B, g.comp t = u ∧ π.comp g = f := by
-  letI := t.toAlgebra
-  letI : Algebra P C := (π.comp u).toAlgebra
-  letI : Algebra P B := u.toAlgebra
-  haveI : Algebra.FormallyEtale P A := ht
+  let := t.toAlgebra
+  let : Algebra P C := (π.comp u).toAlgebra
+  let : Algebra P B := u.toAlgebra
+  have : Algebra.FormallyEtale P A := ht
   let fA : A →ₐ[P] C := { f with commutes' := fun r => RingHom.congr_fun h r }
   let πA : B →ₐ[P] C := { π with commutes' := fun r => rfl }
   let g := Algebra.FormallySmooth.liftOfSurjective fA πA hπ hn
@@ -674,9 +674,9 @@ theorem fe_lift (t : P →+* A) (ht : t.FormallyEtale) (π : B →+* C) (hπ : F
 
 theorem fe_uniq (t : P →+* A) (ht : t.FormallyEtale) (π : B →+* C) (hn : IsNilpotent (RingHom.ker π))
     (g₁ g₂ : A →+* B) (h : g₁.comp t = g₂.comp t) (h' : π.comp g₁ = π.comp g₂) : g₁ = g₂ := by
-  letI := t.toAlgebra
-  letI : Algebra P B := (g₁.comp t).toAlgebra
-  haveI : Algebra.FormallyEtale P A := ht
+  let := t.toAlgebra
+  let : Algebra P B := (g₁.comp t).toAlgebra
+  have : Algebra.FormallyEtale P A := ht
   let a₁ : A →ₐ[P] B := { g₁ with commutes' := fun r => rfl }
   let a₂ : A →ₐ[P] B := { g₂ with commutes' := fun r => (RingHom.congr_fun h r).symm }
   have key := Algebra.FormallyUnramified.ext' π hn a₁ a₂ (fun x => RingHom.congr_fun h' x)
@@ -684,8 +684,8 @@ theorem fe_uniq (t : P →+* A) (ht : t.FormallyEtale) (π : B →+* C) (hn : Is
   exact AlgHom.congr_fun key x
 
 theorem fe_of_etale {t : P →+* A} (ht : t.Etale) : t.FormallyEtale := by
-  letI := t.toAlgebra
-  haveI : Algebra.Etale P A := ht
+  let := t.toAlgebra
+  have : Algebra.Etale P A := ht
   show Algebra.FormallyEtale P A
   infer_instance
 
@@ -727,7 +727,7 @@ theorem chart_cover (hs : Smooth s) : ⨆ U : Chart s, U.1.1 = ⊤ := by
   intro x _
   rw [TopologicalSpace.Opens.mem_iSup]
   obtain ⟨V, hV, hxV, -⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := ⊤) trivial
-  letI algV : Algebra R Γ(X, V) := (secMap s V).hom.toAlgebra
+  let algV : Algebra R Γ(X, V) := (secMap s V).hom.toAlgebra
   have hsmV : Algebra.Smooth R Γ(X, V) := by
     have e : V ≤ s ⁻¹ᵁ (⊤ : (Sp R).Opens) := le_top
     have H1 : (s.appLE ⊤ V e).hom.Smooth := hs.smooth_appLE (isAffineOpen_top (Sp R)) hV e
@@ -742,14 +742,14 @@ theorem chart_cover (hs : Smooth s) : ⨆ U : Chart s, U.1.1 = ⊤ := by
   refine ⟨⟨W, ?_, ?_⟩, hxg⟩
   · exact RingHom.flat_algebraMap_iff.1
       (RingHom.Smooth.flat (RingHom.smooth_algebraMap.2 (sec_smooth hs W)))
-  · haveI := hSt g hgS
+  · have := hSt g hgS
     obtain ⟨d, g', hg'C, hg'e⟩ :=
       RingHom.IsStandardSmooth.exists_etale_mvPolynomial (RingHom.isStandardSmooth_algebraMap.2 this)
-    haveI : IsLocalization.Away g Γ(X, X.basicOpen g) := hV.isLocalization_basicOpen g
+    have : IsLocalization.Away g Γ(X, X.basicOpen g) := hV.isLocalization_basicOpen g
     let e : Localization.Away g ≃ₐ[Γ(X, V)] Γ(X, X.basicOpen g) :=
       IsLocalization.algEquiv (Submonoid.powers g) _ _
     have he : (e : Localization.Away g →+* Γ(X, X.basicOpen g)).FormallyEtale := by
-      letI := (e : Localization.Away g →+* Γ(X, X.basicOpen g)).toAlgebra
+      let := (e : Localization.Away g →+* Γ(X, X.basicOpen g)).toAlgebra
       show Algebra.FormallyEtale (Localization.Away g) Γ(X, X.basicOpen g)
       exact Algebra.FormallyEtale.of_equiv (AlgEquiv.ofRingEquiv (f := e.toRingEquiv) (fun _ => rfl))
     have hcompat : ∀ r, e (algebraMap R (Localization.Away g) r) = algebraMap R (Sec s W.1) r := by
@@ -785,7 +785,7 @@ theorem chart_inf (hs : IsSeparated s) (U V : Chart s) : ∃ W : Chart s, W.1.1 
 theorem bas_le (U : X.affineOpens) : ⊤ ≤ (bas s U).x ⁻¹ᵁ U.1 := U.2.fromSpec_preimage_self.ge
 
 theorem bas_inN (U : Chart s) : InN κ (bas s U.1) := by
-  haveI : Module.Flat R (Sec s U.1.1) := U.2.1
+  have : Module.Flat R (Sec s U.1.1) := U.2.1
   obtain ⟨δ, hδ⟩ := flatExt R (Sec s U.1.1) I κ
   refine ExtDP.of_eq (κ := κ) δ (bot_sup_eq _).symm ⟨by simp, fun {n} a ha => ?_⟩ hδ
   rw [Ideal.mem_bot] at ha

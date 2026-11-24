@@ -161,7 +161,7 @@ private theorem loc (hU : UnramifiedOrthogonality) (hr : 0 < r) {A : ValuationSu
       ∃ b : Dec (F := F) A → ZMod (l ^ r), Continuous b ∧ ∀ g h : Dec (F := F) A,
         ((cycMod F Ω l r g : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)) * b h - b (g * h) + b g = f g * x h)
     (τ : Dec (F := F) A) (hτ : τ.1 ∈ Ine (F := F) A) : f τ = 0 := by
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   let ρ : Representation (ZMod (l ^ r)) (Dec (F := F) A) (ZMod (l ^ r)) := 1
   let χ := (cycMod F Ω l r).comp (Dec (F := F) A).subtype
   have hc : ContAction ρ := continuous_snd
@@ -193,7 +193,7 @@ private theorem gen {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)} (
     (hφ : IsFrob (F := F) A (normV v) φ) {B : Type} [AddCommGroup B] (d : Dec (F := F) A → B) (hd : IsLocallyConstant d)
     (hm : ∀ g h, d (g * h) = d g + d h) (hI : ∀ g : Dec (F := F) A, g.1 ∈ Ine (F := F) A → d g = 0)
     (h0 : d ⟨φ, hφ.1⟩ = 0) (g : Dec (F := F) A) : d g = 0 := by
-  haveI : IsGalois F Ω := {}
+  have : IsGalois F Ω := {}
   have h1 : d 1 = 0 := by simpa using hm 1 1
   let K : Subgroup (Dec (F := F) A) :=
     { carrier := {u | d u = 0}
@@ -206,7 +206,7 @@ private theorem gen {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 F)} (
         rw [mul_inv_cancel, h1, hx, zero_add] at this
         exact this.symm }
   have hK : IsClosed ((K.map (Dec (F := F) A).subtype : Subgroup (G F Ω)) : Set (G F Ω)) :=
-    (isClosed_Dec A).isClosedMap_subtype_val _ (hd.isClosed_fiber 0)
+    (isClosed_Dec A).isClosedMap_subtypeVal _ (hd.isClosed_fiber 0)
   have key := ProfiniteGrp.closedSubgroup_eq_sInf_open (G := G F Ω) ⟨K.map (Dec (F := F) A).subtype, hK⟩
   have h2 : Dec (F := F) A ≤ K.map (Dec (F := F) A).subtype := by
     refine le_trans (le_sInf ?_) key.ge
@@ -248,7 +248,7 @@ private theorem ns_le {B : Type} [CommRing B] (S : Set (HeightOneSpectrum (𝓞 
         have := map_mul α x x⁻¹
         rw [mul_inv_cancel, map_one, hx.2.1, one_mul] at this
         exact this.symm, c2 _ hx.2.2.1, n2 _ hx.2.2.2⟩ }
-  haveI : K.Normal := ⟨fun u hu g => ⟨by rw [map_mul, map_mul, hu.1, mul_one, ← map_mul, mul_inv_cancel, map_one],
+  have : K.Normal := ⟨fun u hu g => ⟨by rw [map_mul, map_mul, hu.1, mul_one, ← map_mul, mul_inv_cancel, map_one],
     by rw [map_mul, map_mul, hu.2.1, mul_one, ← map_mul, mul_inv_cancel, map_one], c3 g u hu.2.1 hu.2.2.1,
     n3 g u (hb u hu.1 hu.2.1) hu.2.2.2⟩⟩
   have hcl : IsClosed (K : Set (G F Ω)) :=
@@ -274,8 +274,8 @@ private theorem locq (hU : UnramifiedOrthogonality) (hr : 0 < r) {A : ValuationS
   intro g hg τ hτ
   obtain ⟨b, hb, hb'⟩ := hb
   obtain ⟨σ, hσ⟩ := exists_isFrob (F := F) hA
-  have hc' : IsLocallyConstant fun g : Dec (F := F) A => c g := hc.comp_continuous continuous_subtype_val
-  have hn' : IsLocallyConstant fun g : Dec (F := F) A => n g := hn.comp_continuous continuous_subtype_val
+  have hc' : IsLocallyConstant fun g : Dec (F := F) A => c g := hc.comp_continuous continuous_subtypeVal
+  have hn' : IsLocallyConstant fun g : Dec (F := F) A => n g := hn.comp_continuous continuous_subtypeVal
   refine gen hA hσ (fun g => lam (n τ * c g)) (hc'.comp fun z => lam (n τ * z))
     (fun g h => by rw [← map_add (f := _), ← mul_add, ← cc]; rfl) (fun g hg => by rw [hI _ hg, mul_zero, map_zero]) ?_ ⟨g, hg⟩
   refine loc hU hr hA hl (fun g => lam (n g * c σ)) (hn'.comp fun z => lam (z * c σ)).continuous (fun g h => ?_)
@@ -348,11 +348,11 @@ private theorem core (hPT : PoitouTateDuality) (hU : UnramifiedOrthogonality) {�
   let Av : S → ValuationSubring Ω := fun v => if v.1 = v₀ then A₀ else placeOf Ω v.1
   have hAv : ∀ v, IsPlaceOver (Av v) v.1 := fun v => by
     by_cases h : v.1 = v₀
-    · simp only [Av, if_pos h]
+    · simp only [Av, ite_eq_left h]
       rw [h]; exact hv₀
-    · simp only [Av, if_neg h]
+    · simp only [Av, ite_eq_right h]
       exact isPlaceOver_placeOf Ω v.1
-  have hA0 : Av ⟨v₀, h₀⟩ = A₀ := if_pos rfl
+  have hA0 : Av ⟨v₀, h₀⟩ = A₀ := ite_eq_left rfl
   have hχ : ∀ g z, ((cycMod ℚ Ω l r g : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)) * lam z = lam (α g * β g * z) := fun g z => by
     rw [hαβ, hlam]
   have hNS := ns_le (S : Set (HeightOneSpectrum (𝓞 ℚ))) φ α β hαβ hα c n hc hn cc cn (fun v hv h => hv (hlS v h))
@@ -371,7 +371,7 @@ private theorem core (hPT : PoitouTateDuality) (hU : UnramifiedOrthogonality) {�
       have h1 : ¬ Over (Av v) q := fun h => hv (Subtype.ext (place_eq hq ((over_iff (hAv v) _).1 h) hq₀))
       obtain ⟨m, hm⟩ := hcob (Av v) (((hmul _ _ _).1 ((over_iff (hAv v) _).2 ((hmem _).1 v.2))).resolve_right h1) h1
       refine ⟨fun g => -lam (n g * (α g * m)),
-        (((hn.mul (hα.comp (· * m))).comp fun z => -lam z).comp_continuous continuous_subtype_val).continuous,
+        (((hn.mul (hα.comp (· * m))).comp fun z => -lam z).comp_continuous continuous_subtypeVal).continuous,
         fun g h => ?_⟩
       beta_reduce
       rw [mul_neg, hχ, ← map_neg, ← map_neg, ← map_neg, ← map_sub, ← map_add (f := _), hm h h.2, Subgroup.coe_mul, cn, map_mul α]
@@ -395,7 +395,7 @@ theorem UpperTheory.V.ML.recip :
   have hdvd : a ∣ ((l ^ (r₀ + 1) : ℕ) : O) := by
     rw [← hw, Nat.cast_smul_eq_nsmul, pow_succ', mul_smul, hr₀, smul_zero]
   generalize hr : r₀ + 1 = r at hdvd
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   let B := O ⧸ Ideal.span {a}
   let mk : O →+* B := Ideal.Quotient.mk _
   have hmk : ∀ u v : O, mk u = mk v ↔ a ∣ u - v := fun u v => Ideal.Quotient.eq.trans Ideal.mem_span_singleton
@@ -444,7 +444,7 @@ theorem UpperTheory.V.ML.recip :
   have hny : n' τ = mk y := hinj (by rw [hn', hy, hι])
   rw [← hc', ← hιm, ← hny]
   by_contra hne
-  letI : Algebra (ZMod (l ^ r)) B := φ.toAlgebra
+  let : Algebra (ZMod (l ^ r)) B := φ.toAlgebra
   obtain ⟨lam, -, hlam⟩ := KStar.Selmer.exists_form_ne_zero (N := l ^ r) (⊥ : Submodule (ZMod (l ^ r)) B)
     (z := n' τ * c' g) fun h => hne (by rw [(Submodule.mem_bot _).1 h, map_zero])
   refine hlam (core hPT hU hl (hr ▸ r₀.succ_pos) φ lam.toAddMonoidHom (fun k z => map_smul lam k z) α' β' hαβ hlc hN hlN
@@ -474,8 +474,8 @@ private theorem primRam_lift (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure 
     (A : ValuationSubring Ω) (hA : A.valuation (r : Ω) < 1) (u : (ZMod N)ˣ)
     (hu : u ∈ (ZMod.unitsMap (Nat.ordCompl_dvd N r)).ker) :
     ∃ σ ∈ Ine (F := ℚ) A, Chr.cls ℚ Ω N σ = u := by
-  haveI : Fact r.Prime := ⟨hr⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Fact r.Prime := ⟨hr⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨v, hv⟩ := KStar.TotallyRealRoots.redPow_surjective (l := r) (N.factorization r)
     (ZMod.unitsMap (Nat.ordProj_dvd N r) u)
   obtain ⟨σ, hσ, hσv⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω r A hA v
@@ -494,8 +494,8 @@ private theorem primRam_lift (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure 
 
 private theorem primRam_l (l : ℕ) [Fact l.Prime] (c : HV.Coef l) : ¬ IsUnit (l : c.O) := by
   intro hu
-  haveI := c.fin
-  haveI : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
+  have := c.fin
+  have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
   have hker : RingHom.ker (algebraMap ℤ_[l] c.O) ≤ IsLocalRing.maximalIdeal ℤ_[l] :=
     IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _)
   obtain ⟨Q, hQ, hQc⟩ :=
@@ -508,7 +508,7 @@ private theorem primRam_l (l : ℕ) [Fact l.Prime] (c : HV.Coef l) : ¬ IsUnit (
 
 private theorem primRam_unit (l : ℕ) [Fact l.Prime] (c : HV.Coef l) (n : ℕ) (hn : ¬ l ∣ n) (x : c.O) (hx : x ^ n = 1)
     (h1 : x ≠ 1) : IsUnit (x - 1) := by
-  haveI := c.dvr
+  have := c.dvr
   by_contra hne
   have hm : x - 1 ∈ IsLocalRing.maximalIdeal c.O := (IsLocalRing.mem_maximalIdeal _).2 hne
   have hsum : ∑ i ∈ Finset.range n, x ^ i = 0 := by
@@ -557,7 +557,7 @@ theorem UpperTheory.V.ML.primRam :
     (∀ A : ValuationSubring Ω, Over A f → ∃ g ∈ Ine (F := ℚ) A, IsUnit (((Chr.dirG ℚ Ω ψ g : c.Oˣ) : c.O) - 1)) ∧
     (∀ A : ValuationSubring Ω, ¬ Over A f → ∀ g ∈ Ine (F := ℚ) A, Chr.dirG ℚ Ω ψ g = 1) ∧ ∀ g : G ℚ Ω, Chr.dirG ℚ Ω ψ g ≠ 1 → IsUnit (((Chr.dirG ℚ Ω ψ g : c.Oˣ) : c.O) - 1) := by
   intro Ω _ inst _ l _ c f _ ψ hprim hord
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain rfl : inst = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   have hpb := placeBasic Ω
   have hC : ∀ g : G ℚ Ω, Chr.dirG ℚ Ω ψ g ≠ 1 →
@@ -583,7 +583,7 @@ theorem UpperTheory.V.ML.primRam :
         Nat.div_lt_self (Nat.pos_of_ne_zero (NeZero.ne f))
           (Nat.one_lt_pow (hr.factorization_pos_of_dvd (NeZero.ne f) hrf).ne' hr.one_lt)
       exact absurd (Nat.le_of_dvd hpos hdvd) (not_le.2 hlt)
-    obtain ⟨u, hu, hψu⟩ := SetLike.not_le_iff_exists.mp hsub
+    obtain ⟨u, hu, hψu⟩ := IsConcreteLE.not_le_iff_exists.mp hsub
     obtain ⟨σ, hσ, hσu⟩ := primRam_lift Ω f r hr A hAr u hu
     refine ⟨σ, hσ, hC σ ?_⟩
     show MulChar.toUnitHom ψ (Chr.cls ℚ Ω f σ) ≠ 1
@@ -609,9 +609,9 @@ private theorem rat_pow {l : ℕ} (hl : Odd l) (a : ℚˣ) (h : ∀ v : HeightOn
     ∃ y : ℚ, (a : ℚ) = y ^ l := by
   have hl0 : l ≠ 0 := hl.pos.ne'
   have h1 := (Kum.radClKer ℚ ∅ l hl0 a fun v _ => h v).1 (by
-    haveI : IsPrincipalIdealRing (𝓞 ℚ) :=
+    have : IsPrincipalIdealRing (𝓞 ℚ) :=
       IsPrincipalIdealRing.of_surjective Rat.ringOfIntegersEquiv.symm Rat.ringOfIntegersEquiv.symm.surjective
-    haveI : Subsingleton (ClassGroup (𝓞 ℚ)) :=
+    have : Subsingleton (ClassGroup (𝓞 ℚ)) :=
       (@Fintype.card_le_one_iff_subsingleton _ (_)).1 (card_classGroup_eq_one (R := 𝓞 ℚ)).le
     rw [Subsingleton.elim (Kum.radCl l a) 1]; exact one_mem _)
   obtain ⟨u, hu, _, ⟨b, rfl⟩, rfl⟩ := Subgroup.mem_sup.1 h1
@@ -677,8 +677,8 @@ private theorem kum {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
 
 private theorem cyc_nat {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (g : G ℚ Ω) :
     ∃ n : ℕ, (∀ x : Ω, x ^ l = 1 → g x = x ^ n) ∧ (l : ℤ_[l]) ∣ (cycZ ℚ Ω l g : ℤ_[l]) - n := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   refine ⟨(PadicInt.toZModPow 1 (cycZ ℚ Ω l g : ℤ_[l])).val, fun x hx =>
     cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (G ℚ Ω) Ω g) x (by rwa [pow_one]), ?_⟩
   rw [← Ideal.mem_span_singleton, ← pow_one (l : ℤ_[l]), ← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub,
@@ -706,10 +706,10 @@ private theorem sht_pi {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
     (n : G ℚ Ω → ℕ) (hn : ∀ (g : G ℚ Ω) (x : Ω), x ^ l = 1 → g x = x ^ n g) (hα : ∀ g, π ∣ (α g : O) - n g)
     (A₀ : ValuationSubring Ω) (hA₀ : Over A₀ l) (t : G ℚ Ω) (ht : t ∈ Ine (F := ℚ) A₀) (ht1 : (n t : ZMod l) ≠ 1)
     (hu : IsUnit ((α t : O) - 1)) (a : O) (c : G ℚ Ω → W) (hc : c ∈ ShT W α t l a) (h0 : π • c = 0) : c = 0 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hp : l.Prime := Fact.out
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   obtain ⟨⟨h1, h2⟩, h3, -, h4, h5⟩ := hc
   obtain ⟨m, -, hm⟩ := h5 A₀ hA₀
   have hm0 : m = 0 := by
@@ -743,8 +743,8 @@ theorem UpperTheory.V.ML.exc :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O], l ≠ 2 → ∀ α : G ℚ Ω →* Oˣ, (∀ g, ¬ IsUnit ((α g : O) - (chiO ℚ Ω l O g : O))) →
     (∀ A : ValuationSubring Ω, ¬ Over A l → ∀ g ∈ Ine (F := ℚ) A, α g = 1) → ShaU (twist₂ l α) l (⊤ : Subgroup (G ℚ Ω)) = ⊥ := by
   intro Ω _ _ _ l _ O _ _ _ _ _ hl2 α hα hun
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hp : l.Prime := Fact.out
   have hl : Odd l := hp.odd_of_ne_two hl2
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
@@ -761,13 +761,13 @@ theorem UpperTheory.V.ML.exc :
   obtain ⟨A₀, hA₀⟩ := (placeBasic Ω).1 l hp
   obtain ⟨t, ht, htl⟩ := (ineTau Ω l hp).1 A₀ hA₀ (-1)
   have ht1 : (n t : ZMod l) ≠ 1 := fun e => by
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
     have h3 := (hn t ζ hζ.pow_eq_one).symm.trans (htl ζ hζ.pow_eq_one)
     rw [pow_eq_pow_mod _ hζ.pow_eq_one] at h3
     have h4 := hζ.pow_inj (Nat.mod_lt _ hl.pos) (ZMod.val_lt _) h3
     rw [← ZMod.val_natCast, e] at h4
     have h5 := ZMod.val_injective l h4
-    haveI : Fact (2 < l) := ⟨lt_of_le_of_ne hp.two_le hl2.symm⟩
+    have : Fact (2 < l) := ⟨lt_of_le_of_ne hp.two_le hl2.symm⟩
     exact ZMod.neg_one_ne_one (by simpa using h5.symm)
   have hu : IsUnit ((α t : O) - 1) := by
     by_contra hnu
@@ -821,7 +821,7 @@ private theorem th_eq (F b : ℕ) [NeZero F] (t : ZMod F) (ht : t ≠ 0) (hy : (
   have h3 : F * ((-t).val * b / F) + (-t).val * b % F = (-t).val * b := Nat.div_add_mod _ _
   have h4 : (-t).val * b % F < F := Nat.mod_lt _ hF
   have h5 : (-t).val + t.val = F := by
-    rw [ZMod.neg_val, if_neg ht]
+    rw [ZMod.neg_val, ite_eq_right ht]
     have := ZMod.val_lt t
     omega
   rw [← h1] at h2
@@ -879,7 +879,7 @@ private theorem pointwise (F e b : ℕ) [NeZero F] (t : ZMod F) (ht : t ≠ 0) (
 private theorem genB_units {R : Type} [CommRing R] [Algebra ℚ R] {F : ℕ} [NeZero F] (hF : 1 < F) (k : ℕ)
     (χ : DirichletCharacter R F) :
     Bern.genB k (χ : ZMod F → R) = ∑ t : (ZMod F)ˣ, χ t * algebraMap ℚ R (Bern.bcoef F k (t : ZMod F).val) := by
-  haveI : Fact (1 < F) := ⟨hF⟩
+  have : Fact (1 < F) := ⟨hF⟩
   have h1 : Bern.genB k (χ : ZMod F → R) = ∑ t : ZMod F, χ t * algebraMap ℚ R (Bern.bcoef F k t.val) := by
     rw [← Bern.b_sumicc (fun x : ZMod F => χ x * algebraMap ℚ R (Bern.bcoef F k x.val)), Bern.genB]
     refine Finset.sum_congr rfl fun a ha => ?_
@@ -909,7 +909,7 @@ theorem UpperTheory.V.ML.zCong :
   intro l hl F m e b _ hm h1m _ hb χ _
   have hF : 1 < F := lt_of_lt_of_le (Nat.one_lt_pow (by omega) hl.out.one_lt)
     (Nat.le_of_dvd (Nat.pos_of_ne_zero (NeZero.ne F)) hm)
-  haveI : Fact (1 < F) := ⟨hF⟩
+  have : Fact (1 < F) := ⟨hF⟩
   set u : (ZMod F)ˣ := ZMod.unitOfCoprime b hb with hu
   have hub : (u : ZMod F) = b := ZMod.coe_unitOfCoprime b hb
   have g1 := genB_units hF (e + 1) χ
@@ -963,7 +963,7 @@ private theorem ze_norm {l : ℕ} [Fact l.Prime] (c : HV.Coef l) :
   obtain ⟨hinj, -, -, -, -, h0, hfin, -, -⟩ := dvrFacts l c.O
   have hE : (eO l c.O).toNat ≠ 0 := by
     rw [Ne, ENat.toNat_eq_zero, not_or]
-    exact ⟨h0, ne_top_of_le_ne_top (ENat.coe_ne_top _) hfin⟩
+    exact ⟨h0, ne_top_of_le_ne_top (ENat.natCast_ne_top _) hfin⟩
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   have hl0 : (0 : ℝ) < (l : ℝ)⁻¹ := by positivity
   have hl1 : (l : ℝ)⁻¹ < 1 := inv_lt_one_of_one_lt₀ hl
@@ -987,7 +987,7 @@ private theorem ze_norm {l : ℕ} [Fact l.Prime] (c : HV.Coef l) :
       rw [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]; exact hx
     have a2 : IsDiscreteValuationRing.addVal c.O y ≠ ⊤ := by
       rw [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]; exact hy
-    rw [← ENat.coe_toNat a1, ← ENat.coe_toNat a2]
+    rw [← ENat.natCast_toNat a1, ← ENat.natCast_toNat a2]
     exact_mod_cast h1
 
 private theorem ze_chi {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O]
@@ -996,7 +996,7 @@ private theorem ze_chi {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
   have h1 : g ζ = ζ ^ (PadicInt.toZModPow m ((cycZ ℚ Ω l g : ℤ_[l]ˣ) : ℤ_[l])).val :=
     cyclotomicCharacter.spec l g.toRingEquiv ζ hζ.pow_eq_one
   have h2 : g ζ = ζ ^ k := hg ζ (by obtain ⟨d, rfl⟩ := h; rw [pow_mul, hζ.pow_eq_one, one_pow])
@@ -1316,8 +1316,8 @@ private theorem prim_case (hR : Rec) (Ω : Type) [Field Ω] [Algebra ℚ Ω] [Is
     (hp : ψ.IsPrimitive) (ho : ¬ l ∣ orderOf ψ) (hs : ψ (-1) = (-1) ^ (e + 1)) (a : c.O)
     (ha : (a : PadicAlgCl l) = alN (e + 1) (ψ.ringHomComp c.O.val.toRingHom)) :
     Chr.V l e (Chr.dirG ℚ Ω ψ) ≤ IsDiscreteValuationRing.addVal c.O a := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hl2 : ¬ l ∣ 2 := by
     intro h
     exact h2 ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).mp h)
@@ -1394,8 +1394,8 @@ private theorem lev_case (hR : Rec) (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
     (hs : DirichletCharacter.changeLevel h φ (-1) = (-1) ^ (e + 1)) (a : c.O)
     (ha : (a : PadicAlgCl l) = alN (e + 1) ((DirichletCharacter.changeLevel h φ).ringHomComp c.O.val.toRingHom)) :
     Chr.V l e (Chr.dirG ℚ Ω (DirichletCharacter.changeLevel h φ)) ≤ IsDiscreteValuationRing.addVal c.O a := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hG : Chr.dirG ℚ Ω (DirichletCharacter.changeLevel h φ) = Chr.dirG ℚ Ω φ := by
     unfold Chr.dirG
     rw [DirichletCharacter.changeLevel_toUnitHom, MonoidHom.comp_assoc, (Chr.clsFacts ℚ Ω N).2.1 f h]
@@ -1428,7 +1428,7 @@ theorem UpperTheory.V.ML.vChar :
     Rec → ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (c : HV.Coef l), l ≠ 2 → ∀ (N : ℕ) [NeZero N] (ψ : DirichletCharacter c.O N) (e : ℕ), 1 ≤ e → ¬ l ∣ orderOf ψ → ψ (-1) = (-1) ^ (e + 1) →
     ∀ a : c.O, (a : PadicAlgCl l) = alN (e + 1) (ψ.ringHomComp c.O.val.toRingHom) → Chr.V l e (Chr.dirG ℚ Ω ψ) ≤ IsDiscreteValuationRing.addVal c.O a := by
   intro hR Ω _ _ _ l _ c h2 N _ ψ e he ho hs a ha
-  haveI : NeZero ψ.conductor := ⟨ψ.conductor_ne_zero⟩
+  have : NeZero ψ.conductor := ⟨ψ.conductor_ne_zero⟩
   have key := lev_case hR Ω l c h2 ψ.conductor N ψ.conductor_dvd_level ψ.primitiveCharacter e he
     ψ.primitiveCharacter_isPrimitive
   rw [DirichletCharacter.changeLevel_primitiveCharacter] at key
@@ -1448,7 +1448,7 @@ open scoped nonZeroDivisors Pointwise
 theorem UpperTheory.V.ML.psiOf :
     Rec → PsiBound := by
   intro hR E Ω _ _ _ _ _ _ _ _ _ _ N _ ρ hρ l _ hl2 hlE O _ _ e he ψ hodd a ha
-  haveI : IsGalois ℚ E := inferInstance
+  have : IsGalois ℚ E := inferInstance
   let c : HV.Coef l := ⟨O, inferInstance, inferInstance⟩
   let ψ' : DirichletCharacter (↥c.O) N := MulChar.ofUnitHom (ψ.comp ρ)
   have hcomp : MulChar.ringHomComp ψ' c.O.val.toRingHom = chiOf ρ ψ := by
@@ -1485,7 +1485,7 @@ theorem UpperTheory.V.ML.psiOf :
     ext σ
     simp [Chr.dirG, ψ', hρσ]
   obtain ⟨_, hopen, hidx⟩ := galEmbTop ℚ E Ω
-  haveI : (galOf ℚ E Ω).Normal := by
+  have : (galOf ℚ E Ω).Normal := by
     rw [← hker]
     infer_instance
   have hle : galOf ℚ E Ω ≤ (ψ.comp (AlgEquiv.restrictNormalHom E)).ker := by

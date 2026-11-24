@@ -90,7 +90,7 @@ theorem dualMat_apply {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O
 
 theorem continuous_dualMat {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i))
     (hM : Continuous fun g => M g) : Continuous (dualMat i w hw M) := by
-  haveI := isTopRing i w hw
+  have := isTopRing i w hw
   exact GlobalTheory.TateDualX.continuous_dualTw _ _ (GlobalTheory.TateDualX.continuous_cyc D i w hw)
     (GlobalTheory.PotDual.continuous_loc D i w hw M hM)
 
@@ -153,12 +153,12 @@ theorem isDualLat1_dual : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
       (y : Fin k → Br.LL D.nbr i w hw) = y a
     simp [GlobalTheory.BKLatticeCochain.incl_apply, dotProduct, Pi.single_apply,
       apply_ite (algebraMap (Br.OLL D.nbr i w hw) (Br.LL D.nbr i w hw))]
-    exact (Finset.sum_ite_eq' _ _ _).trans (if_pos (Finset.mem_univ a))
+    exact (Finset.sum_ite_eq' _ _ _).trans (ite_eq_left (Finset.mem_univ a))
 
 theorem isCrys_dual : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → ∀ (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : w ∈ placesOver D.host.E (D.nd.l i)) {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i)) (hM : Continuous fun g => M g) (K' : FinExt (D.nd.l i)) (h : (D.nbr i w hw).Kw.1 ≤ K'.1), IsCrys ((D.loc (D.nd.l i)).PD K') ((GlobalTheory.Pass.LocDirect.ModuleGaloisRepresentation i w hw M hM).ρ.comp (Subgroup.inclusion (GK_le h))) → IsCrys ((D.loc (D.nd.l i)).PD K') ((GlobalTheory.Pass.LocDirect.Udual i w hw M hM).ρ.comp (Subgroup.inclusion (GK_le h))) := by
   intro D hF i w hw k M hM K' h hcrys
-  haveI := isTopRing i w hw
-  have hi : Continuous (Subgroup.inclusion (GK_le h)) := continuous_subtype_val.subtype_mk _
+  have := isTopRing i w hw
+  have hi : Continuous (Subgroup.inclusion (GK_le h)) := continuous_subtypeVal.subtype_mk _
   have hU : Continuous ((Br.loc D.nbr i w hw M).comp (Subgroup.inclusion (GK_le h))) :=
     (GlobalTheory.PotDual.continuous_loc D i w hw M hM).comp hi
   have hU' : Continuous ((dualMat i w hw M).comp (Subgroup.inclusion (GK_le h))) :=
@@ -167,7 +167,7 @@ theorem isCrys_dual : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → ∀ (i : 
       Br.LL D.nbr i w hw) = ((cycLL (Br.PD D.loc D.nbr i w hw) (Br.LL D.nbr i w hw)
         (Subgroup.inclusion (GK_le h) g) : (Br.LL D.nbr i w hw)ˣ) : Br.LL D.nbr i w hw) := by
     intro g
-    simp only [cycLL, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [cycLL, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
     congr 1
     rw [(D.loc (D.nd.l i)).PD_χ, Br.PD, (D.loc (D.nd.l i)).PD_χ]
     rfl
@@ -205,7 +205,7 @@ theorem latDual_bounded {D : D7} (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.h
     (hw : w ∈ placesOver D.host.E (D.nd.l i)) {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i))
     (hM : Continuous fun g => M g) (y : Br.G D.nbr i w hw → (Udual i w hw M hM).V) (hy : Continuous y) :
     ∃ m : Br.OLL D.nbr i w hw, m ≠ 0 ∧ ∀ g, m • y g ∈ (latDual i w hw M hM).T := by
-  haveI : CompactSpace (Br.G D.nbr i w hw) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK _
+  have : CompactSpace (Br.G D.nbr i w hw) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK _
   obtain ⟨N, hN⟩ := GlobalTheory.BlochKatoIntegralScalars.exists_pow_mul_mem_OL (D.nbr i w hw).LL
     (m := k) y hy
   refine ⟨(D.nd.l i : Br.OLL D.nbr i w hw) ^ N, ?_, fun g => ?_⟩
@@ -226,9 +226,9 @@ theorem dualLat_rank : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → admBK (D
     hPDR (D.nd.l i) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL h (Udual i w hw M hM) hcrys'
   have hle := GlobalTheory.Pass.RankDeRham.finrank_H1f_le (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw
     (D.nbr i w hw).LL hdeg (hBK (D.nd.l i) _) (Udual i w hw M hM) hdR
-  haveI : IsFractionRing (Br.OLL D.nbr i w hw) (Br.LL D.nbr i w hw) :=
+  have : IsFractionRing (Br.OLL D.nbr i w hw) (Br.LL D.nbr i w hw) :=
     (goodO_ringOfIntegers (D.nd.l i) (D.nbr i w hw).LL).1.2.2
-  haveI : IsDomain (Br.OLL D.nbr i w hw) := inferInstance
+  have : IsDomain (Br.OLL D.nbr i w hw) := inferInstance
   rw [finrank_H1fT_eq (Br.PD D.loc D.nbr i w hw) (Udual i w hw M hM) (latDual i w hw M hM) (latDual_bounded i w hw M hM)]
   refine hle.trans (le_of_eq ?_)
   exact Module.finrank_fin_fun _
@@ -478,7 +478,7 @@ theorem loc_eq_map {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i)
       (mapM (toK D.nd i) M ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd)).map (Br.toLLK (D.nbr i w hw)) := by
   ext a b
   simp only [Br.loc, Br.locM, Br.locO, mapM, MonoidHom.coe_comp, Function.comp_apply, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply, toK]
+    MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply, toK]
   exact congrArg Subtype.val (Br.toLLK_alg (D.nbr i w hw) _).symm
 
 end GlobalTheory.Pass.LocDirect
@@ -790,7 +790,7 @@ theorem sum_crys (hAdm : FontaineAtPlacesOverL (D := D)) (K' : FinExt (D.nd.l i)
     (hpot : ∀ j, (pc (D.loc (D.nd.l i)) h hN hF hS).IsPotCrys (matRep (fam i w hw r (x j)))) :
     IsCrys ((D.loc (D.nd.l i)).PD K')
       ((sumRho (fun j : Fin a => fam i w hw r (x j)) id).comp (Subgroup.inclusion (GK_le h))) := by
-  haveI := isTopRing i w hw
+  have := isTopRing i w hw
   have hc' : ∀ (j : Fin a) (v : Fin D.R.nV → Br.LL D.nbr i w hw),
       Continuous fun g => ((fam i w hw r (x j)).comp (Subgroup.inclusion (GK_le h)) g).mulVec v :=
     fun j v => ((hc j).comp (continuous_inclusion (GK_le h))).matrix_mulVec continuous_const
@@ -816,7 +816,7 @@ theorem pushoutCocycle_mem_blochKatoSelmer (hAdm : FontaineAtPlacesOverL (D := D
         algebraMap ↥(K0 K') (D.loc (D.nd.l i)).R.B c')
     (hpot : ∀ j, (pc (D.loc (D.nd.l i)) h hN hF hS).IsPotCrys (matRep (fam i w hw r (x j)))) :
     cocY i w hw r x hc Y hst E hE ∈ finiteCocycles (Br.PD D.loc D.nbr i w hw) (Xgrep i w hw r x hc Y hst).ρ := by
-  haveI := isTopRing i w hw
+  have := isTopRing i w hw
   have hF' := hAdm (D.nd.l i) K' (D.nbr i w hw).LL
   exact GlobalTheory.Pass.FinDesc.main (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL h hN hF
     (fun A₀ A₁ A₂ ι π h1 h2 h3 h4 h5 hA =>
@@ -867,7 +867,7 @@ theorem loc_eq_map {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i)
       (mapM (toK D.nd i) M ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd)).map (Br.toLLK (D.nbr i w hw)) := by
   ext a b
   simp only [Br.loc, Br.locM, Br.locO, mapM, MonoidHom.coe_comp, Function.comp_apply, RingHom.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, RingHom.mapMatrix_apply, Matrix.map_apply, toK]
+    MonoidHom.coe_ofClass, RingHom.mapMatrix_apply, Matrix.map_apply, toK]
   exact congrArg Subtype.val (Br.toLLK_alg (D.nbr i w hw) _).symm
 
 theorem main : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → ∀ (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))), GoodR D.nd i r → ∀ (Xs : Set (D.nd.X i)) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : w ∈ placesOver D.host.E (D.nd.l i)) (n : ℕ), PotFam i w hw (fun x : ↥Xs => rTwO D.nd i r x) n → ∀ {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i)), SubTw i r Xs M → ∀ (hM : Continuous fun g => M g), ∃ (K' : FinExt (D.nd.l i)) (h : (D.nbr i w hw).Kw.1 ≤ K'.1), IsCrys ((D.loc (D.nd.l i)).PD K') ((GlobalTheory.Pass.LocDirect.ModuleGaloisRepresentation i w hw M hM).ρ.comp (Subgroup.inclusion (GK_le h))) := by
@@ -875,12 +875,12 @@ theorem main : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → ∀ (i : D.nd.Lo
   obtain ⟨K', h, hN, hFi, hS, Sig, Fr, -, -, -, -, hx⟩ := hP
   obtain ⟨-, x₀, hx₀, j, hjinj, hjeq⟩ := hSub
   refine ⟨K', h, ?_⟩
-  haveI := GlobalTheory.Pass.LocDirect.isTopRing i w hw
+  have := GlobalTheory.Pass.LocDirect.isTopRing i w hw
   have hcont := (GlobalTheory.Pass.FamCont.stepCont D i r hr x₀).1
   have hc1 : Continuous (Br.loc D.nbr i w hw (rTwO D.nd i r x₀)) :=
     GlobalTheory.PotDual.continuous_loc D i w hw _ hcont
   have hinc : Continuous (Subgroup.inclusion (GK_le h)) :=
-    Continuous.subtype_mk continuous_subtype_val _
+    Continuous.subtype_mk continuous_subtypeVal _
 
   have hpc := (hx ⟨x₀, hx₀⟩).1
   have hcr := ((GlobalTheory.PcRes.main (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL h hN hFi hS

@@ -329,8 +329,8 @@ theorem actB_le : ∀ j : (pullExt f E).ChartIdx,
       (lift (fst (splitTorus S' (pullExt f E).X) ((Over.pullback f).obj G) ≫ iB f E.X d.i)
           (snd (splitTorus S' (pullExt f E).X) ((Over.pullback f).obj G)) ≫
         μ[(Over.pullback f).obj G]).left ⁻¹ᵁ ((qB f d.q).left ⁻¹ᵁ (pullExt f E).chart j) := by
-  haveI := d.q_hom
-  haveI : IsMonHom (qB f d.q) :=
+  have := d.q_hom
+  have : IsMonHom (qB f d.q) :=
     isMonHom_of_grpPullback (isGrpPullback_pullback G f) (isGrpPullback_pullback E.B f) d.q
       (qB f d.q) (qB_h f d.q)
   intro j

@@ -185,7 +185,7 @@ theorem sFam_of_dvd : ∀ (h n N : ℕ) (o : Type) [CommRing o] [IsNoetherianRin
     X := S₁
     s := π ≫ F.s
     smooth := by
-      haveI := F.smooth
+      have := F.smooth
       have := smoothOfRelativeDimension_comp 0 (h * (h + 1) / 2) π F.s
       rwa [zero_add] at this
     qproj := _root_.GlobalTheory.isQProjOver_comp_of_isFinite_noetherian o _ _ π F.s hfin F.qproj
@@ -268,7 +268,7 @@ theorem exists_sFam_cycAway : ∀ g n : ℕ, 1 ≤ g → 3 ≤ n → Odd n → N
   obtain ⟨i, hi, hz, -⟩ := _root_.GlobalTheory.SiegelTor.exists_inclusion_cycAway k (n * k) hN0 (dvd_mul_left k n)
   obtain ⟨F₂⟩ := GlobalTheory.SiegelFamilyNumberField.nonempty_baseChange F i hi
   rw [hz] at F₂
-  haveI : IsDedekindDomain (cycAway (n * k)) := (arBase_cycAway (n * k) hN0).1
+  have : IsDedekindDomain (cycAway (n * k)) := (arBase_cycAway (n * k) hN0).1
   have hup : Nonempty (SFam g (n * k) ((cycBase hN0).ζ : cycAway (n * k))) :=
     _root_.GlobalTheory.SiegLev.sFam_of_dvd g k (n * k) (cycAway (n * k)) (cycBase hN0) hk3 hNodd (dvd_mul_left k n)
       (by rw [cycBase_ζ]; exact ⟨F₂⟩)

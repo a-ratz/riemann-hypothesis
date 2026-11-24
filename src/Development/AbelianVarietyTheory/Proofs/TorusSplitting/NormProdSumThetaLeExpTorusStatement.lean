@@ -161,7 +161,7 @@ theorem norm_prod_sum_theta_le_exp :
     refine h1.trans (le_of_eq ?_)
     have h2 : 2 * (PT.f E : ℝ) * (X.r : ℝ) ^ 2 = ((2 * PT.f E * X.r ^ 2 : ℕ) : ℝ) := by
       push_cast; ring
-    rw [h2, Real.exp_nat_mul, Real.exp_log (by linarith)]
+    rw [h2, Real.exp_natCast_mul, Real.exp_log (by linarith)]
   have hF : (M : ℝ) * (Nc * Real.exp e) ≤
       Real.exp ((Real.log Nc + 2 * PT.f E * (X.r : ℝ) ^ 2 * Real.log r1) + e) := by
     rw [Real.exp_add _ e, Real.exp_add (Real.log Nc), Real.exp_log (by linarith)]
@@ -170,7 +170,7 @@ theorem norm_prod_sum_theta_le_exp :
           mul_le_mul_of_nonneg_right hMR (by positivity)
       _ = _ := by ring
   refine (pow_le_pow_left₀ (by positivity) hF _).trans (le_of_eq ?_)
-  rw [← Real.exp_nat_mul]
+  rw [← Real.exp_natCast_mul]
   congr 1
   have hR0 : R ≠ 0 := by linarith
   push_cast

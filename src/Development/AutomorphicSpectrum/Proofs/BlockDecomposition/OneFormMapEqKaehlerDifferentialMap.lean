@@ -67,9 +67,9 @@ theorem subsingleton_of_tensor {R : Type} [CommRing R] {Q : Type} [AddCommGroup 
   have h1 : Subsingleton (κ ⊗[R] Q) :=
     (TensorProduct.AlgebraTensorModule.cancelBaseChange R (B i) κ κ Q).symm.subsingleton
   have hpq : p.asIdeal = q.asIdeal.comap (algebraMap R (B i)) := by rw [← hq]; rfl
-  letI : Algebra p.asIdeal.ResidueField κ :=
+  let : Algebra p.asIdeal.ResidueField κ :=
     (Ideal.ResidueField.map p.asIdeal q.asIdeal (algebraMap R (B i)) hpq).toAlgebra
-  haveI : IsScalarTower R p.asIdeal.ResidueField κ := .of_algebraMap_eq fun r ↦ by
+  have : IsScalarTower R p.asIdeal.ResidueField κ := .of_algebraMap_eq fun r ↦ by
     rw [IsScalarTower.algebraMap_apply R (B i) κ]
     exact (Ideal.ResidueField.map_algebraMap p.asIdeal q.asIdeal (algebraMap R (B i)) hpq r).symm
   have h2 : Nontrivial (κ ⊗[p.asIdeal.ResidueField] (p.asIdeal.ResidueField ⊗[R] Q)) :=
@@ -101,7 +101,7 @@ theorem bijective_of_lTensor {R : Type} [CommRing R] {N M : Type} [AddCommGroup 
     ext x
     simp [r]
   have hrs : Function.Surjective r := fun x ↦ ⟨x.1, LinearMap.congr_fun hr x⟩
-  haveI : Module.Finite R (LinearMap.ker T) := Module.Finite.of_surjective r hrs
+  have : Module.Finite R (LinearMap.ker T) := Module.Finite.of_surjective r hrs
   have hK : Subsingleton (LinearMap.ker T) := subsingleton_of_tensor B hcov fun i ↦ by
     have key : ∀ x : B i ⊗[R] LinearMap.ker T, x = 0 := fun x ↦ by
       have e : (LinearMap.ker T).subtype.lTensor (B i) x = 0 := (h i).1 <| by
@@ -198,13 +198,13 @@ theorem isBaseChange_at (h : IsPullback φ s' s (spMap (algebraMap R R'))) (hP :
     (u : R' ⊗[R] GlobForm s →ₗ[R'] Ω[Sec s' (φ ⁻¹ᵁ U.1)⁄R'])
     (hu : ∀ c : GlobForm s, u (1 ⊗ₜ c) = (semiHom_secPull h.w (pairOf h U)).m1 (c.1 (op U))) :
     IsBaseChange (Sec s' (φ ⁻¹ᵁ U.1)) u := by
-  letI : Algebra (Sec s U.1) (Sec s' (φ ⁻¹ᵁ U.1)) := (CechDR.secPull s s' (pairOf h U)).toAlgebra
-  letI : Algebra R (Sec s' (φ ⁻¹ᵁ U.1)) :=
+  let : Algebra (Sec s U.1) (Sec s' (φ ⁻¹ᵁ U.1)) := (CechDR.secPull s s' (pairOf h U)).toAlgebra
+  let : Algebra R (Sec s' (φ ⁻¹ᵁ U.1)) :=
     ((algebraMap R' (Sec s' (φ ⁻¹ᵁ U.1))).comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' (Sec s' (φ ⁻¹ᵁ U.1)) := .of_algebraMap_eq fun _ ↦ rfl
-  haveI : IsScalarTower R (Sec s U.1) (Sec s' (φ ⁻¹ᵁ U.1)) :=
+  have : IsScalarTower R R' (Sec s' (φ ⁻¹ᵁ U.1)) := .of_algebraMap_eq fun _ ↦ rfl
+  have : IsScalarTower R (Sec s U.1) (Sec s' (φ ⁻¹ᵁ U.1)) :=
     .of_algebraMap_eq fun r ↦ ((semiHom_secPull h.w (pairOf h U)).map_algebraMap r).symm
-  haveI : Algebra.IsPushout R R' (Sec s U.1) (Sec s' (φ ⁻¹ᵁ U.1)) :=
+  have : Algebra.IsPushout R R' (Sec s U.1) (Sec s' (φ ⁻¹ᵁ U.1)) :=
     CommRingCat.isPushout_iff_isPushout.mp (GlobalTheory.AbLaw.isPushout_cst h U.2 rfl)
   exact isBaseChange_of_isPushout (B := Sec s U.1) (B' := Sec s' (φ ⁻¹ᵁ U.1)) (evForm (OAff s) (op U)) (hP (op U))
     (semiHom_secPull h.w (pairOf h U)) u hu

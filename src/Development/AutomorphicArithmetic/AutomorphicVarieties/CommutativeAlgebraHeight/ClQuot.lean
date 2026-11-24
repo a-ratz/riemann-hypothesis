@@ -85,13 +85,13 @@ theorem UpperTheory.V.CA.cl_quot :
     ∀ (O : Type) [CommRing O] (R : Type) [CommRing R] [Algebra O R] [IsLocalRing R] (R' : Type) [CommRing R'] [Algebra O R'] [IsLocalRing R'] (p : R →ₐ[O] R'), Function.Surjective p → IsCL O R → IsCL O R' := by
   intro O _ R _ _ _ R' _ _ _ p hp hR
   have hpr : Function.Surjective (p : R →+* R') := hp
-  haveI : IsLocalHom (p : R →+* R') := isLocalHom_of_surjective _ hpr
-  haveI := hR.noeth
-  haveI : IsNoetherianRing R' := isNoetherianRing_of_surjective R R' (p : R →+* R') hpr
-  haveI := hR.complete
+  have : IsLocalHom (p : R →+* R') := isLocalHom_of_surjective _ hpr
+  have := hR.noeth
+  have : IsNoetherianRing R' := isNoetherianRing_of_surjective R R' (p : R →+* R') hpr
+  have := hR.complete
   have hm : maximalIdeal R' = (maximalIdeal R).map (p : R →+* R') := (maximalIdeal_map_eq_of_surjective _ hpr).symm
   refine ⟨inferInstance, ?_, ?_, ?_⟩
-  · haveI : IsHausdorff (maximalIdeal R') R' := inferInstance
+  · have : IsHausdorff (maximalIdeal R') R' := inferInstance
     refine { toIsHausdorff := inferInstance, toIsPrecomplete := ⟨fun f hf => ?_⟩ }
     have hd : ∀ n, ∃ d ∈ maximalIdeal R ^ n, p d = f (n + 1) - f n := by
       intro n
@@ -151,5 +151,5 @@ theorem UpperTheory.V.CA.cl_quot :
       obtain ⟨y', rfl⟩ := IsLocalRing.residue_surjective z
       obtain ⟨y, rfl⟩ := hpr y'
       exact ⟨IsLocalRing.residue R y, IsLocalRing.ResidueField.map_residue _ _⟩
-    haveI := hR.res_fin
+    have := hR.res_fin
     exact Module.Finite.of_surjective L hL

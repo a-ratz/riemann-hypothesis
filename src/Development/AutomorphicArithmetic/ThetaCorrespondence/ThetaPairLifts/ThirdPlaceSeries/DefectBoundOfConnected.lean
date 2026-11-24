@@ -817,7 +817,7 @@ theorem exists_cmLat_rankOne (H : Host E) {p q : ℕ} (Y : FD.Data E r) (x₀ : 
       rw [hhr]
       simp only [FD.cc, map_mul, map_natCast]
       field_simp
-  · haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  · have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
     let B := basisOfLinearIndependentOfCardEqFinrank hli (by simp)
     have hB : ∀ j, B j = lam j := fun j => by simp [B]
     let Nm : Submodule (𝓞 E) D.La := LinearMap.range (∑ j, f j ∘ₗ LinearMap.proj j)
@@ -856,7 +856,7 @@ theorem exists_cmLat_unfAt_rankOne : ∀ (E : Type) [Field E] [NumberField E] [I
   obtain ⟨h1, h2, -⟩ := hU
   refine exists_cmLat_rankOne H (U.X k) x₀ hr h1 (h2 k).1 (h2 k).2 _ W.per (W.φ k) (W.isom k)
     (fun j => (W.e j).2) (fun j hj => ?_) W.pm_eq D₁ hp1 hq1 lam hL hli ho hsp
-  exact (W.e j).2.2.trans_eq (if_neg hj)
+  exact (W.e j).2.2.trans_eq (ite_eq_right hj)
 
 end GlobalTheory.LamT.CMRankOne
 end -- clump:auto
@@ -904,7 +904,7 @@ theorem dmin_frm_of_lt (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E
     simp only [Matrix.submatrix_apply, gram, Matrix.of_apply, col_frm, hermC_emb, Matrix.diagonal_apply]
     split_ifs with h
     · subst h; rfl
-    · rw [ho _ _ (by rw [Fin.coe_castLE]; exact a.isLt) (by rw [Fin.coe_castLE]; exact b.isLt)
+    · rw [ho _ _ (by rw [Fin.val_castLE]; exact a.isLt) (by rw [Fin.val_castLE]; exact b.isLt)
         (fun e => h (Fin.castLE_injective _ e)), map_zero]
   rw [this, Matrix.det_diagonal]
 
@@ -944,7 +944,7 @@ theorem gsStep_self (G : Matrix (Fin r) (Fin r) E) (v : Fin r → Fin r → E) (
   funext k
   simp only [gsStep, gsMat, true_and, mul_sub, Finset.sum_sub_distrib, Pi.sub_apply,
     Finset.sum_apply, Pi.smul_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   congr 1
   refine Finset.sum_congr rfl fun j _ => ?_
   split_ifs <;> ring
@@ -967,7 +967,7 @@ theorem gsB_mem (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (v : 
   have ht : (mat (fun (τ : Ψ) j a => τ.1 (gsMat G v m j a)) τ).BlockTriangular id := by
     intro a c hca
     simp [mat, hlow a c hca]
-  rw [Matrix.det_of_upperTriangular ht]
+  rw [Matrix.det_of_isUpperTriangular ht]
   refine Finset.prod_ne_zero_iff.2 fun a _ => ?_
   have hn : ¬ (a = m ∧ a < m) := by rintro ⟨rfl, h⟩; exact lt_irrefl _ h
   simp [mat, gsMat, hn]
@@ -979,7 +979,7 @@ theorem herm_gsStep_self (X : Data E r) (v : Fin r → Fin r → E) (hv : frm X.
   have hne := herm_self_ne X v hv m ho k hkm
   rw [gsStep_self, HermitianTraceFormVanishing.herm_sub_left, herm_sum_left,
     Finset.sum_eq_single k (fun i _ hik => ?_) (fun h => absurd (Finset.mem_univ k) h),
-    if_pos hk, div_mul_cancel₀ _ hne, sub_self]
+    ite_eq_left hk, div_mul_cancel₀ _ hne, sub_self]
   split_ifs with him
   · rw [ho i k him hkm hik, mul_zero]
   · rw [zero_mul]
@@ -1001,7 +1001,7 @@ theorem exists_ortho_lt (X : Data E r) (u : Fin r → Fin r → E) (hu : frm X.�
       by_cases hjm : j = mf
       · have hkm : k ≠ mf := fun h => hjk (hjm.trans h.symm)
         have hk' : k < mf := by
-          rw [Fin.lt_iff_val_lt_val]
+          rw [Fin.lt_def]
           have : (k : ℕ) ≠ m := fun h => hkm (Fin.ext h)
           show (k : ℕ) < m
           omega
@@ -1009,7 +1009,7 @@ theorem exists_ortho_lt (X : Data E r) (u : Fin r → Fin r → E) (hu : frm X.�
         exact herm_gsStep_self X v hv mf ho k hk'
       · by_cases hkm : k = mf
         · have hj' : j < mf := by
-            rw [Fin.lt_iff_val_lt_val]
+            rw [Fin.lt_def]
             have : (j : ℕ) ≠ m := fun h => hjm (Fin.ext h)
             show (j : ℕ) < m
             omega
@@ -1170,7 +1170,7 @@ theorem exists_orthoFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     simpa [ReciprocityTheory.ChartRestriction.G.FD.sgn, hj] using this
   · intro j hj τ
     have := hsl τ j
-    simp only [ReciprocityTheory.ChartRestriction.G.FD.sgn, if_neg (not_lt.2 hj)] at this
+    simp only [ReciprocityTheory.ChartRestriction.G.FD.sgn, ite_eq_right (not_lt.2 hj)] at this
     linarith
   · intro τ
     rfl
@@ -1244,8 +1244,8 @@ theorem exists_cmPt_on_comp : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hfd : FiniteDimensional ℚ c.F := c.fin
   obtain ⟨K₁, nf, hk1, ρ, X, y, t₀, m, m', -, -, -, -, -, hle, hρ, -, hy, hpt, -⟩ :=
     GlobalTheory.CM.cmExists_holds E H Dw l Xo W.g _ W.F (W.ik k) W.Pm W.per Zl c.F hfd
-  letI : Algebra c.F K₁ := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  letI : StarRing (𝓞 E) := H.starRing
+  let : Algebra c.F K₁ := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  let : StarRing (𝓞 E) := H.starRing
   obtain ⟨Φ⟩ := GlobalTheory.LamT.nonempty_fibKey E H Dw l Xo K₁ y (by have := hL.pos; omega)
   obtain ⟨n, -⟩ := (GlobalTheory.sabMap_cancel_and_comp_over E H _ _ _ Xo.univ.t t₀ Φ.T.t y y (𝟙 _) m Φ.m
     (Category.id_comp _).symm).1

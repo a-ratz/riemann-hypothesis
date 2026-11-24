@@ -382,7 +382,7 @@ theorem powVal_comb {κ : Type} [Fintype κ] {k : ℕ} (c : κ → F) (σ : κ �
 
 omit [IsDomain R] in
 theorem sumF_zero [IsDomain R] {Ix : Type} : SumF I F (fun _ : Ix => (0 : F)) 0 := by
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   exact ⟨⊥, Submodule.fg_bot, zero_mem _, fun _ => zero_mem _, fun n => ⟨∅, fun T _ => by simp⟩⟩
 
 theorem sumF_sum (hR : AdmBase R I) {κ Ix : Type} (S : Finset κ) (c : κ → F) {x : κ → Ix → F} {s : κ → F}

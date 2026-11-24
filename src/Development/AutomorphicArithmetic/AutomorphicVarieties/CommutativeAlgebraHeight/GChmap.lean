@@ -78,7 +78,7 @@ private theorem map_mem {A B : Type} [Ring A] [Ring B] (f : A →+* B) (S : Set 
 theorem UpperTheory.V.CA.g_chmap :
     ∀ {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (D : GDet n A G) (f : A →+* B), TwoSidedIdeal.span (D.map f).CH = TwoSidedIdeal.span (MonoidAlgebra.mapRingHom G f '' D.CH) := by
   intro n A B G _ _ _ D f
-  letI : Algebra A B := f.toAlgebra
+  let : Algebra A B := f.toAlgebra
   change TwoSidedIdeal.span (D.map (algebraMap A B)).CH =
     TwoSidedIdeal.span (MonoidAlgebra.mapRingHom G (algebraMap A B) '' D.CH)
   have e : ∀ z : MonoidAlgebra A G, ofT A G B (1 ⊗ₜ z) = MonoidAlgebra.mapRingHom G (algebraMap A B) z :=

@@ -87,7 +87,7 @@ theorem UpperTheory.V.Alg.co_caten :
   intro O _ _ _ _ R _ _ hR _ p _
   have hn : IsNoetherianRing R := hR.toIsNoetherian
   obtain ⟨s, hs⟩ : (maximalIdeal R).FG := IsNoetherian.noetherian _
-  haveI := co_mvps O O s
+  have := co_mvps O O s
   obtain ⟨F, ⟨-, hF⟩, -⟩ := co_ev O O R s (Algebra.ofId O R) (fun i => i.1)
     (fun i => hs ▸ Ideal.subset_span i.2)
   have hsurj : Function.Surjective F := by
@@ -98,9 +98,9 @@ theorem UpperTheory.V.Alg.co_caten :
     simp only at this
     rw [← this]
     exact Ideal.mem_map_of_mem _ (GlobalTheory.FormalIsogeny.mem_maximalIdeal_iff_constantCoeff.2 (by simp))
-  haveI : IsRegularLocalRing (MvPowerSeries s O) :=
+  have : IsRegularLocalRing (MvPowerSeries s O) :=
     GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries O s
-  haveI : (RingHom.ker F).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker F).IsPrime := RingHom.ker_isPrime _
   let e : (MvPowerSeries s O ⧸ RingHom.ker F) ≃+* R := RingHom.quotientKerEquivOfSurjective hsurj
   have h := dim_quot (MvPowerSeries s O) (RingHom.ker F) (p.comap e)
   rw [RingEquiv.height_comap, ringKrullDim_eq_of_ringEquiv e,

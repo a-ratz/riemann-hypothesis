@@ -98,7 +98,7 @@ theorem isCompact_stdK' (B : Base F E) (Y : Spc F E n) (hB : B.IsGood σ) (b : G
         ((⋂ i, ⋂ j, {k : G2 σ Y | finOne F • inFrame b k i j ∈ intHat F E}) ∩
           (⋂ i, ⋂ j, {k : G2 σ Y | finOne F • inFrame b k⁻¹ i j ∈ intHat F E})) := by
     ext k
-    simp only [SetLike.mem_coe, hK k, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, Set.forall_mem_insert,
+    simp only [SetLike.mem_coe, hK k, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, Set.forall_mem_insert,
       Set.mem_singleton_iff, forall_eq]
   have hKc : IsClosed (K : Set (G2 σ Y)) := by
     rw [hKset]
@@ -120,7 +120,7 @@ theorem tBlk_eq_tF_mul_prod_tV {p : G2 σ Y} {t : GL (Fin n) (AE F E)} (hp : IsP
   simp [dC, diagCols, Matrix.fromRows_mul]
 
 theorem continuous_levi_block : Continuous (tBlk (σ := σ) (Y := Y)) := by
-  have hm : Continuous fun g : G2 σ Y => mat2 g := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun g : G2 σ Y => mat2 g := Units.continuous_val.comp continuous_subtypeVal
   have h1 : Continuous fun g : G2 σ Y => mat2 g * dC n (AE F E) := hm.matrix_mul continuous_const
   exact continuous_pi fun i => continuous_pi fun j => h1.matrix_elem (Sum.inl i) j
 
@@ -139,8 +139,8 @@ theorem uDet_eq {p : par2 σ Y} {t : GL (Fin n) (AE F E)} (hp : IsPar p.1 t) : u
 
 theorem continuous_uDet : Continuous (uDet (σ := σ) (Y := Y)) := by
   rw [Units.continuous_iff]
-  refine ⟨(continuous_levi_block.comp continuous_subtype_val).matrix_det, ?_⟩
-  exact (continuous_levi_block.comp (continuous_inv.comp continuous_subtype_val)).matrix_det
+  refine ⟨(continuous_levi_block.comp continuous_subtypeVal).matrix_det, ?_⟩
+  exact (continuous_levi_block.comp (continuous_inv.comp continuous_subtypeVal)).matrix_det
 
 end PositivityTheory.SiegelWeilFormula.kunf.SecA
 

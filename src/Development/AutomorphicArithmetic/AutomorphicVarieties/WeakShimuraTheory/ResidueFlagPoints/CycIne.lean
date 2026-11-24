@@ -61,13 +61,13 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 theorem UpperTheory.V.Ws.Pt.cycIne :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (A : ValuationSubring Ω), A.valuation (l : Ω) < 1 → ∀ n : ℤ, n ≠ 0 → ∃ g ∈ Ine (F := F) A, cycBar F Ω l g ^ n ≠ 1 := by
   intro F Ω _ _ _ _ _ l _ A hA n hn
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ F Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ F Ω
   obtain ⟨u, hu⟩ := GlobalTheory.CycDec.exists_unit_infinite_order l
   obtain ⟨σ, hσI, hσu⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l A hA u
   let ι : F →ₐ[ℚ] Ω := IsScalarTower.toAlgHom ℚ F Ω
   let f : ℕ → (F →ₐ[ℚ] Ω) := fun k => ((σ ^ k : Ω ≃ₐ[ℚ] Ω) : Ω →ₐ[ℚ] Ω).comp ι
-  haveI : Finite (F →ₐ[ℚ] Ω) := inferInstance
+  have : Finite (F →ₐ[ℚ] Ω) := inferInstance
   obtain ⟨a, b, hab, he⟩ := Finite.exists_ne_map_eq_of_infinite f
   have key : ∀ a b : ℕ, a < b → f a = f b →
       ∃ N : ℕ, 0 < N ∧ ∀ x : F, (σ ^ N) (algebraMap F Ω x) = algebraMap F Ω x := by

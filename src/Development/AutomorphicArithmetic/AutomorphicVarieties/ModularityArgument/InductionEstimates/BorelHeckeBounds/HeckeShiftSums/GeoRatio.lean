@@ -180,15 +180,15 @@ private theorem diag_lb {K : Type} [Field K] [NumberField K] {n : ℕ} {ω : Set
   let f : B → GroundTheory.Global.IdeleGroup K := fun b => ⟨_, _, hmul b, hmul' b⟩
   have hf : Continuous f := by
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
-    · exact ((Units.continuous_val.comp continuous_subtype_val).matrix_elem c c)
-    · exact ((Units.continuous_val.comp (continuous_subtype_val.inv)).matrix_elem c c)
+    · exact ((Units.continuous_val.comp continuous_subtypeVal).matrix_elem c c)
+    · exact ((Units.continuous_val.comp (continuous_subtypeVal.inv)).matrix_elem c c)
   have hC : IsCompact ((Subtype.val : B → AdelicGLn.AdelicGL K n) ⁻¹' ω) := by
     rw [Subtype.isCompact_iff, Set.image_preimage_eq_of_subset]
     · exact hω.1
     · rw [Subtype.range_coe]; exact hω.2
   obtain ⟨m, M, hm, -, h⟩ := exists_pos_bounds hC
     (f := fun b => (GroundTheory.Global.IdeleGroup.ideleModule K (f b) : ℝ))
-    (continuous_subtype_val.comp (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp hf))
+    (continuous_subtypeVal.comp (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp hf))
     (fun b _ => (GroundTheory.Global.IdeleGroup.ideleModule K (f b)).2)
   refine ⟨m, hm, fun b hb u hu => ?_⟩
   have := (h ⟨b, hω.2 hb⟩ hb).1

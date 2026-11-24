@@ -88,7 +88,7 @@ theorem Xa_mono (j : ℕ) : Xflag F j ≤ Xflag F (j + 1) := by
   apply Submodule.span_mono
   apply Set.image_mono
   intro i hi
-  simp only [Set.mem_setOf_eq] at hi ⊢
+  simp only [Set.mem_ofPred_eq] at hi ⊢
   omega
 
 instance Xa_fd (j : ℕ) : FiniteDimensional D.host.E (Xflag F j) :=

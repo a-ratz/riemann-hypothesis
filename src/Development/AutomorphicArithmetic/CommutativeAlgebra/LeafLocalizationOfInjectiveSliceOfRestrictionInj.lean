@@ -747,13 +747,13 @@ theorem UpperTheory.totalHomComplex_isKInjective_of_bounded_injective :
     rcases lt_or_ge 0 p with hp | hp
     · exact (hC U p hp).eq_of_src _ _
     · exact (hI r (by omega)).eq_of_tgt _ _
-  haveI : (TC C I h).IsStrictlyGE 0 := by
+  have : (TC C I h).IsStrictlyGE 0 := by
     rw [CochainComplex.isStrictlyGE_iff]
     intro n hn
     rw [IsZero.iff_id_eq_zero]
     refine Sheaf.hom_ext (NatTrans.ext (funext fun U => ModuleCat.hom_ext (LinearMap.ext fun α => ?_)))
     exact (hcoch U.unop n hn α).trans (hcoch U.unop n hn _).symm
-  haveI : ∀ n, Injective ((TC C I h).X n) := hinj
+  have : ∀ n, Injective ((TC C I h).X n) := hinj
   exact CochainComplex.isKInjective_of_injective _ 0
 end -- clump:auto
 end -- clump:auto

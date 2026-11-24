@@ -95,13 +95,13 @@ private theorem UpperTheory.V.Kum.compact_union (F Ω : Type) [Field F] [NumberF
     exacts [hT _, isCompact_empty]
   have e : {g : G F Ω | ∃ A : ValuationSubring Ω, A.valuation (N : Ω) < 1 ∧ g ∈ H A} = ⋃ v ∈ Above F N, P v := by
     ext σ
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion]
     constructor
     · rintro ⟨A, hA, hσ⟩
       obtain ⟨v, hv⟩ := h2 A (h3 A N hN hA)
       refine ⟨v, (h4 A v N hv).1 hA, ?_⟩
       have h : ∃ A : ValuationSubring Ω, IsPlaceOver A v := ⟨A, hv⟩
-      simp only [P, dif_pos h]
+      simp only [P, dite_eq_left h]
       obtain ⟨g, hg⟩ := exists_smul_eq_of_isPlaceOver (F := F) h.choose_spec hv
       refine ⟨(g, g⁻¹ * σ * g), ⟨trivial, hconj _ g σ (hg ▸ hσ)⟩, ?_⟩
       simp [mul_assoc]
@@ -141,9 +141,9 @@ theorem UpperTheory.V.Kum.homExt :
     ∃ (n : ℕ) (ψ : levU l U n → M), IsLocallyConstant ψ ∧ (∀ a b, ψ (a * b) = ψ a + ψ b) ∧ ∀ u : cycU l U, ψ ⟨u.1, cycU_le_levU l U n u.2⟩ = φ u := by
   intro F Ω _ _ _ _ _ l _ U M _ φ hU hφ hmul
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI hroots : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have hroots : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have hlp : l.Prime := Fact.out
   have hφ1 : φ 1 = 0 := by
     have h := hmul 1 1
@@ -151,12 +151,12 @@ theorem UpperTheory.V.Kum.homExt :
   have hprinc : ∀ (x : ℤ_[l]ˣ) (n : ℕ), x ∈ KStar.TotallyRealRoots.princ l n ↔ PadicInt.toZModPow n (x : ℤ_[l]) = 1 := by
     intro x n
     simp only [KStar.TotallyRealRoots.princ, KStar.TotallyRealRoots.redPow, MonoidHom.mem_ker, Units.ext_iff, Units.coe_map,
-      Units.val_one, MonoidHom.coe_coe]
+      Units.val_one, MonoidHom.coe_ofClass]
     exact Iff.rfl
   have hopen_n : ∀ n, IsOpen ((Subgroup.comap (cycZ F Ω l) (KStar.TotallyRealRoots.princ l n) : Subgroup (G F Ω)) : Set (G F Ω)) := by
     intro n
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
-    haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hlp.ne_zero⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
+    have : NeZero (l ^ n) := ⟨pow_ne_zero _ hlp.ne_zero⟩
     apply Subgroup.isOpen_of_mem_nhds _ (g := 1)
     rw [krullTopology_mem_nhds_one_iff]
     refine ⟨IntermediateField.adjoin F {ζ}, IntermediateField.adjoin.finiteDimensional
@@ -166,7 +166,7 @@ theorem UpperTheory.V.Kum.homExt :
     rw [hprinc]
     rcases Nat.eq_zero_or_pos n with h0 | hn0
     · subst h0
-      haveI : Subsingleton (ZMod (l ^ 0)) := ZMod.subsingleton_iff.mpr (pow_zero l)
+      have : Subsingleton (ZMod (l ^ 0)) := ZMod.subsingleton_iff.mpr (pow_zero l)
       exact Subsingleton.elim _ _
     show (cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G F Ω) Ω σ)).val.toZModPow n = 1
     rw [cyclotomicCharacter.toZModPow, eq_comm]
@@ -195,8 +195,8 @@ theorem UpperTheory.V.Kum.homExt :
     simpa using h
   obtain ⟨E, hEfin, hEnorm, hEsub⟩ :=
     (krullTopology_mem_nhds_one_iff_of_normal F Ω O).mp (hOo.mem_nhds h1O)
-  haveI := hEfin
-  haveI := hEnorm
+  have := hEfin
+  have := hEnorm
   have hNnorm : (E.fixingSubgroup : Subgroup (G F Ω)).Normal := by
     rw [← IntermediateField.restrictNormalHom_ker]
     exact MonoidHom.normal_ker _
@@ -252,7 +252,7 @@ theorem UpperTheory.V.Kum.homExt :
   · rw [IsLocallyConstant.iff_exists_open]
     intro y
     refine ⟨{z : levU l U n | (y : G F Ω)⁻¹ * z ∈ E.fixingSubgroup},
-      hNopen.preimage (continuous_const.mul continuous_subtype_val), by simpa using Subgroup.one_mem _, ?_⟩
+      hNopen.preimage (continuous_const.mul continuous_subtypeVal), by simpa using Subgroup.one_mem _, ?_⟩
     intro z hz
     exact hwd (cf z) (cf y) (wf z) (wf y * ((y : G F Ω)⁻¹ * z)) (hwf z)
       (Subgroup.mul_mem _ (hwf y) hz)
@@ -288,7 +288,7 @@ private theorem UpperTheory.V.Kum.xe_closed {U : Subgroup (G F Ω)} (hU : IsClos
   have hs : (KStar.TotallyRealRoots.princ l n : Set ℤ_[l]ˣ) =
       Units.val ⁻¹' {x : ℤ_[l] | ‖x - 1‖ ≤ (l : ℝ) ^ (-(n : ℤ))} := by
     ext u
-    simp only [SetLike.mem_coe, KStar.TotallyRealRoots.mem_princ, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, KStar.TotallyRealRoots.mem_princ, Set.mem_preimage, Set.mem_ofPred_eq]
     rw [PadicInt.norm_le_pow_iff_mem_span_pow, Ideal.mem_span_singleton]
   have hc : IsClosed (KStar.TotallyRealRoots.princ l n : Set ℤ_[l]ˣ) := by
     rw [hs]
@@ -322,7 +322,7 @@ private theorem UpperTheory.V.Kum.xe_spread {U : Subgroup (G F Ω)} (hU : IsClos
     ∃ m, n ≤ m ∧ ∀ u : levU l U n, u.1 ∈ C → u.1 ∈ levU l U m → ψ u = 0 := by
   have hZ : IsClosed ({u : levU l U n | ψ u = 0}ᶜ) := (hψ.isOpen_fiber 0).isClosed_compl
   have hB : IsClosed (Subtype.val '' ({u : levU l U n | ψ u = 0}ᶜ) : Set (G F Ω)) :=
-    (xe_closed l hU n).isClosedMap_subtype_val _ hZ
+    (xe_closed l hU n).isClosedMap_subtypeVal _ hZ
   have hBc : IsCompact (C ∩ Subtype.val '' ({u : levU l U n | ψ u = 0}ᶜ)) := hC.inter_right hB
   obtain ⟨i, hi⟩ := hBc.elim_directed_family_closed (fun m => (levU l U (n + m) : Set (G F Ω)))
     (fun m => xe_closed l hU (n + m))
@@ -364,7 +364,7 @@ theorem UpperTheory.V.Kum.xdualExt :
     · exact hφD A hA _ hD
     · exact hφI A _ hI)
   refine ⟨m, restr R M (xe_anti l U hnm) ψ, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
-  · exact hψc.comp_continuous (continuous_subtype_val.subtype_mk _)
+  · exact hψc.comp_continuous (continuous_subtypeVal.subtype_mk _)
   · intro a b
     simp only [restr, LinearMap.funLeft_apply, map_mul]
     exact hψa _ _

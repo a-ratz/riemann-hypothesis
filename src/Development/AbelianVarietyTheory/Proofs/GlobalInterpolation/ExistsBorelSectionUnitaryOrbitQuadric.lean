@@ -272,16 +272,16 @@ theorem _root_.GlobalTheory.QuadricSection.exists_isSection : ∀ (P Q : ℕ) (�
   have hmem : ∀ y, Matrix.nonsingInvUnit _ (hunit y) ∈ _root_.Formalism.UG.Upq P Q := by
     intro y
     unfold _root_.Formalism.UG.Upq _root_.Formalism.UG.UJ
-    simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
+    simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq]
     rw [hcT]
     exact (hspec y).1
   refine ⟨fun y => (⟨Matrix.nonsingInvUnit _ (hunit y), hmem y⟩ : _root_.Formalism.UG.Upq P Q), ?_⟩
   unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.PerpendicularEmbedding.IsSection
   refine ⟨?_, ?_⟩
-  · letI : MeasurableSpace (_root_.Formalism.BasicNotions.UpqT P Q) := _root_.Formalism.BasicNotions.instMeasurableSpaceUpqT P Q
-    haveI : BorelSpace (_root_.Formalism.BasicNotions.UpqT P Q) := ⟨rfl⟩
-    letI : MeasurableSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) := MeasurableSpace.pi
-    haveI : BorelSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
+  · let : MeasurableSpace (_root_.Formalism.BasicNotions.UpqT P Q) := _root_.Formalism.BasicNotions.instMeasurableSpaceUpqT P Q
+    have : BorelSpace (_root_.Formalism.BasicNotions.UpqT P Q) := ⟨rfl⟩
+    let : MeasurableSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) := MeasurableSpace.pi
+    have : BorelSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
       inferInstanceAs (BorelSpace (Fin P ⊕ Fin Q → Fin P ⊕ Fin Q → ℂ))
     apply (_root_.GlobalTheory.UpqTopology.isClosedEmbedding_mat.measurableEmbedding.measurable_comp_iff).mp
     refine Measurable.of_eval fun i => Measurable.of_eval fun j => ?_

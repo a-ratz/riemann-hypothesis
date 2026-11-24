@@ -72,7 +72,7 @@ private lemma nabStd_fg' (K : Type) [Field K] [NumberField K] (ι : Type) [Finty
     have h := hb τ
     unfold _root_.Formalism.GradedWeylDivisibility.IsWeightBasis at h
     exact ⟨h.1, h.2.1⟩
-  haveI : ∀ τ, Finite ↑(_root_.Formalism.GradedWeylDivisibility.ssIdx n n (lam τ).natW) := fun τ => (_root_.Formalism.GradedWeylDivisibility.sSIdxFinite n n _).to_subtype
+  have : ∀ τ, Finite ↑(_root_.Formalism.GradedWeylDivisibility.ssIdx n n (lam τ).natW) := fun τ => (_root_.Formalism.GradedWeylDivisibility.sSIdxFinite n n _).to_subtype
   obtain ⟨-, hspan⟩ := _root_.Formalism.GradedWeylDivisibility.tensorBasis (𝓞 K) K ι n n (fun τ => ↑(_root_.Formalism.GradedWeylDivisibility.ssIdx n n (lam τ).natW))
     (fun τ => Submodule.map (_root_.Formalism.L2.DIV.toK K (Fin n × Fin n)) (_root_.Formalism.BasicNotions.nablaSq (𝓞 K) n (lam τ)))
     (fun τ i => _root_.Formalism.L2.DIV.toK K (Fin n × Fin n) (b τ i))

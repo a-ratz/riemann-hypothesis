@@ -84,7 +84,7 @@ theorem hs_of_compact {m : ℕ} {ε : Fin m → Bool} (hc : ∀ a b, ε a = ε b
     intro j
     have h1 := congrFun (congrFun hg j) j
     simp only [Jm, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.diagonal_apply, mul_ite, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
     have h2 : ∀ i, (if ε i = true then star (uMat g i j) * 1 else star (uMat g i j) * -1) * uMat g i j =
         (if ε j = true then 1 else -1) * ((‖uMat g i j‖ ^ 2 : ℝ) : ℂ) := by
       intro i
@@ -153,7 +153,7 @@ theorem dec_low {m N : ℕ} {ε : Fin m → Bool} {lam : Fin m → ℝ} {π : Ma
     change Real.sqrt (ReciprocityTheory.ChartRestriction.DS.S7.hs _) ≤ _
     rw [ReciprocityTheory.ChartRestriction.DS.S7.hs_kmulVG, Real.sqrt_le_iff]
     refine ⟨by positivity, ?_⟩
-    have e2 : Real.exp s ^ 2 = Real.exp (2 * s) := by rw [← Real.exp_nat_mul]; norm_num
+    have e2 : Real.exp s ^ 2 = Real.exp (2 * s) := by rw [← Real.exp_natCast_mul]; norm_num
     rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg m), e2]
     exact ReciprocityTheory.ChartRestriction.DS.S7.hs_exp_leVG X
   have hA' : (A : ℝ) ≤ 12 * N ^ 2 := by exact_mod_cast hA
@@ -167,7 +167,7 @@ theorem dec_low {m N : ℕ} {ε : Fin m → Bool} {lam : Fin m → ℝ} {π : Ma
     have : c * A ≤ (2 * N) * (12 * N ^ 2) := mul_le_mul hcm hA' (by linarith) (by linarith)
     nlinarith
   refine hd.trans ((Real.exp_le_exp.2 (by nlinarith)).trans (hr.trans (le_of_eq ?_)))
-  rw [show Real.exp (A : ℝ) = Real.exp 1 ^ A by rw [← Real.exp_nat_mul, mul_one], ← mul_pow]
+  rw [show Real.exp (A : ℝ) = Real.exp 1 ^ A by rw [← Real.exp_natCast_mul, mul_one], ← mul_pow]
 
 theorem dec_conj {m : ℕ} {ε : Fin m → Bool} {π : Matrix (Fin m) (Fin m) ℂ → (H →L[ℂ] H)} (hm : 1 ≤ m)
     (hπ : IsURepOn (UJset ε) π) {v : H} {C : ℝ} (hC : 0 ≤ C) {A : ℕ}

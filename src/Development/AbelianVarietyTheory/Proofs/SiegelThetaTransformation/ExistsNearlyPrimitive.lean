@@ -280,12 +280,12 @@ theorem exists_rows {E : Type} [Field E] [NumberField E] {k : ℕ} (L : AddSubgr
   · simp [ha0 j hj, not_lt.2 hj.le]
   · simpa using hα0
   · rcases lt_trichotomy j i with h | rfl | h
-    · simp only [Pi.sub_apply, if_pos h]
+    · simp only [Pi.sub_apply, ite_eq_left h]
       exact (hyC _).trans (le_max_right _ _)
-    · simp only [Pi.sub_apply, lt_irrefl, if_false, sub_zero]
+    · simp only [Pi.sub_apply, lt_irrefl, ite_false, sub_zero]
       exact hα1.trans (le_max_left _ _)
     · simp [ha0 j h, not_lt.2 h.le]
-  · simp only [Pi.sub_apply, lt_irrefl, if_false, sub_zero]
+  · simp only [Pi.sub_apply, lt_irrefl, ite_false, sub_zero]
     exact hmin _ ⟨hsi, s, hs, hs0, rfl⟩
 
 theorem integral_coord {E : Type} [Field E] [NumberField E] {k : ℕ}
@@ -376,7 +376,7 @@ theorem exists_nearly_primitive : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   choose a haL ha0 hai haC hmin using exists_rows L hO d hd hden C hC
   refine ⟨Matrix.of a, ?_, fun τ i j => (canonicalEmbedding.norm_le_iff _ _).1 (haC i j) τ,
     fun i j => haL i j, fun t ht => ?_⟩
-  · rw [Matrix.det_of_lowerTriangular (Matrix.of a) (fun i j h => ha0 i j h)]
+  · rw [det_of_isLowerTriangular (Matrix.of a) (fun i j h => ha0 i j h)]
     exact Finset.prod_ne_zero_iff.2 fun i _ => hai i
   · refine integral_coord L hsm M hM (Matrix.of a) haL ha0 hai hmin k le_rfl t
       (fun j hj => absurd j.2 (not_lt.2 hj)) fun j => ?_

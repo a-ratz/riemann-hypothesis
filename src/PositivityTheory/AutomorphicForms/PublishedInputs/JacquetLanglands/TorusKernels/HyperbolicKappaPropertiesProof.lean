@@ -71,11 +71,11 @@ theorem pos_den {z w : ℂ} (h : 0 < z.im * w.im) : 0 < ‖z - conj w‖ ^ 2 := 
 theorem kap_of {z w : P} (h : 0 < z.1.im * w.1.im) :
     kap z w = 4 * (z.1.im * w.1.im) / ‖z.1 - conj w.1‖ ^ 2 := by
   unfold kap
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem kap_of_not {z w : P} (h : ¬ 0 < z.1.im * w.1.im) : kap z w = 0 := by
   unfold kap
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 theorem kap_nonneg (z w : P) : 0 ≤ kap z w := by
   unfold kap
@@ -152,8 +152,8 @@ theorem p4 (z w : P) : kap z w * |w.1.im| ≤ 4 * |z.1.im| := by
     positivity
 
 theorem p5 : Continuous (fun p : P × P => kap p.1 p.2) := by
-  have hv1 : Continuous (fun p : P × P => p.1.1) := continuous_subtype_val.comp continuous_fst
-  have hv2 : Continuous (fun p : P × P => p.2.1) := continuous_subtype_val.comp continuous_snd
+  have hv1 : Continuous (fun p : P × P => p.1.1) := continuous_subtypeVal.comp continuous_fst
+  have hv2 : Continuous (fun p : P × P => p.2.1) := continuous_subtypeVal.comp continuous_snd
   have hc : Continuous (fun p : P × P => p.1.1.im * p.2.1.im) :=
     (Complex.continuous_im.comp hv1).mul (Complex.continuous_im.comp hv2)
   have hd : Continuous (fun p : P × P => ‖p.1.1 - conj p.2.1‖ ^ 2) :=
@@ -162,7 +162,7 @@ theorem p5 : Continuous (fun p : P × P => kap p.1 p.2) := by
   have hclosed : IsClosed {p : P × P | 0 < p.1.1.im * p.2.1.im} := by
     have e : {p : P × P | 0 < p.1.1.im * p.2.1.im} = {p : P × P | 0 ≤ p.1.1.im * p.2.1.im} := by
       ext p
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       exact ⟨fun h => le_of_lt h, fun h => lt_of_le_of_ne h (Ne.symm (mul_ne_zero p.1.2 p.2.2))⟩
     rw [e]
     exact isClosed_le continuous_const hc

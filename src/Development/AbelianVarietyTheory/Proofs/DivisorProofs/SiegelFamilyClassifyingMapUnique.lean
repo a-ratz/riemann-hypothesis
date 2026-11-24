@@ -56,7 +56,7 @@ theorem eq_of_siegPB : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F 
     SiegPB c F.univ f → SiegPB c F.univ f' → f = f' := by
   intro g n _ _ _ F S s' c f f' hf hf' h₁ h₂
   refine GlobalTheory.hom_ext_of_fromSpecStalk fun x => ?_
-  haveI : IsLocalRing (S.presheaf.stalk x) := inferInstance
+  have : IsLocalRing (S.presheaf.stalk x) := inferInstance
   obtain ⟨c', hc'⟩ := (GlobalTheory.siegPre_pullback g n (cycAway n) (zetaAway n) S (Sp (S.presheaf.stalk x)) s'
     (S.fromSpecStalk x ≫ s') (S.fromSpecStalk x) c rfl).1
   have e : (S.fromSpecStalk x ≫ f) ≫ F.s = (S.fromSpecStalk x ≫ f') ≫ F.s := by

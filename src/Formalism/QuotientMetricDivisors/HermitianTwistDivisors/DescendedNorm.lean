@@ -217,7 +217,7 @@ theorem filter_succ {m : ℕ} (j : Fin m) :
       insert j (Finset.univ.filter (fun i : Fin m => i.castSucc < j.castSucc)) := by
   ext i
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
-    Fin.lt_iff_val_lt_val, Fin.ext_iff, Fin.coe_castSucc, Fin.val_succ]
+    Fin.lt_def, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
   omega
 
 theorem prod_filter_succ {m : ℕ} (k : Fin m → ℝ) (j : Fin m) :

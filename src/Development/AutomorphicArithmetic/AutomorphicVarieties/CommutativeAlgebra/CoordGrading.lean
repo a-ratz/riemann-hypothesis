@@ -89,7 +89,7 @@ private theorem eigen_low {R S σ : Type} [CommRing R] [CommRing S] [Finite σ] 
       exact Ideal.mul_mem_right _ _ (hIn hp)
     · rw [map_add (f := _), map_add (f := _)]; exact add_mem ha hb
   have h := key (e g) (by
-    rw [AdicCompletion.pow_smul_top_eq_ker_eval (MvPolynomial.idealOfVars_fg σ R), LinearMap.mem_ker,
+    rw [AdicCompletion.pow_smul_top_eq_ker_eval (MvPolynomial.fg_idealOfVars σ R), LinearMap.mem_ker,
       AdicCompletion.eval_apply, toAdicCompletionAlgEquiv_apply, toAdicCompletion_apply_eq_mk_truncTotal]
     have : truncTotal n g = 0 := by
       ext x
@@ -125,7 +125,7 @@ theorem UpperTheory.V.Alg.eigen_mem :
   intro O _ _ _ _ X _ _ _ R _ _ hR W hz x j H
   classical
   obtain ⟨n, t0, ht1, hind⟩ := tchar O X
-  haveI : IsCO O (MvPowerSeries (Fin n) R) := co_mvps O R (Fin n)
+  have : IsCO O (MvPowerSeries (Fin n) R) := co_mvps O R (Fin n)
   let f : R →ₐ[O] MvPowerSeries (Fin n) R :=
     { (C : R →+* MvPowerSeries (Fin n) R) with commutes' := fun a => (MvPowerSeries.algebraMap_apply).symm }
   have hf : ∀ a, f a = C a := fun _ => rfl
@@ -146,7 +146,7 @@ theorem UpperTheory.V.Alg.eigen_mem :
   suffices h : W.π (wcomp O W.wt j g) - W.π g = 0 by
     rw [sub_eq_zero] at h
     exact ⟨_, wcomp_mem O W.wt j g, h⟩
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   refine IsHausdorff.haus (I := maximalIdeal R) inferInstance _ fun N => ?_
   rw [SModEq.zero, smul_eq_mul, Ideal.mul_top]
   obtain ⟨s, hjs, hs⟩ := eigen_split W.wt j N g
@@ -171,10 +171,10 @@ theorem UpperTheory.V.Alg.eigen_mem :
       (fun i _ => hf' i (W.π (wcomp O W.wt i g)) ⟨_, wcomp_mem O W.wt i g, rfl⟩), map_sub, map_sum] at h2
       simp only [map_mul, hq, hf, map_C] at h2
       simp only [map_sub, mul_sub, Finset.sum_sub_distrib, apply_ite C, map_zero, mul_ite, mul_zero,
-        Finset.sum_ite_eq', if_pos hjs]
+        Finset.sum_ite_eq', ite_eq_left hjs]
       rw [← neg_eq_zero, neg_sub]
       exact h2) j hjs
-  simp only [if_true] at h3
+  simp only [ite_true] at h3
   rwa [← map_sub, Ideal.Quotient.eq_zero_iff_mem] at h3
 end -- clump:auto
 end -- clump:auto
@@ -228,7 +228,7 @@ private theorem hos_art {O : Type} [CommRing O] [IsLocalRing O] {X : Type} [AddC
     (j : X) : p (wcomp O wt j x) = 0 := by
   classical
   obtain ⟨n, t, ht1, ht2⟩ := tchar O X
-  haveI : IsCO O (MvPowerSeries (Fin n) S) := co_mvps O S (Fin n)
+  have : IsCO O (MvPowerSeries (Fin n) S) := co_mvps O S (Fin n)
   let i : S →ₐ[O] MvPowerSeries (Fin n) S := IsScalarTower.toAlgHom O S (MvPowerSeries (Fin n) S)
   have hi : ∀ a, i a = MvPowerSeries.C a := fun a => rfl
   let t' : Multiplicative X →* (MvPowerSeries (Fin n) S)ˣ :=
@@ -254,7 +254,7 @@ private theorem hos_art {O : Type} [CommRing O] [IsLocalRing O] {X : Type} [AddC
     (t' (Multiplicative.ofAdd (wt s)) : MvPowerSeries (Fin n) S) * i (p (MvPowerSeries.X s))
   have he : ∀ s, e s ∈ Ideal.map i (maximalIdeal S) := fun s =>
     Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ (hp s))
-  haveI : IsAdicComplete (maximalIdeal (MvPowerSeries (Fin n) S)) (MvPowerSeries (Fin n) S) :=
+  have : IsAdicComplete (maximalIdeal (MvPowerSeries (Fin n) S)) (MvPowerSeries (Fin n) S) :=
     IsCO.complete (O := O)
   let f' := GlobalTheory.mvEvalAdic O (maximalIdeal (MvPowerSeries (Fin n) S)) e (fun s => hJm (he s))
   have hf'X : ∀ s, f' (MvPowerSeries.X s) =
@@ -305,14 +305,14 @@ private theorem hos_art {O : Type} [CommRing O] [IsLocalRing O] {X : Type} [AddC
       _ = f' x := by
           rw [hE]
           refine Finset.sum_congr rfl fun d hd => ?_
-          rw [Finset.sum_ite_eq, if_pos (Finset.mem_image_of_mem _ hd)]
+          rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_image_of_mem _ hd)]
       _ = 0 := h0
   by_cases hj : j ∈ s
   · exact hz j hj
   · rw [hT]
     apply Finset.sum_eq_zero
     intro d hd
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hj (h ▸ Finset.mem_image_of_mem _ hd)
 
@@ -325,7 +325,7 @@ theorem UpperTheory.V.Alg.homog_of_stable :
   intro x hx j
   have hx' : π x = 0 := hx
   show π (wcomp O wt j x) = 0
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   apply GlobalTheory.eq_of_forall_sub_mem_ideal_pow (maximalIdeal R)
   intro N
   rw [sub_zero]
@@ -335,12 +335,12 @@ theorem UpperTheory.V.Alg.homog_of_stable :
   have hIm : I ≤ maximalIdeal R := hI ▸ Ideal.pow_le_self (Nat.succ_ne_zero N)
   have hItop : I ≠ ⊤ := fun h =>
     (maximalIdeal.isMaximal R).ne_top (top_le_iff.1 (h ▸ hIm))
-  haveI : Nontrivial (R ⧸ I) := by
+  have : Nontrivial (R ⧸ I) := by
     refine ⟨⟨0, 1, fun h => hItop ((Ideal.eq_top_iff_one _).2 ?_)⟩⟩
     rw [← map_one (Ideal.Quotient.mk I)] at h
     exact Ideal.Quotient.eq_zero_iff_mem.1 h.symm
   let q : R →ₐ[O] R ⧸ I := Ideal.Quotient.mkₐ O I
-  haveI : IsCO O (R ⧸ I) := co_quot O R (R ⧸ I) q (Ideal.Quotient.mkₐ_surjective O I)
+  have : IsCO O (R ⧸ I) := co_quot O R (R ⧸ I) q (Ideal.Quotient.mkₐ_surjective O I)
   have hmap : ∀ r ∈ maximalIdeal R, q r ∈ maximalIdeal (R ⧸ I) := by
     intro r hr
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
@@ -415,14 +415,14 @@ theorem UpperTheory.V.Alg.coord_grading :
       maximalIdeal R ^ 2 := by
     refine co_span O R O (Algebra.ofId O R) (Set.range e) (by rintro _ ⟨s, rfl⟩; exact hem s) ?_
     intro f f' _ h
-    haveI := (co_res O).2
+    have := (co_res O).2
     exact hgen _ f f' fun s => h _ ⟨s, rfl⟩
   obtain ⟨T, hT, hTs⟩ := (Submodule.fg_span_iff_fg_span_finset_subset (R := R) (Set.range e)).1
     (IsNoetherian.noetherian _)
   choose u hu using fun i : T => hT i.2
   obtain ⟨π, ⟨hπC, hπX⟩, -⟩ := co_ev O O R T (Algebra.ofId O R) (fun i => e (u i)) fun i => hem _
   have hsurj : Function.Surjective π := by
-    haveI := co_mvps O O T
+    have := co_mvps O O T
     refine co_surj O (MvPowerSeries T O) R π (hspan.trans (sup_le_sup_right (sup_le ?_ ?_) _))
     · show Submodule.span R (Set.range e) ≤ _
       rw [hTs, Submodule.span_le]

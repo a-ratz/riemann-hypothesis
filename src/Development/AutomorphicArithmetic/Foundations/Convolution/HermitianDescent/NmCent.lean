@@ -101,7 +101,7 @@ end UpperTheory.ConvolutionTheory.D
 theorem UpperTheory.ConvolutionTheory.D.nmCent :
     UpperTheory.ConvolutionTheory.D.NmCent := by
   intro k R _ _ _ _ σ q hσ n a γ hsep ha x
-  haveI : Module.Finite k R := (galBase k R k σ q hσ).1
+  have : Module.Finite k R := (galBase k R k σ q hσ).1
   have hs : ((up R γ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R).charpoly.Separable := by
     have h := hsep.map (f := algebraMap k R)
     rw [cp, ← Matrix.charpoly_map] at h

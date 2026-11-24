@@ -144,7 +144,7 @@ private theorem inId_iff {D : D7} (Pw : Finset (Pl D.host.E)) (c : Pl D.host.E �
           Formalism.UG.P.levelaf_valued_algebraMap, map_inv₀]
         have : Q.valuation D.host.E (a : D.host.E) = WithZero.exp (-(c Q : ℤ)) :=
           (Q.valuation_of_algebraMap a).trans (hv Q hQ)
-        rw [this, inv_mul_le_one₀ (zero_lt_iff.2 WithZero.exp_ne_zero)]
+        rw [this, inv_mul_le_one₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero)]
         exact h Q hQ
       · rw [hz Q hQ, mul_zero]
         exact zero_mem _

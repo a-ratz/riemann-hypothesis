@@ -94,7 +94,7 @@ theorem exists_vec_ann (γ : Matrix (Fin n) (Fin n) K) (hs : γ.charpoly.Separab
         rw [mul_one]
         calc g * (p * c) = p * g * c := by ring
           _ = g := hc.symm
-      exact hp.not_unit (IsUnit.of_mul_eq_one _ (mul_left_cancel₀ hgne h1))
+      exact hp.not_isUnit (IsUnit.of_mul_eq_one _ (mul_left_cancel₀ hgne h1))
     obtain ⟨u, hu⟩ : ∃ u, (aeval γ g).mulVec u ≠ 0 := by
       by_contra hcon
       push_neg at hcon
@@ -113,7 +113,7 @@ theorem exists_vec_ann (γ : Matrix (Fin n) (Fin n) K) (hs : γ.charpoly.Separab
       simpa using h1.symm
     have hpa : ¬ p ∣ a := by
       rintro ⟨c, rfl⟩
-      exact hp.not_unit (hs.squarefree p
+      exact hp.not_isUnit (hs.squarefree p
         ((mul_dvd_mul_left p (dvd_mul_right p c)).trans hd))
     have hcop : IsCoprime p a := (Prime.coprime_iff_not_dvd hp).2 hpa
     refine ⟨v' + w, ?_, ?_⟩

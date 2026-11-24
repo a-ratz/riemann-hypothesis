@@ -71,7 +71,7 @@ theorem exists_even_reps {G : Type} [AddCommGroup G] (A C : AddSubgroup G) {M : 
       ∀ y ∈ A, ∃ i, y - 2 • a i ∈ C := by
   obtain ⟨k, rfl⟩ := hM
   have hcard : Nat.card (A ⧸ C.addSubgroupOf A) = c := hc
-  haveI : Finite (A ⧸ C.addSubgroupOf A) := Nat.finite_of_card_ne_zero (hcard ▸ h0)
+  have : Finite (A ⧸ C.addSubgroupOf A) := Nat.finite_of_card_ne_zero (hcard ▸ h0)
   let e := (Finite.equivFinOfCardEq hcard).symm
   have key (x : A) : 2 • ((k + 1) • (x : G)) = x + (2 * k + 1) • (x : G) := by
     rw [smul_smul, show 2 * (k + 1) = (2 * k + 1) + 1 by ring, succ_nsmul, add_comm]
@@ -216,11 +216,11 @@ theorem exists_reps_sum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     rfl
   have hfin : (Ideal.span {(N : 𝓞 E)} • stdLat E n).toAddSubgroup.relIndex Λ.toAddSubgroup ≠ 0 := by
     have hfg : Λ.toAddSubgroup.FG := by
-      haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ.1
-      haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
+      have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ.1
+      have : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
       exact (AddGroup.fg_iff_addSubgroup_fg _).1 (Module.Finite.iff_addGroup_fg.1 this)
-    haveI : AddGroup.FG Λ.toAddSubgroup := (AddGroup.fg_iff_addSubgroup_fg _).2 hfg
-    haveI := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg Λ.toAddSubgroup
+    have : AddGroup.FG Λ.toAddSubgroup := (AddGroup.fg_iff_addSubgroup_fg _).2 hfg
+    have := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg Λ.toAddSubgroup
       (mul_ne_zero hN0 hN0)
     have : (nsmulAddMonoidHom (α := Λ.toAddSubgroup) (N * N)).range ≤
         (Ideal.span {(N : 𝓞 E)} • stdLat E n).toAddSubgroup.addSubgroupOf Λ.toAddSubgroup := by

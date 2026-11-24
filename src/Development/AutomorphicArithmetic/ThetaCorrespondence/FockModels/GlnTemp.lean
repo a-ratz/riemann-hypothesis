@@ -322,7 +322,7 @@ theorem lintegral_rpow_lt_top_of_cover {p : ℝ} (hp : 0 ≤ p) {X ι κ : Type*
     rintro ⟨i, j⟩
     have h3 : ∫⁻ x in A i j, ‖F x‖ₑ ^ p ∂μ ≤ ∫⁻ x in A i j, ENNReal.ofReal (b i j ^ p) ∂μ := by
       refine setLIntegral_mono measurable_const fun x hx => ?_
-      rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) hp]
+      rw [← ofReal_norm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) hp]
       exact ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow (norm_nonneg _) (hF i j x hx) hp)
     refine h3.trans ?_
     rw [setLIntegral_const, ENNReal.ofReal_mul (Real.rpow_nonneg (hb i j) _), mul_assoc]
@@ -649,7 +649,7 @@ private theorem isCoatom_of_compl {G V : Type} [Group G] [AddCommGroup V] [Modul
     show s ∈ (⊤ : Submodule ℂ V)
     trivial
   · intro U hTU
-    obtain ⟨hle, u, huU, huT⟩ := SetLike.lt_iff_le_and_exists.mp hTU
+    obtain ⟨hle, u, huU, huT⟩ := IsConcreteLE.lt_iff_le_and_exists.mp hTU
     obtain ⟨w, hwS, hwT⟩ := hsum u
     have hwU : w ∈ U.toSubmodule := by
       rw [← sub_sub_cancel u w]
@@ -693,7 +693,7 @@ private theorem equiv_of_isCosocle (hBZ : GlobalTheory.Published.BernsteinZelevi
       intro hK0
       rw [hK0] at hmem
       exact hne (sub_eq_zero.mp ((Submodule.mem_bot ℂ).mp hmem))
-    haveI := ((hasFiniteLength_iff_wellFounded π).mp hfl).2
+    have := ((hasFiniteLength_iff_wellFounded π).mp hfl).2
     obtain ⟨S, hS, hSK⟩ := (eq_bot_or_exists_atom_le _).resolve_left hK
     let ι : S.toRepresentation.IntertwiningMap π :=
       (S.toSubmodule.subtype).intertwiningMap_of_isIntertwiningMap _ _ (fun g x => rfl)
@@ -867,7 +867,7 @@ theorem UpperTheory.Lit.Cas.split :
     fin_cases a
     · exact h0 v
     · exact h1 v)
-  haveI : Nontrivial (PiTensorProduct ℂ (fun a => (x a).2.rep.V)) :=
+  have : Nontrivial (PiTensorProduct ℂ (fun a => (x a).2.rep.V)) :=
     GlobalTheory.ProdSupport.nontrivial_piTensor _ (fun a => Model.nontrivial_of_isIrreducible (x a).2.rep.irr)
   have := smul_eq_of_equiv E hsub hpi
   simpa [Fin.prod_univ_two] using this
@@ -928,7 +928,7 @@ theorem UpperTheory.Lit.Cas.prodExp :
     GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.BernsteinZelevinskyFiniteness → GlobalTheory.Published.IrreducibleAdmissibleGL → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], CasselmanNecSq k → ∀ (h N : ℕ) (δ : Fin h → IrrGL (k := k)) (hd : ∑ i, (δ i).1 = N), (∀ i, 1 ≤ (δ i).1 ∧ IsSqIntCoeff (δ i).rep) → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), π.IsIrreducible → Nonempty (π.Equiv (prodIrr δ hd)) → UnitaryCentral π ∧ MaxExpWeak π := by
   intro hG hBZ hA k _ _ _ _ hC h N δ hd hδ V _ _ π hirr hφ
   obtain ⟨φ⟩ := hφ
-  haveI := nontrivial_of_irreducible hirr
+  have := nontrivial_of_irreducible hirr
   constructor
   · intro t c hc
     choose b hb using fun i => (schur hA k (δ i) t).1
@@ -1150,7 +1150,7 @@ theorem ncard_perm_dec_le_one {k : Type} [Field k] [ValuativeRel k] [Topological
   have hinj := dec_injective hA Δ
   have hsub : {e : Fin Δ.len ≃ Fin Δ.len | ∀ a, dec Δ a = dec Δ (e a)} ⊆ {Equiv.refl _} := by
     intro e he
-    simp only [Set.mem_setOf_eq] at he
+    simp only [Set.mem_ofPred_eq] at he
     rw [Set.mem_singleton_iff]
     exact Equiv.ext fun a => (hinj (he a)).symm
   calc _ ≤ ({Equiv.refl _} : Set (Fin Δ.len ≃ Fin Δ.len)).ncard :=

@@ -93,8 +93,8 @@ theorem exists_ord_pos_forall_ord_neg (v : Place k K) (S : Finset (Place k K)) (
     rw [Finset.mem_insert, not_or] at hv
     obtain ⟨y, hy0, hyv, hyS⟩ := ih hv.2
 
-    obtain ⟨y₁, hy₁v, hy₁w⟩ := SetLike.not_le_iff_exists.1 fun h => hv.1 (eq_of_le h)
-    obtain ⟨y₂, hy₂w, hy₂v⟩ := SetLike.not_le_iff_exists.1 fun h => hv.1 (eq_of_le h).symm
+    obtain ⟨y₁, hy₁v, hy₁w⟩ := IsConcreteLE.not_le_iff_exists.1 fun h => hv.1 (eq_of_le h)
+    obtain ⟨y₂, hy₂w, hy₂v⟩ := IsConcreteLE.not_le_iff_exists.1 fun h => hv.1 (eq_of_le h).symm
     have hy₁0 : y₁ ≠ 0 := fun h => hy₁w (h ▸ w.ring.zero_mem)
     have hy₂0 : y₂ ≠ 0 := fun h => hy₂v (h ▸ v.ring.zero_mem)
     have h1 := (v.ord_nonneg_iff hy₁0).2 hy₁v

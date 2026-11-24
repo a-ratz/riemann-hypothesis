@@ -78,7 +78,7 @@ theorem isAlgebraic_of_mem_adjoin (u x : L) (hx : x ∈ IntermediateField.adjoin
   refine ⟨C (⟨aeval u s, hs⟩ : R) * X - C ⟨aeval u r, hr⟩, ?_, ?_⟩
   · intro h
     have := congrArg (fun p => p.coeff 1) h
-    simp only [coeff_sub, coeff_C_mul, coeff_X_one, mul_one, coeff_C, one_ne_zero, if_false,
+    simp only [coeff_sub, coeff_C_mul, coeff_X_one, mul_one, coeff_C, one_ne_zero, ite_false,
       sub_zero, coeff_zero] at this
     exact h0 (congrArg Subtype.val this)
   · simp only [map_sub, map_mul, aeval_C, aeval_X]
@@ -173,9 +173,9 @@ theorem UpperTheory.integralClosure_finite_of_finiteType_domain :
   intro s L' _ _ _ _ _
   obtain ⟨p, hp⟩ := CharP.exists Ω
   rcases CharP.char_is_prime_or_zero Ω p with hpr | rfl
-  · haveI : Fact p.Prime := ⟨hpr⟩
+  · have : Fact p.Prime := ⟨hpr⟩
     exact GroundTheory.Heights₂.Heights.FieldNumbers.finite_integralClosure_mvPolynomial_of_charP Ω p s L'
-  · haveI : CharZero Ω := CharP.charP_to_charZero Ω
+  · have : CharZero Ω := CharP.charP_to_charZero Ω
     exact GroundTheory.Heights₂.Heights.FieldNumbers.finite_integralClosure_mvPolynomial_of_charZero Ω s L'
 end -- clump:auto
 end -- clump:auto

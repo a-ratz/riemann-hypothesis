@@ -121,7 +121,7 @@ section Form
 variable {V V' H Z : HSp D} {r : ℕ} (d : HypDec V V' r) (dH : HypDec H Z r) (W : HSp D)
 
 theorem hO_rank_zero (hZ : Z.rank = 0) (x y : WO Z W) : hO Z W x y = 0 := by
-  haveI : IsEmpty (Fin Z.rank) := by
+  have : IsEmpty (Fin Z.rank) := by
     rw [hZ]
     infer_instance
   rw [GlobalTheory.MixModel.hO_eq_trace]
@@ -201,7 +201,7 @@ theorem surj_core (hZ : Z.rank = 0) (hsH : IsIsoSplit H Z dH.e dH.i₀) (ψ : Ad
     apply hne
     funext z
     have hz : z = 0 := by
-      haveI : IsEmpty (Fin Z.rank) := by
+      have : IsEmpty (Fin Z.rank) := by
         rw [hZ]
         infer_instance
       exact Matrix.ext fun _ j => isEmptyElim j

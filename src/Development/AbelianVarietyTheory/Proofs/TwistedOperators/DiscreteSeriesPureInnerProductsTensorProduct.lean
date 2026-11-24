@@ -70,8 +70,8 @@ theorem exists_finite_support {ι : Type} {E : ι → Type} [∀ i, AddCommGroup
     obtain ⟨F₁, h₁, k₁⟩ := hx
     obtain ⟨F₂, h₂, k₂⟩ := hy
     refine ⟨fun i => F₁ i ⊔ F₂ i, fun i => ?_, fun G hG => ?_⟩
-    · haveI := h₁ i
-      haveI := h₂ i
+    · have := h₁ i
+      have := h₂ i
       infer_instance
     · exact add_mem (k₁ G fun i => le_trans le_sup_left (hG i)) (k₂ G fun i => le_trans le_sup_right (hG i))
 
@@ -185,7 +185,7 @@ theorem tensorLaw : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : D
     simp [Function.update_idem]
   · intro τ g _ w
     obtain ⟨hc, -⟩ := M.ds τ
-    haveI : CompleteSpace (M.H τ) := hc
+    have : CompleteSpace (M.H τ) := hc
     refine ⟨Function.update w τ (ContinuousLinearMap.adjoint (M.rep τ g) (w τ)), ?_⟩
     apply PiTensorProduct.ext
     apply MultilinearMap.ext

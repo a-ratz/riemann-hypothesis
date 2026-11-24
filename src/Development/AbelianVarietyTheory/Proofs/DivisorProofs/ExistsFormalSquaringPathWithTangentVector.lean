@@ -84,7 +84,7 @@ private lemma coeff_eq_of_X_pow_dvd_sub {n i : ℕ} {a b : PowerSeries R}
 private lemma coeff_mul_of_X_pow_dvd' {n : ℕ} {u : PowerSeries R} (hu : (X : PowerSeries R) ^ n ∣ u)
     (h : PowerSeries R) : coeff n (u * h) = coeff n u * coeff 0 h := by
   obtain ⟨k, rfl⟩ := hu
-  rw [mul_assoc, coeff_X_pow_mul', coeff_X_pow_mul', if_pos le_rfl, if_pos le_rfl, Nat.sub_self]
+  rw [mul_assoc, coeff_X_pow_mul', coeff_X_pow_mul', ite_eq_left le_rfl, ite_eq_left le_rfl, Nat.sub_self]
   simp only [coeff_zero_eq_constantCoeff_apply, map_mul]
 
 private lemma X_pow_dvd_rescale' {k : ℕ} {p : PowerSeries R} (a : R)
@@ -143,7 +143,7 @@ theorem exists_jet_succ_of_lift (A B R : Type) [CommRing A] [CommRing B] [CommRi
     ring
   have hDπ : ∀ b, D (π b) = 0 := fun b => by
     rw [hD_def, hu_def, hmπf, map_sub, coeff_rescale,
-      coeff_eq_of_X_pow_dvd_sub (hψπ b) (Nat.lt_succ_self n), coeff_C, if_neg (by omega)]
+      coeff_eq_of_X_pow_dvd_sub (hψπ b) (Nat.lt_succ_self n), coeff_C, ite_eq_right (by omega)]
     ring
   obtain ⟨c, hc⟩ : ∃ c : R, c * ((2 : R) ^ n - 2) = 1 := by
     have h4 : (4 : ℚ) ≤ 2 ^ n := by
@@ -193,17 +193,17 @@ theorem exists_jet_succ_of_lift (A B R : Type) [CommRing A] [CommRing B] [CommRi
     intro i hi
     simp only [map_sub, map_add (f := _), coeff_rescale, coeff_C_mul_X_pow]
     rcases Nat.lt_succ_iff_lt_or_eq.mp hi with h | h
-    · rw [if_neg h.ne, if_neg h.ne]
+    · rw [ite_eq_right h.ne, ite_eq_right h.ne]
       have := (X_pow_dvd_iff.mp (hu f)) i h
       rw [hu_def, map_sub, coeff_rescale] at this
       linear_combination this
-    · rw [h, if_pos rfl, if_pos rfl, hEm, hE, hD_def, hu_def, map_sub, coeff_rescale]
+    · rw [h, ite_eq_left rfl, ite_eq_left rfl, hEm, hE, hD_def, hu_def, map_sub, coeff_rescale]
       linear_combination (-(coeff n (ψ (m f)) - 2 ^ n * coeff n (ψ f))) * hc
   · intro f
-    rw [← coeff_zero_eq_constantCoeff_apply, map_add (f := _), coeff_C_mul_X_pow, if_neg (by omega),
+    rw [← coeff_zero_eq_constantCoeff_apply, map_add (f := _), coeff_C_mul_X_pow, ite_eq_right (by omega),
       add_zero, hψ0]
   · intro f
-    rw [map_add (f := _), coeff_C_mul_X_pow, if_neg (by omega), add_zero,
+    rw [map_add (f := _), coeff_C_mul_X_pow, ite_eq_right (by omega), add_zero,
       coeff_eq_of_X_pow_dvd_sub (hψφ f) (by omega), hφ1]
   · intro f
     have e : ψ f + C (E f) * X ^ n - φ f = (ψ f - φ f) + C (E f) * X ^ n := by ring
@@ -230,10 +230,10 @@ theorem ringHom_lift_sqZero {B A O R' : Type} [CommRing B] [CommRing A] [CommRin
     (hα : α.FormallySmooth) (π : R' →+* O) (hs : Function.Surjective π) (hk : RingHom.ker π ^ 2 = ⊥)
     (β' : B →+* R') (χ : A →+* O) (hc : χ.comp α = π.comp β') :
     ∃ χ' : A →+* R', π.comp χ' = χ ∧ χ'.comp α = β' := by
-  letI := α.toAlgebra
-  letI := β'.toAlgebra
-  letI := (π.comp β').toAlgebra
-  haveI : Algebra.FormallySmooth B A := hα
+  let := α.toAlgebra
+  let := β'.toAlgebra
+  let := (π.comp β').toAlgebra
+  have : Algebra.FormallySmooth B A := hα
   let π₁ : R' →ₐ[B] O := { π with commutes' := fun _ => rfl }
   let χ₁ : A →ₐ[B] O := { χ with commutes' := fun b => RingHom.congr_fun hc b }
   have hn : IsNilpotent (RingHom.ker (π₁ : R' →+* O)) := ⟨2, hk⟩
@@ -571,14 +571,14 @@ theorem tanStalk_germ (hs : s ∈ V) {U : G.left.Opens} (hU : unitSec G s ∈ U)
     tanStalk G β τ w hs (G.left.presheaf.germ U _ hU f) = tanCan G β τ w hs hU f := by
   unfold tanStalk
   apply tanCan_germ_eq
-  exact (TopCat.Presheaf.germ_exist _ _).choose_spec.choose_spec.choose_spec
+  exact (TopCat.Presheaf.exists_germ_eq _ _).choose_spec.choose_spec.choose_spec
 
 end TanDer
 
 theorem germ_exist_two {X : Scheme.{0}} (p : X) (x y : X.presheaf.stalk p) :
     ∃ (U : X.Opens) (hU : p ∈ U) (a b : Γ(X, U)), X.presheaf.germ U p hU a = x ∧ X.presheaf.germ U p hU b = y := by
-  obtain ⟨U₁, h₁, a, rfl⟩ := TopCat.Presheaf.germ_exist _ x
-  obtain ⟨U₂, h₂, b, rfl⟩ := TopCat.Presheaf.germ_exist _ y
+  obtain ⟨U₁, h₁, a, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ x
+  obtain ⟨U₂, h₂, b, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ y
   exact ⟨U₁ ⊓ U₂, Opens.mem_inf.2 ⟨h₁, h₂⟩, resG _ inf_le_left a, resG _ inf_le_right b,
     TopCat.Presheaf.germ_res_apply _ _ _ _ _, TopCat.Presheaf.germ_res_apply _ _ _ _ _⟩
 
@@ -595,7 +595,7 @@ theorem exists_stalkDer_of_lie : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R
     rw [← map_mul, tanStalk_germ, tanStalk_germ, tanStalk_germ,
       tanCan_mul G β τ w hs hU a b ε (fun f => hI.2.1 U hU _ _ inf_le_right f)]
   · intro a
-    obtain ⟨V₀, h₀, a₀, rfl⟩ := TopCat.Presheaf.germ_exist _ a
+    obtain ⟨V₀, h₀, a₀, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ a
     have hU : unitSec G s ∈ G.hom ⁻¹ᵁ V₀ := by
       show (unitSec G ≫ G.hom) s ∈ V₀
       rw [sec_hom]

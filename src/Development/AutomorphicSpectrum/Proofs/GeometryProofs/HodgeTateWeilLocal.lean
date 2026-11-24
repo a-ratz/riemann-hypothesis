@@ -98,7 +98,7 @@ theorem stalk_normal₀ {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (Comm
       IsIntegrallyClosed (X.presheaf.stalk q.1) ∧ ∃ κ : FractionRing (X.presheaf.stalk q.1) ≃+* Ω,
         κ.toRingHom.comp (algebraMap _ _) = genMap ξ q := by
   have hd : IsDomain (X.presheaf.stalk q.1) := (hξ.inj q).isDomain _
-  letI : Algebra (X.presheaf.stalk q.1) Ω := (genMap ξ q).toAlgebra
+  let : Algebra (X.presheaf.stalk q.1) Ω := (genMap ξ q).toAlgebra
   have : FaithfulSMul (X.presheaf.stalk q.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 (hξ.inj q)
   have hf : IsFractionRing (X.presheaf.stalk q.1) Ω := by
     refine IsFractionRing.of_field _ _ fun a => ?_
@@ -130,12 +130,12 @@ theorem ht_lat_chart : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (Ω : Type) 
     rw [IsLocalRing.maximalIdeal_eq_bot] at h1
     rw [hk (h1.trans (map_zero k₀).symm)]
     exact Ideal.zero_mem _
-  letI : Algebra Γ(X, U) Ω := k₀.toAlgebra
+  let : Algebra Γ(X, U) Ω := k₀.toAlgebra
   have : FaithfulSMul Γ(X, U) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hk
   have hf : IsFractionRing Γ(X, U) Ω := by
     refine IsFractionRing.of_field _ _ fun a => ?_
     obtain ⟨b, c, hc, e⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_frac_genMap ξ hξ q a
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨q.1, hqU⟩ : U)
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨q.1, hqU⟩ : U)
     have hl := hU.isLocalization_stalk ⟨q.1, hqU⟩
     obtain ⟨⟨b₁, s⟩, hb⟩ := IsLocalization.surj (hU.primeIdealOf ⟨q.1, hqU⟩).asIdeal.primeCompl
       (S := X.presheaf.stalk q.1) b
@@ -160,7 +160,7 @@ theorem ht_lat_chart : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (Ω : Type) 
     have hy : hU.fromSpec P ∈ U := by
       rw [← SetLike.mem_coe, ← hU.range_fromSpec]
       exact ⟨P, rfl⟩
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨_, hy⟩ : U)
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨_, hy⟩ : U)
     have hl : IsLocalization p.primeCompl (X.presheaf.stalk (hU.fromSpec P)) := hU.isLocalization_stalk' P hy
     obtain ⟨_, hic, -⟩ := stalk_normal₀ hξ hN ⟨_, hall P⟩
     exact IsIntegrallyClosed.of_equiv (R := X.presheaf.stalk (hU.fromSpec P))
@@ -335,8 +335,8 @@ theorem exists_form [IsIntegrallyClosed R] [IsNoetherianRing R] (G : Over X) [Gr
         Γ.IsHT i M₀ n χ w₀ ∧ ∀ v, w (j v) = κ (algebraMap R _ (w₀ v)) := by
   obtain ⟨L₀, _, _, ⟨M₀⟩⟩ := lieModel_exists X G R x
   obtain ⟨w₀, hw₀⟩ := _root_.GlobalTheory.CompanionTheory.Relay.exists_hodge_tate_functional R T Γ X G x n i hi hsm L₀ M₀ χ
-  letI : Algebra R Ω := (κ.toRingHom.comp (algebraMap R (FractionRing R))).toAlgebra
-  letI : Module R E := Module.compHom E (algebraMap R Ω)
+  let : Algebra R Ω := (κ.toRingHom.comp (algebraMap R (FractionRing R))).toAlgebra
+  let : Module R E := Module.compHom E (algebraMap R Ω)
   have : IsScalarTower R Ω E := ⟨fun a b c => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩

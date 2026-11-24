@@ -80,8 +80,8 @@ theorem eig_generic : ∀ (Ω : Type) [Field Ω] [CharZero Ω] (E : Type) [AddCo
     apply (algebraMap Ω (AlgebraicClosure Ω)).injective
     have := DFunLike.congr_fun hφψ x
     simpa [j] using this
-  haveI : Finite (F →+* Ω) := Finite.of_injective j hj
-  letI : Fintype (F →+* Ω) := Fintype.ofFinite _
+  have : Finite (F →+* Ω) := Finite.of_injective j hj
+  let : Fintype (F →+* Ω) := Fintype.ofFinite _
   have hle : Fintype.card (F →+* Ω) ≤ Module.finrank ℚ F := by
     rw [← AlgHom.card ℚ F (AlgebraicClosure Ω)]
     exact Fintype.card_le_of_injective j hj
@@ -141,8 +141,8 @@ theorem eq_of_specializes_of_fst {X : Scheme.{0}} {O F Ω₀ : Type} [CommRing O
     (s : X ⟶ Sp O) (β : O →+* F) (g₀ : O →+* Ω₀) (ξ₀ : Sp Ω₀ ⟶ X) (h₀ : IsCptGen ξ₀) (hs : ξ₀ ≫ s = spMap g₀)
     (hF : ∀ u : F, IsAlgebraic ℤ u)
     {y y' : ↥(pullback s (spMap β))} (hy : pullback.fst s (spMap β) y = genPt ξ₀) (hyy : y' ⤳ y) : y' = y := by
-  letI := β.toAlgebra
-  letI := g₀.toAlgebra
+  let := β.toAlgebra
+  let := g₀.toAlgebra
   have hy' : pullback.fst s (spMap β) y' = genPt ξ₀ :=
     GlobalTheory.CompanionTheory.Ar.CptInh.nogen ξ₀ h₀ _ (hy ▸ hyy.map (pullback.fst s (spMap β)).continuous)
   have hsurj : SurjectiveOnStalks ξ₀ := by
@@ -184,7 +184,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem exists_lift : ∃ x : Sp Ω ⟶ Xo.XF c, 𝔐.ξ ≫ 𝔐.f = x ≫ Y.j := by
   have hchar : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
-  haveI : CharZero 𝔐.Ω₀ := 𝔐.fn.charZero
+  have : CharZero 𝔐.Ω₀ := 𝔐.fn.charZero
   let g₀ : O →+* 𝔐.Ω₀ := (Spec.preimage (𝔐.ξ₀ ≫ Y.s)).hom
   have hs : 𝔐.ξ₀ ≫ Y.s = spMap g₀ := by
     show _ = Spec.map (CommRingCat.ofHom (Spec.preimage (𝔐.ξ₀ ≫ Y.s)).hom)
@@ -213,7 +213,7 @@ theorem exists_lift : ∃ x : Sp Ω ⟶ Xo.XF c, 𝔐.ξ ≫ 𝔐.f = x ≫ Y.j 
 
 theorem isProper_gen : IsProper (pullback.snd 𝔐.t.G.hom 𝔐.ξ) := by
   obtain ⟨x, hx⟩ := exists_lift 𝔐
-  haveI := Y.oF.proper
+  have := Y.oF.proper
   have sq : IsPullback (pullback.fst 𝔐.t.G.hom 𝔐.ξ ≫ 𝔐.m.φ) (pullback.snd 𝔐.t.G.hom 𝔐.ξ) Y.t.G.hom
       (𝔐.ξ ≫ 𝔐.f) := (IsPullback.of_hasPullback 𝔐.t.G.hom 𝔐.ξ).paste_horiz 𝔐.m.cart.1
   have sq' : IsPullback (pullback.fst Y.oF.t.G.hom x ≫ Y.m.φ) (pullback.snd Y.oF.t.G.hom x) Y.t.G.hom
@@ -237,11 +237,11 @@ theorem two_mul_finrank : 2 * Module.finrank Ω 𝔐.Li = Module.finrank ℤ D.L
     intro s s' h
     refine HodgeBasic.labelEmb_injective c (RingHom.ext fun a => 𝔐.cst.injective ?_)
     exact congrArg (fun m : 𝓞 E →+* Ω => m a) h
-  letI : Fintype (CMType H) := Fintype.ofFinite _
+  let : Fintype (CMType H) := Fintype.ofFinite _
   have hcard : Fintype.card (CMType H ⊕ CMType H) = Module.finrank ℚ E := by
     rw [Fintype.card_of_bijective (HodgeBasic.labelHom_bijective H), Embeddings.card]
   have hint : DirectSum.IsInternal 𝔐.Vgen := eig_generic Ω 𝔐.Li E 𝔐.ρ (CMType H ⊕ CMType H) 𝔐.emb hinj hcard
-  haveI := fun s => (finrank_Vgen 𝔐 s).1
+  have := fun s => (finrank_Vgen 𝔐 s).1
   have h1 : Module.finrank Ω 𝔐.Li = ∑ s, labelRk D s := by
     rw [← (LinearEquiv.ofBijective (DirectSum.coeLinearMap 𝔐.Vgen) hint).finrank_eq, Module.finrank_directSum]
     exact Finset.sum_congr rfl fun s _ => (finrank_Vgen 𝔐 s).2

@@ -76,7 +76,7 @@ theorem val_eq_lift_residue {k K : Type} [CommRing k] [Field K] {Y : Scheme.{0}}
       Scheme.isLocalHom_stalkClosedPointTo' (R := K) x
     H0.val x i hO hi f = IsLocalRing.ResidueField.lift (Scheme.stalkClosedPointTo (R := CommRingCat.of K) x).hom
       ((Y.residue (ptOf x)).hom (germ i (ptOf x) hy hj f)) := by
-  haveI : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of K) x).hom :=
+  have : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of K) x).hom :=
     Scheme.isLocalHom_stalkClosedPointTo' (R := K) x
   rw [H0.val_apply, H0.germ_apply]
   exact (stalkClosedPointTo_ger x _ _ _ (memInf hy hj)).symm.trans
@@ -113,7 +113,7 @@ theorem ratGen_of_birOn : ∀ {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y
     have := hgen.image M.σ.continuous
     rwa [hdense] at this
   refine ⟨ptOf (z ≫ M.σ), hη, hgen', ?_⟩
-  haveI : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of (Om Z)) (z ≫ M.σ)).hom :=
+  have : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of (Om Z)) (z ≫ M.σ)).hom :=
     Scheme.isLocalHom_stalkClosedPointTo' (R := Om Z) (z ≫ M.σ)
   set ψ := IsLocalRing.ResidueField.lift (Scheme.stalkClosedPointTo (R := CommRingCat.of (Om Z)) (z ≫ M.σ)).hom
     with hψ

@@ -114,7 +114,7 @@ variable (L : LocBessel k r) {μG : Measure (Mt k r)} {γ : Matrix (Fin (2 * r +
 
 theorem pairMeas_eq_map (hμR : IsHaarOn (RStab k r γ) μR) (hOQ : IsOrbQuot L γ μR ν) :
     pairMeas L = (ν.prod μR).map (mStab γ) := by
-  haveI : SigmaFinite μR := hμR.1
+  have : SigmaFinite μR := hμR.1
   ext s hs
   have hf : Measurable (s.indicator (1 : PairSp k r → ℝ≥0∞)) := measurable_one.indicator hs
   rw [← lintegral_indicator_one (μ := pairMeas L) hs,

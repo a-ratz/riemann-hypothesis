@@ -115,7 +115,7 @@ theorem integrable_ball (hC : ChartMassCompare.Statement) (hMF : MassFinite.Stat
     (PiLp.antilipschitzWith_ofLp 2 fun _ : Fin n => ℂ).isBounded_preimage Metric.isBounded_closedBall
   obtain ⟨R', hR'⟩ := (Metric.isBounded_iff_subset_ball 0).1 hbd
   have h1 := hle (fun _ => 1) measurable_const
-  simp only [enorm_one, setLIntegral_one] at h1
+  simp only [eNorm_one, setLIntegral_one] at h1
   refine h1.trans_lt (ENNReal.mul_lt_top hK ?_)
   exact (measure_mono (Set.inter_subset_inter_right _ hR')).trans_lt (hMF n d J hJ hd R')
 

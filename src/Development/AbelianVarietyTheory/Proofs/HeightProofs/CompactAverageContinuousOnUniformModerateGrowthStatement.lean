@@ -94,7 +94,7 @@ theorem mul_exp_conj {P : GlobalTheory.TypeSum.Mx n} (hP : IsUnit P) (X : Global
 theorem bound_K (ε : Fin n → Bool) : ∃ M : ℝ, ∀ k : ↥(Formalism.REAL.KG ε), 1 + hs (Formalism.REAL.toMK k) ≤ M := by
   have hc : Continuous fun k : ↥(Formalism.REAL.KG ε) => 1 + hs (Formalism.REAL.toMK k) :=
     continuous_const.add (continuous_hs'.comp
-      (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)))
+      (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)))
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hc.continuousOn
   refine ⟨C, fun k => ?_⟩
   have h := hC k (Set.mem_univ _)
@@ -327,19 +327,19 @@ theorem mul_mem_UJset_of_inUJ {n : ℕ} {ε : Fin n → Bool} {y m : Matrix (Fin
 
 theorem continuous_maximalCompactSubgroup_toMatrix {n : ℕ} (ε : Fin n → Bool) :
     Continuous (fun k : Formalism.REAL.KG ε => Formalism.REAL.toMK k) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+  Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
 
 theorem continuousOn_avg_right_translates : ∀ (n : ℕ) (ε : Fin n → Bool) (f : GlobalTheory.TypeSum.Mx n → ℂ),
     ContinuousOn f (UJset ε) →
     ∀ e : ↥(Formalism.REAL.KG ε) → ℂ, Continuous e →
     ContinuousOn (fun y => ∫ k, e k * f (y * Formalism.REAL.toMK k) ∂(Formalism.REAL.muK ε)) (UJset ε) := by
   intro n ε f hf e he
-  rw [continuousOn_iff_continuous_restrict]
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  rw [continuousOn_iff_continuous_domRestrict]
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : FirstCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : FirstCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (FirstCountableTopology (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (UJset ε) :=
+  have : LocallyCompactSpace (UJset ε) :=
     (isClosed_UJset ε).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let F : UJset ε → Formalism.REAL.KG ε → ℂ := fun y k => e k * f ((y : Matrix (Fin n) (Fin n) ℂ) * Formalism.REAL.toMK k)
   have hF : Continuous (Function.uncurry F) := by
@@ -348,7 +348,7 @@ theorem continuousOn_avg_right_translates : ∀ (n : ℕ) (ε : Fin n → Bool) 
         (p.1 : Matrix (Fin n) (Fin n) ℂ) * Formalism.REAL.toMK p.2 ∈ UJset ε :=
       fun p => mul_mem_UJset_of_inUJ p.1.2 ((p.2 : Formalism.REAL.UJ ε).2)
     exact hf.comp_continuous
-      ((continuous_subtype_val.comp continuous_fst).matrix_mul
+      ((continuous_subtypeVal.comp continuous_fst).matrix_mul
         ((continuous_maximalCompactSubgroup_toMatrix ε).comp continuous_snd)) hmaps
   have h := continuous_parametric_integral_of_continuous (μ := Formalism.REAL.muK ε) hF isCompact_univ
   simp only [Measure.restrict_univ] at h
@@ -520,7 +520,7 @@ def lc {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n) ℂ) : (Fin d → ℝ) �
   ∑ i, (ContinuousLinearMap.proj i : (Fin d → ℝ) →L[ℝ] ℝ).smulRight (b i)
 
 theorem lc_apply {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n) ℂ) (v : Fin d → ℝ) : lc b v = ∑ i, v i • b i := by
-  simp [lc, ContinuousLinearMap.sum_apply]
+  simp [lc, sum_apply]
 
 theorem expProd_line {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n) ℂ) (j : Fin d) (r : ℝ) :
     (List.ofFn fun i => NormedSpace.exp ((r • Pi.single j (1 : ℝ) : Fin d → ℝ) i • b i)).prod =
@@ -849,7 +849,7 @@ theorem hasFDerivAt_derFam_prodExp : ∀ (n : ℕ) (ε : Fin n → Bool) (N : �
   refine Asymptotics.IsBigO.of_bound C ?_
   filter_upwards [Metric.closedBall_mem_nhds (0 : Fin d → ℝ) one_pos] with h hh
   rw [mem_closedBall_zero_iff] at hh
-  simp only [zero_add, e0, Matrix.mul_one, ContinuousLinearMap.coe_sum', Finset.sum_apply,
+  simp only [zero_add, e0, Matrix.mul_one, FunLike.coe_sum, Finset.sum_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.proj_apply, norm_pow, norm_norm]
   exact hC g rfl h hh
 
@@ -993,7 +993,7 @@ theorem continuousOn_and_umg_kAvg : ∀ (n : ℕ) (ε : Fin n → Bool) (f : Glo
     have := congrArg Subtype.val (B.sum_repr ⟨Z, hZ'⟩)
     rw [Submodule.coe_sum] at this
     simp only [Submodule.coe_smul] at this
-    simp only [c, dif_pos hZ]
+    simp only [c, dite_eq_left hZ]
     exact this.symm
   have hli : LinearIndependent ℝ b :=
     B.linearIndependent.map' (GlobalTheory.LowTypeDetermined.lie (Jm ε)).subtype (Submodule.ker_subtype _)
@@ -1012,7 +1012,7 @@ theorem continuousOn_and_umg_kAvg : ∀ (n : ℕ) (ε : Fin n → Bool) (f : Glo
       simp only [Function.comp_apply, ht]
     have h6 := h4.unique (h3.congr_of_eventuallyEq h5)
     rw [h6]
-    simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.smulRight_apply,
+    simp only [FunLike.coe_sum, Finset.sum_apply, ContinuousLinearMap.smulRight_apply,
       ContinuousLinearMap.proj_apply, Complex.real_smul]
   have hD := GlobalTheory.T.derFam_ofFn_eq_sum_prod_coeff_of_expand n ε F hFd _ b c hb hC
   have hK : ∀ k : ↥(KG ε), toMK k ∈ UJset ε := fun k => K_le_UJ (toMK_mem_K k)
@@ -1033,7 +1033,7 @@ theorem continuousOn_and_umg_kAvg : ∀ (n : ℕ) (ε : Fin n → Bool) (f : Glo
     have e1 : (fun k : ↥(KG ε) => c i ((toMK k)⁻¹ * X * toMK k)) =
         fun k => B.repr ⟨(toMK k)⁻¹ * X * toMK k, hX' k⟩ i := by
       funext k
-      simp only [c, dif_pos (had k X hX)]
+      simp only [c, dite_eq_left (had k X hX)]
     rw [e1]
     have hm : Continuous fun k : ↥(KG ε) => (⟨(toMK k)⁻¹ * X * toMK k, hX' k⟩ : GlobalTheory.LowTypeDetermined.lie (Jm ε)) :=
       ((hinvc.matrix_mul continuous_const).matrix_mul (continuous_toMK ε)).subtype_mk _

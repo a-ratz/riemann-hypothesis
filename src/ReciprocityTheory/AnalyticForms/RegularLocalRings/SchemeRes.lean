@@ -102,10 +102,10 @@ theorem exists_mem_pres_V (x : w.W) : ∃ c : w.Idx, x ∈ (w.pres c.1 c.2).V :=
 
 theorem exists_closed_off_of_isOpen (N : Set w.W) (hN : IsOpen N) (hne : N.Nonempty) :
     ∃ x' : w.M, x'.1 ∈ N ∧ w.π.base x'.1 ∉ (projB P D hP : Set (projX P hP)) := by
-  haveI := w.jacobsonSpace_W
+  have := w.jacobsonSpace_W
   obtain ⟨x0, hx0N, hx0c⟩ := nonempty_inter_closedPoints hne hN.isLocallyClosed
   obtain ⟨c, hc⟩ := w.exists_mem_pres_V x0
-  haveI := ((w.pres c.1 c.2).isRegularLocalRing_stalk_iff x0 hc hx0c).mp (w.regular x0)
+  have := ((w.pres c.1 c.2).isRegularLocalRing_stalk_iff x0 hc hx0c).mp (w.regular x0)
   obtain ⟨𝔮, h𝔮min, h𝔮x, -, -⟩ :=
     regular_point_unique_minimalPrime (w.pres c.1 c.2).K ((w.pres c.1 c.2).coord x0 hc)
   obtain ⟨T, hT⟩ := (w.pres c.1 c.2).exists_basicOpen_cover ⟨N, hN⟩
@@ -162,7 +162,7 @@ theorem germ_lift_isUnit (hD : IsMultiHomogIdeal D)
     (c : w.Idx) (x : w.W) (hx : x ∈ (w.pres c.1 c.2).V)
     (hxB : w.π.base x ∉ (projB P D hP : Set (projX P hP))) :
     IsUnit (w.W.presheaf.germ _ x hx ((w.pres c.1 c.2).secHom (bind₁ (w.lift c) f))) := by
-  haveI := w.jacobsonSpace_W
+  have := w.jacobsonSpace_W
   refine (w.W.mem_basicOpen _ x hx).mp ?_
   by_contra hxs
   let U : w.W.Opens := (w.pres c.1 c.2).V ⊓ w.π ⁻¹ᵁ projBCompl P D hP
@@ -865,7 +865,7 @@ theorem inv (hD : IsMultiHomogIdeal D) (c : w.Idx) (x : w.M) (hx : x ∈ w.src c
   have hxp : w.π.base x.1 ∈ (chartOpen hP p).1 := (w.mem_chartOpen_iff c x hx p).2 hp
   have hxU : w.π.base x.1 ∈ projBCompl P D hP :=
     (projBCompl_mem _).2 fun h => hxD ((w.mem_projB_iff_lift hD c x hx).1 h)
-  haveI := w.isIso_off
+  have := w.isIso_off
   have hu : ∀ t : Γ(projX P hP, (chartOpen hP p).1), ∃ F : MvPolynomial (Σ k, ι k) ℂ,
       t = eval₂ (constSec (toSpecC hP) (chartOpen hP p).1) (chartCoord hP p) F := by
     intro t
@@ -906,7 +906,7 @@ theorem exists_sncData_w {e : ℕ} (he : ∀ x : w.M, ringKrullDim (w.W.presheaf
   · obtain ⟨k, hk, hb⟩ := hS l hl
     exact ⟨k, hk, hx', hb⟩
   · ext y
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨hyk, hyO⟩
       have hyV : y.1 ∈ (w.pres c.1 c.2).V := hOV hyO
@@ -951,8 +951,8 @@ theorem exists_divIdeal (hD : IsMultiHomogIdeal D)
     (fun c c' x hx hx' => w.germ_lift_ratio f a hf c c' x hx hx')
   refine ⟨G, effCartier_of_stalkId G (fun x => ?_), fun x hxG => ?_, fun c x hx => hG c x.1 hx⟩
   · obtain ⟨c, hc⟩ := w.exists_mem_pres_V x
-    haveI := w.regular x
-    haveI : IsDomain (w.W.presheaf.stalk x) := isDomain_of_isRegularLocalRing
+    have := w.regular x
+    have : IsDomain (w.W.presheaf.stalk x) := isDomain_of_isRegularLocalRing
     exact ⟨_, mem_nonZeroDivisors_of_ne_zero (w.germ_lift_ne_zero hD hcomp f a hf hzero c x hc),
       hG c x hc⟩
   · by_contra hxZ
@@ -975,7 +975,7 @@ theorem mult {e : ℕ} (he : ∀ x : w.M, ringKrullDim (w.W.presheaf.stalk x.1) 
   obtain ⟨G, hG, hGZ, hGx⟩ := w.exists_divIdeal hD hcomp f a hf hzero
   refine ⟨fun k => ordAlong G (w.compEquiv k), fun c x hx => ?_⟩
   have hx' : x.1 ∈ (w.pres c.1 c.2).V := hx
-  haveI := w.regular x.1
+  have := w.regular x.1
   exact monomial_chart hG hGZ (w.pres c.1 c.2) w.compEquiv e x.1 hx' x.2 (he x)
     (w.coord_of_mem c x hx).symm (w.sncAt he c x hx)
     (fun l hl => by
@@ -1065,7 +1065,7 @@ variable (w : WData P D hP)
 
 theorem coord_eq_of_mem (c : w.Idx) (x : w.M) (hx : x ∈ w.src c) :
     w.coord c x = (w.pres c.1 c.2).coord x.1 hx :=
-  dif_pos hx
+  dite_eq_left hx
 
 theorem continuousOn_coord (c : w.Idx) : ContinuousOn (w.coord c) (w.src c) := by
   rw [continuousOn_iff']
@@ -1192,7 +1192,7 @@ def fib (p : (k : K) → ι k) (l : Fin (w.m p)) (x : w.M) : ℝ :=
 theorem fib_eq (p : (k : K) → ι k) (l : Fin (w.m p)) (i : Fin (w.m p)) (x : w.M)
     (hx : x ∈ w.src ⟨p, i⟩) : w.fib p l x = vecNorm (w.tv p i x) l := by
   have h : ∃ i, x ∈ w.src ⟨p, i⟩ := ⟨i, hx⟩
-  rw [fib, dif_pos h]
+  rw [fib, dite_eq_left h]
   exact vecNorm_smul _ ((w.tv_ne_zero_iff p _ i x h.choose_spec).mpr hx)
     (fun k => w.tv_mul p _ i x h.choose_spec hx k) l
 
@@ -1334,7 +1334,7 @@ theorem isCompact_cptPiece (c : w.Idx) : IsCompact (w.cptPiece c) := by
   have hmemB : ∀ y, y ∈ B ↔ (∀ h ∈ (w.pres c.1 c.2).K, eval y h = 0) ∧
       (∀ q, ‖y (w.yq c.1 c.2 q)‖ ≤ 1) ∧ ∀ k, ‖y (w.yt c.1 c.2 k)‖ ≤ 1 := by
     intro y
-    simp only [B, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+    simp only [B, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
   have hS : ∀ y ∈ B, ∀ i ∈ S, ‖y i‖ ≤ 1 := by
     intro y hy i hi
     rw [hmemB] at hy
@@ -1377,7 +1377,7 @@ theorem isCompact_cptPiece (c : w.Idx) : IsCompact (w.cptPiece c) := by
       have hy' := (hmemB _).mp hy
       exact ⟨y.2, hy'.2.1, hy'.2.2⟩
   rw [heq]
-  exact hpre.image continuous_subtype_val
+  exact hpre.image continuous_subtypeVal
 
 theorem exists_cptPiece (x : w.M) : ∃ c, x ∈ w.cptPiece c := by
   obtain ⟨c0, h0⟩ := w.cover x

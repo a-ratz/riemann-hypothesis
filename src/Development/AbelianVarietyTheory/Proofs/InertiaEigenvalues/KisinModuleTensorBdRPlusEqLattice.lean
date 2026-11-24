@@ -71,7 +71,7 @@ theorem TWincl_smul {R R' : Type} [CommRing R] [CommRing R'] [Algebra O R] [Alge
 theorem TWincl_inj {R R' : Type} [CommRing R] [CommRing R'] [Algebra O R] [Algebra O R']
     (f : R →ₐ[O] R') (hf : Function.Injective f) (T : LocLat G ℚ_[l] K O) :
     Function.Injective (TWincl f T) := by
-  haveI : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Free O ↥T.L.T := T.L.free
   exact Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T) f.toLinearMap hf
 
 theorem fix_of_unit {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (f : M →ₗ[R] M) (r : R)

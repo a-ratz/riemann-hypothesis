@@ -61,7 +61,7 @@ private theorem conn_congr {R : Type} [CommRing R] {F : Shv R} {c : ℤ} {X : Sc
 private theorem conn_top {R : Type} [CommRing R] (F : Shv R) (c : ℤ) {X : Scheme.{0}} {U : X.Opens} (e : U = ⊤) :
     Conn R F c (sch.map U.ι) := by
   subst e
-  haveI : IsIso (⊤ : X.Opens).ι := by
+  have : IsIso (⊤ : X.Opens).ι := by
     first
       | infer_instance
       | (rw [← Scheme.topIso_hom]; infer_instance)
@@ -83,7 +83,7 @@ private theorem exists_good {R : Type} [CommRing R] {F : Shv R} {c : ℤ} {X : S
   · obtain ⟨Y', j', hj', hx, hsub, hC⟩ := H (j y) hy j.opensRange ⟨y, rfl⟩
     have hle : Set.range j' ⊆ Set.range j := hsub
     have hfac : IsOpenImmersion.lift j j' hle ≫ j = j' := IsOpenImmersion.lift_fac j j' hle
-    haveI : IsOpenImmersion (IsOpenImmersion.lift j j' hle ≫ j) := by rw [hfac]; exact hj'
+    have : IsOpenImmersion (IsOpenImmersion.lift j j' hle ≫ j) := by rw [hfac]; exact hj'
     refine ⟨Y', IsOpenImmersion.lift j j' hle, IsOpenImmersion.of_comp _ j, ?_, ?_⟩
     · obtain ⟨z, hz⟩ := hx
       refine ⟨z, j.isOpenEmbedding.injective ?_⟩

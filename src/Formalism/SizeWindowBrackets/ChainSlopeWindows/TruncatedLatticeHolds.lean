@@ -139,7 +139,7 @@ theorem pLen_self (p : Ideal R) [p.IsPrime] (A : Submodule R W) : pLen p A A = 0
 theorem pLen_simple_ne (p m : Ideal R) [hp : p.IsMaximal] [hm : m.IsMaximal] (h : p ≠ m)
     {A C : Submodule R W} (hkill : ∀ s ∈ m, ∀ x ∈ A, s • x ∈ C) : pLen p A C = 0 := by
   have hnle : ¬ m ≤ p := fun hle => h (hm.eq_of_le hp.ne_top hle).symm
-  obtain ⟨s, hsm, hsp⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨s, hsm, hsp⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have hA : A ≤ localization₂ p C := fun x hx => ⟨s, hsp, hkill s hsm x hx⟩
   have hle : localization₂ p A ≤ localization₂ p C := by
     have := locBasic_locS_mono p.primeCompl hA
@@ -280,8 +280,8 @@ theorem card_pLen : ∀ (n : ℕ) (A B : Submodule R W), B ≤ A →
         rw [pLen_add w.1 hBC hCA, hk1 w, Finsupp.add_apply, Finsupp.single_apply]
         by_cases hw : (⟨m0, hm0⟩ : {p : Ideal R // p.IsMaximal}) = w
         · subst hw
-          rw [if_pos rfl, pLen_simple_self m0 e]; simp
-        · rw [if_neg hw, pLen_simple_ne w.1 m0 (fun h => hw (Subtype.ext h.symm))
+          rw [ite_eq_left rfl, pLen_simple_self m0 e]; simp
+        · rw [ite_eq_right hw, pLen_simple_ne w.1 m0 (fun h => hw (Subtype.ext h.symm))
             (kill_of_equiv m0 e)]; simp
       · have hz : ∀ w : {p : Ideal R // p.IsMaximal}, Nat.card (R ⧸ w.1) ^ 0 = 1 :=
           fun _ => pow_zero _

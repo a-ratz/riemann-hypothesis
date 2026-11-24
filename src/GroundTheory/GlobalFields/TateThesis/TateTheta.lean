@@ -232,9 +232,9 @@ theorem continuous_thetaIntegrand (w : InfinitePlace K) {F : 𝔸[K] → ℂ}
     (hF : F ∈ schwartzBruhat K) (χ : HeckeCharacter K) (t : {r : ℝ // 0 < r}) :
     Continuous (thetaIntegrand w F χ t) := by
   have h1 : Continuous fun u : normOneSubgroup K ↦ moduleSection w t * (u : IdeleGroup K) :=
-    continuous_const.mul continuous_subtype_val
+    continuous_const.mul continuous_subtypeVal
   have h2 : Continuous fun u : normOneSubgroup K ↦ (χ.toIdele (u : IdeleGroup K) : ℂ) :=
-    continuous_subtype_val.comp (χ.continuous_toIdele.comp continuous_subtype_val)
+    continuous_subtypeVal.comp (χ.continuous_toIdele.comp continuous_subtypeVal)
   exact ((continuous_adelicTheta hF).comp h1).mul h2
 
 theorem integrableOn_thetaIntegrand (w : InfinitePlace K) {F : 𝔸[K] → ℂ}
@@ -246,8 +246,8 @@ theorem integrableOn_thetaIntegrand (w : InfinitePlace K) {F : 𝔸[K] → ℂ}
 theorem integrableOn_char (χ : HeckeCharacter K) :
     IntegrableOn (fun u : normOneSubgroup K ↦ (χ.toIdele (u : IdeleGroup K) : ℂ))
       (normOneFundamentalDomain K) (normOneMeasure K) :=
-  ((continuous_subtype_val.comp (χ.continuous_toIdele.comp
-    continuous_subtype_val)).continuousOn.integrableOn_compact
+  ((continuous_subtypeVal.comp (χ.continuous_toIdele.comp
+    continuous_subtypeVal)).continuousOn.integrableOn_compact
     (isCompact_closure_normOneFundamentalDomain K)).mono_set subset_closure
 
 theorem toIdele_inv (χ : HeckeCharacter K) (x : IdeleGroup K) :

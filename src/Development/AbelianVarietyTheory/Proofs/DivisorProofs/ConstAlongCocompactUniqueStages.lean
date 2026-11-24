@@ -127,17 +127,17 @@ theorem constAlong_cocompact_unique_stages :
       IsConstAlong σ J X T φ c → IsConstAlong σ J X S c c' → IsConstAlong σ J X S φ c') := by
   refine ⟨fun S => ?_, fun S T hTS => ⟨unip_mono_of_subset F E σ h n J hJ r X Y hW S T hTS, ?_⟩,
     fun S φ c c' h1 h2 => ?_, fun S φ hφ => ?_, fun S T φ c c' hTS hφc hφ hc hc' => ?_⟩
-  · haveI := locallyCompact_unip h hJ hW S
+  · have := locallyCompact_unip h hJ hW S
     exact ⟨cocompact_unip_std h hJ hW S, exists_mass_one (cocompact_unip_std h hJ hW S)⟩
   · intro g hg
     simp only [levi, Subgroup.mem_iInf] at hg ⊢
     exact fun k hk => hg k (hTS hk)
-  · haveI := locallyCompact_unip h hJ hW S
+  · have := locallyCompact_unip h hJ hW S
     exact IsConstTermOn.unique (cocompact_unip_std h hJ hW S) h1 h2
-  · haveI := locallyCompact_unip h hJ hW S
+  · have := locallyCompact_unip h hJ hW S
     exact ⟨_, isConstTermOn_constTermOn (N := unip σ J X S) fun γ hγ g => hφ γ hγ.1 hγ.2 g⟩
-  · haveI := locallyCompact_unip h hJ hW S
-    haveI := locallyCompact_unip h hJ hW T
+  · have := locallyCompact_unip h hJ hW S
+    have := locallyCompact_unip h hJ hW T
     have hle : unip σ J X T ≤ unip σ J X S := unip_mono_of_subset F E σ h n J hJ r X Y hW S T hTS
     have cS := cocompact_unip_std h hJ hW S
     have cT := cocompact_unip_std h hJ hW T

@@ -101,7 +101,7 @@ def FeqFFun : Prop := ∀ x y : Carrier P, Rel Λ F P x y →
   ((∃ n ∈ NLam Λ F, ∀ a, n (frame F a) = frame x.1 a) ↔ (∃ n ∈ NLam Λ F, ∀ a, n (frame F a) = frame y.1 a))
 
 theorem one_mem_NLam {T₀ : E} (F₀ : LFlag S r T₀) : (1 : S.V ≃ₗ[E] S.V) ∈ NLam Λ F₀ := by
-  simp only [NLam, IsAutLam, Set.mem_setOf_eq]
+  simp only [NLam, IsAutLam, Set.mem_ofPred_eq]
   refine ⟨⟨one_mem _, ?_⟩, fun j x _ => ?_, fun x _ => ?_⟩
   · unfold Formalism.HermitianLatticesTheory.gmap
     ext v

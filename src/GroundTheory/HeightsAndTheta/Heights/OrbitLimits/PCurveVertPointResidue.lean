@@ -211,7 +211,7 @@ theorem CurveVertPointResidue.proof (hC : CurveClosedPointChart.Statement) :
     intro b
     rw [geoNum, dite_eq_left hWrel]
   obtain ⟨hF, hFin, hcard⟩ := Inter.regularityLocalResidue_holds.chart_field_card hWmh hcW hdim (charOf W) hp
-  letI : Field (MRing ι ⧸ J) := hF.toField
+  let : Field (MRing ι ⧸ J) := hF.toField
   have hyc : ∀ k, y ⟨k, c k⟩ ≠ 0 := fun k => ne_zero_of_X_notMem fun h => hcW k (hPW h)
   have hD : ∀ n : K → ℕ, (∏ k, y ⟨k, c k⟩ ^ n k) ≠ 0 := fun n =>
     Finset.prod_ne_zero_iff.mpr fun k _ => pow_ne_zero _ (hyc k)

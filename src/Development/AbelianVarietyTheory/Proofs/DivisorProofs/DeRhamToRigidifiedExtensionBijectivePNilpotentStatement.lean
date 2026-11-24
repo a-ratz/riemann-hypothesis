@@ -360,9 +360,9 @@ def restrictR {R D A E : Type} [CommRing R] [CommRing D] [CommRing A] [CommRing 
 
 theorem cocycle_descends : ∀ (R : Type) [CommRing R] (D D' : Type) [CommRing D] [Algebra R D] [CommRing D'] [Algebra R D'] (ψ : D →ₐ[R] D'), (ψ : D →+* D').FaithfullyFlat → ∀ (c : ∀ (E : Type) [CommRing E] [Algebra R E], (D' →ₐ[R] E) → (D' →ₐ[R] E) → E), (∀ (E : Type) [CommRing E] [Algebra R E] (E' : Type) [CommRing E'] [Algebra R E'] (α β : D' →ₐ[R] E) (ρ : E →ₐ[R] E'), α.comp ψ = β.comp ψ → c E' (ρ.comp α) (ρ.comp β) = ρ (c E α β)) → (∀ (E : Type) [CommRing E] [Algebra R E] (f₁ f₂ f₃ : D' →ₐ[R] E), f₁.comp ψ = f₂.comp ψ → f₂.comp ψ = f₃.comp ψ → c E f₁ f₃ = c E f₁ f₂ + c E f₂ f₃) → ∃ a : D', ∀ (E : Type) [CommRing E] [Algebra R E] (α β : D' →ₐ[R] E), α.comp ψ = β.comp ψ → c E α β = β a - α a := by
   intro R _ D D' _ _ _ _ ψ hψ c hnat hcoc
-  letI : Algebra D D' := (ψ : D →+* D').toAlgebra
-  haveI : Module.FaithfullyFlat D D' := hψ
-  letI instRT : Algebra R (D' ⊗[D] D') :=
+  let : Algebra D D' := (ψ : D →+* D').toAlgebra
+  have : Module.FaithfullyFlat D D' := hψ
+  let instRT : Algebra R (D' ⊗[D] D') :=
     ((algebraMap D (D' ⊗[D] D')).comp (algebraMap R D)).toAlgebra
   have h' : ∀ r, algebraMap D D' (algebraMap R D r) = algebraMap R D' r := fun r => ψ.commutes r
   have hT : ∀ r, algebraMap D (D' ⊗[D] D') (algebraMap R D r) = algebraMap R (D' ⊗[D] D') r :=
@@ -375,7 +375,7 @@ theorem cocycle_descends : ∀ (R : Type) [CommRing R] (D D' : Type) [CommRing D
       ((Algebra.TensorProduct.includeRight (R := D) (A := D') (B := D')).commutes d).symm
   obtain ⟨a, ha⟩ := GlobalTheory.AmitsurCohomologyH1.cocycle_is_coboundary D D' (c (D' ⊗[D] D') i₁ i₂) (by
     intro E _ _ f₁ f₂ f₃
-    letI : Algebra R E := ((algebraMap D E).comp (algebraMap R D)).toAlgebra
+    let : Algebra R E := ((algebraMap D E).comp (algebraMap R D)).toAlgebra
     have hE : ∀ r, algebraMap D E (algebraMap R D r) = algebraMap R E r := fun _ => rfl
     have key : ∀ f g : D' →ₐ[D] E,
         Algebra.TensorProduct.lift f g (fun _ _ ↦ Commute.all _ _) (c (D' ⊗[D] D') i₁ i₂) =
@@ -397,7 +397,7 @@ theorem cocycle_descends : ∀ (R : Type) [CommRing R] (D D' : Type) [CommRing D
     exact hcoc E _ _ _ (hc _ _) (hc _ _))
   refine ⟨a, ?_⟩
   intro E _ _ α β hαβ
-  letI : Algebra D E := ((α.comp ψ : D →ₐ[R] E) : D →+* E).toAlgebra
+  let : Algebra D E := ((α.comp ψ : D →ₐ[R] E) : D →+* E).toAlgebra
   let α' : D' →ₐ[D] E := ⟨α.toRingHom, fun _ => rfl⟩
   let β' : D' →ₐ[D] E := ⟨β.toRingHom, fun d => by
     show β (ψ d) = α (ψ d)
@@ -444,8 +444,8 @@ variable {R : Type} [CommRing R] {A : Over (Sp R)} [GrpObj A] [IsCommMonObj A]
 
 theorem injective_of_ff {D D' : Type} [CommRing D] [Algebra R D] [CommRing D'] [Algebra R D']
     (ψ : D →ₐ[R] D') (h : (ψ : D →+* D').FaithfullyFlat) : Function.Injective ψ := by
-  letI : Algebra D D' := (ψ : D →+* D').toAlgebra
-  haveI : Module.FaithfullyFlat D D' := h
+  let : Algebra D D' := (ψ : D →+* D').toAlgebra
+  have : Module.FaithfullyFlat D D' := h
   exact FaithfulSMul.algebraMap_injective D D'
 
 theorem root_map {n : ℕ} {D D' E : Type} [CommRing D] [Algebra R D] [CommRing D'] [Algebra R D'] [CommRing E]
@@ -740,8 +740,8 @@ theorem isSec_sub_existsUnique : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [
     intro D' _ _ φ z hz
     obtain ⟨E', _, _, ψ', φ', hψ', hsq⟩ := GlobalTheory.exists_pushout_faithfullyFlat R D D₁ D' ψ φ hψ
     have hinj : Function.Injective ψ' := by
-      letI : Algebra D' E' := (ψ' : D' →+* E').toAlgebra
-      haveI : Module.FaithfullyFlat D' E' := hψ'
+      let : Algebra D' E' := (ψ' : D' →+* E').toAlgebra
+      have : Module.FaithfullyFlat D' E' := hψ'
       exact FaithfulSMul.algebraMap_injective D' E'
     apply hinj
     have h1 := root_spOver φ ψ' z hz
@@ -1474,7 +1474,7 @@ theorem exists_lie_comp_psi_eq :
   obtain ⟨N', hc⟩ := hN'
   let h : HdR A := l ∘ₗ Submodule.projectionOnto (PrimitiveSubmodule A) N' hc
   obtain ⟨v, hv, -⟩ := hLE.1 h
-  haveI := isAdicComplete_span_natCast_of_isNilpotent p R ⟨N, hN⟩
+  have := isAdicComplete_span_natCast_of_isNilpotent p R ⟨N, hN⟩
   obtain ⟨x, hx, -⟩ := t.existsUnique_lieCorr hv.1
   refine ⟨x, fun c => ?_⟩
   obtain ⟨⟨c, hc1⟩, hc2⟩ := c
@@ -1569,11 +1569,11 @@ theorem bijective_of_isCan_of_isNilpotent_of_hodgeDeRham : GlobalTheory.Publishe
     GlobalTheory.PtExt.toH1O_surjective_of_abelian hH R A g hA hg
   obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_hodgeFiltration_to_pDivOmega_linearMap p R N hN A hA G t
 
-  haveI : Module.Finite R (Cot R (G.A N)) := .of_surjective _ (AugCot.d_surjective _)
-  haveI : Module.Finite R G.omega :=
+  have : Module.Finite R (Cot R (G.A N)) := .of_surjective _ (AugCot.d_surjective _)
+  have : Module.Finite R G.omega :=
     .equiv (LinearEquiv.ofBijective _
       (PDivGroup.omegaLevel_bijective_of_pow_eq_zero p R N hN G N le_rfl)).symm
-  haveI : Module.Projective R (PrimitiveSubmodule A) := hFproj
+  have : Module.Projective R (PrimitiveSubmodule A) := hFproj
 
   have hψs : Function.Surjective ψ :=
     GlobalTheory.surjective_of_range_sup_smul_top_eq_top R _ G.omega ψ

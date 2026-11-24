@@ -124,7 +124,7 @@ theorem UpperTheory.V.Th.pow_choose_two_le_card_fixed_ad0_of_odd_involution :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G G0 : Glob l L) (h : G.Hom G0) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (y : Pt G0.frame O n) (m : ℕ) (rep : Representation O G.Γ (Mm O n m)) (c' : G.Γ), l ≠ 2 → IsAd0 h y m rep → c' * c' = 1 → G.η c' = -1 → Nat.card (ResidueField O) ^ (m * n.choose 2) ≤ Nat.card {Z : Mm O n m // rep c' Z = Z} := by
   intro l _ L G G0 h O _ _ _ _ _ n y m rep c' _ hA hc hη
   obtain ⟨f1, f2, -⟩ := (UpperTheory.V.Th.omFacts l O).2 m
-  haveI := f1
+  have := f1
   let g : G.G₀ := ⟨c' * G.c⁻¹, by rw [MonoidHom.mem_ker, map_mul, map_inv, hη, G.η_c, mul_inv_cancel]⟩
   have hg : c' = (g : G.Γ) * G.c := by simp [g]
   have p1 := red_inv m y.P

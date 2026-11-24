@@ -179,7 +179,7 @@ noncomputable section
 namespace GlobalTheory.Dec.CuspAllKType
 
 theorem one_mem_Kg (I : AutInst) (g : ℕ) : (1 : I.Gf) ∈ I.Kg g := by
-  simp only [AutInst.Kg, AutInst.Kset, Set.mem_setOf_eq]
+  simp only [AutInst.Kg, AutInst.Kset, Set.mem_ofPred_eq]
   refine ⟨?_, fun y _ => ⟨0, Submodule.zero_mem _, ?_⟩⟩
   · simp
   · simp [AutInst.fmat]
@@ -207,7 +207,7 @@ theorem re_fixed (B : RowsAut) : ∀ k ∈ B.I.Kg B.g, (B.R (1, k)).comp B.Re = 
   have hinner : ∀ a, ⟪π k⁻¹ x, B.R (1, a) y⟫_ℂ = ⟪x, B.R (1, k * a) y⟫_ℂ := fun a => by
     have := (GlobalTheory.IdemProj.inner_rep π hπ1 hπm hπn k x (π a y)).symm
     change ⟪π k⁻¹ x, π a y⟫_ℂ = ⟪x, π (k * a) y⟫_ℂ
-    rw [this, hπm, ContinuousLinearMap.mul_apply]
+    rw [this, hπm, mul_apply_eq_comp]
   simp_rw [hinner]
   calc ∫ a, B.e a * ⟪x, B.R (1, k * a) y⟫_ℂ ∂B.μf
       = ∫ a, (fun b => B.e b * ⟪x, B.R (1, b) y⟫_ℂ) (k * a) ∂B.μf := by

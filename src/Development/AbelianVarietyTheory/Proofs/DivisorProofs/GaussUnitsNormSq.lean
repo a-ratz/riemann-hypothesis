@@ -80,9 +80,9 @@ theorem sum_ideal_of_exists (I : Ideal R) [DecidablePred (· ∈ I)] (ψ : AddCh
     refine Finset.sum_congr rfl (fun x _ => ?_)
     by_cases hx : x ∈ I
     · have h' : x + x₀ * r ∈ I := I.add_mem hx hyI
-      rw [if_pos h', if_pos hx, mul_add, AddChar.map_add_eq_mul, mul_comm]
+      rw [ite_eq_left h', ite_eq_left hx, mul_add, AddChar.map_add_eq_mul, mul_comm]
     · have h' : x + x₀ * r ∉ I := fun h => hx (by simpa using I.sub_mem h hyI)
-      rw [if_neg h', if_neg hx, mul_zero]
+      rw [ite_eq_right h', ite_eq_right hx, mul_zero]
   have h1 : (1 - ψ (b * (x₀ * r))) * ∑ x, (if x ∈ I then ψ (b * x) else 0) = 0 := by
     rw [sub_mul, one_mul, ← hS, sub_self]
   rcases mul_eq_zero.mp h1 with h | h

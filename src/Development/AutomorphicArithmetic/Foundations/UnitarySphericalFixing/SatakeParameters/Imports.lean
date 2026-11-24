@@ -318,9 +318,9 @@ theorem val_lt_val_iff (hm : ∀ z, φ z ∈ A' ↔ z ∈ A) (a b : Ω) (hb : b 
   have h1 : A'.valuation (φ b) ≠ 0 := by simpa using hb'
   have h2 : A.valuation b ≠ 0 := by simpa using hb
   have e1 : A'.valuation (φ a) < A'.valuation (φ b) ↔ A'.valuation (φ (a / b)) < 1 := by
-    rw [map_div₀, map_div₀, div_lt_one₀ (zero_lt_iff.mpr h1)]
+    rw [map_div₀, map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr h1)]
   have e2 : A.valuation a < A.valuation b ↔ A.valuation (a / b) < 1 := by
-    rw [map_div₀, div_lt_one₀ (zero_lt_iff.mpr h2)]
+    rw [map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr h2)]
   rw [e1, e2, GlobalTheory.WeilTransport.val_lt_one_iff hm]
 
 theorem isWild_of_rel (hm : ∀ z, φ z ∈ A' ↔ z ∈ A) {σ : G E Ω} {σ' : G E' Ω'}
@@ -403,7 +403,7 @@ theorem isLocalHom_intMap (i : k ≃+* k') (hv : ∀ x : k, valuation k' (i x) �
 theorem map_mem_kOne (i : k ≃+* k') (hv : ∀ x : k, valuation k' (i x) ≤ 1 ↔ valuation k x ≤ 1) {n : ℕ}
     {g : GL (Fin n) k} (hg : g ∈ GlobalTheory.SplitWeil.KOne k (Fin n)) :
     GeneralLinearGroup.map i.toRingHom g ∈ GlobalTheory.SplitWeil.KOne k' (Fin n) := by
-  haveI := isLocalHom_intMap i hv
+  have := isLocalHom_intMap i hv
   obtain ⟨g0, hg0, rfl⟩ := Subgroup.mem_map.1 hg
   refine Subgroup.mem_map.2 ⟨GeneralLinearGroup.map (intMap i hv) g0, ?_, ?_⟩
   · rw [MonoidHom.mem_ker] at hg0 ⊢
@@ -555,22 +555,22 @@ private theorem typeLaw_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.
     (rc' : IrrGL (k := w'.adicCompletion E') → WD h') (hrel : ∀ x x', RepRel i x x' → WDRel φ (rc x) (rc' x'))
     (hT : UpperTheory.Zero.LLC.TypeLaw h rc) : UpperTheory.Zero.LLC.TypeLaw h' rc' := by
   intro E'' _ _ _ _ _ _ g _ w'' h'' ii hii n hn hg hnorm a'' ha'' K _ _ red hred hker θ hθ τ hτ hτc σ' hσ'
-  letI iE : Algebra E E'' := ((algebraMap E' E'').comp j).toAlgebra
-  letI iΩ : Algebra E'' Ω := ((φ.symm : Ω' →+* Ω).comp (algebraMap E'' Ω')).toAlgebra
-  haveI : IsScalarTower E E'' Ω := IsScalarTower.of_algebraMap_eq fun x => by
+  let iE : Algebra E E'' := ((algebraMap E' E'').comp j).toAlgebra
+  let iΩ : Algebra E'' Ω := ((φ.symm : Ω' →+* Ω).comp (algebraMap E'' Ω')).toAlgebra
+  have : IsScalarTower E E'' Ω := IsScalarTower.of_algebraMap_eq fun x => by
     show algebraMap E Ω x = φ.symm (algebraMap E'' Ω' (algebraMap E' E'' (j x)))
     rw [← IsScalarTower.algebraMap_apply, ← P.ext, RingEquiv.symm_apply_apply]
   let ψ : Ω' ≃ₐ[E''] Ω := AlgEquiv.ofRingEquiv (f := φ.symm) fun _ => rfl
-  haveI : Algebra.IsAlgebraic E'' Ω' := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure E'' Ω := ⟨IsAlgClosure.isAlgClosed E, ψ.isAlgebraic⟩
+  have : Algebra.IsAlgebraic E'' Ω' := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure E'' Ω := ⟨IsAlgClosure.isAlgClosed E, ψ.isAlgebraic⟩
   have hm : ∀ z, φ.symm z ∈ A ↔ z ∈ A' := fun z => by
     rw [← P.mem, RingEquiv.apply_symm_apply]
   have h₃ : IsPlaceOver A w'' := fun x => by
     show A.valuation (φ.symm (algebraMap E'' Ω' (x : E''))) < 1 ↔ _
     rw [GlobalTheory.WeilTransport.val_lt_one_iff hm]
     exact h'' x
-  haveI := charZero_compl w
-  haveI := charZero_compl w'
+  have := charZero_compl w
+  have := charZero_compl w'
   have hs : Continuous i.symm := (GlobalTheory.T.continuous_ringEquiv_localField_preserves_valuation _ _ i P.cont).1
   have hcont : Continuous (ii.trans i.symm) := hs.comp hii
   obtain ⟨T, hT1, -⟩ := GlobalTheory.transport_irrGL_bijective _ _ i.symm hs

@@ -104,7 +104,7 @@ theorem latticeProb_eq (μ : Measure E) [μ.IsAddHaarMeasure] :
   set c := Measure.addHaarScalarFactor (Measure.addHaar : Measure E) μ
   rw [← measure_latticeDomain, latticeProb, h]
   have hc0 : (c : ENNReal) ≠ 0 := by exact_mod_cast hc.ne'
-  rw [Measure.restrict_smul, Measure.smul_apply, ENNReal.smul_def, ENNReal.smul_def, smul_smul,
+  rw [Measure.restrict_smul, smul_apply, ENNReal.smul_def, ENNReal.smul_def, smul_smul,
     smul_eq_mul, ENNReal.mul_inv (Or.inl hc0) (Or.inl ENNReal.coe_ne_top), mul_right_comm,
     ENNReal.inv_mul_cancel hc0 ENNReal.coe_ne_top, one_mul]
 
@@ -174,7 +174,7 @@ theorem eq_zero_of_latticeMean_eq_zero {f : E → ℝ} (hc : Continuous f) (h0 :
       ext x
       rw [Set.mem_vadd_set_iff_neg_vadd_mem]
       have := hf (-a) (L.neg_mem ha) x
-      simp only [Submodule.vadd_def, Set.mem_setOf_eq, vadd_eq_add, NegMemClass.coe_neg]
+      simp only [Submodule.vadd_def, mem_ofPred_eq, vadd_eq_add, NegMemClass.coe_neg]
       rw [add_comm, this]
     · rw [← Measure.restrict_apply hm]
       exact h1

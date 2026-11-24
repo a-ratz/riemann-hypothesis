@@ -139,7 +139,7 @@ theorem casimir_on_vector {p q : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     intro b a
     have h5 := congrArg (fun f : Module.End ℂ V => f e)
       (act_Eab_comm h (.inr b) (.inl a) (.inl a) (.inr b))
-    simp only [if_true, LinearMap.sub_apply, Module.End.mul_apply, h3, sub_zero, hw] at h5
+    simp only [ite_true, LinearMap.sub_apply, Module.End.mul_apply, h3, sub_zero, hw] at h5
     rw [h5, Rat.cast_sub, sub_smul]
   have h6 : ∑ b : Fin q, ∑ a : Fin p, ((Λ (.inr b) - Λ (.inl a) : ℚ) : ℂ) • e =
       ((∑ b : Fin q, ∑ a : Fin p, (Λ (.inr b) - Λ (.inl a)) : ℚ) : ℂ) • e := by
@@ -329,7 +329,7 @@ theorem flow_eq {T : GrpData p q} (σ : URep T) {X : Mat p q} (hX : X ∈ upq p 
     convert (preTransparency := .reducible) h2 using 1
     · funext s
       simp only [hf, Function.comp, ContinuousLinearMap.coe_restrictScalars']
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, ← T.expt_add X hX, add_sub_cancel]
+      rw [← mul_apply_eq_comp, ← map_mul, ← T.expt_add X hX, add_sub_cancel]
     · simp [hf]
   have hg : ∀ t : ℝ, HasDerivAt (fun t : ℝ => Complex.exp (-(c * t)) • f t) 0 t := by
     intro t
@@ -341,7 +341,7 @@ theorem flow_eq {T : GrpData p q} (σ : URep T) {X : Mat p q} (hX : X ∈ upq p 
     rw [smul_smul, ← add_smul]; simp
   have hc := is_const_of_deriv_eq_zero (fun t => (hg t).differentiableAt) (fun t => (hg t).deriv) 1 0
   simp only [hf, one_smul, zero_smul, T.expt_zero, map_one, Complex.ofReal_one, mul_one, Complex.ofReal_zero, mul_zero,
-    neg_zero, Complex.exp_zero, ContinuousLinearMap.one_apply] at hc
+    neg_zero, Complex.exp_zero, one_apply_eq_self] at hc
   conv_rhs => rw [← hc, smul_smul, ← Complex.exp_add]
   simp
 
@@ -713,7 +713,7 @@ theorem exists_subrep_closure : ∀ (p q : ℕ) (T : GrpData p q), Subgroup.clos
     | one => intro x hx; simpa using hx
     | mul a b _ _ ha hb' =>
       intro x hx
-      rw [map_mul, ContinuousLinearMap.mul_apply]
+      rw [map_mul, mul_apply_eq_comp]
       exact ha _ (hb' x hx)
   set K := (LinearMap.range E).topologicalClosure with hKdef
   have hK : IsClosed (K : Set πU.H) := Submodule.isClosed_topologicalClosure _
@@ -753,7 +753,7 @@ namespace GlobalTheory.FockExtGroup
 theorem pi_comm {p q r s : ℕ} {T0 : GrpData (p * r + q * s) (p * s + q * r)} {T1 : GrpData p q}
     {T2 : GrpData r s} (F : FockData T0 T1 T2) (g : T1.G) (h : T2.G) (x : F.H) :
     F.π (g, 1) (F.π (1, h) x) = F.π (1, h) (F.π (g, 1) x) := by
-  rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul]
+  rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, ← map_mul]
   simp
 
 theorem comm_and_extend : ∀ (p q n : ℕ) (T0 : GrpData (p * n + q * 0) (p * 0 + q * n)) (T1 : GrpData p q) (T2 : GrpData n 0) (F : FockData T0 T1 T2), 1 ≤ n → ∀ (D : DSRep T1) (τ : URep T2) (M : GKMod n 0) (j : M.V →ₗ[ℂ] τ.H) (I : D.HK.V ⊗[ℂ] M.V →ₗ[ℂ] Pol p q n 0) (v₀ : M.V), IrrU τ → IsHCMod τ M j → v₀ ≠ 0 → IsGIntw F D.HK M I → (∃ J : D.U.H →L[ℂ] F.H, (∀ x, J (D.ι x) = F.ι (I (x ⊗ₜ v₀))) ∧ ∀ g y, F.π (g, 1) (J y) = J (D.U.π g y)) → (∀ (h : T2.G) (x : D.HK.V) (v v' : M.V), j v' = τ.π h (j v) → F.π (1, h) (F.ι (I (x ⊗ₜ v))) = F.ι (I (x ⊗ₜ v'))) ∧ ∀ v : M.V, ∃ J : D.U.H →L[ℂ] F.H, (∀ x, J (D.ι x) = F.ι (I (x ⊗ₜ v))) ∧ ∀ g y, F.π (g, 1) (J y) = J (D.U.π g y) := by
@@ -939,7 +939,7 @@ theorem weight_eq_wtK (p q n : ℕ) (hn : p + q < n) (ap : Fin p → ℕ) (am : 
     have v := e3 ⟨i.1, by omega⟩
     rw [b1 _ (by simp)] at u
     rw [d1 _ ((min_le_left _ _).trans (by rw [Fin.val_rev]; dsimp only; omega))] at v
-    simp only [shiftNu, cPair, wtH, hi, dif_pos, Fin.eta] at u v
+    simp only [shiftNu, cPair, wtH, hi, dite_eq_left, Fin.eta] at u v
     simp only [wtK]
     push_cast at u v
     linarith
@@ -951,7 +951,7 @@ theorem weight_eq_wtK (p q n : ℕ) (hn : p + q < n) (ap : Fin p → ℕ) (am : 
       rw [Fin.val_rev]; dsimp only; omega
     rw [c1 _ (by simp)] at u
     rw [a1 _ ((min_le_left _ _).trans (not_lt.1 hp))] at v
-    simp only [shiftNu, cPair, wtH, dif_neg hp, Fin.rev_rev, hr, dif_pos, Fin.eta] at u v
+    simp only [shiftNu, cPair, wtH, dite_eq_right hp, Fin.rev_rev, hr, dite_eq_left, Fin.eta] at u v
     simp only [wtK]
     push_cast at u v
     linarith
@@ -1058,7 +1058,7 @@ theorem mem_of_isometry_eigen_of_dense_iSup :
   intro H _ _ _ U hU E lam hlam hfin hE hd m y hy
   let V : H →ₗᵢ[ℂ] H := ⟨U.toLinearMap, hU⟩
   have hin : ∀ a b : H, ⟪U a, U b⟫_ℂ = ⟪a, b⟫_ℂ := fun a b => V.inner_map_map a b
-  haveI := hfin m
+  have := hfin m
   obtain ⟨p, hp, q, hq, rfl⟩ := (E m).exists_add_mem_mem_orthogonal y
   have hUq : U q = lam m • q := by
     rw [map_add (f := _), hE m p hp, smul_add] at hy
@@ -1115,9 +1115,9 @@ namespace GlobalTheory
 theorem irrU_of_dense_graded_irrGK :
     ∀ (p q : ℕ) (T : GrpData p q) (σ : URep T) (M : GKMod p q) (j : M.V →ₗ[ℂ] σ.H), Function.Injective j → Dense (Set.range j) → (∀ Y ∈ upq p q, ∀ x, HasDerivAt (fun t : ℝ => σ.π (T.expt (t • Y)) (j x)) (j (M.act Y x)) 0) → IrrGK M → ∀ (N : ℕ → Submodule ℂ M.V) (k : T.G) (lam : ℕ → ℂ), (∀ m, FiniteDimensional ℂ (N m)) → (⨆ m, N m) = ⊤ → k ∈ T.Kset → Function.Injective lam → (∀ m, ∀ x ∈ N m, σ.π k (j x) = lam m • j x) → IrrU σ := by
   intro p q T σ M j hinj hd hder hirr N k lam hfin hN _ hlam heig
-  haveI := hirr.1
+  have := hirr.1
   refine ⟨hinj.nontrivial, fun S hS hinv => ?_⟩
-  haveI : CompleteSpace S := hS.completeSpace_coe
+  have : CompleteSpace S := hS.completeSpace_coe
   have hreal : ∀ Y ∈ upq p q, ∀ y, j y ∈ S → j (M.act Y y) ∈ S := by
     intro Y hY y hy
     rw [← S.orthogonal_orthogonal, Submodule.mem_orthogonal]
@@ -1159,7 +1159,7 @@ theorem irrU_of_dense_graded_irrGK :
       have h3 : σ.π k a = lam m • a :=
         sub_eq_zero.1 (inner_self_eq_zero.1 (Submodule.inner_right_of_mem_orthogonal h1 h2))
       have h4 := GlobalTheory.mem_of_isometry_eigen_of_dense_iSup σ.H (σ.π k) (σ.isom k)
-        (fun m => (N m).map j) lam hlam (fun m => by haveI := hfin m; infer_instance)
+        (fun m => (N m).map j) lam hlam (fun m => by have := hfin m; infer_instance)
         (by rintro m _ ⟨x, hx, rfl⟩; exact heig m x hx) hdense m a h3
       obtain ⟨x', -, hx'⟩ := h4
       have h5 : x' ∈ S.comap j := by rw [Submodule.mem_comap, hx']; exact ha
@@ -1371,9 +1371,9 @@ theorem memLp_two_of_decay : GlobalTheory.IndefiniteRowSideFullHecke.CartanCoshP
     have : ((p + q : ℕ) : ℝ) < n := by exact_mod_cast hn
     linarith
   have h1 := hI.1 p q m hm _ hc
-  haveI := hm.1
-  haveI := GlobalTheory.DetSqrtCover.isHaarMeasure_map_covU T
-  haveI : BorelSpace (Formalism.BasicNotions.UpqT p q) := ⟨rfl⟩
+  have := hm.1
+  have := GlobalTheory.DetSqrtCover.isHaarMeasure_map_covU T
+  have : BorelSpace (Formalism.BasicNotions.UpqT p q) := ⟨rfl⟩
   obtain ⟨t, ht⟩ := GlobalTheory.CompactDualUnique.exists_eq_smul (T.haar.map T.covU) m
   have h2 : Integrable (coshPow (2 * (n : ℝ))) (T.haar.map T.covU) := by
     rw [ht]; exact h1.smul_measure_nnreal
@@ -1552,8 +1552,8 @@ theorem exists_fdeg (T : GrpData p q) (σ : URep T) (hσ : IrrU σ) (v : σ.H) (
     (h : MemLp (fun g => inner ℂ v (σ.π g v)) 2 T.haar) :
     ∃ d : ℝ, 0 < d ∧ ∀ x y : σ.H, Integrable (fun g => ‖inner ℂ y (σ.π g x)‖ ^ 2) T.haar ∧
       ∫ g, ‖inner ℂ y (σ.π g x)‖ ^ 2 ∂T.haar = ‖x‖ ^ 2 * ‖y‖ ^ 2 / d := by
-  haveI : T2Space T.G := T.emb.t2Space
-  haveI := (GlobalTheory.HolDS.haar_unimodular p q T).1
+  have : T2Space T.G := T.emb.t2Space
+  have := (GlobalTheory.HolDS.haar_unimodular p q T).1
   obtain ⟨h1, d, hd, h2⟩ := GlobalTheory.Published.schurOrthogonalitySquareIntegrable' T.G T.haar σ.H σ.π σ.isom σ.cont
     hσ.2 ⟨v, v, hv, hv, h⟩
   refine ⟨d, hd, fun x y => ⟨(memLp_two_iff_integrable_sq_norm (h1 x y).aestronglyMeasurable).1 (h1 x y), ?_⟩⟩
@@ -1792,7 +1792,7 @@ theorem exists_k_translate (hpq : 1 ≤ p + q) (T : GrpData p q) (σ : URep T) (
   obtain ⟨e', h, -⟩ := GlobalTheory.RealPar.pair_kEquivariant_of_lie p q T (GlobalTheory.CoverKGen.kset_gen p q hpq T) σ σ W
     (fun Y => if h : IsKC Y then (M.act Y).restrict (hW Y h) else 0) (j ∘ₗ W.subtype) (j ∘ₗ W.subtype)
     (fun Y hY hK w => by
-      simp only [dif_pos hK, and_self]
+      simp only [dite_eq_left hK, and_self]
       exact hder Y hY w) k hk e
   exact ⟨e', h⟩
 
@@ -1858,7 +1858,7 @@ theorem harmonicMaps_of (hn : 1 ≤ n) (F : FockData T0 T1 T2) (D : DSRep T1) (W
   · rw [hio, hio, hI.2]
   · obtain ⟨J, hJ1, hJ2⟩ := g2 v'
     have : (k, h) = ((k, 1) : T1.G × T2.G) * (1, h) := by simp
-    rw [hio, hio, this, map_mul, ContinuousLinearMap.mul_apply, g1 h e v v' hv, ← hJ1, hJ2, ← he, hJ1]
+    rw [hio, hio, this, map_mul, mul_apply_eq_comp, g1 h e v v' hv, ← hJ1, hJ2, ← he, hJ1]
   · rw [hio, hio, hip]
   · induction y using TensorProduct.induction_on with
     | zero => simp
@@ -1902,7 +1902,7 @@ theorem harmonicModule_of (hdec : GlobalTheory.IndefiniteRowSideFullHecke.FockSi
       simp only [LinearMap.comp_apply, pow_intw i _ _ (he Y)]
       exact om_bound F _ (i y))
     hlow.1 N _ hN1 hN2 hN3
-  haveI := hlow.2.1
+  have := hlow.2.1
   have hdecay := coef_decay hdec hpq F σ M₁ j₁ hHC.2.2 W hlow.2.2.1 i J hJ hG
     fun e h a b => (zero_iff hi he).1 (hlow.2.2.2.2.2.2.1 e h a b)
   have hjv : j₁ v ≠ 0 := (map_ne_zero_iff j₁ hHC.1).2 hv0

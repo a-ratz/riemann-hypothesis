@@ -91,7 +91,7 @@ private theorem Q_mulVec_fvec_eq_smul_frm (τ : D.what₂.Tau) (a : Fin (D.R.rS 
       Formalism.L2.SG.RealObj.famSc, Formalism.L2.SG.RealObj.fam, Fin.snoc_last, Complex.ofReal_one, one_pow, inv_one]
   | cast i =>
     obtain ⟨hq, -⟩ := h4 i i rfl
-    simp only [Formalism.QuantumDeterminants.fvec, Fin.coe_castSucc, i.isLt, dite_true, Fin.eta, Formalism.QuantumDeterminants.bvec, hq, rhoF_eq_frS_pow,
+    simp only [Formalism.QuantumDeterminants.fvec, Fin.val_castSucc, i.isLt, dite_true, Fin.eta, Formalism.QuantumDeterminants.bvec, hq, rhoF_eq_frS_pow,
       Formalism.L2.SG.RealObj.frm, Formalism.L2.SG.RealObj.famSc, Formalism.L2.SG.RealObj.fam, Fin.snoc_castSucc,
       Complex.ofReal_one, one_pow, inv_one, one_smul]
 
@@ -136,9 +136,9 @@ private theorem ptEntry_locBlocksFrom_eq (D : D7) (τ : D.what₂.Tau) :
     intro A i j
     simp only [locBlocksFrom, ptEntry]
     by_cases h1 : i < s ∧ j < s
-    · rw [if_pos h1, if_pos h1]
+    · rw [ite_eq_left h1, ite_eq_left h1]
       by_cases h2 : i + j + 1 = s
-      · rw [if_pos h2, if_pos h2]
+      · rw [ite_eq_left h2, ite_eq_left h2]
         have hz : rhoReal D (A + 1) s = D.host.rdE ^ (-((D.R.rS : ℤ) - ((A + i : ℕ) : ℤ))) *
             D.host.rdE ^ (-((D.R.rS : ℤ) - ((A + j : ℕ) : ℤ))) := by
           rw [← zpow_add₀ hne]
@@ -147,13 +147,13 @@ private theorem ptEntry_locBlocksFrom_eq (D : D7) (τ : D.what₂.Tau) :
           push_cast
           omega
         rw [hz]
-      · rw [if_neg h2, if_neg h2, map_zero, mul_zero]
-    · rw [if_neg h1, if_neg h1]
+      · rw [ite_eq_right h2, ite_eq_right h2, map_zero, mul_zero]
+    · rw [ite_eq_right h1, ite_eq_right h1]
       by_cases h3 : s ≤ i ∧ s ≤ j
-      · rw [if_pos h3, if_pos h3, ih]
+      · rw [ite_eq_left h3, ite_eq_left h3, ih]
         obtain ⟨h3i, h3j⟩ := h3
         rw [show A + s + (i - s) = A + i by omega, show A + s + (j - s) = A + j by omega]
-      · rw [if_neg h3, if_neg h3, map_zero, mul_zero]
+      · rw [ite_eq_right h3, ite_eq_right h3, map_zero, mul_zero]
 
 theorem zhat_conjugator_eq_point (w : Point D.host.E (D.R.rS + 1)) (γ : X.B.I.Ginf) (hrep : Formalism.L2.SG.RealObj.IsPtRep X u u' w γ)
     (τ : D.what₂.Tau) :

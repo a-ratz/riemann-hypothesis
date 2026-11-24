@@ -160,16 +160,16 @@ theorem mem_addSubgroup_of_double_orthogonal : ∀ (M : Type) [AddCommGroup M] [
 
 theorem exists_submodule_killed_card_eq_pow : ∀ (R : Type) [CommRing R] (w : Ideal R), w.IsMaximal → 0 < Nat.card (R ⧸ w) → ∀ (M : Type) [AddCommGroup M] [Module R M] [Finite M] (j : ℕ), Nat.card (R ⧸ w) ^ j ≤ Nat.card {x : M // ∀ a ∈ w, a • x = 0} → ∃ K : Submodule R M, (∀ x ∈ K, ∀ a ∈ w, a • x = 0) ∧ Nat.card K = Nat.card (R ⧸ w) ^ j := by
   intro R _ w hw hpos M _ _ _ j hj
-  haveI := hw
-  letI : Field (R ⧸ w) := Ideal.Quotient.field w
+  have := hw
+  let : Field (R ⧸ w) := Ideal.Quotient.field w
   set T := Submodule.torsionBySet R M (w : Set R) with hT
   have hTm : ∀ x : M, x ∈ T ↔ ∀ a ∈ w, a • x = 0 := fun x => by
     rw [Submodule.mem_torsionBySet_iff]
     exact ⟨fun h a ha => h ⟨a, ha⟩, fun h a => h a a.2⟩
   have hcT : Nat.card {x : M // ∀ a ∈ w, a • x = 0} = Nat.card T :=
     Nat.card_congr (Equiv.subtypeEquivRight fun x => (hTm x).symm)
-  haveI : Finite (R ⧸ w) := Nat.finite_of_card_ne_zero hpos.ne'
-  haveI : Module.Finite (R ⧸ w) T := Module.Finite.of_finite
+  have : Finite (R ⧸ w) := Nat.finite_of_card_ne_zero hpos.ne'
+  have : Module.Finite (R ⧸ w) T := Module.Finite.of_finite
   have hd := Module.natCard_eq_pow_finrank (K := R ⧸ w) (V := T)
   have hq : 1 < Nat.card (R ⧸ w) := Finite.one_lt_card
   have hjd : j ≤ Module.finrank (R ⧸ w) T :=

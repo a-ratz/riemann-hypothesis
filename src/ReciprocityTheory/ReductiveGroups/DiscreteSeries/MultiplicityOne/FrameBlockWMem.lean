@@ -65,7 +65,7 @@ variable {k r : ℕ}
 theorem haarSK_of {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : Formalism.MainNotions.S.IsHaarOn U μ := by
   obtain ⟨h1, h2, h3, h4⟩ := h
   refine ⟨?_, ?_, h1, h2⟩
-  · haveI : IsFiniteMeasureOnCompacts μ := ⟨h4⟩
+  · have : IsFiniteMeasureOnCompacts μ := ⟨h4⟩
     infer_instance
   · assumption
 

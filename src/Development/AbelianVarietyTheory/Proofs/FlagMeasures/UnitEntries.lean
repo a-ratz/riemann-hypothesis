@@ -84,13 +84,13 @@ theorem UpU.mul {s t : Matrix (Fin n) (Fin n) E} (hs : UpU s) (ht : UpU t) : UpU
     · simp
 
 theorem UpU.det {s : Matrix (Fin n) (Fin n) E} (hs : UpU s) : s.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (M := s) (fun i j h => hs.1 i j h)]
+  rw [Matrix.det_of_isUpperTriangular (M := s) (fun i j h => hs.1 i j h)]
   simp [hs.2]
 
 theorem UpU.inv {s : Matrix (Fin n) (Fin n) E} (hs : UpU s) :
     ∃ t : Matrix (Fin n) (Fin n) E, UpU t ∧ t * s = 1 := by
   have hd : IsUnit s.det := by rw [hs.det]; exact isUnit_one
-  letI := Matrix.invertibleOfIsUnitDet s hd
+  let := Matrix.invertibleOfIsUnitDet s hd
   have hb : s.BlockTriangular id := fun i j h => hs.1 i j h
   have hi := Matrix.blockTriangular_inv_of_blockTriangular hb
   have h1 : s⁻¹ * s = 1 := Matrix.nonsing_inv_mul s hd
@@ -156,7 +156,7 @@ theorem decomp (O : Subring E) (W : Matrix (Fin n) (Fin n) E) (σ : Fin n → Fi
       simp only [Matrix.transpose_apply] at this ⊢
       simp [D, this]
   have hd : IsUnit D.det := by rw [← Matrix.det_transpose, hD.det]; exact isUnit_one
-  letI := Matrix.invertibleOfIsUnitDet D hd
+  let := Matrix.invertibleOfIsUnitDet D hd
   have hb : D.BlockTriangular (OrderDual.toDual ∘ β) := by
     intro i j h
     have h' : β i < β j := h

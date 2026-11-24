@@ -125,26 +125,26 @@ theorem zero_fromC {J : Type} (b : TBase ℂ k) :
 
 theorem isIso_of_dim_zero (A : Over S) [GrpObj A] (h : IsAbelianScheme A) (hd : SmoothOfRelativeDimension 0 A.hom) :
     IsIso A.hom := by
-  haveI := h.proper
-  haveI := h.geomConnected
-  haveI : Etale A.hom := (Etale.iff_smoothOfRelativeDimension_zero _).2 hd
+  have := h.proper
+  have := h.geomConnected
+  have : Etale A.hom := (Etale.iff_smoothOfRelativeDimension_zero _).2 hd
   let e : S ⟶ A.left := eSec A
   have he : e ≫ A.hom = 𝟙 S := Over.w η[A]
-  haveI : IsClosedImmersion e := by
-    haveI : IsClosedImmersion (e ≫ A.hom) := by rw [he]; infer_instance
+  have : IsClosedImmersion e := by
+    have : IsClosedImmersion (e ≫ A.hom) := by rw [he]; infer_instance
     exact IsClosedImmersion.of_comp e A.hom
-  haveI : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion (MorphismProperty.diagonal @IsOpenImmersion) :=
+  have : MorphismProperty.HasOfPostcompProperty @IsOpenImmersion (MorphismProperty.diagonal @IsOpenImmersion) :=
     MorphismProperty.hasOfPostcompProperty_iff_le_diagonal.mpr le_rfl
-  haveI : IsOpenImmersion e :=
+  have : IsOpenImmersion e :=
     MorphismProperty.of_postcomp (W := @IsOpenImmersion) (W' := MorphismProperty.diagonal @IsOpenImmersion) e A.hom
       (inferInstanceAs (IsOpenImmersion (pullback.diagonal A.hom))) (by rw [he]; infer_instance)
   have hs : ∀ y : S, A.hom (e y) = y := fun y => by rw [← Scheme.Hom.comp_apply, he]; rfl
-  haveI : IsIso e := by
+  have : IsIso e := by
     refine isIso_of_isOpenImmersion_of_opensRange_eq_top _ (top_unique fun a _ => ?_)
     have hc := (A.hom.isConnected_preimage_singleton (A.hom a)).isPreconnected
     have hcl : IsClopen (Set.range e) := ⟨e.isClosedEmbedding.isClosed_range, e.isOpenEmbedding.isOpen_range⟩
     exact hc.subset_isClopen hcl ⟨e (A.hom a), hs _, _, rfl⟩ rfl
-  haveI : IsIso (e ≫ A.hom) := by rw [he]; infer_instance
+  have : IsIso (e ≫ A.hom) := by rw [he]; infer_instance
   exact IsIso.of_isIso_comp_left e _
 
 theorem lbIso_of_gen {X : Scheme.{0}} (L M : LB X) (F : X ⟶ X) (hF : F = 𝟙 X) (t : LB.Gen (L.pull F)) (ht : t.IsGen)
@@ -169,7 +169,7 @@ theorem lbIso_of_gen {X : Scheme.{0}} (L M : LB X) (F : X ⟶ X) (hF : F = 𝟙 
 
 theorem tmap_zero {J : Type} {b : TBase o k} (s : S ⟶ Sp o) {s' : S' ⟶ Sp o} (t : TObj 0 k J b s') (f : S' ⟶ S) :
     TMap t (zeroObj J b s) f := by
-  haveI := isIso_of_dim_zero t.A t.ab t.dim
+  have := isIso_of_dim_zero t.A t.ab t.dim
   obtain ⟨r, hr⟩ := t.rigid
   have he : (eSec t.A : S' ⟶ t.A.left) ≫ t.A.hom = 𝟙 S' := Over.w η[t.A]
   have hF : t.A.hom ≫ (eSec t.A : S' ⟶ t.A.left) = 𝟙 _ := by

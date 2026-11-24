@@ -177,7 +177,7 @@ variable {ε : Fin n → Bool} {lam : Fin n → ℝ} {W : Type} [NormedAddCommGr
 
 theorem eventually_differentiableAt_tau {abelian₂ : Fin n → ℝ} (hτ : IsTau ε abelian₂ τ w) :
     ∀ᶠ a in 𝓝 (1 : Matrix (Fin n) (Fin n) ℂ), DifferentiableAt ℂ (fun y => τ (prJ ε y)) a := by
-  haveI := hτ.1
+  have := hτ.1
   filter_upwards [(eventually_prJ_mem ε).eventually_nhds] with a ha
   refine differentiableAt_of_coef _ _ fun u v => ?_
   have h : DifferentiableOn ℂ (fun y : Matrix (Fin n) (Fin n) ℂ => ⟪u, τ y v⟫_ℂ) (KC ε) := hτ.2.2.1 u v
@@ -191,8 +191,8 @@ theorem eventually_ps_mul (hB : PsBasic) (hE : PsEquiv) (hl : IsHCParam lam) (h�
         (Matrix (Fin n) (Fin n) ℂ × Matrix (Fin n) (Fin n) ℂ) in 𝓝 ((1, 1), (1, 1)),
       ps ε lam τ w (prJ ε x.1.1 * (x.1.2 * x.2.2) * prJ ε x.2.1) -
         τ (prJ ε x.1.1) * ps ε lam τ w (x.1.2 * x.2.2) * τ (prJ ε x.2.1) = 0 := by
-  haveI := hτ.1
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have := hτ.1
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   obtain ⟨hopen, hpos, hdiff, -⟩ := hB n ε lam W τ w hl hτ
   have hopen' : IsOpen (U1 ε) := hopen
   have hdiff' : DifferentiableOn ℂ (ps ε lam τ w) (U1 ε) := hdiff
@@ -249,7 +249,7 @@ theorem psLocal_of (hB : PsBasic) (hE : PsEquiv) : PsLocal := by
     rw [hdec]; simp
   have hLc' : Continuous fun g : UJ ε => L (umat g) := hLc.comp_continuous hu fun g => g.2
   have hexp : Continuous (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → _) := by
-    letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+    let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
     exact NormedSpace.exp_continuous
   have hc : Continuous fun g : UJ ε =>
       (((umat g * NormedSpace.exp (-L (umat g)), NormedSpace.exp (L (umat g))), (1, 1)) :

@@ -113,7 +113,7 @@ theorem exists_div (l r : ℕ) [Fact l.Prime]
     rw [Nat.card_congr (QuotientAddGroup.quotientKerEquivRange f).toEquiv, hker, hc,
       mul_add, mul_one, pow_add] at h1
     exact (Nat.eq_of_mul_eq_mul_right (pow_pos hl r) h1).symm
-  haveI : Finite (tors M (l ^ n)) :=
+  have : Finite (tors M (l ^ n)) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; positivity)
   have htop : f.range = ⊤ := AddSubgroup.eq_top_of_card_eq _ (by rw [hr, hc])
   have : (⟨y, hy⟩ : tors M (l ^ n)) ∈ f.range := by rw [htop]; trivial
@@ -126,9 +126,9 @@ theorem exists_basis_adapted_lattice_subspace (l r : ℕ) [Fact l.Prime] (V : Ty
       (∀ a : Fin r → ℤ, ∑ i, a i • b i = 0 → ∀ i, (l : ℤ) ∣ a i) ∧
       (∀ y : V, ∃ a : Fin r → ℤ, ∑ i, a i • b i = y) := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
-  haveI : Finite V := Nat.finite_of_card_ne_zero (by rw [hc]; exact pow_ne_zero _ hp.ne_zero)
-  letI := Fintype.ofFinite V
+  have : NeZero l := ⟨hp.ne_zero⟩
+  have : Finite V := Nat.finite_of_card_ne_zero (by rw [hc]; exact pow_ne_zero _ hp.ne_zero)
+  let := Fintype.ofFinite V
 
   have hdim : Module.finrank (ZMod l) V = r := by
     have h1 := Module.card_eq_pow_finrank (K := ZMod l) (V := V)

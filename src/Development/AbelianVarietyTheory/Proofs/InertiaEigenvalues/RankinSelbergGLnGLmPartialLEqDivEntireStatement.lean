@@ -152,7 +152,7 @@ theorem blockGL_cornerGL (hj : j ≤ n) (s : R →ₙ+* S) (g : GL (Fin j) R) :
   rw [GroundTheory.Automorphic.FourierWhittaker.blockMat_apply, GroundTheory.Automorphic.FourierWhittaker.blockMat_apply]
   by_cases ha : a.val < j
   · by_cases hb : b.val < j
-    · simp only [dif_pos ha, dif_pos hb, Matrix.add_apply, Matrix.sub_apply, Matrix.map_apply, Matrix.one_apply,
+    · simp only [dite_eq_left ha, dite_eq_left hb, Matrix.add_apply, Matrix.sub_apply, Matrix.map_apply, Matrix.one_apply,
         Fin.ext_iff]
     · have hab : a ≠ b := fun h => hb (h ▸ ha)
       simp [ha, hb, hab, Matrix.one_apply]
@@ -164,7 +164,7 @@ theorem blockGL_diagPow (hj : j ≤ n) (ϖ : Rˣ) (v : Fin j → ℕ) :
     GroundTheory.Automorphic.FourierWhittaker.blockGL hj (diagPow ϖ v) = diagPow ϖ (GlobalTheory.RSnmUnf.padNat (n := n) v) := by
   ext a b
   rw [GroundTheory.Automorphic.FourierWhittaker.coe_blockGL, GroundTheory.Automorphic.FourierWhittaker.blockMat_apply]
-  simp only [diagPow, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Matrix.diagonalRingHom_apply]
+  simp only [diagPow, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Matrix.diagonalRingHom_apply]
   by_cases ha : a.val < j
   · by_cases hb : b.val < j
     · simp [ha, hb, Matrix.diagonal_apply, GlobalTheory.RSnmUnf.padNat, Fin.ext_iff, MulEquiv.piUnits]
@@ -303,8 +303,8 @@ theorem chart_whit (F : GA E a → ℂ) (g : GA E a) :
       chart F (uGL X * g) y * (GroundTheory.Global.adelicChar E (-supSum 0 X) : ℂ) ∂vecMeasure E (Pos a) := by
   funext y
   by_cases h : IsUnit (Matrix.of y)
-  · simp only [chart, dif_pos h, GlobalTheory.JSW.WhitAlg.whit_eq, mul_assoc]
-  · simp only [chart, dif_neg h, zero_mul, integral_zero]
+  · simp only [chart, dite_eq_left h, GlobalTheory.JSW.WhitAlg.whit_eq, mul_assoc]
+  · simp only [chart, dite_eq_right h, zero_mul, integral_zero]
 
 theorem hasFDerivAt_chart_whit {φ : Sm E a} (h : Good φ) (g : GA E a) :
     HasFDerivAt (chart (GlobalTheory.JSW.whit φ.1) g)
@@ -330,7 +330,7 @@ theorem hasFDerivAt_chart_whit {φ : Sm E a} (h : Good φ) (g : GA E a) :
       fderiv ℝ (chart φ.1 (uGL X * g)) (oneL E a)) ((vecMeasure E (Pos a)).restrict (vecDomain E (Pos a))) :=
     ((GlobalTheory.JSW.WhitAlg.continuous_psiNeg.smul (hc.comp_continuous (continuous_id.prodMk continuous_const)
       fun _ => ⟨trivial, hy⟩)).continuousOn.integrableOn_compact isCompact_closure_vecDomain).mono_set subset_closure
-  haveI : IsFiniteMeasure ((vecMeasure E (Pos a)).restrict (vecDomain E (Pos a))) :=
+  have : IsFiniteMeasure ((vecMeasure E (Pos a)).restrict (vecDomain E (Pos a))) :=
     ⟨by rw [Measure.restrict_apply_univ, vecMeasure_vecDomain]; exact ENNReal.one_lt_top⟩
   refine hasFDerivAt_integral_of_dominated_of_fderiv_le (bound := fun _ => C)
     (F' := fun z X => (GroundTheory.Global.adelicChar E (-supSum 0 X) : ℂ) • fderiv ℝ (chart φ.1 (uGL X * g)) z) hSy
@@ -416,7 +416,7 @@ theorem continuous_of_chart (b : GA E a → ℂ) (U : Subgroup (GL (Fin a) (Af E
   have heq : ∀ g', pF (g⁻¹ * g') ∈ U → b g' = chart b g (F g') := by
     intro g' hg'
     have hx : IsUnit (Matrix.of (F g')) := (pI (g⁻¹ * g')).isUnit
-    rw [chart, dif_pos hx]
+    rw [chart, dite_eq_left hx]
     have hu : hx.unit = pI (g⁻¹ * g') := Units.ext rfl
     rw [hu]
     have e : g' = g * infGL E a (pI (g⁻¹ * g')) * finGL E a (pF (g⁻¹ * g')) := by
@@ -506,7 +506,7 @@ theorem GlobalTheory.KappaCut.exists_kappa : ∀ (E : Type) [Field E] [NumberFie
     refine h3.congr fun x hx => ?_
     have hx' : IsUnit (Matrix.of x) := hx
     have hL' : IsUnit (Matrix.of (L x)) := hmaps hx
-    simp only [Function.comp, chart, dif_pos hx', dif_pos hL']
+    simp only [Function.comp, chart, dite_eq_left hx', dite_eq_left hL']
     congr 3
     have hu : hL'.unit = A * hx'.unit * A⁻¹ := Units.ext (by rw [IsUnit.unit_spec, hLx]; simp)
     rw [hu, ← hconjI]; group
@@ -828,9 +828,9 @@ theorem integrableOn_min_absDet : ∀ (E : Type) [Field E] [NumberField E] [_roo
     · rintro ⟨g, hg⟩
       obtain ⟨γ, n, rfl⟩ := mem_latticeGL_iff.1 hg
       exact ⟨⟨⟨_, γ, rfl⟩, n⟩, rfl⟩
-  haveI : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hd := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom (latticeGL E a) μ
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have h1 : μ (GlobalTheory.AutomorphicL2Unitary.stdDom (latticeGL E a)) ≠ ⊤ := by
     rw [← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ hd]; exact measure_ne_top _ _
   rw [← GlobalTheory.ThetaUnfold.lintegral_unfold μ (latticeGL E a) (ratGL E a).range (fun n : ℤ => @GlobalTheory.UnitaryBC.splitCentre E _ _ _ a 1 ^ n)
@@ -1003,7 +1003,7 @@ theorem mspanR_le_contGood (ha : 0 < a) {π : CuspSub E a} (hπ : π.IsUnitary) 
   refine sInf_le ⟨fun φ hφ => ?_, fun F hF h => ?_, fun F hF X _ ν hν k γ hk => ?_⟩
   · exact ⟨(GlobalTheory.RSnm.mem_goodFns ha hπ (Submodule.mem_sup_left ⟨φ, hφ, rfl⟩)).1, GlobalTheory.MSpanDecay.good_of_mem hπ hφ⟩
   · exact ⟨hF.1.comp (continuous_id.mul continuous_const), GlobalTheory.RtGood.good_mul_right E a F h hF.2⟩
-  · haveI := hν
+  · have := hν
     refine ⟨?_, GlobalTheory.MSpanDecay.Good.kernel hF.2 hk⟩
     exact (GlobalTheory.JSW.kerOp_integrable_continuous E a X ν k γ hk ⟨F, hF.2.1⟩ hF.1
       (GlobalTheory.RSnm.bounded_of_decays ha hF.2.decays)).2
@@ -1079,14 +1079,14 @@ theorem rs_nm_partialL_eq_div : ∀ (E : Type) [Field E] [NumberField E] [_root_
   have hfd : ∀ a : ℕ, ∃ (μ : Measure (GA E a)) (_ : μ.IsHaarMeasure) (𝓕 : Set (GA E a)) (𝓕₀ : Set (GA E a)),
       IsFundamentalDomain (ratGL E a).range 𝓕 μ ∧ IsFundamentalDomain (GlobalTheory.CellDec.NE E a) 𝓕₀ μ := by
     intro a
-    haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E a
-    haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E a
-    haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
-    haveI : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
+    have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E a
+    have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E a
+    have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
+    have : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
     have hsub : (GlobalTheory.CellDec.NE E a : Set (GA E a)) ⊆ ((ratGL E a).range : Set (GA E a)) := by
       rintro _ ⟨u, -, rfl⟩
       exact ⟨u, rfl⟩
-    haveI : DiscreteTopology (GlobalTheory.CellDec.NE E a) :=
+    have : DiscreteTopology (GlobalTheory.CellDec.NE E a) :=
       DiscreteTopology.of_subset (inferInstance : DiscreteTopology ((ratGL E a).range : Set (GA E a))) hsub
     obtain ⟨𝓕, -, -, h𝓕⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (ratGL E a).range
     obtain ⟨𝓕₀, -, -, h𝓕₀⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (GlobalTheory.CellDec.NE E a)
@@ -1104,11 +1104,11 @@ theorem rs_nm_partialL_eq_div : ∀ (E : Type) [Field E] [NumberField E] [_root_
   classical
   let αe : HeightOneSpectrum (𝓞 E) → Fin (m₀ + r + 1 + 1) → ℂˣ := fun w => if h : w ∉ T then α ⟨w, h⟩ else fun _ => 1
   let βe : HeightOneSpectrum (𝓞 E) → Fin (m₀ + 1) → ℂˣ := fun w => if h : w ∉ T then β ⟨w, h⟩ else fun _ => 1
-  have hαe : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, αe w.1 = α w := fun w => dif_pos w.2
-  have hβe : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, βe w.1 = β w := fun w => dif_pos w.2
+  have hαe : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, αe w.1 = α w := fun w => dite_eq_left w.2
+  have hβe : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, βe w.1 = β w := fun w => dite_eq_left w.2
   have hsatσ : ∀ {a : ℕ} (ρ : CuspSub E a) (w : HeightOneSpectrum (𝓞 E)), (∃ B, (CG.mk ρ).HasSat w B) →
       HasSatGL w (ρ.locRep w) (sat (CG.mk ρ) w) := fun ρ w h => by
-    rw [← CG.hasSat_mk, sat, dif_pos h]
+    rw [← CG.hasSat_mk, sat, dite_eq_left h]
     exact h.choose_spec
   have hsat : ∀ w ∉ T, HasSatGL w (π.locRep w) (Finset.univ.val.map (αe w)) := fun w hw => by
     rw [hαe ⟨w, hw⟩, hα ⟨w, hw⟩]; exact hsatσ π w (hT w hw)
@@ -1117,7 +1117,7 @@ theorem rs_nm_partialL_eq_div : ∀ (E : Type) [Field E] [NumberField E] [_root_
   obtain ⟨φ, φ', κ, hφ, hφ', v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13⟩ :=
     GlobalTheory.T.exists_matchedWhittakerVectors_shintaniRelations E m₀ r T hψ π π' hu hu' αe βe hsat hsat'
   obtain ⟨F, hF, hC⟩ := GlobalTheory.T.unfolded_rankinSelberg_cellIntegral_matchedVectors E m₀ r T hψ π π' hu hu' αe βe φ φ' κ hφ hφ' v1 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 v12 v13
-  letI : μ.IsHaarMeasure := hμ
+  let : μ.IsHaarMeasure := hμ
   obtain ⟨c, hc, hU⟩ := GlobalTheory.T.rankinSelbergGLnGLm_unfolding_to_mirabolic E m₀ r μ
   obtain ⟨f, t, hfm, htm, hf0, hfi, hfpos, hR, hid⟩ := hC μ 𝓕₀ h𝓕₀
   obtain ⟨hdiff, hreal⟩ := GlobalTheory.exp_integral_entire_real_pos (μ.restrict 𝓕₀) f t hfm htm hf0 hfi hR

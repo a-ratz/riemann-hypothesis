@@ -60,13 +60,13 @@ private theorem eis_spread (N : ℕ) (hN : 0 < N) (f : ℍ → ℂ) (a : ℕ →
   rw [← hg.hasSum_iff]
   · convert h τ using 1
     funext n
-    simp only [Function.comp_apply, spread, dvd_mul_right, if_true, Nat.mul_div_cancel_left n hN]
+    simp only [Function.comp_apply, spread, dvd_mul_right, ite_true, Nat.mul_div_cancel_left n hN]
     congr 2
     push_cast
     field_simp
   · intro m hm
     simp only [spread]
-    rw [if_neg, zero_mul]
+    rw [ite_eq_right, zero_mul]
     rintro ⟨k, rfl⟩
     exact hm ⟨k, rfl⟩
 
@@ -79,7 +79,7 @@ private theorem eis_one {k : ℤ} {f : ℍ → ℂ} (hf : IsMF k f) (p : PowerSe
   rw [← hp] at hs
   convert hs using 1
   funext n
-  rw [PowerSeries.coeff_map, eq_intCast, ReciprocityTheory.ChartRestriction.L1.qm, ← Complex.exp_nat_mul]
+  rw [PowerSeries.coeff_map, eq_intCast, ReciprocityTheory.ChartRestriction.L1.qm, ← Complex.exp_natCast_mul]
   congr 2
   push_cast
   ring

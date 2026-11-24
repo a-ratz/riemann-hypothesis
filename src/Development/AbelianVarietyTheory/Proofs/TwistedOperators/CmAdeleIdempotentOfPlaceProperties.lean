@@ -70,7 +70,7 @@ theorem idem_spec : ∀ D : D7, (∀ p, idem D p * idem D p = idem D p) ∧ (∀
     · exact TensorProduct.zero_tmul _ _
     · apply AddSubgroup.subset_closure
       refine ⟨singleV D.host.F v 1, ?_, 1, ?_⟩
-      · simp only [intAf, Set.mem_setOf_eq]
+      · simp only [intAf, Set.mem_ofPred_eq]
         intro u
         rcases eq_or_ne u v with rfl | h
         · rw [GlobalTheory.LocWeil.PlaceIdem.evalV_single_same]
@@ -80,7 +80,7 @@ theorem idem_spec : ∀ D : D7, (∀ p, idem D p * idem D p = idem D p) ∧ (∀
       · rfl
   · intro θ hθ τ
     refine ⟨?_, fun τ' h => ?_⟩
-    · rw [hTheta θ hθ τ τ, if_pos rfl]
-    · rw [hTheta θ hθ τ' τ, if_neg (Ne.symm h)]
+    · rw [hTheta θ hθ τ τ, ite_eq_left rfl]
+    · rw [hTheta θ hθ τ' τ, ite_eq_right (Ne.symm h)]
 
 end GlobalTheory.PlaceTensor

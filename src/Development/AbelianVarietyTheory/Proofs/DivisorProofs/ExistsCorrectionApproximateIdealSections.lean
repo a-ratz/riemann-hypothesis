@@ -92,18 +92,18 @@ theorem dvd_of_forall_mem_span_sup_pow {V : Type} [CommRing V] [IsDomain V] [IsD
 
 theorem mem_span_sup_pow_of_forall_complete_dvr : ∀ (O : Type) [CommRing O] [IsDomain O] [IsLocalRing O] [IsIntegrallyClosed O] [CharZero O] [Algebra.EssFiniteType ℤ O] (g : O) (b : ℕ → O), g ≠ 0 → (∀ m n, m ≤ n → b m - b n ∈ maximalIdeal O ^ m) → (∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ ρ : O →+* V, Function.Injective ρ → IsLocalHom ρ → ∀ e, ρ (b e) ∈ Ideal.span {ρ g} ⊔ maximalIdeal V ^ e) → ∀ n, b n ∈ Ideal.span {g} ⊔ maximalIdeal O ^ n := by
   intro O _ _ _ _ _ _ g b hg hb hV n
-  haveI : IsNoetherianRing O := Algebra.EssFiniteType.isNoetherianRing ℤ O
+  have : IsNoetherianRing O := Algebra.EssFiniteType.isNoetherianRing ℤ O
   set m := maximalIdeal O with hm
   let R := AdicCompletion m O
   let ι : O →+* R := algebraMap O R
-  haveI : IsNoetherianRing R := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion O m
+  have : IsNoetherianRing R := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion O m
   obtain ⟨hdom, hic⟩ := GlobalTheory.AnalyticNormality.completion_isDomain_and_isIntegrallyClosed O
   have fg : m.FG := m.fg_of_isNoetherianRing
-  haveI : Module.Flat O R := AdicCompletion.flat_of_isNoetherian m
-  haveI : IsLocalHom (algebraMap O R) := AdicCompletion.algebraMap_isLocalHom_of_fg fg
-  haveI : Module.FaithfullyFlat O R := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have : Module.Flat O R := AdicCompletion.flat_of_isNoetherian m
+  have : IsLocalHom (algebraMap O R) := AdicCompletion.algebraMap_isLocalHom_of_fg fg
+  have : Module.FaithfullyFlat O R := Module.FaithfullyFlat.of_flat_of_isLocalHom
   have hinj : Function.Injective ι := FaithfulSMul.algebraMap_injective O R
-  haveI : CharZero R := charZero_of_injective_ringHom hinj
+  have : CharZero R := charZero_of_injective_ringHom hinj
   have hmR : maximalIdeal R = m.map ι := AdicCompletion.maximalIdeal_eq_map
 
   have hc : IsAdicComplete (m.map ι) R := AdicCompletion.isAdicComplete_self m fg
@@ -122,8 +122,8 @@ theorem mem_span_sup_pow_of_forall_complete_dvr : ∀ (O : Type) [CommRing O] [I
     intro V _ _ _ hVc ρ' hρ' _
     let ρ : O →+* V := ρ'.comp ι
     have hρ : Function.Injective ρ := hρ'.comp hinj
-    haveI : IsLocalHom ρ := inferInstance
-    haveI : CharZero V := charZero_of_injective_ringHom hρ
+    have : IsLocalHom ρ := inferInstance
+    have : CharZero V := charZero_of_injective_ringHom hρ
     have hgV : ρ' (ι g) ≠ 0 := fun h => hgR (hρ' (by rw [h, map_zero]))
     refine dvd_of_forall_mem_span_sup_pow hgV fun e => ?_
     have h1 : ρ (b e) ∈ Ideal.span {ρ g} ⊔ maximalIdeal V ^ e := hV V hVc ρ hρ inferInstance e
@@ -199,8 +199,8 @@ theorem mem_map_of_approx {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π] (I : S
   generalize hξ : Spec.map (CommRingCat.ofHom i) ≫ Z.fromSpecStalk z = ξ
   have hfl : Flat ξ := by
     rw [← hξ]
-    haveI := GlobalTheory.LocalRingGeneralisation.flat_fromSpecStalk Z z
-    haveI : Flat (Spec.map (CommRingCat.ofHom i)) := (HasRingHomProperty.Spec_iff (P := @Flat)).2 hi
+    have := GlobalTheory.LocalRingGeneralisation.flat_fromSpecStalk Z z
+    have : Flat (Spec.map (CommRingCat.ofHom i)) := (HasRingHomProperty.Spec_iff (P := @Flat)).2 hi
     infer_instance
   have hξc : ξ (closedPoint R) = z := by
     rw [← hξ]
@@ -211,7 +211,7 @@ theorem mem_map_of_approx {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π] (I : S
   · rw [Scheme.stalkClosedPointTo, CommRingCat.hom_comp]
     exact RingHom.Flat.comp (Flat.stalkMap ξ _) (RingHom.Flat.of_bijective (ConcreteCategory.bijective_of_isIso _))
   refine _root_.GlobalTheory.SpreadIdeal.mem_stalkId_of_closedFibre _ R (Limits.pullback.fst ξ π) _ _ fun v hv => ?_
-  haveI : IsLocallyNoetherian (Limits.pullback ξ π) := LocallyOfFiniteType.isLocallyNoetherian (Limits.pullback.fst ξ π)
+  have : IsLocallyNoetherian (Limits.pullback ξ π) := LocallyOfFiniteType.isLocallyNoetherian (Limits.pullback.fst ξ π)
   set p := Limits.pullback.fst ξ π with hp
   set q := Limits.pullback.snd ξ π with hq
   have hpq : p ≫ ξ = q ≫ π := Limits.pullback.condition
@@ -222,12 +222,12 @@ theorem mem_map_of_approx {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π] (I : S
     ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ (Sp R).presheaf.germ ⊤ (p v) trivial) ≫ p.stalkMap v
   have hα : Spec.map α = (Limits.pullback ξ π).fromSpecStalk v ≫ p := by
     rw [Spec.map_comp, ← Spec.fromSpecStalk_eq, Scheme.SpecMap_stalkMap_fromSpecStalk]
-  haveI : IsLocalHom α.hom := by
+  have : IsLocalHom α.hom := by
     refine (IsLocalRing.isLocalHom_iff_comap_closedPoint _).2 ?_
     change Spec.map α (closedPoint _) = _
     rw [hα]
     exact (Scheme.Hom.comp_apply _ _ _).trans ((congrArg p Scheme.fromSpecStalk_closedPoint).trans hv)
-  haveI : IsLocalHom (q.stalkMap v).hom := q.toLRSHom.prop v
+  have : IsLocalHom (q.stalkMap v).hom := q.toLRSHom.prop v
   have hc : CommRingCat.ofHom i ≫ α = CommRingCat.ofHom ψ ≫ q.stalkMap v := by
     refine Spec.map_injective ((cancel_mono (Z.fromSpecStalk z)).1 ?_)
     rw [Spec.map_comp _ α, Spec.map_comp _ (q.stalkMap v), Category.assoc, Category.assoc, hξ, hα, Category.assoc, hpq]
@@ -249,7 +249,7 @@ theorem mem_map_of_approx {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π] (I : S
 theorem charZero_essFiniteType {S : Scheme.{0}} (s : S ⟶ Sp ℤ) [Flat s] [LocallyOfFiniteType s] (x : S) :
     CharZero (S.presheaf.stalk x) ∧ Algebra.EssFiniteType ℤ (S.presheaf.stalk x) := by
   let y : PrimeSpectrum ℤ := s x
-  letI A : Algebra ℤ ((Sp ℤ).presheaf.stalk (s x)) := StructureSheaf.stalkAlgebra _ y
+  let A : Algebra ℤ ((Sp ℤ).presheaf.stalk (s x)) := StructureSheaf.stalkAlgebra _ y
   haveI : @IsLocalization.AtPrime ℤ _ ((Sp ℤ).presheaf.stalk (s x)) _ A y.asIdeal _ :=
     StructureSheaf.IsLocalization.to_stalk _ y
   let φ := @algebraMap ℤ ((Sp ℤ).presheaf.stalk (s x)) _ _ A
@@ -294,7 +294,7 @@ theorem range_subset {S : Scheme.{0}} [IsIntegral S] (U : S.Opens) (hU : (U : Se
 
 theorem exists_correction : ∀ (Z S : Scheme.{0}) [IsIntegral Z] [IsIntegral S] (sZ : Z ⟶ Sp ℤ) [LocallyOfFiniteType sZ] [QuasiCompact sZ] (π : S ⟶ Z) [IsProper π] [IsDominant π] [Flat (π ≫ sZ)], ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S → ∀ (U : S.Opens), (U : Set S).Nonempty → ∀ (E : GlobalTheory.EffCartierData S) (z : Z) (k : ℕ), ∃ e : ℕ, ∀ f : Z.presheaf.stalk z, (∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ (ξ : Sp V ⟶ S) (ev : Z.presheaf.stalk z →+* V), IsLocalHom ev → spMap ev ≫ Z.fromSpecStalk z = ξ ≫ π → Set.range (jK V ≫ ξ) ⊆ U → ev f ∈ idlAlong E.idealSheaf ξ ⊔ ((maximalIdeal _).map ev) ^ e) → f ∈ FinalTheorems.stalkId (E.idealSheaf.map π) z ⊔ maximalIdeal _ ^ k := by
   intro Z S _ _ sZ _ _ π _ _ _ hS U hU E z k
-  haveI : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian sZ
+  have : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian sZ
   let K : ℕ → Ideal (Z.presheaf.stalk z) := fun e =>
     { carrier := {f | ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V],
         IsAdicComplete (maximalIdeal V) V → ∀ (ξ : Sp V ⟶ S) (ev : Z.presheaf.stalk z →+* V), IsLocalHom ev →
@@ -313,13 +313,13 @@ theorem exists_correction : ∀ (Z S : Scheme.{0}) [IsIntegral Z] [IsIntegral S]
     rw [← Ideal.map_pow]
     exact Ideal.mem_map_of_mem _ hf
   intro F a ha hK
-  haveI := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ (maximalIdeal (Z.presheaf.stalk z))
-  haveI : Module.FaithfullyFlat (Z.presheaf.stalk z) (AdicCompletion (maximalIdeal (Z.presheaf.stalk z)) (Z.presheaf.stalk z)) :=
+  have := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ (maximalIdeal (Z.presheaf.stalk z))
+  have : Module.FaithfullyFlat (Z.presheaf.stalk z) (AdicCompletion (maximalIdeal (Z.presheaf.stalk z)) (Z.presheaf.stalk z)) :=
     Module.FaithfullyFlat.of_flat_of_isLocalHom
   refine mem_map_of_approx π E.idealSheaf z _ (RingHom.flat_algebraMap_iff.2 inferInstance) F a ha fun x ψ hψ hc => ?_
   obtain ⟨i, hi⟩ : ∃ i, x ∈ E.U i := TopologicalSpace.Opens.mem_iSup.1 (E.cover ▸ trivial)
   obtain ⟨h0, hft⟩ := charZero_essFiniteType (π ≫ sZ) x
-  haveI := (hS x).2
+  have := (hS x).2
   have hI := E.stalkId_idealSheaf i x hi
   rw [hI]
   refine _root_.GlobalTheory.Poinc.mem_span_sup_pow_of_forall_complete_dvr (S.presheaf.stalk x) _ (fun n => ψ (a n))

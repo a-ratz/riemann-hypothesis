@@ -343,12 +343,12 @@ theorem smul_fderiv_chart_comp (φ : Sm E a) (g : GA E a) (y : GL (Fin a) (Cinf 
     c • (fderiv ℝ (chart φ.1 g) (toL y.val)).comp (rmul (toL y.val)) =
       ∑ p, (c * adCoef y p * (lie E a (lieBasis E a p.1) φ).1 (g * infGL E a y)) • lieCoord E a p.2 := by
   refine ContinuousLinearMap.coe_injective ((lieBasis E a).ext fun r => ?_)
-  simp only [ContinuousLinearMap.coe_coe, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.coe_sum', Finset.sum_apply, fderiv_chart_rmul, CuspRep.lie_apply]
+  simp only [ContinuousLinearMap.coe_coe, smul_apply, ContinuousLinearMap.comp_apply,
+    FunLike.coe_sum, Finset.sum_apply, fderiv_chart_rmul, CuspRep.lie_apply]
   rw [lieD_eq_sum, Fintype.sum_prod_type, smul_eq_mul, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single r]
-  · simp only [lieCoord, adCoef, ContinuousLinearMap.coe_comp', Function.comp_apply, LinearMap.coe_toContinuousLinearMap',
+  · simp only [lieCoord, adCoef, ContinuousLinearMap.coe_comp, Function.comp_apply, LinearMap.coe_toContinuousLinearMap',
       Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_eq_same, Complex.ofRealCLM_apply, Complex.ofReal_one,
       smul_eq_mul, mul_one]
     ring
@@ -439,14 +439,14 @@ theorem isBCC_zero_and_add : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
       rw [norm_mul]
       exact mul_le_mul_of_nonneg_left (hCF g) (norm_nonneg c)
     · intro r h0 h1 _ _ μ 𝓕 hμ hFd g
-      haveI := hμ
+      have := hμ
       have hfin := covol_lt_top μ 𝓕 hFd
       have hint : ∀ H : GA E a → ℂ, IsBCC H → IntegrableOn (fun x => H (unip x * g)) 𝓕 μ := by
         intro H hH
         obtain ⟨C, hC⟩ := hH.bdd
         have hc : Continuous fun x : BlockIx a r → Ad E => H (unip x * g) :=
           hH.cont.comp (continuous_unip_adele.mul continuous_const)
-        haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+        have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
         exact Integrable.of_bound hc.aestronglyMeasurable C (Filter.Eventually.of_forall fun x => hC _)
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       rw [integral_add ((hint F hF).const_mul c) (hint G hG), integral_const_mul,
@@ -492,9 +492,9 @@ theorem measurable_integrand {r : ℕ} [MeasurableSpace (BlockIx a r → Ad E)] 
   let Φ : invSet E a → (BlockIx a r → Ad E) → ℂ := fun y u => chart φ.1 (unip u * g) y.1
   have hΦ : Measurable (Function.uncurry Φ) := by
     refine measurable_uncurry_of_continuous_of_measurable (fun u => ?_) (fun y => ?_)
-    · exact ((φ.2 (unip u * g)).continuousOn).restrict
+    · exact ((φ.2 (unip u * g)).continuousOn).domRestrict
     · have e : Φ y = fun u => φ.1 (unip u * g * infGL E a y.2.unit) := by
-        funext u; exact dif_pos y.2
+        funext u; exact dite_eq_left y.2
       rw [e]
       exact (hc.comp ((continuous_unip.mul continuous_const).mul continuous_const)).measurable
   have hy : Measurable (fun x : X => (⟨toL (γ x).val, val_mem_invSet (γ x)⟩ : invSet E a)) :=
@@ -515,9 +515,9 @@ theorem isCuspidal_kerOp : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
     [SFinite ν] (k : X → ℂ) (γ : X → GL (Fin a) (Cinf E)), IsRapidInf ν k γ → ∀ φ : Sm E a, IsBCC φ.1 →
       IsCuspidal (kerOp ν k γ φ.1) := by
   intro E _ _ _ a X _ ν _ k γ hk φ hφ r h0 h1 _ _ μ 𝓕 hμ hF g
-  haveI := hμ
+  have := hμ
   have hfin := covol_lt_top μ 𝓕 hF
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
   obtain ⟨C, hC⟩ := hφ.bdd
   have hk0 : Integrable (fun x => ‖k x‖) ν := by simpa using hk.2.2 0
   have hm := KerCusp.measurable_integrand (r := r) hk.1 hk.2.1 φ hφ.cont g
@@ -704,7 +704,7 @@ theorem kerOp_mem_dSub {π : CuspSub E a} {φ : Sm E a} (hφ : φ ∈ dSub π) {
       have e : (lie E a Y ⟨f, h⟩).1 = ∑ p, (lieCoord E a p.2 Y) • fs p := by
         funext g
         rw [CuspRep.lie_apply, lieD, (h2 g).fderiv]
-        simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+        simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply,
           smul_eq_mul, mul_comm]
       rw [e]
       exact Submodule.sum_mem _ fun p _ => Submodule.smul_mem _ _ (Submodule.subset_span (h1 p))

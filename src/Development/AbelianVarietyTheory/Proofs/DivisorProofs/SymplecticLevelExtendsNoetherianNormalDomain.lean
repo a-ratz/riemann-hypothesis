@@ -197,7 +197,7 @@ theorem level_extends : ∀ {R₁ : Type} [CommRing R₁] (P₁ : PolAV (Sp R₁
   dsimp only at hg
   subst hg
   have hL := abelianSchemeLaws_all.1
-  haveI : NeZero K := ⟨hK.ne'⟩
+  have : NeZero K := ⟨hK.ne'⟩
   let j := spMap (algebraMap R F)
   let P : PolAV (Sp R) :=
     { A := (Over.pullback (spMap h)).obj P₁.A
@@ -210,7 +210,7 @@ theorem level_extends : ∀ {R₁ : Type} [CommRing R₁] (P₁ : PolAV (Sp R₁
       rigid := PolBaseChange.rigidified_pull (isGrpPullback_pullback P₁.A (spMap h)) P₁.rigid
       sym := PolBaseChange.sym_pull (isGrpPullback_pullback P₁.A (spMap h)) P₁.sym
       ample := by
-        haveI := P₁.isAb.proper
+        have := P₁.isAb.proper
         exact AmpleBaseChange.relAmple_of_isPullback P₁.isLB P₁.ample (IsPullback.of_hasPullback P₁.A.hom (spMap h))
       ktriv := by
         obtain ⟨w, hw⟩ := PolBaseChange.lbIso_refl (pull_isLB P₁.isLB (pullback.fst P₁.A.hom (spMap h)))

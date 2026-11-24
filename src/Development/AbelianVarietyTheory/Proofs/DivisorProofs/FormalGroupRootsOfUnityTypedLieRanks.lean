@@ -230,7 +230,7 @@ private lemma exists_mem_sub_one_mem_of_maximal_ne {R : Type} [CommRing R] {P Q 
 theorem exists_sub_one_mem_and_mem {R ι : Type} [CommRing R] [Finite ι] (P : ι → Ideal R) (hP : ∀ i, (P i).IsMaximal)
     (t : ι) : ∃ e : R, e - 1 ∈ P t ∧ ∀ i, P i ≠ P t → e ∈ P i := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have hc : ∀ i, ∃ a : R, (P i ≠ P t → a ∈ P i) ∧ a - 1 ∈ P t := by
     intro i
     by_cases hi : P i = P t
@@ -262,7 +262,7 @@ theorem exists_approx_root_twists : ∀ (E : Type) [Field E] [NumberField E] [Is
   classical
   obtain ⟨a₀, ha₀⟩ := ha₀
   have hp : p.Prime := Fact.out
-  haveI : NeZero h := ⟨hh.ne'⟩
+  have : NeZero h := ⟨hh.ne'⟩
   obtain ⟨e, he1, he⟩ := exists_sub_one_mem_and_mem (fun σ : E →+* ℂ => primeBelow io X σ)
     (fun σ => (primeBelow_isMaximal_card E H l c p T io X σ).1) τ
   have hv1 : ∀ σ a, X.v (embX io X σ a) ≤ 1 := fun σ a => v_embX_le_one io X σ a
@@ -556,7 +556,7 @@ theorem red_eq_of_label_eq {σ σ' : E →+* ℂ} {a b : 𝓞 E} (h : σ' (a : E
 
 theorem frobOnType : FrobOnType io X := by
   intro σ σ' hF
-  haveI := charP_residueField_of_irreducible X
+  have := charP_residueField_of_irreducible X
   have hred : ∀ a, red io X σ' a = red io X σ a ^ p := fun a => (red_eq_pow_iff io X σ σ' a p).2 (hF a)
   have hr : red io X σ H.rt ^ 2 = -(H.d : ResidueField X.O) := by
     rw [← map_pow, H.rt_sq, map_neg, map_natCast]
@@ -1231,9 +1231,9 @@ theorem field_case (K k : Type) [Field K] [Fintype K] [Field k] (p : ℕ) [hp : 
     rw [Finset.card_insert_of_notMem hx', himg] at hle
     omega
   · intro g
-    haveI : CharP K p := RingHom.charP f f.injective p
-    letI : Algebra (ZMod p) K := ZMod.algebra K p
-    letI : Algebra (ZMod p) k := ZMod.algebra k p
+    have : CharP K p := RingHom.charP f f.injective p
+    let : Algebra (ZMod p) K := ZMod.algebra K p
+    let : Algebra (ZMod p) k := ZMod.algebra k p
     let toAlg : (K →+* k) → (K →ₐ[ZMod p] k) := fun φ =>
       { φ with
         commutes' := fun r =>
@@ -1267,14 +1267,14 @@ theorem ringHom_ker_eq_iff_frobenius_twist :
         (∀ s a, F (s + 1) a = F s a ^ p) ∧ Function.Injective F ∧
         ∀ g : R →+* k, RingHom.ker g = RingHom.ker f ↔ ∃ s, F s = g := by
   intro R k _ _ p hp _ f h hh hc
-  haveI : NeZero h := ⟨hh.ne'⟩
-  haveI : Finite (R ⧸ RingHom.ker f) :=
+  have : NeZero h := ⟨hh.ne'⟩
+  have : Finite (R ⧸ RingHom.ker f) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact pow_ne_zero _ hp.out.ne_zero)
-  haveI : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
-  haveI : (RingHom.ker f).IsMaximal :=
+  have : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
+  have : (RingHom.ker f).IsMaximal :=
     Ideal.Quotient.maximal_of_isField _ (Finite.isDomain_to_isField _)
-  letI : Field (R ⧸ RingHom.ker f) := Ideal.Quotient.field _
-  letI : Fintype (R ⧸ RingHom.ker f) := Fintype.ofFinite _
+  let : Field (R ⧸ RingHom.ker f) := Ideal.Quotient.field _
+  let : Fintype (R ⧸ RingHom.ker f) := Fintype.ofFinite _
   obtain ⟨hfix, hsurj, hinj, hall⟩ := field_case (R ⧸ RingHom.ker f) k p (RingHom.kerLift f) h hh
     (by rw [← Nat.card_eq_fintype_card, hc])
   have hmk : ∀ a, RingHom.kerLift f (Ideal.Quotient.mk _ a) = f a := RingHom.kerLift_mk f
@@ -1354,7 +1354,7 @@ theorem proj_eq {j : Fin d' → κ} (hj : Function.Injective j) (t : κ → C) (
     U.submatrix id j * L.submatrix j id = U * Matrix.diagonal t * L := by
   ext a b
   simp only [Matrix.mul_apply, Matrix.submatrix_apply, id, Matrix.diagonal_apply, mul_ite, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine Finset.sum_of_injOn j hj.injOn (fun _ _ => by simp) (fun ℓ _ hℓ => ?_) fun b' _ => by rw [h1, mul_one]
   rw [h0 ℓ (by simpa using hℓ), mul_zero, zero_mul]
 
@@ -1404,7 +1404,7 @@ theorem exists_orbit (X : ValExt T p) (hp : UnramIn E p) (τ : E →+* ℂ) :
       (∀ s a, X.v (embX io X (lab s) a - embX io X τ a ^ p ^ s.val) < 1) ∧
       ∀ z : X.C, z ^ (p ^ h - 1) = 1 → ∃ a₀ : 𝓞 E, X.v (embX io X τ a₀ - z) < 1 := by
   obtain ⟨-, h, h0, hc⟩ := _root_.GlobalTheory.PrimePart.primeBelow_isMaximal_card E H l c p T io X τ
-  haveI := charP_residueField_of_irreducible X
+  have := charP_residueField_of_irreducible X
   obtain ⟨hon, F, Fp, Fs, Fi, Fk⟩ := _root_.GlobalTheory.FrobOrbit.ringHom_ker_eq_iff_frobenius_twist (𝓞 E) _ p (red io X τ) h h0 (by rw [← primeBelow_eq_ker]; exact hc)
   obtain ⟨hi, hs⟩ := _root_.GlobalTheory.PrimePart.red_bijective E H l c p T io X hp
   choose lab hlab using fun s => hs (F s)
@@ -1440,7 +1440,7 @@ theorem exists_hom_of_approx [DecidableEq (Lt1 Dw)] {L : Matrix (Lt1 Dw) (Fin (c
 theorem typedPartAt (hp : UnramIn E p) (τ : E →+* ℂ) : TypedPartAt Ch X τ := by
   classical
   obtain ⟨h, h0, hc, lab, horb, hpow, hroot⟩ := exists_orbit (io := io) X hp τ
-  haveI : NeZero h := ⟨h0.ne'⟩
+  have : NeZero h := ⟨h0.ne'⟩
   obtain ⟨L, hL, hLU, hUL⟩ := _root_.GlobalTheory.PrimePart.exists_integral_inverse_lieVec E H Dw l Xo c p T io X y Ch hp
   set U : Matrix (Fin (chD Ch.ch)) (Lt1 Dw) X.C := Matrix.of fun e ℓ => lieVec Ch X ℓ e with hU
   obtain ⟨-, -, hinj, hker⟩ := id horb
@@ -1524,7 +1524,7 @@ theorem typedPartAt (hp : UnramIn E p) (τ : E →+* ℂ) : TypedPartAt Ch X τ 
       rw [Matrix.of_apply, frame, hco', hr, Matrix.one_apply]
       simp [eq_comm]
     rw [this]; simp
-  · rw [frame, hco', if_neg]
+  · rw [frame, hco', ite_eq_right]
     intro hb'
     exact hb (hinj ((congrArg Sigma.fst hb').trans hf))
   · exact _root_.GlobalTheory.DepthMono.detDepth_le_of_isIntHom X.C _ _ _ _ k _ _ _ _ hπ _

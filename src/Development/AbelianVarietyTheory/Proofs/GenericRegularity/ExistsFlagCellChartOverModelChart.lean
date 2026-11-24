@@ -218,10 +218,10 @@ theorem exists_cell_algebra (K O A T : Type) [Field K] [CommRing O] [IsDomain O]
           (∀ a (h : g a ∈ Algebra.adjoin K (insert e⁻¹ (gens : Set Ω))), ψ ⟨g a, h⟩ = f a) ∧
           ∀ τ i j (h : u τ i j ∈ Algebra.adjoin K (insert e⁻¹ (gens : Set Ω))), ψ ⟨u τ i j, h⟩ = u' τ i j := by
   classical
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   obtain ⟨F, _, _, i, hi, hiα, hfr⟩ := exists_fraction_field K O A α hinj
   obtain ⟨sA, hsA⟩ : ∃ sA : Finset A, ∀ a, a ∈ Subring.closure (Set.range α ∪ (sA : Set A)) := by
-    letI := α.toAlgebra
+    let := α.toAlgebra
     obtain ⟨s, hs⟩ := hft.out
     exact ⟨s, fun a => Algebra.mem_adjoin_iff.mp (hs ▸ Algebra.mem_top)⟩
   let V : Type := Σ τ, {q : Fin (r τ) × Fin (r τ) // q.2 < q.1}
@@ -481,7 +481,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 
 theorem lift_point_unique {R : Type} [CommRing R] [Algebra c.F R] {f : Γ(Y.X, M.U) →+* R} {x x' : Sp R ⟶ Xo.X}
     (Λ : M.Lift f x) (Λ' : M.Lift f x') : x = x' := by
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   have h : Λ.xF = Λ'.xF := by
     rw [← cancel_mono Y.jQ]
     apply pullback.hom_ext
@@ -517,7 +517,7 @@ namespace GlobalTheory.Reg
 open GlobalTheory.Reg.CellChart in
 theorem exists_pChart_of_cell : ReciprocityTheory.ChartRestriction.G.Out.SecTwistSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), FrBC Xo c → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O c.F] [IsFractionRing O c.F] (Y : Model Xo c (algebraMap O c.F)), PushInvertible Y.t.G Y.t.PP.L → ∀ (M : MChart Y) (ix : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) ↪ Fin M.n), ∃ (J : Type) (_ : Finite J) (P : J → PChart Xo c (algebraMap O c.F)), ∀ (L : Type) [Field L] [Algebra c.F L] (W : ValuationSubring L) (f : Γ(Y.X, M.U) →+* L) (y : FrPt Xo c L) (Λ : M.Lift f y.x) (u : ∀ τ : E →+* ℂ, Matrix (Fin M.n) (Fin (Dw.mult τ)) L) (b : ∀ τ : E →+* ℂ, Matrix (Fin (Dw.mult τ)) (Fin (Dw.mult τ)) L), (∀ a, f a ∈ W) → (∀ τ i j, u τ i j ∈ W) → (∀ τ, InCell (ix τ) (u τ)) → (∀ τ, (b τ).BlockTriangular id ∧ ∀ i, b τ i i ≠ 0) → Λ.LieTie (fun τ => u τ * b τ) y.u → ∃ j, (P j).Catches W y := by
   intro hS E _ _ _ H Dw l Xo c hbc O _ _ _ _ _ Y hpush M ix
-  haveI := M.dom
+  have := M.dom
   obtain ⟨α, es, -, hft, hinj, hne, hes, hop, hpt⟩ := GlobalTheory.Reg.ChartOpens.moduli_basicOpens E H Dw l Xo c O Y M
   obtain ⟨ρ, hρ⟩ := GlobalTheory.Reg.MChart.exists_ringHom_rho E H Dw l Xo c O _ Y M
   have hemb : Function.Injective (embF (E := E) c) := fun τ τ' h =>
@@ -562,7 +562,7 @@ theorem exists_pChart_of_cell : ReciprocityTheory.ChartRestriction.G.Out.SecTwis
       (mul_eq_smul_iff_cols _ _ _).mpr fun i => (heig L f hf τ _).mp
         ((GlobalTheory.Reg.isEigAt_iff_eig E H Dw l Xo c O _ Y M L f y.x Λ τ _ _ (ht τ i)).mp (y.eig τ i))
     have hd : IsUnit (b τ).det := by
-      rw [Matrix.det_of_upperTriangular (hb τ).1]
+      rw [Matrix.det_of_isUpperTriangular (hb τ).1]
       exact (Finset.prod_ne_zero_iff.mpr fun i _ => (hb τ).2 i).isUnit
     have h2 := congrArg (· * (b τ)⁻¹) h1
     simp only [Matrix.mul_assoc, Matrix.smul_mul, Matrix.mul_nonsing_inv _ hd, Matrix.mul_one] at h2
@@ -603,7 +603,7 @@ theorem exists_pChart_of_cell : ReciprocityTheory.ChartRestriction.G.Out.SecTwis
           ψ w ∈ Set.range (algebraMap T.V T.Fr)) →
         ∀ z : FrPt Xo c T.Fr, FrMap ψ (yy e he) z → Integral T io z := by
     intro e he T io
-    letI := io.toAlgebra
+    let := io.toAlgebra
     intro ψ hO hg z hz
     have hVinj : Function.Injective (algebraMap T.V T.Fr) := IsFractionRing.injective _ _
     have hB : ∀ w ∈ Subring.closure (Set.range ((algebraMap c.F Ω).comp (algebraMap O c.F)) ∪ (gens : Set Ω)),

@@ -123,7 +123,7 @@ theorem exists_exp_lattice : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCom
       (Λ : Submodule ℤ (Fin g → ℂ)), IsExp y e ∧ DiscreteTopology Λ ∧ Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤ ∧
         ∀ z, e z = 1 ↔ z ∈ Λ := by
   intro X G _ _ g hG hgG y
-  letI : GrpObj ((Over.pullback y).obj G) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback y).obj G) := Functor.grpObjObj
   have hj := isGrpPullback_pullback G y
   have hA : IsAbelianScheme ((Over.pullback y).obj G) := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hG hj
   have hgA : SmoothOfRelativeDimension g ((Over.pullback y).obj G).hom :=
@@ -568,7 +568,7 @@ theorem exists_ext (F : Type) [Field F] [NumberField F] (τ : 𝓞 F →+* ℂ) 
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     by_contra hne
-    have hI := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) (I := RingHom.ker τ) hne (by simpa [RingHom.mem_ker] using hx)
+    have hI := Ideal.under_ne_bot_of_integral_mem (R := ℤ) (I := RingHom.ker τ) hne (by simpa [RingHom.mem_ker] using hx)
       (Algebra.IsIntegral.isIntegral x)
     apply hI
     rw [eq_bot_iff]
@@ -1205,8 +1205,8 @@ theorem rep_conj_of_trace_eq : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (g : �
   classical
   intro p _ D g ρ ρ' htr
   obtain ⟨φ, hφ, hspan⟩ := _root_.GlobalTheory.UPel.HT.SplitC.exists_ringHom_pi_matrix p D
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeO
+  have := D.finO
   have hdim : Module.finrank ℂ ((D.F →+* ℂ) → Matrix (Fin D.m) (Fin D.m) ℂ) = Module.finrank ℤ D.O := by
     rw [Module.finrank_pi_fintype, D.rankO]
     simp [Module.finrank_matrix, NumberField.Embeddings.card]
@@ -1242,7 +1242,7 @@ theorem rep_conj_of_trace_eq : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (g : �
       have hφ' : φ (algebraMap (𝓞 D.F) D.O c) = fun τ => Matrix.scalar (Fin D.m) (τ (c : D.F)) := funext (hφ c)
       rw [← hσ, ← hσ', hφ', key, key] at h1
       simp only [Finset.sum_apply, Pi.smul_apply, Function.comp_apply, smul_eq_mul, Pi.zero_apply]
-      simp only [χ, MonoidHom.coe_coe, RingHom.coe_comp, Function.comp_apply, sub_mul, Finset.sum_sub_distrib]
+      simp only [χ, MonoidHom.coe_ofClass, RingHom.coe_comp, Function.comp_apply, sub_mul, Finset.sum_sub_distrib]
       rw [sub_eq_zero]
       simpa [mul_comm] using h1)
     intro τ
@@ -1357,7 +1357,7 @@ theorem exists_unifAt_of_exp (D : Datum p) {R : Type} [CommRing R] (b : Base D R
     (hρ : ∀ a z, e (ρ' a *ᵥ z) = e z ≫ o.act.act a) :
     ∃ (D' : PLat D.O D.inv) (t : D.La → D'.La) (Q : D'.La →+ (Fin D.g → ℂ)), UnifAt (o.fam h hL) σ ρ' N D' t Q (𝟙 _) e := by
   have hst : ∀ a z, z ∈ Λ → ρ' a *ᵥ z ∈ Λ := fun a z hz => by
-    haveI := o.act.hom a
+    have := o.act.hom a
     rw [← hk, hρ, (hk z).2 hz]
     exact one_comp _
   let φ : D.O →+* Module.End ℤ Λ :=
@@ -1371,8 +1371,8 @@ theorem exists_unifAt_of_exp (D : Datum p) {R : Type} [CommRing R] (b : Base D R
       map_mul' := fun a b => by ext x i; simp [Matrix.mulVec_mulVec]
       map_zero' := by ext x i; simp
       map_add' := fun a b => by ext x i; simp [Matrix.add_mulVec] }
-  letI : Module D.O Λ := Module.compHom Λ φ
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  let : Module D.O Λ := Module.compHom Λ φ
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   let Q : Λ →+ (Fin D.g → ℂ) := Λ.subtype.toAddMonoidHom
   have hQi : Function.Injective Q := Subtype.val_injective
   have hQk : ∀ z, e z = 1 ↔ z ∈ Q.range := fun z => by

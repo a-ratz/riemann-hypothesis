@@ -111,7 +111,7 @@ theorem GCoord.c_mul_gS_eq_delta_theta : ∀ (D : D7) (X : HidaSetting D) (Y : F
   refine ⟨hg, fun p => ?_⟩
 
   have hE : ((gS D : ℕ) : D.host.E) ≠ 0 := Nat.cast_ne_zero.mpr hg
-  haveI : Nontrivial (D.s.atP p).Ep :=
+  have : Nontrivial (D.s.atP p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (D.s.atP p).Fp) (by rw [(D.s.atP p).rank]; norm_num)
   let cp : (D.s.atP p).Fp := (G.c p).val
   have hc : algebraMap (D.s.atP p).Fp (D.s.atP p).Ep cp =
@@ -134,9 +134,9 @@ theorem GCoord.c_mul_gS_eq_delta_theta : ∀ (D : D7) (X : HidaSetting D) (Y : F
       have hn : Loc.resChar p ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) := by
         rw [← hs, hD]; simp
       simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hn
-      have hgp : gpart p = 1 := by unfold gpart; rw [if_neg hn.1, if_neg hn.2]
+      have hgp : gpart p = 1 := by unfold gpart; rw [ite_eq_right hn.1, ite_eq_right hn.2]
       rw [Frames.th, hgg, hgp]
-      exact (if_neg (by decide)).trans Nat.cast_one.symm
+      exact (ite_eq_right (by decide)).trans Nat.cast_one.symm
     · simp [hM, hD] at hA
     · simp [hM, hD] at hA
     · have hgs := wc.gg_some g hM
@@ -148,11 +148,11 @@ theorem GCoord.c_mul_gS_eq_delta_theta : ∀ (D : D7) (X : HidaSetting D) (Y : F
       have hgp : gpart p = Loc.resChar p := by
         unfold gpart
         rcases hn with h | h
-        · rw [if_pos h, h]
+        · rw [ite_eq_left h, h]
         · by_cases h0 : Loc.resChar p = D.host.g 0
-          · rw [if_pos h0, h0]
-          · rw [if_neg h0, if_pos h, h]
-      simp only [Frames.th, hgs.1, if_true, hgs.2, hA.2, hgp]
+          · rw [ite_eq_left h0, h0]
+          · rw [ite_eq_right h0, ite_eq_left h, h]
+      simp only [Frames.th, hgs.1, ite_true, hgs.2, hA.2, hgp]
       exact hq
   exact h1.trans (congrArg (Y.δ p * ·) h2.symm)
 
@@ -351,7 +351,7 @@ theorem coef_eq {H : Loc.HermSp M V} (Fr : LocNG.FrameD H r) {n : ℕ} (Hm : Mat
     | last =>
       have h0 : H.h (Fr.f (Fin.last r)) (Fr.es j) = 0 := by
         rw [H.h_herm (Fr.es j) (Fr.f (Fin.last r)), Fr.h_sz j, map_zero]
-      rw [h0, if_neg (Fin.castSucc_lt_last j).ne']
+      rw [h0, ite_eq_right (Fin.castSucc_lt_last j).ne']
     | cast i =>
       rw [Fr.h_es i j]
       simp [Fin.castSucc_inj]
@@ -477,7 +477,7 @@ theorem tendsto_pow_zero (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace
   intro γ _
   obtain ⟨n, hn⟩ := exists_pow_lt₀ hz γ
   filter_upwards [eventually_ge_atTop n] with m hm
-  simp only [Set.mem_setOf_eq, map_pow]
+  simp only [Set.mem_ofPred_eq, map_pow]
   exact lt_of_le_of_lt (pow_le_pow_right_of_le_one' hz.le hm) hn
 
 theorem norm_le_one_of_isIntegral {Ω : Type} [NormedField Ω] [IsUltrametricDist Ω] {x : Ω}
@@ -661,7 +661,7 @@ theorem exists_extension (hd : DenseRange ι) (hUo : IsOpen U)
     have e : (Pi.map (fun (_ : Fin (Module.finrank ℚ F)) => (Rat.cast : ℚ → ℚ_[l])) q) =
       fun i => (q i : ℚ_[l]) := rfl
     rw [e, Set.mem_preimage, hΦq] at hx
-    rw [e, Set.mem_setOf_eq, hΨq]
+    rw [e, Set.mem_ofPred_eq, hΨq]
     exact hle _ hx
   have hker : ∀ c, Φ c = 0 → Ψ c = 0 := by
     intro c hc
@@ -680,7 +680,7 @@ theorem exists_extension (hd : DenseRange ι) (hUo : IsOpen U)
   have hψ : ∀ x, ψ (1 ⊗ₜ x) = σ x := fun x => by simp [ψ]
   have hsurj : Function.Surjective φ := by
     have h1 : IsClosed (LinearMap.range φ.toLinearMap : Set K) :=
-      Submodule.closed_of_finiteDimensional _
+      Submodule.isClosed_of_finiteDimensional _
     intro z
     have h2 : Set.range ι ⊆ (LinearMap.range φ.toLinearMap : Set K) := by
       rintro _ ⟨x, rfl⟩
@@ -759,7 +759,7 @@ theorem psi_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] 
   have := A.free
   have := A.qlFin
   have : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; omega)
-  letI := ((algebraMap A.Fp A.Ep).comp (algebraMap ℚ_[resChar p] A.Fp)).toAlgebra
+  let := ((algebraMap A.Fp A.Ep).comp (algebraMap ℚ_[resChar p] A.Fp)).toAlgebra
   have : IsScalarTower ℚ_[resChar p] A.Fp A.Ep := IsScalarTower.of_algebraMap_eq fun _ => rfl
   rw [← trace_base_change hE A.rank A.ιF A.ιE A.compat A.span x, Algebra.trace_trace]
   exact h2
@@ -824,7 +824,7 @@ theorem prod_psi {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
   have hfin : {p : HeightOneSpectrum (𝓞 F) | resChar p = l}.Finite := by
     refine (Ideal.finite_factors (I := Ideal.span {(l : 𝓞 F)}) (by simpa using hl0)).subset ?_
     intro p hp
-    rw [Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+    rw [Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
     exact (resChar_eq_iff p (A p).ellPrime.out hl).mp hp
   have hsupp : (Function.mulSupport fun p : HeightOneSpectrum (𝓞 F) =>
       (A p).psiE ((A p).ιE (y / (l : E) ^ k))) ⊆ {p | resChar p = l} := by
@@ -833,7 +833,7 @@ theorem prod_psi {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
     exact hp (psi_eq_one hE (A p) hl h y hy k)
   refine ⟨hfin.subset hsupp, ?_⟩
   let S : Type := {p : HeightOneSpectrum (𝓞 F) | resChar p = l}
-  letI : Fintype S := hfin.fintype
+  let : Fintype S := hfin.fintype
   rw [finprod_eq_prod_of_mulSupport_subset _ (s := hfin.toFinset) (by simpa using hsupp),
     Finset.prod_subtype (F := (inferInstance : Fintype S)) hfin.toFinset
       (p := fun p => p ∈ {p : HeightOneSpectrum (𝓞 F) | resChar p = l}) (by simp)]
@@ -859,7 +859,7 @@ theorem prod_psi {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
       have h := (A s.1).val 1 z
       rw [Valuation.Compatible.vle_iff_le (v := valuation _)] at h
       simp only [map_one] at h
-      rw [Set.mem_setOf_eq, ← not_le, ← not_le, h])
+      rw [Set.mem_ofPred_eq, ← not_le, ← not_le, h])
     (fun s z hz => tendsto_pow_zero _ z hz) (Algebra.trace F E x)
   rw [Algebra.trace_trace] at hsum
   have hnorm : ‖((Algebra.trace ℚ E x - ∑ s, a s : ℚ) : ℚ_[l])‖ ≤ 1 := by
@@ -1124,7 +1124,7 @@ theorem rationalDualPairing_eq_scaledLocalPairing {F E : Type} [Field F] [Number
     (hd : ∀ a j, hf (A.L p) S.Hm (Sf a) (Se j) = if a = j.castSucc then 1 else 0)
     (b : Fin (r + 1)) (a : Fin r) :
     ∑ i, ∑ j, fv b i * Hm i j * sig (ev a j) = if b = a.castSucc then 1 else 0 := by
-  haveI := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
+  have := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
   set α : ℕ → (A.loc p).Ep := fun n => algebraMap (A.loc p).Fp (A.loc p).Ep ((c : (A.loc p).Fp) ^ (r - n)) with hα
   have hu : ∀ n, IsUnit (α n) := fun n => ((c.isUnit.pow _)).map _
   have key := (GlobalTheory.HL.RatExt.rational_extend A (k + 2 * r + 1) p).2.2.2.2.1 Hm (fv b) (ev a)
@@ -1141,7 +1141,7 @@ theorem rationalDualPairing_eq_scaledLocalPairing {F E : Type} [Field F] [Number
   rw [h1] at h2
   split_ifs at h2 ⊢ with hb
   · subst hb
-    have ha : ((a.castSucc : Fin (r + 1)) : ℕ) = (a : ℕ) := Fin.coe_castSucc a
+    have ha : ((a.castSucc : Fin (r + 1)) : ℕ) = (a : ℕ) := Fin.val_castSucc a
     rw [ha, mul_one] at h2
     have h3 : (A.loc p).ιE (∑ i, ∑ j, fv a.castSucc i * Hm i j * sig (ev a j)) = (A.loc p).ιE 1 := by
       rw [map_one]
@@ -1195,8 +1195,8 @@ theorem coef_sum {E : Type} [Field E] [NumberField E] (sig : E → E) {r n : ℕ
   rw [Finset.sum_congr rfl fun a _ => h1 a]
   unfold Formalism.L2.SG.PairVal.sgUp
   rw [Fin.sum_univ_castSucc]
-  simp only [Fin.coe_castSucc, Fin.val_last, lt_self_iff_false, dif_neg, not_false_eq_true, add_zero,
-    add_lt_add_iff_right, Fin.is_lt, dif_pos]
+  simp only [Fin.val_castSucc, Fin.val_last, lt_self_iff_false, dite_eq_right, not_false_eq_true, add_zero,
+    add_lt_add_iff_right, Fin.is_lt, dite_eq_left]
   refine Finset.sum_congr rfl fun a _ => ?_
   rfl
 
@@ -1267,8 +1267,8 @@ theorem indep_frames {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
   let p : HeightOneSpectrum (𝓞 F) :=
     ⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField F)⟩
   obtain ⟨-, -, -, -, -, hind⟩ := GlobalTheory.HL.RatExt.rational_extend A (k + 2 * r + 1) p
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   obtain ⟨hli, -, -⟩ := GlobalTheory.FrameBasic.main (A.L p) r k (G.S p)
   set S := G.S p with hS
   set Ep := (A.loc p).Ep
@@ -1277,9 +1277,9 @@ theorem indep_frames {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
   have hu : ∀ q, A.bc p (g q) = ((s q : Epˣ) : Ep) • Sum.elim S.f S.f' q := by
     intro q
     rcases q with a | a
-    · simp only [hg, Sum.elim_inl, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_pow_eq_pow_val]
+    · simp only [hg, Sum.elim_inl, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_pow_eq_pow_val]
       exact (G.f_eq p a).symm
-    · simp only [hg, Sum.elim_inr, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_pow_eq_pow_val]
+    · simp only [hg, Sum.elim_inr, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_pow_eq_pow_val]
       exact (G.f'_eq p a).symm
   let e := (finSumFinEquiv (m := r + 1) (n := r + 1))
   refine (linearIndependent_equiv e.symm).1 ((hind _ (g ∘ e.symm)).2 ?_)
@@ -1292,7 +1292,7 @@ theorem indep_frames {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
 theorem det_isUnit_of_unitri {E : Type} [Field E] {n : ℕ} (B : Matrix (Fin n) (Fin n) E)
     (hB : ∀ i j, j < i → B i j = 0) (hB1 : ∀ i, B i i = 1) : IsUnit B.det := by
   have hbt : B.BlockTriangular id := fun i j h => hB i j h
-  rw [Matrix.det_of_upperTriangular hbt]
+  rw [Matrix.det_of_isUpperTriangular hbt]
   simp [hB1]
 
 theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig) (r k : ℕ) (G : GFrames A r k) (B : Matrix (Fin (r + 1)) (Fin (r + 1)) E), (∀ i j, j < i → B i j = 0) → (∀ i, B i i = 1) → (∃ N : G.GLV, ∀ b, N (G.f b) = ∑ a, B a b • G.f a) ∧ (∃ N : G.GLV, ∀ b, N (G.f' b) = ∑ a, B a b • G.f' a) := by
@@ -1371,7 +1371,7 @@ theorem unitri_mul_inv_sgUp : ∀ {E : Type} [Field E] {n : ℕ} (B C : Matrix (
   obtain ⟨hP0, hP1, hP2⟩ := unitriangular_mul_superdiagonal_add B C⁻¹ hB0 hB1 hD0 hD1
   obtain ⟨-, -, hQ2⟩ := unitriangular_mul_superdiagonal_add C C⁻¹ hC0 hC1 hD0 hD1
   have hdet : IsUnit C.det := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => hC0 i j hij)]; simp [hC1]
+    rw [Matrix.det_of_isUpperTriangular (fun i j hij => hC0 i j hij)]; simp [hC1]
   have hCC : C * C⁻¹ = 1 := Matrix.mul_nonsing_inv C hdet
   refine ⟨hP0, hP1, ?_⟩
   unfold Formalism.L2.SG.PairVal.sgUp

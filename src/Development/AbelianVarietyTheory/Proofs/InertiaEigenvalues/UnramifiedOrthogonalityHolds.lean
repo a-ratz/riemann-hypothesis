@@ -193,7 +193,7 @@ theorem rho_eq_pow (hc : ContAction rho) (hgen : (Subgroup.zpowers φ ⊔ I).top
   have hcl : IsClosed (S : Set D) := by
     have : (S : Set D) = ⋂ m : M, {g | rho g m = (rho φ ^ deg d g) m} := by
       ext g
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       exact ⟨fun h m => by rw [show rho g = _ from h], fun h => LinearMap.ext h⟩
     rw [this]
     refine isClosed_iInter fun m => isClosed_eq (hc.comp (continuous_id.prodMk continuous_const)) ?_
@@ -264,8 +264,8 @@ variable {R : Type*} [CommRing R] {D : Type*} [Group D] [TopologicalSpace D] [Is
 theorem mk_mem_H1ur (hI : ∀ σ ∈ I, rho σ = 1) (z : Z1 rho) :
     (Submodule.Quotient.mk z : H1 rho) ∈ H1ur rho I ↔ ∀ σ ∈ I, z.1 σ = 0 := by
   have e : (Submodule.Quotient.mk z : H1 rho) ∈ H1ur rho I ↔
-      (restrictCocycles1 rho I.subtype continuous_subtype_val z).1 ∈ B1 (rho.comp I.subtype) := by
-    change (Submodule.Quotient.mk (restrictCocycles1 rho I.subtype continuous_subtype_val z) :
+      (restrictCocycles1 rho I.subtype continuous_subtypeVal z).1 ∈ B1 (rho.comp I.subtype) := by
+    change (Submodule.Quotient.mk (restrictCocycles1 rho I.subtype continuous_subtypeVal z) :
       H1 (rho.comp I.subtype)) = 0 ↔ _
     rw [Submodule.Quotient.mk_eq_zero]
     rfl
@@ -335,7 +335,7 @@ theorem card_H1ur [Finite M] {n : ℕ} (hn0 : 0 < n) (hn : ∀ m : M, n • m = 
   obtain ⟨N₁, hN₁, hf⟩ := exists_pow_eq_one rho φ
   have hNpos : 0 < n * N₁ := Nat.mul_pos hn0 hN₁
   obtain ⟨d, hd, hdI, hdφ⟩ := hdeg (n * N₁) hNpos
-  haveI : NeZero (n * N₁) := ⟨hNpos.ne'⟩
+  have : NeZero (n * N₁) := ⟨hNpos.ne'⟩
   have hfN : rho φ ^ (n * N₁) = 1 := by rw [mul_comm, pow_mul, hf, one_pow]
   have hS : ∀ m, geo (rho φ) m (n * N₁) = 0 := geo_eq_zero _ hn hf
   rw [H0_eq_ker_frobenius_sub_one hc hgen hI, ← card_quot_range_eq_card_ker]
@@ -446,7 +446,7 @@ theorem exists_cochain {rho₁ : Representation R D M₁} {rho₂ : Representati
   have fP0 : rhoP φ ^ N₀ = 1 := pow_mul_eq_one' n fPN
   set N := n * N₀ with hN
   have hNpos : 0 < N := Nat.mul_pos hn0 (Nat.mul_pos hn0 hN₁pos)
-  haveI : NeZero N := ⟨hNpos.ne'⟩
+  have : NeZero N := ⟨hNpos.ne'⟩
   have f₁F : rho₁ φ ^ N = 1 := pow_mul_eq_one' n f₁0
   have f₂F : rho₂ φ ^ N = 1 := pow_mul_eq_one' n f₂0
   have fPF : rhoP φ ^ N = 1 := pow_mul_eq_one' n fP0

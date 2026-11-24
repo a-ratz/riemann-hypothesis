@@ -72,7 +72,7 @@ theorem gfp_li_tri {K : Type} [Field K] {m n : ℕ} (M : Fin m → Fin m → K) 
   rw [Fintype.linearIndependent_iff] at he ⊢
   intro g hg
   have hM : (Matrix.of M).det = 1 := by
-    rw [Matrix.det_of_upperTriangular (by intro i j h; exact hlow i j h)]
+    rw [Matrix.det_of_isUpperTriangular (by intro i j h; exact hlow i j h)]
     simp [hdiag]
   have hv : Matrix.vecMul g (Matrix.of M) = 0 := by
     have h0 : ∑ j, (Matrix.vecMul g (Matrix.of M) j) • e j = 0 := by

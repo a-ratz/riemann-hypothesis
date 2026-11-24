@@ -72,9 +72,9 @@ theorem re_term (hU : IsInfUnitary ε E) (a b : Fin n) (x : M) :
   unfold adjSign
   by_cases h : ε b = ε a
   · have h' : ε a = ε b := h.symm
-    rw [if_pos h', if_pos h, one_mul, one_mul, ← RCLike.ofReal_pow, RCLike.ofReal_re]
+    rw [ite_eq_left h', ite_eq_left h, one_mul, one_mul, ← RCLike.ofReal_pow, RCLike.ofReal_re]
   · have h' : ¬ ε a = ε b := fun e => h e.symm
-    rw [if_neg h', if_neg h, neg_mul, one_mul, neg_mul, one_mul, map_neg, ← RCLike.ofReal_pow,
+    rw [ite_eq_right h', ite_eq_right h, neg_mul, one_mul, neg_mul, one_mul, map_neg, ← RCLike.ofReal_pow,
       RCLike.ofReal_re]
 
 theorem sum_sq_eq (hU : IsInfUnitary ε E) (x : M) :
@@ -298,7 +298,7 @@ theorem kFiniteWordBound_indefUnitary : PositivityTheory.UnitaryDecomposition.Wo
   unfold PositivityTheory.UnitaryDecomposition.WordBd
   intro m ε lam B H _ _ π hm hl hDS hB hg v hv
   have hm1 : 1 ≤ m := by omega
-  haveI : CompleteSpace H := hDS.1
+  have : CompleteSpace H := hDS.1
   have hπ : IsURepOn (UJset ε) π := hDS.2.2.1
   have hD := isDerivedOn_smE hπ
   have hGl : IsGlRep (smE ε π) := hD.glRep
@@ -314,7 +314,7 @@ theorem kFiniteWordBound_indefUnitary : PositivityTheory.UnitaryDecomposition.Wo
   have hsub : Formalism.MainNotions.S.lowKSub ε lam π = S0 := by
     have hset : {S : Submodule ℂ H | Formalism.MainNotions.S.IsKTypeOf ε π (Formalism.QuantumDeterminants.lowK ε lam) S} = {S0} := by
       ext S
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
       exact ⟨fun h => huniq S S0 h hS0, fun h => h ▸ hS0⟩
     unfold Formalism.MainNotions.S.lowKSub
     rw [hset, sSup_singleton]
@@ -324,7 +324,7 @@ theorem kFiniteWordBound_indefUnitary : PositivityTheory.UnitaryDecomposition.Wo
   obtain ⟨w, hwS, hw0, hwk⟩ := exists_isKHWVec_of_isKTypeOf hπ hD hS0 hS0le
   let T : Submodule ℂ (smD ε π) := S0.comap (smD ε π).subtype
   have hTfd : FiniteDimensional ℂ T := by
-    haveI := hS0.1
+    have := hS0.1
     let f : T →ₗ[ℂ] S0 := ((smD ε π).subtype.comp T.subtype).codRestrict S0 (fun x => x.2)
     refine Module.Finite.of_injective f (fun a b hab => ?_)
     have h : ((f a : S0) : H) = ((f b : S0) : H) := congrArg Subtype.val hab

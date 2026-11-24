@@ -92,12 +92,12 @@ theorem flat_localized_of_flat_baseChange {R : Type} [CommRing R] (M : Type) [Ad
       (IsLocalRing.mem_maximalIdeal _).2 h
     exact y.2 (hP.le h1)
   let ψ : Rp →+* R' := IsLocalization.lift hu
-  letI : Algebra Rp R' := ψ.toAlgebra
+  let : Algebra Rp R' := ψ.toAlgebra
   have hψ : ∀ r : R, algebraMap Rp R' (algebraMap R Rp r) = algebraMap R R' r :=
     fun r => IsLocalization.lift_eq hu r
-  haveI : IsScalarTower R Rp R' := .of_algebraMap_eq (fun r => (hψ r).symm)
-  haveI : Module.Flat Rp R' := (Module.flat_iff_of_isLocalization Rp P.primeCompl R').2 inferInstance
-  haveI : IsLocalHom (algebraMap Rp R') := ⟨fun x hx => by
+  have : IsScalarTower R Rp R' := .of_algebraMap_eq (fun r => (hψ r).symm)
+  have : Module.Flat Rp R' := (Module.flat_iff_of_isLocalization Rp P.primeCompl R').2 inferInstance
+  have : IsLocalHom (algebraMap Rp R') := ⟨fun x hx => by
     obtain ⟨r, s, rfl⟩ := IsLocalization.exists_mk'_eq P.primeCompl x
     have e : algebraMap R R' r =
         algebraMap Rp R' (IsLocalization.mk' Rp r s) * algebraMap R R' s := by
@@ -112,11 +112,11 @@ theorem flat_localized_of_flat_baseChange {R : Type} [CommRing R] (M : Type) [Ad
       IsLocalization.map_units Rp (⟨r, hrP⟩ : P.primeCompl)
     rw [← IsLocalization.mk'_spec Rp r s] at h3
     exact isUnit_of_mul_isUnit_left h3⟩
-  haveI : Module.FaithfullyFlat Rp R' := Module.FaithfullyFlat.of_flat_of_isLocalHom
-  haveI : Module.Flat R' (R' ⊗[Rp] (Rp ⊗[R] M)) :=
+  have : Module.FaithfullyFlat Rp R' := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have : Module.Flat R' (R' ⊗[Rp] (Rp ⊗[R] M)) :=
     Module.Flat.of_linearEquiv (AlgebraTensorModule.cancelBaseChange R Rp R' R' M)
-  haveI : Module.Flat Rp (Rp ⊗[R] M) := Module.Flat.of_flat_tensorProduct Rp (Rp ⊗[R] M) R'
-  haveI : Module.Flat R (Rp ⊗[R] M) :=
+  have : Module.Flat Rp (Rp ⊗[R] M) := Module.Flat.of_flat_tensorProduct Rp (Rp ⊗[R] M) R'
+  have : Module.Flat R (Rp ⊗[R] M) :=
     (Module.flat_iff_of_isLocalization Rp P.primeCompl (Rp ⊗[R] M)).1 inferInstance
   exact Module.Flat.of_linearEquiv
     (IsLocalizedModule.linearEquiv P.primeCompl (LocalizedModule.mkLinearMap P.primeCompl M)
@@ -135,7 +135,7 @@ theorem flat_baseChange_of_flat_extOrder {R : Type} [CommRing R] {T : Type} [Com
     simp [L, Algebra.smul_def, mul_comm]
   have hinj : Function.Injective L := by
     have h1 : Function.Injective (LinearMap.baseChange R' A.val.toLinearMap) := by
-      rw [LinearMap.baseChange_eq_ltensor]
+      rw [LinearMap.baseChange_eq_lTensor]
       exact Module.Flat.lTensor_preserves_injective_linearMap _ Subtype.val_injective
     exact (TensorProduct.piScalarRight R R' R' T).injective.comp h1
   have hrange : LinearMap.range L = Subalgebra.toSubmodule (extOrder (algebraMap R R') A) := by
@@ -153,7 +153,7 @@ theorem flat_baseChange_of_flat_extOrder {R : Type} [CommRing R] {T : Type} [Com
       refine Submodule.span_le.2 ?_ h
       rintro _ ⟨f, hf, rfl⟩
       exact ⟨(1 : R') ⊗ₜ ⟨f, hf⟩, by rw [hL]; simp⟩
-  haveI : Module.Flat R' (Subalgebra.toSubmodule (extOrder (algebraMap R R') A)) :=
+  have : Module.Flat R' (Subalgebra.toSubmodule (extOrder (algebraMap R R') A)) :=
     inferInstanceAs (Module.Flat R' (extOrder (algebraMap R R') A))
   exact Module.Flat.of_linearEquiv (LinearEquiv.ofInjective L hinj ≪≫ₗ LinearEquiv.ofEq _ _ hrange)
 
@@ -206,13 +206,13 @@ theorem isHopfOrder_of_flat_local :
         (IsLocalRing.maximalIdeal R').comap (algebraMap R R') = P ∧
         IsHopfOrder (extOrder (algebraMap R R') A)) → IsHopfOrder A := by
   intro R _ _ T _ _ _ A hfull H
-  haveI hfin : Module.Finite R A :=
+  have hfin : Module.Finite R A :=
     Module.Finite.of_injective A.val.toLinearMap Subtype.val_injective
-  haveI : Module.FinitePresentation R A := Module.finitePresentation_of_finite R A
-  haveI hflat : Module.Flat R A := Module.flat_of_localized_maximal A fun P hP => by
+  have : Module.FinitePresentation R A := Module.finitePresentation_of_finite R A
+  have hflat : Module.Flat R A := Module.flat_of_localized_maximal A fun P hP => by
     obtain ⟨R', _, _, _, _, hf, hP', hH⟩ := H P hP
-    haveI := hH.projective
-    haveI : Module.Flat R' (R' ⊗[R] A) := flat_baseChange_of_flat_extOrder A R'
+    have := hH.projective
+    have : Module.Flat R' (R' ⊗[R] A) := flat_baseChange_of_flat_extOrder A R'
     exact flat_localized_of_flat_baseChange A P R' hP'
   refine ⟨hfin, Module.Flat.projective_of_finitePresentation, hfull, ?_, ?_⟩
   · intro f hf
@@ -249,10 +249,10 @@ private theorem btOrder_top_isHopfOrder' (hHenselian : type_of% @_root_.GlobalTh
     (hRegular : type_of% @GlobalTheory.T.regular_at_base_change) (R' : Type) [CommRing R'] [IsDomain R'] [IsIntegrallyClosed R']
     [HenselianLocalRing R'] (T : Type) [CommGroup T] [Finite T] (Γ' : QFGroup R' T) :
     IsHopfOrder (Γ'.btOrder ⊤) := by
-  haveI := Γ'.separated
-  haveI := Γ'.quasiCompact
-  haveI := Γ'.quasiFinite
-  haveI := Γ'.finPres
+  have := Γ'.separated
+  have := Γ'.quasiCompact
+  have := Γ'.quasiFinite
+  have := Γ'.finPres
   have hU : Γ'.IsFinOpenSub (GlobalTheory.finitePart Γ'.G.hom) := by
     apply QFGroup.isFinOpenSub_of_closedFibre
     · exact GlobalTheory.isFinite_finitePart (R := CommRingCat.of R') Γ'.G.hom
@@ -300,7 +300,7 @@ private theorem exists_smul_mem_of_extOrder {R K : Type} [CommRing R] [IsDomain 
       linear_combination (algebraMap R K s2 * y t) * h1 + (algebraMap R K (a1 t)) * h2
   choose s hs a ha e using fun t : T =>
     key _ (hA (fun u => algebraMap R K ((Pi.single t (1 : R) : T → R) u)))
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   have hδ : ∀ t, s t • (Pi.single t (1 : R) : T → R) = a t := by
     intro t
     funext u
@@ -311,7 +311,7 @@ private theorem exists_smul_mem_of_extOrder {R K : Type} [CommRing R] [IsDomain 
   have hmem : (∏ t, s t) • f = ∑ t, (f t * ∏ t' ∈ Finset.univ.erase t, s t') • a t := by
     funext u
     simp only [← hδ, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [← Finset.mul_prod_erase _ s (Finset.mem_univ u)]
     ring
   rw [hmem]
@@ -330,7 +330,7 @@ theorem btOrder_top_isHopfOrder (hHenselian : type_of% @_root_.GlobalTheory.Comp
     have := hd'm (d'⁻¹ • g)
     rwa [smul_smul, mul_inv_cancel₀ hd', one_smul] at this
   · intro P hP
-    haveI := hP.isPrime
+    have := hP.isPrime
     obtain ⟨R', iR, iD, iH, iA, hic, hfl, hcomap⟩ := hHenselian R P
     have hinj : Function.Injective (algebraMap R R') := PositivityTheory.HtPt.Htat.ValuationInjectivePi.flat_inj
     obtain ⟨Γ', F, hbc⟩ := hBaseChange R T Γ R' (algebraMap R R') hinj

@@ -94,7 +94,7 @@ theorem preservesFilteredColimits_iff_elements :
     constructor
     intro c hc
     obtain ⟨hs, hi⟩ := h J D c hc
-    haveI : ReflectsColimit (D ⋙ N) (forget AddCommGrpCat.{1}) :=
+    have : ReflectsColimit (D ⋙ N) (forget AddCommGrpCat.{1}) :=
       reflectsColimit_of_reflectsIsomorphisms _ _
     refine ⟨isColimitOfReflects (forget AddCommGrpCat.{1}) ?_⟩
     refine Types.FilteredColimit.isColimitOf' _ _ (fun x => ?_) (fun i (x y : N.obj (D.obj i)) hxy => ?_)

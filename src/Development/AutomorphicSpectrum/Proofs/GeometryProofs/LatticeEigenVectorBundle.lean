@@ -85,8 +85,8 @@ theorem exists_frame_of_proj (R : Subring Ω) [IsLocalRing R] (M : Submodule R E
     simpa [Subring.smul_def] using hxy)
   let bM : Basis (Fin g) R M := by
     rw [hM]; exact Basis.span hbR
-  haveI : Module.Free R M := Module.Free.of_basis bM
-  haveI : Module.Finite R M := Module.Finite.of_basis bM
+  have : Module.Free R M := Module.Free.of_basis bM
+  have : Module.Finite R M := Module.Finite.of_basis bM
 
   let P : M →ₗ[R] M := LinearMap.restrict (e.restrictScalars R) hMe
   have hPP : ∀ m, P (P m) = P m := fun m => Subtype.ext (hee m)
@@ -100,8 +100,8 @@ theorem exists_frame_of_proj (R : Subring Ω) [IsLocalRing R] (M : Submodule R E
     have hπι : π ∘ₗ inc = LinearMap.id := by
       ext ⟨_, m, rfl⟩
       simp [π, inc, hA]
-    haveI : Module.Finite R (LinearMap.range A) := Module.Finite.range A
-    haveI : Module.Projective R (LinearMap.range A) := Module.Projective.of_split inc π hπι
+    have : Module.Finite R (LinearMap.range A) := Module.Finite.range A
+    have : Module.Projective R (LinearMap.range A) := Module.Projective.of_split inc π hπι
     exact ⟨Module.free_of_flat_of_isLocalRing, inferInstance⟩
   obtain ⟨h1, h2⟩ := key P hPP
   obtain ⟨h3, h4⟩ := key Q hQQ
@@ -157,7 +157,7 @@ theorem exists_frame_of_proj (R : Subring Ω) [IsLocalRing R] (M : Submodule R E
     (by ext m; simp [Q])
   have hcard : finrank R (LinearMap.range P) + finrank R (LinearMap.range Q) = g := by
     rw [← Module.finrank_prod, ← LinearEquiv.finrank_eq eqv, Module.finrank_eq_card_basis bM, Fintype.card_fin]
-  haveI : FiniteDimensional Ω E := Module.Finite.of_basis (Basis.mk hb hspan.ge)
+  have : FiniteDimensional Ω E := Module.Finite.of_basis (Basis.mk hb hspan.ge)
   have hfin : finrank Ω E = g := by
     have := finrank_span_eq_card hb
     rwa [hspan, finrank_top, Fintype.card_fin] at this
@@ -216,7 +216,7 @@ theorem isVBOn_inter_range (L : Lat ξ E) (T : Set (Cpt ξ)) (g : ℕ) (e : E �
   intro p hp
   obtain ⟨U, hpU, b, hbs, hfr⟩ := hVB p hp
   obtain ⟨hbi, hbp⟩ := hfr p hp hpU
-  haveI := isLocalRing_regAt p
+  have := isLocalRing_regAt p
   obtain ⟨r, r', f, f', hli, hsp, hsR, hfe, hfe'⟩ :=
     exists_frame_of_proj (regAt ξ p) (L p) b hbi hbs hbp e he (hs p hp)
   have hee : ∀ v, e (e v) = e v := fun v => LinearMap.congr_fun he v
@@ -269,7 +269,7 @@ variable (F : Type) [Field F] [NumberField F]
 
 theorem injective_of_charZero {Ω : Type} [Field Ω] [CharZero Ω] (σ : 𝓞 F →+* Ω) : Function.Injective σ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   rw [eq_bot_iff]
   intro n hn
   have h : σ (algebraMap ℤ (𝓞 F) n) = 0 := hn
@@ -310,8 +310,8 @@ theorem isVBOn_eigSp : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (C
     apply (algebraMap Ω (AlgebraicClosure Ω)).injective
     have := DFunLike.congr_fun hφψ x
     simpa [j] using this
-  haveI : Finite (F →+* Ω) := Finite.of_injective j hj
-  letI : Fintype (F →+* Ω) := Fintype.ofFinite _
+  have : Finite (F →+* Ω) := Finite.of_injective j hj
+  let : Fintype (F →+* Ω) := Fintype.ofFinite _
   have hle : Fintype.card (F →+* Ω) ≤ finrank ℚ F := by
     rw [← AlgHom.card ℚ F (AlgebraicClosure Ω)]
     exact Fintype.card_le_of_injective j hj

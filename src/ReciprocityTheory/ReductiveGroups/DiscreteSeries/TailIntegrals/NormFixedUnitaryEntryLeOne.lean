@@ -66,7 +66,7 @@ open Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.Fourier
 
 lemma enn_nnnorm (z : ℂ) : (‖z‖₊ : ℝ≥0∞) = ENNReal.ofReal ‖z‖ := by
   first
-  | exact (ofReal_norm_eq_enorm z).symm
+  | exact (ofReal_norm z).symm
   | (rw [ENNReal.ofReal, Real.toNNReal_of_nonneg (norm_nonneg _)]; rfl)
 
 lemma ofReal_rpow_neg_anti {a b s : ℝ} (hs : 0 ≤ s) (hab : a ≤ b) :
@@ -88,7 +88,7 @@ lemma measurable_PsiF {ι : Type*} [Fintype ι] [DecidableEq ι] (p q : ι) (s :
         (Complex.continuous_ofReal.comp (continuous_tW q)).measurable)
     | fun_prop
   show Measurable fun x : ι → ℂ => (‖(1 : ℂ) - star (x p) / ((tW q x : ℝ) : ℂ)‖₊ : ℝ≥0∞) ^ (-s)
-  exact (measurable_coe_nnreal_ennreal.comp (measurable_nnnorm.comp h1)).pow_const _
+  exact (measurable_coe_nnreal_ennreal.comp (measurable_nnNorm.comp h1)).pow_const _
 
 variable {k : ℕ}
 
@@ -181,7 +181,7 @@ lemma rot (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : IsHaarOn (U0 k) ν) {φ 
     congr 1
     by_cases h : i = iK k
     · simp [hudef, h]
-    · simp only [hudef, h, if_false]
+    · simp only [hudef, h, ite_false]
       rw [Complex.normSq_mul, Complex.normSq_inv,
         show Complex.normSq (star c) = Complex.normSq c from Complex.normSq_conj c]
       ring
@@ -196,7 +196,7 @@ lemma rot (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : IsHaarOn (U0 k) ν) {φ 
       by_cases h : i = iK k
       · subst h; simp [hudef, bvec]
       · rw [hudef]
-        simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, if_neg h, bvec, Pi.single_apply,
+        simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, ite_eq_right h, bvec, Pi.single_apply,
           mul_zero, add_zero]
         rw [mul_inv_cancel_left₀ hcs]
     have h1 : Rᴴ *ᵥ u = bvec (iW k) := by
@@ -213,7 +213,7 @@ lemma rot (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : IsHaarOn (U0 k) ν) {φ 
     intro x hx
     have hx0 : x (iK k) (iW k) = 0 := by
       have h := fixedUnitary_apply_fixedIndex_left hx (iW k)
-      rw [if_neg hWK] at h
+      rw [ite_eq_right hWK] at h
       exact h
     show ((R * Matrix.of x)ᴴ *ᵥ v) (iW k) = _
     rw [Matrix.conjTranspose_mul, ← Matrix.mulVec_mulVec, hRv, Matrix.mulVec_add,
@@ -304,7 +304,7 @@ lemma bnd (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : IsHaarOn (U0 k) ν) {s :
     have hv0 : ∀ i, i ≠ iK k → v i = 0 := by
       intro i hi
       have h3 := (Finset.sum_eq_zero_iff_of_nonneg hnn).mp hS i (Finset.mem_univ i)
-      rw [if_neg hi] at h3
+      rw [ite_eq_right hi] at h3
       exact Complex.normSq_eq_zero.mp h3
     calc ∫⁻ x, ENNReal.ofReal (lam * ‖((Matrix.of x)ᴴ *ᵥ v) (iW k) + b‖) ^ (-s) ∂ν
         = ∫⁻ _x, ENNReal.ofReal (lam * ‖b‖) ^ (-s) ∂ν := by
@@ -312,7 +312,7 @@ lemma bnd (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : IsHaarOn (U0 k) ν) {s :
           filter_upwards [ae_mem_fixedUnitary hν] with x hx
           have hx0 : x (iK k) (iW k) = 0 := by
             have h := fixedUnitary_apply_fixedIndex_left hx (iW k)
-            rw [if_neg hWK] at h
+            rw [ite_eq_right hWK] at h
             exact h
           have hz : ((Matrix.of x)ᴴ *ᵥ v) (iW k) = 0 := by
             first
@@ -388,7 +388,7 @@ private lemma nnnorm_one_sub_star_div_real_eq (z : ℂ) (t : ℝ) :
     ‖1 - star z / (t : ℂ)‖₊ = ‖1 - z / (t : ℂ)‖₊ := by
   have e : (1 : ℂ) - star z / (t : ℂ) = star (1 - z / (t : ℂ)) := by
     simp [star_div₀, Complex.conj_ofReal]
-  rw [e, nnnorm_star]
+  rw [e, nnNorm_star]
 
 lemma haarIntegralConstant_lt_top (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : IsHaarOn (U0 k) ν) (hνf : ν Set.univ < ∞)
     {s : ℝ} (hs : 0 ≤ s) (hsk : s < k) : C0 k s ν < ∞ := by
@@ -414,7 +414,7 @@ lemma haarIntegralConstant_lt_top (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : 
       rw [hcdef, Complex.normSq_ofReal]
       ring
     have hφ : Measurable fun z : ℂ => (‖1 - z / c‖₊ : ℝ≥0∞) ^ (-s) :=
-      ((measurable_const.sub (measurable_id.div_const c)).nnnorm.coe_nnreal_ennreal).pow_const (-s)
+      ((measurable_const.sub (measurable_id.div_const c)).nnNorm.coe_nnreal_ennreal).pow_const (-s)
     have hr := rot hk hν hφ x c hc hvc
     show ∫⁻ h, (fun z : ℂ => (‖1 - z / c‖₊ : ℝ≥0∞) ^ (-s)) (((Matrix.of h)ᴴ *ᵥ x) (iW k)) ∂ν = C0 k s ν
     rw [hr, C0]
@@ -422,7 +422,7 @@ lemma haarIntegralConstant_lt_top (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : 
     have hsc : star c = c := by rw [hcdef]; exact Complex.conj_ofReal _
     rw [hsc, mul_div_cancel_left₀ _ hc]
     have e : (1 : ℂ) - star (h (iW k) (iW k)) = star (1 - h (iW k) (iW k)) := by simp
-    rw [e, nnnorm_star]
+    rw [e, nnNorm_star]
 
   have hinner : ∀ᵐ h ∂ν, ∫⁻ x in Bset (iK k), G x h = ∫⁻ x in Bset (iK k), PsiF (iW k) (iK k) s x := by
     filter_upwards [ae_mem_fixedUnitary hν] with h hh
@@ -447,7 +447,7 @@ lemma haarIntegralConstant_lt_top (hk : 1 ≤ k) {ν : Measure (Mt k 0)} (hν : 
   have hden : Measurable fun p : (Fin (2 * 0 + k + 1) → ℂ) × Mt k 0 => (tW (iK k) p.1 : ℂ) :=
     (Complex.continuous_ofReal.comp ((continuous_tW (iK k)).comp continuous_fst)).measurable
   have hmeas : Measurable (Function.uncurry G) :=
-    ((measurable_const.sub (hcont.measurable.div hden)).nnnorm.coe_nnreal_ennreal).pow_const (-s)
+    ((measurable_const.sub (hcont.measurable.div hden)).nnNorm.coe_nnreal_ennreal).pow_const (-s)
   have hswap := lintegral_lintegral_swap
     (hmeas.aemeasurable : AEMeasurable (Function.uncurry G) ((volume.restrict (Bset (iK k))).prod ν))
   have h1 : ∫⁻ x in Bset (iK k), ∫⁻ h, G x h ∂ν = C0 k s ν * volume (Bset (iK k)) := by

@@ -397,7 +397,7 @@ private theorem finrank_ker_le_finrank_ker_sq_add {n h : ℕ} {k E G : Type} [Fi
       Module.finrank k ↥(LinearMap.ker π.toLinearMap * LinearMap.ker π.toLinearMap) + n * n * h := by
   set J := LinearMap.ker π.toLinearMap with hJdef
   set A := (J * J).dualAnnihilator with hA
-  haveI hfin : ∀ p : {p : Fin n × Fin n // p.1 ≠ p.2},
+  have hfin : ∀ p : {p : Fin n × Fin n // p.1 ≠ p.2},
       Module.Finite k ↥(Z1 (χ p.1.1) (χ p.1.2)) := fun p => (hM.fin _ _ p.2).1
   have hlc := lc_of_ker ρ hker
   let Φ : ∀ p : {p : Fin n × Fin n // p.1 ≠ p.2}, Module.Dual k E →ₗ[k] (G → k) := fun p =>
@@ -454,7 +454,7 @@ theorem UpperTheory.V.CA.f_cot :
     have h01 : (1 : E) = 0 := by
       have := hce.complete
       simpa using this.symm
-    haveI : Subsingleton E := subsingleton_of_zero_eq_one h01.symm
+    have : Subsingleton E := subsingleton_of_zero_eq_one h01.symm
     rw [Module.finrank_zero_of_subsingleton]
     exact Nat.zero_le _
   | succ m =>
@@ -577,12 +577,12 @@ private theorem level_field {n h : ℕ} {k G : Type} [Field k] [Group G] [Topolo
       rw [this, map_smul]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨g, rfl⟩)
   have hfr : (Set.range ρ).Finite := by
-    haveI : Finite (G ⧸ ρ.ker) := Subgroup.quotient_finite_of_isOpen _ hopen
+    have : Finite (G ⧸ ρ.ker) := Subgroup.quotient_finite_of_isOpen _ hopen
     refine (Set.finite_range (QuotientGroup.lift ρ.ker ρ le_rfl)).subset ?_
     rintro _ ⟨g, rfl⟩
     exact ⟨(g : G ⧸ ρ.ker), rfl⟩
-  haveI : Module.Finite k J.ringCon.Quotient := ⟨hspan ▸ Submodule.fg_span hfr⟩
-  haveI : IsAdicComplete (maximalIdeal k) k := by
+  have : Module.Finite k J.ringCon.Quotient := ⟨hspan ▸ Submodule.fg_span hfr⟩
+  have : IsAdicComplete (maximalIdeal k) k := by
     rw [IsLocalRing.maximalIdeal_eq_bot]; infer_instance
   obtain ⟨-, e, he, hπe⟩ := f_gma DE π' hCH (fun v => by
       obtain ⟨x, rfl⟩ := hπs v; exact ⟨f x, hπ' x⟩) (fun q => by

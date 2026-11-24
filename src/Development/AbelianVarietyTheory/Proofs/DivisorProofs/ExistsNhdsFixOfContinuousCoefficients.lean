@@ -99,7 +99,7 @@ theorem exists_nhds_fix : (∀ {V : Type} [AddCommGroup V] [Module ℂ V] (s : S
     intro l
     obtain ⟨C, hC⟩ := hK₀c.exists_bound_of_continuousOn ((hcont l v).mono hK₀H)
     exact ⟨C, by rintro _ ⟨k, hk, rfl⟩; exact hC k hk⟩
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ s) := hfd s hb
+  have : FiniteDimensional ℂ (Submodule.span ℂ s) := hfd s hb
   set W := Submodule.span ℂ s with hW
   have hinv : ∀ k ∈ K₀, ∀ w ∈ W, S k w ∈ W := by
     intro k hk w hw

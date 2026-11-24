@@ -83,7 +83,7 @@ namespace GlobalTheory.SBCount
 theorem countable_compact_open (X : Type) [TopologicalSpace X] [SecondCountableTopology X] :
     {U : Set X | IsCompact U ∧ IsOpen U}.Countable := by
   obtain ⟨b, hbc, -, hb⟩ := TopologicalSpace.exists_countable_basis X
-  refine ((Set.countable_setOf_finite_subset hbc).image Set.sUnion).mono ?_
+  refine ((Set.countable_ofPred_finite_subset hbc).image Set.sUnion).mono ?_
   rintro U ⟨hUc, hUo⟩
   obtain ⟨S, hSb, rfl⟩ := hb.open_eq_sUnion hUo
   obtain ⟨t, htS, htf, hcov⟩ := hUc.elim_finite_subcover_image (b := S) (c := id)

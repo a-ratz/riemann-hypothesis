@@ -56,8 +56,8 @@ namespace GlobalTheory.FourKFub
 variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E]
 
 theorem secondCountableK [Unram F E] (A : Et F E) : SecondCountableTopology A.K := by
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   let e : A.K ≃ₗ[F] (Fin (Module.finrank F A.K) → F) := (Module.finBasis F A.K).equivFun
   have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -79,7 +79,7 @@ theorem psiK_add (A : Et F E) (ψ : AddChar F ℂ) (x y : A.K) : A.psiK ψ (x + 
 
 theorem fourK_eq_fourB_tilde : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (μK : Measure A.K), μK.IsAddHaarMeasure → ∀ φ' : A.K × A.K → ℂ, IsTest φ' → ∀ b c : A.K, A.fourK μK ψ φ' (b, c) = fourB μK (A.kerK ψ) (fun c' => A.tilde μK ψ φ' c' c) b := by
   intro F E _ _ _ _ _ A ψ hψ μK hμ φ' hφ b c
-  haveI := secondCountableK A
+  have := secondCountableK A
   have hc := psiK_continuous A ψ hψ
   let f : A.K × A.K → ℂ := fun p => φ' p * A.psiK ψ (b * p.2 + p.1 * c)
   have hf : Integrable f (μK.prod μK) := by

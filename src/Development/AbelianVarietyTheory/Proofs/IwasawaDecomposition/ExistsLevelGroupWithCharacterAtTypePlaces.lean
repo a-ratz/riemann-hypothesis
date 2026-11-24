@@ -162,7 +162,7 @@ theorem glOf_mul {ι R : Type} [Fintype ι] [DecidableEq ι] [CommRing R] (M N :
   rw [Units.val_mul, NX.glOf_val _ (by rw [Matrix.det_mul]; exact hM.mul hN), NX.glOf_val _ hM, NX.glOf_val _ hN]
 
 theorem det_uniTri {r : ℕ} {R : Type} [CommRing R] {M : Matrix (Fin r) (Fin r) R} (h : NX.IsUniTri r M) : M.det = 1 := by
-  rw [Matrix.det_of_upperTriangular h.1]
+  rw [Matrix.det_of_isUpperTriangular h.1]
   simp [h.2]
 
 theorem uniTri_red {R : Type} [CommRing R] {r : ℕ} (hr : r ≤ n) (red : v.adicCompletionIntegers (maximalRealSubfield L) →+* R)
@@ -240,12 +240,12 @@ theorem bt_parah {r : ℕ} {x : Matrix (Fin n) (Fin n) (v.adicCompletion (maxima
 
 theorem parah_of_bt {r : ℕ} {x : Matrix (Fin n) (Fin n) (v.adicCompletion (maximalRealSubfield L))} (hx : ∀ a b, x a b ∈ v.adicCompletionIntegers (maximalRealSubfield L)) (h : (resM x hx).BlockTriangular (bP r)) :
     NX.InParah v r x :=
-  ⟨hx, fun a b ha hb => (resM_zero hx a b).1 (h (by simp only [bP]; rw [if_pos ha, if_neg (by omega)]; omega))⟩
+  ⟨hx, fun a b ha hb => (resM_zero hx a b).1 (h (by simp only [bP]; rw [ite_eq_left ha, ite_eq_right (by omega)]; omega))⟩
 
 theorem bt_levG {r : ℕ} {x : Matrix (Fin n) (Fin n) (v.adicCompletion (maximalRealSubfield L))} (hx : NX.InLevG v r x) : (resM x hx.1.1).BlockTriangular (bG r) := by
   intro a b hab
   refine (resM_zero hx.1.1 a b).2 ?_
-  by_cases ha : (a : ℕ) < r <;> by_cases hb : (b : ℕ) < r <;> simp only [bG, ha, hb, if_true, if_false] at hab
+  by_cases ha : (a : ℕ) < r <;> by_cases hb : (b : ℕ) < r <;> simp only [bG, ha, hb, ite_true, ite_false] at hab
   · exact (hx.2 a b ha hb).1 (by rw [Fin.lt_def]; exact hab)
   · omega
   · exact hx.1.2 a b (by omega) hb
@@ -254,7 +254,7 @@ theorem bt_levG {r : ℕ} {x : Matrix (Fin n) (Fin n) (v.adicCompletion (maximal
 theorem levG_top_of_bt {r : ℕ} {x : Matrix (Fin n) (Fin n) (v.adicCompletion (maximalRealSubfield L))} (hx : ∀ a b, x a b ∈ v.adicCompletionIntegers (maximalRealSubfield L)) (h : (resM x hx).BlockTriangular (bG r))
     (hd : ∀ a : Fin n, (a : ℕ) < r → resM x hx a a = 1) :
     ∀ a b : Fin n, (a : ℕ) < r → (b : ℕ) < r → (b < a → Valued.v (x a b) < 1) ∧ (a = b → Valued.v (x a b - 1) < 1) :=
-  fun a b ha hb => ⟨fun hba => (resM_zero hx a b).1 (h (by simp only [bG]; rw [if_pos ha, if_pos hb]; exact hba)),
+  fun a b ha hb => ⟨fun hba => (resM_zero hx a b).1 (h (by simp only [bG]; rw [ite_eq_left ha, ite_eq_left hb]; exact hba)),
     fun hab => by subst hab; exact (resM_one hx a a).1 (hd a ha)⟩
 
 theorem diag_mul {r : ℕ} {K : Type} [CommRing K] {M N : Matrix (Fin n) (Fin n) K} (hM : M.BlockTriangular (bG r))
@@ -292,7 +292,7 @@ theorem lr_mul {K : Type} [CommRing K] {r : ℕ} {M N : Matrix (Fin n) (Fin n) K
   simp only [Matrix.submatrix_apply, Matrix.mul_apply]
   rw [← Fintype.sum_subtype_add_sum_subtype (fun c : Fin n => r ≤ (c : ℕ))]
   have hz : ∑ c : {c : Fin n // ¬ r ≤ (c : ℕ)}, M a.1 c.1 * N c.1 b.1 = 0 := Finset.sum_eq_zero fun c _ => by
-    rw [hM (by simp only [bP]; rw [if_pos a.2, if_neg c.2]; omega), zero_mul]
+    rw [hM (by simp only [bP]; rw [ite_eq_left a.2, ite_eq_right c.2]; omega), zero_mul]
   rw [hz, add_zero]
 
 theorem detT_mul_of {K : Type} [CommRing K] {r : ℕ} {M N : Matrix (Fin n) (Fin n) K} (hM : M.BlockTriangular (bP r)) :
@@ -336,7 +336,7 @@ theorem i_parah_inv (v : HeightOneSpectrum (𝓞 (maximalRealSubfield L))) (r : 
   intro hxy hy hx
   refine parah_of_bt hy ?_
   have h1 : resM x hx.1 * resM y hy = 1 := by rw [← resM_mul]; exact resM_one_of _ hxy
-  haveI : Invertible (resM x hx.1) := Matrix.invertibleOfIsUnitDet _ (Units.mkOfMulEqOne (resM x hx.1).det (resM y hy).det (by rw [← Matrix.det_mul, h1, Matrix.det_one])).isUnit
+  have : Invertible (resM x hx.1) := Matrix.invertibleOfIsUnitDet _ (Units.mkOfMulEqOne (resM x hx.1).det (resM y hy).det (by rw [← Matrix.det_mul, h1, Matrix.det_one])).isUnit
   rw [(Matrix.inv_eq_right_inv h1).symm]
   exact Matrix.blockTriangular_inv_of_blockTriangular (bt_parah hx)
 
@@ -345,7 +345,7 @@ theorem i_levG_inv (v : HeightOneSpectrum (𝓞 (maximalRealSubfield L))) (r : �
       (b < a → Valued.v (y a b) < 1) ∧ (a = b → Valued.v (y a b - 1) < 1) := by
   intro hxy hy hx
   have h1 : resM x hx.1.1 * resM y hy = 1 := by rw [← resM_mul]; exact resM_one_of _ hxy
-  haveI : Invertible (resM x hx.1.1) := Matrix.invertibleOfIsUnitDet _ (Units.mkOfMulEqOne (resM x hx.1.1).det (resM y hy).det (by rw [← Matrix.det_mul, h1, Matrix.det_one])).isUnit
+  have : Invertible (resM x hx.1.1) := Matrix.invertibleOfIsUnitDet _ (Units.mkOfMulEqOne (resM x hx.1.1).det (resM y hy).det (by rw [← Matrix.det_mul, h1, Matrix.det_one])).isUnit
   have hbt : (resM y hy).BlockTriangular (bG r) := by
     rw [(Matrix.inv_eq_right_inv h1).symm]
     exact Matrix.blockTriangular_inv_of_blockTriangular (bt_levG hx)
@@ -358,7 +358,7 @@ theorem i_detT_one (v : HeightOneSpectrum (𝓞 (maximalRealSubfield L))) (r : �
     x * y = 1 → (∀ a b, y a b ∈ v.adicCompletionIntegers (maximalRealSubfield L)) → NX.InParah v r x → Valued.v (NX.detT r x) = 1 := by
   intro hxy hy hx
   have h1 : resM x hx.1 * resM y hy = 1 := by rw [← resM_mul]; exact resM_one_of _ hxy
-  haveI : Invertible (resM x hx.1) := Matrix.invertibleOfIsUnitDet _ (Units.mkOfMulEqOne (resM x hx.1).det (resM y hy).det (by rw [← Matrix.det_mul, h1, Matrix.det_one])).isUnit
+  have : Invertible (resM x hx.1) := Matrix.invertibleOfIsUnitDet _ (Units.mkOfMulEqOne (resM x hx.1).det (resM y hy).det (by rw [← Matrix.det_mul, h1, Matrix.det_one])).isUnit
   have h2 : NX.detT r (resM x hx.1) * NX.detT r (resM y hy) = 1 := by
     rw [← detT_mul_of (bt_parah hx), h1, detT_one']
   have hne : IsLocalRing.residue ↥(v.adicCompletionIntegers (maximalRealSubfield L)) (NX.detT r (intM x hx.1)) ≠ 0 := by
@@ -748,7 +748,7 @@ theorem levGroup_exists : ∀ (D : D7) (T : TwR D.LL0 D.nd) (θ : ∀ kk : Fin 2
       ∀ z : (sp (NX.pG D kv)).v.adicCompletionIntegers (maximalRealSubfield D.host.E),
       Valued.v (z : (sp (NX.pG D kv)).v.adicCompletion (maximalRealSubfield D.host.E)) < 1 → redG kv z = 0 := by
     intro kv z hz
-    haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
+    have : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
     exact i_red_zero _ (redG kv) z hz
   have hdet : ∀ (s : SplitPlace D.host.E) (κ : GAf D.host.E D.R.nV), κ ∈ Umax D.host.E D.R.nV →
       NX.InParah s.v D.R.r (NX.locM s κ) → Valued.v (NX.detT D.R.r (NX.locM s κ)) = 1 := fun s κ hU hp =>
@@ -865,6 +865,6 @@ theorem levGroup_exists : ∀ (D : D7) (T : TwR D.LL0 D.nd) (θ : ∀ kk : Fin 2
   · intro κ h
     show ((chiU D T θ i j b k ψ QP DP sp redG κ : (FractionRing (T.Ok i k))ˣ) : FractionRing (T.Ok i k)) = _
     unfold chiU
-    simp only [Units.val_mul, Units.coe_prod, gU_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [Units.val_mul, Units.coe_prod, gU_val, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
 
 end GlobalTheory.LevGChar

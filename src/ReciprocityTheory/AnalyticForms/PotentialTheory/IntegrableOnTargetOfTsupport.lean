@@ -89,7 +89,7 @@ private theorem integrableOn_target_of_tsupport [CompactSpace X] (A : FinHolAtla
   have hKt : (A.chart j) '' tsupport g ⊆ (A.chart j).target := by
     rintro _ ⟨x, hx, rfl⟩
     exact (A.chart j).map_source (hs hx)
-  refine (hg j _ hKt hK).of_forall_diff_eq_zero (A.chart j).open_target.measurableSet ?_
+  refine (hg j _ hKt hK).of_forall_sdiff_eq_zero (A.chart j).open_target.measurableSet ?_
   rintro y ⟨hy, hyK⟩
   have h0 : g ((A.chart j).symm y) = 0 := by
     by_contra h0

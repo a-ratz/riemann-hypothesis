@@ -400,7 +400,7 @@ theorem isAffineOpen_biInf_of_isSeparated {R : Type} [CommRing R] {Y : Scheme.{0
     (f : Y ⟶ Spec (CommRingCat.of R)) [IsSeparated f] {κ : Type} {D : κ → Y.Opens}
     (hD : ∀ i, IsAffineOpen (D i)) (s : Finset κ) (hs : s.Nonempty) :
     IsAffineOpen (⨅ i ∈ s, D i) := by
-  haveI : Y.IsSeparated := by
+  have : Y.IsSeparated := by
     rw [Scheme.isSeparated_iff, ← terminal.comp_from f]
     infer_instance
   exact IsAffineOpen.biInf _ (Finset.finite_toSet _) (by exact_mod_cast hs) fun i _ => hD i
@@ -411,7 +411,7 @@ theorem cohomology_finite_and_vanishes_off_origin : ∀ (K : Type) [Field K] [Is
   obtain ⟨hproj, hsep, hsm, -, -, -⟩ := H R t Y π f h
   have := P.isAb.smooth
   have hN : IsNoetherianRing R := by
-    haveI : IsLocallyNoetherian (Spec (CommRingCat.of R)) :=
+    have : IsLocallyNoetherian (Spec (CommRingCat.of R)) :=
       LocallyOfFiniteType.isLocallyNoetherian (t ≫ P.A.hom)
     exact (isLocallyNoetherian_Spec (R := CommRingCat.of R)).1 inferInstance
   have hF : (translDiff P.A P.L (𝟙 P.A)).IsLB := LB.isLB_linComb P.isLB _ _

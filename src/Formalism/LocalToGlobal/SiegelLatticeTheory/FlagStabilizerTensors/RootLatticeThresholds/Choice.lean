@@ -189,7 +189,7 @@ theorem isHaarOn_muS_gen {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT
   refine ⟨inferInstance, ?_, ?_, ?_⟩
   · intro h0
     have h2 := congrArg (fun μ : Measure (Mt k r) => μ Set.univ) h0
-    simp only [Formalism.MainNotions.S.muS, Measure.map_apply hmul MeasurableSet.univ, Set.preimage_univ, Measure.coe_zero,
+    simp only [Formalism.MainNotions.S.muS, Measure.map_apply hmul MeasurableSet.univ, Set.preimage_univ, FunLike.coe_zero,
       Pi.zero_apply] at h2
     rw [← Set.univ_prod_univ, Measure.prod_prod, hW1, one_mul] at h2
     exact hNne (Measure.measure_univ_eq_zero.mp h2)
@@ -343,7 +343,7 @@ theorem z_tr {n : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) {Q : Matri
     rw [hQi, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Formalism.L2.SG.Pf.WFL.Hpk_mulVec]
     congr 1
     simp only [hJ, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, Pi.star_apply, Pi.single_apply,
-      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine ⟨fun i hi => ?_, ?_⟩
   · rw [hcoord]
     rcases hi with hi | hi
@@ -675,7 +675,7 @@ theorem torS_eq (μ : ℂ) : torS μ k r = Matrix.diagonal (tE μ k r) := rfl
 
 theorem tE_eI (μ : ℂ) (a : Fin r) : tE μ k r (eI k r a) = μ ^ (r - (a : ℕ)) := by
   simp only [tE]
-  rw [if_pos (show (eI k r a).val < r from a.isLt)]
+  rw [ite_eq_left (show (eI k r a).val < r from a.isLt)]
   rfl
 
 theorem tE_esI (μ : ℂ) (a : Fin r) : tE μ k r (esI k r a) = (star (μ ^ (r - (a : ℕ))))⁻¹ := by
@@ -684,7 +684,7 @@ theorem tE_esI (μ : ℂ) (a : Fin r) : tE μ k r (esI k r a) = (star (μ ^ (r -
   have h2 : r + k < (esI k r a).val := by show r + k < 2 * r + k - a.val; omega
   have h3 : 2 * r + k - (esI k r a).val = a.val := by show 2 * r + k - (2 * r + k - a.val) = a.val; omega
   simp only [tE]
-  rw [if_neg h1, if_pos h2, h3]
+  rw [ite_eq_right h1, ite_eq_left h2, h3]
 
 theorem tE_inv_mul (μ : ℂ) (hμ : μ ≠ 0) (i : Fin (2 * r + k + 1)) : tE μ⁻¹ k r i * tE μ k r i = 1 := by
   unfold tE
@@ -702,18 +702,18 @@ theorem tE_sig (μ : ℂ) (hμ : μ ≠ 0) (i : Fin (2 * r + k + 1)) : star (tE 
   have hi := i.isLt
   unfold tE
   by_cases h1 : i.val < r
-  · have h2 : ¬ (sig k r i).val < r := by rw [hs, if_pos (Or.inl h1)]; omega
-    have h3 : r + k < (sig k r i).val := by rw [hs, if_pos (Or.inl h1)]; omega
-    have h4 : 2 * r + k - (sig k r i).val = i.val := by rw [hs, if_pos (Or.inl h1)]; omega
-    rw [if_pos h1, if_neg h2, if_pos h3, h4]
+  · have h2 : ¬ (sig k r i).val < r := by rw [hs, ite_eq_left (Or.inl h1)]; omega
+    have h3 : r + k < (sig k r i).val := by rw [hs, ite_eq_left (Or.inl h1)]; omega
+    have h4 : 2 * r + k - (sig k r i).val = i.val := by rw [hs, ite_eq_left (Or.inl h1)]; omega
+    rw [ite_eq_left h1, ite_eq_right h2, ite_eq_left h3, h4]
     exact mul_inv_cancel₀ (star_ne_zero.mpr (pow_ne_zero _ hμ))
   · by_cases h5 : r + k < i.val
-    · have h2 : (sig k r i).val < r := by rw [hs, if_pos (Or.inr h5)]; omega
-      have h4 : (sig k r i).val = 2 * r + k - i.val := by rw [hs, if_pos (Or.inr h5)]
-      rw [if_neg h1, if_pos h5, if_pos h2, h4, star_inv₀, star_star]
+    · have h2 : (sig k r i).val < r := by rw [hs, ite_eq_left (Or.inr h5)]; omega
+      have h4 : (sig k r i).val = 2 * r + k - i.val := by rw [hs, ite_eq_left (Or.inr h5)]
+      rw [ite_eq_right h1, ite_eq_left h5, ite_eq_left h2, h4, star_inv₀, star_star]
       exact inv_mul_cancel₀ (pow_ne_zero _ hμ)
     · have h6 : sig k r i = i := Formalism.QuantumDeterminants.GBasic.sig_mid k r i (by omega) (by omega)
-      rw [h6, if_neg h1, if_neg h5]
+      rw [h6, ite_eq_right h1, ite_eq_right h5]
       simp
 
 theorem torS_inv_mul (μ : ℂ) (hμ : μ ≠ 0) : torS μ⁻¹ k r * torS μ k r = 1 := by
@@ -1089,7 +1089,7 @@ theorem inner_conj {ε : Fin n → Bool} {σ : Matrix (Fin n) (Fin n) ℂ → (H
   have h1 : σ 1 = 1 := hrep.1.1
   have key : σ h (σ h' w) = w := by
     have := congrArg (fun T : H →L[ℂ] H => T w) hmul
-    simp only [hhh', h1, ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at this
+    simp only [hhh', h1, ContinuousLinearMap.comp_apply, one_apply_eq_self] at this
     exact this.symm
   calc ⟪w, σ h x⟫_ℂ = ⟪σ h (σ h' w), σ h x⟫_ℂ := by rw [key]
     _ = ⟪σ h' w, x⟫_ℂ := (isoOf hrep hh).inner_map_map (σ h' w) x

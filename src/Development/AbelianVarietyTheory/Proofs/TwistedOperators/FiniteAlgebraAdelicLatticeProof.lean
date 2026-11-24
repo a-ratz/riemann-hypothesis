@@ -95,17 +95,17 @@ open scoped TensorProduct in
 theorem _root_.GlobalTheory.RegSSLattice.tensorLattice : _root_.GlobalTheory.RegSS.TensorLattice := by
   unfold _root_.GlobalTheory.RegSS.TensorLattice
   intro F B _ _ _ _ _
-  haveI := _root_.GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := _root_.GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI := _root_.GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := _root_.GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := _root_.GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := _root_.GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   obtain ⟨U, hU, hUF⟩ := _root_.GlobalTheory.AdeleDiscrete.exists_nhds_zero_principal_eq_zero F
-  haveI : Nontrivial (AdeleRing (𝓞 F) F) := ⟨⟨0, 1, fun h01 => one_ne_zero
+  have : Nontrivial (AdeleRing (𝓞 F) F) := ⟨⟨0, 1, fun h01 => one_ne_zero
     (hUF 1 (by rw [map_one, ← h01]; exact mem_of_mem_nhds hU))⟩⟩
-  letI : Algebra (AdeleRing (𝓞 F) F) (B ⊗[F] AdeleRing (𝓞 F) F) :=
+  let : Algebra (AdeleRing (𝓞 F) F) (B ⊗[F] AdeleRing (𝓞 F) F) :=
     Algebra.TensorProduct.rightAlgebra
-  letI : TopologicalSpace (B ⊗[F] AdeleRing (𝓞 F) F) := _root_.Formalism.BasicNotions.tensTopL (AdeleRing (𝓞 F) F)
-  haveI : IsModuleTopology (AdeleRing (𝓞 F) F) (B ⊗[F] AdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI : ContinuousAdd (B ⊗[F] AdeleRing (𝓞 F) F) :=
+  let : TopologicalSpace (B ⊗[F] AdeleRing (𝓞 F) F) := _root_.Formalism.BasicNotions.tensTopL (AdeleRing (𝓞 F) F)
+  have : IsModuleTopology (AdeleRing (𝓞 F) F) (B ⊗[F] AdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have : ContinuousAdd (B ⊗[F] AdeleRing (𝓞 F) F) :=
     IsModuleTopology.toContinuousAdd (AdeleRing (𝓞 F) F) _
   let b := Module.finBasis F B
   let c : B ⊗[F] AdeleRing (𝓞 F) F ≃ₗ[AdeleRing (𝓞 F) F] AdeleRing (𝓞 F) F ⊗[F] B :=
@@ -119,7 +119,7 @@ theorem _root_.GlobalTheory.RegSSLattice.tensorLattice : _root_.GlobalTheory.Reg
           simp [Algebra.TensorProduct.right_algebraMap_apply, TensorProduct.smul_tmul', mul_comm]
         | add x y hx hy => simp_all [smul_add] }
   let e := c.trans (Algebra.TensorProduct.basis (AdeleRing (𝓞 F) F) b).equivFun
-  haveI : Module.Finite (AdeleRing (𝓞 F) F) (B ⊗[F] AdeleRing (𝓞 F) F) :=
+  have : Module.Finite (AdeleRing (𝓞 F) F) (B ⊗[F] AdeleRing (𝓞 F) F) :=
     Module.Finite.of_basis ((Algebra.TensorProduct.basis (AdeleRing (𝓞 F) F) b).map c.symm)
   let h : B ⊗[F] AdeleRing (𝓞 F) F ≃L[AdeleRing (𝓞 F) F]
       (Fin (Module.finrank F B) → AdeleRing (𝓞 F) F) :=
@@ -141,7 +141,7 @@ theorem _root_.GlobalTheory.RegSSLattice.tensorLattice : _root_.GlobalTheory.Reg
       (fun y => y i) '' (h '' D)}) fun i => finite_setOf_algebraMap_mem_of_isCompact F
         (hD'.image (continuous_apply i))).preimage b.equivFun.injective.injOn).subset ?_
     intro β hβ
-    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_univ_pi, Set.mem_ofPred_eq]
     intro i
     exact ⟨h (_root_.Formalism.UG.inclE (AdeleRing (𝓞 F) F) β), ⟨_, hβ, rfl⟩, by rw [he]⟩
   · obtain ⟨K, hK, hKF⟩ := _root_.GlobalTheory.AdeleCocompact.exists_compact_adele F

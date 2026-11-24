@@ -278,7 +278,7 @@ theorem theta_exists (p n' : ℕ) [Fact p.Prime] (W Qq O Kf : Type) [CommRing W]
     ∃ Θ : ↥((Pol (KK O) (ι := Fin n') (m + 1) d).restrictScalars O) ≃ₗ[O] ↥(Vsp Kf lam0),
       IsFlatIdent ι σ w φ r d lam0 vec h Θ ∧ IsTrueTheta hS d lam0 vec h Θ := by
   open Formalism.L2.G.Model in
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   have hw := w_ne hS
   have hm : 1 ≤ m := by omega
   have hlam := flat_lam vec d lam0 hfl
@@ -286,7 +286,7 @@ theorem theta_exists (p n' : ℕ) [Fact p.Prime] (W Qq O Kf : Type) [CommRing W]
     unfold VS Vsp
     congr 1
     funext s
-    rw [hlam s, if_pos (letterWt_anti _ _ _)]
+    rw [hlam s, ite_eq_left (letterWt_anti _ _ _)]
   obtain ⟨Θ0, hΘ0⟩ := gen_equiv hS m hm vec d (fun x => la_tw ι σ x.val h) (fun x => la_tw_det _ _ _ _ hh)
   let Θ : ↥((Pol (KK O) (ι := Fin n') (m + 1) d).restrictScalars O) ≃ₗ[O] ↥(Vsp Kf lam0) :=
     Θ0.trans ((LinearEquiv.ofEq _ _ hV).restrictScalars O)

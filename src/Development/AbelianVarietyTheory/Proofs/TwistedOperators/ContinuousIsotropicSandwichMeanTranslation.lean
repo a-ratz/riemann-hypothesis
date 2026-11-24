@@ -70,10 +70,10 @@ theorem continuous_emb {D : D7} (V W : HSp D) {a b : ℕ} (P : Matrix (Fin W.ran
 
 theorem continuous_meanX : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) (Fin a) D.host.E) (Q : Matrix (Fin b) (Fin V.rank) D.host.E) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D a b)) (𝓨 : Set (Mx D a b)), IsCovolOne (GlobalTheory.MixModel.ratMx D a b) μ 𝓨 → ∀ F : WO V W → ℂ, IsThetaFunO ψ V W F → Continuous (GlobalTheory.IsoMean.meanX V W P Q μ 𝓨 F) := by
   intro D V W a b P Q ψ hψ μ 𝓨 hμ F hF
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
   obtain ⟨-, -, i3, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V.rank
-  haveI : FirstCountableTopology (WO V W) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : FirstCountableTopology (WO V W) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
+  have : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
   obtain ⟨C, hC⟩ := isThetaFunO_bounded V W ψ hψ F hF
   unfold meanX

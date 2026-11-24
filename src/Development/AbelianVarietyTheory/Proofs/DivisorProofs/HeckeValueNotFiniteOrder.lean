@@ -61,8 +61,8 @@ open WithZero GlobalTheory.CharVal GlobalTheory.Formalism.L2.Col.HostOk
 
 theorem exists_aut_comp {E : Type} [Field E] [NumberField E] [IsGalois ℚ E] (τ₀ τ₁ : E →+* ℂ) :
     ∃ g : E ≃ₐ[ℚ] E, ∀ x, τ₀ (g x) = τ₁ x := by
-  letI : Algebra E ℂ := τ₀.toAlgebra
-  haveI : IsScalarTower ℚ E ℂ := IsScalarTower.of_algebraMap_eq fun q => by
+  let : Algebra E ℂ := τ₀.toAlgebra
+  have : IsScalarTower ℚ E ℂ := IsScalarTower.of_algebraMap_eq fun q => by
     show algebraMap ℚ ℂ q = τ₀ (algebraMap ℚ E q)
     rw [eq_ratCast (algebraMap ℚ ℂ), eq_ratCast (algebraMap ℚ E), map_ratCast]
   exact ⟨(τ₁.toRatAlgHom).restrictNormal' E, fun x => (τ₁.toRatAlgHom).restrictNormal_commutes E x⟩

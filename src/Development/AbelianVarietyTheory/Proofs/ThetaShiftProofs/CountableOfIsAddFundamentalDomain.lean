@@ -274,7 +274,7 @@ theorem exists_bound (L : Submodule ℤ W) [DiscreteTopology L] [IsZLattice ℝ 
 theorem measure_ne_zero_ne_top (L : Submodule ℤ W) [DiscreteTopology L] [IsZLattice ℝ L]
     {D : Set W} (hD : IsAddFundamentalDomain L D μ) : μ D ≠ 0 ∧ μ D ≠ ⊤ := by
   obtain ⟨n, ω, rfl⟩ := exists_basis L
-  haveI := countable_toAddSubgroup (Submodule.span ℤ (Set.range ω))
+  have := countable_toAddSubgroup (Submodule.span ℤ (Set.range ω))
   have h : μ D = μ (ZSpan.fundamentalDomain ω) :=
     IsAddFundamentalDomain.measure_eq (G := (Submodule.span ℤ (Set.range ω)).toAddSubgroup) hD
       (ZSpan.isAddFundamentalDomain' ω μ)
@@ -287,13 +287,13 @@ theorem coeff_eq_cubeCoeff {ι : Type*} [Fintype ι] (ω : Basis ι ℝ W) {D : 
     (hf : ∀ l ∈ Submodule.span ℤ (Set.range ω), ∀ x, f (x + l) = f x) {χ : W →ₗ[ℝ] ℝ}
     (hχ : ∀ l ∈ Submodule.span ℤ (Set.range ω), ∃ k : ℤ, χ l = k) :
     coeff μ D f χ = cubeCoeff ω f χ := by
-  haveI := countable_toAddSubgroup (Submodule.span ℤ (Set.range ω))
+  have := countable_toAddSubgroup (Submodule.span ℤ (Set.range ω))
   rw [coeff_congr_domain (Γ := (Submodule.span ℤ (Set.range ω)).toAddSubgroup) hD
     (ZSpan.isAddFundamentalDomain' ω μ) hf hχ]
   set φ : (ι → ℝ) ≃L[ℝ] W := ω.equivFunL.symm with hφ
   have hφa : ∀ t, φ t = ∑ i, t i • ω i := fun t => ω.equivFun_symm_apply t
   set μ' : Measure W := (volume : Measure (ι → ℝ)).map φ with hμ'
-  haveI : μ'.IsAddHaarMeasure := φ.isAddHaarMeasure_map _
+  have : μ'.IsAddHaarMeasure := φ.isAddHaarMeasure_map _
   have hpre : φ ⁻¹' ZSpan.fundamentalDomain ω = Set.pi Set.univ fun _ => Set.Ico (0 : ℝ) 1 := by
     ext t
     have : ∀ i, ω.repr (φ t) i = t i := fun i =>
@@ -311,7 +311,7 @@ theorem coeff_eq_cubeCoeff {ι : Type*} [Fintype ι] (ω : Basis ι ℝ W) {D : 
     (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure μ μ').ne'
   generalize Measure.addHaarScalarFactor μ μ' = c at h3 h4
   rw [coeff, setAverage_eq, h3, Measure.restrict_smul, integral_smul_nnreal_measure, h2,
-    Measure.real, Measure.smul_apply, h1, cubeCoeff]
+    Measure.real, smul_apply, h1, cubeCoeff]
   simp only [hφa]
   rw [NNReal.smul_def, smul_smul]
   simp [h4]
@@ -367,7 +367,7 @@ theorem continuous_partialCoeff {D₁ : Set W₁} (h1 : μ₁ D₁ ≠ ⊤) (j :
     Continuous (partialCoeff μ₁ D₁ j f ν) := by
   have hj := j.continuous_of_finiteDimensional
   have hν := continuous_eNeg ν
-  haveI : IsFiniteMeasure (μ₁.restrict D₁) := isFiniteMeasure_restrict.2 h1
+  have : IsFiniteMeasure (μ₁.restrict D₁) := isFiniteMeasure_restrict.2 h1
   unfold partialCoeff coeff
   simp only [setAverage_eq]
   refine Continuous.const_smul ?_ _
@@ -394,13 +394,13 @@ theorem coeff_partialCoeff_eq_mul (L : Submodule ℤ W) [DiscreteTopology L] [Is
     (ν : W₁ →ₗ[ℝ] ℝ) {χ : W →ₗ[ℝ] ℝ} (hχ : ∀ l ∈ L, ∃ k : ℤ, χ l = k) :
     coeff μ D (partialCoeff μ₁ D₁ j f ν) χ =
       coeff μ₁ D₁ (fun _ => 1) (ν - χ ∘ₗ j) * coeff μ D f χ := by
-  haveI := countable_toAddSubgroup L
+  have := countable_toAddSubgroup L
   obtain ⟨C, hC⟩ := exists_bound L hc hf
   have hj := j.continuous_of_finiteDimensional
   have hν := continuous_eNeg ν
   have hχc := continuous_eNeg χ
-  haveI : IsFiniteMeasure (μ₁.restrict D₁) := isFiniteMeasure_restrict.2 h1
-  haveI : IsFiniteMeasure (μ.restrict D) :=
+  have : IsFiniteMeasure (μ₁.restrict D₁) := isFiniteMeasure_restrict.2 h1
+  have : IsFiniteMeasure (μ.restrict D) :=
     isFiniteMeasure_restrict.2 (measure_ne_zero_ne_top L hD).2
   have hint : Integrable (Function.uncurry fun (b : W) (s : W₁) =>
       f (b + j s) * eNeg ν s * eNeg χ b) ((μ.restrict D).prod (μ₁.restrict D₁)) := by
@@ -439,8 +439,8 @@ theorem coeff_partialCoeff (L : Submodule ℤ W) [DiscreteTopology L] [IsZLattic
     {ν : W₁ →ₗ[ℝ] ℝ} (hν : ∀ l ∈ L₁, ∃ k : ℤ, ν l = k)
     {χ : W →ₗ[ℝ] ℝ} (hχ : ∀ l ∈ L, ∃ k : ℤ, χ l = k) :
     coeff μ D (partialCoeff μ₁ D₁ j f ν) χ = if χ ∘ₗ j = ν then coeff μ D f χ else 0 := by
-  haveI := countable_toAddSubgroup L
-  haveI := countable_of_isAddFundamentalDomain hD₁ h0
+  have := countable_toAddSubgroup L
+  have := countable_of_isAddFundamentalDomain hD₁ h0
   rw [coeff_partialCoeff_eq_mul L hD h1 j hc hf ν hχ]
   split_ifs with h
   · rw [h, sub_self, coeff_one_zero h0 h1, one_mul]
@@ -487,7 +487,7 @@ theorem partialCoeff_spec_map (L : Submodule ℤ W) [DiscreteTopology L] [IsZLat
     (∀ χ : W →ₗ[ℝ] ℝ, (∀ l ∈ L, ∃ k : ℤ, χ l = k) → (¬ ∀ l ∈ L₁, ∃ k : ℤ, χ (j l) = k) →
       coeff μ D f χ = 0) ∧
     (f = 0 ↔ ∀ χ : W →ₗ[ℝ] ℝ, (∀ l ∈ L, ∃ k : ℤ, χ l = k) → coeff μ D f χ = 0) := by
-  haveI := countable_toAddSubgroup L
+  have := countable_toAddSubgroup L
   obtain ⟨C, hC⟩ := exists_bound L hc hf
   refine ⟨fun ν hν => ⟨continuous_partialCoeff h1 j hc hC ν,
     fun l hl b => partialCoeff_add_period D₁ j ν (hf l hl) b,

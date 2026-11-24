@@ -103,7 +103,7 @@ theorem _root_.GlobalTheory.BadShare.bb_iff {g N l : ℕ} :
     _root_.GlobalTheory.BadShare.BB g N l ↔
       l = g ∨ (l.Prime ∧ ∃ d : ℕ, 1 ≤ d ∧ d ≤ N ∧ g ^ d < l ^ (4 * padicValNat l (g ^ d - 1))) := by
   unfold _root_.GlobalTheory.BadShare.BB _root_.Formalism.CyclotomicNorms.BB _root_.Formalism.CyclotomicNorms.Exc
-  simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_setOf_eq]
+  simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_ofPred_eq]
   refine or_congr Iff.rfl ⟨?_, ?_⟩
   · rintro ⟨d, h1, h2, hp, hq⟩
     exact ⟨hp, d, h1, h2, hq⟩
@@ -112,7 +112,7 @@ theorem _root_.GlobalTheory.BadShare.bb_iff {g N l : ℕ} :
 
 theorem bb_of_dvd {g N l d : ℕ} (hl : l.Prime) (h1 : 1 ≤ d) (h2 : d ≤ N) (h0 : g ^ d - 1 ≠ 0) (h3 : l ∣ g ^ d - 1)
     (h4 : g ^ d < l ^ 4) : BB g N l := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   refine bb_iff.2 (Or.inr ⟨hl, d, h1, h2, h4.trans_le (Nat.pow_le_pow_right hl.pos ?_)⟩)
   have hval : 1 ≤ padicValNat l (g ^ d - 1) := by
     rw [Nat.padicValNat_def]
@@ -134,7 +134,7 @@ variable (g : ℕ) [Fact g.Prime] in
 variable {k : Type} [Field k] {l : ℕ} in
 theorem _root_.GlobalTheory.BadShare.eq_of_pow_eq {M a : ℕ} (hM : M.Coprime l) {x y : k} (hx : x ^ M = 1)
     (hy : y ^ M = 1) (hM0 : M ≠ 0) (h : x ^ (l ^ a) = y ^ (l ^ a)) : x = y := by
-  haveI : NeZero M := ⟨hM0⟩
+  have : NeZero M := ⟨hM0⟩
   have hs : l ^ a * ((l ^ a : ℕ) : ZMod M)⁻¹.val ≡ 1 [MOD M] := by
     rw [← ZMod.natCast_eq_natCast_iff, Nat.cast_mul, ZMod.natCast_zmod_val, Nat.cast_one]
     exact ZMod.coe_mul_inv_eq_one _ (hM.symm.pow_left a)
@@ -158,7 +158,7 @@ private theorem primeToPart_pow_prime_pow_eq_of_factorization_le {G : Type*} [Mo
   have hm : m ≠ 0 := (Nat.ordCompl_pos l hn).ne'
   have hcop : Nat.Coprime (l ^ v) m := (Nat.coprime_ordCompl hl hn).pow_left v
   have hnm : l ^ v * m = n := Nat.ordProj_mul_ordCompl_eq_self n l
-  haveI : NeZero m := ⟨hm⟩
+  have : NeZero m := ⟨hm⟩
   have hinv : l ^ v * ((l ^ v : ℕ) : ZMod m)⁻¹.val ≡ 1 [MOD m] := by
     rw [← ZMod.natCast_eq_natCast_iff, Nat.cast_mul, ZMod.natCast_zmod_val, Nat.cast_one]
     exact ZMod.coe_mul_inv_eq_one _ hcop
@@ -231,8 +231,8 @@ variable (g : ℕ) [Fact g.Prime] in
 private theorem isOfFinOrder_of_ne_zero_algebraicClosure_zmod {g : ℕ} [Fact g.Prime]
     {x : AlgebraicClosure (ZMod g)} (hx : x ≠ 0) : IsOfFinOrder x := by
   have hint : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
-  haveI := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
+  have := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite (IntermediateField.adjoin (ZMod g) {x}) := Module.finite_of_finite (ZMod g)
   let y : IntermediateField.adjoin (ZMod g) {x} := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
   have hy : y ≠ 0 := fun h => hx (by simpa [y] using congrArg Subtype.val h)
   obtain ⟨n, hn, hpow⟩ := (isOfFinOrder_of_finite (Units.mk0 y hy)).exists_pow_eq_one

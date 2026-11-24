@@ -224,7 +224,7 @@ theorem lattice_norm_matrix_conj (lam : Measure (Fin n → R)) [lam.IsAddHaarMea
   have hS : {x | ∃ y ∈ L.map (Matrix.mulVecLin A).toAddMonoidHom, ∃ y' ∈ L.map (Matrix.mulVecLin C).toAddMonoidHom,
       x = y + (A * B * A').mulVec y'} = (fun x => A *ᵥ x) '' {x | ∃ y ∈ L, ∃ y' ∈ L, x = y + B.mulVec y'} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_image, AddSubgroup.mem_map]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, AddSubgroup.mem_map]
     constructor
     · rintro ⟨_, ⟨u, hu, rfl⟩, _, ⟨u', hu', rfl⟩, rfl⟩
       refine ⟨u + B *ᵥ u', ⟨u, hu, u', hu', rfl⟩, ?_⟩
@@ -803,20 +803,20 @@ theorem realMatch : RealMatch := by
         refine Finset.prod_congr rfl fun k _ => ?_
         by_cases h : k.1 = τ
         · subst h
-          rw [if_pos rfl, if_pos rfl]
+          rw [ite_eq_left rfl, ite_eq_left rfl]
           have := evX_lz (frM k.1) (((frG k.1)⁻¹).1 * compAt θ k.1 (HMul.hMul x a.1 : Mx D V.rank n)) k.2
           unfold PositivityTheory.Rg.Sw.evX at this
           rw [this, hZ k.1, hf]
           simp only [starRingEnd_apply]
-        · rw [if_neg h, if_neg h, map_one]
+        · rw [ite_eq_right h, ite_eq_right h, map_one]
       simp only [hτ]
-      rw [Finset.prod_mul_distrib, Finset.prod_ite_eq' Finset.univ τ0, if_pos (Finset.mem_univ _), Finset.prod_comm]
+      rw [Finset.prod_mul_distrib, Finset.prod_ite_eq' Finset.univ τ0, ite_eq_left (Finset.mem_univ _), Finset.prod_comm]
       unfold evalPoly
       rw [MvPolynomial.eval_monomial]
       congr 1
       refine Finset.prod_congr rfl fun k _ => ?_
       simp only [ite_pow, one_pow]
-      rw [Finset.prod_ite_eq Finset.univ k.1, if_pos (Finset.mem_univ _)]
+      rw [Finset.prod_ite_eq Finset.univ k.1, ite_eq_left (Finset.mem_univ _)]
       simp only [hf, ite_pow]
     unfold PositivityTheory.SiegelWeilFormula.Gen.phiInf
     simp only [hY]
@@ -980,7 +980,7 @@ private theorem conjH_add' (a : GL (Fin n) (AE D)) (b c : hermA D n) :
 
 private theorem continuous_conjH' (a : GL (Fin n) (AE D)) : Continuous (conjH (D := D) a) := by
   have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  exact ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const).subtype_mk _
+  exact ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const).subtype_mk _
 
 
 
@@ -1060,7 +1060,7 @@ theorem integrable_whit_of_unfold (hU : Unfold) :
   have hc : Continuous fun b : hermA D n => ψ (-halfTr (Matrix.trace (HMul.hMul T b.1 : Mx D n n))) := by
     unfold halfTr
     exact hS.hψ.1.comp (continuous_const.mul (ht.comp
-      ((continuous_const.matrix_mul continuous_subtype_val).matrix_trace))).neg
+      ((continuous_const.matrix_mul continuous_subtypeVal).matrix_trace))).neg
   exact h2.mul_bdd (c := 1) hc.aestronglyMeasurable (Filter.Eventually.of_forall fun b => (hS.hψ.2.1 _).le)
 
 end PositivityTheory.PfSWUS.SwMatch

@@ -59,7 +59,7 @@ private lemma one_add_inv_pow_le_exp_one (N : ℕ) (hN : 1 ≤ N) :
   calc (1 + 1 / (N : ℝ)) ^ N ≤ (Real.exp (1 / N)) ^ N := by
         gcongr
         linarith [Real.add_one_le_exp (1 / (N : ℝ))]
-    _ = Real.exp 1 := by rw [← Real.exp_nat_mul, mul_one_div_cancel hN']
+    _ = Real.exp 1 := by rw [← Real.exp_natCast_mul, mul_one_div_cancel hN']
 
 theorem mass_corollary : PowerProductTwoSidedBounds := by
   intro f k T X Γ Dstar dstar dM lo hi hf hk hfk2 hT hX hΓ hD hd hXD hlow hup hdM hlo hhi

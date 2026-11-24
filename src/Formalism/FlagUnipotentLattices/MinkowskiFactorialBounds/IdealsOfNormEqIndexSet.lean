@@ -327,9 +327,9 @@ private theorem primeSet_lemma (K : Type) [Field K] [NumberField K]
   have hn : Ideal.absNorm I ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff]
   have hfin : {P : Ideal (NumberField.RingOfIntegers K) | P.IsPrime ∧ I ≤ P}.Finite := by
     apply Set.Finite.subset ((Ideal.absNorm I).divisors.finite_toSet.biUnion
-      fun d hd => Ideal.finite_setOf_absNorm_eq d)
+      fun d hd => Ring.HasFiniteQuotients.finite_absNorm_eq d)
     intro P hP
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_coe, Nat.mem_divisors]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_coe, Nat.mem_divisors]
     exact ⟨_, ⟨Ideal.absNorm_dvd_absNorm_of_le hP.2, hn⟩, rfl⟩
   refine ⟨hfin.toFinset, by simp, ?_, ?_⟩
   · intro P hP
@@ -340,7 +340,7 @@ private theorem primeSet_lemma (K : Type) [Field K] [NumberField K]
     apply Finset.prod_primes_dvd
     · intro P hP
       rw [Set.Finite.mem_toFinset] at hP
-      haveI := hP.1
+      have := hP.1
       exact Ideal.prime_of_isPrime (fun h => hI (le_bot_iff.1 (h ▸ hP.2))) hP.1
     · intro P hP
       rw [Set.Finite.mem_toFinset] at hP
@@ -399,8 +399,8 @@ private theorem normCount_lemma (K : Type) [Field K] [NumberField K] : ∀ n : �
       intro htop
       have hcard : Nat.card (𝓞 K ⧸ I) = n := by
         rw [← hI, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-      haveI : Finite (𝓞 K ⧸ I) := Nat.finite_of_card_ne_zero (by omega)
-      haveI : Fact p.Prime := ⟨hp⟩
+      have : Finite (𝓞 K ⧸ I) := Nat.finite_of_card_ne_zero (by omega)
+      have : Fact p.Prime := ⟨hp⟩
       obtain ⟨y, hy⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 K ⧸ I) p (hcard ▸ hpn)
       have h1 : (1 : 𝓞 K) ∈ I ⊔ Ideal.span {q} := htop ▸ Submodule.mem_top
       obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.1 h1
@@ -431,18 +431,18 @@ private theorem normCount_lemma (K : Type) [Field K] [NumberField K] : ∀ n : �
   classical
   let T' := T.filter (fun P => Ideal.absNorm P ∣ n)
   let F := T'.biUnion (fun P =>
-    (Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) (n / Ideal.absNorm P)).toFinset.image (P * ·))
+    (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) (n / Ideal.absNorm P)).toFinset.image (P * ·))
   have hsub : {I : Ideal (𝓞 K) | Ideal.absNorm I = n} ⊆ ↑F := by
     intro I hI
     obtain ⟨P, hPT, hdvd, J, hJ, rfl⟩ := hcover I hI
     simp only [F, T', Finset.coe_biUnion, Finset.coe_filter, Set.mem_iUnion, Finset.coe_image,
-      Set.Finite.coe_toFinset, Set.mem_image, Set.mem_setOf_eq]
+      Set.Finite.coe_toFinset, Set.mem_image, Set.mem_ofPred_eq]
     exact ⟨P, ⟨hPT, hdvd⟩, J, hJ, rfl⟩
   have hΩ : 1 ≤ (Nat.primeFactorsList n).length := by
     have : Nat.primeFactorsList n ≠ [] := by
       rw [Ne, Nat.primeFactorsList_eq_nil]; omega
     exact List.length_pos_iff.2 this
-  have hterm : ∀ P ∈ T', (Ideal.finite_setOf_absNorm_eq (S := 𝓞 K)
+  have hterm : ∀ P ∈ T', (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K)
       (n / Ideal.absNorm P)).toFinset.card ≤
         finrank ℚ K ^ ((Nat.primeFactorsList n).length - 1) := by
     intro P hP
@@ -451,7 +451,7 @@ private theorem normCount_lemma (K : Type) [Field K] [NumberField K] : ∀ n : �
     obtain ⟨m, hm⟩ := hdvd
     have hm0 : m ≠ 0 := by rintro rfl; omega
     have hmdiv : n / Ideal.absNorm P = m := by rw [hm, Nat.mul_div_cancel_left _ (by omega)]
-    rw [← Set.ncard_eq_toFinset_card _ (Ideal.finite_setOf_absNorm_eq _), hmdiv]
+    rw [← Set.ncard_eq_toFinset_card _ (Ring.HasFiniteQuotients.finite_absNorm_eq _), hmdiv]
     have hmlt : m < n := by
       rw [hm]; have : 1 * m < Ideal.absNorm P * m := by
         apply Nat.mul_lt_mul_of_pos_right (by omega) (Nat.pos_of_ne_zero hm0)
@@ -468,9 +468,9 @@ private theorem normCount_lemma (K : Type) [Field K] [NumberField K] : ∀ n : �
   calc {I : Ideal (𝓞 K) | Ideal.absNorm I = n}.ncard ≤ (↑F : Set (Ideal (𝓞 K))).ncard :=
         Set.ncard_le_ncard hsub F.finite_toSet
     _ = F.card := Set.ncard_coe_finset F
-    _ ≤ ∑ P ∈ T', ((Ideal.finite_setOf_absNorm_eq (S := 𝓞 K)
+    _ ≤ ∑ P ∈ T', ((Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K)
           (n / Ideal.absNorm P)).toFinset.image (P * ·)).card := Finset.card_biUnion_le
-    _ ≤ ∑ P ∈ T', (Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) (n / Ideal.absNorm P)).toFinset.card :=
+    _ ≤ ∑ P ∈ T', (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) (n / Ideal.absNorm P)).toFinset.card :=
         Finset.sum_le_sum fun P _ => Finset.card_image_le
     _ ≤ ∑ P ∈ T', finrank ℚ K ^ ((Nat.primeFactorsList n).length - 1) := Finset.sum_le_sum hterm
     _ = T'.card * finrank ℚ K ^ ((Nat.primeFactorsList n).length - 1) := by simp
@@ -485,12 +485,12 @@ theorem ideal_norm_le_count : IdealNormLeCount := by
   set d := finrank ℚ K
   have hd : 1 ≤ d := Module.finrank_pos
   let F := (Finset.Icc 1 ⌊x⌋₊).biUnion (fun n =>
-    (Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) n).toFinset)
+    (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) n).toFinset)
   have hsub : {I : Ideal (𝓞 K) | I ≠ ⊥ ∧ (Ideal.absNorm I : ℝ) ≤ x} ⊆ ↑F := by
     rintro I ⟨hI, hx'⟩
     have h0 : Ideal.absNorm I ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff]
     simp only [F, Finset.coe_biUnion, Set.mem_iUnion, Finset.coe_Icc, Set.mem_Icc,
-      Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+      Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     exact ⟨Ideal.absNorm I, ⟨by omega, Nat.le_floor hx'⟩, rfl⟩
   refine ⟨F.finite_toSet.subset hsub, ?_⟩
   have hL : 0 ≤ Real.logb 2 d := Real.logb_nonneg (by norm_num) (by exact_mod_cast hd)
@@ -498,13 +498,13 @@ theorem ideal_norm_le_count : IdealNormLeCount := by
   have h1 : (({I : Ideal (𝓞 K) | I ≠ ⊥ ∧ (Ideal.absNorm I : ℝ) ≤ x}.ncard : ℕ) : ℝ) ≤ (F.card : ℝ) := by
     exact_mod_cast (Set.ncard_le_ncard hsub F.finite_toSet).trans (Set.ncard_coe_finset F).le
   have h2 : (F.card : ℝ) ≤ ∑ n ∈ Finset.Icc 1 ⌊x⌋₊,
-      ((Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) n).toFinset.card : ℝ) := by
+      ((Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) n).toFinset.card : ℝ) := by
     exact_mod_cast Finset.card_biUnion_le
   have h3 : ∀ n ∈ Finset.Icc 1 ⌊x⌋₊,
-      ((Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) n).toFinset.card : ℝ) ≤ x ^ Real.logb 2 d := by
+      ((Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) n).toFinset.card : ℝ) ≤ x ^ Real.logb 2 d := by
     intro n hn
     obtain ⟨hn1, hn2⟩ := Finset.mem_Icc.1 hn
-    rw [← Set.ncard_eq_toFinset_card _ (Ideal.finite_setOf_absNorm_eq _)]
+    rw [← Set.ncard_eq_toFinset_card _ (Ring.HasFiniteQuotients.finite_absNorm_eq _)]
     have e1 : (({I : Ideal (𝓞 K) | Ideal.absNorm I = n}.ncard : ℕ) : ℝ) ≤ (d : ℝ) ^ (Nat.primeFactorsList n).length := by
       exact_mod_cast normCount_lemma K n hn1
     have e2 := Formalism.SLP.Final.omegaPow d n hd hn1
@@ -512,7 +512,7 @@ theorem ideal_norm_le_count : IdealNormLeCount := by
       Real.rpow_le_rpow (by positivity) ((Nat.cast_le.2 hn2).trans (Nat.floor_le hx0.le)) hL
     linarith
   have h4 : ∑ n ∈ Finset.Icc 1 ⌊x⌋₊,
-      ((Ideal.finite_setOf_absNorm_eq (S := 𝓞 K) n).toFinset.card : ℝ) ≤
+      ((Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) n).toFinset.card : ℝ) ≤
       (⌊x⌋₊ : ℝ) * x ^ Real.logb 2 d := by
     refine (Finset.sum_le_sum h3).trans ?_
     simp
@@ -619,14 +619,14 @@ lemma index_ideal_smul_top_le_norm_pow {E : Type} [Field E] [NumberField E] (p :
     (p • (⊤ : Submodule (𝓞 E) X)).toAddSubgroup.index ≠ 0 ∧
       (p • (⊤ : Submodule (𝓞 E) X)).toAddSubgroup.index ≤ Ideal.absNorm p ^ k := by
   classical
-  letI : Field (𝓞 E ⧸ p) := Ideal.Quotient.field p
+  let : Field (𝓞 E ⧸ p) := Ideal.Quotient.field p
   have hN0 : Ideal.absNorm p ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff]
   have hNF : Nat.card (𝓞 E ⧸ p) = Ideal.absNorm p := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 E ⧸ p) := Nat.finite_of_card_ne_zero (by rwa [hNF])
-  haveI : Module.Finite (𝓞 E ⧸ p) (X ⧸ (p • (⊤ : Submodule (𝓞 E) X))) :=
+  have : Finite (𝓞 E ⧸ p) := Nat.finite_of_card_ne_zero (by rwa [hNF])
+  have : Module.Finite (𝓞 E ⧸ p) (X ⧸ (p • (⊤ : Submodule (𝓞 E) X))) :=
     Module.Finite.of_restrictScalars_finite (𝓞 E) _ _
-  haveI : Finite (X ⧸ (p • (⊤ : Submodule (𝓞 E) X))) := Module.finite_of_finite (𝓞 E ⧸ p)
+  have : Finite (X ⧸ (p • (⊤ : Submodule (𝓞 E) X))) := Module.finite_of_finite (𝓞 E ⧸ p)
   have hsm : ∀ (a : 𝓞 E) (q : X ⧸ (p • (⊤ : Submodule (𝓞 E) X))),
       (Ideal.Quotient.mk p a) • q = a • q := by
     intro a q; rw [← Ideal.Quotient.algebraMap_eq, algebraMap_smul]

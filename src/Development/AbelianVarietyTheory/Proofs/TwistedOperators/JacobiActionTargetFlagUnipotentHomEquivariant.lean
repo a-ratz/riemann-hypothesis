@@ -61,7 +61,7 @@ theorem mul_strictUp_eq_zero {ρ m : ℕ} {y : Mx D m ρ} (hy : ∀ u ∈ UX D �
   have hdiag : ∀ i, (1 + T) i i = 1 := fun i => by
     rw [Matrix.add_apply, Matrix.one_apply_eq, hT i i le_rfl, add_zero]
   have hdet : (1 + T).det = 1 := by
-    rw [Matrix.det_of_upperTriangular hbt]
+    rw [det_of_isUpperTriangular hbt]
     simp only [hdiag, Finset.prod_const_one]
   have hu : IsUnit (1 + T) := (Matrix.isUnit_iff_isUnit_det _).2 (by rw [hdet]; exact isUnit_one)
   have hmem : hu.unit ∈ UX D ρ := mem_UX.2 fun i j =>

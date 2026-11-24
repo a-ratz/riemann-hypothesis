@@ -68,7 +68,7 @@ private theorem tr_comap' {n : ℕ} {A G H : Type} [CommRing A] [Group G] [Group
         (MonoidAlgebra.single 1 Polynomial.X - MonoidAlgebra.mapRingHom H Polynomial.C (MonoidAlgebra.single g 1))) = _
     congr 1
     rw [map_sub]
-    simp [MonoidAlgebra.mapDomainRingHom_apply, MonoidAlgebra.mapRingHom_apply, MonoidAlgebra.mapDomain_single]
+    simp [MonoidAlgebra.mapDomainRingHom_apply, MonoidAlgebra.coeff_mapRingHom, MonoidAlgebra.mapDomain_single]
   simp only [GDet.tr, GDet.lam, hc]
 
 private theorem tr_at {n : ℕ} {A G H K : Type} [CommRing A] [Group G] [Group H] [CommRing K] (hn : 1 ≤ n)
@@ -77,7 +77,7 @@ private theorem tr_at {n : ℕ} {A G H K : Type} [CommRing A] [Group G] [Group H
     f (D.tr (MonoidAlgebra.single (φ g) 1)) = (ρ g).trace := by
   have h1 : f (D.tr (MonoidAlgebra.single (φ g) 1)) = (D.map f).tr (MonoidAlgebra.single (φ g) 1) := by
     have := ((UpperTheory.V.CA.d_gmap D).2.2.1 f (MonoidAlgebra.single (φ g) 1)).2 1
-    simpa [GDet.tr, MonoidAlgebra.mapRingHom_apply] using this.symm
+    simpa [GDet.tr, MonoidAlgebra.coeff_mapRingHom] using this.symm
   rw [h1, ← tr_comap', h, ← (UpperTheory.V.CA.d_toDet _ _).2.2.1, (UpperTheory.V.CA.d_toDet_ofRep).1 ρ,
     (UpperTheory.V.CA.d_ofRep _ _ _).2.2.1 hn, GDet.repAlg, MonoidAlgebra.lift_single, one_smul]
   congr 1
@@ -95,7 +95,7 @@ private theorem gram_at {n : ℕ} {A G H K : Type} [CommRing A] [Group G] [Group
 
 private theorem isIrr_iff_span {Γ k : Type} [Group Γ] [Field k] [IsAlgClosed k] {n : ℕ} (hn : 1 ≤ n)
     (r : Γ →* GL (Fin n) k) : IsIrr r ↔ Submodule.span k (Set.range (mat r)) = ⊤ := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   rw [← _root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan]
   constructor
   · intro h N hN

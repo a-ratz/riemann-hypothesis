@@ -460,7 +460,7 @@ theorem exists_schr_eigen : ∀ {F : Type} [Field F] [NumberField F] (v : Global
       ∃ φ ∈ GlobalTheory.WeilM.SB (κ → Fv F v), φ ≠ 0 ∧
         ∀ a : M → v.adicCompletionIntegers F, GlobalTheory.WeilM.schr ψ (∑ m, (a m : Fv F v) • u m) φ = χ a • φ := by
   intro F _ _ v ψ hψc hψ1 κ M _ _ u χ hχc hker hco
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   let lamH : (M → v.adicCompletionIntegers F) →+ (κ → Fv F v) × (κ → Fv F v) :=
     { toFun := fun a => ∑ m, (a m : Fv F v) • u m
       map_zero' := by simp
@@ -524,8 +524,8 @@ theorem exists_schr_eigen : ∀ {F : Type} [Field F] [NumberField F] (v : Global
     have : lamH ⁻¹' N' ∈ nhds (0 : M → v.adicCompletionIntegers F) :=
       hlamc.continuousAt.preimage_mem_nhds (by rw [map_zero]; exact hN')
     exact Filter.mem_of_superset this fun a ha w hw => hN'Y _ ha w hw
-  haveI : Finite ((M → v.adicCompletionIntegers F) ⧸ Ks) := AddSubgroup.quotient_finite_of_isOpen Ks hKsopen
-  letI : Fintype ((M → v.adicCompletionIntegers F) ⧸ Ks) := Fintype.ofFinite _
+  have : Finite ((M → v.adicCompletionIntegers F) ⧸ Ks) := AddSubgroup.quotient_finite_of_isOpen Ks hKsopen
+  let : Fintype ((M → v.adicCompletionIntegers F) ⧸ Ks) := Fintype.ofFinite _
   have hKsUU : ∀ a ∈ Ks, lamH a ∈ U ∩ U' := fun a ha => hYsep _ ha
 
   let πL : (M → v.adicCompletionIntegers F) → ((κ → Fv F v) → ℂ) →ₗ[ℂ] ((κ → Fv F v) → ℂ) :=

@@ -137,7 +137,7 @@ theorem stable [FiniteDimensional ℂ W] (U : ℝ → W →L[ℂ] W) (A : W →�
     rw [h4, map_sub, map_sub, h3, sub_zero]
   have hz : (fun s => Q (U s v)) = fun _ => (0 : W) := by
     refine ODE_solution_unique_univ (v := fun _ y => B y) (s := fun _ => Set.univ) (K := ‖B‖₊) (t₀ := 0)
-      (fun _ => B.lipschitz.lipschitzOnWith) (fun t => ⟨hq t, trivial⟩)
+      (fun _ => B.lipschitzWith.lipschitzOnWith) (fun t => ⟨hq t, trivial⟩)
       (fun t => ⟨by simpa using hasDerivAt_const t (0 : W), trivial⟩) ?_
     simp only [h0]
     exact hQ0 v hv

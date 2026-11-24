@@ -310,7 +310,7 @@ theorem initBnd_holds : InitBnd := by
         mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (by linarith)
           (hz.trans (mul_le_mul_of_nonneg_left hD (mul_nonneg hB0 hB0))) _) hC10
     _ = _ := by
-        rw [← Finset.mul_sum, Real.exp_nat_mul, Real.exp_add, mul_assoc C1, ← mul_pow]
+        rw [← Finset.mul_sum, Real.exp_natCast_mul, Real.exp_add, mul_assoc C1, ← mul_pow]
         ring
 
 end PositivityTheory.Rg.Rs

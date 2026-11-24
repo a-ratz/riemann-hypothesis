@@ -134,7 +134,7 @@ private theorem UpperTheory.false_of_mem_dual_of_valuation_eq_different_succ (F 
         w.associates_irreducible]
     omega
   rw [Ideal.dvd_iff_le] at hnd
-  obtain ⟨d, hd, hd'⟩ := SetLike.not_le_iff_exists.mp hnd
+  obtain ⟨d, hd, hd'⟩ := IsConcreteLE.not_le_iff_exists.mp hnd
   have hint := hx _ ((FractionalIdeal.mem_coeIdeal _).mpr ⟨d, hd, rfl⟩)
   obtain ⟨a, ha⟩ := (FractionalIdeal.mem_one_iff _).mp hint
   have h1 : w.valuation F x * w.intValuation d ≤ 1 := by
@@ -270,7 +270,7 @@ open scoped Matrix
 theorem UpperTheory.bijective_residue_unit_mul_lift :
     ∀ (F : Type) [Field F] [NumberField F] (w : Pl F) (u : w.adicCompletionIntegers F), Valued.v (u : w.adicCompletion F) = 1 → ∀ s : 𝓞 F ⧸ w.asIdeal → 𝓞 F, (∀ r, Ideal.Quotient.mk w.asIdeal (s r) = r) → Function.Bijective fun r => IsLocalRing.residue (w.adicCompletionIntegers F) (u * algebraMap (𝓞 F) (w.adicCompletionIntegers F) (s r)) := by
   intro F _ _ w u hu s hs
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
+  have : w.asIdeal.IsMaximal := w.isMaximal
   have hv : ∀ k : F, Valued.v (algebraMap F (w.adicCompletion F) k) = w.valuation F k :=
     fun k => IsDedekindDomain.HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w k
   have hmem : ∀ x : w.adicCompletionIntegers F,
@@ -381,7 +381,7 @@ theorem UpperTheory.exists_global_element_valuation_eq_idele_at_place :
   · rw [← hval]
     refine Valuation.map_eq_of_sub_lt _ ((key w).trans_lt ?_)
     have h0 : 0 < Valued.v (pLoc F w (y : Af F)) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (y.isUnit.map (pLoc F w)).ne_zero)
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (y.isUnit.map (pLoc F w)).ne_zero)
     exact (mul_lt_mul_of_pos_left ((w.valuation_lt_one_iff_mem p).2 hpw) h0).trans_eq (mul_one _)
   · rw [← hval, ← sub_add_cancel (pLoc F v (algebraMap F (Af F) β)) (pLoc F v (y : Af F))]
     exact (Valuation.map_add _ _ _).trans
@@ -448,7 +448,7 @@ theorem UpperTheory.hilbertHolomorphic_invariant_integralTranslation :
         exact hS u ((Finset.mem_insert.1 hu).resolve_left huw)
   obtain ⟨S, hS⟩ := exists_KAway_subset (M := 1) (hφ.aut.level.mem_nhds (show (1 : GL (Fin 2) (Af F)) ∈ _ by simp))
   refine key S (fun x hx h0 => hS (mem_KAway.2 ⟨⟨aff 1 ⟨x, hx⟩, ?_, map_aff' _ _⟩, fun w hw => ?_⟩)) o (mem_Ohat.2 ho)
-  · haveI : Subsingleton (Ohat F ⧸ Ideal.span {((1 : ℕ) : ↥(Ohat F))}) :=
+  · have : Subsingleton (Ohat F ⧸ Ideal.span {((1 : ℕ) : ↥(Ohat F))}) :=
       Ideal.Quotient.subsingleton_iff.2 (by simp)
     ext i j
     exact Subsingleton.elim _ _
@@ -482,7 +482,7 @@ private theorem fin_supp (y : (Af F)ˣ) : Function.HasFiniteMulSupport fun w : P
   have h2 := Filter.eventually_cofinite.1 ((y⁻¹ : (Af F)ˣ) : Af F).2
   refine (h1.union h2).subset fun w hw => ?_
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   have a1 : Valued.v (pLoc F w (y : Af F)) ≤ 1 := hc.1
   have a2 : Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) ≤ 1 := hc.2
   have a3 : Valued.v (pLoc F w (y : Af F)) * Valued.v (pLoc F w ((y⁻¹ : (Af F)ˣ) : Af F)) = 1 := by
@@ -661,7 +661,7 @@ private theorem shift [IsTotallyReal F] {k : ℕ} {c : Pl F → ℕ} {ω : HChar
       φ.1 (TR.infGL F 2 (aff y (x - fun v => reAt v β)) * finGL F 2 (aff yf 0)) := by
   have h1 := UpperTheory.hilbertHolomorphic_invariant_integralTranslation F k c ω φ h (((yf⁻¹ : (Af F)ˣ) : Af F) * (t - algebraMap F (Af F) β)) fun v => by
     have h0 : Valued.v (pLoc F v yf) ≠ 0 := (_root_.map_ne_zero _).2 (yf.isUnit.map (pLoc F v)).ne_zero
-    rw [map_mul, map_mul, map_units_inv, map_inv₀, inv_mul_le_one₀ (zero_lt_iff.2 h0)]
+    rw [map_mul, map_mul, map_units_inv, map_inv₀, inv_mul_le_one₀ (pos_iff_ne_zero.2 h0)]
     exact hβ v
   have h2 : TR.infGL F 2 (aff y x) * finGL F 2 (aff yf t) = ratGL F 2 (aff 1 β) *
       (TR.infGL F 2 (aff y (x - fun v => reAt v β)) * finGL F 2 (aff yf 0) *

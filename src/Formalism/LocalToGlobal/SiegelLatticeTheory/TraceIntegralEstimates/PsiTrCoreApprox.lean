@@ -86,7 +86,7 @@ private theorem exists_integer_approx_valuation (v : HeightOneSpectrum (𝓞 F))
     have := (intValuation_le_pow_iff_mem v y (m + 1)).mpr hy2
     rw [hvy, WithZero.exp_le_exp] at this
     omega
-  obtain ⟨t, htJ, htv⟩ := SetLike.not_le_iff_exists.mp hJv
+  obtain ⟨t, htJ, htv⟩ := IsConcreteLE.not_le_iff_exists.mp hJv
   have hxt : x * t ∈ Ideal.span {y} := hJ ▸ Ideal.mul_mem_mul hxm htJ
   obtain ⟨z, hz⟩ := Ideal.mem_span_singleton'.mp hxt
   obtain ⟨s, i, hi, hsi⟩ := v.isMaximal.exists_inv htv
@@ -133,10 +133,10 @@ theorem exists_int_near (v : HeightOneSpectrum (𝓞 F)) (a w : v.adicCompletion
     exact h
   have hs : {y : v.adicCompletion F | Valued.v (y - a) < Valued.v w} ∈ nhds a := by
     refine hU.mem_nhds ?_
-    simp only [Set.mem_setOf_eq, sub_self, map_zero]
-    exact zero_lt_iff.mpr hw0
+    simp only [Set.mem_ofPred_eq, sub_self, map_zero]
+    exact pos_iff_ne_zero.mpr hw0
   obtain ⟨k, hk⟩ := (denseRange_algebraMap F v).mem_nhds hs
-  simp only [Set.mem_setOf_eq] at hk
+  simp only [Set.mem_ofPred_eq] at hk
   have hak : Valued.v (a - algebraMap F (v.adicCompletion F) k) < Valued.v w := by
     rwa [Valuation.map_sub_swap]
   have hk1 : v.valuation F k ≤ 1 := by

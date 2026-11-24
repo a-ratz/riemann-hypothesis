@@ -213,9 +213,9 @@ theorem hasColength_eq_pow_mul_pow (hv : v.Integers R) (AA : HopfOrder (C := C) 
       rw [quotient_out_add_coe K q k, cosetCoordinates_expand K β hβ (f j) q.out k, Matrix.mul_apply]
       simp only [Fintype.sum_prod_type, Matrix.blockDiagonal_apply, Matrix.kroneckerMap_apply,
         Matrix.one_apply, ite_mul, zero_mul, mul_ite, mul_one, mul_zero, one_mul,
-        Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_const_zero]
+        Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.sum_const_zero]
       conv_rhs => rw [Finset.sum_eq_single j (fun b _ hb => by simp [hb]) (by simp)]
-      simp only [eq_self_iff_true, if_true, Finset.sum_ite_eq, Finset.mem_univ]
+      simp only [eq_self_iff_true, ite_true, Finset.sum_ite_eq, Finset.mem_univ]
       rw [mul_comm]
       rfl
     have hq : ∀ q : N ⧸ K, v (β * (h3mm K β f q.out)ᵀ).det = v β.det := by
@@ -245,8 +245,8 @@ namespace ReciprocityTheory.PGsh.L2
 theorem h3 (C R : Type) [Field C] [CommRing R] [Algebra R C] :
     SubgroupFreenessStatement (C := C) (R := R) := by
   intro hC hC0 v hv N _ _ _ K _ _ _ AA
-  haveI := hC
-  haveI := hC0
+  have := hC
+  have := hC0
   exact ⟨exists_coset_basis hv AA K, mem_of_restrictToSubgroup_eq_zero hv AA K, hasColength_eq_pow_mul_pow hv AA K, mem_sup_of_restrictToSubgroup_mem_sq hv AA K⟩
 
 end ReciprocityTheory.PGsh.L2

@@ -186,7 +186,7 @@ theorem exists_pivot (hv : v.Integers R) {b : ℕ} {ι : Type} [Fintype ι]
     have ha0 : a ≠ 0 := by
       intro h0
       have := hmax (j1, i1) (Finset.mem_univ _)
-      rw [h0, map_zero, map_zero, le_zero_iff, Valuation.zero_iff] at this
+      rw [h0, map_zero, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at this
       exact hi1 (hv.hom_inj (by rw [this, map_zero]))
     choose u hu using hdvd j0
     choose s hs using fun j => hdvd j i0

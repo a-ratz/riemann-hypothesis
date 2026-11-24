@@ -156,7 +156,7 @@ private theorem wd_finset_sum {ι : Type*} (s : Finset ι) (Φ : ι → V n → 
     have H := HasFDerivAt.sum (u := s) (A := Φ) fun i hi => (hΦ i hi).hasFDerivAt
     try simp only [Finset.sum_fn] at H
     exact H.fderiv
-  simp only [wd, hF, ContinuousLinearMap.sum_apply, Finset.mul_sum, ← Finset.sum_sub_distrib,
+  simp only [wd, hF, sum_apply, Finset.mul_sum, ← Finset.sum_sub_distrib,
     Finset.sum_div]
 
 private theorem wd_mul_eq_leibniz {p q : V n → ℂ} {y : V n} (hp : DifferentiableAt ℝ p y)
@@ -164,7 +164,7 @@ private theorem wd_mul_eq_leibniz {p q : V n → ℂ} {y : V n} (hp : Differenti
     wd n j (fun w => p w * q w) y = wd n j p y * q y + p y * wd n j q y := by
   have hF : fderiv ℝ (fun w => p w * q w) y = p y • fderiv ℝ q y + q y • fderiv ℝ p y :=
     (hp.hasFDerivAt.mul hq.hasFDerivAt).fderiv
-  simp only [wd, hF, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [wd, hF, add_apply, smul_apply, smul_eq_mul]
   ring
 
 private theorem wd_conj_holomorphic_eq_zero {h : V n → ℂ} {y : V n} (hh : DifferentiableAt ℂ h y) (j : Fin n) :
@@ -276,7 +276,7 @@ theorem cmpa_wdb_log {g : V n → ℂ} {y : V n} (hg : ContDiffAt ℂ 2 g y) (hy
     ⇑Complex.ofRealCLM ∘ fun v => Real.log (‖g v‖ ^ 2) from rfl, hF.fderiv]
   have hG : (g y).re * (g y).re + (g y).im * (g y).im ≠ 0 := by
     rw [← Complex.normSq_apply, ← Complex.sq_norm]; exact hpos
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
+  simp only [ContinuousLinearMap.comp_apply, smul_apply,
     ContinuousLinearMap.coe_restrictScalars', map_smul, innerSL_apply_apply, Complex.ofRealCLM_apply,
     smul_eq_mul, nsmul_eq_mul, Complex.inner, Complex.sq_norm, Complex.normSq_apply]
   apply Complex.ext <;>

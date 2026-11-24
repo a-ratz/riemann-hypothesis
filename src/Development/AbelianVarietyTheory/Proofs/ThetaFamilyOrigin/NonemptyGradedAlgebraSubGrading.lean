@@ -154,7 +154,7 @@ theorem aeval_cone_eq_zero_iff {C : Type} [CommRing C] [Algebra K C] (r : σ →
       rw [Finset.sum_eq_single n] at h2
       · simpa using h2
       · intro b _ hb
-        rw [if_neg (Ne.symm hb)]
+        rw [ite_eq_right (Ne.symm hb)]
       · exact fun h' => absurd hn h'
     · rw [homogeneousComponent_eq_zero _ _ (by simpa using hn), map_zero]
   · intro h
@@ -164,7 +164,7 @@ theorem aeval_cone_eq_zero_iff {C : Type} [CommRing C] [Algebra K C] (r : σ →
 
 theorem trdeg_eq_of_isAlgebraic {A : Type} [CommRing A] [IsDomain A] [Algebra K A]
     (B : Subalgebra K A) [Algebra.IsAlgebraic B A] : Algebra.trdeg K A = Algebra.trdeg K B := by
-  haveI : FaithfulSMul K B := (faithfulSMul_iff_algebraMap_injective _ _).2 (algebraMap K B).injective
+  have : FaithfulSMul K B := (faithfulSMul_iff_algebraMap_injective _ _).2 (algebraMap K B).injective
   rw [← trdeg_add_eq K B (A := A), trdeg_eq_zero (R := B) (A := A), add_zero]
 
 theorem ringKrullDim_cone {T C : Type} [CommRing T] [IsDomain T] [Algebra K T]
@@ -174,7 +174,7 @@ theorem ringKrullDim_cone {T C : Type} [CommRing T] [IsDomain T] [Algebra K T]
     (hr : Function.Surjective (aeval r : MvPolynomial σ K →ₐ[K] C))
     (hrel : ∀ n (G : MvPolynomial σ K), G.IsHomogeneous n → (aeval x G = 0 ↔ aeval r G = 0))
     (g : ℕ) (hg : ringKrullDim C = g) : ringKrullDim T = (g + 1 : ℕ) := by
-  haveI : Algebra.FiniteType K C := Algebra.FiniteType.of_surjective _ hr
+  have : Algebra.FiniteType K C := Algebra.FiniteType.of_surjective _ hr
   obtain ⟨s, hs, hs'⟩ := ReciprocityTheory.CA.exists_dim_trdeg_field (K := K) (A := C)
   obtain rfl : s = g := by
     rw [hs] at hg
@@ -215,7 +215,7 @@ theorem ringKrullDim_cone {T C : Type} [CommRing T] [IsDomain T] [Algebra K T]
         rw [h1, ← Polynomial.C_mul_X_pow_eq_monomial]; ring
       rw [this]
       exact mul_mem ⟨G, rfl⟩ (pow_mem hX _)
-  haveI : Algebra.IsAlgebraic cone.range (Polynomial C) := ⟨fun p => by
+  have : Algebra.IsAlgebraic cone.range (Polynomial C) := ⟨fun p => by
     obtain ⟨n, hn⟩ := key p
     refine IsAlgebraic.of_smul (y := (⟨Polynomial.X ^ n, pow_mem hX n⟩ : cone.range))
       (mem_nonZeroDivisors_of_ne_zero fun h => ?_) ?_
@@ -243,7 +243,7 @@ theorem nonempty_gradedAlgebra_subGrading (𝒜 : ℕ → Submodule K R) [Graded
     Nonempty (GradedAlgebra (subGrading 𝒜 N (Algebra.adjoin K S))) := by
   classical
   set T := Algebra.adjoin K S with hT
-  haveI gm : SetLike.GradedMonoid (subGrading 𝒜 N T) :=
+  have gm : SetLike.GradedMonoid (subGrading 𝒜 N T) :=
     { one_mem := by
         rw [mem_subGrading]
         simpa using SetLike.one_mem_graded 𝒜
@@ -346,8 +346,8 @@ theorem card_zeros_le [IsAlgClosed K] [IsDomain R] (𝒜 : ℕ → Submodule K R
       G.IsHomogeneous (n + e) ∧ y * x' i ^ n = aeval x' G := fun e y hy i => by
     obtain ⟨n, G, hG, h⟩ := hform e y hy i
     exact ⟨n, G, hG, Subtype.ext (by rw [hval, ← h]; rfl)⟩
-  haveI : Algebra.FiniteType K T := Algebra.FiniteType.adjoin_of_finite hSfin
-  haveI : Algebra.IsIntegral (Algebra.adjoin K (Set.range x')) T := ⟨fun y => by
+  have : Algebra.FiniteType K T := Algebra.FiniteType.adjoin_of_finite hSfin
+  have : Algebra.IsIntegral (Algebra.adjoin K (Set.range x')) T := ⟨fun y => by
     induction y using DirectSum.Decomposition.inductionOn ℬ with
     | zero => exact isIntegral_zero
     | @homogeneous e y =>
@@ -357,13 +357,13 @@ theorem card_zeros_le [IsAlgClosed K] [IsDomain R] (𝒜 : ℕ → Submodule K R
       rw [h, Algebra.adjoin_range_eq_range_aeval]
       exact ⟨G, rfl⟩
     | add a b ha hb => exact ha.add hb⟩
-  haveI : Algebra.FiniteType (Algebra.adjoin K (Set.range x')) T :=
+  have : Algebra.FiniteType (Algebra.adjoin K (Set.range x')) T :=
     Algebra.FiniteType.of_restrictScalars_finiteType K _ _
   have hdim : ringKrullDim T = (g + 1 : ℕ) :=
     ringKrullDim_cone ℬ hx' r i₀ hi₀ hr (fun n G hG => by
       rw [← hrel n G hG, ← hval]
       exact ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩) g hC
-  haveI : Finite {p : Pt // p ∈ Z ∧ ev p s = 0} :=
+  have : Finite {p : Pt // p ∈ Z ∧ ev p s = 0} :=
     (hZ.subset (fun p hp => hp.1 : {p | p ∈ Z ∧ ev p s = 0} ⊆ Z)).to_subtype
   let E := (Finite.equivFin {p : Pt // p ∈ Z ∧ ev p s = 0}).symm
   refine hBez T ℬ m g N d a x' s' (Set.range f') hg hx' Algebra.IsIntegral.finite hdim

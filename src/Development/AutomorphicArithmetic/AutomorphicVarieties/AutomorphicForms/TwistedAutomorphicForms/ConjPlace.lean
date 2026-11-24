@@ -44,7 +44,7 @@ open scoped Pointwise
 theorem UpperTheory.V.Af.Tw.conjPlace :
     UpperTheory.V.Af.Tw.ConjPlace := by
   intro F L Ω _ _ _ _ _ _ _ _ _ _ _ h g hg w w' A hA hne hun
-  haveI : Algebra.IsQuadraticExtension F L := ⟨h⟩
+  have : Algebra.IsQuadraticExtension F L := ⟨h⟩
   have hc : Nat.card (L ≃ₐ[F] L) = 2 := (IsGalois.card_aut_eq_finrank F L).trans h
   obtain ⟨t, -, hu⟩ := (Nat.card_eq_two_iff' (1 : L ≃ₐ[F] L)).1 hc
   have h1 : g.restrictNormal L = t := by
@@ -56,10 +56,10 @@ theorem UpperTheory.V.Af.Tw.conjPlace :
   have hlift : ∀ x : L, g (algebraMap L Ω x) = algebraMap L Ω (t x) := fun x => by
     rw [← h1]
     exact (AlgEquiv.restrictNormal_commutes g L x).symm
-  haveI := w.isPrime
-  haveI := w'.isPrime
-  haveI : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
-  haveI : w'.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨congrArg HeightOneSpectrum.asIdeal hun.symm⟩
+  have := w.isPrime
+  have := w'.isPrime
+  have : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
+  have : w'.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨congrArg HeightOneSpectrum.asIdeal hun.symm⟩
   obtain ⟨σ, hσ⟩ := Ideal.exists_smul_eq_of_isGaloisGroup (w.under (𝓞 F)).asIdeal w.asIdeal w'.asIdeal
     (L ≃ₐ[F] L)
   obtain rfl : σ = t := hu σ fun h0 => hne (HeightOneSpectrum.ext (by rw [← hσ, h0, one_smul]))

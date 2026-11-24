@@ -140,7 +140,7 @@ variable {R₀ R B : Type} [CommRing R₀] [CommRing R] [CommRing B] [Algebra R�
 
 theorem span_range_sq {P : Type} [CommRing P] {σ : Type} (g : σ → P) :
     Ideal.span (Set.range g) ^ 2 = Ideal.span (Set.range fun p : σ × σ ↦ g p.1 * g p.2) := by
-  rw [pow_two, Ideal.span_mul_span']
+  rw [pow_two, Ideal.span_mul_span]
   congr 1
   ext x
   simp only [Set.mem_mul, Set.mem_range, Prod.exists]
@@ -243,7 +243,7 @@ theorem exists_finite_chart {R R₀ : Type} [CommRing R] [CommRing R₀] [Algebr
   let e : U ≅ Spec (CommRingCat.of B) := U.isoSpec
   let α : CommRingCat.of R₀ ⟶ CommRingCat.of B := Spec.preimage (e.inv ≫ j ≫ f₀)
   have hα : Spec.map α = e.inv ≫ j ≫ f₀ := Spec.map_preimage _
-  letI : Algebra R₀ B := α.hom.toAlgebra
+  let : Algebra R₀ B := α.hom.toAlgebra
   have hmap : Spec.map (CommRingCat.ofHom (algebraMap R₀ B)) = e.inv ≫ j ≫ f₀ := hα
   have he : e.hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R₀ B)) = j ≫ f₀ := by
     rw [hmap, Iso.hom_inv_id_assoc]
@@ -266,7 +266,7 @@ end Schemes
 
 theorem smooth_spreads : GlobalTheory.SpreadingModels.Spreads (fun _ _ f ↦ Smooth f) := by
   intro R R₀ _ _ φ Y Y₀ f f₀ π ⟨hfg, hlfp, hqc, hqs, hpb⟩ hsm
-  letI : Algebra R₀ R := φ.toAlgebra
+  let : Algebra R₀ R := φ.toAlgebra
   have : CompactSpace Y₀ := QuasiCompact.compactSpace_of_compactSpace f₀
   let 𝒰 := Y₀.affineCover.finiteSubcover
   have hch (i : 𝒰.I₀) := exists_finite_chart (R := R) (R₀ := R₀) hlfp hpb hsm (𝒰.f i)

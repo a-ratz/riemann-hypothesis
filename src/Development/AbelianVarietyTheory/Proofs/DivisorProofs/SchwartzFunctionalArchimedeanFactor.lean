@@ -190,8 +190,8 @@ theorem indicator_scaledInt_eq_sum : ∀ (F : Type) [Field F] [NumberField F] (�
   set I : Ideal (𝓞 F) := Ideal.span {m} with hIdef
   have hI : I ≠ ⊥ := by
     rw [hIdef, Ne, Ideal.span_singleton_eq_bot]; exact hm
-  haveI : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  haveI : Fintype (κ → 𝓞 F ⧸ I) := Fintype.ofFinite _
+  have : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have : Fintype (κ → 𝓞 F ⧸ I) := Fintype.ofFinite _
   let out : 𝓞 F ⧸ I → 𝓞 F := fun q => (Ideal.Quotient.mk_surjective q).choose
   have hout : ∀ q, Ideal.Quotient.mk I (out q) = q := fun q => (Ideal.Quotient.mk_surjective q).choose_spec
   let rep : (κ → 𝓞 F ⧸ I) → (κ → F) := fun c i => a * ((out (c i) : 𝓞 F) : F)
@@ -598,13 +598,13 @@ theorem periodisation_hasSum_fourier_bilinForm {V : Type} [NormedAddCommGroup V]
     simp only [A₀, LinearEquiv.trans_apply, LinearEquiv.apply_symm_apply]
     rfl
   let L : Submodule ℤ E := ZLattice.comap ℝ Λ T.toLinearMap
-  haveI : DiscreteTopology L := inferInstanceAs (DiscreteTopology (ZLattice.comap ℝ Λ T.toLinearMap))
-  haveI : IsZLattice ℝ L := inferInstanceAs (IsZLattice ℝ (ZLattice.comap ℝ Λ T.toLinearMap))
+  have : DiscreteTopology L := inferInstanceAs (DiscreteTopology (ZLattice.comap ℝ Λ T.toLinearMap))
+  have : IsZLattice ℝ L := inferInstanceAs (IsZLattice ℝ (ZLattice.comap ℝ Λ T.toLinearMap))
   have hL : ∀ y, y ∈ L ↔ T y ∈ Λ := fun y => Iff.rfl
   let g : 𝓢(E, ℂ) := SchwartzMap.compCLMOfContinuousLinearEquiv ℝ T f
   have hg : ∀ y, g y = f (T y) := fun y => rfl
   let Λ' : Submodule ℤ V := ZLattice.comap ℝ (GroundTheory.Global.dualLattice L) A.toLinearMap
-  haveI : DiscreteTopology Λ' :=
+  have : DiscreteTopology Λ' :=
     inferInstanceAs (DiscreteTopology (ZLattice.comap ℝ (GroundTheory.Global.dualLattice L) A.toLinearMap))
   have hmem : ∀ μ : V, (∀ l ∈ Λ, ∃ k : ℤ, P l μ = k) ↔ A μ ∈ GroundTheory.Global.dualLattice L := by
     intro μ
@@ -668,10 +668,10 @@ theorem summable_one_add_norm_inv_pow' {E : Type} [NormedAddCommGroup E] [Normed
     ((ZLattice.summable_norm_pow_inv L k hk).add (hasSum_ite_eq (0 : L) (1 : ℝ)).summable)
   by_cases hz : z = 0
   · subst hz
-    simp only [if_pos rfl, norm_zero, add_zero, inv_one, one_pow]
+    simp only [ite_eq_left rfl, norm_zero, add_zero, inv_one, one_pow]
     exact le_add_of_nonneg_left (by positivity)
   · have h0 : 0 < ‖z‖ := norm_pos_iff.2 hz
-    simp only [hz, if_false, add_zero]
+    simp only [hz, ite_false, add_zero]
     gcongr
     linarith
 
@@ -772,7 +772,7 @@ theorem summable_one_add_norm_inv_pow' {V : Type} [NormedAddCommGroup V] [Normed
   · subst hz
     simp
   · have h0 : 0 < ‖z‖ := norm_pos_iff.2 hz
-    simp only [hz, if_false, add_zero]
+    simp only [hz, ite_false, add_zero]
     gcongr
     linarith
 
@@ -1082,8 +1082,8 @@ theorem hasSum_of_summable_seminorms :
     rw [iteratedFDeriv_sub', iteratedFDeriv_limMap hu]
     exact hN j hj x
 
-  haveI : CompleteSpace 𝓢(V, ℂ) := by
-    haveI : (uniformity 𝓢(V, ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : CompleteSpace 𝓢(V, ℂ) := by
+    have : (uniformity 𝓢(V, ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
     exact UniformSpace.complete_of_cauchySeq_tendsto fun u hu => ⟨limMap u hu, tendsto_limMap hu⟩
 
   have hS : Summable u := by
@@ -1195,7 +1195,7 @@ theorem comb_unique : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] 
       have hfun : (fun μ : {μ : V // ∀ l ∈ Λ, ∃ k : ℤ, P l μ = k} => v μ x) =
           fun μ : {μ : V // ∀ l ∈ Λ, ∃ k : ℤ, P l μ = k} => h x * (c μ * Complex.exp (2 * Real.pi * Complex.I * (P x μ : ℂ))) := by
         funext μ
-        simp only [v, SchwartzMap.smul_apply, hv0, smul_eq_mul]
+        simp only [v, smul_apply, hv0, smul_eq_mul]
         ring
       rw [hfun]; exact this
     have e2 : h x * ∑' l : Λ, f (x + l) = G' x := e1.unique (hG'p x)
@@ -1475,7 +1475,7 @@ theorem trace_dualVec (a : F) (ha : a ≠ 0) (m : Fin (nn κ F) → ℤ) (l : Fi
       have := (Algebra.traceForm ℚ F).apply_dualBasis_left (traceForm_nondegenerate ℚ F) (integralBasis F) j j₀
       rw [Algebra.traceForm_apply, integralBasis_apply] at this
       exact this
-    simp only [map_smul, hd, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [map_smul, hd, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   · intro i _ hi
     rw [hZ, Pi.single_eq_of_ne hi]
     simp
@@ -1813,7 +1813,7 @@ theorem box_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (L : ((κ → AF F) �
     funext i; exact inf_rat (ξ i)
   have e2 : (fun i => ((fun i => algebraMap F (AdeleRing (𝓞 F) F) (ξ i)) i).2) =
       fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i) := rfl
-  simp only [pureA, e1, e2, Set.indicator_apply, SetLike.mem_coe, Set.mem_setOf_eq]
+  simp only [pureA, e1, e2, Set.indicator_apply, SetLike.mem_coe, Set.mem_ofPred_eq]
   split_ifs <;> simp
 
 end GlobalTheory.ThetaFunctionalUnique
@@ -1838,7 +1838,7 @@ theorem cos_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (L : ((κ → AF F) �
   have hs : {y | y - r ∈ GlobalTheory.EvAdm.scaledInt F κ a} =
       {y | y - (fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i)) ∈ GlobalTheory.EvAdm.scaledInt F κ a} := by
     ext y
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro h
       have := add_mem h hξ
@@ -1854,7 +1854,7 @@ theorem cos_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (L : ((κ → AF F) �
     intro x
     simp [hf'def, SchwartzMap.compSubConstCLM_apply, sub_neg_eq_add]
   have e := pure_shift f f' ξ (cosInd F κ a (fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i)))
-    (boxInd F κ a) hf' (fun y => by simp only [Set.indicator_apply, SetLike.mem_coe, Set.mem_setOf_eq, add_sub_cancel_right])
+    (boxInd F κ a) hf' (fun y => by simp only [Set.indicator_apply, SetLike.mem_coe, Set.mem_ofPred_eq, add_sub_cancel_right])
   have hm := pure_mem f (cosInd_mem_SB ha (fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i)))
   rw [← L_shift ψ L hinv ξ hm, ← theta_shift ψ hψ ξ, e, hc f']
 

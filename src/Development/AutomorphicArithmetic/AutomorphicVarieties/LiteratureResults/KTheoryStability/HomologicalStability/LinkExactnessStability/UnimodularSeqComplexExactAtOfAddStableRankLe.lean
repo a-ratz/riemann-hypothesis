@@ -225,7 +225,7 @@ theorem linkIn_map {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (ψ :
     (X : Set M) (hX : ∀ x, ψ x ∈ X ↔ x ∈ X) (τ : List M) :
     linkIn (uniM R M) X (τ.map ψ) = List.map ψ '' linkIn (uniM R M) X τ := by
   ext w
-  simp only [linkIn, Set.mem_setOf_eq, Set.mem_image]
+  simp only [linkIn, Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · rintro ⟨hw, hmem⟩
     refine ⟨w.map ψ.symm, ⟨?_, ?_⟩, ?_⟩
@@ -379,7 +379,7 @@ theorem main : ∀ (R : Type) [CommRing R] (n : ℕ) (h : (ℕ →₀ R) →ₗ[
   intro R _ n h t ht hht
   have key : ∀ x y : ℕ →₀ R, y ∈ low R n → (x + y ∈ low R n ↔ x ∈ low R n) := by
     intro x y hy
-    simp only [low, Set.mem_setOf_eq, Finsupp.add_apply] at hy ⊢
+    simp only [low, Set.mem_ofPred_eq, Finsupp.add_apply] at hy ⊢
     constructor
     · intro hx i hi
       have hxi := hx i hi
@@ -389,7 +389,7 @@ theorem main : ∀ (R : Type) [CommRing R] (n : ℕ) (h : (ℕ →₀ R) →ₗ[
       rw [hx i hi, hy i hi, add_zero]
   have hts : ∀ c : R, c • t ∈ low R n := by
     intro c
-    simp only [low, Set.mem_setOf_eq, Finsupp.smul_apply] at ht ⊢
+    simp only [low, Set.mem_ofPred_eq, Finsupp.smul_apply] at ht ⊢
     intro i hi
     rw [ht i hi, smul_zero]
   let ψ : (ℕ →₀ R) ≃ₗ[R] (ℕ →₀ R) :=
@@ -415,7 +415,7 @@ theorem main : ∀ (R : Type) [CommRing R] (n : ℕ) (h : (ℕ →₀ R) →ₗ[
     exact key x _ (hts _)
   · intro j x
     rw [hψ]
-    simp only [aff, Set.mem_setOf_eq]
+    simp only [aff, Set.mem_ofPred_eq]
     have e : x + h x • t - (Finsupp.single j 1) = (x - Finsupp.single j 1) + h x • t := by abel
     rw [e]
     exact key _ _ (hts _)
@@ -473,9 +473,9 @@ theorem unimodular_to_coord_one : ∀ (R : Type) [CommRing R] (s : ℕ), StableR
     split_ifs with hk
     · rw [Finset.sum_eq_single ⟨k, hk⟩]
       · simp
-      · intro b _ hb; rw [if_neg]; intro e; apply hb; ext; exact e
+      · intro b _ hb; rw [ite_eq_right]; intro e; apply hb; ext; exact e
       · simp
-    · apply Finset.sum_eq_zero; intro b _; rw [if_neg]; intro e; apply hk; rw [← e]; exact b.2
+    · apply Finset.sum_eq_zero; intro b _; rw [ite_eq_right]; intro e; apply hk; rw [← e]; exact b.2
   have htlow : t ∈ low R n := fun k hk => by rw [htapp, dite_eq_right (by omega)]
   have htlow' : t ∈ low R (n + 1) := fun k hk => htlow k (by omega)
   have hht : h t = 0 := by
@@ -502,12 +502,12 @@ theorem unimodular_to_coord_one : ∀ (R : Type) [CommRing R] (s : ℕ), StableR
   have hh2 : ∀ x, h2 x = ∑ i : Fin n, c i * x i := by
     intro x; simp [h2]
   have ht2low : Finsupp.single n (1 : R) ∈ low R (n + 1) := fun k hk => by
-    rw [Finsupp.single_apply, if_neg (by omega)]
+    rw [Finsupp.single_apply, ite_eq_right (by omega)]
   have hht2 : h2 (Finsupp.single n 1) = 0 := by
     rw [hh2]
     refine Finset.sum_eq_zero fun i _ => ?_
     have := i.2
-    rw [Finsupp.single_apply, if_neg (by omega), mul_zero]
+    rw [Finsupp.single_apply, ite_eq_right (by omega), mul_zero]
   obtain ⟨ψ2, hψ2, hψ2l, hψ2a⟩ := GlobalTheory.T.exists_transvection_preserving_low_and_aff R (n + 1) h2 _ ht2low hht2
   refine ⟨ψ1.trans ψ2, fun x => ?_, fun j x => ?_, ?_⟩
   · rw [LinearEquiv.trans_apply, hψ2l, hψ1l]
@@ -743,7 +743,7 @@ theorem unimodular_partner_aff : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
     rw [hφ, h1, Finset.sum_eq_single k
       (fun b _ hb => by simp [Finsupp.single_apply, Ne.symm hb])
       (fun h => absurd (Finset.mem_range.2 hk) h)]
-    simp only [Finsupp.single_eq_same, Finsupp.single_apply, if_neg (show k ≠ j by omega), mul_zero,
+    simp only [Finsupp.single_eq_same, Finsupp.single_apply, ite_eq_right (show k ≠ j by omega), mul_zero,
       sub_zero]
     ring
   have hφj : φ (Finsupp.single j 1) = 0 := by
@@ -786,7 +786,7 @@ theorem unimodular_partner_aff : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
   let x : ℕ →₀ R := Finsupp.single j 1 + y
   have hxj : x j = 1 := by simp [x, hy0 j hnj]
   have hxaff : x ∈ aff R n j := by
-    simp only [aff, low, Set.mem_setOf_eq]
+    simp only [aff, low, Set.mem_ofPred_eq]
     intro m hm
     simp [x, hy0 m hm]
   have hφx : φ x = 0 := by
@@ -797,7 +797,7 @@ theorem unimodular_partner_aff : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
   have hv'i : ∀ i : Fin n, v' i = v i + v j * (t i * a j) := by
     intro i
     simp only [v', x, Finsupp.sub_apply, Finsupp.smul_apply, smul_eq_mul, Finsupp.add_apply, hyi,
-      Finsupp.single_apply, if_neg (show j ≠ (i : ℕ) by have := i.isLt; omega)]
+      Finsupp.single_apply, ite_eq_right (show j ≠ (i : ℕ) by have := i.isLt; omega)]
     ring
   have hφv' : φ v' = φ v := by simp [v', hφx]
   have hspan : Ideal.span (Set.range fun i => v' i) = ⊤ := by
@@ -830,7 +830,7 @@ theorem unimodular_partner_aff : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
     simp only [f2, LinearMap.sub_apply, LinearMap.smul_apply, Finsupp.lapply_apply, smul_eq_mul, hf1v]
     ring
   refine ⟨x, hxaff, ?_⟩
-  simp only [uniM, Set.mem_setOf_eq]
+  simp only [uniM, Set.mem_ofPred_eq]
   refine ⟨![f1, f2], ?_⟩
   intro p q
   fin_cases p <;> fin_cases q <;> simp [hf1x, hf1v, hf2x, hf2v]
@@ -931,7 +931,7 @@ private theorem exactAt_zero_of_singleton_mem' {V : Type} (F : Set (List V)) (x 
       by_cases hl : l = []
       · subst hl
         simp
-      · rw [Finsupp.single_apply, if_neg (Ne.symm hl)]
+      · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hl)]
         by_contra hne
         have hmem := hc' (Finsupp.mem_support_iff.mpr hne)
         exact hl (List.length_eq_zero_iff.mp hmem.2)
@@ -1007,7 +1007,7 @@ theorem uniSeq_exactAt_of_stableRangeLe : ∀ (R : Type) [CommRing R] (s : ℕ),
     ∀ m q : ℕ, q + s ≤ m → ExactAt (uniSeq R m) q := by
   intro R _ s h m q hq
   rcases Nat.eq_zero_or_pos s with rfl | hs
-  · haveI := subsingleton_of_stableRangeLe_zero R h
+  · have := subsingleton_of_stableRangeLe_zero R h
     have hall : ∀ l : List (Fin m → R), l ∈ uniSeq R m :=
       fun l => ⟨fun _ => 0, fun _ _ => Subsingleton.elim _ _⟩
     exact GlobalTheory.T.seqChain_cycle_bounded_by_cone (Fin m → R) (uniSeq R m) (uniSeq R m) 0 (fun l _ => hall _) q

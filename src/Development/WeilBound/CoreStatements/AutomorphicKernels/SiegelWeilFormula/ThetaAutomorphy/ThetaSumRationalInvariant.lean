@@ -78,7 +78,7 @@ theorem split_core {m n : ℕ} {κ : Type} [Fintype κ] {ψ : AddChar (AF F) ℂ
     (hg : ∃ γ₀ : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) E,
       ((g : GL (Fin n ⊕ Fin n) (AE F E)) : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) = incM F γ₀) :
     ∀ Ψ ∈ schA F κ, thetaSum F (om' g Ψ) = thetaSum F Ψ := by
-  haveI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   have hL : IsLagr σ (dbl JB) (diagCols (Fin n)) := isLagr_diagCols (R := F) σ JB
   have hC : (diagCols (Fin n) : Matrix (Fin n ⊕ Fin n) (Fin n) E).map
       (fun z => ((1 : AF F) ⊗ₜ[F] z : AE F E)) = diagCols (Fin n) := by
@@ -125,7 +125,7 @@ theorem theta_sum_rational_invariant (d : SD σ) (γ : d.G) (hγ : γ ∈ rat2 �
   have hσ : IsCMExt F E σ := d.cm
   have hψ : IsStd d.B.ψ := d.std
   have h2 : Module.finrank F E = 2 := hσ.2.2.1
-  haveI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   obtain ⟨δ, hq⟩ := exists_isQuad hσ
   have h0 : δ ≠ 0 := hq.unit.ne_zero
   obtain ⟨-, hS, hR⟩ := d.ok.dbl.weil
@@ -147,8 +147,8 @@ theorem theta_sum_rational_invariant (d : SD σ) (γ : d.G) (hγ : γ ∈ rat2 �
     have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
     let bE : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E h2
     let bA := Algebra.TensorProduct.basis (AF F) bE
-    haveI : Module.Free (AF F) (AE F E) := Module.Free.of_basis bA
-    haveI : Module.Finite (AF F) (AE F E) := Module.Finite.of_basis bA
+    have : Module.Free (AF F) (AE F E) := Module.Free.of_basis bA
+    have : Module.Finite (AF F) (AE F E) := Module.Finite.of_basis bA
     have e := d.dd.e.finrank_eq
     rw [Module.finrank_matrix, Module.finrank_eq_card_basis bA, Module.finrank_prod,
       Module.finrank_fintype_fun_eq_card] at e

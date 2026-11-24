@@ -74,7 +74,7 @@ private lemma frac_lemma' {E : Type} [Field E] [NumberField E] (v : HeightOneSpe
   have hvd : v.intValuation d = WithZero.exp (-(k : ℤ)) := by
     rw [v.intValuation_if_neg hd0, hk]
   have hpos : 0 < v.intValuation d := by
-    rw [hvd]; exact zero_lt_iff.mpr WithZero.exp_ne_zero
+    rw [hvd]; exact pos_iff_ne_zero.mpr WithZero.exp_ne_zero
   rw [map_div₀, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap,
     div_le_one₀ hpos, hvd] at hu
   have hdvda : v.asIdeal ^ k ∣ Ideal.span {a} := (v.intValuation_le_pow_iff_dvd a k).mp hu
@@ -165,7 +165,7 @@ theorem intValuation_natCast {l : ℕ} [hl : Fact l.Prime] {E : Type} [Field E] 
     exact hv
   have hunder : Ideal.span {((l : ℕ) : ℤ)} = v.asIdeal.under ℤ :=
     (Int.ideal_span_isMaximal_of_prime l).eq_of_le (Ideal.comap_ne_top _ v.isPrime.ne_top) hle
-  haveI : v.asIdeal.LiesOver (Ideal.span {((l : ℕ) : ℤ)}) := ⟨hunder⟩
+  have : v.asIdeal.LiesOver (Ideal.span {((l : ℕ) : ℤ)}) := ⟨hunder⟩
   have hmap : Ideal.map (algebraMap ℤ (𝓞 E)) (Ideal.span {((l : ℕ) : ℤ)}) =
       Ideal.span {((l : ℕ) : 𝓞 E)} := by
     rw [Ideal.map_span, Set.image_singleton, map_natCast]
@@ -183,7 +183,7 @@ theorem kerProp : KerProp := by
   have key := (le_one_lemma_2 (normAbv φ) v (fun y => hφ y) (algebraMap (𝓞 E) E x / ((l : ℕ) : E))).1
   rw [← Ideal.dvd_span_singleton, ← v.intValuation_le_pow_iff_dvd, ← intValuation_natCast v hv]
   have hvl : 0 < v.intValuation ((l : ℕ) : 𝓞 E) := by
-    rw [intValuation_natCast v hv]; exact zero_lt_iff.mpr WithZero.exp_ne_zero
+    rw [intValuation_natCast v hv]; exact pos_iff_ne_zero.mpr WithZero.exp_ne_zero
   have hnl : 0 < ‖((l : ℕ) : Om l)‖ := by
     rw [← map_natCast φ]; exact norm_pos_iff.mpr ((map_ne_zero φ).mpr hl0)
   rw [← div_le_one₀ hvl, ← div_le_one hnl]

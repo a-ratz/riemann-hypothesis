@@ -224,7 +224,7 @@ def gL (L : IntermediateField (KO p n) (Om p n)) : L →+* Kc p :=
 theorem gL_alg (L : IntermediateField (KO p n) (Om p n)) (y : KO p n) :
     gL L (algebraMap (KO p n) L y) = gK p n y := by
   unfold gL
-  letI : Algebra (KO p n) (Kc p) := (gK p n).toAlgebra
+  let : Algebra (KO p n) (Kc p) := (gK p n).toAlgebra
   exact (IsAlgClosed.lift : L →ₐ[KO p n] Kc p).commutes y
 
 theorem gL_algO (L : IntermediateField (KO p n) (Om p n)) (z : OO p n) :

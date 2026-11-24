@@ -115,11 +115,11 @@ theorem smooth_away_mul {B : Type} [CommRing B] [Algebra ℚ B] (s u : B) (e : �
     Algebra.IsStandardSmoothOfRelativeDimension e ℚ (Localization.Away (s * u)) := by
   let S := Localization.Away s
   let T := Localization.Away (algebraMap B S u)
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension 0 S T :=
+  have : Algebra.IsStandardSmoothOfRelativeDimension 0 S T :=
     Algebra.IsStandardSmoothOfRelativeDimension.localization_away (algebraMap B S u)
   have h := Algebra.IsStandardSmoothOfRelativeDimension.trans e 0 ℚ S T
   rw [zero_add] at h
-  haveI : IsLocalization.Away (s * u) T := IsLocalization.Away.mul' S T s u
+  have : IsLocalization.Away (s * u) T := IsLocalization.Away.mul' S T s u
   let f : T ≃ₐ[B] Localization.Away (s * u) :=
     IsLocalization.algEquiv (Submonoid.powers (s * u)) T (Localization.Away (s * u))
   exact Algebra.IsStandardSmoothOfRelativeDimension.of_algEquiv e (f.restrictScalars ℚ)

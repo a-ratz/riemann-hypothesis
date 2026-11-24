@@ -614,7 +614,7 @@ theorem unitDichotomy_holds : UnitDich := by
     let f : ∀ w : HeightOneSpectrum (𝓞 F), w.adicCompletion F := fun w => if w = v then (a w)⁻¹ else 0
     have hf : ∀ᶠ w in Filter.cofinite, f w ∈ w.adicCompletionIntegers F := by
       filter_upwards [Filter.eventually_cofinite_ne v] with w hw
-      simp only [f, if_neg hw]
+      simp only [f, ite_eq_right hw]
       exact zero_mem _
     let a' : Formalism.L2.Herm.Af F := ⟨f, hf⟩
     have hprod : idem * a * a' = idem := by
@@ -623,7 +623,7 @@ theorem unitDichotomy_holds : UnitDich := by
       show idem w * a w * f w = idem w
       by_cases hw : w = v
       · subst hw
-        simp only [f, if_pos rfl]
+        simp only [f, ite_eq_left rfl]
         rw [mul_assoc, mul_inv_cancel₀ hav, mul_one]
       · rw [hidem, Formalism.L2.DIV.idemAd_neg (P := fun x => x = v) hw, zero_mul, zero_mul]
     refine ⟨σ u * ((1 : E) ⊗ₜ[F] a'), ?_⟩
@@ -1071,8 +1071,8 @@ private theorem unit_lemma_5 {F E : Type} [Field F] [NumberField F] [Field E] [N
 
 private theorem over_lemma_6 {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] (v : HeightOneSpectrum (𝓞 F)) :
     ∃ PP : HeightOneSpectrum (𝓞 E), Formalism.L2.DIV.underPl F PP = v := by
-  haveI := v.isMaximal
-  haveI : Algebra.IsIntegral (𝓞 F) (𝓞 E) := by
+  have := v.isMaximal
+  have : Algebra.IsIntegral (𝓞 F) (𝓞 E) := by
     first
       | infer_instance
   have hker : RingHom.ker (algebraMap (𝓞 F) (𝓞 E)) ≤ v.asIdeal := by

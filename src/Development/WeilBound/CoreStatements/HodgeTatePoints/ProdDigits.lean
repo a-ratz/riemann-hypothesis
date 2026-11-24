@@ -146,7 +146,7 @@ private lemma card_le (F K : Type) [Field F] [Fintype F] [Field K] :
       AddChar.toMonoidHomEquiv.injective
   have hfin : Finite (AddChar F K) := hli.finite
   refine ⟨hfin, ?_⟩
-  haveI : Fintype (AddChar F K) := Fintype.ofFinite _
+  have : Fintype (AddChar F K) := Fintype.ofFinite _
   have h := hli.fintype_card_le_finrank
   rw [Module.finrank_fintype_fun_eq_card] at h
   simpa [Nat.card_eq_fintype_card] using h
@@ -229,9 +229,9 @@ theorem ltOneIdeal_isPrime {C : Type} [Field C] (v : Valuation C NNReal) (R : Ty
 theorem gauss_value : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → Fintype.card F ≠ 2 → ∀ σ : MulChar F R, (∀ a b, σ (a + b) - σ a - σ b ∈ Ideal.span {(p : R)}) → ∀ ψ : AddChar F C, ψ ≠ 1 → v (∑ a, algebraMap R C (σ⁻¹ a) * ψ a) ^ (p - 1) = v (p : C) := by
   intro p _ C _ _ _ v R _ _ hv hp F _ _ _ _ f hcard hF σ hσ ψ hψ
   have hpp : p.Prime := Fact.out
-  haveI : NeZero p := ⟨hpp.ne_zero⟩
-  haveI : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
-  haveI hprime : (ltOneIdeal v R hv).IsPrime := ltOneIdeal_isPrime v R hv
+  have : NeZero p := ⟨hpp.ne_zero⟩
+  have : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
+  have hprime : (ltOneIdeal v R hv).IsPrime := ltOneIdeal_isPrime v R hv
 
   have hpm : (p : R) ∈ ltOneIdeal v R hv := by
     rw [mem_ltOneIdeal, map_natCast]; exact hp
@@ -247,11 +247,11 @@ theorem gauss_value : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
         have := hspan (hσ a b)
         rwa [sub_sub] at this }
 
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C p
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C p
   have hvζ : v ζ = 1 := val_eq_one_of_pow_eq_one v hpp.ne_zero hζ.pow_eq_one
   obtain ⟨z, rfl⟩ := hv.exists_of_le_one hvζ.le
   have hzp : z ^ p = 1 := hv.hom_inj (by rw [map_pow, hζ.pow_eq_one, map_one])
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
   obtain ⟨y, hym, hy⟩ := ReciprocityTheory.PGsh.gaussCongruence p F R (ltOneIdeal v R hv) ι σ z hF hzp
     (fun a => rfl)
 
@@ -259,7 +259,7 @@ theorem gauss_value : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgCl
     (Algebra.trace (ZMod p) F).toAddMonoidHom
   have hψ₀ : ∀ a, ψ₀ a = algebraMap R C z ^ (Algebra.trace (ZMod p) F a).val := fun a => rfl
   have hψ₀1 : ψ₀ ≠ 1 := by
-    haveI : Module.Finite (ZMod p) F := Module.Finite.of_finite
+    have : Module.Finite (ZMod p) F := Module.Finite.of_finite
     obtain ⟨b, hb⟩ := Algebra.trace_surjective (ZMod p) F 1
     intro h
     have h1 : ψ₀ b = 1 := by rw [h]; simp
@@ -321,8 +321,8 @@ theorem exists_addChar_ne_one (C F : Type) [Field C] [IsAlgClosed C] [CharZero C
     rw [ringChar.eq_zero]
     exact (CharP.char_ne_zero_of_finite F (ringChar F)).symm
   let P := AddChar.FiniteField.primitiveChar F C hch
-  haveI : NeZero (P.n : ℕ) := ⟨P.n.ne_zero⟩
-  haveI : Algebra.IsIntegral C (CyclotomicField P.n C) :=
+  have : NeZero (P.n : ℕ) := ⟨P.n.ne_zero⟩
+  have : Algebra.IsIntegral C (CyclotomicField P.n C) :=
     IsCyclotomicExtension.integral {(P.n : ℕ)} C _
   let j : CyclotomicField P.n C →ₐ[C] C := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -642,7 +642,7 @@ lemma eq_of_prod_eq {ι : Type} [Fintype ι] [DecidableEq ι] (a b : ι → NNRe
   refine le_antisymm ?_ (hab i)
   have hQ : 0 < ∏ j ∈ Finset.univ.erase i, a j := Finset.prod_pos (fun j _ => ha j)
   have h1 : ∏ j ∈ Finset.univ.erase i, a j ≤ ∏ j ∈ Finset.univ.erase i, b j :=
-    Finset.prod_le_prod' (fun j _ => hab j)
+    Finset.prod_le_prod (fun j _ => hab j)
   have h2 : b i * ∏ j ∈ Finset.univ.erase i, a j ≤ a i * ∏ j ∈ Finset.univ.erase i, a j :=
     calc b i * ∏ j ∈ Finset.univ.erase i, a j ≤ b i * ∏ j ∈ Finset.univ.erase i, b j :=
           mul_le_mul' le_rfl h1
@@ -761,8 +761,8 @@ lemma prod_digits {p f : ℕ} (hp : p ≠ 0) (w : ℕ → NNReal) :
     simp only [Finset.mem_range, Finset.mem_insert, Finset.mem_Icc]
     omega
   rw [h1, Fin.prod_univ_eq_prod_range (fun i => if i = 0 then 1 else w i), h2,
-    Finset.prod_insert (by simp), if_pos rfl, one_mul]
-  refine Finset.prod_congr rfl fun m hm => if_neg ?_
+    Finset.prod_insert (by simp), ite_eq_left rfl, one_mul]
+  refine Finset.prod_congr rfl fun m hm => ite_eq_right ?_
   have := (Finset.mem_Icc.1 hm).1
   omega
 
@@ -783,7 +783,7 @@ theorem r_mono : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
         else v (algebraMap R C (γ (∑ n : Fin f, (d n : ℕ) * p ^ (n : ℕ)))) := by
     intro BB γ b hγ hb d
     split_ifs with h
-    · exact Finset.prod_le_one' fun n _ => pow_le_one' (hv.map_le_one _) _
+    · exact Finset.prod_le_one fun n _ => pow_le_one' (hv.map_le_one _) _
     · have hm := mono_mem BB σ hp0 b
         (fun n => by rw [hb n]; exact Ideal.mem_span_singleton_self _) (fun n => (d n : ℕ)) h
       rw [hγ, Ideal.mem_span_singleton, hv.dvd_iff_le] at hm
@@ -808,7 +808,7 @@ theorem r_mono : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
       intro h
       exact mul_ne_zero hn (pow_ne_zero _ hp0)
         (Finset.sum_eq_zero_iff.1 h n (Finset.mem_univ n))
-    rw [if_neg hne] at key
+    rw [ite_eq_right hne] at key
     rw [hg]
     have hval : v (algebraMap R C (∏ n : Fin f, c n ^ (d n : ℕ))) =
         v (algebraMap R C (g (∑ n : Fin f, (d n : ℕ) * p ^ (n : ℕ)))) := by

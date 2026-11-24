@@ -153,7 +153,7 @@ private theorem unm_dim_le_of_le {I J : Ideal R} (h : I ≤ J) :
 
 private theorem unm_dim_succ_le_of_lt {Q P : Ideal R} [Q.IsPrime] (h : Q < P) :
     ringKrullDim (R ⧸ P) + 1 ≤ ringKrullDim (R ⧸ Q) := by
-  obtain ⟨a, haP, haQ⟩ := SetLike.exists_of_lt h
+  obtain ⟨a, haP, haQ⟩ := IsConcreteLE.exists_of_lt h
   have hx0 : (Ideal.Quotient.mk Q a : R ⧸ Q) ≠ 0 :=
     fun hx => haQ (Ideal.Quotient.eq_zero_iff_mem.mp hx)
   have hxreg : (Ideal.Quotient.mk Q a : R ⧸ Q) ∈ nonZeroDivisors (R ⧸ Q) :=
@@ -189,7 +189,7 @@ private theorem unm_modDepthGE_congr {N : Type*} [AddCommGroup N] [Module R N]
 private theorem unm_isCMMod_congr {N : Type*} [AddCommGroup N] [Module R N]
     (e : M ≃ₗ[R] N) (h : IsCMMod R M) : IsCMMod R N := by
   obtain ⟨hR, hfin, n, hdim, hdep⟩ := id h
-  haveI := hfin
+  have := hfin
   have hs : Module.support R N = Module.support R M :=
     (Module.support_subset_of_surjective e.toLinearMap e.surjective).antisymm
       (Module.support_subset_of_surjective e.symm.toLinearMap e.symm.surjective)
@@ -203,8 +203,8 @@ private theorem unm_isCMMod_congr {N : Type*} [AddCommGroup N] [Module R N]
 theorem IsCMMod.ringKrullDim_quotient_eq_supportDim (h : IsCMMod R M) {p : Ideal R}
     (hp : p ∈ associatedPrimes R M) : ringKrullDim (R ⧸ p) = Module.supportDim R M := by
   obtain ⟨hR, hfin, n, hdim, hdep⟩ := id h
-  haveI := hR
-  haveI := hfin
+  have := hR
+  have := hfin
   have hann : Module.annihilator R M ≤ p := by
     first
     | (have h0 := IsAssociatedPrime.annihilator_le hp
@@ -222,8 +222,8 @@ theorem IsCMMod.ringKrullDim_quotient_eq_supportDim (h : IsCMMod R M) {p : Ideal
 theorem IsCMMod.associatedPrimes_eq_minimalPrimes (h : IsCMMod R M) :
     associatedPrimes R M = (Module.annihilator R M).minimalPrimes := by
   obtain ⟨hR, hfin, n, hdim, -⟩ := id h
-  haveI := hR
-  haveI := hfin
+  have := hR
+  have := hfin
   apply Set.Subset.antisymm
   · intro p hp
     have hpp : p.IsPrime := IsAssociatedPrime.isPrime hp
@@ -240,7 +240,7 @@ theorem IsCMMod.associatedPrimes_eq_minimalPrimes (h : IsCMMod R M) :
     refine ⟨⟨hpp, hann⟩, fun q hq hqp => ?_⟩
     by_contra hne
     have hlt : q < p := lt_of_le_of_ne hqp (fun e => hne (le_of_eq e.symm))
-    haveI := hq.1
+    have := hq.1
     have h1 := unm_dim_succ_le_of_lt hlt
     have h2 : ringKrullDim (R ⧸ q) ≤ (n : WithBot ℕ∞) := by
       calc ringKrullDim (R ⧸ q) ≤ ringKrullDim (R ⧸ Module.annihilator R M) :=
@@ -257,8 +257,8 @@ theorem IsCMMod.associatedPrimes_eq_minimalPrimes (h : IsCMMod R M) :
 theorem IsCMMod.quotSMulTop (h : IsCMMod R M) {x : R} (hx : x ∈ maximalIdeal R)
     (reg : IsSMulRegular M x) : IsCMMod R (QuotSMulTop x M) := by
   obtain ⟨hR, hfin, n, hdim, hdep⟩ := id h
-  haveI := hR
-  haveI := hfin
+  have := hR
+  have := hfin
   have hsd : Module.supportDim R (QuotSMulTop x M) + 1 = Module.supportDim R M := by
     first
     | exact Module.supportDim_quotSMulTop_succ_eq_supportDim reg hx
@@ -286,8 +286,8 @@ theorem IsCMMod.isSMulRegular_of_supportDim_quotSMulTop_lt (h : IsCMMod R M) {x 
     (hd : Module.supportDim R (QuotSMulTop x M) < Module.supportDim R M) :
     IsSMulRegular M x := by
   obtain ⟨hR, hfin, n, hdim, hdep⟩ := id h
-  haveI := hR
-  haveI := hfin
+  have := hR
+  have := hfin
   by_contra hx
   have hmem : x ∈ ⋃ p ∈ associatedPrimes R M, (p : Set R) := by
     rw [biUnion_associatedPrimes_eq_compl_regular]
@@ -370,8 +370,8 @@ theorem IsCMMod.isRegular_of_supportDim_quotient_le_zero (h : IsCMMod R M) (xs :
     | cons _ _ => simp at hrs
   | cons x xs ih =>
     obtain ⟨hR, hfin, n, hdim, hdep⟩ := id h
-    haveI := hR
-    haveI := hfin
+    have := hR
+    have := hfin
     have hx : x ∈ maximalIdeal R := hxs x (by simp)
     have hxs' : ∀ r ∈ xs, r ∈ maximalIdeal R := fun r hr => hxs r (by simp [hr])
     have e := Submodule.quotOfListConsSMulTopEquivQuotSMulTopInner M x xs

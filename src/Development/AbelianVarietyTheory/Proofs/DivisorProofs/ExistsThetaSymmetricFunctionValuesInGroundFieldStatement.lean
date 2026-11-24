@@ -125,8 +125,8 @@ theorem symAt_exists : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
     (x : Sp Ω ⟶ S) (θ : SecAt G L x), Odd m → N = m ^ (4 * g) → PolFib G L g x → ∃ e : Fin N → Ω, SymAt G L ρ m x θ e := by
   intro S G _ _ L ρ hL hρ g m N Ω _ _ x θ hm hN hP
   obtain ⟨Ω', instF, instA, pt₀, c₀, hfd, hgal, -, hT, hτ⟩ := GlobalTheory.T.theta_constants_listed_finite_galois_extension S G L ρ hL hρ g m N Ω x θ hm hN hP
-  haveI := hfd
-  haveI := hgal
+  have := hfd
+  have := hgal
   have sb := GlobalTheory.T.thetaSymmetricFunctionsDegreeFactorial_basic_properties
   have hfix : ∀ j, ∃ e : Ω, algebraMap Ω Ω' e = symTup c₀ j := by
     intro j
@@ -140,8 +140,8 @@ theorem symAt_exists : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
   refine ⟨e, ?_⟩
   intro K _ i pt c hc j
   let k : K →+* AlgebraicClosure K := algebraMap K (AlgebraicClosure K)
-  letI : Algebra Ω (AlgebraicClosure K) := (k.comp i).toAlgebra
-  haveI : Algebra.IsAlgebraic Ω Ω' := Algebra.IsAlgebraic.of_finite Ω Ω'
+  let : Algebra Ω (AlgebraicClosure K) := (k.comp i).toAlgebra
+  have : Algebra.IsAlgebraic Ω Ω' := Algebra.IsAlgebraic.of_finite Ω Ω'
   let jj : Ω' →ₐ[Ω] AlgebraicClosure K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

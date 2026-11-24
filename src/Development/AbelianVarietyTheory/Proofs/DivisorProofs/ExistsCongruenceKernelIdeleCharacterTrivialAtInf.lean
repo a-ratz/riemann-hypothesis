@@ -61,8 +61,8 @@ theorem continuous_finU : Continuous (finU F) :=
 def sndU : (AF F)ˣ →* (Af F)ˣ := Units.map (MonoidHom.snd (InfiniteAdeleRing F) (FiniteAdeleRing (𝓞 F) F))
 
 theorem continuous_circle_toUnits : Continuous (Circle.toUnits : Circle →* ℂˣ) :=
-  Units.continuous_iff.2 ⟨continuous_subtype_val, by
-    have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtype_val.comp continuous_inv
+  Units.continuous_iff.2 ⟨continuous_subtypeVal, by
+    have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtypeVal.comp continuous_inv
     refine h.congr fun z => ?_
     simp⟩
 

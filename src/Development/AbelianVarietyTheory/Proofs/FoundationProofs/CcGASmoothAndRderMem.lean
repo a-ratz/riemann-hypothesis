@@ -174,7 +174,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 theorem contDiff_exp_smul_entry (X : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     ContDiff ℝ ∞ fun t : ℝ => (NormedSpace.exp (t • X) : Matrix (Fin n) (Fin n) ℂ) i j := by
-  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h : ContDiff ℝ ∞ (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → _) :=
     contDiff_iff_contDiffAt.2 fun A => (NormedSpace.exp_analytic (𝕂 := ℝ) A).contDiffAt
   exact (LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℂ i j)).contDiff.comp

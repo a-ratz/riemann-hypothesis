@@ -145,8 +145,8 @@ theorem comp_mem (θ : InfFam D) (V : HSp D) (h : GA D V) {Φ : Mx D V.rank n �
   | smul c Φ _ h1 => exact Submodule.smul_mem _ c h1
   | mem Φ hΦ =>
     obtain ⟨f, g, hg, rfl⟩ := hΦ
-    haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-    haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+    have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+    have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
     refine Submodule.subset_span ⟨SchwartzMap.compCLMOfContinuousLinearEquiv ℝ
       (lmulFam n fun τ => map_cancel ((θ τ).comp (infPart D)) V h).toContinuousLinearEquiv f,
       g ∘ lmulHomeo n (map_cancel (finPart D) V h), ⟨hg.1.comp_continuous (lmulHomeo n _).continuous, hg.2.comp_homeomorph _⟩, funext fun x => ?_⟩
@@ -276,7 +276,7 @@ theorem theta_weyl {V : HSp D} {ψ χ θ μ} {ω : G D n →* Module.End ℂ (sc
     ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, (ω g Φ).1 (ξ.map (incA D)) =
       ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, Φ.1 (ξ.map (incA D)) := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D V.rank n
-  haveI : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
   have hT := isHermND_gram V
   obtain ⟨h1, h2⟩ := GlobalTheory.T.rationalAdelicMatrices_self_annihilator D V.rank n V.gram hT ψ hψ
   have hs := pairing_symm (n := n) hT ψ
@@ -287,7 +287,7 @@ theorem theta_weyl {V : HSp D} {ψ χ θ μ} {ω : G D n →* Module.End ℂ (sc
     rw [hs y x]
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.pairing, GlobalTheory.SiegelWeilLitCompare.gramQ_eq]
     rfl
-  haveI := hμ.1
+  have := hμ.1
   have key := poisson_translates (ratMx D V.rank n) K hK hKc (GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.pairing (n := n) V.gram ψ)
     (fun y => ?_) hs (fun x x' y => ?_) (fun x y => hψ.2.1 _) h1 h2 μ 𝓕 hμ.2.1 hμ.2.2 (f := Φ.1) ?_
     (translates_bound hθ Φ) ?_
@@ -295,8 +295,8 @@ theorem theta_weyl {V : HSp D} {ψ χ θ μ} {ω : G D n →* Module.End ℂ (sc
     rw [tsum_ratMx, tsum_ratMx (fun x => (ω g Φ).1 x)] at key
     exact key.symm
   · simp only [hs _ y]
-    haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-    haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+    have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+    have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
     have ht : Continuous (GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.trA (D := D)) :=
       IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
     exact hψ.1.comp (ht.comp (continuous_const.matrix_mul continuous_id).matrix_trace)
@@ -450,7 +450,7 @@ theorem bound_triv (hω : IsWeilSch ψ χ θ W μ ω) {nb : hermA D n → G D n}
   rw [theta_full hω hnb C hC Ψ Ψ' hΨ hΨ' hgv h]
   have e : ‖∑' y : {y : Matrix (Fin W.rank) (Fin n) D.host.E // y.rank = W.rank},
       (ω g Ψ').1 (mm (mt W h⁻¹) (rat y.1))‖ₑ ≤ B :=
-    (enorm_tsum_le_tsum_enorm).trans ((ENNReal.tsum_le_tsum fun y => by
+    (eNorm_tsum_le_tsum_eNorm).trans ((ENNReal.tsum_le_tsum fun y => by
       have := hMb g hg (mm (mt W h⁻¹) (rat y.1))
       rw [← ofReal_norm, ← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal this).trans (hB h))

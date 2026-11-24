@@ -174,23 +174,23 @@ theorem main : PositivityTheory.Rg.Tf.Loc.N1 → ∀ (O O' R : Type) [CommRing O
   obtain ⟨J, hJ⟩ : ∃ J : Ideal R, J = (⊥ : Ideal R).jacobson := ⟨_, rfl⟩
   have hmJ : Ideal.map (algebraMap O R) (IsLocalRing.maximalIdeal O) ≤ J :=
     hJ ▸ (GlobalTheory.CompanionTheory.LocalFinite.map_maximalIdeal_le_jacobson_and_pow_le O R).1
-  letI : Algebra (IsLocalRing.ResidueField O) (R ⧸ J) :=
+  let : Algebra (IsLocalRing.ResidueField O) (R ⧸ J) :=
     (Ideal.Quotient.lift (IsLocalRing.maximalIdeal O) (algebraMap O (R ⧸ J)) fun c hc => by
       first
         | exact Ideal.Quotient.eq_zero_iff_mem.mpr (hmJ (Ideal.mem_map_of_mem _ hc))
         | (rw [← Ideal.Quotient.mk_algebraMap, Ideal.Quotient.eq_zero_iff_mem]
            exact hmJ (Ideal.mem_map_of_mem _ hc))).toAlgebra
-  haveI : IsScalarTower O (IsLocalRing.ResidueField O) (R ⧸ J) :=
+  have : IsScalarTower O (IsLocalRing.ResidueField O) (R ⧸ J) :=
     IsScalarTower.of_algebraMap_eq fun c => rfl
-  haveI : Module.Finite O (R ⧸ J) :=
+  have : Module.Finite O (R ⧸ J) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ O J).toLinearMap (Ideal.Quotient.mkₐ_surjective O J)
-  haveI : Module.Finite (IsLocalRing.ResidueField O) (R ⧸ J) :=
+  have : Module.Finite (IsLocalRing.ResidueField O) (R ⧸ J) :=
     Module.Finite.of_restrictScalars_finite O _ _
   have hrad : J.IsRadical := by
     rw [hJ]
     exact Ideal.radical_le_jacobson.trans Ideal.jacobson_idem.le
-  haveI : IsReduced (R ⧸ J) := (Ideal.isRadical_iff_quotient_reduced J).mp hrad
-  haveI : Module.Finite (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField O ⊗[O] O') :=
+  have : IsReduced (R ⧸ J) := (Ideal.isRadical_iff_quotient_reduced J).mp hrad
+  have : Module.Finite (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField O ⊗[O] O') :=
     Module.Finite.base_change O _ O'
   have hres : Function.Surjective (algebraMap O (IsLocalRing.ResidueField O)) :=
     IsLocalRing.residue_surjective
@@ -466,7 +466,7 @@ theorem map_tw (τ : O' ≃ₐ[O] O') (j : ℕ) (s : O' ⊗[O] R) :
   induction s using TensorProduct.induction_on with
   | zero => simp only [map_zero]
   | tmul x y =>
-    simp only [GlobalTheory.CompanionTheory.UnitNorm.tw, Algebra.TensorProduct.map_tmul, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe,
+    simp only [GlobalTheory.CompanionTheory.UnitNorm.tw, Algebra.TensorProduct.map_tmul, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass,
       AlgHom.id_apply, pow_succ', AlgEquiv.mul_apply]
   | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
@@ -583,17 +583,17 @@ theorem norm_units_surjective : PositivityTheory.Rg.Tf.Loc.N1 → PositivityTheo
   intro O O' R _ _ _ _ _ _ _ _ _ _ _ _ ℓ τ hℓ hτ hfix hbasis r
   by_cases hO' : Nontrivial O'
   swap
-  · haveI : Subsingleton O' := not_nontrivial_iff_subsingleton.mp hO'
+  · have : Subsingleton O' := not_nontrivial_iff_subsingleton.mp hO'
     have h1 : (1 : O' ⊗[O] R) = 0 := by
       calc (1 : O' ⊗[O] R) = (1 : O') ⊗ₜ[O] (1 : R) := Algebra.TensorProduct.one_def
         _ = (0 : O') ⊗ₜ[O] (1 : R) := by rw [Subsingleton.elim (1 : O') 0]
         _ = 0 := by rw [TensorProduct.zero_tmul]
-    haveI : Subsingleton (O' ⊗[O] R) := subsingleton_of_zero_eq_one h1.symm
+    have : Subsingleton (O' ⊗[O] R) := subsingleton_of_zero_eq_one h1.symm
     exact ⟨1, Subsingleton.elim _ _⟩
-  haveI := hO'
+  have := hO'
   obtain ⟨hfixS, a, ha1, hcong⟩ := hConj O O' R ℓ τ hℓ hτ hfix hbasis
   obtain ⟨hle, N, hN⟩ := _root_.GlobalTheory.CompanionTheory.LocalFinite.map_maximalIdeal_le_jacobson_and_pow_le O R
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal O) (O' ⊗[O] R) :=
+  have : IsAdicComplete (IsLocalRing.maximalIdeal O) (O' ⊗[O] R) :=
     _root_.GlobalTheory.CompanionTheory.FiniteComplete.isAdicComplete_of_finite O (O' ⊗[O] R)
   obtain ⟨P₁, hP₁⟩ :=
     _root_.GlobalTheory.CompanionTheory.FirstApprox.main hInt O O' R ℓ τ hℓ hτ hfix hbasis ⟨a, ha1⟩ r

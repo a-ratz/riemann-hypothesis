@@ -118,7 +118,7 @@ theorem isLatMod_of_idx (A B : Submodule (𝓞 K) V) (S I : Submodule K V) (hA :
     (hI : rs (𝓞 K) I ≤ B) (h : idx A B ≠ 0) : IsLatMod B S I := by
   obtain ⟨⟨M, hM, hL⟩, hsp⟩ := hA
   refine ⟨⟨B ⊓ M, ?_, ?_⟩, le_antisymm ?_ ?_⟩
-  · haveI : IsNoetherian (𝓞 K) M := isNoetherian_of_fg_of_noetherian _ hM
+  · have : IsNoetherian (𝓞 K) M := isNoetherian_of_fg_of_noetherian _ hM
     exact isNoetherian_submodule.1 this _ inf_le_right
   · rw [inf_sup_assoc_of_le _ hI, ← hL]
     exact (inf_eq_left.2 hBA).symm

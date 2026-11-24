@@ -86,23 +86,23 @@ private theorem cocycle_extends_to_conj_group {l : ℕ} [Fact l.Prime] (F : W.GF
     · exact h
   let z : F.Γ → M := fun x =>
     if hx : x ∈ F.η.ker then y ⟨x, hx⟩ else y ⟨x * F.c, cocExt_mem F hx⟩ + R (x * F.c) w
-  have zin : ∀ x (hx : x ∈ F.η.ker), z x = y ⟨x, hx⟩ := fun x hx => dif_pos hx
+  have zin : ∀ x (hx : x ∈ F.η.ker), z x = y ⟨x, hx⟩ := fun x hx => dite_eq_left hx
   have zout : ∀ x (hx : x ∉ F.η.ker), z x = y ⟨x * F.c, cocExt_mem F hx⟩ + R (x * F.c) w :=
-    fun x hx => dif_neg hx
+    fun x hx => dite_eq_right hx
   refine ⟨z, ?_, ?_, fun g => zin g g.2⟩
   · rw [continuous_iff_continuousAt]
     intro x
     by_cases hx : x ∈ F.η.ker
     · apply ContinuousOn.continuousAt _ (hker.mem_nhds hx)
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       have hm : Continuous fun p : (F.η.ker : Set F.Γ) => (⟨p.1, p.2⟩ : F.G₀) :=
-        continuous_subtype_val.subtype_mk fun p => p.2
+        continuous_subtypeVal.subtype_mk fun p => p.2
       refine (hy.comp hm).congr fun p => ?_
       exact (zin p.1 p.2).symm
     · apply ContinuousOn.continuousAt _ (hkerc.mem_nhds hx)
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       have hm : Continuous fun p : ((F.η.ker : Set F.Γ)ᶜ : Set F.Γ) => (⟨p.1 * F.c, cocExt_mem F p.2⟩ : F.G₀) :=
-        (continuous_subtype_val.mul continuous_const).subtype_mk _
+        (continuous_subtypeVal.mul continuous_const).subtype_mk _
       refine ((hy.comp hm).add (hw.comp hm)).congr fun p => ?_
       exact (zout p.1 p.2).symm
   · intro g h

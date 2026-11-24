@@ -422,7 +422,7 @@ theorem core (hL : Laws) (hL₂ : Laws2) (hL₅ : Laws5)
       ((∀ (T : Scheme.{0}) (g : T ⟶ W.t.G.left) (g₁ : T ⟶ Y.oF.t.G.left) (g₂ : T ⟶ Y'.oF.t.G.left),
         g ≫ W.m.φ = g₁ ≫ Y.m.φ → g₁ ≫ Y.m0.toSABMap.φ = g₂ ≫ Y'.m0.toSABMap.φ →
         g₁ ≫ Y.oF.t.G.hom = g₂ ≫ Y'.oF.t.G.hom → g ≫ ψ.hom.left ≫ W'.m.φ = g₂ ≫ Y'.m.φ) → W.Agree W' ψ) := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨hD, hdat⟩ := GlobalTheory.arcWit_data_iso hL₅ E H D l Xo c k bF a O O' β β' Y Y' χ χ' W W'
   have hI : Ideal.span {(PowerSeries.X : PowerSeries k)} = IsLocalRing.maximalIdeal (PowerSeries k) :=
     PowerSeries.maximalIdeal_eq_span_X.symm
@@ -838,7 +838,7 @@ theorem exists_dvr_frPt : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [N
     arcιR_C_isUnit Dw Tv.V hϖ (nonZeroDivisors.ne_zero y.2)
   let g : Tv.Fr →+* ArcSR Dw Tv.V ϖ := IsLocalization.lift hκ
   have hg : ∀ v, g (algebraMap Tv.V Tv.Fr v) = κ v := fun v => IsLocalization.lift_eq hκ v
-  letI alg : Algebra c.F (ArcSR Dw Tv.V ϖ) := (g.comp f).toAlgebra
+  let alg : Algebra c.F (ArcSR Dw Tv.V ϖ) := (g.comp f).toAlgebra
   have halg : ∀ x, algebraMap c.F (ArcSR Dw Tv.V ϖ) x = g (f x) := fun _ => rfl
   refine ⟨alg, ?_, ?_⟩
   · intro x v n h
@@ -914,12 +914,12 @@ theorem hasSum_laurent_of_mul_eq {q : LaurentSeries F} {g : PowerSeries V} {N : 
   rw [← hinj.hasSum_iff]
   · refine Eq.mpr (congrArg (HasSum · _) (funext fun k => ?_))
       ((hasSum_discEval (ι.comp a) hi ht g).mul_left (((ι (a ϖ) * t) ^ N)⁻¹))
-    rw [Function.comp_apply, hc, sub_add_cancel, if_neg (by omega), Int.natAbs_natCast,
+    rw [Function.comp_apply, hc, sub_add_cancel, ite_eq_right (by omega), Int.natAbs_natCast,
       zpow_sub₀ ht0, zpow_natCast, zpow_natCast, map_mul, map_inv₀, map_pow, RingHom.comp_apply,
       mul_pow, mul_inv]
     ring
   · intro n hn
-    rw [hc, if_pos, map_zero, zero_mul]
+    rw [hc, ite_eq_left, map_zero, zero_mul]
     by_contra h0
     exact hn ⟨(n + N).toNat, by simp only; omega⟩
 

@@ -113,11 +113,11 @@ theorem subsingleton_H_of_ses {R : Type} [CommRing R] {C : Type 1} [Category.{0}
   intro n
   cases n with
   | zero =>
-    haveI : Subsingleton ((CH.cx F₂).H 0) := h₂ 0
+    have : Subsingleton ((CH.cx F₂).H 0) := h₂ 0
     exact ⟨fun x y => hinj (Subsingleton.elim _ _)⟩
   | succ n =>
-    haveI : Subsingleton ((CH.cx F₂).H (n + 1)) := h₂ (n + 1)
-    haveI : Subsingleton ((CH.cx F₃).H n) := h₃ n
+    have : Subsingleton ((CH.cx F₂).H (n + 1)) := h₂ (n + 1)
+    have : Subsingleton ((CH.cx F₃).H n) := h₃ n
     have key : ∀ x : (CH.cx F₁).H (n + 1), x = 0 := fun x => by
       obtain ⟨y, rfl⟩ := (hex n x).1 (Subsingleton.elim _ _)
       rw [Subsingleton.elim y 0, map_zero]

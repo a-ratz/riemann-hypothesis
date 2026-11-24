@@ -221,7 +221,7 @@ theorem diag_case [Nonempty n] (Θ : Matrix n n K[X]) (D : n → K)
         · simp [diagonal_apply_ne _ hij]
       have hX := X_mul_divX_add (Θ i j)
       rw [hc, C_0, add_zero] at hX
-      simp only [hi, if_true]
+      simp only [hi, ite_true]
       exact hX.symm
     · simp [hi]
   have hadj : ∀ b c, Θ.adjugate b c = T.adjugate b c * ∏ j ∈ Finset.univ.erase c, s j := by
@@ -269,16 +269,16 @@ theorem diag_case [Nonempty n] (Θ : Matrix n n K[X]) (D : n → K)
       by_cases hi : D i = 0
       · simp [hi]
       · have := hvi i
-        simp only [hi, if_false] at this
+        simp only [hi, ite_false] at this
         simpa using this
     · rw [hD]
       funext i
       rw [Pi.add_apply, mulVec_diagonal]
       by_cases hi : D i = 0
       · have := hvi i
-        simp only [hi, if_true] at this
+        simp only [hi, ite_true] at this
         simp [hi, this]
-      · simp only [hi, if_false]
+      · simp only [hi, ite_false]
         rw [Pi.zero_apply, ← mul_div_assoc, mul_div_cancel_left₀ _ hi, add_neg_cancel]
   obtain ⟨b, c, hbc⟩ := exists_coeff_adjugate_ne_zero T hker
   refine ⟨b, c, fun hdvd => hbc ?_⟩
@@ -617,7 +617,7 @@ noncomputable def laurentCoeffForm (k : Type) [Field k] (n : ℤ) :
 
 theorem laurent_degeneration : ∀ (k : Type) [Field k], ∃ (K : Type) (_ : Field K) (_ : Algebra k K) (σ : K), ∀ (a e : ℕ) (V : Submodule k (Fin a → k)) (U : Type) [AddCommGroup U] [Module k U] (t u : V →ₗ[k] U), e ≤ 1 → (∀ x0 x1 : Fin (e + 1) → V, (∀ j, t (x0 j) = 0 ∧ t (x1 j) = u (x0 j)) → ¬ LinearIndependent k x0) → ∀ y : Fin (e + 1) → Fin a → K, (∀ j (π : K →ₗ[k] k), ∃ x x' : V, (∀ c, x.1 c = π (y j c)) ∧ (∀ c, x'.1 c = π (σ * y j c)) ∧ t x = u x') → ¬ LinearIndependent K y := by
   intro k _
-  letI : Algebra k (HahnSeries ℤ k) := HahnSeries.instAlgebra
+  let : Algebra k (HahnSeries ℤ k) := HahnSeries.instAlgebra
   refine ⟨HahnSeries ℤ k, inferInstance, this, HahnSeries.single 1 1, ?_⟩
   intro a e V U _ _ t u
   have hs : ∀ (z : HahnSeries ℤ k) (n : ℤ),
@@ -761,7 +761,7 @@ theorem tau_mem_selOn (Q : Finset (PlE D.host)) (x : H1 (repOn ρ κ K)) (hx : x
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   refine (res_slH1 (repOn ρ κ K) (repOn ρ (1 : GE N →* Kˣ) K) (idVec φ hs r) continuous_of_discreteTopology
-    (idVec_repOn φ hs ρ κ hκ) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ▸ ?_
+    (idVec_repOn φ hs ρ κ hκ) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · exact tau_mem_bkOn bkP i ρ φ hs κ hκ v _ hv
@@ -776,7 +776,7 @@ theorem tors_of_cast_eq_zero {B : Type} [CommRing B] {l : ℕ} (h : (l : B) = 0)
 theorem computes_transfer : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i) (M : ℕ) (ι : Type) (d : ι → (GE N →* Multiplicative (ZMod (X.l i ^ M)))) (Q : Finset (PlE D.host)) (a : ℕ) (Φ : Matrix (Fin a) (Fin a) (abelian₂ X i M ι)), Computes bkP i s M d Q Φ → ∀ (k : Type) [Field k] [Algebra (X.O0 i) k] [TopologicalSpace k] [DiscreteTopology k], ((X.l i : ℕ) : k) = 0 → Function.Surjective (algebraMap (X.O0 i) k) → ∀ aug : abelian₂ X i M ι →ₐ[X.O0 i] k, (∀ δ, aug (MonoidAlgebra.of (X.O0 i) (Del X i M ι) δ) = 1) → ∃ E : LinearMap.ker (Φ.map aug).mulVecLin →ₗ[k] H1 (red i k (Tgl i s)), Function.Injective E ∧ (∀ x, E x ∈ selOn bkP i (Tgl i s) (1 : GE N →* kˣ) k Q) ∧ ∀ (B : Type) [CommRing B] [Algebra (X.O0 i) B] (th : abelian₂ X i M ι →ₐ[X.O0 i] B), ((X.l i : ℕ) : B) = 0 → ∀ x : Fin a → B, (Φ.map th).mulVec x = 0 → ∃ z : GE N → Fin D.R.r → B, IsLocallyConstant z ∧ (∀ g h, z (g * h) = z g + th ((delInv i M d g : (abelian₂ X i M ι)ˣ) : abelian₂ X i M ι) • ((Tmat i s g).map (algebraMap (X.O0 i) B)).mulVec (z h)) ∧ ∀ f : B →+ k, (∀ y b, f (th y * b) = aug y * f b) → ∃ (x' : LinearMap.ker (Φ.map aug).mulVecLin) (z' : Z1 (red i k (Tgl i s))), (∀ c, x'.1 c = f (x c)) ∧ (∀ g c, z'.1 g c = f (z g c)) ∧ E x' = cl z' := by
   intro D N X bkP i s M ι d Q a Φ hC k _ _ _ _ hk hsurj aug haug
   obtain ⟨e, he⟩ := hC
-  letI : Module (abelian₂ X i M ι) k := Module.compHom k (aug : abelian₂ X i M ι →+* k)
+  let : Module (abelian₂ X i M ι) k := Module.compHom k (aug : abelian₂ X i M ι →+* k)
   have hs : ∀ (y : abelian₂ X i M ι) (b : k), y • b = aug y * b := fun _ _ => rfl
   have hκ : ∀ g, aug ((delInv i M d g : (abelian₂ X i M ι)ˣ) : abelian₂ X i M ι) = 1 := fun g =>
     haug (delAll X i M d g)⁻¹
@@ -786,10 +786,10 @@ theorem computes_transfer : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D
   · rw [hE]
     exact tau_mem_selOn bkP i _ aug hs _ hκ Q _ (e k hkT (kerIn aug hs Φ x)).2
   intro B _ _ th hB x hx
-  letI : Module (abelian₂ X i M ι) B := Module.compHom B (th : abelian₂ X i M ι →+* B)
+  let : Module (abelian₂ X i M ι) B := Module.compHom B (th : abelian₂ X i M ι →+* B)
   have hsB : ∀ (y : abelian₂ X i M ι) (b : B), y • b = th y * b := fun _ _ => rfl
-  letI : TopologicalSpace B := ⊥
-  haveI : DiscreteTopology B := ⟨rfl⟩
+  let : TopologicalSpace B := ⊥
+  have : DiscreteTopology B := ⟨rfl⟩
   have hBT := tors_of_cast_eq_zero hB
   let xB : LinearMap.ker (matAct (M := B) Φ) := ⟨x, by rw [LinearMap.mem_ker, matAct_eq th hsB]; exact hx⟩
   obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective _ (e B hBT xB).1
@@ -1005,7 +1005,7 @@ theorem vanish_of_additive {l : ℕ} {J : Subgroup Γ}
   intro j hj
   let f : J →* Multiplicative W := MonoidHom.mk' (fun g => Multiplicative.ofAdd (w g)) fun a b => by
     rw [← ofAdd_add, ← hadd a a.2 b b.2]; rfl
-  have hf : IsOpen (f.ker : Set J) := (hw {0}).preimage continuous_subtype_val
+  have hf : IsOpen (f.ker : Set J) := (hw {0}).preimage continuous_subtypeVal
   refine hom_trivial hU f hf 1 (fun x => ?_) ⟨j, hj⟩
   apply Multiplicative.toAdd.injective
   rw [toAdd_pow, pow_one, ← Nat.cast_smul_eq_nsmul K, CharP.cast_eq_zero, zero_smul, toAdd_one]
@@ -1081,7 +1081,7 @@ theorem tame_relation : TameQuotient → ∀ (F Ω : Type) [Field F] [NumberFiel
   have hγD : γ0 ∈ Dec (F := F) A := hID hγ0.1
   have hφD : φ ∈ Dec (F := F) A := hφ.1
   have hdJ : ∀ j ∈ GlobalTheory.TameQuot.ineKer F A l, d j = 1 := fun j hj => by
-    refine hom_trivial hU (d.comp (GlobalTheory.TameQuot.ineKer F A l).subtype) (hd.preimage continuous_subtype_val) M
+    refine hom_trivial hU (d.comp (GlobalTheory.TameQuot.ineKer F A l).subtype) (hd.preimage continuous_subtypeVal) M
       (fun x => ?_) ⟨j, hj⟩
     apply Multiplicative.toAdd.injective
     rw [toAdd_pow, nsmul_eq_mul, ZMod.natCast_self, zero_mul, toAdd_one]
@@ -1260,14 +1260,14 @@ theorem core (hT : TameQuotient) (hG : GalHyp bkP i s) (hF : FirstHalf i s) (hR 
   have hcj := hcj i s hG.2.2.1
   have hφ' : ∀ a, φ' a = cConj X (φ a) := fun a => AlgEquiv.ext (hPa a).2.2
   let k := IsLocalRing.ResidueField (X.O0 i)
-  letI : TopologicalSpace k := ⊥
-  haveI : DiscreteTopology k := ⟨rfl⟩
+  let : TopologicalSpace k := ⊥
+  have : DiscreteTopology k := ⟨rfl⟩
   have hk : IsRes i k := fun x hx => (IsLocalRing.residue_eq_zero_iff x).2 hx
   have hsurj : Function.Surjective (algebraMap (X.O0 i) k) := IsLocalRing.residue_surjective
   have hchar : ∀ (K : Type) [Field K] [Algebra (X.O0 i) K], IsRes i K → ((X.l i : ℕ) : K) = 0 := fun K _ _ h => by
     have := h _ (l_mem i)
     rwa [map_natCast] at this
-  haveI : CharP k (X.l i) := (CharP.charP_iff_prime_eq_zero Fact.out).2 (hchar k hk)
+  have : CharP k (X.l i) := (CharP.charP_iff_prime_eq_zero Fact.out).2 (hchar k hk)
   have hloc := fun a : Fin R => _root_.GlobalTheory.TameRel.tame_relation hT D.host.E N.Om (X.l i) M (N.plOm.1 (P (.inr a))) (P (.inr a)) (N.plOm.2 _)
     (fun h => (hAux.1 (.inr a) _ (over_refl _)).2.2.2.1 (X.twistExcludedPlaces_contains_residueChar i h)) hM (hAux.1 (.inr a) _ (over_refl _)).2.2.2.2.2
     (d (.inr a)) (hAux.2.2 _).1 ((hAux.2.2 _).2.2.2.2 _ (over_refl _) _ (N.plOm.2 _)) (φ a) (hPa a).2.1
@@ -1323,11 +1323,11 @@ theorem core (hT : TameQuotient) (hG : GalHyp bkP i s) (hF : FirstHalf i s) (hR 
       have e1 : (fun j => cl (z0 j)) = E ∘ x0 := funext hz0
       rwa [e1]
   obtain ⟨K, _, _, σ, hK⟩ := _root_.GlobalTheory.laurent_degeneration k
-  letI : Algebra (X.O0 i) K := ((algebraMap k K).comp (algebraMap (X.O0 i) k)).toAlgebra
-  haveI : IsScalarTower (X.O0 i) k K := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra (X.O0 i) K := ((algebraMap k K).comp (algebraMap (X.O0 i) k)).toAlgebra
+  have : IsScalarTower (X.O0 i) k K := IsScalarTower.of_algebraMap_eq' rfl
   have hKr : IsRes i K := fun x hx => by
     rw [IsScalarTower.algebraMap_apply (X.O0 i) k K, hk x hx, map_zero]
-  haveI : CharP K (X.l i) := (CharP.charP_iff_prime_eq_zero Fact.out).2 (hchar K hKr)
+  have : CharP K (X.l i) := (CharP.charP_iff_prime_eq_zero Fact.out).2 (hchar K hKr)
   let cst : ZMod (X.l i ^ M) →+* K := ZMod.castHom (dvd_pow_self _ (by omega)) K
   let β : Fin R → K := fun a => σ * algebraMap k K (sl a)
   let b : Fin R ⊕ Fin R → K :=
@@ -1379,8 +1379,8 @@ theorem core (hT : TameQuotient) (hG : GalHyp bkP i s) (hF : FirstHalf i s) (hR 
     simp only [lam, map_mul, toAdd_mul, map_add (f := _), mul_add, Finset.sum_add_distrib, neg_add]
   have hlamc : IsLocallyConstant lam := by
     have h1 : ∀ q, IsLocallyConstant (d q) := fun q => by
-      letI : TopologicalSpace (Multiplicative (ZMod (X.l i ^ M))) := ⊥
-      haveI : DiscreteTopology (Multiplicative (ZMod (X.l i ^ M))) := ⟨rfl⟩
+      let : TopologicalSpace (Multiplicative (ZMod (X.l i ^ M))) := ⊥
+      have : DiscreteTopology (Multiplicative (ZMod (X.l i ^ M))) := ⟨rfl⟩
       rw [IsLocallyConstant.iff_continuous]
       refine continuous_of_continuousAt_one (d q) ?_
       rw [ContinuousAt, map_one, nhds_discrete (Multiplicative (ZMod (X.l i ^ M))), Filter.tendsto_pure]

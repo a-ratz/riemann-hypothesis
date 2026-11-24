@@ -90,7 +90,7 @@ theorem mem_algebraicClosure_of_norm_le :
   have hx0 : x ≠ 0 := by
     rintro rfl
     exact hx isAlgebraic_zero
-  haveI : Algebra.IsAlgebraic ℚ (algebraicClosure ℚ ℂ) := algebraicClosure.isAlgebraic ℚ ℂ
+  have : Algebra.IsAlgebraic ℚ (algebraicClosure ℚ ℂ) := algebraicClosure.isAlgebraic ℚ ℂ
   have hx' : Transcendental (algebraicClosure ℚ ℂ) x := fun ha =>
     hx (ha.restrictScalars ℚ)
   have hq1 : (1 : ℝ) < q := by exact_mod_cast hq.out.one_lt

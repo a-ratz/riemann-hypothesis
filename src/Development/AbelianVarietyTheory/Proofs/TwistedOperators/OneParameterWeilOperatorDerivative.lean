@@ -328,10 +328,10 @@ theorem GlobalTheory.ArchLineAct.intertwine : ∀ {F E : Type} [Field F] [Number
   have hmat1 : mat (1 : UA σ G.W.J) = 1 := rfl
   refine ⟨fun t => GlobalTheory.ArchLineAct.archMap G.M.co (L t), fun w => ?_, fun s t => ?_, ?_, fun t p q f g hg => ?_⟩
   · have hm : Continuous fun t : ℝ => (mat (γ (Multiplicative.ofAdd t)))ᵀ :=
-      (Units.continuous_val.comp (continuous_subtype_val.comp (hγ.1.comp continuous_ofAdd))).matrix_transpose
+      (Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.1.comp continuous_ofAdd))).matrix_transpose
     set u := G.M.co.e.symm (GlobalTheory.ArchLineAct.archLift w.1, GlobalTheory.ArchLineAct.archLift w.2) with hu
     let K := G.M.co.e.toLinearMap ∘ₗ (GlobalTheory.ArchLineAct.lmulL (k := a + a') u)
-    haveI : IsModuleTopology (AF F) (Matrix (Fin (a + a')) (Fin (a + a')) (AE F E)) :=
+    have : IsModuleTopology (AF F) (Matrix (Fin (a + a')) (Fin (a + a')) (AE F E)) :=
       inferInstanceAs (IsModuleTopology (AF F) (Fin (a + a') → Fin (a + a') → AE F E))
     have hK : Continuous K := IsModuleTopology.continuous_of_linearMap K
     have hc : Continuous fun t : ℝ => G.M.co.e (L t u) := hK.comp hm

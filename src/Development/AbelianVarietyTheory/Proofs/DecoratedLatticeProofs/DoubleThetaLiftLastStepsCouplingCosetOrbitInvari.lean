@@ -97,8 +97,8 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ}
 theorem setIntegral_mul_right {V : HSp D} (v : Vol V) (G : GA D V → ℂ) (hG : ∀ γ ∈ GQ V, ∀ h, G (γ * h) = G h)
     (a : GA D V) : ∫ h in v.𝓕, G (h * a) ∂v.μ = ∫ h in v.𝓕, G h ∂v.μ := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := v.haar
-  haveI : v.μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V v.μ v.haar
+  have := v.haar
+  have : v.μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V v.μ v.haar
   have hmp : MeasurePreserving (· * a) v.μ v.μ := measurePreserving_mul_right _ a
   have hmp' : MeasurePreserving (· * a⁻¹) v.μ v.μ := measurePreserving_mul_right _ a⁻¹
   rw [← hmp.setIntegral_image_emb (measurableEmbedding_mulRight a) G v.𝓕, Set.image_mul_right]
@@ -286,7 +286,7 @@ theorem cosetInd_move {g : GL (n ⊕ Fin 0) k} (hg : g ∈ KO k _) (c : kˣ) (y 
       change ((blk g)⁻¹).val *ᵥ _ ∈ _ at this
       rwa [mulVec_sub, mulVec_mulVec y, Units.inv_mul, one_mulVec] at this
   classical
-  simp only [cosetInd, Set.indicator_apply, Set.mem_setOf_eq, h]
+  simp only [cosetInd, Set.indicator_apply, Set.mem_ofPred_eq, h]
 
 variable {s : ℕ} {X : ℕ → Type} [∀ j, Fintype (X j)] [∀ j, DecidableEq (X j)] {Z : Type} [Fintype Z] [DecidableEq Z]
 
@@ -430,7 +430,7 @@ theorem lst_model {D : D7} {c : GlobalTheory.SeeSaw.Comm D} {v : GlobalTheory.Se
   let O₂' : SB _ := ⟨_, intInd_mem_SB (k := Q.k) Q.Z (Q.X (Q.s + 1))⟩
   have b₁ : flatBF s₁ (T₁ O₁) = U₁ O₁' := hfl O₁ O₁' (by
     have := (GlobalTheory.LocFlat.flat_contr_intIndicator Q.k Q.ψk Q.ν Q.cond Q.unitVol (Q.X (Q.s + 1)) (Q.X Q.s) Unit 0 (0 + 1)).1
-    rw [if_neg (by omega)] at this
+    rw [ite_eq_right (by omega)] at this
     exact this.symm)
   have b₂ := hext O₂ O₂' fun x => by
     have hx : (∀ r q, x r q ∈ 𝒪[Q.k]) ↔ ∀ r (q : Q.X (Q.s + 1) ⊕ Fin 0), (fromCols x 0) r q ∈ 𝒪[Q.k] := by
@@ -438,7 +438,7 @@ theorem lst_model {D : D7} {c : GlobalTheory.SeeSaw.Comm D} {v : GlobalTheory.Se
       rcases q with q | q
       · exact hx r q
       · exact q.elim0
-    simp only [O₂, O₂', Set.indicator_apply, Set.mem_setOf_eq, hx]
+    simp only [O₂, O₂', Set.indicator_apply, Set.mem_ofPred_eq, hx]
   obtain ⟨Λ, hΛ, hK⟩ := _root_.GlobalTheory.LastKerLoc.lastLoc D Q.k (ofSplit Q.q) Q.ν Q.unitVol.1 c.ψ hc.std Q.ψk Q.char 0 (c.B Q.s 0 h) (c.X (Q.s + 1))
     (c.X (Q.s + 1 + 1)) c.T c.Lz (c.oT (Q.s + 1 + 1) h) (v.τ Q.s h) hr hτ (Q.sc Q.s) Q.z₀ hsc (Q.tau h) _ _ _
     (Q.FX Q.s (by omega)) F₀ (Q.FX (Q.s + 1) le_rfl) Q.FT Q.FM hF₀ Q.last U₁ U₂ hU₁ hU₂

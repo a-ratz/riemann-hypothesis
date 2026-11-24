@@ -49,7 +49,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.infOf :
   intro F Ω _ _ _ _ _ P hP hfin
   have hopen : ∀ Q : QCM F Ω, IsOpen ((Q.K.fixingSubgroup : Subgroup (G F Ω)) : Set (G F Ω)) := by
     intro Q
-    haveI : FiniteDimensional F ↥Q.K :=
+    have : FiniteDimensional F ↥Q.K :=
       Module.finite_of_finrank_pos (by rw [Q.two]; exact two_pos)
     exact IntermediateField.fixingSubgroup_isOpen Q.K
   have hS : (⋃ Q ∈ {Q | P Q}, {u : HeightOneSpectrum (𝓞 F) | ∃ A : ValuationSubring Ω,

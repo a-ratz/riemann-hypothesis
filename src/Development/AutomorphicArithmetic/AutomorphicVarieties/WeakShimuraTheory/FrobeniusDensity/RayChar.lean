@@ -214,12 +214,12 @@ end UpperTheory.V.Ws.Tw
 theorem UpperTheory.V.Ws.Tw.rayChar :
     ∀ (K Ω : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] (𝔪 : Ideal (𝓞 K)), 𝔪 ≠ ⊥ → ∀ (C : Type) [CommGroup C] (f : Ideal (𝓞 K) → C), (∀ I J, I ≠ ⊥ → J ≠ ⊥ → IsCoprime I 𝔪 → IsCoprime J 𝔪 → f (I * J) = f I * f J) → (∀ a : 𝓞 K, a ≠ 0 → a - 1 ∈ 𝔪 → f (Ideal.span {a}) = 1) → ∃ κ : G K Ω →* C, IsOpen (κ.ker : Set (G K Ω)) ∧ ∀ w : HeightOneSpectrum (𝓞 K), ¬ w.asIdeal ∣ 𝔪 → ∀ A : ValuationSubring Ω, IsPlaceOver A w → Ine (F := K) A ≤ κ.ker ∧ ∀ σ : G K Ω, IsFrob A (normV w) σ → κ σ = f w.asIdeal := by
   intro K Ω _ _ _ _ _ _ 𝔪 h𝔪 C _ f hm h1
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   let M : GroundTheory.Global.Modulus K := ⟨𝔪, h𝔪, ∅⟩
   obtain ⟨F, hF⟩ := rc_hom M f hm h1
-  haveI : NumberField (M.rayClassField Ω) := NumberField.of_module_finite K _
-  haveI : Algebra.IsAlgebraic (M.rayClassField Ω) Ω := Algebra.IsAlgebraic.tower_top (K := K) _
-  haveI : IsAlgClosure (M.rayClassField Ω) Ω := ⟨inferInstance, inferInstance⟩
+  have : NumberField (M.rayClassField Ω) := NumberField.of_module_finite K _
+  have : Algebra.IsAlgebraic (M.rayClassField Ω) Ω := Algebra.IsAlgebraic.tower_top (K := K) _
+  have : IsAlgClosure (M.rayClassField Ω) Ω := ⟨inferInstance, inferInstance⟩
   let r : G K Ω →* (M.rayClassField Ω ≃ₐ[K] M.rayClassField Ω) := AlgEquiv.restrictNormalHom (M.rayClassField Ω)
   let κ : G K Ω →* C := (F.comp (M.rayClassArtinEquiv Ω).symm.toMonoidHom).comp r
   have hker : r.ker ≤ κ.ker := fun σ hσ => by
@@ -237,7 +237,7 @@ theorem UpperTheory.V.Ws.Tw.rayChar :
     · have := CompanionTheory.FamInh.res_mem_inertia hu hσ
       rw [hI] at this
       exact this
-    · haveI : Finite (𝓞 (M.rayClassField Ω) ⧸ u.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ u.ne_bot
+    · have : Finite (𝓞 (M.rayClassField Ω) ⧸ u.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ u.ne_bot
       have e : r σ = M.rayClassArtinEquiv Ω (M.primeClass hw) := by
         rw [M.rayClassArtinEquiv_primeClass Ω hw u]
         exact GroundTheory.Global.IsArithFrobAt.eq_of_inertia_eq_bot (R := 𝓞 K) hI

@@ -126,7 +126,7 @@ theorem exists_majorant_pureA {κ : Type} [Fintype κ] {g : (κ → FiniteAdeleR
   have hK : IsCompact ((fun y => y - xf) '' tsupport g) :=
     hg.2.isCompact.image (continuous_id.sub continuous_const)
   obtain ⟨N, hN, hKN⟩ := GlobalTheory.WeilM.exists_nat_mul_integral_of_isCompact F hK
-  haveI := GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
+  have := GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
   let v : (κ → F) → (κ → mixedEmbedding.mixedSpace F) := fun ξ j => mixedEmbedding F (ξ j)
   let S : Set (κ → F) := {ξ | v ξ ∈ GlobalTheory.WeilM.denomLattice F κ N}
   let k := Module.finrank ℤ (GlobalTheory.WeilM.denomLattice F κ N) + 1

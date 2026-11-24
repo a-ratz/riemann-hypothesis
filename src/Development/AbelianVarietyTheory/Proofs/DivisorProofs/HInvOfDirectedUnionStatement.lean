@@ -283,7 +283,7 @@ noncomputable def cocone : Cocone (diag S hS) where
 
 theorem cocone_isColimit [IsDirected ι (· ≤ ·)] [Nonempty ι] (hcov : ∀ a, ∃ i, a ∈ S i) :
     Nonempty (IsColimit (cocone S hS)) := by
-  haveI : ReflectsColimitsOfShape ι (forget CommRingCat.{0}) :=
+  have : ReflectsColimitsOfShape ι (forget CommRingCat.{0}) :=
     reflectsColimitsOfShape_of_reflectsIsomorphisms
   refine ⟨isColimitOfReflects (forget CommRingCat.{0}) ?_⟩
   refine Types.FilteredColimit.isColimitOf _ _ ?_ ?_

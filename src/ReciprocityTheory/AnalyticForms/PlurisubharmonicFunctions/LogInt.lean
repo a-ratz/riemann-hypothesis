@@ -83,14 +83,14 @@ theorem locallyIntegrable_comp_eval_fin {D : ℕ} (i : Fin D) {g : ℂ → ℝ}
   refine hI.congr (Filter.Eventually.of_forall fun z => ?_)
   beta_reduce
   by_cases hz : z ∈ Set.pi Set.univ (fun j => Metric.closedBall (x j) (1 : ℝ))
-  · rw [Set.indicator_apply, if_pos hz]
+  · rw [Set.indicator_apply, ite_eq_left hz]
     rw [Set.mem_univ_pi] at hz
     rw [Finset.prod_eq_single i]
     · simp [Set.indicator_apply, hz i]
     · intro j _ hj
       simp [hj, Set.indicator_apply, hz j]
     · simp
-  · rw [Set.indicator_apply, if_neg hz]
+  · rw [Set.indicator_apply, ite_eq_right hz]
     rw [Set.mem_univ_pi] at hz
     push_neg at hz
     obtain ⟨j, hj⟩ := hz

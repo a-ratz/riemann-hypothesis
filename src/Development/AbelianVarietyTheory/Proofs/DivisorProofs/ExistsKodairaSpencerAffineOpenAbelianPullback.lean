@@ -217,7 +217,7 @@ theorem exists_isKS_of_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   intro E _ _ _ H X t V U hUV t' ⟨m'⟩ hP hA hK n v hv hb D
   obtain ⟨u, m, ⟨cp⟩⟩ := exists_pull_chart (chart U) t
   obtain ⟨hP', hA', hK'⟩ := proper_ample_kTriv m' m hP hA hK
-  haveI : IsOpenImmersion (chart U) := U.2.isOpenImmersion_fromSpec
+  have : IsOpenImmersion (chart U) := U.2.isOpenImmersion_fromSpec
   let U' : (Sp Γ(X, U.1)).affineOpens := ⟨⊤, isAffineOpen_top _⟩
   have hU : chart U ''ᵁ U'.1 = U.1 := by
     show chart U ''ᵁ ⊤ = U.1

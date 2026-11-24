@@ -71,7 +71,7 @@ theorem UpperTheory.V.Lit.Dr.corrCochain :
     refine mat_cancel Ξ y ?_
     have h1 := h (y * Unitary.toUnits k) x X
     rw [← h y x, Matrix.mulVec_mulVec, ← map_mul, mul_assoc, ← infGL_comm, ← mul_assoc, ← map_mul, ← h1]
-    simp only [map_mul, ContinuousLinearMap.mul_apply, sand_unit_one, sand_unit_hv]
+    simp only [map_mul, mul_apply_eq_comp, sand_unit_one, sand_unit_hv]
   · rw [← infGL_mul_finGL g]
     generalize GeneralLinearGroup.map (pInf E) g = y
     generalize GeneralLinearGroup.map (pFin E) g = x

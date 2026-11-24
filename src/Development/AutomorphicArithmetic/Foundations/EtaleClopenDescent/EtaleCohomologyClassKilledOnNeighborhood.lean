@@ -849,7 +849,7 @@ section Main
 private theorem sys_of {q : ℕ} [NeZero q] (i : ℤ) {B W Y : Scheme.{0}} (ι : W ⟶ B) [IsClosedImmersion ι] (p : Y ⟶ B)
     (hp : IsProper p) (U : B.Etale) (R : CommRingCat.{0}) (e : U.left ≅ Spec R) (m : ℤ) (u : U.left)
     (hq : IsUnit (q : R)) (hA : A2) (hB : B1) : Nonempty (Sys q i p ι U m u) := by
-  haveI := hp
+  have := hp
   obtain ⟨J, _, _, D, c, hc, uu, hSH, hE⟩ := LateralTheory.Fin.StrictHenselization.intersectionNumber_baseChange R (e.hom u)
   obtain ⟨uj, huj⟩ : ∃ uj : ∀ j, R ⟶ D.obj j, ∀ j, uj j = uu.app j := ⟨fun j => uu.app j, fun _ => rfl⟩
   have hu : ∀ {j k : J} (f : j ⟶ k), uj j ≫ D.map f = uj k := by
@@ -865,8 +865,8 @@ private theorem sys_of {q : ℕ} [NeZero q] (i : ℤ) {B W Y : Scheme.{0}} (ι :
     exact a1.trans a2.symm
   have hEt : ∀ j, Etale (((Spec.map (uj j) ≫ e.inv) ≫ U.hom : Spec (D.obj j) ⟶ B)) := by
     intro j
-    haveI : Etale (Spec.map (uj j)) := HasRingHomProperty.Spec_iff.mpr (by rw [huj]; exact (hE j).1)
-    haveI : Etale U.hom := U.prop
+    have : Etale (Spec.map (uj j)) := HasRingHomProperty.Spec_iff.mpr (by rw [huj]; exact (hE j).1)
+    have : Etale U.hom := U.prop
     infer_instance
   let π : Spec R ⟶ B := e.inv ≫ U.hom
   let s : ∀ j, Spec (D.obj j) ⟶ B := fun j => (Spec.map (uj j) ≫ e.inv) ≫ U.hom
@@ -1150,9 +1150,9 @@ private lemma shrink (q : ℕ) (i : ℤ) (p : Y ⟶ B) (ι : W ⟶ B) (U U' : B.
         pull (ZMod q) (sch.map f) (tw q i) n (pull (ZMod q) (sch.map g) (tw q i) n y) := by
     intro X1 X2 X3 f g n y
     rw [CategoryTheory.Functor.map_comp, pull_comp]
-  letI := S.cat
-  letI := S.ring
-  haveI := S.filt
+  let := S.cat
+  let := S.ring
+  have := S.filt
   refine ⟨Sys.mk S.J S.V (fun j => S.a j ≫ a) ?_ S.tr S.tr_id S.tr_comp ?_ S.A S.sh
     (S.t ≫ a.left) (fun j => mY p _ _ (𝟙 _) hu ≫ S.gY j) (fun j => mW p ι _ _ (𝟙 _) hu ≫ S.gW j)
     ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_⟩

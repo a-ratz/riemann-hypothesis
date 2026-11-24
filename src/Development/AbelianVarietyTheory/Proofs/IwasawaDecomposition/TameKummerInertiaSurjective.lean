@@ -122,7 +122,7 @@ theorem exists_unit_denominator {E : Type u_1} {Ω : Type u_2} [inst : Field E] 
 
   have hJle : ∀ z ∈ (J : Submodule (𝓞 E) E), A.valuation (ι z) ≤ 1 := by
     intro z hz
-    rw [FractionalIdeal.coe_sup, Submodule.mem_sup] at hz
+    rw [FractionalIdeal.coeToSubmodule_sup, Submodule.mem_sup] at hz
     obtain ⟨a, ha, b, hb, rfl⟩ := hz
     obtain ⟨a', rfl⟩ := (FractionalIdeal.mem_one_iff _).mp ha
     obtain ⟨b', rfl⟩ := (FractionalIdeal.mem_spanSingleton _).mp hb
@@ -144,7 +144,7 @@ theorem exists_unit_denominator {E : Type u_1} {Ω : Type u_2} [inst : Field E] 
     refine lt_of_le_of_ne (valuation_integer_le_one ι A s) fun h => hne s t h ?_
     exact ht.symm
   have hle : ((J * J⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) ≤ P := by
-    rw [FractionalIdeal.coe_mul]
+    rw [FractionalIdeal.coeToSubmodule_mul]
     refine Submodule.mul_le.mpr fun z hz y hy => ?_
     show A.valuation (ι (z * y)) < 1
     rw [map_mul, map_mul]
@@ -248,7 +248,7 @@ theorem index_one_root : ∀ (E K : Type) [Field E] [NumberField E] [Field K] [N
   intro E K _ _ _ _ _ v P _ hPv he g hgv hgv2 k Z hZ
   by_contra hk
   push Not at hk
-  haveI : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
+  have : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
   have he' : Ideal.ramificationIdx' v.asIdeal P = 1 := by
     rw [Ideal.ramificationIdx'_eq_ramificationIdx v.asIdeal P v.ne_bot]; exact he
   have hmap : Ideal.map (algebraMap (𝓞 E) (𝓞 K)) v.asIdeal ≤ P :=
@@ -282,7 +282,7 @@ theorem index_one_root : ∀ (E K : Type) [Field E] [NumberField E] [Field K] [N
   obtain ⟨j, hjJ, hjv⟩ := Set.not_subset.1 hJv
   have hjP : algebraMap (𝓞 E) (𝓞 K) j ∉ P := by
     intro h; apply hjv; rw [← hPv]; exact h
-  haveI hPmax : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 E) P
+  have hPmax : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 E) P
     (by rw [hPv]; exact v.isMaximal)
   have hrad : (P ^ 2).radical = P := by rw [Ideal.radical_pow _ two_ne_zero, hPmax.isPrime.radical]
   have hprim : (P ^ 2).IsPrimary := Ideal.isPrimary_of_isMaximal_radical (by rw [hrad]; exact hPmax)
@@ -301,9 +301,9 @@ theorem tame_kummer_surj : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω
   intro E Ω _ _ _ _ _ A v hA g _ hgv hgv2 m hm hgm Y μ hY hμ
   have hgp : g.Prime := Fact.out
   have hg := GlobalTheory.TameCoupledEx.val_g_lt A v hA hgv
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : NeZero m := ⟨hm.ne'⟩
   have hg0 : ((g : ℕ) : Ω) ≠ 0 := Nat.cast_ne_zero.2 hgp.ne_zero
   have hY0 : Y ≠ 0 := GlobalTheory.TameCoupledEx.ne_zero_of_pow_eq hgp hm hY
   have hpow : ∀ σ : G E Ω, (σ Y / Y) ^ m = 1 := fun σ => tameQuot_pow σ hg0 hY
@@ -342,17 +342,17 @@ theorem tame_kummer_surj : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω
   have hZn : Z ^ n = ((g : ℕ) : Ω) := by rw [hZ, ← pow_mul, hnd, hY]
   have hn1 : n ≤ 1 := by
     have hZi : IsIntegral E Z := Algebra.IsIntegral.isIntegral Z
-    haveI : FiniteDimensional E (IntermediateField.adjoin E {Z}) := IntermediateField.adjoin.finiteDimensional hZi
+    have : FiniteDimensional E (IntermediateField.adjoin E {Z}) := IntermediateField.adjoin.finiteDimensional hZi
     set L := IntermediateField.normalClosure E (IntermediateField.adjoin E {Z}) Ω with hLdef
-    haveI : NumberField L := NumberField.of_module_finite E L
+    have : NumberField L := NumberField.of_module_finite E L
     have hZL : Z ∈ L := IntermediateField.le_normalClosure _ (IntermediateField.mem_adjoin_simple_self E Z)
     set Z' : L := ⟨Z, hZL⟩ with hZ'
     set K : IntermediateField E L := IntermediateField.adjoin E {Z'} with hK
-    haveI : NumberField K := NumberField.of_module_finite E K
+    have : NumberField K := NumberField.of_module_finite E K
     let f : 𝓞 L →+* A := ((algebraMap L Ω).comp (algebraMap (𝓞 L) L)).codRestrict A.toSubring
       (fun x => ReciprocityTheory.Gal.mem_of_isIntegral_int A ((x.isIntegral_coe.map (IsScalarTower.toAlgHom ℤ L Ω))))
     set Q : Ideal (𝓞 L) := (IsLocalRing.maximalIdeal A).comap f with hQ
-    haveI : Q.IsPrime := Ideal.comap_isPrime f _
+    have : Q.IsPrime := Ideal.comap_isPrime f _
     have hQmem : ∀ x : 𝓞 L, x ∈ Q ↔ A.valuation (((x : L) : Ω)) < 1 := fun x =>
       Ideal.mem_comap.trans (ValuationSubring.valuation_lt_one_iff A (f x))
     have hfixK : ∀ σ ∈ Ine (F := E) A, ∀ y : K, σ (((y : L) : Ω)) = ((y : L) : Ω) := by

@@ -149,14 +149,14 @@ theorem matR_injective : Function.Injective (matR Ψ G) :=
   fun _ _ h => Subtype.ext (funext fun i => Units.ext (congrFun h i))
 
 theorem continuous_matR : Continuous (matR Ψ G) :=
-  continuous_pi fun i => Units.continuous_val.comp ((continuous_apply i).comp continuous_subtype_val)
+  continuous_pi fun i => Units.continuous_val.comp ((continuous_apply i).comp continuous_subtypeVal)
 
 theorem matR_one : matR Ψ G 1 = 1 := rfl
 
 theorem continuous_chartExp (hG : G.det ≠ 0) : Continuous (chartExp Ψ G hG) := by
   refine Continuous.subtype_mk (continuous_pi fun i => Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact GlobalTheory.UpqExpChart.continuous_matExp.comp ((continuous_apply i).comp continuous_subtype_val)
-  · exact GlobalTheory.UpqExpChart.continuous_matExp.comp ((continuous_apply i).comp continuous_subtype_val).neg
+  · exact GlobalTheory.UpqExpChart.continuous_matExp.comp ((continuous_apply i).comp continuous_subtypeVal)
+  · exact GlobalTheory.UpqExpChart.continuous_matExp.comp ((continuous_apply i).comp continuous_subtypeVal).neg
 
 theorem chartExp_zero (hG : G.det ≠ 0) : chartExp Ψ G hG 0 = 1 :=
   matR_injective Ψ G (funext fun i => NormedSpace.exp_zero (𝔸 := Matrix (Fin r) (Fin r) ℂ))
@@ -323,7 +323,7 @@ theorem tangentHaar_realSU_of_det [NumberField E] [NumberField.IsCMField E] (hG 
     (fun t ht => (chart_squeeze Ψ G hG ht).mono fun ε h => ⟨measure_mono h.1, measure_mono h.2⟩)
   have hν : ∀ ε : ℝ, 0 < ε → (lam.map Subtype.val) (tanBall Ψ r ε) = lam (ball 0 ε) := by
     intro ε hε
-    rw [Measure.map_apply measurable_subtype_coe, preimage_tanBall Ψ G hε]
+    rw [Measure.map_apply measurable_subtypeVal, preimage_tanBall Ψ G hε]
     rw [show tanBall Ψ r ε = ball (0 : Ψ → Fin r → Fin r → ℂ) ε by
       ext X; rw [mem_ball_zero_iff, pi_norm_lt_iff hε]; simp only [pi_norm_lt_iff hε]; rfl]
     exact measurableSet_ball
@@ -345,7 +345,7 @@ theorem tangentHaar_realSU_of_det [NumberField E] [NumberField.IsCMField E] (hG 
   have := ENNReal.Tendsto.const_mul hA (Or.inr (ENNReal.inv_ne_top.2 hc0)) (a := c⁻¹)
   rw [ENNReal.inv_mul_cancel hc0 hct] at this
   refine this.congr fun ε => ?_
-  rw [Measure.smul_apply, smul_eq_mul, mul_div_assoc]
+  rw [smul_apply, smul_eq_mul, mul_div_assoc]
 
 end Density
 
@@ -368,7 +368,7 @@ theorem tangentHaar_realSU_of_map [NumberField E] [NumberField.IsCMField E] (hG 
   let φ : V ≃L[ℝ] realLie Ψ G := (LinearEquiv.ofBijective Φ' hb).toContinuousLinearEquiv
   have : (μ.map φ).IsAddHaarMeasure := φ.isAddHaarMeasure_map μ
   have e : μ.map Φ = (μ.map φ).map Subtype.val := by
-    rw [Measure.map_map measurable_subtype_coe φ.continuous.measurable]
+    rw [Measure.map_map measurable_subtypeVal φ.continuous.measurable]
     rfl
   rw [e]
   exact tangentHaar_realSU_of_det Ψ G hG (μ.map φ)

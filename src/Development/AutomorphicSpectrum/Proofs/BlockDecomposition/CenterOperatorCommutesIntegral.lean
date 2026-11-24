@@ -177,7 +177,7 @@ theorem int_sm {U : ℝ → Mat n → V} {g : ℝ → ℝ} {T : ℝ} (hU : Sm U)
 theorem rd_avg [CompleteSpace V] (X : Mat n) {U : ℝ → Mat n → V} {g : ℝ → ℝ} {T : ℝ} (hU : Sm U) (hg : IsBump g T)
     {x : Mat n} (hx : x ∈ GLs n) :
     Rd X (fun x' => ∫ t, (g t : ℂ) • U t x') x = ∫ t, (g t : ℂ) • Rd X (U t) x := by
-  haveI : ProperSpace (Mat n) := FiniteDimensional.proper ℝ _
+  have : ProperSpace (Mat n) := FiniteDimensional.proper ℝ _
   simp only [Complex.coe_smul]
   exact gen_avg (isOpen_invertible_matrices n) hU hg.1.continuous (bump_support hg) hx (x * X)
 

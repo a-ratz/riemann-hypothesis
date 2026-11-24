@@ -752,7 +752,7 @@ theorem eq_of_comp_schemeDominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y 
     (d : W ⟶ X) [IsSchemeTheoreticallyDominant d] (hU : d ≫ f = d ≫ g) : f = g := by
   let f' : Over.mk (f ≫ s) ⟶ Over.mk s := Over.homMk f
   let g' : Over.mk (f ≫ s) ⟶ Over.mk s := Over.homMk g h.symm
-  haveI : IsSeparated (Over.mk s).hom := ‹IsSeparated s›
+  have : IsSeparated (Over.mk s).hom := ‹IsSeparated s›
   let d' : Over.mk (d ≫ f ≫ s) ⟶ Over.mk (f ≫ s) := Over.homMk d
   have e : d' ≫ f' = d' ≫ g' := Over.OverMorphism.ext hU
   let l := equalizer.lift d' e
@@ -762,14 +762,14 @@ theorem eq_of_comp_schemeDominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y 
     apply le_bot_iff.1
     calc _ ≤ (l.left ≫ (equalizer.ι f' g').left).ker := Scheme.Hom.le_ker_comp _ _
       _ = ⊥ := by rw [← hd]; exact d.ker_eq_bot
-  haveI : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
+  have : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
   have h0 : IsIso ((Over.forget Z).map (equalizer.ι f' g')) := (inferInstance : IsIso (equalizer.ι f' g').left)
   have : IsIso (equalizer.ι f' g') := isIso_of_reflects_iso _ (Over.forget Z)
   exact congrArg CommaMorphism.left ((cancel_epi (equalizer.ι f' g')).1 (equalizer.condition f' g'))
 
 theorem schemeDominant_spec_of_injective {A B : Type} [CommRing A] [CommRing B] [_root_.IsReduced A] (φ : A →+* B)
     (hφ : Function.Injective φ) : IsSchemeTheoreticallyDominant (Spec.map (CommRingCat.ofHom φ)) := by
-  haveI : IsDominant (Spec.map (CommRingCat.ofHom φ)) := by
+  have : IsDominant (Spec.map (CommRingCat.ofHom φ)) := by
     rw [isDominant_iff]
     show DenseRange (PrimeSpectrum.comap φ)
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical, (RingHom.injective_iff_ker_eq_bot φ).1 hφ]
@@ -778,7 +778,7 @@ theorem schemeDominant_spec_of_injective {A B : Type} [CommRing A] [CommRing B] 
 
 theorem act_comm_of_torsion : Laws → EndDeterminedOnTorsionSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] (S : Scheme.{0}) (s : Sp R ⟶ S) (B : PolAV (Sp R)) (B₀ : PolAV S) (ρ : letI := H.starRing; B.OAct (𝓞 E)) (ρ₀ : letI := H.starRing; B₀.OAct (𝓞 E)) (ψ : B.A.left ⟶ B₀.A.left), IsGrpPullback B.A B₀.A s ψ → LBIso B.L (B₀.L.pull ψ) → ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZero C] [Algebra (FractionRing R) C] (n : ℕ), 2 ≤ n → ∀ x : 𝓞 E, (letI := H.starRing; (∀ (j : ℕ) (y : TF (R := R) C ⟶ B.A), y ^ n ^ j = 1 → (y ≫ ρ.act x).left ≫ ψ = y.left ≫ ψ ≫ (ρ₀.act x).left) → (ρ.act x).left ≫ ψ = ψ ≫ (ρ₀.act x).left) := by
   intro hL h₂ E _ _ _ H R _ _ _ S s B B₀ ρ ρ₀ ψ hψ hw C _ _ _ _ n hn x h
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨ρ', hρ'⟩ := polOActPull _ _ s B₀ B ψ hψ hw.symm (𝓞 E) ρ₀
   obtain ⟨P, g, hg, -, hm, ht⟩ := hL.polBaseChange _ _ (TF (R := R) C).hom B
   have gp : IsGrpPullback P.A B.A (TF (R := R) C).hom g := ⟨hg, fun T a b a₀ b₀ ha hb => by
@@ -807,15 +807,15 @@ theorem act_comm_of_torsion : Laws → EndDeterminedOnTorsionSt → ∀ (E : Typ
       rw [Over.comp_left, Over.comp_left, Category.assoc, Category.assoc, hσ, hσ']
       simpa only [Category.assoc] using e'
   rw [Iso.refl_hom, Category.comp_id, Category.id_comp] at key
-  haveI : IsSchemeTheoreticallyDominant (jK R) := schemeDominant_spec_of_injective _ (IsFractionRing.injective R _)
-  haveI : IsSchemeTheoreticallyDominant (jFK (R := R) C) := schemeDominant_spec_of_injective _ (RingHom.injective _)
-  haveI : IsSchemeTheoreticallyDominant (TF (R := R) C).hom := by
+  have : IsSchemeTheoreticallyDominant (jK R) := schemeDominant_spec_of_injective _ (IsFractionRing.injective R _)
+  have : IsSchemeTheoreticallyDominant (jFK (R := R) C) := schemeDominant_spec_of_injective _ (RingHom.injective _)
+  have : IsSchemeTheoreticallyDominant (TF (R := R) C).hom := by
     show IsSchemeTheoreticallyDominant (_ ≫ _); infer_instance
-  haveI := B.isAb.proper
-  haveI := B.isAb.smooth
-  haveI : QuasiCompact (TF (R := R) C).hom := by
+  have := B.isAb.proper
+  have := B.isAb.smooth
+  have : QuasiCompact (TF (R := R) C).hom := by
     show QuasiCompact (spMap (algebraMap (FractionRing R) C) ≫ spMap (algebraMap R (FractionRing R))); infer_instance
-  haveI : IsSchemeTheoreticallyDominant g := IsSchemeTheoreticallyDominant.of_isPullback hg.flip
+  have : IsSchemeTheoreticallyDominant g := IsSchemeTheoreticallyDominant.of_isPullback hg.flip
   rw [← hρ', eq_of_comp_schemeDominant B.A.hom ((Over.w (ρ.act x)).trans (Over.w (ρ'.act x)).symm) g
     (by rw [← hσ, ← hσ', key])]
 
@@ -1012,7 +1012,7 @@ theorem labels_of_four_le : GlobalTheory.UT.LL → BrGtSt → AllS fun {_} _ _ _
   obtain ⟨p₂, hp₂⟩ := (hQk k).2.1 (lower q₁)
   have hy₂ : p₂.y = p₁'.y := hp₂.1.symm.trans hp₁'.1
   have hn₂ : GtPtF.IsNsmul 4 p₁'.g p₂.g := (GtValues.isNsmul_val ν' 4 hp₁'.2 hp₂.2).2 rfl
-  haveI := M.admissible_base_of_complete_dvr.2
+  have := M.admissible_base_of_complete_dvr.2
   have t₂ : M.P.ToA C k p₂ (z₁ ^ 4) :=
     (GlobalTheory.LevelCompat.qkToAkU_level hL M.W (IsLocalRing.maximalIdeal M.W) M.admissible_base_of_complete_dvr.1 M.P.D M.P.A M.t.G M.t.semi
       M.P.U C k 4 (k * 4) hk (by norm_num) rfl p₂ p₁' z₁).2 hy₂ hn₂ t₁
@@ -1199,7 +1199,7 @@ theorem exists_image {C : Type} [CommRing C] {N N' : NumD C} (J : NumD.Iso N N')
 
 theorem main : GlobalTheory.UT.LL → BrGtSt → AllS fun {E} _ _ _ {H} {_} {_} {_} {_} _ {_} {_} _ _ {_} a {_} _ _ A u r {_} M _ {_} ν' J => M.P.TorsionIso → ∀ k : ℕ, 0 < k → Labels A u r M ν' J k → (∀ (x : 𝓞 E) y, ν'.eX (J.e (A.arc.act x y)) = x • ν'.eX (J.e y)) → ∀ (x : 𝓞 E) (y y' : A.N.A), y ^ k = 1 → (letI := H.starRing; A.ν.eA y' = A.ν.eA y ≫ a.oa.onB.act x → ν'.eA (J.φ y') = ν'.eA (J.φ y) ≫ M.P.oD.onB.act x) := by
   intro hL hB E _ _ _ H D l c O _ β O' _ _ _ b a C _ _ _ _ _ _ A u r o M f N' ν' J hr _ hT k hk hlab hlin x y y' hy hy'
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨-, -, -, -, B⟩ := hB O' a.D₀ a.even a.bimult C A.N A.ν
   obtain ⟨-, -, -, -, B'⟩ := hB M.W M.P.D.toPre M.P.D.psi_even M.P.D.tau_bimult C N' ν'
   obtain ⟨t, t₁, -, t₃, -, t₅, -⟩ := hT C k hk
@@ -1349,13 +1349,13 @@ theorem hasArcData_of_model (hV : HV) (h6 : Laws6) (hU : GlobalTheory.LN.UDvrSt)
     (t₁ : RatTors M.P.D.toPre.P C 3)
     (t₂ : ∀ (B : PolAV (Sp M.W)) ψ, IsGrpPullback B.A a.D₀.P.A (spMap f) ψ → RatTors B C 3) :
     Y.HasArcData a (IsLocalRing.maximalIdeal M.W) f u₀ χ := by
-  letI := H.starRing
+  let := H.starRing
   have hLL := hV.1
   obtain ⟨hL, hL2, hL3, hL4, hL5⟩ := hV.1
   have hGt : BrGtSt := GlobalTheory.T.torus_torsion_points_correspond_values
   have : IsNoetherianRing O' := by
     rcases hB with h | h
-    · letI := h.1.toField; infer_instance
+    · let := h.1.toField; infer_instance
     · have := h.1; infer_instance
   have := M.cdv.1
   have := M.cdv.2.2
@@ -1470,7 +1470,7 @@ theorem hasArcData_at_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → Global
   have injW : Function.Injective ((algebraMap (FractionRing W) C).comp (algebraMap W _)) :=
     (algebraMap (FractionRing W) C).injective.comp (IsFractionRing.injective W _)
   have injC : Function.Injective (((algebraMap (FractionRing W) C).comp (algebraMap W _)).comp f₀) := injW.comp inj₀
-  letI : Algebra (FractionRing O') C := (IsFractionRing.lift (K := FractionRing O') injC).toAlgebra
+  let : Algebra (FractionRing O') C := (IsFractionRing.lift (K := FractionRing O') injC).toAlgebra
   have al₀ : Along f₀ C := fun x => (IsFractionRing.lift_algebraMap injC x).symm
   have hu0 : algebraMap (FractionRing W) C (algebraMap W _ (φ (g PowerSeries.X))) ≠ 0 := fun h =>
     PowerSeries.X_ne_zero (hg (hφ (injW (h.trans (by simp)))))

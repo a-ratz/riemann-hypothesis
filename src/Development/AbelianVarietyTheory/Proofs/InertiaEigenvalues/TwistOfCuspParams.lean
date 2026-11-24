@@ -75,8 +75,8 @@ theorem injective_of_cellTie {ρ : Setup D.ntw} {hρ : ρ.Good} {i : D.ntw.Tw} {
   refine (injective_iff_map_eq_zero rd).2 fun x hx => ?_
   have h1 : ((1 : D.ntw.Ok i 0) ⊗ₜ[D.ntw.O i] x : D.ntw.Ok i 0 ⊗[D.ntw.O i] D.nexp.Fm i ((j : ℕ) + 1) b) = 0 :=
     T.injective_rdK 0 (by rw [rdK_tmul, hx, smul_zero, map_zero])
-  haveI : Module.Flat (D.ntw.O i) (FractionRing (D.ntw.O i)) := IsLocalization.flat _ (nonZeroDivisors (D.ntw.O i))
-  haveI : Module.Flat (D.ntw.O i) (D.nexp.Fm i ((j : ℕ) + 1) b) :=
+  have : Module.Flat (D.ntw.O i) (FractionRing (D.ntw.O i)) := IsLocalization.flat _ (nonZeroDivisors (D.ntw.O i))
+  have : Module.Flat (D.ntw.O i) (D.nexp.Fm i ((j : ℕ) + 1) b) :=
     Module.Flat.trans (D.ntw.O i) (FractionRing (D.ntw.O i)) _
   have h2 := Module.Flat.rTensor_preserves_injective_linearMap (M := D.nexp.Fm i ((j : ℕ) + 1) b)
     (Algebra.linearMap (D.ntw.O i) (D.ntw.Ok i 0)) (D.ntw.Ok_inj i 0)

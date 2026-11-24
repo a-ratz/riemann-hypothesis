@@ -1064,7 +1064,7 @@ theorem eventually_unit (y : M2 n) (hy : InG y) :
     simp only [Set.mem_preimage, Finset.mem_coe, Multiset.mem_toFinset, Polynomial.mem_roots hp]
     exact ht
   have hS : IsClosed ({t : ℝ | (M.det).eval (t : ℂ) = 0} \ {0}) :=
-    (hfin.subset Set.diff_subset).isClosed
+    (hfin.subset Set.sdiff_subset).isClosed
   have hnhds : ({t : ℝ | (M.det).eval (t : ℂ) = 0} \ {0})ᶜ ∈ 𝓝 (0 : ℝ) :=
     hS.isOpen_compl.mem_nhds (by simp)
   filter_upwards [nhdsWithin_le_nhds hnhds, self_mem_nhdsWithin] with t ht ht0

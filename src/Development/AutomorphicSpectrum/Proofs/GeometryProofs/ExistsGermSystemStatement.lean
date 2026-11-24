@@ -433,7 +433,7 @@ theorem basis_bc {n : ℕ} {tg : Fin n → (Sp (DualNumber S) ⟶ t.G.left)} (ht
     (hb : ∀ w, IsTanAtG t x w → ∃! a : Fin n → S, IsCombAtG t x tg a w) (w : Sp (DualNumber S₂) ⟶ t.G.left)
     (hw : IsTanAtG t (spMap f ≫ x) w) :
     ∃! a : Fin n → S₂, IsCombAtG t (spMap f ≫ x) (fun i => spMap (GlobalTheory.CompanionTheory.Ar.dualMap f) ≫ tg i) a w := by
-  letI : Algebra S S₂ := f.toAlgebra
+  let : Algebra S S₂ := f.toAlgebra
   obtain ⟨V, _, _, ⟨M⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists X0 t.G S x
   obtain ⟨V', _, _, ⟨M'⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists X0 t.G S₂ (spMap f ≫ x)
   obtain ⟨j, hj, -, hbs⟩ := PositivityTheory.HtPt.Htat.lie_bc X0 t.G S S₂ x V V' M M'
@@ -995,7 +995,7 @@ theorem st_spec {p q : X0} (h : q ⤳ p) : stPt X0 q = spMap (X0.presheaf.stalkS
 theorem genMap_comp (p q : Cpt ξ) (h : q.1 ⤳ p.1) :
     (genMap ξ q).comp (X0.presheaf.stalkSpecializes h).hom = genMap ξ p := by
   have e : spMap ((genMap ξ q).comp (X0.presheaf.stalkSpecializes h).hom) = spMap (genMap ξ p) := by
-    haveI : Mono (stPt X0 p.1) := inferInstanceAs (Mono (X0.fromSpecStalk p.1))
+    have : Mono (stPt X0 p.1) := inferInstanceAs (Mono (X0.fromSpecStalk p.1))
     rw [← cancel_mono (stPt X0 p.1), ← Bc.spMap_cp, Category.assoc, ← st_spec h, ← genMap_from p, ← genMap_from q]
   exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
 

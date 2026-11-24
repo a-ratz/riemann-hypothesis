@@ -84,7 +84,7 @@ theorem SemilocalMaxIdeals.proof (h1 : FibreFinite.Statement.{u}) (h2 : FibreRel
     by_contra hne
     have := h₁.1.isPrime
     have := h₂.1.isPrime
-    obtain ⟨f, hf₂, hf₁⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+    obtain ⟨f, hf₂, hf₁⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
     have hd := ringKrullDim_add_one_le hle hf₁ hf₂
     obtain ⟨D₁, -, hD₁⟩ := exists_ringKrullDim_eq
       (fun T _ hq => killBlocks_mem_of_isMultiHomogIdeal h₁.1.multiHomog T hq) h₁.1.relevant

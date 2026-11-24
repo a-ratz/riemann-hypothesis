@@ -333,7 +333,7 @@ theorem nP_eq_one_of_hP_eq_zero (D : D7) (p : ℕ) (hC : IsResidueClassZero D p)
     rw [hC] at hs
     exact absurd hs (by decide)
   unfold nP
-  rw [if_neg hS, h0, addOrderOf_zero]
+  rw [ite_eq_right hS, h0, addOrderOf_zero]
 
 theorem thetaExpansionRealPlaces_stdSer_of_adm : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Formalism.L2.Ker.Base D cc δ) (χ : IdE D → ℂ) (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[p]), HostAt B χ p lam → 5 ≤ p → IsResidueClassZero D p → hP D p = 0 → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (P : D.what₂.Tau → Matrix (Fin N) (Fin N) D.host.E) (P' : D.what₂.Tau → Matrix (Fin N') (Fin N') D.host.E), admitted D N N' L L' → StdBases D lam L P → StdBases D lam L' P' → ∀ G, IsComb D B.tor (B.eNat χ) lam L L' G → OrbitPlaces.ThetaExpansionRealPlaces D p (stdSer D lam (fun _ => 1) P P' G) := by
   intro D cc δ B χ p _ lam hHost h5 hC hP0 N N' L L' P P' hAdm hS hS' G hG
@@ -543,8 +543,8 @@ private theorem orthogonal_complement_free_finite [IsLocalRing R] [Module.Free R
   have hs : Function.Surjective p := fun z => ⟨z, by
     have := LinearMap.congr_fun hp z
     simpa using this⟩
-  haveI : Module.Finite R (perp h x) := Module.Finite.of_surjective p hs
-  haveI : Module.Projective R (perp h x) := Module.Projective.of_split _ p hp
+  have : Module.Finite R (perp h x) := Module.Finite.of_surjective p hs
+  have : Module.Projective R (perp h x) := Module.Projective.of_split _ p hp
   exact ⟨inferInstance, Module.free_of_flat_of_isLocalRing⟩
 
 universe u in
@@ -560,7 +560,7 @@ private theorem exists_orthonormal_basis_unimodular [IsLocalRing R] (hR : UnramD
     exact i.elim0
   | succ n ih =>
     intro M _ _ _ _ h hh hu hn
-    haveI : Nontrivial M := Module.nontrivial_of_finrank_eq_succ hn
+    have : Nontrivial M := Module.nontrivial_of_finrank_eq_succ hn
     obtain ⟨x, hx⟩ := exists_norm_one hR h hh hu
     obtain ⟨hfin, hfree⟩ := orthogonal_complement_free_finite h x hx
     have hli := orthogonal_complement_independent h x hx
@@ -803,7 +803,7 @@ private lemma congr_one [CompleteSpace K] [CharZero K] (hU : UnrOK K l σ) (ζ :
     (hHG : H * G = 1) :
     ∃ P : Matrix n n K, (∀ i j, ‖P i j‖ ≤ 1 ∧ σ (σ (P i j)) = P i j) ∧
       ∀ r r', ∑ k, (∑ j, P r j * H j k) * σ (P r' k) = if r = r' then 1 else 0 := by
-  letI : StarRing (intFix hU) :=
+  let : StarRing (intFix hU) :=
     { star := fun a => ⟨σ a, sig_le hU a.2.1, by rw [a.2.2]⟩
       star_involutive := fun a => Subtype.ext a.2.2
       star_mul := fun a b => Subtype.ext (by
@@ -811,7 +811,7 @@ private lemma congr_one [CompleteSpace K] [CharZero K] (hU : UnrOK K l σ) (ζ :
         rw [map_mul, mul_comm])
       star_add := fun a b => Subtype.ext (map_add σ (a : K) b) }
   have hst : ∀ a : intFix hU, ((star a : intFix hU) : K) = σ a := fun a => rfl
-  haveI : IsLocalRing (intFix hU) := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
+  have : IsLocalRing (intFix hU) := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
     rcases a.2.1.lt_or_eq with h | h
     · refine Or.inr (unit_of_norm hU _ (norm_one_of_close norm_one ?_))
       simpa using h
@@ -987,7 +987,7 @@ theorem UpperTheory.exists_unit_quotient_of_normOne_unramified_ultrametric :
     ∀ (l : ℕ) [Fact l.Prime], 5 ≤ l → ∀ σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtension l, UnrOK (MaximalUnramifiedExtension l) l σ → ∀ (i : ℕ) [NeZero i], Odd i →
     ∃ om : Fin i → MaximalUnramifiedExtension l, OwOK (2 * i) σ om (fun r => σ^[i] (om r)) ∧ TrDual (2 * i) σ om (fun r => σ^[i] (om r)) := by
   intro l _ _ σ hU i _ hi
-  haveI : CompleteSpace (MaximalUnramifiedExtension l) := Formalism.L2.Th1.D.kurComplete l
+  have : CompleteSpace (MaximalUnramifiedExtension l) := Formalism.L2.Th1.D.kurComplete l
   have a1 := UpperTheory.NormSurjectiveFixedIntegers.not_dvd (d := 2) hU.1 two_ne_zero
   have a2 := UpperTheory.NormSurjectiveFixedIntegers.not_dvd (d := 2 * i) hU.1 (NeZero.ne _)
   obtain ⟨ζ, hζ⟩ := Formalism.L2.Th1.D.kurRoots l _ a1.1 a1.2
@@ -1046,7 +1046,7 @@ private theorem logS_eq_gLog {K Lt β : Type} [Field K] [DecidableEq Lt] [Decida
     {pos : Lt → ℕ → Lt} (h : IsPos i pos) (r : Lt) (b : β) (s : ZMod (2 * i)) :
     logS (K := K) l i pos (pos r s.val, b) =
       KernelCokernelKilling.gLog K l (fun s : ZMod (2 * i) => (pos r s.val, b)) s := by
-  haveI : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
+  have : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
   have key : ∀ e : ℕ, pos r (s.val + 2 * (i - 1) * e) = pos r ((s - 2 * (e : ZMod (2 * i))).val) := by
     intro e
     apply pos_cast h
@@ -1063,7 +1063,7 @@ private theorem logS_eq_gLog {K Lt β : Type} [Field K] [DecidableEq Lt] [Decida
 
 private theorem val_add_i {i : ℕ} [NeZero i] (s : ZMod (2 * i)) :
     ∃ k : ℕ, s.val + i = (s + (i : ZMod (2 * i))).val + 2 * i * k := by
-  haveI : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
+  have : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
   have hi : 0 < i := Nat.pos_of_ne_zero (NeZero.ne i)
   refine ⟨(s.val + i) / (2 * i), ?_⟩
   rw [ZMod.val_add, ZMod.val_natCast, Nat.mod_eq_of_lt (by omega : i < 2 * i)]
@@ -1072,7 +1072,7 @@ private theorem val_add_i {i : ℕ} [NeZero i] (s : ZMod (2 * i)) :
 private theorem linOL_eq {K τ : Type} [NormedField K] {i : ℕ} [NeZero i] (hi : Odd i) (σ : K →+* K) {c : K}
     (hc : σ^[2 * i] c = c) (L : ZMod (2 * i) → MvPowerSeries τ K) (hL : ∀ s, L (s + (i : ZMod (2 * i))) = L s) :
     linOL σ c L = linEL σ (σ^[i] c) L := by
-  haveI : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
+  have : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
   unfold linOL linEL
   refine Fintype.sum_equiv (Equiv.addRight (i : ZMod (2 * i))) _ _ fun s => ?_
   simp only [Equiv.coe_addRight]
@@ -1198,7 +1198,7 @@ private theorem diagJ (K0 K : Type) [NormedField K0] [IsUltrametricDist K0] [Cha
           (map j (beMean (d := 2 * i) l σ be0 om (fun r => σ^[i] (om r)) ζ))) := by
   have hlp : Nat.Prime l := hU.1
   have hl2 : 2 ≤ l := hlp.two_le
-  haveI : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
+  have : NeZero (2 * i) := ⟨by have := NeZero.ne i; omega⟩
   set L0 : ZMod (2 * i) → MvPowerSeries (Lt × β) K0 := fun s => logS (K := K0) l i pos (pos r s.val, b) with hL0
   have hS : ShiftType l σ L0 := by
     have e : L0 = fun s => KernelCokernelKilling.gLog K0 l (fun s : ZMod (2 * i) => (pos r s.val, b)) s :=
@@ -1539,7 +1539,7 @@ theorem frobeniusConjugation_conditions_adaptedKernelDatum_alt : Formalism.L2.Ke
         have h2 : D.host.cls (D.what₂.places.resChar w) = PrimeClass.signal := h
         rw [h1] at h2; cases h2
       unfold nP
-      rw [if_neg hs]
+      rw [ite_eq_right hs]
       exact hC.2.1
     exact main u μ w hLF hC.1 i hi c c' (OrbitPlaces.EvenConditionsAllReal D (D.what₂.places.resChar w)) fun hHA h5 =>
       UpperTheory.lattice_pairs_odd_degree_isometric D t.cc t.δ t.B t.χ (D.what₂.places.resChar w) (t.ent.lam w) hHA h5 hC.1 hodd _ _

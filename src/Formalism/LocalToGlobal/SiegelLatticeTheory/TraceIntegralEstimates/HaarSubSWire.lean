@@ -194,7 +194,7 @@ theorem isHaarSub_comap (Φ : G ≃* H) (hΦ : Continuous Φ) (hΦ' : Continuous
     show Φ a⁻¹ ∈ S
     rw [map_inv]
     exact hi _ ha
-  · haveI := hσ
+  · have := hσ
     show SigmaFinite (μ.map M.symm)
     first
       | exact M.symm.sigmaFinite_map
@@ -250,7 +250,7 @@ theorem isFolner_of_equiv (Φ : G ≃* H) (hΦ : Continuous Φ) (hΦ' : Continuo
   · have hset : {t | t ∈ ⇑Φ.symm ⁻¹' Ω ∧ ∀ k ∈ K, k * t ∈ ⇑Φ.symm ⁻¹' Ω} =
         ⇑Φ.symm ⁻¹' {t | t ∈ Ω ∧ ∀ k ∈ ⇑Φ ⁻¹' K, k * t ∈ Ω} := by
       ext t
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, map_mul]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_mul]
       constructor
       · rintro ⟨h1, h2⟩
         refine ⟨h1, fun k hk => ?_⟩
@@ -292,7 +292,7 @@ theorem uMat_ext {a b : Formalism.REAL.UJ ε} (h : uMat a = uMat b) : a = b :=
   Subtype.ext (Units.ext h)
 
 theorem continuous_uMat : Continuous (uMat : Formalism.REAL.UJ ε → Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 def ofM (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (hg : g ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r)) :
     GH k r :=
@@ -435,7 +435,7 @@ theorem finite_bi {H : Set G} (hHm : MeasurableSet H) (hinvH : ∀ h ∈ H, h⁻
   have hS : ∀ S, μ S = μ Set.univ * (ν.map (fun x => x⁻¹)) S := by
     intro S
     conv_lhs => rw [hμeq]
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
   have hfin : μ Set.univ < ⊤ := by
     by_contra hinf
     rw [not_lt, top_le_iff] at hinf
@@ -498,22 +498,22 @@ def HuSub (hD : SDecomp) {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D
 theorem measH_of (hD : SDecomp) : MeasH := by
   intro D X u
   obtain ⟨hsf, _, hc, hl⟩ := X.muH_haar u
-  haveI := hsf
+  have := hsf
   have hd := hD D X u
   have hcomp : IsCompact (Hu X u) := hd.2.2.2.2.2.2.2.1
   have hinv : ∀ a ∈ Hu X u, a⁻¹ ∈ Hu X u := hd.2.2.2.2.2.2.2.2.2.2.1
   have hHm : MeasurableSet (Hu X u) := hcomp.isClosed.measurableSet
   let K := HuSub hD X u
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hcomp
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hcomp
   let μK : Measure K := haarMeasure ⊤
   have hμK1 : μK Set.univ = 1 := by
     have h := haarMeasure_self (G := K) (K₀ := ⊤)
     rwa [TopologicalSpace.PositiveCompacts.coe_top] at h
   let ν : Measure X.B.I.Ginf := μK.map Subtype.val
-  haveI : IsProbabilityMeasure ν :=
-    ⟨by rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, Set.preimage_univ]; exact hμK1⟩
+  have : IsProbabilityMeasure ν :=
+    ⟨by rw [Measure.map_apply measurable_subtypeVal MeasurableSet.univ, Set.preimage_univ]; exact hμK1⟩
   have hνc : ν (Hu X u)ᶜ = 0 := by
-    rw [Measure.map_apply measurable_subtype_coe hHm.compl]
+    rw [Measure.map_apply measurable_subtypeVal hHm.compl]
     have he : (Subtype.val ⁻¹' (Hu X u)ᶜ : Set K) = ∅ := by
       ext x
       simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_empty_iff_false, iff_false, not_not]
@@ -521,10 +521,10 @@ theorem measH_of (hD : SDecomp) : MeasH := by
     rw [he, measure_empty]
   have hνl : ∀ h ∈ Hu X u, ν.map (fun x => h * x) = ν := by
     intro h hh
-    rw [Measure.map_map (measurable_const_mul h) measurable_subtype_coe]
+    rw [Measure.map_map (measurable_const_mul h) measurable_subtypeVal]
     have he : (fun x => h * x) ∘ (Subtype.val : K → X.B.I.Ginf) =
         Subtype.val ∘ (fun y : K => (⟨h, hh⟩ : K) * y) := rfl
-    rw [he, ← Measure.map_map measurable_subtype_coe (measurable_const_mul _), map_mul_left_eq_self]
+    rw [he, ← Measure.map_map measurable_subtypeVal (measurable_const_mul _), map_mul_left_eq_self]
   obtain ⟨h1, h2, h3⟩ := finite_bi hHm hinv hc hl hνc hνl
   exact ⟨h1, h2, h3⟩
 
@@ -704,7 +704,7 @@ theorem span_facts (k : ℕ) {v : Fin n → ℂ} (hv : v ∈ spanLt e k) :
   | mem x hx =>
     obtain ⟨d, hd, rfl⟩ := hx
     refine ⟨fun b hb => ?_, fun b => hG.ee b d, Pw_e hG d⟩
-    rw [fe hG, if_neg]
+    rw [fe hG, ite_eq_right]
     rintro rfl
     exact (not_lt.2 hb) hd
   | zero => exact ⟨fun b _ => hJ_zero ε _, fun b => hJ_zero ε _, Pw_zero⟩
@@ -1220,7 +1220,7 @@ theorem measN_holds : MeasN := by
 
 theorem nuQSFinite_holds : NuQSFinite := by
   intro D X u
-  haveI : SigmaFinite (X.nuQ u) :=
+  have : SigmaFinite (X.nuQ u) :=
     quotient_sigma_finite X.B.I.Ginf (Formalism.L2.SG.ProjRows.muInf X.B.I) _ _ (X.muN u) (X.muH u) (X.nuQ u)
       (X.muN_haar u) (X.muH_haar u) (X.nuQ_weil u)
   infer_instance

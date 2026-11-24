@@ -108,7 +108,7 @@ theorem alpha_unpack {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
     (letI := H.starRing;
       ∃ (z : P.D.toPre.X) (q : QkPt P.D.toPre F (1 * N)) (h g0 : GtPtF P.D.toPre F),
         p.y = -(star α • z) ∧ GtAct P.oD α p.g q.g ∧ GtPtF.IsIota z h ∧ q.g.IsAdd h g0 ∧ g0.IsZero) := by
-  letI := H.starRing
+  let := H.starRing
   have hαN' : α * star α = (N : 𝓞 E) := hαN
   have hB : P.D.toPre.TauBimult := P.D.tau_bimult
   obtain ⟨p0, hy0, hz0, hadd0⟩ := exists_zero_qk (F := F) hB (1 * N)
@@ -129,7 +129,7 @@ theorem alpha_unpack {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
   have key : ∀ w : P.D.toPre.X, (1 * N) • w = N • w := fun w => by rw [Nat.one_mul]
   rw [smul_comm (star α) (1 * N) z, _root_.mul_comm (star α) α, hαN', Nat.cast_smul_eq_nsmul,
     ← key p.y, ← smul_add] at e'
-  haveI : Module.Free ℤ P.D.toPre.X := P.D.toPre.freeX
+  have : Module.Free ℤ P.D.toPre.X := P.D.toPre.freeX
   rw [← Nat.cast_smul_eq_nsmul ℤ] at e'
   have e3 : p.y + star α • z = 0 := (smul_eq_zero.1 e').resolve_left (by omega)
   exact eq_neg_of_add_eq_zero_left e3

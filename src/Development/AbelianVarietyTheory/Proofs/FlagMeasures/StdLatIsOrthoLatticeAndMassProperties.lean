@@ -70,7 +70,7 @@ open scoped ENNReal Classical in
 private theorem massU_zero_eq_one (K : Type) [Field K] [NumberField K] [StarRing K] :
     _root_.Formalism.MainNotions.S.Cnt.massU K 0 = 1 := by
   have hsub : ∀ M N : Submodule (𝓞 K) (Fin 0 → K), M = N := fun M N => Subsingleton.elim M N
-  haveI : Subsingleton ((Fin 0 → K) ≃ₗ[K] (Fin 0 → K)) :=
+  have : Subsingleton ((Fin 0 → K) ≃ₗ[K] (Fin 0 → K)) :=
     ⟨fun f g => LinearEquiv.ext fun x => Subsingleton.elim _ _⟩
   have hlat : Submodule.IsLattice K (_root_.Formalism.MainNotions.S.Cnt.stdLat K 0) := _root_.ReciprocityTheory.ChartRestriction.L3.isLattice_of_ortho (_root_.Formalism.MainNotions.StandardLattice.stdLat_ortho K 0)
   have hfull : Submodule.IsFullLattice K (_root_.Formalism.MainNotions.S.Cnt.stdLat K 0) :=

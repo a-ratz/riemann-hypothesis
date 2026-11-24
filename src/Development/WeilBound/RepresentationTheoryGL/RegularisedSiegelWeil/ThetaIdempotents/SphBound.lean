@@ -397,16 +397,16 @@ theorem cfFJ_of_pcBound : PcBound → CfFJ := by
     obtain ⟨-, hcov⟩ := hPc D n ρ p hn M m ψ hψ b₀
     obtain ⟨C, hCc, hcover, -⟩ := hcov g
     obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D ρ p
-    haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
-    haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-    haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-    haveI : FirstCountableTopology (Mx D ρ p) := inferInstance
-    haveI : FirstCountableTopology (Mx D ρ p × Mx D ρ p) := inferInstance
+    have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+    have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+    have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+    have : FirstCountableTopology (Mx D ρ p) := inferInstance
+    have : FirstCountableTopology (Mx D ρ p × Mx D ρ p) := inferInstance
     obtain ⟨hμh, -, hμ1⟩ := m.hμ
     obtain ⟨-, -, hl1⟩ := m.hz
-    haveI : SFinite m.μ := inferInstance
-    haveI : IsFiniteMeasure (m.lz.restrict m.𝓖) := ⟨by rw [Measure.restrict_apply_univ, hl1]; exact ENNReal.one_lt_top⟩
-    haveI : IsFiniteMeasure (m.μ.restrict m.𝓕) := ⟨by rw [Measure.restrict_apply_univ, hμ1]; exact ENNReal.one_lt_top⟩
+    have : SFinite m.μ := inferInstance
+    have : IsFiniteMeasure (m.lz.restrict m.𝓖) := ⟨by rw [Measure.restrict_apply_univ, hl1]; exact ENNReal.one_lt_top⟩
+    have : IsFiniteMeasure (m.μ.restrict m.𝓕) := ⟨by rw [Measure.restrict_apply_univ, hμ1]; exact ENNReal.one_lt_top⟩
     obtain ⟨hχc, hχ1⟩ := conj_chz ψ hψ b₀
     have hκ1 : Integrable (fun z : hermA D ρ => conj (chz ψ b₀ z)) (m.lz.restrict m.𝓖) :=
       Integrable.of_bound hχc.aestronglyMeasurable 1 (Eventually.of_forall fun z => (hχ1 z).le)
@@ -740,7 +740,7 @@ open GlobalTheory.StdUnn.HeightExists GlobalTheory.StdUnn.PolesModel
 
 theorem eisHol_of_htExist : HtExist → EisHol := by
   intro _ D p χ _ c f hc hd hl h
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   have hsub : rightOf (max c ((p : ℝ) / 2)) ⊆ {z : ℂ | c < z.re} := fun z hz =>
     lt_of_le_of_lt (le_max_left _ _) (mem_rightOf.1 hz)
   have key := analyticOnNhd_cosetSum (P := P D p) (Γ := GF D p) (K := K D p) (δ := modP (D := D) (n := p))
@@ -785,7 +785,7 @@ theorem law_facts : ∀ {D : D7} {n : ℕ} {χ : (AE D)ˣ →* Circle} {s : ℂ}
     (∀ q ∈ P D n, ∀ a : GL (Fin n) (AE D), blkA (mat q) = a.1 → Matrix.GeneralLinearGroup.det a = 1 → ∀ g, f (q * g) = f g) ∧
     ∀ C : Set (G D n), IsCompact C → ∃ u : Cosets (P D n) (GF D n) → ℝ, Summable u ∧ ∀ q, ∀ g ∈ C, ‖term (P D n) (GF D n) f g q‖ ≤ u q := by
   intro D n χ s f hχ hc hl hs
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   refine ⟨fun γ hγ g => ?_, fun q hq a ha h1 g => ?_, fun C hC => ?_⟩
   · obtain ⟨hp, hr⟩ := Subgroup.mem_inf.1 hγ
     obtain ⟨a, ha⟩ := exists_blkA hp
@@ -892,7 +892,7 @@ theorem unfold_fam : ∀ {A X Y U : Type} [AddCommGroup A] [MeasurableSpace A] [
     HasSum (fun u => ∫ b, F0 u b * ch b ∂lam) (∫ b in 𝓖, (∑' q, F q b) * ch b ∂lam) := by
   intro A X Y U _ _ _ lam _ Λ _ 𝓖 h𝓖 h1 _ _ c y0 F F0 ch hF hch hnorm hmul hΛ Um hUm τ hτ hcτ hbd
     e he hfib hτe hF0 hν
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by simp [h1]⟩
+  have : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by simp [h1]⟩
 
   have hUm0 : ∀ q, 0 ≤ Um q := by
     intro q
@@ -955,18 +955,18 @@ theorem unfold_fam : ∀ {A X Y U : Type} [AddCommGroup A] [MeasurableSpace A] [
     integrable_of_lattice_bound lam Λ 𝓖 h𝓖 h1 (F0 u) (hm0 u) _ (horb u)
   have hnb : ∀ u, ∫ b, ‖F0 u b‖ ∂lam ≤ ∑' l : Λ, Um (e (l, u)) := by
     intro u
-    rw [integral_norm_eq_lintegral_enorm (hm0 u)]
+    rw [integral_norm_eq_lintegral_eNorm (hm0 u)]
     refine ENNReal.toReal_le_of_le_ofReal (hS0 u) ?_
     have ee : ∫⁻ b, ‖F0 u b‖ₑ ∂lam = ∑' l : Λ, ∫⁻ b in 𝓖, ‖F0 u ((l : A) + b)‖ₑ ∂lam :=
       h𝓖.lintegral_eq_tsum'' _
     have hmeas : ∀ l : Λ, AEMeasurable (fun b => ‖F0 u ((l : A) + b)‖ₑ) (lam.restrict 𝓖) :=
       fun l => (((hm0 u).comp_measurePreserving
-        (measurePreserving_add_left lam (l : A))).enorm).restrict
+        (measurePreserving_add_left lam (l : A))).eNorm).restrict
     rw [ee, ← lintegral_tsum hmeas]
     calc ∫⁻ b in 𝓖, ∑' l : Λ, ‖F0 u ((l : A) + b)‖ₑ ∂lam
         ≤ ∫⁻ _ in 𝓖, ENNReal.ofReal (∑' l : Λ, Um (e (l, u))) ∂lam := by
           refine lintegral_mono (fun b => ?_)
-          simp_rw [← ofReal_norm_eq_enorm]
+          simp_rw [← ofReal_norm]
           rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (horb u b).1]
           exact ENNReal.ofReal_le_ofReal (horb u b).2
       _ = ENNReal.ofReal (∑' l : Λ, Um (e (l, u))) := by simp [h1]
@@ -1292,10 +1292,10 @@ theorem unfold_on {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) {ψ : AddC
   obtain ⟨hHaar, hFD, hvol⟩ := m.hz
   obtain ⟨hadd, hcsh, hcem, hrat⟩ := GlobalTheory.T.heisenberg_centre_rational_form M
   have hcolat := GlobalTheory.CompanionTheory.HermVol.isCoLat_herm (D := D) (r := ρ)
-  haveI : Countable (ratHerm D ρ) := countable_ratHerm
-  haveI : Countable (Cosets (P D n) (GF D n)) := countable_cosets
-  haveI : Countable (Cosets (P D p) (GF D p)) := countable_cosets
-  haveI : Countable (Matrix (Fin ρ) (Fin p) D.host.E) := countable_mat ρ p
+  have : Countable (ratHerm D ρ) := countable_ratHerm
+  have : Countable (Cosets (P D n) (GF D n)) := countable_cosets
+  have : Countable (Cosets (P D p) (GF D p)) := countable_cosets
+  have : Countable (Matrix (Fin ρ) (Fin p) D.host.E) := countable_mat ρ p
   obtain ⟨e, he, hfib, hτe, hterm⟩ := GlobalTheory.T.heisenberg_cosets_param_rational hn M
   obtain ⟨K0, hK0, hKc⟩ := hcolat.2
   have hcn := continuous_jacobi_map_zero M
@@ -1566,8 +1566,8 @@ theorem pairing_eq (b₀ : HermE D ρ) (ψ : AddChar (AF D.host.F) ℂ) (u v : M
 
 theorem continuous_psi_Pp {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) (x : Mx D ρ p) :
     Continuous fun u : Mx D ρ p => ψ (Pp b₀ x u) := by
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have ht : Continuous (trA (D := D)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
   exact hψ.1.comp (ht.comp (continuous_const.matrix_mul (continuous_const.matrix_mul continuous_id)).matrix_trace)
@@ -1579,12 +1579,12 @@ theorem poisson_step {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F �
       ψ (-Pp b₀ x y) * ∑' ξ : Matrix (Fin ρ) (Fin p) D.host.E,
         ψ (Pp b₀ (-y) (ξ.map (incA D))) * Ω (g * h) (ξ.map (incA D) + x) := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D ρ p
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
   have hT : IsHermND (D.sp.cm.sig) b₀.1 := ⟨fun i j => congrFun (congrFun b₀.2 i) j, hb⟩
   obtain ⟨h1, h2⟩ := GlobalTheory.T.rationalAdelicMatrices_self_annihilator D ρ p b₀.1 hT ψ hψ
   have hs := ThetaPoisson.pairing_symm (n := p) hT ψ
   have hμ := m.hμ
-  haveI := hμ.1
+  have := hμ.1
   have hn1 : ∀ a, ‖ψ a‖ = 1 := hψ.2.1
   let f : Mx D ρ p → ℂ := fun u => Ω h (u + y) * ψ (Pp b₀ x u)
   have hfc : Continuous f :=

@@ -63,7 +63,7 @@ theorem exists_finite_affine_cover_infClosed : ∀ (R : Type) [CommRing R] (X : 
       (U : J → X.affineOpens), Monotone U ∧ (∀ i j, (U (i ⊓ j)).1 = (U i).1 ⊓ (U j).1) ∧
         ⨆ i, (U i).1 = ⊤ := by
   intro R _ X s hsep hqc
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
   have hdiag : IsAffineHom (pullback.diagonal s) := inferInstance
   have hinf : ∀ U V : X.Opens, IsAffineOpen U → IsAffineOpen V → IsAffineOpen (U ⊓ V) :=
     fun U V hU hV => isAffineHom_diagonal_iff.mp hdiag ⊤ (isAffineOpen_top _) U (by simp) V
@@ -74,9 +74,9 @@ theorem exists_finite_affine_cover_infClosed : ∀ (R : Type) [CommRing R] (X : 
   have hA : ∀ U ∈ A, IsAffineOpen U :=
     infClosure_min (t := {U | IsAffineOpen U}) (by rintro _ ⟨i, -, rfl⟩; exact i.2)
       (fun a ha b hb => hinf a b ha hb)
-  letI inst : SemilatticeInf A :=
+  let inst : SemilatticeInf A :=
     Subtype.semilatticeInf (fun _ _ ha hb => infClosed_infClosure ha hb)
-  haveI hfin : Finite A := ((hS.image _).infClosure).to_subtype
+  have hfin : Finite A := ((hS.image _).infClosure).to_subtype
   refine ⟨A, hfin, inst, fun j => ⟨j.1, hA j.1 j.2⟩, fun a b h => h, fun i j => rfl, ?_⟩
   apply top_le_iff.mp
   rw [e]

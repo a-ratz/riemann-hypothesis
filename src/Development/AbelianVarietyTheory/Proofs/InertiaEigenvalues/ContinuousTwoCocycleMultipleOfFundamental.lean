@@ -98,7 +98,7 @@ theorem span : ∀ (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalSpa
     rw [← PadicInt.ext_of_toZModPow]
     intro n
     simpa only [map_sub, map_add (f := _), map_mul, map_zero] using (hG n).1.2 g h k
-  refine ⟨⟨continuous_subtype_val.comp hcc, fun g h k => ?_⟩, fun z hz hzc => ?_⟩
+  refine ⟨⟨continuous_subtypeVal.comp hcc, fun g h k => ?_⟩, fun z hz hzc => ?_⟩
   · have e := congrArg (fun a : ℤ_[l] => (a : ℚ_[l])) (hcoc g h k)
     push_cast at e
     exact e
@@ -177,7 +177,7 @@ theorem span : ∀ (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalSpa
     simp only [d1_apply, charRep_apply, MonoidHom.comp_apply, Units.coe_map, map_sub, map_mul, hxr]
     have e := hXB r (g, h)
     simp only at e
-    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     linear_combination -e
   have hker : ∀ r : ℕ, ∃ w' ∈ Z2 (charRep χ), (fun p => w p - x * c p) - (l : ℤ_[l]) ^ r • w' ∈
       B2 (charRep χ) := fun r =>
@@ -187,7 +187,7 @@ theorem span : ∀ (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalSpa
     (GlobalTheory.PadicH2Separated.mem_coboundaries_of_forall_pow l G (charRep χ) _ hcompat hfin _ hyZ hker)
   have hl0 : (l : ℚ_[l]) ^ m ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hl.ne_zero)
   refine ⟨(x : ℚ_[l]) / (l : ℚ_[l]) ^ m, fun g => (f g : ℚ_[l]) / (l : ℚ_[l]) ^ m,
-    (continuous_subtype_val.comp hf).div_const _, fun g h => ?_⟩
+    (continuous_subtypeVal.comp hf).div_const _, fun g h => ?_⟩
   have e := congrFun hfd (g, h)
   simp only [d1_apply, charRep_apply] at e
   have e' := congrArg (fun a : ℤ_[l] => (a : ℚ_[l])) e

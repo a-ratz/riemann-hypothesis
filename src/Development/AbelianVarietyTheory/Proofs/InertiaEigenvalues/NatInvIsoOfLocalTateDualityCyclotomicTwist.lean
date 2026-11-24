@@ -142,18 +142,18 @@ namespace GlobalTheory
 
 theorem card_H2_le_of_local_duality : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (K : IntermediateField ℚ_[l] (PadicAlgCl l)), FiniteDimensional ℚ_[l] K → ∀ (r : ℕ) (M : Type) [AddCommGroup M] [Module (ZMod (l ^ r)) M] [Finite M] [TopologicalSpace M] [DiscreteTopology M] (rho : Representation (ZMod (l ^ r)) (Formalism.GaloisCohomology.GK l K) M), 0 < r → ContAction rho → Finite (H2 rho) ∧ Nat.card (H2 rho) ≤ Nat.card M := by
   intro hT l _ K hK r M _ _ _ _ _ rho hr hrho
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hfin := (GlobalTheory.finite_H1_H2_of_localTateDuality hT l K hK r M rho hr hrho).2
   obtain ⟨⟨e⟩, -, -, -, h20⟩ := hT l K hK r M rho hr hrho
   refine ⟨hfin, ?_⟩
-  haveI : Finite (TDual (ZMod (l ^ r)) M) :=
+  have : Finite (TDual (ZMod (l ^ r)) M) :=
     Finite.of_injective (fun φ : TDual (ZMod (l ^ r)) M => (φ : M → ZMod (l ^ r)))
       DFunLike.coe_injective
-  haveI : Finite (H0 ((twDual (Formalism.GaloisCohomology.cycK l K r) rho).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K)))) :=
+  have : Finite (H0 ((twDual (Formalism.GaloisCohomology.cycK l K r) rho).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K)))) :=
     Subtype.finite
-  haveI : Finite (H2 ((charRep (Formalism.GaloisCohomology.cycK l K r)).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K)))) :=
+  have : Finite (H2 ((charRep (Formalism.GaloisCohomology.cycK l K r)).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K)))) :=
     Finite.of_equiv _ e.toEquiv.symm
-  haveI : Finite (H0 ((twDual (Formalism.GaloisCohomology.cycK l K r) rho).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K))) →ₗ[ZMod (l ^ r)]
+  have : Finite (H0 ((twDual (Formalism.GaloisCohomology.cycK l K r) rho).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K))) →ₗ[ZMod (l ^ r)]
       H2 ((charRep (Formalism.GaloisCohomology.cycK l K r)).comp (MonoidHom.id (Formalism.GaloisCohomology.GK l K)))) :=
     Finite.of_injective (fun f => (f : _ → _)) DFunLike.coe_injective
   calc Nat.card (H2 rho)
@@ -316,8 +316,8 @@ theorem h2_twist_card_of_zmod {p : ℕ} [Fact p.Prime] {K : IntermediateField �
 theorem h2_quot_card : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[p] (PadicAlgCl p)} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [TopologicalSpace O] [IsTopologicalRing O] {G : Type} [Group G] [TopologicalSpace G], Formalism.GaloisCohomology.LocalTateDualityK → FiniteDimensional ℚ_[p] K → PadicCoeff p O → ∀ (i : G ≃ₜ* GK p K) {ε : G →* Oˣ}, IsCyc p K (carry i ε) → ∀ k : ℕ, Finite (H2 (twist ε (O ⧸ IsLocalRing.maximalIdeal O ^ k))) ∧ Nat.card (H2 (twist ε (O ⧸ IsLocalRing.maximalIdeal O ^ k))) ≤ Nat.card (O ⧸ IsLocalRing.maximalIdeal O ^ k) := by
   intro p _ K O _ _ _ _ _ G _ _ hTD hK hO i ε hε k
   obtain ⟨hdisc, hfin⟩ := _root_.GlobalTheory.NatQuot.quot_pow_maximalIdeal_discrete_finite hO k
-  haveI := hdisc
-  haveI := hfin
+  have := hdisc
+  have := hfin
   have hkill : ∀ x : O ⧸ IsLocalRing.maximalIdeal O ^ k, (p ^ (k + 1)) • x = 0 := by
     intro x
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -334,7 +334,7 @@ theorem h2_quot_card : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[
       funext q; exact Algebra.smul_def _ _
     rw [e]
     exact ((hq.comp hce).comp continuous_fst).mul continuous_snd
-  letI : Module (ZMod (p ^ (k + 1))) (O ⧸ IsLocalRing.maximalIdeal O ^ k) :=
+  let : Module (ZMod (p ^ (k + 1))) (O ⧸ IsLocalRing.maximalIdeal O ^ k) :=
     AddCommGroup.zmodModule hkill
   exact h2_twist_card_of_zmod hTD hK i ε _ (k + 1) (Nat.succ_pos k) hc
 
@@ -370,9 +370,9 @@ theorem phi_quot_pow_injective :
       ∀ z : H2 (twist ε O), Function.Bijective (fun a : O => a • z) → ∀ k : ℕ,
       Function.Injective (phi ε z (O ⧸ IsLocalRing.maximalIdeal O ^ k)) := by
   intro p O _ _ _ _ _ G _ _ _ hO ε hε z hz k
-  haveI : CompactSpace O := hO.compact
-  haveI : T2Space O := hO.t2
-  haveI hdisc := (quot_pow_maximalIdeal_discrete_finite hO k).1
+  have : CompactSpace O := hO.compact
+  have : T2Space O := hO.t2
+  have hdisc := (quot_pow_maximalIdeal_discrete_finite hO k).1
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hI : IsLocalRing.maximalIdeal O ^ k = Ideal.span {ϖ ^ k} := by
     rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow]
@@ -447,7 +447,7 @@ namespace GlobalTheory.FunctorialityH2
 
 theorem bijective_phi_quot_pow : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[p] (PadicAlgCl p)} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [TopologicalSpace O] [IsTopologicalRing O] {G : Type} [Group G] [TopologicalSpace G], Formalism.GaloisCohomology.LocalTateDualityK → FiniteDimensional ℚ_[p] K → PadicCoeff p O → ∀ (i : G ≃ₜ* GK p K) {ε : G →* Oˣ}, IsCyc p K (carry i ε) → ∀ z : H2 (twist ε O), Function.Bijective (fun a : O => a • z) → ∀ k : ℕ, Function.Bijective (phi ε z (O ⧸ IsLocalRing.maximalIdeal O ^ k)) := by
   intro p _ K O _ _ _ _ _ G _ _ hT hK hO i ε hε z hz k
-  haveI : ContinuousMul G := ⟨by
+  have : ContinuousMul G := ⟨by
     have h : (fun q : G × G => q.1 * q.2) = fun q => i.symm (i q.1 * i q.2) := by
       funext q; simp
     rw [h]
@@ -511,7 +511,7 @@ theorem cyc_eq_image : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[
   have key : ∀ n : ℕ, ((ε g : Oˣ) : O) - φ c ∈ Ideal.span {(p : O) ^ n} := by
     intro n
     obtain ⟨ζ, hζ⟩ : ∃ ζ : PadicAlgCl p, IsPrimitiveRoot ζ (p ^ n) :=
-      HasEnoughRootsOfUnity.exists_primitiveRoot _ _
+      HasEnoughRootsOfUnity.exists_isPrimitiveRoot _ _
     obtain ⟨a, ha, hmem⟩ := hε (i g) n ζ hζ.pow_eq_one
     have hcar : ((carry i ε (i g) : Oˣ) : O) = ((ε g : Oˣ) : O) := by
       simp only [carry, MonoidHom.coe_comp, MulEquiv.coe_toMonoidHom, Function.comp_apply]
@@ -581,12 +581,12 @@ theorem free_inj : ∀ {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [IsDomai
   have key : ∀ n : ℕ, a ∈ (powSub (M := O) ϖ n : Submodule O O) := by
     intro n
     set N : Submodule O O := powSub (M := O) ϖ n with hN
-    letI : Module ℤ_[p] (O ⧸ N) := Module.compHom (O ⧸ N) φ
+    let : Module ℤ_[p] (O ⧸ N) := Module.compHom (O ⧸ N) φ
     have hs : ∀ (t : ℤ_[p]) (x : O), t • (Submodule.Quotient.mk x : O ⧸ N) =
         Submodule.Quotient.mk (φ t * x) := fun t x => by
       show (φ t) • (Submodule.Quotient.mk x : O ⧸ N) = _
       rw [← Submodule.Quotient.mk_smul, smul_eq_mul]
-    haveI : Finite (O ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N.toAddSubgroup (hopen n)
+    have : Finite (O ⧸ N) := AddSubgroup.quotient_finite_of_isOpen N.toAddSubgroup (hopen n)
     have hM : ∀ m : O ⧸ N, (p : ℤ_[p]) ^ n • m = 0 := by
       intro m
       induction m using Submodule.Quotient.induction_on with
@@ -673,10 +673,10 @@ theorem isPrecomplete_of_compact_isAdic {O : Type} [CommRing O] [TopologicalSpac
 
 theorem isAdicComplete_of_padicCoeff {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     [TopologicalSpace O] (h : PadicCoeff p O) : IsAdicComplete (IsLocalRing.maximalIdeal O) O := by
-  haveI := h.ring
-  haveI := h.compact
-  haveI := isPrecomplete_of_compact_isAdic _ h.adic
-  haveI : IsHausdorff (IsLocalRing.maximalIdeal O) O := inferInstance
+  have := h.ring
+  have := h.compact
+  have := isPrecomplete_of_compact_isAdic _ h.adic
+  have : IsHausdorff (IsLocalRing.maximalIdeal O) O := inferInstance
   exact ⟨⟩
 
 end GlobalTheory
@@ -696,7 +696,7 @@ namespace GlobalTheory
 theorem padicInt_ringHom_continuous_of_padicCoeff : ∀ {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [IsDomain O]
     [IsDiscreteValuationRing O] [TopologicalSpace O], PadicCoeff p O → ∀ φ : ℤ_[p] →+* O, Continuous φ := by
   intro p _ O _ _ _ _ hO φ
-  haveI := hO.ring
+  have := hO.ring
   refine continuous_of_continuousAt_zero φ ?_
   rw [ContinuousAt, map_zero]
   intro s hs
@@ -773,7 +773,7 @@ theorem span_mod_pow {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [IsDomain 
   have hne : ∀ n, (S n).Nonempty := by
     intro n
     have := hdisc n
-    letI : Module ℤ_[p] (O ⧸ powSub (M := O) ϖ n) := Module.compHom _ φ
+    let : Module ℤ_[p] (O ⧸ powSub (M := O) ϖ n) := Module.compHom _ φ
     have hsm : ∀ (s : ℤ_[p]) (q : O ⧸ powSub (M := O) ϖ n), s • q = φ s • q := fun _ _ => rfl
     have : CompactSpace (O ⧸ powSub (M := O) ϖ n) := by
       refine ⟨?_⟩
@@ -882,7 +882,7 @@ theorem d1_mk {O : Type} [CommRing O] {G : Type} [Group G] (ε : G →* Oˣ) (ϖ
 
 theorem separated_dvr_second_cohomology_mem : ∀ {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [TopologicalSpace O] [IsTopologicalRing O] [CompactSpace O] [T2Space O] {G : Type} [Group G] [TopologicalSpace G] (ε : G →* Oˣ) (ϖ : O), (∀ n : ℕ, IsOpen ((powSub (M := O) ϖ n : Submodule O O) : Set O)) → (∀ U ∈ nhds (0 : O), ∃ n : ℕ, ((powSub (M := O) ϖ n : Submodule O O) : Set O) ⊆ U) → (∀ n : ℕ, (Z1 (quotRep (twist ε O) ϖ n) : Set (G → O ⧸ powSub (M := O) ϖ n)).Finite) → ∀ (w : G × G → O), w ∈ Z2 (twist ε O) → (∀ n : ℕ, ∃ b : G → O ⧸ powSub (M := O) ϖ n, Continuous b ∧ ∀ g h : G, d1 (quotRep (twist ε O) ϖ n) b (g, h) = Submodule.Quotient.mk (w (g, h))) → w ∈ B2 (twist ε O) := by
   intro O _ _ _ _ _ _ _ G _ _ ε ϖ hopen hbasis hfin w hw hmod
-  haveI hdisc : ∀ n : ℕ, DiscreteTopology (O ⧸ powSub (M := O) ϖ n) := fun n => discrete_quot _ (hopen n)
+  have hdisc : ∀ n : ℕ, DiscreteTopology (O ⧸ powSub (M := O) ϖ n) := fun n => discrete_quot _ (hopen n)
   let α : ∀ s : ℕ, Set (G → O ⧸ powSub (M := O) ϖ s) := fun s =>
     {β | Continuous β ∧ d1 (quotRep (twist ε O) ϖ s) β = fun p => Submodule.Quotient.mk (w p)}
   have hα : ∀ s, (α s).Finite := by
@@ -989,7 +989,7 @@ theorem powSub_open_basis {p : ℕ} {O : Type} [CommRing O] [IsDomain O]
     [IsDiscreteValuationRing O] [TopologicalSpace O] (hO : PadicCoeff p O) {ϖ : O} (hϖ : Irreducible ϖ) :
     (∀ n : ℕ, IsOpen ((powSub (M := O) ϖ n : Submodule O O) : Set O)) ∧
       ∀ U ∈ nhds (0 : O), ∃ n : ℕ, ((powSub (M := O) ϖ n : Submodule O O) : Set O) ⊆ U := by
-  haveI := hO.ring
+  have := hO.ring
   obtain ⟨h1, h2⟩ := (isAdic_iff).1 hO.adic
   refine ⟨fun n => ?_, fun U hU => ?_⟩
   · rw [powSub_eq hϖ]; exact h1 n
@@ -1002,11 +1002,11 @@ theorem exists_free_H2_twist : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
     PadicCoeff p O → ∀ (i : G ≃ₜ* GK p K) {ε : G →* Oˣ}, IsCyc p K (carry i ε) →
     ∃ z : H2 (twist ε O), Function.Bijective (fun a : O => a • z) := by
   intro p _ K O _ _ _ _ _ G _ _ hT hK hO i ε hε
-  haveI := hO.compact
-  haveI := hO.t2
+  have := hO.compact
+  have := hO.t2
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨hopen, hbasis⟩ := powSub_open_basis hO hϖ
-  haveI := _root_.GlobalTheory.isAdicComplete_of_padicCoeff hO
+  have := _root_.GlobalTheory.isAdicComplete_of_padicCoeff hO
   have hd : ∀ n : ℕ, ringChar (O ⧸ IsLocalRing.maximalIdeal O ^ n) ∣ p ^ n := fun n => by
     apply ringChar.dvd
     rw [← map_natCast (Ideal.Quotient.mk (IsLocalRing.maximalIdeal O ^ n)),
@@ -1124,7 +1124,7 @@ namespace GlobalTheory
 
 theorem natInvIso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTateDualityK) : NatInvIso := by
   intro p _ K O _ _ _ _ G _ _ hK hO i ε hε
-  haveI := hO.ring; haveI := hO.compact; haveI := hO.t2
+  have := hO.ring; have := hO.compact; have := hO.t2
   obtain ⟨z, hz⟩ := _root_.GlobalTheory.FreeTwistH2.exists_free_H2_twist hT hK hO i hε
   have hq := _root_.GlobalTheory.FunctorialityH2.bijective_phi_quot_pow hT hK hO i hε z hz
   have hbij : ∀ (M : Type) [AddCommGroup M] [Module O M] [TopologicalSpace M] [IsTopologicalAddGroup M]
@@ -1157,8 +1157,8 @@ theorem natInvIso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTate
       haveI := h.csmul; haveI := h.t2; haveI := h.fg
       exact (LinearEquiv.ofBijective (phi ε z M) (hbij M)).symm, ?_⟩⟩
   intro M M' _ _ _ _ _ _ _ _ _ _ h h' f hf w
-  haveI := h.csmul; haveI := h.t2; haveI := h.fg
-  haveI := h'.csmul; haveI := h'.t2; haveI := h'.fg
+  have := h.csmul; have := h.t2; have := h.fg
+  have := h'.csmul; have := h'.t2; have := h'.fg
   obtain ⟨m, rfl⟩ := (hbij M).2 w
   show (LinearEquiv.ofBijective (phi ε z M') (hbij M')).symm _ =
     f ((LinearEquiv.ofBijective (phi ε z M) (hbij M)).symm _)

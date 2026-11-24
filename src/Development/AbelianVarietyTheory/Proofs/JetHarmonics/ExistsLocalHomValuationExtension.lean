@@ -103,7 +103,7 @@ theorem exists_isLocalHom_extension {A B O C : Type} [CommRing A] [IsDomain A] [
   refine ⟨ι', ?_, hcomp⟩
 
   have hA : (IsLocalRing.maximalIdeal O).comap ι = IsLocalRing.maximalIdeal A :=
-    ((IsLocalRing.local_hom_TFAE ι).out 1 5).mp (inferInstance : IsLocalHom ι)
+    ((IsLocalRing.local_hom_tfae ι).out 1 5).mp (inferInstance : IsLocalHom ι)
   have hp : (((IsLocalRing.maximalIdeal O).comap ι').comap (algebraMap A B)).IsMaximal := by
     rw [Ideal.comap_comap, show ι'.comp (algebraMap A B) = ι from hcomp, hA]
     exact IsLocalRing.maximalIdeal.isMaximal A
@@ -146,7 +146,7 @@ theorem ValExt.exists_local_extension :
     ∀ (T T' : CDVR) (φ : T.V →+* T'.V), Function.Injective φ → φ.Finite → ∀ (p : ℕ) [Fact p.Prime]
       (X : ValExt T p), ∃ ι' : T'.V →+* X.O, IsLocalHom ι' ∧ ι'.comp φ = X.ι := by
   intro T T' φ hφ hfin p _ X
-  haveI := X.ι_local
+  have := X.ι_local
   refine exists_local_extension_of_integral X.v X.ints φ hφ hfin.to_isIntegral X.ι ?_
   have h : (algebraMap X.O X.C).comp X.ι = X.ιF.comp (algebraMap T.V T.Fr) := by
     ext x; exact (X.comp x).symm

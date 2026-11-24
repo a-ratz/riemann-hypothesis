@@ -65,9 +65,9 @@ theorem left_and_zero {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     (hR : IsClosed (R : Set G)) (μR : Measure R) [μR.IsHaarMeasure] [μR.IsInvInvariant]
     (μG : Measure G) [μG.IsHaarMeasure] {f : G → ℂ} {z : ℂ} (h : IsQuotIntL1 μR μG f z) :
     (∀ r ∈ R, ∀ x, f (r * x) = f x) ∧ (f = 0 → z = 0) := by
-  haveI : LocallyCompactSpace R := hR.locallyCompactSpace
-  haveI : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology (R : Set G)
-  haveI : μR.IsMulRightInvariant := by rw [← Measure.inv_eq_self μR]; infer_instance
+  have : LocallyCompactSpace R := hR.locallyCompactSpace
+  have : SecondCountableTopology R := TopologicalSpace.Subtype.secondCountableTopology (R : Set G)
+  have : μR.IsMulRightInvariant := by rw [← Measure.inv_eq_self μR]; infer_instance
   refine ⟨fun r hr x => h.left hr x, ?_⟩
   rintro rfl
   exact h.unique hR IsQuotIntL1.zero
@@ -85,7 +85,7 @@ theorem isClosed_of_locallyCompactSpace {G : Type} [Group G] [TopologicalSpace G
   have hWo : IsOpen W := hVo.inter hVo.inv
   have hW1 : (1 : G) ∈ W := ⟨hV1, by simpa using hV1⟩
   set K' : Set G := Subtype.val '' K
-  have hK'c : IsCompact K' := hKc.image continuous_subtype_val
+  have hK'c : IsCompact K' := hKc.image continuous_subtypeVal
   have hK'R : K' ⊆ R := by rintro _ ⟨k, -, rfl⟩; exact k.2
   refine isClosed_of_closure_subset fun x hx => ?_
   obtain ⟨y, hyW, hyR⟩ := mem_closure_iff.1 hx (x • W) (hWo.smul x) (by simpa using Set.smul_mem_smul_set (a := x) hW1)
@@ -116,10 +116,10 @@ theorem jac_haar_inv {D : D7} {ρ : ℕ} (J : JacLev D ρ) :
   have hμ := J.v0.haar
   obtain ⟨p, hpc, hp⟩ := GlobalTheory.JacProj.exists_continuous_proj D J.W J.W₀ ρ J.d
   have hNc := GlobalTheory.Mem.TrueRecord.isClosed_NFlag J.W (isIsoSub_e J.d)
-  haveI : LocallyCompactSpace (flagN J.d) := hNc.locallyCompactSpace
+  have : LocallyCompactSpace (flagN J.d) := hNc.locallyCompactSpace
   obtain ⟨e, -⟩ := GlobalTheory.SemiHaar.exists_homeo (flagN J.d) J.d.emb0 (flag_jacobi_structure D J.W J.W₀ ρ J.d).2.2.2.2.1
     J.d.continuous_embed ⟨p, hpc, hp⟩
-  haveI : LocallyCompactSpace (jacGrp J.d) := e.symm.isClosedEmbedding.locallyCompactSpace
+  have : LocallyCompactSpace (jacGrp J.d) := e.symm.isClosedEmbedding.locallyCompactSpace
   refine ⟨isClosed_of_locallyCompactSpace (jacGrp J.d), ?_⟩
   exact GlobalTheory.SemiHaar.semiMeas_haar_inv (flagN J.d) J.d.emb0 hNc J.d.continuous_embed
     (flag_jacobi_structure D J.W J.W₀ ρ J.d).2.2.2.2.1 ⟨p, hpc, hp⟩
@@ -137,9 +137,9 @@ theorem bes_haar_inv {D : D7} {ρ : ℕ} (B : BesLev D ρ) :
   obtain ⟨hc, hcl, hnorm, -, hrat⟩ := GlobalTheory.Unf.besSemi D ρ B
   have hΛ : ∀ δ ∈ GQ B.A, embA B.d B.o δ ∈ GQ B.V := fun δ hδ => by
     simpa using (hrat 1 (one_mem _) δ).2 ⟨one_mem _, hδ⟩
-  haveI : LocallyCompactSpace (flagN B.d) := hcl.locallyCompactSpace
+  have : LocallyCompactSpace (flagN B.d) := hcl.locallyCompactSpace
   obtain ⟨e, -⟩ := GlobalTheory.SemiHaar.exists_homeo (flagN B.d) (embA B.d B.o) hnorm hc ⟨p, hpc, hp⟩
-  haveI : LocallyCompactSpace (besGrp B.d B.o) := e.symm.isClosedEmbedding.locallyCompactSpace
+  have : LocallyCompactSpace (besGrp B.d B.o) := e.symm.isClosedEmbedding.locallyCompactSpace
   refine ⟨isClosed_of_locallyCompactSpace (besGrp B.d B.o), ?_⟩
   exact GlobalTheory.SemiHaar.semiMeas_haar_inv (flagN B.d) (embA B.d B.o) hcl hc hnorm ⟨p, hpc, hp⟩
     (GQ B.V) (GQ B.A) hΛ hK hcov B.vA.μ B.vA.fund B.vN.ν h𝓝

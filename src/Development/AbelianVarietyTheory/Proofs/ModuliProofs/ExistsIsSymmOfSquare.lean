@@ -159,8 +159,8 @@ theorem pushout_functional {K : Type} [Field K] {A B C : CommRingCat.{0}} (f : C
     (∀ (α : A →+ K) (β : B →+ K), (∀ c a, α (f.hom c * a) = c * α a) → (∀ c b, β (g.hom c * b) = c * β b) →
       ∃ F : C →+ K, ∀ a b, F (i.hom a * j.hom b) = α a * β b) ∧
     ∀ G : C →+ K, (∀ a b, G (i.hom a * j.hom b) = 0) → ∀ w, G w = 0 := by
-  letI : Algebra K A := f.hom.toAlgebra
-  letI : Algebra K B := g.hom.toAlgebra
+  let : Algebra K A := f.hom.toAlgebra
+  let : Algebra K B := g.hom.toAlgebra
   have hw : f ≫ CommRingCat.ofHom (Algebra.TensorProduct.includeLeftRingHom (R := K) (A := A) (B := B)) =
       g ≫ CommRingCat.ofHom (Algebra.TensorProduct.includeRight (R := K) (A := A) (B := B)).toRingHom := by
     ext c
@@ -189,7 +189,7 @@ theorem pushout_functional {K : Type} [Field K] {A B C : CommRingCat.{0}} (f : C
     rw [map_mul, hφi, hφj, Algebra.TensorProduct.tmul_mul_tmul, _root_.mul_one, _root_.one_mul, TensorProduct.map_tmul,
       LinearMap.mul'_apply]
     rfl
-  · letI : Algebra K C := (f ≫ i).hom.toAlgebra
+  · let : Algebra K C := (f ≫ i).hom.toAlgebra
     let iA : A →ₐ[K] C := { i.hom with commutes' := fun _ => rfl }
     let jA : B →ₐ[K] C :=
       { j.hom with commutes' := fun c => (congrArg (fun m => m.hom c) po.w).symm }
@@ -337,8 +337,8 @@ theorem pair_symm {K : Type} [Field K] {Y Z : Scheme.{0}} {q : Y ⟶ Sp K} {p₁
     (hα0 : ∀ c, IsCob U c → α c = 0) (hβ0 : ∀ c, IsCob U c → β c = 0) :
     ∑ a, α (θ a) * β (φ a) = ∑ a, α (φ a) * β (θ a) := by
   classical
-  haveI := Fintype.ofFinite I
-  haveI := hq
+  have := Fintype.ofFinite I
+  have := hq
   have haff : ∀ i i', IsAffineOpen (U i ⊓ U i') := fun i i' =>
     (isAffineHom_diagonal_iff (f := q)).mp inferInstance ⊤ (isAffineOpen_top _) (U i) (by simp) (U i') (by simp)
       (hU i) (hU i')
@@ -524,7 +524,7 @@ theorem pair_symm {K : Type} [Field K] {Y Z : Scheme.{0}} {q : Y ⟶ Sp K} {p₁
 
 theorem kunneth_symm : ∀ (K : Type) [Field K] (Y Z : Scheme.{0}) (q : Y ⟶ Sp K) (p₁ p₂ : Z ⟶ Y) (I : Type) [Finite I] (U : I → Y.Opens) (g : ℕ) (θ φ : Fin g → C1 U), IsSeparated q → IsPullback p₁ p₂ q q → (∀ i, IsAffineOpen (U i)) → (∀ c, IsCob U (lc q c φ) → c = 0) → ∀ (u : ∀ i i' j, Γ(Z, p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ U j)) (u' : ∀ i j j', Γ(Z, p₁ ⁻¹ᵁ U i ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j'))), (∀ i i' j j', ∑ a, (pbT p₁ (θ a i i') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) * pbT p₂ (φ a j j') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) - pbT p₁ (φ a i i') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) * pbT p₂ (θ a j j') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j'))) = (rsT (u i i' j') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) - rsT (u i i' j) (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j'))) + (rsT (u' i' j j') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')) - rsT (u' i j j') (p₁ ⁻¹ᵁ (U i ⊓ U i') ⊓ p₂ ⁻¹ᵁ (U j ⊓ U j')))) → ∃ Θ : Matrix (Fin g) (Fin g) K, Θ.IsSymm ∧ ∀ b, IsCob U (θ b - lc q (Θ b) φ) := by
   intro K _ Y Z q p₁ p₂ I _ U g θ φ hq H hU hind u u' hu
-  letI : ∀ i j : I, Module K Γ(Y, U i ⊓ U j) := fun i j => (cstHom q (U i ⊓ U j)).hom.toModule
+  let : ∀ i j : I, Module K Γ(Y, U i ⊓ U j) := fun i j => (cstHom q (U i ⊓ U j)).hom.toModule
   have hsmul : ∀ (c : K) (x : C1 U), c • x = fun i j => constFn q (U i ⊓ U j) c * x i j := by
     intro c x
     funext i j

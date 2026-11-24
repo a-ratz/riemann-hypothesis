@@ -142,7 +142,7 @@ private theorem isDedekindDomain_valuationSubring_of_not_isUnit_natCast {K : Typ
     IsDedekindDomain V := by
   let f : 𝓞 K →+* V := (algebraMap (𝓞 K) K).codRestrict V.toSubring
     (fun x => mem_valuationSubring_of_isIntegral_moduli V (RingOfIntegers.isIntegral_coe x))
-  letI : Algebra (𝓞 K) V := f.toAlgebra
+  let : Algebra (𝓞 K) V := f.toAlgebra
   have hcoe : ∀ x : 𝓞 K, ((algebraMap (𝓞 K) V x : V) : K) = algebraMap (𝓞 K) K x := fun _ => rfl
   let P : Ideal (𝓞 K) := (IsLocalRing.maximalIdeal V).comap (algebraMap (𝓞 K) V)
   have hM : P.primeCompl ≤ nonZeroDivisors (𝓞 K) := by
@@ -163,7 +163,7 @@ private theorem isDedekindDomain_valuationSubring_of_not_isUnit_natCast {K : Typ
     apply RingOfIntegers.coe_injective
     have := congrArg Subtype.val h
     simpa [hcoe] using this
-  haveI : IsLocalization P.primeCompl V :=
+  have : IsLocalization P.primeCompl V :=
     { map_units := by
         rintro ⟨s, hs⟩
         by_contra h
@@ -176,7 +176,7 @@ private theorem isDedekindDomain_valuationSubring_of_not_isUnit_natCast {K : Typ
           exact nonZeroDivisors.ne_zero hb
             (by exact_mod_cast (IsFractionRing.injective (𝓞 K) K) (h0.trans (map_zero _).symm))
         let Dp := Localization.AtPrime P
-        haveI : IsDiscreteValuationRing Dp :=
+        have : IsDiscreteValuationRing Dp :=
           IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 K) hP Dp
         have hDinj : Function.Injective (algebraMap (𝓞 K) Dp) := IsLocalization.injective Dp hM
         obtain ⟨c, hc⟩ := ValuationRing.cond (algebraMap (𝓞 K) Dp a) (algebraMap (𝓞 K) Dp b)
@@ -221,8 +221,8 @@ open scoped CategoryTheory.Obj TensorProduct Pointwise in
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] in
 theorem _root_.GlobalTheory.CoeffRings.coeff_isDedFrac : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (l : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (c : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Coeff l), _root_.GlobalTheory.Models.IsDedFrac (algebraMap (𝓞 c.F) c.F) ∧ Algebra.FiniteType ℤ (𝓞 c.F) ∧ (∀ A : ℕ, A ∣ l.A → ∃ b : _root_.GlobalTheory.Models.RZ H 1 A →+* 𝓞 c.F, _root_.GlobalTheory.Models.IsInc (_root_.GlobalTheory.Models.RZ H 1 A).subtype (c.F.val.toRingHom.comp (algebraMap (𝓞 c.F) c.F)) b) ∧ ∀ (p : ℕ) (W : ValuationSubring ℂ), p.Prime → (p : ℂ) ∈ W.nonunits → _root_.GlobalTheory.Models.IsDedFrac (c.V W).subtype ∧ (∀ n : ℕ, n.Coprime p → IsUnit (n : c.V W)) ∧ ∀ S A : ℕ, S.Coprime p → 0 < A → _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta A ∈ c.F → ∃ b : _root_.GlobalTheory.Models.RZ H S A →+* c.V W, _root_.GlobalTheory.Models.IsInc (_root_.GlobalTheory.Models.RZ H S A).subtype (c.F.val.toRingHom.comp (c.V W).subtype) b := by
   intro E _ _ _ H l c
-  haveI : FiniteDimensional ℚ c.F := c.2
-  haveI : NumberField c.F := ⟨⟩
+  have : FiniteDimensional ℚ c.F := c.2
+  have : NumberField c.F := ⟨⟩
   have hw : IsIntegral ℤ ((1 + H.rt0) / 2) := isIntegral_one_add_rt0_div_two H
   have hnatF : ∀ n : ℕ, (n : ℂ) ∈ c.F := fun n => natCast_mem c.F n
   have hwF : (1 + H.rt0) / 2 ∈ c.F :=

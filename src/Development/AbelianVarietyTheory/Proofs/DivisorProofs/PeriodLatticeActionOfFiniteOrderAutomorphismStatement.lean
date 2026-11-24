@@ -113,7 +113,7 @@ theorem lift_unique (f : P.A ⟶ P.A) (F F' : (Fin P.g → ℂ) →ₗ[ℂ] (Fin
     have h := u.ex_add ((F - F') z) (F' z)
     rw [LinearMap.sub_apply, sub_add_cancel, hF, hF'] at h
     exact mul_eq_right.mp h.symm
-  haveI := u.discrete
+  have := u.discrete
   let D : (Fin P.g → ℂ) → u.Λ := fun z => ⟨(F - F') z, hmem z⟩
   have hD : Continuous D :=
     Continuous.subtype_mk (LinearMap.continuous_of_finiteDimensional _) _
@@ -206,7 +206,7 @@ theorem main_of_unif (E : Type) [Field E] [NumberField E] (act : OAct (𝓞 E) P
       Module.Finite (𝓞 E) Λ ∧ Module.IsTorsionFree (𝓞 E) Λ ∧ F ^ N = 1 ∧ (∀ a b, ψ (a + b) = ψ a * ψ b) ∧
       (∀ (c : 𝓞 E) a, ψ (c • a) = ψ a ≫ act.act c) ∧ (∀ a, ψ a = 1 ↔ ∃ b, a = n • b) ∧
       (∀ q : 𝟙_ (Over (Sp ℂ)) ⟶ P.A, q ^ n = 1 → ∃ a, ψ a = q) ∧ ∀ a, ψ (F a) = ψ a ≫ θ := by
-  letI inst : Module (𝓞 E) u.Λ := Module.compHom u.Λ (ringAct u hl act)
+  let inst : Module (𝓞 E) u.Λ := Module.compHom u.Λ (ringAct u hl act)
   have hsmul : ∀ (c : 𝓞 E) (x : u.Λ), ((c • x : u.Λ) : Fin P.g → ℂ) = lift u hl (act.act c) (act.hom c) x :=
     fun _ _ => rfl
 
@@ -227,9 +227,9 @@ theorem main_of_unif (E : Type) [Field E] [NumberField E] (act : OAct (𝓞 E) P
   have hψlift : ∀ (f : P.A ⟶ P.A) (hf : IsMonHom f) (a : u.Λ),
       u.ex ((n : ℂ)⁻¹ • lift u hl f hf a) = ψ a ≫ f := fun f hf a => by
     rw [← map_smul, lift_spec]
-  haveI := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
-  haveI hZ : Module.Finite ℤ u.Λ := ZLattice.module_finite ℝ u.Λ
+  have := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have hZ : Module.Finite ℤ u.Λ := ZLattice.module_finite ℝ u.Λ
   refine ⟨u.Λ, inferInstance, inst, F, ψ, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) u.Λ
   · refine Module.IsTorsionFree.of_smul_eq_zero fun c x h => ?_

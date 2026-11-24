@@ -724,8 +724,8 @@ open UpperTheory.Gal.FiniteEtaleModels
 theorem UpperTheory.Gal.FiniteEtaleModels.finModel_holds :
     FinCover → FinModel := by
   intro cover p _ D R _ _ b N h3 hcop 𝔞 r h𝔞 M
-  haveI : Smooth M.s := M.smooth.smooth
-  haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : Smooth M.s := M.smooth.smooth
+  have : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨Y, q, u, mu, lev, act, hlev, hgal, hrep⟩ :=
     cover p D R b N 𝔞 r h3 hcop h𝔞 M.X M.s M.univ
   let E : EtModel b N 𝔞 r :=
@@ -760,11 +760,11 @@ private theorem quot_finite {p : ℕ} [Fact p.Prime] (D : Datum p) (𝔞 : Ideal
   have hr : 𝔞 ^ r ≠ ⊥ := pow_ne_zero r h𝔞
   have hN0 : Ideal.absNorm (𝔞 ^ r) ≠ 0 := fun h => hr (Ideal.absNorm_eq_zero_iff.mp h)
   have hNmem : ((Ideal.absNorm (𝔞 ^ r) : ℕ) : 𝓞 D.F) ∈ 𝔞 ^ r := Ideal.absNorm_mem _
-  haveI hLa : AddGroup.FG D.La := Module.Finite.iff_addGroup_fg.mp D.finLa
-  haveI : AddGroup.FG (D.La ⧸ wSub D 𝔞 r) :=
+  have hLa : AddGroup.FG D.La := Module.Finite.iff_addGroup_fg.mp D.finLa
+  have : AddGroup.FG (D.La ⧸ wSub D 𝔞 r) :=
     AddGroup.fg_of_surjective (f := (Submodule.mkQ (wSub D 𝔞 r)).toAddMonoidHom)
       (Submodule.mkQ_surjective _)
-  apply AddCommGroup.finite_of_fg_torsion
+  apply AddCommGroup.finite_of_fg_isAddTorsion
   intro x
   obtain ⟨z, rfl⟩ := Submodule.mkQ_surjective (wSub D 𝔞 r) x
   refine isOfFinAddOrder_iff_nsmul_eq_zero.mpr ⟨Ideal.absNorm (𝔞 ^ r), Nat.pos_of_ne_zero hN0, ?_⟩
@@ -776,7 +776,7 @@ private theorem quot_finite {p : ℕ} [Fact p.Prime] (D : Datum p) (𝔞 : Ideal
 theorem UpperTheory.Gal.FiniteEtaleModels.grpFin_holds :
     GrpFin := by
   intro p _ D 𝔞 r h𝔞
-  haveI hQ : Finite (D.La ⧸ wSub D 𝔞 r) := quot_finite D 𝔞 r h𝔞
+  have hQ : Finite (D.La ⧸ wSub D 𝔞 r) := quot_finite D 𝔞 r h𝔞
   refine ⟨hQ, ?_⟩
   exact Finite.of_injective
     (fun e : (D.La ⧸ wSub D 𝔞 r) ≃ₗ[D.O] D.La ⧸ wSub D 𝔞 r => (e : D.La ⧸ wSub D 𝔞 r → D.La ⧸ wSub D 𝔞 r))
@@ -856,17 +856,17 @@ private lemma exists_map_ker {p : ℕ} [Fact p.Prime] {F : Type} [Field F] [Numb
     (k : Type) [Field k] [IsAlgClosed k] [CharP k p] :
     ∃ φ : 𝓞 F →+* k, RingHom.ker φ = J := by
   classical
-  letI : Field (𝓞 F ⧸ J) := Ideal.Quotient.field J
+  let : Field (𝓞 F ⧸ J) := Ideal.Quotient.field J
   have hpr : p.Prime := Fact.out
-  haveI : CharP (𝓞 F ⧸ J) p := by
+  have : CharP (𝓞 F ⧸ J) p := by
     rw [CharP.charP_iff_prime_eq_zero hpr]
     rw [← map_natCast (Ideal.Quotient.mk J), Ideal.Quotient.eq_zero_iff_mem]
     exact hp
-  haveI : Finite (𝓞 F ⧸ J) := Ideal.finiteQuotientOfFreeOfNeBot J hne
-  letI : Algebra (ZMod p) (𝓞 F ⧸ J) := ZMod.algebra _ p
-  letI : Algebra (ZMod p) k := ZMod.algebra _ p
-  haveI : Module.Finite (ZMod p) (𝓞 F ⧸ J) := Module.Finite.of_finite
-  haveI : Algebra.IsAlgebraic (ZMod p) (𝓞 F ⧸ J) := Algebra.IsAlgebraic.of_finite _ _
+  have : Finite (𝓞 F ⧸ J) := Ideal.finiteQuotientOfFreeOfNeBot J hne
+  let : Algebra (ZMod p) (𝓞 F ⧸ J) := ZMod.algebra _ p
+  let : Algebra (ZMod p) k := ZMod.algebra _ p
+  have : Module.Finite (ZMod p) (𝓞 F ⧸ J) := Module.Finite.of_finite
+  have : Algebra.IsAlgebraic (ZMod p) (𝓞 F ⧸ J) := Algebra.IsAlgebraic.of_finite _ _
   let ψ : (𝓞 F ⧸ J) →ₐ[ZMod p] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -899,10 +899,10 @@ theorem UpperTheory.Gal.FiniteEtaleModels.placeOf_holds :
         exact hne (le_bot_iff.mp hP𝔞)
       have hPmax : P.IsMaximal := Ideal.IsPrime.isMaximal hPprime hPne
       obtain ⟨_, hpP, _, hφ⟩ := hall P hPmax hP𝔞
-      haveI : CharP (IsLocalRing.ResidueField O) p := by
+      have : CharP (IsLocalRing.ResidueField O) p := by
         rw [CharP.charP_iff_prime_eq_zero hpr, ← map_natCast (IsLocalRing.residue O)]
         exact (IsLocalRing.residue_eq_zero_iff _).mpr hpO
-      haveI : CharP (AlgebraicClosure (IsLocalRing.ResidueField O)) p := by
+      have : CharP (AlgebraicClosure (IsLocalRing.ResidueField O)) p := by
         rw [CharP.charP_iff_prime_eq_zero hpr,
           ← map_natCast (algebraMap (IsLocalRing.ResidueField O) (AlgebraicClosure _)),
           CharP.cast_eq_zero, map_zero]
@@ -931,7 +931,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.placeOf_holds :
       have h00 : ((p : ℕ) : 𝓞 D.F) = 0 := eq_zero_of_pow_eq_zero h0
       exact hpr.ne_zero (by exact_mod_cast h00)
     · intro w' hw' h𝔞w'
-      haveI := hw'.isPrime
+      have := hw'.isPrime
       have hUw' : uIdeal D r ≤ w' := Ideal.IsPrime.le_of_pow_le (he.trans h𝔞w')
       have hne : w' ≠ w := by
         rintro rfl
@@ -985,7 +985,7 @@ theorem pt_ext_of_pullback {S : Scheme.{0}} {A : Over S} {k k' : Type} [Field k]
     (x' : Sp k' ⟶ Sp k) (g₁ g₂ : Over.mk x ⟶ A)
     (h : (Over.homMk x' rfl : Over.mk (x' ≫ x) ⟶ Over.mk x) ≫ g₁ =
       (Over.homMk x' rfl : Over.mk (x' ≫ x) ⟶ Over.mk x) ≫ g₂) : g₁ = g₂ := by
-  haveI := epi_sp_field x'
+  have := epi_sp_field x'
   apply Over.OverMorphism.ext
   have := congrArg CommaMorphism.left h
   simp only [Over.comp_left, Over.homMk_left] at this
@@ -998,10 +998,10 @@ theorem exists_etLevOver_geomPt : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
     have hp : (p : 𝓞 D.F) ∈ w0 := hw.2.1
     rw [h, Ideal.mem_bot] at hp
     exact (Fact.out : p.Prime).ne_zero (by exact_mod_cast hp)
-  haveI : Finite (𝓞 D.F ⧸ w0 ^ r) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero _ hw0)
+  have : Finite (𝓞 D.F ⧸ w0 ^ r) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero _ hw0)
   obtain ⟨f, fadd, fsm, finj, fsurj⟩ := GlobalTheory.T.torsion_points_additive_parametrization p D R b N w0 r hw S s o k x
   have hmul : ∀ (c : D.O) (g h : Over.mk x ⟶ o.A), (g * h) ≫ o.act.act c = (g ≫ o.act.act c) * (h ≫ o.act.act c) := by
-    intro c g h; haveI := o.act.hom c; exact MonObj.mul_comp _ _ _
+    intro c g h; have := o.act.hom c; exact MonObj.mul_comp _ _ _
   obtain ⟨l, ladd, llin, lker, lsurj⟩ := GlobalTheory.T.exists_morita_lattice_quotient_torsion p D w0 r hw.1 hw.2.1 (Over.mk x ⟶ o.A) (fun c g => g ≫ o.act.act c)
     (fun c g h => hmul c g h) (fun g => by simp only [o.act.one, Category.comp_id])
     (fun b c g => by simp only [o.act.mul, Category.assoc])
@@ -1077,7 +1077,7 @@ private theorem lev_top {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommR
     refine Submodule.subset_span ⟨1, by simp, y, ?_⟩
     simp
   refine ⟨fun _ _ => (_root_.mul_one _).symm, fun c _ => ?_, fun _ _ => rfl, fun k _ _ x => ⟨fun y _ => hw y, fun g hg => ⟨0, ?_⟩⟩⟩
-  · haveI := o.act.hom c
+  · have := o.act.hom c
     exact (MonObj.one_comp _).symm
   · have h1 := hg 1 (by simp)
     rw [map_one, o.act.one, Category.comp_id] at h1
@@ -1119,10 +1119,10 @@ theorem UpperTheory.Gal.FiniteEtaleModels.repMul_holds :
   intro hM hP p _ D R _ b N S s o 𝔞 𝔟 hab h₁ h₂
   obtain ⟨Y₁, π₁, lu₁, hf₁, he₁, hl₁, hu₁⟩ := h₁
   obtain ⟨Y₂, π₂, lu₂, hf₂, he₂, hl₂, hu₂⟩ := h₂
-  haveI := hf₁
-  haveI := hf₂
-  haveI := he₁
-  haveI := he₂
+  have := hf₁
+  have := hf₂
+  have := he₁
+  have := he₂
   obtain ⟨ea, hea, eb, heb, hsum⟩ :=
     Submodule.mem_sup.1 (show (1 : 𝓞 D.F) ∈ 𝔞 ⊔ 𝔟 by rw [hab]; exact Submodule.mem_top)
   have kill : ∀ {𝔠 : Ideal (𝓞 D.F)} {T : Over S} {l : D.La → (T ⟶ o.A)}, IsEtLevOver o 𝔠 1 l →

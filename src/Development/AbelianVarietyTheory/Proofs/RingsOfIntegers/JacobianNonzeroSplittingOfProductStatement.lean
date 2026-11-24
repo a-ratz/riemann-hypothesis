@@ -151,8 +151,8 @@ theorem exists_trace_eq_form_mul_diagonal : ∀ (A R : Type) [CommRing A] [IsLoc
   refine TraceDiagonal.exists_trace_eq_of_isUnit_det b M (fun x => by rw [← hM, mul_comm, hΔ]) ?_
   let k := ResidueField A
   let I : Ideal R := (maximalIdeal A).map (algebraMap A R)
-  letI : Algebra k (R ⧸ I) := Ideal.Quotient.algebraQuotientMapQuotient
-  haveI : IsScalarTower A k (R ⧸ I) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra k (R ⧸ I) := Ideal.Quotient.algebraQuotientMapQuotient
+  have : IsScalarTower A k (R ⧸ I) := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨lift, hlift⟩ := (residue_surjective (R := A)).hasRightInverse
   have hεa : ∀ a, ε (algebraMap A R a) = residue A a := fun a => RingHom.congr_fun hε a
   let ev : R →ₐ[A] k := { ε with commutes' := hεa }
@@ -256,7 +256,7 @@ theorem exists_eq_C_add_sum {R σ : Type} [CommRing R] [Fintype σ] (s : MvPower
 theorem exists_ringHom_eval {A B σ : Type} [CommRing A] [CommRing B] [Finite σ] (ι : A →+* B)
     (K : Ideal B) [h : IsAdicComplete K B] (a : σ → B) (ha : ∀ j, a j ∈ K) :
     ∃ θ : MvPowerSeries σ A →+* B, (∀ c, θ (C c) = ι c) ∧ ∀ j, θ (X j) = a j := by
-  letI := ι.toAlgebra
+  let := ι.toAlgebra
   obtain ⟨ψ, hψ⟩ := (mvPowerSeries_eval_of_pow_mem B K σ a fun j => ⟨1, by simpa using ha j⟩).1 h A
   exact ⟨ψ, fun c => ψ.commutes c, hψ⟩
 
@@ -394,9 +394,9 @@ theorem dvd_trace_of_ringHom {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoe
     {r : ℕ} (b : Fin r → B) (hb : ∀ g, ∃! c : Fin r → A, g = ∑ i, ι (c i) * b i)
     (g : B) (M : Matrix (Fin r) (Fin r) A) (hM : ∀ j, g * b j = ∑ i, ι (M i j) * b i) :
     δ ∣ M.trace := by
-  letI := ι.toAlgebra
-  letI := θ.toAlgebra
-  haveI : IsScalarTower A (MvPowerSeries σ A) B := IsScalarTower.of_algebraMap_eq fun c => (hι c).symm
+  let := ι.toAlgebra
+  let := θ.toAlgebra
+  have : IsScalarTower A (MvPowerSeries σ A) B := IsScalarTower.of_algebraMap_eq fun c => (hι c).symm
   have hsm : ∀ (c : A) (x : B), c • x = ι c * x := fun c x => rfl
   let β : Module.Basis (Fin r) A B := Module.Basis.mk (v := b)
     (Fintype.linearIndependent_iff.2 fun c hc => by
@@ -406,8 +406,8 @@ theorem dvd_trace_of_ringHom {A B σ : Type} [CommRing A] [IsLocalRing A] [IsNoe
       obtain ⟨c, hc, -⟩ := hb x
       exact (Submodule.mem_span_range_iff_exists_fun A).2 ⟨c, hc.symm⟩)
   have hβ : ∀ i, β i = b i := fun i => Module.Basis.mk_apply _ _ i
-  haveI : Module.Free A B := Module.Free.of_basis β
-  haveI : Module.Finite A B := Module.Finite.of_basis β
+  have : Module.Free A B := Module.Free.of_basis β
+  have : Module.Finite A B := Module.Finite.of_basis β
   obtain ⟨lam, hlam⟩ := exists_trace_eq (A := A) (B := B) hsurj f hf0 ε hε hW
   have e : Algebra.leftMulMatrix β g = M := by
     ext i j
@@ -728,19 +728,19 @@ theorem sum_tower {A₀ A₁ R : Type} [CommRing A₀] [IsDomain A₀] [CommRing
     (x : A₁) (M : Matrix (Fin r) (Fin r) A₀) (hM : ∀ j, x * b j = ∑ i, φ (M i j) * b i) :
     ∑ α ∈ S, g α (ψ x) = ψ (φ ((r' : A₀) * M.trace)) := by
   classical
-  letI := φ.toAlgebra
-  letI := ψ.toAlgebra
-  letI := (ψ.comp φ).toAlgebra
-  haveI : IsScalarTower A₀ A₁ R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := φ.toAlgebra
+  let := ψ.toAlgebra
+  let := (ψ.comp φ).toAlgebra
+  have : IsScalarTower A₀ A₁ R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨e, he⟩ := exists_basis (A := A₀) b h
   obtain ⟨e', -⟩ := exists_basis (A := A₁) b' h'
   obtain ⟨e'', -⟩ := exists_basis (A := A₀) b'' h''
-  haveI := Module.Free.of_basis e
-  haveI := Module.Free.of_basis e'
-  haveI := Module.Free.of_basis e''
-  haveI := Module.Finite.of_basis e
-  haveI := Module.Finite.of_basis e'
-  haveI := Module.Finite.of_basis e''
+  have := Module.Free.of_basis e
+  have := Module.Free.of_basis e'
+  have := Module.Free.of_basis e''
+  have := Module.Finite.of_basis e
+  have := Module.Finite.of_basis e'
+  have := Module.Finite.of_basis e''
   choose χ hχ using hg
   let G : S → (R →ₐ[A₀] R) := fun α =>
     { χ α.1 α.2 with commutes' := fun a => (hχ α.1 α.2 _).symm.trans (hfix α.1 α.2 a) }
@@ -899,7 +899,7 @@ theorem sum_shift_kerM_mul : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscret
   obtain ⟨U, hU⟩ := GlobalTheory.T.det_jacobian_formal_module_matrix_eq_const_mul_unit V d O B n p
   obtain ⟨g, hg⟩ := GlobalTheory.T.constant_dvd_trace_of_jacobian_finite_colength V _ (crd B p) (crd_const B p) cp _ U hjp hU r b hb f' (Matrix.of fun i j => M j i) hM
   refine ⟨g, ?_⟩
-  haveI : IsDomain (PS V n d) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (PS V n d) := NoZeroDivisors.to_isDomain _
   have hsm : ∀ α ∈ hfin.toFinset, ∀ b, Small (α b) := fun α hα => (hfin.mem_toFinset.1 hα).1
   have hsh := (GlobalTheory.T.formalGroupTranslate_automorphism_and_matrixKernel V d O B n (p * q)).2.2
   have key := sum_tower (pullHom B p : PS V n d →+* PS V n d) (pullHom B q : PS V n d →+* PS V n d) b b' b''

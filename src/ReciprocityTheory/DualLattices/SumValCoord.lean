@@ -155,11 +155,11 @@ theorem u5 : MonomialDeterminantStatement := by
       obtain ⟨y, hy⟩ := (hR.isUnit_of_one' hv1).exists_right_inv
       rw [← hy]
       exact J.mul_mem_right y hxJ
-  letI : Field (R ⧸ I) := Ideal.Quotient.field I
+  let : Field (R ⧸ I) := Ideal.Quotient.field I
   have hpk : ((p : ℕ) : R ⧸ I) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk I), Ideal.Quotient.eq_zero_iff_mem, hmem, map_natCast]
     exact hp
-  haveI : CharP (R ⧸ I) p := by
+  have : CharP (R ⧸ I) p := by
     have hdvd := (ringChar.spec (R ⧸ I) p).mp hpk
     rcases (Fact.out : p.Prime).eq_one_or_self_of_dvd _ hdvd with h1 | h1
     · exact absurd h1 CharP.ringChar_ne_one

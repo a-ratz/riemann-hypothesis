@@ -142,7 +142,7 @@ private theorem pow_q_pow (hq : q ≠ 2) {s a : ℤ} (hs : (a : ZMod q) ^ (q / 2
 
 private theorem even_of_neg (hq : q ≠ 2) {a : ℤ} (hs : (a : ZMod q) ^ (q / 2) = ((-1 : ℤ) : ZMod q))
     {y : k} (hy : y ^ 2 = (a : k)) (hy0 : y ≠ 0) {m : ℕ} (hc : Nat.card k = q ^ m) : Even m := by
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   have h1 := pow_q_pow hq hs (Or.inr rfl) hy m
   rw [← hc, Nat.card_eq_fintype_card, FiniteField.pow_card] at h1
   by_contra hm
@@ -156,7 +156,7 @@ private theorem invol_data (hq : q ≠ 2) {s a : ℤ} (hs : (a : ZMod q) ^ (q / 
     (hs1 : s = 1 ∨ s = -1) {y : k} (hy : y ^ 2 = (a : k)) (hy0 : y ≠ 0) (τ : k →+* k)
     (hτ : ∀ z, τ (τ z) = z) (hτy : τ y = -y) {m : ℕ} (hc : Nat.card k = q ^ m) :
     s = -1 ∧ ∃ j, Odd j ∧ m = 2 * j := by
-  letI : Algebra (ZMod q) k := ZMod.algebra k q
+  let : Algebra (ZMod q) k := ZMod.algebra k q
   let σ : k ≃ₐ[ZMod q] k := AlgEquiv.ofRingEquiv (f := RingEquiv.ofRingHom τ τ (RingHom.ext hτ) (RingHom.ext hτ))
     (fun x => by
       obtain ⟨n, rfl⟩ := ZMod.natCast_zmod_surjective x
@@ -260,18 +260,18 @@ private theorem norm_mem (h : IsCMExt F E σ) (x : 𝓞 E) :
 private theorem not_le_sq {A : Type} [CommRing A] [Algebra A (𝓞 E)] [Algebra.EssFiniteType A (𝓞 E)]
     (w : HeightOneSpectrum (𝓞 E)) (hu : Algebra.IsUnramifiedAt A w.asIdeal) :
     ¬ (w.asIdeal.under A).map (algebraMap A (𝓞 E)) ≤ w.asIdeal ^ 2 := by
-  haveI := w.isPrime
+  have := w.isPrime
   have hle : (w.asIdeal.under A).map (algebraMap A (𝓞 E)) ≤ w.asIdeal := Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (w.asIdeal.under A) w.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (w.asIdeal.under A) w.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (w.asIdeal.under A) w.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff w.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq A (w.asIdeal.under A) w.asIdeal).1 hu).2
-  exact fun h => (Ideal.ramificationIdx_ne_one_iff hle).2 h h1
+  exact fun h => (Ideal.ramificationIdx'_ne_one_iff hle).2 h h1
 
 private theorem inert_of_kept (h : IsCMExt F E σ) (hu : Algebra.Unramified (𝓞 F) (𝓞 E))
     (w : HeightOneSpectrum (𝓞 E)) (hk : Fx σ w) : Formalism.UG.IsInertAt F E (w.under (𝓞 F)) w := by
   classical
-  haveI := w.isPrime
+  have := w.isPrime
   set v := w.under (𝓞 F) with hv
   have hva : v.asIdeal = w.asIdeal.under (𝓞 F) := rfl
   have hinj : Function.Injective (algebraMap (𝓞 F) (𝓞 E)) := FaithfulSMul.algebraMap_injective _ _
@@ -312,8 +312,8 @@ private theorem inert_of_kept (h : IsCMExt F E σ) (hu : Algebra.Unramified (�
 
 private theorem unram_int {B : Base F E} (hG : GoodK σ B) (w : HeightOneSpectrum (𝓞 E)) (hk : Fx σ w) :
     (2 : 𝓞 F) ∉ (w.under (𝓞 F)).asIdeal ∧ Algebra.IsUnramifiedAt ℤ w.asIdeal := by
-  haveI := hG.unram
-  haveI := w.isPrime
+  have := hG.unram
+  have := w.isPrime
   have hin := hG.inert _ w (inert_of_kept hG.cm hG.unram w hk)
   refine ⟨hin.1, ?_⟩
   have hnF := GlobalTheory.DiffCoprimeP.not_le_differentIdeal_of_psiUnr hG.std _ hin.2.2
@@ -328,7 +328,7 @@ private theorem unram_int {B : Base F E} (hG : GoodK σ B) (w : HeightOneSpectru
 private theorem not_mem_sq (w : HeightOneSpectrum (𝓞 E)) (hu : Algebra.IsUnramifiedAt ℤ w.asIdeal) {q : ℕ}
     (hq : q.Prime) (hqw : (q : 𝓞 E) ∈ w.asIdeal) : (q : 𝓞 E) ∉ w.asIdeal ^ 2 := by
   intro hmem
-  haveI := w.isPrime
+  have := w.isPrime
   apply not_le_sq (A := ℤ) w hu
   have hmax : (Ideal.span {(q : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.1 hq).irreducible
@@ -364,7 +364,7 @@ private theorem not_dvd_of {a : ℕ} (hsq : Squarefree a) {y : 𝓞 E} (hy : y ^
 
 private theorem charP_res (P : Ideal (𝓞 E)) [hP : P.IsMaximal] [Finite (𝓞 E ⧸ P)] {q : ℕ} (hq : q.Prime)
     (hqP : (q : 𝓞 E) ∈ P) : letI := Ideal.Quotient.field P; CharP (𝓞 E ⧸ P) q := by
-  letI := Ideal.Quotient.field P
+  let := Ideal.Quotient.field P
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 E ⧸ P)
   have hpp := CharP.char_is_prime (𝓞 E ⧸ P) p
   have h0 : ((q : ℕ) : 𝓞 E ⧸ P) = 0 := by
@@ -376,15 +376,15 @@ private theorem charP_res (P : Ideal (𝓞 E)) [hP : P.IsMaximal] [Finite (𝓞 
 
 private theorem res_card (P : Ideal (𝓞 E)) [hP : P.IsMaximal] [Finite (𝓞 E ⧸ P)] {q : ℕ} (hq : q.Prime)
     (hqP : (q : 𝓞 E) ∈ P) : ∃ m, Nat.card (𝓞 E ⧸ P) = q ^ m := by
-  letI := Ideal.Quotient.field P
-  haveI := charP_res P hq hqP
-  haveI := Fintype.ofFinite (𝓞 E ⧸ P)
+  let := Ideal.Quotient.field P
+  have := charP_res P hq hqP
+  have := Fintype.ofFinite (𝓞 E ⧸ P)
   obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 E ⧸ P) q
   exact ⟨n, by rw [Nat.card_eq_fintype_card, hn]⟩
 
 private theorem res_prime (P : Ideal (𝓞 E)) [hP : P.IsMaximal] [Finite (𝓞 E ⧸ P)] :
     ∃ q : ℕ, q.Prime ∧ (q : 𝓞 E) ∈ P := by
-  letI := Ideal.Quotient.field P
+  let := Ideal.Quotient.field P
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 E ⧸ P)
   refine ⟨p, CharP.char_is_prime (𝓞 E ⧸ P) p, Ideal.Quotient.eq_zero_iff_mem.1 ?_⟩
   simpa using CharP.cast_eq_zero (𝓞 E ⧸ P) p
@@ -393,8 +393,8 @@ private theorem res_root {a : ℕ} {y : 𝓞 E} (hy : y ^ 2 = -(a : 𝓞 E)) (P 
     [Finite (𝓞 E ⧸ P)] {q : ℕ} (hq : q.Prime) (hqP : (q : 𝓞 E) ∈ P) (hnd : ¬ q ∣ a) :
     letI := Ideal.Quotient.field P
     (Ideal.Quotient.mk P y) ^ 2 = ((-(a : ℤ) : ℤ) : 𝓞 E ⧸ P) ∧ Ideal.Quotient.mk P y ≠ 0 := by
-  letI := Ideal.Quotient.field P
-  haveI := charP_res P hq hqP
+  let := Ideal.Quotient.field P
+  have := charP_res P hq hqP
   have h1 : (Ideal.Quotient.mk P y) ^ 2 = ((-(a : ℤ) : ℤ) : 𝓞 E ⧸ P) := by
     have := congrArg (Ideal.Quotient.mk P) hy
     simpa using this
@@ -421,9 +421,9 @@ private theorem kept_deg {B : Base F E} (hG : GoodK σ B) {a : ℕ} (hsq : Squar
     rw [Ideal.mem_comap, map_ofNat]
     simpa using hqP
   have hnd := not_dvd_of hsq hy w hq hqP (not_mem_sq w hu hq hqP)
-  haveI : Fact q.Prime := ⟨hq⟩
-  letI := Ideal.Quotient.field P
-  haveI := charP_res P hq hqP
+  have : Fact q.Prime := ⟨hq⟩
+  let := Ideal.Quotient.field P
+  have := charP_res P hq hqP
   have ha0 : ((-(a : ℤ) : ℤ) : ZMod q) ≠ 0 := by
     intro h
     apply hnd
@@ -447,9 +447,9 @@ private theorem kept_deg {B : Base F E} (hG : GoodK σ B) {a : ℕ} (hsq : Squar
 private theorem even_deg {a : ℕ} {y : 𝓞 E} (hy : y ^ 2 = -(a : 𝓞 E)) (P : Ideal (𝓞 E)) [hP : P.IsMaximal]
     [Finite (𝓞 E ⧸ P)] {q m : ℕ} (hq : q.Prime) (hqP : (q : 𝓞 E) ∈ P) (hc : Nat.card (𝓞 E ⧸ P) = q ^ m)
     (h2 : q ≠ 2) (hnd : ¬ q ∣ a) (hs : ((-(a : ℤ) : ℤ) : ZMod q) ^ (q / 2) = ((-1 : ℤ) : ZMod q)) : Even m := by
-  haveI : Fact q.Prime := ⟨hq⟩
-  letI := Ideal.Quotient.field P
-  haveI := charP_res P hq hqP
+  have : Fact q.Prime := ⟨hq⟩
+  let := Ideal.Quotient.field P
+  have := charP_res P hq hqP
   obtain ⟨hyb, hy0⟩ := res_root hy P hq hqP hnd
   exact even_of_neg h2 hs hyb hy0 hc
 
@@ -500,7 +500,7 @@ theorem normK : NormK := by
   have hl : ofPrimeValues u (q ^ m) = u q ^ m := by rw [map_pow, ofPrimeValues_prime u hq]
   by_cases hS : S q
   · have hu2 : u q ^ 2 = -(q : ℂ) := by
-      simp only [u, if_pos hS, mul_pow, hsqr, Complex.I_sq]
+      simp only [u, ite_eq_left hS, mul_pow, hsqr, Complex.I_sq]
       ring
     obtain ⟨P₀, hP₀, hf₀, hq₀, hk₀⟩ := hS
     obtain ⟨m₀, hc₀⟩ := res_card P₀ hq hq₀
@@ -512,7 +512,7 @@ theorem normK : NormK := by
       rfl
     · obtain ⟨-, -, -, j, hj, hm⟩ := kept_deg hG hsq hs' hy P hq hqP hc hk
       rw [hc, hl, ← sqrt_pow_nat, hm, pow_mul, pow_mul, hu2, hsqr, hj.neg_pow]
-  · have hu1 : u q = (Real.sqrt q : ℂ) := by simp only [u, if_neg hS, mul_one]
+  · have hu1 : u q = (Real.sqrt q : ℂ) := by simp only [u, ite_eq_right hS, mul_one]
     rw [hc, hl, hu1, sqrt_pow_nat]
     exact ⟨hsqr _, fun hk => absurd ⟨P, hP, hfin, hqP, hk⟩ hS⟩
 
@@ -596,8 +596,8 @@ theorem eta_eq_prod_sign_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E
         ((‖piInf (B.emb w) ((idFF F E a : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E)‖ : ℝ) : ℂ) := by
   intro F E _ _ _ _ _ σ B hB η hη a ha
   have hcm := hB.cm
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
-  haveI := hcm.1
+  have : Algebra.IsQuadraticExtension F E := ⟨hcm.2.2.1⟩
+  have := hcm.1
   rw [eq_signToCircle η hη, MonoidHom.comp_apply, normSign_eq_prod (finComp_eq_one ha), map_prod]
   rw [show ((∏ w : InfinitePlace F, signToCircle (eta F E w.Completion (infComp a w)) : Circle) : ℂ) =
       ∏ w : InfinitePlace F, ((signToCircle (eta F E w.Completion (infComp a w)) : Circle) : ℂ) from
@@ -615,7 +615,7 @@ theorem eta_eq_prod_sign_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   · have hneg : r < 0 := lt_of_le_of_ne (not_lt.1 hpos) hr0
     rw [eta_eq_neg_one_iff.2 (fun h => hpos (hx.1 h)), abs_of_neg hneg]
     change ((if (-1 : ℤˣ) = 1 then (1 : Circle) else -1 : Circle) : ℂ) = _
-    rw [if_neg (by decide)]
+    rw [ite_eq_right (by decide)]
     push_cast
     rw [div_neg, div_self (by exact_mod_cast hr0)]
 end GlobalTheory.EtaSignReal
@@ -666,8 +666,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem exists_weil_char_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
     _root_.UpperTheory.TP.W.GoodK σ B → ∃ ξ : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF ξ ∧ HasExp B.emb ξ (fun _ => 1) := by
   intro F E _ _ _ _ _ σ B hB
-  haveI : IsCMField E := isCMField_of_cmExt hB.cm
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsCMField E := isCMField_of_cmExt hB.cm
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨q, hq1, hq⟩ := Nat.exists_infinite_primes (max 3 (Nat.card (Units.torsion E) + 1))
   have hq2 : 2 < q := by omega
   have htq : Nat.card (Units.torsion E) < q := by omega
@@ -746,7 +746,7 @@ theorem exists_extend_hecke_k : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
         (∀ z : (AF F ⊗[F] E)ˣ, At (evI F) ((z : AF F ⊗[F] E) - 1) → lam' z = 1) ∧
         ∀ a, lam' (idFF F E a) = lam a := by
   intro F E _ _ _ _ _ σ B hB lam hc h1 hinf
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨M, hM, hMk⟩ := GlobalTheory.T.exists_congruence_kernel_ideleCharacter_trivialAtInfinity F lam hc hinf
   let V : Subgroup (AF F ⊗[F] E)ˣ := (Units.map (incAF F E).toMonoidHom).range ⊔ WE F E (8 * M)
   have hkey : ∀ a : (AF F)ˣ, idFF F E a ∈ V → lam a = 1 := key σ hB.cm M hM lam h1 hMk
@@ -761,13 +761,13 @@ theorem exists_extend_hecke_k : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hVo : IsOpen (V : Set (AF F ⊗[F] E)ˣ) := Subgroup.isOpen_mono le_sup_right hWo
   let ψ0 : (AF F)ˣ →* (AF F ⊗[F] E)ˣ ⧸ V := (QuotientGroup.mk' V).comp (idFF F E)
   have hker : ψ0.ker ≤ lam.ker := fun a ha => hkey a ((QuotientGroup.eq_one_iff _).1 ha)
-  letI : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
+  let : DivisibleBy (Additive Circle) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn u => by
     obtain ⟨t, ht⟩ := Circle.exp_surjective u.toMul
     refine ⟨Additive.ofMul (Circle.exp (t / n)), ?_⟩
     show Additive.ofMul (Circle.exp (t / n) ^ n) = u
     rw [← Circle.exp_nsmul, nsmul_eq_mul, mul_div_cancel₀ _ (Nat.cast_ne_zero.2 hn), ht]
     rfl
-  letI : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
+  let : DivisibleBy (Additive Circle) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
   obtain ⟨ρ, hρ⟩ := (Module.Baer.of_divisible (Additive Circle)).extension_property_addMonoidHom
     (MonoidHom.toAdditive (QuotientGroup.kerLift ψ0)) (QuotientGroup.kerLift_injective ψ0)
     (MonoidHom.toAdditive (QuotientGroup.lift ψ0.ker lam hker))
@@ -1091,7 +1091,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem eta_fin_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {η : (AF F ⊗[F] E)ˣ →* Circle} (hη : ResEtaF η 1)
     (a : (AF F)ˣ) (h1 : (idFF F E a : AF F ⊗[F] E) ∈ SE F E) (h2 : (idFF F E a⁻¹ : AF F ⊗[F] E) ∈ SE F E) :
     η (idFF F E (finU F (sndU F a))) = 1 := by
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := hB.cm.2.2.1 }
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := hB.cm.2.2.1 }
   have hint : ∀ t : AF F, algebraMap (AF F) (AF F ⊗[F] E) t ∈ SE F E → ∀ v : HeightOneSpectrum (𝓞 F),
       2 * t.2 v ∈ v.adicCompletionIntegers F := by
     intro t ht v
@@ -1173,7 +1173,7 @@ theorem exists_eta_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     (B : Base F E), _root_.UpperTheory.TP.W.GoodK σ B → ∃ η : (AF F ⊗[F] E)ˣ →* Circle,
       IsHeckeCharF η ∧ ResEtaF η 1 ∧ HasExp B.emb η (fun _ => 1) ∧ UnramInert σ η := by
   intro F E _ _ _ _ _ σ B hB
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨η, h1, h2, h3⟩ := _root_.GlobalTheory.EtaCMType.exists_eta_cmType_k F E σ B hB
   obtain ⟨N, hN, hk⟩ := _root_.PositivityTheory.ThKW.Eta.key_k hB h1.1 h2
   obtain ⟨ν, hV, hU⟩ := exists_ext _ _ η hk
@@ -1288,7 +1288,7 @@ theorem exists_weilDatumOF_twist_k : ∀ (F E : Type) [Field F] [NumberField F] 
     rw [arat γ hγ, brat γ' hγ', mul_one, Circle.coe_one, one_mul]
     exact ho.om_aut γ hγ γ' hγ' f hf
   · intro f hf w
-    exact (continuous_subtype_val.comp ((acont.comp continuous_fst).mul (bcont.comp continuous_snd))).mul
+    exact (continuous_subtypeVal.comp ((acont.comp continuous_fst).mul (bcont.comp continuous_snd))).mul
       (ho.om_cont f hf w)
   · intro μ 𝓕 hμ h𝓕 p f hf
     rw [← ho.om_unit μ 𝓕 hμ h𝓕 p f hf]

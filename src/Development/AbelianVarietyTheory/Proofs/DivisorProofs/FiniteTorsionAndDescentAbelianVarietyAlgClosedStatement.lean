@@ -70,7 +70,7 @@ theorem finite_torsion_and_descent : ∀ (k : Type) [Field k] [IsAlgClosed k] (A
   refine ⟨?_, ?_⟩
   · exact GlobalTheory.TorusExtTorsion.finite_torsion_abelian_geomPoint A hA k (𝟙 _) n hn1
   · intro κ _ _ x g hg
-    letI : Algebra k κ := (Spec.preimage x).hom.toAlgebra
+    let : Algebra k κ := (Spec.preimage x).hom.toAlgebra
     have hx : x = spMap (algebraMap k κ) := by
       show x = Spec.map (CommRingCat.ofHom (Spec.preimage x).hom)
       rw [CommRingCat.ofHom_hom, Spec.map_preimage]

@@ -118,7 +118,7 @@ private theorem chiInf_pos {χ : HChar E} {n : (E →+* ℂ) → ℤ} (h : IsAlg
     ((TR.chiInf χ u : ℂˣ) : ℂ) = ∏ φ : E →+* ℂ, ((u.val (InfinitePlace.mk φ) : ℝ) : ℂ) ^ n φ := by
   have hc : ∀ v, Continuous fun u : (TR.Rinf E)ˣ => u.val v := fun v => (continuous_apply v).comp Units.continuous_val
   have ho : IsOpen {u : (TR.Rinf E)ˣ | ∀ v, 0 < u.val v} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun v => isOpen_lt continuous_const (hc v)
   have hcl : IsClosed {u : (TR.Rinf E)ˣ |
       ((TR.chiInf χ u : ℂˣ) : ℂ) = ∏ φ : E →+* ℂ, ((u.val (InfinitePlace.mk φ) : ℝ) : ℂ) ^ n φ} :=
@@ -139,7 +139,7 @@ private theorem expo_abs (k : ℕ) (v : InfinitePlace E) : TR.expo (Model.absPow
   classical
   refine TR.expo_eq_of_exp _ v _ fun t => ?_
   rw [chiInf_pos (GlobalTheory.Published.CharAboveModel.absPow_isAlgPos E k) _ fun w => Real.exp_pos _]
-  simp only [TR.expU_val, Complex.ofReal_exp, ← Complex.exp_int_mul]
+  simp only [TR.expU_val, Complex.ofReal_exp, ← Complex.exp_intCast_mul]
   rw [← Complex.exp_sum, Finset.sum_eq_single v.embedding]
   · simp
   · intro φ _ h
@@ -278,10 +278,10 @@ private theorem ordAt_tw {r : G F Ω →* GL (Fin 2) (Qbar l)} (hr : Continuous 
   have e0 : ∀ g : ↥(Dec (F := F) A), κ 0 g * (ψ₀ g)⁻¹ ∈ U1 l := by
     refine dec_cong hA (κ 0 * (ψ₀.comp (Dec (F := F) A).subtype)⁻¹) ?_ (fun g hg => ?_) fun σ hσ => ?_
     · have c1 : Continuous fun g : ↥(Dec (F := F) A) => (P * r g * P⁻¹ : GL (Fin 2) (Qbar l)) 0 0 :=
-        (Units.continuous_val.comp ((continuous_const.mul (hr.comp continuous_subtype_val)).mul
+        (Units.continuous_val.comp ((continuous_const.mul (hr.comp continuous_subtypeVal)).mul
           continuous_const)).matrix_elem 0 0
       simp only [(hP _).2] at c1
-      exact c1.mul (Units.continuous_val.comp (hc.comp continuous_subtype_val).inv)
+      exact c1.mul (Units.continuous_val.comp (hc.comp continuous_subtypeVal).inv)
     · change κ 0 g * (ψ₀ g)⁻¹ ∈ _
       rw [hκI 0 g hg, MonoidHom.mem_ker.1 (hI hg), inv_one, mul_one]
       exact cyc_mem _ hm

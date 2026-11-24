@@ -166,7 +166,7 @@ theorem exists_isPullConst (hL : L.IsLB) {Hm : Matrix (Fin g) (Fin g) ℂ} {χ :
     have h2 := Matrix.isHermitian_mul_mul_conjTranspose (LinearMap.toMatrix' Φ).transpose hAH.1
     rw [hB, Matrix.IsHermitian, Matrix.conjTranspose_sub, Matrix.conjTranspose_smul,
       Matrix.conjTranspose_smul, h2.eq, hAH.1.eq, star_intCast, star_intCast]
-  haveI := u.discrete
+  have := u.discrete
   obtain ⟨k1, k2, k3⟩ := appellHumbert_trivial_of_nowhere_vanishing g u.Λ u.full B
     (fun l => χ l ^ a / χ ⟨Φ l, map_mem_period hΦ l.2⟩ ^ b) r hBh
     (fun l => by rw [norm_div, norm_zpow, norm_zpow, hAH.2.2.1, hAH.2.2.1]; simp) hr hne
@@ -183,7 +183,7 @@ theorem exists_isPullConst (hL : L.IsLB) {Hm : Matrix (Fin g) (Fin g) ℂ} {χ :
         hBf, hBf]
       have n1 := zpow_ne_zero a (hχ l)
       have n2 := zpow_ne_zero b (hχ ⟨Φ l, map_mem_period hΦ l.2⟩)
-      simp only [mul_zpow, zpow_neg, ← Complex.exp_int_mul, hermForm]
+      simp only [mul_zpow, zpow_neg, ← Complex.exp_intCast_mul, hermForm]
       set E0 := (Real.pi : ℂ) * (z ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))) +
         Real.pi / 2 * ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))) with hE0
       set E1 := (Real.pi : ℂ) * (Φ z ⬝ᵥ Hm.mulVec (star (Φ l))) +

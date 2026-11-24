@@ -193,11 +193,11 @@ theorem finite_finrank_le_base [FiniteDimensional Qp K] [FiniteDimensional Qp V]
     have h2 := linearIndepOn_of_invariant (fun g b => act g b) (fun g => (σ g).toAddMonoidHom) hσ hreg
       (fun x : U => (x : B ⊗[Qp] V)) (fun g x => x.2 g) s h1
     simpa using LinearIndependent.fintype_card_le_finrank h2
-  haveI : Module.Finite K U := by
+  have : Module.Finite K U := by
     rw [← Module.rank_lt_aleph0_iff]
     exact lt_of_le_of_lt hr Cardinal.natCast_lt_aleph0
   have hr' : finrank K U ≤ finrank Qp V := finrank_le_of_rank_le hr
-  haveI : Module.Finite Qp U := Module.Finite.trans K U
+  have : Module.Finite Qp U := Module.Finite.trans K U
   have hc : ∀ g x, σ g (TensorProduct.comm Qp V B x) =
       TensorProduct.comm Qp V B (AlgebraTensorModule.map (ρ g)
         (((act g).toAlgHom.toLinearMap).restrictScalars Qp) x) := by
@@ -226,7 +226,7 @@ theorem finite_finrank_le [FiniteDimensional Qp K] [FiniteDimensional Qp LL] [Fi
     (ρ : Representation LL G V) :
     Module.Finite LL (invs (Qp := Qp) act ρ) ∧
       finrank LL (invs (Qp := Qp) act ρ) ≤ finrank Qp K * finrank LL V := by
-  haveI : FiniteDimensional Qp V := Module.Finite.trans LL V
+  have : FiniteDimensional Qp V := Module.Finite.trans LL V
   obtain ⟨h1, h2⟩ := finite_finrank_le_base (Qp := Qp) act hreg ρ
   refine ⟨Module.Finite.of_restrictScalars_finite Qp LL _, ?_⟩
   rw [← Module.finrank_mul_finrank Qp LL (invs (Qp := Qp) act ρ), ← Module.finrank_mul_finrank Qp LL V,
@@ -246,7 +246,7 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
 
 theorem frac_dR (hF : IsField BdR) (b b' : BdR) (hb : b ≠ 0)
     (h : ∀ g, b * PD.actdR g b' = PD.actdR g b * b') : ∃ c : K, b' = algebraMap K BdR c * b := by
-  letI : Field BdR := hF.toField
+  let : Field BdR := hF.toField
   obtain ⟨c, hc⟩ := PD.invdR (b' / b) fun g => by
     have hg : PD.actdR g b ≠ 0 := (map_ne_zero _).2 hb
     rw [map_div₀, div_eq_div_iff hg hb, mul_comm, h g, mul_comm]
@@ -263,8 +263,8 @@ variable {LL : Type} [Field LL] [Algebra Qp LL] [FiniteDimensional Qp LL]
 
 theorem ddR_finite_le (hF : IsField BdR) (ρ : Representation LL G V) :
     Module.Finite LL (DdR PD ρ) ∧ finrank LL (DdR PD ρ) ≤ finrank Qp K * finrank LL V := by
-  haveI := hF.isDomain
-  haveI := PD.finK
+  have := hF.isDomain
+  have := PD.finK
   exact finite_finrank_le PD.actdR (frac_dR PD hF) ρ
 
 end Periods
@@ -309,9 +309,9 @@ theorem dcris_finite_le (hfit : GlobalTheory.MemLoc.Fits T C) (hinj : C.TensorIn
     [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V) :
     Module.Finite ↥LL.1 (Dcris (P.PD K) ρ) ∧
       finrank ↥LL.1 (Dcris (P.PD K) ρ) ≤ finrank ℚ_[l] ↥(K0 K) * finrank ↥LL.1 V := by
-  haveI := isDomain_cris (P.PD K) (isField_of_tied T)
-  haveI := (P.PD K).finK₀
-  haveI := LL.2
+  have := isDomain_cris (P.PD K) (isField_of_tied T)
+  have := (P.PD K).finK₀
+  have := LL.2
   exact finite_finrank_le (P.PD K).actB (frac_cris hfit hinj K) ρ
 
 end Tied

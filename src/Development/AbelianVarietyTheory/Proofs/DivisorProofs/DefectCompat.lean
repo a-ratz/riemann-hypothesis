@@ -75,7 +75,7 @@ theorem defect_compat : ∀ (p : ℕ) [Fact p.Prime] (O E : Type) [CommRing O] [
   obtain ⟨s₁, hs₁, -⟩ := hex p
   have h := ((_root_.GlobalTheory.QLog.integral_cob_defect_rules O E d c.μ c.isLaw hF.inj f κ hκ).2.2 p s₁ hs₁).2 (p ^ n) s s' hs
     (by rw [← pow_succ]; exact hs')
-  haveI := hF.complete
+  have := hF.complete
   refine ⟨c.ev (n + 1) s₁, ?_⟩
   rw [h, map_add (f := _), map_smul, (_root_.GlobalTheory.QLog.Chart.ev_nmul_pow p O G d c n).2.2, Nat.cast_pow]
   exact add_comm _ _

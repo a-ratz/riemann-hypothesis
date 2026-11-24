@@ -58,7 +58,7 @@ namespace GlobalTheory.TypePlaces
 
 theorem star_eq_conj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 

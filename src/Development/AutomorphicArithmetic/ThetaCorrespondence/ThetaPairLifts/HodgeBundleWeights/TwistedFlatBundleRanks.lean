@@ -253,11 +253,11 @@ theorem rankW_eq_finsum_rankOn : ∀ (D : D7) (H : ReciprocityTheory.ChartRestri
     (∀ σ, GoodEmb c σ → IsUnf (U σ)) → GoodW U x V dict G → rankW U G = ∑ᶠ Z : Comp Xo c, rankOn U Z G := by
   intro D H Dw l Xo c r U x V dict G hU hG
   obtain ⟨-, -, -, hsup⟩ := GlobalTheory.CuspSplit.splits D H Dw l Xo c r U V dict hU G
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
 
   obtain ⟨-, ⟨s, hs⟩, htop⟩ := hG
-  haveI : FiniteDimensional c.F (cuspW Xo c U G) := by
+  have : FiniteDimensional c.F (cuspW Xo c U G) := by
     refine Module.Finite.of_fg_top ⟨s, ?_⟩
     rw [← htop, ← hs, Submodule.span_span_of_tower]
   set S : Comp Xo c → Submodule c.F (cuspW Xo c U G) :=
@@ -370,8 +370,8 @@ theorem flat_twist_rank_eq : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheo
   intro a n kc s _hdom hn hgood
   have hR := _root_.GlobalTheory.RankAdd.rankW_eq_finsum_rankOn D T.Q.H (T.Q.Dw j) _ Y.d.Xo₂ Y.d.c₂ _ Y.U (xiR D) (fun _ => D.sp.W j) Y.dict
     (shiftG (T.Q.Dw j) a n s) hU hgood
-  haveI : Finite (Comp Y.d.Xo₂ Y.d.c₂) := GlobalTheory.IndefiniteRowSideFullHecke.ComponentMassSum.finite_comp
-  letI := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
+  have : Finite (Comp Y.d.Xo₂ Y.d.c₂) := GlobalTheory.IndefiniteRowSideFullHecke.ComponentMassSum.finite_comp
+  let := Fintype.ofFinite (Comp Y.d.Xo₂ Y.d.c₂)
   show ((AllWt.rankW Y.U (shiftG (T.Q.Dw j) a n s) : ℕ) : ℝ) = _
   rw [hR]
   simp only [finsum_eq_sum_of_fintype, Nat.cast_sum]

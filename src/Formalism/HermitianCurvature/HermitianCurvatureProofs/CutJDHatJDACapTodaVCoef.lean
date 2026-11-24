@@ -246,7 +246,7 @@ theorem coef_gen {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {c : Fin 
       intro a b hab
       simp only [C3.sR, castLE_self, keyS_esI]
       exact hab
-    rw [if_pos hmono]
+    rw [ite_eq_left hmono]
     rfl
   · intro B hB
     split_ifs with hm

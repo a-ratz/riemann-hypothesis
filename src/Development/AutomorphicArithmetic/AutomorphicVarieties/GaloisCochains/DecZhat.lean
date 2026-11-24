@@ -147,8 +147,8 @@ private theorem dz_frob (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
       ∀ n : ℕ, 0 < n → ∃ d : D →* Multiplicative (ZMod n), IsLocallyConstant d ∧ (∀ s ∈ I.subgroupOf D, d s = 1) ∧
         d φ = Multiplicative.ofAdd 1 := by
   subst hD hI
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsGalois F Ω := {}
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsGalois F Ω := {}
   obtain ⟨γ, hγ⟩ := exists_isFrob hv
   refine ⟨⟨γ, hγ.1⟩, hγ, ?_, fun n hn => ?_⟩
   · have key := ProfiniteGrp.closedSubgroup_eq_sInf_open (G := G F Ω)
@@ -178,10 +178,10 @@ private theorem dz_frob (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
       omega
     have hqv : ((normV v : ℕ) : 𝓞 F) ∈ v.asIdeal := hq ▸ Ideal.absNorm_mem _
     obtain ⟨p, hp, hpq, hpv⟩ := dz_exists_prime v _ (by omega) hqv
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     have h1 : 1 < normV v ^ n := Nat.one_lt_pow hn.ne' hq1
     obtain ⟨m, hm⟩ : ∃ m, m + 1 = normV v ^ n := ⟨normV v ^ n - 1, by omega⟩
-    haveI : NeZero m := ⟨by omega⟩
+    have : NeZero m := ⟨by omega⟩
     have hmp : m.Coprime p := by
       refine ((Nat.Prime.coprime_iff_not_dvd hp).2 fun h => ?_).symm
       have h2 : p ∣ m + 1 := hm ▸ hpq.trans (dvd_pow_self _ hn.ne')
@@ -190,8 +190,8 @@ private theorem dz_frob (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
     obtain ⟨hopen, -, -, -, hIne⟩ := Chr.clsFacts F Ω m
     have hI := hIne A fun h => dz_not_both v hmp ((dz_val hv m).1 h) hpv
     have hu : ((Chr.cls F Ω m γ : (ZMod m)ˣ) : ZMod m) = normV v := by
-      haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-      obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+      have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+      obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
       have hv1 : A.valuation ζ ≤ 1 := by
         have h1 : A.valuation ζ ^ m = 1 := by rw [← map_pow, hζ.pow_eq_one, map_one]
         exact ((pow_eq_one_iff_left (NeZero.ne m)).1 h1).le
@@ -216,7 +216,7 @@ private theorem dz_frob (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
     have hf1 : ∀ s : Dec (F := F) A, Chr.cls F Ω m s = 1 → f s = 1 := fun s hs => Subtype.ext hs
     refine ⟨(zmodMulEquivOfGenerator hg hc).symm.toMonoidHom.comp f, dz_locConst _ ?_, fun s hs => ?_, ?_⟩
     · refine Subgroup.isOpen_mono (H₁ := (Chr.cls F Ω m).ker.subgroupOf _) (fun s hs => ?_)
-        (hopen.preimage continuous_subtype_val)
+        (hopen.preimage continuous_subtypeVal)
       rw [MonoidHom.mem_ker, MonoidHom.comp_apply, hf1 s hs, map_one]
     · rw [MonoidHom.comp_apply, hf1 s (hI hs), map_one]
     · exact zmodMulEquivOfGenerator_symm_apply_generator hg hc

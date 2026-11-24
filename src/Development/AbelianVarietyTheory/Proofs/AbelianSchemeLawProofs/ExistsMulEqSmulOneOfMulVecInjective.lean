@@ -104,7 +104,7 @@ theorem exists_mul_eq_smul_one_of_mulVec_injective {R K : Type} [CommRing R] [Fi
   let e : l ≃ κ := Fintype.equivOfCardEq (le_antisymm h2 h1)
   let N : Matrix l l R := M.submatrix (a ∘ e) id
   have hN : IsUnit (N.map g) := by
-    rw [← Matrix.linearIndependent_rows_iff_isUnit]
+    rw [← Matrix.linearIndependent_row_iff_isUnit]
     exact hli.comp e e.injective
   refine ⟨N.det, N.adjugate * (1 : Matrix m m R).submatrix (a ∘ e) id, ?_, ?_⟩
   · rw [Matrix.isUnit_iff_isUnit_det] at hN

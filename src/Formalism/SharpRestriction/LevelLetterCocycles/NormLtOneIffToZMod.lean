@@ -150,8 +150,8 @@ theorem pow_approx (hl2 : l ≠ 2) (u : ℤ_[l]) (hu : ‖u - 1‖ = (l : ℝ)�
   set U := huu.unit
   set C := hcu.unit
   have hdiv : l ^ 1 ∣ l ^ (n + 1) := pow_dvd_pow l (by omega)
-  haveI : NeZero (l ^ (n + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (n + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hker : ∀ x : ℤ_[l], ‖x - 1‖ < 1 → ∀ hx : IsUnit (PadicInt.toZModPow (n + 1) x), hx.unit ∈ (ZMod.unitsMap hdiv).ker := by
     intro x hx hxu
     rw [MonoidHom.mem_ker, Units.ext_iff, ZMod.unitsMap_def, Units.coe_map, IsUnit.unit_spec]

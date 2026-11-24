@@ -63,7 +63,7 @@ private theorem hth_place (Ω : Type) [Field Ω] [CharZero Ω] (p : ℕ) (hp : p
 
 private theorem hth_spec (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (w : ℕ) [hw : Fact w.Prime]
     (s : G ℚ Ω) (ζ : Ω) (h : ζ ^ w = 1) : s ζ = ζ ^ ((cycMod ℚ Ω w 1 s : (ZMod (w ^ 1))ˣ) : ZMod (w ^ 1)).val := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have h1 : ζ ^ w ^ 1 = 1 := by rwa [pow_one]
   exact cyclotomicCharacter.spec (L := Ω) w (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) ζ h1
 
@@ -71,8 +71,8 @@ private theorem hth_iff (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
     (w : ℕ) [hw : Fact w.Prime] (s : G ℚ Ω) :
     (∃ a : ℕ, ∀ ζ : Ω, ζ ^ w = 1 → s ζ = ζ ^ a ^ l) ↔
       cycMod ℚ Ω w 1 s ∈ (powMonoidHom l : (ZMod (w ^ 1))ˣ →* (ZMod (w ^ 1))ˣ).range := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero w := ⟨hw.out.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero w := ⟨hw.out.ne_zero⟩
   have hred : ∀ (ζ : Ω) (m : ℕ), ζ ^ w = 1 → ζ ^ m = ζ ^ (m % w) := by
     intro ζ m hζ
     conv_lhs => rw [← Nat.mod_add_div m w, pow_add, pow_mul, hζ, one_pow, mul_one]
@@ -81,7 +81,7 @@ private theorem hth_iff (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   have hl0 : l ≠ 0 := hl.out.ne_zero
   constructor
   · rintro ⟨a, ha⟩
-    obtain ⟨ζ0, hζ0⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω w
+    obtain ⟨ζ0, hζ0⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω w
     have e1 := ha ζ0 hζ0.pow_eq_one
     rw [hth_spec Ω w s ζ0 hζ0.pow_eq_one, hred ζ0 (a ^ l) hζ0.pow_eq_one] at e1
     have e2 : ((cycMod ℚ Ω w 1 s : (ZMod (w ^ 1))ˣ) : ZMod (w ^ 1)).val = a ^ l % w :=
@@ -103,8 +103,8 @@ private theorem hth_iff (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
 theorem UpperTheory.V.Fr.hth :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (w : ℕ), w.Prime → w ≡ 1 [MOD l] → IsOpen (Hth Ω l w : Set (G ℚ Ω)) ∧ commutator (G ℚ Ω) ≤ Hth Ω l w ∧ (Hth Ω l w).index = l ∧ (∀ B' : ValuationSubring Ω, ¬ B'.valuation (w : Ω) < 1 → Ine (F := ℚ) B' ≤ Hth Ω l w) ∧ ∀ B' : ValuationSubring Ω, B'.valuation (w : Ω) < 1 → ¬ Ine (F := ℚ) B' ≤ Hth Ω l w := by
   intro Ω _ _ _ l hl w hwp hw1
-  haveI hw : Fact w.Prime := ⟨hwp⟩
-  haveI : Fact (w ^ 1).Prime := ⟨by rw [pow_one]; exact hwp⟩
+  have hw : Fact w.Prime := ⟨hwp⟩
+  have : Fact (w ^ 1).Prime := ⟨by rw [pow_one]; exact hwp⟩
   have hmem : ∀ s : G ℚ Ω, s ∈ Hth Ω l w ↔
       cycMod ℚ Ω w 1 s ∈ (powMonoidHom l : (ZMod (w ^ 1))ˣ →* (ZMod (w ^ 1))ˣ).range := by
     intro s
@@ -135,7 +135,7 @@ theorem UpperTheory.V.Fr.hth :
       rw [MonoidHom.mem_ker, hZ]
       exact hs
     · exact (contTw ℚ Ω w).1.isOpen_preimage _ (KStar.TotallyRealRoots.isOpen_princ 1)
-  · exact (Abelianization.commutator_subset_ker (cycMod ℚ Ω w 1)).trans hker
+  · exact (Group.Abelianization.commutator_le_ker (cycMod ℚ Ω w 1)).trans hker
   · intro B' hB' s hs
     apply hker
     rw [MonoidHom.mem_ker, hZ, MonoidHom.mem_ker.mp ((places ℚ Ω w B').2.2.2 hB' hs), map_one]

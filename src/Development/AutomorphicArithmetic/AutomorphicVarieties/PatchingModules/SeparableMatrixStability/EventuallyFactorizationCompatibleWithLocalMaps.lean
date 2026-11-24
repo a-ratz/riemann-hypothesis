@@ -54,15 +54,15 @@ private theorem exists_open_normal {P Z : Type} [Group P] [TopologicalSpace P] [
     [TotallyDisconnectedSpace P] (K : Subgroup P) (hK : IsOpen (K : Set P)) (c : K → Z) (hc : IsLocallyConstant c) :
     ∃ V : OpenNormalSubgroup P, ∀ g g' : K, (g : P)⁻¹ * g' ∈ V → c g = c g' := by
   have hKc : IsClosed (K : Set P) := Subgroup.isClosed_of_isOpen K hK
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc.isCompact
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc.isCompact
   have hfin : (Set.range c).Finite := hc.range_finite
   have hS : ∀ z, ∃ W ∈ nhds (1 : P), ∀ x ∈ (Subtype.val '' (c ⁻¹' {z}) : Set P), ∀ w ∈ W,
       x * w ∈ (Subtype.val '' (c ⁻¹' {z}) : Set P) := by
     intro z
     have hcpt : IsCompact (Subtype.val '' (c ⁻¹' {z}) : Set P) :=
-      (hc.isClosed_fiber z).isCompact.image continuous_subtype_val
+      (hc.isClosed_fiber z).isCompact.image continuous_subtypeVal
     have ho : IsOpen (Subtype.val '' (c ⁻¹' {z}) : Set P) :=
-      hK.isOpenMap_subtype_val _ (hc.isOpen_fiber z)
+      hK.isOpenMap_subtypeVal _ (hc.isOpen_fiber z)
     open scoped Pointwise in
     obtain ⟨W, hW, hWS⟩ := compact_open_separated_mul_right hcpt ho subset_rfl
     open scoped Pointwise in

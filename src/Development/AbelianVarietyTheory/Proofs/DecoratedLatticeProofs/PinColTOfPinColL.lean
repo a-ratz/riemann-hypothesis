@@ -101,7 +101,7 @@ theorem volLev_ne_zero (hI : I.Ok) {θ : InfFam (I.rec7 l Z)} (hθ : IsInfFam θ
   have hu := GlobalTheory.SeeSaw.ontoUni_inB _ θ ((I.rec7 l Z).sp.X j) (fun _ => 1) hθ fun τ => by
     rw [gramAt_one (gram_X hI j)]; simp
   obtain ⟨-, -, -, ν, -, -, h⟩ := GlobalTheory.SeeSaw.integral_eq_classSum _ θ _ _ hθ hu
-  letI : Fintype {c : (I.stp u a j).Cl // A.chOf j c = β} := @Subtype.fintype _ _ _ ((I.chain l u a).clsFin j)
+  let : Fintype {c : (I.stp u a j).Cl // A.chOf j c = β} := @Subtype.fintype _ _ _ ((I.chain l u a).clsFin j)
   exact (h v _ _ _ hr).1.ne'
 
 end GlobalTheory.AdForm.PinInhab

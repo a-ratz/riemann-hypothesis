@@ -146,7 +146,7 @@ theorem secTie_exists_unique : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hL := Xo.univ.t.PP.isLB
   have hL' := t'.PP.isLB
   have hG : Out.GlobalFnsSt := GlobalTheory.lawsFieldsSeparately.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
-  haveI hpr : IsProper t'.G.hom := MorphismProperty.of_isPullback (P := @IsProper) m.cart.1 Xo.univ.proper
+  have hpr : IsProper t'.G.hom := MorphismProperty.of_isPullback (P := @IsProper) m.cart.1 Xo.univ.proper
   have hA := AbelianSchemeGerms.isAbelianScheme_of_proper t'.G t'.semi
   have wu : ∀ w', RigIso m w' → w' = w := fun w' h' =>
     iso_unique_of_rig hG t'.G hA hL' hL h'.1 gw1 h'.2 rw1

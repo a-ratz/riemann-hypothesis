@@ -90,7 +90,7 @@ theorem Uni.det {b : ι → ℕ} {M : Matrix ι ι k} (h : Uni b M) : M.det = 1 
 
 theorem Uni.inv {b : ι → ℕ} {g : GL ι k} (h : Uni b g.val) : Uni b (g⁻¹).val := by
   have hb : (g⁻¹).val.BlockTriangular b := by
-    letI : Invertible g.val := g.invertible
+    let : Invertible g.val := g.invertible
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular h.blockTri
   intro r s hrs

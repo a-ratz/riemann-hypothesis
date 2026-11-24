@@ -113,14 +113,14 @@ def PtBd : Prop :=
 theorem ptIp_sub {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} {Ξ : AlgRep E a} {q : ℕ} (χ : HChar E)
     (G : Matrix (Fin Ξ.d) (Fin Ξ.d) ℂ) {n : ℕ} (e : Fin n → Herm E a) (α β β' : Co Ξ q) (g : GA E a) :
     ptIp χ G e α (β - β') g = ptIp χ G e α β g - ptIp χ G e α β' g := by
-  simp only [ptIp, AlternatingMap.sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, dotProduct_sub,
+  simp only [ptIp, sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, dotProduct_sub,
     Finset.sum_sub_distrib, mul_sub]
 
 theorem firstGeometricCondition_of_properties (h1 : PairFacts) (h2 : QhtFacts) (h3 : LevD) (h4 : BdGrowth) (h5 : Approx) (h6 : PtBd)
     (h7 : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure],
       IsFiniteMeasure (GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ)) : G1 := by
   intro E _ _ _ a ha μ _ U hUo hUc Ξ r χ G n e hD q β η hβ hη hR hδ hM
-  haveI := h7 E a μ
+  have := h7 E a μ
   obtain ⟨N, C, hC, hA⟩ := h5 E a ha U hUo hUc Ξ q η hη hM
   obtain ⟨C', hC', hB⟩ := (h4 E a Ξ (q + 1) β).2 hR (N + 1)
   obtain ⟨B, hB0, hP⟩ := h6 E a ha U hUo Ξ r χ G n e hD (q + 1)

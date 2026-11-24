@@ -153,7 +153,7 @@ theorem eq_of_tails {n : ℕ} {a b : Fin n → ℤ} (h : ∀ k, ∑ i ∈ Finset
   induction k using WellFoundedGT.induction with
   | ind k ih =>
     have := h k
-    rw [← Finset.Ioi_insert, Finset.sum_insert (by simp), Finset.sum_insert (by simp),
+    rw [← Finset.insert_Ioi, Finset.sum_insert (by simp), Finset.sum_insert (by simp),
       Finset.sum_congr rfl fun i hi => ih i (Finset.mem_Ioi.1 hi)] at this
     exact add_right_cancel this
 
@@ -182,7 +182,7 @@ theorem tail_le {ϖ ϖ' : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (hϖ'
   let ι := {i // i ∈ Finset.Ici k}
   let B : Matrix ι ι L := b.submatrix Subtype.val Subtype.val
   have hB : B.det = ∏ i ∈ Finset.Ici k, ϖ' ^ a i := by
-    rw [Matrix.det_of_upperTriangular (M := B) (fun i j hij => hb hij), ← Finset.prod_coe_sort (Finset.Ici k)]
+    rw [Matrix.det_of_isUpperTriangular (M := B) (fun i j hij => hb hij), ← Finset.prod_coe_sort (Finset.Ici k)]
     exact Finset.prod_congr rfl fun i _ => hd i
   have hE : B.det = ∑ p : ι → Fin n, (k₁.submatrix Subtype.val p).det * ((∏ i, ϖ ^ μ (p i)) * ∏ i : ι, k₂ (p i) i) := by
     have hij : ∀ i j : ι, B i j = ∑ l, k₁ i l * (ϖ ^ μ l * k₂ l j) := fun i j => by
@@ -289,17 +289,17 @@ theorem satU_labInd (hU : IsUnramInv ϖ σ q) {d : List ℤ} (h : Good n d) (α 
     simp only [Set.Finite.mem_toFinset]
     by_cases h1 : Cell ϖ a x
     · by_cases h2 : InLab ϖ d x
-      · rw [if_pos h1, if_pos (show x ∈ {x | Cell ϖ a x ∧ InLab ϖ d x} from ⟨h1, h2⟩)]
+      · rw [ite_eq_left h1, ite_eq_left (show x ∈ {x | Cell ϖ a x ∧ InLab ϖ d x} from ⟨h1, h2⟩)]
         unfold labInd
         exact Set.indicator_of_mem (f := (1 : GU σ n → ℂ)) (a := x.out) (by exact h2)
-      · rw [if_pos h1, if_neg (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h2 h.2)]
+      · rw [ite_eq_left h1, ite_eq_right (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h2 h.2)]
         unfold labInd
         exact Set.indicator_of_notMem (a := x.out) (by exact h2) _
-    · rw [if_neg h1, if_neg (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h1 h.1)]
+    · rw [ite_eq_right h1, ite_eq_right (show x ∉ {x | Cell ϖ a x ∧ InLab ϖ d x} from fun h => h1 h.1)]
   refine (finsum_congr fun x => @key x _).trans ?_
   rw [finsum_eq_sum_of_support_subset (s := hf.toFinset) _ (fun x hx => by
     by_contra h
-    exact hx (if_neg h)), Finset.sum_congr rfl fun x hx => if_pos hx, cnt, Set.ncard_eq_toFinset_card _ hf]
+    exact hx (ite_eq_right h)), Finset.sum_congr rfl fun x hx => ite_eq_left hx, cnt, Set.ncard_eq_toFinset_card _ hf]
   simp
 
 theorem finite_cnt (hU : IsUnramInv ϖ σ q) {d : List ℤ} (h : Good n d) : {a | cnt σ n ϖ d a ≠ 0}.Finite := by

@@ -83,9 +83,9 @@ def sigL : (Fv F v ⊗[F] E) →ₗ[Fv F v] (Fv F v ⊗[F] E) where
   map_smul' := sigR_smul σ v
 
 theorem sigR_cont : Continuous (sigR (Fv F v) σ : Fv F v ⊗[F] E → Fv F v ⊗[F] E) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
   exact IsModuleTopology.continuous_of_linearMap (sigL σ v)
 
 theorem sigR_sigR (hinv : ∀ y, σ (σ y) = y) (x : Fv F v ⊗[F] E) : sigR (Fv F v) σ (sigR (Fv F v) σ x) = x := by
@@ -185,7 +185,7 @@ def hermBox (g r : ℕ) (c : Matrix (Fin (r + 1)) (Fin (r + 1)) (Fv F v ⊗[F] E
 theorem volTW_eq (hinv : ∀ y, σ (σ y) = y) (g r : ℕ) (c : Matrix (Fin (r + 1)) (Fin (r + 1)) (Fv F v ⊗[F] E))
     (hc : VolTHermInt σ v r c) : VolTW σ v g r c = phiF σ v r ⁻¹' hermBox σ v g r c := by
   ext Y
-  simp only [VolTW, hermBox, Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [VolTW, hermBox, Set.mem_ofPred_eq, Set.mem_preimage]
   constructor
   · intro h i j
     refine ⟨(phiF_mem_iff σ v r Y).2 (fun i j => (h i j).1) i j, fun hij => ?_, fun hij => ?_⟩
@@ -219,7 +219,7 @@ theorem volTW_meas (hinv : ∀ y, σ (σ y) = y) (μ : Measure (Fin (r + 1) × F
   have hK' : (phiE σ v r) ⁻¹' VolTO (E := E) v (Fin (r + 1) × Fin (r + 1)) =
       VolTO (E := E) v (Fin (r + 1) × Fin (r + 1)) := by
     ext Y
-    simp only [VolTO, Set.mem_preimage, Set.mem_setOf_eq, Prod.forall]
+    simp only [VolTO, Set.mem_preimage, Set.mem_ofPred_eq, Prod.forall]
     exact phiF_mem_iff σ v r Y
   rw [hK', hK, one_mul] at h
   rw [volTW_eq σ v hinv g r c hc]

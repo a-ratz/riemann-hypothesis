@@ -99,10 +99,10 @@ end GlobalTheory.SWQ.PoissonSum
 open GlobalTheory.SWQ.PoissonSum in
 theorem GlobalTheory.SWQ.poisson_summation : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ : AddChar (AF F) ℂ) (lam : InfinitePlace F → ℝ) (ν : Measure (AF F)) (a : Fin N → F), Ctx ψ lam ν a → ∀ Φ : (Fin N → AF F) → ℂ, Decay Φ → Decay (Fo ψ ν a Φ) → th (Fo ψ ν a Φ) = th Φ := by
   intro F _ _ N ψ lam ν a hC Φ hΦ hFΦ
-  haveI := countable_F F
+  have := countable_F F
   have hψ := hC.2.1
   obtain ⟨hHaar, hmem, hinj, -, D, hDm, hD, hD1⟩ := GlobalTheory.SWQ.rat_lattice_fundamentalDomain F N ν hC.2.2.2.1
-  haveI := hHaar
+  have := hHaar
   obtain ⟨hint, hsum, hcont⟩ := _root_.GlobalTheory.decay_integrable_periodise F N hC.1 Φ hΦ
   obtain ⟨-, hsumF, -⟩ := _root_.GlobalTheory.decay_integrable_periodise F N hC.1 _ hFΦ
   set P : (Fin N → AF F) → ℂ := fun u => ∑' ξ : Fin N → F, Φ (rat ξ + u) with hP
@@ -118,7 +118,7 @@ theorem GlobalTheory.SWQ.poisson_summation : ∀ (F : Type) [Field F] [NumberFie
       ⟨fun η η' h => hinj (congrArg Subtype.val h), fun γ => by
         obtain ⟨η, hη⟩ := (hmem γ.1).1 γ.2
         exact ⟨η, Subtype.ext hη.symm⟩⟩
-    haveI : Countable G := e.surjective.countable
+    have : Countable G := e.surjective.countable
     set g : (Fin N → AF F) → ℂ := fun u => Φ u * ψ (-(Bd (AF F) a u (rat ξ))) with hg
     have hgc : Continuous g :=
       hΦ.1.mul (hψ.1.comp (continuous_Bd_right a (rat ξ)).neg)
@@ -142,10 +142,10 @@ theorem GlobalTheory.SWQ.poisson_summation : ∀ (F : Type) [Field F] [NumberFie
       rw [← e.tsum_eq] at hl
       simp_rw [hvadd] at hl
       have hfin : ∫⁻ u, ‖Φ u‖ₑ ∂(muV N ν) ≠ ∞ := (hint _ hHaar).2.ne
-      simp only [← ofReal_norm_eq_enorm] at hl ⊢
+      simp only [← ofReal_norm] at hl ⊢
       simp only [norm_mul, hψ.2.1, mul_one]
       rw [← hl]
-      simpa [ofReal_norm_eq_enorm] using hfin
+      simpa [ofReal_norm] using hfin
   have hsc : Summable (fun ξ : Fin N → F => ‖Fo ψ ν a Φ (rat (-ξ))‖) := by
     have h := hsumF 0
     simp only [add_zero] at h

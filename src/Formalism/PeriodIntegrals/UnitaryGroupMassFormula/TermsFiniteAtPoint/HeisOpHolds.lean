@@ -238,7 +238,7 @@ theorem heisOp_holds : HeisOp := by
   refine ⟨LinearEquiv.ofLinear _ _ hfg hgf, ?_, fun v => ?_⟩
   swap
   · simp [LinearEquiv.ofLinear_apply, heis_eq]
-  simp only [NLam, Set.mem_setOf_eq, IsAutLam]
+  simp only [NLam, Set.mem_ofPred_eq, IsAutLam]
   refine ⟨⟨?_, ?_⟩, ?_, ?_⟩
   · intro x y
     simp only [LinearEquiv.ofLinear_apply, LinearMap.add_apply, LinearMap.id_apply]

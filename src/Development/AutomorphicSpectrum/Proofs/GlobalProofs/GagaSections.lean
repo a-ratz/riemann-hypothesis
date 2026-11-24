@@ -328,14 +328,14 @@ namespace GlobalTheory.CompanionTheory.Gaga
 theorem mem_closure_of_isPushout {R A B C : CommRingCat.{0}} {f : R ⟶ A} {g : R ⟶ B} {i : A ⟶ C}
     {j : B ⟶ C} (h : IsPushout f g i j) (c : C) :
     c ∈ AddSubmonoid.closure {x : C | ∃ (a : A) (b : B), x = i a * j b} := by
-  letI : Algebra R A := f.hom.toAlgebra
-  letI : Algebra R B := g.hom.toAlgebra
-  letI : Algebra A C := i.hom.toAlgebra
-  letI : Algebra B C := j.hom.toAlgebra
-  letI : Algebra R C := (f ≫ i).hom.toAlgebra
-  haveI : IsScalarTower R A C := .of_algebraMap_eq fun r => rfl
-  haveI : IsScalarTower R B C := .of_algebraMap_eq fun r => congr($(h.w) r)
-  haveI : Algebra.IsPushout R B A C := CommRingCat.isPushout_iff_isPushout.mp h.flip
+  let : Algebra R A := f.hom.toAlgebra
+  let : Algebra R B := g.hom.toAlgebra
+  let : Algebra A C := i.hom.toAlgebra
+  let : Algebra B C := j.hom.toAlgebra
+  let : Algebra R C := (f ≫ i).hom.toAlgebra
+  have : IsScalarTower R A C := .of_algebraMap_eq fun r => rfl
+  have : IsScalarTower R B C := .of_algebraMap_eq fun r => congr($(h.w) r)
+  have : Algebra.IsPushout R B A C := CommRingCat.isPushout_iff_isPushout.mp h.flip
   obtain ⟨t, rfl⟩ := (Algebra.IsPushout.equiv R B A C).surjective c
   induction t with
   | tmul b a =>
@@ -448,8 +448,8 @@ theorem exists_gens_bound : ∀ (Y : Scheme.{0}) (p : Y ⟶ Sp ℂ), IsSeparated
     (HasRingHomProperty.appLE @LocallyOfFiniteType p inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨V, hV⟩ _).comp
       (RingHom.FiniteType.of_surjective _
         (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv).2)
-  letI : Algebra ℂ Γ(Y, V) := (algX p V).toAlgebra
-  haveI : Algebra.FiniteType ℂ Γ(Y, V) := hc
+  let : Algebra ℂ Γ(Y, V) := (algX p V).toAlgebra
+  have : Algebra.FiniteType ℂ Γ(Y, V) := hc
   obtain ⟨n, φ, hφ⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1
     (inferInstance : Algebra.FiniteType ℂ Γ(Y, V))
   have hφe (f : MvPolynomial (Fin n) ℂ) :
@@ -654,11 +654,11 @@ theorem exists_mem_holSec : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), S
   · refine ⟨⟨?_, ?_⟩, ?_⟩
     · intro i j y hi hj
       have hij : y ∈ ptsIn s (RingHom.id ℂ) (L.U i ⊓ L.U j) := mem_ptsIn_inf.2 ⟨hi, hj⟩
-      simp only [if_pos hi, if_pos hj]
+      simp only [ite_eq_left hi, ite_eq_left hj]
       rw [hcoc i j y.1 (comp_eq_id y) hij, valAt'_eq_ev]
       rfl
     · intro i y hy
-      simp only [if_neg hy]
+      simp only [ite_eq_right hy]
     · intro i k
       have hB : IsOpen (ψ ⁻¹' ((R.chart k).e.target ∩
           (R.chart k).e.symm ⁻¹' ptsIn s (RingHom.id ℂ) (L.U i))) :=
@@ -675,7 +675,7 @@ theorem exists_mem_holSec : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), S
       have hv2 : (R.chart k).e.symm v ∈ ptsIn s (RingHom.id ℂ) (L.U i) := hv.2
       simp [Function.comp, hv2]
   · intro i y hy
-    simp only [if_pos hy]
+    simp only [ite_eq_left hy]
 
 end GlobalTheory.CompanionTheory.Gaga
 end -- clump:auto
@@ -900,7 +900,7 @@ theorem gagaSections : GlobalTheory.CompanionTheory.Ar.Flat.GagaSections := by
   intro X s hp hs L hL h hhol hcomp
   obtain ⟨W, hcl, hdim, hc, hd⟩ := _root_.GlobalTheory.CompanionTheory.Gaga.exists_clopen_smoothOfRelativeDimension X s hs
   have hprop : ∀ D, IsProper ((W D).ι ≫ s) := fun D => by
-    haveI : IsClosedImmersion (W D).ι :=
+    have : IsClosedImmersion (W D).ι :=
       IsClosedImmersion.of_isPreimmersion _ (by rw [Scheme.Opens.range_ι]; exact hcl D)
     infer_instance
   have key : ∀ D, ∃ σ : (resLB (W D).ι L).Sec, ∀ (i : L.ι) (x : Sp ℂ ⟶ (W D).toScheme),

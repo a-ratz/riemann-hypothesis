@@ -67,7 +67,7 @@ theorem isSmoothAt_bot (k : Type) [Field k] [PerfectField k] (B : Type) [CommRin
   have h : IsField (Localization.AtPrime (⊥ : Ideal B)) := by
     rw [IsLocalRing.isField_iff_maximalIdeal_eq, ← Localization.AtPrime.map_eq_maximalIdeal]
     simp
-  letI := h.toField
+  let := h.toField
   have : Algebra.EssFiniteType B (Localization.AtPrime (⊥ : Ideal B)) :=
     .of_isLocalization _ (⊥ : Ideal B).primeCompl
   have : Algebra.EssFiniteType k (Localization.AtPrime (⊥ : Ideal B)) := .comp _ B _
@@ -102,7 +102,7 @@ theorem isSmoothAt_of_ne_bot (k : Type) [Field k] [IsAlgClosed k] (B : Type) [Co
     have hi := ha.isIntegral
     have hu : IsUnit t := hi.isUnit ht0
     exact hqp.ne_top (Ideal.eq_top_of_isUnit_mem _ htq hu)
-  letI : Algebra k[X] B := (aeval t : k[X] →ₐ[k] B).toRingHom.toAlgebra
+  let : Algebra k[X] B := (aeval t : k[X] →ₐ[k] B).toRingHom.toAlgebra
   have : IsScalarTower k k[X] B := .of_algebraMap_eq fun c => by
     change _ = aeval t (algebraMap k k[X] c)
     simp
@@ -113,10 +113,10 @@ theorem isSmoothAt_of_ne_bot (k : Type) [Field k] [IsAlgClosed k] (B : Type) [Co
   have : Algebra.FinitePresentation k[X] B :=
     (Algebra.FinitePresentation.of_finiteType (R := k[X]) (A := B)).mp ‹_›
   let p : Ideal k[X] := q.under k[X]
-  letI := Localization.AtPrime.algebraOfLiesOver p q
+  let := Localization.AtPrime.algebraOfLiesOver p q
   have hsep : Algebra.IsSeparable p.ResidueField q.ResidueField := by
     have : Module.Finite k (B ⧸ q) := by
-      letI := Ideal.Quotient.field q
+      let := Ideal.Quotient.field q
       exact finite_of_finite_type_of_isJacobsonRing k (B ⧸ q)
     have : Module.Finite k q.ResidueField :=
       Module.Finite.of_surjective (IsScalarTower.toAlgHom k (B ⧸ q) q.ResidueField).toLinearMap

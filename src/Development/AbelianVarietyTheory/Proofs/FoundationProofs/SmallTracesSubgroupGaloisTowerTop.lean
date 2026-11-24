@@ -163,11 +163,11 @@ theorem exists_reps_of_cosetTrace : ∀ (L : Type) [Field L] (G : Type) [Group G
   have hV1 : ∀ g : G, (g : G ⧸ V) = ((1 : G) : G ⧸ V) ↔ g ∈ V := by
     intro g
     rw [QuotientGroup.eq, mul_one, inv_mem_iff]
-  haveI : Finite (G ⧸ V) := Finite.of_surjective π (by
+  have : Finite (G ⧸ V) := Finite.of_surjective π (by
     intro c
     induction c using QuotientGroup.induction_on with
     | H a => exact ⟨(a : G ⧸ U), rfl⟩)
-  letI : Fintype (G ⧸ V) := Fintype.ofFinite _
+  let : Fintype (G ⧸ V) := Fintype.ofFinite _
   set F : Finset (G ⧸ U) := Finset.univ.filter (fun q => π q = ((1 : G) : G ⧸ V)) with hF
   have hout : ∀ {H : Subgroup G} (a b : G ⧸ H), a.out = b.out → a = b := by
     intro H a b hab
@@ -291,9 +291,9 @@ theorem small_traces_subgroup : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field 
   let K : Subgroup (Gal p Ω) := ⨅ n, Gn T n
   let H' : Subgroup ↥K := H.subgroupOf K
   let U' : Subgroup ↥H' := U.subgroupOf H'
-  haveI : U'.FiniteIndex := inferInstance
-  haveI : Finite (↥H' ⧸ U') := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (↥H' ⧸ U') := Fintype.ofFinite _
+  have : U'.FiniteIndex := inferInstance
+  have : Finite (↥H' ⧸ U') := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (↥H' ⧸ U') := Fintype.ofFinite _
   have hU'sep : AlmostSep v U' := _root_.GlobalTheory.AlmostEt.almostSep_subgroupOf Ω v ↥K U H' hUsep
   have hsmul : ∀ (h : ↥H') (x : Ω), h • x = ((h : ↥K) : Gal p Ω) x := fun _ _ => rfl
   have hinv : ∀ (h : ↥H') (x : Ω), v (h • x) = v x := fun h x => by rw [hsmul]; exact hvgal _ x

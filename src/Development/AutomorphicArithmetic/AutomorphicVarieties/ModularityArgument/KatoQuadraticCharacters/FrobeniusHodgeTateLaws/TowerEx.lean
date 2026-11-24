@@ -197,7 +197,7 @@ theorem expansion_j : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ), ∃ h : Ha
       · rw [h0 r (fun n hn => hr ⟨n, hn⟩), map_zero, zero_mul]
       · convert hc τ using 1
         funext n
-        simp only [Function.comp_apply, hP, map_intCast, hq, ← Complex.exp_nat_mul]
+        simp only [Function.comp_apply, hP, map_intCast, hq, ← Complex.exp_natCast_mul]
         congr 2
         push_cast
         ring
@@ -410,7 +410,7 @@ theorem laurent_exp_shift (M : ℕ) (hM : 0 < M) (w : ℕ) (k : ℤ) (τ : ℂ) 
       Complex.exp (2 * Real.pi * Complex.I * ((k - (w * M : ℕ) : ℤ) : ℂ) * τ / M) =
       Complex.exp (2 * Real.pi * Complex.I * (k : ℂ) * τ / M) := by
   have hM' : (M : ℂ) ≠ 0 := by exact_mod_cast hM.ne'
-  rw [← Complex.exp_nat_mul, ← Complex.exp_add]
+  rw [← Complex.exp_natCast_mul, ← Complex.exp_add]
   congr 1
   push_cast
   field_simp
@@ -439,7 +439,7 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
       · exact hbE _
       · exact E.zero_mem
     · simp only [c]
-      rw [if_neg (not_le.mpr hn)]
+      rw [ite_eq_right (not_le.mpr hn)]
     · rw [← hginj.hasSum_iff]
       · have h1 := (hb τ).mul_left (Complex.exp (2 * Real.pi * Complex.I * τ) ^ w)⁻¹
         have hφ : (Complex.exp (2 * Real.pi * Complex.I * τ) ^ w)⁻¹ *
@@ -453,7 +453,7 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
             (fun n : ℤ => c n * Complex.exp (2 * Real.pi * Complex.I * (n : ℂ) * τ / M)) ∘ g := by
           funext k
           simp only [Function.comp, g, c]
-          rw [if_pos (by omega)]
+          rw [ite_eq_left (by omega)]
           have hk : ((k : ℤ) - ((w * M : ℕ) : ℤ) + ((w * M : ℕ) : ℤ)).toNat = k := by omega
           rw [hk]
           have := laurent_exp_shift M hM w k τ
@@ -465,7 +465,7 @@ theorem laurent_iff : ∀ (E : Subring ℂ) (M : ℕ) (φ : ℍ → ℂ), 0 < M 
         have : ¬ (-((w * M : ℕ) : ℤ) ≤ n) := fun h => hn ⟨(n + ((w * M : ℕ) : ℤ)).toNat, by
           simp only [g]; omega⟩
         simp only [c]
-        rw [if_neg this, zero_mul]
+        rw [ite_eq_right this, zero_mul]
   · rintro ⟨c, n₀, hcE, hc0, hs⟩
     refine ⟨(-n₀).toNat, ?_⟩
     set w := (-n₀).toNat with hw
@@ -526,14 +526,14 @@ theorem uniform_pole_order : ∀ (E : Subring ℂ) (M : ℕ) (f : ℍ → ℂ), 
     (∀ γ : SL(2, ℤ), ∃ w : ℕ, QAll (· ∈ E) M fun τ => DD τ ^ w * f (γ • τ)) → ∃ w : ℕ, Lv E M w f := by
   intro E M f hM hinv hw
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   choose w hw using hw
   let red : SL(2, ℤ) →* SL(2, ZMod M) := Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M))
   let lift : SL(2, ZMod M) → SL(2, ℤ) := fun g => if h : ∃ γ, red γ = g then h.choose else 1
   let W : ℕ := Finset.univ.sup fun g => w (lift g)
   refine ⟨W, hinv, fun γ => ?_⟩
   have hex : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-  have hl : lift (red γ) = hex.choose := dif_pos hex
+  have hl : lift (red γ) = hex.choose := dite_eq_left hex
   set γ' := lift (red γ) with hγ'
   have hred : red γ' = red γ := by rw [hl]; exact hex.choose_spec
   have hmem : γ * γ'⁻¹ ∈ CongruenceSubgroup.Gamma M := by
@@ -767,7 +767,7 @@ theorem exists_finset_coeff_mem_closure :
     apply hR0; rw [Polynomial.eq_C_of_natDegree_eq_zero h, hRb, map_zero]
   obtain ⟨D, hD⟩ : ∃ D, D = Polynomial.derivative R := ⟨_, rfl⟩
   have hD0 : D ≠ 0 := by
-    haveI : HasUniqueDiv (PowerSeries L) := IsAddTorsionFree.of_isTorsionFree L _
+    have : HasUniqueDiv (PowerSeries L) := HasUniqueDiv.of_isTorsionFree L _
     intro h; rw [hD] at h; exact hdeg (Polynomial.natDegree_eq_zero_of_derivative_eq_zero h)
   have hDc : ∀ i, D.coeff i ∈ RA := by
     intro i; rw [hD, Polynomial.coeff_derivative]
@@ -808,8 +808,8 @@ theorem exists_finset_coeff_mem_closure :
     rw [map_add (f := _), PowerSeries.coeff_X_pow_mul', hu, hv]
     simp only [PowerSeries.coeff_mk]
     by_cases h1 : k < n
-    · rw [if_pos h1, if_neg (by omega), add_zero]
-    · rw [if_neg h1, if_pos (by omega), zero_add, show n + (k - n) = k by omega]
+    · rw [ite_eq_left h1, ite_eq_right (by omega), add_zero]
+    · rw [ite_eq_right h1, ite_eq_left (by omega), zero_add, show n + (k - n) = k by omega]
   have huB : u ∈ RB := by
     rw [hRBdef]
     refine (mem_range_map_iff B u).2 fun k => ?_
@@ -834,7 +834,7 @@ theorem exists_finset_coeff_mem_closure :
     rw [hk]; ring
   have hc2 := congrArg (PowerSeries.coeff (n + m)) key
   rw [map_zero, map_add (f := _), map_add (f := _), PowerSeries.coeff_X_pow_mul', PowerSeries.coeff_X_pow_mul',
-    if_pos (by omega), if_neg (by omega), add_zero, Nat.add_sub_cancel_left] at hc2
+    ite_eq_left (by omega), ite_eq_right (by omega), add_zero, Nat.add_sub_cancel_left] at hc2
   have hFv : PowerSeries.coeff m (F * v) = c * PowerSeries.coeff n b := by
     rw [PowerSeries.coeff_mul, Finset.sum_eq_single (m, 0)]
     · rw [← hcdef, hv, PowerSeries.coeff_mk, add_zero]
@@ -941,7 +941,7 @@ theorem qcoeff_finitelyGenerated : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ
       ∃ S : Finset Ω, ∀ k, a k ∈ Subring.closure (S : Set Ω) := by
   intro Ω _ ε N w f a hN hLv hF
   classical
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   obtain ⟨n, c, hc, hrel⟩ := _root_.GlobalTheory.FN.integral_over_jT ε.range f ⟨N, w, hN, hLv⟩
   set M := ∑ i, (c i).natDegree with hMdef
   have hM : ∀ i, (c i).natDegree ≤ M := fun i =>
@@ -979,7 +979,7 @@ theorem qcoeff_finitelyGenerated : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ
   have hQne : Q ≠ 0 := by
     intro h0
     have hn := hcoef n
-    rw [h0, Polynomial.coeff_zero, if_pos (Finset.self_mem_range_succ n)] at hn
+    rw [h0, Polynomial.coeff_zero, ite_eq_left (Finset.self_mem_range_succ n)] at hn
     have hc0 : c' n = 0 := funext fun k => by
       have h1 := congrArg (PowerSeries.coeff k) hn
       rw [PowerSeries.coeff_mk, map_zero] at h1
@@ -1139,7 +1139,7 @@ theorem frac_bdd_den : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
     intro r
     rw [hf]
     exact hP.1 _ _ hA_a hA_inv r
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   obtain ⟨D, hD, hDk⟩ := _root_.GlobalTheory.finite_subring_common_denominator Ω S
   exact ⟨D, hD, fun r => hDk _ (hA_f r)⟩
 
@@ -1369,7 +1369,7 @@ namespace GlobalTheory
 
 theorem fraction_field_extension : ∀ (Ω R L M : Type) [Field Ω] [CommRing R] [IsDomain R] [Field L] [Algebra Ω L] [CommRing M] (G S : Type) (c : Ω →+* R) (e : R →+* L) (sl : G → R ≃+* R) (ga : S → R ≃+* R) (A : R →+* M), Function.Injective e → (∀ x, e (c x) = algebraMap Ω L x) → (∀ g x, sl g (c x) = c x) → (∀ a, a ≠ 0 → IsUnit (A a)) → ∃ (K : Type) (_ : Field K) (_ : Algebra Ω K) (io : R →+* K) (e' : K →ₐ[Ω] L) (sl' : G → K ≃ₐ[Ω] K) (ga' : S → K ≃+* K) (A' : K →+* M), Function.Injective io ∧ (∀ f : K, ∃ a b : R, b ≠ 0 ∧ f * io b = io a) ∧ (∀ x, io (c x) = algebraMap Ω K x) ∧ (∀ a, e' (io a) = e a) ∧ (∀ g a, sl' g (io a) = io (sl g a)) ∧ (∀ s a, ga' s (io a) = io (ga s a)) ∧ ∀ a, A' (io a) = A a := by
   intro Ω R L M _ _ _ _ _ _ G S c e sl ga A he hce hsl hA
-  letI alg : Algebra Ω (FractionRing R) := ((algebraMap R (FractionRing R)).comp c).toAlgebra
+  let alg : Algebra Ω (FractionRing R) := ((algebraMap R (FractionRing R)).comp c).toAlgebra
   have hΩ : ∀ x, algebraMap Ω (FractionRing R) x = algebraMap R (FractionRing R) (c x) := fun _ => rfl
   let e0 : FractionRing R →+* L := IsFractionRing.lift he
   have he0 : ∀ a, e0 (algebraMap R (FractionRing R) a) = e a := fun a => IsFractionRing.lift_algebraMap he a
@@ -1421,7 +1421,7 @@ namespace GlobalTheory.FN
 theorem exists_conj_of_inR : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (s : Ω ≃+* Ω) (f : ℍ → ℂ), InR ε.range f → ∃ f' : ℍ → ℂ, InR ε.range f' ∧ ∀ h h' : HahnSeries ℚ Ω, IsExp ε f h → IsExp ε f' h' → ∀ r, h'.coeff r = s (h.coeff r) := by
   intro Ω _ ε s f hf
   obtain ⟨N, w, hN, hLv⟩ := hf
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.FN.exists_ringEquiv_extend_of_embedding Ω ε s
   have hgE : ∀ x ∈ ε.range, g x ∈ ε.range := by
     rintro x ⟨y, rfl⟩
@@ -1564,11 +1564,11 @@ namespace GlobalTheory.FN
 
 theorem ring_isDomain : ∀ E : Subring ℂ, IsDomain (GlobalTheory.FN.ring E) := by
   intro E
-  haveI : Nontrivial (GlobalTheory.FN.ring E) := by
+  have : Nontrivial (GlobalTheory.FN.ring E) := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h1 := congrArg (fun x : GlobalTheory.FN.ring E => (x : ℍ → ℂ) UpperHalfPlane.I) h
     simp at h1
-  haveI : NoZeroDivisors (GlobalTheory.FN.ring E) := by
+  have : NoZeroDivisors (GlobalTheory.FN.ring E) := by
     refine ⟨fun {a b} hab => ?_⟩
     have hmem := (_root_.GlobalTheory.FN.mem_ring_iff_inR E).1
     have ha := _root_.GlobalTheory.FN.inR_mdifferentiable E a ((hmem a).1 a.2)
@@ -1603,7 +1603,7 @@ theorem frac_nonempty : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosur
     Nonempty (Frac Ω ε) := by
   intro Ω _ _ _ ε
   classical
-  haveI : IsDomain (ring ε.range) := _root_.GlobalTheory.FN.ring_isDomain ε.range
+  have : IsDomain (ring ε.range) := _root_.GlobalTheory.FN.ring_isDomain ε.range
   obtain ⟨hmem, hconst⟩ := _root_.GlobalTheory.FN.mem_ring_iff_inR ε.range
   obtain ⟨-, huniq, hC, -, -⟩ := _root_.GlobalTheory.FNExp.exp_props Ω ε
   obtain ⟨e, he_inj, he_exp⟩ := _root_.GlobalTheory.FN.expansion_injective_ringHom Ω ε
@@ -1717,7 +1717,7 @@ namespace GlobalTheory.FN
 theorem gal_sl_io_of_cong :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (T : Frac Ω ε) (a : GlobalTheory.FN.ring ε.range) (N w : ℕ), 0 < N → Lv ε.range N w a → ∀ (s : Ω ≃ₐ[ℚ] Ω) (d : ℤ), s (eOm ε (1 / N)) = eOm ε (1 / N) ^ d → ∀ γ γ' : SL(2, ℤ), Cong N d γ γ' → T.gal s (T.sl (ofSL γ) (T.io a)) = T.sl (ofSL γ') (T.gal s (T.io a)) := by
   intro Ω _ _ _ ε T a N w hN hLv s d hs γ γ' hC
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   obtain ⟨g, hg⟩ := _root_.GlobalTheory.FN.exists_ringEquiv_extend_of_embedding Ω ε s.toRingEquiv
   have hg' : ∀ x, g (ε x) = ε (s x) := hg
   obtain ⟨u, hu, hZ⟩ := (_root_.GlobalTheory.ZetaExp.main Ω ε s N hN).2 d hs
@@ -1856,7 +1856,7 @@ theorem mul_inv_mem_Gamma {M : ℕ} {γ' γ'' : SL(2, ℤ)} (h : ∀ i j, (en γ
 
 theorem cong_lift : ∀ (M N : ℕ) (d d' : ℤ), 0 < N → M ∣ N → (d : ZMod M) = d' → IsUnit (d' : ZMod N) → (∀ γ γ' : SL(2, ℤ), Cong M d γ γ' → ∃ γ'' : SL(2, ℤ), Cong N d' γ γ'' ∧ γ' * γ''⁻¹ ∈ CongruenceSubgroup.Gamma M) ∧ ∀ δ' ∈ CongruenceSubgroup.Gamma M, ∃ δ ∈ CongruenceSubgroup.Gamma M, Cong N d' δ δ' := by
   intro M N d d' hN hMN hdd' hu
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hdM : IsUnit (d : ZMod M) := by
     have := (hu.map (ZMod.castHom hMN (ZMod M)))
     rw [hdd']; simpa using this
@@ -1910,7 +1910,7 @@ theorem main : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
   set ω := eOm ε (1 / (N : ℚ)) with hω
   have hωp : IsPrimitiveRoot ω N := (_root_.GlobalTheory.FNRoots.main Ω ε).2.2.2.2.1 N hN
   have hωM : IsPrimitiveRoot (ω ^ N₀) M := hωp.pow hN rfl
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨i, -, hi⟩ := hωM.eq_pow_of_pow_eq_one hζ.pow_eq_one
   have hsζ : s ζ = ζ ^ d' := by
     rw [← hi, map_pow, map_pow, hd', ← zpow_natCast, ← zpow_natCast, ← zpow_natCast, ← zpow_natCast,

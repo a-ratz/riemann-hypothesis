@@ -56,7 +56,7 @@ namespace GlobalTheory.Core.Mi
 theorem kFin_le_sm (hHC : GlobalTheory.Published.HarishChandraModules) {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar}
     (M : DSModel V S) (τ : D.what₂.Tau) : GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ ≤ M.sm τ := by
   intro w hw
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have h := GlobalTheory.TypeSum.std_of_isDS hHC (M.ds τ)
   exact (GlobalTheory.SmoothCyclic.sm_eq M τ).ge (h.2.2.1 w hw)
 

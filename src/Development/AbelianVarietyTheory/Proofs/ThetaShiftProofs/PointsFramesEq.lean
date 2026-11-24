@@ -389,8 +389,8 @@ theorem inSpan_of_comp {f : X ⟶ Y} {H : LB X} {I K : Type} [Fintype I] [Fintyp
   simp only [map_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.sum_eq_single (e a) (fun b _ hb => by rw [if_neg (Ne.symm hb), map_zero, zero_mul]) (by simp),
-    if_pos rfl]
+  rw [Finset.sum_eq_single (e a) (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), map_zero, zero_mul]) (by simp),
+    ite_eq_left rfl]
 
 theorem valF_const (c : F) : valF (𝟙 (Sp F)) ⊤ ((Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom c) = c := by
   rw [valF_eq le_rfl]
@@ -909,12 +909,12 @@ theorem points_frames_eq (L₁ : Out.Laws) (L₂ : Out.Laws2) {E : Type} [Field 
     (hfg : ∀ a ∈ Conv.convLaurent, f a = g a) (v : A.V) :
     spMap f ≫ (Φ.x v).left = spMap g ≫ (Φ.x v).left ∧
       ∀ j, ⊤ ≤ (Φ.x v).left ⁻¹ᵁ Xo.univ.t.PP.L.U j → f (Φ.τ v j) = g (Φ.τ v j) := by
-  haveI : NeZero l.A := ⟨l.A_pos.ne'⟩
-  haveI : NeZero l.M := ⟨by have := l.three_le; omega⟩
+  have : NeZero l.A := ⟨l.A_pos.ne'⟩
+  have : NeZero l.M := ⟨by have := l.three_le; omega⟩
   let φ : ∀ j, (Σ α : A.X, A.Theta j α) → A.V → F := fun j i v =>
     if h : j = 0 then 0 else haveI : NeZero j := ⟨h⟩; f (A.FSum j i.1 i.2 v)
   have hf : ∀ (j : ℕ) [NeZero j] i v, φ j i v = f (A.FSum j i.1 i.2 v) := fun j _ i v =>
-    dif_neg (NeZero.ne j)
+    dite_eq_right (NeZero.ne j)
   have hg : ∀ (j : ℕ) [NeZero j] i v, φ j i v = g (A.FSum j i.1 i.2 v) := fun j _ i v =>
     (hf j i v).trans (hfg _ (fsum_mem A j _ _ i.2.2 v))
   obtain ⟨Θ₁, x₁, l₁⟩ := _root_.GlobalTheory.ArcBaseChange.exists_fpts_baseChange E H Xo.X A Xo.univ.t y Φ F f φ hA hf
@@ -943,8 +943,8 @@ theorem points_frames_eq (L₁ : Out.Laws) (L₂ : Out.Laws2) {E : Type} [Field 
 
 theorem rational : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) [StarRing (𝓞 E)] (D : Datum H) (l : Level H) (Xo : Moduli D l) (A : AnArc (𝓞 E)) (σ : KA l →+* ℂ) (y : Sp ℂ⸨X⸩ ⟶ Xo.X) (Φ : GenPts A Xo.univ.t y) (laA laM : D.La → A.La), AnFin A → y ≫ Xo.s = spMap ((algebraMap ℂ ℂ⸨X⸩).comp σ) → (∀ v, Φ.LevelPt l.A (toUnit _ ≫ Xo.univ.etaA v) (laA v)) → (∀ v ∈ idealPart D l, Φ.LevelPt l.M (toUnit _ ≫ Xo.univ.eta v) (laM v)) → Φ.Rational := by
   intro L₁ L₂ E _ _ _ H _ D l Xo A σ y Φ laA laM hA hy levA levM
-  haveI : CharZero ℂ⸨X⸩ := algebraRat.charZero _
-  haveI : CharZero Conv.convLaurent := algebraRat.charZero _
+  have : CharZero ℂ⸨X⸩ := algebraRat.charZero _
+  have : CharZero Conv.convLaurent := algebraRat.charZero _
   have key := fun s : AlgebraicClosure ℂ⸨X⸩ ≃ₐ[Conv.convLaurent] AlgebraicClosure ℂ⸨X⸩ =>
     points_frames_eq L₁ L₂ σ Φ laA laM hA hy levA levM
       ((s : AlgebraicClosure ℂ⸨X⸩ →+* AlgebraicClosure ℂ⸨X⸩).comp (algebraMap ℂ⸨X⸩ _))

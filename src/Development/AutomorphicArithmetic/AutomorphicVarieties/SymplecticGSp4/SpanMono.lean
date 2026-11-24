@@ -93,7 +93,7 @@ private theorem spanMono_prec_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecom
 private theorem spanMono_prec {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by
   obtain ⟨n, π, hπ⟩ := Module.Finite.exists_fin' R M
-  haveI := spanMono_prec_pi I n
+  have := spanMono_prec_pi I n
   have hmap : ∀ k, (I ^ k • ⊤ : Submodule R (Fin n → R)).map π = I ^ k • ⊤ := by
     intro k
     rw [Submodule.map_smul'', Submodule.map_top, LinearMap.range_eq_top.2 hπ]
@@ -268,9 +268,9 @@ private theorem spanMono_top {O B : Type} [CommRing O] [IsLocalRing O] [IsAdicCo
       · exact Submodule.mem_sup_left (A.algebraMap_mem c)
       · exact Submodule.mem_sup_right (Ideal.mem_sup_left hj)
       · simpa using hP s hs 1
-  haveI : IsPrecomplete (maximalIdeal O) A := spanMono_prec (maximalIdeal O)
-  haveI : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
-  haveI : IsHausdorff (maximalIdeal O) B := by
+  have : IsPrecomplete (maximalIdeal O) A := spanMono_prec (maximalIdeal O)
+  have : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
+  have : IsHausdorff (maximalIdeal O) B := by
     refine ⟨fun x hx => IsHausdorff.haus' (I := maximalIdeal B) x fun n => ?_⟩
     have h := hx n
     rw [SModEq.zero] at h ⊢
@@ -305,7 +305,7 @@ private theorem spanMono_parts {O X R : Type} [CommRing O] [IsLocalRing O] [IsNo
     (N : X → Submodule O R) [SetLike.GradedMonoid N] (hN : ∀ s, W.z s ∈ N (W.wt s))
     (A : Subalgebra O R) [Module.Finite O A] (hA : ∀ x, x ∈ A ↔ x ∈ N 0) (w : X) : W.part w ≤ N w := by
   classical
-  haveI := wPres_gr_zero_isCO_of_mem_maximalIdeal O X R W hz
+  have := wPres_gr_zero_isCO_of_mem_maximalIdeal O X R W hz
   obtain ⟨-, u, hu, hmu⟩ := wPres_maximalIdeal_gr_zero_eq_sup_span_monomials O X R W hz
   have hmono : ∀ n : W.σ →₀ ℕ, W.π (MvPowerSeries.monomial n 1) ∈ N (Finsupp.weight W.wt n) := by
     intro n
@@ -334,7 +334,7 @@ private theorem spanMono_parts {O X R : Type} [CommRing O] [IsLocalRing O] [IsNo
     { toFun := fun x => ⟨(((x : ↥(W.gr 0)) : W.A) : R), x.2⟩
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  haveI : Module.Finite O A' := Module.Finite.of_injective φ (by
+  have : Module.Finite O A' := Module.Finite.of_injective φ (by
     intro x y h
     have h' := congrArg (fun t : A => (t : R)) h
     exact Subtype.ext (Subtype.ext (Subtype.ext h')))
@@ -384,7 +384,7 @@ private theorem spanMono_lift {O R H : Type} [CommRing O] [IsLocalRing O] [IsNoe
     refine Submodule.span_mono ?_ hxy
     rintro _ ⟨a, ha, b, hb, rfl⟩
     exact hm1 ha hb
-  haveI : SetLike.GradedMonoid (fun v => Submodule.span O (mono r.hom v)) :=
+  have : SetLike.GradedMonoid (fun v => Submodule.span O (mono r.hom v)) :=
     { one_mem := Submodule.subset_span hm2
       mul_mem := fun v1 v2 x y hx hy => hmulN hx hy }
   have hlist : ∀ L : List (H × Fin 4 × Fin 4), (L.map (fun a => r.hom a.1 a.2.1 a.2.2)).prod ∈
@@ -404,35 +404,35 @@ private theorem spanMono_lift {O R H : Type} [CommRing O] [IsLocalRing O] [IsNoe
     by_cases hab : a = b
     · subst hab
       dsimp only [z']
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact hc (g, a, a)
     · dsimp only [z']
-      rw [if_neg hab, ← res_eq_zero_iff O R, r.red, hbar g a b hab]
+      rw [ite_eq_right hab, ← res_eq_zero_iff O R, r.red, hbar g a b hab]
   have hz'part : ∀ t, z' t ∈ W.part (wt t.2.1 t.2.2) := by
     rintro ⟨g, a, b⟩
     by_cases hab : a = b
     · subst hab
       dsimp only [z']
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       refine Submodule.sub_mem _ (hr g a a) ?_
       rw [(wt_eq_zero a a).2 rfl, Algebra.algebraMap_eq_smul_one]
       exact Submodule.smul_mem _ _ h1W
     · dsimp only [z']
-      rw [if_neg hab]
+      rw [ite_eq_right hab]
       exact hr g a b
   have hz'N : ∀ t, z' t ∈ Submodule.span O (mono r.hom (wt t.2.1 t.2.2)) := by
     rintro ⟨g, a, b⟩
     by_cases hab : a = b
     · subst hab
       dsimp only [z']
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       refine Submodule.sub_mem _ (Submodule.subset_span (hm3 g a a)) ?_
       rw [(wt_eq_zero a a).2 rfl, Algebra.algebraMap_eq_smul_one]
       exact Submodule.smul_mem _ _ (Submodule.subset_span hm2)
     · dsimp only [z']
-      rw [if_neg hab]
+      rw [ite_eq_right hab]
       exact Submodule.subset_span (hm3 g a b)
-  haveI : IsCO O (DualNumber (ResidueField O)) := (co_res O).2
+  have : IsCO O (DualNumber (ResidueField O)) := (co_res O).2
   have hcot : maximalIdeal R ≤ Ideal.span (Set.range z') ⊔ Ideal.map (Algebra.ofId O R) (maximalIdeal O) ⊔
       maximalIdeal R ^ 2 := by
     refine co_span O R O (Algebra.ofId O R) (Set.range z') ?_ ?_
@@ -447,10 +447,10 @@ private theorem spanMono_lift {O R H : Type} [CommRing O] [IsLocalRing O] [IsNoe
       by_cases hab : a = b
       · subst hab
         dsimp only [z'] at hfs
-        rw [if_pos rfl, map_sub, map_sub, AlgHom.commutes, AlgHom.commutes] at hfs
+        rw [ite_eq_left rfl, map_sub, map_sub, AlgHom.commutes, AlgHom.commutes] at hfs
         exact sub_left_inj.1 hfs
       · dsimp only [z'] at hfs
-        rwa [if_neg hab] at hfs
+        rwa [ite_eq_right hab] at hfs
   have hcot' : maximalIdeal R ≤ Ideal.span (Set.range z') ⊔ Ideal.map (algebraMap O R) (maximalIdeal O) ⊔
       maximalIdeal R ^ 2 := hcot
   obtain ⟨U, hUsub, hUspan⟩ :=
@@ -484,7 +484,7 @@ private theorem spanMono_lift {O R H : Type} [CommRing O] [IsLocalRing O] [IsNoe
     obtain ⟨t, rfl⟩ := e.surjective s
     rw [(he t).1, (he t).2]
     exact hz'N _
-  haveI := hfin
+  have := hfin
   have hAeq : ∀ x, x ∈ Algebra.adjoin O (mono r.hom 0) ↔ x ∈ Submodule.span O (mono r.hom 0) := by
     intro x
     constructor

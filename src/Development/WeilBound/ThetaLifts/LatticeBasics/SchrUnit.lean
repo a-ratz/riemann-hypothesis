@@ -80,7 +80,7 @@ theorem sq_ne (ν : @Measure (κ → AF F) (borel _)) (hν : @Measure.IsAddHaarM
 theorem norm_eig {G : Type} [Group G] {om : G →* Module.End ℂ ((κ → AF F) → ℂ)} (hu : IsUnitaryOn (adeleClass F) om)
     (hp : ∀ g, ∀ φ ∈ schA F κ, om g φ ∈ schA F κ) {g : G} {Φ} (h : Φ ∈ schA F κ) (h0 : Φ ≠ 0) {c : ℂ} (hc : om g Φ = c • Φ) :
     ‖c‖ = 1 := by
-  letI : MeasurableSpace (κ → AF F) := borel _
+  let : MeasurableSpace (κ → AF F) := borel _
   have : BorelSpace (κ → AF F) := ⟨rfl⟩
   obtain ⟨a, a0, ha⟩ := lD_haar (F := F) (κ := κ) Measure.addHaar inferInstance
   have e := lD_unit hu hp g h h
@@ -92,7 +92,7 @@ theorem norm_eig {G : Type} [Group G] {om : G →* Module.End ℂ ((κ → AF F)
 theorem schr_unit {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (ν : @Measure (κ → AF F) (borel _))
     (hν : @Measure.IsAddHaarMeasure _ _ _ (borel _) ν) (w) (A C : (κ → AF F) → ℂ) :
     ∫ u, schr ψ w A u * star (schr ψ w C u) ∂ν = ∫ u, A u * star (C u) ∂ν := by
-  letI : MeasurableSpace (κ → AF F) := borel _
+  let : MeasurableSpace (κ → AF F) := borel _
   have : BorelSpace (κ → AF F) := ⟨rfl⟩
   rw [← integral_add_right_eq_self (fun u => A u * star (C u)) w.1]
   refine integral_congr_ae (.of_forall fun u => ?_)

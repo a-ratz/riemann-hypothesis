@@ -185,7 +185,7 @@ theorem afIso_one_tmul (a : FiniteAdeleRing (𝓞 F) F) (k : F) (P : HeightOneSp
   by_contra hne
   have h0 := (Valuation.ne_zero_iff (Valued.v : Valuation (P.adicCompletion E) _)).2 (sub_ne_zero.2 hne)
   have h5 := h4 ((-WithZero.log (Valued.v (afIso F E (1 ⊗ₜ[F] a) P - algebraMap E _ (algebraMap F E k)))).toNat + 1)
-    (by rw [h, sub_self, map_zero]; exact zero_le')
+    (by rw [h, sub_self, map_zero]; exact zero_le)
   rw [← WithZero.exp_log h0, WithZero.exp_le_exp, WithZero.log_exp] at h5
   omega
 

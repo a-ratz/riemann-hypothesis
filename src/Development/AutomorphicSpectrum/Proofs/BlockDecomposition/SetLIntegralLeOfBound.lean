@@ -115,7 +115,7 @@ theorem part_last {n : ℕ} (c : Fin (n - 1) → ℝ) (i : Fin n) (hi : (i : ℕ
   unfold part
   refine Finset.sum_eq_zero fun j _ => ?_
   have := j.2
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 theorem y_bound {n : ℕ} (y : Fin n → ℝ) (hl : ∀ i : Fin n, (i : ℕ) + 1 = n → 0 ≤ y i ∧ y i ≤ 1)
     (hd : ∀ j : Fin (n - 1), 0 ≤ sr y ((j : ℕ) + 1) ∧ sr y ((j : ℕ) + 1) ≤ 1) :
@@ -177,7 +177,7 @@ theorem setLIntegral_le_of_bound {α : Type*} [MeasurableSpace α] (μ : Measure
     rw [ae_iff, show {a | ¬ f a ≤ c} = {g | f g ≤ c}ᶜ from rfl, Measure.restrict_apply hB.compl]
     have : {g | f g ≤ c}ᶜ ∩ A = ∅ := by
       ext g
-      simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_setOf_eq, Set.mem_empty_iff_false,
+      simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_ofPred_eq, Set.mem_empty_iff_false,
         iff_false, not_and, not_not]
       intro h1 h2
       exact h1 (h g h2)
@@ -271,9 +271,9 @@ theorem slabGlue : SlabGlue := by
           _ = W := by
               show _ = max C 0 * Real.exp E * Real.exp S
               rw [Real.exp_add]; ring
-      rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+      rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
       exact ENNReal.ofReal_le_ofReal (pow_le_pow_left₀ (norm_nonneg _) h3 2)
-    have hmeas : Measurable fun g => ‖φ g‖ₑ ^ 2 := (hφ.measurable.enorm).pow_const 2
+    have hmeas : Measurable fun g => ‖φ g‖ₑ ^ 2 := (hφ.measurable.eNorm).pow_const 2
     have hexp : W ^ 2 * (Cv * Real.exp (-∑ r ∈ Finset.range n, 2 * rho K n r * sr (X s) r))
         = D * ∏ j, Real.exp (a j * s j) := by
       have e1 : ∑ r ∈ Finset.range n, κ r * sr (X s) r
@@ -295,7 +295,7 @@ theorem slabGlue : SlabGlue := by
         ring
       have e4 : Real.exp S ^ 2 * Real.exp (-∑ r ∈ Finset.range n, 2 * rho K n r * sr (X s) r)
           = Real.exp (-t₀ * ∑ j, a j) * ∏ j, Real.exp (a j * s j) := by
-        rw [← Real.exp_sum, ← Real.exp_add, ← e3, ← Real.exp_nat_mul, ← Real.exp_add]
+        rw [← Real.exp_sum, ← Real.exp_add, ← e3, ← Real.exp_natCast_mul, ← Real.exp_add]
         congr 1
       show (max C 0 * Real.exp E * Real.exp S) ^ 2 * _ = (max C 0 * Real.exp E) ^ 2 * Cv * Real.exp (-t₀ * ∑ j, a j) * _
       calc _ = (max C 0 * Real.exp E) ^ 2 * Cv * (Real.exp S ^ 2 *

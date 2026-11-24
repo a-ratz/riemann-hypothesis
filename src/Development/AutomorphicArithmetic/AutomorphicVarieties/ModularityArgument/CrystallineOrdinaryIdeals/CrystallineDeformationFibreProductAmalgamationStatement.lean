@@ -117,10 +117,10 @@ theorem _root_.GlobalTheory.T.crystalline_deformation_fibre_product_amalgamation
     have : IsTopologicalRing T := IsModuleTopology.isTopologicalRing ℚ_[l] T
     have c₁ : ContAction (resCoef ℚ_[l] (colRep ρ₁)) := OrdinaryDeformation.cont_col ρ₁ fun a b => by
       simp only [hρ₁]
-      exact (hr₁.cont a b).comp (continuous_subtype_val (p := fun g => g ∈ D.HL))
+      exact (hr₁.cont a b).comp (continuous_subtypeVal (p := fun g => g ∈ D.HL))
     have c₂ : ContAction (resCoef ℚ_[l] (colRep ρ₂)) := OrdinaryDeformation.cont_col ρ₂ fun a b => by
       simp only [hρ₂]
-      exact (hr₂.cont a b).comp (continuous_subtype_val (p := fun g => g ∈ D.HL))
+      exact (hr₂.cont a b).comp (continuous_subtypeVal (p := fun g => g ∈ D.HL))
     have cprod : ContAction ((resCoef ℚ_[l] (colRep ρ₁)).prod (resCoef ℚ_[l] (colRep ρ₂))) :=
       (c₁.comp (continuous_fst.prodMk (continuous_fst.comp continuous_snd))).prodMk
         (c₂.comp (continuous_fst.prodMk (continuous_snd.comp continuous_snd)))
@@ -130,7 +130,7 @@ theorem _root_.GlobalTheory.T.crystalline_deformation_fibre_product_amalgamation
     refine ((isCrys_isDR_sub_quot _ hHL _ _ (OrdinaryDeformation.cont_col _ fun a b => ?_) cprod
       ((f₁.compLeft (Fin 3)).prod (f₂.compLeft (Fin 3))) fun g x => ?_).1
       (fun x y h => ?_)).1 hprod
-    · exact (hc a b).comp continuous_subtype_val
+    · exact (hc a b).comp continuous_subtypeVal
     · refine Prod.ext (funext fun a => ?_) (funext fun a => ?_)
       · change _ = Matrix.mulVec (ρ₁ g : Matrix (Fin 3) (Fin 3) B) _ a
         rw [hρ₁]

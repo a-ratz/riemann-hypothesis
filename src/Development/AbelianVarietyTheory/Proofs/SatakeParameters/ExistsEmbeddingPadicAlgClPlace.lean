@@ -137,14 +137,14 @@ theorem exists_embedding_padicAlgCl_place (E : Type) [Field E] [NumberField E] (
     { carrier := {x | ‖τ (x : E)‖ < 1}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         push_cast
         rw [map_add (f := _)]
         exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ha hb)
       zero_mem' := by simp
       smul_mem' := by
         intro c x hx
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at *
         push_cast
         rw [map_mul, norm_mul]
         calc ‖τ (c : E)‖ * ‖τ (x : E)‖ ≤ 1 * ‖τ (x : E)‖ :=

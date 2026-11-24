@@ -111,9 +111,9 @@ theorem UpperTheory.fixes_roots_of_unity_of_cyclotomicChar_near_one :
     ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (p : ℕ) [Fact p.Prime] (b : ℕ) (s : G F Ω),
     ‖((cycBar F Ω p s : (Qbar p)ˣ) : Qbar p) - 1‖ ≤ ‖((p ^ b : ℕ) : Qbar p)‖ → ∀ ζ : Ω, ζ ^ p ^ b = 1 → s ζ = ζ := by
   intro F Ω _ _ _ _ _ p _ b s h ζ hζ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (p ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : ∀ i, HasEnoughRootsOfUnity Ω (p ^ i) := fun i => inferInstance
   rcases Nat.eq_zero_or_pos b with rfl | hb
   · rw [pow_zero, pow_one] at hζ
     rw [hζ, map_one]
@@ -203,7 +203,7 @@ theorem UpperTheory.norm_locPow_sub_one_le_of_valuation_sub_one_le :
   have key : ∀ j : w.adicCompletion F →+* Qbar p, Continuous j → ‖j u - 1‖ ≤ ‖(M : Qbar p)‖ := by
     intro j hj
     by_cases hM : (M : w.adicCompletion F) = 0
-    · rw [hM, map_zero, le_zero_iff, map_eq_zero, sub_eq_zero] at hv
+    · rw [hM, map_zero, nonpos_iff_eq_zero, map_eq_zero, sub_eq_zero] at hv
       simp [hv]
     · have hx : Valued.v ((u - 1) / (M : w.adicCompletion F)) ≤ 1 := by
         rw [map_div₀]
@@ -336,7 +336,7 @@ theorem UpperTheory.inertia_fixes_roots_of_unity_of_artin_congruence :
       exact (Valuation.map_add _ _ _).trans (max_le ih (by rw [map_one]))
   apply UpperTheory.algEquiv_fixes_root_of_fixes_prime_power_roots (σ : G F Ω) M (by omega)
   intro p b hp hpb ζ hζ
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨ι⟩ := UpperTheory.nonempty_qbar_ringEquiv_complex p
   have hle : valuation (w.adicCompletion F) ((a σ : w.adicCompletion F) - 1) ≤
       valuation (w.adicCompletion F) ((p ^ b : ℕ) : w.adicCompletion F) := by

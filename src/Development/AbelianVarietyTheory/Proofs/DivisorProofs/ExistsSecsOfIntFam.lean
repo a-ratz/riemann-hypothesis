@@ -244,8 +244,8 @@ theorem exists_fractionRing_map_comp_eq {R W B : Type} [CommRing R] [IsDomain R]
 
 theorem Modif.exists_generic_factor : ∀ (R : Type) [CommRing R] [IsDomain R] (M : Modif R) (W : Type) [CommRing W] [IsDomain W] (φ : R →+* W), Function.Injective φ → ∀ ξ : Sp W ⟶ M.S, ξ ≫ M.π = spMap φ → ∃ ψ : FractionRing R →+* FractionRing W, ψ.comp (algebraMap R (FractionRing R)) = (algebraMap W (FractionRing W)).comp φ ∧ spMap ψ ≫ M.gp = jK W ≫ ξ := by
   intro R _ _ M W _ _ φ hφ ξ hξ
-  haveI := M.integral
-  haveI := M.dominant
+  have := M.integral
+  have := M.dominant
   let s : M.S := (jK W ≫ ξ) (IsLocalRing.closedPoint (FractionRing W))
   obtain ⟨B, f, hf, hs, -⟩ := M.S.exists_affine_mem_range_and_range_subset (x := s) (U := ⊤) trivial
   have hb : Set.range (jK W ≫ ξ) ⊆ Set.range f := by
@@ -271,7 +271,7 @@ theorem Modif.exists_generic_factor : ∀ (R : Type) [CommRing R] [IsDomain R] (
   have hred : IsReduced (Spec B) := isReduced_of_isOpenImmersion f
   have hred' : _root_.IsReduced B := (affine_isReduced_iff B).1 hred
   have hdom : IsDominant (Spec.map a) := by
-    haveI : IsDominant (Spec.map a ≫ f) := e1 ▸ M.dominant
+    have : IsDominant (Spec.map a ≫ f) := e1 ▸ M.dominant
     exact IsDominant.of_comp_of_isOpenImmersion _ f
   have hainj : Function.Injective a.hom := by
     have := (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical a.hom).1 hdom.1
@@ -396,8 +396,8 @@ theorem mem_range_of_pullback_eq {K L : Type} [Field K] [Field L] (ψ : K →+* 
   let B : CommRingCat := Γ(X, V)
   let e : Spec B ⟶ X := hV.fromSpec
   let α : CommRingCat.of K ⟶ B := Spec.preimage (e ≫ h)
-  letI : Algebra K B := α.hom.toAlgebra
-  letI : Algebra K L := ψ.toAlgebra
+  let : Algebra K B := α.hom.toAlgebra
+  let : Algebra K L := ψ.toAlgebra
   let Z : CommRingCat := CommRingCat.of (B ⊗[K] L)
   let a : Spec Z ⟶ Spec B := Spec.map (CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom)
   let b : Spec Z ⟶ Sp L :=
@@ -510,7 +510,7 @@ theorem pull_fst_app_injective {K L : Type} [Field K] [Field L] (ψ : K →+* L)
     (U : X.Opens) : Function.Injective ((pullback.fst h (spMap ψ)).app U).hom := by
   have : Flat (spMap ψ) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := ψ.toAlgebra
+    let := ψ.toAlgebra
     exact (RingHom.flat_algebraMap_iff).2 inferInstance
   have : Surjective (spMap ψ) := by
     constructor
@@ -1257,8 +1257,8 @@ theorem cancel (C : LabCover D) {W : Type} [CommRing W] [IsDomain W] [IsLocalRin
       Good C.P.L.L z J → cst (p ≫ T.G.hom) z b * sval s₁ p z J = cst (p ≫ T.G.hom) z b * sval s₂ p' z J)
     (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ C.A.A.left) (hp : p ≫ T.β = p' ≫ C.α) (z : Z)
     (J : (Z ⟶ C.G.left) → C.P.L.L.ι) (hJ : Good C.P.L.L z J) : sval s₁ p z J = sval s₂ p' z J := by
-  haveI := T.U.smooth
-  haveI : Flat (pullback.fst T.β C.α ≫ T.G.hom) := inferInstance
+  have := T.U.smooth
+  have : Flat (pullback.fst T.β C.α ≫ T.G.hom) := inferInstance
   obtain ⟨g, rfl, rfl⟩ : ∃ g, g ≫ pullback.fst T.β C.α = p ∧ g ≫ pullback.snd T.β C.α = p' :=
     ⟨pullback.lift p p' hp, pullback.lift_fst _ _ _, pullback.lift_snd _ _ _⟩
   obtain ⟨J₀, hJ₀, e₀⟩ := exists_good C.P.L.L C.P.L.isLB (g z) (K := Unit)

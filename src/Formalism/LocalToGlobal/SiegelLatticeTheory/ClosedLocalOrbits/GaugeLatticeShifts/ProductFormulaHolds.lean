@@ -68,7 +68,7 @@ theorem good_eq {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' :
     Good X u u' = Set.univ.pi fun _ => GoodLoc (r := D.R.rS) (Tw u) (Tw u') := by
   ext y
   first
-  | (simp only [Good, GoodLoc, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq])
+  | (simp only [Good, GoodLoc, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq])
   | (simp only [Good, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq]; rfl)
   | (simp [Good, GoodLoc])
   | (show _ ↔ _; exact Iff.rfl)
@@ -85,7 +85,7 @@ theorem product_formula_holds : P5 := by
     rw [hJ_cj, h0, map_zero]
   have hSH : ∀ w v, IsHaarS (SLoc (X.B.I.ε v) (eV X v) (zV X w v)) (muSv X w v) := fun w v =>
     hNH _ _ _ _ _ _ _ _ _ _ (frameLoc_X X w u v) (hep v) (hpp v) (hzp w v) _ _ (muNv_haar X w v) (muHv_haar X w v)
-  haveI : ∀ w v, SigmaFinite (muSv X w v) := fun w v => (hSH w v).1.1
+  have : ∀ w v, SigmaFinite (muSv X w v) := fun w v => (hSH w v).1.1
   obtain ⟨κ, hκ0, hκT, hκ⟩ := muS_eq X u (fun v => inferInstance)
   obtain ⟨κ', hκ'0, hκ'T, hκ'⟩ := muS_eq X u' (fun v => inferInstance)
   have hsec := fun v => hSM _ _ _ _ _ _ _ _ _ sc (frameLoc_X X u u' v) hsc
@@ -112,7 +112,7 @@ theorem product_formula_holds : P5 := by
       ((dcInf X).restrict (Good X u u')).withDensity
         (fun c => ∏ v, ENNReal.ofReal (Cv v * wtLoc D.R.k (Tw u) (Tw u') (c v))) := by
     unfold nuLoc
-    haveI : SigmaFinite (dcLoc (r := D.R.rS)) := by unfold dcLoc; infer_instance
+    have : SigmaFinite (dcLoc (r := D.R.rS)) := by unfold dcLoc; infer_instance
     rw [PiM.pi_withDensity _ _ hwm (fun v x => ENNReal.ofReal_ne_top), ← Measure.restrict_pi_pi, good_eq]
     rfl
   set H : (Cinf X) → X.B.I.Ginf := fun c v => hs v (c v) with hHd

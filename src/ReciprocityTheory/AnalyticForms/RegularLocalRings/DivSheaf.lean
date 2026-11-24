@@ -104,8 +104,8 @@ lemma dsJ_basicOpen (hV : ∀ x : W, ∃ c, x ∈ V c)
     rw [e]
     exact h1
   · intro b hb
-    letI := (W.presheaf.map (homOfLE <| W.basicOpen_le f).op).hom.toAlgebra
-    haveI := U.2.isLocalization_basicOpen f
+    let := (W.presheaf.map (homOfLE <| W.basicOpen_le f).op).hom.toAlgebra
+    have := U.2.isLocalization_basicOpen f
     obtain ⟨⟨a, s'⟩, hab⟩ := IsLocalization.surj (Submonoid.powers f) b
     obtain ⟨n, hn⟩ := s'.2
     simp only [RingHom.algebraMap_toAlgebra, ← hn] at hab
@@ -174,10 +174,10 @@ theorem effCartier_of_stalkId {W : Scheme.{0}} [IsNoetherian W] (G : W.IdealShea
     FinalTheorems.EffCartier G := by
   intro x
   obtain ⟨U0, hU0, hxU0, -⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := ⊤) trivial
-  haveI : IsNoetherianRing Γ(W, U0) := IsLocallyNoetherian.component_noetherian ⟨U0, hU0⟩
+  have : IsNoetherianRing Γ(W, U0) := IsLocallyNoetherian.component_noetherian ⟨U0, hU0⟩
   obtain ⟨t, ht, hst⟩ := hG x
-  letI := (W.presheaf.germ U0 x hxU0).hom.toAlgebra
-  haveI := hU0.isLocalization_stalk ⟨x, hxU0⟩
+  let := (W.presheaf.germ U0 x hxU0).hom.toAlgebra
+  have := hU0.isLocalization_stalk ⟨x, hxU0⟩
   have hI : (G.ideal ⟨U0, hU0⟩).map (algebraMap Γ(W, U0) (W.presheaf.stalk x)) =
       Ideal.span {t} := by
     rw [← hst, ds_stalkId_eq_map G ⟨U0, hU0⟩ x hxU0]
@@ -192,8 +192,8 @@ theorem effCartier_of_stalkId {W : Scheme.{0}} [IsNoetherian W] (G : W.IdealShea
     rw [hyc]
     exact mul_mem c.isUnit.mem_nonZeroDivisors ht
   obtain ⟨σ, hσ, hT⟩ := ds_spread (hU0.primeIdealOf ⟨x, hxU0⟩).asIdeal _ h hh hmap hnzd
-  letI := (W.presheaf.map (homOfLE <| W.basicOpen_le σ).op).hom.toAlgebra
-  haveI := hU0.isLocalization_basicOpen σ
+  let := (W.presheaf.map (homOfLE <| W.basicOpen_le σ).op).hom.toAlgebra
+  have := hU0.isLocalization_basicOpen σ
   obtain ⟨h1, h2⟩ := hT Γ(W, W.basicOpen σ)
   refine ⟨W.affineBasicOpen (U := ⟨U0, hU0⟩) σ, algebraMap Γ(W, U0) Γ(W, W.basicOpen σ) h, ?_, h2, ?_⟩
   · have hu := (IsLocalization.AtPrime.isUnit_to_map_iff (W.presheaf.stalk x)

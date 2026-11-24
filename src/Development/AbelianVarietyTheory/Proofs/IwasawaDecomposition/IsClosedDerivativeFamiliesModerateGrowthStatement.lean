@@ -77,13 +77,13 @@ theorem taylor_bound {R : ℝ → (E →L[ℂ] E)} (h0 : R 0 = 1) (hR : ∀ s t,
   have h1 : ∀ s, |s| ≤ |t| → ‖R s b - b‖ ≤ M * ‖c‖ * |t| := fun s hs => by
     have := norm_sub_le (hasDerivAt_flow hR hb) (t := s) (C := M * ‖c‖) fun u hu =>
       ((R u).le_opNorm c).trans (mul_le_mul_of_nonneg_right (hM u (hu.trans (hs.trans ht))) (norm_nonneg _))
-    simp only [h0, ContinuousLinearMap.one_apply] at this
+    simp only [h0, one_apply_eq_self] at this
     exact this.trans (mul_le_mul_of_nonneg_left hs (by positivity))
   have h2 := norm_sub_le (f := fun s : ℝ => R s a - s • b) (f' := fun s => R s b - b)
     (fun s => by
       have := (hasDerivAt_flow hR ha s).fun_sub ((hasDerivAt_id' s).smul_const b)
       rwa [one_smul] at this) h1
-  simp only [h0, ContinuousLinearMap.one_apply, zero_smul, sub_zero] at h2
+  simp only [h0, one_apply_eq_self, zero_smul, sub_zero] at h2
   rwa [sub_right_comm]
 
 theorem hasDerivAt_of_bound {f : ℝ → E} {b : E} {K : ℝ}
@@ -116,7 +116,7 @@ theorem GlobalTheory.TypeSum.isClosed_fam (n : ℕ) (ε : Fin n → Bool) (E : T
     have hM' : ∀ s : ℝ, |s| ≤ 1 → ‖ρ (NormedSpace.exp (s • (X : Mx n)))‖ ≤ M := fun s hs =>
       (hC _ (exp_mem_UJ hX s)).trans (hM ⟨s, by simpa using hs, rfl⟩)
     refine hasDerivAt_of_bound (K := M * ‖v (X :: X :: l)‖) fun t ht => ?_
-    simp only [h0, ContinuousLinearMap.one_apply]
+    simp only [h0, one_apply_eq_self]
     have hcl : IsClosed {w : List (lie (Jm ε)) → E |
         ‖ρ (NormedSpace.exp (t • (X : Mx n))) (w l) - w l - t • w (X :: l)‖ ≤ M * ‖w (X :: X :: l)‖ * |t| * |t|} :=
       isClosed_le (by fun_prop) (by fun_prop)

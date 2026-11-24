@@ -64,7 +64,7 @@ theorem reg_local : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Comm
   refine ⟨fun p => ?_, fun p q h => (RegAtMono.regAt_mono X Ω ξ p q h).1, fun hg p a => ?_⟩
   · unfold regAt
     exact IsLocalRing.of_surjective' (genMap ξ p).rangeRestrict (RingHom.rangeRestrict_surjective _)
-  · haveI := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hg p).2.1
+  · have := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hg p).2.1
     obtain ⟨u, v, hv, rfl⟩ := IsFractionRing.div_surjective (A := regAt ξ p) a
     refine ⟨u, u.2, v, v.2, fun h => ?_, rfl⟩
     exact nonZeroDivisors.ne_zero hv (Subtype.ext h)

@@ -55,7 +55,7 @@ open scoped Formalism.Per NNReal
 theorem GlobalTheory.BSP.TopBasis.dvd_iff_dvd_c : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (A : Type) [CommRing A]
     (s : bk.S →+* A) (ι : Type) (TB : TopBasis s bk.J ι) (a : bk.S) (x : A), s a ∣ x ↔ ∀ i, a ∣ TB.c i x := by
   intro l _ K bk A _ s ι TB a x
-  haveI hH : IsHausdorff bk.J bk.S := bk.complete.toIsHausdorff
+  have hH : IsHausdorff bk.J bk.S := bk.complete.toIsHausdorff
   obtain ⟨h1, -, -, h4, -⟩ := _root_.GlobalTheory.BSP.TopBasis.basic_facts bk.S A s bk.J ι TB hH
   constructor
   · rintro ⟨y, rfl⟩ i

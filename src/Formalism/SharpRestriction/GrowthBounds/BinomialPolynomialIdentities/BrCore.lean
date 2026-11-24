@@ -539,7 +539,7 @@ lemma qh_can_emb [NeZero n] (mu : Fin n → ℤ) (c : ↥(TCols mu)) (a : Fin (c
       | simp [canT]
   have hmono : StrictMono (Fin.castLE (colH_le mu c)) := by
     intro x y hxy
-    rw [Fin.lt_iff_val_lt_val] at hxy ⊢
+    rw [Fin.lt_def] at hxy ⊢
     exact hxy
   exact (congrFun (Finset.orderEmbOfFin_unique (canT mu c).2 hmem hmono) a).symm
 
@@ -650,8 +650,8 @@ lemma qh_phi_mono1 (d : Fin n × Fin n →₀ ℕ) :
   | zero => simp
   | add d1 d2 h1 h2 =>
     have e : (monomial (d1 + d2) (1 : R)) = monomial d1 1 * monomial d2 1 := by
-      rw [monomial_mul, one_mul]
-    rw [e, map_mul, h1, h2, monomial_mul, Finsupp.mapDomain_add]
+      rw [monomial_mul_monomial, one_mul]
+    rw [e, map_mul, h1, h2, monomial_mul_monomial, Finsupp.mapDomain_add]
   | single v e =>
     rw [← X_pow_eq_monomial, map_pow, qhPhi, aeval_X, mul_pow, Finsupp.mapDomain_single, ← map_pow,
       X_pow_eq_monomial, mul_comm, C_mul_monomial, mul_one]
@@ -668,9 +668,9 @@ lemma qh_phi_coeff (Q : MvPolynomial (Fin n × Fin n) R) (d0 : Fin n × Fin n �
     rw [qh_phi_mono]
     by_cases h : d = d0
     · subst h; simp
-    · rw [coeff_monomial, coeff_monomial, if_neg h]
+    · rw [coeff_monomial, coeff_monomial, ite_eq_right h]
       split_ifs
-      · rw [coeff_monomial, if_neg h]
+      · rw [coeff_monomial, ite_eq_right h]
       · simp
   | add p q hp hq => rw [map_add (f := _), MvPolynomial.coeff_add, MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq]
 
@@ -716,7 +716,7 @@ lemma qh_homog [IsDomain R] (Q : MvPolynomial (Fin n × Fin n) R) (ν : Fin n �
     intro heq
     apply hne
     rw [← heq]; rfl
-  rw [← qh_phi_coeff, h, coeff_monomial, if_neg hne']
+  rw [← qh_phi_coeff, h, coeff_monomial, ite_eq_right hne']
   simp
 
 lemma qh_invariant [IsDomain R] (Q : MvPolynomial (Fin n × Fin n) R) (ν : Fin n → ℕ)
@@ -744,9 +744,9 @@ lemma qh_invariant [IsDomain R] (Q : MvPolynomial (Fin n × Fin n) R) (ν : Fin 
         Matrix (Fin n) (Fin n) (MvPolynomial (Option (Fin n × Fin n)) R)) v.2 v.1) Q := by
     rw [Formalism.GradedWeylDivisibility.colAddGen]; congr 2; funext v
     by_cases hv : v.2 = j
-    · rw [if_pos hv, hv, Matrix.transvection_mul_apply_same]
+    · rw [ite_eq_left hv, hv, Matrix.transvection_mul_apply_same]
       simp [← hv]
-    · rw [if_neg hv, Matrix.transvection_mul_apply_of_ne _ _ _ _ hv]
+    · rw [ite_eq_right hv, Matrix.transvection_mul_apply_of_ne _ _ _ _ hv]
       simp
   rw [e1, h, ← aeval_X_left_apply (rename some Q), aeval_rename]
   rfl
@@ -1010,7 +1010,7 @@ theorem qn_divide (n : ℕ) [NeZero n] (ν' : Fin n → ℕ) :
     have h4 := congrFun h3 t
     have h5 : initW n (sz k0) t = 1 := by
       unfold initW
-      rw [hsz0, if_pos t.isLt]
+      rw [hsz0, ite_eq_left t.isLt]
     rw [Pi.add_apply, h5] at h4
     omega
   refine ⟨ε • ∏ k ∈ Finset.univ.erase k0, initMinor ℤ (I k) (hsz k), Submodule.smul_mem _ _ hrest, ?_⟩
@@ -1130,7 +1130,7 @@ theorem qn_coeff_X_pderiv {σ : Type*} (i : σ) (f : MvPolynomial σ ℚ) (m : �
       · simp [hs]
       · have h1 : Finsupp.single i 1 + (s - Finsupp.single i 1) = s :=
           add_tsub_cancel_of_le (Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hs))
-        rw [X, monomial_mul, h1, smul_monomial, one_mul, smul_eq_mul, mul_comm]
+        rw [X, monomial_mul_monomial, h1, smul_monomial, one_mul, smul_eq_mul, mul_comm]
     rw [h, MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul]
     split_ifs with hsm
     · rw [hsm]
@@ -1215,7 +1215,7 @@ theorem qn_mem_otherWts' (n : ℕ) (ν : Fin n → ℕ) (g : MvPolynomial (Fin n
     have := congrFun hwt a
     simp only [qn_wt] at this
     exact_mod_cast this
-  rw [coeff_weightedHomogeneousComponent, if_pos hw, coeff_transposeVariables] at h1
+  rw [coeff_weightedHomogeneousComponent, ite_eq_left hw, coeff_transposeVariables] at h1
   exact (mem_support_iff.mp hm) (by simpa using h1)
 
 theorem qn_otherWts_coeff' (n : ℕ) (ν : Fin n → ℕ) (z : MvPolynomial (Fin n × Fin n) ℚ)
@@ -1279,7 +1279,7 @@ theorem qn_comp (n : ℕ) (ν : Fin n → ℕ) (hν : Antitone ν) (F : MvPolyno
     hHW (by rw [hH1]; exact one_ne_zero)
   have h1 : AddMonoidAlgebra.coeff F (lhwline_mnu (le_refl n) ν) = c := by
     have e : AddMonoidAlgebra.coeff F (lhwline_mnu (le_refl n) ν) = AddMonoidAlgebra.coeff G (lhwline_mnu (le_refl n) ν) := by
-      rw [hGdef, coeff_weightedHomogeneousComponent, if_pos hwt]
+      rw [hGdef, coeff_weightedHomogeneousComponent, ite_eq_left hwt]
     rw [e, hc, MvPolynomial.coeff_smul, hH1, smul_eq_mul, mul_one]
   rw [qn_eval_eq_coeff n ν F (qn_colHom ℚ n ν F hF), h1, hc]
 
@@ -1430,7 +1430,7 @@ theorem qn_interlaced_lowerTri {r n : ℕ} (m : Fin r × Fin n →₀ ℕ) (h : 
 theorem qn_lowerTriIntegral : LowerTriIntegral := by
   classical
   intro r n ν
-  haveI := (colLex r n).wellFoundedLT_syn
+  have := (colLex r n).wellFoundedLT_syn
   obtain ⟨b, hbB, hbdeg⟩ := sSBasis ℤ r n ν
   have hBmem : ∀ i, intQ r n (b i) ∈ dualWeyl ℚ r n ν := by
     intro i
@@ -1651,10 +1651,10 @@ theorem qn_coeff_pt (n : ℕ) (ν : Fin n → ℕ) (F : MvPolynomial (Fin n × F
   rw [aeval_def, eval₂_eq', coeff_sum]
   simp only [algebraMap_eq, coeff_C_mul, qn_prod_pt]
   rw [Finset.sum_eq_single e]
-  · rw [if_pos he, coeff_monomial, if_pos rfl, mul_one]
+  · rw [ite_eq_left he, coeff_monomial, ite_eq_left rfl, mul_one]
   · intro m hm hne
     split_ifs with hl
-    · rw [coeff_monomial, if_neg, mul_zero]
+    · rw [coeff_monomial, ite_eq_right, mul_zero]
       intro hoff
       apply hne
       refine qn_off_inj ν m e hl he ?_ hec hoff
@@ -1766,7 +1766,7 @@ theorem qn_main (n : ℕ) (ν : Fin n → ℕ) (hν : Antitone ν) {ι : Type}
   have hTvev : eval (idFrame ℚ n n) (transposeVariables ℚ n v) = 1 := by
     rw [hTv, qn_eval_map, h3, Int.cast_one]
   ext x
-  simp only [SetLike.mem_coe, Set.mem_setOf_eq]
+  simp only [SetLike.mem_coe, Set.mem_ofPred_eq]
   constructor
   · intro hx
     refine ⟨Submodule.span_le_restrictScalars ℤ ℚ _ hx, ?_⟩

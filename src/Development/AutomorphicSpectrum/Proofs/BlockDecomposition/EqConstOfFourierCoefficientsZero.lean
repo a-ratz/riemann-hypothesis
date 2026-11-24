@@ -132,14 +132,14 @@ theorem const_of_coeff : ∀ {D : D7} {p : ℕ} {lp : Measure (hermA D p)} {𝓖
   intro D p lp 𝓖p hC ψ hψ φ hφ hper hco y
   obtain ⟨hlam, hFD, h1⟩ := hC
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D p p
-  haveI : BorelSpace (Mx D p p) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D p) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D p) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace (hermA D p) := GlobalTheory.CompanionTheory.FourierN.isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : DiscreteTopology (ratHerm D p) := GlobalTheory.CompanionTheory.FourierN.discrete_ratHerm
+  have : BorelSpace (Mx D p p) := ⟨rfl⟩
+  have : BorelSpace (hermA D p) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D p) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (hermA D p) := GlobalTheory.CompanionTheory.FourierN.isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : DiscreteTopology (ratHerm D p) := GlobalTheory.CompanionTheory.FourierN.discrete_ratHerm
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.CompanionTheory.FourierN.exists_compact_cover (D := D) (n := p)
   refine const_of_coefficients (ratHerm D p) K hK hcov (GlobalTheory.CompanionTheory.FourierN.hermSub D p) (fun a x => ψ (-GlobalTheory.CompanionTheory.FourierN.pr a.1 x.1))
-    (fun a => hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr a.1).neg.comp continuous_subtype_val))
+    (fun a => hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr a.1).neg.comp continuous_subtypeVal))
     (fun a x y => by
       show ψ (-GlobalTheory.CompanionTheory.FourierN.pr a.1 (x.1 + y.1)) = _
       rw [GlobalTheory.CompanionTheory.FourierN.pr_add_right, neg_add, AddChar.map_add_eq_mul])

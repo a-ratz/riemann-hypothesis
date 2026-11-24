@@ -49,7 +49,7 @@ theorem exists_ringHom_comp_of_isCompl : ∀ (L : Type) [CommRing L] (Q : Type) 
     (i : L →+* Q) (J : Ideal L) (JC : Ideal C), IsCompl i J → IsAdicComplete JC C →
     ∀ g : L →+* C, J.map g ≤ JC → ∃ h : Q →+* C, h.comp i = g := by
   intro L _ Q _ C _ i J JC hi hC g hg
-  haveI := hC
+  have := hC
 
   let ψ : (n : ℕ) → L →+* Q ⧸ (J ^ n).map i := fun n => (Ideal.Quotient.mk _).comp i
   have hψ : ∀ n, Function.Surjective (ψ n) := by

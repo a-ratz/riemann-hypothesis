@@ -68,7 +68,7 @@ theorem appLE_bijective {Y Z : Scheme.{0}} (π : Z ⟶ Y) [IsOpenImmersion π] {
     {V' : Z.Opens} (h : V' ≤ π ⁻¹ᵁ V) (h' : π ⁻¹ᵁ V ≤ V') : Function.Bijective (π.appLE V V' h).hom := by
   obtain rfl : V' = π ⁻¹ᵁ V := le_antisymm h h'
   rw [← Scheme.Hom.app_eq_appLE]
-  haveI := π.isIso_app V hV
+  have := π.isIso_app V hV
   exact ConcreteCategory.bijective_of_isIso (π.app V)
 
 theorem exists_pow_mul_eq {Y Z : Scheme.{0}} [CompactSpace Y] [QuasiSeparatedSpace Y] (π : Z ⟶ Y)
@@ -91,7 +91,7 @@ theorem exists_pow_mul_eq {Y Z : Scheme.{0}} [CompactSpace Y] [QuasiSeparatedSpa
     have := hf i j
     rw [← ht i, ← ht j, GlobalTheory.LB.resG_appLE, GlobalTheory.LB.resG_appLE] at this
     exact this
-  haveI := GlobalTheory.LB.isQuasicoherent_toMod hM
+  have := GlobalTheory.LB.isQuasicoherent_toMod hM
   obtain ⟨N, u, hu⟩ := GlobalTheory.QCoh.Qcqs.exists_pow_smul_eq_res_of_qcqs (GlobalTheory.LB.toMod M)
     (U := ⊤) isCompact_univ isQuasiSeparated_univ a le_top ha (GlobalTheory.LB.mkSec t hmem)
   let s : LB.Sec M := ⟨fun i => resG Y (le_inf le_top le_rfl) (GlobalTheory.LB.coord u i), fun i j => by

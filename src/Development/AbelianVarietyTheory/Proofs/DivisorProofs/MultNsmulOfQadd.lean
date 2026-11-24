@@ -72,7 +72,7 @@ theorem qNum_add : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (
     IsProjOver p → ∀ (N : LB X) (a b : ℚ) (D B : X → ℚ), QNum p N a D → QNum p N b B →
       QNum p N (a + b) (D + B) := by
   intro X _ _ p hp N a b D B hD hB
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   obtain ⟨-, H, hH⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp
   obtain ⟨m, D₀, hm, hD₀, rfl, hDn⟩ := hD
   obtain ⟨m', B₀, hm', hB₀, rfl, hBn⟩ := hB

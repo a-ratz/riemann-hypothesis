@@ -366,7 +366,7 @@ theorem measureReal_doubleCoset_eq_relIndex_mul :
   intro G _ _ _ _ _ μ _ J hJo hJc g
   set K := J.map (MulAut.conj g).toMonoidHom with hK
   set H : Subgroup J := K.subgroupOf J with hH
-  haveI : CompactSpace J := isCompact_iff_compactSpace.1 hJc
+  have : CompactSpace J := isCompact_iff_compactSpace.1 hJc
   have hKo : IsOpen (K : Set G) := by
     have : (K : Set G) = (fun x => g⁻¹ * x * g) ⁻¹' (J : Set G) := by
       ext x; rw [SetLike.mem_coe, hK, mem_map_conj_iff_conj_mem]; rfl
@@ -374,9 +374,9 @@ theorem measureReal_doubleCoset_eq_relIndex_mul :
   have hHo : IsOpen (H : Set J) := by
     have : (H : Set J) = Subtype.val ⁻¹' (K : Set G) := by
       ext x; simp [hH, Subgroup.mem_subgroupOf]
-    rw [this]; exact hKo.preimage continuous_subtype_val
-  haveI : Finite (J ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
-  letI : Fintype (J ⧸ H) := Fintype.ofFinite _
+    rw [this]; exact hKo.preimage continuous_subtypeVal
+  have : Finite (J ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
+  let : Fintype (J ⧸ H) := Fintype.ofFinite _
   let f : J ⧸ H → Set G := fun q => ((q.out : J) * g : G) • (J : Set G)
   have hcover : DoubleCoset.doubleCoset g (J : Set G) (J : Set G) = ⋃ q, f q := by
     ext x
@@ -572,7 +572,7 @@ theorem map_reindexGL_KO (σ : n ≃ n') : (KO k n).map (reindexGL k σ).toMonoi
   have h1 : ∀ i j, ((reindexGL k σ).symm x).val i j = x.val (σ i) (σ j) := fun i j => rfl
   have h2 : ∀ i j, (((reindexGL k σ).symm x)⁻¹).val i j = (x⁻¹).val (σ i) (σ j) := fun i j => by
     rw [← map_inv]; rfl
-  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, h1, h2]
+  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, h1, h2]
   exact and_congr ⟨fun h i j => by simpa using h (σ.symm i) (σ.symm j), fun h i j => h _ _⟩
     ⟨fun h i j => by simpa using h (σ.symm i) (σ.symm j), fun h i j => h _ _⟩
 
@@ -1045,12 +1045,12 @@ theorem summable_nonneg_family_of_differentiableOn {ι : Type} (c : ι → ℝ) 
   have hpq := hp.hasFPowerSeriesAt.eq_formalMultilinearSeries hRq
   rw [hpq] at hp
   have hxn : ‖(x : ℂ)‖₊ < ρn := by
-    rw [← NNReal.coe_lt_coe, coe_nnnorm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hx0]
+    rw [← NNReal.coe_lt_coe, coe_nnNorm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hx0]
     show x < ρ
     linarith
   have hxmem : (x : ℂ) ∈ Metric.eball (0 : ℂ) (ρn : ENNReal) := by
     show edist (x : ℂ) 0 < ρn
-    rw [edist_zero_right, enorm_eq_nnnorm]
+    rw [edist_zero_right, eNorm_eq_nnNorm]
     exact_mod_cast hxn
   have hsx := (hp.hasSum hxmem).summable
   simp_rw [hqapply] at hsx
@@ -1183,7 +1183,7 @@ theorem exists_isZonal_zonalInt [MeasurableSpace (GL (Fin N) k)] [BorelSpace (GL
   obtain ⟨π, hπ⟩ := GlobalTheory.CuspRep.ParLaws.exists_hasSatake (k := k) α
   refine ⟨_, _, _, π.ρ, hπ, ?_⟩
   obtain ⟨-, hs, S, f, hf⟩ := hπ
-  haveI := isMulRightInvariant_haar μK
+  have := isMulRightInvariant_haar μK
   have hKm : MeasurableSet (KO k (Fin N) : Set (GL (Fin N) k)) := SplitFlip.isOpen_KO.measurableSet
   have hsm : IsSmooth S.toRepresentation :=
     IsSubquotient.isSmooth ⟨S, .id _, Function.surjective_id⟩ (isSmooth_parInd _ _)
@@ -1568,10 +1568,10 @@ theorem lower_eigen : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
 theorem local_zeta_twisted : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → ∀ (ϖ : kˣ), valuation k (ϖ : k) = uniformizer k → ∀ (r t l : ℕ) (ξ μ₀ : kˣ →* ℂˣ), IsUnitaryChar ξ → IsTame ξ → ¬ IsUnram ξ → IsUnram μ₀ → IsUnitaryChar μ₀ → ∀ (B : Multiset ℂˣ) (α : Fin (l * t) → ℂˣ) (ρ : ℝ), Finset.univ.val.map α = B.map (· * ((μ₀ * ξ) ϖ)⁻¹) → (∀ x, ‖(α x : ℂ)‖ ≤ (resCard k : ℝ) ^ ρ ∧ ‖(α x : ℂ)‖⁻¹ ≤ (resCard k : ℝ) ^ ρ) → ∀ H : GL (Fin r ⊕ Blocks l t) k → ℝ, IsHgt ϖ H → ∀ [MeasurableSpace (GL (Fin r ⊕ Blocks l t) k)] [BorelSpace (GL (Fin r ⊕ Blocks l t) k)] (m : Measure (GL (Fin r ⊕ Blocks l t) k)) [m.IsHaarMeasure], m (parahoric k (Fin r) (Blocks l t)) = 1 → ∀ c : GL (Fin r ⊕ Blocks l t) k → ℂ, (∀ g, c g = ip ν (om (μ₀ * ξ) g (1 : GL (Fin r ⊕ Blocks (l + 1) t) k) (datum ξ)) (datum ξ)) → c 1 ≠ 0 ∧ ∃ ζ : GL (Fin r ⊕ Blocks l t) k → ℂ, (∀ (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin r ⊕ Blocks l t) k) V) (x : V) (ℓ : V →ₗ[ℂ] ℂ), IsGen π ξ ϖ B x → IsCoType π ξ ℓ → ∀ g, starRingEnd ℂ (c g) * ℓ (π g x) = starRingEnd ℂ (c 1) * ζ g * ℓ x) ∧ (∀ g ∈ parahoric k (Fin r) (Blocks l t), ζ g = 1) ∧ ∀ s : ℂ, ρ - 1 / 2 < s.re → Integrable (fun g => ζ g * (H g : ℂ) ^ (s - (t : ℂ) / 2)) m ∧ ∫ g, ζ g * (H g : ℂ) ^ (s - (t : ℂ) / 2) ∂m = lFactor (resCard k) α (s + 1 / 2) * lFactor (resCard k) α⁻¹ (s + 1 / 2) * invNormFactor (resCard k) (l * t) s := by
   intro hUD k _ _ _ _ _ _ _ ν hν ϖ hϖ r t l ξ μ₀ hξu hξt hξr hμ₀ hμ₀u B α ρ hαB hαρ H hH _ _ m _ hm c hc
   classical
-  letI : MeasurableSpace (GL (Fin (l * t)) k) := borel _
-  haveI : BorelSpace (GL (Fin (l * t)) k) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin (l * t)) k) := borel _
+  have : BorelSpace (GL (Fin (l * t)) k) := ⟨rfl⟩
   obtain ⟨μK, hμKH, hμK⟩ := GlobalTheory.GLDoubling.Model.exists_haar (k := k) (l * t)
-  haveI := hμKH
+  have := hμKH
   obtain ⟨ψ, hψB, hψ⟩ := _root_.GlobalTheory.ZonalUnique.eq_mul_zonalInt k (l * t) μK hμK ϖ hϖ α
   obtain ⟨hvol, hdisj⟩ := _root_.GlobalTheory.ChainCells.vol_dcell_and_disjoint k ϖ hϖ r l t m hm μK hμK
   have hceq : c = fun g => ip ν (om (μ₀ * ξ) g (1 : GL (Fin r ⊕ Blocks (l + 1) t) k) (datum ξ)) (datum ξ) :=

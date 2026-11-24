@@ -73,7 +73,7 @@ theorem finite_ncard_cosets {E : Type} [Field E] [NumberField E] {n : ℕ} (A₁
     (h : ∀ y ∈ A₁, c • y ∈ A₀) :
     {Y : Set (Sp E n) | ∃ y ∈ A₁, Y = {z | z - y ∈ A₀}}.Finite ∧
       {Y : Set (Sp E n) | ∃ y ∈ A₁, Y = {z | z - y ∈ A₀}}.ncard ≤ c ^ (Module.finrank ℚ E * n) := by
-  haveI : Module.Finite ℚ (Sp E n) := Module.Finite.trans E (Sp E n)
+  have : Module.Finite ℚ (Sp E n) := Module.Finite.trans E (Sp E n)
   have hd : Module.finrank ℚ (Sp E n) = Module.finrank ℚ E * n := by
     rw [← Module.finrank_mul_finrank ℚ E (Sp E n)]
     simp
@@ -121,7 +121,7 @@ theorem finite_ncard_ybSet {X : Fields} {Pr : Primes X} (hPr : Pr.Ok)
   intro P
   have h1 := hy P
   rw [Submodule.mem_comap] at h1 ⊢
-  simp only [hvG P, if_true, zpow_neg, zpow_one, inv_inv, zpow_zero, inv_one, one_smul, LinearMap.restrictScalars_apply,
+  simp only [hvG P, ite_true, zpow_neg, zpow_one, inv_inv, zpow_zero, inv_one, one_smul, LinearMap.restrictScalars_apply,
     LinearMap.smul_apply, LinearMap.id_apply, Nat.cast_smul_eq_nsmul] at h1 ⊢
   rcases Finset.mem_union.mp (hvG P) with h | h
   · have hq : Formalism.L2.Col.qOf P.1 = Pr.g 0 := hPr.vG_norm 0 _ h
@@ -174,7 +174,7 @@ theorem ncard_ybSet_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (CY : ℝ) (D : D7) (N : N
       _ ≤ ((N.g 0 : ℝ) * N.g 1 * Pr.T u) ^ (2 * N.R.f * n) := pow_le_pow_left₀ (by linarith) ggT _
       _ ≤ ((N.g 0 : ℝ) * N.g 1 * Pr.T u) ^ (2 * N.R.f * (N.R.m ^ 2 * N.Nm ^ 2)) := pow_le_pow_right₀ (gg.trans ggT) he
       _ = Real.exp (2 * errUnit N (Pr.T u)) := by
-        rw [← Real.exp_log (show 0 < (N.g 0 : ℝ) * N.g 1 * Pr.T u by linarith), ← Real.exp_nat_mul, Real.exp_eq_exp]
+        rw [← Real.exp_log (show 0 < (N.g 0 : ℝ) * N.g 1 * Pr.T u by linarith), ← Real.exp_natCast_mul, Real.exp_eq_exp]
         unfold errUnit
         push_cast
         ring

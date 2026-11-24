@@ -124,7 +124,7 @@ theorem UpperTheory.V.HV.projFacts :
       rw [← hA, hu, map_one]
     · intro hu
       exact crtExt r (by rw [hA, hu, map_one]) (by rw [hB, map_one])
-  · haveI : NeZero M := ⟨ne_zero_of_dvd_ne_zero (NeZero.ne N) h⟩
+  · have : NeZero M := ⟨ne_zero_of_dvd_ne_zero (NeZero.ne N) h⟩
     refine crtExt r ?_ ?_
     · rw [projA r _ _ dvd_rfl, mapMap, mapMap]
       exact projA r _ _ (Nat.ordProj_dvd_ordProj_of_dvd (NeZero.ne N) h r) u

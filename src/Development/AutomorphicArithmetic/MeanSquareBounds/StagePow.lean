@@ -171,7 +171,7 @@ private theorem bs_mul_D_eq_S (Z : ℝ) (y : ℝ) (q : ℕ) (κ : ℕ → ℂ) :
     have := (Finset.mem_Icc.1 hm).1
     exact_mod_cast this
   by_cases h : y < (m : ℝ)
-  · simp only [h, if_true]
+  · simp only [h, ite_true]
     rw [min_eq_right ((div_le_one hm0).2 h.le)]
     push_cast
     ring
@@ -1695,7 +1695,7 @@ theorem stage :
       have : (q : ℝ) ≤ ((ξ.1 + 1 : ℕ) : ℝ) := by exact_mod_cast Nat.le_of_dvd (Nat.succ_pos _) hd
       linarith
     obtain ⟨ψ, hψp, hψ1, hψ⟩ := twist_prim (ξ.1 + 1) q ξ.2 hξp hqp hq2' hnd
-    haveI hne : NeZero ((ξ.1 + 1) * q) := ⟨mul_ne_zero (Nat.succ_ne_zero _) hqp.ne_zero⟩
+    have hne : NeZero ((ξ.1 + 1) * q) := ⟨mul_ne_zero (Nat.succ_ne_zero _) hqp.ne_zero⟩
     have hlev : (((ξ.1 + 1) * q : ℕ) : ℝ) ≤ F * U := by
       rw [Nat.cast_mul]
       exact mul_le_mul hξF hq2 (Nat.cast_nonneg _) hF0.le

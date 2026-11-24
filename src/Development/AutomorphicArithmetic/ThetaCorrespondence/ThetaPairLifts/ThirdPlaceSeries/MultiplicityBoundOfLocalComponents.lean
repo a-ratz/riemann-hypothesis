@@ -821,7 +821,7 @@ private theorem isRepOf_of_split_pz (D : D7) {l : ℕ} [Fact l.Prime] (ι : Qbar
   have hcp := GlobalTheory.TwistLG.charpoly_eq_of_dense ρ₁ ρ₂ c₁ c₂ _ (hC hfin.toFinset).closure_eq (by
     rintro g ⟨w, hw, hs, B, hB, hg⟩
     rw [Set.Finite.mem_toFinset] at hw
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hw
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hw
     apply Polynomial.map_injective ι.toRingHom ι.injective
     rw [hw.1 hs B g hB hg, hw.2 B g hB hg])
   refine ⟨c₁, s₁, f₂.mono fun w hw B σ hB hσ => ?_⟩
@@ -1005,8 +1005,8 @@ private theorem hermFramePairNormalForm_frameSpan_le_of_generators (D : D7) (S :
     (hs : Submodule.span (FractionRing (D.ntw.O i)) (Set.range Ψ) = ⊤) :
     V0 D.nexp i j b ≤ Submodule.span (FractionRing (D.ntw.O i)) (Ψ '' (goodL D S In.θ j : Set (S.WL j))) := by
   classical
-  letI : Fintype (G0g D.nd) := finiteLevelGroupFintype D
-  letI : Fintype ↥(Formalism.IndefR.NX.U D.nd) := fintypeU
+  let : Fintype (G0g D.nd) := finiteLevelGroupFintype D
+  let : Fintype ↥(Formalism.IndefR.NX.U D.nd) := fintypeU
   intro y hy
   obtain ⟨z, hz, rfl⟩ := Submodule.mem_map.mp hy
   let pr : Module.End (FractionRing (D.ntw.O i)) (D.nexp.Fm i j b) :=
@@ -1263,7 +1263,7 @@ private theorem under_le_one {K L : Type} [Field K] [NumberField K] [Field L] [N
     (w : HeightOneSpectrum (𝓞 L)) : ∃ v : HeightOneSpectrum (𝓞 K),
     (∀ x : K, v.valuation K x ≤ 1 ↔ w.valuation L (ι x) ≤ 1) ∧
     (∀ x : K, v.valuation K x < 1 ↔ w.valuation L (ι x) < 1) := by
-  letI : Algebra K L := ι.toAlgebra
+  let : Algebra K L := ι.toAlgebra
   have he : (w.under (𝓞 K)).asIdeal.ramificationIdx' w.asIdeal ≠ 0 :=
     Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver w.asIdeal (w.under (𝓞 K)).ne_bot
   rw [Ideal.ramificationIdx'_eq_ramificationIdx _ _ (w.under (𝓞 K)).ne_bot] at he
@@ -1327,8 +1327,8 @@ theorem UpperTheory.sidePlace_exists_of_copyAll :
   have a := hs (e x)
   rw [hv, hL x] at a
   have b : D.ntw.emb0 i (e x) = (overD D r).ntw.emb0 i x := eq_of_heq (hE i i HEq.rfl x)
-  rw [if_pos rfl, b] at a
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl, b] at a
+  rw [ite_eq_left rfl]
   exact a
 end -- clump:auto
 end -- clump:auto
@@ -1446,7 +1446,7 @@ private theorem psi_standard_of_units {G : Type} [Group G] {P0 : Subgroup G} {ψ
         (((res kv (xiBar D (pl kv).1 * edgeSum supEdge (eC u (pl kv)))).val : ℤ) : kP (pl kv).1) := by
       apply (res kv).injective
       rw [map_intCast, Int.cast_natCast, ZMod.natCast_zmod_val]
-    rw [hW kv _ _ hb, ← Complex.exp_nat_mul]
+    rw [hW kv _ _ hb, ← Complex.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -1498,7 +1498,7 @@ private theorem is_eig_sys_sig_ev_of_eig_occ {cf : CharFrame D} {Rw low Pq S hL 
     rw [hc, hΦs, hΦT _ (Bs.rho _ h1 h2 (S.eG.symm g)), map_inv₀]
     rfl
   have hE : eG D.nexp i _ _ (e.symm (Φ x)) = e.symm (Φ x) := by
-    letI : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
+    let : Fintype (G0g D.nd) := Formalism.MainNotions.PrimeDegreeVariant.finiteLevelGroupFintype D
     have hx1 := Module.End.mem_eigenspace_iff.1 (Submodule.mem_inf.1 hxg).1
     rw [one_smul, finsum_eq_sum_of_fintype, LinearMap.sum_apply] at hx1
     apply e.injective

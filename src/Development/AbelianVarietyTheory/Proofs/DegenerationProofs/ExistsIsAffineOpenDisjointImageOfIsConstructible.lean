@@ -62,7 +62,7 @@ theorem interior_closure_eq_empty_of_isConstructible_of_disjoint_dense
     interior_frontier_preimage_of_isConstructible (f := id) continuous_id hD
   have h2 : interior D = ∅ :=
     interior_eq_empty_iff_dense_compl.2 (hSg.mono h.subset_compl_left)
-  rwa [frontier, h2, Set.diff_empty] at h1
+  rwa [frontier, h2, Set.sdiff_empty] at h1
 
 theorem exists_isAffineOpen_disjoint_image_of_isConstructible_of_disjoint_dense :
     ∀ (X S : Scheme.{0}) [IsIntegral S] [IsNoetherian S] (f : X ⟶ S) [LocallyOfFiniteType f] [QuasiCompact f] (C : Set X) (Sg : Set S), Topology.IsConstructible C → Dense Sg → Disjoint (f '' C) Sg → ∃ V : S.Opens, (V : Set S).Nonempty ∧ IsAffineOpen V ∧ Disjoint (f '' C) V := by

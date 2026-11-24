@@ -232,14 +232,14 @@ theorem coc_ext (T : LocLat S.G S.Qp S.LL S.O) [T2Space T.V] {G' : Type} [Group 
     { carrier := {g | c g = c' g}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [hc.2, hc'.2, ha, hb]
       one_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         rw [h1 c hc, h1 c' hc']
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [h2 c hc, h2 c' hc', ha] }
   funext g
   exact hden U (isClosed_eq hc.1 hc'.1) h g
@@ -276,7 +276,7 @@ theorem phi_act (hφ : ∀ g x, S.φR (S.gR g x) = S.gR g (S.φR x))
 theorem one_tmul_inj (hinj : Function.Injective (algebraMap S.O S.RW))
     (T : LocLat S.G S.Qp S.LL S.O) :
     Function.Injective fun t : ↥T.L.T => (1 : S.RW) ⊗ₜ[S.O] t := by
-  haveI := T.L.free
+  have := T.L.free
   have h := Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T)
     (Algebra.linearMap S.O S.RW) hinj
   intro t t' e
@@ -486,7 +486,7 @@ theorem norm_pow_sub_one {j₀ : ℕ} (hj : Lev l j₀) {u : ℚ_[l]}
   obtain ⟨j, hjj, e⟩ := exists_norm_eq (sub_ne_zero.2 hne) hu
   have hk0 : k ≠ 0 := by rintro rfl; exact hk (dvd_zero _)
   have h1 := _root_.GlobalTheory.Cyc.LiftExp.norm_zpow_sub_one l j (lev_mono hj hjj) u e k (by exact_mod_cast hk0)
-  rw [zpow_natCast, padicValInt.of_nat, padicValNat.eq_zero_of_not_dvd hk] at h1
+  rw [zpow_natCast, padicValInt.of_nat, multiplicity_eq_zero_of_not_dvd hk] at h1
   rw [h1, e]; simp
 
 theorem mem_of_gen {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} {χ : GQ l →* ℚ_[l]ˣ}
@@ -651,7 +651,7 @@ theorem norm_l_pow (s : ℕ) : ‖(l : ℚ_[l]) ^ s‖ = (l : ℝ) ^ (-(s : ℤ)
 
 theorem algebraMap_RW_injective (LL : FinExt l) :
     Function.Injective (algebraMap ↥(OL LL) (RW LL)) := by
-  haveI : Module.Flat ℤ_[l] ↥(OL LL) := by
+  have : Module.Flat ℤ_[l] ↥(OL LL) := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     rintro x ⟨⟨a, ha⟩, hx⟩
     have h1 : algebraMap ℤ_[l] ↥(OL LL) a * x = 0 := by rw [← Algebra.smul_def]; exact hx
@@ -699,7 +699,7 @@ theorem phi_gRW {P : LocPrime l} (AI : LocAinf l P) (LL : FinExt l) (g : GQ l) (
 
 theorem t2Space_localLattice_representationSpace {G : Type} [Group G] [TopologicalSpace G] (LL : FinExt l)
     (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) : T2Space T.V := by
-  haveI : IsTopologicalRing ↥LL.1 := inferInstanceAs (IsTopologicalRing ↥LL.1.toSubalgebra.toSubring)
+  have : IsTopologicalRing ↥LL.1 := inferInstanceAs (IsTopologicalRing ↥LL.1.toSubalgebra.toSubring)
   let b := Module.finBasis ↥LL.1 T.V
   exact T2Space.of_injective_continuous b.equivFun.injective
     (IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap)
@@ -808,7 +808,7 @@ theorem herr_a : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonO
     have h1Δ : (1 : W.Gam) ∈ W.DelF := (mem_DelF_iff W _).2 (one_mem _)
     have hd : ¬ l ∣ W.DelF.card := by
       intro hdv
-      haveI : Finite ↥(CommGroup.torsion W.Gam) := Nat.finite_of_card_ne_zero (by
+      have : Finite ↥(CommGroup.torsion W.Gam) := Nat.finite_of_card_ne_zero (by
         rw [card_torsion]; exact Finset.card_ne_zero.2 ⟨1, h1Δ⟩)
       rw [← card_torsion] at hdv
       obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' l hdv
@@ -840,9 +840,9 @@ theorem herr_a : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonO
         ↥(CommGroup.torsion W.Gam)))
       rw [card_torsion] at h3
       exact congrArg Subtype.val h3
-    haveI := hT T
+    have := hT T
     obtain ⟨k1, k2⟩ := onto_and_kernel E hmul hφ hinj hF hD T (MonoidHom.id S.G) (Hker S).subtype
-      continuous_subtype_val (fun _ => rfl) (fun _ _ e => e) T.ρ (fun _ _ => rfl) T.L rfl
+      continuous_subtypeVal (fun _ => rfl) (fun _ _ e => e) T.ρ (fun _ _ => rfl) T.L rfl
       S.W.DelF h1Δ
       (fun x hx y hy => (mem_DelF_iff W _).2
         (mul_mem ((mem_DelF_iff W _).1 hx) ((mem_DelF_iff W _).1 hy)))
@@ -854,9 +854,9 @@ theorem herr_a : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonO
         simp [h3 δ hδ]⟩)
       (S.W.clK T) (E.clK_def h2 T)
     refine ⟨k1, k2, fun T' f pr pr' e => ?_⟩
-    haveI := hT T'
+    have := hT T'
     exact clK_natural E hinj hF h2 hden T T' f pr pr' e
-  · haveI := hT T
+  · have := hT T
     obtain ⟨γ, hγ⟩ := W.resΓ_onto W.gam
     have hγs : γ ∈ W.GKs := (mem_GKs_iff W γ).2 (norm_of_res_gam W γ hγ).le
     have hden : ∀ U : Subgroup ↥W.GKs, IsClosed (U : Set ↥W.GKs) →

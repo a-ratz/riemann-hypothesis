@@ -244,7 +244,7 @@ theorem finiteDimensional_of_uniformly_almost_invariant :
   have hβU' : ∀ u, β u ≠ 0 → u ∈ U := fun u hu =>
     interior_subset (hβU (subset_tsupport _ hu))
   set c : ℝ := ∫ u, β u ∂μ with hc
-  have hcpos : 0 < c := β.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero
+  have hcpos : 0 < c := β.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero
     (x := 1) (HasCompactSupport.of_compactSpace _) hβ0 (by simp [hβ1 (Set.mem_singleton _)])
   set L := ContinuousMap.toLp (α := K) (E := ℂ) 2 μ ℂ with hL
 
@@ -426,8 +426,8 @@ namespace GlobalTheory
 theorem finiteDimensional_eigenspace_sum_sq_invariantFields : ∀ (K : Type) [Group K] [TopologicalSpace K] [IsTopologicalGroup K] [CompactSpace K] [T2Space K] (L : Type) [NormedAddCommGroup L] [NormedSpace ℝ L] [FiniteDimensional ℝ L] (S : Submodule ℂ (K → ℂ)), (∀ f ∈ S, Continuous f) → ∀ e : L → K, (∀ X : L, Continuous fun t : ℝ => e (t • X)) → e 0 = 1 → (∀ r : ℝ, 0 < r → e '' Metric.ball 0 r ∈ 𝓝 (1 : K)) → ∀ d : L → Module.End ℂ S, (∀ X Y, d (X + Y) = d X + d Y) → (∀ (a : ℝ) X, d (a • X) = (a : ℂ) • d X) → (∀ (X : L) (f : S) (x : K) (t : ℝ), HasDerivAt (fun t : ℝ => f.1 (x * e (t • X))) ((d X f).1 (x * e (t • X))) t) → ∀ (ι : Type) [Fintype ι] (X : ι → L), Submodule.span ℝ (Set.range X) = ⊤ → ∀ lam : ℂ, FiniteDimensional ℂ (Module.End.eigenspace (∑ i, d (X i) * d (X i)) lam) := by
   intro K _ _ _ _ _ L _ _ _ S hS e he he0 hU d hadd hsmul hder ι _ X hX lam
   classical
-  letI : MeasurableSpace K := borel K
-  haveI : BorelSpace K := ⟨rfl⟩
+  let : MeasurableSpace K := borel K
+  have : BorelSpace K := ⟨rfl⟩
   set μ : Measure K := haarProb K with hμ
   have hc : ∀ f : S, Continuous f.1 := fun f => hS f.1 f.2
   have hint : ∀ {F : Type} [NormedAddCommGroup F] {g : K → F}, Continuous g → Integrable g μ :=
@@ -581,7 +581,7 @@ theorem finiteDimensional_ker_aeval_of_eigenspaces
           simp only [map_sub, Polynomial.aeval_X, Polynomial.aeval_C, LinearMap.sub_apply,
             Module.algebraMap_end_apply] at hx'
           exact sub_eq_zero.mp hx'
-        haveI := hT a
+        have := hT a
         exact (Module.Finite.iff_fg).mp (Submodule.finiteDimensional_of_le hle)
       · exact (Module.Finite.iff_fg).mp (Submodule.finiteDimensional_of_le
           (inf_le_right : _ ≤ LinearMap.ker (Polynomial.aeval T q)))
@@ -682,7 +682,7 @@ theorem smooth_of_finiteDimensional_translation_stable :
       rw [hkey, hc0, mul_one]; rfl
     · intro s t
       refine ContinuousLinearMap.ext fun v => hsep _ _ fun g => ?_
-      rw [ContinuousLinearMap.mul_apply, hkey, hkey, hkey, hc, mul_assoc]
+      rw [mul_apply_eq_comp, hkey, hkey, hkey, hc, mul_assoc]
   have hf : ∀ f (hf : f ∈ M) g, f g = ev g (Φ ⟨f, hf⟩) := by
     intro f hf g
     rw [hev, Φ.symm_apply_apply]
@@ -710,7 +710,7 @@ theorem smooth_of_finiteDimensional_translation_stable :
       | succ k ih =>
         intro I t g v
         simp only [List.ofFn_succ, List.prod_cons]
-        rw [ContinuousLinearMap.mul_apply, hkey, ih (fun a => I a.succ) (fun a => t a.succ),
+        rw [mul_apply_eq_comp, hkey, ih (fun a => I a.succ) (fun a => t a.succ),
           mul_assoc]
     have h1 : (fun t : Fin k → ℝ => f (g * (List.ofFn fun a => c (I a) (t a)).prod))
         = fun t => ev g ((List.ofFn fun a => R (I a) (t a)).prod (Φ ⟨f, hfM⟩)) := by
@@ -801,7 +801,7 @@ theorem isLieData_toU (H : IsLieData σ j s) : IsLieData σ j (toU H) :=
     rw [toU_val H (unitary_mul H ha hb), toU_val H ha, toU_val H hb]))⟩
 
 theorem continuous_val (H : IsLieData σ j s) : Continuous fun k : uGrp H => (k.1 : 𝔸) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_toU (H : IsLieData σ j s) {X : Type} [TopologicalSpace X] {c : X → 𝔸} (hc : Continuous c)
     (hu : ∀ x, σ (c x) * c x = 1) : Continuous fun x => toU H (c x) := by
@@ -813,12 +813,12 @@ theorem continuous_toU (H : IsLieData σ j s) {X : Type} [TopologicalSpace X] {c
 
 theorem compactSpace_uGrp (H : IsLieData σ j s) (hc : IsCompact {a | σ a * a = 1}) : CompactSpace (uGrp H) := by
   have := isCompact_iff_compactSpace.1 hc
-  have h := isCompact_range (continuous_toU H (c := fun a : {a | σ a * a = 1} => a.1) continuous_subtype_val fun a => a.2)
+  have h := isCompact_range (continuous_toU H (c := fun a : {a | σ a * a = 1} => a.1) continuous_subtypeVal fun a => a.2)
   refine ⟨by convert h; exact (Set.range_eq_univ.2 fun k => ⟨⟨k.1, k.2⟩, toU_coe H k⟩).symm⟩
 
 theorem expMap_add (H : IsLieData σ j s) (X : L) (a b : ℝ) :
     expMap j s ((a + b) • X) = expMap j s (a • X) * expMap j s (b • X) := by
-  have : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   unfold expMap
   rw [← H.mul _ _ (DerLinear.exp_unitary H _) (DerLinear.exp_unitary H _), ← NormedSpace.exp_add_of_commute, add_smul,

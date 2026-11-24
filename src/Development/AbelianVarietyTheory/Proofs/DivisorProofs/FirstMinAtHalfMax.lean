@@ -210,7 +210,7 @@ theorem firstMin_at_halfMax (hLw : Laws D j Xo c U dict) {σ : c.F →+* ℂ} (h
     push Not at hcon
     have h1 : Submodule.span D.host.E (Xx.Λ : Set (Fin D.R.r → D.host.E)) = ⊥ := Submodule.span_eq_bot.2 hcon
     rw [Xx.Λ_span] at h1
-    haveI : Nonempty (Fin D.R.r) := ⟨⟨0, hr⟩⟩
+    have : Nonempty (Fin D.R.r) := ⟨⟨0, hr⟩⟩
     exact top_ne_bot h1
   obtain ⟨v0, hv0, hv00⟩ := hne
   exact le_csInf ⟨_, v0, hv0, hv00, rfl⟩ (fun t ⟨v, hv, hv0', ht⟩ => ht ▸ hlow v hv hv0')

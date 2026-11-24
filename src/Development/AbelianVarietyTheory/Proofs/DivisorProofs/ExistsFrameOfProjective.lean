@@ -75,9 +75,9 @@ theorem isFrame_of_affine_basis [G.IsQuasicoherent] (hU : IsAffineOpen U) {ι : 
   refine isFrame_of_forall_exists fun V h x hx => ?_
   obtain ⟨W, hW, hxW, hle⟩ := QCoh.exists_affine_mem_le x hx
   refine ⟨W, hle, hxW, ?_⟩
-  letI := QCoh.resAlgebra (hle.trans h)
-  letI := QCoh.resModule G (hle.trans h)
-  haveI := QCoh.res_isScalarTower G (hle.trans h)
+  let := QCoh.resAlgebra (hle.trans h)
+  let := QCoh.resModule G (hle.trans h)
+  have := QCoh.res_isScalarTower G (hle.trans h)
   let b' := (QCoh.isBaseChange_resLinear G hU hW (hle.trans h)).basis b
   have hb (i : ι) : b' i = resM G (hle.trans h) (b i) := by
     rw [IsBaseChange.basis_apply]

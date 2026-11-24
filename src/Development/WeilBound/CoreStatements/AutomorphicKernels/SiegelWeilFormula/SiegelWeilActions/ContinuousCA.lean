@@ -85,11 +85,11 @@ instance countable_fA : Countable (fA F) := by
   exact h.to_subtype
 
 theorem exists_fd_fA : ∃ 𝓐 : Set (AF F), IsAddFundamentalDomain (fA F) 𝓐 (lamA F) ∧ lamA F 𝓐 ≠ 0 ∧ lamA F 𝓐 ≠ ⊤ := by
-  haveI : DiscreteTopology (fA F) := by
+  have : DiscreteTopology (fA F) := by
     obtain ⟨U, hU, hU0⟩ := GlobalTheory.AdeleDiscrete.exists_nhds_zero_principal_eq_zero F
     obtain ⟨O, hOU, hO, h0⟩ := mem_nhds_iff.1 hU
     refine discreteTopology_of_isOpen_singleton_zero ?_
-    convert hO.preimage continuous_subtype_val using 1
+    convert hO.preimage continuous_subtypeVal using 1
     ext ⟨x, hx⟩
     constructor
     · intro h
@@ -146,14 +146,14 @@ instance lcNA {n : ℕ} {Y : Spc F E n} {b : GL (Fin n ⊕ Fin n) E} [Fact (IsFr
 theorem lam_map {lam : Measure (nA σ d.Y d.b)} [lam.IsAddHaarMeasure] {ν : Measure (Fin L.n → AE F E)} [ν.IsAddHaarMeasure]
     {lam' : Measure (nA σ L.Y L.b)} [lam'.IsAddHaarMeasure] (P : (nA σ d.Y d.b) ≃ₜ+ (((Fin L.n → AE F E) × AF F) × nA σ L.Y L.b)) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ lam.map P = c • ((ν.prod (lamA F)).prod lam') := by
-  haveI : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
-  haveI : (lam.map P).IsAddHaarMeasure := P.isAddHaarMeasure_map lam
-  haveI : SFinite ν := inferInstance
-  haveI : SFinite lam' := inferInstance
-  haveI : SFinite (lamA F) := inferInstance
-  haveI : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
-  haveI : SFinite (ν.prod (lamA F)) := inferInstance
-  haveI : ((ν.prod (lamA F)).prod lam').IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
+  have : (lam.map P).IsAddHaarMeasure := P.isAddHaarMeasure_map lam
+  have : SFinite ν := inferInstance
+  have : SFinite lam' := inferInstance
+  have : SFinite (lamA F) := inferInstance
+  have : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : SFinite (ν.prod (lamA F)) := inferInstance
+  have : ((ν.prod (lamA F)).prod lam').IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   refine ⟨(Measure.addHaarScalarFactor (lam.map P) ((ν.prod (lamA F)).prod lam') : ℝ≥0∞),
     ENNReal.coe_ne_zero.2 (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne', ENNReal.coe_ne_top, ?_⟩
   rw [← ENNReal.smul_def]
@@ -161,9 +161,9 @@ theorem lam_map {lam : Measure (nA σ d.Y d.b)} [lam.IsAddHaarMeasure] {ν : Mea
 
 theorem kap_eq {ν : Measure (Fin L.n → AE F E)} [ν.IsAddHaarMeasure] {κ : Measure ((Fin L.n → AE F E) × AF F)}
     [κ.IsAddHaarMeasure] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ κ = c • (ν.prod (lamA F)) := by
-  haveI : SFinite ν := inferInstance
-  haveI : SFinite (lamA F) := inferInstance
-  haveI : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : SFinite ν := inferInstance
+  have : SFinite (lamA F) := inferInstance
+  have : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   refine ⟨(Measure.addHaarScalarFactor κ (ν.prod (lamA F)) : ℝ≥0∞),
     ENNReal.coe_ne_zero.2 (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne', ENNReal.coe_ne_top, ?_⟩
   rw [← ENNReal.smul_def]

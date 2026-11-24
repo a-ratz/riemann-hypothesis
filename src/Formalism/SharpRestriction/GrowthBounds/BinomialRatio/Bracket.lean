@@ -157,11 +157,11 @@ theorem nk_exponent (s r : ℕ) (La γ : ℝ) (hr : 9 ≤ r) (hs : 2 * s + 1 ≤
     linarith
   have hb : Real.exp (1 / k ^ 2) * Real.exp (2 / k ^ 2) ^ s * Real.exp (2 / k ^ 2) ^ s * γ ≤
       Real.exp (1 / k ^ 2 + s * (2 / k ^ 2) + s * (2 / k ^ 2) - La / (4 * k)) := by
-    rw [← Real.exp_nat_mul, sub_eq_add_neg, Real.exp_add, Real.exp_add, Real.exp_add]
+    rw [← Real.exp_natCast_mul, sub_eq_add_neg, Real.exp_add, Real.exp_add, Real.exp_add]
     exact mul_le_mul_of_nonneg_left hγ (by positivity)
   have hb0 : 0 ≤ Real.exp (1 / k ^ 2) * Real.exp (2 / k ^ 2) ^ s * Real.exp (2 / k ^ 2) ^ s * γ := by positivity
   refine (pow_le_pow_left₀ hb0 hb (r - 1)).trans ?_
-  rw [← Real.exp_nat_mul, hn]
+  rw [← Real.exp_natCast_mul, hn]
   apply Real.exp_le_exp.mpr
   have hk0 : 0 < k := by linarith
   have e1 : (k - 2) * (1 / k ^ 2 + s * (2 / k ^ 2) + s * (2 / k ^ 2) - La / (4 * k)) =
@@ -339,14 +339,14 @@ theorem brk_core (s m : ℕ) (La p A lam0 : ℝ) (Ai Ci ρ u nn : Fin s → ℝ)
       exact nk_iv _ _ _ _ hr0 hrc hrA hu
     · by_cases hi : i = i0
       · subst hi
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         have hm := hmη _ (hkCi i)
         have hC0' := hCi0 i
         have h1 : nn i + m ≤ μ0 * Ci i := by rw [hμ0]; nlinarith
         calc _ ≤ μ0 * Ci i := h1
           _ ≤ μ0 * (Real.exp (2 * η) * Ci i) := mul_le_mul_of_nonneg_left (by nlinarith) hμ00
-      · rw [if_neg hi]; exact hnn1 i
-    · rw [Finset.prod_const_one, one_mul, Finset.prod_ite_eq' Finset.univ i0 (fun _ => μ0), if_pos (Finset.mem_univ _)]
+      · rw [ite_eq_right hi]; exact hnn1 i
+    · rw [Finset.prod_const_one, one_mul, Finset.prod_ite_eq' Finset.univ i0 (fun _ => μ0), ite_eq_left (Finset.mem_univ _)]
       refine le_trans (show μ0 ≤ Real.exp (-(La / k) + η) by linarith [Real.add_one_le_exp (-(La / k) + η)])
         (Real.exp_le_exp.mpr ?_)
       rw [hτ]
@@ -361,7 +361,7 @@ theorem brk_core (s m : ℕ) (La p A lam0 : ℝ) (Ai Ci ρ u nn : Fin s → ℝ)
     · obtain ⟨hr0, hrc, hrA, hu⟩ := hfacts i
       by_cases hi : i = i0
       · subst hi
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         refine hstep0 i (1 - τ) ?_ (by linarith)
         have hcpos : 0 < c i := by
           have := hCnn i
@@ -396,12 +396,12 @@ theorem brk_core (s m : ℕ) (La p A lam0 : ℝ) (Ai Ci ρ u nn : Fin s → ℝ)
         have := mul_le_mul_of_nonneg_left hmax (by linarith : (0:ℝ) ≤ 2 * τ)
         rw [e2] at hP
         linarith
-      · rw [if_neg hi]
+      · rw [ite_eq_right hi]
         refine hstep0 i 1 ?_ zero_le_one
         rw [one_mul]
         exact nk_iv _ _ _ _ hr0 hrc hrA hu
     · rw [Finset.prod_const_one, mul_one, Finset.prod_ite_eq' Finset.univ i0 (fun _ => 1 - τ),
-        if_pos (Finset.mem_univ _)]
+        ite_eq_left (Finset.mem_univ _)]
       linarith [Real.add_one_le_exp (-τ)]
 
 theorem bracket_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cc : ℝ} (hF : PairFactsAt C0 CYb Cde Ck CD Cb CE1 CE2 Cc)

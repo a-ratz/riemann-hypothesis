@@ -763,17 +763,17 @@ theorem exists_diag {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [Co
   · rw [hφg, hPA]
     change (if (j : ℕ) < m then a j else 0) ∣ _
     by_cases h : (j : ℕ) < m
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       refine Finset.dvd_sum fun l _ => ?_
       split_ifs
       · exact dvd_mul_right _ _
       · simp
     · have h0 : ∑ l : Fin m, (if (l : ℕ) = (j : ℕ) then a j else 0) * Q⁻¹ l k = 0 :=
-        Finset.sum_eq_zero fun l _ => by rw [if_neg (fun hl : (l : ℕ) = j => h (hl ▸ l.2)), zero_mul]
+        Finset.sum_eq_zero fun l _ => by rw [ite_eq_right (fun hl : (l : ℕ) = j => h (hl ▸ l.2)), zero_mul]
       rw [h0]
       exact dvd_zero _
   · by_cases h : (j : ℕ) < m
-    · simp only [if_pos h]
+    · simp only [ite_eq_left h]
       let x : F := ∑ k, Q k ⟨j, h⟩ • g k
       have hx : x ∈ Submodule.span O (Set.range g) :=
         Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
@@ -786,12 +786,12 @@ theorem exists_diag {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [Co
         rw [h1, hD]
       have hxe : a j • e j = x := by
         rw [hsum x, Finset.sum_eq_single j]
-        · rw [hφx, if_pos rfl]
+        · rw [hφx, ite_eq_left rfl]
         · intro i _ hij
-          rw [hφx, if_neg fun hh => hij (Fin.ext hh.symm), zero_smul]
+          rw [hφx, ite_eq_right fun hh => hij (Fin.ext hh.symm), zero_smul]
         · simp
       rwa [hxe]
-    · simp only [if_neg h, zero_smul]
+    · simp only [ite_eq_right h, zero_smul]
       exact zero_mem _
 
 end Diag
@@ -840,10 +840,10 @@ theorem dvd_mul_of_groupLike_val (p : ℕ) [Fact p.Prime] [hac : IsAlgClosed C] 
     rw [Real.rpow_def_of_pos hv0, show Real.log (v (p : C) : NNReal) *
       (Real.log p / (-Real.log (v (p : C) : NNReal))) = -Real.log p by
         field_simp [hL.ne], Real.exp_neg, Real.exp_log (by linarith)]
-  letI nf : NormedField C := (absOf v s hs).toNormedField
+  let nf : NormedField C := (absOf v s hs).toNormedField
   have hnorm : ∀ x : C, ‖x‖ = ((v x : NNReal) : ℝ) ^ s := fun x => rfl
   have hpn : ‖(p : C)‖ = (p : ℝ)⁻¹ := by rw [hnorm, hps]
-  letI nnf : NontriviallyNormedField C := NontriviallyNormedField.ofNormNeOne
+  let nnf : NontriviallyNormedField C := NontriviallyNormedField.ofNormNeOne
     ⟨(p : C), hpc, by rw [hpn]; exact (inv_lt_one_of_one_lt₀ hp1).ne⟩
   have ult : IsUltrametricDist C :=
     IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm
@@ -1665,19 +1665,19 @@ theorem exists_HTPoint : FarguesHodgeTate → ∀ (p : ℕ) [Fact p.Prime] (C : 
   intro hF p _ C _ _ _ v O _ _ _ hv hp hO E _ _ c hc La _ _ EF N u hu L _ _ _ _ X ρL ζ κ hact hrank hprim hcomp
     hpair hκ
   classical
-  haveI := hu.free
-  haveI := hu.finite
-  haveI : IsFractionRing O C := hv.isFractionRing
-  haveI : IsIntegrallyClosed O := hv.isIntegrallyClosed
+  have := hu.free
+  have := hu.finite
+  have : IsFractionRing O C := hv.isFractionRing
+  have : IsIntegrallyClosed O := hv.isIntegrallyClosed
   obtain ⟨alg⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.HT.padicComplete_integers_structure p C v O hv hp hO).1
-  letI := alg
+  let := alg
   obtain ⟨ρ, T, e, h1, h2, h3, h4, h5, h6, h7, h8⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.free_on_lift p C v O hv hp hO E c La EF N u hu
   obtain ⟨G, ee, τ, hre, hheight, j, hj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.tower_pdiv_exists p C v O hv hp hO La L X
   obtain ⟨lam, hlam⟩ := GlobalTheory.T.divisible_group_tower_dual p C v O hv hp hO La L X G ee τ hre EF ζ hprim hcomp hpair
   obtain ⟨jj, hder, hjj⟩ := GlobalTheory.T.divisible_group_tower_free p C v O hv hp hO La L X G ee τ hre
   have hend := (GlobalTheory.T.divisible_group_tower_compatibility p C v O hv hp hO La L X G ee τ hre).1
-  haveI : Module.Free O G.omega := Module.Free.of_equiv jj.symm
-  haveI : Module.Finite O G.omega := Module.Finite.equiv jj.symm
+  have : Module.Free O G.omega := Module.Free.of_equiv jj.symm
+  have : Module.Finite O G.omega := Module.Finite.equiv jj.symm
 
   let ζ' : ℕ → O := fun n => ((ζ n : Oˣ) : O)
   have hprim' : ∀ n, IsPrimitiveRoot (ζ' n) (p ^ n) := fun n => (IsPrimitiveRoot.coe_units_iff).2 (hprim n)

@@ -176,7 +176,7 @@ theorem i_defect : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype 
   have hw : IsDefectOn P (mcPts P) f g A B w := by
     intro z hz u v h hu
     have hex : ∃ q : MRing ι × MRing ι, q.1 * f - q.2 * g ∈ P ∧ evC z q.1 ≠ 0 := ⟨(u, v), h, hu⟩
-    simp only [w, dif_pos hex]
+    simp only [w, dite_eq_left hex]
     rw [ratio_eq hP.1 hU.2.1 hex.choose_spec.1 h hz hex.choose_spec.2 hu]
   have hinv : ∀ z ∈ mcPts P, ∀ z', SameOrbit z z' → w z = w z' := by
     intro z hz z' hzz
@@ -218,9 +218,9 @@ theorem i_defect : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype 
     ContDiffAt.comp (g := fun z => evC z s) y
       (((AnalyticOnNhd.eval_mvPolynomial (map (Int.castRingHom ℂ) s)) _ trivial).contDiffAt.restrict_scalars ℝ) hl
   have hNZ : IsOpen {z : (Σ k, ι k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun k => ?_
-    rw [Set.setOf_exists]
+    rw [Set.ofPred_exists]
     exact isOpen_iUnion fun i => isOpen_ne_fun (continuous_apply _) continuous_const
   have hh : ∀ C : HermLine ι, IsSmoothHerm C → ContDiffAt ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
       (fun y => C.h (R.lift x ((R.A.chart j).symm y))) y := fun C hC =>

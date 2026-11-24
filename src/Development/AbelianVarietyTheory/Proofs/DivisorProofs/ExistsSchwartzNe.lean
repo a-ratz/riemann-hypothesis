@@ -172,7 +172,7 @@ variable {F : Type} [Field F] [NumberField F]
 theorem slice_mem_schA (a : κ₀ → AF F) {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) :
     (fun b => Φ (glue ε a b)) ∈ schA F κ₁ := by
   classical
-  haveI : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   induction hΦ using Submodule.span_induction with
   | mem Φ hΦ =>
     obtain ⟨f, g, hg, rfl⟩ := hΦ

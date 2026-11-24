@@ -187,7 +187,7 @@ theorem isThetaFn_shift (u : HolUnif A M g) (u' : HolUnif A' M' g) {Hm : Matrix 
       Complex.exp (2 * Real.pi * Complex.I * (hermForm Hm a l).im) ^ 4 *
       Complex.exp (Real.pi * hermForm Hm z l + Real.pi / 2 * hermForm Hm l l) ^ 4 *
       Complex.exp (-(4 * Real.pi) * hermForm Hm z a) := by
-    simp only [← Complex.exp_nat_mul, ← Complex.exp_add]
+    simp only [← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     ring

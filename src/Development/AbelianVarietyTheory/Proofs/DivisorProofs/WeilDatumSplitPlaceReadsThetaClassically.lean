@@ -363,8 +363,8 @@ theorem reads_om_split : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
     have := g1.overlap idx hs hn g0 hv₁ hv
     rw [h0, Nat.cast_zero, zero_mul] at this
     exact zero_ne_one this
-  haveI : ((tens Λ' L).addSubgroupOf (tens Λ₁ L)).FiniteIndex := ⟨hidx⟩
-  haveI := Fintype.ofFinite (tens Λ₁ L ⧸ (tens Λ' L).addSubgroupOf (tens Λ₁ L))
+  have : ((tens Λ' L).addSubgroupOf (tens Λ₁ L)).FiniteIndex := ⟨hidx⟩
+  have := Fintype.ofFinite (tens Λ₁ L ⧸ (tens Λ' L).addSubgroupOf (tens Λ₁ L))
   obtain ⟨R, hR, hRu⟩ := exists_reps (tens Λ' L) (fun z => z ∈ tens Λ₁ L) Finset.univ
     (fun q : tens Λ₁ L ⧸ (tens Λ' L).addSubgroupOf (tens Λ₁ L) => (q.out : Matrix (Fin V.rank) (Fin r) D.host.E))
     fun z hz => ⟨QuotientAddGroup.mk ⟨z, hz⟩, Finset.mem_univ _,

@@ -192,7 +192,7 @@ theorem _root_.GlobalTheory.FjCauchy.fj_flow {la : _root_.ReciprocityTheory.Char
       W = {t | X.flow ξ (fun τ ↦ ((s τ).re : ℂ) + t * (s τ).im) x ∈ X.dom} := ⟨_, rfl⟩
   have hW : W = (fun t : ℂ ↦ fun τ : X.Ψ ↦ t.im * (s τ).im) ⁻¹' _root_.ReciprocityTheory.ChartRestriction.G.FD.AdmissibleHermitianColumns.admissibleImaginary X ξ x := by
     ext t
-    rw [hWdef, Set.mem_setOf_eq, Set.mem_preimage, _root_.ReciprocityTheory.ChartRestriction.G.FD.AdmissibleHermitianColumns.flow_mem_dom_iff X hGξ x hx]
+    rw [hWdef, Set.mem_ofPred_eq, Set.mem_preimage, _root_.ReciprocityTheory.ChartRestriction.G.FD.AdmissibleHermitianColumns.flow_mem_dom_iff X hGξ x hx]
     have him : (fun τ ↦ (((s τ).re : ℂ) + t * (s τ).im).im) = fun τ ↦ t.im * (s τ).im := by
       funext τ
       simp
@@ -210,14 +210,14 @@ theorem _root_.GlobalTheory.FjCauchy.fj_flow {la : _root_.ReciprocityTheory.Char
     push_cast
     ring
   have h0W : (0 : ℂ) ∈ W := by
-    rw [hWdef, Set.mem_setOf_eq, show (0 : ℂ) = ((0 : ℝ) : ℂ) by simp, hreal]
+    rw [hWdef, Set.mem_ofPred_eq, show (0 : ℂ) = ((0 : ℝ) : ℂ) by simp, hreal]
     exact (_root_.ReciprocityTheory.ChartRestriction.G.FD.FlowCoefficientBounds.flow_real X hξ hx _ la).1
   have hline : ∀ τ, ((s τ).re : ℂ) + I * (s τ).im = s τ := by
     intro τ
     rw [mul_comm]
     exact Complex.re_add_im (s τ)
   have hIW : I ∈ W := by
-    rw [hWdef, Set.mem_setOf_eq]
+    rw [hWdef, Set.mem_ofPred_eq]
     simp only [hline]
     exact hs
   obtain ⟨g, hg⟩ : ∃ g : ℂ → ℂ, g = fun t ↦

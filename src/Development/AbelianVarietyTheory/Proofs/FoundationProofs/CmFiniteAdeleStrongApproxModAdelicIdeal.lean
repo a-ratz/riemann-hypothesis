@@ -82,7 +82,7 @@ theorem one_mem_inverse_halfDifferent : (1 : D.host.E) ∈ (D.host.AA0 : Submodu
   have hB : ((D.host.𝔟 : Ideal (𝓞 D.host.E)) :
       FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) ≠ 0 := by
     rw [Ne, FractionalIdeal.coeIdeal_eq_zero]; rintro h; exact hne (by rw [h]; simp)
-  rw [FractionalIdeal.mem_coe]
+  rw [FractionalIdeal.mem_coeToSubmodule]
   unfold Host.AA0
   rw [FractionalIdeal.mem_inv_iff hB]
   intro y hy

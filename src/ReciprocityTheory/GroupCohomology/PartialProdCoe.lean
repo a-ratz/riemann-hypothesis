@@ -189,7 +189,7 @@ theorem continuous_rho (s : G) : Continuous (M.rho s) :=
 theorem normF_mem (n : ℕ) (F : (Fin (n + 1) → G) → M.V) (hF : F ∈ hcoch (M.resSub U) G n) :
     normF M U n F ∈ hcoch M G n := by
   classical
-  haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
+  have : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
   refine ⟨?_, fun g x => ?_⟩
   · have : normF M U n F = fun x => ∑ c : Quotient (QuotientGroup.rightRel U),
         M.rho c.out⁻¹ (F fun i => c.out * x i) := funext (normF_eq M U n F)
@@ -221,7 +221,7 @@ theorem normF_mem (n : ℕ) (F : (Fin (n + 1) → G) → M.V) (hF : F ∈ hcoch 
 theorem normF_hd (n : ℕ) (F : (Fin (n + 1) → G) → M.V) :
     normF M U (n + 1) (hd n F) = hd n (normF M U n F) := by
   classical
-  haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
+  have : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
   funext x
 
   simp only [normF_eq, hd, map_sum, map_zsmul, Finset.smul_sum]
@@ -230,14 +230,14 @@ theorem normF_hd (n : ℕ) (F : (Fin (n + 1) → G) → M.V) :
 theorem normF_add (n : ℕ) (F F' : (Fin (n + 1) → G) → M.V) :
     normF M U n (F + F') = normF M U n F + normF M U n F' := by
   classical
-  haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
+  have : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
   funext x
   simp only [Pi.add_apply, normF_eq, map_add (f := _), Finset.sum_add_distrib]
 
 theorem normF_smul (n : ℕ) (r : R) (F : (Fin (n + 1) → G) → M.V) :
     normF M U n (r • F) = r • normF M U n F := by
   classical
-  haveI : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
+  have : Fintype (Quotient (QuotientGroup.rightRel U)) := Fintype.ofFinite _
   funext x
   simp only [Pi.smul_apply, normF_eq, map_smul, Finset.smul_sum]
 

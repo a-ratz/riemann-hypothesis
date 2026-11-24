@@ -296,7 +296,7 @@ theorem norm_stJ_apply (ε : Fin n → Bool) (X : Matrix (Fin n) (Fin n) ℂ) (a
 
 theorem l1_le_card_mul_norm (X : Matrix (Fin n) (Fin n) ℂ) : l1 X ≤ (n : ℝ) ^ 2 * ‖X‖ := by
   calc l1 X ≤ ∑ _a : Fin n, ∑ _b : Fin n, ‖X‖ :=
-        sum_le_sum fun a _ => sum_le_sum fun b _ => Matrix.norm_entry_le_entrywise_sup_norm X
+        sum_le_sum fun a _ => sum_le_sum fun b _ => norm_apply_le_norm X
     _ = _ := by simp; ring
 
 theorem norm_mul_le_n (X Y : Matrix (Fin n) (Fin n) ℂ) : ‖X * Y‖ ≤ n * (‖X‖ * ‖Y‖) := by
@@ -306,8 +306,8 @@ theorem norm_mul_le_n (X Y : Matrix (Fin n) (Fin n) ℂ) : ‖X * Y‖ ≤ n * (
   calc _ ≤ ∑ c, ‖X a c * Y c b‖ := norm_sum_le _ _
     _ ≤ ∑ _c : Fin n, ‖X‖ * ‖Y‖ := sum_le_sum fun c _ => by
         rw [norm_mul]
-        exact mul_le_mul (Matrix.norm_entry_le_entrywise_sup_norm X)
-          (Matrix.norm_entry_le_entrywise_sup_norm Y) (norm_nonneg _) (norm_nonneg _)
+        exact mul_le_mul (norm_apply_le_norm X)
+          (norm_apply_le_norm Y) (norm_nonneg _) (norm_nonneg _)
     _ = _ := by simp
 
 theorem act_bound {M : Type*} [NormedAddCommGroup M] [InnerProductSpace ℂ M]
@@ -321,8 +321,8 @@ theorem act_bound {M : Type*} [NormedAddCommGroup M] [InnerProductSpace ℂ M]
       trace_dMat, mul_sum, sum_smul]
     congr 1
     refine sum_congr rfl fun a _ => ?_
-    rw [sum_eq_single a (fun b _ hb => by rw [if_neg (Ne.symm hb), zero_smul, smul_zero])
-      (by simp), if_pos rfl, smul_smul]
+    rw [sum_eq_single a (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), zero_smul, smul_zero])
+      (by simp), ite_eq_left rfl, smul_smul]
     congr 1; push_cast; ring
   rw [e, l1, mul_sum]
   refine (norm_sum_le _ _).trans (sum_le_sum fun a _ => ?_)
@@ -377,7 +377,7 @@ theorem matrixCoeffBounds_imply_bound : MatrixCoeffBoundsImplyBound := by
     intro a b
     rw [Matrix.of_apply]
     split_ifs
-    · exact (Matrix.norm_entry_le_entrywise_sup_norm Y).trans hYn
+    · exact (norm_apply_le_norm Y).trans hYn
     · simp
   have hYmn : ‖Ym‖ ≤ |R| := hpart _
   have hsum : Yl + Yp + Ym = Y := by
@@ -402,19 +402,19 @@ theorem matrixCoeffBounds_imply_bound : MatrixCoeffBoundsImplyBound := by
       by_contra h
       exact hne a a (hs a a (right_ne_zero_of_mul h)) rfl
     have := act_bound (smE ε σ) ⟨w, hw⟩ d t C X fun a b h => by
-      rw [if_neg (hne a b (hs a b h)), zero_smul, sub_zero]; exact bp a b (hs a b h)
+      rw [ite_eq_right (hne a b (hs a b h)), zero_smul, sub_zero]; exact bp a b (hs a b h)
     rw [h0, mul_zero, zero_smul, sub_zero] at this
     exact this.trans (hbd X hX)
   have hstn : ∀ X : Matrix (Fin n) (Fin n) ℂ, ‖stJ ε X‖ ≤ 1 * ‖X‖ := fun X => by
     rw [one_mul, Matrix.norm_le_iff (norm_nonneg _)]
     intro a b
-    rw [norm_stJ_apply]; exact Matrix.norm_entry_le_entrywise_sup_norm X
+    rw [norm_stJ_apply]; exact norm_apply_le_norm X
   have hdn : ∀ X, ‖dl X‖ ≤ Cd * ‖X‖ := fun X => by
     show ‖trace (dMat d * X)‖ ≤ _
     rw [trace_dMat, hCd, sum_mul]
     refine (norm_sum_le _ _).trans (sum_le_sum fun a _ => ?_)
     rw [norm_mul, Complex.norm_real, Real.norm_eq_abs]
-    exact mul_le_mul_of_nonneg_left (Matrix.norm_entry_le_entrywise_sup_norm X) (abs_nonneg _)
+    exact mul_le_mul_of_nonneg_left (norm_apply_le_norm X) (abs_nonneg _)
   have hdl : dl Yl = trace (dMat d * Y) := by
     show trace (dMat d * Yl) = _
     rw [trace_dMat, trace_dMat]

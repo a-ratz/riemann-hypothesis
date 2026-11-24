@@ -68,7 +68,7 @@ theorem sec_eq_zero_of_complex (σ : c.F →+* ℂ) {a : (E →+* ℂ) × ℕ �
   have hW := (GlobalTheory.Frames.algebraic_laws hS E H Dw l Xo c).2.2.1
   funext p y
   have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).mp p.rad
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   refine GlobalTheory.FiniteOrderRule.eq_zero_of_forall_algHom (K := c.F) (Ω := ℂ) (g p y) ?_
   intro φ
   let φ' : p.R →ₐ[c.F] CAt σ := φ

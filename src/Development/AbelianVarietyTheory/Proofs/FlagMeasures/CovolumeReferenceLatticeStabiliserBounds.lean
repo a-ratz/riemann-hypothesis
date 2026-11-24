@@ -121,8 +121,8 @@ theorem herm_esI {k r : ℕ} (u : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
   have ha := a.2
   have ht : WeylGroupFacts.tau k r (esI k r a) = eI k r a := by
     have h1 : (esI k r a).val < r ∨ r + k < (esI k r a).val := Or.inr (by simp only [esI]; omega)
-    apply Fin.ext; unfold WeylGroupFacts.tau; dsimp only; rw [if_pos h1]; simp only [esI, eI]; omega
-  have hs : WeylGroupFacts.sgn k r (esI k r a) = 1 := if_neg (by simp only [esI]; omega)
+    apply Fin.ext; unfold WeylGroupFacts.tau; dsimp only; rw [ite_eq_left h1]; simp only [esI, eI]; omega
+  have hs : WeylGroupFacts.sgn k r (esI k r a) = 1 := ite_eq_right (by simp only [esI]; omega)
   unfold herm bvec
   rw [← Pi.single_star, star_one, single_one_dotProduct]
   simp only [mulVec, dotProduct, WeylGroupFacts.hpk_row, ht, hs]
@@ -153,7 +153,7 @@ theorem coords_skew : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [A
       (((ρ ^ (r - a.val))⁻¹ : ℝ) : ℂ) * ((((ρ ^ (r - b.val))⁻¹ : ℝ) : ℂ) * S a b) := by
     intro a b ha hb
     rw [← hr.2.2.1, hsb b hb, hi a ha, RealMat.herm_smul_right, herm_esI, Pi.smul_apply, Pi.add_apply, sum_eI_apply,
-      Rad.bvec_apply, if_neg (Rad.eI_ne_esI a b), zero_add, smul_eq_mul, Complex.star_def, Complex.conj_ofReal]
+      Rad.bvec_apply, ite_eq_right (Rad.eI_ne_esI a b), zero_add, smul_eq_mul, Complex.star_def, Complex.conj_ofReal]
   refine ⟨fun b hb => ?_, fun p => ?_, fun a => ?_⟩
   · have hΦy : Φ (s (N.ist b) - N.ist b) = ∑ a, ((((ρ ^ (r - b.val))⁻¹ : ℝ) : ℂ) * S a b) • bvec (eI k r a) := by
       rw [RealMat.phi_sub hr, hsb b hb, hi b hb, smul_add, add_sub_cancel_left, Finset.smul_sum]
@@ -279,7 +279,7 @@ theorem upper_mul_entry (x y : UT r → ℂ) (i : UT r)
     (upper x * upper y) i.1.1 i.1.2 = x i + y i := by
   obtain ⟨⟨a, b⟩, hab⟩ := i
   rw [Matrix.mul_apply, Fintype.sum_eq_add a b hab.ne]
-  · simp only [upper, lt_irrefl, dif_neg, not_false_eq_true, if_true, dif_pos hab, one_mul, mul_one]
+  · simp only [upper, lt_irrefl, dite_eq_right, not_false_eq_true, ite_true, dite_eq_left hab, one_mul, mul_one]
     exact add_comm _ _
   · rintro c ⟨hca, hcb⟩
     simp only [upper]
@@ -287,9 +287,9 @@ theorem upper_mul_entry (x y : UT r → ℂ) (i : UT r)
     · by_cases h2 : c < b
       · have hl : c.val - a.val < b.val - a.val := by
           have := Fin.lt_def.mp h1; have := Fin.lt_def.mp h2; omega
-        rw [dif_pos h1, hx ⟨(a, c), h1⟩ hl, zero_mul]
-      · rw [dif_neg h2, if_neg hcb, mul_zero]
-    · rw [dif_neg h1, if_neg (Ne.symm hca), zero_mul]
+        rw [dite_eq_left h1, hx ⟨(a, c), h1⟩ hl, zero_mul]
+      · rw [dite_eq_right h2, ite_eq_right hcb, mul_zero]
+    · rw [dite_eq_right h1, ite_eq_right (Ne.symm hca), zero_mul]
 
 theorem first (β : Fin r → ℕ) (p q w : (UTin β → ℂ) × PTop k r j)
     (h : crd k r j β p * crd k r j β q = crd k r j β w) (i : UTin β)
@@ -620,7 +620,7 @@ theorem mem_smul_iff {K W : Type} [Field K] [NumberField K] [AddCommGroup W] [Mo
       rw [map_smul, e.repr_self, Finsupp.smul_apply, smul_eq_mul]
       by_cases hj : i = j
       · subst hj; simpa using hs
-      · rw [Finsupp.single_apply, if_neg hj, mul_zero]; exact FractionalIdeal.zero_mem _
+      · rw [Finsupp.single_apply, ite_eq_right hj, mul_zero]; exact FractionalIdeal.zero_mem _
     · rw [add_smul]; exact Submodule.add_mem _ ht hu
 
 theorem exists_coordLat (K : Type) [Field K] [NumberField K] (hK : IsTotallyComplex K) (ι : Type) [Fintype ι]
@@ -683,7 +683,7 @@ theorem unimod_coords {K W : Type} [Field K] [NumberField K] [StarRing K] [AddCo
     rw [map_smul, e.repr_self, Finsupp.smul_apply, smul_eq_mul]
     by_cases hj : i = j
     · subst hj; simpa using ht
-    · rw [Finsupp.single_apply, if_neg hj, mul_zero]; exact FractionalIdeal.zero_mem _
+    · rw [Finsupp.single_apply, ite_eq_right hj, mul_zero]; exact FractionalIdeal.zero_mem _
   set x : W := e.equivFun.symm y with hxdef
   have hrx : ∀ i, e.repr x i = y i := fun i => by
     show e.equivFun (e.equivFun.symm y) i = y i
@@ -1338,7 +1338,7 @@ theorem image_meas {ι X Y Z : Type} [Fintype ι] [MeasurableSpace X] [Measurabl
     MeasurableSet ((fun p v => c (a p v)) '' S) ∧
       Measure.pi (fun _ : ι => μ.map c) ((fun p v => c (a p v)) '' S) = ν S := by
   have he : MeasurableEmbedding c := hc.measurableEmbedding hi
-  haveI : SigmaFinite (μ.map c) := he.sigmaFinite_map
+  have : SigmaFinite (μ.map c) := he.sigmaFinite_map
   have h1 : MeasurePreserving (fun (q : ι → X) (v : ι) => c (q v)) (Measure.pi fun _ : ι => μ)
       (Measure.pi fun _ : ι => μ.map c) :=
     measurePreserving_pi _ _ fun _ => ⟨hc, rfl⟩
@@ -1352,36 +1352,36 @@ theorem image_meas {ι X Y Z : Type} [Fintype ι] [MeasurableSpace X] [Measurabl
 theorem box_meas : ∀ (ι : Type) [Fintype ι] (k r j : ℕ) (β : Fin r → ℕ), Monotone β → (∀ a b : Fin r, j ≤ b.val → (β a = β b ↔ j ≤ a.val)) → MeasurePreserving (atP : Crd ι k r j β → ι → (UTin β → ℂ) × PTop k r j) volume (Measure.pi fun _ : ι => (volume : Measure ((UTin β → ℂ) × PTop k r j))) → ∀ (F₁ : UTin β → Set (ι → ℂ)) (F₂ : {a : Fin r // j ≤ a.val} → Set (ι → Fin (k + 1) → ℂ)) (F₃ : {p : UT r // j ≤ p.1.1.val} → Set (ι → ℂ)) (F₄ : {a : Fin r // j ≤ a.val} → Set (ι → ℝ)), (∀ i, MeasurableSet (F₁ i)) → (∀ i, MeasurableSet (F₂ i)) → (∀ i, MeasurableSet (F₃ i)) → (∀ i, MeasurableSet (F₄ i)) → ∀ Ω : Set (ι → Mt k r), Ω = (fun (p : Crd ι k r j β) (v : ι) => (Matrix.of.symm (CC p v) : Mt k r)) '' (Set.pi Set.univ F₁ ×ˢ Set.pi Set.univ F₂ ×ˢ (Set.pi Set.univ F₃ ×ˢ Set.pi Set.univ F₄)) → MeasurableSet Ω ∧ Measure.pi (fun _ : ι => lebR0 k r j β) Ω = (∏ i, volume (F₁ i)) * ((∏ i, volume (F₂ i)) * ((∏ i, volume (F₃ i)) * ∏ i, volume (F₄ i))) := by
   intro ι _ k r j β hm hβ hat F₁ F₂ F₃ F₄ h₁ h₂ h₃ h₄ Ω hΩ
   obtain ⟨hl, -, hinj, -⟩ := Swap.range_eq_and_injective_parabolic_unipotent_product k r j β hm hβ
-  haveI s1 : SigmaFinite (volume : Measure (Swap.STop r j)) := Measure.prod.instSigmaFinite
-  haveI s2 : SigmaFinite (volume : Measure (PTop k r j)) := Measure.prod.instSigmaFinite
-  haveI s3 : SigmaFinite (volume : Measure ((UTin β → ℂ) × PTop k r j)) := Measure.prod.instSigmaFinite
-  haveI b1 : BorelSpace (Swap.STop r j) := Prod.borelSpace
-  haveI b2 : BorelSpace (PTop k r j) := Prod.borelSpace
-  haveI b3 : BorelSpace ((UTin β → ℂ) × PTop k r j) := Prod.borelSpace
+  have s1 : SigmaFinite (volume : Measure (Swap.STop r j)) := Measure.prod.instSigmaFinite
+  have s2 : SigmaFinite (volume : Measure (PTop k r j)) := Measure.prod.instSigmaFinite
+  have s3 : SigmaFinite (volume : Measure ((UTin β → ℂ) × PTop k r j)) := Measure.prod.instSigmaFinite
+  have b1 : BorelSpace (Swap.STop r j) := Prod.borelSpace
+  have b2 : BorelSpace (PTop k r j) := Prod.borelSpace
+  have b3 : BorelSpace ((UTin β → ℂ) × PTop k r j) := Prod.borelSpace
   have hG : Continuous fun q : (UTin β → ℂ) × PTop k r j =>
       (Matrix.of.symm (pTop k r j q.2 * uEmb k r (upperIn β q.1)) : Mt k r) :=
     (Swap.cont_pTop.comp continuous_snd).matrix_mul ((GlobalTheory.Amp.Swap.cont_uEmb k r).comp
       ((Swap.extZ (fun p : UT r => β p.1.1 = β p.1.2) ℂ).continuous_of_finiteDimensional.comp continuous_fst))
   have hS : MeasurableSet ((Set.pi Set.univ F₁ ×ˢ Set.pi Set.univ F₂ ×ˢ (Set.pi Set.univ F₃ ×ˢ Set.pi Set.univ F₄)) : Set (Crd ι k r j β)) :=
     (MeasurableSet.univ_pi h₁).prod ((MeasurableSet.univ_pi h₂).prod ((MeasurableSet.univ_pi h₃).prod (MeasurableSet.univ_pi h₄)))
-  haveI d1 : StandardBorelSpace (Swap.STop r j) := StandardBorelSpace.prod
-  haveI d2 : StandardBorelSpace (PTop k r j) := StandardBorelSpace.prod
-  haveI d3 : StandardBorelSpace ((UTin β → ℂ) × PTop k r j) := StandardBorelSpace.prod
-  haveI d4 : StandardBorelSpace (Mt k r) := StandardBorelSpace.pi_countable
-  haveI d5 : StandardBorelSpace (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ)) := StandardBorelSpace.prod
-  haveI d6 : StandardBorelSpace ({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ) := StandardBorelSpace.pi_countable
-  haveI d7 : StandardBorelSpace (({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ) × (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ))) := StandardBorelSpace.prod
-  haveI d8 : StandardBorelSpace (Crd ι k r j β) := StandardBorelSpace.prod
+  have d1 : StandardBorelSpace (Swap.STop r j) := StandardBorelSpace.prod
+  have d2 : StandardBorelSpace (PTop k r j) := StandardBorelSpace.prod
+  have d3 : StandardBorelSpace ((UTin β → ℂ) × PTop k r j) := StandardBorelSpace.prod
+  have d4 : StandardBorelSpace (Mt k r) := StandardBorelSpace.pi_countable
+  have d5 : StandardBorelSpace (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ)) := StandardBorelSpace.prod
+  have d6 : StandardBorelSpace ({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ) := StandardBorelSpace.pi_countable
+  have d7 : StandardBorelSpace (({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ) × (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ))) := StandardBorelSpace.prod
+  have d8 : StandardBorelSpace (Crd ι k r j β) := StandardBorelSpace.prod
   have key := image_meas (volume : Measure ((UTin β → ℂ) × PTop k r j)) volume _ hG.measurable
     (Matrix.of.symm.injective.comp hinj) atP hat usage₂.1 _ hS
   rw [← hl] at key
   subst hΩ
   refine ⟨key.1, key.2.trans ?_⟩
-  haveI t1 : SigmaFinite (volume : Measure (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ))) :=
+  have t1 : SigmaFinite (volume : Measure (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ))) :=
     Measure.prod.instSigmaFinite
-  haveI t3 : SigmaFinite (volume : Measure (ι → Fin (k + 1) → ℂ)) := Measure.pi.sigmaFinite _
-  haveI t4 : SigmaFinite (volume : Measure ({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ)) := Measure.pi.sigmaFinite _
-  haveI t2 : SigmaFinite (volume : Measure (({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ) × (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ)))) :=
+  have t3 : SigmaFinite (volume : Measure (ι → Fin (k + 1) → ℂ)) := Measure.pi.sigmaFinite _
+  have t4 : SigmaFinite (volume : Measure ({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ)) := Measure.pi.sigmaFinite _
+  have t2 : SigmaFinite (volume : Measure (({a : Fin r // j ≤ a.val} → ι → Fin (k + 1) → ℂ) × (({p : UT r // j ≤ p.1.1.val} → ι → ℂ) × ({a : Fin r // j ≤ a.val} → ι → ℝ)))) :=
     Measure.prod.instSigmaFinite
   rw [Measure.volume_eq_prod, Measure.prod_prod, Measure.volume_eq_prod, Measure.prod_prod, Measure.volume_eq_prod, Measure.prod_prod,
     volume_pi_pi, volume_pi_pi, volume_pi_pi, volume_pi_pi]
@@ -1853,8 +1853,8 @@ theorem covol_ref : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [Add
       choose y hy hyb using fun a => hb a trivial
       obtain ⟨s, hs, he, h⟩ := d2 (fun a => if h : N.j ≤ a.val then y ⟨a, h⟩ else 0) fun a => by
         by_cases h : N.j ≤ a.val
-        · rw [dif_pos h]; exact hy ⟨a, h⟩
-        · rw [dif_neg h]; exact Submodule.zero_mem _
+        · rw [dite_eq_left h]; exact hy ⟨a, h⟩
+        · rw [dite_eq_right h]; exact Submodule.zero_mem _
       obtain ⟨p, hp⟩ := hex s hs
       have h1 := hu0 s p hp he
       refine ⟨p, ⟨s, hs, hp⟩, h1, funext fun a => ?_⟩
@@ -1862,7 +1862,7 @@ theorem covol_ref : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [Add
       funext v
       refine (htop v s _ (hp v)).2.2 (h10 p h1 v) a (y a) ?_
       have := h a.1 a.2
-      rwa [dif_pos a.2] at this
+      rwa [dite_eq_left a.2] at this
     · rintro d ⟨hd1, hd2⟩
       choose t ht htd using fun a => hd1 a trivial
       choose t' ht' htd' using fun a => hd2 a trivial
@@ -1874,16 +1874,16 @@ theorem covol_ref : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [Add
         intro a b
         by_cases h : N.j ≤ a.val ∧ N.j ≤ b.val
         · rcases lt_trichotomy a b with h1 | rfl | h1
-          · simp only [S, dif_pos h, dif_pos h.symm, dif_pos h1, dif_neg h1.not_gt]
+          · simp only [S, dite_eq_left h, dite_eq_left h.symm, dite_eq_left h1, dite_eq_right h1.not_gt]
             exact ⟨ht ⟨⟨(a, b), h1⟩, h.1⟩, by simp⟩
-          · simp only [S, dif_pos h, dif_neg (lt_irrefl a)]
+          · simp only [S, dite_eq_left h, dite_eq_right (lt_irrefl a)]
             rw [← hcast]
             exact ht' ⟨a, h.1⟩
-          · simp only [S, dif_pos h, dif_pos h.symm, dif_pos h1, dif_neg h1.not_gt]
+          · simp only [S, dite_eq_left h, dite_eq_left h.symm, dite_eq_left h1, dite_eq_right h1.not_gt]
             refine ⟨neg_mem (LiftS.ipow_star _ N.𝔡_ne N.𝔡_star _ ?_), by simp⟩
             rw [show -((r : ℤ) - a.val) - ((r : ℤ) - b.val) = -((r : ℤ) - b.val) - ((r : ℤ) - a.val) by ring]
             exact ht ⟨⟨(b, a), h1⟩, h.2⟩
-        · simp [S, dif_neg h, dif_neg (mt And.symm h)]
+        · simp [S, dite_eq_right h, dite_eq_right (mt And.symm h)]
       obtain ⟨s, hs, he, h⟩ := d4 S hS
       obtain ⟨p, hp⟩ := hex s hs
       have h1 := hu0 s p hp he
@@ -1911,12 +1911,12 @@ theorem covol_ref : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [Add
           have hi : N.j ≤ i.1.1.2.val := i.2.trans (le_of_lt i.1.2)
           refine ((h3 v).2.1 i).trans ?_
           rw [hSB _ _ i.2 hi]
-          simp only [S, dif_pos (And.intro i.2 hi), dif_pos i.1.2]
+          simp only [S, dite_eq_left (And.intro i.2 hi), dite_eq_left i.1.2]
           exact congrFun (htd i) v
         · funext a v
           refine ((h3 v).2.2 a).trans ?_
           rw [hSB _ _ a.2 a.2]
-          simp only [S, dif_pos (And.intro a.2 a.2), dif_neg (lt_irrefl a.1)]
+          simp only [S, dite_eq_left (And.intro a.2 a.2), dite_eq_right (lt_irrefl a.1)]
           exact congrFun (htd' a) v
       exact h4 ▸ ⟨s, hs, hp⟩
   · have hsc : ∀ (n : ℕ) (m : ℤ), m = -(n : ℤ) → (Ideal.absNorm N.𝔡 : ℝ) ^ m * (ρ ^ n) ^ (2 * Fintype.card ι) = 1 := by
@@ -1945,9 +1945,9 @@ theorem covol_ref : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [Add
     simp only [e1, e2, e3, Finset.prod_const, Finset.card_univ, card_top]
     refine _root_.GlobalTheory.DegVol.RefCov.prod_pow_bounds _ _ k r _ _ _ _ hv (Nat.sub_le _ _) (card_UT r _) (card_UT r _) ?_ ?_
     · rw [← card_top, ← Finset.card_univ (α := {a : Fin r // N.j ≤ a.val}), ← Finset.prod_const]
-      exact Finset.prod_le_prod' fun i _ => hF₄l i
+      exact Finset.prod_le_prod fun i _ => hF₄l i
     · rw [← card_top, ← Finset.card_univ (α := {a : Fin r // N.j ≤ a.val}), ← Finset.prod_const]
-      exact Finset.prod_le_prod' fun i _ => hF₄u i
+      exact Finset.prod_le_prod fun i _ => hF₄u i
 
 end GlobalTheory.DegVol.RefCov
 end -- clump:auto

@@ -204,12 +204,12 @@ theorem exists_scale {O K J : Type} [CommRing O] [IsDomain O] [ValuationRing O] 
     [Algebra O K] [IsFractionRing O K] [Finite J] (c : J → K) (j : J) (hj : c j ≠ 0) :
     ∃ (j₀ : J) (d : J → O), c j₀ ≠ 0 ∧ d j₀ = 1 ∧ ∀ i, c i = c j₀ * algebraMap O K (d i) := by
   classical
-  haveI : Nonempty J := ⟨j⟩
+  have : Nonempty J := ⟨j⟩
   obtain ⟨j₀, h₀⟩ := Finite.exists_max (fun i => ValuationRing.valuation O K (c i))
   have hv : ValuationRing.valuation O K (c j₀) ≠ 0 := by
     intro h
     have h1 := h₀ j
-    rw [h, le_zero_iff] at h1
+    rw [h, nonpos_iff_eq_zero] at h1
     exact hj ((Valuation.zero_iff _).1 h1)
   have hc : c j₀ ≠ 0 := fun h => hv (by rw [h, map_zero])
   have hex : ∀ i, ∃ a : O, algebraMap O K a = c i / c j₀ := by
@@ -232,8 +232,8 @@ theorem finrank_span_residue_le {O K I A B : Type} [CommRing O] [IsDomain O] [Va
       Module.finrank K (Submodule.span K (Set.range f)) := by
   classical
   obtain ⟨κ, e, he, hsp, hli⟩ := exists_linearIndependent' (IsLocalRing.ResidueField O) g
-  haveI : Finite κ := Finite.of_injective e he
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective e he
+  have : Fintype κ := Fintype.ofFinite κ
   have hf : LinearIndependent K (f ∘ e) := by
     rw [Fintype.linearIndependent_iff]
     intro c hc
@@ -265,7 +265,7 @@ theorem finrank_span_residue_le {O K I A B : Type} [CommRing O] [IsDomain O] [Va
     have := Fintype.linearIndependent_iff.1 hli _ hz j₀
     rw [hd₀, map_one] at this
     exact one_ne_zero this
-  haveI : Module.Finite K (Submodule.span K (Set.range f)) :=
+  have : Module.Finite K (Submodule.span K (Set.range f)) :=
     Module.Finite.span_of_finite K (Set.finite_range f)
   rw [← hsp, finrank_span_eq_card hli, ← finrank_span_eq_card hf]
   exact Submodule.finrank_mono (Submodule.span_mono (Set.range_comp_subset_range e f))
@@ -332,7 +332,7 @@ theorem hilb_eq_finrank_span {k J : Type} [Field k] [Finite J] (C : Set (J → k
 theorem hilb_reduction_le : (∀ (O K J : Type) [CommRing O] [IsDomain O] [ValuationRing O] [Field K] [Algebra O K] [IsFractionRing O K] [Fintype J] (C : Set (J → K)) (C' : Set (J → IsLocalRing.ResidueField O)), (∀ v' ∈ C', ∃ w : J → O, (fun j => algebraMap O K (w j)) ∈ C ∧ v' = fun j => IsLocalRing.residue O (w j)) → ∀ d, hilb C' d ≤ hilb C d) := by
   intro O K J _ _ _ _ _ _ _ C C' h d
   rw [hilb_eq_finrank_span, hilb_eq_finrank_span]
-  haveI : Finite {m : J →₀ ℕ // m.degree = d} :=
+  have : Finite {m : J →₀ ℕ // m.degree = d} :=
     (Finsupp.finite_of_degree_eq d).to_subtype
   apply finrank_span_reduction_le
   rintro ⟨v', hv'⟩
@@ -348,8 +348,8 @@ theorem Mod.hilb_special_le_generic : ∀ (p : ℕ) [Fact p.Prime] (V : Type) [C
   refine ModHilb.hilb_reduction_le (OO p) (PadicAlgCl p) J _ _ ?_ d
   rintro v ⟨x, hx, hv⟩
   have hred : Crd H σ (x ≫ m.r) v := m.red (Over.homMk x hx) v hv
-  haveI := m.smooth
-  haveI : Smooth G.hom := SmoothOfRelativeDimension.smooth g G.hom
+  have := m.smooth
+  have : Smooth G.hom := SmoothOfRelativeDimension.smooth g G.hom
   obtain ⟨c, hc, hcx⟩ := GlobalTheory.ZJ.exists_classical_lift_of_smooth p G.left (Sp V) G.hom (spMap j)
     (x ≫ m.r) (by
       rw [Category.assoc, m.cart.1.w, ← Category.assoc, hx]
@@ -793,7 +793,7 @@ theorem mem_cone_iff [ArithBase o Ω] (hL : GlobalTheory.UT.LL) (hB : BaseFacts 
       ∀ (d : ℕ) (Pf : MvPolynomial S.J (kb p)), d ≤ S.N ^ S.g * S.g.factorial → Pf.IsHomogeneous d →
         (∀ w ∈ Q.Tors (rPt p ≫ y) tm.l, MvPolynomial.eval w Pf = 0) →
         MvPolynomial.eval ((mb tm).mulVec v) Pf = 0 := by
-  haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
+  have : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
   have hsm : SmoothOfRelativeDimension S.g t.mod.Φ.G.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback t.mod.cart.1 t.mod.smooth
   have hbig : Big S.g S.N (S.r * S.N) := ⟨(GlobalTheory.T.uniformisedTest_dimensions_and_split_fibre hL o Ω S ρ p y₀ t.u).2.2.2.1, hS.1, hS.2.1⟩
@@ -1096,7 +1096,7 @@ theorem exists_functionField_point (X : Scheme.{0}) [IsIntegral X] :
   refine ⟨X.functionField, inferInstance, pt, fun w => ?_, fun x => ?_⟩
   · rw [Subsingleton.elim w (IsLocalRing.closedPoint X.functionField)]
     exact Scheme.fromSpecStalk_closedPoint
-  · obtain ⟨W, hW, g, rfl⟩ := X.presheaf.germ_exist (x := genericPoint X) x
+  · obtain ⟨W, hW, g, rfl⟩ := X.presheaf.exists_germ_eq (x := genericPoint X) x
     obtain ⟨V, hV, hz, hle⟩ := exists_isAffineOpen_mem_and_subset hW
     have hle' : V ≤ W := hle
     let φ : Γ(X, V) ⟶ CommRingCat.of X.functionField := X.presheaf.germ V (genericPoint X) hz
@@ -1122,7 +1122,7 @@ theorem RatModel.exists_functionField_of_isDominant (o Ω : Type) [CommRing o] [
   have hm : ∀ x : Ω, x ∈ M.O (genericPoint M.Z) := fun x => by rw [RatModel.O_genericPoint]; trivial
   let β : Ω →+* K := (RatModel.valHomOf (pt ≫ q) _ hs).comp
     ((RingHom.id Ω).codRestrict (M.O (genericPoint M.Z)).toSubring hm)
-  letI : Algebra o K := (β.comp (algebraMap o Ω)).toAlgebra
+  let : Algebra o K := (β.comp (algebraMap o Ω)).toAlgebra
   refine ⟨K, inferInstance, inferInstance, { β with commutes' := fun _ => rfl }, pt, ?_, honto, ?_⟩
   · exact Set.eq_singleton_iff_unique_mem.2 ⟨⟨_, hpt (IsLocalRing.closedPoint K)⟩, by
       rintro _ ⟨w, rfl⟩

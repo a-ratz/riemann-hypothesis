@@ -74,11 +74,11 @@ theorem exists_algebraicIndependent (k R : Type) [Field k] [CommRing R] [Nontriv
       (MvPolynomial.aeval_unique g).symm
     rw [algebraicIndependent_iff_injective_aeval, e]
     exact hg
-  · letI := g.toRingHom.toAlgebra
+  · let := g.toRingHom.toAlgebra
     have : Algebra.IsIntegral (MvPolynomial (Fin e) k) R := ⟨RingHom.Finite.to_isIntegral hf⟩
     refine (Order.krullDim_le_of_strictMono
       (PrimeSpectrum.comap (algebraMap (MvPolynomial (Fin e) k) R))
-      fun I J h => Ideal.IsIntegral.comap_lt_comap (I := I.asIdeal) (J := J.asIdeal) h).trans ?_
+      fun I J h => Ideal.IsIntegral.under_lt_under (I := I.asIdeal) (J := J.asIdeal) h).trans ?_
     change ringKrullDim _ ≤ _
     rw [MvPolynomial.ringKrullDim_of_isNoetherianRing, ringKrullDim_eq_zero_of_field]
     simp
@@ -204,8 +204,8 @@ theorem exists_pow_le_globalSectionsDim_lineBundlePow [IsIntegral X] [CompactSpa
   obtain ⟨a, ha, hya⟩ := exists_isLocalFn_mul hL s J y
   have hxV : x ∈ nonzeroLocus s ⊓ powChart L J := ⟨hx, hJ⟩
   have : Nonempty ((nonzeroLocus s ⊓ powChart L J : X.Opens)) := ⟨⟨x, hxV⟩⟩
-  letI := algebraOpen k (nonzeroLocus s)
-  letI := algebraOpen k (nonzeroLocus s ⊓ powChart L J)
+  let := algebraOpen k (nonzeroLocus s)
+  let := algebraOpen k (nonzeroLocus s ⊓ powChart L J)
   let ρ : Γ(X, nonzeroLocus s) →ₐ[k] Γ(X, nonzeroLocus s ⊓ powChart L J) :=
     { resG X inf_le_left with commutes' := fun c => LB.resG_resG _ _ _ }
   have hy' : AlgebraicIndependent k fun i => resG X
@@ -265,7 +265,7 @@ theorem IsAmpleLB.isBig : ∀ (k : Type) [Field k] (X : Scheme.{0}) [IsIntegral 
       topologicalKrullDim (nonzeroLocus (s i) : Set X) ≤ e ∧
       ∃ M, 1 ≤ M ∧ ∀ n, (n + 1) ^ e ≤ lbH0 k (lbPow A (M * n)) := by
     rintro ⟨i, x, hx⟩
-    letI := algebraOpen k (nonzeroLocus (s i))
+    let := algebraOpen k (nonzeroLocus (s i))
     have := finiteType_algebraOpen (k := k) (ha i)
     have : Nonempty (nonzeroLocus (s i)) := ⟨⟨x, hx⟩⟩
     obtain ⟨e, y, hy, hd⟩ := exists_algebraicIndependent k Γ(X, nonzeroLocus (s i))
@@ -288,7 +288,7 @@ theorem IsAmpleLB.isBig : ∀ (k : Type) [Field k] (X : Scheme.{0}) [IsIntegral 
     generalize topologicalKrullDim X = d at hd h0
     lift d to ℕ∞ using (fun h => by simp [h] at h0)
     have hd' : d ≤ e i₀ := by exact_mod_cast hd
-    lift d to ℕ using ne_top_of_le_ne_top (ENat.coe_ne_top _) hd'
+    lift d to ℕ using ne_top_of_le_ne_top (ENat.natCast_ne_top _) hd'
     exact ⟨d, rfl, by exact_mod_cast hd'⟩
   obtain ⟨M, hM1, hM⟩ := hM i₀
   have hM' : (0 : ℝ) < M := Nat.cast_pos.2 hM1

@@ -135,7 +135,7 @@ theorem eval_monomial_tor (θ : Fin n → ℝ) (h : Matrix (Fin n) (Fin n) ℂ) 
   rw [Finsupp.prod_fintype _ _ (fun i => pow_zero _), Finsupp.prod_fintype _ _ (fun i => pow_zero _)]
   simp only [hent, mul_pow, Finset.prod_mul_distrib]
   congr 1
-  simp only [← Complex.exp_nat_mul]
+  simp only [← Complex.exp_natCast_mul]
   rw [← Complex.exp_sum]
   congr 1
   rw [Fintype.sum_sum_type, Fintype.sum_prod_type, Fintype.sum_prod_type, ← Finset.sum_add_distrib]

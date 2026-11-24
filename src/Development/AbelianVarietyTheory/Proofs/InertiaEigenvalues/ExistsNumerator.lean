@@ -77,7 +77,7 @@ theorem idlE_cancel {G : Ideal (𝓞 E)} (hG : G ≠ ⊥) {X Y : Submodule (𝓞
       (((G : FractionalIdeal (𝓞 E)⁰ E)⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) *
         (idlE G * Z) = Z := by
     intro Z
-    rw [e, ← mul_assoc, ← FractionalIdeal.coe_mul, inv_mul_cancel₀ hG', FractionalIdeal.coe_one, one_mul]
+    rw [e, ← mul_assoc, ← FractionalIdeal.coeToSubmodule_mul, inv_mul_cancel₀ hG', FractionalIdeal.coeToSubmodule_one, one_mul]
   rw [← key X, h, key Y]
 
 theorem index_coprime {n p : ℕ} (hp : p.Prime) (Λ : GenLat E n) (h : Λ.TrivAt p)

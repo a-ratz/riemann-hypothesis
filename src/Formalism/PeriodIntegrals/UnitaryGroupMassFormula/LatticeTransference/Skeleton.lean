@@ -69,7 +69,7 @@ lemma finrank_span_lt_succMin (M : Submodule ℤ (EuclideanSpace ℝ (Fin N))) (
   obtain ⟨b, hbS, hbspan, hbli⟩ := exists_linearIndependent ℝ
     {x : EuclideanSpace ℝ (Fin N) | x ∈ M ∧ ‖x‖ < succMin M i}
   have hbfin : b.Finite := hbli.setFinite
-  letI := hbfin.fintype
+  let := hbfin.fintype
   have hcard := finrank_span_set_eq_card hbli
   rw [hbspan] at hcard
   have hle : i ≤ Fintype.card b := by rw [← Set.toFinset_card]; omega
@@ -94,8 +94,8 @@ theorem minima_of_key (h : TransferenceKey) : TransferenceMinima := by
   have hB0 : 0 ≤ succMin (dualZ M) (N + 1 - i) := succMin_nonneg _ _
   rcases hB0.eq_or_lt with hB | hB
   · rw [← hB, mul_zero]; positivity
-  haveI : DiscreteTopology M := hdisc
-  haveI : IsZLattice ℝ M := ⟨hspan⟩
+  have : DiscreteTopology M := hdisc
+  have : IsZLattice ℝ M := ⟨hspan⟩
   set A := succMin M i with hAdef
   set B := succMin (dualZ M) (N + 1 - i) with hBdef
   set Sd : Submodule ℝ (EuclideanSpace ℝ (Fin N)) :=

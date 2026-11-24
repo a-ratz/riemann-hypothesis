@@ -80,16 +80,16 @@ theorem noetherianSpace_zariski {k : Type} [Field k] (X : Over (Sp k)) [LocallyO
   have : IsLocallyNoetherian X.left := LocallyOfFiniteType.isLocallyNoetherian X.hom
   have : CompactSpace X.left := QuasiCompact.compactSpace_of_compactSpace X.hom
   have : IsNoetherian X.left := {}
-  letI := zariski X
+  let := zariski X
   exact (IsInducing.induced pt).noetherianSpace
 
 theorem finite_points_of_isOpenImmersion {k : Type} [Field k] [IsAlgClosed k] {N₀ N : Over (Sp k)}
     [GrpObj N₀] [GrpObj N] [LocallyOfFiniteType N.hom] [QuasiCompact N.hom] (ν : N₀ ⟶ N)
     [IsMonHom ν] [IsOpenImmersion ν.left] [Finite (𝟙_ (Over (Sp k)) ⟶ N₀)] :
     Finite (𝟙_ (Over (Sp k)) ⟶ N) := by
-  letI := zariski N
-  haveI := separatelyContinuousMul N
-  haveI := noetherianSpace_zariski N
+  let := zariski N
+  have := separatelyContinuousMul N
+  have := noetherianSpace_zariski N
   have : LocallyOfFiniteType N₀.hom := by rw [← ν.w]; infer_instance
   let φ : (𝟙_ (Over (Sp k)) ⟶ N₀) →* (𝟙_ (Over (Sp k)) ⟶ N) :=
     MonoidHom.mk' (fun x => x ≫ ν) fun x y => MonObj.mul_comp x y ν
@@ -151,8 +151,8 @@ theorem exists_pow_stable {k : Type} [Field k] [IsAlgClosed k] (G : Over (Sp k))
     (K : Subgroup (𝟙_ (Over (Sp k)) ⟶ G)) (Z : Set G.left) (hZ : IsClosed Z)
     (hK : ∀ x, x ∈ K ↔ Set.range x.left ⊆ Z) :
     ∃ a : ℕ, ∀ x ∈ K, ∃ y ∈ K, y ^ (l ^ (a + 1)) = x ^ (l ^ a) := by
-  letI := zariski G
-  haveI := noetherianSpace_zariski G
+  let := zariski G
+  have := noetherianSpace_zariski G
   have hpow : ∀ n : ℕ, IsMonHom (𝟙 G ^ n) := fun n => by
     induction n with
     | zero =>
@@ -167,7 +167,7 @@ theorem exists_pow_stable {k : Type} [Field k] [IsAlgClosed k] (G : Over (Sp k))
     refine isClosed_induced_iff.2 ⟨Z', hZ', ?_⟩
     ext z
     rw [Set.mem_preimage, ← range_left_subset_iff, ← h]
-    simp only [MonObj.comp_pow, Category.comp_id, Set.mem_setOf_eq]
+    simp only [MonObj.comp_pow, Category.comp_id, Set.mem_ofPred_eq]
   let F : ℕ → Closeds (𝟙_ (Over (Sp k)) ⟶ G) := fun a => ⟨_, hcl (l ^ a)⟩
   obtain ⟨_, ⟨a, rfl⟩, hmin⟩ := (wellFounded_lt (α := Closeds (𝟙_ (Over (Sp k)) ⟶ G))).has_min
     (Set.range F) ⟨_, 0, rfl⟩
@@ -187,7 +187,7 @@ theorem eq_one_of_finite_range {k : Type} [Field k] [IsAlgClosed k] {G G' : Over
     (h : (Set.range fun x : 𝟙_ (Over (Sp k)) ⟶ G => x ≫ f).Finite) : f = 1 := by
   let e : 𝟙_ (Over (Sp k)) ⟶ G' := 1
   let S : Set G'.left := ⋃ y ∈ (Set.range fun x : 𝟙_ (Over (Sp k)) ⟶ G => x ≫ f) \ {e}, {pt y}
-  have hS : IsClosed S := (h.subset Set.diff_subset).isClosed_biUnion fun y _ => isClosed_pt y
+  have hS : IsClosed S := (h.subset Set.sdiff_subset).isClosed_biUnion fun y _ => isClosed_pt y
   have hsub : Set.range f.left ⊆ {pt e} ∪ S := by
     refine ReducedSubgroup.range_subset_of_points f ((isClosed_pt e).union hS) fun x => ?_
     rw [range_left_subset_iff]

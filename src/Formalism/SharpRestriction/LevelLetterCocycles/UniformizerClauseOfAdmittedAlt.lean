@@ -195,8 +195,8 @@ theorem eq_zero_of_natCast_pow_mul (hζ : ∃ ζ : LL, IsPrimitiveRoot ζ PD.p)
     (hO : ∃ _ : IsDomain O, IsDiscreteValuationRing O ∧ IsFractionRing O LL) (N : ℕ) (β : LetA O n)
     (h : ((PD.p : ℕ) : LetA O n) ^ N * β = 0) : β = 0 := by
   obtain ⟨hd, -, hf⟩ := hO
-  haveI := hd
-  haveI : NeZero PD.p := ⟨PD.hp.ne_zero⟩
+  have := hd
+  have : NeZero PD.p := ⟨PD.hp.ne_zero⟩
   obtain ⟨ζ, hζ⟩ := hζ
   have hLL : ((PD.p : ℕ) : LL) ≠ 0 := hζ.neZero'.out
   have hpO : ((PD.p : ℕ) : O) ≠ 0 := by
@@ -1155,7 +1155,7 @@ variable (W : LocWach PD LL O v n) (T : LocLat G Qp LL O)
 theorem finiteDimensional_filLev (c : ZMod n) (hfd : FiniteDimensional LL ↥(DcrisL PD T.ρ (W.emb c))) (u : ℤ) :
     FiniteDimensional LL ↥(Formalism.MainNotions.WachCoordinates.FilLev W T c 0 u) := by
   have hc : c - ((0 : ℕ) : ZMod n) = c := by simp
-  haveI : FiniteDimensional LL
+  have : FiniteDimensional LL
       ↥(Formalism.WeaklyAdmissibleFiltrations.FilCris PD T.ρ u ⊓ DcrisL PD T.ρ (W.emb (c - ((0 : ℕ) : ZMod n)))) := by
     rw [hc]
     exact Submodule.finiteDimensional_of_le inf_le_right
@@ -1192,7 +1192,7 @@ theorem multV_nonneg' [NeZero n] (hFD : Sh.FilDim W) (hA : Formalism.MainNotions
     | add y z hy hz =>
       rw [map_add (f := _)]
       exact add_mem hy hz
-  haveI := finiteDimensional_filLev W T c hfd k
+  have := finiteDimensional_filLev W T c hfd k
   have h2 : Module.finrank LL ↥(Formalism.MainNotions.WachCoordinates.FilLev W T c 0 (k + 1)) ≤
       Module.finrank LL ↥(Formalism.MainNotions.WachCoordinates.FilLev W T c 0 k) :=
     LinearMap.finrank_le_finrank_of_injective (f := Submodule.inclusion hle)
@@ -1222,7 +1222,7 @@ theorem sum_multV_le [NeZero n] (hFD : Sh.FilDim W) {d : ℕ} {T₁ T₂ : LocLa
       by_contra hnj
       exact hne (Formalism.MainNotions.N.Pv.LocalLengthBound.rk_multV_of_not_jump PD T₂.ρ τ k hnj)
     have hw := hjump k hj
-    simp only [Formalism.MainNotions.RamifiedCoefficientChains.JumpWinS, hev, if_true, Set.mem_union, Set.mem_Icc] at hw
+    simp only [Formalism.MainNotions.RamifiedCoefficientChains.JumpWinS, hev, ite_true, Set.mem_union, Set.mem_Icc] at hw
     have hk' := Finset.mem_Ico.1 hk
     simp only [Finset.mem_Icc]
     omega
@@ -1335,7 +1335,7 @@ theorem digits_sum_le_log (p : ℕ) [Fact p.Prime] (K : ℕ) :
     (p.digits K).sum ≤ (p - 1) * (Nat.log p K + 1) := by
   have hp : p.Prime := Fact.out
   have h1 : (p.digits K).sum ≤ (p.digits K).length * (p - 1) := by
-    have := List.sum_le_card_nsmul (p.digits K) (p - 1) (fun x hx => by
+    have := List.sum_le_length_nsmul (p.digits K) (p - 1) (fun x hx => by
       have := Nat.digits_lt_base hp.one_lt hx
       omega)
     simpa using this
@@ -1474,7 +1474,7 @@ theorem first_lift_of_hypotheses [NeZero n] (W : LocWach PD LL O v n) (hV : Form
     (hB : Sh.BasTool W) (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisExactStrict PD LL)
     (hC : Formalism.MainNotions.RamifiedCoefficientChains.CrysSubQuot PD LL) (hQ : Formalism.MainNotions.RamifiedCoefficientChains.DdREqDcris PD LL) : Step1 W := by
   intro d T₁ T₂ F b S η m hS
-  haveI : Fact PD.p.Prime := ⟨PD.hp⟩
+  have : Fact PD.p.Prime := ⟨PD.hp⟩
   have hA : Formalism.MainNotions.LiftingTheory.CaseA W := hS.1
   have hl : 11 ≤ PD.p := hS.2.1
   obtain ⟨hdom, hdvr, hfrac⟩ := hS.2.2.2.1
@@ -1523,7 +1523,7 @@ theorem first_lift_of_hypotheses [NeZero n] (W : LocWach PD LL O v n) (hV : Form
     simp only [Finset.mem_filter] at hu
     obtain ⟨-, τ, hτ, hjmp⟩ := hu
     have hw := hjw c τ hτ p.1 hjmp
-    simp only [JumpWinS, hev, if_true, Set.mem_union, Set.mem_Icc] at hw
+    simp only [JumpWinS, hev, ite_true, Set.mem_union, Set.mem_Icc] at hw
     refine ⟨hx0, ?_⟩
     push_cast at hj1 hj2 ⊢
     omega
@@ -1569,9 +1569,9 @@ theorem first_lift_of_hypotheses [NeZero n] (W : LocWach PD LL O v n) (hV : Form
     exact le_trans (by exact_mod_cast this) (Nat.floor_le hB1)
   refine ⟨s₁, hs₁, ?_⟩
   intro FF _ _ _ _ g N y z μ ν hX
-  haveI := hdom
-  haveI := hdvr
-  haveI := hfrac
+  have := hdom
+  have := hdvr
+  have := hfrac
 
   have hw : ∀ c, ∃ w : O, c ∈ evens n d →
       (C w * ∏ x ∈ Sx c, (X - C (cO x))).coeff 0 = ((PD.p : ℕ) : O) ^ s₁ := by
@@ -1699,7 +1699,7 @@ theorem lemK_D (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     Formalism.MainNotions.WachCoordinates.AtCaseA fun l _ K LL h => Formalism.MainNotions.RamifiedCoefficientChains.Sh.LemK ((HW l).W K 1 LL h.2.2) := by
   intro l _ K LL hA' h5
   have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
+  have := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
   have h1 := hA.1 l K 1 LL hA'.2.2
   have h11 := hA.2.2.2.2.2.2.2.2.2.2.1 l K LL
   have hs := (HW l).W_s K 1 LL hA'.2.2
@@ -1770,8 +1770,8 @@ theorem local_lemmas_of_literature (hA : admitted D HW F Cm CR CA CB CK) (h23 : 
   have h9 : Formalism.MainNotions.DeltaInvariantLattices.P9W W := h1.2.2.2.2.2.2.2.2.1
   obtain ⟨hE, hC, hQ⟩ := hA.2.2.2.2.2.2.2.2.2.2.1 l K LL
   have hs : W.s = 1 := hCA.2.1
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 := Formalism.MainNotions.UnusedSlot80.BCF.isFrac_OL LL
-  haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+  have : IsFractionRing ↥(OL LL) ↥LL.1 := Formalism.MainNotions.UnusedSlot80.BCF.isFrac_OL LL
+  have : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
   have hring : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP W :=
     (((h9 _ (Formalism.MainNotions.LiftingTheory.gen_one_crys W)) hs hCA.2.2).2.2 (Formalism.MainNotions.UnusedSlot80.finrank_K0_eq_one_of_le_Kur hCAl.1)).1
   have C := ((Cm l).C K 1 LL hg).tie

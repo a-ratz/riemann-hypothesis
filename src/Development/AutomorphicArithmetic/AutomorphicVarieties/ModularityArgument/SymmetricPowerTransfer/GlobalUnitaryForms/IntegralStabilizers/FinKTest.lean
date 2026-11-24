@@ -59,7 +59,7 @@ private theorem supp_fin (P : RPG G Gv K) (f : ∀ v, Gv v → ℂ) (S : Finset 
     (Function.mulSupport fun v => f v (P.p v y)).Finite := by
   refine (S.finite_toSet.union (Filter.eventually_cofinite.1 (P.ae y))).subset fun v hv => ?_
   by_contra h
-  simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at h
+  simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at h
   exact hv (h1 v h.1 _ h.2)
 
 private theorem prod_law (P : RPG G Gv K) (f : ∀ v, Gv v → ℂ) (S : Finset I) (h1 : ∀ v ∉ S, ∀ k ∈ K v, f v k = 1) (x y : G)
@@ -178,10 +178,10 @@ end Local
 theorem finK_test : ∀ (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat Δ), D.Ok → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (ch : F → ℂ)
     (B : Base (DX Δ) (DA Δ) V), D.IsBK ch B → ∀ t, D.Cone t → (Base.Tw.one B).IsTest (D.FK t) := by
   intro F _ _ Δ D hD V _ _ ch B hB t ht
-  have hoffJ : ∀ v ∉ D.Sg, D.J2v v = KD _ (Ov v) := fun v hv => if_neg hv
-  have hofff : ∀ v ∉ D.Sg, D.fKv t v = fZD (Ov v) (D.χ v) := fun v hv => funext fun _ => if_neg hv
-  have honJ : ∀ v ∈ D.Sg, D.J2v v = (D.S v).J2 := fun v hv => if_pos hv
-  have honf : ∀ v ∈ D.Sg, D.fKv t v = (D.S v).fK (t v) := fun v hv => funext fun _ => if_pos hv
+  have hoffJ : ∀ v ∉ D.Sg, D.J2v v = KD _ (Ov v) := fun v hv => ite_eq_right hv
+  have hofff : ∀ v ∉ D.Sg, D.fKv t v = fZD (Ov v) (D.χ v) := fun v hv => funext fun _ => ite_eq_right hv
+  have honJ : ∀ v ∈ D.Sg, D.J2v v = (D.S v).J2 := fun v hv => ite_eq_left hv
+  have honf : ∀ v ∈ D.Sg, D.fKv t v = (D.S v).fK (t v) := fun v hv => funext fun _ => ite_eq_left hv
   have hz := fun v (hv : v ∉ D.Sg) => Loc.fzdLaw (Ov v) (Kv v) (cv v Δ) (hD.off v hv) (D.χ v) (hD.chi v).1
   have hlaw : ∀ v, Law (D.J2v v) (D.χ v) (D.fKv t v) := fun v => by
     by_cases hv : v ∈ D.Sg
@@ -203,7 +203,7 @@ theorem finK_test : ∀ (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat �
     refine ⟨fun v => D.χ v (z v), ?_, hB.ω u z s hs, fun v y => hlaw v _ _ _ (hs v).1 (hs v).2 y⟩
     refine (D.Sg.finite_toSet.union (Filter.eventually_cofinite.1 (P.ae u.1))).subset fun v hv => ?_
     by_contra h
-    simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at h
+    simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at h
     refine hv ?_
     have := h1' v (hoffJ v h.1 ▸ h.2)
     simp only [this, map_one, Units.val_one]

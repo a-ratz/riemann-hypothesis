@@ -97,9 +97,9 @@ theorem valR_eq_of_gs {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) 
 
 theorem isAbelianScheme_fibre {S T : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsSemiAbelian G) (y : T ⟶ S)
     (hp : IsProper (pullback.snd G.hom y)) : IsAbelianScheme ((Over.pullback y).obj G) := by
-  haveI := hG.comm
-  haveI := hG.smooth
-  haveI := hG.geomConnected
+  have := hG.comm
+  have := hG.smooth
+  have := hG.geomConnected
   exact ⟨inferInstance, (inferInstance : Smooth (pullback.snd G.hom y)), hp,
     (inferInstance : GeometricallyConnected (pullback.snd G.hom y))⟩
 
@@ -128,9 +128,9 @@ theorem main : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberField 
       gm r z (φ ⁻¹ᵁ U) (pullU φ U x) = gm (r ≫ φ) z U x := by
     have h₁ : r z ∈ φ ⁻¹ᵁ U := h
     have h₂ : (r ≫ φ) z ∈ U := h
-    simp only [gm, dif_pos h₁, dif_pos h₂, MonoidHom.comp_apply]
+    simp only [gm, dite_eq_left h₁, dite_eq_left h₂, MonoidHom.comp_apply]
     ext
-    simp only [Units.coe_map, pullU, MonoidHom.coe_coe]
+    simp only [Units.coe_map, pullU, MonoidHom.coe_ofClass]
     first
       | rfl
       | (rw [Scheme.comp_app]; rfl)

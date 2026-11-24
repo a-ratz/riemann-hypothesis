@@ -104,19 +104,19 @@ theorem valuation_apply_le {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
   by_cases hw : w = 0
   · subst hw
     have hz : z = 0 := by
-      have : A.valuation z = 0 := le_antisymm (by simpa using h) zero_le'
+      have : A.valuation z = 0 := le_antisymm (by simpa using h) zero_le
       simpa using this
     subst hz; simp
   · have hsw : s w ≠ 0 := (map_ne_zero_iff _ s.injective).mpr hw
     have h1 : A.valuation (z / w) ≤ 1 := by
       rw [map_div₀]
-      exact div_le_one_of_le₀ h zero_le'
+      exact div_le_one_of_le₀ h zero_le
     have h2 : s (z / w) ∈ A := (ReciprocityTheory.Gal.apply_mem_iff_of_mem_Dec hs _).mpr ((A.valuation_le_one_iff _).mp h1)
     rw [map_div₀] at h2
     have h3 := (A.valuation_le_one_iff _).mpr h2
     rw [map_div₀] at h3
     have hv : A.valuation (s w) ≠ 0 := by simpa using hsw
-    exact (div_le_one₀ (zero_lt_iff.mpr hv)).mp h3
+    exact (div_le_one₀ (pos_iff_ne_zero.mpr hv)).mp h3
 
 end GlobalTheory.SqFix
 
@@ -124,7 +124,7 @@ namespace GlobalTheory.SqFix
 
 theorem sqrt_fixed_of_isSquare_padic : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (v : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω), IsPlaceOver A v → ∀ (q : ℕ) [Fact q.Prime], ((q : ℕ) : 𝓞 F) ∈ v.asIdeal → ∀ (d : ℤ) (δ : Ω), δ ^ 2 = (d : Ω) → IsSquare (d : ℚ_[q]) → ∀ s ∈ Dec (F := F) A, s δ = δ := by
   intro F Ω _ _ _ _ _ v A hA q _ hq d δ hδ hsq s hs
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have hsδ2 : s δ ^ 2 = δ ^ 2 := by rw [← map_pow, hδ, map_intCast]
   by_cases hd : d = 0
   · subst hd

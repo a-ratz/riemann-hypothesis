@@ -81,7 +81,7 @@ theorem isMultiHomog_C (r : ℤ) : IsMultiHomog (C r : Pol n) 0 := by
   intro e he k
   have h0 : e = 0 := by
     by_contra h
-    rw [MvPolynomial.mem_support_iff, coeff_C, if_neg (Ne.symm h)] at he
+    rw [MvPolynomial.mem_support_iff, coeff_C, ite_eq_right (Ne.symm h)] at he
     exact he rfl
   subst h0
   simp
@@ -195,7 +195,7 @@ variable [IsClosedImmersion i]
 theorem exists_quot (c : ∀ k, Bk n k) (hc : genericPoint X ∈ i ⁻¹ᵁ mchart c) (e : X.functionField) :
     ∃ F G : Pol n, fnAt i c hc G ≠ 0 ∧ e * fnAt i c hc G = fnAt i c hc F := by
   have hA : IsAffineOpen (i ⁻¹ᵁ mchart c) := (SmoothRep.gen m n c).1.preimage i
-  haveI : Nonempty (i ⁻¹ᵁ mchart c : X.Opens) := ⟨⟨_, hc⟩⟩
+  have : Nonempty (i ⁻¹ᵁ mchart c : X.Opens) := ⟨⟨_, hc⟩⟩
   have := functionField_isFractionRing_of_isAffineOpen X _ hA
   obtain ⟨a, d, hd, rfl⟩ := IsFractionRing.div_surjective (A := Γ(X, i ⁻¹ᵁ mchart c)) e
   obtain ⟨a', rfl⟩ := i.app_surjective _ (SmoothRep.gen m n c).1 a

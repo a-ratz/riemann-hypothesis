@@ -121,10 +121,10 @@ theorem exists_mem_fiber_isAlgebraic_residueField :
   intro Y X π _ y₀
   let x := π y₀
   let s : π.fiber x ⟶ Spec (X.residueField x) := π.fiberToSpecResidueField x
-  haveI : LocallyOfFiniteType s := by
+  have : LocallyOfFiniteType s := by
     show LocallyOfFiniteType (pullback.snd _ _)
     infer_instance
-  haveI : JacobsonSpace (π.fiber x) := LocallyOfFiniteType.jacobsonSpace s
+  have : JacobsonSpace (π.fiber x) := LocallyOfFiniteType.jacobsonSpace s
   have hx : y₀ ∈ Set.range (π.fiberι x) := by
     rw [π.range_fiberι]; rfl
   obtain ⟨y₀', -⟩ := hx
@@ -138,9 +138,9 @@ theorem exists_mem_fiber_isAlgebraic_residueField :
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).mp this
   have halg : letI := φ.hom.toAlgebra;
       Algebra.IsAlgebraic (X.residueField x) ((π.fiber x).residueField z) := by
-    letI : Algebra (X.residueField x) ((π.fiber x).residueField z) := φ.hom.toAlgebra
-    haveI : Algebra.FiniteType (X.residueField x) ((π.fiber x).residueField z) := hft
-    haveI : Module.Finite (X.residueField x) ((π.fiber x).residueField z) :=
+    let : Algebra (X.residueField x) ((π.fiber x).residueField z) := φ.hom.toAlgebra
+    have : Algebra.FiniteType (X.residueField x) ((π.fiber x).residueField z) := hft
+    have : Module.Finite (X.residueField x) ((π.fiber x).residueField z) :=
       finite_of_finite_type_of_isJacobsonRing _ _
     exact Algebra.IsAlgebraic.of_finite _ _
   let y : Y := π.fiberι x z
@@ -157,10 +157,10 @@ theorem exists_mem_fiber_isAlgebraic_residueField :
       Scheme.Hom.SpecMap_residueFieldMap_fromSpecResidueField, ← Category.assoc,
       Scheme.Hom.SpecMap_residueFieldMap_fromSpecResidueField, Category.assoc]
   have hψ := isAlgebraic_residueField_transport hy ψ φ e halg
-  letI : Algebra (X.residueField (π y)) (Y.residueField y) := (π.residueFieldMap y).hom.toAlgebra
-  letI : Algebra (Y.residueField y) ((π.fiber x).residueField z) := g.hom.toAlgebra
-  letI : Algebra (X.residueField (π y)) ((π.fiber x).residueField z) := ψ.hom.toAlgebra
-  haveI : IsScalarTower (X.residueField (π y)) (Y.residueField y) ((π.fiber x).residueField z) :=
+  let : Algebra (X.residueField (π y)) (Y.residueField y) := (π.residueFieldMap y).hom.toAlgebra
+  let : Algebra (Y.residueField y) ((π.fiber x).residueField z) := g.hom.toAlgebra
+  let : Algebra (X.residueField (π y)) ((π.fiber x).residueField z) := ψ.hom.toAlgebra
+  have : IsScalarTower (X.residueField (π y)) (Y.residueField y) ((π.fiber x).residueField z) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Algebra.IsAlgebraic.tower_bot_of_injective (R := X.residueField (π y)) (A := (π.fiber x).residueField z) g.hom.injective
 
@@ -188,7 +188,7 @@ private lemma specMap_residueFieldMap_conj_eq_ofHom_map {R S : CommRingCat.{0}} 
     (Scheme.Spec.residueFieldIso R ((Spec.map φ) p)).inv ≫ (Spec.map φ).residueFieldMap p ≫
       (Scheme.Spec.residueFieldIso S p).hom =
       CommRingCat.ofHom (Ideal.ResidueField.map (p.asIdeal.comap φ.hom) p.asIdeal φ.hom rfl) := by
-  haveI : ((Spec.map φ) p).asIdeal.IsPrime := PrimeSpectrum.isPrime _
+  have : ((Spec.map φ) p).asIdeal.IsPrime := PrimeSpectrum.isPrime _
   have key : CommRingCat.ofHom (algebraMap R ((Spec.map φ) p).asIdeal.ResidueField) ≫
       (Scheme.Spec.residueFieldIso R ((Spec.map φ) p)).inv ≫ (Spec.map φ).residueFieldMap p ≫
       (Scheme.Spec.residueFieldIso S p).hom =
@@ -244,10 +244,10 @@ theorem _root_.GlobalTheory.RelDimFibCrit.trdeg_affine {X Y : Scheme.{0}} (f : X
     @Algebra.trdeg (p.asIdeal.comap (f.appLE U V e).hom).ResidueField p.asIdeal.ResidueField _ _
       (Ideal.ResidueField.map _ p.asIdeal (f.appLE U V e).hom rfl).toAlgebra := by
   obtain ⟨p, rfl⟩ : ∃ p' : Spec Γ(X, V), p' = p := ⟨p, rfl⟩
-  haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime (p : PrimeSpectrum Γ(X, V))
+  have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime (p : PrimeSpectrum Γ(X, V))
   set φ := f.appLE U V e
-  haveI := hU.isOpenImmersion_fromSpec
-  haveI := hV.isOpenImmersion_fromSpec
+  have := hU.isOpenImmersion_fromSpec
+  have := hV.isOpenImmersion_fromSpec
   have h₁ : hU.fromSpec ((Spec.map φ) p) = f (hV.fromSpec p) :=
     congr($(hU.SpecMap_appLE_fromSpec f hV e) p)
   set q : Spec Γ(Y, U) := (Spec.map φ) p
@@ -304,32 +304,32 @@ theorem ringKrullDim_quotient_eq_of_trdeg_residueField_eq_zero (F : Type) [Field
     (h : @Algebra.trdeg (Q.comap φ).ResidueField Q.ResidueField _ _
       (Ideal.ResidueField.map (Q.comap φ) Q φ rfl).toAlgebra = 0) :
     ringKrullDim (B ⧸ Q) = ringKrullDim (A ⧸ Q.comap φ) := by
-  letI : Algebra F B := (φ.comp (algebraMap F A)).toAlgebra
-  letI : Algebra A B := φ.toAlgebra
-  haveI : IsScalarTower F A B := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let : Algebra F B := (φ.comp (algebraMap F A)).toAlgebra
+  let : Algebra A B := φ.toAlgebra
+  have : IsScalarTower F A B := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   set P := Q.comap φ
-  letI : Algebra P.ResidueField Q.ResidueField := (Ideal.ResidueField.map P Q φ rfl).toAlgebra
-  haveI : IsScalarTower F P.ResidueField Q.ResidueField := IsScalarTower.of_algebraMap_eq fun f ↦ by
+  let : Algebra P.ResidueField Q.ResidueField := (Ideal.ResidueField.map P Q φ rfl).toAlgebra
+  have : IsScalarTower F P.ResidueField Q.ResidueField := IsScalarTower.of_algebraMap_eq fun f ↦ by
     change algebraMap F Q.ResidueField f = Ideal.ResidueField.map P Q φ rfl (algebraMap F P.ResidueField f)
     rw [IsScalarTower.algebraMap_apply F A P.ResidueField, Ideal.ResidueField.map_algebraMap,
       IsScalarTower.algebraMap_apply F B Q.ResidueField]
     rfl
-  haveI : Algebra.FiniteType F (A ⧸ P) :=
+  have : Algebra.FiniteType F (A ⧸ P) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ F P) Ideal.Quotient.mk_surjective
-  haveI : Algebra.FiniteType F (B ⧸ Q) :=
+  have : Algebra.FiniteType F (B ⧸ Q) :=
     haveI := hB; Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ F Q) Ideal.Quotient.mk_surjective
   have hfaith (S : Type) [CommRing S] [Nontrivial S] [Algebra F S] : FaithfulSMul F S :=
     (faithfulSMul_iff_algebraMap_injective F S).mpr (algebraMap F S).injective
-  haveI := hfaith (A ⧸ P); haveI := hfaith (B ⧸ Q); haveI := hfaith P.ResidueField
-  haveI : FaithfulSMul (A ⧸ P) P.ResidueField :=
+  have := hfaith (A ⧸ P); have := hfaith (B ⧸ Q); have := hfaith P.ResidueField
+  have : FaithfulSMul (A ⧸ P) P.ResidueField :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr P.injective_algebraMap_quotient_residueField
-  haveI : FaithfulSMul (B ⧸ Q) Q.ResidueField :=
+  have : FaithfulSMul (B ⧸ Q) Q.ResidueField :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr Q.injective_algebraMap_quotient_residueField
-  haveI : FaithfulSMul P.ResidueField Q.ResidueField :=
+  have : FaithfulSMul P.ResidueField Q.ResidueField :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (RingHom.injective _)
-  haveI : Algebra.IsAlgebraic (A ⧸ P) P.ResidueField :=
+  have : Algebra.IsAlgebraic (A ⧸ P) P.ResidueField :=
     IsLocalization.isAlgebraic _ (nonZeroDivisors (A ⧸ P))
-  haveI : Algebra.IsAlgebraic (B ⧸ Q) Q.ResidueField :=
+  have : Algebra.IsAlgebraic (B ⧸ Q) Q.ResidueField :=
     IsLocalization.isAlgebraic _ (nonZeroDivisors (B ⧸ Q))
   have h₁ := GlobalTheory.trdeg_eq_of_isAlgebraic_top F (A ⧸ P) P.ResidueField
   have h₂ := GlobalTheory.trdeg_eq_of_isAlgebraic_top F (B ⧸ Q) Q.ResidueField
@@ -364,12 +364,12 @@ theorem dim_closure_eq_of_isAlgebraic : ∀ (F : Type) [Field F] (Y X : Scheme.{
     rw [← Scheme.Hom.comp_apply, ← hsq, Scheme.Hom.comp_apply]
   have h0 : @Algebra.trdeg (X.residueField (π (hV.fromSpec p))) (Y.residueField (hV.fromSpec p)) _ _
       (π.residueFieldMap (hV.fromSpec p)).hom.toAlgebra = 0 := by
-    letI := (π.residueFieldMap (hV.fromSpec p)).hom.toAlgebra
+    let := (π.residueFieldMap (hV.fromSpec p)).hom.toAlgebra
     exact trdeg_eq_zero (R := X.residueField (π (hV.fromSpec p))) (A := Y.residueField (hV.fromSpec p))
   rw [GlobalTheory.RelDimFibCrit.trdeg_affine π U hU V hV e p] at h0
   let ψ := Spec.preimage (hU.fromSpec ≫ sX)
   have hψ : Spec.map ψ = hU.fromSpec ≫ sX := Spec.map_preimage _
-  letI : Algebra F Γ(X, U) := ψ.hom.toAlgebra
+  let : Algebra F Γ(X, U) := ψ.hom.toAlgebra
   have hA : Algebra.FiniteType F Γ(X, U) :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) (φ := ψ)).mp (hψ ▸ inferInstance)
   have hB : @Algebra.FiniteType F Γ(Y, V) _ _ (φ.hom.comp (algebraMap F Γ(X, U))).toAlgebra := by
@@ -378,7 +378,7 @@ theorem dim_closure_eq_of_isAlgebraic : ∀ (F : Type) [Field F] (Y X : Scheme.{
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) (φ := ψ ≫ φ)).mp (h ▸ inferInstance)
   rw [hpt, GlobalTheory.topologicalKrullDim_closure_eq_ringKrullDim_quotient (π ≫ sX) hV.fromSpec p,
     GlobalTheory.topologicalKrullDim_closure_eq_ringKrullDim_quotient sX hU.fromSpec (Spec.map φ p)]
-  haveI := p.isPrime
+  have := p.isPrime
   exact ringKrullDim_quotient_eq_of_trdeg_residueField_eq_zero F φ.hom hB p.asIdeal h0
 
 end GlobalTheory.ClosureDim
@@ -435,8 +435,8 @@ theorem exists_curve_over : ∀ (F : Type) [Field F] (Y X : Scheme.{0}) (π : Y 
 
 theorem isNef_of_pull : ∀ (F : Type) [Field F] [NumberField F] (Y X : Scheme.{0}) (π : Y ⟶ X) (sX : X ⟶ Sp F) (p : Y ⟶ Sp F) (L : LB X) (hL : L.IsLB) (L' : LB Y) (hL' : L'.IsLB), π ≫ sX = p → IsProjOver sX → IsProjOver p → Surjective π → CechPic.pull π (cls L hL) = cls L' hL' → (letI := algebraΓOfHom p; IsNef F L') → (letI := algebraΓOfHom sX; IsNef F L) := by
   intro F _ _ Y X π sX p L hL L' hL' hπ hX hY hs hcl hnef
-  letI := algebraΓOfHom sX
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom sX
+  let := algebraΓOfHom p
   have hnef' : IsNef F L' := hnef
   obtain ⟨hPX, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB sX).1 hX
   obtain ⟨hPY, A', hA'⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hY
@@ -469,13 +469,13 @@ theorem isNef_of_pull : ∀ (F : Type) [Field F] [NumberField F] (Y X : Scheme.{
     obtain ⟨t, ht⟩ := exists_isGen_of_nonzeroLocus_eq_top s (top_unique fun z _ => h z)
     have e0 := (cls_eq_zero_iff (LB.isLB_pull hr' (redι Z))).2 ⟨t, ht⟩
     have h1 : interNumRed F Z ![lbPow (dual L) r] = 0 := by
-      letI := algebraΓAlong F (redι Z)
+      let := algebraΓAlong F (redι Z)
       rw [interNumRed_one_eq hr']
       exact interNum_eq_zero_of_cls_eq_zero F _ (isLB_vecOne (LB.isLB_pull hr' _)) 0 e0
     rw [hZ.interNumRed_lbPow hA hM] at h1
     have : (0 : ℤ) < r := by exact_mod_cast hr
     nlinarith
-  letI := algebraΓAlong F (redι C)
+  let := algebraΓAlong F (redι C)
   have := hC.isProper_strHom
   obtain ⟨x, hx⟩ := hsφ (genericPoint _)
   have hx' : x ∈ nonzeroLocus (secPull s φ) := (nonzeroLocus_secPull s φ).ge (by

@@ -88,7 +88,7 @@ theorem scale_neg_mono {O Kf X : Type*} [CommRing O] [Field Kf] [Algebra O Kf] [
   ring
 
 theorem RS.w_ne {p n' : ℕ} (R : RS p n') : algebraMap R.O R.Kf R.w ≠ 0 := by
-  haveI := R.std.1.frac_O
+  have := R.std.1.frac_O
   intro h
   exact R.std.2.1.ne_zero (IsFractionRing.injective R.O R.Kf (h.trans (map_zero _).symm))
 
@@ -207,7 +207,7 @@ theorem topW_base {n' m : ℕ} {TT : Finset (Fin n')} {aw bw : Fin n' → ℤ} {
     IsBaseWeight TT aw bw c (topW TT lam0) := by
   intro s
   refine ⟨fun hs => ?_, fun hs i => ?_⟩
-  · simp only [topW, if_pos hs]
+  · simp only [topW, ite_eq_left hs]
     exact (h s).1 hs
   · simp [topW, hs]
 
@@ -215,9 +215,9 @@ theorem topW_dom {n' m : ℕ} {TT : Finset (Fin n')} {lam0 : Fin n' → Fin (m +
     IsDominant (topW TT lam0) := by
   intro s
   by_cases hs : s ∈ TT
-  · simp only [topW, if_pos hs]
+  · simp only [topW, ite_eq_left hs]
     exact h s
-  · simp only [topW, if_neg hs]
+  · simp only [topW, ite_eq_right hs]
     exact antitone_const
 
 theorem topW_zero {n' m : ℕ} {TT : Finset (Fin n')} (lam0 : Fin n' → Fin (m + 1) → ℤ) (s : Fin n') (hs : s ∉ TT) :
@@ -241,7 +241,7 @@ theorem midLP_of (h60c : RhoLowerBoundLargeConductor) (h62 : CloudWeightLowerBou
     push_neg
     have := kF_nonneg' X K R (fun s => ((fun s : X.TT => aw s) s + X.ccl).toNat)
       (fun s => ((fun s : X.TT => bw s) s + X.ccl).toNat)
-    simp only [Dat.kText, if_neg hn]
+    simp only [Dat.kText, ite_eq_right hn]
     linarith
   have hAs : ∀ s : X.TT, (((aw s - X.ccl).toNat : ℕ) : ℤ) = aw s - X.ccl := fun s =>
     Int.toNat_of_nonneg (by have h3 : (X.a : ℤ) ≤ aw s - X.ccl := (hins s).1; omega)
@@ -316,7 +316,7 @@ theorem midLP_of (h60c : RhoLowerBoundLargeConductor) (h62 : CloudWeightLowerBou
       X.kF K R (fun s : X.TT => (aw s - X.ccl).toNat) (fun s : X.TT => (bw s - X.ccl).toNat) +
         2 * X.kF K R (fun s : X.TT => (aw s + X.ccl).toNat) (fun s : X.TT => (bw s + X.ccl).toNat) +
         12 * (X.TT.card : ℝ) * ((X.m : ℝ) + 1) * X.ccl / X.b' := by
-    simp only [Dat.kText, if_pos hins]
+    simp only [Dat.kText, ite_eq_left hins]
     rfl
   rw [hκ]
   exact RhoL_mono R lam0 htt hF.dle le_rfl r63

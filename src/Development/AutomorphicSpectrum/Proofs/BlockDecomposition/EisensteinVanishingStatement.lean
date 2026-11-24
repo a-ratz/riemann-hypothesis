@@ -95,8 +95,8 @@ theorem pairing_add_right (T : Matrix (Fin m) (Fin m) D.host.E) (ψ : AddChar (A
 theorem continuous_pairing (T : Matrix (Fin m) (Fin m) D.host.E) {ψ : AddChar (AF D.host.F) ℂ}
     (hψ : IsCharAF D.host.F ψ) {n : ℕ} (x : Mx D m n) : Continuous (pairing T ψ x) := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerRestrict.lattice_Mx D m n
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have ht : Continuous (GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.trA (D := D)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
   unfold pairing gramQ mmul
@@ -147,19 +147,19 @@ open Classical in
 theorem zero : PositivityTheory.GramSchwartzFunctions.EC.Zero := by
   intro D ψ hψ θ hθ V n μ 𝓕 hμ Φ hΦ
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerRestrict.lattice_Mx D V.rank n
-  haveI : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
-  haveI i6 : DiscreteTopology (ratMx D V.rank n) := i5
-  haveI i7 : SecondCountableTopology (ratMx D V.rank n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : Countable (ratMx D V.rank n) := TopologicalSpace.separableSpace_iff_countable.1
+  have : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
+  have i6 : DiscreteTopology (ratMx D V.rank n) := i5
+  have i7 : SecondCountableTopology (ratMx D V.rank n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (ratMx D V.rank n) := TopologicalSpace.separableSpace_iff_countable.1
     (TopologicalSpace.SecondCountableTopology.to_separableSpace)
-  haveI : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) := by
+  have : Countable (Matrix (Fin V.rank) (Fin n) D.host.E) := by
     let g : Matrix (Fin V.rank) (Fin n) D.host.E → ratMx D V.rank n := fun ξ => ⟨ξ.map (incA D), ξ, rfl⟩
     have hg : Function.Injective g := by
       intro a b h
       have h' := congrArg Subtype.val h
       exact Matrix.ext fun i j => incA_injective (congrFun (congrFun h' i) j)
     exact hg.countable
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) :=
+  have : IsFiniteMeasure (μ.restrict 𝓕) :=
     isFiniteMeasure_restrict.2 (by rw [hμ.2.2]; exact ENNReal.one_ne_top)
   simp only [heis_zy]
   set F : Matrix (Fin V.rank) (Fin n) D.host.E → Mx D V.rank n → ℂ :=

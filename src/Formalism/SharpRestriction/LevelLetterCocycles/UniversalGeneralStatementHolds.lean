@@ -507,10 +507,10 @@ theorem gen_of (z : W.Gam → ℤ_[PD.p]ˣ)
     have h1 : z δ = z δ' := congrArg Subtype.val h
     have h2 : W.χΓ δ = W.χΓ δ' := Units.ext (by rw [← hz, ← hz, h1])
     exact Subtype.ext (W.χΓ_inj h2)
-  haveI : NeZero (PD.p - 1) := ⟨by omega⟩
+  have : NeZero (PD.p - 1) := ⟨by omega⟩
   let e : DeltaT PD.p ≃ ↥(rootsOfUnity (PD.p - 1) ℤ_[PD.p]) :=
     Equiv.subtypeEquivRight fun x => (mem_rootsOfUnity (PD.p - 1) x).symm
-  haveI : Finite (DeltaT PD.p) := Finite.of_equiv _ e.symm
+  have : Finite (DeltaT PD.p) := Finite.of_equiv _ e.symm
   have hle : Nat.card (DeltaT PD.p) ≤ Nat.card ↥W.DelF := by
     rw [Nat.card_congr e, Nat.card_eq_finsetCard, hcard]
     exact card_rootsOfUnity ℤ_[PD.p] (PD.p - 1)
@@ -614,7 +614,7 @@ theorem invCutPf_mem_stab (f : Rs LL l s → LL) (a : (ZMod (l ^ (s + 1)))ˣ) :
 
 theorem invCutPf_exists_pow (ζ₀ ζ : Rs LL l s) : ∃ a, powR LL l s a ζ₀ = ζ := by
   have hN : 0 < l ^ (s + 1) := pos_pow l s
-  haveI : NeZero (l ^ (s + 1)) := ⟨hN.ne'⟩
+  have : NeZero (l ^ (s + 1)) := ⟨hN.ne'⟩
   have h0 : IsPrimitiveRoot (ζ₀ : LL) (l ^ (s + 1)) := (mem_primitiveRoots hN).1 ζ₀.2
   have h1 : IsPrimitiveRoot (ζ : LL) (l ^ (s + 1)) := (mem_primitiveRoots hN).1 ζ.2
   obtain ⟨i, hi, hζ⟩ := h0.eq_pow_of_pow_eq_one h1.pow_eq_one
@@ -686,8 +686,8 @@ theorem reduction_zero_of_principal_unit (u : ℤ_[l]ˣ) (h1 : (u : ℤ_[l]) - 1
 
 theorem invCutPf_teich (x : (ZMod (l ^ 1))ˣ) : ∃ d : DeltaT l, redU l 0 d.1 = x := by
   have hl := (Fact.out : l.Prime)
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl.one_lt⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl.one_lt⟩
   obtain ⟨a, ha⟩ : ∃ a : ℤ_[l], a = (((x : ZMod (l ^ 1)).val : ℕ) : ℤ_[l]) := ⟨_, rfl⟩
   have hxa : PadicInt.toZModPow 1 a = x := by
     rw [ha, map_natCast, ZMod.natCast_zmod_val]
@@ -740,7 +740,7 @@ theorem invCutPf_orderOf (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]ˣ)
   cases s with
   | zero => rw [pow_zero, orderOf_eq_one_iff]; exact reduction_zero_of_principal_unit u h1
   | succ t =>
-    haveI : NeZero (l ^ (t + 1 + 1)) := ⟨(pos_pow l (t + 1)).ne'⟩
+    have : NeZero (l ^ (t + 1 + 1)) := ⟨(pos_pow l (t + 1)).ne'⟩
     obtain ⟨m, hm_def⟩ : ∃ m : ℕ, m = (PadicInt.toZModPow (t + 1 + 1) (u : ℤ_[l])).val := ⟨_, rfl⟩
     have hmu : ((m : ℕ) : ZMod (l ^ (t + 1 + 1))) = PadicInt.toZModPow (t + 1 + 1) (u : ℤ_[l]) := by
       rw [hm_def, ZMod.natCast_zmod_val]
@@ -784,7 +784,7 @@ theorem invCutPf_orderOf (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]ˣ)
     have hodd : Odd l := hl.odd_of_ne_two hl2
     have hv : ∀ j : ℕ, padicValNat l (m ^ (l ^ j) - 1) = 1 + j := by
       intro j
-      have := padicValNat.pow_sub_pow hodd hm1 hdvd1 hndvd (pow_ne_zero j hl.ne_zero)
+      have := Nat.multiplicity_pow_sub_pow hodd hm1 hdvd1 hndvd (pow_ne_zero j hl.ne_zero)
       rw [one_pow] at this
       rw [Nat.padicValNat_def] at hv1 ⊢
       rw [this, hv1, Nat.multiplicity_prime_pow]
@@ -800,8 +800,8 @@ theorem invCutPf_orderOf (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]ˣ)
 
 theorem invCutPf_card_ker (s : ℕ) : Nat.card (invCutPf_rho (l := l) s).ker = l ^ s := by
   have hl := (Fact.out : l.Prime)
-  haveI : NeZero (l ^ (s + 1)) := ⟨(pos_pow l s).ne'⟩
-  haveI : NeZero (l ^ (0 + 1)) := ⟨(pos_pow l 0).ne'⟩
+  have : NeZero (l ^ (s + 1)) := ⟨(pos_pow l s).ne'⟩
+  have : NeZero (l ^ (0 + 1)) := ⟨(pos_pow l 0).ne'⟩
   have hsurj : Function.Surjective (invCutPf_rho (l := l) s) :=
     ZMod.unitsMap_surjective (pow_dvd_pow l (invCutPf_le s))
   have e1 := Subgroup.card_eq_card_quotient_mul_card_subgroup (invCutPf_rho (l := l) s).ker
@@ -817,7 +817,7 @@ theorem invCutPf_ker_eq (hl2 : l ≠ 2) (s : ℕ) (u : ℤ_[l]ˣ)
     (h1 : (u : ℤ_[l]) - 1 ∈ Ideal.span {(l : ℤ_[l])})
     (h2 : (u : ℤ_[l]) - 1 ∉ Ideal.span {(l : ℤ_[l]) ^ 2}) :
     (invCutPf_rho (l := l) s).ker = Subgroup.zpowers (redU l s u) := by
-  haveI : NeZero (l ^ (s + 1)) := ⟨(pos_pow l s).ne'⟩
+  have : NeZero (l ^ (s + 1)) := ⟨(pos_pow l s).ne'⟩
   symm
   apply Subgroup.eq_of_le_of_card_ge
   · rw [Subgroup.zpowers_le, MonoidHom.mem_ker, invCutPf_rho_red, reduction_zero_of_principal_unit u h1]
@@ -929,10 +929,10 @@ theorem invLevCore_L (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     AtCaseA fun l _ K LL hG => Formalism.MainNotions.UnusedSlot80.CutU.InvLevCore ((HW l).W K 1 LL hG) := by
   intro l _ K LL hG hCA h5
   have : FiniteDimensional ℚ_[l] ↥(K0 K) := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨⟨hdom, -, -⟩, -⟩ := Formalism.MainNotions.N.T2.litGoodO l LL
-  haveI := hdom
-  haveI : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
+  have := hdom
+  have : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
     rw [(D.loc l).PD_p]
     exact Formalism.MainNotions.WachCoordinates.Br.complete_OL LL
   have hR : ToolsR.RingP ((HW l).W K 1 LL hCA.2.2) := ring_condition_uniformizer_polynomial D HW F h9 l K LL hCA
@@ -981,12 +981,12 @@ theorem invLevCore_fin (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (h
     AtCaseA fun l _ K LL hG => Formalism.MainNotions.UnusedSlot80.CutU.InvLevCore ((HW l).W K 1 LL hG) := by
   refine InvW.invLevCore_L D HW F h9 fun l _ K LL h a s hB => ?_
   obtain ⟨⟨hdom, -, -⟩, -⟩ := Formalism.MainNotions.N.T2.litGoodO l LL
-  haveI := hdom
-  haveI : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
-  haveI : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
+  have := hdom
+  have : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
+  have : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
     rw [(D.loc l).PD_p]
     exact Formalism.MainNotions.WachCoordinates.Br.complete_OL LL
-  haveI := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
+  have := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
   exact InvW.levRat_of ((HW l).W K 1 LL h.2.2) (ring_condition_uniformizer_polynomial D HW F h9 l K LL h) (toolsAlg_at D HW F h9 l K LL h)
     (Formalism.MainNotions.WachCoordinates.Br.not_isUnit_p ((HW l).W K 1 LL h.2.2) (Formalism.MainNotions.WachCoordinates.Br.valRing_rec (D.loc l) LL)) a s hB
 

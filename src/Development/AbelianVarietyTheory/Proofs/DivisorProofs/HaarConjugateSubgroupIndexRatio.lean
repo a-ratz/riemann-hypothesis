@@ -284,15 +284,15 @@ theorem units_ringOfIntegers_mod_sq (L : Type) [Field L] [NumberField L] :
     ∃ R : Finset (𝓞 L)ˣ, ∀ x : (𝓞 L)ˣ, ∃ ρ ∈ R, ∃ w : (𝓞 L)ˣ, x = ρ * w ^ 2 := by
   classical
   let N : Submodule ℤ (Additive (𝓞 L)ˣ) := LinearMap.range ((2 : ℤ) • LinearMap.id)
-  haveI : Module.Finite ℤ (Additive (𝓞 L)ˣ) := inferInstance
-  haveI : Finite (Additive (𝓞 L)ˣ ⧸ N) := by
+  have : Module.Finite ℤ (Additive (𝓞 L)ˣ) := inferInstance
+  have : Finite (Additive (𝓞 L)ˣ ⧸ N) := by
     refine Module.finite_of_fg_torsion _ fun q => ⟨⟨2, mem_nonZeroDivisors_of_ne_zero two_ne_zero⟩, ?_⟩
     induction q using Submodule.Quotient.induction_on with
     | H x =>
       show (2 : ℤ) • (Submodule.Quotient.mk (p := N) x) = 0
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
       exact ⟨x, rfl⟩
-  haveI : Fintype (Additive (𝓞 L)ˣ ⧸ N) := Fintype.ofFinite _
+  have : Fintype (Additive (𝓞 L)ˣ ⧸ N) := Fintype.ofFinite _
   let rep := Function.surjInv (Submodule.Quotient.mk_surjective N)
   refine ⟨Finset.univ.image (fun q => Additive.toMul (rep q)), fun x => ?_⟩
   let q : Additive (𝓞 L)ˣ ⧸ N := Submodule.Quotient.mk (Additive.ofMul x)
@@ -334,7 +334,7 @@ theorem units_fixed_eq_mul_mul_conj : ∀ (L : Type) [Field L] [NumberField L] (
   have hP : P ρ := ⟨ε, h1, h2, hfix, w, hw⟩
   obtain ⟨_g1, _g2, gfix, w', hw'⟩ := Classical.choose_spec hP
   have hpick : pick ρ = {((Classical.choose hP : Lˣ) : L), -((Classical.choose hP : Lˣ) : L)} := by
-    simp only [pick, dif_pos hP]
+    simp only [pick, dite_eq_left hP]
   set e : Lˣ := Classical.choose hP with he
   let W : Lˣ := Units.map φ (w * w'⁻¹)
   have hint : ∀ v : (𝓞 L)ˣ, IsIntegral ℤ (φ (v : 𝓞 L)) := fun v => RingOfIntegers.isIntegral_coe _
@@ -405,9 +405,9 @@ theorem exists_rat_approx (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ
   classical
   let K := v.adicCompletion ℚ
   let A := K ⊗[ℚ] L
-  letI : TopologicalSpace A := moduleTopology K A
-  haveI : IsModuleTopology K A := ⟨rfl⟩
-  haveI : IsTopologicalRing A := IsModuleTopology.isTopologicalRing K A
+  let : TopologicalSpace A := moduleTopology K A
+  have : IsModuleTopology K A := ⟨rfl⟩
+  have : IsTopologicalRing A := IsModuleTopology.isTopologicalRing K A
   let b := integralBasis L
   let bA := Algebra.TensorProduct.basis K b
   let mc : A →ₗ[K] A := (Algebra.TensorProduct.map (AlgHom.id K K) c).toLinearMap
@@ -432,7 +432,7 @@ theorem exists_rat_approx (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ
       simp only [F, hY0]
       have e : mc y = Algebra.TensorProduct.map (AlgHom.id ℚ K) c y := rfl
       rw [e, ← h, Algebra.TensorProduct.tmul_mul_tmul, one_mul, inv_mul_cancel₀ ha, Algebra.TensorProduct.one_def, sub_self]
-    simp only [U, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq, hF0, map_zero]
+    simp only [U, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq, hF0, map_zero]
     intro j
     exact zero_lt_one
   have hd : DenseRange (Prod.map (algebraMap ℚ K) (Pi.map fun (_ : Module.Free.ChooseBasisIndex ℤ (𝓞 L)) => algebraMap ℚ K)) :=
@@ -453,7 +453,7 @@ theorem exists_rat_approx (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ
     have hmz : mc ((1 : K) ⊗ₜ[ℚ] z) = (1 : K) ⊗ₜ[ℚ] c z := map_one_tmul c z
     rw [hYz, hq, hmz, key_tmul]
   have hc := Set.mem_iInter.1 hqt j
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, key, Module.Basis.coord_apply, bA,
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, key, Module.Basis.coord_apply, bA,
     Algebra.TensorProduct.basis_repr_tmul, one_smul, Finsupp.mapRange_apply] at hc
   rwa [valued_algebraMap] at hc
 
@@ -494,7 +494,7 @@ theorem valuation_eq_one_of_coord (L : Type) [Field L] [NumberField L] (v : Heig
   have hrat : ∀ x : ℚ, v.valuation ℚ x < 1 → w.valuation L (algebraMap ℚ L x) < 1 := by
     intro x hx
     rw [← HeightOneSpectrum.valuation_liesOver L v w x]
-    exact pow_lt_one₀ zero_le' hx he
+    exact pow_lt_one₀ zero_le hx he
   have hsum : ε - 1 = ∑ j, (integralBasis L).repr (ε - 1) j • integralBasis L j := ((integralBasis L).sum_repr _).symm
   have hlt : w.valuation L (ε - 1) < 1 := by
     rw [hsum]
@@ -573,7 +573,7 @@ theorem exists_rat_of_divisor (n : HeightOneSpectrum ℤ → ℤ) (hn : ∀ᶠ v
   have hJ : (J : FractionalIdeal ℤ⁰ ℚ) = FractionalIdeal.spanSingleton ℤ⁰ g := by
     apply FractionalIdeal.coeToSubmodule_injective
     dsimp only
-    rw [FractionalIdeal.coe_spanSingleton, Submodule.IsPrincipal.span_singleton_generator]
+    rw [FractionalIdeal.coeToSubmodule_spanSingleton, Submodule.IsPrincipal.span_singleton_generator]
   have hg : g ≠ 0 := by
     intro h0
     apply J.ne_zero
@@ -601,7 +601,7 @@ theorem exists_finset_divisor_cover (L : Type) [Field L] [NumberField L] :
       FractionalIdeal.spanSingleton (𝓞 L)⁰ z := by
     apply FractionalIdeal.coeToSubmodule_injective
     dsimp only
-    rw [FractionalIdeal.coe_spanSingleton, Submodule.IsPrincipal.span_singleton_generator]
+    rw [FractionalIdeal.coeToSubmodule_spanSingleton, Submodule.IsPrincipal.span_singleton_generator]
   have hz0 : z ≠ 0 := by
     intro h0
     apply (J * J₀⁻¹).ne_zero
@@ -636,11 +636,11 @@ theorem finite_under (L : Type) [Field L] [NumberField L] (T : Finset (HeightOne
     obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot v.ne_bot
     have hm0' : (m : L) ≠ 0 := by exact_mod_cast hm0
     refine (finite_valuation_ne_one L hm0').subset fun w hw => ?_
-    simp only [Set.mem_setOf_eq] at hw ⊢
+    simp only [Set.mem_ofPred_eq] at hw ⊢
     have := (mem_under_iff L w m).1 (by rw [hw]; exact hm)
     exact ne_of_lt this
   refine (Set.Finite.biUnion T.finite_toSet fun v _ => h v).subset fun w hw => ?_
-  simp only [Set.mem_setOf_eq] at hw
+  simp only [Set.mem_ofPred_eq] at hw
   exact Set.mem_biUnion hw rfl
 
 def conjEquiv {L : Type} [Field L] [Algebra ℚ L] (c : L →ₐ[ℚ] L) (hc : ∀ x, c (c x) = x) : L ≃ₐ[ℚ] L :=
@@ -670,7 +670,7 @@ theorem ord_conj (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L) (hc 
 theorem valuation_rat_eq (L : Type) [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L)) {Q q : ℚ}
     (h : (w.under ℤ).valuation ℚ Q = (w.under ℤ).valuation ℚ q) :
     w.valuation L (algebraMap ℚ L Q) = w.valuation L (algebraMap ℚ L q) := by
-  haveI : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
+  have : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
   rw [← HeightOneSpectrum.valuation_liesOver L (w.under ℤ) w Q, ← HeightOneSpectrum.valuation_liesOver L (w.under ℤ) w q, h]
 
 theorem log_injective {x y : WithZero (Multiplicative ℤ)} (hx : x ≠ 0) (hy : y ≠ 0)
@@ -695,7 +695,7 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
   let B : (HeightOneSpectrum (𝓞 L) → ℤ) → L := fun φ => if h : ∃ b, P φ b then h.choose else 1
   have hB : ∀ φ b, P φ b → P φ (B φ) := fun φ b hb => by
     have h : ∃ b, P φ b := ⟨b, hb⟩
-    simp only [B, dif_pos h]
+    simp only [B, dite_eq_left h]
     exact h.choose_spec
   refine ⟨(Φ ×ˢ S₆).image (fun p => B p.1 * p.2), fun a ha => ?_⟩
   obtain ⟨ha0, hca, hloc⟩ := hX a ha
@@ -718,16 +718,16 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
   have hk : ∀ᶠ v in Filter.cofinite, k v = 0 := by
     refine Filter.eventually_cofinite.2 ((T.finite_toSet).subset fun v hv => ?_)
     by_contra h
-    exact hv (if_neg (fun h' => h h'.1))
+    exact hv (ite_eq_right (fun h' => h h'.1))
   obtain ⟨Q, hQ0, hQ⟩ := exists_rat_of_divisor k hk
   let n : HeightOneSpectrum (𝓞 L) → ℤ := fun w =>
     if w.under ℤ ∈ S then ord w a / 2 else if w.under ℤ ∈ T then ord w (zv (w.under ℤ)) else 0
   have hn : ∀ᶠ w in Filter.cofinite, n w = 0 := by
     refine Filter.eventually_cofinite.2 ((finite_under L (S ∪ T)).subset fun w hw => ?_)
-    simp only [Set.mem_setOf_eq, Finset.mem_union] at hw ⊢
+    simp only [Set.mem_ofPred_eq, Finset.mem_union] at hw ⊢
     by_contra h
     push_neg at h
-    exact hw (by simp only [n, if_neg h.1, if_neg h.2])
+    exact hw (by simp only [n, ite_eq_right h.1, ite_eq_right h.2])
   obtain ⟨f, hfF, z₁, hz₁, hnf⟩ := hF n hn
   let Δ : Finset (HeightOneSpectrum (𝓞 L)) := WS.filter (fun w => ord w a % 2 = 1)
   let φ : HeightOneSpectrum (𝓞 L) → ℤ := fun w => (if w ∈ Δ then 1 else 0) + f w + f (conjEquiv c hc • w)
@@ -739,12 +739,12 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
     have h := hQ (w.under ℤ)
     simp only [k] at h
     split_ifs with hc'
-    · rw [if_pos hc'] at h
+    · rw [ite_eq_left hc'] at h
       have hq0 := hqv _ hc'.2
       have e : (w.under ℤ).valuation ℚ Q = (w.under ℤ).valuation ℚ (qv (w.under ℤ)) :=
         log_injective ((Valuation.ne_zero_iff _).2 hQ0) ((Valuation.ne_zero_iff _).2 hq0) (by omega)
       simp only [ord, valuation_rat_eq L w e]
-    · rw [if_neg hc'] at h
+    · rw [ite_eq_right hc'] at h
       have e : (w.under ℤ).valuation ℚ Q = (w.under ℤ).valuation ℚ 1 := by
         rw [map_one]
         exact log_injective ((Valuation.ne_zero_iff _).2 hQ0) one_ne_zero (by rw [WithZero.log_one]; omega)
@@ -758,12 +758,12 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
     rw [hQw w]
     by_cases hS : w.under ℤ ∈ S
     · have hWS : w ∈ WS := (finite_under L S).mem_toFinset.2 hS
-      rw [if_neg (fun h => h.2 hS)]
-      simp only [n, hu, if_pos hS, hσa, Δ, Finset.mem_filter, hWS, true_and, not_true, and_false, if_false]
+      rw [ite_eq_right (fun h => h.2 hS)]
+      simp only [n, hu, ite_eq_left hS, hσa, Δ, Finset.mem_filter, hWS, true_and, not_true, and_false, ite_false]
       split_ifs with h2 <;> omega
     · have hnWS : w ∉ Δ := fun h => hS ((finite_under L S).mem_toFinset.1 (Finset.mem_filter.1 h).1)
       by_cases hT' : w.under ℤ ∈ T
-      · haveI : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
+      · have : w.asIdeal.LiesOver (w.under ℤ).asIdeal := ⟨HeightOneSpectrum.under_asIdeal ℤ w⟩
         have hv := hval (w.under ℤ) hS w inferInstance
         have hq0 : algebraMap ℚ L (qv (w.under ℤ)) ≠ 0 := by simpa using hqv _ hS
         have hz0 := hzv _ hS
@@ -775,13 +775,13 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
             (mul_ne_zero ((Valuation.ne_zero_iff _).2 hz0) ((Valuation.ne_zero_iff _).2 hcz0)),
             WithZero.log_mul ((Valuation.ne_zero_iff _).2 hz0) ((Valuation.ne_zero_iff _).2 hcz0)]
           ring
-        rw [e, ord_conj L c hc, if_pos ⟨hT', hS⟩]
-        simp only [n, hu, if_neg hS, if_pos hT', hnWS, if_false, hT', not_false_eq_true, and_self, if_true]
+        rw [e, ord_conj L c hc, ite_eq_left ⟨hT', hS⟩]
+        simp only [n, hu, ite_eq_right hS, ite_eq_left hT', hnWS, ite_false, hT', not_false_eq_true, and_self, ite_true]
         ring
       · have h1 := hT w hT'
         have e : ord w a = 0 := (ord_eq_zero_iff w ha0).2 h1
-        rw [if_neg (fun h => hT' h.1)]
-        simp only [n, hu, if_neg hS, if_neg hT', hnWS, if_false, e]
+        rw [ite_eq_right (fun h => hT' h.1)]
+        simp only [n, hu, ite_eq_right hS, ite_eq_right hT', hnWS, ite_false, e]
         ring
 
   have hcz₁ : c z₁ ≠ 0 := fun h => hz₁ (by rw [← hc z₁, h, map_zero])
@@ -929,8 +929,8 @@ theorem units_conj_of_minpoly_eq_of_irreducible : ∀ (p : ℕ) [Fact p.Prime] (
       ∃ g : G.Cˣ, (a : G.C) = g * b * ↑g⁻¹ := by
   intro p _ G a b h hirr
   have hb : IsIntegral G.F (b : G.C) := IsIntegral.of_finite G.F _
-  haveI : Fact (Irreducible (minpoly G.F (b : G.C))) := ⟨hirr⟩
-  haveI : FiniteDimensional G.F (AdjoinRoot (minpoly G.F (b : G.C))) :=
+  have : Fact (Irreducible (minpoly G.F (b : G.C))) := ⟨hirr⟩
+  have : FiniteDimensional G.F (AdjoinRoot (minpoly G.F (b : G.C))) :=
     (AdjoinRoot.powerBasis (minpoly.ne_zero hb)).finite
   have ha : Polynomial.aeval (a : G.C) (minpoly G.F (b : G.C)) = 0 := by rw [← h]; exact minpoly.aeval _ _
   obtain ⟨y, hy⟩ := GroundTheory.Brauer.exists_unit_conj (evalQuot _ (b : G.C) (minpoly.aeval _ _))
@@ -1192,7 +1192,7 @@ theorem finite_of_compact (Ω : Set G.GAf) (hΩ : IsCompact Ω) (γ₀ : G.Cˣ)
   obtain ⟨b, hb, q, z, hq, hz, hab⟩ := hR a ⟨P, hP, hPa⟩
   have hex : ∃ P', good b (decide (0 < q) = true) P' := ⟨P, hP, a, q, z, hPa, decide_eq_true_iff.symm, hq, hz, hab⟩
   refine ⟨(b, decide (0 < q)), Finset.mem_coe.2 (Finset.mem_product.2 ⟨hb, Finset.mem_univ _⟩), ?_⟩
-  have hrep : rep (b, decide (0 < q)) = hex.choose := dif_pos hex
+  have hrep : rep (b, decide (0 < q)) = hex.choose := dite_eq_left hex
   obtain ⟨hP', a', q', z', hPa', hsgn, hq', hz', hab'⟩ := hex.choose_spec
   simp only [hrep]
   apply Quot.sound
@@ -1354,9 +1354,9 @@ theorem irreducible_minpoly_inv (G : HTGroup p) (γ : G.Cˣ) (hirr : Irreducible
     Irreducible (minpoly G.F ((γ⁻¹ : G.Cˣ) : G.C)) := by
   have hi : IsIntegral G.F (γ : G.C) := Algebra.IsIntegral.isIntegral _
   set m := minpoly G.F (γ : G.C) with hmdef
-  haveI : Fact (Irreducible m) := ⟨hirr⟩
+  have : Fact (Irreducible m) := ⟨hirr⟩
   have hm0 : m ≠ 0 := minpoly.ne_zero hi
-  haveI : FiniteDimensional G.F (AdjoinRoot m) := (AdjoinRoot.powerBasis hm0).finite
+  have : FiniteDimensional G.F (AdjoinRoot m) := (AdjoinRoot.powerBasis hm0).finite
   have hz : ∀ a : Polynomial G.F, a ∈ Ideal.span {m} → Polynomial.aeval (γ : G.C) a = 0 := by
     intro a ha
     obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton.1 ha
@@ -1389,11 +1389,11 @@ theorem exists_emb_isRoot_irr {F C E : Type} [Field F] [NumberField F] [Ring C] 
     (y : C) (hirr : Irreducible (minpoly F y)) (μ : E) (h : ((minpoly ℚ y).map (algebraMap ℚ E)).IsRoot μ) :
     ∃ τ : F →+* E, ((minpoly F y).map τ).IsRoot μ := by
   have hyi : IsIntegral F y := IsIntegral.of_finite F y
-  haveI : Fact (Irreducible (minpoly F y)) := ⟨hirr⟩
-  haveI : FiniteDimensional F (AdjoinRoot (minpoly F y)) :=
+  have : Fact (Irreducible (minpoly F y)) := ⟨hirr⟩
+  have : FiniteDimensional F (AdjoinRoot (minpoly F y)) :=
     (AdjoinRoot.powerBasis (minpoly.ne_zero hyi)).finite
-  haveI : FiniteDimensional ℚ (AdjoinRoot (minpoly F y)) := Module.Finite.trans F _
-  haveI : Algebra.IsAlgebraic ℚ (AdjoinRoot (minpoly F y)) := Algebra.IsAlgebraic.of_finite ℚ _
+  have : FiniteDimensional ℚ (AdjoinRoot (minpoly F y)) := Module.Finite.trans F _
+  have : Algebra.IsAlgebraic ℚ (AdjoinRoot (minpoly F y)) := Algebra.IsAlgebraic.of_finite ℚ _
   set r := AdjoinRoot.root (minpoly F y)
   have hdvd : minpoly ℚ y ∣ minpoly ℚ r := by
     apply minpoly.dvd
@@ -1502,7 +1502,7 @@ theorem integral_of_term_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) 
       IsIntegral ℤ ((N : ℤ) • (P.γ : G.C)) ∧ IsIntegral ℤ ((N : ℤ) • ((P.γ⁻¹ : G.Cˣ) : G.C)) := open scoped Pointwise in by
   classical
   intro p _ G L f r K φ hr hf hφ
-  letI : Inv (Set G.GAf) := Set.inv
+  let : Inv (Set G.GAf) := Set.inv
   obtain ⟨Ω, hΩc, hΩ⟩ := GlobalTheory.T.twistedHeckeTestFunction_support_compact p G L f hf
   obtain ⟨D, hD, hDp⟩ := GlobalTheory.T.compact_conj_charpoly_bounded_denominators_awayP p G (Ω ∪ Ω⁻¹) (hΩc.union hΩc.inv)
   obtain ⟨k, hk⟩ := GlobalTheory.T.twisted_orbit_norm_bounds p G r K φ hr hφ
@@ -1589,7 +1589,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem roots_eig (G : HTGroup p) (P : DPair G) (v : InfinitePlace G.F) (w : ℂ)
     (hw : P.pol.eval₂ v.embedding w = 0) : ∃ x : Fin G.n → ℂ, x ≠ 0 ∧ G.psi v P.γ *ᵥ x = w • x := by
-  letI : Algebra G.F ℂ := v.embedding.toAlgebra
+  let : Algebra G.F ℂ := v.embedding.toAlgebra
   let ψF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ :=
     { G.psi v with
       commutes' := fun x => by
@@ -1598,8 +1598,8 @@ theorem roots_eig (G : HTGroup p) (P : DPair G) (v : InfinitePlace G.F) (w : ℂ
         rfl }
   let Ψ : ℂ ⊗[G.F] G.C →ₐ[ℂ] Matrix (Fin G.n) (Fin G.n) ℂ :=
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) ψF (fun a _ => Algebra.commute_algebraMap_left a _)
-  haveI : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
-    haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
+    have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
     infer_instance
   have hinj : Function.Injective Ψ := RingHom.injective (Ψ : ℂ ⊗[G.F] G.C →+* Matrix (Fin G.n) (Fin G.n) ℂ)
   set Γ := G.psi v P.γ with hΓ

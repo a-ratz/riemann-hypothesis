@@ -242,7 +242,7 @@ theorem dX_surj (h₁ : Q.Crit a r) (h₂ : Q.Crit a (r - 1)) (h₃ : Q.Crit b r
     refine (h₁ T c).2 fun k => ?_
     cases k with
     | zero =>
-      have : c 0 = 0 := Finsupp.mapDomain_notin_range _ _ (by simp)
+      have : c 0 = 0 := Finsupp.mapDomain_of_notMem_range _ _ (by simp)
       rw [this]
       exact Ideal.zero_mem _
     | succ k =>

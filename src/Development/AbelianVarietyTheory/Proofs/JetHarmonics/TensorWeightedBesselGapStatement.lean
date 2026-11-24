@@ -99,7 +99,7 @@ theorem coef_mul_split : PI.KFinSmooth → ∀ (k r : ℕ) (ι κ : Type) [Finty
   · intro I κ₀ κ₁ h0 h1
     rw [hs, Finset.mul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    rw [h0 _ (hsm _ (hxy i).1), h1 _ (hsm _ (hxy i).2), map_smul, ContinuousLinearMap.smul_apply,
+    rw [h0 _ (hsm _ (hxy i).1), h1 _ (hsm _ (hxy i).2), map_smul, smul_apply,
       inner_smul_left, inner_smul_right, inner_smul_right]
     simp only [starRingEnd_apply]
     ring

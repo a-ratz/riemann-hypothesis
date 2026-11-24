@@ -408,7 +408,7 @@ theorem assemble {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] 
     exact hQt z' c hc
   have hQconj : ∀ z, Qf (fun p => starRingEnd ℂ (z p)) = Qf z := by
     intro z
-    simp only [Qf, Fintype.sum_prod_type, Fintype.sum_bool, GG, aa, if_true, if_false,
+    simp only [Qf, Fintype.sum_prod_type, Fintype.sum_bool, GG, aa, ite_true, ite_false,
       Bool.false_eq_true, nd_conj]
     refine Finset.sum_congr rfl fun j _ => ?_
     have e1 : MvPolynomial.eval (fun p => starRingEnd ℂ (z p)) (MvPolynomial.map (starRingEnd ℂ) (G j)) =
@@ -691,11 +691,11 @@ theorem padExp_apply (p : (k : K) → ι k) (T : ℕ) (m : (Σ k, ι k) →₀ �
   · rw [Finsupp.single_apply]
     by_cases h : i = p k
     · subst h; simp
-    · rw [if_neg, if_neg h]
+    · rw [ite_eq_right, ite_eq_right h]
       intro e
       exact h (eq_of_heq (Sigma.mk.inj_iff.1 e).2).symm
   · intro b _ hb
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro e
     exact hb (Sigma.mk.inj_iff.1 e).1
   · simp
@@ -707,7 +707,7 @@ theorem blkDeg_padExp (p : (k : K) → ι k) (T : ℕ) (m : (Σ k, ι k) →₀ 
   simp only [padExp_apply]
   rw [Finset.sum_eq_single (p k)]
   · simp [blkDeg]
-  · intro b _ hb; rw [if_neg hb]
+  · intro b _ hb; rw [ite_eq_right hb]
   · simp
 
 theorem blkDeg_le_totalDegree {Q : MvPolynomial (Σ k, ι k) ℂ} {m : (Σ k, ι k) →₀ ℕ} (hm : m ∈ Q.support)
@@ -757,8 +757,8 @@ theorem exists_homogenize (p : (k : K) → ι k) (Q : MvPolynomial (Fin (Fintype
     rw [Fintype.prod_sigma, Fintype.prod_sigma, Fintype.prod_sigma]
     have hpad : ∀ k, ∏ i, z ⟨k, i⟩ ^ padExp p T m ⟨k, i⟩ = z ⟨k, p k⟩ ^ (T - blkDeg m k) := fun k => by
       rw [Finset.prod_eq_single (p k)]
-      · rw [padExp_apply, if_pos rfl]
-      · intro b _ hb; rw [padExp_apply, if_neg hb, pow_zero]
+      · rw [padExp_apply, ite_eq_left rfl]
+      · intro b _ hb; rw [padExp_apply, ite_eq_right hb, pow_zero]
       · simp
     simp only [hpad, ReciprocityTheory.AnForm.R.affCoord, div_pow]
     have hden : ∀ k, ∏ i, z ⟨k, p k⟩ ^ m ⟨k, i⟩ = z ⟨k, p k⟩ ^ blkDeg m k := fun k => by
@@ -780,7 +780,7 @@ theorem exists_homogenize (p : (k : K) → ι k) (Q : MvPolynomial (Fin (Fintype
     refine Finset.sum_eq_zero fun m hm => ?_
     rw [eval_monomial, Finsupp.prod_fintype _ _ (fun _ => pow_zero _)]
     refine mul_eq_zero_of_right _ (Finset.prod_eq_zero (Finset.mem_univ ⟨k, p k⟩) ?_)
-    rw [hk, Finsupp.coe_add, Pi.add_apply, padExp_apply, if_pos rfl]
+    rw [hk, Finsupp.coe_add, Pi.add_apply, padExp_apply, ite_eq_left rfl]
     exact zero_pow (by have := hlt m hm k; omega)
 
 end
@@ -962,7 +962,7 @@ theorem exists_res {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
       null := fun j => by
         refine MeasureTheory.measure_mono_null (fun t ht => ?_) MeasureTheory.measure_empty
         have h3 := ht.2
-        simp only [Set.mem_preimage, Set.mem_setOf_eq] at h3
+        simp only [Set.mem_preimage, Set.mem_ofPred_eq] at h3
         exact absurd h3 (fun h => by simpa using h.2 1 trivial) }
   refine ⟨Rb, R.rc, R.comp, fun x₀ => ?_⟩
   have hx : x₀ ∈ R.src (idx x₀) := hidx x₀
@@ -980,12 +980,12 @@ theorem exists_res {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
     intro k l
     by_cases h : ∃ l, d.σ l = some k
     · have hc0 := Classical.choose_spec h
-      simp only [σ', dif_pos h, Option.some.injEq]
+      simp only [σ', dite_eq_left h, Option.some.injEq]
       constructor
       · rintro rfl; exact hc0
       · intro hl
         exact d.σ_injOn (hJ' _ _ hc0) (hJ' _ _ hl) (by rw [hc0, hl])
-    · simp only [σ', dif_neg h]
+    · simp only [σ', dite_eq_right h]
       constructor
       · intro h'; cases h'
       · intro hl; exact absurd ⟨l, hl⟩ h
@@ -1202,10 +1202,10 @@ theorem le_mCoordIdeal_of_torus {bd : Ideal (MRing J)} {z : (Σ k, J k) → ℂ}
 theorem exists_algHom_ker_eq {S : Type} [CommRing S] [Algebra ℚ S] [Algebra.FiniteType ℚ S] (m : Ideal S)
     [m.IsMaximal] : ∃ ev : S →ₐ[ℚ] ℂ, RingHom.ker ev = m := by
   let _ : Field (S ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType ℚ (S ⧸ m) :=
+  have : Algebra.FiniteType ℚ (S ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℚ m) (Ideal.Quotient.mkₐ_surjective ℚ m)
-  haveI : Module.Finite ℚ (S ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℚ (S ⧸ m)
-  haveI : Algebra.IsAlgebraic ℚ (S ⧸ m) := Algebra.IsAlgebraic.of_finite ℚ _
+  have : Module.Finite ℚ (S ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℚ (S ⧸ m)
+  have : Algebra.IsAlgebraic ℚ (S ⧸ m) := Algebra.IsAlgebraic.of_finite ℚ _
   let φ : (S ⧸ m) →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1223,7 +1223,7 @@ theorem cond_of_bd {Ω : Type} [Field Ω] [CharZero Ω] {x : (Σ k, J k) → Ω}
     ∀ g ∈ (⨅ z ∈ mcPts (mCoordIdeal x) ∩ mcPts bd, mCoordIdeal z), ∀ s : S,
       (s : Ω) = MvPolynomial.aeval (fun p : Σ k, J k => x p / x ⟨p.1, c p.1⟩) g → s ∈ q := by
   intro g hg s hs
-  haveI : IsJacobsonRing S := isJacobsonRing_of_finiteType (A := ℚ)
+  have : IsJacobsonRing S := isJacobsonRing_of_finiteType (A := ℚ)
   have hjac : q.jacobson = q := isJacobsonRing_iff_prime_eq.mp inferInstance q hq
   rw [← hjac]
   refine Ideal.mem_sInf.2 ?_
@@ -1321,7 +1321,7 @@ theorem exists_homogIdeal {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintyp
     · intro h
       have hfin : (insert (f l)⁻¹ (Set.range fun p : Σ k, J k => x p / x ⟨p.1, c' p.1⟩)).Finite :=
         (Set.finite_range _).insert _
-      haveI : Algebra.FiniteType ℚ S := by
+      have : Algebra.FiniteType ℚ S := by
         rw [← Subalgebra.fg_iff_finiteType, hS, ← hfin.coe_toFinset]
         exact Subalgebra.fg_adjoin_finset _
       have hρ : ∀ p : Σ k, J k, x p / x ⟨p.1, c' p.1⟩ ∈ S := fun p => by

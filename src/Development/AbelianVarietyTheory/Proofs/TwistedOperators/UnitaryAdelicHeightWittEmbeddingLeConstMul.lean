@@ -95,7 +95,7 @@ theorem map_aff {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (A : 
   rw [Matrix.map_add _ (map_add φ), Matrix.map_mul, Matrix.map_mul]
 
 theorem opNorm_add_le (a b : Matrix n n ℂ) : opNorm (a + b) ≤ opNorm a + opNorm b := by
-  unfold opNorm; rw [map_add (f := _)]; exact nnnorm_add_le _ _
+  unfold opNorm; rw [map_add (f := _)]; exact nnNorm_add_le _ _
 
 theorem exists_opNorm_mul_mul_le (B : Matrix n m ℂ) (C : Matrix m n ℂ) :
     ∃ K : ℝ≥0, ∀ y : Matrix m m ℂ, opNorm (B * y * C) ≤ K * opNorm y := by
@@ -189,8 +189,8 @@ theorem exists_heightGL_aff_le (A : Matrix n n (AF F ⊗[F] E)) (B : Matrix n m 
   unfold heightGL
   rw [mul_mul_mul_comm, ← Finset.prod_mul_distrib,
     ← finprod_mul_distrib hfin (finite_mulSupport_htFin F x)]
-  refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_)
-    (finprod_le_finprod' (finite_mulSupport_htFin F _) (hfin.union (finite_mulSupport_htFin F x) |>.subset
+  refine mul_le_mul' (Finset.prod_le_prod fun w _ => ?_)
+    (finprod_le_finprod (finite_mulSupport_htFin F _) (hfin.union (finite_mulSupport_htFin F x) |>.subset
       (Function.mulSupport_mul _ _)) fun v => ?_)
   · refine htOf_le_mul (hcw1 w) _ _ ?_ ?_
     · rw [bc_val_aff _ _ _ _ h1]; exact hcw w _

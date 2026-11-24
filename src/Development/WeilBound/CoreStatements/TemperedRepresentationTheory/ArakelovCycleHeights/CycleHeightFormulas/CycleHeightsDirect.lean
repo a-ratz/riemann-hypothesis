@@ -132,11 +132,11 @@ open GlobalTheory.ArithmeticHeightTower ReciprocityTheory.ChartRestriction.G.AI.
 theorem charZero_genericPt {n' m : ℕ} {n : Fin (m + 1) → ℕ} {Y : Scheme.{0}} [IsIntegral Y]
     {j : Y ⟶ MP ℤ (m + 1) (consN n' n)} {e : ℕ} (hvar : GlobalTheory.IsArithVar (j ≫ qpStr n' m n) e) :
     CharZero ((MP ℤ (m + 1) (consN n' n)).residueField (j (genericPoint Y))) := by
-  haveI h0 : CharZero Γ(Y, ⊤) := hvar.charZero
+  have h0 : CharZero Γ(Y, ⊤) := hvar.charZero
   have hinj : Function.Injective ((Y.residue (genericPoint Y)).hom.comp
       (Y.presheaf.germ ⊤ (genericPoint Y) trivial).hom) :=
     (Y.residue (genericPoint Y)).hom.injective.comp (germ_injective_of_isIntegral Y _ _)
-  haveI h1 : CharZero (Y.residueField (genericPoint Y)) := charZero_of_injective_ringHom hinj
+  have h1 : CharZero (Y.residueField (genericPoint Y)) := charZero_of_injective_ringHom hinj
   exact (RingHom.charZero_iff (j.residueFieldMap (genericPoint Y)).hom.injective).2 h1
 
 theorem charZero_image (n' m : ℕ) (n : Fin (m + 1) → ℕ) (x : MP ℤ (m + 1) (consN n' n))
@@ -204,7 +204,7 @@ theorem prod_X_eq {ι : Type} {m : ℕ} (f : Fin m → ι) (a : Fin m → ℝ) :
     | empty => simp
     | insert x s hx ih =>
       rw [Finset.prod_insert hx, Finset.prod_insert hx, Finset.sum_insert hx, ih, X,
-        C_mul_monomial, monomial_mul]
+        C_mul_monomial, monomial_mul_monomial]
       simp
   exact key Finset.univ
 
@@ -231,7 +231,7 @@ theorem coef_cnt {ι : Type} {m : ℕ} (F : (Fin m → ι) → ℝ)
 
 theorem coef_of_degree_ne {ι : Type} {m : ℕ} (F : (Fin m → ι) → ℝ) {k : ι →₀ ℕ}
     (hk : k.degree ≠ m) : coef F k = 0 := by
-  refine dif_neg ?_
+  refine dite_eq_right ?_
   rintro ⟨f, rfl⟩
   exact hk (degree_cnt f)
 
@@ -340,20 +340,20 @@ theorem codimOne_holds : CodimOne := by
   intro X _ p D hD z hz
   let C : Closeds X := ⟨closure {z}, isClosed_closure⟩
   let I := Scheme.IdealSheafData.vanishingIdeal C
-  haveI : IsReduced I.subscheme := GlobalTheory.ReducedSubgroup.isReduced_subscheme_vanishingIdeal C
+  have : IsReduced I.subscheme := GlobalTheory.ReducedSubgroup.isReduced_subscheme_vanishingIdeal C
   have hrange : Set.range I.subschemeι = closure {z} := by
     rw [Scheme.IdealSheafData.range_subschemeι]
     rfl
   have hemb : Topology.IsEmbedding I.subschemeι := I.subschemeι.isClosedEmbedding.isEmbedding
-  haveI : IrreducibleSpace I.subscheme := by
+  have : IrreducibleSpace I.subscheme := by
     have hs : IsIrreducible (Set.range I.subschemeι) := by
       rw [hrange]; exact isIrreducible_singleton.closure
-    haveI := Subtype.irreducibleSpace hs
+    have := Subtype.irreducibleSpace hs
     have h2 := (IrreducibleSpace.isIrreducible_univ (Set.range I.subschemeι)).image
       hemb.toHomeomorph.symm hemb.toHomeomorph.symm.continuous.continuousOn
     rw [Set.image_univ_of_surjective hemb.toHomeomorph.symm.surjective] at h2
     exact (irreducibleSpace_def _).2 h2
-  haveI : IsIntegral I.subscheme := isIntegral_of_irreducibleSpace_of_isReduced _
+  have : IsIntegral I.subscheme := isIntegral_of_irreducibleSpace_of_isReduced _
   have hgen : I.subschemeι (genericPoint I.subscheme) = z := by
     have h1 := (genericPoint_spec I.subscheme).image I.subschemeι.continuous
     rw [Set.image_univ, hrange, closure_closure] at h1
@@ -639,7 +639,7 @@ theorem exists_isMultiHomog_eq (c : ∀ k, Bk n k) (hc : ∀ k, ε (MvPolynomial
     intro μ hμ k
     have : μ = 0 := by
       by_contra h
-      exact (mem_support_iff.1 hμ) (by rw [coeff_C, if_neg (Ne.symm h)])
+      exact (mem_support_iff.1 hμ) (by rw [coeff_C, ite_eq_right (Ne.symm h)])
     simp [this]
   | add p q hp hq =>
     obtain ⟨d₁, p', h₁, e₁⟩ := hp
@@ -736,7 +736,7 @@ theorem multAt_eq {z : X} (hz : z ∈ i ⁻¹ᵁ mchart c) {s : Pol n} {a : Fin 
       (isWeightedHomogeneous_X ℤ (coordDeg n) ⟨k, c k⟩))).1 h
     rw [phi_X_chart] at h1
     exact (Ideal.ne_top_iff_one _).1 (Ideal.IsPrime.ne_top inferInstance) h1
-  haveI : Nonempty (i ⁻¹ᵁ mchart c) := ⟨⟨z, hz⟩⟩
+  have : Nonempty (i ⁻¹ᵁ mchart c) := ⟨⟨z, hz⟩⟩
   have key := multAt_eq_localQuotLength_of (phi i c) (cone (phi i c))
     (fun hF => cone_of_isMultiHomog _ ((geoMultiHomog_iff _ _).2 hF)) (ptIdeal (i z)) (phi_surjective c)
     (ptIdeal (i (genericPoint X)))
@@ -753,8 +753,8 @@ theorem ord_fnAt {z : X} (h1 : Order.coheight z = 1) (hz : z ∈ i ⁻¹ᵁ mcha
     (hsP : s ∉ ptIdeal (i (genericPoint X))) :
     Scheme.ord (fnAt i c hc s) z = multAt (ptIdeal (i (genericPoint X)) ⊔ Ideal.span {s}) (ptIdeal (i z)) := by
   rw [multAt_eq c hz hs]
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨z, hz⟩ : i ⁻¹ᵁ mchart c)
-  haveI : IsLocalization.AtPrime (X.presheaf.stalk z) (qOf c hz) :=
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨z, hz⟩ : i ⁻¹ᵁ mchart c)
+  have : IsLocalization.AtPrime (X.presheaf.stalk z) (qOf c hz) :=
     (isAffineOpen_preimage c).isLocalization_stalk ⟨z, hz⟩
   have e1 : fnAt i c hc s = algebraMap (X.presheaf.stalk z) X.functionField
       (X.presheaf.germ _ z hz (phi i c s)) := (algebraMap_germ hz _).symm
@@ -1039,7 +1039,7 @@ theorem readComb : ReadComb := by
   · rw [ha, Finset.sum_map_toList]
     rfl
   · rw [hh z hz, Finset.prod_map_toList]
-    exact (if_pos hz).symm
+    exact (ite_eq_left hz).symm
 
 end GlobalTheory.CompanionTheory.MixZ
 end -- clump:auto
@@ -1349,21 +1349,21 @@ theorem vertical_eq (h₃ : PtDict) (hV : VertEq) (II : IntersectionSystem) (N :
   obtain ⟨-, hp₃, -, hp₅⟩ := h₃ m n Z i d hd
   have hnh : ¬ IsHorizontal (ptIdeal (i (genericPoint Z))) := by
     intro hh
-    haveI hc : CharZero Γ(Z, ⊤) := hp₃.1 hh
+    have hc : CharZero Γ(Z, ⊤) := hp₃.1 hh
     obtain ⟨p, hp⟩ := CharP.exists κ
-    haveI := hp
+    have := hp
     have hp0 : p ≠ 0 := CharP.char_ne_zero_of_finite κ p
     have h0 : (p : Γ(Z, ⊤)) = 0 := by
       rw [← map_natCast (algebraMap κ Γ(Z, ⊤)) p, CharP.cast_eq_zero, map_zero]
     exact hp0 (Nat.cast_eq_zero.1 h0)
   obtain ⟨hpr, hz⟩ := hp₅ hnh
-  rw [cycVal, if_neg hnh]
+  rw [cycVal, ite_eq_right hnh]
   generalize charOf (ptIdeal (i (genericPoint Z))) = l at hpr hz ⊢
-  haveI : Fact l.Prime := ⟨hpr⟩
-  haveI : CharP Γ(Z, ⊤) l := charP_of_cast hpr hz
-  haveI : CharP κ l := (RingHom.charP_iff (algebraMap κ Γ(Z, ⊤)) (algebraMap κ Γ(Z, ⊤)).injective l).2 inferInstance
-  letI : Algebra (ZMod l) κ := ZMod.algebra κ l
-  letI : Algebra (ZMod l) Γ(Z, ⊤) := ZMod.algebra _ l
+  have : Fact l.Prime := ⟨hpr⟩
+  have : CharP Γ(Z, ⊤) l := charP_of_cast hpr hz
+  have : CharP κ l := (RingHom.charP_iff (algebraMap κ Γ(Z, ⊤)) (algebraMap κ Γ(Z, ⊤)).injective l).2 inferInstance
+  let : Algebra (ZMod l) κ := ZMod.algebra κ l
+  let : Algebra (ZMod l) Γ(Z, ⊤) := ZMod.algebra _ l
   have e₀ := GlobalTheory.ArithmeticHeightTower.TowerCopy.topSelf_eq_finrank_mul (X := Z) (ZMod l) κ
     (fun a => RingHom.congr_fun (Subsingleton.elim (algebraMap (ZMod l) Γ(Z, ⊤))
       ((algebraMap κ Γ(Z, ⊤)).comp (algebraMap (ZMod l) κ))) a) (N.B.pull i) d
@@ -1375,7 +1375,7 @@ theorem vertical_eq (h₃ : PtDict) (hV : VertEq) (II : IntersectionSystem) (N :
     topSelf_congr (ZMod l) (N.restr i).isLB ((N.pull (𝟙 _) (Category.id_comp _)).restr i).isLB pullIso d
   have e₃ : (𝟙 (MP ℤ m n) : _ ⟶ _) (i (genericPoint Z)) = i (genericPoint Z) := by simp
   rw [e₃] at e₁
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Fintype κ := Fintype.ofFinite κ
   have e₄ : Nat.card κ = l ^ Module.finrank (ZMod l) κ := by
     rw [Nat.card_eq_fintype_card, Module.card_eq_pow_finrank (K := ZMod l) (V := κ), ZMod.card]
   rw [← e₁, ← e₂, e₀, e₄]
@@ -1412,7 +1412,7 @@ theorem rec_pow (h₅ : ExistsRat) (h₆ : CycleOfRat) (h₇ : ArchIntEq) (h₈ 
       simp only [HermLB.archInt, e₁]
       exact finsum_congr fun σ => (Weight.chernInt_congr (isOpen_offSupp _).measurableSet (e₂ σ)).symm
     have e₄ : ((N.restr i).pow mm).div hr = ((N.pow mm).restr i).div hr' := e₁.symm
-    rw [cycVal, if_pos hP.2.2.1, ← hpw, hrr, e₃, hint, e₄, hcyc]
+    rw [cycVal, ite_eq_left hP.2.2.1, ← hpw, hrr, e₃, hint, e₄, hcyc]
     rfl
 
 theorem exists_height (h₃ : PtDict) (h₄ : CodimOne) (h₅ : ExistsRat) (h₆ : CycleOfRat) (h₇ : ArchIntEq)
@@ -1453,13 +1453,13 @@ theorem combLine_single [DecidableEq κ] (A : κ → HermLine ι)
   · funext z
     by_cases hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0
     · simp only [combLine]
-      rw [if_pos hz, Finset.prod_eq_single o]
+      rw [ite_eq_left hz, Finset.prod_eq_single o]
       · simp
       · intro b _ hb
         simp [Pi.single_apply, hb]
       · simp
     · simp only [combLine]
-      rw [if_neg hz, cA o z hz]
+      rw [ite_eq_right hz, cA o z hz]
 
 theorem expand_comb (A : κ → HermLine ι) (sA : ∀ o, IsSmoothHerm (A o))
     (cA : ∀ j z, (¬ ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) → (A j).h z = 0) (e : ℕ) (F : (Fin e → HermLine ι) → ℝ)
@@ -1566,7 +1566,7 @@ theorem formZ_direct :
   have H := exists_height h₃ codimOne_holds _root_.GlobalTheory.CompanionTheory.MixZ.ExRat.existsRat _root_.GlobalTheory.CompanionTheory.MixZ.CycleRat.cycleOfRat h₇ h₈ GlobalTheory.CompanionTheory.MixZ.Vert.vertEq GlobalTheory.CompanionTheory.MixZ.PtLenProof.ptLen curveInt hR II hII
     (comb M a) (combLine A a) Rc sC
   refine ⟨_, (isometric_comb_pull M a i rfl).symm.isArithHeight hX (H.restrict (mp_var m n) i rfl), ?_⟩
-  rw [htFn_eq II _ ((dim_of_generic i).trans hX.dim_eq), cycVal, if_pos hhor, hΦ]
+  rw [htFn_eq II _ ((dim_of_generic i).trans hX.dim_eq), cycVal, ite_eq_left hhor, hΦ]
   refine (expand_comb A sA cA (D + 1) (II (Fin (m + 1)) (Bk n) (ptIdeal (i (genericPoint X))) (D + 1))
     (fun L j B C hL hB hC => hII.2.1 _ _ _ _ L j B C hP hL hB hC) a)
 
@@ -1596,24 +1596,24 @@ theorem height_eq_direct : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKSta
     _root_.GlobalTheory.CompanionTheory.MixZ.PtLenProof.ptLen _root_.GlobalTheory.CompanionTheory.MixZ.curveInt (GlobalTheory.T.rationality_of_resolution_statement hK) II hII
   have hX := isArithVar_mpStr m n
   obtain ⟨Z, i, _, _, rfl⟩ := exists_isClosedImmersion_genericPoint x
-  haveI : IsNoetherian Z := hX.isNoetherian_sub i
+  have : IsNoetherian Z := hX.isNoetherian_sub i
   have e := hH m n M A hA (_root_.GlobalTheory.CompanionTheory.MPSmooth.smooth_of_isHermRep m n M A hA) Z i _ (H.restrict hX i rfl) (genericPoint Z) d
     ((GlobalTheory.CompanionTheory.MixZ.dim_closure_generic Z).trans (dim_of_isArithVar _root_.GlobalTheory.CompanionTheory.MixZ.ptDict i hd))
   refine e.trans ?_
   rw [GlobalTheory.CompanionTheory.MixZ.cycVal]
-  exact if_pos hd.2.2.1
+  exact ite_eq_left hd.2.2.1
 
 theorem projQ_direct (hAIS : Geo.ArithIntersectionSystemStatement)
     (hK : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement) : ProjQ := by
   obtain ⟨II, hII⟩ := hAIS
   intro n' m n Y _ j' _ e hvar hdim hdeg M hM h h' hh hh'
   let j : Y ⟶ MP ℤ (m + 1) (consN n' n) := j'
-  haveI : IsClosedImmersion j := ‹IsClosedImmersion j'›
+  have : IsClosedImmersion j := ‹IsClosedImmersion j'›
   obtain ⟨A, hA⟩ := GlobalTheory.CompanionTheory.MPDict.HermRep.exists_isHermRep m n M hM
   have hA' := GlobalTheory.CompanionTheory.MPDict.isHermRep_pull n' m n M A hA
   have hS := GlobalTheory.CompanionTheory.MPSmooth.smooth_of_isHermRep m n M A hA
-  haveI hc : CharZero ((MP ℤ (m + 1) (consN n' n)).residueField (j (genericPoint Y))) := charZero_genericPt hvar
-  haveI hc' : CharZero ((MP ℤ m n).residueField (qpSnd n' m n (j (genericPoint Y)))) := charZero_image _ _ _ _
+  have hc : CharZero ((MP ℤ (m + 1) (consN n' n)).residueField (j (genericPoint Y))) := charZero_genericPt hvar
+  have hc' : CharZero ((MP ℤ m n).residueField (qpSnd n' m n (j (genericPoint Y)))) := charZero_image _ _ _ _
   have hP' : Geo.IsArithVar (ptIdeal (j (genericPoint Y))) (e + 1) :=
     GlobalTheory.CompanionTheory.MPDict.DimVar.isArithVar_ptIdeal (m + 1) (consN n' n) _ _ hc (dim_closure_genericPt hvar)
   have hP : Geo.IsArithVar (ptIdeal (qpSnd n' m n (j (genericPoint Y)))) (e + 1) := GlobalTheory.CompanionTheory.MPDict.DimVar.isArithVar_ptIdeal m n _ _ hc' hdim

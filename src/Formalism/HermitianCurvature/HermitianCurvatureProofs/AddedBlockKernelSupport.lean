@@ -64,7 +64,7 @@ theorem blk_app (l : List ℕ) (s : ℕ) (hs : 1 ≤ s) : blk (l ++ [s]) l.sum =
   | cons a l ih =>
     rw [List.cons_append, List.sum_cons, List.length_cons]
     simp only [blk]
-    rw [if_neg (by omega), Nat.add_sub_cancel_left, ih]
+    rw [ite_eq_right (by omega), Nat.add_sub_cancel_left, ih]
     omega
 
 theorem revIn_app (l : List ℕ) (s : ℕ) (hs : 1 ≤ s) :
@@ -74,7 +74,7 @@ theorem revIn_app (l : List ℕ) (s : ℕ) (hs : 1 ≤ s) :
   | cons a l ih =>
     rw [List.cons_append, List.sum_cons]
     simp only [revIn]
-    rw [if_neg (by omega), Nat.add_sub_cancel_left, ih]
+    rw [ite_eq_right (by omega), Nat.add_sub_cancel_left, ih]
     omega
 
 theorem blk_app_lt (s : ℕ) : ∀ (l : List ℕ) (j : ℕ), j < l.sum → blk (l ++ [s]) j = blk l j
@@ -163,7 +163,7 @@ theorem minor_lemma {n m : ℕ} (hmn : m < n) (x w y : Matrix (Fin n) (Fin n) K)
     have hlow : (x.submatrix r r).BlockTriangular OrderDual.toDual := by
       intro i j hij
       exact hxT (show r i < r j from hij)
-    rw [Matrix.det_of_lowerTriangular (h := hlow)]
+    rw [det_of_isLowerTriangular (h := hlow)]
     exact Finset.prod_eq_one (fun i _ => hxD (r i))
 
   have hrowsum : ∀ j : Fin (m + 1),
@@ -218,7 +218,7 @@ theorem minor_lemma {n m : ℕ} (hmn : m < n) (x w y : Matrix (Fin n) (Fin n) K)
     have hup : (y.submatrix e e).BlockTriangular id := by
       intro i j hij
       exact hyT (show e j < e i from hij)
-    rw [Matrix.det_of_upperTriangular (h := hup)]
+    rw [det_of_isUpperTriangular (h := hup)]
     exact Finset.prod_eq_one (fun i _ => hyD (e i))
   rw [hsplit, Matrix.det_mul, hX, one_mul, hB, hTL, Matrix.det_mul, hYt, mul_one, mul_comm]
 
@@ -251,17 +251,17 @@ theorem supp_one (h : Point K) (s : ℕ) (hs : 1 ≤ s) (t : Kˣ)
     show (if (b : ℕ) = revIn (h.1 ++ [s]) a then
         ((Function.update h.2 h.1.length t (blk (h.1 ++ [s]) a) : Kˣ) : K) else 0) = _
     rw [revIn_app_lt s h.1 a.val ha, blk_app_lt s h.1 a.val ha, Function.update_apply,
-      if_neg (ne_of_lt (blk_lt_length h.1 a.val ha))]
+      ite_eq_right (ne_of_lt (blk_lt_length h.1 a.val ha))]
     by_cases hb : b.val < h.1.sum
     · rw [dite_eq_left hb]
       rfl
     · have hne : ¬ ((b : ℕ) = revIn h.1 a) := fun hc => hb (by rw [hc]; exact hrev)
-      rw [dite_eq_right hb, if_neg hne]
+      rw [dite_eq_right hb, ite_eq_right hne]
   · intro a b ha
     show (if (b : ℕ) = revIn (h.1 ++ [s]) a then
         ((Function.update h.2 h.1.length t (blk (h.1 ++ [s]) a) : Kˣ) : K) else 0) =
       if (b : ℕ) + 1 = (h.1 ++ [s]).sum then (t : K) else 0
-    rw [ha, revIn_app h.1 s hs, blk_app h.1 s hs, Function.update_apply, if_pos rfl]
+    rw [ha, revIn_app h.1 s hs, blk_app h.1 s hs, Function.update_apply, ite_eq_left rfl]
     split_ifs <;> first | rfl | omega
 
 end Supp
@@ -286,7 +286,7 @@ theorem Formalism.FourierDecayAlt.P.added_block_kernel_support : Formalism.Fouri
     by_contra hc
     apply hq
     unfold pairTerm
-    rw [if_neg hc, zero_mul, zero_mul]
+    rw [ite_eq_right hc, zero_mul, zero_mul]
   exact ⟨supp_one R h s hs t _ hc.1, supp_one R h' s hs t' _ hc.2⟩
 
 namespace Formalism.FourierDecayAlt.P.A5x7
@@ -332,7 +332,7 @@ theorem lu_int {n : ℕ} {h u : Matrix (Fin n) (Fin n) K} (hh : IsLowUni h) (hu 
         intro k hk
         have hki : k ≠ i := Finset.ne_of_mem_erase hk
         rcases lt_or_gt_of_ne hki with hlt | hgt
-        · have hv := Fin.lt_iff_val_lt_val.1 hlt
+        · have hv := Fin.lt_def.1 hlt
           exact R.mul_mem (IH i k (by omega)).1 (IH k j (by omega)).2
         · rw [hhT hgt, zero_mul]
           exact R.zero_mem
@@ -354,7 +354,7 @@ theorem lu_int {n : ℕ} {h u : Matrix (Fin n) (Fin n) K} (hh : IsLowUni h) (hu 
         intro k hk
         have hkj : k ≠ j := Finset.ne_of_mem_erase hk
         rcases lt_or_gt_of_ne hkj with hlt | hgt
-        · have hv := Fin.lt_iff_val_lt_val.1 hlt
+        · have hv := Fin.lt_def.1 hlt
           exact R.mul_mem (IH i k (by omega)).1 (IH k j (by omega)).2
         · rw [huT hgt, mul_zero]
           exact R.zero_mem
@@ -475,11 +475,11 @@ theorem coker_subsingleton {n : ℕ} {Z : Matrix (Fin n) (Fin n) K} (hZ : IsInt 
 theorem card_iso_one {n n' : ℕ} {Z : Matrix (Fin n) (Fin n) K} {Z' : Matrix (Fin n') (Fin n') K}
     (hZ : IsInt R Z⁻¹) (h1 : Z * Z⁻¹ = 1) (hZ' : IsInt R Z'⁻¹) (h1' : Z' * Z'⁻¹ = 1) :
     Nat.card (isoZZ R Z Z') = 1 := by
-  haveI := coker_subsingleton R hZ h1
-  haveI := coker_subsingleton R hZ' h1'
+  have := coker_subsingleton R hZ h1
+  have := coker_subsingleton R hZ' h1'
   rw [Nat.card_eq_one_iff_unique]
   refine ⟨⟨fun a b => Subtype.ext (LinearEquiv.ext fun x => Subsingleton.elim _ _)⟩, ⟨⟨LinearEquiv.ofSubsingleton _ _, ?_⟩⟩⟩
-  simp only [isoZZ, Set.mem_setOf_eq]
+  simp only [isoZZ, Set.mem_ofPred_eq]
   exact ⟨Subsingleton.elim _ _, fun v v' _ => by rw [lamLin_zero R hZ, lamLin_zero R hZ']⟩
 
 def cos1 (w : Point K) : Cos R w := (Quotient.mk _ 1, QuotientGroup.mk 1)
@@ -547,7 +547,7 @@ theorem Formalism.FourierDecayAlt.P.zero_kernel_all_ones : Formalism.FourierDeca
     obtain ⟨i2, j2, k2⟩ := orb_of_int R h' hh' _ b1 b2
     unfold pairTerm
     dsimp only
-    rw [if_pos ⟨i1, i2⟩, card_iso_one R j1 k1 j2 k2, phase_one R ψ hψ h _ a1 a2,
+    rw [ite_eq_left ⟨i1, i2⟩, card_iso_one R j1 k1 j2 k2, phase_one R ψ hψ h _ a1 a2,
       phase_one R ψ hψ h' _ b1 b2]
     simp
   · rintro ⟨q1, q2⟩ hq
@@ -556,7 +556,7 @@ theorem Formalism.FourierDecayAlt.P.zero_kernel_all_ones : Formalism.FourierDeca
       exact hq (by rw [(int_iff R h hh q1).1 c1, (int_iff R h' hh' q2).1 c2])
     unfold pairTerm
     dsimp only
-    rw [if_neg hnc, zero_mul, zero_mul]
+    rw [ite_eq_right hnc, zero_mul, zero_mul]
 
 namespace Formalism.FourierDecayAlt.P.A5x7
 

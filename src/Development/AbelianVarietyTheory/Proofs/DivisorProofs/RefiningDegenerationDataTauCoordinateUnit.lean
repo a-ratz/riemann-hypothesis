@@ -73,7 +73,7 @@ theorem exists_good_over (ξ : Spec (CommRingCat.of (FractionRing R))) {X S : Sc
     (s : X ⟶ S) [IsSeparated s] (f : Spec (CommRingCat.of R) ⟶ S) :
     ∃ J, Good L ξ J ∧ ∀ p : Spec (CommRingCat.of R) ⟶ X, p ≫ s = f →
       p (closedPoint R) ∈ L.U (J (jK R ≫ p)) := by
-  haveI : IsDominant (jK R) := DVR.isDominant_jK
+  have : IsDominant (jK R) := DVR.isDominant_jK
   choose pick hpk using fun p : Spec (CommRingCat.of R) ⟶ X => exists_chart hL (p (closedPoint R))
   obtain ⟨J, hJ, e⟩ := exists_good L hL ξ (K := {p : Spec (CommRingCat.of R) ⟶ X // p ≫ s = f})
     (fun p => jK R ≫ p.1) (fun p => pick p.1)
@@ -99,7 +99,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'
         algebraMap R' (FractionRing R') u * IsFractionRing.lift (A := R) (K := FractionRing R)
           (g := (algebraMap R' (FractionRing R')).comp ρ) ((IsFractionRing.injective R' (FractionRing R')).comp hρ) (k : FractionRing R) := by
   intro R _ _ R' _ _ _ Q ρ D e hρ href a b k hk x hx
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   obtain ⟨β, β₂, w, h₁, h₂, -, -, h₅⟩ := href
   have hσ : ∀ r, IsFractionRing.lift (A := R) (K := FractionRing R) (g := (algebraMap R' (FractionRing R')).comp ρ)
       ((IsFractionRing.injective R' (FractionRing R')).comp hρ) (algebraMap R (FractionRing R) r) =
@@ -109,8 +109,8 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'
   have hκ : spMap σ ≫ jK R = jK R' ≫ spMap ρ := by
     have : σ.comp (algebraMap R (FractionRing R)) = (algebraMap R' (FractionRing R')).comp ρ := RingHom.ext hσ
     rw [← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← CommRingCat.ofHom_comp, this]
-  haveI : IsProper D.P.A.hom := D.P.isAb.proper
-  haveI : IsProper Q.B.hom := Q.isAb.proper
+  have : IsProper D.P.A.hom := D.P.isAb.proper
+  have : IsProper Q.B.hom := Q.isAb.proper
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R'))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨J', hJ', hc'⟩ := exists_good_integral ξ D.P.isLB D.P.A.hom
   obtain ⟨J, hJ, hc⟩ := exists_good_over ξ Q.M.isLB Q.B.hom (spMap ρ)

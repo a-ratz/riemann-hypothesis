@@ -91,7 +91,7 @@ variable {X : Scheme.{0}} {L : LB X} {φ : A.left ⟶ X} {g : ℕ} (u : HolUnif 
 theorem cj_isDiff' {t : epsR ℂ ⟶ A} {t' : epsR ℂ ⟶ A'}
     (e : t'.left ≫ ψ = spMap (dualMap (starRingEnd ℂ)) ≫ t.left) {w : Fin g → ℂ} (hd : u.IsDiff w t) :
     (cjUnif h u).IsDiff (star w) t' := by
-  haveI := isIso_of_cj h
+  have := isIso_of_cj h
   intro U hU f
   have e2 : t'.left = spMap (dualMap (starRingEnd ℂ)) ≫ (show Sp (DualNumber ℂ) ⟶ _ from t.left) ≫ inv ψ := by
     rw [← Category.assoc]
@@ -296,10 +296,10 @@ theorem archimedean_l2_norm_unique (hU : ThetaUnifAV) {K : Type} [Field K] {P : 
     obtain ⟨a, rfl⟩ := T.surjective a
     obtain ⟨z, rfl⟩ := T.surjective z
     rw [← map_add (f := _), hT, hT, hff, hff, hper a ((hΛ a).1 ha)]
-  haveI := u.discrete
-  haveI := u'.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
-  haveI : IsZLattice ℝ u'.Λ := ⟨u'.full⟩
+  have := u.discrete
+  have := u'.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have : IsZLattice ℝ u'.Λ := ⟨u'.full⟩
   rw [mean_eq u.Λ hF hper, mean_eq u'.Λ hF' hper',
     ← latticeMean_comp_equiv u.Λ u'.Λ (T.restrictScalars ℝ).toContinuousLinearEquiv hΛ hper']
   exact congrArg _ (funext fun z => (hff z).symm)
@@ -342,7 +342,7 @@ theorem len_conj_of_lieNorm (hK : Known) {K : Type} [Field K] [NumberField K] (P
 
 theorem valLine_conj : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (c : Coeff l) (K₁ : Type) [Field K₁] [NumberField K₁] [Algebra c.F K₁] (a : ArcIn Dw l (RingHom.id c.F) K₁ (algebraMap c.F K₁)) (e : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → Out.GtPt a.D₀ (epsR K₁)) (th : a.D₀.P.L.Sec) (jj : ℤ) (n' : ℕ) (La c₁ : ℝ) (s : CMIn a e th jj n' La c₁) (mo : ArcLt Dw →₀ ℕ) (n : ℕ) (em : K₁ →+* ℂ), (s.valLine mo n).n ((starRingEnd ℂ).comp em) = (s.valLine mo n).n em := by
   intro hK E _ _ _ H Dw l c K₁ _ _ _ a e th jj n' La c₁ s mo n em
-  letI := H.starRing
+  let := H.starRing
   have tie := _root_.GlobalTheory.ArcCM.NormTie.lengths_eq_norms hK E H Dw l c K₁ a e th jj n' La c₁ s
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hΨ, h', hT, -⟩ := s.good
   have hTl : s.Tl.n ((starRingEnd ℂ).comp em) = s.Tl.n em := by

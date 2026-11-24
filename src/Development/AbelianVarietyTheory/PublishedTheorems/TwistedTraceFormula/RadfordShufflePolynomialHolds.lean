@@ -659,7 +659,7 @@ theorem monomial_eq_prod {σ : Type} (d : σ →₀ ℕ) :
   induction d using Finsupp.induction_linear with
   | zero => simp
   | add f g hf hg =>
-    rw [map_add (f := _), Multiset.map_add (f := _), Multiset.prod_add, ← hf, ← hg, MvPolynomial.monomial_mul,
+    rw [map_add (f := _), Multiset.map_add (f := _), Multiset.prod_add, ← hf, ← hg, MvPolynomial.monomial_mul_monomial,
       one_mul]
   | single a n =>
     rw [Finsupp.toMultiset_single, ← MvPolynomial.X_pow_eq_monomial]

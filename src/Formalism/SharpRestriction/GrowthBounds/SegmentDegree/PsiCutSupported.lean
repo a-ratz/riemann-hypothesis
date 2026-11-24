@@ -103,7 +103,7 @@ theorem Kcol_supported (ν : Fin (N + 1) → Fin r → ℤ) (c : ℤ) :
     have hS : ∀ J', Kcol R ν c j J' ∈ supported R {v : Fin N × Fin r | v.1.val < j + 1} := by
       intro J'
       refine supported_mono (fun v hv => ?_) (ih (by omega) J')
-      simp only [Set.mem_setOf_eq] at hv ⊢
+      simp only [Set.mem_ofPred_eq] at hv ⊢
       omega
     have hx : ∀ m, letVec R ⟨j, by omega⟩ m ∈ supported R {v : Fin N × Fin r | v.1.val < j + 1} := by
       intro m

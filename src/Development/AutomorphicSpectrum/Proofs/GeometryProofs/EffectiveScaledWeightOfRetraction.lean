@@ -100,7 +100,7 @@ theorem exists_C_eq_of_isAlgebraic {k I : Type} [Field k] (P : MvPolynomial I k)
     ∃ p : k, MvPolynomial.C p = P := by
   by_cases h0 : P = 0
   · exact ⟨0, by simp [h0]⟩
-  obtain ⟨r, hr, hd⟩ := h.exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero h0)
+  obtain ⟨r, hr, hd⟩ := h.exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero h0)
   have hu : IsUnit P := isUnit_of_dvd_unit hd ((IsUnit.mk0 r hr).map (algebraMap k _))
   obtain ⟨p, -, hp⟩ := MvPolynomial.isUnit_iff_eq_C_of_isReduced.1 hu
   exact ⟨p, hp.symm⟩
@@ -110,11 +110,11 @@ theorem mem_range_of_isAlgebraic {k L I : Type} [Field k] [Field L] [Algebra k L
     (ha : IsAlgebraic k a) : a ∈ (algebraMap k L).range := by
   let g : MvPolynomial I k →ₐ[k] L := MvPolynomial.aeval x
   have hg : Function.Injective g := hx
-  letI : Algebra (MvPolynomial I k) L := g.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial I k) L := g.toRingHom.toAlgebra
   have hmap : ∀ P : MvPolynomial I k, algebraMap (MvPolynomial I k) L P = g P := fun _ => rfl
-  haveI : IsScalarTower k (MvPolynomial I k) L := IsScalarTower.of_algebraMap_eq fun r => (g.commutes r).symm
-  haveI : FaithfulSMul (MvPolynomial I k) L := (faithfulSMul_iff_algebraMap_injective _ _).2 hg
-  haveI : IsFractionRing (MvPolynomial I k) L := by
+  have : IsScalarTower k (MvPolynomial I k) L := IsScalarTower.of_algebraMap_eq fun r => (g.commutes r).symm
+  have : FaithfulSMul (MvPolynomial I k) L := (faithfulSMul_iff_algebraMap_injective _ _).2 hg
+  have : IsFractionRing (MvPolynomial I k) L := by
     refine IsFractionRing.of_field _ _ fun z => ?_
     have hz : z ∈ IntermediateField.adjoin k (Set.range x) := ht ▸ IntermediateField.mem_top
     obtain ⟨r, s, e⟩ := (IntermediateField.mem_adjoin_range_iff k x z).1 hz
@@ -136,8 +136,8 @@ theorem exists_cst₀ {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset �
     {J : K → Type} {y : (Σ k, J k) → Ω} (𝔐 : HodgeCpt Y S y) :
     ∃ cst₀ : c.F →+* 𝔐.Ω₀, 𝔐.fn.comp cst₀ = 𝔐.cst ∧
       𝔐.ξ₀ ≫ Y.s = spMap (cst₀.comp (algebraMap (𝓞 c.F) c.F)) := by
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
   let b₀ : 𝓞 c.F →+* 𝔐.Ω₀ := (Spec.preimage (𝔐.ξ₀ ≫ Y.s)).hom
   have hb : 𝔐.ξ₀ ≫ Y.s = spMap b₀ := (Spec.map_preimage _).symm
   have hc : 𝔐.fn.comp b₀ = 𝔐.cst.comp (algebraMap (𝓞 c.F) c.F) := by
@@ -165,8 +165,8 @@ theorem exists_cst₀ {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset �
 theorem isAlgebraic_mem_cst_range : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (Fl : 𝔐.Flag), SplitComps Y → Fl.deg = 1 → ∀ a : Ω, IsAlgebraic ℤ a → a ∈ 𝔐.cst.range := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J y 𝔐 Fl hS hdeg a ha
   obtain ⟨cst₀, h1, h2⟩ := exists_cst₀ 𝔐
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
-  letI : Algebra 𝔐.Ω₀ Ω := 𝔐.fn.toAlgebra
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  let : Algebra 𝔐.Ω₀ Ω := 𝔐.fn.toAlgebra
   obtain ⟨-, u, -, -, -, -, hdiag, hup, -, hind, -, hfin⟩ := Fl.generic
   rw [hdeg] at hfin
   let x : (Σ q : CMType H ⊕ CMType H, {lk : Fin (labelRk D q) × Fin (labelRk D q) // lk.2 < lk.1}) → Ω :=
@@ -193,7 +193,7 @@ theorem isAlgebraic_mem_cst_range : ∀ (E : Type) [Field E] [NumberField E] [Is
       exact one_mem _
     · exact IntermediateField.subset_adjoin _ _ ⟨⟨σ, ⟨(l', k), h⟩⟩, rfl⟩
   have hal : IsAlgebraic 𝔐.Ω₀ a := by
-    haveI : CharZero 𝔐.Ω₀ := charZero_of_injective_ringHom cst₀.injective
+    have : CharZero 𝔐.Ω₀ := charZero_of_injective_ringHom cst₀.injective
     exact ha.extendScalars (RingHom.injective_int _)
   obtain ⟨a₀, rfl⟩ := mem_range_of_isAlgebraic x hind ht a hal
   have ha₀ : IsAlgebraic ℤ a₀ :=
@@ -226,7 +226,7 @@ theorem UpperTheory.Reformulated.B.ValuationSubringDominantCoordinate.main.{u_1}
   refine ⟨c, hc0, fun j => ?_⟩
   rw [← ValuationSubring.valuation_le_one_iff, map_div₀]
   have hpos : W.valuation (x c) ≠ 0 := (Valuation.ne_zero_iff _).2 hc0
-  exact (div_le_one₀ (zero_lt_iff.2 hpos)).2 (hc j)
+  exact (div_le_one₀ (pos_iff_ne_zero.2 hpos)).2 (hc j)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.MatchStatement =====
@@ -476,7 +476,7 @@ theorem span_top [CharZero Ω] (k₀ : K) (hy : ∀ k, ∃ j, y ⟨k, j⟩ ≠ 0
       exact hAW (ratioA y k i j).2
     · simp only [show c k = c0 k from Function.update_of_ne h _ _]
       exact hcW0 k j
-  haveI := charZero_residue W hinv
+  have := charZero_residue W hinv
   obtain ⟨f, hfS, hf⟩ := H (IsLocalRing.ResidueField W) _ (ratio_pt_mem y W c hc hcW)
   apply hf
   have hnon : (aeval (ratio y k₀ i) f : Ω) ∈ W.nonunits := by
@@ -654,7 +654,7 @@ theorem homog_rename (k₀ : K) {F : MvPolynomial (J k₀) ℤ} {n : ℕ} (h : F
   · subst hk
     simp [Finsupp.mapDomain_apply_of_injective sigma_mk_injective, hd]
   · have h0 : ∀ i, Finsupp.mapDomain (Sigma.mk k₀) m' ⟨k, i⟩ = 0 := fun i =>
-      Finsupp.mapDomain_notin_range _ _ (by
+      Finsupp.mapDomain_of_notMem_range _ _ (by
         rintro ⟨i', hi'⟩
         exact hk (congrArg Sigma.fst hi').symm)
     simp [h0, Pi.single_apply, hk]
@@ -1117,10 +1117,10 @@ theorem stepLine_a {G : RefGeo Y} (A : G.An) (t : ℝ) (r : RootIx D) :
     simp [Finset.sum_apply]
   simp only [stepLine, PB.combLine_a, Fin.sum_univ_two]
   by_cases h : (i : ℕ) = 0
-  · simp only [prevLine, dif_pos h]
+  · simp only [prevLine, dite_eq_left h]
     simp [Top.trivLine, hl, Iic_zero i h]
   · have hi : 0 < (i : ℕ) := Nat.pos_of_ne_zero h
-    simp only [prevLine, dif_neg h]
+    simp only [prevLine, dite_eq_right h]
     simp only [Matrix.cons_val_zero, Matrix.cons_val_one, hl]
     rw [Iic_pred i hi, Finset.sum_insert (not_mem_Iic_pred i hi)]
     simp
@@ -1153,10 +1153,10 @@ theorem log_line_eq {G : RefGeo Y} (A : G.An) (t : ℝ) (τ : CMType H) (i : Fin
       -∑ k ∈ Finset.Iic i, Real.log ((stepLine A t (τ, k)).h z) := by
   have := sum_Iic_step (fun i' : Fin (D.p + D.q) => Real.log ((A.Re.line (some (τ, i')) t).h z))
     (fun k => Real.log ((stepLine A t (τ, k)).h z)) (fun k hk => by
-      simp only [stepLine_h, prevLine, dif_pos hk, Top.trivLine]
+      simp only [stepLine_h, prevLine, dite_eq_left hk, Top.trivLine]
       rw [Real.log_div one_ne_zero ((A.Re.line _ t).pos z hz).ne']
       simp) (fun k hk => by
-      simp only [stepLine_h, prevLine, dif_neg hk.ne']
+      simp only [stepLine_h, prevLine, dite_eq_right hk.ne']
       rw [Real.log_div ((A.Re.line _ t).pos z hz).ne' ((A.Re.line _ t).pos z hz).ne']) i
   rw [this, neg_neg]
 
@@ -1358,12 +1358,12 @@ theorem refRoot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
     · rintro ⟨ij, rfl⟩
       exact ⟨(ix.symm ij.1, ix.symm ij.2), by simp⟩
   obtain ⟨Mf, hMf⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SabLie.lieModel_of_sabMap E H _ _ G.𝔐.t Y.t G.𝔐.f G.𝔐.m G.Ω G.𝔐.ξ G.𝔐.Li G.𝔐.M
-  haveI : Nonempty G.K := ⟨G.k₀⟩
+  have : Nonempty G.K := ⟨G.k₀⟩
   have hb : Birational G.y := (_root_.GlobalTheory.CompanionTheory.Ar.flagged_model_dim E H D l Xo c (𝓞 c.F) (algebraMap _ _) Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl
     (RingOfIntegers.coe_injective)).1
   have hδ : 0 < Module.finrank ℚ c.F * G.Fl.deg := by
     rw [G.deg_one, _root_.mul_one]
-    haveI := c.fin
+    have := c.fin
     exact Module.finrank_pos
   have hcov : ∀ x : A.Sys.X, A.Re.π (inv x) = x := fun x => by
     obtain ⟨u, rfl⟩ := A.π_bij.2 x

@@ -405,8 +405,8 @@ private theorem UpperTheory.V.AlgebraTools.almost_selfdual_dual_full {A : Type} 
     (Y : Submodule A V) (hY : Submodule.IsFullLattice F Y) :
     Submodule.IsFullLattice F (Bf.dualSubmodule Y) := by
   classical
-  haveI : Module.Free A Y := Submodule.IsLattice.free F Y
-  haveI : Module.Finite A Y := Submodule.IsLattice.finite F Y
+  have : Module.Free A Y := Submodule.IsLattice.free F Y
+  have : Module.Finite A Y := Submodule.IsLattice.finite F Y
   let b0 := Module.Free.chooseBasis A Y
   let b := b0.extendOfIsFullLattice F
   have hb : Submodule.span A (Set.range b) = Y := by
@@ -451,10 +451,10 @@ theorem UpperTheory.V.AlgebraTools.almost_selfdual :
         have hWD : Y ⊔ maximalIdeal A ^ (k + 1) • Bf.dualSubmodule Y ≤ Bf.dualSubmodule Y :=
           sup_le hle hsm
         have hWl : Submodule.IsFullLattice F (Y ⊔ maximalIdeal A ^ (k + 1) • Bf.dualSubmodule Y) := by
-          haveI := hY
-          haveI := hDY
+          have := hY
+          have := hDY
           refine Submodule.IsFullLattice.of_le_of_fg F hYW ?_
-          haveI : Module.Finite A ↥(Bf.dualSubmodule Y) := Submodule.IsLattice.finite F _
+          have : Module.Finite A ↥(Bf.dualSubmodule Y) := Submodule.IsLattice.finite F _
           have : IsNoetherian A ↥(Bf.dualSubmodule Y) := inferInstance
           have : IsNoetherian A
               ↥(Y ⊔ maximalIdeal A ^ (k + 1) • Bf.dualSubmodule Y : Submodule A V) :=
@@ -481,8 +481,8 @@ theorem UpperTheory.V.AlgebraTools.almost_selfdual :
           le_trans (Submodule.smul_mono le_rfl (anti hYW)) le_sup_right
         exact ih _ hWl hWst hWW hWdual
   have hD₀ := UpperTheory.V.AlgebraTools.almost_selfdual_dual_full Bf hnd Y₀ hY₀
-  haveI := hY₀
-  haveI := hD₀
+  have := hY₀
+  have := hD₀
   have hY₁ : Submodule.IsFullLattice F (Y₀ ⊓ Bf.dualSubmodule Y₀) := inferInstance
   have hst₁ : ∀ g, ∀ y ∈ Y₀ ⊓ Bf.dualSubmodule Y₀, r g y ∈ Y₀ ⊓ Bf.dualSubmodule Y₀ :=
     fun g y hy => Submodule.mem_inf.mpr
@@ -513,9 +513,9 @@ theorem UpperTheory.V.AlgebraTools.smith_zero_one :
     ∀ {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] {F V : Type} [Field F] [Algebra A F] [IsFractionRing A F] [AddCommGroup V] [Module F V] [Module A V] [IsScalarTower A F V] [Module.Finite F V] (ϖ : A) (Y Z : Submodule A V), Irreducible ϖ → Submodule.IsFullLattice F Z → Y ≤ Z → maximalIdeal A • Z ≤ Y → ∃ (b : Module.Basis (Fin (Module.finrank F V)) F V) (S : Finset (Fin (Module.finrank F V))), Z = Submodule.span A (Set.range b) ∧ Y = Submodule.span A (Set.range fun i => if i ∈ S then ϖ • b i else b i) := by
   intro A _ _ _ F V _ _ _ _ _ _ _ _ ϖ Y Z hϖ hZ hYZ hmY
   classical
-  haveI : Submodule.IsFullLattice F Z := hZ
-  haveI : Module.IsTorsionFree A V := Module.IsTorsionFree.trans F
-  haveI : Module.Finite A Z := Submodule.IsLattice.finite F Z
+  have : Submodule.IsFullLattice F Z := hZ
+  have : Module.IsTorsionFree A V := Module.IsTorsionFree.trans F
+  have : Module.Finite A Z := Submodule.IsLattice.finite F Z
   have hfr : Module.finrank A Z = Module.finrank F V := by
     apply Module.finrank_eq_of_rank_eq
     rw [Submodule.IsFullLattice.rank_eq F Z, Module.finrank_eq_rank]
@@ -573,7 +573,7 @@ theorem UpperTheory.V.AlgebraTools.smith_zero_one :
           · exact h
         have : i ∈ S := by simp [S, hai]
         refine ⟨hcu.unit⁻¹, ?_⟩
-        rw [if_pos this, smul_smul, hc]
+        rw [ite_eq_left this, smul_smul, hc]
         congr 1
         rw [mul_comm (a i) c, ← mul_assoc]
         simp
@@ -851,13 +851,13 @@ theorem UpperTheory.V.AlgebraTools.selfdual_ramified :
     by_cases hj : j ∈ S
     · by_cases hi : i ∈ S
       · refine ⟨φ (M i j), ?_⟩
-        simp only [hi, hj, if_true] at h1 ⊢
+        simp only [hi, hj, ite_true] at h1 ⊢
         rw [← h1, ← hsϖ]; ring
       · refine ⟨φ (M j i) * s, ?_⟩
-        simp only [hi, hj, if_true, if_false, map_one, mul_one, one_mul] at h2 ⊢
+        simp only [hi, hj, ite_true, ite_false, map_one, mul_one, one_mul] at h2 ⊢
         rw [h2, map_mul]
     · refine ⟨(if i ∈ S then s else 1) * φ (M i j), ?_⟩
-      simp only [hj, if_false, map_one, mul_one] at h1 ⊢
+      simp only [hj, ite_false, map_one, mul_one] at h1 ⊢
       rw [h1, map_mul]
   choose H' hH' using hH'
   have hH'm : (Matrix.of H').map (algebraMap A' F') = E * H0.map φF * E := by
@@ -887,13 +887,13 @@ theorem UpperTheory.V.AlgebraTools.selfdual_ramified :
       by_cases hi : i ∈ S
       · by_cases hj : j ∈ S
         · refine ⟨φ (R i j), ?_⟩
-          simp only [hi, hj, if_true]
+          simp only [hi, hj, ite_true]
           ring
         · refine ⟨s * φ (T i j), ?_⟩
-          simp only [hi, hj, if_true, if_false, map_one, mul_one] at h1 ⊢
+          simp only [hi, hj, ite_true, ite_false, map_one, mul_one] at h1 ⊢
           rw [h1, ← hsϖ, map_mul]; ring
       · refine ⟨φ (R i j) * (if j ∈ S then s else 1), ?_⟩
-        simp only [hi, if_false, map_one, one_mul, map_mul]
+        simp only [hi, ite_false, map_one, one_mul, map_mul]
     choose X hX using hX
     refine ⟨Matrix.of X, ?_⟩
     have h1 : E * (Matrix.of X).map (algebraMap A' F') = (R.map (algebraMap A F)).map φF * E := by
@@ -1004,7 +1004,7 @@ theorem UpperTheory.V.Pa.Det.oneBlock :
       _ = _ := by rw [key, Matrix.mul_smul, Matrix.smul_mul]
   obtain ⟨P, H', r', hP, hr'⟩ := UpperTheory.V.AlgebraTools.selfdual_ramified (A := PowerSeries K)
     (F := FractionRing (PowerSeries K)) H₁ r₀ σ u (A' := PowerSeries K)
-    (F' := FractionRing (PowerSeries K)) j₁ f₁ PowerSeries.X PowerSeries.X PowerSeries.X_irreducible
+    (F' := FractionRing (PowerSeries K)) j₁ f₁ PowerSeries.X PowerSeries.X PowerSeries.irreducible_X
     hj₁.symm hf₁ (IsFractionRing.injective _ _) hH₁s hH₁det hσ hsim₀
   have h2u : IsUnit (2 : PowerSeries K) := by
     rw [← map_ofNat (PowerSeries.C (R := K)) 2]
@@ -1019,7 +1019,7 @@ theorem UpperTheory.V.Pa.Det.oneBlock :
     exact IsFractionRing.injective _ (FractionRing (PowerSeries K)) (congr_fun (congr_fun e i) j)
   have hH'det : IsUnit H'.1.det :=
     (Matrix.isUnit_iff_isUnit_det _).1 H'.isUnit
-  haveI := henselian_powerSeries K'
+  have := henselian_powerSeries K'
   obtain ⟨P₂, hP₂⟩ := UpperTheory.V.AlgebraTools.orthonormal_local j₂ H'.1
     h2u hH's hH'det hsq
   refine ⟨GeneralLinearGroup.map (f₂.comp f₁) Q₀ * GeneralLinearGroup.map f₂ P *

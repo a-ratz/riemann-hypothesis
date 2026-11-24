@@ -292,10 +292,10 @@ theorem PtY.mv_dn_facts {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOneSpect
   intro d hd
   by_cases h : (∀ (P : Q) (x : Sp X.E n), p.1.1.1.2 P x ∈ d.1.at P.1 ↔ x ∈ stdAt X.E n P.1) ∧ p.1.2 ∈ y.ys d.1.N
   · have e : (p.mv d).1 = ((⟨(d, p.1.1.1.2), h.1⟩ : DecoF X.E n ST SG Q), p.1.2) :=
-      congrArg Subtype.val (dif_pos h)
+      congrArg Subtype.val (dite_eq_left h)
     rw [e]
     exact ⟨rfl, rfl, hd⟩
-  · have e : p.mv d = p := dif_neg h
+  · have e : p.mv d = p := dite_eq_right h
     rw [e]
     exact ⟨rfl, rfl, ⟨fun _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl⟩⟩
 
@@ -432,7 +432,7 @@ theorem move_down_adelic : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
   subst hc0
 
   have hgram : gramN (I.rec7 l Z) i hi = 1 := ((GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hOk hPins l Z).2.2.2 i hi).1
-  haveI : NeZero (B.R.N i) := inferInstance
+  have : NeZero (B.R.N i) := inferInstance
   have hP := _root_.GlobalTheory.Mem.PrimesAtLevel.primes_atT I hOk l u a v
   have hv0 : (eV v).1 = v.1.under (𝓞 B.host.F) := hV v
   have hd : ((I.atIn u a).A i).dnPt v c0 g = ((I.stp u a i).rep c0).mv (((I.stp u a i).rep c0).1.1.deco.dn v (TDat.extF _ v.1 g)) := rfl

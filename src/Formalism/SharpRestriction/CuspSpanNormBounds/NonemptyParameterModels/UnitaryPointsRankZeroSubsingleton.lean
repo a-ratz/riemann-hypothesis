@@ -85,13 +85,13 @@ theorem aut_isHCParam_lamS (R : Ranks) (P : HCParam R) : Formalism.QuantumDeterm
   have hv : ∀ (j : ℕ) (hj : j < R.k - 1) (x : Fin R.r), x.val = j → lamS R P x = (P.v ⟨j, hj⟩ : ℝ) := by
     intro j hj x hx
     subst hx
-    simp only [lamS, dif_pos hj]
+    simp only [lamS, dite_eq_left hj]
   have hb : ∀ (j : ℕ) (hj : j < R.m) (x : Fin R.r), x.val = R.k - 1 + j → lamS R P x = -(P.b ⟨j, hj⟩ : ℝ) := by
     intro j hj x hx
     have h1 : ¬ x.val < R.k - 1 := by omega
     have h2 : x.val - (R.k - 1) < R.m := by omega
     have e : (⟨x.val - (R.k - 1), h2⟩ : Fin R.m) = ⟨j, hj⟩ := Fin.ext (show x.val - (R.k - 1) = j by omega)
-    simp only [lamS, dif_neg h1, dif_pos h2, e]
+    simp only [lamS, dite_eq_right h1, dite_eq_left h2, e]
   refine ⟨aut_strictAnti_of_step _ ?_, ?_⟩
   · intro i hi
     have hir : i.val + 1 < R.k + R.m - 1 := hr ▸ hi
@@ -160,8 +160,8 @@ theorem aut_rowsTie_iff (D : D7) (X : RowsAut) :
 
 theorem aut_exists_emb (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
     (cm : CMData F E) (v : InfinitePlace F) : ∃ φ : E →+* ℂ, ∀ a : F, φ (algebraMap F E a) = v.embedding a := by
-  letI : Algebra F ℂ := v.embedding.toAlgebra
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [cm.deg2]; norm_num)
+  let : Algebra F ℂ := v.embedding.toAlgebra
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [cm.deg2]; norm_num)
   refine ⟨(IsAlgClosed.lift : E →ₐ[F] ℂ).toRingHom, fun a => ?_⟩
   exact (IsAlgClosed.lift : E →ₐ[F] ℂ).commutes a
 
@@ -226,7 +226,7 @@ theorem aut_compact_allPos (n : ℕ) : CompactSpace (Formalism.REAL.UJ (allPos n
       nlinarith [norm_nonneg (A i j)]
     exact (isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_closedBall (0 : ℂ) 1).of_isClosed_subset
       hcl hbd
-  haveI : CompactSpace S := isCompact_iff_compactSpace.mp hSc
+  have : CompactSpace S := isCompact_iff_compactSpace.mp hSc
   let φ : S → Formalism.REAL.UJ (allPos n) := fun A =>
     ⟨⟨A.1, A.1ᴴ, by
         first
@@ -236,7 +236,7 @@ theorem aut_compact_allPos (n : ℕ) : CompactSpace (Formalism.REAL.UJ (allPos n
       rw [hJ, Matrix.mul_one, A.2]⟩
   have hφ : Continuous φ := by
     apply Continuous.subtype_mk
-    exact Units.continuous_iff.mpr ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩
+    exact Units.continuous_iff.mpr ⟨continuous_subtypeVal, continuous_subtypeVal.matrix_conjTranspose⟩
   have hsurj : Function.Surjective φ := by
     intro g
     have hg : ((g : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ) ∈ S := by

@@ -122,7 +122,7 @@ theorem flow_eq {T : GrpData p q} (R : DSRep T) {X : Mat p q} (hX : X ∈ upq p 
     convert (preTransparency := .reducible) h2 using 1
     · funext s
       simp only [hf, Function.comp, ContinuousLinearMap.coe_restrictScalars']
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, ← T.expt_add X hX, add_sub_cancel]
+      rw [← mul_apply_eq_comp, ← map_mul, ← T.expt_add X hX, add_sub_cancel]
     · simp [hf]
   have hg : ∀ t : ℝ, HasDerivAt (fun t : ℝ => Complex.exp (-(c * t)) • f t) 0 t := by
     intro t
@@ -134,7 +134,7 @@ theorem flow_eq {T : GrpData p q} (R : DSRep T) {X : Mat p q} (hX : X ∈ upq p 
     rw [smul_smul, ← add_smul]; simp
   have hc := is_const_of_deriv_eq_zero (fun t => (hg t).differentiableAt) (fun t => (hg t).deriv) 1 0
   simp only [hf, one_smul, zero_smul, T.expt_zero, map_one, Complex.ofReal_one, mul_one, Complex.ofReal_zero, mul_zero,
-    neg_zero, Complex.exp_zero, ContinuousLinearMap.one_apply] at hc
+    neg_zero, Complex.exp_zero, one_apply_eq_self] at hc
   conv_rhs => rw [← hc, smul_smul, ← Complex.exp_add]
   simp
 

@@ -167,7 +167,7 @@ theorem addVal_det_le_length {ι V : Type} [Fintype ι] [DecidableEq ι] [AddCom
       obtain ⟨k, hk⟩ := ENat.ne_top_iff_exists.1 hne
       have := key (k + 1)
       rw [← hk] at this
-      exact absurd (ENat.coe_le_coe.1 this) (by omega)
+      exact absurd (ENat.natCast_le_natCast.1 this) (by omega)
     rw [this]; exact le_top
   · have hdet : IsUnit M'.det := by
       have : M'.det = algebraMap O (FractionRing O) M.det := (RingHom.map_det _ M).symm

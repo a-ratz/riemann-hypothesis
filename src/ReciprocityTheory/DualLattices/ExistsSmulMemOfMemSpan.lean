@@ -114,7 +114,7 @@ theorem isLat_of_fg [IsDomain R] [ValuationRing R] [IsFractionRing R C]
   let e : X ≃ Module.Free.ChooseBasisIndex R M := Fintype.equivOfCardEq hcard
   refine ⟨fun x j => v (e j) x, ?_, ?_⟩
   · have hli : LinearIndependent C (fun j x => v (e j) x) := hC.comp e e.injective
-    have hu := (Matrix.linearIndependent_cols_iff_isUnit (A := (fun x j => v (e j) x : Matrix X X C))).1
+    have hu := (Matrix.linearIndependent_col_iff_isUnit (A := (fun x j => v (e j) x : Matrix X X C))).1
       (by convert hli using 1; rfl)
     exact (Matrix.isUnit_iff_isUnit_det _).1 hu
   · have : Set.range (fun j x => v (e j) x) = Set.range v := by
@@ -133,7 +133,7 @@ theorem span_top_of_isLat {X : Type} [Fintype X] [DecidableEq X] {M : Submodule 
   obtain ⟨B, hB, rfl⟩ := h
   rw [Submodule.span_span_of_tower]
   have hli : LinearIndependent C (fun j x => B x j) := by
-    have := (Matrix.linearIndependent_cols_iff_isUnit (A := B)).2 ((Matrix.isUnit_iff_isUnit_det B).2 hB)
+    have := (Matrix.linearIndependent_col_iff_isUnit (A := B)).2 ((Matrix.isUnit_iff_isUnit_det B).2 hB)
     convert this using 1; rfl
   exact hli.span_eq_top_of_card_eq_finrank' (by simp)
 

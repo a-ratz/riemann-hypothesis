@@ -74,7 +74,7 @@ theorem UpperTheory.Reformulated.B.Rd2.exists_bound_poly_mul_exp :
   intro c hc N
   refine ⟨Real.exp ((N : ℝ) ^ 2 / (4 * c)), fun r hr => ?_⟩
   have h1 : (1 + r) ^ N ≤ Real.exp ((N : ℝ) * r) := by
-    rw [Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul]
     refine pow_le_pow_left₀ (by positivity) ?_ N
     linarith [Real.add_one_le_exp r]
   have h2 : (N : ℝ) * r + -(c * r ^ 2) ≤ (N : ℝ) ^ 2 / (4 * c) := by
@@ -178,7 +178,7 @@ def dop (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) : 𝓢(V, ℂ) :=
 theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
     dop a L f x = fderiv ℝ f x a + (-(2 * Real.pi * Complex.I) * (L x : ℂ)) * f x := by
   have hT := L.hasTemperateGrowth
-  simp only [dop, SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
+  simp only [dop, add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   simp only [Complex.real_smul, smul_eq_mul]
   ring
@@ -186,7 +186,7 @@ theorem dop_apply (a : V) (L : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) (x : V) :
 theorem dop_add (a b : V) (L M : V →L[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     dop (a + b) (L + M) f = dop a L f + dop b M f := by
   ext x
-  simp only [SchwartzMap.add_apply, dop_apply, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [add_apply, dop_apply, map_add (f := _), add_apply]
   push_cast
   ring
 
@@ -256,7 +256,7 @@ theorem rOf_add (g : (κ → FiniteAdeleRing (𝓞 F) F) → ℂ) (x z : κ → 
 
 theorem exists_sb_one : ∃ g ∈ SB (κ → FiniteAdeleRing (𝓞 F) F), g 0 = 1 := by
   obtain ⟨-, -, -, hc, ho, -⟩ := GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : T2Space (GlobalTheory.CompanionTheory.SW.Core.A F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : T2Space (GlobalTheory.CompanionTheory.SW.Core.A F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   have hcl : IsClosed (GlobalTheory.CompanionTheory.SW.Core.Oh F) := hc.isClosed
   let S : Set (κ → FiniteAdeleRing (𝓞 F) F) := Set.pi Set.univ fun _ => GlobalTheory.CompanionTheory.SW.Core.Oh F
   have hS : IsClopen S := ⟨isClosed_set_pi fun _ _ => hcl, isOpen_set_pi Set.finite_univ fun _ _ => ho⟩
@@ -295,7 +295,7 @@ theorem aOf_add (M : Model σ X W) (u v : Matrix (Fin n) (Fin d) (AE F E)) :
 theorem lOf_add (M : Model σ X W) (u v : Matrix (Fin n) (Fin d) (AE F E)) :
     lOf M (u + v) = lOf M u + lOf M v := by
   ext y
-  simp only [lOf, ContinuousLinearMap.add_apply, linForm_apply, ← map_add (f := _), ← Finset.sum_add_distrib]
+  simp only [lOf, add_apply, linForm_apply, ← map_add (f := _), ← Finset.sum_add_distrib]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   simp [map_add (f := _), evI_add, mul_add]
@@ -433,16 +433,16 @@ theorem integrable_conj_mul₂ (p q : 𝓢(V, ℂ)) : Integrable (fun x => conj 
   (SchwartzMap.bilinLeftCLM cmul q.hasTemperateGrowth p).integrable
 
 theorem P_add (p q r : 𝓢(V, ℂ)) : P μ p (q + r) = P μ p q + P μ p r := by
-  simp only [P, SchwartzMap.add_apply, mul_add]
+  simp only [P, add_apply, mul_add]
   exact integral_add (integrable_conj_mul₂ μ p q) (integrable_conj_mul₂ μ p r)
 
 theorem P_smul (p q : 𝓢(V, ℂ)) (s : ℂ) : P μ p (s • q) = s * P μ p q := by
-  simp only [P, SchwartzMap.smul_apply, smul_eq_mul]
+  simp only [P, smul_apply, smul_eq_mul]
   rw [← integral_const_mul]
   exact integral_congr_ae (Filter.Eventually.of_forall fun x => by simp only []; ring)
 
 theorem l2Inner_smul_left (p q : 𝓢(V, ℂ)) (s : ℂ) : P μ (s • p) q = conj s * P μ p q := by
-  simp only [P, SchwartzMap.smul_apply, smul_eq_mul, map_mul]
+  simp only [P, smul_apply, smul_eq_mul, map_mul]
   rw [← integral_const_mul]
   exact integral_congr_ae (Filter.Eventually.of_forall fun x => by simp only []; ring)
 
@@ -458,7 +458,7 @@ theorem l2Inner_op_right (a : V) (L : V →L[ℝ] ℝ) (p q : 𝓢(V, ℂ)) : P 
     rw [op, P_add, P_smul]
   have e2 : P μ (op a L p) q = P μ (∂_{a} p) q + (2 * Real.pi * Complex.I) * P μ (SchwartzMap.smulLeftCLM ℂ (L : V → ℝ) p) q := by
     have : ∀ r s : 𝓢(V, ℂ), P μ (r + s) q = P μ r q + P μ s q := fun r s => by
-      simp only [P, SchwartzMap.add_apply, map_add (f := _), add_mul]
+      simp only [P, add_apply, map_add (f := _), add_mul]
       exact integral_add (integrable_conj_mul₂ μ r q) (integrable_conj_mul₂ μ s q)
     rw [op, this, l2Inner_smul_left]
     have c2 : conj (-(2 * (Real.pi : ℂ) * Complex.I)) = 2 * Real.pi * Complex.I := by
@@ -481,8 +481,8 @@ theorem l2Inner_self_eq_integral_norm_sq (p : 𝓢(V, ℂ)) : P μ p p = ((∫ x
 omit [MeasurableSpace V] [BorelSpace V] in
 theorem eq_zero_of_neg (f : 𝓢(V, ℂ)) (a a' : V) (L L' : V →L[ℝ] ℝ) (h : op a' L' f = Complex.I • op a L f)
     (hT : L' a - L a' < 0) : f = 0 := by
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   let μ : Measure V := Measure.addHaar
   set g := op a L f with hg
   have h1 : P μ f (op a L (op a' L' f)) = -(Complex.I * P μ g g) := by
@@ -600,7 +600,7 @@ theorem exists_coercive [FiniteDimensional ℝ E] (B : E →L[ℝ] E →L[ℝ] �
       have h1 : B u u ≤ B x0 x0 := hmax hun
       have h2 : B x x = ‖x‖ ^ 2 * B u u := by
         conv_lhs => rw [hxu]
-        simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]; ring
+        simp only [map_smul, smul_apply, smul_eq_mul]; ring
       rw [h2]
       nlinarith [sq_nonneg ‖x‖]
 

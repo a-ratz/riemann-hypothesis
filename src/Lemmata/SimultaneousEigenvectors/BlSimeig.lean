@@ -55,7 +55,7 @@ private lemma diagonal_apply_comm {n : ℕ} {X : Type u_1} [NormedAddCommGroup X
   by_cases hcd : c = d
   · subst hcd; rfl
   · have h := hA c c d d
-    rw [if_neg hcd, if_neg (Ne.symm hcd), sub_zero] at h
+    rw [ite_eq_right hcd, ite_eq_right (Ne.symm hcd), sub_zero] at h
     have h2 := LinearMap.congr_fun h v
     simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.zero_apply] at h2
     exact sub_eq_zero.mp h2

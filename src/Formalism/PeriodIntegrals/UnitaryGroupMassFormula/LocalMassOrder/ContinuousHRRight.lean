@@ -130,7 +130,7 @@ theorem continuous_act (z : Fin n → Fv F v ⊗[F] E) :
       ((HA.mat (Fv F v) σ J x : GL (Fin n) (Fv F v ⊗[F] E)) : Matrix (Fin n) (Fin n) _) *ᵥ z) := by
   have h : Continuous (fun x : HR (Fv F v) σ J =>
       (((x : GL (Fin n) (Fv F v ⊗[F] E))) : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   exact h.matrix_mulVec continuous_const
 
 def Into (Λ : Set (Fin n → E)) : Set (HA (Fv F v) σ J) :=
@@ -154,7 +154,7 @@ theorem kv_eq (Λ : Set (Fin n → E)) :
         ((((HA.mat (Fv F v) σ J x)⁻¹ : GL (Fin n) (Fv F v ⊗[F] E)) : Matrix (Fin n) (Fin n) _) *ᵥ z) = z := by
     intro z
     rw [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec]
-  simp only [Formalism.L2.SG.TypedSets.Kv, Into, Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq, mat_inv]
+  simp only [Formalism.L2.SG.TypedSets.Kv, Into, Set.mem_inter_iff, Set.mem_preimage, Set.mem_ofPred_eq, mat_inv]
   constructor
   · intro h
     refine ⟨fun z hz => (h z).1 hz, fun z hz => ?_⟩
@@ -174,7 +174,7 @@ theorem isClosed_Kv (Λ : Set (Fin n → E)) (hSD : IsSDLoc σ J v Λ) :
           ((HA.mat (Fv F v) σ J x : GL (Fin n) (Fv F v ⊗[F] E)) : Matrix (Fin n) (Fin n) _) *ᵥ z) ⁻¹'
           (latLoc (E := E) v Λ : Set (Fin n → Fv F v ⊗[F] E)) := by
       ext x
-      simp only [Into, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe, Set.mem_setOf_eq]
+      simp only [Into, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe, Set.mem_ofPred_eq]
     rw [e]
     exact isClosed_biInter fun z _ =>
       (isClosed_latLoc σ J v Λ hSD).preimage (continuous_act σ J v z)

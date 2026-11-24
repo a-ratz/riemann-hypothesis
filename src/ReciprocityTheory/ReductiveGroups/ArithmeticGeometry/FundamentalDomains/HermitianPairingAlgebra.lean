@@ -137,9 +137,9 @@ theorem hermitian_lattice_pairing_duality : PerpQuotientSelfDual (E := E) := by
     have hJ0 : J ≠ 0 := by
       intro h
       apply hI
-      rw [← hJc, h, FractionalIdeal.coe_zero]
+      rw [← hJc, h, FractionalIdeal.coeToSubmodule_zero]
     have h1 : (1 : E) ∈ (J : Submodule (𝓞 E) E) * ((J⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) := by
-      rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hJ0]
+      rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hJ0]
       exact FractionalIdeal.one_mem_one _
     have key := Submodule.mul_induction_on
       (C := fun w => ∃ c : E, ∀ y ∈ X.L', IsIntegral ℤ (w * herm X.Gm y x - c * herm X.Gm y ξ)) h1
@@ -149,7 +149,7 @@ theorem hermitian_lattice_pairing_duality : PerpQuotientSelfDual (E := E) := by
         have hu' := (FractionalIdeal.mem_inv_iff hJ0).mp hu
         have hint : ∀ y ∈ X.L', IsIntegral ℤ (u * herm X.Gm y ξ) := fun y hy => by
           have hs : herm X.Gm y ξ ∈ J := by
-            rw [← FractionalIdeal.mem_coe, hJc, ← pairL_apply]
+            rw [← FractionalIdeal.mem_coeToSubmodule, hJc, ← pairL_apply]
             exact Submodule.mem_map_of_mem hy
           obtain ⟨a, ha⟩ := (FractionalIdeal.mem_one_iff _).mp (hu' _ hs)
           rw [← ha]

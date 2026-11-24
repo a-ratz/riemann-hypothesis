@@ -56,20 +56,20 @@ theorem exists_point_finite_ext {X Y : Scheme.{0}} (f : X ⟶ Y) [LocallyOfFinit
     ∃ (L : Type) (_ : Field L) (_ : Algebra K L) (_ : FiniteDimensional K L) (x : Sp L ⟶ X),
       x ≫ f = spMap (algebraMap K L) ≫ y := by
   let P := pullback f y
-  haveI : Nonempty (Sp K) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
+  have : Nonempty (Sp K) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
   obtain ⟨p, -⟩ := (pullback.snd f y).surjective (Classical.arbitrary (Sp K))
   obtain ⟨R, e, he, ⟨q, -⟩, -⟩ := Scheme.exists_affine_mem_range_and_range_subset (X := P) (x := p) (U := ⊤) trivial
   let g' : Spec R ⟶ Sp K := e ≫ pullback.snd f y
-  haveI : LocallyOfFiniteType g' := inferInstance
+  have : LocallyOfFiniteType g' := inferInstance
   obtain ⟨φ, hφ⟩ := Spec.map_surjective g'
   have hφf : φ.hom.FiniteType := by
     rw [← HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType), hφ]
     infer_instance
-  haveI : Nontrivial R := PrimeSpectrum.nonempty_iff_nontrivial.1 ⟨q⟩
+  have : Nontrivial R := PrimeSpectrum.nonempty_iff_nontrivial.1 ⟨q⟩
   obtain ⟨I, hI⟩ := Ideal.exists_maximal R
-  letI : Field (R ⧸ I) := Ideal.Quotient.field I
-  letI : Algebra K (R ⧸ I) := ((Ideal.Quotient.mk I).comp φ.hom).toAlgebra
-  haveI hft : Algebra.FiniteType K (R ⧸ I) :=
+  let : Field (R ⧸ I) := Ideal.Quotient.field I
+  let : Algebra K (R ⧸ I) := ((Ideal.Quotient.mk I).comp φ.hom).toAlgebra
+  have hft : Algebra.FiniteType K (R ⧸ I) :=
     RingHom.FiniteType.comp (RingHom.FiniteType.of_surjective _ Ideal.Quotient.mk_surjective) hφf
   refine ⟨R ⧸ I, inferInstance, inferInstance, finite_of_finite_type_of_isJacobsonRing _ _,
     Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) ≫ e ≫ pullback.fst f y, ?_⟩
@@ -82,8 +82,8 @@ theorem exists_lift_of_proper {X Y : Scheme.{0}} (f : X ⟶ Y) [IsProper f] [Sur
     (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (hV : IsCN V) (y : Sp V ⟶ Y) :
     ∃ (V' : Type) (_ : CommRing V') (_ : IsDomain V') (_ : IsDiscreteValuationRing V') (j : V →+* V') (ξ : Sp V' ⟶ X),
       IsCN V' ∧ Function.Injective j ∧ IsLocalHom j ∧ ξ ≫ f = spMap j ≫ y := by
-  haveI := hV.2.2.1
-  haveI := hV.2.2.2
+  have := hV.2.2.1
+  have := hV.2.2.2
   obtain ⟨L, _, _, _, x, hx⟩ :=
     exists_point_finite_ext f (FractionRing V) (spMap (algebraMap V (FractionRing V)) ≫ y)
   obtain ⟨V', _, _, _, hc, _, _, _, hcomp, -, hinj, hloc, -⟩ :=
@@ -105,14 +105,14 @@ theorem surjective_of_isHom_id {o Ω : Type} [CommRing o] [Field Ω] [Algebra o 
   have h : Y.pt ≫ f = M.pt := by
     rw [hf]
     exact (congrArg (· ≫ M.pt) (Spec.map_id _)).trans (Category.id_comp _)
-  haveI : IsDominant (Y.pt ≫ f) := h ▸ inferInstance
-  haveI : IsDominant f := IsDominant.of_comp Y.pt f
+  have : IsDominant (Y.pt ≫ f) := h ▸ inferInstance
+  have : IsDominant f := IsDominant.of_comp Y.pt f
   infer_instance
 
 theorem exists_lift : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (z₁ : X₁.M.Z) (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z), Cmp.ZHAbove X₁ Y πY → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsDiscreteValuationRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V), IsLocalHom ev → IsCN V → ∃ (V' : Type) (_ : CommRing V') (_ : IsDomain V') (_ : IsLocalRing V') (_ : IsDiscreteValuationRing V') (j : V →+* V') (ξ : Sp V' ⟶ Y.Z), IsCN V' ∧ Function.Injective j ∧ IsLocalHom j ∧ ξ ≫ πY = spMap (j.comp ev) ≫ X₁.M.Z.fromSpecStalk z₁ := by
   intro g n F W Z i X₁ z₁ Y πY h V _ _ _ _ ev _ hV
   obtain ⟨U₀, EE, -, -, -, hf, hp⟩ := h
-  haveI := surjective_of_isHom_id hf
+  have := surjective_of_isHom_id hf
   obtain ⟨V', _, _, _, j, ξ, h1, h2, h3, h4⟩ := exists_lift_of_proper πY V hV (spMap ev ≫ X₁.M.Z.fromSpecStalk z₁)
   refine ⟨V', inferInstance, inferInstance, inferInstance, inferInstance, j, ξ, h1, h2, h3, ?_⟩
   rw [h4, ← Category.assoc, ← Spec.map_comp]

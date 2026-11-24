@@ -75,7 +75,7 @@ theorem orbit_finite [TopologicalSpace H] [IsTopologicalGroup H] (ρ : Represent
     intro i
     have e : {h : H | ρ h w = ρ (i : H) w} = (fun h => (i : H)⁻¹ * h) ⁻¹' {h | ρ h w = w} := by
       ext h
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, map_mul, Module.End.mul_apply]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_mul, Module.End.mul_apply]
       constructor
       · intro e; rw [e, rho_inv_rho]
       · intro e
@@ -143,7 +143,7 @@ theorem exists_irreducible_equivariant_projection : ∀ (H W : Type) [Group H] [
   have hadm := hadm_of ρ hK0 hsm hfd
   obtain ⟨K0, hxK, hfdK, -⟩ := hadm x
   set F := GlobalTheory.PRep.fixed ρ K0 with hF
-  haveI := hfdK
+  have := hfdK
   have ofF : ∀ u ∈ F, ∀ k ∈ K0, ρ k u = u := by
     intro u hu k hk
     have := hu ⟨k, hk⟩
@@ -203,9 +203,9 @@ theorem exists_irreducible_equivariant_projection : ∀ (H W : Type) [Group H] [
     · right
       have hQt : Q t := ⟨ht0, memF t (fun k hk => hfix k (ofF y hyF k hk)), hUO (hNU htN)⟩
       have h1 := hmin t hQt
-      haveI : FiniteDimensional ℂ (U.toSubmodule ⊓ F : Submodule ℂ W) :=
+      have : FiniteDimensional ℂ (U.toSubmodule ⊓ F : Submodule ℂ W) :=
         Submodule.finiteDimensional_of_le inf_le_right
-      haveI : FiniteDimensional ℂ (N ⊓ F : Submodule ℂ W) :=
+      have : FiniteDimensional ℂ (N ⊓ F : Submodule ℂ W) :=
         Submodule.finiteDimensional_of_le inf_le_right
       have hle1 : ((orbSpan ρ t).toSubmodule ⊓ F : Submodule ℂ W) ≤ N ⊓ F :=
         inf_le_inf_right _ (orbSpan_le ρ t N' htN)

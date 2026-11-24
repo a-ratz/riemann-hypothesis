@@ -78,7 +78,7 @@ private theorem gOf_coprime_gOth (p : TypX X) : Nat.Coprime (gOf p) (gOth X p) :
 private theorem le_exp_sub_one_of_lt_exp' (y : WithZero (Multiplicative ℤ)) (k : ℤ) (h : y < WithZero.exp k) :
     y ≤ WithZero.exp (k - 1) := by
   rcases eq_or_ne y 0 with rfl | hy
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log hy] at h ⊢
     rw [WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -86,7 +86,7 @@ private theorem le_exp_sub_one_of_lt_exp' (y : WithZero (Multiplicative ℤ)) (k
 
 private theorem exp_add_one_le_of_exp_lt (y : WithZero (Multiplicative ℤ)) (k : ℤ) (h : WithZero.exp k < y) :
     WithZero.exp (k + 1) ≤ y := by
-  have hy : y ≠ 0 := (lt_of_le_of_lt zero_le' h).ne'
+  have hy : y ≠ 0 := (lt_of_le_of_lt zero_le h).ne'
   rw [← WithZero.exp_log hy] at h ⊢
   rw [WithZero.exp_lt_exp] at h
   rw [WithZero.exp_le_exp]
@@ -140,7 +140,7 @@ theorem imA_span_g_max (p : TypX X) :
     intro h
     have h' := hvg
     rw [h, map_zero] at h'
-    exact (lt_of_le_of_lt zero_le' hgt2).ne' h'.symm
+    exact (lt_of_le_of_lt zero_le hgt2).ne' h'.symm
   apply le_antisymm
   · rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, ReciprocityTheory.Aut.mem_maxIdeal_iff, hvg]
     refine lt_of_le_of_lt hle1 ?_
@@ -155,7 +155,7 @@ theorem imA_span_g_max (p : TypX X) :
       exact this
     have hq : Valued.v ((x : p.1.adicCompletion X.B.I.F) /
         (((gOf p : ℕ) : p.1.adicCompletionIntegers X.B.I.F) : p.1.adicCompletion X.B.I.F)) ≤ 1 := by
-      rw [map_div₀, hvg, div_le_one₀ (lt_of_le_of_lt zero_le' hgt2)]
+      rw [map_div₀, hvg, div_le_one₀ (lt_of_le_of_lt zero_le hgt2)]
       exact hx1.trans hge1
     refine ⟨⟨(x : p.1.adicCompletion X.B.I.F) /
         (((gOf p : ℕ) : p.1.adicCompletionIntegers X.B.I.F) : p.1.adicCompletion X.B.I.F),

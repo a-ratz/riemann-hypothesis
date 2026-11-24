@@ -71,7 +71,7 @@ theorem isLat_stdLat (L : PeriodPair) (m : Type) [Fintype m] : IsLat (stdLat L m
   constructor
   · let f : stdLat L m → (∀ _ : m, L.lattice) := fun x i => ⟨x.1 i, x.2 i (Set.mem_univ i)⟩
     have hf : Continuous f :=
-      continuous_pi fun i => Continuous.subtype_mk ((continuous_apply i).comp continuous_subtype_val) _
+      continuous_pi fun i => Continuous.subtype_mk ((continuous_apply i).comp continuous_subtypeVal) _
     have hinj : Function.Injective f := by
       intro x y hxy
       apply Subtype.ext
@@ -110,7 +110,7 @@ theorem isLat_of_comm {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] {Λ
       (AddSubgroup.nsmul_mem_of_relIndex_ne_zero_of_dvd h2 x.2
         (fun k hk hk' => by rw [hN]; exact Nat.dvd_factorial hk hk')).1
     let f : Λ₁ → Λ := fun x => ⟨N • (x : V), hmem x⟩
-    have hf : Continuous f := Continuous.subtype_mk (continuous_subtype_val.const_smul N) _
+    have hf : Continuous f := Continuous.subtype_mk (continuous_subtypeVal.const_smul N) _
     have hinj : Function.Injective f := by
       intro x y hxy
       apply Subtype.ext

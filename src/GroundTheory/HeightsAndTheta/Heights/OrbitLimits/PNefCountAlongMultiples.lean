@@ -76,7 +76,7 @@ theorem count_shift_le {y : (Σ k, ι k) → Ω} {A N : ReciprocityTheory.ChartR
         (chartLat y (HermLine.constShift N ((p : ℝ) * C)).a) n ≤
       smallSectionCount (IsSmallH (mCoordIdeal y) y A) (chartLat y A.a) (q * n) := by
   have hc : Real.exp (-((p : ℝ) * C)) ^ n * Real.exp (((p * n : ℕ) : ℝ) * C) = 1 := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
     convert Real.exp_zero using 2
     push_cast
     ring

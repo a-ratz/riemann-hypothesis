@@ -382,9 +382,9 @@ theorem eq_zero_of_flat_of_forall_fiber [IsNoetherianRing A] [IsNoetherianRing B
         (LocalizedModule.mk x 1 : LocalizedModule q'.asIdeal.primeCompl L) = 0) : x = 0 := by
   refine eq_zero_of_forall_associatedPrimes_exists_smul_eq_zero (A := B) fun q hq ↦ ?_
   have hqB := associatedPrimes_subset_of_flat hq
-  haveI := hqB.isPrime
+  have := hqB.isPrime
   have hp := ((mem_associatedPrimes_iff_of_flat (A := A) q).1 hqB).1
-  haveI := hfib ⟨q.under A, inferInstance⟩ hp
+  have := hfib ⟨q.under A, inferInstance⟩ hp
   obtain ⟨q', h1, h2⟩ := hx ⟨q, inferInstance⟩ hp
   obtain ⟨s, hs, h⟩ := (localizedModule_mk_one_eq_zero_iff q'.asIdeal x).1 h2
   exact ⟨s, fun hsq ↦ hs (((mem_associatedPrimes_iff_generic_of_flat (A := A) q).1 hqB).2

@@ -103,7 +103,7 @@ theorem MaximalIdealHeightFG.proof : MaximalIdealHeightFG.Statement.{u} := by
     rw [← hR]
     refine Order.krullDim_le_of_strictMono
       (PrimeSpectrum.comap (algebraMap (MvPolynomial (Fin s) F) A)) fun p q hpq => ?_
-    exact Ideal.IsIntegral.comap_lt_comap (R := MvPolynomial (Fin s) F) hpq
+    exact Ideal.IsIntegral.under_lt_under (R := MvPolynomial (Fin s) F) hpq
   let n := m.under (MvPolynomial (Fin s) F)
   have : n.IsMaximal := Ideal.isMaximal_under_of_isIntegral_of_isMaximal m
   have h1 := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown n m

@@ -362,8 +362,8 @@ theorem localSubalgebra_eval_sub_mem_maximalIdeal {X O : Type} [CommRing O] [IsL
     (T : Subalgebra O (X → O)) [IsLocalRing T] {f : X → O} (hf : f ∈ T) (x y : X) :
     f x - f y ∈ IsLocalRing.maximalIdeal O := by
   classical
-  haveI : (IsLocalRing.maximalIdeal O).IsMaximal := IsLocalRing.maximalIdeal.isMaximal O
-  letI : Field (O ⧸ IsLocalRing.maximalIdeal O) := Ideal.Quotient.field _
+  have : (IsLocalRing.maximalIdeal O).IsMaximal := IsLocalRing.maximalIdeal.isMaximal O
+  let : Field (O ⧸ IsLocalRing.maximalIdeal O) := Ideal.Quotient.field _
   let ψ : X → (T →+* O ⧸ IsLocalRing.maximalIdeal O) := fun z =>
     (Ideal.Quotient.mk (IsLocalRing.maximalIdeal O)).comp
       ((Pi.evalRingHom (fun _ : X => O) z).comp (T.val : T →+* (X → O)))
@@ -652,7 +652,7 @@ theorem objects_globalStep_gen : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (
     funext x; simp only [Pi.mul_apply, ← mul_assoc, hBx]
   have hX2 : (fun x => eB x * mat (r x) g0 * eB x) * eB = fun x => eB x * mat (r x) g0 * eB x := by
     funext x; simp only [Pi.mul_apply, mul_assoc, hBx]
-  haveI := D.nd.O_complete i
+  have := D.nd.O_complete i
   have hβ := _root_.GlobalTheory.hensel_roots_of_local_family (t := D.R.t) (D.nd.T i) hl (fun x => blockPol (eB x) (eB x * mat (r x) g0 * eB x))
     (blockPol_coeff_mem hT hB hX)
     (fun x => by
@@ -945,7 +945,7 @@ theorem psi_Eel (hS : Formalism.MainNotions.IdempotentChoiceDepthZero.IsOrthogon
   · rw [Matrix.map_zero _ (map_zero _), Matrix.zero_mulVec]
     exact congrArg Prod.fst (h (v, 0))
   · have := congrFun (congrArg Prod.snd (h (0, fun _ => 1))) c
-    simp only [mul_one, if_neg hc] at this
+    simp only [mul_one, ite_eq_right hc] at this
     exact IsFractionRing.injective (D.nd.O i) (KK D.nd i) (this.trans (map_zero _).symm)
 
 theorem sum_blocks (hS : Formalism.MainNotions.IdempotentChoiceDepthZero.IsOrthogonalIdempotentDecomposition D.nd r ρ π S)
@@ -997,7 +997,7 @@ theorem del_sq_smul (hS : Formalism.MainNotions.IdempotentChoiceDepthZero.IsOrth
   obtain ⟨m, f, g, hf, e⟩ := inR'_Eel hS
   have h := del_smul_sum hS Xs ψ hE hψ hf e hw
   have h0 := (sum_blocks hS e).2 ⟨0, D.R.t_odd.pos⟩
-  simp only [zero_add, if_true, mul_comm (f _ _)] at h0
+  simp only [zero_add, ite_true, mul_comm (f _ _)] at h0
   simp only [amitsur_d0_apply, smul_sub, Finset.sum_sub_distrib, Check.WKG_eq_matKO] at h
   rw [← matKO_sum, hM e, ← Finset.sum_smul, h0, ← zero_smul (D.nd.O i) (1 : Matrix (Fin k) (Fin k) (D.nd.O i)),
     Check.matKO_smul_one, zero_smul, smul_zero, zero_sub, neg_eq_zero, smul_smul] at h
@@ -1030,7 +1030,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
     · simp only [(psi_scalar hS hf).2 c]
     · intro m f g e
       have h := (sum_blocks hS e).2 c
-      rw [if_neg hc] at h
+      rw [ite_eq_right hc] at h
       simp only [hχ, smul_smul]
       rw [← Finset.sum_smul]
       convert zero_smul (D.nd.O i) (1 : Matrix (Fin 1) (Fin 1) (D.nd.O i))
@@ -1315,7 +1315,7 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (i
     refine hlen'.trans (add_le_add ?_ (Finset.sum_le_sum fun q hq' =>
       _root_.GlobalTheory.Cut.QuadN.main D i r ρ π Set.univ S hr hS hπ q (Or.inr hq') (hQ q hq').1 c))
     by_cases hc : (c : ℕ) = 0
-    · rw [if_pos hc]
+    · rw [ite_eq_left hc]
       have e : (c : ℕ) + 1 = 1 := by omega
       rw [e] at hZ1
       have hloc : ∀ w (hw : w ∈ placesOver D.host.E (D.nd.l i)), ∀ f ∈ C',
@@ -1328,7 +1328,7 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (i
       · exact GlobalTheory.CutTrivIne.main D i C' v hv fun f hf =>
           (Submodule.span_le.mpr fun z hz => (hl v hv).2.2 z hz) (hloc v hv f hf)
       · exact hunr v hv
-    · rw [if_neg hc]
+    · rw [ite_eq_right hc]
       have h2 : 2 ≤ (c : ℕ) + 1 := by omega
       have ht : (c : ℕ) + 1 ≤ D.R.t := c.2
       have h := _root_.GlobalTheory.Cut.ShaBound.main D i ((c : ℕ) + 1) C' hZ1 h2 ht
@@ -1344,11 +1344,11 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (i
   have hz : ∀ q ∈ D.nd.Q i, lenQ i (D.nd.zeta i q - 1) = ((lenQ i (D.nd.zeta i q - 1)).toNat : ℕ∞) := by
     intro q hq
     obtain ⟨n, hn⟩ := CutCore.exists_length_quot (sub_ne_zero.mpr (hQ q hq).2)
-    rw [lenQ, hn, ENat.toNat_coe]
+    rw [lenQ, hn, ENat.toNat_natCast]
   set z : HeightOneSpectrum (𝓞 D.host.E) → ℕ := fun q => (lenQ i (D.nd.zeta i q - 1)).toNat with hzdef
   set g : ℕ → ℕ := fun e => (Formalism.GaloisCohomology.shaLen (D.nd.ldat (D.nd.l i)) (e : ℤ)).toNat with hg
   have hg' : ∀ e ∈ Finset.Ioo 0 D.R.t, Formalism.GaloisCohomology.shaLen (D.nd.ldat (D.nd.l i)) (e : ℤ) = (g e : ℕ∞) :=
-    fun e he => (ENat.coe_toNat (hsha e he).ne).symm
+    fun e he => (ENat.natCast_toNat (hsha e he).ne).symm
   have ht : 0 < D.R.t := D.R.t_odd.pos
   set h := padicValNat (D.nd.l i) (hE D.host) with hh
   have hχ' : ∀ c : Fin D.R.t, Module.length (D.nd.O i) ↥(cocChi i r S Set.univ c) ≤
@@ -1357,23 +1357,23 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (i
     refine (hχ c).trans (le_of_eq ?_)
     rw [Finset.sum_congr rfl hz, lenQ, hL]
     by_cases hc : (c : ℕ) = 0
-    · rw [if_pos hc, if_pos hc]
+    · rw [ite_eq_left hc, ite_eq_left hc]
       push_cast
       rfl
-    · rw [if_neg hc, if_neg hc, hg' c (Finset.mem_Ioo.mpr ⟨Nat.pos_of_ne_zero hc, c.2⟩)]
+    · rw [ite_eq_right hc, ite_eq_right hc, hg' c (Finset.mem_Ioo.mpr ⟨Nat.pos_of_ne_zero hc, c.2⟩)]
       push_cast
       rfl
   have htot := (_root_.GlobalTheory.CutDetOrd.main D i r ρ π Set.univ S hr hS hπ hZ hN).trans
     (add_le_add hρ (Finset.sum_le_sum fun c _ => hχ' c))
   rw [← Nat.cast_sum, ← Nat.cast_add] at htot
-  have hnat := ENat.toNat_le_of_le_coe htot
+  have hnat := ENat.toNat_le_of_le_natCast htot
   have hsum : ∑ c : Fin D.R.t, (L * (if (c : ℕ) = 0 then h else g c) + ∑ q ∈ D.nd.Q i, z q) =
       L * (h + ∑ e ∈ Finset.Ioo 0 D.R.t, g e) + D.R.t * ∑ q ∈ D.nd.Q i, z q := by
     rw [Finset.sum_add_distrib, ← Finset.mul_sum, CutCore.sum_fin_ite ht, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, smul_eq_mul]
   rw [hsum] at hnat
   have hsp : Br.sPi D.loc D.nbr i ρ π = (s : ℚ) / L := by
-    rw [Br.sPi, lenUnit, hL, ← hs, ENat.toNat_coe, ENat.toNat_coe]
+    rw [Br.sPi, lenUnit, hL, ← hs, ENat.toNat_natCast, ENat.toNat_natCast]
   have hsh : ∑ e ∈ Finset.Ioo 0 D.R.t, (D.what₂.shaLen (D.nd.l i) e : ℚ) =
       ((∑ e ∈ Finset.Ioo 0 D.R.t, g e : ℕ) : ℚ) := by
     rw [Nat.cast_sum]
@@ -1384,10 +1384,10 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (i
         ((∑ q ∈ D.nd.Q i, z q : ℕ) : ℚ) / L := by
     rw [Nat.cast_sum, Finset.sum_div]
     refine Finset.sum_congr rfl fun q _ => ?_
-    rw [lenUnit, hL, ENat.toNat_coe]
+    rw [lenUnit, hL, ENat.toNat_natCast]
     rfl
   show lenUnit (O := D.nd.O i) (D.nd.l i) (D.nd.O i ⧸ ccAt (D.nd.T i) (D.nd.Z i) π) ≤ _
-  rw [← ccOff_univ, hsp, hsh, hzq, lenUnit, hL, ENat.toNat_coe]
+  rw [← ccOff_univ, hsp, hsh, hzq, lenUnit, hL, ENat.toNat_natCast]
   have hLq : (0 : ℚ) < L := by exact_mod_cast Nat.pos_of_ne_zero hL0
   generalize (Module.length (D.nd.O i) (D.nd.O i ⧸ ccOff i Set.univ π)).toNat = a at hnat
   generalize ∑ e ∈ Finset.Ioo 0 D.R.t, g e = G at hnat ⊢

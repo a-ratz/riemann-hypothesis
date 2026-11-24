@@ -226,11 +226,11 @@ def zext {A : Type} [Zero A] (a : Fin n → A) : Fin N → A := fun j => if h : 
 theorem iniH_zext {A : Type} [Zero A] (a : Fin n → A) : iniH hN (zext a : Fin N → A) = a := by
   funext i
   show (if h : i.1 < n then a ⟨i.1, h⟩ else 0) = a i
-  rw [dif_pos i.2]
+  rw [dite_eq_left i.2]
 
 theorem zext_iL {A : Type} [Zero A] (a : Fin n → A) : (zext a : Fin N → A) (Br.iL hN) = 0 := by
   show (if h : n < n then a ⟨n, h⟩ else 0) = 0
-  rw [dif_neg (lt_irrefl n)]
+  rw [dite_eq_right (lt_irrefl n)]
 
 theorem hatL_ext {L : Submodule (𝓞 E) (Sp E n)} {M : Submodule (𝓞 E) (Sp E N)}
     (hM : ∀ x, x ∈ M ↔ iniH hN x ∈ L ∧ x (Br.iL hN) ∈ (1 : Submodule (𝓞 E) E)) (x : Fin N → AfE F E) :
@@ -306,7 +306,7 @@ theorem hatL_ext {L : Submodule (𝓞 E) (Sp E n)} {M : Submodule (𝓞 E) (Sp E
           omega
         rw [Pi.add_apply, Pi.smul_apply, Pi.single_eq_of_ne hj, map_zero]
         show _ = (if h : j.1 < n then iniH hN x ⟨j.1, h⟩ else 0) + _ * 0
-        rw [dif_pos hj', mul_zero, add_zero]
+        rw [dite_eq_left hj', mul_zero, add_zero]
         rfl
     rw [e]
     exact Submodule.add_mem _ (hJ _ h1) (Submodule.smul_mem _ _ he)
@@ -398,7 +398,7 @@ theorem tilH_be {N n : ℕ} (hN : N = n + 1) {ST SG : Finset (HeightOneSpectrum 
   show (∀ i : Fin n, (DecoSet.til (ST := ST) pi d).1.be w x i.castSucc = _) ∧ (DecoSet.til (ST := ST) pi d).1.be w x (Fin.last n) = _
   rw [DecoSet.til_val d hT hG] at hx ⊢
   have h1 : (d.1.til (ST := ST) pi).be w x = Fin.snoc (α := fun _ => 𝓞 E ⧸ w.1.asIdeal) (d.1.be w (initL E n x))
-      (redP w.1 (x (Fin.last n) / algebraMap (𝓞 E) E pi)) := if_pos (le_locP _ _ hx)
+      (redP w.1 (x (Fin.last n) / algebraMap (𝓞 E) E pi)) := ite_eq_left (le_locP _ _ hx)
   rw [h1]
   refine ⟨fun i => ?_, ?_⟩
   · rw [Fin.snoc_castSucc]
@@ -462,9 +462,9 @@ theorem isPtOf_tilFr {hc : Formalism.BasicNotions.CMData F E} {N n : ℕ} (hN : 
     rw [hf, hcomp]
     refine hasRes_sum P.1 _ _ (Br.iL hN) _ r ?_ (fun j hj => ?_) (fun j => DetSpec.val_le_of_mem_hatL P.1 (hint x hx) j) ?_
     · have := hkT P (Br.iL hN) (Br.iL hN) hi
-      rwa [if_pos rfl] at this
+      rwa [ite_eq_left rfl] at this
     · have := hkT P (Br.iL hN) j hi
-      rwa [if_neg hj] at this
+      rwa [ite_eq_right hj] at this
     · rw [hlast, adAt_inclE, hr]
   · have hsum : adAt F w.1 (pullV (extGL hN y * k) x i) = adAt F w.1 (pullV (extGL hN y) x i) := by
       rw [hcomp, Finset.sum_eq_single i]
@@ -525,7 +525,7 @@ theorem pt_tilF (hI : I.Ok) (u : B.Word) (p : XPt (B.primes X) B.R I.sel (I.tup 
       HasRes P.1 (adAt B.host.F P.1 ((k⁻¹ : GA B (B.R.N B.R.m)).1 r j))
         (if j = r then Ideal.Quotient.mk P.1.asIdeal (B.fields.conjO (X.piT u)) else 0)) :
     PtOf (extGL (N_m_succ B.R) y * k) (tilF (Pr := B.primes X) (R := B.R) I.sel (I.tup I.mu0) u p) := by
-  haveI := isEmpty_functional_primes_base_tuple I
+  have := isEmpty_functional_primes_base_tuple I
   obtain ⟨p0, hp0, hN0⟩ := hk1
   have hPr := (base_fields_primes_ok B X).2.1
   have hgw : ∀ w : (B.primes X).vGs, ∃ i, ((B.primes X).g i : 𝓞 B.fields.E) ∈ w.1.asIdeal := by
@@ -725,8 +725,8 @@ theorem lastCoordinateUniformizerVector_eq_single (u : B.Word) : z0v B X u = Pi.
     omega
   unfold z0v
   by_cases h1 : j.1 + 1 = B.R.N B.R.m
-  · rw [if_pos h1, e.2 h1, Pi.single_eq_same]
-  · rw [if_neg h1, Pi.single_eq_of_ne (fun h2 => h1 (e.1 h2))]
+  · rw [ite_eq_left h1, e.2 h1, Pi.single_eq_same]
+  · rw [ite_eq_right h1, Pi.single_eq_of_ne (fun h2 => h1 (e.1 h2))]
 
 theorem hform_one_single {A : Type} [CommRing A] {ι : Type} [Fintype ι] [DecidableEq ι] (σ : A →+* A) (i : ι) (a : A) (y : ι → A) :
     hform σ (1 : Matrix ι ι A) (Pi.single i a) y = σ a * y i := by
@@ -822,11 +822,11 @@ theorem lastCoordinateUniformizerVector_spans_orthogonal_line (hg : gramN (I.rec
   rw [lastCoordinateUniformizerVector_eq_single]
   refine line_of_orth (N_m_succ B.R) (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E) ?_ (iXc (I.rec7 l Z)) hiX ?_ _
   · intro h0
-    letI := (I.rec7 l Z).host.cmStar
+    let := (I.rec7 l Z).host.cmStar
     have h1 : (I.rec7 l Z).sp.z = 0 := (Crd.co ((I.rec7 l Z).sp.X (I.rec7 l Z).R.m) (rankN (I.rec7 l Z) _ le_rfl)).map_eq_zero_iff.1 h0
     exact (I.rec7 l Z).sp.z_anis (by rw [h1]; simp)
   · intro x
-    letI := (I.rec7 l Z).host.cmStar
+    let := (I.rec7 l Z).host.cmStar
     have h1 := (I.rec7 l Z).sp.z_orth ((Crd.co (I.rec7 l Z).sp.X' (rankP (I.rec7 l Z))).symm x)
     rw [hT_co (I.rec7 l Z).sp.cm ((I.rec7 l Z).sp.X (I.rec7 l Z).R.m) (rankN (I.rec7 l Z) _ le_rfl)] at h1
     have h2 : hform (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E) (gramN (I.rec7 l Z) B.R.m le_rfl) (iXc (I.rec7 l Z) x) (zc (I.rec7 l Z)) = 0 := h1
@@ -878,8 +878,8 @@ theorem TDat.fv_mk {E K : Type} [Field E] [NumberField E] [Field K] {n : ℕ} {S
   have h1 : ∃ φ : Module.Dual (Res P.1) (A.lv P c), ∀ x : A.N c.1 (S.rep c),
       φ (Submodule.Quotient.mk x) = A.f c.1 (S.rep c) P x := by
     by_contra h2
-    exact h (dif_neg h2)
-  have h2 : A.fv P c = h1.choose := dif_pos h1
+    exact h (dite_eq_right h2)
+  have h2 : A.fv P c = h1.choose := dite_eq_left h1
   rw [h2]
   exact h1.choose_spec x
 
@@ -1107,11 +1107,11 @@ theorem baseL_sup (u : B.Word) {Lb : Submodule (𝓞 B.host.E) (Fin (B.R.N B.R.m
       funext j
       rw [Pi.add_apply, hf, Pi.smul_apply, lastCoordinateUniformizerVector_eq_single]
       by_cases hj : j.1 < B.R.N B.R.m - 1
-      · rw [dif_pos hj, Pi.single_eq_of_ne (fun e => by rw [e] at hj; exact lt_irrefl _ hj), smul_zero, add_zero]
+      · rw [dite_eq_left hj, Pi.single_eq_of_ne (fun e => by rw [e] at hj; exact lt_irrefl _ hj), smul_zero, add_zero]
         rfl
       · have e : j = Br.iL hN := Fin.ext (by show j.1 = B.R.N B.R.m - 1; have := j.2; omega)
         subst e
-        rw [dif_neg hj, Pi.single_eq_same, zero_add, hr, Algebra.smul_def]
+        rw [dite_eq_right hj, Pi.single_eq_same, zero_add, hr, Algebra.smul_def]
         show algebraMap (𝓞 B.host.E) B.host.E (X.piT u * t) = _
         rw [map_mul, mul_comm]
     rw [e]
@@ -1129,8 +1129,8 @@ theorem baseL_sup (u : B.Word) {Lb : Submodule (𝓞 B.host.E) (Fin (B.R.N B.R.m
       · exact ⟨0, by simp, fun _ => dvd_zero _⟩
     · unfold z0v
       by_cases hj : j.1 + 1 = B.R.N B.R.m
-      · exact ⟨X.piT u, by rw [if_pos hj], fun _ => dvd_rfl⟩
-      · exact ⟨0, by rw [if_neg hj]; simp, fun e => absurd e hj⟩
+      · exact ⟨X.piT u, by rw [ite_eq_left hj], fun _ => dvd_rfl⟩
+      · exact ⟨0, by rw [ite_eq_right hj]; simp, fun e => absurd e hj⟩
 
 end GlobalTheory.Mem.Col2.TilX
 

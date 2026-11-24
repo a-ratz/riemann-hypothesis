@@ -188,9 +188,9 @@ theorem move (h : Hyp L nb uM nb' w₁ cM δ) (u : Fin L.n → AE F E) (β'' : n
     · simp
   refine Prod.ext (funext fun k => ?_) ?_
   · show inFrame d.b (kom L uM nb' (u, β'')) (Sum.inl L.i₀) (Sum.inr (L.em k)) = B k
-    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, if_neg (ComplexParameterFamilyContinuity.em_ne L k), zero_add, sB_i0em]
+    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, ite_eq_right (ComplexParameterFamilyContinuity.em_ne L k), zero_add, sB_i0em]
   · show ellA δ (inFrame d.b (kom L uM nb' (u, β'')) (Sum.inl L.i₀) (Sum.inr L.i₀)) = A
-    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, if_pos rfl, sB_i0i0, add_zero, map_smul, ellA_self h.δ0,
+    rw [hf, Matrix.fromBlocks_apply₁₂, Matrix.add_apply, hrow, ite_eq_left rfl, sB_i0i0, add_zero, map_smul, ellA_self h.δ0,
       smul_eq_mul, mul_one]
 
 end PositivityTheory.SiegelWeilFormula.Act.C5.CoordK

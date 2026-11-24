@@ -194,10 +194,10 @@ open SiegelDescent
 theorem exists_siegPre_of_descended_data : ∀ (h M : ℕ) (o : Type) [CommRing o] (ζ : o) (K₀ K : Type) [Field K₀] [Field K] (i : K₀ →+* K) (s₀ : Sp K₀ ⟶ Sp o) (s : Sp K ⟶ Sp o) (c : SiegPre h M ζ s) (A₀ : Over (Sp K₀)) [GrpObj A₀] (φ : c.A.left ⟶ A₀.left) (φ₂ : (G2 c.A).left ⟶ (G2 A₀).left) (P₀ : LB (G2 A₀).left) (lev₀ : Fin h ⊕ Fin h → (𝟙_ (Over (Sp K₀)) ⟶ A₀)), s = spMap i ≫ s₀ → IsGrpPullback c.A A₀ (spMap i) φ → IsSquare φ φ₂ → P₀.IsLB → LBIso c.P (P₀.pull φ₂) → (∀ u, (c.lev (Pi.single u 1)).left ≫ φ = spMap i ≫ (lev₀ u).left) → ∃ c₀ : SiegPre h M ζ s₀, SiegPB c c₀ (spMap i) := by
   intro h M o _ ζ K₀ K _ _ i s₀ s c A₀ _ φ φ₂ P₀ lev₀ hs hp sq hP₀ hw hlev
   have ab : IsAbelianScheme A₀ := (_root_.GlobalTheory.FieldDescentAb.isAbelianScheme_and_relDim_descend K₀ K i A₀ c.A φ hp c.ab).1
-  haveI := ab.comm
-  haveI := ab.smooth
-  haveI := ab.proper
-  haveI := ab.geomConnected
+  have := ab.comm
+  have := ab.smooth
+  have := ab.proper
+  have := ab.geomConnected
   have epi : ∀ (F F' : Type) [Field F] [Field F'] (j : F →+* F'), Epi (spMap j) := fun F F' _ _ j =>
     ((_root_.GlobalTheory.FieldBaseChange.epi_and_isMonHom_iff F F' j).1 _ _ (𝟙 _) (𝟙 _) (spMap j) (IsPullback.of_vert_isIso ⟨by simp⟩)).1
   have hφ : φ ≫ A₀.hom = c.A.hom ≫ spMap i := hp.1.w
@@ -230,7 +230,7 @@ theorem exists_siegPre_of_descended_data : ∀ (h M : ℕ) (o : Type) [CommRing 
     rw [map_zpow, (hρ _ _).2 (hlev u)]
   have hlev' : ∀ a, (c.lev a).left ≫ φ = spMap i ≫ (lev a).left := fun a => (hρ _ _).1 (ρlev a)
   have ρinj : Function.Injective ρ := fun x y e => by
-    haveI := epi _ _ i
+    have := epi _ _ i
     exact Over.OverMorphism.ext ((cancel_epi (spMap i)).1
       (((hρ x _).1 rfl).symm.trans ((hρ y _).1 e.symm)))
   refine ⟨{ A := A₀, ab := ab, P := P₀, isLB := hP₀
@@ -248,7 +248,7 @@ theorem exists_siegPre_of_descended_data : ∀ (h M : ℕ) (o : Type) [CommRing 
     (by rw [hs, ← Category.assoc, ← e, Category.assoc, hx, spMap_comp]) (congrArg j' hz)
   obtain ⟨σ, hσ⟩ := exists_liftHom hp (Over.mk (spMap j)) (Over.mk (spMap i')) (spMap j') e
   have σinj : Function.Injective σ := fun x y e => by
-    haveI := epi _ _ j'
+    have := epi _ _ j'
     exact Over.OverMorphism.ext ((cancel_epi (spMap j')).1
       (((hσ x _).1 rfl).symm.trans ((hσ y _).1 e.symm)))
   have pt : ∀ a, (toUnit (Over.mk (spMap j)) ≫ c.lev a).left ≫ φ =

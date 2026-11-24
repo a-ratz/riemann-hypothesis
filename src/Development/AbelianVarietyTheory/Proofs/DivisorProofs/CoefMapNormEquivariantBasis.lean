@@ -133,7 +133,7 @@ theorem linearIndependent (hE : ∀ v, c' (up φ lam v) = c₀ v)
     (hli : LinearIndependent ℂ fun j => c₀ (bVV K lam j)) {m : ℕ} (b : Fin m → VV K' lam) (hb : LinearIndependent K' b) :
     LinearIndependent ℂ fun j => c' (b j) := by
   classical
-  letI : Algebra K' ℂ := σ'.toAlgebra
+  let : Algebra K' ℂ := σ'.toAlgebra
   choose a ha using fun j => exists_coord φ lam (b j)
   have h1 : LinearIndependent K' a := by
     refine LinearIndependent.of_comp (Fintype.linearCombination K' fun k => up φ lam (bVV K lam k)) ?_

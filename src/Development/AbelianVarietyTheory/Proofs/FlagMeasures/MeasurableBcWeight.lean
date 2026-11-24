@@ -116,7 +116,7 @@ theorem lintegral_cell {X Y : Type} [MeasurableSpace X] [MeasurableSpace Y] (μ 
   have hdm : Measurable fun x => ENNReal.ofReal (w x) := ENNReal.measurable_ofReal.comp hw
   have hg : Measurable fun y => ENNReal.ofReal (S.indicator F y) := ENNReal.measurable_ofReal.comp hF
   have h1 : ((μ.withDensity fun x => ENNReal.ofReal (w x)).map φ) Sᶜ = 0 := by
-    rw [Measure.smul_apply, smul_eq_mul, mul_eq_zero] at hS
+    rw [smul_apply, smul_eq_mul, mul_eq_zero] at hS
     exact hS.resolve_left ha'
   have h2 : ∀ᵐ y ∂((μ.withDensity fun x => ENNReal.ofReal (w x)).map φ), y ∈ S := by
     rw [ae_iff]

@@ -111,7 +111,7 @@ theorem connectedComponent_mem {X : Type} [TopologicalSpace X] (hfin : (irreduci
         fun h => hpZ ((show irreducibleComponent p = _ from h) ▸ mem_irreducibleComponent)⟩ mem_irreducibleComponent
   have ho : IsOpen (irreducibleComponent z) := by
     rw [hU]
-    exact ((hfin.subset Set.diff_subset).isClosed_biUnion fun W hW =>
+    exact ((hfin.subset Set.sdiff_subset).isClosed_biUnion fun W hW =>
       isClosed_of_mem_irreducibleComponents _ hW.1).isOpen_compl
   have e : connectedComponent z = irreducibleComponent z :=
     ((IsClopen.connectedComponent_subset ⟨isClosed_irreducibleComponent, ho⟩ mem_irreducibleComponent)).antisymm

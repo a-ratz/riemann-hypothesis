@@ -389,7 +389,7 @@ theorem hasIwasawa_inert : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L
     ¬ Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v →
       HasIwasawa D.sp.cm.sig (dblSp A).gram (KFin D.sp.cm.sig (dblSp A).gram L v) := by
   intro D A L hL v hv
-  haveI : Submodule.IsFullLattice D.host.E L :=
+  have : Submodule.IsFullLattice D.host.E L :=
     Formalism.IndefR.Fin.PDA.selfDual_isFullLattice A L hL
   have := v.isMaximal
   obtain ⟨P, hP, hPv⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 D.host.E) v.asIdeal

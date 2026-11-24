@@ -186,7 +186,7 @@ def resFun : (G → T.V) →ₗ[O] (↥H → T.V) := LinearMap.funLeft O T.V (Su
 
 theorem resFun_Z1T (c : G → T.V) (hc : c ∈ latticeCocycles T.L) : resFun T H c ∈ latticeCocycles (resLat T H) := by
   obtain ⟨⟨hcont, hcoc⟩, hT⟩ := hc
-  refine ⟨⟨hcont.comp continuous_subtype_val, fun g h => ?_⟩, ?_⟩
+  refine ⟨⟨hcont.comp continuous_subtypeVal, fun g h => ?_⟩, ?_⟩
   · simp only [resFun, LinearMap.funLeft_apply, Subgroup.coe_mul, hcoc]
     rfl
   · intro g _
@@ -989,7 +989,7 @@ theorem ε_ne_one : AI.ε ≠ 1 := by
   let c : OC l → OC l := fun μ => if h : μ ∈ s then Classical.choose (hfac μ h) else 0
   have hc : ∀ μ ∈ s, 1 - μ = (1 - AI.ζ 2) * c μ := by
     intro μ hμ
-    simp only [c, dif_pos hμ]
+    simp only [c, dite_eq_left hμ]
     exact Classical.choose_spec (hfac μ hμ)
   rw [Finset.prod_congr rfl hc, Finset.prod_mul_distrib, Finset.prod_const] at hev
   have hcard : s.card = l * (l - 1) := by

@@ -118,11 +118,11 @@ theorem eq_one_of_pow_eq_one_of_geometric : ∀ (S : Scheme.{0}) (A : Over S) [G
         (Over.homMk q rfl : Over.mk (q ≫ T.hom) ⟶ T) ≫ x = 1) → x = 1 := by
   intro S A _ _ hA m _ hm T x hx hgeo
   let f := (ReciprocityTheory.ChartRestriction.G.Out.mulA A m).left
-  haveI : FormallyUnramified f := GlobalTheory.formallyUnramified_mulA S A m hm
-  haveI : Smooth A.hom := hA.smooth
+  have : FormallyUnramified f := GlobalTheory.formallyUnramified_mulA S A m hm
+  have : Smooth A.hom := hA.smooth
   have hfA : f ≫ A.hom = A.hom := Over.w _
-  haveI : LocallyOfFiniteType (f ≫ A.hom) := by rw [hfA]; infer_instance
-  haveI : LocallyOfFiniteType f := locallyOfFiniteType_of_comp f A.hom
+  have : LocallyOfFiniteType (f ≫ A.hom) := by rw [hfA]; infer_instance
+  have : LocallyOfFiniteType f := locallyOfFiniteType_of_comp f A.hom
   have hpow : ∀ y : T ⟶ A, y ≫ ReciprocityTheory.ChartRestriction.G.Out.mulA A m = y ^ m := fun y => by
     simp [ReciprocityTheory.ChartRestriction.G.Out.mulA, MonObj.comp_pow]
   have hf : x.left ≫ f = (1 : T ⟶ A).left ≫ f := by
@@ -347,7 +347,7 @@ theorem pow_eq_one_of_lift {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Co
 
 theorem kernel_primePower_descent : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (c : ℕ), (∃ e : ℕ, c = p ^ e) → IsUnit ((p : ℕ) : R) → ∀ (H : Subgroup (𝟙_ (Over S) ⟶ o.A)) (A' : Over S) [GrpObj A'] [IsCommMonObj A'] (ψ : o.A ⟶ A'), IsAbelianScheme A' → IsMonHom ψ → GlobalTheory.ZM.IsGaloisCover H (fun h => (transl h.1).left) ψ.left → (∀ (κ : Type) [Field κ] [IsAlgClosed κ] (x : Sp κ ⟶ S) (g : Over.mk x ⟶ o.A), g ^ c = 1 → (∀ h ∈ H, Out.WeilIs (G2 o.A) (Hecke.lbPow o.P c) 1 (lift g 1 : Over.mk x ⟶ G2 o.A) (lift 1 (toUnit (Over.mk x) ≫ h)) 1) → ∃ h ∈ H, g = toUnit (Over.mk x) ≫ h) → ∀ P' : LB (G2 A').left, P'.IsLB → (∃ t : (P'.pull (lift (1 : A' ⟶ A') (𝟙 A')).left).Gen, t.IsGen) → (∃ t : (P'.pull (lift (𝟙 A') (1 : A' ⟶ A')).left).Gen, t.IsGen) → LBIso (Hecke.lbPow o.P c) (P'.pull (sq2 ψ)) → ∃ e : ℕ, e.Coprime p ∧ ∀ (T : Over S) (x : T ⟶ A'), (∃ t : (P'.pull (lift (snd A' T ≫ x) (fst A' T)).left).Gen, t.IsGen) → x ^ e = 1 := by
   intro p _ D R _ b N S s o c hc hpu H A' _ _ ψ hA' hψ hG hH P' hP' r₁ r₂ hiso
-  haveI := hψ
+  have := hψ
   obtain ⟨e₀, he₀, hker⟩ := o.kerP
   obtain ⟨e, rfl⟩ := hc
   refine ⟨e₀, he₀, ?_⟩
@@ -413,7 +413,7 @@ theorem kernel_primePower_descent : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
       exact ⟨V, hV, GlobalTheory.DescendedPrincipal.exists_theta_of_translDiff hP' _ V c hc⟩
   have hPc : (Hecke.lbPow o.P (p ^ e)).IsLB := LB.isLB_linComb o.isLB _ _
   let ψ2 : G2 o.A ⟶ G2 A' := lift (fst o.A o.A ≫ ψ) (snd o.A o.A ≫ ψ)
-  haveI : IsMonHom ψ2 := inferInstance
+  have : IsMonHom ψ2 := inferInstance
   have hw : LBIso (Geo.Tor.lbPow (Hecke.lbPow o.P (p ^ e)) 1) (P'.pull ψ2.left) :=
     LBIso.trans (GlobalTheory.isLB_lbPow hPc 1) hPc (pull_isLB hP' _) (GlobalTheory.lbIso_lbPow_one hPc) hiso
   have hHψ : ∀ h ∈ H, h ≫ ψ = 1 := fun h hh => comp_eq_one_of_transl ψ h (hG.inv ⟨h, hh⟩)
@@ -540,7 +540,7 @@ theorem exists_pairing : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
   have he : ∀ g g' : Over.mk x ⟶ A, ∀ hg : g ^ c = 1, ∀ hg' : g' ^ c = 1,
       Out.WeilIs (G2 A) (Hecke.lbPow P c) 1 (lift g 1 : Over.mk x ⟶ G2 A) (lift 1 g') (unitOn (e g g')) := by
     intro g g' hg hg'
-    simp only [e, dif_pos (And.intro hg hg')]
+    simp only [e, dite_eq_left (And.intro hg hg')]
     exact (ex g g' hg hg').choose_spec
   have hmulc : ∀ g₁ g₂ : Over.mk x ⟶ A, g₁ ^ c = 1 → g₂ ^ c = 1 → (g₁ * g₂) ^ c = 1 := by
     intro g₁ g₂ h₁ h₂
@@ -599,7 +599,7 @@ theorem exists_pow_inv (c n : ℕ) (h : c.Coprime n) :
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · rw [Nat.coprime_zero_right] at h
     exact ⟨1, fun q _ => by rw [h, _root_.one_mul, pow_one]⟩
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   refine ⟨(((ZMod.unitOfCoprime c h)⁻¹ : (ZMod n)ˣ) : ZMod n).val, fun q hq => ?_⟩
   have e : (c * (((ZMod.unitOfCoprime c h)⁻¹ : (ZMod n)ˣ) : ZMod n).val) % n = 1 % n := by
     rw [← ZMod.val_natCast, Nat.cast_mul, ZMod.natCast_zmod_val, ← ZMod.val_one_eq_one_mod]
@@ -653,8 +653,8 @@ theorem exists_tateIsoO_quot : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
     intro n hn hnp q
     constructor
     · intro hq
-      haveI := hGal.fin
-      haveI := hGal.onto
+      have := hGal.fin
+      have := hGal.onto
       obtain ⟨a₀, ha₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective ψ.left q.left
       let a : Over.mk x ⟶ o.A := Over.homMk a₀ (by
         show a₀ ≫ o.A.hom = x
@@ -876,7 +876,7 @@ theorem exists_pairing {s : S ⟶ Sp R} (o : Obj b N s) (c : ℕ) (hc : ∃ e : 
       Out.WeilIs (G2 o.A) o.P c (lift g 1 : Over.mk x ⟶ G2 o.A) (lift 1 g') (unitOn (e g g')) :=
     fun g g' hg hg' => GlobalTheory.BiextPairing.weilIs_of_hecke_lbPow hG2 o.isLB c ((he g g' hg hg' _).2 rfl)
   have hact : ∀ (a : D.O) (g : Over.mk x ⟶ o.A), g ^ c = 1 → (g ≫ o.act.act a) ^ c = 1 := fun a g hg => by
-    haveI := o.act.hom a
+    have := o.act.hom a
     rw [← MonObj.pow_comp, hg, MonObj.one_comp]
   refine ⟨e, he, hl, hr, fun a g g' hg hg' => hinj ?_, fun g g' hg hg' => hinj ?_, fun g hg h => ?_⟩
   · exact GlobalTheory.T.commutatorPairing_adjoint_eq_of_pullback_iso S o.A o.P o.ab o.isLB _ _ (o.act.hom a) (o.act.hom _) (o.rosati a) c _ g g' _ _
@@ -914,9 +914,9 @@ theorem max_geom {k : Type} [Field k] [IsAlgClosed k] {s : Sp k ⟶ Sp R} (o : O
   have hinj : Function.Injective (toUnit (Over.mk x)).left.appTop.hom := by
     have e1 : (toUnit (Over.mk x)).left = x := by simp
     rw [e1]
-    haveI : Nontrivial Γ(Sp κ, ⊤) :=
+    have : Nontrivial Γ(Sp κ, ⊤) :=
       (Scheme.ΓSpecIso (CommRingCat.of κ)).commRingCatIsoToRingEquiv.toEquiv.nontrivial
-    letI : Field Γ(Sp k, ⊤) :=
+    let : Field Γ(Sp k, ⊤) :=
       ((Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.toMulEquiv.isField (Field.toIsField k)).toField
     exact RingHom.injective x.appTop.hom
   have hu1 : u = 1 := Units.map_injective (f := (toUnit (Over.mk x)).left.appTop.hom.toMonoidHom) hinj

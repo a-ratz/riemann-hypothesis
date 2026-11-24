@@ -188,7 +188,7 @@ theorem exp_pair_mem {X : Mat p q} (h : X ∈ upq p q) :
     (expU X, expC (X.trace / 2)) ∈ covSub p q := by
   refine ⟨expU_mem h, ?_⟩
   show Complex.exp (X.trace / 2) ^ 2 = (NormedSpace.exp X).det
-  rw [det_exp, ← Complex.exp_nat_mul]
+  rw [det_exp, ← Complex.exp_natCast_mul]
   congr 1; push_cast; ring
 
 theorem smul_mem_upq {X : Mat p q} (h : X ∈ upq p q) (s : ℝ) : s • X ∈ upq p q := by
@@ -206,7 +206,7 @@ def exptStd (X : Mat p q) : covSub p q :=
   if h : X ∈ upq p q then ⟨(expU X, expC (X.trace / 2)), exp_pair_mem h⟩ else 1
 
 theorem exptStd_of_mem {X : Mat p q} (h : X ∈ upq p q) :
-    exptStd X = ⟨(expU X, expC (X.trace / 2)), exp_pair_mem h⟩ := dif_pos h
+    exptStd X = ⟨(expU X, expC (X.trace / 2)), exp_pair_mem h⟩ := dite_eq_left h
 
 open scoped Matrix.Norms.Operator in
 theorem continuous_matExp : Continuous (NormedSpace.exp : Mat p q → Mat p q) :=
@@ -218,10 +218,10 @@ theorem exptStd_cont : ContinuousOn (exptStd (p := p) (q := q)) (upq p q) := by
       (⟨(expU (X : Mat p q), expC ((X : Mat p q).trace / 2)), exp_pair_mem X.2⟩ : covSub p q) := by
     refine Continuous.subtype_mk (Continuous.prodMk ?_ ?_) _
     · refine Units.continuous_iff.2 ⟨?_, ?_⟩
-      · exact continuous_matExp.comp continuous_subtype_val
-      · exact continuous_matExp.comp continuous_subtype_val.neg
+      · exact continuous_matExp.comp continuous_subtypeVal
+      · exact continuous_matExp.comp continuous_subtypeVal.neg
     · have ht : Continuous fun X : upq p q => (X : Mat p q).trace / 2 :=
-        (continuous_subtype_val.matrix_trace).div_const 2
+        (continuous_subtypeVal.matrix_trace).div_const 2
       refine Units.continuous_iff.2 ⟨?_, ?_⟩
       · exact Complex.continuous_exp.comp ht
       · exact Complex.continuous_exp.comp ht.neg

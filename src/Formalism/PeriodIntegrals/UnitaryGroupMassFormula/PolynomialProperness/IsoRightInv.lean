@@ -191,7 +191,7 @@ theorem isoCore : IsoCore := by
     exact mul_nonneg (Nat.cast_nonneg _) hA0
   have hAD : A ≤ D := by
     rcases Nat.eq_zero_or_pos (Fintype.card ι) with h0 | h0
-    · haveI : IsEmpty ι := Fintype.card_eq_zero_iff.mp h0
+    · have : IsEmpty ι := Fintype.card_eq_zero_iff.mp h0
       have hA' : A = 0 := by
         rw [hA]
         simp

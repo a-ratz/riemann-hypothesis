@@ -118,7 +118,7 @@ theorem isAlgWeight_subrep (L : Type) [Field L] [NumberField L] [IsCMField L] (n
     Formalism.AUTREP.IsAlgWeight L n S.toRepresentation := by
   classical
   obtain ⟨hfin, ι, _, _, b, P, hP⟩ := hρ
-  haveI := hfin
+  have := hfin
   obtain ⟨C, hC⟩ := Submodule.exists_isCompl S.toSubmodule
   let π : V →ₗ[ℂ] S.toSubmodule := Submodule.linearProjOfIsCompl S.toSubmodule C hC
   let e := Module.Free.chooseBasis ℂ S.toSubmodule
@@ -129,7 +129,7 @@ theorem isAlgWeight_subrep (L : Type) [Field L] [NumberField L] [IsCMField L] (n
   have hres : S.toRepresentation γ = π ∘ₗ ρ γ ∘ₗ S.toSubmodule.subtype := by
     ext x : 1
     have hm : ρ γ x ∈ S.toSubmodule := S.apply_mem_toSubmodule γ x.2
-    have h1 := Submodule.linearProjOfIsCompl_apply_left hC ⟨ρ γ x, hm⟩
+    have h1 := Submodule.projectionOnto_apply_left hC ⟨ρ γ x, hm⟩
     rw [LinearMap.comp_apply, LinearMap.comp_apply, Submodule.subtype_apply]
     rw [show π (ρ γ ↑x) = _ from h1]
     apply Subtype.ext
@@ -144,7 +144,7 @@ namespace GlobalTheory.AlgSubrep
 
 theorem exists_irreducible_algWt : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] [Nontrivial V] (ρ : Representation ℂ (ReciprocityTheory.Aut.GQ L n) V), Formalism.AUTREP.IsAlgWeight L n ρ → ∃ (a : NG.AlgWt L n) (j : a.W →ₗ[ℂ] V), Function.Injective j ∧ ∀ γ x, j (a.ρ γ x) = ρ γ (j x) := by
   intro L _ _ _ n V _ _ _ ρ hρ
-  haveI := hρ.1
+  have := hρ.1
   obtain ⟨S, hS⟩ := GlobalTheory.PiIsotypic.exists_irreducible_subrep ρ
   exact ⟨⟨S.toSubmodule, S.toRepresentation, isAlgWeight_subrep L n ρ hρ S, hS⟩,
     S.toSubmodule.subtype, S.toSubmodule.injective_subtype, fun γ x => rfl⟩
@@ -278,7 +278,7 @@ namespace GlobalTheory
 
 theorem matrix_intertwiner_descends : ∀ (K : Type) [Field K] (e : K →+* ℂ) (Γ m p : Type) [Fintype m] [Fintype p] (A : Γ → Matrix m m K) (B : Γ → Matrix p p K), (∃ X : Matrix p m ℂ, X ≠ 0 ∧ ∀ γ, X * (A γ).map e = (B γ).map e * X) → ∃ X : Matrix p m K, X ≠ 0 ∧ ∀ γ, X * A γ = B γ * X := by
   intro K _ e Γ m p _ _ A B ⟨X, hX, hXc⟩
-  letI := e.toAlgebra
+  let := e.toAlgebra
   obtain ⟨a, b, hab⟩ : ∃ a b, X a b ≠ 0 := by
     by_contra h
     push_neg at h
@@ -371,9 +371,9 @@ theorem weight_descends : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     rw [LinearMap.toMatrix'_toLin']
   have halg : Formalism.AUTREP.IsAlgWeight L n ρC :=
     GlobalTheory.T.isAlgWeight_of_contragredient_highestWeight L n K e c hc W ρ (Fin N) b ρC hρC (emb t₀) (lam0 t₀) (hw t₀)
-  haveI : Nontrivial W := GlobalTheory.PiIsotypic.nontrivial_of_isIrreducible ρ hρ
+  have : Nontrivial W := GlobalTheory.PiIsotypic.nontrivial_of_isIrreducible ρ hρ
   have hN : 0 < N := Module.finrank_pos
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   obtain ⟨a, j, hj, hjρ⟩ := GlobalTheory.T.exists_irreducible_algebraicWeight_subrep L n (Fin N → ℂ) ρC halg
   obtain ⟨lam, Tc, hTc⟩ := GlobalTheory.T.algebraic_weight_dominant_iso_exists L n ι (fun t => e.comp (emb t)) hinj hcm hcov a
   have hmatch : ∀ γ : ReciprocityTheory.Aut.GQ L n, (((γ : GAf L n) : GL (Fin n) (ReciprocityTheory.Aut.AL L)) :
@@ -417,7 +417,7 @@ theorem weight_descends : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     have hM0 : M = 0 := by
       have := congrArg (Matrix.toLin bC (Pi.basisFun ℂ (Fin N))) h
       simpa [X] using this
-    haveI := GlobalTheory.PiIsotypic.nontrivial_of_isIrreducible a.ρ a.irr
+    have := GlobalTheory.PiIsotypic.nontrivial_of_isIrreducible a.ρ a.irr
     obtain ⟨x, hx⟩ := exists_ne (0 : a.W)
     apply hx
     apply hj
@@ -451,8 +451,8 @@ theorem weight_descends : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
       simpa [Φ] using this
     · have hr : LinearMap.range Φ = ⊤ := congrArg Subrepresentation.toSubmodule h
       exact LinearMap.range_eq_top.1 hr
-  haveI : FiniteDimensional ℂ a.W := a.alg.1
-  haveI : FiniteDimensional K (VV K lam) := Module.Finite.of_basis bK
+  have : FiniteDimensional ℂ a.W := a.alg.1
+  have : FiniteDimensional K (VV K lam) := Module.Finite.of_basis bK
   have hdimC : Module.finrank ℂ a.W ≤ N := by
     have := LinearMap.finrank_le_finrank_of_injective hj
     simpa using this

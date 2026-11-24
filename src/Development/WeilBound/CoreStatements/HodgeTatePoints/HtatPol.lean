@@ -64,9 +64,9 @@ theorem finrank_int_eq {E : Type} [Field E] [NumberField E] (M : Type) [AddCommG
     exact mem_nonZeroDivisors_of_ne_zero (by
       simpa using (FaithfulSMul.algebraMap_injective ℤ (𝓞 E)).ne (nonZeroDivisors.ne_zero hn))
   let f := TensorProduct.mk (𝓞 E) E M 1
-  haveI hloc : IsLocalizedModule S f :=
+  have hloc : IsLocalizedModule S f :=
     (isLocalizedModule_iff_isBaseChange S E f).mpr (TensorProduct.isBaseChange (𝓞 E) M E)
-  haveI : IsLocalizedModule (nonZeroDivisors ℤ) (f.restrictScalars ℤ) :=
+  have : IsLocalizedModule (nonZeroDivisors ℤ) (f.restrictScalars ℤ) :=
     IsLocalizedModule.restrictScalars (nonZeroDivisors ℤ) f
   have h1 := IsLocalizedModule.finrank_eq (nonZeroDivisors ℤ) (f.restrictScalars ℤ) le_rfl
   have h2 := IsLocalizedModule.finrank_eq S f hS
@@ -81,13 +81,13 @@ private theorem exists_span_sup_maximal_smul_eq_top {R : Type} [CommRing R] [IsD
   classical
   let Rp := Localization.AtPrime P
   let f := TensorProduct.mk R Rp M 1
-  haveI hloc : IsLocalizedModule P.primeCompl f :=
+  have hloc : IsLocalizedModule P.primeCompl f :=
     (isLocalizedModule_iff_isBaseChange P.primeCompl Rp f).mpr (TensorProduct.isBaseChange R M Rp)
   have hle : P.primeCompl ≤ nonZeroDivisors R := fun s hs =>
     mem_nonZeroDivisors_of_ne_zero (fun h => hs (h ▸ P.zero_mem))
   have hrank : Module.finrank Rp (TensorProduct R Rp M) = Module.finrank R M :=
     (IsLocalization.finrank_eq Rp P.primeCompl hle).trans (IsLocalizedModule.finrank_eq P.primeCompl f hle)
-  haveI : Module.Free Rp (TensorProduct R Rp M) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free Rp (TensorProduct R Rp M) := Module.free_of_flat_of_isLocalRing
   let b := Module.finBasisOfFinrankEq Rp (TensorProduct R Rp M) hrank
   choose ms hms using fun i => IsLocalizedModule.mk'_surjective P.primeCompl f (b i)
   refine ⟨fun i => (ms i).1, ?_⟩
@@ -124,7 +124,7 @@ private theorem exists_finrank_family_mod_smul {R : Type} [CommRing R] [IsDedeki
   have hm : ∀ P ∈ F, ∃ m : Fin (Module.finrank R M) → M,
       Submodule.span R (Set.range m) ⊔ P • (⊤ : Submodule R M) = ⊤ := by
     intro P hP
-    haveI : P.IsMaximal := Ideal.IsPrime.isMaximal (Ideal.isPrime_of_prime (hprime P hP))
+    have : P.IsMaximal := Ideal.IsPrime.isMaximal (Ideal.isPrime_of_prime (hprime P hP))
       (by rw [← Ideal.zero_eq_bot]; exact (hprime P hP).ne_zero)
     exact exists_span_sup_maximal_smul_eq_top P M
   choose! m hm using hm
@@ -139,7 +139,7 @@ private theorem exists_finrank_family_mod_smul {R : Type} [CommRing R] [IsDedeki
     intro P hP i
     have : u i - m P i = ∑ Q ∈ F, (e Q - if P = Q then 1 else 0) • m Q i := by
       simp only [u, sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq, hP, if_true]
+        Finset.sum_ite_eq, hP, ite_true]
     rw [this]
     exact Submodule.sum_mem _ fun Q hQ => Submodule.smul_mem_smul (he Q hQ P hP) Submodule.mem_top
   set N := Submodule.span R (Set.range u) ⊔ Ideal.span {a} • (⊤ : Submodule R M)
@@ -185,11 +185,11 @@ private theorem exists_finrank_family_mod_smul {R : Type} [CommRing R] [IsDedeki
 open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct NumberField GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.BT GlobalTheory.CompanionTheory.Ar.HT ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor in
 theorem pol_lattice : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (p : ℕ) [Fact p.Prime], ∃ u : Fin (D.p + D.q) → D.La, IsPolLattice (IsCMField.complexConj E).toRingEquiv p D.EF u := by
   intro E _ _ _ H D p _
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   have hfinZ : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.IsTorsionFree (𝓞 E) D.La := inferInstance
-  haveI : Module.IsTorsionFree ℤ D.La := Module.IsTorsionFree.trans (𝓞 E)
+  have : Module.IsTorsionFree (𝓞 E) D.La := inferInstance
+  have : Module.IsTorsionFree ℤ D.La := Module.IsTorsionFree.trans (𝓞 E)
   obtain ⟨u, hu⟩ := exists_finrank_family_mod_smul D.La (D.p + D.q) D.rank (p : 𝓞 E)
     (Nat.cast_ne_zero.mpr (Fact.out : p.Prime).ne_zero)
   refine ⟨u, ⟨inferInstance, hfinZ, D.alt, D.unimod, ?_, ?_, ?_⟩⟩

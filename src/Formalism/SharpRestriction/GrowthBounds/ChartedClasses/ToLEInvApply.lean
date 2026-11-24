@@ -87,7 +87,7 @@ theorem latAd_rat (γ : GL (Fin N) E) (y : GL (Fin N) (E ⊗[F] FiniteAdeleRing 
       rw [hB, bc_mulVec, ← toLE_apply, toLE_inv_apply]
     rw [h1, _root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec, h2]
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_image, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe, key]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe, key]
   constructor
   · intro hx
     exact ⟨toLE γ⁻¹ x, hx, toLE_inv_apply γ x⟩
@@ -104,7 +104,7 @@ theorem latAd_stab (y κ : GL (Fin N) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) (Lb
   unfold latAd
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [_root_.mul_inv_rev, Units.val_mul, ← Matrix.mulVec_mulVec]
   exact hκ _
 
@@ -132,7 +132,7 @@ theorem dualSet_mvL (σ : E →+* E) (J : Matrix (Fin N) (Fin N) E) (γ : GL (Fi
   have hM : cT σ (γ : Matrix (Fin N) (Fin N) E) * J * (γ : Matrix (Fin N) (Fin N) E) = J := hγ
   ext v
   unfold dualSet mvL
-  simp only [Set.mem_setOf_eq, Set.mem_image, Submodule.mem_map, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, Submodule.mem_map, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe]
   constructor
   · intro hv
     refine ⟨toLE γ⁻¹ v, fun x hx => ?_, toLE_inv_apply γ v⟩

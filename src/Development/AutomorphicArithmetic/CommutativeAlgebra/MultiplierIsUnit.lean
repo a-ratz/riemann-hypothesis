@@ -92,7 +92,7 @@ private theorem exists_ne (D : Datum p) : ∃ x y : D.La, D.EF x y ≠ 0 := by
   have hr : 0 < Module.finrank ℤ D.La := by
     rw [D.rankLa]
     exact Nat.mul_pos (Nat.mul_pos D.m_pos D.n_pos) hF
-  haveI := Module.nontrivial_of_finrank_pos hr
+  have := Module.nontrivial_of_finrank_pos hr
   obtain ⟨x, hx⟩ := _root_.exists_ne (0 : D.La)
   have hne : D.EF x ≠ 0 := by
     intro h

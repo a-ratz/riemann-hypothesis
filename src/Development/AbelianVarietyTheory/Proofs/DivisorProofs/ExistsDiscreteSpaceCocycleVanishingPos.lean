@@ -132,7 +132,7 @@ def htpZ (F : PSh) : Homotopy (𝟙 ((chains R).obj (disc.obj F))) (piZ F) :=
 
 theorem piZ_f (F : PSh) (p : ℕ) (hp : 0 < p) : (piZ (R := R) F).f (-(p : ℤ)) = 0 := by
   have h1 := HomologicalComplex.extendMap_f (piC (R := R) F) ComplexShape.embeddingDownNat (i := p) (i' := -(p : ℤ)) rfl
-  simp only [piC, if_neg hp.ne', zero_comp, comp_zero] at h1
+  simp only [piC, ite_eq_right hp.ne', zero_comp, comp_zero] at h1
   exact h1
 
 end GlobalTheory.EtC.DiscRep

@@ -217,8 +217,8 @@ theorem re_star_dot_hessC {D : ℕ} (φ : (Fin D → ℂ) → ℝ) (z x : Fin D 
     unfold levi
     rw [← hH, hIw, hw]
 
-    simp only [map_sum, map_add (f := _), map_smul, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_smul',
+    simp only [map_sum, map_add (f := _), map_smul, sum_apply,
+    add_apply, smul_apply, FunLike.coe_smul,
     Pi.smul_apply, smul_eq_mul]
     simp only [Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_div]
     rw [Finset.sum_comm]

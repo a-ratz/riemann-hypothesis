@@ -98,7 +98,7 @@ theorem stalk_exists_mul_eq {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U)
     (c : X.presheaf.stalk p) :
     ∃ a m : Γ(X, U), IsUnit ((X.presheaf.germ U p hp).hom m) ∧
       c * (X.presheaf.germ U p hp).hom m = (X.presheaf.germ U p hp).hom a := by
-  letI : Algebra Γ(X, U) (X.presheaf.stalk p) :=
+  let : Algebra Γ(X, U) (X.presheaf.stalk p) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨p, hp⟩
   have hloc := hU.isLocalization_stalk ⟨p, hp⟩
   obtain ⟨⟨a, m⟩, hm⟩ := @IsLocalization.surj _ _ _ _ _ _ hloc c
@@ -144,11 +144,11 @@ theorem exists_extension {X Y Z P : Scheme.{0}} (π : Y ⟶ X) (p : X) (y₀ : Y
     (isIso_pushoutSection_of_isAffineOpen H hUST hUSX hUY hV (isAffineOpen_top _) hW₀)
   have hUYaff : IsAffineOpen UY := by
     have hpb := Scheme.Hom.isPullback_resLE H hUST hUSX hUY
-    haveI : IsAffine (W₀ : Scheme.{0}) := hW₀
-    haveI : IsAffine (V : Scheme.{0}) := hV
-    haveI : IsAffine ((⊤ : (Spec (X.presheaf.stalk p)).Opens) : Scheme.{0}) :=
+    have : IsAffine (W₀ : Scheme.{0}) := hW₀
+    have : IsAffine (V : Scheme.{0}) := hV
+    have : IsAffine ((⊤ : (Spec (X.presheaf.stalk p)).Opens) : Scheme.{0}) :=
       isAffineOpen_top _
-    haveI := Scheme.Pullback.isAffine_of_isAffine_isAffine_isAffine
+    have := Scheme.Pullback.isAffine_of_isAffine_isAffine_isAffine
       (π.resLE V W₀ hUSX) ((X.fromSpecStalk p).resLE V ⊤ hUST)
     exact IsAffine.of_isIso hpb.isoPullback.hom
   obtain ⟨d, GlobalTheory.CompanionTheory.RedCov.Levi.hd⟩ := Scheme.Hom.app_surjective c UY hUYaff

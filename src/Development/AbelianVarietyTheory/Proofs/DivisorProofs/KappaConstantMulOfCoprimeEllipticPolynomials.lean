@@ -125,7 +125,7 @@ theorem cptPart_prod [T2Space G₁] [T2Space G₂] (T₁ : Subgroup G₁) (T₂ 
   rw [← Subgroup.closure_prod]
   · congr 1
     ext ⟨x, y⟩
-    simp only [Set.mem_setOf_eq, Set.mem_prod, isCompact_zpowers_prod, Subgroup.mem_prod]
+    simp only [Set.mem_ofPred_eq, Set.mem_prod, isCompact_zpowers_prod, Subgroup.mem_prod]
     tauto
   · exact ⟨T₁.one_mem, by simp⟩
   · exact ⟨T₂.one_mem, by simp⟩
@@ -201,7 +201,7 @@ theorem twCent_star [StarRing R] (δ : GL (Fin n) R)
       rw [Units.ext_iff, Units.val_mul, Units.val_mul, thetaGL_val]
       exact (and_iff_right g.isUnit).symm
     rw [h1, GlobalTheory.Tw.CentralizerAdjoin.cent_eq ⟨δ.isUnit, hs⟩]
-    simp only [Set.mem_setOf_eq, Algebra.adjoin_singleton_eq_range_aeval, AlgHom.mem_range]
+    simp only [Set.mem_ofPred_eq, Algebra.adjoin_singleton_eq_range_aeval, AlgHom.mem_range]
     constructor
     · rintro ⟨⟨f, hf⟩, h⟩
       exact ⟨f, hf.symm, by rw [← adj_aeval, hf, h]⟩
@@ -213,7 +213,7 @@ theorem twCent_iff (c : R →+* R) (hc : ∀ x, c (c x) = x) (δ : GL (Fin n) R)
     (hs : (δ * thetaGL n c δ).val.charpoly.Separable) :
     (∀ g, g ∈ twCent (thetaGL n c) δ ↔ NormOne c (δ * thetaGL n c δ) g.val) ∧
     ∀ f : R[X], aeval (δ * thetaGL n c δ).val f = 0 → aeval ((δ * thetaGL n c δ)⁻¹).val (f.map c) = 0 := by
-  letI : StarRing R :=
+  let : StarRing R :=
     { star := c
       star_involutive := hc
       star_mul := fun x y => by rw [mul_comm y x |>.symm]; exact (map_mul c y x).trans (by rfl) |>.trans rfl
@@ -409,7 +409,7 @@ theorem exists_norm (E : Type) [Field E] [NumberField E] [IsCMField E] {n : ℕ}
     ∃ δ : GL (Fin n) E, (δ * thE E n δ).val.charpoly = P := by
   obtain ⟨hm, hn, hs, hr⟩ := hP
   obtain ⟨N, hN⟩ : ∃ N : Matrix (Fin n) (Fin n) E, N.charpoly = P := hn ▸ exists_charpoly_eq P hm
-  letI : StarRing E :=
+  let : StarRing E :=
     { star := IsCMField.complexConj E
       star_involutive := IsCMField.complexConj_apply_apply E
       star_mul := fun x y => by rw [mul_comm x y]; exact map_mul (IsCMField.complexConj E) y x
@@ -476,10 +476,10 @@ theorem mass_mul {n a b : ℕ} (hn : a + b = n) (δ : GL (Fin n) E) (δ₁ : GL 
     (h : (δ * thE E n δ).val.charpoly = (δ₁ * thE E a δ₁).val.charpoly * (δ₂ * thE E b δ₂).val.charpoly) :
     mass (thF E n) (ratF E n).range (ratF E n δ) =
       mass (thF E a) (ratF E a).range (ratF E a δ₁) * mass (thF E b) (ratF E b).range (ratF E b δ₂) := by
-  haveI : T2Space (Af E) :=
+  have : T2Space (Af E) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 E) => v.adicCompletion E)
       (fun v => (v.adicCompletionIntegers E : Set (v.adicCompletion E))) Filter.cofinite))
-  haveI : Nontrivial (Af E) := by
+  have : Nontrivial (Af E) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     exact (pLoc E ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _)⟩).domain_nontrivial

@@ -77,10 +77,10 @@ theorem det_compl {n : Type} [Fintype n] [DecidableEq n] (M Y : Matrix n n ℝ) 
   have hMZ : ∀ i k, (M * Z) i k = if p k then M i k else (1 : Matrix n n ℝ) i k := by
     intro i k
     by_cases hk : p k
-    · simp only [hk, if_true]
+    · simp only [hk, ite_true]
       rw [Matrix.mul_apply]
       simp [Z, hk, Matrix.one_apply]
-    · simp only [hk, if_false]
+    · simp only [hk, ite_false]
       rw [← h, Matrix.mul_apply, Matrix.mul_apply]
       simp [Z, hk]
   have hZ : Z.det = (toSquareBlockProp Y (fun k => ¬ p k)).det := by
@@ -239,7 +239,7 @@ theorem finrank_int_le {X : Type} [AddCommGroup X] [Module (𝓞 E) X] [Module.F
       intro ht0
       rw [ht0, zero_smul, add_zero] at hst
       exact hne (hx0 s hst) ht0
-    have hI := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) (I := Ideal.span {t}) ht
+    have hI := Ideal.under_ne_bot_of_integral_mem (R := ℤ) (I := Ideal.span {t}) ht
       (Ideal.mem_span_singleton_self t) (NumberField.RingOfIntegers.isIntegral t)
     obtain ⟨N, hN, hN0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
     rw [Ideal.mem_comap, Ideal.mem_span_singleton] at hN
@@ -345,7 +345,7 @@ theorem exists_line_basis {La ι V : Type} [AddCommGroup La] [Module (𝓞 E) La
       rw [map_smul, map_smul, hv, ← algebraMap_smul E β', ← algebraMap_smul E α, smul_smul, ← hβ'.2]
       congr 1
       field_simp
-    have hI := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) (I := Ideal.span {β'}) hβ0
+    have hI := Ideal.under_ne_bot_of_integral_mem (R := ℤ) (I := Ideal.span {β'}) hβ0
       (Ideal.mem_span_singleton_self β') (NumberField.RingOfIntegers.isIntegral β')
     obtain ⟨N, hN, hN0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
     rw [Ideal.mem_comap, Ideal.mem_span_singleton] at hN

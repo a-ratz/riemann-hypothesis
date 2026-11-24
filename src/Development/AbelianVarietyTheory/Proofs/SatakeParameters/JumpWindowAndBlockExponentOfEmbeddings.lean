@@ -52,7 +52,7 @@ theorem window_and_cTB_of_jumps_at_embeddings :
   choose U hUc hUb hUj using hU
   have hpos : 0 < finrank S.Qp S.K := finrank_pos
   have hfin : Finite (S.K →ₐ[S.Qp] S.LL) := Nat.finite_of_card_ne_zero (by omega)
-  letI : Fintype (S.K →ₐ[S.Qp] S.LL) := Fintype.ofFinite _
+  let : Fintype (S.K →ₐ[S.Qp] S.LL) := Fintype.ofFinite _
   have hsub : LocalSituation.Jset S Y ⊆ ((Finset.univ.biUnion U : Finset ℤ) : Set ℤ) := by
     intro a ha
     obtain ⟨τ, hτ⟩ := jump_of_total S.PD Y.ρ hcard a ha

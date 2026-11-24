@@ -77,8 +77,8 @@ theorem UpperTheory.V.Hi.levelUR2GalRes :
       (r g : Matrix (Fin n) (Fin n) (Qbar l)).charpoly.coeff i‖ < 1} :=
     isOpen_lt (continuous_norm.comp (hc.sub continuous_const)) continuous_const
   obtain ⟨h, ⟨hh1, hh2⟩, hhS⟩ := hS.inter_open_nonempty _ (hU.inter hW) ⟨g, rfl, by simp⟩
-  have key := hSb h hhS i b (by rw [hb, Set.mem_setOf_eq.mp hh1])
-  have hh2' := Set.mem_setOf_eq.mp hh2
+  have key := hSb h hhS i b (by rw [hb, Set.mem_ofPred_eq.mp hh1])
+  have hh2' := Set.mem_ofPred_eq.mp hh2
   rw [norm_sub_rev] at hh2'
   calc ‖(r g : Matrix (Fin n) (Fin n) (Qbar l)).charpoly.coeff i - algebraMap c.O (Qbar l) b‖
       = ‖((r g : Matrix (Fin n) (Fin n) (Qbar l)).charpoly.coeff i -

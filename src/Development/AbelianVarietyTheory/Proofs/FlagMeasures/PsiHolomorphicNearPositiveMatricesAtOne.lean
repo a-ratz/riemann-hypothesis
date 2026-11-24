@@ -128,14 +128,14 @@ theorem IsTau.isURepOn {ε : Fin n → Bool} {abelian₂ : Fin n → ℝ} {W : T
     have hc : (τ (star g)).comp (τ g) = 1 := by
       rw [← hmul _ (hsub _ hs) _ (hsub _ hg), hgg, h1]
     have hv : τ (star g) (τ g v) = v := by
-      rw [← ContinuousLinearMap.comp_apply, hc, ContinuousLinearMap.one_apply]
+      rw [← ContinuousLinearMap.comp_apply, hc, one_apply_eq_self]
     have hi : ⟪τ g v, τ g v⟫_ℂ = ⟪v, v⟫_ℂ := by
       rw [hadj g (hsub g hg) v (τ g v), ← Matrix.star_eq_conjTranspose, hv]
     have h2 : ‖τ g v‖ ^ 2 = ‖v‖ ^ 2 := by
       rw [norm_sq_eq_re_inner (𝕜 := ℂ), norm_sq_eq_re_inner (𝕜 := ℂ) v, hi]
     exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).mp h2
   · intro v
-    haveI := hfd
+    have := hfd
     let bs := stdOrthonormalBasis ℂ W
     have hco : ∀ u : W, ContinuousOn (fun g : Matrix (Fin n) (Fin n) ℂ => ⟪u, τ g v⟫_ℂ)
         (Formalism.REAL.Kset ε) :=
@@ -149,8 +149,8 @@ theorem psBasic : PsBasic := by
   intro n ε lam W _ _ τ w _hlam htau
   have hrep : IsURepOn (Formalism.REAL.Kset ε) τ := htau.isURepOn
   obtain ⟨hfd, -, -, -, hirr, hw, -⟩ := htau
-  haveI := hfd
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have := hfd
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hK : ∀ k : KG ε, toMK k ∈ Formalism.REAL.Kset ε := fun k => (mem_KG ε _).1 k.2
   have hinv : ∀ k : KG ε, (toMK k)⁻¹ = star (toMK k) := fun k =>
     Matrix.inv_eq_left_inv (Matrix.mem_unitaryGroup_iff'.mp (hK k).1)
@@ -239,7 +239,7 @@ theorem psBasic : PsBasic := by
       simp_rw [e1] at e2
       simpa [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] using e2
     ext u
-    rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.integral_apply (hI _ hPc),
+    rw [smul_apply, ContinuousLinearMap.integral_apply (hI _ hPc),
       ContinuousLinearMap.id_apply]
     simp only [ContinuousLinearMap.smulRight_apply, show ∀ a b : W, (innerSL ℂ a) b = ⟪a, b⟫_ℂ from fun _ _ => rfl]
     apply ext_inner_left ℂ

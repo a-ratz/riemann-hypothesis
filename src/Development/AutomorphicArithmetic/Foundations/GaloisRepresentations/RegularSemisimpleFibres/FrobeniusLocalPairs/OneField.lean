@@ -80,9 +80,9 @@ private theorem exists_reps {G ι : Type} [Group G] (H U : Subgroup G) (R : Fins
   have hf : ∀ g, S.r g (f (Quotient.mk S g)) := by
     intro g
     by_cases hq : ∃ i ∈ R, Quotient.mk S (x i) = Quotient.mk S g
-    · simp only [f, dif_pos hq]
+    · simp only [f, dite_eq_left hq]
       exact Quotient.exact (hq.choose_spec.2.symm)
-    · simp only [f, dif_neg hq]
+    · simp only [f, dite_eq_right hq]
       exact Quotient.exact (Quotient.out_eq (Quotient.mk S g)).symm
   refine ⟨fun g => f (Quotient.mk S g), hf, ?_, ?_⟩
   · intro g h hh u hu
@@ -90,19 +90,19 @@ private theorem exists_reps {G ι : Type} [Group G] (H U : Subgroup G) (R : Fins
     simp only [this]
   · intro i hi
     have hq : ∃ j ∈ R, Quotient.mk S (x j) = Quotient.mk S (x i) := ⟨i, hi, rfl⟩
-    simp only [f, dif_pos hq]
+    simp only [f, dite_eq_left hq]
     rw [hd _ hq.choose_spec.1 i hi (Quotient.exact hq.choose_spec.2)]
 
 theorem UpperTheory.Gal.InertialTypesAlt.L.cosetSum :
     UpperTheory.Gal.InertialTypesAlt.L.CosetSum := by
   intro G _ _ _ _ _ _ _ _ μ hμ K H hKo hKc hHc hcomm ν hν ι R x V S hV hS hd
   classical
-  haveI : SFinite μ := inferInstance
-  haveI : LocallyCompactSpace H := hHc.locallyCompactSpace
-  haveI : SFinite ν := inferInstance
-  letI cH : CommGroup H :=
+  have : SFinite μ := inferInstance
+  have : LocallyCompactSpace H := hHc.locallyCompactSpace
+  have : SFinite ν := inferInstance
+  let cH : CommGroup H :=
     { (inferInstance : Group H) with mul_comm := fun a b => Subtype.ext (hcomm a a.2 b b.2) }
-  haveI : ν.IsInvInvariant := @Measure.IsHaarMeasure.isInvInvariant_of_regular H cH _ _ _ _ ν hν _ _
+  have : ν.IsInvInvariant := @Measure.IsHaarMeasure.isInvInvariant_of_regular H cH _ _ _ _ ν hν _ _
   obtain ⟨rep, hrep, hinv, hfix⟩ := exists_reps H K R x hd
   let W : G → Set H := fun y => {h | y⁻¹ * (h : G) * y ∈ K}
   have hWcont : ∀ y : G, Continuous fun h : H => y⁻¹ * (h : G) * y := fun y => by fun_prop
@@ -114,7 +114,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cosetSum :
     have hc : IsCompact (W y) := by
       have e : W y = Subtype.val ⁻¹' ((fun k => y * k * y⁻¹) '' (K : Set G)) := by
         ext h
-        simp only [W, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_image]
+        simp only [W, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_image]
         constructor
         · intro hk
           exact ⟨_, hk, by group⟩
@@ -150,7 +150,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cosetSum :
     have key : ∀ h : H, ρ (↑h * g) = (W y).indicator (fun _ => (ν (W y))⁻¹) (⟨h0, hh0⟩ * h) := by
       intro h
       have hr : rep (↑h * g) = y := hrepH g h h.2
-      simp only [ρ, hr, Set.indicator, W, Set.mem_setOf_eq]
+      simp only [ρ, hr, Set.indicator, W, Set.mem_ofPred_eq]
       have e : y⁻¹ * (↑h * g) = (y⁻¹ * ↑(⟨h0, hh0⟩ * h : H) * y) * k0 := by
         rw [hg]
         simp only [Subgroup.coe_mul]
@@ -242,7 +242,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cosetSum :
     intro g
     by_cases hg : g ∈ S <;> simp [F, hg]
   unfold quotIntegral
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   simp_rw [hpt2]
   have hm2 : Measurable fun g => F g * hex.choose g := hFm.mul hex.choose_spec.1
   rw [integral_complex_ofReal, integral_toReal hm2.aemeasurable (ae_lt_top hm2 (hI ▸ hfin)), hI]
@@ -276,7 +276,7 @@ private theorem sg_cont {σ : E ≃+* E} (hσ : Isom σ) : Continuous (sg σ : G
       (IsValuativeTopology.hasBasis_nhds (σ x))]
     intro γ _
     refine ⟨γ, trivial, fun z hz => ?_⟩
-    simp only [Set.mem_setOf_eq] at hz ⊢
+    simp only [Set.mem_ofPred_eq] at hz ⊢
     rw [← map_sub, hσ]
     exact hz
   exact Continuous.units_map _ (continuous_id.matrix_map hc)
@@ -399,11 +399,11 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneField :
           = (diagT E (Fin n) ρ)⁻¹ * (y⁻¹ * ↑h * y) * diagT E (Fin n) ρ := by group
         _ = y⁻¹ * ↑h * y := by
           rw [hu, mul_assoc, diag_comm u ρ, inv_mul_cancel_left]
-    rw [Set.mem_setOf_eq, e, ← SetLike.mem_coe, hK]
+    rw [Set.mem_ofPred_eq, e, ← SetLike.mem_coe, hK]
   have hS : ∀ g, g ∈ {g : GL (Fin n) E | g⁻¹ * δ * sg σ g ∈ elemSet r A} ↔
       ∃ ρ ∈ R, ∃ h ∈ H, ∃ κ ∈ K, g = h * (y * diagT E (Fin n) ρ) * κ := by
     intro g
-    rw [Set.mem_setOf_eq, hsupp g]
+    rw [Set.mem_ofPred_eq, hsupp g]
     constructor
     · rintro ⟨u, hu, κ, hκ, rfl⟩
       obtain ⟨ρ, hρR, p, s, hp, hs, rfl⟩ := (hR u).1 hu

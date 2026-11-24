@@ -62,7 +62,7 @@ theorem torsion_pow_card_succ {R : Type} [CommRing R] [IsDedekindDomain R]
       Nat.card (torsionBySet R M ((w0 ^ j : Ideal R) : Set R)) *
         Nat.card (torsionBySet R M ((w0 : Ideal R) : Set R)) := by
   have hlt : w0 ^ 2 < w0 := by simpa using Ideal.pow_succ_lt_pow hne 1
-  obtain ⟨c0, hc0, hc02⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨c0, hc0, hc02⟩ := IsConcreteLE.exists_of_lt hlt
   have hdvd : w0 ∣ Ideal.span {c0} := Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem _).mpr hc0)
   obtain ⟨b, hb⟩ := hdvd
   have hbw : ¬ b ≤ w0 := by

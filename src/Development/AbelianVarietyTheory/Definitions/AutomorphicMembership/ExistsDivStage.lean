@@ -64,7 +64,7 @@ def ext (σ : K →+* ℂ) (e : V →ₛₗ[σ] M) (b : Module.Basis ι K V) :
 
 theorem ext_one_tmul [Fintype ι] (σ : K →+* ℂ) (e : V →ₛₗ[σ] M) (b : Module.Basis ι K V) (x : V) :
     letI := σ.toAlgebra; ext σ e b ((1 : ℂ) ⊗ₜ[K] x) = e x := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   conv_lhs => rw [← b.sum_repr x]
   conv_rhs => rw [← b.sum_repr x]
 
@@ -76,14 +76,14 @@ theorem ext_one_tmul [Fintype ι] (σ : K →+* ℂ) (e : V →ₛₗ[σ] M) (b 
 
 theorem ext_inj (σ : K →+* ℂ) (e : V →ₛₗ[σ] M) (b : Module.Basis ι K V)
     (h : LinearIndependent ℂ (fun a => e (b a))) : Function.Injective (ext σ e b) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   exact Module.Basis.injective_constr_of_linearIndependent _ h
 
 theorem li_comp [Fintype ι] {V' ι' : Type} [AddCommGroup V'] [Module K V'] (σ : K →+* ℂ) (e : V →ₛₗ[σ] M)
     (b : Module.Basis ι K V) (h : LinearIndependent ℂ (fun a => e (b a))) (ψ : V' →ₗ[K] V)
     (hψ : Function.Injective ψ) (b' : Module.Basis ι' K V') :
     LinearIndependent ℂ (fun a => e (ψ (b' a))) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   have h1 : Function.Injective (ψ.baseChange ℂ) := Module.Flat.lTensor_preserves_injective_linearMap ψ hψ
   have h2 := (Algebra.TensorProduct.basis ℂ b').linearIndependent.map' (ext σ e b ∘ₗ ψ.baseChange ℂ)
     (LinearMap.ker_eq_bot.2 ((ext_inj σ e b h).comp h1))
@@ -97,7 +97,7 @@ theorem ker_rational [Fintype ι] {J : Type} [Fintype J] (σ : K →+* ℂ) (e :
     (hφ : φ ∈ Submodule.span ℂ (Set.range (fun a => e (b a)))) (h0 : ∀ j, N j φ = 0) :
     φ ∈ Submodule.span ℂ (e '' {x | ∀ j, n j x = 0}) := by
   classical
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   obtain ⟨t, rfl⟩ : φ ∈ LinearMap.range (ext σ e b) := by
     rw [ext, Module.Basis.constr_range]; exact hφ
   have hc : ∀ j t, ext σ e b ((n j).baseChange ℂ t) = N j (ext σ e b t) := by

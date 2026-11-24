@@ -220,7 +220,7 @@ theorem set_eq (m j : ℕ) :
         (Fin.castSucc (Fin.last (m + j))) (Fin.castSucc l) = 0
     rw [Matrix.mul_apply]
     simp only [embedding₂, MonoidHom.comp_apply, Subgroup.coe_subtype]
-    simp only [row_levi, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [row_levi, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact hi _ _ (by simp) (by simpa using hl)
   · intro hg
     obtain ⟨A, hA1, hA2⟩ := exists_GL_row (m + j) m (rowQ k (m + j) g⁻¹) hg (rowQ_ne_zero _ _)
@@ -267,9 +267,9 @@ theorem set_eq (m j : ℕ) :
 
 theorem isClosed_HGP_iota (m j : ℕ) :
     IsClosed {g : Mir k (m + (j + 1)) | ∃ h ∈ MirabolicParabolic k m (j + 1), ∃ x : Mir k (m + j), g = h * embedding₂ k (m + j) x} := by
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
   rw [set_eq]
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   exact isClosed_iInter fun l => isClosed_iInter fun _ =>
     isClosed_eq (((continuous_apply l).comp (continuous_rowQ (m + j))).comp continuous_inv) continuous_const
 

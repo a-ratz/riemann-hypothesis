@@ -79,9 +79,9 @@ theorem UpperTheory.Reformulated.B.Qf32.orbit_finite :
     calc ρ g w = ρ (k * (k⁻¹ * g)) w := by rw [mul_inv_cancel_left]
       _ = ρ k (ρ (k⁻¹ * g) w) := by rw [map_mul, Module.End.mul_apply]
       _ = ρ k w := by rw [hg']
-  haveI : CompactSpace (K : Set G) := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace (K : Set G) := isCompact_iff_compactSpace.mp hK
   have hfin := (hloc.comp_continuous
-    (continuous_subtype_val (p := fun g : G => g ∈ (K : Set G)))).range_finite
+    (continuous_subtypeVal (p := fun g : G => g ∈ (K : Set G)))).range_finite
   refine hfin.subset ?_
   rintro x ⟨k, hk, rfl⟩
   exact ⟨⟨k, hk⟩, rfl⟩

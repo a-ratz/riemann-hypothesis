@@ -220,7 +220,7 @@ variable {R : Type} [CommRing R]
 
 theorem mk_le_of_finiteType {D : Type} [CommRing D] (σ : D →+* R) (hσ : σ.FiniteType)
     (h : Cardinal.mk D ≤ Cardinal.continuum) : Cardinal.mk R ≤ Cardinal.continuum := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   have : Algebra.FiniteType D R := hσ
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 this
   refine (Cardinal.mk_le_of_surjective hf).trans (MvPolynomial.cardinalMk_le_max.trans ?_)
@@ -364,13 +364,13 @@ theorem exists_scf_embedding_dvd :
   have hx : 1 < ‖algebraMap K C (algebraMap V K p)⁻¹‖ := by
     rw [map_inv₀, norm_inv, hCp, inv_inv]; exact h1
   obtain ⟨L, hKL, hcl, hac, hL⟩ := GlobalTheory.SmallClosedField.exists_small_closed_subfield hK hx
-  letI : NontriviallyNormedField L :=
+  let : NontriviallyNormedField L :=
     { (inferInstance : NormedField L) with non_trivial := ⟨⟨_, hKL _⟩, hx⟩ }
-  haveI : CompleteSpace L := hcl.completeSpace_coe
-  haveI : CharZero K := charZero_of_injective_ringHom (IsFractionRing.injective V K)
+  have : CompleteSpace L := hcl.completeSpace_coe
+  have : CharZero K := charZero_of_injective_ringHom (IsFractionRing.injective V K)
   let i : K →+* L := (algebraMap K C).codRestrict L hKL
   have hi : ∀ y, ‖i y‖ = ‖algebraMap K C y‖ := fun _ => rfl
-  haveI : CharZero L := charZero_of_injective_ringHom i.injective
+  have : CharZero L := charZero_of_injective_ringHom i.injective
   have hLp : ‖(p : L)‖ = (p : ℝ)⁻¹ := by
     rw [← map_natCast i, hi, ← map_natCast (algebraMap V K), hCp]
   obtain ⟨D, e, he⟩ := GlobalTheory.SmallClosedField.exists_scf_isometry hLp hL
@@ -424,7 +424,7 @@ theorem valF_ne_zero_iff {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (a : Γ(X, U))
   have e1 := Scheme.basicOpen_appLE x ⊤ U h a
   rw [top_inf_eq] at e1
   have e2 : (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom (valF x U a) = (x.appLE U ⊤ h).hom a := by
-    rw [valF, dif_pos h]
+    rw [valF, dite_eq_left h]
     exact (Scheme.ΓSpecIso (CommRingCat.of F)).hom_inv_id_apply _
   have e3 : x ⁻¹ᵁ X.basicOpen a =
       (Sp F).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom (valF x U a)) := by
@@ -440,12 +440,12 @@ theorem valF_ne_zero_iff {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (a : Γ(X, U))
 theorem valF_restrict {U V : X.Opens} (e : V ≤ U)
     (h : ⊤ ≤ x ⁻¹ᵁ V) (a : Γ(X, U)) : valF x V ((X.presheaf.map (homOfLE e).op).hom a) = valF x U a := by
   have h' : ⊤ ≤ x ⁻¹ᵁ U := fun q hq => e (h hq)
-  rw [valF, valF, dif_pos h, dif_pos h', ← Scheme.Hom.map_appLE x h (homOfLE e).op]
+  rw [valF, valF, dite_eq_left h, dite_eq_left h', ← Scheme.Hom.map_appLE x h (homOfLE e).op]
   rfl
 
 theorem valF_sub {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (a b : Γ(X, U)) :
     valF x U (a - b) = valF x U a - valF x U b := by
-  simp only [valF, dif_pos h, map_sub]
+  simp only [valF, dite_eq_left h, map_sub]
 
 theorem le_preimage_iff (U : X.Opens) : ⊤ ≤ x ⁻¹ᵁ U ↔ x (IsLocalRing.closedPoint F) ∈ U := by
   constructor
@@ -726,9 +726,9 @@ theorem exists_div [IsLocalRing O] {q : O} (hq : q ≠ 0) (a : O) {Y : Scheme.{0
     (h : spMap (dualMap (Ideal.Quotient.mk (Ideal.span {q}))) ≫ spMap (epsMul a) ≫ v =
       spMap (dualMap (Ideal.Quotient.mk (Ideal.span {q}))) ≫ spMap (epsMul 0) ≫ v) :
     ∃ w : Sp (DualNumber O) ⟶ Y, spMap (epsMul q) ≫ w = spMap (epsMul a) ≫ v := by
-  haveI : IsLocalRing (DualNumber O) := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun d => by
+  have : IsLocalRing (DualNumber O) := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun d => by
     simpa [TrivSqZeroExt.isUnit_iff_isUnit_fst] using IsLocalRing.isUnit_or_isUnit_one_sub_self d.fst
-  haveI : IsLocalRing (CommRingCat.of (DualNumber O)) := ‹_›
+  have : IsLocalRing (CommRingCat.of (DualNumber O)) := ‹_›
   obtain ⟨R, ψ, κ, hk, rfl⟩ : ∃ (R : CommRingCat.{0}) (ψ : R →+* DualNumber O) (κ : Sp R ⟶ Y), Mono κ ∧
       v = spMap ψ ≫ κ :=
     ⟨_, (Scheme.stalkClosedPointTo v).hom, Y.fromSpecStalk _, inferInstance,
@@ -914,14 +914,14 @@ theorem Rep.pt_comul (χ : A ⊗[O] A →ₐ[O] B) : homAt x (χ.comp h.comul) �
       ext; simp))
 
 theorem Rep.isCocomm : letI := h.bialgebra; Coalgebra.IsCocomm O A := by
-  letI := h.bialgebra
+  let := h.bialgebra
   have : (Algebra.TensorProduct.comm O A A : A ⊗[O] A →ₐ[O] A ⊗[O] A).comp h.comul = (AlgHom.id O _).comp h.comul :=
     h.ext (by rw [h.pt_comul, h.pt_comul, _root_.mul_comm]; congr 2)
   exact ⟨LinearMap.ext fun a => AlgHom.congr_fun this a⟩
 
 theorem Rep.map_mul {u₀ : A} (hu : letI := h.bialgebra; IsGroupLikeElem O u₀) {φ ψ χ : A →ₐ[O] B} [Module.Finite O B]
     (e : homAt x χ ≫ u = (homAt x φ ≫ u) * (homAt x ψ ≫ u)) : χ u₀ = φ u₀ * ψ u₀ := by
-  letI := h.bialgebra
+  let := h.bialgebra
   have h1 : χ = (lift φ ψ fun _ _ => .all _ _).comp h.comul :=
     h.ext (by rw [e, h.pt_comul, lift_comp_includeLeft, lift_comp_includeRight'])
   have h2 : h.comul u₀ = u₀ ⊗ₜ u₀ := hu.comul_eq_tmul_self
@@ -929,7 +929,7 @@ theorem Rep.map_mul {u₀ : A} (hu : letI := h.bialgebra; IsGroupLikeElem O u₀
 
 theorem Rep.map_one {u₀ : A} (hu : letI := h.bialgebra; IsGroupLikeElem O u₀) {χ : A →ₐ[O] B} [Module.Finite O B]
     (e : homAt x χ ≫ u = 1) : χ u₀ = 1 := by
-  letI := h.bialgebra
+  let := h.bialgebra
   have h1 : χ = (Algebra.ofId O B).comp h.counit := h.ext (by rw [e, h.pt_counit])
   have h2 : h.counit u₀ = 1 := hu.counit_eq_one
   rw [h1, AlgHom.comp_apply, h2, _root_.map_one]
@@ -955,7 +955,7 @@ theorem Rep.exists_char (h : Rep q u) {u₀ : A} (hu : letI := h.bialgebra; IsGr
     fun B _ _ _ g => if hg : g ^ q = 1 then (hunit B (h.2 B g hg).exists.choose).unit else 1
   have hχ : ∀ (B : Type) [CommRing B] [Algebra O B] [Module.Finite O B] (φ : A →ₐ[O] B),
       (χ B (homAt x φ ≫ u) : B) = φ u₀ := fun B _ _ _ φ => by
-    simp only [χ, dif_pos (h.pow φ), IsUnit.unit_spec]
+    simp only [χ, dite_eq_left (h.pow φ), IsUnit.unit_spec]
     rw [h.ext (h.2 B _ (h.pow φ)).exists.choose_spec]
   refine ⟨⟨χ, fun B _ _ _ g g' hg hg' => ?_, fun B B' _ _ _ _ _ _ φ g g' hg e => ?_⟩, hχ⟩
   · obtain ⟨ξ, hξ, -⟩ := h.2 B (g * g') (by rw [mul_pow, hg, hg', _root_.one_mul])
@@ -979,7 +979,7 @@ theorem htBound : HTBoundSt := by
   have ha1 : ‖a‖ ≤ 1 := ha.trans (Real.rpow_le_one_of_one_le_of_nonpos hp1.le
     (neg_nonpos.2 (div_nonneg zero_le_one (sub_nonneg.2 hp1.le))))
   obtain ⟨a, rfl⟩ : ∃ b : intO C, (intO C).subtype b = a := ⟨⟨a, ha1⟩, rfl⟩
-  haveI : PreValuationRing (intO C) := ⟨fun r s => by
+  have : PreValuationRing (intO C) := ⟨fun r s => by
     rcases le_total ‖(r : C)‖ ‖(s : C)‖ with h | h
     · by_cases hs : (s : C) = 0
       · exact ⟨0, .inl (Subtype.ext (by simp [hs]))⟩
@@ -991,14 +991,14 @@ theorem htBound : HTBoundSt := by
       · exact ⟨⟨s / r, by
           change ‖(s : C) / r‖ ≤ 1
           rw [norm_div]; exact div_le_one_of_le₀ h (norm_nonneg _)⟩, .inl (Subtype.ext (mul_div_cancel₀ _ hr))⟩⟩
-  haveI : ValuationRing (intO C) := {}
-  haveI : IsFractionRing (intO C) C := IsFractionRing.of_field _ _ fun z => by
+  have : ValuationRing (intO C) := {}
+  have : IsFractionRing (intO C) C := IsFractionRing.of_field _ _ fun z => by
     rcases le_total ‖z‖ 1 with h | h
     · exact ⟨⟨z, h⟩, 1, by simp; rfl⟩
     · exact ⟨1, ⟨z⁻¹, by
         change ‖z⁻¹‖ ≤ 1
         rw [norm_inv]; exact inv_le_one_of_one_le₀ h⟩, by rw [map_one, one_div]; exact (inv_inv z).symm⟩
-  haveI := GlobalTheory.henselianLocalRing_of_valuationRing_of_isAlgClosed (intO C) C
+  have := GlobalTheory.henselianLocalRing_of_valuationRing_of_isAlgClosed (intO C) C
   have hpC : (p : C) ^ m ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
   have hq : (p : intO C) ^ m ≠ 0 := fun h0 => hpC (by simpa using congrArg (intO C).subtype h0)
   obtain ⟨A, _, _, u, _, _, h⟩ := GlobalTheory.T.torsion_representable_finite_free X t.G t.semi (intO C) x (p ^ m)
@@ -1030,8 +1030,8 @@ theorem htBound : HTBoundSt := by
   replace hD : ∀ z, Ideal.Quotient.mk I (D z) = (φ z).snd := LinearMap.congr_fun hD
   have hdvd : ∀ z : intO C, (p : intO C) ^ m ∣ z ↔ Ideal.Quotient.mk I z = 0 := fun z => by
     rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
-  letI := h.bialgebra
-  haveI := h.isCocomm
+  let := h.bialgebra
+  have := h.isCocomm
   have key := _root_.GlobalTheory.GroupLikeDerivation.dvd_mul_of_groupLike C p hp A _ hq D (fun r s => by
       change _ ∣ D (r * s) - h.counit r * D s - h.counit s * D r
       rw [hdvd, map_sub, map_sub, map_mul (Ideal.Quotient.mk I), map_mul (Ideal.Quotient.mk I), hD, hD, hD, ← hfst,
@@ -1214,7 +1214,7 @@ theorem exists_extension {U : Z.X.Opens} (f : ∀ a, Γ(Z.X, (Z.U a).1 ⊓ U))
   have hc : Cardinal.mk R ≤ Cardinal.continuum := by
     obtain ⟨V, hV, hxV, -⟩ := exists_isAffineOpen_mem_and_subset (X := Z.X) hx
     obtain ⟨σ, -, hσ⟩ := HTLine.Dvd.exists_base hp hW Z hV
-    letI := Z.X.presheaf.algebra_section_stalk (⟨x, hxV⟩ : V)
+    let := Z.X.presheaf.algebra_section_stalk (⟨x, hxV⟩ : V)
     have := hV.isLocalization_stalk ⟨x, hxV⟩
     exact (IsLocalization.cardinalMk_le (hV.primeIdealOf ⟨x, hxV⟩).asIdeal.primeCompl).trans
       (HTLine.Dvd.mk_le_of_finiteType σ hσ
@@ -1231,7 +1231,7 @@ theorem exists_extension {U : Z.X.Opens} (f : ∀ a, Γ(Z.X, (Z.U a).1 ⊓ U))
       have hy : y.gen = spMap θ ≫ w₀ := g
       have := hb y a₀ (hy ▸ fun q _ => w₀a (Set.mem_univ (spMap θ q))) fun q _ => (hι (spMap ψ q)).mem_open U.isOpen hx
       rwa [hy, valF_map θ (U := (Z.U a₀).1 ⊓ U) fun q hq => ⟨w₀a hq, w₀U hq⟩] at this
-  obtain ⟨V₁, hx₁, t₁, rfl⟩ := Z.X.presheaf.germ_exist ρ
+  obtain ⟨V₁, hx₁, t₁, rfl⟩ := Z.X.presheaf.exists_germ_eq ρ
   have hC := irreducibleComponent_mem_irreducibleComponents x
   have hg := hC.1.isGenericPoint_genericPoint (isClosed_of_mem_irreducibleComponents _ hC)
   obtain ⟨V, hV, hxV, hle⟩ := exists_isAffineOpen_mem_and_subset (X := Z.X) (x := x)
@@ -1324,7 +1324,7 @@ theorem bdd_step (st : ((E →+* ℂ) × ℕ) ⊕ ℕ) : Bdd Z false true st st 
       linarith
   rw [Nat.cast_add, Nat.cast_one, add_mul, one_mul]
   rcases st with ⟨τ, k⟩ | k
-  · simp only [lnStep, lat, Bool.false_eq_true, false_and, if_false, true_and, sub_zero]
+  · simp only [lnStep, lat, Bool.false_eq_true, false_and, ite_false, true_and, sub_zero]
     split_ifs with h h'
     · have := abs_le.1 (key ((Z.fr a).bc φ τ) ⟨k, h⟩)
       exact abs_le.2 ⟨by linarith, by linarith⟩
@@ -1500,7 +1500,7 @@ theorem natCast_mem_nonunits_of_induces (D : D7) (p : ℕ) [hp : Fact p.Prime] (
     simpa using this
   have hp0 : (p : D.what₂.LL) ≠ 0 := Nat.cast_ne_zero.2 hp.out.ne_zero
   have hv0 : 0 < la.1.valuation D.what₂.LL (p : D.what₂.LL) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hp0)
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hp0)
   have hnot : ((p : ℂ))⁻¹ ∉ W := by
     intro hm
     have h1 : D.what₂.embLL ((p : D.what₂.LL)⁻¹) ∈ W := by simpa using hm
@@ -1608,11 +1608,11 @@ theorem mult_comp (τ : DV.Emb D p) : S.Dw.mult (jc.comp τ) = DV.rkOf (DV.PsiOf
   have h₂ := S.rank_eq
   by_cases h : τ ∈ DV.PsiOf D jc
   · obtain ⟨t, ht⟩ := id h
-    rw [DV.rkOf, if_pos h, ht, Datum.mult, if_pos (A.cm t), h₁]
+    rw [DV.rkOf, ite_eq_left h, ht, Datum.mult, ite_eq_left (A.cm t), h₁]
   · obtain ⟨t, ht⟩ : DV.cEmb D τ ∈ DV.PsiOf D jc := by_contra fun h' => h ((cm_type_meets_conjugate_pair p jc τ).2 h')
     have h₃ := GlobalTheory.Proof.LetterConjugation.mult_add S.Dw (jc.comp τ)
-    rw [← comp_cEmb, ht, Datum.mult.eq_1 _ (DV.tauEmb D t), if_pos (A.cm t)] at h₃
-    rw [DV.rkOf, if_neg h]
+    rw [← comp_cEmb, ht, Datum.mult.eq_1 _ (DV.tauEmb D t), ite_eq_left (A.cm t)] at h₃
+    rw [DV.rkOf, ite_eq_right h]
     omega
 
 theorem mult_conj_comp (τ : DV.Emb D p) : S.Dw.mult (conjEmb (jc.comp τ)) = N - DV.rkOf (DV.PsiOf D jc) N j τ := by
@@ -1628,12 +1628,12 @@ theorem length_letters : (letters S.Dw).length = D.R.f * N := by
 
 theorem letterOf_lie (τ : DV.Emb D p) (i : Fin (DV.rkOf (DV.PsiOf D jc) N j τ)) :
     letterOf S.Dw (.inl (jc.comp τ, i)) = some ⟨jc.comp τ, i.cast (mult_comp S jc τ).symm⟩ :=
-  dif_pos (i.cast (mult_comp S jc τ).symm).2
+  dite_eq_left (i.cast (mult_comp S jc τ).symm).2
 
 theorem letterOf_om (τ : DV.Emb D p) (i : Fin (N - DV.rkOf (DV.PsiOf D jc) N j τ)) :
     letterOf S.Dw (.inl (conjEmb (jc.comp τ), i.rev)) =
       some ⟨conjEmb (jc.comp τ), i.rev.cast (mult_conj_comp S jc τ).symm⟩ :=
-  dif_pos (i.rev.cast (mult_conj_comp S jc τ).symm).2
+  dite_eq_left (i.rev.cast (mult_conj_comp S jc τ).symm).2
 
 theorem letterOf_whole (k : Fin (D.R.f * N)) :
     letterOf S.Dw (.inr k) = some ((letters S.Dw).get (k.cast (length_letters S).symm)) :=

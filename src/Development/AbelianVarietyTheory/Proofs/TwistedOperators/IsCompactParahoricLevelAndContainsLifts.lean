@@ -60,8 +60,8 @@ theorem exists_compact_entries {F E : Type} [Field F] [NumberField F] [Field E] 
     ∃ C : Set (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E), IsCompact C ∧ ∀ x : GL (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E),
       Formalism.UG.bc (GlobalTheory.Mass.swapTens F E (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) : _ →+* _) x ∈ St β → ∀ i j, x.1 i j ∈ C := by
   classical
-  haveI : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E) :=
+  have : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F ⊗[F] E) :=
     IsModuleTopology.isTopologicalRing (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F) _
   obtain ⟨-, C0, hC0, hC0m⟩ := GlobalTheory.Mass.intTens_open_compact F E
   let s := GlobalTheory.Mass.swapTens F E (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af F)
@@ -113,7 +113,7 @@ variable {D : D7}
 theorem isOpen_comap_lev (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) :
     IsOpen (((lev D.sp.cm V.gram β L).comap (finE V) : Subgroup (GA D V)) : Set (GA D V)) := by
   classical
-  haveI := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V).1
+  have := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V).1
   apply Subgroup.isOpen_of_mem_nhds _ (g := 1)
   filter_upwards [GlobalTheory.ThetaIntegrand.eventually_princ V β (L.Pg ∪ L.Q)] with κ hκ
   obtain ⟨hU, hS, hR⟩ := hκ
@@ -128,13 +128,13 @@ theorem exists_compact (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) :
   obtain ⟨θ, hθ⟩ := GlobalTheory.Member.exists_isInfFam_family D
   obtain ⟨K, hK, hKm⟩ := GlobalTheory.StabCompact.exists_compact_adele D θ hθ 1 C1 hC1
 
-  haveI : T2Space (InfiniteAdeleRing D.host.F) :=
+  have : T2Space (InfiniteAdeleRing D.host.F) :=
     inferInstanceAs (T2Space ((v : InfinitePlace D.host.F) → v.Completion))
-  haveI : T2Space (FiniteAdeleRing (𝓞 D.host.F) D.host.F) :=
+  have : T2Space (FiniteAdeleRing (𝓞 D.host.F) D.host.F) :=
     inferInstanceAs (T2Space (RestrictedProduct
       (fun v : IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.F) => v.adicCompletion D.host.F)
       (fun v => (v.adicCompletionIntegers D.host.F : Set (v.adicCompletion D.host.F))) Filter.cofinite))
-  haveI : T2Space (AF D.host.F) :=
+  have : T2Space (AF D.host.F) :=
     inferInstanceAs (T2Space (InfiniteAdeleRing D.host.F × FiniteAdeleRing (𝓞 D.host.F) D.host.F))
   obtain ⟨K', hK', hK'm⟩ := GlobalTheory.StabCompact.exists_compact_of_entries (AF D.host.F) D.sp.cm.sig V.gram
     (GlobalTheory.StabCompact.det_gram_ne_zero V) K hK
@@ -166,7 +166,7 @@ theorem exists_compact (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) :
 
 theorem isCompact_levG (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) :
     IsCompact ((levG V β L : Subgroup (GA D V)) : Set (GA D V)) := by
-  haveI := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V).1
+  have := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V).1
   obtain ⟨C, hC, hCm⟩ := exists_compact V β
   refine hC.of_isClosed_subset ?_ ?_
   · rw [levG, levA, Subgroup.coe_inf]

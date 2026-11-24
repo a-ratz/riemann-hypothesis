@@ -149,9 +149,9 @@ theorem UpperTheory.ConvolutionTheory.L1.matchProd :
   refine ⟨w, hw0, ?_⟩
   intro h hh iF bF mF hHaar hvol iE' bE' iF' bF' mE mF' hE hF' hmE hmF'
   obtain rfl : iF' = iF := by rw [bF'.measurable_eq, bF.measurable_eq]
-  haveI := hHaar
-  haveI := hF'
-  haveI := hE
+  have := hHaar
+  have := hF'
+  have := hE
   have hmm : mF' = mF := haar_unique mF mF' _ hvol hmF'
   rw [hmm]
   have hsl := fun i => UpperTheory.ConvolutionTheory.L1.splitLoc F E v (w i) (hs (w i)) n
@@ -202,7 +202,7 @@ theorem UpperTheory.ConvolutionTheory.L1.matchProd :
     simp [hvol]
   have hone : ENNReal.ofReal c = 1 := by
     have h1 := hmE
-    rw [hμ, Measure.smul_apply, Measure.map_apply hgc.measurable hmeas, hset, hpi] at h1
+    rw [hμ, smul_apply, Measure.map_apply hgc.measurable hmeas, hset, hpi] at h1
     simpa using h1
   have hc1' : c = 1 := ENNReal.ofReal_eq_one.1 hone
   have hfin := hM (D.tens n φ) hc1 hc2

@@ -75,7 +75,7 @@ open IsLocalRing in
 private theorem complete_of_finite (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsAdicComplete (maximalIdeal R) R] (R' : Type) [CommRing R'] [Algebra R R'] [Module.Finite R R']
     [IsLocalRing R'] : IsAdicComplete (maximalIdeal R') R' := by
-  haveI hN : IsNoetherianRing R' := IsNoetherianRing.of_finite R R'
+  have hN : IsNoetherianRing R' := IsNoetherianRing.of_finite R R'
   have hcomap : (maximalIdeal R').comap (algebraMap R R') = maximalIdeal R :=
     eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal R'))
   have hle : (maximalIdeal R).map (algebraMap R R') ≤ maximalIdeal R' :=
@@ -127,7 +127,7 @@ theorem UpperTheory.V.AlgebraTools.local_factor :
       ∀ (C : Type) [CommRing C] [IsLocalRing C] (f : A →+* C), (IsLocalRing.maximalIdeal C).comap f = n →
         ∃ g : Localization.AtPrime n →+* C, g.comp (algebraMap A _) = f := by
   intro R _ _ _ _ A _ _ _ n hn
-  letI : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_henselianRing R
+  let : HenselianLocalRing R := GlobalTheory.henselianLocalRing_of_henselianRing R
   have hfin : Module.Finite R (Localization.AtPrime n) := GlobalTheory.finite_localization_of_henselian R n
   refine ⟨GlobalTheory.surjective_algebraMap_localization_of_henselian R n, hfin, ⟨fun a ha => ?_⟩,
     complete_of_finite R _, fun hF => ?_, ?_, fun C _ _ f hf => ?_⟩
@@ -136,8 +136,8 @@ theorem UpperTheory.V.AlgebraTools.local_factor :
     rw [← GlobalTheory.comap_eq_maximalIdeal_of_finite (IsLocalRing.maximalIdeal (Localization.AtPrime n)),
       Ideal.mem_comap] at h1
     exact h1 ha
-  · haveI : Module.Flat A (Localization.AtPrime n) := IsLocalization.flat _ n.primeCompl
-    haveI : Module.Flat R (Localization.AtPrime n) := Module.Flat.trans R A _
+  · have : Module.Flat A (Localization.AtPrime n) := IsLocalization.flat _ n.primeCompl
+    have : Module.Flat R (Localization.AtPrime n) := Module.Flat.trans R A _
     exact Module.free_of_flat_of_isLocalRing
   · obtain ⟨e, he, H⟩ := GlobalTheory.exists_idempotent_notMem_iff_of_henselian R n
     refine ⟨e, he, H, le_antisymm (fun x hx => ?_) ?_⟩

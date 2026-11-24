@@ -98,7 +98,7 @@ theorem wd_ofReal_sum {m : ℕ} {j : Fin n} {u : Fin m → V n → ℝ} {x : V n
   first
   | rw [fderiv_fun_sum hd]
   | rw [fderiv_sum' hd]
-  simp only [ContinuousLinearMap.sum_apply]
+  simp only [sum_apply]
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div]
 
 private theorem wd_wdb_finset_sum {m : ℕ} {j : Fin n} {G : Fin m → V n → ℂ} {x : V n}
@@ -109,7 +109,7 @@ private theorem wd_wdb_finset_sum {m : ℕ} {j : Fin n} {G : Fin m → V n → �
   first
   | rw [fderiv_fun_sum hd]
   | rw [fderiv_sum hd]
-  simp only [ContinuousLinearMap.sum_apply]
+  simp only [sum_apply]
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div]
 
 private theorem wdb_sum' {m : ℕ} {k : Fin n} {G : Fin m → V n → ℂ} {x : V n}
@@ -120,7 +120,7 @@ private theorem wdb_sum' {m : ℕ} {k : Fin n} {G : Fin m → V n → ℂ} {x : 
   first
   | rw [fderiv_fun_sum hd]
   | rw [fderiv_sum hd]
-  simp only [ContinuousLinearMap.sum_apply]
+  simp only [sum_apply]
   rw [Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_div]
 
 private theorem wd_apply_congr_of_eventuallyEq {j : Fin n} {f g : V n → ℂ} {x : V n} (h : f =ᶠ[𝓝 x] g) :
@@ -213,7 +213,7 @@ theorem wd_normSq_comp {j : Fin n} {g : V n → ℂ} {x : V n} (hg : ContDiffAt 
     exact (Complex.mul_conj (g y)).symm
   unfold wd
   rw [hfun, hh.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply,
     smul_eq_mul, hlin, map_mul, Complex.conj_I]
   linear_combination (g x * conj (fderiv ℝ g x (bas n j)) / 2) * Complex.I_mul_I
@@ -246,7 +246,7 @@ private theorem wdb_normSq_eq_mul_conj_wd {k : Fin n} {g : V n → ℂ} {y : V n
   rw [wd_eq_fderiv_basis_of_differentiableAt hy]
   unfold wdb
   rw [hfun, hh.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply,
     smul_eq_mul, hlin, map_mul, Complex.conj_I]
   linear_combination ((conj (g y) * fderiv ℝ g y (bas n k) -
@@ -269,7 +269,7 @@ private theorem wd_mul_conj_of_differentiableAt {j : Fin n} {g h : V n → ℂ} 
     hD.mul hc
   unfold wd
   rw [hp.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply,
     smul_eq_mul, hlin, map_mul, Complex.conj_I]
   linear_combination (g x * conj (fderiv ℝ h x (bas n j)) / 2) * Complex.I_mul_I

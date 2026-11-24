@@ -80,7 +80,7 @@ theorem isIntV_tmat_inv {γ : Fin d → Fin d → PowerSeries C} (hγ : ∀ a, I
   let S : Subring C :=
     { carrier := {x | 0 ≤ v x}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, AddValuation.map_mul] at *
+        simp only [Set.mem_ofPred_eq, AddValuation.map_mul] at *
         exact add_nonneg ha hb
       one_mem' := by simp
       add_mem' := fun {a b} ha hb => le_trans (le_min ha hb) (AddValuation.map_add v a b)
@@ -125,7 +125,7 @@ theorem isIntV_vecMul_inv {γ : Fin d → Fin d → PowerSeries C} (hγ : ∀ a,
   let S : Subring C :=
     { carrier := {x | 0 ≤ v x}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, AddValuation.map_mul] at *
+        simp only [Set.mem_ofPred_eq, AddValuation.map_mul] at *
         exact add_nonneg ha hb
       one_mem' := by simp
       add_mem' := fun {a b} ha hb => le_trans (le_min ha hb) (AddValuation.map_add v a b)

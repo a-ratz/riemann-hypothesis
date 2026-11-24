@@ -178,7 +178,7 @@ theorem _root_.GlobalTheory.CompRat.splitLat_of_definite : ∀ (E : Type) [Field
     rfl
   have hcard : ∀ i, Nat.card {j // ty j = ty i} ≠ 0 := by
     intro i
-    haveI : Nonempty {j // ty j = ty i} := ⟨⟨i, rfl⟩⟩
+    have : Nonempty {j // ty j = ty i} := ⟨⟨i, rfl⟩⟩
     exact Nat.card_pos.ne'
   have him := rt0_im_ne_zero H
   have hsq := mul_self_pos.2 him

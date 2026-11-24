@@ -179,7 +179,7 @@ theorem UpperTheory.V.ZK.Cl.cBlock :
         by_cases hj : β j = x
         · exact (loc_iff (s j) b (V j)).1 (h ⟨j, hj⟩) P hP
         · rw [hV j hj, map_zero]
-          exact zero_le'
+          exact zero_le
     have hgW : (fun i : {k // β k = x} => s i.1 (g W i.1)) = g' x w := by
       funext i
       rw [blk_apply hg W x i, hW]

@@ -244,16 +244,16 @@ theorem evLgG_gridA_of_exGrid : ExGrid → ∃ CF0 : ℝ, ∀ CF, CF0 ≤ CF →
     simp at hz
   · intro B f F F₀ Ξ z hz
     by_cases hΞ : Ξ.Finite
-    · simp only [dif_pos hΞ] at hz
+    · simp only [dite_eq_left hΞ] at hz
       exact (Classical.choose_spec (hS B f Ξ hΞ)).1 z hz
-    · simp [dif_neg hΞ] at hz
+    · simp [dite_eq_right hΞ] at hz
   · intro B f T _ hHas _ _ C W V S N G
     have hfin := (GlobalTheory.Mem.Top.TwFin.tw_fin B f T).1
     have hspec := (Classical.choose_spec (hS B.toPre f (T.set f) hfin)).2
     refine hspec ⟨B, C, W, V, S, N, G⟩ f (T.set f) rfl HEq.rfl HEq.rfl ?_
     intro z hz
     have h2 := hHas.2 z
-    simp only [dif_pos hfin] at h2
+    simp only [dite_eq_left hfin] at h2
     exact h2 hz
 
 end GlobalTheory.Mem.LiteralAutomorphy
@@ -447,11 +447,11 @@ theorem prod_localIdele_comp (z : ∀ v : HeightOneSpectrum (𝓞 L), (v.adicCom
       rw [e2, e, ih.2 w]
       by_cases hw : w = a
       · subst hw
-        rw [localIdele_snd_self, if_neg ha, if_pos (Finset.mem_insert_self _ _), mul_one]
+        rw [localIdele_snd_self, ite_eq_right ha, ite_eq_left (Finset.mem_insert_self _ _), mul_one]
       · rw [(localIdele_isSupportedAt L a (z a)).2 w hw, one_mul]
         by_cases hF : w ∈ F
-        · rw [if_pos hF, if_pos (Finset.mem_insert_of_mem hF)]
-        · rw [if_neg hF, if_neg (fun h => (Finset.mem_insert.1 h).elim hw hF)]
+        · rw [ite_eq_left hF, ite_eq_left (Finset.mem_insert_of_mem hF)]
+        · rw [ite_eq_right hF, ite_eq_right (fun h => (Finset.mem_insert.1 h).elim hw hF)]
 
 theorem tendsto_prod_localIdele (z : ∀ v : HeightOneSpectrum (𝓞 L), (v.adicCompletion L)ˣ) (hz : ∀ v, IsUnitAt v (z v))
     (c : Ideles L) (hc1 : (c : AdeleRing (𝓞 L) L).1 = 1)
@@ -470,7 +470,7 @@ theorem tendsto_prod_localIdele (z : ∀ v : HeightOneSpectrum (𝓞 L), (v.adic
     refine tendsto_const_nhds.congr' ?_
     filter_upwards [eventually_ge_atTop {w}] with F hF
     have hw : w ∈ F := hF (Finset.mem_singleton_self w)
-    simp only [g, o, if_pos hw]
+    simp only [g, o, ite_eq_left hw]
   have h2 := ((RestrictedProduct.isEmbedding_structureMap (A := A) (𝓕 := cofinite)).continuous.tendsto o).comp hg
   have h3 : Tendsto (fun F : Finset (HeightOneSpectrum (𝓞 L)) =>
       ((∏ v ∈ F, localIdele L v (z v) : Ideles L) : AdeleRing (𝓞 L) L).2) atTop (𝓝 (c : AdeleRing (𝓞 L) L).2) := by
@@ -482,8 +482,8 @@ theorem tendsto_prod_localIdele (z : ∀ v : HeightOneSpectrum (𝓞 L), (v.adic
     show ((g F w : A w) : w.adicCompletion L) = _
     refine Eq.trans ?_ ((prod_localIdele_comp z F).2 w).symm
     by_cases hw : w ∈ F
-    · simp only [g, if_pos hw]
-    · simp only [g, if_neg hw]
+    · simp only [g, ite_eq_left hw]
+    · simp only [g, ite_eq_right hw]
   have h4 := (tendsto_const_nhds (x := (1 : InfiniteAdeleRing L))).prodMk_nhds h3
   have ec : (c : AdeleRing (𝓞 L) L) = ((1 : InfiniteAdeleRing L), (c : AdeleRing (𝓞 L) L).2) := Prod.ext hc1 rfl
   rw [ec]
@@ -605,7 +605,7 @@ theorem exists_finset_close (L : Type) [Field L] [NumberField L] (v : HeightOneS
     (fun x _ => (hball.preimage (continuous_id.sub continuous_const)).mem_nhds (by
       show Valued.v (x - x) < Valued.v s
       rw [sub_self, map_zero, hs]
-      exact zero_lt_iff.2 WithZero.exp_ne_zero))
+      exact pos_iff_ne_zero.2 WithZero.exp_ne_zero))
   refine ⟨t, fun x hx => ?_⟩
   have hxO : x ∈ (v.adicCompletionIntegers L : Set (v.adicCompletion L)) :=
     by rw [SetLike.mem_coe, HeightOneSpectrum.mem_adicCompletionIntegers]; exact hx
@@ -619,7 +619,7 @@ namespace GlobalTheory.LevelChars
 theorem relIndex_levSub_ne_zero (L : Type) [Field L] [NumberField L] (S : Set (HeightOneSpectrum (𝓞 L))) (N : ℕ)
     (hS : S.Finite) : (levSub L S N).relIndex (levSub L ∅ 0) ≠ 0 := by
   classical
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   choose F hF using fun v : S => exists_finset_close L v.1 N
   have hint : ∀ a : levSub L ∅ 0, ∀ v, Valued.v (compAt L v (a : (AdeleRing (𝓞 L) L)ˣ)) ≤ 1 :=
     fun a v => le_of_eq (a.2 v).1
@@ -646,7 +646,7 @@ theorem relIndex_levSub_ne_zero (L : Type) [Field L] [NumberField L] (S : Set (H
       linear_combination hc
     rw [e2, map_mul, hinv, one_mul]
     exact (Valuation.map_sub _ _ _).trans (max_le h2 h1)
-  haveI : Finite (levSub L ∅ 0 ⧸ (levSub L S N).subgroupOf (levSub L ∅ 0)) := Finite.of_injective φ hφ
+  have : Finite (levSub L ∅ 0 ⧸ (levSub L S N).subgroupOf (levSub L ∅ 0)) := Finite.of_injective φ hφ
   exact Subgroup.index_ne_zero_of_finite
 
 end GlobalTheory.LevelChars
@@ -659,8 +659,8 @@ theorem levSub_le_levSub_empty (L : Type) [Field L] [NumberField L] (S : Set (He
 theorem finiteIndex_range_sup_levSub_empty (L : Type) [Field L] [NumberField L] :
     ((Units.map (algebraMap L (AdeleRing (𝓞 L) L)).toMonoidHom).range ⊔ levSub L ∅ 0).FiniteIndex := by
   classical
-  haveI : Finite (ReciprocityTheory.Neutral.Bridge.HCFR.classOf L).range := inferInstance
-  haveI := Subgroup.finiteIndex_ker (ReciprocityTheory.Neutral.Bridge.HCFR.classOf L)
+  have : Finite (ReciprocityTheory.Neutral.Bridge.HCFR.classOf L).range := inferInstance
+  have := Subgroup.finiteIndex_ker (ReciprocityTheory.Neutral.Bridge.HCFR.classOf L)
   refine Subgroup.finiteIndex_of_le (H := (ReciprocityTheory.Neutral.Bridge.HCFR.classOf L).ker) ?_
   intro a ha
   obtain ⟨k, u, hu, rfl⟩ := (ReciprocityTheory.Neutral.Bridge.HCFR.classOf_eq_one_iff L a).1 ha
@@ -672,7 +672,7 @@ theorem finiteIndex_range_sup_levSub (L : Type) [Field L] [NumberField L] (S : S
     ((Units.map (algebraMap L (AdeleRing (𝓞 L) L)).toMonoidHom).range ⊔ levSub L S N).FiniteIndex := by
   set R := (Units.map (algebraMap L (AdeleRing (𝓞 L) L)).toMonoidHom).range
   have hle := levSub_le_levSub_empty L S N
-  haveI := finiteIndex_range_sup_levSub_empty L
+  have := finiteIndex_range_sup_levSub_empty L
   have hT : R ⊔ levSub L S N ≤ R ⊔ levSub L ∅ 0 := sup_le_sup_left hle _
   have h1 : (R ⊔ levSub L S N).relIndex (levSub L ∅ 0) ≠ 0 := by
     intro h0
@@ -816,7 +816,7 @@ theorem isAlgebraic_norm {D : D7} {δ t0 : ℂ} {Q N : ℕ} {B : ℝ} {del : ℕ
     (P : GlobalTheory.NormSum.Pair D ⊤ δ t0 Q) (hP : P.Small N B) : IsAlgebraic ℚ ((P.norm : ℝ) : ℂ) := by
   have hco : ∀ h T, P.coord h T ∈ Formalism.MainNotions.TaylorLogMetric.Qbar := fun h T => by
     obtain ⟨p, hp, hi⟩ := _root_.GlobalTheory.NormSum.exists_prime_integralOver D P.d h
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     exact ((hC δ t0 p Q le_rfl P hP).2.2 h hi T).1
   have hsq : ∀ g, ((P.sq g : ℝ) : ℂ) ∈ Formalism.MainNotions.TaylorLogMetric.Qbar := fun g => by
     unfold GlobalTheory.NormSum.Pair.sq
@@ -891,14 +891,14 @@ theorem sqIn_of {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : GridData
   obtain ⟨Λ, hΛ⟩ := hΛ
   have hSta : ∀ z ∈ St, IsAlgebraic ℚ z := by
     intro z hz
-    simp only [St, Set.mem_iUnion, Set.mem_setOf_eq] at hz
+    simp only [St, Set.mem_iUnion, Set.mem_ofPred_eq] at hz
     obtain ⟨i, j, s, ⟨h1, h2⟩, c, x, y, hx, hy, rfl⟩ := hz
     obtain ⟨x0, hx0, hx00, ha⟩ := hT i j s h1 h2 none
     obtain ⟨x1, hx1, -, hb⟩ := hT i j s h1 h2 (some c)
     rw [hx.2.unique hx0.2, hy.2.unique hx1.2]
     exact isAlgebraic_div_of_beta hd h1 _ Λ hx00 (ha Λ hΛ) (hb Λ hΛ)
   let S : Set ℂ := Sn ∪ St
-  haveI : Finite S := (hSn.union hSt).to_subtype
+  have : Finite S := (hSn.union hSt).to_subtype
   have hmem : ∀ z ∈ S, z ∈ Set.range (algebraMap (IntermediateField.adjoin ℚ S) ℂ) := fun z hz =>
     ⟨⟨z, IntermediateField.subset_adjoin ℚ S hz⟩, rfl⟩
   refine ⟨IntermediateField.adjoin ℚ S, IntermediateField.finiteDimensional_adjoin fun z hz =>
@@ -906,7 +906,7 @@ theorem sqIn_of {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G : GridData
   · obtain ⟨δ, t0, b⟩ := hSb h
     exact ⟨δ, t0, fun ij => let ⟨P, P', a, b1, b2⟩ := b ij; ⟨P, P', a, hmem _ (Or.inl b1), hmem _ (Or.inl b2)⟩⟩
   · refine hmem _ (Or.inr ?_)
-    simp only [St, Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [St, Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨i, j, s, ⟨h1, h2⟩, c, x, y, hx, hy, rfl⟩
 
 end GlobalTheory.SqTop.SqField
@@ -1069,7 +1069,7 @@ theorem exists_weilDeligne_of_localInputs (hP : _root_.GlobalTheory.FunPr.ThetaL
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS G => ?_⟩⟩
   obtain ⟨W, hW⟩ := GlobalTheory.ChiGrid.WeilOver.exists_weil_over_of_clauses hP.weilRepresentationUnitaryPair R hS.core.lev
     hS.core.chain hS.core.models _ G
-  haveI := hS.fin
+  have := hS.fin
   exact ⟨W, hW, GlobalTheory.FunObj.gridChoice_nonempty_of W hS.core.lev Set.finite_univ (GlobalTheory.RowClaim.Test.pde_ne_q hS)
     fun t _ P hP => GlobalTheory.RowClaim.Test.guard hS t P hP⟩
 end GlobalTheory.Mem.LiteralAutomorphy
@@ -1561,8 +1561,8 @@ theorem zscale_f0_of_witness_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {
   obtain ⟨x, a, ax, y, _⟩ := w
   cases ax
   have hX := y.eq ▸ hB
-  letI := a.x.grp
-  letI := a.x.fin
+  let := a.x.grp
+  let := a.x.fin
   have hX' : ∀ Zs : DefSub a.x.A3.fam3.amb3, HEq (a.x.F.Zsc Zs).F0 (F0K K.s (q.w.D q.Z)) := hX
   dsimp only
   clear * - hX'
@@ -1581,9 +1581,9 @@ theorem weight_one_places_finite_of_witness : ∀ (hL : _root_.UpperTheory.Zero.
   have hZ := _root_.GlobalTheory.Mem.Top.Bl.zscale_f0_of_witness_alt q b w hsc
   obtain ⟨x, a, ax, y, _⟩ := w
   cases ax
-  letI := a.x.grp
-  letI := a.x.fin
-  letI : Algebra (↥a.x.core.Q.c.F) (q.w.D q.Z).what₂.LL := a.x.alg
+  let := a.x.grp
+  let := a.x.fin
+  let : Algebra (↥a.x.core.Q.c.F) (q.w.D q.Z).what₂.LL := a.x.alg
   have h3 : _root_.Formalism.IndefR.IndefiniteRealisationNormalisationDegreeThree (_root_.GlobalTheory.Mem.R3.realisationOfInput y.y) :=
     _root_.GlobalTheory.Mem.R3.realPins3_realTOf_alt K q.B q.f q.T q.w q.Z q.x.Wt _ _ _ _ _ _ _ q.O.ex q.x.what₂ a b.R b.S y.y hZ
   have hP : (fun r : _root_.GlobalTheory.Mem.Top.Bl.RealPackage b.R b.S => _root_.Formalism.IndefR.IndefiniteRealisationNormalisationDegreeThree r.B.Q ∧ r.B.Q.Rl.toRealDat.ExAt ∧ Finite r.P.T) (_root_.GlobalTheory.Mem.Top.Bl.realPackageOfRealInput y.y) :=

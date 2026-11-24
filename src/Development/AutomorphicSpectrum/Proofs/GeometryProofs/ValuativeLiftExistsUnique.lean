@@ -97,7 +97,7 @@ theorem val_specializes {R S : Type} [CommRing R] [IsLocalRing R] [CommRing S] [
     (τ : CommRingCat.of R ⟶ CommRingCat.of S) (f : Spec (CommRingCat.of R) ⟶ X)
     (w : centre (Spec.map τ ≫ f) ⤳ centre f) (s : X.presheaf.stalk (centre f)) :
     val (Spec.map τ ≫ f) ((X.presheaf.stalkSpecializes w).hom s) = τ.hom (val f s) := by
-  obtain ⟨W, hW, g, rfl⟩ := X.presheaf.germ_exist s
+  obtain ⟨W, hW, g, rfl⟩ := X.presheaf.exists_germ_eq s
   obtain ⟨_, ⟨U, hU, rfl⟩, hmem, hle⟩ :=
     X.isBasis_affineOpens.exists_subset_of_mem_open hW W.2
   replace hU : IsAffineOpen U := hU
@@ -177,7 +177,7 @@ theorem exists_goodChart {ξ : Spec (CommRingCat.of Ω) ⟶ X} {κ : Type} [Fini
     rw [map_mul, h2, ← V.valuation_le_one_iff, map_mul, map_inv₀, ← div_eq_mul_inv]
     have hv : V.valuation (val zC (s d)) ≠ 0 := by
       simpa using hr
-    exact (div_le_one₀ (zero_lt_iff.2 hv)).2 (hd j)
+    exact (div_le_one₀ (pos_iff_ne_zero.2 hv)).2 (hd j)
 
 theorem exists_of_goodChart {ξ : Spec (CommRingCat.of Ω) ⟶ X} {κ : Type} {x : κ → Ω}
     (hT : CoordTie ℤ ξ x) {C : Type} [Field C] (V : ValuationSubring C)

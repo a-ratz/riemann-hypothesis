@@ -248,8 +248,8 @@ theorem exists_not_mem_both (U U' : Submodule K V) (h : finrank K U = finrank K 
     exact ⟨v, hv, hv⟩
   by_cases h2 : U' ≤ U
   · exact absurd (Submodule.eq_of_le_of_finrank_eq h2 h.symm ▸ le_rfl) h1
-  obtain ⟨x, hxU, hxU'⟩ := SetLike.not_le_iff_exists.1 h1
-  obtain ⟨y, hyU', hyU⟩ := SetLike.not_le_iff_exists.1 h2
+  obtain ⟨x, hxU, hxU'⟩ := IsConcreteLE.not_le_iff_exists.1 h1
+  obtain ⟨y, hyU', hyU⟩ := IsConcreteLE.not_le_iff_exists.1 h2
   refine ⟨x + y, fun hm => hyU ?_, fun hm => hxU' ?_⟩
   · simpa using U.sub_mem hm hxU
   · simpa using U'.sub_mem hm hyU'
@@ -500,7 +500,7 @@ theorem witt_split : ∀ {E : Type} [CommRing E] (σ : E →+* E), IsQA σ →
       have he0 : e = 0 := by linear_combination -e * hc + c * hee'
       have h01 : (0 : E) = 1 := by rw [← he1, he0, map_zero, add_zero]
       obtain ⟨z, hz⟩ := hQA.2.1
-      haveI := subsingleton_of_zero_eq_one h01
+      have := subsingleton_of_zero_eq_one h01
       exact hz (Subsingleton.elim _ _)
     · intro x hx
       obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -513,7 +513,7 @@ theorem witt_split : ∀ {E : Type} [CommRing E] (σ : E →+* E), IsQA σ →
       rw [← map_mul, ← map_one (Ideal.Quotient.mk I), Ideal.Quotient.eq]
       have : x * y - 1 = (x * y - 1) * σ e := by linear_combination hy - (x * y - 1) * he1
       rw [this]; exact hmemI _
-  letI : Field (E ⧸ I) := Ideal.Quotient.field I
+  let : Field (E ⧸ I) := Ideal.Quotient.field I
   have hpe : Ideal.Quotient.mk I e = 1 := by
     rw [← map_one (Ideal.Quotient.mk I), Ideal.Quotient.eq]
     have : e - 1 = (-1) * σ e := by linear_combination he1
@@ -551,7 +551,7 @@ theorem witt_free_tuples_fin {E : Type} [CommRing E] (σ : E →+* E) (hσ : IsQ
     (hY : Free Y) (hY' : Free Y') (hP : pairM σ J Y Y = pairM σ J Y' Y') :
     ∃ g, IsUn σ J g ∧ g * Y = Y' := by
   rcases _root_.GlobalTheory.SgAlg.isField_or_exists_idempotent_of_isQA σ hσ with hF | hS
-  · letI := hF.toField
+  · let := hF.toField
     exact _root_.GlobalTheory.SgAlg.witt_free_field σ hσ J hJ Y Y' hY hY' hP
   · exact _root_.GlobalTheory.SgAlg.WittSplit.witt_split σ hσ hS J hJ Y Y' hY hY' hP
 
@@ -653,7 +653,7 @@ theorem residue_eq_zero_iff {ϖ : L}
     refine ⟨(x : L) / ϖ, ?_, by field_simp⟩
     show Valued.v ((x : L) / ϖ) ≤ 1
     rw [map_div₀]
-    exact div_le_one_of_le₀ hlt zero_le'
+    exact div_le_one_of_le₀ hlt zero_le
   · rintro ⟨b, hb, hxb⟩ h
     have hb' : Valued.v b ≤ 1 := hb
     have : Valued.v (x : L) ≤ Valued.v ϖ := by
@@ -1202,7 +1202,7 @@ theorem cayley_cong : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
     rw [hU.2.2.2.1]; exact_mod_cast (show (Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) < 1 by decide)
   have hϖI : ϖ ∈ Formalism.UG.intL L := le_of_lt hvϖ
   have hvϖk : Valued.v (ϖ ^ k) < 1 := by
-    rw [map_pow]; exact pow_lt_one₀ zero_le' hvϖ (by omega)
+    rw [map_pow]; exact pow_lt_one₀ zero_le hvϖ (by omega)
   have hhalf : Valued.v ((2 : L)⁻¹) ≤ 1 := by rw [map_inv₀, h2, inv_one]
   have hσhalf : σ ((2 : L)⁻¹) = 2⁻¹ := by rw [map_inv₀, map_ofNat]
   set Jt : Matrix (Fin n') (Fin n') L := (JT : Matrix (Fin n') (Fin n') L) with hJt
@@ -1732,17 +1732,17 @@ theorem indepMod_sub {ϖ : L} {ι : Type} [Fintype ι] {n : ℕ} {z : ι → Fin
   let d' : ι → L := fun j => if hj : p j then d ⟨j, hj⟩ else 0
   have h1 : ∀ j, d' j ∈ Formalism.UG.intL L := by
     intro j; by_cases hj : p j
-    · simp only [d', dif_pos hj]; exact hd _
-    · simp only [d', dif_neg hj]; exact (Formalism.UG.intL L).zero_mem
+    · simp only [d', dite_eq_left hj]; exact hd _
+    · simp only [d', dite_eq_right hj]; exact (Formalism.UG.intL L).zero_mem
   have h2 : ∀ r, ∑ j, d' j * z j r = ∑ j : {i // p i}, d j * z j.1 r := by
     intro r
     rw [← Fintype.sum_subtype_add_sum_subtype p (fun j => d' j * z j r)]
     have a1 : ∑ j : {i // ¬ p i}, d' j.1 * z j.1 r = 0 :=
-      Finset.sum_eq_zero fun j _ => by simp [d', dif_neg j.2]
+      Finset.sum_eq_zero fun j _ => by simp [d', dite_eq_right j.2]
     rw [a1, add_zero]
-    exact Finset.sum_congr rfl fun j _ => by simp [d', dif_pos j.2]
+    exact Finset.sum_congr rfl fun j _ => by simp [d', dite_eq_left j.2]
   have := hz d' h1 (fun r => by rw [h2]; exact hs r) i.1
-  simpa [d', dif_pos i.2] using this
+  simpa [d', dite_eq_left i.2] using this
 
 end GlobalTheory.Hk3.IntWittMod
 

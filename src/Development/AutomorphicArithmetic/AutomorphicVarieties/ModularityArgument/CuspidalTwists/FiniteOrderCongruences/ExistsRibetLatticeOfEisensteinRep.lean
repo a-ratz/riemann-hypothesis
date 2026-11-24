@@ -325,8 +325,8 @@ end ModEx4
 open ModEx4 in
 theorem modEx4 : ModEx4 := by
   intro Ω _ _ _ l _ ι c D pr θ k hk ρ hρ hloc g0 hg0 c₀
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
   have hT : ∀ g, ((toB (Phi D pr k) g : (Qbar l)ˣ) : Qbar l) =
       ((cycBar ℚ Ω l ^ (k - 1) * toB (phi D pr)) g : (Qbar l)ˣ) := fun g => by
     change (((Phi D pr k g : c.Oˣ) : c.O) : PadicAlgCl l) = _

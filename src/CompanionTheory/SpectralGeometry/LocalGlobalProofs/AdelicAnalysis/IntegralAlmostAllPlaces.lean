@@ -66,7 +66,7 @@ theorem eventually_eq_one {F : Type} [Field F] [NumberField F] (x : F) (hx : x �
   refine le_antisymm h1 ?_
   rw [map_inv₀] at h2
   have h0 : v.valuation F x ≠ 0 := (Valuation.ne_zero_iff _).mpr hx
-  exact (inv_le_one₀ (zero_lt_iff.mpr h0)).mp h2
+  exact (inv_le_one₀ (pos_iff_ne_zero.mpr h0)).mp h2
 
 theorem repr_inclR {F E : Type} [Field F] [Field E] [Algebra F E] {d : ℕ} (b : Module.Basis (Fin d) F E)
     (R : Type) [CommRing R] [Algebra F R] (x : E) (k : Fin d) :

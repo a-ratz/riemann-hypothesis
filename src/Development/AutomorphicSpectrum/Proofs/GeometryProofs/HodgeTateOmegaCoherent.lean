@@ -77,14 +77,14 @@ theorem htOm_coherent : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (Ω : Type)
     rwa [add_sub_cancel_left] at hsub
   refine ⟨?_, fun q => ⟨fun u hu => mult q u hu, ?_, ?_⟩⟩
   · intro p _
-    haveI := hsemi
-    haveI : IsCommMonObj G := IsSemiAbelian.comm
+    have := hsemi
+    have : IsCommMonObj G := IsSemiAbelian.comm
     have hsm : AlgebraicGeometry.Smooth G.hom := IsSemiAbelian.smooth
     obtain ⟨-, hVB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB_of_smooth X Ω ξ G E M hgen hsm
     obtain ⟨U2, hpU2, bv, -, hfr⟩ := hVB p (Set.mem_univ p)
     obtain ⟨⟨U1, hpU1, w, hw⟩, -⟩ :=
       _root_.GlobalTheory.CompanionTheory.Ar.htLat_exists_lifts X Ω ξ hgen hnorm G hsemi L n hn hfull e hW E M p
-    haveI : Finite {x : Over.mk ξ ⟶ G // x ^ n = 1} := hW.finite
+    have : Finite {x : Over.mk ξ ⟶ G // x ^ n = 1} := hW.finite
     obtain ⟨k, ⟨eqv⟩⟩ := Finite.exists_equiv_fin {x : Over.mk ξ ⟶ G // x ^ n = 1}
     let b1 : Fin k → Module.Dual Ω E := fun i => w (eqv.symm i).1
     let b2 : Fin (Module.finrank Ω E) → Module.Dual Ω E := fun j => n • bv j

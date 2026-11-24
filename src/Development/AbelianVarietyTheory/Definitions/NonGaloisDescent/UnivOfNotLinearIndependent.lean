@@ -178,7 +178,7 @@ theorem dU_mul (β : DetBases k r n) (U : Planes k r n) (g : Matrix (Fin r) (Fin
     exact Finset.sum_congr rfl fun j _ => mul_comm _ _
   unfold dU
   rw [(β.form U).eq_smul_basis_det e]
-  simp only [AlternatingMap.smul_apply, Module.Basis.det_apply, hM, Matrix.det_mul, Matrix.det_transpose, smul_eq_mul]
+  simp only [smul_apply, Module.Basis.det_apply, hM, Matrix.det_mul, Matrix.det_transpose, smul_eq_mul]
   ring
 
 variable [Finite k] {C : Type} [AddCommGroup C]
@@ -202,7 +202,7 @@ theorem univCoef_eq (β : DetBases k r n) (κ : kˣ →* Multiplicative C) (c : 
     univCoef β κ c y = ((Nat.card k : ℚ) ^ (r * (n - r)))⁻¹ *
       Nat.card {U : Planes k r n // ∃ u : kˣ, (u : k) = dU β U y ∧ Multiplicative.toAdd (κ u) = c} := by
   classical
-  haveI := Fintype.ofFinite (Planes k r n)
+  have := Fintype.ofFinite (Planes k r n)
   have hterm : ∀ U : Planes k r n, (univTerm β κ y U).coeff c =
       if ∃ u : kˣ, (u : k) = dU β U y ∧ Multiplicative.toAdd (κ u) = c then 1 else 0 := by
     intro U
@@ -212,10 +212,10 @@ theorem univCoef_eq (β : DetBases k r n) (κ : kˣ →* Multiplicative C) (c : 
       by_cases hE : ∃ u : kˣ, (u : k) = dU β U y ∧ Multiplicative.toAdd (κ u) = c
       · obtain ⟨u, hu, hc⟩ := hE
         have hmk : Units.mk0 _ ((dU_ne_zero_iff β U y).2 hC) = u := Units.ext (by simp [hu])
-        rw [hmk, if_pos hc, if_pos ⟨u, hu, hc⟩]
-      · rw [if_neg hE, if_neg]
+        rw [hmk, ite_eq_left hc, ite_eq_left ⟨u, hu, hc⟩]
+      · rw [ite_eq_right hE, ite_eq_right]
         exact fun hc => hE ⟨_, rfl, hc⟩
-    · rw [dite_eq_right hC, if_neg, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
+    · rw [dite_eq_right hC, ite_eq_right, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
       rintro ⟨u, hu, -⟩
       exact hC ((dU_ne_zero_iff β U y).1 (hu ▸ u.ne_zero))
   unfold univCoef univ

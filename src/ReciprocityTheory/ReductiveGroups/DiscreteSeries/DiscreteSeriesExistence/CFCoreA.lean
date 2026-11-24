@@ -301,7 +301,7 @@ theorem kLowSpan_kIrrHW (hE : IsGlRep E) (hU : IsInfUnitary ε E) {μ : Fin n �
   have hy' : (∀ a, E a a y = (μ a : ℂ) • y) ∧ ∀ a b, a < b → ε a = ε b → E a b y = 0 := hy
   refine ⟨hfin, kLowSpan_kStable hE hy, ?_, y, self_mem_kLowSpan y, hy0, hy⟩
   intro S' hS'le hS'st
-  haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'le
+  have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'le
   have hperp : IsKStableSub ε E S'ᗮ := by
     intro a b hab v hv
     rw [Submodule.mem_orthogonal]

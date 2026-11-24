@@ -91,8 +91,8 @@ noncomputable section
 
 theorem countable_GL_numberField {E : Type} [Field E] [NumberField E] (r : ℕ) :
     Countable (GL (Fin r) E) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
-  haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+  have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+  have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
   exact Function.Injective.countable
     (f := fun g : GL (Fin r) E => (g : Matrix (Fin r) (Fin r) E)) fun _ _ h => Units.ext h
 
@@ -113,7 +113,7 @@ theorem baire_one_candidate {E : Type} [Field E] [NumberField E] [IsCMField E] {
     ((mat (lact (g * a) z) τ).adjugate * mat (lact c z) τ) p q = 0}
   have hC : ∀ g, IsClosed (C g) := by
     intro g
-    simp only [C, Set.setOf_forall]
+    simp only [C, Set.ofPred_forall]
     refine isClosed_iInter fun τ => isClosed_iInter fun p => isClosed_iInter fun q =>
       isClosed_iInter fun _ => ?_
     exact isClosed_eq ((((continuous_mat_lact (g * a) τ).matrix_adjugate).matrix_mul
@@ -134,7 +134,7 @@ theorem baire_one_candidate {E : Type} [Field E] [NumberField E] [IsCMField E] {
       Matrix.smul_apply, smul_eq_mul]
     have : mat b τ p q = 0 := (hb τ).2 p q hqp
     rw [this, mul_zero]
-  haveI : Countable (GL (Fin r) E) := countable_GL_numberField r
+  have : Countable (GL (Fin r) E) := countable_GL_numberField r
   let f : Option S → Set (Frame X.Ψ r) := fun o => o.elim Wᶜ (fun γ => C γ.1)
   have hf : ∀ o, IsClosed (f o) := by
     rintro (_ | γ)
@@ -155,7 +155,7 @@ theorem baire_one_candidate {E : Type} [Field E] [NumberField E] [IsCMField E] {
       fun x hx => hWdom hx.1, fun x hx => ?_⟩
     have hxd : x ∈ X.dom := hWdom hx.1
     have hxC : x ∈ C γ.1 := interior_subset hx.2
-    simp only [C, Set.mem_setOf_eq] at hxC
+    simp only [C, Set.mem_ofPred_eq] at hxC
     generalize γ.1 * a = g at hxC ⊢
     have hdetg : ∀ (g' : GL (Fin r) E) (τ : X.Ψ),
         ((g' : Matrix (Fin r) (Fin r) E).map τ.1).det ≠ 0 := by
@@ -250,8 +250,8 @@ theorem scalar_of_triangular_moves_open :
     have hc : Continuous pert := by
       apply continuous_pi; intro σ; apply continuous_pi; intro a; apply continuous_pi; intro c
       by_cases h : σ = τ ∧ c = 0
-      · simp only [pert, h, and_self, if_true]; fun_prop
-      · simp only [pert, h, if_false]; fun_prop
+      · simp only [pert, h, and_self, ite_true]; fun_prop
+      · simp only [pert, h, ite_false]; fun_prop
     have h0 : pert 0 = x0 := by funext σ a c; simp [pert]
     have hO : IsOpen (pert ⁻¹' W) := hW.preimage hc
     obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hO 0 (by simp [h0, hx0])
@@ -289,7 +289,7 @@ theorem scalar_of_triangular_moves_open :
     have := hq (Pi.single i 1 + Pi.single j 1) i j
     have hji : j ≠ i := Ne.symm hij
     rw [Matrix.mulVec_add] at this
-    simp only [Pi.add_apply, hsv, Pi.single_apply, hij, hji, if_true, if_false, mul_one, add_zero, zero_add, hoff i j hij, hoff j i hji] at this
+    simp only [Pi.add_apply, hsv, Pi.single_apply, hij, hji, ite_true, ite_false, mul_one, add_zero, zero_add, hoff i j hij, hoff j i hji] at this
     exact this
   refine ⟨(m : Matrix (Fin (n+1)) (Fin (n+1)) E) 0 0, ?_⟩
   ext i j
@@ -456,7 +456,7 @@ theorem eventually_comp (hσ : GoodEmb c σ) (hU : IsUnf U) (ρ : Xo.X ⟶ Xo.X)
     (F.sig _).1 (F.sig _).2 hr (hty k').1 (hty k').2 (hef k')
     (FrameSign.im_neg_of_isPeriod E H Dw l c σ g e _ r (U.X k') (ψ k') hσ hr (hty k').1 (hty k').2 (hef k')
       x₀.1 x₀.2 P₁ hP₁ hP₁') hB₁ Q hQ hb₁
-  filter_upwards [(L.continuous.comp continuous_subtype_val).continuousAt.preimage_mem_nhds (hB₂.mem_nhds hb₂)]
+  filter_upwards [(L.continuous.comp continuous_subtypeVal).continuousAt.preimage_mem_nhds (hB₂.mem_nhds hb₂)]
     with z hz
   obtain ⟨y, hy, hper, -⟩ := hx' _ hz
   obtain ⟨P₀, hP₀, -, hux, -⟩ := hun k' ⟨y, hy⟩
@@ -468,7 +468,7 @@ theorem eventually_comp (hσ : GoodEmb c σ) (hU : IsUnf U) (ρ : Xo.X ⟶ Xo.X)
 theorem comp_const (hσ : GoodEmb c σ) (hU : IsUnf U) (ρ : Xo.X ⟶ Xo.X) (hρ : ρ ≫ Xo.s = Xo.s) (k : U.Comp)
     (κ : (U.X k).dom → U.Comp) (hκ : ∀ z, ∃ x : (U.X (κ z)).dom, (U.un (κ z) x).x = (U.un k z).x ≫ ρ)
     (z z' : (U.X k).dom) : κ z = κ z' := by
-  haveI : ConnectedSpace (U.X k).dom := isConnected_iff_connectedSpace.1 (GlobalTheory.frames_isConnected E r (U.X k))
+  have : ConnectedSpace (U.X k).dom := isConnected_iff_connectedSpace.1 (GlobalTheory.frames_isConnected E r (U.X k))
   refine IsLocallyConstant.apply_eq_of_preconnectedSpace ((IsLocallyConstant.iff_eventually_eq κ).2 fun z₀ => ?_) z z'
   obtain ⟨x₀, h₀⟩ := hκ z₀
   filter_upwards [eventually_comp hσ hU ρ hρ z₀ x₀ h₀] with w hw
@@ -804,15 +804,15 @@ theorem exists_transp_all : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {G
   let ι := Σ k' : (uAt r v i).Comp, {a : GL (Fin D.R.r) D.host.E //
     ∃ hm : GlobalTheory.LevelCusp.IsMatch ((uAt r v i).X k) ((uAt r v i).X k') a, ReadsInv p r i v ψ γ k k' a}
   let S : ι → Set V := fun c => {x | ∃ hx : x ∈ Dk, MovesAt p r i v γ k c.1 c.2.1 c.2.2.1 x hx}
-  haveI : Countable ι := inferInstance
+  have : Countable ι := inferInstance
   obtain ⟨x₀, hx₀⟩ := hDn
-  haveI : Nonempty ι := by
+  have : Nonempty ι := by
     obtain ⟨k', a, hm, hR, -⟩ := h1 γ k x₀ hx₀
     exact ⟨⟨k', a, hm, hR⟩⟩
-  haveI : Nonempty Dk := ⟨⟨x₀, hx₀⟩⟩
-  haveI : LocallyCompactSpace Dk := hDo.locallyCompactSpace
+  have : Nonempty Dk := ⟨⟨x₀, hx₀⟩⟩
+  have : LocallyCompactSpace Dk := hDo.locallyCompactSpace
   let T : ι → Set Dk := fun c => Subtype.val ⁻¹' closure (S c)
-  have hTc : ∀ c, IsClosed (T c) := fun c => isClosed_closure.preimage continuous_subtype_val
+  have hTc : ∀ c, IsClosed (T c) := fun c => isClosed_closure.preimage continuous_subtypeVal
   have hTu : ⋃ c, T c = Set.univ := by
     refine Set.eq_univ_of_forall fun y => ?_
     obtain ⟨k', a, hm, hR, hM⟩ := h1 γ k y.1 y.2
@@ -821,7 +821,7 @@ theorem exists_transp_all : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {G
   obtain ⟨k', a, hm, hR⟩ := c
   refine ⟨k', a, isTransp_of_movesAt hm ?_ hR⟩
   refine _root_.GlobalTheory.ShareOn.movesAt_of_dense p hp r h hr i v γ k k' a hm (Subtype.val '' interior (T ⟨k', a, hm, hR⟩))
-    (hDo.isOpenMap_subtype_val _ isOpen_interior) (hc.image _) ?_ ?_
+    (hDo.isOpenMap_subtypeVal _ isOpen_interior) (hc.image _) ?_ ?_
   · rintro _ ⟨y, -, rfl⟩
     exact y.2
   · rintro _ ⟨y, hy, rfl⟩

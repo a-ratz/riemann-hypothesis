@@ -112,7 +112,7 @@ theorem _root_.GlobalTheory.SUVol.isClosed_realSU (Ψ : Finset (E →+* ℂ)) (G
       _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC τ.1 G u w}
   have hc : ∀ τ : Ψ, Continuous fun g : Ψ → GL (Fin r) ℂ => (g τ : Matrix (Fin r) (Fin r) ℂ) :=
     fun τ => Units.continuous_val.comp (continuous_apply τ)
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [Set.ofPred_forall, Set.ofPred_and]
   refine isClosed_iInter fun τ => ((isClosed_eq (hc τ).matrix_det continuous_const).inter
     (isClosed_iInter fun u => isClosed_iInter fun w => isClosed_eq ?_ continuous_const))
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC

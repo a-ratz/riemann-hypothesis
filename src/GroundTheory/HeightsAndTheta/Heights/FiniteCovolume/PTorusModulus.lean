@@ -139,7 +139,7 @@ theorem TorusModulus.proof (h : HermitianForm F E W) (v : Basis ι E W)
   let v' := Module.finBasis E (hypComplement h x₀ w₀)
   obtain ⟨i, q, hic, hqc, hqi, hker, hiw, -⟩ := h4 x₀ w₀ hp h' hh' _ v'
   let τ : archUnitary h' v' →* archUnitary h v := (vecFixGroup h v x₀).subtype.comp i
-  have hτc : Continuous τ := continuous_subtype_val.comp hic
+  have hτc : Continuous τ := continuous_subtypeVal.comp hic
   have hτmem : ∀ t, τ t ∈ vecFixGroup h v x₀ ⊓ vecFixGroup h v w₀ :=
     fun t => Subgroup.mem_inf.2 ⟨(i t).2, hiw t⟩
   have hnorm : ∀ t, ∀ x ∈ unipRadical h v x₀, τ t * x * (τ t)⁻¹ ∈ unipRadical h v x₀ := by
@@ -163,8 +163,8 @@ theorem TorusModulus.proof (h : HermitianForm F E W) (v : Basis ι E W)
     intro t f hf
     have e := h5 x₀ w₀ hp νN (τ t) (hτmem t)
     have hm : Measurable fun n : unipRadical h v x₀ => τ t * (n : archUnitary h v) * (τ t)⁻¹ :=
-      ((continuous_const.mul continuous_subtype_val).mul continuous_const).measurable
-    rw [ENNReal.coe_one, one_mul, ← lintegral_map hf hm, e, lintegral_map hf measurable_subtype_coe]
+      ((continuous_const.mul continuous_subtypeVal).mul continuous_const).measurable
+    rw [ENNReal.coe_one, one_mul, ← lintegral_map hf hm, e, lintegral_map hf measurable_subtypeVal]
   obtain ⟨c, -, hc⟩ := h7 x₀ w₀ h' _ v' (vecFixGroup h v x₀) (unipRadical h v x₀)
     (isClosed_vecFixGroup h v x₀) (isClosed_unipRadical h v x₀) (unipRadical_le_vecFixGroup h v x₀)
     τ q (fun _ => 1) hτc hqc continuous_const (fun t => (i t).2) hnorm hinj hdec ν νN ρ hδ
@@ -187,7 +187,7 @@ theorem TorusModulus.proof (h : HermitianForm F E W) (v : Basis ι E W)
       (hf.comp (continuous_id.mul continuous_const).measurable)
   have hmeas : Measurable fun t => ∫⁻ x : unipRadical h v x₀, f (x * τ t) ∂νN :=
     Measurable.lintegral_prod_right' (f := fun p : archUnitary h' v' × unipRadical h v x₀ =>
-      f (p.2 * τ p.1)) (hf.comp ((continuous_subtype_val.comp continuous_snd).mul
+      f (p.2 * τ p.1)) (hf.comp ((continuous_subtypeVal.comp continuous_snd).mul
         (hτc.comp continuous_fst)).measurable)
   calc ∫⁻ x, f (g * x * g⁻¹) ∂ν
       = c * ∫⁻ t, ((1 : ℝ≥0) : ℝ≥0∞) *

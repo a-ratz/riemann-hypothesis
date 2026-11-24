@@ -106,7 +106,7 @@ theorem logSizeM_tor {n : ℕ} (x : Fin n → ℝ) :
       refine Real.iSup_le (fun p => ?_) (Real.exp_pos _).le
       rw [entry]
       split_ifs
-      · rw [norm_cV_posIdele, ← Real.exp_nat_mul]
+      · rw [norm_cV_posIdele, ← Real.exp_natCast_mul]
         have : x p.1 ≤ ‖x‖ := (le_abs_self _).trans (norm_le_pi_norm x p.1)
         exact Real.exp_le_exp.2 (by push_cast; linarith)
       · simp [(Real.exp_pos _).le]

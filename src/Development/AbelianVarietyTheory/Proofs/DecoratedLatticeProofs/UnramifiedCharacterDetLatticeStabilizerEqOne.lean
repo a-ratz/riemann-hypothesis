@@ -94,8 +94,8 @@ theorem det_mem_of_mem_latStab_std {g : GL n k} (hg : g ∈ latStab (stdLat k n)
 
 theorem exists_smul_stdLat_eq (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] : ∃ h : GL n k, h • stdLat k n = L := by
   classical
-  letI : Module.Free 𝒪[k] L := Submodule.IsLattice.free k L
-  letI : Module.Finite 𝒪[k] L := Submodule.IsLattice.finite k L
+  let : Module.Free 𝒪[k] L := Submodule.IsLattice.free k L
+  let : Module.Finite 𝒪[k] L := Submodule.IsLattice.finite k L
   let b := Module.Free.chooseBasis 𝒪[k] L
   let B := b.extendOfIsFullLattice k
   have hc : Fintype.card (Module.Free.ChooseBasisIndex 𝒪[k] L) = Fintype.card n := by

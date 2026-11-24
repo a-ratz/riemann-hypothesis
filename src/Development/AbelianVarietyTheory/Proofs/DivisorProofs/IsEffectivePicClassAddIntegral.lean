@@ -80,7 +80,7 @@ theorem mul_compat {X : Scheme.{0}} {A₁ A₂ B₁ B₂ : X.Opens} (s₁ : Γ(X
   have hτ := congrArg (X.presheaf.map (homOfLE (le_inf (inf_le_left.trans inf_le_right)
     (inf_le_right.trans inf_le_right) : A₁ ⊓ B₁ ⊓ (A₂ ⊓ B₂) ≤ B₁ ⊓ B₂)).op).hom ht
   rw [res_res_apply, map_mul, res_res_apply] at hσ hτ
-  simp only [res, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, map_mul, res_res_apply]
+  simp only [res, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, map_mul, res_res_apply]
   rw [hσ, hτ]
   ring
 
@@ -110,7 +110,7 @@ theorem germ_sec_ne_zero {X : Scheme.{0}} [IsIntegral X] {N : LB X} (σ : LB.Sec
       ext x
       simp only [Opens.coe_bot, Set.mem_empty_iff_false, iff_false]
       exact fun hx => hne ⟨x, hx⟩
-    haveI : Subsingleton Γ(X, N.U j) := CommRingCat.subsingleton_of_isTerminal (X.sheaf.isTerminalOfEqEmpty hT)
+    have : Subsingleton Γ(X, N.U j) := CommRingCat.subsingleton_of_isTerminal (X.sheaf.isTerminalOfEqEmpty hT)
     exact Subsingleton.elim _ _
 
 theorem eff_add {X : Scheme.{0}} [IsIntegral X] (a b : Pic X) (ha : Eff a) (hb : Eff b) : Eff (a + b) := by

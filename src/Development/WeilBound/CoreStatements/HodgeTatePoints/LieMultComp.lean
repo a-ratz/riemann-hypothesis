@@ -341,7 +341,7 @@ namespace PositivityTheory.HtPt.Kftwo
 theorem exists_completion (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [CharZero W] :
     ∃ (T : CDVR) (g : W →+* T.V), IsLocalHom g ∧ Function.Injective g := by
   obtain ⟨⟨hdom, hdvr⟩, hcpl, hinj, hloc, -⟩ := ReciprocityTheory.CA.Pt.completionDVR W
-  haveI : CharZero (AdicCompletion (maximalIdeal W) W) := charZero_of_injective_algebraMap hinj
+  have : CharZero (AdicCompletion (maximalIdeal W) W) := charZero_of_injective_algebraMap hinj
   exact ⟨CDVR.mk (AdicCompletion (maximalIdeal W) W),
     algebraMap W (AdicCompletion (maximalIdeal W) W), hloc, hinj⟩
 
@@ -352,18 +352,18 @@ theorem exists_cdvr_of_isIntegral {V A : Type} [CommRing V] [IsDomain V] [IsDisc
     rw [(RingHom.injective_iff_ker_eq_bot _).mp hinj]
     exact bot_le
   obtain ⟨P, hPmax, hPc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (maximalIdeal V) hker
-  haveI : P.IsPrime := hPmax.isPrime
+  have : P.IsPrime := hPmax.isPrime
   have hP0 : P ≠ ⊥ := by
     rintro rfl
     apply IsDiscreteValuationRing.not_a_field V
     rw [← hPc, Ideal.under_def, ← RingHom.ker_eq_comap_bot, (RingHom.injective_iff_ker_eq_bot _).mp hinj]
-  haveI : IsDomain (Localization.AtPrime P) :=
+  have : IsDomain (Localization.AtPrime P) :=
     IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors P)
-  haveI : IsDiscreteValuationRing (Localization.AtPrime P) :=
+  have : IsDiscreteValuationRing (Localization.AtPrime P) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hP0 (Localization.AtPrime P)
   have hAinj : Function.Injective (algebraMap A (Localization.AtPrime P)) :=
     IsLocalization.injective (Localization.AtPrime P) (Ideal.primeCompl_le_nonZeroDivisors P)
-  haveI : CharZero (Localization.AtPrime P) := charZero_of_injective_algebraMap hAinj
+  have : CharZero (Localization.AtPrime P) := charZero_of_injective_algebraMap hAinj
   obtain ⟨T, g0, hg0, hg0inj⟩ := exists_completion (Localization.AtPrime P)
   refine ⟨T, g0.comp (algebraMap A (Localization.AtPrime P)), ⟨fun x hx => ?_⟩, hg0inj.comp hAinj⟩
   simp only [RingHom.comp_apply] at hx
@@ -378,13 +378,13 @@ theorem exists_cdvr {V K K' : Type} [CommRing V] [IsDomain V] [IsDiscreteValuati
     [Algebra V K] [IsFractionRing V K] [Field K'] [Algebra K K'] [FiniteDimensional K K'] :
     ∃ (T : CDVR) (g : V →+* T.V) (j : K' →+* T.Fr), IsLocalHom g ∧
       (algebraMap T.V T.Fr).comp g = (j.comp (algebraMap K K')).comp (algebraMap V K) := by
-  letI : Algebra V K' := ((algebraMap K K').comp (algebraMap V K)).toAlgebra
-  haveI : IsScalarTower V K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : CharZero K' := charZero_of_injective_algebraMap (algebraMap K K').injective
-  haveI : IsDedekindDomain (integralClosure V K') := integralClosure.isDedekindDomain V K K'
-  haveI : IsFractionRing (integralClosure V K') K' :=
+  let : Algebra V K' := ((algebraMap K K').comp (algebraMap V K)).toAlgebra
+  have : IsScalarTower V K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : CharZero K' := charZero_of_injective_algebraMap (algebraMap K K').injective
+  have : IsDedekindDomain (integralClosure V K') := integralClosure.isDedekindDomain V K K'
+  have : IsFractionRing (integralClosure V K') K' :=
     integralClosure.isFractionRing_of_finite_extension K K'
-  haveI : CharZero (integralClosure V K') :=
+  have : CharZero (integralClosure V K') :=
     ⟨fun m n h => Nat.cast_injective (R := K')
       (by simpa using congrArg (algebraMap (integralClosure V K') K') h)⟩
   have hVK' : Function.Injective (algebraMap V K') :=
@@ -1270,7 +1270,7 @@ theorem exists_coeff_embedding {l : Level H} (c : Coeff l) {Ω : Type} [Field Ω
   have hr2 : r ^ 2 = -(H.d : c.F) := by rw [hr, ← map_pow, (baseKA l).ρ_sq, map_neg, map_natCast]
   have hd : (0 : ℚ) < H.d := by exact_mod_cast H.d_prime.pos
   have hirr : Irreducible (Polynomial.X ^ 2 - Polynomial.C (-(H.d : ℚ))) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two fun b hb => by nlinarith [sq_nonneg b]
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two fun b hb => by nlinarith [sq_nonneg b]
   have hmin : Polynomial.X ^ 2 - Polynomial.C (-(H.d : ℚ)) = minpoly ℚ r :=
     minpoly.eq_of_irreducible_of_monic hirr (by simp [hr2]) (Polynomial.monic_X_pow_sub_C _ two_ne_zero)
   obtain ⟨φ, hφ⟩ := IntermediateField.exists_algHom_of_splits_of_aeval (F := ℚ) (E := c.F) (K := Ω)
@@ -1368,7 +1368,7 @@ theorem exists_point {D : Datum H} {l : Level H} (hA : l.A = 1) (Xo : Moduli D l
         obtain rfl : φ.comp κ = δ :=
           congrArg CommRingCat.Hom.hom (Spec.map_injective ((Spec.map_comp _ _).trans hx))
         obtain ⟨ψ, rfl⟩ : ∃ ψ : AlgebraicClosure K →+* k, ψ.comp i = φ := by
-          letI := φ.toAlgebra
+          let := φ.toAlgebra
           set_option synthInstance.maxHeartbeats 400000 in
           exact ⟨(IsAlgClosed.lift (R := K') (S := AlgebraicClosure K) (M := k)).toRingHom,
             RingHom.ext fun z => (IsAlgClosed.lift (R := K') (S := AlgebraicClosure K) (M := k)).commutes z⟩

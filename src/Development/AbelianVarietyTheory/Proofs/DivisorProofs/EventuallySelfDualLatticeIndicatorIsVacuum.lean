@@ -200,7 +200,7 @@ theorem indicator_int_mem_SB {κ : Type} [Fintype κ] (v : HeightOneSpectrum (�
       isOpen_set_pi Set.finite_univ fun _ _ => Valued.isOpen_valuationSubring (v.adicCompletion F)⟩
   have hcp : IsCompact S := by
     rw [hS']
-    haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+    have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
     exact isCompact_univ_pi fun _ => isCompact_iff_compactSpace.2 this
   refine ⟨(IsLocallyConstant.iff_exists_open _).2 fun x => ?_, HasCompactSupport.intro hcp fun x hx => Set.indicator_of_notMem hx _⟩
   by_cases hx : x ∈ S

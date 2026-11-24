@@ -83,7 +83,7 @@ theorem ltS_act (h : GA E N) (o : Op E N) (F : Sm E N) : ltS h (act o F) = act o
 theorem D_ct_smooth (r : ℕ) (φ : Sm E N) (hl : ∀ γ g, φ.1 (ratGL E N γ * g) = φ.1 g)
     (hlev : IsOpen {k | finRep E N k φ = φ}) :
     ∃ F : Sm E N, F.1 = An.ctn r φ.1 ∧ ∀ X, (lie E N X F).1 = An.ctn r (lie E N X φ).1 := by
-  letI : MeasurableSpace (BlockIx N r → Ad E) := borel _
+  let : MeasurableSpace (BlockIx N r → Ad E) := borel _
   have : BorelSpace (BlockIx N r → Ad E) := ⟨rfl⟩
   obtain ⟨μ, hμ, hD, hint⟩ := JDict.exists_normed E N r
   obtain ⟨F, h1, h2⟩ := GlobalTheory.CompanionTheory.CTSmooth.ct_smooth E N r φ hl hlev μ _ hμ hD
@@ -100,7 +100,7 @@ def ctSm (r : ℕ) (φ : Sm E N) : Sm E N := if h : An.ctn r φ.1 ∈ Sm E N the
 theorem ctSm_val (r : ℕ) {φ : Sm E N} (hφ : IsAutForm φ) : (ctSm r φ).1 = An.ctn r φ.1 := by
   obtain ⟨F, hF, -⟩ := D_ct_smooth r φ hφ.left hφ.level
   have h : An.ctn r φ.1 ∈ Sm E N := hF ▸ F.2
-  simp only [ctSm, dif_pos h]
+  simp only [ctSm, dite_eq_left h]
 
 theorem ctn_add (r : ℕ) {f g : GA E N → ℂ} (hf : Continuous f) (hg : Continuous g) :
     An.ctn r (f + g) = An.ctn r f + An.ctn r g := by

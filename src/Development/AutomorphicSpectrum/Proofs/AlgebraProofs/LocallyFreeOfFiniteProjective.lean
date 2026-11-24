@@ -69,7 +69,7 @@ theorem exists_local_basis {R L : Type} [CommRing R] [IsDomain R] [AddCommGroup 
   let Rp := Localization.AtPrime p
   let Lp := LocalizedModule p.primeCompl L
   let f : L →ₗ[R] Lp := LocalizedModule.mkLinearMap p.primeCompl L
-  haveI : Module.Free Rp Lp := Module.free_of_flat_of_isLocalRing
+  have : Module.Free Rp Lp := Module.free_of_flat_of_isLocalRing
   let β := Module.finBasis Rp Lp
   choose ms hms using fun i => IsLocalizedModule.mk'_surjective p.primeCompl f (β i)
   let m : Fin (Module.finrank Rp Lp) → L := fun i => (ms i).1
@@ -111,10 +111,10 @@ theorem exists_local_basis {R L : Type} [CommRing R] [IsDomain R] [AddCommGroup 
 
 theorem flat_field {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Subalgebra o Ω) :
     Module.Flat R Ω := by
-  letI : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
-  haveI : Module.Flat R (FractionRing R) := IsLocalization.flat _ (nonZeroDivisors R)
-  haveI : Module.Free (FractionRing R) Ω := Module.Free.of_divisionRing _ _
-  haveI : Module.Flat (FractionRing R) Ω := Module.Flat.of_free
+  let : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
+  have : Module.Flat R (FractionRing R) := IsLocalization.flat _ (nonZeroDivisors R)
+  have : Module.Free (FractionRing R) Ω := Module.Free.of_divisionRing _ _
+  have : Module.Flat (FractionRing R) Ω := Module.Flat.of_free
   exact Module.Flat.trans R (FractionRing R) Ω
 
 theorem exists_chart {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Subalgebra o Ω) {E : Type}
@@ -125,7 +125,7 @@ theorem exists_chart {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : S
         ∃ a : Fin r → Ω, (∀ q, ∃ n : ℕ, (s : Ω) ^ n * a q ∈ R) ∧ e = ∑ q, a q • b q := by
   classical
   obtain ⟨n, m, s, hs, hli, hsp⟩ := exists_local_basis (L := L) p
-  haveI := flat_field R
+  have := flat_field R
   have hs0 : (s : Ω) ≠ 0 := fun h => hs (by
     have : s = 0 := Subtype.ext h
     rw [this]; exact p.zero_mem)

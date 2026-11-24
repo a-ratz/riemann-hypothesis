@@ -1023,7 +1023,7 @@ theorem UpperTheory.cusp_sections_over_coefficient_extension :
   have ei : @Eq (type_of% i') ((by with_unfolding_all exact (i :))) i' := (by with_unfolding_all exact ((@Fin.ext (w'.st Z').toD7.R.m ((i)) i' ((hii))) : _))
   subst ei
   have ha : @Eq (type_of% (wtA (z.geo.κ i))) ((by with_unfolding_all exact ((wtA (κ' ((i)))) : _))) (wtA (z.geo.κ i)) := (by with_unfolding_all exact ((UpperTheory.weight_function_eq (z.geo.κ i) ((by with_unfolding_all exact ((κ' ((i))).aP : _))) ((by with_unfolding_all exact ((κ' ((i))).aM : _))) ((by with_unfolding_all exact (a1 :))) ((by with_unfolding_all exact (a2 :)))) :))
-  letI := z.alg
+  let := z.alg
   have hm := UpperTheory.base_change_mem_section (C := z.core.toCore) hle ha hf₀
   have key := fun (g : Gc B w.px) (q : AutQ (Wc (w'.st Z').toD7 ((by with_unfolding_all exact (i :))))) =>
     UpperTheory.omega_lowering_action (z.geo.O i) (z.geo.pins i).2.act.1 c hle (le_trans (z.geo.O i).hle hle) hG hi (lev := (by with_unfolding_all exact ((O' ((i))).lev : _)))
@@ -1251,8 +1251,8 @@ theorem UpperTheory.theta_lift_data_over_coefficient_extension :
                   z.R.thF i _ y (z.geo.v₀ i (sg0 (w.st Z).toD7 _)) (pt q).out := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Wt' z hE hpx core' alg' halg hc Xg tr R' cG' hpins hRS κ' hκ v₀' fw' hcrd hv0 i i' hi hMW
     pt hpt
-  letI := alg'
-  letI := z.alg
+  let := alg'
+  let := z.alg
   have hs := sign_at_base_place_eq_embedding z.R.toRealDat
   have hs' := sign_at_base_place_eq_embedding R'.toRealDat
   have hcl := hRS.1.2.2.2.2.2.2.2.2.2.2.2.2.1 i i' hi
@@ -1424,7 +1424,7 @@ theorem ties_enl : ∀ {B B' : Base} {f : Fr B.toPre} {f' : Fr B'.toPre} {T : Tw
           ∀ i, R'.toRealDat.LUnif → PhaseTie core' R'.toRealDat κ' v₀' O' (fun _ => 1) i := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Wt' z hE hpx core' alg' halg hc Xg tr R' cG' hPins hRS κ' hκ v₀' fw' hcrd hv0 O'
     hOP hOm hEx hLU hEx' hMW
-  letI := alg'
+  let := alg'
   have hz := z.pins.char
   have hpz := preChar_of z.R z.F hz hEx
   have hp' := preChar_of R' _ hPins.char hEx'
@@ -1508,7 +1508,7 @@ theorem _root_.GlobalTheory.T.geometricHalf_to_analyticData_enlargedBase : Globa
   intro _ _ h3 _ _ _ _
   refine (GlobalTheory.Mem.R3.Rw.inGeo_stepW h3 Pinned).trans (Step.of_all fun K B' f' T' _ _ _ _ w' H => ?_)
   intro B f T w hE hf hP hpx Z hX Wt z hG hGA hF hH Z' hX' hG' hGA' hV core' alg' ha1 ha2 ha3 hc hL hC hD hpb Xg tr R' cG' s1 _
-  letI := alg'
+  let := alg'
   obtain ⟨hPins, hLev, -, -, -, hBrg, hEx', hRS⟩ := s1
   have hex : ∃ ι : (w.st Z).toD7.what₂.LL →+* (w'.st Z').toD7.what₂.LL,
       ∀ x, (w'.st Z').toD7.what₂.embLL (ι x) = (w.st Z).toD7.what₂.embLL x := ⟨(by with_unfolding_all exact ((enlEmb hE.2.2.2) :)), (by with_unfolding_all exact ((enlEmb_spec hE.2.2.2) :))⟩

@@ -498,7 +498,7 @@ def embOn (V : HSp D) (T : Set (HeightOneSpectrum (𝓞 D.host.F))) (s : ∀ v �
   if hv : v ∈ T then embV V (s v hv) else 1
 
 theorem embOn_mem (V : HSp D) {T : Set (HeightOneSpectrum (𝓞 D.host.F))} (s : ∀ v ∈ T, SplitD D v)
-    {v : HeightOneSpectrum (𝓞 D.host.F)} (hv : v ∈ T) : embOn V T s v = embV V (s v hv) := dif_pos hv
+    {v : HeightOneSpectrum (𝓞 D.host.F)} (hv : v ∈ T) : embOn V T s v = embV V (s v hv) := dite_eq_left hv
 
 theorem embOn_not (V : HSp D) {T : Set (HeightOneSpectrum (𝓞 D.host.F))} (s : ∀ v ∈ T, SplitD D v)
     {v : HeightOneSpectrum (𝓞 D.host.F)} (hv : v ∉ T) (a : GL (Fin V.rank) (v.adicCompletion D.host.F)) :

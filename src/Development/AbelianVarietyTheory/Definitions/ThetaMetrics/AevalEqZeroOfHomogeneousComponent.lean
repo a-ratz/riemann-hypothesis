@@ -80,7 +80,7 @@ theorem exists_smul_mem_of_span_eq_top {R Ω n : Type*} [CommRing R] [Field Ω] 
   choose v hv hv' using fun k : n => hb (e k).2
   let A : Matrix n n R := Matrix.of v
   have hA : IsUnit (φ.mapMatrix A) := by
-    rw [← Matrix.linearIndependent_rows_iff_isUnit]
+    rw [← Matrix.linearIndependent_row_iff_isUnit]
     have : (φ.mapMatrix A).row = Subtype.val ∘ e := funext fun k => hv' k
     rw [this]
     exact hli.comp _ e.injective
@@ -110,8 +110,8 @@ theorem exists_C_mul_X_pow_mem {R Ω σ : Type*} [CommRing R] [Field Ω] [IsAlgC
   choose m hm using hrad
   let d := ∑ j, m j + 1
   let n := {a : σ →₀ ℕ // a.degree = d}
-  haveI : Finite n := (Finsupp.finite_of_degree_eq d).to_subtype
-  letI : Fintype n := Fintype.ofFinite n
+  have : Finite n := (Finsupp.finite_of_degree_eq d).to_subtype
+  let : Fintype n := Fintype.ofFinite n
 
   have hmon : ∀ a : n, monomial a.1 (1 : Ω) ∈ I.map (map φ) := by
     intro a
@@ -124,7 +124,7 @@ theorem exists_C_mul_X_pow_mem {R Ω σ : Type*} [CommRing R] [Field Ω] [IsAlgC
       omega
     have hle : Finsupp.single j (m j) ≤ a.1 := Finsupp.single_le_iff.2 hj
     obtain ⟨c, hc⟩ := exists_add_of_le hle
-    rw [hc, ← mul_one (1 : Ω), ← monomial_mul, ← X_pow_eq_monomial]
+    rw [hc, ← mul_one (1 : Ω), ← monomial_mul_monomial, ← X_pow_eq_monomial]
     exact Ideal.mul_mem_right _ _ (hm j)
   let L : (n → R) →ₗ[R] MvPolynomial σ R := ∑ a : n, (monomial a.1).comp (LinearMap.proj a)
   have hL (v) : L v = ∑ a : n, monomial a.1 (v a) := by simp [L]
@@ -141,10 +141,10 @@ theorem exists_C_mul_X_pow_mem {R Ω σ : Type*} [CommRing R] [Field Ω] [IsAlgC
         · rw [Finset.sum_eq_single (⟨c, hc⟩ : n)]
           · simp
           · intro a _ ha
-            rw [coeff_monomial, if_neg fun h => ha (Subtype.ext h)]
+            rw [coeff_monomial, ite_eq_right fun h => ha (Subtype.ext h)]
           · simp
         · refine Finset.sum_eq_zero fun a _ => ?_
-          rw [coeff_monomial, if_neg fun h : a.1 = c => hc (h ▸ a.2)]
+          rw [coeff_monomial, ite_eq_right fun h : a.1 = c => hc (h ▸ a.2)]
       change L _ ∈ I
       rw [this]
       exact homogeneousComponent_mem_of_mem hI hg d
@@ -165,7 +165,7 @@ theorem exists_C_mul_X_pow_mem {R Ω σ : Type*} [CommRing R] [Field Ω] [IsAlgC
       induction a using MvPolynomial.induction_on' with
       | monomial u r =>
         have : monomial c 1 * monomial u r • x = r • (monomial (c + u) 1 * x) := by
-          rw [smul_eq_mul, ← mul_assoc, monomial_mul, ← smul_mul_assoc, smul_monomial]
+          rw [smul_eq_mul, ← mul_assoc, monomial_mul_monomial, ← smul_mul_assoc, smul_monomial]
           simp
         rw [this, map_smul]
         exact T.smul_mem _ (hx _)

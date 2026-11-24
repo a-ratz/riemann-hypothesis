@@ -74,7 +74,7 @@ theorem gaugeSubEx_haarK (n : ℕ) (ε : Fin n → Bool) :
   have hc : IsCompact (Formalism.REAL.KG ε : Set (Formalism.REAL.UJ ε)) :=
     isCompact_iff_compactSpace.mpr (Formalism.REAL.instCompactKG n ε)
   have hm : MeasurableSet (maxK ε) := hK ▸ hc.isClosed.measurableSet
-  have hv : Measurable (Subtype.val : Formalism.REAL.KG ε → Formalism.REAL.UJ ε) := measurable_subtype_coe
+  have hv : Measurable (Subtype.val : Formalism.REAL.KG ε → Formalism.REAL.UJ ε) := measurable_subtypeVal
   have := Formalism.REAL.compact_haar_probability n ε
   refine ⟨(Formalism.REAL.muK ε).map Subtype.val, ?_, ?_, ?_⟩
   · rw [Measure.map_apply hv hm.compl]

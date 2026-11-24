@@ -104,18 +104,18 @@ end UpperTheory.Gal.G3
 theorem UpperTheory.Gal.G3.pHomDesc :
     EtDesc → HomDesc := by
   intro etd S S' _ c _ _ _ A B _ _ _ _ A' B' _ _ _ _ hAab hBab hB'ab a b hA hB ψ ψ' e hψ'
-  haveI : Flat c := inferInstance
+  have : Flat c := inferInstance
   have hψ : IsMonHom ψ := monHom_desc c hA hB ψ ψ' e
   refine ⟨hψ, ?_⟩
   intro χ' d hχ' hsurj hfin h1 h2
-  haveI : Smooth B'.hom := hB'ab.smooth
-  haveI : AlgebraicGeometry.IsReduced B'.left := GlobalTheory.isReduced_of_smooth_of_isReduced B'.hom
-  haveI : IsFinite b := MorphismProperty.of_isPullback (P := @IsFinite) hB.1.flip ‹_›
-  haveI : Etale b := MorphismProperty.of_isPullback (P := @Etale) hB.1.flip ‹_›
-  haveI : Surjective b := MorphismProperty.of_isPullback (P := @Surjective) hB.1.flip ‹_›
-  haveI : Flat a := MorphismProperty.of_isPullback (P := @Flat) hA.1.flip ‹_›
-  haveI : Surjective a := MorphismProperty.of_isPullback (P := @Surjective) hA.1.flip ‹_›
-  haveI : IsProper A.hom := hAab.proper
+  have : Smooth B'.hom := hB'ab.smooth
+  have : AlgebraicGeometry.IsReduced B'.left := GlobalTheory.isReduced_of_smooth_of_isReduced B'.hom
+  have : IsFinite b := MorphismProperty.of_isPullback (P := @IsFinite) hB.1.flip ‹_›
+  have : Etale b := MorphismProperty.of_isPullback (P := @Etale) hB.1.flip ‹_›
+  have : Surjective b := MorphismProperty.of_isPullback (P := @Surjective) hB.1.flip ‹_›
+  have : Flat a := MorphismProperty.of_isPullback (P := @Flat) hA.1.flip ‹_›
+  have : Surjective a := MorphismProperty.of_isPullback (P := @Surjective) hA.1.flip ‹_›
+  have : IsProper A.hom := hAab.proper
   have ea : a ≫ A.hom = A'.hom ≫ c := hA.1.w
   have eb : b ≫ B.hom = B'.hom ≫ c := hB.1.w
   have hcond : (χ'.left ≫ a) ≫ A.hom = b ≫ B.hom := by
@@ -123,7 +123,7 @@ theorem UpperTheory.Gal.G3.pHomDesc :
   have hpts : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x y : sp Ω ⟶ B'.left), x ≫ b = y ≫ b →
       x ≫ (χ'.left ≫ a) = y ≫ (χ'.left ≫ a) := by
     intro Ω _ _ x y hxy
-    haveI := hfin
+    have := hfin
     have lift : ∀ z : sp Ω ⟶ B'.left, ∃ z' : sp Ω ⟶ A'.left, z' ≫ ψ'.left = z := by
       intro z
       obtain ⟨v, hv⟩ := hsurj.surj (UpperTheory.Gal.TranscendenceTraces.pt z)

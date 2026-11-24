@@ -83,7 +83,7 @@ def IsPPol (c : E ≃ₐ[F] E) (r : ℕ) (P : E[X]) : Prop :=
 variable {c : E ≃ₐ[F] E} {r : ℕ} {P : E[X]}
 
 theorem isUnit_root (hP : IsPPol c r P) : IsUnit (AdjoinRoot.root P) := by
-  haveI : Fact (Irreducible P) := ⟨hP.2.1⟩
+  have : Fact (Irreducible P) := ⟨hP.2.1⟩
   refine Ne.isUnit fun h => hP.2.2.2.1 ?_
   have h1 := AdjoinRoot.eval₂_root P
   rw [h, eval₂_at_zero] at h1
@@ -94,7 +94,7 @@ def alpha (hP : IsPPol c r P) : (AdjoinRoot P)ˣ := (isUnit_root hP).unit
 theorem eval₂_conj_inv (hP : IsPPol c r P) :
     P.eval₂ ((AdjoinRoot.of P).comp (c : E →+* E)) ((alpha hP)⁻¹ : (AdjoinRoot P)ˣ) = 0 := by
   rw [← eval₂_map]
-  letI : Invertible (((alpha hP)⁻¹ : (AdjoinRoot P)ˣ) : AdjoinRoot P) := Units.invertible _
+  let : Invertible (((alpha hP)⁻¹ : (AdjoinRoot P)ˣ) : AdjoinRoot P) := Units.invertible _
   have hd : (P.map (c : E →+* E)).natDegree ≤ r := hP.2.2.1 ▸ natDegree_map_le
   rw [← eval₂_reflect_eq_zero_iff _ _ r _ hd]
   have h1 : ⅟(((alpha hP)⁻¹ : (AdjoinRoot P)ˣ) : AdjoinRoot P) = AdjoinRoot.root P := rfl
@@ -225,7 +225,7 @@ theorem exists_cyclic {A : Type} [CommRing A] [IsArtinianRing A] {r : ℕ}
       (krylov (g.map (Ideal.Quotient.mk m.asIdeal)) v).det ≠ 0 := by
     intro m
     have := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
+    let := Ideal.Quotient.field m.asIdeal
     exact exists_cyclic_field _ (by rw [Matrix.charpoly_map]; exact hs.map)
   choose w hw using hloc
   have hsurj : ∀ i : Fin r, ∃ a : A, ∀ m : MaximalSpectrum A,

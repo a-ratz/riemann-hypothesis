@@ -164,7 +164,7 @@ theorem real_indep {J : Type*} [Fintype J] (b : Module.Basis J ℤ Λ) {w : Fin 
   have h2 := congrArg ψ h
 
   simp only [map_sum, map_smul, h1, map_zero, smul_eq_mul, mul_ite, mul_one, mul_zero,
-  Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+  Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
   simpa using h2
 
 theorem continuousAt_P (x : Λ) {w₀ : Fin n → ℂ} (hw : w₀ ∈ logCover L.a_le) :
@@ -196,8 +196,8 @@ theorem eventually_eq (A : (Fin n → ℂ) → Module.End ℂ (Fin g → ℂ))
     (x y : Λ) {w₀ : Fin n → ℂ} (hw : w₀ ∈ logCover L.a_le)
     (h : L.P w₀ y = A (expCover a w₀) (L.P w₀ x)) :
     ∀ᶠ w in 𝓝 w₀, L.P w y = A (expCover a w) (L.P w x) := by
-  haveI := L.free
-  haveI := L.fin
+  have := L.free
+  have := L.fin
   obtain ⟨b⟩ : Nonempty (Module.Basis (Module.Free.ChooseBasisIndex ℤ Λ) ℤ Λ) :=
     ⟨Module.Free.chooseBasis ℤ Λ⟩
   obtain ⟨ε, hε, hev⟩ := exists_eventually_int_eq_zero (fun w i => L.P w (b i)) w₀
@@ -231,11 +231,11 @@ theorem eq_of_mem (A : (Fin n → ℂ) → Module.End ℂ (Fin g → ℂ))
   have hlc : IsLocallyConstant φ := by
     rw [IsLocallyConstant.iff_eventually_eq]
     intro w
-    have h2 := (continuous_subtype_val.continuousAt (x := w)).eventually
+    have h2 := (continuous_subtypeVal.continuousAt (x := w)).eventually
       (eventually_eq L A hA hex x (φ w) w.2 (hφ w))
     filter_upwards [h2] with w' hw'
     exact P_injective L w'.2 ((hφ w').trans hw'.symm)
-  haveI : PreconnectedSpace (logCover L.a_le) :=
+  have : PreconnectedSpace (logCover L.a_le) :=
     Subtype.preconnectedSpace (convex_logCover L.a_le).isPreconnected
   have h2 := hlc.apply_eq_of_preconnectedSpace ⟨w₀, h0⟩ ⟨w₁, h1⟩
   have hy : φ ⟨w₀, h0⟩ = y := P_injective L h0 ((hφ ⟨w₀, h0⟩).trans h.symm)

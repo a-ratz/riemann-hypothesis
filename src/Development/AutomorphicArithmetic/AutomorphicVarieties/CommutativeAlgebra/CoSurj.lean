@@ -66,9 +66,9 @@ theorem UpperTheory.V.Alg.co_surj :
     refine Submodule.le_of_le_smul_of_le_jacobson_bot hfg (maximalIdeal_le_jacobson _) ?_
     rw [smul_eq_mul, ← pow_two]
     exact hf
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
-  haveI : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
-  haveI : IsHausdorff ((maximalIdeal R).map (f : R →+* R')) R' := by
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := O)
+  have : IsHausdorff ((maximalIdeal R).map (f : R →+* R')) R' := by
     rw [heq]
     infer_instance
   apply surjective_of_mk_map_comp_surjective (I := maximalIdeal R) (f : R →+* R')

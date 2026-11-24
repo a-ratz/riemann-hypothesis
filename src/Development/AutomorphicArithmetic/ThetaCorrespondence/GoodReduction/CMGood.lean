@@ -204,7 +204,7 @@ theorem exists_generator_mod_sq : ∀ (B : Type) [CommRing B] [IsDedekindDomain 
   have hQt : Q ≠ ⊤ := Ideal.IsPrime.ne_top hQ
   have hmax : Q.IsMaximal := Ideal.IsPrime.isMaximal hQ hQ0
   refine ⟨?_, fun a b hab ha => ?_⟩
-  · obtain ⟨π, hπ, hπ2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self Q hQ0 hQt 2 le_rfl)
+  · obtain ⟨π, hπ, hπ2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_lt_self Q hQ0 hQt 2 le_rfl)
     refine ⟨π, hπ, hπ2, fun x hx => ?_⟩
     have hlt : Q ^ (1 + 1) < Ideal.span {π} ⊔ Q ^ 2 := by
       refine lt_of_le_of_ne le_sup_right fun h => hπ2 ?_
@@ -325,8 +325,8 @@ theorem integral_mem_and_valuation_lt_one : ∀ (R K Ω : Type) [CommRing R] [Is
     rw [IsScalarTower.algebraMap_apply R K Ω]
     exact (memV _).2 ⟨r, rfl⟩
   refine ⟨fun x hx => ?_, fun r => ?_⟩
-  · letI : Algebra R V := ((algebraMap R Ω).codRestrict V hRV).toAlgebra
-    haveI : IsScalarTower R V Ω := .of_algebraMap_eq fun _ => rfl
+  · let : Algebra R V := ((algebraMap R Ω).codRestrict V hRV).toAlgebra
+    have : IsScalarTower R V Ω := .of_algebraMap_eq fun _ => rfl
     have hxV : IsIntegral V x := hx.tower_top
     obtain ⟨y, rfl⟩ := IsIntegrallyClosed.isIntegral_iff.1 hxV
     exact y.2
@@ -361,11 +361,11 @@ theorem integral_mem_and_valuation_lt_one : ∀ (R K Ω : Type) [CommRing R] [Is
 
 theorem exists_frobenius : ∀ (R B G : Type) [CommRing R] [IsLocalRing R] [Finite (ResidueField R)] [CommRing B] [Algebra R B] [Module.Finite R B] [Group G] [Finite G] [MulSemiringAction G B] [SMulCommClass G R B] [Algebra.IsInvariant R B G] (Q : Ideal B) [Q.IsPrime], Q.under R = maximalIdeal R → ∃ σ : G, ∀ x : B, σ • x - x ^ Nat.card (ResidueField R) ∈ Q := by
   intro R B G _ _ _ _ _ _ _ _ _ _ _ Q _ hQ
-  haveI : Q.LiesOver (maximalIdeal R) := ⟨hQ.symm⟩
-  haveI : Finite (R ⧸ maximalIdeal R) := inferInstanceAs (Finite (ResidueField R))
-  haveI : Module.Finite (R ⧸ maximalIdeal R) (B ⧸ Q) :=
+  have : Q.LiesOver (maximalIdeal R) := ⟨hQ.symm⟩
+  have : Finite (R ⧸ maximalIdeal R) := inferInstanceAs (Finite (ResidueField R))
+  have : Module.Finite (R ⧸ maximalIdeal R) (B ⧸ Q) :=
     Module.Finite.of_restrictScalars_finite R (R ⧸ maximalIdeal R) (B ⧸ Q)
-  haveI : Finite (B ⧸ Q) := Module.finite_of_finite (R ⧸ maximalIdeal R)
+  have : Finite (B ⧸ Q) := Module.finite_of_finite (R ⧸ maximalIdeal R)
   obtain ⟨σ, hσ⟩ := IsArithFrobAt.exists_of_isInvariant R G Q
   refine ⟨σ, fun x => ?_⟩
   have := hσ x
@@ -374,19 +374,19 @@ theorem exists_frobenius : ∀ (R B G : Type) [CommRing R] [IsLocalRing R] [Fini
 
 theorem inertia_pow_fixes_of_commutative : ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Finite (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field Ω] [Algebra K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring → ∀ (L : IntermediateField K Ω), FiniteDimensional K L → IsGalois K L → (∀ σ τ : L ≃ₐ[K] L, σ * τ = τ * σ) → ∀ σ ∈ inertia K V, ∃ a : ℕ, ∀ x ∈ L, (σ ^ ((Nat.card (ResidueField R) - 1) * ringChar (ResidueField R) ^ a)) x = x := by
   intro R K Ω _ _ _ _ _ _ _ _ _ V hV L hfin hgal hab σ hσ
-  haveI := hfin
-  haveI := hgal
+  have := hfin
+  have := hgal
 
-  letI : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K Ω := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R K L := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R L Ω := .of_algebraMap_eq fun _ => rfl
+  let : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K Ω := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R K L := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R L Ω := .of_algebraMap_eq fun _ => rfl
   let B := integralClosure R L
-  haveI : IsFractionRing B L := IsIntegralClosure.isFractionRing_of_finite_extension R K L B
-  haveI : IsDedekindDomain B := IsIntegralClosure.isDedekindDomain R K L B
-  haveI : Module.Finite R B := IsIntegralClosure.finite R K L B
-  haveI : Algebra.IsInvariant R B (B ≃ₐ[R] B) := Algebra.isInvariant_of_isGalois' R K L B
-  haveI : Finite (B ≃ₐ[R] B) := Finite.of_equiv _ (galRestrict R K L B).toEquiv
+  have : IsFractionRing B L := IsIntegralClosure.isFractionRing_of_finite_extension R K L B
+  have : IsDedekindDomain B := IsIntegralClosure.isDedekindDomain R K L B
+  have : Module.Finite R B := IsIntegralClosure.finite R K L B
+  have : Algebra.IsInvariant R B (B ≃ₐ[R] B) := Algebra.isInvariant_of_isGalois' R K L B
+  have : Finite (B ≃ₐ[R] B) := Finite.of_equiv _ (galRestrict R K L B).toEquiv
 
   obtain ⟨hint, hres⟩ := integral_mem_and_valuation_lt_one R K Ω V hV
   have hBV : ∀ b : B, algebraMap L Ω (algebraMap B L b) ∈ V := fun b =>
@@ -395,7 +395,7 @@ theorem inertia_pow_fixes_of_commutative : ∀ (R K Ω : Type) [CommRing R] [IsD
   let Q : Ideal B := (maximalIdeal V).comap f
   have hQmem : ∀ b : B, b ∈ Q ↔ V.valuation (algebraMap L Ω (algebraMap B L b)) < 1 := fun b =>
     ValuationSubring.valuation_lt_one_iff V (f b)
-  haveI : Q.IsPrime := Ideal.comap_isPrime f _
+  have : Q.IsPrime := Ideal.comap_isPrime f _
   have hunder : Q.under R = maximalIdeal R := by
     ext r
     rw [Ideal.under, Ideal.mem_comap, hQmem, ← hres r, ← IsScalarTower.algebraMap_apply,
@@ -433,7 +433,7 @@ theorem inertia_pow_fixes_of_commutative : ∀ (R K Ω : Type) [CommRing R] [IsD
   set N := orderOf ρ with hNdef
   have hN : 0 < N := orderOf_pos ρ
   set p := ringChar (ResidueField R) with hpdef
-  haveI := Fintype.ofFinite (ResidueField R)
+  have := Fintype.ofFinite (ResidueField R)
   have hp : p.Prime := CharP.char_is_prime (ResidueField R) p
   set a := N.factorization p with hadef
   set m := N / p ^ a with hmdef
@@ -621,16 +621,16 @@ theorem exists_galois_field_of_finite [IsGalois K Ω] [LocallyOfFiniteType A.hom
     ∃ L : IntermediateField K Ω, FiniteDimensional K L ∧ IsGalois K L ∧
       ∀ σ : Ω ≃ₐ[K] Ω, σ ∈ L.fixingSubgroup ↔ ∀ x ∈ S, σ ∈ stab A x := by
   choose E hE hEs using fun x : S => exists_field_of_point A x.1
-  haveI : Finite S := hS.to_subtype
-  haveI := hE
+  have : Finite S := hS.to_subtype
+  have := hE
   have key : ∀ σ : Ω ≃ₐ[K] Ω, σ ∈ (⨆ x : S, E x).fixingSubgroup ↔ ∀ x ∈ S, σ ∈ stab A x := by
     intro σ
-    rw [← Subgroup.zpowers_le, ← IntermediateField.le_iff_le, iSup_le_iff]
+    rw [← Subgroup.zpowers_le, ← IntermediateField.le_fixedField_iff_le_fixingSubgroup, iSup_le_iff]
     constructor
     · intro h x hx
-      exact (hEs ⟨x, hx⟩ σ).2 (Subgroup.zpowers_le.1 ((IntermediateField.le_iff_le _ _).1 (h ⟨x, hx⟩)))
+      exact (hEs ⟨x, hx⟩ σ).2 (Subgroup.zpowers_le.1 ((IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 (h ⟨x, hx⟩)))
     · intro h x
-      exact (IntermediateField.le_iff_le _ _).2 (Subgroup.zpowers_le.2 ((hEs x σ).1 (h x.1 x.2)))
+      exact (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).2 (Subgroup.zpowers_le.2 ((hEs x σ).1 (h x.1 x.2)))
   refine ⟨⨆ x : S, E x, inferInstance, ?_, key⟩
   refine (InfiniteGalois.normal_iff_isGalois _).1 ⟨fun n hn g => ?_⟩
   rw [key] at hn ⊢
@@ -663,9 +663,9 @@ end GlobalTheory.InertiaTate
 open GlobalTheory.InertiaTate in
 theorem GlobalTheory.InertiaTate.exists_exponent_inertia_galTate : ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Finite (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring → ∀ (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ (l : ℕ) [Fact l.Prime], (l : ResidueField R) ≠ 0 → (∀ σ τ : Ω ≃ₐ[K] Ω, galTate A l σ * galTate A l τ = galTate A l τ * galTate A l σ) → ∃ E : ℕ, 0 < E ∧ ∀ σ ∈ inertia K V, galTate A l σ ^ E = 1 := by
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V hV A _ _ hA l _ hl hc
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
-  haveI : LocallyOfFiniteType A.hom := by
-    haveI := hA.smooth
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : LocallyOfFiniteType A.hom := by
+    have := hA.smooth
     infer_instance
   obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim K A hA
   have hlK : (l : K) ≠ 0 := by
@@ -1424,12 +1424,12 @@ theorem galTate_comm_actTate {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] (
 theorem galTate_commute_of_hasCMBy : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ (F : Type) [Field F] [NumberField F], HasCMBy A F → ∀ (l : ℕ) [Fact l.Prime], (l : K) ≠ 0 → ∀ σ τ : Ω ≃ₐ[K] Ω, galTate A l σ * galTate A l τ = galTate A l τ * galTate A l σ := by
   intro K Ω _ _ _ _ A _ _ hA F _ _ hF l _ hl σ τ
   obtain ⟨⟨d, hd, hdeg⟩, O, _, _, _, ⟨α⟩⟩ := hF
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
   have hcard : ∀ n : ℕ, Nat.card {x : ptOver K Ω ⟶ A // x ^ (l ^ n) = 1} = l ^ (2 * d * n) := fun n => by
     rw [GlobalTheory.SepClosedTorsion.card_torsion_sepClosed K Ω A hA d hd (l ^ n) (by rw [Nat.cast_pow]; exact pow_ne_zero _ hl), ← pow_mul, mul_comm n]
   obtain ⟨hfree, hfin, hrank⟩ := GlobalTheory.TateFree.free_finite_finrank (ptOver K Ω ⟶ A) l (2 * d) hcard
-  haveI := hfree
-  haveI := hfin
+  have := hfree
+  have := hfin
   obtain ⟨v, c, hc, hv⟩ := GlobalTheory.T.exists_smul_mem_span_orbit_of_numberField_lattice l (Tate l (ptOver K Ω ⟶ A)) O F (actTate α.toRingAct l (ptOver K Ω))
     (hrank.trans hdeg.symm) (GlobalTheory.T.linearIndependent_numberFieldEndomorphisms_tateModule K Ω A hA
       ⟨d, by have := Module.finrank_pos (R := ℚ) (M := F); omega, hd⟩ F O α l hl)

@@ -116,7 +116,7 @@ def LdMulti (ψ : AddChar F Circle) (r : ℕ) : Prop :=
 
 theorem ldMulti_zero (ψ : AddChar F Circle) : LdMulti F W ψ 0 := by
   intro ι _ _ hcard d _ μ _ H _ _ _ _ _ _ _ ρ _ _ α _ _ _
-  haveI : IsEmpty ι := Fintype.card_eq_zero_iff.1 hcard
+  have : IsEmpty ι := Fintype.card_eq_zero_iff.1 hcard
   refine ⟨1, ?_, ?_⟩
   · simpa using ldShape_one ((GroundTheory.LocalField.residueCard F : ℕ) : ℂ)
   · intro Ψ _ w ℓ _
@@ -155,7 +155,7 @@ theorem ldMulti_succ (hB : LdBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
   obtain ⟨a⟩ : Nonempty ι := Fintype.card_pos_iff.1 (by omega)
   have hcard' : Fintype.card {i // i ≠ a} = r := by
     have h := Set.card_ne_eq a
-    simp only [Set.coe_setOf] at h
+    simp only [Set.coe_ofPred] at h
     omega
   let σ : Representation ℂ (GL (Fin (d a)) F × (((i : {i // i ≠ a}) → GL (Fin (d i)) F) × H)) W :=
     ρ.comp (peelFst d H a).symm.toMonoidHom
@@ -215,7 +215,7 @@ theorem ldMulti_succ (hB : LdBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
       = (y, (1, 1)) from rfl, hρ'] at hy
     obtain ⟨j, hj⟩ := hCx _ hy
     exact ⟨fun k => j k, _, hj, funext fun k => centralPow_mul_splitSymm_apply j y k⟩
-  haveI := hσirr
+  have := hσirr
   obtain ⟨γa, s₁, hblk⟩ := exists_blockFE (μ a) hσadm hψ hψ1 hσcent hσsupp
   have hsha := hB F (d a) (μ a) _ W σ hσadm hσirr (α a) (hα a) hσcent hσsupp ψ hψ hψ1 γa
     (fun Φ hΦ v ℓ hℓ => (hblk Φ hΦ v ℓ hℓ).2.2)
@@ -249,7 +249,7 @@ theorem ldMulti_succ (hB : LdBlock) {ψ : AddChar F Circle} (hψ : Continuous ψ
     have hKo : IsOpen ((Ka.prod K' : Subgroup _) : Set (GL (Fin (d a)) F × (((i : {i // i ≠ a}) → GL (Fin (d i)) F) × H))) := by
       rw [Subgroup.coe_prod]
       exact K₁.isOpen.prod K₂.isOpen
-    haveI : FiniteDimensional ℂ (fixedVectors σ (Ka.prod K')) := hσadm.2 _ hKc hKo
+    have : FiniteDimensional ℂ (fixedVectors σ (Ka.prod K')) := hσadm.2 _ hKc hKo
     have hKa : Ka ≤ integralGL F (d a) := fun k hk => congruenceSubgroup_le F (d a) m0 (hK₁u hk).2
     have hΨinv : ∀ k ∈ Ka, ∀ X : Matrix (Fin (d a)) (Fin (d a)) F, Ψ a ((k : Matrix (Fin (d a)) (Fin (d a)) F) * X) = Ψ a X := fun k hk X => (hm0 k (hK₁u hk).2 X).1
     have hΦinv : ∀ k ∈ Ka, ∀ X : Matrix (Fin (d a)) (Fin (d a)) F, GJMatrix.localMatrixFourier ψ (Ψ a) (X * (k : Matrix (Fin (d a)) (Fin (d a)) F)) =

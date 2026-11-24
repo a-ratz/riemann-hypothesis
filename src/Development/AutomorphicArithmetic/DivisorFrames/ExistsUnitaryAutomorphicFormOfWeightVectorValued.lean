@@ -92,8 +92,8 @@ private theorem orbit_finite {H V : Type} [Group H] [TopologicalSpace H] [IsTopo
     have h2 : ρ (x⁻¹ * y) w = w := hy
     conv_rhs => rw [← h2]
     rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  exact (h1.comp_continuous (continuous_subtype_val (p := fun x => x ∈ K))).range_finite
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  exact (h1.comp_continuous (continuous_subtypeVal (p := fun x => x ∈ K))).range_finite
 
 section
 
@@ -229,7 +229,7 @@ theorem UpperTheory.exists_admissible_equivariantFormsRep :
       rw [Submodule.coe_sum, LinearMap.sum_apply]
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [eqRep_apply]
-      simp only [y', dif_pos (hy i hi)]
+      simp only [y', dite_eq_left (hy i hi)]
     have h2 := hsum κ s y' c (Subtype.ext (LinearMap.ext fun v => (hy' _ v).trans (h v)))
     exact (hy' f' v).symm.trans (LinearMap.congr_fun (congrArg Subtype.val h2) v)
 end -- clump:auto
@@ -363,7 +363,7 @@ theorem UpperTheory.exists_invariant_perfect_pairing_nablaSq_dualWeyl :
     (fischer _).compl₁₂ ((Formalism.GradedWeylDivisibility.dualWeyl ℂ n n ν).subtype ∘ₗ j) (Formalism.GradedWeylDivisibility.dualWeyl ℂ n n ν).subtype
   have hP : ∀ v u, P v u = fischer _ (j v : MvPolynomial (Fin n × Fin n) ℂ) u := fun _ _ => rfl
   let e := LinearEquiv.ofBijective j hj
-  haveI : FiniteDimensional ℂ (Formalism.GradedWeylDivisibility.dualWeyl ℂ n n ν) := e.finiteDimensional
+  have : FiniteDimensional ℂ (Formalism.GradedWeylDivisibility.dualWeyl ℂ n n ν) := e.finiteDimensional
   have hinj : Function.Injective P.flip := by
     refine (injective_iff_map_eq_zero _).2 fun u hu => ?_
     obtain ⟨v, hv⟩ := hj.2 ⟨_, Formalism.GradedWeylDivisibility.dualWeylMap ℂ ℂ (starRingEnd ℂ) n n ν u u.2⟩
@@ -536,7 +536,7 @@ theorem UpperTheory.finiteDimensional_nablaT_and_continuous_wtOp :
         FiniteDimensional ℂ (NablaT ℂ n mu) ∧ ∀ (ℓ : NablaT ℂ n mu →ₗ[ℂ] ℂ) (u : NablaT ℂ n mu),
           Continuous fun g : ι → GL (Fin n) ℂ => ℓ (wtOp ℂ n mu sh g u) := by
   intro n ι _ _ mu sh
-  haveI : ∀ τ, FiniteDimensional ℂ (Formalism.GradedWeylDivisibility.dualWeyl ℂ n n (Formalism.CohomologicalDescent.LD.res n (mu τ))) := fun τ => fd_dw n _
+  have : ∀ τ, FiniteDimensional ℂ (Formalism.GradedWeylDivisibility.dualWeyl ℂ n n (Formalism.CohomologicalDescent.LD.res n (mu τ))) := fun τ => fd_dw n _
   refine ⟨Module.Finite.of_basis (Basis.piTensorProduct fun τ => Module.finBasis ℂ _), fun ℓ u => ?_⟩
   have h1 : Continuous fun g : ι → GL (Fin n) ℂ => ℓ (GlobalTheory.ExpFrame.grp ℂ n mu g u) := by
     induction u using PiTensorProduct.induction_on with
@@ -653,17 +653,17 @@ theorem UpperTheory.isAutFormU_of_vectorValued_invariant :
         one_mem' := by simp
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq] at ha hb ⊢
           rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hb, ha]
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at ha ⊢
+          simp only [Set.mem_ofPred_eq] at ha ⊢
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul]
           simp }
     refine S.isOpen_of_mem_nhds (g := 1) ?_
     have ht : Filter.Tendsto (fun k : finU (E := E) (n := n) => (k : UA E n)) (nhds 1) (nhds 1) :=
-      continuous_subtype_val.tendsto (1 : finU (E := E) (n := n))
+      continuous_subtypeVal.tendsto (1 : finU (E := E) (n := n))
     filter_upwards [ht.eventually hev] with k hk
     show RU E n k φ = φ
     funext g
@@ -729,8 +729,8 @@ theorem UpperTheory.span_highestWeightRep_unitaryGroup_realPoints_image_eq_top :
         Submodule.span ℂ (Set.range ((Formalism.L2.DIV.rhoK (K := ℂ) lam).comp
           ((MonoidHom.pi fun τ => cEmb (E := E) (n := n) (emb τ)).comp (infU E n).subtype))) = ⊤ := by
   intro E _ _ _ n ι _ emb hinj lam _
-  haveI : ∀ v, Finite (Formalism.GradedWeylDivisibility.ssIdx n n (lam v).natW) := fun _ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).to_subtype
-  haveI : FiniteDimensional ℂ (Formalism.L2.DIV.VV ℂ lam) := Module.Finite.of_basis (Formalism.L2.DIV.bVV ℂ lam)
+  have : ∀ v, Finite (Formalism.GradedWeylDivisibility.ssIdx n n (lam v).natW) := fun _ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).to_subtype
+  have : FiniteDimensional ℂ (Formalism.L2.DIV.VV ℂ lam) := Module.Finite.of_basis (Formalism.L2.DIV.bVV ℂ lam)
   exact GlobalTheory.ClassFin.span_range_eq_top_of_isIrreducible _ _ _ ((GlobalTheory.CuspRep.isIrreducible_iff _).2 ⟨inferInstance, fun U hU =>
     GlobalTheory.CoefIrred.vv_irreducible_unitary ι n lam U fun g hg x hx => by
       obtain ⟨y, rfl⟩ := UpperTheory.exists_infinite_unitary_lift emb hinj g hg
@@ -760,8 +760,8 @@ private theorem cont_cEmb {E : Type} [Field E] [NumberField E] [IsCMField E] {n 
   have c3 : Continuous (pInf E) := c2.comp continuous_fst
   have c4 : Continuous fun a => coord τ (pInf E a) := c0.comp c3
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · exact (Units.continuous_val.comp continuous_subtype_val).matrix_map c4
-  · exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_map c4
+  · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_map c4
+  · exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_map c4
 
 theorem UpperTheory.exists_unitaryAutomorphicForm_of_weightVectorValued :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] (emb : ι → (E →+* ℂ)), Function.Injective (fun τ => InfinitePlace.mk (emb τ)) →
@@ -804,12 +804,12 @@ theorem UpperTheory.exists_unitaryAutomorphicForm_of_weightVectorValued :
     have h2 := congrArg (R g) h1
     rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, map_zero] at h2
     exact h2)
-  haveI : Nontrivial (Formalism.L2.DIV.VV ℂ lam) := by
+  have : Nontrivial (Formalism.L2.DIV.VV ℂ lam) := by
     by_contra hc
     rw [not_nontrivial_iff_subsingleton] at hc
     exact hf0 (LinearMap.ext fun v => by rw [Subsingleton.elim v 0, map_zero, map_zero])
-  haveI : ∀ v, Finite (Formalism.GradedWeylDivisibility.ssIdx n n (lam v).natW) := fun _ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).to_subtype
-  haveI : FiniteDimensional ℂ (Formalism.L2.DIV.VV ℂ lam) := Module.Finite.of_basis (Formalism.L2.DIV.bVV ℂ lam)
+  have : ∀ v, Finite (Formalism.GradedWeylDivisibility.ssIdx n n (lam v).natW) := fun _ => (Formalism.GradedWeylDivisibility.sSIdxFinite n n _).to_subtype
+  have : FiniteDimensional ℂ (Formalism.L2.DIV.VV ℂ lam) := Module.Finite.of_basis (Formalism.L2.DIV.bVV ℂ lam)
   obtain ⟨π, hπ, f', hf'0, hf'π, hf'e, hsum⟩ := UpperTheory.exists_admissible_equivariantFormsRep E n (Formalism.L2.DIV.VV ℂ lam)
     ((Formalism.L2.DIV.rhoK (K := ℂ) lam).comp (C.comp (infU E n).subtype)) (UpperTheory.span_highestWeightRep_unitaryGroup_realPoints_image_eq_top E n ι emb hinj lam) B hpos hinv
     f hf0 hfa (fun x v => hfe x.1 x.2 v)

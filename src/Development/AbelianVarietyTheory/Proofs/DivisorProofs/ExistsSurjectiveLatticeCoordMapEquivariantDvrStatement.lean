@@ -131,7 +131,7 @@ theorem exists_coefficientField (S : Type) [CommRing S] [IsLocalRing S] [IsAdicC
     obtain ⟨y, hy⟩ := hu.exists_right_inv
     exact ⟨⟨y, hle ⟨1, by rw [pow_one, hy]; exact Λ.one_mem⟩⟩, Subtype.ext hy⟩
   refine ⟨Λ, hF, fun s => ?_⟩
-  letI := hF.toField
+  let := hF.toField
   have key : ∀ a : S, (∀ f : Λ[X], aeval a f ∈ maximalIdeal S → aeval a f = 0) → a ∈ Λ := fun a ha => by
     have h' : (aeval (R := Λ) a).toRingHom.range ∈ T := by
       rintro _ ⟨f, rfl⟩ hm
@@ -141,7 +141,7 @@ theorem exists_coefficientField (S : Type) [CommRing S] [IsLocalRing S] [IsAdicC
     (aeval_algHom_apply (IsScalarTower.toAlgHom Λ S (ResidueField S)) a f).symm
   by_cases hs : IsAlgebraic Λ (residue S s)
   · have hi := hs.isIntegral
-    haveI : CharZero Λ := RingHom.charZero (algebraMap Λ (ResidueField S))
+    have : CharZero Λ := RingHom.charZero (algebraMap Λ (ResidueField S))
     have hsep : (minpoly Λ (residue S s)).Separable := (minpoly.irreducible hi).separable
     obtain ⟨a, ha, has⟩ := HenselianRing.is_henselian (I := maximalIdeal S)
       ((minpoly Λ (residue S s)).map (algebraMap Λ S)) ((minpoly.monic hi).map _) s
@@ -175,20 +175,20 @@ theorem exists_finite_over_normal (S : Type) [CommRing S] [IsDomain S] [IsLocalR
   · obtain ⟨A, _, _, _, i, h1, h2, h3, h4, -⟩ := exists_finite_injective_of_isAdicComplete S p h
       (by rw [← residue_eq_zero_iff, map_natCast]; exact CharP.cast_eq_zero _ p) inferInstance hc
     exact ⟨A, inferInstance, inferInstance, i, h1, h2, h3, h4⟩
-  haveI := CharP.charP_to_charZero (ResidueField S)
+  have := CharP.charP_to_charZero (ResidueField S)
   by_cases hm : maximalIdeal S = ⊥
-  · letI := (isField_iff_maximalIdeal_eq.2 hm).toField
+  · let := (isField_iff_maximalIdeal_eq.2 hm).toField
     exact ⟨S, inferInstance, inferInstance, RingHom.id S, Function.injective_id, RingHom.Finite.id S, inferInstance,
       inferInstance⟩
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hm
   obtain ⟨Λ, hF, h1⟩ := exists_coefficientField S
-  letI := hF.toField
+  let := hF.toField
   obtain ⟨n, x₀, hx₀, hd, N, hN⟩ := GlobalTheory.exists_systemOfParameters_insert S a ha0 ha
   let x : Fin (n + 1) → S := Fin.cons a x₀
   have hx : ∀ i, x i ∈ maximalIdeal S := fun i => Fin.cases ha hx₀ i
   let A := MvPowerSeries (Fin (n + 1)) Λ
   let φ : A →ₐ[Λ] S := mvEvalAdic Λ (maximalIdeal S) x hx
-  letI : Algebra A S := φ.toRingHom.toAlgebra
+  let : Algebra A S := φ.toRingHom.toAlgebra
   have : IsDomain A := isDomain_mvPowerSeries Λ (n + 1)
   have hb : maximalIdeal Λ = ⊥ := isField_iff_maximalIdeal_eq.1 hF
   have : IsAdicComplete (maximalIdeal Λ) Λ := by rw [hb]; infer_instance
@@ -226,20 +226,20 @@ theorem exists_factor {R W : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRin
     [IsAdicComplete (maximalIdeal R) R] [CommRing W] [IsDomain W] [IsIntegrallyClosed W] [CharZero W] (g : R →+* W) :
     ∃ (N : Type) (_ : CommRing N) (_ : IsDomain N) (_ : IsLocalRing N) (φ : R →+* N) (g' : N →+* W),
       IsCN N ∧ IsLocalHom φ ∧ Function.Injective g' ∧ ∀ r, g' (φ r) = g r := by
-  haveI := RingHom.ker_isPrime g
+  have := RingHom.ker_isPrime g
   let S := R ⧸ RingHom.ker g
   let k : S →+* W := RingHom.kerLift g
   have hk : Function.Injective k := RingHom.kerLift_injective g
-  haveI : IsLocalRing S := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := R) S
-  haveI : IsAdicComplete (maximalIdeal S) S := CompleteFiniteExtension.isAdicComplete_of_finite_local R S
-  haveI : CharZero S := RingHom.charZero k
+  have : IsLocalRing S := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := R) S
+  have : IsAdicComplete (maximalIdeal S) S := CompleteFiniteExtension.isAdicComplete_of_finite_local R S
+  have : CharZero S := RingHom.charZero k
   obtain ⟨A, _, _, i, hi, hfin, _, _⟩ := exists_finite_over_normal S
-  letI : Algebra A S := i.toAlgebra
+  let : Algebra A S := i.toAlgebra
   have : FaithfulSMul A S := (faithfulSMul_iff_algebraMap_injective A S).2 hi
   have : Module.Finite A S := hfin
   let N := integralClosure S (FractionRing S)
   have hf : Module.Finite S N := finite_normalisation_of_finite_over_normal A S
-  haveI : IsLocalRing N := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := S) _
+  have : IsLocalRing N := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := S) _
   have j : Function.Injective ((algebraMap W (FractionRing W)).comp k) := (IsFractionRing.injective W _).comp hk
   let K : FractionRing S →+* FractionRing W := IsFractionRing.lift j
   have hK : ∀ s, K (algebraMap S _ s) = algebraMap W _ (k s) := IsFractionRing.lift_algebraMap j
@@ -254,9 +254,9 @@ theorem exists_factor {R W : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRin
     congrArg Subtype.val (eW.apply_symm_apply ⟨K x, hint x⟩)
   have hinj : Function.Injective g' := fun a b h =>
     Subtype.ext (K.injective ((hg' a).symm.trans ((congrArg _ h).trans (hg' b))))
-  haveI : FaithfulSMul S N := (faithfulSMul_iff_algebraMap_injective S N).2 fun a b h =>
+  have : FaithfulSMul S N := (faithfulSMul_iff_algebraMap_injective S N).2 fun a b h =>
     IsFractionRing.injective S (FractionRing S) (congrArg Subtype.val h)
-  haveI : IsLocalHom (Ideal.Quotient.mk (RingHom.ker g)) := IsLocalHom.of_surjective (S := S) _ Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk (RingHom.ker g)) := IsLocalHom.of_surjective (S := S) _ Ideal.Quotient.mk_surjective
   refine ⟨N, inferInstance, inferInstance, inferInstance, (algebraMap S N).comp (Ideal.Quotient.mk _), g',
     ⟨IsNoetherianRing.of_finite S _, integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing S),
       CompleteFiniteExtension.isAdicComplete_of_finite_local S _, RingHom.charZero g'⟩, inferInstance, hinj, fun r => ?_⟩
@@ -307,7 +307,7 @@ theorem exists_surjective_coordMap_equivMap : ∀ (R : Type) [CommRing R] [IsDom
     rw [e]
     exact hker
   have hG₂ : IsSemiAbelian ((Over.pullback (specOf φ)).obj G) := Geo.Tor.IsSemiAbelian.pullback _ G hG
-  haveI : IsCommMonObj ((Over.pullback (specOf φ)).obj G) := hG₂.comm
+  have : IsCommMonObj ((Over.pullback (specOf φ)).obj G) := hG₂.comm
   have hbc : IsMonHom (Iso.refl ((Over.pullback (specOf φ)).obj G)).hom :=
     inferInstanceAs (IsMonHom (𝟙 ((Over.pullback (specOf φ)).obj G)))
   obtain ⟨D₂, A₂, hD, U₂, hU⟩ := GlobalTheory.Mum.unif_baseChange_of_psiUnitOn R hR D A G hG U N hNb.1 φ hφ ⟨Wo, hWo⟩ hψ hgen

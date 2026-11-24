@@ -71,7 +71,7 @@ theorem trace_eq_add (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : �
     (hfin : Module.finrank F E = 2) (x : E) :
     algebraMap F E (Algebra.trace F E x) = x + σ x := by
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hfin
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hfin
   obtain ⟨x0, hx0⟩ := hnt
   let σe : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext hinv) (AlgHom.ext hinv)
   have hne : (1 : E ≃ₐ[F] E) ≠ σe := by
@@ -85,7 +85,7 @@ theorem trace_eq_add (σ : E →ₐ[F] E) (hinv : ∀ y, σ (σ y) = y) (hnt : �
     apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
     rw [Finset.card_univ, Finset.card_pair hne]
     exact hle
-  haveI : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by
+  have : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by
     rw [Nat.card_eq_fintype_card, ← Finset.card_univ, huniv, Finset.card_pair hne, hfin])
   rw [trace_eq_sum_automorphisms, huniv, Finset.sum_pair hne]
   simp [σe]

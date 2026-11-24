@@ -131,8 +131,8 @@ theorem phiE_one (v : GlobalTheory.FinPl.Pl D) : phiE (D := D) v 1 = idem D (· 
     apply af_ext; intro u
     rw [GlobalTheory.FinPlLoc.evalV_ePl]
     by_cases hu : u = v
-    · subst hu; rw [sglV_same, if_pos rfl]
-    · rw [sglV_ne v _ hu, if_neg hu]
+    · subst hu; rw [sglV_same, ite_eq_left rfl]
+    · rw [sglV_ne v _ hu, ite_eq_right hu]
   unfold idem
   rw [← h]
   rfl
@@ -235,7 +235,7 @@ theorem compl_mem (P : Places L) (sc : Consts) {v : GlobalTheory.FinPl.Pl D} (hv
     rw [mul_comm, GlobalTheory.SeeSaw.IdVMul.incA_mul_tmul, mul_one]
     refine GlobalTheory.SeeSaw.IdVMul.gen_mem (GlobalTheory.FinPlLoc.ePl_int _) (fun w hw => ?_)
       ((FractionalIdeal.mem_coeIdeal _).2 ⟨x, hx, rfl⟩)
-    rw [GlobalTheory.FinPlLoc.evalV_ePl, if_neg hw]
+    rw [GlobalTheory.FinPlLoc.evalV_ePl, ite_eq_right hw]
   have h2 := GlobalTheory.SeeSaw.IdVMul.mul_mem_idV h1 hs
   rw [mul_left_comm, mul_inv_cancel₀ hm0, mul_one] at h2
   have hint : finPart D (cA D f * incA D (x : D.host.E)⁻¹) ∈ intAE D := by
@@ -327,7 +327,7 @@ theorem pX_xLast_mul_apply {W W₀ : HSp D} {σ : ℕ} (dW : HypDec W W₀ σ) (
     (N : Mx D (σ + 1) (σ + 1)) (k : Fin σ) (j : Fin (σ + 1)) :
     (dW.pX ⬝ (xLast dW z ⬝ N)) k j = N k.castSucc j := by
   rw [← Matrix.mul_assoc, Matrix.mul_apply, Fin.sum_univ_castSucc, pX_xLast_last, zero_mul, add_zero]
-  simp only [pX_xLast_castSucc, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [pX_xLast_castSucc, Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 end GlobalTheory.UniStepFB
 
@@ -558,7 +558,7 @@ theorem lineV (F : GlobalTheory.Asc.Frames G) (hF : Std F) (ρ : ℕ) (h : 2 * �
   have e2 : G.Λ (.grid (2 * ρ + 1) 0) = (G.colDec (2 * ρ + 1) (by omega) (by omega)).lat (G.Λ (.core (2 * ρ + 1)))
       (stairId (G.pl.stA sc) (G.pl.stAbar sc) (2 * ρ + 1 - 1)) := G.sp.colLat (2 * ρ + 1) (by omega) (by omega)
   rw [e2]
-  exact (GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.coe_castLE]; omega)
+  exact (GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.val_castLE]; omega)
     (pow_ne_zero _ (neg_ne_zero.2 cmHost_imaginaryGenerator_ne_zero)) v a).2 ha
 
 
@@ -600,7 +600,7 @@ theorem lineW (F : GlobalTheory.Asc.Frames G) (hF : Std F) (σ : ℕ) (h' : 2 * 
         (stairId (G.pl.stA sc) (G.pl.stAbar sc) (2 * σ + 2 - 1)) := G.sp.colLat (2 * σ + 2) (by omega) h'
     rw [e2] at h1
     rw [mul_comm (((F.dB σ h').pX *ᵥ y) p) s]
-    exact (GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.coe_castLE]; omega)
+    exact (GlobalTheory.StairLine.line_mem_iff _ _ _ _ (by simp only [Fin.val_castLE]; omega)
       (pow_ne_zero _ (neg_ne_zero.2 cmHost_imaginaryGenerator_ne_zero)) v _).1 h1
   rwa [inv_inv] at key
 
@@ -976,7 +976,7 @@ theorem finLat_comap {m n m' n' : ℕ} {Γ : AddSubgroup (Mx D m' n')} (hΓ : Fi
   · intro a ha
     rw [← hgf a]
     exact hgM _ (hΓ.fin _ ha)
-  · haveI : T2Space (Mx D m' n') := (GlobalTheory.MixModel.lattice_Mx D m' n').2.2.2.1
+  · have : T2Space (Mx D m' n') := (GlobalTheory.MixModel.lattice_Mx D m' n').2.2.2.1
     have hc : IsClosed ((Γ.comap f : AddSubgroup _) : Set (Mx D m n)) := hΓ.cpt.isClosed.preimage hf
     refine (hΓ.cpt.image hg).of_isClosed_subset hc ?_
     intro a ha

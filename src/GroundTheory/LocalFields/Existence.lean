@@ -82,7 +82,7 @@ theorem mem_unitFiltration_of_mem_range_normUnits {n : ℕ} (hn : 0 < n) (u : �
     u ∈ unitFiltration K n := by
   have : IsSepClosed Ω := IsSepClosure.sep_closed K
   set T := lubinTateField Ω hπ hf n
-  haveI : IsGalois K T :=
+  have : IsGalois K T :=
     IsGalois.of_card_aut_eq_finrank K _
       ((Nat.card_congr (lubinTateGalEquiv (Ω := Ω) hπ hf n).toEquiv).trans
         (card_units_quotient_eq_finrank (Ω := Ω) (hπ := hπ) hf n))

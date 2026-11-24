@@ -92,7 +92,7 @@ theorem UpperTheory.Gal.W2.latForm_of :
   obtain ⟨hj2, hjO2, hjs2, s₂, hs₂, hjF2⟩ := hP''
   obtain ⟨A, hA⟩ := ext_lin j'' hj2 hjs2 (j.comp w.toAddMonoidHom)
   replace hA : ∀ u, A (j'' u) = j (w u) := hA
-  haveI := D.finLa
+  have := D.finLa
   have hm0 : (m : ℚ) ≠ 0 := by exact_mod_cast hm.ne'
   have hAinj : Function.Injective A := by
     refine (injective_iff_map_eq_zero A).2 fun v hv => ?_

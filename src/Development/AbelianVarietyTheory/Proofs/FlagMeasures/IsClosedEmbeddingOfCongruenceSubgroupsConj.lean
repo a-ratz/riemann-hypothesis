@@ -88,7 +88,7 @@ theorem nhds_one_hasBasis_Kg (I : AutInst) : (nhds (1 : I.Gf)).HasBasis (fun N :
   refine ⟨fun t => ⟨fun ht => I.topf_basis t ht, ?_⟩⟩
   rintro ⟨N, hN, hsub⟩
   refine Filter.mem_of_superset ((I.topf_open N hN).mem_nhds ?_) hsub
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine ⟨?_, fun y _ => ⟨0, zero_mem _, ?_⟩⟩
   · simpa using one_mem (Formalism.UG.stabGL (lamAf (F := I.F) I.L))
   · simp
@@ -106,8 +106,8 @@ theorem isClosedEmbedding_of_preimage_Kg (I I' : AutInst) (φ : I'.Gf →* I.Gf)
     IsTopologicalGroup.isInducing_iff_nhds_one.mpr
       (hb.eq_of_same_basis ((nhds_one_hasBasis_Kg I).comap φ))
   have hT' := GlobalTheory.CongTop.adelic_topology I'
-  haveI : T2Space I'.Gf := hT'.1
-  haveI : T2Space I.Gf := (GlobalTheory.CongTop.adelic_topology I).1
+  have : T2Space I'.Gf := hT'.1
+  have : T2Space I.Gf := (GlobalTheory.CongTop.adelic_topology I).1
   obtain ⟨hopen1, ⟨K, hK⟩, -⟩ := hT'.2.2.2.2.2.2 1 le_rfl
   have hKcl : IsClosed (I'.Kg 1) := by
     rw [← hK]

@@ -234,7 +234,7 @@ theorem isOpen_units_Ainf (F : Type) [Field F] [NumberField F] : IsOpen {x : Inf
   rw [this]; exact isOpen_iInter_of_finite fun v => isOpen_ne.preimage (continuous_apply v)
 
 theorem isOpen_IndI {D : D7} (X : HidaSetting D) : IsOpen (IndI X) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   exact isOpen_linIndep (Module.finBasis X.B.I.F X.B.I.E) (Ainf X.B.I.F) (isOpen_units_Ainf _) (lip_ainf _)
 
 section LC
@@ -258,7 +258,7 @@ instance t2Space_infiniteAdeleRing_archimedean_orbit_measures (F : Type) [Field 
 
 theorem lfFib_holds : LFFib := by
   intro D X u' ψ hT μinf νinf fibInf hP K hK hKU
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   obtain ⟨k, -, hkcl, hKk, hkU⟩ := exists_compact_closed_between hK (isOpen_IndI X) hKU
   obtain ⟨f, hf1, hf0, hfc, -⟩ := exists_continuous_one_zero_of_isCompact hK isOpen_interior.isClosed_compl
     (Set.disjoint_compl_right_iff_subset.mpr hKk)

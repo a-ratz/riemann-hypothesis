@@ -58,7 +58,7 @@ theorem li_pi_of_basis [Finite C] [Fintype J] (e : Module.Basis J K V) (ev : V �
     (he : LinearIndependent ℂ fun j => ev (e j)) {κ : Type} (b : κ → C → V) (hb : LinearIndependent K b) :
     LinearIndependent ℂ fun i => fun c => ev (b i c) := by
   classical
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let r : (C → V) →ₗ[K] (C × J → K) :=
     LinearMap.pi fun p => (e.coord p.2) ∘ₗ LinearMap.proj p.1
   have hr : LinearMap.ker r = ⊥ := by
@@ -128,7 +128,7 @@ theorem evV_rho_eq_tr (b : S.β) (g : S.G b) (F : VV K lam) :
 
 theorem lawBasis_of_ok (h : (S.fam emb lam).Ok) : S.LawBasis emb σ lam h := by
   classical
-  haveI : Fintype S.Cl := h.fintypeCl
+  have : Fintype S.Cl := h.fintypeCl
   constructor
   · have h1 : LinearIndependent K fun a => ((S.csd emb lam h).basis a).1 :=
       (S.csd emb lam h).basis.linearIndependent.map' (S.csd emb lam h).Forms.subtype (Submodule.ker_subtype _)
@@ -144,7 +144,7 @@ theorem lawBasis_of_ok (h : (S.fam emb lam).Ok) : S.LawBasis emb σ lam h := by
     · intro φ hφ
       rw [← Finset.univ_sum_single φ]
       refine Submodule.sum_mem _ fun c _ => ?_
-      letI : Fintype (S.Stab c) := (S.csd emb lam h).finGam c
+      let : Fintype (S.Stab c) := (S.csd emb lam h).finGam c
       let A : (Fr emb σ n → ℂ) →ₗ[ℂ] (S.Cl → Fr emb σ n → ℂ) :=
         LinearMap.single ℂ (fun _ : S.Cl => Fr emb σ n → ℂ) c ∘ₗ ∑ g : S.Stab c, (S.tr emb σ c.1 g.1).toLinearMap
       have hA : ∀ w, A w = Pi.single c (∑ g : S.Stab c, S.tr emb σ c.1 g.1 w) := fun w => by

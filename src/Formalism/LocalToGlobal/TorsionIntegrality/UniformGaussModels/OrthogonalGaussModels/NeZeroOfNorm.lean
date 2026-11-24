@@ -435,8 +435,8 @@ theorem CalcP_of (hD : CMDatum) : CalcP := by
   let _ : StarRing (OO ι hmod) := starOO ι hmod
   have key := (Formalism.L2.Th1.C.curveEndoUnitBall ℂ_[p] h2 _ hM (ι (Formalism.L2.Th1.F.s2 L)) (OO ι hmod)
     (tau ι hmod)
-    (continuous_fst.comp continuous_subtype_val)
-    (Continuous.subtype_mk (continuous_swap.comp continuous_subtype_val) _)
+    (continuous_fst.comp continuous_subtypeVal)
+    (Continuous.subtype_mk (continuous_swap.comp continuous_subtypeVal) _)
     (fun z hz => selfadj ι hmod hp2 z.2 (congrArg Subtype.val hz))
     (isUnit_of_norm ι hmod 2 h2 h2)
     (two_units ι hmod h5)

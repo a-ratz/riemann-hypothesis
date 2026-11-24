@@ -142,7 +142,7 @@ theorem card_residue_of_split (g : ℕ) (hg : g.Prime) (w : HeightOneSpectrum (�
 
 private theorem zmod_eq_of_val_sub_mem_prime (g : ℕ) (hg : g.Prime) (w : HeightOneSpectrum (𝓞 E)) (hw : ((g : ℕ) : 𝓞 E) ∈ w.asIdeal)
     {x y : ZMod g} (h : ((x.val : ℕ) : 𝓞 E) - ((y.val : ℕ) : 𝓞 E) ∈ w.asIdeal) : x = y := by
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   have hwt : w.asIdeal ≠ ⊤ := w.isPrime.ne_top
   by_contra hne
   have hab : x.val ≠ y.val := fun h' => hne (ZMod.val_injective g h')
@@ -166,9 +166,9 @@ theorem exists_zmod_residue (g : ℕ) (hg : g.Prime) (w : HeightOneSpectrum (�
     (hsplit : ({v : HeightOneSpectrum (𝓞 E) | ((g : ℕ) : 𝓞 E) ∈ v.asIdeal}).ncard = Module.finrank ℚ E)
     (hw : ((g : ℕ) : 𝓞 E) ∈ w.asIdeal) (y : 𝓞 E ⧸ w.asIdeal) :
     ∃ x : ZMod g, Ideal.Quotient.mk w.asIdeal ((x.val : ℕ) : 𝓞 E) = y := by
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   have hcard := card_residue_of_split g hg w hsplit hw
-  haveI : Finite (𝓞 E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hg.ne_zero)
+  have : Finite (𝓞 E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hg.ne_zero)
   let f : ZMod g → 𝓞 E ⧸ w.asIdeal := fun x => Ideal.Quotient.mk w.asIdeal ((x.val : ℕ) : 𝓞 E)
   have hinj : Function.Injective f := by
     intro x y hxy

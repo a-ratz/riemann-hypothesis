@@ -337,9 +337,9 @@ theorem exists_ideal (hG : GlobalFnsSt) {V : Type} [CommRing V] [IsNoetherianRin
   obtain ⟨C, c₁, c₂, ⟨eC⟩, c₃⟩ := GlobalTheory.T.exists_perfect_free_finite_complex A B' hB' hp' g hg' F hF hΛ P
   refine ⟨I, ?_, fun R _ _ φ => (test R φ _ _ _ (IsPullback.of_hasPullback _ _)).symm.trans
     (hI R φ _ _ _ (IsPullback.of_hasPullback _ _))⟩
-  letI : Algebra V A := σ.toAlgebra
-  haveI : IsLocalHom (algebraMap V A) := hσ
-  haveI : Module.Flat V A := h₁
+  let : Algebra V A := σ.toAlgebra
+  have : IsLocalHom (algebraMap V A) := hσ
+  have : Module.Flat V A := h₁
   have key : Module.Flat V (A ⧸ I) → ((Ideal.Quotient.mk I).comp σ).Flat := fun h =>
     RingHom.flat_algebraMap_iff.2 h
   refine key (_root_.GlobalTheory.flat_quotient_of_equiv_coker_dualMap_of_exact_fibres V A g h₂ h₃ C c₁ c₂ (fun p hϖ => ?_) I ⟨eC.trans eI⟩)

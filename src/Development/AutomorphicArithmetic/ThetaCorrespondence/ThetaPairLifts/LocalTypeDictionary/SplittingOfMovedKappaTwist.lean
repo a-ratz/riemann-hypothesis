@@ -168,7 +168,7 @@ theorem mod1All_root {ζ : ℂ} {n : ℕ} (hn : 0 < n) (hζ : ζ ^ n = 1) : Mod1
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').1 (by rw [← norm_pow, h2, norm_one])
 
 theorem lamC_mem {q : ℕ} [Fact q.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[q]) {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) :
-    TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
+    TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 theorem unitAt_mul {q : ℕ} [Fact q.Prime] {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar)
     (ux : GlobalTheory.MovedKappaEx.UnitAt q x) (uy : GlobalTheory.MovedKappaEx.UnitAt q y) : GlobalTheory.MovedKappaEx.UnitAt q (x * y) := by
@@ -577,7 +577,7 @@ private theorem moves_generate_lattices {D : D7} {ψ : AddChar (AF D.host.F) ℂ
   set Λ := (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) with hΛ
   set Λ' := (latO S T (ΛS' : Set (Fin S.rank → D.host.E)) (ΛT' : Set (Fin T.rank → D.host.E)) fun _ => True) with hΛ'
   have : (A₁.addSubgroupOf A₂).FiniteIndex := ⟨hidx⟩
-  letI : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := Fintype.ofFinite _
+  let : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := Fintype.ofFinite _
   have hch : ∀ c : A₂ ⧸ A₁.addSubgroupOf A₂, ∃ γ, ((Quotient.out c : A₂) : V) =
       P γ := fun c => hA₂γ _ (Quotient.out c).2
   choose γc hγc using hch
@@ -1281,8 +1281,8 @@ theorem mean_eq_of_swap {G V : Type} [AddCommGroup G] [TopologicalSpace G] [Cont
     (μ : Measure G) (𝓕 : Set G) (h𝓕 : μ 𝓕 = 1) (ν : Measure V) (Fd : Set V) (h0 : ν Fd ≠ 0) (ht : ν Fd ≠ ⊤)
     (g : G → ℝ) (hg : Continuous g) (M : ℝ) (hM : ∀ w, ‖g w‖ ≤ M) (ι : V → G) (hι : Continuous ι) (c m : ℝ)
     (h1 : ∀ x, ∫ w in 𝓕, g (w + x) ∂μ = c) (h2 : ∀ w, ⨍ z in Fd, g (w + ι z) ∂ν = m) : m = c := by
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h𝓕]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (ν.restrict Fd) := ⟨by rw [Measure.restrict_apply_univ]; exact ht.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h𝓕]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (ν.restrict Fd) := ⟨by rw [Measure.restrict_apply_univ]; exact ht.lt_top⟩
   have hc : Continuous (Function.uncurry fun (w : G) (z : V) => g (w + ι z)) :=
     hg.comp (continuous_fst.add (hι.comp continuous_snd))
   have hint : Integrable (Function.uncurry fun (w : G) (z : V) => g (w + ι z)) ((μ.restrict 𝓕).prod (ν.restrict Fd)) :=
@@ -1376,7 +1376,7 @@ theorem normSq_real_form {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam 
     have hz := hzι (δ • Z)
     simp only [hι] at hz ⊢
     rw [hz, GlobalTheory.ThetaLawOF.torusHermitianForm_scaled_coordinate_eq hδ, smul_smul, inv_mul_cancel₀ hδ, one_smul, norm_mul, mul_pow, mul_comm,
-      Complex.norm_exp, ← Real.exp_nat_mul]
+      Complex.norm_exp, ← Real.exp_natCast_mul]
     congr 2
     simp only [Complex.mul_conj']
     norm_cast

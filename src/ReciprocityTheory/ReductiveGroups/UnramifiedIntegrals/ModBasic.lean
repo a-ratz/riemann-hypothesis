@@ -155,7 +155,7 @@ theorem IsMF.pow {k : ℤ} {f : ℍ → ℂ} (hf : IsMF k f) (n : ℕ) : IsMF (n
 
 theorem zetaC_pow_self {m : ℕ} (hm : 0 < m) : zetaC m ^ m = 1 := by
   unfold zetaC
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
   have : (m : ℂ) * (2 * Real.pi * Complex.I / m) = 2 * Real.pi * Complex.I := by field_simp
   rw [this, Complex.exp_two_pi_mul_I]

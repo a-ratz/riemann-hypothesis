@@ -104,7 +104,7 @@ theorem isMaximal_comap_maximalIdeal_OO {A : Type*} [CommRing A] (φ : A →+* O
     refine RingHom.IsIntegral.tower_top (Int.castRingHom A) _ ?_
     rw [RingHom.ext_int (RingHom.comp _ _) (Int.castRingHom _)]
     exact isIntegral_int_residueField_OO
-  have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' _ h ⊥
+  have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal _ h ⊥
   rwa [← Ideal.comap_comap, ← RingHom.ker_eq_comap_bot, ker_residue] at this
 
 theorem isClosed_singleton_cPt {X : Scheme.{0}} (y : Sp (OO p) ⟶ X) : IsClosed ({y (cPt p)} : Set X) := by

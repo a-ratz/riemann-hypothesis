@@ -59,7 +59,7 @@ theorem exists_divSupp_of_eval {P : Ideal (MRing ι)} {s : MRing ι} {z : (Σ k,
   classical
   let φ : MRing ι →+* ℂ := (eval z).comp (map (Int.castRingHom ℂ))
   have hφ : ∀ f, φ f = eval z (map (Int.castRingHom ℂ) f) := fun f => rfl
-  haveI hQ : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have hQ : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   have hle : P ⊔ Ideal.span {s} ≤ RingHom.ker φ := by
     rw [sup_le_iff, Ideal.span_le, Set.singleton_subset_iff]
     refine ⟨fun f hf => ?_, ?_⟩

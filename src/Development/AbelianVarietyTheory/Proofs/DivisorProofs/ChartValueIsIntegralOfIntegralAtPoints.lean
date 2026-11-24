@@ -52,11 +52,11 @@ theorem intElem_pow_mul_of_away {R S Rt St : Type} [CommRing R] [CommRing S] [Co
     [IsLocalization.Away (f t) St] (ft : Rt →+* St)
     (hc : ft.comp (algebraMap R Rt) = (algebraMap S St).comp f) (x : S)
     (hx : ft.IsIntegralElem (algebraMap S St x)) : ∃ n : ℕ, f.IsIntegralElem (f t ^ n * x) := by
-  letI : Algebra R S := f.toAlgebra
-  letI : Algebra Rt St := ft.toAlgebra
-  letI : Algebra R St := ((algebraMap S St).comp f).toAlgebra
-  haveI : IsScalarTower R Rt St := IsScalarTower.of_algebraMap_eq' hc.symm
-  haveI : IsScalarTower R S St := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra R S := f.toAlgebra
+  let : Algebra Rt St := ft.toAlgebra
+  let : Algebra R St := ((algebraMap S St).comp f).toAlgebra
+  have : IsScalarTower R Rt St := IsScalarTower.of_algebraMap_eq' hc.symm
+  have : IsScalarTower R S St := IsScalarTower.of_algebraMap_eq' rfl
   have hx' : IsIntegral Rt (algebraMap S St x) := hx
   obtain ⟨⟨_, a, rfl⟩, ha⟩ := hx'.exists_multiple_integral_of_isLocalization (Submonoid.powers t)
   have e : (⟨t ^ a, a, rfl⟩ : Submonoid.powers t) • algebraMap S St x =
@@ -82,7 +82,7 @@ theorem chartVal_isIntegral_of_intAt : ∀ {X Y : Scheme.{0}} (L : LB X) (α : Y
     (j : L.ι) (W : X.Opens) (hW : W ≤ L.U j), IsAffineOpen W → IsAffineOpen (α ⁻¹ᵁ W) →
     (∀ x ∈ W, IntAt L α s x) → (α.app W).hom.IsIntegralElem (chartVal L α s j W hW) := by
   intro X Y L α k s j W hW hWa hYa hint
-  letI : Algebra Γ(X, W) Γ(Y, α ⁻¹ᵁ W) := (α.app W).hom.toAlgebra
+  let : Algebra Γ(X, W) Γ(Y, α ⁻¹ᵁ W) := (α.app W).hom.toAlgebra
   set F := chartVal L α s j W hW with hF
   have loc : ∀ x ∈ W, ∃ d : Γ(X, W), x ∈ X.basicOpen d ∧
       ∃ n : ℕ, (α.app W).hom.IsIntegralElem ((α.app W).hom d ^ n * F) := by
@@ -92,8 +92,8 @@ theorem chartVal_isIntegral_of_intAt : ∀ {X Y : Scheme.{0}} (L : LB X) (α : Y
     refine ⟨d, hxd, ?_⟩
     set r : Γ(Y, α ⁻¹ᵁ W) := (α.app W).hom d with hr
     have hED : Y.basicOpen r ≤ α ⁻¹ᵁ X.basicOpen d := (Scheme.preimage_basicOpen α d).ge
-    haveI := hWa.isLocalization_basicOpen d
-    haveI := hYa.isLocalization_basicOpen r
+    have := hWa.isLocalization_basicOpen d
+    have := hYa.isLocalization_basicOpen r
     have hDW : X.basicOpen d ≤ W := X.basicOpen_le d
     have hDW' : X.basicOpen d ≤ W' := hdle.trans inf_le_right
     have hEW : Y.basicOpen r ≤ α ⁻¹ᵁ W := Y.basicOpen_le r

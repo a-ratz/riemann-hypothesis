@@ -62,13 +62,13 @@ private theorem parseval_integral {X H ι : Type} [MeasurableSpace X] {ν : Meas
       (aestronglyMeasurable_const.inner hv.aestronglyMeasurable)
   rw [← integral_tsum hm]
   · simp only [b.tsum_inner_mul_inner]
-  · rw [← lintegral_tsum fun i => (hm i).enorm]
+  · rw [← lintegral_tsum fun i => (hm i).eNorm]
     refine ne_top_of_le_ne_top (b := ∫⁻ x, (‖u x‖ₑ ^ 2 + ‖v x‖ₑ ^ 2) ∂ν) ?_ (lintegral_mono fun x => ?_)
-    · rw [lintegral_add_left' (hu.aestronglyMeasurable.enorm.pow_const 2)]
+    · rw [lintegral_add_left' (hu.aestronglyMeasurable.eNorm.pow_const 2)]
       exact ENNReal.add_ne_top.2 ⟨lintegral_sq_ne_top hu, lintegral_sq_ne_top hv⟩
     · rw [enorm_sq_eq_tsum b (u x), enorm_sq_eq_tsum b (v x), ← ENNReal.tsum_add]
       refine ENNReal.tsum_le_tsum fun i => ?_
-      rw [enorm_mul, enorm_inner_comm (u x)]
+      rw [eNorm_mul, enorm_inner_comm (u x)]
       exact ennreal_mul_le_sq_add_sq _ _
 
 theorem UpperTheory.ConvolutionTheory.K.traceKer :

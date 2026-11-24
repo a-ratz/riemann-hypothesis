@@ -87,12 +87,12 @@ theorem pull_intAt_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     obtain ⟨T', iT, e, y', io₂, y₂, ⟨he, hv, φ, hφ, hm⟩, hfin, hio, hover⟩ :=
       GlobalTheory.CoverPoint.exists_ext_lift_to_cover E H Dw l Xo c 0 d hlev T io y hy
     have h1 : evI y₂ g = evI y' f := by
-      letI := (iT.comp io).toAlgebra
-      letI := io₂.toAlgebra
+      let := (iT.comp io).toAlgebra
+      let := io₂.toAlgebra
       exact GlobalTheory.CoverDown.evR_eq_of_pull hf hg hP (fun a => hio a) hover
     have h2 : evI y' f = iT (evI y f) := by
-      letI := io.toAlgebra
-      letI := (iT.comp io).toAlgebra
+      let := io.toAlgebra
+      let := (iT.comp io).toAlgebra
       have := GlobalTheory.SupLawProbe.evR_map (GlobalTheory.TransferCompare.evalWD_framed Xo c) f hf.1 φ y.1
         (GlobalTheory.TransferCompare.allTest_framed Xo c T.Fr y.1) y'.1 hm
       show evR Xo c f y'.1 = iT (evR Xo c f y.1)

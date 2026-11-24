@@ -87,7 +87,7 @@ theorem mem_of_forall_mul_smul {V : Type} [AddCommGroup V] [Module E V]
     v ∈ N := by
   let I : FractionalIdeal (𝓞 E)⁰ E := ⟨AA, FractionalIdeal.isFractional_of_fg hfg⟩
   have hI : I ≠ 0 := fun h => h0 ((congrArg FractionalIdeal.coeToSubmodule h).trans
-    FractionalIdeal.coe_zero)
+    FractionalIdeal.coeToSubmodule_zero)
   have h1 : (1 : E) ∈ I * I⁻¹ := by
     rw [mul_inv_cancel₀ hI]
     exact FractionalIdeal.one_mem_one _
@@ -136,7 +136,7 @@ theorem isLattice_divLat {r : ℕ} {AA : Submodule (𝓞 E) E} (hfg : AA.FG) (h0
     let f : (Fin r → E) →ₗ[𝓞 E] (Fin r → E) := (LinearMap.lsmul E (Fin r → E) a).restrictScalars _
     have hf : Function.Injective f := smul_right_injective _ ha0
     apply Submodule.fg_of_fg_map_injective f hf
-    haveI : IsNoetherian (𝓞 E) M := isNoetherian_of_fg_of_noetherian M hM
+    have : IsNoetherian (𝓞 E) M := isNoetherian_of_fg_of_noetherian M hM
     refine Submodule.FG.of_le_of_isNoetherian (T := M) ?_
     rintro _ ⟨v, hv, rfl⟩
     exact hv a ha

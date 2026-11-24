@@ -67,8 +67,8 @@ def sph (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchime
 theorem exists_haar (ν : Measure k) [ν.IsAddHaarMeasure] (n : Type) [Fintype n] [DecidableEq n] :
     ∃ m : Measure (GL n k), m.IsHaarMeasure ∧ m (KO k n) = 1 := by
   obtain ⟨h0, _, _, h1, h2, -⟩ := volGL_haar k n ν
-  haveI : BorelSpace (GL n k) := h0
-  haveI := (GlobalTheory.RootExchangeFixed.nonarchimedeanLocalField_secondCountable_t2Space (k := k)).2
+  have : BorelSpace (GL n k) := h0
+  have := (GlobalTheory.RootExchangeFixed.nonarchimedeanLocalField_secondCountable_t2Space (k := k)).2
   let K : TopologicalSpace.PositiveCompacts (GL n k) := ⟨⟨KO k n, h1⟩, by rw [h2.interior_eq]; exact ⟨1, one_mem _⟩⟩
   exact ⟨Measure.haarMeasure K, inferInstance, Measure.haarMeasure_self⟩
 

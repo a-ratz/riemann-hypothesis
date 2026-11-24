@@ -112,7 +112,7 @@ theorem scal_apply (f : T') (y : X') :
 theorem smul_val (f : T') (a : spanSub T' rK) (y : X') :
     (letI := algRp T' rK; (f • a : spanSub T' rK)).1 y =
       algebraMap O (FractionRing O) (f.1 y) • a.1 y := by
-  letI := algRp T' rK
+  let := algRp T' rK
   show ((scal T' rK f) * a).1 y = _
   rw [Subalgebra.coe_mul, Pi.mul_apply, scal_apply, smul_mul_assoc, one_mul]
 

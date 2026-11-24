@@ -106,7 +106,7 @@ theorem split_or_inert_idem : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F
       (∃ w : HeightOneSpectrum (𝓞 D.host.E), Formalism.UG.IsInertAt D.host.F D.host.E v w) := by
   intro D v f hf
   obtain ⟨ε, ⟨α, hεα, hα1, hα0⟩, rfl⟩ := hf
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨⟨P, hPp, hPo⟩⟩ := v.asIdeal.nonempty_primesOver (S := 𝓞 D.host.E)
   let w : HeightOneSpectrum (𝓞 D.host.E) := ⟨P, hPp, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P⟩
   have hw : w.under (𝓞 D.host.F) = v := HeightOneSpectrum.ext hPo.over.symm
@@ -775,12 +775,12 @@ theorem card_nbrs (c : O ≃+* O) (cK : K ≃+* K)
     t.card * (Nat.card (IsLocalRing.ResidueField O) - 1) ≤
       N * Nat.card (IsLocalRing.ResidueField O) := by
   classical
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField O)
+  let := Fintype.ofFinite (IsLocalRing.ResidueField O)
   set Wg := (L.map (ϖ • (LinearMap.id : (Fin r → K) →ₗ[O] (Fin r → K)))).toAddSubgroup.addSubgroupOf
     L.toAddSubgroup with hWg
   have hcardW : Nat.card (L.toAddSubgroup ⧸ Wg) = N := hL.2.2
-  haveI : Finite (L.toAddSubgroup ⧸ Wg) := Nat.finite_of_card_ne_zero (hcardW ▸ hN)
-  letI := Fintype.ofFinite (L.toAddSubgroup ⧸ Wg)
+  have : Finite (L.toAddSubgroup ⧸ Wg) := Nat.finite_of_card_ne_zero (hcardW ▸ hN)
+  let := Fintype.ofFinite (L.toAddSubgroup ⧸ Wg)
   let rel : Submodule O (Fin r → K) → (L.toAddSubgroup ⧸ Wg) → Prop := fun L' u =>
     ∃ v, IsStep cK J ϖ L v ∧ L' = nb cK J L v ∧ ∃ hw : ϖ • v ∈ L,
       (QuotientAddGroup.mk (⟨ϖ • v, hw⟩ : L.toAddSubgroup) : L.toAddSubgroup ⧸ Wg) = u
@@ -830,8 +830,8 @@ theorem card_nbrs (c : O ≃+* O) (cK : K ≃+* K)
     set Wq := (perp cK J L v0).toAddSubgroup.addSubgroupOf L.toAddSubgroup with hWq
     have hcq : Nat.card (L.toAddSubgroup ⧸ Wq) = Nat.card (IsLocalRing.ResidueField O) :=
       perp_relIndex c cK hcK hϖ hL.1 hs0.1 hs0.2.1
-    haveI : Finite (L.toAddSubgroup ⧸ Wq) := Nat.finite_of_card_ne_zero (by rw [hcq]; exact Nat.card_pos.ne')
-    letI := Fintype.ofFinite (L.toAddSubgroup ⧸ Wq)
+    have : Finite (L.toAddSubgroup ⧸ Wq) := Nat.finite_of_card_ne_zero (by rw [hcq]; exact Nat.card_pos.ne')
+    let := Fintype.ofFinite (L.toAddSubgroup ⧸ Wq)
     have hch : ∀ L' ∈ t.filter (fun L' => rel L' u), ∃ z : L.toAddSubgroup ⧸ Wq, ∃ v,
         IsStep cK J ϖ L v ∧ L' = nb cK J L v ∧ ∃ h : v - v0 ∈ L,
           z = QuotientAddGroup.mk (⟨v - v0, h⟩ : L.toAddSubgroup) := by
@@ -1190,7 +1190,7 @@ theorem indexSum_inert : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ 
   let H : GA D W → Formalism.UG.UJ σ (1 : Matrix (Fin W.rank) (Fin W.rank) K) := fun g =>
     if hg : SuppF W (algebraMap (AF D.host.F) (AE D) ε) g then (hGC.2.2.1 g hg).choose else 1
   have hH : ∀ g ∈ C, ι (H g) = g := fun g hg => by
-    simp only [H, dif_pos (hC g hg).1]
+    simp only [H, dite_eq_left (hC g hg).1]
     exact (hGC.2.2.1 g (hC g hg).1).choose_spec
   have hinj : Set.InjOn (fun g => ((H g : GL (Fin W.rank) K))) C := fun g hg g' hg' e => by
     rw [← hH g hg, ← hH g' hg', Subtype.ext e]

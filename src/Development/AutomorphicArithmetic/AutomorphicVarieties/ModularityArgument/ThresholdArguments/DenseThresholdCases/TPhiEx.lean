@@ -270,7 +270,7 @@ private theorem ac_pow {Γ R : Type} [TopologicalSpace Γ] [CommRing R] {I : Ide
 
 private theorem ac_alg {Γ O R : Type} [TopologicalSpace Γ] [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R] [IsCO O R]
     {f : Γ → O} (hf : AdicCont (maximalIdeal O) f) : AdicCont (maximalIdeal R) fun s => algebraMap O R (f s) := by
-  haveI : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
   have hm : maximalIdeal O ≤ (maximalIdeal R).comap (algebraMap O R) := by
     intro x hx
     rw [Ideal.mem_comap, mem_maximalIdeal, mem_nonunits_iff]
@@ -388,7 +388,7 @@ private theorem core2 {n : ℕ} {P A C Γ : Type} [CommRing P] [CommRing A] [Com
   let A' := AdjoinRoot (X ^ (n + 1) : C[X])
   let α : P[X] →+* A' := (AdjoinRoot.mk _).comp (mapRingHom φ)
   let ι : C →+* A' := AdjoinRoot.of _
-  letI : Algebra P[X] A' := α.toAlgebra
+  let : Algebra P[X] A' := α.toAlgebra
   have hα : ∀ (c : P[X]) (M : Matrix (Fin n) (Fin n) A'), c • M = α c • M := fun c M => rfl
   have hC : α.comp Polynomial.C = ι.comp φ := by
     ext a
@@ -536,7 +536,7 @@ private theorem lemB {n : ℕ} {B A G : Type} [CommRing B] [CommRing A] [Group G
       exact hg (by rw [hx', h0, map_zero])
     rw [k1 ι y _ subset_rfl, k1 G (gen B x.coeff.support) y.coeff.support (fun g hg => by
       rw [Finsupp.mem_support_iff, gen_coeff] at hg
-      exact hsub (by_contra fun h0 => hg (if_neg h0))), ← AlgHom.comp_apply, ← AlgHom.comp_apply]
+      exact hsub (by_contra fun h0 => hg (ite_eq_right h0))), ← AlgHom.comp_apply, ← AlgHom.comp_apply]
     congr 1
     ext g
     simp only [AlgHom.comp_apply, MvPolynomial.aeval_X, gen_coeff, ← hx']
@@ -579,7 +579,7 @@ private theorem lemB {n : ℕ} {B A G : Type} [CommRing B] [CommRing A] [Group G
     ext
     simp
   · ext C _ _ x
-    letI : Algebra B C := ((algebraMap A C).comp f).toAlgebra
+    let : Algebra B C := ((algebraMap A C).comp f).toAlgebra
     change MvPolynomial.aeval x.coeff (E G (gen B x.coeff.support)) = _
     have hψ : (MvPolynomial.aeval (R := B) x.coeff).toRingHom =
         (MvPolynomial.aeval (R := A) x.coeff : MvPolynomial G A →+* C).comp (MvPolynomial.map f) := by
@@ -664,7 +664,7 @@ theorem UpperTheory.Reformulated.B.DeterminantIdentities.phiDet :
     have : (K : Set H) = ⋂ (h : H) (j : ℕ) (N : ℕ), {k | Ideal.Quotient.mk (I ^ N) ((cp (h * k)).coeff j) =
         Ideal.Quotient.mk (I ^ N) ((cp h).coeff j)} := by
       ext k
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       refine ⟨fun hk h j N => by rw [hk h], fun hk h => Polynomial.ext fun j => ?_⟩
       refine sub_eq_zero.1 (IsHausdorff.haus' (I := I) _ fun N => ?_)
       rw [SModEq.zero, smul_eq_mul, Ideal.mul_top]
@@ -690,7 +690,7 @@ theorem UpperTheory.Reformulated.B.DeterminantIdentities.phiDet :
   have hchi : ∀ g, D.chi (MonoidAlgebra.single (π g) 1) = cp g := by
     intro g
     apply hinj
-    letI : Algebra B A[X] := ((algebraMap A A[X]).comp f).toAlgebra
+    let : Algebra B A[X] := ((algebraMap A A[X]).comp f).toAlgebra
     let ψ : B[X] →ₐ[B] A[X] := { mapRingHom f with commutes' := fun b => Polynomial.map_C f }
     have e := D.nat B[X] A[X] ψ (MonoidAlgebra.single 1 X - MonoidAlgebra.mapRingHom G C (MonoidAlgebra.single (π g) 1))
     refine e.symm.trans ?_
@@ -763,7 +763,7 @@ theorem UpperTheory.V.Ws.phiFlag :
   refine ⟨fun i j hij => ?_, fun i => ?_⟩
   · rw [hval, Matrix.smul_apply, X.pair.flag (K.e v) _ hs' i j hij, smul_zero]
   · rw [hval, Matrix.smul_apply]
-    simp only [W.pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [W.pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
     rw [hψ v i ⟨s, hs⟩, map_mul, ← IsScalarTower.algebraMap_apply, X.ψ_map _ _ _ hs', smul_eq_mul]
     rfl
 end -- clump:auto
@@ -854,7 +854,7 @@ private theorem pp_tr {n : ℕ} {A B G H : Type} [CommRing A] [CommRing B] [Grou
   simp only [W.GDet.tr, W.GDet.lam]
   have h0 : f ((D.chi (MonoidAlgebra.mapDomainRingHom B π (MonoidAlgebra.single h 1 * y))).coeff (n - 1)) = 0 := by
     rw [← Polynomial.coeff_map, hc, Polynomial.coeff_X_pow]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   rw [(map_eq_zero_iff f hf).1 h0, mul_zero]
 
 
@@ -1027,14 +1027,14 @@ theorem UpperTheory.V.Ws.phiIsPsi :
         adic_mul K.κ_cont (adic_pow K.β_cont n)
       have h1 : AdicCont (maximalIdeal c'.O)
           fun g : Dec (F := T.L) (K.s.A (v : W.Plc (W.Lp T.L))) => K.sc n g :=
-        fun N => (h0 N).comp_continuous continuous_subtype_val
+        fun N => (h0 N).comp_continuous continuous_subtypeVal
       exact adic_alg h1
     have hX : AdicCont (maximalIdeal X.B)
         fun g : Dec (F := T.L) (K.s.A (v : W.Plc (W.Lp T.L))) => X.ψ (K.e v) i (resLe T.F_le g) := by
       intro N
       have hc : Continuous fun g : Dec (F := T.L) (K.s.A (v : W.Plc (W.Lp T.L))) =>
           (⟨resLe T.F_le g, hmem g⟩ : (T.fr ∅).Gv (K.e v)) :=
-        ((continuous_resLe T.F_le).comp continuous_subtype_val).subtype_mk hmem
+        ((continuous_resLe T.F_le).comp continuous_subtypeVal).subtype_mk hmem
       exact (X.ψ_cont (K.e v) i N).comp_continuous hc
     show AdicCont (maximalIdeal X.B)
       fun g : Dec (F := T.L) (K.s.A (v : W.Plc (W.Lp T.L))) => ((ψ v i g : X.Bˣ) : X.B)
@@ -1053,7 +1053,7 @@ theorem UpperTheory.V.Ws.phiIsPsi :
     have hβ : K.β g.1.1 = 1 := MonoidHom.mem_ker.mp (K.β_t (MonoidHom.mem_ker.mpr ht))
     have hmu : resLe T.F_le g.1.1 ∈ (T.fr ∅).Mu (K.e v) :=
       phiMu ((resLe T.F_le).comp (Dec (F := T.L) (K.s.A (v : W.Plc (W.Lp T.L)))).subtype)
-        ((continuous_resLe T.F_le).comp continuous_subtype_val)
+        ((continuous_resLe T.F_le).comp continuous_subtypeVal)
         (Dec (F := T.F) (T.pl (K.e v))) hmem g.1 g.2
     have hψ1 : X.ψ (K.e v) i (resLe T.F_le g.1.1) = 1 := by
       apply X.inj

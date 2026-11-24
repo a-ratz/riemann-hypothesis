@@ -158,13 +158,13 @@ theorem nested_vanish : ∀ (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ 
     have hnd' := (List.nodup_cons.1 hnd).2
     have sp := hsp i (List.mem_cons_self ..)
     obtain ⟨hρ, hμ, hρ', hμ'⟩ := hhaar i (List.mem_cons_self ..)
-    haveI := hρ; haveI := hμ; haveI := hρ'; haveI := hμ'
-    haveI : (ρ i).IsInvInvariant := sp.uniR _ hρ
-    haveI : (ρ' i).IsInvInvariant := sp.uniRB _ hρ'
-    haveI : (μ' i).IsMulRightInvariant := sp.uniB _ hμ'
-    haveI : LocallyCompactSpace (B i) := sp.clB.locallyCompactSpace
+    have := hρ; have := hμ; have := hρ'; have := hμ'
+    have : (ρ i).IsInvInvariant := sp.uniR _ hρ
+    have : (ρ' i).IsInvInvariant := sp.uniRB _ hρ'
+    have : (μ' i).IsMulRightInvariant := sp.uniB _ hμ'
+    have : LocallyCompactSpace (B i) := sp.clB.locallyCompactSpace
     have hRB : IsClosed (((R i).subgroupOf (B i) : Subgroup (B i)) : Set (B i)) := by
-      rw [Subgroup.coe_subgroupOf]; exact sp.clR.preimage continuous_subtype_val
+      rw [Subgroup.coe_subgroupOf]; exact sp.clR.preimage continuous_subtypeVal
     have hKbc : IsCompact (((K i).subgroupOf (B i) : Subgroup (B i)) : Set (B i)) := by
       rw [Subgroup.coe_subgroupOf, Subgroup.coe_subtype, Subtype.isCompact_iff, Set.image_preimage_eq_of_subset]
       · exact sp.cpt
@@ -173,16 +173,16 @@ theorem nested_vanish : ∀ (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ 
       intro j hj f z z' h1 h2
       have spj := hsp j (List.mem_cons_of_mem _ hj)
       obtain ⟨a1, a2, -, -⟩ := hhaar j (List.mem_cons_of_mem _ hj)
-      haveI := a1; haveI := a2; haveI : (ρ j).IsInvInvariant := spj.uniR _ a1
+      have := a1; have := a2; have : (ρ j).IsInvInvariant := spj.uniR _ a1
       exact IsQuotIntL1.unique spj.clR h1 h2
     have huB : ∀ j ∈ l, ∀ (f : B j → ℂ) (z z' : ℂ), IsQuotIntL1 (ρ' j) (μ' j) f z → IsQuotIntL1 (ρ' j) (μ' j) f z' → z = z' := by
       intro j hj f z z' h1 h2
       have spj := hsp j (List.mem_cons_of_mem _ hj)
       obtain ⟨-, -, a3, a4⟩ := hhaar j (List.mem_cons_of_mem _ hj)
-      haveI := a3; haveI := a4; haveI : (ρ' j).IsInvInvariant := spj.uniRB _ a3
-      haveI : LocallyCompactSpace (B j) := spj.clB.locallyCompactSpace
+      have := a3; have := a4; have : (ρ' j).IsInvInvariant := spj.uniRB _ a3
+      have : LocallyCompactSpace (B j) := spj.clB.locallyCompactSpace
       have hRBj : IsClosed (((R j).subgroupOf (B j) : Subgroup (B j)) : Set (B j)) := by
-        rw [Subgroup.coe_subgroupOf]; exact spj.clR.preimage continuous_subtype_val
+        rw [Subgroup.coe_subgroupOf]; exact spj.clR.preimage continuous_subtypeVal
       exact IsQuotIntL1.unique hRBj h1 h2
     let T : Finset (B i) := (S.image fun s => s i).subtype (· ∈ B i)
     have cell : ∀ a ∈ A i, ∀ g : B i, (∃ s ∈ S, ∃ r ∈ R i, ∃ a₀ ∈ A i, ∃ k ∈ K i, a * (g : H i) = r * a₀ * s i * k) →
@@ -441,7 +441,7 @@ theorem niter_cellSum_at (ι : Type) [DecidableEq ι] (H : ι → Type) [∀ i, 
       simp only [Function.update_self, Function.update_idem] at h2
       rw [h2, h1]
     refine ⟨fun g => ∑ β ∈ S, Wt' β * q (b β) * (if g ∈ dcos (R i) (K i) (b β i) then 1 else 0), ?_, ?_⟩
-    · haveI := hρ; haveI := hρi; haveI := hμ
+    · have := hρ; have := hρi; have := hμ
       have hS := quotient_integral_finset_sum S (fun β g => Wt' β * q (b β) * (if g ∈ dcos (R i) (K i) (b β i) then (1 : ℂ) else 0))
         (fun β => Wt' β * q (b β) * (((μ i (K i : Set (H i))).toReal / (ρ i (cellSet (R i) (K i) (b β i) (b β i))).toReal : ℝ) : ℂ))
         (fun β _ => by
@@ -593,7 +593,7 @@ namespace GlobalTheory.RowVal
 open GlobalTheory.CellVanishing in
 theorem cellVan_holds : CellVan := by
   intro ι _ H _ _ _ _ _ _ _ _ A B R K l hl hS ρ μ ρ' μ' hM X S b w q z α hw hdist hinv hsupp hz hrel
-  haveI := Classical.decEq (∀ i, H i)
+  have := Classical.decEq (∀ i, H i)
   have hQ := (GlobalTheory.T.isIteratedInvariantIntegral_linear_and_congr ι H R ρ μ l 1).1 (Fin 2) Finset.univ α z q (fun n _ => hz n)
   refine GlobalTheory.T.isIteratedInvariantIntegral_vanish_of_inner_vanish ι H A B R K l hl hS ρ μ ρ' μ' hM
     ((S 0).image (b 0) ∪ (S 1).image (b 1)) (fun g => ∑ n ∈ Finset.univ, α n * q n g) _ ?_ ?_ ?_ hQ ?_
@@ -617,15 +617,15 @@ theorem cellVan_holds : CellVan := by
     · exact Finset.mem_union_right _ (Finset.mem_image_of_mem _ hβ)
   · intro a ha ha1
     let p : ι → Prop := fun i => i ∈ l
-    haveI : ∀ j : Subtype p, LocallyCompactSpace (B j.1) := fun j =>
+    have : ∀ j : Subtype p, LocallyCompactSpace (B j.1) := fun j =>
       (hS j.1 j.2).clB.isClosedEmbedding_subtypeVal.locallyCompactSpace
 
-    haveI : ∀ n (β : X n) i, Decidable (b n β i ∈ B i) := fun _ _ _ => Classical.dec _
+    have : ∀ n (β : X n) i, Decidable (b n β i ∈ B i) := fun _ _ _ => Classical.dec _
     let bb : ∀ n, X n → ∀ i, B i := fun n β i => if h : b n β i ∈ B i then ⟨b n β i, h⟩ else 1
     have hbb : ∀ n β (hβ : β ∈ S n), bb n β = fun i => ⟨b n β i, (hw n β hβ).2.1 i⟩ := by
       intro n β hβ
       funext i
-      exact dif_pos _
+      exact dite_eq_left _
     let qn : Fin 2 → (∀ j : Subtype p, B j.1) → ℂ := fun n g => q n fun i => a i * (extPt (H := fun i => ↥(B i)) p 1 g i).1
     have hg1 : ∀ (g : ∀ j : Subtype p, B j.1) i, i ∉ l → a i * (extPt (H := fun i => ↥(B i)) p 1 g i).1 = 1 := by
       intro g i hi
@@ -637,7 +637,7 @@ theorem cellVan_holds : CellVan := by
       intro j _
       have hs := hS j.1 j.2
       obtain ⟨-, -, h3, h4⟩ := hM j.1 j.2
-      exact ⟨hs.clR.preimage continuous_subtype_val, hs.clB.isClosedEmbedding_subtypeVal.isCompact_preimage hs.cpt,
+      exact ⟨hs.clR.preimage continuous_subtypeVal, hs.clB.isClosedEmbedding_subtypeVal.isCompact_preimage hs.cpt,
         hs.opn, h3, hs.uniRB _ h3, h4, hs.uniB _ h4⟩
     have hcell : ∀ n, NIter (R := fun j : Subtype p => (R j.1).subgroupOf (B j.1)) (fun j => ρ' j.1) (fun j => μ' j.1)
         (qn n) l.attach 1 (∑ β ∈ S n, w n β * q n (a * b n β)) := by

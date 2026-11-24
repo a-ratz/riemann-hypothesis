@@ -89,8 +89,8 @@ theorem trCont {Γ k ι : Type} [Group Γ] [TopologicalSpace Γ] [ContinuousMul 
 
 theorem resLe_cont {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {F L : IntermediateField ℚ Ω} [NumberField F]
     [NumberField L] (hFL : F ≤ L) : Continuous (resLe hFL) := by
-  letI : Algebra F L := (IntermediateField.inclusion hFL).toAlgebra
-  haveI : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra F L := (IntermediateField.inclusion hFL).toAlgebra
+  have : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Af.continuous_restrictScalarsHom F L Ω
 
 private theorem continuous_monoidHom_units_of_continuous_coe {Γ M : Type} [Group Γ] [TopologicalSpace Γ] [ContinuousInv Γ]
@@ -103,7 +103,7 @@ private theorem continuous_monoidHom_units_of_continuous_coe {Γ M : Type} [Grou
 theorem psi_cont {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω]
     [IsAlgClosure L Ω] {s : W.HidaSetting l L Ω} {V : s.Lev} {c : Coef l} {n : ℕ} {r : W.Resid V.frame c.O n} {B : W.UniversalOrdinaryDeterminantRing r}
     (x : B.Pt) (v : W.Vl l L) (i : Fin n) : Continuous (x.psi v i) := by
-  letI := V.frame.tv v
+  let := V.frame.tv v
   have h1 := adicPt c x _ (W.Resid.IsPsi.cont (B.u.psi v i))
   exact continuous_monoidHom_units_of_continuous_coe _ (h1.congr fun g => rfl)
 

@@ -134,7 +134,7 @@ lemma gauss_normSq {k : Type} [Field k] [Fintype k] [DecidableEq k] {ι : Type} 
     rw [Finset.sum_eq_single (0 : ι → k)]
     · simp
     · intro z _ hz
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h
       rcases smul_eq_zero.mp h with h | h
       · exact mul_ne_zero h2 ht h
@@ -322,7 +322,7 @@ theorem latV_eq : (latV b v : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) =
   exact ⟨fun h p => h 0 p.1 p.2, fun h a i k => by rw [Subsingleton.elim a 0]; exact h (i, k)⟩
 
 theorem isOpen_latV : IsOpen (latV b v : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) := by
-  rw [latV_eq, Set.setOf_forall]
+  rw [latV_eq, Set.ofPred_forall]
   have hO : IsOpen (v.adicCompletionIntegers F : Set (Fv F v)) := Valued.isOpen_valuationSubring _
   exact isOpen_iInter_of_finite fun p =>
     hO.preimage ((continuous_apply p).comp (coord b v).continuous)
@@ -338,7 +338,7 @@ theorem continuous_q :
 
 theorem exists_sqrt (h2 : Valued.v (2 : Fv F v) = 1) (u : Fv F v) (hu : Valued.v (u - 1) < 1) :
     ∃ r : Fv F v, Valued.v r = 1 ∧ r * r = u := by
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   have hu1 : Valued.v u = 1 := by
     have := Valuation.map_one_add_of_lt _ hu
     rwa [add_sub_cancel] at this
@@ -377,7 +377,7 @@ theorem fib_const (hσ : IsCMExt F E σ) (h2 : Valued.v (2 : Fv F v) = 1)
     (m m' : Measure (Fin 1 → Fin M → Fv F v ⊗[F] E))
     (hm : FibAt (Fv F v) σ J (tupMeas lam 1 M) ν β m)
     (hm' : FibAt (Fv F v) σ J (tupMeas lam 1 M) ν c m') : m' (latV b v) = m (latV b v) := by
-  haveI := IsModuleTopology.toContinuousSMul (Fv F v) (Fv F v ⊗[F] E)
+  have := IsModuleTopology.toContinuousSMul (Fv F v) (Fv F v ⊗[F] E)
   have hβ0 : β ≠ 0 := by rintro rfl; simp at hβ
   obtain ⟨r, hr, hrr⟩ := exists_sqrt v h2 (c / β) (by
     rw [div_sub_one hβ0, map_div₀, hβ, div_one]; exact hc)
@@ -409,7 +409,7 @@ theorem fib_const (hσ : IsCMExt F E σ) (h2 : Valued.v (2 : Fv F v) = 1)
     Measure.map_apply (continuous_const_smul r).measurable (isOpen_latV b v).measurableSet]
   congr 1
   ext X
-  simp only [latV_eq, Set.mem_preimage, Set.mem_setOf_eq, map_smul, Pi.smul_apply, smul_eq_mul,
+  simp only [latV_eq, Set.mem_preimage, Set.mem_ofPred_eq, map_smul, Pi.smul_apply, smul_eq_mul,
     HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, hr, one_mul]
 
 theorem residue_eq_iff (x y : v.adicCompletionIntegers F) :
@@ -503,12 +503,12 @@ theorem local_bound (hσ : IsCMExt F E σ) (hJ : IsHermND σ J) (hM : 1 ≤ M)
     |(m (latV b v)).toReal - 1| * (Ideal.absNorm v.asIdeal : ℝ) ^ M ≤
       (Ideal.absNorm v.asIdeal : ℝ) := by
   classical
-  haveI := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField (v.adicCompletionIntegers F))
+  have := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  let := Fintype.ofFinite (IsLocalRing.ResidueField (v.adicCompletionIntegers F))
   have hd : d = 2 := by rw [← hσ.2.2.1, Module.finrank_eq_card_basis b, Fintype.card_fin]
   subst hd
-  haveI : Nonempty (Fin M) := ⟨⟨0, hM⟩⟩
-  haveI : (tupMeas lam 1 M).IsAddHaarMeasure := by
+  have : Nonempty (Fin M) := ⟨⟨0, hM⟩⟩
+  have : (tupMeas lam 1 M).IsAddHaarMeasure := by
     haveI : (Measure.pi fun _ : Fin M => lam).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
     exact Measure.pi.isAddHaarMeasure _
   let O := v.adicCompletionIntegers F
@@ -559,7 +559,7 @@ theorem local_bound (hσ : IsCMExt F E σ) (hJ : IsHermND σ J) (hM : 1 ≤ M)
       exact ⟨fun i => ⟨_, h1 i⟩, fun _ => rfl, (key X (fun i => ⟨_, h1 i⟩) fun _ => rfl).2 h3⟩
   rw [hset, ← latV_eq, measureReal_def, measureReal_def, tupMeas_latV b v lam hl1,
     vol_fibre σ b J v hσ h2 lam ν hl hν β hβ m hm, ENNReal.toReal_mul, ENNReal.toReal_one, mul_one,
-    GlobalTheory.GaugeProdFormula.card_residue, Set.ncard_eq_toFinset_card', Set.toFinset_setOf] at hbox
+    GlobalTheory.GaugeProdFormula.card_residue, Set.ncard_eq_toFinset_card', Set.toFinset_ofPred] at hbox
   have hv := vol_class v ν hν1 β₀
   rw [← Nat.card_eq_fintype_card, GlobalTheory.GaugeProdFormula.card_residue, ← hbox] at hcount
   have hq : (0 : ℝ) < (Ideal.absNorm v.asIdeal : ℝ) := by

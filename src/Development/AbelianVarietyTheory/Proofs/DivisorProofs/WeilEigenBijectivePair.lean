@@ -185,7 +185,7 @@ theorem haar_coords_cplx {n : ℕ} {V : Type} [NormedAddCommGroup V] [NormedSpac
     ∃ k : ℝ, ∀ G : V → ℂ, ∫ y, G y ∂μ = (k : ℂ) * ∫ x, G (C.symm x) := by
   let e : V ≃ᵐ EuclideanSpace ℝ (Fin n) := C.toHomeomorph.toMeasurableEquiv
   have he : ∀ y, e y = C y := fun y => rfl
-  haveI : (μ.map e).IsAddHaarMeasure := C.isAddHaarMeasure_map μ
+  have : (μ.map e).IsAddHaarMeasure := C.isAddHaarMeasure_map μ
   have hk := Measure.isAddLeftInvariant_eq_smul (μ.map e) (volume : Measure (EuclideanSpace ℝ (Fin n)))
   refine ⟨(Measure.addHaarScalarFactor (μ.map e) volume : ℝ), fun G => ?_⟩
   have h1 : ∫ y, G y ∂μ = ∫ x, G (C.symm x) ∂(μ.map e) := by
@@ -214,8 +214,8 @@ theorem const_of_euclidean : (∀ (n : ℕ) (B : GlobalTheory.RealWeil.Sch (Fin 
           @integral _ ℂ _ _ (borel _) μ (fun x => T f x * starRingEnd ℂ (T f' x)) =
             (c : ℂ) * @integral _ ℂ _ _ (borel _) μ (fun x => f x * starRingEnd ℂ (f' x)) := by
   intro H F _ _ _ κ _ ψ hψ T A hT
-  letI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
   have hP : IsPairing (trP F κ) := Coord.isPairing_trP κ
   obtain ⟨C, φ, -, hS⟩ := exists_pairing_coords (κ → mixedEmbedding.mixedSpace F) (trP F κ) hP _ rfl
   generalize Module.finrank ℝ (κ → mixedEmbedding.mixedSpace F) = n at C φ hS
@@ -282,7 +282,7 @@ theorem const_of_euclidean : (∀ (n : ℕ) (B : GlobalTheory.RealWeil.Sch (Fin 
     have := hc (toE f) (toE f')
     simpa only [B, hT', hVE, htoE, Function.comp_apply] using this
   refine ⟨c, hc0, fun μ hμ f f' => ?_⟩
-  haveI := hμ
+  have := hμ
   obtain ⟨k, hk⟩ := haar_coords_cplx μ C
   rw [hk, hk, hB]
   ring
@@ -541,7 +541,7 @@ theorem coe_smulLeft_sub {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (L : V →L[ℝ] ℝ) (k : ℝ) (f : 𝓢(V, ℂ)) :
     ⇑(SchwartzMap.smulLeftCLM ℂ (fun y => eChar (L y + k)) f - f) = fun y => (psi k ∘ ⇑L) y * f y := by
   funext y
-  rw [SchwartzMap.sub_apply, SchwartzMap.smulLeftCLM_apply_apply (hasTemperateGrowth_phase L k), smul_eq_mul,
+  rw [sub_apply, SchwartzMap.smulLeftCLM_apply_apply (hasTemperateGrowth_phase L k), smul_eq_mul,
     ← congrFun (eChar_sub_one_eq L k) y]
   ring
 
@@ -635,10 +635,10 @@ theorem seminorm_smulLeft_eChar_sub_le : ∀ (V : Type) [NormedAddCommGroup V] [
       exact seminorm_smulLeft_sub_le (Finset.le_sup (f := Prod.fst) hi) (Finset.le_sup (f := Prod.snd) hi) L k f
     calc p g ≤ (C • s.sup (schwartzSeminormFamily ℂ V ℂ)) g := hC g
       _ = (C : ℝ) * (s.sup (schwartzSeminormFamily ℂ V ℂ)) g := by
-          rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+          rw [smul_apply, NNReal.smul_def, smul_eq_mul]
       _ ≤ (C : ℝ) * (K * ((‖L‖ + |k|) * (1 + ‖L‖) ^ N) * Q f) := by gcongr
       _ = (‖L‖ + |k|) * (1 + ‖L‖) ^ N * (((C * ⟨K, hK0⟩ : NNReal) • Q) f) := by
-          rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+          rw [smul_apply, NNReal.smul_def, smul_eq_mul]
           change (C : ℝ) * _ = _ * (((C : ℝ) * K) * Q f)
           ring
 
@@ -730,7 +730,7 @@ theorem tendsto_rhoSch_zero (g : Sch l) : Tendsto (fun u => rhoSch u g) (𝓝 0)
 theorem rhoSch_rhoSch (w₀ u : l ⊕ l → ℝ) (g : Sch l) :
     rhoSch w₀ (rhoSch u g) = Complex.exp (((Real.pi * sympl w₀ u : ℝ) : ℂ) * Complex.I) • rhoSch (w₀ + u) g := by
   ext x
-  rw [coe_rhoSch, coe_rhoSch, rhoFun_rhoFun, SchwartzMap.smul_apply, coe_rhoSch]
+  rw [coe_rhoSch, coe_rhoSch, rhoFun_rhoFun, smul_apply, coe_rhoSch]
   rfl
 
 theorem continuous_rhoSch (g : Sch l) : Continuous fun w => rhoSch w g := by
@@ -935,7 +935,7 @@ theorem iteratedFDeriv_eq_integral {G : W → 𝓢(E, ℂ)} (hG : Continuous G)
       rw [iteratedFDeriv_succ_eq_comp_left]
       rfl
     have hdiff : ∀ w, Differentiable ℝ (iteratedFDeriv ℝ m (G w)) := fun w =>
-      ((G w).smooth ⊤).differentiable_iteratedFDeriv (by exact_mod_cast ENat.coe_lt_top m)
+      ((G w).smooth ⊤).differentiable_iteratedFDeriv (by exact_mod_cast ENat.natCast_lt_top m)
     have hF' : ∀ w y, fderiv ℝ (iteratedFDeriv ℝ m (G w)) y = Ψ (iteratedFDeriv ℝ (m + 1) (G w) y) := by
       intro w y
       rw [key, LinearIsometryEquiv.apply_symm_apply]
@@ -1013,8 +1013,8 @@ theorem clm_apply_eq_integral (L : 𝓢(E, ℂ) →L[ℂ] ℂ) {G : W → 𝓢(E
     show L f = L (e.symm _)
     rw [h2]
   have hcont : Continuous fun w => embed t (G w) := (embed t).continuous.comp hG
-  haveI : SecondCountableTopology W := inferInstance
-  haveI : SecondCountableTopologyEither W (Target E t) := secondCountableTopologyEither_of_left _ _
+  have : SecondCountableTopology W := inferInstance
+  have : SecondCountableTopologyEither W (Target E t) := secondCountableTopologyEither_of_left _ _
   have hInt : Integrable (fun w => embed t (G w)) ν :=
     (MeasureTheory.integrable_finsetSum t fun i _ => hint i.1 i.2).mono' hcont.aestronglyMeasurable
       (.of_forall fun w => norm_embed_le t (G w))
@@ -1123,7 +1123,7 @@ theorem step (n : ℕ) (B : Sch (Fin n) → Sch (Fin n) → ℂ)
       _ = C' * |C| * ((1 + ‖w‖) ^ (d + 1))⁻¹ := by ring
   have hpt : ∀ x, (ip • g') x = ∫ w, c w * G w x := by
     intro x
-    simp only [SchwartzMap.smul_apply, smul_eq_mul, hc, hG]
+    simp only [smul_apply, smul_eq_mul, hc, hG]
     rw [_root_.GlobalTheory.MoyalPointwise.moyal_pointwise n f g g' x]
   have key := _root_.GlobalTheory.SchwartzIntegral.clm_integral_interchange (Fin n ⊕ Fin n → ℝ) volume n L G c (ip • g') hGc hcc hint hpt
   calc ip * B g' f' = B (ip • g') f' := by rw [hL, hL, map_smul, smul_eq_mul]
@@ -1222,15 +1222,15 @@ theorem exists_const : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       apply two_ne_zero (α := F)
       apply (algebraMap F (Fv F v)).injective
       rw [map_ofNat, h, map_zero]
-    letI : Invertible (2 : Fv F v) := invertibleOfNonzero h2
+    let : Invertible (2 : Fv F v) := invertibleOfNonzero h2
     obtain ⟨ψv, hc, hne, A, hA⟩ := _root_.GlobalTheory.ThK.ModelLocInt.exists_loc_schr F E σ B n d X W M χX χW om r s r' s' hPair M₁ hM₁ e hE ei ev hei hev hpure v
     exact _root_.GlobalTheory.CompactOpenLattice.inner_eq_const_mul F v (Fin n × Fin d) ψv hc hne (ev v) A (hSB v) hA
   have hinf : ∃ c : ℝ, 0 ≤ c ∧ ∀ μ : @Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) (borel _),
       @Measure.IsAddHaarMeasure _ _ _ (borel _) μ → ∀ f f' : SInf F (Fin n × Fin d),
         @integral _ ℂ _ _ (borel _) μ (fun x => ei f x * starRingEnd ℂ (ei f' x)) =
           (c : ℂ) * @integral _ ℂ _ _ (borel _) μ (fun x => f x * starRingEnd ℂ (f' x)) := by
-    letI : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
-    letI : Invertible (2 : mixedEmbedding.mixedSpace F) :=
+    let : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
+    let : Invertible (2 : mixedEmbedding.mixedSpace F) :=
       (Invertible.map (algebraMap ℝ (mixedEmbedding.mixedSpace F)) 2).copy 2 (map_ofNat _ 2).symm
     obtain ⟨ψ, hψ, A, hA⟩ := _root_.GlobalTheory.ArchIntertw.ei_schr F E σ B n d X W M χX χW om r s r' s' hPair M₁ hM₁ e hE ei ev hei hev hpure
     exact _root_.GlobalTheory.SvNForm.schrodinger_intertwiner_l2_const F (Fin n × Fin d) ψ hψ ei A hA

@@ -402,11 +402,11 @@ theorem intOff_jn (S : Finset (Pl D)) (hn : r + t = n) (x : Mx D a r) (v : Mx D 
 
 theorem good_pos {S : Finset (Pl D)} {e : AE D} {Φ : Mx D a b → ℂ} (h : Good S e Φ) {x : Mx D a b} (hx : IntOff S x) :
     Φ x = Φ (e • x) := by
-  rw [h x, if_pos hx]
+  rw [h x, ite_eq_left hx]
 
 theorem good_neg {S : Finset (Pl D)} {e : AE D} {Φ : Mx D a b → ℂ} (h : Good S e Φ) {x : Mx D a b} (hx : ¬ IntOff S x) :
     Φ x = 0 := by
-  rw [h x, if_neg hx]
+  rw [h x, ite_eq_right hx]
 
 theorem continuous_jn (hn : r + t = n) : Continuous fun z : Mx D a r × Mx D a t => jn hn z.1 z.2 := by
   have h : Continuous fun z : Mx D a r × Mx D a t => Matrix.fromCols z.1 z.2 := by
@@ -427,7 +427,7 @@ theorem map_ne_zero (ν : Measure (Mx D a r × Mx D a t)) (s : Set (Mx D a r × 
   intro h
   have := congrArg (fun μ : Measure _ => μ Set.univ) h
   simp only [Measure.map_apply (measurable_sm e) MeasurableSet.univ, Set.preimage_univ, Measure.restrict_apply_univ,
-    Measure.coe_zero, Pi.zero_apply] at this
+    FunLike.coe_zero, Pi.zero_apply] at this
   exact hs this
 
 theorem transfer (hn : r + t = n) {V : HSp D} {b₀ : HermE D r} {S : Finset (Pl D)} {e : AE D}
@@ -853,7 +853,7 @@ theorem chn_eq (ψ : AddChar (AF D.host.F) ℂ) (β : HermE D n) (b : hermA D n)
     chn ψ β b = ψ (-GlobalTheory.CompanionTheory.FourierN.pr β.1 b.1) := rfl
 
 theorem chn_cont {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (β : HermE D n) : Continuous (chn ψ β) :=
-  hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr β.1).neg.comp continuous_subtype_val)
+  hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr β.1).neg.comp continuous_subtypeVal)
 
 theorem chn_per {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (β : HermE D n) (γ : hermA D n)
     (hγ : γ ∈ ratHerm D n) (x : hermA D n) : chn ψ β (γ + x) = chn ψ β x := by
@@ -1130,7 +1130,7 @@ theorem fourierPt : FourierPt := by
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.CompanionTheory.FourierN.exists_compact_cover (D := D) (n := n)
   exact GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero (hermA D n) (ratHerm D n) K hK hcov
     (GlobalTheory.CompanionTheory.FourierN.hermSub D n) (fun a x => ψ (-GlobalTheory.CompanionTheory.FourierN.pr a.1 x.1))
-    (fun a => hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr a.1).neg.comp continuous_subtype_val))
+    (fun a => hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr a.1).neg.comp continuous_subtypeVal))
     (fun a x y => by
       show ψ (-GlobalTheory.CompanionTheory.FourierN.pr a.1 (x.1 + y.1)) = _
       rw [GlobalTheory.CompanionTheory.FourierN.pr_add_right, neg_add, AddChar.map_add_eq_mul])
@@ -1404,7 +1404,7 @@ theorem resCore : Polar → CfFJ → IdemEx → GoodEv → FixW → WMaj → JPo
     hb _ (Set.mul_mem_mul (subset_closure (Set.mem_range_self x)) p.1.2) p.2
   have hmeas : Measurable (fun q : X × (KAt D n v × GA D W) => theta ωW Ψ' (cX q.1 * q.2.1) q.2.2) :=
     hθc.measurable.comp (((hcX.comp measurable_fst).mul
-      (measurable_subtype_coe.comp (measurable_fst.comp measurable_snd))).prodMk (measurable_snd.comp measurable_snd))
+      (measurable_subtypeVal.comp (measurable_fst.comp measurable_snd))).prodMk (measurable_snd.comp measurable_snd))
   have hintx : ∀ x, Integrable (fun p : KAt D n v × GA D W => theta ωW Ψ' (cX x * p.1) p.2)
       (νv.prod (I.m.restrict 𝓕)) := fun x =>
     Integrable.of_bound (hmeas.comp (measurable_const.prodMk measurable_id)).aestronglyMeasurable b
@@ -1603,7 +1603,7 @@ theorem PositivityTheory.Rg.Rsw.L.rowTotal : IdemEx → BumpEx → RowTotal := b
     simp only [G, this, map_zero, mul_zero]
   have hGi : Integrable G μ := hGc.integrable_of_hasCompactSupport hGK
   have hpos : 0 < ∫ y, (G y).re ∂μ := by
-    refine (Complex.continuous_re.comp hGc).integral_pos_of_hasCompactSupport_nonneg_nonzero
+    refine (Complex.continuous_re.comp hGc).integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (hGK.comp_left Complex.zero_re) (fun y => ?_) (x := y₀) ?_
     · show 0 ≤ (G y).re
       rw [hGre]

@@ -60,7 +60,7 @@ private theorem val_le_iff (x p : kˣ) :
   have h := mem_valBall_iff_le_ord (n := 0) (x * p⁻¹ : kˣ).ne_zero
   rw [mem_valBall_zero_iff, Valuation.mem_integer_iff, ord_units_mul, ord_units_inv, Units.val_mul,
     Units.val_inv_eq_inv_val, map_mul, map_inv₀,
-    mul_inv_le_iff₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 p.ne_zero)), one_mul] at h
+    mul_inv_le_iff₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 p.ne_zero)), one_mul] at h
   rw [h]
   omega
 

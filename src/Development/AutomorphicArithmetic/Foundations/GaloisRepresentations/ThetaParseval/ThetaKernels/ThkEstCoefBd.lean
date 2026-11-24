@@ -61,7 +61,7 @@ end W
 open W
 theorem coefBd_of_k : CoefReal → _root_.PositivityTheory.ThKEst.CoefBd_k := by
   intro hR F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP μ hμ φ₁ h₁ φ₂ h₂ N
-  haveI := hP.base.cm.1
+  have := hP.base.cm.1
   obtain ⟨p, C, K, hp, hC, hK, h⟩ := coef_split hR hP.base.std μ hμ h₁ h₂ N
   obtain ⟨L, hL, hsz⟩ := sz_le B.emb M.co.e.symm.toLinearMap
   have hLN : 0 ≤ C * L ^ N := by positivity
@@ -79,7 +79,7 @@ theorem coefBd_of_k : CoefReal → _root_.PositivityTheory.ThKEst.CoefBd_k := by
   · rw [h0, norm_zero]
     exact mul_nonneg (mul_nonneg (apply_nonneg _ _) (apply_nonneg _ _)) (LatticeQuotientCompactness.maj_nonneg _ _ _ _)
   have s0 := LatticeQuotientCompactness.sz_nonneg B.emb (M.co.e.symm (spl F _ x, spl F _ y))
-  rw [maj, if_pos, ← div_eq_mul_inv, le_div_iff₀ (by positivity)]
+  rw [maj, ite_eq_left, ← div_eq_mul_inv, le_div_iff₀ (by positivity)]
   · have q := mul_nonneg (apply_nonneg p f₁) (apply_nonneg p f₂)
     calc _ ≤ _ * (L * (1 + ‖x.1‖ + ‖y.1‖)) ^ N := by gcongr; exact hsz x y
       _ = L ^ N * (_ * (1 + ‖x.1‖ + ‖y.1‖) ^ N) := by rw [mul_pow, mul_left_comm]

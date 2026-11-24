@@ -59,8 +59,8 @@ theorem exists_zpow_of_trivial (ψ : ℂˣ →* Circle) (hc : Continuous ψ)
     (h : ∀ s : ℂˣ, starRingEnd ℂ (s : ℂ) = s → ψ (s * s) = 1) :
     ∃ k : ℤ, ∀ z : ℂˣ, ((ψ z : Circle) : ℂ) = ((z : ℂ) / (‖(z : ℂ)‖ : ℂ)) ^ k := by
   have hu : Continuous (Circle.toUnits : Circle →* ℂˣ) := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-    exact (continuous_subtype_val.comp (continuous_inv (G := Circle))).congr fun u => by simp [Function.comp, Circle.coe_inv]
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
+    exact (continuous_subtypeVal.comp (continuous_inv (G := Circle))).congr fun u => by simp [Function.comp, Circle.coe_inv]
   obtain ⟨k, hk⟩ := GlobalTheory.circle_hom_eq_zpow (ψ.comp Circle.toUnits) (hc.comp hu)
   refine ⟨k, fun z => ?_⟩
   have h0 : 0 < ‖(z : ℂ)‖ := norm_pos_iff.2 z.ne_zero

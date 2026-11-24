@@ -113,7 +113,7 @@ theorem PiQuotCokerFiniteLength.proof : PiQuotCokerFiniteLength.Statement := by
     · intro h
       exact absurd (Finset.mem_univ Q) h
   by_cases hItop : I = ⊤
-  · haveI : Subsingleton
+  · have : Subsingleton
         (((P : J.minimalPrimes) → B ⧸ (P : Ideal B)) ⧸ LinearMap.range (quotToPiMinimalPrimes J)) :=
       ⟨fun c d => by
         have hc := @htors c ⟨1, by rw [hItop]; trivial⟩

@@ -111,13 +111,13 @@ theorem elim_step {N : Matrix (Fin n) (Fin n) L} (hN : IwM N) (c : Fin n) :
     rw [h, map_zero] at this
     exact zero_ne_one this
   let x : Fin n → L := fun a => if a < c then N a c / N c c else 0
-  have hxa : ∀ a, ¬ a < c → x a = 0 := fun a h => if_neg h
-  have hxl : ∀ a, a < c → x a = N a c / N c c := fun a h => if_pos h
+  have hxa : ∀ a, ¬ a < c → x a = 0 := fun a h => ite_eq_right h
+  have hxl : ∀ a, a < c → x a = N a c / N c c := fun a h => ite_eq_left h
   have hxv : ∀ a, Valued.v (x a) ≤ 1 := by
     intro a
     by_cases h : a < c
     · rw [hxl a h, map_div₀, h3 c, div_one]; exact h1 a c
-    · rw [hxa a h, map_zero]; exact zero_le'
+    · rw [hxa a h, map_zero]; exact zero_le
   have hxc : x c = 0 := hxa c (lt_irrefl c)
   let R : Matrix (Fin n) (Fin n) L := Matrix.vecMulVec x (Pi.single c 1)
   have hR : ∀ a b, R a b = if b = c then x a else 0 := by
@@ -152,7 +152,7 @@ theorem elim_step {N : Matrix (Fin n) (Fin n) L} (hN : IwM N) (c : Fin n) :
     rw [hR]
     split_ifs
     · exact hxv a
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
   · have : (1 + R) * (1 - R) = 1 - R * R := by noncomm_ring
     rw [this, hRR, sub_zero]
   · rw [hE']
@@ -235,7 +235,7 @@ theorem tau_mul_self {σ : L →+* L} (g : GL (Fin n) L) (hg : g ∈ GU σ n) {W
     have hb1 : Matrix.BlockTriangular Y OrderDual.toDual := fun a b h => hY a b h
     have hb2 : Matrix.BlockTriangular (tau σ Y) OrderDual.toDual := fun a b h => hlo a b h
     exact hb1.mul hb2
-  letI : Invertible (Y * tau σ Y) := ⟨tau σ W * W, hPQ, mul_eq_one_comm.1 hPQ⟩
+  let : Invertible (Y * tau σ Y) := ⟨tau σ W * W, hPQ, mul_eq_one_comm.1 hPQ⟩
   have hinvQ := Matrix.blockTriangular_inv_of_blockTriangular hQ
   rw [Matrix.inv_eq_left_inv hPQ] at hinvQ
   ext a b
@@ -330,7 +330,7 @@ theorem iwahori_fact : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicat
       (Valuation.ne_zero_iff _).2 (hne a)
     rw [map_mul, map_mul, map_inv₀, mul_comm _ (Valued.v (Y a b)), mul_assoc]
     refine (mul_le_of_le_one_left' (hY.1 a b)).trans_lt ?_
-    rw [inv_mul_lt_iff₀ (zero_lt_iff.2 hva), mul_one]
+    rw [inv_mul_lt_iff₀ (pos_iff_ne_zero.2 hva), mul_one]
     exact hlt
   refine ⟨u, (mem_iwU_iff hσv u).2 ⟨hW.2.2, fun a b h => ?_⟩, ⟨hW.1, hW.2.1⟩, y,
     (mem_iwU_iff hσv y).2 ⟨?_, ?_⟩, (mem_iwU_iff hσv _).2 ⟨fun a b => ?_, fun a b h => ?_⟩, ?_⟩
@@ -341,7 +341,7 @@ theorem iwahori_fact : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicat
   · rw [hyval]; exact hY.2.1
   · rw [hconj]
     rcases lt_trichotomy a b with h | h | h
-    · rw [hz' a b h, mul_zero, zero_mul, map_zero]; exact zero_le'
+    · rw [hz' a b h, mul_zero, zero_mul, map_zero]; exact zero_le
     · subst h
       rw [mul_comm _ (Y a a), mul_assoc, inv_mul_cancel₀ (hne a), mul_one]
       exact hY.1 a a

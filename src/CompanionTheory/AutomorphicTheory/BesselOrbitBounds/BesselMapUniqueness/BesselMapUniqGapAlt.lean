@@ -529,7 +529,7 @@ theorem factor : Factor := by
       map_smul' := fun c a => hB.smul c _ a.2 }
   have hb : ∀ v : S, ‖B' v‖ ≤ (|C| * Ws.length) * ‖J v‖ := fun v => by
     have h1 : (Ws.map fun w => ‖dsW σ w (v : H)‖).sum ≤ Ws.length * ‖J v‖ := by
-      have := List.sum_le_card_nsmul (Ws.map fun w => ‖dsW σ w (v : H)‖) ‖J v‖ (by
+      have := List.sum_le_length_nsmul (Ws.map fun w => ‖dsW σ w (v : H)‖) ‖J v‖ (by
         intro x hx
         obtain ⟨w, hw, rfl⟩ := List.mem_map.1 hx
         obtain ⟨i, rfl⟩ := List.get_of_mem hw
@@ -567,8 +567,8 @@ namespace GlobalTheory.CompanionTheory.BmuExpMem
 
 theorem lin_exp_eq {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (L : Matrix (Fin n) (Fin n) ℂ →ₗ[ℂ] ℂ)
     (h : ∀ m : ℕ, L (A ^ (m + 1)) = 0) : L (NormedSpace.exp A) = L 1 := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have hs : HasSum (fun m : ℕ => ((m.factorial : ℂ)⁻¹) • A ^ m) (NormedSpace.exp A) :=
     NormedSpace.exp_series_hasSum_exp' A
   have hL : Continuous L := LinearMap.continuous_of_finiteDimensional L
@@ -651,8 +651,8 @@ theorem expMem : ExpMem := by
   have hint : ∀ B C H : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ, B * H = H * C →
       NormedSpace.exp B * H = H * NormedSpace.exp C := by
     intro B C H h
-    letI : NormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℂ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
+    let : NormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℂ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
       Matrix.linftyOpNormedAlgebra
     exact exp_mul_eq_mul_exp_of_semiconj B C H h
   have hU : Lie (Formalism.QuantumDeterminants.Hpk k r) X → ex X t ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) := by
@@ -792,15 +792,15 @@ theorem pq_val (k r : ℕ) (i : Fin (2 * r + k + 1)) :
     (pq k r i).val = if i.val ≤ r ∨ r + k ≤ i.val then 2 * r + k - i.val else i.val := by
   unfold pq
   by_cases h : outer k r i
-  · rw [if_pos h, if_pos (show i.val ≤ r ∨ r + k ≤ i.val from h), Fin.val_rev]; omega
-  · rw [if_neg h, if_neg (show ¬ (i.val ≤ r ∨ r + k ≤ i.val) from h)]
+  · rw [ite_eq_left h, ite_eq_left (show i.val ≤ r ∨ r + k ≤ i.val from h), Fin.val_rev]; omega
+  · rw [ite_eq_right h, ite_eq_right (show ¬ (i.val ≤ r ∨ r + k ≤ i.val) from h)]
 
 theorem bq_eq (k r : ℕ) (i : Fin (2 * r + k + 1)) :
     bq k r i = if i.val ≤ r ∨ r + k ≤ i.val then 2 * (i.val : ℤ) - (2 * r + k) else 0 := by
   unfold bq
   by_cases h : outer k r i
-  · rw [if_pos h, if_pos (show i.val ≤ r ∨ r + k ≤ i.val from h)]
-  · rw [if_neg h, if_neg (show ¬ (i.val ≤ r ∨ r + k ≤ i.val) from h)]
+  · rw [ite_eq_left h, ite_eq_left (show i.val ≤ r ∨ r + k ≤ i.val from h)]
+  · rw [ite_eq_right h, ite_eq_right (show ¬ (i.val ≤ r ∨ r + k ≤ i.val) from h)]
 
 theorem adapted_pq (k r : ℕ) : Adapted (pq k r) (bq k r) (fun _ => 1) := by
   constructor
@@ -841,9 +841,9 @@ theorem Hq_eq_dp (k r : ℕ) : Hq k r = dp (pq k r) 0 (fun _ => 1) := by
   have hi := i.2
   simp only [Hq, dp, Matrix.of_apply, Pi.zero_apply, ite_self, zero_add, Fin.ext_iff, pq_val]
   by_cases h : outer k r i
-  · rw [if_pos h, if_pos (show i.val ≤ r ∨ r + k ≤ i.val from h)]
+  · rw [ite_eq_left h, ite_eq_left (show i.val ≤ r ∨ r + k ≤ i.val from h)]
     exact if_congr (by omega) rfl rfl
-  · rw [if_neg h, if_neg (show ¬ (i.val ≤ r ∨ r + k ≤ i.val) from h)]
+  · rw [ite_eq_right h, ite_eq_right (show ¬ (i.val ≤ r ∨ r + k ≤ i.val) from h)]
     exact if_congr eq_comm rfl rfl
 
 theorem iwaQ : IwaQ := by
@@ -888,7 +888,7 @@ theorem factor_prod {n : ℕ} {H V ι : Type*} [NormedAddCommGroup H] [NormedSpa
     obtain ⟨hP, hBP⟩ := ih
     simp only [List.map_cons, List.prod_cons]
     refine ⟨h.mul_mem _ (hg a) _ hP, ?_⟩
-    rw [h.apply_mul (hg a) hP, hc a _ (IsSm.apply h hv hP), hBP, ContinuousLinearMap.mul_apply]
+    rw [h.apply_mul (hg a) hP, hc a _ (IsSm.apply h hv hP), hBP, mul_apply_eq_comp]
 
 theorem norm_le_avg {d : ℕ} {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] [CompleteSpace V]
     (φ : (Fin d → ℝ) → ℝ) (hφ : Continuous φ) (hc : HasCompactSupport φ) (h0 : ∀ t, 0 ≤ φ t)
@@ -997,7 +997,7 @@ theorem qBound (hF : Factor) (hR : Reduce) (hC : ChartExists) : QBound := by
     rw [← Finset.sum_mul] at hb2
     nlinarith
   · have hsub : Φ t (B v) - B v = (Φ t - 1) (B v) := by
-      rw [ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply]
+      rw [sub_apply, one_apply_eq_self]
     rw [hsub]
     calc ‖(Φ t - 1) (B v)‖ ≤ ‖Φ t - 1‖ * ‖B v‖ := (Φ t - 1).le_opNorm _
       _ ≤ 1 / 2 * ‖B v‖ := mul_le_mul_of_nonneg_right (hnear t ht) (norm_nonneg _)
@@ -1294,7 +1294,7 @@ theorem unitary_conj_le {n : ℕ} (R B : Mat n) (hR : Rᴴ * R = 1) : ‖Rᴴ * 
     intro x _
     rw [norm_mul, Matrix.conjTranspose_apply, norm_star]
     calc ‖R x i‖ * ‖B x l‖ ≤ 1 * ‖B‖ :=
-          mul_le_mul (he x i) (Matrix.norm_entry_le_entrywise_sup_norm B) (norm_nonneg _) zero_le_one
+          mul_le_mul (he x i) (norm_apply_le_norm B) (norm_nonneg _) zero_le_one
       _ = ‖B‖ := one_mul _
   rw [Matrix.mul_apply]
   refine (norm_sum_le _ _).trans ?_
@@ -1340,7 +1340,7 @@ theorem torBound : TorBound := by
     have hj := hpos j
     calc (d i)⁻¹ * ‖A i j‖ * d j = ‖A i j‖ * ((d i)⁻¹ * d j) := by ring
       _ ≤ ‖A‖ * M ^ (2 * r + k + 1) :=
-        mul_le_mul (Matrix.norm_entry_le_entrywise_sup_norm A) h2 (by positivity) (norm_nonneg _)
+        mul_le_mul (norm_apply_le_norm A) h2 (by positivity) (norm_nonneg _)
 
 end GlobalTheory.CompanionTheory.BmuTorBound
 end -- clump:auto
@@ -1476,7 +1476,7 @@ theorem dsW_cutI (hσ : URep Hm σ) {μ : Measure (PI.MtM n)} (hμ : PI.IsHaarOn
 
 theorem cutLim_of (hF : Factor) (hD : CutDer) : CutLim := by
   intro n Hm H _ _ _ σ hσ V _ _ _ B hB μ hμ w hw hi κ hκ ⟨K, hK⟩ v hv
-  have : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   obtain ⟨M, W, β, hW, hBβ⟩ := hF n Hm H σ hσ V B hB
   obtain ⟨ρ, -, hc, hρ, -, hρ1⟩ := exists_contDiff_tsupport_subset (n := ⊤)
     (Filter.univ_mem : (univ : Set (Mat n)) ∈ 𝓝 0)
@@ -1581,7 +1581,7 @@ theorem apply_cutI (h : URep Hm σ) (hμ : PI.IsHaarOnM (UH Hm) μ) (hF : Contin
     σ (ex X t) (cutI σ μ w R ρ v) =
       ∫ y : PI.MtM n, ((ρ (ex X (-t) * (R⁻¹ • Matrix.of y)) : ℂ) * ⟪F (Matrix.of y), σ (ex X t) v⟫_ℂ) •
         F (Matrix.of y) ∂μ := by
-  haveI : IsFiniteMeasureOnCompacts μ :=
+  have : IsFiniteMeasureOnCompacts μ :=
     ⟨fun _ hK => CompanionTheory.D.Upq.Quot.IsHaarOnM.lt_top_of_isCompact h.grp hμ hK⟩
   have hae : ∀ᵐ g ∂μ, Matrix.of g ∈ UH Hm := hμ.2.2.1
   have hi : Integrable (fun y : PI.MtM n =>
@@ -1607,7 +1607,7 @@ theorem apply_cutI (h : URep Hm σ) (hμ : PI.IsHaarOnM (UH Hm) μ) (hF : Contin
 
 theorem cutDer : CutDer := by
   intro n Hm H _ _ _ σ h μ hμ w hw R hR ρ hρ hc v hv
-  haveI : IsFiniteMeasureOnCompacts μ :=
+  have : IsFiniteMeasureOnCompacts μ :=
     ⟨fun _ hK => CompanionTheory.D.Upq.Quot.IsHaarOnM.lt_top_of_isCompact h.grp hμ hK⟩
   have hae : ∀ᵐ g ∂μ, Matrix.of g ∈ UH Hm := hμ.2.2.1
   obtain ⟨F, hF, hFw⟩ := SmOn.exists_contDiff hw h.grp.1
@@ -1669,7 +1669,7 @@ theorem cutDer : CutDer := by
   conv_lhs => unfold ds
   simp_rw [apply_cutI h hμ hFc hFw hR hρ.continuous hc v hX]
   rw [hd.deriv]
-  simp only [neg_zero, ex_zero, Matrix.one_mul, h.rep.map_one, ContinuousLinearMap.one_apply, add_smul]
+  simp only [neg_zero, ex_zero, Matrix.one_mul, h.rep.map_one, one_apply_eq_self, add_smul]
 
 end GlobalTheory.CompanionTheory.CutDeriv
 

@@ -54,9 +54,9 @@ theorem UpperTheory.V.Pa.pl_sub :
   intro l _ Γ _ _ _ _ _ H K _ _ hK hHK U hU g hg
   have hl : l.Prime := Fact.out
   have hKc : IsClosed (K : Set Γ) := OpenSubgroup.isClosed ⟨K, hK⟩
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc.isCompact
-  haveI : U.toSubgroup.FiniteIndex := U.toOpenSubgroup.toSubgroup.finiteIndex_of_finite_quotient
-  haveI : U.toSubgroup.Normal := U.isNormal'
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc.isCompact
+  have : U.toSubgroup.FiniteIndex := U.toOpenSubgroup.toSubgroup.finiteIndex_of_finite_quotient
+  have : U.toSubgroup.Normal := U.isNormal'
   have hn0 : U.toSubgroup.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
   have lem : ∀ k : K, (k : Γ) ∈ H → k ^ l ^ U.toSubgroup.index ∈ U.toSubgroup := by
     intro k hk
@@ -82,10 +82,10 @@ theorem UpperTheory.V.Pa.pl_sub :
   let O : Subgroup Γ := U.toSubgroup.map K.subtype
   have hOo : IsOpen (O : Set Γ) := by
     rw [Subgroup.coe_map]
-    exact hK.isOpenMap_subtype_val _ U.toOpenSubgroup.isOpen
+    exact hK.isOpenMap_subtypeVal _ U.toOpenSubgroup.isOpen
   have hOc : IsClosed (O : Set Γ) := OpenSubgroup.isClosed ⟨O, hOo⟩
-  haveI : Finite (Γ ⧸ O) := O.quotient_finite_of_isOpen hOo
-  haveI : O.FiniteIndex := O.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ O) := O.quotient_finite_of_isOpen hOo
+  have : O.FiniteIndex := O.finiteIndex_of_finite_quotient
   have hCo : IsOpen (O.normalCore : Set Γ) :=
     Subgroup.isOpen_of_isClosed_of_finiteIndex _ (O.normalCore_isClosed hOc)
   let C : OpenNormalSubgroup Γ :=

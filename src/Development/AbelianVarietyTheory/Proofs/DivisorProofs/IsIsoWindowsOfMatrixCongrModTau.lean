@@ -133,7 +133,7 @@ theorem isNil_kron {B O ι : Type} [CommRing B] [CommRing O] [IsLocalRing O] [Fi
       · simp [hm, Function.iterate_fixed (map_zero σ)]
     rw [h2] at h1
     simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h1
     exact (IsLocalRing.mem_maximalIdeal _).2 h1
   refine ⟨n, fun v x => ?_⟩
   rw [kron_iter]
@@ -222,8 +222,8 @@ namespace GlobalTheory.WindowIso
 theorem window_iso : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (d k : ℕ) (U U' : Matrix (Fin d ⊕ Fin k) (Fin d ⊕ Fin k) F.B), IsUnit U → IsUnit U' → (∀ i j, F.τ ∣ U i j - U' i j) → IsNil F.θ F.σ (U * blk d k (p : F.B) 1) → ∃ X : Matrix (Fin d ⊕ Fin k) (Fin d ⊕ Fin k) F.B, (∀ i j, F.τ ∣ X i j - (1 : Matrix (Fin d ⊕ Fin k) (Fin d ⊕ Fin k) F.B) i j) ∧ X * (U' * blk d k (p : F.B) 1) = U * blk d k (p : F.B) 1 * X.map F.σ := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F d k U U' hU _ hUU' hnil
   classical
-  haveI : Nontrivial O := ⟨⟨p, 1, fun h => (Fact.out : ¬IsUnit (p : O)) (h ▸ isUnit_one)⟩⟩
-  haveI : IsLocalRing O := by
+  have : Nontrivial O := ⟨⟨p, 1, fun h => (Fact.out : ¬IsUnit (p : O)) (h ▸ isUnit_one)⟩⟩
+  have : IsLocalRing O := by
     refine IsLocalRing.of_nonunits_add fun x y hx hy => ?_
     rw [mem_nonunits_iff, hv.isUnit_iff_valuation_eq_one] at hx hy ⊢
     have hx' := lt_of_le_of_ne (hv.map_le_one x) hx

@@ -108,7 +108,7 @@ theorem UpperTheory.V.Ws.Lk.betaCyc :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (K : IntermediateField ℚ Ω) [NumberField K], Module.finrank ℚ K = 2 → ∀ A₀ : ValuationSubring Ω, A₀.valuation (l : Ω) < 1 → ∀ β : G K Ω →* (PadicAlgCl l)ˣ, (∀ σ ∉ K.fixingSubgroup, ∀ s s' : G K Ω, resQ K s' = σ * resQ K s * σ⁻¹ → β s * β s' = 1) → ∀ U : Subgroup (G K Ω), IsOpen (U : Set (G K Ω)) → (∀ B : ValuationSubring Ω, (∀ x ∈ K, x ∈ B ↔ x ∈ A₀) → ∀ s ∈ U ⊓ Ine (F := K) B, (β s : PadicAlgCl l) ^ 2 = algebraMap ℤ_[l] (PadicAlgCl l) (cycZ K Ω l s : ℤ_[l])) → ∀ A : ValuationSubring Ω, A.valuation (l : Ω) < 1 → ∃ (b : ℤ) (k : ℕ), 0 < k ∧ Odd b ∧ ∀ s ∈ Ine (F := K) A, (β s ^ 2 * cycBar K Ω l s ^ (-b)) ^ k = 1 := by
   intro Ω _ _ _ l _ K _ hK A₀ hA₀ β hconj U hU hcyc A hA
   have hn : U.index ≠ 0 := by
-    haveI : Finite (G K Ω ⧸ U) := U.quotient_finite_of_isOpen hU
+    have : Finite (G K Ω ⧸ U) := U.quotient_finite_of_isOpen hU
     exact Subgroup.index_ne_zero_of_finite
   have hpow : ∀ s : G K Ω, s ^ U.index.factorial ∈ U := fun s =>
     Subgroup.pow_mem_of_index_ne_zero_of_dvd hn s (fun m h1 h2 => Nat.dvd_factorial h1 h2)
@@ -134,9 +134,9 @@ theorem UpperTheory.V.Ws.Lk.betaCyc :
       rw [mul_comm 2]
     rw [e1, h1, mul_inv_cancel]
   · refine ⟨-1, U.index.factorial, hkpos, ⟨-1, by norm_num⟩, ?_⟩
-    haveI hN : K.fixingSubgroup.Normal := by
+    have hN : K.fixingSubgroup.Normal := by
       refine (InfiniteGalois.normal_iff_isGalois K).2 ?_
-      haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+      have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
       exact isGalois_iff.2 ⟨Algebra.IsSeparable.of_integral _ _, Algebra.IsQuadraticExtension.normal ℚ K⟩
     intro s hs
     have hg : resQ K s ∈ Ine (F := ℚ) A := (resQ_Ine K A s).1 hs

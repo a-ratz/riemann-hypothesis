@@ -93,7 +93,7 @@ def us (U : UMeas) : Measure US := U.υ.comap Subtype.val
 
 theorem measurableSet_US : MeasurableSet (US : Set (A ℚ)ˣ) := UpperTheory.isCompact_integralIdeleUnits_and_abs_eq_one.1.isClosed.measurableSet
 
-theorem val_emb : MeasurableEmbedding (Subtype.val : US → (A ℚ)ˣ) := MeasurableEmbedding.subtype_coe measurableSet_US
+theorem val_emb : MeasurableEmbedding (Subtype.val : US → (A ℚ)ˣ) := MeasurableEmbedding.subtypeVal measurableSet_US
 
 instance us_prob (U : UMeas) : IsProbabilityMeasure (us U) := by
   haveI := U.prob

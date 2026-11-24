@@ -64,7 +64,7 @@ theorem exists_isIrreducible_inter_open_subset {α : Type*} [TopologicalSpace α
     obtain ⟨x, t, ht, -⟩ := hne
     exact ⟨t, ht⟩
   obtain ⟨Z, hZ⟩ := hS.exists_maximal hSne
-  have hfin : (S \ {Z}).Finite := hS.diff
+  have hfin : (S \ {Z}).Finite := hS.sdiff
   refine ⟨Z, hc Z hZ.1, hi Z hZ.1, Set.subset_sUnion_of_mem hZ.1, (⋃₀ (S \ {Z}))ᶜ, ?_, ?_, ?_⟩
   · rw [isOpen_compl_iff, Set.sUnion_eq_biUnion]
     exact hfin.isClosed_biUnion fun t ht => hc t ht.1

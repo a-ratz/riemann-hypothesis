@@ -73,7 +73,7 @@ theorem continuous_adeleNorm : Continuous (adeleNorm E) := by
   classical
   refine Continuous.comp (g := Algebra.norm (AdeleRing (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E))) ?_
     (continuous_adeleEquiv_symm (isCMExt_real E))
-  haveI : IsModuleTopology (HeckeCharacterZeroLocus.ThmBIn.AF (maximalRealSubfield E)) (HeckeCharacterZeroLocus.ThmBIn.AE (maximalRealSubfield E) E) := ⟨rfl⟩
+  have : IsModuleTopology (HeckeCharacterZeroLocus.ThmBIn.AF (maximalRealSubfield E)) (HeckeCharacterZeroLocus.ThmBIn.AE (maximalRealSubfield E) E) := ⟨rfl⟩
   let b := Algebra.TensorProduct.basis (HeckeCharacterZeroLocus.ThmBIn.AF (maximalRealSubfield E))
     (Module.finBasis (maximalRealSubfield E) E)
   refine (IsModuleTopology.continuous_of_linearMap (Algebra.leftMulMatrix b).toLinearMap).matrix_det.congr fun x => ?_

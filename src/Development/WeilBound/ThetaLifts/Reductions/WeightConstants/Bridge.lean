@@ -98,7 +98,7 @@ theorem unr_iff (χ : HChar E) (hu : χ.IsUnitary) (v : HeightOneSpectrum (𝓞 
     rw [Submonoid.mem_units_iff, Formalism.L2.Host.IsUnitAt]
     change Valued.v (x : v.adicCompletion E) ≤ 1 ∧ Valued.v ((x⁻¹ : (v.adicCompletion E)ˣ) : v.adicCompletion E) ≤ 1 ↔ _
     have h0 : Valued.v (x : v.adicCompletion E) ≠ 0 := by simp
-    rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (zero_lt_iff.2 h0)]
+    rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h0)]
     exact ⟨fun h => le_antisymm h.1 h.2, fun h => ⟨h.le, h.ge⟩⟩
   constructor
   · intro h x hx
@@ -131,7 +131,7 @@ theorem dense_atInf : DenseRange fun (k : Eˣ) (w : InfinitePlace E) => atInf w 
   have hj : IsInducing j := IsInducing.piMap fun w => (Units.isEmbedding_val₀ (G₀ := w.Completion)).isInducing
   have hd : Dense (Set.range (algebraMap E (InfiniteAdeleRing E))) := InfiniteAdeleRing.denseRange_algebraMap E
   have hU : IsOpen {y : ∀ w : InfinitePlace E, w.Completion | ∀ w, y w ≠ 0} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun w => isOpen_ne_fun (continuous_apply w) continuous_const
   intro x
   rw [hj.closure_eq_preimage_closure_image, Set.mem_preimage]
@@ -156,7 +156,7 @@ theorem params_of (χ : HChar E) (hu : χ.IsUnitary) [_root_.NumberField.IsTotal
   let B : (∀ w : InfinitePlace E, (w.Completion)ˣ) → ℂ := fun x =>
     ∏ w, (extensionEmbedding w (x w : w.Completion) / ((‖(x w : w.Completion)‖ : ℝ) : ℂ)) ^ m w
   have hA : Continuous A := continuous_finsetProd _ fun w _ =>
-    continuous_subtype_val.comp (((hc χ hu).infiniteComponent w).continuous.comp (continuous_apply w))
+    continuous_subtypeVal.comp (((hc χ hu).infiniteComponent w).continuous.comp (continuous_apply w))
   have hn : ∀ (w : InfinitePlace E) (a : (w.Completion)ˣ), ((‖(a : w.Completion)‖ : ℝ) : ℂ) ≠ 0 := fun w a =>
     ofReal_ne_zero.2 (norm_ne_zero_iff.2 a.ne_zero)
   have hB : Continuous B := continuous_finsetProd _ fun w _ => by
@@ -257,7 +257,7 @@ theorem heckeL_ne_zero [_root_.NumberField.IsTotallyComplex E] {I : Type} [Finty
   have hW : μ.rootNumber ≠ 0 := left_ne_zero_of_mul_eq_one μ.rootNumber_mul_rootNumber_inv
   refine mul_ne_zero (mul_ne_zero (μ.discrNormConductor_cpow_ne_zero _) (inv_ne_zero ?_)) ?_
   · refine Finset.prod_ne_zero_iff.2 fun w _ => ?_
-    rw [HeckeCharacter.infiniteGamma, if_neg (not_isReal_iff_isComplex.2 (hc' w)), ht, hw, Gammaℂ_def]
+    rw [HeckeCharacter.infiniteGamma, ite_eq_right (not_isReal_iff_isComplex.2 (hc' w)), ht, hw, Gammaℂ_def]
     refine mul_ne_zero (mul_ne_zero two_ne_zero ?_) (Gamma_ne_zero_of_re_pos ?_)
     · rw [Ne, cpow_eq_zero_iff, not_and_or]
       exact Or.inl (mul_ne_zero two_ne_zero (ofReal_ne_zero.2 Real.pi_ne_zero))

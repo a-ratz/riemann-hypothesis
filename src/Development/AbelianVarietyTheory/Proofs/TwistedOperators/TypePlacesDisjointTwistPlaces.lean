@@ -67,10 +67,10 @@ theorem typePlaces_disjoint_twistPlaces : ∀ {D : D7} {G : Type} [Group G] [Fin
   have hmemE : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := by
     have h2 : algebraMap (𝓞 D.host.K) (𝓞 D.host.E) ((D.host.g k : ℕ) : 𝓞 D.host.K) ∈ PP.asIdeal := hmemK
     simpa using h2
-  haveI : Finite (kP PP) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq.ne_zero)
+  have : Finite (kP PP) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq.ne_zero)
   have : PP.asIdeal.IsPrime := PP.isPrime
-  haveI : Nontrivial (kP PP) := inferInstance
-  haveI : Fintype (kP PP) := Fintype.ofFinite _
+  have : Nontrivial (kP PP) := inferInstance
+  have : Fintype (kP PP) := Fintype.ofFinite _
   have h0g : ((D.host.g k : ℕ) : kP PP) = 0 := by
     have := (Ideal.Quotient.eq_zero_iff_mem (I := PP.asIdeal)).2 hmemE
     simpa using this

@@ -346,8 +346,8 @@ theorem GlobalTheory.Mem.Top.Bl.bWit_zsc_F0_heq_F0K_of_sc_eq : ∀ (hL : _root_.
   obtain ⟨x, a, ax, y, _⟩ := w
   cases ax
   have hX := y.eq ▸ hB
-  letI := a.x.grp
-  letI := a.x.fin
+  let := a.x.grp
+  let := a.x.fin
   have hX' : ∀ Zs : DefSub a.x.A3.fam3.amb3, HEq (a.x.F.Zsc Zs).F0 (F0K K.s (q.w.D q.Z)) := hX
   dsimp only
   clear * - hX'

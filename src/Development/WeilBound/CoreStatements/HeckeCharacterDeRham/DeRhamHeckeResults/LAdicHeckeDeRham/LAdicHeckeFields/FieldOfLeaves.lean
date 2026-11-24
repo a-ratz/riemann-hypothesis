@@ -119,7 +119,7 @@ theorem mem_OL_of_norm_le_one (K : FinExt l) (x : ↥K.1) (h : ‖((x : ↥K.1) 
     x ∈ OL K := by
   change x ∈ integralClosure ℤ_[l] ↥K.1
   rw [mem_integralClosure_iff]
-  haveI : IsScalarTower ℤ_[l] ↥K.1 (Om l) := IsScalarTower.of_algebraMap_eq fun z => by
+  have : IsScalarTower ℤ_[l] ↥K.1 (Om l) := IsScalarTower.of_algebraMap_eq fun z => by
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (Om l),
       IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] ↥K.1]
     rfl
@@ -134,7 +134,7 @@ theorem compactSpace_GK (K : FinExt l) : CompactSpace ↥(GK K) := by
 theorem norm_le_one (K : FinExt l) (χ : ↥(GK K) →* (↥K.1)ˣ)
     (hc : Continuous (fun g => (((χ g : (↥K.1)ˣ) : ↥K.1) : Om l))) (g : ↥(GK K)) :
     ‖(((χ g : (↥K.1)ˣ) : ↥K.1) : Om l)‖ ≤ 1 := by
-  haveI := compactSpace_GK K
+  have := compactSpace_GK K
   obtain ⟨M, hM⟩ := (isCompact_range hc).isBounded.exists_norm_le
   have hpow : ∀ n : ℕ, ‖(((χ g : (↥K.1)ˣ) : ↥K.1) : Om l)‖ ^ n ≤ M := fun n => by
     have := hM _ ⟨g ^ n, rfl⟩
@@ -455,7 +455,7 @@ theorem GlobalTheory.CompanionTheory.LTPer.evalMod_sigma_of_congr : ∀ {B : Typ
   obtain ⟨M, _, s0, hs0, hf0⟩ := hM
   obtain ⟨I, hI⟩ := GlobalTheory.CompanionTheory.LTPer.QGal.exists_near_ideal (S := S) env.mem (F k) m
   obtain ⟨h', hh⟩ : ∃ h' : R →+* S, ∀ c, (h' c : B) = h c := ⟨h.codRestrict S hS, fun _ => rfl⟩
-  letI : Algebra R (S ⧸ I) := ((Ideal.Quotient.mk I).comp h').toAlgebra
+  let : Algebra R (S ⧸ I) := ((Ideal.Quotient.mk I).comp h').toAlgebra
   exact GlobalTheory.CompanionTheory.LTPer.QGal.finiteRing_sq_sub_mul_sq_eq_of_card env k m (Ideal.Quotient.mk I)
     (fun x => Ideal.Quotient.eq_zero_iff_mem.trans (hI x)) h h' hh (fun _ => rfl) π hπ q hq2 s hsS hs φ h0 hc
     σ hσS hσϖ v hvS hv M s0 hs0 hf0 Q hQS hQ hE
@@ -940,7 +940,7 @@ theorem toZModPow_eq_of_pow (a b : ℤ_[l])
   have : NeZero (l ^ n) := ⟨hl.ne'⟩
   have : NeZero ((l ^ n : ℕ) : Om l) := ⟨Nat.cast_ne_zero.mpr hl.ne'⟩
   obtain ⟨ζ, hζ⟩ : ∃ z : Om l, IsPrimitiveRoot z (l ^ n) :=
-    HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ n)
+    HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ n)
   have h1 := h n ζ hζ.pow_eq_one
   have h2 := hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _) h1
   exact ZMod.val_injective _ h2
@@ -1684,10 +1684,10 @@ theorem pre_period (HT : TiltLeaf) (K : FinExt l) (χ : ↥(GK K) →* (↥K.1)�
     (μ : ↥K.1 →ₐ[ℚ_[l]] Om l) : ∃ t, PrePer K χ μ t := by
   have hπ : Irreducible π := hD.1
   obtain ⟨hq2, hlq, hπl, hnπ, hnμ⟩ := _root_.GlobalTheory.CompanionTheory.LTPer.uniformiser_facts K π hπ
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   let K' : IntermediateField ℚ_[l] (Om l) := IntermediateField.normalClosure ℚ_[l] ↥K.1 (Om l)
-  haveI : FiniteDimensional ℚ_[l] K' := inferInstance
-  haveI : Normal ℚ_[l] K' := inferInstance
+  have : FiniteDimensional ℚ_[l] K' := inferInstance
+  have : Normal ℚ_[l] K' := inferInstance
   obtain ⟨S, hW, hO, hG, hI, hE⟩ := GlobalTheory.CompanionTheory.LTPer.lattice_main K'
   have hμK : ∀ x, μ x ∈ K' := fun x => AlgHom.fieldRange_le_normalClosure μ ⟨x, rfl⟩
   have hint : ∀ c : ↥(OL K), IsIntegral ℤ_[l] (μ (c : ↥K.1)) := fun c =>

@@ -67,8 +67,8 @@ private theorem lc_inv_compact {K : Type} [Field K] [NumberField K] {B : Set �
     Units.continuous_coe_inv
   have hE : IsCompact ((fun p : 𝔸[K] × GroundTheory.Global.IdeleGroup K => p.1 * ((p.2⁻¹ : GroundTheory.Global.IdeleGroup K) : 𝔸[K])) '' (B ×ˢ S)) :=
     (hB.prod hS).image (continuous_fst.mul (hci.comp continuous_snd))
-  haveI := GroundTheory.Global.t2Space_adeleRing K
-  haveI := GroundTheory.Global.discreteTopology_principalSubgroup K
+  have := GroundTheory.Global.t2Space_adeleRing K
+  have := GroundTheory.Global.discreteTopology_principalSubgroup K
   have hF := ((GroundTheory.Global.isClosed_principalSubgroup K).isClosedEmbedding_subtypeVal.isCompact_preimage hE).finite_of_discrete
   have hF2 := hF.image (fun x : AdeleRing.principalSubgroup (𝓞 K) K => Ring.inverse (x : 𝔸[K]))
   refine ⟨_, (hF2.isCompact.prod hS).image (f := fun p : 𝔸[K] × GroundTheory.Global.IdeleGroup K =>
@@ -97,7 +97,7 @@ private theorem lc_rows {R : Type} [CommRing R] (X Y : UPos (2 + 2) 2 → R) (a 
     simp only [wGL, Matrix.reindex_apply, Matrix.submatrix_apply, finSumFinEquiv_symm_apply_castAdd,
       finSumFinEquiv_symm_apply_natAdd, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, zero_mul,
       Finset.sum_const_zero, add_zero, coe_unipGL, Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ,
-      if_true]
+      ite_true]
   have hU : ∀ (i : Fin 2) (M : Matrix (Fin (2 + 2)) (Fin (2 + 2)) R) (j : Fin (2 + 2)),
       (unipMatrix Y * M) (Fin.natAdd 2 i) j = M (Fin.natAdd 2 i) j := by
     intro i M j

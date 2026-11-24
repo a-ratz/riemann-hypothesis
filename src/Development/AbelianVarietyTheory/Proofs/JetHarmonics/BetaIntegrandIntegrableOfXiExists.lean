@@ -144,7 +144,7 @@ theorem _root_.GlobalTheory.betaIntegrand_integrable_of_xiExists (hXi : _root_.F
       ENNReal.ofReal (w q * ‖uF q‖ ^ 2) + ENNReal.ofReal (w q * ‖uX q‖ ^ 2) := by
     intro q
     rw [← ENNReal.ofReal_add (mul_nonneg (hw0 q) (sq_nonneg _)) (mul_nonneg (hw0 q) (sq_nonneg _)),
-      ← ofReal_norm_eq_enorm]
+      ← ofReal_norm]
     apply ENNReal.ofReal_le_ofReal
     rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg (hw0 q)]
     have h1 := norm_inner_le_norm (𝕜 := ℂ) (uF q) (uX q)
@@ -157,7 +157,7 @@ theorem _root_.GlobalTheory.betaIntegrand_integrable_of_xiExists (hXi : _root_.F
   rw [hfun]
   refine ⟨(Complex.continuous_ofReal.measurable.comp (_root_.Formalism.FourierDecayAlt.P.B7.measurable_bcWeight _ _)).aestronglyMeasurable.mul
     (hmF.inner hmX), ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   calc ∫⁻ q, ‖(w q : ℂ) * inner ℂ (uF q) (uX q)‖ₑ
       ≤ ∫⁻ q, (ENNReal.ofReal (w q * ‖uF q‖ ^ 2) + ENNReal.ofReal (w q * ‖uX q‖ ^ 2)) :=
         lintegral_mono hbound

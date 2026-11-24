@@ -305,11 +305,11 @@ theorem UpperTheory.Reformulated.B.Yha4.main :
   rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
   simp only [Pi.add_apply, Set.indicator, Set.mem_Ici, Left.nonneg_neg_iff]
   rcases le_or_gt 0 x with h | h
-  · rw [abs_of_nonneg h, if_pos h]
+  · rw [abs_of_nonneg h, ite_eq_left h]
     split_ifs
     · linarith [Real.exp_pos (-c * -x)]
     · simp
-  · rw [abs_of_neg h, if_neg (not_le.mpr h), if_pos h.le]
+  · rw [abs_of_neg h, ite_eq_right (not_le.mpr h), ite_eq_left h.le]
     simp
 end -- clump:auto
 end -- clump:auto
@@ -1032,7 +1032,7 @@ theorem phi_eq_of_convex : ∀ (X : Type) [NormedAddCommGroup X] [NormedSpace �
     rintro ⟨⟨p₁, p₂⟩, hp⟩
     obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hΩ (p₁, p₂) hp
     have hmem : {q : Ω | (q : ℝ × ℝ) ∈ Metric.ball (p₁, p₂) ε} ∈ 𝓝 (⟨(p₁, p₂), hp⟩ : Ω) :=
-      continuousAt_subtype_val.preimage_mem_nhds (Metric.ball_mem_nhds _ hε)
+      continuousAt_subtypeVal.preimage_mem_nhds (Metric.ball_mem_nhds _ hε)
     filter_upwards [hmem]
     rintro ⟨⟨q₁, q₂⟩, hq⟩ hqball
     have hd : dist q₁ p₁ < ε ∧ dist q₂ p₂ < ε := by
@@ -1050,7 +1050,7 @@ theorem phi_eq_of_convex : ∀ (X : Type) [NormedAddCommGroup X] [NormedSpace �
       exact ⟨lt_of_le_of_lt (Set.abs_sub_left_of_mem_uIcc hs) h₁, hε⟩
     show GlobalTheory.CompanionTheory.TubeFourier.phi G (q₁, q₂) t = GlobalTheory.CompanionTheory.TubeFourier.phi G (p₁, p₂) t
     rw [← hv, ← hh]
-  haveI : PreconnectedSpace Ω := Subtype.preconnectedSpace hconv.isPreconnected
+  have : PreconnectedSpace Ω := Subtype.preconnectedSpace hconv.isPreconnected
   exact hf.apply_eq_of_isPreconnected isPreconnected_univ (Set.mem_univ (⟨x, hx⟩ : Ω))
     (Set.mem_univ (⟨x', hx'⟩ : Ω))
 

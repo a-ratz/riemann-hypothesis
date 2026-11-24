@@ -85,7 +85,7 @@ theorem mem_box_iff (hc : IsCompl P q ι ϖ) (e : A ≃ Fin n) (M : ℕ) (v : Sp
   rw [stdAt, StabRef.mem_locStd, mem_box]
   have key : ∀ a : E, valuation k (ι a) ≤ valuation k ((ϖ ^ M : kˣ) : k) ↔ IntAt P (((q : E) ^ M)⁻¹ * a) := fun a => by
     rw [← hc.int, map_mul, map_inv₀, map_pow, ← hc.unif, Valuation.mem_integer_iff, map_mul, map_inv₀, Units.val_pow_eq_pow_val,
-      inv_mul_le_iff₀ (zero_lt_iff.2 (by simp)), mul_one]
+      inv_mul_le_iff₀ (pos_iff_ne_zero.2 (by simp)), mul_one]
   refine ⟨fun h l => ?_, fun h r => (key _).2 (h (e r))⟩
   obtain ⟨r, rfl⟩ := e.surjective l
   exact (key _).1 (h r)
@@ -122,7 +122,7 @@ theorem sameOrb_iff (hc : IsCompl P q ι ϖ) (e : A ≃ Fin n) (e' : A ⊕ Fin 0
       convert this using 1
       abel
     have hU1 : IsOpen {N : Matrix (A ⊕ Fin 0) (A ⊕ Fin 0) k | MaxM ((g⁻¹).val * N - 1)} := by
-      simp only [MaxM, Set.setOf_forall]
+      simp only [MaxM, Set.ofPred_forall]
       refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
       exact IsOpen.preimage (f := fun N : Matrix (A ⊕ Fin 0) (A ⊕ Fin 0) k => ((g⁻¹).val * N - 1) i j)
         (t := {z | valuation k z < 1}) (by fun_prop) (by simpa using (valuation k).isOpen_ball 1)
@@ -178,7 +178,7 @@ theorem sameOrb_iff_level : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : C
     fun g => by rw [← hconj]; rfl
   have hmem : ∀ γ : Sp X.E (R.N (s + 1)) ≃ₗ[X.E] Sp X.E (R.N (s + 1)), phi ι e' γ ∈ ((W.T s R).lev (s + 1) 0 rfl).J ↔
       γ ∈ prCat (Pr := Pr) cst.sharp (s + 1) P.1 (L.h (s + 1) b P) := fun γ => by
-    rw [hJ, hL.last_h, prCat, Jat, if_neg hA.nmem, mem_prX_JQ _ _ _ _ _ hc]
+    rw [hJ, hL.last_h, prCat, Jat, ite_eq_right hA.nmem, mem_prX_JQ _ _ _ _ _ hc]
     exact mem_par_iff (c := 0) (s := s) hA.compl W.unif rfl hn he' W.tame γ
   have hle : ((W.T s R).lev (s + 1) 0 rfl).J ≤ KO k _ := fun g hg => by
     have h := (mem_parahoric.1 ((hJ g).1 hg)).1

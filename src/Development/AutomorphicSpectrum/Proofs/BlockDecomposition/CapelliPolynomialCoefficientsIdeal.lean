@@ -149,8 +149,8 @@ theorem monic_relations_to_blocks : ∀ (V : Type) [AddCommGroup V] [Module ℂ 
     · exact hRS u v
     · exact (hRS v u).symm
     · exact hSS u v
-  letI : IsMulCommutative (Algebra.adjoin ℂ s) := Algebra.isMulCommutative_adjoin ℂ hcomm
-  letI : CommRing (Algebra.adjoin ℂ s) := open scoped IsMulCommutative in inferInstance
+  let : IsMulCommutative (Algebra.adjoin ℂ s) := Algebra.isMulCommutative_adjoin ℂ hcomm
+  let : CommRing (Algebra.adjoin ℂ s) := open scoped IsMulCommutative in inferInstance
   have hpres : Algebra.adjoin ℂ s ≤ preserving I := by
     rw [Algebra.adjoin_le_iff]
     rintro x (⟨u, rfl⟩ | ⟨u, rfl⟩)

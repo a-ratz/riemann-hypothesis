@@ -243,7 +243,7 @@ theorem q_bound {p : ℕ → Seminorm ℂ E} [TopologicalSpace E] (hp : WithSemi
   obtain ⟨S, C, hS, hC, h⟩ := sup_bound hT s
   refine ⟨S, C' * C, hS, mul_nonneg (NNReal.coe_nonneg C') hC, fun x hx => ?_⟩
   have h1 : Q (T x) ≤ (C' • s.sup p) (T x) := hle (T x)
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul] at h1
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul] at h1
   calc Q (T x) ≤ C' * s.sup p (T x) := h1
     _ ≤ C' * (C * sobNorm σ S x) := mul_le_mul_of_nonneg_left (h x hx) (NNReal.coe_nonneg C')
     _ = _ := by ring
@@ -660,20 +660,20 @@ theorem e3d : SobolevNormDomination := by
     induction S with
     | nil =>
       intro _
-      refine ⟨0, by rw [Seminorm.coe_zero]; exact continuous_zero, fun w _ => ?_⟩
+      refine ⟨0, by rw [FunLike.coe_zero]; exact continuous_zero, fun w _ => ?_⟩
       simp [sobNorm]
     | cons l S ih =>
       intro hS
       obtain ⟨q', hq', h'⟩ := ih (fun m hm => hS m (List.mem_cons_of_mem _ hm))
       have hl : ∀ X ∈ l, X ∈ lieSet ε := hS l List.mem_cons_self
       refine ⟨q.comp (Dop l : E →ₗ[ℂ] E) + q', ?_, fun w hw' => ?_⟩
-      · rw [Seminorm.coe_add]
+      · rw [FunLike.coe_add]
         exact (hcont l).add hq'
       · have e : sobNorm σ (l :: S) w = ‖Dw σ l w‖ + sobNorm σ S w := by
           first
             | rfl
             | simp [sobNorm]
-        rw [e, Seminorm.add_apply]
+        rw [e, add_apply]
         exact add_le_add (hw l hl w hw') (h' w hw')
   exact main S hS
 
@@ -713,7 +713,7 @@ theorem tr_smul (k : KG ε) (c : ℂ) (v : kfin ε σ) : tr k (c • v) = c • 
 theorem continuous_tr (hU : IsURepOn (UJset ε) σ) (l : kfin ε σ →ₗ[ℂ] ℂ) (v : kfin ε σ) :
     Continuous fun k : KG ε => l (tr k v) := by
   obtain ⟨S, hSf, hvS, hSK⟩ := mem_kfin.1 v.2
-  haveI := hSf
+  have := hSf
   have hSk : ∀ x ∈ S, x ∈ kfin ε σ := fun x hx => mem_kfin.2 ⟨S, hSf, hx, hSK⟩
   let ι : S →ₗ[ℂ] kfin ε σ :=
     { toFun := fun x => ⟨x, hSk x x.2⟩
@@ -730,7 +730,7 @@ def fm (l : kfin ε σ →ₗ[ℂ] ℂ) (v y : kfin ε σ) : ℂ := ∫ k, conj 
 
 theorem integrable_fm (hU : IsURepOn (UJset ε) σ) (l : kfin ε σ →ₗ[ℂ] ℂ) (v y : kfin ε σ) :
     Integrable (fun k : KG ε => conj (l (tr k v)) * l (tr k y)) (muK ε) := by
-  haveI : CompactSpace (KG ε) := instCompactKG n ε
+  have : CompactSpace (KG ε) := instCompactKG n ε
   have hc : Continuous fun k : KG ε => conj (l (tr k v)) * l (tr k y) :=
     ((continuous_tr hU l v).star).mul (continuous_tr hU l y)
   exact hc.integrable_of_hasCompactSupport (isClosed_tsupport _).isCompact
@@ -807,7 +807,7 @@ theorem e2b : E2b := by
         exact mul_le_mul (hlQ _) (hlQ _) (norm_nonneg _) (apply_nonneg _ _))
     simpa [measure_univ] using h
   · rw [bf_apply, fm]
-    haveI : CompactSpace (KG ε) := instCompactKG n ε
+    have : CompactSpace (KG ε) := instCompactKG n ε
     have e : ∀ k : KG ε, conj (l (tr k v₀)) * l (tr k v₀) = ((‖l (tr k v₀)‖ ^ 2 : ℝ) : ℂ) := fun k => by
       rw [mul_comm, Complex.mul_conj']
       push_cast
@@ -815,7 +815,7 @@ theorem e2b : E2b := by
     simp only [e]
     rw [integral_complex_ofReal]
     have hpos : 0 < ∫ k, ‖l (tr k v₀)‖ ^ 2 ∂(muK ε) := by
-      refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+      refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
         ((continuous_tr hU l v₀).norm.pow 2) (isClosed_tsupport _).isCompact (fun k => by positivity) ?_
       have h1 : tr (1 : KG ε) v₀ = v₀ := Subtype.ext (by
         show σ (toMK (1 : KG ε)⁻¹) (v₀ : H) = v₀
@@ -851,7 +851,7 @@ theorem hs2_eq {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) : hs2 g = hs g := rfl
 
 theorem smul_seminorm_cont {E : Type} [AddCommGroup E] [Module ℂ E] [TopologicalSpace E] {q : Seminorm ℂ E}
     (hq : Continuous q) (c : NNReal) : Continuous (c • q) := by
-  rw [Seminorm.coe_smul]
+  rw [FunLike.coe_smul]
   exact hq.const_smul c
 
 end HilbertSchmidtSqEq₂
@@ -947,7 +947,7 @@ theorem e3c : SmoothMapSeminormBound := by
   refine ⟨(K * Cs).toNNReal • Q.comp (D : E →ₗ[ℂ] E), smul_seminorm_cont ?_ _, fun v hv => ?_⟩
   · rw [Seminorm.coe_comp]
     exact hQc.comp D.continuous
-  · rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul, Real.coe_toNNReal _ (mul_nonneg hK hCs0),
+  · rw [smul_apply, NNReal.smul_def, smul_eq_mul, Real.coe_toNNReal _ (mul_nonneg hK hCs0),
       Seminorm.comp_apply]
     exact key ⟨v, hv⟩
 
@@ -990,7 +990,7 @@ end KInvarianceAlt
 theorem e1a : SmoothSeminormGrowth := by
   intro n ε H _ _ _ σ hU hI E _ _ _ _ _ _ p π dπ hπ i
   obtain ⟨q, N, hq, hg⟩ := hπ.growth i
-  haveI : Nonempty (UJset ε) := ⟨⟨1, one_mem_UJ ε⟩⟩
+  have : Nonempty (UJset ε) := ⟨⟨1, one_mem_UJ ε⟩⟩
   set W : Mx n → ℝ := fun g => (1 + hs g) ^ N with hWdef
   have hW : ∀ g, 0 < W g := fun g => pow_pos (by linarith [hs_nonneg g]) _
   have hWm : ∀ a b : Mx n, W (a * b) ≤ W a * W b := fun a b => by
@@ -1257,7 +1257,7 @@ theorem c3a : HighestWeightSpaceFinite := by
         (smD ε σ).subtype := by
     rw [Submodule.map_span, Submodule.map_span]
     exact Submodule.span_mono hsub
-  haveI : FiniteDimensional ℂ ((Submodule.span ℂ {v : kfin ε σ | IsKHWVec ε E μ v}).map (kfin ε σ).subtype) :=
+  have : FiniteDimensional ℂ ((Submodule.span ℂ {v : kfin ε σ | IsKHWVec ε E μ v}).map (kfin ε σ).subtype) :=
     Submodule.finiteDimensional_of_le hle
   exact LinearEquiv.finiteDimensional
     (Submodule.equivMapOfInjective _ (kfin ε σ).injective_subtype _).symm
@@ -1313,8 +1313,8 @@ open MatrixActionLinear in
 theorem e3b : faceMap_castSucc_comp_eq_succ := by
   classical
   intro n ε H _ _ _ σ hU hI E _ _ _ _ _ _ p π dπ hπ A hA T hT m
-  haveI : IsTopologicalAddGroup E := hπ.withSeminorms.topologicalAddGroup
-  haveI : ContinuousSMul ℂ E := hπ.withSeminorms.continuousSMul
+  have : IsTopologicalAddGroup E := hπ.withSeminorms.isTopologicalAddGroup
+  have : ContinuousSMul ℂ E := hπ.withSeminorms.continuousSMul
 
   let P : Module.End ℂ (kfin ε σ) → Prop := fun u => ∃ D : E →L[ℂ] E, ∀ v : kfin ε σ, T ((u v : kfin ε σ) : H) = D (T v)
   have hone : P 1 := ⟨1, fun v => rfl⟩
@@ -1509,7 +1509,7 @@ theorem re_inner_casK_nonneg (hU : IsInfUnitary ε E) (x : V) : 0 ≤ (⟪x, cas
   refine Finset.sum_nonneg fun a _ => Finset.sum_nonneg fun b hb => ?_
   have hb' : ε b = ε a := (Finset.mem_filter.1 hb).2
   have h := hU b a x (E b a x)
-  simp only [ReciprocityTheory.ChartRestriction.DS.adjSign, hb', if_true, one_mul] at h
+  simp only [ReciprocityTheory.ChartRestriction.DS.adjSign, hb', ite_true, one_mul] at h
   rw [← h]
   simpa using (inner_self_nonneg (𝕜 := ℂ) (x := E b a x))
 
@@ -1643,8 +1643,8 @@ theorem e2c : CasimirPairingBound := by
   rintro w ⟨μ, hw⟩
   let W : Submodule ℂ V := Module.End.eigenspace (casimirK ε E) (μ : ℂ)
   have hWmem : ∀ v, v ∈ W ↔ casimirK ε E v = (μ : ℂ) • v := fun v => Module.End.mem_eigenspace_iff
-  haveI : FiniteDimensional ℂ W := by
-    haveI := hM.fin μ
+  have : FiniteDimensional ℂ W := by
+    have := hM.fin μ
     have hle : W ≤ Submodule.span ℂ {v | ∃ μ' ≤ μ, Eig ε E μ' v} :=
       fun v hv => Submodule.subset_span ⟨μ, le_rfl, (hWmem v).1 hv⟩
     exact Submodule.finiteDimensional_of_le hle
@@ -1822,7 +1822,7 @@ theorem d1b : D1 := by
             (hpos g)
         _ = (∑ e ∈ I₀, q (T₀ e)) * (1 + hs g) ^ N := mul_comm _ _)
     w hw
-  rw [hF, hπ.map_one, ContinuousLinearMap.one_apply] at key
+  rw [hF, hπ.map_one, one_apply_eq_self] at key
   rw [← hφ1]
   exact key
 
@@ -1849,8 +1849,8 @@ variable {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inne
 theorem continuousOn_Dw (hU : IsURepOn (UJset ε) σ) (hI : IsIrredOn (UJset ε) σ) {l : List (Mx n)}
     (hl : ∀ X ∈ l, X ∈ lieSet ε) {w : H} (hw : Sm ε σ w) :
     ContinuousOn (fun g => Dw σ l (σ g w)) (UJset ε) :=
-  continuousOn_iff_continuous_restrict.2
-    (continuous_word_orbit (isUnit_Jm ε) hU (GlobalTheory.CWGeneral.dense_smoothAll_of_irred hU hI) continuous_subtype_val
+  continuousOn_iff_continuous_domRestrict.2
+    (continuous_word_orbit (isUnit_Jm ε) hU (GlobalTheory.CWGeneral.dense_smoothAll_of_irred hU hI) continuous_subtypeVal
       (fun t => t.2) l hl hw)
 
 theorem hasDerivAt_Dw (hU : IsURepOn (UJset ε) σ) (hI : IsIrredOn (UJset ε) σ) {l : List (Mx n)}

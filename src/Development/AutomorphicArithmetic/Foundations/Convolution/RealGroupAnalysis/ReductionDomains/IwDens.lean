@@ -54,8 +54,8 @@ theorem UpperTheory.ConvolutionTheory.R2.M.iwDens :
       Real.toNNReal ((ab p.1)⁻¹ ^ 2) • u p = (((ab p.1)⁻¹ ^ 2 : ℝ) : ℂ) * u p := by
     intro u p
     rw [NNReal.smul_def, Real.coe_toNNReal _ (by positivity), Complex.real_smul]
-  haveI : IsProbabilityMeasure M₀.κ := M₀.prob
-  haveI : SFinite M₀.ν := by unfold Meas.ν; infer_instance
+  have : IsProbabilityMeasure M₀.κ := M₀.prob
+  have : SFinite M₀.ν := by unfold Meas.ν; infer_instance
   refine ⟨M₀.ν.withDensity fun p => (Real.toNNReal ((ab p.1)⁻¹ ^ 2) : ℝ≥0∞), inferInstance, ?_, ?_⟩
   · intro u _
     have h := lintegral_withDensity_eq_lintegral_mul_non_measurable M₀.ν hwm

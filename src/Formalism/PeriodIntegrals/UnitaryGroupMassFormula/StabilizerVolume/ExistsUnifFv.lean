@@ -113,9 +113,9 @@ theorem exists_unif_Fv {F : Type} [Field F] [NumberField F] (v : HeightOneSpectr
 
 theorem gramFilt_of (hDx : DxOpen) : GramFilt := by
   intro F E _ _ _ _ σ hσ M J hJ hdet a ha1 _ v d b x hx
-  letI : FiniteDimensional F E := Module.Finite.of_basis b
-  letI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
-  letI : NumberField E :=
+  let : FiniteDimensional F E := Module.Finite.of_basis b
+  let : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  let : NumberField E :=
     { to_charZero := inferInstance
       to_finiteDimensional := Module.Finite.trans F E }
   exact PI.VolStabSW.OmFibG.gramFilt_gen σ hσ M J hJ hdet a ha1 v d b x hx

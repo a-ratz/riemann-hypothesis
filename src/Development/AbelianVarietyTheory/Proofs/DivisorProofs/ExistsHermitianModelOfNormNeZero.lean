@@ -168,7 +168,7 @@ theorem exists_unit_vector [FiniteDimensional K.E V] (h : V → V → K.E)
   have hL : L = ⊥ := Submodule.eq_bot_of_le_smul_of_le_jacobson_bot m L hfg c3
     (le_of_eq (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).symm)
   have htop : (⊤ : Submodule K.E V) = ⊥ := by rw [← hspan, hL]; simp
-  haveI := Module.finrank_pos_iff.1 hpos
+  have := Module.finrank_pos_iff.1 hpos
   exact bot_ne_top htop.symm
 
 end Abstract
@@ -179,7 +179,7 @@ variable {K : UQ}
 
 theorem fg_of_le {V : Type} [AddCommGroup V] [Module K.O V] (L N : Submodule K.O V) (hfg : L.FG) (hle : N ≤ L) :
     N.FG := by
-  haveI := isNoetherian_of_fg_of_noetherian L hfg
+  have := isNoetherian_of_fg_of_noetherian L hfg
   have h1 := (IsNoetherian.noetherian (N.comap L.subtype)).map L.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h1
 
@@ -266,7 +266,7 @@ theorem exists_mem_X_of_N_ne_zero {K : UQ} (B : InvAlg K) (x : B.A) (hN : B.N x 
   by_contra hne
   push_neg at hne
   apply hN
-  haveI : IsEmpty (Orb K.O B.T (B.X x)) := ⟨fun o => by
+  have : IsEmpty (Orb K.O B.T (B.X x)) := ⟨fun o => by
     induction o using Quot.ind with
     | mk L => exact hne L.1 L.2⟩
   unfold InvAlg.N orbSum
@@ -323,7 +323,7 @@ theorem exists_model : ∀ (K : GlobalTheory.UnitLemma.UQ) (B : GlobalTheory.Uni
   have hcol : ∀ i z, B.herm x (b i) z = K.c (b.repr z i) := by
     intro i z
     rw [hsym, hexp z (b i)]
-    simp only [hb, hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hb, hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine ⟨LinearMap.toMatrix b b (LinearMap.mulLeft K.E B.g), b.equivFun, hσx, fun y => ?_, fun y z => ?_⟩
   · rw [Module.Basis.equivFun_apply, Module.Basis.equivFun_apply, LinearMap.toMatrix_mulVec_repr]
     rfl

@@ -147,7 +147,7 @@ theorem vacData_of {G : Type} [TopologicalSpace G] (h : ℂ → G → ℂ) (s₀
     rw [hFQ g _ (circleMap_ne_center hρ0)]
   have hcont : ContinuousOn (fun y : ℂ × G => (2 * Real.pi * Complex.I : ℂ)⁻¹ • ∫ θ in (0 : ℝ)..2 * Real.pi, K y θ)
       (Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     show Continuous fun x : ↥(Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) =>
       (2 * Real.pi * Complex.I : ℂ)⁻¹ • ∫ θ in (0 : ℝ)..2 * Real.pi, K x.1 θ
     suffices hI : Continuous fun x : ↥(Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) =>
@@ -163,12 +163,12 @@ theorem vacData_of {G : Type} [TopologicalSpace G] (h : ℂ → G → ℂ) (s₀
     have hE : Continuous fun q : ↥(Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) × ℝ =>
         Ê (circleMap s₀ ρ q.2) q.1.1.2 :=
       hc.comp_continuous (f := fun q : ↥(Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) × ℝ =>
-        (circleMap s₀ ρ q.2, q.1.1.2)) (hc1.prodMk (continuous_snd.comp (continuous_subtype_val.comp continuous_fst)))
+        (circleMap s₀ ρ q.2, q.1.1.2)) (hc1.prodMk (continuous_snd.comp (continuous_subtypeVal.comp continuous_fst)))
         (fun q => ⟨hbU _ (hcirc q.2), Set.mem_univ _⟩)
     have hP : Continuous fun q : ↥(Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) × ℝ => p.eval (circleMap s₀ ρ q.2) :=
       p.continuous.comp hc1
     have hz : Continuous fun q : ↥(Metric.ball s₀ (r₁ / 2) ×ˢ (Set.univ : Set G)) × ℝ => q.1.1.1 :=
-      continuous_fst.comp (continuous_subtype_val.comp continuous_fst)
+      continuous_fst.comp (continuous_subtypeVal.comp continuous_fst)
     refine ((continuous_circleMap 0 ρ).comp continuous_snd |>.mul continuous_const).smul ?_
     refine ((hc1.sub hz).inv₀ fun q => ?_).smul (hE.div hP fun q => ?_)
     · have hq : q.1.1.1 ∈ Metric.ball s₀ ρ := Metric.ball_subset_ball (by rw [hρ]; linarith) q.1.2.1

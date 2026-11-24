@@ -147,7 +147,7 @@ theorem del_apply {q : ℕ} (ω : Herm E a [⋀^Fin (q + 1)]→ₗ[ℝ] M) (X : 
   have h : ∀ (s : Finset (Fin n)) (f : Fin n → Herm E a [⋀^Fin q]→ₗ[ℝ] M), (∑ j ∈ s, f j) X = ∑ j ∈ s, f j X := fun s f => by
     induction s using Finset.cons_induction with
     | empty => rfl
-    | cons j s hj ih => rw [Finset.sum_cons, Finset.sum_cons, AlternatingMap.add_apply, ih]
+    | cons j s hj ih => rw [Finset.sum_cons, Finset.sum_cons, add_apply, ih]
   rw [del, h]
   rfl
 

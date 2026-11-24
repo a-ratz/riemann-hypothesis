@@ -229,10 +229,10 @@ theorem _root_.GlobalTheory.finsum_ord_mul_inertiaDeg_eq_finrank_mul_ord (A B : 
         (algebraMap B _ (algebraMap A B a))).toNat : ℤ) * (Q.asIdeal.inertiaDeg A : ℤ) =
       (Module.finrank A B : ℤ) * ((Ring.ord A a).toNat : ℤ) := by
   classical
-  haveI : Ring.KrullDimLE 1 A := Ring.krullDimLE_iff.2 hdim.le
-  haveI : IsNoetherianRing B := isNoetherian_of_tower A inferInstance
-  haveI := _root_.GlobalTheory.finite_maximalSpectrum_of_finite A B
-  haveI : Fintype (MaximalSpectrum B) := Fintype.ofFinite _
+  have : Ring.KrullDimLE 1 A := Ring.krullDimLE_iff.2 hdim.le
+  have : IsNoetherianRing B := isNoetherian_of_tower A inferInstance
+  have := _root_.GlobalTheory.finite_maximalSpectrum_of_finite A B
+  have : Fintype (MaximalSpectrum B) := Fintype.ofFinite _
   set b := algebraMap A B a with hb
   have hb0 : b ≠ 0 := by
     rw [hb, ne_eq, ← map_zero (algebraMap A B)]
@@ -256,7 +256,7 @@ theorem _root_.GlobalTheory.finsum_ord_mul_inertiaDeg_eq_finrank_mul_ord (A B : 
       length_quotient_smul_univ_eq_finrank_mul a hM]
     rfl
   have hne : (Module.finrank A B : ℕ∞) * Ring.ord A a ≠ ⊤ :=
-    WithTop.mul_ne_top (ENat.coe_ne_top _) hordA
+    WithTop.mul_ne_top (ENat.natCast_ne_top _) hordA
   have hfinA : IsFiniteLength A (B ⧸ Ideal.span {b}) := by
     rw [← Module.length_ne_top_iff, h1]
     exact hne
@@ -285,7 +285,7 @@ theorem _root_.GlobalTheory.finsum_ord_mul_inertiaDeg_eq_finrank_mul_ord (A B : 
         ((n.asIdeal.inertiaDeg A : ℕ) : ℕ∞)) (fun _ _ ↦ bot_le) hn)
   have h3 := congrArg ENat.toNat h2
   rw [ENat.toNat_sum hterm] at h3
-  simp only [ENat.toNat_mul, ENat.toNat_coe] at h3
+  simp only [ENat.toNat_mul, ENat.toNat_natCast] at h3
   have hS : {Q : PrimeSpectrum B | Q.asIdeal.comap (algebraMap A B) = maximalIdeal A} =
       Set.range MaximalSpectrum.toPrimeSpectrum := by
     ext Q

@@ -372,8 +372,8 @@ variable (μ : Measure G)
 
 theorem quotientMeasure_eq_map_fundamentalDomainEquiv :
     quotientMeasure Γ μ = Measure.map (fundamentalDomainEquiv Γ) (μ.comap Subtype.val) := by
-  rw [quotientMeasure, ← map_comap_subtype_coe (measurableSet_fundamentalDomain Γ),
-    Measure.map_map (measurable_mk Γ) measurable_subtype_coe]
+  rw [quotientMeasure, ← map_comap_subtypeVal (measurableSet_fundamentalDomain Γ),
+    Measure.map_map (measurable_mk Γ) measurable_subtypeVal]
   rfl
 
 theorem integral_quotientMeasure {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]

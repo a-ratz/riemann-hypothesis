@@ -62,7 +62,7 @@ end Stab
 theorem hostStab : HostStab := by
   classical
   intro e q d hqd L _ _ ζ a b hL k g hg hlt Γ hΓ
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   have hn := Galois.finrank_cmField hqd hL
   have key : ∀ δ : Matrix.GeneralLinearGroup (Fin k) (hostE ζ a b), δ ^ g = 1 → δ = 1 := by
     intro δ hδ

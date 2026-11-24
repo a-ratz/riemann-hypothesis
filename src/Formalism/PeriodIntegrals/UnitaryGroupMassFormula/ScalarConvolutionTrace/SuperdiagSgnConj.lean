@@ -88,8 +88,8 @@ theorem superdiag_mul {A B : Matrix (Fin k) (Fin k) F} (hA : IsUTm A) (hB : IsUT
       have h1 : (c : ℕ) ≠ i := fun h => hc.1 (Fin.ext h)
       have h2 : (c : ℕ) ≠ j := fun h => hc.2 (Fin.ext h)
       rcases Nat.lt_or_gt_of_ne h1 with h | h
-      · rw [hA.2 i c (Fin.lt_iff_val_lt_val.2 h), zero_mul]
-      · rw [hB.2 c j (Fin.lt_iff_val_lt_val.2 (by omega)), mul_zero]
+      · rw [hA.2 i c (Fin.lt_def.2 h), zero_mul]
+      · rw [hB.2 c j (Fin.lt_def.2 (by omega)), mul_zero]
     · intro h
       exact absurd (Finset.mem_univ _) h
     · intro h

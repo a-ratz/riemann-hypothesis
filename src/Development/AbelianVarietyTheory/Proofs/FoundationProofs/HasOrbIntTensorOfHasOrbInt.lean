@@ -66,7 +66,7 @@ theorem HasQuotInt.exists_lift {φ : H → ℂ} {c : ℂ} (h : HasQuotInt T dt d
     ∃ f : H → ℂ, Integrable f dh ∧ ∫ x, f x ∂dh = c ∧
       ∀ x, Integrable (fun t : T => f (t * x)) dt ∧ ∫ t : T, f (t * x) ∂dt = φ x := by
   obtain ⟨b, hb, h1⟩ := exists_bruhat hT dt
-  have hm : ∀ x, Measurable fun t : T => b (t * x) := fun x => hb.comp (measurable_subtype_coe.mul_const _)
+  have hm : ∀ x, Measurable fun t : T => b (t * x) := fun x => hb.comp (measurable_subtypeVal.mul_const _)
   have hlt : ∀ x, ∀ᵐ t : T ∂dt, b (t * x) < ∞ := fun x => ae_lt_top (hm x) (by simp [h1])
   have hb' : Measurable fun x => (b x).toNNReal := hb.ennreal_toNNReal
   have hν := (isQuotMeasure_quotMeas dt dh hT).eq_map (b := fun x => (b x).toNNReal) hb'.coe_nnreal_ennreal
@@ -90,7 +90,7 @@ theorem HasQuotInt.exists_lift {φ : H → ℂ} {c : ℂ} (h : HasQuotInt T dt d
 theorem hasQuotInt_indicator_mul [IsFiniteMeasureOnCompacts dh] {K : Subgroup H} (ho : IsOpen (K : Set H))
     (hc : IsCompact (K : Set H)) :
     HasQuotInt T dt dh (((T : Set H) * (K : Set H)).indicator 1) (dh.real K / dt.real (K.subgroupOf T)) := by
-  have ho' : IsOpen (K.subgroupOf T : Set T) := ho.preimage continuous_subtype_val
+  have ho' : IsOpen (K.subgroupOf T : Set T) := ho.preimage continuous_subtypeVal
   have h0 : (dt.real (K.subgroupOf T) : ℂ) ≠ 0 := by
     exact_mod_cast ENNReal.toReal_ne_zero.2 ⟨(ho'.measure_pos dt ⟨1, one_mem _⟩).ne',
       (hT.isClosedEmbedding_subtypeVal.isCompact_preimage hc).measure_ne_top⟩
@@ -132,8 +132,8 @@ theorem HasQuotInt.mul_of_measurePreserving (hT : IsClosed (T : Set H)) (hT₁ :
     (mq : MeasurePreserving q dt (dt₁.prod dt₂)) (i₁ : LeftInv T₁ φ₁) (i₂ : LeftInv T₂ φ₂)
     (h₁ : HasQuotInt T₁ dt₁ dh₁ φ₁ c₁) (h₂ : HasQuotInt T₂ dt₂ dh₂ φ₂ c₂) :
     HasQuotInt T dt dh (fun x => φ₁ (p x).1 * φ₂ (p x).2) (c₁ * c₂) := by
-  haveI : LocallyCompactSpace T₁ := hT₁.locallyCompactSpace
-  haveI : LocallyCompactSpace T₂ := hT₂.locallyCompactSpace
+  have : LocallyCompactSpace T₁ := hT₁.locallyCompactSpace
+  have : LocallyCompactSpace T₂ := hT₂.locallyCompactSpace
   obtain ⟨f₁, a₁, rfl, b₁⟩ := h₁.exists_lift hT₁ i₁
   obtain ⟨f₂, a₂, rfl, b₂⟩ := h₂.exists_lift hT₂ i₂
   have hi := a₁.mul_prod a₂
@@ -163,8 +163,8 @@ theorem HasQuotInt.prod (hT₁ : IsClosed (T₁ : Set H₁)) (hT₂ : IsClosed (
     (h : ∀ x, x ∈ U ↔ x.1 ∈ T₁ ∧ x.2 ∈ T₂) (i₁ : LeftInv T₁ φ₁) (i₂ : LeftInv T₂ φ₂)
     (h₁ : HasQuotInt T₁ dt₁ dh₁ φ₁ c₁) (h₂ : HasQuotInt T₂ dt₂ dh₂ φ₂ c₂) :
     HasQuotInt U ((dt₁.prod dt₂).map (prodSub h)) (dh₁.prod dh₂) (fun x => φ₁ x.1 * φ₂ x.2) (c₁ * c₂) := by
-  haveI : LocallyCompactSpace T₁ := hT₁.locallyCompactSpace
-  haveI : LocallyCompactSpace T₂ := hT₂.locallyCompactSpace
+  have : LocallyCompactSpace T₁ := hT₁.locallyCompactSpace
+  have : LocallyCompactSpace T₂ := hT₂.locallyCompactSpace
   have hU : IsClosed (U : Set (H₁ × H₂)) := by
     rw [show (U : Set (H₁ × H₂)) = (T₁ : Set H₁) ×ˢ (T₂ : Set H₂) from Set.ext h]
     exact hT₁.prod hT₂
@@ -217,10 +217,10 @@ theorem hasQuotInt_tensor (hX : IsRestrGroup pa pf K) (hμ : IsHaarProd pa pf K 
     (∀ᶠ v in cofinite, cf v = 1) ∧
       HasQuotInt T dt μ (fun x => (∏ w, φa w (pa w x)) * ∏ᶠ v, φf v (pf v x)) ((∏ w, ca w) * ∏ᶠ v, cf v) := by
   classical
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
-  haveI : ∀ w, LocallyCompactSpace (Ta w) := fun w => (hTa w).locallyCompactSpace
-  haveI : ∀ v, LocallyCompactSpace (Tf v) := fun v => (hTf v).locallyCompactSpace
-  haveI := hdt.isMulRightInvariant hR
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : ∀ w, LocallyCompactSpace (Ta w) := fun w => (hTa w).locallyCompactSpace
+  have : ∀ v, LocallyCompactSpace (Tf v) := fun v => (hTf v).locallyCompactSpace
+  have := hdt.isMulRightInvariant hR
   obtain ⟨_, _, _, hμ⟩ := hμ
   obtain ⟨_, _, _, hdt⟩ := hdt
   obtain ⟨S, hS⟩ := exists_finset_of_eventually (h1.and (hμ.1.and hdt.1))
@@ -232,8 +232,8 @@ theorem hasQuotInt_tensor (hX : IsRestrGroup pa pf K) (hμ : IsHaarProd pa pf K 
   choose fa a1 a2 a3 using fun w => (ha w).exists_lift (hTa w) (ia w)
   choose g b1 b2 b3 using fun v => (hf v).exists_lift (hTf v) (jf v)
   let ff : ∀ v, Yf v → ℂ := fun v => if v ∈ S then g v else (K v : Set (Yf v)).indicator 1
-  have e1 : ∀ v ∈ S, ff v = g v := fun v hv => if_pos hv
-  have e2 : ∀ v ∉ S, ff v = (K v : Set (Yf v)).indicator 1 := fun v hv => if_neg hv
+  have e1 : ∀ v ∈ S, ff v = g v := fun v hv => ite_eq_left hv
+  have e2 : ∀ v ∉ S, ff v = (K v : Set (Yf v)).indicator 1 := fun v hv => ite_eq_right hv
   obtain ⟨hI, hI'⟩ := hμ.integral_tensor_indicator (fun w => (hX.continuous_pa w).measurable)
     (fun v => (hX.continuous_pf v).measurable) (fun v => (hX.isOpen_K v).measurableSet) hX.eventually_mem
     (fun v hv => (hS v hv).2.1) e2 a1 fun v hv => e1 v hv ▸ b1 v

@@ -649,7 +649,7 @@ theorem lcq_finite (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
 
 theorem u2rank_of_ring (hR : Formalism.MainNotions.N.Ln34.SecondRingHypothesis) : Formalism.MainNotions.N.Ln34.SecondRankHypothesis := by
   intro D HW F Cm CA CB CK hA hML l _ hl K LL hG π' E hπ T h' hh' hc hj c
-  haveI : IsDiscreteValuationRing ↥(OL LL) := GenPf.isDVR (D.loc l) LL
+  have : IsDiscreteValuationRing ↥(OL LL) := GenPf.isDVR (D.loc l) LL
   exact u2rank_local (W := (HW l).W K 1 LL hG) (T := T) (π' := π') (c := c)
     (Formalism.MainNotions.DeltaInvariantLattices.ptK D.loc HW hG) (Formalism.MainNotions.DeltaInvariantLattices.Eat E π') h' (MK l K h')
     (hML l hl K LL hG π' E hπ h' hh' T hc hj c)

@@ -75,7 +75,7 @@ private theorem lt_one_of_tendsto {R Γ : Type*} [Ring R] [LinearOrderedCommGrou
   have ho : {y : R | (Valued.v y : Γ) < 1} ∈ 𝓝 (0 : R) := by
     rw [Valued.mem_nhds_zero]
     refine ⟨1, fun y hy => ?_⟩
-    simp only [Set.mem_setOf_eq] at hy ⊢
+    simp only [Set.mem_ofPred_eq] at hy ⊢
     rw [Valuation.restrict_lt_iff_lt_embedding] at hy
     simpa using hy
   obtain ⟨n, hn⟩ := (h.eventually ho).exists
@@ -193,7 +193,7 @@ open GlobalTheory.WeilDeligne GlobalTheory.LocLanglands UpperTheory.V UpperTheor
 theorem UpperTheory.V.Br.wdAway :
     UpperTheory.V.Br.WdAway := by
   intro F K Ω _ _ _ _ _ _ _ _ _ _ _ l _ ι A v w h h' i hP hl hl' n r x y hx hy
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   obtain ⟨c, hc, hdegc, hq, hsm⟩ := GlobalTheory.T.place_over_transport_ring_iso F Ω A v h K Ω A w h' _ _ i hP
   have hd1 : ∀ σ, deg (c.symm σ) = deg σ := fun σ => by
     rw [← hdegc, MulEquiv.apply_symm_apply]
@@ -216,7 +216,7 @@ theorem UpperTheory.V.Br.wdAway :
     rwa [key] at h1
   let d : Ine (F := K) A →* Ine (F := F) A :=
     ((Bc.res F Ω K).comp (Ine (F := K) A).subtype).codRestrict _ hmem
-  have hdc : Continuous d := (hres.comp continuous_subtype_val).subtype_mk _
+  have hdc : Continuous d := (hres.comp continuous_subtypeVal).subtype_mk _
   have hds : Function.Surjective d := fun τ => by
     have h1 : ((c (ineIncl h τ) : Weil h') : G K Ω) ∈ Ine (F := K) A := by
       rw [← deg_eq_zero_iff, hdegc, deg_ineIncl]
@@ -275,14 +275,14 @@ theorem UpperTheory.V.Br.splitOf :
     UpperTheory.V.Br.SplitOf := by
   intro N exC exR F K _ _ _ _ _ _ _ hK n _ hn π χ Q hreg hpol hQ v w i hi hloc σ σ' hσ hσ'
   obtain ⟨l, hl, hlv⟩ := exists_prime_notMem v
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨ι⟩ : Nonempty (Qbar l ≃+* ℂ) := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex l
   have hL : GlobalTheory.Published.LocalLanglandsGL :=
     GlobalTheory.LocLanglandsBridge.localLanglandsGL_of_depthZero_zelevinsky_bernstein N.loc.llc N.loc.conv N.loc.dzc N.loc.dzi
       N.loc.brauer N.loc.chev N.aut.art N.loc.exh N.loc.multi N.loc.cos N.loc.zel N.loc.geo N.loc.bz
   let Ω := AlgebraicClosure K
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed K, by
-    haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed K, by
+    have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
     exact Algebra.IsAlgebraic.trans F K Ω⟩
   obtain ⟨r, wt, HT, hG, hatt, -⟩ := exR F Ω l ι n hn π χ hreg hpol
   have hnorm : (Bc.res F Ω K).range.Normal := by
@@ -322,8 +322,8 @@ namespace UpperTheory.V.Br
 theorem quadBCw_of_quadBC0 (hN : GlobalTheory.Mem.LiteralAutomorphy.LitN) (hC : ExC) (hR : ExR) (h : QuadBC0) : QuadBCw := by
   intro F E _ _ _ _ _ _ _ h2 a _ ha π hr
   refine (h F E h2 a ha π hr).imp_right fun ⟨P, hP⟩ => ⟨P, hP, fun hreg ⟨χ, hχ⟩ => ?_⟩
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
+  have : IsCMField E := IsCMField.ofCMExtension F E
   exact splitOf hN hC hR F E h2 a ha π χ P hreg hχ hP
 
 theorem quadBCw (P : Hypotheses₂) : QuadBCw :=

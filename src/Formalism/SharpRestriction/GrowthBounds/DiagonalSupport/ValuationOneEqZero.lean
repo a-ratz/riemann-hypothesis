@@ -97,7 +97,7 @@ theorem asm_eq_sum (rho : TL J nL r × Fin (r + K) → ℕ) (A : MvPolynomial (T
   intro bp _
   apply Finset.sum_congr rfl
   intro bn _
-  rw [monomial_mul, monomial_mul, one_mul, bigM_eq]
+  rw [monomial_mul_monomial, monomial_mul_monomial, one_mul, bigM_eq]
 
 theorem levImg_coeff (rho : TL J nL r × Fin (r + K) → ℕ) (dPl dNo : TL J nL r → ℕ)
     (G : MvPolynomial (TV n' (m + 1)) (KK O)) (bp : TL J nL r × Fin r →₀ ℕ) (bn : TL J nL r × Fin K →₀ ℕ) :
@@ -123,17 +123,17 @@ theorem levImg_coeff_bigM (hp : 0 < p) (hinj : Function.Injective fun x : TL J n
   rw [levImg_coeff]
   refine (Finset.sum_eq_single (bigM Fr p hk nL rho bp bn) ?_ ?_).trans ?_
   · intro mo hmo hne
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨e1, e2⟩
     apply hne
     obtain ⟨hmo1, hlow, -⟩ := Finset.mem_filter.mp hmo
     rw [eq_bigM hinj rho mo (hz mo hmo1) hlow, e1, e2]
   · intro hnot
-    rw [if_pos ⟨hpl, hno⟩]
+    rw [ite_eq_left ⟨hpl, hno⟩]
     by_contra hc
     exact hnot (Finset.mem_filter.mpr ⟨mem_support_iff.mpr hc, bigM_inLow (hk := hk) hinj rho hrho bp bn,
       bigM_inBlock (hk := hk) hp hinj rho hrho bp bn dPl dNo h1 h2⟩)
-  · rw [if_pos ⟨hpl, hno⟩]
+  · rw [ite_eq_left ⟨hpl, hno⟩]
 
 end Up
 

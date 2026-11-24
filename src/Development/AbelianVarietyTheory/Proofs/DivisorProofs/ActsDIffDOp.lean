@@ -102,7 +102,7 @@ theorem pol_eq {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (M : Model σ X W) (τ
   unfold Model.Pol
   congr 1
   ext N
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine and_congr (forall_congr' fun f₀ => imp_congr_left (isGauss_iff hψ M τ f₀)) ⟨fun H a b f hf => ?_, fun H u hu f hf f₁ h1 => ?_⟩
   · have hu := at_symm M a b
     refine H _ hu f hf _ ((actsD_iff_dOp hψ M _ hu _ _).2 ?_)

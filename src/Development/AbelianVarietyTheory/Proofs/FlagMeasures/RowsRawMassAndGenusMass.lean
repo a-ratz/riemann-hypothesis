@@ -97,7 +97,7 @@ theorem exists_unimodular_ge {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) 
   have hsup := (dualBasic (𝓞 K) K V h hs star_algebraMap_ringOfIntegers_mem_range).2.2.1
   have lat : ∀ A : Submodule (𝓞 K) V, Submodule.IsFullLattice K A → Submodule.IsFullLattice K (A ⊔ G : Submodule (𝓞 K) V) :=
     fun A hA => by
-      letI := hA
+      let := hA
       exact { toIsLattice := Submodule.IsLattice.of_fg K (hA.fg.sup hG)
               span_eq_top := top_le_iff.1 ((Submodule.IsFullLattice.span_eq_top (A := K) (M := A)).ge.trans
                 (Submodule.span_mono (le_sup_left (a := A) (b := G)))) }
@@ -113,7 +113,7 @@ theorem exists_pair {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hn : h.N
   have hint : ∀ x ∈ M, ∀ y ∈ M, h x y ∈ (1 : Submodule (𝓞 K) K) := fun x hx y hy => by
     rw [← hu, dualBasic_mem_dual] at hy
     exact hy x hx
-  letI := hM
+  let := hM
   have ne : ∀ φ : V →ₗ[K] K, (∀ y ∈ M, φ y = 0) → φ = 0 := fun φ H =>
     LinearMap.ext_on (Submodule.IsFullLattice.span_eq_top (A := K) (M := M)) fun y hy => H y hy
   obtain ⟨v, hv, y, hy, hvy⟩ : ∃ v ∈ M, ∃ y ∈ M, h v y ≠ 0 := by
@@ -316,7 +316,7 @@ theorem exists_adapted {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hn : 
       (h3 (Submodule.subset_span (Or.inl (Or.inr ⟨a, b, hb, rfl⟩))))
 
     simp only [map_sum, sm, star_star, hfe, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true] at this
+    ite_true] at this
     rw [mul_comm]
     exact (FractionalIdeal.mem_one_iff _).2 (Submodule.mem_one.1 this)
   · rintro _ ⟨a, x, hx, rfl⟩
@@ -328,7 +328,7 @@ end General
 
 theorem main : ∀ (D : D7) (u : D.what₂.Word), letI := D.host.cmStar; ∀ F0 : FlagG (VS D) D.R.rS ((Lat.Tu D u : ℕ) : D.host.E), F0.e = D.sp.hypE → F0.z = D.zmOf u → (Lat.Tu D u).Prime → Lat.SplitsCompletely (E := D.host.E) (Lat.Tu D u) → ∃ Λ : Cnt.LatV D, IsRowLat D F0 Λ := by
   intro D u
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro F0 he hz hp hsp
   have hm : 0 < D.R.m := lt_of_lt_of_le (by norm_num) D.R.two_le_m
   have hcm : IsCMUnram D.host.E := D.sp.cm.cmUnram

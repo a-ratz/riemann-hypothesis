@@ -59,13 +59,13 @@ theorem sh_of_finite_local (A T : Type) [CommRing A] [CommRing T] [Algebra A T] 
   refine ⟨GlobalTheory.henselianLocalRing_of_finite A T, ?_⟩
   have hc : (maximalIdeal T).comap (algebraMap A T) = maximalIdeal A :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal T))
-  haveI : IsLocalHom (algebraMap A T) := by
+  have : IsLocalHom (algebraMap A T) := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have : a ∈ (maximalIdeal T).comap (algebraMap A T) := by rw [hc]; exact hna
     exact (maximalIdeal T).ne_top_iff_one.1 (maximalIdeal.isMaximal T).ne_top
       (by simpa using Ideal.mul_mem_left _ (↑ha.unit⁻¹ : T) (show algebraMap A T a ∈ maximalIdeal T from this))
-  haveI : Algebra.IsIntegral (ResidueField A) (ResidueField T) := by
+  have : Algebra.IsIntegral (ResidueField A) (ResidueField T) := by
     refine ⟨fun x => ?_⟩
     obtain ⟨t', rfl⟩ := residue_surjective x
     have h1 : IsIntegral A (residue T t') :=
@@ -101,12 +101,12 @@ theorem induction_principle : ∀ (A : Type) [CommRing A], SH A → ∀ (P : ∀
     | h_option ih =>
       intro S _ _ hS'
       refine hiso _ _ (optionProdEquiv A S).symm ?_
-      haveI : ∀ a, Module.Finite A (S (some a)) := fun a => (hS' (some a)).1
+      have : ∀ a, Module.Finite A (S (some a)) := fun a => (hS' (some a)).1
       exact hprod _ _ (hS' none).1 inferInstance (hsh _ (hS' none).1 (hS' none).2)
         (ih (fun a => S (some a)) (fun a => hS' (some a)))
   refine hiso _ _ e.symm (key ι S fun i => ⟨(hS i).2, ?_⟩)
-  haveI := (hS i).1
-  haveI := (hS i).2
+  have := (hS i).1
+  have := (hS i).2
   exact sh_of_finite_local A (S i) ⟨hH, hk⟩
 
 end GlobalTheory.EtC.GmStep.FinSH

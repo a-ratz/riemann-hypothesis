@@ -64,7 +64,7 @@ theorem ringOfIntegers_hom_injective {F : Type} [Field F] [NumberField F] {R : T
       simpa using h1
     have h2 : n = 0 := by exact_mod_cast h0
     simp [h2]
-  exact (RingHom.injective_iff_ker_eq_bot a).2 (Ideal.eq_bot_of_comap_eq_bot hI)
+  exact (RingHom.injective_iff_ker_eq_bot a).2 (Ideal.eq_bot_of_under_eq_bot hI)
 
 theorem exists_ringHom_extend {F : Type} [Field F] [NumberField F] {R : Type} [Field R] [CharZero R]
     (a : 𝓞 F →+* R) : ∃ κ : F →+* R, κ.comp (algebraMap (𝓞 F) F) = a :=
@@ -74,7 +74,7 @@ theorem exists_ringHom_extend {F : Type} [Field F] [NumberField F] {R : Type} [F
 theorem exists_isOver : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (z : Sp ℂ ⟶ 𝔐.X), 𝔐.Interior z → ∃ (κ : c.F →+* ℂ) (p : Sp ℂ ⟶ Xo.X), IsOver 𝔐 z κ p := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 z hz
   have := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   let a : 𝓞 c.F →+* ℂ := (Spec.preimage (z ≫ 𝔐.f ≫ Y.s)).hom
   have ha : z ≫ 𝔐.f ≫ Y.s = spMap a := by
     unfold spMap

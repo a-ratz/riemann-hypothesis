@@ -112,7 +112,7 @@ theorem UpperTheory.induced_deletion_condition :
     apply h.hyp.spl A hA
     exact hs.1
   have hcont : Continuous (resQ T.F) := by
-    haveI : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
+    have : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
     exact (galEmbTop ℚ T.F Ω).1.continuous
   have hup : ∀ (χ : G ℚ Ω →* c.Oˣ) g, χ g = 1 → up χ g = 1 := fun χ g hg => by
     simp only [up, MonoidHom.comp_apply, hg, map_one]

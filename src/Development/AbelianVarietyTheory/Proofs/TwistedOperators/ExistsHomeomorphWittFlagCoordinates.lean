@@ -189,9 +189,9 @@ theorem flagCoord_homeo : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S
       d.levi (e0.symm n).1.1 * (d.nB (e0.symm n).2.1 * d.nC (e0.symm n).2.2) := fun n =>
     congrArg Subtype.val (e0.apply_symm_apply n).symm
   have hM : Continuous fun n : flagN d => Formalism.L2.Theta.mt S (n : GA D S) :=
-    (continuous_mt S).comp continuous_subtype_val
+    (continuous_mt S).comp continuous_subtypeVal
   have hMi : Continuous fun n : flagN d => Formalism.L2.Theta.mt S (n : GA D S)⁻¹ :=
-    (continuous_mt S).comp continuous_subtype_val.inv
+    (continuous_mt S).comp continuous_subtypeVal.inv
   have hU : ∀ n : flagN d, ((e0.symm n).1.1).val = d.pX * (Formalism.L2.Theta.mt S (n : GA D S) * d.jX) := by
     intro n; rw [key n, flagCoord_jX]
   have hUi : ∀ n : flagN d, (((e0.symm n).1.1)⁻¹).val =
@@ -222,7 +222,7 @@ theorem flagCoord_homeo : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S
       (continuous_const.matrix_mul (hM.matrix_mul continuous_const))).add (hp.const_smul (half D))
   refine ⟨{ toEquiv := e0, continuous_toFun := ?_, continuous_invFun := ?_ }, fun p => rfl⟩
   · show Continuous (flagCoordMap d)
-    exact Continuous.subtype_mk ((d.continuous_levi.comp (continuous_subtype_val.comp continuous_fst)).mul
+    exact Continuous.subtype_mk ((d.continuous_levi.comp (continuous_subtypeVal.comp continuous_fst)).mul
       ((d.continuous_nB.comp (continuous_fst.comp continuous_snd)).mul
         (d.continuous_nC.comp (continuous_snd.comp continuous_snd)))) _
   · refine Continuous.prodMk ?_ (Continuous.prodMk cB ?_)

@@ -87,7 +87,7 @@ theorem IsHermPos.map_equiv {N' : Type} [AddCommGroup N'] [Module ℂ N'] (h : I
     rw [← hyz]
     simpa using hy
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · haveI := h.fd
+  · have := h.fd
     infer_instance
   · intro x x' y
     show ip (e.symm ((x : N') + x')) (e.symm y) = ip (e.symm x) (e.symm y) + ip (e.symm x') (e.symm y)
@@ -126,7 +126,7 @@ theorem isMultiplicityInner_add_left {T T' T'' : MMap M} {a b : ℂ} (h : IsMult
   intro v v'
   obtain ⟨i1, e1⟩ := h v v'
   obtain ⟨i2, e2⟩ := h' v v'
-  simp only [MultilinearMap.add_apply, Pi.add_apply, star_add, add_mul]
+  simp only [add_apply, Pi.add_apply, star_add, add_mul]
   exact ⟨Integrable.add i1 i2, by rw [integral_add i1 i2, e1, e2]⟩
 
 theorem isMultiplicityInner_smul_left {T T' : MMap M} {a : ℂ} (s : ℂ) (h : IsMultIP M μ 𝓕 T T' a) :
@@ -135,7 +135,7 @@ theorem isMultiplicityInner_smul_left {T T' : MMap M} {a : ℂ} (s : ℂ) (h : I
   obtain ⟨i1, e1⟩ := h v v'
   have hf : ∀ g, star ((s • T) v g) * T' v' g = starRingEnd ℂ s * (star (T v g) * T' v' g) := by
     intro g
-    rw [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, star_mul', mul_assoc]
+    rw [smul_apply, Pi.smul_apply, smul_eq_mul, star_mul', mul_assoc]
     rfl
   simp only [hf]
   exact ⟨Integrable.const_mul i1 _, by rw [integral_const_mul, e1, mul_assoc]⟩
@@ -166,18 +166,18 @@ theorem mult_cont_left {T : MMap M} (hT : T ∈ Mult θ M J χ) (v : M.Vec) :
     exact ⟨hA.cont, hA.left⟩
   | zero =>
     refine ⟨?_, fun _ _ _ => rfl⟩
-    simp only [MultilinearMap.zero_apply]
+    simp only [zero_apply]
     exact continuous_const
   | add T T' _ _ h1 h2 =>
     refine ⟨?_, fun γ hγ g => ?_⟩
-    · rw [MultilinearMap.add_apply]
+    · rw [add_apply]
       exact h1.1.add h2.1
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, h1.2 γ hγ g, h2.2 γ hγ g]
+    · simp only [add_apply, Pi.add_apply, h1.2 γ hγ g, h2.2 γ hγ g]
   | smul a T _ h1 =>
     refine ⟨?_, fun γ hγ g => ?_⟩
-    · rw [MultilinearMap.smul_apply]
+    · rw [smul_apply]
       exact h1.1.const_smul a
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, h1.2 γ hγ g]
+    · simp only [smul_apply, Pi.smul_apply, h1.2 γ hγ g]
 
 theorem isHermPos_mult (hθ : IsInfFam θ) (hfin : HCFinite θ M J χ)
     (hU : ∃ U : Subgroup (GA D V), IsOpen (U : Set (GA D V)) ∧ ∀ k ∈ U, k ∈ GfC V → k ∈ J ∧ χ k = 1)

@@ -704,7 +704,7 @@ theorem fib_eq_lieEig_rf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     (hev1 _ _).2 ⟨zero_mem _, map_zero ev'⟩
   have P1 : ∀ (a : 𝓞 E) {e w}, Or.𝔐.M.ValAt (gen T zV) e (MC.pt w) →
       Or.𝔐.M.ValAt (gen T zV) (Or.𝔐.ρ a e) (MC.pt (ρC a w)) := fun a e w h => by
-    haveI := Or.𝔐.t.act.hom a
+    have := Or.𝔐.t.act.hom a
     have h1 := Flat.CPoint.valAt_of_isDiffOf (Or.𝔐.t.act.act a) (Or.𝔐.ρ a) (Or.𝔐.act a) h
     rwa [← hact a w] at h1
   have P2 : ∀ {a : RM.Ω} {r : T.Fr} {e w}, ValAt Or.𝔐.ξ (gen T zV) a r → Or.𝔐.M.ValAt (gen T zV) e (MC.pt w) →
@@ -1032,7 +1032,7 @@ theorem absT_of_vV {p : ℕ} (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) {e :
   have he' : (e : ℝ) ≠ 0 := by exact_mod_cast he.ne'
   have hr' : (ramOverZ la : ℝ) ≠ 0 := by exact_mod_cast hr.ne'
   unfold absT
-  rw [if_neg hx, h, mul_div_assoc, div_self (mul_ne_zero he' hr'), mul_one]
+  rw [ite_eq_right hx, h, mul_div_assoc, div_self (mul_ne_zero he' hr'), mul_one]
 
 theorem absT_kappa {p : ℕ} [hp : Fact p.Prime] {la : HeightOneSpectrum (𝓞 c.F)} (hla : (p : 𝓞 c.F) ∈ la.asIdeal)
     {T : CDVR} {io : c.F →+* T.Fr} {e : ℕ} (hov : OverLa la T.V io e) {κz : T.V} (h2 : p = 2 → κz = 4)
@@ -1052,7 +1052,7 @@ theorem absT_kappa {p : ℕ} [hp : Fact p.Prime] {la : HeightOneSpectrum (𝓞 c
     have hne : algebraMap T.V T.Fr (p : T.V) ≠ 0 := (map_ne_zero_iff _ inj).2 hp0
     rw [hk, absT_of_vV la T he hr (pow_ne_zero _ hne) (a := Small.htExp p)]
     rw [vV_pow hne, hvp]
-    simp only [Small.htExp, if_pos h]
+    simp only [Small.htExp, ite_eq_left h]
     push_cast
     ring
   · have hz := hodd h
@@ -1069,7 +1069,7 @@ theorem absT_kappa {p : ℕ} [hp : Fact p.Prime] {la : HeightOneSpectrum (𝓞 c
     have h5 : ((p : ℝ) - 1) * (vV T.V (algebraMap T.V T.Fr κz) : ℝ) = (e : ℝ) * (ramOverZ la : ℝ) := by
       rw [← h4]
       exact_mod_cast h1
-    simp only [Small.htExp, if_neg h]
+    simp only [Small.htExp, ite_eq_right h]
     field_simp
     linarith
 
@@ -1109,12 +1109,12 @@ theorem lieEig_htDual : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [
   obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hodge_tate_model_point_sandwich E H Dw l Xo c O β Y SS _ _ _ RM.y Or.𝔐 p hpS κ hHT hS T.Fr
     (realVal T.V T.Fr) T.V realVal_integers hv1 zV EC MC ρC s σ κz hAct hσ hκz
   refine ⟨κz, h1, h2, absT_kappa hla hov (fun h => ?_) (fun h => ?_)⟩
-  · rw [HT.IsCp, if_pos h] at hκ
+  · rw [HT.IsCp, ite_eq_left h] at hκ
     have h3 := value_aeval hgen hκz (Polynomial.X - Polynomial.C 4) (by
       simp only [map_sub, Polynomial.aeval_X, hκ, map_ofNat, sub_self])
     simp only [map_sub, Polynomial.aeval_X, map_ofNat] at h3
     exact sub_eq_zero.1 h3
-  · rw [HT.IsCp, if_neg h] at hκ
+  · rw [HT.IsCp, ite_eq_right h] at hκ
     obtain ⟨ζ, hζ, rfl⟩ := hκ
     have hp0 : NeZero (p : T.V) := ⟨Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero⟩
     have h3 := value_aeval hgen hκz ((Polynomial.cyclotomic p ℤ).comp (Polynomial.X + 1)) (by
@@ -1406,7 +1406,7 @@ theorem compare : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     · rw [mul_smul]
       exact h2 _ (h6 w hw)
     · rw [map_mul, hmul, h3]
-      have e1 : Small.latExp E SS p = Small.htExp p + (padicValInt p (discr E) : ℝ) / Module.finrank ℚ E := if_pos hpS
+      have e1 : Small.latExp E SS p = Small.htExp p + (padicValInt p (discr E) : ℝ) / Module.finrank ℚ E := ite_eq_left hpS
       rw [e1, neg_add, Real.rpow_add hp0]
       exact mul_le_mul_of_nonneg_left h5 (Real.rpow_nonneg hp0.le _)
   · have hd : ¬ (p : ℤ) ∣ discr E := fun h => hpS (hSS p Fact.out h)
@@ -1433,15 +1433,15 @@ theorem diag_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsC
   have he : 0 < e := hI.2.1.1
   obtain ⟨hmul, hone, hpos, hle⟩ := GlobalTheory.T.finite_residue_absolute_value E H l c p la T e he (ram_pos hpla)
   obtain ⟨EC, _, _, MC, ρC, hact⟩ := GlobalTheory.T.root_origin_complete_dvr_bound E H Dw l Xo c O β Y SS RM Sys Fx Or T zV
-  letI : Module T.V EC := Module.compHom EC (algebraMap T.V T.Fr)
-  haveI : IsScalarTower T.V T.Fr EC := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module T.V EC := Module.compHom EC (algebraMap T.V T.Fr)
+  have : IsScalarTower T.V T.Fr EC := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨σ, hσ, -⟩ := GlobalTheory.T.root_origin_frame_archimedean E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A p z ev hz hval hA la T io e y evT zT t hI
     zV hR s
   choose u hu huv using GlobalTheory.T.root_origin_frame_local_bound E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A p z ev hz hval hA la T io e y evT zT t hI
     zV hR EC MC s
   obtain ⟨hli, yb, htri, hspan⟩ := GlobalTheory.T.root_origin_frame_relay_bound hG E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A p z ev hz hval hA la T io e y
     evT zT t hI zV hR EC MC ρC hact s u σ hu hσ
-  haveI := Or.𝔐.t.semi.smooth
+  have := Or.𝔐.t.semi.smooth
   have hW := GlobalTheory.T.complete_dvr_lie_model_lattice Or.𝔐.X Or.𝔐.t.G RM.Ω Or.𝔐.ξ Or.𝔐.Li Or.𝔐.M T zV EC MC A evT Or.𝔐.tie.gen inferInstance
     (Or.𝔐.all _) (Or.𝔐.all _) hR (Or.𝔐.V s) _ b (Or.Fl.b s) Tm u hT hfr hb huv
   obtain ⟨d, d', hd1, hd2, hμ, hμ'⟩ := compare hG E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A p z ev hz hval hA la T io e y
@@ -1514,7 +1514,7 @@ theorem reads_roots : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [Is
   have hmax : ∀ k, ∃ ck : RM.ι k, z ⟨k, ck⟩ ≠ 0 ∧ ∀ i, ‖z ⟨k, i⟩‖ ≤ ‖z ⟨k, ck⟩‖ := by
     intro k
     obtain ⟨u, hu⟩ := hzp.1 k
-    haveI : Nonempty (RM.ι k) := ⟨u⟩
+    have : Nonempty (RM.ι k) := ⟨u⟩
     obtain ⟨m, hm⟩ := Finite.exists_max (fun i => ‖z ⟨k, i⟩‖)
     refine ⟨m, fun h0 => ?_, hm⟩
     have h1 := hm u
@@ -1538,7 +1538,7 @@ theorem reads_roots : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [Is
     exact div_le_one_of_le₀ (hcm k i) (norm_nonneg _))
   have hne : ∀ x : A, ev x ≠ 0 → evT x ≠ 0 := fun x hx h0 => by
     have h1 := habs x
-    rw [h0, show absT p la T e (0 : T.Fr) = 0 from if_pos rfl] at h1
+    rw [h0, show absT p la T e (0 : T.Fr) = 0 from ite_eq_left rfl] at h1
     exact hx (norm_eq_zero.1 h1)
   obtain ⟨zV, h, hch, hRd⟩ := GlobalTheory.T.complete_dvr_coord_ratio_value Or.𝔐.X RM.Ω Or.𝔐.ξ RM.K RM.ι RM.y Or.𝔐.all Or.𝔐.tie A T evT ch hy hr hVr
     (fun a => by

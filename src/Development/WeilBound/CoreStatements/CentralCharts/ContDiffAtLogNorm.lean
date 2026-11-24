@@ -256,7 +256,7 @@ theorem padd (hf : PshAt0 f) (hg : PshAt0 g) : PshAt0 fun t => f t + g t := by
   have e : levi (fun t => f t + g t) 0 w = levi f 0 w + levi g 0 w := by
     unfold levi
     rw [h]
-    simp only [ContinuousLinearMap.add_apply]
+    simp only [add_apply]
     ring
   rw [e]
   exact add_nonneg (hf.2 w) (hg.2 w)
@@ -281,7 +281,7 @@ theorem pconst_mul {c : ℝ} (hc : 0 ≤ c) (hf : PshAt0 f) : PshAt0 fun t => c 
   have e : levi (fun t => c * f t) 0 w = c * levi f 0 w := by
     unfold levi
     rw [pconst_mul_lemma c hf.1]
-    simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [smul_apply, smul_eq_mul]
     ring
   rw [e]
   exact mul_nonneg hc (hf.2 w)
@@ -339,7 +339,7 @@ theorem pre {G : (Fin n → ℂ) → ℂ} (hG : AnalyticAt ℂ G 0) : PshAt0 fun
   unfold levi
   rw [key, key]
   have hI : fderiv ℂ (fderiv ℂ G) 0 (Complex.I • w) (Complex.I • w) = - fderiv ℂ (fderiv ℂ G) 0 w w := by
-    simp only [map_smul, ContinuousLinearMap.smul_apply, smul_smul, Complex.I_mul_I, neg_smul, one_smul]
+    simp only [map_smul, smul_apply, smul_smul, Complex.I_mul_I, neg_smul, one_smul]
   rw [hI, Complex.neg_re]
   simp
 
@@ -404,7 +404,7 @@ theorem snd_nonneg (hf : ContDiffAt ℝ 2 f 0) (hm : IsLocalMin f 0) (v : Fin n 
         _ ≤ η * ‖c • v‖ * ‖v‖ := mul_le_mul_of_nonneg_right hb (norm_nonneg _)
     have h2 : ‖c • v‖ = c * ‖v‖ := by rw [norm_smul, Real.norm_eq_abs, abs_of_pos hc.1]
     have h3 : (ψ (c • v) - B (c • v)) v = ψ (c • v) v - c * q := by
-      rw [ContinuousLinearMap.sub_apply, hBc]
+      rw [sub_apply, hBc]
     rw [h3, h2] at h1
     have h4 : η * (c * ‖v‖) * ‖v‖ ≤ c * (-q / 2) := by
       have : η * ‖v‖ ^ 2 ≤ -q / 2 := by
@@ -438,7 +438,7 @@ theorem ptouch (hf : ContDiffAt ℝ 2 f 0) (hg : PshAt0 g) (h0 : g 0 = f 0) (h :
       + fderiv ℝ (fderiv ℝ (fun t => f t - g t)) 0 (Complex.I • w) (Complex.I • w)) / 4 + levi g 0 w := by
     unfold levi
     rw [e]
-    simp only [ContinuousLinearMap.add_apply]
+    simp only [add_apply]
     ring
   rw [e2]
   have a1 := snd_nonneg hfg hmin w

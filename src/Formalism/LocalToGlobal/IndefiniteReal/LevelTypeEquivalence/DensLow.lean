@@ -165,7 +165,7 @@ theorem approx_id (ε : Fin n → Bool) (f : PI.UpqRep.UJ ε → ℂ) (hf : Cont
     rw [hu1]
     exact bumpQ_pos_one.ne'
   have hI : 0 < ∫ h, b h ∂(PI.UpqRep.muG ε) :=
-    hb_cont.integral_pos_of_hasCompactSupport_nonneg_nonzero hb_cs hb_nn hb1
+    hb_cont.integral_pos_of_hasCompactSupport_nonneg_ne_zero hb_cs hb_nn hb1
   set I := ∫ h, b h ∂(PI.UpqRep.muG ε) with hI_def
   have hint_b : Integrable b (PI.UpqRep.muG ε) := hb_cont.integrable_of_hasCompactSupport hb_cs
   refine ⟨fun m => ((bumpQ r m / I : ℝ) : ℂ), ?_, ?_, ?_⟩
@@ -304,7 +304,7 @@ theorem ksub_closure_top (hlow : ∃ w0 : lowT M τ, ((w0 : M.sm τ) : M.H τ) �
     have hmem : ((w0 : M.sm τ) : M.H τ) ∈ (Ksub M τ).topologicalClosure := by
       apply Submodule.le_topologicalClosure
       refine Submodule.subset_span ⟨1, one_uh τ, w0, ?_⟩
-      rw [rep_one' M τ, ContinuousLinearMap.one_apply]
+      rw [rep_one' M τ, one_apply_eq_self]
     rw [h, Submodule.mem_bot] at hmem
     exact hw0 hmem
   · exact h
@@ -391,7 +391,7 @@ theorem densLow_model (hlow : ∃ w0 : lowT M τ, ((w0 : M.sm τ) : M.H τ) ≠ 
   have hcont := cont_orbit M τ (ℓ := ℓ) hℓ w.2
   have h1 : ℓ (M.σ τ (PI.UpqRep.umat (1 : PI.UpqRep.UJ (M.ε τ))) (w : M.H τ)) = ℓ (w : M.H τ) := by
     rw [show PI.UpqRep.umat (1 : PI.UpqRep.UJ (M.ε τ)) = 1 from rfl, (M.ds τ).2.2.1.1.1,
-      ContinuousLinearMap.one_apply]
+      one_apply_eq_self]
   refine norm_eq_zero.1 (le_antisymm (le_of_forall_pos_le_add fun δ hδ => ?_) (norm_nonneg _))
   obtain ⟨Φ, hΦ, hΦc, hle⟩ := approx_id (M.ε τ) _ hcont hδ
   rw [← gvPair_holds M τ Φ hΦ hΦc ℓ hℓ _ w.2, hsmooth Φ hΦ hΦc, h1, zero_sub, norm_neg] at hle

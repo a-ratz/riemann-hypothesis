@@ -81,7 +81,7 @@ theorem dl_diag (a b : Fin (r + 1) → ℂ) (Z : Matrix (Fin (r + 1)) (Fin (r + 
         Matrix.diagonal (fun i => b (Fin.castLE hl i)) := by
     ext i j
     simp [Matrix.mul_diagonal, Matrix.diagonal_mul]
-  simp only [RealObj.Dl, dif_pos hl]
+  simp only [RealObj.Dl, dite_eq_left hl]
   rw [hsub, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal, Matrix.det_diagonal]
   ring
 
@@ -158,11 +158,11 @@ theorem dl_pt_last (σ : K →+* ℂ) (w : Point K (r + 1)) (L : List (K × ℕ)
     rw [hw, ptEntry_app_lt L _ i j (by rw [hs]; exact i.2) (by rw [hs]; exact j.2)]
   have hDr : RealObj.Dl M r = ((ptMat w0).map σ).det := by
     unfold RealObj.Dl
-    rw [dif_pos (Nat.le_succ r), ← hsub]
+    rw [dite_eq_left (Nat.le_succ r), ← hsub]
     rfl
   have hDtop : RealObj.Dl M (r + 1) = M.det := by
     unfold RealObj.Dl
-    rw [dif_pos le_rfl]
+    rw [dite_eq_left le_rfl]
     rfl
   have hrow : ∀ j : Fin (r + 1), M (Fin.last r) j = if j = Fin.last r then σ t else 0 := by
     intro j
@@ -175,13 +175,13 @@ theorem dl_pt_last (σ : K →+* ℂ) (w : Point K (r + 1)) (L : List (K × ℕ)
         have := j.2
         have : (j : ℕ) ≠ r := fun h => hj (Fin.ext h)
         omega
-      rw [if_neg (by omega), if_neg hj, map_zero]
+      rw [ite_eq_right (by omega), ite_eq_right hj, map_zero]
   have hdet : M.det = σ t * ((ptMat w0).map σ).det := by
     rw [Matrix.det_succ_row M (Fin.last r), Finset.sum_eq_single (Fin.last r)]
-    · rw [hrow, if_pos rfl, Fin.succAbove_last, hsub, Fin.val_last, ← two_mul, pow_mul, neg_one_sq, one_pow,
+    · rw [hrow, ite_eq_left rfl, Fin.succAbove_last, hsub, Fin.val_last, ← two_mul, pow_mul, neg_one_sq, one_pow,
         one_mul]
     · intro j _ hj
-      rw [hrow, if_neg hj]
+      rw [hrow, ite_eq_right hj]
       simp
     · intro h
       exact absurd (Finset.mem_univ _) h
@@ -281,7 +281,7 @@ theorem topTie_G (S : Formalism.FourierDecayAlt.C.HidaSetting D.host.E Wp Wq) (u
   intro j p w hp hex h1
   have hrep : IsPtRep X u u' w (gamW X u u' w) := by
     unfold gamW
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     exact hex.choose_spec
 
   have hloc : ∀ (σ : D.host.E →+* ℂ), (Formalism.FourierDecayAlt.C.loc σ p).getLast? = p.getLast?.map (fun b => (b.1, σ b.2)) := by

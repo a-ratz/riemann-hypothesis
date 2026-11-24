@@ -81,7 +81,7 @@ theorem addEquivAddHaarChar_prodCE (G₁ G₂ : Type) [AddCommGroup G₁] [Topol
   have hpos : (μ.map φ) K ≠ 0 := (Measure.measure_pos_of_mem_nhds _ hK0).ne'
   have hfin : (μ.map φ) K ≠ ∞ := hK.measure_lt_top.ne
   have key := congrArg (fun m : Measure (G₁ × G₂) => m K) (h.trans hc.symm)
-  simp only [Measure.smul_apply, Measure.nnreal_smul_coe_apply] at key
+  simp only [smul_apply, Measure.nnreal_smul_coe_apply] at key
   have := (ENNReal.mul_left_inj hpos hfin).1 key
   exact_mod_cast this
 

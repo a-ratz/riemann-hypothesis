@@ -72,7 +72,7 @@ theorem exists_GL_last_row (k : Type) [Field k] (m : ℕ) (ξ : Fin (m + 1) → 
   have hlast : b (Fin.last m) = ξ := by
     simp only [b, Module.Basis.reindex_apply, he, Module.Basis.extend_apply_self]
   have hu : IsUnit (Matrix.of fun i j => b i j) :=
-    Matrix.linearIndependent_rows_iff_isUnit.1 b.linearIndependent
+    linearIndependent_row_iff_isUnit.1 b.linearIndependent
   refine ⟨hu.unit, ?_⟩
   rw [IsUnit.unit_spec, single_vecMul, one_smul]
   exact hlast

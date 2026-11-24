@@ -209,7 +209,7 @@ theorem isVariety₀_flag : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hVo : Nonempty (Vo C) := by
     refine ⟨⟨genericPoint C.Y.X, ?_⟩⟩
     show C.π (genericPoint C.Y.X) ∈ Set.range T.Y.jQ
-    letI := (GlobalTheory.ShFam.constF (RingEquiv.refl c.F) C.Y).toAlgebra
+    let := (GlobalTheory.ShFam.constF (RingEquiv.refl c.F) C.Y).toAlgebra
     have e1 := Scheme.Hom.comp_apply (GlobalTheory.ShFam.genericPt C.Y) C.π (IsLocalRing.closedPoint C.Y.Fn)
     have e2 := Scheme.Hom.comp_apply (GlobalTheory.AllWt.ptF C.y0) T.Y.jQ (IsLocalRing.closedPoint C.Y.Fn)
     rw [C.y0_x] at e2

@@ -212,7 +212,7 @@ theorem _root_.GlobalTheory.HermLineZeros.finite_zeros_on_line : ∀ (F E : Type
   have htr : Algebra.trace K (K ⊗[F] E) (_root_.Formalism.UG.hform S JR y y)
       = Module.finrank K (K ⊗[F] E) • algebraMap F K a := by
     rw [hyy, Algebra.trace_algebraMap]
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
   have hfr : Module.finrank K (K ⊗[F] E) ≠ 0 := by
     rw [Module.finrank_baseChange, h.2.2.1]; norm_num
   set α := algebraMap F K (1 / 2) * Algebra.trace K (K ⊗[F] E) (_root_.Formalism.UG.hform S JR y y) with hα
@@ -229,8 +229,8 @@ theorem _root_.GlobalTheory.HermLineZeros.finite_zeros_on_line : ∀ (F E : Type
     have := congrArg (fun q : Polynomial K => q.coeff 2) hp
     simp [p, Polynomial.coeff_X, Polynomial.coeff_C] at this
     exact hα0 this
-  refine (Polynomial.finite_setOf_isRoot hp).subset fun t ht => ?_
-  simp only [Set.mem_setOf_eq] at ht ⊢
+  refine (Polynomial.finite_setOfPred_isRoot hp).subset fun t ht => ?_
+  simp only [Set.mem_ofPred_eq] at ht ⊢
   rw [Polynomial.IsRoot.def, ← ht]
   have hsmul : t • y = algebraMap K (K ⊗[F] E) t • y := by
     funext i; simp [Algebra.smul_def]

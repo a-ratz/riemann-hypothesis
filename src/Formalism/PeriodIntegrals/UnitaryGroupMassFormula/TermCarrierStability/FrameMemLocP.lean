@@ -224,7 +224,7 @@ theorem frame_last {T : E} (F : LFlag S r T) : frame F (Fin.last r) = F.fl.z := 
 theorem frame_mem_locP {T : E} (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (F : LFlag S r T) (hz : F.fl.z ∈ Λ)
     (hc : IsFixedConv Λ g F) (P : HeightOneSpectrum (𝓞 E)) (hP : (g : 𝓞 E) ∈ P.asIdeal) (a : Fin (r + 1)) :
     (haveI := P.isPrime; frame F a ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ) := by
-  haveI := P.isPrime
+  have := P.isPrime
   induction a using Fin.lastCases with
   | last => rw [frame_last]; exact mem_locP.mpr ⟨1, one_nmem _, by rw [one_smul]; exact hz⟩
   | cast k =>

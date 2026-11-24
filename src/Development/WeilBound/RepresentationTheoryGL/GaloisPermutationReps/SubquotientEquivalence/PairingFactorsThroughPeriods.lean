@@ -118,7 +118,7 @@ theorem basis_side {V : Type} [AddCommGroup V] [Module ℂ V] [FiniteDimensional
     ⟨basisOfLinearIndependentOfCardEqFinrank hli (by rw [Fintype.card_fin, hr]),
       fun j => congrFun (coe_basisOfLinearIndependentOfCardEqFinrank hli _) j⟩
   refine ⟨b, fun j => by rw [hb]; exact hMf j, fun k => ?_, ?_⟩
-  · rw [hb, hb, hf, hf, Fin.val_succ, Fin.coe_castSucc, pow_succ', Module.End.mul_apply]
+  · rw [hb, hb, hf, hf, Fin.val_succ, Fin.val_castSucc, pow_succ', Module.End.mul_apply]
   · obtain ⟨x, hxdef⟩ : ∃ x, x = G (b (Fin.last m)) := ⟨_, rfl⟩
     have hxG : x = (G ^ (m + 1)) v := by
       rw [hxdef, hb, hf, Fin.val_last, pow_succ', Module.End.mul_apply]

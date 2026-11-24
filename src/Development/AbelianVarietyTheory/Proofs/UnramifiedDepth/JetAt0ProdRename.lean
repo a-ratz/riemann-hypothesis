@@ -80,7 +80,7 @@ private lemma prod_monomial_eq_monomial_sum_prod' {α κ : Type} (s : Finset κ)
   | empty => simp
   | insert k s hk ih =>
     rw [Finset.prod_insert hk, Finset.sum_insert hk, Finset.prod_insert hk, ih,
-      MvPolynomial.monomial_mul]
+      MvPolynomial.monomial_mul_monomial]
 
 open scoped BigOperators in
 open NumberField in
@@ -125,7 +125,7 @@ private lemma jetAt0_monomial_eq_mul_mfact_mul_coeff {α : Type} (D : α →₀ 
     _root_.Formalism.IncomingBounds.jetAt0 (MvPolynomial.monomial D a) G = a * (_root_.Formalism.IncomingBounds.mfact D : C) * MvPowerSeries.coeff D G := by
   classical
   rw [jetAt0_eq_sum_coeff_mul_mfact_of_support_subset _ G (MvPolynomial.support_monomial_subset (s := D) (a := a)),
-    Finset.sum_singleton, MvPolynomial.coeff_monomial, if_pos rfl]
+    Finset.sum_singleton, MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
 open scoped BigOperators in
 open NumberField in
@@ -163,7 +163,7 @@ private lemma sum_embDomain_apply_eq_of_disjoint (hd : ∀ i j x y, e i x = e j 
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single j]
   · exact Finsupp.embDomain_apply_self (e j) (z j) x
   · intro k _ hk
-    apply Finsupp.embDomain_notin_range
+    apply embDomain_of_notMem_range
     rintro ⟨w, hw⟩
     exact hk (hd k j w x hw)
   · intro h

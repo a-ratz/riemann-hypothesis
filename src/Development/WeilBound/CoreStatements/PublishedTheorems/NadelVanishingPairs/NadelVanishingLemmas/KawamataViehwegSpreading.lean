@@ -128,8 +128,8 @@ theorem nonempty_cechLB_homology_equiv_coh {X : Scheme.{0}} {R : Type} [CommRing
     (f : X ⟶ Spec (CommRingCat.of R)) {M : LB X} (hM : M.IsLB) {κ : Type} [LinearOrder κ] [Finite κ]
     {D : κ → X.Opens} (hc : ⨆ i, D i = ⊤) (hD : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ i ∈ s, D i))
     (n : ℕ) : Nonempty ((cechLB f M D).homology n ≃ coh (LB.toMod M) n) := by
-  haveI : SheafOfModules.IsQuasicoherent (LB.toMod M) := GlobalTheory.LB.isQuasicoherent_toMod hM
-  letI : Algebra R Γ(X, ⊤) := algebraΓOfHom f
+  have : SheafOfModules.IsQuasicoherent (LB.toMod M) := GlobalTheory.LB.isQuasicoherent_toMod hM
+  let : Algebra R Γ(X, ⊤) := algebraΓOfHom f
   exact ⟨(((HomologicalComplex.homologyFunctor _ _ n).mapIso
     (FieldChangeInter.cechIso f M D)).toLinearEquiv.toEquiv).trans
     (cechHEquivCoh R hc hD (LB.toMod M) n).toEquiv⟩
@@ -163,7 +163,7 @@ private theorem fibre_lemma_2 {R : Type} [CommRing R] (K : CochainComplex (Modul
   change _ ↔ Module.finrank P.asIdeal.ResidueField
     ((((ModuleCat.extendScalars (algebraMap R P.asIdeal.ResidueField)).mapHomologicalComplex
       (ComplexShape.up ℕ)).obj K).homology q) = 0
-  haveI := hV P
+  have := hV P
   have hunit : P.asIdeal.primeCompl ≤ Submonoid.comap g (IsUnit.submonoid κ) := by
     intro x hx
     simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
@@ -171,7 +171,7 @@ private theorem fibre_lemma_2 {R : Type} [CommRing R] (K : CochainComplex (Modul
   let φ : P.asIdeal.ResidueField →+* κ := Ideal.ResidueField.lift P.asIdeal g le_rfl hunit
   have hcomp : φ.comp (algebraMap R P.asIdeal.ResidueField) = g :=
     RingHom.ext fun r => Ideal.ResidueField.lift_algebraMap _ _ le_rfl hunit r
-  letI : Algebra P.asIdeal.ResidueField κ := φ.toAlgebra
+  let : Algebra P.asIdeal.ResidueField κ := φ.toAlgebra
   obtain ⟨e⟩ := FieldChangeInter.nonempty_homology_equiv κ
     (((ModuleCat.extendScalars (algebraMap R P.asIdeal.ResidueField)).mapHomologicalComplex
       (ComplexShape.up ℕ)).obj K) q
@@ -193,38 +193,38 @@ theorem subsingleton_coh_pull_of_ker_le : ∀ (R : Type) [CommRing R] [IsNoether
     RingHom.ker g₂ ≤ RingHom.ker g₁ → ∀ q : ℕ, Subsingleton (coh (LB.toMod (M.pull π₁)) q) →
     Subsingleton (coh (LB.toMod (M.pull π₂)) q) := by
   intro R _ _ X f _ _ M hM κ₁ κ₂ _ _ g₁ g₂ X₁ X₂ f₁ f₂ π₁ π₂ h₁ h₂ hker q hsub
-  haveI : CompactSpace X := by
+  have : CompactSpace X := by
     have : QuasiCompact f := inferInstance
     exact ⟨(QuasiCompact.isCompact_preimage (f := f) _ isOpen_univ isCompact_univ)⟩
   obtain ⟨ι, _, U, hU, hUtop⟩ :=
     GlobalTheory.QCoh.exists_finite_affine_cover_of_isCompact (X := X) (W := ⊤) isCompact_univ
-  letI : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
+  let : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
   have hsep : X.IsSeparated := by
     have e : terminal.from X = f ≫ terminal.from _ := terminal.hom_ext _ _
     exact ⟨by rw [e]; infer_instance⟩
   have hint : ∀ s : Finset ι, s.Nonempty → IsAffineOpen (⨅ i ∈ s, U i) :=
     (GlobalTheory.cech_computes_coh_of_affine_cover.{0, 0, 0} X ℤ).1 (Or.inl hsep) ι U hU
   have hcov : ⨆ i, U i = ⊤ := hUtop.symm
-  haveI : IsAffineHom π₁ := MorphismProperty.of_isPullback h₁.flip inferInstance
-  haveI : IsAffineHom π₂ := MorphismProperty.of_isPullback h₂.flip inferInstance
+  have : IsAffineHom π₁ := MorphismProperty.of_isPullback h₁.flip inferInstance
+  have : IsAffineHom π₂ := MorphismProperty.of_isPullback h₂.flip inferInstance
   obtain ⟨hc₁, hi₁⟩ := affine_cover_preimage_of_isAffineHom π₁ U hcov hint
   obtain ⟨hc₂, hi₂⟩ := affine_cover_preimage_of_isAffineHom π₂ U hcov hint
-  haveI : SheafOfModules.IsQuasicoherent (LB.toMod M) := GlobalTheory.LB.isQuasicoherent_toMod hM
-  haveI : IsFiniteQC (LB.toMod M) :=
+  have : SheafOfModules.IsQuasicoherent (LB.toMod M) := GlobalTheory.LB.isQuasicoherent_toMod hM
+  have : IsFiniteQC (LB.toMod M) :=
     GlobalTheory.QCoh.isFiniteQC_iff_isFiniteType.2 ⟨inferInstance, GlobalTheory.LB.isFiniteType_toMod hM⟩
   have hfin : ∀ p : ℕ, Module.Finite R ((cechLB f M U).homology p) := by
     intro p
-    letI : Algebra R Γ(X, ⊤) := algebraΓOfHom f
+    let : Algebra R Γ(X, ⊤) := algebraΓOfHom f
     have e := ((HomologicalComplex.homologyFunctor _ _ p).mapIso
       (FieldChangeInter.cechIso f M U)).toLinearEquiv.trans (cechHEquivCoh R hcov hint (LB.toMod M) p)
-    haveI := GlobalTheory.ProperFinite.finite_coh_of_isProper f (LB.toMod M) p
+    have := GlobalTheory.ProperFinite.finite_coh_of_isProper f (LB.toMod M) p
     exact Module.Finite.equiv e.symm
   obtain ⟨K, φ, hKz, hKfin, -, hKproj, -, -, hKq⟩ :=
     exists_finite_projective_complex_quasiIso (cechLB f M U) (Fintype.card ι)
       (fun p hp => GlobalTheory.AbLaw.isZero_cechLB_X f M U hp.le)
       (fun p => GlobalTheory.AbLaw.flat_cechLB_X f hM hint p) hfin
-  haveI : ∀ i, Module.Finite R (K.X i) := hKfin
-  haveI : ∀ i, Module.Projective R (K.X i) := hKproj
+  have : ∀ i, Module.Finite R (K.X i) := hKfin
+  have : ∀ i, Module.Projective R (K.X i) := hKproj
   have hsemi := GlobalTheory.semicontinuity_finite_projective_complex K (Fintype.card ι) hKz
   have hV := fun p => hsemi.1 q p
   have hus := hsemi.2.1 q
@@ -238,8 +238,8 @@ theorem subsingleton_coh_pull_of_ker_le : ∀ (R : Type) [CommRing R] [IsNoether
     obtain ⟨e1⟩ := nonempty_cechLB_homology_equiv_coh fY (LB.isLB_pull hM π) hc hi q
     have e2 := (HomologicalComplex.homologyFunctor _ _ q).mapIso
       (GlobalTheory.AbLaw.cechLBBaseChangeIso hM h hint)
-    letI : Algebra R κ := g.toAlgebra
-    haveI : QuasiIso (((ModuleCat.extendScalars g).mapHomologicalComplex
+    let : Algebra R κ := g.toAlgebra
+    have : QuasiIso (((ModuleCat.extendScalars g).mapHomologicalComplex
       (ComplexShape.up ℕ)).map φ) := hKq κ
     have e3 := asIso (HomologicalComplex.homologyMap (((ModuleCat.extendScalars g).mapHomologicalComplex
       (ComplexShape.up ℕ)).map φ) q)
@@ -274,11 +274,11 @@ namespace GlobalTheory
 theorem exists_numberField_of_finiteType_rat (R : Type) [CommRing R] [Nontrivial R] [Algebra ℚ R]
     [Algebra.FiniteType ℚ R] : ∃ (K : Type) (_ : Field K) (_ : NumberField K) (φ : R →+* K), True := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType ℚ (R ⧸ m) :=
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType ℚ (R ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℚ m) Ideal.Quotient.mk_surjective
-  haveI : Module.Finite ℚ (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℚ (R ⧸ m)
-  haveI : CharZero (R ⧸ m) := algebraRat.charZero _
+  have : Module.Finite ℚ (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing ℚ (R ⧸ m)
+  have : CharZero (R ⧸ m) := algebraRat.charZero _
   have hfin := (inferInstance : Module.Finite ℚ (R ⧸ m))
   haveI : @FiniteDimensional ℚ (R ⧸ m) _ _ (@Algebra.toModule ℚ (R ⧸ m) _ _ DivisionRing.toRatAlgebra) := by
     have e : (Ideal.Quotient.algebra ℚ : Algebra ℚ (R ⧸ m)) = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
@@ -286,7 +286,7 @@ theorem exists_numberField_of_finiteType_rat (R : Type) [CommRing R] [Nontrivial
     first
       | exact (congrArg (@Algebra.toModule ℚ (R ⧸ m) _ _) e).symm
       | (rw [← e]; rfl)
-  haveI : NumberField (R ⧸ m) := ⟨⟩
+  have : NumberField (R ⧸ m) := ⟨⟩
   exact ⟨R ⧸ m, inferInstance, inferInstance, Ideal.Quotient.mk m, trivial⟩
 
 theorem exists_numberField_point_ne_zero :
@@ -310,7 +310,7 @@ theorem exists_numberField_point_ne_zero :
     | add x y _ _ hx hy => rw [map_add (f := _)]; exact B.add_mem hx hy
     | mul x y _ _ hx hy => rw [map_mul]; exact B.mul_mem hx hy
   have hinv : (f a)⁻¹ ∈ B := Algebra.subset_adjoin (Set.mem_insert _ _)
-  haveI hBft : Algebra.FiniteType ℚ B := by
+  have hBft : Algebra.FiniteType ℚ B := by
     rw [← Subalgebra.fg_iff_finiteType]
     exact ⟨insert (f a)⁻¹ (s.image f), by simp [B]⟩
   have hfa : f a ≠ 0 := by
@@ -688,7 +688,7 @@ namespace GlobalTheory
 theorem exists_integral_clopen_cover_of_smooth_field :
     ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k) [Smooth f] [QuasiCompact f], ∃ (κ : Type) (U : κ → X.Opens), ⨆ c, U c = ⊤ ∧ (Pairwise fun a b => Disjoint (U a) (U b)) ∧ ∀ c, IsIntegral (U c).toScheme ∧ IsClosedImmersion (U c).ι := by
   intro k _ X f _ _
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   have hopen : ∀ c : _root_.ConnectedComponents X, IsOpen ((_root_.ConnectedComponents.mk : X → _) ⁻¹' {c}) := by
     intro c
     obtain ⟨x, rfl⟩ := _root_.ConnectedComponents.surjective_coe c
@@ -710,7 +710,7 @@ theorem exists_integral_clopen_cover_of_smooth_field :
     have hU : ((U (_root_.ConnectedComponents.mk x) : X.Opens) : Set X) = connectedComponent x :=
       connectedComponents_preimage_singleton
     constructor
-    · haveI : ConnectedSpace (U (_root_.ConnectedComponents.mk x)).toScheme := by
+    · have : ConnectedSpace (U (_root_.ConnectedComponents.mk x)).toScheme := by
         show ConnectedSpace ((U (_root_.ConnectedComponents.mk x) : Set X))
         rw [← isConnected_iff_connectedSpace, hU]
         exact isConnected_connectedComponent
@@ -770,9 +770,9 @@ theorem isFrame_pullForm_openImm {U : X.Opens} {ω : FormsOn f d U} (hω : IsFra
     rw [this]
     infer_instance
   have sq := appLE_comp_algX (comp_spMap_id e f) h'
-  haveI : IsIso (CommRingCat.ofHom (e.appLE (e ''ᵁ W) W h').hom) := by
+  have : IsIso (CommRingCat.ofHom (e.appLE (e ''ᵁ W) W h').hom) := by
     simpa using hiso
-  haveI : IsIso (CommRingCat.ofHom (RingHom.id R)) := by
+  have : IsIso (CommRingCat.ofHom (RingHom.id R)) := by
     rw [CommRingCat.ofHom_id]
     infer_instance
   have H : IsPushout (CommRingCat.ofHom (algX f (e ''ᵁ W))) (CommRingCat.ofHom (RingHom.id R))
@@ -794,7 +794,7 @@ theorem resG_oBundle_g (K : CanonLB f d) (a b : OIdx e K)
       (e.appLE (K.bundle.U a.1 ⊓ K.bundle.U b.1) W
         (h.trans (fun _ hy => ⟨a.2.2.2 hy.1, b.2.2.2 hy.2⟩))).hom
           ((K.bundle.g a.1 b.1 : Γ(X, K.bundle.U a.1 ⊓ K.bundle.U b.1))) := by
-  simp only [oBundle, ZH.UFib.refinePull, res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [oBundle, ZH.UFib.refinePull, res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   erw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply]
   simp only [Scheme.Hom.appLE, Category.assoc, resG]
   rw [← Functor.map_comp]
@@ -1065,13 +1065,13 @@ namespace GlobalTheory
 
 theorem vanishing_charZero_fibre_of_finiteType : ∀ (R k : Type) [CommRing R] [Field k] [CharZero k] (φ : R →+* k) (X X' : Scheme.{0}) (f : X ⟶ Sp R) (f' : X' ⟶ Sp k) (π : X' ⟶ X) (d : ℕ) [SmoothOfRelativeDimension d f] [IsProper f], Algebra.FiniteType ℤ R → Function.Injective φ → IsPullback π f' f (spMap φ) → ∀ (s : ℕ) (L : Fin s → LB X) (σ : ∀ i, (L i).Sec) (h : RelSnc f d L σ) (K : CanonLB f d) (M A : LB X) (hM : M.IsLB) (hA : A.IsLB) (r : ℕ) (b : Fin s → ℕ), IsAmpleLB (A.pull π) → 0 < r → (∀ i, b i < r) → r • cls M hM = r • cls K.bundle K.isLB + ∑ i, b i • cls (L i) (h.isLB i) + cls A hA → ∀ q : ℕ, 0 < q → Subsingleton (coh (LB.toMod (M.pull π)) q) := by
   intro R k _ _ _ φ X X' f f' π d _ _ hR hφ hpb s L σ h K M A hM hA r b hAmp hr hb hrel q hq
-  haveI : IsDomain R := Function.Injective.isDomain φ hφ
-  haveI : CharZero R := (RingHom.charZero_iff hφ).mpr inferInstance
-  haveI := hR
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
-  haveI hstab := smoothOfRelativeDimension_isStableUnderBaseChange (n := d)
-  haveI : Smooth f := SmoothOfRelativeDimension.smooth d f
-  haveI : Flat f := inferInstance
+  have : IsDomain R := Function.Injective.isDomain φ hφ
+  have : CharZero R := (RingHom.charZero_iff hφ).mpr inferInstance
+  have := hR
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have hstab := smoothOfRelativeDimension_isStableUnderBaseChange (n := d)
+  have : Smooth f := SmoothOfRelativeDimension.smooth d f
+  have : Flat f := inferInstance
   let KR := FractionRing R
   let ι : KR →+* k := IsFractionRing.lift hφ
   have hφι : φ = ι.comp (algebraMap R KR) := by
@@ -1080,7 +1080,7 @@ theorem vanishing_charZero_fibre_of_finiteType : ∀ (R k : Type) [CommRing R] [
   have hsp : spMap φ = spMap ι ≫ spMap (algebraMap R KR) := by
     rw [hφι]
     simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-  haveI : IsProper f' := MorphismProperty.of_isPullback (P := @IsProper) hpb ‹IsProper f›
+  have : IsProper f' := MorphismProperty.of_isPullback (P := @IsProper) hpb ‹IsProper f›
   have hAπ : (A.pull π).IsLB := LB.isLB_pull hA π
   have hrelK' : Out.RelAmple (Over.mk f') (A.pull π) :=
     haveI : IsProper (Over.mk f').hom := (inferInstance : IsProper f')
@@ -1092,15 +1092,15 @@ theorem vanishing_charZero_fibre_of_finiteType : ∀ (R k : Type) [CommRing R] [
     FibreAmple.relAmple_of_fieldExtension hA ι hgenPb (hsp ▸ hpb) hA1 ((cls_eq_iff hA1 hA1).mp rfl) hrelK'
   obtain ⟨a, ha, hspread⟩ := AmpleSpread.relAmple_spread R KR (Over.mk f) A ‹IsProper f› hA hgen
   obtain ⟨p, hp, hdp, χ, hχ⟩ := exists_ringHom_zmod_prime_sq_isUnit_of_finiteType R hR a ha d
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
   let c : ZMod (p ^ 2) →+* ZMod p := ZMod.castHom (dvd_pow_self p two_ne_zero) (ZMod p)
   have hY := IsPullback.of_hasPullback f (spMap χ)
-  haveI : SmoothOfRelativeDimension d (pullback.snd f (spMap χ)) :=
+  have : SmoothOfRelativeDimension d (pullback.snd f (spMap χ)) :=
     MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension d) hY inferInstance
   have h1 := IsPullback.of_hasPullback (pullback.snd f (spMap χ)) (spMap c)
-  haveI : SmoothOfRelativeDimension d (pullback.snd (pullback.snd f (spMap χ)) (spMap c)) :=
+  have : SmoothOfRelativeDimension d (pullback.snd (pullback.snd f (spMap χ)) (spMap c)) :=
     MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension d) h1 inferInstance
-  haveI : IsProper (pullback.snd (pullback.snd f (spMap χ)) (spMap c)) := inferInstance
+  have : IsProper (pullback.snd (pullback.snd f (spMap χ)) (spMap c)) := inferInstance
   have hsp2 : spMap c ≫ spMap χ = spMap (c.comp χ) := by
     simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
   have hρ : IsPullback (pullback.fst (pullback.snd f (spMap χ)) (spMap c) ≫ pullback.fst f (spMap χ))
@@ -1115,7 +1115,7 @@ theorem vanishing_charZero_fibre_of_finiteType : ∀ (R k : Type) [CommRing R] [
   have hamp1 : Out.RelAmple (Over.mk f₁) (A.pull ρ) :=
     FibreAmple.relAmple_of_fieldExtension hA (RingHom.id (ZMod p)) hρ
       (hid.symm ▸ IsPullback.of_hasPullback f (spMap (c.comp χ))) hAρ ((cls_eq_iff hAρ hAρ).mp rfl) hspec
-  haveI : IsProper (Over.mk f₁).hom := (inferInstance : IsProper f₁)
+  have : IsProper (Over.mk f₁).hom := (inferInstance : IsProper f₁)
   have hampX : IsAmpleLB (A.pull ρ) := (relAmple_iff_isAmpleLB_of_isAffine (Over.mk f₁) hAρ).mp hamp1
   have hproj : IsProjOver f₁ := (isProjOver_iff_isProper_and_exists_isAmpleLB f₁).mpr ⟨inferInstance, _, hampX⟩
   have hL := LogPair.relSnc_baseChange R (ZMod (p ^ 2)) χ X _ f _ _ d s L σ hY h

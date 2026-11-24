@@ -282,12 +282,12 @@ variable {F : Type} [Field F] {V : Type} [AddCommGroup V] [Module F V] in
 theorem _root_.GlobalTheory.CuspGL.finsum_psi_transversal : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGroup V] [Module F V] [FiniteDimensional F V] (s : F[X] → ℂ) (A : Submodule F V) (g : Module.End F V) (hg : ∀ x ∈ A, g x ∈ A), ∑ᶠ x : {x : Module.End F V × Submodule F V // x.1 ∈ _root_.GlobalTheory.CuspGL.nilRad A ∧ x.2 ⊓ A = ⊥ ∧ ∀ v ∈ x.2, (g + x.1) v ∈ x.2}, _root_.GlobalTheory.CuspGL.psi s x.1.2 ((g + x.1.1).restrict x.2.2.2) = (Nat.card (_root_.GlobalTheory.CuspGL.nilRad A) : ℂ) * s (LinearMap.charpoly (A.mapQ A g (fun x hx => hg x hx))) := by
   intro F _ _ V _ _ _ s A g hg
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (V ⧸ A) := Module.finite_of_finite F
-  haveI : Finite (Module.End F V) := Module.finite_of_finite F
-  haveI : Finite (Submodule F V) :=
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (V ⧸ A) := Module.finite_of_finite F
+  have : Finite (Module.End F V) := Module.finite_of_finite F
+  have : Finite (Submodule F V) :=
     Finite.of_injective (fun U : Submodule F V => (U : Set V)) SetLike.coe_injective
-  haveI : Finite (Submodule F (V ⧸ A)) :=
+  have : Finite (Submodule F (V ⧸ A)) :=
     Finite.of_injective (fun U : Submodule F (V ⧸ A) => (U : Set (V ⧸ A))) SetLike.coe_injective
   set gb := A.mapQ A g (fun x hx => hg x hx) with hgb
   have hcount : ∀ (U : Submodule F (V ⧸ A)), (∀ y ∈ U, gb y ∈ U) →
@@ -315,8 +315,8 @@ theorem _root_.GlobalTheory.CuspGL.finsum_psi_transversal : ∀ (F : Type) [Fiel
     fun x => ⟨_, hstep x⟩
   let G : {U : Submodule F (V ⧸ A) // ∀ y ∈ U, gb y ∈ U} → ℂ :=
     fun U => _root_.GlobalTheory.CuspGL.psi s U.1 (gb.restrict U.2)
-  haveI := Fintype.ofFinite {U : Submodule F (V ⧸ A) // ∀ y ∈ U, gb y ∈ U}
-  haveI := Fintype.ofFinite {x : Module.End F V × Submodule F V //
+  have := Fintype.ofFinite {U : Submodule F (V ⧸ A) // ∀ y ∈ U, gb y ∈ U}
+  have := Fintype.ofFinite {x : Module.End F V × Submodule F V //
     x.1 ∈ _root_.GlobalTheory.CuspGL.nilRad A ∧ x.2 ⊓ A = ⊥ ∧ ∀ v ∈ x.2, (g + x.1) v ∈ x.2}
   rw [_root_.GlobalTheory.CuspGL.charpoly_eq_finsum_psi F (V ⧸ A) s gb, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype,
     Finset.mul_sum]
@@ -382,9 +382,9 @@ theorem sum_restrict_eq_zero_of_mixed (F : Type) [Field F] [Finite F] (V : Type)
     ∑ᶠ h : {h : Module.End F V // h ∈ nilRad A ∧ ∀ x ∈ W, (g + h) x ∈ W},
       φ ((g + h.1).restrict h.2.2) = 0 := by
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Module.End F V) := Finite.of_injective _ DFunLike.coe_injective
-  haveI : Finite (Module.End F W) := Finite.of_injective _ DFunLike.coe_injective
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Module.End F V) := Finite.of_injective _ DFunLike.coe_injective
+  have : Finite (Module.End F W) := Finite.of_injective _ DFunLike.coe_injective
   set A' : Submodule F W := A.comap W.subtype with hA'
   have hb : A' ≠ ⊥ := by
     intro h
@@ -401,8 +401,8 @@ theorem sum_restrict_eq_zero_of_mixed (F : Type) [Field F] [Finite F] (V : Type)
     have : (⟨x, hx⟩ : W) ∈ A' := h ▸ Submodule.mem_top
     exact this
   let S := {h : Module.End F V // h ∈ nilRad A ∧ ∀ x ∈ W, (g + h) x ∈ W}
-  haveI : Fintype S := Fintype.ofFinite _
-  haveI : Fintype (nilRad A') := Fintype.ofFinite _
+  have : Fintype S := Fintype.ofFinite _
+  have : Fintype (nilRad A') := Fintype.ofFinite _
   have inner : ∀ h : S, ∑ h' : nilRad A', φ ((g + h.1).restrict h.2.2 + h'.1) = 0 := by
     intro h
     have := hφ A' hb ht ((g + h.1).restrict h.2.2) (by
@@ -435,7 +435,7 @@ theorem sum_restrict_eq_zero_of_mixed (F : Type) [Field F] [Finite F] (V : Type)
     rw [Finset.sum_comm]
     exact Finset.sum_eq_zero fun h _ => inner h
   simp only [shift, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_eq_zero] at tot
-  haveI : Nonempty (nilRad A') := ⟨⟨0, fun x => A'.zero_mem, fun x _ => rfl⟩⟩
+  have : Nonempty (nilRad A') := ⟨⟨0, fun x => A'.zero_mem, fun x _ => rfl⟩⟩
   rw [finsum_eq_sum_of_fintype]
   rcases tot with h | h
   · exact absurd h (Nat.cast_ne_zero.mpr Fintype.card_ne_zero)
@@ -559,10 +559,10 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
     rw [← card_H, ← key, Fintype.sum_prod_type, Finset.sum_comm]
     refine Finset.sum_congr rfl fun W _ => ?_
     by_cases hW : W ⊓ A = ⊥
-    · rw [if_pos hW, sum_H]
+    · rw [ite_eq_left hW, sum_H]
       refine Finset.sum_congr rfl fun h _ => ?_
       by_cases hh : h ∈ nilRad A <;> simp [hh, hW, res]
-    · rw [if_neg hW]
+    · rw [ite_eq_right hW]
       symm
       refine Finset.sum_eq_zero fun h _ => ?_
       simp [hW]
@@ -576,11 +576,11 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
       simp [res_bot]
     by_cases hle : W ≤ A
     · have hmeet : W ⊓ A ≠ ⊥ := by rw [inf_eq_left.2 hle]; exact hb
-      rw [if_neg hmeet, if_pos hle, zero_add,
+      rw [ite_eq_right hmeet, ite_eq_left hle, zero_add,
         Finset.sum_congr rfl fun h hh => res_le h ((memH h).1 hh) W hle, Finset.sum_const, nsmul_eq_mul]
     by_cases hd : W ⊓ A = ⊥
-    · rw [if_pos hd, if_neg hle, add_zero]
-    · rw [if_neg hd, if_neg hle, add_zero]
+    · rw [ite_eq_left hd, ite_eq_right hle, add_zero]
+    · rw [ite_eq_right hd, ite_eq_right hle, add_zero]
       exact res_mixed W hWT hd hle
   have s_split : s (LinearMap.charpoly g) = s (LinearMap.charpoly (g.restrict hg)) +
       s (LinearMap.charpoly (A.mapQ A g (fun x hx => hg x hx))) := by
@@ -600,7 +600,7 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
     rw [Finset.sum_congr rfl fun W hW => split W (Finset.ne_of_mem_erase hW), Finset.sum_add_distrib]
     have htop1 : ¬ (⊤ : Submodule F V) ⊓ A = ⊥ := by rw [top_inf_eq]; exact hA0
     have htop2 : ¬ (⊤ : Submodule F V) ≤ A := fun h => hAT (top_le_iff.1 h)
-    rw [Finset.sum_erase _ (by rw [if_neg htop1]), Finset.sum_erase _ (by rw [if_neg htop2]),
+    rw [Finset.sum_erase _ (by rw [ite_eq_right htop1]), Finset.sum_erase _ (by rw [ite_eq_right htop2]),
       sum_disj, ← sum_le, Finset.mul_sum]
     congr 1
     refine Finset.sum_congr rfl fun W _ => ?_

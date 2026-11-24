@@ -80,13 +80,13 @@ theorem cmap_add (d : SD σ) {κ : Type} (τ : κ ≃ Ix d) (X Y : Mx F E d.m d.
   simp [cmap, SD.crd, map_add (f := _)]
 
 theorem cont_cmap (d : SD σ) {κ : Type} (τ : κ ≃ Ix d) : Continuous (cmap d τ) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have hr := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ d.ok.good.cm (AF F)).2.2.2.2.2.2.1 2 d.bs
   refine continuous_pi fun k => ?_
   exact (continuous_apply (τ k).2.2).comp (hr.continuous.comp (continuous_id.matrix_elem (τ k).1 (τ k).2.1))
 
 theorem cont_cinv (d : SD σ) {κ : Type} (τ : κ ≃ Ix d) : Continuous (cinv d τ) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have hr := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ d.ok.good.cm (AF F)).2.2.2.2.2.2.1 2 d.bs
   set h := hr.homeomorph with hh
   have e : ∀ c i j, cinv d τ c i j = h.symm (fun l => c (τ.symm (i, j, l))) := fun c i j => by
@@ -111,11 +111,11 @@ theorem map_haar (d : SD σ) {κ : Type} [Fintype κ] (τ : κ ≃ Ix d) (ν : M
     (hν : ν.IsAddHaarMeasure) :
     (ν.map (cmap d τ)).IsAddHaarMeasure ∧
       ∀ f : (κ → AF F) → ℂ, ∫ X, f (cmap d τ X) ∂ν = ∫ y, f y ∂(ν.map (cmap d τ)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have P := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ d.ok.good.cm (AF F)
-  haveI : IsTopologicalRing (AE F E) := P.1
-  haveI : BorelSpace (Mx F E d.m d.n) := P.2.2.2.2.2.2.2.1 d.m d.n
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstance
+  have : IsTopologicalRing (AE F E) := P.1
+  have : BorelSpace (Mx F E d.m d.n) := P.2.2.2.2.2.2.2.1 d.m d.n
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstance
   refine ⟨?_, fun f => ?_⟩
   · exact ContinuousAddEquiv.isAddHaarMeasure_map ν (cEquiv d τ)
   · have h := integral_map_equiv (μ := ν) (cEquiv d τ).toHomeomorph.toMeasurableEquiv f

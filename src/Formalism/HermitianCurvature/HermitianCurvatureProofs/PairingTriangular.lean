@@ -289,7 +289,7 @@ lemma exists_tp (n : ℕ) : ∃ (B : Finset (Fin d → ℤ)) (c : (Fin d → ℤ
   rw [ee_eq_prod, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl (fun j _ => ?_)
   simp only [Function.Embedding.coeFn_mk, Int.toNat_natCast]
-  rw [mul_comm, ← Complex.exp_nat_mul]
+  rw [mul_comm, ← Complex.exp_natCast_mul]
   congr 2
   push_cast
   ring
@@ -764,7 +764,7 @@ lemma Tl_emb : MeasurableEmbedding (Tl La) := (Tl La).toHomeomorph.measurableEmb
 
 lemma vol_eq : ∃ c : NNReal, 0 < c ∧
     (volume : Measure (V f)) = c • Measure.map (Tl La) (volume : Measure (Fin (finrank ℤ La) → ℝ)) := by
-  haveI : (Measure.map (Tl La) (volume : Measure (Fin (finrank ℤ La) → ℝ))).IsAddHaarMeasure :=
+  have : (Measure.map (Tl La) (volume : Measure (Fin (finrank ℤ La) → ℝ))).IsAddHaarMeasure :=
     (Tl La).isAddHaarMeasure_map _
   exact ⟨_, Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _,
     Measure.isAddLeftInvariant_eq_smul _ _⟩
@@ -785,7 +785,7 @@ lemma covol_eq (c : NNReal)
   have hfd := ZSpan.isAddFundamentalDomain (bR La) (volume : Measure (V f))
   rw [show Submodule.span ℤ (Set.range (bR La)) = La from
     Module.Basis.ofZLatticeBasis_span ℝ La _] at hfd
-  rw [ZLattice.covolume_eq_measure_fundamentalDomain La volume hfd, hc, measureReal_def, Measure.smul_apply, map_fd]
+  rw [ZLattice.covolume_eq_measure_fundamentalDomain La volume hfd, hc, measureReal_def, smul_apply, map_fd]
   simp
 
 end Lat

@@ -771,7 +771,7 @@ variable {K : Type} [Field K] [CharZero K]
 
 theorem aff_sub (α β : K) (h : α ≠ 0 ∨ β ≠ 0) : {t : ℕ | α + (t : K) * β = 0}.Subsingleton := by
   intro t1 h1 t2 h2
-  simp only [Set.mem_setOf_eq] at h1 h2
+  simp only [Set.mem_ofPred_eq] at h1 h2
   by_cases hb : β = 0
   · rw [hb, mul_zero, add_zero] at h1
     exact absurd h1 (h.resolve_right (not_not.mpr hb))
@@ -897,7 +897,7 @@ theorem coeff_extract [CharZero K] {ι : Type} [Fintype ι] [DecidableEq ι] (B 
       exact hroot t
     have hc1 := congrArg (fun p : K[X] => p.coeff 1) hq0
     simp only [hq, finsetSum_coeff, coeff_monomial_apply, Finset.sum_ite_eq', Finset.mem_range, coeff_zero] at hc1
-    rw [if_pos (by omega)] at hc1
+    rw [ite_eq_left (by omega)] at hc1
     exact hc1
   have hR1 : R.coeff 1 = (X - Polynomial.C (μ c)) * Polynomial.C (∏ c' ∈ Finset.univ.erase c, a c') := by
     rw [hR, ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ c), hac, map_zero, map_zero, zero_add, mul_assoc]

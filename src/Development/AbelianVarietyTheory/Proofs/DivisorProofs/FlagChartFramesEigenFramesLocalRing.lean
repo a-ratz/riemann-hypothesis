@@ -154,7 +154,7 @@ theorem eigDefect_eq_zero (X : FlagCover Y) (k : X.F.J) (σ : E →+* ℂ) (i : 
     (j : Fin (X.F.M k).n) : eigDefect X k σ i a j = 0 := by
   refine GlobalTheory.DRFlag.AdaptedOfStep.eq_zero_of_dense (dense_flagOpen X) _ fun K _ w hw hwD => ?_
   obtain ⟨ψ, hψ⟩ : ∃ ψ : c.F →+* K, spMap ψ = w ≫ X.π ≫ Y.s := ⟨_, spMap_ev_top _⟩
-  letI : Algebra c.F K := ψ.toAlgebra
+  let : Algebra c.F K := ψ.toAlgebra
   have hall : ⊤ ≤ w ⁻¹ᵁ flagOpen X := ((IsLocalRing.closed_point_mem_iff (U := w ⁻¹ᵁ flagOpen X)).1 hwD).ge
   have hr : Set.range w ⊆ Set.range X.inc := by
     rintro _ ⟨p, rfl⟩
@@ -217,7 +217,7 @@ theorem existsUnique_of_retraction {R N : Type} [CommRing R] [AddCommGroup N] [M
     simp only [← Finset.sum_smul]
     have : ∀ j, (∑ i, C k i * A i j) = (1 : Matrix (Fin m) (Fin m) R) k j := fun j => by
       rw [← hCA, Matrix.mul_apply]; rfl
-    simp only [this, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [this, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   obtain ⟨b, hb, -⟩ := he w hw
   have hex : w = ∑ i, (∑ k, b k * C k i) • v i := by
     rw [hb]

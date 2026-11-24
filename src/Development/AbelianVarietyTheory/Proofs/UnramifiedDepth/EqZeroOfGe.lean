@@ -93,7 +93,7 @@ theorem exists_sep {k O : Type} [CommRing k] [IsDomain k] [CommRing O] {d : ℕ}
     rintro a ⟨x, hx⟩
     rw [mem_rootsOfUnity', ← hx]
     exact hu x (by rw [hx]; exact a.ne_zero)
-  haveI : IsCyclic H := Subgroup.isCyclic_of_le hH
+  have : IsCyclic H := Subgroup.isCyclic_of_le hH
   obtain ⟨⟨γ, x, hx⟩, hγ⟩ := IsCyclic.exists_zpow_surjective (G := H)
   have hx0 : f 0 x ≠ 0 := by rw [hx]; exact γ.ne_zero
   refine ⟨x, fun a => by rw [hv]; exact pow_ne_zero _ hx0, fun a a' h => ?_⟩

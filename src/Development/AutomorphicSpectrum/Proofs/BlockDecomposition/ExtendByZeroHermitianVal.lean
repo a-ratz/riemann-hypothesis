@@ -114,7 +114,7 @@ theorem map_eq_self (Γ : AddSubgroup A) [Countable Γ] (T : A ≃ₜ+ A) (hT : 
   have h4 := Measure.isAddLeftInvariant_eq_smul (μ.map T) μ
   rw [h4] at h2
   have hc : Measure.addHaarScalarFactor (μ.map T) μ = 1 := by
-    rw [Measure.smul_apply, h1, ENNReal.smul_def, smul_eq_mul, mul_one] at h2
+    rw [smul_apply, h1, ENNReal.smul_def, smul_eq_mul, mul_one] at h2
     exact_mod_cast h2
   rw [h4, hc, one_smul]
 end Transport
@@ -136,10 +136,10 @@ theorem map_right_rat {μ₁ : Measure (Mx D t n)} (h : ∃ 𝓕, IsCovolOne (ra
     μ₁.map (rightT t a) = μ₁ := by
   obtain ⟨𝓕, hHaar, hFD, hvol⟩ := h
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D t n
-  haveI : BorelSpace (Mx D t n) := ⟨rfl⟩
-  haveI : DiscreteTopology (ratMx D t n) := i5
-  haveI : SecondCountableTopology (ratMx D t n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : Countable (ratMx D t n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D t n) := ⟨rfl⟩
+  have : DiscreteTopology (ratMx D t n) := i5
+  have : SecondCountableTopology (ratMx D t n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (ratMx D t n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   refine map_eq_self (ratMx D t n) (rightT t a) (fun x => ⟨fun hx => ?_, fun hx => ?_⟩) μ₁ hFD hvol
   · obtain ⟨γ, hγ⟩ := hx
     refine ⟨γ * (a⁻¹).1, ?_⟩
@@ -156,7 +156,7 @@ theorem map_right_rat {μ₁ : Measure (Mx D t n)} (h : ∃ 𝓕, IsCovolOne (ra
 
 theorem integral_right_rat {μ₁ : Measure (Mx D t n)} (h : ∃ 𝓕, IsCovolOne (ratMx D t n) μ₁ 𝓕) (a : GL (Fin n) D.host.E)
     (f : Mx D t n → ℂ) : ∫ x, f (mm x (rat a.1)) ∂μ₁ = ∫ x, f x ∂μ₁ := by
-  haveI : BorelSpace (Mx D t n) := ⟨rfl⟩
+  have : BorelSpace (Mx D t n) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D t n
   have hemb : MeasurableEmbedding (rightT (D := D) t a) := (rightT t a).toHomeomorph.measurableEmbedding
   conv_rhs => rw [← map_right_rat h a]
@@ -215,8 +215,8 @@ theorem eq_of_pairing (hTP : ThProd) (hRT : RowTotal) (hr : 1 ≤ r) {ψ : AddCh
     (h : ∀ Ω, IsTh ψ χ θ b₀ m.μ Ω → HasCompactSupport (Ω 1) →
       ∫ y, A y * conj (Ω 1 y) ∂m.μ = ∫ y, T y * conj (Ω 1 y) ∂m.μ) : A = T := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D r t
-  haveI : BorelSpace (Mx D r t) := ⟨rfl⟩
-  haveI : m.μ.IsAddHaarMeasure := m.hμ.1
+  have : BorelSpace (Mx D r t) := ⟨rfl⟩
+  have : m.μ.IsAddHaarMeasure := m.hμ.1
   have hz := hRT D θ hθ r t m.μ m.hμ.1 (fun y => A y - T y) (hA.sub hT) (fun η hη' => ?_)
   · funext y
     exact sub_eq_zero.1 (congrFun hz y)
@@ -263,7 +263,7 @@ theorem exists_complete {K : Type} [Field K] (hn : r + t = n) (c : Matrix (Fin r
   let e := finSumFinEquiv.trans (finCongr hn)
   let A : Matrix (Fin n) (Fin n) K := fun i => v (e.symm i)
   have hA : LinearIndependent K A.row := hv.comp e.symm e.symm.injective
-  have hu : IsUnit A := Matrix.linearIndependent_rows_iff_isUnit.1 hA
+  have hu : IsUnit A := Matrix.linearIndependent_row_iff_isUnit.1 hA
   refine ⟨hu.unit, fun i j => ?_⟩
   show A (e (Sum.inl i)) j = c i j
   simp [A, v]
@@ -313,13 +313,13 @@ theorem fc_levi_mat {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ
       ∀ g, fc ψ lam 𝓖 nb F β (q * g) = fc ψ lam 𝓖 nb F (cg a β) g := by
   obtain ⟨hnb, hlam, hFD, hvol⟩ := hC
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D n n
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D n) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace (hermA D n) := isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : DiscreteTopology (ratHerm D n) := discrete_ratHerm
-  haveI : SecondCountableTopology (ratHerm D n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : Countable (ratHerm D n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : BorelSpace (hermA D n) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (hermA D n) := isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : DiscreteTopology (ratHerm D n) := discrete_ratHerm
+  have : SecondCountableTopology (ratHerm D n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : Countable (ratHerm D n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨q, hqF, hq⟩ := exists_levi_rat (D := D) a
   refine ⟨q, hq, fun g => ?_⟩
   let f : hermA D n → ℂ := fun c =>

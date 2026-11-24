@@ -163,7 +163,7 @@ theorem map_maximalIdeal_le_jacobson_of_finite (R S : Type*) [CommRing R] [IsLoc
     (maximalIdeal R).map (algebraMap R S) ≤ (⊥ : Ideal S).jacobson := by
   rw [Ideal.jacobson_bot, Ring.jacobson_eq_sInf_isMaximal, le_sInf_iff]
   rintro n hn
-  letI : n.IsMaximal := hn
+  let : n.IsMaximal := hn
   rw [Ideal.map_le_iff_le_comap, comap_eq_maximalIdeal_of_finite]
 
 theorem finite_maximalSpectrum_of_finite_of_isLocalRing (R S : Type*) [CommRing R] [IsLocalRing R]
@@ -214,7 +214,7 @@ theorem mem_jacobson_bot_of_forall_isMaximal {S : Type*} [CommRing S] {x : S}
     (h : ∀ n : Ideal S, n.IsMaximal → x ∈ n) : x ∈ (⊥ : Ideal S).jacobson := by
   rw [Ideal.jacobson_bot, Ring.jacobson_eq_sInf_isMaximal, Ideal.mem_sInf]
   rintro n hn
-  letI : n.IsMaximal := hn
+  let : n.IsMaximal := hn
   exact h n hn
 
 theorem one_sub_mem_iff_notMem_of_isIdempotentElem {S : Type*} [CommRing S] {e : S}

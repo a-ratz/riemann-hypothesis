@@ -158,7 +158,7 @@ theorem candS_of (h : Tail.ReadS) : CandS := by
   have hm : (F.d.betaL _ ha).m w = fun u v => (F.d.sgn (F₀.C.a i) w * ((F.d.X w).card : ℂ))⁻¹ • M (σ u) (σ v) := by
     funext u v
     show (if w ∈ F.d.T then _ else _) = _
-    rw [if_neg hwT]
+    rw [ite_eq_right hwT]
     funext z
     show _ * phiMu (Nat.add_sub_of_le ha) w (F.d.μ w) (F.d.e w) _ _ z = _
     rw [hμ]

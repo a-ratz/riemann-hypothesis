@@ -201,7 +201,7 @@ theorem haar_transport (hP : IsUnit P) (μ : Measure (Fin n → Fin n → ℂ)) 
       have hlt := measure_spanningSets_lt_top ν i
       have hS : ν (spanningSets ν i) = (c • muG ε) (spanningSets ν i) :=
         congrArg (fun m : Measure (UJ ε) => m (spanningSets ν i)) heq
-      rw [hS, Measure.smul_apply, smul_eq_mul, h] at hlt
+      rw [hS, smul_apply, smul_eq_mul, h] at hlt
       by_contra hne
       rw [ENNReal.top_mul hne] at hlt
       exact lt_irrefl _ hlt
@@ -387,7 +387,7 @@ lemma ktype_map (hT : Inter (ε := ε) σ σ' T) {Λ : Fin n → ℝ} {S : Submo
     (hS : IsKTypeOf ε σ Λ S) : IsKTypeOf ε σ' Λ (S.map (T : H →ₗ[ℂ] H)) := by
   obtain ⟨hfin, hst, hirr, ⟨v, hvS, hv0, hvw⟩, hdom⟩ := hS
   refine ⟨?_, stab_map hT hst, ?_, ?_, ?_⟩
-  · haveI := hfin
+  · have := hfin
     infer_instance
   · intro S' hS' hst'
     have hle : S'.map (T.symm : H →ₗ[ℂ] H) ≤ S := by
@@ -647,7 +647,7 @@ theorem reproducing_formula_holds : WlocSk.ReprodG := by
       rw [← hg]; exact hE.injective.extend_apply _ _ g
     · exact absurd (Function.extend_apply' f (fun _ => (0 : ℂ)) _ h) hy
   have hcont : Continuous fun g : Formalism.REAL.UJ (eps48 k r) => P'⁻¹ * uMat g * P' :=
-    (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul
+    (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul
       continuous_const
   have hinv := OneP.unit_inv hP'.2
   have h1 := OneP.unit_star_mul hP'.2

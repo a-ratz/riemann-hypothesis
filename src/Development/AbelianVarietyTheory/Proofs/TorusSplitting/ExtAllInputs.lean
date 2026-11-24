@@ -135,7 +135,7 @@ private theorem ext_detPerturbNumeric : _root_.ReciprocityTheory.ChartRestrictio
     nlinarith
   have h1 : (1 + (ρ : ℝ) ^ (-3 / 2 : ℝ) / 10) ^ ρ
       ≤ Real.exp ((ρ : ℝ) * ((ρ : ℝ) ^ (-3 / 2 : ℝ) / 10)) := by
-    rw [Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul]
     exact pow_le_pow_left₀ (by positivity)
       (by linarith [Real.add_one_le_exp ((ρ : ℝ) ^ (-3 / 2 : ℝ) / 10)]) ρ
   have h2 : Real.exp ((ρ : ℝ) * ((ρ : ℝ) ^ (-3 / 2 : ℝ) / 10)) ≤ Real.exp (1 / 10) :=

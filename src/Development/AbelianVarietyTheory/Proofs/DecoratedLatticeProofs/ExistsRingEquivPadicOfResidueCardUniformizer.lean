@@ -84,7 +84,7 @@ theorem maximalIdeal_eq (hirr : Irreducible (T : 𝒪[k])) :
 
 theorem dvd_of_residue (hirr : Irreducible (T : 𝒪[k])) (a : ℤ) :
     (T : 𝒪[k]) ∣ (a : 𝒪[k]) ↔ (T : ℤ) ∣ a := by
-  haveI := charP_residueField_of_irreducible hirr
+  have := charP_residueField_of_irreducible hirr
   constructor
   · intro h
     have h1 : (a : 𝒪[k]) ∈ maximalIdeal 𝒪[k] := by
@@ -117,8 +117,8 @@ theorem pow_dvd_intCast_iff (hirr : Irreducible (T : 𝒪[k])) (n : ℕ) (a : �
 
 theorem exists_residue_intCast (hcard : Nat.card (ResidueField 𝒪[k]) = T)
     (hirr : Irreducible (T : 𝒪[k])) (y : 𝒪[k]) : ∃ b : ℤ, (T : 𝒪[k]) ∣ y - b := by
-  haveI := charP_residueField_of_irreducible hirr
-  haveI : NeZero T := ⟨hT.out.ne_zero⟩
+  have := charP_residueField_of_irreducible hirr
+  have : NeZero T := ⟨hT.out.ne_zero⟩
   have hbij : Function.Bijective (ZMod.castHom (dvd_refl T) (ResidueField 𝒪[k])) :=
     (ZMod.castHom_injective _).bijective_of_nat_card_le (by rw [hcard, Nat.card_zmod])
   obtain ⟨q, hq⟩ := hbij.2 (IsLocalRing.residue 𝒪[k] y)
@@ -213,8 +213,8 @@ theorem padic_intCast_mem_span_iff (m : ℕ) (c : ℤ) :
     Nat.cast_pow]
 
 theorem isAdicComplete_integer : IsAdicComplete (maximalIdeal 𝒪[k]) 𝒪[k] := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
   infer_instance
 
 noncomputable def toPadic (hcard : Nat.card (ResidueField 𝒪[k]) = T)
@@ -252,7 +252,7 @@ theorem toPadic_injective (hcard : Nat.card (ResidueField 𝒪[k]) = T)
 theorem toPadic_surjective (hcard : Nat.card (ResidueField 𝒪[k]) = T)
     (hirr : Irreducible (T : 𝒪[k])) : Function.Surjective (toPadic hcard hirr) := by
   intro z
-  haveI := isAdicComplete_integer (k := k)
+  have := isAdicComplete_integer (k := k)
   have hI : ∀ m : ℕ, ((maximalIdeal 𝒪[k]) ^ m • ⊤ : Submodule 𝒪[k] 𝒪[k]) = Ideal.span {(T : 𝒪[k]) ^ m} := by
     intro m
     rw [Ideal.smul_eq_mul, Ideal.mul_top, maximalIdeal_eq hirr, Ideal.span_singleton_pow]
@@ -322,7 +322,7 @@ theorem valuation_le_T_pow_iff (hirr : Irreducible (T : 𝒪[k])) (o : 𝒪[k]) 
 
 theorem exists_T_pow_lt (hirr : Irreducible (T : 𝒪[k])) (γ : ValueGroupWithZero k) (hγ : γ ≠ 0) :
     ∃ n : ℕ, valuation k (T : k) ^ n < γ := by
-  haveI : MulArchimedean (ValueGroupWithZero k) :=
+  have : MulArchimedean (ValueGroupWithZero k) :=
     ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
   obtain ⟨n, hn⟩ := exists_pow_lt₀ (valuation_T_lt_one hirr) (Units.mk0 γ hγ)
   exact ⟨n, hn⟩
@@ -385,7 +385,7 @@ theorem exists_ringEquiv_padic : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
     filter_upwards [(IsValuativeTopology.hasBasis_nhds_zero' k).mem_of_mem hγ] with y hy
     have hy1 : valuation k y < valuation k (T : k) ^ n := hy
     have hyO : valuation k y ≤ 1 :=
-      hy1.le.trans (pow_le_one₀ zero_le' (valuation_T_lt_one hirr).le)
+      hy1.le.trans (pow_le_one₀ zero_le (valuation_T_lt_one hirr).le)
     obtain ⟨w, hw⟩ := (valuation_le_T_pow_iff hirr ⟨y, hyO⟩ n).mp hy1.le
     have hy' : y = (T : k) ^ n * (w : k) := by
       have h6 := congrArg (fun t : 𝒪[k] => (t : k)) hw

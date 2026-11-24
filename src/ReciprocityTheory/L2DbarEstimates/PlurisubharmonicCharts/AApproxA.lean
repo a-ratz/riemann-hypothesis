@@ -134,7 +134,7 @@ theorem leviV_eq_dv {n : ℕ} {g : V n → ℂ} {y : V n} (hg : ContDiffAt ℝ 2
   refine Finset.sum_congr rfl fun j _ => ?_
   simp only [wd]
   rw [hD.fderiv]
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
     Pi.smul_apply, smul_eq_mul, WithLp.ofLp_toLp]
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div, Finset.sum_mul]
   refine Finset.sum_congr rfl fun k _ => ?_
@@ -177,7 +177,7 @@ private theorem dv_fderiv_conj_holomorphic_eq_zero {n : ℕ} {c : V n → ℂ} {
   have hL : fderiv ℂ c y (I • ζ) = I * fderiv ℂ c y ζ := by rw [map_smul, smul_eq_mul]
   have hfun : (fun v => conj (c v)) = fun v => star (c v) := rfl
   rw [hfun, h.fderiv, hc.fderiv_restrictScalars ℝ]
-  simp only [dv, ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simp only [dv, ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.coe_restrictScalars', hL]
   simp only [ContinuousLinearEquiv.coe_coe, starL'_apply, star_mul', Complex.star_def,
     Complex.conj_I]
@@ -187,12 +187,12 @@ private theorem dv_fderiv_conj_holomorphic_eq_zero {n : ℕ} {c : V n → ℂ} {
 
 private theorem dv_add' {n : ℕ} (L M : V n →L[ℝ] ℂ) (ζ : V n) :
     dv (L + M) ζ = dv L ζ + dv M ζ := by
-  simp only [dv, ContinuousLinearMap.add_apply]
+  simp only [dv, add_apply]
   ring
 
 private theorem dv_sum_smul {n : ℕ} (a : Fin n → ℂ) (L : Fin n → V n →L[ℝ] ℂ) (ζ : V n) :
     dv (∑ k, a k • L k) ζ = ∑ k, a k * dv (L k) ζ := by
-  simp only [dv, ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
+  simp only [dv, FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
     Pi.smul_apply, smul_eq_mul]
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div]
   exact Finset.sum_congr rfl fun k _ => by ring

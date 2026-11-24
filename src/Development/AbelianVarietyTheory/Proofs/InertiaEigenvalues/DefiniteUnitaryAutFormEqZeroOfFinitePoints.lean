@@ -71,7 +71,7 @@ def infPt (y : UJ (starRingEnd (Cinf E)) (1 : Matrix (Fin n) (Fin n) (Cinf E))) 
     exact h)⟩
 
 theorem continuous_infPt : Continuous (infPt (E := E) (n := n)) :=
-  (GlobalTheory.DefU.continuous_infGL.comp continuous_subtype_val).subtype_mk _
+  (GlobalTheory.DefU.continuous_infGL.comp continuous_subtypeVal).subtype_mk _
 
 theorem mem_closure_rat_fin (x : UA E n) (hx : x ∈ infU E n) :
     x ∈ closure ((ratU E n : Set (UA E n)) * (finU (E := E) (n := n) : Set (UA E n))) := by

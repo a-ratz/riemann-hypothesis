@@ -157,7 +157,7 @@ theorem roots_cases (t n : ℤ) {p : ℕ} (hp : p.Prime) :
       ((kroneckerAt (t ^ 2 - 4 * n) p = 0 ∧ β = β') ∨
         (kroneckerAt (t ^ 2 - 4 * n) p = 1 ∧ β ≠ β')) := by
   rcases eq_or_ne p 2 with rfl | h2
-  · simp only [kroneckerAt, if_true]
+  · simp only [kroneckerAt, ite_true]
     have key : ∀ t n : ZMod 8,
         (ZMod.χ₈ (t ^ 2 - 4 * n) = -1 ∧ ∀ β : ZMod 2, β ^ 2 ≠ t.cast * β - n.cast) ∨
         ∃ β β' : ZMod 2, β + β' = t.cast ∧ β * β' = n.cast ∧
@@ -167,9 +167,9 @@ theorem roots_cases (t n : ℤ) {p : ℕ} (hp : p.Prime) :
     rw [ZMod.cast_intCast (by norm_num), ZMod.cast_intCast (by norm_num)] at this
     push_cast
     exact this
-  · haveI := Fact.mk hp
+  · have := Fact.mk hp
     have h2' : (2 : ZMod p) ≠ 0 := Ring.two_ne_zero (by rwa [ZMod.ringChar_zmod_n])
-    simp only [kroneckerAt, if_neg h2, ← jacobiSym.legendreSym.to_jacobiSym]
+    simp only [kroneckerAt, ite_eq_right h2, ← jacobiSym.legendreSym.to_jacobiSym]
     by_cases hs : IsSquare ((t ^ 2 - 4 * n : ℤ) : ZMod p)
     · obtain ⟨r, hr⟩ := hs
       refine Or.inr ⟨(t + r) / 2, (t - r) / 2, by field_simp; ring, ?_, ?_⟩
@@ -206,7 +206,7 @@ theorem ncard_dvd {J : Ideal (𝓞 K)} (hJ : J ≠ ⊥) (k : ℕ) :
       exact ⟨by rw [map_mul, h1], dvd_mul_right _ _⟩
   · have hEmpty : {I : Ideal (𝓞 K) | Ideal.absNorm I = k ∧ J ∣ I} = ∅ := by
       ext I
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
       rintro rfl h'
       exact h (map_dvd _ h')
     rw [hEmpty, Set.ncard_empty]
@@ -239,7 +239,7 @@ theorem eq_span_of_no_root (h : ∀ β : ZMod p, β ^ 2 ≠ t * β - n) :
       linear_combination (y : 𝓞 K) ^ 2 * hw
     rw [int_dvd_of_mem hP, ← ZMod.intCast_zmod_eq_zero_iff_dvd] at h1
     push_cast at h1
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     have hy : (y : ZMod p) = 0 := by
       by_contra hy
       refine h (-x / y) ?_
@@ -256,7 +256,7 @@ theorem eq_span_of_no_root (h : ∀ β : ZMod p, β ^ 2 ≠ t * β - n) :
 omit hw in
 theorem eq_ker_of_mem (φ : 𝓞 K →+* ZMod p) {c : ℤ} (hc : φ (b 1) = c) (hm : b 1 - c ∈ P) :
     P = RingHom.ker φ := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   refine ((RingHom.ker_isMaximal_of_surjective φ (ZMod.ringHom_surjective φ)).eq_of_le
     hPm.ne_top fun z hz => ?_).symm
   rw [eq_coord b h0 z] at hz ⊢
@@ -294,7 +294,7 @@ theorem idealCount_prime_mul (h2 : finrank ℚ K = 2) {p : ℕ} (hp : p.Prime) (
     (idealCount K (p * m) : ℤ) = (1 + kroneckerAt (discr K) p) * idealCount K m
       - kroneckerAt (discr K) p * if p ∣ m then (idealCount K (m / p) : ℤ) else 0 := by
   obtain ⟨b, t, n, h0, hw, hD⟩ := exists_basis h2
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hex : ∀ I : Ideal (𝓞 K), Ideal.absNorm I = p * m →
       ∃ P : Ideal (𝓞 K), P.IsMaximal ∧ P.under ℤ = .span {(p : ℤ)} ∧ P ∣ I := fun I hI =>
     Ideal.exists_isMaximal_dvd_of_dvd_absNorm' hp I (hI ▸ dvd_mul_right _ _)
@@ -307,7 +307,7 @@ theorem idealCount_prime_mul (h2 : finrank ℚ K = 2) {p : ℕ} (hp : p.Prime) (
   have hone : ∀ J : Ideal (𝓞 K), Ideal.absNorm J = p →
       {I : Ideal (𝓞 K) | Ideal.absNorm I = p * m ∧ J ∣ I}.ncard = idealCount K m := fun J hJ => by
     rw [ncard_dvd (by rw [Ne, ← Ideal.absNorm_eq_zero_iff, hJ]; simp [hp.ne_zero]), hJ,
-      Nat.mul_div_cancel_left _ hp.pos, if_pos (dvd_mul_right _ _)]
+      Nat.mul_div_cancel_left _ hp.pos, ite_eq_left (dvd_mul_right _ _)]
   rw [hD]
   rcases roots_cases t n hp with ⟨hκ, h⟩ | ⟨β, β', hs, hm, h⟩
   · have hN : Ideal.absNorm (Ideal.span {(p : 𝓞 K)}) = p * p := by
@@ -340,7 +340,7 @@ theorem idealCount_prime_mul (h2 : finrank ℚ K = 2) {p : ℕ} (hp : p.Prime) (
         exact hne (by simpa [RingHom.mem_ker, hφ', hc, sub_eq_zero, eq_comm] using this)
       have hcop : IsCoprime (RingHom.ker φ) (RingHom.ker φ') :=
         Ideal.isCoprime_iff_sup_eq.2 (hmax.coprime_of_ne hmax' hk)
-      have hfin := Ideal.finite_setOfPred_absNorm_eq (S := 𝓞 K) (p * m)
+      have hfin := Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) (p * m)
       have hu := Set.ncard_union_add_ncard_inter
         {I : Ideal (𝓞 K) | Ideal.absNorm I = p * m ∧ RingHom.ker φ ∣ I}
         {I : Ideal (𝓞 K) | Ideal.absNorm I = p * m ∧ RingHom.ker φ' ∣ I}
@@ -450,7 +450,7 @@ include hχ
 theorem apply_two (h4 : d % 4 ≠ 1) : χ 2 = (ZMod.χ₈ ((-(d : ℤ) : ℤ) : ZMod 8) : ℤ) := by
   rcases Nat.even_or_odd d with h | h
   · rw [MulChar.map_nonunit, (ZMod.χ₈_int_eq_if_mod_eight _),
-      if_pos (by obtain ⟨k, rfl⟩ := h; omega)]
+      ite_eq_left (by obtain ⟨k, rfl⟩ := h; omega)]
     · simp
     · rw [show (2 : ZMod d) = ((2 : ℕ) : ZMod d) by simp, ZMod.isUnit_iff_coprime,
         Nat.coprime_two_left, Nat.not_odd_iff_even]
@@ -506,7 +506,7 @@ theorem isKroneckerChar_quadraticChar {d : ℕ} [Fact d.Prime] (hd : d % 4 = 3) 
 
 theorem exists_isKroneckerChar {d : ℕ} (hd0 : d ≠ 0) (hd : d % 4 = 0 ∨ d % 4 = 3) :
     ∃ χ : DirichletCharacter ℂ d, IsKroneckerChar χ := by
-  haveI : NeZero d := ⟨hd0⟩
+  have : NeZero d := ⟨hd0⟩
   rcases hd with hd | hd
   · obtain ⟨k, hk⟩ : 4 ∣ d := Nat.dvd_of_mod_eq_zero hd
     let f : ℕ → ℤ := fun n => if Odd n then J(-(d : ℤ) | n) else 0

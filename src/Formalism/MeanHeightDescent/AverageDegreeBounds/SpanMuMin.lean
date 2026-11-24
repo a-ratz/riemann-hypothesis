@@ -163,7 +163,7 @@ theorem muMin_line (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
         (Submodule.span (𝓞 K) ({x} : Set V)).subtype
       rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hN] at h1
     obtain ⟨-, hrkN, -⟩ := Formalism.HN.place_lattice_structure K V ι b X hX N hNFG
-    haveI : FiniteDimensional K V := Module.Finite.of_basis b
+    have : FiniteDimensional K V := Module.Finite.of_basis b
     have hkN : rkK (K := K) N = 1 := by
       have hle : Submodule.span K (N : Set V) ≤ Submodule.span K ({x} : Set V) := by
         rw [Submodule.span_le]

@@ -77,9 +77,9 @@ namespace GlobalTheory.ValCmp
 theorem hasDiv_of_forall_cDvr : ∀ (k Ω : Type) [CommRing k] [IsNoetherianRing k] [Field Ω] [CharZero Ω] [Algebra k Ω] (M : RatModel k Ω) (J J' : Type) [Fintype J] (th : J → Ω) (e : J' → Ω) (D : ℕ), 1 ≤ D → Geo.Tor.IsNormalScheme M.Z → M.HasDiv e → (∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ (ξ : Sp V ⟶ M.Z) (emb : Ω →+* FractionRing V), jK V ≫ ξ = spMap emb ≫ M.pt → ∀ j₀, e j₀ ≠ 0 → (∀ j, emb (e j / e j₀) ∈ Set.range (algebraMap V (FractionRing V))) → (∀ b, emb (th b ^ D / e j₀) ∈ Set.range (algebraMap V (FractionRing V))) ∧ ∃ b, th b ≠ 0 ∧ emb (e j₀ / th b ^ D) ∈ Set.range (algebraMap V (FractionRing V))) → M.HasDiv th := by
   intro k Ω _ _ _ _ _ M J J' _ th e D hD hN he H z
   obtain ⟨j₀, hj₀, hej⟩ := he z
-  haveI : IsNoetherianRing (M.O z) := RatModel.isNoetherianRing_O M z
-  haveI : IsIntegrallyClosed (M.O z) := RatModel.isIntegrallyClosed_O hN z
-  haveI : CharZero (M.O z) := ⟨fun a b h => by
+  have : IsNoetherianRing (M.O z) := RatModel.isNoetherianRing_O M z
+  have : IsIntegrallyClosed (M.O z) := RatModel.isIntegrallyClosed_O hN z
+  have : CharZero (M.O z) := ⟨fun a b h => by
     have := congrArg Subtype.val h
     simpa using this⟩
   have key : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V →

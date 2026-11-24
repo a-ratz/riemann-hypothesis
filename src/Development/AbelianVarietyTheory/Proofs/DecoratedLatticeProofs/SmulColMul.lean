@@ -304,7 +304,7 @@ theorem line_idele {X T L : HSp D} (o : OrthDec X T L) {ζ : Fin L.rank → D.ho
   by_cases hS : x ∈ hfin.toFinset
   · rw [inv_same (m1 x hS) a ha]; exact hu x hx a ha
   · rw [inv_same (m2 x hS) a ha, inv_one, Units.val_one, one_mul]
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hS
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hS
     exact hS a ha
 
 theorem colMul_id {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) {x : Pl D} (j : Fin ρ) {a : AE D}

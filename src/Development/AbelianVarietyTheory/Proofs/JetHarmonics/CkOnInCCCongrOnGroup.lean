@@ -59,10 +59,10 @@ private theorem exp_real_smul_mem_UJset_of_inG {n : ℕ} (H X : Matrix (Fin n) (
     rw [hYdef, Matrix.mul_smul, hHX, Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal,
       Matrix.neg_mul, Matrix.smul_mul, smul_neg]
   have key : NormedSpace.exp (-(-Y.conjTranspose)) * H * NormedSpace.exp Y = H := by
-    letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-    letI : NormedSpace ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
-    letI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℂ _
+    let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+    let : NormedSpace ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
+    let : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℂ _
     exact hY.exp_neg_mul_mul_exp_eq_self
   rwa [neg_neg, Matrix.exp_conjTranspose] at key
 

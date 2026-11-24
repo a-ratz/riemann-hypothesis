@@ -88,7 +88,7 @@ theorem exists_section_of_pow_eq_one {T V : Scheme.{0}} [IsLocallyNoetherian T] 
 theorem torsion_section_extends_abLocus : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β), IsDedFrac β → AbOpen Y.t.G → ∃ U : Y.X.Opens, (U : Set Y.X) = abLocus Y.t.G ∧ ∀ (σ : 𝟙_ (Over (Xo.XF c)) ⟶ Y.oF.t.G) (n : ℕ), IsUnit (n : O) → σ ^ n = 1 → Y.Extends U σ := by
   intro E _ _ _ H D l Xo c O _ β Y ⟨⟨_, hD⟩, _, hF⟩ ⟨U, hU, hP⟩
   refine ⟨U, hU, fun σ n hn hσ => ?_⟩
-  letI : Algebra O c.F := β.toAlgebra
+  let : Algebra O c.F := β.toAlgebra
   obtain ⟨hN, -, -, j₁, j₂, j₃, j₄⟩ := genericPart_dense_proOpen O c.F Y.X (Xo.XF c) Y.s Y.jQ Y.flat Y.proj
     Y.jQ_open Y.jQ_dense
   replace j₁ : IsPreimmersion Y.j := j₁

@@ -68,7 +68,7 @@ theorem kgv_conj (v : HeightOneSpectrum (𝓞 F)) (g : ℕ) (a y : HA (Fv F v) �
     (hy : y ∈ Kgv σ J Λ g v) : a⁻¹ * y * a ∈ Kgv σ J Λ g v := by
   unfold Kgv Kv Kloc at *
   obtain ⟨hy1, hy2⟩ := hy
-  simp only [Set.mem_setOf_eq] at ha hy1 ⊢
+  simp only [Set.mem_ofPred_eq] at ha hy1 ⊢
   have hm : HA.mat (Fv F v) σ J (a⁻¹ * y * a) =
       (HA.mat (Fv F v) σ J a)⁻¹ * HA.mat (Fv F v) σ J y * HA.mat (Fv F v) σ J a := rfl
   rw [hm]
@@ -129,7 +129,7 @@ theorem kgv_of_gOf (X : HidaSetting D) (p : TypX X) (y : HA (Fv X.B.I.F p.1) X.B
     (hy : y ∈ Kgv X.B.I.cm.sig X.B.I.J (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) (gOf p) p.1) :
     y ∈ Kgv X.B.I.cm.sig X.B.I.J (X.B.I.L : Set (Fin X.B.I.n → X.B.I.E)) X.B.g p.1 := by
   obtain ⟨w, hw⟩ := g_eq_gOf_mul_unit X p
-  simp only [Formalism.L2.SG.TypedSets.Kgv, Set.mem_setOf_eq] at hy ⊢
+  simp only [Formalism.L2.SG.TypedSets.Kgv, Set.mem_ofPred_eq] at hy ⊢
   obtain ⟨hKv, h⟩ := hy
   refine ⟨hKv, fun y' hy' => ?_⟩
   obtain ⟨z, hz, e⟩ := h y' hy'

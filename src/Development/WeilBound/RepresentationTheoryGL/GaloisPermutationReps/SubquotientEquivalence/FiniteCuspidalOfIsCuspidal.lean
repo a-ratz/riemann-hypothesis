@@ -120,7 +120,7 @@ private theorem finite_cuspidal_of_isCuspidal_lemma_2 {K : Type} [Field K] [Fint
         intro h
         subst h
         exact lt_irrefl _ hji
-      rw [hud i j ?_, if_neg hne]
+      rw [hud i j ?_, ite_eq_right hne]
       by_cases h1 : GlobalTheory.SmGL.blk e i < t
       · have h2 : GlobalTheory.SmGL.blk e j < t := lt_trans hji h1
         simp [h1, h2]
@@ -158,7 +158,7 @@ theorem hasCuspLabel_of_equiv {K : Type} [Field K] [Fintype K] [DecidableEq K]
 theorem st7 : St7 := by
   intro K _ _ n hn
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   obtain ⟨C⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.CuspExists.nonempty_labelConv K
   obtain ⟨P0, a0, b0, c0, d0⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.CuspExists.exists_monic_irreducible K n hn
   obtain ⟨τ0, -⟩ := _root_.GlobalTheory.CompanionTheory.TyFin.CuspLabel.exists_cuspidal_label K C n hn P0 a0 b0 c0 d0

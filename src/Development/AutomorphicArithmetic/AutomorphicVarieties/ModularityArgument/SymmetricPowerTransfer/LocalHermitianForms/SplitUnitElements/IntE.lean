@@ -57,7 +57,7 @@ theorem UpperTheory.V.Z.Sym.Loc.One.intE :
         (∃ u : Oˣ, algebraMap O K u = τ ^ 2 - 4) → τ ∈ (algebraMap O K).range ∧ (∃ u : Oˣ, algebraMap O K u = 2 - τ) ∧ (∃ u : Oˣ, algebraMap O K u = 2 + τ) ∧
         ∀ x : Etau K τ, IsIntegral O x ↔ x.re ∈ (algebraMap O K).range ∧ x.im ∈ (algebraMap O K).range := by
   rintro O K _ _ _ _ _ Δ τ L ⟨u, hu⟩
-  haveI := L.frac
+  have := L.frac
   have sq_int : ∀ (x : K) (a : O), x ^ 2 = algebraMap O K a → ∃ b : O, algebraMap O K b = x := fun x a h =>
     IsIntegrallyClosed.algebraMap_eq_of_integral (IsIntegral.of_pow (n := 2) (by norm_num) (h ▸ isIntegral_algebraMap))
   obtain ⟨τ₀, e₀⟩ := sq_int τ (4 + u) (by rw [map_add (f := _), hu, map_ofNat]; ring)

@@ -97,9 +97,9 @@ theorem UpperTheory.continuous_thetaLift_of_definite :
   obtain ⟨C, hC⟩ := cX.bdd₂ cW (f := fun x => theta om Φ x.1 x.2) t1 fun γ hγ δ hδ g g' => t2 γ hγ δ hδ g g'
   obtain ⟨C', hC'⟩ := cX.bdd hφ.1 hφ.2
   have hfin : M.μ M.dom < ⊤ := cX.fin _ _ hp.good.haar hp.good.dom
-  haveI : IsFiniteMeasure (M.μ.restrict M.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
-  haveI := cW.sc
-  haveI : FirstCountableTopology (UA σ W.J) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : IsFiniteMeasure (M.μ.restrict M.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have := cW.sc
+  have : FirstCountableTopology (UA σ W.J) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   have hs : Continuous fun g => star (φ g) := hφ.1.star
   unfold lift
   refine continuous_of_dominated (bound := fun _ => C * C') (fun h => ?_) (fun h => ?_) (integrable_const _) ?_
@@ -215,7 +215,7 @@ theorem polFin_k {B : Base F E} {Y : Spc F E n} {W : Spc F E d} {M : Model σ Y 
       smul_mem' := fun c f ⟨N, h0, h1⟩ => ⟨N, h0, fun k hk A hA => by rw [map_smul]; exact N.smul_mem c (h1 k hk A hA)⟩ }
   obtain ⟨U, h0, h1⟩ : f ∈ S := by
     refine (sInf_le (a := S) ⟨fun f₀ h₀ => ?_, fun u hu g ⟨N, h0, h1⟩ g₁ hg => ?_⟩ : M.Pol B.ψ B.emb ≤ S) hf
-    · haveI := Dense.vacSp_fin h.base.cm M B.emb
+    · have := Dense.vacSp_fin h.base.cm M B.emb
       refine ⟨⨆ ε, Dense.vacSp M B.emb ε, inferInstance, fun k hk A hA => ?_⟩
       have hgauss : M.IsGauss B.ψ B.emb (A f₀) := by
         obtain ⟨ε, hε⟩ := h₀
@@ -375,7 +375,7 @@ private theorem schr_left_pk {n d : ℕ} {X : Spc F E n} {W : Spc F E d} (M : Mo
   have he : Continuous M.co.e := IsModuleTopology.continuous_of_linearMap M.co.e.toLinearMap
   have hV := schr_near hψ hg (hC.image he)
   have hm : Continuous fun p : UA σ X.J × Ten F E n d => M.co.e ((mat p.1 - 1) * p.2) :=
-    he.comp ((((Units.continuous_val.comp continuous_subtype_val).comp continuous_fst).sub continuous_const).matrix_mul
+    he.comp ((((Units.continuous_val.comp continuous_subtypeVal).comp continuous_fst).sub continuous_const).matrix_mul
       continuous_snd)
   have h1 := hC.eventually_forall_of_forall_eventually (x₀ := (1 : UA σ X.J))
     (P := fun u c => M.co.e ((mat u - 1) * c) ∈ _) fun c _ => hm.continuousAt.preimage_mem_nhds (by
@@ -408,7 +408,7 @@ theorem UpperTheory.exists_nhds_one_weil_fixes_pure_tensor :
   have h1 := schr_left_pk M hp.base.std hφ hCc
   have := PositivityTheory.ThKEst.LatticeQuotientMeasure.ring_AE F E
   have hi : Continuous fun u : UA σ X.J => u⁻¹ :=
-    ((continuous_inv (G := GL (Fin n) (AE F E))).comp continuous_subtype_val).subtype_mk fun u => (u⁻¹).2
+    ((continuous_inv (G := GL (Fin n) (AE F E))).comp continuous_subtypeVal).subtype_mk fun u => (u⁻¹).2
   have h2 := (hi.tendsto' 1 1 inv_one).eventually h1
   have hc : Continuous fun u : UA σ X.J => ‖om (u, 1) (pureA F f₀ φ) y / pureA F f₀ φ y - 1‖ :=
     ((((hs.cont _ (PositivityTheory.ThKEst.levelStructure.ev_adm y) _ (mem f₀)).comp (continuous_id.prodMk continuous_const)).div_const _).sub
@@ -435,8 +435,8 @@ theorem UpperTheory.exists_nhds_one_weil_fixes_pure_tensor :
       rw [← h1 hu _ a', ← Matrix.mul_assoc, show mat u * mat u⁻¹ = 1 from Units.mul_inv u.1, Matrix.one_mul]
     have b := hb f f₀ z
     have b' := hb f f₀ (mat u⁻¹ * z)
-    rw [PositivityTheory.ThKEst.maj, if_neg a, mul_zero, norm_le_zero_iff] at b
-    rw [PositivityTheory.ThKEst.maj, if_neg a', mul_zero, norm_le_zero_iff] at b'
+    rw [PositivityTheory.ThKEst.maj, ite_eq_right a, mul_zero, norm_le_zero_iff] at b
+    rw [PositivityTheory.ThKEst.maj, ite_eq_right a', mul_zero, norm_le_zero_iff] at b'
     rw [b, b']
   have h4 : (starRingEnd ℂ) (om (u, 1) (pureA F f₀ φ) y) ≠ 0 := fun h => by
     have := key f₀ y
@@ -496,7 +496,7 @@ theorem level_of_k (hC : _root_.PositivityTheory.ThKEst.CoefEq_k) (hF : FourierI
   have h1 := coef_near M hp.base.std hφ hCc
   have := LatticeQuotientMeasure.ring_AE F E
   have hi : Continuous fun u : UA σ W.J => u⁻¹ :=
-    ((continuous_inv (G := GL (Fin d) (AE F E))).comp continuous_subtype_val).subtype_mk fun u => (u⁻¹).2
+    ((continuous_inv (G := GL (Fin d) (AE F E))).comp continuous_subtypeVal).subtype_mk fun u => (u⁻¹).2
   have h2 := (hi.tendsto' 1 1 inv_one).eventually h1
   have hc : Continuous fun u : UA σ W.J => ‖om (1, u) (pureA F f₀ φ) y / pureA F f₀ φ y - 1‖ :=
     ((((hs.cont _ (ev_adm y) _ (mem f₀)).comp (continuous_const.prodMk continuous_id)).div_const _).sub
@@ -523,8 +523,8 @@ theorem level_of_k (hC : _root_.PositivityTheory.ThKEst.CoefEq_k) (hF : FourierI
         Matrix.transpose_one, Matrix.mul_one]
     have b := hb f f₀ z
     have b' := hb f f₀ (z * (mat u⁻¹)ᵀ)
-    rw [maj, if_neg a, mul_zero, norm_le_zero_iff] at b
-    rw [maj, if_neg a', mul_zero, norm_le_zero_iff] at b'
+    rw [maj, ite_eq_right a, mul_zero, norm_le_zero_iff] at b
+    rw [maj, ite_eq_right a', mul_zero, norm_le_zero_iff] at b'
     rw [b, b']
   have h4 : (starRingEnd ℂ) (om (1, u) (pureA F f₀ φ) y) ≠ 0 := fun h => by
     have := key f₀ y
@@ -662,12 +662,12 @@ theorem UpperTheory.thetaLift_weil_translate_equivariant :
     rw [one_mul] at h1
     simp only [G]
     rw [h1, hφ.2 γ hγ x]
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI := hp.good.haar
-  haveI : M.μ.IsMulRightInvariant := c.right _ hp.good.haar
-  haveI := c.cnt
-  haveI : MeasurableConstSMul (ratU σ X.J) (UA σ X.J) := ⟨fun c => measurable_const_mul (c : UA σ X.J)⟩
-  haveI : SMulInvariantMeasure (ratU σ X.J) (UA σ X.J) M.μ :=
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := hp.good.haar
+  have : M.μ.IsMulRightInvariant := c.right _ hp.good.haar
+  have := c.cnt
+  have : MeasurableConstSMul (ratU σ X.J) (UA σ X.J) := ⟨fun c => measurable_const_mul (c : UA σ X.J)⟩
+  have : SMulInvariantMeasure (ratU σ X.J) (UA σ X.J) M.μ :=
     ⟨fun c s _ => measure_preimage_mul M.μ (c : UA σ X.J) s⟩
   have hL : lift M om (om (a, b) Φ) (fun y => φ (y * a)) h = ∫ x in M.dom, G (x * a) ∂M.μ := by
     unfold lift
@@ -887,7 +887,7 @@ theorem aut_lift_k (T : _root_.UpperTheory.TP.Tools_k) (hp : _root_.GlobalTheory
     refine Subgroup.isOpen_of_mem_nhds H (g := 1) ?_
     have h1 := _root_.PositivityTheory.ThKEnd.Grp.level_sch_k _root_.PositivityTheory.ThKEst.level_k hp hs
     have c : Tendsto (fun k : GlobalTheory.UnitaryBC.finU (E := E) (n := d) => e' k.1) (𝓝 1) (𝓝 1) :=
-      (e'.continuous.comp continuous_subtype_val).tendsto' _ _ (map_one e')
+      (e'.continuous.comp continuous_subtypeVal).tendsto' _ _ (map_one e')
     filter_upwards [c.eventually h1] with k hk
     show GlobalTheory.UnitaryBC.RU E d k.1 f = f
     rw [_root_.UpperTheory.TP.RU_lift_k T hp hs hψ, hk fun w => real_of_off_pk ((he'.fin k.1).2 k.2) w]
@@ -918,7 +918,7 @@ theorem _root_.UpperTheory.TP.liftAut_k :
   let Pj : (GlobalTheory.UnitaryBC.UA E n → ℂ) →ₗ[ℂ] (GlobalTheory.UnitaryBC.UA E n → ℂ) := C.subtype ∘ₗ C.linearProjOfIsCompl C' hC'
   have p1 : ∀ φ, Pj φ ∈ C := fun φ => (C.linearProjOfIsCompl C' hC' φ).2
   have p2 : ∀ φ ∈ C, Pj φ = φ := fun φ h => by
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hC' ⟨φ, h⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hC' ⟨φ, h⟩)
   have fn : ∀ φ ∈ C, IsFn (φ ∘ e.symm) := fun φ h => ⟨h.1.comp e.symm.continuous, fun γ hγ g => by
     show φ (e.symm (γ * g)) = φ (e.symm g)
     rw [map_mul]

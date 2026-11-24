@@ -322,15 +322,15 @@ theorem UpperTheory.V.Fr.pr_mazur :
       simp only [LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul] at hy
       rw [← hy]
       exact Finset.sum_congr rfl (fun u _ => mul_comm _ _)
-    haveI := IsCO.isLocalHom (O := O) (R := A')
+    have := IsCO.isLocalHom (O := O) (R := A')
     rw [Algebra.smul_def]
     exact hη _ (map_nonunit (algebraMap O A') _ hm))
   have hT := (pr_tan O R).2
-  haveI := (pr_tan O R).1
+  have := (pr_tan O R).1
   classical
-  haveI := Fintype.ofFinite (ResidueField O)
-  haveI : Finite (Tan O R) := Module.finite_of_finite (ResidueField O)
-  haveI := Fintype.ofFinite (Tan O R)
+  have := Fintype.ofFinite (ResidueField O)
+  have : Finite (Tan O R) := Module.finite_of_finite (ResidueField O)
+  have := Fintype.ofFinite (Tan O R)
   have h2 : 2 ≤ Fintype.card (ResidueField O) := Fintype.one_lt_card
   have hTc : Nat.card (Tan O R) =
       Fintype.card (ResidueField O) ^ Module.finrank (ResidueField O) (Tan O R) := by
@@ -356,11 +356,11 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 theorem UpperTheory.V.Fr.pres :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (x : Ideal S.A) (L : S.Loc x), L.Pres := by
   intro l _ O _ _ _ _ F C₀ n hF hn S x L
-  haveI : CharP (ResidueField O) l := IsCoef.char
-  haveI : IsNoetherianRing L.O' := inferInstance
-  haveI : IsAdicComplete (maximalIdeal L.O') L.O' := IsCoef.complete
-  haveI : Finite (ResidueField L.O') := IsCoef.fin
-  haveI : CharP (ResidueField L.O') l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
+  have : IsNoetherianRing L.O' := inferInstance
+  have : IsAdicComplete (maximalIdeal L.O') L.O' := IsCoef.complete
+  have : Finite (ResidueField L.O') := IsCoef.fin
+  have : CharP (ResidueField L.O') l := IsCoef.char
   have hU : NRep.Univ L.O' L.ρ := by
     refine ⟨(loc_rho hF hn S x L).1, ?_⟩
     intro C _ _ _ ρ' hc hb
@@ -368,7 +368,7 @@ theorem UpperTheory.V.Fr.pres :
   obtain ⟨B, hBo, hBc⟩ := pr_box hF L.R (maximalIdeal L.R) L.ρ (loc_rho hF hn S x L).1 (fun v => flag hF hn S L.R (L.ι : S.A →+* L.R) v)
   obtain ⟨φ, hφ⟩ := (pr_res hF hn S x L).1
   have hG := pr_good hF hn (ResidueField L.O') φ _ hφ
-  haveI : Module.Finite (ResidueField L.O') (Tan L.O' L.R) := (pr_tan L.O' L.R).1
+  have : Module.Finite (ResidueField L.O') (Tan L.O' L.R) := (pr_tan L.O' L.R).1
   have hBo' := hBo.map (res L.O' L.R : L.R →+* ResidueField L.O')
   have hres := pr_res hF hn S x L
   have hcount := pr_count (K := ResidueField L.O') F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b
@@ -440,7 +440,7 @@ theorem UpperTheory.V.Fr.pres :
         Submodule.comap (continuousCocycles2 F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b).subtype (continuousCoboundaries2 F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b) :=
       (Submodule.Quotient.mk_eq_zero _).1 hu
     exact h'
-  haveI : Module.Finite (ResidueField L.O') (coneH2 F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b) := hec.1
+  have : Module.Finite (ResidueField L.O') (coneH2 F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b) := hec.1
   have hobs' : HasObs L.O' L.R (coneH2 F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b ×
       (Fin (Module.finrank (ResidueField L.O') (Tan L.O' L.R) - (n * F.d + 1) -
         Module.finrank (ResidueField L.O') (coneH2 F.loc (Box.bar L.O' B).ad (Box.bar L.O' B).b)) → ResidueField L.O')) := by

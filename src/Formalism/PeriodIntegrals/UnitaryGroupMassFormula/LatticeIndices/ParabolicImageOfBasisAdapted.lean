@@ -315,14 +315,14 @@ theorem stAdaptB_of (hC : LatCoreX) (u : D.what₂.Word) (p : TypX X) (h : StAda
     { carrier := KvX X p
       mul_mem' := by
         intro a b ha hb
-        simp only [KvX, Formalism.L2.SG.TypedSets.Kv, Set.mem_setOf_eq] at ha hb ⊢
+        simp only [KvX, Formalism.L2.SG.TypedSets.Kv, Set.mem_ofPred_eq] at ha hb ⊢
         exact Subgroup.mul_mem _ ha hb
       one_mem' := by
-        simp only [KvX, Formalism.L2.SG.TypedSets.Kv, Set.mem_setOf_eq]
+        simp only [KvX, Formalism.L2.SG.TypedSets.Kv, Set.mem_ofPred_eq]
         exact Subgroup.one_mem _
       inv_mem' := by
         intro a ha
-        simp only [KvX, Formalism.L2.SG.TypedSets.Kv, Set.mem_setOf_eq] at ha ⊢
+        simp only [KvX, Formalism.L2.SG.TypedSets.Kv, Set.mem_ofPred_eq] at ha ⊢
         exact Subgroup.inv_mem _ ha }
   obtain ⟨ψ, hψs, hψ1, hψ2⟩ := hG K rfl
   exact ⟨θ, hθ, idxEquiv X, Q, l, hl, h1, h2, K, rfl, ψ, hψs, hψ1, hψ2⟩

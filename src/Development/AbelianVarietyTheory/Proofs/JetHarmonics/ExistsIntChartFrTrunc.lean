@@ -178,7 +178,7 @@ theorem exists_intChart_frTrunc : IntChartStatement → ∀ (E : Type) [Field E]
     simp [Finset.sum_apply, Pi.single_apply]
   obtain ⟨B', uvec', x', e', wP', h', hch', hfr', hpr', hg', hr', hgen⟩ :=
     hTr hstar T io y I _ B tgT uvecT xT eT wPT tgBasis chartT dirT hfr hpr htr hrig
-  letI := io.toAlgebra
+  let := io.toAlgebra
   exact ⟨⟨⟨_, B', uvec', x', e', wP', h', hch', hfr', hpr', hg', hr'⟩, I, B.G.F, B.A.act, B.ph1, B.ph2, B.sy, B.ad,
     uvecT, tgT, xT, eT, wPT, tgBasis, chartT, dirT, hfr, hpr, hgen⟩, htr⟩
 

@@ -81,7 +81,7 @@ theorem eq_const_mul_of_norm_one : ∀ {V : Type} [NormedAddCommGroup V] [Normed
     simp only [q]
     rw [hg i₀ y (hball y hy).1, mul_assoc, mul_inv_cancel₀ (hball y hy).2, mul_one]
   have hmax : IsMaxOn (norm ∘ q) (Metric.ball x₀ ε) x₀ := fun y hy => by
-    simp only [Set.mem_setOf_eq, Function.comp_apply]
+    simp only [Set.mem_ofPred_eq, Function.comp_apply]
     rw [hqg y hy, hqg x₀ hx₀b, hg1 _ (hball y hy).1, hg1 _ (hball x₀ hx₀b).1]
   have heq := Complex.eqOn_of_isPreconnected_of_isMaxOn_norm (convex_ball x₀ ε).isPreconnected
     Metric.isOpen_ball hqd hx₀b hmax
@@ -172,7 +172,7 @@ theorem cover_scalar_const : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Form
       unfold bchar
       refine Finset.prod_ne_zero_iff.2 fun τ _ => Finset.prod_ne_zero_iff.2 fun i _ => zpow_ne_zero _ ?_
       have hdet : (mat b τ).det ≠ 0 := (hb τ).1
-      rw [Matrix.det_of_upperTriangular (M := mat b τ) (fun a c h => (hb τ).2 a c h)] at hdet
+      rw [Matrix.det_of_isUpperTriangular (M := mat b τ) (fun a c h => (hb τ).2 a c h)] at hdet
       simpa [mat] using Finset.prod_ne_zero_iff.1 hdet i (Finset.mem_univ _)
     show rdU C.U₂ f₂ k₂ x = t ^ n * rdU (T.U j σ) f k (G x)
     apply mul_left_cancel₀ e6
@@ -181,9 +181,9 @@ theorem cover_scalar_const : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Form
   classical
   let g : Frame (C.U₂.X k₂).Ψ D.R.r → ℂ := fun x => if h : x ∈ (C.U₂.X k₂).dom then (hg x h).choose else 1
   have hg1 : ∀ x ∈ (C.U₂.X k₂).dom, ‖g x‖ = 1 := fun x h => by
-    simp only [g, dif_pos h]; exact (hg x h).choose_spec.1
+    simp only [g, dite_eq_left h]; exact (hg x h).choose_spec.1
   have hgr : ∀ i, ∀ x ∈ (C.U₂.X k₂).dom, P₂ i x = g x * P i x := fun i x h => by
-    simp only [g, dif_pos h]; exact (hg x h).choose_spec.2 i
+    simp only [g, dite_eq_left h]; exact (hg x h).choose_spec.2 i
   obtain ⟨u, hu1, hu⟩ := eq_const_mul_of_norm_one (C.U₂.X k₂).dom (ReciprocityTheory.ChartRestriction.G.FD.FourierCoefficientDomain.isOpen_dom _)
     (ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.flag_domain_frames_connected D.R.r (C.U₂.X k₂)).isPreconnected P₂ P g hP₂d hPd hg1 hgr
   refine ⟨u, hu1, fun x x' hxd hrel' => ⟨(hx x x' hxd hrel').1, ?_⟩⟩

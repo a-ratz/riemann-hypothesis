@@ -50,7 +50,7 @@ theorem minpoly_coeff_le_inf (F E : Type) [Field F] [NumberField F] [Field E] [N
     (x : E) (w : InfinitePlace F) (j : ℕ) :
     w ((minpoly F x).coeff j) ≤ 2 ^ Module.finrank F E *
       ((max 1 (Finset.univ.sup fun τ : EmbOver E w => ‖τ.1 x‖₊) : ℝ≥0) : ℝ) ^ Module.finrank F E := by
-  letI : Algebra F ℂ := w.embedding.toAlgebra
+  let : Algebra F ℂ := w.embedding.toAlgebra
   set M : ℝ≥0 := max 1 (Finset.univ.sup fun τ : EmbOver E w => ‖τ.1 x‖₊) with hM
   set p := minpoly F x
   have hx : IsIntegral F x := Algebra.IsIntegral.isIntegral x

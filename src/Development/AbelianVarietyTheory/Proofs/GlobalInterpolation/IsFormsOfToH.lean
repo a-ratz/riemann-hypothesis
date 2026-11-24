@@ -101,7 +101,7 @@ theorem coAt_sum (x : S.Forms) :
   simp
 
 theorem coAt_indep : LinearIndependent ℂ fun i => fun p : S.Cl × S.ιV => coAt S v (S.basis i : S.Cl → S.V) p.1 p.2 := by
-  letI : Algebra K ℂ := v.embedding.toAlgebra
+  let : Algebra K ℂ := v.embedding.toAlgebra
   let f : S.Forms →ₗ[K] (S.Cl × S.ιV → K) := LinearMap.pi fun p =>
     S.bV.coord p.2 ∘ₗ LinearMap.proj p.1 ∘ₗ S.Forms.subtype
   have hf : LinearMap.ker f = ⊥ := by

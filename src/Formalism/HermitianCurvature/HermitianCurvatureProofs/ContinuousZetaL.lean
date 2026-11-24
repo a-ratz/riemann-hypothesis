@@ -148,7 +148,7 @@ theorem map_levM_eq {z z' : Fin (2 * ρ + k + 1) → ℂ} {μ : Measure (Mt k (1
   · push_neg at hR
     have h0 : ∫⁻ ζ, wt ζ = 0 := by
       rw [← setLIntegral_univ, ← Metric.iUnion_closedBall_nat (0 : ℂ)]
-      refine le_antisymm ((lintegral_iUnion_le _ _).trans ?_) zero_le'
+      refine le_antisymm ((lintegral_iUnion_le _ _).trans ?_) zero_le
       simp [hR]
     have hμ0 : μ = 0 := by
       have h3 := hlaw (fun _ => 1) measurable_const

@@ -74,7 +74,7 @@ theorem siegData_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hν : IsGrpPullback t'.G t.G f ν.φ := ν.cart
   have hc : IsGrpPullback o'.A t.G f (φ₁ ≫ φ) := (hpb₁.comp hpb).congr (Category.comp_id f) rfl
   obtain ⟨e, he, hel⟩ := grpPullback_iso hc hν
-  haveI := he
+  have := he
   have hpb' : IsGrpPullback o'.A t'.G (𝟙 T') e.hom.left := isGrpPullback_of_iso e
   have hsq' := GlobalTheory.LamPull.exists_isSquare hpb'.1.w
   have hν₂ := GlobalTheory.LamPull.exists_isSquare hν.1.w

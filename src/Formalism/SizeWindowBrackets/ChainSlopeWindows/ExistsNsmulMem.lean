@@ -144,12 +144,12 @@ theorem idealSmul_coeIdeal (J : Ideal (𝓞 K)) (L : Submodule (𝓞 K) V) :
   apply le_antisymm
   · refine Submodule.span_le.2 ?_
     rintro z ⟨a, ha, x, hx, rfl⟩
-    obtain ⟨r, hr, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 (FractionalIdeal.mem_coe.1 ha)
+    obtain ⟨r, hr, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 (FractionalIdeal.mem_coeToSubmodule.1 ha)
     rw [SetLike.mem_coe, algebraMap_smul]
     exact Submodule.smul_mem_smul hr hx
   · refine Submodule.smul_le.2 fun r hr x hx => ?_
     rw [← algebraMap_smul K r x]
-    exact mem_idealSmul (FractionalIdeal.mem_coe.2 ((FractionalIdeal.mem_coeIdeal _).2 ⟨r, hr, rfl⟩)) hx
+    exact mem_idealSmul (FractionalIdeal.mem_coeToSubmodule.2 ((FractionalIdeal.mem_coeIdeal _).2 ⟨r, hr, rfl⟩)) hx
 
 def lsm (c : K) : V →ₗ[𝓞 K] V := (LinearMap.lsmul K V c).restrictScalars (𝓞 K)
 
@@ -159,32 +159,32 @@ theorem idealSmul_spanSingleton (c : K) (L : Submodule (𝓞 K) V) :
   apply le_antisymm
   · refine Submodule.span_le.2 ?_
     rintro z ⟨a, ha, x, hx, rfl⟩
-    obtain ⟨r, rfl⟩ := (FractionalIdeal.mem_spanSingleton _).1 (FractionalIdeal.mem_coe.1 ha)
+    obtain ⟨r, rfl⟩ := (FractionalIdeal.mem_spanSingleton _).1 (FractionalIdeal.mem_coeToSubmodule.1 ha)
     refine ⟨r • x, Submodule.smul_mem _ r hx, ?_⟩
     show c • (r • x) = (r • c) • x
     rw [smul_assoc, smul_comm_integers_field]
   · rintro _ ⟨x, hx, rfl⟩
     show c • x ∈ _
-    exact mem_idealSmul (FractionalIdeal.mem_coe.2 (FractionalIdeal.mem_spanSingleton_self _ c)) hx
+    exact mem_idealSmul (FractionalIdeal.mem_coeToSubmodule.2 (FractionalIdeal.mem_spanSingleton_self _ c)) hx
 
 theorem idealSmul_fg (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) {L : Submodule (𝓞 K) V}
     (hL : L.FG) : (idealSmul (I : Submodule (𝓞 K) K) L).FG := by
   obtain ⟨a, J, -, hI⟩ := FractionalIdeal.exists_eq_spanSingleton_mul I
-  rw [hI, FractionalIdeal.coe_mul, idealSmul_mul, idealSmul_coeIdeal, idealSmul_spanSingleton]
+  rw [hI, FractionalIdeal.coeToSubmodule_mul, idealSmul_mul, idealSmul_coeIdeal, idealSmul_spanSingleton]
   exact (Submodule.FG.smul (IsNoetherian.noetherian J) hL).map _
 
 theorem idealSmul_inv_cancel {I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K} (hI : I ≠ 0)
     (L : Submodule (𝓞 K) V) :
     idealSmul ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K)
       (idealSmul (I : Submodule (𝓞 K) K) L) = L := by
-  rw [← idealSmul_mul, ← FractionalIdeal.coe_mul, inv_mul_cancel₀ hI, FractionalIdeal.coe_one,
+  rw [← idealSmul_mul, ← FractionalIdeal.coeToSubmodule_mul, inv_mul_cancel₀ hI, FractionalIdeal.coeToSubmodule_one,
     idealSmul_one]
 
 theorem idealSmul_cancel_inv {I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K} (hI : I ≠ 0)
     (L : Submodule (𝓞 K) V) :
     idealSmul (I : Submodule (𝓞 K) K)
       (idealSmul ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K) L) = L := by
-  rw [← idealSmul_mul, ← FractionalIdeal.coe_mul, mul_inv_cancel₀ hI, FractionalIdeal.coe_one,
+  rw [← idealSmul_mul, ← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hI, FractionalIdeal.coeToSubmodule_one,
     idealSmul_one]
 
 theorem span_idealSmul {I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K} (hI : I ≠ 0)
@@ -341,7 +341,7 @@ theorem ht_fractional (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι �
       FractionalIdeal.spanSingleton_mul_spanSingleton, mul_inv_cancel₀ haK,
       FractionalIdeal.spanSingleton_one, one_mul]
   have hlat : Ideal.span {a} • idealSmul (I : Submodule (𝓞 K) K) L = J • L := by
-    rw [← idealSmul_coeIdeal, ← idealSmul_mul, ← FractionalIdeal.coe_mul, hmul, idealSmul_coeIdeal]
+    rw [← idealSmul_coeIdeal, ← idealSmul_mul, ← FractionalIdeal.coeToSubmodule_mul, hmul, idealSmul_coeIdeal]
   have h1 := ht_ideal b X hX (idealSmul_fg I hL) hA
   rw [hlat, ht_ideal b X hX hL hJ, rkK_idealSmul hI] at h1
   have hnorm : ((Ideal.absNorm (Ideal.span {a}) : ℕ) : ℝ) * ((FractionalIdeal.absNorm I : ℚ) : ℝ) =
@@ -498,7 +498,7 @@ theorem locLen_quot_ne (w m : Ideal R) [hw : w.IsMaximal] [hm : m.IsMaximal] (h 
   refine Module.length_eq_zero_iff.2 ((IsLocalizedModule.subsingleton_iff w.primeCompl
     (LocalizedModule.mkLinearMap w.primeCompl (R ⧸ m))).2 ?_)
   have hnle : ¬ m ≤ w := fun hle => h (hm.eq_of_le hw.ne_top hle).symm
-  obtain ⟨s, hsm, hsw⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨s, hsm, hsw⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   intro x
   refine ⟨s, hsw, ?_⟩
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -544,8 +544,8 @@ theorem card_eq_prod_locLen : ∀ (n : ℕ) (Q : Type) [AddCommGroup Q] [Module 
           Finsupp.single_apply]
         by_cases hw : (⟨m0, hm0⟩ : {p : Ideal R // p.IsMaximal}) = w
         · subst hw
-          rw [if_pos rfl, locLen_quot_self]; simp
-        · rw [if_neg hw, locLen_quot_ne w.1 m0 (fun h => hw (Subtype.ext h.symm))]; simp
+          rw [ite_eq_left rfl, locLen_quot_self]; simp
+        · rw [ite_eq_right hw, locLen_quot_ne w.1 m0 (fun h => hw (Subtype.ext h.symm))]; simp
       · have hz : ∀ w : {p : Ideal R // p.IsMaximal}, Nat.card (R ⧸ w.1) ^ 0 = 1 :=
           fun _ => pow_zero _
         have ha : ∀ (w : {p : Ideal R // p.IsMaximal}) (a c : ℕ), Nat.card (R ⧸ w.1) ^ (a + c) =

@@ -153,9 +153,9 @@ theorem exists_finite_ext_sq_eq_uniformiser : ∀ (V : Type) [CommRing V] [IsDom
     apply IsFractionRing.injective V₁ (FractionRing V₁)
     rw [map_pow, ht, hy2]
 
-  letI : Algebra V V₁ := ρ.toAlgebra
-  haveI : Module.Finite V V₁ := hfin
-  haveI : Algebra.IsIntegral V V₁ := Algebra.IsIntegral.of_finite V V₁
+  let : Algebra V V₁ := ρ.toAlgebra
+  have : Module.Finite V V₁ := hfin
+  have : Algebra.IsIntegral V V₁ := Algebra.IsIntegral.of_finite V V₁
   have hϖ0 : ρ ϖ ≠ 0 := by
     intro h; apply hϖ.ne_zero; apply hinj; simpa using h
   have hϖnu : ¬ IsUnit (ρ ϖ) := fun h => hϖ.not_isUnit ((isUnit_map_iff ρ ϖ).mp h)
@@ -175,8 +175,8 @@ theorem exists_finite_ext_sq_eq_uniformiser : ∀ (V : Type) [CommRing V] [IsDom
     · rintro P ⟨hP0, hPp⟩
       obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP0
       have hc : P.comap (algebraMap V V₁) ≠ ⊥ :=
-        Ideal.comap_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
-      haveI : (P.comap (algebraMap V V₁)).IsPrime := Ideal.IsPrime.comap _
+        Ideal.under_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
+      have : (P.comap (algebraMap V V₁)).IsPrime := Ideal.IsPrime.comap _
       have hm : (P.comap (algebraMap V V₁)).IsMaximal := IsPrime.to_maximal_ideal hc
       have hPm : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := V) P hm
       exact IsLocalRing.eq_maximalIdeal hPm
@@ -277,8 +277,8 @@ theorem exact_of_isGeo : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ)
   obtain ⟨sg, eps, hlink⟩ := GlobalTheory.T.thetaConstants_translate_eq_twisted_sums O X₁ z₁ act x₀ hdiv
   intro y κ c
   obtain ⟨𝔪, hT⟩ := hmem y
-  haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)⟩
-  haveI : IsDomain X₁.o₁ := X₁.ar.ded.toIsDomain
+  have : NeZero (X₁.S.r * X₁.S.N) := ⟨Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)⟩
+  have : IsDomain X₁.o₁ := X₁.ar.ded.toIsDomain
   obtain ⟨yy1, yy2, yy3, yy4⟩ := GlobalTheory.T.thetaLabels_surjective_hom_lattice_mod_level O X₁ z₁ act (Φ.V y) (Φ.ev y) (Fin s → Φ.X y) _ _ 𝔪
   have hH := GlobalTheory.T.mem_dividingLabels_iff_class_zero O X₁ z₁ act x₀ hdiv (Φ.V y) (Φ.ev y) (Fin s → Φ.X y) _ _ 𝔪
   obtain ⟨l, -, hlY, hlC⟩ := labels X₁.S (X₁.S.HH X₁.M z₁) 𝔪.YY yy1 yy2 yy3 yy4 hH
@@ -334,9 +334,9 @@ theorem exact_of_isGeo : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ)
       (hhτ τ) (fun mu => w mu τ) (fun a mu hY => by simp only [w, hlY τ τ.2 a mu hY])
   let f : (Fin s → Φ.X y) → Φ.V y := fun mu => if ∀ v, CongMod (X₁.S.r * X₁.S.N) (mu v) (κ v) then Φ.term y mu c else 0
   have hf := sumI_fourier (maximalIdeal (Φ.V y)) hω (Φ.ev y d) hd w hw κ (fun mu => Φ.term y mu c) (fun τ => Φ.ev y (hτ τ))
-    hsum f (fun mu h => if_pos ((hwκ mu).1 h)) (fun mu h => if_neg fun h' => h ((hwκ mu).2 h'))
+    hsum f (fun mu h => ite_eq_left ((hwκ mu).1 h)) (fun mu h => ite_eq_right fun h' => h ((hwκ mu).2 h'))
   refine ⟨d * ∑ τ : TT, zt ^ (-(w κ τ)).val * hτ τ, isClassSum_of_sumI Φ y _ κ c (RingHom.id _) _ f
-    (fun mu h => if_pos h) (fun mu h => if_neg h) ?_⟩
+    (fun mu h => ite_eq_left h) (fun mu h => ite_eq_right h) ?_⟩
 
   simpa only [map_mul, map_sum, map_pow] using hf
 
@@ -560,7 +560,7 @@ theorem genfib_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     exact e₄.symm
   · intro a
     obtain ⟨f, hfα, hfβ⟩ := hf a
-    letI := H.starRing
+    let := H.starRing
     have hext := P.lin.ext (H.bar a)
     have hg : (P.oA.act (H.bar a)).left ≫ P.U.gen.inv.left =
         P.U.gen.inv.left ≫ ((Over.pullback (jK V)).map (t.act.act (H.bar a))).left := by
@@ -718,7 +718,7 @@ theorem yK_ne_zero {I : Type} {X₁ : GlobalTheory.GSep.GSet} {z₁ : X₁.M.Z} 
     {ev : X₁.M.Z.presheaf.stalk z₁ →+* V} {X : Type} [AddCommGroup X] {t : X → V}
     {δ : I → X → X} (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) :
     𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩ ≠ 0 := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   obtain ⟨a, ha⟩ := GlobalTheory.ThetaGeneric.exists_th_ne_zero hL.1 hL.2.1 _ _ X₁.S X₁.ρ (FractionRing V) 𝔪.yK
   intro h0
@@ -738,7 +738,7 @@ theorem yK_ne_zero {I : Type} {X₁ : GlobalTheory.GSep.GSet} {z₁ : X₁.M.Z} 
 theorem isThetaTerms₀_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (t : X → V) (δ : I → X → X) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (C : Type) (lab : C → X₁.S.Gam), Set.range lab = X₁.S.HH X₁.M z₁ → ∀ T : X → C → V, 𝔪.Terms x₀ lab T → IsThetaTerms₀ 𝔪.D.toPre (X₁.S.r * X₁.S.N) 𝔪.e₈ T := by
   intro I X₁ z₁ act x₀ hd V _ _ _ ev X _ t δ 𝔪 C lab hlab T hT
   obtain ⟨x, fr, th, w₀, s, g', w, hx, hfr, -, hw₀, -, hg, hT⟩ := hT
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hk : 1 ≤ X₁.S.r * X₁.S.N := by
@@ -763,7 +763,7 @@ theorem isThetaTerms₀_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet
     (g' a) (w a) (x (lab a)) (fr (lab a)) (hg a).2.1 (hfr _).1 (hg a).2.2 c hc
   have htors : ∀ a, (g' a).b ^ (X₁.S.r * X₁.S.N) = 1 := fun a => by
     obtain ⟨o, h₁, h₂⟩ := (hg a).1
-    letI := GlobalTheory.TorusExt.gtGroup 𝔪.D.toPre (FractionRing V)
+    let := GlobalTheory.TorusExt.gtGroup 𝔪.D.toPre (FractionRing V)
     have e := congrArg (GlobalTheory.TorusExt.gtProj 𝔪.D.toPre (FractionRing V)) ((GlobalTheory.TorusExt.isNsmul_iff_eq _ _ _).1 h₁)
     rw [map_nsmul] at e
     exact (congrArg Additive.toMul e).symm.trans ((isZero_iff o).1 h₂).1
@@ -896,7 +896,7 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     have hd : X₁.ρ.n ∣ X₁.S.r * X₁.S.N := by
       rw [hL₁]; exact dvd_pow_self _ (by omega)
     exact isUnit_of_dvd_unit (Nat.cast_dvd_cast hd) X₁.S.unit
-  haveI : CharZero X₁.Ω₁ := ArithBase.char (o := X₁.o₁)
+  have : CharZero X₁.Ω₁ := ArithBase.char (o := X₁.o₁)
   have hM : 0 < X₁.S.r * X₁.S.N := by rw [hL₁]; exact pow_pos hℓp.pos _
   have hζ₀ : ∃ ζ₀ : X₁.Ω₁, IsPrimitiveRoot ζ₀ (X₁.S.r * X₁.S.N) :=
     ⟨_, (X₁.S.prim.pow (by positivity) (sq _)).map_of_injective (ArithBase.inj (o := X₁.o₁) (Ω := X₁.Ω₁))⟩
@@ -912,13 +912,13 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨Ω₂, _, _, Q, φQ, ζ, fd, gal, -, hζ, hQg, hQpb, hQlb, ⟨levQ⟩⟩ :=
     GlobalTheory.T.exists_primePower_galois_ext_symplecticLevel X₁.S.R.val.toRingHom X₁.ρ.P X₁.ρ.n (X₁.S.r * X₁.S.N) K hℓp hM
       (by rw [hL₁]; exact dvd_pow_self _ (by omega)) ⟨2 * (j + 2 * k), by rw [hK]; ring⟩ hζ₀ htors
-  haveI := fd
+  have := fd
   obtain ⟨o₂, _, _, _, κ, ze, hκ, hc, hze⟩ :=
     GlobalTheory.Poinc.exists_arithBase_rootOfUnity (o₁ := X₁.o₁) (Ω₁ := X₁.Ω₁) Ω₂ K ζ hKpos hζ
-  haveI : CharZero Ω₂ := ArithBase.char (o := o₂)
+  have : CharZero Ω₂ := ArithBase.char (o := o₂)
   obtain ⟨R, h, hfg, hfr, hh, hfin, hic, hstab⟩ := GlobalTheory.T.exists_integralClosure_finite_galoisStable_thetaRing X₁.S.R X₁.S.fg X₁.S.frac κ hκ hc
-  haveI := GlobalTheory.ThetaReal.isNoetherian_of_fg hfg
-  haveI := GlobalTheory.GenSpread.isFractionRing_of_forall_div hfr
+  have := GlobalTheory.ThetaReal.isNoetherian_of_fg hfg
+  have := GlobalTheory.GenSpread.isFractionRing_of_forall_div hfr
   have hun2 : IsUnit (X₁.ρ.n : o₂) := by simpa using hun1.map κ
   have hKunit : IsUnit (K : R) := by
     have := (hun2.map (algebraMap o₂ R))
@@ -952,10 +952,10 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     Over.homMk (hφp.lift ((φ₂ ≫ ψ) ≫ (act a).left) ρ₂.P.A.hom (wε a)) (hφp.lift_snd _ _ _)
   have hact₂ : ∀ a, (act₂ a).left ≫ (φ₂ ≫ ψ) = (φ₂ ≫ ψ) ≫ (act a).left := fun a => hφp.lift_fst _ _ _
   have hmon : ∀ a, IsMonHom (act₂ a) := fun a => by
-    haveI := hact a
+    have := hact a
     exact isMonHom_of_isGrpPullback hcart (act a) (act₂ a) (hact₂ a)
 
-  haveI : IsDedekindDomain X₁.o₁ := ArithBase.ded (o := X₁.o₁) (Ω := X₁.Ω₁)
+  have : IsDedekindDomain X₁.o₁ := ArithBase.ded (o := X₁.o₁) (Ω := X₁.Ω₁)
   have hp : (spMap (algebraMap X₁.Ω₁ Ω₂) ≫ X₁.M.pt) ≫ X₁.M.s = spMap ((algebraMap o₂ Ω₂).comp κ) := by
     rw [Category.assoc, X₁.M.pt_s, hc]
     exact (Spec.map_comp (CommRingCat.ofHom (algebraMap X₁.o₁ X₁.Ω₁))
@@ -1102,7 +1102,7 @@ theorem projective_of_free (E : Type) [Field E] [NumberField E] (X : Type) [AddC
     rintro x ⟨c, hc⟩
     by_contra hx
     have hc0 : (c : 𝓞 E) ≠ 0 := nonZeroDivisors.coe_ne_zero c
-    obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) (c : 𝓞 E)).exists_nonzero_dvd
+    obtain ⟨r, hr, α, hα⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) (c : 𝓞 E)).exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero hc0)
     have h0 : r • x = 0 := by
       rw [← algebraMap_smul (𝓞 E) r x, hα, mul_comm, mul_smul]
@@ -1143,7 +1143,7 @@ theorem nonempty_gMem_trait (hpq : 1 ≤ Dw.p + Dw.q) (C : UCompact Xo c) (X₁ 
     Nonempty (GMem X₁ z₁ act V' (f.comp e) (Fin 1 → T.P.D.toPre.X) (mono !![(1 : ℤ)] ![t] ![T.be])
       (fun a mu => a • mu)) := by
   have hcnT : IsCN T.V := by
-    haveI := T.cdvr.1
+    have := T.cdvr.1
     exact ⟨inferInstance, inferInstance, T.cdvr.2.1, T.cdvr.2.2⟩
   let fK : FractionRing T.V →+* FractionRing V' := IsLocalization.map (S := FractionRing T.V) (FractionRing V') f
     (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective f hinj)
@@ -1186,9 +1186,9 @@ theorem GlobalTheory.GSep.exists_vPre_traitsOn_chart : ∀ (E : Type) [Field E] 
   have hunit : ∀ m : ℕ, m ≠ 0 → IsUnit (m : X₁.M.Z.presheaf.stalk z₁) := fun m hm =>
     isUnit_natCast_of_spec (ζ ≫ pullback.snd C.z (spMap C.b)) m hm
   have hρ : IsLocalHom ρ₁ := by
-    letI := ρ₁.toAlgebra
-    haveI : Module.Finite V V₁ := hfin
-    haveI : FaithfulSMul V V₁ := (faithfulSMul_iff_algebraMap_injective V V₁).2 hinj
+    let := ρ₁.toAlgebra
+    have : Module.Finite V V₁ := hfin
+    have : FaithfulSMul V V₁ := (faithfulSMul_iff_algebraMap_injective V V₁).2 hinj
     exact (inferInstance : IsLocalHom (algebraMap V V₁))
   have hcnV : IsCN V := ⟨hB.1.1, hB.1.2.2.1, hB.1.2.2.2, hB.2⟩
   let fK₁ : FractionRing V →+* FractionRing V₁ := IsLocalization.map (S := FractionRing V) (FractionRing V₁) ρ₁
@@ -1204,9 +1204,9 @@ theorem GlobalTheory.GSep.exists_vPre_traitsOn_chart : ∀ (E : Type) [Field E] 
         _ = _ := by rw [← hξ]; simp only [Category.assoc])
 
   have hcnT : ∀ T : UTrait Xo c, IsCN T.V := fun T => by
-    haveI := T.cdvr.1
+    have := T.cdvr.1
     exact ⟨inferInstance, inferInstance, T.cdvr.2.1, T.cdvr.2.2⟩
-  have hsq := fun T : UTrait Xo c => GlobalTheory.T.exists_finite_ext_sqrt_uniformiser_complete_dvr T.V (hcnT T) (by haveI := T.cdvr.1; infer_instance) T.ϖ T.irr
+  have hsq := fun T : UTrait Xo c => GlobalTheory.T.exists_finite_ext_sqrt_uniformiser_complete_dvr T.V (hcnT T) (by have := T.cdvr.1; infer_instance) T.ϖ T.irr
   choose VT iRT iDT iLT fT tT hcnW hpirW hinjW hlocW hfinW htW using hsq
   let Tr : Type 1 := Σ T : UTrait Xo c, {e : X₁.M.Z.presheaf.stalk z₁ →+* T.V // IsLocalHom e ∧
     jK T.V ≫ spMap e ≫ ζ = T.y ≫ C.iF ∧ Set.range (jK T.V ≫ spMap e ≫ X₁.M.Z.fromSpecStalk z₁) ⊆ (U : Set X₁.M.Z)}
@@ -1217,25 +1217,25 @@ theorem GlobalTheory.GSep.exists_vPre_traitsOn_chart : ∀ (E : Type) [Field E] 
       (hlocW T) (htW T) e he hc hrg
 
   let VV : Option Tr → Type := fun y => match y with | none => V₁ | some T => VT T.1
-  letI iR : ∀ y, CommRing (VV y) := fun y => match y with
+  let iR : ∀ y, CommRing (VV y) := fun y => match y with
     | none => inferInstanceAs (CommRing V₁) | some T => iRT T.1
-  haveI iD : ∀ y, IsDomain (VV y) := fun y => match y with
+  have iD : ∀ y, IsDomain (VV y) := fun y => match y with
     | none => inferInstanceAs (IsDomain V₁) | some T => iDT T.1
-  haveI iL : ∀ y, IsLocalRing (VV y) := fun y => match y with
+  have iL : ∀ y, IsLocalRing (VV y) := fun y => match y with
     | none => inferInstanceAs (IsLocalRing V₁) | some T => iLT T.1
   let EV : ∀ y, X₁.M.Z.presheaf.stalk z₁ →+* VV y := fun y => match y with
     | none => ev₁ | some T => (fT T.1).comp T.2.1
   let XX : Option Tr → Type := fun y => match y with | none => Cm.P.D.toPre.X | some T => T.1.P.D.toPre.X
-  letI iA : ∀ y, AddCommGroup (XX y) := fun y => match y with
+  let iA : ∀ y, AddCommGroup (XX y) := fun y => match y with
     | none => inferInstanceAs (AddCommGroup Cm.P.D.toPre.X) | some T => inferInstanceAs (AddCommGroup T.1.P.D.toPre.X)
-  letI iM : ∀ y, Module (𝓞 E) (XX y) := fun y => match y with
+  let iM : ∀ y, Module (𝓞 E) (XX y) := fun y => match y with
     | none => inferInstanceAs (Module (𝓞 E) Cm.P.D.toPre.X) | some T => inferInstanceAs (Module (𝓞 E) T.1.P.D.toPre.X)
-  haveI iFZ : ∀ y, Module.Free ℤ (XX y) := fun y => match y with
+  have iFZ : ∀ y, Module.Free ℤ (XX y) := fun y => match y with
     | none => inferInstanceAs (Module.Free ℤ Cm.P.D.toPre.X) | some T => inferInstanceAs (Module.Free ℤ T.1.P.D.toPre.X)
-  haveI iGZ : ∀ y, Module.Finite ℤ (XX y) := fun y => match y with
+  have iGZ : ∀ y, Module.Finite ℤ (XX y) := fun y => match y with
     | none => inferInstanceAs (Module.Finite ℤ Cm.P.D.toPre.X) | some T => inferInstanceAs (Module.Finite ℤ T.1.P.D.toPre.X)
-  haveI iFO : ∀ y, Module.Finite (𝓞 E) (XX y) := fun y => Module.Finite.of_restrictScalars_finite ℤ _ _
-  haveI iPO : ∀ y, Module.Projective (𝓞 E) (XX y) := fun y => projective_of_free E (XX y)
+  have iFO : ∀ y, Module.Finite (𝓞 E) (XX y) := fun y => Module.Finite.of_restrictScalars_finite ℤ _ _
+  have iPO : ∀ y, Module.Projective (𝓞 E) (XX y) := fun y => projective_of_free E (XX y)
   let MM : Option Tr → ℕ := fun y => match y with | none => Cm.m | some _ => 1
   let tt : ∀ y, Fin (MM y) → VV y := fun y => match y with | none => r | some T => ![tT T.1]
   let dd : ∀ y, Fin (MM y) → LinearMap.BilinForm ℤ (XX y) := fun y => match y with
@@ -1256,7 +1256,7 @@ theorem GlobalTheory.GSep.exists_vPre_traitsOn_chart : ∀ (E : Type) [Field E] 
       rw [map_zero, ← hr k, h0]
       ring
   have htT : ∀ T : UTrait Xo c, tT T ∈ maximalIdeal (VT T) ∧ tT T ≠ 0 := fun T => by
-    haveI := hlocW T
+    have := hlocW T
     refine ⟨(mem_maximalIdeal _).2 (mem_nonunits_iff.2 fun hu => ?_), fun h0 => ?_⟩
     · have h1 : IsUnit (fT T T.ϖ) := (htW T) ▸ hu.pow 2
       exact T.irr.not_isUnit ((isUnit_map_iff (fT T) _).1 h1)

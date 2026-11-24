@@ -106,9 +106,9 @@ namespace Cc2
 theorem norm_le {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) {q : ℕ} (hq : 1 < q)
     (h : ∀ x : 𝓞 K, x - x ^ q ∈ w.asIdeal) : normV w ≤ q := by
   have := w.isMaximal
-  letI : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
   have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
   rw [show normV w = Fintype.card (𝓞 K ⧸ w.asIdeal) from Nat.card_eq_fintype_card]
   by_contra hlt
   refine Polynomial.X_pow_sub_X_ne_zero (R := 𝓞 K ⧸ w.asIdeal) hq
@@ -142,12 +142,12 @@ open Cc2
 
 theorem classChar2 : ClassChar := by
   intro K M _ _ _ _ _ _ _ _ hl
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI := Fact.mk hl
-  haveI : NeZero (Module.finrank K M) := ⟨hl.ne_zero⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have := Fact.mk hl
+  have : NeZero (Module.finrank K M) := ⟨hl.ne_zero⟩
   obtain ⟨ι⟩ : Nonempty (Qbar 2 ≃+* ℂ) := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex 2
   let Ω := AlgebraicClosure M
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
   obtain ⟨art, ha⟩ := _root_.CompanionTheory.FamInh.globalArtin K Ω
   let r : G K Ω →* (M ≃ₐ[K] M) := AlgEquiv.restrictNormalHom M
   have hr : ∀ s (x : M), algebraMap M Ω (r s x) = s (algebraMap M Ω x) := fun s x => AlgEquiv.restrictNormal_commutes s M x
@@ -216,7 +216,7 @@ theorem classChar2 : ClassChar := by
       rwa [map_mul, h2, mul_one, map_inv, inv_eq_one] at h1
   refine ⟨η, ⟨?_, ho, ?_⟩, key.mono fun w hw => ⟨hw.1, ?_⟩⟩
   · rintro rfl
-    haveI : Nontrivial (M ≃ₐ[K] M) := Finite.one_lt_card_iff_nontrivial.1 (IsGalois.card_aut_eq_finrank K M ▸ hl.one_lt)
+    have : Nontrivial (M ≃ₐ[K] M) := Finite.one_lt_card_iff_nontrivial.1 (IsGalois.card_aut_eq_finrank K M ▸ hl.one_lt)
     obtain ⟨τ, hτ⟩ := exists_ne (1 : M ≃ₐ[K] M)
     obtain ⟨s, rfl⟩ := AlgEquiv.restrictNormalHom_surjective Ω τ
     refine hτ ((hδ s).1 (Units.ext ?_))

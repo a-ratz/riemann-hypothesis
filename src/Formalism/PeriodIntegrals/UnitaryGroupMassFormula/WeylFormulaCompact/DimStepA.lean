@@ -272,7 +272,7 @@ theorem schur2 (hρ : Good ρ) {X W : Submodule ℂ H} [FiniteDimensional ℂ X]
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hrank).1 hAinj
   let e : X ≃ₗ[ℂ] W := LinearEquiv.ofBijective A ⟨hAinj, hAsurj⟩
   let T : Module.End ℂ X := e.symm.toLinearMap ∘ₗ B
-  haveI : Nontrivial X := ⟨⟨⟨x₀, hx₀⟩, 0, fun h => h0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial X := ⟨⟨⟨x₀, hx₀⟩, 0, fun h => h0 (congrArg Subtype.val h)⟩⟩
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue T
   obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
   have hTv : T v = μ • v := hv.apply_eq_smul

@@ -148,7 +148,7 @@ private theorem exists_linearIndependent_extension_fin (N : ℕ) (d k : ℕ) (hd
       hx.comp _ (Fin.cast_injective _), fun i => ?_⟩
     have e : Fin.cast hc (Fin.natAdd (d + 1) i) = Fin.succ (Fin.natAdd d i) := by
       ext
-      simp only [Fin.coe_cast, Fin.coe_natAdd, Fin.val_succ]
+      simp only [Fin.val_cast, Fin.val_natAdd, Fin.val_succ]
       omega
     simp only [e, Fin.cons_succ]
     exact hsv i
@@ -177,7 +177,7 @@ theorem tjcosets_exists_smul [Finite 𝔽] (n j : ℕ) (w : TjcosetsFr (n - j) n
   obtain ⟨s, hs, hsw⟩ := tjcosets_extend n j w hw
   let A : Matrix (Fin n) (Fin n) 𝔽 := Matrix.of fun a b => s b a
   have hAc : A.col = s := by funext b a; rfl
-  have hA : IsUnit A := Matrix.linearIndependent_cols_iff_isUnit.1 (by rw [hAc]; exact hs)
+  have hA : IsUnit A := linearIndependent_col_iff_isUnit.1 (by rw [hAc]; exact hs)
   refine ⟨hA.unit, ?_⟩
   rw [GL_smul_standard_tuple]
   funext i
@@ -187,7 +187,7 @@ theorem tjcosets_orbit_gl [Finite 𝔽] (n j : ℕ) :
     MulAction.orbit (GL (Fin n) 𝔽) (standardBasisTuple n j : TjcosetsFr (n - j) n 𝔽) =
       {w : TjcosetsFr (n - j) n 𝔽 | LinearIndependent 𝔽 (w : Fin (n - j) → Fin n → 𝔽)} := by
   ext w
-  simp only [MulAction.mem_orbit_iff, Set.mem_setOf_eq]
+  simp only [MulAction.mem_orbit_iff, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨g, rfl⟩
     rw [GL_smul_standard_tuple]
@@ -221,7 +221,7 @@ theorem tjcosets_orbit_par [Finite 𝔽] (n j : ℕ) :
       {w : TjcosetsFr (n - j) n 𝔽 | LinearIndependent 𝔽 (w : Fin (n - j) → Fin n → 𝔽) ∧
         ∀ i (a : Fin n), (a : ℕ) < j → w i a = 0} := by
   ext w
-  simp only [MulAction.mem_orbit_iff, Set.mem_setOf_eq]
+  simp only [MulAction.mem_orbit_iff, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨p, hp⟩
     have hp' : (p : GL (Fin n) 𝔽) • (standardBasisTuple n j : TjcosetsFr (n - j) n 𝔽) = w := hp

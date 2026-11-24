@@ -104,10 +104,10 @@ theorem continuous_integrable_tuple (σ : E →ₐ[F] E) [NumberField E] (hCM : 
     Continuous Φ ∧ Integrable Φ dx := by
   obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨_, _, _, _, -, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := hB n M
-  haveI := hB 1 (n * M)
+  have := hB n M
+  have := hB 1 (n * M)
   let c := flat (AF F ⊗[F] E) n M
-  haveI : (dx.map c).IsAddHaarMeasure :=
+  have : (dx.map c).IsAddHaarMeasure :=
     Measure.isAddHaarMeasure_map _
       (c : (Fin n → Fin M → AF F ⊗[F] E) ≃+ (Fin 1 → Fin (n * M) → AF F ⊗[F] E)).toAddMonoidHom
       c.continuous c.surjective
@@ -127,7 +127,7 @@ theorem coefN_finset_sum : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   intro F E _ _ _ _ _ σ hCM M J hJ n _ hM ψ hψ dx hdx db hdb T k Φ hΦ
   obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨_, _, _, _, -, ht, -, hB, -, hG⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := hB n M
+  have := hB n M
   obtain ⟨hψc, hψn, -⟩ := id hψ
   have hstar : ∀ b, starN σ J ψ dx (fun X => ∑ i, Φ i X) b = ∑ i, starN σ J ψ dx (Φ i) b := by
     intro b
@@ -150,8 +150,8 @@ theorem coefN_finset_sum : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       ψ (-(algebraMap F (AF F) (1 / 2) * Algebra.trace (AF F) (AF F ⊗[F] E)
         (Matrix.trace (T.map (inclR (AF F)) * (b : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)))))) :=
     hψc.comp (continuous_const.mul
-      (ht.comp (continuous_const.matrix_mul continuous_subtype_val).matrix_trace)).neg
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+      (ht.comp (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace)).neg
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
   refine hI.norm.mono' (hI.1.mul hc.aestronglyMeasurable) ?_
   refine Filter.Eventually.of_forall fun b => ?_
   rw [norm_mul, hψn, mul_one]

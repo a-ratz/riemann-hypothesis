@@ -77,13 +77,13 @@ theorem am_mul_mkE (a u t : A F) : am E a * D.mkE u t = D.mkE (a * u) (a * t) :=
 theorem mkE_mul (u t u' t' : A F) : D.mkE u t * D.mkE u' t' = D.mkE (u * u' + rt D.δ * (t * t')) (u * t' + t * u') := by
   simp only [mkE_def, map_add (f := _), map_mul, ← D.rt_θ_sq]; ring
 @[simp] theorem mkE_co (z : A E) : D.mkE (D.co z 0) (D.co z 1) = z := by
-  letI : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
+  let : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
   have h := (AdeleBaseChange.adeleBasis D.b).sum_repr z
   rw [Fin.sum_univ_two, AdeleBaseChange.adeleBasis_apply, AdeleBaseChange.adeleBasis_apply, D.b0, D.b1, map_one,
     Algebra.smul_def, Algebra.smul_def, mul_one] at h
   exact h
 @[simp] theorem co_mkE (u t : A F) : D.co (D.mkE u t) = ![u, t] := by
-  letI : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
+  let : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
   have h : D.mkE u t = u • AdeleBaseChange.adeleBasis D.b 0 + t • AdeleBaseChange.adeleBasis D.b 1 := by
     rw [AdeleBaseChange.adeleBasis_apply, AdeleBaseChange.adeleBasis_apply, D.b0, D.b1, map_one,
       Algebra.smul_def, Algebra.smul_def, mul_one]
@@ -146,7 +146,7 @@ theorem eq_am_of_bar_eq {z : A E} (h : D.bar z = z) : z = am E (D.co z 0) := by
 
 theorem coe_ideleNorm (z : (A E)ˣ) :
     ((ideleNorm F E z : (A F)ˣ) : A F) = D.co z 0 ^ 2 - rt D.δ * D.co z 1 ^ 2 := by
-  letI : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
+  let : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
   rw [GroundTheory.Global.coe_ideleNorm, Algebra.norm_eq_matrix_det (AdeleBaseChange.adeleBasis D.b), Matrix.det_fin_two]
   have h0 : (rt (D.b 0) : A E) = D.mkE 1 0 := by rw [D.b0, mkE_one]; exact map_one _
   have h1 : (rt (D.b 1) : A E) = D.mkE 0 1 := by rw [D.b1]; simp [mkE_def]

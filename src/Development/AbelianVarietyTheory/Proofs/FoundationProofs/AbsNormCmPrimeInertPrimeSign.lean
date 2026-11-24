@@ -53,8 +53,8 @@ namespace GlobalTheory.InertResidue
 theorem card_of_involution {k : Type} [Field k] [Finite k] {q : ℕ} [Fact q.Prime] [CharP k q] (s : k →+* k)
     (hs : ∀ x, s (s x) = x) {r : k} {m : ℤ} (hr : r ^ 2 = m) (hsr : s r = -r) (hne : -r ≠ r) :
     (∃ f, Odd f ∧ Nat.card k = q ^ (2 * f)) ∧ ¬ IsSquare (m : ZMod q) := by
-  letI : Algebra (ZMod q) k := ZMod.algebra k q
-  haveI := Fintype.ofFinite k
+  let : Algebra (ZMod q) k := ZMod.algebra k q
+  have := Fintype.ofFinite k
   let σ : k ≃ₐ[ZMod q] k :=
     { toFun := s, invFun := s, left_inv := hs, right_inv := hs, map_mul' := map_mul s, map_add' := map_add s,
       commutes' := fun c => RingHom.congr_fun (Subsingleton.elim (s.comp (algebraMap (ZMod q) k)) _) c }
@@ -155,11 +155,11 @@ theorem card_of_root (D : D7) {P : Ideal (𝓞 D.host.E)} (hP : P.IsMaximal) (hf
   have hsP : ∀ x ∈ P, D.host.conj • x ∈ P := fun x hx => by
     rw [← hfix]; exact Ideal.smul_mem_pointwise_smul _ _ _ hx
   obtain ⟨r, hr, hsr⟩ := exists_root D n b hb
-  haveI := Fact.mk hq
-  letI := Ideal.Quotient.field P
-  haveI : Finite (𝓞 D.host.E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P
+  have := Fact.mk hq
+  let := Ideal.Quotient.field P
+  have : Finite (𝓞 D.host.E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P
     (Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _))
-  haveI : CharP (𝓞 D.host.E ⧸ P) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
+  have : CharP (𝓞 D.host.E ⧸ P) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
     rw [← map_natCast (Ideal.Quotient.mk P), Ideal.Quotient.eq_zero_iff_mem]; exact hqP)
   let c := MulSemiringAction.toRingHom _ (𝓞 D.host.E) D.host.conj
   let s : 𝓞 D.host.E ⧸ P →+* 𝓞 D.host.E ⧸ P := Ideal.quotientMap P c hsP
@@ -188,10 +188,10 @@ theorem card_of_root (D : D7) {P : Ideal (𝓞 D.host.E)} (hP : P.IsMaximal) (hf
 
 theorem exists_prime (D : D7) {P : Ideal (𝓞 D.host.E)} (hP : P.IsMaximal) :
     ∃ q n : ℕ, q.Prime ∧ (q : 𝓞 D.host.E) ∈ P ∧ Ideal.absNorm P = q ^ n := by
-  letI := Ideal.Quotient.field P
-  haveI : Finite (𝓞 D.host.E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P
+  let := Ideal.Quotient.field P
+  have : Finite (𝓞 D.host.E ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P
     (Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _))
-  haveI := Fintype.ofFinite (𝓞 D.host.E ⧸ P)
+  have := Fintype.ofFinite (𝓞 D.host.E ⧸ P)
   obtain ⟨q, hc, n, hq, hn⟩ := FiniteField.card' (𝓞 D.host.E ⧸ P)
   refine ⟨q, n, hq, ?_, ?_⟩
   · rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -213,8 +213,8 @@ theorem norm_prime : ∀ (D : D7) (P : Ideal (𝓞 D.host.E)), P.IsMaximal → E
     obtain ⟨f, hf, hN⟩ : ∃ f, Odd f ∧ Ideal.absNorm P = q ^ (2 * f) := by
       by_cases h : q = D.host.d
       · exfalso
-        haveI := hP.isPrime
-        haveI : P.LiesOver (Ideal.span {(q : ℤ)}) := by
+        have := hP.isPrime
+        have : P.LiesOver (Ideal.span {(q : ℤ)}) := by
           refine ⟨Ideal.IsMaximal.eq_of_le
             (PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.1 hq).irreducible)
             (Ideal.IsPrime.ne_top inferInstance) ?_⟩
@@ -227,7 +227,7 @@ theorem norm_prime : ∀ (D : D7) (P : Ideal (𝓞 D.host.E)), P.IsMaximal → E
       rw [hN, Nat.factorization_pow]
       simp [Nat.even_mul]
     · have hf0 : 2 * f ≠ 0 := by have := hf.pos; omega
-      rw [hN, sgn, hlf, Nat.primeFactors_prime_pow hf0 hq, Finset.filter_singleton, if_pos hin,
+      rw [hN, sgn, hlf, Nat.primeFactors_prime_pow hf0 hq, Finset.filter_singleton, ite_eq_left hin,
         Finset.sum_singleton, Nat.factorization_pow_self hq, Nat.mul_div_cancel_left _ two_pos, hf.neg_one_pow]
     · rintro rfl
       exact two_not_mem D hP.isPrime

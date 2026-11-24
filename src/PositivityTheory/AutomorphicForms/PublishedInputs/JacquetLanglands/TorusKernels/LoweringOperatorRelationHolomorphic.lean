@@ -81,7 +81,7 @@ theorem fin_expU {ω : HChar F} (h : IsOfFinOrder ω) (z : Rinf F) : ω.1 (infId
   have e1 : expU z = expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]
@@ -178,7 +178,7 @@ theorem f_eq {k : InfinitePlace F → ℕ} {f : X (InfinitePlace F) × GF F → 
 
 theorem continuous_A : Continuous fun z : X (InfinitePlace F) => TR.toL (A z).val := by
   have hc : ∀ u, Continuous fun z : X (InfinitePlace F) => (z u).1 := fun u =>
-    continuous_subtype_val.comp (continuous_apply u)
+    continuous_subtypeVal.comp (continuous_apply u)
   refine continuous_pi fun i => continuous_pi fun j => continuous_pi fun u => ?_
   fin_cases i <;> fin_cases j
   · exact Complex.continuous_im.comp (hc u)
@@ -209,7 +209,7 @@ theorem cr {G : ℂ → ℂ} {L : ℂ →L[ℝ] ℂ} {t0 : ℂ} (h : HasFDerivAt
     have hw : w = w.re • (1 : ℂ) + w.im • Complex.I := by
       apply Complex.ext <;> simp
     simp only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply,
-      ContinuousLinearMap.one_apply, smul_eq_mul]
+      one_apply_eq_self, smul_eq_mul]
     conv_rhs => rw [hw]
     rw [map_add (f := _), map_smul, map_smul, hI, Complex.real_smul, Complex.real_smul]
     conv_lhs => rw [← Complex.re_add_im w]
@@ -245,7 +245,7 @@ theorem sepHol {k : InfinitePlace F → ℕ} {c : Pl F → ℕ} {ω : HChar F} {
         ContinuousAt.comp (f := fun z => TR.toL (A z).val) (TR.contDiffAt_chart φ.2 g (TR.val_mem_invSet (A z))).continuousAt
           continuous_A.continuousAt
     · exact continuous_finsetProd _ fun u _ => Complex.continuous_ofReal.comp
-        ((continuous_abs.comp (Complex.continuous_im.comp (continuous_subtype_val.comp (continuous_apply u)))).rpow_const
+        ((continuous_abs.comp (Complex.continuous_im.comp (continuous_subtypeVal.comp (continuous_apply u)))).rpow_const
           fun z => Or.inl (abs_ne_zero.2 (z u).2))
   · intro t0 ht0
     have ht0' : t0.im ≠ 0 := ht0
@@ -305,7 +305,7 @@ theorem sepHol {k : InfinitePlace F → ℕ} {c : Pl F → ℕ} {ω : HChar F} {
     have hLI : L0 Complex.I = E v 0 0 := by simp [hL0]
     have hrel := lowering_operator_relation_holomorphic hω hφ v (g * TR.infGL F 2 A0)
     refine cr hGd ?_
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, hL1, hLI,
+    simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply, hL1, hLI,
       smul_zero, zero_add, smul_eq_mul]
     have hI1 : Complex.imCLM Complex.I = 1 := by simp
     have hI0 : Complex.imCLM (1 : ℂ) = 0 := by simp

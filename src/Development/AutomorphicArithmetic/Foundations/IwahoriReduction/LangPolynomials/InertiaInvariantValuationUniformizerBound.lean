@@ -49,7 +49,7 @@ private theorem unramified_uniformizer_divides {K E : Type} [Field K] [NumberFie
     (π : 𝓞 K) (p : Ideal (𝓞 K)) [p.IsPrime] (hp : p = Ideal.span {π}) (P : Ideal (𝓞 E)) [P.IsPrime] [P.LiesOver p]
     (h : Algebra.IsUnramifiedAt (𝓞 K) P) (x : 𝓞 E) (hx : x ∈ P) :
     ∃ t y : 𝓞 E, t ∉ P ∧ t * x = algebraMap (𝓞 K) (𝓞 E) π * y := by
-  letI := Localization.AtPrime.algebraOfLiesOver p P
+  let := Localization.AtPrime.algebraOfLiesOver p P
   have h2 := ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 K) p P).1 h).2
   have h3 : algebraMap (𝓞 E) (Localization.AtPrime P) x ∈ IsLocalRing.maximalIdeal (Localization.AtPrime P) :=
     (IsLocalization.AtPrime.to_map_mem_maximal_iff _ P x).2 hx
@@ -93,16 +93,16 @@ private theorem valuation_le_uniformizer_inertia {K Ω : Type} [Field K] [Number
     (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)) (hv : IsPlaceOver A v) (π : 𝓞 K)
     (hπ : v.asIdeal = Ideal.span {π}) (x : Ω) (hx : ∀ s ∈ Ine (F := K) A, s x = x) (h1 : A.valuation x < 1) :
     A.valuation x ≤ A.valuation (algebraMap K Ω (π : K)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
-  haveI : IsGalois K Ω := {}
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : IsGalois K Ω := {}
   let M : IntermediateField K Ω := (FiniteGaloisIntermediateField.adjoin K ({x} : Set Ω)).toIntermediateField
   have hxM : x ∈ M := FiniteGaloisIntermediateField.subset_adjoin K ({x} : Set Ω) rfl
-  haveI : NumberField M := NumberField.of_module_finite K M
-  haveI : Algebra.IsAlgebraic M Ω := Algebra.IsAlgebraic.tower_top (K := K) M
-  haveI : IsAlgClosure M Ω := ⟨inferInstance, inferInstance⟩
+  have : NumberField M := NumberField.of_module_finite K M
+  have : Algebra.IsAlgebraic M Ω := Algebra.IsAlgebraic.tower_top (K := K) M
+  have : IsAlgClosure M Ω := ⟨inferInstance, inferInstance⟩
   obtain ⟨w, hw, hwv⟩ := CompanionTheory.FamInh.exists_place_between (L := M) hv
   let E : IntermediateField K M := IntermediateField.fixedField (w.asIdeal.inertia Gal(M/K))
-  haveI : NumberField E := NumberField.of_module_finite K E
+  have : NumberField E := NumberField.of_module_finite K E
   have hxE : (⟨x, hxM⟩ : M) ∈ E := by
     rw [IntermediateField.mem_fixedField_iff]
     intro τ hτ
@@ -115,7 +115,7 @@ private theorem valuation_le_uniformizer_inertia {K Ω : Type} [Field K] [Number
   have hu : IsPlaceOver A (w.under (𝓞 E)) := fun y => by
     have := hw (algebraMap (𝓞 E) (𝓞 M) y)
     exact this
-  haveI : (w.asIdeal.under (𝓞 E)).LiesOver v.asIdeal := inferInstance
+  have : (w.asIdeal.under (𝓞 E)).LiesOver v.asIdeal := inferInstance
   have := valuation_le_uniformizer_div A (w.under (𝓞 E)) hu (algebraMap (𝓞 K) (𝓞 E) π)
     (unramified_uniformizer_divides π v.asIdeal hπ (w.asIdeal.under (𝓞 E)) hun) ⟨_, hxE⟩ h1
   exact this
@@ -123,7 +123,7 @@ private theorem valuation_le_uniformizer_inertia {K Ω : Type} [Field K] [Number
 theorem UpperTheory.Kd.C7.inertia_invariant_valuation_uniformizer_bound :
     UpperTheory.Kd.C7.FixedIntegersIsUnitOfNotMemPrimeSpan := by
   intro l hl _ Ω _ _ _ A ⟨v, hv, hlv⟩ x hx
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hpr : Prime ((l : ℕ) : 𝓞 ℚ) := by
     have h0 : Prime (l : ℤ) := Nat.prime_iff_prime_int.mp hl.out
     have := (MulEquiv.prime_iff Rat.ringOfIntegersEquiv.symm).2 h0

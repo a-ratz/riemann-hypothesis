@@ -115,7 +115,7 @@ lemma exists_col {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ)
       · simp
       · intro c _ hc
         have : c.1 ≠ j := fun h => hc (Subtype.ext h)
-        rw [dite_eq_right c.2, if_neg this, mul_zero]
+        rw [dite_eq_right c.2, ite_eq_right this, mul_zero]
       · simp
     rw [h1, h2]
     ring
@@ -128,7 +128,7 @@ lemma exists_diag {n : ℕ} (B : Matrix (Fin n) (Fin n) ℂ) (hH : B.IsHermitian
   let F : Matrix (Fin n) (Fin n) ℂ := Matrix.of fun c j => y j c
   have hFt : F.BlockTriangular id := fun c j h => hy0 j c h
   have hFd : F.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hFt]
+    rw [det_of_isUpperTriangular hFt]
     exact Finset.prod_eq_one fun i _ => hy1 i
   have hup : ∀ i j, i < j → (Fᴴ * B * F) i j = 0 := by
     intro i j hij
@@ -176,7 +176,7 @@ lemma diag_of_isometry {n : ℕ} (d : Matrix (Fin n) (Fin n) ℂ) (μ : Fin n �
     intro i j hij
     have : d j i = 0 := hd (show i < j from hij)
     rw [Matrix.conjTranspose_apply, this, star_zero]
-  haveI := Matrix.invertibleOfIsUnitDet _ hu
+  have := Matrix.invertibleOfIsUnitDet _ hu
   have hlow' := Matrix.blockTriangular_inv_of_blockTriangular hlow
   have h2 : diagonal μ * d = (dᴴ)⁻¹ * diagonal μ := by
     conv_rhs => rw [← h]
@@ -254,7 +254,7 @@ theorem bounded_pow_of_triangular_isometry {n : ℕ} (g x b A : Matrix (Fin n) (
     exact this
   obtain ⟨F, μ, hFt, hFd, hμ, hD⟩ := exists_diag Aᵀ hA.transpose hm'
   have hu : IsUnit F.det := by rw [hFd]; exact isUnit_one
-  haveI := Matrix.invertibleOfIsUnitDet _ hu
+  have := Matrix.invertibleOfIsUnitDet _ hu
   have hFd' : F * (F⁻¹ * b * F) = b * F := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.one_mul]
   obtain ⟨l, hl, hl1⟩ := diag_of_isometry (F⁻¹ * b * F) μ

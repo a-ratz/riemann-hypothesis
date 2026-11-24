@@ -62,12 +62,12 @@ theorem count {F M N : Type} [Field F] [AddCommGroup M] [Module F M] [AddCommGro
     Module.finrank F ((Submodule.span F (Set.range v)).map g) = m ∧
       Submodule.span F (Set.range v) ⊓ LinearMap.ker g = V' ∧ LinearIndependent F v := by
   set V := Submodule.span F (Set.range v) with hV
-  haveI : FiniteDimensional F V := FiniteDimensional.span_of_finite F (Set.finite_range v)
+  have : FiniteDimensional F V := FiniteDimensional.span_of_finite F (Set.finite_range v)
   have h1 : Module.finrank F V ≤ r := (finrank_range_le_card (R := F) v).trans (Fintype.card_fin r).le
   have h2 := (g.domRestrict V).finrank_range_add_finrank_ker
   rw [LinearMap.range_domRestrict, LinearMap.ker_domRestrict,
     ← Submodule.finrank_map_subtype_eq, Submodule.map_comap_subtype] at h2
-  haveI : FiniteDimensional F ↥(V ⊓ LinearMap.ker g) := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional F ↥(V ⊓ LinearMap.ker g) := Submodule.finiteDimensional_of_le inf_le_left
   have h3 : V' ≤ V ⊓ LinearMap.ker g := le_inf hle hk
   have h4 := Submodule.finrank_mono h3
   refine ⟨by omega, (Submodule.eq_of_le_of_finrank_le h3 (by omega)).symm, ?_⟩
@@ -118,8 +118,8 @@ theorem abs_main (h1 : ∀ c, ∃ e, ε * κ c = ε * ρ e) (h2 : ∀ e, ∃ c, 
     (hs : ∀ (t : ℕ) (u : Fin t → M), (∀ y, ε • J (φ y) ∈ Submodule.span R (Set.range u)) → s ≤ t) :
     (∃ u : Fin m → D, ∀ x, ∃ c : Fin m → F, ε • g (J x) = ∑ j, κ (c j) • ε • g (J (u j))) ∧
       ∀ x, ε • g (J x) = 0 → ∃ y, ∀ j, ε * ρ (b.repr (x - φ y) j) = 0 := by
-  letI : Module F M := Module.compHom M κ
-  letI : Module F N := Module.compHom N κ
+  let : Module F M := Module.compHom M κ
+  let : Module F N := Module.compHom N κ
   have hM : ∀ (c : F) (x : M), c • x = κ c • x := fun _ _ => rfl
   have hN : ∀ (c : F) (x : N), c • x = κ c • x := fun _ _ => rfl
   let gF : M →ₗ[F] N :=
@@ -146,9 +146,9 @@ theorem abs_main (h1 : ∀ c, ∃ e, ε * κ c = ε * ρ e) (h2 : ∀ e, ∃ c, 
     rintro _ ⟨y, rfl⟩
     change g (ε • J (φ y)) = 0
     rw [map_smul, hg, smul_zero])
-  haveI : FiniteDimensional F (Submodule.span F (Set.range v)) :=
+  have : FiniteDimensional F (Submodule.span F (Set.range v)) :=
     FiniteDimensional.span_of_finite F (Set.finite_range v)
-  haveI : FiniteDimensional F V' := Submodule.finiteDimensional_of_le hle
+  have : FiniteDimensional F V' := Submodule.finiteDimensional_of_le hle
   have hmem' : ∀ x, ε • g (J x) ∈ (Submodule.span F (Set.range v)).map gF := fun x =>
     ⟨_, hmem x, by rw [hgF, map_smul]⟩
   obtain ⟨e1, e2, e3⟩ := count gF v V' hle hk hr
@@ -211,12 +211,12 @@ theorem dim_ker : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Typ
   intro G _ _ Qp K₀ K _ _ _ _ _ _ _ B BdR _ _ _ _ _ _ _ _ _ _ _ PD LL O _ _ _ _ _ v n W RA RW _ _ _ _
     inclR φR gR πA E k _ _ Rk _ _ _ _ ρ lam κ hR T m q hq T' f hf i
   classical
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
-  haveI := (W.DD_free T).1
-  haveI := GlobalTheory.EtaleExact.finite_DD E T
-  haveI : Nontrivial W.EE := by
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := (W.DD_free T).1
+  have := GlobalTheory.EtaleExact.finite_DD E T
+  have : Nontrivial W.EE := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     apply hR.eps_ne i

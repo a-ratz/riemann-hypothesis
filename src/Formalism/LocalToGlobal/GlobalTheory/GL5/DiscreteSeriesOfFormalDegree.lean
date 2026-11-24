@@ -228,9 +228,9 @@ theorem volume_mass_of_class_data (D : D7) (n : ℕ) (hT : VolTie D) (hG : Genus
   obtain ⟨m, g, hcov, hdisj⟩ := hF W hW hsig hrk
   have hsum := hM W hW hsig hrk m g hcov hdisj
   have := Unfold.borelHA D.sp.cm.sig W.gram
-  haveI := hμ.1
-  haveI := Unfold.measurableMulHA D.sp.cm.sig W.gram
-  haveI : Countable (GamA D W) := Unfold.countableGamma D.sp.cm.sig W.gram
+  have := hμ.1
+  have := Unfold.measurableMulHA D.sp.cm.sig W.gram
+  have : Countable (GamA D W) := Unfold.countableGamma D.sp.cm.sig W.gram
   have hmeas := measure_KSub D W W.rank μ hμ θ hθ A hA
   rw [hK] at hmeas
   have hKm : MeasurableSet (StabFin.SFin D.sp.cm.sig W.gram (L0c D W) :

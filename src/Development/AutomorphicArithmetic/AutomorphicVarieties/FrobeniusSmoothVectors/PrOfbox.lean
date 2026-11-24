@@ -110,6 +110,6 @@ theorem UpperTheory.V.Fr.pr_ofbox :
     exact (ord_of_flag (rr.comp (F.loc0 v)) (ψ v) hf).1 g
   refine ⟨⟨rr, ψ, hpol, fun i j hij => hdg i j hij, hord⟩, ⟨hc, fun s => rfl, fun v i s => rfl⟩, ?_, ?_⟩
   · intro i j N
-    exact (hcont i j N).comp_continuous continuous_subtype_val
+    exact (hcont i j N).comp_continuous continuous_subtypeVal
   · intro v i
-    exact cont_conj I (fun s => (B.r (F.loc v s)).mat) (fun p q N => (hcont p q N).comp_continuous (continuous_subtype_val.comp (hF.loc_cont v))) ↑(B.g v) ↑(B.g v)⁻¹ i i
+    exact cont_conj I (fun s => (B.r (F.loc v s)).mat) (fun p q N => (hcont p q N).comp_continuous (continuous_subtypeVal.comp (hF.loc_cont v))) ↑(B.g v) ↑(B.g v)⁻¹ i i

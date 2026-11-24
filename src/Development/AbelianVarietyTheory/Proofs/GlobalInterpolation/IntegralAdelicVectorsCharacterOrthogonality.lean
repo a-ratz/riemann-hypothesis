@@ -68,7 +68,7 @@ theorem Bd_rat_rat (a : Fin N → F) (η ξ : Fin N → F) :
 
 theorem charOrth : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ : AddChar (AF F) ℂ) (lam : InfinitePlace F → ℝ) (ν : Measure (AF F)) (a : Fin N → F), Ctx ψ lam ν a → ∀ D : Set (Fin N → AF F), IsAddFundamentalDomain (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F)))) D (muV N ν) → muV N ν D = 1 → ∀ ξ : Fin N → F, ξ ≠ 0 → ∫ u in D, ψ (Bd (AF F) a u (rat ξ)) ∂(muV N ν) = 0 := by
   intro F _ _ N ψ lam ν a hC D hD _ ξ hξ
-  haveI := hC.2.2.2.1.1
+  have := hC.2.2.2.1.1
   have hmem : ∀ u : Fin N → AF F, u ∈ AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F))) →
       ∃ η, u = rat η := by
     let φ : (Fin N → F) →+ (Fin N → AF F) :=
@@ -78,9 +78,9 @@ theorem charOrth : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ : AddC
       (AddSubgroup.closure_le _).mpr (by rintro _ ⟨η, rfl⟩; exact ⟨η, rfl⟩)
     obtain ⟨η, hη⟩ := hle hu
     exact ⟨η, hη.symm⟩
-  haveI : (muV N ν).IsAddLeftInvariant := by unfold muV; infer_instance
-  haveI : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
-  haveI : Countable (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F)))) := by
+  have : (muV N ν).IsAddLeftInvariant := by unfold muV; infer_instance
+  have : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
+  have : Countable (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F)))) := by
     have hs : (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F))) :
         Set (Fin N → AF F)).Countable :=
       (Set.countable_range (rat : (Fin N → F) → (Fin N → AF F))).mono fun u hu => by

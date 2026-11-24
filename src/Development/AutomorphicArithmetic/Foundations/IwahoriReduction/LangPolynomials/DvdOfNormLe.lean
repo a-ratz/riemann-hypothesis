@@ -62,7 +62,7 @@ private theorem norm_unit (c : Coef l) (u : c.Oˣ) : ‖((u : c.O) : PadicAlgCl 
 
 private theorem norm_pos_and_lt_one_of_irreducible (c : Coef l) (ϖ : c.O) (hϖ : Irreducible ϖ) :
     0 < ‖(ϖ : PadicAlgCl l)‖ ∧ ‖(ϖ : PadicAlgCl l)‖ < 1 := by
-  haveI := c.dvr
+  have := c.dvr
   have hne : (ϖ : PadicAlgCl l) ≠ 0 := by
     intro h
     exact hϖ.ne_zero (Subtype.ext h)
@@ -88,7 +88,7 @@ private theorem norm_pos_and_lt_one_of_irreducible (c : Coef l) (ϖ : c.O) (hϖ 
 
 private theorem dvd_of_norm_le (c : Coef l) (x y : c.O) (hy : y ≠ 0)
     (h : ‖(x : PadicAlgCl l)‖ ≤ ‖(y : PadicAlgCl l)‖) : y ∣ x := by
-  haveI := c.dvr
+  have := c.dvr
   by_cases hx : x = 0
   · rw [hx]
     exact dvd_zero y
@@ -117,8 +117,8 @@ private theorem div_pow_of_cg (c : Coef l) (n : ℕ) (x : c.O) (h : Cg n (x : Pa
 
 theorem pBasEx : SBasEx := by
   intro l _ c
-  haveI := c.fin
-  haveI := c.dvr
+  have := c.fin
+  have := c.dvr
   refine ⟨⟨⟨_, Module.finBasis ℤ_[l] c.O⟩⟩, fun β => ⟨fun i => GlobalTheory.LambdaValuationPowers.norm_le_one_of_mem (β.e i).2,
     ?_, fun n x h => div_pow_of_cg c n x h, ?_⟩⟩
   · intro n x h i

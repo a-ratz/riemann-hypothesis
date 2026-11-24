@@ -75,7 +75,7 @@ theorem expMap_zero (H : IsLieData σ j s) : expMap j s 0 = 1 := by
 
 theorem expMap_add_smul (H : IsLieData σ j s) (X : L) (t h : ℝ) :
     expMap j s ((t + h) • X) = expMap j s (t • X) * expMap j s (h • X) := by
-  haveI : CompleteSpace 𝔸 := FiniteDimensional.complete ℝ 𝔸
+  have : CompleteSpace 𝔸 := FiniteDimensional.completeSpace ℝ 𝔸
   have hb : ∀ x : 𝔸, x ∈ Metric.eball (0 : 𝔸) (NormedSpace.expSeries ℝ 𝔸).radius := fun x =>
     (NormedSpace.expSeries_radius_eq_top ℝ 𝔸).symm ▸ edist_lt_top _ _
   simp only [expMap]

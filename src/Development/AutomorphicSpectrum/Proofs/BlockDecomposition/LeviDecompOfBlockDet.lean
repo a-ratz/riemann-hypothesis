@@ -276,7 +276,7 @@ variable [TopologicalSpace R] [IsTopologicalRing R]
 
 theorem continuous_piQ (A : Ad E R) (ε : ℤˣ) : Continuous (piQ A ε (ι := ι)) := by
   have hv : Continuous fun q : A.uQ ε (Set.univ : Set ι) => (q.1.1 : GL (ι ⊕ ι) R) :=
-    continuous_subtype_val.comp continuous_subtype_val
+    continuous_subtypeVal.comp continuous_subtypeVal
   rw [Units.continuous_iff]
   refine ⟨continuous_matrix fun r c => ?_, continuous_matrix fun r c => ?_⟩
   · exact (Units.continuous_val.comp hv).matrix_elem _ _
@@ -296,7 +296,7 @@ theorem continuous_jQ (A : Ad E R) (ε : ℤˣ) (h : ∀ x, A.σ (A.σ x) = x) (
 theorem isClosed_uQ (A : Ad E R) (ε : ℤˣ) (s : Set ι)
     (h : IsClosed (stab R (Sum.inl '' s : Set (ι ⊕ ι)) : Set (GL (ι ⊕ ι) R))) :
     IsClosed (A.uQ ε s : Set (A.U ε ι)) :=
-  h.preimage continuous_subtype_val
+  h.preimage continuous_subtypeVal
 
 end Top
 
@@ -344,7 +344,7 @@ theorem ht_U (hB : BdetLaw) (hE : ExtLaw) (A : Ad E R) (hA : A.Good) (ε : ℤˣ
     A.uH ε s (p * k) = A.lg (bdet (Sum.inl '' s : Set (ι ⊕ ι)) p.1) := by
   have hb := hB E R A hA.toGoodL (ι ⊕ ι) (Sum.inl '' s)
   have hc : ContinuousOn (fun p : A.U ε ι => bdet (Sum.inl '' s : Set (ι ⊕ ι)) p.1) (A.uQ ε s : Set (A.U ε ι)) :=
-    hb.2.2.1.comp continuous_subtype_val.continuousOn fun x hx => hx
+    hb.2.2.1.comp continuous_subtypeVal.continuousOn fun x hx => hx
   have hv : ∀ p ∈ A.uQ ε s, p ∈ A.uK ε ι → A.lg (bdet (Sum.inl '' s : Set (ι ⊕ ι)) p.1) = 0 :=
     fun p hp hk => hb.2.2.2.2.1 p.1 (Subgroup.mem_subgroupOf.1 hp) (Subgroup.mem_subgroupOf.1 hk)
   exact (hE (A.U ε ι) (A.uK ε ι) (A.uK ε ι) (A.uQ ε s) (fun p => A.lg (bdet (Sum.inl '' s : Set (ι ⊕ ι)) p.1)) hK

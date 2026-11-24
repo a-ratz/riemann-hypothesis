@@ -102,7 +102,7 @@ theorem charPol_eq_prod_support : LanglandsExhaustionGL → ZelevinskyPolynomial
     (rc : IrrGL (k := w.adicCompletion E) → WD h), LawsLit a ha e rc → ∀ (x : IrrGL (k := w.adicCompletion E)) s,
     HasSupport x.rep s → ∀ σ, (rc x).charPol σ = (s.map fun y => (rc y).charPol σ).prod := by
   intro hEx hZ hG hBZ E Ω _ _ _ _ _ A w h a ha e rc H x s hs σ
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := hEx (w.adicCompletion E) x
   have h1 := GlobalTheory.T.langlandsClassification_supercuspidalSupport_multisegment hZ _ 𝔪 x hm
   obtain rfl : s = msupp 𝔪 := GlobalTheory.T.supercuspidalSupport_unique_GL hG hBZ hZ _ x s _ hs h1

@@ -75,7 +75,7 @@ theorem continuous_finPart : Continuous (finPart (E := E) (n := n)) := by
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
   exact GlobalTheory.DefU.ClassFin.continuous_finGL.comp
     ((Continuous.units_map _ (continuous_id.matrix_map (continuous_snd : Continuous (pFin E)))).comp
-      continuous_subtype_val)
+      continuous_subtypeVal)
 
 theorem continuous_infPart : Continuous (infPart (E := E) (n := n)) := by
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _

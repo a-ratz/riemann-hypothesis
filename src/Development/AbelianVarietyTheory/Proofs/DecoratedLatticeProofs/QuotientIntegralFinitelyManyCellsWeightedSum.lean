@@ -74,7 +74,7 @@ theorem dcos_eq_of_mem {R K : Subgroup G} {q h : G} (hh : h ∈ dcos R K q) : dc
 def cellSet (R K : Subgroup G) (q h : G) : Set R := {r | q⁻¹ * ((r : G) * h) ∈ K}
 
 theorem isOpen_cellSet {R K : Subgroup G} (hK : IsOpen (K : Set G)) (q h : G) : IsOpen (cellSet R K q h) :=
-  (continuous_const.mul (continuous_subtype_val.mul continuous_const)).isOpen_preimage _ hK
+  (continuous_const.mul (continuous_subtypeVal.mul continuous_const)).isOpen_preimage _ hK
 
 theorem isCompact_cellSet {R K : Subgroup G} (hR : IsClosed (R : Set G)) (hK : IsCompact (K : Set G)) (q h : G) :
     IsCompact (cellSet R K q h) := by
@@ -85,7 +85,7 @@ theorem isCompact_cellSet {R K : Subgroup G} (hR : IsClosed (R : Set G)) (hK : I
 theorem cellSet_of_mem {R K : Subgroup G} {q h : G} (r0 : R) (k0 : G) (hk0 : k0 ∈ K) (hh : h = r0 * q * k0) :
     cellSet R K q h = (fun r => r * r0) ⁻¹' cellSet R K q q := by
   ext r
-  simp only [cellSet, Set.mem_preimage, Set.mem_setOf_eq, Subgroup.coe_mul, hh]
+  simp only [cellSet, Set.mem_preimage, Set.mem_ofPred_eq, Subgroup.coe_mul, hh]
   constructor
   · intro hr
     have := K.mul_mem hr (K.inv_mem hk0)
@@ -115,7 +115,7 @@ theorem isQuotientIntegral_indicator_doubleCoset (R K : Subgroup G) (hR : IsClos
   have hS0 : ρ (cellSet R K q q) ≠ 0 := (isOpen_cellSet hKo q q).measure_ne_zero ρ ⟨1, by simp [cellSet]⟩
   have hSt : ρ (cellSet R K q q) ≠ ⊤ := ((isCompact_cellSet hR hKc q q).measure_lt_top (μ := ρ)).ne
   have e : ∀ h, (fun r : R => A.indicator (fun _ => c) ((r : G) * h)) = (cellSet R K q h).indicator fun _ => c := by
-    intro h; funext r; simp only [Set.indicator_apply, hA, cellSet, Set.mem_preimage, Set.mem_setOf_eq, SetLike.mem_coe]
+    intro h; funext r; simp only [Set.indicator_apply, hA, cellSet, Set.mem_preimage, Set.mem_ofPred_eq, SetLike.mem_coe]
   refine ⟨A.indicator fun _ => c, ?_, fun h => ?_, fun h => ?_, ?_⟩
   · exact (integrableOn_const hAc.measure_lt_top.ne).integrable_indicator hAo.measurableSet
   · rw [e h]
@@ -124,11 +124,11 @@ theorem isQuotientIntegral_indicator_doubleCoset (R K : Subgroup G) (hR : IsClos
   · rw [e h, integral_indicator (isOpen_cellSet hKo q h).measurableSet, setIntegral_const]
     show (if h ∈ dcos R K q then (1 : ℂ) else 0) = ρ.real (cellSet R K q h) • c
     by_cases hh : h ∈ dcos R K q
-    · rw [if_pos hh]
+    · rw [ite_eq_left hh]
       obtain ⟨r0, hr0, k0, hk0, rfl⟩ := hh
       rw [cellSet_of_mem ⟨r0, hr0⟩ k0 hk0 rfl, measureReal_def, measure_preimage_mul_right, hc, Complex.real_smul,
         ← Complex.ofReal_mul, mul_inv_cancel₀ (ENNReal.toReal_ne_zero.2 ⟨hS0, hSt⟩), Complex.ofReal_one]
-    · rw [if_neg hh, cellSet_eq_empty hh]
+    · rw [ite_eq_right hh, cellSet_eq_empty hh]
       simp
   · rw [integral_indicator hAo.measurableSet, setIntegral_const, measureReal_def, hAμ, hc, Complex.real_smul, ← Complex.ofReal_mul, div_eq_mul_inv]
 
@@ -167,11 +167,11 @@ theorem GlobalTheory.CellInt.quotInt_finiteCells : ∀ (G : Type) [Group G] [Top
     intro h
     by_cases hex : ∃ q0 ∈ u, h ∈ dcos R K q0
     · obtain ⟨q0, hq0, hh⟩ := hex
-      rw [Finset.sum_eq_single q0 (fun q hq hne => ?_) (fun h' => absurd hq0 h'), if_pos hh, mul_one, hinv q0 h hh]
-      rw [if_neg, mul_zero]
+      rw [Finset.sum_eq_single q0 (fun q hq hne => ?_) (fun h' => absurd hq0 h'), ite_eq_left hh, mul_one, hinv q0 h hh]
+      rw [ite_eq_right, mul_zero]
       intro hq'
       exact hne (hinj hq hq0 ((dcos_eq_of_mem hq').symm.trans (dcos_eq_of_mem hh)))
-    · rw [Finset.sum_eq_zero fun q hq => by rw [if_neg fun hh => hex ⟨q, hq, hh⟩, mul_zero]]
+    · rw [Finset.sum_eq_zero fun q hq => by rw [ite_eq_right fun hh => hex ⟨q, hq, hh⟩, mul_zero]]
       by_contra hne
       obtain ⟨q, hq, r, hr, k, hk, hh⟩ := hsupp h hne
       have hm : dcos R K q ∈ u.image (dcos R K) := himg ▸ Finset.mem_image_of_mem _ hq

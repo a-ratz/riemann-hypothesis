@@ -89,12 +89,12 @@ theorem sum_target :
   · have hg : IsGlue Q.lat (x *ᵥ e₁) := (isGlue_iff q).2 ⟨Q.isLat, fun h0 =>
       one_ne_zero (h.2.unique (Pair.mem_ker.1 (Pair.smul_mem_ker q.mem_max h0))), h.2.mem⟩
     rw [Finset.sum_eq_single_of_mem (glue hg)]
-    · exact if_pos ((hm _).2 ⟨by rw [glue_ker]; exact h.1, glue_hasVal hg⟩)
+    · exact ite_eq_left ((hm _).2 ⟨by rw [glue_ker]; exact h.1, glue_hasVal hg⟩)
     · exact Finset.mem_filter.2 ⟨mem_withKer.2 (glue_ker hg),
         (cross_hasVal q (glue_ker hg).symm (glue_hasVal hg)).unique h.2⟩
-    · exact fun Q₁ h1 h2 => if_neg fun h3 =>
+    · exact fun Q₁ h1 h2 => ite_eq_right fun h3 =>
         h2 ((eq_glue_iff hg).2 ⟨mem_withKer.1 (Finset.mem_filter.1 h1).1, ((hm _).1 h3).2⟩)
-  · refine Finset.sum_eq_zero fun Q₁ h1 => if_neg fun h3 => h ?_
+  · refine Finset.sum_eq_zero fun Q₁ h1 => ite_eq_right fun h3 => h ?_
     obtain ⟨h1, h2⟩ := Finset.mem_filter.1 h1
     rw [mem_withKer] at h1
     exact ⟨h1 ▸ ((hm _).1 h3).1, h2 ▸ cross_hasVal q h1.symm ((hm _).1 h3).2⟩
@@ -112,9 +112,9 @@ theorem sum_source :
     let R : Pair k n' := ⟨P₁.ker, P₁.ker_isLat, f, fun h0 => by simp [h0] at h1⟩
     have hR : Maps R Q x := ⟨h.1, fun _ => rfl⟩
     rw [Finset.sum_eq_single_of_mem R]
-    · exact (if_pos hR).symm
+    · exact (ite_eq_left hR).symm
     · exact Finset.mem_filter.2 ⟨mem_withLat.2 rfl, (cross_hasVal q (P := R) rfl he).unique ⟨hq, h1⟩⟩
-    · refine fun P hP h2 => if_neg fun h3 => h2 (Pair.ext fun y a => ?_)
+    · refine fun P hP h2 => ite_eq_right fun h3 => h2 (Pair.ext fun y a => ?_)
       have hl : P.lat = R.lat := mem_withLat.1 (Finset.mem_filter.1 hP).1
       rw [maps_iff_hasVal] at hR h3
       constructor
@@ -124,7 +124,7 @@ theorem sum_source :
       · intro hy
         have h4 := P.hasVal_fn ⟨y, hl ▸ hy.mem⟩
         exact (h3 _ _ h4).unique (hR _ _ hy) ▸ h4
-  · refine (Finset.sum_eq_zero fun P h1 => if_neg fun h3 => h ?_).symm
+  · refine (Finset.sum_eq_zero fun P h1 => ite_eq_right fun h3 => h ?_).symm
     obtain ⟨h1, h2⟩ := Finset.mem_filter.1 h1
     rw [mem_withLat] at h1
     exact ⟨h1 ▸ h3.1, maps_iff_hasVal.1 h3 _ _ (h2 ▸ cross_hasVal q h1 he)⟩
@@ -135,9 +135,9 @@ theorem card_withKer (q : Unif k) (L : Submodule 𝒪[k] (n → k)) [L.IsLattice
     (withKer L).card = (withLat L).card := by
   classical
   by_cases hfull : L.IsFullLattice k
-  · letI : L.IsFullLattice k := hfull
-    letI := Fintype.ofFinite (Red L)
-    letI := Fintype.ofFinite (Module.Dual 𝓀[k] (Red L))
+  · let : L.IsFullLattice k := hfull
+    let := Fintype.ofFinite (Red L)
+    let := Fintype.ofFinite (Module.Dual 𝓀[k] (Red L))
     have hc : Fintype.card (Red L) = Fintype.card (Module.Dual 𝓀[k] (Red L)) := by
       rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card, Module.natCard_eq_pow_finrank (K := 𝓀[k]),
         Module.natCard_eq_pow_finrank (K := 𝓀[k]) (V := Module.Dual 𝓀[k] (Red L)), Subspace.dual_finrank_eq]
@@ -161,7 +161,7 @@ theorem exists_det (q : Unif k) (P : Pair k n) :
     ∃ d : GL n k, d • P.ker = P.lat ∧ Matrix.GeneralLinearGroup.det d = q.unit⁻¹ := by
   obtain ⟨i⟩ : Nonempty n := by
     by_contra h
-    haveI := not_nonempty_iff.1 h
+    have := not_nonempty_iff.1 h
     exact P.fn_ne (LinearMap.ext fun y => by rw [Subsingleton.elim y 0]; simp)
   obtain ⟨a, rfl⟩ := MulAction.exists_smul_eq (GL n k) (stdPair k i) P
   have hdet : (Matrix.diagonal (Function.update (1 : n → k) i (q.1 : k))).det = (q.1 : k) := by
@@ -319,12 +319,12 @@ theorem U_KK (hl' : IsUnram l') (q : Unif k) {φ : Form k n' V'} (hφ : φ ∈ E
       · have hg : IsGlue Q.lat (x *ᵥ e₁) := (isGlue_iff q).2 ⟨Q.isLat, fun h0 =>
           one_ne_zero (h.2.unique (Pair.mem_ker.1 (Pair.smul_mem_ker q.mem_max h0))), h.2.mem⟩
         rw [Finset.sum_eq_single_of_mem (glue hg)]
-        · exact if_pos ((hm _).2 ⟨by rw [glue_ker]; exact h.1, glue_hasVal hg⟩)
+        · exact ite_eq_left ((hm _).2 ⟨by rw [glue_ker]; exact h.1, glue_hasVal hg⟩)
         · exact Finset.mem_filter.2 ⟨mem_withKer.2 (glue_ker hg),
             (cross_hasVal q (glue_ker hg).symm (glue_hasVal hg)).unique h.2⟩
-        · exact fun Q₁ h1 h2 => if_neg fun h3 =>
+        · exact fun Q₁ h1 h2 => ite_eq_right fun h3 =>
             h2 ((eq_glue_iff hg).2 ⟨mem_withKer.1 (Finset.mem_filter.1 h1).1, ((hm _).1 h3).2⟩)
-      · refine Finset.sum_eq_zero fun Q₁ h1 => if_neg fun h3 => h ?_
+      · refine Finset.sum_eq_zero fun Q₁ h1 => ite_eq_right fun h3 => h ?_
         obtain ⟨h1, h2⟩ := Finset.mem_filter.1 h1
         rw [mem_withKer] at h1
         exact ⟨h1 ▸ ((hm _).1 h3).1, h2 ▸ cross_hasVal q h1.symm ((hm _).1 h3).2⟩
@@ -340,9 +340,9 @@ theorem U_KK (hl' : IsUnram l') (q : Unif k) {φ : Form k n' V'} (hφ : φ ∈ E
         let R : Pair k n' := ⟨P₁.ker, P₁.ker_isLat, f, fun h0 => by simp [h0] at h1⟩
         have hR : Maps R Q x := ⟨h.1, fun _ => rfl⟩
         rw [Finset.sum_eq_single_of_mem R]
-        · exact (if_pos hR).symm
+        · exact (ite_eq_left hR).symm
         · exact Finset.mem_filter.2 ⟨mem_withLat.2 rfl, (cross_hasVal q (P := R) rfl he).unique ⟨hq, h1⟩⟩
-        · refine fun P hP h2 => if_neg fun h3 => h2 (Pair.ext fun y a => ?_)
+        · refine fun P hP h2 => ite_eq_right fun h3 => h2 (Pair.ext fun y a => ?_)
           have hl : P.lat = R.lat := mem_withLat.1 (Finset.mem_filter.1 hP).1
           rw [maps_iff_hasVal] at hR h3
           constructor
@@ -352,7 +352,7 @@ theorem U_KK (hl' : IsUnram l') (q : Unif k) {φ : Form k n' V'} (hφ : φ ∈ E
           · intro hy
             have h4 := P.hasVal_fn ⟨y, hl ▸ hy.mem⟩
             exact (h3 _ _ h4).unique (hR _ _ hy) ▸ h4
-      · refine (Finset.sum_eq_zero fun P h1 => if_neg fun h3 => h ?_).symm
+      · refine (Finset.sum_eq_zero fun P h1 => ite_eq_right fun h3 => h ?_).symm
         obtain ⟨h1, h2⟩ := Finset.mem_filter.1 h1
         rw [mem_withLat] at h1
         exact ⟨h1 ▸ h3.1, maps_iff_hasVal.1 h3 _ _ (h2 ▸ cross_hasVal q h1 he)⟩

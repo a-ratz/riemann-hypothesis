@@ -231,7 +231,7 @@ theorem proof : SheetChartHolo.Statement := by
     have hFy' : F x ξ0 = y := hFy
     rwa [hFy'] at this
   have hleft : ∀ᶠ ξ in 𝓝 ξ0, G (F x ξ) = ξ :=
-    (hcd.hasStrictFDerivAt' hder hn1).eventually_left_inverse
+    (hcd.hasStrictFDerivAt hder hn1).eventually_left_inverse
 
   have hmem : ∀ᶠ y' in 𝓝 y, γ y' ∈ mcPts P := hev.mono fun _ h => h.2.1
   have hpc : Tendsto (fun y' => M.proj (γ y')) (𝓝 y) (𝓝 (M.proj (γ y))) :=

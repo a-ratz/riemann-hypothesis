@@ -111,7 +111,7 @@ theorem DecoSet.dia_L (c : DiaG (E := E) (ST := ST)) (d : DecoSet (E := E) (n :=
   unfold Deco.L
   congr 1
   ext x
-  simp only [Deco.dia, Set.mem_setOf_eq, Units.mul_right_eq_zero]
+  simp only [Deco.dia, Set.mem_ofPred_eq, Units.mul_right_eq_zero]
 
 theorem decoOfD_ptOfD (hS : DecoPtSurj hc n ST SG) (c : DiaG (E := E) (ST := ST)) (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) :
     decoOfD n ST SG c (ptOfD hc n ST SG c d : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) = d := by

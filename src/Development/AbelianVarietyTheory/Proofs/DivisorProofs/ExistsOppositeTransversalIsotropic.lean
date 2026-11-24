@@ -88,7 +88,7 @@ theorem bar_algebraMap (H : Host E) (r : 𝓞 (maximalRealSubfield E)) :
 
 theorem sub_bar_mem_pow_succ (H : Host E) (𝔭 : Ideal (𝓞 E)) (n : ℕ) (hn : 1 ≤ n)
     (h : ∀ c, c - H.bar c ∈ 𝔭 ^ n) (c : 𝓞 E) : c - H.bar c ∈ 𝔭 ^ (n + 1) := by
-  haveI := H.unram
+  have := H.unram
   let L : 𝓞 E →ₗ[𝓞 (maximalRealSubfield E)] (𝓞 E ⧸ 𝔭 ^ (n + 1)) :=
     { toFun := fun c => Ideal.Quotient.mk _ (c - H.bar c)
       map_add' := fun a b => by rw [← map_add (f := _), map_add H.bar]; congr 1; ring
@@ -164,7 +164,7 @@ theorem exists_local_gen {M : FractionalIdeal (𝓞 E)⁰ E} (hM : M ≠ 0) {�
     apply hδ'
     have : spanSingleton (𝓞 E)⁰ δ ≤ (𝔭 : FractionalIdeal (𝓞 E)⁰ E) * M := hIM ▸ mul_le_mul_left h M
     exact spanSingleton_le_iff_mem.1 this
-  obtain ⟨y, hyI, hy𝔭⟩ := SetLike.not_le_iff_exists.1 hnot
+  obtain ⟨y, hyI, hy𝔭⟩ := IsConcreteLE.not_le_iff_exists.1 hnot
   obtain ⟨s, rfl⟩ := (mem_one_iff _).1 (hI1 hyI)
   refine ⟨s, fun hs => hy𝔭 ((mem_coeIdeal _).2 ⟨s, hs, rfl⟩), fun x hx => ?_⟩
   have : algebraMap (𝓞 E) E s * x ∈ spanSingleton (𝓞 E)⁰ δ := hIM ▸ mul_mem_mul hyI hx
@@ -184,15 +184,15 @@ theorem exists_mem_notMem_mul {M : FractionalIdeal (𝓞 E)⁰ E} (hM : M ≠ 0)
   exact h𝔭 (top_le_iff.1 h1)
 
 theorem fi_add_mem (N : FractionalIdeal (𝓞 E)⁰ E) {x y : E} (hx : x ∈ N) (hy : y ∈ N) : x + y ∈ N :=
-  FractionalIdeal.mem_coe.1 (Submodule.add_mem _ (FractionalIdeal.mem_coe.2 hx) (FractionalIdeal.mem_coe.2 hy))
+  FractionalIdeal.mem_coeToSubmodule.1 (Submodule.add_mem _ (FractionalIdeal.mem_coeToSubmodule.2 hx) (FractionalIdeal.mem_coeToSubmodule.2 hy))
 
 theorem fi_sub_mem (N : FractionalIdeal (𝓞 E)⁰ E) {x y : E} (hx : x ∈ N) (hy : y ∈ N) : x - y ∈ N :=
-  FractionalIdeal.mem_coe.1 (Submodule.sub_mem _ (FractionalIdeal.mem_coe.2 hx) (FractionalIdeal.mem_coe.2 hy))
+  FractionalIdeal.mem_coeToSubmodule.1 (Submodule.sub_mem _ (FractionalIdeal.mem_coeToSubmodule.2 hx) (FractionalIdeal.mem_coeToSubmodule.2 hy))
 
 theorem fi_mul_mem (N : FractionalIdeal (𝓞 E)⁰ E) (a : 𝓞 E) {y : E} (hy : y ∈ N) : (a : E) * y ∈ N := by
-  have := Submodule.smul_mem (N : Submodule (𝓞 E) E) a (FractionalIdeal.mem_coe.2 hy)
+  have := Submodule.smul_mem (N : Submodule (𝓞 E) E) a (FractionalIdeal.mem_coeToSubmodule.2 hy)
   rw [Algebra.smul_def] at this
-  exact FractionalIdeal.mem_coe.1 this
+  exact FractionalIdeal.mem_coeToSubmodule.1 this
 
 theorem exists_real_notMem (H : Host E) {M : FractionalIdeal (𝓞 E)⁰ E} (hM : M ≠ 0)
     (hconj : ∀ x ∈ M, IsCMField.complexConj E x ∈ M) {𝔭 : Ideal (𝓞 E)} (h𝔭 : 𝔭.IsMaximal) :
@@ -281,7 +281,7 @@ theorem exists_bar_inv_trace_gen : ∀ {E : Type} [Field E] [NumberField E] [IsC
     obtain ⟨t, ht⟩ := hs (ψ.comp (H.bar : 𝓞 E →+* 𝓞 E).toAddMonoidHom)
     refine ⟨H.bar t, fun u => ?_⟩
     have := ht (H.bar u)
-    simp only [AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe, RingHom.coe_coe,
+    simp only [AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass, RingHom.coe_coe,
       map_mul, bar_bar] at this
     rw [this, ← hθbar (t * H.bar u), map_mul, bar_bar]
   refine ⟨θ, hθbar, ?_⟩
@@ -415,7 +415,7 @@ theorem exists_improves_of_ne_conj : ∀ {E : Type} [Field E] [NumberField E] [I
     rw [this, LinearMap.range_comp]
 
   obtain ⟨ℓ₂, hℓ₂⟩ : ∃ ℓ₂, y (ζ ℓ₂) ∉ img D y Z' 𝔭 := by
-    obtain ⟨_, ⟨z, hz, rfl⟩, hz'⟩ := SetLike.not_le_iff_exists.1 hZ
+    obtain ⟨_, ⟨z, hz, rfl⟩, hz'⟩ := IsConcreteLE.not_le_iff_exists.1 hZ
     obtain ⟨ℓ, hℓ⟩ := GlobalTheory.LowFilt.exists_linear_theta_factor D Z' θ s (fun h0 => hs (h0 ▸ zero_mem _)) hgen z
     have h0 : ζ ℓ - H.bar s • z = 0 := h.symm.eq_zero (sub_mem (hζZ ℓ) (Z.smul_mem _ hz)) fun x hx => by
       rw [ef_swap, map_sub, hζ ℓ ⟨x, hx⟩, hℓ ⟨x, hx⟩]; simp
@@ -511,7 +511,7 @@ theorem exists_improves_of_perp {E : Type} [Field E] [NumberField E] [IsCMField 
     have hu' := hle hker.1
     have hz : y (ζ (e • ℓ₀)) ∈ img D y Z' 𝔭 := by
       rcases hA with hA | hA
-      · haveI := h𝔭
+      · have := h𝔭
         have h𝔭' : (𝔭.map (H.bar : 𝓞 E →+* 𝓞 E)).IsMaximal := Ideal.map_isMaximal_of_equiv H.bar
         have hn' : (n : 𝓞 E) ∈ 𝔭.map (H.bar : 𝓞 E →+* 𝓞 E) := by
           simpa using Ideal.mem_map_of_mem (H.bar : 𝓞 E →+* 𝓞 E) hn𝔭
@@ -663,8 +663,8 @@ open scoped TensorProduct
 private theorem finite_projective_of_free_int (E : Type) [Field E] [NumberField E] (N : Type) [AddCommGroup N]
     [Module (𝓞 E) N] [Module.Free ℤ N] [Module.Finite ℤ N] :
     Module.Finite (𝓞 E) N ∧ Module.Projective (𝓞 E) N := by
-  haveI : Module.Finite (𝓞 E) N := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) N
-  haveI : Module.IsTorsionFree (𝓞 E) N := by
+  have : Module.Finite (𝓞 E) N := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) N
+  have : Module.IsTorsionFree (𝓞 E) N := by
     refine Module.isTorsionFree_iff_smul_eq_zero.2 fun a x hax => ?_
     by_contra hk
     push_neg at hk
@@ -675,13 +675,13 @@ private theorem finite_projective_of_free_int (E : Type) [Field E] [NumberField 
     have h1 : ((Ideal.absNorm (Ideal.span {a}) : ℕ) : ℤ) • x = 0 := by
       rw [natCast_zsmul, ← Nat.cast_smul_eq_nsmul (𝓞 E), ← hc, mul_smul, hax, smul_zero]
     exact hk.2 ((smul_eq_zero.1 h1).resolve_left (by exact_mod_cast h0))
-  haveI : Module.FinitePresentation (𝓞 E) N := Module.finitePresentation_of_finite _ _
+  have : Module.FinitePresentation (𝓞 E) N := Module.finitePresentation_of_finite _ _
   exact ⟨inferInstance, Module.Flat.projective_of_finitePresentation⟩
 
 private theorem finrank_quot_tensor {O N : Type} [CommRing O] [IsDomain O] [AddCommGroup N] [Module O N]
     [Module.Finite O N] [Module.Projective O N] (I : Ideal O) [I.IsMaximal] :
     Module.finrank (O ⧸ I) ((O ⧸ I) ⊗[O] N) = Module.finrank O N := by
-  letI : Field (O ⧸ I) := Ideal.Quotient.field _
+  let : Field (O ⧸ I) := Ideal.Quotient.field _
   have h1 := Module.rankAtStalk_baseChange (R := O) (M := N) (S := O ⧸ I) ⊥
   rw [Module.rankAtStalk_eq_finrank_of_free, Module.rankAtStalk_eq, Ideal.finrank_fiber_eq_finrank] at h1
   exact h1
@@ -702,7 +702,7 @@ theorem exists_ker_vec_of_not_onto_mod {O P X : Type} [CommRing O] [IsDomain O] 
     [Module.Projective O X] (f : P →ₗ[O] X) (hr : Module.finrank O P = Module.finrank O X) (I : Ideal O)
     (hI : I.IsMaximal) (hi : LinearMap.range f ⊔ I • (⊤ : Submodule O X) ≠ ⊤) :
     ∃ v : P, f v ∈ I • (⊤ : Submodule O X) ∧ ∃ ℓ : P →ₗ[O] O, ℓ v ∉ I := by
-  letI : Field (O ⧸ I) := Ideal.Quotient.field _
+  let : Field (O ⧸ I) := Ideal.Quotient.field _
   have hns : ¬ Function.Surjective (f.baseChange (O ⧸ I)) := fun hs => hi <| eq_top_iff.2 fun x _ => by
     obtain ⟨t, ht⟩ := hs (1 ⊗ₜ x)
     obtain ⟨v, rfl⟩ := one_tmul_surjective I t
@@ -813,8 +813,8 @@ theorem cois_dvd (D : Datum H) {X : Type} [AddCommGroup X] [Module (𝓞 E) X] [
 
 theorem exists_pair (D : Datum H) {p : ℕ} (hp : p.Prime) (S : AddSubgroup D.La) (hpS : ∀ x : D.La, p • x ∈ S)
     {c : D.La} (hc : c ∉ S) : ∃ a : D.La, (∀ b ∈ S, (p : ℤ) ∣ D.EF a b) ∧ ¬ (p : ℤ) ∣ D.EF a c := by
-  haveI := Fact.mk hp
-  letI : Module (ZMod p) (D.La ⧸ S) := AddCommGroup.zmodModule (fun x => by
+  have := Fact.mk hp
+  let : Module (ZMod p) (D.La ⧸ S) := AddCommGroup.zmodModule (fun x => by
     induction x using QuotientAddGroup.induction_on with
     | H x => rw [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff]; exact hpS x)
   have hc' : (QuotientAddGroup.mk c : D.La ⧸ S) ≠ 0 := by rwa [Ne, QuotientAddGroup.eq_zero_iff]
@@ -824,9 +824,9 @@ theorem exists_pair (D : Datum H) {p : ℕ} (hp : p.Prime) (S : AddSubgroup D.La
     refine hc' ((Module.forall_dual_apply_eq_zero_iff (ZMod p) _).1 fun φ => ?_)
     exact hne (LinearMap.toAddMonoidHom φ)
   let g : D.La →+ ZMod p := f.comp (QuotientAddGroup.mk' S)
-  haveI := datum_finite_int D
-  haveI := datum_isTorsionFree_int D
-  haveI : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
+  have := datum_finite_int D
+  have := datum_isTorsionFree_int D
+  have : Module.Free ℤ D.La := Module.free_of_finite_type_torsion_free'
   let bs := Module.Free.chooseBasis ℤ D.La
   let G : D.La →ₗ[ℤ] ℤ := bs.constr ℤ (fun i => ((g (bs i)).val : ℤ))
   have hG : ∀ x, ((G x : ℤ) : ZMod p) = g x := by
@@ -869,7 +869,7 @@ theorem mem_nsmul_of_img_eq_top (D : Datum H) {X : Type} [AddCommGroup X] [Modul
     (hr : Module.finrank (𝓞 E) Z = Module.finrank (𝓞 E) X) (𝔮 : Ideal (𝓞 E)) (h𝔮 : 𝔮.IsMaximal)
     (htop : img D y Z' 𝔮 = ⊤) {p : ℕ} {b : D.La} (hb : b ∈ Z') (hyb : ∃ e, y b = p • e)
     (hq : ∀ t ∈ 𝔮, ∃ e ∈ Z', t • b = p • e) : ∃ e ∈ Z', b = p • e := by
-  haveI : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ _ _
   obtain ⟨r, hr1, hrX⟩ := Submodule.exists_sub_one_mem_and_smul_le_of_fg_of_le_sup (I := 𝔮) (N := Z'.map y)
     (N' := ⊤) (P := ⊤) Module.Finite.fg_top le_rfl (le_of_eq htop.symm)
   have hr0 : r ∉ 𝔮 := fun h' => h𝔮.ne_top ((Ideal.eq_top_iff_one _).2 (by simpa using sub_mem h' hr1))
@@ -941,7 +941,7 @@ theorem img_bar_ne_top : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     img D y Z' (𝔭.map (H.bar : 𝓞 E →+* 𝓞 E)) ≠ ⊤ := by
   intro E _ _ _ H D X _ _ _ _ y n hn hc Z Z' h hr 𝔭 h𝔭 hn𝔭 hi hL htop
   obtain ⟨p, hp, hp𝔭, hpn⟩ : ∃ p : ℕ, p.Prime ∧ (p : 𝓞 E) ∈ 𝔭 ∧ p ∣ n := by
-    letI := Ideal.Quotient.field 𝔭
+    let := Ideal.Quotient.field 𝔭
     obtain ⟨p, hch⟩ := CharP.exists (𝓞 E ⧸ 𝔭)
     have hn0 : Ideal.Quotient.mk 𝔭 (n : 𝓞 E) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hn𝔭
     rw [map_natCast] at hn0
@@ -1016,7 +1016,7 @@ theorem img_bar_ne_top : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     refine ⟨_, (h.symm.isIsoSat).2 p _ hp.ne_zero ?_, h1⟩
     rw [← h1]
     exact Z'.smul_mem t hb'
-  haveI := Ideal.map_isMaximal_of_equiv H.bar (p := 𝔭)
+  have := Ideal.map_isMaximal_of_equiv H.bar (p := 𝔭)
   obtain ⟨e, -, he⟩ := mem_nsmul_of_img_eq_top D y Z Z' h hr _ this htop hb' hyb hq
   apply hac
   rw [hzm, he, ← smul_add, map_nsmul, LinearMap.smul_apply, nsmul_eq_mul]
@@ -1222,12 +1222,12 @@ theorem exists_opp_transv : ∀ {E : Type} [Field E] [NumberField E] [IsCMField 
   intro E _ _ _ H D X _ _ _ _ y n hn hc Z Z₀ h0 hr
   classical
   let S := {𝔮 : Ideal (𝓞 E) | 𝔮.IsMaximal ∧ (n : 𝓞 E) ∈ 𝔮}
-  haveI : Finite S := (fin_max (E := E) n hn).to_subtype
-  haveI : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) X
+  have : Finite S := (fin_max (E := E) n hn).to_subtype
+  have : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) X
   let F : Submodule (𝓞 E) D.La → (S → Submodule (𝓞 E) X) := fun Z' q => img D y Z' q.1
-  haveI : IsNoetherian (𝓞 E) X := isNoetherian_of_isNoetherianRing_of_finite (𝓞 E) X
+  have : IsNoetherian (𝓞 E) X := isNoetherian_of_isNoetherianRing_of_finite (𝓞 E) X
   have h1 : WellFoundedLT (S → (Submodule (𝓞 E) X)ᵒᵈ) := Pi.wellFoundedLT
-  haveI : WellFoundedGT (S → Submodule (𝓞 E) X) := h1
+  have : WellFoundedGT (S → Submodule (𝓞 E) X) := h1
   have wf : WellFounded (fun a b : S → Submodule (𝓞 E) X => b < a) := wellFounded_gt
   obtain ⟨_, ⟨Z', hZ', rfl⟩, hmax⟩ := wf.has_min (F '' {Z' | IsOpp D Z Z'}) ⟨_, Z₀, h0, rfl⟩
   have htop : ∀ 𝔮 : Ideal (𝓞 E), 𝔮.IsMaximal → (n : 𝓞 E) ∈ 𝔮 →

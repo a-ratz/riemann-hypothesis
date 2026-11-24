@@ -131,10 +131,10 @@ private theorem valuation_two_eq_one_of_unramInv_odd {ϖ : L} {σ : L →+* L} {
     first
       | simpa using hlt
       | exact_mod_cast hlt
-  haveI : Finite ((Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
+  have : Finite ((Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
       IsLocalRing.maximalIdeal (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
-  letI := Fintype.ofFinite ((Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
+  let := Fintype.ofFinite ((Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
       IsLocalRing.maximalIdeal (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring)
   have h2Q : (2 : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
       IsLocalRing.maximalIdeal (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring) = 0 := by
@@ -149,7 +149,7 @@ private theorem valuation_two_eq_one_of_unramInv_odd {ϖ : L} {σ : L →+* L} {
   push_cast at hc0
   rw [h2Q, zero_mul, zero_add] at hc0
   have hsub := subsingleton_of_zero_eq_one hc0.symm
-  haveI : Unique ((Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
+  have : Unique ((Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
       IsLocalRing.maximalIdeal (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring) :=
     ⟨⟨0⟩, fun _ => Subsingleton.elim _ _⟩
   have hc1 := Nat.card_unique (α := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).integer ⧸
@@ -172,9 +172,9 @@ theorem normSurj [CompleteSpace L] (hF : FinNormSurj) (hS : HenselSqrt) {ϖ : L}
     (hU : Formalism.UG.IsUnramInv ϖ σ q) (hq : Odd q) (c : VA L) (hcσ : sigA σ hU.2.1 c = c) (hc : IsUnit c) :
     ∃ t : VA L, sigA σ hU.2.1 t * t = c := by
   obtain ⟨hσσ, hv, -, -, ⟨x₀, hx₀, hx₀v⟩, hq2, hcard⟩ := id hU
-  haveI : Finite (IsLocalRing.ResidueField (VA L)) :=
+  have : Finite (IsLocalRing.ResidueField (VA L)) :=
     Nat.finite_of_card_ne_zero (by rw [show Nat.card (IsLocalRing.ResidueField (VA L)) = q ^ 2 from hcard]; positivity)
-  letI : Fintype (IsLocalRing.ResidueField (VA L)) := Fintype.ofFinite _
+  let : Fintype (IsLocalRing.ResidueField (VA L)) := Fintype.ofFinite _
   have hτres : ∀ a : VA L, IsLocalRing.ResidueField.map (sigA σ hU.2.1) (IsLocalRing.residue (VA L) a) =
       IsLocalRing.residue (VA L) (sigA σ hU.2.1 a) := fun a => IsLocalRing.ResidueField.map_residue _ a
   have hττ : ∀ y, IsLocalRing.ResidueField.map (sigA σ hU.2.1)

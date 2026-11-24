@@ -144,7 +144,7 @@ theorem SupBoundBlock.proof (hS : SupNormAgainstL2.Statement) (hR : ResolutionPu
     calc g w = g (blockPt d x) := (SupBoundBlock.normRatio_torus hf d.A d.deg hx).symm
       _ ≤ M := hres x
 
-  obtain ⟨F, hFJ, hFP⟩ := SetLike.not_le_iff_exists.1 d.R.nondeg
+  obtain ⟨F, hFJ, hFP⟩ := IsConcreteLE.not_le_iff_exists.1 d.R.nondeg
   set S := {w | w ∈ mcPts (mCoordIdeal d.y) ∧ eval w (map (Int.castRingHom ℂ) F) ≠ 0} with hSdef
   have hcl : z ∈ closure S := hN K ι (mCoordIdeal d.y) (D + 1) F d.arith hFP hz
   have hSM : ∀ w ∈ S, g w ≤ M := fun w hw => hoff w hw.1 fun hJ => hw.2 (hJ.2 F hFJ)

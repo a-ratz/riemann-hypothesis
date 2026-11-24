@@ -87,7 +87,7 @@ theorem dense_open_eq_top_of_smoothOfRelativeDimension_zero : ∀ (k : Type) [Fi
   have hq : LocallyQuasiFinite p := by
     refine ⟨fun {V} hV {W} hW e ↦ ?_⟩
     have h := p.etale_appLE hV hW e
-    letI := (p.appLE V W e).hom.toAlgebra
+    let := (p.appLE V W e).hom.toAlgebra
     have : Algebra.Etale Γ(Sp k, V) Γ(Y, W) := h
     exact (inferInstance : Algebra.QuasiFinite Γ(Sp k, V) Γ(Y, W))
   have hsub : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))

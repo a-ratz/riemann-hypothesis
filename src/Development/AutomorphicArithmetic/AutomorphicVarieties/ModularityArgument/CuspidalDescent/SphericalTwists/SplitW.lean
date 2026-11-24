@@ -96,7 +96,7 @@ private theorem types (hn : 1 ≤ n) (x : B.Pt) {σ : Submodule ℂ (UA L n → 
   intro i
   obtain ⟨-, hfin, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
   refine Subgroup.isOpen_mono (H₁ := (r.chib i).ker.comap (V.pr.comp (Ine (F := L) (s.A u)).subtype)) (fun g hg => ?_)
-    ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtype_val))
+    ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtypeVal))
   have h1 : residue c.O (t i (V.pr g)) = 1 := (ht i _).1.trans (congrArg Units.val hg)
   have h2 : ((t i (V.pr g) : c.O)) ^ (Nat.card (ResidueField c.O) - 1) = 1 :=
     (Units.val_pow_eq_pow_val _ _).symm.trans (congrArg Units.val (ht i _).2)
@@ -107,7 +107,7 @@ private theorem types (hn : 1 ≤ n) (x : B.Pt) {σ : Submodule ℂ (UA L n → 
 
     simp only [map_sum, map_pow, h1, one_pow, Finset.sum_const, Finset.card_range, nsmul_one, map_zero] at h6
     rw [Nat.cast_pred Nat.card_pos] at h6
-    letI := Fintype.ofFinite (ResidueField c.O)
+    let := Fintype.ofFinite (ResidueField c.O)
     simp [Nat.card_eq_fintype_card] at h6))
   exact (congrArg (Units.map (algebraMap c.O (Qbar l) : c.O →* Qbar l)) h4).trans (map_one _)
 

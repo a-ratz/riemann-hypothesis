@@ -225,7 +225,7 @@ theorem exists_not_mem_forall_mem {C E ι : Type} [Field C] [AddCommGroup E] [Mo
     ∃ v ∈ W, v ∉ K ∧ ∀ i, N i v ∈ K := by
   obtain ⟨Z, ⟨hZW, hZi, hZK⟩, hmin⟩ := (IsArtinian.set_has_minimal (R := C) (M := E)
     {Z | Z ≤ W ∧ (∀ i, ∀ v ∈ Z, N i v ∈ Z) ∧ ¬ Z ≤ K} ⟨W, le_rfl, hW, hWK⟩)
-  obtain ⟨v, hvZ, hvK⟩ := SetLike.not_le_iff_exists.1 hZK
+  obtain ⟨v, hvZ, hvK⟩ := IsConcreteLE.not_le_iff_exists.1 hZK
   refine ⟨v, hZW hvZ, hvK, fun i => ?_⟩
   by_contra hi
   have hle : Z.map (N i) ≤ Z := by
@@ -257,10 +257,10 @@ theorem card_hom_le {M k ι : Type} [CommRing M] [CommRing k] [IsDomain k] [Fini
     (hd : d ≠ 0) [CharP k l] (j : M →+* k) (hj : Function.Injective j) (hq : ∀ x, j x ^ l ^ d = j x)
     (f : ι → M →+* k) (hf : Function.Injective f) : Nat.card ι ≤ d := by
   classical
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : CharP M l := j.charP hj l
-  letI : Algebra (ZMod l) M := ZMod.algebra M l
-  letI : Algebra (ZMod l) k := ZMod.algebra k l
+  have : Fact l.Prime := ⟨hl⟩
+  have : CharP M l := j.charP hj l
+  let : Algebra (ZMod l) M := ZMod.algebra M l
+  let : Algebra (ZMod l) k := ZMod.algebra k l
   have hq1 : 1 < l ^ d := Nat.one_lt_pow hd hl.one_lt
   obtain ⟨q, hqd⟩ : ∃ q, q = l ^ d := ⟨_, rfl⟩
   rw [← hqd] at hq hq1
@@ -272,7 +272,7 @@ theorem card_hom_le {M k ι : Type} [CommRing M] [CommRing k] [IsDomain k] [Fini
     rw [Multiset.mem_toFinset, Polynomial.mem_roots hp]
     simp [hq]⟩
   have hr : Function.Injective r := fun a b h => hj (congrArg Subtype.val h)
-  haveI : Finite M := Finite.of_injective r hr
+  have : Finite M := Finite.of_injective r hr
   have hcard : Nat.card M ≤ q := by
     refine (Nat.card_le_card_of_injective r hr).trans ?_
     rw [Nat.card_eq_fintype_card, Fintype.card_coe]
@@ -289,7 +289,7 @@ theorem card_hom_le {M k ι : Type} [CommRing M] [CommRing k] [IsDomain k] [Fini
     apply hf
     ext x
     exact AlgHom.congr_fun h x
-  haveI : Finite (M →ₐ[ZMod l] k) := inferInstance
+  have : Finite (M →ₐ[ZMod l] k) := inferInstance
   exact (Nat.card_le_card_of_injective F hF).trans ((card_algHom_le_finrank (ZMod l) M k).trans hfr)
 
 theorem hom_eq_of_ker {O k ι : Type} [CommRing O] [CommRing k] [IsDomain k] [Finite ι] (l : ℕ) (hl : l.Prime)
@@ -299,7 +299,7 @@ theorem hom_eq_of_ker {O k ι : Type} [CommRing O] [CommRing k] [IsDomain k] [Fi
   classical
   by_contra hne
   push_neg at hne
-  haveI : Nonempty ι := ⟨i0⟩
+  have : Nonempty ι := ⟨i0⟩
   let f : Option ι → O →+* k := fun o => o.elim ψ e
   have hf : Function.Injective f := by
     rintro (_ | a) (_ | b) h
@@ -385,7 +385,7 @@ theorem eq_em_of_not_mm (em : ZMod d → O →+* C) (hint : ∀ a x, V.Ge 0 (em 
     rw [hm] at h1
     have := mm_add h1 (mm_mul ((hint 0 x).pow m) hx)
     convert this using 1; ring
-  haveI : CharP (intRing V ⧸ maxId V) V.l := by
+  have : CharP (intRing V ⧸ maxId V) V.l := by
     rw [CharP.charP_iff_prime_eq_zero V.l_prime]
     rw [← map_natCast (Ideal.Quotient.mk (maxId V)), Ideal.Quotient.eq_zero_iff_mem]
     show V.MM _

@@ -61,32 +61,32 @@ private theorem exists_dom {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     simp only [hc]
     split_ifs with h
     · rw [Units.val_inv_eq_inv_val, map_inv₀]
-      exact one_le_inv_iff₀.mpr ⟨zero_lt_iff.mpr (hv _), h⟩
+      exact one_le_inv_iff₀.mpr ⟨pos_iff_ne_zero.mpr (hv _), h⟩
     · exact le_of_lt (not_le.mp h)
   have hct : ∀ i, valuation k ((t i : kˣ) : k) ≤ valuation k ((c i : kˣ) : k) := by
     intro i
     simp only [hc]
     split_ifs with h
     · rw [Units.val_inv_eq_inv_val, map_inv₀]
-      exact h.trans (one_le_inv_iff₀.mpr ⟨zero_lt_iff.mpr (hv _), h⟩)
+      exact h.trans (one_le_inv_iff₀.mpr ⟨pos_iff_ne_zero.mpr (hv _), h⟩)
     · exact le_rfl
   have hct' : ∀ i, (valuation k ((t i : kˣ) : k))⁻¹ ≤ valuation k ((c i : kˣ) : k) := by
     intro i
     simp only [hc]
     split_ifs with h
     · rw [Units.val_inv_eq_inv_val, map_inv₀]
-    · exact (inv_le_one₀ (zero_lt_iff.mpr (hv _))).mpr (le_of_lt (not_le.mp h)) |>.trans
+    · exact (inv_le_one₀ (pos_iff_ne_zero.mpr (hv _))).mpr (le_of_lt (not_le.mp h)) |>.trans
         (le_of_lt (not_le.mp h))
   set x : kˣ := ∏ i, c i with hx
   have hx1 : 1 ≤ valuation k (x : k) := by
     rw [hx, Units.coe_prod, map_prod]
-    exact Finset.one_le_prod' (fun i _ => hc1 i)
+    exact Finset.one_le_prod (fun i _ => hc1 i)
   have hx2 : ∀ i j, i ≠ j →
       valuation k ((c i : kˣ) : k) * valuation k ((c j : kˣ) : k) ≤ valuation k (x : k) := by
     intro i j hij
     rw [hx, Units.coe_prod, map_prod,
       ← Finset.prod_pair (f := fun l => valuation k ((c l : kˣ) : k)) hij]
-    exact Finset.prod_le_prod_of_subset_of_one_le' (Finset.subset_univ _) (fun l _ _ => hc1 l)
+    exact Finset.prod_le_prod_of_subset_of_one_le (Finset.subset_univ _) (fun l _ _ => hc1 l)
   refine ⟨fun i => x ^ (i : ℕ), ?_, ?_⟩
   · intro i j hij
     simp only [Units.val_pow_eq_pow_val, map_pow]
@@ -135,8 +135,8 @@ theorem UpperTheory.Gal.Join.imStab :
     exact hco
   obtain ⟨e, he, hcomm⟩ := avgEx (GL (Fin n) k) V π hπ.1 K hco
   unfold UpperTheory.Gal.Join.imK
-  haveI : FiniteDimensional ℂ (fixed π K) := hπ.2 K hco'.2 hco'.1
-  haveI hfd : FiniteDimensional ℂ
+  have : FiniteDimensional ℂ (fixed π K) := hπ.2 K hco'.2 hco'.1
+  have hfd : FiniteDimensional ℂ
       (Submodule.map (twKer π (unipB k (Fin n)) 1).mkQ (fixed π K)) :=
     Module.Finite.map _ _
   have hD : ∀ t : Fin n → kˣ, Dom t → ∀ y ∈ Submodule.map (twKer π (unipB k (Fin n)) 1).mkQ

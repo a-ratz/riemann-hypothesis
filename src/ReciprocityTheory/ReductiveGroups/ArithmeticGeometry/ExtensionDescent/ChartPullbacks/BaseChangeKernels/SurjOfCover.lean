@@ -131,7 +131,7 @@ lemma surj_of_cover {V : B.Opens} (h : V ≤ W) {ι : Type} [Finite ι] (U : ι 
     Function.Surjective (cm q φ V h) := by
   classical
   intro s
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have hloc : ∀ i, ∃ p : AddMonoidAlgebra Γ(B, U i) X, cm q φ (U i) ((hU i).trans h) p =
       (G.presheaf.map (homOfLE (q.preimage_mono (hU i))).op).hom s := fun i => hsurj i _
   choose p hp using hloc

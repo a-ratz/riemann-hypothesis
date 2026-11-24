@@ -150,7 +150,7 @@ theorem not_isSplit_under {w : Pl E} (h : ¬ IsSplitAt w) : ¬ Formalism.MainNot
 
 theorem isUnram_of_unr (hU : Unr E) (v : HeightOneSpectrum (𝓞 ↥(maximalRealSubfield E))) : Formalism.MainNotions.SchurIrreducible.IsUnram (E := E) v :=
   GlobalTheory.LFun.isUnram_iff.2 fun P _ => by
-    haveI := hU P
+    have := hU P
     exact Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
 
 theorem neg_one_zpow_cast (k : ℤ) : ((((-1 : ℤˣ) ^ k : ℤˣ) : ℤ) : ℂ) = (-1 : ℂ) ^ k := by
@@ -210,7 +210,7 @@ theorem signProd_totPos : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     intro w
     have hw : w.IsReal := IsTotallyReal.isReal w
     refine eta_inf_eq_one hw t ?_
-    letI : Algebra (↥(maximalRealSubfield E)) ℂ := w.embedding.toAlgebra
+    let : Algebra (↥(maximalRealSubfield E)) ℂ := w.embedding.toAlgebra
     let τ : E →ₐ[↥(maximalRealSubfield E)] ℂ := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,

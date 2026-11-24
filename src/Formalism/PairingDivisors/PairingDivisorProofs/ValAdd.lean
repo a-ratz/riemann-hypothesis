@@ -59,7 +59,7 @@ private theorem vw_ringOfIntegers_eq_count_factors_span (w : Pl K) (x : 𝓞 K) 
     vw w (x : K) = ((Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {x})).factors : ℤ) := by
   unfold Formalism.DivisionValues.vw
   rw [show (x : K) = algebraMap (𝓞 K) K x from rfl, ← FractionalIdeal.coeIdeal_span_singleton,
-    FractionalIdeal.count_coe]
+    FractionalIdeal.count_coeIdeal]
   simpa using hx
 
 theorem intValuation_eq_exp (w : Pl K) (x : 𝓞 K) (hx : x ≠ 0) :

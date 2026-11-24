@@ -113,7 +113,7 @@ theorem loc_point {X B : Scheme.{0}} (e : B ⟶ X) [Etale e] {T : Scheme.{0}} (x
   obtain ⟨W0, hW, hzW, -⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.mp (pullback x e).isBasis_affineOpens)
     (show z ∈ (⊤ : (pullback x e).Opens) from trivial)
   let W : (pullback x e).Opens := W0
-  haveI : IsAffine W := hW
+  have : IsAffine W := hW
   refine ⟨W, W.ι ≫ pullback.fst x e, inferInstance, inferInstance, ⟨⟨z, hzW⟩, ?_⟩, W.ι ≫ pullback.snd x e, ?_⟩
   · exact hz1
   · simp [pullback.condition]
@@ -156,7 +156,7 @@ theorem mv_right_epi : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [C
     Epi (biprod.desc ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f))))))
       ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A A')))))) := by
   intro R _ A A' _ _ _ _ f hs hi
-  haveI hd : Etale (Spec.map (CommRingCat.ofHom (algebraMap A A'))) :=
+  have hd : Etale (Spec.map (CommRingCat.ofHom (algebraMap A A'))) :=
     HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr inferInstance)
   apply epi_of_loc
   intro T (x : T ⟶ Spec (CommRingCat.of A))
@@ -239,16 +239,16 @@ theorem mono_freePresheaf_map (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q) 
   exact Finsupp.mapDomain_injective hu
 
 theorem free_mono (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q) [Mono f] : Mono ((free R).map f) := by
-  haveI := mono_freePresheaf_map R f
+  have := mono_freePresheaf_map R f
   exact (presheafToSheaf _ _).map_mono ((freeP R).map f)
 
 theorem left_mono : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] (f : A), Mono (biprod.lift ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (Localization.awayMap (algebraMap A A') f))))) (-(free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f)))))))) := by
   intro R _ A A' _ _ _ f
-  haveI : IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f))))) :=
+  have : IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f))))) :=
     inferInstanceAs (IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f))))))
-  haveI : Mono (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f)))))) :=
+  have : Mono (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f)))))) :=
     yoneda.map_mono _
-  haveI := free_mono R (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f))))))
+  have := free_mono R (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f))))))
   exact mono_of_mono_fac (biprod.lift_snd _ _)
 
 end GlobalTheory.EtC.MVLeft

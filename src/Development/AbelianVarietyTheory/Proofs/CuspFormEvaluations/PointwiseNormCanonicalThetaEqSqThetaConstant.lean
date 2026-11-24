@@ -117,11 +117,11 @@ theorem exists_canMult_eq (ε : (Fin g ⊕ Fin g → ℤ) → ℤ) (h1 : ∀ m, 
   let S : AddSubgroup (Fin g ⊕ Fin g → ℤ) :=
     { carrier := {m | C m = ε m}
       add_mem' := fun {m m'} hm hm' => by
-        rw [Set.mem_setOf_eq] at hm hm' ⊢
+        rw [Set.mem_ofPred_eq] at hm hm' ⊢
         rw [hCadd, hadd, hm, hm']
       zero_mem' := hC0.trans h0.symm
       neg_mem' := fun {m} hm => by
-        rw [Set.mem_setOf_eq] at hm ⊢
+        rw [Set.mem_ofPred_eq] at hm ⊢
         have e1 := hCadd m (-m)
         have e2 := hadd m (-m)
         rw [add_neg_cancel] at e1 e2
@@ -138,9 +138,9 @@ theorem exists_canMult_eq (ε : (Fin g ⊕ Fin g → ℤ) → ℤ) (h1 : ∀ m, 
       · left; simp [hC, canMult, dotProduct, Pi.single_apply]
       · right; simp [hC, canMult, dotProduct, Pi.single_apply]
     rcases h1 (Pi.single j 1) with h | h
-    · have : t j = 0 := if_pos h
+    · have : t j = 0 := ite_eq_left h
       rcases e with e | e <;> simp [e, this, h]
-    · have : t j = 1 / 2 := if_neg (by rw [h]; decide)
+    · have : t j = 1 / 2 := ite_eq_right (by rw [h]; decide)
       have e2 : 2 * π * I * (t j : ℂ) = π * I := by rw [this]; push_cast; ring
       rcases e with e | e <;> simp [e, e2, h, Complex.exp_neg]
   intro m
@@ -364,7 +364,7 @@ theorem pointwiseNorm_canonicalTheta_eq_sq_thetaConstant (hs : IsSympl X bas) {x
   have h2 : canTh (tauMat X bas idx x) (a + a') (b + b') 0 =
       thetaChar (tauMat X bas idx x) (fun i => ((a + a') i : ℂ)) (fun i => ((b + b') i : ℂ)) 0 := by
     simp [canTh]
-  rw [← h2, ← h, GT.ptN2, canSec_scaleUp, canFn_eq_canTh, mul_pow, mul_comm, ← Real.exp_nat_mul]
+  rw [← h2, ← h, GT.ptN2, canSec_scaleUp, canFn_eq_canTh, mul_pow, mul_comm, ← Real.exp_natCast_mul]
   congr 2
   simp only [hermForm, zero_dotProduct, mul_zero, neg_zero, zero_sub, neg_re]
   rw [show (π : ℂ) / 2 = ((π / 2 : ℝ) : ℂ) by push_cast; ring, ← ofReal_mul, ofReal_re]
@@ -451,21 +451,21 @@ theorem exists_equiv : ∃ e : X.Ψ × Fin r ≃ Idx A.T.dim, ∀ v p,
     · rintro ⟨σ, a⟩
       by_cases h : σ ∈ X.Ψ
       · have ha : (a : ℕ) < X.p0 := lt_of_lt_of_eq a.2 (A.dim_pos ⟨σ, h⟩)
-        exact ⟨(⟨σ, h⟩, ⟨a, by omega⟩), dif_pos ha⟩
+        exact ⟨(⟨σ, h⟩, ⟨a, by omega⟩), dite_eq_left ha⟩
       · obtain ⟨τ, rfl⟩ : ∃ τ : X.Ψ, σ = ComplexEmbedding.conjugate τ.1 :=
           ⟨⟨_, TorusCoord.conj_mem X h⟩, (TorusAtDataPf.conj_conj_X σ).symm⟩
         have ha : (a : ℕ) < r - X.p0 := lt_of_lt_of_eq a.2 (A.dim_neg τ)
-        refine ⟨(τ, ⟨X.p0 + a, by omega⟩), (dif_neg (by simp)).trans ?_⟩
+        refine ⟨(τ, ⟨X.p0 + a, by omega⟩), (dite_eq_right (by simp)).trans ?_⟩
         simp
     · rw [Fintype.card_sigma, TorusCoord.sum_emb_split X]
       simp [A.dim_pos, A.dim_neg, Nat.add_sub_cancel' hp]
   refine ⟨Equiv.ofBijective f hf, fun v ⟨τ, a⟩ => ?_⟩
   rw [Equiv.ofBijective_apply]
   by_cases h : (a : ℕ) < X.p0
-  · rw [show f (τ, a) = _ from dif_pos h, A.coord_pos, map_mul, conj_ofReal, per_of_lt X _ _ _ h,
+  · rw [show f (τ, a) = _ from dite_eq_left h, A.coord_pos, map_mul, conj_ofReal, per_of_lt X _ _ _ h,
       hermC_conj τ.1 X.Gm_herm]
     rfl
-  · rw [show f (τ, a) = _ from dif_neg h, A.coord_neg, map_mul, conj_ofReal, conj_conj,
+  · rw [show f (τ, a) = _ from dite_eq_right h, A.coord_neg, map_mul, conj_ofReal, conj_conj,
       per_of_le X _ _ _ (not_lt.1 h)]
     congr 1
     have ha : (⟨X.p0 + (a - X.p0), by have := a.2; omega⟩ : Fin r) = a := Fin.ext (by
@@ -508,7 +508,7 @@ theorem exists_char_at (hs : IsSympl X.toData bas) {x : Frame X.Ψ r} (A : Torus
     rw [h3]
     rcases hσ with rfl | rfl <;> rcases A.sg_pm with h4 | h4 <;> simp [h4, mul_comm]
   rw [h2, Real.cos_int_mul_pi] at h
-  rw [map_add (f := _), Submodule.coe_add, map_add (f := _), mul_comm (π * I : ℂ), Complex.exp_int_mul,
+  rw [map_add (f := _), Submodule.coe_add, map_add (f := _), mul_comm (π * I : ℂ), exp_intCast_mul,
     Complex.exp_pi_mul_I]
   have h5 := congrArg ((↑) : ℝ → ℂ) h
   push_cast at h5

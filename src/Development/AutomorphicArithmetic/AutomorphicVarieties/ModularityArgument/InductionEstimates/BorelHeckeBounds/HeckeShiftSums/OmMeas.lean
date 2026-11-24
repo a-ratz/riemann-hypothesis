@@ -68,7 +68,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.omMeas :
       rwa [inv_mul_cancel_left] at this, om_of_mul hγ⟩
   have h2 : IsClosed {x : G1 K (2 + 2) | Om T x} := by
     unfold Om
-    simp only [Set.setOf_forall]
+    simp only [ofPred_forall]
     exact isClosed_iInter fun q => isClosed_le
       ((hpSpec (K := K)).2.2.2.1.comp (continuous_const.mul continuous_id)) continuous_const
   refine ⟨h1, h2, ?_⟩

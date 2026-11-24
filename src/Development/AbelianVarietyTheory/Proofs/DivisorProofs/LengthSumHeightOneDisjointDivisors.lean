@@ -360,7 +360,7 @@ theorem concl_equiv {M N : Type} [AddCommGroup M] [Module A M] [AddCommGroup N] 
 theorem ne_max [IsLocalRing A] (p : PrimeSpectrum A) (h : ringKrullDim (A ⧸ p.asIdeal) = 1) :
     p.asIdeal ≠ maximalIdeal A := by
   intro hpm
-  letI := Ideal.Quotient.field (maximalIdeal A)
+  let := Ideal.Quotient.field (maximalIdeal A)
   have h0 : ringKrullDim (A ⧸ maximalIdeal A) = 0 := ringKrullDim_eq_zero_of_field (A ⧸ maximalIdeal A)
   rw [← hpm, h] at h0
   exact one_ne_zero h0
@@ -415,7 +415,7 @@ theorem concl_prime [IsLocalRing A] (b : A) (P : Finset (PrimeSpectrum A))
   rw [hcok, hk0, zero_add, Finset.sum_eq_single p, loc_quot_self, one_mul]
   · intro q hq hqp
     have hnle : ¬ p.asIdeal ≤ q.asIdeal := fun h => hqp (eq_of_le p q (hP p hpP).1 (hP q hq).1 h).symm
-    obtain ⟨s, hsp, hsq⟩ := SetLike.not_le_iff_exists.1 hnle
+    obtain ⟨s, hsp, hsq⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
     rw [loc_zero_of_ann q.asIdeal _ s hsq (fun x => ?_), zero_mul]
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
     rw [Algebra.smul_def, Ideal.Quotient.algebraMap_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
@@ -435,7 +435,7 @@ theorem concl_max [IsLocalRing A] (b : A) (P : Finset (PrimeSpectrum A))
   intro p hp
   have hnle : ¬ maximalIdeal A ≤ p.asIdeal := fun h =>
     ne_max p (hP p hp).1 (le_antisymm (IsLocalRing.le_maximalIdeal p.isPrime.ne_top) h)
-  obtain ⟨s, hsm, hsp⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨s, hsm, hsp⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   rw [loc_zero_of_ann p.asIdeal _ s hsp (fun x => ?_), zero_mul]
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
   rw [Algebra.smul_def, Ideal.Quotient.algebraMap_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
@@ -579,7 +579,7 @@ namespace GlobalTheory.IntersectionSymm
 theorem height_add_dim_quotient_le {R : Type} [CommRing R] (p : Ideal R) [hp : p.IsPrime] :
     ((p.height : ℕ∞) : WithBot ℕ∞) + ringKrullDim (R ⧸ p) ≤ ringKrullDim R := by
   let P : PrimeSpectrum R := ⟨p, hp⟩
-  haveI : Nonempty (PrimeSpectrum R) := ⟨P⟩
+  have : Nonempty (PrimeSpectrum R) := ⟨P⟩
   have h1 : PrimeSpectrum.zeroLocus (p : Set R) = Set.Ici P := by
     ext x
     simp only [PrimeSpectrum.mem_zeroLocus, Set.mem_Ici]
@@ -616,7 +616,7 @@ theorem arith (h : ℕ∞) (d : WithBot ℕ∞) (h1 : (h : WithBot ℕ∞) + d �
 theorem not_dim_quotient_le_zero {A : Type} [CommRing A] (p : Ideal A) [p.IsPrime]
     (hne : ¬ p.IsMaximal) : ¬ ringKrullDim (A ⧸ p) ≤ 0 := by
   intro h
-  haveI : Ring.KrullDimLE 0 (A ⧸ p) := Ring.krullDimLE_iff.2 (by exact_mod_cast h)
+  have : Ring.KrullDimLE 0 (A ⧸ p) := Ring.krullDimLE_iff.2 (by exact_mod_cast h)
   exact hne (Ideal.Quotient.maximal_of_isField _ Ring.KrullDimLE.isField_of_isDomain)
 
 theorem dim_quotient_eq_one {A : Type} [CommRing A] [IsLocalRing A]
@@ -677,7 +677,7 @@ theorem length_localized_ne_top {A : Type} [CommRing A] [IsDomain A] [IsNoetheri
     (p : Ideal A) [p.IsPrime] (hp : p.height = 1) (a : A) (ha : a ≠ 0) :
     Module.length (Localization.AtPrime p)
         (Localization.AtPrime p ⧸ Ideal.span {algebraMap A (Localization.AtPrime p) a}) ≠ ⊤ := by
-  haveI : Ring.KrullDimLE 1 (Localization.AtPrime p) := by
+  have : Ring.KrullDimLE 1 (Localization.AtPrime p) := by
     rw [Ring.krullDimLE_iff, IsLocalization.AtPrime.ringKrullDim_eq_height p, hp]
     rfl
   rw [Module.length_ne_top_iff]
@@ -689,7 +689,7 @@ theorem length_localized_ne_top {A : Type} [CommRing A] [IsDomain A] [IsNoetheri
 theorem length_quotient_ne_top {A : Type} [CommRing A] [IsNoetherianRing A]
     (p : Ideal A) [p.IsPrime] (hd : ringKrullDim (A ⧸ p) = 1) (b : A) (hb : b ∉ p) :
     Module.length (A ⧸ p) ((A ⧸ p) ⧸ Ideal.span {Ideal.Quotient.mk p b}) ≠ ⊤ := by
-  haveI : Ring.KrullDimLE 1 (A ⧸ p) := by
+  have : Ring.KrullDimLE 1 (A ⧸ p) := by
     rw [Ring.krullDimLE_iff, hd]
     rfl
   rw [Module.length_ne_top_iff]

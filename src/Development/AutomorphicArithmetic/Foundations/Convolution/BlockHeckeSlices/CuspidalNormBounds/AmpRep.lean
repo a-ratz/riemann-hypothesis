@@ -295,14 +295,14 @@ theorem UpperTheory.tensorTestFunction_invariant_and_finiteDimensional_span :
     choose te hte using trEx e
     let Kf := AdelicGLn.integralFiniteGL K n
     let V : Subgroup Kf := U.subgroupOf Kf
-    have hV : IsOpen (V : Set Kf) := hUo.preimage continuous_subtype_val
-    haveI : CompactSpace Kf := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL K n)
-    haveI : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
+    have hV : IsOpen (V : Set Kf) := hUo.preimage continuous_subtypeVal
+    have : CompactSpace Kf := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL K n)
+    have : Finite (Kf ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
     let c : TI K n →ₗ[ℂ] (archGroup K n → ℂ) :=
       { toFun := fun f => f, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
     have hc : Function.Injective c := DFunLike.coe_injective
     let T : Submodule ℂ (TI K n) := Submodule.span ℂ (Set.range fun k : archCompact K n => tb k)
-    haveI : FiniteDimensional ℂ T := by
+    have : FiniteDimensional ℂ T := by
       unfold LeftFin at hβ
       have hle : T.map c ≤ Submodule.span ℂ (Set.range fun k : archCompact K n =>
           fun g : archGroup K n => β ((k : archGroup K n) * g)) :=
@@ -362,7 +362,7 @@ private theorem UpperTheory.polynomial_identity_coefficients_zero {M : Type*} [A
   rw [Finset.sum_eq_single i] at this
   · simpa using this
   · intro j _ hj
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro e
     apply hj
     have := j.2
@@ -517,7 +517,7 @@ theorem UpperTheory.ConvolutionTheory.BW.ampRep :
       map_add' := fun v w => Subtype.ext (funext fun g => rconv_add _ μ _ v w _)
       map_smul' := fun c v => Subtype.ext (funext fun g => rconv_smul _ μ _ c v _) }
   obtain ⟨d, ρ, hρ, hk⟩ := _root_.UpperTheory.Reformulated.B.ShiftMap.finite_translates_matrix_coefficient (KA E n) (normOneGL (K := E) (n := n)) (Subgroup.inclusion maxCompact_le_normOneGL)
-    (continuous_subtype_val.subtype_mk _) (tens 𝔞.a₀ e) (tens 𝔞.a₀ e).continuous
+    (continuous_subtypeVal.subtype_mk _) (tens 𝔞.a₀ e) (tens 𝔞.a₀ e).continuous
     ((UpperTheory.tensorTestFunction_invariant_and_finiteDimensional_span E n hn 𝔞.a₀ e 𝔞.U 𝔞.le 𝔞.isOpen heU).2 𝔞.fin)
   obtain ⟨N, hN⟩ := UpperTheory.liftOne_rconv_tensor_moderateGrowth_uniform E n hn μ 𝔞.ν m hm 𝔞.a₀ e 𝔞.smooth
   refine ⟨⟨d, ρ, hρ⟩, N, L, fun v => ⟨hrep _ 𝔞.smooth v _ rfl, ampRep_killed hk, fun w hw k hk => ?_⟩,

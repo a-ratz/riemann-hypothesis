@@ -86,7 +86,7 @@ theorem stab_frob_pow {M : Type} [Field M] [NumberField M] (p : ℕ) [Fact p.Pri
     (hF : IsArithFrobAt ℤ F Q) (hσ : σ ∈ MulAction.stabilizer Gal(M/ℚ) Q) :
     ∃ k : ℕ, ∀ x : 𝓞 M, σ • x - (F ^ k) • x ∈ Q := by
   have hp : p.Prime := Fact.out
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   have hund : span {(p : ℤ)} = Q.under ℤ := Ideal.LiesOver.over
   have hQ0 : Q ≠ ⊥ := by
     intro hQ
@@ -96,10 +96,10 @@ theorem stab_frob_pow {M : Type} [Field M] [NumberField M] (p : ℕ) [Fact p.Pri
     have h2 := Ideal.mem_comap.mp h1
     rw [hQ, Ideal.mem_bot] at h2
     exact hp.ne_zero (by simpa using h2)
-  haveI : Q.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hQ0
-  letI : Field (𝓞 M ⧸ Q) := Ideal.Quotient.field Q
-  haveI : Finite (𝓞 M ⧸ Q) := Ideal.finiteQuotientOfFreeOfNeBot Q hQ0
-  haveI : CharP (𝓞 M ⧸ Q) p := by
+  have : Q.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hQ0
+  let : Field (𝓞 M ⧸ Q) := Ideal.Quotient.field Q
+  have : Finite (𝓞 M ⧸ Q) := Ideal.finiteQuotientOfFreeOfNeBot Q hQ0
+  have : CharP (𝓞 M ⧸ Q) p := by
     refine ⟨fun n => ?_⟩
     rw [← map_natCast (Ideal.Quotient.mk Q) n, Ideal.Quotient.eq_zero_iff_mem]
     have e1 : (n : 𝓞 M) ∈ Q ↔ (n : ℤ) ∈ Q.under ℤ :=
@@ -107,7 +107,7 @@ theorem stab_frob_pow {M : Type} [Field M] [NumberField M] (p : ℕ) [Fact p.Pri
         fun h => by simpa using Ideal.mem_comap.mp h⟩
     rw [e1, ← hund, Ideal.mem_span_singleton]
     norm_cast
-  letI : Algebra (ZMod p) (𝓞 M ⧸ Q) := ZMod.algebra _ p
+  let : Algebra (ZMod p) (𝓞 M ⧸ Q) := ZMod.algebra _ p
   have hσQ : Q ≤ Q.comap (MulSemiringAction.toRingHom _ (𝓞 M) σ) := by
     intro y hy
     rw [Ideal.mem_comap, MulSemiringAction.toRingHom_apply]
@@ -428,7 +428,7 @@ theorem stab_two_sgn (hqd : HypOdd q d) (hd16 : d % 16 = 7) (h : IsLayer (e + 2)
     exact (inferInstance : P.IsPrime).ne_top ((Ideal.eq_top_iff_one P).mpr h1P)
   show sgn σ (bE ζ a b) = 1
   unfold sgn
-  exact if_pos hfix
+  exact ite_eq_left hfix
 
 end Two
 
@@ -608,7 +608,7 @@ theorem hostDecompConj : HostDecompConj := by
         | rfl
     exact hm1 (h3.symm.trans (MonoidHom.mem_ker.mp hmem))
   rcases hp with rfl | rfl | ⟨rfl, he2⟩
-  · haveI : P.LiesOver (span {(2 : ℤ)}) := by
+  · have : P.LiesOver (span {(2 : ℤ)}) := by
       have h' : P.LiesOver (span {((2 : ℕ) : ℤ)}) := inferInstance
       simpa using h'
     rw [HD.1 P]

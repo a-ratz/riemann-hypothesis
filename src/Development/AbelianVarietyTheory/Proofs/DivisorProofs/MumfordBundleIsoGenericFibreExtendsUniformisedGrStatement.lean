@@ -75,12 +75,12 @@ open GlobalTheory.CechPic GlobalTheory.ZH.EndoExtend
 
 theorem lbIso_lam_of_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (J : Ideal R), AdmBase R J → ∀ (D₁ : DegData R J) (A₁ : PolAV (Sp (FractionRing R))) (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁] (U₁ : UnifPre J D₁ A₁ G₁) (D₂ : DegData R J) (A₂ : PolAV (Sp (FractionRing R))) (G₂ : Over (Sp R)) [GrpObj G₂] [IsCommMonObj G₂] (U₂ : UnifPre J D₂ A₂ G₂), IsSemiAbelian G₁ → ∀ (a : G₁ ⟶ G₂) (cA : A₁.A ⟶ A₂.A), IsMonHom a → IsMonHom cA → Gen₀ U₁ U₂ a cA → LBIso (abelian₂ A₁.A A₁.L) ((abelian₂ A₂.A A₂.L).pull (lift (fst A₁.A A₁.A ≫ cA) (snd A₁.A A₁.A ≫ cA) : G2 A₁.A ⟶ G2 A₂.A).left) → LBIso (abelian₂ G₁ U₁.LG.L) ((abelian₂ G₂ U₂.LG.L).pull (lift (fst G₁ G₁ ≫ a) (snd G₁ G₁ ≫ a) : G2 G₁ ⟶ G2 G₂).left) := by
   intro R _ _ _ J hR D₁ A₁ G₁ _ _ U₁ D₂ A₂ G₂ _ _ U₂ hS a cA ha hcA hgen hA
-  haveI : IsNoetherianRing R := hR.1
-  haveI : IsIntegrallyClosed R := hR.2.2.1
-  haveI := hS.smooth
-  haveI := hS.geomConnected
-  haveI := GlobalTheory.smooth_tensorObj_hom G₁ G₁
-  haveI := GlobalTheory.geometricallyIntegral_tensorObj_hom G₁ G₁
+  have : IsNoetherianRing R := hR.1
+  have : IsIntegrallyClosed R := hR.2.2.1
+  have := hS.smooth
+  have := hS.geomConnected
+  have := GlobalTheory.smooth_tensorObj_hom G₁ G₁
+  have := GlobalTheory.geometricallyIntegral_tensorObj_hom G₁ G₁
   let δ := CartesianMonoidalCategory.prodComparison (Over.pullback (jK R)) G₁ G₁
   let u := lift (fst ((Over.pullback (jK R)).obj G₁) ((Over.pullback (jK R)).obj G₁) ≫ U₁.gen.hom)
     (snd ((Over.pullback (jK R)).obj G₁) ((Over.pullback (jK R)).obj G₁) ≫ U₁.gen.hom)

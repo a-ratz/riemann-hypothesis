@@ -79,7 +79,7 @@ private theorem a_mu (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalS
     (I : Subgroup G) (d : ℕ) (A : LocAb l G I d) (g : G) (hg : g ∈ muG l G) : A.a g = 1 := by
   have hc : (commutator G).topologicalClosure ≤ A.a.ker := by
     apply Subgroup.topologicalClosure_minimal
-    · exact Abelianization.commutator_subset_ker A.a
+    · exact Group.Abelianization.commutator_le_ker A.a
     · exact (isClosed_singleton.preimage A.cont : IsClosed (A.a ⁻¹' {1}))
   obtain ⟨n, hn⟩ := CommGroup.mem_primaryComponent.mp hg
   have hpow : g ^ (l ^ n) ∈ (commutator G).topologicalClosure := by
@@ -142,8 +142,8 @@ private theorem factor (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [Topologica
     have hopen : IsOpen (ρ.rangeRestrict.ker : Set G) := by
       rw [MonoidHom.ker_rangeRestrict]
       exact hko
-    haveI : Finite ρ.range := by
-      haveI := Subgroup.quotient_finite_of_isOpen ρ.ker hko
+    have : Finite ρ.range := by
+      have := Subgroup.quotient_finite_of_isOpen ρ.ker hko
       exact Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ρ).toEquiv
     have hp : IsPGroup l ρ.range := by
       rintro ⟨_, g', rfl⟩
@@ -201,7 +201,7 @@ theorem UpperTheory.V.W.lam_factor :
     ∀ (l : ℕ) [Fact l.Prime] (F : GFrame l) (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] [Algebra ℤ_[l] O] [Finite (ResidueField O)] [CharP (ResidueField O) l] (n : ℕ) (r : Resid F O n) (d : F.Vl → ℕ) (A : ∀ v, LocAb l (F.Gv v) (F.Iv v) (d v)) (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (v : F.Vl) (i : Fin n) (ψ₀ : F.Gv v →* Rˣ), r.IsPsi v i ψ₀ → ∀ ψ : F.Gv v →* Rˣ,
       r.IsPsi v i ψ ↔ ∃ χ : Multiplicative ((Fin (d v) → ℤ_[l]) × ℤ_[l]) →* Rˣ, AdicCont (maximalIdeal R) (fun x => ((χ x : Rˣ) : R)) ∧ (∀ x, res O R (χ x) = 1) ∧ ψ = ψ₀ * χ.comp (A v).a := by
   intro l _ F O _ _ _ _ _ _ _ n r d A R _ _ _ v i ψ₀ h0 ψ
-  haveI hcomp : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have hcomp : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   have hl : (l : R) ∈ maximalIdeal R := by
     rw [← res_eq_zero_iff O R, map_natCast, CharP.cast_eq_zero]
   constructor
@@ -362,8 +362,8 @@ theorem UpperTheory.V.W.lam_zl :
         map_one' := by simp
         map_mul' := fun a b => by simp [ofAdd_add, Finset.prod_mul_distrib] }
   · intro N
-    letI : TopologicalSpace (R ⧸ maximalIdeal R ^ N) := ⊥
-    haveI : DiscreteTopology (R ⧸ maximalIdeal R ^ N) := ⟨rfl⟩
+    let : TopologicalSpace (R ⧸ maximalIdeal R ^ N) := ⊥
+    have : DiscreteTopology (R ⧸ maximalIdeal R ^ N) := ⟨rfl⟩
     rw [IsLocallyConstant.iff_continuous]
     simp only [MonoidHom.coe_mk, OneHom.coe_mk, Units.coe_prod, map_prod]
     refine continuous_finsetProd _ fun i _ => ?_
@@ -376,8 +376,8 @@ theorem UpperTheory.V.W.lam_zl :
     · simp
   · rintro χ χ' ⟨h1, h2⟩ ⟨h1', h2'⟩
     refine MonoidHom.ext fun x => Units.ext (zl_eq (maximalIdeal R) fun N => ?_)
-    letI : TopologicalSpace (R ⧸ maximalIdeal R ^ N) := ⊥
-    haveI : DiscreteTopology (R ⧸ maximalIdeal R ^ N) := ⟨rfl⟩
+    let : TopologicalSpace (R ⧸ maximalIdeal R ^ N) := ⊥
+    have : DiscreteTopology (R ⧸ maximalIdeal R ^ N) := ⟨rfl⟩
     have hd : DenseRange (Pi.map fun (_ : ι) => (Nat.cast : ℕ → ℤ_[l])) :=
       DenseRange.piMap fun _ => PadicInt.denseRange_natCast
     have key := hd.equalizer ((h1 N).continuous.comp continuous_ofAdd) ((h1' N).continuous.comp continuous_ofAdd)
@@ -426,8 +426,8 @@ open IsLocalRing UpperTheory.V.Alg UpperTheory.V.W
 private theorem teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -448,7 +448,7 @@ theorem UpperTheory.V.W.psib_mu (l : ℕ) [Fact l.Prime] (F : GFrame l) (O : Typ
   rw [← map_pow] at h1
   have h2 : (g : F.Gv v) ^ l ^ k ∈ (commutator (F.Gv v)).topologicalClosure := (QuotientGroup.eq_one_iff _).1 h1
   have h3 : (commutator (F.Gv v)).topologicalClosure ≤ (r.psib v i).ker :=
-    Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker _)
+    Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker _)
       (Subgroup.isClosed_of_isOpen _ (r.psib_open v i))
   have h4 : r.psib v i g ^ l ^ k = 1 := by rw [← map_pow]; exact h3 h2
   have h5 : ((r.psib v i g : (ResidueField O)ˣ) : ResidueField O) ^ l ^ k = 1 := by
@@ -505,7 +505,7 @@ private theorem lam_res (l : ℕ) [Fact l.Prime] {O R ι : Type} [CommRing O] [I
     [CharP (ResidueField O) l] [CommRing R] [Algebra O R] [IsCO O R] [Fintype ι] [DecidableEq ι]
     (χ : Multiplicative (ι → ℤ_[l]) →* Rˣ) (hc : AdicCont (maximalIdeal R) fun x => ((χ x : Rˣ) : R))
     (h1 : ∀ i, res O R (χ (Multiplicative.ofAdd (Pi.single i 1))) = 1) (x) : res O R (χ x) = 1 := by
-  haveI := (co_res O).1
+  have := (co_res O).1
   have h := (lam_zl l O (ResidueField O) ι (fun _ => 1) (fun _ => by simp)).unique
     (y₁ := pushCh (res O R : R →+* ResidueField O) χ) (y₂ := 1)
     ⟨lam_cont (res O R) _ hc, fun i => Units.ext (h1 i)⟩
@@ -588,7 +588,7 @@ theorem UpperTheory.V.W.lam_ex_free :
         fun x => h2 _, rfl⟩, rfl⟩
   let σ : Type := Σ v, Fin n × Fin (d v)
   let P : Type := MvPowerSeries σ O
-  haveI : IsCO O P := co_mvps O O σ
+  have : IsCO O P := co_mvps O O σ
   have hX : ∀ s : σ, (MvPowerSeries.X s : P) ∈ maximalIdeal P := fun s h => by
     simpa using MvPowerSeries.isUnit_constantCoeff _ h
   have hu : ∀ s : σ, IsUnit (1 + MvPowerSeries.X s : P) := fun s => by

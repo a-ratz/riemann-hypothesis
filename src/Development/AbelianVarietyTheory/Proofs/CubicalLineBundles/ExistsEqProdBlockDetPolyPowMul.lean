@@ -119,7 +119,7 @@ theorem exists_eq_prod_blockDetPoly_pow_mul (K : Type) [Field K] [Infinite K] (B
       by_cases hb : b = b₀
       · subst hb
         rw [Function.update_self, Matrix.det_mul] at h
-        have hd : t.det = ∏ i, t i i := Matrix.det_of_upperTriangular htri
+        have hd : t.det = ∏ i, t i i := Matrix.det_of_isUpperTriangular htri
         have hp : (∏ i, t i i ^ (a b i + n b)) = t.det * ∏ i, t i i ^ (a b i + n' b) := by
           rw [hd, ← Finset.prod_mul_distrib]
           refine Finset.prod_congr rfl fun i _ => ?_

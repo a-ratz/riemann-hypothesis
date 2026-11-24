@@ -111,7 +111,7 @@ theorem natCast_notMem_sq_of_isUnramifiedAt {K : Type*} [Field K] [NumberField K
     simpa [Ideal.under, Ideal.mem_comap] using hlP
   have hunder : Ideal.span {(l : ℤ)} = P.under ℤ :=
     hmax.eq_of_le (Ideal.IsPrime.under ℤ P).ne_top hle
-  haveI : P.LiesOver (Ideal.span {(l : ℤ)}) := ⟨hunder⟩
+  have : P.LiesOver (Ideal.span {(l : ℤ)}) := ⟨hunder⟩
   have hmap : Ideal.map (algebraMap ℤ (𝓞 K)) (Ideal.span {(l : ℤ)}) = Ideal.span {(l : 𝓞 K)} := by
     rw [Ideal.map_span, Set.image_singleton]
     simp
@@ -137,7 +137,7 @@ theorem natCast_notMem_sq_of_isUnramifiedAt {K : Type*} [Field K] [NumberField K
 theorem cyclotomic_irreducible_of_isUnramifiedAt {K : Type*} [Field K] [NumberField K] {l : ℕ}
     (hl : l.Prime) (P : Ideal (𝓞 K)) [P.IsPrime] (hlP : (l : 𝓞 K) ∈ P)
     [Algebra.IsUnramifiedAt ℤ P] : Irreducible (cyclotomic l K) := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hl2 := natCast_notMem_sq_of_isUnramifiedAt hl P
 
   have hE := cyclotomic_comp_X_add_one_isEisensteinAt l
@@ -195,7 +195,7 @@ theorem cyclotomic_irreducible_of_forall_isUnramifiedAt {K : Type*} [Field K] [N
   obtain ⟨M, hM, hlM⟩ := Ideal.exists_le_maximal (Ideal.span {(l : 𝓞 K)})
     (by rwa [Ne, Ideal.span_singleton_eq_top])
   have hlM' : (l : 𝓞 K) ∈ M := hlM (Ideal.mem_span_singleton_self _)
-  haveI := h M hlM'
+  have := h M hlM'
   exact cyclotomic_irreducible_of_isUnramifiedAt hl M hlM'
 
 end ReciprocityTheory.Cheb

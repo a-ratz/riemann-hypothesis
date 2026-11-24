@@ -169,7 +169,7 @@ theorem rankNums_sizes : ∀ eps CD : ℝ, 0 < eps → eps < 1 / 52 → 3 ≤ CD
           rw [mul_assoc, mul_assoc (12 : ℝ)]
           exact mul_le_mul_of_nonneg_left (mul_le_mul hk10 hDelE (by linarith) (by positivity)) (by norm_num)
       _ ≤ Real.exp (x ^ eps / 2) := exp_bound heps (by norm_num) hx1 ht2 ht12 le_rfl
-  · rw [hsq, bx, ← Real.exp_nat_mul]
+  · rw [hsq, bx, ← Real.exp_natCast_mul]
     exact Real.exp_le_exp.2 (by push_cast; nlinarith [Real.rpow_nonneg hx0.le eps])
   · rw [show bx x eps ^ 2 = bx x eps ^ ((2 : ℕ) : ℝ) from (Real.rpow_natCast _ 2).symm]
     exact Real.rpow_le_rpow_of_exponent_le hb1 (by norm_num)

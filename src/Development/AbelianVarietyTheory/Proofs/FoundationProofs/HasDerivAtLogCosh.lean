@@ -94,7 +94,7 @@ theorem dil_monomial {p q n : ℕ} (u : Ix p q → ℝ) (α : Ln p q n 0 →₀ 
       ((Real.exp (∑ l : Ln p q n 0, ((α l : ℝ) + 1 / 2) * u l.1) : ℝ) : ℂ) • MvPolynomial.monomial α c := by
   have h : Real.exp (∑ l : Ln p q n 0, ((α l : ℝ) + 1 / 2) * u l.1) =
       Real.exp ((∑ l : Ln p q n 0, u l.1) / 2) * ∏ l : Ln p q n 0, Real.exp (u l.1) ^ α l := by
-    simp only [← Real.exp_nat_mul, ← Real.exp_sum, ← Real.exp_add, Finset.sum_div, ← Finset.sum_add_distrib]
+    simp only [← Real.exp_natCast_mul, ← Real.exp_sum, ← Real.exp_add, Finset.sum_div, ← Finset.sum_add_distrib]
     congr 1
     exact Finset.sum_congr rfl fun l _ => by ring
   rw [h, Complex.ofReal_mul, mul_smul, dil, LinearMap.smul_apply, AlgHom.toLinearMap_apply,
@@ -319,7 +319,7 @@ theorem norm_sq_sum {σ H : Type} [DecidableEq σ] [NormedAddCommGroup H] [Inner
   refine Finset.sum_congr rfl fun α hα => ?_
   rw [inner_sum, Finset.sum_eq_single α, ← mul_pow, ← norm_smul, e]
   · intro β _ hβ
-    rw [inner_smul_left, inner_smul_right, h, if_neg (Ne.symm hβ), mul_zero, mul_zero]
+    rw [inner_smul_left, inner_smul_right, h, ite_eq_right (Ne.symm hβ), mul_zero, mul_zero]
   · exact fun h => (h hα).elim
 
 theorem norm_dil_le {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {ι : Pol p q n 0 →ₗ[ℂ] H}
@@ -507,7 +507,7 @@ theorem kronOne_mem {Y : Mat p q} (hY : Y ∈ upq p q) :
     Matrix.kroneckerMap_apply, Matrix.one_apply]
   by_cases h : c = d
   · subst h
-    simp only [if_true, mul_one]
+    simp only [ite_true, mul_one]
     linear_combination sgnIx c * hY a b
   · simp [h, Ne.symm h]
 
@@ -530,7 +530,7 @@ theorem emb_expt (F : FockData T0 T1 T2) {Y : Mat p q} (hY : Y ∈ upq p q) :
     rfl
   · apply Units.ext
     rw [F.emb_sq, map_one, one_pow, mul_one, Units.val_pow_eq_pow_val, sq_expt T1 hY, sq_expt T0 (kronOne_mem hY),
-      trace_kronOne, ← Complex.exp_nat_mul, mul_div_assoc]
+      trace_kronOne, ← Complex.exp_natCast_mul, mul_div_assoc]
 
 theorem hasDerivAt_pi (F : FockData T0 T1 T2) {Y : Mat p q} (hY : Y ∈ upq p q) (P : Pol p q r s) :
     HasDerivAt (fun t : ℝ => F.π (T1.expt (t • Y), 1) (F.ι P)) (F.ι (fockAct1 p q r s Y P)) 0 := by
@@ -546,10 +546,10 @@ theorem hasDerivAt_pi (F : FockData T0 T1 T2) {Y : Mat p q} (hY : Y ∈ upq p q)
 
 theorem pi_mul (F : FockData T0 T1 T2) (g h : T1.G) (x : F.H) :
     F.π (g * h, 1) x = F.π (g, 1) (F.π (h, 1) x) := by
-  rw [← ContinuousLinearMap.mul_apply, ← map_mul, Prod.mk_mul_mk, one_mul]
+  rw [← mul_apply_eq_comp, ← map_mul, Prod.mk_mul_mk, one_mul]
 
 theorem pi_one (F : FockData T0 T1 T2) (x : F.H) : F.π (1, 1) x = x := by
-  rw [Prod.mk_one_one, map_one, ContinuousLinearMap.one_apply]
+  rw [Prod.mk_one_one, map_one, one_apply_eq_self]
 
 theorem norm_pi (F : FockData T0 T1 T2) (g : T1.G) (x : F.H) : ‖F.π (g, 1) x‖ = ‖x‖ := F.isom _ x
 
@@ -681,7 +681,7 @@ theorem act_tanhDiag (σ : ℕ → ℝ) (t : ℝ) (α : Ln p q n 0 →₀ ℕ) :
       ((σ (posIx a) * Real.tanh (t * σ (posIx a)) : ℝ) : ℂ)) • Eab a a := by
     ext i j
     simp only [tanhDiag, Eab, Matrix.sum_apply, Matrix.smul_apply, Matrix.single_apply, Matrix.diagonal_apply,
-      ite_and, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      ite_and, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
   rw [e, map_sum, LinearMap.sum_apply]
   simp only [map_smul, LinearMap.smul_apply, cartan1, smul_smul, ← Finset.sum_smul]

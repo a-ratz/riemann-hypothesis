@@ -426,15 +426,15 @@ private theorem plugOpen2_of_plugOpen3_selfGood (hLift : TruncatedSeriesCounting
     SelmerInequalityTwo i r ρ π dc g0 eB e₁ s Dd hD hc hT hrk lenRow e' cB := by
   obtain ⟨⟨-, -, hiLeq, -, -, hiL, -, -, hspL, -⟩, -, hevs, -, hEs, -⟩ :=
     Formalism.MainNotions.N.K.tensor_lattice_facts (Dd := Dd) (hT := hT) (hrk := hrk) (ε := epsU D.nd i)
-  haveI := Formalism.MainNotions.N.K.Topo.finite_RD (hD := hD)
-  haveI := Formalism.MainNotions.N.KLift.leftId_finite (i := i) (Dd := Dd) Dd.e₁
-  haveI := Formalism.MainNotions.N.KLift.leftId_free (i := i) (Dd := Dd) Dd.e₁
-  haveI := Formalism.MainNotions.N.KLift.leftId_finite (i := i) (Dd := Dd) Dd.E
-  haveI := Formalism.MainNotions.N.KLift.leftId_free (i := i) (Dd := Dd) Dd.E
-  haveI := Formalism.MainNotions.N.KLift.ideal_finite (i := i) Dd.δO
-  haveI := Formalism.MainNotions.N.KLift.ideal_free (i := i) Dd.δO
-  haveI := Formalism.MainNotions.N.KLift.latM_finite (D.nd.O i) _ (Dd.ρk 0).toRingHom
-  haveI := Formalism.MainNotions.N.KLift.latM_free (D.nd.O i) _ (Dd.ρk 0).toRingHom
+  have := Formalism.MainNotions.N.K.Topo.finite_RD (hD := hD)
+  have := Formalism.MainNotions.N.KLift.leftId_finite (i := i) (Dd := Dd) Dd.e₁
+  have := Formalism.MainNotions.N.KLift.leftId_free (i := i) (Dd := Dd) Dd.e₁
+  have := Formalism.MainNotions.N.KLift.leftId_finite (i := i) (Dd := Dd) Dd.E
+  have := Formalism.MainNotions.N.KLift.leftId_free (i := i) (Dd := Dd) Dd.E
+  have := Formalism.MainNotions.N.KLift.ideal_finite (i := i) Dd.δO
+  have := Formalism.MainNotions.N.KLift.ideal_free (i := i) Dd.δO
+  have := Formalism.MainNotions.N.KLift.latM_finite (D.nd.O i) _ (Dd.ρk 0).toRingHom
+  have := Formalism.MainNotions.N.KLift.latM_free (D.nd.O i) _ (Dd.ρk 0).toRingHom
   have hL1 := Formalism.MainNotions.N.KLift.liftCol_eve_Dd (eR := e') (hA := hLift) (hG := hG) (hC := hc) (hD := hD)
     (κ := Formalism.MainNotions.N.KLift.kappaL i Dd Dd.e₁) (hκ := Formalism.MainNotions.N.KLift.kappaL_inj i Dd Dd.e₁)
     (hκa := Formalism.MainNotions.N.KLift.kappaL_mul i Dd Dd.e₁) (ince := incl (D.nd.O i) Dd.e₁) (v₁ := v1S i Dd hT hrk)
@@ -590,7 +590,7 @@ theorem rank_submatrix_le' {K : Type} [Field K] {m n : Type} [Fintype m] [Fintyp
 theorem castAdd_ne_natAdd {r t : ℕ} (b : Fin r) (c : Fin t) : Fin.castAdd t b ≠ Fin.natAdd r c := by
   intro h
   have h1 := congrArg Fin.val h
-  simp only [Fin.coe_castAdd, Fin.coe_natAdd] at h1
+  simp only [Fin.val_castAdd, Fin.val_natAdd] at h1
   omega
 
 theorem lt_rank_of {K : Type} [Field K] {r t : ℕ} (M : Matrix (Fin (r + t)) (Fin (r + t)) K)
@@ -656,7 +656,7 @@ theorem eq_diag_of {K : Type} [Field K] {r t : ℕ} (M : Matrix (Fin (r + t)) (F
     by_cases hcd : c = d
     · subst hcd
       simp
-    · rw [if_neg hcd, if_neg]
+    · rw [ite_eq_right hcd, ite_eq_right]
       intro h
       apply hcd
       have h3 := congrArg Fin.val h
@@ -664,7 +664,7 @@ theorem eq_diag_of {K : Type} [Field K] {r t : ℕ} (M : Matrix (Fin (r + t)) (F
       exact Fin.ext h3
   have hcb : ∀ (c : Fin t) (b : Fin r), M (Fin.natAdd r c) (Fin.castAdd t b) = 0 := by
     intro c b
-    rw [h2, if_neg (fun h => castAdd_ne_natAdd b c h.symm)]
+    rw [h2, ite_eq_right (fun h => castAdd_ne_natAdd b c h.symm)]
   have hB0 : ∀ a b, M (Fin.castAdd t a) (Fin.castAdd t b) = 0 := by
     intro a b
     by_contra hab
@@ -1365,7 +1365,7 @@ theorem theorem_n5_of_ring_inputs (g1 : TruncatedSeriesCountingIdentities.admG1 
   obtain ⟨g0, -, ⟨u0, hcyc⟩, eB, e₁, s, hI, hX⟩ := Norm.design_normalized_of_admitted i r ρ π a51 hπ
   obtain ⟨Dd, hD, -, i1, i2, i3, i4, i5, hTop, hK⟩ :=
     normalized_ring_data i (Norm.rN i r ρ π) ρ π hN hG1 g3.2.2 g0 eB e₁ s hI hX
-  haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
+  have := i1; have := i2; have := i3; have := i4; have := i5
   have hc : TruncatedSeriesCountingIdentities.FamilyContinuous (D := D) i (Norm.rN i r ρ π) := Norm.continuity_normalized i r ρ π (Norm.rhoCont_of i r ρ π dcm ct) ct
   exact selmer_inequality_three i (Norm.rN i r ρ π) ρ π dc g0 eB e₁ s Dd hD hc hTop (rank_reduction_idempotent_one Dd hI hD) lenRow e' cB hN
     (RepresentationBoundsCohomology.primHyp_of D.nd (Norm.rN i r ρ π) ρ π hN hG1) u0 hcyc hK (Norm.admG6_rN i r ρ π dcm g6) hL' hG

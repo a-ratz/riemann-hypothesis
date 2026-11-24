@@ -58,7 +58,7 @@ theorem UpperTheory.V.Th.omFacts :
     have h' : ((2 : ℕ) : ResidueField O) = 0 := by exact_mod_cast h
     rw [CharP.cast_eq_zero_iff (ResidueField O) l] at h'
     exact h2 ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 h')
-  · haveI : Finite (O ⧸ maximalIdeal O) := hf
+  · have : Finite (O ⧸ maximalIdeal O) := hf
     exact Ideal.finite_quotient_pow (IsNoetherian.noetherian _) m
   · have := cardQuot_pow_of_prime (IsDiscreteValuationRing.not_a_field O) (i := m)
     rw [Submodule.cardQuot_apply, Submodule.cardQuot_apply] at this

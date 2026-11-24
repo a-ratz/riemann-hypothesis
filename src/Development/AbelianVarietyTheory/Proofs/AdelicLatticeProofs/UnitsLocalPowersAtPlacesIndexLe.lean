@@ -190,7 +190,7 @@ theorem _root_.GlobalTheory.CNorm.index_finPow_le : ∀ (p : ℕ) (F : Type) [Fi
   calc ∏ v : S, (_root_.GlobalTheory.CNorm.powSub p
           (algebraMap F ((v : HeightOneSpectrum (𝓞 F)).adicCompletion F))).index
       ≤ ∏ v : S, (p * Ideal.absNorm (v : HeightOneSpectrum (𝓞 F)).asIdeal ^ e v * p) :=
-        Finset.prod_le_prod' fun v _ => (hloc v).2
+        Finset.prod_le_prod fun v _ => (hloc v).2
     _ = p ^ (2 * S.card) * ∏ v ∈ S, Ideal.absNorm v.asIdeal ^ e v := by
         rw [Finset.prod_coe_sort S (fun v => p * Ideal.absNorm v.asIdeal ^ e v * p)]
         simp only [Finset.prod_mul_distrib, Finset.prod_const]

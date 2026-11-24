@@ -95,7 +95,7 @@ theorem UpperTheory.V.CF.cheb :
   have key : ∀ S : Set (HeightOneSpectrum (𝓞 K)),
       Set.HasDirichletDensity S ((Nat.card C : ℝ) / Nat.card Gal(L/K)) → (S \ T).Nonempty := by
     intro S hS
-    refine Set.Infinite.nonempty (Set.Infinite.diff ?_ hT)
+    refine Set.Infinite.nonempty (Set.Infinite.sdiff ?_ hT)
     intro hfin
     have h0 := GroundTheory.Global.hasDirichletDensity_zero_of_finite hfin
     exact hpos.ne' (hS.dirichletDensity_eq.symm.trans h0.dirichletDensity_eq)
@@ -131,8 +131,8 @@ private theorem UpperTheory.V.CF.bauer_fix_iff (K M N : Type) [Field K] [NumberF
     [IsGalois K N] (P : Ideal (𝓞 N)) [P.IsPrime] (hP : P ≠ ⊥) :
     (∀ σ : N ≃ₐ[K] N, σ • P = P → ∀ x : M, σ (algebraMap M N x) = algebraMap M N x) ↔
       (P.under (𝓞 M)).ramificationIdx (𝓞 K) * (P.under (𝓞 M)).inertiaDeg (𝓞 K) = 1 := by
-  haveI : IsGalois M N := IsGalois.tower_top_of_isGalois K M N
-  haveI : P.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hP
+  have : IsGalois M N := IsGalois.tower_top_of_isGalois K M N
+  have : P.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hP
   have h1 := Ideal.card_stabilizer_eq (G := N ≃ₐ[K] N) (P.under (𝓞 K)) P
   have h2 := Ideal.card_stabilizer_eq (G := N ≃ₐ[M] N) (P.under (𝓞 M)) P
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx _ P (N ≃ₐ[K] N),
@@ -175,11 +175,11 @@ private theorem UpperTheory.V.CF.bauer_fix (K A C N : Type) [Field K] [NumberFie
     (σ : Gal(N/K)) (hσ : ∀ x : C, σ (algebraMap C N x) = algebraMap C N x) (x : A) :
     σ (algebraMap A N x) = algebraMap A N x := by
   obtain ⟨v, hv, w, hw, he, hF⟩ := cheb K N σ T hT
-  haveI := w.isPrime
-  haveI := v.isPrime
+  have := w.isPrime
+  have := v.isPrime
   have hst := GroundTheory.Global.stabilizer_eq_zpowers_arithFrobAt v w he
   have hσF : σ = arithFrobAt (𝓞 K) Gal(N/K) w.asIdeal := by
-    haveI : Algebra.IsUnramifiedAt (𝓞 K) w.asIdeal := (Ideal.ramificationIdx_eq_one_iff ..).1 he
+    have : Algebra.IsUnramifiedAt (𝓞 K) w.asIdeal := (Ideal.ramificationIdx_eq_one_iff ..).1 he
     have h1 := AlgHom.IsArithFrobAt.eq_of_isUnramifiedAt hF
       (IsArithFrobAt.arithFrobAt (𝓞 K) Gal(N/K) w.asIdeal) (Ideal.primeCompl_le_nonZeroDivisors _)
     refine AlgEquiv.ext fun y => ?_
@@ -197,7 +197,7 @@ private theorem UpperTheory.V.CF.bauer_fix (K A C N : Type) [Field K] [NumberFie
     exact this hτ'
   have hsC : GroundTheory.Global.SplitsCompletely C v := by
     intro u hu
-    haveI := u.isPrime
+    have := u.isPrime
     rw [← Ideal.ramificationIdxIn_eq_ramificationIdx v.asIdeal _ Gal(C/K),
       ← Ideal.inertiaDegIn_eq_inertiaDeg v.asIdeal _ Gal(C/K)] at hC ⊢
     exact mul_eq_one.1 hC
@@ -209,13 +209,13 @@ theorem UpperTheory.V.CF.bauer :
     ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] (A C : IntermediateField K Ω) [NumberField A] [NumberField C] [IsGalois K A] [IsGalois K C] (T : Set (HeightOneSpectrum (𝓞 K))), T.Finite → (∀ v ∉ T, GroundTheory.Global.SplitsCompletely C v → GroundTheory.Global.SplitsCompletely A v) → A ≤ C := by
   intro K Ω _ _ _ _ A C _ _ _ _ T hT h
   let N : IntermediateField K Ω := A ⊔ C
-  haveI : NumberField N := NumberField.of_module_finite K N
-  haveI : IsGalois K N := { to_isSeparable := inferInstance, to_normal := IntermediateField.normal_sup K Ω A C }
-  letI : Algebra A N := (IntermediateField.inclusion (le_sup_left : A ≤ N)).toRingHom.toAlgebra
-  letI : Algebra C N := (IntermediateField.inclusion (le_sup_right : C ≤ N)).toRingHom.toAlgebra
-  haveI : IsScalarTower K A N := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K C N := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsGalois C N := IsGalois.tower_top_of_isGalois K C N
+  have : NumberField N := NumberField.of_module_finite K N
+  have : IsGalois K N := { to_isSeparable := inferInstance, to_normal := IntermediateField.normal_sup K Ω A C }
+  let : Algebra A N := (IntermediateField.inclusion (le_sup_left : A ≤ N)).toRingHom.toAlgebra
+  let : Algebra C N := (IntermediateField.inclusion (le_sup_right : C ≤ N)).toRingHom.toAlgebra
+  have : IsScalarTower K A N := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K C N := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsGalois C N := IsGalois.tower_top_of_isGalois K C N
   intro x hx
   have : algebraMap A N ⟨x, hx⟩ ∈ (⊥ : IntermediateField C N) := by
     rw [IsGalois.mem_bot_iff_fixed]
@@ -311,25 +311,25 @@ open scoped Pointwise
 theorem UpperTheory.V.CF.splitCyc :
     ∀ (N : ℕ) [NeZero N] (C : Type) [Field C] [NumberField C] [IsCyclotomicExtension {N} ℚ C] (v : HeightOneSpectrum (𝓞 ℚ)) (p : ℕ), p.Prime → (p : 𝓞 ℚ) ∈ v.asIdeal → ¬ p ∣ N → GroundTheory.Global.SplitsCompletely C v → p ≡ 1 [MOD N] := by
   intro N _ C _ _ _ v p hp hpv hpN hspl
-  haveI := Fact.mk hp
-  haveI := v.isMaximal
+  have := Fact.mk hp
+  have := v.isMaximal
   have hspan : (Ideal.span {(p : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
   have hvZ : v.asIdeal.under ℤ = Ideal.span {(p : ℤ)} := by
     refine (hspan.eq_of_le (Ideal.IsPrime.under ℤ v.asIdeal).ne_top ?_).symm
     rw [Ideal.span_singleton_le_iff_mem, Ideal.under, Ideal.mem_comap, map_natCast]
     exact hpv
-  haveI : v.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := ⟨hvZ.symm⟩
+  have : v.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := ⟨hvZ.symm⟩
   have hsurj : Function.Surjective (algebraMap ℤ (𝓞 ℚ)) := fun y => ⟨Rat.ringOfIntegersEquiv y, by
     have h : (Rat.ringOfIntegersEquiv.symm : ℤ →+* 𝓞 ℚ) = algebraMap ℤ (𝓞 ℚ) :=
       Subsingleton.elim _ _
     rw [← h]
     exact Rat.ringOfIntegersEquiv.symm_apply_apply y⟩
   have hv1 : v.asIdeal.inertiaDeg ℤ = 1 := by
-    letI := Ideal.Quotient.field (Ideal.span {(p : ℤ)})
-    letI := Ideal.Quotient.field v.asIdeal
+    let := Ideal.Quotient.field (Ideal.span {(p : ℤ)})
+    let := Ideal.Quotient.field v.asIdeal
     rw [Ideal.inertiaDeg_eq_of_isMaximal (Ideal.span {(p : ℤ)}) v.asIdeal,
-      finrank_eq_one_iff_of_nonzero (1 : 𝓞 ℚ ⧸ v.asIdeal) one_ne_zero, eq_top_iff]
+      finrank_eq_one_iff_of_ne_zero (1 : 𝓞 ℚ ⧸ v.asIdeal) one_ne_zero, eq_top_iff]
     rintro y -
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
     obtain ⟨a, rfl⟩ := hsurj y
@@ -340,7 +340,7 @@ theorem UpperTheory.V.CF.splitCyc :
   obtain ⟨⟨P, hPp, hPl⟩⟩ := v.asIdeal.nonempty_primesOver (S := 𝓞 C)
   have hPne : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P
   have hs := hspl ⟨P, hPp, hPne⟩ hPl
-  haveI : P.LiesOver (Ideal.span {(p : ℤ)}) := Ideal.LiesOver.trans P v.asIdeal _
+  have : P.LiesOver (Ideal.span {(p : ℤ)}) := Ideal.LiesOver.trans P v.asIdeal _
   have ht := Ideal.inertiaDeg_tower (R := ℤ) v.asIdeal P
   rw [hv1, one_mul, hs.2, IsCyclotomicExtension.Rat.inertiaDeg_eq_of_not_dvd p C P hpN] at ht
   rw [← ZMod.natCast_eq_natCast_iff, Nat.cast_one]
@@ -396,11 +396,11 @@ theorem UpperTheory.V.CF.kwRay :
   have hN0 : N ≠ 0 := by
     rw [hN, Ne, Ideal.absNorm_eq_zero_iff]
     exact 𝔪.ideal_ne_bot
-  haveI : NeZero N := ⟨hN0⟩
+  have : NeZero N := ⟨hN0⟩
   have hcyc := cyc_adjoin ℚ hζ
-  haveI : NumberField ℚ⟮ζ⟯ := @IsCyclotomicExtension.numberField {N} ℚ ℚ⟮ζ⟯ _ _ _ _ _ hcyc
+  have : NumberField ℚ⟮ζ⟯ := @IsCyclotomicExtension.numberField {N} ℚ ℚ⟮ζ⟯ _ _ _ _ _ hcyc
   have hgal := @IsCyclotomicExtension.isGalois {N} ℚ ℚ⟮ζ⟯ _ _ _ hcyc
-  haveI := (GroundTheory.Global.Modulus.isAbelianGalois_rayClassField 𝔪 Ω).toIsGalois
+  have := (GroundTheory.Global.Modulus.isAbelianGalois_rayClassField 𝔪 Ω).toIsGalois
   have hfin : ({v | v.asIdeal ∣ 𝔪.ideal} ∪ {v | v.asIdeal ∣ Ideal.span {(N : 𝓞 ℚ)}} :
       Set (HeightOneSpectrum (𝓞 ℚ))).Finite := by
     refine (Ideal.finite_factors 𝔪.ideal_ne_bot).union (Ideal.finite_factors ?_)
@@ -409,7 +409,7 @@ theorem UpperTheory.V.CF.kwRay :
   refine @UpperTheory.V.CF.bauer ℚ Ω _ _ _ _ (𝔪.rayClassField Ω) ℚ⟮ζ⟯ _ _ _
     (by convert hgal) _ hfin ?_
   intro v hv hsplit
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at hv
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at hv
   obtain ⟨_, hv2⟩ := hv
   rw [Ideal.dvd_span_singleton] at hv2
   obtain ⟨p, hp, hpv⟩ := exists_prime_mem_of_mem v.asIdeal v.isPrime
@@ -421,7 +421,7 @@ theorem UpperTheory.V.CF.kwRay :
     rw [hk, Nat.cast_mul]
     exact v.asIdeal.mul_mem_right _ hpv
   have hmod : p ≡ 1 [MOD N] := by
-    haveI hc2 : IsCyclotomicExtension {N} ℚ ℚ⟮ζ⟯ := by
+    have hc2 : IsCyclotomicExtension {N} ℚ ℚ⟮ζ⟯ := by
       convert hcyc
       all_goals first
         | rfl
@@ -452,8 +452,8 @@ theorem UpperTheory.V.CF.kw :
   have hn : Ideal.absNorm m.ideal ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]
     exact m.ideal_ne_bot
-  haveI : NeZero ((Ideal.absNorm m.ideal : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hn⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (Ideal.absNorm m.ideal)
+  have : NeZero ((Ideal.absNorm m.ideal : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hn⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (Ideal.absNorm m.ideal)
   exact ⟨_, ζ, Nat.pos_of_ne_zero hn, hζ, hm.trans (kwRay Ω m ζ hζ)⟩
 end -- clump:auto
 end -- clump:auto

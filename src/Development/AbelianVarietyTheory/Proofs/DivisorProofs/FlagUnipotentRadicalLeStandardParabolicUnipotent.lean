@@ -133,7 +133,7 @@ theorem unipFlag_le_unip (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     refine ⟨k', hk', h1, ?_⟩
     rw [Fin.le_def] at hlk
     rw [Fin.lt_def] at hkj ⊢
-    simp only [Fin.coe_castLE] at hlk
+    simp only [Fin.val_castLE] at hlk
     omega
   ·
     have hle : colSpan F X {j} ≤ (colSpan F X {i | ∃ k ∈ S, i ≤ k ∧ k < j}).comap

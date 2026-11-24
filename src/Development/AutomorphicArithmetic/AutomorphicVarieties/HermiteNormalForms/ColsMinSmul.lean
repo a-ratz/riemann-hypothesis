@@ -146,7 +146,7 @@ private theorem UpperTheory.V.KT.finite_subfamily_spans_dual {E Y : Type*} [AddC
   have hch : ∀ φ ∈ b, ∃ y, y ∈ S ∧ f y = φ := fun φ hφ => hbs hφ
   choose g hgS hgf using hch
   refine ⟨hbfin.toFinset.attach.image (fun φ => g φ.1 (hbfin.mem_toFinset.mp φ.2)), ?_, ?_, ?_⟩
-  · haveI : Fintype b := hbfin.fintype
+  · have : Fintype b := hbfin.fintype
     calc (hbfin.toFinset.attach.image (fun φ => g φ.1 (hbfin.mem_toFinset.mp φ.2))).card
         ≤ hbfin.toFinset.attach.card := Finset.card_image_le
       _ = hbfin.toFinset.card := Finset.card_attach
@@ -258,7 +258,7 @@ theorem UpperTheory.V.KT.orb :
   obtain ⟨S, hS, hrep⟩ := hnf L N (I0 L N)
   let S' := S.filter fun A => A.det ≠ 0
   have hdet : ∀ A : S', A.1.det ≠ 0 := fun A => (Finset.mem_filter.1 A.2).2
-  haveI : ∀ A : S', Finite (nearVx A.1) := fun A => (nearvx L N A.1 (hdet A)).1.to_subtype
+  have : ∀ A : S', Finite (nearVx A.1) := fun A => (nearvx L N A.1 (hdet A)).1.to_subtype
   have key : ∀ c : MulAction.orbitRel.Quotient (Gm L N) (Sx L N p),
       ∃ s : (Σ A : S', (Fin (p + 1) → nearVx A.1)), ∃ t : Sx L N p,
         Quotient.mk _ t = c ∧ ∀ j, t.1 j = (s.2 j).1 := by

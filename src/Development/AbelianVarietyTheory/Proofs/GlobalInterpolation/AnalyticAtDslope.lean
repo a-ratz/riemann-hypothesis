@@ -63,7 +63,7 @@ namespace GlobalTheory.ExplicitRect
 theorem analyticAt_dslope {f : ℂ → ℂ} {p : ℂ} (hf : AnalyticAt ℂ f p) :
     AnalyticAt ℂ (dslope f p) p := by
   obtain ⟨q, hq⟩ := hf
-  exact ⟨_, hq.has_fpower_series_dslope_fslope⟩
+  exact ⟨_, hq.dslope_fslope⟩
 
 theorem eq_add_dslope (f : ℂ → ℂ) (p s : ℂ) : f s = f p + (s - p) * dslope f p s := by
   have h := sub_smul_dslope f p s
@@ -227,7 +227,7 @@ theorem logDeriv_one {N : ℕ} [NeZero N] {χ : DirichletCharacter ℂ N} (hχ :
         ((deriv (DirichletCharacter.LFunctionTrivChar₁ 1) s * (s - 1) -
           DirichletCharacter.LFunctionTrivChar₁ 1 s * 1) / (s - 1) ^ 2) s :=
       (hZd s).hasDerivAt.div ((hasDerivAt_id' s).sub_const 1) hs1'
-    rw [hLeq.deriv_eq, hLeq.eq_of_nhds, hd.deriv, if_pos rfl]
+    rw [hLeq.deriv_eq, hLeq.eq_of_nhds, hd.deriv, ite_eq_left rfl]
     field_simp
     ring
   · have hχ1 : χ ≠ 1 := by
@@ -238,7 +238,7 @@ theorem logDeriv_one {N : ℕ} [NeZero N] {χ : DirichletCharacter ℂ N} (hχ :
     have hL1 := DirichletCharacter.LFunction_apply_one_ne_zero hχ1
     refine ⟨fun s => deriv (LFunction χ) s / LFunction χ s, hLa.deriv.div hLa hL1,
       Filter.Eventually.of_forall fun s => ?_⟩
-    simp only [hN, if_false, zero_div, zero_add]
+    simp only [hN, ite_false, zero_div, zero_add]
 
 theorem residue_identity : ∀ (N : ℕ) [NeZero N] (χ : DirichletCharacter ℂ N), χ.IsPrimitive → ∀ (u c T : ℝ) (m : ℕ) (h : ℂ → ℂ), 1 < u → 1 < c → 0 < T → AnalyticAt ℂ h 0 → (∀ᶠ s in 𝓝[≠] (0 : ℂ), deriv (LFunction χ) s / LFunction χ s = (m : ℂ) / s + h s) → (∀ s : ℂ, -(1/2 : ℝ) ≤ s.re → s.re ≤ c → |s.im| = T → LFunction χ s ≠ 0) → (∀ s : ℂ, s.re = -(1/2 : ℝ) → LFunction χ s ≠ 0) → (∫ x : ℝ in (-(1/2 : ℝ))..c, (-(deriv (LFunction χ) ((x : ℂ) - T * I) / LFunction χ ((x : ℂ) - T * I)) * (u : ℂ) ^ ((x : ℂ) - T * I) / ((x : ℂ) - T * I))) - (∫ x : ℝ in (-(1/2 : ℝ))..c, (-(deriv (LFunction χ) ((x : ℂ) + T * I) / LFunction χ ((x : ℂ) + T * I)) * (u : ℂ) ^ ((x : ℂ) + T * I) / ((x : ℂ) + T * I))) + I * (∫ t : ℝ in (-T)..T, (-(deriv (LFunction χ) ((c : ℂ) + t * I) / LFunction χ ((c : ℂ) + t * I)) * (u : ℂ) ^ ((c : ℂ) + t * I) / ((c : ℂ) + t * I))) - I * (∫ t : ℝ in (-T)..T, (-(deriv (LFunction χ) (((-(1/2) : ℝ) : ℂ) + t * I) / LFunction χ (((-(1/2) : ℝ) : ℂ) + t * I)) * (u : ℂ) ^ (((-(1/2) : ℝ) : ℂ) + t * I) / (((-(1/2) : ℝ) : ℂ) + t * I))) = 2 * Real.pi * I * ((if N = 1 then (u : ℂ) else 0) - (∑ᶠ ρ ∈ {ρ : ℂ | 0 < ρ.re ∧ ρ.re < 1 ∧ |ρ.im| < T ∧ LFunction χ ρ = 0}, ((analyticOrderNatAt (LFunction χ) ρ : ℕ) : ℂ) * ((u : ℂ) ^ ρ / ρ)) - (m * (Real.log u : ℂ) + h 0)) := by
   intro N _ χ hχ u c T m h hu hc hT hh hφ0 hside hleft
@@ -335,7 +335,7 @@ theorem residue_identity : ∀ (N : ℕ) [NeZero N] (χ : DirichletCharacter ℂ
   simp only [e]
   refine key.trans ?_
   have hr1 : r 1 = if N = 1 then (u : ℂ) else 0 := by
-    simp only [r, if_pos]
+    simp only [r, ite_eq_left]
     split_ifs <;> simp
   have hr0 : r 0 = -(m * (Real.log u : ℂ) + h 0) := by simp [r]
   have hrZ : ∑ p ∈ hZfin.toFinset, r p =

@@ -95,7 +95,7 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
       · obtain ⟨rfl, rfl⟩ := h
         exact hx
       · exact hlow r c hrc h
-    rw [Matrix.det_of_upperTriangular hT]
+    rw [det_of_isUpperTriangular hT]
     exact Finset.prod_eq_zero (Finset.mem_univ ca) ha
   set s : ℂ := if C ca ca = 0 then -(C cb ca)⁻¹ else 0 with hs
   set C' : Matrix (Fin N) (Fin N) ℂ := Matrix.transvection ca cb (-s) * C with hC'
@@ -124,9 +124,9 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
     rw [hC'a]
     by_cases ha : C ca ca = 0
     · have hx' := hx ha
-      rw [hs, if_pos ha, ha, neg_neg, inv_mul_cancel₀ hx']
+      rw [hs, ite_eq_left ha, ha, neg_neg, inv_mul_cancel₀ hx']
       simp
-    · rw [hs, if_neg ha]
+    · rw [hs, ite_eq_right ha]
       simpa using ha
   set t : ℂ := C' cb ca / C' ca ca with ht
   set U : Matrix (Fin N) (Fin N) ℂ := Matrix.transvection cb ca (-t) * C' with hU
@@ -159,20 +159,20 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
   · intro a b hab
     rw [Matrix.transvection, Matrix.add_apply, Matrix.one_apply, Matrix.single_apply]
     have hab' : a ≠ b := fun h => hab (by rw [h])
-    rw [if_neg hab']
+    rw [ite_eq_right hab']
     by_cases h : ca = a ∧ cb = b
     · obtain ⟨rfl, rfl⟩ := h
       exact absurd hblk hab
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       simp
   · intro r c hrc
     change c < r at hrc
     rw [Matrix.transvection, Matrix.add_apply, Matrix.one_apply, Matrix.single_apply,
-      if_neg (ne_of_gt hrc)]
+      ite_eq_right (ne_of_gt hrc)]
     have h : ¬ (ca = r ∧ cb = c) := by
       rintro ⟨rfl, rfl⟩
       exact absurd (lt_trans hrc hlt) (lt_irrefl _)
-    rw [if_neg h]
+    rw [ite_eq_right h]
     simp
   · rw [Matrix.det_transvection_of_ne _ _ hne]
     exact one_ne_zero
@@ -184,7 +184,7 @@ theorem exists_upper_transvection_upper : ∀ (N j : ℕ) (ca cb : Fin N) (C : M
     · rw [hUo a b ha, hC'blk a b hab]
   · intro c
     have hp : ∏ i, U i i ≠ 0 := by
-      rw [← Matrix.det_of_upperTriangular hUtri, hdetU]
+      rw [← det_of_isUpperTriangular hUtri, hdetU]
       exact hdet
     exact Finset.prod_ne_zero_iff.mp hp c (Finset.mem_univ c)
   · change C = Matrix.transvection ca cb s * Matrix.transvection cb ca t * U
@@ -232,42 +232,42 @@ theorem upper_of_steps : ∀ (N j : ℕ) (a b ca cb : Fin N) (C : Matrix (Fin N)
   · obtain ⟨i, hi⟩ : ∃ i : Fin N, (i : ℕ) = c - (N - j) := ⟨⟨(c : ℕ) - (N - j), by omega⟩, rfl⟩
     by_cases hia : i = a
     · have hai : (a : ℕ) = c - (N - j) := by rw [← hia]; exact hi
-      rw [if_pos (by omega)] at hca
+      rw [ite_eq_left (by omega)] at hca
       have hcc : c = ca := Fin.ext (by omega)
       have hrcb : (r : ℕ) ≠ cb := fun h => hne ⟨Fin.ext h, hcc⟩
       refine hv b ⟨by omega, by omega⟩ hba r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
     · refine hv i ⟨by omega, by omega⟩ hia r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
         omega
   · obtain ⟨i, hi⟩ : ∃ i : Fin N, (i : ℕ) = j + c := ⟨⟨j + (c : ℕ), by omega⟩, rfl⟩
     by_cases hia : i = a
     · have hai : (a : ℕ) = j + c := by rw [← hia]; exact hi
-      rw [if_neg (by omega)] at hca
+      rw [ite_eq_right (by omega)] at hca
       have hcc : c = ca := Fin.ext (by omega)
       have hrcb : (r : ℕ) ≠ cb := fun h => hne ⟨Fin.ext h, hcc⟩
       refine hv b ⟨by omega, by omega⟩ hba r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
     · refine hv i ⟨by omega, by omega⟩ hia r c ?_ ?_
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
       · simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
 
 end GlobalTheory.CompanionTheory.Ar.PB.StepShape
@@ -343,11 +343,11 @@ theorem cols_ne_empty {N j : ℕ} (hj : j ≤ N) (i : Fin N) : stepCols N j i �
   have hi := i.2
   by_cases h : (i : ℕ) + 1 ≤ j
   · have : (⟨N - j, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_pos h]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_left h]
       omega
     simp [e] at this
   · have : (⟨0, by omega⟩ : Fin N) ∈ stepCols N j i := by
-      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, if_neg h]
+      simp only [stepCols, Finset.mem_filter, Finset.mem_univ, true_and, ite_eq_right h]
       omega
     simp [e] at this
 
@@ -358,7 +358,7 @@ theorem minor_one_ne {N : ℕ} {I J : Finset (Fin N)} (h : I ≠ J) :
 theorem minor_one_same {N : ℕ} (I : Finset (Fin N)) :
     minorIJ (1 : Matrix (Fin N) (Fin N) ℂ) I I = 1 := by
   unfold minorIJ
-  rw [dif_pos rfl, Matrix.submatrix_one _ (I.orderEmbOfFin rfl).injective, Matrix.det_one]
+  rw [dite_eq_left rfl, Matrix.submatrix_one _ (I.orderEmbOfFin rfl).injective, Matrix.det_one]
 
 theorem det_submatrix_eq_zero {N : ℕ} (C : Matrix (Fin N) (Fin N) ℂ) (S : Finset (Fin N))
     (f : Fin S.card → Fin N) (hf : Function.Injective f)
@@ -403,7 +403,7 @@ theorem quot_vanish : ∀ (N j : ℕ) (i : Fin N) (h₁ h₂ : Matrix (Fin N) (F
   have hD : D.det ≠ 0 := by
     have h1 := hq S
     rw [minor_one_same, mul_one] at h1
-    have h2 : minorIJ C S S = D.det := dif_pos rfl
+    have h2 : minorIJ C S S = D.det := dite_eq_left rfl
     rw [← h2]
     intro h0
     rw [h0, mul_zero] at h1
@@ -539,7 +539,7 @@ theorem transv_det {R : Type} [CommRing R] {ca cb : Fin N} (hc : (cb : ℕ) = ca
     (1 + Matrix.single cb ca t).det = 1 := by
   have hne : ca ≠ cb := fun e => by rw [e] at hc; omega
   have hlt : ca < cb := by rw [Fin.lt_def]; omega
-  rw [Matrix.det_of_lowerTriangular _ fun r c h => ?_]
+  rw [det_of_isLowerTriangular _ fun r c h => ?_]
   · refine Finset.prod_eq_one fun c _ => ?_
     rw [Matrix.add_apply, Matrix.one_apply_eq, Matrix.single_apply_of_ne, add_zero]
     rintro ⟨rfl, e⟩
@@ -625,7 +625,7 @@ theorem step_pl {F : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) {zb : (Σ 
         · subst e; simp
         · simp [e, Ne.symm e]
       · have e : I ≠ I₀ := fun e => hI (e ▸ hI₀)
-        rw [off I hI, if_neg e, mul_zero]
+        rw [off I hI, ite_eq_right e, mul_zero]
     calc _ = ∑ I, (∑ m : ι k, val (vA I₀ ⟨k, m⟩) * val (uA ⟨k, m⟩ I)) * minorIJ A I (stepCols N j p.2) := by
           simp only [Finset.mul_sum, Finset.sum_mul]
           rw [Finset.sum_comm]
@@ -667,7 +667,7 @@ theorem fwd_flags {τ : Ψ} {a b ca cb : Fin N} {k₀ : K} (hb : (b : ℕ) = a +
   obtain ⟨B, U, t, hB, hBt, hBd, hU, hUt, hUd, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.Factor.exists_upper_transvection_upper N j ca cb C hcb hS hCb hCd
     (_root_.GlobalTheory.CompanionTheory.Ar.PB.StepShape.upper_of_steps N j a b ca cb C M.j_le hb hab hca hcb hCb vanish)
   have hBc : ∀ c, B c c ≠ 0 := fun c => by
-    rw [Matrix.det_of_upperTriangular hBt] at hBd
+    rw [det_of_isUpperTriangular hBt] at hBd
     exact Finset.prod_ne_zero_iff.1 hBd c (Finset.mem_univ c)
   have hh' : h' τ = h τ * B * (1 + Matrix.single cb ca t) * U := by
     have : h τ * C = h' τ := Matrix.mul_nonsing_inv_cancel_left _ _ hd
@@ -713,8 +713,8 @@ theorem frame_any {F : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) {S : Typ
     f (detFac j p.2 (F.T p.1)) * (∏ c ∈ stepCols N j p.2, bb c c) *
         ∑ I, f (M.coef ⟨k, m⟩ I) * minorIJ gg I (stepCols N j p.2) =
       f (∏ k', M.x ⟨k', F.c k'⟩ ^ M.b p k') * ∑ I, f (F.u ⟨k, m⟩ I) * minorIJ G I (stepCols N j p.2) := by
-  haveI : Infinite M.Ω := Infinite.of_injective (Nat.cast : ℕ → M.Ω) Nat.cast_injective
-  letI : Algebra M.Ω S := f.toAlgebra
+  have : Infinite M.Ω := Infinite.of_injective (Nat.cast : ℕ → M.Ω) Nat.cast_injective
+  let : Algebra M.Ω S := f.toAlgebra
   have h1 := _root_.GlobalTheory.CompanionTheory.Ar.PB.MinorAny.minor_any M.Ω N j (F.T p.1) _ _ (M.coef ⟨k, m⟩) (F.u ⟨k, m⟩) (stepCols N j p.2)
     (hF.2.1 p k hp m) S G hG
   have e' : (F.T p.1).map (algebraMap M.Ω S) * G = gg * bb := e

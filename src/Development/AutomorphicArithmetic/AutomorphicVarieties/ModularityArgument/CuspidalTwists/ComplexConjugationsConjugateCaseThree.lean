@@ -77,8 +77,8 @@ private theorem complex_conjugations_conjugate' {Ω : Type} [Field Ω] [CharZero
     ∃ g : G ℚ Ω, g * τ = σ * g := by
   obtain ⟨j, hj⟩ := hσ
   obtain ⟨j', hj'⟩ := hτ
-  letI : Algebra Ω ℂ := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra Ω ℂ := j.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have key : ∀ x, j (AlgHom.restrictNormal' j'.toRatAlgHom Ω x) = j' x := fun x => AlgHom.restrictNormal_commutes j'.toRatAlgHom Ω x
   refine ⟨AlgHom.restrictNormal' j'.toRatAlgHom Ω, AlgEquiv.ext fun x => j.injective ?_⟩
   rw [AlgEquiv.mul_apply, AlgEquiv.mul_apply, key, hj, hj', key]
@@ -101,8 +101,8 @@ private theorem exists_cm_and_real_fields {Ω : Type} [Field Ω] [CharZero Ω] [
     rw [MonoidHom.mem_ker, MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one]
   have ho : IsOpen ((η * η'⁻¹).ker : Set (G ℚ Ω)) :=
     Subgroup.isOpen_mono (H₁ := η.ker ⊓ η'.ker) (fun g hg => (hk g).2 (Eq.trans hg.1 (Eq.symm hg.2))) (h.opn.inter h'.opn)
-  obtain ⟨K, _, _, hK, dK⟩ := fixAb Ω η.ker h.opn (Abelianization.commutator_subset_ker _)
-  obtain ⟨F, _, _, hF, dF⟩ := fixAb Ω (H ⊓ (η * η'⁻¹).ker) (hH.inter ho) (le_inf hc (Abelianization.commutator_subset_ker _))
+  obtain ⟨K, _, _, hK, dK⟩ := fixAb Ω η.ker h.opn (Group.Abelianization.commutator_le_ker _)
+  obtain ⟨F, _, _, hF, dF⟩ := fixAb Ω (H ⊓ (η * η'⁻¹).ker) (hH.inter ho) (le_inf hc (Group.Abelianization.commutator_le_ker _))
   have hN : H.Normal := Subgroup.Normal.of_commutator_le _ hc
   refine ⟨K, F, inferInstance, inferInstance, (fixInf Ω K).2 (fun σ hσ e => ?_) (dK.trans h.idx), (fixInf Ω F).1 fun σ hσ => ?_, inferInstance,
     η.ker ⊓ η'.ker, dK.trans h.idx, ?_, fun q hq A hA => le_inf (h.split q hq A hA) (h'.split q (Finset.mem_insert_of_mem hq) A hA),
@@ -302,8 +302,8 @@ private theorem jacobi_symbol_eq_one_of_congr (p q : ℕ) (s : ℤˣ) (hq : q.Pr
   rcases hq.eq_two_or_odd' with rfl | hq2
   · rw [Nat.cast_ofNat, jacobiSym.at_two hp, ZMod.χ₈_nat_eq_if_mod_eight]
     rcases Int.units_eq_one_or s with rfl | rfl <;> simp only [Int.ModEq, Units.val_one, Units.val_neg] at h8
-    · rw [if_neg (by omega), if_pos (by omega)]
-    · rw [if_neg (by omega), if_pos (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_left (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_left (by omega)]
   · have e : jacobiSym p q = jacobiSym s q := jacobiSym.mod_left' hpq
     rcases Int.units_eq_one_or s with rfl | rfl <;> simp only [Int.ModEq, Units.val_one, Units.val_neg] at h8 e
     · rw [jacobiSym.quadratic_reciprocity_one_mod_four' hq2 (by omega), e, jacobiSym.one_left]
@@ -423,14 +423,14 @@ theorem UpperTheory.V.Cu.RankFourGaloisLemmas.quad {Ω : Type} [Field Ω] [CharZ
     rw [Subgroup.index_ker, ht, Subgroup.card_top, Nat.card_eq_fintype_card, Fintype.card_units_int]
   have hccη : ∀ σ : G ℚ Ω, IsCC σ → Chr.dirG ℚ Ω χ σ = -1 := fun σ hσ =>
     Units.ext (by rw [hval, hcc σ hσ, Units.val_neg, Units.val_one, hs]; simp)
-  obtain ⟨K', _, _, hK, dK⟩ := fixAb Ω (Chr.dirG ℚ Ω χ).ker hopn (Abelianization.commutator_subset_ker _)
+  obtain ⟨K', _, _, hK, dK⟩ := fixAb Ω (Chr.dirG ℚ Ω χ).ker hopn (Group.Abelianization.commutator_le_ker _)
   have hdeg : Module.finrank ℚ K' = 2 := dK.trans hidx
   have : IsCMField K' := (fixInf Ω K').2 (fun σ hσ e => by
     rw [hK, MonoidHom.mem_ker, hccη σ hσ] at e
     exact absurd e (by decide)) hdeg
 
   have hp2 : p ≠ 2 := h2
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω p
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω p
   have hst : CF.pStar p = -(p : ℤ) := by
     have : Odd (p / 2) := ⟨p / 4, by omega⟩
     rw [CF.pStar, this.neg_one_pow, neg_one_mul]
@@ -514,10 +514,10 @@ theorem UpperTheory.V.Cu.RankFourGaloisLemmas.odd :
   have hdo : orderOf ψ ∣ h.o :=
     (((hostOdd h c.O ψ (h.mem_X.1 hX).1).1 hodd).1).trans (Nat.ordCompl_dvd _ _)
   have hlm : l.Coprime (orderOf ψ) := lp.coprime_iff_not_dvd.2 fun hd => hlo (hd.trans hdo)
-  haveI : NeZero l := ⟨lp.ne_zero⟩
+  have : NeZero l := ⟨lp.ne_zero⟩
   generalize UpperTheory.V.pOne h.chi = p at *
   generalize h.nIII l ψ = n at *
-  haveI : NeZero p := ⟨pp.ne_zero⟩
+  have : NeZero p := ⟨pp.ne_zero⟩
   have hom : ∀ g, Chr.cls ℚ Ω l g = 1 → D.om g = 1 := by
     have hT : IsOmT c D.om := ⟨hG.om_pow, fun σ => by
       have := hG.om_bar σ
@@ -533,7 +533,7 @@ theorem UpperTheory.V.Cu.RankFourGaloisLemmas.odd :
     apply hne
     ext a
     rw [MulChar.one_apply_coe, ← MulChar.coe_toUnitHom, hc a, Units.val_one]
-  haveI : NeZero (l * p) := ⟨mul_ne_zero lp.ne_zero pp.ne_zero⟩
+  have : NeZero (l * p) := ⟨mul_ne_zero lp.ne_zero pp.ne_zero⟩
   have c1 : h.N.Coprime (l * p) :=
     Nat.Coprime.mul_right (lp.coprime_iff_not_dvd.2 hlN).symm (pp.coprime_iff_not_dvd.2 hpN).symm
   obtain ⟨u, hu, hu'⟩ := UpperTheory.V.Ws.large₂.clsIndep (Ω := Ω) h.N (l * p) c1 a
@@ -624,7 +624,7 @@ theorem UpperTheory.V.Cu.existsTensorSeedTower_holds : ExistsTensorFactorTower :
     · rw [reduction_psi_eq_omega_pow_case_three D hD, MonoidHom.mem_ker.1 a4, MonoidHom.mem_ker.1 a3]
       simp
   have hcomm : commutator (G ℚ Ω) ≤ H :=
-    le_inf (Abelianization.commutator_subset_ker _) (Abelianization.commutator_subset_ker _)
+    le_inf (Group.Abelianization.commutator_le_ker _) (Group.Abelianization.commutator_le_ker _)
   have hψcc : D.ψ D.cc = 1 := by
     have h1 : D.ψ D.cc ^ 2 = 1 := by rw [← map_pow, pow_two, complex_conjugation_sq hD.isCC, map_one]
     have h2 : D.ψ D.cc ^ m = 1 := by rw [← MonoidHom.pow_apply, hm, MonoidHom.one_apply]

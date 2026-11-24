@@ -65,7 +65,7 @@ theorem coeff_rename_outside {σ τ : Type} [Finite σ] (φ : σ → τ) (F : Mv
     coeff ν (MvPowerSeries.subst (fun x => (X (φ x) : MvPowerSeries τ C)) F) = 0 := by
   refine coeff_subst_rename_out φ F ν fun e' he => hs ?_
   rw [← he]
-  exact Finsupp.mapDomain_notin_range _ _ (by rintro ⟨x, hx⟩; exact hr x hx)
+  exact Finsupp.mapDomain_of_notMem_range _ _ (by rintro ⟨x, hx⟩; exact hr x hx)
 
 variable {dd : ℕ}
 
@@ -129,7 +129,7 @@ theorem FBChart.self_raw_first_pairing_eq (Y : FBChart C V O dd) (p : SelfData Y
     rw [show Finsupp.single ((0 : Fin 2), x) 1 + Finsupp.single ((1 : Fin 2), i) 1 =
       E2 ((0 : Fin 2), (x.1, x.2)) ((1 : Fin 2), (i.1, i.2)) from rfl, coeff_E2_sum_hCol_eq_ite]
   simp only [RawChart.sg1, hsg, bil, Fintype.sum_prod_type, Fin.sum_univ_two]
-  simp only [Fin.isValue, if_true, zero_ne_one, one_ne_zero, if_false, mul_zero, Finset.sum_const_zero,
+  simp only [Fin.isValue, ite_true, zero_ne_one, one_ne_zero, ite_false, mul_zero, Finset.sum_const_zero,
     add_zero, zero_add, Finset.mul_sum, mul_neg, Finset.sum_neg_distrib, neg_add]
   congr 1 <;> (congr 1; exact Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => by ring)
 

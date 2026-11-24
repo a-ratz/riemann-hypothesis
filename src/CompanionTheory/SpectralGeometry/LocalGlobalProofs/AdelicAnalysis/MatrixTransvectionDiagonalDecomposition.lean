@@ -172,10 +172,10 @@ theorem artinian_reduced_list_transvec_mul_diagonal_mul_list_transvec
       A = (L.map Matrix.TransvectionStruct.toMatrix).prod * Matrix.diagonal D *
         (L'.map Matrix.TransvectionStruct.toMatrix).prod := by
   classical
-  letI : Fintype (MaximalSpectrum K) := Fintype.ofFinite _
+  let : Fintype (MaximalSpectrum K) := Fintype.ofFinite _
   refine ArtinElem.factor_of_pi (F := fun m : MaximalSpectrum K => K ⧸ m.asIdeal)
     (IsArtinianRing.equivPi K).toRingEquiv (fun m B => ?_) A
-  letI : Field (K ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
+  let : Field (K ⧸ m.asIdeal) := Ideal.Quotient.field m.asIdeal
   exact Matrix.Pivot.exists_list_transvec_mul_diagonal_mul_list_transvec B
 
 end GlobalTheory.CompanionTheory.SW

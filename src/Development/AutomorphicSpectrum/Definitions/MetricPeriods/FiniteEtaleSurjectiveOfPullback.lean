@@ -361,7 +361,7 @@ theorem omBundle_dualFrame {Ω : Type} [Field Ω] {K : Type} [Fintype K] {J : K 
   obtain ⟨hres, hmap⟩ := Lat.restrict_isVBOn _ _ _ _ _ _ _ _ (𝔐.vb (.inr τ))
   obtain ⟨U, hU, b, hb, hf⟩ := hres q trivial
   let B : Module.Basis (Fin D.q) Ω (𝔐.Vgen (.inr τ)) := Module.Basis.mk (hf q trivial hU).1 hb.ge
-  haveI := Module.Finite.of_basis B
+  have := Module.Finite.of_basis B
   have hrk : Module.finrank Ω (𝔐.Vgen (.inr τ)) = D.q := by simpa using Module.finrank_eq_card_basis B
   constructor
   · let C := basisOfLinearIndependentOfCardEqFinrank' φ hφ.1 (by simp [Subspace.dual_finrank_eq, hrk])
@@ -370,7 +370,7 @@ theorem omBundle_dualFrame {Ω : Type} [Field Ω] {K : Type} [Fintype K] {J : K 
     rw [Module.apply_evalEquiv_symm_apply, ← hC, Module.Basis.coord_apply, C.repr_self, Finsupp.single_apply]
   · intro v hv
     have hli : LinearIndependent Ω v := LinearIndependent.of_pairwise_dual_eq_zero_one v φ
-      (fun a b hab => (hv a b).trans (if_neg hab)) (fun a => by rw [hv, if_pos rfl])
+      (fun a b hab => (hv a b).trans (ite_eq_right hab)) (fun a => by rw [hv, ite_eq_left rfl])
     let C := basisOfLinearIndependentOfCardEqFinrank' v hli (by simp [hrk])
     have hC : ⇑C = v := by simp [C]
     have hr : ∀ e a, C.repr e a = φ a e := fun e a => by

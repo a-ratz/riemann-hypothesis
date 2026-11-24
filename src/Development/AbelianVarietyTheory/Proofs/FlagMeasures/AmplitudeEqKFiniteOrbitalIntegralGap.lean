@@ -89,9 +89,9 @@ theorem ampKF : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 := by
     rw [hd']
     show ⟪w, w⟫_ℂ * ⟪y, y'⟫_ℂ / _ = _
     rw [this, one_mul, div_eq_inv_mul]
-  haveI : SigmaFinite μG := hμ.1
-  haveI : SigmaFinite μR := hR.1
-  haveI : SFinite (pairMeas L) := by
+  have : SigmaFinite μG := hμ.1
+  have : SigmaFinite μR := hR.1
+  have : SFinite (pairMeas L) := by
     have : SFinite L.μN := by unfold LocBessel.μN haarLie; infer_instance
     have : SigmaFinite L.μW := L.hμW.1.1
     have : SigmaFinite L.μW' := L.hμW'.1.1
@@ -99,7 +99,7 @@ theorem ampKF : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 := by
   have aG : ∀ᵐ y ∂μG, Matrix.of y ∈ UH (Hpk k r) := by rw [ae_iff]; exact hμ.2.2.1
   have aR : ∀ᵐ y ∂μR, Matrix.of y ∈ RStab k r γ := by rw [ae_iff]; exact hR.2.2.1
   have aν := ae_quot L hR hQ
-  haveI : SFinite ν := sfinite_of_lintegral ν (fun p => ‖pairMaj γ b p‖ₑ) hint.1.enorm
+  have : SFinite ν := sfinite_of_lintegral ν (fun p => ‖pairMaj γ b p‖ₑ) hint.1.eNorm
     (aν.mono fun p hp => by
       have : 0 < pairMaj γ b p :=
         Real.rpow_pos_of_pos (one_pos.trans_le (PI.PolynomialProperness.GN.gN_ge_one (point_mem L hγ hp))) _
@@ -126,7 +126,7 @@ theorem ampKF : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 := by
     conv_lhs => rw [← hinv]
     rw [lintegral_map (f := fun s => f fun i j => (Matrix.of (cj s) * Matrix.of x) i j) (mf.comp mc) mi]
     rfl
-  haveI : SFinite νR := sfinite_of_weil μG νR μR hR.2.1 a₂ m2 hW2
+  have : SFinite νR := sfinite_of_weil μG νR μR hR.2.1 a₂ m2 hW2
   have m1 : Measurable fun q : PairSp k r × Mt k r => stabAct γ (Matrix.of q.2) q.1 :=
     (measurable_fst.fst.fst.prodMk (meas_mul measurable_snd measurable_fst.fst.snd)).prodMk
       (measurable_fst.snd.fst.prodMk (meas_mul (mc.comp measurable_snd) measurable_fst.snd.snd))
@@ -155,7 +155,7 @@ theorem ampKF : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 := by
       hl _ (Submodule.subset_span ⟨_, hG.mul_mem _ hγ _ hx, rfl⟩) v hv,
       hl' _ (Submodule.subset_span ⟨_, hx, rfl⟩) v' hv']
     ext η
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_smul,
+    simp only [smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_smul,
       inner_smul_left, inner_conj_symm]
     congr 1
     ring

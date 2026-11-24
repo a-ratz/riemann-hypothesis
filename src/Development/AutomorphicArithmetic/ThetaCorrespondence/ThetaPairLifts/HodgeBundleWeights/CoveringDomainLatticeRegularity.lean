@@ -219,7 +219,7 @@ theorem coeff_valuation_le_one_almost_all : ∀ (E : Type) [Field E] [NumberFiel
       FractionalIdeal.count z.K p (z.ℓ j).I ≠ 0}).Finite :=
     Set.finite_iUnion fun j => Filter.eventually_cofinite.1 (FractionalIdeal.finite_factors (z.ℓ j).I)
   refine ⟨S₁ ∪ hfin.toFinset, fun p hp F hF hv G hG μ => ?_⟩
-  simp only [Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_iUnion, Set.mem_setOf_eq, not_exists,
+  simp only [Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_iUnion, Set.mem_ofPred_eq, not_exists,
     not_not] at hp
   obtain ⟨hp1, hp2⟩ := hp
   have hgen : ∀ j, Formalism.L2.LamCM.IsLocGen p (1 : z.K) (z.ℓ j).I := fun j =>
@@ -227,7 +227,7 @@ theorem coeff_valuation_le_one_almost_all : ∀ (E : Type) [Field E] [NumberFiel
   obtain ⟨T, iK, hT, hiK⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff z.K p
   obtain ⟨M⟩ := (_root_.GlobalTheory.LamT.locMod_exists E H Dw l Xo c z T iK).1 fun a => (hiK _).2 (p.valuation_le_one a)
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let φ : z.K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ φ z.y
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hz.2.2.2.1]
@@ -458,7 +458,7 @@ theorem class_bound_any_level (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (((l.M ^ Formalism.L2.Pj.DF Dw w : ℕ) : T.Fr) *
       (io (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) *
         ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P)) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hk : ∀ b, KilledBy Xo l.Mb (tp b ^ N) := fun b => by rw [(htp b).1]; exact GlobalTheory.ShortBound.levPt_killed Xo _ _
   obtain ⟨u, n', Bn, j, β₀, hu, h1, h2, h3, h4, h5⟩ := factorisation_pow Xo N ℓ hL.1 hL.2.1 hℓ
   have hA : (u : 𝓞 E) * H.bar (u : 𝓞 E) = ((u ^ 2 : ℕ) : 𝓞 E) := by rw [map_natCast]; push_cast; ring
@@ -492,7 +492,7 @@ theorem exists_smul_nonneg_of_shortRule_any_level (D : D7) (H : ReciprocityTheor
   have hM0 : d.l₂.M ≠ 0 := by have := d.l₂.three_le; omega
   have hc0 : Nat.card (Fin n → LevQ Dw d.l₂) ≠ 0 := by
     rw [GlobalTheory.PlaceInt.card_fun_levQ]; exact pow_ne_zero _ hM0
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   have hS : ∀ p ∈ D.host.condN.primeFactors, p ≠ 0 := fun p hp => (Nat.prime_of_mem_primeFactors hp).ne_zero
   obtain ⟨X, hX⟩ : ∃ X : ℕ, X = (NumberField.discr D.host.E).natAbs * Formalism.L2.Pj.DF Dw w := ⟨_, rfl⟩
   obtain ⟨Q, hQ⟩ : ∃ Q : ℕ, Q = ∏ p ∈ D.host.condN.primeFactors, p ^ X := ⟨_, rfl⟩
@@ -504,7 +504,7 @@ theorem exists_smul_nonneg_of_shortRule_any_level (D : D7) (H : ReciprocityTheor
   obtain ⟨-, ef2, -⟩ := GlobalTheory.PlaceInt.eF_transfer _ _ _ _ Xo c n d Λ
   obtain ⟨T', iT, r, io₂, y₂, C, ζ, z, tp, F, hr, hiT, hfr, hio, hC, hrat, hζ, hz, hgi, htp, hF, hval⟩ :=
     GlobalTheory.PlaceInt.short_value_on_cover _ _ _ _ Xo c n d hlev hnab 1 hroot Λ N hU hTM hN w P hP x0 g hsec hR Tc io yI hy
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have : CharZero T'.Fr := algebraRat.charZero _
   have ho' := ho.bc iT hr hiT
   have he' : 0 < r * e := ho'.1
   have hu : ¬ IsUnit (ℓ : T'.V) := fun hu => by
@@ -523,7 +523,7 @@ theorem exists_smul_nonneg_of_shortRule_any_level (D : D7) (H : ReciprocityTheor
   rw [finsum_eq_sum_of_fintype, Finset.mul_sum, Finset.mul_sum]
   refine le_nval_sum T' _ _ _ _ fun q _ => ?_
   have hq := key q
-  letI := io₂.toAlgebra
+  let := io₂.toAlgebra
   generalize (∑ i, hv d.Xo₂ d.c₂ d.nab₂ y₂.1 (N ^ 2) (fun b => sqN d.Xo₂ N (F q i b))
     (MvPolynomial.map (d.eF : c.F →+* d.c₂.F) P)) = Sm at hq ⊢
   have hb0 : io₂ (d.eF (betaH (Dw := Dw) c Λ)) ≠ 0 := (map_ne_zero io₂).2 ((map_ne_zero d.eF).2 hβ)
@@ -660,7 +660,7 @@ theorem exists_smul_nonneg_of_dvd (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j)
       hlev hnab hunit h3 (fun _ => ⟨ph, 1, x₀, hpin⟩) nab b 0 a hb hdom hn hP hχ htot
     refine GlobalTheory.mem_span_of_map_mem_span_image (Formalism.L2.PjFree.rdU (Formalism.L2.PjFree.Unf.ofPj (Y.U σ)))
       (sec Y.d.Xo₂ Y.d.c₂ a n) hind (shortGen Y.d.Xo₂ Y.d.c₂ nab b 0 a n d) (fun g hg => hg.1) hf'.1 (hsp ?_)
-    exact ⟨hf'.2 _ hσ, fun k x hx => dif_neg hx⟩
+    exact ⟨hf'.2 _ hσ, fun k x hx => dite_eq_right hx⟩
   · obtain ⟨hsec, Λ, N, x0, P, hUn, hTb, hTM, hN, -, hPl, hR⟩ := hg
     obtain ⟨inst, hnab⟩ := hnab
     obtain ⟨t, ht, hb'⟩ := exists_smul_nonneg_of_shortRule_any_level D _ _ _ Y.d.Xo₂ Y.d.c₂ n d hlev hnab
@@ -933,7 +933,7 @@ theorem exists_dom_exponents_bar : ∀ (E : Type) [Field E] [NumberField E] [IsC
     · simp [ex, exOf, exZ, wtOf]
     · have hi : (i : ℕ) < Dw.mult τ := i.2
       show (((if (i : ℕ) < Dw.mult τ then (val (τ, (i : ℕ))).toNat else 0 : ℕ)) : ℤ) = _
-      rw [if_pos hi, Int.toNat_of_nonneg (nonneg τ i hi)]
+      rw [ite_eq_left hi, Int.toNat_of_nonneg (nonneg τ i hi)]
       rw [Pi.add_apply, Pi.smul_apply]
       show _ = (k + 1) • (wtOf Dw la 0).1 (τ, (i : ℕ)) +
         (wtOf Dw (GlobalTheory.FlatLine.parWt Dw fun τ => (N : ℤ) * w τ) (M : ℤ)).1 (τ, (i : ℕ))
@@ -1063,7 +1063,7 @@ theorem exists_idem_zero {w : HeightOneSpectrum (𝓞 c.F)} {v : Rul Xo c → ER
     rcases y with ⟨q, T, io, e, ho, y, hy, eta, heta, rfl⟩
     show nval T.V e (evI y 1) = 0
     have h1 : evI y 1 = 1 := by
-      letI := io.toAlgebra
+      let := io.toAlgebra
       exact evalAt_one _ _ y.1 y.2.1
     rw [h1, nval_of_ne one_ne_zero]
     simp [vV]
@@ -1073,8 +1073,8 @@ theorem exists_idem_zero {w : HeightOneSpectrum (𝓞 c.F)} {v : Rul Xo c → ER
     have hd := vAtV_mul y (GlobalTheory.FlatLine.idem Z) (GlobalTheory.FlatLine.idem Z)
     rw [GlobalTheory.FlatLine.idem_mul_idem] at hd
     exact (eq_zero_or_top_of_double (vAtV_ne_bot y _) hd).resolve_left (hne Z)
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   classical
   have hs : ∀ s : Finset (Comp Xo c), vAtV y (∑ Z ∈ s, GlobalTheory.FlatLine.idem Z) = ⊤ := by
     intro s
@@ -1092,8 +1092,8 @@ theorem exists_idem_zero {w : HeightOneSpectrum (𝓞 c.F)} {v : Rul Xo c → ER
 
 theorem exists_smul_nonneg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K ρ : Rul Xo c) (a : Comp Xo c → c.F), (∀ Z, a Z ≠ 0) → (∀ Z, GlobalTheory.FlatLine.idem Z * ρ ^ 4 = a Z • (GlobalTheory.FlatLine.idem Z * K)) → (∀ (w : HeightOneSpectrum (𝓞 c.F)), ∀ v ∈ valSet Xo c (algCls Xo c) w, 0 ≤ v K) → ∃ t : c.F, t ≠ 0 ∧ ∀ (w : HeightOneSpectrum (𝓞 c.F)), ∀ v ∈ valSet Xo c (algCls Xo c) w, 0 ≤ v (t • ρ) := by
   intro E _ _ _ H Dw l Xo c K ρ a ha hρ hK
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   obtain ⟨s, hs0, hsa⟩ := exists_common_denom a
   refine ⟨(s : c.F), hs0, fun w v hv => ?_⟩
   have hKv := hK w v hv
@@ -1152,12 +1152,12 @@ theorem dual_ext {R R' : Type} [CommRing R] [CommRing R'] (F₁ F₂ : DualNumbe
 
 theorem generates_of_flat {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {R R₂ : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [CommRing R₂] [IsDomain R₂] (φ : R →+* R₂) (hφ : Function.Injective φ) (G : SAB H (Sp R)) (G₂ : SAB H (Sp R₂)) (m : SABMap G₂ G (spMap φ)) (wI : G₂.PP.L.Iso (G.PP.L.pull m.φ)) (hwI : LB.Gen.IsGen wI) (θ : G.PP.L.Sec) (θ₂ : G₂.PP.L.Sec) (hθ : IsoMaps wI θ₂ (thfPull G.PP.L m.φ θ)) : Generates (X := G.G) θ → Generates (X := G₂.G) θ₂ := by
   intro hgen
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : FaithfulSMul R R₂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hφ
   have : Module.Flat R R₂ := inferInstance
-  haveI : IsSeparated G.G.hom := G.semi.separated
-  haveI : QuasiCompact G.G.hom := G.semi.quasiCompact
-  haveI : CompactSpace G.G.left := QuasiCompact.compactSpace_of_compactSpace G.G.hom
+  have : IsSeparated G.G.hom := G.semi.separated
+  have : QuasiCompact G.G.hom := G.semi.quasiCompact
+  have : CompactSpace G.G.left := QuasiCompact.compactSpace_of_compactSpace G.G.hom
   have hinter : ∀ U W : G.G.left.Opens, IsAffineOpen U → IsAffineOpen W → IsAffineOpen (U ⊓ W) :=
     fun U W hU hW => isAffineHom_diagonal_iff.mp (inferInstance : IsAffineHom (pullback.diagonal G.G.hom)) ⊤
       (isAffineOpen_top _) U le_top W le_top hU hW
@@ -1477,7 +1477,7 @@ theorem exists_tied_det_any {κ : KeyRule} (hκ : IsKeyRule κ) (hpq : 1 ≤ Dw.
       (∀ τ k a, (A a).mulVec (U τ k) = τ' τ a • U τ k) ∧
       (κ T.Fr Φ.key : T.Fr) =
         algebraMap T.V T.Fr ((Matrix.of fun j k => U (e j).1 (e j).2 k).det ^ 4 * (u : T.V)) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, t', m1, m2, ⟨ub, u1, u2, u3, u4⟩, θ, hθ, w1, w2, σ, s1, θ2, r1, r2, i1, i2, hp, hs⟩ := hy
   obtain ⟨U₀, hU₀, hg₀⟩ := GlobalTheory.CM.exists_pat_of_obj E H Dw l _ _ _ _ Xo.univ
   obtain ⟨⟨P, rfl, hPg⟩, -⟩ := GlobalTheory.CM.PAT.exists_of_sabMap E H _ _ y.x U₀ t' (hU₀ ▸ m1)
@@ -1532,7 +1532,7 @@ theorem key_valuation_nonneg : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalTheory.
   intro κ hκ E _ _ _ H Dw l Xo c g e K hpq _ hK w v hv
   classical
   obtain ⟨⟨_, T, io, r, ho, y, -, η, -, rfl⟩, rfl⟩ := hv
-  letI := io.toAlgebra
+  let := io.toAlgebra
   choose τ' hτ using fun τ : E →+* ℂ => GlobalTheory.EtaVal.exists_base_map_of_overLa (β := embK c τ)
     (fun a => w.valuation_le_one (K := c.F) (RingOfIntegers.mapRingHom (embF c τ) a)) T io r ho
   replace hτ : ∀ τ a, algebraMap T.V T.Fr (τ' τ a) = io (embK c τ a) := fun τ a => DFunLike.congr_fun (hτ τ) a
@@ -1671,7 +1671,7 @@ theorem eq_of_mem_secZ {e e' : Ix Dw → ℤ} {f : Rul Xo c} (hf : f ∈ GlobalT
   have hw : ∀ d : Ix Dw → ℤ, ((∏ j, t j ^ d j : (p.R)ˣ) : p.R) = algebraMap c.F p.R ((2 : c.F) ^ d i) := by
     intro d
     rw [Finset.prod_eq_single i]
-    · simp only [t, Pi.mulSingle_eq_same, ← map_zpow, Units.coe_map, MonoidHom.coe_coe, Units.val_zpow_eq_zpow_val,
+    · simp only [t, Pi.mulSingle_eq_same, ← map_zpow, Units.coe_map, MonoidHom.coe_ofClass, Units.val_zpow_eq_zpow_val,
         u0, Units.val_mk0]
     · intro j _ hj
       simp [t, Pi.mulSingle_eq_of_ne hj]
@@ -1770,7 +1770,7 @@ theorem pow_mul_mem_cusp_of_unit : _root_.GlobalTheory.CovTop.PublishedHodgeBund
     rw [hexG, heq, add_sub_cancel_left]; exact hRsec
   have hGe : Even G.2 := by
     have h2 : G.2 = (n : ℤ) := by simp [hG, wtZ, GlobalTheory.AllWt.wtOf_snd]
-    rw [h2]; exact (Int.even_coe_nat n).2 hDom.2
+    rw [h2]; exact (Int.even_natCast n).2 hDom.2
   have hdec : ∀ (τ : D.host.E →+* ℂ) (i j' : ℕ), i ≤ j' → j' < (T.Q.Dw j).mult τ → G.1 (τ, j') ≤ G.1 (τ, i) := by
     have hne : ∀ (τ : D.host.E →+* ℂ) (m : ℕ) (hm : m + 1 < (T.Q.Dw j).mult τ), G.1 (τ, m + 1) ≤ G.1 (τ, m) := by
       intro τ m hm
@@ -1929,7 +1929,7 @@ theorem weight_lattice_fg_on_domain : _root_.GlobalTheory.CovTop.PublishedHodgeB
     2 < Module.finrank ℚ D.host.E / 2 → 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → ∀ la : GlobalTheory.AllWt.Weight (T.Q.Dw j), (∀ τ, Antitone (la τ)) → (∀ τ, 1 ≤ gap (la τ) ((T.Q.Dw j).p - 1)) →
     FiniteDimensional Y.d.c₂.F (Y.V (wtOf _ la 0)) → (GlobalTheory.AllWt.latW Y.U (wtOf _ la 0)).FG := by
   intro hP D T j Y e o hG hE hp hq la hA hb hfd
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   refine GlobalTheory.fg_of_integral_functionals Y.d.c₂.F (Y.V (wtOf _ la 0)) _ fun x hx => ?_
   obtain ⟨z, La, y, hz, hyx, hne⟩ := _root_.GlobalTheory.T.cmPoint_detects_dominant_covering hP D T j Y e o hG hE hp hq la hA hb (fun _ => rfl) x.1 x.2
     (fun h => hx (Subtype.ext h))

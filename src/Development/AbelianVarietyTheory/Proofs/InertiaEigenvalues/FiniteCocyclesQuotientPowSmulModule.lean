@@ -72,9 +72,9 @@ theorem finite_cocycles_of_finite_h1 {R : Type*} [CommRing R] {H : Type*} [Group
     {Q : Type*} [AddCommGroup Q] [Module R Q] [TopologicalSpace Q] [IsTopologicalAddGroup Q]
     [ContinuousConstSMul R Q] [Finite Q] (σ : Representation R H Q) [Finite (H1 σ)] :
     Finite (Z1 σ) := by
-  haveI : Finite ((B1 σ).comap (Z1 σ).subtype) := by
-    haveI : Finite (B1 σ) := by
-      haveI : Finite (Set.range (d0 σ)) := Set.finite_range _
+  have : Finite ((B1 σ).comap (Z1 σ).subtype) := by
+    have : Finite (B1 σ) := by
+      have : Finite (Set.range (d0 σ)) := Set.finite_range _
       exact Finite.of_injective (fun x : B1 σ => (⟨x.1, x.2⟩ : Set.range (d0 σ)))
         (fun x y h => Subtype.ext (congrArg Subtype.val h))
     exact Finite.of_injective (fun x : (B1 σ).comap (Z1 σ).subtype => (⟨x.1.1, x.2⟩ : B1 σ))
@@ -127,16 +127,16 @@ namespace GlobalTheory.LocDualInt
 theorem finite_cocycles_quotient_pow_smul_module : Formalism.GaloisCohomology.LocalTateDualityK → ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[p] (PadicAlgCl p)} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] {G : Type} [Group G] [TopologicalSpace G] {M : Type} [AddCommGroup M] [Module O M] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul O M] [CompactSpace M], FiniteDimensional ℚ_[p] K → (p : O) ∈ IsLocalRing.maximalIdeal O → ∀ (i : G ≃ₜ* Formalism.GaloisCohomology.GK p K) (ρ : Representation O G M), ContAction ρ → ∀ ϖ : O, Irreducible ϖ → (∀ n : ℕ, IsOpen ((powSub (M := M) ϖ n : Submodule O M) : Set M)) → ∀ n : ℕ, (Z1 (quotRep ρ ϖ n) : Set (G → M ⧸ powSub (M := M) ϖ n)).Finite := by
   intro hT p _ K O _ _ _ G _ _ M _ _ _ _ _ _ hK hp i ρ hρ ϖ hϖ hopen n
   have hmk := Submodule.isOpenQuotientMap_mkQ (powSub (M := M) ϖ n)
-  haveI hdisc : DiscreteTopology (M ⧸ powSub (M := M) ϖ n) := by
+  have hdisc : DiscreteTopology (M ⧸ powSub (M := M) ϖ n) := by
     rw [discreteTopology_iff_isOpen_singleton_zero, ← hmk.isQuotientMap.isOpen_preimage]
     convert hopen n using 1
     ext x
     simp [Submodule.Quotient.mk_eq_zero]
-  haveI : CompactSpace (M ⧸ powSub (M := M) ϖ n) :=
+  have : CompactSpace (M ⧸ powSub (M := M) ϖ n) :=
     ⟨by simpa [hmk.surjective.range_eq] using isCompact_univ.image hmk.continuous⟩
-  haveI : Finite (M ⧸ powSub (M := M) ϖ n) := finite_of_compact_of_discrete
+  have : Finite (M ⧸ powSub (M := M) ϖ n) := finite_of_compact_of_discrete
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · haveI : Subsingleton (M ⧸ powSub (M := M) ϖ 0) := by
+  · have : Subsingleton (M ⧸ powSub (M := M) ϖ 0) := by
       refine ⟨fun a b => ?_⟩
       induction a using Submodule.Quotient.induction_on with | _ x => ?_
       induction b using Submodule.Quotient.induction_on with | _ y => ?_
@@ -151,8 +151,8 @@ theorem finite_cocycles_quotient_pow_smul_module : Formalism.GaloisCohomology.Lo
     push_cast
     rw [← ha, mul_pow, mul_comm, mul_smul]
     exact smul_mem_powSub ϖ n _
-  letI : Module (ZMod (p ^ n)) (M ⧸ powSub (M := M) ϖ n) := AddCommGroup.zmodModule kill
-  haveI : ContinuousConstSMul (ZMod (p ^ n)) (M ⧸ powSub (M := M) ϖ n) :=
+  let : Module (ZMod (p ^ n)) (M ⧸ powSub (M := M) ϖ n) := AddCommGroup.zmodModule kill
+  have : ContinuousConstSMul (ZMod (p ^ n)) (M ⧸ powSub (M := M) ϖ n) :=
     ⟨fun _ => continuous_of_discreteTopology⟩
   have hcont : ContAction ((quotRep ρ ϖ n).comp i.symm.toMonoidHom) := by
     refine continuous_prod_of_discrete_right.2 fun q => ?_
@@ -160,10 +160,10 @@ theorem finite_cocycles_quotient_pow_smul_module : Formalism.GaloisCohomology.Lo
     show Continuous fun g => quotRep ρ ϖ n (i.symm g) (Submodule.Quotient.mk x)
     simp only [quotRep_mk]
     exact hmk.continuous.comp (hρ.comp (i.symm.continuous.prodMk continuous_const))
-  haveI := (GlobalTheory.finite_H1_H2_of_localTateDuality hT p K hK n (M ⧸ powSub (M := M) ϖ n)
+  have := (GlobalTheory.finite_H1_H2_of_localTateDuality hT p K hK n (M ⧸ powSub (M := M) ϖ n)
     (toZModRep (p ^ n) ((quotRep ρ ϖ n).comp i.symm.toMonoidHom)) hn
     (contAction_toZModRep _ _ hcont)).1
-  haveI := finite_cocycles_of_finite_h1 (toZModRep (p ^ n) ((quotRep ρ ϖ n).comp i.symm.toMonoidHom))
+  have := finite_cocycles_of_finite_h1 (toZModRep (p ^ n) ((quotRep ρ ϖ n).comp i.symm.toMonoidHom))
   exact ((Set.toFinite _).image _).subset (cocycles_subset_image_toZModRestriction (p ^ n) i (quotRep ρ ϖ n))
 
 end GlobalTheory.LocDualInt

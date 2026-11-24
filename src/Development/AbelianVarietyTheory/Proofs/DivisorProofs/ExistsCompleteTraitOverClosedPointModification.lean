@@ -55,7 +55,7 @@ theorem exists_cDvr_injective_isLocalHom (A : Type) [CommRing A] [IsDomain A] [I
     ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsLocalRing W) (ψ : A →+* W),
       GlobalTheory.LN.CDvr W ∧ Function.Injective ψ ∧ IsLocalHom ψ := by
   by_cases h : IsField A
-  · letI := h.toField
+  · let := h.toField
     refine ⟨PowerSeries A, inferInstance, inferInstance, inferInstance, PowerSeries.C, ⟨inferInstance, ?_, ?_⟩,
       RingHom.injective _, inferInstance⟩
     · rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance

@@ -131,7 +131,7 @@ theorem unrAt_of_inert {D : D7} {T : Type} {L : LevCh D T} {μ₀ : T} (hL : L.I
 theorem exists_heckeU_xi : ∀ {D : D7} {T : Type} {L : LevCh D T} {μ₀ : T}, L.Is μ₀ → ∀ t : T,
     ∃ χ : HeckeU D 0, (∀ x, χ.f x = (L.xiH t).1 (finIdl D x)) ∧ ∀ τ, χ.n τ = 0 := by
   intro D T L μ₀ hL t
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   obtain ⟨n, hn, ho⟩ := hL.xi_fin t
   have hu : (L.xiH t).IsUnitary := isUnitary_of_orderDvd hn ho
   have hi : (L.xiH t).HasInf (Formalism.L2.Host.embTau D) 0 := fun k => by

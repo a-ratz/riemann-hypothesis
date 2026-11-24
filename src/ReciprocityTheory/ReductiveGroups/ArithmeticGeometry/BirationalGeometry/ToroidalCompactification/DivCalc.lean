@@ -95,8 +95,8 @@ theorem dvd_of_tensor {V F A : Type} [CommRing V] [IsDomain V] [IsDiscreteValuat
     rw [Subring.coe_one, v.map_one]
     exact lt_irrefl 0
   let iota : V →+* R := (algebraMap V F).codRestrict R h0
-  letI : Algebra V R := iota.toAlgebra
-  haveI hmax : (Ideal.span {ϖ} : Ideal V).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  let : Algebra V R := iota.toAlgebra
+  have hmax : (Ideal.span {ϖ} : Ideal V).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
   have hI : ∀ t ∈ (Ideal.span {ϖ} : Ideal V), (Ideal.Quotient.mk mI).comp iota t = 0 := by
     intro t ht
     obtain ⟨y, rfl⟩ := Ideal.mem_span_singleton'.mp ht
@@ -104,13 +104,13 @@ theorem dvd_of_tensor {V F A : Type} [CommRing V] [IsDomain V] [IsDiscreteValuat
     show 0 < v (algebraMap V F (y * ϖ))
     rw [map_mul, v.map_mul]
     exact lt_of_lt_of_le h1 (le_add_of_nonneg_left (h0 y))
-  letI : Field (V ⧸ (Ideal.span {ϖ} : Ideal V)) := Ideal.Quotient.field _
+  let : Field (V ⧸ (Ideal.span {ϖ} : Ideal V)) := Ideal.Quotient.field _
   let phi : V ⧸ (Ideal.span {ϖ} : Ideal V) →+* R ⧸ mI :=
     Ideal.Quotient.lift (Ideal.span {ϖ}) ((Ideal.Quotient.mk mI).comp iota) hI
-  haveI : Nontrivial (R ⧸ mI) :=
+  have : Nontrivial (R ⧸ mI) :=
     ⟨⟨1, 0, fun e => hm1 (Ideal.Quotient.eq_zero_iff_mem.mp ((map_one (Ideal.Quotient.mk mI)).trans e))⟩⟩
-  letI : Algebra (V ⧸ (Ideal.span {ϖ} : Ideal V)) (R ⧸ mI) := phi.toAlgebra
-  haveI : IsScalarTower V (V ⧸ (Ideal.span {ϖ} : Ideal V)) (R ⧸ mI) :=
+  let : Algebra (V ⧸ (Ideal.span {ϖ} : Ideal V)) (R ⧸ mI) := phi.toAlgebra
+  have : IsScalarTower V (V ⧸ (Ideal.span {ϖ} : Ideal V)) (R ⧸ mI) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨lam, hlam⟩ := LinearMap.exists_leftInverse_of_injective
     (Algebra.linearMap (V ⧸ (Ideal.span {ϖ} : Ideal V)) (R ⧸ mI)) (LinearMap.ker_eq_bot.mpr phi.injective)
@@ -205,11 +205,11 @@ theorem gs_stalkMap (r : Z ⟶ X) (z : Z) (U : X.Opens) (h : r z ∈ U) (f : Γ(
 
 theorem dvd_descend (r : Z ⟶ X) [Flat r] (z : Z) {a b : X.presheaf.stalk (r z)}
     (h : (r.stalkMap z).hom a ∣ (r.stalkMap z).hom b) : a ∣ b := by
-  letI : Algebra (X.presheaf.stalk (r z)) (Z.presheaf.stalk z) := (r.stalkMap z).hom.toAlgebra
-  haveI : Module.Flat (X.presheaf.stalk (r z)) (Z.presheaf.stalk z) := Flat.stalkMap r z
-  haveI : IsLocalHom (algebraMap (X.presheaf.stalk (r z)) (Z.presheaf.stalk z)) :=
+  let : Algebra (X.presheaf.stalk (r z)) (Z.presheaf.stalk z) := (r.stalkMap z).hom.toAlgebra
+  have : Module.Flat (X.presheaf.stalk (r z)) (Z.presheaf.stalk z) := Flat.stalkMap r z
+  have : IsLocalHom (algebraMap (X.presheaf.stalk (r z)) (Z.presheaf.stalk z)) :=
     inferInstanceAs (IsLocalHom (r.stalkMap z).hom)
-  haveI : Module.FaithfullyFlat (X.presheaf.stalk (r z)) (Z.presheaf.stalk z) :=
+  have : Module.FaithfullyFlat (X.presheaf.stalk (r z)) (Z.presheaf.stalk z) :=
     Module.FaithfullyFlat.of_flat_of_isLocalHom
   rw [← Ideal.mem_span_singleton] at h ⊢
   rw [← Ideal.comap_map_eq_self_of_faithfullyFlat (B := Z.presheaf.stalk z) (Ideal.span {a}),
@@ -219,8 +219,8 @@ theorem dvd_descend (r : Z ⟶ X) [Flat r] (z : Z) {a b : X.presheaf.stalk (r z)
 theorem cst_regular [IsDomain V] (p : X ⟶ Sp V) [Flat p] (x : X) {a : V} (ha : a ≠ 0) : IsLeftRegular (cst p x a) := by
   have hU : IsAffineOpen (⊤ : (Sp V).Opens) := isAffineOpen_top _
   let y : (⊤ : (Sp V).Opens) := ⟨p x, trivial⟩
-  haveI := hU.isLocalization_stalk y
-  letI : Algebra Γ(Sp V, ⊤) ((Sp V).presheaf.stalk (p x)) :=
+  have := hU.isLocalization_stalk y
+  let : Algebra Γ(Sp V, ⊤) ((Sp V).presheaf.stalk (p x)) :=
     TopCat.Presheaf.algebra_section_stalk (Sp V).presheaf y
   have hloc : Module.Flat Γ(Sp V, ⊤) ((Sp V).presheaf.stalk (p x)) :=
     IsLocalization.flat _ (hU.primeIdealOf y).asIdeal.primeCompl
@@ -240,8 +240,8 @@ theorem cst_regular [IsDomain V] (p : X ⟶ Sp V) [Flat p] (x : X) {a : V} (ha :
     unfold gs
     rw [dite_eq_left (show p x ∈ (⊤ : (Sp V).Opens) from trivial)]
     exact Scheme.Hom.germ_stalkMap_apply p ⊤ x trivial _
-  letI : Algebra V (X.presheaf.stalk x) := φ.toAlgebra
-  haveI : Module.Flat V (X.presheaf.stalk x) := hφ
+  let : Algebra V (X.presheaf.stalk x) := φ.toAlgebra
+  have : Module.Flat V (X.presheaf.stalk x) := hφ
   have hreg := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := X.presheaf.stalk x)
     (mem_nonZeroDivisors_of_ne_zero ha)
   intro s s' hss
@@ -292,7 +292,7 @@ theorem exists_div [IsDomain V] (p : X ⟶ Sp V) [Flat p] {a : V} (ha : a ≠ 0)
       (X.presheaf.map iU.op).hom f = constFn p U a * g := by
     rintro ⟨x, hx⟩
     obtain ⟨c, hc⟩ := h x hx
-    obtain ⟨U₁, hx₁, g₁, hg₁⟩ := TopCat.Presheaf.germ_exist X.presheaf c
+    obtain ⟨U₁, hx₁, g₁, hg₁⟩ := TopCat.Presheaf.exists_germ_eq X.presheaf c
     have he : (X.presheaf.germ W x hx).hom f = (X.presheaf.germ U₁ x hx₁).hom (constFn p U₁ a * g₁) := by
       rw [map_mul, hcst x hx₁, ← hgs x hx, hc]
       exact congrArg _ hg₁.symm

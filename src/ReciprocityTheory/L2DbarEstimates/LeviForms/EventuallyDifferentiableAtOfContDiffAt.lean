@@ -81,14 +81,14 @@ theorem wd_add {j : Fin n} {f g : V n → ℂ} {x : V n} (hf : DifferentiableAt 
     (hg : DifferentiableAt ℝ g x) : wd n j (fun y => f y + g y) x = wd n j f x + wd n j g x := by
   unfold wd
   rw [(show HasFDerivAt (fun y => f y + g y) _ x from hf.hasFDerivAt.add hg.hasFDerivAt).fderiv]
-  simp only [ ContinuousLinearMap.add_apply]
+  simp only [ add_apply]
   ring
 
 theorem wdb_add {j : Fin n} {f g : V n → ℂ} {x : V n} (hf : DifferentiableAt ℝ f x)
     (hg : DifferentiableAt ℝ g x) : wdb n j (fun y => f y + g y) x = wdb n j f x + wdb n j g x := by
   unfold wdb
   rw [(show HasFDerivAt (fun y => f y + g y) _ x from hf.hasFDerivAt.add hg.hasFDerivAt).fderiv]
-  simp only [ ContinuousLinearMap.add_apply]
+  simp only [ add_apply]
   ring
 
 theorem wd_sum {ι : Type*} (s : Finset ι) {j : Fin n} {f : ι → V n → ℂ} {x : V n}
@@ -99,7 +99,7 @@ theorem wd_sum {ι : Type*} (s : Finset ι) {j : Fin n} {f : ι → V n → ℂ}
     simp [Finset.sum_apply]
   unfold wd
   rw [e, (HasFDerivAt.sum fun i hi => (hf i hi).hasFDerivAt).fderiv]
-  simp only [ ContinuousLinearMap.sum_apply, Finset.mul_sum,
+  simp only [ sum_apply, Finset.mul_sum,
     ← Finset.sum_sub_distrib, Finset.sum_div]
 
 theorem wdb_sum {ι : Type*} (s : Finset ι) {j : Fin n} {f : ι → V n → ℂ} {x : V n}
@@ -110,7 +110,7 @@ theorem wdb_sum {ι : Type*} (s : Finset ι) {j : Fin n} {f : ι → V n → ℂ
     simp [Finset.sum_apply]
   unfold wdb
   rw [e, (HasFDerivAt.sum fun i hi => (hf i hi).hasFDerivAt).fderiv]
-  simp only [ ContinuousLinearMap.sum_apply, Finset.mul_sum,
+  simp only [ sum_apply, Finset.mul_sum,
     ← Finset.sum_add_distrib, Finset.sum_div]
 
 theorem wd_mul {j : Fin n} {f g : V n → ℂ} {x : V n} (hf : DifferentiableAt ℝ f x)
@@ -118,8 +118,8 @@ theorem wd_mul {j : Fin n} {f g : V n → ℂ} {x : V n} (hf : DifferentiableAt 
     wd n j (fun y => f y * g y) x = wd n j f x * g x + f x * wd n j g x := by
   unfold wd
   rw [(show HasFDerivAt (fun y => f y * g y) _ x from hf.hasFDerivAt.mul hg.hasFDerivAt).fderiv]
-  simp only [ ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [ add_apply,
+    smul_apply, smul_eq_mul]
   ring
 
 theorem wdb_mul {j : Fin n} {f g : V n → ℂ} {x : V n} (hf : DifferentiableAt ℝ f x)
@@ -127,8 +127,8 @@ theorem wdb_mul {j : Fin n} {f g : V n → ℂ} {x : V n} (hf : DifferentiableAt
     wdb n j (fun y => f y * g y) x = wdb n j f x * g x + f x * wdb n j g x := by
   unfold wdb
   rw [(show HasFDerivAt (fun y => f y * g y) _ x from hf.hasFDerivAt.mul hg.hasFDerivAt).fderiv]
-  simp only [ ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [ add_apply,
+    smul_apply, smul_eq_mul]
   ring
 
 theorem fderiv_ofReal_apply {v : V n → ℝ} {x : V n} (hv : DifferentiableAt ℝ v x) (w : V n) :

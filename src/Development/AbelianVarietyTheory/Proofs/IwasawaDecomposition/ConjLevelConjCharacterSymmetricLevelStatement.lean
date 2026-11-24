@@ -647,7 +647,7 @@ theorem comb (hn : n = 2 * ρ + k + 1) (e f : Fin ρ → M) (z : M) (b ε εd : 
     rw [hd, fl_b f e _ (-z) j (Fin.rev a) (by rw [Fin.val_rev]; omega), ← img_rev hn f e b (-z) a.2.le,
       Fin.rev_rev] at this
     exact this
-  simp only [hcol, Set.mem_setOf_eq, symAllowed]
+  simp only [hcol, Set.mem_ofPred_eq, symAllowed]
   constructor
   · intro H
     refine ⟨⟨fun a => ?_, ?_, fun a => ?_⟩, fun a => ?_, ?_, fun a => ?_⟩

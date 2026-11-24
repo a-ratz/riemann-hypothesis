@@ -390,8 +390,8 @@ theorem LevelTowerAlt.holomorphic_family_smooth_hermitian : ∀ (E : Type) [Fiel
   rcases U.eq_empty_or_nonempty with rfl | ⟨t1, ht1⟩
   · refine ⟨fun i j => ⟨contDiffOn_empty, contDiffOn_empty⟩, fun a x => differentiableOn_empty, fun m u _ _ => ?_⟩
     exact isPsh_of_tangent (continuousOn_empty _) fun t0 h => absurd h (Set.notMem_empty t0)
-  haveI := (R t1).free
-  haveI := (R t1).fin
+  have := (R t1).free
+  have := (R t1).fin
   let e : Module.Basis (Fin g ⊕ Fin g) ℤ Λ :=
     (Module.finBasisOfFinrankEq ℤ Λ (n := g + g) (by rw [(R t1).rank, two_mul])).reindex finSumFinEquiv.symm
   have hK : (frm (R t1).form e).det ≠ 0 := frm_det (R t1).unimod.1 e

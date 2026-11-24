@@ -67,7 +67,7 @@ theorem G5.ptsIntegral_curve_const (W : Ideal (MRing ι)) (hW1 : IsArithVar W 1)
   have hpts := GroundTheory.Heights₂.Heights.PtsIntegralPoints.homogProof K ι W (fun _ => c) hW1.2.1.2.1 hfin
     (fun _ _ _ _ => rfl)
   rw [hpot, hpts]
-  letI := Fintype.ofFinite (GroundTheory.Heights₂.Heights.projPts W)
+  let := Fintype.ofFinite (GroundTheory.Heights₂.Heights.projPts W)
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
     GroundTheory.Heights₂.Heights.degC_eq_card_projPts, Nat.card_eq_fintype_card]
   ring

@@ -55,7 +55,7 @@ theorem unitHecke : UnitHecke := by
   intro E _ _ _ n a b w
   have hG : ∀ m : ℕ, IsOpen (KGL w (n := m) : Set (GLw m w)) ∧ IsCompact (KGL w (n := m) : Set (GLw m w)) :=
     fun m => GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w m
-  have hKLo : IsOpen (KL n w : Set (UL n w)) := (hG n).1.preimage continuous_subtype_val
+  have hKLo : IsOpen (KL n w : Set (UL n w)) := (hG n).1.preimage continuous_subtypeVal
   have hKLc : IsCompact (KL n w : Set (UL n w)) := GlobalTheory.LocFinU.isCompact_KL n w
   refine ⟨hKLo, ⟨?_, ?_⟩, (hG n).1, (hG n).2, ?_, ?_, ?_⟩
   · have hcl : IsClosed (KL n w : Set (UL n w)) := Subgroup.isClosed_of_isOpen _ hKLo

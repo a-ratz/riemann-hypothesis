@@ -90,7 +90,7 @@ theorem maMeasure_bdry_eq_zero {e : ℕ} {X : Type} [TopologicalSpace X] [Compac
   have hInt : interior (bdry s) = ∅ := LeviFormBoundaryTopology.interior_bdry_eq_empty hS hSNC
   unfold maMeasure
   split_ifs with h
-  · simp only [Measure.coe_finsetSum, Finset.sum_apply]
+  · simp only [FunLike.coe_sum, Finset.sum_apply]
     refine Finset.sum_eq_zero fun j _ => ?_
     have hT := (A.chart j).open_target.measurableSet
     rw [Measure.map_apply_of_aemeasurable (((A.chart j).continuousOn_symm.aemeasurable hT).mono_ac
@@ -248,8 +248,8 @@ theorem conv_tail_split : ∀ {X : Type} [MeasurableSpace X] {l : Filter ℝ} (�
       ∫⁻ y in (E R)ᶜ, ‖f y‖ₑ ∂ν ≤ ENNReal.ofReal (b R) →
       ‖∫ y in (E R)ᶜ, f y ∂ν‖ ≤ max (b R) 0 := by
     intro ν f R h2
-    have h5 := (enorm_integral_le_lintegral_enorm (μ := ν.restrict (E R)ᶜ) f).trans h2
-    rw [← ofReal_norm_eq_enorm] at h5
+    have h5 := (eNorm_integral_le_lintegral_eNorm (μ := ν.restrict (E R)ᶜ) f).trans h2
+    rw [← ofReal_norm] at h5
     rcases (ENNReal.ofReal_le_ofReal_iff').1 h5 with h6 | h6
     · exact h6.trans (le_max_left _ _)
     · exact h6.trans (le_max_right _ _)
@@ -286,7 +286,7 @@ theorem conv_tail_enorm : ∀ {X : Type} [MeasurableSpace X] (ν : Measure X) (B
     by_cases hyB : y ∈ B
     · exact Or.inl hyB
     · refine Or.inr ⟨hyB, ?_⟩
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_and, not_le] at hy
+      simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_and, not_le] at hy
       exact (hy hyB).le
   calc ∫⁻ y in {y | y ∉ B ∧ r y ≤ R}ᶜ, ‖f y‖ₑ ∂ν
       ≤ ∫⁻ y in B ∪ (Bᶜ ∩ {y | R ≤ r y}), ‖f y‖ₑ ∂ν := lintegral_mono_set hsub
@@ -295,7 +295,7 @@ theorem conv_tail_enorm : ∀ {X : Type} [MeasurableSpace X] (ν : Measure X) (B
         rw [Measure.restrict_eq_zero.2 hB, lintegral_zero_measure, zero_add]
     _ ≤ ∫⁻ y in Bᶜ ∩ {y | R ≤ r y}, ENNReal.ofReal |c| * ENNReal.ofReal (Real.log (r y)) ∂ν := by
         refine setLIntegral_mono' hSm fun y hy => ?_
-        rw [Real.enorm_eq_ofReal_abs, ← ENNReal.ofReal_mul (abs_nonneg c)]
+        rw [Real.eNorm_eq_ofReal_abs, ← ENNReal.ofReal_mul (abs_nonneg c)]
         exact ENNReal.ofReal_le_ofReal ((hf y hy.1).trans
           (mul_le_mul_of_nonneg_right (le_abs_self c) (hl y hy.1)))
     _ = ENNReal.ofReal |c| * ∫⁻ y in Bᶜ ∩ {y | R ≤ r y}, ENNReal.ofReal (Real.log (r y)) ∂ν :=
@@ -409,7 +409,7 @@ theorem conv_core {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace X] [T2
     intro R
     have : (bdry s)ᶜ ∩ {y | R ≤ rW L s y} = (bdry s)ᶜ \ {y | y ∉ bdry s ∧ rW L s y < R} := by
       ext y
-      simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_setOf_eq, Set.mem_diff, not_and,
+      simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_ofPred_eq, Set.mem_sdiff, not_and,
         not_lt]
       constructor
       · rintro ⟨h1, h2⟩
@@ -448,7 +448,7 @@ theorem conv_core {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace X] [T2
       (fun y hy => hgbd y hy) (fun y _ => hlog y)
       (((hK₁ R hR).2).trans (hKb K₁ (le_max_left _ _)))
   · filter_upwards [hev] with t ht
-    haveI := hμTfin t ht
+    have := hμTfin t ht
     refine ⟨ContinuousOn.integrableOn_compact (hKcpt R) ((hgc t).mono (hKU R)), ?_⟩
     exact conv_tail_enorm _ (bdry s) (rW L s) (gT t) C₆ R _ (hSm R) (hμT0 t ht) (fun y hy => hgb t y hy)
       (fun y _ => hlog y) ((htail t ht R hR).trans (hKb K₂ (le_max_right _ _)))

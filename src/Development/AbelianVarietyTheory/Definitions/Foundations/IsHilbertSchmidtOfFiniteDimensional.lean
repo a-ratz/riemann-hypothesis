@@ -222,10 +222,10 @@ theorem IsTraceClass.hasSum_trace {T : H →L[ℂ] H} (h : IsTraceClass T) (e : 
   obtain ⟨n, B, C, hB, hC, rfl⟩ := h
   have key : ∀ {κ : Type _} (f : HilbertBasis κ ℂ H),
       HasSum (fun i => ⟪f i, (∑ k, B k ∘L C k) (f i)⟫_ℂ) (∑ k, trace (B k ∘L C k)) := fun f => by
-    simpa only [ContinuousLinearMap.sum_apply, inner_sum] using
+    simpa only [sum_apply, inner_sum] using
       hasSum_sum fun k (_ : k ∈ Finset.univ) => hasSum_trace_comp f (hB k) (hC k)
   have h2 : HasSum (fun i => ⟪e i, (∑ k, B k ∘L C k) (e i)⟫_ℂ) (∑ k, trace (B k ∘L C k)) := by
-    simpa only [ContinuousLinearMap.sum_apply, inner_sum] using
+    simpa only [sum_apply, inner_sum] using
       hasSum_sum fun k (_ : k ∈ Finset.univ) => hasSum_trace_comp e (hB k) (hC k)
   rw [show trace (∑ k, B k ∘L C k) = _ from (key (stdBasis (H := H))).tsum_eq]
   exact h2
@@ -250,7 +250,7 @@ theorem exists_comp_eq_of_norm_le {C : H →L[ℂ] K} {A : H →L[ℂ] L} (h : �
   refine ⟨(C : H →ₗ[ℂ] K).extendOfNorm a ∘L M.orthogonalProjection, ?_⟩
   ext x
   have h1 : M.orthogonalProjection (A x) = a x :=
-    Submodule.orthogonalProjection_mem_subspace_eq_self (a x)
+    Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (a x)
   rw [comp_apply, comp_apply, h1]
   exact LinearMap.extendOfNorm_eq hd ⟨1, fun y => by simpa [a] using h y⟩ x
 
@@ -329,7 +329,7 @@ theorem trace_add {S T : H →L[ℂ] H} (hS : IsTraceClass S) (hT : IsTraceClass
 theorem trace_sum {α : Type*} (s : Finset α) {T : α → (H →L[ℂ] H)}
     (h : ∀ a ∈ s, IsTraceClass (T a)) : trace (∑ a ∈ s, T a) = ∑ a ∈ s, trace (T a) := by
   have := hasSum_sum fun a (ha : a ∈ s) => (h a ha).hasSum_trace (stdBasis (H := H))
-  simpa only [trace, ContinuousLinearMap.sum_apply, inner_sum] using this.tsum_eq
+  simpa only [trace, sum_apply, inner_sum] using this.tsum_eq
 
 theorem trace_smul (c : ℂ) (T : H →L[ℂ] H) : trace (c • T) = c * trace T := by
   simp [trace, inner_smul_right, tsum_mul_left]
@@ -409,7 +409,7 @@ def charRep (χ : G →* Circle) : G →* (ℂ →L[ℂ] ℂ) where
 
 theorem isUnitaryRep_charRep {χ : G →* Circle} (hχ : Continuous χ) : IsUnitaryRep (charRep χ) :=
   ⟨fun g v => by simp [charRep, Circle.norm_coe], fun v =>
-    ((continuous_subtype_val.comp hχ).mul continuous_const : Continuous fun g => (χ g : ℂ) * v)⟩
+    ((continuous_subtypeVal.comp hχ).mul continuous_const : Continuous fun g => (χ g : ℂ) * v)⟩
 
 theorem IsUnitaryRep.inner_apply_left {π : G →* (H →L[ℂ] H)} (hπ : IsUnitaryRep π) (g : G)
     (v w : H) : ⟪π g v, w⟫_ℂ = ⟪v, π g⁻¹ w⟫_ℂ := by
@@ -626,7 +626,7 @@ theorem hasTrace_of_finiteRank {H : Type*} [NormedAddCommGroup H] [InnerProductS
     [CompleteSpace H] (T : H →L[ℂ] H) [FiniteDimensional ℂ (LinearMap.range (T : H →ₗ[ℂ] H))] :
     HasTrace T (finRankTrace (T : H →ₗ[ℂ] H)) := by
   let R := LinearMap.range (T : H →ₗ[ℂ] H)
-  have : CompleteSpace R := FiniteDimensional.complete ℂ R
+  have : CompleteSpace R := FiniteDimensional.completeSpace ℂ R
   let c : H →L[ℂ] R := T.codRestrict R fun x => ⟨x, rfl⟩
   have h := isTraceClass_of_finiteDimensional (ContinuousLinearMap.id ℂ R)
   refine ⟨h.comp_comp R.subtypeL c, (h.trace_comp_comp R.subtypeL c).trans ?_⟩

@@ -76,10 +76,10 @@ theorem exists_algHom_of_isTranscendenceBasis {E Ω ι : Type} [Field E] [Algebr
   let g : A →ₐ[K] Ω := (aeval T).comp hv.1.aevalEquiv.symm.toAlgHom
   have hg : Function.Injective g := fun p q h =>
     hv.1.aevalEquiv.symm.injective (algebraicIndependent_iff_injective_aeval.1 hT h)
-  letI : Algebra A Ω := g.toRingHom.toAlgebra
-  haveI : IsScalarTower K A Ω := IsScalarTower.of_algebraMap_eq fun a => (g.commutes a).symm
-  haveI : FaithfulSMul A Ω := (faithfulSMul_iff_algebraMap_injective A Ω).2 hg
-  haveI := hv.isAlgebraic
+  let : Algebra A Ω := g.toRingHom.toAlgebra
+  have : IsScalarTower K A Ω := IsScalarTower.of_algebraMap_eq fun a => (g.commutes a).symm
+  have : FaithfulSMul A Ω := (faithfulSMul_iff_algebraMap_injective A Ω).2 hg
+  have := hv.isAlgebraic
   let j : E →ₐ[A] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -125,11 +125,11 @@ abbrev Gen (F I : Type) [Field F] : Type := AlgebraicClosure (FractionRing (MvPo
 def genX (F I : Type) [Field F] : I → Gen F I := fun i => algebraMap (MvPolynomial I F) _ (X i)
 
 theorem isTranscendenceBasis_genX (F I : Type) [Field F] : IsTranscendenceBasis F (genX F I) := by
-  haveI : Algebra.IsAlgebraic (MvPolynomial I F) (FractionRing (MvPolynomial I F)) :=
+  have : Algebra.IsAlgebraic (MvPolynomial I F) (FractionRing (MvPolynomial I F)) :=
     IsLocalization.isAlgebraic _ (nonZeroDivisors _)
-  haveI : Algebra.IsAlgebraic (MvPolynomial I F) (Gen F I) :=
+  have : Algebra.IsAlgebraic (MvPolynomial I F) (Gen F I) :=
     Algebra.IsAlgebraic.trans _ (FractionRing (MvPolynomial I F)) _
-  haveI : FaithfulSMul (MvPolynomial I F) (Gen F I) := (faithfulSMul_iff_algebraMap_injective _ _).2 <| by
+  have : FaithfulSMul (MvPolynomial I F) (Gen F I) := (faithfulSMul_iff_algebraMap_injective _ _).2 <| by
     rw [IsScalarTower.algebraMap_eq _ (FractionRing (MvPolynomial I F))]
     exact (algebraMap (FractionRing (MvPolynomial I F)) (Gen F I)).injective.comp (IsFractionRing.injective _ _)
   exact (IsTranscendenceBasis.mvPolynomial I F).algebraMap_comp

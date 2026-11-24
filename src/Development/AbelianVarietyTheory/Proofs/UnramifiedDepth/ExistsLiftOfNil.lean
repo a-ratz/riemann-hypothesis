@@ -111,13 +111,13 @@ theorem exists_point_lift {R₀ : Type} [CommRing R₀] (X : Over (Spec (CommRin
     exact hsp.mem_open (x ⁻¹ᵁ U).isOpen hmem
   let a0 : R₀ →+* Γ(X.left, U) :=
     ((Scheme.ΓSpecIso (CommRingCat.of R₀)).inv ≫ X.hom.appLE ⊤ U le_top).hom
-  letI : Algebra R₀ Γ(X.left, U) := a0.toAlgebra
+  let : Algebra R₀ Γ(X.left, U) := a0.toAlgebra
   have hover : hU.fromSpec ≫ X.hom = Spec.map (CommRingCat.ofHom a0) := by
     have h := IsAffineOpen.SpecMap_appLE_fromSpec X.hom
       (isAffineOpen_top (Spec (CommRingCat.of R₀))) hU (le_top : U ≤ X.hom ⁻¹ᵁ ⊤)
     rw [IsAffineOpen.fromSpec_top, Scheme.isoSpec_Spec_inv] at h
     rw [← h, CommRingCat.ofHom_hom, Spec.map_comp]
-  haveI : Algebra.Smooth R₀ Γ(X.left, U) := by
+  have : Algebra.Smooth R₀ Γ(X.left, U) := by
     have h1 : RingHom.Smooth (X.hom.appLE ⊤ U le_top).hom :=
       HasRingHomProperty.appLE (P := @Smooth) X.hom inferInstance
         ⟨⊤, isAffineOpen_top (Spec (CommRingCat.of R₀))⟩ ⟨U, hU⟩ le_top

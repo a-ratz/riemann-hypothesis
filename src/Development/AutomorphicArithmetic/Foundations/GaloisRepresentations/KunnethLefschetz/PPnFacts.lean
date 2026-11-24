@@ -247,7 +247,7 @@ private theorem locNml (k : Type) [Field k] (d : ℕ) : TranscendenceTraces.LocN
   rw [← LSmoothPf.Dp_cover k d] at hs
   obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.mp hs
   obtain ⟨j, hj, -, hr⟩ := chart_holds k d i
-  haveI := hj
+  have := hj
   have hU : j.opensRange = LPdCut.Dp k d i := TopologicalSpace.Opens.ext hr
   refine ⟨j.opensRange, isAffineOpen_opensRange j, hU ▸ hi, ?_⟩
   have e1 := j.appIso ⊤

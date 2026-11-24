@@ -492,7 +492,7 @@ theorem exists_sim_point {h M : ℕ} (hM : 0 < M) (hodd : Odd M) {T : Scheme.{0}
         ((a : (Fin h ⊕ Fin h → ZMod M) ≃ₗ[ZMod M] (Fin h ⊕ Fin h → ZMod M)) v) = (i : ZMod M) * omegaMod M u v) ∧
       β' (zetaAway M) = β (zetaAway M) ^ i ∧
       ∀ c, toUnit (Over.mk y) ≫ l' c = toUnit (Over.mk y) ≫ sympTwist a l c := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hzk : IsPrimitiveRoot (β (zetaAway M)) M := isPrimitiveRoot_map hM.ne' β
   have hzk' : IsPrimitiveRoot (β' (zetaAway M)) M := isPrimitiveRoot_map hM.ne' β'
   let z : kˣ := Units.mk0 _ (hzk.ne_zero hM.ne')
@@ -567,15 +567,15 @@ theorem exists_spMap_eq {A B : Type} [CommRing A] [CommRing B] (f : Sp B ⟶ Sp 
 
 theorem exists_open_eq_cycAway {M : ℕ} (hM : M ≠ 0) {T : Scheme.{0}} (f g : T ⟶ Sp (cycAway M)) (k : Type) [Field k]
     (y : Sp k ⟶ T) (hy : y ≫ f = y ≫ g) : ∃ V : T.Opens, Set.range y ⊆ (V : Set T) ∧ V.ι ≫ f = V.ι ≫ g := by
-  haveI : FormallyUnramified (spMap (algebraMap ℤ (cycAway M))) := by
+  have : FormallyUnramified (spMap (algebraMap ℤ (cycAway M))) := by
     rw [spMap, HasRingHomProperty.Spec_iff (P := @FormallyUnramified)]
     exact RingHom.formallyUnramified_algebraMap.2 (formallyUnramified_cycAway hM ℤ)
-  haveI : LocallyOfFiniteType (spMap (algebraMap ℤ (cycAway M))) := by
+  have : LocallyOfFiniteType (spMap (algebraMap ℤ (cycAway M))) := by
     rw [spMap, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
     exact RingHom.finiteType_algebraMap.2 (finiteType_cycAway M)
   have hab : f ≫ spMap (algebraMap ℤ (cycAway M)) = g ≫ spMap (algebraMap ℤ (cycAway M)) :=
     specZIsTerminal.hom_ext _ _
-  haveI := GlobalTheory.isOpenImmersion_equalizer_ι_of_unramified (spMap (algebraMap ℤ (cycAway M))) hab
+  have := GlobalTheory.isOpenImmersion_equalizer_ι_of_unramified (spMap (algebraMap ℤ (cycAway M))) hab
   refine ⟨(equalizer.ι f g).opensRange, GlobalTheory.range_subset_range_equalizer_ι y hy, ?_⟩
   rw [← cancel_epi (equalizer.ι f g).isoOpensRange.hom, ← Category.assoc, ← Category.assoc,
     Scheme.Hom.isoOpensRange_hom_ι, equalizer.condition]
@@ -588,8 +588,8 @@ theorem false_of_sympLev_zero {M : ℕ} (hM : 2 ≤ M) (hMp : M.Coprime p) {T : 
   have hzk : IsPrimitiveRoot (β (zetaAway M)) M := isPrimitiveRoot_map hM0.ne' β
   obtain ⟨-, onto, -⟩ := hl.2.2 k y β (Units.mk0 _ (hzk.ne_zero hM0.ne')) hβ rfl
   obtain ⟨I, -⟩ := o.geom k y βR hR
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let bs := Module.Free.chooseBasis ℤ D.La
   have hpos : 0 < Module.finrank ℤ D.La := by have := Datum.two_le_finrank_La D; omega
   obtain ⟨i₀⟩ : Nonempty (Module.Free.ChooseBasisIndex ℤ D.La) := by
@@ -633,7 +633,7 @@ theorem exists_local_similitude : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
   have hyq : q ∈ Set.range y :=
     ⟨(⊥ : PrimeSpectrum k), (Scheme.Hom.comp_apply _ _ _).trans (Scheme.fromSpecResidueField_apply q _)⟩
   have hM0 : 0 < M := by omega
-  haveI : NeZero M := ⟨hM0.ne'⟩
+  have : NeZero M := ⟨hM0.ne'⟩
   obtain ⟨β, hβ⟩ := exists_spMap_eq (y ≫ x ≫ s₁)
   obtain ⟨β', hβ'⟩ := exists_spMap_eq (y ≫ x' ≫ s₁)
   obtain ⟨βR, hβR⟩ := exists_spMap_eq (y ≫ t)
@@ -900,7 +900,7 @@ theorem isSympLev_twist {b : Base D R} {N h M : ℕ} (hM : 0 < M) {X : Scheme.{0
     (hlev : IsSympLev u.P h M (zetaAway M) s₁ lev) (a : sympSimGrp h M) (n : ℕ) (ha : IsMultOf a n)
     (σ : cycAway M →+* cycAway M) (hσ : σ (zetaAway M) = zetaAway M ^ n) :
     IsSympLev u.P h M (zetaAway M) (s₁ ≫ spMap σ) (sympTwist a lev) := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨hadd, htor, hgeo⟩ := hlev
   have hres : ∀ {x y : Fin h ⊕ Fin h → ℤ}, reduceMod M x = reduceMod M y → lev x = lev y :=
     fun hxy => lev_eq_of_reduce hM lev hadd htor hxy
@@ -956,7 +956,7 @@ theorem exists_sympActs : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
     IsSympLev u.P h M (zetaAway M) s₁ lev → HarrisTaylorSymplecticLevelFamilyUniversalProperty b N h M s s₁ u lev →
     ∃ ρ : sympSimGrp h M → (X ⟶ X), ρ 1 = 𝟙 X ∧ (∀ a c, ρ (a * c) = ρ a ≫ ρ c) ∧ SympActs s s₁ u lev ρ := by
   intro p _ D R _ b N h M hM X s s₁ u lev hlev huniv
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hζ := isPrimitiveRoot_zetaAway hM.ne'
   have hζM : zetaAway M ^ M = 1 := hζ.pow_eq_one
   have hadd := hlev.1
@@ -1300,8 +1300,8 @@ namespace GlobalTheory.LieDesc
 
 theorem lieMult_descend : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : Base D R) (X Y : Scheme.{0}) (π : X ⟶ Y) (sY : Y ⟶ Sp R) (Ga : Type) [Group Ga] (ρ : Ga → (X ⟶ X)) (A : Over X) [GrpObj A] [IsCommMonObj A] (A₀ : Over Y) [GrpObj A₀] [IsCommMonObj A₀] (φ : A.left ⟶ A₀.left) (act : OActN D.O A) (act₀ : OActN D.O A₀), GlobalTheory.ZM.IsGaloisCover Ga ρ π → IsAbelianScheme A → IsAbelianScheme A₀ → IsGrpPullback A A₀ π φ → (∀ c, (act.act c).left ≫ φ = φ ≫ (act₀.act c).left) → (∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ X) (β : R →+* k), x ≫ (π ≫ sY) = spMap β → ∀ i, LieMult (act.toF D) x (β.comp (b.t i)) D.m) → (∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ Y) (β : R →+* k), x ≫ sY = spMap β → ∀ i, LieMult (act₀.toF D) x (β.comp (b.t i)) D.m) := by
   intro p _ D R _ b X Y π sY Ga _ ρ A _ _ A₀ _ _ φ act act₀ hG _ _ hpb hact hX k _ _ x β hx i
-  haveI : Surjective π := hG.onto
-  haveI : IsFinite π := hG.fin
+  have : Surjective π := hG.onto
+  have : IsFinite π := hG.fin
   obtain ⟨y, rfl⟩ := GlobalTheory.ObjDesc.exists_geomPt_lift π k x
   have hc : ∀ c, ((act.toF D).act c).left ≫ φ = φ ≫ ((act₀.toF D).act c).left := fun c => hact _
   exact (GlobalTheory.LiePull.lieMult_pull _ _ _ A₀ A π φ (act₀.toF D) (act.toF D) hpb hc k y _ D.m).1
@@ -1596,7 +1596,7 @@ theorem exists_repFam_of_levelCover : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p)
 theorem exists_representing_family_of_level_structure : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N M e : ℕ), 3 ≤ N → N.Coprime p → 3 ≤ M → Odd M → M.Coprime p → e.Coprime p → M.Coprime e → (∀ f : D.La →ₗ[ℤ] ℤ, ∃ x, D.EF x = e • f) → HasLevelStructureOfLevel b N (Module.finrank ℤ D.La / 2) M → ∃ F : RepFam b N, IsQProjOver F.s := by
   intro p _ D R _ _ b N M e hN hNp hM hodd hMp hep hMe hperf hrep
   obtain ⟨X, s, s₁, u, lev, hlev, hq, huniv⟩ := hrep
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   obtain ⟨ρ, h1, hmul, hact⟩ := _root_.GlobalTheory.UPel.HT.SympAct.exists_sympActs p D R b N _ M (by omega) X s s₁ u lev hlev huniv
   exact exists_repFam_of_levelCover p D R b N hN hNp X s u _ ρ hq h1 hmul (fun a => (hact a).1)
     (fun a => let ⟨m, _⟩ := (hact a).2.2; ⟨m⟩)

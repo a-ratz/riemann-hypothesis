@@ -133,7 +133,7 @@ theorem isThetaFunO_coord (S T : HSp D) (hr : S.rank ≤ T.rank) (ψ : AddChar (
   · have := hf.smooth k ((coord S T).symm.toAddMonoidHom.comp L) (c2.comp hL)
       (fun t => coord_symm_map_zero S T _ _ (h0 t)) ((coord S T).symm w)
     simpa only [map_add (f := _), AddMonoidHom.comp_apply, AddEquiv.coe_toAddMonoidHom, AddEquiv.toAddMonoidHom_eq_coe,
-      AddMonoidHom.coe_coe, AddEquiv.apply_symm_apply] using this
+      AddMonoidHom.coe_ofClass, AddEquiv.apply_symm_apply] using this
   · have := hf.quasi (γ * S.gram⁻¹)ᵀ (coord S T w)
     rw [← coord_ratW, ← symplOH_eq S T hr] at this
     simpa only [map_add (f := _)] using this
@@ -143,7 +143,7 @@ theorem isThetaFunO_coord (S T : HSp D) (hr : S.rank ≤ T.rank) (ψ : AddChar (
   · have := hf.smooth k ((coord S T).toAddMonoidHom.comp L) (c1.comp hL)
       (fun t => coord_map_zero S T _ _ (h0 t)) (coord S T w)
     simpa only [map_add (f := _), AddMonoidHom.comp_apply, AddEquiv.coe_toAddMonoidHom, AddEquiv.toAddMonoidHom_eq_coe,
-      AddMonoidHom.coe_coe] using this
+      AddMonoidHom.coe_ofClass] using this
 
 theorem coord_gen (S T : HSp D) (β : AF D.host.F) (a : D.host.E) (s : Fin S.rank → D.host.E) (t : Fin T.rank → D.host.E) :
     coord S T (Matrix.of fun i j => β ⊗ₜ[D.host.F] (a * t i * ∑ k, star (s k) * S.gram k j)) =
@@ -164,7 +164,7 @@ theorem coord_mem_latVWS (S T : HSp D) (hr : S.rank ≤ T.rank) (Z : Finset (Hei
     refine (AddSubgroup.closure_le _).2 ?_
     rintro w ⟨α, hα, h0, a, ha, s, hs, t, ht, rfl⟩
     refine AddSubgroup.subset_closure ⟨α, hα, fun v hv => h0 v (not_not.2 hv), a, ha, s, hs, t, ht, ?_⟩
-    simp only [if_pos hr]
+    simp only [ite_eq_left hr]
     exact coord_gen S T _ a s t
   exact this hu
 

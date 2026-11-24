@@ -167,8 +167,8 @@ private theorem exists_section_off_center {X X' : Scheme.{u}} (π : X' ⟶ X) (Z
   have hmem : ∀ y : ↥(((Z.support : Set ↥X))ᶜ), (y : ↥X) ∈ Z.support.compl := fun y => y.2
   have hcont : Continuous (⇑e.inv.base) := e.inv.continuous
   refine ⟨fun y => (e.inv.base ⟨(y : ↥X), hmem y⟩).1, ?_, ?_, ?_⟩
-  · exact continuous_subtype_val.comp
-      (hcont.comp (continuous_subtype_val.subtype_mk hmem))
+  · exact continuous_subtypeVal.comp
+      (hcont.comp (continuous_subtypeVal.subtype_mk hmem))
   · intro y
     have h1 : e.hom.base (e.inv.base ⟨(y : ↥X), hmem y⟩) = ⟨(y : ↥X), hmem y⟩ :=
       hinvhom _ _ e _

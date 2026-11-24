@@ -85,12 +85,12 @@ theorem genT_ngSet (X : PB.Terms τ Rw I H H₁) : (genT X).ngSet = X.genSet := 
 theorem genT_one (X : PB.Terms τ Rw I H H₁) : (genT X).one (genT X).ngSet = X.sc X.genSet := by
   rw [genT_ngSet]
   ext p
-  simp only [PB.Terms.one, PB.Terms.sc, PB.Terms.allPairs, Set.mem_setOf_eq]
+  simp only [PB.Terms.one, PB.Terms.sc, PB.Terms.allPairs, Set.mem_ofPred_eq]
   by_cases h : X.s0 p.1 p.2 = 1 ∧ X.scal p.1 p.2
-  · have e : (genT X).s0 p.1 p.2 = 1 := by simp only [genT]; rw [if_pos h]
+  · have e : (genT X).s0 p.1 p.2 = 1 := by simp only [genT]; rw [ite_eq_left h]
     rw [e]
     exact ⟨fun ⟨a, _⟩ => ⟨a, h.1, h.2⟩, fun ⟨a, _, _⟩ => ⟨a, rfl⟩⟩
-  · have e : (genT X).s0 p.1 p.2 = 2 := by simp only [genT]; rw [if_neg h]
+  · have e : (genT X).s0 p.1 p.2 = 2 := by simp only [genT]; rw [ite_eq_right h]
     rw [e]
     exact ⟨fun ⟨_, b⟩ => absurd b (by norm_num), fun ⟨_, b, c⟩ => absurd ⟨b, c⟩ h⟩
 
@@ -601,7 +601,7 @@ theorem diagNumC_of (hTC : TypedCountC) : DiagNumC := by
       rw [e]
       exact mul_le_mul_of_nonneg_right this (by positivity)
     have a2 : (40 : ℝ) ^ D.R.f ≤ Real.exp 32 ^ D.R.f := pow_le_pow_left₀ (by norm_num) forty_le_exp _
-    have a3 : Real.exp 32 ^ D.R.f = Real.exp (D.R.f * 32) := (Real.exp_nat_mul _ _).symm
+    have a3 : Real.exp 32 ^ D.R.f = Real.exp (D.R.f * 32) := (Real.exp_natCast_mul _ _).symm
     have a4 : Real.exp (D.R.f * 32) ≤ Real.exp t := Real.exp_le_exp.mpr (by linarith)
     linarith
   rw [hGam]

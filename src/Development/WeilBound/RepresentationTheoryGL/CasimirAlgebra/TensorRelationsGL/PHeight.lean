@@ -433,7 +433,7 @@ theorem height_of : TensorGl → Height := by
     ext f
     simp only [LinearMap.comp_apply, LinearMap.proj_apply, LinearMap.smul_apply]
     rw [tE_apply]
-    simp only [hta, if_false, Finset.sum_const_zero, add_zero]
+    simp only [hta, ite_false, Finset.sum_const_zero, add_zero]
     rw [← LinearMap.comp_apply, hψ a b hab]
     rfl
 

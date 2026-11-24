@@ -103,10 +103,10 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
   by_cases hex : ∃ ψ0 : E →+* k, Q ψ0 = P
   swap
   · refine ⟨0, Fin.elim0, Fin.elim0, fun ψ => ?_⟩
-    rw [if_neg (fun h => hex ⟨ψ, (hcond ψ).mp h⟩)]
+    rw [ite_eq_right (fun h => hex ⟨ψ, (hcond ψ).mp h⟩)]
     simp
   obtain ⟨ψ0, hψ0⟩ := hex
-  haveI : CharZero k := ⟨fun a b h => by
+  have : CharZero k := ⟨fun a b h => by
     rw [← map_natCast ψ0, ← map_natCast ψ0 b] at h
     exact Nat.cast_injective (ψ0.injective h)⟩
   have hPmax : P.IsMaximal := hP.isMaximal hP0
@@ -128,7 +128,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
     · have hQ0 : Q ψ ≠ ⊥ := fun h0 => hN0 (by simpa [h0] using hNQ ψ)
       have hQmax : (Q ψ).IsMaximal := (hQp ψ).isMaximal hQ0
       have hnle : ¬ Q ψ ≤ P := fun hle => h (hQmax.eq_of_le hPmax.ne_top hle)
-      obtain ⟨c, hcQ, hcP⟩ := SetLike.not_le_iff_exists.mp hnle
+      obtain ⟨c, hcQ, hcP⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
       exact ⟨c, hcP, fun _ => hcQ⟩
   choose c hcP hcQ using hc
   have hprod : ∏ ψ, c ψ ∉ P := by
@@ -182,7 +182,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
     simp only [map_pow, map_mul]
   rw [hsum]
   by_cases h : Q ψ = P
-  · rw [if_pos ((hcond ψ).mpr h)]
+  · rw [ite_eq_left ((hcond ψ).mpr h)]
     have hp1z : p1.eval (σ ψ b) = 0 := by
       rw [hp1, eval_prod]
       exact Finset.prod_eq_zero (i := ψ) (by simp [h]) (by simp)
@@ -192,7 +192,7 @@ theorem _root_.GlobalTheory.PlaceInt.placeIdem : _root_.ReciprocityTheory.ChartR
         add_zero] at h2
       exact h2
     rw [this, map_one]
-  · rw [if_neg (fun h' => h ((hcond ψ).mp h'))]
+  · rw [ite_eq_right (fun h' => h ((hcond ψ).mp h'))]
     have hp0z : p0.eval (σ ψ b) = 0 := by
       rw [hp0, eval_prod]
       exact Finset.prod_eq_zero (i := ψ) (by simp [h]) (by simp)

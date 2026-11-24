@@ -67,11 +67,11 @@ def ptOverMap {K Ω Ω' : Type} [Field K] [Field Ω] [Field Ω'] [Algebra K Ω] 
 theorem epi_ptOverMap {K Ω Ω' : Type} [Field K] [Field Ω] [Field Ω'] [Algebra K Ω] [Algebra K Ω'] (j : Ω →ₐ[K] Ω') :
     Epi (ptOverMap j).left := by
   change Epi (spMap (j : Ω →+* Ω'))
-  letI := (j : Ω →+* Ω').toAlgebra
-  haveI : Flat (spMap (j : Ω →+* Ω')) := by
+  let := (j : Ω →+* Ω').toAlgebra
+  have : Flat (spMap (j : Ω →+* Ω')) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact (inferInstance : Module.Flat Ω Ω')
-  haveI : Surjective (spMap (j : Ω →+* Ω')) :=
+  have : Surjective (spMap (j : Ω →+* Ω')) :=
     ⟨fun p => ⟨(⊥ : PrimeSpectrum Ω'), Subsingleton.elim (α := PrimeSpectrum Ω) _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
 

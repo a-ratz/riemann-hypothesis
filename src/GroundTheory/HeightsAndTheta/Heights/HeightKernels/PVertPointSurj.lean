@@ -245,9 +245,9 @@ theorem le_of_minimal_prime_over_coord (y : (Σ _ : Unit, T) → K') (t : T) (ht
       · exact absurd h3 (hXtpowQ e)
   have hIQmax : (formIdeal y t ht Q).IsMaximal := by
     have hcomap : (formIdeal y t ht Q).comap (algebraMap ℤ (curveRing y)) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_integral_mem ha0 haIQ (Algebra.IsIntegral.isIntegral a)
+      Ideal.under_ne_bot_of_integral_mem ha0 haIQ (Algebra.IsIntegral.isIntegral a)
     have : ((formIdeal y t ht Q).comap (algebraMap ℤ (curveRing y))).IsPrime := Ideal.IsPrime.comap _
-    letI := hIQprime
+    let := hIQprime
     exact Ideal.isMaximal_of_isIntegral_of_isMaximal_under _ (IsPrime.to_maximal_ideal hcomap)
   have hIQeq : formIdeal y t ht Q = m := hIQmax.eq_of_le hm.ne_top hIQm
 

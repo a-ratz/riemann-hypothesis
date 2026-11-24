@@ -78,17 +78,17 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     (h : ∀ (M : Type) [AddCommGroup M] [Module (ZMod n) M] [TopologicalSpace M] [DiscreteTopology M] [Finite M]
       (ρ : Representation (ZMod n) Γ M), ContAction ρ → Finite (H1 ρ)) : PhiCond Γ n := by
   intro H hH
-  haveI : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
-  haveI : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
-  letI : TopologicalSpace (ZMod n) := ⊥
-  haveI : DiscreteTopology (ZMod n) := ⟨rfl⟩
+  have : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
+  have : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
+  let : TopologicalSpace (ZMod n) := ⊥
+  have : DiscreteTopology (ZMod n) := ⟨rfl⟩
   have hs : ∀ x : Γ ⧸ H, Continuous fun g : Γ => g⁻¹ • x := fun x => continuous_inv.smul continuous_const
   have hc : ContAction (permR (ZMod n) H) := by
     refine continuous_pi fun x => ?_
     have h1 : Continuous fun p : (Γ ⧸ H → ZMod n) × (Γ ⧸ H) => p.1 p.2 := continuous_of_discreteTopology
     exact h1.comp (continuous_snd.prodMk ((hs x).comp continuous_fst))
-  haveI h1 := h _ _ hc
-  haveI : Finite (Z1 (permR (ZMod n) H)) := by
+  have h1 := h _ _ hc
+  have : Finite (Z1 (permR (ZMod n) H)) := by
     have hB : Finite (B1 (permR (ZMod n) H)) := (Set.finite_range _).to_subtype
     have hB' : Finite ((B1 (permR (ZMod n) H)).comap (Z1 (permR (ZMod n) H)).subtype).toAddSubgroup :=
       Finite.of_injective (fun z => (⟨z.1.1, z.2⟩ : B1 (permR (ZMod n) H)))
@@ -126,10 +126,10 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
 
 private theorem phi_surj {Γ Γ' : Type} [Group Γ] [TopologicalSpace Γ] [Group Γ'] [TopologicalSpace Γ'] (π : Γ →* Γ')
     (hc : Continuous π) (hπ : Function.Surjective π) {l : ℕ} (h : PhiCond Γ l) : PhiCond Γ' l := fun H hH => by
-  haveI := h (H.comap π) (hH.preimage hc)
+  have := h (H.comap π) (hH.preimage hc)
   let p : H.comap π →* H := π.subgroupComap H
-  have hp : Continuous p := (hc.comp continuous_subtype_val).subtype_mk _
-  have hs : Function.Surjective p := MonoidHom.subgroupComap_surjective_of_surjective _ _ hπ
+  have hp : Continuous p := (hc.comp continuous_subtypeVal).subtype_mk _
+  have hs : Function.Surjective p := MonoidHom.subgroupComap_surjective _ _ hπ
   refine Finite.of_injective
     (β := {φ : H.comap π →* Multiplicative (ZMod l) // IsOpen (φ.ker : Set (H.comap π))})
     (fun φ => ⟨φ.1.comp p, φ.2.preimage hp⟩) fun φ φ' e => ?_
@@ -138,9 +138,9 @@ private theorem phi_surj {Γ Γ' : Type} [Group Γ] [TopologicalSpace Γ] [Group
 private theorem phi_unr (hGF : GlobalFiniteness) {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ)
     [hl : Fact l.Prime] (S : Finset (HeightOneSpectrum (𝓞 ℚ))) (hS : ContainsAbove S l) (M : Subgroup (G ℚ Ω)) [M.Normal]
     (hM : NS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) ≤ M) : PhiCond (G ℚ Ω ⧸ M) l := by
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI hK : CompactSpace (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) := inferInstance
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have hK : CompactSpace (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) := inferInstance
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have key : PhiCond (GS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ)))) (l ^ 1) := phi_condition_of_finite_cohomology (l ^ 1) fun M _ _ _ _ _ ρ hρ => by
     obtain ⟨-, f1, -⟩ := hGF ℚ Ω l 1 M S ρ one_pos hS hρ
     exact f1
@@ -156,16 +156,16 @@ theorem UpperTheory.V.U3.exists_ring :
     CohInp → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {K : Type} [Field K] [NumberField K] [Algebra K Ω]
       {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N] {e : ℕ} {ψ : DirichletCharacter c.O N} (D : Dat Ω K c e ψ) (U : (_root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition _ (D.η.comp D.ι) (D.Ψ.comp D.ι)))) (g₁ : G ℚ Ω), D.Marked g₁ → Nonempty (D.Ring U g₁) := by
   intro hI Ω _ _ _ K _ _ _ l hl c N hN e ψ D U g₁ hg₁
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨hc, hf, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI := hc
-  haveI : Finite (ResidueField c.O) := hf
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
+  have := hc
+  have : Finite (ResidueField c.O) := hf
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]; exact hlm)
   obtain ⟨-, -, -, hη, hΨ, hK, -, -, -, hKill, -⟩ := dat_facts D
-  haveI : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   obtain ⟨T, hT⟩ := (ramFinite ℚ ℚ K Ω).1
   obtain ⟨-, -, -, -, hIne⟩ := Chr.clsFacts ℚ Ω N
   have hfin : {v : HeightOneSpectrum (𝓞 ℚ) | v.asIdeal ∣ Ideal.span {((l * N : ℕ) : 𝓞 ℚ)}}.Finite :=
@@ -180,7 +180,7 @@ theorem UpperTheory.V.U3.exists_ring :
     have e : algebraMap ℚ Ω (((n : ℕ) : 𝓞 ℚ) : ℚ) = (n : Ω) := by simp
     rw [e] at h
     exact h.1 hn
-  haveI : (Subgroup.normalClosure D.Kill).topologicalClosure.Normal := Subgroup.is_normal_topologicalClosure _
+  have : (Subgroup.normalClosure D.Kill).topologicalClosure.Normal := Subgroup.is_normal_topologicalClosure _
   have hΦ : PhiCond (G ℚ Ω ⧸ (Subgroup.normalClosure D.Kill).topologicalClosure) l := by
     refine phi_unr hI.gf l (T ∪ hfin.toFinset) (fun v hv => hmem v ?_) _
       (Subgroup.topologicalClosure_mono (Subgroup.normalClosure_mono fun g hg => ?_))

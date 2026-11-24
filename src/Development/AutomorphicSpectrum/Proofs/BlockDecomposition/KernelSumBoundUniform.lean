@@ -71,7 +71,7 @@ namespace GlobalTheory.CompanionTheory.ReproBessel
 
 theorem finite_inter_compact {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G]
     (Γ : Subgroup G) [DiscreteTopology Γ] {C : Set G} (hC : IsCompact C) : ((Γ : Set G) ∩ C).Finite := by
-  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discreteTopology
   have hK : IsCompact ((Γ : Set G) ∩ C) := hC.inter_left hcl
   have hΓ : DiscreteTopology (Γ : Set G) := inferInstanceAs (DiscreteTopology Γ)
   exact hK.finite ⟨DiscreteTopology.of_subset hΓ Set.inter_subset_left⟩
@@ -244,11 +244,11 @@ theorem bessel_lintegral_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     (∀ i j, i ≠ j → ∫ x in F, ψ i x * (starRingEnd ℂ) (ψ j x) ∂μ = 0) →
     ∑ i, ∫⁻ x in Ω, ‖ψ i x‖ₑ ^ 2 ∂μ ≤ B := by
   intro E _ _ _ N _ _ μ _ δ α F Ω hαc hαs hδ hF hΩ
-  haveI : DiscreteTopology (latticeGL E N) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E N
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E N
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E N
-  haveI : Countable (latticeGL E N) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : DiscreteTopology (latticeGL E N) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E N
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E N
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E N
+  have : Countable (latticeGL E N) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨Mr, hMr⟩ := hαc.bounded_above_of_compact_support hαs
   set M : ENNReal := ENNReal.ofReal Mr with hMdef
   have hαM : ∀ y, ‖α y‖ₑ ≤ M := fun y => by
@@ -272,7 +272,7 @@ theorem bessel_lintegral_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       intro γ hγ z
       simp only [hg, hinv _ γ hγ]
     set T : ENNReal := ∑ i, ‖v i‖ₑ ^ 2 with hT
-    have hTtop : T ≠ ⊤ := ENNReal.sum_ne_top.2 fun i _ => ENNReal.pow_ne_top enorm_ne_top
+    have hTtop : T ≠ ⊤ := ENNReal.sum_ne_top.2 fun i _ => ENNReal.pow_ne_top eNorm_ne_top
     have hstep1 : T ≤ ∫⁻ y, ‖α y‖ₑ * ‖g (x * y)‖ₑ ∂μ := by
       have hint : ∀ i, Integrable (fun y => α y * ψ i (x * y)) μ := fun i =>
         (hαc.mul ((hc i).comp (continuous_const.mul continuous_id))).integrable_of_hasCompactSupport
@@ -295,12 +295,12 @@ theorem bessel_lintegral_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
       calc T = ‖∫ y, α y * g (x * y) ∂μ‖ₑ := by rw [e, eT]
-        _ ≤ ∫⁻ y, ‖α y * g (x * y)‖ₑ ∂μ := enorm_integral_le_lintegral_enorm _
-        _ = ∫⁻ y, ‖α y‖ₑ * ‖g (x * y)‖ₑ ∂μ := by simp_rw [enorm_mul]
+        _ ≤ ∫⁻ y, ‖α y * g (x * y)‖ₑ ∂μ := eNorm_integral_le_lintegral_eNorm _
+        _ = ∫⁻ y, ‖α y‖ₑ * ‖g (x * y)‖ₑ ∂μ := by simp_rw [eNorm_mul]
     have hstep2 : (∫⁻ y, ‖α y‖ₑ * ‖g (x * y)‖ₑ ∂μ) ^ 2 ≤ A * ∫⁻ y, ‖α y‖ₑ * ‖g (x * y)‖ₑ ^ 2 ∂μ :=
       lintegral_mul_sq_le_lemma_2 (w := fun y => ‖α y‖ₑ) (h := fun y => ‖g (x * y)‖ₑ)
-        hαc.measurable.enorm.aemeasurable
-        (hgc.comp (continuous_const.mul continuous_id)).measurable.enorm.aemeasurable
+        hαc.measurable.eNorm.aemeasurable
+        (hgc.comp (continuous_const.mul continuous_id)).measurable.eNorm.aemeasurable
     have horth : ∫⁻ z in F, ‖g z‖ₑ ^ 2 ∂μ = T := by
       rw [orth_sum_lemma ψ (fun i => (hc i).aestronglyMeasurable) h1 h0 c, hT]
       refine Finset.sum_congr rfl fun i _ => ?_
@@ -330,8 +330,8 @@ theorem bessel_lintegral_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
               lintegral_const_mul' _ _ (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hm)
           _ = (M * m) * T := by rw [horth]
       · intro γ
-        exact ((hαc.comp (continuous_const.mul (continuous_const.mul continuous_id))).measurable.enorm.mul
-          (hgc.measurable.enorm.pow_const 2)).aemeasurable
+        exact ((hαc.comp (continuous_const.mul (continuous_const.mul continuous_id))).measurable.eNorm.mul
+          (hgc.measurable.eNorm.pow_const 2)).aemeasurable
     by_cases hT0 : T = 0
     · rw [hT0]
       positivity
@@ -364,7 +364,7 @@ theorem bessel_lintegral_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       _ = (ENNReal.ofReal δ⁻¹) ^ 2 * ∑ i, ‖s i * ψ i x‖ₑ ^ 2 := by rw [Finset.mul_sum]
       _ ≤ _ := mul_le_mul_of_nonneg_left hb (by positivity)
   calc ∑ i, ∫⁻ x in Ω, ‖ψ i x‖ₑ ^ 2 ∂μ = ∫⁻ x in Ω, ∑ i, ‖ψ i x‖ₑ ^ 2 ∂μ :=
-        (lintegral_finsetSum _ fun i _ => (hc i).measurable.enorm.pow_const 2).symm
+        (lintegral_finsetSum _ fun i _ => (hc i).measurable.eNorm.pow_const 2).symm
     _ ≤ ∫⁻ x in Ω, (ENNReal.ofReal δ⁻¹) ^ 2 * (A * (M * m)) ∂μ := setLIntegral_mono' hΩ.measurableSet hpx
     _ = _ := by rw [setLIntegral_const, mul_comm]
 

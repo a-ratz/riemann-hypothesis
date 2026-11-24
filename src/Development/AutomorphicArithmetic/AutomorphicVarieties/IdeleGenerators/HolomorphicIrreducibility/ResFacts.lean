@@ -53,8 +53,8 @@ private theorem isIrr_of_range {Γ Γ' k : Type} [Group Γ] [Group Γ'] [Field k
 theorem UpperTheory.V.Sd.resFacts :
     UpperTheory.V.Sd.ResFacts := by
   intro F E Ω _ _ _ _ _ _ _ _ _ _ l _ n r
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsAlgClosure F Ω :=
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsAlgClosure F Ω :=
     ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
   obtain ⟨hemb, hopen, -⟩ := galEmbTop F E Ω
   have hoe : Topology.IsOpenEmbedding (galEmb F E Ω) := by

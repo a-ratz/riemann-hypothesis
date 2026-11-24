@@ -187,7 +187,7 @@ theorem N_det {n : Mat k r} (hn : n ∈ Nset k r) :
         have hv := congrArg Fin.val h'
         exact e (Fin.ext hv)
       simp [hne, e]
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun b _ => ?_
     simp [hent b b le_rfl]
   · intro b a hab
@@ -320,10 +320,10 @@ theorem Ppos_N {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inW
 
 theorem N_sub_S (z : Fin (2 * r + k + 1) → ℂ) {n : Mat k r} (hn : n ∈ Nset k r) : n ∈ Sset k r z := by
   have h1 : (1 : Mat k r) ∈ UWset k r z := by
-    simp only [Formalism.QuantumDeterminants.UWset, Set.mem_setOf_eq]
+    simp only [Formalism.QuantumDeterminants.UWset, Set.mem_ofPred_eq]
     exact ⟨(uHGroup _ (Hpk k r) (isUnit_det_of_mem_UWset k r)).1, fun a => ⟨Matrix.one_mulVec _, Matrix.one_mulVec _⟩,
       Matrix.one_mulVec _⟩
-  simp only [Formalism.QuantumDeterminants.Sset, Set.mem_setOf_eq]
+  simp only [Formalism.QuantumDeterminants.Sset, Set.mem_ofPred_eq]
   exact ⟨1, h1, n, hn, (Matrix.one_mul n).symm⟩
 
 theorem Yv_N {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z') (γ : Mat k r) {n₁ n₂ : Mat k r}

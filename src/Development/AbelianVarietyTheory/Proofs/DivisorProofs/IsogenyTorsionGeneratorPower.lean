@@ -108,8 +108,8 @@ theorem pow_sq_eq_one_of_lam_trivial : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsAbe
       LBIso (abelian₂ A M) ((abelian₂ P.A P.L).pull (lift (fst A A ≫ ψ) (snd A A ≫ ψ)).left) →
     ∀ (T : Over (Sp ℂ)) (x : T ⟶ A), HasGen ((abelian₂ A M).pull (lift (fst A T) (snd A T ≫ x)).left) → x ^ (N * N) = 1 := by
   intro A _ hA M hM P ψ ρ N hψ hρ h1 h2 hiso T x hx
-  haveI : IsCommMonObj A := hA.comm
-  haveI := P.isAb
+  have : IsCommMonObj A := hA.comm
+  have := P.isAb
   have hL := P.isLB
   have hΘ := GlobalTheory.exists_gen_theta_of_isAbelianScheme ℂ P.A P.isAb P.L hL
   set ℓ := cls P.L hL

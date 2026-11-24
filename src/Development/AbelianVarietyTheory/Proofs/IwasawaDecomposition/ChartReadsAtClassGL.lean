@@ -165,7 +165,7 @@ theorem val_mul_sub_one_le {P : HeightOneSpectrum (𝓞 E)} {n N : ℕ} {A B : M
 
 theorem le_exp_neg_one_of_lt_one' {γ : WithZero (Multiplicative ℤ)} (h : γ < 1) : γ ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
   rcases eq_or_ne γ 0 with h0 | h0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   rw [← WithZero.exp_log h0] at h ⊢
   rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
   rw [WithZero.exp_le_exp]
@@ -233,7 +233,7 @@ theorem frame_near : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
     have h0 := adAt_pullV_fr hpt ⟨P.1, hSQ⟩ r s
     rw [e3]
     erw [h0, sub_self, map_zero]
-    exact zero_le'
+    exact zero_le
 
 end GlobalTheory.Mem.Col2.AdT.FrameMove
 end

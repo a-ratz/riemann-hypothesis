@@ -166,14 +166,14 @@ theorem hermitian_entry_zero_or_weights_cancel (k r : ℕ) (i j : Fin (2 * r + k
     have h1 : ¬ j.val < r := by omega
     have h2 : ¬ j.val ≤ r + k := by omega
     have h3 : j.val - (r + k) = r - i.val := by omega
-    simp only [dilationGeneratorDiagonal, c1.1, h1, h2, if_true, if_false, h3]
+    simp only [dilationGeneratorDiagonal, c1.1, h1, h2, ite_true, ite_false, h3]
     push_cast; ring
   · by_cases c2 : j.val < r ∧ i.val + j.val = 2 * r + k
     · right
       have h1 : ¬ i.val < r := by omega
       have h2 : ¬ i.val ≤ r + k := by omega
       have h3 : i.val - (r + k) = r - j.val := by omega
-      simp only [dilationGeneratorDiagonal, c2.1, h1, h2, if_true, if_false, h3]
+      simp only [dilationGeneratorDiagonal, c2.1, h1, h2, ite_true, ite_false, h3]
       push_cast; ring
     · by_cases c3 : r ≤ i.val ∧ i.val ≤ r + k ∧ i = j
       · right
@@ -224,11 +224,11 @@ theorem exp_dilation_generator_eq_aDil (k r : ℕ) (s : ℝ) :
   rw [Pi.coe_exp, Pi.smul_apply, smul_eq_mul, ← Complex.exp_eq_exp_ℂ]
   unfold dilationGeneratorDiagonal
   split_ifs with h1 h2
-  · rw [← Real.exp_nat_mul, ← Complex.ofReal_mul, ← Complex.ofReal_exp]
+  · rw [← Real.exp_natCast_mul, ← Complex.ofReal_mul, ← Complex.ofReal_exp]
     congr 2
     unfold rr; field_simp
   · simp
-  · rw [← Real.exp_nat_mul, ← Real.exp_neg, ← Complex.ofReal_mul, ← Complex.ofReal_exp]
+  · rw [← Real.exp_natCast_mul, ← Real.exp_neg, ← Complex.ofReal_mul, ← Complex.ofReal_exp]
     congr 2
     unfold rr; field_simp
 
@@ -372,9 +372,9 @@ theorem aDil_continuousOn (k r : ℕ) : ContinuousOn (fun t : ℝ => aDil k r t)
   show Continuous fun t : Set.Ioi (0 : ℝ) => if i.val < r then (((t : ℝ) ^ (r - i.val) : ℝ) : ℂ)
     else if i.val ≤ r + k then 1 else ((((t : ℝ) ^ (i.val - (r + k)))⁻¹ : ℝ) : ℂ)
   split_ifs
-  · exact Complex.continuous_ofReal.comp (continuous_subtype_val.pow _)
+  · exact Complex.continuous_ofReal.comp (continuous_subtypeVal.pow _)
   · exact continuous_const
-  · refine Complex.continuous_ofReal.comp (Continuous.inv₀ (continuous_subtype_val.pow _) ?_)
+  · refine Complex.continuous_ofReal.comp (Continuous.inv₀ (continuous_subtypeVal.pow _) ?_)
     intro t
     exact pow_ne_zero _ (ne_of_gt t.2)
 
@@ -446,9 +446,9 @@ theorem lam_continuous (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) : Continuou
   refine Complex.continuous_re.comp (continuous_const.mul ?_)
   refine continuous_finsetSum _ fun a _ => ?_
   by_cases h : a.val + 1 < r
-  · simp only [h, dif_pos]
+  · simp only [h, dite_eq_left]
     exact continuous_id.matrix_elem _ _
-  · simp only [h, dif_neg, not_false_iff]
+  · simp only [h, dite_eq_right, not_false_iff]
     have h2 : Continuous fun n : Mat k r => n *ᵥ z := continuous_id.matrix_mulVec continuous_const
     exact (continuous_apply (eI k r a)).comp h2
 
@@ -2015,7 +2015,7 @@ theorem weight_integrable_first_factor {Ξ : Mat k r → NNReal} (z : Fin (2 * r
   unfold HasFiniteIntegral
   refine lt_of_le_of_lt (le_of_eq ?_) h
   refine lintegral_congr fun p => ?_
-  rw [enorm_mul, Real.enorm_eq_ofReal (NNReal.coe_nonneg _), Real.enorm_eq_ofReal (by positivity),
+  rw [eNorm_mul, Real.eNorm_eq_ofReal (NNReal.coe_nonneg _), Real.eNorm_eq_ofReal (by positivity),
     ENNReal.ofReal_coe_nnreal]
 
 theorem xi_integrable (H : Hyp D Ξ α) : Integrable (fun p : SS k r => XX Ξ p * LL D p) D.μSS := by

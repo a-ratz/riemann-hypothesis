@@ -119,7 +119,7 @@ theorem exists_norm_tateTrace_le_of_stableIndex_le :
 theorem exists_norm_tateTrace_le_on_layer (n N : ℕ) :
     ∃ c : ℝ, 0 ≤ c ∧ ∀ x ∈ cyclotomicLayer K N, ‖tateTrace K n x‖ ≤ c * ‖x‖ := by
   let S : Submodule ℚ_[p] (PadicAlgCl p) := (cyclotomicLayer K N).toSubalgebra.toSubmodule
-  haveI : FiniteDimensional ℚ_[p] S :=
+  have : FiniteDimensional ℚ_[p] S :=
     inferInstanceAs (FiniteDimensional ℚ_[p] (cyclotomicLayer K N))
   let f : S →ₗ[ℚ_[p]] PadicAlgCl p :=
     ((normTraceₗ (cyclotomicLayer K n)).restrictScalars ℚ_[p]).comp S.subtype

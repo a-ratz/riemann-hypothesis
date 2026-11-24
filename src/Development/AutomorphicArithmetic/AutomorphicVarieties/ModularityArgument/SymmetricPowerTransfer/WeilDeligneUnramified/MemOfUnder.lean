@@ -164,15 +164,15 @@ private theorem full_chars [CharZero k] {n : ℕ} {V : Type} [AddCommGroup V] [M
   let q := multiProdEquiv (stdBlocks (fun i => (y i).1) hd) fun i => equivRep (IrrRep.det (Fin 1) (ξ i) (hξ i))
   have hM : (multiProd (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) fun i => detRep (Fin 1) (ξ i)).IsIrreducible :=
     GlobalTheory.Parabolic.isIrreducible_of_equiv (p.trans q).symm hP
-  letI := nontrivial_of_irreducible hM
+  let := nontrivial_of_irreducible hM
   have nontriv {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
       [Module ℂ W] {σ : Representation ℂ G W} {τ : Representation ℂ G V}
       (h : IsSubquotient σ τ) (hw : Nontrivial W) : Nontrivial V := by
-    letI := hw
+    let := hw
     obtain ⟨S, f, hf⟩ := h
     have := hf.nontrivial
     exact Subtype.val_injective.nontrivial (α := S.toSubmodule)
-  haveI := nontriv (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries
+  have := nontriv (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries
       (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) ξ) (nontrivial_of_irreducible hM)
   have equiv_sub {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
       [Module ℂ W] {σ : Representation ℂ G W} {τ : Representation ℂ G V}
@@ -180,7 +180,7 @@ private theorem full_chars [CharZero k] {n : ℕ} {V : Type} [AddCommGroup V] [M
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation τ) := hτ
+    have : IsSimpleOrder (Subrepresentation τ) := hτ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : τ.IntertwiningMap σ := f.comp (topEquiv τ).symm.toIntertwiningMap
@@ -230,7 +230,7 @@ end WD
 
 theorem sphT : SphT := by
   intro _ F Ω _ _ _ _ _ l _ ι n r _ w hl A h hI rc ⟨a, ha, L⟩ σ hP hx
-  haveI : CharZero (w.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : CharZero (w.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
   have e0 := hx.wdOf_eq hl
   obtain ⟨t, ht, φ, hφ, N, b, hN, -, -⟩ := id hx
   have hxu : (rc (algNorm σ)).unr := e0 ▸ (hN.unr_wdOf_iff hl ht ι).2 hI
@@ -318,8 +318,8 @@ private theorem pow_fix {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
 private theorem cyc_inf_over (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (l : ℕ) [hl : Fact l.Prime] (A : ValuationSubring Ω) (hA : A.valuation (l : Ω) < 1) :
     ∃ s ∈ Ine (F := F) A, ∀ k : ℕ, k ≠ 0 → cycBar F Ω l s ^ k ≠ 1 := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
   have hu : IsUnit ((l + 1 : ℕ) : ℤ_[l]) := by
     rw [PadicInt.isUnit_iff]
     exact PadicInt.norm_natCast_eq_one_iff.2 (by simp)
@@ -685,11 +685,11 @@ private theorem adjoint_inertia_image_finite (hl : ((l : ℕ) : 𝓞 L) ∉ w.as
     apply Units.ext
     rw [ad0, tw_val, MonoidHom.inv_apply, MonoidHom.comp_apply, MonoidHom.comp_apply, h1]
     simp
-  haveI := compactSpace_Ine (E := L) A
+  have := compactSpace_Ine (E := L) A
   let f := (ad0 r).comp (Ine (F := L) A).subtype
-  haveI : Finite (Ine (F := L) A ⧸ f.ker) :=
+  have : Finite (Ine (F := L) A ⧸ f.ker) :=
     Subgroup.quotient_finite_of_isOpen _ (Subgroup.isOpen_mono (H₁ := U) (fun x hx => hu x hx) hU)
-  haveI : Finite f.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange f).toEquiv
+  have : Finite f.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange f).toEquiv
   refine (Set.toFinite (f.range : Set (GL (Fin 3) (Qbar l)))).subset ?_
   rintro _ ⟨s, hs, rfl⟩
   exact ⟨⟨s, hs⟩, rfl⟩
@@ -1061,7 +1061,7 @@ private theorem att_iso {F Ω : Type} [Field F] [NumberField F] [_root_.NumberFi
 theorem branch1W : Branch1W := by
   intro Pr L Ω _ _ _ _ _ _ l _ ι hl hU M m hM r σ hA hg P ψ hP hreg σ₃ hσ₃ hev
   obtain ⟨r3, hg3, hirr⟩ := galExW Pr L Ω l ι hl hU 3 (by norm_num) σ₃ hσ₃
-  haveI : IsGalois L Ω := IsAlgClosure.isGalois L Ω
+  have : IsGalois L Ω := IsAlgClosure.isGalois L Ω
   obtain ⟨hcu, hce, hbad⟩ := Ga.badClosed L Ω l r hg.cont
   have hct : Continuous fun g : G L Ω => Ga.tr (r3 g) :=
     Continuous.matrix_trace (Units.continuous_val.comp hg3.cont)

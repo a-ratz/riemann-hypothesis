@@ -78,9 +78,9 @@ theorem peel_core {m : ℕ} (I : Ideal A) {ι : Type} [Fintype ι] (η : ι → 
     congr 1
     · exact Finset.sum_comm
     · rw [Finset.sum_eq_single (Fin.last m)]
-      · rw [if_pos rfl, Fin.val_last, sign_last, one_mul, Algebra.smul_def, Algebra.commutes]
+      · rw [ite_eq_left rfl, Fin.val_last, sign_last, one_mul, Algebra.smul_def, Algebra.commutes]
       · intro l _ hl
-        rw [if_neg hl, map_zero, mul_zero, mul_zero]
+        rw [ite_eq_right hl, map_zero, mul_zero, mul_zero]
       · intro hn
         exact absurd (Finset.mem_univ _) hn
   rw [key]
@@ -161,7 +161,7 @@ theorem first_peeling_minor_mem_ideal {A : Type} [Ring A] [Algebra ℂ A] (k r :
           (fun l _ => Tm E (u - (m : ℂ)) (pe k r l.val) (pe k r (m + 1))) 1 ?_
         · rw [Formalism.FourierDecayAlt.P.expansion_last_column A (2 * r + k + 1) m E]
           have hm : ¬ (m < i) := by omega
-          simpa [Fin.succAbove_last, Fin.val_last, hm, Function.comp_def, Fin.coe_castSucc] using hc
+          simpa [Fin.succAbove_last, Fin.val_last, hm, Function.comp_def, Fin.val_castSucc] using hc
         · intro l
           have hl := l.isLt
           have h1 : min (l.val) (2 * r + k) = l.val := Nat.min_eq_left (by omega)
@@ -176,7 +176,7 @@ theorem first_peeling_minor_mem_ideal {A : Type} [Ring A] [Algebra ℂ A] (k r :
             omega
           have hd : dpsiP k r z' (pe k r l.val) (pe k r (m + 1)) = if l.val = m then 1 else 0 := by
             simp only [dpsiP, pe_val, h1, h2]
-            rw [if_pos ⟨by omega, by omega⟩]
+            rw [ite_eq_left ⟨by omega, by omega⟩]
             split_ifs <;> first | rfl | (exfalso; omega)
           simp only [Finset.univ_unique, Finset.sum_singleton, one_smul, last_iff]
           rw [tm_offdiag _ _ hne, ← hd]
@@ -188,7 +188,7 @@ theorem first_peeling_minor_mem_ideal {A : Type} [Ring A] [Algebra ℂ A] (k r :
       have e : (fun l : Fin (m + 1) => pe k r (if l.val < m + 1 then l.val else l.val + 1)) =
           fun l : Fin (m + 1) => pe k r l.val := by
         funext l
-        rw [if_pos l.isLt]
+        rw [ite_eq_left l.isLt]
       rw [e, sub_self]
       exact Submodule.zero_mem _
 
@@ -198,14 +198,14 @@ theorem first_peeling_identity : PeelingOmittedColumn := by
     intro j hj
     funext l
     apply Fin.ext
-    simp only [xR, Formalism.QuantumDeterminants.eI, Fin.coe_castLE, pe_val]
+    simp only [xR, Formalism.QuantumDeterminants.eI, Fin.val_castLE, pe_val]
     have := l.isLt
     omega
   have e2 : (fun l : Fin m => xR k r (m + 1) hm (i.succAbove l)) =
       fun l : Fin m => pe k r (if l.val < i.val then l.val else l.val + 1) := by
     funext l
     apply Fin.ext
-    simp only [xR, Formalism.QuantumDeterminants.eI, Fin.coe_castLE, pe_val, succAbove_val]
+    simp only [xR, Formalism.QuantumDeterminants.eI, Fin.val_castLE, pe_val, succAbove_val]
     have := l.isLt
     split_ifs <;> omega
   rw [e2, e1, e1]

@@ -81,7 +81,7 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
 theorem le_ofAdd_neg_one_of_lt_one' {y : WithZero (Multiplicative ℤ)} (h : y < 1) :
     y ≤ ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
   induction y using WithZero.recZeroCoe with
-  | zero => exact zero_le'
+  | zero => exact zero_le
   | coe a =>
     rw [← WithZero.coe_one, WithZero.coe_lt_coe] at h
     rw [WithZero.coe_le_coe]
@@ -98,8 +98,8 @@ theorem exists_residue_reps' {q : ℕ} (hq : 2 ≤ q)
   set v := (Valued.v : Valuation L (WithZero (Multiplicative ℤ)))
   have hfin : Finite (v.integer ⧸ IsLocalRing.maximalIdeal v.valuationSubring) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
-  haveI : Finite (v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring) := hfin
-  haveI := Fintype.ofFinite (v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring)
+  have : Finite (v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring) := hfin
+  have := Fintype.ofFinite (v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring)
   let f : v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring → L :=
     fun c => ((Ideal.Quotient.mk_surjective c).choose : L)
   refine ⟨Finset.univ.image f, ?_, ?_⟩
@@ -256,7 +256,7 @@ theorem GlobalTheory.Hk3.HoweDuality.exists_finset_reps_mul_inv :
     · have hr : rep (q t) = x := by simp [rep, hxt]
       rw [hr]; exact ⟨Finset.mem_insert_self _ _, hxt⟩
     · have h : ∃ t' ∈ T, q t' = q t := ⟨t, ht, rfl⟩
-      simp only [rep, hxt, if_false, h, dif_pos]
+      simp only [rep, hxt, ite_false, h, dite_eq_left]
       exact h.choose_spec
   refine ⟨T.image fun t => rep (q t), ?_, ?_, ?_, ?_⟩
   · refine Finset.mem_image.2 ⟨x, Finset.mem_insert_self _ _, ?_⟩
@@ -1243,7 +1243,7 @@ theorem trace_skewHermitian_gram_integral : ∀ (L : Type) [Field L] [Valued L (
   rw [hmem, map_mul, map_pow] at h2
   calc Valued.v (Γ k j) * Valued.v ((Formalism.UG.cT σ N * (JT : Matrix (Fin n') (Fin n') L) * N) j k)
       ≤ Valued.v ϖ ^ (e k + e j) * Valued.v ((Formalism.UG.cT σ N * (JT : Matrix (Fin n') (Fin n') L) * N) j k) :=
-        mul_le_mul_of_nonneg_right h1 zero_le'
+        mul_le_mul_of_nonneg_right h1 zero_le
     _ = Valued.v ((Formalism.UG.cT σ N * (JT : Matrix (Fin n') (Fin n') L) * N) j k) * Valued.v ϖ ^ (e j + e k) := by
         rw [mul_comm, add_comm]
     _ ≤ 1 := h2
@@ -1467,7 +1467,7 @@ theorem gram_class_family : ∀ (L : Type) [Field L] [Valued L (WithZero (Multip
   obtain ⟨r, M, e, he1, hMint, hD1, hD2, hD3⟩ := _root_.GlobalTheory.Hk3.snf_generators L ϖ hvϖ n a
   have hR := _root_.GlobalTheory.UnramReps.exists_reps_mod_pow L ϖ σ q hU
   obtain ⟨Y, hxY, hYa, hYd, hYc⟩ := _root_.GlobalTheory.Hk3.HoweDuality.exists_finset_reps_mul_inv L ϖ hvϖ hR n n' a x hxa
-  haveI hfin := _root_.GlobalTheory.Hk3.GramSep.gam_quot_finite L ϖ σ hvϖ hR r e
+  have hfin := _root_.GlobalTheory.Hk3.GramSep.gam_quot_finite L ϖ σ hvϖ hR r e
   set G := gam σ ϖ e with hG
   set G0 := (gam0 σ ϖ e).addSubgroupOf G with hG0
   let Γf : (G ⧸ G0) → Matrix (Fin r) (Fin r) L := fun b => ((Quotient.out b : G) : Matrix (Fin r) (Fin r) L)
@@ -1602,7 +1602,7 @@ theorem gram_class_family : ∀ (L : Type) [Field L] [Valued L (WithZero (Multip
         refine Subring.sum_mem _ fun k _ => Subring.sum_mem _ fun j _ => ?_
         show Valued.v (Γf b k j * (Φ y - Φ x) j k) ≤ 1
         calc Valued.v (Γf b k j * (Φ y - Φ x) j k) = Valued.v (Γf b k j) * Valued.v ((Φ y - Φ x) j k) := map_mul _ _ _
-          _ ≤ Valued.v ϖ ^ max (e k) (e j) * Valued.v ((Φ y - Φ x) j k) := mul_le_mul_of_nonneg_right ((hΓ b).2 k j) zero_le'
+          _ ≤ Valued.v ϖ ^ max (e k) (e j) * Valued.v ((Φ y - Φ x) j k) := mul_le_mul_of_nonneg_right ((hΓ b).2 k j) zero_le
           _ = Valued.v ((Φ y - Φ x) j k * ϖ ^ max (e j) (e k)) := by rw [map_mul, map_pow, max_comm, mul_comm]
           _ ≤ 1 := hb j k
       have e1 : -(w b y) = -(w b x) + -(w b y - w b x) := by ring

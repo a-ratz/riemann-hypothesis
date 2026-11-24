@@ -52,7 +52,7 @@ theorem UpperTheory.ConvolutionTheory.T.pickS :
   obtain ⟨-, -, h0⟩ := UpperTheory.ConvolutionTheory.Dp.parEx E n hn μ V hV
   have hU := Filter.eventually_cofinite.1 hUnr
   have hfin := ((hS₀.image (fun w => w.under (𝓞 F))).union hU).union (Set.finite_singleton v)
-  obtain ⟨q, hq, hqS⟩ := (hInf.diff hfin).nonempty
+  obtain ⟨q, hq, hqS⟩ := (hInf.sdiff hfin).nonempty
   have hsub : ∀ w, w.under (𝓞 F) ∉ hfin.toFinset → w ∉ S₀ := fun w hw hw0 =>
     hw (hfin.mem_toFinset.2 (Or.inl (Or.inl ⟨w, hw0, rfl⟩)))
   refine ⟨hfin.toFinset, q, (hNe q).some, hfin.mem_toFinset.2 (Or.inr rfl),

@@ -130,7 +130,7 @@ theorem char_eq_psi_symp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
           GlobalTheory.LatVac.psiAt B.ψ v (∑ i, ∑ j, (-((1 : GL (Fin n) (Fv F v)).1ᵀ * X.J.map t * (x).map (piW (t.comp σ)) * (W.J.map t)ᵀ * (1 : GL (Fin d) (Fv F v)).1)) i j * Z i j) := by
   intro F E _ _ _ _ _ σ B hB n d r s r' s' X W hX hW v t Z
   have h := hB.cm
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h.2.2.1
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h.2.2.1
   refine ⟨Matrix.of fun k l => tensAt E v ((splitAlgEquiv h t).symm (-Z k l, 0)), ?_, ?_, ?_⟩
   · intro a ha
     ext k l

@@ -135,7 +135,7 @@ theorem UpperTheory.V.Base.gammaGen :
   let ψ : U →* U.map (cycZ k Ω l) := (cycZ k Ω l).subgroupMap U
   have hψc : Continuous ψ := by
     apply Continuous.subtype_mk
-    exact hχc.comp continuous_subtype_val
+    exact hχc.comp continuous_subtypeVal
   let κ : U →* Multiplicative ℤ_[l] := e.toMulEquiv.toMonoidHom.comp ψ
   have hκc : Continuous κ := e.continuous.comp hψc
   have hκs : Function.Surjective κ := e.surjective.comp (MonoidHom.subgroupMap_surjective _ U)
@@ -155,7 +155,7 @@ theorem UpperTheory.V.Base.gammaGen :
     have hsub : Subgroup.zpowers γ.1 ⊔ cycU l U ≤ V := Subgroup.le_topologicalClosure _
     have hcU : CompactSpace U := isCompact_iff_compactSpace.mp hUc.isCompact
     let S : Set U := Subtype.val ⁻¹' (V : Set (G k Ω))
-    have hSc : IsClosed S := hVc.preimage continuous_subtype_val
+    have hSc : IsClosed S := hVc.preimage continuous_subtypeVal
     have hIc : IsClosed (κ '' S) := (hSc.isCompact.image hκc).isClosed
     let T : Set ℤ_[l] := Multiplicative.ofAdd ⁻¹' (κ '' S)
     have hTc : IsClosed T := hIc.preimage continuous_ofAdd
@@ -436,7 +436,7 @@ private theorem transg_cont (σ : Representation R Γ M) (hσ : ContAction σ) (
   rw [← hq.continuous_comp_iff]
   refine continuous_induced_rng.2 ?_
   exact hσ.comp (f := fun p : Γ × Representation.invariants (σ.comp N.subtype) => (p.1, (p.2 : M)))
-    (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))
+    (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))
 
 private theorem transg_top [DiscreteTopology M] [CompactSpace Γ] [T2Space Γ] [TotallyDisconnectedSpace Γ]
     (σ : Representation R Γ M) (hσ : ContAction σ) (N : Subgroup Γ) [N.Normal] (hN : IsClosed (N : Set Γ)) :
@@ -446,7 +446,7 @@ private theorem transg_top [DiscreteTopology M] [CompactSpace Γ] [T2Space Γ] [
   let Q : TRep R (Γ ⧸ N) :=
     { V := Representation.invariants (σ.comp N.subtype), rho := σ.quotientToInvariants N, cont := transg_cont σ hσ N }
   let P : Pair Q A := ⟨QuotientGroup.mk' N, Submodule.subtype _, QuotientGroup.continuous_mk,
-    continuous_subtype_val, fun _ _ => rfl⟩
+    continuous_subtypeVal, fun _ _ => rfl⟩
   have hP : IsInvRep A N Q P := by
     refine ⟨rfl, Topology.IsEmbedding.subtypeVal, fun m => ?_⟩
     show m ∈ LinearMap.range (Submodule.subtype _) ↔ _
@@ -455,7 +455,7 @@ private theorem transg_top [DiscreteTopology M] [CompactSpace Γ] [T2Space Γ] [
   obtain ⟨a₀, a₁, a₂, ha⟩ := exists_isLow A
   obtain ⟨n₀, n₁, n₂, hn⟩ := exists_isLow (A.resSub N)
   obtain ⟨q₀, q₁, q₂, hq⟩ := exists_isLow Q
-  haveI : DiscreteTopology A.V := ‹DiscreteTopology M›
+  have : DiscreteTopology A.V := ‹DiscreteTopology M›
   let I : Submodule R ((A.resSub N).H 1) := (conjRep σ N).invariants.comap n₁.toLinearMap
   obtain ⟨tg, htg, -⟩ := fiveTerm_holds R Γ A N hN Q P hP I (by
     intro x
@@ -483,7 +483,7 @@ private theorem transg_top [DiscreteTopology M] [CompactSpace Γ] [T2Space Γ] [
       map_add' := fun x y => Subtype.ext (n₁.symm.map_add x.1 y.1)
       map_smul' := fun r x => Subtype.ext (n₁.symm.map_smul r x.1) }
   refine ⟨q₂.toLinearMap.comp (tg.comp k), fun x => ?_⟩
-  have hr := (lowNat_holds R Γ N _ _ (Pair.res A N.subtype continuous_subtype_val) _ _ _ _ _ _ ha hn).2.1
+  have hr := (lowNat_holds R Γ N _ _ (Pair.res A N.subtype continuous_subtypeVal) _ _ _ _ _ _ ha hn).2.1
   refine (q₂.map_eq_zero_iff.trans (htg (k x))).trans ⟨?_, ?_⟩
   · rintro ⟨y, hy⟩
     refine ⟨a₁ y, ?_⟩
@@ -504,21 +504,21 @@ theorem UpperTheory.V.Base.transg :
       [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul R M] [DiscreteTopology M] (ρ : Representation R G M) [CompactSpace G] [T2Space G] [TotallyDisconnectedSpace G], ContAction ρ → ∀ (U' U : Subgroup G) [U'.Normal] (h : U' ≤ U), IsClosed (U : Set G) → IsClosed (U' : Set G) →
       ∃ tg : resCoker ρ h →ₗ[R] H2 (quotRep ρ U U'), Function.Injective tg := by
   intro R G M _ _ _ _ _ _ _ _ _ _ ρ _ _ _ hρ U' U _ h hU hU'
-  haveI : CompactSpace U := isCompact_iff_compactSpace.1 hU.isCompact
+  have : CompactSpace U := isCompact_iff_compactSpace.1 hU.isCompact
   let σ : Representation R U M := ρ.comp U.subtype
   have hσ : ContAction σ := hρ.comp (f := fun p : U × M => ((p.1 : G), p.2))
-    ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
-  obtain ⟨tg, htg⟩ := transg_top σ hσ (U'.subgroupOf U) (hU'.preimage continuous_subtype_val)
+    ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
+  obtain ⟨tg, htg⟩ := transg_top σ hσ (U'.subgroupOf U) (hU'.preimage continuous_subtypeVal)
   let j : H1U ρ U' →ₗ[R] H1U σ (U'.subgroupOf U) :=
     pairH1DecompositionMap _ _ (Subgroup.subgroupOfEquivOfLe h).toMonoidHom
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) LinearMap.id continuous_id fun _ _ => rfl
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) LinearMap.id continuous_id fun _ _ => rfl
   let j' : H1U σ (U'.subgroupOf U) →ₗ[R] H1U ρ U' :=
     pairH1DecompositionMap _ _ (Subgroup.subgroupOfEquivOfLe h).symm.toMonoidHom
-      ((continuous_subtype_val.subtype_mk _).subtype_mk _) LinearMap.id continuous_id fun _ _ => rfl
+      ((continuous_subtypeVal.subtype_mk _).subtype_mk _) LinearMap.id continuous_id fun _ _ => rfl
   have h1 : ∀ x, j' (j x) = x := fun x => by
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     rfl
-  have h2 : ∀ y, j (resU ρ h y) = resH1 σ (U'.subgroupOf U).subtype continuous_subtype_val y := fun x => by
+  have h2 : ∀ y, j (resU ρ h y) = resH1 σ (U'.subgroupOf U).subtype continuous_subtypeVal y := fun x => by
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     rfl
   have h3 : ∀ (g : U) x, conjRep σ (U'.subgroupOf U) g (j x) = j (conjRep ρ U' g x) := fun g x => by
@@ -574,7 +574,7 @@ private theorem cont_quot {R G M : Type} [CommRing R] [Group G] [TopologicalSpac
     (IsOpenQuotientMap.id (X := Representation.invariants (ρ.comp S.subtype)))
   rw [← hq.continuous_comp_iff]
   refine Continuous.subtype_mk (f := fun p : G × Representation.invariants (ρ.comp S.subtype) => ρ p.1 p.2.1) ?_ _
-  exact hρ.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))
+  exact hρ.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))
 
 private theorem H2_quotientToInvariants_subsingleton_of_zl_quotient (l : ℕ) [Fact l.Prime] {R G M : Type} [CommRing R] [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [CompactSpace G] [AddCommGroup M] [Module R M] [TopologicalSpace M] [IsTopologicalAddGroup M]
@@ -600,10 +600,10 @@ theorem UpperTheory.V.Base.resZl :
       ∀ (U' U : Subgroup G) [U'.Normal] (h : U' ≤ U), IsClosed (U : Set G) → ∀ κ : U →* Multiplicative ℤ_[l], Continuous κ →
       Function.Surjective κ → κ.ker = U'.subgroupOf U → invariantsUnderSubgroupH1 ρ U U' ≤ LinearMap.range (resU ρ h) := by
   intro l _ R G M _ _ _ _ _ _ _ _ _ _ ρ _ _ _ hρ hl U' U _ h hU κ hκ hs hk
-  haveI : CompactSpace U := isCompact_iff_compactSpace.1 hU.isCompact
+  have : CompactSpace U := isCompact_iff_compactSpace.1 hU.isCompact
   have hρU : ReciprocityTheory.Gal.ContAction (ρ.comp U.subtype : Representation R U M) :=
-    hρ.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
-  haveI : Subsingleton (H2 (quotRep ρ U U')) := H2_quotientToInvariants_subsingleton_of_zl_quotient l _ hρU hl _ κ hκ hs hk
+    hρ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
+  have : Subsingleton (H2 (quotRep ρ U U')) := H2_quotientToInvariants_subsingleton_of_zl_quotient l _ hρU hl _ κ hκ hs hk
   have hc : IsClosed (U'.subgroupOf U : Set U) := by
     rw [← hk]
     exact isClosed_singleton.preimage hκ
@@ -652,7 +652,7 @@ private theorem inj_cyc (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Alge
     (hχ : ¬ V ≤ (cycZ k Ω l).ker) :
     Function.Injective (resU (twist₂ l (ψ * chiO k Ω l O ^ n)) (cycU_le l V)) := by
   obtain ⟨κ, γ, -, -, hk, -, hcl, hfin⟩ := gammaGen k Ω l V hV hg hχ
-  haveI : ((cycU l V).subgroupOf V).Normal := hk ▸ inferInstance
+  have : ((cycU l V).subgroupOf V).Normal := hk ▸ inferInstance
   refine (kerResCyc O (G k Ω) (QO l O) _ ((contTw k Ω l).2.2 O ψ n hψo) (cycU l V) V (cycU_le l V) γ.1 γ.2 hcl).2 ?_
   intro m _
   have hall : ∀ m' : QO l O, m' ∈ H0U (twist₂ l (ψ * chiO k Ω l O ^ n)) (cycU l V) := by
@@ -692,7 +692,7 @@ theorem UpperTheory.V.Base.controlGamma :
       LinearMap.range (selRes (twist₂ l (ψ * chiO k Ω l O ^ n)) (cycU_le l U) (shaFam k Ω l)) =
         shaEig (twist₂ l (ψ * chiO k Ω l O ^ n)) l (cycU l U) U 1 := by
   intro k Ω _ _ _ _ _ l hl O _ _ _ _ _ U _ hU hg ψ n hψ hn
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
   have hψo : IsOpen (ψ.ker : Set (G k Ω)) := Subgroup.isOpen_mono hψ hU
   have hUc : IsClosed (U : Set (G k Ω)) := U.isClosed_of_isOpen hU
   have hnt : ∀ A : ValuationSubring Ω, A.valuation (l : Ω) < 1 → ¬ U ⊓ Dec (F := k) A ≤ (cycZ k Ω l).ker := by
@@ -829,7 +829,7 @@ theorem UpperTheory.V.Base.control :
   · exact controlGamma k Ω l O U hU hγ ψ n hψ hn
   have hl2 : l ≠ 2 := hl.resolve_right hγ
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hρ : ReciprocityTheory.Gal.ContAction (twist₂ l (ψ * chiO k Ω l O ^ n)) :=
     (contTw k Ω l).2.2 O ψ n (Subgroup.isOpen_mono hψ hU)
   have hq : qExp l = 1 := by simp [qExp, hl2]
@@ -842,14 +842,14 @@ theorem UpperTheory.V.Base.control :
     simp only [levU]
     exact inf_le_inf_right _ le_top
   have hVU : gamU l U ≤ U := levU_le l U (qExp l)
-  haveI hVn : (gamU l U).Normal := by
+  have hVn : (gamU l U).Normal := by
     rw [hV]
     infer_instance
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
   have hVopen : IsOpen ((gamU l U : Subgroup (G k Ω)) : Set (G k Ω)) := by
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ 1)
-    haveI : FiniteDimensional k (IntermediateField.adjoin k {ζ}) :=
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ 1)
+    have : FiniteDimensional k (IntermediateField.adjoin k {ζ}) :=
       IntermediateField.adjoin.finiteDimensional (Algebra.IsAlgebraic.isAlgebraic ζ).isIntegral
     refine Subgroup.isOpen_mono
       (H₁ := U ⊓ (IntermediateField.adjoin k {ζ}).fixingSubgroup) ?_ ?_
@@ -863,7 +863,7 @@ theorem UpperTheory.V.Base.control :
         simpa [AlgEquiv.smul_def] using this
       have hs := cyclotomicCharacter.spec l (n := 1)
         (MulSemiringAction.toRingAut (G k Ω) Ω g) ζ hζ.pow_eq_one
-      simp only [MulSemiringAction.toRingAut_apply, MulSemiringAction.toRingEquiv_apply,
+      simp only [MulSemiringAction.toRingAut_apply, MulSemiringAction.toRingEquiv_apply_apply,
         AlgEquiv.smul_def, hgz] at hs
       have key := zmod_eq_intCast_of_primitiveRoot_pow_eq_selmer hζ _ 1 (by rw [zpow_one]; exact hs.symm)
       apply Units.ext
@@ -872,7 +872,7 @@ theorem UpperTheory.V.Base.control :
       exact hU.inter (IntermediateField.fixingSubgroup_isOpen _)
   have hrel : IsOpen ((gamU l U).subgroupOf U : Set U) := by
     rw [Subgroup.coe_subgroupOf]
-    exact hVopen.preimage continuous_subtype_val
+    exact hVopen.preimage continuous_subtypeVal
   have hd : (gamU l U).relIndex U ∣ l - 1 := by
     rw [hV]
     unfold Subgroup.relIndex
@@ -926,13 +926,13 @@ private theorem kwl_onto {Ω : Type} [Field Ω] [inst : Algebra ℚ Ω] [IsAlgCl
 
 private theorem kwl_pow (l : ℕ) (hl : l.Prime) (h2 : l ≠ 2) (n : ℕ) (hd : l ^ 2 ∣ l ^ (n + 2)) (u : (ZMod (l ^ (n + 2)))ˣ)
     (hu : ZMod.unitsMap hd u = 1) : ∃ v, v ^ l = u := by
-  haveI : NeZero (l ^ (n + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : NeZero (l ^ 2) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI := ZMod.isCyclic_units_of_prime_pow l hl h2 (n + 2)
+  have : NeZero (l ^ (n + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ 2) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have := ZMod.isCyclic_units_of_prime_pow l hl h2 (n + 2)
   have hl0 : 0 < l - 1 := Nat.sub_pos_of_lt hl.one_lt
   have hcard : ∀ e : ℕ, 0 < e → Nat.card (ZMod (l ^ e))ˣ = l ^ (e - 1) * (l - 1) := by
     intro e he
-    haveI : NeZero (l ^ e) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : NeZero (l ^ e) := ⟨pow_ne_zero _ hl.ne_zero⟩
     rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient, Nat.totient_prime_pow hl he]
   have hG := hcard (n + 2) (by omega)
   have hH := hcard 2 (by omega)
@@ -982,14 +982,14 @@ theorem UpperTheory.V.X.kwl :
   have hVo : IsOpen ((ψ.ker : Subgroup (G ℚ Ω)) : Set (G ℚ Ω)) := by
     rw [hkerset]
     exact hlc.isOpen_fiber 0
-  have hVc : commutator (G ℚ Ω) ≤ ψ.ker := Abelianization.commutator_subset_ker ψ
+  have hVc : commutator (G ℚ Ω) ≤ ψ.ker := Group.Abelianization.commutator_le_ker ψ
   have hI : ∀ A : ValuationSubring Ω, ¬ A.valuation (l : Ω) < 1 → Ine (F := ℚ) A ≤ ψ.ker := by
     intro A hA x hx
     rw [MonoidHom.mem_ker, hψ, hunr A hA x hx]
     rfl
   obtain ⟨n, hn⟩ := UpperTheory.V.CF.kwAbsRam Ω ψ.ker hVo hVc l hl.pos hI
-  haveI : NeZero (l ^ (n + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : NeZero (l ^ 2) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (n + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ 2) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hfix : fixMu ℚ Ω (l ^ (n + 2)) ≤ ψ.ker := by
     intro x hx
     apply hn x
@@ -1025,8 +1025,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem sep_tors {M : Type} [AddCommGroup M] (l : ℕ) [Fact l.Prime] (x : AddSubgroup.torsionBy M l)
     (h : ∀ φ : AddSubgroup.torsionBy M l →+ ZMod l, φ x = 0) : x = 0 := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  letI : Module (ZMod l) (AddSubgroup.torsionBy M l) := AddSubgroup.torsionBy.zmodModule
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  let : Module (ZMod l) (AddSubgroup.torsionBy M l) := AddSubgroup.torsionBy.zmodModule
   exact (Module.forall_dual_apply_eq_zero_iff (ZMod l) x).1 fun φ => h φ.toAddMonoidHom
 
 private theorem hom_kill (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (hl : l ≠ 2)
@@ -1195,7 +1195,7 @@ theorem UpperTheory.V.X.zOne :
     refine ⟨m', fun u => ?_⟩
     have hu := hk u u.2
     exact sub_eq_zero.1 hu
-  haveI : CompactSpace (⊤ : Subgroup (G ℚ Ω)) := isCompact_iff_compactSpace.mp (by simpa using isCompact_univ)
+  have : CompactSpace (⊤ : Subgroup (G ℚ Ω)) := isCompact_iff_compactSpace.mp (by simpa using isCompact_univ)
   have hgen : ∀ n : ℕ, ∀ x : ShaU ρ l ⊤, (l : O) ^ n • x = 0 → x = 0 := by
     intro n
     induction n with
@@ -1309,11 +1309,11 @@ private theorem zq_gen {l e : ℕ} [Fact l.Prime] (h2 : ¬ l - 1 ∣ e) :
 private theorem zq_root (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [hp : Fact l.Prime]
     (h4 : l % 4 = 1) : ∃ s : Ω, s ^ 2 = (l : Ω) ∧ ∀ g : G ℚ Ω, (g s = s ∨ g s = -s) ∧
       (g s = s → PadicInt.toZMod (cycZ ℚ Ω l g : ℤ_[l]) ^ (l / 2) = 1) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero l := ⟨hp.out.ne_zero⟩
-  haveI hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero l := ⟨hp.out.ne_zero⟩
+  have hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   obtain ⟨⟨s, hs⟩, h⟩ := CF.gauss Ω l ζ (by omega) hζ
   have hs2 : s ^ 2 = (l : Ω) := by
     rw [hs, CF.pStar, Even.neg_one_pow ⟨l / 4, by omega⟩]
@@ -1360,8 +1360,8 @@ private theorem zq_field (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
     ∃ (K : Type) (_ : Field K) (_ : NumberField K) (_ : Algebra K Ω) (_ : IsAlgClosure K Ω),
       Module.finrank ℚ K = 2 ∧ discr K = l ∧ ∀ g : G ℚ Ω, g ∈ galOf ℚ K Ω ↔ g s = s := by
   have hi : IsIntegral ℚ s := Algebra.IsIntegral.isIntegral s
-  haveI : FiniteDimensional ℚ ℚ⟮s⟯ := adjoin.finiteDimensional hi
-  haveI : NumberField ℚ⟮s⟯ := NumberField.of_module_finite ℚ _
+  have : FiniteDimensional ℚ ℚ⟮s⟯ := adjoin.finiteDimensional hi
+  have : NumberField ℚ⟮s⟯ := NumberField.of_module_finite ℚ _
   refine ⟨ℚ⟮s⟯, inferInstance, inferInstance, inferInstance, inferInstance, ?_, ?_, fun g => ⟨fun h => ?_, fun h x => ?_⟩⟩
   · rw [adjoin.finrank hi]
     refine le_antisymm ?_ ((minpoly.two_le_natDegree_iff hi).2 ?_)
@@ -1431,7 +1431,7 @@ private theorem zq_main (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
         rw [smul_comm, sub_smul, one_smul, ← hm t (Ine_le_Dec (F := ℚ) A ht), hcl']
       rw [hm g hg, htr g hgs m hlm, sub_self]
     have hX : (fun v : galOf ℚ K Ω => c v) ∈ Kum.XDual l (galOf ℚ K Ω) O (QO l O) := by
-      refine ⟨hlc.comp_continuous continuous_subtype_val, fun v w => ?_, fun A v hv => ?_, fun A hA v hv => ?_⟩
+      refine ⟨hlc.comp_continuous continuous_subtypeVal, fun v w => ?_, fun A v hv => ?_, fun A hA v hv => ?_⟩
       · show c (v * w) = c v + c w
         rw [hc, htr v ((hU _).1 v.2) _ (hcl' _)]
       · by_cases hA : Over A l
@@ -1449,7 +1449,7 @@ private theorem zq_main (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
       rw [← mul_inv_cancel_left δ g, hc, hcδ, h0 _ this, smul_zero, add_zero, Pi.zero_apply]
   refine nonpos_iff_eq_zero.1 (shaToShT Ω l O α δ (hun δ hδ) l hp.out.ne_zero hin (fun A h h' => absurd h h') 0 fun a ha => ?_)
   have hnu : ¬ IsUnit (l : O) := fun h => by
-    haveI := (dvrFacts l O).2.2.1
+    have := (dvrFacts l O).2.2.1
     rw [← map_natCast (algebraMap ℤ_[l] O), isUnit_map_iff] at h
     exact PadicInt.irreducible_p.not_isUnit h
   obtain ⟨n, hn⟩ : ∃ n : ℕ, a ∣ (l : O) ^ n := by
@@ -1475,7 +1475,7 @@ private theorem zq_main (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
 theorem UpperTheory.V.X.zQuad :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O], 5 ≤ l → ∀ e : ℕ, Even e → l - 1 ∣ 2 * e → ¬ l - 1 ∣ e → Chr.V l e (1 : G ℚ Ω →* Oˣ) = 0 := by
   intro Ω _ inst _ l _ O _ _ _ _ _ hl e he h1 h2
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   obtain rfl : inst = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   exact zq_main Ω l O hl e he h1 h2
 end -- clump:auto

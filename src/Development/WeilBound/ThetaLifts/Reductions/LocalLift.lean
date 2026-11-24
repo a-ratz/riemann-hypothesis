@@ -98,7 +98,7 @@ theorem Intw.smul {S : Sch l →L[ℂ] Sch l} {p q p' q' : Eu l} (hS : Intw S p 
     Intw (c • S) p q p' q' := fun f g h => by
   funext x
   have := congrFun (hS f g h) x
-  simp only [rf, ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, smul_eq_mul] at this ⊢
+  simp only [rf, smul_apply, smul_apply, smul_eq_mul] at this ⊢
   rw [this]
   ring
 
@@ -130,7 +130,7 @@ theorem ph_apply (S : Eu l →L[ℝ] Eu l) (f : Sch l) (x : Eu l) :
 
 theorem ph_mul (S T : Eu l →L[ℝ] Eu l) : ph S * ph T = ph (S + T) := by
   ext f x
-  simp only [ContinuousLinearMap.mul_apply, ph_apply, ← mul_assoc, ← Complex.exp_add, ContinuousLinearMap.add_apply,
+  simp only [mul_apply_eq_comp, ph_apply, ← mul_assoc, ← Complex.exp_add, add_apply,
     inner_add_right]
   congr 2
   push_cast
@@ -191,7 +191,7 @@ theorem iso_dil {B : Eu l →L[ℝ] Eu l} (hB : IsUnit B) {c : ℝ} (hc : c ^ 2 
       B.continuous.aemeasurable (f.continuous.norm.rpow_const fun _ => Or.inr (by norm_num)).aestronglyMeasurable
     rw [Measure.map_linearMap_addHaar_eq_smul_addHaar _ hd, integral_smul_measure,
       ENNReal.toReal_ofReal (abs_nonneg _)] at h1
-    simp only [ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, dil_apply hB, norm_smul, norm_real, Real.rpow_two,
+    simp only [smul_apply, smul_apply, dil_apply hB, norm_smul, norm_real, Real.rpow_two,
       mul_pow, Real.norm_eq_abs, sq_abs, hc, integral_const_mul] at h1 ⊢
     erw [← h1]
     rw [smul_eq_mul, ← mul_assoc, ← abs_mul, ContinuousLinearMap.det, mul_inv_cancel₀ hd, abs_one, one_mul]
@@ -206,12 +206,12 @@ theorem fouInv_apply (f : Sch l) : fouInv l f = 𝓕⁻ f := rfl
 
 theorem fou_mul_fouInv : fou l * fouInv l = 1 := by
   ext1 f
-  rw [ContinuousLinearMap.mul_apply, fou_apply, fouInv_apply, FourierTransform.fourier_fourierInv_eq]
+  rw [mul_apply_eq_comp, fou_apply, fouInv_apply, FourierTransform.fourier_fourierInv_eq]
   rfl
 
 theorem fouInv_mul_fou : fouInv l * fou l = 1 := by
   ext1 f
-  rw [ContinuousLinearMap.mul_apply, fou_apply, fouInv_apply, FourierTransform.fourierInv_fourier_eq]
+  rw [mul_apply_eq_comp, fou_apply, fouInv_apply, FourierTransform.fourierInv_fourier_eq]
   rfl
 
 theorem isUnit_fou : IsUnit (fou l) := ⟨⟨_, _, fou_mul_fouInv, fouInv_mul_fou⟩, rfl⟩
@@ -221,7 +221,7 @@ theorem isUnit_fouInv : IsUnit (fouInv l) := ⟨⟨_, _, fouInv_mul_fou, fou_mul
 theorem iso_fou : Iso (fou l) := fun f => norm_fourier_toL2_eq f
 
 theorem iso_fouInv : Iso (fouInv l) := fun f => by
-  rw [← iso_fou (fouInv l f), ← ContinuousLinearMap.mul_apply, fou_mul_fouInv, ContinuousLinearMap.one_apply]
+  rw [← iso_fou (fouInv l f), ← mul_apply_eq_comp, fou_mul_fouInv, one_apply_eq_self]
 
 theorem intw_fou (p q : Eu l) : Intw (fou l) p q (-q) p := fun f g h => by
   funext x
@@ -326,7 +326,7 @@ theorem LD.mul {U W : ℝ → Sch l →L[ℂ] Sch l} {P Q : Sch l → Sch l} {t�
   have h3 := (h1.fun_add h2).fun_add (hU (W t₀ f))
   rw [zero_add, ← map_add (f := _), add_comm (U t₀ (Q f))] at h3
   refine h3.congr_of_eventuallyEq (.of_forall fun t => ?_)
-  simp only [ContinuousLinearMap.mul_apply, map_sub, map_smul]
+  simp only [mul_apply_eq_comp, map_sub, map_smul]
   simp only [csmul]
   abel
 
@@ -335,9 +335,9 @@ variable [DecidableEq l]
 theorem weyl_step {V : Sch l →L[ℂ] Sch l} {w v : l ⊕ l → ℝ} (h : ∀ f, dRho w (V f) = V (dRho v f))
     (A : Sch l →L[ℂ] Sch l) (f : Sch l) :
     schwartzToL2 l ((A * dRho w) (V f)) = ∑ a, v a • schwartzToL2 l (A (V (dRho (Pi.single a 1) f))) := by
-  rw [ContinuousLinearMap.mul_apply, h, dRho_eq_sum v]
+  rw [mul_apply_eq_comp, h, dRho_eq_sum v]
 
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, map_sum, map_smul]
+  simp only [sum_apply, smul_apply, map_sum, map_smul]
   simp only [csmul]
 
 theorem LD.differentiableAt {V : ℝ → Sch l →L[ℂ] Sch l} {Q : Sch l → Sch l} {t₀ : ℝ} (hV : LD V Q t₀)
@@ -353,10 +353,10 @@ theorem LD.differentiableAt {V : ℝ → Sch l →L[ℂ] Sch l} {Q : Sch l → S
       filter_upwards [h] with t ht
       exact weyl_step (ht w) A f
     · intro A B hA hB f
-      simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+      simp only [add_apply, map_add (f := _)]
       exact (hA f).add (hB f)
     · intro c A hA f
-      simp only [ContinuousLinearMap.smul_apply, map_smul]
+      simp only [smul_apply, map_smul]
       exact (hA f).const_smul c
   obtain ⟨ι, _, A, Λ, hA, h⟩ := exists_factor lam
   simp only [h]
@@ -374,20 +374,20 @@ theorem LD.hasDerivAt {V : ℝ → Sch l →L[ℂ] Sch l} {Q : Sch l →L[ℂ] S
       refine ((HasDerivAt.fun_sum (u := Finset.univ) fun a _ =>
         (hv w a).fun_smul (ih (dRho (Pi.single a 1) f))).congr_deriv ?_).congr_of_eventuallyEq ?_
       · have e : dRho w * Q = Q * dRho w - dRho (v' w) := by rw [← hQ, sub_sub_cancel]
-        rw [ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply (dRho w), e, dRho_eq_sum w,
+        rw [mul_apply_eq_comp, ← mul_apply_eq_comp (dRho w), e, dRho_eq_sum w,
           dRho_eq_sum (v' w)]
 
-        simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, map_sum, map_smul, hv0, h0,
-        ContinuousLinearMap.sub_apply, ContinuousLinearMap.mul_apply, map_sub, neg_smul, ← sub_eq_add_neg,
+        simp only [sum_apply, smul_apply, map_sum, map_smul, hv0, h0,
+        sub_apply, mul_apply_eq_comp, map_sub, neg_smul, ← sub_eq_add_neg,
         Finset.sum_sub_distrib]
         simp only [csmul]
       · filter_upwards [h] with t ht
         exact weyl_step (ht w) A f
     · intro A B hA hB f
-      simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+      simp only [add_apply, map_add (f := _)]
       exact (hA f).add (hB f)
     · intro c A hA f
-      simp only [ContinuousLinearMap.smul_apply, map_smul]
+      simp only [smul_apply, map_smul]
       exact (hA f).const_smul c
   obtain ⟨ι, _, A, Λ, hA, h⟩ := exists_factor lam
   simp only [h]
@@ -452,7 +452,7 @@ theorem ld_ph {S : ℝ → Eu l →L[ℝ] Eu l} {S' : Eu l →L[ℝ] Eu l} {t₀
     simp only [ph_apply]
     rw [← sub_mul, norm_mul]
     have h1 : |-π * ⟪x, S t x⟫ - -π * ⟪x, S t₀ x⟫| ≤ π * ((1 + ‖x‖) ^ 2 * (K * |t - t₀|)) := by
-      rw [← mul_sub, ← inner_sub_right, abs_mul, abs_neg, abs_of_pos Real.pi_pos, ← ContinuousLinearMap.sub_apply]
+      rw [← mul_sub, ← inner_sub_right, abs_mul, abs_neg, abs_of_pos Real.pi_pos, ← sub_apply]
       refine mul_le_mul_of_nonneg_left ((abs_real_inner_le_norm _ _).trans ?_) Real.pi_pos.le
       have h2 := (S t - S t₀).le_opNorm x
       calc ‖x‖ * ‖(S t - S t₀) x‖ ≤ ‖x‖ * ((K * |t - t₀|) * ‖x‖) := by
@@ -481,7 +481,7 @@ theorem ld_dil {B : ℝ → Eu l →L[ℝ] Eu l} {B' : Eu l →L[ℝ] Eu l} {t�
   refine ld_dil_one (h.const_mul (Ring.inverse (B t₀))) (Ring.inverse_mul_cancel _ h0) _ ?_
   set_option synthInstance.maxHeartbeats 200000 in
     filter_upwards [h.continuousAt.eventually (Units.isOpen.mem_nhds h0)] with t ht x
-  rw [dil_apply ht, dil_apply h0, ← ContinuousLinearMap.mul_apply, ← mul_assoc, Ring.mul_inverse_cancel _ h0, one_mul]
+  rw [dil_apply ht, dil_apply h0, ← mul_apply_eq_comp, ← mul_assoc, Ring.mul_inverse_cancel _ h0, one_mul]
 
 theorem ld_big {Ai B C : ℝ → Eu l →L[ℝ] Eu l} {Ai' B' C' : Eu l →L[ℝ] Eu l} {c : ℝ → ℝ} {c' t₀ : ℝ}
     (hA : HasDerivAt Ai Ai' t₀) (hB : HasDerivAt B B' t₀) (hC : HasDerivAt C C' t₀) (hc : HasDerivAt c c' t₀)
@@ -494,7 +494,7 @@ theorem ld_big {Ai B C : ℝ → Eu l →L[ℝ] Eu l} {Ai' B' C' : Eu l →L[ℝ
   have h4 := (ld_ph (hC.mul hA)).mul h3 (.of_forall fun t => iso_ph _)
   refine ⟨_, h4, fun e1 e2 e3 e4 f => ?_⟩
   have e5 : fou l (fouInv l f) = f := by
-    rw [← ContinuousLinearMap.mul_apply, fou_mul_fouInv, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, fou_mul_fouInv, one_apply_eq_self]
   simp [e1, e2, e3, e4, ph_zero, dil_one, e5]
   abel
 
@@ -554,8 +554,8 @@ theorem block_inr_inl_one : bl Sum.inr Sum.inl (1 : Matrix (l ⊕ l) (l ⊕ l) �
 theorem hasDerivAt_lin_exp {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F] (L : Matrix (l ⊕ l) (l ⊕ l) ℝ →ₗ[ℝ] F)
     (X : Matrix (l ⊕ l) (l ⊕ l) ℝ) (t : ℝ) :
     HasDerivAt (fun t : ℝ => L (NormedSpace.exp (t • X))) (L (NormedSpace.exp (t • X) * X)) t := by
-  letI := Matrix.linftyOpNormedRing (n := l ⊕ l) (α := ℝ)
-  letI := Matrix.linftyOpNormedAlgebra (n := l ⊕ l) (R := ℝ) (α := ℝ)
+  let := Matrix.linftyOpNormedRing (n := l ⊕ l) (α := ℝ)
+  let := Matrix.linftyOpNormedAlgebra (n := l ⊕ l) (R := ℝ) (α := ℝ)
   exact (LinearMap.toContinuousLinearMap L).hasFDerivAt.comp_hasDerivAt t (hasDerivAt_exp_smul_const (𝕂 := ℝ) X t)
 
 theorem exp_mul_exp_neg (X : Matrix (l ⊕ l) (l ⊕ l) ℝ) : NormedSpace.exp X * NormedSpace.exp (-X) = 1 := by
@@ -589,8 +589,8 @@ theorem intw_of_sympl {g : Matrix (l ⊕ l) (l ⊕ l) ℝ} (hg : ∀ w w', sympl
     exact this
   rw [pPart_mulVec, qPart_mulVec]
   refine intw_big h.ringInverse (fun x => ?_) (fun x => ?_) (fun y z => ?_) (fun y z => ?_) (fun y z => ?_) c _ _
-  · rw [← ContinuousLinearMap.mul_apply, Ring.mul_inverse_cancel _ h, ContinuousLinearMap.one_apply]
-  · rw [← ContinuousLinearMap.mul_apply, Ring.inverse_mul_cancel _ h, ContinuousLinearMap.one_apply]
+  · rw [← mul_apply_eq_comp, Ring.mul_inverse_cancel _ h, one_apply_eq_self]
+  · rw [← mul_apply_eq_comp, Ring.inverse_mul_cancel _ h, one_apply_eq_self]
   · simpa [sub_eq_zero] using key y 0 z 0
   · simpa [sub_eq_zero] using key 0 y 0 z
   · simpa using key y 0 0 z
@@ -619,7 +619,7 @@ open LL
 
 theorem localLift_holds : LocalLift := by
   intro l _ _ X hX
-  letI : HasSummableGeomSeries (Eu l →L[ℝ] Eu l) := by
+  let : HasSummableGeomSeries (Eu l →L[ℝ] Eu l) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
   let g : ℝ → Matrix (l ⊕ l) (l ⊕ l) ℝ := fun t => NormedSpace.exp (t • X)
@@ -657,7 +657,7 @@ theorem localLift_holds : LocalLift := by
   have hw : ∀ t, IsUnit (A t) → ∀ w f, dRho w (V t f) = V t (dRho (v t w) f) := fun t ht w f => by
     have hs : Function.Surjective (V t).toLinearMap := fun f => ⟨Ring.inverse (V t) f, by
       show (V t * Ring.inverse (V t)) f = f
-      rw [Ring.mul_inverse_cancel _ (hU t ht), ContinuousLinearMap.one_apply]⟩
+      rw [Ring.mul_inverse_cancel _ (hU t ht), one_apply_eq_self]⟩
     have := Impl.dRho (s := Matrix.mulVecLin (g t)) (hI t ht) hs (v t w) f
     simp only [v, g, Matrix.mulVecLin_apply, mulVec_mulVec, smul_neg, exp_mul_exp_neg, one_mulVec] at this
     simp only [v, smul_neg]
@@ -670,15 +670,15 @@ theorem localLift_holds : LocalLift := by
   simp only [dist_zero_right, Real.norm_eq_abs] at hA
   refine ⟨ε, V, fun t => Ring.inverse (V t), (deriv c 0 : ℝ) + ((X.toBlocks₁₁.trace / 2 : ℝ) : ℂ), hε,
     fun f => by rw [V0]; rfl, fun t ht => ⟨fun f => ?_, fun f => ?_, hI t (hA ht)⟩, fun t ht f lam => ?_, fun f lam => ?_⟩
-  · rw [← ContinuousLinearMap.mul_apply, Ring.mul_inverse_cancel _ (hU t (hA ht)), ContinuousLinearMap.one_apply]
-  · rw [← ContinuousLinearMap.mul_apply, Ring.inverse_mul_cancel _ (hU t (hA ht)), ContinuousLinearMap.one_apply]
+  · rw [← mul_apply_eq_comp, Ring.mul_inverse_cancel _ (hU t (hA ht)), one_apply_eq_self]
+  · rw [← mul_apply_eq_comp, Ring.inverse_mul_cancel _ (hU t (hA ht)), one_apply_eq_self]
   · obtain ⟨Q, hQ, -⟩ := hL t (hA ht) _ ((hd Sum.inl Sum.inl t).differentiableAt.inverse (hA ht)).hasDerivAt
     exact hQ.differentiableAt v (fun w a => (hv t w a).differentiableAt) ((hopen t (hA ht)).mono hw) f lam
   · have h1 : HasDerivAt (fun t => Ring.inverse (A t)) (-bl Sum.inl Sum.inl X) 0 := by
       have h2 := (hasFDerivAt_ringInverse (𝕜 := ℝ) (1 : (Eu l →L[ℝ] Eu l)ˣ)).comp_hasDerivAt_of_eq 0
         (hd Sum.inl Sum.inl 0) A0.symm
       exact h2.congr_deriv (by
-        simp only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.mulLeftRight_apply, inv_one, Units.val_one,
+        simp only [neg_apply, ContinuousLinearMap.mulLeftRight_apply, inv_one, Units.val_one,
           one_mul, mul_one, zero_smul, NormedSpace.exp_zero])
     obtain ⟨Q, hQ, hQ'⟩ := hL 0 h0 _ h1
     have h3 := hQ' (by rw [A0, Ring.inverse_one]) (by rw [← block_inl_inr_one, ← g0]) (by rw [← block_inr_inl_one, ← g0]) c0
@@ -686,7 +686,7 @@ theorem localLift_holds : LocalLift := by
     set z : ℂ := (deriv c 0 : ℝ) + ((X.toBlocks₁₁.trace / 2 : ℝ) : ℂ) with hz
     have h4 : Q = ⇑(quad X + z • (1 : Sch l →L[ℂ] Sch l)) := by
       funext f
-      rw [h3, ContinuousLinearMap.add_apply, quad_eq hX, hz, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply,
+      rw [h3, add_apply, quad_eq hX, hz, smul_apply, one_apply_eq_self,
         add_smul]
       abel
     rw [h4] at hQ

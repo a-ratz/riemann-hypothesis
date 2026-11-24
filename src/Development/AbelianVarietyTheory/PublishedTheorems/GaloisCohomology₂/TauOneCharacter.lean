@@ -128,7 +128,7 @@ open Polynomial CategoryTheory in
 variable {g : ℕ} [hg : Fact g.Prime] in
 theorem _root_.GlobalTheory.Published.GreenModel.ev_eq (L : _root_.GlobalTheory.GLq.LabelDatum g) (y : _root_.GlobalTheory.GLq.Gn g 1) :
     ∃ n, _root_.GlobalTheory.Published.GreenModel.ev y = L.gen 1 ^ n := by
-  haveI : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
+  have : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
   obtain ⟨i, -, hi⟩ := (isPrimitiveRoot_gen_one L).eq_pow_of_pow_eq_one
     (_root_.GlobalTheory.Published.GreenModel.alg_pow (gn_one_entry_zero_zero_ne_zero y))
   exact ⟨i, hi.symm⟩
@@ -157,7 +157,7 @@ variable {g : ℕ} [hg : Fact g.Prime] in
 private theorem exists_ne_zero_gn_one_ev_eq_gen_one (L : _root_.GlobalTheory.GLq.LabelDatum g) :
     ∃ c : ZMod g, c ≠ 0 ∧ ∃ y : _root_.GlobalTheory.GLq.Gn g 1,
       (y : _root_.GlobalTheory.GLq.Mt g 1) 0 0 = c ∧ _root_.GlobalTheory.Published.GreenModel.ev y = L.gen 1 := by
-  haveI : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
+  have : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
   obtain ⟨u, hu⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := (ZMod g)ˣ)
   have hu' : IsPrimitiveRoot (u : ZMod g) (g ^ 1 - 1) := by
     rw [IsPrimitiveRoot.coe_units_iff, pow_one, ← ZMod.card_units g, ← Nat.card_eq_fintype_card,
@@ -238,7 +238,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
   refine ⟨fun P => if h : _root_.GlobalTheory.GLq.IsPrimeLab 1 P then
       ⇑(_root_.GlobalTheory.Published.GreenModel.th L (hlab h)) else fun _ => 0, ?_, ?_, ?_⟩
   · intro P hP
-    simp only [dif_pos hP]
+    simp only [dite_eq_left hP]
     refine ⟨⟨hP, ⟨one_pos, _root_.GlobalTheory.Published.GreenModel.isIrr_hom _,
       fun a ha ha' => absurd ha' (by omega)⟩, ?_⟩, by simp⟩
     intro x hx y _ z hz
@@ -260,7 +260,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
   · intro P P' hP hP' he
     obtain ⟨c, hc, y0, -, hy0⟩ := exists_ne_zero_gn_one_ev_eq_gen_one L
     have h1 := congrFun he y0
-    simp only [dif_pos hP, dif_pos hP'] at h1
+    simp only [dite_eq_left hP, dite_eq_left hP'] at h1
     have key : ∀ {b : ZMod g} (hb : b ≠ 0), _root_.GlobalTheory.Published.GreenModel.th L hb y0 =
         L.teich (algebraMap (ZMod g) (_root_.Formalism.CyclotomicNorms.Fbar g) b) := by
       intro b hb
@@ -275,7 +275,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
       _root_.GlobalTheory.Published.GreenModel.lab_eq hP', hb]
   · intro χ hχ
     obtain ⟨-, ⟨V, hVs, hV⟩, -⟩ := hχ
-    haveI := hVs
+    have := hVs
     have hm := character_one_and_mul_of_simple_of_comm gn_one_mul_comm V
     let ψ : _root_.GlobalTheory.GLq.Gn g 1 →* ℂ :=
       { toFun := χ
@@ -298,7 +298,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
         exact hl'
     have hy0pow : y0 ^ (g ^ 1 - 1) = 1 := _root_.GlobalTheory.Published.GreenModel.ev_inj (by
       rw [map_pow, hy0, (isPrimitiveRoot_gen_one L).pow_eq_one, map_one])
-    haveI : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
+    have : NeZero (g ^ 1 - 1) := ⟨pow_one_sub_one_pos.ne'⟩
     obtain ⟨k, -, hk⟩ := hζ.eq_pow_of_pow_eq_one
       (show ψ y0 ^ (g ^ 1 - 1) = 1 by rw [← map_pow, hy0pow, map_one])
     have hck : c ^ k ≠ 0 := pow_ne_zero _ hc
@@ -308,7 +308,7 @@ theorem _root_.GlobalTheory.Published.GreenModel.green_one (L : _root_.GlobalThe
       natDegree_X_sub_C _⟩
     refine ⟨X - C (c ^ k), hP, ?_⟩
     funext y
-    simp only [dif_pos hP]
+    simp only [dite_eq_left hP]
     obtain ⟨n, hn⟩ := _root_.GlobalTheory.Published.GreenModel.ev_eq L y
     have hy : y = y0 ^ n := _root_.GlobalTheory.Published.GreenModel.ev_inj (by rw [hn, map_pow, hy0])
     change χ y = _root_.GlobalTheory.GLq.thetaOf L 1

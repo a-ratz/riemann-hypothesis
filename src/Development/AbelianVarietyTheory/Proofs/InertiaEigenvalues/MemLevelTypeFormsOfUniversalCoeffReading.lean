@@ -274,7 +274,7 @@ theorem mem_baseChange_iInf_ker [Finite ι] (φ : ι → V →ₗ[K] V) {x : A �
     (h : ∀ i, LinearMap.lTensor A ((φ i).restrictScalars R) x = 0) :
     x ∈ ((⨅ i, LinearMap.ker (φ i)).restrictScalars R).baseChange A := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨l, hl⟩ := (LinearMap.range (LinearMap.pi φ)).subtype.exists_leftInverse_of_injective (Submodule.ker_subtype _)
   obtain ⟨r, hr⟩ := (LinearMap.pi φ).rangeRestrict.exists_rightInverse_of_surjective (LinearMap.range_rangeRestrict _)
   let s : ι → V →ₗ[K] V := fun i => r ∘ₗ l ∘ₗ LinearMap.single K (fun _ : ι => V) i
@@ -365,10 +365,10 @@ theorem injective_rd (Z : CellTie hρ Y rd) : Function.Injective rd := by
   obtain ⟨d⟩ := Z.nonempty_dat
   have hQ : InRange X i ∅ := ⟨by simp, fun _ h => absurd h (Finset.notMem_empty _), by simp⟩
   have key : ∀ x, rd x = rd (Y.th i _ b d) → coefAt 0 (Y.thU i _ b ∅ 0 d) = x := fun x hx => by
-    haveI : IsEmpty ↥(half (ρ.ch i) (admissibleConjugatePairPlaces X i ∅ 0)) := ⟨fun P => Finset.notMem_empty _ (admissibleConjugatePairPlaces_subset i ∅ 0 (mem_half.1 P.2).1)⟩
+    have : IsEmpty ↥(half (ρ.ch i) (admissibleConjugatePairPlaces X i ∅ 0)) := ⟨fun P => Finset.notMem_empty _ (admissibleConjugatePairPlaces_subset i ∅ 0 (mem_half.1 P.2).1)⟩
     rw [Z.thU_eq ∅ 0 d hQ (fun _ => x) fun a => by rw [hx, Z.th_eq, ρ.xi_of_empty i j b Y (by simp)], grpSum,
       Finset.sum_eq_single 0 (fun a _ h => absurd (funext fun P => isEmptyElim P) h)
-        (fun h => absurd (@Finset.mem_univ _ (_) _) h), map_zero, coefAt_tmul_single, if_pos rfl]
+        (fun h => absurd (@Finset.mem_univ _ (_) _) h), map_zero, coefAt_tmul_single, ite_eq_left rfl]
   have h1 := key (Y.th i _ b d + f) (by rw [map_add (f := _), hf, add_zero])
   rw [key _ rfl] at h1
   exact left_eq_add.1 h1
@@ -414,7 +414,7 @@ theorem mem_levelTypeForms_of_hasLevelType (Z : CellTie hρ Y rd) (hA : ActRead 
 theorem mem_baseChange_of_hasType (Z : CellTie hρ Y rd) (hA : ActRead rd) {k : ℕ}
     {x : X.Ok i k ⊗[X.O i] Y.Fm i ((j : ℕ) + 1) b} (hx : HasType ρ i j b (rdK rd hρ k x)) :
     x ∈ ((Fm0 Y i ((j : ℕ) + 1) b).restrictScalars (X.O i)).baseChange (X.Ok i k) := by
-  haveI : Finite (G0g N) := Finite.of_equiv _ (ρ.eG i j b).symm.toEquiv
+  have : Finite (G0g N) := Finite.of_equiv _ (ρ.eG i j b).symm.toEquiv
   refine mem_baseChange_iInf_ker _ fun u => Z.injective_rdK k (funext fun g => ?_)
   obtain ⟨κ, hκ⟩ := exists_lift (hρ := hρ) (i := i) (j := j) (b := b) u.1
   have hu := (Z.U_eq u.1).2 u.2

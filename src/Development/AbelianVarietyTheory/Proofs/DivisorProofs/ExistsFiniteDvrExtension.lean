@@ -126,10 +126,10 @@ namespace GlobalTheory.CdvrLiftCp
 
 theorem exists_cdvr_lift : ∀ (p : ℕ) [Fact p.Prime] (T : CDVR), T.FinRes → ∀ (kO : T.V →+* 𝓞_ℂ_[p]) (k : T.Fr →+* ℂ_[p]), (∀ a, algebraMap 𝓞_ℂ_[p] ℂ_[p] (kO a) = k (algebraMap T.V T.Fr a)) → ∀ (L : Type) [Field L] [Algebra T.Fr L] [FiniteDimensional T.Fr L] (kL : L →+* ℂ_[p]), (∀ a, kL (algebraMap T.Fr L a) = k a) → ∃ (T' : CDVR) (i : T.V →+* T'.V) (iF : T.Fr →+* T'.Fr) (ψ : L ≃+* T'.Fr) (kO' : T'.V →+* 𝓞_ℂ_[p]), T'.FinRes ∧ Function.Injective kO' ∧ (∀ a, algebraMap T'.V T'.Fr (i a) = iF (algebraMap T.V T.Fr a)) ∧ (∀ a, ψ (algebraMap T.Fr L a) = iF a) ∧ (∀ a, algebraMap 𝓞_ℂ_[p] ℂ_[p] (kO' a) = kL (ψ.symm (algebraMap T'.V T'.Fr a))) ∧ ∀ (A : Type) [CommRing A] (f : A →+* L), (∀ a, ‖kL (f a)‖ ≤ 1) → ∃ fO : A →+* T'.V, ∀ a, algebraMap T'.V T'.Fr (fO a) = ψ (f a) := by
   intro p _ T hT kO k hk L _ _ _ kL hkL
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   obtain ⟨W, _, _, _, _, _, _, _, hc, hfin, hinj, hloc, -, -⟩ :=
     GlobalTheory.SS.exists_complete_dvr_finite_extension T.V T.Fr L
-  haveI : CharZero W := charZero_of_injective_algebraMap hinj
+  have : CharZero W := charZero_of_injective_algebraMap hinj
   let T' : CDVR := { V := W }
   let ψ : L ≃+* FractionRing W := (FractionRing.algEquiv W L).symm.toRingEquiv
   let iF : T.Fr →+* FractionRing W := ψ.toRingHom.comp (algebraMap T.Fr L)
@@ -146,7 +146,7 @@ theorem exists_cdvr_lift : ∀ (p : ℕ) [Fact p.Prime] (T : CDVR), T.FinRes →
       (RingHom.congr_fun hc a).symm
     change ψ (algebraMap T.Fr L (algebraMap T.V T.Fr a)) = _
     rw [h1, hψ]
-  haveI : Algebra.IsIntegral T.V W := Algebra.IsIntegral.of_finite T.V W
+  have : Algebra.IsIntegral T.V W := Algebra.IsIntegral.of_finite T.V W
   have hint : ∀ w : W, kL (algebraMap W L w) ∈ 𝓞_ℂ_[p] := by
     intro w
     have hw : IsIntegral T.V w := Algebra.IsIntegral.isIntegral w
@@ -160,7 +160,7 @@ theorem exists_cdvr_lift : ∀ (p : ℕ) [Fact p.Prime] (T : CDVR), T.FinRes →
   let kO' : W →+* 𝓞_ℂ_[p] := (kL.comp (algebraMap W L)).codRestrict 𝓞_ℂ_[p] hint
   have hkO' : ∀ w, algebraMap 𝓞_ℂ_[p] ℂ_[p] (kO' w) = kL (algebraMap W L w) := fun w => rfl
   refine ⟨T', algebraMap T.V W, iF, ψ, kO', ?_, ?_, fun a => (hφ a).symm, fun a => rfl, ?_, ?_⟩
-  · haveI : Finite (IsLocalRing.ResidueField T.V) := hT
+  · have : Finite (IsLocalRing.ResidueField T.V) := hT
     exact Module.finite_of_finite (IsLocalRing.ResidueField T.V) (M := IsLocalRing.ResidueField W)
   · intro a b hab
     have h1 := congrArg (algebraMap 𝓞_ℂ_[p] ℂ_[p]) hab

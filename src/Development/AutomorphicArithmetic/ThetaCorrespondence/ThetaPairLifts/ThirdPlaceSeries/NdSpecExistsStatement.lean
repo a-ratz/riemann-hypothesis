@@ -202,14 +202,14 @@ theorem tSet_subset_of_unif (n : ℕ) (s : SplitPlace L) (ϖ ϖ' : s.v.adicCompl
       · simp only [c]; split_ifs
         · rw [hv]
         · rw [map_one]
-      · rw [map_zero]; exact zero_le'
+      · rw [map_zero]; exact zero_le
     · show Valued.v (Matrix.diagonal c' i j) ≤ 1
       rw [Matrix.diagonal_apply]
       split_ifs
       · simp only [c']; split_ifs
         · rw [hvi]
         · rw [map_one]
-      · rw [map_zero]; exact zero_le'
+      · rw [map_zero]; exact zero_le
   have hdiag : Formalism.UG.diagJ n ϖ k = Formalism.UG.diagJ n ϖ' k * (dm : Matrix (Fin n) (Fin n) _) := by
     show _ = _ * Matrix.diagonal c
     rw [Formalism.UG.diagJ, Formalism.UG.diagJ, Matrix.diagonal_mul_diagonal]
@@ -374,7 +374,7 @@ theorem iSup_maxGen_baseChange {L K M I : Type} [Field L] [Field K] [Algebra L K
 theorem finiteDimensional_mtL {R : Ranks} (what₂ : Rows.Data R) (μ : what₂.Tup) (j : ℕ) :
     FiniteDimensional what₂.LL (what₂.MtL μ j) := by
   let b := Module.Free.chooseBasis what₂.LL (what₂.MtL μ j)
-  haveI : Finite (Module.Free.ChooseBasisIndex what₂.LL (what₂.MtL μ j)) := ((what₂.jMt_basis μ j b).1).finite
+  have : Finite (Module.Free.ChooseBasisIndex what₂.LL (what₂.MtL μ j)) := ((what₂.jMt_basis μ j b).1).finite
   exact Module.Finite.of_basis b
 
 end GlobalTheory.HeckeSplitField
@@ -390,12 +390,12 @@ theorem exists_finExt_split : ∀ (D : D7) (M : MtFam D) (C : NChoice D) (hR : H
         ⨆ μ, (hKC (mt0 M) C.Q hR X j w v k).maxGenEigenspace μ = ⊤ := by
   intro D M C hR E0 hcomm j w
   classical
-  haveI : FiniteDimensional D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := finiteDimensional_mtL D.what₂ _ j
+  have : FiniteDimensional D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := finiteDimensional_mtL D.what₂ _ j
   let op : HeightOneSpectrum (𝓞 D.host.E) × ℕ → Module.End D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) :=
     fun vk => hLC (mt0 M) C.Q hR j w vk.1 vk.2
   obtain ⟨p, hp⟩ := Formalism.L2.Col.hfs_exists_poly op
   let S : Set (PadicAlgCl (D.what₂.places.resChar w)) := ((p.map (E0.emb w)).roots.toFinset : Set _)
-  haveI : Finite S := Finset.finite_toSet _
+  have : Finite S := Finset.finite_toSet _
   have hfin : FiniteDimensional ℚ_[D.what₂.places.resChar w] (IntermediateField.adjoin ℚ_[D.what₂.places.resChar w] S) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine ⟨⟨IntermediateField.adjoin ℚ_[D.what₂.places.resChar w] S, hfin⟩, ?_⟩
@@ -647,14 +647,14 @@ theorem heckeEig_ne_bot (B : LocBase0 H what₂) (hs : HeckeStd0 B) (hd : FinDim
     (hAct : ActEx B (partCompl_of hs hd)) (hH : ActHK B hs hd hL hAct) (i : LocT B) (x : XOf B i) :
     heckeEig (TOf B i) (actC B (partCompl_of hs hd) hAct i) x ≠ ⊥ := by
   classical
-  haveI := hd (jOf B i) (wOf B i)
+  have := hd (jOf B i) (wOf B i)
   let S : Set (Module.End (FractionRing (OOf B i)) (B.V (jOf B i) (wOf B i))) :=
     {f | ∃ v k, GenAt0 H (lOf B i) (B.Qw (wOf B i)) v k ∧ f = B.hK (jOf B i) (wOf B i) v k}
   let χ : Module.End (FractionRing (OOf B i)) (B.V (jOf B i) (wOf B i)) → FractionRing (OOf B i) :=
     fun a => if h : a ∈ hAlg B i then NCov.pt x.1 ⟨a, h⟩ else 0
   have hSc : ∀ a ∈ S, ∀ b ∈ S, Commute a b := std_comm (j := jOf B i) (w := wOf B i) hs i.2.2.2.1 i.2.2.2.2.1
   have hmem : ∀ a ∈ S, a ∈ hAlg B i := fun a ha => Algebra.subset_adjoin ha
-  have hχ : ∀ a (ha : a ∈ S), χ a = NCov.pt x.1 ⟨a, hmem a ha⟩ := fun a ha => dif_pos (hmem a ha)
+  have hχ : ∀ a (ha : a ∈ S), χ a = NCov.pt x.1 ⟨a, hmem a ha⟩ := fun a ha => dite_eq_left (hmem a ha)
   obtain ⟨u, huW, hu0, hu⟩ := exists_common_eigvec S hSc χ (NCov.W (hAlg B i) (NCov.pt x.1)) x.2.2
     (fun a ha => by
       rw [hχ a ha]
@@ -671,7 +671,7 @@ theorem heckeEig_ne_bot (B : LocBase0 H what₂) (hs : HeckeStd0 B) (hd : FinDim
       ((actC B (partCompl_of hs hd) hAct i f).baseChange (FractionRing (OOf B i))) z =
         algebraMap (OOf B i) (FractionRing (OOf B i)) ((f : XOf B i → OOf B i) x) • z := by
     rintro f ⟨v, k, hvk, hf⟩
-    have e1 : f = hTOf B i v k := Subtype.ext (by rw [hf]; simp [hTOf, dif_pos hvk])
+    have e1 : f = hTOf B i v k := Subtype.ext (by rw [hf]; simp [hTOf, dite_eq_left hvk])
     subst e1
     apply PsiC_inj B (partCompl_of hs hd) hL i
     rw [hH i v k hvk z, hz, map_smul, hz, hu _ ⟨v, k, hvk, rfl⟩, hχ _ ⟨v, k, hvk, rfl⟩]
@@ -752,8 +752,8 @@ theorem not_mem_bad (D : D7) (cf : CharFrame D) (C : NChoice D) (tp : TupTied D 
         fun h => hp (GlobalTheory.LocLevel.mem_placesOver_of_overPl' hov hov' h)
       unfold CharFrame.delAt
       split_ifs with h
-      · exact cf.isDel'.unr w' fun h' => hnp (by rw [if_pos h]; exact h')
-      · exact cf.isDel.unr w' fun h' => hnp (by rw [if_neg h]; exact h')
+      · exact cf.isDel'.unr w' fun h' => hnp (by rw [ite_eq_left h]; exact h')
+      · exact cf.isDel.unr w' fun h' => hnp (by rw [ite_eq_right h]; exact h')
 
 theorem genHyp : ∀ (D : D7) (cf : CharFrame D) (M : MtFam D) (C : NChoice D) (tp : TupTied D cf C),
     MtInput D M tp.tup C.Q → QOver C → GenHyp M C.Q := by
@@ -829,7 +829,7 @@ theorem actHK_holds {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (B : LocBas
     have hs1 := ((hAct i).choose_spec.2 v k hg m)
     have e : ∀ m' : MtSub B (partCompl_of hs hd) i, PsiC B (partCompl_of hs hd) hL i (c ⊗ₜ m') = c • ((m' : partOf B i) : B.V (jOf B i) (wOf B i)) := by
       intro m'
-      haveI := hL i
+      have := hL i
       simp only [PsiC, mtEquiv, LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe, Submodule.coe_subtype]
       rw [IsBaseChange.equiv_tmul]
       rfl
@@ -877,7 +877,7 @@ theorem free_quot [IsDomain O] [IsPrincipalIdealRing O] (s : A →+* O) (N : Sub
     intro y
     refine Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (Submodule.subset_span ?_)
     exact ⟨e (Pi.single k 1), he1 _, rfl⟩
-  haveI : Module.IsTorsionFree O ((ι → O) ⧸ P) := Module.IsTorsionFree.of_smul_eq_zero fun c q h => by
+  have : Module.IsTorsionFree O ((ι → O) ⧸ P) := Module.IsTorsionFree.of_smul_eq_zero fun c q h => by
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective P q
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
     by_cases hc : c = 0
@@ -909,9 +909,9 @@ theorem exists_proj {A : Type} [CommRing A] [IsDedekindDomain A] {ι : Type} [Fi
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at ha
     rw [Submodule.mem_bot, Submodule.Quotient.mk_eq_zero]
     exact htf a (nonZeroDivisors.coe_ne_zero a) x ha
-  haveI : Module.Flat A ((ι → A) ⧸ N) := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htor
-  haveI := Module.finitePresentation_of_finite A ((ι → A) ⧸ N)
-  haveI : Module.Projective A ((ι → A) ⧸ N) := Module.Flat.projective_of_finitePresentation
+  have : Module.Flat A ((ι → A) ⧸ N) := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htor
+  have := Module.finitePresentation_of_finite A ((ι → A) ⧸ N)
+  have : Module.Projective A ((ι → A) ⧸ N) := Module.Flat.projective_of_finitePresentation
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property N.mkQ LinearMap.id (Submodule.mkQ_surjective N)
   refine ⟨LinearMap.id - σ ∘ₗ N.mkQ, fun x => ?_, fun x hx => ?_⟩
   · rw [← Submodule.Quotient.mk_eq_zero]
@@ -948,7 +948,7 @@ namespace GlobalTheory.BjFree
 theorem latRel_torsionFree (D : D7) (hinj : Function.Injective D.what₂.OtoLL) (j : ℕ) (a : D.what₂.O) (ha : a ≠ 0)
     (x : (D.what₂.MjLat j).gen → D.what₂.O) (hx : a • x ∈ Formalism.L2.latRelSub (D.what₂.MjLat j)) :
     x ∈ Formalism.L2.latRelSub (D.what₂.MjLat j) := by
-  simp only [Formalism.L2.mem_latRelSub, Formalism.L2.latRel, Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, map_mul,
+  simp only [Formalism.L2.mem_latRelSub, Formalism.L2.latRel, Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul, map_mul,
     mul_smul] at hx ⊢
   rw [← Finset.smul_sum] at hx
   have hne : (D.what₂.embLL.comp D.what₂.OtoLL) a ≠ 0 := by
@@ -962,10 +962,10 @@ theorem latRel_torsionFree (D : D7) (hinj : Function.Injective D.what₂.OtoLL) 
 theorem bjC_free : ∀ (D : D7) (B : LocBase0 D.host D.what₂) (hI : OsInt B), (Function.Injective D.what₂.OtoLL ∧ ∃ F : Subfield D.what₂.LL, ∀ x, x ∈ D.what₂.OtoLL.range ↔ x ∈ F ∧ IsIntegral ℤ x) → ∀ i, Module.Free (OOf B i) (BjC B hI i) := by
   intro D B hI hO i
   classical
-  haveI := GlobalTheory.FreeDedekindQuotient.dedekind_of_concrete D hO
+  have := GlobalTheory.FreeDedekindQuotient.dedekind_of_concrete D hO
   obtain ⟨e, he1, he2⟩ := GlobalTheory.FreeDedekindQuotient.exists_proj (Formalism.L2.latRelSub (D.what₂.MjLat (jOf B i)))
     (fun a ha x hx => latRel_torsionFree D hO.1 _ a ha x hx)
-  haveI : IsPrincipalIdealRing (OOf B i) := inferInstance
+  have : IsPrincipalIdealRing (OOf B i) := inferInstance
   have hF := GlobalTheory.FreeDedekindQuotient.free_quot (sOfC B hI i) _ e he1 he2
   exact hF
 
@@ -1149,7 +1149,7 @@ theorem le_comap_of_padicInt {p : ℕ} [Fact p.Prime] {A B : Type} [CommRing A] 
     rw [Ideal.comap_comap, ← comap_maximalIdeal_padicInt B]
     congr 1
     exact RingHom.ext hφ
-  haveI : ((maximalIdeal B).comap φ).IsMaximal :=
+  have : ((maximalIdeal B).comap φ).IsMaximal :=
     Ideal.isMaximal_of_isIntegral_of_isMaximal_comap (algebraMap ℤ_[p] A)
       (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance))
       ((maximalIdeal B).comap φ) (by rw [hc]; infer_instance)
@@ -1223,9 +1223,9 @@ theorem chiN_continuous : ∀ (D : D7) (M : MtFam D) (C : NChoice D) (hR : Hecke
     continuous_of_isOpen_ker _ (hker _ _)
   have h3 : Continuous (Units.map (twC (Fam.NPC.jOf (base M C hR X hS) i) (wOf (base M C hR X hS) i)).toMonoidHom) :=
     continuous_unitsMap _ (htwc _ _)
-  haveI : Fact (lOf (base M C hR X hS) i).Prime := ⟨D.what₂.places.resChar_prime _⟩
-  letI : Algebra ℤ_[lOf (base M C hR X hS) i] (OOf (base M C hR X hS) i) := (base M C hR X hS).algOc _ _
-  haveI : Module.Finite ℤ_[lOf (base M C hR X hS) i] (OOf (base M C hR X hS) i) := (base M C hR X hS).finOc _ _
+  have : Fact (lOf (base M C hR X hS) i).Prime := ⟨D.what₂.places.resChar_prime _⟩
+  let : Algebra ℤ_[lOf (base M C hR X hS) i] (OOf (base M C hR X hS) i) := (base M C hR X hS).algOc _ _
+  have : Module.Finite ℤ_[lOf (base M C hR X hS) i] (OOf (base M C hR X hS) i) := (base M C hR X hS).finOc _ _
   have h4 : Continuous (Units.map (algebraMap ℤ_[lOf (base M C hR X hS) i] (OOf (base M C hR X hS) i)).toMonoidHom) :=
     continuous_unitsMap _ (continuous_algebraMap_padicInt _ (hadic _ _))
   have h5 := continuous_cycZ D.host.E D.nd.Om (lOf (base M C hR X hS) i)
@@ -1295,7 +1295,7 @@ theorem main : ∀ {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (B : LocBase
   | mem f hf =>
     obtain ⟨v, k, hvk, rfl⟩ := hf
     refine Ideal.Quotient.eq.2 ?_
-    simp only [hTfun, dif_pos hvk]
+    simp only [hTfun, dite_eq_left hvk]
     exact sub_mem_of_ker_eq x.1 y.1 (x.2.1.trans y.2.1.symm) _
   | algebraMap r => rfl
   | add f g _ _ hf hg => simp only [Pi.add_apply, map_add (f := _), hf, hg]
@@ -1619,7 +1619,7 @@ namespace GlobalTheory.TwistRamLoc
 theorem twist_ram_and_trivial_at_l : ∀ (D : D7) (cf : CharFrame D) (C : NChoice D) (tp : TupTied D cf C) (w : D.what₂.places.Pl), GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.RowTie.ChebSplit D.nd → PsiChoiceCompatible D cf C tp → TwistedAt D w → (tp.psi w).ValuesIn 0 D.what₂.embLL → NX.AdmTw D (C.twI w) (C.k' w) (C.Q w) ((C.psi' w).comp (D.ntw.art (C.twI w) (C.Q w))) → (∀ v ∈ C.Q w, ∀ A : ValuationSubring D.nd.Om, IsPlaceOver A v → ∃ σ ∈ Ine (F := D.host.E) A, ((C.psi' w).comp (D.ntw.art (C.twI w) (C.Q w))) σ ≠ 1) ∧ (∀ v ∈ placesOver D.host.E (D.what₂.places.resChar w), ∀ A : ValuationSubring D.nd.Om, IsPlaceOver A v → ∀ σ ∈ Dec (F := D.host.E) A, ((C.psi' w).comp (D.ntw.art (C.twI w) (C.Q w))) σ = 1) := by
   intro D cf C tp w hGAR _ hTied hTw hVal hAdm
   classical
-  haveI : Fact (D.what₂.places.resChar w).Prime := ⟨D.what₂.places.resChar_prime w⟩
+  have : Fact (D.what₂.places.resChar w).Prime := ⟨D.what₂.places.resChar_prime w⟩
   obtain ⟨art, ha⟩ := hGAR D.host.E D.nd.Om
   obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex (D.what₂.places.resChar w)
   have hP : IsPsi (D.what₂.places.resChar w) (C.Q w) (tp.psi w) := tp.psi_is w hTw
@@ -1783,8 +1783,8 @@ theorem unrAt_of_under_eq {E : Type} [Field E] [NumberField E] [StarRing E] {F :
 
 theorem cond_of_under_eq {R : Ranks} (H : Host R) {l : ℕ} {Q : Finset (HeightOneSpectrum (𝓞 H.E))} {χ : HChar H.E}
     (h : IsPsi l Q χ) {v v' : HeightOneSpectrum (𝓞 H.E)} (hv : v.under (𝓞 H.F) = v'.under (𝓞 H.F)) (hQ : v ∈ Q) : v' ∈ Q := by
-  letI := H.cmStar
-  haveI : IsCMField H.E := H.isCMField_hostE
+  let := H.cmStar
+  have : IsCMField H.E := H.isCMField_hostE
   by_contra hn
   refine (h.ram v).1 (unrAt_of_under_eq (F := H.F) (fun x => ?_) ?_ ?_ h.triv h.tame hv ((h.ram v').2 hn)) hQ
   · exact IsCMField.complexConj_apply_eq_self H.E x
@@ -1797,7 +1797,7 @@ theorem under_eq_of_conj {R : Ranks} (H : Host R) {v v' : HeightOneSpectrum (�
     v.under (𝓞 H.F) = v'.under (𝓞 H.F) := by
   ext a
   refine h (algebraMap (𝓞 H.F) (𝓞 H.E) a) (algebraMap (𝓞 H.F) (𝓞 H.E) a) ?_
-  haveI : IsCMField H.E := H.isCMField_hostE
+  have : IsCMField H.E := H.isCMField_hostE
   apply H.φ₀.injective
   rw [Formalism.HC.HostAx.conjE_apply, ← IsCMField.complexEmbedding_complexConj]
   exact congrArg H.φ₀ (IsCMField.complexConj_apply_eq_self H.E (a : H.F)).symm
@@ -1831,9 +1831,9 @@ namespace GlobalTheory.TypePrimeSplit
 
 theorem exists_intCast_of_card {K : Type} [CommRing K] {p : ℕ} (hp : p.Prime) (h : Nat.card K = p) (x : K) :
     ∃ n : ℤ, x = n := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Finite K := Nat.finite_of_card_ne_zero (h ▸ hp.ne_zero)
-  haveI : Nontrivial K := Finite.one_lt_card_iff_nontrivial.1 (h ▸ hp.one_lt)
+  have : Fact p.Prime := ⟨hp⟩
+  have : Finite K := Nat.finite_of_card_ne_zero (h ▸ hp.ne_zero)
+  have : Nontrivial K := Finite.one_lt_card_iff_nontrivial.1 (h ▸ hp.one_lt)
   obtain ⟨n, hn⟩ := mem_zmultiples_of_prime_card (G := K) h (g := 1) (g' := x) one_ne_zero
   exact ⟨n, by simpa using hn.symm⟩
 

@@ -88,7 +88,7 @@ theorem exists_pow_loc (P : HeightOneSpectrum (𝓞 E)) (k : ℕ) (hk : 0 < k) :
   obtain ⟨e, B, hB, hkB⟩ := WfDvdMonoid.max_power_factor hk0 P.irreducible
   refine ⟨e, fun j hj => ?_⟩
   have hB' : ¬ B ≤ P.asIdeal := fun h => hB (Ideal.dvd_iff_le.2 h)
-  obtain ⟨t, htB, htP⟩ := SetLike.not_le_iff_exists.1 hB'
+  obtain ⟨t, htB, htP⟩ := IsConcreteLE.not_le_iff_exists.1 hB'
   refine ⟨t, htP, ?_⟩
   have h1 : t * j ∈ Ideal.span {(k : 𝓞 E)} := by
     rw [hkB, mul_comm t j]
@@ -368,9 +368,9 @@ theorem thDistC_add_deg (hadd : A.IndAdd a b Sa D) (hsm : A.IndSmooth a b Sa D)
   unfold latSum
   rw [finsum_eq_sum_of_fintype]
   unfold thDistC
-  rw [if_pos ⟨(Dvd.intro _ rfl).trans hR.2.2.2.1, hR.2.2.2.2⟩, hJ, Formalism.L2.Ker.jetOp_sum, Finset.smul_sum]
+  rw [ite_eq_left ⟨(Dvd.intro _ rfl).trans hR.2.2.2.1, hR.2.2.2.2⟩, hJ, Formalism.L2.Ker.jetOp_sum, Finset.smul_sum]
   refine Finset.sum_congr rfl fun z _ => ?_
-  exact (if_pos ⟨hR.2.2.2.1, mem_divLat_add D c _ hR.2.2.2.2 (Subtype.coe_prop _)⟩).symm
+  exact (ite_eq_left ⟨hR.2.2.2.1, mem_divLat_add D c _ hR.2.2.2.2 (Subtype.coe_prop _)⟩).symm
 
 end Step
 

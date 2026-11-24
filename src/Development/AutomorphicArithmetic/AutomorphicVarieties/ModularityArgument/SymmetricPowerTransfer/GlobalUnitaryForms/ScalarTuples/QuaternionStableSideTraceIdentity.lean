@@ -92,28 +92,28 @@ open NumberField UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.Z.Sym
 theorem UpperTheory.V.Z.Sym.Glob.gqS :
     UpperTheory.V.Z.Sym.Glob.GqS := by
   intro F _ _ Δ D hD ι hι t ht τ hτ γ j hγ hj
-  haveI := hD.real
+  have := hD.real
   have hreg : τ ^ 2 - 4 ≠ 0 := cm_ne hτ
   have htr : ∀ (g : DX Δ) (v : Pl F), HasTr g τ → HasTr ((ι g).1 v) (cv v τ) :=
     fun g v hg => hasTr_map (cv v) (hι g v) hg
   by_cases hA : D.admitted t τ
-  · rw [show one (D.admitted t τ) = 1 from if_pos hA, one_mul]
+  · rw [show one (D.admitted t τ) = 1 from ite_eq_left hA, one_mul]
     refine gqD D hD ι hι t ht τ hτ hA γ j hγ hj γ (D.fSv t) ?_ (fun v => ((D.S v).cS : ℂ))
       (fun v => gOrb (Ov v) (jstd ((cv v) τ)) 1 (toUnit QuadraticAlgebra.omega)) ?_
     · intro v u hu x
       by_cases hv : v ∈ D.Sg
       · have hS := hD.sig v hv
         have hu' : u ∈ (D.S v).J2 := by simpa [Dat.J2v, hv] using hu
-        simp only [Dat.fSv, if_pos hv]
+        simp only [Dat.fSv, ite_eq_left hv]
         rw [(hS.S_inv (t v) (ht v hv) u hu' _).2, (hS.S_inv (t v) (ht v hv) u⁻¹ (inv_mem hu') _).1]
       · have hu' : u ∈ KD ((cv v) Δ) (Ov v) := by simpa [Dat.J2v, hv] using hu
         have hiff : u⁻¹ * x * u ∈ KD ((cv v) Δ) (Ov v) ↔ x ∈ KD ((cv v) Δ) (Ov v) := by
           rw [(KD ((cv v) Δ) (Ov v)).mul_mem_cancel_right hu',
             (KD ((cv v) Δ) (Ov v)).mul_mem_cancel_left (inv_mem hu')]
-        simp only [Dat.fSv, if_neg hv, one]
+        simp only [Dat.fSv, ite_eq_right hv, one]
         by_cases hx : x ∈ KD ((cv v) Δ) (Ov v)
-        · rw [if_pos hx, if_pos (hiff.2 hx)]
-        · rw [if_neg hx, if_neg (fun h => hx (hiff.1 h))]
+        · rw [ite_eq_left hx, ite_eq_left (hiff.2 hx)]
+        · rw [ite_eq_right hx, ite_eq_right (fun h => hx (hiff.1 h))]
     · intro v jv hjv
       have hgv : HasTr ((ι γ).1 v) (cv v τ) := htr γ v hγ
       have hrv := cv_reg hreg v
@@ -128,7 +128,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqS :
         have e2 : D.J2v v = (D.S v).J2 := by simp [Dat.J2v, hv]
         rw [e1, e2]
         refine ⟨hF, fun _ => ?_, fun h => absurd hv h⟩
-        rw [hO, show one (Ind _ _ _) = 1 from if_pos (hA v hv), mul_one]
+        rw [hO, show one (Ind _ _ _) = 1 from ite_eq_left (hA v hv), mul_one]
       · have hL := hD.off v hv
         have e1 : D.fSv t v = fun g => one (g ∈ KD ((cv v) Δ) (Ov v)) := by
           funext g
@@ -137,12 +137,12 @@ theorem UpperTheory.V.Z.Sym.Glob.gqS :
         rw [e1, e2]
         refine ⟨(finD _ _ _ _ hL hrv _ jv hgv hjv).1, fun h => absurd h hv, fun _ =>
           ⟨(locD _ _ _ _ hL hrv _ jv hgv hjv (D.χ v) (hD.chi v).1 z hz).1, fun hK hu =>
-            ⟨if_pos hK, fun y hy => ?_⟩⟩⟩
+            ⟨ite_eq_left hK, fun y hy => ?_⟩⟩⟩
         have hy' : y⁻¹ * (ι γ).1 v * y ∈ ZD ((cv v) Δ) ⊔ KD ((cv v) Δ) (Ov v) := by
           by_contra hn
-          exact hy (if_neg (fun h => hn (le_sup_right (a := ZD ((cv v) Δ)) h)))
+          exact hy (ite_eq_right (fun h => hn (le_sup_right (a := ZD ((cv v) Δ)) h)))
         exact (oneD _ _ _ _ hL hrv _ jv hgv hjv hK hu).2.1 y hy'
-  · rw [show one (D.admitted t τ) = 0 from if_neg hA, zero_mul, mul_zero]
+  · rw [show one (D.admitted t τ) = 0 from ite_eq_right hA, zero_mul, mul_zero]
     apply gqOn_zero
     intro y
     obtain ⟨v, hv, hI⟩ : ∃ v ∈ D.Sg, ¬ Ind (D.S v).H ((cv v) τ) (t v) := by
@@ -153,7 +153,7 @@ theorem UpperTheory.V.Z.Sym.Glob.gqS :
       rw [heq]
       exact hasTr_conj (htr γ v hγ) _
     have hz : D.fSv t v (((Quotient.out y)⁻¹ * ι γ * Quotient.out y).1 v) = 0 := by
-      simp only [Dat.fSv, if_pos hv]
+      simp only [Dat.fSv, ite_eq_left hv]
       by_contra hne
       exact hI ((hD.sig v hv).S_supp (t v) (ht v hv) _ _ hgtr hne)
     exact fin_mulSupp (D.fSv t) D.Sg (fun w hw k hk => by simp [Dat.fSv, hw, one, hk]) _ hz
@@ -210,10 +210,10 @@ theorem UpperTheory.orbitalFiber_fixedSet_conj :
   unfold Dat.fSv
   unfold Dat.J2v at hk
   by_cases hv : v ∈ D.Sg
-  · simp only [if_pos hv] at hk ⊢
+  · simp only [ite_eq_left hv] at hk ⊢
     have H := (hD.sig v hv).S_inv (t v) (ht v hv)
     rw [(H k hk _).2, (H _ (inv_mem hk) _).1]
-  · simp only [if_neg hv] at hk ⊢
+  · simp only [ite_eq_right hv] at hk ⊢
     congr 1
     apply propext
     rw [Subgroup.mul_mem_cancel_right _ hk, Subgroup.mul_mem_cancel_left _ (inv_mem hk)]
@@ -263,11 +263,11 @@ theorem UpperTheory.orbitalFiber_fixedSet_support :
     have h1 : {w | ¬ x.1 w ∈ KD (cv w Δ) (Ov w)}.Finite := Filter.eventually_cofinite.1 x.2
     refine (h1.union D.Sg.finite_toSet).subset fun w hw => ?_
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not, Finset.mem_coe] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not, Finset.mem_coe] at hc
     apply hw
-    simp only [Dat.fSv, if_neg hc.2, Glob.one, if_pos hc.1]
+    simp only [Dat.fSv, ite_eq_right hc.2, Glob.one, ite_eq_left hc.1]
   have h := ne_zero_of_finprod _ hfin hne v
-  simp only [Dat.fSv, if_pos hv] at h
+  simp only [Dat.fSv, ite_eq_left hv] at h
   exact (hD.sig v hv).S_supp _ (ht v hv) _ _ hconj h
 end -- clump:auto
 end -- clump:auto
@@ -431,7 +431,7 @@ theorem UpperTheory.orbitalFiber_level_finite :
   have hfin : ∀ v ∈ D.Sg, ((D.J2v v).comap (P.p v)).relIndex (D.UZ ⊓ SA Δ) ≠ 0 := by
     intro v hv
     apply comap_relIndex_ne_zero (P.p v) (D.J2v v) (KD ((cv v) Δ) (Ov v))
-    · rw [Dat.J2v.eq_1, if_pos hv]
+    · rw [Dat.J2v.eq_1, ite_eq_left hv]
       exact SigOk.levelTwoFiniteIndex (hD.sig v hv)
     · exact hT v
   obtain ⟨W, hW, hWS⟩ := finset_relIndex_ne_zero (fun v => (D.J2v v).comap (P.p v)) _ D.Sg hfin
@@ -443,7 +443,7 @@ theorem UpperTheory.orbitalFiber_level_finite :
     by_cases hv : v ∈ D.Sg
     · exact hWS v hv hg.1
     · have e := hT v g hg.2
-      rw [Dat.J2v.eq_1, if_neg hv]
+      rw [Dat.J2v.eq_1, ite_eq_right hv]
       exact e
   refine ⟨?_, ?_⟩
   · rw [Dat.U2.eq_1, Dat.UZ.eq_1, RPG.box.eq_1, RPG.box.eq_1]
@@ -473,12 +473,12 @@ private theorem reps_setoid {G : Type} (r : Setoid G) (Y : Finset G) (x₀ : G)
       obtain ⟨y, hy, h⟩ := hY g
       exact ⟨y, hy, Quotient.sound h⟩
   choose σ hσY hσ using hσ
-  haveI : Finite (Quotient r) := by
+  have : Finite (Quotient r) := by
     refine Finite.of_injective (fun q => (⟨σ q, hσY q⟩ : Y)) ?_
     intro a b h
     have h' : σ a = σ b := congrArg Subtype.val h
     rw [← hσ a, ← hσ b, h']
-  haveI : Nonempty (Quotient r) := ⟨Quotient.mk r x₀⟩
+  have : Nonempty (Quotient r) := ⟨Quotient.mk r x₀⟩
   obtain ⟨n, hn⟩ : ∃ n, Nat.card (Quotient r) = n + 1 :=
     Nat.exists_eq_succ_of_ne_zero (Nat.card_pos (α := Quotient r)).ne'
   let e₀ : Fin (n + 1) ≃ Quotient r := (Finite.equivFinOfCardEq hn).symm
@@ -598,7 +598,7 @@ theorem orbitalFiber_index_finite : V.Z.Sym.Glob.Fib.IndexFin := by
         group
       rw [e]
       exact Subgroup.mul_mem _ (Subgroup.mem_sup_left hx) (Subgroup.mem_sup_right hc)
-    haveI := Finite.of_injective _ inj
+    have := Finite.of_injective _ inj
     exact Subgroup.index_ne_zero_of_finite
   exact Subgroup.relIndex_ne_zero_trans h1 h2
 
@@ -617,7 +617,7 @@ theorem UpperTheory.orbitalFiber_single :
     UpperTheory.V.Z.Sym.Glob.Fib.OneFib := by
   intro Γ G _ _ ι S U' Γ₁ Γ₀ x Φ hcomm hΓS hN htriv hΦl hΦr hTex hst hrel hcard
   classical
-  haveI hSn : S.Normal := ⟨fun n hn g => by
+  have hSn : S.Normal := ⟨fun n hn g => by
     convert S.mul_mem (hcomm g n) hn using 1
     group⟩
   set C := Subgroup.comap ι (S ⊔ U') with hC
@@ -651,7 +651,7 @@ theorem UpperTheory.orbitalFiber_single :
     · have hy' : ι h.1 • y ∉ orbit ↥S (x : G ⧸ U') := fun hm => hy (by
         have := hclos _ (inv_mem hg) _ hm
         rwa [inv_smul_smul] at this)
-      rw [hf, Set.indicator_apply, if_neg hy', Set.indicator_apply, if_neg hy]
+      rw [hf, Set.indicator_apply, ite_eq_right hy', Set.indicator_apply, ite_eq_right hy]
   have hfin : ∃ T' : Finset (G ⧸ U'), ∀ y, f y ≠ 0 → ∃ h : C, ∃ x' ∈ T', y = j h • x' := by
     obtain ⟨T, hT⟩ := hTex
     refine ⟨T.image (QuotientGroup.mk : G → G ⧸ U'), ?_⟩
@@ -688,7 +688,7 @@ theorem UpperTheory.orbitalFiber_single :
       UpperTheory.V.Z.Sym.gqOn (j.comp φ) (Subgroup.comap φ (Γ₀.subgroupOf C)) U' f := rfl
   have hb : UpperTheory.V.Z.Sym.gqOn (ι.comp Γ₁.subtype) (Γ₀.subgroupOf Γ₁) U' f =
       ↑(Nat.card ↥(Γ₀.subgroupOf Γ₁)) * UpperTheory.V.Z.Sym.gqOn (ι.comp Γ₁.subtype) ⊥ U' f := by
-    letI := MulAction.compHom (G ⧸ U') (ι.comp Γ₁.subtype)
+    let := MulAction.compHom (G ⧸ U') (ι.comp Γ₁.subtype)
     exact (UpperTheory.orbitalFiber_of_bot Γ₁ (G ⧸ U') (Γ₀.subgroupOf Γ₁) f).2 hcard
       (fun z hz y => htriv z.1 (Subgroup.mem_subgroupOf.mp hz) y)
   rw [← hb, e1, key, hidx]
@@ -766,7 +766,7 @@ private theorem mem_orb {G : Type} [Group G] (S U : Subgroup G) (x : G) (y : G �
 private theorem sup_act {G : Type} [Group G] {S U : Subgroup G} (hc : ∀ a b : G, a * b * a⁻¹ * b⁻¹ ∈ S)
     {g : G} (hg : g ∈ S ⊔ U) (x : G) {y : G ⧸ U} (hy : y ∈ orbit S (x : G ⧸ U)) :
     g • y ∈ orbit S (x : G ⧸ U) := by
-  haveI : S.Normal := ⟨fun n hn a => conj_memS hc hn a⟩
+  have : S.Normal := ⟨fun n hn a => conj_memS hc hn a⟩
   rw [← SetLike.mem_coe, Subgroup.normal_mul, Set.mem_mul] at hg
   obtain ⟨s, hs, u, hu, rfl⟩ := hg
   obtain ⟨s₀, hs₀, rfl⟩ := (mem_orb S U x y).1 hy
@@ -787,8 +787,8 @@ theorem UpperTheory.orbitalFiber_sum_over_fibers :
   intro Γ G I _ _ _ ι S U' Γ₀ x Φ hc hN hΦl hΦu hT hdisj hcov
   classical
   let Γ' : Subgroup Γ := Subgroup.comap ι (S ⊔ U')
-  letI A : MulAction Γ (G ⧸ U') := MulAction.compHom _ ι
-  letI B : MulAction Γ' (G ⧸ U') := MulAction.compHom _ (ι.comp Γ'.subtype)
+  let A : MulAction Γ (G ⧸ U') := MulAction.compHom _ ι
+  let B : MulAction Γ' (G ⧸ U') := MulAction.compHom _ (ι.comp Γ'.subtype)
   let k : G ⧸ U' → ℂ := fun y => Φ y.out
   let ki : I → G ⧸ U' → ℂ := fun i => (orbit S (x i : G ⧸ U')).indicator k
   have hsmul : ∀ (h : Γ) (g : G), h • (g : G ⧸ U') = ((ι h * g : G) : G ⧸ U') := fun h g => rfl
@@ -825,9 +825,9 @@ theorem UpperTheory.orbitalFiber_sum_over_fibers :
         exact sup_act hc hh (x i) hy
     show Set.indicator _ k (h • y) = Set.indicator _ k y
     by_cases hy : y ∈ orbit S (x i : G ⧸ U')
-    · rw [Set.indicator_apply, Set.indicator_apply, if_pos (hmem.2 hy), if_pos hy]
+    · rw [Set.indicator_apply, Set.indicator_apply, ite_eq_left (hmem.2 hy), ite_eq_left hy]
       exact hkinv (h : Γ) y
-    · rw [Set.indicator_apply, Set.indicator_apply, if_neg (mt hmem.1 hy), if_neg hy]
+    · rw [Set.indicator_apply, Set.indicator_apply, ite_eq_right (mt hmem.1 hy), ite_eq_right hy]
   · intro i y h
     exact (Set.indicator_of_mem (hki_mem i y h) k).symm
   · intro z
@@ -898,7 +898,7 @@ theorem UpperTheory.orbitalFiber_card_formula : UpperTheory.V.Z.Sym.Glob.Fib.Car
   have hgT : ∀ w, g w ∈ {s : ↥S ⧸ Ux | (((Quotient.out s : ↥S) : G) * x : G ⧸ U') = ((s₀ : G) * x : G ⧸ U')} := by
     intro w
     obtain ⟨k, hk⟩ := QuotientGroup.mk_out_eq_mul Ux (⟨_, hmem w⟩ : ↥S)
-    simp only [Set.mem_setOf_eq, g]
+    simp only [Set.mem_ofPred_eq, g]
     rw [hk, QuotientGroup.eq]
     have hkU : x⁻¹ * ((k : ↥S) : G) * x ∈ U' := hU ((hx k).1 k.2)
     have e : ((((⟨_, hmem w⟩ : ↥S) * (k : ↥S) : ↥S) : G) * x)⁻¹ * ((s₀ : G) * x) =
@@ -923,7 +923,7 @@ theorem UpperTheory.orbitalFiber_card_formula : UpperTheory.V.Z.Sym.Glob.Fib.Car
     rw [QuotientGroup.eq, Subgroup.mem_subgroupOf]
     simpa using (hg a b).1 h
   · rintro ⟨s, hs⟩
-    rw [Set.mem_setOf_eq] at hs
+    rw [Set.mem_ofPred_eq] at hs
     have hwS : x⁻¹ * ((s₀ : G)⁻¹ * ((Quotient.out s : ↥S) : G)) * x ∈ S := by
       simpa using hS.conj_mem _ (S.mul_mem (S.inv_mem s₀.2) (Quotient.out s).2) x⁻¹
     have hwU : x⁻¹ * ((s₀ : G)⁻¹ * ((Quotient.out s : ↥S) : G)) * x ∈ U' := by
@@ -956,8 +956,8 @@ open MulAction
 theorem UpperTheory.symmetric_fiber_covering : UpperTheory.V.Z.Sym.Glob.Fib.Cover := by
   intro H G _ _ S U U' x Ux ι Φ hS hU hUx hr hL hR hT hfin
   classical
-  letI a1 : MulAction H (S ⧸ Ux) := MulAction.compHom _ ι
-  letI a2 : MulAction H (G ⧸ U') := MulAction.compHom _ (S.subtype.comp ι)
+  let a1 : MulAction H (S ⧸ Ux) := MulAction.compHom _ ι
+  let a2 : MulAction H (G ⧸ U') := MulAction.compHom _ (S.subtype.comp ι)
   let q : S ⧸ Ux → G ⧸ U' := fun y => (((y.out : S) : G) * x : G)
   let k : S ⧸ Ux → ℂ := fun y => Φ (((y.out : S) : G) * x)
   have hΦ : ∀ a b : G, (a : G ⧸ U') = b → Φ a = Φ b := by
@@ -1030,7 +1030,7 @@ theorem UpperTheory.symmetric_fiber_covering : UpperTheory.V.Z.Sym.Glob.Fib.Cove
       have := QuotientGroup.eq.1 e3
       show ((q y).out)⁻¹ * ((ι h : S) : G) * (q y).out ∈ U'
       rwa [mul_assoc]
-    haveI : Finite (stabilizer H (q y)) := hs.to_subtype
+    have : Finite (stabilizer H (q y)) := hs.to_subtype
     exact Nat.card_pos.ne'
   have hpush := UpperTheory.orbitalFiber_pushforward H (S ⧸ Ux) (G ⧸ U') ⊥ q k inferInstance hq
     (fun z hz y => by rw [Subgroup.mem_bot.1 hz, one_smul]) hk hT' hfib hrel
@@ -1054,7 +1054,7 @@ theorem UpperTheory.symmetric_fiber_covering : UpperTheory.V.Z.Sym.Glob.Fib.Cove
     · rw [Set.indicator_of_notMem hz, mul_zero]
       have h0 : ∀ y : S ⧸ Ux, (∑ᶠ (_ : q y = z), k y) = 0 := by
         intro y
-        refine finsum_eq_if.trans (if_neg fun e => hz ?_)
+        refine finsum_eq_if.trans (ite_eq_right fun e => hz ?_)
         exact ⟨y.out, e⟩
       simp only [h0, finsum_zero]
   have hbot := (UpperTheory.orbitalFiber_of_bot H (G ⧸ U') ⊥ ((orbit S (x : G ⧸ U')).indicator fun y => Φ y.out)).1
@@ -1077,7 +1077,7 @@ theorem UpperTheory.symmetric_fiber_master_formula :
     UpperTheory.V.Z.Sym.Glob.Fib.Master := by
   intro Γ G _ _ ι S U U' Γ₁ Γ₀ ι₁ hι₁ hcomm hΓ₁ hΓ₀ htriv hUU' hidx hfinT hfinS hT hstab
   classical
-  haveI hSN : S.Normal := ⟨fun s hs g => by
+  have hSN : S.Normal := ⟨fun s hs g => by
     have h := S.mul_mem (hcomm g s) hs
     simpa [mul_assoc] using h⟩
   have hcomp : S.subtype.comp ι₁ = ι.comp Γ₁.subtype := MonoidHom.ext fun γ => hι₁ γ
@@ -1096,7 +1096,7 @@ theorem UpperTheory.symmetric_fiber_master_formula :
       rw [MulAction.Quotient.smul_mk, smul_eq_mul, mul_one, QuotientGroup.eq] at h
       have h' : ι z ∈ U' := by simpa using U'.inv_mem h
       simpa [hι₁] using h'
-    haveI : Finite (Γ₀.subgroupOf Γ₁) := ((hfinU' 1).subset hsubset).to_subtype
+    have : Finite (Γ₀.subgroupOf Γ₁) := ((hfinU' 1).subset hsubset).to_subtype
     exact Nat.card_pos.ne'
   have hd : (Γ₁ ⊔ Γ₀).relIndex ((S ⊔ U').comap ι) ≠ 0 := by
     refine UpperTheory.orbitalFiber_index_finite Γ G ι S U' Γ₁ Γ₀ hSN hΓ₁ ?_ ?_
@@ -1462,7 +1462,7 @@ private lemma conF (hSF : SuppFin) (bS : BaseS) (fS : FinS) (ok : D.Ok) (ι : DX
   have h2 := hSF _ _ _ B h1.1 hB.Γ₀ _ (h1.2 t ht) 1
   refine h2.subset ?_
   intro γ hγ
-  simp only [Set.mem_setOf_eq, Dat.FSx, inv_one, mul_one, one_mul]
+  simp only [Set.mem_ofPred_eq, Dat.FSx, inv_one, mul_one, one_mul]
   rw [bι D ι hι 0 g B hB γ]
   exact hγ
 
@@ -1475,7 +1475,7 @@ private lemma clEx (hH : HasTrLaw) (ch : F → ℂ) : ∃ cl : DX Δ → ℂ, (�
     have he : ∃ s, HasTr g s := ⟨s, hs⟩
     show (if h : ∃ s, HasTr g s then ch h.choose else 0) = ch s
     rw [dite_eq_left he, (hH F Δ g).2.1 _ _ he.choose_spec hs]
-  have zero : ∀ g, ¬ (∃ s, HasTr g s) → cl g = 0 := fun g he => dif_neg he
+  have zero : ∀ g, ¬ (∃ s, HasTr g s) → cl g = 0 := fun g he => dite_eq_right he
   refine ⟨cl, key, ?_, ?_⟩
   · intro g hg
     by_contra hn
@@ -1614,7 +1614,7 @@ theorem split_side_identity_unitary : QuaternionStableSideTraceIdentity := by
             (∏ v ∈ D.Sg, ((D.S v).cS : ℂ)) * (ch s.1 * ms s.1 * D.nS s.1) := by
         intro s
         rw [gqS F Δ D hD ι hι t ht s.1 ((hG _).1 s.2).1 (γ s) (j s) (hγ s) (hjj s)]
-        have h1 : one (D.admitted t s.1) = 1 := if_pos ((hG _).1 s.2).2
+        have h1 : one (D.admitted t s.1) = 1 := ite_eq_left ((hG _).1 s.2).2
         rw [h1]
         ring
       rw [finsum_congr hterm, sum_sub (fun a => D.Good t a) (fun a => ch a * ms a * D.nS a)]

@@ -164,7 +164,7 @@ theorem isAutFunSm_sgn_true (hL : SgnLaw θ true V) (φ : GA D V → ℂ) :
     · intro k τs Xs hX g
       have h := hs k τs Xs (fun i => by rw [hL.lie]; exact hX i) ((ofSgn true V).symm g)
       simpa only [prod_sgn_true hL, MulEquiv.apply_symm_apply] using h
-    · haveI := hW
+    · have := hW
       exact Module.Finite.map W _
     · exact Submodule.mem_map.2 ⟨Le φ, hφ, Le.symm_apply_apply φ⟩
     · rintro τ k f ⟨f', hf', rfl⟩
@@ -184,7 +184,7 @@ theorem isAutFunSm_sgn_true (hL : SgnLaw θ true V) (φ : GA D V → ℂ) :
     · intro k τs Xs hX g
       have h := hs k τs Xs (fun i => by rw [← hL.lie]; exact hX i) (ofSgn true V g)
       simpa only [prod_sgn_true hL] using h
-    · haveI := hW
+    · have := hW
       exact Module.Finite.map W _
     · exact Submodule.mem_map.2 ⟨φ, hφ, rfl⟩
     · rintro τ k f ⟨f', hf', rfl⟩
@@ -238,11 +238,11 @@ theorem cusp_transport {A B : HSp D} (e : GA D B ≃* GA D A) (hc : Continuous e
       left_inv := fun n => by ext; simp
       right_inv := fun n => by ext; simp
       map_mul' := fun a b => by ext; simp }
-  have c1 : Continuous eN := (hc.comp continuous_subtype_val).subtype_mk _
-  have c2 : Continuous eN.symm := (hcs.comp continuous_subtype_val).subtype_mk _
+  have c1 : Continuous eN := (hc.comp continuous_subtypeVal).subtype_mk _
+  have c2 : Continuous eN.symm := (hcs.comp continuous_subtypeVal).subtype_mk _
   let eH : NI B CB ≃ₜ NI A CA := { toEquiv := eN.toEquiv, continuous_toFun := c1, continuous_invFun := c2 }
   let eM : NI B CB ≃ᵐ NI A CA := eH.toMeasurableEquiv
-  haveI := hμ
+  have := hμ
   have hH : (Measure.map eN μ).IsHaarMeasure := MulEquiv.isHaarMeasure_map μ eN c1 c2
   let eQ : NIQ B CB ≃ NIQ A CA :=
     { toFun := fun q => ⟨eN q, by

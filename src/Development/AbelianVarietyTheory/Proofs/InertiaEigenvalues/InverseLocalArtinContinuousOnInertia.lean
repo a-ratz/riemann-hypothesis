@@ -69,7 +69,7 @@ namespace GlobalTheory.ArtinInvCont
 theorem absoluteGaloisAbelianization_t2Space (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] :
     T2Space (GlobalTheory.HeckeGal.Gab E Ω) := by
   unfold GlobalTheory.HeckeGal.Gab TopologicalAbelianization
-  haveI : IsClosed (((commutator (G E Ω)).topologicalClosure : Subgroup (G E Ω)) : Set (G E Ω)) :=
+  have : IsClosed (((commutator (G E Ω)).topologicalClosure : Subgroup (G E Ω)) : Set (G E Ω)) :=
     Subgroup.isClosed_topologicalClosure _
   infer_instance
 
@@ -114,7 +114,7 @@ theorem isCompact_valOne (E : Type) [Field E] [NumberField E] (w : HeightOneSpec
     have e2 : {y : w.adicCompletion E | Valued.v y = 1} =
         {y : w.adicCompletion E | Valued.v y ≤ 1} ∩ {y : w.adicCompletion E | Valued.v y < 1}ᶜ := by
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_compl_iff, not_lt]
+      simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_compl_iff, not_lt]
       exact ⟨fun h => ⟨h.le, h.ge⟩, fun h => le_antisymm h.1 h.2⟩
     rw [e2]
     exact h1.inter h2.isClosed_compl
@@ -123,12 +123,12 @@ theorem isCompact_valOne (E : Type) [Field E] [NumberField E] (w : HeightOneSpec
 
 theorem continuous_inv_on_ine : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (art : Neutral.B1.Ideles E →* GlobalTheory.HeckeGal.Gab E Ω) (a : Weil h →* (w.adicCompletion E)ˣ), GlobalTheory.HeckeGal.IsGlobalArtin art → (∀ σ, ord (w.adicCompletion E) (a σ) = -deg σ) → (∀ σ : Weil h, art (Neutral.B1.localIdele E w (a σ)) = GlobalTheory.HeckeGal.toAb E Ω σ) → Continuous fun σ : Ine (F := E) A => a (ineIncl h σ) := by
   intro E Ω _ _ _ _ _ A w h art a ha hord hart
-  haveI := absoluteGaloisAbelianization_t2Space E Ω
+  have := absoluteGaloisAbelianization_t2Space E Ω
   let K : Set (w.adicCompletion E)ˣ := {x | Valued.v (x : w.adicCompletion E) = 1}
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp (isCompact_valOne E w)
+  have : CompactSpace K := isCompact_iff_compactSpace.mp (isCompact_valOne E w)
   let f : K → GlobalTheory.HeckeGal.Gab E Ω := fun x => art (Neutral.B1.localIdele E w x.1)
   have hf : Continuous f :=
-    (ha.quot.continuous.comp (continuous_localIdele' E w)).comp continuous_subtype_val
+    (ha.quot.continuous.comp (continuous_localIdele' E w)).comp continuous_subtypeVal
   have hinj : Function.Injective f := fun x y hxy =>
     Subtype.ext (GlobalTheory.ArtinLocalInj.artin_localIdele_injective GlobalTheory.Published.chevalleyUnits' E Ω art ha w hxy)
   have hemb := hf.isClosedEmbedding hinj
@@ -148,7 +148,7 @@ theorem continuous_inv_on_ine : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
     have e : f ∘ g = fun σ : Ine (F := E) A => GlobalTheory.HeckeGal.toAb E Ω (σ : G E Ω) :=
       funext fun σ => hart (ineIncl h σ)
     rw [e]
-    exact continuous_quot_mk.comp continuous_subtype_val
-  exact continuous_subtype_val.comp hg
+    exact continuous_quot_mk.comp continuous_subtypeVal
+  exact continuous_subtypeVal.comp hg
 
 end GlobalTheory.ArtinInvCont

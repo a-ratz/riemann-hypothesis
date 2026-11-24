@@ -254,7 +254,7 @@ theorem stagesInnerFun_mem (h : Refines β γ) (φ : parabolicIndSpace F n γ τ
       fun_prop
     refine ⟨K'.subgroupOf (levi F n β), ?_, fun k hk x => ?_⟩
     · rw [Subgroup.coe_subgroupOf, Subgroup.coe_inf, Subgroup.coe_comap]
-      exact ((hKo.preimage hc).inter (isOpen_integralGL F n)).preimage continuous_subtype_val
+      exact ((hKo.preimage hc).inter (isOpen_integralGL F n)).preimage continuous_subtypeVal
     · obtain ⟨hk1, hk2⟩ := Subgroup.mem_inf.1 (Subgroup.mem_subgroupOf.1 hk)
       have hk1' : g⁻¹ * (k : GL (Fin n) F) * g ∈ K := by
         have := Subgroup.mem_comap.1 hk1

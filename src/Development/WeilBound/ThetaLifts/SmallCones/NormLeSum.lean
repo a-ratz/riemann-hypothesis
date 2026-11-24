@@ -120,10 +120,10 @@ theorem slice_core {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (e : ((κ → AF F
     rw [psi_eq hψ, map_neg, map_mul, qI_pt, zero_mul, neg_zero, map_zero, map_neg, map_mul, finite_projection_mixed_point, finite_projection_mixed_point] at h3
     simpa using h3
   have hfin : (G '' C \ {0}).Finite := by
-    haveI := isCompact_iff_compactSpace.1 hC
-    have := (hG.comp_continuous (continuous_subtype_val : Continuous ((↑) : C → _))).range_finite
+    have := isCompact_iff_compactSpace.1 hC
+    have := (hG.comp_continuous (continuous_subtypeVal : Continuous ((↑) : C → _))).range_finite
     rw [Set.range_comp, Subtype.range_coe] at this
-    exact this.diff
+    exact this.sdiff
   let φ₁ : Fin hfin.toFinset.card → (κ₁ → Af F) → ℂ := fun i => (hfin.toFinset.equivFin.symm i).1
   have hφ₁ : ∀ i, φ₁ i ∈ G '' C \ {0} := fun i => hfin.mem_toFinset.1 (hfin.toFinset.equivFin.symm i).2
   let A : Fin hfin.toFinset.card → (Fin m → AF F) → SInf F κ →L[ℂ] SInf F κ₁ := fun i y =>
@@ -131,7 +131,7 @@ theorem slice_core {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (e : ((κ → AF F
   have z0 : ∀ g : (κ₁ → Af F) → ℂ, pureA F (0 : SInf F κ₁) g = 0 := fun g => funext fun x => zero_mul _
   obtain ⟨K₁, hK₁, hK₁'⟩ := (LinearMap.toContinuousLinearMap (aw0 F κ)).bound
   refine ⟨_, φ₁, C, A, fun i => by obtain ⟨b, -, hb⟩ := (hφ₁ i).1; exact hb ▸ hGm b, hC, fun i f => ?_, fun y f => ?_,
-    fun i y hy => if_neg fun h : G (fun j => p2 (y j)) = φ₁ i => hy (hC' _ fun h' => (hφ₁ i).2 (h.symm.trans h')), fun q N hq => ?_⟩
+    fun i y hy => ite_eq_right fun h : G (fun j => p2 (y j)) = φ₁ i => hy (hC' _ fun h' => (hφ₁ i).2 (h.symm.trans h')), fun q N hq => ?_⟩
   · have h1 : IsLocallyConstant fun y : Fin m → AF F => if G (fun j => p2 (y j)) = φ₁ i then (1 : ℂ) else 0 :=
       (hG.comp_continuous (f := fun (y : Fin m → AF F) j => p2 (y j))
         (continuous_pi fun j => continuous_snd.comp (continuous_apply j))).comp fun g => if g = φ₁ i then (1 : ℂ) else 0
@@ -148,15 +148,15 @@ theorem slice_core {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (e : ((κ → AF F
     · rw [h, GlobalTheory.ThK.Dbl.Dense.pureA_zero]
       refine (Finset.sum_eq_zero fun i _ => ?_).symm
       simp only [A]
-      rw [if_neg fun h' => (hφ₁ i).2 (h'.symm.trans h)]
+      rw [ite_eq_right fun h' => (hφ₁ i).2 (h'.symm.trans h)]
       exact z0 _
     · let i₀ := hfin.toFinset.equivFin ⟨G fun j => p2 (y j), hfin.mem_toFinset.2 ⟨⟨_, hC' _ h, rfl⟩, h⟩⟩
       have hi : G (fun j => p2 (y j)) = φ₁ i₀ := by simp only [φ₁, i₀, Equiv.symm_apply_apply]
       rw [Finset.sum_eq_single i₀ (fun i _ hne => ?_) fun h => absurd (Finset.mem_univ _) h]
       · simp only [A]
-        rw [if_pos hi, ← hi]
+        rw [ite_eq_left hi, ← hi]
       · simp only [A]
-        rw [if_neg fun h' => hne (hfin.toFinset.equivFin.symm.injective (Subtype.ext (h'.symm.trans hi)))]
+        rw [ite_eq_right fun h' => hne (hfin.toFinset.equivFin.symm.injective (Subtype.ext (h'.symm.trans hi)))]
         exact z0 _
   · obtain ⟨p, M, hp, hp'⟩ := grow (q.comp ei.toLinearMap) (hq.comp ei.continuous)
     obtain ⟨K, hK, hK'⟩ := exists_half_trace (F := F)

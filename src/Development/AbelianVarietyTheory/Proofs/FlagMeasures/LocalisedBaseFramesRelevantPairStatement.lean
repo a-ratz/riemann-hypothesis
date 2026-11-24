@@ -113,7 +113,7 @@ open GlobalTheory.LocDual in
 theorem GlobalTheory.LocDual.frameD_exists : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r : ℕ), ∀ (f : Fin (r + 1) → V) (T : F), T ≠ 0 → (∀ a b : Fin (r + 1), (a ≠ Fin.last r ∨ b ≠ Fin.last r) → H.h (f a) (f b) = 0) → H.h (f (Fin.last r)) (f (Fin.last r)) = -(algebraMap F E T) → (∃ y : Fin r → V, ∀ i j : Fin r, H.h (f i.castSucc) (y j) = if i = j then 1 else 0) → ∃ Fr : FrameD H r, Fr.f = f ∧ Fr.T = T := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r f T hT hiso hzz hy
   obtain ⟨y, hy⟩ := hy
-  haveI := hM.char0
+  have := hM.char0
   set z := f (Fin.last r) with hz
   set e : Fin r → V := fun i => f i.castSucc with he
   have hez : ∀ k, H.h (e k) z = 0 := fun k => hiso _ _ (Or.inl (Fin.castSucc_ne_last k))
@@ -150,7 +150,7 @@ theorem GlobalTheory.LocDual.frameD_exists : ∀ {F : Type} [Field F] [Valuative
   · intro i j
     rw [hesR]
     simp only [hesL, hey', hy'e, hee, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [b, map_mul, hhalf]
     rw [← H.h_herm (y' j) (y' i)]
     linear_combination (-H.h (y' i) (y' j)) * hhalf2
@@ -246,8 +246,8 @@ theorem exists_coord_of_point {F : Type} [Field F] [ValuativeRel F] [Topological
 theorem relG_of_point : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r : ℕ), ∀ (k : ℕ) (P : FPair H r), Module.finrank E V = k + 2 * r + 1 → P.IsPoint → P.NormsOK → P.Gv ≠ 0 → P.RelG (theta M) := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P hrk hpt hN hG
   obtain ⟨S, ⟨c⟩⟩ := exists_coord_of_point M hM H r k P hrk hpt hN hG
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨hli, -, -, hD, hDl, -⟩ := GlobalTheory.FrameBasic.main M.L r k S
   obtain ⟨-, -, -, hSt, hpsi, -⟩ := GlobalTheory.HL.CoordUnip.transport M hM H r k P S c
   have hZm : S.Zh = H.Zhat P.A.f P.B.f := by
@@ -456,9 +456,9 @@ theorem dl_scaled (Z : LocDat D) (p : PlF D) {T T' : D.host.E} (F : LFlag (D.sp.
     simp only [Matrix.submatrix_apply, Matrix.mul_diagonal, Matrix.diagonal_mul]
   have hB : ((Formalism.MainNotions.S.Zhat F.fl F'.fl).map (D.s.atP p).ιE).submatrix (Fin.castLE hl) (Fin.castLE hl) =
       (D.s.atP p).ιE.mapMatrix ((Formalism.MainNotions.S.Zhat F.fl F'.fl).submatrix (Fin.castLE hl) (Fin.castLE hl)) := rfl
-  rw [Formalism.MainNotions.S.Loc.HermSp.Dl, dif_pos hl, hA, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal,
+  rw [Formalism.MainNotions.S.Loc.HermSp.Dl, dite_eq_left hl, hA, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal,
     Matrix.det_diagonal, hB, ← RingHom.map_det, Finset.prod_mul_distrib]
-  simp only [Formalism.MainNotions.S.Dl, Formalism.MainNotions.S.leadMinorE, dif_pos hl]
+  simp only [Formalism.MainNotions.S.Dl, Formalism.MainNotions.S.leadMinorE, dite_eq_left hl]
   ring
 
 theorem gv_ne_of (Z : LocDat D) (p : PlF D) (n n' : ℕ) (F : LFlag (D.sp.Y 0) D.R.rS ((n : ℕ) : D.host.E))

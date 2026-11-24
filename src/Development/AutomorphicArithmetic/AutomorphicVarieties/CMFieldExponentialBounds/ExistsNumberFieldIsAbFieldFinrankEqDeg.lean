@@ -52,11 +52,11 @@ open NumberField Formalism.HC UpperTheory.Top UpperTheory.V
 theorem UpperTheory.V.exists_numberField_isAbField_finrank_eq_deg :
     ∀ A : AbF, ∃ (L : Type) (_ : Field L) (_ : NumberField L), IsAbField A L ∧ Module.finrank ℚ L = A.deg := by
   intro A
-  haveI : NeZero A.m := ⟨A.pos.ne'⟩
-  haveI : NeZero ((A.m : ℚ)) := ⟨by exact_mod_cast A.pos.ne'⟩
-  haveI hcyc : IsCyclotomicExtension {A.m} ℚ (CyclotomicField A.m ℚ) :=
+  have : NeZero A.m := ⟨A.pos.ne'⟩
+  have : NeZero ((A.m : ℚ)) := ⟨by exact_mod_cast A.pos.ne'⟩
+  have hcyc : IsCyclotomicExtension {A.m} ℚ (CyclotomicField A.m ℚ) :=
     CyclotomicField.isCyclotomicExtension A.m ℚ
-  haveI : IsGalois ℚ (CyclotomicField A.m ℚ) :=
+  have : IsGalois ℚ (CyclotomicField A.m ℚ) :=
     IsCyclotomicExtension.isGalois {A.m} ℚ (CyclotomicField A.m ℚ)
   have hirr := Polynomial.cyclotomic.irreducible_rat A.pos
   let e := IsCyclotomicExtension.autEquivPow (CyclotomicField A.m ℚ) hirr

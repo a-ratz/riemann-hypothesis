@@ -316,7 +316,7 @@ theorem UpperTheory.Gal.W2.fApprox_of :
     fun j => Sum.elim (fun w => G.emb w) (fun w => (G.emb w).comp c) j
   let L : Fin G.m ⊕ Fin G.m → IntermediateField ℚ_[p] (PadicAlgCl p) :=
     fun j => G.Fw (Sum.elim id id j)
-  haveI : ∀ j, FiniteDimensional ℚ_[p] (L j) := fun j => G.finiteDimensional_Fw _
+  have : ∀ j, FiniteDimensional ℚ_[p] (L j) := fun j => G.finiteDimensional_Fw _
   have hL : ∀ j, L j = IntermediateField.adjoin ℚ_[p] (Set.range (τ j)) := by
     intro j
     rcases j with w | w

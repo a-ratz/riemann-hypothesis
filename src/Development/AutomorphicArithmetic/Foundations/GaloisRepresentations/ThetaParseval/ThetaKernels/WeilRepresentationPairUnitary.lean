@@ -87,12 +87,12 @@ theorem haar_fundDomain_transfer_k : ∀ (F E : Type) [Field F] [NumberField F] 
                 ∫⁻ w in 𝓕, ‖f (co.e w)‖ₑ ^ 2 ∂ν = ∫⁻ w in 𝓕', ‖f w‖ₑ ^ 2 ∂ν' := by
   intro F E _ _ _ _ _ σ B _ _ nS nT JS JT _ _ ξ₀ _ _ JA JB ξ _ _ κ _ co hrat ν 𝓕 hν h𝓕
   obtain ⟨hfr, hfin, -⟩ := finrank_AEF F E
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI hMT : IsModuleTopology (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) :=
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have hMT : IsModuleTopology (AF F) (Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E)) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin nT → Fin nS → AF F ⊗[F] E))
-  letI mP : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
-  haveI : BorelSpace ((κ → AF F) × (κ → AF F)) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  let mP : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
+  have : BorelSpace ((κ → AF F) × (κ → AF F)) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
   let ce : Matrix (Fin nT) (Fin nS) (AF F ⊗[F] E) ≃L[AF F] (κ → AF F) × (κ → AF F) :=
     { co.e with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap co.e.toLinearMap

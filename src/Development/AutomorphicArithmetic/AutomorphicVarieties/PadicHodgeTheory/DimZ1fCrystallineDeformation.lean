@@ -200,7 +200,7 @@ private theorem dz_data {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDoma
     have ho : IsOpen (D.η.ker : Set (GQ l)) := by
       have : D.η.ker = GK D.Kv := Subgroup.ext fun g => D.η_ker g
       rw [this]
-      haveI := D.Kv.2
+      have := D.Kv.2
       exact D.Kv.1.fixingSubgroup_isOpen
     refine continuous_of_continuousAt_one _ ?_
     refine (continuousAt_const (y := 1)).congr ?_
@@ -247,8 +247,8 @@ private theorem dz_sum (j : ℤ) :
 theorem UpperTheory.V.Loc.dim_Z1f_crystalline_deformation :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [TopologicalSpace E] [IsModuleTopology ℚ_[l] E] [IsTopologicalRing E] (j : ℤ), Module.Finite E ↥(finiteCocycles (MonoidHom.id _) (adRep (D.rz E))) ∧ finrank E ↥(finiteCocycles (MonoidHom.id _) (adRep (D.rz E)) ⊓ Submodule.pi Set.univ fun _ => gw E j) = locDims j ∧ (∀ γ ∈ finiteCocycles (MonoidHom.id _) (adRep (D.rz E)), (fun g => Matrix.of fun a b => if wt a b = j then γ g a b else 0) ∈ finiteCocycles (MonoidHom.id _) (adRep (D.rz E))) ∧ ∀ γ ∈ Z1 (adRep (D.rz E)), (∀ g, γ g ∈ gw E j) → (j < 0 → (γ ∈ finiteCocycles (MonoidHom.id _) (adRep (D.rz E)) ↔ γ ∈ B1 (adRep (D.rz E)))) ∧ (j = 0 → (γ ∈ finiteCocycles (MonoidHom.id _) (adRep (D.rz E)) ↔ ∀ g ∈ Iq l, γ g = 0)) := by
   intro hP l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _ _ _ _ j
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin 3 → Fin 3 → E))
   obtain ⟨hr, hχ⟩ := dz_data D E _ rfl
   rw [hr]

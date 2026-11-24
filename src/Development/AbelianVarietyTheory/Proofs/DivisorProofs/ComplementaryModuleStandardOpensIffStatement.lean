@@ -269,7 +269,7 @@ theorem single (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K
     [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F) (hc : IsFinCover k K x)
     (τ : DR k K →ₗ[K] K) (hτ : IsTop k K x τ) (i : Fin (d + 1)) (z : K) :
     (∀ b ∈ rB k K x {i}, Algebra.trace F K (z * b) ∈ omA k x {i}) ↔ ∃ y ∈ omB k K (rB k K x {i}) d, τ y = z := by
-  haveI := hc.fin
+  have := hc.fin
   have hx := hc.pd.ne
   obtain ⟨e, he⟩ := GlobalTheory.T.standardAffineOpen_ring_polynomialEquiv k F d x hc.pd i
   set u : Fin d → F := fun j => x (i.succAbove j) / x i with hu_def
@@ -292,7 +292,7 @@ theorem single (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K
     · apply Algebra.adjoin_le
       rintro y ⟨j, rfl⟩
       exact Algebra.subset_adjoin ⟨i, Finset.mem_singleton_self _, _, rfl⟩
-  haveI : IsFractionRing (rA k x {i}) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x hc.pd {i} (Finset.singleton_nonempty _)).1
+  have : IsFractionRing (rA k x {i}) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x hc.pd {i} (Finset.singleton_nonempty _)).1
   obtain ⟨ε, hε⟩ := GlobalTheory.T.exists_sign_iMulti_D_chart_change k F K d x hc i
   set P : F := ∏ j, x i / x j with hP
   set C : F := ∏ j, x j / x i with hC
@@ -343,7 +343,7 @@ theorem unif (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] 
     Subalgebra.prod_mem _ fun j _ => Algebra.subset_adjoin ⟨i, Finset.mem_singleton_self _, j, rfl⟩
   have hle : rB k K x {i} ≤ rB k K x I :=
     (GlobalTheory.T.finite_cover_ring_localization_chart k F K d x hc {i} i (Finset.mem_singleton_self _)).1 I (Finset.singleton_subset_iff.2 hi)
-  haveI : Module.Finite (rA k x {i}) (integralClosure (rA k x {i}) K) :=
+  have : Module.Finite (rA k x {i}) (integralClosure (rA k x {i}) K) :=
     (GlobalTheory.T.finite_cover_chart_smooth_normal k F K d x hc {i} (Finset.singleton_nonempty _)).1
   obtain ⟨S, hS⟩ := Module.Finite.fg_top (R := rA k x {i}) (M := integralClosure (rA k x {i}) K)
   have hg : ∀ g : integralClosure (rA k x {i}) K, ∃ N : ℕ,

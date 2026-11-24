@@ -225,7 +225,7 @@ theorem det_blocks_single {E : Type} [CommRing E] {n : Type} [Fintype n] [Decida
     (Z Y : Matrix n n E) (l : n) (c c' : E) (hZ : IsUnit Z.det) :
     (Matrix.fromBlocks Z (Matrix.single l l c) (Matrix.single l l c') Y).det
       = Z.det * Y.det - c * c' * (Z.adjugate l l * Y.adjugate l l) := by
-  letI := Matrix.invertibleOfIsUnitDet Z hZ
+  let := Matrix.invertibleOfIsUnitDet Z hZ
   rw [Matrix.det_fromBlocks₁₁, Matrix.single_mul_mul_single, det_sub_single]
   have h : Z.det * (⅟Z) l l = Z.adjugate l l := by
     rw [Matrix.invOf_eq_nonsing_inv, Matrix.inv_def, Matrix.smul_apply, smul_eq_mul, ← mul_assoc,
@@ -256,7 +256,7 @@ theorem det_gram_sum_elim {F : Type} [Field F] [ValuativeRel F] [TopologicalSpac
     simp [HermSp.Dl, hZ]
   have hD0 : H.Dl f f' r = Z.adjugate (Fin.last r) (Fin.last r) := by
     rw [adjugate_last]
-    simp only [HermSp.Dl, Nat.le_succ, dif_pos]
+    simp only [HermSp.Dl, Nat.le_succ, dite_eq_left]
     rfl
   set c : E →+* E := (M.L.cj : E →+* E) with hc
   have hg : H.gram (Sum.elim f f') = Matrix.fromBlocks
@@ -493,12 +493,12 @@ theorem sum_eq_sum_castLE {E : Type} [AddCommMonoid E] {n l : ℕ} (hl : l ≤ n
 theorem det_block_uni {E : Type} [CommRing E] {n l : ℕ} (hl : l ≤ n) (A : Matrix (Fin n) (Fin n) E)
     (hA : Uni A) : (A.submatrix (Fin.castLE hl) (Fin.castLE hl)).det = 1 := by
   obtain ⟨h0, h1⟩ := hA
-  rw [Matrix.det_of_upperTriangular]
+  rw [Matrix.det_of_isUpperTriangular]
   · simp [Matrix.submatrix_apply, h1]
   · intro i j hij
     simp only [Matrix.submatrix_apply]
     apply h0
-    rw [Fin.lt_def, Fin.coe_castLE, Fin.coe_castLE]
+    rw [Fin.lt_def, Fin.val_castLE, Fin.val_castLE]
     exact hij
 
 theorem block_mul_uni {E : Type} [CommRing E] {n l : ℕ} (hl : l ≤ n) (Z A : Matrix (Fin n) (Fin n) E)
@@ -509,7 +509,7 @@ theorem block_mul_uni {E : Type} [CommRing E] {n l : ℕ} (hl : l ≤ n) (Z A : 
   simp only [Matrix.submatrix_apply, Matrix.mul_apply]
   rw [sum_eq_sum_castLE hl _ ?_]
   intro c hc
-  rw [h0 c (Fin.castLE hl j) (by rw [Fin.lt_def, Fin.coe_castLE]; exact lt_of_lt_of_le j.isLt hc), mul_zero]
+  rw [h0 c (Fin.castLE hl j) (by rw [Fin.lt_def, Fin.val_castLE]; exact lt_of_lt_of_le j.isLt hc), mul_zero]
 
 theorem det_block_mul_uni {E : Type} [CommRing E] {n l : ℕ} (hl : l ≤ n) (Z A : Matrix (Fin n) (Fin n) E)
     (hA : Uni A) : ((Z * A).submatrix (Fin.castLE hl) (Fin.castLE hl)).det =
@@ -898,7 +898,7 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
   obtain ⟨hBased, hRelG, hPrime, hTerm0, Λ₀, hΛ₀, hΛ₀t⟩ := hB
   obtain ⟨-, -, -, -, hloc⟩ := hS
   have hLG := LatLoc.lattices_local_global D Z
-  haveI : Infinite (PlF D) := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.F
+  have : Infinite (PlF D) := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.F
   obtain ⟨p₀, hp₀⟩ : ∃ p : PlF D, p ∉ P := by
     by_contra h
     push_neg at h
@@ -952,14 +952,14 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
       have hLp : ∀ p, Lp p ∈ locSet G G' p (y p) := by
         intro p
         by_cases h : p ∈ P
-        · simp only [Lp, dif_pos h]; exact hg ⟨p, h⟩ (Set.mem_univ _)
-        · simp only [Lp, dif_neg h]; exact (single p h).exists.choose_spec
+        · simp only [Lp, dite_eq_left h]; exact hg ⟨p, h⟩ (Set.mem_univ _)
+        · simp only [Lp, dite_eq_right h]; exact (single p h).exists.choose_spec
       have hlat : ∀ p, (Lp p).FG ∧ Submodule.span (D.s.atP p).Ep (Lp p : Set (Vp D p)) = ⊤ :=
         fun p => isLat D Z FP p (y p) (tm FP G G' p (Lp p)) (hLp p).1
       have hfin' : {p | Lp p ≠ lattice₂ D Z.M p Λ₀}.Finite := by
         refine ((P.finite_toSet).union hfin).subset fun p hp => ?_
         by_contra hn
-        simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hn
+        simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hn
         exact hp ((single p hn.1).unique (hLp p) (std p hn.1 hn.2))
       obtain ⟨Λ, hΛ, hΛp⟩ := hLG.2 Λ₀ hΛ₀full Lp hlat hfin'
       refine ⟨Λ, ⟨hΛ, fun p => by rw [hΛp p]; exact hLp p⟩, ?_⟩
@@ -967,7 +967,7 @@ theorem fibre : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (lo
       show lattice₂ D Z.M q Λ = g q
       rw [hΛp q]
       show (if h : (q : PlF D) ∈ P then g ⟨q, h⟩ else (single q h).exists.choose) = g q
-      rw [dif_pos q.2]
+      rw [dite_eq_left q.2]
   have e1 := hinj.encard_image
   rw [himg, Set.encard_pi_eq_prod_encard] at e1
   rw [← e1]

@@ -66,7 +66,7 @@ theorem exists_pow_intAt_div (P : HeightOneSpectrum (𝓞 E)) {m : ℕ} (hm : m 
       conv_rhs => rw [← WithZero.exp_log h0]
       rw [WithZero.exp_le_exp]
       omega
-    exact (div_le_one₀ (zero_lt_iff.2 h0)).2 (h1.trans h2)
+    exact (div_le_one₀ (pos_iff_ne_zero.2 h0)).2 (h1.trans h2)
   obtain ⟨r, s, hrs⟩ := P.exists_primeCompl_mul_eq_of_integer _ hv
   exact ⟨r, s, s.2, by rw [mul_comm]; exact hrs⟩
 
@@ -139,7 +139,7 @@ theorem coset_be (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (SB : Fin
     rw [Set.mem_singleton_iff, e, d.2.be_add w _ hy _ (TopStep.smul_mem_locP (TopStep.intAt_nat _) hz'),
       TopStep.be_smul_int d.2 w (TopStep.intAt_nat _) hz', TopStep.reduction_absNorm_eq_zero, zero_smul, add_zero]
   · intro hv
-    exact ⟨y, by rw [Set.mem_setOf_eq, sub_self]; exact zero_mem _, hv⟩
+    exact ⟨y, by rw [Set.mem_ofPred_eq, sub_self]; exact zero_mem _, hv⟩
 
 end Local
 
@@ -159,14 +159,14 @@ theorem exists_ptAt_bar_eq {X : Fields} {Pr : Primes X} {R : Ranks} {sel : Heigh
       (fun P => if P.1 ∈ Pr.vGs then 0 else (cst.M : ℤ))}), ?_⟩, rfl, ?_⟩
     · rw [ysAt_ys_of_eq sel mu cst h]
       refine ⟨y', (Formalism.L2.Col.mem_locLat _ _ _ _).2 fun P => ?_, by congr!⟩
-      rw [if_pos (hG' P), _root_.zpow_neg_one, inv_inv]
+      rw [ite_eq_left (hG' P), _root_.zpow_neg_one, inv_inv]
       exact (hy' ⟨P.1, hG' P⟩).1
     · funext w
       have h1 := (Formalism.L2.Col.mem_locLat _ _ _ _).1 hy ⟨w.1, hG w⟩
-      rw [if_pos w.2, _root_.zpow_neg_one, inv_inv] at h1
-      refine (coset_be d _ w (hG w) _ (if_pos w.2) (hy' w).1).trans ?_
+      rw [ite_eq_left w.2, _root_.zpow_neg_one, inv_inv] at h1
+      refine (coset_be d _ w (hG w) _ (ite_eq_left w.2) (hy' w).1).trans ?_
       rw [(hy' w).2, MemChart.bar, hY]
-      exact (coset_be q.1.1.deco _ w (hG w) _ (if_pos w.2) h1).symm
+      exact (coset_be q.1.1.deco _ w (hG w) _ (ite_eq_left w.2) h1).symm
   · have hY : q.1.2 = ∅ := by
       have := q.2
       rwa [ysAt_ys_of_ne sel mu cst h] at this

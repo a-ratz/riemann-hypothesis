@@ -111,7 +111,7 @@ theorem kappa_act {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l
     letI := zlLat T
     ∀ y : WCb l ⊗[ℤ_[l]] ↥T.L.T, TWact (galOW O s) T g (kappa T y) =
       kappa T (TensorProduct.map (galW l s).toLinearMap (actZ T g) y) := by
-  letI := zlLat T
+  let := zlLat T
   intro y
   induction y using TensorProduct.induction_on with
   | zero => simp only [map_zero]
@@ -121,7 +121,7 @@ theorem kappa_act {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l
 theorem kappa_smul' {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l] K O) (w : WCb l) :
     letI := zlLat T
     ∀ y : WCb l ⊗[ℤ_[l]] ↥T.L.T, kappa T (w • y) = ((1 : O) ⊗ₜ[ℤ_[l]] w) • kappa T y := by
-  letI := zlLat T
+  let := zlLat T
   intro y
   induction y using TensorProduct.induction_on with
   | zero => simp only [smul_zero, map_zero]
@@ -194,7 +194,7 @@ theorem add_step {P : PhiMod O K l e a ι} {T : Lat a O K ϖ} (I : Ident t ϖ P 
     ∀ (j : E.M (ainfObj (ϖ.field a)) →ₛₗ[(inclW l).comp (ainfId (ϖ.field a)).toRingHom] (WCb l ⊗[ℤ_[l]] ↥T.L.T))
       (z z' : E.M (ainfObj (ϖ.field a))) (v v' : ι → OW l O), I.j v = kappa T (j z) → I.j v' = kappa T (j z') →
       I.j (v + v') = kappa T (j (z + z')) := by
-  letI := zlLat T
+  let := zlLat T
   intro j z z' v v' hv hw
   rw [I.j.map_add, hv, hw, j.map_add, (kappa T).map_add]
 
@@ -203,7 +203,7 @@ theorem smul_step {P : PhiMod O K l e a ι} {T : Lat a O K ϖ} (I : Ident t ϖ P
     ∀ (j : E.M (ainfObj (ϖ.field a)) →ₛₗ[(inclW l).comp (ainfId (ϖ.field a)).toRingHom] (WCb l ⊗[ℤ_[l]] ↥T.L.T))
       (c : (ainfObj (ϖ.field a)).A) (z : E.M (ainfObj (ϖ.field a))) (v : ι → OW l O), I.j v = kappa T (j z) →
       I.j (inclO l O ((1 : O) ⊗ₜ[ℤ_[l]] ainfId (ϖ.field a) c) • v) = kappa T (j (c • z)) := by
-  letI := zlLat T
+  let := zlLat T
   intro j c z v hv
   have e1 : j (c • z) = inclW l (ainfId (ϖ.field a) c) • j z := j.map_smulₛₗ c z
   rw [e1, kappa_smul', LinearEquiv.map_smul, hv, inclO_tmul]
@@ -214,7 +214,7 @@ theorem span_step {P : PhiMod O K l e a ι} {T : Lat a O K ϖ} (I : Ident t ϖ P
       (∀ y : TW (OW l O) T, (∃ x : E.M (ϖ.prism a), y = kappa T (j (E.tr (ϖ.toAinf a) x))) ↔
         ∃ (m : Vec K a ι) (hm : m ∈ P.M), y = I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩)) →
       ∀ z : E.M (ainfObj (ϖ.field a)), ∃ v ∈ MA P, I.j v = kappa T (j z) := by
-  letI := zlLat T
+  let := zlLat T
   intro j hE z
   have hz : z ∈ Submodule.span (ainfObj (ϖ.field a)).A (Set.range (E.tr (ϖ.toAinf a))) := by
     rw [SemiBC.span_eq (E.tr_bc (ϖ.toAinf a))]
@@ -238,7 +238,7 @@ theorem core {P : PhiMod O K l e a ι} {T : Lat a O K ϖ} (I : Ident t ϖ P T) (
     I.act (g : GQ l) g (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩) ∈ MA P ∧
       ((g : GQ l) ∈ ϖ.GfieldInf a →
         I.act (g : GQ l) g (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩) = toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩) := by
-  letI := zlLat T
+  let := zlLat T
   obtain ⟨E, j, H, hE⟩ := hI
   obtain ⟨x, hx⟩ := (hE (I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩))).2 ⟨m, hm, rfl⟩
   have hact : I.j (I.act (g : GQ l) g (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩)) =
@@ -315,7 +315,7 @@ namespace GlobalTheory.BKGal.StableFix
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a] (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod ↥(OL LL) ↥LL.1 l e a ι) (T : QLat LL) (I : Ident (thetaW a LL) ϖ P T), IsBK (T := resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) → Ident.Stable (T := resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) ∧ ∀ g : Gl l, sQ l g ∈ ϖ.GfieldInf a → ∀ v : ME P, I.act (sQ l g) g (toW (thetaW a LL) ϖ P v) = toW (thetaW a LL) ϖ P v := by
   intro l _ a e _ _ ϖ LL _ _ ι _ _ P T I hBK
   refine ⟨fun g => ⟨act_LA _ hBK g, act_MA _ hBK g⟩, fun g hg v => ?_⟩
-  exact act_fix (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) hBK
+  exact act_fix (I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) hBK
     ⟨sQ l g, PiSys.fixing_fieldInf_le a ϖ hg⟩ hg v
 
 end GlobalTheory.BKGal.StableFix
@@ -903,7 +903,7 @@ theorem kappa_act {LL : FinExt l} (T : QLat LL) (g : Gl l) (z : letI := zlLat T;
     letI := zlLat T
     TWact (galOW (↥(OL LL)) (sQ l g)) T g (kappa T z) =
       kappa T (TensorProduct.map (galW l (sQ l g)).toLinearMap (actZ T g) z) := by
-  letI := zlLat T
+  let := zlLat T
   induction z using TensorProduct.induction_on with
   | zero => simp only [map_zero]
   | tmul w x => rfl
@@ -929,7 +929,7 @@ theorem GlobalTheory.GKinfStable.main : GlobalTheory.Published.BhattScholzeCryst
   choose σ hσ using res_exists (l := l) a e ϖ he (sQ l g)
   choose ψ hψ using _root_.GlobalTheory.BKGal.covers_ringEndo a e ϖ LL (sQ l g) γ hcov
   choose H hH using _root_.GlobalTheory.BKGal.PrismTwist.hom_restrict a e ϖ (sQ l g) σ hσ ψ hψ
-  letI := zlLat T
+  let := zlLat T
   obtain ⟨E, j, hR, hiff⟩ := hBK
   let ρg : ↥T.L.T ≃ₗ[ℤ_[l]] ↥T.L.T :=
     LinearEquiv.ofLinear (actZ T g) (actZ T g⁻¹)
@@ -1289,7 +1289,7 @@ private lemma exists_eq_prime_mul_of_eisenstein_mul {g h : PowerSeries K}
   · ext m
     have key := congrArg (coeff (m + e)) hgh
     simp only [_root_.GlobalTheory.BK.E, add_mul, map_add (f := _),
-      coeff_X_pow_mul', le_add_iff_nonneg_left, zero_le, if_true, Nat.add_sub_cancel] at key
+      coeff_X_pow_mul', le_add_iff_nonneg_left, zero_le, ite_true, Nat.add_sub_cancel] at key
     rw [← map_natCast (PowerSeries.C (R := K)), coeff_C_mul, coeff_C_mul] at key
     rw [← map_natCast (PowerSeries.C (R := K)), coeff_C_mul, coeff_mk]
     linear_combination key
@@ -1318,7 +1318,7 @@ variable {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDist K] [Algebr
   [NormedAlgebra ℚ_[l] K] [NeZero e] in
 omit [IsUltrametricDist K] [NeZero e] in
 private lemma natCast_prime_ne_zero_powerSeries : ((l : ℕ) : PowerSeries K) ≠ 0 := by
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   rw [← map_natCast (PowerSeries.C (R := K))]
   exact (map_ne_zero_iff _ PowerSeries.C_injective).2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
 
@@ -1703,7 +1703,7 @@ theorem exists_pack_isOfType : GlobalTheory.Published.BhattScholzeCrystallineLat
   obtain ⟨F⟩ := GlobalTheory.nonempty_crysBKFunctorOL_of_bhattScholze hBS l a e ϖ LL Pl AI hstd
   let B := F.obj (resF T (ϖ.field a)) hT.crys
   let I : Ident (thetaW a LL) ϖ B.P T := Ident.ofRes B.I
-  have hBK : IsBK (T := resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) :=
+  have hBK : IsBK (T := resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) :=
     B.isBK
   obtain ⟨C, hC, hTay⟩ := _root_.GlobalTheory.IntConnTaylor.main hBS l a e ϖ LL hl (Fin B.n) B.P T I hBK
   obtain ⟨⟨jB, hcmp⟩, -⟩ := _root_.GlobalTheory.CrisComparison.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ (Fin B.n) B.P T I

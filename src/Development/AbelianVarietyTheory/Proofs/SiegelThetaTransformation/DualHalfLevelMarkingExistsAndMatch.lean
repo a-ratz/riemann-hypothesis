@@ -161,7 +161,7 @@ theorem exists_inv [Module.Projective R P] (hIJ : J * I ≤ Ideal.span {(m : R)}
 
 theorem exists_pow_le (J K : Ideal R) [IsNoetherianRing R] [Finite (R ⧸ K)] :
     ∃ (t : R) (j : ℕ), t - 1 ∈ J ∧ ∀ a ∈ J ^ j, t * a ∈ K := by
-  haveI : IsArtinian R (R ⧸ K) := isArtinian_of_finite
+  have : IsArtinian R (R ⧸ K) := isArtinian_of_finite
   let f : ℕ →o (Submodule R (R ⧸ K))ᵒᵈ :=
     ⟨fun j => OrderDual.toDual (J ^ j • ⊤), fun i j h =>
       Submodule.smul_mono_left (Ideal.pow_le_pow_right h)⟩
@@ -238,7 +238,7 @@ theorem zpow_eq_iff {m k : ℕ} (hm : m ≠ 0) (a b : ℤ) :
       (m : ℤ) ∣ k * a + b := by
   have hp := Complex.isPrimitiveRoot_exp m hm
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm
-  rw [← hp.zpow_eq_one_iff_dvd, ← Complex.exp_int_mul, ← Complex.exp_int_mul, Complex.exp_neg,
+  rw [← hp.zpow_eq_one_iff_dvd, ← exp_intCast_mul, ← exp_intCast_mul, Complex.exp_neg,
     ← mul_eq_one_iff_eq_inv₀ (Complex.exp_ne_zero _), ← Complex.exp_add]
   congr! 2
   push_cast
@@ -304,7 +304,7 @@ theorem exists_roots (l : Geo.Tor.Level H) (mk : Dw.La →ₗ[𝓞 E] L) (n N : 
     ∃ Y : (Fin n → LevQ Dw l) → Matrix (Fin n) (Fin r) E, IsRoots l L (L.subtype ∘ₗ mk) N Y := by
   have hK : Ideal.span {((2 * N : ℕ) : 𝓞 E)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot, Nat.cast_eq_zero]; omega
-  haveI := Ideal.finiteQuotientOfFreeOfNeBot _ hK
+  have := Ideal.finiteQuotientOfFreeOfNeBot _ hK
   obtain ⟨t, j, ht, hj⟩ := exists_pow_le l.Mb (Ideal.span {((2 * N : ℕ) : 𝓞 E)})
   have hM : (l.M : E) ≠ 0 := by exact_mod_cast level_ne l
   have hc := LevelPairing.cSep_spec l
@@ -384,9 +384,9 @@ theorem dual_marking : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     intro v hv
     obtain ⟨a, ha, u, hu, h⟩ := hmk.surj v ((Submodule.mem_smul_top_iff _ _ _).1 hv)
     exact ⟨a, ha, ⟨u, hu⟩, Subtype.ext h⟩
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL.1
-  haveI : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 E) L := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL.1
+  have : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 E) L := Module.Flat.projective_of_finitePresentation
   refine ⟨?_, fun δ hδ => ?_, conj_half l, by rw [mul_comm]; exact l.prod, exists_roots l mk⟩
   · obtain ⟨δ, hδ⟩ := exists_dual hIJ hmJ hc hc1 hB aB' aC mk inj surj k
     exact ⟨_, (isDual_iff hE k mk δ).2 hδ⟩

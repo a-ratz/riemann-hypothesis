@@ -623,7 +623,7 @@ private lemma mem_zeroSet_of_sqn_eq_zero {n : ℕ} {Y : Type*} [TopologicalSpace
     (hy : A.sqn L s y = 0) : y ∈ A.zeroSet s := by
   have hy' : ∑ k, A.nsq L (s k) y = 0 := hy
   rw [Finset.sum_eq_zero_iff_of_nonneg (fun k _ => A.nsq_nonneg L (s k) y)] at hy'
-  simp only [_root_.ReciprocityTheory.L2DbarEstimates.Y.WeightedAtlas.zeroSet, Set.mem_setOf_eq]
+  simp only [_root_.ReciprocityTheory.L2DbarEstimates.Y.WeightedAtlas.zeroSet, Set.mem_ofPred_eq]
   intro k
   have hk : ‖s k (A.pick y) y‖ ^ 2 * Real.exp (-A.ph L (A.pick y) y) = 0 :=
     hy' k (Finset.mem_univ _)
@@ -832,7 +832,7 @@ theorem isOpen_nz_and_mem_nz_iff : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y]
     intro i y hy
     have e := h.2 i (A.pick y) y (Set.mem_univ _) hy (A.mem_pick y)
     have g := A.g_ne Λ i (A.pick y) y hy (A.mem_pick y)
-    simp only [nz, Set.mem_setOf_eq, e, ne_eq, mul_eq_zero, g, false_or]
+    simp only [nz, Set.mem_ofPred_eq, e, ne_eq, mul_eq_zero, g, false_or]
   refine ⟨?_, key⟩
   have cont : ∀ i, ContinuousOn (τ i) (A.chart i).source := by
     intro i
@@ -1334,7 +1334,7 @@ theorem GlobalTheory.OTY.extension_values_at_zeros : ∀ (n : ℕ) (Y : Type) [T
     (A.zeroSet s \ {P})ᶜ ∩ {y | A.sqn L s y < ε} with hNdef
   have hNo : IsOpen N := by
     refine ((((A.continuousOn_ph E i).isOpen_inter_preimage e.open_source isOpen_Iio).inter
-      hΩo).inter ((hS.subset Set.diff_subset).isClosed.isOpen_compl)).inter
+      hΩo).inter ((hS.subset Set.sdiff_subset).isClosed.isOpen_compl)).inter
       (isOpen_lt (A.continuous_sqn hs) continuous_const)
   have hPN : P ∈ N := by
     refine ⟨⟨⟨⟨hPs, ?_⟩, hSΩ hP⟩, fun h' => h'.2 rfl⟩, ?_⟩
@@ -1394,7 +1394,7 @@ theorem GlobalTheory.OTY.extension_values_at_zeros : ∀ (n : ℕ) (Y : Type) [T
         Set.inter_subset_left, e.image_source_inter_eq'] at hmu0
       have hBm : MeasurableSet (e.target ∩ e.symm ⁻¹' (nz A τ)ᶜ) := by
         have : e.target ∩ e.symm ⁻¹' (nz A τ)ᶜ = e.target \ (e.target ∩ e.symm ⁻¹' nz A τ) := by
-          ext v; simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff, Set.mem_diff]
+          ext v; simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff, Set.mem_sdiff]
           tauto
         rw [this]; exact e.open_target.measurableSet.diff hUt.measurableSet
       have hco : ContinuousOn (fun v => ENNReal.ofReal (Real.exp (A.ph A.kap i (e.symm v))))
@@ -1414,10 +1414,10 @@ theorem GlobalTheory.OTY.extension_values_at_zeros : ∀ (n : ℕ) (Y : Type) [T
         by_cases hvp : v = e P
         · left; exact hvp
         · right; exact ⟨hv.1.1, fun hU => hv.2 ⟨⟨hv.1, hv.1.1, hU⟩, hvp⟩⟩
-      · haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+      · have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
         exact measure_union_null (measure_singleton _) hnull
     have hOWeq : volume.restrict O = volume.restrict W :=
-      Measure.restrict_congr_set (ae_eq_set.2 ⟨hOW, by rw [Set.diff_eq_empty.2 hWO]; exact measure_empty⟩)
+      Measure.restrict_congr_set (ae_eq_set.2 ⟨hOW, by rw [Set.sdiff_eq_empty.2 hWO]; exact measure_empty⟩)
     rw [hOWeq]
     set c : Y → ℝ := fun y => Real.sqrt (wT T (δ * psi A L s y) * Real.exp (-psi A L s y)) with hcdef
     set D : ι → Y → ℂ := fun j y => (c y : ℂ) * X j y with hDdef
@@ -1546,17 +1546,17 @@ theorem lintegral_sublevel_tail_le (Y : Type) [MeasurableSpace Y] (μ : Measure 
     ∃ T0 : ℝ, ∀ T, T0 ≤ T → ∫⁻ y in {y | x y ≤ -T + 1}, g y ∂μ ≤ ε := by
   have hms : ∀ T : ℝ, MeasurableSet {y | x y ≤ -T + 1} := fun T =>
     measurableSet_le hx measurable_const
-  haveI : IsFiniteMeasure (μ.withDensity g) := isFiniteMeasure_withDensity hg.ne
+  have : IsFiniteMeasure (μ.withDensity g) := isFiniteMeasure_withDensity hg.ne
   have hanti : Antitone (fun n : ℕ => {y | x y ≤ -(n : ℝ) + 1}) := by
     intro a b hab y hy
     have : (a : ℝ) ≤ b := by exact_mod_cast hab
-    simp only [Set.mem_setOf_eq] at hy ⊢
+    simp only [Set.mem_ofPred_eq] at hy ⊢
     linarith
   have h := tendsto_measure_iInter_atTop (μ := μ.withDensity g)
     (fun n : ℕ => (hms n).nullMeasurableSet) hanti ⟨0, measure_ne_top _ _⟩
   have hem : (⋂ n : ℕ, {y | x y ≤ -(n : ℝ) + 1}) = ∅ := by
     ext y
-    simp only [Set.mem_iInter, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_forall,
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_forall,
       not_le]
     obtain ⟨n, hn⟩ := exists_nat_gt (1 - x y)
     exact ⟨n, by linarith⟩
@@ -1566,7 +1566,7 @@ theorem lintegral_sublevel_tail_le (Y : Type) [MeasurableSpace Y] (μ : Measure 
   rw [← withDensity_apply _ (hms T)]
   refine le_trans (measure_mono ?_) hn
   intro y hy
-  simp only [Set.mem_setOf_eq] at hy ⊢
+  simp only [Set.mem_ofPred_eq] at hy ⊢
   linarith
 
 end GlobalTheory

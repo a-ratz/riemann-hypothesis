@@ -84,7 +84,7 @@ private theorem psib_th {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Comm
     rw [map_pow]; exact congrArg Subtype.val hm
   have h2 : (g : F.Gv v) ^ l ^ m ∈ (commutator (F.Gv v)).topologicalClosure := (QuotientGroup.eq_one_iff _).1 h1
   have h3 : (commutator (F.Gv v)).topologicalClosure ≤ (r.psib v i).ker :=
-    Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker _)
+    Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker _)
       (Subgroup.isClosed_of_isOpen _ (r.psib_open v i))
   have h4 : r.psib v i g ^ l ^ m = 1 := by rw [← map_pow]; exact h3 h2
   have h5 : r.th v i g ^ l ^ m = 1 := by rw [← map_pow]; exact r.th_comm v i _ h2
@@ -115,7 +115,7 @@ theorem UpperTheory.V.CA.universalDeformationRing_localCharacters :
       exact this hx
     · have := h _ (Ideal.subset_span ⟨g, rfl⟩)
       rwa [map_sub, AlgHom.commutes, sub_eq_zero] at this
-  haveI := (co_res O).1
+  have := (co_res O).1
   have hres : ∀ x : ResidueField O, res O (ResidueField O) x = x := fun x => by
     obtain ⟨a, rfl⟩ := residue_surjective x
     exact (res O (ResidueField O)).commutes a

@@ -102,7 +102,7 @@ theorem card_le_of_injective_chars (G H : Type) [CommGroup G] [Finite G] (U : Ty
     [IsDomain U] (f : H → (G →* Uˣ)) (hf : Function.Injective f) :
     Finite H ∧ Nat.card H ≤ Nat.card G := by
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   let g : H → (G →* U) := fun h => (Units.coeHom U).comp (f h)
   have hg : Function.Injective g := by
     intro a b hab
@@ -112,8 +112,8 @@ theorem card_le_of_injective_chars (G H : Type) [CommGroup G] [Finite G] (U : Ty
     simpa [g] using this
   have hli : LinearIndependent U (fun h => (g h : G → U)) :=
     (linearIndependent_monoidHom G U).comp g hg
-  haveI : Finite H := hli.finite
-  haveI := Fintype.ofFinite H
+  have : Finite H := hli.finite
+  have := Fintype.ofFinite H
   refine ⟨inferInstance, ?_⟩
   have := hli.fintype_card_le_finrank
   rw [Module.finrank_fintype_fun_eq_card] at this
@@ -209,7 +209,7 @@ theorem conj_dual_parts : ∀ (O : Type) [CommRing O] (bar : O →+* O) (U : Typ
     conv_lhs => rw [← h1' x, ← hab, hadd', map_mul]
     rw [← hbb b₀, ← hee', F4 y hy]
     simp
-  haveI : Finite A := hfin
+  have : Finite A := hfin
   have hAB : Finite B ∧ Nat.card B ≤ Nat.card A := by
     refine card_le_of_injective_chars A B U (fun x => (e x.1).comp A.subtype) ?_
     intro x₁ x₂ h
@@ -218,7 +218,7 @@ theorem conj_dual_parts : ∀ (O : Type) [CommRing O] (bar : O →+* O) (U : Typ
     refine MonoidHom.ext fun y => ?_
     rw [E1 x₁.1 x₁.2, E1 x₂.1 x₂.2]
     exact congrArg (fun χ : A →* Uˣ => χ ⟨α b₀ y, F1 y⟩) h
-  haveI : Finite B := hAB.1
+  have : Finite B := hAB.1
   have hBA : Finite A ∧ Nat.card A ≤ Nat.card B := by
     refine card_le_of_injective_chars B A U (fun y => (e' y.1).comp B.subtype) ?_
     intro y₁ y₂ h
@@ -500,9 +500,9 @@ theorem exists_gen_of_val_eq (hL : L.IsLB) {E F : Scheme.{0}} (π : E ⟶ F) (hF
     fun j x hx => (hmem j x).2 hx
   have desc : ∀ j : (L.pull φ).ι, ∃ u : Γ(F, (L.pull φ).U j)ˣ, pullU π _ u = res (hle j) (σ.s j) := by
     intro j
-    haveI := hF
-    haveI := hS
-    haveI := hA
+    have := hF
+    have := hS
+    have := hA
     refine EigenDescent.unit_descends π _ _ ?_
     intro Z g₁ g₂ h₁ h₂ hπ
     have e1 : ∀ (g : Z ⟶ E) (hg : ∀ z, g z ∈ π ⁻¹ᵁ (L.pull φ).U j) (z : Z),
@@ -521,9 +521,9 @@ theorem exists_gen_of_val_eq (hL : L.IsLB) {E F : Scheme.{0}} (π : E ⟶ F) (hF
     have hJ : Good L z J := by
       intro ψ
       by_cases hψ : ψ z ∈ L.U (j PUnit.unit)
-      · simp only [J, if_pos hψ]
+      · simp only [J, ite_eq_left hψ]
         exact hψ
-      · simp only [J, if_neg hψ]
+      · simp only [J, ite_eq_right hψ]
         exact (exists_chart hL (ψ z)).choose_spec
     set_option synthInstance.maxHeartbeats 200000 in
     have hj : ∀ (g : Z ⟶ E), g z ∈ π ⁻¹ᵁ (L.pull φ).U j → (fun k : PUnit => J (g ≫ (π ≫ φ))) = j := by
@@ -533,7 +533,7 @@ theorem exists_gen_of_val_eq (hL : L.IsLB) {E F : Scheme.{0}} (π : E ⟶ F) (hF
         have := (hmem j (g z)).2 hg
         simp [LB.pull, LB.LinComb, LB.wchart] at this
         simpa using this PUnit.unit
-      simp only [J, if_pos hin]
+      simp only [J, ite_eq_left hin]
     have hv := hval Z g₁ g₂ hπ z J hJ
     unfold val at hv
     rw [hj g₁ (h₁ z)] at hv
@@ -752,7 +752,7 @@ theorem exists_pairing {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A �
     have := pow_gcd_eq_one.2 ⟨e₁, e₂⟩
     rw [(hn.pow_right m).gcd_eq_one, pow_one] at this
     exact Subtype.ext this
-  · haveI := o.act.hom (D.star a).unop
+  · have := o.act.hom (D.star a).unop
     have hz : (LB.LinComb o'.P (K := Fin 2) ![φ₀ (g.1 ≫ o'.act.act a),
         (lift (snd o'.A T ≫ g.1) (fst o'.A T ≫ o'.act.act (D.star a).unop)).left] ![1, -1]).IsLB :=
       LB.isLB_linComb hL _ _
@@ -904,14 +904,14 @@ theorem isTj_dual {r : ℤ} {w : Ideal (𝓞 D.F)} (hw : w.IsMaximal) (hu : uIde
     IsTj (D.tr - r) (w.map (D.bar : 𝓞 D.F →+* 𝓞 D.F)) j o' o ψ' := by
   intro k _ _ _ x
   obtain ⟨e, rfl⟩ := hψ.1
-  haveI := hψ.2.1
+  have := hψ.2.1
   have hl := hψ.2.2.1
   obtain ⟨hl', c₂, c₃⟩ := dual_clauses hψ h₁ h₂
   have hψ' : IsPIsog (p ^ e) o' (scale o e rfl) ψ' := ⟨⟨e, rfl⟩, ‹_›, hl', c₂, c₃, ψ, ‹_›, h₂, h₁⟩
   obtain ⟨ε, hε, aε⟩ := exists_pairing hψ h₁ h₂ hl hl' k x
   obtain ⟨ε', hε', aε'⟩ := @exists_pairing p _ D R _ b N S s _ o' (scale o e rfl) ψ' hψ'.2.1 hψ' ψ hψ.2.1 h₂ h₁
     hl' hl k _ _ _ x
-  haveI : IsDomain Γ((Over.mk x).left, ⊤) :=
+  have : IsDomain Γ((Over.mk x).left, ⊤) :=
     (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.toMulEquiv.isDomain k
   have hst : ∀ a : 𝓞 D.F, (D.star (algebraMap (𝓞 D.F) D.O a)).unop = algebraMap (𝓞 D.F) D.O (D.bar a) :=
     fun a => by rw [D.star_F, MulOpposite.unop_op]
@@ -988,13 +988,13 @@ theorem finite_etale_target : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
   obtain ⟨f, hef⟩ := exists_inv_exp (p := p) (by omega : 0 < N) hNp e
   have hc0 : 0 < p ^ e := hψ.pos
   have hw' : (w.map (D.bar : 𝓞 D.F →+* 𝓞 D.F)).IsMaximal := by
-    haveI := hw
+    have := hw
     exact Ideal.map_isMaximal_of_equiv D.bar
   have hu' : uIdeal D (D.tr - r) ≤ w.map (D.bar : 𝓞 D.F →+* 𝓞 D.F) := by
     rw [uIdeal_conj]; exact Ideal.map_mono hu
-  haveI := M.smooth
-  haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
-  haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have := M.smooth
+  have : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
+  have : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨Y', o₀, m₀, o₂, χ, hfin, het, hχ, hχT, univ'⟩ := GlobalTheory.T.harrisTaylor_typeTj_isogenies_representable p D R b N hN hNp hp (D.tr - r) _ j (p ^ e)
     hw' hu' hj ⟨e, rfl, he⟩ hm M.X M.s M.univ
   obtain ⟨ψ', hψ', a₁, a₂⟩ := hψ.2.2.2.2.2
@@ -1045,7 +1045,7 @@ theorem finite_etale_target : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
       · exact compMap (compMap u₀ n₀) m₀
     · exact square_comp' sqy sqz'
     · exact (Category.id_comp _).trans (Category.comp_id _).symm
-  haveI : IsIso y := ⟨z, hyz, hzy⟩
+  have : IsIso y := ⟨z, hyz, hzy⟩
   rw [← hy]
   exact ⟨inferInstance, inferInstance⟩
 
@@ -1069,10 +1069,10 @@ namespace GlobalTheory.UPel.HT.ES
 
 theorem exists_tjCorr_finiteEtale : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → IsUnit ((p : ℕ) : R) → ∀ (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ), w.IsMaximal → uIdeal D r ≤ w → j ≤ D.n → (∃ e : ℕ, c = p ^ e ∧ (0 < j → 0 < e)) → D.m = 1 → ∀ M : Model b N, ∃ T : TjCorr M.toRepFam r w j c, IsFinite T.s ∧ Etale T.s ∧ Surjective T.s ∧ IsFinite T.t ∧ Etale T.t ∧ ∀ (S : Scheme.{0}) (x : S ⟶ M.X) (o₁ o₁' : Obj b N (x ≫ M.s)) (m : ObjMap o₁ M.univ x) (ψ₁ : o₁.A ⟶ o₁'.A), IsUnit ((p : ℕ) : Γ(S, ⊤)) → IsPIsog c o₁ o₁' ψ₁ → IsTj r w j o₁ o₁' ψ₁ → ∃! y : S ⟶ T.Y, y ≫ T.s = x ∧ ∃ (m₀ : ObjMap o₁ T.o y) (m₁ : ObjMap o₁' T.o' y), m₀.φ ≫ T.ψ.left = ψ₁.left ≫ m₁.φ := by
   intro p _ D R _ _ b N hN hNp hp r w j c hw hu hj hc hm M
-  haveI : LocallyOfFiniteType M.s := by
-    haveI : Smooth M.s := M.smooth.smooth
+  have : LocallyOfFiniteType M.s := by
+    have : Smooth M.s := M.smooth.smooth
     infer_instance
-  haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨Y, o₀, m₀, o', ψ, hfin, het, hisog, htj, huniv⟩ :=
     GlobalTheory.T.harrisTaylor_typeTj_isogenies_representable p D R b N hN hNp hp r w j c hw hu hj hc hm M.X M.s M.univ
   obtain ⟨t, ⟨ht, ⟨mt⟩⟩, -⟩ := M.rep Y.left (Y.hom ≫ M.s) o'

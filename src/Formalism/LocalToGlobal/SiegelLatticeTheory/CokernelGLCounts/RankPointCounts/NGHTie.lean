@@ -151,7 +151,7 @@ theorem hTie_of (hP : HTPlace) (hD : HTDelta) (hT : HTTheta) : Formalism.L2.SG.F
   refine ⟨a0, b0, ?_⟩
   intro C' Cl e1 e2 D large₂ X Y u u' hc Cl' Nu TS cls nml γ Fm hFT
   obtain ⟨⟨hG0, hD0⟩, hloc⟩ := hP2 C' Cl e1 e2 D large₂ X Y u u' hc TS cls nml γ Fm hFT
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   obtain ⟨w, F00, F'0, F'1, hw, -, -, -, -, -, -, hgood, -⟩ := hFT
   have hOK : ∀ p, ((zOf Y).M p).OK := fun p => ((zOf Y).agree p).1
   have hPF := (product_formula_e D.host.F D.host.E _ (Formalism.MainNotions.BridgeLemma.szf_finrankFE D) D.s.atP).1 (zOf Y).M hOK

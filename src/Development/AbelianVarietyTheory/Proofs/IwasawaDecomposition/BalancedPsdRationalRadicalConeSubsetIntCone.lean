@@ -49,7 +49,7 @@ namespace GlobalTheory.PolFan
 theorem psdCone_subset_psdCone_int (O : Type) [CommRing O] [Module.Finite ℤ O] [Module.Free ℤ O] (bar : O → O)
     (X : Type) [AddCommGroup X] [Module O X] : psdCone (bar := bar) (X := X) ⊆ psdCone (bar := (id : ℤ → ℤ)) (X := X) := by
   rintro B ⟨X₁, _, _, hP, r, B₁, hr, h1, h2, h3⟩
-  haveI : Module.Projective ℤ X₁ := by
+  have : Module.Projective ℤ X₁ := by
     obtain ⟨s, hs⟩ := Module.projective_def'.1 hP
     exact Module.Projective.of_split (s.restrictScalars ℤ) ((Finsupp.linearCombination O id).restrictScalars ℤ)
       (by ext x; exact congrArg (· x) hs)

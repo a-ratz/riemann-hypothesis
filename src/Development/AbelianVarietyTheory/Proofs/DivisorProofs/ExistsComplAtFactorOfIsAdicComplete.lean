@@ -22,17 +22,17 @@ namespace GlobalTheory.TChart
 
 theorem exists_complAt_factor_of_isAdicComplete : ∀ (W : Type) [CommRing W] [IsRegularLocalRing W] (I : Type) [Fintype I] (V : Type) [CommRing V] [IsLocalRing V], IsAdicComplete (maximalIdeal V) V → ∀ ψV : MvPolynomial I W →+* V, IsLocalHom (ψV.comp MvPolynomial.C) → ∃ (R : Type) (_ : CommRing R) (_ : IsDomain R) (_ : IsLocalRing R) (ψ : MvPolynomial I W →+* R) (θ : R →+* V), IsComplAt ψ ∧ IsLocalHom θ ∧ θ.comp ψ = ψV ∧ IsLocalHom (ψ.comp MvPolynomial.C) := by
   intro W _ _ I _ V _ _ hV ψV hC
-  haveI := hV
+  have := hV
   let A := MvPolynomial I W
   let q : Ideal A := (maximalIdeal V).comap ψV
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
+  have : q.IsPrime := Ideal.comap_isPrime _ _
   let L := Localization.AtPrime q
-  haveI : IsRegularRing W := GlobalTheory.isRegularRing_of_isRegularLocalRing W
-  haveI : IsRegularLocalRing L := inferInstance
+  have : IsRegularRing W := GlobalTheory.isRegularRing_of_isRegularLocalRing W
+  have : IsRegularLocalRing L := inferInstance
   let R := AdicCompletion (maximalIdeal L) L
-  haveI : IsRegularLocalRing R := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion L
-  haveI : IsDomain R := inferInstance
-  haveI : IsNoetherianRing R := inferInstance
+  have : IsRegularLocalRing R := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion L
+  have : IsDomain R := inferInstance
+  have : IsNoetherianRing R := inferInstance
   have hfg : (maximalIdeal L).FG := (maximalIdeal L).fg_of_isNoetherianRing
   have hunit : ∀ y : q.primeCompl, IsUnit (ψV y) := fun y => by
     have := y.2
@@ -82,7 +82,7 @@ theorem exists_complAt_factor_of_isAdicComplete : ∀ (W : Type) [CommRing W] [I
         rw [sub_mul, h3]
       rw [this]
       exact Ideal.mul_mem_right _ _ h2
-  · haveI : IsLocalHom (θ.comp (algebraMap L R)) := by
+  · have : IsLocalHom (θ.comp (algebraMap L R)) := by
       rw [hθ]
       apply ((IsLocalRing.local_hom_tfae φ).out 1 3).mpr
       simpa using hk

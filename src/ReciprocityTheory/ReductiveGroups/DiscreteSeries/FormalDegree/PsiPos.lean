@@ -75,7 +75,7 @@ lemma psiPos_op_inv (T : KType ε Λ) (k : KG ε) :
 lemma psiPos_inner_P (T : KType ε Λ) (k : KG ε) (v : T.V) :
     ⟪v, (T.op k * projW T * T.op k⁻¹) v⟫_ℂ = ((‖⟪T.op k T.w, v⟫_ℂ‖ ^ 2 : ℝ) : ℂ) := by
   rw [psiPos_op_inv T k]
-  simp only [ContinuousLinearMap.mul_apply, projW, ContinuousLinearMap.smulRight_apply,
+  simp only [mul_apply_eq_comp, projW, ContinuousLinearMap.smulRight_apply,
     map_smul, inner_smul_right]
   rw [← inner_conj_symm v (T.op k T.w)]
   rw [show ((innerSL ℂ) T.w) (ContinuousLinearMap.adjoint (T.op k) v) = ⟪T.op k T.w, v⟫_ℂ from
@@ -96,8 +96,8 @@ lemma psiPos_integral_isPositive (T : KType ε Λ) {c : ℝ} (hc : 0 ≤ c) (g :
       · have hpt : ∀ k, ⟪x, (((g k : ℝ) : ℂ) • (T.op k * projW T * T.op k⁻¹)) x⟫_ℂ =
             ((g k * ‖⟪T.op k T.w, x⟫_ℂ‖ ^ 2 : ℝ) : ℂ) := by
           intro k
-          rw [ContinuousLinearMap.smul_apply, inner_smul_right, psiPos_inner_P, Complex.ofReal_mul]
-        rw [hA, ContinuousLinearMap.smul_apply, inner_smul_right,
+          rw [smul_apply, inner_smul_right, psiPos_inner_P, Complex.ofReal_mul]
+        rw [hA, smul_apply, inner_smul_right,
           ContinuousLinearMap.integral_apply hint x,
           ← integral_inner (hint.apply_continuousLinearMap x)]
         simp_rw [hpt]
@@ -106,7 +106,7 @@ lemma psiPos_integral_isPositive (T : KType ε Λ) {c : ℝ} (hc : 0 ≤ c) (g :
           | rw [integral_complex_ofReal]
           | exact congrArg _ integral_ofReal
     · refine ⟨0, le_rfl, ?_⟩
-      rw [hA, integral_undef hint, smul_zero, ContinuousLinearMap.zero_apply, inner_zero_right,
+      rw [hA, integral_undef hint, smul_zero, zero_apply, inner_zero_right,
         Complex.ofReal_zero]
   rw [ContinuousLinearMap.isPositive_iff_complex]
   intro x

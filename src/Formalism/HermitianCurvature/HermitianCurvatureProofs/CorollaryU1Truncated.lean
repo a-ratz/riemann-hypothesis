@@ -923,7 +923,7 @@ theorem eA_mul_inv {Z : Fin s → Fin s → ℂ} (h : (Matrix.of Z).det ≠ 0) :
   have hu : IsUnit (Matrix.of Z).det := isUnit_iff_ne_zero.mpr h
   have hinv : Matrix.of (invF s Z) = (Matrix.of Z)⁻¹ := Matrix.of.apply_symm_apply _
   constructor <;> ext1 v <;>
-    simp only [ContinuousLinearMap.mul_apply, eA_apply, ContinuousLinearMap.one_apply,
+    simp only [mul_apply_eq_comp, eA_apply, one_apply_eq_self,
       Matrix.mulVec_mulVec, hinv, Matrix.mul_nonsing_inv _ hu, Matrix.nonsing_inv_mul _ hu,
       Matrix.one_mulVec]
 
@@ -1126,7 +1126,7 @@ theorem zeta_cost_of_smooth_deriv (hS : ZSmooth) (hD : ZDeriv) (hDS : DirSize) :
       ext1 W
       rw [hD hSM hRP hSZ k p s ρ σ d hd E H'
         (P.BetaSesquilinearity.CkOn_mono (by exact_mod_cast Nat.le_add_left 1 b) h) ξ z γ hz hγ W]
-      simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.smulRight_apply]
+      simp only [FunLike.coe_sum, Finset.sum_apply, ContinuousLinearMap.smulRight_apply]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [ZI.cF_apply s i hz]
       rfl)

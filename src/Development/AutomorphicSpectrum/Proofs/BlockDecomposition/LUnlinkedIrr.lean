@@ -110,7 +110,7 @@ theorem isIrreducible_of_generic {ψ : AddChar k Circle} (hψ : Continuous ψ) (
     have h2 : v ∈ (⊤ : Subrepresentation π).toSubmodule := trivial
     rw [← e] at h2
     exact hv h2
-  haveI : Nontrivial (Subrepresentation π) := ⟨⟨⊥, ⊤, hbt⟩⟩
+  have : Nontrivial (Subrepresentation π) := ⟨⟨⊥, ⊤, hbt⟩⟩
   refine ⟨fun S => ?_⟩
   by_contra hc
   push Not at hc
@@ -319,9 +319,9 @@ theorem false_of_shift {h : ℕ} (Δ : Fin h → Segment k) (hun : ∀ i j, ¬ (
   obtain ⟨i₀, -, hi₀⟩ := H1 w hw
   let S := {i : Fin h // top (Δ i) ∈ u}
   let r : S → S → Prop := fun a b => ∃ n : ℕ, 0 < n ∧ top (Δ a.1) = (top (Δ b.1)).nu (n : ℂ)
-  haveI : IsTrans S r := ⟨fun a b c ⟨n, hn, e⟩ ⟨n', hn', e'⟩ =>
+  have : IsTrans S r := ⟨fun a b c ⟨n, hn, e⟩ ⟨n', hn', e'⟩ =>
     ⟨n' + n, by omega, by rw [e, e', nu_nat_add]⟩⟩
-  haveI : Std.Irrefl r := ⟨fun a ⟨n, hn, e⟩ => by
+  have : Std.Irrefl r := ⟨fun a ⟨n, hn, e⟩ => by
     have e' : (top (Δ a.1)).nu ((0 : ℕ) : ℂ) = (top (Δ a.1)).nu (n : ℂ) := by
       rw [← e]
       simp
@@ -366,7 +366,7 @@ theorem one_le_jmL_single (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) 
   have hd : ∑ a : Fin 1, ((fun _ : Fin 1 => ρ) a).1 = ρ.1 := by simp
   obtain ⟨φ⟩ := nonempty_equiv_prodIrr_one ρ hd
   rw [GlobalTheory.CompanionTheory.CsStages.jmL_eq_jm [ρ] (fun _ : Fin 1 => ρ) (by simp) hd ρ.rep]
-  haveI := nontrivial_of_irreducible ρ.2.rep.irr
+  have := nontrivial_of_irreducible ρ.2.rep.irr
   exact one_le_jm_of_injective hA (fun _ : Fin 1 => ρ) hd ρ.rep ρ.2.rep.smooth φ.toIntertwiningMap φ.injective
 
 theorem exists_intertwiningMap_ne_zero {G V W : Type} [Group G] [Subsingleton G] [AddCommGroup V] [Module ℂ V]
@@ -388,16 +388,16 @@ theorem one_le_jmL_nil (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (z 
   let e : Fin 0 → IrrGL (k := k) := Fin.elim0
   have hd : ∑ a, (e a).1 = 0 := by simp
   rw [GlobalTheory.CompanionTheory.CsStages.jmL_eq_jm [] e (by simp) hd _]
-  haveI := nontrivial_of_irreducible c.rep.irr
-  haveI := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_prodIrr e hd
-  haveI : Subsingleton (GL (Fin 0) k) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
+  have := nontrivial_of_irreducible c.rep.irr
+  have := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_prodIrr e hd
+  have : Subsingleton (GL (Fin 0) k) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
   obtain ⟨f, hf⟩ := exists_intertwiningMap_ne_zero c.rep.ρ (prodIrr e hd)
   exact GlobalTheory.CompanionTheory.FrobJm.one_le_jm hA e hd _ c.rep.smooth f hf
 
 theorem one_le_jmL_cons (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (X : IrrGL (k := k)) (z : Fin 2 → IrrGL (k := k))
     (hz : ∑ a, (z a).1 = X.1) (g : X.rep.IntertwiningMap (prodIrr z hz)) (hg : Function.Injective g)
     (W : List (IrrGL (k := k))) (hW : 1 ≤ jmL W (z 1).rep) : 1 ≤ jmL (z 0 :: W) X.rep := by
-  haveI := nontrivial_of_irreducible X.2.rep.irr
+  have := nontrivial_of_irreducible X.2.rep.irr
   have hfl : HasFiniteLength X.rep :=
     GlobalTheory.ProdLength.hasFiniteLength_of_injective g hg (GlobalTheory.CompanionTheory.ProdFL.hasFiniteLength_prodIrr hA z hz)
   exact one_le_jmL_append hA z hz [z 0] W X.rep X.2.rep.smooth hfl
@@ -506,7 +506,7 @@ theorem GlobalTheory.CompanionTheory.BZSeg.NuPairIrr.lUnlinkedIrr : ∀ (k : Typ
     GlobalTheory.BZSeg.ProdIrrFiniteLength k → GlobalTheory.BZSeg.LUnlinkedIrr k := by
   intro k _ _ _ _ hA hJ _ hNu hR hFL h N Δ x hd hun hL
   obtain ⟨ψ, hψ, h1⟩ := exists_continuous_addChar_ne_one k
-  haveI := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_prodIrr x hd
+  have := GlobalTheory.CompanionTheory.AdjQuot.nontrivial_prodIrr x hd
   have hP := isSmooth_prodIrr x hd
   have key : ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (τ : Representation ℂ (GL (Fin N) k) W), IsSmooth τ →
       HasFiniteLength τ → Nontrivial W → IsSubquotient τ (prodIrr x hd) → IsGeneric τ := by

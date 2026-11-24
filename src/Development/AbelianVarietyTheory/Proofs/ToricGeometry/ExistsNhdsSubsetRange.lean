@@ -122,9 +122,9 @@ theorem exists_compact_cover {g : ℕ} (τ : Matrix (Fin g) (Fin g) ℂ)
 theorem isClosed_cone {E ι : Type*} [TopologicalSpace E] {f : E → ι → ℂ} (hf : Continuous f)
     (h0 : ∀ z, f z ≠ 0) {K : Set E} (hK : IsCompact K) :
     IsClosed {p : ι → ℂ | ∃ t : ℂ, ∃ z ∈ K, p = t • f z} := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have h1 : IsClosed {x : (ι → ℂ) × K | ∀ c c', x.1 c * f x.2 c' = x.1 c' * f x.2 c} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun c => isClosed_iInter fun c' => isClosed_eq ?_ ?_ <;> fun_prop
   convert isClosedMap_fst_of_compactSpace _ h1 using 1
   ext p
@@ -234,7 +234,7 @@ theorem exists_nhds_subset_range {d : ℕ} {A W : Type*} [CommRing A] [Algebra �
     (Φ : W → A →ₐ[ℂ] ℂ) (hΦ : ∀ b, Differentiable ℂ fun w => Φ w b) (w₀ : W)
     (hq : Φ w₀ (j q) ≠ 0) (himm : ∀ ξ, (∀ b, fderiv ℂ (fun w => Φ w b) w₀ ξ = 0) → ξ = 0) :
     ∃ U ∈ 𝓝 (⇑(Φ w₀) : A → ℂ), ∀ φ : A →ₐ[ℂ] ℂ, ⇑φ ∈ U → ∃ w, φ = Φ w := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hp' : Φ w₀ (p.derivative.eval₂ j.toRingHom a) ≠ 0 := by
     intro h
     obtain ⟨α, β, hαβ⟩ := Ideal.mem_span_pair.mp hpq
@@ -257,7 +257,7 @@ theorem exists_nhds_subset_range {d : ℕ} {A W : Type*} [CommRing A] [Algebra �
     · intro x y
       simp only [map_mul]
       rw [fderiv_fun_mul (hΦ x w₀) (hΦ y w₀)]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+      simp only [add_apply, smul_apply, smul_eq_mul]
       ring
     · intro c
       simp
@@ -379,9 +379,9 @@ theorem cone_eq_zeroLocus {E ι : Type} [NormedAddCommGroup E] [NormedSpace ℂ 
     refine ⟨(t, z), Ideal.Quotient.algHom_ext ℂ (MvPolynomial.algHom_ext fun c => ?_)⟩
     exact (congrFun h c).trans (hΦX (t, z) c).symm
   have hDY : D ⊆ Y := by
-    haveI : PreconnectedSpace D := Subtype.preconnectedSpace (hconn b₀ hb0).isPreconnected
+    have : PreconnectedSpace D := Subtype.preconnectedSpace (hconn b₀ hb0).isPreconnected
     have hclopen : IsClopen (Subtype.val ⁻¹' Y : Set D) := by
-      refine ⟨hY.preimage continuous_subtype_val, isOpen_iff_mem_nhds.mpr ?_⟩
+      refine ⟨hY.preimage continuous_subtypeVal, isOpen_iff_mem_nhds.mpr ?_⟩
       rintro ⟨_, φ, rfl, hφ⟩ hφY
       obtain ⟨w₀, rfl⟩ := hYΦ' φ hφY
       have hφ' := hφ
@@ -408,7 +408,7 @@ theorem cone_eq_zeroLocus {E ι : Type} [NormedAddCommGroup E] [NormedSpace ℂ 
           have h1 := key c
           rw [h2, map_zero, mul_zero, add_zero] at h1
           exact Prod.ext ((mul_eq_zero.mp h1).resolve_right hc) h2)
-      refine mem_of_superset (continuous_subtype_val.continuousAt hU) ?_
+      refine mem_of_superset (continuous_subtypeVal.continuousAt hU) ?_
       rintro ⟨_, ψ, rfl, hψ⟩ hψU
       obtain ⟨w, rfl⟩ := hU' ψ hψU
       exact hYΦ w
@@ -462,11 +462,11 @@ theorem thetaCone_eq_zeroLocus : (∀ (g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ
     | zero => exact ⟨differentiable_const 0, by simp⟩
     | add x y _ _ hx hy =>
       refine ⟨hx.1.add hy.1, ?_⟩
-      rw [fderiv_add (hx.1 z) (hy.1 z), ContinuousLinearMap.add_apply, hx.2, hy.2, Pi.add_apply,
+      rw [fderiv_add (hx.1 z) (hy.1 z), add_apply, hx.2, hy.2, Pi.add_apply,
         mul_add]
     | smul r x _ hx =>
       refine ⟨hx.1.const_smul r, ?_⟩
-      rw [fderiv_const_smul (hx.1 z), ContinuousLinearMap.smul_apply, hx.2, Pi.smul_apply,
+      rw [fderiv_const_smul (hx.1 z), smul_apply, hx.2, Pi.smul_apply,
         smul_eq_mul, smul_eq_mul]
       ring
   have hcl : IsClosed {p : (Fin g → Fin N) → ℂ |

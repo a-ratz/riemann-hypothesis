@@ -62,7 +62,7 @@ theorem abs_integrable {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopol
     (C : Set V) (hC : IsCompact C) (hcov : ∀ β, ∃ ν : Λ, β + (ν : V) ∈ C)
     (u : Q → ℝ) (hu : Summable u) (hAu : ∀ q, ∀ β ∈ C, ‖A q β‖ ≤ u q)
     (q₀ : Q) (hinj : Function.Injective (act q₀)) : Integrable (A q₀) lam := by
-  have hAm : ∀ q, Measurable fun β => ‖A q β‖ₑ := fun q => (hA q).measurable.enorm
+  have hAm : ∀ q, Measurable fun β => ‖A q β‖ₑ := fun q => (hA q).measurable.eNorm
   obtain ⟨S, hS_def⟩ : ∃ S : V → ℝ≥0∞, S = fun β => ∑' q, ‖A q β‖ₑ := ⟨_, rfl⟩
   have hSm : Measurable S := by
     rw [hS_def]
@@ -81,7 +81,7 @@ theorem abs_integrable {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopol
     rw [← ENNReal.ofReal_tsum_of_nonneg hu0 hu]
     exact ENNReal.ofReal_ne_top
   have hmeas : ∀ ν : Λ, AEMeasurable (fun β => ‖A q₀ (ν +ᵥ β)‖ₑ) (lam.restrict 𝓖) := fun ν =>
-    ((hA q₀).comp (continuous_const_add (ν : V))).measurable.enorm.aemeasurable
+    ((hA q₀).comp (continuous_const_add (ν : V))).measurable.eNorm.aemeasurable
   have h1 : ∫⁻ β, ‖A q₀ β‖ₑ ∂lam ≤ ∫⁻ β in 𝓖, S β ∂lam := by
     rw [h𝓖.lintegral_eq_tsum'', ← lintegral_tsum hmeas]
     refine lintegral_mono fun β => ?_

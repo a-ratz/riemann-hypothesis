@@ -153,7 +153,7 @@ theorem UpperTheory.V.Z.Gam.suppFacts :
     · exact ⟨s, (uniq hσ hσ' hs).of_equiv (IrrGL.equivOf σ'.ρ σ'.smooth σ'.irred), h⟩
   · rintro s B ⟨σ, hσ, hs⟩ hB
     obtain ⟨y, h0, hy⟩ := exists_fixed hσ hB
-    haveI : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+    have : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
     exact unram_of_fixed hs h0 hy
   · rintro χ s ⟨σ, hσ, hs⟩
     refine ⟨_, ⟨_, hσ.twist χ, supp_twist χ hs⟩, fun θ => ?_, ?_⟩

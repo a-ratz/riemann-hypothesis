@@ -81,7 +81,7 @@ theorem lat_of_good {J : Matrix (Fin d) (Fin d) E} [DiscreteTopology (ratU σ J)
     Lat ((ratU σ J).subgroupOf N) :=
   haveI := PositivityTheory.ThKF.countable_ratU σ J
   ⟨h.cnt, DiscreteTopology.of_continuous_injective (f := fun γ => (⟨γ.1.1, γ.2⟩ : ratU σ J))
-    ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+    ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
     fun a b h => Subtype.ext (Subtype.ext (congrArg Subtype.val h :)), h.cov⟩
 
 theorem conj_unipU {U : Submodule E (Fin d → E)} {γ m : UA σ W.J} (hγ : γ ∈ ratU σ W.J)
@@ -199,7 +199,7 @@ theorem levi_data : ∃ (lev : UA σ W₁.J →* UA σ W.J) (ρ : stab σ W H.x 
     levi_uniq h hJ hH (hl _) (by simpa using levi_mul (hl y) (hl y'))
   refine ⟨lev, ρ, cont_hom lev ?_, cont_hom ρ ?_, hl, fun y hy => ?_, fun u hu => ?_, fun u => (st u).2⟩
   · exact (((continuous_const.matrix_mul continuous_mat).matrix_mul continuous_const).add continuous_const).congr fun y => (e y).symm
-  · exact (continuous_const.matrix_mul (continuous_mat.comp continuous_subtype_val)).matrix_mul continuous_const
+  · exact (continuous_const.matrix_mul (continuous_mat.comp continuous_subtypeVal)).matrix_mul continuous_const
   · obtain ⟨A, hA⟩ := (rat_iff y).1 hy
     refine (rat_iff _).2 ⟨H.ι * A * Q + (1 - H.ι * Q), (e y).trans ?_⟩
     rw [hA, ← incM_mul, ← incM_mul]

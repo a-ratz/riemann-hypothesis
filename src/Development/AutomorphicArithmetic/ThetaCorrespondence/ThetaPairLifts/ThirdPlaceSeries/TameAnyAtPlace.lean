@@ -80,7 +80,7 @@ theorem tameAnyFix_map_primeToPart {M K : Type} [Monoid M] [Field K] (l : ℕ) [
     have hmul : l ^ a * m = orderOf x := Nat.ordProj_mul_ordCompl_eq_self _ _
     have hcop : Nat.Coprime (l ^ a) m := (Nat.coprime_ordCompl hl hpos.ne').pow_left _
     have hmpos : 0 < m := Nat.ordCompl_pos l hpos.ne'
-    haveI : NeZero m := ⟨hmpos.ne'⟩
+    have : NeZero m := ⟨hmpos.ne'⟩
     have h1 : (ι x ^ m) ^ l ^ a = 1 ^ l ^ a := by
       rw [← pow_mul, mul_comm, hmul, ← map_pow, pow_orderOf_eq_one, map_one, one_pow]
     have h2 : ι x ^ m = 1 := by
@@ -136,7 +136,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 open GlobalTheory.TameLabels
 theorem tameAnyAt_fixed_alt_alt : ∀ D : D7, _root_.UpperTheory.GalS.GalAwayN D → FrobDense D → ∀ (i : D.nd.Loc) (π : D.naut.CG D.R.r) (ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.r) (D.nd.O i)), D.naut.csd π → D.naut.ralg π → _root_.UpperTheory.GalS.FullLabS D [⟨D.R.r, π, 1⟩] → IsRepOfSig D.nd D.naut i [⟨D.R.r, π, 1⟩] ρ → ∀ k : Fin 2, D.nd.l i ≠ D.host.g k → ∀ v : D.nd.PlG k, TameAnyAt D i [⟨D.R.r, π, 1⟩] ρ k (D.naut.plGw k v) := by
   intro D hA hF i π ρ hc hr hfull hρ k hk v
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨ι, hinj, hred⟩ := _root_.GlobalTheory.TypeLeaf.exists_redVia D i k hk
   have hpol := _root_.GlobalTheory.IneAway.ineAt' D hA hF i π ρ hc hr hfull hρ k v _ rfl (tameAnyFix_not_over D i k hk v) _ (D.ntypes.tg_mem k v)
   have hlab := D.ntypes.inertiaCharpoly_type k v _ (_root_.UpperTheory.GalS.fl0' hfull k v)

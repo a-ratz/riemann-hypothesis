@@ -138,7 +138,7 @@ theorem zerosWindowWith_of (C : ℝ) (hR : RightHalfWith C) (hT : Transfer) :
     fun ρ ⟨⟨_, h1, h2, h3⟩, h4⟩ => ⟨h4, h1, h2, h3⟩
   have hZl : ∀ ρ ∈ ZerosNear χ t ∩ {ρ | ρ.re < 1 / 2}, 1 - ρ ∈ RightNear χ⁻¹ (-t) := by
     rintro ρ ⟨⟨h0, h1, h2, h3⟩, h4⟩
-    simp only [Set.mem_setOf_eq] at h4
+    simp only [Set.mem_ofPred_eq] at h4
     refine ⟨by simp; linarith, by simp; linarith, ?_, (hT N χ hχ ρ h0 h1 h3).1⟩
     simp only [Complex.sub_im, Complex.one_im, zero_sub]
     rw [show -ρ.im - -t = -(ρ.im - t) by ring, abs_neg]
@@ -666,17 +666,17 @@ open DirichletCharacter
 lemma differentiable_gammaFactor_inv {N : ℕ} (χ : DirichletCharacter ℂ N) :
     Differentiable ℂ (fun s => (gammaFactor χ s)⁻¹) := by
   by_cases h : χ.Even
-  · simp only [DirichletCharacter.gammaFactor, h, if_true]
+  · simp only [DirichletCharacter.gammaFactor, h, ite_true]
     exact Complex.differentiable_Gammaℝ_inv
-  · simp only [DirichletCharacter.gammaFactor, h, if_false]
+  · simp only [DirichletCharacter.gammaFactor, h, ite_false]
     exact Complex.differentiable_Gammaℝ_inv.comp (differentiable_id.add_const 1)
 
 lemma gammaFactor_ne_zero_of_re_pos {N : ℕ} (χ : DirichletCharacter ℂ N) {s : ℂ}
     (hs : 0 < s.re) : gammaFactor χ s ≠ 0 := by
   by_cases h : χ.Even
-  · simp only [DirichletCharacter.gammaFactor, h, if_true]
+  · simp only [DirichletCharacter.gammaFactor, h, ite_true]
     exact Complex.Gammaℝ_ne_zero_of_re_pos hs
-  · simp only [DirichletCharacter.gammaFactor, h, if_false]
+  · simp only [DirichletCharacter.gammaFactor, h, ite_false]
     exact Complex.Gammaℝ_ne_zero_of_re_pos (by simp; linarith)
 
 lemma isPrimitive_inv {N : ℕ} {χ : DirichletCharacter ℂ N} (hχ : χ.IsPrimitive) :

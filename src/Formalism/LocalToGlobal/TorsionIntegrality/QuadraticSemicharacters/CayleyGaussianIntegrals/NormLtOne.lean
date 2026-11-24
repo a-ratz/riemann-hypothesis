@@ -130,7 +130,7 @@ theorem norm_coeff {l : ℕ} [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) {V : Type} 
       rw [hE] at hm
       exact_mod_cast hm
     have h4 : ‖ι (Complex.exp (-(Real.pi : ℂ) * Complex.I * (altE H s x : ℂ)))‖ ^ (2 * N) = 1 := by
-      rw [← norm_pow, ← map_pow, ← Complex.exp_nat_mul]
+      rw [← norm_pow, ← map_pow, ← Complex.exp_natCast_mul]
       have h5 : ((2 * N : ℕ) : ℂ) * (-(Real.pi : ℂ) * Complex.I * (altE H s x : ℂ))
           = ((-m : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
         push_cast

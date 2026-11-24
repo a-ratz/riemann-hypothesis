@@ -87,13 +87,13 @@ theorem adj_adj (Z : Mat r s) : adjZ (adjZ Z) = Z := by
 
 theorem realPart_mem_unitaryLieAlgebra (Z : Mat r s) : reP Z ∈ upq r s := by
   have h : star (1 / 2 : ℂ) = 1 / 2 := by simp
-  simp only [upq, reP, Set.mem_setOf_eq, Matrix.conjTranspose_smul, Matrix.conjTranspose_sub, Matrix.smul_mul,
+  simp only [upq, reP, Set.mem_ofPred_eq, Matrix.conjTranspose_smul, Matrix.conjTranspose_sub, Matrix.smul_mul,
     Matrix.mul_smul, Matrix.sub_mul, Matrix.mul_sub, adj_ct_J, J_adj, h]
   module
 
 theorem imaginaryPart_mem_unitaryLieAlgebra (Z : Mat r s) : imaginary Z ∈ upq r s := by
   have h : star (-Complex.I / 2 : ℂ) = Complex.I / 2 := by simp
-  simp only [upq, imaginary, Set.mem_setOf_eq, Matrix.conjTranspose_smul, Matrix.conjTranspose_add, Matrix.smul_mul,
+  simp only [upq, imaginary, Set.mem_ofPred_eq, Matrix.conjTranspose_smul, Matrix.conjTranspose_add, Matrix.smul_mul,
     Matrix.mul_smul, Matrix.add_mul, Matrix.mul_add, adj_ct_J, J_adj, h]
   module
 
@@ -370,7 +370,7 @@ theorem ctr_ne_zero {U : Type} [AddCommGroup U] [Module ℂ U] (Λ : Ix p q → 
     rw [mem_hwSub]
     exact ⟨fun a => by rw [← hdA, hw, map_smul], fun a b hab => by rw [← hdA, hn a b hab, map_zero]⟩
   have hv0 : (⟨v, hv.2⟩ : hwSub R.HK.act Λ) ≠ 0 := fun h => hv.1 (congrArg Subtype.val h)
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hv0).1 h1 ⟨d z, hmem⟩
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hv0).1 h1 ⟨d z, hmem⟩
   have hc' : c • v = d z := congrArg Subtype.val hc
   have h2 := hdc v z
   rw [h0, map_zero, ← hc', map_smul, inner_smul_right] at h2
@@ -458,7 +458,7 @@ theorem pairLaw_of_tensLaw : ∀ (p q r s : ℕ) (T₁ : GrpData p q) (σ : Type
       · change inc (e (R₂.HK.act Z x) : N) = b Z (inc (e x : N))
         rw [hee, he Z hZ]
       · rintro _ ⟨x, rfl⟩
-        haveI : Nontrivial (hwSub R₁.HK.act Λ₁) := Module.nontrivial_of_finrank_eq_succ h1
+        have : Nontrivial (hwSub R₁.HK.act Λ₁) := Module.nontrivial_of_finrank_eq_succ h1
         obtain ⟨⟨v, hvm⟩, hv⟩ := exists_ne (0 : hwSub R₁.HK.act Λ₁)
         have hvv : ⟪R₁.ι v, R₁.ι v⟫_ℂ ≠ 0 := fun h =>
           hv (Subtype.ext (R₁.ι_inj (by rw [ZeroMemClass.coe_zero, map_zero]; exact inner_self_eq_zero.1 h)))

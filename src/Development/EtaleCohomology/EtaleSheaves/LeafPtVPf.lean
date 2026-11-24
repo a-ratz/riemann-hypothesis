@@ -66,7 +66,7 @@ theorem isZero_free_empty (R : Type) [CommRing R] (X : Scheme.{0}) [IsEmpty X] :
   · exact (isZero_sec_empty R ((free R).obj (yoneda.obj X)) U.unop).eq_of_tgt _ _
   · have hE : IsEmpty (ULift.{1} (unop U ⟶ X)) := ⟨fun f => by
       obtain ⟨x⟩ := not_isEmpty_iff.1 hU; exact IsEmpty.false (f.down.base x)⟩
-    haveI : Subsingleton ↑(((freeP R).obj (yoneda.obj X)).obj U) := by
+    have : Subsingleton ↑(((freeP R).obj (yoneda.obj X)).obj U) := by
       change Subsingleton (ULift.{1} (unop U ⟶ X) →₀ ULift.{1} R); infer_instance
     exact (ModuleCat.isZero_of_subsingleton _).eq_of_src _ _
 
@@ -88,7 +88,7 @@ theorem isIso_inr (R : Type) [CommRing R] {K L : Cx R} (φ : K ⟶ L) (hK : ∀ 
 
 theorem fgt_bij (hH : Hyps) (R : Type) [CommRing R] (F : Shv R) {X : Scheme.{0}} [IsEmpty X] {E : Spc}
     (f : sch.obj X ⟶ E) (n : ℤ) : Function.Bijective (fgt R f F n) := by
-  haveI := isIso_inr R ((chains R).map f) (isZero_chains_empty R X)
+  have := isIso_inr R ((chains R).map f) (isZero_chains_empty R X)
   exact hH.1 R (mappingCone.inr ((chains R).map f)) F n
 
 theorem rpl_zero (hH : Hyps) (q : ℕ) (i : ℤ) {U E U' E' : Scheme.{0}} (f : U ⟶ E) (f' : U' ⟶ E') [IsEmpty U']
@@ -112,7 +112,7 @@ theorem isEmpty_pullback_closed_subscheme_section_into_complement {B W Y S : Sch
 
 theorem LeafPtV_of : LateralTheory.E.SecondDegreeKilling.LeafPtV := by
   intro hH q _ k _ hq i B W Y Y' toK ι _ V hVW p g hp hgp U A _ t hA hV m hpl y
-  haveI := isEmpty_pullback_closed_subscheme_section_into_complement ι V hVW (g ≫ p) (t ≫ U.hom) hV
+  have := isEmpty_pullback_closed_subscheme_section_into_complement ι V hVW (g ≫ p) (t ≫ U.hom) hV
   let wA : pullback (pullback.snd (g ≫ p) (t ≫ U.hom) ≫ (t ≫ U.hom)) ι ⟶
       pullback (pullback.snd p (t ≫ U.hom) ≫ (t ≫ U.hom)) ι :=
     pullback.map _ ι _ ι (fibMap g p (t ≫ U.hom)) (𝟙 W) (𝟙 B)

@@ -73,10 +73,10 @@ theorem UpperTheory.V.LinAlg.simEig :
     apply hU
     rw [Submodule.eq_bot_iff] at h ⊢
     exact h
-  haveI : IsArtinian A M := isArtinian_of_tower K inferInstance
+  have : IsArtinian A M := isArtinian_of_tower K inferInstance
   obtain ⟨S, hS, hSU⟩ := (eq_bot_or_exists_atom_le U').resolve_left hU'
-  haveI : IsSimpleModule A S := isSimpleModule_iff_isAtom.2 hS
-  haveI : FiniteDimensional K S :=
+  have : IsSimpleModule A S := isSimpleModule_iff_isAtom.2 hS
+  have : FiniteDimensional K S :=
     FiniteDimensional.of_injective (S.subtype.restrictScalars K) Subtype.val_injective
   obtain ⟨v, hv, hv0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hS.1
   refine ⟨v, hSU hv, hv0, fun j => ?_⟩

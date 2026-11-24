@@ -125,8 +125,8 @@ theorem shift_val (c : Fin (e + 1) → ℂ) (ρ : ℝ) (k : ℤ) (u : strip c ρ
 
 theorem continuous_shift (c : Fin (e + 1) → ℂ) (ρ : ℝ) (k : ℤ) : Continuous (shift c ρ k) := by
   refine Continuous.subtype_mk ?_ _
-  exact continuous_subtype_val.update 0
-    (((continuous_apply 0).comp continuous_subtype_val).add continuous_const)
+  exact continuous_subtypeVal.update 0
+    (((continuous_apply 0).comp continuous_subtypeVal).add continuous_const)
 
 theorem shift_shift (c : Fin (e + 1) → ℂ) (ρ : ℝ) (k l : ℤ) (u : strip c ρ) :
     shift c ρ k (shift c ρ l u) = shift c ρ (k + l) u := by
@@ -210,7 +210,7 @@ theorem FiniteCoverPuncturedPolydisc.proof : FiniteCoverPuncturedPolydisc.Statem
   let F : Set Y := p ⁻¹' {E u₀}
   have hFfin : F.Finite := Set.finite_of_encard_eq_coe (hfib (E u₀))
   have : Finite F := hFfin.to_subtype
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   have hcardF : Nat.card F = N := by
     rw [Nat.card_coe_set_eq, Set.ncard_def, hfib]
     simp
@@ -271,7 +271,7 @@ theorem FiniteCoverPuncturedPolydisc.proof : FiniteCoverPuncturedPolydisc.Statem
         Equiv.Perm.mul_apply]
 
   let Q := MulAction.orbitRel.Quotient (Subgroup.zpowers σ) F
-  letI : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Q := Fintype.ofFinite Q
   let m := Nat.card Q
   let eQ : Fin m ≃ Q := (Finite.equivFin Q).symm
   let rep : Fin m → F := fun b => (eQ b).out
@@ -345,17 +345,17 @@ theorem FiniteCoverPuncturedPolydisc.proof : FiniteCoverPuncturedPolydisc.Statem
     rw [heq]
     apply (L (rep b)).continuous.continuousAt.comp
     rw [Topology.IsInducing.subtypeVal.continuousAt_iff]
-    apply continuousAt_subtype_val.update 0
+    apply continuousAt_subtypeVal.update 0
     apply continuousAt_const.mul
     apply continuousAt_const.add
     apply ContinuousAt.clog
-    · exact (((continuous_apply 0).comp continuous_subtype_val).div_const _).continuousAt
+    · exact (((continuous_apply 0).comp continuous_subtypeVal).div_const _).continuousAt
     · simp [div_self hz]
   have hpψ : ∀ b t, ((p (ψ b t) : Fin (e + 1) → ℂ)) = Function.update t.1 0 (t.1 0 ^ ord b) := by
     intro b t
     show ((p (L (rep b) _) : Fin (e + 1) → ℂ)) = _
     rw [hLp', expMap_val]
-    simp only [Function.update_self, Function.update_idem, exp_nat_mul, exp_log t.2.2]
+    simp only [Function.update_self, Function.update_idem, exp_natCast_mul, exp_log t.2.2]
   have hrest : ∀ b b' t t', ψ b t = ψ b' t' → (∀ i, i ≠ 0 → t.1 i = t'.1 i) ∧
       t.1 0 ^ ord b = t'.1 0 ^ ord b' := by
     intro b b' t t' h
@@ -371,7 +371,7 @@ theorem FiniteCoverPuncturedPolydisc.proof : FiniteCoverPuncturedPolydisc.Statem
     intro b b' t t' h
     obtain ⟨hr', h0⟩ := hrest b b' t t' h
     have hexp : exp (ord b' * log (t'.1 0)) = exp (ord b * log (t.1 0)) := by
-      rw [exp_nat_mul, exp_nat_mul, exp_log t.2.2, exp_log t'.2.2, h0]
+      rw [exp_natCast_mul, exp_natCast_mul, exp_log t.2.2, exp_log t'.2.2, h0]
     obtain ⟨n, hn⟩ := exp_eq_exp_iff_exists_int.1 hexp
     refine ⟨n, hn, ?_⟩
     have hsh : (⟨_, hpt b' t' (log (t'.1 0)) (exp_log t'.2.2)⟩ : strip c ρ) =

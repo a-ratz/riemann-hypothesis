@@ -72,7 +72,7 @@ theorem zc_two : zc (2 : ℤ_[p]) = 2 := by
 
 theorem norm_zc (a : ℤ_[p]) : ‖zc a‖ = ‖a‖ := by
   show ‖algebraMap ℚ_[p] ℂ_[p] (a : ℚ_[p])‖ = ‖a‖
-  rw [norm_algebraMap', PadicInt.padic_norm_e_of_padicInt]
+  rw [norm_algebraMap', PadicInt.norm_coe]
 
 theorem norm_two_of (hp2 : p ≠ 2) : ‖(2 : ℂ_[p])‖ = 1 := by
   have h2 : ‖((2 : ℕ) : ℚ_[p])‖ = 1 :=

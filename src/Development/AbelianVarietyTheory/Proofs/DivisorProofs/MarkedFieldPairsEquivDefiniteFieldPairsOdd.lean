@@ -237,8 +237,8 @@ theorem diag_sign_of_pos_eigenvector : ∀ {n : ℕ} (A h g : Matrix (Fin n) (Fi
     have := congrFun this i
     simp at this
   have hneg := re_form_neg_of_orth_of_sigPosH_eq_one A hA hdet hsig (M *ᵥ Pi.single i₀ 1)
-    (M *ᵥ Pi.single i 1) (by rw [hval]; simpa using hd0) (by rw [hval, if_neg (Ne.symm hi)]) hne
-  rw [hval, if_pos rfl, Complex.ofReal_re] at hneg
+    (M *ᵥ Pi.single i 1) (by rw [hval]; simpa using hd0) (by rw [hval, ite_eq_right (Ne.symm hi)]) hne
+  rw [hval, ite_eq_left rfl, Complex.ofReal_re] at hneg
   exact hneg
 
 end GlobalTheory
@@ -368,7 +368,7 @@ variable {F M : Type} [Field F] [Field M] [Algebra F M]
 
 theorem exists_emb (pb : PowerBasis F M) (τ : F →+* ℂ) (z : ℂ) (hz : (minpoly F pb.gen).eval₂ τ z = 0) :
     ∃ e : M →+* ℂ, (∀ x, e (algebraMap F M x) = τ x) ∧ e pb.gen = z := by
-  letI : Algebra F ℂ := τ.toAlgebra
+  let : Algebra F ℂ := τ.toAlgebra
   have h : Polynomial.aeval z (minpoly F pb.gen) = 0 := hz
   exact ⟨(pb.lift z h : M →ₐ[F] ℂ), fun x => (pb.lift z h).commutes x, pb.lift_gen z h⟩
 
@@ -633,13 +633,13 @@ theorem norm_eig_of_def {n : ℕ} (h g : Matrix (Fin n) (Fin n) ℂ) (c : ℝ)
 open Polynomial in
 theorem dcharpoly (P : DPair G) (v : InfinitePlace G.F) :
     (G.psi v (P.γ : G.C)).charpoly = P.pol.map v.embedding := by
-  letI : Algebra G.F ℂ := v.embedding.toAlgebra
+  let : Algebra G.F ℂ := v.embedding.toAlgebra
   have hg : ∀ a, G.psi v (algebraMap G.F G.C a) = algebraMap G.F (Matrix (Fin G.n) (Fin G.n) ℂ) a :=
     fun a => by rw [G.psi_F, Matrix.algebraMap_eq_diagonal]; rfl
   let g : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ := { G.psi v with commutes' := hg }
   let L : ℂ ⊗[G.F] G.C →ₐ[ℂ] Matrix (Fin G.n) (Fin G.n) ℂ :=
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) g (fun r _ => Algebra.commute_algebraMap_left r _)
-  haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
   have hinj : Function.Injective L :=
     (IsSimpleRing.injective_ringHom_or_subsingleton_codomain L.toRingHom).resolve_right (not_subsingleton _)
   have hL : ∀ x : G.C, L ((1 : ℂ) ⊗ₜ x) = G.psi v x := fun x => by
@@ -1293,10 +1293,10 @@ theorem move_definite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 �
     · exact ⟨Q.c, Q.γ, hQ, Q.reg, fun φ z hz => DMove.dell Q φ z (by rw [hQ]; exact hz)⟩
     · exact ⟨P.c, P.γ, hP, P.reg, fun φ z hz => GlobalTheory.T.marked_similitude_pair_minpoly_roots_normSq_eq p G P μ ha hm φ z (by rw [hP]; exact hz)⟩
   have hmon : P0.Monic := hγ0 ▸ minpoly.monic (Algebra.IsIntegral.isIntegral _)
-  haveI : Fact (Irreducible P0) := ⟨hirr⟩
+  have : Fact (Irreducible P0) := ⟨hirr⟩
   let pb := AdjoinRoot.powerBasis hmon.ne_zero
-  haveI : Module.Finite G.F (AdjoinRoot P0) := pb.finite
-  haveI : NumberField (AdjoinRoot P0) := NumberField.of_module_finite G.F _
+  have : Module.Finite G.F (AdjoinRoot P0) := pb.finite
+  have : NumberField (AdjoinRoot P0) := NumberField.of_module_finite G.F _
   have hmin : minpoly G.F pb.gen = P0 := AdjoinRoot.minpoly_powerBasis_gen_of_monic hmon
   have hcore := DMove.core ha hn pb (by rw [hmin, ← hγ0]; exact hreg.1) (by rw [hmin, ← hγ0]; exact hreg.2) c0 μ v hv
     (by rw [hmin]; exact hμ) (fun φ => hc0 _ _ (by have h := emb_root pb φ; rw [hmin] at h; exact h))

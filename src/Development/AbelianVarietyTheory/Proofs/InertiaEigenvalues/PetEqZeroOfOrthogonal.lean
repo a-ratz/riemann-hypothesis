@@ -195,9 +195,9 @@ namespace GlobalTheory.GLFin
 theorem expGL_image_ball_mem_nhds : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ), ∀ ε : ℝ, 0 < ε →
     (fun X : Lie E a => GlobalTheory.ExpDeriv.expGL X 1) '' {X | ‖X‖ < ε} ∈ nhds (1 : GL (Fin a) (Cinf E)) := by
   intro E _ _ _ a ε hε
-  letI : NormedRing (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   have hd : HasStrictFDerivAt (NormedSpace.exp : Matrix (Fin a) (Fin a) (Cinf E) → _)
       ((ContinuousLinearEquiv.refl ℝ (Matrix (Fin a) (Fin a) (Cinf E)) : Matrix (Fin a) (Fin a) (Cinf E) →L[ℝ] _)) 0 :=
     hasStrictFDerivAt_exp_zero
@@ -742,13 +742,13 @@ theorem eq_zero_along {F : Sm E a} {x : GA E a} {X : Lie E a}
   have hev : (fun t : ℝ => F.1 (x * infGL E a (expGL X t))) =ᶠ[𝓝 0] 0 := by
     filter_upwards [Metric.eball_mem_nhds (0 : ℝ) hp.r_pos] with y hy
     have h := hp.hasSum_iteratedFDeriv hy
-    simp only [hF, ContinuousMultilinearMap.zero_apply, smul_zero, zero_add] at h
+    simp only [hF, zero_apply, smul_zero, zero_add] at h
     exact h.unique hasSum_zero
   exact hf.eqOn_zero_of_preconnected_of_eventuallyEq_zero isPreconnected_univ (Set.mem_univ 0) hev (Set.mem_univ t)
 
 theorem eq_univ_of_exp {S : Set (GL (Fin a) (Cinf E))} (h1 : 1 ∈ S) (hS : ∀ y ∈ S, ∀ X t, y * expGL X t ∈ S) :
     S = Set.univ := by
-  haveI : PreconnectedSpace (GL (Fin a) (Cinf E)) := ⟨by
+  have : PreconnectedSpace (GL (Fin a) (Cinf E)) := ⟨by
     rw [← (GlobalTheory.CuspQuot.isOpenEmbedding_val (E := E) (a := a)).isInducing.isPreconnected_image]
     rw [Set.image_univ]
     exact GlobalTheory.AlgInfChar.isPreconnected_invSet (E := E) (a := a)⟩
@@ -803,7 +803,7 @@ theorem hasFDerivAt_chart (φ : Sm E a) (g : GA E a) {z : Lie E a} (hz : z ∈ i
   have h := chart_lieD φ.2 (lmul (invL z) v) g hz
   rw [e] at h
   rw [← h]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smulRight_apply]
+  simp only [sum_apply, ContinuousLinearMap.smulRight_apply]
   exact chart_lie _ φ g z
 
 variable {ω : HChar E} (μ : Measure (GA E a)) [μ.IsHaarMeasure] {ψ : GA E a → ℂ}
@@ -828,7 +828,7 @@ theorem hasFDerivAt_coef (hω : ω.IsUnitary) (h' : ψ ∈ bddForms E a ω) {φ 
     (hl : ∀ X, (lie E a X φ).1 ∈ bddForms E a ω) (x : GA E a) {z : Lie E a} (hz : z ∈ invSet E a) :
     HasFDerivAt (chart (coef μ ψ φ.1) x)
       (∑ i, (crd i z).smulRight (chart (coef μ ψ (lie E a (bas E a i) φ).1) x z)) z := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   obtain ⟨D, hD⟩ := h'.2.2.2
   choose C hC using fun i => (hl (bas E a i)).2.2.2
   have hs : ∀ᶠ y in 𝓝 z, y ∈ invSet E a ∧ ∀ i, ‖crd i y‖ ≤ ‖crd i z‖ + 1 := by
@@ -884,7 +884,7 @@ theorem lieD_coef (hω : ω.IsUnitary) (h' : ψ ∈ bddForms E a ω) {φ : Sm E 
     change (1 : Matrix (Fin a) (Fin a) (Cinf E))⁻¹ * Matrix.of X = Matrix.of X
     simp
   rw [lieD, (hasFDerivAt_coef μ hω h' h hl x (z := oneL E a) isUnit_one).fderiv, e (coef μ ψ _)]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smulRight_apply, chart_coef, chart_lie X,
+  simp only [sum_apply, ContinuousLinearMap.smulRight_apply, chart_coef, chart_lie X,
     Finset.sum_mul, smul_mul_assoc]
   refine Eq.trans (Finset.sum_congr rfl fun i _ => ?_) (integral_finsetSum _ fun i _ =>
     (integrable_chart μ hω h' (hl (bas E a i)) x (oneL E a)).smul ((bas E a).coord i X)).symm

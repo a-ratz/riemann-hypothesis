@@ -326,7 +326,7 @@ theorem finite_box (F : Type) [Field F] [NumberField F] (La : Submodule ℤ (mix
   refine Set.Finite.subset ?_ hsub
   refine Metric.finite_isBounded_inter_isClosed DiscreteTopology.isDiscrete isBounded_closedBall ?_
   rw [← Submodule.coe_toAddSubgroup]
-  exact AddSubgroup.isClosed_of_discrete
+  exact AddSubgroup.isClosed_of_discreteTopology
 
 
 open scoped Classical in

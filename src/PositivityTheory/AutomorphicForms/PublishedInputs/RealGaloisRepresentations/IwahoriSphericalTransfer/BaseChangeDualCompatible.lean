@@ -83,7 +83,7 @@ theorem bcDual_of_polarized : Cr.BcDual := by
     rw [Filter.eventually_cofinite]
     refine ((GlobalTheory.Mem.UnrAe.finite_ramified χ).preimage' (f := fun w : HeightOneSpectrum (𝓞 K) => w.under (𝓞 F))
       fun v _ => ?_).subset fun w hw => hw
-    haveI := v.isMaximal
+    have := v.isMaximal
     refine ((IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 K)).preimage
       (f := fun w : HeightOneSpectrum (𝓞 K) => w.asIdeal) fun _ _ _ _ e => HeightOneSpectrum.ext e).subset fun w hw => ?_
     exact ⟨w.isPrime, ⟨congrArg HeightOneSpectrum.asIdeal (Eq.symm hw)⟩⟩

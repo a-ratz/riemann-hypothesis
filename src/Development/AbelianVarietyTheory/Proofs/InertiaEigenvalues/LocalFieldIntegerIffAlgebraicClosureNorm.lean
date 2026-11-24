@@ -102,7 +102,7 @@ theorem mem_integer_iff_norm_le_and_valuation_lt_one_iff_norm_lt (l : ℕ) [Fact
   have h1 := key x⁻¹
   rw [map_inv₀, norm_inv, inv_le_one₀ (norm_pos_iff.2 hy)] at h1
   change valuation L x⁻¹ ≤ 1 ↔ _ at h1
-  rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 hv)] at h1
+  rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 hv)] at h1
   rw [← not_le, ← not_le, h1]
 
 end GlobalTheory.PMon.Ram

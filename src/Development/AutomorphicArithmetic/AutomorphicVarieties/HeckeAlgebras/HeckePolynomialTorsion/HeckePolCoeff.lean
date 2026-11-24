@@ -121,12 +121,12 @@ theorem rels {l : ℕ} [Fact l.Prime] (F : GFrame l) (O : Type) [CommRing O] [Al
 theorem teich {l : ℕ} [hl : Fact l.Prime] {F : GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t ∧ ∀ i g, r.chib i g = 1 → t i g = 1 := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
-  haveI : CharP (c.O ⧸ maximalIdeal c.O) l := inferInstanceAs (CharP (ResidueField c.O) l)
+  have : CharP (c.O ⧸ maximalIdeal c.O) l := inferInstanceAs (CharP (ResidueField c.O) l)
   let j : ResidueField c.O →+* Perfection (c.O ⧸ maximalIdeal c.O) l :=
     Perfection.lift l (ResidueField c.O) (c.O ⧸ maximalIdeal c.O) (RingHom.id (ResidueField c.O))
   have hj : ∀ x, Perfection.coeff (c.O ⧸ maximalIdeal c.O) l 0 (j x) = x := fun x =>
@@ -162,8 +162,8 @@ theorem red_eq {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [CommRing O] [
     (S : Set F.G₀) (hS : Dense S)
     (h : ∀ g ∈ S, (D.chi (MonoidAlgebra.single g 1)).map (res O R : R →+* ResidueField O) = r.Dbar.chi (MonoidAlgebra.single g 1)) :
     D.map (res O R : R →+* ResidueField O) = r.Dbar := by
-  letI : TopologicalSpace (ResidueField O) := ⊥
-  haveI : DiscreteTopology (ResidueField O) := ⟨rfl⟩
+  let : TopologicalSpace (ResidueField O) := ⊥
+  have : DiscreteTopology (ResidueField O) := ⟨rfl⟩
   refine extDense _ _ S hS (fun i _ => ?_) (fun i _ => repCont _ ?_ i) fun g hg => ?_
   · simp only [(mapApi D _).2.2.1]
     exact (res_lc (hD i)).continuous
@@ -182,7 +182,7 @@ theorem heckePol_coeff {A : Type} [CommRing A] (n q : ℕ) (a : ℕ → A) (j : 
   · rw [coeff_C_mul, coeff_X_pow_self, mul_one, mul_assoc, ← mul_assoc, ← mul_pow]
     simp
   · intro i hi hij
-    rw [coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
+    rw [coeff_C_mul, coeff_X_pow, ite_eq_right, mul_zero]
     have := Finset.mem_range.1 hi
     omega
   · intro h

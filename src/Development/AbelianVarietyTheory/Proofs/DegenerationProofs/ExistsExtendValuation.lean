@@ -156,7 +156,7 @@ private theorem absSumAt_algebraMap (u a : C) :
     rcases n with _ | n <;> simp [PowerSeries.coeff_C]
   refine ⟨?_, ?_⟩
   · refine summable_of_ne_finset_zero (s := {0}) fun n hn => ?_
-    rw [congrFun h n, if_neg (by simpa using hn), norm_zero]
+    rw [congrFun h n, ite_eq_right (by simpa using hn), norm_zero]
   · rw [h]
     simp
 
@@ -262,7 +262,7 @@ private theorem finite_setOf_bilin_self_le_of_posDef {X : Type} [AddCommGroup X]
     simp only [map_smul, LinearMap.smul_apply, smul_eq_mul] at h2
     have h3 : 0 < ((d : ℤ) : ℚ) * ((d : ℤ) : ℚ) := mul_self_pos.2 hd0
     nlinarith
-  haveI : Invertible (2 : ℚ) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : ℚ) := invertibleOfNonzero two_ne_zero
   obtain ⟨w, hw⟩ := LinearMap.BilinForm.exists_orthogonal_basis hBsymm
   have hexp : ∀ v, Bq v v = ∑ k, (w.repr v k) ^ 2 * Bq (w k) (w k) := by
     intro v
@@ -373,7 +373,7 @@ private theorem absSumAt_arcTx_twist_tx {C : Type} [NontriviallyNormedField C]
     refine ((finite_setOf_bilin_self_le_of_posDef β.be β.symm β.pos
       ((K + 1) * (2 * (m : ℤ) ^ 2))).preimage (injective_add_nsmul_of_ne_zero a hm0).injOn).subset ?_
     intro χ hχ
-    simp only [Set.mem_setOf_eq, Set.mem_preimage] at hχ ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage] at hχ ⊢
     have h1 := Int.lt_mul_ediv_self_add
       (x := β.be (a + m • χ) (a + m • χ)) hden
     have h2 : 2 * (m : ℤ) ^ 2 * (β.be (a + m • χ) (a + m • χ) / (2 * (m : ℤ) ^ 2))
@@ -411,7 +411,7 @@ private theorem absSumAt_arcTx_twist_tx {C : Type} [NontriviallyNormedField C]
   have hQtend : Filter.Tendsto Q Filter.cofinite Filter.atTop := by
     refine Filter.tendsto_atTop.2 fun K => Filter.eventually_cofinite.2 ?_
     refine (hfin K).subset fun χ hχ => ?_
-    simp only [Set.mem_setOf_eq, not_le] at hχ ⊢
+    simp only [Set.mem_ofPred_eq, not_le] at hχ ⊢
     have := hQ χ
     omega
   have hsum : Summable f := by
@@ -424,7 +424,7 @@ private theorem absSumAt_arcTx_twist_tx {C : Type} [NontriviallyNormedField C]
     intro n
     have hset : Q ⁻¹' {n} = {χ | q χ = n} := by
       ext χ
-      simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq]
       have := hQ χ
       omega
     have hterm : ∀ b : ↑(Q ⁻¹' {n}), f b = (u : C) ^ n * N.txT m p b := by
@@ -485,7 +485,7 @@ theorem hasSum_regroup {X : Type} (e : X → ℤ) (h0 : ∀ χ, 0 ≤ e χ) (hf 
   have hs : (fun χ => (e χ).toNat) ⁻¹' {n} = ((hf n).toFinset : Set X) := by
     ext χ
     have := h0 χ
-    simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     omega
   rw [hs, Finset.tsum_subtype' (hf n).toFinset fun χ => u ^ e χ * a χ]
   have h2 : (∑ᶠ (χ : X) (_ : e χ = n), a χ) = ∑ χ ∈ (hf n).toFinset, a χ :=
@@ -507,7 +507,7 @@ theorem finite_fibre {O : Type} [CommRing O] {N : NumD O} {k : ℕ} (β : N.Form
   have hpos : (0 : ℤ) < 2 * m ^ 2 := by positivity
   have h2 := Int.lt_ediv_add_one_mul_self (β.be (y + m • χ) (y + m • χ)) hpos
   rw [hχ'] at h2
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, GlobalTheory.ClassMin.ofIntBilin_apply]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, GlobalTheory.ClassMin.ofIntBilin_apply]
   have h3 : ((β.be (y + m • χ) (y + m • χ) : ℤ) : ℝ) ≤ (((n + 1) * (2 * m ^ 2) : ℤ) : ℝ) := by
     exact_mod_cast h2.le
   linarith
@@ -611,8 +611,8 @@ theorem exists_arcF_over : Laws → BrGtSt → BrWpSt → AllD fun D => ∀ (R :
     have := A.D₀.P.isAb.smooth
     refine ⟨n, ?_, h₂.trans (by
       by_cases h : τ H.rt = A.ρ
-      · rw [if_pos h, if_pos (show f.comp τ H.rt = f A.ρ from congrArg f h)]
-      · rw [if_neg h, if_neg (show ¬ f.comp τ H.rt = f A.ρ from fun e => h (f.injective e))])⟩
+      · rw [ite_eq_left h, ite_eq_left (show f.comp τ H.rt = f A.ρ from congrArg f h)]
+      · rw [ite_eq_right h, ite_eq_right (show ¬ f.comp τ H.rt = f A.ρ from fun e => h (f.injective e))])⟩
     have e : spMap ((algebraMap (FractionRing R) F').comp (algebraMap R _)) =
         spMap f ≫ spMap ((algebraMap (FractionRing R) F).comp (algebraMap R _)) := by
       rw [spMap, spMap, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← RingHom.comp_assoc, hf]
@@ -674,7 +674,7 @@ theorem exists_ringHom_complex_of_countable_of_relations :
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro r hr
     by_contra h0
-    refine Ideal.comap_ne_bot_of_algebraic_mem (R := ℤ) (I := RingHom.ker β) h0 hr (halg r) ?_
+    refine Ideal.under_ne_bot_of_algebraic_mem (R := ℤ) (I := RingHom.ker β) h0 hr (halg r) ?_
     rw [eq_bot_iff]
     intro n hn
     rw [Ideal.mem_comap, RingHom.mem_ker] at hn
@@ -862,7 +862,7 @@ theorem aeval_arcTx_eq_zero_of_vanishC : HV → Laws6 → GlobalTheory.LN.UDvrSt
   obtain ⟨-, ⟨d, hG⟩, hVan⟩ := hV
   have hpos : 0 < m ^ 2 := pow_pos hm.pos 2
   obtain ⟨R₁, F₁, _, _, _, _, _, _, f, A₁, hA₁⟩ := hdown E H D R F A
-  haveI : CharZero F₁ := A₁.charZero
+  have : CharZero F₁ := A₁.charZero
   obtain ⟨e₁, he₁⟩ := over_iff hA₁
   obtain ⟨β₁, hβ₁⟩ := exists_form e₁ β
   have h1 := he₁ k β₁ β hβ₁
@@ -892,7 +892,7 @@ theorem aeval_arcTx_eq_zero_of_vanishC : HV → Laws6 → GlobalTheory.LN.UDvrSt
     ![(A₁.I.ζ (m ^ 2) : F₁), A₁.ρ] ![zeta (m ^ 2), H.rt0] halg hC₁
   have hg0 : g (A₁.I.ζ (m ^ 2) : F₁) = zeta (m ^ 2) := by simpa using hg 0
   have hg1 : g A₁.ρ = H.rt0 := by simpa using hg 1
-  letI : Algebra (FractionRing R₁) ℂ := (g.comp (algebraMap (FractionRing R₁) F₁)).toAlgebra
+  let : Algebra (FractionRing R₁) ℂ := (g.comp (algebraMap (FractionRing R₁) F₁)).toAlgebra
   obtain ⟨A₂, -, hA₂⟩ := hup E H D R₁ F₁ ℂ g (fun x => rfl) A₁
   obtain ⟨e₂, he₂⟩ := over_iff hA₂
   obtain ⟨β₂, hβ₂⟩ := exists_form e₂.symm β₁
@@ -953,7 +953,7 @@ theorem dvd_pow_sub {z : ℂ} {d k : ℕ} (hd : d.Prime) (hz : z ^ d ^ k = z) (y
     obtain rfl : x = z := hx
     exact ⟨0, Subtype.ext (by simp [hz])⟩
   | algebraMap r =>
-    haveI := Fact.mk hd
+    have := Fact.mk hd
     have h : (d : ℤ) ∣ r ^ d ^ k - r := by
       rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]; push_cast; rw [ZMod.pow_card_pow, sub_self]
     have := map_dvd (algebraMap ℤ (Algebra.adjoin ℤ {z})) h
@@ -988,12 +988,12 @@ theorem dvd_of_dvd_sq {z : ℂ} {d N : ℕ} (hd : d.Prime) (hN : 0 < N) (hdN : �
 theorem eq_zero_of_sq {z : ℂ} {d N : ℕ} (hd : d.Prime) (hN : 0 < N) (hdN : ¬ d ∣ N) (hz : z ^ N = 1)
     (B : Algebra.adjoin ℤ {z}) : ∀ A : Algebra.adjoin ℤ {z}, A ^ 2 = -d * B ^ 2 → B = 0 := by
   have hi : IsIntegral ℤ z := IsIntegral.of_pow hN (hz ▸ isIntegral_one)
-  haveI : Module.Finite ℤ (Algebra.adjoin ℤ {z}) := Algebra.finite_adjoin_simple_of_isIntegral hi
-  haveI : IsNoetherianRing (Algebra.adjoin ℤ {z}) := Algebra.FiniteType.isNoetherianRing ℤ _
+  have : Module.Finite ℤ (Algebra.adjoin ℤ {z}) := Algebra.finite_adjoin_simple_of_isIntegral hi
+  have : IsNoetherianRing (Algebra.adjoin ℤ {z}) := Algebra.FiniteType.isNoetherianRing ℤ _
   have hd0 : (d : Algebra.adjoin ℤ {z}) ≠ 0 := Nat.cast_ne_zero.2 hd.ne_zero
   have hu : ¬ IsUnit (d : Algebra.adjoin ℤ {z}) := fun hu => by
     rw [← map_natCast (algebraMap ℤ (Algebra.adjoin ℤ {z}))] at hu
-    exact (Nat.prime_iff_prime_int.1 hd).not_unit (IsUnit.of_map _ _ hu)
+    exact (Nat.prime_iff_prime_int.1 hd).not_isUnit (IsUnit.of_map _ _ hu)
   induction B using (wellFounded_dvdNotUnit (α := Algebra.adjoin ℤ {z})).induction with
   | _ B ih =>
     intro A hA
@@ -1091,7 +1091,7 @@ namespace GlobalTheory.Ex.OneLevel
 
 theorem exists_full_theta : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomExtSt → ThetaPtDeterminesSt → EndDeterminedOnTorsionSt → ThetaUnifAV → AllA fun {E} _ _ _ {H} {D} {l} {Xo} {c} {W₀} Y {O'} _ _ {b} a => ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing O') K] [Algebra (PowerSeries O') K] [FaithfulSMul (PowerSeries O') K] [Algebra.IsAlgebraic (PowerSeries O') K], (∀ x, algebraMap (FractionRing O') K (algebraMap O' _ x) = algebraMap (PowerSeries O') K (PowerSeries.C x)) → ∀ (S : Ser a K (algebraMap _ K)) (n j : ℕ), n.Prime → Odd n → IsUnit (n : O') → ¬ n ∣ H.d → 2 ≤ j → ∃ o : Full D K, o.ρ = S.A.ρ ∧ o.I.ζ ((n ^ j) ^ 2) = S.A.I.ζ ((n ^ j) ^ 2) ∧ o.Theta (n ^ j) (S.v (n ^ j)) := by
   intro h1 h2 h3 h4 h5 h6 h7 E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hb K _ _ _ _ _ _ _ S n j hn ho hu hd hj
-  haveI : CharZero K := S.A.arc.charZero
+  have : CharZero K := S.A.arc.charZero
   have hm : Odd (n ^ j) := ho.pow
   have hm2 : 0 < (n ^ j) ^ 2 := pow_pos hm.pos 2
   have hdN : ¬ H.d ∣ (n ^ j) ^ 2 := fun h => hd (by
@@ -1101,7 +1101,7 @@ theorem exists_full_theta : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTh
     (compat_of_not_dvd H hm2 hdN (IsPrimitiveRoot.coe_units_iff.2 (S.A.I.ζ_prim _ hm2)) S.A.ρ_sq)
     (fun G hG => by_contra fun hne => S.base.not_allC_false fun C _ _ _ _ _ gam u c1 c2 c3 c4 => hne (by
       obtain ⟨A', r', i1, ⟨_, o1, o2, -⟩, i3, i4⟩ := S.val C gam u c1 c2 c3 c4
-      haveI : CharZero C := A'.arc.charZero
+      have : CharZero C := A'.arc.charZero
       have hr : r' ((n ^ j) ^ 2) ^ (n ^ j) ^ 2 = u := Units.ext (by
         rw [Units.val_pow_eq_pow_val, i3, ← map_pow, ← Units.val_pow_eq_pow_val, S.roots.pow hm2, S.r_one, c3]; rfl)
       have hr1 : ‖(r' ((n ^ j) ^ 2) : C)‖ < 1 := by
@@ -1495,9 +1495,9 @@ theorem exists_normal_order (A L : Type) [CommRing A] [IsDomain A] [IsNoetherian
     [Field L] [Algebra (FractionRing A) L] [FiniteDimensional (FractionRing A) L] :
     ∃ (R : Type) (_ : CommRing R) (_ : IsDomain R) (g : A →+* R) (e : L ≃+* FractionRing R), Function.Injective g ∧ g.Finite ∧
       IsIntegrallyClosed R ∧ ∀ x, e (algebraMap (FractionRing A) L (algebraMap A _ x)) = algebraMap R _ (g x) := by
-  letI : Algebra A L := ((algebraMap (FractionRing A) L).comp (algebraMap A _)).toAlgebra
-  haveI : IsScalarTower A (FractionRing A) L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsFractionRing (integralClosure A L) L :=
+  let : Algebra A L := ((algebraMap (FractionRing A) L).comp (algebraMap A _)).toAlgebra
+  have : IsScalarTower A (FractionRing A) L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsFractionRing (integralClosure A L) L :=
     IsIntegralClosure.isFractionRing_of_finite_extension A (FractionRing A) L _
   have hfin : Module.Finite A (integralClosure A L) := IsIntegralClosure.finite A (FractionRing A) L _
   refine ⟨integralClosure A L, inferInstance, inferInstance, algebraMap A _,
@@ -1508,7 +1508,7 @@ theorem exists_normal_order (A L : Type) [CommRing A] [IsDomain A] [IsNoetherian
 
 theorem exists_extend {L K C : Type} [Field L] [Field K] [Algebra L K] [Algebra.IsAlgebraic L K] [Field C] [IsAlgClosed C]
     (f : L →+* C) : ∃ g : K →+* C, ∀ x, g (algebraMap L K x) = f x := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact ⟨(IsAlgClosed.lift : K →ₐ[L] C), fun x => (IsAlgClosed.lift : K →ₐ[L] C).commutes x⟩
 
 theorem exists_extend_valuation {F K : Type} [Field F] [CharZero F] [Algebra.IsAlgebraic ℚ F] [Field K] [CharZero K]
@@ -1519,7 +1519,7 @@ theorem exists_extend_valuation {F K : Type} [Field F] [CharZero F] [Algebra.IsA
     by_contra h0
     have ha : IsAlgebraic ℤ (x : F) := (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 (Algebra.IsAlgebraic.isAlgebraic _)
     have ha' : IsAlgebraic ℤ x := (isAlgebraic_algHom_iff V.subtype.toIntAlgHom Subtype.val_injective).1 ha
-    refine Ideal.comap_ne_bot_of_algebraic_mem (I := RingHom.ker b) h0 hx ha' (eq_bot_iff.2 fun n hn => ?_)
+    refine Ideal.under_ne_bot_of_algebraic_mem (I := RingHom.ker b) h0 hx ha' (eq_bot_iff.2 fun n hn => ?_)
     simpa using hn
   exact ⟨IsFractionRing.lift hb, fun x => IsFractionRing.lift_algebraMap hb x⟩
 
@@ -1551,7 +1551,7 @@ theorem valuation_comap_eq_one {K K' : Type} [Field K] [Field K'] (f : K →+* K
       rw [h0, map_zero] at h
       exact zero_ne_one h
     · rintro ⟨h0, h₁, h₂⟩
-      have : 0 < T.valuation y := zero_lt_iff.2 ((map_ne_zero _).2 h0)
+      have : 0 < T.valuation y := pos_iff_ne_zero.2 ((map_ne_zero _).2 h0)
       exact le_antisymm h₁ ((inv_le_one₀ this).1 h₂)
   rw [key, key, ValuationSubring.mem_comap, ValuationSubring.mem_comap, map_inv₀, map_ne_zero]
 
@@ -1577,7 +1577,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem coord_scale (hL : Laws) (o : Full D K) {m : ℕ} (hm : Odd m) {z : baseOver (Sp K) ⟶ o.P.A} {v v' : D.La → K}
     (s : Kˣ) (hs : ∀ x, v x = s * v' x) (h : o.Coord m z v) : o.Coord m z v' := by
-  haveI := o.closed
+  have := o.closed
   have hc := GlobalTheory.T.thetaCoordinates_exist_unique_separate_points hL K _ o.P (𝟙 _) m hm (Nat.cast_ne_zero.2 hm.pos.ne') _
     (o.I.ev (m ^ 2)) fun x => (o.I.onto _ (pow_pos hm.pos 2) _).2 ⟨x, rfl⟩
   refine (hc.2.1 z _ _ h).2 ⟨s⁻¹, funext fun x => ?_⟩
@@ -1585,7 +1585,7 @@ theorem coord_scale (hL : Laws) (o : Full D K) {m : ℕ} (hm : Odd m) {z : baseO
 
 theorem theta_scale (hL : Laws) (o : Full D K) {m : ℕ} (hm : Odd m) {v v' : D.La → K}
     (s : Kˣ) (hs : ∀ x, v x = s * v' x) (h : o.Theta m v) : o.Theta m v' := by
-  haveI := o.closed
+  have := o.closed
   have hc := GlobalTheory.T.thetaCoordinates_exist_unique_separate_points hL K _ o.P (𝟙 _) m hm (Nat.cast_ne_zero.2 hm.pos.ne') _
     (o.I.ev (m ^ 2)) fun x => (o.I.onto _ (pow_pos hm.pos 2) _).2 ⟨x, rfl⟩
   exact (hc.2.2.1 _).2 (coord_scale hL o hm s hs ((hc.2.2.1 _).1 h))
@@ -1598,8 +1598,8 @@ theorem realises_of_has : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheo
         A.ν.IntN ∧ Roots u r ∧ FullExt gam o o' ∧ Realises o' A.arc A.be u r := by
   intro hV h6 hU hH hT hE hA E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hb K _ _ _ i S o ho C _ _ _ _ _ gam u h₁ h₂ h₃ h₄
   have hL := hV.1.1
-  haveI := o.closed
-  haveI : CharZero C := (RingHom.charZero_iff gam.injective).1 inferInstance
+  have := o.closed
+  have : CharZero C := (RingHom.charZero_iff gam.injective).1 inferInstance
   obtain ⟨A, r, hint, ⟨-, hAρ, hAζ, -⟩, hr', hser⟩ := S.val C gam u h₁ h₂ h₃ h₄
   have hr : Roots u r := ⟨Units.ext ((hr' 1).trans ((congrArg gam S.r_one).trans h₃.symm)), fun n m hn hm => Units.ext (by
     rw [Units.val_pow_eq_pow_val, hr', hr', ← map_pow, ← Units.val_pow_eq_pow_val, S.roots.2 n m hn hm])⟩
@@ -1629,22 +1629,22 @@ theorem exists_point : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
   intro hV h6 hU hH hT hE hA E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hb
   have hloc : IsLocalRing O' ∧ IsPrincipalIdealRing O' := by
     rcases hb with h | h
-    · letI := h.1.toField
+    · let := h.1.toField
       exact ⟨inferInstance, inferInstance⟩
-    · haveI := h.1
+    · have := h.1
       exact ⟨inferInstance, inferInstance⟩
-  haveI := hloc.1
-  haveI := hloc.2
-  haveI : CharZero (PowerSeries O') := charZero_of_injective_ringHom (PowerSeries.C_injective (R := O'))
+  have := hloc.1
+  have := hloc.2
+  have : CharZero (PowerSeries O') := charZero_of_injective_ringHom (PowerSeries.C_injective (R := O'))
   let K₀ := FractionRing (PowerSeries O')
   let K := AlgebraicClosure K₀
-  haveI : FaithfulSMul (PowerSeries O') K := (faithfulSMul_iff_algebraMap_injective _ _).2 fun x y h =>
+  have : FaithfulSMul (PowerSeries O') K := (faithfulSMul_iff_algebraMap_injective _ _).2 fun x y h =>
     IsFractionRing.injective (PowerSeries O') K₀ ((algebraMap K₀ K).injective h)
-  haveI : Algebra.IsAlgebraic (PowerSeries O') K :=
+  have : Algebra.IsAlgebraic (PowerSeries O') K :=
     (IsFractionRing.comap_isAlgebraic_iff (K := K₀)).2 inferInstance
   have hC : Function.Injective ((algebraMap (PowerSeries O') K).comp (PowerSeries.C (R := O'))) :=
     fun x y h => PowerSeries.C_injective (FaithfulSMul.algebraMap_injective (PowerSeries O') K h)
-  letI : Algebra (FractionRing O') K := (IsFractionRing.lift hC).toAlgebra
+  let : Algebra (FractionRing O') K := (IsFractionRing.lift hC).toAlgebra
   have hK : ∀ x, algebraMap (FractionRing O') K (algebraMap O' _ x) = algebraMap (PowerSeries O') K (PowerSeries.C x) :=
     fun x => IsFractionRing.lift_algebraMap hC x
   obtain ⟨S⟩ := GlobalTheory.T.exists_arcSeries_integral_algebraic_over_powerSeries hV h6 hU hH hT hE hA E H D l Xo c W₀ Y O' b ϖ a hb K hK
@@ -1652,7 +1652,7 @@ theorem exists_point : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
   obtain ⟨o₀, hρ₀, h₀⟩ := GlobalTheory.T.thetaPoints_allPrimePowerLevels_of_single_object hV h6 hU hH hT hE hA E H D l Xo c W₀ Y O' b ϖ a hb K hK S n hn hodd fun j hj =>
     GlobalTheory.T.exists_object_with_thetaPoint_of_degenerationSeries hV h6 hU hH hT hE hA E H D l Xo c W₀ Y O' b ϖ a hb K hK S n j hn hodd hu hd hj
   obtain ⟨o, ho⟩ := GlobalTheory.T.power_series_algebraic_closure_compatible hV h6 hU hH hT hE hA E H D l Xo c W₀ Y O' b ϖ a hb K hK S n hn hodd hu o₀ hρ₀ h₀
-  haveI := c.fin
+  have := c.fin
   obtain ⟨bF, hbF⟩ := exists_extend_valuation (c.V W₀)
     ((algebraMap (PowerSeries O') K₀).comp ((PowerSeries.C (R := O')).comp b))
   have hbK : ∀ x : c.V W₀, (algebraMap K₀ K).comp bF x = algebraMap (FractionRing O') K (algebraMap O' _ (b x)) :=
@@ -1672,8 +1672,8 @@ theorem exists_point : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
         exact one_mem _)
       rw [ho.2.1 _ l.A_pos]
       exact (S.A.ζ_eq ⟨z, hm⟩ hz).trans (hbK ⟨z, hm⟩).symm)
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim _
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim _
   obtain ⟨L, hLf, y', hy', hy's⟩ := exists_finite_factor (pullback.snd Xo.s _) bF y hy
   obtain ⟨R₁, _, _, g, e, hgi, hgf, hRn, he⟩ := exists_normal_order (PowerSeries O') L
   have hover : (spMap (e : L →+* FractionRing R₁) ≫ y') ≫ Y.j ≫ Y.s =

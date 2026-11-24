@@ -125,7 +125,7 @@ variable {σ₀ : X.K →+* ℂ} {xi0 : X.E} {D : ℕ}
 
 theorem twZeta_pow (hz : σ₀ (twZeta σ₀ (qOf P ^ D)) = Complex.exp (2 * Real.pi * Complex.I / ((qOf P ^ D : ℕ) : ℂ)))
     (hq : (qOf P).Prime) (b : ℤ) : σ₀ (twZeta σ₀ (qOf P ^ D) ^ b) = Complex.exp (2 * Real.pi * Complex.I * b / ((qOf P ^ D : ℕ) : ℂ)) := by
-  rw [map_zpow₀, hz, ← Complex.exp_int_mul]
+  rw [map_zpow₀, hz, ← Complex.exp_intCast_mul]
   congr 1
   ring
 
@@ -267,7 +267,7 @@ theorem twLamQ_mem {j : ℕ} {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∉ Pr.v
     v ∈ lamYat (Pr := Pr) (R := R) j P ↔ ∀ l, IntAt P (v l) := by
   have e : lamYat (Pr := Pr) (R := R) j P = LocE.lamY P (qOf P) (R.N j) (cOf R j) 0 := by
     unfold lamYat
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
   rw [e]
   unfold LocE.lamY
   rw [ciMem_sclLat]

@@ -80,7 +80,7 @@ theorem kunneth_open (A B : Over (Sp R)) (U : A.left.affineOpens) (V : B.left.af
   have eV : iV ≫ B.hom = spMap (algebraMap R Sb) := affPt_w _ _
   let ma : pullback (spMap (algebraMap R Sa)) (spMap (algebraMap R Sb)) ⟶ pullback A.hom B.hom :=
     pullback.map _ _ _ _ iU iV (𝟙 _) (by rw [Category.comp_id, eU]) (by rw [Category.comp_id, eV])
-  haveI hma : IsOpenImmersion ma :=
+  have hma : IsOpenImmersion ma :=
     CategoryTheory.MorphismProperty.pullbackMap (P := @IsOpenImmersion) (f := spMap (algebraMap R Sa)) (g := spMap (algebraMap R Sb))
       (IsAffineOpen.isOpenImmersion_fromSpec U.2) (IsAffineOpen.isOpenImmersion_fromSpec V.2) eU.symm eV.symm
   let j : Spec (CommRingCat.of (Sa ⊗[R] Sb)) ⟶ pullback A.hom B.hom := (pullbackSpecIso R Sa Sb).inv ≫ ma
@@ -131,9 +131,9 @@ theorem kunneth_open (A B : Over (Sp R)) (U : A.left.affineOpens) (V : B.left.af
         rw [← l, spMap_comp]
       rw [← Category.assoc]
       exact (congrArg (· ≫ iV) m2).trans s1
-  haveI hj1 : IsOpenImmersion j := inferInstance
-  haveI h2 : IsOpenImmersion (spMap κ.toRingHom ≫ j) := hk ▸ IsAffineOpen.isOpenImmersion_fromSpec hV
-  haveI h3 : IsOpenImmersion (spMap κ.toRingHom) := IsOpenImmersion.of_comp _ j
+  have hj1 : IsOpenImmersion j := inferInstance
+  have h2 : IsOpenImmersion (spMap κ.toRingHom ≫ j) := hk ▸ IsAffineOpen.isOpenImmersion_fromSpec hV
+  have h3 : IsOpenImmersion (spMap κ.toRingHom) := IsOpenImmersion.of_comp _ j
   have hs : Function.Surjective (spMap κ.toRingHom) := by
     intro t
     have ht : j t ∈ Set.range hV.fromSpec := by
@@ -141,9 +141,9 @@ theorem kunneth_open (A B : Over (Sp R)) (U : A.left.affineOpens) (V : B.left.af
     obtain ⟨y, hy⟩ := ht
     refine ⟨y, j.injective ?_⟩
     rw [← hy, ← hk]; rfl
-  haveI : Epi (spMap κ.toRingHom).base := (TopCat.epi_iff_surjective _).2 hs
-  haveI hi : IsIso (spMap κ.toRingHom) := IsOpenImmersion.isIso (spMap κ.toRingHom)
-  haveI : IsIso (CommRingCat.ofHom κ.toRingHom) := by
+  have : Epi (spMap κ.toRingHom).base := (TopCat.epi_iff_surjective _).2 hs
+  have hi : IsIso (spMap κ.toRingHom) := IsOpenImmersion.isIso (spMap κ.toRingHom)
+  have : IsIso (CommRingCat.ofHom κ.toRingHom) := by
     let g := Spec.preimage (inv (Spec.map (CommRingCat.ofHom κ.toRingHom)))
     refine ⟨g, Spec.map_injective ?_, Spec.map_injective ?_⟩ <;> simp [g]
   exact ConcreteCategory.bijective_of_isIso (CommRingCat.ofHom κ.toRingHom)
@@ -292,9 +292,9 @@ section Aff
 
 theorem aff_inf_preimage {X Y T : Scheme.{0}} (s : Y ⟶ T) [IsSeparated s] [IsAffine T] (f : X ⟶ Y) {V : X.Opens}
     (hV : IsAffineOpen V) {U : Y.Opens} (hU : IsAffineOpen U) : IsAffineOpen (V ⊓ f ⁻¹ᵁ U) := by
-  haveI : IsAffine V := hV
-  haveI : IsAffineHom (V.ι ≫ f) := by
-    haveI : IsAffineHom ((V.ι ≫ f) ≫ s) := inferInstance
+  have : IsAffine V := hV
+  have : IsAffineHom (V.ι ≫ f) := by
+    have : IsAffineHom ((V.ι ≫ f) ≫ s) := inferInstance
     exact IsAffineHom.of_comp _ s
   have := (hU.preimage (V.ι ≫ f)).image_of_isOpenImmersion V.ι
   rwa [Scheme.Hom.comp_preimage, Scheme.Hom.image_preimage_eq_opensRange_inf, Scheme.Opens.opensRange_ι] at this
@@ -434,7 +434,7 @@ theorem Wop_iSup (a b : P) : ⨆ c, Wop A S a b c = Vop A S a b := by
   exact TopologicalSpace.Opens.mem_iSup.2 ⟨c, hx, hc⟩
 
 theorem pj_qiso [Finite P] (hF : FubiniSt) (hA : AffAcycSt) : AllQIso (pj A S).coef := by
-  haveI : Quiver.IsThin (Pᵒᵖ × Pᵒᵖ) := fun _ _ ↦ ⟨fun f g ↦ Prod.ext (Subsingleton.elim _ _) (Subsingleton.elim _ _)⟩
+  have : Quiver.IsThin (Pᵒᵖ × Pᵒᵖ) := fun _ _ ↦ ⟨fun f g ↦ Prod.ext (Subsingleton.elim _ _) (Subsingleton.elim _ _)⟩
   refine hF R (Pᵒᵖ × Pᵒᵖ) (box (OSys A.hom S)) Pᵒᵖ (GG A S) (pj A S) fun T ↦ ?_
   let u : P →o (A ⊗ A).left.affineOpens := ⟨fun c ↦ ⟨Wop A S T.1.unop T.2.unop c, Wop_aff A S _ _ _⟩,
     fun c c' h ↦ Wop_mono A S le_rfl le_rfl h⟩
@@ -492,7 +492,7 @@ theorem primitive
   rw [hm, hp, hq, ← map_add (f := _), primitive_structure_sheaf_cohomology_class A hAx]
 
 theorem exists_unit_mem (hR : IsField R) : ∃ a₀, η[A].left ⁻¹ᵁ (S.u a₀).1 = ⊤ := by
-  letI := hR.toField
+  let := hR.toField
   haveI hu : Unique (𝟙_ (Over (Sp R))).left := inferInstanceAs (Unique (PrimeSpectrum R))
   have h1 : η[A].left default ∈ ⨆ a, (S.u a).1 := by rw [S.cover]; trivial
   obtain ⟨a₀, ha⟩ := TopologicalSpace.Opens.mem_iSup.1 h1
@@ -645,8 +645,8 @@ end Main6
 
 theorem hopfSt : HtpySt → QCalcSt → FubiniSt → AffAcycSt → DescentSt → LowSt → AxOSt → HopfSt := by
   intro _ _ hF hA hD hL hX R _ A _ g hab hsm P _ _ S
-  haveI := hab.proper
-  haveI : IsSeparated A.hom := inferInstance
+  have := hab.proper
+  have : IsSeparated A.hom := inferInstance
   refine ⟨(Pᵒᵖ × Pᵒᵖ) × Pᵒᵖ, inferInstance, GG A S, (pj A S).coef, mMap A S, pj_qiso A S hF hA,
     primitive A S (hX R A g hab hsm) (hL R _ _ _ _ (resSys A.hom S) (hD R A.left A.hom inferInstance P S)).1.2, fun hR ↦ ?_⟩
   obtain ⟨a₀, ha⟩ := exists_unit_mem A S hR

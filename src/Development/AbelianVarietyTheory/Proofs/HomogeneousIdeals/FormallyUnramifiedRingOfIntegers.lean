@@ -236,7 +236,7 @@ variable (k K E : Type*) [Field k] [CharZero k] [Field K] [Field E] [NumberField
 omit [NumberField K] in
 theorem ringOfIntegers_injective (τ : 𝓞 K →+* k) : Function.Injective τ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+  refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
   rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
   exact RingHom.injective_int _
 

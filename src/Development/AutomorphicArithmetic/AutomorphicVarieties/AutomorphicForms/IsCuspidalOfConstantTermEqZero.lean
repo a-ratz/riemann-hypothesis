@@ -93,7 +93,7 @@ theorem UpperTheory.isCuspidal_of_constantTerm_eq_zero :
       left_inv := fun y => Subtype.ext (β.apply_symm_apply y)
       right_inv := fun x => Subtype.ext (β.symm_apply_apply x) }
   let m := β.toHomeomorph.toMeasurableEquiv
-  haveI : (μ.map m).IsAddHaarMeasure := β.isAddHaarMeasure_map μ
+  have : (μ.map m).IsAddHaarMeasure := β.isAddHaarMeasure_map μ
   have h2 := setIntegral_haar hl g (hφ r h0 h1 g) (μ.map m) (D := m '' 𝓕)
     (hF.image_of_equiv m.toEquiv (MeasurePreserving.symm m ⟨m.measurable, rfl⟩).quasiMeasurePreserving e fun y x => by
       change β (β.symm y + x) = y + β x

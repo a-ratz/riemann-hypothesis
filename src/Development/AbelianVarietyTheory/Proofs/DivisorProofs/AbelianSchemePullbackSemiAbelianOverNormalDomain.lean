@@ -117,7 +117,7 @@ theorem link_of_normal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω
   have sG : IsSemiAbelian GO := IsSemiAbelian.pullback _ _ FinalForm.semi
   obtain ⟨E, ⟨hE, hEφ⟩, -⟩ := GlobalTheory.semiAbelianHomExtension_holds.generic_existsUnique_iso_of_extensions
     (GlobalTheory.Published.SemiAbelianHomExtension.isNormalScheme_spec O) (GlobalTheory.IsGenericPointHom.fractionField O Ω) sA sG hφ₂ hφ₁
-  haveI := hE
+  have := hE
   let gm : A.left ⟶ FinalForm.G.left := E.hom.left ≫ pullback.fst FinalForm.G.hom x
   have hgm : IsGrpPullback A FinalForm.G x gm := ((isGrpPullback_of_iso E).comp hGO).congr (Category.id_comp _) rfl
   have key : φ₂ ≫ gm = ν ≫ FinalForm.φ := by
@@ -127,7 +127,7 @@ theorem link_of_normal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian _ sA
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian _ FinalForm.semi
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.spec_fractionRing O Ω
-  haveI : IsSchemeTheoreticallyDominant φ₂ := .of_isPullback hφ₂.1.flip
+  have : IsSchemeTheoreticallyDominant φ₂ := .of_isPullback hφ₂.1.flip
   refine ⟨gm, hgm, ?_, ?_⟩
   · intro f Fm hf T' p p' h₁ h₂
     let fO := (Over.pullback (spMap u)).map f
@@ -183,8 +183,8 @@ theorem link_of_normal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω
           exact ((genericPoint_spec (Sp O)).mem_open_set_iff O'.isOpen).2 (by simpa using hO)
         let jO : Sp Ω ⟶ O'.toScheme := IsOpenImmersion.lift O'.ι j hr'
         have hjO : jO ≫ O'.ι = j := IsOpenImmersion.lift_fac _ _ _
-        haveI : IsDominant (jO ≫ O'.ι) := by rw [hjO]; infer_instance
-        haveI : IsDominant jO := IsDominant.of_comp_of_isOpenImmersion jO O'.ι
+        have : IsDominant (jO ≫ O'.ι) := by rw [hjO]; infer_instance
+        have : IsDominant jO := IsDominant.of_comp_of_isOpenImmersion jO O'.ι
         refine ext_of_isDominant_of_isSeparated FinalForm.G.hom ?_ jO ?_
         · simp only [Category.assoc]
           rw [hgmw, ← Category.assoc σ, hσ₂, Category.id_comp, hs.1, morphismRestrict_ι]
@@ -210,7 +210,7 @@ theorem link_of_normal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω
           calc jO ≫ O'.ι ≫ σ ≫ gm = (e ≫ φ₂) ≫ gm := by rw [← Category.assoc, hjO, he₁, Category.assoc]
             _ = (e ≫ ν) ≫ FinalForm.φ := by rw [Category.assoc, key, Category.assoc]
             _ = jO ≫ (x ∣_ Wo) ≫ h := by rw [heν, ← Category.assoc, hsec]
-      · haveI : IsEmpty O'.toScheme := ⟨fun y => hO ⟨y.1, y.2⟩⟩
+      · have : IsEmpty O'.toScheme := ⟨fun y => hO ⟨y.1, y.2⟩⟩
         exact isInitialOfIsEmpty.hom_ext _ _
     rw [hp, ← hq₂, ← hq₁, Category.assoc, Category.assoc, hmain, Category.assoc]
 

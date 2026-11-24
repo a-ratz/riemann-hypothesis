@@ -332,9 +332,9 @@ theorem finrank_symm_comm_le (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [NumberField.Embeddings.card] at h3
     change Fintype.card T ≤ _ - Fintype.card T at h1
     omega
-  have hp : ∀ τ : T, Module.finrank ℂ (Eig F τ.1) = p := fun τ => by rw [hdim', if_pos τ.2]
+  have hp : ∀ τ : T, Module.finrank ℂ (Eig F τ.1) = p := fun τ => by rw [hdim', ite_eq_left τ.2]
   have hq : ∀ τ : T, Module.finrank ℂ (Eig F (ComplexEmbedding.conjugate τ.1)) = q :=
-    fun τ => by rw [hdim', if_neg (hne τ.1 τ.2)]
+    fun τ => by rw [hdim', ite_eq_right (hne τ.1 τ.2)]
   let b : ∀ τ : T, Module.Basis (Fin p) ℂ (Eig F τ.1) := fun τ => Module.finBasisOfFinrankEq ℂ _ (hp τ)
   let Ψ : S →ₗ[ℂ] (∀ τ : T, Fin p → Eig F (ComplexEmbedding.conjugate τ.1)) :=
     { toFun := fun Θ τ i => ⟨Θ.1.mulVec (star (b τ i : Fin g → ℂ)), theta_mem F τ.1 Θ.1 (hS Θ.1 Θ.2).2 _ (b τ i).2⟩
@@ -569,7 +569,7 @@ theorem dbar_add {f f' : E → ℂ} {z : E} (h : DifferentiableAt ℝ f z) (h' :
   have H : HasFDerivAt (fun x => f x + f' x) (fderiv ℝ f z + fderiv ℝ f' z) z :=
     h.hasFDerivAt.add h'.hasFDerivAt
   rw [dbar, dbar, dbar, H.fderiv]
-  simp only [ContinuousLinearMap.add_apply]
+  simp only [add_apply]
   ring
 
 theorem dbar_sub {f f' : E → ℂ} {z : E} (h : DifferentiableAt ℝ f z) (h' : DifferentiableAt ℝ f' z)
@@ -577,7 +577,7 @@ theorem dbar_sub {f f' : E → ℂ} {z : E} (h : DifferentiableAt ℝ f z) (h' :
   have H : HasFDerivAt (fun x => f x - f' x) (fderiv ℝ f z - fderiv ℝ f' z) z :=
     h.hasFDerivAt.sub h'.hasFDerivAt
   rw [dbar, dbar, dbar, H.fderiv]
-  simp only [ContinuousLinearMap.sub_apply]
+  simp only [sub_apply]
   ring
 
 theorem dbar_mul {f f' : E → ℂ} {z : E} (h : DifferentiableAt ℝ f z) (h' : DifferentiableAt ℝ f' z)
@@ -585,7 +585,7 @@ theorem dbar_mul {f f' : E → ℂ} {z : E} (h : DifferentiableAt ℝ f z) (h' :
   have H : HasFDerivAt (fun x => f x * f' x) (f z • fderiv ℝ f' z + f' z • fderiv ℝ f z) z :=
     h.hasFDerivAt.mul h'.hasFDerivAt
   rw [dbar, dbar, dbar, H.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 private lemma hasFDerivAt_finset_sum {ι : Type*} (s : Finset ι) {A : ι → E → ℂ}
@@ -597,7 +597,7 @@ theorem dbar_sum {ι : Type*} (s : Finset ι) {f : ι → E → ℂ} {z : E}
     (h : ∀ i ∈ s, DifferentiableAt ℝ (f i) z) (u : E) :
     dbar (fun x => ∑ i ∈ s, f i x) u z = ∑ i ∈ s, dbar (f i) u z := by
   have H := hasFDerivAt_finset_sum s (fun i hi => (h i hi).hasFDerivAt)
-  rw [dbar, H.fderiv, ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, Finset.mul_sum,
+  rw [dbar, H.fderiv, sum_apply, sum_apply, Finset.mul_sum,
     ← Finset.sum_add_distrib]
   rfl
 
@@ -636,7 +636,7 @@ theorem dbar_symm {f : E → ℂ} {z : E} (h : ContDiffAt ℝ 2 f z) (u v : E) :
     have H : HasFDerivAt (dbar f a) (fderiv ℝ (fun x => fderiv ℝ f x a) z
         + I • fderiv ℝ (fun x => fderiv ℝ f x (I • a)) z) z :=
       d1.hasFDerivAt.add (d2.hasFDerivAt.const_mul I)
-    rw [H.fderiv, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+    rw [H.fderiv, add_apply, smul_apply, smul_eq_mul,
       fderiv_apply_lemma hD, fderiv_apply_lemma hD]
   rw [dbar, dbar, e, e, e, e, hs v u, hs v (I • u), hs (I • v) u, hs (I • v) (I • u)]
   ring
@@ -645,7 +645,7 @@ private lemma dbar_const_mul {f : E → ℂ} {z : E} (c : ℂ) (h : Differentiab
     (u : E) : dbar (fun x => c * f x) u z = c * dbar f u z := by
   have H : HasFDerivAt (fun x => c * f x) (c • fderiv ℝ f z) z := h.hasFDerivAt.const_mul c
   rw [dbar, dbar, H.fderiv]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 private lemma contDiffAt_two_of_contDiffOn_infty_of_isOpen {s : Set E} {f : E → ℂ} {x : E} (hf : ContDiffOn ℝ ∞ f s)
@@ -907,7 +907,7 @@ theorem period_symm : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)), Discre
       k (fun m => antiRow Θ m) (fun m => (Real.pi) • antiRow Hm m) (fun m u => antiRow_I Θ m u)
       ?_ hU hinv hcov ?_ ?_ hk hkc ?_ z w
     · intro m u
-      simp only [ContinuousLinearMap.smul_apply, antiRow_I, Complex.real_smul]
+      simp only [smul_apply, antiRow_I, Complex.real_smul]
       ring
     · intro i m
       have h1 : DifferentiableOn ℂ (fun x => fderiv ℂ (a i) x (Pi.single m 1)) (U i) :=
@@ -915,7 +915,7 @@ theorem period_symm : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)), Discre
       have h2 : DifferentiableOn ℂ (fun x => (a i x)⁻¹) (U i) := (ha i).1.inv (ha i).2
       exact (h1.mul h2).congr fun x _ => div_eq_mul_inv _ _
     · intro i m l x hx
-      simp only [ContinuousLinearMap.smul_apply, antiRow_apply, Complex.real_smul]
+      simp only [smul_apply, antiRow_apply, Complex.real_smul]
       exact logDeriv_translate (hU i) (ha i).1 (ha i).2 (l : Fin g → ℂ) _ (e l)
         (fun y hy => hinv i l y hy) (fun y hy => hf i l y hy) m hx
     · intro i j l x hx
@@ -925,7 +925,7 @@ theorem period_symm : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)), Discre
   have e1 : ∀ x y : Fin g → ℂ, ∑ m, antiRow Θ m x * ((Real.pi) • antiRow Hm m) y
       = Real.pi * (Θ.mulVec (star x) ⬝ᵥ Hm.mulVec (star y)) := by
     intro x y
-    simp only [ContinuousLinearMap.smul_apply, antiRow_apply, Complex.real_smul, dotProduct,
+    simp only [smul_apply, antiRow_apply, Complex.real_smul, dotProduct,
       Finset.mul_sum]
     exact Finset.sum_congr rfl fun _ _ => by ring
   have hπ : (Real.pi : ℂ) ≠ 0 := by exact_mod_cast Real.pi_ne_zero
@@ -981,12 +981,12 @@ private theorem valAt'_units_val_ne_zero {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W 
     (f : (Γ(X, W))ˣ) : valAt' y W f.val ≠ 0 := by
   have h1 : valAt' y W (f.val * f.inv) = valAt' y W f.val * valAt' y W f.inv := by
     unfold valAt'
-    simp only [dif_pos hW]
+    simp only [dite_eq_left hW]
     unfold valAt
     simp only [map_mul]
   have h2 : valAt' y W (1 : Γ(X, W)) = 1 := by
     unfold valAt'
-    simp only [dif_pos hW]
+    simp only [dite_eq_left hW]
     unfold valAt
     simp only [map_one]
   intro h0
@@ -1106,14 +1106,14 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
 private theorem valAt'_mul_of_whole_le_preimage {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W)
     (f f' : Γ(X, W)) : valAt' y W (f * f') = valAt' y W f * valAt' y W f' := by
   unfold valAt'
-  simp only [dif_pos hW]
+  simp only [dite_eq_left hW]
   unfold valAt
   simp only [map_mul]
 
 private theorem valAt'_one_of_whole_le_preimage {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W) :
     valAt' y W 1 = 1 := by
   unfold valAt'
-  simp only [dif_pos hW]
+  simp only [dite_eq_left hW]
   unfold valAt
   simp only [map_one]
 
@@ -1155,12 +1155,12 @@ private theorem valAt'_val_unit_ne_zero {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W :
     (f : (Γ(X, W))ˣ) : valAt' y W f.val ≠ 0 := by
   have h1 : valAt' y W (f.val * f.inv) = valAt' y W f.val * valAt' y W f.inv := by
     unfold valAt'
-    simp only [dif_pos hW]
+    simp only [dite_eq_left hW]
     unfold valAt
     simp only [map_mul]
   have h2 : valAt' y W (1 : Γ(X, W)) = 1 := by
     unfold valAt'
-    simp only [dif_pos hW]
+    simp only [dite_eq_left hW]
     unfold valAt
     simp only [map_one]
   intro h0
@@ -1927,7 +1927,7 @@ theorem tangent_injects_symm_antilinear : Out.Laws → Out.Laws2 → ThetaUnifAV
   obtain ⟨t₀, m, hm⟩ := _root_.GlobalTheory.tObj_pull o g k J b _ _ _ _ (spMap (algebraMap R ℂ)) t hcomp
   obtain ⟨u, Hm, χ, hG, -⟩ := _root_.GlobalTheory.KSInh.exists_goodU_ksRel hU t₀.pol
   have hsm : Smooth t.A.hom := by
-    haveI := t.dim
+    have := t.dim
     exact SmoothOfRelativeDimension.smooth g _
   obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.KS.Lin.ks_linear t₀.pol u Hm χ hG o R t.A.left t.A.hom m hsm hm.1.1
   refine ⟨t₀, m, u, Hm, χ, κ, hG, hm, ?_, fun D => ?_⟩

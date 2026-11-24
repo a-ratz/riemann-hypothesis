@@ -153,7 +153,7 @@ theorem exists_symplectic_basis : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → �
     ∃ bs : Module.Basis (Fin g ⊕ Fin g) ℤ Λ, ∀ α β,
       (hermForm Hm (bs α : Fin g → ℂ) (bs β : Fin g → ℂ)).im = Matrix.J (Fin g) ℝ α β := by
   intro g Λ Hm hdisc hspan hH hpos hint hdual
-  haveI : IsZLattice ℝ Λ := ⟨hspan⟩
+  have : IsZLattice ℝ Λ := ⟨hspan⟩
   choose k hk using hint
   let Ef : LinearMap.BilinForm ℤ Λ := LinearMap.mk₂ ℤ (fun x y => k x y)
     (fun x x' y => by
@@ -602,7 +602,7 @@ theorem exists_half_canMult : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ))
     mul_self_eq_one_iff.mp (by rw [← sq]; exact hsq l)
   have hexp : ∀ k : ℤ, Complex.exp (↑Real.pi * Complex.I * ((k : ℝ) : ℂ)) = (-1) ^ k := by
     intro k
-    rw [Complex.ofReal_intCast, mul_comm, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+    rw [Complex.ofReal_intCast, mul_comm, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   have hhalf : Complex.exp (2 * ↑Real.pi * Complex.I * ((1 / 2 : ℝ) : ℂ)) = -1 := by
     rw [show (2 : ℂ) * ↑Real.pi * Complex.I * ((1 / 2 : ℝ) : ℂ) = ↑Real.pi * Complex.I by
       push_cast; ring, Complex.exp_pi_mul_I]
@@ -704,13 +704,13 @@ theorem exists_half_canMult : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ))
       rcases hpm (bs (Sum.inl i)) with h | h
       · simp [ha, h]
       · have h' : χ (bs (Sum.inl i)) ≠ 1 := by rw [h]; norm_num
-        simp only [ha, h', if_false]
+        simp only [ha, h', ite_false]
         rw [h, hhalf]
     · rw [hC_inr]
       rcases hpm (bs (Sum.inr i)) with h | h
       · simp [hc, h]
       · have h' : χ (bs (Sum.inr i)) ≠ 1 := by rw [h]; norm_num
-        simp only [hc, h', if_false]
+        simp only [hc, h', ite_false]
         rw [h, hhalf']
   exact GlobalTheory.HolTheta.eq_of_cocycle bs
     (fun l l' => Complex.exp (Real.pi * Complex.I *
@@ -795,7 +795,7 @@ theorem mean_sq_fixes_norm_const :
           (‖θ z‖ * Real.exp (-(Real.pi * ((1 : ℕ) : ℝ) / 2) * (hermForm Hm z z).re)) ^ 2 := by
         intro z
         rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hb, mul_pow, div_pow,
-          ← Real.exp_nat_mul]
+          ← Real.exp_natCast_mul]
         have : ((2 : ℕ) : ℝ) * (-(Real.pi * ((1 : ℕ) : ℝ) / 2) * (hermForm Hm z z).re) =
             -Real.pi * (hermForm Hm z z).re := by
           push_cast
@@ -1150,7 +1150,7 @@ theorem volume_zero_set {n g : ℕ} {θ : (Fin g → ℂ) → ℂ} (L : (Fin n �
   have he : (e : (Fin n → ℝ) → Fin g → ℂ) = Lc := rfl
   have hμ := Measure.isAddLeftInvariant_eq_smul (Measure.map Lc volume) (volume : Measure (Fin g → ℂ))
   have h1 : (Measure.map Lc volume) {z : Fin g → ℂ | θ z = 0} = 0 := by
-    rw [hμ, Measure.smul_apply, h0', smul_zero]
+    rw [hμ, smul_apply, h0', smul_zero]
   rw [← he, e.map_apply] at h1
   exact h1
 
@@ -1318,7 +1318,7 @@ theorem core (hn : 0 < n) (c₀ : ℝ) (hθ : Differentiable ℂ θ) (hw : ∃ w
     · rintro ⟨hx, hx2⟩
       rw [← hrange] at hx
       obtain ⟨i, rfl⟩ := hx
-      exact ⟨i, by simpa only [Set.mem_setOf_eq, ← hnorm] using hx2, rfl⟩
+      exact ⟨i, by simpa only [Set.mem_ofPred_eq, ← hnorm] using hx2, rfl⟩
     · rintro ⟨i, hi, rfl⟩
       refine ⟨hrange ▸ Set.mem_range_self i, ?_⟩
       rw [hnorm]
@@ -1528,7 +1528,7 @@ theorem exists_reduced (g : ℕ) [NeZero g] (Λ : Submodule ℤ (Fin g → ℂ))
     simp only [hc, hJ, Fintype.sum_sum_type, Matrix.J, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
       Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, Matrix.neg_apply, Matrix.one_apply]
     simp only [mul_zero, Finset.sum_const_zero, zero_add, add_zero, mul_neg, mul_ite, _root_.mul_one,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_neg_distrib]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_neg_distrib]
     push_cast
     rw [Finset.sum_sub_distrib]
     ring
@@ -1537,7 +1537,7 @@ theorem nform : ∃ C₀ : ℝ, 0 ≤ C₀ ∧ ∀ {S : Scheme.{0}} {G : Over S}
   obtain ⟨C, hC, hB⟩ := ThetaBound.full
   refine ⟨C, hC.le, ?_⟩
   intro S G _ _ P z g a hg hint hdual hsc hsq θ b hθ hL2
-  haveI : NeZero g := ⟨by omega⟩
+  have : NeZero g := ⟨by omega⟩
   obtain ⟨hH, hpos, hχn, -⟩ := a.ah
   obtain ⟨bs, h, X, Y, ρ, hh, hX, hY, hR, hHh, hcoord, him⟩ :=
     exists_reduced g a.u.Λ a.Hm a.u.discrete a.u.full hH hpos hint hdual

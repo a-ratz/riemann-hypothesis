@@ -124,7 +124,7 @@ theorem mem_span_iff : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteVal
       Category.assoc]
   have htan : ∀ r v, IsTanAt T (𝟙 _) v → IsTanAt T (𝟙 _) (v ≫ actT.act r) := by
     intro r v h
-    haveI := actT.hom r
+    have := actT.hom r
     refine (LieTangent.isTanAt_iff _).2 ?_
     rw [← Category.assoc, (LieTangent.isTanAt_iff _).1 h]
     exact MonObj.one_comp _

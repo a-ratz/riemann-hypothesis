@@ -77,7 +77,7 @@ theorem t2Space_adelicGL_cmField : T2Space (GA E n) :=
   Units.isEmbedding_embedProduct.t2Space
 
 theorem isClosed_UA : IsClosed ((UA E n : Subgroup (GA E n)) : Set (GA E n)) := by
-  haveI := t2Space_adeleRing_cmField (E := E)
+  have := t2Space_adeleRing_cmField (E := E)
   show IsClosed {g : GA E n | ((g : Matrix (Fin n) (Fin n) (Ad E)).map (conjAd E))ᵀ * 1 * (g : Matrix (Fin n) (Fin n) (Ad E)) = 1}
   exact isClosed_eq (((Units.continuous_val.matrix_map GlobalTheory.ThetaPull.continuous_conjAd).matrix_transpose.matrix_mul
     continuous_const).matrix_mul Units.continuous_val) continuous_const
@@ -86,11 +86,11 @@ theorem locU_le_finU (w : HeightOneSpectrum (𝓞 E)) : locU n w ≤ finU (E := 
 
 theorem continuous_inclusion_locU (w : HeightOneSpectrum (𝓞 E)) :
     Continuous (Subgroup.inclusion (locU_le_finU (n := n) w)) :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem isClosed_of_retract (w : HeightOneSpectrum (𝓞 E)) (r : UA E n →* locU n w) (hr : Continuous r)
     (hx : ∀ x : locU n w, r x = x) : IsClosed ((locU n w : Subgroup (UA E n)) : Set (UA E n)) := by
-  haveI := t2Space_adelicGL_cmField (E := E) (n := n)
+  have := t2Space_adelicGL_cmField (E := E) (n := n)
   have e : ((locU n w : Subgroup (UA E n)) : Set (UA E n)) = {x | ((r x : locU n w) : UA E n) = x} := by
     ext x
     constructor
@@ -102,7 +102,7 @@ theorem isClosed_of_retract (w : HeightOneSpectrum (𝓞 E)) (r : UA E n →* lo
       exact (r x).2
 
   rw [e]
-  exact isClosed_eq (continuous_subtype_val.comp hr) continuous_id
+  exact isClosed_eq (continuous_subtypeVal.comp hr) continuous_id
 
 theorem isSmooth_loc (π : AutSub E n) (w : HeightOneSpectrum (𝓞 E)) :
     IsSmooth (π.rep.comp (locU n w).subtype) := fun v => by
@@ -118,7 +118,7 @@ theorem exists_compact_open (w : HeightOneSpectrum (𝓞 E)) (r : UA E n →* lo
   obtain ⟨U0, hU0o, hU0c⟩ := GlobalTheory.GLIntegral.exists_isOpen_isCompact E n
   let p : locU n w →* GL (Fin n) (Af E) :=
     (GeneralLinearGroup.map (pFin E)).comp ((UA E n).subtype.comp (locU n w).subtype)
-  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtype_val.comp continuous_subtype_val)
+  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   let K : Subgroup (locU n w) := U0.comap p ⊓ L.comap (Subgroup.inclusion (locU_le_finU w))
   have hKo : IsOpen (K : Set (locU n w)) :=
     (hU0o.preimage hp).inter (hL.preimage (continuous_inclusion_locU w))
@@ -184,8 +184,8 @@ theorem exists_admissible_comp : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       FiniteDimensional ℂ ↥(fixed π.rep M ⊓ fixed ρ K') := fun K' hK' => by
     let r' : finU (E := E) (n := n) →* locU n w := r.comp (finU (E := E) (n := n)).subtype
     let H : Subgroup (finU (E := E) (n := n)) := L ⊓ (K' ⊓ L.comap (Subgroup.inclusion hle)).comap r'
-    have hHo : IsOpen (H : Set (finU (E := E) (n := n))) := hLo.inter ((hK'.inter hLl).preimage (hr.comp continuous_subtype_val))
-    haveI := hadm H hHo
+    have hHo : IsOpen (H : Set (finU (E := E) (n := n))) := hLo.inter ((hK'.inter hLl).preimage (hr.comp continuous_subtypeVal))
+    have := hadm H hHo
     refine Submodule.finiteDimensional_of_le (S₂ := fixed ρf H) fun v hv => LocEx.mem_fix.2 fun k hk => ?_
     obtain ⟨hv1, hv2⟩ := Submodule.mem_inf.1 hv
     obtain ⟨hkL, hkK, hkL'⟩ := And.intro (Subgroup.mem_inf.1 hk).1 (Subgroup.mem_inf.1 (Subgroup.mem_inf.1 hk).2)

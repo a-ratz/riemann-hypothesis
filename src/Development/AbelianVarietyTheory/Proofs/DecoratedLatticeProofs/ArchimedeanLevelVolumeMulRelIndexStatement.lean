@@ -63,7 +63,7 @@ theorem mul_set_eq_comap (V : HSp D) (U : Subgroup (GA D V)) (hU : U ≤ GfC V) 
     {g : GA D V | ∃ k ∈ GinfC V, ∃ κ ∈ U, g = k * κ} =
       (((U.subgroupOf (GfC V)).comap (GlobalTheory.AutMult.toFin V) : Subgroup (GA D V)) : Set (GA D V)) := by
   ext g
-  simp only [Set.mem_setOf_eq, SetLike.mem_coe, Subgroup.mem_comap, Subgroup.mem_subgroupOf]
+  simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Subgroup.mem_comap, Subgroup.mem_subgroupOf]
   constructor
   · rintro ⟨k, hk, κ, hκ, rfl⟩
     have e : GlobalTheory.AutMult.toFin V (k * κ) = ⟨κ, hU hκ⟩ := by
@@ -79,9 +79,9 @@ theorem volLev_mul_relIndex : ∀ (D : D7) (V : HSp D) (v : GlobalTheory.Unf.Vol
     volLev v U * (U.relIndex U' : ℝ) = volLev v U' := by
   intro D V v U U' hle hU' _ hopn
   obtain ⟨i1, -, -, -, i5, -⟩ := GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D V
-  haveI := i1
-  haveI := i5
-  haveI := v.haar
+  have := i1
+  have := i5
+  have := v.haar
   have hU : U ≤ GfC V := hle.trans hU'
   set A := (U.subgroupOf (GfC V)).comap (GlobalTheory.AutMult.toFin V) with hA
   set A' := (U'.subgroupOf (GfC V)).comap (GlobalTheory.AutMult.toFin V) with hA'

@@ -82,7 +82,7 @@ theorem uw_closed (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (UWset k r z) := 
       continuous_const
   have h2 : IsClosed {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ |
       ∀ a : Fin r, g *ᵥ bvec (eI k r a) = bvec (eI k r a) ∧ g *ᵥ bvec (esI k r a) = bvec (esI k r a)} := by
-    simp only [Set.setOf_forall, Set.setOf_and]
+    simp only [Set.ofPred_forall, Set.ofPred_and]
     exact isClosed_iInter fun a =>
       (isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const).inter
         (isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const)

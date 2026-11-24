@@ -153,7 +153,7 @@ def extGroup (f : X → X → U) (f0 : ∀ a, f 0 a = 1) (fs : ∀ a b, f a b = 
 theorem exists_split [Module.Free ℤ X] (f : X → X → U) (f0 : ∀ a, f 0 a = 1) (fs : ∀ a b, f a b = f b a)
     (fc : ∀ a b c, f (a + b) c * f a b = f a (b + c) * f b c) :
     ∃ s : X → U, ∀ a b, s (a + b) * f a b = s a * s b := by
-  letI := extGroup f f0 fs fc
+  let := extGroup f f0 fs fc
   let bX := Module.Free.chooseBasis ℤ X
   let h : X →ₗ[ℤ] ExtPt f := bX.constr ℤ fun i => ⟨bX i, 1⟩
   let p : ExtPt f →ₗ[ℤ] X := AddMonoidHom.toIntLinearMap ⟨⟨ExtPt.a, rfl⟩, fun _ _ => rfl⟩
@@ -376,7 +376,7 @@ namespace GlobalTheory.MumValues
 
 theorem exists_values : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F], ∃ N : NumD F, Nonempty (NumOf D.toPre F N) := by
   intro R _ _ _ hR D F _ _ _
-  haveI : IsNoetherianRing R := hR.1.1
+  have : IsNoetherianRing R := hR.1.1
   obtain ⟨N, ν, -⟩ := GlobalTheory.ValuesExist.exists_integral_values GlobalTheory.allSixLaws.1 R D.toPre D.psi_even D.tau_bimult F ⊤
     (fun _ => trivial)
   exact ⟨N, ⟨ν⟩⟩
@@ -751,8 +751,8 @@ theorem ros_value (T : Tens D D' W) (ν : NumOf D F N) (ν' : NumOf D' F N') (A 
     (ha : ∀ j, TensTor.cmp T ν ν' a j = N.c (χ j)) (hb : ∀ j, TensTor.cmp T ν ν' b j = (gs j).b)
     (h₁ : ∀ i, χ₁ i = ∑ k, A i k • χ k) :
     ρ a b * (PVu W χ₁ gs : Fˣ) = (PVu W χ (fun i => ∏ k, gs k ^ A' i k) : Fˣ) := by
-  letI := D.P.isAb.comm
-  letI := D'.P.isAb.comm
+  let := D.P.isAb.comm
+  let := D'.P.isAb.comm
   obtain ⟨u, hu, u₀, hv⟩ := hρ
   obtain ⟨z⟩ : Nonempty (Sp F) := inferInstanceAs (Nonempty (PrimeSpectrum F))
   have hJ : Good D.P.L z ν.J := fun ψ => ν.good ψ trivial
@@ -839,7 +839,7 @@ end GlobalTheory.Mum.RosComp
 open GlobalTheory.Mum.RosComp in
 theorem GlobalTheory.Mum.TensRos.rosVT_components : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (T : Tens D.toPre D'.toPre W) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (N N' : NumD F) (ν : NumOf D.toPre F N) (ν' : NumOf D'.toPre F N') (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (ρ : 𝓞 E →+* Matrix (Fin r) (Fin r) ℤ), (∀ a, (ρ a).transpose * (W + W.transpose) = (W + W.transpose) * ρ (H.bar a)) → ∀ [Module (𝓞 E) D'.toPre.X] (o : letI := H.starRing; D'.toPre.OAct (𝓞 E)), (letI := H.starRing; T.IsAct o ρ) → ∀ (x : 𝓞 E) (ρ'' : N'.A → N'.A → F), (letI := H.starRing; GlobalTheory.Mum.TensRos.RosVT T ν ν' (o.onB.act (star x)) (o.onB.act x) ρ'') → ∀ (χ : N'.X) (b : N'.A) (gs : Fin r → N.Gt), (∀ j, GlobalTheory.Mum.TensTor.cmp T ν ν' b j = (gs j).b) → (letI := H.starRing; ρ'' (N'.c χ) b * GlobalTheory.Mum.TensRos.PV W (GlobalTheory.Mum.TensTor.chi T ν ν') (ν'.eX.symm (star x • ν'.eX χ)) gs = GlobalTheory.Mum.TensRos.PV W (GlobalTheory.Mum.TensTor.chi T ν ν') χ (fun i => ∏ j, gs j ^ ρ x i j)) := by
   intro R _ _ _ _ D D' r W T F _ _ _ N N' ν ν' E _ _ _ H ρ hρ _ o hact x ρ'' hros χ b gs hb
-  letI := H.starRing
+  let := H.starRing
   have h := hρ (star x)
   rw [show H.bar (star x) = x from star_star x] at h
   refine ros_value T ν ν' (ρ (star x)) (ρ x) h _ _ (hact.2 _) (hact.2 _) ρ'' hros (N'.c χ) b (TensTor.chi T ν ν' χ) _ gs
@@ -1035,7 +1035,7 @@ theorem main_alg {F : Type} [Field F] (a1 a2 P1 P2 s1 s2 A Bv C Dd E' G one : F)
 
 theorem rosGt_values : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (T : Tens D.toPre D'.toPre W) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (N N' : NumD F) (ν : NumOf D.toPre F N) (ν' : NumOf D'.toPre F N') (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (ρ : 𝓞 E →+* Matrix (Fin r) (Fin r) ℤ), (∀ a, (ρ a).transpose * (W + W.transpose) = (W + W.transpose) * ρ (H.bar a)) → ∀ [Module (𝓞 E) D'.toPre.X] (o : letI := H.starRing; D'.toPre.OAct (𝓞 E)), (letI := H.starRing; T.IsAct o ρ) → ∀ (x : 𝓞 E) (ρ' : N'.A → N'.A → F), (letI := H.starRing; GlobalTheory.Relabel.RosV ν' o.onB x ρ') → ∀ (v' w' : N'.Gt) (vs : Fin r → N.Gt), GtRel T ν ν' v' vs → GtRel T ν ν' w' (fun i => ∏ j, vs j ^ ρ x i j) → (letI := H.starRing; ∀ χ, (w'.s χ : F) = v'.s (ν'.eX.symm (star x • ν'.eX χ)) * ρ' (N'.c χ) v'.b) := by
   intro R _ _ _ hB D D' r W T F _ _ _ N N' ν ν' E _ _ _ H ρ hρ _ o hact x ρ' hρ' v' w' vs hv hw
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨ρ'', hT, hmove⟩ := GlobalTheory.T.rosatiValue_tensorData_transport_lambdaBundle R hB D D' W T F N N' ν ν' (𝓞 E) o.onB x ρ' hρ'
   obtain ⟨-, hbij, -, -, -, hwv0, -, -⟩ := GlobalTheory.T.tensorData_values_facts R hB D D' W T F N N' ν ν'
   rw [GtRel, gtRelV_iff] at hv hw
@@ -1100,7 +1100,7 @@ theorem cmp_actV {R : Type} [CommRing R] [IsDomain R] {D D' : DegPre R} {r : ℕ
     (ν' : NumOf D' F N') {O : Type} [CommRing O] [StarRing O] (ρ : O →+* Matrix (Fin r) (Fin r) ℤ) [Module O D'.X]
     (o : D'.OAct O) (hact : T.IsAct o ρ) (x : O) (b : N'.A) (i : Fin r) :
     TensTor.cmp T ν ν' (GlobalTheory.Relabel.actV ν' o.onB x b) i = ∏ j, TensTor.cmp T ν ν' b j ^ ρ x i j := by
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   simp only [TensTor.cmp, GlobalTheory.Relabel.actV, MulEquiv.apply_symm_apply, Category.assoc, hact.2 x i]
   let P : (D'.P.A ⟶ D.P.A) →* (TF (R := R) F ⟶ D.P.A) :=
     { toFun := fun f => ν'.eA b ≫ f
@@ -1165,7 +1165,7 @@ end GlobalTheory.Mum.TensAct
 open GlobalTheory.Mum.TensAct in
 theorem GlobalTheory.Mum.TensAct.qkAct_tens : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ) (T : Tens D.toPre D'.toPre W) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (N N' : NumD F) (ν : NumOf D.toPre F N) (ν' : NumOf D'.toPre F N') (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (ρ : 𝓞 E →+* Matrix (Fin r) (Fin r) ℤ), (∀ a, (ρ a).transpose * (W + W.transpose) = (W + W.transpose) * ρ (H.bar a)) → ∀ [Module (𝓞 E) D'.toPre.X] (o : letI := H.starRing; D'.toPre.OAct (𝓞 E)), (letI := H.starRing; T.IsAct o ρ) → ∀ (g : ℕ) (ev : ∀ n : ℕ, ((Fin g → ℤ) × (Fin g → ℤ)) → QkPt D.toPre F n), (∀ n, 0 < n → ∀ a b, QkAdd (ev n a) (ev n b) (ev n (a + b))) → (∀ n, 0 < n → ∀ a b, QkPt.Equiv D.toPre F (ev n a) (ev n b) ↔ ∃ e, a = b + n • e) → ∀ n, 0 < n → ∀ (x : 𝓞 E) (a : Fin r → (Fin g → ℤ) × (Fin g → ℤ)) (p' q' : QkPt D'.toPre F n), PtRel T ν ν' p' (fun j => ev n (a j)) → PtRel T ν ν' q' (fun i => ev n (∑ j, ρ x i j • a j)) → (letI := H.starRing; QkAct o x p' q') := by
   intro R _ _ _ hR D D' r W T F _ _ _ N N' ν ν' E _ _ _ H ρ hρ _ o hact g ev hadd hker n hn x a p' q' hp hq
-  letI := H.starRing
+  let := H.starRing
   have hF := GlobalTheory.T.tensorData_values_facts R hR D D' W T F N N' ν ν'
   have hB := GtValues.points_correspond R D.toPre D.psi_even D.tau_bimult F N ν
   have hB' := GtValues.points_correspond R D'.toPre D'.psi_even D'.tau_bimult F N' ν'

@@ -256,7 +256,7 @@ private theorem exists_lat_basis_compatible_quotient {V U : Type} [AddCommGroup 
       IsLatOf C i b' L ∧ IsLatOf C i bW (L.comap W.subtype.toAddMonoidHom) ∧
       IsLatOf C i bQ (L.map g.toAddMonoidHom) ∧ (∀ j, b' (Fin.castAdd _ j) = bW j) ∧
       ∀ j, g (b' (Fin.natAdd _ j)) = bQ j := by
-  haveI : FiniteDimensional K V := Module.Finite.of_basis b
+  have : FiniteDimensional K V := Module.Finite.of_basis b
   obtain ⟨b₀, k, hk, hlat, hmem, hspan⟩ := H_affine_combination_eq_of_quadratic_relation C i n b W
   have hkerW : LinearMap.ker g = W := by
     ext x

@@ -149,7 +149,7 @@ private lemma card_submodule_finrank_eq_gaussBinom (k : Type) [Field k] [Finite 
       linear_combination hZ
     exact_mod_cast key
   · rw [_root_.GlobalTheory.IndefiniteRowSideFullHecke.GaussianBinomialFormula.gaussBinom_eq_zero _ _ _ (by omega)]
-    haveI : IsEmpty {L : Submodule k V // finrank k L = j} :=
+    have : IsEmpty {L : Submodule k V // finrank k L = j} :=
       ⟨fun ⟨L, hL⟩ => by have := Submodule.finrank_le L; omega⟩
     exact Nat.card_of_isEmpty
 
@@ -200,7 +200,7 @@ theorem _root_.GlobalTheory.GaussCount.card_codim (k : Type) [Field k] [Finite k
         omega
     rw [Nat.card_congr e, card_submodule_finrank_eq_gaussBinom k V, gaussBinom_sub_eq_gaussBinom hq _ _ hj]
   · rw [_root_.GlobalTheory.IndefiniteRowSideFullHecke.GaussianBinomialFormula.gaussBinom_eq_zero _ _ _ (by omega)]
-    haveI : IsEmpty {L : Submodule k V // finrank k (V ⧸ L) = j} :=
+    have : IsEmpty {L : Submodule k V // finrank k (V ⧸ L) = j} :=
       ⟨fun ⟨L, hL⟩ => by have := L.finrank_quotient_add_finrank; omega⟩
     exact Nat.card_of_isEmpty
 

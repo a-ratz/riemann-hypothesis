@@ -134,7 +134,7 @@ lemma sgn_dOf_pos {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (k : Fin r) 
   have h2 := ((X.mem_dom_iff x).1 hx τ).2 k.succ
   rw [dmin_succ X hx τ k, Complex.mul_re, dOf_real X hx τ k, mul_zero, sub_zero] at h2
   rw [Fin.val_succ, psgn_succ] at h2
-  rw [Fin.coe_castSucc] at h1
+  rw [Fin.val_castSucc] at h1
   by_contra hneg
   push_neg at hneg
   nlinarith
@@ -163,7 +163,7 @@ lemma bOf_mem {x : Frame X.Ψ r} (hx : x ∈ X.dom) : bOf X x ∈ Bor X.Ψ r := 
   refine ⟨?_, fun a c hca => ?_⟩
   · change (uOf X x τ * Matrix.diagonal (sOf X x τ)).det ≠ 0
     unfold uOf
-    rw [Matrix.det_mul, Matrix.det_diagonal, Matrix.det_of_upperTriangular (uMat_upper _)]
+    rw [Matrix.det_mul, Matrix.det_diagonal, det_of_isUpperTriangular (uMat_upper _)]
     simp only [uMat_diag, Finset.prod_const_one, one_mul]
     exact Finset.prod_ne_zero_iff.mpr fun k _ => sOf_ne X hx τ k
   · change (uOf X x τ * Matrix.diagonal (sOf X x τ)) a c = 0

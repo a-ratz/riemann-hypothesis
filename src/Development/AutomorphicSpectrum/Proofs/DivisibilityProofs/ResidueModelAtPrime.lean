@@ -140,7 +140,7 @@ theorem ex_le {c : ∀ k, ι k} {n : ℕ} {d : (Σ k, ι k) →₀ ℕ} (h : ∀
     · rw [← h1]; exact h k
     · exact Nat.zero_le _
   · intro k' _ hk
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h1
     exact hk (congrArg Sigma.fst h1)
   · intro h1
@@ -250,7 +250,7 @@ theorem lift_form [∀ k, Fintype (ι k)] {n : ℕ} (h : ∀ c a, Good (F := F) 
     · have h1 := V'.mul_mem_right (monomial d' 1) hV
       have h2 : (monomial d (AddMonoidAlgebra.coeff q d) : MRing ι F') =
           C (AddMonoidAlgebra.coeff q d) * (∏ k, X ⟨k, c k⟩) ^ n * monomial d' 1 := by
-        rw [chart_pow, mul_assoc, monomial_mul, ← hd', C_mul_monomial]
+        rw [chart_pow, mul_assoc, monomial_mul_monomial, ← hd', C_mul_monomial]
         simp
       rw [h2, map_mul, map_monomial, (algebraMap F F').map_one, ← sub_mul]
       exact h1
@@ -326,7 +326,7 @@ theorem intNumL_subfield_constants : ∀ (K : Type) [Fintype K] [DecidableEq K] 
       have := hm' k
       omega
     unfold hilbFn
-    rw [if_pos hm0, if_pos hm0,
+    rw [ite_eq_left hm0, ite_eq_left hm0,
       BaseChangeColon.PlField.finrank_piece (fun q hq => BaseChangeColon.PlField.lift_form hn hlt hq), Nat.cast_mul]
   have hne : (Module.finrank F F' : ℤ) ≠ 0 := by
     exact_mod_cast (Module.finrank_pos (R := F) (M := F')).ne'
@@ -389,7 +389,7 @@ theorem intNumL_zmod_eq_residueDegree_mul_vNumL : ∀ (K : Type) [Fintype K] [De
     intro h
     apply IsDiscreteValuationRing.not_a_field O
     rw [← IsLocalization.AtPrime.map_eq_maximalIdeal m O, h, Ideal.map_bot]
-  haveI hmax : m.IsMaximal := Ideal.IsPrime.isMaximal ‹_› hmne
+  have hmax : m.IsMaximal := Ideal.IsPrime.isMaximal ‹_› hmne
   let e := IsLocalization.AtPrime.equivQuotMaximalIdeal m O
   have hsurj : ∀ x : IsLocalRing.ResidueField O, ∃ a : A,
       IsLocalRing.residue O (algebraMap A O a) = x := by
@@ -406,16 +406,16 @@ theorem intNumL_zmod_eq_residueDegree_mul_vNumL : ∀ (K : Type) [Fintype K] [De
       (IsLocalization.AtPrime.to_map_mem_maximal_iff O m _).2 hpm
     have h2 := (IsLocalRing.residue_eq_zero_iff _).2 h1
     simpa using h2
-  haveI hchar : CharP (IsLocalRing.ResidueField O) p := by
+  have hchar : CharP (IsLocalRing.ResidueField O) p := by
     rcases (Nat.dvd_prime (Fact.out : p.Prime)).1 (ringChar.dvd hp0) with h | h
     · exact absurd h CharP.ringChar_ne_one
     · exact h ▸ ringChar.charP _
-  letI : Algebra (ZMod p) (IsLocalRing.ResidueField O) := ZMod.algebra _ p
-  haveI hfin : Finite (IsLocalRing.ResidueField O) := by
+  let : Algebra (ZMod p) (IsLocalRing.ResidueField O) := ZMod.algebra _ p
+  have hfin : Finite (IsLocalRing.ResidueField O) := by
     apply Nat.finite_of_card_ne_zero
     rw [hcardκ]
     exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero
-  haveI : FiniteDimensional (ZMod p) (IsLocalRing.ResidueField O) := Module.Finite.of_finite
+  have : FiniteDimensional (ZMod p) (IsLocalRing.ResidueField O) := Module.Finite.of_finite
   have hfr : Module.finrank (ZMod p) (IsLocalRing.ResidueField O) = fd := by
     have h := Module.natCard_eq_pow_finrank (K := ZMod p) (V := IsLocalRing.ResidueField O)
     rw [hcardκ, Nat.card_zmod] at h

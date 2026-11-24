@@ -64,7 +64,7 @@ theorem isRegularLocalRing_quotient : ∀ (T : Type) [CommRing T] [IsRegularRing
   intro T _ _ h f D n _ hf hdet
   classical
   let A := Localization.AtPrime n
-  haveI : IsRegularLocalRing A := IsRegularRing.isRegularLocalRing_localization n
+  have : IsRegularLocalRing A := IsRegularRing.isRegularLocalRing_localization n
   let x : Fin h → A := fun j => algebraMap T A (f j)
   have hx : ∀ j, x j ∈ maximalIdeal A := fun j =>
     (IsLocalization.AtPrime.to_map_mem_maximal_iff A n (f j)).mpr (hf j)
@@ -80,7 +80,7 @@ theorem isRegularLocalRing_quotient : ∀ (T : Type) [CommRing T] [IsRegularRing
         map_smul' := fun m t => by simp [Algebra.smul_def]
         map_one_eq_zero' := by simp
         leibniz' := fun s t => by simp [Algebra.smul_def] }
-    letI : Algebra ℤ A := Ring.toIntAlgebra A
+    let : Algebra ℤ A := Ring.toIntAlgebra A
     have hsq : ∀ y ∈ maximalIdeal A ^ 2, D' y ∈ maximalIdeal A := by
       intro y hy
       rw [pow_two] at hy

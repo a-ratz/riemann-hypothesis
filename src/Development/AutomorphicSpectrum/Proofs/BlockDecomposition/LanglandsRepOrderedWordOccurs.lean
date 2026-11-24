@@ -88,7 +88,7 @@ theorem nontrivial_of_isIrreducible {G W : Type} [Group G] [AddCommGroup W] [Mod
     {σ : Representation ℂ G W} (h : σ.IsIrreducible) : Nontrivial W := by
   by_contra hW
   rw [not_nontrivial_iff_subsingleton] at hW
-  haveI : IsSimpleOrder (Subrepresentation σ) := h
+  have : IsSimpleOrder (Subrepresentation σ) := h
   exact bot_ne_top (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _) :
     (⊥ : Subrepresentation σ) = ⊤)
 
@@ -103,7 +103,7 @@ theorem wd_wtW_of_isL : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
   obtain ⟨h', x', hd', hF', hcos⟩ := hπ
   have hsm : IsSmooth π := IsSubquotient.isSmooth (IsCosocle.isSubquotient hcos) (isSmooth_prodIrr _ _)
   have hfl : HasFiniteLength π := hasFiniteLength_of_isIrreducible hirr
-  haveI := nontrivial_of_isIrreducible hirr
+  have := nontrivial_of_isIrreducible hirr
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   have h1 : 1 ≤ jm (x ∘ Fin.rev) hd π :=
     GlobalTheory.CompanionTheory.FrobJm.one_le_jm hA (x ∘ Fin.rev) hd π hsm f

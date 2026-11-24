@@ -119,7 +119,7 @@ theorem gauss_mul_unram : ∀ {F : Type} [Field F] [NumberField F] (ψ : AddChar
     unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.condExp
     congr 1
     ext c
-    simp only [Set.mem_setOf_eq, CondLE]
+    simp only [Set.mem_ofPred_eq, CondLE]
     refine forall₂_congr fun x hx => ?_
     rw [MonoidHom.mul_apply, hunit x hx.1, mul_one]
   refine ⟨hce, ?_⟩
@@ -335,7 +335,7 @@ theorem isUnitAt_complMap {F E : Type} [Field F] [NumberField F] [Field E] [Numb
   rw [HeightOneSpectrum.mem_adicCompletionIntegers] at h1 h2
   rw [Units.val_inv_eq_inv_val, map_inv₀] at h2
   have hne : Valued.v (x : Fv F v) ≠ 0 := (Valuation.ne_zero_iff _).2 x.ne_zero
-  exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 hne)).1 h2)
+  exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 hne)).1 h2)
 
 end GlobalTheory.SqStepArith
 
@@ -394,7 +394,7 @@ theorem base_place_factor_zero : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : 
       · exact G.pl.levelPlace_ne_basePlace t _ h (hwu.trans e)
       · exact G.pl.levelPlace_ne_basePlace t PP' h ((GlobalTheory.LevelPlaces.under_eq_of_isConjPl hc').trans (hwu.trans e))
     have hv1 : v.1 ∈ S1 D := (G.pl.mem_S0_of_sum_eq.1 hv).resolve_left hv0
-    have hce : condExp G.pl v.1 = 2 := if_neg hv0
+    have hce : condExp G.pl v.1 = 2 := ite_eq_right hv0
     have hloc : GlobalTheory.AdelicU.splitPrime (Bs.τ v) ∈ locPl G t := hB.2.2.2 v (Finset.mem_union_left _ hv)
     have hw : GlobalTheory.AdelicU.splitPrime (Bs.τ v) = G.pl.w v.1 := by
       rcases Finset.mem_union.1 hloc with h | h
@@ -405,7 +405,7 @@ theorem base_place_factor_zero : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : 
         rwa [hwu] at this
     have hdep : depthAt G (GlobalTheory.AdelicU.splitPrime (Bs.τ v)) = 2 := by
       rw [hw, (depthAt_w G hv).2]
-      exact if_neg hv0
+      exact ite_eq_right hv0
     have hroots := hN.roots t _ hloc
     rw [hdep, GlobalTheory.LFun.SplitChart.absNorm_splitPrime] at hroots
     have hchr : ∀ t', chrW (GlobalTheory.SqStep.chs G i j t').ν (Bs.τ v) = ((nuH G t' i j).loc (GlobalTheory.AdelicU.splitPrime (Bs.τ v))).comp
@@ -671,9 +671,9 @@ theorem mu0_chiH_unrAt : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} 
   · refine Formalism.L2.Host.IsMu0.unr (Lc.C.isMu0 j) w ?_
     intro k hmemE
     obtain ⟨⟨q, hq, hcard, -, hne⟩, -⟩ := hL.Q_pl t w hw
-    haveI : Finite (Formalism.L2.DIV.kP w) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq.ne_zero)
+    have : Finite (Formalism.L2.DIV.kP w) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq.ne_zero)
     have : w.asIdeal.IsPrime := w.isPrime
-    haveI : Fintype (Formalism.L2.DIV.kP w) := Fintype.ofFinite _
+    have : Fintype (Formalism.L2.DIV.kP w) := Fintype.ofFinite _
     have h0g : ((D.host.g k : ℕ) : Formalism.L2.DIV.kP w) = 0 := by
       have := (Ideal.Quotient.eq_zero_iff_mem (I := w.asIdeal)).2 hmemE
       simpa using this
@@ -752,7 +752,7 @@ theorem exists_pow_sub_one_mem_pow {L : Type} [Field L] [NumberField L] (S : Fin
     (n : HeightOneSpectrum (𝓞 L) → ℕ) (ha : ∀ w ∈ S, a ∉ w.asIdeal) :
     ∃ M : ℕ, 0 < M ∧ ∀ w ∈ S, a ^ M - 1 ∈ w.asIdeal ^ n w := by
   have key : ∀ w ∈ S, ∃ m : ℕ, 0 < m ∧ Ideal.Quotient.mk (w.asIdeal ^ n w) a ^ m = 1 := fun w hw => by
-    haveI : Finite (𝓞 L ⧸ w.asIdeal ^ n w) :=
+    have : Finite (𝓞 L ⧸ w.asIdeal ^ n w) :=
       Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero _ w.ne_bot)
     obtain ⟨u, hu⟩ := isUnit_mk_pow w.isMaximal (ha w hw) (n w)
     obtain ⟨m, hm, e⟩ := isOfFinOrder_iff_pow_eq_one.1 (isOfFinOrder_of_finite u)
@@ -808,7 +808,7 @@ theorem unitOff_val : ∀ (L : Type) [Field L] [NumberField L] (χ : Formalism.L
       (fun hm => haw w (hne w hw) (w.isPrime.mem_of_pow_mem M hm)) (hM1 w hw)), mul_one,
     finprod_eq_single _ v (fun w hw => by
       rw [hord, HeightOneSpectrum.intValuation_eq_one_iff.2 (fun hm => haw w hw (w.isPrime.mem_of_pow_mem M hm))]
-      simp), finprod_eq_if, if_pos hvS] at hp
+      simp), finprod_eq_if, ite_eq_left hvS] at hp
   have hpos : 0 < ordF v k := by
     rw [hord]
     have h0 : v.intValuation (a ^ M) ≠ 0 := v.intValuation_ne_zero _ hc0
@@ -1304,29 +1304,29 @@ theorem stepFac_ratio_core {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} (G
   · refine hcmul _ _ (hcmul _ _ (hcmul _ _ (hzpow b1 n1 hn1 hb1 _) (hzpow b2 n2 hn2 hb2 _)) ?_) ?_
     · refine hprod _ _ fun v hv => ?_
       have hv' : v.1 ∈ Sz := by simpa using hv
-      simp only [bS₁, dif_pos hv']
+      simp only [bS₁, dite_eq_left hv']
       exact hbS v hv'
     · refine hprod _ _ fun v hv => ?_
       have hv' : v.1 ∈ X.T ∧ v.1 ∉ Sz := by simpa using hv
-      simp only [bT₁, dif_pos hv']
+      simp only [bT₁, dite_eq_left hv']
       exact hbT v hv'.1 hv'.2
   · intro v hv
     have h : v ∈ Bs.P ∧ v ∈ Sz := ⟨hSP v hv, hv⟩
-    simp only [g, g', dif_pos h]
+    simp only [g, g', dite_eq_left h]
     exact ⟨hgS _ h.2, hgS' _ h.2⟩
   · have hA : ∀ v ∈ Finset.univ.filter (fun v : Bs.P => v.1 ∈ Sz),
         f X₀ v = σ (bS₁ v * ((g v.1 : D.what₂.LL) / (g' v.1 : D.what₂.LL))) * f X v := by
       intro v hv
       have hv' : v.1 ∈ Sz := by simpa using hv
       have h2 : v.1 ∈ Bs.P ∧ v.1 ∈ Sz := ⟨v.2, hv'⟩
-      simp only [bS₁, g, g', dif_pos hv', dif_pos h2]
+      simp only [bS₁, g, g', dite_eq_left hv', dite_eq_left h2]
       exact heS v hv'
     have hTw : (∏ v ∈ Finset.univ.filter (fun v : Bs.P => v.1 ∈ X.T ∧ v.1 ∉ Sz), f X v) *
         σ (∏ v ∈ Finset.univ.filter (fun v : Bs.P => v.1 ∈ X.T ∧ v.1 ∉ Sz), bT₁ v) = 1 := by
       rw [map_prod, ← Finset.prod_mul_distrib]
       refine Finset.prod_eq_one fun v hv => ?_
       have hv' : v.1 ∈ X.T ∧ v.1 ∉ Sz := by simpa using hv
-      simp only [bT₁, dif_pos hv']
+      simp only [bT₁, dite_eq_left hv']
       rw [mul_comm]
       exact heT v hv'.1 hv'.2
     rw [hst X₀, hst X, hsplit, hT0, Finset.prod_congr rfl hA, Finset.prod_mul_distrib, ← map_prod,

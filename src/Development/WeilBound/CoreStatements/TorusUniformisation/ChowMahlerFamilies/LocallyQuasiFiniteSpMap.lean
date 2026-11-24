@@ -64,20 +64,20 @@ open Polynomial in
 theorem exists_point {F R : Type} [Field F] [Algebra F ℂ] [CommRing R] [IsDomain R] [Algebra F R]
     [Algebra.FiniteType F R] (f : R) (hf : IsIntegral F f) (r : ℂ) (hr : aeval r (minpoly F f) = 0) :
     ∃ p : R →ₐ[F] ℂ, p f = r := by
-  haveI : Fact (Irreducible (minpoly F f)) := ⟨minpoly.irreducible hf⟩
+  have : Fact (Irreducible (minpoly F f)) := ⟨minpoly.irreducible hf⟩
   let L := AdjoinRoot (minpoly F f)
   let a : L →ₐ[F] R := AdjoinRoot.liftAlgHom (minpoly F f) (Algebra.ofId F R) f (minpoly.aeval F f)
   let b : L →ₐ[F] ℂ := AdjoinRoot.liftAlgHom (minpoly F f) (Algebra.ofId F ℂ) r hr
   have ha : a (AdjoinRoot.root _) = f := AdjoinRoot.liftAlgHom_root _ _ _ _
   have hb : b (AdjoinRoot.root _) = r := AdjoinRoot.liftAlgHom_root _ _ _ _
-  letI : Algebra L R := a.toRingHom.toAlgebra
-  letI : Algebra L ℂ := b.toRingHom.toAlgebra
-  haveI : IsScalarTower F L R := IsScalarTower.of_algebraMap_eq fun x => (a.commutes x).symm
-  haveI : IsScalarTower F L ℂ := IsScalarTower.of_algebraMap_eq fun x => (b.commutes x).symm
-  haveI : Algebra.FiniteType L R := Algebra.FiniteType.of_restrictScalars_finiteType F L R
+  let : Algebra L R := a.toRingHom.toAlgebra
+  let : Algebra L ℂ := b.toRingHom.toAlgebra
+  have : IsScalarTower F L R := IsScalarTower.of_algebraMap_eq fun x => (a.commutes x).symm
+  have : IsScalarTower F L ℂ := IsScalarTower.of_algebraMap_eq fun x => (b.commutes x).symm
+  have : Algebra.FiniteType L R := Algebra.FiniteType.of_restrictScalars_finiteType F L R
   obtain ⟨M, hM⟩ := Ideal.exists_maximal R
-  letI : Field (R ⧸ M) := Ideal.Quotient.field M
-  haveI : Module.Finite L (R ⧸ M) := finite_of_finite_type_of_isJacobsonRing L (R ⧸ M)
+  let : Field (R ⧸ M) := Ideal.Quotient.field M
+  have : Module.Finite L (R ⧸ M) := finite_of_finite_type_of_isJacobsonRing L (R ⧸ M)
   let q : (R ⧸ M) →ₐ[L] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -149,7 +149,7 @@ theorem eq_of_specializes_of_bij {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : S
     (h : Function.Bijective (Scheme.stalkClosedPointTo ξ).hom) {w : X} (hw : w ⤳ genPt ξ) : w = genPt ξ := by
   have hf : IsField (X.presheaf.stalk (genPt ξ)) :=
     (RingEquiv.ofBijective _ h).toMulEquiv.isField (Field.toIsField Ω)
-  letI := hf.toField
+  let := hf.toField
   have h1 : w ∈ Set.range (X.fromSpecStalk (genPt ξ)) := by rw [Scheme.range_fromSpecStalk]; exact hw
   obtain ⟨z, rfl⟩ := h1
   have : z = IsLocalRing.closedPoint (X.presheaf.stalk (genPt ξ)) :=
@@ -180,7 +180,7 @@ theorem exists_chart {X : Scheme.{0}} [GlobalTheory.IsNormalScheme X] [IsLocally
   have ho : IsOpen (irreducibleComponent (genPt ξ)) :=
     GlobalTheory.IsNormalScheme.isOpen_of_mem_irreducibleComponents (irreducibleComponent_mem_irreducibleComponents _)
   obtain ⟨s, hs⟩ := h x
-  obtain ⟨V, hV, f, hf⟩ := X.presheaf.germ_exist (x := genPt ξ) s
+  obtain ⟨V, hV, f, hf⟩ := X.presheaf.exists_germ_eq (x := genPt ξ) s
   obtain ⟨W, hW, hxW, hWle⟩ := exists_isAffineOpen_mem_and_subset (x := genPt ξ)
     (U := V ⊓ ⟨_, ho⟩) ⟨hV, mem_irreducibleComponent⟩
   have hWV : W ≤ V := fun z hz => (hWle hz).1
@@ -255,15 +255,15 @@ end PositivityTheory.Xgn.GeometricOfPeriods
 
 theorem PositivityTheory.Xgn.geometric_of_periods : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (FU : FamilyUnif Xo (algebraMap (KA l) ℂ) ty) (i : Fin FU.n), IsTypeFn H D.p D.q ty → (∀ y : Sp ℂ ⟶ Xo.XF c, y ≫ pullback.snd _ _ = spMap (algebraMap c.F ℂ) → Set.range y ⊆ U → ∃ P, IsPeriod (FU.Di i) ty P ∧ under y = FU.u i P) → Z.IsGeom := by
   intro E _ _ _ H D l Xo c O _ β Y U Z g ty FU i hty hy x ⟨f, hf0, hf⟩
-  haveI := c.fin
-  haveI := Xo.smooth
-  haveI hs0 : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
+  have := c.fin
+  have := Xo.smooth
+  have hs0 : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
   let s : Xo.XF c ⟶ Sp c.F := pullback.snd _ _
-  haveI hs : Smooth s := inferInstanceAs (Smooth (pullback.snd _ _))
+  have hs : Smooth s := inferInstanceAs (Smooth (pullback.snd _ _))
   have hK : GlobalTheory.IsNormalScheme (Spec (.of c.F)) := inferInstance
-  haveI : GlobalTheory.IsNormalScheme (Xo.XF c) := (GlobalTheory.isNormalScheme_iff _).mpr
+  have : GlobalTheory.IsNormalScheme (Xo.XF c) := (GlobalTheory.isNormalScheme_iff _).mpr
     (GlobalTheory.forall_isDomain_and_isIntegrallyClosed_stalk_of_smooth s ((GlobalTheory.isNormalScheme_iff _).mp hK))
-  haveI : IsLocallyNoetherian (Xo.XF c) := LocallyOfFiniteType.isLocallyNoetherian s
+  have : IsLocallyNoetherian (Xo.XF c) := LocallyOfFiniteType.isLocallyNoetherian s
   have hsurj : Function.Surjective (Scheme.stalkClosedPointTo Z.ξ₀).hom := by
     have h := Z.gen.bij.2
     rw [Scheme.stalkClosedPointTo_comp] at h
@@ -272,9 +272,9 @@ theorem PositivityTheory.Xgn.geometric_of_periods : ∀ (E : Type) [Field E] [Nu
     exact ⟨_, hb⟩
   have hgen : ∀ w : Xo.XF c, w ⤳ genPt Z.ξ₀ → w = genPt Z.ξ₀ := by
     intro w hw
-    haveI := PositivityTheory.Xgn.GeometricOfPeriods.locallyQuasiFinite_spMap β
-    haveI := Y.jQ_open
-    haveI : LocallyQuasiFinite Y.j := inferInstanceAs (LocallyQuasiFinite (Y.jQ ≫ pullback.fst _ _))
+    have := PositivityTheory.Xgn.GeometricOfPeriods.locallyQuasiFinite_spMap β
+    have := Y.jQ_open
+    have : LocallyQuasiFinite Y.j := inferInstanceAs (LocallyQuasiFinite (Y.jQ ≫ pullback.fst _ _))
     have h1 : Y.j w = genPt (Z.ξ₀ ≫ Y.j) :=
       PositivityTheory.Xgn.GeometricOfPeriods.eq_of_specializes_of_bij _ Z.gen.bij (hw.map Y.j.continuous)
     have hd := (Y.j.isDiscrete_preimage_singleton (genPt (Z.ξ₀ ≫ Y.j))).to_subtype
@@ -283,17 +283,17 @@ theorem PositivityTheory.Xgn.geometric_of_periods : ∀ (E : Type) [Field E] [Nu
     exact congrArg Subtype.val h2.eq
   obtain ⟨R, _, j, φ, hj, hφ, hφj, ⟨a, rfl⟩, hsp⟩ :=
     PositivityTheory.Xgn.GeometricOfPeriods.exists_chart Z.ξ₀ hsurj hgen x
-  haveI : IsDomain R := hφ.isDomain φ
+  have : IsDomain R := hφ.isDomain φ
   let ρ : c.F →+* R := (Spec.preimage (j ≫ s)).hom
   have hρ : j ≫ s = spMap ρ := (Spec.map_preimage _).symm
-  letI : Algebra c.F R := ρ.toAlgebra
+  let : Algebra c.F R := ρ.toAlgebra
   have hinc : φ.comp ρ = Z.inc := by
     have e : spMap (φ.comp ρ) = spMap Z.inc := by
       rw [← Z.over_inc, ← hφj, Category.assoc]
       change _ = spMap φ ≫ j ≫ s
       rw [hρ, ← Spec.map_comp]; rfl
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
-  haveI : Algebra.FiniteType c.F R := by
+  have : Algebra.FiniteType c.F R := by
     have h : LocallyOfFiniteType (spMap ρ) := by rw [← hρ]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 h
   have ha : IsIntegral c.F a := by

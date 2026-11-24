@@ -80,7 +80,7 @@ theorem ctn_splitCentre {φ : Sm E N} (hinv : ∀ t g, φ.1 (splitCentre E N t *
 theorem ctn_lev_rat {r s : ℕ} {φ : Sm E (r + s)} (hφ : IsAutForm φ) (γ : GL (Fin r) E × GL (Fin s) E)
     (g : GA E (r + s)) :
     An.ctn r φ.1 (lev (Ad E) r s (ratGL E r γ.1, ratGL E s γ.2) * g) = An.ctn r φ.1 g := by
-  letI : MeasurableSpace (BlockIx (r + s) r → Ad E) := borel _
+  let : MeasurableSpace (BlockIx (r + s) r → Ad E) := borel _
   have : BorelSpace (BlockIx (r + s) r → Ad E) := ⟨rfl⟩
   obtain ⟨μ, hμ, hD, hint⟩ := JDict.exists_normed E (r + s) r
   have key : ∀ (f : GA E (r + s) → ℂ) g,
@@ -93,7 +93,7 @@ theorem ctn_lev_rat {r s : ℕ} {φ : Sm E (r + s)} (hφ : IsAutForm φ) (γ : G
 
 theorem ctn_growth {φ : Sm E N} (hφ : IsAutForm φ) (r : ℕ) (g : GA E N) :
     ∃ (C : ℝ) (n : ℕ), ∀ y, ‖An.ctn r φ.1 (g * infGL E N y)‖ ≤ C * height y ^ n := by
-  letI : MeasurableSpace (BlockIx N r → Ad E) := borel _
+  let : MeasurableSpace (BlockIx N r → Ad E) := borel _
   have : BorelSpace (BlockIx N r → Ad E) := ⟨rfl⟩
   obtain ⟨μ, hμ, hD, hint⟩ := JDict.exists_normed E N r
   have key : ∀ (f : GA E N → ℂ) g,
@@ -148,8 +148,8 @@ theorem F_slices (V : Submodule ℂ (Sm E (r + s))) (hV : IsDiscrete V) (T : Sm 
     rw [← e, hh']
 
   let S := GlobalTheory.CuspRep.LocEx.orbSpan (T φ)
-  haveI : FiniteDimensional ℂ S := by
-    haveI := hAφ.kfin
+  have : FiniteDimensional ℂ S := by
+    have := hAφ.kfin
     refine Submodule.finiteDimensional_of_le
       (S₂ := (Submodule.span ℂ (Set.range fun κ => cptRep E (r + s) κ φ)).map T) (Submodule.span_le.2 ?_)
     rintro _ ⟨κ, rfl⟩

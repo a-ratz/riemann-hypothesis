@@ -193,7 +193,7 @@ theorem schwartz_vacuum_eq_smul : ∀ {V : Type} [NormedAddCommGroup V] [NormedS
       obtain ⟨x₀, hx₀⟩ := hne
       apply hg0
       ext x
-      simp only [SchwartzMap.zero_apply]
+      simp only [zero_apply]
       set t₀ : ℝ := -(B x y.2) / B x₀ y.2
       have hS : IsClosed {t : ℝ | g (x + t • x₀) = 0} :=
         isClosed_eq (g.continuous.comp (continuous_const.add (continuous_id.smul continuous_const)))
@@ -201,7 +201,7 @@ theorem schwartz_vacuum_eq_smul : ∀ {V : Type} [NormedAddCommGroup V] [NormedS
       have hsub : ({t₀}ᶜ : Set ℝ) ⊆ {t : ℝ | g (x + t • x₀) = 0} := by
         intro t ht
         simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at ht
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         by_contra hgt
         have := key _ hgt
         rw [map_add (f := _), map_smul, LinearMap.add_apply, LinearMap.smul_apply, smul_eq_mul] at this
@@ -257,7 +257,7 @@ theorem schwartz_vacuum_eq_smul : ∀ {V : Type} [NormedAddCommGroup V] [NormedS
     have hf_ray := hray f hf'
     refine ⟨f 0 / g 0, ?_⟩
     ext x
-    rw [SchwartzMap.smul_apply, smul_eq_mul, hf_ray x, hg_ray x]
+    rw [smul_apply, smul_eq_mul, hf_ray x, hg_ray x]
     field_simp
   · push_neg at hz
     obtain ⟨v, hv⟩ := hz
@@ -290,7 +290,7 @@ theorem schwartz_vacuum_eq_smul : ∀ {V : Type} [NormedAddCommGroup V] [NormedS
       ring)
     refine ⟨0, ?_⟩
     ext z
-    rw [zero_smul, SchwartzMap.zero_apply]
+    rw [zero_smul, zero_apply]
     exact (mul_eq_zero.mp (hk z)).resolve_right ((map_ne_zero _).mpr (hgne z))
 
 end GlobalTheory.VacCore

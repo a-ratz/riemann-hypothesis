@@ -74,7 +74,7 @@ private theorem finCusp_levelZero {V : Type} [AddCommGroup V] [Module ℂ V] (π
     have h1 := congrArg Subtype.val (hv _ (redK_mem_unipRad e hg.1 hg.2))
     rwa [levelZero_apply] at h1
   have hne' : unipRad k e ≠ ⊥ := CuspMax.unipRad_ne_bot_iff.2 (CuspMax.unipRad_ne_bot_iff.1 hne)
-  haveI := hc.2 s d e hne'
+  have := hc.2 s d e hne'
   exact Subtype.ext (GlobalTheory.DepthZeroJac.depthZeroJacquetInjective k n s d e ⟨V, π, hs, hi⟩ (v : V) hV (Subsingleton.elim _ _))
 
 private theorem irreducible_levelZero (π : IrrRep (GL (Fin n) k)) (ω : kˣ →* ℂˣ) (hω : HasCentralChar π.ρ ω)
@@ -82,7 +82,7 @@ private theorem irreducible_levelZero (π : IrrRep (GL (Fin n) k)) (ω : kˣ →
     (levelZero π.ρ).IsIrreducible := by
   have key : ∀ W : Subrepresentation (levelZero π.ρ), W ≠ ⊥ → W = ⊤ := by
     intro W hW
-    haveI : Nontrivial W.toSubmodule := by
+    have : Nontrivial W.toSubmodule := by
       rw [Submodule.nontrivial_iff_ne_bot]
       intro h
       exact hW (Subrepresentation.toSubmodule_injective h)
@@ -106,7 +106,7 @@ private theorem irreducible_levelZero (π : IrrRep (GL (Fin n) k)) (ω : kˣ →
     have hwv : (w : fixed π.ρ (KOne k (Fin n))) = v := Subtype.ext hw
     rw [← hwv]
     exact w.2
-  haveI : Nontrivial (Subrepresentation (levelZero π.ρ)) := by
+  have : Nontrivial (Subrepresentation (levelZero π.ρ)) := by
     refine ⟨⟨⊥, ⊤, fun h => hD ?_⟩⟩
     have h' := congrArg Subrepresentation.toSubmodule h
     rw [Submodule.eq_bot_iff]

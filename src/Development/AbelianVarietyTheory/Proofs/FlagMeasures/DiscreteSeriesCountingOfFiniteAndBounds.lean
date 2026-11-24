@@ -340,7 +340,7 @@ theorem definite_count_of_finite : ∀ (B : RowsAut) (d : InfinitePlace B.I.F �
       have hs : B.σ v (uMat ((1 : B.I.Ginf) v)) = 1 := by
         rw [show uMat ((1 : B.I.Ginf) v) = 1 from rfl]
         exact (hDS v).2.1.2.2.1.1.1
-      rw [hs, ContinuousLinearMap.one_apply, inner_self_eq_norm_sq_to_K, (hDS v).2.2.1.1]
+      rw [hs, one_apply_eq_self, inner_self_eq_norm_sq_to_K, (hDS v).2.2.1.1]
       simp
     rw [Finset.prod_congr rfl (fun v _ => hc v)]
     simp
@@ -404,7 +404,7 @@ private theorem continuous_ph' (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (
   refine continuous_const.mul (continuous_star.comp (continuous_finsetProd _ fun v _ => ?_))
   obtain ⟨-, ⟨-, -, ⟨-, -, hcont⟩, -⟩, -⟩ := h v
   have hmat : Continuous fun g : B.I.Ginf => uMat (g v) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v))
+    Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v))
   have hc : Continuous fun g : B.I.Ginf => B.σ v (uMat (g v)) (B.w v) :=
     (hcont (B.w v)).comp_continuous hmat fun g => (g v).2
   exact continuous_const.inner hc
@@ -442,7 +442,7 @@ private theorem measurable_indicator_nearNe_phe (B : RowsAut) (d : InfinitePlace
       rfl
     rw [heq]
     exact ((MeasurableSet.const _).inter (hne.inter hcl.measurableSet)).inter (MeasurableSet.const _)
-  exact Measurable.indicator hc.enorm.measurable hset
+  exact Measurable.indicator hc.eNorm.measurable hset
 
 theorem nearAbs_measurable_and_split : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ), IsDSData B d → Measurable (GlobalTheory.IndefiniteRowSideFullHecke.NearNonzeroTerms.nearAbs B d) ∧ ∀ x : B.I.GA, Summable (fun γ : B.I.GFset => ‖phe B d (x⁻¹ * γ.1 * x)‖) → ENNReal.ofReal ‖kern B.I (phe B d) x x - phe B d 1‖ ≤ GlobalTheory.IndefiniteRowSideFullHecke.NearNonzeroTerms.nearAbs B d x + GlobalTheory.IndefiniteRowSideFullHecke.FarTermsModerate.farSum B d x := by
   intro B d h
@@ -485,7 +485,7 @@ theorem nearAbs_measurable_and_split : ∀ (B : RowsAut) (d : InfinitePlace B.I.
           by_cases hγ : γ = o
           · simp [hγ]
           have hγ1 : γ.1 ≠ 1 := fun h' => hγ (Subtype.ext h')
-          rw [if_neg hγ]
+          rw [ite_eq_right hγ]
           by_cases hn : IsNear B d (epN B) x γ.1
           · have hm : γ.1 ∈ GlobalTheory.IndefiniteRowSideFullHecke.NearNonzeroTerms.nearNe B d x := ⟨hn, hγ1⟩
             rw [Set.indicator_of_mem hm]

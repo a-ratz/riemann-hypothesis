@@ -142,7 +142,7 @@ theorem unitary_and_separates : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
   refine ⟨t, fun y hy => ?_, fun h => hne (Circle.ext (by simpa [ψ, toCircle_apply] using h))⟩
   have hy' : valuation k y ≤ 1 := hy
   have : t * y ∈ SplitWeil.cball c₀ := by
-    simp only [SplitWeil.cball, Set.mem_setOf_eq, map_mul] at ht ⊢
+    simp only [SplitWeil.cball, Set.mem_ofPred_eq, map_mul] at ht ⊢
     exact (mul_le_mul' le_rfl hy').trans (by rw [mul_one]; exact ht)
   have := hc₀.eq_one this
   simpa [ψ, toCircle_apply] using congrArg (fun z : Circle => (z : ℂ)) this
@@ -323,9 +323,9 @@ theorem _root_.GlobalTheory.T.norm_character_unit_eq_one_heisenberg : ∀ {k : T
       change ((GlobalTheory.HeisUnit.diagAt u i0).valᵀ * Y) i j ∈ 𝒪[k] ↔ Y i j ∈ 𝒪[k]
       rw [GlobalTheory.HeisUnit.diagAt_val, diagonal_transpose, diagonal_mul]
       by_cases hi : i = i0
-      · rw [if_pos hi]
+      · rw [ite_eq_left hi]
         simp only [Valuation.mem_integer_iff, map_mul, hu, one_mul]
-      · rw [if_neg hi, one_mul]
+      · rw [ite_eq_right hi, one_mul]
     let L : Set (Matrix (Fin n) (Fin d) k) := {Z | ∀ i j, Z i j ∈ 𝒪[k]}
     have hL : g.valᵀ * Y ∈ L ↔ Y ∈ L :=
       forall_congr' fun i => forall_congr' fun j => hEntry i j
@@ -342,8 +342,8 @@ theorem _root_.GlobalTheory.T.norm_character_unit_eq_one_heisenberg : ∀ {k : T
     funext Y
     rw [hInd Y]
     rfl
-  letI : MeasurableSpace (Fin n × Fin d → k) := borel _
-  haveI : BorelSpace (Fin n × Fin d → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin n × Fin d → k) := borel _
+  have : BorelSpace (Fin n × Fin d → k) := ⟨rfl⟩
   have hμ : Measure.IsAddHaarMeasure (Measure.addHaar : Measure (Fin n × Fin d → k)) :=
     inferInstance
   have h := hiso g φ0 hφ0 Measure.addHaar hμ

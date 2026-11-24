@@ -93,7 +93,7 @@ theorem exists_birigidified_of_descent : ∀ (p : ℕ) [Fact p.Prime] (D : Globa
     rw [Fintype.prod_unique, zpow_one, Fin.prod_univ_four, e0, e1, e2, e3]
     rw [hε.1, hε.2.1, hε.2.2.1, hε.2.2.2, zpow_one, zpow_one, zpow_neg_one, zpow_neg_one,
       mul_inv_cancel, _root_.one_mul, inv_mul_cancel]
-  · haveI := hψ
+  · have := hψ
     let ρ : Fin 4 → ((G2 o.A).left ⟶ (G2 o.A).left) := ![𝟙 _, (lift (fst o.A o.A) (1 : G2 o.A ⟶ o.A)).left,
       (lift (1 : G2 o.A ⟶ o.A) (snd o.A o.A)).left, (lift (1 : G2 o.A ⟶ o.A) (1 : G2 o.A ⟶ o.A)).left]
     have hsq : ∀ k, sq2 ψ ≫ φ k = ρ k ≫ sq2 ψ := by

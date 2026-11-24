@@ -77,7 +77,7 @@ theorem map_mem_mul (c : E →+* E) {A A' B B' : FractionalIdeal (𝓞 E)⁰ E}
   refine FractionalIdeal.mul_induction_on hx (fun i hi j hj => ?_) (fun y z hy hz => ?_)
   · rw [map_mul]; exact FractionalIdeal.mul_mem_mul (hA i hi) (hB j hj)
   · rw [map_add (f := _)]
-    exact FractionalIdeal.mem_coe.1 (Submodule.add_mem _ (FractionalIdeal.mem_coe.2 hy) (FractionalIdeal.mem_coe.2 hz))
+    exact FractionalIdeal.mem_coeToSubmodule.1 (Submodule.add_mem _ (FractionalIdeal.mem_coeToSubmodule.2 hy) (FractionalIdeal.mem_coeToSubmodule.2 hz))
 
 theorem conj_symm (c : E →+* E) (hc : ∀ x, c (c x) = x) {I I' : FractionalIdeal (𝓞 E)⁰ E}
     (h : ∀ x, x ∈ I' ↔ c x ∈ I) : ∀ x, x ∈ I ↔ c x ∈ I' := fun x => by rw [h, hc]

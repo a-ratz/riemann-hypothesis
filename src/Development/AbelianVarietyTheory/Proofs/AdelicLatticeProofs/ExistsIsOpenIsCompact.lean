@@ -118,7 +118,7 @@ def intSubring (F : Type) [Field F] [NumberField F] : Subring (FiniteAdeleRing (
 
 theorem exists_isOpen_isCompact : ∀ (F : Type) [Field F] [NumberField F] (n : ℕ), ∃ U : Subgroup (GL (Fin n) (FiniteAdeleRing (𝓞 F) F)), IsOpen (U : Set (GL (Fin n) (FiniteAdeleRing (𝓞 F) F))) ∧ IsCompact (U : Set (GL (Fin n) (FiniteAdeleRing (𝓞 F) F))) := by
   intro F _ _ n
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) :=
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite))
   refine ⟨glSub (intSubring F), isOpen_glSub _ ?_,

@@ -69,7 +69,7 @@ theorem exists_smul_eq_zero {R K J : Type} [CommRing R] [Field K] [Algebra R K] 
     ⟨⟨RingHom.ker (algebraMap R K), RingHom.ker_isPrime _⟩, fun _ => Iff.rfl⟩
   let l : p.asIdeal.ResidueField →+* K := Ideal.ResidueField.lift p.asIdeal (algebraMap R K) (fun r hr => (hp₀ r).1 hr)
     (fun r hr => (IsUnit.mk0 _ (fun e => hr ((hp₀ r).2 e))))
-  letI : Algebra p.asIdeal.ResidueField K := l.toAlgebra
+  let : Algebra p.asIdeal.ResidueField K := l.toAlgebra
   have : IsScalarTower R p.asIdeal.ResidueField K := IsScalarTower.of_algebraMap_eq fun r =>
     (Ideal.ResidueField.lift_algebraMap _ _ _ _ r).symm
   have h₁ : Subsingleton (K ⊗[p.asIdeal.ResidueField] (p.asIdeal.ResidueField ⊗[R] J)) :=
@@ -79,7 +79,7 @@ theorem exists_smul_eq_zero {R K J : Type} [CommRing R] [Field K] [Algebra R K] 
   have h₃ : p ∉ Module.support R J := by
     rw [Module.mem_support_iff_nontrivial_residueField_tensorProduct, not_nontrivial_iff_subsingleton]
     exact h₂
-  rw [Module.mem_support_iff_of_finite, SetLike.not_le_iff_exists] at h₃
+  rw [Module.mem_support_iff_of_finite, IsConcreteLE.not_le_iff_exists] at h₃
   obtain ⟨f, hf, hp⟩ := h₃
   exact ⟨f, fun e => hp ((hp₀ f).2 e), Module.mem_annihilator.1 hf⟩
 
@@ -87,8 +87,8 @@ theorem exists_mul_sub_eq_zero {R B K : Type} [CommRing R] [CommRing B] [Field K
     (σ : B →+* R) (hσ : ∀ r, σ (α r) = r) (x : R →+* K)
     (h : ∀ (C : Type) [CommRing C] (ψ : B →+* C) (κ : K →+* C), ψ.comp α = κ.comp x → ∀ b, ψ b = ψ (α (σ b))) :
     ∃ f : R, x f ≠ 0 ∧ ∀ b, α f * (b - α (σ b)) = 0 := by
-  letI := α.toAlgebra
-  letI := x.toAlgebra
+  let := α.toAlgebra
+  let := x.toAlgebra
   have : Module.Finite R B := hα
   let s : B →ₐ[R] R := { σ with commutes' := hσ }
   let P : B →ₗ[R] B := LinearMap.id - (Algebra.linearMap R B).comp s.toLinearMap

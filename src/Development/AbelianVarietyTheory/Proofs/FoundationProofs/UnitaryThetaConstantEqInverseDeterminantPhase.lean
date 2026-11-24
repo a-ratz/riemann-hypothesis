@@ -148,10 +148,10 @@ theorem sum_nonneg_of_swap_conj_fintype (Q : Type) [AddCommGroup Q] [Fintype Q] 
 theorem finsum_quotient_nonneg_of_swap_conj :
     ∀ (G : Type) [AddCommGroup G] (B : AddSubgroup G) [Finite (G ⧸ B)] (φ : G → ℂ) (P S L : G →+ G), (∀ x, ∀ w ∈ B, φ (x + w) = φ x) → (∀ w ∈ B, P w ∈ B ∧ S w ∈ B) → (∀ x, L x ∈ B ↔ x ∈ B) → (∀ x, P (P x) = P x) → (∀ x, S (S x) = x) → (∀ x, S (P x) = S x - P (S x)) → (∀ x, L (P x) = P (L x)) → (∀ x, φ x = φ (P x) * φ (x - P x)) → (∀ x, φ (S x) = φ x) → (∀ x, φ (L x) = (starRingEnd ℂ) (φ x)) → ∃ r : ℝ, 0 ≤ r ∧ ∑ᶠ q : G ⧸ B, φ q.out = (r : ℂ) := by
   intro G _ B _ φ P S L hper hB hLB hP hS hSP hLP hφ hφS hφL
-  haveI : Fintype (G ⧸ B) := Fintype.ofFinite _
+  have : Fintype (G ⧸ B) := Fintype.ofFinite _
   have hout : ∀ x : G, φ (QuotientAddGroup.mk x : G ⧸ B).out = φ x := by
     intro x
-    obtain ⟨w, hw⟩ := QuotientAddGroup.mk_out_eq_mul B x
+    obtain ⟨w, hw⟩ := QuotientAddGroup.mk_out_eq_add B x
     rw [hw]
     exact hper x w w.2
   let P' : G ⧸ B →+ G ⧸ B := QuotientAddGroup.map B B P (fun w hw => (hB w hw).1)
@@ -205,7 +205,7 @@ theorem ex_add (s t : ℝ) : ex (s + t) = ex s * ex t := by
   rw [ex, ex, ex, ← Complex.exp_add]; congr 1; push_cast; ring
 
 theorem ex_int (n : ℤ) : ex n = (-1 : ℂ) ^ n := by
-  rw [ex, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]; congr 1; push_cast; ring
+  rw [ex, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]; congr 1; push_cast; ring
 
 theorem ex_congr {s t : ℝ} (k : ℤ) (h : s = t + 2 * k) : ex s = ex t := by
   have : (2 * k : ℝ) = ((2 * k : ℤ) : ℝ) := by push_cast; ring
@@ -263,9 +263,9 @@ theorem gauss_nonneg {V : Type} [AddCommGroup V] [Module ℂ V] (H : V →ₗ[�
     linarith
   have hmem : ∀ w : A, w ∈ (subLa m A).addSubgroupOf A ↔ ∃ v ∈ A, m • v = (w : V) := fun w => by
     simp [AddSubgroup.mem_addSubgroupOf, subLa]
-  haveI : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 hFG
-  haveI : Finite (A ⧸ (subLa m A).addSubgroupOf A) := by
-    refine AddCommGroup.finite_of_fg_torsion _ fun q => ?_
+  have : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 hFG
+  have : Finite (A ⧸ (subLa m A).addSubgroupOf A) := by
+    refine AddCommGroup.finite_of_fg_isAddTorsion _ fun q => ?_
     induction q using QuotientAddGroup.induction_on with
     | H x =>
       refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨m, hm0, ?_⟩

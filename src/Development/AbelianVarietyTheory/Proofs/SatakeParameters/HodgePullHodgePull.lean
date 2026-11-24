@@ -83,7 +83,7 @@ theorem omegaPull_comp (hf : f ≫ s = s') (hg : g ≫ s' = s'') (hgf : (g ≫ f
 theorem hodgePull_comp (hf : f ≫ s = s') (hg : g ≫ s' = s'') (hgf : (g ≫ f) ≫ s = s'')
     (j q : ℕ) (x : hodgeH s j q) :
     hodgePull hg j q (hodgePull hf j q x) = hodgePull hgf j q x := by
-  letI := algΓ s; letI := algΓ s'; letI := algΓ s''
+  let := algΓ s; let := algΓ s'; let := algΓ s''
   apply (cohOn.toH' (Omega s'' j) ⊤ q).injective
   have e₁ := cohOn.toH'_pull (σ := RingHom.id k) (appTop_algebraMap hg) (omegaPull hg j)
     (le_refl (g ⁻¹ᵁ ⊤)) (hodgePull hf j q x)

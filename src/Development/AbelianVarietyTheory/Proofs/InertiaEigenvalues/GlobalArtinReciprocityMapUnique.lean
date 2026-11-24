@@ -139,7 +139,7 @@ theorem eq_infPart {B : Type} [CommGroup B] (D : Ideles E →* B) (hD : IsOpen (
   have hnhds : {z : Ideles E | D z = D x} ∈ nhds x := by
     have e : {z : Ideles E | D z = D x} = (fun z => x⁻¹ * z) ⁻¹' (D.ker : Set (Ideles E)) := by
       ext z
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, MonoidHom.mem_ker, map_mul, map_inv]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, MonoidHom.mem_ker, map_mul, map_inv]
       rw [inv_mul_eq_one, eq_comm]
     rw [e]
     exact ((continuous_const.mul continuous_id).isOpen_preimage _ hD).mem_nhds (by simp)
@@ -251,7 +251,7 @@ theorem globalArtin_unique : ∀ (E Ω : Type) [Field E] [NumberField E] [Field 
       GlobalTheory.FinPlaceApproxPos.approxpos_target E S (fun u => if u = v then (c : E) else 1) (M + 1 + m)
     have haW : v.valuation E (a - c) ≤ WithZero.exp (-(((M + 1 : ℕ) : ℤ) + m)) := by
       have := hap v hv
-      rw [if_pos rfl] at this
+      rw [ite_eq_left rfl] at this
       exact val_le_of_le v this (by push_cast; omega)
     have hz : v.valuation E (a / c - 1) ≤ WithZero.exp (-((M + 1 : ℕ) : ℤ)) :=
       val_div_sub_one_le v c.ne_zero le_rfl haW
@@ -268,7 +268,7 @@ theorem globalArtin_unique : ∀ (E Ω : Type) [Field E] [NumberField E] [Field 
       (fun u hu => by rw [locUnit_apply]; exact hgood u hu _)
     rw [Finset.prod_eq_single_of_mem v hv (fun u hu hne => hDV _ (hSc u hu au (by
       have := hap u hu
-      rw [if_neg hne] at this
+      rw [ite_eq_right hne] at this
       exact val_le_of_le u this (by push_cast; omega))))] at hprod
     have e : au = c * q := by simp [q]
     rw [e, map_mul, map_mul, hDV _ hqV, mul_one] at hprod

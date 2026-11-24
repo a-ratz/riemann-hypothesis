@@ -255,7 +255,7 @@ attribute [local instance] PositivityTheory.Rg.BcB.E.borelH in
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.pSupp_pf :
     PSupp := by
   intro E _ _ _ n D π a b v hv
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
   have hl : Continuous (ldet : H E n 0 → ℝ) := continuous_ldet
   set c : H E n 0 → ℝ := fun x => chi a b (ldet x) with hcdef
   have hc : Measurable c := ((chi_cont a b).comp hl).measurable

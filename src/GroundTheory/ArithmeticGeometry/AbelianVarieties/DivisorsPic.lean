@@ -134,7 +134,7 @@ theorem eq_mapDomain_affinePart_add (D : CurveDivisor W) :
       Finsupp.single_eq_same, zero_add]
   · obtain ⟨v, rfl⟩ := exists_pointOfIdeal_eq W hP
     rw [Finsupp.mapDomain_apply_of_injective (pointOfIdeal_injective W), affinePart_apply, Finsupp.single_apply,
-      if_neg (pointOfIdeal_ne_zero W v).symm, add_zero]
+      ite_eq_right (pointOfIdeal_ne_zero W v).symm, add_zero]
 
 theorem divisorDegree_eq (D : CurveDivisor W) :
     divisorDegree W D = (affinePart W D).sum (fun _ n => n) + D 0 := by
@@ -209,7 +209,7 @@ theorem classGroup_mk_eq_one_iff
   · rintro ⟨f, hf⟩
     have hI : (I : FractionalIdeal W.toAffine.CoordinateRing⁰ W.toAffine.FunctionField) =
         FractionalIdeal.spanSingleton _ f := by
-      rw [← FractionalIdeal.coeToSubmodule_inj, FractionalIdeal.coe_spanSingleton]
+      rw [← FractionalIdeal.coeToSubmodule_inj, FractionalIdeal.coeToSubmodule_spanSingleton]
       exact hf
     refine ⟨f, ?_, hI⟩
     rintro rfl
@@ -217,7 +217,7 @@ theorem classGroup_mk_eq_one_iff
     exact I.ne_zero hI
   · rintro ⟨f, -, hf⟩
     refine ⟨f, ?_⟩
-    rw [hf, FractionalIdeal.coe_spanSingleton]
+    rw [hf, FractionalIdeal.coeToSubmodule_spanSingleton]
 
 noncomputable def affineDivisorOf (f : W.toAffine.FunctionField) :
     HeightOneSpectrum W.toAffine.CoordinateRing →₀ ℤ :=
@@ -235,7 +235,7 @@ theorem divisorOf_pointOfIdeal (f : W.toAffine.FunctionField)
     (v : HeightOneSpectrum W.toAffine.CoordinateRing) :
     divisorOf W f (pointOfIdeal W v) = ordAtIdeal W v f := by
   rw [divisorOf, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective (pointOfIdeal_injective W),
-    Finsupp.single_apply, if_neg (pointOfIdeal_ne_zero W v).symm, add_zero, affineDivisorOf_apply]
+    Finsupp.single_apply, ite_eq_right (pointOfIdeal_ne_zero W v).symm, add_zero, affineDivisorOf_apply]
 
 omit [DecidableEq F] in
 theorem divisorOf_zero_apply (f : W.toAffine.FunctionField) :

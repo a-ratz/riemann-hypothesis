@@ -198,7 +198,7 @@ theorem cover_bij (hC : Coprod) (R : Type) [CommRing R] (F : Shv R) {ι : Type} 
   convert this using 1
   funext x j
   simp only [Function.comp]
-  rw [← pull_comp, ← Functor.map_comp, Sigma.ι_desc]
+  rw [← pull_comp, ← Functor.map_comp, Sigma.ι_comp_desc]
 
 abbrev pr {ι : Type} (E : ι → CommRingCat.{0}) (j : ι) : CommRingCat.of (∀ k, E k) ⟶ E j :=
   CommRingCat.ofHom (Pi.evalRingHom (fun k => E k) j)

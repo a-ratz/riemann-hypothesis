@@ -113,7 +113,7 @@ def adelicFourier (F : 𝔸[K] → ℂ) (y : 𝔸[K]) : ℂ :=
 
 theorem continuous_adelicChar_mul_const (y : 𝔸[K]) :
     Continuous fun x : 𝔸[K] ↦ (adelicChar K (x * y) : ℂ) :=
-  continuous_subtype_val.comp ((continuous_adelicChar (K := K)).comp (continuous_mul_const y))
+  continuous_subtypeVal.comp ((continuous_adelicChar (K := K)).comp (continuous_mul_const y))
 
 theorem integrable_mul_adelicChar {F : 𝔸[K] → ℂ} (hF : Integrable F (adeleMeasure K))
     (y : 𝔸[K]) :

@@ -334,7 +334,7 @@ theorem sup_of_tied (Rl : RealDat3 D A3 Ks) (cG : Formalism.L2.DIV.G0 Rl.Pg D.R.
   · intro i _ j hj b g f hf
     obtain ⟨h1, h2⟩ := Finset.mem_Icc.1 hj
     obtain ⟨k, rfl⟩ := key j hj
-    haveI : Finite S.G := Finite.of_equiv G (Y.fi k).eG.symm.toEquiv
+    have : Finite S.G := Finite.of_equiv G (Y.fi k).eG.symm.toEquiv
     have hst := iso_MKStable (Y.fi k) (hI k).2.2
     rw [hEq i _ b h1 h2, Y.act]
     exact actG_Bsup S i _ b (Y.rho _ h1 h2) (Y.chi _ h1 h2) (fun g x hx => (hst g x).2 hx) g _

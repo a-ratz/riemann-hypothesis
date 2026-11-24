@@ -117,7 +117,7 @@ theorem exists_ne_zero_forall_complexPoint_separate
     ∃ q : B, q ≠ 0 ∧ ∀ φ : B →+* ℂ, φ q ≠ 0 → ∃ y₁ y₂ : A →+* ℂ,
       y₁.comp (algebraMap B A) = φ ∧ y₂.comp (algebraMap B A) = φ ∧ y₁ a ≠ y₂ a := by
   classical
-  letI : Algebra B F := (j₁.comp (algebraMap B A)).toAlgebra
+  let : Algebra B F := (j₁.comp (algebraMap B A)).toAlgebra
   let J₁ : A →ₐ[B] F := { j₁ with commutes' := fun _ => rfl }
   let J₂ : A →ₐ[B] F := { j₂ with commutes' := fun b => (RingHom.congr_fun h b).symm }
   let u : F := (j₁ a - j₂ a)⁻¹
@@ -125,7 +125,7 @@ theorem exists_ne_zero_forall_complexPoint_separate
     Algebra.adjoin B (({u} : Finset F) : Set F)
   have hA : (⊤ : Subalgebra B A).FG := Algebra.FiniteType.out
   have hD : D.FG := ((hA.map J₁).sup (hA.map J₂)).sup (Subalgebra.fg_adjoin_finset _)
-  haveI : Algebra.FiniteType B D := (Subalgebra.fg_iff_finiteType D).1 hD
+  have : Algebra.FiniteType B D := (Subalgebra.fg_iff_finiteType D).1 hD
   have h1 : ∀ x, J₁ x ∈ D := fun x =>
     (le_sup_left.trans le_sup_left : Subalgebra.map J₁ ⊤ ≤ D) ⟨x, trivial, rfl⟩
   have h2 : ∀ x, J₂ x ∈ D := fun x =>
@@ -167,10 +167,10 @@ namespace GlobalTheory.DegVal
 theorem exists_mul_eq_of_generic_unique_complexPoint : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] (σ : K →+* ℂ) (A B : Subalgebra K Ω), A.FG → B.FG → B ≤ A → (∀ b ∈ B, b ≠ 0 → ∃ x : A →+* ℂ, (∀ k : K, x (algebraMap K A k) = σ k) ∧ (∀ hb : b ∈ A, x ⟨b, hb⟩ ≠ 0) ∧ ∀ y : A →+* ℂ, (∀ k : K, y (algebraMap K A k) = σ k) → (∀ a : A, (a : Ω) ∈ B → y a = x a) → y = x) → ∀ a ∈ A, ∃ p ∈ B, ∃ q ∈ B, q ≠ 0 ∧ a * q = p := by
   intro K Ω _ _ _ σ A B hA hB hBA H a haA
   by_contra hne
-  haveI : CharZero K := ⟨fun m n h => Nat.cast_injective (R := ℂ) (by simpa using congrArg σ h)⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : CharZero K := ⟨fun m n h => Nat.cast_injective (R := ℂ) (by simpa using congrArg σ h)⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
   let L := IntermediateField.adjoin K (B : Set Ω)
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap K L).injective
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap K L).injective
   have haL : a ∉ Set.range (algebraMap L Ω) := by
     rintro ⟨l, hl⟩
     have hmem : a ∈ L := hl ▸ l.2
@@ -181,12 +181,12 @@ theorem exists_mul_eq_of_generic_unique_complexPoint : ∀ (K Ω : Type) [Field 
     · exact ⟨0, B.zero_mem, 1, B.one_mem, one_ne_zero, by simp [hs0]⟩
     · exact ⟨r, hr, s, hs, hs0, div_mul_cancel₀ r hs0⟩
   obtain ⟨F, _, i₁, i₂, hi, hne2⟩ := _root_.GlobalTheory.exists_embeddings_agree_on_subfield_ne L Ω a haL
-  letI : Algebra B A := (Subalgebra.inclusion hBA).toRingHom.toAlgebra
-  haveI : IsScalarTower K B A := IsScalarTower.of_algebraMap_eq fun k => rfl
-  haveI : Algebra.FiniteType K A := (Subalgebra.fg_iff_finiteType A).1 hA
-  haveI : Algebra.FiniteType K B := (Subalgebra.fg_iff_finiteType B).1 hB
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing K B
-  haveI : Algebra.FiniteType B A := Algebra.FiniteType.of_restrictScalars_finiteType K B A
+  let : Algebra B A := (Subalgebra.inclusion hBA).toRingHom.toAlgebra
+  have : IsScalarTower K B A := IsScalarTower.of_algebraMap_eq fun k => rfl
+  have : Algebra.FiniteType K A := (Subalgebra.fg_iff_finiteType A).1 hA
+  have : Algebra.FiniteType K B := (Subalgebra.fg_iff_finiteType B).1 hB
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing K B
+  have : Algebra.FiniteType B A := Algebra.FiniteType.of_restrictScalars_finiteType K B A
   let j₁ : A →+* F := i₁.comp A.val.toRingHom
   let j₂ : A →+* F := i₂.comp A.val.toRingHom
   have hBL : ∀ b : B, (b : Ω) = algebraMap L Ω ⟨b, IntermediateField.subset_adjoin K _ b.2⟩ := fun b => rfl
@@ -325,10 +325,10 @@ theorem comp_eq {T : Type} [CommRing T] [Nontrivial T] [Algebra c.F T] {Z Z' : C
 theorem emb_eq {T : Type} [CommRing T] [Algebra c.F T] {Z : Comp Xo c} (ψ ψ' : kap Z →ₐ[c.F] T)
     (h : spMap ψ.toRingHom ≫ xGen Z = spMap ψ'.toRingHom ≫ xGen Z) : ψ = ψ' := by
   have e := genSp_eq ψ ψ' h
-  haveI : Mono (genSp Z) := by unfold genSp; infer_instance
+  have : Mono (genSp Z) := by unfold genSp; infer_instance
   have e2 : spMap ψ.toRingHom = spMap ψ'.toRingHom := (cancel_mono (genSp Z)).1 e
   have e3 := congrArg CommRingCat.Hom.hom (Spec.map_injective e2)
-  exact AlgHom.coe_ringHom_injective e3
+  exact AlgHom.toRingHom_injective e3
 
 noncomputable def resKap {T : Type} [CommRing T] [Algebra c.F T] {Z : Comp Xo c} (φ : Om Z →ₐ[c.F] T) : kap Z →ₐ[c.F] T :=
   { φ.toRingHom.comp (algebraMap (kap Z) (Om Z)) with
@@ -386,13 +386,13 @@ theorem eq_of_frBor {T : Type} [CommRing T] [Nontrivial T] [Algebra c.F T] (h : 
       simp only [Matrix.mul_apply, Matrix.of_apply]
       rw [h4]
       exact Finset.sum_congr rfl fun k _ => mul_comm _ _
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   refine IsLocalization.ringHom_ext (nonZeroDivisors (MvPolynomial (FlagVar Dw) (kap Z))) ?_
   refine MvPolynomial.ringHom_ext (fun r => ?_) (fun v => ?_)
   · exact AlgHom.congr_fun hψ r
   · obtain ⟨τ, ⟨i, j⟩, hij⟩ := v
     have := hcoef τ i j
-    simp only [genCoef, dif_pos (show i < j from hij)] at this
+    simp only [genCoef, dite_eq_left (show i < j from hij)] at this
     exact this.symm
 
 end GlobalTheory.Reg.GenericFlagInj
@@ -469,7 +469,7 @@ theorem val_eq_stalk {k K : Type} [CommRing k] [Field K] {Y : Scheme.{0}} {p : Y
 
 theorem gapGe_std (Dw : Datum H) : GapGe 1 (GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) : AllWt.Weight Dw) := by
   intro τ k hk
-  simp only [gap, dif_pos hk, GlobalTheory.CompHt.stdWt]
+  simp only [gap, dite_eq_left hk, GlobalTheory.CompHt.stdWt]
   push_cast
   omega
 
@@ -477,7 +477,7 @@ theorem gapGe_sub_std (m : ℕ) (b : AllWt.Weight Dw) (h : GapGe (m : ℤ) b) :
     GapGe 0 (b - m • (GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) : AllWt.Weight Dw)) := by
   intro τ k hk
   have h1 := h τ k hk
-  simp only [gap, dif_pos hk, Pi.sub_apply, Pi.smul_apply, GlobalTheory.CompHt.stdWt] at h1 ⊢
+  simp only [gap, dite_eq_left hk, Pi.sub_apply, Pi.smul_apply, GlobalTheory.CompHt.stdWt] at h1 ⊢
   rw [nsmul_eq_mul, nsmul_eq_mul]
   push_cast
   linarith
@@ -632,16 +632,16 @@ theorem cuspRatioField_eq_top_of_toroidalCompactification (hP : _root_.GlobalThe
     (hv : vanBd TF.X Z la ≤ space TF.X Z U la) :
     GlobalTheory.DegVal.ratioField (genPoint Z (cuspOn U Z (wtOf Dw la 0))) = ⊤ := by
   set L := GlobalTheory.DegVal.ratioField (genPoint Z (cuspOn U Z (wtOf Dw la 0))) with hL
-  haveI := c.fin
-  haveI : Countable c.F := (Module.finBasis ℚ c.F).equivFun.injective.countable
-  haveI : Countable (Om Z) := TwoPoint.countable_of_fg c.F (Om Z) ((FlagDim.fnFG_fnTrdeg E H Dw l Xo c).1 Z)
+  have := c.fin
+  have : Countable c.F := (Module.finBasis ℚ c.F).equivFun.injective.countable
+  have : Countable (Om Z) := TwoPoint.countable_of_fg c.F (Om Z) ((FlagDim.fnFG_fnTrdeg E H Dw l Xo c).1 Z)
   refine eq_top_iff.2 fun a _ => by_contra fun ha => ?_
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap c.F L).injective
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap c.F L).injective
   obtain ⟨i₁, i₂, hi, hne⟩ := TwoPoint.exists_two_embeddings L (Om Z) a (by rintro ⟨b, rfl⟩; exact ha b.2)
   have hag : ∀ b ∈ L, i₁ b = i₂ b := fun b hb => RingHom.congr_fun hi ⟨b, hb⟩
   have hV := GlobalTheory.VarFlag.isVariety₀_flag E H Dw l Xo c TF Z hF
   let M : Modif (str₀ TF.X Z) (U₀ TF.X Z) (dimFlag Dw) := Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)
-  haveI : IsAffineHom M.σ := inferInstanceAs (IsAffineHom (𝟙 (Y₀ TF.X Z)))
+  have : IsAffineHom M.σ := inferInstanceAs (IsAffineHom (𝟙 (Y₀ TF.X Z)))
   have hconn : GeometricallyConnected M.str := by
     have e : M.str = str₀ TF.X Z := Category.id_comp (str₀ TF.X Z)
     rw [e]
@@ -675,7 +675,7 @@ theorem cuspRatioField_eq_top_of_toroidalCompactification (hP : _root_.GlobalThe
     show z ≫ (toFlag M ≫ flagStr TF.X) = _
     rw [← Category.assoc, hz, ptY_str]
   have hzz : spMap (ι 0) ≫ z ≠ spMap (ι 1) ≫ z := fun e => by
-    letI : Algebra c.F ℂ := σ.toAlgebra
+    let : Algebra c.F ℂ := σ.toAlgebra
     have := eq_of_ptY_eq TF.X h Z (K := ℂ) ⟨i₁, RingHom.congr_fun (hι 0)⟩ ⟨i₂, RingHom.congr_fun (hι 1)⟩ (by
       rw [← hz, ← Category.assoc, ← Category.assoc]
       exact congrArg (· ≫ toFlag M) e)

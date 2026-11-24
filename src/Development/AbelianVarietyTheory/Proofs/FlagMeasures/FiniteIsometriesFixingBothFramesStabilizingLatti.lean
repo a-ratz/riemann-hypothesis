@@ -107,7 +107,7 @@ theorem finite_of_fix (hT : V →ₗ⋆[E] V →ₗ[E] E) (U : Submodule E V)
   have hfg : L.FG := by
     apply Submodule.fg_of_fg_map_injective (W.subtype.restrictScalars (𝓞 E)) Subtype.val_injective
     exact hΛ.fg.of_le (Submodule.map_comap_le _ _)
-  haveI : Submodule.IsLattice E L := Submodule.IsLattice.of_fg E hfg
+  have : Submodule.IsLattice E L := Submodule.IsLattice.of_fg E hfg
   let hW := hT.domRestrict₁₂ W W
   have hposW : ∀ w : W, w ≠ 0 → 0 < Algebra.trace ℚ E (hW w w) := fun w hw =>
     hpos w w.2 fun h0 => hw (Subtype.ext h0)

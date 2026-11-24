@@ -426,7 +426,7 @@ theorem count_of_gram {r : ℕ} {G : Matrix (Fin r) (Fin r) ℝ} (hG : G.PosDef)
   rw [hcov, Real.log_sqrt hG.det_pos.le] at hM
   have hT : {x | x ∈ Submodule.span ℤ (Set.range Bb) ∧ ‖x‖ ≤ ρ} = e '' {m | ‖e m‖ ≤ ρ} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨hx, hxn⟩
       obtain ⟨m, rfl⟩ := (hmem x).1 hx

@@ -72,10 +72,10 @@ theorem comm_of_alpha (f : (k ⊗[F] Fld P) →ₗ[k ⊗[F] E] (k ⊗[F] Fld P))
   let S : Subalgebra (k ⊗[F] E) (k ⊗[F] Fld P) :=
     { carrier := {z | ∀ y, f (z * y) = z * f y}
       mul_mem' := fun {a b} ha hb y => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [mem_ofPred_eq] at *
         rw [mul_assoc, ha, hb, mul_assoc]
       add_mem' := fun {a b} ha hb y => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [mem_ofPred_eq] at *
         rw [add_mul, map_add (f := _), ha, hb, add_mul]
       algebraMap_mem' := fun a y => by
         rw [← Algebra.smul_def, map_smul, Algebra.smul_def] }

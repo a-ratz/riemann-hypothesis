@@ -132,10 +132,10 @@ theorem exists_separating {O k : Type} [CommRing O] [CommRing k] [IsDomain k] {d
     have hne : (Polynomial.X ^ l ^ d - Polynomial.X : Polynomial k) ≠ 0 :=
       (Polynomial.monic_X_pow_sub (by
         rw [Polynomial.degree_X]; exact_mod_cast hq)).ne_zero
-    refine (Polynomial.finite_setOf_isRoot hne).subset ?_
+    refine (Polynomial.finite_setOfPred_isRoot hne).subset ?_
     rintro _ ⟨x, rfl⟩
     simp [hper]
-  haveI : Finite (φ 0).range := hfin
+  have : Finite (φ 0).range := hfin
   obtain ⟨g, hg⟩ := IsCyclic.exists_monoid_generator (α := ((φ 0).range)ˣ)
   obtain ⟨x, hx⟩ := (g : (φ 0).range).2
   have hx0 : φ 0 x ≠ 0 := by

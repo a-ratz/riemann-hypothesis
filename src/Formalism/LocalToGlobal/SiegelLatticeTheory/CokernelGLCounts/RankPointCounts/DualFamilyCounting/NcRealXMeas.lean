@@ -82,7 +82,7 @@ theorem measW_of (hF : IsFrameJ ε e f wf z0) {zB : Fin (2 * r + k + 1) → ℂ}
     Formalism.MainNotions.S.IsHaarOn (UWset k r zB) (μH.map (cM (ε := ε) (Qi ε e f wf z0) (Qm e f wf z0))) := by
   have emb := embQ hF
   obtain ⟨hsf, hne, hcon, hinv⟩ := hH
-  haveI := hsf
+  have := hsf
   refine ⟨emb.sigmaFinite_map, (Measure.map_ne_zero_iff emb.measurable.aemeasurable).mpr hne, ?_, ?_⟩
   · rw [emb.map_apply]
     refine measure_mono_null (fun g hg => ?_) hcon
@@ -118,7 +118,7 @@ theorem measN_of (hF : IsFrameJ ε e f wf z0) (κ : ℝ) :
   refine Measure.restrict_eq_self_of_ae_mem ?_
   have hc : (Formalism.MainNotions.S.haarLie (Nset k r) 1) {x | Matrix.of x ∉ Nset k r} = 0 := Jac.nilradical_measure_is_haar.2.2.1
   refine ae_iff.2 (measure_mono_null (fun x hx => ?_) hc)
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   intro hxN
   apply hx
   have hU := conjQ_UJ hF hxN.1
@@ -148,9 +148,9 @@ theorem measS_of (hF : IsFrameJ ε e f wf z0) {zB : Fin (2 * r + k + 1) → ℂ}
   set μW := μH.map Ψ with hμW
   set μN := Formalism.MainNotions.S.haarLie (Nset k r) (ENNReal.ofReal κ) with hμN
   set μN' := ENNReal.ofReal κ • refN ε e f wf z0 with hμN'
-  haveI : SigmaFinite μH := hH.1
-  haveI : SigmaFinite μW := hW.1
-  haveI : SigmaFinite μN := hN.1
+  have : SigmaFinite μH := hH.1
+  have : SigmaFinite μW := hW.1
+  have : SigmaFinite μN := hN.1
   have hNmap : μN'.map Ψ = μN := measN_of hF κ
   have hWB : Formalism.FourierDecayAlt.B.IsHaarOn (Nset k r) μN := Formalism.MainNotions.BridgeLemma₃.lbHaarUp_proved.2 k r _ hN
   apply Measure.ext_of_lintegral

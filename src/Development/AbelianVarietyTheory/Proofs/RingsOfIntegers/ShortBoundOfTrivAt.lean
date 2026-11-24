@@ -192,7 +192,7 @@ theorem le_nval_sum {J : Type} (s : Finset J) (e : ℕ) (r : EReal) (f : J → T
       rw [hz, map_zero] at hsum
       exact hs0 (le_antisymm hsum zero_le)
     have h1 := hf j₀ hj₀
-    rw [if_neg hf0] at h1
+    rw [ite_eq_right hf0] at h1
     refine h1.trans (EReal.coe_le_coe_iff.2 (div_le_div_of_nonneg_right ?_ (Nat.cast_nonneg e)))
     have hv : vV T.V (f j₀) ≤ vV T.V (∑ j ∈ s, f j) := by
       unfold vV
@@ -202,7 +202,7 @@ end Val
 
 theorem short_bound_of_trivAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (Λ : GenLat E n) (N M : ℕ), Λ.Unimod → Λ.LevOK N M → ∀ (β : c.F), β ≠ 0 → BetaIs (Dw := Dw) c Λ β → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmL c Λ w → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (tp : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo (xOf y) z → (∀ b, tp b ^ (N ^ 2) = 1) → (∀ i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) (z i b) (tp b) (F i b)) → Λ.TrivAt ℓ → ∀ (n' A Bn j : ℕ) (α β₀ : 𝓞 E), Nat.Coprime n' ℓ → (N : 𝓞 E) = β₀ * α * n' → α * H.bar α = (A : 𝓞 E) → β₀ * H.bar β₀ = (Bn : 𝓞 E) → A * Bn = ℓ ^ j → (∀ b, (tp b ≫ Xo.univ.t.act.act β₀) ^ (n' ^ 2 * A) = 1) → letI := io.toAlgebra; ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (nrm Dw c w α * (β⁻¹ * ((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹)) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
   intro E iF iN iC H Dw l Xo c iS hst T io y C hC nab hnab e ρ w n he hCB ℓ hℓ hl Λ N M hU hL β hβ0 hβ P hP z tp F hz hgi htp hF hΛ n' A Bn j α β₀ hn' hN hA hBn hAB htpβ
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have vV_mul : ∀ {u z : T.Fr}, u ≠ 0 → z ≠ 0 → vV T.V u = 0 → vV T.V (u * z) = vV T.V z := by
     intro u z hu0 hz hu
     unfold vV at hu ⊢
@@ -213,7 +213,7 @@ theorem short_bound_of_trivAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     by_cases hz : z = 0
     · rw [hz, mul_zero]
     · unfold nval
-      rw [if_neg (mul_ne_zero hu0 hz), if_neg hz, vV_mul hu0 hz hu]
+      rw [ite_eq_right (mul_ne_zero hu0 hz), ite_eq_right hz, vV_mul hu0 hz hu]
   have hNodd : Odd N := hL.1
   obtain ⟨J, J', iJ, iJ', a, a', σ, hinj, ha, ⟨m, hm, ha'⟩, hz', hcard⟩ :=
     GlobalTheory.T.isotropic_group_primary_decomposition E H Dw l Xo T.Fr (xOf y) n Λ N M ℓ hU hL hℓ z hz hgi

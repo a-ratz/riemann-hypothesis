@@ -148,7 +148,7 @@ theorem offDiagBlockNorm_cont_inv : ∀ (n : ℕ) (ε : Fin n → Bool), (Contin
   intro n ε
   refine ⟨?_, ?_⟩
   · have hM : Continuous fun g : UJ ε => toM g :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     refine continuous_finsetSum _ fun z _ => ?_
     exact ((continuous_apply z.1.2).comp ((continuous_apply z.1.1).comp hM)).norm.pow 2
   · intro k k' g

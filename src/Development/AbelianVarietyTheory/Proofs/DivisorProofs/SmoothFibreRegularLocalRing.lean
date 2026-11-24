@@ -84,12 +84,12 @@ theorem isRegularLocalRing_stalk_quot_maximalIdeal :
   replace hWle : W ≤ π ⁻¹ᵁ U := hWle
   have hs : (π.appLE U W hWle).hom.Smooth :=
     HasRingHomProperty.appLE (P := @Smooth) π inferInstance ⟨U, hU⟩ ⟨W, hW⟩ hWle
-  letI := (π.appLE U W hWle).hom.toAlgebra
-  haveI : Algebra.Smooth Γ(X, U) Γ(Y, W) := hs
-  letI := X.presheaf.algebra_section_stalk (⟨π y, hxU⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨π y, hxU⟩
-  letI := Y.presheaf.algebra_section_stalk (⟨y, hyW⟩ : W)
-  haveI := hW.isLocalization_stalk ⟨y, hyW⟩
+  let := (π.appLE U W hWle).hom.toAlgebra
+  have : Algebra.Smooth Γ(X, U) Γ(Y, W) := hs
+  let := X.presheaf.algebra_section_stalk (⟨π y, hxU⟩ : U)
+  have := hU.isLocalization_stalk ⟨π y, hxU⟩
+  let := Y.presheaf.algebra_section_stalk (⟨y, hyW⟩ : W)
+  have := hW.isLocalization_stalk ⟨y, hyW⟩
   set p := (hU.primeIdealOf ⟨π y, hxU⟩).asIdeal with hp
   set n := (hW.primeIdealOf ⟨y, hyW⟩).asIdeal with hn
 

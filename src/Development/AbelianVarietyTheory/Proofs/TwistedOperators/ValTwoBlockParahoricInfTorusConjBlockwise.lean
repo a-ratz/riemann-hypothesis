@@ -256,7 +256,7 @@ theorem blockset : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
   intro k _ _ _ _ ϖ hϖ A D _ _ _ _ e
   ext x
   rw [mem_val_map_conj_inf, mem_parahoric_val_iff, mem_parahoric_val_iff, conj_toBlocks₁₁, conj_toBlocks₂₂]
-  simp only [conj_toBlocks₁₂, conj_toBlocks₂₁, Set.mem_setOf_eq, mem_val_map_conj_inf, ← scal₁ hϖ, ← scal₂ hϖ,
+  simp only [conj_toBlocks₁₂, conj_toBlocks₂₁, Set.mem_ofPred_eq, mem_val_map_conj_inf, ← scal₁ hϖ, ← scal₂ hϖ,
     forall_and]
   tauto
 

@@ -219,7 +219,7 @@ namespace GlobalTheory.Mem.DuInt
 
 theorem idx_eq (g k : ℕ) (hg : g.Prime) :
     ∃ n : ℕ, 0 < n ∧ (n : ℝ) = StandardLattice.idxColLoc g k ∧ Nat.card (GL (Fin k) (ZMod g)) = g ^ (k * (k - 1) / 2) * n := by
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : NeZero g := ⟨hg.ne_zero⟩
   have h1 : Nat.card {A : GL (Fin k) (ZMod g) // StandardLattice.IsUnitri (A : Matrix (Fin k) (Fin k) (ZMod g))} =
       Nat.card (HU (ZMod g) k) := by
     refine Nat.card_congr (Equiv.subtypeEquivRight fun A => ⟨fun h => ?_, fun h => isUpperUni_of_mem_uniUT le_rfl h⟩)
@@ -318,7 +318,7 @@ theorem finrank_red (N : Submodule (𝓞 E) V) (hN : Submodule.IsFullLattice E N
         exact ⟨(⟨_, ht⟩, t), rfl⟩
     rw [← IsLocalizedModule.finrank_eq (nonZeroDivisors (𝓞 E)) N.subtype le_rfl,
       IsFractionRing.finrank_right_eq (𝓞 E) E V]
-  letI : Field (𝓞 E ⧸ w) := Ideal.Quotient.field _
+  let : Field (𝓞 E ⧸ w) := Ideal.Quotient.field _
   have h1 := Module.rankAtStalk_baseChange (R := 𝓞 E) (M := N) (S := 𝓞 E ⧸ w) ⊥
   rw [Module.rankAtStalk_eq_finrank_of_free, Module.rankAtStalk_eq, Ideal.finrank_fiber_eq_finrank, hr] at h1
   exact h1
@@ -329,11 +329,11 @@ theorem card_dvd_card_GL (N : Submodule (𝓞 E) V) (hN : Submodule.IsFullLattic
     Nat.card Γ ∣ Nat.card (GL (Fin (Module.finrank E V)) (ZMod g)) := by
   have : Module.Finite (𝓞 E) N := Module.Finite.iff_fg.2 (Submodule.IsLattice.fg (self := hN.toIsLattice))
   have : Module.IsTorsionFree (𝓞 E) V := Module.IsTorsionFree.trans_faithfulSMul (𝓞 E) E V
-  letI : Field (𝓞 E ⧸ w) := Ideal.Quotient.field _
+  let : Field (𝓞 E ⧸ w) := Ideal.Quotient.field _
   have hc : Nat.card (𝓞 E ⧸ w) = g := by rw [← hn, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 E ⧸ w) := Nat.finite_of_card_ne_zero (hc ▸ hg.ne_zero)
-  letI : Fintype (𝓞 E ⧸ w) := Fintype.ofFinite _
-  haveI : NeZero g := ⟨hg.ne_zero⟩
+  have : Finite (𝓞 E ⧸ w) := Nat.finite_of_card_ne_zero (hc ▸ hg.ne_zero)
+  let : Fintype (𝓞 E ⧸ w) := Fintype.ofFinite _
+  have : NeZero g := ⟨hg.ne_zero⟩
   let e : ZMod g ≃+* 𝓞 E ⧸ w := ZMod.ringEquivOfPrime _ hg (by rw [← hc, Nat.card_eq_fintype_card])
   let b := Module.finBasisOfFinrankEq (𝓞 E ⧸ w) ((𝓞 E ⧸ w) ⊗[𝓞 E] N) (finrank_red N hN w)
   let φ : Module.End (𝓞 E ⧸ w) ((𝓞 E ⧸ w) ⊗[𝓞 E] N) ≃*
@@ -395,7 +395,7 @@ end Lat
 
 theorem duStarOf_nat : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (hc : Tau R → HCParam R), (∀ i, H.g i % (H.QS * H.q * H.d) = 1) → (∀ i, 2 * R.f * R.k < H.g i - 1) → ∃ n : ℕ, 0 < n ∧ (n : ℝ) = duStarOf H hc := by
   intro R H hc hmod hbig
-  letI := H.cmStar
+  let := H.cmStar
   have hg := H.g_prime 0
   have hdeg : Module.finrank ℚ H.E = 4 * R.ord := H.finrank_cmField
   have hdeg' : Module.finrank ℚ H.E = 2 * R.f := by
@@ -408,8 +408,8 @@ theorem duStarOf_nat : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (hc :
   obtain ⟨v, hv⟩ : {v : HeightOneSpectrum (𝓞 H.E) | ((H.g 0 : ℕ) : 𝓞 H.E) ∈ v.asIdeal}.Nonempty :=
     Set.nonempty_of_ncard_ne_zero (by rw [show Set.ncard _ = _ from hs]; exact Module.finrank_pos.ne')
   have hn := (splitsC_main R H _ hg hs v hv).1
-  haveI := v.isMaximal
-  haveI := H.isCMField_hostE
+  have := v.isMaximal
+  have := H.isCMField_hostE
   have hconj : ∀ (φ : H.E →+* ℂ) (x : H.E), φ (star x) = starRingEnd ℂ (φ x) := fun φ x =>
     IsCMField.complexEmbedding_complexConj H.E φ x
   have hsym : (StandardLattice.stdForm H.E R.k).IsSymm := by
@@ -948,7 +948,7 @@ theorem tame_of_pow : Ev fun K => ∀ X : Stages, K.Over X.B.toPre → (∀ (k :
       | (simp only [Formalism.MainNotions.Ranks.r]; omega)
       | (unfold Formalism.MainNotions.Ranks.r; omega)
     have e : X.toD7.nd.chiT k v = fun j : Fin X.B.R.m => w ^ (2 * (j.1 + 1)) := funext hchi
-    haveI : Fact (X.toD7.host.g k).Prime := ⟨X.toD7.host.g_prime k⟩
+    have : Fact (X.toD7.host.g k).Prime := ⟨X.toD7.host.g_prime k⟩
     have h := GlobalTheory.EX.DC.TameGen.tameDistinct_gen X.toD7.R.r (X.toD7.host.g k) X.B.R.m w hw hb hr
     rw [e]
     exact h
@@ -1040,8 +1040,8 @@ theorem twCoverPair_of_tie (D : D7) (c : NChoice D) (h : NChTie D c) : TwCoverPa
     refine resChar_eq_of_pos w' hp ?_
     simpa using (hw' _).1 hw
   · cases hs : c.sd w'
-    · exact Or.inr fun x => (hw' x).trans (pos_iff_side_mem_max h w' x _ (by rw [hs, if_neg (by simp)]))
-    · exact Or.inl fun x => (hw' x).trans (pos_iff_side_mem_max h w' x _ (by rw [hs, if_pos rfl]))
+    · exact Or.inr fun x => (hw' x).trans (pos_iff_side_mem_max h w' x _ (by rw [hs, ite_eq_right (by simp)]))
+    · exact Or.inl fun x => (hw' x).trans (pos_iff_side_mem_max h w' x _ (by rw [hs, ite_eq_left rfl]))
 
 end GlobalTheory.Mem.Top
 

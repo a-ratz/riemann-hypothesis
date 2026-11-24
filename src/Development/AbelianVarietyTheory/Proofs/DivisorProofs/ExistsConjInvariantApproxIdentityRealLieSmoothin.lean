@@ -226,7 +226,7 @@ theorem exists_approx_identity : ∀ (E : Type) [Field E] [NumberField E] [_root
     HasCompactSupport.intro (isCompact_closedBall (oneL E a) (1 / m n)) fun x hx => by
       by_contra h; exact hx (hsupp n h)
   have hpos : ∀ n, 0 < ∫ x, bumpR E a (m n) x ∂ν := fun n =>
-    (contDiff_bumpR (m n)).continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (hcs n)
+    (contDiff_bumpR (m n)).continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (hcs n)
       (fun x => bumpR_nonneg _ x) (x := oneL E a) (by rw [bumpR_one]; norm_num)
   let β : ℕ → Lie E a → ℝ := fun n x => (∫ y, bumpR E a (m n) y ∂ν)⁻¹ * bumpR E a (m n) x
   have hβs : ∀ n x, β n x ≠ 0 → dist x (oneL E a) < 1 / m n := fun n x h =>

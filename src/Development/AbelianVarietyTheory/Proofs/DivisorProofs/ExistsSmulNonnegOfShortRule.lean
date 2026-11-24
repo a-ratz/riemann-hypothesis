@@ -88,7 +88,7 @@ theorem sum_bound_of_trivAt (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)]
     letI := io.toAlgebra
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (nrm Dw c w α * (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ *
       ((N : c.F) ^ P.totalDegree)⁻¹)) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hN : Odd N := hL.1
   obtain ⟨hfz, hm0, hT⟩ := GlobalTheory.TrivLattice.trivAt_units E H Dw l c n Λ N M ℓ hU hL hℓ htr
   obtain ⟨-, hFF⟩ := hT T io hlu
@@ -135,7 +135,7 @@ theorem sum_bound_of_trivAt (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)]
   obtain ⟨m', hm'c, hm'⟩ : ∃ m' : ℕ, Nat.Coprime m' ℓ ∧ Λ.mIdx N (Dw.p + Dw.q) = Fintype.card J * m' :=
     ⟨_, (Nat.coprime_ordCompl hℓ hm0).symm, by rw [hcard, hfz, Nat.ordProj_mul_ordCompl_eq_self]⟩
   have hm'u := isUnit_of_coprime T hm'c hlu
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   have hm'0 : (m' : T.Fr) ≠ 0 := by
     have : m' ≠ 0 := by rintro rfl; simp at hm'u
     exact_mod_cast this
@@ -169,7 +169,7 @@ theorem class_bound_of_trivAt (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (((l.M ^ Formalism.L2.Pj.DF Dw w : ℕ) : T.Fr) *
       (io (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) *
         ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P)) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hk : ∀ b, KilledBy Xo l.Mb (tp b ^ N) := fun b => by rw [(htp b).1]; exact GlobalTheory.ShortBound.levPt_killed Xo _ _
   obtain ⟨t1, t2⟩ := GlobalTheory.TorsFac.factorisation E H Dw l Xo N ℓ hL.1 hL.2.1 hℓ
   have key : ∃ u : ℕ, u ∣ l.M ∧ ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (nrm Dw c w (u : 𝓞 E) *
@@ -198,7 +198,7 @@ end Point
 theorem vV_prod_pow (T : CDVR) (X : ℕ) (S : Finset ℕ) (hS : ∀ p ∈ S, p ≠ 0) :
     vV T.V ((∏ p ∈ S, p ^ X : ℕ) : T.Fr) = ∑ p ∈ S, (X : ℤ) * vV T.V (p : T.Fr) := by
   classical
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   induction S using Finset.induction_on with
   | empty => simp [GlobalTheory.ShortBound.vV_one]
   | insert p S hp ih =>
@@ -238,7 +238,7 @@ theorem exists_smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRes
   have hM0 : d.l₂.M ≠ 0 := hsf.ne_zero
   have hc0 : Nat.card (Fin n → LevQ Dw d.l₂) ≠ 0 := by
     rw [GlobalTheory.PlaceInt.card_fun_levQ]; exact pow_ne_zero _ hM0
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   have hS : ∀ p ∈ D.host.condN.primeFactors, p ≠ 0 := fun p hp =>
     (Nat.prime_of_mem_primeFactors hp).ne_zero
   obtain ⟨X, hX⟩ : ∃ X : ℕ, X = (NumberField.discr D.host.E).natAbs * Formalism.L2.Pj.DF Dw w := ⟨_, rfl⟩
@@ -251,7 +251,7 @@ theorem exists_smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRes
   obtain ⟨-, ef2, -⟩ := GlobalTheory.PlaceInt.eF_transfer _ _ _ _ Xo c n d Λ
   obtain ⟨T', iT, r, io₂, y₂, C, ζ, z, tp, F, hr, hiT, hfr, hio, hC, hrat, hζ, hz, hgi, htp, hF, hval⟩ :=
     GlobalTheory.PlaceInt.short_value_on_cover _ _ _ _ Xo c n d hlev hnab 1 hroot Λ N hU hTM hN w P hP x0 g hsec hR Tc io yI hy
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have : CharZero T'.Fr := algebraRat.charZero _
   have ho' := ho.bc iT hr hiT
   have he' : 0 < r * e := ho'.1
   have hu : ¬ IsUnit (ℓ : T'.V) := fun hu => by
@@ -262,7 +262,7 @@ theorem exists_smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRes
     have h4 : (0 : ℤ) < ((r * e : ℕ) : ℤ) := by exact_mod_cast he'
     exact (mul_pos h4 h3).ne h2
   have hch := GlobalTheory.PlaceInt.HostChart.chBound_host D _ Dw _ d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C (r * e) he' w n _ le_rfl
-  have hsq : ¬ ℓ ^ 2 ∣ d.l₂.M := fun hd => hℓ.prime.not_unit (hsf ℓ (by rwa [← pow_two]))
+  have hsq : ¬ ℓ ^ 2 ∣ d.l₂.M := fun hd => hℓ.prime.not_isUnit (hsf ℓ (by rwa [← pow_two]))
   have key := fun q => class_bound_of_trivAt d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C hC _ hnab (r * e) _ w n he' hch ℓ hℓ
       hu Λ N hU hN _ (ef2 _ P hP).1 z (tp q) (F q) hz hgi (fun b => levRep (q b)) (htp q) (hF q) htr hsq
   rw [pow_one] at hζ
@@ -271,7 +271,7 @@ theorem exists_smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRes
   rw [finsum_eq_sum_of_fintype, Finset.mul_sum, Finset.mul_sum]
   refine le_nval_sum T' _ _ _ _ fun q _ => ?_
   have hq := key q
-  letI := io₂.toAlgebra
+  let := io₂.toAlgebra
   generalize (∑ i, hv d.Xo₂ d.c₂ d.nab₂ y₂.1 (N ^ 2) (fun b => sqN d.Xo₂ N (F q i b))
     (MvPolynomial.map (d.eF : c.F →+* d.c₂.F) P)) = Sm at hq ⊢
   have hb0 : io₂ (d.eF (betaH (Dw := Dw) c Λ)) ≠ 0 := (map_ne_zero io₂).2 ((map_ne_zero d.eF).2 hβ)

@@ -117,15 +117,15 @@ theorem UpperTheory.V.Loc.potCrysOf :
     exact Iff.rfl
   obtain ⟨L, Bw, hBj, hK⟩ := ex_bridge (E := F) j hj
   refine ⟨↥(OL L), inferInstance, inferInstance, inferInstance, Bw, fun x => by rw [hBj]; exact hj x, ?_⟩
-  haveI : CompactSpace ↥(GK Bw.Kw) := by
-    haveI := Bw.Kw.2
+  have : CompactSpace ↥(GK Bw.Kw) := by
+    have := Bw.Kw.2
     exact isCompact_iff_compactSpace.1 Bw.Kw.1.fixingSubgroup_isClosed.isCompact
-  haveI : CompactSpace ↥(Dec (F := F) (placeJ j)) :=
+  have : CompactSpace ↥(Dec (F := F) (placeJ j)) :=
     Bw.e.symm.surjective.compactSpace Bw.e_symm_cont
-  haveI : T2Space ↥(Dec (F := F) (placeJ j)) := inferInstance
+  have : T2Space ↥(Dec (F := F) (placeJ j)) := inferInstance
   let r₀ := r.comp (Dec (F := F) (placeJ j)).subtype
   have hc0 : Continuous fun g => ((r₀ g : GL (Fin n) (Om l)) : Matrix (Fin n) (Fin n) (Om l)) :=
-    Units.continuous_val.comp (hr.comp continuous_subtype_val)
+    Units.continuous_val.comp (hr.comp continuous_subtypeVal)
   obtain ⟨LL, hL, hent⟩ := GlobalTheory.CompactRepField.exists_finExt_entries_mem l _ n r₀ hc0 (GlobalTheory.Pst.supExt Bw.LL E')
   obtain ⟨r₁, hr₁⟩ := GlobalTheory.CompactRepField.exists_hom_of_entries_mem r₀ LL.1 hent
   have l₁ : Bw.LL.1 ≤ LL.1 := le_trans le_sup_left hL

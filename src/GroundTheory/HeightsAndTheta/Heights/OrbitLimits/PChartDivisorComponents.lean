@@ -206,11 +206,11 @@ theorem ChartDivisorComponents.proof (hNot : ChartSectionNotMem.Statement) : Cha
       push Not at hcon
       let g : Ideal (MRing ι) → Ideal (MvPolynomial (Fin m) ℂ) → MvPolynomial (Fin m) ℂ := fun W W'' =>
         if h : (W ∈ divSupp P s ∧ IsHorizontal W) ∧ W'' ∈ segreChartComponents W σ i then
-          (SetLike.not_le_iff_exists.1 (hcon W h.1 W'' h.2)).choose else 1
+          (IsConcreteLE.not_le_iff_exists.1 (hcon W h.1 W'' h.2)).choose else 1
       have hg : ∀ W W'', (W ∈ divSupp P s ∧ IsHorizontal W) → W'' ∈ segreChartComponents W σ i →
           g W W'' ∈ W'' ∧ g W W'' ∉ W' := fun W W'' hW hW'' => by
-        simp only [g, dif_pos (And.intro hW hW'')]
-        exact (SetLike.not_le_iff_exists.1 (hcon W hW W'' hW'')).choose_spec
+        simp only [g, dite_eq_left (And.intro hW hW'')]
+        exact (IsConcreteLE.not_le_iff_exists.1 (hcon W hW W'' hW'')).choose_spec
       set T := (divSupp_finite P s).toFinset.filter IsHorizontal
       have hT : ∀ W, W ∈ T ↔ W ∈ divSupp P s ∧ IsHorizontal W := fun W => by simp [T]
       set G := ∏ W ∈ T, ∏ W'' ∈ segreChartComponents W σ i, g W W''

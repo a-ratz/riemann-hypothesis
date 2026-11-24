@@ -65,7 +65,7 @@ theorem torsion_eq_bot_of_int [IsDomain O] [Module.Finite ℤ O]
   rw [eq_bot_iff]
   rintro x ⟨⟨a, ha⟩, hx⟩
   obtain ⟨n, hn, c, hc⟩ :=
-    (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) a).exists_nonzero_dvd ha
+    (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) a).exists_ne_zero_dvd ha
   have h : n • x = 0 := by
     have hx' : a • x = 0 := hx
     rw [← Int.cast_smul_eq_zsmul O, ← eq_intCast (algebraMap ℤ O), hc, mul_comm, mul_smul, hx',

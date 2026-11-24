@@ -157,7 +157,7 @@ theorem nil_mul {R : Type*} [Ring R] {a b : R} (h : Commute a b) (ha : IsNilpote
 
 theorem nil_upper (x : UT r → ℂ) : IsNilpotent (upper x - 1) := by
   have hc : (upper x - 1).charpoly = Polynomial.X ^ r := by
-    rw [Matrix.charpoly_of_upperTriangular]
+    rw [charpoly_of_isUpperTriangular]
     · simp [upper]
     · intro a b h
       have h : b < a := h
@@ -447,11 +447,11 @@ theorem surj_topAct (u : Matrix (Fin r) (Fin r) ℂ) (hu : ∀ a c : Fin r, ¬ j
 
 theorem mp_topAct (u : Matrix (Fin r) (Fin r) ℂ) (hu : ∀ a c : Fin r, ¬ j ≤ a.val → j ≤ c.val → u a c = 0)
     (hn : IsNilpotent (u - 1)) : MeasurePreserving (topAct (k := k) (j := j) u) volume volume := by
-  haveI h0 : (volume : Measure (Fin (k + 1) → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI h1 : (volume : Measure ({a : Fin r // j ≤ a.val} → Fin (k + 1) → ℂ)).IsAddHaarMeasure :=
+  have h0 : (volume : Measure (Fin (k + 1) → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h1 : (volume : Measure ({a : Fin r // j ≤ a.val} → Fin (k + 1) → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
-  haveI h2 : (volume : Measure ({p : UT r // j ≤ p.1.1.val} → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI h3 : (volume : Measure (STop r j)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have h2 : (volume : Measure ({p : UT r // j ≤ p.1.1.val} → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h3 : (volume : Measure (STop r j)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   exact (mp_of_det volume _ (det_rowTop u hu hn)).prod (mp_of_det volume _ (det_skewTop u hu hn))
 
 theorem upperIn_zero (β : Fin r → ℕ) (hβ : ∀ a b : Fin r, j ≤ b.val → (β a = β b ↔ j ≤ a.val)) (x : UTin β → ℂ)
@@ -513,11 +513,11 @@ theorem range_eq_and_injective_parabolic_unipotent_product : ∀ (k r j : ℕ) (
   have hr : ∀ q : (UTin β → ℂ) × PTop k r j,
       rEl k r j β q = pTop k r j (topAct (upperIn β q.1) q.2) * uEmb k r (upperIn β q.1) :=
     fun q => uEmb_mul_pTop _ (hz q.1) (hd q.1) q.2
-  haveI s1 : SFinite (volume : Measure (STop r j)) := Measure.prod.instSFinite
-  haveI s2 : SFinite (volume : Measure (PTop k r j)) := Measure.prod.instSFinite
-  haveI b1 : BorelSpace (STop r j) := Prod.borelSpace
-  haveI b2 : BorelSpace (PTop k r j) := Prod.borelSpace
-  haveI b3 : BorelSpace ((UTin β → ℂ) × PTop k r j) := Prod.borelSpace
+  have s1 : SFinite (volume : Measure (STop r j)) := Measure.prod.instSFinite
+  have s2 : SFinite (volume : Measure (PTop k r j)) := Measure.prod.instSFinite
+  have b1 : BorelSpace (STop r j) := Prod.borelSpace
+  have b2 : BorelSpace (PTop k r j) := Prod.borelSpace
+  have b3 : BorelSpace ((UTin β → ℂ) × PTop k r j) := Prod.borelSpace
   refine ⟨?_, ?_, ?_, ?_⟩
   · have hΦ : MeasurePreserving (fun q : (UTin β → ℂ) × PTop k r j => (q.1, topAct (upperIn β q.1) q.2)) volume volume :=
       (MeasurePreserving.id (volume : Measure (UTin β → ℂ))).skew_product
@@ -552,8 +552,8 @@ theorem range_eq_and_injective_parabolic_unipotent_product : ∀ (k r j : ℕ) (
     have := congrArg (· * uEmb k r (upperIn β q.1)⁻¹) h
     simpa only [← h1, Matrix.mul_assoc, h3, Matrix.mul_one] using this
   · rintro rfl
-    haveI s3 : SFinite (volume : Measure ((UT r → ℂ) × (Fin r → ℝ))) := Measure.prod.instSFinite
-    haveI s4 : SFinite (volume : Measure (PPar k r)) := Measure.prod.instSFinite
+    have s3 : SFinite (volume : Measure ((UT r → ℂ) × (Fin r → ℝ))) := Measure.prod.instSFinite
+    have s4 : SFinite (volume : Measure (PPar k r)) := Measure.prod.instSFinite
     set_option synthInstance.maxHeartbeats 200000 in
     have hΦ : MeasurePreserving (fun q : (UTin β → ℂ) × PTop k r 0 =>
         ((extZ (fun p : UT r => β p.1.1 = β p.1.2) ℂ q.1, (extR k r 0 q.2.1, extS r 0 q.2.2)) : (UT r → ℂ) × PPar k r))

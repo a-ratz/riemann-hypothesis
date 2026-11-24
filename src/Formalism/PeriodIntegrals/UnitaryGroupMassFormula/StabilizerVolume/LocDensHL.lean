@@ -69,7 +69,7 @@ theorem smul_mem_latSub {a M : ℕ} {s : Fv F v} (hs : s ∈ v.adicCompletionInt
   exact mul_mem hs (hx' i j k)
 
 theorem isOpen_hermO (σ : E →ₐ[F] E) (a : ℕ) : IsOpen (hermO b v σ a : Set (HermR (Fv F v) σ a)) :=
-  continuous_subtype_val.isOpen_preimage _ (PositiveNearLattice.isClopen_latV b v a a).isOpen
+  continuous_subtypeVal.isOpen_preimage _ (PositiveNearLattice.isClopen_latV b v a a).isOpen
 
 theorem isCompact_hermO (σ : E →ₐ[F] E) (a : ℕ) :
     IsCompact (hermO b v σ a : Set (HermR (Fv F v) σ a)) := by

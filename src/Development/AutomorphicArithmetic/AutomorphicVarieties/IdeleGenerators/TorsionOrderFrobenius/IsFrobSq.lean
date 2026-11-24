@@ -80,9 +80,9 @@ theorem UpperTheory.V.Sd.Tw.inert :
         ∃ w : HeightOneSpectrum (𝓞 K), IsPlaceOver A w ∧ w.asIdeal = Ideal.span {(p : 𝓞 K)} ∧
           ∀ s : G K Ω, galEmb ℚ K Ω s = t * t → IsFrob (F := K) A (normV w) s := by
   intro K Ω _ _ _ _ _ _ hK p hp A hA hI t ht htK
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : Fact p.Prime := ⟨hp⟩
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   obtain ⟨h1, h2, h3, -⟩ := UpperTheory.V.Base.places K Ω p A
   obtain ⟨w, hw⟩ := h1 fun h => (h2 h).2 hA
   have hpw : (p : 𝓞 K) ∈ w.asIdeal := (h3 w hw).1 hA

@@ -207,13 +207,13 @@ theorem hasDerivAt_rhoFun (w : l ⊕ l → ℝ) (f : Sch l) (x : EuclideanSpace 
 
 theorem dRho_add (w w' : l ⊕ l → ℝ) : dRho (w + w') = dRho w + dRho w' := by
   ext f x
-  simp only [ContinuousLinearMap.add_apply, SchwartzMap.add_apply, dRho_apply, pPart_add, qPart_add, inner_add_left,
+  simp only [add_apply, add_apply, dRho_apply, pPart_add, qPart_add, inner_add_left,
     map_add, ofReal_add]
   ring
 
 theorem dRho_smul (t : ℝ) (w : l ⊕ l → ℝ) : dRho (t • w) = (t : ℂ) • dRho w := by
   ext f x
-  simp only [ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, dRho_apply, pPart_smul, qPart_smul,
+  simp only [smul_apply, smul_apply, dRho_apply, pPart_smul, qPart_smul,
     real_inner_smul_left, map_smul, ofReal_mul, smul_eq_mul, real_smul]
   ring
 
@@ -237,8 +237,8 @@ theorem dRho_comm (w w' : l ⊕ l → ℝ) :
   ext f x
   have hs : fderiv ℝ (fderiv ℝ f) x (pPart w) (pPart w') = fderiv ℝ (fderiv ℝ f) x (pPart w') (pPart w) :=
     ((f.smooth 2).contDiffAt.isSymmSndFDerivAt (by simp)) _ _
-  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.mul_apply, SchwartzMap.sub_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, SchwartzMap.smul_apply, smul_eq_mul]
+  simp only [sub_apply, mul_apply_eq_comp, sub_apply,
+    smul_apply, one_apply_eq_self, smul_apply, smul_eq_mul]
   rw [dRho_apply w (dRho w' f), dRho_apply w' (dRho w f), key, key, dRho_apply, dRho_apply, hs]
   simp only [sympl, real_inner_comm (pPart w) (qPart w'), ofReal_sub]
   ring
@@ -372,7 +372,7 @@ theorem quad_fromBlocks {A B C D : Matrix l l ℝ} (hX : fromBlocks A B C D ∈ 
     have t : (2 * π * I * (A.trace : ℝ) : ℂ) • (1 : Sch l →L[ℂ] Sch l) =
         ∑ j, ∑ k, (A j k : ℂ) • (2 * π * I * (if j = k then 1 else 0) : ℂ) • (1 : Sch l →L[ℂ] Sch l) := by
       simp only [Matrix.trace, diag_apply, ofReal_sum, Finset.mul_sum, Finset.sum_smul, smul_smul, mul_ite, mul_one,
-        mul_zero, ite_smul, zero_smul, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        mul_zero, ite_smul, zero_smul, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       exact Finset.sum_congr rfl fun j _ => by rw [mul_comm]
     rw [t, Finset.sum_comm (f := fun j k => ((-A k j / 2 : ℝ) : ℂ) • _)]
     simp only [← Finset.sum_add_distrib, ← Finset.sum_sub_distrib]
@@ -383,9 +383,9 @@ theorem quad_fromBlocks {A B C D : Matrix l l ℝ} (hX : fromBlocks A B C D ∈ 
     push_cast
     module
   rw [hq]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.add_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.one_apply,
-    SchwartzMap.smul_apply, SchwartzMap.sub_apply, SchwartzMap.add_apply, SchwartzMap.sum_apply, smul_eq_mul, hQa]
+  simp only [smul_apply, sub_apply, sum_apply,
+    add_apply, mul_apply_eq_comp, one_apply_eq_self,
+    smul_apply, sub_apply, add_apply, sum_apply, smul_eq_mul, hQa]
   simp only [hP, dRho_single_inl, mul_sub, Finset.mul_sum]
   congr 1
   · congr 1

@@ -102,7 +102,7 @@ private theorem UpperTheory.V.Ws.Tw.extIdeal_inj {H G : Type} [CommGroup H] [Com
       apply Additive.toMul.injective
       simp only [toMul_zsmul, toMul_ofMul]
       rw [h, zpow_neg, zpow_natCast, inv_pow, inv_inv, hu]
-  letI : DivisibleBy (Additive kˣ) ℤ := divisibleByOfSMulRightSurj _ _ hdiv
+  let : DivisibleBy (Additive kˣ) ℤ := divisibleByOfSMulRightSurj _ _ hdiv
   obtain ⟨F, hF⟩ := (Module.Baer.of_divisible (Additive kˣ)).extension_property_addMonoidHom
     (MonoidHom.toAdditive i) hi (MonoidHom.toAdditive g)
   refine ⟨MonoidHom.toAdditive.symm F, fun x => ?_⟩
@@ -155,7 +155,7 @@ theorem UpperTheory.V.Ws.Tw.extIdeal :
     else Units.mk0 (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) (FractionalIdeal.coeIdeal_ne_zero.mpr hI)
   have hιv : ∀ I : Ideal (𝓞 K), I ≠ ⊥ → ((ι I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)) = I := by
     intro I hI
-    simp only [ι, dif_neg hI, Units.val_mk0]
+    simp only [ι, dite_eq_right hI, Units.val_mk0]
   have hι : ∀ I J : Ideal (𝓞 K), I ≠ ⊥ → J ≠ ⊥ → ι (I * J) = ι I * ι J := by
     intro I J hI hJ
     have hIJ : I * J ≠ ⊥ := fun h => (Ideal.mul_eq_bot.mp h).elim hI hJ
@@ -228,7 +228,7 @@ private theorem algClosure (K : IntermediateField ℚ Ω) : IsAlgClosure K Ω :=
 
 private theorem exists_prim {k : Type} [Field k] {N : ℕ} (hN : 1 ≤ N) (φ : G ℚ Ω →* kˣ) (hφ : Af.KillsMu N φ) :
     ∃ (M : ℕ) (_ : NeZero M) (χ : DirichletCharacter k M), χ.IsPrimitive ∧ φ = Chr.dirG ℚ Ω χ := by
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   unfold Af.KillsMu at hφ
   have hsurj := (Chr.clsOnto Ω N).1
   have hker : (Chr.cls ℚ Ω N).ker ≤ φ.ker := by
@@ -242,7 +242,7 @@ private theorem exists_prim {k : Type} [Field k] {N : ℕ} (hN : 1 ≤ N) (φ : 
     ⟨_, MonoidHom.liftOfRightInverse_comp _ _ (Function.rightInverse_surjInv hsurj) ⟨φ, hker⟩⟩
   obtain ⟨χ, hχ⟩ : ∃ χ : DirichletCharacter k N, χ.toUnitHom = ψ :=
     ⟨MulChar.ofUnitHom ψ, by simp [MulChar.toUnitHom_eq, MulChar.ofUnitHom_eq]⟩
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   refine ⟨χ.conductor, inferInstance, χ.primitiveCharacter, χ.primitiveCharacter_isPrimitive, ?_⟩
   have h2 : χ.toUnitHom =
       χ.primitiveCharacter.toUnitHom.comp (ZMod.unitsMap χ.conductor_dvd_level) := by
@@ -327,7 +327,7 @@ private theorem cls_frob {M q : ℕ} [NeZero M] {A : ValuationSubring Ω} (hA : 
 private theorem primeTo {Γ C : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [CommGroup C]
     (κ : Γ →* C) (hκ : IsOpen (κ.ker : Set Γ)) {l m : ℕ} (hl : l.Prime) (hm : l.Coprime m) :
     ∃ j m' : ℕ, l.Coprime m' ∧ (κ ^ j) ^ m' = 1 ∧ j ≡ 1 [MOD m] := by
-  haveI : Finite (Γ ⧸ κ.ker) := Subgroup.quotient_finite_of_isOpen _ hκ
+  have : Finite (Γ ⧸ κ.ker) := Subgroup.quotient_finite_of_isOpen _ hκ
   have hn : κ.ker.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   obtain ⟨a, n', hn', hnn⟩ := Nat.exists_eq_pow_mul_and_not_dvd hn l hl.ne_one
   have hco : (l ^ a).Coprime m := Nat.Coprime.pow_left a hm
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (K : IntermediateField ℚ Ω) [NumberField K] [_root_.NumberField.IsTotallyComplex K], Module.finrank ℚ K = 2 → (∀ A : ValuationSubring Ω, A.valuation (2 : Ω) < 1 → Dec (F := ℚ) A ≤ K.fixingSubgroup) → ∀ (η : G ℚ Ω →* (PadicAlgCl l)ˣ) (N m : ℕ), 1 ≤ N → Af.KillsMu N η → l.Coprime m → η ^ m = 1 → (∀ c, IsCC c → η c = 1) → (∀ A : ValuationSubring Ω, Ine (F := ℚ) A ≤ η.ker ∨ Dec (F := ℚ) A ≤ K.fixingSubgroup) → ∃ (κ : G K Ω →* (PadicAlgCl l)ˣ) (m' : ℕ), IsOpen (κ.ker : Set (G K Ω)) ∧ l.Coprime m' ∧ κ ^ m' = 1 ∧ (∀ c ∉ K.fixingSubgroup, ∀ s s' : G K Ω, resQ K s' = c * resQ K s * c⁻¹ → κ s * κ s' = η (resQ K s)) ∧ ∀ A : ValuationSubring Ω, Ine (F := ℚ) A ≤ η.ker → Ine (F := K) A ≤ κ.ker := by
   intro Ω _ _ _ l _ hl2 K _ _ h2 h2split η N m hN hη hm hηm hcc hram
   classical
-  haveI : IsAlgClosure K Ω := algClosure K
+  have : IsAlgClosure K Ω := algClosure K
   obtain ⟨M, _, χ, hχ, rfl⟩ := exists_prim hN η hη
   have hM0 : M ≠ 0 := NeZero.ne M
   obtain ⟨τ, hτc, hτn, hτf, hsp, hun⟩ := Tw.quadFacts Ω l hl2 K h2
@@ -373,7 +373,7 @@ theorem UpperTheory.V.Ws.Tw.kap0 :
   let g : 𝓞 K → (PadicAlgCl l)ˣ := fun a => if h : IsUnit (ρ a) then χ.toUnitHom h.unit else 1
   have hg : ∀ a (h : IsUnit (ρ a)), ((g a : (PadicAlgCl l)ˣ) : PadicAlgCl l) = χ (ρ a) := by
     intro a h
-    simp only [g, dif_pos h, MulChar.coe_toUnitHom, IsUnit.unit_spec]
+    simp only [g, dite_eq_left h, MulChar.coe_toUnitHom, IsUnit.unit_spec]
   have hχm1 : χ (-1) = 1 := by
     obtain ⟨c0, hc0⟩ := exists_cc (Ω := Ω)
     have h1 := hcc c0 hc0

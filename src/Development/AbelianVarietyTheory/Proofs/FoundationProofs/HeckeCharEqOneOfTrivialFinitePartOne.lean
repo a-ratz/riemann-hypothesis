@@ -111,7 +111,7 @@ theorem eq_one_of_trivial_on_finite : ∀ (D : D7) (c : (AE D)ˣ →* Circle), I
   obtain ⟨ρ, hρ, r1, r0⟩ := exists_real_chart D θ hθ (GlobalTheory.CMTypePlaces.places_bijective D)
   obtain ⟨s, hs⟩ := RealChart.exists_chart D θ hθ ρ hρ r1 r0
   obtain ⟨-, a, b, -, -, hab, ha, hb⟩ := GlobalTheory.IdeleParts.congr_open_and_parts D
-  haveI : Nonempty D.what₂.Tau :=
+  have : Nonempty D.what₂.Tau :=
     ⟨((GlobalTheory.CMTypePlaces.places_bijective D).2 (Classical.arbitrary _)).choose⟩
   have ext : ∀ a b : AE D, finPart D a = finPart D b → (∀ τ, θ τ (infPart D a) = θ τ (infPart D b)) → a = b := by
     intro a b h1 h2

@@ -375,7 +375,7 @@ open GlobalTheory.BSP.SeedAsm GlobalTheory.BSP.RegularPeriodsFiltration in
 theorem GlobalTheory.BKLim.wseed_of_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (C : Core l) (τ : Ainf l), bk.IsPer τ → ∀ (d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) (ℤ_[l])) (N c₁ c₂ c₃ k₀ : ℕ) (F F' : Matrix (Fin d) (Fin d) (Wq l bk.a)) (X X' : Matrix (Fin d) (Fin d) (bk.S)) (Z Z' : Matrix (Fin d) (Fin d) (Per.Acris l)) (κ : ↥(GK K) → Matrix (Fin d) (Fin d) (Per.Acris l)), (F * F' = (l : Wq l bk.a) ^ c₃ • (1 : Matrix (Fin d) (Fin d) (Wq l bk.a)) ∧ X * X' = ((l : bk.S) ^ c₂ * bk.E ^ (2 * N)) • (1 : Matrix (Fin d) (Fin d) (bk.S)) ∧ Z * Z' = C.t ^ (2 * N) • (1 : Matrix (Fin d) (Fin d) (Per.Acris l)) ∧ (C.t ^ N * (l : Per.Acris l) ^ c₁) • Z.map (phiA l) = phiA l C.t ^ N • (Z * F.map (((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev).comp PowerSeries.C)) ∧ (∀ g : ↥(GK K), (C.t ^ N * (l : Per.Acris l) ^ k₀) • ((ρ g).map ((algebraMap (Ainf l) (Per.Acris l)).comp (algebraMap ℤ_[l] (Ainf l))) * Z.map (sigA (g : GQ l))) = sigA (g : GQ l) C.t ^ N • (Z * κ g)) ∧ (∀ g : ↥(GK K), bk.FixFlat g → κ g = (l : Per.Acris l) ^ k₀ • (1 : Matrix (Fin d) (Fin d) (Per.Acris l))) ∧ (∀ i j, C.j ((Z * X.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)) i j) ∈ Per.FilP l (2 * N)) ∧ (∀ i j, C.j ((X'.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev) * Z') i j) ∈ Per.FilP l (2 * N)) ∧ ∀ m : ℕ, ∃ (k : ℕ) (Λ : Matrix (Fin d) (Fin d) (bk.S)), (∀ i j, bk.E ∣ (Λ - (l : bk.S) ^ k • (1 : Matrix (Fin d) (Fin d) (bk.S))) i j) ∧ ∀ (g : ↥(GK K)) i j, C.j ((κ g * (Λ.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)).map (sigA (g : GQ l)) - (l : Per.Acris l) ^ k₀ • Λ.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)) i j) ∈ Per.FilP l m) → Nonempty (WSeed bk d ρ τ) := by
   intro l _ K bk C τ hτ d ρ N c₁ c₂ c₃ k₀ F F' X X' Z Z' κ hZ
   obtain ⟨hF, hX, hZZ, hφ, hg, hfix, hf1, hf2, hlog⟩ := hZ
-  haveI := isDomain bk
+  have := isDomain bk
   obtain ⟨γ, hγ, hn⟩ := _root_.GlobalTheory.AcrisDisc.exists_acris_to_disc l K bk
   obtain ⟨ν, hν⟩ := acrisToDisc_image_t_eq_unit_mul_period C hτ γ hγ hn
   set a := bk.iA (bk.ev bk.E * τ) with ha_def
@@ -614,7 +614,7 @@ theorem cont_act {d : ℕ} {Γ : Type} [Group Γ] [TopologicalSpace Γ] (ρ : Γ
     (x : Fin d → ℚ_[l]) : Continuous fun g => qRep ρ g x := by
   have h1 : Continuous fun g => ((ρ g).val : Matrix (Fin d) (Fin d) ℤ_[l]) := Units.continuous_val.comp hρ
   have h2 : Continuous fun g => ((ρ g).val.map (algebraMap ℤ_[l] ℚ_[l])) :=
-    h1.matrix_map (continuous_subtype_val)
+    h1.matrix_map (continuous_subtypeVal)
   exact h2.matrix_mulVec continuous_const
 
 end GlobalTheory.BKLim.StdLat

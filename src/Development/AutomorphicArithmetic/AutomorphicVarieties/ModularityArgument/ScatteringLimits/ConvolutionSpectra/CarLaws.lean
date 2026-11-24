@@ -71,7 +71,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.carLaws :
       have h2 := h1.2.2.1 (Iic_disjoint_Ioi le_rfl)
       rw [Iic_union_Ioi, h1.2.2.2.1] at h2
       have h3 : u = cut V (Iic T) u + cut V (Ioi T) u := DFunLike.congr_fun h2 u
-      simp only [Sc.P, ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply, ContinuousLinearMap.comp_apply]
+      simp only [Sc.P, sub_apply, one_apply_eq_self, ContinuousLinearMap.comp_apply]
       show M.J u - M.J (cut V (Ioi T) (M.J.symm (M.J u))) = _
       rw [M.J.symm_apply_apply, ← map_sub, sub_eq_of_eq_add h3]
     show M.P' (Ioi (T + ρ)) (X ((1 - M.P (Ioi T)) (M.J u))) = 0
@@ -79,5 +79,5 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.carLaws :
     show M.J' (cut W (Ioi (T + ρ)) (M.J'.symm (M.J' _))) = 0
     rw [M.J'.symm_apply_apply]
     have := DFunLike.congr_fun (c2 ρ T hρ) u
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply] at this
+    simp only [ContinuousLinearMap.comp_apply, zero_apply] at this
     rw [this, map_zero]

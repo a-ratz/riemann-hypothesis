@@ -132,8 +132,8 @@ theorem exists_open_injective {S : Scheme.{0}} (X : Over S) [Etale X.hom] [IsSep
 
 theorem isProper_of_subsingleton {K : Type} [Field K] (G : Over (Sp K)) [GrpObj G] (T : TorusExtension G)
     (hT : Subsingleton T.X) : IsProper G.hom := by
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.q_hom
   have := T.i_hom
   have := T.q_flat
@@ -159,8 +159,8 @@ theorem isProper_of_injective {k : Type} [Field k] [IsAlgClosed k] (G : Over (Sp
     (T : TorusExtension G) {g n : ℕ} (hg : SmoothOfRelativeDimension g G.hom) (h2 : 2 ≤ n) (hn : (n : k) ≠ 0)
     (x : Fin (n ^ (2 * g)) → {x : 𝟙_ (Over (Sp k)) ⟶ G // x ^ n = 1}) (hx : Function.Injective x) :
     IsProper G.hom := by
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.free
   have := T.finite
   have := T.i_hom

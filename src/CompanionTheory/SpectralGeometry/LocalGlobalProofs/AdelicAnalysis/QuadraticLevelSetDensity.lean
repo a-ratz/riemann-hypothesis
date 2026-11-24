@@ -316,7 +316,7 @@ theorem exists_density (μ : Measure V) [IsFiniteMeasure μ] (hφ : Integrable (
   have hinv : 𝓕⁻ (𝓕 (phi μ)) = phi μ := (continuous_phi μ).fourierInv_fourier_eq hφ hFi
   refine ⟨fun y => (dens μ y).re, hcD, dens_re_nonneg μ hφ, hof, ?_⟩
   set ν := (volume : Measure V).withDensity (fun y => ENNReal.ofReal (dens μ y).re) with hν
-  haveI : IsFiniteMeasure ν := isFiniteMeasure_withDensity hfin.ne
+  have : IsFiniteMeasure ν := isFiniteMeasure_withDensity hfin.ne
   refine Measure.ext_of_charFun (funext fun t => ?_)
   have hpi : (2 * Real.pi) ≠ 0 := by positivity
   have h1 : charFun μ t = phi μ ((2 * Real.pi)⁻¹ • t) := by
@@ -339,7 +339,7 @@ theorem density_of_integrable_charFun :
   let e : (κ → ℝ) ≃ᵐ EuclideanSpace ℝ κ := MeasurableEquiv.toLp 2 _
   have hmp : MeasurePreserving e volume volume := PiLp.volume_preserving_toLp κ
   set μ : Measure (EuclideanSpace ℝ κ) := m.map e with hμ
-  haveI : IsFiniteMeasure μ := by rw [hμ]; infer_instance
+  have : IsFiniteMeasure μ := by rw [hμ]; infer_instance
   have hin : ∀ z x : κ → ℝ, inner ℝ (e z) (e x) = ∑ w, z w * x w := by
     intro z x
     simp only [e, MeasurableEquiv.toLp_apply, PiLp.inner_apply, RCLike.inner_apply, conj_trivial]
@@ -468,10 +468,10 @@ theorem density_of_q : ∀ (F : Type) [Field F] [NumberField F], ∀ (ι : Type)
   have hdm : Measurable fun x => ENNReal.ofReal (gW P x) :=
     ENNReal.measurable_ofReal.comp (continuous_gW P).measurable
   let ν : Measure (InfinitePlace F → ι → ℝ) := volume.withDensity fun x => ENNReal.ofReal (gW P x)
-  haveI : IsFiniteMeasure ν := isFiniteMeasure_withDensity_ofReal hgi.2
+  have : IsFiniteMeasure ν := isFiniteMeasure_withDensity_ofReal hgi.2
   have hQ : Continuous (qMap B ρ) := continuous_qMap B ρ
   let m : Measure (InfinitePlace F → ℝ) := ν.map (qMap B ρ)
-  haveI : IsFiniteMeasure m := Measure.isFiniteMeasure_map ν _
+  have : IsFiniteMeasure m := Measure.isFiniteMeasure_map ν _
 
   have hχ : ∀ t : InfinitePlace F → ℝ,
       ∫ z, Complex.exp ((2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, z w * t w : ℝ) : ℂ)) ∂m =

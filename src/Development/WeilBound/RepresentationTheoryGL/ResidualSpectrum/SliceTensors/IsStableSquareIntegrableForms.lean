@@ -95,7 +95,7 @@ theorem lintegral_mul_right {μ : Measure (GA E N)} [μ.IsHaarMeasure] [μ.IsMul
     ∫⁻ x in stdDom (latticeGL E N), ‖φ (x * g)‖ₑ ^ 2 ∂μ = ∫⁻ x in stdDom (latticeGL E N), ‖φ x‖ₑ ^ 2 ∂μ := by
   have hd := isFundamentalDomain_stdDom (latticeGL E N) μ
   have hm : AEMeasurable (fun q => ‖descend (latticeGL E N) φ q‖ₑ ^ 2) (quotMeasure (latticeGL E N) μ) :=
-    h.2.aestronglyMeasurable.enorm.pow_const 2
+    h.2.aestronglyMeasurable.eNorm.pow_const 2
   have e1 := lintegral_quotMeasure hd (fun q => ‖descend (latticeGL E N) φ q‖ₑ ^ 2)
   have e2 := lintegral_quotMeasure hd (fun q => ‖descend (latticeGL E N) φ (rmul (latticeGL E N) g q)‖ₑ ^ 2)
   simp only [rmul_mk, h.1.descend_mk] at e1 e2
@@ -124,13 +124,13 @@ theorem memL2_of_smoothing (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulR
     intro x
     have h1 : ‖GlobalTheory.CuspQuot.smoothing ν α φ x‖ₑ ≤ ∫⁻ y in K, ‖α y * chart φ x y‖ₑ ∂ν := by
       rw [setLIntegral_eq_of_support_subset]
-      · exact enorm_integral_le_lintegral_enorm _
+      · exact eNorm_integral_le_lintegral_eNorm _
       · intro y hy
         by_contra hyK
         apply hy
         simp [image_eq_zero_of_notMem_tsupport hyK]
     have hx : Continuous fun y => α y * chart φ x y := hH.comp (continuous_const.prodMk continuous_id)
-    have h2 := sq_lintegral_le (ν.restrict K) (g := fun y => ‖α y * chart φ x y‖ₑ) hx.enorm.aemeasurable
+    have h2 := sq_lintegral_le (ν.restrict K) (g := fun y => ‖α y * chart φ x y‖ₑ) hx.eNorm.aemeasurable
     rw [Measure.restrict_apply_univ] at h2
     calc _ ≤ (∫⁻ y in K, ‖α y * chart φ x y‖ₑ ∂ν) ^ 2 := by gcongr
       _ ≤ ν K * ∫⁻ y in K, ‖α y * chart φ x y‖ₑ ^ 2 ∂ν := h2
@@ -140,7 +140,7 @@ theorem memL2_of_smoothing (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulR
   have hin : ∀ y, ∫⁻ x in stdDom (latticeGL E N), ‖α y * chart φ x y‖ₑ ^ 2 ∂μ = ‖α y‖ₑ ^ 2 * I := by
     intro y
     by_cases hy : IsUnit (Matrix.of y)
-    · simp_rw [chart, dite_eq_left hy, enorm_mul, mul_pow]
+    · simp_rw [chart, dite_eq_left hy, eNorm_mul, mul_pow]
       rw [lintegral_const_mul' _ _ (by simp), lintegral_mul_right h]
     · have : α y = 0 := image_eq_zero_of_notMem_tsupport fun h' => hy (hα.2.2 h')
       simp [this]
@@ -152,7 +152,7 @@ theorem memL2_of_smoothing (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulR
     simpa using this
   have hmeas : AEMeasurable (Function.uncurry fun x y => ‖α y * chart φ x y‖ₑ ^ 2)
       ((μ.restrict (stdDom (latticeGL E N))).prod ν) :=
-    ((ENNReal.continuous_pow 2).comp hH.enorm).measurable.aemeasurable
+    ((ENNReal.continuous_pow 2).comp hH.eNorm).measurable.aemeasurable
   refine (memL2_iff_fundamental_domain hd).2 ⟨hlS, ?_⟩
   change eLpNorm _ _ _ < ⊤
   rw [eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top two_ne_zero ENNReal.ofNat_ne_top hmS]

@@ -77,7 +77,7 @@ private lemma exists_lift {k : Type} [CommRing k] {K L M : CochainComplex (Modul
   have hp : ∀ m : ℕ, p m ≫ ι.f m = u.f m := fun m =>
     ModuleCat.hom_ext (LinearMap.codRestrictOfInjective_comp _ _ _ _)
   refine ⟨{ f := p, comm' := fun i j _ => ?_ }, fun m x => congr($(hp m).hom x)⟩
-  haveI : Mono (ι.f j) := (ModuleCat.mono_iff_injective _).2 (hι j)
+  have : Mono (ι.f j) := (ModuleCat.mono_iff_injective _).2 (hι j)
   rw [← cancel_mono (ι.f j), Category.assoc, Category.assoc, hp, ← ι.comm, ← Category.assoc, hp,
     u.comm]
 

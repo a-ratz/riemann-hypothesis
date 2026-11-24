@@ -289,7 +289,7 @@ theorem wdb_normSq_div {n : ℕ} (ρ : ℝ) (j : Fin n) (z : V n) :
     rw [e]; exact h1
   unfold wdb
   rw [fderiv_ofReal_apply hv.differentiableAt, fderiv_ofReal_apply hv.differentiableAt, hv.fderiv]
-  simp only [bas, ContinuousLinearMap.smul_apply, innerSL_apply_apply, smul_eq_mul, nsmul_eq_mul]
+  simp only [bas, smul_apply, innerSL_apply_apply, smul_eq_mul, nsmul_eq_mul]
   have hr : ∀ x y : V n, inner ℝ x y = re (inner ℂ x y) := by
     intro x y
     rw [PiLp.inner_apply, PiLp.inner_apply, Complex.re_sum]
@@ -455,7 +455,7 @@ theorem eventually_not_mem_saturation : ∀ (E : Type) [Field E] [NumberField E]
       refine (Filter.eventually_all_finite hfin).2 fun δ hδ => ?_
       have hopen : IsOpen {p : Frame X.Ψ r × V (nd X) |
           ∃ τ : X.Ψ, ∃ a c : Fin r, c < a ∧ adjEnt (cpt X x p.2) (lact δ p.1) τ a c ≠ 0} := by
-        simp only [Set.setOf_exists]
+        simp only [Set.ofPred_exists]
         refine isOpen_iUnion fun τ => isOpen_iUnion fun a => isOpen_iUnion fun c => ?_
         by_cases hca : c < a
         · simp only [hca, true_and]
@@ -464,7 +464,7 @@ theorem eventually_not_mem_saturation : ∀ (E : Type) [Field E] [NumberField E]
         · simp [hca]
       refine hopen.mem_nhds ?_
       by_contra hcon
-      simp only [Set.mem_setOf_eq, not_exists, not_and, not_not] at hcon
+      simp only [Set.mem_ofPred_eq, not_exists, not_and, not_not] at hcon
       have hdk : ∀ τ, (mat (cpt X x z) τ).det ≠ 0 := fun τ => (hk τ).1
       have hdw : ∀ τ, (mat (lact δ y) τ).det ≠ 0 := by
         intro τ h0
@@ -540,9 +540,9 @@ theorem frobenius_lower_comparison : ∀ (r : ℕ) (g n b B W H : Matrix (Fin r)
 
   have hnT : n.BlockTriangular OrderDual.toDual := fun i j hij => hn_up i j (by simpa using hij)
   have hdet : n.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular n hnT]; simp [hn_diag]
+    rw [Matrix.det_of_isLowerTriangular n hnT]; simp [hn_diag]
   have hu : IsUnit n.det := by rw [hdet]; exact isUnit_one
-  letI := n.invertibleOfIsUnitDet hu
+  let := n.invertibleOfIsUnitDet hu
   have hinvT : n⁻¹.BlockTriangular OrderDual.toDual :=
     Matrix.blockTriangular_inv_of_blockTriangular hnT
   obtain ⟨Y, hY⟩ : ∃ Y, Y = n⁻¹ * W := ⟨_, rfl⟩
@@ -996,10 +996,10 @@ theorem nmat_hasDerivAt (X : Data E r) {f : ℂ → V (nd X)} {f' : V (nd X)} {t
     HasDerivAt (fun s => nmat X (f s) τ a c) (nmat X f' τ a c - if a = c then 1 else 0) t := by
   unfold nmat
   by_cases h : c < a
-  · simp only [h, dif_pos, h.ne', if_false, sub_zero]
+  · simp only [h, dite_eq_left, h.ne', ite_false, sub_zero]
     exact
       ((PiLp.proj 2 (fun _ : Fin (nd X) => ℂ) ((Fintype.equivFin (Ent X)) ⟨τ, ⟨(a, c), h⟩⟩)).hasFDerivAt).comp_hasDerivAt t hf
-  · simp only [h, dif_neg, not_false_eq_true, sub_self]
+  · simp only [h, dite_eq_right, not_false_eq_true, sub_self]
     exact hasDerivAt_const _ _
 
 theorem nmat_zero_apply (X : Data E r) (τ : X.Ψ) (a c : Fin r) :
@@ -1111,7 +1111,7 @@ theorem levi_transport_origin : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     simp only [Matrix.mul_apply, Matrix.sub_apply, Matrix.add_apply, Matrix.one_apply, mat, Matrix.of_apply,
       WithLp.toLp_ofLp]
     rw [heq]
-    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, mul_add,
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, mul_add,
       Finset.sum_add_distrib, Finset.mul_sum, Finset.sum_mul, mul_assoc]
     rw [Finset.sum_comm]
 
@@ -1413,7 +1413,7 @@ theorem levi_ball (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (hr : 0 < 
   · simp [mat, nmat, not_lt.2 h.le, h.ne]
   · simp [mat, nmat]
   · have := GlobalTheory.ChartNearOne.nmat_entry_le X z τ a c
-    rwa [if_neg h.ne', sub_zero] at this
+    rwa [ite_eq_right h.ne', sub_zero] at this
   · rw [low_apply, dite_eq_right (not_lt.2 h)]
   · rw [low_apply, dite_eq_right (not_lt.2 h)]
   · rw [Matrix.mul_assoc, hm, Matrix.nonsing_inv_mul_cancel_left _ _ hu]
@@ -1838,10 +1838,10 @@ theorem peak_weight : ∃ C1 : ℝ, 0 ≤ C1 ∧ ∀ (E : Type) [Field E] [Numbe
       (measurableSet_lt measurable_norm measurable_const)
   · have h := _root_.GlobalTheory.wdb_cutoff_sq_le χ A hχ hχr hχ1 hχ0 hd1 (nd X) ρ hρ0 z ξ
     by_cases hz' : ρ / 2 ≤ ‖z‖ ∧ ‖z‖ < ρ
-    · rw [if_pos hz'] at h
+    · rw [ite_eq_left hz'] at h
       rw [Set.indicator_of_mem (by exact hz'), one_mul, weight_levi X hx la bb (hsm k).2 hz]
       exact ENNReal.ofReal_le_ofReal (h.trans ((hlevi k).1 z (hz'.2.trans hρR) ξ))
-    · rw [if_neg hz'] at h
+    · rw [ite_eq_right hz'] at h
       rw [ENNReal.ofReal_eq_zero.2 h]
       exact zero_le
   · refine annulus_integral X x (Real.exp_pos _).le fun z h1 h2 => ?_

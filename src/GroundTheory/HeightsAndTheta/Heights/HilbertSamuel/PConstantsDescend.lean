@@ -85,7 +85,7 @@ theorem exists_ringHom_of_root (θ : B) (hgen : Algebra.adjoin A {θ} = ⊤) (I 
     (hβ : ((minpoly (A ⧸ I) (Ideal.Quotient.mk (I.map (algebraMap A B)) θ)).map σ).IsRoot β) :
     ∃ w : B →+* ℂ, w.comp (algebraMap A B) = σ.comp (Ideal.Quotient.mk I) ∧ w θ = β := by
   classical
-  letI : Field (A ⧸ I) := Ideal.Quotient.field I
+  let : Field (A ⧸ I) := Ideal.Quotient.field I
   let f : A[X] →+* B := (aeval θ).toRingHom
   have hf : Function.Surjective f := by
     intro b
@@ -132,12 +132,12 @@ theorem exists_sub_mem_map (θ : B) (hgen : Algebra.adjoin A {θ} = ⊤) (p : �
     ∃ a : A, b - algebraMap A B a ∈ I.map (algebraMap A B) := by
   classical
   set J := I.map (algebraMap A B) with hJ
-  letI : Field (A ⧸ I) := Ideal.Quotient.field I
-  haveI : Nontrivial (B ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hI
-  haveI : Algebra.FiniteType ℚ (A ⧸ I) :=
+  let : Field (A ⧸ I) := Ideal.Quotient.field I
+  have : Nontrivial (B ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hI
+  have : Algebra.FiniteType ℚ (A ⧸ I) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℚ I) (Ideal.Quotient.mkₐ_surjective ℚ I)
-  haveI : Module.Finite ℚ (A ⧸ I) := finite_of_finite_type_of_isJacobsonRing ℚ (A ⧸ I)
-  haveI : Algebra.IsAlgebraic ℚ (A ⧸ I) := Algebra.IsAlgebraic.of_finite ℚ _
+  have : Module.Finite ℚ (A ⧸ I) := finite_of_finite_type_of_isJacobsonRing ℚ (A ⧸ I)
+  have : Algebra.IsAlgebraic ℚ (A ⧸ I) := Algebra.IsAlgebraic.of_finite ℚ _
   let σ : A ⧸ I →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -191,10 +191,10 @@ theorem algebraMap_surjective (hinj : Function.Injective (algebraMap A B)) (θ :
     Function.Surjective (algebraMap A B) := by
   classical
   have hθA : IsIntegral A θ := ⟨p.map (algebraMap ℚ A), hpm.map _, hp⟩
-  haveI : Algebra.IsIntegral A B :=
+  have : Algebra.IsIntegral A B :=
     ⟨fun b => adjoin_le_integralClosure hθA (hgen ▸ Algebra.mem_top : b ∈ Algebra.adjoin A {θ})⟩
-  haveI : Algebra.FiniteType A B := ⟨⟨{θ}, by simpa using hgen⟩⟩
-  haveI : Module.Finite A B := Algebra.finite_iff_isIntegral_and_finiteType.2 ⟨inferInstance, inferInstance⟩
+  have : Algebra.FiniteType A B := ⟨⟨{θ}, by simpa using hgen⟩⟩
+  have : Module.Finite A B := Algebra.finite_iff_isIntegral_and_finiteType.2 ⟨inferInstance, inferInstance⟩
   set N := LinearMap.range (Algebra.linearMap A B) with hN
   have hann : Module.annihilator A (B ⧸ N) = ⊤ := by
     by_contra hne
@@ -266,7 +266,7 @@ theorem exists_primitive {F Ω : Type*} [Field F] [CharZero F] [Field Ω] [Algeb
     (hS : ∀ s ∈ S, IsIntegral F s) :
     ∃ θ : Ω, IsIntegral F θ ∧ θ ∈ Algebra.adjoin F (S : Set Ω) ∧
       ∀ x ∈ IntermediateField.adjoin F (S : Set Ω), x ∈ Algebra.adjoin F {θ} := by
-  haveI : FiniteDimensional F (IntermediateField.adjoin F (S : Set Ω)) :=
+  have : FiniteDimensional F (IntermediateField.adjoin F (S : Set Ω)) :=
     IntermediateField.finiteDimensional_adjoin fun x hx => hS x hx
   obtain ⟨α, hα⟩ := Field.exists_primitive_element F (IntermediateField.adjoin F (S : Set Ω))
   have hθint : IsIntegral F (α : Ω) := (IsIntegral.of_finite F α).map (IntermediateField.adjoin F (S : Set Ω)).val
@@ -372,7 +372,7 @@ theorem proof : ConstantsDescend.Statement := by
 
   obtain ⟨s, hs⟩ := hR
   have hAfg : (Algebra.adjoin ℚ (R : Set Ω)).FG := ⟨s, by rw [← hs, Algebra.adjoin_adjoin_of_tower]⟩
-  haveI : Algebra.FiniteType ℚ (Algebra.adjoin ℚ (R : Set Ω)) := (Subalgebra.fg_iff_finiteType _).1 hAfg
+  have : Algebra.FiniteType ℚ (Algebra.adjoin ℚ (R : Set Ω)) := (Subalgebra.fg_iff_finiteType _).1 hAfg
 
   have hθA : θ ∈ Algebra.adjoin ℚ (R : Set Ω) := by
     refine mem_of_unique_extension _ θ hθint fun w w' hw => ?_

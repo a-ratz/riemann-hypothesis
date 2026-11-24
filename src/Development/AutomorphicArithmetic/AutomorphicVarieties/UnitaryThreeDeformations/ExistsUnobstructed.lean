@@ -94,8 +94,8 @@ theorem UpperTheory.card_dual_residueField_eq_card_of_maximalIdeal_smul_eq_zero 
   intro O N _ _ _ _ _ _ h
   classical
   have hM : Module.IsTorsionBySet O N (maximalIdeal O) := fun x a => h a a.2 x
-  letI : Module (ResidueField O) N := hM.module
-  haveI : IsScalarTower O (ResidueField O) N := hM.isScalarTower
+  let : Module (ResidueField O) N := hM.module
+  have : IsScalarTower O (ResidueField O) N := hM.isScalarTower
   have e := LinearMap.extendScalarsOfSurjectiveEquiv (R := O) (S := ResidueField O) (M := N)
     (N := ResidueField O) IsLocalRing.residue_surjective
   rw [Nat.card_congr e.toEquiv]
@@ -122,7 +122,7 @@ theorem exists_procyc_lift {D H H' : Type} [Group D] [TopologicalSpace D] [IsTop
     ∃ u : D →* H, IsLocallyConstant u ∧ (∀ s ∈ I, u s = 1) ∧ π.comp u = u' ∧ ∀ g, ∃ k : ℕ, u g = y ^ k := by
   have hn : 0 < orderOf y := orderOf_pos y
   obtain ⟨d, hd1, hd2, hd3⟩ := hd (orderOf y) hn
-  haveI : NeZero (orderOf y) := ⟨hn.ne'⟩
+  have : NeZero (orderOf y) := ⟨hn.ne'⟩
   let e : Multiplicative (ZMod (orderOf y)) →* H :=
     { toFun := fun k => y ^ (Multiplicative.toAdd k).val
       map_one' := by simp
@@ -339,7 +339,7 @@ theorem exists_torus_lift {O D R R' : Type} [CommRing O] [IsLocalRing O] [Group 
     (hgr : ∀ a, ∃ x ∈ 𝒜 0, p x = (t' φ).mat a a) :
     ∃ t : D →* GG (m := 3) (R := R), UnitaryThreeInertia.push p t = t' ∧ IsLocallyConstant t ∧ (∀ g, (t g).mat.IsDiag) ∧
       (∀ s ∈ I, t s = GG.ofGL (tor (R := R) (chr Ψ R s))) ∧ ∀ g, GrMat 𝒜 (t g).mat := by
-  haveI : Finite (GG (m := 3) (R := R)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have : Finite (GG (m := 3) (R := R)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
   choose x hx0 hx using hgr
   have hdet : IsUnit (diagonal x).det := by
     have h1 : (diagonal x).map (p : R →+* R') = (t' φ).mat := by
@@ -525,11 +525,11 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_lift_d :
       (∀ g, ∃ X, GrMat 𝒜 X ∧ X.map p = (r' g).mat) →
       ∃ r : F.D v →* GG (m := 3) (R := R), push p r = r' ∧ F.LocAt v r ∧ IsLocallyConstant (mats r) ∧ ∀ g, GrMat 𝒜 (r g).mat := by
   intro O _ _ _ _ _ _ G Γ ι _ _ _ _ _ _ _ _ _ _ _ _ _ F hF _ R R' _ _ _ _ _ _ 𝒜 _ p j hp hS v hv r' hred hloc hlc hgr
-  haveI : Finite R := hS.fin
-  haveI : Finite R' := Finite.of_surjective p hp
-  haveI : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp
+  have : Finite R := hS.fin
+  have : Finite R' := Finite.of_surjective p hp
+  have : IsLocalHom (p : R →+* R') := IsLocalHom.of_surjective _ hp
   have hvT : v ∈ F.Tb := Set.mem_insert_of_mem _ hv
-  have hcont : Continuous (F.loc v) := hF.π_cont.comp continuous_subtype_val
+  have hcont : Continuous (F.loc v) := hF.π_cont.comp continuous_subtypeVal
   obtain ⟨x, hηx, hx⟩ := hF.x v hvT
   obtain ⟨φ, hφ, hd⟩ := hF.frob v
   obtain ⟨X, hXg, hX⟩ := hgr x
@@ -652,8 +652,8 @@ private theorem lu_conj {H H' A : Type} [Group H] [Finite H] [Group H'] [Group A
     (hK : ∀ a b, f a = 1 → f b = 1 → a * b = b * a) (hc : Nat.Coprime (Nat.card f.ker) (Nat.card A))
     (σ τ : A →* H) (h : ∀ a, f (σ a) = f (τ a)) : ∃ k, f k = 1 ∧ ∀ a, τ a = k * σ a * k⁻¹ := by
   classical
-  letI := Fintype.ofFinite A
-  letI : CommGroup f.ker := { (inferInstance : Group f.ker) with
+  let := Fintype.ofFinite A
+  let : CommGroup f.ker := { (inferInstance : Group f.ker) with
     mul_comm := fun a b => Subtype.ext (hK _ _ a.2 b.2) }
   let c : A → f.ker := fun a => ⟨τ a * (σ a)⁻¹, by simp [h a]⟩
   let act : A → f.ker →* f.ker := fun a => (MulAut.conjNormal (σ a) : MulAut f.ker).toMonoidHom
@@ -688,13 +688,13 @@ private theorem lu_abs {D H H' : Type} [Group D] [TopologicalSpace D] [IsTopolog
       d φ = Multiplicative.ofAdd 1)
     (r' : D →* H') (hlc : IsLocallyConstant r') (hs : ∀ g, ∃ h, f h = r' g) (he : ∀ s ∈ I, r' s ^ e = 1) :
     ∃ r : D →* H, (∀ g, f (r g) = r' g) ∧ IsLocallyConstant r ∧ ∀ s ∈ I, r' s = 1 → r s = 1 := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   let A : Subgroup H' := I.map r'
   have hsurj : Function.Surjective (f.subgroupComap A) := by
     rintro ⟨_, s, hsI, rfl⟩
     obtain ⟨h, hh⟩ := hs s
     exact ⟨⟨h, show f h ∈ A from hh ▸ ⟨s, hsI, rfl⟩⟩, Subtype.ext hh⟩
-  haveI : Finite A := Finite.of_surjective _ hsurj
+  have : Finite A := Finite.of_surjective _ hsurj
   have hA : Nat.Coprime l (Nat.card A) := by
     rw [hl.coprime_iff_not_dvd]
     intro hdv
@@ -836,7 +836,7 @@ private theorem lu_sub {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [A
         rcases Int.units_eq_one_or x.right with h | h <;> rw [h]
         · rw [sgnAct_one]; exact hy
         · rw [sgnAct_neg_one]; exact hθ _ hy }
-  haveI : Finite (GG (m := 3) (R := R)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have : Finite (GG (m := 3) (R := R)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
   exact ⟨{ S₁ with inv_mem' := fun hx => lu_inv_mem S₁ hx }, fun _ => Iff.rfl⟩
 
 private theorem lu_ker {R R' : Type} [CommRing R] [CommRing R'] (p : R →+* R')
@@ -894,10 +894,10 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_lift_u :
       (∀ g, ∃ X, GrMat 𝒜 X ∧ X.map p = (r' g).mat) →
       ∃ r : F.D v →* GG (m := 3) (R := R), UnitaryThreeInertia.push p r = r' ∧ F.LocAt v r ∧ IsLocallyConstant (mats r) ∧ ∀ g, GrMat 𝒜 (r g).mat := by
   intro O _ _ _ _ _ _ G Γ ι _ _ _ _ _ _ _ _ _ _ _ _ _ F hF _ R R' _ _ _ _ _ _ 𝒜 _ p j hp hS v hv r' hred hloc hlc hgr
-  haveI := hS.fin
-  haveI : Finite (GG (m := 3) (R := R)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
+  have := hS.fin
+  have : Finite (GG (m := 3) (R := R)) := Finite.of_equiv _ SemidirectProduct.equivProd.symm
   obtain ⟨S, hSm⟩ := lu_sub 𝒜
-  letI := Fintype.ofFinite (ResidueField O)
+  let := Fintype.ofFinite (ResidueField O)
   obtain ⟨l, hchar, n, hl, hcard⟩ := FiniteField.card' (ResidueField O)
   have hkill : ∀ x y : R, x ∈ maximalIdeal R → p y = 0 → x * y = 0 := fun x y hx hy => by
     have := Ideal.mul_mem_mul hx (show y ∈ RingHom.ker p from hy)
@@ -922,7 +922,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_lift_u :
   have hU := hloc.2.2 hv
   have hlc' : IsLocallyConstant r' := by
     have h1 : IsLocallyConstant (F.ηv v) :=
-      hF.η_cont.comp_continuous (hF.π_cont.comp continuous_subtype_val)
+      hF.η_cont.comp_continuous (hF.π_cont.comp continuous_subtypeVal)
     refine IsLocallyConstant.desc r' (fun x : GG (m := 3) (R := R') => (x.mat, x.right)) ?_ ?_
     · have := hlc.prodMk h1
       convert this using 1
@@ -975,12 +975,12 @@ private theorem isCO_of_surj {O : Type} [CommRing O] [IsLocalRing O] {R S : Type
     [IsCO O R] [Finite R] [CommRing S] [Algebra O S] [Nontrivial S] (f : R →ₐ[O] S)
     (hf : Function.Surjective f) :
     ∃ _ : IsCO O S, ∀ x : R, f x ∈ maximalIdeal S ↔ x ∈ maximalIdeal R := by
-  haveI : IsLocalRing S := IsLocalRing.of_surjective' (f : R →+* S) hf
-  haveI : Finite S := Finite.of_surjective f hf
-  haveI hl : IsLocalHom (f : R →+* S) := IsLocalHom.of_surjective (f : R →+* S) hf
+  have : IsLocalRing S := IsLocalRing.of_surjective' (f : R →+* S) hf
+  have : Finite S := Finite.of_surjective f hf
+  have hl : IsLocalHom (f : R →+* S) := IsLocalHom.of_surjective (f : R →+* S) hf
   have hm : ∀ x : R, f x ∈ maximalIdeal S ↔ x ∈ maximalIdeal R := fun x =>
     ⟨fun h hu => h (hu.map f), fun h hu => h (hl.map_nonunit x hu)⟩
-  haveI : IsArtinianRing S := inferInstance
+  have : IsArtinianRing S := inferInstance
   refine ⟨{ complete := inferInstance, isLocalHom := ⟨fun a ha => ?_⟩, res_surj := fun y => ?_ }, hm⟩
   · rw [← f.commutes] at ha
     exact IsLocalHom.map_nonunit (f := algebraMap O R) a (hl.map_nonunit _ ha)
@@ -1028,7 +1028,7 @@ theorem UpperTheory.exists_small_extension_factorization_of_functional :
     refine ⟨a • x0, ?_⟩
     rw [map_smul, Algebra.smul_def, ResidueField.algebraMap_eq, ha, inv_mul_cancel_right₀ hx0]
   have hJtop : J ≠ ⊤ := fun h => hx0 ((hJ x0).1 (h ▸ Submodule.mem_top))
-  haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hJtop
+  have : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hJtop
   have hp1 : Function.Surjective (Ideal.Quotient.mkₐ O J) := Ideal.Quotient.mkₐ_surjective O J
   obtain ⟨inst, hm⟩ := isCO_of_surj (Ideal.Quotient.mkₐ O J) hp1
   let ψ : RingHom.ker p →ₗ[O] R ⧸ J :=
@@ -1283,7 +1283,7 @@ theorem UpperTheory.lift_along_surjection_graded :
         F.Cond r → IsLocallyConstant (mats r) → push q r = r' → F.CondN g₁ r' →
         ∃ r₂ : Γ →* GG (m := 3) (R := R), F.IsPt g₁ r₂ ∧ push q r₂ = r' := by
   intro O _ _ G Γ ι _ _ _ _ _ F hF g₁ hg R R' _ _ _ _ _ _ q hq r r' hr hlc hp hr'
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   have hm : ∀ x : R, q x ∈ maximalIdeal R' ↔ x ∈ maximalIdeal R := fun x => by
     rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
   have hent : ∀ (h : GL (Fin 3) R), InHat (GeneralLinearGroup.map (q : R →+* R') h) ↔ InHat h := fun h => by
@@ -1438,7 +1438,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.exists_unobstructed :
     rwa [hI.kill, Ideal.mem_bot] at this⟩
   have hinj : Function.Injective (incl O (RingHom.ker p)) := Subtype.val_injective
   have hlc := lc_mats r' hr'.cont
-  have hloc : ∀ v, Continuous (F.loc v) := fun v => hF.π_cont.comp continuous_subtype_val
+  have hloc : ∀ v, Continuous (F.loc v) := fun v => hF.π_cont.comp continuous_subtypeVal
   obtain ⟨s, hs, hsc, hsg⟩ := exists_setLift 𝒜 p hp r' hlc hgr
   have hsr : ∀ g, (s g).right = F.η g := fun g =>
     (congrArg SemidirectProduct.right (hs g)).trans (hr'.mult g)

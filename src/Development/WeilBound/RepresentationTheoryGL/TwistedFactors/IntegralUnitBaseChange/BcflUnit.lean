@@ -503,7 +503,7 @@ theorem infinite_of_localField (K : Type) [Field K] [ValuativeRel K] [Topologica
   obtain ⟨m, hm, hmm⟩ := isOfFinOrder_iff_pow_eq_one.mp (isOfFinOrder_of_finite (Units.mk0 r hr))
   have h1 : r ^ m = 1 := by simpa using congrArg Units.val hmm
   have h2 : (ValuativeRel.valuation K r) ^ m = 1 := by rw [← map_pow, h1, map_one]
-  exact absurd h2 (pow_lt_one₀ zero_le' hr1 hm.ne').ne
+  exact absurd h2 (pow_lt_one₀ zero_le hr1 hm.ne').ne
 
 theorem exists_det_ne_zero {k E : Type*} [Field k] [Field E] [Algebra k E] [Infinite k]
     {m n : ℕ} (y : Fin m → Matrix (Fin n) (Fin n) E) (a : Fin m → E)
@@ -743,7 +743,7 @@ theorem cocycle [FiniteDimensional k E] [IsGalois k E] [Infinite k]
 
 theorem cyclicCocycleLemma : PositivityTheory.Rg.Tf.Loc.A2 → PositivityTheory.Rg.Tf.Loc.A3 := by
   intro _ k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ hgen n γ _ u hu hN
-  haveI := infinite_of_localField k
+  have := infinite_of_localField k
   exact cocycle σ hgen γ u hu hN
 
 end GlobalTheory.CompanionTheory.CyclicCocycle
@@ -862,7 +862,7 @@ theorem exists_trace_one [IsLocalRing O] [Module.Finite O O'] (ℓ : ℕ) (τ : 
       have : (1 : O') ∈ (⊤ : Submodule O O') := Submodule.mem_top
       rw [hbot] at this
       exact this
-    haveI : Subsingleton O' := subsingleton_of_zero_eq_one h1.symm
+    have : Subsingleton O' := subsingleton_of_zero_eq_one h1.symm
     exact ⟨0, Subsingleton.elim _ _⟩
 
 variable {R : Type} [CommRing R] [Algebra O R]
@@ -986,10 +986,10 @@ section Field
 variable (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
 
 theorem secondCountable_field : SecondCountableTopology F := by
-  letI N : NontriviallyNormedField F := nontriviallyNormedField F
+  let N : NontriviallyNormedField F := nontriviallyNormedField F
   have hw : @WeaklyLocallyCompactSpace F N.toUniformSpace.toTopologicalSpace :=
     (inferInstance : WeaklyLocallyCompactSpace F)
-  haveI : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
   have h : @SecondCountableTopology F N.toUniformSpace.toTopologicalSpace := inferInstance
   exact h
 
@@ -1075,17 +1075,17 @@ theorem isCompact_unitGL : IsCompact (unitGL (n := Fin n) F : Set (GL (Fin n) F)
   exact (MulOpposite.opHomeomorph.symm.isCompact_preimage).2 (isCompact_intMat F n)
 
 theorem locallyCompact_GL : LocallyCompactSpace (GL (Fin n) F) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) F) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) F) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → F))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) F)ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) F)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.isClosedEmbedding.locallyCompactSpace
   exact (Units.isClosedEmbedding_embedProduct (α := Matrix (Fin n) (Fin n) F)).locallyCompactSpace
 
 theorem secondCountable_GL : SecondCountableTopology (GL (Fin n) F) := by
-  haveI := secondCountable_field F
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) F) :=
+  have := secondCountable_field F
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) F) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → F))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) F)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) F)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.secondCountableTopology
   exact (Units.isEmbedding_embedProduct (M := Matrix (Fin n) (Fin n) F)).secondCountableTopology
 
@@ -1114,7 +1114,7 @@ theorem continuous_sigmaGL (σ : E ≃ₐ[k] E) (hσ : Continuous σ) (n : ℕ) 
 
 theorem isClosed_twCent (σ : E ≃ₐ[k] E) (hσ : Continuous σ) (n : ℕ) (δ : GL (Fin n) E) :
     IsClosed (twCent (sigmaGL σ) δ : Set (GL (Fin n) E)) := by
-  haveI : T2Space (GL (Fin n) E) :=
+  have : T2Space (GL (Fin n) E) :=
     (Units.isEmbedding_embedProduct (M := Matrix (Fin n) (Fin n) E)).t2Space
   have hθ := continuous_sigmaGL σ hσ n
   have : (twCent (sigmaGL σ) δ : Set (GL (Fin n) E)) = {g | g⁻¹ * δ * sigmaGL σ g = δ} := rfl
@@ -1125,10 +1125,10 @@ end Twisted
 
 theorem t0 : T0 := by
   refine ⟨fun F _ _ _ _ n => ?_, ?_⟩
-  · haveI : T2Space F := t2Space_of_isNonarchimedeanLocalField F
+  · have : T2Space F := t2Space_of_isNonarchimedeanLocalField F
     exact ⟨locallyCompact_GL F n, secondCountable_GL F n, isOpen_unitGL F n, isCompact_unitGL F n⟩
   · intro k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ _ n δ
-    haveI : T2Space E := t2Space_of_isNonarchimedeanLocalField E
+    have : T2Space E := t2Space_of_isNonarchimedeanLocalField E
     exact isClosed_twCent σ (continuous_algHom σ.toAlgHom) n δ
 
 end GlobalTheory.CompanionTheory.LocTop
@@ -1164,9 +1164,9 @@ theorem transport_open_trace : D0a → T0 → A1 → MeasureTransportOpenSet := 
   have hinc : Continuous (fun g : GL (Fin n) k => (incl g : GL (Fin n) E)) :=
     (hD k E hur σ hgen).2.2.2.2.2 n
   have hcf : Continuous (fun x : twCent (sigmaGL σ) δ => h⁻¹ * (x : GL (Fin n) E) * h) :=
-    (continuous_const.mul continuous_subtype_val).mul continuous_const
+    (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have hci : Continuous (fun t : Subgroup.centralizer {γ} => incl (t : GL (Fin n) k)) :=
-    hinc.comp continuous_subtype_val
+    hinc.comp continuous_subtypeVal
 
   have hsep : ((incl γ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).charpoly.Separable := by
     have h0 := hreg
@@ -1232,22 +1232,22 @@ open ValuativeRel
 
 theorem secondCountable_t2_local_field (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : SecondCountableTopology k ∧ T2Space k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
     { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   open scoped Valued in
-  haveI : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
+  have : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
   exact ⟨secondCountable_of_proper, inferInstance⟩
 
 theorem secondCountable_GL (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (n : ℕ) : SecondCountableTopology (GL (Fin n) k) := by
   obtain ⟨_, _⟩ := secondCountable_t2_local_field k
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) k) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) k) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → k))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) k)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) k)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact (Units.isEmbedding_embedProduct (M := Matrix (Fin n) (Fin n) k)).secondCountableTopology
 
@@ -1282,7 +1282,7 @@ def conjSet (H U : Subgroup G) (r : G) : Set H := {h | r⁻¹ * (h : G) * r ∈ 
 
 theorem isOpen_conjSet {H U : Subgroup G} (hU : IsOpen (U : Set G)) (r : G) :
     IsOpen (conjSet H U r) :=
-  hU.preimage ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+  hU.preimage ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
 
 theorem one_mem_conjSet (H U : Subgroup G) (r : G) : (1 : H) ∈ conjSet H U r := by
   simp [conjSet, U.one_mem]
@@ -1359,7 +1359,7 @@ theorem rho_isQuotNormaliser [SecondCountableTopology G] {H U : Subgroup G} {μH
     (hcov : ∀ g, ∃ r ∈ Rp, ∃ h ∈ H, ∃ κ ∈ U, g = h * r * κ)
     (huniq : ∀ r ∈ Rp, ∀ r' ∈ Rp, (∃ h ∈ H, ∃ κ ∈ U, r' = h * r * κ) → r = r') :
     IsQuotNormaliser H μH (rho μH U Rp) := by
-  haveI : Countable Rp := countable_reps hU huniq
+  have : Countable Rp := countable_reps hU huniq
   refine ⟨measurable_rho hU, fun g => ?_⟩
   obtain ⟨r, hr, h0, hh0, κ, hκ, rfl⟩ := hcov g
   have hpos : μH (conjSet H U r) ≠ 0 :=
@@ -1413,15 +1413,15 @@ theorem quotLIntegral_eq_tsum [SecondCountableTopology G] [T2Space G]
     (huniq : ∀ r ∈ Rp, ∀ r' ∈ Rp, (∃ h ∈ H, ∃ κ ∈ U, r' = h * r * κ) → r = r') :
     quotLIntegral μG H μH Fn =
       ∑' r : Rp, Fn r * μG (U : Set G) / μH {h : H | (r : G)⁻¹ * (h : G) * r ∈ U} := by
-  haveI : LocallyCompactSpace G :=
+  have : LocallyCompactSpace G :=
     hUc.locallyCompactSpace_of_mem_nhds_of_group (hU.mem_nhds U.one_mem)
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : Countable Rp := countable_reps hU huniq
-  haveI : μH.IsInvInvariant := by
-    letI : CommGroup H := { (inferInstance : Group H) with
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : Countable Rp := countable_reps hU huniq
+  have : μH.IsInvInvariant := by
+    let : CommGroup H := { (inferInstance : Group H) with
       mul_comm := fun a b => Subtype.ext (hcomm a a.2 b b.2) }
-    haveI : μH.Regular := inferInstance
+    have : μH.Regular := inferInstance
     exact Measure.IsHaarMeasure.isInvInvariant_of_regular μH
   have hFm : Measurable Fn := measurable_of_right_invariant hU hFU
   rw [quotLIntegral_eq hFm hFH (rho_isQuotNormaliser hU hUc hH hcomm hcov huniq)]
@@ -1450,10 +1450,10 @@ end Abstract
 
 theorem h2U : PositivityTheory.Rg.Tf.Loc.QuotientIntegralCompactOpen := by
   intro F _ _ _ _ n _ _ μG H μH U hUo hUc hμG hH hcomm hμH Fn hFH hFU Rp hcov huniq
-  haveI := GlobalTheory.CompanionTheory.GLMeasure.secondCountable_GL F n
+  have := GlobalTheory.CompanionTheory.GLMeasure.secondCountable_GL F n
   obtain ⟨_, _⟩ := GlobalTheory.CompanionTheory.GLMeasure.secondCountable_t2_local_field F
-  haveI : T2Space (Matrix (Fin n) (Fin n) F) := inferInstanceAs (T2Space (Fin n → Fin n → F))
-  haveI : T2Space (GL (Fin n) F) := inferInstance
+  have : T2Space (Matrix (Fin n) (Fin n) F) := inferInstanceAs (T2Space (Fin n → Fin n → F))
+  have : T2Space (GL (Fin n) F) := inferInstance
   exact quotLIntegral_eq_tsum μG H μH U hUo hUc hH hcomm Fn hFH hFU Rp hcov huniq
 
 end GlobalTheory.CompanionTheory.QuotU
@@ -1549,7 +1549,7 @@ theorem lt_one_of_mem_maximal (x : 𝒪[E]) (hx : x ∈ IsLocalRing.maximalIdeal
 theorem residue_card_facts : ∃ q : ℕ, valuation E (q : E) < 1 ∧
     ∀ x : 𝒪[E], valuation E (((x ^ q - x : 𝒪[E])) : E) < 1 := by
   classical
-  haveI : Fintype (IsLocalRing.ResidueField 𝒪[E]) := Fintype.ofFinite _
+  have : Fintype (IsLocalRing.ResidueField 𝒪[E]) := Fintype.ofFinite _
   refine ⟨Fintype.card (IsLocalRing.ResidueField 𝒪[E]), ?_, ?_⟩
   · have hmem : ((Fintype.card (IsLocalRing.ResidueField 𝒪[E]) : ℕ) : 𝒪[E]) ∈ IsLocalRing.maximalIdeal 𝒪[E] := by
       rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]
@@ -1572,10 +1572,10 @@ theorem integral_basis
     (hint : ∀ a : k, algebraMap k E a ∈ intO E ↔ a ∈ intO k) :
     ∃ b : Module.Basis (Fin (Module.finrank k E)) k E, (∀ i, b i ∈ intO E) ∧
       ∀ x : E, x ∈ intO E ↔ ∀ i, b.repr x i ∈ intO k := by
-  haveI := GroundTheory.LocalField.free_integer k E
-  haveI := GroundTheory.LocalField.finite_integer k E
-  haveI := GroundTheory.LocalField.isIntegralClosure k E
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid 𝒪[E] (nonZeroDivisors 𝒪[k])) E :=
+  have := GroundTheory.LocalField.free_integer k E
+  have := GroundTheory.LocalField.finite_integer k E
+  have := GroundTheory.LocalField.isIntegralClosure k E
+  have : IsLocalization (Algebra.algebraMapSubmonoid 𝒪[E] (nonZeroDivisors 𝒪[k])) E :=
     IsIntegralClosure.isLocalization 𝒪[k] k E 𝒪[E]
   let bO := Module.finBasisOfFinrankEq 𝒪[k] 𝒪[E] (GroundTheory.LocalField.finrank_integer k E)
   let b := bO.localizationLocalization k (nonZeroDivisors 𝒪[k]) E
@@ -1610,7 +1610,7 @@ theorem uniformiser_of_unramified (hU : IsUnramifiedLoc k E) :
     have hlt := lt_one_of_mem_maximal E y hy
     have h0 := hπ2 _ hlt
     rw [map_zero, map_zero] at h0
-    exact hy0 (Subtype.ext ((Valuation.zero_iff _).mp (le_antisymm h0 zero_le')))
+    exact hy0 (Subtype.ext ((Valuation.zero_iff _).mp (le_antisymm h0 zero_le)))
   refine ⟨π, ⟨(hk1 π).mpr hπ1, hne, ?_⟩, ⟨hπ1, (map_ne_zero _).mpr hne, hπ2⟩⟩
   intro x hx
   exact (val_le_iff x π).mpr (hπ2 _ ((hk1 x).mp hx))
@@ -1623,7 +1623,7 @@ theorem exists_moved (hU : IsUnramifiedLoc k E) (τ : E ≃ₐ[k] E) (hτ : τ �
   push_neg at hcon
   obtain ⟨π, -, hπE⟩ := uniformiser_of_unramified hU
   obtain ⟨hπ1, hπ0, hπmax⟩ := hπE
-  haveI := GroundTheory.LocalField.isDiscreteValuationRing E
+  have := GroundTheory.LocalField.isDiscreteValuationRing E
   have hint : ∀ x : 𝒪[E], ((τ : E →+* E).comp (𝒪[E]).subtype) x ∈ 𝒪[E] := by
     intro x
     show valuation E (τ x) ≤ 1
@@ -1677,7 +1677,7 @@ theorem exists_moved (hU : IsUnramifiedLoc k E) (τ : E ≃ₐ[k] E) (hτ : τ �
     exact this
   · have hy0 : y ≠ 0 := by
       rintro rfl
-      exact hy (by rw [map_zero]; exact zero_le')
+      exact hy (by rw [map_zero]; exact zero_le)
     have hy' : valuation E y⁻¹ ≤ 1 := ((Valuation.one_lt_val_iff _ hy0).mp (not_le.mp hy)).le
     have := congrArg Subtype.val (hall ⟨y⁻¹, hy'⟩)
     rw [hτO] at this

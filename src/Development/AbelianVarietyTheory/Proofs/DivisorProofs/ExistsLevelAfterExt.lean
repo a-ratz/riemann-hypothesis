@@ -154,7 +154,7 @@ theorem exists_level {O C : Type} [CommRing O] [IsDomain O] [ValuationRing O] [F
   have hM' : (M : C) ≠ 0 := by
     have := (hM.map (algebraMap O C)).ne_zero
     rwa [map_natCast] at this
-  haveI : NeZero M := ⟨fun h0 => hM' (by rw [h0, Nat.cast_zero])⟩
+  have : NeZero M := ⟨fun h0 => hM' (by rw [h0, Nat.cast_zero])⟩
   obtain ⟨P', g, hg, hgg, hmul, tw, htw⟩ :=
     GlobalTheory.laws_without_cohomology.2.2.1 _ _ (Geo.Tor.spMap (algebraMap O C)) P
   have hp : IsGrpPullback P'.A P.A (Geo.Tor.spMap (algebraMap O C)) g := ⟨hg, fun T x y x₀ y₀ hx hy => by
@@ -249,9 +249,9 @@ theorem exists_ext_torsion (K : Type) [Field K] (P₀ : PolAV (Sp K)) (N : ℕ) 
     (AbTorsionAnyBase.isFinite_and_flat_torsion (Sp K) P₀.A P₀.isAb N hN).1
   refine ⟨K', inferInstance, inferInstance, hfin, ?_⟩
   intro K'' Ω _ _ i f hf P ψ hP σ Q ψσ hQ y hy
-  letI : Algebra K' K'' := i.toAlgebra
-  letI : Algebra K K'' := f.toAlgebra
-  haveI : IsScalarTower K K' K'' := IsScalarTower.of_algebraMap_eq' hf.symm
+  let : Algebra K' K'' := i.toAlgebra
+  let : Algebra K K'' := f.toAlgebra
+  have : IsScalarTower K K' K'' := IsScalarTower.of_algebraMap_eq' hf.symm
   have hPg : IsGrpPullback P.A P₀.A (spMap f) ψ := hP.2.1
   have hQg : IsGrpPullback Q.A P.A (spMap σ) ψσ := hQ.2.1
   let x0 := ObjPull.pushEquiv hPg _ (ObjPull.pushEquiv hQg (𝟙_ _) y)
@@ -266,12 +266,12 @@ theorem exists_ext_torsion (K : Type) [Field K] (P₀ : PolAV (Sp K)) (N : ℕ) 
     exact Category.id_comp _
   obtain ⟨w, hw⟩ := H K'' Ω σ t0.left ((Over.w t0).trans hs)
   have hw2 : w ≫ (torsion P₀.A N).hom = (𝟙_ (Over (Sp K''))).hom ≫ spMap f := by
-    haveI : Epi (spMap σ) := by
-      letI := σ.toAlgebra
-      haveI : Flat (spMap σ) := by
+    have : Epi (spMap σ) := by
+      let := σ.toAlgebra
+      have : Flat (spMap σ) := by
         rw [HasRingHomProperty.Spec_iff (P := @Flat)]
         exact RingHom.flat_algebraMap_iff.2 inferInstance
-      haveI : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
+      have : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
       exact Flat.epi_of_flat_of_surjective _
     apply (cancel_epi (spMap σ)).1
     rw [← Category.assoc, hw, Over.w t0]
@@ -303,16 +303,16 @@ theorem exists_ext_level (K : Type) [Field K] [CharZero K] (P₀ : PolAV (Sp K))
   refine ⟨K', inferInstance, inferInstance, hfin, fun K'' _ i f hf P ψ hP g hg ze hze => ?_⟩
   let Ω := AlgebraicClosure K''
   let σ : K'' →+* Ω := algebraMap K'' Ω
-  haveI : CharZero Ω := (σ.comp f).charZero_iff (σ.comp f).injective |>.1 inferInstance
+  have : CharZero Ω := (σ.comp f).charZero_iff (σ.comp f).injective |>.1 inferInstance
   obtain ⟨Q, φ, hQ⟩ := exists_isPolFibre GlobalTheory.laws_without_cohomology.2.2.1 σ P
   obtain ⟨l, h₁, h₂, h₃⟩ := SiegPt.exists_level (O := Ω) (C := Ω) Q g N (Units.map σ.toMonoidHom ze) (hQ.1.trans hg)
     (IsUnit.mk0 _ (Nat.cast_ne_zero.2 (by omega))) (hze.map_of_injective σ.injective)
-  haveI : Epi (spMap σ) := by
-    letI := σ.toAlgebra
-    haveI : Flat (spMap σ) := by
+  have : Epi (spMap σ) := by
+    let := σ.toAlgebra
+    have : Flat (spMap σ) := by
       rw [HasRingHomProperty.Spec_iff (P := @Flat)]
       exact RingHom.flat_algebraMap_iff.2 inferInstance
-    haveI : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
+    have : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
     exact Flat.epi_of_flat_of_surjective _
   have hinj : Function.Injective (ObjPull.secPull hQ.2.1) := fun a b h =>
     Over.OverMorphism.ext ((cancel_epi (spMap σ)).1 (by

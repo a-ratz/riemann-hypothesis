@@ -86,9 +86,9 @@ private theorem extend_SB {X Y : Type} [TopologicalSpace X] [T2Space X] [Topolog
     (a : Y → ℂ) (ha : a ∈ SB Y) : ∃ b ∈ SB X, ∀ y, b (i y) = a y := by
   obtain ⟨hlc, hcs⟩ := ha
   have hK : IsCompact (tsupport a) := hcs
-  haveI : CompactSpace (tsupport a) := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace (tsupport a) := isCompact_iff_compactSpace.mp hK
   have hfin : (Set.range ((tsupport a).restrict a)).Finite :=
-    (hlc.comp_continuous continuous_subtype_val).range_finite
+    (hlc.comp_continuous continuous_subtypeVal).range_finite
   have hfib : ∀ c : ℂ, c ≠ 0 → ∃ O : Set X, IsOpen O ∧ IsCompact O ∧ i ⁻¹' O = a ⁻¹' {c} := by
     intro c hc
     refine trace_compactOpen hi hb (hlc.isOpen_fiber c) (hK.of_isClosed_subset (hlc.isClosed_fiber c) ?_)
@@ -115,9 +115,9 @@ private theorem extend_SB {X Y : Type} [TopologicalSpace X] [T2Space X] [Topolog
         have := Set.ext_iff.mp (hOt c hc0) y
         simpa using this
       by_cases h : c = a y
-      · rw [Set.indicator_of_mem (hm.mpr h.symm), if_pos h, mul_one]
+      · rw [Set.indicator_of_mem (hm.mpr h.symm), ite_eq_left h, mul_one]
       · have : i y ∉ O c := fun h' => h (hm.mp h').symm
-        rw [Set.indicator_of_notMem this, if_neg h, mul_zero]
+        rw [Set.indicator_of_notMem this, ite_eq_right h, mul_zero]
     change ∑ c ∈ S, c * (O c).indicator (fun _ => (1 : ℂ)) (i y) = a y
     rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' S (a y) (fun c => c)]
     split_ifs with h

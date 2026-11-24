@@ -104,8 +104,8 @@ lemma exists_diag {E : Type} [Field E] [NumberField E] {W : Type} [AddCommGroup 
     exact EigenSplit.mem_eigenSub.1 (EigenSplit.proj_mem (EigenSplit.isSplitting_complex E) ρ φ v)
   obtain ⟨T, hT, hspan, hli⟩ := exists_linearIndependent ℂ S
   let b : Module.Basis T ℂ W := Module.Basis.mk hli (by rw [Subtype.range_coe, hspan, hS])
-  haveI : Finite T := Module.Finite.finite_basis b
-  haveI : Fintype T := Fintype.ofFinite T
+  have : Finite T := Module.Finite.finite_basis b
+  have : Fintype T := Fintype.ofFinite T
   choose s hs using fun v : T => hT v.2
   have hb : ∀ a v, ρ a (b v) = s v (a : E) • b v := fun a v => by
     simp only [b, Module.Basis.mk_apply]; exact hs v a
@@ -139,13 +139,13 @@ lemma exists_diag_real {E : Type} [Field E] [NumberField E] {W : Type} [AddCommG
     ∃ e : W ≃ₗ[ℝ] (Fin g → ℂ), (∀ v, e (J v) = Complex.I • e v) ∧
       ∀ a v i, e (ρ a v) i = ty i (a : E) * e v i := by
   let φ : ℂ →ₐ[ℝ] Module.End ℝ W := Complex.liftAux (J : Module.End ℝ W) (by ext x; simp [hJ])
-  letI : Module ℂ W := Module.compHom W (φ : ℂ →+* Module.End ℝ W)
+  let : Module ℂ W := Module.compHom W (φ : ℂ →+* Module.End ℝ W)
   have hsm : ∀ (z : ℂ) (v : W), z • v = z.re • v + z.im • J v := fun z v => by
     change φ z v = _
     simp [φ, Complex.liftAux_apply]
-  haveI : IsScalarTower ℝ ℂ W := ⟨fun r z v => by
+  have : IsScalarTower ℝ ℂ W := ⟨fun r z v => by
     simp [hsm, smul_add, smul_smul]⟩
-  haveI : FiniteDimensional ℂ W := Module.Finite.of_restrictScalars_finite ℝ ℂ W
+  have : FiniteDimensional ℂ W := Module.Finite.of_restrictScalars_finite ℝ ℂ W
   have hI : ∀ v : W, Complex.I • v = J v := fun v => by simp [hsm]
   let L : 𝓞 E → Module.End ℂ W := fun a =>
     { toFun := ρ a
@@ -275,11 +275,11 @@ lemma sum_type (H : Host E) {p q g : ℕ} {ty : Fin g → (E →+* ℂ)} (hty : 
 theorem exists_isPeriod (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (g : ℕ)
     (ty : Fin g → (E →+* ℂ)) (hty : IsTypeFn H D.p D.q ty) : ∃ P, IsPeriod D ty P := by
   classical
-  haveI := D.fin
-  haveI := D.proj
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
-  haveI : Module.Flat ℤ D.La := Module.Flat.trans ℤ (𝓞 E) D.La
-  haveI : Module.Free ℤ D.La := inferInstance
+  have := D.fin
+  have := D.proj
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.Flat ℤ D.La := Module.Flat.trans ℤ (𝓞 E) D.La
+  have : Module.Free ℤ D.La := inferInstance
   obtain ⟨J, hJ, hinv, hpos, htr⟩ := D.dom
   let ρ₀ : 𝓞 E →+* Module.End ℤ D.La := (Algebra.lsmul ℤ ℤ D.La : 𝓞 E →ₐ[ℤ] Module.End ℤ D.La)
   let ρ : 𝓞 E →+* Module.End ℝ (ℝ ⊗[ℤ] D.La) :=

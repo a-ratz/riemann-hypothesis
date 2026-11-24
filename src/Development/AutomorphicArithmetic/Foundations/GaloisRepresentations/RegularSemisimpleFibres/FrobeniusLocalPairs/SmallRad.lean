@@ -56,8 +56,8 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 private theorem exists_rad {γ : ValueGroupWithZero k} (hγ : γ ≠ 0) :
     ∃ r : ValueGroupWithZero k, 0 < r ∧ r < 1 ∧ r < γ := by
   obtain ⟨x, hx0, hx1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
-  have hc0 : 0 < valuation k x := zero_lt_iff.2 ((valuation k).ne_zero_iff.2 hx0)
-  have hm0 : 0 < min γ 1 := lt_min (zero_lt_iff.2 hγ) zero_lt_one
+  have hc0 : 0 < valuation k x := pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 hx0)
+  have hm0 : 0 < min γ 1 := lt_min (pos_iff_ne_zero.2 hγ) zero_lt_one
   have hlt : valuation k x * min γ 1 < min γ 1 := mul_lt_of_lt_one_left hm0 hx1
   exact ⟨valuation k x * min γ 1, mul_pos hc0 hm0, hlt.trans_le (min_le_right _ _), hlt.trans_le (min_le_left _ _)⟩
 
@@ -134,9 +134,9 @@ private theorem near_inv' {r : ValueGroupWithZero k} (h1 : r < 1) (x : kˣ) (hx 
   exact hx
 
 private theorem t2 : T2Space k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
     { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -144,7 +144,7 @@ private theorem t2 : T2Space k := by
 
 private theorem compact_units (r : ValueGroupWithZero k) (h1 : r < 1) :
     IsCompact {x : kˣ | valuation k ((x : k) - 1) ≤ r} := by
-  haveI : T2Space k := t2
+  have : T2Space k := t2
   have hC : IsCompact {x : k | valuation k (x - 1) ≤ r} := by
     have h := (IsNonarchimedeanLocalField.isCompact_closedBall k r).image (f := fun x => x + 1) (by fun_prop)
     convert h using 1
@@ -158,7 +158,7 @@ private theorem compact_units (r : ValueGroupWithZero k) (h1 : r < 1) :
     (hC.prod (hC.image MulOpposite.continuous_op))
   convert h using 1
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
     MulOpposite.op_injective.mem_set_image]
   exact ⟨fun hx => ⟨hx, near_inv' h1 x hx⟩, fun hx => hx.1⟩
 
@@ -205,11 +205,11 @@ theorem smallRad :
     refine ⟨fun i => Units.mk0 x hx0 ^ (n - (i : ℕ)), fun i j hij => ?_⟩
     simp only [Units.val_pow_eq_pow_val, Units.val_mk0, map_pow]
     have hij' : (i : ℕ) < j := hij
-    exact pow_lt_pow_right_of_lt_one₀ (zero_lt_iff.2 ((valuation k).ne_zero_iff.2 hx0)) hx1 (by omega)
+    exact pow_lt_pow_right_of_lt_one₀ (pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 hx0)) hx1 (by omega)
   · intro t₀ t h₀ ht i j hij
     have a := h₀ i j hij
     have b := ht i j hij
-    have c : 0 < valuation k (t j : k) := zero_lt_iff.2 (by simp)
+    have c : 0 < valuation k (t j : k) := pos_iff_ne_zero.2 (by simp)
     simp only [Pi.mul_apply, Units.val_mul, map_mul]
     calc valuation k (t₀ i : k) * valuation k (t i : k) ≤ valuation k (t₀ i : k) * valuation k (t j : k) :=
           mul_le_mul_right b _

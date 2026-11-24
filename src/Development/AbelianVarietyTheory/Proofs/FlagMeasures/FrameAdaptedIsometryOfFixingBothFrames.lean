@@ -78,14 +78,14 @@ theorem xflag_succ (A : LFlag (D.sp.Y 0) D.R.rS T) (j : ℕ) (hj : j < D.R.rS) :
   rw [← Set.image_singleton, ← Submodule.span_union, ← Set.image_union]
   congr 2
   ext i
-  simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff]
+  simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff]
   omega
 
 theorem xflag_ge (A : LFlag (D.sp.Y 0) D.R.rS T) (j : ℕ) (hj : D.R.rS ≤ j) : Xflag A j = Xflag A D.R.rS := by
   show Submodule.span _ (A.fl.e '' {i | i.1 < j}) = Submodule.span _ (A.fl.e '' {i | i.1 < D.R.rS})
   congr 2
   ext i
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   omega
 
 theorem frame_castSucc (A : LFlag (D.sp.Y 0) D.R.rS T) (i : Fin D.R.rS) : frame A i.castSucc = A.fl.e i := by
@@ -102,7 +102,7 @@ theorem adapt_xflag {A B : LFlag (D.sp.Y 0) D.R.rS T} {a : GV D} (h : Adapt a A 
     by_cases hj : j < D.R.rS
     · rw [xflag_succ A j hj, xflag_succ B j hj, Submodule.map_sup, ih, Submodule.map_span, Set.image_singleton]
       have hd := h.2 (Fin.castSucc ⟨j, hj⟩)
-      rw [frame_castSucc, frame_castSucc, Fin.coe_castSucc] at hd
+      rw [frame_castSucc, frame_castSucc, Fin.val_castSucc] at hd
       have e : (a : (VS D).V →ₗ[D.host.E] (VS D).V) (A.fl.e ⟨j, hj⟩) = B.fl.e ⟨j, hj⟩ + (a (A.fl.e ⟨j, hj⟩) - B.fl.e ⟨j, hj⟩) := by
         simp
       rw [e, sup_span_add hd]
@@ -176,7 +176,7 @@ theorem adapt_nrat {A : LFlag (D.sp.Y 0) D.R.rS T} {n : GV D} (hn : n ∈ NRat A
     rw [frame_last, Fin.val_last, ← xsp_eq]
     exact hn.2.2 _ (z_mem_orth A)
   | cast i =>
-    rw [frame_castSucc, Fin.coe_castSucc]
+    rw [frame_castSucc, Fin.val_castSucc]
     apply hn.2.1 i.1
     show A.fl.e i ∈ Submodule.span _ (A.fl.e '' {k | k.1 < i.1 + 1})
     exact Submodule.subset_span ⟨i, Nat.lt_succ_self _, rfl⟩
@@ -190,7 +190,7 @@ theorem adapt_mapLF {A : LFlag (D.sp.Y 0) D.R.rS T} {γ : GV D} (hγ : γ ∈ Fo
     Adapt γ A (mapLF γ A) := by
   refine ⟨hγ, fun k => ?_⟩
   have : frame (mapLF γ A) k = γ (frame A k) := by
-    simp only [mapLF, dif_pos hγ, frame]
+    simp only [mapLF, dite_eq_left hγ, frame]
     rw [fvec_mapFlag]
   rw [this, sub_self]; exact zero_mem _
 

@@ -77,13 +77,13 @@ theorem exists_lat_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     (L : Submodule K.O B.A), GlobalTheory.UnitLemma.IsLat K.O K.E L → ∃ q : GLw a w, GlobalTheory.TwLat.lat e b q = L := by
   intro E _ _ _ w K e a B b L hL
   obtain ⟨hfg, hspan⟩ := hL
-  haveI : Module.Finite K.O L := Module.Finite.iff_fg.mpr hfg
-  haveI : NoZeroSMulDivisors K.O B.A := ⟨fun {r x} h => by
+  have : Module.Finite K.O L := Module.Finite.iff_fg.mpr hfg
+  have : NoZeroSMulDivisors K.O B.A := ⟨fun {r x} h => by
     rw [← algebraMap_smul K.E r x] at h
     rcases smul_eq_zero.mp h with h | h
     · left; exact (IsFractionRing.injective K.O K.E) (by simpa using h)
     · right; exact h⟩
-  haveI : Module.Free K.O L := Module.free_of_finite_type_torsion_free'
+  have : Module.Free K.O L := Module.free_of_finite_type_torsion_free'
   let y := Module.Free.chooseBasis K.O L
   let v : Module.Free.ChooseBasisIndex K.O L → B.A := fun i => (y i : B.A)
   have hli : LinearIndependent K.O v := y.linearIndependent.map' L.subtype (Submodule.ker_subtype L)
@@ -157,7 +157,7 @@ variable {E : Type} [Field E] [NumberField E] {w : Pl E} {a : ℕ}
 
 theorem isCompact_boundedGL (R : ℝ) :
     IsCompact {g : GLw a w | ∀ i j, ‖g.val i j‖ ≤ R ∧ ‖(g⁻¹).val i j‖ ≤ R} := by
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion E w
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion E w
   have hK : IsCompact {A : Matrix (Fin a) (Fin a) (w.adicCompletion E) | ∀ i j, ‖A i j‖ ≤ R} := by
     have h : IsCompact (Set.pi Set.univ fun _ : Fin a => Set.pi Set.univ fun _ : Fin a =>
         Metric.closedBall (0 : w.adicCompletion E) R) :=
@@ -172,7 +172,7 @@ theorem isCompact_boundedGL (R : ℝ) :
     (hK.prod (hK.image MulOpposite.continuous_op))
   convert h using 1
   ext g
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
     (MulOpposite.op_injective).mem_set_image]
   exact ⟨fun hg => ⟨fun i j => (hg i j).1, fun i j => (hg i j).2⟩, fun hg i j => ⟨hg.1 i j, hg.2 i j⟩⟩
 
@@ -265,8 +265,8 @@ theorem isIntegral_of_bounded (he : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ 
     refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun j _ => ?_)
     rw [norm_mul]
     exact mul_le_mul_of_nonneg_right (hR n i j) (norm_nonneg _)
-  haveI : IsNoetherian K.O M := isNoetherian_of_fg_of_noetherian M hMfg
-  haveI : IsNoetherian K.O (Subalgebra.toSubmodule (Algebra.adjoin K.O {u})) := isNoetherian_of_le hle
+  have : IsNoetherian K.O M := isNoetherian_of_fg_of_noetherian M hMfg
+  have : IsNoetherian K.O (Subalgebra.toSubmodule (Algebra.adjoin K.O {u})) := isNoetherian_of_le hle
   exact isIntegral_of_submodule_noetherian _ this u (Algebra.self_mem_adjoin_singleton K.O u)
 
 theorem bounded_of_fg (he : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) (M : Submodule K.O B.A)
@@ -680,7 +680,7 @@ theorem twCent_eq_map : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   intro E _ _ _ w hw K e he a B hP β ε hε hβ b δ hG
   have hth : thL a w = thetaGL a (cj w) := by
     unfold thL
-    rw [if_neg hw]
+    rw [ite_eq_right hw]
   rw [hth]
   have hs := sf_crd e b (cj w) he _ (β : B.A) hG
   ext g
@@ -935,7 +935,7 @@ theorem twist_integral_iff_unimodular : ∀ (E : Type) [Field E] [NumberField E]
     rfl
   have step1 : q⁻¹ * δ * thL a w q ∈ GlobalTheory.LFun.KGL w (n := a) ↔ Yg ∈ GlobalTheory.LFun.KGL w (n := a) := by
     have hth : thL a w q = PhiU a F * invT a F (GeneralLinearGroup.map c q) * (PhiU a F)⁻¹ := by
-      simp only [GlobalTheory.BCT.thL, if_neg hw]
+      simp only [GlobalTheory.BCT.thL, ite_eq_right hw]
       rfl
     have hP : PhiU a F ∈ GlobalTheory.LFun.KGL w (n := a) := PhiU_mem _
     rw [hth, show q⁻¹ * δ * (PhiU a F * invT a F (GeneralLinearGroup.map c q) * (PhiU a F)⁻¹) =
@@ -1171,8 +1171,8 @@ theorem GlobalTheory.TwOrbLat.twOrb_unit_eq_orbSum : ∀ (E : Type) [Field E] [N
       rw [one_mul] at this
       simp only [Set.indicator_apply, SetLike.mem_coe, Pi.one_apply]
       by_cases h : P y
-      · rw [if_pos h, if_pos ((this.2 h))]
-      · rw [if_neg h, if_neg (fun h' => h (this.1 h'))]
+      · rw [ite_eq_left h, ite_eq_left ((this.2 h))]
+      · rw [ite_eq_right h, ite_eq_right (fun h' => h (this.1 h'))]
     unfold GlobalTheory.TwOrbConj.summand
     rw [hconst, avg_const, hRel]
     split_ifs <;> simp
@@ -1181,7 +1181,7 @@ theorem GlobalTheory.TwOrbLat.twOrb_unit_eq_orbSum : ∀ (E : Type) [Field E] [N
     ∀ z, z ∈ L ↔ ∀ y ∈ L, B.herm β y z ∈ (algebraMap K.O K.E).range} with hX
   have hUni : ∀ y : GLw a w, P y ↔ GlobalTheory.TwLat.lat e b y ∈ X := by
     intro y
-    simp only [hP_def, hX, Set.mem_setOf_eq]
+    simp only [hP_def, hX, Set.mem_ofPred_eq]
     rw [GlobalTheory.T.twistedConj_integral_iff_lattice_unimodular E w hw K e he hO a B β b δ hδ y]
     exact ⟨fun h => ⟨latOf_isLat e b y, h⟩, fun h => h.2⟩
   let r : X → X → Prop := fun L M => ∃ t ∈ B.T, (M : Submodule K.O B.A) = mulLat K.O (t : B.A) (L : Submodule K.O B.A)

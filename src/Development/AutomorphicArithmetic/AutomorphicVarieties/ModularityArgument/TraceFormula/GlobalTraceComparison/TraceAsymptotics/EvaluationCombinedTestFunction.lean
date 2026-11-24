@@ -336,12 +336,12 @@ private theorem hint_subsingleton {H : Type} [Group H] [Subsingleton H] (K : Sub
   have h1 : rStab u ⊓ K = ⊤ := Subsingleton.elim _ _
   have h2 : (rStab u ⊓ K).relIndex K = 1 := by rw [h1]; simp
   rw [h2]
-  haveI : Subsingleton (H ⧸ (rStab u ⊓ K)) := ⟨by
+  have : Subsingleton (H ⧸ (rStab u ⊓ K)) := ⟨by
     intro a b
     induction a using Quotient.inductionOn with | _ a =>
     induction b using Quotient.inductionOn with | _ b =>
     rw [Subsingleton.elim a b]⟩
-  haveI : Unique (H ⧸ (rStab u ⊓ K)) := Unique.mk' _
+  have : Unique (H ⧸ (rStab u ⊓ K)) := Unique.mk' _
   rw [finsum_unique]
   simp only [Nat.cast_one, inv_one, one_mul]
   exact congrArg u (Subsingleton.elim _ _)
@@ -384,9 +384,9 @@ private theorem ctMu_swap (n : ℕ) (w : Pl E) (χ : (w.adicCompletion E)ˣ →*
     (g : GLw n w) : ctMu (Nat.zero_add n) w χ f (x, g) = ctMu (Nat.add_zero n) w χ f (g, x') := by
   obtain rfl := gl_zero_eq_one_alt w x
   obtain rfl := gl_zero_eq_one_alt w x'
-  haveI : Subsingleton (Multiplicative (Matrix (Fin 0) (Fin n) (w.adicCompletion E))) :=
+  have : Subsingleton (Multiplicative (Matrix (Fin 0) (Fin n) (w.adicCompletion E))) :=
     inferInstanceAs (Subsingleton (Matrix (Fin 0) (Fin n) (w.adicCompletion E)))
-  haveI : Subsingleton (Multiplicative (Matrix (Fin n) (Fin 0) (w.adicCompletion E))) :=
+  have : Subsingleton (Multiplicative (Matrix (Fin n) (Fin 0) (w.adicCompletion E))) :=
     inferInstanceAs (Subsingleton (Matrix (Fin n) (Fin 0) (w.adicCompletion E)))
   unfold ctMu ct
   rw [hint_subsingleton, hint_subsingleton]
@@ -412,9 +412,9 @@ theorem ends : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.Ends := by
     refine geomSt2_swap S l₁ l₂ Φ Φ' fun w hw' y => ?_
     rw [hΦ w hw', hΦ' w hw']
     by_cases hs : IsSplitAt w
-    · simp only [if_pos hs]
+    · simp only [ite_eq_left hs]
       exact ctMu_swap b w _ _ _ _ _
-    · simp only [if_neg hs]
+    · simp only [ite_eq_right hs]
       have hm : y ∈ K2 0 b w ↔ (y.2, y.1) ∈ K2 b 0 w := by
         simp [K2, Subgroup.mem_prod, and_comm]
       simp only [Set.indicator, SetLike.mem_coe, hm, Pi.one_apply]

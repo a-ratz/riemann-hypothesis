@@ -66,27 +66,27 @@ theorem map_haar {nS nT N : ℕ} (α : WOF F E nS nT ≃ₗ[AF F] (Fin N → AF 
     (μN : Measure (Fin N → AF F)) (hμN : μN.IsAddHaarMeasure) :
     ∃ c : ℝ, 0 < c ∧ (∀ G : (Fin N → AF F) → ℂ, ∫ v, G (α v) ∂ν = (c : ℂ) * ∫ x, G x ∂μN) ∧
       ∀ G : (Fin N → AF F) → ℂ, Integrable (fun v => G (α v)) ν ↔ Integrable G μN := by
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI := hν
-  haveI := hμN
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have := hν
+  have := hμN
   let a : WOF F E nS nT ≃ₜ (Fin N → AF F) :=
     { toEquiv := α.toEquiv, continuous_toFun := hαc, continuous_invFun := hαs }
   let m : WOF F E nS nT ≃ᵐ (Fin N → AF F) := a.toMeasurableEquiv
   have hm : ∀ v, m v = α v := fun _ => rfl
-  haveI : ContinuousAdd (WOF F E nS nT) := ⟨by
+  have : ContinuousAdd (WOF F E nS nT) := ⟨by
     have h : (fun p : WOF F E nS nT × WOF F E nS nT => p.1 + p.2) = fun p => α.symm (α p.1 + α p.2) := by
       funext p; simp
     rw [h]
     exact hαs.comp ((hαc.comp continuous_fst).add (hαc.comp continuous_snd))⟩
-  haveI : ContinuousNeg (WOF F E nS nT) := ⟨by
+  have : ContinuousNeg (WOF F E nS nT) := ⟨by
     have h : (fun x : WOF F E nS nT => -x) = fun x => α.symm (-α x) := by
       funext x; simp
     rw [h]
     exact hαs.comp hαc.neg⟩
-  haveI hmap : (Measure.map α ν).IsAddHaarMeasure :=
+  have hmap : (Measure.map α ν).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map ν α.toAddEquiv hαc hαs
   have hmm : Measure.map m ν = Measure.map α ν := rfl
   set c := Measure.addHaarScalarFactor (Measure.map α ν) μN with hcdef

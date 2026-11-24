@@ -121,7 +121,7 @@ variable {R : Type*} [CommRing R]
 
 theorem ringKrullDim_quotient_succ_le_of_lt {pp qq : Ideal R} [pp.IsPrime] (h : pp < qq) :
     ringKrullDim (R ⧸ qq) + 1 ≤ ringKrullDim (R ⧸ pp) := by
-  obtain ⟨r, hrq, hrp⟩ := SetLike.exists_of_lt h
+  obtain ⟨r, hrq, hrp⟩ := IsConcreteLE.exists_of_lt h
   have hr : Ideal.Quotient.mk pp r ∈ nonZeroDivisors (R ⧸ pp) :=
     mem_nonZeroDivisors_of_ne_zero (by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem])
   refine le_trans ?_ (ringKrullDim_quotient_succ_le_of_nonZeroDivisor hr)

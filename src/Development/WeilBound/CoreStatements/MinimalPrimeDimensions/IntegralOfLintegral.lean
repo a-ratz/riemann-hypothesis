@@ -430,7 +430,7 @@ theorem lintegral_cone [IsIntegral Z] (hE : Emb p s) (hφ : φ.IsCInf) (hF : IsF
         ∫⁻ y, F (euc h (coords p σ hE.isLB s y)) ∂φ.chernPart e 1 := by
   classical
   obtain ⟨ι, hι, c, ia, A, hsub, hAm, hAs, hdisj, hcov⟩ := exists_parts (p := p) (σ := σ) (e := e) hE.isLB
-  haveI := hι
+  have := hι
   have hpt_smul : ∀ (t : ℂ) (w : EuclideanSpace ℂ (Fin m)), h.pointOf (t • w) = t • h.pointOf w := by
     intro t w
     conv_lhs => rw [← euc_pointOf h w]
@@ -545,7 +545,7 @@ theorem lintegral_cone [IsIntegral Z] (hE : Emb p s) (hφ : φ.IsCInf) (hF : IsF
       {q | q.2.1 ∈ (WithLp.toLp 2 : (Fin e → ℂ) → V e) ⁻¹' ((c q.1).e '' A q.1) ∧ q.2.2 ≠ 0} : Set _) := by
     rw [ae_eq_set]
     refine ⟨measure_mono_null hsub2 hnull, ?_⟩
-    rw [diff_eq_empty.2 hsub1, measure_empty]
+    rw [sdiff_eq_empty.2 hsub1, measure_empty]
   have hpiece : ∀ a, ∫⁻ x in (WithLp.toLp 2 : (Fin e → ℂ) → V e) ⁻¹' ((c a).e '' A a),
       F (WithLp.toLp 2 (sheet s h (c a) (ia a) x)) * ENNReal.ofReal (fsDens (sheet s h (c a) (ia a)) x) =
       ∫⁻ y in A a, F (euc h (coords p σ hE.isLB s y)) ∂φ.chernPart e 1 := by
@@ -627,7 +627,7 @@ theorem coneBall_subset (h : HermNorm n) {J : Ideal (MvPolynomial (Fin n) ℂ)} 
     have hmem : W ∈ (fundCycle J).support := by
       rw [Finsupp.mem_support_iff]
       unfold fundCycle
-      rw [Finsupp.onFinset_apply, if_pos ⟨hWmin, hrel⟩, localMult_eq_one_of_isRadical hJ hWmin]
+      rw [Finsupp.onFinset_apply, ite_eq_left ⟨hWmin, hrel⟩, localMult_eq_one_of_isRadical hJ hWmin]
       exact one_ne_zero
     exact Set.mem_biUnion hmem ⟨hy1, fun q hq => (RingHom.mem_ker).1 (hWle hq)⟩
   · left
@@ -770,7 +770,7 @@ theorem integral_of_lintegral {X Y : Type} [MeasurableSpace X] [MeasurableSpace 
     {b : ℝ≥0∞} (hb : b ≠ 0) (hb' : b ≠ ⊤) {f : X → ℝ} {g : Y → ℝ} (hg : Measurable g) (hf : Integrable f μ)
     (h : ∀ G : ℝ → ℝ≥0∞, Measurable G → ∫⁻ x, G (f x) ∂μ = b * ∫⁻ y, G (g y) ∂ν) :
     Integrable g ν ∧ ∫ y, g y ∂ν = (∫ x, f x ∂μ) / b.toReal := by
-  have hG1 : Measurable fun t : ℝ => ‖t‖ₑ := measurable_enorm
+  have hG1 : Measurable fun t : ℝ => ‖t‖ₑ := measurable_eNorm
   have hgi : Integrable g ν := by
     refine ⟨hg.aestronglyMeasurable, ?_⟩
     have hfin : ∫⁻ x, ‖f x‖ₑ ∂μ < ⊤ := hf.2
@@ -789,9 +789,9 @@ theorem map_notMem {K : Type} [Field K] [NumberField K] {m : ℕ} {P : Ideal (Mv
     (hP : P.IsPrime) (hI : P.map (MvPolynomial.map (algebraMap (𝓞 K) K)) ≠ ⊤) {q : MvPolynomial (Fin m) (𝓞 K)}
     (hq : q ∉ P) : MvPolynomial.map (algebraMap (𝓞 K) K) q ∉ P.map (MvPolynomial.map (algebraMap (𝓞 K) K)) := by
   classical
-  letI : Algebra (MvPolynomial (Fin m) (𝓞 K)) (MvPolynomial (Fin m) K) :=
+  let : Algebra (MvPolynomial (Fin m) (𝓞 K)) (MvPolynomial (Fin m) K) :=
     MvPolynomial.algebraMvPolynomial
-  haveI hloc := MvPolynomial.isLocalization (σ := Fin m) (nonZeroDivisors (𝓞 K)) K
+  have hloc := MvPolynomial.isLocalization (σ := Fin m) (nonZeroDivisors (𝓞 K)) K
   have hdisj : Disjoint (((nonZeroDivisors (𝓞 K)).map (C (σ := Fin m)) : Submonoid (MvPolynomial (Fin m) (𝓞 K))) :
       Set (MvPolynomial (Fin m) (𝓞 K))) (P : Set (MvPolynomial (Fin m) (𝓞 K))) := by
     rw [Set.disjoint_left]
@@ -837,14 +837,14 @@ theorem integral_zero {R : Type} [CommRing R] {Z : Scheme.{0}} {B : LB Z} {p : Z
       exact c.e.injOn hz hy (hV _ _)
     · rintro rfl
       exact hy
-  haveI : DiscreteTopology (CxPts p σ) := by
+  have : DiscreteTopology (CxPts p σ) := by
     rw [discreteTopology_iff_isOpen_singleton]
     intro y
     obtain ⟨c, hcy⟩ := hc y
     rw [← hsrc c y hcy]
     exact c.e.open_source
-  haveI : Finite (CxPts p σ) := finite_of_compact_of_discrete
-  letI := Fintype.ofFinite (CxPts p σ)
+  have : Finite (CxPts p σ) := finite_of_compact_of_discrete
+  let := Fintype.ofFinite (CxPts p σ)
   have hμ : φ.chernPart 0 1 = Measure.count := by
     rw [Measure.ext_iff_singleton]
     intro y
@@ -866,8 +866,8 @@ theorem stArch (h1 : StPts) (h2 : StCharts) : StArch := by
   unfold StArch
   intro K _ _ Z _ p B m s e hE hAV hChow hproj σ φ h hφ hFS u hu
   obtain ⟨f, hf⟩ := hChow
-  haveI : CompactSpace (CxPts p (σ.comp (algebraMap (𝓞 K) K))) := hAV.compactSpace _
-  haveI : SecondCountableTopology (CxPts p (σ.comp (algebraMap (𝓞 K) K))) :=
+  have : CompactSpace (CxPts p (σ.comp (algebraMap (𝓞 K) K))) := hAV.compactSpace _
+  have : SecondCountableTopology (CxPts p (σ.comp (algebraMap (𝓞 K) K))) :=
     GlobalTheory.CxPts.secondCountableTopology_of_isProjOver _ hAV.isProjOver
   obtain ⟨hem, hint, hcyc, hnull⟩ := C.cone_side hproj hf σ h hu
   obtain ⟨n, q, hqh, hqP, hqc⟩ := h2 K Z p B m s e hE hAV
@@ -897,7 +897,7 @@ theorem stArch (h1 : StPts) (h2 : StCharts) : StArch := by
     refine measure_mono_null ?_ (hnull _ hq')
     rintro y ⟨hy1, hy2⟩
     refine ⟨hy1, ?_⟩
-    simp only [Set.mem_setOf_eq] at hy2 ⊢
+    simp only [mem_ofPred_eq] at hy2 ⊢
     rw [MvPolynomial.map_map, MvPolynomial.eval_map]
     exact hy2
   have hℓs : ∀ t : ℂ, t ≠ 0 → ∀ x : EuclideanSpace ℂ (Fin m),
@@ -942,7 +942,7 @@ theorem stArch (h1 : StPts) (h2 : StCharts) : StArch := by
       setIntegral_eq_integral_of_forall_compl_eq_zero, hgint, hcyc]
     · rfl
     · intro y hy
-      simp only [Set.mem_setOf_eq, not_not] at hy
+      simp only [mem_ofPred_eq, not_not] at hy
       rw [fsLog, hy, norm_zero, zero_div, Real.log_zero]
   · intro he0
     subst he0

@@ -121,7 +121,7 @@ theorem pseq_succ (dop : W.DD T →ₗ[O] W.DD T) (cc : ℤ → O) (xs : List �
     (hk : k < xs.length) :
     pseq W dop cc xs z (k + 1) = dop (pseq W dop cc xs z k) - cc (xs.getD k 0) • pseq W dop cc xs z k := by
   have ht : xs.take (k + 1) = xs.take k ++ [xs.getD k 0] := by
-    rw [List.take_succ, List.getElem?_eq_getElem hk, List.getD_eq_getElem _ _ hk]
+    rw [List.take_add_one, List.getElem?_eq_getElem hk, List.getD_eq_getElem _ _ hk]
     rfl
   unfold pseq
   rw [ht, List.map_append, List.prod_append, mul_comm, map_mul, Module.End.mul_apply]

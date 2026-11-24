@@ -71,7 +71,7 @@ theorem exists_finite_stable [CompactSpace Γ] (rho : Representation R Γ M) (hc
     (isCompact_range (hc.comp (continuous_id.prodMk continuous_const))).finite_of_discrete
   have hfin : Finite (AddSubgroup.closure T) := by
     have : Finite T := hT
-    refine AddCommGroup.finite_of_fg_torsion _ fun m => ?_
+    refine AddCommGroup.finite_of_fg_isAddTorsion _ fun m => ?_
     obtain ⟨n, hn⟩ := hl m.1
     exact isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨l ^ n, pow_pos hl0 n, Subtype.ext hn⟩
   choose e he using hl
@@ -104,7 +104,7 @@ def subRep (rho : Representation R Γ M) (N : AddSubgroup M) (hN : ∀ g, ∀ m 
 omit [DiscreteTopology M] in
 theorem contAction_subRep (rho : Representation R Γ M) (hc : ContAction rho) (N : AddSubgroup M)
     (hN : ∀ g, ∀ m ∈ N, rho g m ∈ N) (n : ℕ) [Module (ZMod n) N] : ContAction (subRep rho N hN n) :=
-  Continuous.subtype_mk (hc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))) _
+  Continuous.subtype_mk (hc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))) _
 
 theorem subsingleton_of_finite [CompactSpace Γ] (rho : Representation R Γ M) (hc : ContAction rho) {l : ℕ} (hl0 : 0 < l)
     (hl : ∀ m : M, ∃ n : ℕ, l ^ n • m = 0)
@@ -116,7 +116,7 @@ theorem subsingleton_of_finite [CompactSpace Γ] (rho : Representation R Γ M) (
     rintro f -
     obtain ⟨N, n, hn, hfin, hS, hN, hk⟩ :=
       exists_finite_stable rho hc hl0 hl (isCompact_range f.2.1).finite_of_discrete
-    letI : Module (ZMod (l ^ n)) N := AddCommGroup.zmodModule hk
+    let : Module (ZMod (l ^ n)) N := AddCommGroup.zmodModule hk
     have h1 := (h N hN n hn).1
     rw [Submodule.Quotient.subsingleton_iff, eq_top_iff] at h1
     obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 (h1 (x := ⟨fun g => ⟨f.1 g, hS ⟨g, rfl⟩⟩, f.2.1.subtype_mk _,
@@ -126,12 +126,12 @@ theorem subsingleton_of_finite [CompactSpace Γ] (rho : Representation R Γ M) (
     rintro f -
     obtain ⟨N, n, hn, hfin, hS, hN, hk⟩ :=
       exists_finite_stable rho hc hl0 hl (isCompact_range f.2.1).finite_of_discrete
-    letI : Module (ZMod (l ^ n)) N := AddCommGroup.zmodModule hk
+    let : Module (ZMod (l ^ n)) N := AddCommGroup.zmodModule hk
     have h1 := (h N hN n hn).2
     rw [Submodule.Quotient.subsingleton_iff, eq_top_iff] at h1
     obtain ⟨c, hc', hm⟩ := (separated_dvr_second_cohomology_mem _ _).1 (h1 (x := ⟨fun g => ⟨f.1 g, hS ⟨g, rfl⟩⟩, f.2.1.subtype_mk _,
       fun g g' k => Subtype.ext (f.2.2 g g' k)⟩) trivial)
-    exact (separated_dvr_second_cohomology_mem _ _).2 ⟨fun g => (c g).1, continuous_subtype_val.comp hc',
+    exact (separated_dvr_second_cohomology_mem _ _).2 ⟨fun g => (c g).1, continuous_subtypeVal.comp hc',
       funext fun p => congrArg Subtype.val (congrFun hm p)⟩
 
 end Union

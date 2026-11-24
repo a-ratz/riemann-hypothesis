@@ -273,8 +273,8 @@ theorem exists_pow_mul_mem (U : X.Opens) (hU : IsAffineOpen U) (hall : ∀ x ∈
       change hU.fromSpec y ∈ (U : Set X)
       rw [← hU.range_fromSpec]
       exact ⟨y, rfl⟩
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨hU.fromSpec y, hy⟩ : U)
-    haveI hloc : IsLocalization y.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec y)) :=
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨hU.fromSpec y, hy⟩ : U)
+    have hloc : IsLocalization y.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec y)) :=
       hU.isLocalization_stalk' y hy
     let q : Cpt ξ := ⟨hU.fromSpec y, hall _ hy⟩
     have hu : IsUnit ((X.presheaf.germ U q.1 hy).hom (N : Γ(X, U))) :=
@@ -424,7 +424,7 @@ theorem emb_mem (s : CMType H ⊕ CMType H) (q : Cpt 𝔐.ξ) (a : 𝓞 E) : �
     IsIntegral.map (labelEmb c s).toIntAlgHom (Algebra.IsIntegral.isIntegral a)
   let o : 𝓞 c.F := IsIntegralClosure.mk' (𝓞 c.F) _ h
   have ho : algebraMap (𝓞 c.F) c.F o = labelEmb c s a := IsIntegralClosure.algebraMap_mk' _ _ _
-  letI : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
+  let : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
   have h1 := (Flat.ConstReg.regular_const 𝔐.X Ω 𝔐.ξ (𝓞 c.F) (𝔐.f ≫ Y.s) 𝔐.cst_over q o).1
   have e : algebraMap (𝓞 c.F) Ω o = 𝔐.emb s a := by
     change 𝔐.cst (algebraMap _ _ o) = 𝔐.cst (labelEmb c s a)
@@ -438,7 +438,7 @@ theorem lat_act (q : Cpt 𝔐.ξ) (x : 𝓞 E) (e : 𝔐.Li) (he : e ∈ 𝔐.M.
   obtain ⟨v, hv⟩ := he
   refine ⟨v ≫ 𝔐.t.act.act x, ?_⟩
   rw [LieModel.extends_iff] at hv ⊢
-  haveI := 𝔐.t.act.hom x
+  have := 𝔐.t.act.hom x
   refine ⟨?_, ?_⟩
   · have h1 := hv.1
     rw [LieTangent.isTanAt_iff] at h1 ⊢
@@ -447,7 +447,7 @@ theorem lat_act (q : Cpt 𝔐.ξ) (x : 𝓞 E) (e : 𝔐.Li) (he : e ∈ 𝔐.M.
 
 theorem V_eq (s : CMType H ⊕ CMType H) (q : Cpt 𝔐.ξ) (hq : unitAt 𝔐.ξ q ((∏ p ∈ S, p : ℕ) : Ω)) :
     𝔐.V s q = 𝔐.dR s q := by
-  haveI := charZero_of_hodgeCpt 𝔐
+  have := charZero_of_hodgeCpt 𝔐
   have hn : ¬ ∃ p ∈ S, InFibre 𝔐.ξ p q := by
     rintro ⟨p, hp, hin⟩
     apply hin
@@ -462,7 +462,7 @@ theorem V_eq (s : CMType H ⊕ CMType H) (q : Cpt 𝔐.ξ) (hq : unitAt 𝔐.ξ 
       field_simp
     rw [e]
     exact mul_mem (natCast_mem _ t) hq.2.2
-  exact if_neg hn
+  exact ite_eq_right hn
 
 theorem mem_regAt_gen (hgen : IsCptGen 𝔐.ξ) (a : Ω) :
     a ∈ regAt 𝔐.ξ (⟨genPt 𝔐.ξ, specializes_rfl⟩ : Cpt 𝔐.ξ) := by
@@ -517,11 +517,11 @@ theorem compactSpace_X : CompactSpace 𝔐.X := by
 theorem exists_local (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) (x : 𝔐.X) :
     ∃ W : 𝔐.X.Opens, x ∈ W ∧ ∃ m : ℕ, 0 < m ∧ ∀ p : Cpt 𝔐.ξ, p.1 ∈ W → Good 𝔐 Fl m s p := by
   have hgen : IsCptGen 𝔐.ξ := 𝔐.tie.gen
-  haveI := charZero_of_hodgeCpt 𝔐
-  haveI := 𝔐.t.semi.smooth
-  haveI := 𝔐.t.semi.geomConnected
-  haveI := connectedSpace_X 𝔐
-  haveI : ConnectedSpace 𝔐.t.G.left := GeometricallyConnected.connectedSpace 𝔐.t.G.hom 𝔐.t.G.hom.isOpenMap
+  have := charZero_of_hodgeCpt 𝔐
+  have := 𝔐.t.semi.smooth
+  have := 𝔐.t.semi.geomConnected
+  have := connectedSpace_X 𝔐
+  have : ConnectedSpace 𝔐.t.G.left := GeometricallyConnected.connectedSpace 𝔐.t.G.hom 𝔐.t.G.hom.isOpenMap
   obtain ⟨g, hdim⟩ := exists_dim_of_preconnected 𝔐.t.G.hom (Classical.arbitrary _)
   have hVB := (_root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB 𝔐.X 𝔐.t.G g Ω 𝔐.ξ 𝔐.Li 𝔐.M hgen hdim).1
   let p₀ : Cpt 𝔐.ξ := ⟨x, 𝔐.all x⟩
@@ -560,7 +560,7 @@ theorem exists_local (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) (x : 𝔐.X) :
 
 theorem exists_global (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) :
     ∃ m : ℕ, 0 < m ∧ ∀ p : Cpt 𝔐.ξ, Good 𝔐 Fl m s p := by
-  haveI := compactSpace_X 𝔐
+  have := compactSpace_X 𝔐
   choose W hx m hm hg using exists_local 𝔐 Fl s
   obtain ⟨t, ht⟩ := CompactSpace.elim_nhds_subcover (fun x => (W x : Set 𝔐.X))
     (fun x => (W x).isOpen.mem_nhds (hx x))
@@ -575,7 +575,7 @@ theorem lat_sandwich : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 Fl
   have h := fun s => exists_global 𝔐 Fl s
   choose m hm hg using h
-  haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  have : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   exact ⟨∏ s, m s, Finset.prod_pos fun s _ => hm s, fun s p =>
     (hg s p).of_dvd (Finset.dvd_prod_of_mem m (Finset.mem_univ s))⟩
 

@@ -100,7 +100,7 @@ theorem symPair_entry {R : Type} [CommRing R] {n : ℕ} (e : (Σ τ : E →+* �
     have h5 : σ = (starRingEnd ℂ).comp τ := congrArg Sigma.fst (e.injective h)
     exact GlobalTheory.LogKSDiv.DetChange.conj_off H τ hτ (h5 ▸ hσ')
   simp only [GlobalTheory.LogKSDiv.symPair, Matrix.of_apply]
-  rw [if_neg h2, add_zero]
+  rw [ite_eq_right h2, add_zero]
   by_cases h : τ = σ
   · subst h
     have key : (e ⟨τ, b⟩ = e ⟨τ, i⟩ ∧ e ⟨conjEmb τ, a⟩ = e ⟨(starRingEnd ℂ).comp τ, k'⟩) ↔
@@ -121,7 +121,7 @@ theorem symPair_entry {R : Type} [CommRing R] {n : ℕ} (e : (Σ τ : E →+* �
   · have h3 : ¬ (e ⟨σ, b⟩ = e ⟨τ, i⟩ ∧ e ⟨conjEmb σ, a⟩ = e ⟨(starRingEnd ℂ).comp τ, k'⟩) := by
       rintro ⟨h4, -⟩
       exact h (congrArg Sigma.fst (e.injective h4)).symm
-    rw [if_neg h3, if_neg]
+    rw [ite_eq_right h3, ite_eq_right]
     intro h4
     exact h (congrArg (fun x : HIx Dw (psiSet H) => x.1.1) h4)
 
@@ -134,8 +134,8 @@ theorem symPair_horizontal_single : ∀ {E : Type} [Field E] [NumberField E] [Is
   refine ⟨ε.trans pairToH, fun f n e j k => ?_⟩
   rw [symPair_entry, Pi.single_apply, Equiv.trans_apply]
   by_cases h : pairToH (ε j) = k
-  · rw [if_pos h, if_pos h.symm, map_one]
-  · rw [if_neg h, if_neg (Ne.symm h), map_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm, map_one]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), map_zero]
 
 end GlobalTheory.LogKSDiv.PairEntry
 end -- clump:auto
@@ -387,7 +387,7 @@ theorem logDet_eq_hor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
       rcases Int.units_eq_one_or (Equiv.Perm.sign (κ.trans o.symm)) with h | h <;> simp [h]
     exact mul_ne_zero (pow_ne_zero _ hs) this
   intro x K _ _ P₀ P hU g hg hP hB w hw hwk
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
   obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.LogPole.exists_snd_ev_eq_sum_of_ksIso TF K P₀ (hKS K P₀) U.1 hU
   choose y' hy' hsnd hred hev using fun j => _root_.GlobalTheory.LogPole.exists_tanPt_of_logDer TF U (b j) K P₀ hU
   have hKSj : ∀ j, FlagTan.IsKS (psiSet H) P₀ (y' j ≫ pullback.fst _ _)

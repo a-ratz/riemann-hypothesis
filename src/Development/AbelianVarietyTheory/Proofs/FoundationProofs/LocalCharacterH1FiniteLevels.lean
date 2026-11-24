@@ -179,7 +179,7 @@ theorem UpperTheory.V.X.So.cardLen :
   · obtain ⟨k, -, hk⟩ := card_of_finiteLength O N (Module.length_ne_top_iff.1 h)
     exact Nat.finite_of_card_ne_zero (hk ▸ pow_ne_zero k (by omega))
   · obtain ⟨k, hk1, hk⟩ := card_of_finiteLength O N (hfl h)
-    rw [hk, hk1, ENat.toNat_coe]
+    rw [hk, hk1, ENat.toNat_natCast]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.SoCardLen =====
@@ -226,7 +226,7 @@ theorem local_character_h1_bound : LocalFiniteness → LocalTateDuality → Loca
   have ha : ((l : ℕ) : c.O) ^ n ≠ 0 := pow_ne_zero _ hl0
   set a := ((l : ℕ) : c.O) ^ n with hadef
   obtain ⟨hM, ⟨r, hr, hkill⟩, htor⟩ := So.levFacts l c.O a ha (Lev a) ⟨LinearEquiv.refl c.O _⟩
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨_⟩ : Nonempty (Module (ZMod (l ^ r)) (Lev a)) := ⟨AddCommGroup.zmodModule hkill⟩
   set ρ := Formalism.GaloisCohomology.scalRep (Lev a) θ with hρ
   let ρ' : Representation (ZMod (l ^ r)) (Dec (F := ℚ) A) (Lev a) := repOverZMod (l ^ r) ρ

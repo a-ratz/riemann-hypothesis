@@ -187,7 +187,7 @@ theorem exists_obj (laws : Laws) (l : Geo.Tor.Level H) {K : Type} [Field K] [IsA
     (b : Base l K) (hρ : b.ρ = o.ρ) (hζ : b.ζ = o.I.ζ l.A) :
     ∃ ob : Obj D l b (𝟙 (Sp K)), ∀ {B : Type} [CommRing B] {b' : Base l B} {S : Scheme.{0}} {s : S ⟶ Sp B}
       (ob' : Obj D l b' s) (y : Sp K ⟶ S), Nonempty (ObjMap ob ob' y) ↔ IsFibre ob' y o := by
-  letI := H.starRing
+  let := H.starRing
   have hM : 0 < l.M := lt_of_lt_of_le (by norm_num) l.three_le
   obtain ⟨⟨L, rig, hL, hrig⟩, cub, rfl, sym⟩ := exists_sab laws o
   obtain ⟨f, hf, e, he, hfe⟩ : ∃ f ∈ l.Mb, ∃ e ∈ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E), f + e = 1 :=
@@ -252,7 +252,7 @@ theorem exists_isFibre {l : Geo.Tor.Level H} {B : Type} [CommRing B] {b : Base l
     (ob : Obj D l b s) {K : Type} [Field K] [IsAlgClosed K] (y : Sp K ⟶ S) :
     ∃ o : Full D K, IsFibre ob y o ∧
       ∀ f : B →+* K, y ≫ s = spMap f → o.ρ = f b.ρ ∧ (o.I.ζ l.A : K) = f b.ζ := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨o', ⟨m⟩⟩ := ObjPull.objPull_of_pol (PolPull.pol_pull_of_relAmple_local AmpleLocal.relAmple_of_locally)
     E H D l B B b b (RingHom.id B) S (Sp K) s (y ≫ s) y rfl rfl
     (by rw [show spMap (RingHom.id B) = 𝟙 _ from Spec.map_id _, Category.comp_id]) ob

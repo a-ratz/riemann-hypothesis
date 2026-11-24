@@ -53,7 +53,7 @@ theorem UpperTheory.V.Z.Sym.Tf.orbReps :
     UpperTheory.V.Z.Sym.Tf.OrbReps := by
   classical
   intro T G _ _ ι C θ U f δ hf hδ J S x hx hs
-  letI : MulAction T (G ⧸ U) := MulAction.compHom _ ι
+  let : MulAction T (G ⧸ U) := MulAction.compHom _ ι
   have sm : ∀ (t : T) (g : G), t • (g : G ⧸ U) = ((ι t * g : G) : G ⧸ U) := fun _ _ => rfl
   have k1 : ∀ (t : T) (g : G), ∀ u ∈ U, f ((ι t * g * u)⁻¹ * δ * θ (ι t * g * u)) = f (g⁻¹ * δ * θ g) := fun t g u hu => by
     rw [← hf u hu (g⁻¹ * δ * θ g)]

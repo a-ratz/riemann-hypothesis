@@ -82,7 +82,7 @@ theorem exists_finite_lengths (n : ℕ) (hn : n ≠ 0) {N : ℤ} (hN : N ≠ 0) 
   refine ⟨({x : E | IsIntegral ℤ x ∧ ∀ φ : E →+* ℂ, ‖φ x‖ ≤ C} ∪ R ∪
     {((2 * (N * M) : ℤ) : E)}) \ {0},
     (((Embeddings.finite_of_norm_le E ℂ C).union hR).union (Set.finite_singleton _)).subset
-      Set.diff_subset, by simp, ?_⟩
+      Set.sdiff_subset, by simp, ?_⟩
   intro V _ _ _ h Λ hV hs hnd hfg hsp hO hint hdual
   obtain ⟨v, hv, hv0, hvC⟩ := hC V h Λ hV hs hfg hsp hO hdual
   by_cases hvv : h v v = 0

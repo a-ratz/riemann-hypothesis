@@ -402,7 +402,7 @@ end Field
 theorem exists_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n m : ℕ), Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E) → 0 < m → ∀ (Λ : GenLat E n) (io : Λ.La →ₗ[𝓞 E] StdMod E n m), Λ.Unimod → IsIsomMod Λ m io → ∀ k : ℕ, 0 < k → ∃ io' : Λ.La →ₗ[𝓞 E] StdMod E n (m * k), IsIsomMod Λ (m * k) io' ∧ ∀ (v : Λ.La) (x : Fin n → 𝓞 E), (∀ j, io' v j = Ideal.Quotient.mk _ (x j)) → ∀ j, io v j = Ideal.Quotient.mk _ (x j) := by
   intro E _ _ _ n m hun hm Λ io hU ⟨_, b₂, b₃⟩ k hk
   obtain ⟨κ, c₁, c₂, c₃⟩ := exists_isomMod Λ hU (Nat.mul_pos hm hk)
-  letI : StarRing (𝓞 E) :=
+  let : StarRing (𝓞 E) :=
     { star := IsCMField.ringOfIntegersComplexConj E
       star_involutive := fun a => by ext; simp
       star_mul := fun a b => by rw [map_mul, mul_comm]
@@ -593,9 +593,9 @@ theorem inc_surjective : Function.Surjective (inc E n) := fun v => by
   exact ⟨x, Subtype.ext (funext hx)⟩
 
 theorem projective_of_fg (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) : Module.Projective (𝓞 E) L := by
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
-  haveI : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
-  haveI : Module.Flat (𝓞 E) L := IsDedekindDomain.flat_iff_torsion_eq_bot.2
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL
+  have : Module.FinitePresentation (𝓞 E) L := Module.finitePresentation_of_finite _ _
+  have : Module.Flat (𝓞 E) L := IsDedekindDomain.flat_iff_torsion_eq_bot.2
     (Submodule.isTorsionFree_iff_torsion_eq_bot.1 inferInstance)
   exact Module.Flat.projective_of_finitePresentation
 
@@ -616,7 +616,7 @@ theorem step (hur : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (𝓞 E)) 
     (hf : IsIsomMod Λ M (red E n M ∘ₗ f)) :
     ∃ f' : Λ.La →ₗ[𝓞 E] (Fin n → 𝓞 E), IsIsomMod Λ M' (red E n M' ∘ₗ f') ∧ ∀ a, ∃ z, f' a = f a + M • z := by
   obtain ⟨k, rfl⟩ := hd
-  haveI := projective_of_fg Λ.La (GlobalTheory.GenusLatCompare.isLat_of_unimod Λ hU).1
+  have := projective_of_fg Λ.La (GlobalTheory.GenusLatCompare.isLat_of_unimod Λ hU).1
   obtain ⟨io', h1, h2⟩ := GlobalTheory.T.exists_lift_hermitianIsometryModLevel_selfDual E n M hur hM Λ _ hU hf k (Nat.pos_of_mul_pos_left hM')
   obtain ⟨f', hf'⟩ := Module.projective_lifting_property (red E n (M * k)) io' (red_surjective _)
   refine ⟨f', hf' ▸ h1, fun a => (red_eq_iff _ _ _).1 (funext fun j => ?_)⟩
@@ -627,7 +627,7 @@ theorem exists_tower (hur : Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
     ∃ f : ℕ → (Λ.La →ₗ[𝓞 E] (Fin n → 𝓞 E)), red E n m ∘ₗ f 0 = io ∧
       (∀ j : ℕ, IsIsomMod Λ (m * j.factorial) (red E n (m * j.factorial) ∘ₗ f j)) ∧
       ∀ i j : ℕ, i ≤ j → ∀ a, ∃ z, f j a = f i a + (m * i.factorial) • z := by
-  haveI := projective_of_fg Λ.La (GlobalTheory.GenusLatCompare.isLat_of_unimod Λ hU).1
+  have := projective_of_fg Λ.La (GlobalTheory.GenusLatCompare.isLat_of_unimod Λ hU).1
   obtain ⟨f₀, hf₀⟩ := Module.projective_lifting_property (red E n m) io (red_surjective _)
   have hpos : ∀ j : ℕ, 0 < m * j.factorial := fun j => Nat.mul_pos hm j.factorial_pos
   have h0 : IsIsomMod Λ (m * Nat.factorial 0) (red E n (m * Nat.factorial 0) ∘ₗ f₀) := by

@@ -272,18 +272,18 @@ theorem datum_move {Xo : Moduli Dw l} {c : Coeff l} {n : ℕ} (d : DeltaDat Xo c
 
 theorem char_eq_one_of_detOne (h3 : ¬ 3 ∣ l.M) {A : Type} [CommGroup A] (χ : (LaMod Dw l ≃ₗ[𝓞 E] LaMod Dw l) →* A)
     {γ : LaMod Dw l ≃ₗ[𝓞 E] LaMod Dw l} (hγ : DetOne γ) : χ γ = 1 := by
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have := Dw.fin
+  have := Dw.proj
   have hM0 : l.M ≠ 0 := by have := l.three_le; omega
-  haveI : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ fun h => by
+  have : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ fun h => by
     have := (natCast_mem_half l).1
     rw [h, Ideal.mem_bot] at this
     exact hM0 (by exact_mod_cast this)
   have h4 : ∀ 𝔪 : Ideal (𝓞 E ⧸ l.Mb), 𝔪.IsMaximal → 4 ≤ Nat.card ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := by
     intro 𝔪 h
-    haveI : Nontrivial ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Ideal.Quotient.nontrivial_iff.2 h.ne_top
-    haveI : Finite ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
-    haveI : Fintype ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Fintype.ofFinite _
+    have : Nontrivial ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Ideal.Quotient.nontrivial_iff.2 h.ne_top
+    have : Finite ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+    have : Fintype ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Fintype.ofFinite _
     have h1 : 1 < Nat.card ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) := Finite.one_lt_card
     have h0 : ((Nat.card ((𝓞 E ⧸ l.Mb) ⧸ 𝔪) : ℕ) : (𝓞 E ⧸ l.Mb) ⧸ 𝔪) = 0 := by
       rw [Nat.card_eq_fintype_card]; exact Nat.cast_card_eq_zero _
@@ -349,7 +349,7 @@ theorem IsSeries.unique {T : Top D} (hT : LawsSh T) (hj : InR D j) {Λ N P x f f
   obtain ⟨-, h1', h2'⟩ := hf'
   generalize T.dδ j w.n = d at *
   refine GlobalTheory.ClassSumUnique.sec_eq_of_geometric h1 h1' fun k _ _ _ y => ?_
-  letI : Algebra d.c₂.F k := ((algebraMap T.Q.c.F k).comp (d.eF.symm : d.c₂.F →+* T.Q.c.F)).toAlgebra
+  let : Algebra d.c₂.F k := ((algebraMap T.Q.c.F k).comp (d.eF.symm : d.c₂.F →+* T.Q.c.F)).toAlgebra
   have hk : ∀ a : T.Q.c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap T.Q.c.F k a := fun a => by
     show algebraMap T.Q.c.F k (d.eF.symm (d.eF a)) = _
     rw [AlgEquiv.symm_apply_apply]

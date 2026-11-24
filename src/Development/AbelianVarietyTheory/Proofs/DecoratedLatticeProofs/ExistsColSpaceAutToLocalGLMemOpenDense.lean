@@ -52,7 +52,7 @@ open NumberField IsDedekindDomain MeasureTheory ValuativeRel Matrix Formalism.L2
 
 theorem GlobalTheory.denseGL_completion : ∀ {E k : Type} [Field E] [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : E →+* k), DenseRange ι → ∀ {A : Type} [Fintype A] [DecidableEq A] {M : ℕ} (e : A ≃ Fin M) (y : GL A k) (V : Set (GL A k)), IsOpen V → y ∈ V → ∃ x : Sp E M ≃ₗ[E] Sp E M, locHom ι e x ∈ V := by
   intro E k _ _ _ _ _ ι hι A _ _ M e y V hV hy
-  haveI : T2Space k := by
+  have : T2Space k := by
     rw [t2Space_iff_disjoint_nhds]
     intro a b hab
     have hne : valuation k (a - b) ≠ 0 := (Valuation.ne_zero_iff _).2 (sub_ne_zero.2 hab)

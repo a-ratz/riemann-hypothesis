@@ -68,7 +68,7 @@ theorem z_ne (hN : 1 ≤ N) {g : GL (Fin N) L} {z : InfinitePlace L → ℂ} {c 
   have h1 := hc w
   rw [h, zero_smul] at h1
   have h2 : (mt c w).det = 1 := (c w).prop
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   rw [h1, Matrix.det_zero] at h2
   exact zero_ne_one h2
 

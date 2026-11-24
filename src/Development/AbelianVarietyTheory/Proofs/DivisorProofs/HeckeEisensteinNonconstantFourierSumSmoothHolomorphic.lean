@@ -122,7 +122,7 @@ theorem norm_F (a b : ℕ) (ν : ℝ) {y : ℝ} (hy : y ≠ 0) (σ : ℂ) (t : �
     ‖F a b ν y σ t‖ = Real.exp (-((a + b : ℝ) + 2 * σ.re) * L y t) := by
   unfold F
   rw [norm_mul, norm_mul, norm_mul, norm_e, norm_pow, norm_pow, norm_inv, norm_inv, Complex.norm_conj,
-    norm_wt hy, Complex.norm_exp, ← Real.exp_neg, ← Real.exp_nat_mul, ← Real.exp_nat_mul, mul_one,
+    norm_wt hy, Complex.norm_exp, ← Real.exp_neg, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, mul_one,
     ← Real.exp_add, ← Real.exp_add]
   congr 1
   simp
@@ -328,7 +328,7 @@ theorem norm_igE {a b : ℕ} {σ : ℂ} {ν y : ℝ} (hy : y ≠ 0) (t : ℝ) :
   rw [norm_mul, norm_mul, norm_mul, norm_pow, norm_pow, norm_inv, norm_inv, Complex.norm_conj, norm_wt, hs,
     Complex.norm_exp, Complex.norm_exp]
   have h0 : (-(2 * (Real.pi : ℂ) * I * (ν : ℂ) * (t : ℂ))).re = 0 := by simp
-  rw [h0, Real.exp_zero, mul_one, ← Real.exp_neg, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+  rw [h0, Real.exp_zero, mul_one, ← Real.exp_neg, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
   congr 1
   simp [Complex.mul_re]
   ring
@@ -528,7 +528,7 @@ theorem fderiv_prod_coord {ι : Type} [Fintype ι] [DecidableEq ι] (g : ι → 
     (hg i).comp z (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : ι => ℂ) i).hasFDerivAt
   have h2 := HasFDerivAt.finsetProd h1
   refine ⟨h2.differentiableAt, fun j v => ?_⟩
-  rw [h2.fderiv, ContinuousLinearMap.sum_apply, Finset.sum_eq_single j]
+  rw [h2.fderiv, sum_apply, Finset.sum_eq_single j]
   · simp [mul_comm]
   · intro i _ hij
     simp [Pi.single_eq_of_ne hij]
@@ -697,7 +697,7 @@ theorem wirtWord_eq_sum (F : Type) [Field F] [NumberField F] (b ν : F) (hb : b 
     have hF : HasFDerivAt (fun z => ∑ i, c i * termQ σ b ν (qf i) z)
         (∑ i, c i • fderiv ℝ (termQ σ b ν (qf i)) z) z :=
       HasFDerivAt.fun_sum fun i _ => ((hd i).1.hasFDerivAt.const_mul (c i))
-    simp only [wirt, hF.fderiv, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
+    simp only [wirt, hF.fderiv, sum_apply, smul_apply,
       smul_eq_mul, (hd _).2.1, (hd _).2.2, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr]
     rw [Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_div, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -805,7 +805,7 @@ theorem wirt_eq_clm (τ : Φ) (b : Bool) :
   refine ⟨(1 / 2 : ℝ) • (ContinuousLinearMap.apply ℝ ℂ (Pi.single τ 1) +
     (ContinuousLinearMap.mul ℝ ℂ (if b then I else -I)).comp
       (ContinuousLinearMap.apply ℝ ℂ (Pi.single τ I))), fun h z => ?_⟩
-  simp only [wirt, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+  simp only [wirt, smul_apply, add_apply,
     ContinuousLinearMap.apply_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.mul_apply',
     Complex.real_smul]
   push_cast

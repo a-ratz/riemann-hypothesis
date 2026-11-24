@@ -122,7 +122,7 @@ theorem exists_mul_eq_app {R : Type} [CommRing R] [IsDomain R] (Q : DegPre R) (V
       (by simp only [Iso.refl_hom, Category.id_comp, Category.comp_id]; exact eT)
   have hloc := GlobalTheory.QCoh.Qcqs.isLocalization_app (R := CommRingCat.of R) (L := CommRingCat.of (FractionRing R))
     (nonZeroDivisors R) H hV
-  letI := ((DegPre.prB Q (FractionRing R)).left.app V).hom.toAlgebra
+  let := ((DegPre.prB Q (FractionRing R)).left.app V).hom.toAlgebra
   obtain ⟨⟨a, _, r, hr, rfl⟩, e⟩ := IsLocalization.surj
     ((nonZeroDivisors (CommRingCat.of R)).map (GlobalTheory.QCoh.Qcqs.baseRingHom Q.P.A.hom V).hom) f
   refine ⟨r, nonZeroDivisors.ne_zero hr, a, ?_⟩

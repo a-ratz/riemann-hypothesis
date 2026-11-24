@@ -543,7 +543,7 @@ theorem ι_appLE_bijective_of_image {T : Scheme.{0}} (Vo O : T.Opens) (W : Vo.to
 theorem exists_cech_ho1_cmp : ∀ (X T : Scheme.{0}) (p : T ⟶ X), IsSeparated p → ∀ (U : X.affineOpens) (J : Type) (W : J → T.Opens), (∀ i, IsAffineOpen (W i)) → ⨆ i, W i = p ⁻¹ᵁ U.1 → ∀ (hWU : ∀ i, W i ≤ p ⁻¹ᵁ U.1), ∃ Φ : (∀ i i' : J, Γ(T, W i ⊓ W i')) → GlobalTheory.CechDR.HO1 ((p ∣_ U.1) ≫ U.2.isoSpec.hom : (p ⁻¹ᵁ U.1).toScheme ⟶ Sp Γ(X, U.1)), (∀ c : ∀ i i' : J, Γ(T, W i ⊓ W i'), (∀ i i' i'', resG T (inf_le_left : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i') (c i i') + resG T (le_inf (inf_le_left.trans inf_le_right) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i' ⊓ W i'') (c i' i'') = resG T (le_inf (inf_le_left.trans inf_le_left) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i'') (c i i'')) → ∀ (N : ℕ) (r : Fin N → Γ(X, U.1)) (e : Fin N → ∀ i i' : J, Γ(T, W i ⊓ W i')), (∀ k, (∀ i i' i'', resG T (inf_le_left : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i') ((e k) i i') + resG T (le_inf (inf_le_left.trans inf_le_right) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i' ⊓ W i'') ((e k) i' i'') = resG T (le_inf (inf_le_left.trans inf_le_left) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i'') ((e k) i i''))) → Φ (fun i i' => c i i' - ∑ k, (p.appLE U.1 (W i ⊓ W i') (inf_le_left.trans (hWU i))).hom (r k) * e k i i') = Φ c - ∑ k, r k • Φ (e k)) ∧ (∀ c : ∀ i i' : J, Γ(T, W i ⊓ W i'), (∀ i i' i'', resG T (inf_le_left : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i') (c i i') + resG T (le_inf (inf_le_left.trans inf_le_right) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i' ⊓ W i'') (c i' i'') = resG T (le_inf (inf_le_left.trans inf_le_left) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i'') (c i i'')) → Φ c = 0 → ∃ h : ∀ i : J, Γ(T, W i), ∀ i i', c i i' = resG T inf_le_left (h i) - resG T inf_le_right (h i')) ∧ (∀ x, ∃ c : ∀ i i' : J, Γ(T, W i ⊓ W i'), (∀ i i' i'', resG T (inf_le_left : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i') (c i i') + resG T (le_inf (inf_le_left.trans inf_le_right) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i' ⊓ W i'') (c i' i'') = resG T (le_inf (inf_le_left.trans inf_le_left) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i'') (c i i'')) ∧ Φ c = x) ∧ ∀ (R' : Type) [CommRing R'] (σ : Γ(X, U.1) →+* R') (Y : Scheme.{0}) (s' : Y ⟶ Sp R') (ι : Y ⟶ T) (ι' : Y ⟶ (p ⁻¹ᵁ U.1).toScheme), ι' ≫ (p ⁻¹ᵁ U.1).ι = ι → ∀ (w : ι' ≫ ((p ∣_ U.1) ≫ U.2.isoSpec.hom : (p ⁻¹ᵁ U.1).toScheme ⟶ Sp Γ(X, U.1)) = s' ≫ spMap σ) (c : ∀ i i' : J, Γ(T, W i ⊓ W i')), (∀ i i' i'', resG T (inf_le_left : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i') (c i i') + resG T (le_inf (inf_le_left.trans inf_le_right) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i' ⊓ W i'') (c i' i'') = resG T (le_inf (inf_le_left.trans inf_le_left) inf_le_right : W i ⊓ W i' ⊓ W i'' ≤ W i ⊓ W i'') (c i i'')) → (∃ h' : ∀ i, Γ(Y, ι ⁻¹ᵁ W i), ∀ i i', (ι.appLE (W i ⊓ W i') (ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i') (fun _ hx => hx)).hom (c i i') = resG Y inf_le_left (h' i) - resG Y inf_le_right (h' i')) → GlobalTheory.CechDR.pullHO1 w (Φ c) = 0 := by
   intro X T p hp U J W hWa hWcov hWU
   have hsepV : (p ⁻¹ᵁ U.1).toScheme.IsSeparated := by
-    haveI : IsAffine U.1 := U.2
+    have : IsAffine U.1 := U.2
     constructor
     rw [← Limits.terminal.comp_from (p ∣_ U.1)]
     infer_instance
@@ -585,7 +585,7 @@ theorem exists_cech_ho1_cmp : ∀ (X T : Scheme.{0}) (p : T ⟶ X), IsSeparated 
     congr 1
     exact _root_.GlobalTheory.CechDR.appLE_ι_appLE_eq_secMap X T p U (W i ⊓ W i') _ (W' i ⊓ W' i') (fun _ hx => hx) (r k)
   · intro c hc h0
-    haveI := hsepV
+    have := hsepV
     obtain ⟨h'', hh⟩ := _root_.GlobalTheory.CechCmp.exists_coboundary_of_cmp_eq_zero _ _ _ _ W' hW' hWa' (fun i i' => (hWa' i).inf (hWa' i')) _ (hcoc c hc) h0
     choose h hh1 using fun i => (ι_appLE_bijective_of_image (p ⁻¹ᵁ U.1) (W i) (W' i) le_rfl (himg _ (hWU i))).2 (h'' i)
     refine ⟨h, fun i i' => (hb2 i i').1 ?_⟩
@@ -593,7 +593,7 @@ theorem exists_cech_ho1_cmp : ∀ (X T : Scheme.{0}) (p : T ⟶ X), IsSeparated 
     rw [map_sub, appLE_resG_tr (f := (p ⁻¹ᵁ U.1).ι) (O := W i) (O' := W i ⊓ W i') (V := W' i) (V' := W' i ⊓ W' i') inf_le_left inf_le_left le_rfl (fun _ hx => hx), appLE_resG_tr (f := (p ⁻¹ᵁ U.1).ι) (O := W i') (O' := W i ⊓ W i') (V := W' i') (V' := W' i ⊓ W' i') inf_le_right inf_le_right le_rfl (fun _ hx => hx), hh1, hh1]
     exact hh i i'
   · intro x
-    haveI := hsepV
+    have := hsepV
     obtain ⟨c', hc', hx⟩ := _root_.GlobalTheory.CechCmp.exists_isCocycle_cmp_eq _ _ ((p ∣_ U.1) ≫ U.2.isoSpec.hom : (p ⁻¹ᵁ U.1).toScheme ⟶ Sp Γ(X, U.1)) _ W' hW' hWa'
       (fun i i' => (hWa' i).inf (hWa' i')) (fun i i' i'' => ((hWa' i).inf (hWa' i')).inf (hWa' i'')) x
     choose c hc using fun i i' => (hb2 i i').2 (c' i i')
@@ -617,7 +617,7 @@ theorem exists_cech_ho1_cmp : ∀ (X T : Scheme.{0}) (p : T ⟶ X), IsSeparated 
   · intro R' _ σ Y s' ι ι' hι w c hc hcob
     obtain ⟨h', hh'⟩ := hcob
     subst hι
-    haveI := hsepV
+    have := hsepV
     refine _root_.GlobalTheory.CechCmp.pullHO1_cmp_eq_zero_of_coboundary _ _ _ _ W' hW' hWa' R' σ Y s' ι' w _ (hcoc c hc) ⟨h', fun i i' => ?_⟩
     refine Eq.trans ?_ (hh' i i')
     rw [← Scheme.Hom.appLE_comp_appLE ι' (p ⁻¹ᵁ U.1).ι _ (W' i ⊓ W' i')]
@@ -654,10 +654,10 @@ theorem mem_smul_top_of_tmul_tmul_eq_zero {R S M : Type} [CommRing R] [CommRing 
 
 theorem mem_smul_top_of_pull_eq_zero : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A], IsAbelianScheme A → ∀ (m : Ideal R), m.IsMaximal → ∀ (Y : Scheme.{0}) (s' : Y ⟶ Sp (R ⧸ m)) (φ : Y ⟶ A.left) (h : IsPullback φ s' A.hom (spMap (algebraMap R (R ⧸ m)))) (x : GlobalTheory.CechDR.HO1 A.hom), GlobalTheory.CechDR.pullHO1 h.w x = 0 → x ∈ m • (⊤ : Submodule R (GlobalTheory.CechDR.HO1 A.hom)) := by
   intro R _ A _ hA m hm Y s' φ h x hx
-  haveI : m.IsMaximal := hm
-  haveI : m.IsPrime := hm.isPrime
+  have : m.IsMaximal := hm
+  have : m.IsPrime := hm.isPrime
   let f := spMap (algebraMap R (Localization.AtPrime m))
-  letI : GrpObj ((Over.pullback f).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback f).obj A) := Functor.grpObjObj
   have hAm : IsAbelianScheme ((Over.pullback f).obj A) := GlobalTheory.AbLaw.CubeGen.isAb_baseChange hA f
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim (Localization.AtPrime m) ((Over.pullback f).obj A) hAm
   have hsq0 : IsPullback (pullback.fst A.hom f) ((Over.pullback f).obj A).hom A.hom f :=
@@ -670,12 +670,12 @@ theorem mem_smul_top_of_pull_eq_zero : ∀ (R : Type) [CommRing R] (A : Over (Sp
     IsLocalization.lift (M := m.primeCompl) (g := Ideal.Quotient.mk m) (fun y : m.primeCompl => by
       show IsUnit (Ideal.Quotient.mk m (y : R))
       have hy : Ideal.Quotient.mk m (y : R) ≠ 0 := by rw [Ne, Ideal.Quotient.eq_zero_iff_mem]; exact y.2
-      letI := Ideal.Quotient.field m
+      let := Ideal.Quotient.field m
       exact isUnit_iff_ne_zero.mpr hy)
-  letI : Algebra (Localization.AtPrime m) (R ⧸ m) := ψ.toAlgebra
+  let : Algebra (Localization.AtPrime m) (R ⧸ m) := ψ.toAlgebra
   have hcomp : (algebraMap (Localization.AtPrime m) (R ⧸ m)).comp (algebraMap R (Localization.AtPrime m)) =
       algebraMap R (R ⧸ m) := IsLocalization.lift_comp _
-  haveI : IsScalarTower R (Localization.AtPrime m) (R ⧸ m) := IsScalarTower.of_algebraMap_eq'  hcomp.symm
+  have : IsScalarTower R (Localization.AtPrime m) (R ⧸ m) := IsScalarTower.of_algebraMap_eq'  hcomp.symm
   have hsp : spMap (algebraMap (Localization.AtPrime m) (R ⧸ m)) ≫ f = spMap (algebraMap R (R ⧸ m)) := by
     show Spec.map _ ≫ Spec.map _ = Spec.map _
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, hcomp]
@@ -727,12 +727,12 @@ namespace GlobalTheory.CechBCInj
 theorem grp_of_isPullback {X S' P : Scheme.{0}} (G : Over X) [GrpObj G] (hG : IsAbelianScheme G) (f : S' ⟶ X)
     (fst : P ⟶ G.left) (snd : P ⟶ S') (h : IsPullback fst snd G.hom f) :
     ∃ _ : GrpObj (Over.mk snd), IsAbelianScheme (Over.mk snd) := by
-  letI : GrpObj ((Over.pullback f).obj G) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback f).obj G) := Functor.grpObjObj
   have hP := GlobalTheory.AbLaw.CubeGen.isAb_baseChange hG f
   let e : Over.mk snd ≅ (Over.pullback f).obj G := Over.isoMk h.isoPullback (by simp)
-  letI gr : GrpObj (Over.mk snd) := GrpObj.ofIso e.symm
+  let gr : GrpObj (Over.mk snd) := GrpObj.ofIso e.symm
   refine ⟨gr, GlobalTheory.Compare.AbelianSchemeTorusCompare.isAbelianScheme_of_iso e ?_ hP⟩
-  haveI : IsMonHom e.symm.hom := inferInstance
+  have : IsMonHom e.symm.hom := inferInstance
   exact isMonHom_inv_of_iso e.symm
 
 theorem restrict_isPullback {X T : Scheme.{0}} (p : T ⟶ X) (U : X.affineOpens) :
@@ -832,7 +832,7 @@ theorem GlobalTheory.CechFibre.exists_dlog_add_coboundary_mod : ∀ (E : Type) [
   classical
   intro E _ _ _ H X t hP hA hK U n v hv hb δ hδ hδU hδv J W j hWa hcov hWU hj m hm c hc
   let x0 : Sp (Γ(X, U.1) ⧸ m) ⟶ X := spMap (Ideal.Quotient.mk m) ≫ chart U
-  letI : GrpObj ((Over.pullback x0).obj t.G) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback x0).obj t.G) := Functor.grpObjObj
   have hpb := isGrpPullback_pullback t.G x0
   obtain ⟨θ, h', hθ⟩ := _root_.GlobalTheory.FibreSpan.fibre_span E H X t hP hA hK U n v hv hb δ hδ hδU hδv J W j hWa hcov hWU hj m hm
     ((Over.pullback x0).obj t.G) (pullback.fst t.G.hom x0) hpb c hc
@@ -927,7 +927,7 @@ open GlobalTheory.CechPoset in
 theorem GlobalTheory.CechFin.cocycle_of_finite_affine_subcover : ∀ (R : Type) [CommRing R] (Z : Scheme.{0}) (s : Z ⟶ Sp R) (J : Type) (W : J → Z.Opens) (hW : ∀ i, IsAffineOpen (W i)) (hW2 : ∀ i i', IsAffineOpen (W i ⊓ W i')), (∀ I : Finset J, I.Nonempty → IsAffineOpen (⨅ i ∈ I, W i)) → ∀ S : Finset J, ⨆ i ∈ S, W i = ⊤ → ∀ c : ∀ i i' : J, Γ(Z, W i ⊓ W i'), IsCoc W c → ∃ (f : Z1 (OAff s)) (h : ∀ i, Γ(Z, W i)), ∀ i ∈ S, ∀ i' ∈ S, c i i' = rho W s hW hW2 f.1 i i' + (resG Z inf_le_left (h i) - resG Z inf_le_right (h i')) := by
   intro R _ Z s J W hW hW2 hI S hS c hc
   let κ := {j // j ∈ S}
-  letI : LinearOrder κ := LinearOrder.lift' (Fintype.equivFin κ) (Fintype.equivFin κ).injective
+  let : LinearOrder κ := LinearOrder.lift' (Fintype.equivFin κ) (Fintype.equivFin κ).injective
   let D : κ → Z.Opens := fun k => W k.1
   have hD : ∀ I : Finset κ, I.Nonempty → IsAffineOpen (⨅ k ∈ I, D k) := by
     classical
@@ -1018,11 +1018,11 @@ theorem GlobalTheory.CechFin.cocycle_of_finite_affine_subcover : ∀ (R : Type) 
     rw [map_sub, map_neg, map_neg]; ring
   have e0 : resG Z hBP (c i i') = sfCr W c (cov D hD b.unop).1 i i' hBP := rfl
   have t1 : resG Z hBP (resG Z inf_le_left (hfun i)) = -resG Z hab (g a) := by
-    simp only [hfun, @dif_pos _ (Classical.propDecidable _) hi]
+    simp only [hfun, @dite_eq_left _ (Classical.propDecidable _) hi]
     rw [map_neg, map_neg]
     exact congrArg Neg.neg ((sf_resG_resG _ _ _).trans (sf_resG_resG _ _ _))
   have t2 : resG Z hBP (resG Z inf_le_right (hfun i')) = -resG Z ha'b (g a') := by
-    simp only [hfun, @dif_pos _ (Classical.propDecidable _) hi']
+    simp only [hfun, @dite_eq_left _ (Classical.propDecidable _) hi']
     rw [map_neg, map_neg]
     exact congrArg Neg.neg ((sf_resG_resG _ _ _).trans (sf_resG_resG _ _ _))
   rw [r1, r2] at erho
@@ -1107,7 +1107,7 @@ theorem appLE_bijective {X Y : Scheme.{0}} (f : X ⟶ Y) [IsOpenImmersion f] {O 
     Function.Bijective (f.appLE O V e).hom := by
   subst hV
   rw [Scheme.Hom.appLE_eq_app]
-  haveI := f.isIso_app O hO
+  have := f.isIso_app O hO
   exact (asIso (f.app O)).commRingCatIsoToRingEquiv.bijective
 
 end GlobalTheory.CechTr
@@ -1338,20 +1338,20 @@ theorem finite_piece (hO : GlobalTheory.AbCoh.OStr) {R : Type} [CommRing R] (A :
     (hA : IsAbelianScheme A) (f : R) (hf : IsIdempotentElem f) (g : ℕ)
     (hg : SmoothOfRelativeDimension g (pullback.snd A.hom (spMap (Ideal.Quotient.mk (Ideal.span {1 - f}))))) :
     Module.Finite (R ⧸ Ideal.span {1 - f}) ((R ⧸ Ideal.span {1 - f}) ⊗[R] HO1 A.hom) := by
-  haveI : IsLocalization.Away f (R ⧸ Ideal.span {1 - f}) :=
+  have : IsLocalization.Away f (R ⧸ Ideal.span {1 - f}) :=
     IsLocalization.Away.quotient_of_isIdempotentElem hf
-  haveI : Module.Flat R (R ⧸ Ideal.span {1 - f}) :=
+  have : Module.Flat R (R ⧸ Ideal.span {1 - f}) :=
     IsLocalization.flat (R ⧸ Ideal.span {1 - f}) (Submonoid.powers f)
   let B : Over (Sp (R ⧸ Ideal.span {1 - f})) :=
     (Over.pullback (spMap (algebraMap R (R ⧸ Ideal.span {1 - f})))).obj A
-  letI : GrpObj B := Functor.grpObjObj
+  let : GrpObj B := Functor.grpObjObj
   have hB : IsAbelianScheme B := isAbelianScheme_pullback_obj _ A hA
   have hBg : SmoothOfRelativeDimension g B.hom := hg
   obtain ⟨hfp, -, -, -⟩ := hO _ B g hB hBg
-  haveI := hA.proper
+  have := hA.proper
   obtain ⟨⟨e, -⟩, -⟩ := GlobalTheory.AbCoh.flat_baseChange_HO R (R ⧸ Ideal.span {1 - f}) A.left B.left A.hom B.hom
     (pullback.fst _ _) (IsPullback.of_hasPullback _ _) inferInstance inferInstance
-  haveI := hfp.1
+  have := hfp.1
   exact Module.Finite.equiv e.symm
 
 theorem finite_HO1 (hO : GlobalTheory.AbCoh.OStr) {R : Type} [CommRing R] (A : Over (Sp R)) [GrpObj A]
@@ -1362,9 +1362,9 @@ theorem finite_HO1 (hO : GlobalTheory.AbCoh.OStr) {R : Type} [CommRing R] (A : O
     exact Ideal.sum_mem _ (fun k _ ↦ Ideal.subset_span ⟨k, rfl⟩)
   have hidem : ∀ g : Set.range e, IsIdempotentElem g.val := by
     rintro ⟨_, k, rfl⟩; exact he.idem k
-  haveI : ∀ g : Set.range e, IsLocalization.Away g.val (R ⧸ Ideal.span {1 - g.val}) := fun g ↦
+  have : ∀ g : Set.range e, IsLocalization.Away g.val (R ⧸ Ideal.span {1 - g.val}) := fun g ↦
     IsLocalization.Away.quotient_of_isIdempotentElem (hidem g)
-  haveI : ∀ g : Set.range e, IsLocalizedModule.Away g.val
+  have : ∀ g : Set.range e, IsLocalizedModule.Away g.val
       (TensorProduct.mk R (R ⧸ Ideal.span {1 - g.val}) (HO1 A.hom) 1) := fun g ↦
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers g.val) (R ⧸ Ideal.span {1 - g.val}) _).2
       (TensorProduct.isBaseChange R (HO1 A.hom) (R ⧸ Ideal.span {1 - g.val}))
@@ -1382,7 +1382,7 @@ theorem GlobalTheory.CechFinGen.finite_HO1_onAff : ∀ (E : Type) [Field E] [Num
     (X : Scheme.{0}) (t : SAB H X), IsProper t.G.hom → ∀ U : X.affineOpens,
     Module.Finite Γ(X, U.1) (HO1 (GlobalTheory.DeRhamSheaf.onAff t.G U.2).hom) := by
   intro E _ _ _ H X t hp U
-  letI : GrpObj (GlobalTheory.DeRhamSheaf.onAff t.G U.2) := Functor.grpObjObj
+  let : GrpObj (GlobalTheory.DeRhamSheaf.onAff t.G U.2) := Functor.grpObjObj
   have hA : IsAbelianScheme t.G := GlobalTheory.AbelianLocusNormalisation.isAbelianScheme_of_isProper t hp
   exact GlobalTheory.CechFinGen.finite_HO1 GlobalTheory.AbCoh.oStr (GlobalTheory.DeRhamSheaf.onAff t.G U.2) (GlobalTheory.DeRhamSheaf.isAbelianScheme_onAff hA U.2)
 end -- clump:auto
@@ -1544,7 +1544,7 @@ theorem exists_dlog_add_coboundary : ∀ (E : Type) [Field E] [NumberField E] [I
   intro E _ _ _ H X t hP hA hK U n v hv hb δ hδ hδU hδv J W j hWa hcov hWU hj c hc
   let ρ : ∀ p : J × J, Γ(X, U.1) →+* Γ(t.G.left, W p.1 ⊓ W p.2) := fun p =>
     (t.G.hom.appLE U.1 (W p.1 ⊓ W p.2) (inf_le_left.trans (hWU p.1))).hom
-  letI inst : ∀ p : J × J, Module Γ(X, U.1) Γ(t.G.left, W p.1 ⊓ W p.2) := fun p => Module.compHom _ (ρ p)
+  let inst : ∀ p : J × J, Module Γ(X, U.1) Γ(t.G.left, W p.1 ⊓ W p.2) := fun p => Module.compHom _ (ρ p)
   have smul_apply : ∀ (r : Γ(X, U.1)) (x : ∀ p : J × J, Γ(t.G.left, W p.1 ⊓ W p.2)) (p : J × J),
       (r • x) p = ρ p r * x p := fun _ _ _ => rfl
   let Z : Submodule Γ(X, U.1) (∀ p : J × J, Γ(t.G.left, W p.1 ⊓ W p.2)) :=
@@ -1607,7 +1607,7 @@ theorem exists_dlog_add_coboundary : ∀ (E : Type) [Field E] [NumberField E] [I
       exact sub_eq_zero.1 h0
     rw [this]
     exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
-  haveI : Module.Finite Γ(X, U.1) (Z ⧸ S') := ⟨⟨Finset.univ.image fun k => S'.mkQ (ek k), by
+  have : Module.Finite Γ(X, U.1) (Z ⧸ S') := ⟨⟨Finset.univ.image fun k => S'.mkQ (ek k), by
     rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]; exact hspan⟩⟩
   have hbot := GlobalTheory.submodule_eq_top_of_sup_maximal_smul_eq_top Γ(X, U.1) (Z ⧸ S') ⊥ (fun m hm => by
     rw [bot_sup_eq]

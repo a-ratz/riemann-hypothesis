@@ -56,7 +56,7 @@ private lemma haar_measure_open_subgroup_index {T : Type} [Group T] [Topological
     [Finite (C' ⧸ H'.subgroupOf C')] :
     ν (C' : Set T) = (H'.relIndex C' : ℝ≥0∞) * ν (H' : Set T) := by
   classical
-  haveI : Fintype (C' ⧸ H'.subgroupOf C') := Fintype.ofFinite _
+  have : Fintype (C' ⧸ H'.subgroupOf C') := Fintype.ofFinite _
   let r : (C' ⧸ H'.subgroupOf C') → T := fun q => ((Quotient.out q : C') : T)
   have hr : ∀ q, r q ∈ C' := fun q => (Quotient.out q).2
   have hcov : (C' : Set T) = ⋃ q, (fun y => (r q)⁻¹ * y) ⁻¹' (H' : Set T) := by
@@ -92,7 +92,7 @@ private lemma haar_measure_open_subgroup_index {T : Type} [Group T] [Topological
 theorem volIdx :
     UpperTheory.Gal.InertialTypesAlt.L.VolIdx := by
   intro G _ _ _ _ _ _ T C H hT ν hν hCT hC hHC hH
-  haveI := hν
+  have := hν
   have eH : {t : T | (t : G) ∈ H} = ((H.subgroupOf T : Subgroup T) : Set T) := rfl
   have eC : {t : T | (t : G) ∈ C} = ((C.subgroupOf T : Subgroup T) : Set T) := rfl
   have hHo : IsOpen ((H.subgroupOf T : Subgroup T) : Set T) := by
@@ -102,11 +102,11 @@ theorem volIdx :
     rw [← eC]
     exact hT.isClosedEmbedding_subtypeVal.isCompact_preimage hC
   have hle : H.subgroupOf T ≤ C.subgroupOf T := fun x hx => hHC hx
-  haveI : CompactSpace (C.subgroupOf T) := isCompact_iff_compactSpace.mp hCc
-  haveI : Finite ((C.subgroupOf T) ⧸ (H.subgroupOf T).subgroupOf (C.subgroupOf T)) :=
+  have : CompactSpace (C.subgroupOf T) := isCompact_iff_compactSpace.mp hCc
+  have : Finite ((C.subgroupOf T) ⧸ (H.subgroupOf T).subgroupOf (C.subgroupOf T)) :=
     Subgroup.quotient_finite_of_isOpen _ (by
       rw [Subgroup.coe_subgroupOf]
-      exact hHo.preimage continuous_subtype_val)
+      exact hHo.preimage continuous_subtypeVal)
   have key := haar_measure_open_subgroup_index ν (C.subgroupOf T) (H.subgroupOf T) hHo hle
   rw [Subgroup.relIndex_subgroupOf hCT] at key
   have hpos : ν ((H.subgroupOf T : Subgroup T) : Set T) ≠ 0 :=

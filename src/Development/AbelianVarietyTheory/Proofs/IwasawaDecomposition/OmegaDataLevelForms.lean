@@ -97,8 +97,8 @@ theorem exists_root_value (l : Level H) {V : HSp D} {k : GA D V} (hk : k ∈ GfC
     rw [e, Ideal.mem_bot, Nat.cast_eq_zero] at h1
     omega
   obtain ⟨a, b, s, s', hb, hs, hs', hin, hout⟩ := exists_half_elements l (Ideal.finite_factors hM0).toFinset fun P => by
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le]
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le] at hin hout
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le]
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le] at hin hout
   obtain ⟨y, y', hy, hy', hyy, hroot, p, hp, hyp⟩ := exists_root_half l.M U a b s s' hb hs hs'
     (by rw [hU]; exact GlobalTheory.RecDict.det_finHom_norm V k)
   obtain ⟨x, hx1, hx2, hx3⟩ := GlobalTheory.DetRootCong.exists_idele D y y' hyy
@@ -191,9 +191,9 @@ theorem exists_psi (V : HSp D) {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {n
     rw [e, Ideal.mem_bot, Nat.cast_eq_zero] at hpI
     rw [hM, hpI, mul_zero] at hM₂
     exact lt_irrefl _ hM₂
-  haveI : Finite (𝓞 D.host.E ⧸ d.I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI0
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have : Finite (𝓞 D.host.E ⧸ d.I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI0
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨e⟩ := HalfPairing.nonempty_equiv_quot (N := Dw.La) d.I V.rank (Dw.rank.trans hrk)
   obtain ⟨δ, -, hδ⟩ := GlobalTheory.TwistTie.exists_det_hom d.I (hrk ▸ hpq) e
   have hIJ : IsCoprime d.I (Mfr d.l₂) := by

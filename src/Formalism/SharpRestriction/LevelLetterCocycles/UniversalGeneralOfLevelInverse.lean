@@ -155,13 +155,13 @@ theorem level_form (hπ : W.π₀ ∈ W.AΔ) {a : ZMod n} {e s : ℕ} (hs : s �
     InFr W a (ps W s ^ x.toNat) (ps W s ^ (-x).toNat * ∏ t ∈ (Finset.range e).erase s, ps W t ^ H t) g := by
   simp only [InId] at hg
   rw [← Finset.mul_prod_erase _ _ hs, ← Finset.mul_prod_erase _ _ hs] at hg
-  simp only [Function.update_apply, if_pos rfl] at hg
+  simp only [Function.update_apply, ite_eq_left rfl] at hg
   have e1 : (∏ t ∈ (Finset.range e).erase s, ps W t ^ (if t = s then x else α t).toNat) =
       ∏ t ∈ (Finset.range e).erase s, ps W t ^ (α t).toNat :=
-    Finset.prod_congr rfl fun t ht => by rw [if_neg (Finset.ne_of_mem_erase ht)]
+    Finset.prod_congr rfl fun t ht => by rw [ite_eq_right (Finset.ne_of_mem_erase ht)]
   have e2 : (∏ t ∈ (Finset.range e).erase s, ps W t ^ (-(if t = s then x else α t)).toNat) =
       ∏ t ∈ (Finset.range e).erase s, ps W t ^ (-α t).toNat :=
-    Finset.prod_congr rfl fun t ht => by rw [if_neg (Finset.ne_of_mem_erase ht)]
+    Finset.prod_congr rfl fun t ht => by rw [ite_eq_right (Finset.ne_of_mem_erase ht)]
   rw [e1, e2] at hg
   have h1 := inFr_num_drop W (prod_ps_mem' W hπ _ _) hg
   have h2 := inFr_den_mul W (prod_ps_mem' W hπ ((Finset.range e).erase s) (fun t => H t - (-α t).toNat)) h1
@@ -449,7 +449,7 @@ theorem inId_αk_iff {a : ZMod n} {e s : ℕ} (hs : s ∈ Finset.range e) (d : �
     · simp [αk]
     · intro t ht
       have ht' := Finset.ne_of_mem_erase ht
-      have h0 : (αk e s d k t).toNat = 0 := by simp only [αk, if_neg ht']; omega
+      have h0 : (αk e s d k t).toNat = 0 := by simp only [αk, ite_eq_right ht']; omega
       rw [h0, pow_zero]
   have hd : (∏ t ∈ Finset.range e, ps W t ^ (-(αk e s d k t)).toNat) =
       ∏ t ∈ (Finset.range e).erase s, ps W t ^ d t := by
@@ -460,7 +460,7 @@ theorem inId_αk_iff {a : ZMod n} {e s : ℕ} (hs : s ∈ Finset.range e) (d : �
     rw [h1, pow_zero, one_mul]
     refine Finset.prod_congr rfl fun t ht => ?_
     have ht' := Finset.ne_of_mem_erase ht
-    have h2 : (-(αk e s d k t)).toNat = d t := by simp only [αk, if_neg ht']; omega
+    have h2 : (-(αk e s d k t)).toNat = d t := by simp only [αk, ite_eq_right ht']; omega
     rw [h2]
   simp only [InId]
   rw [hn, hd]
@@ -518,7 +518,7 @@ theorem mem_JS_thin (A : ArcP n) {c : ZMod n} {s : ℕ} (hs : s < A.len c)
     i ∈ A.JS c := by
   unfold ArcP.JS
   apply Finset.mem_union_left
-  rw [if_pos ⟨s, hs, hth⟩]
+  rw [ite_eq_left ⟨s, hs, hth⟩]
   exact Finset.mem_Icc.2 ⟨hi1, hi2⟩
 
 theorem mem_JS_up (A : ArcP n) {c : ZMod n} {s : ℕ} (hs : s < A.len c) {b : ℕ}
@@ -687,7 +687,7 @@ theorem part_a [IsDomain O] (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.Ring
     InFr W c (W.π₀ * nnNum W A c) (nnDen W A c)
       (W.γE W.gam (PPγ W (A.len c) (A.JS c) f) - PPγ W (A.len c) (A.JS c) f) := by
   obtain ⟨hl1, hl2, -⟩ := hOK.2.2.1 c hc
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   obtain ⟨F, hFdef⟩ : ∃ F : W.EE,
       F = W.γE W.gam (PPγ W (A.len c) (A.JS c) f) - PPγ W (A.len c) (A.JS c) f := ⟨_, rfl⟩
   rw [← hFdef]
@@ -1018,9 +1018,9 @@ theorem killWinL_of (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     KillWinL D HW := by
   intro l _ K LL hG hCA h5
   obtain ⟨⟨hdom, -, -⟩, -⟩ := Formalism.MainNotions.N.T2.litGoodO l LL
-  haveI := hdom
+  have := hdom
   have : FiniteDimensional ℚ_[l] ↥(K0 K) := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hR : ToolsR.RingP ((HW l).W K 1 LL hG) := ring_condition_uniformizer_polynomial D HW F h9 l K LL hCA
   have hT : Formalism.MainNotions.WachCoordinates.ToolsAlg ((HW l).W K 1 LL hG) := tool_algebra_of_ring_condition D HW F h9 l K LL hCA h5
   have hV := Formalism.MainNotions.WachCoordinates.Br.valRing_rec (D.loc l) LL
@@ -1078,11 +1078,11 @@ theorem univGenL_of (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     UnivGenL D HW := by
   intro l _ K LL hG hCA h5 _
   obtain ⟨⟨hdom, -, -⟩, -⟩ := Formalism.MainNotions.N.T2.litGoodO l LL
-  haveI := hdom
-  haveI : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
+  have := hdom
+  have : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
   have : FiniteDimensional ℚ_[l] ↥(K0 K) := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
-  haveI : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) := by
     rw [(D.loc l).PD_p]
     exact Formalism.MainNotions.WachCoordinates.Br.complete_OL LL
   have hR : ToolsR.RingP ((HW l).W K 1 LL hG) := ring_condition_uniformizer_polynomial D HW F h9 l K LL hCA

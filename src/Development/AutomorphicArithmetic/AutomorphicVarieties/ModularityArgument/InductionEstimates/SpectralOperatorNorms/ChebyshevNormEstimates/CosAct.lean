@@ -64,7 +64,7 @@ private theorem coset_pre {G : Type*} [Group G] (U : Subgroup G) (c : G ⧸ U) :
 private theorem coset_fin {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (U : Subgroup G)
     (ho : IsOpen (U : Set G)) (hc : IsCompact (U : Set G)) (h : G) :
     {c : G ⧸ U | ∃ k ∈ U, c = QuotientGroup.mk (k * h)}.Finite := by
-  haveI : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology ho
+  have : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology ho
   have h1 : IsCompact ((fun k : G => (QuotientGroup.mk (k * h) : G ⧸ U)) '' (U : Set G)) :=
     hc.image (QuotientGroup.continuous_mk.comp (continuous_mul_const h))
   refine h1.finite_of_discrete.subset ?_
@@ -185,7 +185,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cosAct :
   have hYe : Y = Ofin μ m e := by
     rw [hY, finsum_mem_eq_finite_toFinset_sum _ hfin]
     refine ContinuousLinearMap.ext fun v => ?_
-    rw [hO, ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply]
+    rw [hO, ContinuousLinearMap.comp_apply, sum_apply]
     refine Eq.trans ?_ (hint _ _ (hcont v)).symm
     refine Finset.sum_congr rfl fun c _ => ?_
     have hi : Integrable (fun h => e₀ h • rhoF μ h v) m :=
@@ -196,7 +196,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.cosAct :
     rw [map_smul, he₀, hmul, ContinuousLinearMap.comp_apply]
   have hmem : ∀ g, g ∈ (QuotientGroup.mk : _ → AdelicGLn.FiniteAdelicGL K (2 + 2) ⧸ Kf) ⁻¹' (hfin.toFinset : Set _) ↔
       ∃ k ∈ Kf, g⁻¹ * (k * h) ∈ Kf := fun g => by
-    simp only [Set.mem_preimage, Set.Finite.coe_toFinset, Set.mem_setOf_eq, QuotientGroup.eq]
+    simp only [Set.mem_preimage, Set.Finite.coe_toFinset, Set.mem_ofPred_eq, QuotientGroup.eq]
   have hinv : ∀ k ∈ Kf, ∀ g, e (k * g) = e g ∧ e (g * k) = e g := fun k hk g => by
     classical
     simp only [he, Set.indicator_apply, hmem]

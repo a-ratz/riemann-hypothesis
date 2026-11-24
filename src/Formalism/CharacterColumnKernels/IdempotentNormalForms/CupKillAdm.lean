@@ -178,7 +178,7 @@ theorem columnJ : StatColumnJ := by
 
   obtain ⟨xη, hxη⟩ := (Module.finrank_pos_iff_exists_ne_zero (R := K)).mp (hrE ▸ Nat.one_pos)
   obtain ⟨x1, hx1⟩ := (Module.finrank_pos_iff_exists_ne_zero (R := K)).mp (hre₁ ▸ Nat.one_pos)
-  have hspan := (finrank_eq_one_iff_of_nonzero' xη hxη).mp hrE
+  have hspan := (finrank_eq_one_iff_of_ne_zero' xη hxη).mp hrE
   set η : V := (xη : V) with hηdef
   set s1 : V := (x1 : V) with hs1def
   have hηmem : η ∈ LinearMap.range (DistribSMul.toLinearMap K V E) := xη.2

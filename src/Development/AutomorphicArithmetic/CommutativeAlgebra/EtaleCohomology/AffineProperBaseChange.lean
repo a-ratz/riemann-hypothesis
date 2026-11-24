@@ -276,7 +276,7 @@ open LateralTheory.E.CechLevelsPf LateralTheory.E.LevelsPf
 open PiTensorProduct in
 theorem tensCop : TensCop := by
   intro A A' _ _ φ n
-  letI : Algebra A A' := φ.toAlgebra
+  let : Algebra A A' := φ.toAlgebra
   refine ⟨PiTensorProduct A (fun _ : Fin (n + 1) => A'), inferInstance, algebraMap A _, fun i => (singleAlgHom (A := fun _ => A') i).toRingHom,
     fun i => ?_, ?_, ?_⟩
   · exact (singleAlgHom (A := fun _ => A') i).comp_algebraMap
@@ -296,7 +296,7 @@ theorem tensCop : TensCop := by
         exact Subring.prod_mem _ fun i _ => Subring.subset_closure (Set.mem_iUnion.2 ⟨i, _, rfl⟩)
     | add x y hx hy => exact Subring.add_mem _ (hx trivial) (hy trivial)
   · intro R _ g c hg
-    letI : Algebra A R := c.toAlgebra
+    let : Algebra A R := c.toAlgebra
     have hc : ∀ i r, g i (algebraMap A A' r) = algebraMap A R r := fun i r => by
       change g i (φ r) = c r
       rw [← RingHom.comp_apply, hg i]
@@ -1074,10 +1074,10 @@ private theorem conn_neg (a9 : A9) {R : Type} [CommRing R] {E E' : Spc} (f : E �
     Conn R f F (-1) := by
   have hs := (a9 R F).1
   refine ⟨fun j hj => ?_, ?_⟩
-  · haveI := hs E j (by omega)
-    haveI := hs E' j (by omega)
+  · have := hs E j (by omega)
+    have := hs E' j (by omega)
     exact ⟨Function.injective_of_subsingleton _, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
-  · haveI := hs E' (-1) (by omega)
+  · have := hs E' (-1) (by omega)
     exact Function.injective_of_subsingleton _
 
 private theorem conn_level {R : Type} [CommRing R] {P P' Q Q' : PSh} {f : P ⟶ P'} {g : Q ⟶ Q'}
@@ -1130,13 +1130,13 @@ theorem UpperTheory.etaleCohomology_descent_of_cech_cover :
   by_cases hq0 : q = 0
   · subst hq0
     have h01 : (0 : A) = 1 := isUnit_zero_iff.mp (by simpa using hq)
-    haveI : Subsingleton A := subsingleton_of_zero_eq_one h01
+    have : Subsingleton A := subsingleton_of_zero_eq_one h01
     have hb : Function.Bijective (Ideal.Quotient.mk I) :=
       ⟨fun x y _ => Subsingleton.elim x y, Ideal.Quotient.mk_surjective⟩
-    haveI : IsIso (CommRingCat.ofHom (Ideal.Quotient.mk I)) :=
+    have : IsIso (CommRingCat.ofHom (Ideal.Quotient.mk I)) :=
       (RingEquiv.ofBijective (Ideal.Quotient.mk I) hb).toCommRingCatIso.isIso_hom
     exact eqv_iso _ _ _
-  · haveI : NeZero q := ⟨hq0⟩
+  · have : NeZero q := ⟨hq0⟩
     intro n
     have hc := conn_all a1 a9 b1 b2 b4 hC hE hD hL q i (n.toNat + 2) A I hq
       (fun C _ χ hχ => hH A I C χ hχ)

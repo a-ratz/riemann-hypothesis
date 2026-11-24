@@ -62,10 +62,10 @@ theorem exists_lift_mem_open (R R' : Type) [CommRing R] [CommRing R'] [IsLocalRi
   obtain ⟨y, hy⟩ : ∃ y, x₀ (closedPoint (ResidueField R')) = y := ⟨_, rfl⟩
   obtain ⟨α, hs, hα⟩ := GlobalTheory.HenselZero.exists_formallySmooth_stalk (O := CommRingCat.of R) U.hom y
   obtain ⟨χ₀, hχ₀⟩ := GlobalTheory.HenselZero.exists_factor_stalk (T := CommRingCat.of (ResidueField R')) x₀ (y := y) hy
-  letI := α.hom.toAlgebra
-  letI := ρ.toAlgebra
-  haveI : Algebra.FormallySmooth R (U.left.presheaf.stalk y) := hs
-  haveI := hc
+  let := α.hom.toAlgebra
+  let := ρ.toAlgebra
+  have : Algebra.FormallySmooth R (U.left.presheaf.stalk y) := hs
+  have := hc
   have e₁ : α ≫ χ₀ = CommRingCat.ofHom ((residue R').comp ρ) := by
     apply Spec.map_injective
     rw [Spec.map_comp, hα, reassoc_of% hχ₀, hx]

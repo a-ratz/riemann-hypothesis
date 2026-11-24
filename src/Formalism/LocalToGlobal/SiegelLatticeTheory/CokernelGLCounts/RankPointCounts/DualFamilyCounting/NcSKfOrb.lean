@@ -204,7 +204,7 @@ theorem finite_orbit_holds :
   obtain ⟨hKc, -⟩ := Formalism.L2.SG.Pf.NcS.AdTupPf.kf_compact_open σ J L inferInstance
   have hmat : Continuous (fun g : HA (Af F) σ J =>
       ((HA.mat (Af F) σ J g : GL (Fin n) (Af F ⊗[F] E)) : Matrix (Fin n) (Fin n) (Af F ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hact : Continuous (fun g : HA (Af F) σ J => g • Y) := by
     refine continuous_pi fun c => ?_
     show Continuous (fun g : HA (Af F) σ J =>

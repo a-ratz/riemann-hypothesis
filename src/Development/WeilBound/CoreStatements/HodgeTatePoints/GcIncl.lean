@@ -97,7 +97,7 @@ theorem test_incl : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoetherianRing
         field_simp
       rw [e]
       exact M.smul_mem a h1
-  letI := hlat
+  let := hlat
   obtain ⟨d, hd, hdx⟩ := hden x (by rw [Submodule.IsFullLattice.span_eq_top]; trivial)
   have hd0' : algebraMap A K d ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hd
   obtain ⟨σ, hσ⟩ := hproj.out

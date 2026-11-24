@@ -113,7 +113,7 @@ open TopForm
 theorem topPair_dForm {k A : Type} [CommRing k] [CommRing A] (α : k →+* A) {n : ℕ}
     (D : Fin n → (letI := α.toAlgebra; Derivation k A A)) (f : Fin n → A) :
     topPair α D (dForm α f) = (Matrix.of fun i j => (letI := α.toAlgebra; (D j : Derivation k A A)) (f i)).det := by
-  letI := α.toAlgebra
+  let := α.toAlgebra
   rw [dForm_eq, topPair, exteriorPower.alternatingMapLinearEquiv_apply_ιMulti, AlternatingMap.compLinearMap_apply]
   change Matrix.det (Matrix.of _) = _
   congr 1

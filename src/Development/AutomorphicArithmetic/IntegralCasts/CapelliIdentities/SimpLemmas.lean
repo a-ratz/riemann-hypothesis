@@ -114,7 +114,7 @@ private lemma core {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Al
       rw [hxa]; field_simp
     have hvd : p.valuation K (algebraMap R K (d : R)) ≠ 0 := (Valuation.ne_zero_iff _).2 hdK
     rw [hf, map_div₀]
-    exact div_le_of_le_mul₀ (zero_le') (zero_le') h2
+    exact div_le_of_le_mul₀ (zero_le) (zero_le) h2
   · rw [map_div₀]
     have hvd : p.valuation K (algebraMap R K (d : R)) ≠ 0 := (Valuation.ne_zero_iff _).2 hdK
     by_cases hpT : p ∈ T
@@ -124,7 +124,7 @@ private lemma core {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Al
       rw [ht, he, sub_zero] at h1
       have h2 := val_le_of_mem (K := K) p h1
       rw [← hm' p] at h2
-      exact div_le_one_of_le₀ h2 zero_le'
+      exact div_le_one_of_le₀ h2 zero_le
     · have hnd : ¬ (p.asIdeal ∣ Ideal.span {(d : R)}) := by
         intro h
         exact hpT (Finset.mem_union_right _ (by simpa using h))
@@ -159,7 +159,7 @@ theorem UpperTheory.Reformulated.B.ApproximationIntegralOutsideFinset.approxF :
     simpa using hc
   have happ : ∀ p, ∃ a : F, valuation (A p).Fp ((A p).ιF a - b p) ≤
       valuation (A p).Fp ((A p).ιF (algebraMap (NumberField.RingOfIntegers F) F c)) := fun p => by
-    haveI := (A p).lf
+    have := (A p).lf
     exact UpperTheory.Reformulated.B.ApproximationIntegralOutsideFinset.approx_one (A p).ιF (A p).dense (b p) _ (hc' p)
   choose a ha using happ
   obtain ⟨f, hf1, hf2⟩ := UpperTheory.Reformulated.B.ApproximationIntegralOutsideFinset.core (K := F) S c hc a

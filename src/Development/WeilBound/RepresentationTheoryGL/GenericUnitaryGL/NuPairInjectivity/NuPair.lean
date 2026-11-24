@@ -235,7 +235,7 @@ theorem exists_injective_of_tensor {α : Type} [DecidableEq α] {Γ X : α → T
       simp
     · simp [Pi.mulSingle_eq_of_ne h, Function.update_of_ne h]⟩
   refine ⟨f, ?_⟩
-  haveI := hi
+  have := hi
   rcases Representation.IsIrreducible.injective_or_eq_zero f with h | h
   · exact h
   · exfalso

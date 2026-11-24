@@ -461,8 +461,8 @@ theorem _root_.GlobalTheory.exists_smul_mem_of_dense_fibres :
       ∃ a : R, a ≠ 0 ∧ a • x ∈ A₀ := by
   intro R _ _ _ A _ _ _ A₀ x Sg hfg hdense hfib
   classical
-  haveI : Algebra.FiniteType R A₀ := (Subalgebra.fg_iff_finiteType A₀).1 hfg
-  haveI : Algebra.FiniteType A₀ A := Algebra.FiniteType.of_restrictScalars_finiteType R A₀ A
+  have : Algebra.FiniteType R A₀ := (Subalgebra.fg_iff_finiteType A₀).1 hfg
+  have : Algebra.FiniteType A₀ A := Algebra.FiniteType.of_restrictScalars_finiteType R A₀ A
   obtain ⟨a, ha0, s, -, hli, hspan⟩ := _root_.GlobalTheory.GenericFreeness.exists_hasBasisAway_quotient R A₀ A (M := A) (Submodule.span A₀ ({1} : Set A)) (Submodule.fg_span_singleton 1)
   set P := (Submodule.span A₀ ({1} : Set A)).restrictScalars R with hPdef
   have hP : ∀ y, y ∈ P ↔ y ∈ A₀ := by
@@ -542,9 +542,9 @@ theorem _root_.GlobalTheory.exists_smul_mem_of_dense_fibres :
     by_cases hjs : j ∈ c.support
     · have hθv : θ v = c j • (1 : K) := by
         rw [← hcv, map_finsuppSum, Finsupp.sum, Finset.sum_eq_single j]
-        · rw [map_smul, hθs j hj, if_pos rfl]
+        · rw [map_smul, hθs j hj, ite_eq_left rfl]
         · intro m hm hmj
-          rw [map_smul, hθs m (hcs hm), if_neg hmj, smul_zero]
+          rw [map_smul, hθs m (hcs hm), ite_eq_right hmj, smul_zero]
         · intro h; exact absurd hjs h
       have h0 : θ (a ^ N • x) = 0 := by rw [map_smul, hx, smul_zero]
       rw [← hpv, map_add (f := _), hθP p hp, zero_add, hθv, Algebra.smul_def, _root_.mul_one] at h0
@@ -902,7 +902,7 @@ theorem generic_invariants : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoether
   intro R _ _ _ G _ _ _ _ _ C d c Sg _ hD hS a j hB i hi _ a' u hu
   change Γ(pullback G.hom (Out.jK R), pullback.fst G.hom (Out.jK R) ⁻¹ᵁ C.W a') at u
   let φ : CommRingCat.of R ⟶ Γ(G.left, C.W a') := (Scheme.ΓSpecIso (.of R)).inv ≫ G.hom.appLE ⊤ (C.W a') le_top
-  letI : Algebra R Γ(G.left, C.W a') := φ.hom.toAlgebra
+  let : Algebra R Γ(G.left, C.W a') := φ.hom.toAlgebra
   have : Algebra.FiniteType R Γ(G.left, C.W a') :=
     (G.hom.finiteType_appLE (isAffineOpen_top _) (C.aff a') le_top).comp
       (RingHom.FiniteType.of_surjective _ (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (.of R)).inv).2)
@@ -933,7 +933,7 @@ theorem generic_invariants : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoether
     rintro P ⟨hP, hPb⟩
     obtain ⟨K, _, t, _, ht, -, i', hT⟩ := hS P hP
     obtain ⟨ψ, rfl⟩ := Spec.map_surjective t
-    letI : Algebra R K := ψ.hom.toAlgebra
+    let : Algebra R K := ψ.hom.toAlgebra
     have hker : RingHom.ker (algebraMap R K) = P.asIdeal := by
       have : Spec.map ψ (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum K) = P := ht.le (Set.mem_range_self _)
       rw [← this]
@@ -1790,18 +1790,18 @@ theorem split_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRi
   obtain ⟨a, j, b, hb, hj, hU⟩ := exists_open G C c Sg hd hs
   let R' := Localization.Away b
   have hle : Submonoid.powers b ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hb
-  haveI : IsDomain R' := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing R' := IsLocalization.isNoetherianRing (Submonoid.powers b) R' inferInstance
+  have : IsDomain R' := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing R' := IsLocalization.isNoetherianRing (Submonoid.powers b) R' inferInstance
   let u : Sp R' ⟶ Sp R := spMap (algebraMap R R')
-  haveI : IsOpenImmersion u := IsOpenImmersion.of_isLocalization b
+  have : IsOpenImmersion u := IsOpenImmersion.of_isLocalization b
   have hu : Set.range u = (PrimeSpectrum.basicOpen b : Set (PrimeSpectrum R)) := PrimeSpectrum.localization_away_comap_range R' b
   let G' : Over (Sp R') := (Over.pullback u).obj G
   let π : G'.left ⟶ G.left := pullback.fst G.hom u
   have hp : IsGrpPullback G' G u π := isGrpPullback_pullback G u
-  haveI : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) hp.1.flip inferInstance
-  haveI : Smooth G'.hom := inferInstanceAs (Smooth (pullback.snd G.hom u))
-  haveI : IsSeparated G'.hom := inferInstanceAs (IsSeparated (pullback.snd G.hom u))
-  haveI : QuasiCompact G'.hom := inferInstanceAs (QuasiCompact (pullback.snd G.hom u))
+  have : IsAffineHom π := MorphismProperty.of_isPullback (P := @IsAffineHom) hp.1.flip inferInstance
+  have : Smooth G'.hom := inferInstanceAs (Smooth (pullback.snd G.hom u))
+  have : IsSeparated G'.hom := inferInstanceAs (IsSeparated (pullback.snd G.hom u))
+  have : QuasiCompact G'.hom := inferInstanceAs (QuasiCompact (pullback.snd G.hom u))
   have hd' : Dense (u ⁻¹' Sg) := hd.preimage u.isOpenEmbedding.isOpenMap
   have hs' : (C.pull π).SplitOn c (u ⁻¹' Sg) := by
     intro x hx
@@ -1811,7 +1811,7 @@ theorem split_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRi
       rintro _ rfl
       exact ⟨x, rfl⟩
     obtain ⟨t', ht'⟩ : ∃ t', t' ≫ u = t := ⟨_, IsOpenImmersion.lift_fac u t hr⟩
-    haveI : IsAffineHom (pullback.fst G'.hom t') :=
+    have : IsAffineHom (pullback.fst G'.hom t') :=
       MorphismProperty.of_isPullback (P := @IsAffineHom) (IsPullback.of_hasPullback _ _).flip inferInstance
     refine ⟨K, inferInstance, t', this, ?_, ?_⟩
     · have h1 : ∀ y, t' y = x := fun y => u.isOpenEmbedding.injective (by
@@ -1834,7 +1834,7 @@ theorem split_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRi
       change π (eSec G' x) ∈ G.left.basicOpen (C.r a (j n))
       rw [he]
       exact (hU _ (hb' x)).2 n
-  haveI : IsAffineHom (pullback.fst G'.hom (Out.jK R')) :=
+  have : IsAffineHom (pullback.fst G'.hom (Out.jK R')) :=
     MorphismProperty.of_isPullback (P := @IsAffineHom) (IsPullback.of_hasPullback _ _).flip inferInstance
   have h := _root_.GlobalTheory.ZJ.Charts.split_generic_of_based R' G' (C.pull π) d c _ hd' hs' a j hB
   have hun : IsUnit (algebraMap R (FractionRing R) b) :=

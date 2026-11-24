@@ -170,12 +170,12 @@ def intAut (L : Type) [Field L] [NumberField L] [Algebra L Ω] (σ : G K Ω) : I
 theorem exists_lift_ine (hw : IsPlaceOver A w) {τ : L ≃ₐ[K] L} (hτ : τ ∈ w.asIdeal.inertia (L ≃ₐ[K] L)) :
     ∃ σ ∈ Ine (F := K) A, AlgEquiv.restrictNormalHom L σ = τ := by
   obtain ⟨σ, hσ, rfl⟩ := exists_lift_dec hw (Ideal.inertia_le_stabilizer _ hτ)
-  letI : TopologicalSpace (IntCl L Ω) := ⊥
-  haveI : DiscreteTopology (IntCl L Ω) := ⟨rfl⟩
-  haveI := continuousSMul_intCl L Ω
-  haveI := isInvariant_intCl L Ω
+  let : TopologicalSpace (IntCl L Ω) := ⊥
+  have : DiscreteTopology (IntCl L Ω) := ⟨rfl⟩
+  have := continuousSMul_intCl L Ω
+  have := isInvariant_intCl L Ω
   set Q := primeBelow (F := L) A with hQ
-  haveI : Q.LiesOver w.asIdeal := ⟨(under_primeBelow hw).symm⟩
+  have : Q.LiesOver w.asIdeal := ⟨(under_primeBelow hw).symm⟩
   have hmap : Q = Q.map (intAut L σ : IntCl L Ω →+* IntCl L Ω) := by
     rw [Ideal.map_comap_of_equiv]
     ext b

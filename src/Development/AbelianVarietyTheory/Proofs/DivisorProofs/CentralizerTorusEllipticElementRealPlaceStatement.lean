@@ -96,7 +96,7 @@ theorem zero_of_hx (hJ : IsHermND σ J) {x : k ⊗[F] Fld P}
 
 theorem isUnit_of_isIsom [Module.Finite F (Fld P)] (hJ : IsHermND σ J) {x : k ⊗[F] Fld P}
     {φ : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E] (Fin n → k ⊗[F] E)} (h : IsIsom P k J x φ) : IsUnit x := by
-  haveI : Module.Finite k (k ⊗[F] Fld P) := Module.Finite.base_change F k (Fld P)
+  have : Module.Finite k (k ⊗[F] Fld P) := Module.Finite.base_change F k (Fld P)
   have hinj : Function.Injective (LinearMap.mulLeft k x) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro y hy
@@ -176,15 +176,15 @@ end Gen
 theorem plusUnits_of_isIsom {D : D7} (V : HSp D) (P : PPol D.sp.cm.sig V.rank) (ρ : D.what₂.Tau) {x φ}
     (h : IsIsom P (placeOf D ρ).Completion V.gram x φ) :
     ∃ u : plusUnits P (placeOf D ρ).Completion, u.1.1 = x := by
-  haveI : Module.Finite D.host.F D.host.E := inferInstance
-  haveI : Module.Finite D.host.F (Fld P) := Module.Finite.trans D.host.E (Fld P)
+  have : Module.Finite D.host.F D.host.E := inferInstance
+  have : Module.Finite D.host.F (Fld P) := Module.Finite.trans D.host.E (Fld P)
   exact plusUnits_gen (fun e => star_star e) (GlobalTheory.DefiniteQuotient.gram_hermND V) h
 
 theorem topGrp {F E : Type} [Field F] [Field E] [Algebra F E] [Module.Finite F E] (R : Type) [CommRing R]
     [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) :
     IsTopologicalGroup (HA R σ J) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   exact inferInstanceAs (IsTopologicalGroup (HR R σ J))
 
 theorem borel {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R]
@@ -211,7 +211,7 @@ theorem measFacts {G H : Type} [Group G] [TopologicalSpace G] [IsTopologicalGrou
     intro a b
     have := congrArg e (hc (e.symm a) (e.symm b))
     simpa [map_mul] using this
-  haveI hH : (dt.map e).IsHaarMeasure := e.isHaarMeasure_map dt
+  have hH : (dt.map e).IsHaarMeasure := e.isHaarMeasure_map dt
   refine ⟨hH, ⟨fun g => ?_⟩, ?_, ?_⟩
   · have : (fun a : H => a * g) = (fun a => g * a) := funext fun a => hcomm a g
     rw [this]
@@ -232,12 +232,12 @@ theorem centMeas_real_place : ∀ {D : D7} (V : HSp D) (P : PPol D.sp.cm.sig V.r
     (GlobalTheory.DefiniteQuotient.gram_hermND V) (placeOf D ρ).Completion u φ h
   obtain ⟨e, H2⟩ := H
   have hm := H2.2
-  haveI : Module.Finite D.host.F D.host.E := inferInstance
-  haveI : Module.Finite D.host.F (Fld P) := Module.Finite.trans D.host.E (Fld P)
-  haveI := topGrp (placeOf D ρ).Completion D.sp.cm.sig V.gram
-  haveI := topGrp (placeOf D ρ).Completion (star' P) (one₁ P)
-  haveI := borel (placeOf D ρ).Completion D.sp.cm.sig V.gram
-  haveI := borel (placeOf D ρ).Completion (star' P) (one₁ P)
+  have : Module.Finite D.host.F D.host.E := inferInstance
+  have : Module.Finite D.host.F (Fld P) := Module.Finite.trans D.host.E (Fld P)
+  have := topGrp (placeOf D ρ).Completion D.sp.cm.sig V.gram
+  have := topGrp (placeOf D ρ).Completion (star' P) (one₁ P)
+  have := borel (placeOf D ρ).Completion D.sp.cm.sig V.gram
+  have := borel (placeOf D ρ).Completion (star' P) (one₁ P)
 
   simp only [hm dt]
   have hc := torComm (placeOf D ρ).Completion (star' P) (one₁ P)

@@ -125,7 +125,7 @@ theorem isDiff_zero {O : Type} [CommRing O] [StarRing O] (A : AnArc O) [IsEmpty 
   have e := GlobalTheory.Points.valR_constFn_of_over (𝟙 (Sp ℂ)) (algebraMap ℂ (DualNumber ℂ)) v.left hv U h (valAt' (𝟙 (Sp ℂ)) U f)
   have e' := (congrArg (valR v.left U) hf).trans e
   unfold valR at e'
-  rw [dif_pos h] at e'
+  rw [dite_eq_left h] at e'
   exact (congrArg TrivSqZeroExt.snd e').trans rfl
 
 variable (c : Coeff l) (bF : c.F →+* ℂ) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ]
@@ -206,13 +206,13 @@ theorem ex_zero : Λ.u.ex 0 = η[a.D₀.P.A] := by
   rw [(Λ.u.ker 0).2 (zero_mem _), Hom.one_def, toUnit_unit, Category.id_comp]
 
 theorem analyticTorusPoint_base_eq_holUnif_ex (v : Λ.A.V) : (Λ.ex0 v).b = toUnit _ ≫ Λ.u.ex v.2 := by
-  haveI := isScalarTower Λ
+  have := isScalarTower Λ
   exact Over.OverMorphism.ext ((Λ.ex0_b v).trans (toUnit_TF_comp_left _).symm)
 
 theorem isLift_gt (v : Λ.A.V) (x : Λ.A.X) :
     IsLift Λ.u (Out.DegPre.gtφ a.D₀ ℂ (Λ.ex0 v).b (Λ.ε x)) (show Sp ℂ ⟶ _ from 𝟙 (Sp ℂ))
       ![Λ.A.ct x + v.2, Λ.A.ct x, v.2, 0] := fun k => by
-  haveI := isScalarTower Λ
+  have := isScalarTower Λ
   refine (Category.id_comp _).trans ?_
   fin_cases k
   · refine Eq.trans ?_ (toUnit_TF_comp_left _)
@@ -243,14 +243,14 @@ theorem corr_of_genVal {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} 
     if h : ∃ k, φ k = p then j h.choose else if h : ∃ k, φ' k = p then j' h.choose else chartAt hL p
   have i₁ : ∀ k, idx (φ k) = j k := fun k => by
     have e : ∃ k', φ k' = φ k := ⟨k, rfl⟩
-    simp only [idx, dif_pos e]
+    simp only [idx, dite_eq_left e]
     exact c₁ _ _ e.choose_spec
   have i₂ : ∀ k, idx (φ' k) = j' k := fun k => by
     have e : ∃ k', φ' k' = φ' k := ⟨k, rfl⟩
     by_cases e' : ∃ k', φ k' = φ' k
-    · simp only [idx, dif_pos e']
+    · simp only [idx, dite_eq_left e']
       exact c₃ _ _ e'.choose_spec
-    · simp only [idx, dif_neg e', dif_pos e]
+    · simp only [idx, dite_eq_right e', dite_eq_left e]
       exact c₂ _ _ e.choose_spec
   have hi : ∀ w, u.fr (idx (u.ex w).left) w ≠ 0 := fun w => u.fr_ne _ _ (by
     by_cases e : ∃ k, φ k = (u.ex w).left
@@ -259,7 +259,7 @@ theorem corr_of_genVal {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} 
     · by_cases e' : ∃ k, φ' k = (u.ex w).left
       · obtain ⟨k, hk⟩ := e'
         rw [← hk, i₂, hφ']; exact (hz'.le_iff j').1 h₂ k
-      · simp only [idx, dif_neg e, dif_neg e']
+      · simp only [idx, dite_eq_right e, dite_eq_right e']
         exact le_chartAt hL _)
   have := congrArg (Units.coeHom ℂ) (hs fun w => Units.mk0 _ (hi w))
   simp only [map_prod, map_zpow, Units.coeHom_apply, Units.val_mk0, ← hφ, ← hφ', i₁, i₂] at this
@@ -317,7 +317,7 @@ theorem genVal_shift (v : Λ.A.V) (z : Fin Λ.A.gB → ℂ) (m : Λ.A.abelian₂
   rfl
 
 theorem isZero_iff (v : Λ.A.V) : (Λ.ex0 v).IsZero ↔ ∃ la : Λ.A.La, la.y = 0 ∧ v = Λ.A.P0 la := by
-  haveI := isScalarTower Λ
+  have := isScalarTower Λ
   constructor
   · rintro ⟨hb, hs⟩
     have h0 : Λ.u.ex v.2 = 1 := Over.OverMorphism.ext ((Λ.ex0_b v).symm.trans ((congrArg (·.left) hb).trans
@@ -347,7 +347,7 @@ theorem isZero_iff (v : Λ.A.V) : (Λ.ex0 v).IsZero ↔ ∃ la : Λ.A.La, la.y =
     · exact h.trans (Eq.trans (by simp [hy]) (genVal_one (u := Λ.u) _ _ _).symm)
 
 theorem isIota (la : Λ.A.La) : Out.GtPtF.IsIota (Λ.ε la.y) (Λ.ex0 (Λ.A.P0 la)) := by
-  haveI := isScalarTower Λ
+  have := isScalarTower Λ
   refine ⟨by rw [analyticTorusPoint_base_eq_holUnif_ex, AnArc.degeneratingTori_basePeriodMap_snd, Λ.u.ex_add, (Λ.u.ker _).2 (Λ.lam.ge la.l.2), _root_.mul_one, Λ.ct], fun x => ?_⟩
   obtain ⟨x, rfl⟩ := Λ.ε.surjective x
   obtain ⟨hz, h⟩ := genVal_shift Λ _ _ la.l (Λ.A.degeneratingTori_basePeriodMap_snd la) x
@@ -384,7 +384,7 @@ theorem isIota (la : Λ.A.La) : Out.GtPtF.IsIota (Λ.ε la.y) (Λ.ex0 (Λ.A.P0 l
     field_simp
 
 theorem isAdd (v v' : Λ.A.V) : (Λ.ex0 v).IsAdd (Λ.ex0 v') (Λ.ex0 (v + v')) := by
-  haveI := isScalarTower Λ
+  have := isScalarTower Λ
   refine ⟨by rw [analyticTorusPoint_base_eq_holUnif_ex, analyticTorusPoint_base_eq_holUnif_ex, analyticTorusPoint_base_eq_holUnif_ex, Prod.snd_add, Λ.u.ex_add, MonObj.comp_mul]; rfl, fun x => ?_⟩
   obtain ⟨x, rfl⟩ := Λ.ε.surjective x
   have hp : 𝟙 (Sp ℂ) ≫ (lift (Out.DegPre.cF a.D₀ ℂ (Λ.ε x)) (lift (Λ.ex0 v).b (Λ.ex0 v').b)).left =
@@ -418,7 +418,7 @@ theorem isAdd (v v' : Λ.A.V) : (Λ.ex0 v).IsAdd (Λ.ex0 v') (Λ.ex0 (v + v')) :
     simp [AnArc.e_add]
 
 theorem analyticTorusPoint_surjective : Function.Surjective Λ.ex0 := by
-  haveI := isScalarTower Λ
+  have := isScalarTower Λ
   intro g
   obtain ⟨z, hz⟩ := Λ.u.ex_onto (Over.homMk (show Sp ℂ ⟶ _ from g.b.left) ((Over.w g.b).trans jFK_comp_jK_complex))
   have hb : ∀ w : Λ.A.X →+ ℂ, (Λ.ex0 (w, z)).b = g.b := fun w =>
@@ -488,7 +488,7 @@ open FrameValue
 
 theorem gtAct (Λ : letI := H.starRing; GtAn a) (r : 𝓞 E) (v : letI := H.starRing; Λ.A.V) :
     letI := H.starRing; GtAct a.oa r (Λ.ex0 v) (Λ.ex0 (Λ.A.actV r v)) := by
-  letI := H.starRing
+  let := H.starRing
   refine ⟨by rw [analyticTorusPoint_base_eq_holUnif_ex, analyticTorusPoint_base_eq_holUnif_ex, AnArc.actV_snd, Λ.act, Category.assoc], fun w hw h₀ x => ?_⟩
   obtain ⟨x, rfl⟩ := Λ.ε.surjective x
   have hp : 𝟙 (Sp ℂ) ≫ (lift (Out.DegPre.cF a.D₀ ℂ (Λ.ε x)) (Λ.ex0 v).b).left =

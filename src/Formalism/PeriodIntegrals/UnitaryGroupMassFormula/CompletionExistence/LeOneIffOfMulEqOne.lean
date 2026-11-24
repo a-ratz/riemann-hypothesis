@@ -157,7 +157,7 @@ private theorem exists_ringOfIntegers_not_mem_mul_eq_of_valuation_le (s : SplitP
     (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 L) L)).2 hb0
   have hvb : s.w.intValuation b ≠ 0 := s.w.intValuation_ne_zero b hb0
   rw [map_div₀, s.w.valuation_of_algebraMap, s.w.valuation_of_algebraMap] at hx
-  have hab : s.w.intValuation a ≤ s.w.intValuation b := (div_le_one₀ (zero_lt_iff.2 hvb)).1 hx
+  have hab : s.w.intValuation a ≤ s.w.intValuation b := (div_le_one₀ (pos_iff_ne_zero.2 hvb)).1 hx
   have hk0 : WithZero.log (s.w.intValuation b) ≤ 0 := by
     have := (WithZero.log_le_log hvb one_ne_zero).2 (s.w.intValuation_le_one b)
     rwa [WithZero.log_one] at this
@@ -179,7 +179,7 @@ private theorem exists_ringOfIntegers_not_mem_mul_eq_of_valuation_le (s : SplitP
       rw [hJ, pow_succ]
       exact Ideal.mul_mono_right hle
     exact (Ideal.span_singleton_le_iff_mem _).1 this
-  obtain ⟨c, hcJ, hcw⟩ := SetLike.not_le_iff_exists.1 hJw
+  obtain ⟨c, hcJ, hcw⟩ := IsConcreteLE.not_le_iff_exists.1 hJw
   have hca : a * c ∈ Ideal.span {b} := by
     rw [hJ]
     exact Ideal.mul_mem_mul ha_mem hcJ
@@ -215,7 +215,7 @@ theorem muV_le_one_iff (s : SplitPlace L) (x : L) : muV s x ≤ 1 ↔ s.w.valuat
     have hμt : muV s (algebraMap (𝓞 L) L t) < 1 := (muV_int_lt_one_iff s t).2 htw
     rw [← ht, map_mul, hμint c hc, one_mul, map_inv₀] at hμt
     have hμx0 : muV s x ≠ 0 := (muV s).ne_zero_iff.2 hx0
-    have h1 := (inv_lt_one₀ (zero_lt_iff.2 hμx0)).1 hμt
+    have h1 := (inv_lt_one₀ (pos_iff_ne_zero.2 hμx0)).1 hμt
     exact absurd hμ (not_le.2 h1)
   · intro hν
     obtain ⟨c, t, hc, ht⟩ := exists_ringOfIntegers_not_mem_mul_eq_of_valuation_le s x hν

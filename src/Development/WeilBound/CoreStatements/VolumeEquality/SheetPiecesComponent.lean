@@ -444,9 +444,9 @@ theorem sheet_local : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintyp
   set c : K → (Fin n → ℂ) → ℂ := fun k y' => if k = k0 then (ψ y')⁻¹ else 1 with hcdef
   have hca : ∀ k, AnalyticAt ℂ (c k) (sheetProj Ψ γ t) := fun k => by
     by_cases hk : k = k0
-    · simp only [hcdef, hk, if_true]
+    · simp only [hcdef, hk, ite_true]
       exact hψa.inv hψ0
-    · simp only [hcdef, hk, if_false]
+    · simp only [hcdef, hk, ite_false]
       exact analyticAt_const
   have hcne : ∀ k y', ψ y' ≠ 0 → c k y' ≠ 0 := fun k y' h => by
     by_cases hk : k = k0
@@ -648,7 +648,7 @@ theorem ptsIntegral_sheets : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k,
   have hint : ∀ m, IntegrableOn (h m) (O m) := fun m => ((hI m).integrable_indicator (hBm m)).integrableOn
   have hset : ∀ m, (O m ∩ B m : Set (Fin n → ℂ)) =ᵐ[volume] B m := fun m => by
     refine (ae_eq_set.mpr ⟨?_, ?_⟩)
-    · rw [Set.diff_eq_empty.mpr Set.inter_subset_right]; exact measure_empty
+    · rw [Set.sdiff_eq_empty.mpr Set.inter_subset_right]; exact measure_empty
     · exact measure_mono_null (show B m \ (O m ∩ B m) ⊆ V m \ O m from
         fun t ht => ⟨(hS.meas m).2 ht.1, fun hO => ht.2 ⟨hO, ht.1⟩⟩) (hnull m)
   have hIB : ∀ m, ∫ u in O m, h m u = ∫ t in B m, F m t := fun m => by
@@ -769,7 +769,7 @@ theorem hasSum_sheets {X M : Type*} [AddCommMonoid M] [TopologicalSpace M] [Cont
     have he : s.filter (fun m => pc m = k) = ∅ := by
       ext m
       simp only [Finset.mem_filter, Finset.notMem_empty, iff_false, not_and, s, Set.Finite.mem_toFinset,
-        Set.mem_setOf_eq]
+        Set.mem_ofPred_eq]
       intro hm h
       exact hk (h ▸ hB m hm)
     rw [he, Finset.card_empty, zero_smul]
@@ -790,7 +790,7 @@ theorem sum_sheets {X : Type*} [MeasurableSpace X] (μ : Measure X) {np : ℕ}
     (integral_indicator (hBm m)).symm
   have hIntAbs : ∀ m, ∫ t in B m, |f (pc m) t| ∂μ = (∫⁻ t, ‖F m t‖ₑ ∂μ).toReal := by
     intro m
-    rw [← integral_norm_eq_lintegral_enorm (hFint m).aestronglyMeasurable, ← integral_indicator (hBm m)]
+    rw [← integral_norm_eq_lintegral_eNorm (hFint m).aestronglyMeasurable, ← integral_indicator (hBm m)]
     congr 1
     ext t
     by_cases ht : t ∈ B m <;> simp [F, ht, Real.norm_eq_abs]
@@ -798,9 +798,9 @@ theorem sum_sheets {X : Type*} [MeasurableSpace X] (μ : Measure X) {np : ℕ}
   have hmeas : ∀ k, AEMeasurable (fun t => (d k : ℝ≥0∞) * (FF k).indicator (fun x => ‖f k x‖ₑ) t) μ := by
     intro k
     apply AEMeasurable.const_mul
-    exact (aemeasurable_indicator_iff (hF k)).mpr (hf k).aestronglyMeasurable.enorm
+    exact (aemeasurable_indicator_iff (hF k)).mpr (hf k).aestronglyMeasurable.eNorm
   have hlin : ∑' m, ∫⁻ t, ‖F m t‖ₑ ∂μ = ∑ k, (d k : ℝ≥0∞) * ∫⁻ t in FF k, ‖f k t‖ₑ ∂μ := by
-    rw [← lintegral_tsum (fun m => (hFint m).aestronglyMeasurable.enorm)]
+    rw [← lintegral_tsum (fun m => (hFint m).aestronglyMeasurable.eNorm)]
     have hae1 : ∀ᵐ t ∂μ, ∑' m, ‖F m t‖ₑ =
         ∑ k, (d k : ℝ≥0∞) * (FF k).indicator (fun x => ‖f k x‖ₑ) t := by
       filter_upwards [hae] with t ht

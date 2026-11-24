@@ -336,7 +336,7 @@ theorem measurable_nuLocX (v : InfinitePlace X.B.I.F) : Measurable (nuLocX X u v
     · exact le_ciInf fun t => nuLocX_le X u v x _ (t : Sloc X u v).2
     · refine le_ciInf fun t => ?_
       have hc : Continuous fun t : Sloc X u v => opn (uMat ((t : Formalism.REAL.UJ (X.B.I.ε v)) * x)) :=
-        (continuous_opn_mul x).comp continuous_subtype_val
+        (continuous_opn_mul x).comp continuous_subtypeVal
       have hcl : IsClosed {t : Sloc X u v | (⨅ s : Dd, opn (uMat (((s : Sloc X u v) : Formalism.REAL.UJ (X.B.I.ε v)) * x))) ≤
           opn (uMat ((t : Formalism.REAL.UJ (X.B.I.ε v)) * x))} := isClosed_le continuous_const hc
       have hsub : Dd ⊆ {t : Sloc X u v | (⨅ s : Dd, opn (uMat (((s : Sloc X u v) : Formalism.REAL.UJ (X.B.I.ε v)) * x))) ≤
@@ -404,7 +404,7 @@ theorem exists_Wu_ne : ∃ x, X.Wu u x ≠ 0 := by
   by_contra h
   push Not at h
   have h1 := ((X.Wu_spec u).2.2.2.2)
-  simp only [h, enorm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, lintegral_zero] at h1
+  simp only [h, eNorm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, lintegral_zero] at h1
   exact zero_ne_one h1
 
 def single (v : InfinitePlace X.B.I.F) (s : Formalism.REAL.UJ (X.B.I.ε v)) : X.B.I.Ginf :=
@@ -501,14 +501,14 @@ def Fw (v : InfinitePlace X.B.I.F) (y : Formalism.REAL.UJ (X.B.I.ε v)) : ℝ≥
   ‖X.Wloc u v y‖ₑ * ENNReal.ofReal (nuLocX X u v y ^ N1 X)
 
 theorem measurable_Fw (v : InfinitePlace X.B.I.F) : Measurable (Fw X u v) :=
-  (X.Wloc_cont u v).enorm.measurable.mul ((measurable_nuLocX X u v).pow_const _).ennreal_ofReal
+  (X.Wloc_cont u v).eNorm.measurable.mul ((measurable_nuLocX X u v).pow_const _).ennreal_ofReal
 
 theorem Fw_inv (v : InfinitePlace X.B.I.F) (m : Formalism.REAL.UJ (X.B.I.ε v)) (hm : m ∈ Nloc X u v)
     (h : Formalism.REAL.UJ (X.B.I.ε v)) (hh : h ∈ Hloc X u v) (x : Formalism.REAL.UJ (X.B.I.ε v)) :
     Fw X u v (m * h * x) = Fw X u v x := by
   have hs : m * h ∈ Sloc X u v := mul_mem_Sloc X u v (Nloc_sub X u v hm) (Hloc_sub X u v hh)
   unfold Fw
-  rw [← enorm_norm (X.Wloc u v (m * h * x)), norm_Wloc_inv X u v hs, enorm_norm, nuLocX_inv X u v hs]
+  rw [← eNorm_norm (X.Wloc u v (m * h * x)), norm_Wloc_inv X u v hs, eNorm_norm, nuLocX_inv X u v hs]
 
 theorem wuWeighted_of_loc {μS νl : ∀ v, Measure (Formalism.REAL.UJ (X.B.I.ε v))} {C : ℝ≥0∞}
     (hQ : QuotWit X u μS νl C) (hL : LocDecayX X u νl) : WuWeighted X u := by
@@ -583,8 +583,8 @@ theorem localRepresentationL2 {μS νl : ∀ v, Measure (Formalism.REAL.UJ (X.B.
       ‖X.Wloc u w (m * h * x)‖ₑ ^ 2 = ‖X.Wloc u w x‖ₑ ^ 2 := by
     intro w m hm h hh x
     have hs : m * h ∈ Sloc X u w := mul_mem_Sloc X u w (Nloc_sub X u w hm) (Hloc_sub X u w hh)
-    rw [← enorm_norm (X.Wloc u w (m * h * x)), norm_Wloc_inv X u w hs, enorm_norm]
-  have h1 := hprod (fun w y => ‖X.Wloc u w y‖ₑ ^ 2) (fun w => ((X.Wloc_cont u w).enorm.measurable.pow_const 2))
+    rw [← eNorm_norm (X.Wloc u w (m * h * x)), norm_Wloc_inv X u w hs, eNorm_norm]
+  have h1 := hprod (fun w y => ‖X.Wloc u w y‖ₑ ^ 2) (fun w => ((X.Wloc_cont u w).eNorm.measurable.pow_const 2))
     hinv
   have h2 : ∫⁻ x, ∏ w, ‖X.Wloc u w (x w)‖ₑ ^ 2 ∂(X.nuQ u) = 1 := by
     rw [← (X.Wu_spec u).2.2.2.2]
@@ -622,7 +622,7 @@ theorem rootCoord_one (v : InfinitePlace X.B.I.F) (a : Fin D.R.rS) :
   rw [Matrix.one_mulVec]
   split_ifs with h
   · show hJ _ (rv X.B.I v (X.crd (X.fY a))) (rv X.B.I v (X.crd (X.eX ⟨a.1 + 1, h⟩))) = 0
-    rw [Formalism.L2.SG.PoincareInHH.Cut.hJ_crd, Formalism.L2.SG.PoincareInHH.Cut.hT_f_e, if_neg, map_zero]
+    rw [Formalism.L2.SG.PoincareInHH.Cut.hJ_crd, Formalism.L2.SG.PoincareInHH.Cut.hT_f_e, ite_eq_right, map_zero]
     intro hc
     have := congrArg Fin.val hc
     simp at this
@@ -944,7 +944,7 @@ theorem lint_prod (x : X.B.I.Ginf) :
       ENNReal.ofReal_prod_of_nonneg (fun _ _ => norm_nonneg _)]
     simp only [ofReal_norm]
   simp only [h1]
-  exact Formalism.L2.SG.RealObj.InfCut.ProductExactness.PiM.lintegral_pi_prod _ _ fun w => (continuous_Gl X u x w).enorm.measurable
+  exact Formalism.L2.SG.RealObj.InfCut.ProductExactness.PiM.lintegral_pi_prod _ _ fun w => (continuous_Gl X u x w).eNorm.measurable
 
 theorem lint_prod_lt (x : X.B.I.Ginf) : ∏ w, ∫⁻ t, ‖Gl X u x w t‖ₑ ∂(Formalism.REAL.muG (X.B.I.ε w)) < ⊤ := by
   rw [← lint_prod]; exact ((X.Wu_spec u).2.1 x).1.2
@@ -957,7 +957,7 @@ theorem lint_ne_zero {x : X.B.I.Ginf} (hx : X.Wu u x ≠ 0) (w : InfinitePlace X
   rw [← lint_prod] at hP
   have hae : (fun y => X.ph y • X.Wu u (x * y)) =ᵐ[Formalism.L2.SG.ProjRows.muInf X.B.I] 0 := by
     have hm : AEMeasurable (fun y => ‖X.ph y • X.Wu u (x * y)‖ₑ) (Formalism.L2.SG.ProjRows.muInf X.B.I) :=
-      ((X.Wu_spec u).2.1 x).1.1.enorm
+      ((X.Wu_spec u).2.1 x).1.1.eNorm
     have := (lintegral_eq_zero_iff' hm).1 hP
     filter_upwards [this] with y hy
     simpa using hy

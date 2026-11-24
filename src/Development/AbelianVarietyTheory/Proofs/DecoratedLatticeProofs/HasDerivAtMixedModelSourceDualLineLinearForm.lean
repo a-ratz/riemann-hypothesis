@@ -78,7 +78,7 @@ theorem hasDerivAt_mixS_extY : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), Is
     refine ⟨hc.comp hLc, fun t => ?_⟩
     show (d.extY T (L t)).map (finPart D) = 0
     rw [HypDec.extY_apply, Matrix.map_mul, hLf t, Matrix.zero_mul]
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, v.covol.2.2]; exact ENNReal.one_lt_top⟩
   obtain ⟨K, hK⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ (GlobalTheory.OrientedHeis.theta_dLine hθ hψ hM hf)
   have e1 : (fun t : ℝ => ψ (symplO S T (d.extX T x) (d.extY T (L t))) * (_root_.I195MixedCoordinates_9421736abf21ec81fbe38545.source d) T ψ v.μ v.𝓕 f x w) =

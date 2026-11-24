@@ -286,7 +286,7 @@ theorem besPer_domN {S S₀ A L : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (o : 
     (φ : GA D A → ℂ) (f : GA D S → ℂ) (hf : ∀ γ ∈ GQ S, ∀ g, f (γ * g) = f g) :
     besPer ψ θ d o ζ μ 𝓕 ν 𝓝 φ f = besPer ψ θ d o ζ μ 𝓕 ν 𝓝' φ f := by
   obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag S (isIsoSub_e d)
-  haveI : Countable (NFlagQ S d.e) := by
+  have : Countable (NFlagQ S d.e) := by
     have hinj : Function.Injective
         (fun x : NFlagQ S d.e => (⟨x.1.1, x.2⟩ : GQ S)) := fun x y hxy =>
       Subtype.ext (Subtype.ext (congrArg (fun z : GQ S => z.1) hxy))
@@ -306,7 +306,7 @@ theorem besPer_domA {ρ : ℕ} (B : GlobalTheory.Unf.BesLev D ρ) {ψ : AddChar 
     (hf : ∀ γ ∈ GQ B.V, ∀ g, f (γ * g) = f g) :
     besPer ψ 1 B.d B.o B.ζ B.vA.μ 𝓕 B.vN.ν B.vN.𝓝 φ f = B.per ψ φ f := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.A
-  haveI := B.vA.haar
+  have := B.vA.haar
   exact h𝓕.setIntegral_eq B.vA.fund fun γ x => Shift.inner_left B ψ hψ φ f hφ hf γ.2 x
 
 end GlobalTheory.Core.Mi.PerCmp
@@ -623,12 +623,12 @@ theorem unitN_unique {S : HSp D} {ρ : ℕ} {e : Matrix (Fin S.rank) (Fin ρ) D.
     {ν ν' : Measure (NFlag S e)} {𝓝 𝓝' : Set (NFlag S e)} (h : GlobalTheory.Per.IsUnitN S e ν 𝓝) (h' : GlobalTheory.Per.IsUnitN S e ν' 𝓝') :
     ν = ν' := by
   obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag S he
-  haveI : Countable (NFlagQ S e) := by
+  have : Countable (NFlagQ S e) := by
     have hinj : Function.Injective (fun x : NFlagQ S e => (⟨x.1.1, x.2⟩ : GQ S)) := fun x y hxy =>
       Subtype.ext (Subtype.ext (congrArg (fun z : GQ S => z.1) hxy))
     exact hinj.countable
-  haveI := h.1
-  haveI := h'.1
+  have := h.1
+  have := h'.1
   have hs := Measure.isMulLeftInvariant_eq_smul ν ν'
   have hac : ν ≪ ν' := by rw [hs]; exact Measure.smul_absolutelyContinuous
   have h2 : ν 𝓝' = 1 := ((h'.2.1.mono hac).measure_eq h.2.1).trans h.2.2
@@ -866,7 +866,7 @@ theorem exists_rowMeas (j : ℕ) : ∃ ρ : Measure (rowGrp G j), (j < D.R.m →
   · let J : GlobalTheory.Unf.JacLev D ((D.R.m - 1 - j) / 2) :=
       ⟨G.V (.grid D.R.m j), G.V (.top j), rowJac G j (by omega) _ (by omega), cocpt_top G (by omega), v,
         (GlobalTheory.Unf.Inhab.nonempty_volN _).some⟩
-    have e : rowGrp G j = jacGrp J.d := dif_pos h
+    have e : rowGrp G j = jacGrp J.d := dite_eq_left h
     obtain ⟨ρ, h1, h2⟩ := exists_haar_heq e J.μR (GlobalTheory.QuotZero.jac_haar_inv J).2.1
     refine ⟨ρ, fun _ => h1, fun t M hM => ⟨fun σ hj => ?_, fun σ hj => by omega⟩⟩
     obtain rfl : σ = (D.R.m - 1 - j) / 2 := by omega
@@ -881,7 +881,7 @@ theorem exists_rowMeas (j : ℕ) : ∃ ρ : Measure (rowGrp G j), (j < D.R.m →
         GlobalTheory.SeeSaw.Model.isLineVec_nLine (pow_ne_zero _ (GlobalTheory.Unf.Inhab.cmHost_imaginaryGenerator_ne_zero D)), cocpt_top G (by omega), v,
         (GlobalTheory.Unf.Inhab.nonempty_volN _).some⟩
     have e : rowGrp G j = besGrp B.d B.o := by
-      simp only [rowGrp, dif_neg h, dif_pos h']
+      simp only [rowGrp, dite_eq_right h, dite_eq_left h']
       rfl
     obtain ⟨ρ, h1, h2⟩ := exists_haar_heq e B.μR (GlobalTheory.QuotZero.bes_haar_inv B).2.1
     refine ⟨ρ, fun _ => h1, fun t M hM => ⟨fun σ hj => by omega, fun σ hj => ?_⟩⟩
@@ -939,7 +939,7 @@ theorem placeValuation_linAt_large : _root_.GlobalTheory.FunPr.ThetaLocalInputs 
   simp only [lhs, liftT_oppTens]
   rw [bplus_fsum hch.toIsBase.vol hM hca _ _ _ fun P _ => hFP P, Finsupp.sum]
   refine Finset.sum_congr rfl fun P _ => ?_
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
 end GlobalTheory.RowVal
 end
 end
@@ -1003,7 +1003,7 @@ theorem twisted_iterate_eventually_large : _root_.GlobalTheory.FunPr.ThetaLocalI
         fun j => (hρ' j t M hM).2)
   have e1 : liftT ch.W M (oppPath t D.R.m) (oppTens ch.W t (Finsupp.single P 1) τ) (formTop ch t y) =
       ∑ d ∈ τ.support, τ d • liftP ch.W M (oppPath t D.R.m) (oppPure ch.W t P d) (formTop ch t y) := by
-    rw [GlobalTheory.RowVal.liftT_oppTens, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same,
+    rw [GlobalTheory.RowVal.liftT_oppTens, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same,
       one_smul]
   have e2 : lhs ch t M (Finsupp.single P 1) τ a y = ∑ d ∈ τ.support,
       τ d * Bplus ch.W ch.M (colFn ch a) (liftP ch.W M (oppPath t D.R.m) (oppPure ch.W t P d) (formTop ch t y)) := by

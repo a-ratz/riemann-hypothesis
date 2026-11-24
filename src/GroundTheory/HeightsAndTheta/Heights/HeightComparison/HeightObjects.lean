@@ -157,7 +157,7 @@ theorem toGeo_a (A : HermLine n) : A.toGeo.a = A.deg := rfl
 
 theorem toGeo_h_of_blockNonzero (A : HermLine n) {w : Coord n → ℂ}
     (hw : BlockNonzero (unflatCone w)) : A.toGeo.h w = A.metric (unflatCone w) := by
-  simp only [toGeo, if_pos hw]
+  simp only [toGeo, ite_eq_left hw]
 
 theorem isSmoothHerm_toGeo (A : HermLine n) : Geo.IsSmoothHerm A.toGeo := by
   have hu : ContDiff ℝ ∞ (fun w : Coord n → ℂ ↦ unflatCone w) :=

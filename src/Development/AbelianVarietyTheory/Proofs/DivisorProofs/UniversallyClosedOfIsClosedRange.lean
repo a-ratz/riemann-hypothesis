@@ -181,8 +181,8 @@ theorem isOpen_diff_range {X U P S Z : Scheme.{0}} {p : X ⟶ S} {t : P ⟶ S} [
   have : IsClosedImmersion γ := IsClosedImmersion.of_comp γ (pullback.snd a i)
   have ho := (pullback.fst a i).isOpenEmbedding.isOpenMap _ γ.isClosedEmbedding.isClosed_range.isOpen_compl
   convert ho using 1
-  rw [← Scheme.Pullback.range_fst, Set.compl_eq_univ_diff,
-    Set.image_diff (pullback.fst a i).isOpenEmbedding.injective, Set.image_univ, ← Set.range_comp, ← e']
+  rw [← Scheme.Pullback.range_fst, Set.compl_eq_univ_sdiff,
+    Set.image_sdiff (pullback.fst a i).isOpenEmbedding.injective, Set.image_univ, ← Set.range_comp, ← e']
   rfl
 
 theorem hasCover_of_section {X U P S : Scheme.{0}} (p : X ⟶ S) [IsSeparated p] (i : U ⟶ X) [IsOpenImmersion i]

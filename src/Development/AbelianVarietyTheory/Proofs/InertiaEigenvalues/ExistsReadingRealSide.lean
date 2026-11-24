@@ -357,7 +357,7 @@ theorem detRed {V : HSp D} {n : ℕ} {hF : D.host.F = maximalRealSubfield D.host
       invFun := fun i => ⟨Fin.cast hn.symm i.1, by
         have h := i.2
         unfold blk2
-        rw [if_neg (by simp only [Fin.val_cast]; omega)]⟩
+        rw [ite_eq_right (by simp only [Fin.val_cast]; omega)]⟩
       left_inv := fun a => rfl
       right_inv := fun i => rfl }
   have hdetT : NX.detT r (NX.locM s κ) = ((A.det : O) : K) := by
@@ -397,7 +397,7 @@ theorem qPlace {V : HSp D} {n : ℕ} {hF : D.host.F = maximalRealSubfield D.host
         Ideal.Quotient.mk w.asIdeal (NX.resRep s w (NX.detT r (NX.locM s κ))) := by
   subst hw hrr
   obtain ⟨-, u, hu, hd⟩ := detRed hP hn r' hκ s hb
-  haveI : Nontrivial (kP s.w) := Ideal.Quotient.nontrivial_iff.2 s.w.isPrime.ne_top
+  have : Nontrivial (kP s.w) := Ideal.Quotient.nontrivial_iff.2 s.w.isPrime.ne_top
   have hun : u ∉ s.w.asIdeal := fun hm =>
     (dBlk (blk2 r') 1 (redFn (1 : GL (Fin V.rank) (Lev.EAf D)) s.w (Lev.finE V (P.ψ κ)))).ne_zero
       (by rw [hd]; exact Ideal.Quotient.eq_zero_iff_mem.2 hm)
@@ -522,7 +522,7 @@ theorem levChi_read : ∀ (D : D7) (i : D.ntw.Tw) (j : Fin D.R.m) (b : Bool) (k 
       obtain ⟨hnot, hd⟩ := qPlace hP hn hUm (M.sp PP) PP hw D.R.r _ hrW (hQB' PP (Finset.mem_union_left _ hPP))
       have hnT : PP ∉ t.Q := by rw [htQ]; exact Finset.disjoint_right.1 hdisj hPP
       have hD : PP ∈ B.de.Q := by rw [hdQ]; exact hPP
-      rw [MonoidHom.mul_apply, Units.val_mul, Twist.locC, Twist.locC, if_neg hnT, if_pos hD, MonoidHom.one_apply,
+      rw [MonoidHom.mul_apply, Units.val_mul, Twist.locC, Twist.locC, ite_eq_right hnT, ite_eq_left hD, MonoidHom.one_apply,
         Units.val_one, mul_one]
       exact (hde PP hPP _ hnot _ hd).symm
     · refine Finset.prod_congr rfl fun PP hPP => ?_
@@ -530,7 +530,7 @@ theorem levChi_read : ∀ (D : D7) (i : D.ntw.Tw) (j : Fin D.R.m) (b : Bool) (k 
       obtain ⟨hnot, hd⟩ := qPlace hP hn hUm (M.sp PP) PP hw D.R.r _ hrW (hQB' PP (Finset.mem_union_right _ hPP))
       have hnD : PP ∉ B.de.Q := by rw [hdQ]; exact Finset.disjoint_left.1 hdisj hPP
       have hT : PP ∈ t.Q := by rw [htQ]; exact hPP
-      rw [MonoidHom.mul_apply, Units.val_mul, Twist.locC, Twist.locC, if_neg hnD, if_pos hT, MonoidHom.one_apply,
+      rw [MonoidHom.mul_apply, Units.val_mul, Twist.locC, Twist.locC, ite_eq_right hnD, ite_eq_left hT, MonoidHom.one_apply,
         Units.val_one, one_mul]
       exact (hres PP hPP _ hnot _ hd).symm
 
@@ -823,7 +823,7 @@ theorem exists_psi {m n : ℕ} (w : Weight D n) (B : GLR D n) (hw : w.Good) (hm 
     have : {φ | ∃ F : VV ℂ w.lam, φ = coefFn (RingHom.id ℂ) w.lam (F : Pol ℂ D.what₂.Tau n)} =
         (LinearMap.range (cfn w.lam) : Set (GLR D n → ℂ)) := by
       ext φ
-      simp only [Set.mem_setOf_eq, SetLike.mem_coe, LinearMap.mem_range, cfn_apply]
+      simp only [Set.mem_ofPred_eq, SetLike.mem_coe, LinearMap.mem_range, cfn_apply]
       exact ⟨fun ⟨F, h⟩ => ⟨F, h.symm⟩, fun ⟨F, h⟩ => ⟨F, h.symm⟩⟩
     rw [this, Submodule.span_eq]
   let e1 := LinearEquiv.ofInjective hf hinj
@@ -1064,7 +1064,7 @@ theorem exists_wtMap : ∀ (D : D7) (S T : HSp D) (B : GlobalTheory.ExportSeries
       have := Fintype.linearIndependent_iff.1 (GlobalTheory.CoefModel.linearIndependent_mapVV (embLL0 D) B.w.lam)
         (fun i => (e.comp f) (k i)) h1 i
       exact (map_eq_zero_iff (e.comp f) (e.comp f).injective).1 this
-    haveI : FiniteDimensional K₀ (VV K₀ B.w.lam) := Module.Finite.of_basis (bVV K₀ B.w.lam)
+    have : FiniteDimensional K₀ (VV K₀ B.w.lam) := Module.Finite.of_basis (bVV K₀ B.w.lam)
     have hgspan := hgind.span_eq_top_of_card_eq_finrank' (Module.finrank_eq_card_basis (bVV K₀ B.w.lam)).symm
     have hQall : ∀ y : VV K₀ B.w.lam, Q y := by
       intro y
@@ -1372,7 +1372,7 @@ theorem levMatch (hA : GlobalTheory.Published.GlobalArtinReciprocity) : ∀ (D :
   · intro kv x z hz
     have hmem := (hPg _).2 ⟨kv, rfl⟩
     have hz' : (z : kP (NX.pG D kv)) = Ideal.Quotient.mk _ (((x : ZMod (D.host.g kv.1)).val : ℕ) : 𝓞 D.host.E) := by
-      haveI : NeZero (D.host.g kv.1) := ⟨(D.host.g_prime _).ne_zero⟩
+      have : NeZero (D.host.g kv.1) := ⟨(D.host.g_prime _).ne_zero⟩
       rw [hz, map_natCast, ← map_natCast (is kv), ZMod.natCast_zmod_val]
     have hu : ((((x : ZMod (D.host.g kv.1)).val : ℕ) : 𝓞 D.host.E) : D.host.E) ≠ 0 := fun h => z.ne_zero (by
       rw [hz', RingOfIntegers.coe_eq_zero_iff.1 h, map_zero])

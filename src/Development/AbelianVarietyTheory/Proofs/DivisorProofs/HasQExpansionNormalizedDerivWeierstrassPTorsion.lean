@@ -165,7 +165,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (x : Fin 2 → ZMod N), HasQ N (wpd N x)
     convert hA.add hT' using 1
     funext n
     have hexp : Complex.exp (2 * Real.pi * Complex.I * n * τ / N) = q ^ n := by
-      rw [hq, ← Complex.exp_nat_mul]
+      rw [hq, ← Complex.exp_natCast_mul]
       congr 1
       ring
     rw [hexp]

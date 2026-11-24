@@ -75,7 +75,7 @@ theorem isCompact_closure_range {A V : Type} [AddCommGroup A] [Module.Finite ℤ
   let g : (Fin n → ℤ_[l]) → V := fun c => ∑ i, ((c i : ℤ_[l]) : ℚ_[l]) • f (b i)
   have hg : Continuous g := by
     refine continuous_finsetSum _ fun i _ => ?_
-    exact (continuous_subtype_val.comp (continuous_apply i)).smul continuous_const
+    exact (continuous_subtypeVal.comp (continuous_apply i)).smul continuous_const
   have hc : IsCompact (Set.range g) := isCompact_range hg
   refine hc.of_isClosed_subset isClosed_closure (closure_minimal ?_ hc.isClosed)
   rintro _ ⟨a, rfl⟩

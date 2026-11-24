@@ -137,9 +137,9 @@ private theorem lb_chart [IsDomain O] [Finite τ] {R Y : Type} [CommRing R] [Alg
       rw [← this, ← IsScalarTower.algebraMap_smul (FractionRing O) c, map_smul, IsScalarTower.algebraMap_smul, coeff_X]
       simp [Finsupp.single_left_inj]
     refine ⟨a, ?_, fun i' hi => ?_⟩
-    · rw [key, if_pos rfl, Algebra.smul_def, mul_one]
+    · rw [key, ite_eq_left rfl, Algebra.smul_def, mul_one]
       exact fun e => hc0 (IsFractionRing.injective O (FractionRing O) (by rw [e, map_zero]))
-    · rw [key, if_neg hi, smul_zero]
+    · rw [key, ite_eq_right hi, smul_zero]
   · have h2 : φ f ∈ maximalIdeal (MvPowerSeries τ (FractionRing O)) ^ 2 := by
       rw [lb_max]
       refine GlobalTheory.mem_germIdeal_pow_iff.2 fun d hd => ?_
@@ -412,11 +412,11 @@ end Stable
 
 private theorem phi_emb {Γ Δ : Type} [Group Γ] [TopologicalSpace Γ] [Group Δ] [TopologicalSpace Δ] (φ : Γ →* Δ)
     (hφ : Topology.IsOpenEmbedding φ) {l : ℕ} (h : PhiCond Δ l) : PhiCond Γ l := fun H hH => by
-  haveI := h (H.map φ) (hφ.isOpenMap _ hH)
+  have := h (H.map φ) (hφ.isOpenMap _ hH)
   let e := H.equivMapOfInjective φ hφ.injective
   have hc : Continuous e.symm := by
     refine Continuous.subtype_mk (f := fun x => (e.symm x : Γ)) (hφ.isInducing.continuous_iff.2 ?_) _
-    refine continuous_subtype_val.congr fun x => ?_
+    refine continuous_subtypeVal.congr fun x => ?_
     exact (congrArg Subtype.val (e.apply_symm_apply x)).symm
   refine Finite.of_injective
     (β := {ψ : H.map φ →* Multiplicative (ZMod l) // IsOpen (ψ.ker : Set (H.map φ))})
@@ -428,14 +428,14 @@ private theorem frac_alg (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDom
     ∃ _ : Algebra ℚ_[l] (FractionRing O), IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) ∧
       Module.Finite ℚ_[l] (FractionRing O) := by
   have hi : Function.Injective (algebraMap ℤ_[l] O) := (dvrFacts l O).1
-  haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+  have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have hi2 : Function.Injective (algebraMap ℤ_[l] (FractionRing O)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] O (FractionRing O)]
     exact (IsFractionRing.injective O _).comp hi
-  letI : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
+  let : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
     IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi2 x).symm
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
+  have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
   exact ⟨inferInstance, inferInstance,
     Module.Finite.of_isLocalization ℤ_[l] O (nonZeroDivisors ℤ_[l])⟩
 
@@ -458,20 +458,20 @@ private theorem rep_ex (hD : D.Good) (hP : Loc.LocalPublishedTheorems) (v : ℕ)
     (hc : P.IsClosed) (ρ₀ : Lift c.O (D.rbarAt v) c.O) (h0 : P _ ρ₀) :
     ∃ (R : Type) (_ : CommRing R) (_ : Algebra c.O R) (_ : IsCO c.O R) (ρ : Lift c.O (D.rbarAt v) R),
       Represents P ρ := by
-  haveI : Fact v.Prime := ⟨hv⟩
-  haveI : IsGalois ℚ Ω := {}
-  haveI : CompactSpace (D.Gp v) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
-  haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField c.O) l := by
+  have : Fact v.Prime := ⟨hv⟩
+  have : IsGalois ℚ Ω := {}
+  have : CompactSpace (D.Gp v) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
+  have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hk, -⟩ := facts D hD
   have hlc : IsLocallyConstant (D.rbarAt v) := by
-    refine IsLocallyConstant.comp_continuous (g := D.rbar) ?_ continuous_subtype_val
+    refine IsLocallyConstant.comp_continuous (g := D.rbar) ?_ continuous_subtypeVal
     refine (IsLocallyConstant.iff_exists_open _).2 fun g =>
       ⟨(fun x => g⁻¹ * x) ⁻¹' (D.rbar.ker : Set _), hk.preimage (by fun_prop), by simp, fun x hx => ?_⟩
     have : D.rbar (g⁻¹ * x) = 1 := hx

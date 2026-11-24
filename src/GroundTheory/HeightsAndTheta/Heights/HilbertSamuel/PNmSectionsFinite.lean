@@ -218,7 +218,7 @@ theorem proof (h : KH.CondStatement) : NmSectionsFinite.Statement := by
   have hmap : (Submodule.span R G).map (LinearMap.mulLeft R u) ≤ Submodule.span R {1} := by
     rw [Submodule.map_span, Submodule.span_le]
     rintro _ ⟨F, ⟨τ, -, s, hs, rfl⟩, rfl⟩
-    rw [LinearMap.mulLeft_apply, monomial_mul]
+    rw [LinearMap.mulLeft_apply, monomial_mul_monomial]
     have hdeg : expo (fun κ => k * a κ) + expo (fun κ => τ * a κ) = expo fun κ => (τ + k) * a κ := by
       ext κ; simp; ring
     rw [hdeg]
@@ -249,13 +249,13 @@ theorem proof (h : KH.CondStatement) : NmSectionsFinite.Statement := by
   refine ⟨fun j => AddMonoidAlgebra.coeff ((f j : R) : MvPolynomial K Ω) (expo fun κ => (τ - d j) * a κ), fun j => ?_, ?_⟩
   · simpa using hR j (expo fun κ => (τ - d j) * a κ)
   · have hc' := congrArg (AddMonoidAlgebra.coeff · (expo fun κ => τ * a κ)) hf
-    rw [coeff_monomial, if_pos rfl] at hc'
+    rw [coeff_monomial, ite_eq_left rfl] at hc'
     rw [← hc', coeff_sum, ← Finset.sum_coe_sort t]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Subalgebra.smul_def, smul_eq_mul]
     set p := ((f j : R) : MvPolynomial K Ω)
     rw [hte j]
-    rw [coeff_mul_monomial', if_pos]
+    rw [coeff_mul_monomial', ite_eq_left]
     · congr 2
       ext κ
       simp [Nat.sub_mul]

@@ -130,7 +130,7 @@ theorem carries_move [StarRing E] {n : ℕ} (T : ℕ) (k k' : GL (Fin n) (Tensor
     (hone : ∀ v : HeightOneSpectrum (𝓞 F), (T : 𝓞 F) ∈ v.asIdeal → bc (prV (E := E) v) k' = 1)
     (hl : Formalism.L2.Herm.Carries k (Formalism.L2.Col.stdLat E n) (Formalism.L2.Col.stdLat E n)) :
     Formalism.L2.Herm.Carries (k'⁻¹ * k) (Formalism.L2.Col.stdLat E n) (Formalism.L2.Col.stdLat E n) := by
-  haveI := stdLat_finite (E := E) n
+  have := stdLat_finite (E := E) n
   have hs : (k⁻¹ : GL (Fin n) (TensorProduct F E (FiniteAdeleRing (𝓞 F) F))) ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
       (tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)) (Formalism.L2.Col.stdLat E n)) := hl
   have key : (k'⁻¹ * k)⁻¹ ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
@@ -253,7 +253,7 @@ theorem readsMove_holds : ReadsMove := by
   obtain ⟨k, R⟩ := hK
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   have hgr : gramN (I.rec7 l Z) i hi = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 i hi).1
   have hB : BasePi ((B.primes X).vT u) (X.piT u) := by
     refine ⟨fun r => ?_, hPr.piT_cop u⟩

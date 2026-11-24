@@ -84,7 +84,7 @@ theorem casInv_expK_zero {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) ℂ} 
 
 theorem casInv_integrable {ε : Fin n → Bool} {E : Type*} [NormedAddCommGroup E] {f : KG ε → E}
     (hf : Continuous f) : Integrable f (muK ε) := by
-  haveI : IsFiniteMeasure (muK ε) := ⟨isCompact_univ.measure_lt_top⟩
+  have : IsFiniteMeasure (muK ε) := ⟨isCompact_univ.measure_lt_top⟩
   exact hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace f)
 
 theorem casInv_rder_zero (ε : Fin n → Bool) (L : List (Matrix (Fin n) (Fin n) ℂ)) :
@@ -700,7 +700,7 @@ theorem finrank_polyV_le {n : ℕ} (ε : Fin n → Bool) (d : ℕ) :
     refine Submodule.subset_span ⟨fun c => ⟨s.count c, Nat.lt_succ_of_le ((List.count_le_length).trans hs)⟩, ?_⟩
     funext k
     rw [mono_eq_prod_pow]
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range b)) :=
+  have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range b)) :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
   calc Module.finrank ℂ (polyV ε d) ≤ Module.finrank ℂ (Submodule.span ℂ (Set.range b)) :=
         Submodule.finrank_mono hle
@@ -798,9 +798,9 @@ theorem exists_parseval {ε : Fin n → Bool} (V : Submodule ℂ (KG ε → ℂ)
     (hV : ∀ p ∈ V, Continuous p) :
     ∃ φ : Fin (Module.finrank ℂ V) → KG ε → ℂ, (∀ j, φ j ∈ V) ∧ (∀ j, ∫ k, ‖φ j k‖ ^ 2 ∂(muK ε) = 1) ∧
       ∀ r ∈ V, ∫ k, ‖r k‖ ^ 2 ∂(muK ε) = ∑ j, ‖∫ k, star (r k) * φ j k ∂(muK ε)‖ ^ 2 := by
-  letI c := l2InnerCore V hV
-  letI : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
+  let c := l2InnerCore V hV
+  let : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore c.toCore
   have hin : ∀ p q : V, inner ℂ p q = ∫ k, star (p.1 k) * q.1 k ∂(muK ε) := fun _ _ => rfl
   have hn : ∀ p : V, ∫ k, ‖p.1 k‖ ^ 2 ∂(muK ε) = ‖p‖ ^ 2 := by
     intro p
@@ -864,8 +864,8 @@ theorem star_mem_top {ε : Fin n → Bool} {i : ℕ} {e : KG ε → ℂ} (he : I
 theorem integral_norm_sq_ker_le : ∀ {n : ℕ} (ε : Fin n → Bool) (i : ℕ) (e : KG ε → ℂ), IsKer ε i e →
     ∫ k, ‖e k‖ ^ 2 ∂(muK ε) ≤ (Module.finrank ℂ (polyV ε i) : ℝ) := by
   intro n ε i e he
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
-  haveI : FiniteDimensional ℂ (topV ε i) := Submodule.finiteDimensional_of_le (topV_le ε i)
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : FiniteDimensional ℂ (topV ε i) := Submodule.finiteDimensional_of_le (topV_le ε i)
   obtain ⟨φ, hφ, h1, hP⟩ := exists_parseval (topV ε i) (fun p hp => continuous_of_mem hp.1)
   have key : ∀ a : KG ε, ∫ k, ‖e k‖ ^ 2 ∂(muK ε) = ∑ j, ‖φ j a‖ ^ 2 := by
     intro a
@@ -951,9 +951,9 @@ theorem kFourier_coeff_decay : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F 
     have hsm : Summable (fun i : ℕ => ((i + 1 : ℕ) : ℝ) ^ ((n : ℝ) ^ 2 - α * M)) :=
       (summable_nat_add_iff 1).mpr (Real.summable_nat_rpow.mpr hp)
     refine Summable.of_nonneg_of_le (fun i => ?_) (fun i => ?_) (hsm.mul_left (|C| * (c ^ M)⁻¹ * 2 ^ (n ^ 2)))
-    · simp only [Nat.add_one_ne_zero, if_false, B]
+    · simp only [Nat.add_one_ne_zero, ite_false, B]
       exact mul_nonneg (mul_nonneg (abs_nonneg _) (hlnn _ (Nat.cast_nonneg _))) (by positivity)
-    · simp only [Nat.add_one_ne_zero, if_false, B]
+    · simp only [Nat.add_one_ne_zero, ite_false, B]
       set x : ℝ := ((i + 1 : ℕ) : ℝ) with hx
       have hx1 : 1 ≤ x := by simp [hx]
       have hx0 : 0 < x := by linarith
@@ -976,7 +976,7 @@ theorem kFourier_coeff_decay : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F 
   · intro i y hy
     have hy0 : 0 ≤ (1 + hs y) ^ N := pow_nonneg (by linarith [hs_nonneg' y]) _
     rcases Nat.eq_zero_or_pos i with rfl | hi
-    · simp only [if_true]
+    · simp only [ite_true]
       have h := hC0 0 (e 0) (he 0).1 y hy
       simp only [Function.iterate_zero, id] at h
       have hk := GlobalTheory.T.integral_normSq_reproducingKernel_le_finrank ε 0 (e 0) (he 0)
@@ -986,7 +986,7 @@ theorem kFourier_coeff_decay : ∀ {n : ℕ} (ε : Fin n → Bool) (N : ℕ) (F 
               (Real.sqrt_nonneg _) (mul_nonneg (abs_nonneg _) hy0)
         _ = _ := by ring
     · have hi0 : i ≠ 0 := hi.ne'
-      simp only [hi0, if_false]
+      simp only [hi0, ite_false]
       have hl : 0 < c * (i : ℝ) ^ α := mul_pos hc (Real.rpow_pos_of_pos (by exact_mod_cast hi) _)
       obtain ⟨s, hsP, hse, hsn⟩ := GlobalTheory.T.compactUnitaryCasimir_inverse_topDegree_bound ε X hX i (c * (i : ℝ) ^ α) hl
         (fun p hp hq => hgap i hi p hp hq) M (e i) (he i).1

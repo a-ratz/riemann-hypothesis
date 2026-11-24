@@ -56,7 +56,7 @@ theorem thetaFunOF_bounded : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E) (ξ₀ : E) (ψ : AddChar (AF F) ℂ), IsCharAF F ψ →
       ∀ f : WOF F E nS nT → ℂ, IsThetaFunOF σ JS JT ξ₀ ψ f → ∃ C : ℝ, ∀ x, ‖f x‖ ≤ C := by
   intro F E _ _ _ _ _ σ nS nT JS JT ξ₀ ψ hψ f hf
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨K, hK, hx⟩ := GlobalTheory.AdelicMatrixLattice.cocompact_tensor (F := F) (E := E) (AF F)
     (GlobalTheory.AdeleCocompact.exists_compact_adele F)
   choose c hc using hx

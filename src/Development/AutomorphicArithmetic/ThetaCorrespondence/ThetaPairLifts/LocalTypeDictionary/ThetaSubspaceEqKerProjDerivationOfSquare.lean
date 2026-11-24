@@ -134,24 +134,24 @@ theorem pure_add' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] 
     (φ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F v) → ℂ) :
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f + g) φ = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ + GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ := by
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.add_apply, Pi.add_apply, add_mul]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, add_apply, Pi.add_apply, add_mul]
 
 theorem pure_smul' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] (c : ℂ) (f : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F κ)
     (φ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F v) → ℂ) :
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (c • f) φ = c • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ := by
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, Pi.smul_apply, smul_eq_mul, mul_assoc]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, smul_apply, Pi.smul_apply, smul_eq_mul, mul_assoc]
 
 theorem pure_zero' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
     (φ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F v) → ℂ) : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (0 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F κ) φ = 0 := by
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.zero_apply, Pi.zero_apply, zero_mul]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, zero_apply, Pi.zero_apply, zero_mul]
 
 theorem pure_sub' {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] (f g : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F κ)
     (φ : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F v) → ℂ) :
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f - g) φ = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ - GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure g φ := by
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.sub_apply, Pi.sub_apply, sub_mul]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, sub_apply, Pi.sub_apply, sub_mul]
 
 theorem isHecke_quot {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {χ χ' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chr F E} (h : GlobalTheory.LFun.IsHecke F E χ) (h' : GlobalTheory.LFun.IsHecke F E χ') :
@@ -362,7 +362,7 @@ theorem exists_finiteDimensional_orbit_of_generated :
         refine (span_le.2 ?_) (hDL u hu x)
         rintro _ ⟨i, rfl⟩
         exact mem_iSup_of_mem i (mem_map_of_mem hx)
-      haveI : FiniteDimensional ℂ (span ℂ (⋃ u ∈ U, (D u) '' (Q n : Set V))) :=
+      have : FiniteDimensional ℂ (span ℂ (⋃ u ∈ U, (D u) '' (Q n : Set V))) :=
         Submodule.finiteDimensional_of_le hle
       exact Submodule.finiteDimensional_sup _ _
   have hQP : ∀ n, Q n ≤ P := by
@@ -636,7 +636,7 @@ theorem sub_mem_span_kInfty_exp_derivatives : _root_.GlobalTheory.FunPr.ThetaLoc
   obtain ⟨hDer, hOp, -, -⟩ := _root_.GlobalTheory.T.dualPair_preserves_polarization hPr F E σ B n d X W M χX χW om r s r' s' hP
   obtain ⟨γ, hγL, hγ1, hγK⟩ := _root_.GlobalTheory.CompactLine.exists_line_in_kInf F E σ B n X r s hP.base hP.herm k hk
   obtain ⟨S, hSfin, hS⟩ := _root_.GlobalTheory.T.fock_vectors_kFinite hPr F E σ B n d X W M χX χW om r s r' s' hP f hf
-  haveI := hSfin
+  have := hSfin
   obtain ⟨Dg, hDgP, hDg⟩ := hDer γ hγL
   choose D hDP hD using fun t : ℝ => hOp (γ (Multiplicative.ofAdd t)) (hγK _)
   let c : ℝ → SInf F (Fin n × Fin d) := fun t => D t f
@@ -1174,7 +1174,7 @@ theorem dOp_expand {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
       (2 * Real.pi * Complex.I : ℂ) • ∑ j, (B.repr b j : ℂ) • mulOp (B j) f := by
   refine DFunLike.ext _ _ fun x => ?_
   rw [dOp_apply, fderiv_expand B a f x, lin_expand B b x]
-  simp only [SchwartzMap.sub_apply, SchwartzMap.smul_apply, sumAt, smul_eq_mul,
+  simp only [sub_apply, smul_apply, sumAt, smul_eq_mul,
     SchwartzMap.lineDerivOp_apply_eq_fderiv, mulOp_apply, Finset.mul_sum, Finset.sum_mul]
   congr 1
   refine Finset.sum_congr rfl fun j _ => by ring
@@ -1185,9 +1185,9 @@ theorem dStep_finiteDimensional : ∀ (F : Type) [Field F] [NumberField F] (κ :
   let B := Module.finBasis ℝ (κ → mixedEmbedding.mixedSpace F)
   let T : Submodule ℂ (SInf F κ) :=
     (⨆ j, P.map (lineDerivOpCLM ℂ (SInf F κ) (B j)).toLinearMap) ⊔ ⨆ j, P.map (mulOp (B j)).toLinearMap
-  haveI : FiniteDimensional ℂ T := by
-    haveI := Submodule.finiteDimensional_iSup (fun j => P.map (lineDerivOpCLM ℂ (SInf F κ) (B j)).toLinearMap)
-    haveI := Submodule.finiteDimensional_iSup (fun j => P.map (mulOp (B j)).toLinearMap)
+  have : FiniteDimensional ℂ T := by
+    have := Submodule.finiteDimensional_iSup (fun j => P.map (lineDerivOpCLM ℂ (SInf F κ) (B j)).toLinearMap)
+    have := Submodule.finiteDimensional_iSup (fun j => P.map (mulOp (B j)).toLinearMap)
     exact Submodule.finiteDimensional_sup _ _
   refine Submodule.finiteDimensional_of_le (S₂ := T) ?_
   rw [GlobalTheory.FockKFin.dStep, Submodule.span_le]
@@ -1429,7 +1429,7 @@ theorem ode_mem {ι : Type} [Fintype ι] (A : (ι → ℂ) →ₗ[ℂ] (ι → �
     rw [map_zero]
     exact hasDerivAt_const t 0
   have heq := ODE_solution_unique_univ (v := fun _ => Bc) (s := fun _ => Set.univ) (K := ‖Bc‖₊) (t₀ := 0)
-    (fun _ => Bc.lipschitz.lipschitzOnWith) (fun t => ⟨hu t, trivial⟩) (fun t => ⟨hv t, trivial⟩)
+    (fun _ => Bc.lipschitzWith.lipschitzOnWith) (fun t => ⟨hu t, trivial⟩) (fun t => ⟨hv t, trivial⟩)
     ((hq0 _).2 h0)
   exact (hq0 _).1 (congrFun heq t)
 
@@ -1457,7 +1457,7 @@ theorem orbit_mem (U : Multiplicative ℝ →* Module.End ℂ (α → ℂ)) (P N
     rw [ofAdd_add, map_mul, Module.End.mul_apply]
   let C' : Submodule ℂ (α → ℂ) := Submodule.span ℂ (Set.range c)
   have hC'C : C' ≤ C := Submodule.span_le.2 (by rintro _ ⟨t, rfl⟩; exact hC t)
-  haveI : FiniteDimensional ℂ C' := Submodule.finiteDimensional_of_le hC'C
+  have : FiniteDimensional ℂ C' := Submodule.finiteDimensional_of_le hC'C
   have hcC' : ∀ t, c t ∈ C' := fun t => Submodule.subset_span ⟨t, rfl⟩
   have hUC : ∀ s, ∀ Ψ ∈ C', U (Multiplicative.ofAdd s) Ψ ∈ C' := by
     intro s Ψ hΨ
@@ -1609,8 +1609,8 @@ theorem polData_kfin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     | zero => exact _root_.GlobalTheory.FockKFin.vacSp_finiteDimensional F E σ B n d X W M χX χW om r s r' s' hP
     | succ m ih =>
       rw [GlobalTheory.FockKFin.polLe_succ]
-      haveI := ih
-      haveI := _root_.GlobalTheory.FockKFinStep.dStep_finiteDimensional F _ _ ih
+      have := ih
+      have := _root_.GlobalTheory.FockKFinStep.dStep_finiteDimensional F _ _ ih
       infer_instance
   have hle : ∀ m, GlobalTheory.FockKFin.polLe M B.emb m ≤ M.Pol B.ψ B.emb := by
     intro m
@@ -1660,7 +1660,7 @@ theorem polData_kfin : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   | mem x hx =>
     obtain ⟨f, hf, φ, hφ, hvac, rfl⟩ := hx
     obtain ⟨m, hm⟩ := hcov f hf
-    haveI := hfin m
+    have := hfin m
     refine ⟨(GlobalTheory.FockKFin.polLe M B.emb m).map (GlobalTheory.FockKFin.pureL φ), inferInstance, ?_, fun k hk => ?_⟩
     · rw [Submodule.map_le_iff_le_comap]
       intro g hg
@@ -1772,7 +1772,7 @@ theorem KExpLine_stabilizes_line : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
       simp only [map_smul, Pi.smul_apply, smul_eq_mul]
       exact (hy t).const_mul a
   obtain ⟨C, hCfin, hCP, hCk⟩ := polData_kfin F E σ B n d X W M χX χW om r s r' s' hP Φ hΦ
-  haveI := hCfin
+  have := hCfin
   exact orbit_mem U (PolData B M) N C hCP (fun Ψ h Ψ₁ h₁ hd => hN Ψ h Ψ₁ h₁ hd) Φ hΦN
     (fun t => hCk _ (hγK _)) (hdiff Φ hΦ) 1
 end GlobalTheory.KExpLineW
@@ -1903,7 +1903,7 @@ theorem GlobalTheory.SquareAgree.exists_ker_projDerivation_thetaSubspace : _root
         stabLie := _root_.GlobalTheory.T.ker_polarizationProjection_stable_under_stabilizer_lie hP D ψ θ W W₁ X A A₁ B α β ν 𝓕 ν₁ 𝓕₁ ωA ωB e Bs Γ Xc om om' cA cB hθ hTr hO hT Pi rf rl p p' hm
         stabCpt := _root_.GlobalTheory.T.ker_polarizationProjection_stable_under_stabilizer_compact hP D ψ θ W W₁ X A A₁ B α β ν 𝓕 ν₁ 𝓕₁ ωA ωB e Bs Γ Xc om om' cA cB hθ hTr hO hT Pi rf rl p p' hm }
   · intro hEq
-    haveI : Nontrivial Pi := hm.irred.1
+    have : Nontrivial Pi := hm.irred.1
     obtain ⟨x, hx⟩ := exists_ne (0 : Pi)
     have hxm : x ∈ (algF ψ θ false A₁ B).map p' := by rw [hm.mapB.onto]; trivial
     obtain ⟨Φ₀, hΦ₀, rfl⟩ := hxm

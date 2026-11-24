@@ -77,11 +77,11 @@ theorem dvd_of_locally_bounded {K A : Type} [Field K] [NumberField K] [CommRing 
     (H : ∀ (m : ℕ) (B : Set (Fin m → ℂ)) (φ : (Fin m → ℂ) → (A →+* ℂ)), IsOpen B →
       (∀ z ∈ B, (φ z).comp (algebraMap K A) = σ) → (∀ u : A, DifferentiableOn ℂ (fun z => φ z u) B) →
       ∀ z₀ ∈ B, ∃ n : ℕ, n ≠ 0 ∧ ∃ M : ℝ, ∀ᶠ z in 𝓝 z₀, ‖φ z b‖ ^ n ≤ M * ‖φ z a‖ ^ n) : a ∣ b := by
-  haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_smooth K A
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing K A
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_smooth K A
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing K A
   by_contra hn
   obtain ⟨p, hp, s, r, hs, hr, h⟩ := GlobalTheory.ContinuousQuotient.exists_prime_of_not_dvd ha hn
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have h0 : Ideal.Quotient.mkₐ K p s ≠ 0 := fun h => hs (Ideal.Quotient.eq_zero_iff_mem.mp h)
   obtain ⟨e, he⟩ := not_forall.mp fun h => h0 (GlobalTheory.FiniteOrderRule.eq_zero_of_forall_algHom (K := K) (Ω := ℂ) _ h)
   obtain ⟨ι, -, m, B, φ, hB, hφσ, hd, hcov, hne⟩ := _root_.GlobalTheory.SmoothPointCover.exists_countable_families K A σ
@@ -165,14 +165,14 @@ theorem exists_near_frames (U : Unf Xo c σ r) (hσ : GoodEmb c σ) (hU : IsUnf 
 theorem toC_evR_frBor {e : Ix Dw → ℤ} {f : Rul Xo c} (hf : f ∈ secZ Xo c e) {t : Ix Dw → (CAt σ)ˣ}
     {y y' : FrPt Xo c (CAt σ)} (h : FrBor t y y') (ht : ∀ i, t (some i) = 1) :
     toC (evR Xo c f y') = toC (t none : CAt σ) ^ e none * toC (evR Xo c f y) := by
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   rw [evR_frBor hf h, Finset.prod_eq_single none (fun i _ hi => by
     obtain ⟨j, rfl⟩ := Option.ne_none_iff_exists'.1 hi
     rw [ht, one_zpow]) (fun h => absurd (Finset.mem_univ _) h), Units.val_zpow_eq_zpow_val]
   rfl
 
 theorem rdU_apply (U : Unf Xo c σ r) (f : Rul Xo c) (k : U.Comp) (x : (U.X k).dom) :
-    rdU U f k x.1 = toC (evR Xo c f (U.un k x)) := dif_pos x.2
+    rdU U f k x.1 = toC (evR Xo c f (U.un k x)) := dite_eq_left x.2
 
 attribute [local instance 1100] Subalgebra.algebra in
 attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
@@ -183,14 +183,14 @@ theorem chart_dvd (U : Unf Xo c σ r) (hσ : GoodEmb c σ) (hU : IsUnf U) {h : G
     (ha : ∀ (ψ : C.R →ₐ[c.F] CAt σ) (z : FrPt Xo c (CAt σ)), FrMap ψ C.y z → evR Xo c f z = ψ a)
     (hb : ∀ (ψ : C.R →ₐ[c.F] CAt σ) (z : FrPt Xo c (CAt σ)), FrMap ψ C.y z → evR Xo c g z = ψ b) : a ∣ b := by
   classical
-  haveI := C.sm
+  have := C.sm
   refine dvd_of_locally_bounded σ ha0 fun m B φ hB hφσ hd z₀ hz₀ => ?_
   let mk : ∀ z ∈ B, C.R →ₐ[c.F] CAt σ := fun z hz =>
     { (show C.R →+* CAt σ from φ z) with commutes' := fun a => RingHom.congr_fun (hφσ z hz) a }
   let φ' : (Fin m → ℂ) → (C.R →ₐ[c.F] CAt σ) := fun z => if hz : z ∈ B then mk z hz else mk z₀ hz₀
   have hφ' : ∀ z ∈ B, ∀ u, toC (φ' z u) = φ z u := by
     intro z hz u
-    simp only [φ', dif_pos hz]
+    simp only [φ', dite_eq_left hz]
     rfl
   choose y hy using fun z => exists_frMap (φ' z) C.y
   obtain ⟨k, x₀, ⟨t₀, ht₀⟩, hnear⟩ := exists_near_frames U hσ hU C.y φ' y hB
@@ -205,7 +205,7 @@ theorem chart_dvd (U : Unf Xo c σ r) (hσ : GoodEmb c σ) (hU : IsUnf U) {h : G
   have hw0 : φ z₀ w ≠ 0 := by
     rw [← hφ' z₀ hz₀, ← hw _ _ _ (hy z₀)]; exact hη0
   have hx0 : rdU U η k x₀.1 ≠ 0 := by
-    letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+    let : Field (CAt σ) := inferInstanceAs (Field ℂ)
     rw [rdU_apply]
     intro h0
     apply hη0

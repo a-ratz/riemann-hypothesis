@@ -161,8 +161,8 @@ namespace GlobalTheory.CompanionTheory.BlockEntry
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem exp_sandwich' {n d : ℕ} (U : Matrix (Fin n) (Fin d) ℂ) (V : Matrix (Fin d) (Fin n) ℂ) (h : V * U = 1)
     (A : Matrix (Fin d) (Fin d) ℂ) : NormedSpace.exp (U * A * V) = 1 + U * (NormedSpace.exp A - 1) * V := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
+  have : CompleteSpace (Matrix (Fin d) (Fin d) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h' : ∀ W : Matrix (Fin d) (Fin n) ℂ, V * (U * W) = W := fun W => by rw [← Matrix.mul_assoc, h, Matrix.one_mul]
   let f : Matrix (Fin d) (Fin d) ℂ × ℂ →+* Matrix (Fin n) (Fin n) ℂ :=
     { toFun := fun p => U * p.1 * V + p.2 • (1 - U * V)
@@ -321,14 +321,14 @@ theorem coord_smul (τ : E →+* ℂ) (t : ℝ) (x : Cinf E) : coord τ (t • x
 
 theorem map_coord_exp {d : ℕ} (τ : E →+* ℂ) (M : Matrix (Fin d) (Fin d) (Cinf E)) :
     (NormedSpace.exp M).map (coord τ) = NormedSpace.exp (M.map (coord τ)) := by
-  letI : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.complete ℝ _
-  letI : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) (Cinf E)) := NormedAlgebra.restrictScalars ℚ ℝ _
-  letI : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) ℂ) := FiniteDimensional.complete ℝ _
-  letI : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
+  let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) (Cinf E)) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin d) (Fin d) ℂ) := FiniteDimensional.completeSpace ℝ _
+  let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
   have hc : Continuous ((coord τ).mapMatrix : Matrix (Fin d) (Fin d) (Cinf E) → Matrix (Fin d) (Fin d) ℂ) :=
     continuous_id.matrix_map (continuous_coordE τ)
   exact NormedSpace.map_exp (coord τ).mapMatrix hc M
@@ -413,9 +413,9 @@ theorem lie_eq_deriv_exp' : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
  (GlobalTheory.CuspRep.lie E d (GlobalTheory.CuspRep.toL B) f).1 x = deriv (fun t : ℝ => f.1 (x * GlobalTheory.CuspRep.infGL E d (GlobalTheory.CuspRep.expGLi d (t • B)))) 0 := by
   intro E _ _ _ d f B x
   have hc : HasDerivAt (fun t : ℝ => toL (expGLi d (t • B)).val) (toL B) 0 := by
-    letI : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-    haveI : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.complete ℝ _
+    let : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+    have : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
     have h1 := hasDerivAt_exp_smul_const (𝕂 := ℝ) B (0 : ℝ)
     rw [zero_smul, NormedSpace.exp_zero, one_mul] at h1
     let L : Matrix (Fin d) (Fin d) (Cinf E) →L[ℝ] Lie E d :=
@@ -468,21 +468,21 @@ theorem rows_of_adapted {n m : ℕ} {H P : Matrix (Fin n) (Fin n) ℂ} {X Y : Ma
     rw [e, e, hyx, hxx, Matrix.one_apply, Matrix.zero_apply]
     refine ⟨?_, ?_⟩
     · by_cases e' : c.val = k.val
-      · rw [if_pos e', if_pos (Fin.ext e'.symm)]
-      · rw [if_neg e', if_neg fun e'' => e' (congrArg Fin.val e'').symm]
-    · rw [if_neg (by omega)]
+      · rw [ite_eq_left e', ite_eq_left (Fin.ext e'.symm)]
+      · rw [ite_eq_right e', ite_eq_right fun e'' => e' (congrArg Fin.val e'').symm]
+    · rw [ite_eq_right (by omega)]
   · by_cases h2 : c.val + m < n
-    · rw [pX c (by omega) h2, pY c (by omega) h2, if_neg (by omega), if_neg (by omega)]
+    · rw [pX c (by omega) h2, pY c (by omega) h2, ite_eq_right (by omega), ite_eq_right (by omega)]
       exact ⟨rfl, rfl⟩
     · have hk' : n - 1 - c.val < m := by omega
       have e : ∀ M : Matrix (Fin m) (Fin n) ℂ, (M * P) k c = (M * Y) k ⟨n - 1 - c.val, hk'⟩ := fun M => by
         simp only [Matrix.mul_apply]
         exact Finset.sum_congr rfl fun a _ => by rw [cY c ⟨n - 1 - c.val, hk'⟩ (by simp only; omega) a]
       rw [e, e, hyy, hxy, Matrix.one_apply, Matrix.zero_apply]
-      refine ⟨by rw [if_neg (by omega)], ?_⟩
+      refine ⟨by rw [ite_eq_right (by omega)], ?_⟩
       by_cases e' : c.val + k.val + 1 = n
-      · rw [if_pos e', if_pos (Fin.ext (by simp only; omega))]
-      · rw [if_neg e', if_neg fun e'' => e' (by have := congrArg Fin.val e''; simp only at this; omega)]
+      · rw [ite_eq_left e', ite_eq_left (Fin.ext (by simp only; omega))]
+      · rw [ite_eq_right e', ite_eq_right fun e'' => e' (by have := congrArg Fin.val e''; simp only at this; omega)]
 
 theorem conj_units_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
     (hcm : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsCMExt F E σ) {n : ℕ} {J : Matrix (Fin n) (Fin n) E} (hJ : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsHermND σ J) {m : ℕ}
@@ -541,7 +541,7 @@ theorem conj_units_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
       · subst e
         simp [Matrix.mul_single_apply_same]
       · have e' : v ≠ c := fun e'' => e e''.symm
-        rw [if_neg e, mul_zero, Matrix.mul_apply]
+        rw [ite_eq_right e, mul_zero, Matrix.mul_apply]
         exact Finset.sum_eq_zero fun b _ => by rw [Matrix.single_apply_of_col_ne _ _ e' _, mul_zero]
     rw [e4, e4, e2, e3]
     have c1 : (c = q) ↔ c.val = l + j.val := by rw [Fin.ext_iff, hq]

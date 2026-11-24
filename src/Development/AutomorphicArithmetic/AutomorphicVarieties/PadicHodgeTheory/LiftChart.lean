@@ -88,8 +88,8 @@ open Formalism.ConjugateSelfDual ReciprocityTheory.Gal Module UpperTheory.V.Loc 
 
 private theorem continuous_linear_functional_comp {l : ℕ} [Fact l.Prime] {X V : Type} [TopologicalSpace X] [AddCommGroup V] [Module ℚ_[l] V]
     (φ : V →ₗ[ℚ_[l]] ℚ_[l]) (f : X → V) (hf : QCont l f) : Continuous fun x => φ (f x) := by
-  letI : TopologicalSpace V := moduleTopology ℚ_[l] V
-  haveI : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
+  let : TopologicalSpace V := moduleTopology ℚ_[l] V
+  have : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
   exact (IsModuleTopology.continuous_of_linearMap φ).comp hf
 
 private theorem continuous_bounded_lattice {l : ℕ} [Fact l.Prime] {X V : Type} [TopologicalSpace X] [CompactSpace X] [AddCommGroup V]
@@ -120,8 +120,8 @@ private theorem eventually_congruent_mod_l_pow {l : ℕ} [Fact l.Prime] {X V M :
     [Module.Finite ℤ_[l] M] (j : M →ₗ[ℤ_[l]] V) (hj : Function.Injective j)
     (f : X → M) (hf : QCont l fun g => j (f g)) (N : ℕ) (g₀ : X) :
     ∀ᶠ g in nhds g₀, ∃ m : M, f g - f g₀ = (l : ℤ_[l]) ^ N • m := by
-  haveI : Module.IsTorsionFree ℤ_[l] V := Module.IsTorsionFree.trans_faithfulSMul ℤ_[l] ℚ_[l] V
-  haveI : Module.IsTorsionFree ℤ_[l] M := Function.Injective.moduleIsTorsionFree j hj (map_smul j)
+  have : Module.IsTorsionFree ℤ_[l] V := Module.IsTorsionFree.trans_faithfulSMul ℤ_[l] ℚ_[l] V
+  have : Module.IsTorsionFree ℤ_[l] M := Function.Injective.moduleIsTorsionFree j hj (map_smul j)
   let b := Module.finBasis ℤ_[l] M
   have h1 : LinearIndependent ℚ_[l] (j ∘ b) :=
     (LinearIndependent.iff_fractionRing ℤ_[l] ℚ_[l]).1 (b.linearIndependent.map' j (LinearMap.ker_eq_bot.2 hj))
@@ -165,7 +165,7 @@ private theorem isUnit_of_nilpotent_kernel {O C A : Type} [CommRing O] [CommRing
     IsUnit a := by
   obtain ⟨u, hu⟩ := ha
   obtain ⟨p, hp, hpe⟩ := Algebra.IsIntegral.isIntegral (R := O) ((u⁻¹ : Aˣ) : A)
-  letI : Invertible ((u⁻¹ : Aˣ) : A) := Units.invertible _
+  let : Invertible ((u⁻¹ : Aˣ) : A) := Units.invertible _
   have h1 := (Polynomial.eval₂_reverse_eq_zero_iff (algebraMap O A) ((u⁻¹ : Aˣ) : A) p).2 hpe
   rw [invOf_units, inv_inv, hu, ← Polynomial.aeval_def, Polynomial.aeval_algHom_apply] at h1
   have h4 : p.reverse = Polynomial.X * p.reverse.divX + Polynomial.C 1 := by
@@ -178,8 +178,8 @@ private theorem isUnit_of_nilpotent_kernel {O C A : Type} [CommRing O] [CommRing
 private theorem complete_of_nilpotent_kernel_finite {O C A : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
     [IsAdicComplete (maximalIdeal O) O] [CommRing C] [CommRing A] [Algebra O C] [Algebra O A] [IsCO O A]
     [Algebra.IsIntegral O A] [Module.Finite O C] (π : C →ₐ[O] A) (hπ : ∀ a, π a = 0 → IsNilpotent a) : IsCO O C := by
-  haveI : Nontrivial C := π.toRingHom.domain_nontrivial
-  haveI : IsLocalRing C := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
+  have : Nontrivial C := π.toRingHom.domain_nontrivial
+  have : IsLocalRing C := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
     rcases IsLocalRing.isUnit_or_isUnit_one_sub_self (π a) with h | h
     · exact Or.inl (isUnit_of_nilpotent_kernel π hπ a h)
     · exact Or.inr (isUnit_of_nilpotent_kernel π hπ _ (by rwa [map_sub, map_one]))
@@ -203,7 +203,7 @@ theorem UpperTheory.V.Loc.exists_lift_factor_compact_subalgebra :
     (Algebra.adjoin_le (S := x.range.comap πO) (by
       rintro _ ⟨⟨g, a, b⟩, rfl⟩
       exact ⟨ρ.hom g a b, (hr g a b).symm⟩)) hc
-  haveI hfin : Module.Finite O C := by
+  have hfin : Module.Finite O C := by
     choose M hM hMr using fun p : ι × ι => continuous_bounded_lattice _ (hc p.1 p.2)
     have h1 : (Submodule.span ℤ_[l] S).FG := by
       refine Submodule.FG.of_le (Submodule.fg_iSup M hM) (Submodule.span_le.2 ?_)
@@ -219,12 +219,12 @@ theorem UpperTheory.V.Loc.exists_lift_factor_compact_subalgebra :
       exact isIntegral_of_nilpotent_kernel πO hπ t (hy ▸ hint y)
     rw [h3]
     exact Algebra.finite_adjoin_of_finite_of_isIntegral T.finite_toSet h4
-  haveI : IsCO O x.range := co_quot O R _ x.rangeRestrict x.rangeRestrict_surjective
-  haveI : Algebra.IsIntegral O x.range := ⟨fun z => by
+  have : IsCO O x.range := co_quot O R _ x.rangeRestrict x.rangeRestrict_surjective
+  have : Algebra.IsIntegral O x.range := ⟨fun z => by
     obtain ⟨a, rfl⟩ := x.rangeRestrict_surjective z
     exact (isIntegral_algHom_iff x.range.val Subtype.val_injective).1 (hint a)⟩
   let p : C →ₐ[O] x.range := (πO.comp C.val).codRestrict _ fun c => hCx c c.2
-  haveI hCO : IsCO O C := complete_of_nilpotent_kernel_finite p fun a ha => by
+  have hCO : IsCO O C := complete_of_nilpotent_kernel_finite p fun a ha => by
     obtain ⟨n, hn⟩ := hπ a (congrArg Subtype.val ha)
     exact ⟨n, Subtype.ext (by simpa using hn)⟩
   let r' : Γ →* Matrix ι ι C :=
@@ -236,11 +236,11 @@ theorem UpperTheory.V.Loc.exists_lift_factor_compact_subalgebra :
         ext a b
         simp [Matrix.mul_apply] }
   refine ⟨C, hCO, ⟨r', fun a b N => ?_, fun g a b => ?_⟩, fun g a b => rfl⟩
-  · letI : Algebra ℤ_[l] C := ((algebraMap O C).comp (algebraMap ℤ_[l] O)).toAlgebra
-    haveI : IsScalarTower ℤ_[l] O C := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : Module.Finite ℤ_[l] C := Module.Finite.trans O C
+  · let : Algebra ℤ_[l] C := ((algebraMap O C).comp (algebraMap ℤ_[l] O)).toAlgebra
+    have : IsScalarTower ℤ_[l] O C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : Module.Finite ℤ_[l] C := Module.Finite.trans O C
     have hl : algebraMap ℤ_[l] C l ∈ maximalIdeal C := by
-      haveI := (dvrFacts l O).2.2.1
+      have := (dvrFacts l O).2.2.1
       rw [IsScalarTower.algebraMap_apply ℤ_[l] O C]
       refine map_nonunit _ _ (map_nonunit _ _ ?_)
       rw [PadicInt.maximalIdeal_eq_span_p]
@@ -290,7 +290,7 @@ private theorem gc_order_of_mem {E σ : Type} [Field E] (N : ℕ) :
 private theorem gc_mem_pow_iff {E σ : Type} [Field E] [Finite σ] (N : ℕ) (g : MvPowerSeries σ E) :
     g ∈ maximalIdeal (MvPowerSeries σ E) ^ N ↔ ∀ d : σ →₀ ℕ, d.degree < N → coeff d g = 0 := by
   classical
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   constructor
   · intro hg d hd
     exact coeff_of_lt_order (lt_of_lt_of_le (by exact_mod_cast hd) (gc_order_of_mem N g hg))
@@ -316,7 +316,7 @@ private theorem gc_mem_pow_iff {E σ : Type} [Field E] [Finite σ] (N : ℕ) (g 
             by_contra hh
             push_neg at hh
             exact he (Finsupp.ext hh)
-          simp only [pick, dif_pos h]
+          simp only [pick, dite_eq_left h]
           exact Classical.choose_spec h
         let gi : σ → MvPowerSeries σ E := fun i e =>
           if pick (e + Finsupp.single i 1) = i then coeff (e + Finsupp.single i 1) g else 0
@@ -334,7 +334,7 @@ private theorem gc_mem_pow_iff {E σ : Type} [Field E] [Finite σ] (N : ℕ) (g 
               intro i hle
               have := hle i
               simp at this
-            simp only [hz, if_false, Finset.sum_const_zero]
+            simp only [hz, ite_false, Finset.sum_const_zero]
             exact hg 0 (by simp)
           · have hle : Finsupp.single (pick e) 1 ≤ e := by
               intro k
@@ -342,13 +342,13 @@ private theorem gc_mem_pow_iff {E σ : Type} [Field E] [Finite σ] (N : ℕ) (g 
               · subst hk
                 simp only [Finsupp.single_eq_same]
                 exact Nat.one_le_iff_ne_zero.mpr (hpick e he)
-              · rw [Finsupp.single_apply, if_neg (Ne.symm hk)]
+              · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hk)]
                 exact Nat.zero_le _
             rw [Finset.sum_eq_single (pick e)]
-            · rw [if_pos hle, hgi, tsub_add_cancel_of_le hle, if_pos rfl]
+            · rw [ite_eq_left hle, hgi, tsub_add_cancel_of_le hle, ite_eq_left rfl]
             · intro i _ hi
               split_ifs with hle'
-              · rw [hgi, tsub_add_cancel_of_le hle', if_neg (fun h => hi h.symm)]
+              · rw [hgi, tsub_add_cancel_of_le hle', ite_eq_right (fun h => hi h.symm)]
               · rfl
             · intro h
               exact absurd (Finset.mem_univ _) h
@@ -437,7 +437,7 @@ variable {E : Type} [Field E] [Algebra O E] {τ : Type}
 private lemma gc_low (W : WPres O Y R) (h : W.HasOrigin) {P : Ideal R} {φ : R →ₐ[O] MvPowerSeries τ E}
     (hφ : IsCompl P (W.origin h) φ) {N : ℕ} {g : MvPowerSeries W.σ O} (hg : (N : ℕ∞) ≤ g.order) :
     φ (W.π g) ∈ maximalIdeal (MvPowerSeries τ E) ^ N := by
-  haveI := W.fin
+  have := W.fin
   have hX : ∀ i, (φ.comp W.π) (MvPowerSeries.X i) ∈ maximalIdeal (MvPowerSeries τ E) := by
     intro i
     rw [gc_mem_max, AlgHom.comp_apply, hφ.const]
@@ -519,9 +519,9 @@ private theorem wcomp_monomial_eq_ite_weight {A σ' Y' : Type} [CommRing A] [Add
   rw [coeff_wcomp, coeff_monomial]
   by_cases hn : n = m
   · subst hn
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     split_ifs <;> simp
-  · rw [if_neg hn]
+  · rw [ite_eq_right hn]
     split_ifs <;> simp [coeff_monomial, hn]
 
 private lemma gc_graded [IsDomain O] [IsFractionRing O E] [Finite τ] (W : WPres O Y R) (h : W.HasOrigin)
@@ -529,9 +529,9 @@ private lemma gc_graded [IsDomain O] [IsFractionRing O E] [Finite τ] (W : WPres
     (hy : ∃ y, W.origin h y ≠ 0 ∧ ∀ a ∈ P, y * a = 0) (u : τ → W.σ) (hu : ∀ i, φ (W.z (u i)) = X i)
     (j : Y) (a : R) (ha : a ∈ W.part j) : φ a ∈ wtPart E (fun i => W.wt (u i)) j := by
   classical
-  haveI : FaithfulSMul O E :=
+  have : FaithfulSMul O E :=
     (faithfulSMul_iff_algebraMap_injective O E).mpr (IsFractionRing.injective O E)
-  haveI := Fintype.ofFinite τ
+  have := Fintype.ofFinite τ
   have hinj := IsFractionRing.injective O E
   obtain ⟨f, hf, rfl⟩ := ha
   have hu' : ∀ i, φ (W.π (X (u i))) = X i := hu
@@ -551,7 +551,7 @@ private lemma gc_graded [IsDomain O] [IsFractionRing O E] [Finite τ] (W : WPres
         by_cases hk : k = i
         · subst hk
           simp
-        · rw [Finsupp.single_apply, if_neg (Ne.symm hk)]
+        · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hk)]
           exact Nat.zero_le _
       have := congrArg Finsupp.degree (tsub_add_cancel_of_le hs)
       rw [map_add (f := _), Finsupp.degree_single] at this
@@ -578,7 +578,7 @@ private lemma gc_graded [IsDomain O] [IsFractionRing O E] [Finite τ] (W : WPres
 
     rw [map_sub, map_sub, map_sum, map_sum, map_smul, map_smul, map_sub, map_sum, hcs]
     simp only [map_smul, hψ, hcs, coeff_monomial, smul_ite, smul_zero]
-    rw [Finset.sum_ite_eq T e'' (fun e' => a e' • (1 : E)), if_pos (hTmem e'' he''),
+    rw [Finset.sum_ite_eq T e'' (fun e' => a e' • (1 : E)), ite_eq_left (hTmem e'' he''),
       ← Algebra.algebraMap_eq_smul_one, ha e'' (hTmem e'' he''), sub_self]
   have hwP : ∀ e', wcomp O W.wt (Finsupp.weight (fun i => W.wt (u i)) e) (Pm e') =
       if Finsupp.weight (fun i => W.wt (u i)) e' = Finsupp.weight (fun i => W.wt (u i)) e
@@ -604,7 +604,7 @@ private lemma gc_graded [IsDomain O] [IsFractionRing O E] [Finite τ] (W : WPres
   have heT : e ∈ T.filter (fun e' => Finsupp.weight (fun i => W.wt (u i)) e' =
       Finsupp.weight (fun i => W.wt (u i)) e) :=
     Finset.mem_filter.mpr ⟨hTmem e (by omega), rfl⟩
-  rw [if_pos heT, ← Algebra.algebraMap_eq_smul_one, ha e (hTmem e (by omega)), Algebra.smul_def] at hc
+  rw [ite_eq_left heT, ← Algebra.algebraMap_eq_smul_one, ha e (hTmem e (by omega)), Algebra.smul_def] at hc
   exact (mul_eq_zero.mp hc).resolve_left (fun h0 => hd0 (hinj (by rw [h0, map_zero])))
 
 private lemma gc_deg_single {σ : Type} (i : σ) : (Finsupp.single i 1 : σ →₀ ℕ).degree < 2 := by simp
@@ -614,7 +614,7 @@ private lemma gc_span [IsDomain O] [FaithfulSMul O E] {n : ℕ} (W : WPres O Y R
     ∃ u : Fin n → W.σ, Submodule.span E
       (Set.range fun i j : Fin n => coeff (Finsupp.single j 1) (φ (W.z (u i)))) = ⊤ := by
   classical
-  haveI := W.fin
+  have := W.fin
   let lin : MvPowerSeries (Fin n) E →ₗ[E] (Fin n → E) :=
     LinearMap.pi (fun j => coeff (Finsupp.single j 1))
   have hlin : ∀ f j, lin f j = coeff (Finsupp.single j 1) f := fun f j => rfl
@@ -635,7 +635,7 @@ private lemma gc_span [IsDomain O] [FaithfulSMul O E] {n : ℕ} (W : WPres O Y R
     intro r
     funext j
     rw [hlin, MvPowerSeries.algebraMap_apply, coeff_C,
-      if_neg (fun h => one_ne_zero (Finsupp.single_eq_zero.mp h))]
+      ite_eq_right (fun h => one_ne_zero (Finsupp.single_eq_zero.mp h))]
     rfl
   have key : ∀ g, lin (φ (W.π g)) ∈ Submodule.span E (Set.range v) := by
     intro g
@@ -669,7 +669,7 @@ private lemma gc_span [IsDomain O] [FaithfulSMul O E] {n : ℕ} (W : WPres O Y R
         by_cases hjk : j = k
         · subst hjk
           simp
-        · rw [if_neg, if_neg hjk]
+        · rw [ite_eq_right, ite_eq_right hjk]
           intro h
           exact hjk ((Finsupp.single_left_inj one_ne_zero).mp h).symm
       rw [hX] at h1
@@ -830,8 +830,8 @@ private lemma gc_count [IsDomain O] [IsFractionRing O E] [Fintype τ] (x : R →
     show Dv (z i.1) = v i
     rw [hDv, hz]
     simp [coeff_X, Finsupp.single_left_inj one_ne_zero]
-    rw [Finset.sum_eq_single i (fun b _ hb => if_neg (fun h => hb (Subtype.ext h)))
-      (fun h => absurd (Finset.mem_univ _) h), if_pos rfl]
+    rw [Finset.sum_eq_single i (fun b _ hb => ite_eq_right (fun h => hb (Subtype.ext h)))
+      (fun h => absurd (Finset.mem_univ _) h), ite_eq_left rfl]
   let e := LinearEquiv.ofBijective L ⟨hinjL, hsurjL⟩
   rw [e.finrank_eq, Module.finrank_fintype_fun_eq_card, Nat.card_eq_fintype_card]
 
@@ -840,7 +840,7 @@ end SlopeTestRemainingChoices
 theorem UpperTheory.V.Loc.gradedChart :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing O E] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] {X : Type} [AddCommGroup X] (W : WPres O X R) (h : W.HasOrigin) (P : Ideal R) {n : ℕ} (φ : R →ₐ[O] MvPowerSeries (Fin n) E), UpperTheory.V.Loc.IsCompl P (W.origin h) φ → (∃ y, W.origin h y ≠ 0 ∧ ∀ a ∈ P, y * a = 0) → ∃ (w : Fin n → X) (φ' : R →ₐ[O] MvPowerSeries (Fin n) E), UpperTheory.V.Loc.IsCompl P (W.origin h) φ' ∧ (∀ j, ∀ f ∈ W.part j, φ' f ∈ wtPart E w j) ∧ ∀ j, Nat.card {i // w i = j} = finrank E ↥(wtDer W.part (W.origin h) E j) := by
   intro l _ O _ _ _ _ _ _ _ E _ _ _ _ _ _ _ _ R _ _ _ X _ W h P n φ hφ hy
-  haveI : FaithfulSMul O E :=
+  have : FaithfulSMul O E :=
     (faithfulSMul_iff_algebraMap_injective O E).mpr (IsFractionRing.injective O E)
   obtain ⟨u, hu⟩ := gc_span W h hφ
   have hz0 : ∀ i, W.origin h ((fun i => W.z (u i)) i) = 0 := fun i => origin_at_generator_eq_zero W h (u i)
@@ -867,25 +867,25 @@ private theorem hx_finite {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDo
     {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra O B] [Algebra ℤ_[l] B]
     [IsScalarTower ℤ_[l] O B] [IsScalarTower ℤ_[l] ℚ_[l] B]
     (x : R →ₐ[O] B) : Module.Finite O x.range := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite ℚ_[l] B
-  haveI : IsNoetherianRing x.range := isNoetherianRing_of_surjective R _ x.rangeRestrict.toRingHom
+  have : IsArtinianRing B := IsArtinianRing.of_finite ℚ_[l] B
+  have : IsNoetherianRing x.range := isNoetherianRing_of_surjective R _ x.rangeRestrict.toRingHom
     x.rangeRestrict_surjective
   have hfin : ∀ m : MaximalSpectrum B, Module.Finite ℤ_[l] (integralClosure ℤ_[l] (B ⧸ m.asIdeal)) := fun m => by
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
     exact IsIntegralClosure.finite ℤ_[l] ℚ_[l] (B ⧸ m.asIdeal) _
   let v : x.range →ₐ[ℤ_[l]] B := x.range.val.restrictScalars ℤ_[l]
   have hint : ∀ (m : MaximalSpectrum B) (z : x.range),
       ((Ideal.Quotient.mkₐ ℤ_[l] m.asIdeal).comp v) z ∈ integralClosure ℤ_[l] (B ⧸ m.asIdeal) := by
     rintro m ⟨_, a, rfl⟩
-    haveI := m.isMaximal
+    have := m.isMaximal
     exact ((ptCont (l := l) R (B ⧸ m.asIdeal) ((Ideal.Quotient.mkₐ O m.asIdeal).comp x)).2
       ((Ideal.Quotient.maximal_ideal_iff_isField_quotient _).1 m.isMaximal)).1 a
   let g : x.range →ₐ[ℤ_[l]] ∀ m : MaximalSpectrum B, integralClosure ℤ_[l] (B ⧸ m.asIdeal) :=
     Pi.algHom _ _ fun m => AlgHom.codRestrict _ _ (hint m)
-  haveI : Module.Finite ℤ_[l] g.range :=
+  have : Module.Finite ℤ_[l] g.range :=
     Module.Finite.of_injective g.range.val.toLinearMap Subtype.val_injective
-  haveI : Module.Finite ℤ_[l] x.range := by
+  have : Module.Finite ℤ_[l] x.range := by
     refine Module.finite_of_surjective_of_ker_le_nilradical g.rangeRestrict g.rangeRestrict_surjective ?_
       (IsNoetherian.noetherian _)
     intro z hz
@@ -912,12 +912,12 @@ private theorem hx_pow {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [CommR
       rw [← (maximalIdeal.isMaximal _).eq_of_le (Ideal.IsPrime.ne_top inferInstance)
         (Ideal.map_le_iff_le_comap.1 hP)]
       infer_instance
-    haveI : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under P hc
+    have : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under P hc
     have hi : (y : R →+* A).IsIntegral := by
       refine RingHom.IsIntegral.tower_top (algebraMap O R) _ ?_
       rw [AlgHom.comp_algebraMap]
       exact fun a => Algebra.IsIntegral.isIntegral (R := O) a
-    have := eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' (y : R →+* A) hi P)
+    have := eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (y : R →+* A) hi P)
     rw [Ideal.map_le_iff_le_comap, ← this]
     exact le_rfl
   obtain ⟨N, hN⟩ := Ideal.exists_pow_le_of_le_radical_of_fg h1 (Ideal.FG.map (IsNoetherian.noetherian _) _)
@@ -934,19 +934,19 @@ theorem UpperTheory.V.Loc.homExt :
     rintro _ ⟨s, rfl⟩
     exact hc _
   have hspan := co_span O R O (Algebra.ofId O R) S hS fun u u' _ hu => by
-    haveI := (co_res O).2
+    have := (co_res O).2
     refine hρ _ u u' (Lift.ext (MonoidHom.ext fun g => Matrix.ext fun a b => ?_))
     have := hu _ ⟨(g, a, b), rfl⟩
     simp only [map_sub, AlgHom.commutes, sub_left_inj] at this
     exact this
-  haveI := hx_finite (l := l) f
-  haveI := hx_finite (l := l) f'
+  have := hx_finite (l := l) f
+  have := hx_finite (l := l) f'
   let A : Subalgebra O B := f.range ⊔ f'.range
-  haveI : Module.Finite O A := Subalgebra.finite_sup _ _
+  have : Module.Finite O A := Subalgebra.finite_sup _ _
   let u : R →ₐ[O] A := f.codRestrict A fun a => (le_sup_left : f.range ≤ A) ⟨a, rfl⟩
   let u' : R →ₐ[O] A := f'.codRestrict A fun a => (le_sup_right : f'.range ≤ A) ⟨a, rfl⟩
-  haveI : IsHausdorff (maximalIdeal O) A := inferInstance
-  haveI : IsHausdorff ((maximalIdeal O).map (algebraMap O A)) A := IsHausdorff.map_algebraMap_iff.2 this
+  have : IsHausdorff (maximalIdeal O) A := inferInstance
+  have : IsHausdorff ((maximalIdeal O).map (algebraMap O A)) A := IsHausdorff.map_algebraMap_iff.2 this
   obtain ⟨N, hN⟩ := hx_pow u
   obtain ⟨N', hN'⟩ := hx_pow u'
   have key : u = u' := by
@@ -1023,18 +1023,18 @@ private theorem origin_eq {O R X : Type} [CommRing O] [IsLocalRing O] [IsNoether
 private theorem qcont_lin {l : ℕ} [Fact l.Prime] {V W X : Type} [AddCommGroup V] [Module ℚ_[l] V]
     [AddCommGroup W] [Module ℚ_[l] W] [TopologicalSpace X] {φ : X → V} (hφ : QCont l φ) (ψ : V →ₗ[ℚ_[l]] W) :
     QCont l fun g => ψ (φ g) := by
-  letI := moduleTopology ℚ_[l] V
-  haveI : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
-  letI := moduleTopology ℚ_[l] W
-  haveI : IsModuleTopology ℚ_[l] W := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd ℚ_[l] W
+  let := moduleTopology ℚ_[l] V
+  have : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
+  let := moduleTopology ℚ_[l] W
+  have : IsModuleTopology ℚ_[l] W := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd ℚ_[l] W
   exact (IsModuleTopology.continuous_of_linearMap ψ).comp hφ
 
 private theorem qcont_add {l : ℕ} [Fact l.Prime] {V X : Type} [AddCommGroup V] [Module ℚ_[l] V]
     [TopologicalSpace X] {φ ψ : X → V} (hφ : QCont l φ) (hψ : QCont l ψ) : QCont l fun g => φ g + ψ g := by
-  letI := moduleTopology ℚ_[l] V
-  haveI : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd ℚ_[l] V
+  let := moduleTopology ℚ_[l] V
+  have : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd ℚ_[l] V
   exact Continuous.add hφ hψ
 
 private theorem qcont_dual {l : ℕ} [Fact l.Prime] {X E : Type} [TopologicalSpace X] [Field E] [Algebra ℚ_[l] E]
@@ -1095,8 +1095,8 @@ theorem UpperTheory.V.Loc.liftChart :
     exact sub_self _
   obtain ⟨u, φ, hφ, hφw, hu⟩ := gradedChart (l := l) E R W h P φ₀ hφ₀ ⟨y, hy, hyP⟩
   refine ⟨_, P, n, u, φ, hx, hφ, ⟨y, hy, hyP⟩, fun g a b => hφw _ _ (hW g a b), fun j => ?_⟩
-  haveI : Module.Finite E (DualNumber E) := inferInstanceAs (Module.Finite E (E × E))
-  haveI : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
+  have : Module.Finite E (DualNumber E) := inferInstanceAs (Module.Finite E (E × E))
+  have : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
   let ev : (R →ₗ[O] E) →ₗ[E] (Γ → Matrix ι ι E) :=
     { toFun := fun δ g => Matrix.of fun a b => δ (ρ.hom g a b)
       map_add' := fun _ _ => rfl
@@ -1104,8 +1104,8 @@ theorem UpperTheory.V.Loc.liftChart :
   have hev : ∀ δ g a b, ev δ g a b = δ (ρ.hom g a b) := fun _ _ _ _ => rfl
   have hder : ∀ D : R → E, (∃ D' ∈ PtDer ((Algebra.ofId O E).comp (W.origin h)) E, ⇑D' = D) ↔
       ∃ y : R →ₐ[O] DualNumber E, ∀ f, (y f).fst = algebraMap O E (W.origin h f) ∧ (y f).snd = D f := by
-    letI : Module Oᵐᵒᵖ E := Module.compHom E (RingEquiv.toOpposite O).symm.toRingHom
-    haveI : IsCentralScalar O E := ⟨fun _ _ => rfl⟩
+    let : Module Oᵐᵒᵖ E := Module.compHom E (RingEquiv.toOpposite O).symm.toRingHom
+    have : IsCentralScalar O E := ⟨fun _ _ => rfl⟩
     exact der_hom O R E E ((Algebra.ofId O E).comp (W.origin h))
   have hO : ∀ δ ∈ PtDer ((Algebra.ofId O E).comp (W.origin h)) E, δ ∈ PtDer (W.origin h) E := fun δ hδ f g => by
     rw [hδ f g]

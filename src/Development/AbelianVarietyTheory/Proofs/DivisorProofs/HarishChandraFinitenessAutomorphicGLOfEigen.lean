@@ -54,7 +54,7 @@ namespace GlobalTheory.HCF
 theorem automorphicFormsFiniteGL_of_core (h : CoreFiniteGL) : GlobalTheory.Published.AutomorphicFormsFiniteGL := by
   intro E _ _ _ a L hL W _ _ _ ρ _ c
   classical
-  haveI hW' : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := _root_.GlobalTheory.Proof.CoeffSpan.finiteDimensional_coeffSpan _ W ρ
+  have hW' : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := _root_.GlobalTheory.Proof.CoeffSpan.finiteDimensional_coeffSpan _ W ρ
   let χ : Module.End ℂ (Sm E a) → ℂ := fun z =>
     if hz : ∃ s : ℂ, ∀ φ : Sm E a, (∀ τ u, cap τ u φ = c τ u • φ) → z φ = s • φ then hz.choose else 0
   have hsub : GlobalTheory.Published.AutFinGL.forms L ρ c ⊆ formsGL E a L (GlobalTheory.Published.AutFin.coeffSpan ρ) {χ} 1 := by
@@ -65,7 +65,7 @@ theorem automorphicFormsFiniteGL_of_core (h : CoreFiniteGL) : GlobalTheory.Publi
     | [z], _ =>
       have hz : z ∈ Zalg E a := hzs z (List.mem_singleton_self z)
       have hex := _root_.GlobalTheory.CuspRep.Zalg_acts_by_scalar E a c z hz
-      have hχ : χ z = hex.choose := dif_pos hex
+      have hχ : χ z = hex.choose := dite_eq_left hex
       simp only [List.foldr_cons, List.foldr_nil]
       rw [hχ, hex.choose_spec φ h4, sub_self]
   have hfin := h E a L hL (GlobalTheory.Published.AutFin.coeffSpan ρ) hW' {χ} (Set.finite_singleton χ) 1

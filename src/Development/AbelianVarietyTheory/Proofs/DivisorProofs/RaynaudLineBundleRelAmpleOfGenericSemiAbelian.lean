@@ -637,12 +637,12 @@ theorem exists_affine_nonzeroLocus_of_square : (∀ (R' : Type) [CommRing R'] [I
   have e3 : ((𝟙 ((Over.pullback (spMap ρ)).obj G) * (toUnit _ ≫ a⁻¹)).left ≫ pullback.fst G.hom (spMap ρ)) x' =
       (fst G G * (snd G G)⁻¹).left z := by rw [hΦ3, Scheme.Hom.comp_apply, hx']
   have hsemi' : IsSemiAbelian ((Over.pullback (spMap ρ)).obj G) := IsSemiAbelian.pullback _ G hG
-  haveI := hd; haveI := hn; haveI := hic
+  have := hd; have := hn; have := hic
   have hab' := _root_.GlobalTheory.Desc.isAbelianScheme_generic_of_injective R R' ρ hinj G hab
   obtain ⟨t, ht⟩ := H R' ((Over.pullback (spMap ρ)).obj G) hsemi' hab'
     (M₀.pull (pullback.fst G.hom (spMap ρ))) (LB.isLB_pull hM _) a
   obtain ⟨s, hs⟩ := _root_.GlobalTheory.PullSecSq.exists_sec_lbPow_two_nonzeroLocus _ _ (pullback.fst G.hom (spMap ρ)) M₀ hM s₀ _ _ ⟨t, ht⟩
-  haveI : IsAffineHom (pullback.fst G.hom (spMap ρ)) :=
+  have : IsAffineHom (pullback.fst G.hom (spMap ρ)) :=
     MorphismProperty.of_isPullback (IsPullback.of_hasPullback G.hom (spMap ρ)).flip inferInstance
   have hW : IsAffineOpen (pullback.fst G.hom (spMap ρ) ⁻¹ᵁ nonzeroLocus s₀) := hV.preimage _
   have hL := _root_.GlobalTheory.TransAff.isAffineOpen_translates R' ((Over.pullback (spMap ρ)).obj G) hsemi'.separated a _ hW
@@ -961,8 +961,8 @@ theorem exists_mul_pow_mem_map (φ : A →+* B) (p : Ideal A) [p.IsPrime] (b : B
 
 theorem exists_monic_coeff_mem (φ : A →+* B) (hφ : φ.Finite) (p : Ideal A) (u : B) (hu : u ∈ p.map φ) :
     ∃ g : A[X], g.Monic ∧ (∀ i < g.natDegree, g.coeff i ∈ p) ∧ eval₂ φ u g = 0 := by
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let := φ.toAlgebra
+  have : Module.Finite A B := hφ
   have hrange : LinearMap.range (Algebra.lmul A B u) ≤ p • (⊤ : Submodule A B) := by
     rintro _ ⟨y, rfl⟩
     rw [Ideal.smul_top_eq_map, Submodule.restrictScalars_mem]
@@ -1004,7 +1004,7 @@ theorem coeff_prod_X_sub_C_mem {R : Type} [CommRing R] (P : Ideal R) [P.IsPrime]
     intro a ha
     simp [Ideal.Quotient.eq_zero_iff_mem.mpr (hs a ha)]
   rw [Multiset.map_congr rfl hX, Multiset.map_const', Multiset.prod_replicate, coeff_X_pow,
-    if_neg hi.ne]
+    ite_eq_right hi.ne]
 
 end Algebra
 
@@ -1070,8 +1070,8 @@ theorem mem_of_forall_mem_prime (φ : A →+* B) (hφ : φ.Finite) (b : B) (p : 
   obtain ⟨s, hs, n, hsn⟩ := exists_mul_pow_mem_map φ p b h
   obtain ⟨g, hgm, hgc, hg0⟩ := exists_monic_coeff_mem φ hφ p _ hsn
   have hbint : ∃ m : A[X], m.Monic ∧ eval₂ φ b m = 0 := by
-    letI := φ.toAlgebra
-    haveI : Module.Finite A B := hφ
+    let := φ.toAlgebra
+    have : Module.Finite A B := hφ
     exact Algebra.IsIntegral.isIntegral (R := A) b
   obtain ⟨m, hmm, hm0⟩ := hbint
   have hinj : Function.Injective (algebraMap A (AlgebraicClosure K)) := by
@@ -1244,13 +1244,13 @@ theorem exists_charK_coeff {A B : Type} [CommRing A] [IsDomain A] [IsIntegrallyC
     (φ : A →+* B) (hφ : φ.Finite) (b : B) (n : ℕ) :
     ∃ a : A, algebraMap A (FractionRing A) a = (charK φ hφ (FractionRing A) b).coeff n := by
   classical
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let := φ.toAlgebra
+  have : Module.Finite A B := hφ
   let K := FractionRing A
   let Ω := AlgebraicClosure K
   let ι := algebraMap K Ω
   let V := K ⊗[A] B
-  haveI : Module.Free K V := Module.Free.of_divisionRing _ _
+  have : Module.Free K V := Module.Free.of_divisionRing _ _
   let e := Module.finBasis K V
   let Mx := Algebra.leftMulMatrix e ((1 : K) ⊗ₜ[A] b)
   have hg : charK φ hφ K b = Mx.charpoly := by
@@ -1297,9 +1297,9 @@ theorem normCoeff_mul : ∀ {A B : Type} [CommRing A] [IsDomain A] [IsIntegrally
     fun b' => by rw [coeff_reverse]; exact exists_charK_coeff φ hφ b' _
   have key : (charK φ hφ (FractionRing A) (φ u * b)).reverse.coeff k
       = (algebraMap A (FractionRing A) u) ^ k * (charK φ hφ (FractionRing A) b).reverse.coeff k := by
-    letI := φ.toAlgebra
-    haveI : Module.Finite A B := hφ
-    haveI : Module.Free (FractionRing A) (FractionRing A ⊗[A] B) := Module.Free.of_divisionRing _ _
+    let := φ.toAlgebra
+    have : Module.Finite A B := hφ
+    have : Module.Free (FractionRing A) (FractionRing A ⊗[A] B) := Module.Free.of_divisionRing _ _
     have e1 : (1 : FractionRing A) ⊗ₜ[A] (φ u * b)
         = algebraMap A (FractionRing A) u • ((1 : FractionRing A) ⊗ₜ[A] b) := by
       rw [algebraMap_smul, ← tmul_smul, Algebra.smul_def]; rfl
@@ -1337,12 +1337,12 @@ theorem charK_map_of_isPushout {A B A' B' K K' : Type} [CommRing A] [CommRing B]
   have : IsScalarTower A B B' := IsScalarTower.of_algebraMap_eq' (congrArg CommRingCat.Hom.hom H.w).symm
   have P : Algebra.IsPushout A B A' B' := CommRingCat.isPushout_iff_isPushout.1 H
   have hb : IsBaseChange A' (IsScalarTower.toAlgHom A B B').toLinearMap := P.symm.out
-  haveI : Module.Finite A B := hφ
-  haveI : Module.Finite A' B' := hφ'
-  letI : Algebra K K' := ι.toAlgebra
-  letI : Algebra A K' := (ι.comp (algebraMap A K)).toAlgebra
-  haveI : IsScalarTower A K K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower A A' K' := IsScalarTower.of_algebraMap_eq fun a => hι a
+  have : Module.Finite A B := hφ
+  have : Module.Finite A' B' := hφ'
+  let : Algebra K K' := ι.toAlgebra
+  let : Algebra A K' := (ι.comp (algebraMap A K)).toAlgebra
+  have : IsScalarTower A K K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower A A' K' := IsScalarTower.of_algebraMap_eq fun a => hι a
   let e : K' ⊗[K] (K ⊗[A] B) ≃ₗ[K'] K' ⊗[A'] B' :=
     AlgebraTensorModule.cancelBaseChange A K K' K' B ≪≫ₗ
       (AlgebraTensorModule.cancelBaseChange A A' K' K' B).symm ≪≫ₗ
@@ -1430,7 +1430,7 @@ open TopologicalSpace Opposite GlobalTheory.LBGerm GlobalTheory.FiniteAmple
 theorem injective_res_of_isAffineOpen {X : Scheme.{0}} {V W : X.Opens} (hV : IsAffineOpen V) [IsDomain Γ(X, V)]
     (h : W ≤ V) {x : X} (hx : x ∈ W) : Function.Injective (X.presheaf.map (homOfLE h).op).hom := by
   have hxV : x ∈ V := h hx
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨x, hxV⟩ : V)
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨x, hxV⟩ : V)
   have hloc := hV.isLocalization_stalk ⟨x, hxV⟩
   have hinj : Function.Injective (X.presheaf.germ V x hxV).hom :=
     IsLocalization.injective (M := (hV.primeIdealOf ⟨x, hxV⟩).asIdeal.primeCompl) (S := X.presheaf.stalk x)
@@ -1530,8 +1530,8 @@ theorem exists_normCoeff_not_mem {A B : Type} [CommRing A] [IsDomain A] [IsInteg
     (p : Ideal A) (hp : p.IsPrime) (hb : ∀ Q : Ideal B, Q.IsPrime → Q.comap φ = p → b ∉ Q) :
     ∃ k, 1 ≤ k ∧ normCoeff φ hφ b k ∉ p := by
   classical
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let := φ.toAlgebra
+  have : Module.Finite A B := hφ
   set K := FractionRing A
   obtain ⟨P, hP⟩ := _root_.GlobalTheory.NormalDescent.exists_map_eq_charK (K := K) φ hφ b
   have hinj : Function.Injective (algebraMap A K) := IsFractionRing.injective A K
@@ -1590,7 +1590,7 @@ theorem exists_normCoeff_not_mem {A B : Type} [CommRing A] [IsDomain A] [IsInteg
       · exact absurd h hs'
       · exact h
     rw [this]; exact p.zero_mem
-  haveI : Algebra.IsIntegral A B := inferInstance
+  have : Algebra.IsIntegral A B := inferInstance
   obtain ⟨Q, hQI, hQp, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := B) p I hI
   have hPQ : Polynomial.aeval b P ∈ Q := hQI (by simpa [I, RingHom.mem_ker] using hker)
   have hbd : b ^ P.natDegree ∈ Q := by

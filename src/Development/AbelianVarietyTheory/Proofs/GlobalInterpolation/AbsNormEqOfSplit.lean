@@ -77,7 +77,7 @@ theorem absNorm_eq_of_split (h2 : Module.finrank F E = 2) {v : HeightOneSpectrum
   obtain ⟨P', -, hm⟩ := exists_cofactor hs hP
   have h1 : Ideal.absNorm P.asIdeal * Ideal.absNorm P'.asIdeal = Ideal.absNorm v.asIdeal ^ 2 := by
     rw [← map_mul, ← hm, Ideal.absNorm_algebraMap (𝓞 F) (𝓞 E), ← h2,
-      Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E]
+      IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E]
   have hP1 : Ideal.absNorm P.asIdeal ≠ 1 := fun h => P.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
   have hP2 : Ideal.absNorm P'.asIdeal ≠ 1 := fun h => P'.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
   exact (((Nat.Prime.mul_eq_prime_sq_iff hq hP1 hP2).1 h1)).1

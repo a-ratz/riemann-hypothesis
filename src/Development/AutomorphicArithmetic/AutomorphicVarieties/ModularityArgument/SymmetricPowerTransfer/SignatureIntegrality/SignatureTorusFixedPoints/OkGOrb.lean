@@ -627,7 +627,7 @@ end
 theorem orbital_integral_over_base_group : UnitaryHyperbolicOrbitCount := by
   unfold UnitaryHyperbolicOrbitCount
   intro k _ _ _ _ V T _ r hr g₀ ι hι d hd x₁ y₁ z₁ hv
-  letI : MulAction T (GL (Fin 3) k ⧸ V.J 3) := MulAction.compHom _ ι
+  let : MulAction T (GL (Fin 3) k ⧸ V.J 3) := MulAction.compHom _ ι
   set δ := g₀ * dg ![x₁, y₁, z₁] * Phi k * (th k 3 g₀)⁻¹ with hδ
   have hF : ∀ q : GL (Fin 3) k ⧸ V.J 3, V.unitaryDoubleCosetIndicator d (q.out⁻¹ * δ * th k 3 q.out) ≠ 0 ↔
       ∃ u, q = ((g₀ * dg u : GL (Fin 3) k) : GL (Fin 3) k ⧸ V.J 3) ∧ Cd V d x₁ y₁ z₁ u := by
@@ -664,9 +664,9 @@ theorem orbital_integral_over_base_group : UnitaryHyperbolicOrbitCount := by
     rw [← Subgroup.relIndex_mul_relIndex _ _ _ FF.2.2.1 FF.2.1, h0, zero_mul]
   unfold orb
   by_cases hc : x₁ / z₁ / (d 0 / d 2) ∈ V.H ∧ ∃ s, y₁ / (d 1 * s ^ 2) ∈ V.H
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     obtain ⟨hxz, s0, hs0⟩ := hc
-    haveI : (V.H.subgroupOf V.H2).FiniteIndex := ⟨hne⟩
+    have : (V.H.subgroupOf V.H2).FiniteIndex := ⟨hne⟩
     let U : ↥V.H2 → Fin 3 → kˣ := fun v => ![x₁ / d 0, s0 * (v : kˣ), 1]
     let q : ↥V.H2 → GL (Fin 3) k ⧸ V.J 3 := fun v => ((g₀ * dg (U v) : GL (Fin 3) k) : GL (Fin 3) k ⧸ V.J 3)
     let Ψ : ↥V.H2 ⧸ V.H.subgroupOf V.H2 → orbitRel.Quotient T (GL (Fin 3) k ⧸ V.J 3) :=
@@ -769,7 +769,7 @@ theorem orbital_integral_over_base_group : UnitaryHyperbolicOrbitCount := by
       (f := fun q : GL (Fin 3) k ⧸ V.J 3 => V.unitaryDoubleCosetIndicator d (q.out⁻¹ * δ * th k 3 q.out))
       (n := V.H.relIndex (Uo k)) Ψ hinj hrng hone
     exact ⟨hfin, hsum.trans rfl⟩
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hzero : ∀ q : GL (Fin 3) k ⧸ V.J 3, V.unitaryDoubleCosetIndicator d (q.out⁻¹ * δ * th k 3 q.out) = 0 := by
       intro q
       by_contra h
@@ -815,7 +815,7 @@ private def OrbSupp (ι : T →* G) (θ : G →* G) (U : Subgroup G) (f : G → 
 private theorem orb_sum {I : Type} (ι : T →* G) (C : Subgroup T) (θ : G →* G) (U : Subgroup G) (δ : G)
     (S : Finset I) (f : I → G → ℂ) (h : ∀ i ∈ S, OrbSupp ι θ U (f i) δ) :
     orb ι C θ U (fun g => ∑ i ∈ S, f i g) δ = ∑ i ∈ S, orb ι C θ U (f i) δ := by
-  letI : MulAction T (G ⧸ U) := MulAction.compHom _ ι
+  let : MulAction T (G ⧸ U) := MulAction.compHom _ ι
   unfold orb wcount
   simp only [Finset.mul_sum]
   rw [finsum_sum_comm]
@@ -828,7 +828,7 @@ private theorem orb_sum {I : Type} (ι : T →* G) (C : Subgroup T) (θ : G →*
 private theorem finOrb_of (ι : T →* G) (θ : G →* G) (U : Subgroup G) (f : G → ℂ) (δ : G)
     (hf : ∀ u ∈ U, ∀ x, f (u⁻¹ * x * θ u) = f x) (hδ : ∀ t, (ι t)⁻¹ * δ * θ (ι t) = δ)
     (h : OrbSupp ι θ U f δ) : FinOrb ι θ U f δ := by
-  letI : MulAction T (G ⧸ U) := MulAction.compHom _ ι
+  let : MulAction T (G ⧸ U) := MulAction.compHom _ ι
   classical
   have h' : {o : orbitRel.Quotient T (G ⧸ U) | f (o.out.out⁻¹ * δ * θ o.out.out) ≠ 0}.Finite := h
   refine ⟨h'.toFinset.image (fun o => o.out.out), ?_⟩
@@ -864,14 +864,14 @@ private theorem finOrb_sum {I : Type} (ι : T →* G) (θ : G →* G) (U : Subgr
   refine finOrb_of ι θ U _ δ ?_ hδ ?_
   · intro u hu x
     exact Finset.sum_congr rfl fun i hi => hf i hi u hu x
-  · letI : MulAction T (G ⧸ U) := MulAction.compHom _ ι
+  · let : MulAction T (G ⧸ U) := MulAction.compHom _ ι
     change {o : orbitRel.Quotient T (G ⧸ U) | (∑ i ∈ S, f i (o.out.out⁻¹ * δ * θ o.out.out)) ≠ 0}.Finite
     have hU : (⋃ i ∈ (S : Set I),
         {o : orbitRel.Quotient T (G ⧸ U) | f i (o.out.out⁻¹ * δ * θ o.out.out) ≠ 0}).Finite :=
       Set.Finite.biUnion S.finite_toSet fun i hi => h i hi
     refine hU.subset ?_
     intro o ho
-    simp only [Set.mem_setOf_eq] at ho
+    simp only [Set.mem_ofPred_eq] at ho
     obtain ⟨i, hi, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero ho
     exact Set.mem_biUnion (Finset.mem_coe.mpr hi) hne
 
@@ -905,7 +905,7 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_over_extended_group :
     rw [hϖ, GlAx.unif_spec]
     exact uniformizer_lt_one
   have hw0 : 0 < valuation k (ϖ : k) := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     exact (Valuation.ne_zero_iff _).mpr ϖ.ne_zero
   have hSD : ∀ a ∈ Ry, SDom (d a) := by
     intro a ha i j hij
@@ -935,10 +935,10 @@ theorem UpperTheory.V.Z.Sym.Sig.orbital_integral_over_extended_group :
     rw [e]
     unfold Glob.one
     by_cases hP : x / z / t ∈ V.H
-    · rw [if_pos ⟨hP, hq₀⟩, if_pos hP, mul_one]
-    · rw [if_neg (fun hh => hP hh.1), if_neg hP, mul_zero]
+    · rw [ite_eq_left ⟨hP, hq₀⟩, ite_eq_left hP, mul_one]
+    · rw [ite_eq_right (fun hh => hP hh.1), ite_eq_right hP, mul_zero]
   · intro b hb hne
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨_, hq⟩
     exact hne (huniq b ⟨hb, hq⟩)
   · intro hn
@@ -1068,8 +1068,8 @@ theorem UpperTheory.V.Z.Sym.Sig.okGOrb :
   · have hm : x / z / t ∈ V.H := by
       rw [hxz, mul_div_cancel_left]
       exact hH
-    rw [show Glob.one (x / z / t ∈ V.H) = 1 from if_pos hm,
-      show Glob.one (Ind S.H (((t * h : kˣ) : k) + ((t * h : kˣ)⁻¹ : kˣ)) t) = 1 from if_pos hI']
+    rw [show Glob.one (x / z / t ∈ V.H) = 1 from ite_eq_left hm,
+      show Glob.one (Ind S.H (((t * h : kˣ) : k) + ((t * h : kˣ)⁻¹ : kˣ)) t) = 1 from ite_eq_left hI']
     show _ = (((V.H.relIndex (Uo k) : ℝ) * (V.H.relIndex V.H2 : ℝ) : ℝ) : ℂ) * 1
     push_cast
     rfl

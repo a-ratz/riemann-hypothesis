@@ -63,11 +63,11 @@ theorem pull_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m �
   have hH : vU.ν.IsHaarMeasure := vU.unit.1
   obtain ⟨hf, hfin, hinv⟩ := GlobalTheory.T.haar_adelicUpperUnitriangular_entry_translate_invariant D ρ vU.ν hH
   have hae : ∀ᵐ y ∂(Measure.map (fun u : UX D ρ => (u.1.1 : Mx D ρ ρ)) vU.ν), ∀ i j, ¬ (fun i j : Fin ρ => i < j) i j → y i j = (1 : Mx D ρ ρ) i j := by
-    haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-    haveI : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
+    have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+    have : T2Space (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.1
     have hS : MeasurableSet {y : Mx D ρ ρ | ∀ i j, ¬ (fun i j : Fin ρ => i < j) i j → y i j = (1 : Mx D ρ ρ) i j} := by
       have hc : IsClosed {y : Mx D ρ ρ | ∀ i j, ¬ (fun i j : Fin ρ => i < j) i j → y i j = (1 : Mx D ρ ρ) i j} := by
-        simp only [Set.setOf_forall]
+        simp only [Set.ofPred_forall]
         exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
           isClosed_eq ((continuous_apply j).comp (continuous_apply i)) continuous_const
       exact hc.measurableSet
@@ -89,8 +89,8 @@ theorem pull_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m �
   have h2 : Integrable (fun u : UX D ρ => maj θ K' N (u.1.1 : Mx D ρ ρ)) vU.ν :=
     (integrable_map_measure ((hmaj ρ ρ K' hK').2.2.1 N).aestronglyMeasurable hf.aemeasurable).1 h1
   have hmul : Measurable (fun y : Mx D ρ ρ => (rat x : Mx D m ρ) ⬝ y) := by
-    haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-    haveI : BorelSpace (Mx D m ρ) := ⟨rfl⟩
+    have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+    have : BorelSpace (Mx D m ρ) := ⟨rfl⟩
     exact (continuous_const.matrix_mul continuous_id).measurable
   refine (h2.const_mul C).mono' (((hmaj m ρ K hK).2.2.1 N).comp (hmul.comp hf)).aestronglyMeasurable (ae_of_all _ fun u => ?_)
   rw [Real.norm_eq_abs, abs_of_nonneg (maj_nonneg θ K N _)]

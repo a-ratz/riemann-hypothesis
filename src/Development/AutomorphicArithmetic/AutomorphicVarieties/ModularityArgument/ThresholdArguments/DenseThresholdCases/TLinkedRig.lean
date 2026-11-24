@@ -92,7 +92,7 @@ private theorem ap_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
     (φ : R →ₐ[ℤ_[l]] PadicAlgCl l) :
     ∃ E : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] E ∧ ∀ x, φ x ∈ E ∧ ‖φ x‖ ≤ 1 := by
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := R)
-  haveI := (s.finite_toSet.image φ).to_subtype
+  have := (s.finite_toSet.image φ).to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] (φ '' (s : Set R)),
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x, fun x =>
     ⟨?_, ap_norm _ ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) x).map φ)⟩⟩
@@ -106,7 +106,7 @@ private theorem ap_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
     exact IntermediateField.smul_mem _ hb
 private theorem ap_coef {l : ℕ} [Fact l.Prime] (c c₁ : Coef l) (A : Subalgebra c.O (PadicAlgCl l)) [Module.Finite c.O A] :
     ∃ c₂ : Coef l, c₁.O ≤ c₂.O ∧ ∀ x ∈ A, x ∈ c₂.O := by
-  haveI : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
+  have : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
   obtain ⟨E₁, f₁, m₁⟩ := ap_field c₁.O.val
   obtain ⟨E₂, f₂, m₂⟩ := ap_field (A.val.restrictScalars ℤ_[l])
   obtain ⟨c₂, hc⟩ := UpperTheory.V.X.So.coefOf l (E₁ ⊔ E₂)
@@ -131,7 +131,7 @@ private theorem ap_det {n : ℕ} {A B G H : Type} [CommRing A] [CommRing B] [Gro
     (ρ : G →* Matrix (Fin n) (Fin n) A) (f : A →+* B) (p : H →* G) (τ : H →* Matrix (Fin n) (Fin n) B)
     (h : ∀ g, τ g = (ρ (p g)).map f) : ((W.GDet.ofRep ρ).map f).comap p = W.GDet.ofRep τ := by
   refine W.GDet.ext fun C _ _ x => ?_
-  letI : Algebra A C := ((algebraMap B C).comp f).toAlgebra
+  let : Algebra A C := ((algebraMap B C).comp f).toAlgebra
   change (W.GDet.repAlg ρ C (MonoidAlgebra.mapDomainRingHom C p x)).det = (W.GDet.repAlg τ C x).det
   congr 1
   induction x using MonoidAlgebra.induction_linear with
@@ -158,7 +158,7 @@ private theorem ap_locAlg (hG : GlobalTheory.Published.GlobalArtinReciprocity) {
   have h2 := (Loc.laMul h).2.1 _ _ _ m (Loc.laCyc hG h hw)
   have h3 := (Loc.laMul h).2.2 (χ.comp (Dec (F := L) A).subtype) (χ.comp (Ine (F := L) A).subtype)⁻¹
     (Subgroup.isOpen_mono (H₁ := χ.ker.comap (Ine (F := L) A).subtype) (fun x hx => inv_eq_one.2 hx)
-      (hχ.preimage continuous_subtype_val)) fun s => mul_inv_cancel _
+      (hχ.preimage continuous_subtypeVal)) fun s => mul_inv_cancel _
   have h4 := ((Loc.laMul h).1 _ _ _ _ _ _ ((Loc.laMul h).1 _ _ _ _ _ _ h2 h3).1 h1).1
   refine ⟨_, h4.1, fun b hb s => ?_⟩
   have h5 := h4.2 b hb s
@@ -264,7 +264,7 @@ private theorem rp_charpoly {H k : Type} [Group H] [CommRing k] {n : ℕ} (r : H
   have h1 := Matrix.charpoly_units_conj g (r s)
   have h2 : ((g * r.toHomUnits s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := Matrix.charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv, MonoidHom.coe_toHomUnits] at h3
   rw [h3]
@@ -321,8 +321,8 @@ private theorem rp_cont {l : ℕ} [Fact l.Prime] {c₁ c₂ : Coef l}
     Continuous (K.tw (ρ.map j)).toHomUnits := by
   have h1 : Continuous (K.tw (ρ.map j)) := by
     refine continuous_matrix fun a b => ?_
-    have h2 := continuous_subtype_val.comp (((X.So.adicCont l c₁).2 _ _).1 K.κ_cont)
-    have h3 := (continuous_subtype_val.comp (((X.So.adicCont l c₂).2 _ _).1 (h.1 a b))).comp K.π_cont
+    have h2 := continuous_subtypeVal.comp (((X.So.adicCont l c₁).2 _ _).1 K.κ_cont)
+    have h3 := (continuous_subtypeVal.comp (((X.So.adicCont l c₂).2 _ _).1 (h.1 a b))).comp K.π_cont
     convert h2.mul h3 using 1
     funext g
     exact congrArg (_ * ·) (hj _)
@@ -376,12 +376,12 @@ theorem UpperTheory.V.Th.rigPtOf_alt :
     GlobalTheory.Published.GlobalArtinReciprocity → _root_.UpperTheory.V.Th.AdjointLiftingTheorem → _root_.UpperTheory.V.Th.RigPtOfAlt := by
   intro hG hAd Ω _ _ _ l _ ι c _ N _ e ψ η σ g₁ B M H L _ _ _ _ _ Φ k c₁ _ f n ka R hL hka A _ _ _ ρ hρ hψ r hr hirr haut hfree
   obtain ⟨c₂, h₁, h₂⟩ := ap_coef c c₁ A
-  letI : Algebra c₁.O c₂.O := (Subalgebra.inclusion h₁).toRingHom.toAlgebra
+  let : Algebra c₁.O c₂.O := (Subalgebra.inclusion h₁).toRingHom.toAlgebra
   let φ : A →+* c₂.O := A.val.toRingHom.codRestrict c₂.O fun x => h₂ x.1 x.2
-  haveI : IsLocalHom φ := ap_local c₂ φ (fun a => rfl) fun a b h => Subtype.ext (congrArg (fun t : c₂.O => t.1) h)
-  haveI hl : IsLocalHom (algebraMap c₁.O c₂.O) := ap_local c₂ _ (fun a => rfl) (Subalgebra.inclusion_injective h₁)
+  have : IsLocalHom φ := ap_local c₂ φ (fun a => rfl) fun a b h => Subtype.ext (congrArg (fun t : c₂.O => t.1) h)
+  have hl : IsLocalHom (algebraMap c₁.O c₂.O) := ap_local c₂ _ (fun a => rfl) (Subalgebra.inclusion_injective h₁)
   obtain ⟨hc, hf, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c₂.O
-  haveI : IsCD c₁.O c₂.O := { complete := hc, isLocalHom := hl, fin := hf }
+  have : IsCD c₁.O c₂.O := { complete := hc, isLocalHom := hl, fin := hf }
   let j : c₂.O →ₐ[c₁.O] Qbar l := { c₂.O.val.toRingHom with commutes' := fun _ => rfl }
   let ρ₂ : Fr.NRep (Φ.ext f) n c₂.O := apExt f (ρ.map φ)
   have hlift : IsLiftA c₁.O ρ₂ := ap_lift f φ (fun a => by
@@ -505,12 +505,12 @@ theorem UpperTheory.V.Th.linked_rigid_of_printed_adjoint_lifting :
     ext s
     rw [MonoidHom.mem_ker, MonoidHom.mem_ker, ← Units.val_eq_one, ← Units.val_eq_one, hη s]
     exact_mod_cast Iff.rfl
-  haveI := hD.imag
+  have := hD.imag
   obtain ⟨κ, hκ⟩ := _root_.UpperTheory.V.Sd.twist_of_printed_results hP K Ω hD.quad l hok.l_odd hdisc ι σ hD.cc
   obtain ⟨hk3, hk2⟩ := Pr.kaOf (_root_.UpperTheory.V.Sd.alg_cyclotomic_of_printed_results hP) (_root_.UpperTheory.V.Sd.alg_restriction_of_printed_results hP) Ω l ι c N e ψ η σ g₁ B M H L Φ k
   obtain ⟨ka, hk2, -⟩ := hk2 K hker κ hκ
   obtain ⟨c₁, hle, hL, hv3, hv2, f, hf⟩ := Pr.coefEx l c L Ω _ _ hk3.alg.1 hk2.alg.1
-  haveI := Pr.coefIs l c₁
+  have := Pr.coefIs l c₁
   obtain ⟨R₂⟩ := Pr.cRealEx hA hLoc W.levEx hB0 Ω l ι c N e ψ η σ g₁ B M H L Φ k c₁ f 2 ka C₀ (Or.inl rfl)
     hok hbig hle hf hk2 hv2
   obtain ⟨R₃⟩ := Pr.cRealEx hA hLoc W.levEx hB0 Ω l ι c N e ψ η σ g₁ B M H L Φ k c₁ f 3 _ C₀ (Or.inr rfl)

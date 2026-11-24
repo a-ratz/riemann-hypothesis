@@ -110,7 +110,7 @@ theorem cover_adele (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
       (Y.card : ℝ) ≤ C * ((4 : ℝ) ^ Fintype.card (InfinitePlace F)) ^ m ∧ ∀ z : AF F ⊗[F] E, ∃ x : E, ∃ y ∈ Y, ∃ ω ∈ Ω,
         z = inclR (F := F) (AF F) x + y + (halfE F E).1 ^ m * ω := by
   classical
-  haveI := hσ.1
+  have := hσ.1
   obtain ⟨Ω₀, C₀, hΩ₀, hcov⟩ := _root_.GlobalTheory.Eis.ConvCover.exists_cover F
   obtain ⟨δ, -, hsp⟩ := exists_delta F E σ hσ
   have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩

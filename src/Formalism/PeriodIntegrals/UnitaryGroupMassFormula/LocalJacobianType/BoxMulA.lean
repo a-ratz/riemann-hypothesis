@@ -165,16 +165,16 @@ theorem measure_Ov [MeasurableSpace (Fv F v)] [BorelSpace (Fv F v)] (μ : Measur
     (Ideal.absNorm v.asIdeal : ℝ≥0∞) * μ (Mv v ϖ) = μ (Ov v) := by
   let O' := v.adicCompletionIntegers F
   have hO : MeasurableSet (Ov v) := (isOpen_Ov v).measurableSet
-  have hme : MeasurableEmbedding (Subtype.val : O' → Fv F v) := MeasurableEmbedding.subtype_coe hO
+  have hme : MeasurableEmbedding (Subtype.val : O' → Fv F v) := MeasurableEmbedding.subtypeVal hO
   let ν : Measure O' := Measure.comap Subtype.val μ
-  haveI : MeasurableAdd O' :=
+  have : MeasurableAdd O' :=
     ⟨fun c => hme.measurable_comp_iff.1 (by
         show Measurable fun x : O' => ((c + x : O') : Fv F v)
-        simpa using (measurable_subtype_coe.const_add (c : Fv F v))),
+        simpa using (measurable_subtypeVal.const_add (c : Fv F v))),
      fun c => hme.measurable_comp_iff.1 (by
         show Measurable fun x : O' => ((x + c : O') : Fv F v)
-        simpa using (measurable_subtype_coe.add_const (c : Fv F v)))⟩
-  haveI : ν.IsAddLeftInvariant := ⟨fun g => by
+        simpa using (measurable_subtypeVal.add_const (c : Fv F v)))⟩
+  have : ν.IsAddLeftInvariant := ⟨fun g => by
     ext S hS
     rw [Measure.map_apply (measurable_const_add g) hS]
     simp only [ν, hme.comap_apply]
@@ -194,14 +194,14 @@ theorem measure_Ov [MeasurableSpace (Fv F v)] [BorelSpace (Fv F v)] (μ : Measur
         rw [e3]; exact hz
     rw [e, measure_preimage_add]⟩
   let H : AddSubgroup O' := (IsLocalRing.maximalIdeal O').toAddSubgroup
-  haveI : H.FiniteIndex := ⟨by rw [index_max]; exact q_ne_zero v⟩
+  have : H.FiniteIndex := ⟨by rw [index_max]; exact q_ne_zero v⟩
   have hHset : (H : Set O') = Subtype.val ⁻¹' Mv v ϖ := by
     ext x
     show x ∈ IsLocalRing.maximalIdeal O' ↔ _
     rw [mem_max_iff, lt_one_iff v ϖ hϖ]
     rfl
   have hH : MeasurableSet (H : Set O') := by
-    rw [hHset]; exact measurable_subtype_coe (isOpen_Mv v ϖ).measurableSet
+    rw [hHset]; exact measurable_subtypeVal (isOpen_Mv v ϖ).measurableSet
   have key := AddSubgroup.index_mul_measure H hH ν
   have e1 : ν H = μ (Mv v ϖ) := by
     simp only [ν, hme.comap_apply]
@@ -226,7 +226,7 @@ variable [LocallyCompactSpace (Fv F v)]
 
 theorem dhc_unif (ϖ : Fv F v) (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (hϖ0 : ϖ ≠ 0) :
     distribHaarChar (Fv F v) (Units.mk0 ϖ hϖ0) = ((Ideal.absNorm v.asIdeal : ℝ≥0))⁻¹ := by
-  haveI := borel_Fv v
+  have := borel_Fv v
   have hset : (Units.mk0 ϖ hϖ0) • Ov v = Mv v ϖ := by
     ext x
     rw [Set.mem_smul_set_iff_inv_smul_mem, Units.smul_def]
@@ -253,7 +253,7 @@ theorem dhc_unif (ϖ : Fv F v) (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (h�
 
 theorem dhc_unit (u : Fv F v) (hu : Valued.v u = 1) (hu0 : u ≠ 0) :
     distribHaarChar (Fv F v) (Units.mk0 u hu0) = 1 := by
-  haveI := borel_Fv v
+  have := borel_Fv v
   have hset : (Units.mk0 u hu0) • Ov v = Ov v := by
     ext x
     rw [Set.mem_smul_set_iff_inv_smul_mem, Units.smul_def, mem_Ov, mem_Ov]
@@ -305,7 +305,7 @@ theorem modF_Fv (a : Fv F v) (ha : a ≠ 0) :
     | exact (map_ne_zero _).mpr ha
     | exact (Valuation.ne_zero_iff _).mpr ha
   unfold PI.NglqJacSplitW.modF PI.LocJacTyp.absV
-  simp only [dif_neg ha, dif_neg hva]
+  simp only [dite_eq_right ha, dite_eq_right hva]
   obtain ⟨m, hm, hmdef⟩ : ∃ m : ℤ, Valued.v a = WithZero.exp m ∧
       Multiplicative.toAdd (WithZero.unzero hva) = m :=
     ⟨_, (WithZero.coe_unzero hva).symm, rfl⟩

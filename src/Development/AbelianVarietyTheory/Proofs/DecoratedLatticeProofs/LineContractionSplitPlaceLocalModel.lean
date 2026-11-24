@@ -199,8 +199,8 @@ theorem contr_isModel : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topo
     ring
   refine ⟨fun Φ => ?_, fun x Φ Φ' e => ?_, fun y hy Φ Φ' e => ?_⟩
   ·
-    haveI : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
-    haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
+    have : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
+    have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
       ⟨by rw [Measure.restrict_apply_univ, vL.covol.2.2]; exact ENNReal.one_lt_top⟩
     obtain ⟨C₂, hC₂⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded _ _ ψ hψ Ξ₂ hΞ₂
     have hc : Continuous fun w => Ξ₂ ((B'.o.resT S).symm (v, w)) :=
@@ -694,8 +694,8 @@ theorem contr_isModel : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topo
     ring
   refine ⟨fun Φ => ?_, fun x Φ Φ' e => ?_, fun y hy Φ Φ' e => ?_⟩
   ·
-    haveI : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
-    haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
+    have : ∀ m n, BorelSpace (Mx D m n) := fun _ _ => ⟨rfl⟩
+    have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) :=
       ⟨by rw [Measure.restrict_apply_univ, vL.covol.2.2]; exact ENNReal.one_lt_top⟩
     obtain ⟨C₁, hC₁⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded _ _ ψ hψ Ξ₁ hΞ₁
     have hc : Continuous fun w => Ξ₁ ((B.o.resS S).symm (u, l.κ S w)) :=

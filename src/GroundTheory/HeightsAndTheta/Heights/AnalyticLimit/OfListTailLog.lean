@@ -477,7 +477,7 @@ theorem errDiv_le [CompactSpace W] [T2Space W] (S : UIData D W) (a : ℕ) (ha : 
       (restrictForms (S.comp k) (S.rest a t) i) := fun i =>
     formNonneg_pullback S.A (S.B k) Subtype.val hholo S.Yo _ (hpotW i) (hnnW i)
   have hg := ReciprocityTheory.AnForm.M.mIntegrableCont (S.B k) _ hpot _
-    ((continuous_gap S a ha ht htt h0).comp continuous_subtype_val)
+    ((continuous_gap S a ha ht htt h0).comp continuous_subtypeVal)
   have htail := S.tailComp k a (Nat.lt_succ_iff.mp ha) t ht h0t (ell t₀) he
   have key := mInt_le_of_abs_le (S.B k) (Subtype.val ⁻¹' S.Yo) _ hpot hnn (S.bdComp_analytic k)
     (S.bdComp_interior k) hg htail.1 (nearBound S.C t₀) |S.C₁| (fun z hz => by
@@ -588,7 +588,7 @@ theorem fderiv2_comp_real {ψ : (ι → ℂ) → ℝ} {G G₁ : ℝ → ℝ} {g�
     hG₁.comp_hasFDerivAt y (hψ.differentiableAt (by norm_num)).hasFDerivAt
   have h := ((hc.smul hD2).congr_of_eventuallyEq hev).fderiv
   rw [h]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.smulRight_apply, smul_eq_mul]
 
 theorem fderiv_comp_real {ψ : (ι → ℂ) → ℝ} {G : ℝ → ℝ} {g₁ : ℝ} {y : ι → ℂ}
@@ -678,7 +678,7 @@ theorem fderiv_normSq_analytic {S : (ι → ℂ) → ℂ} {y : ι → ℂ} (hS :
     (hre.differentiableAt (by norm_num)).pow 2
   have d2 : DifferentiableAt ℝ (fun z => (S z).im ^ 2) y :=
     (him.differentiableAt (by norm_num)).pow 2
-  rw [e, fderiv_fun_add d1 d2, ContinuousLinearMap.add_apply,
+  rw [e, fderiv_fun_add d1 d2, add_apply,
     fderiv_comp_real (G := fun x : ℝ => x ^ 2) (hre.differentiableAt (by norm_num))
       (hasDerivAt_sq' _),
     fderiv_comp_real (G := fun x : ℝ => x ^ 2) (him.differentiableAt (by norm_num))
@@ -716,8 +716,8 @@ theorem levi_log_normSq_add_exp {S : (ι → ℂ) → ℂ} {Φ : (ι → ℂ) �
     have d1 : DifferentiableAt ℝ (fun z => ‖S z‖ ^ 2) y := hQ.differentiableAt (by norm_num)
     have d2 : DifferentiableAt ℝ (fun z => ε * Real.exp (2 * Φ z)) y :=
       (contDiffAt_const.mul hE).differentiableAt (by norm_num)
-    rw [hh, fderiv_fun_add d1 d2, ContinuousLinearMap.add_apply, fderiv_normSq_analytic hS,
-      fderiv_const_mul (hE.differentiableAt (by norm_num)), ContinuousLinearMap.smul_apply,
+    rw [hh, fderiv_fun_add d1 d2, add_apply, fderiv_normSq_analytic hS,
+      fderiv_const_mul (hE.differentiableAt (by norm_num)), smul_apply,
       dE, smul_eq_mul]
   have lh : levi h y w = ‖fderiv ℂ S y w‖ ^ 2 + ε * (Real.exp (2 * Φ y) * (2 * levi Φ y w) +
       Real.exp (2 * Φ y) * ((2 * fderiv ℝ Φ y w) ^ 2 +
@@ -1040,17 +1040,17 @@ theorem mixedForms_eq_cons {W : Type} [TopologicalSpace W] {D : ℕ} (Om : LocPo
     have hD : (i : ℕ) < D := by omega
     have hc : Fin.cycleRange (⟨a, ha⟩ : Fin (D + 1)) i = Fin.succ ⟨i, hD⟩ :=
       Fin.ext (by simp [Fin.coe_cycleRange_of_lt h])
-    rw [hc, Fin.cons_succ, if_pos hi]
-    simp only [restForms, if_pos hi]
+    rw [hc, Fin.cons_succ, ite_eq_left hi]
+    simp only [restForms, ite_eq_left hi]
     rfl
-  · rw [h, Fin.cycleRange_self, Fin.cons_zero, if_neg (lt_irrefl a)]
+  · rw [h, Fin.cycleRange_self, Fin.cons_zero, ite_eq_right (lt_irrefl a)]
   · have hi : a < (i : ℕ) := h
     have hne : i ≠ 0 := fun h0 => by rw [h0] at hi; exact Nat.not_lt_zero _ hi
-    rw [Fin.cycleRange_of_gt h, if_neg (by omega)]
+    rw [Fin.cycleRange_of_gt h, ite_eq_right (by omega)]
     obtain ⟨j, rfl⟩ := Fin.exists_succ_eq.2 hne
     rw [Fin.cons_succ]
     simp only [restForms]
-    rw [if_neg]
+    rw [ite_eq_right]
     simp only [Fin.val_succ] at hi
     omega
 
@@ -1069,8 +1069,8 @@ theorem divInt_linear [CompactSpace W] [T2Space W] (S : UIData D W) (Φ : Fin D 
     ReciprocityTheory.AnForm.M.isPotentialPullback S.A (S.B k) Subtype.val (S.B_holo k) (Φ i) (hΦ i)
   have h := ReciprocityTheory.AnForm.M.mIntLinear (S.B k) (restrictForms (S.comp k) Φ) hpot c
     (f ∘ Subtype.val) (g ∘ Subtype.val)
-    (ReciprocityTheory.AnForm.M.mIntegrableCont _ _ hpot _ (hf.comp continuous_subtype_val))
-    (ReciprocityTheory.AnForm.M.mIntegrableCont _ _ hpot _ (hg.comp continuous_subtype_val))
+    (ReciprocityTheory.AnForm.M.mIntegrableCont _ _ hpot _ (hf.comp continuous_subtypeVal))
+    (ReciprocityTheory.AnForm.M.mIntegrableCont _ _ hpot _ (hg.comp continuous_subtypeVal))
   have e : ((fun x => c * f x + g x) ∘ Subtype.val : S.comp k → ℝ) =
       fun x => c * (f ∘ Subtype.val) x + (g ∘ Subtype.val) x := rfl
   rw [e, h]
@@ -1190,7 +1190,7 @@ theorem GreenMassReplace.proof : GreenMassReplace.Statement := by
       (hlns _ hutpot) (hint _ hutpot F hF_c)
     have hk : kappaEp S.L S.s ε = S.L.rsmul 2 + LocPot.ofFun F := rfl
     have hdiv : S.divInt Φ' ut = ∑ k, (S.mult k : ℝ) * mInt (S.B k)
-        (fun i => (Φ' i).pullback Subtype.val continuous_subtype_val) (ut ∘ Subtype.val) := rfl
+        (fun i => (Φ' i).pullback Subtype.val continuous_subtypeVal) (ut ∘ Subtype.val) := rfl
     rw [hk, hadd, hrs, hbp, hdiv]
     rw [show (fun x => -2 * logNormSec S.L S.s x + F x) = H from rfl] at hlin
     rw [hlin]
@@ -1355,9 +1355,9 @@ theorem interior_secZero {r : ℕ} {m : Fin r → ℕ} {Δ : Fin r → Set W} (h
   have hw0 : ∀ i, w i ≠ 0 := by
     intro i
     by_cases h : ψ x i = 0
-    · simp only [w, if_pos h, ne_eq, Complex.ofReal_eq_zero]
+    · simp only [w, ite_eq_left h, ne_eq, Complex.ofReal_eq_zero]
       linarith
-    · simp only [w, if_neg h]
+    · simp only [w, ite_eq_right h]
       exact h
   have hwb : w ∈ Metric.ball (ψ x) δ := by
     rw [Metric.mem_ball, dist_eq_norm, pi_norm_lt_iff hδ]
@@ -1365,9 +1365,9 @@ theorem interior_secZero {r : ℕ} {m : Fin r → ℕ} {Δ : Fin r → Set W} (h
     by_cases h : ψ x i = 0
     · rw [Pi.sub_apply]
       simp only [w]
-      rw [if_pos h, h, sub_zero, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by linarith)]
+      rw [ite_eq_left h, h, sub_zero, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by linarith)]
       linarith
-    · simp only [w, Pi.sub_apply, if_neg h, sub_self, norm_zero]
+    · simp only [w, Pi.sub_apply, ite_eq_right h, sub_self, norm_zero]
       exact hδ
   obtain ⟨hwt, hwU⟩ := hball hwb
   obtain ⟨i, hi⟩ := hcoord _ (ψ.map_target hwt) hwU
@@ -1545,11 +1545,11 @@ theorem mixedForms_cycle {D : ℕ} (Om : LocPot W) (T : Fin (D + 1) → LocPot W
   · simp only [Function.comp_apply, Fin.cons_succ, Fin.cycleRange_symm_succ]
     by_cases hj : (j : ℕ) < a
     · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hj)]
-      simp only [mixedForms, restForms, Fin.val_castSucc, hj, if_true]
-      rw [if_pos (by omega)]
+      simp only [mixedForms, restForms, Fin.val_castSucc, hj, ite_true]
+      rw [ite_eq_left (by omega)]
     · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simp; omega)]
-      simp only [mixedForms, restForms, Fin.val_succ, hj, if_false]
-      rw [if_neg (by omega)]
+      simp only [mixedForms, restForms, Fin.val_succ, hj, ite_false]
+      rw [ite_eq_right (by omega)]
 
 end
 
@@ -1639,7 +1639,7 @@ theorem GreenMassStep.proof : GreenMassStep.Statement := by
       (S.u a' t) hu (S.rest a t) hΦ
     have hbp := byPartsSymm S.A _ (S.u a' t) hf hu (S.rest a t) hΦ
     have hdiv : S.divInt (S.rest a t) (S.u a' t) = ∑ k, (S.mult k : ℝ) * mInt (S.B k)
-        (fun i => (S.rest a t i).pullback Subtype.val continuous_subtype_val)
+        (fun i => (S.rest a t i).pullback Subtype.val continuous_subtypeVal)
         (S.u a' t ∘ Subtype.val) := rfl
     show mInt S.A _ (fun x => (-2) * logNormSec S.L S.s x + Real.log (secNorm S.L S.s x ^ 2 + ε)) = _
     rw [hlin, hpl, hbp, hdiv]

@@ -79,10 +79,10 @@ theorem Stable.ballFn_mem {S : Submodule ℂ (OnePoint k → ℂ)} (hS : Stable 
   refine hS.1 _ h (r / s) (a - r / s * b) (div_ne_zero hr hs) _ rfl fun x => ?_
   have h1 : r / s * x + (a - r / s * b) - a = r * ((x - b) / s) := by field_simp; ring
   have h2 : valuation k r ≠ 0 := by simpa using hr
-  have h3 : 0 < valuation k s := zero_lt_iff.2 (by simpa using hs)
+  have h3 : 0 < valuation k s := pos_iff_ne_zero.2 (by simpa using hs)
   rw [ballFn_coe, ballFn_coe, h1, map_mul, map_div₀]
   congr 1
-  rw [mul_le_iff_le_one_right (zero_lt_iff.2 h2), div_le_one₀ h3]
+  rw [mul_le_iff_le_one_right (pos_iff_ne_zero.2 h2), div_le_one₀ h3]
 
 def vball (r : k) : AddSubgroup k where
   carrier := {x | valuation k x ≤ valuation k r}
@@ -94,7 +94,7 @@ variable [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem isOpen_vball {r : k} (hr : r ≠ 0) : IsOpen (vball r : Set k) := by
   have ho : IsOpen (𝒪[k] : Set k) := Valuation.isOpen_integer
-  have h3 : 0 < valuation k r := zero_lt_iff.2 (by simpa using hr)
+  have h3 : 0 < valuation k r := pos_iff_ne_zero.2 (by simpa using hr)
   convert ho.preimage (continuous_id.div_const r) using 1
   ext x
   show valuation k x ≤ valuation k r ↔ valuation k (x / r) ≤ 1
@@ -121,9 +121,9 @@ theorem exists_eq_sum_ballFn {r R : k} (hr : r ≠ 0) (hle : valuation k r ≤ v
   let B : AddSubgroup k := vball r
   have hA : IsCompact (A : Set k) := IsNonarchimedeanLocalField.isCompact_closedBall k (valuation k R)
   have hB : IsOpen (B : Set k) := isOpen_vball hr
-  haveI : CompactSpace A := isCompact_iff_compactSpace.1 hA
-  haveI := (B.addSubgroupOf A).quotient_finite_of_isOpen (hB.preimage continuous_subtype_val)
-  haveI := Fintype.ofFinite (A ⧸ B.addSubgroupOf A)
+  have : CompactSpace A := isCompact_iff_compactSpace.1 hA
+  have := (B.addSubgroupOf A).quotient_finite_of_isOpen (hB.preimage continuous_subtypeVal)
+  have := Fintype.ofFinite (A ⧸ B.addSubgroupOf A)
   let o : A ⧸ B.addSubgroupOf A → k := fun q => q.out
   have ho : Function.Injective o := fun p q h => Quotient.out_injective (Subtype.ext h)
   have key : ∀ (q : A ⧸ B.addSubgroupOf A) (x : A), valuation k (x - o q) ≤ valuation k r ↔ q = x := fun q x => by
@@ -144,11 +144,11 @@ theorem exists_eq_sum_ballFn {r R : k} (hr : r ≠ 0) (hle : valuation k r ≤ v
     | coe x =>
       by_cases hx : valuation k x ≤ valuation k R
       · simp only [Pi.smul_apply, ballFn_coe, key _ ⟨x, hx⟩, smul_eq_mul, mul_ite, mul_one, mul_zero,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true]
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         exact (congrArg F (by simp)).trans (h2 _ _ ((key _ ⟨x, hx⟩).2 rfl))
       · rw [h1 x (not_le.1 hx), Finset.sum_eq_zero]
         intro q _
-        rw [Pi.smul_apply, ballFn_coe, if_neg, smul_zero]
+        rw [Pi.smul_apply, ballFn_coe, ite_eq_right, smul_zero]
         intro h
         have h3 : x - o q + o q ∈ A := A.add_mem (h.trans hle) q.out.2
         rw [sub_add_cancel] at h3

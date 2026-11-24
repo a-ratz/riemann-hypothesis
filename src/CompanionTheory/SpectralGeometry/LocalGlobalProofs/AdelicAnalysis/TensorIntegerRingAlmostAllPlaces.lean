@@ -131,8 +131,8 @@ include ι in
 theorem finite_maxSpec [IsLocalRing R] (hsp : ∀ y : O, ∃ p q : R, y = ι p + ι q * δ) :
     Finite (MaximalSpectrum O) := by
   classical
-  letI : Algebra R O := ι.toAlgebra
-  haveI : Module.Finite R O := by
+  let : Algebra R O := ι.toAlgebra
+  have : Module.Finite R O := by
     refine ⟨⟨{1, δ}, ?_⟩⟩
     rw [Submodule.eq_top_iff']
     intro y

@@ -394,7 +394,7 @@ theorem finite_image_tSet_loc : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
   intro L _ _ _ n s ϖ hϖ J hJ k
   classical
   obtain ⟨c, hc⟩ := approx_class s.v
-  haveI : Finite (𝓞 (maximalRealSubfield L) ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
+  have : Finite (𝓞 (maximalRealSubfield L) ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
   let κ : GAf L n → (Fin n → Fin n → 𝓞 (maximalRealSubfield L) ⧸ s.v.asIdeal) := fun x =>
     if h : x ∈ tSet L n s ϖ k then
       fun i j => c (((h.2.choose : GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) :
@@ -403,7 +403,7 @@ theorem finite_image_tSet_loc : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
   have key : ∀ x ∈ tSet L n s ϖ k, ∀ x' ∈ tSet L n s ϖ k, κ x = κ x' →
       (x : GAf L n ⧸ J) = x' := by
     intro x hx x' hx' hκ
-    simp only [κ, dif_pos hx, dif_pos hx'] at hκ
+    simp only [κ, dite_eq_left hx, dite_eq_left hx'] at hκ
     obtain ⟨ha, b, hb, hg⟩ := hx.2.choose_spec
     obtain ⟨ha', b', hb', hg'⟩ := hx'.2.choose_spec
     set a := hx.2.choose
@@ -433,7 +433,7 @@ theorem finite_image_tSet_loc : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
   rintro _ ⟨x, hx, rfl⟩ _ ⟨x', hx', rfl⟩ hgg
   have h : ∃ y ∈ tSet L n s ϖ k, (y : GAf L n ⧸ J) = x := ⟨x, hx, rfl⟩
   have h' : ∃ y ∈ tSet L n s ϖ k, (y : GAf L n ⧸ J) = x' := ⟨x', hx', rfl⟩
-  simp only [g, dif_pos h, dif_pos h'] at hgg
+  simp only [g, dite_eq_left h, dite_eq_left h'] at hgg
   show (x : GAf L n ⧸ J) = x'
   rw [← h.choose_spec.2, ← h'.choose_spec.2]
   exact key _ h.choose_spec.1 _ h'.choose_spec.1 hgg
@@ -654,10 +654,10 @@ theorem exists_fixed_of_sum {n : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W]
     rw [this]
     exact isOpen_iInter_of_finite fun j => σ.smooth (u j)
   set K := KO (s.w.adicCompletion L) (Fin n) with hK
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp GlobalTheory.SplitFlip.isCompact_KO
-  haveI : Finite (K ⧸ H.subgroupOf K) :=
-    Subgroup.quotient_finite_of_isOpen _ (hHo.preimage continuous_subtype_val)
-  letI : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
+  have : CompactSpace K := isCompact_iff_compactSpace.mp GlobalTheory.SplitFlip.isCompact_KO
+  have : Finite (K ⧸ H.subgroupOf K) :=
+    Subgroup.quotient_finite_of_isOpen _ (hHo.preimage continuous_subtypeVal)
+  let : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
   set N : ℂ := (Fintype.card (K ⧸ H.subgroupOf K) : ℂ) with hNdef
   have hN : N ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   let e : ι → σ.V := fun j => N⁻¹ • ∑ q : K ⧸ H.subgroupOf K, σ.ρ ((q.out : K) : GL (Fin n) _) (u j)
@@ -813,7 +813,7 @@ theorem unif_to_unif : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have h2 := (hle _).2 hdiv
   rw [map_div₀, map_div₀, RingEquiv.apply_symm_apply, hz] at h2
   have hlow : WithZero.exp (-1 : ℤ) ≤ Valued.v (i ϖ) := by
-    rwa [div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hiϖ0))] at h2
+    rwa [div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hiϖ0))] at h2
   exact le_antisymm (key _ (by simpa using hiϖ0) hup) hlow
 
 end GlobalTheory.UnifMap
@@ -964,7 +964,7 @@ theorem heckeVec_Tj_inv_conj_eq_sum : ∀ (L : Type) [Field L] [NumberField L] [
       DoubleCoset.doubleCoset (invT i n (dGL n ϖu k)) (GlobalTheory.LFun.KGL (GlobalTheory.HeckeFrob.conjSplit s).w n : Set _)
         (GlobalTheory.LFun.KGL (GlobalTheory.HeckeFrob.conjSplit s).w n)) := by
     intro x hx
-    rw [tSet, Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset]
+    rw [tSet, Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset]
     constructor
     · rintro ⟨-, A, hA, B, hB, h⟩
       refine ⟨invT i n A, (mem_iff_invT i hO A).1 hA, invT i n B, (mem_iff_invT i hO B).1 hB, ?_⟩

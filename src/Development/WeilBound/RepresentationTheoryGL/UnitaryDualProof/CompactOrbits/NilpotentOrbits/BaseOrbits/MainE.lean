@@ -124,7 +124,7 @@ theorem orbit_nhds (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (h0
     exact continuous_finsetSum _ (fun i _ => (continuous_apply i).smul continuous_const)
   let Φ : Wt e → Matrix (Fin n) (Fin n) k := fun w' => 1 + ψ (w'.1 - w.1)
   have hΦ : Continuous Φ :=
-    continuous_const.add (hψc.comp (continuous_subtype_val.sub continuous_const))
+    continuous_const.add (hψc.comp (continuous_subtypeVal.sub continuous_const))
   have hΦw : Φ w = 1 := by simp [Φ]
   have hU : {A : Matrix (Fin n) (Fin n) k | A.det ≠ 0} ∩
       ({A : Matrix (Fin n) (Fin n) k | sm γ (A - 1)} ∩ {A | sm γ (A⁻¹ - 1)}) ∈ 𝓝 (Φ w) := by
@@ -184,7 +184,7 @@ theorem unif (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (e : Matrix (Fin n) (
         (Topology.IsInducing.subtypeVal (t := {w : Fin n → k | e *ᵥ w = w}))
     obtain ⟨t, ht, hte⟩ := hι.isOpen_iff.mp hS
     have hH : Continuous (fun z : Matrix (Fin n) (Fin n) k × (Y × Wt e) => (z.2.1, z.1 *ᵥ z.2.2.1)) :=
-      continuous_snd.fst.prodMk (continuous_fst.matrix_mulVec (continuous_subtype_val.comp continuous_snd.snd))
+      continuous_snd.fst.prodMk (continuous_fst.matrix_mulVec (continuous_subtypeVal.comp continuous_snd.snd))
     have hpt : p ∈ Prod.map id Subtype.val ⁻¹' t := by
       rw [hte]
       exact rfl
@@ -306,8 +306,8 @@ theorem mainE (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (h0 : dB
       (Continuous.subtype_mk (continuous_const.matrix_mulVec continuous_snd) _)
   have hΨc : Continuous Ψ :=
     (continuous_fst.comp continuous_fst).prodMk
-      ((continuous_subtype_val.comp (continuous_snd.comp continuous_fst)).add
-        (continuous_subtype_val.comp continuous_snd))
+      ((continuous_subtypeVal.comp (continuous_snd.comp continuous_fst)).add
+        (continuous_subtypeVal.comp continuous_snd))
   have hΦT : ∀ F ∈ TF ((Matrix (Fin n) (Fin n) k × Wz e) × Wt e), (fun p => F (Φ p)) ∈ TF (Sp k n) := by
     intro F hF
     refine ⟨hF.1.comp_continuous hΦc, HasCompactSupport.intro (hF.2.isCompact.image hΨc) fun p hp => ?_⟩
@@ -425,11 +425,11 @@ theorem mainE (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (h0 : dB
       intro h
       have := hj i0
       rw [h, map_zero] at this
-      exact hi0 ((valuation k).zero_iff.1 (le_antisymm this zero_le'))
+      exact hi0 ((valuation k).zero_iff.1 (le_antisymm this zero_le))
     let w1 : Wt e := ⟨(w0.1 j)⁻¹ • w0.1, by rw [Matrix.mulVec_smul, w0.2]⟩
     refine ⟨w1, fun i => ?_, fun h => ?_⟩
     · show valuation k ((w0.1 j)⁻¹ * w0.1 i) ≤ 1
-      rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.2 ((valuation k).ne_zero_iff.2 hc)), mul_one]
+      rw [map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.2 ((valuation k).ne_zero_iff.2 hc)), mul_one]
       exact hj i
     · have := h j
       rw [htinv] at this
@@ -440,7 +440,7 @@ theorem mainE (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) (h0 : dB
       rw [h1] at h2
       exact absurd (lt_of_le_of_lt h2 ht0) (lt_irrefl 1)
   have hcont : ∀ g : Gs Z e, Continuous fun w : Wt e => g • w := fun g =>
-    Continuous.subtype_mk (continuous_const.matrix_mulVec continuous_subtype_val) _
+    Continuous.subtype_mk (continuous_const.matrix_mulVec continuous_subtypeVal) _
   have hcore := core (Gs_comm Z hZ h0 e) hcont D hD {w : Wt e | w.1 ≠ 0} w0 htr (Ks Z e)
     (fun γ w hw => isOpen_orbit Z hZ h0 e he hee hprim γ w hw) (fun f hf => unif Z e hee f hf.1)
     tG L (isCompact_L e) (isOpen_L e) hLK htL hLS hne

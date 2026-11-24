@@ -311,7 +311,7 @@ namespace GlobalTheory
 theorem freeAlgebra_compHom_isScalarTower {k ι W : Type} [Field k] [AddCommGroup W] [Module k W]
     (φ : FreeAlgebra k ι →ₐ[k] Module.End k W) :
     @IsScalarTower k (FreeAlgebra k ι) W _ (Module.compHom W φ.toRingHom).toSMul _ := by
-  letI : Module (FreeAlgebra k ι) W := Module.compHom W φ.toRingHom
+  let : Module (FreeAlgebra k ι) W := Module.compHom W φ.toRingHom
   refine ⟨fun c r w => ?_⟩
   show φ (c • r) w = c • φ r w
   rw [map_smul]
@@ -327,14 +327,14 @@ theorem endFamily_cancel : ∀ (k ι V V' U : Type) [Field k] [AddCommGroup V] [
   let φa : (FreeAlgebra k ι) →ₐ[k] Module.End k V := FreeAlgebra.lift k a
   let φb : (FreeAlgebra k ι) →ₐ[k] Module.End k V' := FreeAlgebra.lift k b
   let φc : (FreeAlgebra k ι) →ₐ[k] Module.End k U := FreeAlgebra.lift k c
-  letI iV : Module (FreeAlgebra k ι) V := Module.compHom V φa.toRingHom
-  letI iV' : Module (FreeAlgebra k ι) V' := Module.compHom V' φb.toRingHom
-  letI iU : Module (FreeAlgebra k ι) U := Module.compHom U φc.toRingHom
-  haveI tV : IsScalarTower k (FreeAlgebra k ι) V := freeAlgebra_compHom_isScalarTower φa
-  haveI tV' : IsScalarTower k (FreeAlgebra k ι) V' := freeAlgebra_compHom_isScalarTower φb
-  haveI tU : IsScalarTower k (FreeAlgebra k ι) U := freeAlgebra_compHom_isScalarTower φc
-  haveI : IsArtinian (FreeAlgebra k ι) U := isArtinian_of_tower k inferInstance
-  haveI : IsNoetherian (FreeAlgebra k ι) U := isNoetherian_of_tower k inferInstance
+  let iV : Module (FreeAlgebra k ι) V := Module.compHom V φa.toRingHom
+  let iV' : Module (FreeAlgebra k ι) V' := Module.compHom V' φb.toRingHom
+  let iU : Module (FreeAlgebra k ι) U := Module.compHom U φc.toRingHom
+  have tV : IsScalarTower k (FreeAlgebra k ι) V := freeAlgebra_compHom_isScalarTower φa
+  have tV' : IsScalarTower k (FreeAlgebra k ι) V' := freeAlgebra_compHom_isScalarTower φb
+  have tU : IsScalarTower k (FreeAlgebra k ι) U := freeAlgebra_compHom_isScalarTower φc
+  have : IsArtinian (FreeAlgebra k ι) U := isArtinian_of_tower k inferInstance
+  have : IsNoetherian (FreeAlgebra k ι) U := isNoetherian_of_tower k inferInstance
 
   have key : ∀ r : (FreeAlgebra k ι), ∀ x : V × U, e (φa r x.1, φc r x.2) = (φb r (e x).1, φc r (e x).2) := by
     intro r

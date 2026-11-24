@@ -90,7 +90,7 @@ theorem conjDual (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
     apply GlobalTheory.SmGL.mem_smoothPart_of_nhds
     apply Filter.mem_of_superset ((hs v).mem_nhds (by simp))
     intro g hg
-    simp only [Set.mem_setOf_eq] at hg ⊢
+    simp only [Set.mem_ofPred_eq] at hg ⊢
     have hv' : ρ g⁻¹ v = v := by
       conv_lhs => rw [← hg]
       rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
@@ -134,7 +134,7 @@ theorem conjDual (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
       ⟨LinearMap.range φ, by
         rintro g x ⟨v, rfl⟩
         exact ⟨ρ g v, hint g v⟩⟩
-    haveI := GlobalTheory.SmGL.nontrivial_of_irreducible hi
+    have := GlobalTheory.SmGL.nontrivial_of_irreducible hi
     rcases eq_bot_or_eq_top S with h | h
     · exfalso
       obtain ⟨v, hv⟩ := exists_ne (0 : V)

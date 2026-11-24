@@ -101,7 +101,7 @@ theorem span_inf_eq (L : Submodule (𝓞 K) V) (hL : Submodule.IsFullLattice K L
 
 theorem isLattice_latIn (L : Submodule (𝓞 K) V) (hL : Submodule.IsFullLattice K L) (U : Submodule K V) :
     Submodule.IsFullLattice K (latIn U L) := by
-  haveI : Submodule.IsLattice K (latIn U L) := by
+  have : Submodule.IsLattice K (latIn U L) := by
     apply Submodule.IsLattice.of_fg K
     refine Submodule.fg_of_fg_map_injective (U.subtype.restrictScalars (𝓞 K)) U.injective_subtype ?_
     exact hL.fg.of_le (Submodule.map_comap_le _ _)

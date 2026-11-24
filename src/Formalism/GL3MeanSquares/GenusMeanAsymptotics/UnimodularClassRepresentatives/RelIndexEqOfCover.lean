@@ -84,7 +84,7 @@ theorem relIndex_eq_of_cover (S C H' : Subgroup G) (h1 : H' ≤ S)
     fun K g => by rw [← MulAction.mem_stabilizer_iff, MulAction.stabilizer_quotient]
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, hmem]
+  simp only [Set.mem_ofPred_eq, hmem]
   constructor
   · rintro ⟨g, hg, rfl⟩
     obtain ⟨t, ht, htg⟩ := h2 g hg
@@ -173,7 +173,7 @@ theorem sum_relIndex_fibre {X Y : Type*} [MulAction G X] [MulAction G Y] (π : X
     have hfib : {x | x ∈ A ∧ π x = y} =
         ⋃ t ∈ sX.filter (fun t => π t = y), {x : X | ∃ g : G, g • y = y ∧ g • t = x} := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_iUnion, Finset.mem_filter, exists_prop]
+      simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Finset.mem_filter, exists_prop]
       constructor
       · rintro ⟨hxA, hxy⟩
         obtain ⟨t, ⟨ht, g, hgt⟩, -⟩ := hX x hxA

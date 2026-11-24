@@ -139,11 +139,11 @@ theorem vInf_mulVec_le {m n : ℕ} (Y : Matrix (Fin m) (Fin n) (AE D)) (x : Fin 
   refine Finset.sup_le fun p _ => ?_
 
   simp only [Matrix.mulVec, dotProduct, map_sum, map_mul]
-  refine (nnnorm_sum_le _ _).trans ?_
+  refine (nnNorm_sum_le _ _).trans ?_
   refine le_trans ?_ (mul_le_mul' (sum_le_bI Y w p.1 p.2) le_rfl)
   rw [Finset.sum_mul]
   refine Finset.sum_le_sum fun j _ => ?_
-  rw [nnnorm_mul]
+  rw [nnNorm_mul]
   exact mul_le_mul' le_rfl (le_vInf x w p.1 j)
 
 end GlobalTheory.HtOrth.Transp
@@ -238,8 +238,8 @@ theorem vsize_seen_emb_le : ∀ (D : D7) (S A B : HSp D) (o : GlobalTheory.MixMo
   rw [← NNReal.coe_mul, NNReal.coe_le_coe]
   calc (∏ w, vInf w (o.jA *ᵥ seen A h η)) * ∏ᶠ v, vFin v (o.jA *ᵥ seen A h η)
       ≤ (∏ w, bI o.jA w * vInf w (seen A h η)) * ∏ᶠ v, bF o.jA v * vFin v (seen A h η) :=
-        mul_le_mul' (Finset.prod_le_prod' fun w _ => vInf_mulVec_le o.jA _ w)
-          (finprod_le_finprod' hf' (((finite_mulSupport_bF o.jA).union hf).subset (Function.mulSupport_mul _ _))
+        mul_le_mul' (Finset.prod_le_prod fun w _ => vInf_mulVec_le o.jA _ w)
+          (finprod_le_finprod hf' (((finite_mulSupport_bF o.jA).union hf).subset (Function.mulSupport_mul _ _))
             fun v => vFin_mulVec_le o.jA _ v)
     _ = _ := by
         rw [Finset.prod_mul_distrib, finprod_mul_distrib (finite_mulSupport_bF o.jA) hf, mul_mul_mul_comm]

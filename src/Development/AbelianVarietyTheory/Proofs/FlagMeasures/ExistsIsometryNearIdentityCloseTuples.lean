@@ -77,7 +77,7 @@ theorem mem_jac [IsNonarchimedeanLocalField F] (L : LocE F E) {ϖ : 𝒪[F]} (h�
     exact h
   rw [Ideal.jacobson, Ideal.mem_sInf]
   rintro m ⟨-, hm⟩
-  have h := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' f hf m
+  have h := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal f hf m
   have h2 : ϖ ∈ m.comap f := by
     rw [IsLocalRing.eq_maximalIdeal h]; exact hϖ
   have h3 : p = f ϖ := Subtype.ext hp

@@ -164,7 +164,7 @@ theorem Sorts.exists_conj {e e' : Fin P ⊕ Fin Q ≃ Fin n} (h : Sorts ε e) (h
   simpa using this.symm
 
 theorem Sorts.measurable_equiv {e : Fin P ⊕ Fin Q ≃ Fin n} (h : Sorts ε e) : Measurable h.equiv := by
-  haveI : BorelSpace (UpqT P Q) := ⟨rfl⟩
+  have : BorelSpace (UpqT P Q) := ⟨rfl⟩
   exact h.equiv.continuous.measurable
 
 theorem Sorts.map_eq (cd : CDHaar) {P' Q' : ℕ} {e : Fin P ⊕ Fin Q ≃ Fin n} {e' : Fin P' ⊕ Fin Q' ≃ Fin n}
@@ -174,10 +174,10 @@ theorem Sorts.map_eq (cd : CDHaar) {P' Q' : ℕ} {e : Fin P ⊕ Fin Q ≃ Fin n}
     have h1 := Sorts.add_eq e
     have h2 := Sorts.add_eq e'
     omega
-  haveI : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
-  haveI : BorelSpace (UpqT P Q) := ⟨rfl⟩
-  haveI := cd.haar P Q
-  haveI := GlobalTheory.UpqHaarRight.isMulRightInvariant P Q _ (cd.haar P Q)
+  have : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
+  have : BorelSpace (UpqT P Q) := ⟨rfl⟩
+  have := cd.haar P Q
+  have := GlobalTheory.UpqHaarRight.isMulRightInvariant P Q _ (cd.haar P Q)
   obtain ⟨u, hu⟩ := h.exists_conj h'
   have : (h'.equiv : UpqT P Q → Formalism.REAL.UJ ε) = h.equiv ∘ (fun g => g * u⁻¹) ∘ fun g => u * g := funext hu
   rw [this, ← Measure.map_map h.measurable_equiv ((measurable_mul_const _).comp (measurable_const_mul _)),
@@ -186,10 +186,10 @@ theorem Sorts.map_eq (cd : CDHaar) {P' Q' : ℕ} {e : Fin P ⊕ Fin Q ≃ Fin n}
 
 theorem Sorts.exists_scale (cd : CDHaar) {e : Fin P ⊕ Fin Q ≃ Fin n} (h : Sorts ε e) :
     ∃ c : NNReal, 0 < c ∧ (cd.cd P Q).map h.equiv = (c : ENNReal) • Formalism.REAL.muG ε := by
-  haveI : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
-  haveI : BorelSpace (UpqT P Q) := ⟨rfl⟩
-  haveI := cd.haar P Q
-  haveI : ((cd.cd P Q).map h.equiv).IsHaarMeasure := h.equiv.isHaarMeasure_map _
+  have : IsTopologicalGroup (UpqT P Q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq P Q))
+  have : BorelSpace (UpqT P Q) := ⟨rfl⟩
+  have := cd.haar P Q
+  have : ((cd.cd P Q).map h.equiv).IsHaarMeasure := h.equiv.isHaarMeasure_map _
   exact ⟨_, Measure.haarScalarFactor_pos_of_isHaarMeasure _ _,
     Measure.isMulLeftInvariant_eq_smul ((cd.cd P Q).map h.equiv) (Formalism.REAL.muG ε)⟩
 
@@ -216,7 +216,7 @@ theorem cdScaleIs_unique (cd : CDHaar) {sc sc' : ∀ n : ℕ, (Fin n → Bool) �
   have h0 : Formalism.REAL.muG ε K ≠ 0 := (Measure.measure_pos_of_nonempty_interior _ K.interior_nonempty).ne'
   have ht : Formalism.REAL.muG ε K ≠ ⊤ := K.isCompact.measure_lt_top.ne
   have := (h n ε P Q e he.1 he.2 K hm).trans (h' n ε P Q e he.1 he.2 K hm).symm
-  rw [Measure.smul_apply, Measure.smul_apply, smul_eq_mul, smul_eq_mul] at this
+  rw [smul_apply, smul_apply, smul_eq_mul, smul_eq_mul] at this
   exact ENNReal.coe_injective ((ENNReal.mul_left_inj h0 ht).1 this)
 
 end GlobalTheory.Mem.Vol.Scale

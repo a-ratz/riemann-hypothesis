@@ -158,9 +158,9 @@ theorem ChartSupBound.proof : ChartSupBound.Statement := by
     (Homeomorph.addLeft w).isClosedEmbedding.measurableEmbedding
   have hint : ENNReal.ofReal (∫ z in B, ‖G z‖ ^ 2) ≤ ∫⁻ z in B, ENNReal.ofReal (‖G z‖ ^ 2) := by
     calc _ ≤ ‖∫ z in B, ‖G z‖ ^ 2‖ₑ := by
-          rw [Real.enorm_eq_ofReal_abs]; exact ENNReal.ofReal_le_ofReal (le_abs_self _)
-      _ ≤ ∫⁻ z in B, ‖‖G z‖ ^ 2‖ₑ := enorm_integral_le_lintegral_enorm _
-      _ = _ := lintegral_congr fun z => Real.enorm_eq_ofReal (by positivity)
+          rw [Real.eNorm_eq_ofReal_abs]; exact ENNReal.ofReal_le_ofReal (le_abs_self _)
+      _ ≤ ∫⁻ z in B, ‖‖G z‖ ^ 2‖ₑ := eNorm_integral_le_lintegral_eNorm _
+      _ = _ := lintegral_congr fun z => Real.eNorm_eq_ofReal (by positivity)
   have hmain : ENNReal.ofReal (k * (‖F w‖ ^ 2 * ((n : ℝ) ^ D)⁻¹ * P)) ≤
       ∫⁻ z in V, ENNReal.ofReal (‖F z‖ ^ 2 * Real.exp (-(n : ℝ) * ψ z) * ν z) := by
     calc _ ≤ ENNReal.ofReal (k * ∫ z in B, ‖G z‖ ^ 2) :=

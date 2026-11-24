@@ -135,7 +135,7 @@ theorem exists_gens_mod_nsmul (E : Type) [Field E] [NumberField E] (r M : ℕ)
     (Λ : Submodule (𝓞 E) (Fin r → E)) (hM : 1 ≤ M) (hΛ : Λ.FG) :
     ∃ e : Fin r → Fin r → E, (∀ i, e i ∈ Λ) ∧
       ∀ x ∈ Λ, ∃ o : Fin r → 𝓞 E, ∃ y ∈ Λ, x = ∑ i, o i • e i + M • y := by
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ
   obtain ⟨e, he⟩ := exists_gens_mod_nsmul_of_injective E M hM r Λ Λ.subtype Subtype.val_injective
   refine ⟨fun i => e i, fun i => (e i).2, fun x hx => ?_⟩
   obtain ⟨o, y, h⟩ := he ⟨x, hx⟩

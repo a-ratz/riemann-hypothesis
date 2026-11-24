@@ -376,7 +376,7 @@ theorem main : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing
       ((algebraMap (FractionRing V) C).injective (by simpa [toF] using h)))
   have hκ : ‖algebraMap (FractionRing V) C c₀‖ = Real.exp (-((k : ℝ) * q mu + QuadraticMap.polar q mu α)) := by
     rw [norm_hasVal hC.1 hc₀, bOf, ← map_add (f := _), zpow_add₀ ht, zpow_sub₀ ht, zpow_sub₀ ht, mul_comm (k : ℤ), zpow_mul,
-      ← hψ, ← hψ, ← hψ, zpow_natCast, ← Real.exp_nat_mul, ← Real.exp_sub, ← Real.exp_sub, ← Real.exp_add,
+      ← hψ, ← hψ, ← hψ, zpow_natCast, ← Real.exp_natCast_mul, ← Real.exp_sub, ← Real.exp_sub, ← Real.exp_add,
       QuadraticMap.polar]
     congr 1; ring
   set c := algebraMap (FractionRing V) C c₀
@@ -487,7 +487,7 @@ theorem sE_comb : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (F : T
   have hW : ⊤ ≤ r ⁻¹ᵁ LB.wchart D.P.L (DegPre.famφ D F β)
       (fun k' => J (redE F ≫ r ≫ DegPre.famφ D F β k')) := by
     intro y _
-    haveI := sp_dual_subsingleton F
+    have := sp_dual_subsingleton F
     let z : Sp F := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum F)
     have hy : y = (redE F).base z := Subsingleton.elim _ _
     refine Set.mem_iInter.2 fun k' => ?_
@@ -811,7 +811,7 @@ theorem sE_norm_le_one_of_pull : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDis
   have hle : ∀ v : V, toF V C v ∈ S := fun v => (hSmem _).2 (hC.1 v)
   let toS : V →+* S := (toF V C).codRestrict S hle
   have htoS : S.subtype.comp toS = toF V C := by ext v; rfl
-  haveI : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
+  have : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
   have hpt : ∀ i : Fin 4, ⊤ ≤ (spMap (dualMap toS) ≫ Q ≫ D.toPre.famφB β i) ⁻¹ᵁ
       D.toPre.P.L.U (ν.J (redE C ≫ spMap (dualMap (toF V C)) ≫ Q ≫ D.toPre.famφB β i)) := by
     intro i

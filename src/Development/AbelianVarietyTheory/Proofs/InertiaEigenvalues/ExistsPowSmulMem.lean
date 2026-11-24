@@ -46,7 +46,7 @@ namespace GlobalTheory.IntegralPowerScalar
 
 theorem exists_pow_mul_integral {l : ℕ} [Fact (Nat.Prime l)] (LL : FinExt l) (c : ↥LL.1) :
     ∃ n : ℕ, (l : ↥LL.1) ^ n * c ∈ OL LL := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have h1 : IsAlgebraic ℚ_[l] c := IsAlgebraic.of_finite ℚ_[l] c
   have h2 : IsAlgebraic ℤ_[l] c := (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥LL.1).2 h1
   obtain ⟨y, hy, hint⟩ := h2.exists_integral_multiple

@@ -148,7 +148,7 @@ theorem exists_clear_col (n : Fin p) (M : Matrix (Fin p) (Fin p) K) (hn : M n n 
       if b ∈ Finset.Ioi n then (- M b n / M n n) * M n k else 0, fun f hf => ?_, ?_, ?_, ?_⟩
   · exact hf.what₂ n (fun b => - M b n / M n n) M _ (by simp)
   · intro b hb
-    simp only [of_apply, Finset.mem_Ioi, hb, if_true]
+    simp only [of_apply, Finset.mem_Ioi, hb, ite_true]
     field_simp
     ring
   · intro b k hb

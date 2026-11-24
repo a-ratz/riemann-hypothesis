@@ -154,8 +154,8 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
     obtain ⟨r, q, hrq⟩ := hx
     set a := p.down FS FT y r q with ha
     have hrq' : ¬ valuation k a ≤ 1 := fun h => hrq ((Valuation.mem_integer_iff _ _).2 h)
-    have ha0 : a ≠ 0 := by rintro h; rw [h, map_zero] at hrq'; exact hrq' zero_le'
-    have hc0 : 0 < valuation k (c : k) := by simp [zero_lt_iff]
+    have ha0 : a ≠ 0 := by rintro h; rw [h, map_zero] at hrq'; exact hrq' zero_le
+    have hc0 : 0 < valuation k (c : k) := by simp [pos_iff_ne_zero]
     have hcv : ¬ valuation k (c * a) ≤ valuation k (c : k) := by
       rw [map_mul]; intro h
       have h' : valuation k (c : k) * valuation k a ≤ valuation k (c : k) * 1 := by rwa [mul_one]
@@ -168,7 +168,7 @@ theorem selfDual_lattice_split : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel
     have hy'Λ : y' ∈ dualHalf p ψ S T FS FT := by
       refine ⟨hy'c, fun t ht => ?_⟩
       rw [hpsi t y' hy'c, hy'p, hsum]
-      have ha0' : 0 < valuation k a := by simp [zero_lt_iff, ha0]
+      have ha0' : 0 < valuation k a := by simp [pos_iff_ne_zero, ha0]
       have hv : valuation k (z / a * t r q) ≤ valuation k (c : k) := by
         rw [map_mul, map_div₀]
         calc valuation k z / valuation k a * valuation k (t r q) ≤ valuation k z / valuation k a * 1 := by

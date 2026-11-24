@@ -162,14 +162,14 @@ theorem rhoF_apply (X : Tower Ω ε) (M : ℕ) (γ : SL(2, ℤ)) (x : FM X M) :
     ((rhoF X M γ x : FM X M) : X.K) = X.sl (ofSL γ⁻¹) x := rfl
 
 theorem finite_range (X : Tower Ω ε) (M : ℕ) (hM : 0 < M) : Finite (rhoF X M).range := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hle : CongruenceSubgroup.Gamma M ≤ (rhoF X M).ker := by
     intro γ hγ
     rw [MonoidHom.mem_ker]
     ext x
     show X.sl (ofSL γ⁻¹) x = x
     exact (mem_FM X M x).1 x.2 _ (inv_mem hγ)
-  haveI := Subgroup.finiteIndex_of_le hle
+  have := Subgroup.finiteIndex_of_le hle
   exact Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange (rhoF X M)).toEquiv
 
 theorem sl_neg_one (X : Tower Ω ε) (f : X.K) : X.sl (ofSL (-1)) f = f := by
@@ -269,7 +269,7 @@ theorem fracGen : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
   set L := IntermediateField.adjoin Ω
     ({X.jK} ∪ {g | ∃ a b : ℤ, ¬ ((M : ℤ) ∣ a ∧ (M : ℤ) ∣ b) ∧ g = siegel X c ![(a : ℚ) / M, (b : ℚ) / M]}) with hLdef
   let Lsub : Subfield (FM X M) := L.toSubfield.comap (algebraMap (FM X M) X.K)
-  haveI := finite_range X M hM
+  have := finite_range X M hM
   have hL : FixedPoints.subfield (rhoF X M).range (FM X M) ≤ Lsub := by
     intro x hx
     have hinv : ∀ γ : SL(2, ℤ), X.sl (ofSL γ) x = x := by

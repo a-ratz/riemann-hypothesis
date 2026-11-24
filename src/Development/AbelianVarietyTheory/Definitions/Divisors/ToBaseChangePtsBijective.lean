@@ -238,7 +238,7 @@ variable {R A} in
 theorem toBaseChange_pts_bijective (B : Type) [CommRing B] [Algebra R B] [Algebra R' B]
     (hB : ∀ r, algebraMap R B r = algebraMap R' B (algebraMap R R' r)) :
     Function.Bijective ((toBaseChange R R' A).pts B hB) := by
-  haveI : IsScalarTower R R' B := .of_algebraMap_eq hB
+  have : IsScalarTower R R' B := .of_algebraMap_eq hB
   refine ⟨fun x y h => ofConv_injective (Algebra.TensorProduct.ext (Subsingleton.elim _ _)
     (AlgHom.ext fun a => DFunLike.congr_fun (congrArg ofConv h) a)), fun x => ?_⟩
   exact ⟨toConv (Algebra.TensorProduct.lift (Algebra.ofId R' B) x.ofConv fun _ _ => .all _ _),

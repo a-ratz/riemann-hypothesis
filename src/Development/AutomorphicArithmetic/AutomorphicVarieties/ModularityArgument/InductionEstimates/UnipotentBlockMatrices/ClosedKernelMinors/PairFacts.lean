@@ -74,10 +74,10 @@ private theorem ext_two {E F H : Type} [NormedAddCommGroup E] [NormedSpace ℂ E
     | mem x hx => exact h u hu x hx
     | zero => simp
     | add x y _ _ hx hy =>
-      simp only [mem_setOf_eq] at hx hy ⊢
+      simp only [mem_ofPred_eq] at hx hy ⊢
       rw [map_add (f := _), map_add (f := _), inner_add_right, inner_add_right, hx, hy]
     | smul c x _ hx =>
-      simp only [mem_setOf_eq] at hx ⊢
+      simp only [mem_ofPred_eq] at hx ⊢
       rw [map_smul, map_smul, inner_smul_right, inner_smul_right, hx]
   intro u hu v hv
   have hc : IsClosed {u : E | ⟪T u, S v⟫_ℂ = ⟪T' u, S' v⟫_ℂ} := isClosed_eq (by fun_prop) (by fun_prop)
@@ -86,10 +86,10 @@ private theorem ext_two {E F H : Type} [NormedAddCommGroup E] [NormedSpace ℂ E
   | mem x hx => exact h1 x hx v hv
   | zero => simp
   | add x y _ _ hx hy =>
-    simp only [mem_setOf_eq] at hx hy ⊢
+    simp only [mem_ofPred_eq] at hx hy ⊢
     rw [map_add (f := _), map_add (f := _), inner_add_left, inner_add_left, hx, hy]
   | smul c x _ hx =>
-    simp only [mem_setOf_eq] at hx ⊢
+    simp only [mem_ofPred_eq] at hx ⊢
     rw [map_smul, map_smul, inner_smul_left, inner_smul_left, hx]
 
 private theorem pure_pair {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 K (2 + 2)))
@@ -102,8 +102,8 @@ private theorem pure_pair {K : Type} [Field K] [NumberField K] [_root_.NumberFie
           pw μ₂ (A.sec e) (A'.sec e') k (w0 K * nn X * k.1) ∂unipMeasure K (2 + 2) 2 ∂κ := by
   have hK : IsCompact (KG K (2 + 2) : Set (G1 K (2 + 2))) :=
     ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 hK
-  haveI : LocallyCompactSpace (KG K (2 + 2)) := hK.isClosed.locallyCompactSpace
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 hK
+  have : LocallyCompactSpace (KG K (2 + 2)) := hK.isClosed.locallyCompactSpace
   obtain ⟨c, hc⟩ := (unf μ μ₂ (Measure.haar : Measure (KG K (2 + 2)))).1
   refine ⟨c, Measure.haar, fun β β' e e' u v hβ hβc hβ' hβc' hu hv => ?_⟩
   obtain ⟨hs, hf⟩ := (A.onto (A.sec e)).1 ⟨e, rfl⟩
@@ -163,4 +163,4 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.pairFacts :
       · rw [hz t h, map_zero, zero_mul]
       · have := (longCell (K := K)).1 X k.1 k.2
         rw [hz' _ (by linarith), mul_zero]
-    simp only [h0, zero_mul, integral_zero, mul_zero, ContinuousLinearMap.zero_apply, inner_zero_left]
+    simp only [h0, zero_mul, integral_zero, mul_zero, zero_apply, inner_zero_left]

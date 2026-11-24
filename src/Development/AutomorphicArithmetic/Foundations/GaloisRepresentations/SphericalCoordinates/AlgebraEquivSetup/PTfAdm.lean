@@ -102,7 +102,7 @@ private lemma doset_right {X : Type} [Group X] (K : Subgroup X) (h k g : X) (hk 
 private lemma fin_reps {X : Type} [Group X] (A B : Subgroup X) (hAB : B.relIndex A ≠ 0) :
     ∃ R : Finset X, (∀ r ∈ R, r ∈ A) ∧ ∀ k ∈ A, ∃ r ∈ R, ∃ u ∈ B, k = r * u := by
   have hfin : Finite (A ⧸ B.subgroupOf A) := Subgroup.index_ne_zero_iff_finite.mp hAB
-  haveI := Fintype.ofFinite (A ⧸ B.subgroupOf A)
+  have := Fintype.ofFinite (A ⧸ B.subgroupOf A)
   refine ⟨Finset.univ.image (fun q : A ⧸ B.subgroupOf A => ((q.out : A) : X)), ?_, ?_⟩
   · intro r hr
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.mp hr

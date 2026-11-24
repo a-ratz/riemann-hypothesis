@@ -71,8 +71,8 @@ namespace GlobalTheory.SeparatingCharacters
 theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (Γ : AddSubgroup G) [DiscreteTopology Γ] (K : Set G), IsCompact K → (∀ x, ∃ γ ∈ Γ, γ + x ∈ K) → ∀ (A : Type) [AddCommGroup A] (χ : A → G → ℂ), (∀ a, Continuous (χ a)) → (∀ a x y, χ a (x + y) = χ a x * χ a y) → (∀ a b x, χ (a + b) x = χ a x * χ b x) → (∀ x, χ 0 x = 1) → (∀ a x, ‖χ a x‖ = 1) → (∀ x, (∀ a, χ a x = 1) ↔ x ∈ Γ) → (∀ a, (∀ x, χ a x = 1) → a = 0) → ∀ (μ : Measure G) (𝓕 : Set G), μ.IsAddHaarMeasure → IsAddFundamentalDomain Γ 𝓕 μ → μ 𝓕 = 1 → ∀ Φ : G → ℂ, Continuous Φ → (∀ γ ∈ Γ, ∀ x, Φ (γ + x) = Φ x) → Summable (fun a => ∫ x in 𝓕, χ a x * Φ x ∂μ) → ∑' a, ∫ x in 𝓕, χ a x * Φ x ∂μ = Φ 0 := by
   intro G _ _ _ _ _ _ _ _ Γ _ K hK hKcov A _ χ hχc hχmul hχadd hχ0 hχnorm hχker hχinj μ 𝓕 hμ h𝓕 h𝓕1 Φ hΦc hΦper hsum
   classical
-  haveI := hμ
-  haveI : Countable Γ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+  have := hμ
+  have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
 
   have hχz : ∀ a, χ a 0 = 1 := by
     intro a
@@ -106,7 +106,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
     refine ⟨⟨fun q => Quotient.liftOn' q f (fun x y h => hwd x y (Quotient.sound' h)), ?_⟩, fun x => rfl⟩
     exact (QuotientAddGroup.isQuotientMap_mk Γ).continuous_iff.mpr hf
 
-  haveI : CompactSpace (G ⧸ Γ) := by
+  have : CompactSpace (G ⧸ Γ) := by
     refine ⟨?_⟩
     have himg : (QuotientAddGroup.mk '' K : Set (G ⧸ Γ)) = Set.univ := by
       refine Set.eq_univ_of_forall fun q => ?_
@@ -278,10 +278,10 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
       exact hH a
     | zero => simp
     | add x y _ _ hx hy =>
-      simp only [Set.mem_setOf_eq] at hx hy ⊢
+      simp only [Set.mem_ofPred_eq] at hx hy ⊢
       rw [add_mul, map_add (f := _), hx, hy, add_zero]
     | smul r x _ hx =>
-      simp only [Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.mem_ofPred_eq] at hx ⊢
       rw [smul_mul_assoc, map_smul, hx, smul_zero]
   have hmem : star H ∈ closure (S : Set C(G ⧸ Γ, ℂ)) := by
     rw [← StarSubalgebra.topologicalClosure_coe, hcl]
@@ -323,7 +323,7 @@ theorem tsum_coefficients_eq_value_zero : ∀ (G : Type) [AddCommGroup G] [Topol
     refine h𝓕.measure_zero_of_invariant t (fun γ => ?_) h1
     ext x
     rw [Set.mem_vadd_set_iff_neg_vadd_mem]
-    simp only [htdef, Set.mem_setOf_eq, hkper]
+    simp only [htdef, Set.mem_ofPred_eq, hkper]
   have h3 : t = ∅ := (ht.measure_eq_zero_iff μ).mp h2
   have hk0 : k 0 = 0 := by
     by_contra hne

@@ -73,7 +73,7 @@ theorem red_surj (C : Type) [CommRing C] (p : Sp (DualNumber C)) : ∃ q : Sp C,
     rcases P.isPrime.mem_or_mem this with h | h <;> exact h
   have hs : Function.Surjective (TrivSqZeroExt.fstHom C C C).toRingHom :=
     fun a => ⟨TrivSqZeroExt.inl a, rfl⟩
-  haveI := P.isPrime
+  have := P.isPrime
   have hprime := Ideal.map_isPrime_of_surjective hs hker
   refine ⟨(⟨_, hprime⟩ : PrimeSpectrum C), ?_⟩
   have e : PrimeSpectrum.comap (TrivSqZeroExt.fstHom C C C).toRingHom ⟨_, hprime⟩ = P := by

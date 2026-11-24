@@ -59,7 +59,7 @@ theorem exists_basis (S : HSpace E) (Q : Matrix (Fin S.rank) (Fin S.rank) E) (hQ
   simp [Module.Basis.toMatrix_apply, Matrix.toLinearEquiv_apply, Matrix.toLin_self, Finsupp.single_apply]
 
 theorem isUnit_det (S : HSpace E) (b : Module.Basis (Fin S.rank) E S.V) : IsUnit (S.frame.toMatrix b).det := by
-  letI := Module.Basis.invertibleToMatrix S.frame b
+  let := Module.Basis.invertibleToMatrix S.frame b
   exact Matrix.isUnit_det_of_invertible _
 
 theorem gram_change (S : HSpace E) (b : Module.Basis (Fin S.rank) E S.V) (i j : Fin S.rank) :

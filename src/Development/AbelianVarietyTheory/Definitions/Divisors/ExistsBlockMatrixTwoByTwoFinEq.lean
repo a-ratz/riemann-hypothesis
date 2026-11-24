@@ -314,12 +314,12 @@ theorem continuous_leviUp : Continuous (leviUp R σ Q) := by
   have hA : Continuous fun g : HA R σ Q => StdUnn.blkA (matR R σ g) :=
     continuous_matrix fun i j => continuous_matR.matrix_elem _ _
   rw [Units.continuous_iff]
-  refine ⟨hA.comp continuous_subtype_val, ?_⟩
-  refine (hA.comp (continuous_subtype_val.comp continuous_inv)).congr fun p => ?_
+  refine ⟨hA.comp continuous_subtypeVal, ?_⟩
+  refine (hA.comp (continuous_subtypeVal.comp continuous_inv)).congr fun p => ?_
   rw [← map_inv]; rfl
 
 theorem continuous_aUp : Continuous (aUp R σ Q) := by
-  haveI := isTopologicalRing_tens (F := F) (E := E) (R := R)
+  have := isTopologicalRing_tens (F := F) (E := E) (R := R)
   have hd : Continuous (Matrix.GeneralLinearGroup.det : GL (Fin n) (R ⊗[F] E) → (R ⊗[F] E)ˣ) := by
     rw [Units.continuous_iff]
     refine ⟨Units.continuous_val.matrix_det, (Units.continuous_coe_inv.matrix_det).congr fun g => ?_⟩
@@ -327,12 +327,12 @@ theorem continuous_aUp : Continuous (aUp R σ Q) := by
   exact hd.comp continuous_leviUp
 
 theorem isClosed_upP [T2Space R] : IsClosed (upperParabolic R σ Q : Set (HA R σ Q)) := by
-  haveI := t2Space_tensorProduct_finiteExtension (F := F) (E := E) (R := R)
+  have := t2Space_tensorProduct_finiteExtension (F := F) (E := E) (R := R)
   have : (upperParabolic R σ Q : Set (HA R σ Q)) = ⋂ i : Fin n, ⋂ j : Fin n,
       ({g | matR R σ g (finSumFinEquiv (.inr i)) (finSumFinEquiv (.inl j)) = 0} ∩
         {g | matR R σ g⁻¹ (finSumFinEquiv (.inr i)) (finSumFinEquiv (.inl j)) = 0}) := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq, SetLike.mem_coe, mem_siegelParabolic_iff]
+    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq, SetLike.mem_coe, mem_siegelParabolic_iff]
   rw [this]
   exact isClosed_iInter fun i => isClosed_iInter fun j => (isClosed_eq (continuous_matR.matrix_elem _ _) continuous_const).inter
     (isClosed_eq ((continuous_matR.comp continuous_inv).matrix_elem _ _) continuous_const)

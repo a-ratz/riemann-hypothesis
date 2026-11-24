@@ -64,8 +64,8 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   let c : K → ℂ := fun k => if hk : ∀ p, M.blk p ≠ some k then (w ⟨k, F.c ⟨k, hk⟩⟩)⁻¹ else 1
   have hc : ∀ k, c k ≠ 0 := fun k => by
     by_cases hk : ∀ p, M.blk p ≠ some k
-    · simp only [c, dif_pos hk]; exact inv_ne_zero (hne ⟨k, hk⟩)
-    · simp only [c, dif_neg hk]; exact one_ne_zero
+    · simp only [c, dite_eq_left hk]; exact inv_ne_zero (hne ⟨k, hk⟩)
+    · simp only [c, dite_eq_right hk]; exact one_ne_zero
   let z₀ : (Σ k, ι k) → ℂ := fun q => c q.1 * w q
   let c' : NonPluckerBlocks M.blk → ℂ := fun k => c k.1
   have hc' : ∀ k, c' k ≠ 0 := fun k => hc k.1
@@ -76,13 +76,13 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   have hflag : M.IsFlagOf F z₀ H := by
     refine ⟨fun k => ?_, hH, fun p k hp => ?_⟩
     · show c k.1 * w ⟨k.1, F.c k⟩ = 1
-      simp only [c, dif_pos k.2]
+      simp only [c, dite_eq_left k.2]
       exact inv_mul_cancel₀ (hne k)
     · obtain ⟨a, ha, hw⟩ := hP p k hp
       refine ⟨a, ha, fun m => ?_⟩
       have hk : ¬ ∀ p, M.blk p ≠ some k := fun h => h p hp
       show c k * w ⟨k, m⟩ = _
-      simp only [c, dif_neg hk, one_mul]
+      simp only [c, dite_eq_right hk, one_mul]
       rw [hw m, CovMap.LocImg.plk]
       simp only [hval]
   have hG₀ : M.GoodAt F (mCoordIdeal (basePart M.blk z₀)) := by rw [hI]; exact hG

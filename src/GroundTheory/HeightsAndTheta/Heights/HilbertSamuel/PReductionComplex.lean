@@ -117,7 +117,7 @@ theorem cellMon_lift {S : Type} [CommRing S] {I : ∀ k, Finset (ι k)} {t : MRi
   | mul f g _ _ hf hg =>
     obtain ⟨d, rfl, hd⟩ := hf
     obtain ⟨d', rfl, hd'⟩ := hg
-    exact ⟨d + d', by rw [monomial_mul, mul_one], by rw [← mul_one (1 : ℤ), ← monomial_mul]; exact mul_mem hd hd'⟩
+    exact ⟨d + d', by rw [monomial_mul_monomial, mul_one], by rw [← mul_one (1 : ℤ), ← monomial_mul_monomial]; exact mul_mem hd hd'⟩
 
 theorem map_monomial_one (d : (Σ k, ι k) →₀ ℕ) :
     MvPolynomial.map (Int.castRingHom (ZMod p)) (monomial d 1 : MRingOver ℤ ι) = monomial d 1 := by
@@ -127,7 +127,7 @@ theorem homog_monomial_one_of_zmod [Fact p.Prime] {d : (Σ k, ι k) →₀ ℕ} 
     (h : IsMultiHomog (monomial d 1 : MRingOver (ZMod p) ι) e) : IsMultiHomog (monomial d 1 : MRingOver ℤ ι) e :=
   by
   classical
-  exact GenOnFibres.homog_monomial d 1 e fun k => h d (by rw [mem_support_iff, coeff_monomial, if_pos rfl]; exact one_ne_zero) k
+  exact GenOnFibres.homog_monomial d 1 e fun k => h d (by rw [mem_support_iff, coeff_monomial, ite_eq_left rfl]; exact one_ne_zero) k
 
 def liftPoly (F : MRingOver (ZMod p) ι) : MRingOver ℤ ι :=
   ∑ d ∈ F.support, monomial d ((AddMonoidAlgebra.coeff F d).val : ℤ)
@@ -139,8 +139,8 @@ theorem coeff_liftPoly (F : MRingOver (ZMod p) ι) (d : (Σ k, ι k) →₀ ℕ)
   simp only [coeff_monomial]
   rw [Finset.sum_ite_eq']
   by_cases h : d ∈ F.support
-  · rw [if_pos h]
-  · rw [if_neg h, notMem_support_iff.mp h]
+  · rw [ite_eq_left h]
+  · rw [ite_eq_right h, notMem_support_iff.mp h]
     simp
 
 theorem map_liftPoly [NeZero p] (F : MRingOver (ZMod p) ι) :

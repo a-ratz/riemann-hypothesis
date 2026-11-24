@@ -193,7 +193,7 @@ theorem theta_value_indep : ∀ {E : Type} [Field E] [NumberField E] [IsCMField 
   have hfr : ∀ j z, ⊤ ≤ (W₁.F.ex (W₁.ik k) W₁.Pm z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j → Y₂.fr j (L z) = Y₁.fr j z :=
     GlobalTheory.UnitFrameGen.frames_eq W₁.Pm.range hspan' (fun j => {z | ⊤ ≤ (W₁.F.ex (W₁.ik k) W₁.Pm z).left ⁻¹ᵁ Xo.univ.t.PP.L.U j})
       (fun j => GlobalTheory.FamilyUnif_isOpen_ex W₁.F _ _ W₁.per _) hcov
-      (fun j a ha z hz => by rw [Set.mem_setOf_eq, hper1 a ha]; exact hz)
+      (fun j a ha z hz => by rw [Set.mem_ofPred_eq, hper1 a ha]; exact hz)
       Y₁.fr (fun j z => Y₂.fr j (L z))
       (fun j j' z => valAt' (W₁.F.ex (W₁.ik k) W₁.Pm z).left (Xo.univ.t.PP.L.U j ⊓ Xo.univ.t.PP.L.U j')
         (Xo.univ.t.PP.L.g j j').val)

@@ -46,9 +46,9 @@ open scoped TensorProduct Classical
 
 private theorem relIndex_ne_zero_of_isOpen {X : Type*} [Group X] [TopologicalSpace X] [IsTopologicalGroup X]
     {K O : Subgroup X} (hK : IsCompact (K : Set X)) (hO : IsOpen (O : Set X)) : O.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have ho : IsOpen ((O.subgroupOf K : Subgroup K) : Set K) := hO.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have ho : IsOpen ((O.subgroupOf K : Subgroup K) : Set K) := hO.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   exact Nat.card_pos.ne'
 
 private theorem isOpen_map_conj {X : Type*} [Group X] [TopologicalSpace X] [IsTopologicalGroup X]

@@ -98,12 +98,12 @@ theorem exists_place_of_embedding :
       zero_mem' := by simp
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [RingOfIntegers.coe_eq_algebraMap, map_add (f := _), map_add (f := _)]
         exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt ha hb)
       smul_mem' := by
         intro c a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [RingOfIntegers.coe_eq_algebraMap, smul_eq_mul, map_mul, map_mul, norm_mul]
         exact mul_lt_one_of_nonneg_of_lt_one_right (hle c) (norm_nonneg _) ha }
   have hP : ∀ a : 𝓞 E, a ∈ P ↔ ‖τ (algebraMap (𝓞 E) E a)‖ < 1 := fun a => Iff.rfl

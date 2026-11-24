@@ -76,8 +76,8 @@ lemma emb_out_col (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * 
   rw [dite_eq_right (fun h => hj' h.2)]
   by_cases hqj : q = j
   · subst hqj
-    rw [if_pos ⟨rfl, hj'⟩, if_pos rfl]
-  · rw [if_neg (fun h => hqj h.1), if_neg hqj]
+    rw [ite_eq_left ⟨rfl, hj'⟩, ite_eq_left rfl]
+  · rw [ite_eq_right (fun h => hqj h.1), ite_eq_right hqj]
 
 lemma emb_out_row (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : ¬ mid k r q) :
     embWb k r μ q j = if q = j then 1 else 0 := by
@@ -86,8 +86,8 @@ lemma emb_out_row (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * 
   rw [dite_eq_right (fun h => hq' h.1)]
   by_cases hqj : q = j
   · subst hqj
-    rw [if_pos ⟨rfl, hq'⟩, if_pos rfl]
-  · rw [if_neg (fun h => hqj h.1), if_neg hqj]
+    rw [ite_eq_left ⟨rfl, hq'⟩, ite_eq_left rfl]
+  · rw [ite_eq_right (fun h => hqj h.1), ite_eq_right hqj]
 
 lemma emb_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : mid k r q) (hj : mid k r j) :
     embWb k r μ q j = μ ⟨q.val - r, by have := hq; omega⟩ ⟨j.val - r, by have := hj; omega⟩ := by
@@ -137,7 +137,7 @@ lemma emb_mul (a b : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
         rw [emb_mid _ _ _ hi (wI_mid q), emb_mid _ _ _ (wI_mid q) hj]
         simp only [fin_wI_sub_eq_self]
       · intro p hp
-        rw [emb_out_col a i p hp, if_neg (fun (h : i = p) => hp (h ▸ hi)), zero_mul]
+        rw [emb_out_col a i p hp, ite_eq_right (fun (h : i = p) => hp (h ▸ hi)), zero_mul]
     · simp [emb_out_col b _ _ hj]
       rw [emb_out_col _ _ _ hj, emb_out_col _ _ _ hj]
   · simp [emb_out_row a _ _ hi]
@@ -248,7 +248,7 @@ theorem embF_cont : Continuous (embF k r) := by
   exact Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_cont
 
 theorem haar_sigmaFinite {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 end Formalism.FourierDecayAlt.P.RankOneEmbeddings.R1
@@ -272,12 +272,12 @@ def secF (k r : ℕ) (z z' : Vc k r) (μsec : ℂ → Matrix (Fin (k + 1)) (Fin 
 theorem secF_on {z z' : Vc k r} {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} {ζ : ℂ} (h : ζ ∈ Om k r z z') :
     secF k r z z' μsec ζ = μsec ζ := by
   unfold secF
-  exact if_pos h
+  exact ite_eq_left h
 
 theorem secF_off {z z' : Vc k r} {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} {ζ : ℂ} (h : ζ ∉ Om k r z z') :
     secF k r z z' μsec ζ = 1 := by
   unfold secF
-  exact if_neg h
+  exact ite_eq_right h
 
 theorem secF_section {z z' : Vc k r} {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ}
     (hsec : IsSection k r z z' μsec) : IsSection k r z z' (secF k r z z' μsec) := by
@@ -329,7 +329,7 @@ theorem ae_Om (z z' : Vc k r) :
     Measure.addHaar_sphere volume _ _
   have hae : ∀ᵐ ζ : ℂ, ζ ∉ Metric.sphere (0 : ℂ) (Real.sqrt (Tz k r z * Tz k r z')) := by
     rw [ae_iff]
-    simp only [not_not, Set.setOf_mem_eq]
+    simp only [not_not, Set.ofPred_mem_eq]
     exact hnull
   filter_upwards [hae] with ζ hζ
   by_cases h : ζ ∈ Om k r z z'
@@ -338,7 +338,7 @@ theorem ae_Om (z z' : Vc k r) :
     have h0 : ¬ (Tz k r z * Tz k r z' < Complex.normSq ζ) := h
     have h' : Complex.normSq ζ ≤ Tz k r z * Tz k r z' := not_lt.1 h0
     unfold zWeight
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hle
     apply hζ
     rw [mem_sphere_zero_iff_norm, ← le_antisymm h' hle, Complex.normSq_eq_norm_sq,
@@ -384,15 +384,15 @@ theorem exists_G (CWb : ClosedWb) (z' : Vc k r) (F : Mt k r → ℝ≥0∞) (hF 
   have hUc : IsClosed U := by
     rw [hUdef]
     exact (CWb k r).closed
-  haveI : PolishSpace U := hUc.polishSpace
+  have : PolishSpace U := hUc.polishSpace
   have h2 : ∀ x : Mt k r, x ∈ U → (Matrix.of x : Mat k r) ∈ UWb k r := by
     rw [hUdef]
     intro x hx
     exact hx
   have hmem : ∀ m : U, (Matrix.of (m : Mt k r) : Mat k r) ∈ UWb k r := fun m => h2 m m.2
   have hπ : Measurable fun m : U => (Matrix.of (m : Mt k r) : Mat k r) *ᵥ z' :=
-    (mvM_cont.comp (continuous_subtype_val.prodMk continuous_const)).measurable
-  have hF' : Measurable fun m : U => F m := hF.comp measurable_subtype_coe
+    (mvM_cont.comp (continuous_subtypeVal.prodMk continuous_const)).measurable
+  have hF' : Measurable fun m : U => F m := hF.comp measurable_subtypeVal
   have hfib : ∀ x y : U, (Matrix.of (x : Mt k r) : Mat k r) *ᵥ z' = (Matrix.of (y : Mt k r) : Mat k r) *ᵥ z' →
       F x = F y := by
     rintro ⟨a, ha0⟩ ⟨b, hb0⟩ hxy
@@ -504,8 +504,8 @@ theorem nu_left (CWb : ClosedWb) (CW : ClosedW) (UF : UWbFacts) (HI : HypInv) (z
     (hsec : IsSection k r z z' s)
     {μW μW' : Measure (Mt k r)} (hW : IsHaarOn (UWset k r z) μW) (hW' : IsHaarOn (UWset k r z') μW')
     (a : Mat k r) (ha : a ∈ UWb k r) : (nu z z' s μW μW').map (lmulM a) = nu z z' s μW μW' := by
-  haveI := haar_sigmaFinite hW
-  haveI := haar_sigmaFinite hW'
+  have := haar_sigmaFinite hW
+  have := haar_sigmaFinite hW'
   have hWb := CWb k r
   apply Measure.ext_of_lintegral
   intro f hf
@@ -546,8 +546,8 @@ theorem nu_conc (CWb : ClosedWb) (CW : ClosedW) (UF : UWbFacts) (z z' : Vc k r)
     {s : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hs : MeasSec s) (hsu : ∀ ζ, (s ζ)ᴴ * Hb k * s ζ = Hb k)
     {μW μW' : Measure (Mt k r)} (hW : IsHaarOn (UWset k r z) μW) (hW' : IsHaarOn (UWset k r z') μW') :
     (nu z z' s μW μW') (UWb k r)ᶜ = 0 := by
-  haveI := haar_sigmaFinite hW
-  haveI := haar_sigmaFinite hW'
+  have := haar_sigmaFinite hW
+  have := haar_sigmaFinite hW'
   have hWb := CWb k r
   have hc' : IsClosed {m : Mt k r | (Matrix.of m : Mat k r) ∈ UWb k r} := hWb.closed
   have hcl : MeasurableSet ({m : Mt k r | (Matrix.of m : Mat k r) ∈ UWb k r}ᶜ) := hc'.measurableSet.compl
@@ -599,10 +599,10 @@ theorem nu_finite (KW : CompactW) (RM : RankOneMem) (z z' : Vc k r)
     (hsec : IsSection k r z z' s)
     {μW μW' : Measure (Mt k r)} (hW : IsHaarOn (UWset k r z) μW) (hW' : IsHaarOn (UWset k r z') μW')
     (K : Set (Mt k r)) (hK : IsCompact K) : (nu z z' s μW μW') K < ∞ := by
-  haveI := haar_sigmaFinite hW
-  haveI := haar_sigmaFinite hW'
-  haveI := haar_finite KW hz hT hW
-  haveI := haar_finite KW hz' hT' hW'
+  have := haar_sigmaFinite hW
+  have := haar_sigmaFinite hW'
+  have := haar_finite KW hz hT hW
+  have := haar_finite KW hz' hT' hW'
   have hcont : Continuous fun m : Mt k r => herm (Hpk k r) ((Matrix.of m : Mat k r) *ᵥ z') z := by
     unfold herm
     fun_prop
@@ -681,14 +681,14 @@ theorem wd_ne_zero (z z' : Vc k r) : wd k r z z' ≠ 0 := by
   have hp : 0 < (Complex.normSq ζ - Tz k r z * Tz k r z') ^ (k - 1) := pow_pos (by linarith) _
   show ¬ (ENNReal.ofReal (zWeight k (Tz k r z) (Tz k r z') ζ) = 0)
   unfold zWeight
-  rw [if_pos hlt.le]
+  rw [ite_eq_left hlt.le]
   exact (ENNReal.ofReal_pos.2 hp).ne'
 
 theorem nu_ne_zero (z z' : Vc k r) {s : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hs : MeasSec s)
     {μW μW' : Measure (Mt k r)} (hW : IsHaarOn (UWset k r z) μW) (hW' : IsHaarOn (UWset k r z') μW') :
     nu z z' s μW μW' ≠ 0 := by
-  haveI := haar_sigmaFinite hW
-  haveI := haar_sigmaFinite hW'
+  have := haar_sigmaFinite hW
+  have := haar_sigmaFinite hW'
   unfold nu
   intro h0
   rw [Measure.map_eq_zero_iff (Phi_meas hs).aemeasurable] at h0
@@ -708,8 +708,8 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Fo
 
 theorem rank_one_formula_of_parts : Formalism.FourierDecayAlt.B2.AssembleRankOne := by
   intro HU CWb CW KW UF RM RC HI k r z z' μsec μb μW μW' hk hz hz' hT hT' hsec hb hW hW'
-  haveI := haar_sigmaFinite hW
-  haveI := haar_sigmaFinite hW'
+  have := haar_sigmaFinite hW
+  have := haar_sigmaFinite hW'
   have hsm : MeasSec (secF k r z z' μsec) := secF_meas hsec
   have hss : IsSection k r z z' (secF k r z z' μsec) := secF_section hsec
   have hsu : ∀ ζ, (secF k r z z' μsec ζ)ᴴ * Hb k * secF k r z z' μsec ζ = Hb k := secF_unit hsec

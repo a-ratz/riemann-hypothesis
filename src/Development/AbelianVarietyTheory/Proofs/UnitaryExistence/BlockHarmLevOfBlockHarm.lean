@@ -231,7 +231,7 @@ theorem _root_.GlobalTheory.ShortLawsCompare.unimod_std [IsCMField E] (n : ℕ) 
       · simp [hij]
     have hc := h _ hsingle
     simp only [Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at hc
+      Finset.mem_univ, ite_true] at hc
     obtain ⟨b, hb⟩ := hc
     obtain ⟨a, ha⟩ := complexConj_coe_mem_range_algebraMap b
     refine ⟨a, ?_⟩
@@ -297,7 +297,7 @@ theorem _root_.GlobalTheory.ShortLawsCompare.isUnit_idealAt {n b : ℕ} {Λ : _r
     intro h0
     have hbot : (J : Submodule (𝓞 c.F) c.F) = ⊥ := by
       rw [h0]
-      exact FractionalIdeal.coe_zero
+      exact FractionalIdeal.coeToSubmodule_zero
     have hmem : _root_.Formalism.L2.Pj.embF c τ ((k : E) ^ n) ∈ (J : Submodule (𝓞 c.F) c.F) :=
       Submodule.subset_span ⟨_, hdet, rfl⟩
     rw [hbot, Submodule.mem_bot, map_eq_zero] at hmem
@@ -305,7 +305,7 @@ theorem _root_.GlobalTheory.ShortLawsCompare.isUnit_idealAt {n b : ℕ} {Λ : _r
   refine isUnit_iff_exists_inv.mpr
     ⟨((J⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 c.F)) c.F) : Submodule (𝓞 c.F) c.F), ?_⟩
   change (J : Submodule (𝓞 c.F) c.F) * _ = 1
-  rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hJ, FractionalIdeal.coe_one]
+  rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hJ, FractionalIdeal.coeToSubmodule_one]
 
 
 set_option autoImplicit false in

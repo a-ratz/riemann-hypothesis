@@ -146,7 +146,7 @@ namespace GlobalTheory.CompanionTheory.AnisoRange
 
 theorem bddAbove_isotropic_dims {D : D7} (V : HSp D) :
     BddAbove {k | ∃ W : Submodule D.host.E V.V, Module.finrank D.host.E W = k ∧ ∀ x ∈ W, ∀ y ∈ W, V.hT x y = 0} := by
-  haveI := V.fd
+  have := V.fd
   refine ⟨Module.finrank D.host.E V.V, ?_⟩
   rintro k ⟨W, rfl, -⟩
   exact Submodule.finrank_le W
@@ -348,7 +348,7 @@ theorem isPureFin_box (b : Module.Basis (Fin d) F E) {n M : ℕ}
       (fun v => (A v).indicator 1) := by
   classical
   refine ⟨fun v => ?_, ?_, fun X => ?_⟩
-  · haveI : T2Space (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E) :=
+  · have : T2Space (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E) :=
       (GlobalTheory.CompanionTheory.SW.TopK.coordHomeo (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) b).isEmbedding.t2Space
     have hcl : IsClopen (A v) := ⟨(hA v).1.isClosed, (hA v).2⟩
     refine ⟨(IsLocallyConstant.iff_exists_open _).2 fun x => ?_,
@@ -378,7 +378,7 @@ theorem isPureFin_box (b : Module.Basis (Fin d) F E) {n M : ℕ}
       have hfin := Filter.eventually_cofinite.1 (GlobalTheory.CompanionTheory.SW.MeasProj.eventually_mem_latV b X)
       refine (hfin.union S.finite_toSet).subset fun v hv => ?_
       by_contra h
-      simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not, Finset.mem_coe] at h
+      simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not, Finset.mem_coe] at h
       apply hv
       show (A v).indicator 1 (HeckeCharacterZeroLocus.SiegelWeilU.projV v X) = 1
       rw [hS v h.2]
@@ -425,7 +425,7 @@ theorem gen_mem_span (θ : InfFam D) (V : HSp D) (l : D.what₂.Tau → ℝ)
     (fun x : Mx D V.rank n => evalPoly p (fun τ => compAt θ τ x) * gauss V l s (fun τ => compAt θ τ x) *
       g (fun i j => finPart D (x i j))) ∈ Submodule.span ℂ {φ | IsMonoFock θ V l s φ} := by
   classical
-  haveI : FiniteDimensional D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : FiniteDimensional D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
   let b := Module.finBasis D.host.F D.host.E
   let tr : (Fin n → Fin V.rank → Af D.host.F ⊗[D.host.F] D.host.E) ≃ₜ
       (Fin V.rank → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) :=
@@ -1039,7 +1039,7 @@ theorem mem_SB_of_isPureFin {D : D7} {r n d : ℕ} (bs : Module.Basis (Fin d) D.
       (Fin n → Fin r → HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v ⊗[D.host.F] D.host.E) → ℂ)
     (h : HeckeCharacterZeroLocus.SiegelWeilU.IsPureFin bs (fun X => g fun i j => X j i) gv) :
     g ∈ GlobalTheory.WeilM.SB (Fin r → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI : FiniteDimensional D.host.F D.host.E := Module.Finite.of_basis bs
+  have : FiniteDimensional D.host.F D.host.E := Module.Finite.of_basis bs
   obtain ⟨h1, h2⟩ := isSB_of_isPureFin bs gv _ h
   exact ⟨h1.comp_continuous (transpH _ r n).continuous, h2.comp_homeomorph (transpH _ r n)⟩
 
@@ -1080,7 +1080,7 @@ theorem integrable_descend_tsum (a : G → X → ℂ) (ha : ∀ x, Measurable fu
     Integrable (descend Γ fun g => ∑' x, a g x) (GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ) ∧
       ∀ᵐ q ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ, Summable (a q.out) := by
   set A : G → ℝ≥0∞ := fun g => ∑' x, ‖a g x‖ₑ with hAdef
-  have hAm : Measurable A := Measurable.tsum fun x => (ha x).enorm
+  have hAm : Measurable A := Measurable.tsum fun x => (ha x).eNorm
   have hAq : Measurable (descend Γ A) := measurable_from_quotient.2 (by
     rw [show descend Γ A ∘ Quotient.mk'' = A from hA.lift_descend]
     exact hAm)
@@ -1100,7 +1100,7 @@ theorem integrable_descend_tsum (a : G → X → ℂ) (ha : ∀ x, Measurable fu
   refine ⟨⟨hGm, ?_⟩, ?_⟩
   · refine (lintegral_mono fun q => ?_).trans_lt hfin
     show ‖∑' x, a q.out x‖ₑ ≤ ∑' x, ‖a q.out x‖ₑ
-    exact enorm_tsum_le_tsum_enorm
+    exact eNorm_tsum_le_tsum_eNorm
   · filter_upwards [hae] with q hq
     exact GlobalTheory.CompanionTheory.ThetaOrbit.summable_of_tsum_enorm_lt_top hq
 
@@ -1131,9 +1131,9 @@ theorem ifrB_finset_sum {V : HSp D} {ν : Measure (GA D V)} (hν : ν.IsHaarMeas
     (habs : ∀ j, GlobalTheory.SiegelFormula.absThetaInt V ν (φs j) < ⊤) :
     IfrB V ν (∑ j, φs j) β = ∑ j, IfrB V ν (φs j) β := by
   have : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI := hν
-  haveI := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
-  haveI : Countable (Matrix (Fin V.rank) (Fin r) D.host.E) :=
+  have := hν
+  have := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
+  have : Countable (Matrix (Fin V.rank) (Fin r) D.host.E) :=
     inferInstanceAs (Countable (Fin V.rank → Fin r → D.host.E))
   have hrank : ∀ (δ : GL (Fin V.rank) D.host.E) (ξ : Matrix (Fin V.rank) (Fin r) D.host.E),
       (δ.1 * ξ).rank = ξ.rank := fun δ ξ =>

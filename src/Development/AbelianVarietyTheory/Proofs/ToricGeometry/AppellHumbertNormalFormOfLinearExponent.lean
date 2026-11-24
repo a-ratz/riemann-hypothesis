@@ -71,7 +71,7 @@ theorem _root_.GlobalTheory.AppellHumbert.exists_real_extension {g : ℕ} (Λ : 
     [DiscreteTopology Λ]
     (hΛ : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) {W : Type*} [AddCommGroup W] [Module ℝ W]
     (f : Λ →+ W) : ∃ F : (Fin g → ℂ) →ₗ[ℝ] W, ∀ l : Λ, F l = f l := by
-  haveI : IsZLattice ℝ Λ := ⟨hΛ⟩
+  have : IsZLattice ℝ Λ := ⟨hΛ⟩
   let b := Module.Free.chooseBasis ℤ Λ
   let bR := Module.Basis.ofZLatticeBasis ℝ Λ b
   refine ⟨bR.constr ℝ (fun i => f (b i)), fun l => ?_⟩
@@ -99,7 +99,7 @@ theorem _root_.GlobalTheory.appellHumbert_normal_form_of_linear_exponent :
     (∀ (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)), DiscreteTopology Λ → Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤ → ∀ (a : Λ → ℂ) (B : Λ →+ ((Fin g → ℂ) →ₗ[ℂ] ℂ)), (∀ l, a l ≠ 0) → (∀ l m : Λ, a (l + m) = a l * a m * cexp (B l m)) → ∃ (Hm : Matrix (Fin g) (Fin g) ℂ) (χ : Λ → ℂ) (Ef : LinearMap.BilinForm ℤ Λ) (Q : (Fin g → ℂ) → ℂ), Hm.IsHermitian ∧ (∀ l, ‖χ l‖ = 1) ∧ (∀ l m : Λ, (Ef l m : ℝ) = ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (m : Fin g → ℂ))).im) ∧ Differentiable ℂ Q ∧ Q 0 = 0 ∧ ∀ (l : Λ) z, a l * cexp (B l z) * cexp (Q z - Q (z + l)) = (χ l * cexp (Real.pi * (z ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ))) + Real.pi / 2 * ((l : Fin g → ℂ) ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ)))))) := by
   intro g Λ hdisc hΛ a B ha hcoc
   classical
-  haveI := hdisc
+  have := hdisc
   let b : Λ →+ (Fin g → ℂ) :=
     { toFun := fun l j => B l (Pi.single j 1)
       map_zero' := by ext j; simp

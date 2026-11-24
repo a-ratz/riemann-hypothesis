@@ -76,7 +76,7 @@ theorem hessC_eq_leviC {e : ℕ} (f : (Fin e → ℂ) → ℝ) (z : Fin e → �
 theorem leviC_add {e : ℕ} (H : (Fin e → ℂ) →L[ℝ] (Fin e → ℂ) →L[ℝ] ℝ) (a a' b : Fin e → ℂ) :
     leviC H (a + a') b = leviC H a b + leviC H a' b := by
   unfold leviC
-  simp only [smul_add, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [smul_add, map_add (f := _), add_apply]
   push_cast
   ring
 
@@ -94,7 +94,7 @@ theorem leviC_smul {e : ℕ} (H : (Fin e → ℂ) →L[ℝ] (Fin e → ℂ) →L
     linear_combination (↑c.im * a k) * Complex.I_sq
   unfold leviC
   rw [hc', hc]
-  simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
+  simp only [map_add (f := _), map_smul, add_apply, FunLike.coe_smul,
     Pi.smul_apply, smul_eq_mul]
   push_cast
   conv_rhs => rw [← Complex.re_add_im c]
@@ -176,7 +176,7 @@ theorem vecMul_hessC_comp_eq_zero {N e : ℕ} (φ : (Fin N → ℂ) → ℝ) (τ
     unfold leviC
     rw [hess_comp_of_ker φ τ z hτ hφ v b hv, hess_comp_of_ker φ τ z hτ hφ v _ hv,
       hess_comp_of_ker φ τ z hτ hφ _ b hIv, hess_comp_of_ker φ τ z hτ hφ _ _ hIv, hB]
-    simp only [map_smul, ContinuousLinearMap.smul_apply, smul_smul, Complex.I_mul_I, neg_one_smul,
+    simp only [map_smul, smul_apply, smul_smul, Complex.I_mul_I, neg_one_smul,
       map_neg]
     simp
   funext j

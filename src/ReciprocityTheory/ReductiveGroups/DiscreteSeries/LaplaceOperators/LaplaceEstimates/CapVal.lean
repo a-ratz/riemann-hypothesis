@@ -200,7 +200,7 @@ lemma opC_coef (h : Matrix (Fin n) (Fin n) ℂ) (B : Module.End ℂ D) (v v' : V
   rw [vec_expandD ι v, vec_expand ι v']
 
   simp only [opC, map_sum, map_smul, Submodule.coe_sum, Submodule.coe_smul,
-  ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply,
+  FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply,
   ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, inner_sum, sum_inner, inner_smul_left,
   inner_smul_right, inner_conj_symm]
   simp only [Finset.mul_sum]

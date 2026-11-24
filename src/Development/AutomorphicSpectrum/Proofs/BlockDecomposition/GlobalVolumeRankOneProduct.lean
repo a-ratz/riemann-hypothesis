@@ -85,7 +85,7 @@ theorem sigmaFinite_fib (h : Formalism.MainNotions.GlobalTheoryTheory.GenusMassV
     (b : X) : SigmaFinite (fib b) := by
   have hc : fib b Uᶜ = 0 :=
     measure_mono_null (compl_subset_compl.2 inter_subset_right) (h.1 b)
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   have hσ : IsSigmaCompact U := isSigmaCompact_iff_sigmaCompactSpace.2 inferInstance
   obtain ⟨K, hKc, hKU⟩ := hσ
   have hsub : ∀ n, K n ⊆ U := fun n => hKU ▸ subset_iUnion K n
@@ -213,18 +213,18 @@ theorem sigmaFinite_free (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (
   have hO := GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hCM R hR n M
   obtain ⟨h1, h2, h3, h4, -⟩ := hR
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := t8 n M
+  have := t2
+  have := t3
+  have := t4
+  have := t8 n M
   exact sigmaFinite_fib hm hO S
 
 theorem free_fibre_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (h₀ : ∀ a b : Fin 1, σ ((0 : Matrix (Fin 1) (Fin 1) E) b a) = (0 : Matrix (Fin 1) (Fin 1) E) a b), ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (laminf : Measure (Ainf F)) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), IsStdInf laminf → (∀ v, IsStdV v (lam v)) → ∀ (minf : HermR (Ainf F) σ 1 → Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)), IsGramFibFree (Ainf F) σ J 1 (coordW (Ainf F) b laminf 1 M) (coordHerm (Ainf F) σ b laminf 1) minf → ∀ (m : ∀ v : HeightOneSpectrum (𝓞 F), HermR (Fv F v) σ 1 → Measure (Fin 1 → Fin M → Fv F v ⊗[F] E)), (∀ v, IsGramFibFree (Fv F v) σ J 1 (coordW (Fv F v) b (lam v) 1 M) (coordHerm (Fv F v) σ b (lam v) 1) (m v)) → SigmaFinite (minf (hermOf (Ainf F) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀)) ∧ (∀ v, SigmaFinite (m v (hermOf (Fv F v) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀))) ∧ ((framesE σ J (0 : Matrix (Fin 1) (Fin 1) E)).Nonempty → minf (hermOf (Ainf F) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) ≠ 0 ∧ ∀ v, m v (hermOf (Fv F v) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) ≠ 0) := by
   intro F E _ _ _ _ _ σ hCM M J hJ _ h₀ d b laminf lam hinf hlam minf hminf m hm
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   refine ⟨sigmaFinite_free σ hCM J (Ainf F) hLi 1 _ _ minf hminf _,
     fun v => sigmaFinite_free σ hCM J (Fv F v) (hLv v) 1 _ _ (m v) (hm v) _, ?_⟩
   rintro ⟨X₀, hX₀, hg⟩
@@ -235,22 +235,22 @@ theorem free_fibre_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     rfl
   constructor
   · obtain ⟨h1, h2, h3, h4, hA, hRed, hU, -⟩ := hLi
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
-    haveI := hA
-    haveI := hRed
-    haveI : FiniteDimensional F E := Module.Finite.of_basis b
+    have := h1
+    have := h2
+    have := h3
+    have := h4
+    have := hA
+    have := hRed
+    have : FiniteDimensional F E := Module.Finite.of_basis b
     have hUo : IsOpen {r : Ainf F | IsUnit r} := by
       have := hU.isOpen_range
       convert this using 1
       ext r
       simp [IsUnit]
     have hH := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b laminf hinf.1
-    haveI := hH.2.1 1 M
+    have := hH.2.1 1 M
     let ν' : Measure (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HermR (Ainf F) σ 1) := coordHerm (Ainf F) σ b laminf 1
-    haveI : ν'.IsAddHaarMeasure := hH.2.2 1
+    have : ν'.IsAddHaarMeasure := hH.2.2 1
     exact (GlobalTheory.LocalFibreNonzero.fib_tens σ (PI.VolStabS.sigma_invol σ hCM.2.2.2) J hJ.1 1 (Ainf F)
       hUo (GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.lip_of_artinian_reduced (Ainf F)) _ ν' minf hminf
       (ratTup (F := F) (Ainf F) X₀) _ (ratTup_free (Ainf F) X₀ hX₀)
@@ -258,10 +258,10 @@ theorem free_fibre_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
         (ratTup_free (Ainf F) X₀ hX₀) (hgram (Ainf F)) W hW hxW)).1
   · intro v
     obtain ⟨h1, h2, h3, h4, -⟩ := hLv v
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
+    have := h1
+    have := h2
+    have := h3
+    have := h4
     have hH := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b (lam v) (hlam v).1
     exact (GlobalTheory.LocalFibreNonzero.fibre_nonzero_finite F E σ hCM M J hJ v 1 _ _ (hH.2.1 1 M) (hH.2.2 1)
       (m v) (hm v) (ratTup (F := F) (Fv F v) X₀) _ (ratTup_free (Fv F v) X₀ hX₀) (hgram (Fv F v))).1

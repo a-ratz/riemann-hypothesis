@@ -175,8 +175,8 @@ theorem mem_span_Pm (h : ∀ y, ev (ι y) = y) (hev : Continuous ev) (hι : Cont
     apply hk
     exact ⟨put ev ι x k, subset_tsupport _ hne, ev_put h x k⟩
   have hfin : (F '' (ev '' tsupport g)).Finite := by
-    letI : TopologicalSpace (A → ℂ) := ⊥
-    haveI : DiscreteTopology (A → ℂ) := ⟨rfl⟩
+    let : TopologicalSpace (A → ℂ) := ⊥
+    have : DiscreteTopology (A → ℂ) := ⟨rfl⟩
     exact (hC.image hFloc.continuous).finite_of_discrete
   let Vs : Finset (A → ℂ) := hfin.toFinset.filter (· ≠ 0)
   let rep : (A → ℂ) → K := fun v => if hv : ∃ k, F k = v then hv.choose else 0
@@ -197,7 +197,7 @@ theorem mem_span_Pm (h : ∀ y, ev (ι y) = y) (hev : Continuous ev) (hι : Cont
     have hsupp : Function.support (φv v) ⊆ {k | F k = v} := by
       intro k hk
       by_contra hne
-      exact hk (if_neg hne)
+      exact hk (ite_eq_right hne)
     have hL : {k | F k = v} ⊆ ev '' tsupport g := by
       intro k hk
       by_contra hc
@@ -219,8 +219,8 @@ theorem mem_span_Pm (h : ∀ y, ev (ι y) = y) (hev : Continuous ev) (hι : Cont
       show g x = g (put ev ι x (ev x))
       rw [put_self]
     by_cases hmem : F (ev x) ∈ Vs
-    · rw [if_pos hmem, ← hgx]
-    · rw [if_neg hmem]
+    · rw [ite_eq_left hmem, ← hgx]
+    · rw [ite_eq_right hmem]
       have h0 : F (ev x) = 0 := by
         by_contra hne
         apply hmem

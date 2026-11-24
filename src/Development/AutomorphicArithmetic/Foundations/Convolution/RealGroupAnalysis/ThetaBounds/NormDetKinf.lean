@@ -88,7 +88,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.kFin :
     rw [hΦ]
     exact h2
   refine ⟨fun k => Submodule.subset_span ⟨f, hf, _, hUF (hU k), key k⟩, ?_⟩
-  haveI := hfd
+  have := hfd
   let T : U →ₗ[ℂ] (GL (Fin 2) (A E) → ℂ) :=
     { toFun := fun u => lift W M f.1 u.1
       map_add' := fun u u' => hl.1 f hf u.1 (hUF u.2) u'.1 (hUF u'.2)
@@ -97,6 +97,6 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.kFin :
     rw [Submodule.map_span, Submodule.span_le]
     rintro _ ⟨_, ⟨k, rfl⟩, rfl⟩
     exact ⟨⟨_, hU k⟩, (key k).symm⟩
-  haveI : FiniteDimensional ℂ ((Submodule.span ℂ (Set.range fun k => cptRep E 2 k Φ)).map (Sm E 2).subtype) :=
+  have : FiniteDimensional ℂ ((Submodule.span ℂ (Set.range fun k => cptRep E 2 k Φ)).map (Sm E 2).subtype) :=
     Submodule.finiteDimensional_of_le hle
   exact (Submodule.equivMapOfInjective (Sm E 2).subtype (Submodule.injective_subtype _) _).symm.finiteDimensional

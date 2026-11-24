@@ -1065,7 +1065,7 @@ theorem exists_parAt : GlobalTheory.UT.LL → UTorsSt → ∀ (o Ω : Type) [Com
     have h1 : 2 ≤ ρ.n ^ ρ.k := le_trans ρ.n_prime.two_le
       (Nat.le_self_pow (by have := ρ.two_le; omega) _)
     nlinarith
-  haveI : CharZero u.V := RingHom.charZero
+  have : CharZero u.V := RingHom.charZero
     ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V (FractionRing u.V)))
   obtain ⟨k, hk, hint⟩ := GlobalTheory.T.theta_test_power_integral hL o Ω S ρ p y₀ u a
   obtain ⟨a₁, ⟨c, hc, hca⟩, hpow⟩ := GlobalTheory.T.exists_integral_nthRoot_testModel_point hL o Ω S ρ p y₀ u (a ^ k) k hk hint
@@ -1073,7 +1073,7 @@ theorem exists_parAt : GlobalTheory.UT.LL → UTorsSt → ∀ (o Ω : Type) [Com
   have hpar := (GlobalTheory.T.torusCoord_unit_and_section_eq_expansion hL o Ω S ρ p y₀ u c g₁ a₁ hc hca hg₁).2
   have hNk : 1 ≤ S.N * k := Nat.mul_pos (by omega) hk
   obtain ⟨f, hf, hsurj, -⟩ := hT u.V u.complete u.A u.G u.D u.U (PadicAlgCl p) (S.N * k) hNk
-  haveI : IsMonHom u.U.gen.hom := u.U.gen_hom
+  have : IsMonHom u.U.gen.hom := u.U.gen_hom
   have hk' : (a₁ ≫ u.U.gen.hom) ^ k = (a ≫ u.U.gen.hom) ^ k := by
     rw [← MonObj.pow_comp, ← MonObj.pow_comp, hpow]
   have hx : ((a ≫ u.U.gen.hom) * (a₁ ≫ u.U.gen.hom)⁻¹) ^ (S.N * k) = 1 := by

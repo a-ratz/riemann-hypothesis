@@ -149,7 +149,7 @@ namespace GlobalTheory.HullLat
 
 theorem fg_of_le {R M : Type} [CommRing R] [IsNoetherianRing R] [AddCommGroup M] [Module R M]
     {L X : Submodule R M} (hL : L.FG) (hX : X ≤ L) : X.FG := by
-  haveI : IsNoetherian R L := isNoetherian_of_fg_of_noetherian L hL
+  have : IsNoetherian R L := isNoetherian_of_fg_of_noetherian L hL
   have h1 : (X.comap L.subtype).FG := IsNoetherian.noetherian _
   have h2 := h1.map L.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hX] at h2
@@ -233,12 +233,12 @@ theorem fg_quot_ker {G S : Type} [CommGroup G] [Finite S] (φ : G →* (S → Mu
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_add' := fun _ _ => rfl }
-  haveI : Module.Finite ℤ (Additive (S → Multiplicative ℤ)) := Module.Finite.equiv e.toIntLinearEquiv
+  have : Module.Finite ℤ (Additive (S → Multiplicative ℤ)) := Module.Finite.equiv e.toIntLinearEquiv
   have h1 : φ.range.FG := by
     rw [Subgroup.fg_iff_add_fg]
     rw [← AddSubgroup.toIntSubmodule_toAddSubgroup (Subgroup.toAddSubgroup φ.range)]
     exact (Submodule.fg_iff_addSubgroup_fg _).1 (IsNoetherian.noetherian _)
-  haveI : Group.FG φ.range := (Group.fg_iff_subgroup_fg _).2 h1
+  have : Group.FG φ.range := (Group.fg_iff_subgroup_fg _).2 h1
   exact Group.fg_of_surjective (f := (QuotientGroup.quotientKerEquivRange φ).symm.toMonoidHom)
     (QuotientGroup.quotientKerEquivRange φ).symm.surjective
 
@@ -268,7 +268,7 @@ theorem finite_spec [IsDedekindDomain (integralClosure K.O L)] :
     have hp : (v.asIdeal.comap (algebraMap K.O C)).IsPrime := Ideal.comap_isPrime _ _
     have hne : v.asIdeal.comap (algebraMap K.O C) ≠ ⊥ := by
       intro h
-      exact v.ne_bot (Ideal.eq_bot_of_comap_eq_bot h)
+      exact v.ne_bot (Ideal.eq_bot_of_under_eq_bot h)
     have hmax := hp.isMaximal hne
     rw [IsLocalRing.eq_maximalIdeal hmax]
   have := Ideal.finite_factors hI
@@ -332,9 +332,9 @@ theorem ker_valHom [IsDedekindDomain (integralClosure K.O L)] [IsFractionRing (i
 theorem fg_units_quot : ∀ (K : UQ) (L : Type) [Field L] [Algebra K.O L] [Algebra K.E L] [IsScalarTower K.O K.E L]
     [FiniteDimensional K.E L], Group.FG (Lˣ ⧸ intUnits K.O L) := by
   intro K L _ _ _ _ _
-  haveI : IsDedekindDomain (integralClosure K.O L) := integralClosure.isDedekindDomain K.O K.E L
-  haveI : IsFractionRing (integralClosure K.O L) L := integralClosure.isFractionRing_of_finite_extension K.E L
-  haveI := finite_spec K L
+  have : IsDedekindDomain (integralClosure K.O L) := integralClosure.isDedekindDomain K.O K.E L
+  have : IsFractionRing (integralClosure K.O L) L := integralClosure.isFractionRing_of_finite_extension K.E L
+  have := finite_spec K L
   rw [← ker_valHom K L]
   exact fg_quot_ker _
 
@@ -396,15 +396,15 @@ theorem units_quot_intUnits_fg : ∀ (K : UQ), (∀ (L : Type) [Field L] [Algebr
     [Module.Finite K.E A], IsReduced A → Group.FG (Aˣ ⧸ intUnits K.O A) := by
   intro K hL A _ _ _ _ _ _
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K.E A
+  have : IsArtinianRing A := IsArtinianRing.of_finite K.E A
   have := Fintype.ofFinite (MaximalSpectrum A)
 
   have hfg : ∀ I : MaximalSpectrum A,
       Group.FG ((A ⧸ I.asIdeal)ˣ ⧸ intUnits K.O (A ⧸ I.asIdeal)) := by
     intro I
-    haveI := I.isMaximal
-    letI : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-    haveI : FiniteDimensional K.E (A ⧸ I.asIdeal) :=
+    have := I.isMaximal
+    let : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+    have : FiniteDimensional K.E (A ⧸ I.asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ K.E I.asIdeal).toLinearMap
         Ideal.Quotient.mk_surjective
     exact hL (A ⧸ I.asIdeal)
@@ -428,7 +428,7 @@ theorem units_quot_intUnits_fg : ∀ (K : UQ), (∀ (L : Type) [Field L] [Algebr
         Ideal.Quotient.mk I.asIdeal (e.symm z) = z I := fun z => by
       rw [← IsArtinianRing.equivPi_apply A (e.symm z) I]
       exact congrFun (e.apply_symm_apply z) I
-    simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
     rw [h3]
     rfl
   have hker : ψ.ker ≤ intUnits K.O A := by
@@ -440,7 +440,7 @@ theorem units_quot_intUnits_fg : ∀ (K : UQ), (∀ (L : Type) [Field L] [Algebr
       NormUnits.isIntegral_of_forall_quot _ fun I => ?_⟩
     have := (hI I).2
     rwa [Units.coe_map_inv] at this
-  haveI : Group.FG (Aˣ ⧸ ψ.ker) :=
+  have : Group.FG (Aˣ ⧸ ψ.ker) :=
     Group.fg_of_surjective (f := (QuotientGroup.quotientKerEquivOfSurjective ψ hsurj).symm.toMonoidHom)
       (QuotientGroup.quotientKerEquivOfSurjective ψ hsurj).symm.surjective
   refine Group.fg_of_surjective
@@ -472,11 +472,11 @@ theorem fg_quot_intUnits : ∀ (K : UQ) (B : InvAlg K), B.P.Separable →
 theorem exists_finset_sq_mem {G : Type} [CommGroup G] (N : Subgroup G) (hN : Group.FG (G ⧸ N)) :
     ∃ F : Finset G, ∀ u : G, u ^ 2 ∈ N → ∃ f ∈ F, u * f⁻¹ ∈ N := by
   let M := Additive (G ⧸ N)
-  haveI : AddGroup.FG M := inferInstance
-  haveI : Module.Finite ℤ M := Module.Finite.iff_addGroup_fg.mpr inferInstance
+  have : AddGroup.FG M := inferInstance
+  have : Module.Finite ℤ M := Module.Finite.iff_addGroup_fg.mpr inferInstance
   let K2 : Submodule ℤ M := LinearMap.ker (LinearMap.lsmul ℤ M 2)
-  haveI : Module.Finite ℤ K2 := Module.IsNoetherian.finite ℤ K2
-  haveI : Finite K2 := Module.finite_of_fg_torsion K2 (fun x => ⟨⟨2, mem_nonZeroDivisors_of_ne_zero (by norm_num)⟩, by
+  have : Module.Finite ℤ K2 := Module.IsNoetherian.finite ℤ K2
+  have : Finite K2 := Module.finite_of_fg_torsion K2 (fun x => ⟨⟨2, mem_nonZeroDivisors_of_ne_zero (by norm_num)⟩, by
     apply Subtype.ext; have h := x.2; rw [LinearMap.mem_ker, LinearMap.lsmul_apply] at h
     simpa using h⟩)
   let r : K2 → G := fun k => Quotient.out (Additive.toMul (k : M))
@@ -726,7 +726,7 @@ theorem finite_mod_T_of (K : UQ) (B : InvAlg K)
   obtain ⟨a, rfl⟩ := hPr J hJ hst
   have ha : adm a := ⟨h3, h4⟩
   have hex' : ∃ a', adm a' ∧ Mf a' = Mf a := ⟨a, ha, rfl⟩
-  have hg : gch (Mf a) = hex'.choose := dif_pos hex'
+  have hg : gch (Mf a) = hex'.choose := dite_eq_left hex'
   obtain ⟨ha', hMa'⟩ := hex'.choose_spec
   set a' := hex'.choose
 
@@ -844,7 +844,7 @@ theorem relIndex_ne_zero_of_between (K : UQ) (B : InvAlg K) (L : Submodule K.O B
     have hu := (Subgroup.mem_inf.mp u.2).1
     have hM : γ • ((u : B.Aˣ) • L) = mulLat K.O (algebraMap K.O B.A c * ((u : B.Aˣ) : B.A)) L := by
       rw [smul_smul, smul_eq_mulLat, Units.val_mul, hγ]
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Subgroup.smul_def, hM]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Subgroup.smul_def, hM]
     constructor
     · rintro _ ⟨y, hy, rfl⟩
       refine ⟨algebraMap K.O B.A c * (((u : B.Aˣ)⁻¹ : B.Aˣ) : B.A) * y, h _ hu.2 y hy, ?_⟩
@@ -856,8 +856,8 @@ theorem relIndex_ne_zero_of_between (K : UQ) (B : InvAlg K) (L : Submodule K.O B
       simp only [LinearMap.mulLeft_apply]
       exact h _ hu.1 y hy
   rw [Subgroup.relIndex, hsub]
-  haveI : Finite (MulAction.orbit G L) := horb.to_subtype
-  haveI : Finite (G ⧸ MulAction.stabilizer G L) := Finite.of_equiv _ (MulAction.orbitEquivQuotientStabilizer G L)
+  have : Finite (MulAction.orbit G L) := horb.to_subtype
+  have : Finite (G ⧸ MulAction.stabilizer G L) := Finite.of_equiv _ (MulAction.orbitEquivQuotientStabilizer G L)
   exact Subgroup.index_ne_zero_of_finite
 
 end GlobalTheory.UnitLemma.StabIndex
@@ -903,7 +903,7 @@ theorem orbits_finite : ∀ (K : UQ) (B : InvAlg K), B.P.Separable → ∀ x : B
   by_cases h0 : ∃ L0, L0 ∈ B.X x
   swap
   · push_neg at h0
-    haveI : IsEmpty (B.X x) := ⟨fun L => h0 L.1 L.2⟩
+    have : IsEmpty (B.X x) := ⟨fun L => h0 L.1 L.2⟩
     refine ⟨?_, fun L hL => absurd hL (h0 L)⟩
     unfold Orb
     infer_instance
@@ -938,7 +938,7 @@ theorem orbits_finite : ∀ (K : UQ) (B : InvAlg K), B.P.Separable → ∀ x : B
       (⋃ J ∈ S, {M : Submodule K.O B.A | mulLat K.O (algebraMap K.O B.A c) J ≤ M ∧ M ≤ J}) ∩ B.X x with hW
     have hWf : W.Finite :=
       (hSf.biUnion fun J hJ => _root_.GlobalTheory.UnitLemma.finite_between_mulLat K B J (hSl J hJ) c hc0).subset Set.inter_subset_left
-    haveI : Finite W := hWf.to_subtype
+    have : Finite W := hWf.to_subtype
     let f : W → Orb K.O B.T (B.X x) := fun M => Quot.mk _ ⟨M.1, M.2.2⟩
     apply Finite.of_surjective f
     intro o

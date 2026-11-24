@@ -48,8 +48,8 @@ namespace GlobalTheory.Mem.Isom
 
 theorem haar_fd_phi : ∀ (D : D7) (V V' : HSp D) (I : GlobalTheory.Mem.Isom.IsoMat V V') (S : HSp D) (μ : Measure (WO S V')) (𝓕 : Set (WO S V')), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratL V' S) 𝓕 μ → ∃ (ν : Measure (WO S V)) (𝓖 : Set (WO S V)), ν.IsAddHaarMeasure ∧ IsAddFundamentalDomain (ratL V S) 𝓖 ν ∧ ∀ u : WO S V → ENNReal, ∫⁻ w in 𝓕, u ((I.phi S).symm w) ∂μ = ∫⁻ w in 𝓖, u w ∂ν := by
   intro D V V' I S μ 𝓕 hμ h𝓕
-  haveI hB : BorelSpace (WO S V) := ⟨rfl⟩
-  haveI hB' : BorelSpace (WO S V') := ⟨rfl⟩
+  have hB : BorelSpace (WO S V) := ⟨rfl⟩
+  have hB' : BorelSpace (WO S V') := ⟨rfl⟩
   have hc := I.continuous_phi S
   have hcs := I.continuous_phi_symm S
   have hrat : ∀ x, I.phi S x ∈ ratL V' S ↔ x ∈ ratL V S := by

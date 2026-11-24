@@ -81,9 +81,9 @@ theorem exists_levelOff_le [Submodule.IsFullLattice E L] (U : Subgroup (GAd σ J
   push Not at hcon
   obtain ⟨g, hg⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
     (fun S : Finset (HeightOneSpectrum (𝓞 F)) => (levelOff σ J L S : Set (GAd σ J)) \ (U : Set (GAd σ J)))
-    (fun S S' => ⟨S ∪ S', Set.diff_subset_diff_left (levelOff_anti σ J L Finset.subset_union_left),
-      Set.diff_subset_diff_left (levelOff_anti σ J L Finset.subset_union_right)⟩)
-    (fun S => Set.diff_nonempty.2 (hcon S))
+    (fun S S' => ⟨S ∪ S', Set.sdiff_subset_sdiff_left (levelOff_anti σ J L Finset.subset_union_left),
+      Set.sdiff_subset_sdiff_left (levelOff_anti σ J L Finset.subset_union_right)⟩)
+    (fun S => Set.sdiff_nonempty.2 (hcon S))
     (fun S => (isCompact_levelOff σ J L S).diff hU)
     (fun S => ((isCompact_levelOff σ J L S).diff hU).isClosed)
   rw [Set.mem_iInter] at hg
@@ -130,7 +130,7 @@ end General
 
 theorem gen_by_local : ∀ (D : D7) (V : HSp D) (U : Subgroup (GA D V)), IsOpen (U : Set (GA D V)) → (∀ g : GA D V, {p : Place D | ¬ (gAt V p g ∈ U ∧ gAt V p g ∈ GfC V)}.Finite) ∧ Submonoid.closure ({g : GA D V | ∃ p, gAt V p g = g} ∪ {k : GA D V | k ∈ U ∧ k ∈ GfC V ∧ ∀ p, gAt V p k ∈ U ∧ gAt V p k ∈ GfC V}) = ⊤ := by
   intro D V U hU
-  haveI hL : Submodule.IsFullLattice D.host.E (stdLattice D.host.E V.rank) := isLattice_stdLattice
+  have hL : Submodule.IsFullLattice D.host.E (stdLattice D.host.E V.rank) := isLattice_stdLattice
   obtain ⟨S, hS⟩ := exists_levelOff_le D.sp.cm.sig V.gram (stdLattice D.host.E V.rank) U hU
   have hG : ∀ k ∈ levelOff D.sp.cm.sig V.gram (stdLattice D.host.E V.rank) S, k ∈ U ∧ k ∈ GfC V :=
     fun k hk => ⟨hS hk, (mem_levelOff.1 hk).1⟩
@@ -138,7 +138,7 @@ theorem gen_by_local : ∀ (D : D7) (V : HSp D) (U : Subgroup (GA D V)), IsOpen 
     (fun v x => Submonoid.subset_closure (Or.inl ⟨.inl v, by simp [gAt]⟩)) (fun w x => ?_) fun k hk => ?_⟩
   · have hf := Filter.eventually_cofinite.1
       (eventually_proj_mem_stabLoc D.sp.cm.sig V.gram (stdLattice D.host.E V.rank) g)
-    haveI : Finite D.what₂.Tau := Finite.of_injective _ (placeOf_bijective D).1
+    have : Finite D.what₂.Tau := Finite.of_injective _ (placeOf_bijective D).1
     refine (((hf.union S.finite_toSet).image Sum.inl).union (Set.finite_range Sum.inr)).subset ?_
     rintro (v | τ) hp
     · refine Or.inl ⟨v, ?_, rfl⟩

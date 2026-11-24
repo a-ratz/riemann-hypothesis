@@ -126,13 +126,13 @@ def eP : FiniteAdeleRing (𝓞 F) F :=
 theorem idempotentOver_eval_eq_one (v : HeightOneSpectrum (𝓞 F)) (h : ((p : ℕ) : 𝓞 F) ∈ v.asIdeal) : evalV F v (eP F p) = 1 := by
   show (eP F p) v = 1
   first
-  | exact if_pos h
+  | exact ite_eq_left h
   | simp [eP, h]
 
 theorem idempotentOver_eval_eq_zero (v : HeightOneSpectrum (𝓞 F)) (h : ((p : ℕ) : 𝓞 F) ∉ v.asIdeal) : evalV F v (eP F p) = 0 := by
   show (eP F p) v = 0
   first
-  | exact if_neg h
+  | exact ite_eq_right h
   | simp [eP, h]
 
 theorem projection_idem : eP F p * eP F p = eP F p := by

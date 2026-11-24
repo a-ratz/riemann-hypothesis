@@ -169,7 +169,7 @@ theorem lintegral_cone_slab (K : Type) [Field K] [NumberField K] :
   have hmap : (volume.restrict S).map (fun x : mixedSpace K => mixedEmbedding.norm x) =
       volume (normLeOne K) • volume.restrict (Set.Ioc 0 e) := by
     refine Measure.ext_of_Iic _ _ fun t => ?_
-    rw [Measure.map_apply hN measurableSet_Iic, Measure.restrict_apply' hSm, Measure.smul_apply,
+    rw [Measure.map_apply hN measurableSet_Iic, Measure.restrict_apply' hSm, smul_apply,
       Measure.restrict_apply measurableSet_Iic, smul_eq_mul]
     have e1 : (fun x : mixedSpace K => mixedEmbedding.norm x) ⁻¹' Set.Iic t ∩ S =
         fundamentalCone K ∩ {x | mixedEmbedding.norm x ≤ min t e} := by
@@ -180,7 +180,7 @@ theorem lintegral_cone_slab (K : Type) [Field K] [NumberField K] :
   have e3 : fundamentalCone K ∩ {x | 1 ≤ mixedEmbedding.norm x ∧ mixedEmbedding.norm x < e} =
       (fun x : mixedSpace K => mixedEmbedding.norm x) ⁻¹' Set.Ico 1 e ∩ S := by
     ext x
-    simp only [hS, Set.mem_inter_iff, Set.mem_preimage, Set.mem_Ico, Set.mem_setOf_eq]
+    simp only [hS, Set.mem_inter_iff, Set.mem_preimage, Set.mem_Ico, Set.mem_ofPred_eq]
     exact ⟨fun h => ⟨h.2, h.1, h.2.2.le⟩, fun h => ⟨h.2.1, h.1⟩⟩
   rw [e3, ← Measure.restrict_restrict (hN measurableSet_Ico),
     ← setLIntegral_map (f := fun t : ℝ => ENNReal.ofReal t⁻¹) measurableSet_Ico (by fun_prop) hN, hmap,
@@ -474,7 +474,7 @@ theorem torsion_mul_covol (hE : IsTotallyComplex E) (Λ : Submodule (𝓞 E) (Fi
         ← (measurePreserving_act hE g).setLIntegral_comp_preimage hs (by fun_prop)]
       simp only [hdact])
     (Units.torsion E) (toMixed E ⁻¹' fundamentalCone E) A hC hA
-    (fun g x hx => by simpa only [A, Set.mem_setOf_eq, hdact] using hx)
+    (fun g x hx => by simpa only [A, Set.mem_ofPred_eq, hdact] using hx)
     (fun x hx => by
       obtain ⟨u, hu⟩ := fundamentalCone.exists_unit_smul_mem (x := toMixed E x)
         (by rw [norm_toMixed hE]; exact (lt_of_lt_of_le one_pos hx.1).ne')

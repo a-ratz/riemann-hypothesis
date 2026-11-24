@@ -56,7 +56,7 @@ open GlobalTheory.LevelHecke
 theorem le_exp_sub_one {x : WithZero (Multiplicative ℤ)} {n : ℤ} (h : x < WithZero.exp n) :
     x ≤ WithZero.exp (n - 1) := by
   rcases eq_or_ne x 0 with rfl | hx
-  · exact zero_le'
+  · exact zero_le
   rw [← WithZero.exp_log hx] at h ⊢
   rw [WithZero.exp_lt_exp] at h
   rw [WithZero.exp_le_exp]
@@ -68,7 +68,7 @@ theorem T_notMem_sq (D : D7) (u : D.what₂.Word) (A : Formalism.L2.Forms.AtTTie
   set v0 := A.eV.symm ⟨v, hv⟩ with hv0
   have hU := GlobalTheory.LevelUnram.unram D u A v0
   set P := RingHom.ker (A.res v0) with hP
-  haveI hPp : P.IsPrime := RingHom.ker_isPrime _
+  have hPp : P.IsPrime := RingHom.ker_isPrime _
   have hvP : ∀ x, x ∈ v.asIdeal → algebraMap (𝓞 D.host.F) (𝓞 D.host.E) x ∈ P := by
     intro x hx
     have h := (A.res_v v0 x).1 (by rw [hv0, Equiv.apply_symm_apply]; exact hx)
@@ -79,7 +79,7 @@ theorem T_notMem_sq (D : D7) (u : D.what₂.Word) (A : Formalism.L2.Forms.AtTTie
   have hPbot : P ≠ ⊥ := fun h => hT0 (by rw [h] at hTP; exact (Ideal.mem_bot).1 hTP)
   have hlt : P ^ 2 < P ^ 1 := Ideal.pow_right_strictAnti P hPbot hPp.ne_top (by norm_num)
   rw [pow_one] at hlt
-  obtain ⟨a, haP, ha2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨a, haP, ha2⟩ := IsConcreteLE.exists_of_lt hlt
   have hTE : (((D.mem u).A.T : ℕ) : 𝓞 D.host.E) ∉ P ^ 2 := by
     intro hT2
     obtain ⟨s, b, hs, hsab⟩ := hU.2 a haP

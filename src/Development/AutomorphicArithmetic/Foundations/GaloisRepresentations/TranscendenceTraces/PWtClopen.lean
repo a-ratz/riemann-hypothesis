@@ -59,7 +59,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtClopen_of :
   apply hcrit p w
   intro A φ hφ u
   have hφc : Continuous φ := (IsLocallyConstant.iff_continuous φ).1 hφ
-  haveI := A.finite
+  have := A.finite
   obtain ⟨U0, hU0, hu, -⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.1 A.U.isBasis_affineOpens)
     (show u ∈ (⊤ : A.U.Opens) from trivial)
   have hK : IsCompact (A.r ⁻¹' (U0 : Set A.U)) :=
@@ -93,4 +93,4 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtClopen_of :
     rw [← pt_comp, hzf]
     exact hx0
   simp_rw [mul_ite, mul_zero]
-  rw [Finset.sum_ite_eq, if_pos hmem, mul_comm]
+  rw [Finset.sum_ite_eq, ite_eq_left hmem, mul_comm]

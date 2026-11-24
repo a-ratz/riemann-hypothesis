@@ -68,7 +68,7 @@ private theorem surjective_flat_quasiCompact_spMap {k K : Type} [Field k] [Field
     exact ⟨y, Subsingleton.elim _ _⟩
   · show Flat (Spec.map (CommRingCat.ofHom σ))
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := σ.toAlgebra
+    let := σ.toAlgebra
     show Module.Flat k K
     infer_instance
   · show QuasiCompact (Spec.map (CommRingCat.ofHom σ))
@@ -80,20 +80,20 @@ open scoped CategoryTheory.Obj in
 theorem _root_.GlobalTheory.hom_descends_to_subfield_containing_finset :
     ∀ (k K : Type) [Field k] [Field K] (σ : k →+* K) (X Y : Over (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp K)) (X₀ Y₀ : Over (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k)) (φ : X.left ⟶ X₀.left) (ψ : Y.left ⟶ Y₀.left), IsPullback φ X.hom X₀.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap σ) → IsPullback ψ Y.hom Y₀.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap σ) → QuasiCompact X.hom → QuasiSeparated X.hom → LocallyOfFiniteType Y.hom → ∀ f : X ⟶ Y, ∃ s : Finset K, ∀ (k₁ : Type) [Field k₁] (α : k →+* k₁) (β : k₁ →+* K), β.comp α = σ → (s : Set K) ⊆ Set.range β → ∀ (X₁ Y₁ : Over (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k₁)) (φ₁ : X.left ⟶ X₁.left) (χ : X₁.left ⟶ X₀.left) (ψ₁ : Y.left ⟶ Y₁.left) (ω : Y₁.left ⟶ Y₀.left), IsPullback χ X₁.hom X₀.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap α) → IsPullback ω Y₁.hom Y₀.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap α) → φ₁ ≫ χ = φ → ψ₁ ≫ ω = ψ → φ₁ ≫ X₁.hom = X.hom ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap β → ψ₁ ≫ Y₁.hom = Y.hom ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap β → ∃ f₁ : X₁ ⟶ Y₁, φ₁ ≫ f₁.left = f.left ≫ ψ₁ := by
   intro k K _ _ σ X Y X₀ Y₀ φ ψ hX hY hqc hqs hft f
-  letI : Algebra k K := σ.toAlgebra
+  let : Algebra k K := σ.toAlgebra
   have hσ : (@Surjective ⊓ @Flat ⊓ @QuasiCompact : MorphismProperty Scheme) (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap σ) :=
     surjective_flat_quasiCompact_spMap σ
-  haveI := _root_.GlobalTheory.quasiCompact_descendsAlong_fpqc
-  haveI := _root_.GlobalTheory.quasiSeparated_descendsAlong_fpqc
-  haveI : QuasiCompact X₀.hom :=
+  have := _root_.GlobalTheory.quasiCompact_descendsAlong_fpqc
+  have := _root_.GlobalTheory.quasiSeparated_descendsAlong_fpqc
+  have : QuasiCompact X₀.hom :=
     MorphismProperty.of_isPullback_of_descendsAlong hX.flip hσ hqc
-  haveI : QuasiSeparated X₀.hom :=
+  have : QuasiSeparated X₀.hom :=
     MorphismProperty.of_isPullback_of_descendsAlong hX.flip hσ hqs
-  haveI : LocallyOfFiniteType Y₀.hom :=
+  have : LocallyOfFiniteType Y₀.hom :=
     MorphismProperty.of_isPullback_of_descendsAlong hY.flip hσ hft
-  haveI : IsLocallyNoetherian (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k) := by
+  have : IsLocallyNoetherian (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k) := by
     show IsLocallyNoetherian (Spec (CommRingCat.of k)); infer_instance
-  haveI : LocallyOfFinitePresentation Y₀.hom :=
+  have : LocallyOfFinitePresentation Y₀.hom :=
     LocallyOfFinitePresentation.iff_locallyOfFiniteType.2 inferInstance
   have hX' : IsPullback φ X.hom X₀.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap k K)) := hX
   have hΦ : (hX'.isoPullback.inv ≫ f.left ≫ ψ) ≫ Y₀.hom =
@@ -106,7 +106,7 @@ theorem _root_.GlobalTheory.hom_descends_to_subfield_containing_finset :
   obtain ⟨s, hs⟩ := hRfg
   refine ⟨s, ?_⟩
   intro k₁ _ α β hβα hsβ X₁ Y₁ φ₁ χ ψ₁ ω hX₁ hY₁ hφ₁ hψ₁ hφ₁s hψ₁s
-  letI : Algebra k k₁ := α.toAlgebra
+  let : Algebra k k₁ := α.toAlgebra
   have hβα' : ∀ r : k, β (α r) = σ r := fun r => by rw [← hβα]; rfl
   let β' : k₁ →ₐ[k] K := { β with commutes' := fun r => hβα' r }
   have hβinj : Function.Injective β' := β.injective

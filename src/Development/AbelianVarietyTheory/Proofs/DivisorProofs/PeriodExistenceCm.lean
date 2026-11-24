@@ -182,9 +182,9 @@ namespace GlobalTheory.InertiaRestrict
 
 theorem restrict_eq_one : ∀ {K : Type} [Field K] [NumberField K] {Ω : Type} [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] (e : Ω ≃ₐ[K] AlgebraicClosure K) (L : IntermediateField K (AlgebraicClosure K)) (h : IsFiniteAbelian K L) (v : HeightOneSpectrum (𝓞 K)), IsUnramifiedIn K v L → ∀ (A : ValuationSubring Ω), Formalism.ConjugateSelfDual.IsPlaceOver A v → ∀ σ : Formalism.ConjugateSelfDual.G K Ω, σ ∈ ReciprocityTheory.Gal.Ine (F := K) A → haveI := h.isGalois; AlgEquiv.restrictNormalHom L ((e.symm.trans σ).trans e) = 1 := by
   intro K _ _ Ω _ _ _ e L h v hv A hA σ hσ
-  haveI := h.isGalois
-  haveI := h.finiteDimensional
-  haveI : NumberField L := NumberField.of_module_finite K L
+  have := h.isGalois
+  have := h.finiteDimensional
+  have : NumberField L := NumberField.of_module_finite K L
   have hint : ∀ y : 𝓞 L, e.symm ((y : L) : AlgebraicClosure K) ∈ A := by
     intro y
     have h1 : IsIntegral ℤ (e.symm ((y : L) : AlgebraicClosure K)) :=
@@ -202,8 +202,8 @@ theorem restrict_eq_one : ∀ {K : Type} [Field K] [NumberField K] {Ω : Type} [
   let Q : Ideal (𝓞 L) := (IsLocalRing.maximalIdeal A).comap φ
   have hmem : ∀ y : 𝓞 L, y ∈ Q ↔ A.valuation (e.symm ((y : L) : AlgebraicClosure K)) < 1 := fun y =>
     ValuationSubring.valuation_lt_one_iff A (φ y)
-  haveI hQp : Q.IsPrime := Ideal.comap_isPrime _ _
-  haveI hQo : Q.LiesOver v.asIdeal := by
+  have hQp : Q.IsPrime := Ideal.comap_isPrime _ _
+  have hQo : Q.LiesOver v.asIdeal := by
     constructor
     ext x
     rw [Ideal.under, Ideal.mem_comap, hmem, ← hA x]
@@ -303,8 +303,8 @@ theorem isFrobAt_primeBelow (e : Ω ≃ₐ[K] AlgebraicClosure K) (L : Intermedi
     (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)) (hA : Formalism.ConjugateSelfDual.IsPlaceOver A v)
     (σ : Formalism.ConjugateSelfDual.G K Ω) (hσ : Formalism.ConjugateSelfDual.IsFrob (F := K) A (Formalism.ConjugateSelfDual.normV v) σ) :
     IsFrobAt K L (AlgEquiv.restrictNormalHom L ((e.symm.trans σ).trans e)) (primeBelow e L A) := by
-  haveI : NumberField L := NumberField.of_module_finite K L
-  haveI := liesOver_primeBelow e L A v hA
+  have : NumberField L := NumberField.of_module_finite K L
+  have := liesOver_primeBelow e L A v hA
   rw [ReciprocityTheory.DiscreteGroups.GlobalClassField.isFrobAt_iff_forall]
   have hu : (primeBelow e L A).under (𝓞 K) = v.asIdeal := (Ideal.LiesOver.over).symm
   rw [hu]
@@ -327,10 +327,10 @@ theorem isFrobAt_restrict : ∀ {K : Type} [Field K] [NumberField K] {Ω : Type}
     haveI := h.finiteDimensional; haveI := h.isGalois;
     IsFrobAt K L (AlgEquiv.restrictNormalHom L ((e.symm.trans σ).trans e)) Q := by
   intro K _ _ Ω _ _ _ e L h v A hA σ hσ Q hQ hQv
-  haveI := h.finiteDimensional
-  haveI := h.isGalois
-  haveI : NumberField L := NumberField.of_module_finite K L
-  haveI := liesOver_primeBelow e L A v hA
+  have := h.finiteDimensional
+  have := h.isGalois
+  have : NumberField L := NumberField.of_module_finite K L
+  have := liesOver_primeBelow e L A v hA
   exact ReciprocityTheory.DiscreteGroups.GlobalClassField.isFrobAt_of_comm v (primeBelow e L A) Q h.comm _ (isFrobAt_primeBelow e L A v hA σ hσ)
 
 end GlobalTheory.FrobRestrict
@@ -592,7 +592,7 @@ theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.Numbe
 
 theorem periodEx_of_mainTheorem : GlobalTheory.Published.EllipticMainTheoremCM → PeriodEx := by
   intro hMT K _ _ _ ι h2 Λ₀ Ω₀ hΛ hΩ Ω _ _ _ j art hj ha g σ t hσg hsym
-  letI : Algebra K ℂ := ι.toAlgebra
+  let : Algebra K ℂ := ι.toAlgebra
   have hg : ∀ x : K, g (algebraMap K ℂ x) = algebraMap K ℂ x := fun x => by
     change g (ι x) = ι x
     rw [← hj, RingHom.comp_apply, ← hσg, AlgEquiv.commutes]

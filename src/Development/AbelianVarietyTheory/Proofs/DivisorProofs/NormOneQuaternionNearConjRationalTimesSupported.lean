@@ -304,10 +304,10 @@ private lemma exists_binary_form_eq_unit {O : Type*} [CommRing O] [IsLocalRing O
     set e : O := (t ^ 2 - 4 * n) * i ^ 2 with he_def
     have he : IsUnit e := hD.mul ((h2.unit⁻¹).isUnit.pow 2)
     have hek := (residue_ne_zero_iff_isUnit e).2 he
-    haveI := Fintype.ofFinite (ResidueField O)
+    have := Fintype.ofFinite (ResidueField O)
     have hchar : ringChar (ResidueField O) ≠ 2 := by
       intro h
-      haveI := ringChar.eq_iff.mp h
+      have := ringChar.eq_iff.mp h
       exact h2k (by simpa using CharP.cast_eq_zero (ResidueField O) 2)
     obtain ⟨α, σ, hασ⟩ := FiniteField.exists_root_sum_quadratic
       (f := X ^ 2 - C (residue O u)) (g := C (-(residue O e)) * X ^ 2)
@@ -405,11 +405,11 @@ theorem _root_.GlobalTheory.QSA.IntRep.exists_nrm_eq_one_re_eq : ∀ (F : Type) 
     positivity
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors (I := Ideal.span {α * d * β * e * 2})
     (by simpa using hx0)).subset fun v hv => ?_)
-  rw [Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+  rw [Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   by_contra hx
   apply hv
-  haveI := _root_.GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
-  haveI := _root_.GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  have := _root_.GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := _root_.GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
   have hunit := (_root_.GlobalTheory.SelfDualGenus.isUnit_algebraMap_iff v _).2 hx
   simp only [map_mul, IsUnit.mul_iff] at hunit
   obtain ⟨⟨⟨⟨hA, hD⟩, hB⟩, hE⟩, h2⟩ := hunit
@@ -583,7 +583,7 @@ theorem infinitePlace_completion_nhdsNE_neBot : ∀ (F : Type) [Field F] [Number
   have h2 : ‖(2 : w.Completion)‖ = 2 := by
     have := (AddMonoidHomClass.isometry_iff_norm _).1 hiso (2 : w.Completion)
     rw [← this, map_ofNat]; simp
-  letI : NontriviallyNormedField w.Completion :=
+  let : NontriviallyNormedField w.Completion :=
     { (inferInstance : NormedField w.Completion) with
       non_trivial := ⟨2, by rw [h2]; norm_num⟩ }
   exact NormedField.nhdsNE_neBot (0 : w.Completion)
@@ -833,13 +833,13 @@ theorem _root_.GlobalTheory.QSA.FinAdele.traceOpen_finiteAdele : ∀ (F : Type) 
       ⟨fun v => if v ∈ J then (hOne v).some else 0, Filter.eventually_cofinite.2 (hJ.subset
         fun v hv => by
           by_contra hvJ
-          exact hv (by simp only [if_neg hvJ]; exact zero_mem _))⟩
+          exact hv (by simp only [ite_eq_right hvJ]; exact zero_mem _))⟩
     refine ⟨t₀, Set.mem_iInter₂.2 fun v hv => ?_, fun v hv => ?_⟩
     · show (if v ∈ J then (hOne v).some else 0) ∈ O v
-      rw [if_pos hv]
+      rw [ite_eq_left hv]
       exact (hOne v).some_mem
     · show (if v ∈ J then (hOne v).some else 0) ∈ v.adicCompletionIntegers F
-      rw [if_neg hv]
+      rw [ite_eq_right hv]
       exact zero_mem _
   · rintro t ⟨htJ, htA⟩
     rw [Set.mem_iInter₂] at htJ
@@ -1083,7 +1083,7 @@ theorem sqOpen_and_nhdsNE_zero_neBot_adicCompletion :
     ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)),
       SqOpen (v.adicCompletion F) ∧ (𝓝[≠] (0 : v.adicCompletion F)).NeBot := by
   intro F _ _ v
-  letI : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
   have h2 : (2 : v.adicCompletion F) ≠ 0 := by
     intro h
     have h' : algebraMap F (v.adicCompletion F) 2 = algebraMap F (v.adicCompletion F) 0 := by

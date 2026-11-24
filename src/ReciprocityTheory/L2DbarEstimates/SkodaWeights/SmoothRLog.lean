@@ -217,7 +217,7 @@ private theorem db_log_eq_inv_mul_db {M : Type*} [TopologicalSpace M] (n : ℕ) 
     rw [hzy]
     unfold wdb
     rw [hf1, hf2, h1, h2, hsy]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
+    simp only [ContinuousLinearMap.comp_apply, smul_apply,
       Complex.ofRealCLM_apply, smul_eq_mul, Complex.ofReal_mul, Complex.ofReal_inv]
     ring
   · rw [dite_eq_right hex, dite_eq_right hex, mul_zero]

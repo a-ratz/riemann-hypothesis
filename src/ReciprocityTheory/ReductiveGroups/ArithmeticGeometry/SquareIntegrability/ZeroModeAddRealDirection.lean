@@ -67,7 +67,7 @@ theorem tof_box_int_differentiable {V : Type} [NormedAddCommGroup V] [NormedSpac
   have hIcc : IsCompact (Set.Icc (0 : Fin d → ℝ) 1) := isCompact_Icc
   have hBm : MeasurableSet B := tof_box_measurable d
   have hfin : volume B < ⊤ := (measure_mono hBsub).trans_lt hIcc.measure_lt_top
-  haveI : IsFiniteMeasure (volume.restrict B) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (volume.restrict B) := isFiniteMeasure_restrict.2 hfin.ne
   have hKc : IsCompact ((fun p : V × (Fin d → ℝ) => p.1 + φ p.2) ''
       (Metric.closedBall x₀ 1 ×ˢ Set.Icc 0 1)) :=
     ((isCompact_closedBall x₀ 1).prod hIcc).image (continuous_fst.add (hφ.comp continuous_snd))

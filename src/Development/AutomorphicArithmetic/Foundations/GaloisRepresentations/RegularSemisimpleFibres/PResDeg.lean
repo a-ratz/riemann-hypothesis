@@ -55,12 +55,12 @@ theorem UpperTheory.Gal.InertialTypesAlt.resDeg :
   have hfconst : ∀ u : PlacesOver M v,
       (u : HeightOneSpectrum (𝓞 M)).asIdeal.inertiaDeg (𝓞 K) = f := by
     intro u
-    haveI := u.2
+    have := u.2
     exact Ideal.inertiaDeg_eq_of_isGaloisGroup v.asIdeal _ _ Gal(M/K)
   have heone : ∀ u : PlacesOver M v,
       (u : HeightOneSpectrum (𝓞 M)).asIdeal.ramificationIdx (𝓞 K) = 1 := by
     intro u
-    haveI := hunr u
+    have := hunr u
     exact Ideal.ramificationIdx_eq_one _ _
   have hsum := GroundTheory.Global.SemiLocal.sum_ramificationIdx_mul_inertiaDeg M v
   have hdvd : f ∣ Module.finrank K M := by
@@ -72,7 +72,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.resDeg :
     intro h1
     apply hns
     intro u
-    haveI := u.2
+    have := u.2
     have hrk := GroundTheory.Global.SemiLocal.finrank_eq_ramificationIdx_mul_inertiaDeg M v
       (u : HeightOneSpectrum (𝓞 M))
     rw [heone u, hfconst u, h1, one_mul] at hrk
@@ -107,12 +107,12 @@ theorem UpperTheory.Gal.InertialTypesAlt.resDeg :
   have hcardM : Nat.card 𝓀[HeightOneSpectrum.adicCompletion M (w : HeightOneSpectrum (𝓞 M))] =
       Nat.card 𝓀[HeightOneSpectrum.adicCompletion K v] ^ Module.finrank K M := by
     rw [hM, hK, hnormM, hnormK, ← hpow, hfn]
-  haveI : Finite 𝓀[HeightOneSpectrum.adicCompletion K v] :=
+  have : Finite 𝓀[HeightOneSpectrum.adicCompletion K v] :=
     Nat.finite_of_card_ne_zero (by rw [hK, hnormK]; omega)
-  haveI : Finite 𝓀[HeightOneSpectrum.adicCompletion M (w : HeightOneSpectrum (𝓞 M))] :=
+  have : Finite 𝓀[HeightOneSpectrum.adicCompletion M (w : HeightOneSpectrum (𝓞 M))] :=
     Nat.finite_of_card_ne_zero (by rw [hcardM, hK, hnormK]; positivity)
-  letI := Fintype.ofFinite 𝓀[HeightOneSpectrum.adicCompletion K v]
-  haveI : Module.Finite 𝓀[HeightOneSpectrum.adicCompletion K v]
+  let := Fintype.ofFinite 𝓀[HeightOneSpectrum.adicCompletion K v]
+  have : Module.Finite 𝓀[HeightOneSpectrum.adicCompletion K v]
       𝓀[HeightOneSpectrum.adicCompletion M (w : HeightOneSpectrum (𝓞 M))] :=
     Module.Finite.of_finite
   refine ⟨?_, ?_⟩

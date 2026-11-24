@@ -84,7 +84,7 @@ theorem _root_.GlobalTheory.KeyRuleUnique.nonempty_ringHom_complex (K : Type) [F
   let F := FractionRing (MvPolynomial ℝ K)
   let L := AlgebraicClosure F
   let i : K →+* L := (algebraMap F L).comp ((algebraMap (MvPolynomial ℝ K) F).comp MvPolynomial.C)
-  haveI : CharZero L := (RingHom.charZero_iff i.injective).1 inferInstance
+  have : CharZero L := (RingHom.charZero_iff i.injective).1 inferInstance
   have hK : #K ≤ 𝔠 := mk_le_aleph0.trans aleph0_le_continuum
   have hP : #(MvPolynomial ℝ K) = 𝔠 := by
     rw [MvPolynomial.cardinalMk_eq_max_lift]

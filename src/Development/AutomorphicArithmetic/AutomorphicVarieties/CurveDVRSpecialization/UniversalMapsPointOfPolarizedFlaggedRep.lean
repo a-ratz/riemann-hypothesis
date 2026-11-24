@@ -87,7 +87,7 @@ private theorem tr_single {n : ℕ} {A G K : Type} [CommRing A] [Group G] [CommR
       congr 1
       ext i j
       by_cases h : i = j <;> simp [Matrix.one_apply, h]
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   have hc : (GDet.ofRep ρ).chi (MonoidAlgebra.single g 1) = (ρ g).charpoly := by
     have hc' (y : MonoidAlgebra K G) : (GDet.ofRep ρ).chi y = (GDet.repAlg ρ K y).charpoly := by
       unfold GDet.chi
@@ -174,7 +174,7 @@ private theorem tt_res (hn : 0 < n) (g : G.G₀) :
   rw [mul_comm _ (L.κA _ g), inv_mul_cancel_left]
 
 private theorem π_quot : Topology.IsQuotientMap L.π := by
-  haveI : CompactSpace G.G₀ := isCompact_iff_compactSpace.1 (G.η.ker.isClosed_of_isOpen G.η_open).isCompact
+  have : CompactSpace G.G₀ := isCompact_iff_compactSpace.1 (G.η.ker.isClosed_of_isOpen G.η_open).isCompact
   exact L.π_cont.isClosedMap.isQuotientMap L.π_cont L.π_surj
 
 private theorem chi_ex : ∃ χ : ∀ v, Fin n → F.Gv v →* Cˣ, IsPsi O F n (fun v i g => (χ v i g : C)) ∧
@@ -238,7 +238,7 @@ private theorem main {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain 
     (hirr : Af.IsIrr r) :
     ∃ ρ' : NRep F n K, MatIrr ⊤ ρ'.r ∧ p.D.map (j : C →+* K) = GDet.ofRep (T.K.tw ρ') := by
   have hn : 0 < n := by have := T.n23; omega
-  letI : Algebra C K := (j : C →+* K).toAlgebra
+  let : Algebra C K := (j : C →+* K).toAlgebra
   have hv : ∀ g, mat (Af.tw (r.comp T.K.π) (T.K.κA K)) g = ((T.K.κA K g : Kˣ) : K) • mat r (T.K.π g) :=
     fun g => Af.tw_val _ _ g
   obtain ⟨χ, hχ, hψ⟩ := chi_ex T.K p
@@ -314,7 +314,7 @@ theorem UpperTheory.universalMaps_point_of_polarized_flagged_rep :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Fr.IsCoef l O] [Algebra ℤ_[l] O] {F : Fr.Frame l (ResidueField O)} {n : ℕ} (T : Setup F n) (K' : Type) [Field K'] [IsAlgClosed K'] [Algebra O K'] (x : T.B.B →ₐ[O] K') (r : F.G0 →* GL (Fin n) K') (ρ : T.G.G₀ →* GL (Fin n) K') (Q : GL (Fin n) K') (ψ : ∀ v, Fin n → T.G.Gv v →* K'ˣ), (Q : Matrix (Fin n) (Fin n) K')ᵀ = Q → (∀ g, (r g : Matrix (Fin n) (Fin n) K')ᵀ * (Q : Matrix (Fin n) (Fin n) K') * (r (F.conj g) : Matrix (Fin n) (Fin n) K') = Q) → ρ = tw (r.comp T.K.π) (T.K.κA K') → T.B.u.Maps (x : T.B.B →+* K') (W.GDet.ofRep (W.mat ρ)) ψ → (∀ v, W.HasFlag (ρ.comp (T.G.φ v)) (ψ v)) → IsIrr r → ∃ ρ' : Fr.NRep F n K', MatIrr ⊤ ρ'.r ∧ T.B.u.D.map (x : T.B.B →+* K') = W.GDet.ofRep (T.K.tw ρ') := by
   intro l _ O _ _ _ _ _ F n T K' _ _ _ x r ρ Q ψ hQ hform hρ hx hfl hirr
   subst hρ
-  haveI : Alg.IsCO O x.range := Alg.co_quot O _ _ x.rangeRestrict x.rangeRestrict_surjective
+  have : Alg.IsCO O x.range := Alg.co_quot O _ _ x.rangeRestrict x.rangeRestrict_surjective
   obtain ⟨p, hp⟩ := W.exists_determinantPair_map_of_algHom l T.G O n T.r T.B.B x.range x.rangeRestrict T.B.u
   have hD : p.D.map (x.range.val : x.range →+* K') = T.B.u.D.map (x : T.B.B →+* K') := by
     rw [← hp.1, (CA.d_gmap _).2.1]; rfl

@@ -58,6 +58,6 @@ theorem UpperTheory.V.Pr.p1Of :
   subst hker
   obtain ⟨h1, h3, hI, -⟩ := UpperTheory.V.Pr.niceOf l O F n T x L y j hloc hp hρ hψ
   rw [key] at hM ⊢
-  haveI := hP
+  have := hP
   exact hJ y (j.comp (T.phi Φ L)) ⟨h1, hI hTI, h3, h4 y⟩ hpt (fun a ha => hM ha) (T.back Φ L P)
     (fun a ha => hPp ha)

@@ -65,7 +65,7 @@ def matCoord : (Fin (D.R.rS + 1 + D.R.rS) → Fin (D.R.rS + 1 + D.R.rS) → Ainf
       (Homeomorph.piCongrRight fun _ => ainfReal (totReal_of X))).trans (flat4 _ _ _ _)
 
 theorem matCoord_add (x y : (Fin (D.R.rS + 1 + D.R.rS) → Fin (D.R.rS + 1 + D.R.rS) → Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) : matCoord X (x + y) = matCoord X x + matCoord X y := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   simp only [matCoord, Homeomorph.trans_apply]
   rw [← flatten_four_add]
   congr 1
@@ -79,7 +79,7 @@ def scalI (t : ℝ) : Ainf X.B.I.F := (ainfReal (totReal_of X)).symm fun _ => t
 theorem matCoord_scal (t : ℝ) (S : (Fin (D.R.rS + 1 + D.R.rS) → Fin (D.R.rS + 1 + D.R.rS) → Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :
     matCoord X (fun a b => algebraMap (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) (scalI X t) * S a b) =
       t • matCoord X S := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   simp only [matCoord, Homeomorph.trans_apply]
   have hf : ∀ f : Fin (D.R.rS + 1 + D.R.rS) → Fin (D.R.rS + 1 + D.R.rS) → Module.Free.ChooseBasisIndex (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) → InfinitePlace X.B.I.F → ℝ,
       flat4 _ _ _ _ (t • f) = t • flat4 _ _ _ _ f := by
@@ -198,13 +198,13 @@ theorem pairHerm_symm (S T : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R
 
 theorem continuous_pairHerm_leftP (T : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) :
     Continuous fun S : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) => pairHerm (Ainf X.B.I.F) X.B.I.cm.sig _ S T := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   show Continuous fun S : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) => algebraMap X.B.I.F (Ainf X.B.I.F) (1 / 2) *
     Algebra.trace (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)
       (∑ a, ∑ b, (S : Matrix (Fin (D.R.rS + 1 + D.R.rS)) (Fin (D.R.rS + 1 + D.R.rS)) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) a b * (T : Matrix (Fin (D.R.rS + 1 + D.R.rS)) (Fin (D.R.rS + 1 + D.R.rS)) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) b a)
   refine continuous_const.mul ((continuous_traceP X).comp ?_)
   refine continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun b _ => ?_
-  exact (Continuous.matrix_elem continuous_subtype_val a b).mul continuous_const
+  exact (Continuous.matrix_elem continuous_subtypeVal a b).mul continuous_const
 
 def sumReI (a : Ainf X.B.I.F) : ℝ :=
   ∑ w : InfinitePlace X.B.I.F, (InfinitePlace.Completion.extensionEmbedding w (a w)).re
@@ -230,8 +230,8 @@ def DensNu : Prop := ∀ {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (ψ 
 
 theorem densNu_holds : DensNu := by
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
   have hS := hP.2.2.1
   have hν : SelfDual νinf (fun S T : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) => psiInf X.B.I.F ψ (pairHerm (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) S T)) := hP.2.2.2.2.2.1
   have h1 : ∀ x y : Wh X, (fun S T : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) => psiInf X.B.I.F ψ (pairHerm (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS) S T)) ((hermCoord X).symm x) ((hermCoord X).symm y) = ((𝐞 (betaH X x y) : Circle) : ℂ) := by

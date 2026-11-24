@@ -115,7 +115,7 @@ namespace GlobalTheory.HSAmp
 
 theorem ringChar_residueField_eq {X Y : Scheme.{0}} (f : X ⟶ Y) (x : X) :
     ringChar (X.residueField x) = ringChar (Y.residueField (f x)) := by
-  haveI := (RingHom.charP_iff_charP (f.residueFieldMap x).hom (ringChar (Y.residueField (f x)))).1
+  have := (RingHom.charP_iff_charP (f.residueFieldMap x).hom (ringChar (Y.residueField (f x)))).1
     (ringChar.charP _)
   exact ringChar.eq _ _
 
@@ -207,17 +207,17 @@ theorem GlobalTheory.surjective_toPushforward_app_top_lbPow : ∀ (k : Type) [Co
     ∀ (T : Scheme.{0}) (i : T ⟶ X) [IsClosedImmersion i], ∀ᶠ N in atTop,
       Function.Surjective ((GlobalTheory.LB.toPushforward (lbPow L N) i).app ⊤) := by
   intro k _ _ X p hp L hL T i _
-  letI : Algebra k Γ(X, ⊤) := (p.appTop.hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom).toAlgebra
+  let : Algebra k Γ(X, ⊤) := (p.appTop.hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom).toAlgebra
   have hf : ∀ r, algebraMap k Γ(X, ⊤) r = p.appTop.hom ((Scheme.ΓSpecIso (.of k)).inv.hom r) :=
     fun _ => rfl
-  haveI := (isProper_and_exists_isAmpleLB_of_isProjOver hp).1
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : QCoh.IsFiniteQC (kernel (GlobalTheory.SerreOnto.unitToPush i)) :=
+  have := (isProper_and_exists_isAmpleLB_of_isProjOver hp).1
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have : QCoh.IsFiniteQC (kernel (GlobalTheory.SerreOnto.unitToPush i)) :=
     QCoh.IsFiniteQC.of_mono (kernel.ι (GlobalTheory.SerreOnto.unitToPush i))
   filter_upwards [hL.eventually_subsingleton_coh_twist hf (kernel (GlobalTheory.SerreOnto.unitToPush i))]
     with N hN
   have hM : (lbPow L N).IsLB := isLB_lbPow hL.isLB N
-  haveI := GlobalTheory.PinchLift.epi_toPushforward_of_closedImm i hM
+  have := GlobalTheory.PinchLift.epi_toPushforward_of_closedImm i hM
   let φ := GlobalTheory.LB.toPushforward (lbPow L N) i
   let S := ShortComplex.mk (kernel.ι φ) φ (kernel.condition φ)
   have hS : S.ShortExact := ShortComplex.ShortExact.mk'
@@ -298,9 +298,9 @@ theorem exists_sec_nonzero_on_closed : ∀ (k : Type) [CommRing k] (X : Scheme.{
     (s : (lbPow (L.pull i) n).Sec), 1 ≤ n → ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus s = ⊤ →
     ∃ (N : ℕ) (u : (lbPow L N).Sec), 1 ≤ N ∧ Set.range i ⊆ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus u := by
   intro k _ X _ p D hX L hL T i _ n s hn hs
-  haveI : Module.Finite ℤ k := hX.finite
-  haveI : IsNoetherian ℤ k := inferInstance
-  haveI : IsNoetherianRing k := isNoetherian_of_tower ℤ this
+  have : Module.Finite ℤ k := hX.finite
+  have : IsNoetherian ℤ k := inferInstance
+  have : IsNoetherianRing k := isNoetherian_of_tower ℤ this
   obtain ⟨N₀, hN₀⟩ := eventually_atTop.1 (_root_.GlobalTheory.surjective_toPushforward_app_top_lbPow k X p hX.isProjOver L hL T i)
   have hN : N₀ ≤ n * (N₀ + 1) := by nlinarith
   obtain ⟨σ', hσ'⟩ := exists_sec_pull_pow L i (n * (N₀ + 1)) (secPow s (N₀ + 1))
@@ -330,13 +330,13 @@ theorem exists_nat_mem_sup (B : Type) [CommRing B] [Module.Finite ℤ B]
   have hQm : Minimal (fun q : Ideal B => q.IsPrime ∧ ⊥ ≤ q) Q := hQ
   have hPm : Minimal (fun q : Ideal B => q.IsPrime ∧ ⊥ ≤ q) P := hP
   have hnle : ¬ P ≤ Q := fun h => hPQ (hQm.eq_of_le hPm.1 h)
-  haveI : Q.IsPrime := hQm.1.1
+  have : Q.IsPrime := hQm.1.1
   obtain ⟨p, hpP, hpQ⟩ := Set.not_subset.mp hnle
   have hx : Ideal.Quotient.mk Q p ≠ 0 := by
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   have hxI : Ideal.Quotient.mk Q p ∈ Ideal.map (Ideal.Quotient.mk Q) P :=
     Ideal.mem_map_of_mem _ hpP
-  have hne := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) hx hxI
+  have hne := Ideal.under_ne_bot_of_integral_mem (R := ℤ) hx hxI
     (Algebra.IsIntegral.isIntegral _)
   obtain ⟨k, hk, hk0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   rw [Ideal.mem_comap, eq_intCast, ← map_intCast (Ideal.Quotient.mk Q),
@@ -390,10 +390,10 @@ theorem exists_nat_mul_mem_range_pi_quotient_minimalPrimes : ∀ (B : Type) [Com
         (Pi.ringHom fun P : minimalPrimes B => Ideal.Quotient.mk (P : Ideal B)).range := by
   intro B _ _
   classical
-  haveI : IsNoetherian ℤ B := isNoetherian_of_isNoetherianRing_of_finite ℤ B
-  haveI : IsNoetherianRing B := isNoetherian_of_tower ℤ inferInstance
-  haveI : Finite (minimalPrimes B) := (minimalPrimes.finite_of_isNoetherianRing B).to_subtype
-  letI : Fintype (minimalPrimes B) := Fintype.ofFinite _
+  have : IsNoetherian ℤ B := isNoetherian_of_isNoetherianRing_of_finite ℤ B
+  have : IsNoetherianRing B := isNoetherian_of_tower ℤ inferInstance
+  have : Finite (minimalPrimes B) := (minimalPrimes.finite_of_isNoetherianRing B).to_subtype
+  let : Fintype (minimalPrimes B) := Fintype.ofFinite _
   have hpair : ∀ P Q : minimalPrimes B, ∃ m : ℕ, m ≠ 0 ∧ (P ≠ Q → (m : B) ∈ (P : Ideal B) ⊔ Q) := by
     intro P Q
     by_cases h : P = Q
@@ -435,7 +435,7 @@ namespace GlobalTheory.PicDom
 
 theorem exists_int_mem_span {B : Type} [CommRing B] [IsDomain B] [Algebra.IsIntegral ℤ B] {d : B} (hd : d ≠ 0) :
     ∃ a : ℤ, a ≠ 0 ∧ (a : B) ∈ Ideal.span {d} := by
-  have h := Ideal.comap_ne_bot_of_integral_mem hd (Ideal.mem_span_singleton_self d)
+  have h := Ideal.under_ne_bot_of_integral_mem hd (Ideal.mem_span_singleton_self d)
     (Algebra.IsIntegral.isIntegral (R := ℤ) d)
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
   exact ⟨a, ha0, by simpa using ha⟩
@@ -546,13 +546,13 @@ theorem isOfFinOrder_of_numberField (K : Type) [Field K] [Algebra B K] [IsFracti
       rwa [h, Int.cast_natCast] at this
     · have := neg_mem (hNmem x)
       rwa [h, Int.cast_neg, Int.cast_natCast, neg_mul, neg_neg] at this
-  haveI : Finite (CommRing.Pic (𝓞 K)) := Finite.of_equiv _ (ClassGroup.equivPic (𝓞 K)).toEquiv
+  have : Finite (CommRing.Pic (𝓞 K)) := Finite.of_equiv _ (ClassGroup.equivPic (𝓞 K)).toEquiv
   exact _root_.GlobalTheory.isOfFinOrder_of_isOfFinOrder_mapRingHom B (𝓞 K) φ N.natAbs hinj hn0 hcond M (isOfFinOrder_of_finite _)
 
 theorem isOfFinOrder_of_charZero (M : CommRing.Pic B) : IsOfFinOrder M := by
-  haveI : CharZero (FractionRing B) := IsFractionRing.charZero_of_isFractionRing B
-  haveI : FiniteDimensional ℚ (FractionRing B) := finiteDimensional_of_isFractionRing B (FractionRing B)
-  haveI : NumberField (FractionRing B) := ⟨⟩
+  have : CharZero (FractionRing B) := IsFractionRing.charZero_of_isFractionRing B
+  have : FiniteDimensional ℚ (FractionRing B) := finiteDimensional_of_isFractionRing B (FractionRing B)
+  have : NumberField (FractionRing B) := ⟨⟩
   exact isOfFinOrder_of_numberField B (FractionRing B) M
 
 end GlobalTheory.PicDom
@@ -577,11 +577,11 @@ namespace GlobalTheory.PicReducedTors
 theorem pic_isOfFinOrder : ∀ (B : Type) [CommRing B] [IsReduced B] [Module.Finite ℤ B] (M : CommRing.Pic B),
     IsOfFinOrder M := by
   intro B _ _ _ M
-  haveI : IsNoetherian ℤ B := inferInstance
-  haveI : IsNoetherianRing B := isNoetherian_of_tower ℤ inferInstance
-  haveI : Finite (minimalPrimes B) := (minimalPrimes.finite_of_isNoetherianRing B).to_subtype
+  have : IsNoetherian ℤ B := inferInstance
+  have : IsNoetherianRing B := isNoetherian_of_tower ℤ inferInstance
+  have : Finite (minimalPrimes B) := (minimalPrimes.finite_of_isNoetherianRing B).to_subtype
   let φ := Pi.ringHom fun P : minimalPrimes B => Ideal.Quotient.mk (P : Ideal B)
-  haveI : Module.Finite ℤ ((P : minimalPrimes B) → B ⧸ (P : Ideal B)) := inferInstance
+  have : Module.Finite ℤ ((P : minimalPrimes B) → B ⧸ (P : Ideal B)) := inferInstance
   obtain ⟨n, hn, hmul⟩ := _root_.GlobalTheory.CokerMinimalPrimes.exists_nat_mul_mem_range_pi_quotient_minimalPrimes B
   have hinj : Function.Injective φ := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -596,7 +596,7 @@ theorem pic_isOfFinOrder : ∀ (B : Type) [CommRing B] [IsReduced B] [Module.Fin
     exact IsReduced.eq_zero b ⟨k, by simpa using hk⟩
   refine _root_.GlobalTheory.isOfFinOrder_of_isOfFinOrder_mapRingHom B _ φ n hinj hn hmul M ?_
   refine _root_.GlobalTheory.pic_pi_isOfFinOrder _ _ (fun P N => ?_) _
-  haveI : (P : Ideal B).IsPrime := P.2.1.1
+  have : (P : Ideal B).IsPrime := P.2.1.1
   exact _root_.GlobalTheory.pic_isOfFinOrder_of_finite_int _ N
 
 end GlobalTheory.PicReducedTors
@@ -694,8 +694,8 @@ theorem exists_pow_section_nonvanishing_on_closed : ∀ (k : Type) [CommRing k] 
   intro k _ X _ p D hX P hA T hT hfin
   let Z : Closeds X := ⟨T, hT⟩
   obtain ⟨hAff, hFin⟩ := _root_.GlobalTheory.HSAmp.closeds_finite_int k X p D hX Z hfin
-  haveI := hAff
-  haveI := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
+  have := hAff
+  have := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
   let i := (Scheme.IdealSheafData.vanishingIdeal Z).subschemeι
   obtain ⟨n, s, hn, hs⟩ := _root_.GlobalTheory.PowNowhereZero.main _ hFin (P.L.B.pull i) (LB.isLB_pull hA.isLB i)
   obtain ⟨N, u, hN, hu⟩ := _root_.GlobalTheory.LiftAmple.exists_sec_nonzero_on_closed k X p D hX P.L.B hA _ i n s hn hs
@@ -739,7 +739,7 @@ theorem coheight_le_one {Y : Scheme.{0}} [IsLocallyNoetherian Y] {N : LB Y} (hN 
   obtain ⟨P, hP⟩ : ∃ P : PrimeSpectrum Γ(Y, V), hV.fromSpec P = w := by
     have : w ∈ Set.range hV.fromSpec := by rw [hV.range_fromSpec]; exact hwV
     exact this
-  haveI : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
   have hmemb : ∀ Q : PrimeSpectrum Γ(Y, V), g ∈ Q.asIdeal ↔ hV.fromSpec Q ∉ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus t := by
     intro Q
     have h1 : Q ∈ PrimeSpectrum.basicOpen g ↔ hV.fromSpec Q ∈ Y.basicOpen g := by
@@ -793,12 +793,12 @@ theorem exists_irreducible_zero : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
   intro k _ X _ p D hX M s C hM hC hCc hmeet hnot
   set Z := ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus s with hZ
   have hamb : IsAmb p := isAmb_of_isArithVar hX
-  haveI : IsNoetherian X := hamb.isNoetherian
+  have : IsNoetherian X := hamb.isNoetherian
   obtain ⟨η, hη⟩ := QuasiSober.sober hC hCc
   have hηC : closure ({η} : Set X) = C := hη
   let i := cloι η
   have hambY : IsAmb (i ≫ p) := hamb.sub i
-  haveI : IsNoetherian (clo η) := hambY.isNoetherian
+  have : IsNoetherian (clo η) := hambY.isNoetherian
   have hgi : i (genericPoint (clo η)) = η := cloι_genericPoint η
   have hWm : ∀ y : clo η, y ∈ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus (GlobalTheory.secPull s i) ↔ i y ∈ Z := fun y => by
     rw [GlobalTheory.nonzeroLocus_secPull]; rfl
@@ -907,7 +907,7 @@ theorem dim_le_zero_of_fib_of_subset_affine : ∀ (k : Type) [CommRing k] (X : S
   let e : A ≃+* k := (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv
   have hAint : Algebra.IsIntegral ℤ A :=
     Algebra.IsIntegral.of_surjective e.symm.toRingHom.toIntAlgHom e.symm.surjective
-  letI : Algebra A R := (i ≫ p).appTop.hom.toAlgebra
+  let : Algebra A R := (i ≫ p).appTop.hom.toAlgebra
   have hRA : Algebra.IsIntegral A R := ⟨hφ⟩
   have hRint : Algebra.IsIntegral ℤ R := Algebra.IsIntegral.trans A
 
@@ -927,7 +927,7 @@ theorem dim_le_zero_of_fib_of_subset_affine : ∀ (k : Type) [CommRing k] (X : S
 
   have : Fact ℓ.Prime := ⟨hℓ⟩
   have : CharP R ℓ := (CharP.charP_iff_prime_eq_zero hℓ).2 hchar
-  letI : Algebra (ZMod ℓ) R := ZMod.algebra R ℓ
+  let : Algebra (ZMod ℓ) R := ZMod.algebra R ℓ
   have : Algebra.IsIntegral (ZMod ℓ) R := Algebra.IsIntegral.tower_top ℤ
   have hR : IsField R := isField_of_isIntegral_of_isField' (Field.toIsField (ZMod ℓ))
 
@@ -1020,7 +1020,7 @@ theorem GlobalTheory.HSAmp.common_zero_of_le_dim : ∀ (k : Type) [CommRing k] (
     obtain ⟨C', h1, h2, h3, h4⟩ := _root_.GlobalTheory.AmpleCut.exists_irreducible_diff_NV k X p D hX P hA ℓ d (e 0) C (g 0) hℓ hC hCc hCf
       (by exact_mod_cast hd) (hg 0).1 (hg 0).2
     obtain ⟨x, hxC', hx⟩ := ih C' (fun j => e j.succ) (fun j => g j.succ) hℓ h1 h2
-      (h3.trans (Set.diff_subset.trans hCf)) h4 (fun j => hg j.succ)
+      (h3.trans (Set.sdiff_subset.trans hCf)) h4 (fun j => hg j.succ)
     refine ⟨x, (h3 hxC').1, ?_⟩
     simp only [Set.mem_iUnion, not_exists] at hx ⊢
     intro j
@@ -1076,7 +1076,7 @@ theorem exists_finite_drop {T : Type} [TopologicalSpace T] [NoetherianSpace T] (
   choose y hy using hne
   have : Finite (irreducibleComponents Y) := hfin.to_subtype
   refine ⟨Set.range fun C => (y C : T), Set.finite_range _, fun U hU hS => ?_⟩
-  have hC : IsClosed ((Subtype.val : Y → T) ⁻¹' Uᶜ) := hU.isClosed_compl.preimage continuous_subtype_val
+  have hC : IsClosed ((Subtype.val : Y → T) ⁻¹' Uᶜ) := hU.isClosed_compl.preimage continuous_subtypeVal
   have h := (_root_.GlobalTheory.DimDrop.dim_drop Y).1 _ (d + 1) hC hY fun Z hZ _ hsub =>
     hsub (hy ⟨Z, hZ⟩) (hS ⟨⟨Z, hZ⟩, rfl⟩)
   let f : ↥(Y \ U) → ↥((Subtype.val : Y → T) ⁻¹' Uᶜ) := fun x => ⟨⟨x.1, x.2.1⟩, x.2.2⟩
@@ -1155,7 +1155,7 @@ theorem isAlgebraic_of_finite (B : Type) [CommRing B] [IsDomain B] [CharZero B] 
     (h : {Q : PrimeSpectrum B | ∀ n : ℕ, n ≠ 0 → (n : B) ∉ Q.asIdeal}.Finite) : Algebra.IsAlgebraic ℤ B := by
   let M := Algebra.algebraMapSubmonoid B (nonZeroDivisors ℤ)
   let S := ℚ ⊗[ℤ] B
-  letI : Algebra B S := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B S := Algebra.TensorProduct.rightAlgebra
   have hloc : IsLocalization M S := IsLocalization.tensorRight ℚ (nonZeroDivisors ℤ)
   have hinj := PrimeSpectrum.localization_comap_injective S M
   have hfin : Finite (PrimeSpectrum S) := by
@@ -1306,14 +1306,14 @@ namespace GlobalTheory.HSAmp
 theorem noetherianSpace_of_isArithVar {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ Sp k} {D : ℕ}
     (h : IsArithVar p D) : NoetherianSpace X := by
   obtain ⟨N, j, hj, hjp⟩ := h.isProjOver
-  haveI := h.isDomain
-  haveI := h.finite
-  haveI : IsNoetherian ℤ k := isNoetherian_of_isNoetherianRing_of_finite ℤ k
-  haveI : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
-  haveI : IsProper p := hjp ▸ inferInstance
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
-  haveI : IsNoetherian X := {}
+  have := h.isDomain
+  have := h.finite
+  have : IsNoetherian ℤ k := isNoetherian_of_isNoetherianRing_of_finite ℤ k
+  have : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
+  have : IsProper p := hjp ▸ inferInstance
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
+  have : IsNoetherian X := {}
   infer_instance
 
 theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ),
@@ -1321,7 +1321,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
     (∀ ℓ : ℕ, topologicalKrullDim ↥(Z ∩ fib X ℓ) ≤ d) →
     ∃ e : ℕ, 0 < e ∧ ∃ f ∈ P.H e 0, ∀ ℓ : ℕ, topologicalKrullDim ↥((Z \ NV P e 0 f) ∩ fib X ℓ) < d := by
   intro k _ X _ p D hX P hA d Z hZ hdim
-  haveI : NoetherianSpace X := noetherianSpace_of_isArithVar hX
+  have : NoetherianSpace X := noetherianSpace_of_isArithVar hX
   have memfib : ∀ {x : X} {ℓ : ℕ}, x ∈ fib X ℓ ↔ ringChar (X.residueField x) = ℓ := Iff.rfl
   obtain ⟨hcov, hfibc, -, -, hWfib⟩ := _root_.GlobalTheory.IntFib.fib_structure k X p D hX
   have hNV : ∀ (a b : ℤ) (g : X.functionField), g ∈ P.H a b → IsOpen (NV P a b g) :=
@@ -1335,7 +1335,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
       IsClosed ({y} : Set ↥(Z ∩ fib X 0)) := fun Y =>
     (isClosed_of_mem_irreducibleComponents Y.1 Y.2).exists_closed_singleton Y.2.1.nonempty
   choose q₀ hq₀ hq₀c using hpick0
-  haveI : Finite (irreducibleComponents ↥(Z ∩ fib X 0)) :=
+  have : Finite (irreducibleComponents ↥(Z ∩ fib X 0)) :=
     NoetherianSpace.finite_irreducibleComponents.to_subtype
   set W : Set X := (Z \ ⋃ j, NV P (e₀ j) 0 (g j)) ∪ ⋃ Y, closure {((q₀ Y : ↥(Z ∩ fib X 0)) : X)} with hWdef
   have hWc : IsClosed W := hW₀c.union (isClosed_iUnion_of_finite fun _ => isClosed_closure)
@@ -1369,7 +1369,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
     have := hc.isClosedEmbedding_subtypeVal.isClosedMap _ hyc
     rwa [Set.image_singleton] at this
   choose q hq hqc using hpick
-  haveI : ∀ ℓ : S, Finite (irreducibleComponents ↥(Z ∩ fib X (ℓ : ℕ))) := fun _ =>
+  have : ∀ ℓ : S, Finite (irreducibleComponents ↥(Z ∩ fib X (ℓ : ℕ))) := fun _ =>
     NoetherianSpace.finite_irreducibleComponents.to_subtype
   have hFc : IsClosed (Set.range fun i => ((q i : ↥(Z ∩ fib X (i.1 : ℕ))) : X)) := by
     rw [← Set.iUnion_singleton_eq_range]
@@ -1398,7 +1398,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
       · exact absurd ((memfib.1 s₀.2.2).symm.trans (memfib.1 h)) hℓ0
       · rwa [(memfib.1 s₀.2.2).symm.trans (memfib.1 h)]
     have hc : IsClosed (Z ∩ fib X ℓ) := hZ.inter (hfibc ℓ hℓ0)
-    have hCi : IsIrreducible (Subtype.val '' Y) := hY.1.image _ continuous_subtype_val.continuousOn
+    have hCi : IsIrreducible (Subtype.val '' Y) := hY.1.image _ continuous_subtypeVal.continuousOn
     have hCc : IsClosed (Subtype.val '' Y) :=
       hc.isClosedEmbedding_subtypeVal.isClosedMap _ (isClosed_of_mem_irreducibleComponents Y hY)
     have hCf : Subtype.val '' Y ⊆ fib X ℓ := by
@@ -1416,7 +1416,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
       have : ℓ' = ℓ := (memfib.1 h').symm.trans (memfib.1 s.2.2)
       exact absurd (this ▸ hℓ'S) hℓS
   have hCsc : IsClosed {s : ↥(Z ∩ fib X ℓ) | (s : X) ∉ NV P e 0 f} :=
-    (hfo.preimage continuous_subtype_val).isClosed_compl
+    (hfo.preimage continuous_subtypeVal).isClosed_compl
   have hdrop := (_root_.GlobalTheory.DimDrop.dim_drop ↥(Z ∩ fib X ℓ)).1 _ d hCsc (hdim ℓ) fun Y hY hYd hsub => by
     obtain ⟨s, hsY, hsT⟩ := key Y hY hYd
     exact hsub hsY (hTNV hsT)

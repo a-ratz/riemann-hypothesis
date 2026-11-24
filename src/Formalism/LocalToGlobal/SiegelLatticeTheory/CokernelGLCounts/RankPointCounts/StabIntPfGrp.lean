@@ -93,7 +93,7 @@ theorem det_loIn {S : Subring K} {l : Matrix (Fin n) (Fin n) K} (hl : LoIn S l) 
 theorem loIn_inv {S : Subring K} {l : Matrix (Fin n) (Fin n) K} (hl : LoIn S l) : LoIn S l⁻¹ := by
   have hd : IsUnit l.det := by rw [det_loIn hl]; exact isUnit_one
   have hinv : l⁻¹ = l.adjugate := by rw [Matrix.inv_def, det_loIn hl, Ring.inverse_one, one_smul]
-  letI : Invertible l := Matrix.invertibleOfIsUnitDet l hd
+  let : Invertible l := Matrix.invertibleOfIsUnitDet l hd
   have hlow : l⁻¹.IsLowerTriangular := Matrix.blockTriangular_inv_of_blockTriangular (loIn_lower hl)
   have hlow' : ∀ a b, a < b → l⁻¹ a b = 0 := fun a b h => hlow h
   refine ⟨fun a => ?_, hlow', fun a b => ?_⟩

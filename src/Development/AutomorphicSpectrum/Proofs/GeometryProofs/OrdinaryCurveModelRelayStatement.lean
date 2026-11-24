@@ -475,12 +475,12 @@ theorem lattices (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E)
     ∀ a : Fin r → C, a ∈ spanOver RC (bcMap Ω C _ '' coordLat O y (𝔐.dR t) b c') ↔
       ∀ u : Fin g → RC, ∑ k, a k * ev (b k) (fun j => (u j : C)) ∈ RC := by
   classical
-  haveI : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
   have hξ : IsCptGen 𝔐.ξ := 𝔐.tie.gen
-  haveI := 𝔐.t.semi.smooth
-  haveI := 𝔐.t.semi.comm
-  haveI := P.fin
-  haveI := P.proj
+  have := 𝔐.t.semi.smooth
+  have := 𝔐.t.semi.comm
+  have := P.fin
+  have := P.proj
   have hinj : Function.Injective (algebraMap (CR O y c') Ω) := Subtype.val_injective
   obtain ⟨σ, hσ, -, -⟩ := PositivityTheory.Xgn.exists_cm_type_embedding E H D l Xo c O₀ β Y S Ω K J y 𝔐 t
   obtain ⟨hσO, x₀, hx₀, o₀, ho₀⟩ :=
@@ -626,7 +626,7 @@ theorem chi_cong {E : Type} [Field E] [NumberField E] (p : ℕ) [Fact p.Prime] {
   by_cases hpu : IsUnit (p : RC)
   · rw [Ideal.span_singleton_eq_top.mpr hpu]
     trivial
-  haveI : CharP (RC ⧸ Ideal.span {(p : RC)}) p := CharP.quotient RC p hpu
+  have : CharP (RC ⧸ Ideal.span {(p : RC)}) p := CharP.quotient RC p hpu
   have hσq : σ a ^ Fintype.card F - σ a ∈ Ideal.span {(p : RC)} := by
     obtain ⟨e', he'⟩ := Ideal.Quotient.mk_surjective (sc 1)
     have hker : (Ideal.Quotient.mk (Ideal.span {(p : 𝓞 E)}) (a ^ Fintype.card F - a)) * sc 1 = 0 := by
@@ -673,7 +673,7 @@ theorem chi_cong {E : Type} [Field E] [NumberField E] (p : ℕ) [Fact p.Prime] {
       rfl
     rw [h7, Valuation.map_sub_eq_of_lt_right, map_one]
     rw [map_one, map_pow]
-    exact pow_lt_one₀ zero_le' hvd (by omega)
+    exact pow_lt_one₀ zero_le hvd (by omega)
   obtain ⟨w, hw⟩ := hunit
   have e1 : d ^ Fintype.card F - d = d * (d ^ (Fintype.card F - 1) - 1) := by
     conv_lhs => rw [show Fintype.card F = (Fintype.card F - 1) + 1 by omega]
@@ -693,9 +693,9 @@ theorem gram_cong {E : Type} [Field E] [NumberField E] {R : Type} [CommRing R] {
   by_cases hpu : IsUnit (p : R)
   · rw [Ideal.span_singleton_eq_top.mpr hpu]
     trivial
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p hpu
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p hpu
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
-  haveI : NeZero (p ^ Rr) := ⟨pow_ne_zero _ hp0⟩
+  have : NeZero (p ^ Rr) := ⟨pow_ne_zero _ hp0⟩
   let mk := Ideal.Quotient.mk (Ideal.span {(p : R)})
   let φ : ZMod (p ^ Rr) →+* (R ⧸ Ideal.span {(p : R)}) := ZMod.castHom (dvd_pow_self p (by omega)) _
   have hφ : ∀ z : ZMod (p ^ Rr), mk (z.val : R) = φ z := by
@@ -915,7 +915,7 @@ theorem hdual_chart [Fact p.Prime] (hRr : 1 ≤ Rr) (hact : ∀ a u, Dh.ρΩ a u
       calc v (algebraMap Ω C t) * (v (p : C) ^ M * v (algebraMap Ω C z)) ≤ 1 * (v (p : C) ^ M * 1) := by
             gcongr
         _ = v (p : C) ^ M := by ring
-        _ ≤ v (p : C) := pow_le_of_le_one zero_le' hvp (by omega)
+        _ ≤ v (p : C) := pow_le_of_le_one zero_le hvp (by omega)
         _ ≤ v w := hvpw
   · rw [map_mul]
     calc v (p : C) * v S ≤ (v w * v w) * v S := by gcongr
@@ -945,10 +945,10 @@ namespace PositivityTheory.HtPt.Gd
 theorem free_of_fg {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O] [Algebra O C]
     (hv : v.Integers O) {Ω : Type} [AddCommGroup Ω] [Module C Ω] [Module O Ω] [IsScalarTower O C Ω]
     (L : Submodule O Ω) (hL : L.FG) : Module.Free O L := by
-  haveI : IsDomain O := Function.Injective.isDomain (algebraMap O C) hv.hom_inj
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : Module.Finite O L := Module.Finite.iff_fg.mpr hL
-  haveI : Module.Flat O L := by
+  have : IsDomain O := Function.Injective.isDomain (algebraMap O C) hv.hom_inj
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : Module.Finite O L := Module.Finite.iff_fg.mpr hL
+  have : Module.Flat O L := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     intro x hx
     obtain ⟨a, ha⟩ := (Submodule.mem_torsion_iff x).mp hx
@@ -1003,9 +1003,9 @@ theorem pt_matrices {v : Valuation C NNReal} (hv : v.Integers O) (P : HTPoint C 
       (∀ m m', algebraMap O C (Eg m m') = P.e (P.tate (dl m)) (P.tate (dl m'))) ∧
       ∀ m, ∃ h : P.ht (P.tate (dl m)) ∈ P.om, ∀ k, Hm k m = bo.repr ⟨_, h⟩ k := by
   classical
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI := PositivityTheory.HtPt.Gb.isFractionRing_of_integers hv
-  haveI : P.om.IsFullLattice C := P.om_lat
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have := PositivityTheory.HtPt.Gb.isFractionRing_of_integers hv
+  have : P.om.IsFullLattice C := P.om_lat
   have hinj := hv.hom_inj
   have hsp : ⊤ ≤ Submodule.span C (Set.range fun q : Ix E N =>
       P.ρ (RingOfIntegers.basis E q.2) (P.t q.1)) := by
@@ -1016,7 +1016,7 @@ theorem pt_matrices {v : Valuation C NNReal} (hv : v.Integers O) (P : HTPoint C 
   have hB : ∀ q, B q ∈ P.T := fun q => by
     rw [hT]
     exact Submodule.subset_span ⟨q, rfl⟩
-  haveI : FiniteDimensional C V := Module.Finite.of_basis B
+  have : FiniteDimensional C V := Module.Finite.of_basis B
   have hnd : ∀ x, (∀ y, P.e x y = 0) → x = 0 := fun x hx =>
     P.nondeg x fun y => by rw [pt_swap, hx, neg_zero]
   have hei : Function.Injective (P.e : V →ₗ[C] Module.Dual C V) := by
@@ -1140,9 +1140,9 @@ theorem chart_matrices {A K : Type} [CommRing A] [IsDomain A] [Field K] [Algebra
       (∀ m m', Eg m m' - ((D.e (dl m) (dl m')).val : O) ∈ Ideal.span {(p : O)}) ∧
       ∀ m k, Hm k m - io ⟨D.h (dl m), D.h_mem _⟩ k ∈ Ideal.span {(p : O)} := by
   classical
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI := PositivityTheory.HtPt.Gd.free_of_fg hv P.om P.om_lat.fg
-  haveI : Module.Finite O P.om := Module.Finite.iff_fg.2 P.om_lat.fg
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have := PositivityTheory.HtPt.Gd.free_of_fg hv P.om P.om_lat.fg
+  have : Module.Finite O P.om := Module.Finite.iff_fg.2 P.om_lat.fg
   let bo := Module.finBasis O P.om
   have hmem : ∀ u, ι₀ u ∈ P.om := fun u => by
     rw [← hr.span_eq]
@@ -1248,8 +1248,8 @@ open TensorProduct in
 theorem reducesAt_of : PointHT → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (p : ℕ) [Fact p.Prime] (R K : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] [CharZero R] [Field K] [Algebra R K] [IsFractionRing R K] (n : ℕ) (Ω : Type) [AddCommGroup Ω] [Module K Ω] [Module R Ω] [IsScalarTower R K Ω] (Dc : HTChart R K (IsCMField.complexConj E).toRingEquiv p n (D.p + D.q) Ω) (u : Fin (D.p + D.q) → D.La) (hu : IsPolLattice (IsCMField.complexConj E).toRingEquiv p D.EF u) (S : Scheme.{0}) [IsLocallyNoetherian S] (t : SAB H S) (x : Sp R ⟶ S) (Γ₀ : QFGroup R (LevGrp D.La p n)) (i : Γ₀.G.left ⟶ t.G.left) (hi : Γ₀.IsTorsionAlong t.G x (p ^ n) i) (L : Type) [AddCommGroup L] [Module R L] (M : LieModel t.G x L) (ρ : 𝓞 E →+* Module.End R L) (hρ : M.IsActOf t.act.act ρ) (j : Module.Dual R L →ₗ[R] Ω) (hj : IsBaseChange K j) (π : Multiplicative (Fin (D.p + D.q) → 𝓞 E) →* LevGrp D.La p n) (ζ₀ : Rˣ) (κ : R), IsHTChartOf Dc Γ₀ i M ρ j π ζ₀ → (∀ z, π (Multiplicative.ofAdd z) = lev p n (∑ k, z k • u k)) → (∀ z z', Dc.e z z' = ((D.EF (∑ k, z k • u k) (∑ k, z' k • u k) : ℤ) : ZMod (p ^ n))) → 2 * Module.finrank R L = Module.finrank ℤ D.La → IsProper (Limits.pullback.snd t.G.hom ((BT.genPt R).hom ≫ x)) → (∀ (k : Type) [Field k] [IsAlgClosed k] (f : FractionRing R →+* k), ∃ I : TateIso D k (Over.mk (spMap f ≫ (BT.genPt R).hom ≫ x) ⟶ t.G) (fun a g => g ≫ t.act.act a) (fun n g g' c => Out.WeilIs t.G t.PP.L n g g' (unitOn c)), (I.ζ (p ^ n) : k) = f (algebraMap R _ (ζ₀ : R)) ∧ ∀ a, (I.ev (p ^ n) a).left = spMap f ≫ (Γ₀.pt (lev p n a)).left ≫ i) → (if p = 2 then κ = 4 else ∃ ζ : R, IsPrimitiveRoot ζ p ∧ κ = ζ - 1) → ∀ (C O : Type) [Field C] [IsAlgClosed C] [CharZero C] [CommRing O] [IsDomain O] [Algebra O C] [Algebra R O] (v : Valuation C NNReal), v.Integers O → v (p : C) < 1 → IsAdicComplete (Ideal.span {(p : O)}) O → Function.Injective (algebraMap R O) → ReducesAt Dc κ C O := by
   intro hPt E _ _ _ H D p _ R K _ _ _ _ _ _ _ _ n Ω _ _ _ _ Dc u hu S _ t x Γ₀ i hi L _ _ M ρ hρ j hj π ζ₀ κ hc hπ he hrank hprop hTate hκ C O _ _ _ _ _ _ _ v hv hp hO hinj
   obtain ⟨-, -, hIC, -, hAC, -⟩ := PositivityTheory.HtPt.Twhopf.padic_alg p C v O hv hp hO
-  haveI := hAC
-  haveI := hIC
+  have := hAC
+  have := hIC
   have hgk : Function.Injective ((algebraMap O (FractionRing O)).comp (algebraMap R O)) :=
     (IsFractionRing.injective O _).comp hinj
   let f : FractionRing R →+* FractionRing O := IsFractionRing.lift hgk
@@ -1282,10 +1282,10 @@ theorem reducesAt_pack (hF : HT.FarguesHodgeTate) (E : Type) [Field E] [NumberFi
     (zp Ω p) (mem_range_zp Ω p)
   have hp := (Fact.out : p.Prime)
   have hn : p ^ 𝔐.R p ≠ 0 := pow_ne_zero _ hp.ne_zero
-  haveI : NeZero (p ^ 𝔐.R p) := ⟨hn⟩
+  have : NeZero (p ^ 𝔐.R p) := ⟨hn⟩
   have hR : 1 ≤ 𝔐.R p := le_trans (by norm_num) (𝔐.R_ge p hpS)
   have hinj : Function.Injective (algebraMap (CR O y c') Ω) := IsFractionRing.injective _ _
-  haveI : CharZero (CR O y c') := (algebraMap (CR O y c') Ω).charZero
+  have : CharZero (CR O y c') := (algebraMap (CR O y c') Ω).charZero
   obtain ⟨ev, ζ₀, hev⟩ := exists_isParam D 𝔐.t 𝔐.ξ _root_.GlobalTheory.CompanionTheory.Ar.HT.level_parametrisation (p ^ 𝔐.R p) (Nat.pos_of_ne_zero hn) hpq hprop
     (𝔐.tors p hpS) hTa
   obtain ⟨u, hu, huz⟩ := exists_coords D 𝔐.t 𝔐.ξ p (𝔐.R p) hR hev G.t₂.pt G.t₂.onto G.t₂.lin
@@ -1327,7 +1327,7 @@ theorem reducesAt_pack (hF : HT.FarguesHodgeTate) (E : Type) [Field E] [NumberFi
     congr 3
     ext r
     exact (RingEquiv.symm_apply_eq κ).2 (hκ r).symm
-  haveI := P.fin
+  have := P.fin
   refine reducesAt_of (_root_.GlobalTheory.CompanionTheory.Ar.HT.Fargues.pointHT hF) E H D p (CR O y c') Ω (𝔐.R p) _ (withE P.Dh e halt hadj hes hei) u hu 𝔐.X 𝔐.t P.x (relabel P.Γ₂ b) P.i₂
     ⟨P.tors₂.isOver, P.tors₂.mul, P.tors₂.inj, P.tors₂.kernel⟩ P.L P.M P.ρ P.act P.j P.j_bc π (P.ζ ^ a) (algebraMap O (CR O y c') w)
     ⟨P.isHT.1, P.isHT.2.1, fun z => ?_⟩ hπ he ?_ (isProper_of_iso _ 𝔐.ξ _ _ hq) (fun k _ _ f => ?_)
@@ -1367,10 +1367,10 @@ theorem point_data (hF : HT.FarguesHodgeTate) (E : Type) [Field E] [NumberField 
   obtain ⟨h0, hNoe, hIC, hFr⟩ := chart_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd p hpS A m hpm O c' hc'
   have hC := hT.1
   obtain ⟨v, hv, hvp⟩ := hT.2.1
-  haveI : CharZero C := charZero_of_injective_ringHom (algebraMap Ω C).injective
+  have : CharZero C := charZero_of_injective_ringHom (algebraMap Ω C).injective
   have hint : v.Integers RC :=
     ⟨Subtype.val_injective, fun x => (hv _).1 x.2, fun r hr => ⟨⟨r, (hv _).2 hr⟩, rfl⟩⟩
-  letI : Algebra (CR O y c') RC := (toRC (CR O y c') RC hT.2.2.2).toAlgebra
+  let : Algebra (CR O y c') RC := (toRC (CR O y c') RC hT.2.2.2).toAlgebra
   have hφ : Function.Injective (algebraMap (CR O y c') RC) := fun a b h =>
     Subtype.ext ((algebraMap Ω C).injective (congrArg Subtype.val h))
   obtain ⟨V, Ω', _, _, _, _, _, _, _, _, Pt, io₀, hr⟩ := reducesAt_pack hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd hpq p
@@ -1671,8 +1671,8 @@ theorem PositivityTheory.Xgn.test_group_point_exists : GlobalTheory.CompanionThe
     hpm O _ _ _ _ _ _ _ t₀ Sg _ e φ' F _ _ _ pq sc w σF hO hsec G c' hc' P i hseq hbase C _ _ _ _ RC hT χ hχ _ _ _ v hv hvp
     τ hbm _ _ hW hcl
   have hpp : p.Prime := Fact.out
-  haveI : NeZero p := ⟨hpp.ne_zero⟩
-  haveI : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : NeZero p := ⟨hpp.ne_zero⟩
+  have : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hpp.ne_zero⟩
   have hR4 := 𝔐.R_ge p hpS
   obtain ⟨h0, hNoe, hIC, hFr⟩ := Par.chart_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd p hpS A m hpm O c' hc'
   obtain ⟨-, hN, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS (Par.zp Ω p) (Par.mem_range_zp Ω p)
@@ -1685,8 +1685,8 @@ theorem PositivityTheory.Xgn.test_group_point_exists : GlobalTheory.CompanionThe
   obtain ⟨Dv, hD, hDs, hDch⟩ := exists_der hpS P hT.2.2.2 io
   have hlat := fun t => lattices E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd hpq p hpS A m hpm O G c' hc' P C RC hdisc
     hT.2.2.2 io ev hio hev t (b t) (hb t).1 (hb t).2
-  haveI := hT.1
-  haveI : CharZero C := charZero_of_injective_algebraMap (algebraMap Ω C).injective
+  have := hT.1
+  have : CharZero C := charZero_of_injective_algebraMap (algebraMap Ω C).injective
   have hint : v.Integers RC := ⟨Subtype.val_injective, fun x => (hv _).1 x.2, fun r hr => ⟨⟨r, (hv _).2 hr⟩, rfl⟩⟩
   obtain ⟨φN, hφN⟩ := exists_phiN E (D.p + D.q) p
   have hζ : IsPrimitiveRoot (algebraMap Ω C (G.ζ ^ p ^ (𝔐.R p - 1))) p :=

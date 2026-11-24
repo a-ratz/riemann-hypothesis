@@ -140,7 +140,7 @@ theorem exists_param_definite {V : HSp D} (hs : V.SigOK) (hp : V.IsPosDef) (c : 
     funext g
     have h3 := congrFun h2 g
     have h4 := GlobalTheory.DefLiftHecke.ext_hkF c hc w (Finsupp.single d 1) f g
-    rw [he w d hw ⟨R, hR'⟩, map_smul, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton,
+    rw [he w d hw ⟨R, hR'⟩, map_smul, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton,
       Finsupp.single_eq_same, one_smul] at h4
     rw [opOf, Finsupp.sum_single_index (by exact zero_smul _ _), one_smul, Finset.sum_apply, LinearMap.sum_apply,
       Finset.sum_apply] at h3

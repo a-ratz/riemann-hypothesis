@@ -63,8 +63,8 @@ theorem UpperTheory.V.Lit.Bor.avgPos :
     UpperTheory.V.Lit.Bor.AvgPos := by
   intro K _ _ _ _ _ d ρ hρ
   classical
-  letI : MeasurableSpace K := borel K
-  haveI : BorelSpace K := ⟨rfl⟩
+  let : MeasurableSpace K := borel K
+  have : BorelSpace K := ⟨rfl⟩
   let μ : Measure K := Measure.haar
   have hint : ∀ f : K → ℂ, Continuous f → Integrable f μ := fun f hf =>
     hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
@@ -204,9 +204,9 @@ private theorem continuous_unitary_toUnits_matrix_pi_complex (T : Type) [Fintype
       (Matrix (Fin a) (Fin a) (T → ℂ))ˣ) := by
   rw [Units.continuous_iff]
   refine ⟨?_, ?_⟩
-  · simpa [Function.comp_def, Unitary.val_toUnits_apply] using continuous_subtype_val
+  · simpa [Function.comp_def, Unitary.val_toUnits_apply] using continuous_subtypeVal
   · simp only [Unitary.val_inv_toUnits_apply]
-    exact continuous_subtype_val.comp continuous_inv
+    exact continuous_subtypeVal.comp continuous_inv
 
 private theorem conjTranspose_D_mul_add_mul_D_eq_zero_of_skew {T : Type} [Fintype T] {a d : ℕ}
     {R : GL (Fin a) (T → ℂ) →* Matrix (Fin d) (Fin d) ℂ}
@@ -220,10 +220,10 @@ private theorem conjTranspose_D_mul_add_mul_D_eq_zero_of_skew {T : Type} [Fintyp
       (∀ s, (c s : Matrix (Fin a) (Fin a) (T → ℂ)) ∈ unitary (Matrix (Fin a) (Fin a) (T → ℂ))) ∧
       ∀ (i j : Fin a) (t : T), HasDerivAt (fun s => (c s : Matrix (Fin a) (Fin a) (T → ℂ)) i j t)
         (Y i j t) 0 := by
-    letI : NormedRing (Matrix (Fin a) (Fin a) (T → ℂ)) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (T → ℂ)) := Matrix.linftyOpNormedAlgebra
-    letI : NormedAlgebra ℚ (Matrix (Fin a) (Fin a) (T → ℂ)) := Matrix.linftyOpNormedAlgebra
-    haveI : CompleteSpace (Matrix (Fin a) (Fin a) (T → ℂ)) := FiniteDimensional.complete ℝ _
+    let : NormedRing (Matrix (Fin a) (Fin a) (T → ℂ)) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (T → ℂ)) := Matrix.linftyOpNormedAlgebra
+    let : NormedAlgebra ℚ (Matrix (Fin a) (Fin a) (T → ℂ)) := Matrix.linftyOpNormedAlgebra
+    have : CompleteSpace (Matrix (Fin a) (Fin a) (T → ℂ)) := FiniteDimensional.completeSpace ℝ _
     let S : Matrix (Fin a) (Fin a) (T → ℂ) →ₗ[ℝ] Matrix (Fin a) (Fin a) (T → ℂ) :=
       { toFun := star
         map_add' := star_add
@@ -281,7 +281,7 @@ private theorem conjTranspose_D_mul_add_mul_D_eq_zero_of_skew {T : Type} [Fintyp
 theorem UpperTheory.V.Lit.Bor.admissible_abs_bound :
     UpperTheory.V.Lit.Bor.AdmAbs := by
   intro T _ a d R D hR
-  haveI := compactSpace_unitary_matrix_pi_complex T a
+  have := compactSpace_unitary_matrix_pi_complex T a
   obtain ⟨G, hG, hinv⟩ := avgPos (unitary (Matrix (Fin a) (Fin a) (T → ℂ))) d
     (R.comp Unitary.toUnits) (fun i j => (hR.cont i j).comp (continuous_unitary_toUnits_matrix_pi_complex T a))
   refine ⟨G, hG, fun Z => ?_⟩

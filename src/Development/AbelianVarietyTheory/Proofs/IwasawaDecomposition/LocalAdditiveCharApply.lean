@@ -74,7 +74,7 @@ namespace GlobalTheory.BaseChars
 
 theorem eq_of_pow_eq {K : Type} [Field K] {p : ℕ} (hp : p.Prime) {om : (ZMod p)ˣ →* Kˣ} (hom : Function.Injective om)
     {a b : ℕ} (ha : a < p - 1) (hb : b < p - 1) (h : ∀ x, om x ^ a = om x ^ b) : a = b := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ZMod p)ˣ)
   have hog : orderOf g = p - 1 := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.card_eq_fintype_card, ZMod.card_units]
@@ -86,8 +86,8 @@ theorem nonempty_equiv_zmod {E : Type} [Field E] [NumberField E] {p : ℕ} (hp :
     (hw : Ideal.absNorm w.asIdeal = p) : Nonempty ((𝓞 E ⧸ w.asIdeal) ≃+* ZMod p) := by
   have hc : Nat.card (𝓞 E ⧸ w.asIdeal) = p := by
     rw [← hw, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (hc ▸ hp.ne_zero)
-  letI := Fintype.ofFinite (𝓞 E ⧸ w.asIdeal)
+  have : Finite (𝓞 E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (hc ▸ hp.ne_zero)
+  let := Fintype.ofFinite (𝓞 E ⧸ w.asIdeal)
   exact ⟨(ZMod.ringEquivOfPrime _ hp (by rw [← Nat.card_eq_fintype_card, hc])).symm⟩
 
 end GlobalTheory.BaseChars
@@ -133,7 +133,7 @@ theorem pullUnit_spec {K : Type} [Field K] (σ : K →+* ℂ) {z : ℂ} (hz : z 
 
 theorem roots_of_isPrimitiveRoot {K : Type} [Field K] (σ : K →+* ℂ) {n : ℕ} (hn : n ≠ 0) {y : K}
     (hy : IsPrimitiveRoot y n) (z : ℂ) (hz : z ^ n = 1) : ∃ x, σ x = z := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   obtain ⟨i, -, hi⟩ := (hy.map_of_injective σ.injective).eq_pow_of_pow_eq_one hz
   exact ⟨y ^ i, by rw [map_pow, hi]⟩
 
@@ -167,13 +167,13 @@ def psiK : AddChar (ZMod p) K :=
 
 theorem psiK_spec (b : ℤ) :
     σ (psiK σ hp hr (b : ZMod p)) = Complex.exp (2 * Real.pi * Complex.I * b / (p : ℂ)) := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   rw [← ZMod.stdAddChar_coe]
   exact liftHom_spec σ _ _ (Multiplicative.ofAdd (b : ZMod p))
 
 theorem psiK_one : psiK σ hp hr 1 ≠ 1 := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI := Fact.mk hp
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have := Fact.mk hp
   intro h
   have h1 : σ (psiK σ hp hr 1) = ZMod.stdAddChar (1 : ZMod p) :=
     liftHom_spec σ _ _ (Multiplicative.ofAdd (1 : ZMod p))

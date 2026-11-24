@@ -128,8 +128,8 @@ theorem Mn.mul [IsDomain R] {M B : Matrix (Fin N) (Fin N) R} (h : Mn M) (hB : B.
     rfl
   rw [e, det_mul]
   refine mul_ne_zero (h P i hP) ?_
-  rw [det_of_upperTriangular hB, Finset.prod_ne_zero_iff] at hd
-  rw [det_of_upperTriangular (M := B.submatrix (Subtype.val : {a // P a} → Fin N) Subtype.val) fun a b e => hB e,
+  rw [det_of_isUpperTriangular hB, Finset.prod_ne_zero_iff] at hd
+  rw [det_of_isUpperTriangular (M := B.submatrix (Subtype.val : {a // P a} → Fin N) Subtype.val) fun a b e => hB e,
     Finset.prod_ne_zero_iff]
   exact fun a _ => hd _ (Finset.mem_univ _)
 
@@ -235,7 +235,7 @@ theorem PositivityTheory.Xgp.t_c_fm_exists_flags_chgbasis : ∀ (Ω G : Type) [F
     intro a b
     rw [← e₁]
     exact ((X₁ * B₁) a b).2
-  · letI := Matrix.invertibleOfIsUnitDet _ (hd s).isUnit
+  · let := Matrix.invertibleOfIsUnitDet _ (hd s).isUnit
     exact blockTriangular_inv_of_blockTriangular (hB s) h
 end -- clump:auto
 end -- clump:auto
@@ -324,8 +324,8 @@ theorem bc {S : Scheme.{0}} {G : Over S} [GrpObj G] (hs : Smooth G.hom) {R R' : 
   subst hy
   let _ := f.toAlgebra
   obtain ⟨j, hj, hl, hb⟩ := PositivityTheory.HtPt.Htat.lie_bc S G R R' x E E' M M'
-  haveI := hs
-  haveI : Module.Finite R E := (PositivityTheory.HtPt.Htat.lie_fin S G R x E M).1
+  have := hs
+  have : Module.Finite R E := (PositivityTheory.HtPt.Htat.lie_fin S G R x E M).1
   let b₁ := Module.finBasis R E
   refine ⟨j, hj, ⟨hl, fun n b h => LiePull.indep_of_bases b₁ j (fun m B => (hb hs m B).1) b h⟩, ?_, inferInstance⟩
   refine top_le_iff.1 ((hb hs _ b₁).2.symm.le.trans (Submodule.span_mono ?_))
@@ -404,7 +404,7 @@ theorem PositivityTheory.Xgp.exists_flags_lie_compact_dominated : ∀ (E : Type)
     rw [← hfa]
     refine RingHom.ext fun o => ?_
     exact congrArg ι (IsFractionRing.lift_algebraMap hainj o)
-  haveI : CharZero F₀ := ι.charZero
+  have : CharZero F₀ := ι.charZero
   let σ : CMType H ⊕ CMType H → (𝓞 E →+* F₀) := fun s => a'.comp (labelEmb c s)
   have hσ : ∀ s, A.emb s = ι.comp (σ s) := fun s => by
     rw [← RingHom.comp_assoc, ha']
@@ -552,13 +552,13 @@ theorem step_le {c : Fin r → M} (hc : LinearIndependent G c) (w : Fin r → N)
     rw [hcoef l]
     rw [Finsupp.mem_supported'] at hd
     apply hd l
-    simp only [Set.mem_setOf_eq, not_lt]
+    simp only [Set.mem_ofPred_eq, not_lt]
     exact hkl
   rw [dual_change hc w hF hu h']
   unfold flagStep
   apply Submodule.span_le.mpr
   rintro _ ⟨k, hk, rfl⟩
-  simp only [Set.mem_setOf_eq] at hk
+  simp only [Set.mem_ofPred_eq] at hk
   change ∑ a, Bᵀ a k.rev • colFrame w uᵀ⁻¹ a ∈ _
   refine Submodule.sum_mem _ fun a _ => ?_
   by_cases hak : k.rev ≤ a
@@ -566,7 +566,7 @@ theorem step_le {c : Fin r → M} (hc : LinearIndependent G c) (w : Fin r → N)
     apply Submodule.subset_span
     refine ⟨a.rev, ?_, by simp⟩
     have := Fin.rev_le_iff.mp hak
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact lt_of_le_of_lt (Fin.le_def.mp this) hk
   · rw [Matrix.transpose_apply, htri _ _ (not_le.mp hak), zero_smul]
     exact Submodule.zero_mem _
@@ -625,7 +625,7 @@ private theorem dual_lemma_4 {Ω V : Type} [Field Ω] [AddCommGroup V] [Module �
   rw [LinearMap.sum_apply]
 
   simp only [LinearMap.smul_apply, map_sum, map_smul, hv, smul_eq_mul, mul_ite, mul_one, mul_zero,
-  Finset.sum_ite_eq, Finset.mem_univ, if_true, Matrix.transpose_apply]
+  Finset.sum_ite_eq, Finset.mem_univ, ite_true, Matrix.transpose_apply]
   exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
 
 open PositivityTheory.Xgp.c_fm_exists_flags_dualflag in
@@ -635,7 +635,7 @@ theorem PositivityTheory.Xgp.t_c_fm_exists_flags_dualflag : ∀ (E : Type) [Fiel
   set mk := (TensorProduct.mk Ω G (Module.Dual Ω (𝔐.Vgen (.inr τ))) 1).toAddMonoidHom with hmkdef
   have hc : LinearIndependent G (fun l => mk (bO l)) := hmk.2 _ bO bO.linearIndependent
   have hu : IsUnit u.det := by
-    rw [Matrix.det_of_lowerTriangular u (fun _ _ hab => hu0 _ _ hab)]
+    rw [det_of_isLowerTriangular u (fun _ _ hab => hu0 _ _ hab)]
     simp [hu1]
   have hw : LinearIndependent G (fun a => j (v a)) := by
     apply hj.2
@@ -766,13 +766,13 @@ theorem PositivityTheory.Xgp.t_c_fm_exists_flags_field : ∀ (E : Type) [Field E
   have e5 : spMap (A.fn.comp ψ.toRingHom) ≫ A'.ξ₀ = A.ξ ≫ A.f := by
     rw [FlagPull.spMap_comp, Category.assoc, hψ, e2]
   refine ⟨A.fn.comp ψ.toRingHom, ?_, e5.symm, ?_⟩
-  · haveI := FlagPull.mono_of_isCptGen A'.gen₀
+  · have := FlagPull.mono_of_isCptGen A'.gen₀
     have e4 : spMap (i.comp (A.fn.comp ψ.toRingHom)) = spMap A'.fn := by
       refine (cancel_mono A'.ξ₀).1 ?_
       rw [FlagPull.spMap_comp, Category.assoc, e5, e1, hf, ← Category.assoc, ← e3, Category.assoc]
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e4)
-  · letI := A.fn.toAlgebra
-    letI := (A.fn.comp ψ.toRingHom).toAlgebra
+  · let := A.fn.toAlgebra
+    let := (A.fn.comp ψ.toRingHom).toAlgebra
     exact (Algebra.finrank_eq_of_equiv_equiv ψ (RingEquiv.refl Ω) (RingHom.ext fun _ => rfl)).trans hcov.2
 end -- clump:auto
 end -- clump:auto
@@ -897,9 +897,9 @@ theorem PositivityTheory.Xgp.c_fm_exists_flags_degree.core {F₀ Ω G I : Type} 
     (hx : AlgebraicIndependent Ω x) (hx₀ : AlgebraicIndependent F₀ x)
     (ht : IntermediateField.adjoin Ω (Set.range x) = ⊤) :
     Module.finrank (IntermediateField.adjoin F₀ (Set.range x)) G = Module.finrank F₀ Ω := by
-  letI : Algebra (FractionRing (MvPolynomial I F₀)) (FractionRing (MvPolynomial I Ω)) :=
+  let : Algebra (FractionRing (MvPolynomial I F₀)) (FractionRing (MvPolynomial I Ω)) :=
     FractionRing.liftAlgebra _ _
-  haveI : IsScalarTower (MvPolynomial I F₀) (FractionRing (MvPolynomial I F₀)) (FractionRing (MvPolynomial I Ω)) :=
+  have : IsScalarTower (MvPolynomial I F₀) (FractionRing (MvPolynomial I F₀)) (FractionRing (MvPolynomial I Ω)) :=
     FractionRing.isScalarTower_liftAlgebra _ _
   have h := Algebra.IsAlgebraic.rank_fractionRing_mvPolynomial (R := F₀) (S := Ω) I
   rw [Cardinal.lift_id] at h
@@ -920,7 +920,7 @@ theorem PositivityTheory.Xgp.c_fm_exists_flags_degree.core {F₀ Ω G I : Type} 
 
 theorem PositivityTheory.Xgp.t_c_fm_exists_flags_degree : ∀ (F₀ Ω G : Type) [Field F₀] [Field Ω] [Field G] [Algebra F₀ Ω] [Algebra Ω G] [Algebra F₀ G] [IsScalarTower F₀ Ω G] (S : Type) [Finite S] (r : S → ℕ) (u : ∀ s, Matrix (Fin (r s)) (Fin (r s)) G) (d : ℕ), 0 < d → Module.finrank F₀ Ω = d → IsGenFam Ω G u → AlgebraicIndependent F₀ (fun q : Σ σ, {lk : Fin (r σ) × Fin (r σ) // lk.2 < lk.1} => u q.1 q.2.1.1 q.2.1.2) ∧ Module.finrank (IntermediateField.adjoin F₀ (Set.range fun q : Σ σ, Fin (r σ) × Fin (r σ) => u q.1 q.2.1 q.2.2)) G = d := by
   intro F₀ Ω G _ _ _ _ _ _ _ S _ r u d hd hr hu
-  haveI : Module.Finite F₀ Ω := Module.finite_of_finrank_pos (hr ▸ hd)
+  have : Module.Finite F₀ Ω := Module.finite_of_finrank_pos (hr ▸ hd)
   have h₀ := hu.2.2.1.restrictScalars (R := F₀) (algebraMap F₀ Ω).injective
   refine ⟨h₀, ?_⟩
   rw [PositivityTheory.Xgp.GenFam.adjoin_low F₀ u hu.1 hu.2.1, ← hr]
@@ -971,7 +971,7 @@ private theorem revInv_unitriangular_and_mem_of_unitriangular {Ω G : Type} [Fie
   have hunit : IsUnit (Mᵀ).det := by
     rw [Matrix.det_of_isUpperTriangular hup]
     simp [Matrix.transpose_apply, hd]
-  letI : Invertible (Mᵀ) := Matrix.invertibleOfIsUnitDet _ hunit
+  let : Invertible (Mᵀ) := Matrix.invertibleOfIsUnitDet _ hunit
   have hup' : (Mᵀ)⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hup
   have hdiag : ∀ i, (Mᵀ)⁻¹ i i = 1 := by
     intro i
@@ -1010,15 +1010,15 @@ theorem PositivityTheory.Xgp.t_c_fm_exists_flags_revgen : ∀ (Ω G : Type) [Fie
   refine PositivityTheory.Xgp.GenFam.of_gen hu ?_ ?_ ?_
   · intro s a
     by_cases h : P s
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       exact (key s).1 a
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       exact hd s a
   · intro s a b hab
     by_cases h : P s
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       exact (key s).2.1 a b hab
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       exact hl s a b hab
   · intro s a b
     have hsub : ∀ x y, (if P s then revInv (u s) else u s) x y ∈
@@ -1026,9 +1026,9 @@ theorem PositivityTheory.Xgp.t_c_fm_exists_flags_revgen : ∀ (Ω G : Type) [Fie
           (if P q.fst then revInv (u q.fst) else u q.fst) q.snd.1 q.snd.2) :=
       fun x y => IntermediateField.subset_adjoin _ _ ⟨⟨s, x, y⟩, rfl⟩
     by_cases h : P s
-    · rw [if_pos h] at hsub
+    · rw [ite_eq_left h] at hsub
       exact (key s).2.2 _ hsub a b
-    · rw [if_neg h] at hsub
+    · rw [ite_eq_right h] at hsub
       exact hsub a b
 end -- clump:auto
 end -- clump:auto
@@ -1162,7 +1162,7 @@ theorem flagStep_colFrame {G M : Type} [Field G] [AddCommGroup M] [Module G M] {
     (B : Matrix (Fin r) (Fin r) G) (hB : ∀ a b, b < a → B a b = 0) (hu : IsUnit B.det) (i : ℕ) :
     flagStep G (colFrame e B) i = flagStep G e i := by
   refine le_antisymm (flagStep_colFrame_le e B hB i) ?_
-  letI := Matrix.invertibleOfIsUnitDet B hu
+  let := Matrix.invertibleOfIsUnitDet B hu
   have ht : B.BlockTriangular id := fun a b h => hB a b h
   have hi : B⁻¹.BlockTriangular id := blockTriangular_inv_of_blockTriangular ht
   have h := flagStep_colFrame_le (colFrame e B) B⁻¹ (fun a b h => hi h) i
@@ -1225,7 +1225,7 @@ theorem gen_of_mat (F₀ Ω G : Type) [Field F₀] [Field Ω] [Field G] [Algebra
     funext k
     exact hb s k
   have hu'd : ∀ s, IsUnit (u' s).det := fun s => by
-    rw [Matrix.det_of_lowerTriangular _ fun a b h => hu'.2.1 s a b h]
+    rw [det_of_isLowerTriangular _ fun a b h => hu'.2.1 s a b h]
     simp [hu'.1 s]
   refine ⟨c, u', hc, hsemi, hlin, fun s => ?_, hu'.1, hu'.2.1, fun s i => ?_, hind, hd, hdeg⟩
   · rw [hbe]
@@ -1252,9 +1252,9 @@ theorem gen_of_mat' (F₀ Ω G : Type) [Field F₀] [Field Ω] [Field G] [Algebr
     (hfin : letI := ι.toAlgebra; Module.finrank F₀ Ω = d) :
     letI := fn.toAlgebra
     GlobalTheory.CompanionTheory.Ar.IsGenericFlag (Ω' := G) j₀ V₀ b d := by
-  letI := ι.toAlgebra
-  letI := fn.toAlgebra
-  haveI : IsScalarTower F₀ Ω G := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun hι a).symm
+  let := ι.toAlgebra
+  let := fn.toAlgebra
+  have : IsScalarTower F₀ Ω G := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun hι a).symm
   exact gen_of_mat F₀ Ω G E₀ E' j₀ S r V₀ c b U A d hc hsemi hlin hU hA hb hd hfin
 
 
@@ -1353,7 +1353,7 @@ theorem exists_colFlags : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     rintro (τ | τ)
     · exact ⟨(bW τ).linearIndependent.map' (𝔐.Vgen (.inl τ)).subtype (Submodule.ker_subtype _), fun k => (bW τ k).2⟩
     · have h1 : LinearIndependent Ω (v τ) := LinearIndependent.of_pairwise_dual_eq_zero_one (v τ) (bO τ)
-        (fun a b hab => (hv τ a b).trans (if_neg hab)) (fun a => by rw [hv, if_pos rfl])
+        (fun a b hab => (hv τ a b).trans (ite_eq_right hab)) (fun a => by rw [hv, ite_eq_left rfl])
       have h2 := h1.map' (𝔐.Vgen (.inr τ)).subtype (Submodule.ker_subtype _)
       exact ⟨h2.comp Fin.rev Fin.rev_injective, fun k => (v τ k.rev).2⟩
   have hA : ∀ s, ∃ A : Matrix (Fin (labelRk D s)) (Fin (labelRk D s)) Ω, IsUnit A.det ∧
@@ -1370,8 +1370,8 @@ theorem exists_colFlags : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hU : IsGenFam Ω (GenField Ω (rk (CMType H) D.p D.q)) U :=
     _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.GenFl.isGenFam_revInv_ite Ω _ _ (rk (CMType H) D.p D.q) (genU Ω (rk (CMType H) D.p D.q)) (fun s => Sum.isRight s = true)
       (genU_isGenFam Ω _)
-  have hUl : ∀ τ, U (.inl τ) = genU Ω (rk (CMType H) D.p D.q) (.inl τ) := fun τ => if_neg (by simp)
-  have hUr : ∀ τ, U (.inr τ) = revInv (genU Ω (rk (CMType H) D.p D.q) (.inr τ)) := fun τ => if_pos (by simp)
+  have hUl : ∀ τ, U (.inl τ) = genU Ω (rk (CMType H) D.p D.q) (.inl τ) := fun τ => ite_eq_right (by simp)
+  have hUr : ∀ τ, U (.inr τ) = revInv (genU Ω (rk (CMType H) D.p D.q) (.inr τ)) := fun τ => ite_eq_left (by simp)
   let b : ∀ s, Fin (labelRk D s) → 𝔐'.Li := fun s k => ∑ a, U s a k • j (eb s a)
   have hbW : ∀ τ k, b (.inl τ) k = ∑ a, genU Ω (rk (CMType H) D.p D.q) (.inl τ) a k • j (bW τ a) := fun τ k => by
     show ∑ a, U (.inl τ) a k • j (bW τ a) = _

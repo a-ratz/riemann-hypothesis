@@ -316,7 +316,7 @@ theorem exists_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (�
       conv_rhs => rw [← b.sum_repr X]
 
       simp only [map_sum, map_smul, ht, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     funext τ
     ext k l
     let L : CM Ψ N N →ₗ[ℂ] ℂ :=
@@ -582,7 +582,7 @@ open Matrix NumberField in
 open scoped ComplexOrder in
 private lemma card_mul_det_rpow_le_trace_of_posDef {N : ℕ} (hN : 0 < N) {P : Matrix (Fin N) (Fin N) ℂ}
     (hP : P.PosDef) : (N : ℝ) * P.det.re ^ (1 / (N : ℝ)) ≤ P.trace.re := by
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   have h := card_mul_prod_rpow_inv_card_le_sum hP.isHermitian.eigenvalues
     (fun i => (hP.eigenvalues_pos i).le)
   rw [Fintype.card_fin] at h
@@ -634,7 +634,7 @@ theorem _root_.GlobalTheory.SW.TracePair.trace_ge :
     · refine ⟨ComplexEmbedding.conjugate τ₀, ?_⟩
       by_contra h'
       exact h ((hΨ τ₀).2 h')
-  haveI : Nonempty Ψ := hne.to_subtype
+  have : Nonempty Ψ := hne.to_subtype
   have hn : 0 < Ψ.card := hne.card_pos
   have hcR : (0 : ℝ) < c := by exact_mod_cast hc
   have hNR : (0 : ℝ) < N := by exact_mod_cast hN
@@ -837,7 +837,7 @@ theorem coef_psd (hX : ∀ x τ, (X x τ).IsHermitian) (hT : ccT T = T) (hη : 0
     simp only [Matrix.mul_add, trace_add, add_re, Finset.sum_add_distrib]
     congr 1
     rw [Finset.sum_eq_single τ]
-    · rw [if_pos rfl, Matrix.mul_smul, trace_smul, trace_vecMulVec, smul_eq_mul, re_ofReal_mul,
+    · rw [ite_eq_left rfl, Matrix.mul_smul, trace_smul, trace_vecMulVec, smul_eq_mul, re_ofReal_mul,
         mul_comm]
     · intro σ _ h; simp [h]
     · simp
@@ -884,7 +884,7 @@ theorem coef_sing (hXc : Continuous X) (hX : ∀ x τ, (X x τ).IsHermitian) (hT
   have hH : ∀ t, 0 ≤ t → ∀ x, (fun τ => X x τ + I • Y t τ) ∈ Hn Ψ N := fun t ht x τ => by
     have := posDef_of_ge hη (hY t ht τ)
     simpa only [imH_xy (hX x τ) this.1] using this
-  haveI : IsFiniteMeasure (volume.restrict (cube m)) :=
+  have : IsFiniteMeasure (volume.restrict (cube m)) :=
     isFiniteMeasure_restrict.2 (by rw [volume_cube]; exact ENNReal.one_ne_top)
   have lim := tendsto_integral_filter_of_dominated_convergence (μ := volume.restrict (cube m))
     (l := atTop) (F := fun (t : ℝ) x => f (fun τ => X x τ + I • Y t τ) *
@@ -1004,13 +1004,13 @@ theorem exists_fourier (hΨ : IsType Ψ) (N R : ℕ) (hR : 0 < R) :
     have h1 := hpr ν (Φ (Pi.single j 1))
     rw [h, hpr, hcoΦ] at h1
     simp only [Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true] at h1
+      ite_true] at h1
     exact_mod_cast h1.symm
   · have := hIntM (fun i => (c : E) • T i) ν hD
     simpa only [Den, hTT, Finset.smul_sum, smul_comm (c : E)] using this
   set Ω : Set (Fin m → ℝ) := {y | ∀ τ, (Φ (fun i => (y i : ℂ)) τ).PosDef} with hΩ
   have hmem : ∀ z : Fin m → ℂ, (fun i => (z i).im) ∈ Ω ↔ Φ z ∈ Hn Ψ N := by
-    intro z; simp only [hΩ, Hn, Set.mem_setOf_eq, him]
+    intro z; simp only [hΩ, Hn, Set.mem_ofPred_eq, him]
   have hopen : IsOpen Ω := by
     refine isOpen_iff_mem_nhds.2 fun x0 hx0 => ?_
     exact Filter.eventually_all.2 fun τ => ReciprocityTheory.ChartRestriction.G.AR.Up.ExhB.posDef_eventually

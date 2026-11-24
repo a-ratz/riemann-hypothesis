@@ -98,12 +98,12 @@ theorem delAt_dbarAt_linear_local : ∀ (n : ℕ) (v : V n),
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [coefwise_sum_of t fun S => by
-      rw [GlobalTheory.del_sum fun i hi => hF i hi S, ContinuousLinearMap.sum_apply], Finset.mul_sum]
+      rw [GlobalTheory.del_sum fun i hi => hF i hi S, sum_apply], Finset.mul_sum]
   · simp only [dbarAt]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [coefwise_sum_of t fun S => by
-      rw [GlobalTheory.dbar_sum fun i hi => hF i hi S, ContinuousLinearMap.sum_apply], Finset.mul_sum]
+      rw [GlobalTheory.dbar_sum fun i hi => hF i hi S, sum_apply], Finset.mul_sum]
   · have e (S) : del (fun x => (bas n).repr (F x) S) v = del (fun x => (bas n).repr (G x) S) v :=
       GlobalTheory.del_congr (h.fun_comp fun y => (bas n).repr y S)
     simp only [delAt, coefwise, e]

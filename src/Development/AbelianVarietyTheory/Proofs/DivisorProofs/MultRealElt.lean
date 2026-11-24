@@ -68,7 +68,7 @@ theorem list_equiv {U : MMap M} (hU : IsMultMap θ M J χ U)
   | cons a l ih =>
     rw [List.nodup_cons] at hl
     have e := hU.equiv a (g a) (hg a) (fun ρ => if ρ ∈ l then w ρ else v ρ) (w a) (by
-      simp only [if_neg hl.1]; exact h a)
+      simp only [ite_eq_right hl.1]; exact h a)
     rw [ih hl.2] at e
     have e2 : rTr V ((a :: l).map fun ρ => atTau θ V ρ (g ρ)).prod (U v) =
         rTr V (atTau θ V a (g a)) (rTr V (l.map fun ρ => atTau θ V ρ (g ρ)).prod (U v)) := by
@@ -98,12 +98,12 @@ theorem mult_realElt : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (θ
     funext x
     have a := congrFun h1 x
     have b := congrFun h2 x
-    simp only [rTr, MultilinearMap.add_apply, Pi.add_apply] at a b ⊢
+    simp only [rTr, add_apply, Pi.add_apply] at a b ⊢
     rw [a, b]
   | smul c U _ h1 =>
     funext x
     have a := congrFun h1 x
-    simp only [rTr, MultilinearMap.smul_apply, Pi.smul_apply] at a ⊢
+    simp only [rTr, smul_apply, Pi.smul_apply] at a ⊢
     rw [a]
 
 end GlobalTheory.RealEquiv

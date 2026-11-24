@@ -149,7 +149,7 @@ theorem of_isEps (l : ℕ) [Fact l.Prime] (e : Per.Fl l) (he : IsEps e) :
   have hk := _root_.GlobalTheory.MemLoc.ker_localizedTheta_eq_span_xi l e he
   obtain ⟨-, hθ, hu, -, -⟩ := _root_.GlobalTheory.MemLoc.thetaD_props l
   have : Nontrivial (Per.BdRp l) := (Per.θD l).domain_nontrivial
-  haveI : IsLocalization.Away (aDp l (xi e)) (Per.BdR l) := GlobalTheory.CrisLoc.bdR_away l _ hk
+  have : IsLocalization.Away (aDp l (xi e)) (Per.BdR l) := GlobalTheory.CrisLoc.bdR_away l _ hk
   refine general (Submonoid.powers (aDp l (xi e))) (aDp l (xi e)) hreg ?_ ?_ ?_ ?_
   · intro y hy
     refine hc.toIsHausdorff.haus y fun n => ?_

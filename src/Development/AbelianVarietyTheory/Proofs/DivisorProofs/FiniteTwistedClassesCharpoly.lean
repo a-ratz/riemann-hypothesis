@@ -69,7 +69,7 @@ theorem cocycle_finite_comm {A : Type} [CommGroup A] (hsq : ∃ F : Set A, F.Fin
   refine ⟨Set.image2 (fun f e => r f * e) F {t : A | t ^ 2 = 1}, hF.image2 _ h2, fun t ht => ?_⟩
   obtain ⟨f, hf, s, rfl⟩ := hsq t
   have h : ∃ s, (f * s ^ 2) * τ (f * s ^ 2) = 1 := ⟨s, ht⟩
-  have hr : r f = f * h.choose ^ 2 := dif_pos h
+  have hr : r f = f * h.choose ^ 2 := dite_eq_left h
   have h0 := h.choose_spec
   set s₀ := h.choose
   refine ⟨r f * ((s * s₀⁻¹) * τ (s * s₀⁻¹)), Set.mem_image2_of_mem hf ?_, (s * s₀⁻¹)⁻¹, ?_⟩
@@ -94,7 +94,7 @@ def SqFin (T : Subgroup G) : Prop :=
 
 theorem cocycle_finite {T : Subgroup G} (hT : SqFin T) (τ : G →* G) (hτ : ∀ t ∈ T, τ t ∈ T) :
     ∃ F : Set G, F.Finite ∧ ∀ t ∈ T, t * τ t = 1 → ∃ f ∈ F, ∃ s ∈ T, t = s⁻¹ * f * τ s := by
-  letI : CommGroup T := { (inferInstance : Group T) with mul_comm := hT.1 }
+  let : CommGroup T := { (inferInstance : Group T) with mul_comm := hT.1 }
   obtain ⟨F, hF, h⟩ := cocycle_finite_comm hT.2.1 hT.2.2
     ((τ.comp T.subtype).codRestrict T fun t => hτ _ t.2)
   refine ⟨Subtype.val '' F, hF.image _, fun t ht h1 => ?_⟩
@@ -249,7 +249,7 @@ theorem sqFin_centralizer [CharZero K]
     apply Subtype.ext
     show x.1 * y.1 = y.1 * x.1
     rw [hp, hq, ← map_mul, ← map_mul, mul_comm]
-  letI : CommRing S := { (inferInstance : Ring S) with mul_comm := hcomm }
+  let : CommRing S := { (inferInstance : Ring S) with mul_comm := hcomm }
   have h1 := GlobalTheory.units_modSq_finite_of_fields K hK S
   have h2 := GlobalTheory.finite_sq_eq_one_of_finite_algebra K S
   let j : Sˣ →* Subgroup.centralizer {a} := (Units.map S.val.toRingHom.toMonoidHom).codRestrict _ fun u => by
@@ -299,31 +299,31 @@ theorem units_mod_sq {E : Type} [Field E] [NumberField E] (w : Pl E) (L : Type) 
     Finite (Lˣ ⧸ (powMonoidHom 2 : Lˣ →* Lˣ).range) := by
   obtain ⟨vrL, topL, hlocL, -⟩ :=
     GroundTheory.LocalField.exists_isNonarchimedeanLocalField_valuativeExtension (w.adicCompletion E) L
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap (w.adicCompletion E) L).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap (w.adicCompletion E) L).injective
   exact GroundTheory.LocalField.finite_quotient_range_pow_of_charZero (K := L) two_ne_zero
 
 theorem classes_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (n : ℕ) (w : Pl E) (Q : (w.adicCompletion E)[X]), Q.Separable → {c : TwCl (thL n w) | (nrmL n w c.rep).val.charpoly = Q}.Finite ∧ {c : TwCl (MonoidHom.id (UL n w)) | c.rep.1.val.charpoly = Q}.Finite := by
   intro E _ _ _ _ n w Q hQ
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   have hP : ∀ a b : GLw n w, a.val.charpoly = Q → b.val.charpoly = Q → ∃ g, b = g⁻¹ * a * g :=
     fun a b ha hb => conj_of_charpoly a b (ha ▸ hQ) (ha.trans hb.symm)
   have hT : ∀ a : GLw n w, a.val.charpoly = Q → SqFin (Subgroup.centralizer {a}) :=
     fun a ha => sqFin_centralizer (units_mod_sq w) a (ha ▸ hQ)
   by_cases hw : IsSplitAt w
   · constructor
-    · simp only [nrmL, if_pos hw]
-      exact finite_of_id _ (fun g => by rw [thL, if_pos hw]; rfl) _ hP
-    · exact finite_fixed (MonoidHom.id _) (fun _ => rfl) _ (fun g => by rw [UL, if_pos hw]; simp) _ hP hT
-  · have hth : thL n w = thetaGL n (cj w) := if_neg hw
+    · simp only [nrmL, ite_eq_left hw]
+      exact finite_of_id _ (fun g => by rw [thL, ite_eq_left hw]; rfl) _ hP
+    · exact finite_fixed (MonoidHom.id _) (fun _ => rfl) _ (fun g => by rw [UL, ite_eq_left hw]; simp) _ hP hT
+  · have hth : thL n w = thetaGL n (cj w) := ite_eq_right hw
     constructor
-    · have hn : ∀ y, nrmL n w y = y * thL n w y := fun y => by rw [nrmL, if_neg hw, hth]
+    · have hn : ∀ y, nrmL n w y = y * thL n w y := fun y => by rw [nrmL, ite_eq_right hw, hth]
       simp only [hn]
       exact finite_twisted _ (fun g => by rw [hth]; exact GlobalTheory.ThetaPull.thetaGL_thetaGL _ (cj_cj w) g) _ hP hT
     · refine finite_fixed ((invT n _).comp (GeneralLinearGroup.map (cj w))) (fun g => ?_) _ (fun g => ?_) _ hP hT
       · refine Units.ext (Matrix.ext fun i j => ?_)
         exact cj_cj w _
-      · rw [UL, if_neg hw]
+      · rw [UL, ite_eq_right hw]
         change cT (cj w) g.val * 1 * g.val = 1 ↔ invT n _ (GeneralLinearGroup.map (cj w) g) = g
         rw [mul_one, ← _root_.inv_inj (a := invT n _ _), ← mul_eq_one_iff_eq_inv, Units.ext_iff]
         rfl

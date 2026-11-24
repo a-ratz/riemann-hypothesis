@@ -170,7 +170,7 @@ theorem exists_dvr_of_dim_one (O : Type) [CommRing O] [IsDomain O] [IsLocalRing 
     have : algebraMap O K s ≠ 0 := fun h => hs0 (IsFractionRing.injective O K (by simpa using h))
     change algebraMap O K s * (x : K) = algebraMap O K r
     rw [← e]; exact mul_div_cancel₀ _ this
-  letI : Algebra O B := f.toAlgebra
+  let : Algebra O B := f.toAlgebra
   have hN : IsNoetherianRing B := by
     rw [isNoetherianRing_iff_ideal_fg]
     intro J

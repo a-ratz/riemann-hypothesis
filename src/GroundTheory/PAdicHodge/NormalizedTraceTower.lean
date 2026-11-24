@@ -246,7 +246,7 @@ theorem eq_sum_towerCoeff {m : ℕ} (hm : stableIndex K ≤ m) {y : PadicAlgCl p
   have hcard : Fintype.card (Fin d) = finrank (cycl p m) L := by
     rw [Fintype.card_fin]
     exact (relDeg_eq_of_le K hm).symm
-  haveI : Nonempty (Fin d) := ⟨⟨0, relDeg_pos K _⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, relDeg_pos K _⟩⟩
   let B := basisOfLinearIndependentOfCardEqFinrank hli hcard
   have hsum := B.sum_repr ⟨y, hy⟩
   have hyexp : y = ∑ i, ((B.repr ⟨y, hy⟩ i : cycl p m) : PadicAlgCl p) * towerVec K i := by

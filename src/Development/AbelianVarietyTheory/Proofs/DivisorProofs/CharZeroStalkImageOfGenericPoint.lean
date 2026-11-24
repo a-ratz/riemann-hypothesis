@@ -54,7 +54,7 @@ theorem charZero_stalk_genPt : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsIntegral
     (letI := GlobalTheory.NormSheafDescent.fieldK π hK
      CharZero (Z.presheaf.stalk (GlobalTheory.NormSheafDescent.genPt π))) := by
   intro Y Z π _ hY hK
-  haveI : Nonempty (⊤ : Y.Opens) := ⟨⟨genericPoint Y, trivial⟩⟩
+  have : Nonempty (⊤ : Y.Opens) := ⟨⟨genericPoint Y, trivial⟩⟩
   have hL : CharZero Y.functionField :=
     charZero_of_injective_ringHom (f := (Y.germToFunctionField ⊤).hom) (Y.germToFunctionField_injective ⊤)
   have h0 : CharZero (Z.presheaf.stalk (genPt π)) := (π.stalkMap (genericPoint Y)).hom.charZero

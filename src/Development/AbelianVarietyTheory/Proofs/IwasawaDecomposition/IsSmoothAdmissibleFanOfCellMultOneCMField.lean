@@ -66,7 +66,7 @@ theorem exists_retract_balForms : ∀ (O : Type) [CommRing O] [Module.Finite ℤ
     [Module.Finite O X], ∃ ρ : LinearMap.BilinForm ℤ X →ₗ[ℤ] balForms bar X, ∀ β : balForms bar X, ρ β = β := by
   intro O _ _ bar X _ _ _
   classical
-  haveI : Module.Finite ℤ X := Module.Finite.trans O X
+  have : Module.Finite ℤ X := Module.Finite.trans O X
   obtain ⟨n, π, hπ⟩ := Module.Finite.exists_fin' ℤ X
   let P : LinearMap.BilinForm ℤ X →ₗ[ℤ] LinearMap.BilinForm ℤ (Fin n → ℤ) :=
     { toFun := fun β => β.compl₁₂ π π, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
@@ -75,8 +75,8 @@ theorem exists_retract_balForms : ∀ (O : Type) [CommRing O] [Module.Finite ℤ
     obtain ⟨a, rfl⟩ := hπ a
     obtain ⟨b, rfl⟩ := hπ b
     exact LinearMap.congr_fun₂ h a b
-  haveI : Module.Finite ℤ (LinearMap.BilinForm ℤ X) := Module.Finite.of_injective P hP
-  haveI : NoZeroSMulDivisors ℤ (LinearMap.BilinForm ℤ X ⧸ balForms bar X) := by
+  have : Module.Finite ℤ (LinearMap.BilinForm ℤ X) := Module.Finite.of_injective P hP
+  have : NoZeroSMulDivisors ℤ (LinearMap.BilinForm ℤ X ⧸ balForms bar X) := by
     refine ⟨fun {k x} hkx => ?_⟩
     obtain ⟨β, rfl⟩ := Submodule.mkQ_surjective _ x
     rw [Submodule.mkQ_apply, ← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hkx
@@ -92,7 +92,7 @@ theorem exists_retract_balForms : ∀ (O : Type) [CommRing O] [Module.Finite ℤ
     · have := h2 a y z
       simp only [LinearMap.smul_apply, smul_eq_mul] at this
       exact mul_left_cancel₀ hk this
-  haveI : Module.Free ℤ (LinearMap.BilinForm ℤ X ⧸ balForms bar X) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (LinearMap.BilinForm ℤ X ⧸ balForms bar X) := Module.free_of_finite_type_torsion_free'
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property (balForms bar X).mkQ LinearMap.id (Submodule.mkQ_surjective _)
   have hmem : ∀ x, (LinearMap.id - σ ∘ₗ (balForms bar X).mkQ :
       LinearMap.BilinForm ℤ X →ₗ[ℤ] LinearMap.BilinForm ℤ X) x ∈ balForms bar X := by
@@ -233,7 +233,7 @@ theorem isStrict_face_of_isCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
     exact ⟨by linarith, by exact_mod_cast e2⟩
   refine ⟨K * N, K • ℓ + h, Nat.mul_pos (by omega) hN, fun j => ?_, fun β hβ hp => ?_, fun β hβ hp he => ?_⟩
   · have hs : s j ∉ T := by simp [hT]
-    simp only [LinearMap.add_apply, LinearMap.smul_apply, hγh, if_neg hs, nsmul_eq_mul, add_zero]
+    simp only [LinearMap.add_apply, LinearMap.smul_apply, hγh, ite_eq_right hs, nsmul_eq_mul, add_zero]
     push_cast
     rw [h1]
     ring
@@ -252,7 +252,7 @@ theorem isStrict_face_of_isCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
       have hz := (Finset.sum_eq_zero_iff_of_nonneg fun i _ => by split_ifs <;> simp).1 e.symm
       intro i hi
       have := hz i (Finset.mem_univ _)
-      rw [if_pos hi, nsmul_eq_mul, mul_one] at this
+      rw [ite_eq_left hi, nsmul_eq_mul, mul_one] at this
       exact_mod_cast this
     refine ⟨k, fun j => c (s j), hk, ?_⟩
     rw [hc]
@@ -506,11 +506,11 @@ namespace GlobalTheory.PolFan.SmoothEnd
 
 theorem isPartOfBasis_of_card_torsion_le_one : ∀ (L : Type) [AddCommGroup L] [Module.Free ℤ L] [Module.Finite ℤ L] (m : ℕ) (v : Fin m → L), LinearIndependent ℤ v → Nat.card (Submodule.torsion ℤ (L ⧸ Submodule.span ℤ (Set.range v))) ≤ 1 → IsPartOfBasis v := by
   intro L _ _ _ m v hv hT
-  haveI : _root_.Finite (Submodule.torsion ℤ (L ⧸ Submodule.span ℤ (Set.range v))) :=
+  have : _root_.Finite (Submodule.torsion ℤ (L ⧸ Submodule.span ℤ (Set.range v))) :=
     Module.finite_of_fg_torsion _ Submodule.torsion_isTorsion
-  haveI : Subsingleton (Submodule.torsion ℤ (L ⧸ Submodule.span ℤ (Set.range v))) :=
+  have : Subsingleton (Submodule.torsion ℤ (L ⧸ Submodule.span ℤ (Set.range v))) :=
     Finite.card_le_one_iff_subsingleton.mp hT
-  haveI : Module.IsTorsionFree ℤ (L ⧸ Submodule.span ℤ (Set.range v)) :=
+  have : Module.IsTorsionFree ℤ (L ⧸ Submodule.span ℤ (Set.range v)) :=
     Submodule.isTorsionFree_iff_torsion_eq_bot.mpr Submodule.eq_bot_of_subsingleton
   set bQ := Module.finBasis ℤ (L ⧸ Submodule.span ℤ (Set.range v)) with hbQ
   obtain ⟨s, hs⟩ : ∃ s : Fin (Module.finrank ℤ (L ⧸ Submodule.span ℤ (Set.range v))) → L,
@@ -606,7 +606,7 @@ theorem ray_of_mem_cone : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : InvF
 
     rw [map_nsmul, map_sum] at this
     simp only [map_nsmul, hψ', nsmul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ,
-      if_true] at this
+      ite_true] at this
     exact this
   have hψface : ∀ l i', a j i' ≠ 0 → 0 ≤ ψ l ⟨γ' i', hγ'.mem i'⟩ := by
     intro l i' hai'
@@ -677,7 +677,7 @@ theorem cellMult_le_maxMult {X : Type} [AddCommGroup X] [Module O X] [Module.Fin
 
 private lemma balForms_free_and_finite (X : Type) [AddCommGroup X] [Module O X] [Module.Finite O X] :
     Module.Free ℤ (balForms bar X) ∧ Module.Finite ℤ (balForms bar X) := by
-  haveI : Module.Finite ℤ X := Module.Finite.trans O X
+  have : Module.Finite ℤ X := Module.Finite.trans O X
   obtain ⟨n, p, hp⟩ := Module.Finite.exists_fin' ℤ X
   let F : balForms bar X →ₗ[ℤ] LinearMap.BilinForm ℤ (Fin n → ℤ) :=
     { toFun := fun β => (β : LinearMap.BilinForm ℤ X).compl₁₂ p p
@@ -691,8 +691,8 @@ private lemma balForms_free_and_finite (X : Type) [AddCommGroup X] [Module O X] 
     obtain ⟨y', rfl⟩ := hp y
     have := LinearMap.congr_fun₂ h x' y'
     simpa [F] using this
-  haveI : Module.Finite ℤ (balForms bar X) := Module.Finite.of_injective F hF
-  haveI : Module.IsTorsionFree ℤ (balForms bar X) :=
+  have : Module.Finite ℤ (balForms bar X) := Module.Finite.of_injective F hF
+  have : Module.IsTorsionFree ℤ (balForms bar X) :=
     Function.Injective.moduleIsTorsionFree F hF (fun c β => map_smul F c β)
   exact ⟨inferInstance, inferInstance⟩
 

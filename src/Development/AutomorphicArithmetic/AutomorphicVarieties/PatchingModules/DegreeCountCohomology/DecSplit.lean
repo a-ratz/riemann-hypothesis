@@ -73,8 +73,8 @@ theorem UpperTheory.V.Pa.decSplit :
   let e : Dec (F := L) A ≃* Dec (F := Lp L) A := MulEquiv.ofBijective f hbij
   have hcont : Continuous e := by
     apply Continuous.subtype_mk
-    exact continuous_resP.comp continuous_subtype_val
-  haveI : CompactSpace (Dec (F := L) A) :=
+    exact continuous_resP.comp continuous_subtypeVal
+  have : CompactSpace (Dec (F := L) A) :=
     isCompact_iff_compactSpace.mp (isClosed_Dec (F := L) A).isCompact
   let h := hcont.homeoOfEquivCompactToT2 (f := e.toEquiv)
   refine ⟨{ e with continuous_toFun := h.continuous, continuous_invFun := h.symm.continuous }, fun g => rfl⟩

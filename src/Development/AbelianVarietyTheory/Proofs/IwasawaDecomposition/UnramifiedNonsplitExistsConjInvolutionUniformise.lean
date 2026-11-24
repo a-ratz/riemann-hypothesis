@@ -61,7 +61,7 @@ theorem isInertAt_of_not_split (w : HeightOneSpectrum (𝓞 E))
     (hu : Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield E)) w.asIdeal) (hs : ¬ IsSplitAt w) :
     Formalism.UG.IsInertAt (maximalRealSubfield E) E (w.under (𝓞 (maximalRealSubfield E))) w := by
   classical
-  haveI := w.isPrime
+  have := w.isPrime
   set v := w.under (𝓞 (maximalRealSubfield E)) with hv
   have hva : v.asIdeal = w.asIdeal.under (𝓞 (maximalRealSubfield E)) := rfl
   have hinj : Function.Injective (algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E)) :=
@@ -71,7 +71,7 @@ theorem isInertAt_of_not_split (w : HeightOneSpectrum (𝓞 E))
   have hle : (w.asIdeal.under (𝓞 (maximalRealSubfield E))).map
       (algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E)) ≤ w.asIdeal := Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (w.asIdeal.under (𝓞 (maximalRealSubfield E))) w.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (w.asIdeal.under (𝓞 (maximalRealSubfield E))) w.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (w.asIdeal.under (𝓞 (maximalRealSubfield E))) w.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff w.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 (maximalRealSubfield E))
         (w.asIdeal.under (𝓞 (maximalRealSubfield E))) w.asIdeal).1 hu).2
@@ -197,7 +197,7 @@ theorem exists_isUnramInv_of_inert (w : HeightOneSpectrum (𝓞 E))
       rw [← h', Ideal.absNorm_algebraMap,
         ← Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield E) E]
       congr 1
-      exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E)
+      exact (IsFractionRing.finrank_eq (𝓞 (maximalRealSubfield E)) (maximalRealSubfield E)
         (𝓞 E) E).symm
     rw [← hN]
     exact Formalism.UG.P.tjcosets_card_residue w

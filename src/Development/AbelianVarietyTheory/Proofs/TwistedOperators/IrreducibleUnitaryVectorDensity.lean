@@ -140,7 +140,7 @@ theorem irreducibleUnitary_density (H : Type) [NormedAddCommGroup H] [InnerProdu
     have h1 : w = diag n (π g) (diag n (π g⁻¹) w) := by rw [hmul, mul_inv_cancel, hone]
     rw [h1, hinner']
     exact hx _ (hinv _ _ hw)
-  haveI : CompleteSpace W := S.isClosed_topologicalClosure.completeSpace_coe
+  have : CompleteSpace W := S.isClosed_topologicalClosure.completeSpace_coe
   let P := W.starProjection
   have hP : ∀ g x, P (diag n (π g) x) = diag n (π g) (P x) := by
     intro g x

@@ -107,7 +107,7 @@ theorem uh_inv {Hm u : Mt n} (hH : Hm.det ≠ 0) (hu : u ∈ Formalism.QuantumDe
 theorem upT_one : UpT (1 : Mt n) := ⟨by simp, fun a c h => Matrix.one_apply_ne (ne_of_gt h)⟩
 
 theorem upT_det {b : Mt n} (hb : UpT b) : b.det = ∏ a, b a a :=
-  det_of_upperTriangular (fun a c h => hb.2 a c h)
+  det_of_isUpperTriangular (fun a c h => hb.2 a c h)
 
 theorem diffOn_prod {F : Type} [NormedAddCommGroup F] [NormedSpace ℂ F] {κ : Type} (t : Finset κ) (f : κ → F → ℂ)
     (s : Set F) (hf : ∀ i, DifferentiableOn ℂ (f i) s) : DifferentiableOn ℂ (fun y => ∏ i ∈ t, f i y) s := by
@@ -357,20 +357,20 @@ theorem exists_sec (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → S
       rw [show T (lact δ x) = _ from funext (hTl δ x)]
       exact this
   refine ⟨fun x => if x ∈ (X (dict h).1).dom then (c (dict h).1 * mu h)⁻¹ * Q (T x) else 0,
-    fun x hx => if_neg hx, ⟨?_, ?_, ?_⟩, ?_⟩
+    fun x hx => ite_eq_right hx, ⟨?_, ?_, ?_⟩, ?_⟩
   · have hd : Differentiable ℂ T := by
       simp only [T]
       fun_prop
     refine ((hQ.1.comp hd.differentiableOn fun x hx => (hT x).1 hx).const_mul (c (dict h).1 * mu h)⁻¹).congr ?_
     intro x hx
-    exact if_pos hx
+    exact ite_eq_left hx
   · intro x hx b hb
     obtain ⟨h1, h2⟩ := hweight x hx b hb
-    simp only [if_pos hx, if_pos h2, h1]
+    simp only [ite_eq_left hx, ite_eq_left h2, h1]
     ring
   · intro δ hδ x hx
     obtain ⟨h1, h2⟩ := hinv δ hδ x hx
-    simp only [if_pos hx, if_pos h2, h1, hG.chi _ δ hδ, one_mul]
+    simp only [ite_eq_left hx, ite_eq_left h2, h1, hG.chi _ δ hδ, one_mul]
   · intro g x hg
     obtain ⟨γg, -, hfr, -⟩ := hG.base.2.2 g
     have key : ∀ p : Σ k, Frame (X k).Ψ V.rank, p = ⟨(dict h).1, x⟩ → p.2 ∈ (X p.1).dom →
@@ -390,7 +390,7 @@ theorem exists_sec (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → S
     obtain ⟨⟨γ₁, hγ₁, e₁⟩, f₁⟩ := hunit u hu x hxu
     obtain ⟨g₁, g₂⟩ := hsame _ _ _ _ hγ₁ hg e₁
     rw [g₁, g₂] at f₁
-    simp only [if_pos hx]
+    simp only [ite_eq_left hx]
     have := hmu0 h
     have := hG.cNe (dict h).1
     field_simp

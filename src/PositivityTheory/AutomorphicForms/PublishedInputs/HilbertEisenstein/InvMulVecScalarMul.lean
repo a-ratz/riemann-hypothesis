@@ -130,7 +130,7 @@ theorem gauss_apply (m : NumberField.mixedEmbedding.mixedSpace F) :
 theorem norm_gauss (m : NumberField.mixedEmbedding.mixedSpace F) :
     ‖gauss F m‖ = Real.exp (-Real.pi * ∑ v : InfinitePlace F, (m.1 ⟨v, IsTotallyReal.isReal v⟩) ^ 2) := by
   rw [gauss_apply, Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, norm_mixedToEuclidean_sq]
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => (InfinitePlace.not_isComplex_iff_isReal.2 (IsTotallyReal.isReal w.1)) w.2⟩
   rw [Finset.univ_eq_empty (α := {w : InfinitePlace F // w.IsComplex}), Finset.sum_empty, mul_zero, add_zero]
   congr 2
@@ -249,7 +249,7 @@ theorem dom_gen {Kc : Set (Matrix (Fin 2) (Fin 2) (Ad F))} (hK : IsCompact Kc) {
       · exact Or.inl ⟨_, ⟨⟨hy.1, hy.2⟩, hA⟩, rfl⟩
       · exact Or.inr ⟨_, ⟨⟨hy.1, hy.2⟩, hA⟩, rfl⟩
     exact hmem
-  rw [norm_gJ_invN, norm_gJ_invN, if_pos (hfin 0), if_pos (hfin 1), mul_one, mul_one, ← Real.exp_add]
+  rw [norm_gJ_invN, norm_gJ_invN, ite_eq_left (hfin 0), ite_eq_left (hfin 1), mul_one, mul_one, ← Real.exp_add]
   refine (arch_norm_le _ _).trans (Real.exp_le_exp.2 ?_)
   simp_rw [pInf_vecMul]
   rw [Finset.mul_sum, Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
@@ -389,7 +389,7 @@ private theorem continuous_Y (g : GA F 2) (ξ : Fin 2 → F) :
   have hz : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F =>
       ((moduleSection (w0 F) p.1 * (p.2 : Ideles F) : Ideles F) : Ad F) :=
     Units.continuous_val.comp (((continuous_moduleSection _).comp continuous_fst).mul
-      (continuous_subtype_val.comp continuous_snd))
+      (continuous_subtypeVal.comp continuous_snd))
   simp_rw [coe_scalar_mul, Matrix.scalar_apply]
   exact continuous_const.matrix_vecMul ((Continuous.matrix_diagonal (continuous_pi fun _ => hz)).matrix_mul
     continuous_const)
@@ -398,7 +398,7 @@ theorem measurable_eisInt {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ
     Measurable (fun p : {r : ℝ // 0 < r} × normOneSubgroup F => eisInt ω (Phi c) g p.1 p.2) := by
   have hz : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F =>
       (moduleSection (w0 F) p.1 * (p.2 : Ideles F) : Ideles F) :=
-    ((continuous_moduleSection _).comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    ((continuous_moduleSection _).comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   have hterm : ∀ ξ : Fin 2 → F, Measurable fun p : {r : ℝ // 0 < r} × normOneSubgroup F =>
       Phi c (rowA ξ ᵥ* ((Matrix.GeneralLinearGroup.scalar (Fin 2) (moduleSection (w0 F) p.1 * (p.2 : Ideles F)) * g :
         GA F 2) : Matrix (Fin 2) (Fin 2) (Ad F))) := by
@@ -425,7 +425,7 @@ theorem measurable_eisInt {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ
       ((ω.1 (moduleSection (w0 F) p.1 * (p.2 : Ideles F)) : ℂˣ) : ℂ)⁻¹ :=
     (Units.continuous_val.comp (ω.2.1.comp hz)).inv₀ fun p => Units.ne_zero _
   have ht : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => ((p.1 : ℝ) : ℂ) :=
-    Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst)
+    Complex.continuous_ofReal.comp (continuous_subtypeVal.comp continuous_fst)
   unfold eisInt
   exact ((hθ.mul hω.measurable).mul ht.measurable).mul measurable_const
 
@@ -486,10 +486,10 @@ theorem pair_sum {α : Type*} [Zero α] {f : α → ℝ} (hf0 : ∀ x, 0 ≤ f x
         fin_cases i
         · exact h0
         · exact h1
-      have : f' (ξ.1 1) = f (ξ.1 1) := by simp only [f', if_neg h1]
+      have : f' (ξ.1 1) = f (ξ.1 1) := by simp only [f', ite_eq_right h1]
       rw [this]
       linarith [mul_nonneg (hf'0 (ξ.1 0)) (hf0 (ξ.1 1))]
-    · have : f' (ξ.1 0) = f (ξ.1 0) := by simp only [f', if_neg h0]
+    · have : f' (ξ.1 0) = f (ξ.1 0) := by simp only [f', ite_eq_right h0]
       rw [this]
       linarith [mul_nonneg (hf0 (ξ.1 0)) (hf'0 (ξ.1 1))]
   have hQs : Summable (fun ξ : {ξ : Fin 2 → α // ξ ≠ 0} => g (e ξ.1)) := hQ.subtype _
@@ -611,7 +611,7 @@ theorem thetaS_bound {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H 
   set C : Set (IdeleGroup F) := (fun u : normOneSubgroup F => invN F N * (u : IdeleGroup F)) ''
     closure (normOneFundamentalDomain F) with hCdef
   have hC : IsCompact C := (isCompact_closure_normOneFundamentalDomain F).image
-    (continuous_const.mul continuous_subtype_val)
+    (continuous_const.mul continuous_subtypeVal)
   obtain ⟨M1, hM1, hdec⟩ := decay1D (gJ_mem J) hC (w0 F)
   refine ⟨2 * (‖gJ J 0‖ + M1) * M1, mul_nonneg (mul_nonneg (by norm_num) (add_nonneg (norm_nonneg _) hM1)) hM1,
     fun g hg t ht u hu => ?_⟩
@@ -642,8 +642,8 @@ theorem thetaS_bound {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H 
     by_cases h2 : pFin F (y 0) ∈ idealFiniteAdeles (Jc c) ∧ pFin F (y 1) - 1 ∈ idealFiniteAdeles (Jc c)
     · have h3 : pFin F (y 0) ∈ L ∧ pFin F (y 1) ∈ L :=
         ⟨Or.inl h2.1, Or.inr (mem_vadd_idealFiniteAdeles.2 h2.2)⟩
-      rw [if_pos h2, if_pos h3, norm_one]
-    · rw [if_neg h2, norm_zero]
+      rw [ite_eq_left h2, ite_eq_left h3, norm_one]
+    · rw [ite_eq_right h2, norm_zero]
       split_ifs <;> norm_num
   have hsumPhi : Summable fun ξ : {ξ : Fin 2 → F // ξ ≠ 0} =>
       ‖Phi c (rowA ξ.1 ᵥ* (h : Matrix (Fin 2) (Fin 2) (Ad F)))‖ :=
@@ -673,7 +673,7 @@ theorem thetaT_bound {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H 
   set C : Set (IdeleGroup F) := (fun u : normOneSubgroup F => invN F N * (u : IdeleGroup F)⁻¹) ''
     closure (normOneFundamentalDomain F) with hCdef
   have hC : IsCompact C := (isCompact_closure_normOneFundamentalDomain F).image
-    (continuous_const.mul continuous_subtype_val.inv)
+    (continuous_const.mul continuous_subtypeVal.inv)
   obtain ⟨M1, hM1, hdec⟩ := decay1D (gJ_mem J) hC (w0 F)
   refine ⟨2 * (‖gJ J 0‖ + M1) * M1, mul_nonneg (mul_nonneg (by norm_num) (add_nonneg (norm_nonneg _) hM1)) hM1,
     fun g hg t ht u hu => ?_⟩
@@ -766,7 +766,7 @@ theorem continuous_absD : Continuous (absD (F := F)) := by
         rw [← map_inv]
         rfl
       exact (Units.continuous_coe_inv.matrix_det).congr e
-  exact continuous_subtype_val.comp (IdeleGroup.continuous_ideleModule.comp hdet)
+  exact continuous_subtypeVal.comp (IdeleGroup.continuous_ideleModule.comp hdet)
 
 theorem absD_pos (g : GA F 2) : 0 < absD g := (IdeleGroup.ideleModule F (Matrix.GeneralLinearGroup.det g)).2
 

@@ -372,10 +372,10 @@ theorem subsingleton_of_lTensor_flat_family (R : Type) [CommRing R] (J : Type) (
     exact Submodule.ker_liftQ_eq_bot _ _ _ le_rfl
   have hinj : Function.Injective (e.lTensor (B i)) :=
     Module.Flat.lTensor_preserves_injective_linearMap e he
-  haveI := h i
-  haveI : Subsingleton (B i ⊗[R] (R ⧸ I)) := hinj.subsingleton
-  haveI : Subsingleton ((R ⧸ I) ⊗[R] B i) := (TensorProduct.comm R (R ⧸ I) (B i)).toEquiv.injective.subsingleton
-  haveI : Subsingleton (B i ⧸ (I • (⊤ : Submodule R (B i)))) :=
+  have := h i
+  have : Subsingleton (B i ⊗[R] (R ⧸ I)) := hinj.subsingleton
+  have : Subsingleton ((R ⧸ I) ⊗[R] B i) := (TensorProduct.comm R (R ⧸ I) (B i)).toEquiv.injective.subsingleton
+  have : Subsingleton (B i ⧸ (I • (⊤ : Submodule R (B i)))) :=
     (TensorProduct.quotTensorEquivQuotSMul (B i) I).symm.toEquiv.injective.subsingleton
   have htop : I • (⊤ : Submodule R (B i)) = ⊤ :=
     Submodule.unique_quotient_iff_eq_top.mp ⟨uniqueOfSubsingleton 0⟩
@@ -569,7 +569,7 @@ theorem lTensor_liftSemi_bijective_of_isBaseChange {R R' B B' W W' Ω Ω' : Type
     (e : W →ₗ[R] Ω) (he : IsBaseChange B e) (e' : W' →ₗ[R'] Ω') (he' : IsBaseChange B' e')
     (p : W →ₛₗ[algebraMap R R'] W') (hp : ∀ w, e' (p w) = m (e w)) :
     Function.Bijective (LinearMap.lTensor B' (liftSemi p)) := by
-  letI : Module R (B' ⊗[R'] (R' ⊗[R] W)) := Module.compHom _ (algebraMap R R')
+  let : Module R (B' ⊗[R'] (R' ⊗[R] W)) := Module.compHom _ (algebraMap R R')
   have hsm : ∀ (c : R) (z : B' ⊗[R'] (R' ⊗[R] W)), c • z = algebraMap R R' c • z := fun _ _ ↦ rfl
   have hR : ∀ (c : R) (x : R' ⊗[R] B), c • x = algebraMap R R' c • x := fun c x ↦
     (algebraMap_smul R' c x).symm
@@ -695,7 +695,7 @@ namespace GlobalTheory.AbCoh
 theorem isAffineOpen_preimage_of_isPullback (R R' : Type) [CommRing R] [CommRing R'] [Algebra R R']
     (X X' : Scheme.{0}) (s : X ⟶ Sp R) (s' : X' ⟶ Sp R') (φ : X' ⟶ X)
     (h : IsPullback φ s' s (spMap (algebraMap R R'))) (U : X.affineOpens) : IsAffineOpen (φ ⁻¹ᵁ U.1) := by
-  haveI : IsAffineHom φ := MorphismProperty.of_isPullback (P := @IsAffineHom) h.flip inferInstance
+  have : IsAffineHom φ := MorphismProperty.of_isPullback (P := @IsAffineHom) h.flip inferInstance
   exact U.2.preimage φ
 
 theorem exists_equiv_globForm_baseChange : ∀ (R R' : Type) [CommRing R] [CommRing R'] [Algebra R R'] (X X' : Scheme.{0}) (s : X ⟶ Sp R) (s' : X' ⟶ Sp R') (φ : X' ⟶ X) (h : IsPullback φ s' s (spMap (algebraMap R R'))), HasFrame (OAff s) → CohomZeroIsConstants (OAff s) → HasFrame (OAff s') → CohomZeroIsConstants (OAff s') → Flat s' → Surjective s' → ∃ e : R' ⊗[R] GlobForm s ≃ₗ[R'] GlobForm s', ∀ c, e (1 ⊗ₜ c) = GlobalTheory.CechDR.pullForm h.w c := by
@@ -745,9 +745,9 @@ theorem exists_grpObj_isAbelianScheme_of_isPullback_spMap : ∀ (R : Type) [Comm
     have := smoothOfRelativeDimension_isStableUnderBaseChange (n := g)
     exact MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension g) h hg
   let B := (Over.pullback (spMap σ)).obj A
-  letI : GrpObj B := Functor.grpObjObj
+  let : GrpObj B := Functor.grpObjObj
   let e : B ≅ Over.mk s' := Over.isoMk h.isoPullback.symm (by simp [B])
-  letI : GrpObj (Over.mk s') := GrpObj.ofIso e
+  let : GrpObj (Over.mk s') := GrpObj.ofIso e
   refine ⟨this, ?_, hsm⟩
   have hc := hA.comm
   have hcB : IsCommMonObj B := Functor.isCommMonObj_obj
@@ -796,8 +796,8 @@ theorem baseChange_middle_equiv_of_exact : ∀ (R R' : Type) [CommRing R] [CommR
   intro R R' _ _ _ W M H _ _ _ _ _ _ W' M' H' _ _ _ _ _ _ i p i' p' a b c hp hip hi' hip' hb hc hW hH
   obtain ⟨eW, heW⟩ := hW
   obtain ⟨eH, heH⟩ := hH
-  letI : Module R M' := Module.compHom M' (algebraMap R R')
-  haveI : IsScalarTower R R' M' := ⟨fun r s x => by
+  let : Module R M' := Module.compHom M' (algebraMap R R')
+  have : IsScalarTower R R' M' := ⟨fun r s x => by
     show (r • s) • x = algebraMap R R' r • s • x
     rw [Algebra.smul_def, mul_smul]⟩
   let b' : M →ₗ[R] M' :=
@@ -824,10 +824,10 @@ theorem baseChange_middle_equiv_of_exact : ∀ (R R' : Type) [CommRing R] [CommR
       rw [h1]; simp only [map_smul, hf1, LinearMap.baseChange_tmul, heW, hb]
     | add x y hx hy => simp only [map_add (f := _), hx, hy]
   have hex : Function.Exact (LinearMap.baseChange R' i) (LinearMap.baseChange R' p) := by
-    rw [LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor, LinearMap.baseChange_eq_lTensor]
     first | exact lTensor_exact R' hip hp | exact LinearMap.lTensor_exact R' hip hp
   have hsurj : Function.Surjective (LinearMap.baseChange R' p) := by
-    rw [LinearMap.baseChange_eq_ltensor]; exact LinearMap.lTensor_surjective R' hp
+    rw [LinearMap.baseChange_eq_lTensor]; exact LinearMap.lTensor_surjective R' hp
   have hinj : Function.Injective f := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro s hs
@@ -902,8 +902,8 @@ theorem baseChange_HH1_globForm : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) 
   have hc := GlobalTheory.T.abelianScheme_globalOneForms_closed R A g hab hsm
   have hc' := GlobalTheory.T.abelianScheme_globalOneForms_closed R' (Over.mk s') g hab' hsm'
   have hflat : Flat s' := by
-    haveI := hsm'
-    haveI : Smooth s' := SmoothOfRelativeDimension.smooth g s'
+    have := hsm'
+    have : Smooth s' := SmoothOfRelativeDimension.smooth g s'
     infer_instance
   have hsurj : Surjective s' := by
     refine surjective_of_section s' (η[Over.mk s']).left ?_

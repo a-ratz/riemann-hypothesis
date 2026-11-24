@@ -185,7 +185,7 @@ private lemma addVal_algebraMap {T S : Type*} [CommRing T] [CommRing S] [IsDomai
   rw [addVal_def' u hπ n, ← Nat.cast_mul]
   refine addVal_def _ (Units.map (algebraMap T S : T →* S) u * w ^ n) hϖ _ ?_
   rw [map_mul, map_pow, ← hw]
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, Units.val_pow_eq_pow_val]
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, Units.val_pow_eq_pow_val]
   ring
 
 private lemma addVal_prod {S : Type*} [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]

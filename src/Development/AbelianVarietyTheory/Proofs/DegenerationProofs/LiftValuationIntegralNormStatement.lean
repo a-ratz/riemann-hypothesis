@@ -145,7 +145,7 @@ theorem genRel_rescale {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [Is
 theorem exists_match_rescale : GlobalFnsSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (O' : Type) [CommRing O'] [IsDomain O'] (b : O →+* O') (a : ArcIn D l β O' b) (R : Type) [CommRing R] [IsDomain R] (f : O' →+* R) (D' : DegPre R) (hD : IsPullDeg f a.D₀ D') (u₀ : R) (uK : (FractionRing R)ˣ), (uK : FractionRing R) = algebraMap R _ u₀ → ∀ (q : D'.X → (FractionRing R)ˣ) (Φ : D'.P.A.left ⟶ a.D₀.P.A.left), Φ = PsiEvenPull.proj hD → (∀ y, q y = uK ^ (a.be (hD.xe y) (hD.xe y) / 2)) → ∃ (_ : Module (𝓞 E) (TauTwist.rescale D' q).X) (oW : letI := H.starRing; (TauTwist.rescale D' q).OAct (𝓞 E)) (he : _) (w : _) (e : _), GlobalTheory.LN.Match a f u₀ (TauTwist.rescale D' q) oW Φ he w e ∧ (∀ y, hD.xe (e y) = y) ∧ (TauTwist.rescale D' q).PsiEven ∧ (TauTwist.rescale D' q).TauBimult := by
   intro hG E _ _ _ H D l c O _ β O' _ _ b a R _ _ f D' hD u₀ uK hu q Φ hΦ hq
   subst hΦ
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨inst, o', hs, ho⟩ := exists_oAct_of_isPullDeg hG O' R f a.D₀ D' hD (𝓞 E) a.oa
   have hw := TauTwist.halfUnit_add_star H
   have ht : TauTwist.IsScalarForm (𝓞 E) fun y x : D'.X => uK ^ a.be (hD.xe y) (hD.xe x) :=
@@ -1065,7 +1065,7 @@ theorem eq_zero_of_nsmul (D : Datum H) (k : ℕ) (x : D.La) (hk : 0 < k) (h : k 
 
 theorem local_of_arcBase {ϖ : O'} (h : GlobalTheory.LN.ArcBase O' ϖ) : IsLocalRing O' ∧ IsNoetherianRing O' := by
   rcases h with ⟨h, -⟩ | ⟨h, -⟩
-  · letI := h.toField
+  · let := h.toField
     exact ⟨inferInstance, inferInstance⟩
   · exact ⟨inferInstance, inferInstance⟩
 
@@ -1076,7 +1076,7 @@ theorem exists_unitBall (C : Type) [NormedField C] [IsUltrametricDist C] :
 
 theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomExtSt → ThetaPtDeterminesSt → EndDeterminedOnTorsionSt → ThetaUnifAV → AllA fun {E} _ _ _ {H} {D} {l} {Xo} {c} {W₀} Y {O'} _ _ {b} a => ∀ (C : Type) [NontriviallyNormedField C] [IsUltrametricDist C] [CompleteSpace C] [IsAlgClosed C] [CharZero C] [Algebra (FractionRing O') C] (A : Lift a C) (u : Cˣ) (r : ℕ → Cˣ) (o : Full D C) (M : Mdl o) (f : O' →+* M.W) (u₀ : M.W), A.ν.IntN → Roots u r → ‖(u : C)‖ < 1 → (u : C) = algebraMap (FractionRing M.W) C (algebraMap _ _ u₀) → (∀ x, algebraMap (FractionRing M.W) C (algebraMap _ _ (f x)) = algebraMap (FractionRing O') C (algebraMap _ _ x)) → ∀ n : ℕ, n.Prime → Odd n → ‖(n : C)‖ = 1 → (∀ j, o.I.ζ (n ^ j) = A.I.ζ (n ^ j) ∧ ∀ p : D.La → (A.N.twist A.be u).QT ((n ^ j) ^ 2), (∀ x, TwRel A.be u (r ((n ^ j) ^ 2)) (A.q _ x) (p x)) → o.Theta (n ^ j) fun x => (A.N.twist A.be u).tx (n ^ j) (p x)) → ∃ (N' : NumD C) (ν' : NumOf M.P.D.toPre C N') (J : NumD.Iso (A.N.twist A.be u) N'), (∀ (x : 𝓞 E) y, ν'.eX (J.e (A.arc.act x y)) = x • ν'.eX (J.e y)) ∧ (∀ j x (p : (A.N.twist A.be u).QT (n ^ j)) (q' : N'.QT (n ^ j)) p' z, TwRel A.be u (r (n ^ j)) (A.q _ x) p → q'.1.1.toAdd = J.e p.1.1.toAdd → J.Rel p.1.2 q'.1.2 → ν'.QPt p' q' → z.left = (o.I.ev (n ^ j) x).left ≫ M.φ → M.P.ToA C (n ^ j) p' z) ∧ ∃ (DW : DegPre M.W) (_ : Module (𝓞 E) DW.X) (oW : letI := H.starRing; DW.OAct (𝓞 E)) (φ : _) (he : _) (w : _) (e : _) (νW : NumOf DW C (A.N.twist A.be u)), GlobalTheory.LN.Match a f u₀ DW oW φ he w e ∧ (∀ y, νW.eX y = e (A.ν.eX y)) ∧ (∀ x, (νW.eA x).left ≫ φ = (A.ν.eA x).left) ∧ GeoIso νW ν' J.toIso := by
   intro hV _ _ _ hT _ _ E _ _ _ H D l Xo c W₀ Y O' _ _ _ b ϖ a hO C _ _ _ _ _ _ A u r o M f u₀ hI hr hu1 hu hf n hn ho hn1 hθ
-  letI := H.starRing
+  let := H.starRing
   have hL : Laws := hV.1.1
   have hL2 : Laws2 := hV.1.2.1
   obtain ⟨_, _⟩ := local_of_arcBase hO

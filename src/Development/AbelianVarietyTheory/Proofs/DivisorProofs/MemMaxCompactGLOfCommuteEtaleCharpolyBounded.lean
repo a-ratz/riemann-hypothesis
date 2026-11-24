@@ -70,7 +70,7 @@ variable {E : Type} [Field E] [NumberField E] {w : HeightOneSpectrum (𝓞 E)} {
 theorem mem_O_iff (x : w.adicCompletion E) : x ∈ 𝒪[w.adicCompletion E] ↔ x ∈ w.adicCompletionIntegers E := by
   show _ ↔ Valued.v x ≤ 1
   simp only [Valuation.mem_integer_iff]
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have h1 := (Valuation.Compatible.vle_iff_le (v := Valued.v) x 1)
   rw [map_one] at h1
@@ -105,8 +105,8 @@ theorem mem_integralGL_of_conj (N t g : GL (Fin n) (w.adicCompletion E))
     (htN : t * N = N * t) (ht' : g⁻¹ * t * g ∈ integralGL (w.adicCompletion E) n)
     (hN' : g⁻¹ * N * g ∈ integralGL (w.adicCompletion E) n) : t ∈ integralGL (w.adicCompletion E) n := by
   set F := w.adicCompletion E
-  letI : NontriviallyNormedField F := Valued.toNontriviallyNormedField _ _
-  haveI : IsUltrametricDist F :=
+  let : NontriviallyNormedField F := Valued.toNontriviallyNormedField _ _
+  have : IsUltrametricDist F :=
     inferInstanceAs (@IsUltrametricDist F (Valued.toNormedField F (WithZero (Multiplicative ℤ))).toDist)
   have hO : ∀ x : F, ‖x‖ ≤ 1 ↔ x ∈ 𝒪[F] := fun x =>
     (Valued.toNormedField.norm_le_one_iff).trans (mem_O_iff x).symm

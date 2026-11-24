@@ -61,8 +61,8 @@ theorem genReads_of_unfBC {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     (x : ((U (σ'.comp (incF c c' hle))).X k).dom) (ϑ : (Fin g → ℂ) → ℂ)
     (h : GenReads (unfBC hle U σ') k bas idx e x ϑ) : GenReads (U (σ'.comp (incF c c' hle))) k bas idx e x ϑ := by
   obtain ⟨B, hB⟩ := h
-  letI : Algebra c.F ℂ := (σ'.comp (incF c c' hle)).toAlgebra
-  letI : Algebra c'.F ℂ := σ'.toAlgebra
+  let : Algebra c.F ℂ := (σ'.comp (incF c c' hle)).toAlgebra
+  let : Algebra c'.F ℂ := σ'.toAlgebra
   exact ⟨⟨B.ex, B.ex_add, B.ex_onto, B.ex_ker, B.ex_lin, B.hol, B.der, B.fr, B.fr_hol, B.fr_ne, B.fr_g, B.fr_0, B.χ,
     B.χ_norm, B.fr_per⟩, hB⟩
 

@@ -102,8 +102,8 @@ theorem GlobalTheory.PoissonReindex.poisson_any : ∀ (F : Type) [Field F] [Numb
     ∃ c : ℂ, c ≠ 0 ∧ ∀ Φ ∈ schA F κ, (fun y : κ → AF F => ∫ x, Φ x * ψ (x ⬝ᵥ y) ∂μ) ∈ schA F κ →
       thetaSum F (fun y : κ → AF F => ∫ x, Φ x * ψ (x ⬝ᵥ y) ∂μ) = c * thetaSum F Φ := by
   intro F _ _ hF ψ hψ κ _ inst hB μ hμ
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have hinst : inst = MeasurableSpace.pi := by
     rw [hB.measurable_eq]
     exact (Pi.borelSpace (ι := κ) (X := fun _ => AF F)).measurable_eq.symm
@@ -116,11 +116,11 @@ theorem GlobalTheory.PoissonReindex.poisson_any : ∀ (F : Type) [Field F] [Numb
   let a : Fin N → F := fun _ => 1 / 2
   have hC : Ctx ψ lam ν a := ⟨hF, hC1, hlam, hν, fun _ => by norm_num [a]⟩
   obtain ⟨hHaar, -⟩ := GlobalTheory.SWQ.rat_lattice_fundamentalDomain F N ν hν
-  haveI := hHaar
+  have := hHaar
   let T : (Fin N → AF F) ≃ₜ+ (κ → AF F) := reidx e
   let Tm : (Fin N → AF F) ≃ᵐ (κ → AF F) := T.toHomeomorph.toMeasurableEquiv
   have hTm : ∀ u, Tm u = T u := fun _ => rfl
-  haveI hm : (Measure.map Tm (muV N ν)).IsAddHaarMeasure := T.isAddHaarMeasure_map (muV N ν)
+  have hm : (Measure.map Tm (muV N ν)).IsAddHaarMeasure := T.isAddHaarMeasure_map (muV N ν)
   have hr := Measure.isAddLeftInvariant_eq_smul μ (Measure.map Tm (muV N ν))
   set r := μ.addHaarScalarFactor (Measure.map Tm (muV N ν))
   have hr0 : (r : ℂ) ≠ 0 := by

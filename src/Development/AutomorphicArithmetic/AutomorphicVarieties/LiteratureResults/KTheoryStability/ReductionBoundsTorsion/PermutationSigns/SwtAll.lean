@@ -97,7 +97,7 @@ theorem contDiffAt_comp {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] {�
     ContDiffAt ℝ ∞ (fun y => β.compContinuousLinearMap (A y)) x := by
   have hdiff : ContDiff ℝ ∞ (fun B : V →L[ℝ] V => β.compContinuousLinearMap B) := by
     let M := ContinuousMultilinearMap ℝ (fun _ : Fin q => V) ℝ
-    haveI : FiniteDimensional ℝ M := Module.Finite.of_injective
+    have : FiniteDimensional ℝ M := Module.Finite.of_injective
       (ContinuousMultilinearMap.toMultilinearMapLinear (R' := ℝ) (A := ℝ) :
         M →ₗ[ℝ] MultilinearMap (RingHom.id ℝ) (fun _ : Fin q => V) ℝ)
       ContinuousMultilinearMap.toMultilinearMap_injective
@@ -147,7 +147,7 @@ theorem core (B : V →L[ℝ] V →L[ℝ] V →L[ℝ] V) (e : V) (h1 : B e e = 1
     simp [add_comm]
   have hee : B e e e = e := by rw [h1]; rfl
   have hstrict : HasStrictFDerivAt (fun y => B y y e) (L : V →L[ℝ] V) e :=
-    hφs.contDiffAt.hasStrictFDerivAt' hφe (by simp)
+    hφs.contDiffAt.hasStrictFDerivAt hφe (by simp)
   have hψ : ContDiffAt ℝ ∞ (hstrict.localInverse _ _ _) (B e e e) :=
     hφs.contDiffAt.to_localInverse hφe (by simp)
   have hright := hstrict.eventually_right_inverse
@@ -177,7 +177,7 @@ theorem core (B : V →L[ℝ] V →L[ℝ] V →L[ℝ] V) (e : V) (h1 : B e e = 1
     ext i
     change v i = (B (hstrict.localInverse _ _ _ y) (hstrict.localInverse _ _ _ y))
       ((Ring.inverse (B (hstrict.localInverse _ _ _ y) (hstrict.localInverse _ _ _ y))) (v i))
-    rw [← ContinuousLinearMap.mul_apply, Ring.mul_inverse_cancel _ hu]
+    rw [← mul_apply_eq_comp, Ring.mul_inverse_cancel _ hu]
     rfl
   have hsm : ContDiffAt ℝ ∞ o e := by
     have hR : ContDiffAt ℝ ∞
@@ -208,11 +208,11 @@ theorem core (B : V →L[ℝ] V →L[ℝ] V →L[ℝ] V) (e : V) (h1 : B e e = 1
       (((-(1/2 : ℝ)) • (B.flip e + B e)) w) := by
     intro w
     have hw := congrArg (fun T => T w) huniq
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.zero_apply] at hw
+    simp only [_root_.add_apply, ContinuousLinearMap.comp_apply,
+      zero_apply] at hw
     rw [hee, h1, hcomp1, hLw, map_smul] at hw
     have hX := eq_neg_of_add_eq_zero_right hw
-    rw [ContinuousLinearMap.smul_apply, map_smul, ContinuousLinearMap.add_apply, hX, smul_neg, smul_smul]
+    rw [_root_.smul_apply, map_smul, _root_.add_apply, hX, smul_neg, smul_smul]
     first | norm_num | simp
   have hfd : fderiv ℝ o e = (o e).fderivCompContinuousLinearMap 1 ∘L
       ((-(1/2 : ℝ)) • (B.flip e + B e)) := by
@@ -222,7 +222,7 @@ theorem core (B : V →L[ℝ] V →L[ℝ] V →L[ℝ] V) (e : V) (h1 : B e e = 1
   apply ContinuousAlternatingMap.alternatizeUncurryFin_fderivCompContinuousLinearMap_eq_zero
   intro x y
   have hs := hsym x y
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.flip_apply]
+  simp only [_root_.smul_apply, _root_.add_apply, ContinuousLinearMap.flip_apply]
   rw [add_comm (B x e y), hs, add_comm]
 
 theorem transport (A : V →L[ℝ] V) {h : V} (o : V → V [⋀^Fin q]→L[ℝ] ℝ) (hc : ContDiffAt ℝ ∞ o (A h))

@@ -240,9 +240,9 @@ theorem UpperTheory.V.U3.pt_fixed :
       (fun A g hg => div_eq_one.2 (hine i A g hg))
     · exact div_eq_one.1 (DFunLike.congr_fun hk g)
     · have c1 : Continuous fun g : D.η.ker => (r g).mat i i :=
-        (h.cont.comp continuous_subtype_val).matrix_elem i i
+        (h.cont.comp continuous_subtypeVal).matrix_elem i i
       have c2 : Continuous fun g : D.η.ker => (t g : PadicAlgCl l) :=
-        Units.continuous_val.comp (hcont.comp continuous_subtype_val)
+        Units.continuous_val.comp (hcont.comp continuous_subtypeVal)
       refine (c1.div (c2.zpow₀ (wt1 i) fun g => Or.inl (Units.ne_zero _))
         fun g => zpow_ne_zero _ (Units.ne_zero _)).congr fun g => ?_
       show _ = ((a i g / t g ^ wt1 i : (PadicAlgCl l)ˣ) : PadicAlgCl l)

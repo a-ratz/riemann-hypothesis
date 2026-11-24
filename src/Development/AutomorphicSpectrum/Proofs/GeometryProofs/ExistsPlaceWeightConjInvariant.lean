@@ -243,7 +243,7 @@ theorem isCompact_overSet (y : (Σ k, ι k) → Ω) (φ : F →+* Ω) (σ : F �
           {z : (Σ k, ι k) → ℂ | IsMultiHomog g d → IsMultiHomog h d → aeval y g = φ a * aeval y h →
             evC z g = σ a * evC z h}) := by
     ext z
-    simp only [overSet, PtOver, mcPts, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [overSet, PtOver, mcPts, mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     constructor
     · rintro ⟨hu, ⟨_, h1⟩, h2⟩
       exact ⟨hu, h1, h2⟩
@@ -258,14 +258,14 @@ theorem isCompact_overSet (y : (Σ k, ι k) → Ω) (φ : F →+* Ω) (σ : F �
   · have hs : {z : (Σ k, ι k) → ℂ | IsMultiHomog g d → IsMultiHomog h d →
         aeval y g = φ a * aeval y h → evC z g = σ a * evC z h} = {z | evC z g = σ a * evC z h} := by
       ext z
-      simp only [Set.mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       exact ⟨fun H => H hp.1 hp.2.1 hp.2.2, fun H _ _ _ => H⟩
     rw [hs]
     exact isClosed_eq (evC_continuous g) (continuous_const.mul (evC_continuous h))
   · have hs : {z : (Σ k, ι k) → ℂ | IsMultiHomog g d → IsMultiHomog h d →
         aeval y g = φ a * aeval y h → evC z g = σ a * evC z h} = Set.univ := by
       ext z
-      simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      simp only [mem_ofPred_eq, Set.mem_univ, iff_true]
       intro h1 h2 h3
       exact absurd ⟨h1, h2, h3⟩ hp
     rw [hs]

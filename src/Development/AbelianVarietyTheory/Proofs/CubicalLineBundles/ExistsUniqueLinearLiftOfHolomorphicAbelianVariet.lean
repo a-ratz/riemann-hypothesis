@@ -128,7 +128,7 @@ theorem existsUnique_linear_lift_of_separating [NormedSpace ℂ V] [NormedSpace 
     (hfG : ∀ i, DifferentiableOn ℂ (fun z ↦ f i (G z)) (G ⁻¹' S))
     (hD : ∀ w, (∀ i, fderiv ℂ (fun w ↦ f i (ex w)) 0 w = 0) → w = 0) :
     ∃! F : V →ₗ[ℂ] W, ∀ z, ex (F z) = G z := by
-  have : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   have : ProperSpace W := FiniteDimensional.proper ℂ W
   have ht := tendsto_map_nhds_of_separating hex h0 hsep hSe hSG
     (fun i ↦ (hfe i).continuousOn) (fun i ↦ (hfG i).continuousOn)

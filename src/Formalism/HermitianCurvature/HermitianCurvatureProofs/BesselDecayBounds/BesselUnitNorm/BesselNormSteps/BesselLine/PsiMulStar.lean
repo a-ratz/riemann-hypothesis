@@ -145,7 +145,7 @@ theorem beF_tInv (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (π : Mx k r → (W
     have hAi := g2 A hAU
     let L : H →ₗᵢ[ℂ] H := { toLinearMap := (σ A : H →ₗ[ℂ] H), norm_map' := hsn A hAU }
     have hv : σ A (σ A⁻¹ v) = v := by
-      rw [← ContinuousLinearMap.comp_apply, ← hsm A hAU _ hAi.2.2, hAi.1, hs1, ContinuousLinearMap.one_apply]
+      rw [← ContinuousLinearMap.comp_apply, ← hsm A hAU _ hAi.2.2, hAi.1, hs1, one_apply_eq_self]
     calc ⟪w, σ A⁻¹ v⟫_ℂ = ⟪L w, L (σ A⁻¹ v)⟫_ℂ := (L.inner_map_map _ _).symm
       _ = ⟪σ A w, σ A (σ A⁻¹ v)⟫_ℂ := rfl
       _ = ⟪σ A w, v⟫_ℂ := by rw [hv]
@@ -157,7 +157,7 @@ theorem beF_tInv (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (π : Mx k r → (W
     let L : Wp →ₗᵢ[ℂ] Wp := { toLinearMap := (π A : Wp →ₗ[ℂ] Wp), norm_map' := hpn A hA }
     have hx : ∀ x : Wp, π A (π A⁻¹ x) = x := by
       intro x
-      rw [← ContinuousLinearMap.comp_apply, ← hpm A hA _ hAi, h1, hp1, ContinuousLinearMap.one_apply]
+      rw [← ContinuousLinearMap.comp_apply, ← hpm A hA _ hAi, h1, hp1, one_apply_eq_self]
     symm
     rw [ContinuousLinearMap.eq_adjoint_iff]
     intro x y

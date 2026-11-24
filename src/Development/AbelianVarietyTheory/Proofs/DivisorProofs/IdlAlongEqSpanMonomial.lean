@@ -266,8 +266,8 @@ theorem idlAlong_eq_span_monomial : ∀ (g : ℕ) (n : ℕ) (F : SFam g n (zetaA
   have hβ₀ : ∀ u u', β₀ u u' = ∑ k, ((2 * w k : ℕ) : ℤ) * ((n : ℤ) • δ k) u u' := fun u u' => by
     simp only [β₀, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
   have sq := GlobalTheory.LamPull.exists_isSquare hgA.1.w
-  letI := A.isAb.comm
-  letI := A'.isAb.comm
+  let := A.isAb.comm
+  let := A'.isAb.comm
   have i₁ : (abelian₂ A.A A.L).IsLB := DVR.linComb_isLB _ A.isLB _ _
   let T : Trait F :=
     { V := V, complete := hVc, ϖ := ϖ, irr := hϖ, y := spMap (GlobalTheory.ArcPull.fracMap hψ) ≫ κ ≫ y

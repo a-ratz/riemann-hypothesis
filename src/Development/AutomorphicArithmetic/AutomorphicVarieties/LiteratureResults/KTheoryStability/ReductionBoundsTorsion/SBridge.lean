@@ -384,7 +384,7 @@ theorem jz_injective : Function.Injective (jz d0 e1) := by
   unfold jz
   rw [LinearMap.coe_comp]
   refine e1.injective.comp ?_
-  rw [LinearMap.baseChange_eq_ltensor]
+  rw [LinearMap.baseChange_eq_lTensor]
   exact Module.Flat.lTensor_preserves_injective_linearMap _ Subtype.val_injective
 
 theorem range_jz (h0 : D0 ∘ₗ e1.toLinearMap = e0.toLinearMap ∘ₗ d0.baseChange ℝ) :
@@ -397,7 +397,7 @@ theorem range_jz (h0 : D0 ∘ₗ e1.toLinearMap = e0.toLinearMap ∘ₗ d0.baseC
     have h1 := congrArg (fun f => f (((LinearMap.ker d0).subtype.baseChange ℝ) w)) h0
     simp only [LinearMap.comp_apply, LinearEquiv.coe_coe] at h1
     simp only [jz, LinearMap.comp_apply, LinearEquiv.coe_coe]
-    rw [h1, LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor,
+    rw [h1, LinearMap.baseChange_eq_lTensor, LinearMap.baseChange_eq_lTensor,
       hex.apply_apply_eq_zero w, map_zero]
   · intro hx
     rw [LinearMap.mem_ker] at hx
@@ -408,11 +408,11 @@ theorem range_jz (h0 : D0 ∘ₗ e1.toLinearMap = e0.toLinearMap ∘ₗ d0.baseC
     have hy : (d0.baseChange ℝ) y = 0 := by
       rw [← map_zero e0] at hx
       exact e0.injective hx
-    rw [LinearMap.baseChange_eq_ltensor] at hy
+    rw [LinearMap.baseChange_eq_lTensor] at hy
     obtain ⟨w, hw⟩ := (hex y).mp hy
     refine ⟨w, ?_⟩
     simp only [jz, LinearMap.comp_apply, LinearEquiv.coe_coe]
-    rw [LinearMap.baseChange_eq_ltensor, hw]
+    rw [LinearMap.baseChange_eq_lTensor, hw]
 
 def th (h0 : D0 ∘ₗ e1.toLinearMap = e0.toLinearMap ∘ₗ d0.baseChange ℝ) :
     LinearMap.ker D0 →ₗ[ℝ] ℝ ⊗[ℤ] H :=
@@ -439,7 +439,7 @@ theorem th_surjective (hp : Function.Surjective p)
     Function.Surjective (th d0 p e1 e0 D0 h0) := by
   intro y
   have hs : Function.Surjective (p.baseChange ℝ) := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact LinearMap.lTensor_surjective _ hp
   obtain ⟨w, rfl⟩ := hs y
   have hw : jz d0 e1 w ∈ LinearMap.ker D0 := by
@@ -480,16 +480,16 @@ theorem th_eq_zero_iff (hdd : d0 ∘ₗ d1 = 0) (hker : ∀ x, p x = 0 ↔ x.1 �
     have := LinearMap.congr_fun h1 u
     simp only [LinearMap.comp_apply, LinearEquiv.coe_coe] at this
     exact this.symm
-  rw [LinearMap.baseChange_eq_ltensor, hexR w]
+  rw [LinearMap.baseChange_eq_lTensor, hexR w]
   constructor
   · rintro ⟨u, rfl⟩
     refine ⟨e2 u, ?_⟩
-    rw [← key u, LinearMap.baseChange_eq_ltensor]
+    rw [← key u, LinearMap.baseChange_eq_lTensor]
   · rintro ⟨v, hv⟩
     obtain ⟨u, rfl⟩ := e2.surjective v
     refine ⟨u, ?_⟩
     apply jz_injective d0 e1
-    rw [← LinearMap.baseChange_eq_ltensor, key u, hv]
+    rw [← LinearMap.baseChange_eq_lTensor, key u, hv]
 
 end
 
@@ -709,14 +709,14 @@ private theorem dC_prism_sum_eq_snd_sub_fst {Y : Type} {n : ℕ} (F : (Fin (n + 
     linear_combination (-1 : ℝ) ^ i * hc - (F (M i) - F (M (i + 1))) * hε
   have hM0 : M 0 = fun p ↦ (u p).2 := by
     funext r
-    simp only [M, uu, Nat.not_lt_zero, if_false]
+    simp only [M, uu, Nat.not_lt_zero, ite_false]
     congr 2
     apply Fin.ext
     simp only [Fin.val_mk]
     omega
   have hM1 : M (n + 2) = fun p ↦ (u p).1 := by
     funext r
-    simp only [M, uu, r.isLt, if_true]
+    simp only [M, uu, r.isLt, ite_true]
     congr 2
     apply Fin.ext
     simp only [Fin.val_mk]
@@ -901,7 +901,7 @@ theorem sFin_of : SBridge → SFin := by
   intro h L _ _ hL N k
   classical
   obtain ⟨θ, hsurj, hker, -⟩ := h k
-  haveI : Module.Finite ℤ (grpH (Gm L N) (k + 1)) :=
+  have : Module.Finite ℤ (grpH (Gm L N) (k + 1)) :=
     UpperTheory.FiniteGenerationAndTorsion.hglFG_of UpperTheory.FiniteGenerationAndTorsion.fgShift L hL N (k + 1)
   obtain ⟨t, ht⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℝ (ℝ ⊗[ℤ] ↑(grpH (Gm L N) (k + 1)))).FG)
   choose pre hpre using hsurj (Gm L N)
@@ -1012,7 +1012,7 @@ private theorem exists_conj_blk_mulSingle_eq_stab (R : Type) [CommRing R] (q n :
     ∃ P : GL (Fin (q * n)) R, (PsiBlockMatrix.blk R q n).comp (MonoidHom.mulSingle (fun _ : Fin q => GL (Fin n) R) i) =
       (MulAut.conj P).toMonoidHom.comp (stab R n (q * n) h) := by
   classical
-  haveI : NeZero q := ⟨by rintro rfl; exact i.elim0⟩
+  have : NeZero q := ⟨by rintro rfl; exact i.elim0⟩
   have hs : ∀ x : Fin (q * n), (PsiBlockMatrix.ee q n).symm x = (x.modNat, x.divNat) := fun _ => rfl
   have hE : ∀ (a : Fin n) (b : Fin q),
       (PsiBlockMatrix.ee q n (a, b)).modNat = a ∧ (PsiBlockMatrix.ee q n (a, b)).divNat = b := by
@@ -1051,11 +1051,11 @@ private theorem exists_conj_blk_mulSingle_eq_stab (R : Type) [CommRing R] (q n :
     simp only [padMat, Matrix.of_apply, e1]
     by_cases hX : X.divNat = 0
     · by_cases hY : Y.divNat = 0
-      · rw [dite_eq_left ⟨(hlt X).2 hX, (hlt Y).2 hY⟩, if_pos ⟨hX, hY⟩]
+      · rw [dite_eq_left ⟨(hlt X).2 hX, (hlt Y).2 hY⟩, ite_eq_left ⟨hX, hY⟩]
       · rw [dite_eq_right (fun hh => hY ((hlt Y).1 hh.2)),
-          if_neg (fun hh : X.divNat = 0 ∧ Y.divNat = 0 => hY hh.2)]
+          ite_eq_right (fun hh : X.divNat = 0 ∧ Y.divNat = 0 => hY hh.2)]
     · rw [dite_eq_right (fun hh => hX ((hlt X).1 hh.1)),
-        if_neg (fun hh : X.divNat = 0 ∧ Y.divNat = 0 => hX hh.1)]
+        ite_eq_right (fun hh : X.divNat = 0 ∧ Y.divNat = 0 => hX hh.1)]
   ext x y
   rw [show (((MulAut.conj (⟨Pm, Pm, hPP, hPP⟩ : GL (Fin (q * n)) R)).toMonoidHom.comp
       (stab R n (q * n) h)) A : Matrix _ _ R) = Pm * (stab R n (q * n) h A : Matrix _ _ R) * Pm from rfl]
@@ -1067,7 +1067,7 @@ private theorem exists_conj_blk_mulSingle_eq_stab (R : Type) [CommRing R] (q n :
   simp [PsiBlockMatrix.blk, PsiBlockMatrix.blkM, hs, blockDiagonal_apply, Pi.mulSingle_apply, Equiv.swap_apply_eq_iff]
   by_cases h1 : x.divNat = i <;> by_cases h2 : y.divNat = i <;>
     by_cases h3 : x.divNat = y.divNat <;> simp [h1, h2, h3, Matrix.one_apply]
-  all_goals rw [if_neg (fun e => h2 e.symm), if_neg (fun e => h2 e.2.symm)]
+  all_goals rw [ite_eq_right (fun e => h2 e.symm), ite_eq_right (fun e => h2 e.2.symm)]
 
 private theorem isBd_cmap_pi_sub_sum_cmap_mulSingle_of_isPrim (hC : SChain) {G : Type} [Group G] {k : ℕ} {z : Chn G (k + 1)}
     (hz : IsPrim z) (q : ℕ) :
@@ -1414,14 +1414,14 @@ theorem rat_succAbove_succ {m : ℕ} (x : Fin (m + 2) → G) (j : Fin (m + 1)) :
   funext i
   simp only [Function.comp_apply, rat, Fin.contractNth]
   by_cases h1 : (i : ℕ) < j
-  · rw [if_pos h1, Fin.succAbove_of_castSucc_lt _ _ (by simp [Fin.lt_def] <;> omega),
+  · rw [ite_eq_left h1, Fin.succAbove_of_castSucc_lt _ _ (by simp [Fin.lt_def] <;> omega),
       Fin.succAbove_of_castSucc_lt _ _ (by simp [Fin.lt_def] <;> omega)]
     simp only [Fin.succ_castSucc]
   · by_cases h2 : (i : ℕ) = j
-    · rw [if_neg h1, if_pos h2, Fin.succAbove_of_castSucc_lt _ _ (by simp [Fin.lt_def] <;> omega),
+    · rw [ite_eq_right h1, ite_eq_left h2, Fin.succAbove_of_castSucc_lt _ _ (by simp [Fin.lt_def] <;> omega),
         Fin.succAbove_of_le_castSucc _ _ (by simp [Fin.le_def] <;> omega)]
       simp only [Fin.succ_castSucc, mul_assoc, mul_inv_cancel_left]
-    · rw [if_neg h1, if_neg h2, Fin.succAbove_of_le_castSucc _ _ (by simp [Fin.le_def] <;> omega),
+    · rw [ite_eq_right h1, ite_eq_right h2, Fin.succAbove_of_le_castSucc _ _ (by simp [Fin.le_def] <;> omega),
         Fin.succAbove_of_le_castSucc _ _ (by simp [Fin.le_def] <;> omega)]
       simp only [Fin.succ_castSucc]
 
@@ -1557,13 +1557,13 @@ theorem sSep : SSep := by
         rcases lt_trichotomy (l : ℕ) (j : ℕ) with h | h | h
         · rw [Fin.contractNth_apply_of_lt _ _ _ _ h]
           have e1 : j.succ.succAbove l.castSucc = l.castSucc.castSucc :=
-            Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_iff_val_lt_val]; simp; omega)
+            Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simp; omega)
           have e2 : j.succ.succAbove l.succ = l.succ.castSucc :=
-            Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_iff_val_lt_val]; simp; omega)
+            Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simp; omega)
           rw [e1, e2, Fin.succ_castSucc]
         · rw [Fin.contractNth_apply_of_eq _ _ _ _ h]
           have e1 : j.succ.succAbove l.castSucc = l.castSucc.castSucc :=
-            Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_iff_val_lt_val]; simp; omega)
+            Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simp; omega)
           have e2 : j.succ.succAbove l.succ = l.succ.succ :=
             Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_iff_val_le_val]; simp; omega)
           rw [e1, e2, Fin.succ_castSucc]

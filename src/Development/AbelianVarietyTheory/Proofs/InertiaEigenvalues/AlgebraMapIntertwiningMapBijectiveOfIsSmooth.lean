@@ -242,9 +242,9 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 variable (k n) in
 theorem secondCountableTopology_GL : SecondCountableTopology (GL n k) := by
   have : SecondCountableTopology k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
-    letI : (Valued.v (R := k)).RankOne :=
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
+    let : (Valued.v (R := k)).RankOne :=
       { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
         strictMono' := IsRankLeOne.nonempty.some.strictMono.comp MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
     open scoped Valued in

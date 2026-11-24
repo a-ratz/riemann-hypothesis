@@ -94,7 +94,7 @@ theorem left_haar_eq_smul_biinvariant {U : Set (Mat k r)} (hU : IsClosedSubgroup
     have e0 : ∀ s : Set (Gp U hU), pull hU μ s = ∞ * pull hU ν s := by
       intro s
       have := congrArg (fun m : Measure (Gp U hU) => m s) key
-      simpa only [Measure.smul_apply, smul_eq_mul, h] using this
+      simpa only [smul_apply, smul_eq_mul, h] using this
     have e := e0 (spanningSets (pull hU μ) n)
     by_cases hz : pull hU ν (spanningSets (pull hU μ) n) = 0
     · rw [e, hz, mul_zero] at hn

@@ -112,13 +112,13 @@ private lemma qR_eq {r : ℕ} (B : Matrix (Fin r) (Fin r) ℝ) (y : Fin r → �
 private lemma setC_eq {r : ℕ} (B : Matrix (Fin r) (Fin r) ℂ) (R : ℝ) :
     {y | qC (Bᴴ * B) y ≤ R ^ 2} = ((Matrix.toLin' B).restrictScalars ℝ) ⁻¹' sqBall r ℂ R := by
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, qC_eq, LinearMap.restrictScalars_apply,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, qC_eq, LinearMap.restrictScalars_apply,
     Matrix.toLin'_apply, sqBall]
 
 private lemma setR_eq {r : ℕ} (B : Matrix (Fin r) (Fin r) ℝ) (R : ℝ) :
     {y | qR (Bᵀ * B) y ≤ R ^ 2} = (Matrix.toLin' B) ⁻¹' sqBall r ℝ R := by
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, qR_eq, Matrix.toLin'_apply, sqBall]
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, qR_eq, Matrix.toLin'_apply, sqBall]
   skip
 
 private lemma detC_eq {r : ℕ} (B : Matrix (Fin r) (Fin r) ℂ) :

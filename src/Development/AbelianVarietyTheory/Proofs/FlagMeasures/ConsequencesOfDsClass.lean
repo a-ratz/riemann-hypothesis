@@ -80,9 +80,9 @@ theorem isSqIntIrr_of_uEquiv (he : UEquiv ε σ τ) (h : IsSqIntIrr ε τ) : IsS
     show (1 : Matrix (Fin n) (Fin n) ℂ)ᴴ * Jm ε * 1 = Jm ε
     simp
   refine ⟨?_, ?_, ⟨⟨?_, ?_⟩, ?_, ?_⟩, ?_, ?_⟩
-  · haveI := hc
+  · have := hc
     exact T.toIsometryEquiv.completeSpace
-  · haveI := hn
+  · have := hn
     exact T.toLinearEquiv.toEquiv.nontrivial
   · ext v
     rw [hσ 1 one_mem v, h1]
@@ -147,7 +147,7 @@ theorem isKFin_transfer (T : H ≃ₗᵢ[ℂ] H') (h : ∀ g ∈ UJset ε, ∀ v
     (hv : IsKFin ε σ v) : IsKFin ε τ (T v) := by
   obtain ⟨S, hfin, hvS, hst⟩ := hv
   refine ⟨S.map (T.toLinearEquiv : H →ₗ[ℂ] H'), ?_, Submodule.mem_map_of_mem hvS, ?_⟩
-  · haveI := hfin
+  · have := hfin
     infer_instance
   · intro g hg w hw
     obtain ⟨u, hu, hwu⟩ := Submodule.mem_map.mp hw
@@ -197,7 +197,7 @@ theorem strictLow_of_dsClass (h : DSClass) : StrictLow := by
   ·
     have hset : {S : Submodule ℂ H | IsKTypeOf ε σ (lowK ε lam) S} = {S0} := by
       ext S
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
       constructor
       · intro hS
         exact lowKMultOne_of_dsClass h n ε lam H σ hl hσ S S0 hS hS0

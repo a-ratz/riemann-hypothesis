@@ -119,7 +119,7 @@ abbrev Lq (w : HeightOneSpectrum (𝓞 I.E)) : Submodule (IntAf I.F I.E) (Fin I.
 theorem stepA {w : HeightOneSpectrum (𝓞 I.E)} {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p)
     {m : ℕ} {x : I.Gf} (hx : x ∈ I.Kset) (hR : RedMat0 I w p x (1 : Matrix (Fin m) (Fin m) (ZMod p))) :
     ∀ y ∈ I.Lf, (I.fmat x - 1) *ᵥ y ∈ Lq I w := by
-  haveI : Fact (1 < p) := ⟨hp.one_lt⟩
+  have : Fact (1 < p) := ⟨hp.one_lt⟩
   have H0 : ∀ m ∈ wLat0 I w, (fun i => Formalism.UG.inclE (F := I.F) (Af I.F) (m i)) ∈ Lq I w := by
     intro m hm
     show _ ∈ Submodule.span _ _
@@ -484,7 +484,7 @@ theorem mem_span_of_all {E : Type} [Field E] [NumberField E] {p : ℕ} (hp : p.P
       have hpP : ((p : ℕ) : 𝓞 E) ∈ P := hle (Ideal.mem_span_singleton_self _)
       have hP0 : P ≠ ⊥ := fun h => hp0 (by rw [h] at hpP; exact (Submodule.mem_bot _).1 hpP)
       have hmax : P.IsMaximal := hPp.isMaximal hP0
-      haveI := hPp
+      have := hPp
       have h1 : (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {((p : ℕ) : 𝓞 E)})).count P = 1 := by
         apply Ideal.count_normalizedFactors_eq
         · rw [pow_one]

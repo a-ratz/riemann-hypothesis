@@ -217,10 +217,10 @@ theorem RelLen.unique (v : AddValuation C (WithTop ℝ)) {M : Type} [AddCommGrou
   have hAB : A = b.toMatrix c * B * c'.toMatrix b' := by
     rw [← key b b' A hA, ← key c c' B hB, basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix]
   have u1 : IsUnit (b.toMatrix c).det := by
-    letI := b.invertibleToMatrix c
+    let := b.invertibleToMatrix c
     exact Matrix.isUnit_det_of_invertible _
   have u2 : IsUnit (c'.toMatrix b').det := by
-    letI := c'.invertibleToMatrix b'
+    let := c'.invertibleToMatrix b'
     exact Matrix.isUnit_det_of_invertible _
   have : v (A.det : C) = v (B.det : C) := by
     rw [hAB, Matrix.det_mul, Matrix.det_mul, Subring.coe_mul, Subring.coe_mul, v.map_mul,

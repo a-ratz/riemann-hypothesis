@@ -152,9 +152,9 @@ private theorem du_root {ζ : Qbar l} {n : ℕ} (h : ζ ^ l ^ n = 1) : ‖ζ - 1
     exact mul_lt_one_of_nonneg_of_lt_one_left (norm_nonneg _) du_norm_l ((z - 1) * r).2
   exact lt_of_pow_lt_pow_left₀ (l ^ n) zero_le_one (by rwa [one_pow])
 private theorem du_prim (N : ℕ) (hN : N ≠ 0) : ∃ ζ : Qbar l, IsPrimitiveRoot ζ N := by
-  haveI : NeZero N := ⟨hN⟩
-  haveI : NeZero ((N : ℕ) : Qbar l) := ⟨Nat.cast_ne_zero.2 hN⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Qbar l) N
+  have : NeZero N := ⟨hN⟩
+  have : NeZero ((N : ℕ) : Qbar l) := ⟨Nat.cast_ne_zero.2 hN⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Qbar l) N
 private theorem du_near {u : Qbar l} {M : ℕ} (hM : 0 < M) (h : ‖u ^ M - 1‖ < 1) : ∃ ω : Qbar l, ω ^ M = 1 ∧ ‖u * ω - 1‖ < 1 := by
   obtain ⟨ζ, hζ⟩ := du_prim (l := l) M hM.ne'
   have e := congrArg (eval u) (X_pow_sub_one_eq_prod hM hζ)
@@ -205,7 +205,7 @@ section Grp
 variable {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
 private theorem du_pow (Φ : Γ →* (Qbar l)ˣ) (hΦ : Continuous Φ) : ∃ M, 0 < M ∧ ∀ g, ‖(Φ g : Qbar l) ^ M - 1‖ < 1 := by
   let H := (du_ball l 1 one_pos le_rfl).comap Φ
-  haveI := H.quotient_finite_of_isOpen ((du_ball_open 1 one_pos le_rfl).preimage hΦ)
+  have := H.quotient_finite_of_isOpen ((du_ball_open 1 one_pos le_rfl).preimage hΦ)
   refine ⟨H.index, Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite, fun g => ?_⟩
   have h : Φ (g ^ H.index) ∈ du_ball l 1 one_pos le_rfl := H.pow_index_mem g
   rw [map_pow] at h
@@ -213,7 +213,7 @@ private theorem du_pow (Φ : Γ →* (Qbar l)ˣ) (hΦ : Continuous Φ) : ∃ M, 
 variable {I : Subgroup Γ} {d : ℕ} (A : W.LocAb l Γ I d)
 private theorem du_ker (Φ : Γ →* (Qbar l)ˣ) (hΦ : Continuous Φ) : ∃ M, 0 < M ∧ ∀ g, A.a g = 1 → Φ g ^ M = 1 := by
   obtain ⟨M, hM, h1⟩ := du_pow Φ hΦ
-  haveI := A.b.ker.quotient_finite_of_isOpen A.b_open
+  have := A.b.ker.quotient_finite_of_isOpen A.b_open
   refine ⟨A.b.ker.index * M, Nat.mul_pos (Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite) hM, fun g hg => ?_⟩
   let Ψ : Γ →* (Qbar l)ˣ := (powMonoidHom (A.b.ker.index * M)).comp Φ
   have hΨ : Continuous Ψ := hΦ.pow _
@@ -224,7 +224,7 @@ private theorem du_ker (Φ : Γ →* (Qbar l)ˣ) (hΦ : Continuous Φ) : ∃ M, 
     have e1 := A.b_mu _ (pow_mem hx A.b.ker.index)
     rw [MonoidHom.mem_ker.1 (A.b.ker.pow_index_mem x)] at e1
     have e2 : x ^ A.b.ker.index ∈ (commutator Γ).topologicalClosure := (QuotientGroup.eq_one_iff _).1 e1.symm
-    have e3 : Φ (x ^ A.b.ker.index) = 1 := Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker Φ)
+    have e3 : Φ (x ^ A.b.ker.index) = 1 := Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker Φ)
       (isClosed_singleton.preimage hΦ) e2
     show Φ x ^ (A.b.ker.index * M) = 1
     rw [pow_mul, ← map_pow, e3, one_pow]
@@ -239,8 +239,8 @@ private theorem du_ker (Φ : Γ →* (Qbar l)ˣ) (hΦ : Continuous Φ) : ∃ M, 
   have ho : IsOpen (χ.rangeRestrict.ker : Set Γ) := by
     rw [show (χ.rangeRestrict.ker : Set Γ) = Ψ ⁻¹' B from Set.ext hk]
     exact (du_ball_open _ _ _).preimage hΨ
-  haveI := χ.rangeRestrict.ker.quotient_finite_of_isOpen ho
-  haveI : Finite χ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivOfSurjective _ χ.rangeRestrict_surjective).toEquiv
+  have := χ.rangeRestrict.ker.quotient_finite_of_isOpen ho
+  have : Finite χ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivOfSurjective _ χ.rangeRestrict_surjective).toEquiv
   have hp : IsPGroup l χ.range := by
     rintro ⟨_, x, rfl⟩
     obtain ⟨k, hk'⟩ := du_small (h2 x) h0
@@ -322,9 +322,9 @@ private theorem du_unit (ha : IsLocalArtin h a) (s : Weil h) : a s ∈ Uo (w.adi
 private theorem du_alg (H : GlobalTheory.Published.GlobalArtinReciprocity) (ha : IsLocalArtin h a) (hh : (F →+* Qbar l) → ℤ) :
     ∃ δ : Dec (F := F) A →* (Qbar l)ˣ, Continuous δ ∧ ∀ s : Weil h, (s : G F Ω) ∈ Ine (F := F) A →
       (δ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = algPow w hh (a s : w.adicCompletion F) := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  letI := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
-  haveI := compactSpace_Ine (E := F) A
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  let := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
+  have := compactSpace_Ine (E := F) A
   let α : (w.adicCompletion F)ˣ →* (Qbar l)ˣ := ∏ j : {j : w.adicCompletion F →+* Qbar l // Continuous j},
     Units.map j.1.toMonoidHom ^ hh (j.1.comp (algebraMap F _))
   have hα : ∀ y, (α y : Qbar l) = algPow w hh (y : w.adicCompletion F) := fun y => by
@@ -367,7 +367,7 @@ private theorem du_arith (ha : IsLocalArtin h a) (Φ : Dec (F := F) A →* (Qbar
     ∃ e, ∀ e', e ≤ e' → ∀ s : Weil h, a s ∈ Uc _ e' → Φ (Subgroup.inclusion (Weil_le_Dec h) s) = 1 := by
   obtain ⟨ι⟩ : Nonempty (Qbar l ≃+* ℂ) := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex l
   let i : Ine (F := F) A →* Dec (F := F) A := (Subgroup.inclusion (Weil_le_Dec h)).comp (ineIncl h)
-  have hi : Continuous i := continuous_subtype_val.subtype_mk _
+  have hi : Continuous i := continuous_subtypeVal.subtype_mk _
   have ho := GlobalTheory.HeckeGal.isOpen_ker_of_pow (Φ.comp i) (hΦ.comp hi) hN fun σ => h1 _ σ.2
   let ξ : Weil h →* ℂˣ := (Units.map ι.toRingHom.toMonoidHom).comp (Φ.comp (Subgroup.inclusion (Weil_le_Dec h)))
   obtain ⟨χ, hχ, e⟩ := ha.factor ξ (Subgroup.isOpen_mono (H₂ := (ξ.comp (ineIncl h)).ker) (fun x hx => by
@@ -379,16 +379,16 @@ private theorem du_arith (ha : IsLocalArtin h a) (Φ : Dec (F := F) A →* (Qbar
   exact (congrArg Units.val h2).trans (map_one ι).symm
 private theorem du_cyc : Continuous (cycBar F Ω l) :=
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ F Ω l)
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ F Ω l)
 private theorem du_pos {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E Ω] {v : Plc E}
     (h : IsPlaceOver A v) (hw : ((l : ℕ) : 𝓞 E) ∈ v.asIdeal) {d : ℕ}
     (B : W.LocAb l (Dec (F := F) A) ((Ine (F := F) A).subgroupOf (Dec (F := F) A)) d) : 0 < d := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   by_contra hd
   obtain rfl : d = 0 := by omega
-  obtain ⟨N, hN, h1⟩ := du_fin B ((cycBar F Ω l).comp (Dec (F := F) A).subtype) (du_cyc.comp continuous_subtype_val)
+  obtain ⟨N, hN, h1⟩ := du_fin B ((cycBar F Ω l).comp (Dec (F := F) A).subtype) (du_cyc.comp continuous_subtypeVal)
     Fin.elim0 (fun j => j.elim0) fun j => j.elim0
   obtain ⟨j, rfl⟩ := (Loc.decEmb (F := E) (Ω := Ω) (v := l)).1 A v h hw
   obtain ⟨-, φ, b1, -, -, b4, b5, -⟩ := (Loc.decEmb (F := F) (Ω := Ω) (v := l)).2 j
@@ -432,14 +432,14 @@ theorem UpperTheory.V.Hi.isDomain_and_denseWt_of_isTheta :
     ∀ (V : s.Lev) (Q : QData V) (c : Coef l), ∀ (m : ℕ) (τ₀ : KT n (wt s) →* GL (Fin m) c.O), ∀ (r : Resid V.frame c.O n) (Λ : LamObj r) (θ : (hset Q τ₀).X.I.T →* Λ.Λˣ), IsTheta Q τ₀ Λ θ → IsDomain Λ.Λ ∧ ∀ lam, (hset Q τ₀).DenseWt θ lam := by
   intro hN l _ L Ω _ _ _ _ _ _ s n _ V Q c m τ₀ r Λ θ hθ
   classical
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-  haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField ℤ_[l]) l :=
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+  have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : CharP (ResidueField ℤ_[l]) l :=
     charP_of_injective_ringHom (f := (PadicInt.residueField (p := l)).symm.toRingHom)
       (PadicInt.residueField (p := l)).symm.injective l
-  haveI : CharP (ResidueField c.O) l :=
+  have : CharP (ResidueField c.O) l :=
     charP_of_injective_ringHom (algebraMap (ResidueField ℤ_[l]) (ResidueField c.O)).injective l
   obtain ⟨d₀, -, hA⟩ := W.locCFT hN.aut.art ⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.gw, hN.coh.pt,
     GlobalTheory.Published.TameLocal_of_duality hN.coh.lt⟩ l L Ω s
@@ -447,7 +447,7 @@ theorem UpperTheory.V.Hi.isDomain_and_denseWt_of_isTheta :
   let A : ∀ v : V.frame.Vl, W.LocAb l (V.frame.Gv v) (V.frame.Iv v) (d v) := fun v => (hA v).some
   have hd : ∀ v : V.frame.Vl, 0 < d v := fun v => du_pos (s.hA v.1) v.2 (hA v).some
   obtain ⟨e, ψ₀, hψ₀, he⟩ := (W.lam_ex_free l V.frame c.O n r d A).2 Λ
-  haveI : IsDomain (MvPowerSeries (Σ v : V.frame.Vl, Fin n × Fin (d v)) c.O) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (MvPowerSeries (Σ v : V.frame.Vl, Fin n × Fin (d v)) c.O) := NoZeroDivisors.to_isDomain _
   refine ⟨MulEquiv.isDomain _ e.symm.toMulEquiv, fun lam f hf => ?_⟩
   have ha : ∀ v : V.frame.Vl, IsLocalArtin (s.hw v.1) (artOf (s.hw v.1)) :=
     fun v => Classical.epsilon_spec (_root_.UpperTheory.V.Z.Win.T2.laArtinLit' hN _)
@@ -455,7 +455,7 @@ theorem UpperTheory.V.Hi.isDomain_and_denseWt_of_isTheta :
   choose ψ hψ hκ using Λ.inert
   let ω : ∀ v : V.frame.Vl, Fin n → V.frame.Gv v →* (Qbar l)ˣ := fun v i =>
     ((cycBar L Ω l).comp (Dec (F := L) (s.A v.1)).subtype) ^ (i : ℕ) * δ v i
-  have hω : ∀ v i, Continuous (ω v i) := fun v i => ((du_cyc.comp continuous_subtype_val).pow (i : ℕ)).mul (hδ v i)
+  have hω : ∀ v i, Continuous (ω v i) := fun v i => ((du_cyc.comp continuous_subtypeVal).pow (i : ℕ)).mul (hδ v i)
   let Φ : (Λ.Λ →ₐ[c.O] Qbar l) → ∀ v : V.frame.Vl, Fin n → V.frame.Gv v →* (Qbar l)ˣ := fun x v i =>
     W.pushCh (x : Λ.Λ →+* Qbar l) (ψ v i) * ω v i
   have hΦ : ∀ x v i, Continuous (Φ x v i) := fun x v i => (du_cont c Λ.Λ x _ (hψ v i).cont).mul (hω v i)

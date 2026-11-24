@@ -102,7 +102,7 @@ private theorem ord_unif_eq : ord ((UpperTheory.V.Z.ImaginaryQuadraticEtaCharact
   have b := h2 _ ((lt_one_iff (unifUnit k).ne_zero).2 ord_unifUnit.ge)
   have c : ValuativeRel.valuation k ((unifUnit k * (UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.unif k)⁻¹ : kˣ) : k) ≤ 1 := by
     rw [Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀]
-    exact mul_inv_le_one_of_le₀ b zero_le'
+    exact mul_inv_le_one_of_le₀ b zero_le
   have d := (le_one_iff (Units.ne_zero _)).1 c
   rw [ord_units_mul, ord_units_inv, ord_unifUnit] at d
   omega
@@ -133,7 +133,7 @@ private theorem alg (a A q X : ℂ) (n : ℤ) (hA : A ≠ 0) (hq : q ≠ 0) (hX 
 private theorem zpow_qpow (n : ℕ) (hn : 1 < n) (m : ℤ) (s : ℂ) :
     ((n : ℂ) ^ (-s)) ^ m = Complex.exp (((-(m * Real.log n) : ℝ) : ℂ) * s) := by
   have h0 : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
-  rw [Complex.cpow_def_of_ne_zero h0, ← Complex.exp_int_mul]
+  rw [Complex.cpow_def_of_ne_zero h0, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring
@@ -168,7 +168,7 @@ theorem UpperTheory.local_gamma_factor_exponential_form :
     have e3 : ((μ⁻¹ (unifUnit F) : ℂˣ) : ℂ) = A⁻¹ := by
       rw [MonoidHom.inv_apply, Units.val_inv_eq_inv_val]
     have e4 : lin μ = 1 - C A * X := by
-      rw [lin, if_pos h, hval]
+      rw [lin, ite_eq_left h, hval]
     rw [Ad3.gam, fac, hε s, localLFactor_of_isUnramified hu, localLFactor_of_isUnramified hu', e2, e3,
       Complex.ofReal_natCast, e4, alg _ _ _ _ _ hA0 hq0 hX, zpow_qpow _ hq1]
     simp only [eval_sub, eval_one, eval_mul, eval_C, eval_X, e1]
@@ -177,7 +177,7 @@ theorem UpperTheory.local_gamma_factor_exponential_form :
       have := isUnramifiedChar_iff.1 h2 u hu2
       rwa [MonoidHom.inv_apply, inv_eq_one] at this)
     refine ⟨a, -(n * Real.log (residueCard F)), fun s => ?_⟩
-    have e4 : lin μ = 1 := by rw [lin, if_neg h]
+    have e4 : lin μ = 1 := by rw [lin, ite_eq_right h]
     rw [Ad3.gam, fac, hε s, localLFactor_of_not_isUnramified hu, localLFactor_of_not_isUnramified hu', e4,
       zpow_qpow _ hq1]
     simp
@@ -259,7 +259,7 @@ private theorem lin_ne {ν : Fˣ →* ℂˣ} (h : Ad3.IsUnit1 ν) (x : ℂ) (hx 
   · simp
 
 private theorem local_linear_factor_ramified {ν c : Fˣ →* ℂˣ} (h : Ram3 ν c) : lin3 ν c = 1 := by
-  simp only [lin3, lin, if_neg h.1, if_neg h.2.1, if_neg h.2.2, mul_one]
+  simp only [lin3, lin, ite_eq_right h.1, ite_eq_right h.2.1, ite_eq_right h.2.2, mul_one]
 
 private theorem gamma_factor_rank_three_form [MeasurableSpace F] [BorelSpace F] (ψ : AddChar F Circle) {ν c : Fˣ →* ℂˣ} (h : Ad3.IsUnit1 ν)
     (h' : Ad3.IsUnit1 c) : IsFac (Ad3.gam3 ψ ν c) (residueCard F : ℝ) (lin3 ν c) :=

@@ -223,7 +223,7 @@ theorem eC_conj (hC : GlobalTheory.Hk3.Core R F) (u g : G) :
   rw [key, key, map_mul eR, map_mul eR, map_inv eR]
   have hc := (Subalgebra.mem_center_iff.1 (GlobalTheory.GoodLatCompare.goodSeriesIdempotent_central_idempotent D).1) (MonoidAlgebra.single (eR u) 1)
   have := congrArg (fun z => z.coeff (eR u * eR g)) hc
-  simp only [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply, one_mul, mul_one, inv_mul_cancel_left] at this
+  simp only [MonoidAlgebra.coeff_single_mul_apply, MonoidAlgebra.coeff_mul_single_apply, one_mul, mul_one, inv_mul_cancel_left] at this
   exact this.symm
 
 end GlobalTheory.ProjLiftLaw

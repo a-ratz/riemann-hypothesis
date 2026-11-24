@@ -58,8 +58,8 @@ namespace LateralTheory.E.GenPf
 
 theorem field_log {q : ℕ} {K : Type} [Field K] (ζ ξ : Prim q K) :
     ∃! a : (ZMod q)ˣ, ξ.1 = ζ.1 ^ (a : ZMod q).val := by
-  haveI : NeZero (q : K) := ⟨ζ.2.1.ne_zero⟩
-  haveI : NeZero q := NeZero.of_neZero_natCast K
+  have : NeZero (q : K) := ⟨ζ.2.1.ne_zero⟩
+  have : NeZero q := NeZero.of_neZero_natCast K
   have hp : ∀ η : Prim q K, IsPrimitiveRoot η.1 q := fun η => by
     rw [← Polynomial.isRoot_cyclotomic_iff, ← Polynomial.map_cyclotomic_int, Polynomial.IsRoot.def,
       Polynomial.eval_map]
@@ -73,8 +73,8 @@ theorem field_log {q : ℕ} {K : Type} [Field K] (ζ ξ : Prim q K) :
 
 theorem field_pow {q : ℕ} {K : Type} [Field K] (ζ : Prim q K) (a b : ZMod q) :
     ζ.1 ^ (a * b).val = (ζ.1 ^ a.val) ^ b.val := by
-  haveI : NeZero (q : K) := ⟨ζ.2.1.ne_zero⟩
-  haveI : NeZero q := NeZero.of_neZero_natCast K
+  have : NeZero (q : K) := ⟨ζ.2.1.ne_zero⟩
+  have : NeZero q := NeZero.of_neZero_natCast K
   have hp : IsPrimitiveRoot ζ.1 q := by
     rw [← Polynomial.isRoot_cyclotomic_iff, ← Polynomial.map_cyclotomic_int, Polynomial.IsRoot.def,
       Polynomial.eval_map]
@@ -100,8 +100,8 @@ theorem field_ann {q : ℕ} (j : ℤ) {K : Type} [Field K] (ζ : Prim q K) (c : 
     simp only [ULift.mul_down, Units.val_mul, ULift.one_down]
     ring
   have h1 : lg ζ = 1 := by
-    haveI : NeZero (q : K) := ⟨ζ.2.1.ne_zero⟩
-    haveI : NeZero q := NeZero.of_neZero_natCast K
+    have : NeZero (q : K) := ⟨ζ.2.1.ne_zero⟩
+    have : NeZero q := NeZero.of_neZero_natCast K
     have e : lg ζ * lg ζ = lg ζ := hu ζ _ (by
       show ζ.1 = ζ.1 ^ ((lg ζ * lg ζ : (ZMod q)ˣ) : ZMod q).val
       rw [Units.val_mul, field_pow, ← hlg ζ, ← hlg ζ])
@@ -113,7 +113,7 @@ theorem field_ann {q : ℕ} (j : ℤ) {K : Type} [Field K] (ζ : Prim q K) (c : 
 theorem ring_ann {q : ℕ} (j : ℤ) {A : Type} [CommRing A] [Nontrivial A] (ζ : Prim q A) (c : ULift.{1} (ZMod q))
     (h : Finsupp.single ζ c ∈ twRel q j A) : c = 0 := by
   obtain ⟨M, hM⟩ := Ideal.exists_maximal A
-  letI := Ideal.Quotient.field M
+  let := Ideal.Quotient.field M
   have := twRel_le q j (Ideal.Quotient.mk M) h
   rw [Submodule.mem_comap, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single] at this
   exact field_ann j _ c this
@@ -131,12 +131,12 @@ theorem ann {q : ℕ} (j l : ℤ) {X : Scheme.{0}} (ζ : Prim q Γ(X, ⊤)) (c :
       (twF q j).obj Γ(Y, ⊤)) = 0 := Eq.trans hf (map_zero _)
   rw [Finsupp.mapDomain_single] at hf'
   by_cases hY : Nonempty Y
-  · haveI : Nontrivial Γ(Y, ⊤) := by
-      haveI : Nonempty (⊤ : Y.Opens) := hY.elim fun y => ⟨⟨y, trivial⟩⟩
+  · have : Nontrivial Γ(Y, ⊤) := by
+      have : Nonempty (⊤ : Y.Opens) := hY.elim fun y => ⟨⟨y, trivial⟩⟩
       infer_instance
     have hc := ring_ann j _ c ((Submodule.Quotient.mk_eq_zero _).1 hf')
     rw [hc, zero_smul]
-  · haveI : IsEmpty Y := not_nonempty_iff.1 hY
+  · have : IsEmpty Y := not_nonempty_iff.1 hY
     exact sep ⊥ (by exact Scheme.bot_mem_grothendieckTopology Y) _ _ (fun _ _ hg => hg.elim)
 
 theorem res_comp {q : ℕ} {j : ℤ} {X Y Z : Scheme.{0}} (h : Z ⟶ Y) (f : Y ⟶ X) (x : Sec (tw q j) X) :

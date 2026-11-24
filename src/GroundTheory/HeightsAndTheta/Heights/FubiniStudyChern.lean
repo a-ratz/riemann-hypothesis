@@ -234,7 +234,7 @@ lemma isOpen_chartDomain (i : Fin (N + 1)) : IsOpen (chartDomain (N := N) i) := 
       {v : {v : Fin (N + 1) → ℂ // v ≠ 0} | v.1 i ≠ 0} := by
     ext ⟨v, hv⟩; exact Iff.rfl
   rw [this]
-  exact isOpen_ne_fun ((continuous_apply i).comp continuous_subtype_val) continuous_const
+  exact isOpen_ne_fun ((continuous_apply i).comp continuous_subtypeVal) continuous_const
 
 lemma continuousOn_chartCoord (i : Fin (N + 1)) :
     ContinuousOn (chartCoord (N := N) i) (chartDomain i) := by
@@ -243,8 +243,8 @@ lemma continuousOn_chartCoord (i : Fin (N + 1)) :
   intro v hv
   have hvi : v.1 i ≠ 0 := hv
   have hc : ContinuousAt (fun w : {v : Fin (N + 1) → ℂ // v ≠ 0} => w.1 (i.succAbove j) / w.1 i) v :=
-    (((continuous_apply _).comp continuous_subtype_val).continuousAt).div
-      (((continuous_apply _).comp continuous_subtype_val).continuousAt) hvi
+    (((continuous_apply _).comp continuous_subtypeVal).continuousAt).div
+      (((continuous_apply _).comp continuous_subtypeVal).continuousAt) hvi
   exact hc.continuousWithinAt
 
 def chart (i : Fin (N + 1)) : OpenPartialHomeomorph (CP N) (Fin N → ℂ) where
@@ -352,7 +352,7 @@ theorem fsNorm_eq (x : CP N) (φ : O1 x) (v : Fin (N + 1) → ℂ) (hv : v ∈ t
   have ht : t ≠ 0 := by rintro rfl; simp at hv0
   have : (⟨t • x.rep, hv⟩ : tautLine x) = t • ⟨x.rep, rep_mem_tautLine x⟩ := rfl
   rw [this, map_smul, smul_eq_mul, norm_mul, euclideanNorm_smul, fsNorm]
-  have hn : 0 < norm2 x.rep := euclideanNorm_pos x.rep_nonzero
+  have hn : 0 < norm2 x.rep := euclideanNorm_pos x.rep_ne_zero
   have ht' : 0 < ‖t‖ := norm_pos_iff.mpr ht
   field_simp
 
@@ -368,7 +368,7 @@ lemma tautologicalDual_ext (x : CP N) {φ ψ : O1 x} (h : φ ⟨x.rep, rep_mem_t
 theorem fsNorm_eq_zero_iff (x : CP N) (φ : O1 x) : fsNorm x φ = 0 ↔ φ = 0 := by
   constructor
   · intro h
-    have hn : 0 < norm2 x.rep := euclideanNorm_pos x.rep_nonzero
+    have hn : 0 < norm2 x.rep := euclideanNorm_pos x.rep_ne_zero
     rw [fsNorm, div_eq_zero_iff, norm_eq_zero] at h
     rcases h with h | h
     · exact tautologicalDual_ext x (by simpa using h)
@@ -529,13 +529,13 @@ theorem chernCoeff_apply (i : Fin (N + 1)) (z : Fin N → ℂ) (j k : Fin N) :
   rw [hconj, Matrix.one_apply]
   by_cases h : j = k
   · subst h
-    simp only [Pi.single_eq_same, if_true]
+    simp only [Pi.single_eq_same, ite_true]
     push_cast
     field_simp
     ring_nf
     all_goals (try simp only [Complex.I_sq])
     all_goals ring
-  · simp only [Pi.single_apply, if_neg (Ne.symm h), if_neg h]
+  · simp only [Pi.single_apply, ite_eq_right (Ne.symm h), ite_eq_right h]
     push_cast
     field_simp
     ring_nf

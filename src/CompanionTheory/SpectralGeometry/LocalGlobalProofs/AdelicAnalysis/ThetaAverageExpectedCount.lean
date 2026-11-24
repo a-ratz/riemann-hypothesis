@@ -88,7 +88,7 @@ lemma exists_dyadic {c u : ℝ} (hc : 0 < c) (hu : 0 ≤ u) :
     exact ⟨j, hj.le⟩
   refine ⟨Nat.find hex, Nat.find_spec hex, ?_⟩
   rcases hj : Nat.find hex with _ | k
-  · simp only [wt, if_true]
+  · simp only [wt, ite_true]
     rw [Real.exp_le_one_iff]
     have : 0 ≤ c * u ^ 2 := by positivity
     linarith
@@ -99,7 +99,7 @@ lemma exists_dyadic {c u : ℝ} (hc : 0 < c) (hu : 0 ≤ u) :
       have h2 : ((2 : ℝ) ^ k) ^ 2 = 4 ^ k := by
         rw [← pow_mul, mul_comm, pow_mul]; norm_num
       linarith
-    simp only [wt, Nat.succ_ne_zero, if_false]
+    simp only [wt, Nat.succ_ne_zero, ite_false]
     apply Real.exp_le_exp.mpr
     have h3 : c * 4 ^ (k + 1) / 4 = c * 4 ^ k := by rw [pow_succ]; ring
     rw [h3]
@@ -117,7 +117,7 @@ lemma summable_wt {c : ℝ} (hc : 0 < c) (n : ℕ) :
   rcases Nat.eq_zero_or_pos j with rfl | hj
   · simp [wt]; linarith
   · have hj0 : j ≠ 0 := by omega
-    simp only [wt, hj0, if_false]
+    simp only [wt, hj0, ite_false]
     set y : ℝ := 4 ^ j with hy
     have hy0 : 0 < y := by positivity
     have hx0 : 0 ≤ c * y / 4 := by positivity
@@ -391,7 +391,7 @@ theorem phi_bound {φ : (ι → A F) → ℂ} (hφ : SB φ) :
 theorem measurable_fin {Ω : Type} [MeasurableSpace Ω] [MeasurableSpace (A F)] [BorelSpace (A F)]
     {gf : Ω → Matrix ι ι (A F)} (h : ∀ i j, Measurable fun ω => gf ω i j) (x : ι → F) :
     Measurable fun ω => gf ω *ᵥ fun j => algebraMap F (A F) (x j) := by
-  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
+  have : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
   refine measurable_pi_iff.mpr fun i => ?_
   simp only [Matrix.mulVec, dotProduct]
   exact Finset.measurable_sum _ fun j _ => (h i j).mul_const _
@@ -415,7 +415,7 @@ theorem measurable_term {Ω : Type} [MeasurableSpace Ω] [MeasurableSpace (A F)]
     (hf : ∀ i j, Measurable fun ω => gf ω i j) (hi : ∀ w i j, Measurable fun ω => gi ω w i j)
     {φ : (ι → A F) → ℂ} (hφ : SB φ) (τ : InfinitePlace F → ℂ) (x : ι → F) :
     Measurable fun ω => thTerm B ρ P (gf ω) (gi ω) φ τ x := by
-  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
+  have : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
   unfold thTerm
   exact (hφ.1.continuous.measurable.comp (measurable_fin hf x)).mul
     ((continuous_gauss B ρ P τ).measurable.comp (measurable_inf hi ρ x))
@@ -467,8 +467,8 @@ theorem theta_integral_bound : ∀ (F : Type) [Field F] [NumberField F], ∀ [Me
   intro F _ _ _ _ ι _ _ M B ρ P hQ Ω _ Pr gf gi hCD φ hφ κ t hκ ht
   obtain ⟨htr, -, -, -, -, hP, -⟩ := hQ
   obtain ⟨-, hgi, hgf, -, hcnt⟩ := hCD
-  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
-  haveI : Countable F := countable_field
+  have : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
+  have : Countable F := countable_field
   have hOh : MeasurableSet (Oh F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.1.measurableSet
   obtain ⟨C₀, hC₀, N, hN, hb, hs⟩ := phi_bound hφ
   obtain ⟨c, hc, hlow⟩ := posDef_lower_family P hP
@@ -500,7 +500,7 @@ theorem theta_integral_bound : ∀ (F : Type) [Field F] [NumberField F], ∀ [Me
               (∀ i v, ((N : A F) * (gf ω *ᵥ fun j => algebraMap F (A F) (x j)) i) v ∈
                 v.adicCompletionIntegers F) ∧
               ∀ w, ‖gi ω w *ᵥ fun j => ρ w (x j)‖ ≤ R}) := by
-          simp only [Set.mem_setOf_eq]
+          simp only [Set.mem_ofPred_eq]
           rw [pi_norm_le_iff_of_nonneg hR.le]
           rfl
         by_cases h : x.1 ∈ {x : ι → F |

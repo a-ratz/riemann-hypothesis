@@ -131,7 +131,7 @@ theorem val_mem_GLs (y : G n) : y.val ∈ GLs n :=
   ((Matrix.isUnit_iff_isUnit_det _).1 y.isUnit).ne_zero
 
 theorem mul_mem_GLs' {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem inv_mem_GLs {x : Mat n} (hx : x ∈ GLs n) : x⁻¹ ∈ GLs n := by
@@ -141,8 +141,8 @@ theorem inv_mem_GLs {x : Mat n} (hx : x ∈ GLs n) : x⁻¹ ∈ GLs n := by
 def toG {x : Mat n} (hx : x ∈ GLs n) : G n := Matrix.GeneralLinearGroup.mkOfDetNeZero x hx
 
 theorem secondCountable_G : SecondCountableTopology (G n) := by
-  haveI : SecondCountableTopology (Mat n) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Mat n)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
+  have : SecondCountableTopology (Mat n) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
+  have : SecondCountableTopology (Mat n)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
 theorem lg_le_lg_mul (hL : LgFacts) (y : G n) {x : Mat n} (hx : x ∈ GLs n) : lg y.val ≤ lg (y.val * x) + lg x := by
@@ -167,8 +167,8 @@ theorem ibp_of (hL : LgFacts) (hU : Unimod) : IBP := by
   intro n _ _ μ _ V _ _ _ f hf hC X
   obtain ⟨R, hR⟩ := hC
   obtain ⟨-, -, -, hsm, hcpt, -⟩ := hL n
-  haveI := (hU n μ).1
-  haveI : SecondCountableTopology (G n) := secondCountable_G
+  have := (hU n μ).1
+  have : SecondCountableTopology (G n) := secondCountable_G
   obtain ⟨ε, hε, hcε⟩ := exists_eps X
   have hball : ∀ t ∈ Metric.ball (0 : ℝ) ε, c X t ∈ GLs n := fun t ht => hcε t (Metric.ball_subset_closedBall ht)
   have hmem : ∀ (y : G n), ∀ t ∈ Metric.closedBall (0 : ℝ) ε, y.val * c X t ∈ GLs n :=
@@ -220,7 +220,7 @@ theorem ibp_of (hL : LgFacts) (hU : Unimod) : IBP := by
     exact hR _ (hmem y 0 (Metric.mem_closedBall_self hε.le)) (hfar y hy 0 (Metric.mem_closedBall_self hε.le))
   · intro t ht y hy
     have ht' := Metric.ball_subset_closedBall ht
-    simp only [fderiv_eq_zero_far hL hR (hmem y t ht') (hfar y hy t ht'), ContinuousLinearMap.zero_apply]
+    simp only [fderiv_eq_zero_far hL hR (hmem y t ht') (hfar y hy t ht'), zero_apply]
   · intro t ht y hy
     exact hCb (y, t) ⟨hy, Metric.ball_subset_closedBall ht⟩
   · intro t ht

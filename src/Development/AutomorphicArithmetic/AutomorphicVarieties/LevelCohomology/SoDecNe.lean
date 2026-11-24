@@ -84,8 +84,8 @@ private theorem cyc_ne (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Algeb
 theorem UpperTheory.V.X.So.decNe :
     ∀ (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Algebra k Ω] [IsAlgClosure k Ω] (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] (ψ : G k Ω →* Oˣ), IsOpen (ψ.ker : Set (G k Ω)) → ∀ n : ℤ, n ≠ 0 → ∀ (v : HeightOneSpectrum (𝓞 k)) (A : ValuationSubring Ω), IsPlaceOver A v → ∃ g ∈ Dec (F := k) A, (ψ * chiO k Ω l O ^ n) g ≠ 1 := by
   intro k Ω _ _ _ _ _ l _ O _ _ _ _ _ ψ hψ n hn v A hA
-  haveI : IsGalois k Ω := {}
-  haveI : Finite (G k Ω ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
+  have : IsGalois k Ω := {}
+  have : Finite (G k Ω ⧸ ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hψ
   have hm : ψ.ker.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   obtain ⟨g, hg, hne⟩ := cyc_ne k Ω l v A hA (n * (ψ.ker.index : ℤ)) (mul_ne_zero hn (Int.natCast_ne_zero.2 hm))
   refine ⟨g, hg, fun h => hne ?_⟩

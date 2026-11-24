@@ -66,8 +66,8 @@ private theorem u_gen_approx {O R : Type} [CommRing O] [CommRing R] [Algebra O R
 private theorem u_gen_dual (O : Type) [CommRing O] [IsLocalRing O] (M : Type) [AddCommGroup M] [Module O M]
     (h : Module.IsTorsionBySet O M (maximalIdeal O)) (x : M) (hx : x ≠ 0) :
     ∃ D : M →ₗ[O] ResidueField O, D x ≠ 0 := by
-  letI : Module (ResidueField O) M := h.module
-  haveI : IsScalarTower O (ResidueField O) M := h.isScalarTower
+  let : Module (ResidueField O) M := h.module
+  have : IsScalarTower O (ResidueField O) M := h.isScalarTower
   have := (Module.forall_dual_apply_eq_zero_iff (ResidueField O) x).not.2 hx
   push Not at this
   obtain ⟨φ, hφ⟩ := this
@@ -166,7 +166,7 @@ theorem UpperTheory.V.CA.u_gen :
   refine u_gen_span O R _ (fun _ h => h.2)
     (fun a ha => ⟨Subalgebra.algebraMap_mem _ a, fun h => ha (IsLocalHom.map_nonunit a h)⟩) ?_
   intro f f' h
-  haveI := (co_res O).2
+  have := (co_res O).2
   refine H _ f f' fun t ht => ?_
   obtain ⟨a, ha⟩ := IsCO.res_surj (O := O) t
   have := h _ ⟨sub_mem (Algebra.subset_adjoin ht) (Subalgebra.algebraMap_mem _ a), ha⟩

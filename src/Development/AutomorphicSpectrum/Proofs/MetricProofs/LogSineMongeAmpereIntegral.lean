@@ -570,7 +570,7 @@ theorem det_prodMap (z w : ℂ) :
 theorem integral_mob_sq (hg : IsUnit g.det) (f : ℂ × ℂ → ℝ) :
     ∫ p : ℂ × ℂ, (Complex.normSq (mobD g p.1) * Complex.normSq (mobD g p.2)) * f (mob g p.1, mob g p.2)
       = ∫ q : ℂ × ℂ, f q := by
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (ℂ × ℂ)) := by
+  have : Measure.IsAddHaarMeasure (volume : Measure (ℂ × ℂ)) := by
     rw [Measure.volume_eq_prod]
     infer_instance
   have hUo : IsOpen (GlobalTheory.CompanionTheory.Ar.PB.FibPt.CovSq.dom g) := GlobalTheory.CompanionTheory.Ar.PB.FibPt.CovSq.isOpen_dom

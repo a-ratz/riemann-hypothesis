@@ -132,8 +132,8 @@ theorem interLocF [FiniteDimensional E V] (N : Submodule (𝓞 E) V) (hN : Submo
   have hne : p ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hp (RingOfIntegers.not_isField E)
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   have hcb : p.comap (algebraMap (𝓞 F) (𝓞 E)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem ha0 ha (Algebra.IsIntegral.isIntegral (R := 𝓞 F) a)
-  haveI := hp.isPrime
+    Ideal.under_ne_bot_of_integral_mem ha0 ha (Algebra.IsIntegral.isIntegral (R := 𝓞 F) a)
+  have := hp.isPrime
   let v : HeightOneSpectrum (𝓞 F) := ⟨p.comap (algebraMap (𝓞 F) (𝓞 E)), Ideal.comap_isPrime _ _, hcb⟩
   obtain ⟨s, hs, hsx⟩ := hx v
   exact ⟨algebraMap (𝓞 F) (𝓞 E) s, hs, hsx⟩
@@ -161,7 +161,7 @@ theorem surjStep_of_F (hP : PatchF) (hS : SemiApprox) (hO : LSOne) : SurjStep :=
   refine ⟨g, ?_⟩
   rw [hg]
   ext x
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   have hout : ∀ v, v ∉ T → Floc v L0 = Floc v N := fun v hv => flocEq v L0 N D (hTm v hv) hDL hDN
   constructor
   · rintro ⟨h1, h2⟩

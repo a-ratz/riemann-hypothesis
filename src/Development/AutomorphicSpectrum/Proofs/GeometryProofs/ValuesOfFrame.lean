@@ -220,11 +220,11 @@ theorem stalk_model [IsCommMonObj G] [Smooth G.hom] {Li : Type} [AddCommGroup Li
     obtain ⟨t, rfl⟩ := M0.onto w hw.1
     refine ⟨t, M.inj ?_⟩
     rw [hi, ((M.extends_iff _ _ _).1 hw).2]
-  letI alg : Algebra (X.presheaf.stalk (centre z)) L := (Scheme.stalkClosedPointTo z).hom.toAlgebra
-  letI mV : Module (X.presheaf.stalk (centre z)) V := Module.compHom V (Scheme.stalkClosedPointTo z).hom
+  let alg : Algebra (X.presheaf.stalk (centre z)) L := (Scheme.stalkClosedPointTo z).hom.toAlgebra
+  let mV : Module (X.presheaf.stalk (centre z)) V := Module.compHom V (Scheme.stalkClosedPointTo z).hom
   have hmV : ∀ (a : X.presheaf.stalk (centre z)) (x : V), a • x = (Scheme.stalkClosedPointTo z).hom a • x :=
     fun _ _ => rfl
-  haveI tower : IsScalarTower (X.presheaf.stalk (centre z)) L V :=
+  have tower : IsScalarTower (X.presheaf.stalk (centre z)) L V :=
     ⟨fun a b x => by rw [Algebra.smul_def, hmV, mul_smul]; rfl⟩
   obtain ⟨M', hM'⟩ := exists_model_of_eq
     (show z = Spec.map (CommRingCat.ofHom (algebraMap (X.presheaf.stalk (centre z)) L)) ≫ X.fromSpecStalk (centre z)
@@ -274,7 +274,7 @@ theorem not_inFibre {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶ X} {
     have hv : IsUnit ((Scheme.stalkClosedPointTo z).hom (r : X.presheaf.stalk (centre z))) := by
       rw [map_natCast]
       exact (Nat.cast_ne_zero.2 hr.ne_zero).isUnit
-    haveI : IsLocalHom (Scheme.stalkClosedPointTo z).hom :=
+    have : IsLocalHom (Scheme.stalkClosedPointTo z).hom :=
       inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo z).hom)
     exact isUnit_of_map_unit _ _ hv
   obtain ⟨g, hg⟩ := hu.exists_right_inv
@@ -299,8 +299,8 @@ theorem values_core (𝔐 : HodgeCpt Y S y) {L : Type} [Field L] (z : Sp L ⟶ �
     ∃ sL : Fin m → V, (∀ k, ∃ v : epsAt z ⟶ 𝔐.t.G, 𝔐.M.ValAt z (s k) v ∧ (MV.pt (sL k)).left ≫ mp.φ = v.left) ∧
       LinearIndependent L sL ∧ Submodule.span L (Set.range sL) = eigSp ρ (σ lab) := by
   classical
-  haveI := 𝔐.t.semi.smooth
-  haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  have := 𝔐.t.semi.smooth
+  have : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   have hξ : IsCptGen 𝔐.ξ := 𝔐.tie.gen
   let q : Cpt 𝔐.ξ := ⟨centre z, 𝔐.all _⟩
   obtain ⟨M₁, hM₁⟩ := (LiePull.lieModel_pullback _ _ 𝔐.t.G tK.G z mp.φ mp.cart L (𝟙 _) V).2 MV
@@ -347,7 +347,7 @@ theorem values_core (𝔐 : HodgeCpt Y S y) {L : Type} [Field L] (z : Sp L ⟶ �
       refine (𝔐.act a (i t)).symm.trans (congrArg 𝔐.M.pt ?_)
       rw [he, hsi]
       exact congrArg (· • i t) hu1.symm
-    haveI := 𝔐.t.act.hom a
+    have := 𝔐.t.act.hom a
     have e2 := value_end 𝔐.M hξ z (𝔐.all _) Mz M0 i β hext hβ (𝔐.t.act.act a) t (u • t) e1
     have e3 : ρ a (β t) = σ j a • β t := Mz.inj (Over.OverMorphism.ext (by
       rw [← hM, hact a (β t), Over.comp_left, Category.assoc, mp.act a, ← Category.assoc, hM, ← Over.comp_left, e2,

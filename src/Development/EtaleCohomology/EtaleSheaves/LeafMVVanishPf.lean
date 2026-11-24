@@ -101,7 +101,7 @@ theorem LateralTheory.EtaleFoundations.etale_simplicial_cochain_short_exact_sequ
     apply Cochain.ext
     intro p q hpq
     rw [hv2]
-    haveI := (hd p).epi_g
+    have := (hd p).epi_g
     exact (hd p).exact.g_desc _ _
   · intro c hc
     apply Cochain.ext

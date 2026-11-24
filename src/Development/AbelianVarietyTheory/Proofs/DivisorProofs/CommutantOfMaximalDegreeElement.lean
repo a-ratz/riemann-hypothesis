@@ -80,7 +80,7 @@ theorem commute_iff_mem_adjoin (F C : Type) [Field F] [Ring C] [Algebra F C] [Fi
     intro g hg
     rw [Set.mem_singleton_iff] at hg
     rw [hg]
-  haveI : Fact (Irreducible (minpoly F y)) := ⟨hirr⟩
+  have : Fact (Irreducible (minpoly F y)) := ⟨hirr⟩
   set j : AdjoinRoot (minpoly F y) →ₐ[F] C := rootHom F C y
   have hj : Function.Injective j := j.toRingHom.injective
   have hrange : j.range = B := by
@@ -90,7 +90,7 @@ theorem commute_iff_mem_adjoin (F C : Type) [Field F] [Ring C] [Algebra F C] [Fi
   have hEdim : Module.finrank F (AdjoinRoot (minpoly F y)) = n := by
     rw [(AdjoinRoot.powerBasis hne).finrank, AdjoinRoot.powerBasis_dim, hdeg]
   let eB : AdjoinRoot (minpoly F y) ≃ₐ[F] B := (AlgEquiv.ofInjective j hj).trans (Subalgebra.equivOfEq _ _ hrange)
-  haveI : IsSimpleRing B := IsSimpleRing.of_ringEquiv eB.toRingEquiv inferInstance
+  have : IsSimpleRing B := IsSimpleRing.of_ringEquiv eB.toRingEquiv inferInstance
   have hBdim : Module.finrank F B = n := by rw [← eB.toLinearEquiv.finrank_eq, hEdim]
   set Z := Subalgebra.centralizer F (B : Set C)
   have hBZ : B ≤ Z := by
@@ -125,16 +125,16 @@ theorem centralizer_unit_eq_field : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p)
     ∃ (E : Type) (_ : Field E) (_ : NumberField E) (_ : Algebra G.F E) (j : E →ₐ[G.F] G.C),
       Function.Injective j ∧ ∀ z : G.C, Commute z (y₀ : G.C) ↔ ∃ e, j e = z := by
   intro p _ G y₀ hirr hdeg
-  haveI : Fact (Irreducible (minpoly G.F (y₀ : G.C))) := ⟨hirr⟩
+  have : Fact (Irreducible (minpoly G.F (y₀ : G.C))) := ⟨hirr⟩
   let j : AdjoinRoot (minpoly G.F (y₀ : G.C)) →ₐ[G.F] G.C := rootHom G.F G.C (y₀ : G.C)
   have hne : minpoly G.F (y₀ : G.C) ≠ 0 := hirr.ne_zero
-  haveI : FiniteDimensional G.F (AdjoinRoot (minpoly G.F (y₀ : G.C))) :=
+  have : FiniteDimensional G.F (AdjoinRoot (minpoly G.F (y₀ : G.C))) :=
     (AdjoinRoot.powerBasis hne).finite
-  haveI : FiniteDimensional ℚ (AdjoinRoot (minpoly G.F (y₀ : G.C))) :=
+  have : FiniteDimensional ℚ (AdjoinRoot (minpoly G.F (y₀ : G.C))) :=
     Module.Finite.trans G.F _
-  haveI : CharZero (AdjoinRoot (minpoly G.F (y₀ : G.C))) :=
+  have : CharZero (AdjoinRoot (minpoly G.F (y₀ : G.C))) :=
     charZero_of_injective_algebraMap (algebraMap G.F _).injective
-  haveI : NumberField (AdjoinRoot (minpoly G.F (y₀ : G.C))) := ⟨⟩
+  have : NumberField (AdjoinRoot (minpoly G.F (y₀ : G.C))) := ⟨⟩
   have hrange : j.range = Algebra.adjoin G.F ({(y₀ : G.C)} : Set G.C) := by
     rw [← Algebra.map_top, ← AdjoinRoot.adjoinRoot_eq_top, AlgHom.map_adjoin, Set.image_singleton]
     rw [rootHom_root]

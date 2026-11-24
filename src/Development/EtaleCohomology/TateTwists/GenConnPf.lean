@@ -152,8 +152,8 @@ theorem inj_of (h : LateralTheory.EtaleFoundations.twF_gen_inj) (q : ℕ) [NeZer
   erw [map_nsmul, map_nsmul] at hV2
   have hm : ψ m = Submodule.Quotient.mk (Finsupp.single (ζ.map j.appTop.hom) 1) := twF_map_mk i j.appTop ζ
   rw [hm] at hV2
-  haveI : Nonempty (⊤ : V.Opens) := ⟨⟨v, trivial⟩⟩
-  haveI : Nontrivial Γ(V, ⊤) := AlgebraicGeometry.Scheme.component_nontrivial V ⊤
+  have : Nonempty (⊤ : V.Opens) := ⟨⟨v, trivial⟩⟩
+  have : Nontrivial Γ(V, ⊤) := AlgebraicGeometry.Scheme.component_nontrivial V ⊤
   exact h q Γ(V, ⊤) inferInstance i (ζ.map j.appTop.hom) hV2
 
 end LateralTheory.EtaleFoundations.GenConn

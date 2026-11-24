@@ -68,8 +68,8 @@ theorem measure_eq_relIndex_mul (μ : Measure G) [IsMulLeftInvariant μ] {U W : 
     μ U = W.relIndex U * μ W := by
   classical
   have hcard : Nat.card (U ⧸ W.subgroupOf U) = W.relIndex U := rfl
-  haveI : Finite (U ⧸ W.subgroupOf U) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hfin)
-  letI : Fintype (U ⧸ W.subgroupOf U) := Fintype.ofFinite _
+  have : Finite (U ⧸ W.subgroupOf U) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hfin)
+  let : Fintype (U ⧸ W.subgroupOf U) := Fintype.ofFinite _
   choose r hr using fun q : U ⧸ W.subgroupOf U => QuotientGroup.mk_surjective q
   have hC : (U : Set G) = ⋃ q, (fun x => ((r q : U) : G)⁻¹ * x) ⁻¹' (W : Set G) := by
     ext x

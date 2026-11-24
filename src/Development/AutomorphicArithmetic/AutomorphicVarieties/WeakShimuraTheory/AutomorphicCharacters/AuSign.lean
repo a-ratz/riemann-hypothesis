@@ -53,8 +53,8 @@ theorem UpperTheory.V.Ws.auSign :
   intro Ω _ _ _ C _ μ c c' hc hc'
   obtain ⟨j, hj⟩ := hc
   obtain ⟨j', hj'⟩ := hc'
-  letI : Algebra Ω ℂ := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra Ω ℂ := j.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => by
     simp [RingHom.algebraMap_toAlgebra]
   let σ : Ω ≃ₐ[ℚ] Ω := AlgHom.restrictNormal' j'.toRatAlgHom Ω
   have hσ : ∀ x, j (σ x) = j' x := fun x => by

@@ -208,8 +208,8 @@ theorem finite_support (d s : ℕ) {I : Type} [Fintype I] (κ : I → ℕ) (𝔣
   have hcv : c_vp 𝔣 l = 0 := by
     have hd : ¬ l ∣ (discr E).natAbs := fun h => hlB (Finset.mem_union_right _
       (Nat.mem_primeFactors.2 ⟨hl, h, by simpa using discr_ne_zero E⟩))
-    rw [c_vp, if_neg (fun ⟨v, h1, h2⟩ => hv v h1 h2), delta_vp]
-    simp [padicValInt, padicValNat.eq_zero_of_not_dvd hd]
+    rw [c_vp, ite_eq_right (fun ⟨v, h1, h2⟩ => hv v h1 h2), delta_vp]
+    simp [padicValInt, multiplicity_eq_zero_of_not_dvd hd]
   have hcE : cE_vp l z = 0 := by
     rw [cE_vp, ← bot_eq_zero, Finset.sup_eq_bot_iff]
     intro C _
@@ -217,7 +217,7 @@ theorem finite_support (d s : ℕ) {I : Type} [Fintype I] (κ : I → ℕ) (𝔣
     have hd : ¬ l ∣ q.den := fun h => hlB (Finset.mem_union_left _ (Finset.mem_biUnion.2
       ⟨C, Finset.mem_univ _, Nat.mem_primeFactors.2 ⟨hl, h, q.den_ne_zero⟩⟩))
     show (-padicValRat l q).toNat = 0
-    rw [Int.toNat_eq_zero, padicValRat, padicValNat.eq_zero_of_not_dvd hd]
+    rw [Int.toNat_eq_zero, padicValRat, multiplicity_eq_zero_of_not_dvd hd]
     simp
   simp [betaBound_vp, hcE, hcv, ha0, n_vp]
 
@@ -549,7 +549,7 @@ theorem vw_eq_zero_of_notMem (w : Formalism.PairingDivisionLocalBalance.Pl K) {a
     rintro rfl
     exact ha w.asIdeal.zero_mem
   unfold Formalism.DivisionValues.vw
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K _ ha0]
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K _ ha0]
   by_contra h
   have h' : (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {a})).factors ≠ 0 := by
     intro h0
@@ -559,7 +559,7 @@ theorem vw_eq_zero_of_notMem (w : Formalism.PairingDivisionLocalBalance.Pl K) {a
 theorem vw_int_nonneg (w : Formalism.PairingDivisionLocalBalance.Pl K) (a : 𝓞 K) : 0 ≤ Formalism.DivisionValues.vw w (a : K) := by
   unfold Formalism.DivisionValues.vw
   rw [← FractionalIdeal.coeIdeal_span_singleton]
-  exact FractionalIdeal.count_coe_nonneg K w _
+  exact FractionalIdeal.count_coeIdeal_nonneg K w _
 
 theorem vw_mul (w : Formalism.PairingDivisionLocalBalance.Pl K) {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) :
     Formalism.DivisionValues.vw w (a * b) = Formalism.DivisionValues.vw w a + Formalism.DivisionValues.vw w b := by
@@ -574,10 +574,10 @@ theorem vw_pow (w : Formalism.PairingDivisionLocalBalance.Pl K) (a : K) (n : ℕ
 
 theorem coeff_zero_mem (σ : K →+* ℂ) {δ : ℂ} (hδ : IsIntegral ℤ δ) {q : K[X]} (hq : IsMinPol σ δ q) :
     ∃ b : 𝓞 K, (b : K) = q.coeff 0 := by
-  letI : Algebra K ℂ := σ.toAlgebra
-  letI : Algebra (𝓞 K) ℂ := ((algebraMap K ℂ).comp (algebraMap (𝓞 K) K)).toAlgebra
-  haveI : IsScalarTower (𝓞 K) K ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℤ (𝓞 K) ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra K ℂ := σ.toAlgebra
+  let : Algebra (𝓞 K) ℂ := ((algebraMap K ℂ).comp (algebraMap (𝓞 K) K)).toAlgebra
+  have : IsScalarTower (𝓞 K) K ℂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℤ (𝓞 K) ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have hi : IsIntegral (𝓞 K) δ := hδ.tower_top
   have e := minpoly.isIntegrallyClosed_eq_field_fractions' K hi
   refine ⟨(minpoly (𝓞 K) δ).coeff 0, ?_⟩
@@ -602,8 +602,8 @@ theorem GlobalTheory.FunObj.SqNum.meanVal_vw_ge_of_intAt : ∀ {K : Type} [Field
     have e : σ a * β = (n : ℂ) * ((l : ℂ) ^ m * (σ c * β)) := by
       simp only [a, map_mul, map_pow, map_natCast]; ring
     rw [e]; exact hint
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI : IsScalarTower ℤ K ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra K ℂ := σ.toAlgebra
+  have : IsScalarTower ℤ K ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have hK : IsIntegral K (σ a * β) := hδ.tower_top
   have hq : IsMinPol σ (σ a * β) (minpoly K (σ a * β)) :=
     ⟨minpoly.monic hK, minpoly.irreducible hK, minpoly.aeval K (σ a * β)⟩
@@ -804,8 +804,8 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     (w : Formalism.PairingDivisionLocalBalance.Pl D.what₂.LL) (l : ℕ) (hl : l.Prime) (hlw : (l : 𝓞 D.what₂.LL) ∈ w.asIdeal)
     (hQw : (GlobalTheory.SqTop.Qn G t : 𝓞 D.what₂.LL) ∉ w.asIdeal) :
     -(n l * (vw w (l : D.what₂.LL) : ℝ)) ≤ ((vw w z + g w : ℤ) : ℝ) := by
-  haveI := hcm
-  haveI := hab
+  have := hcm
+  have := hab
   obtain ⟨x, hx, hx0, -, Λl, p, hΛl, hp, hg⟩ := htv
   have hU : UnramFin D.host.E := hfd.2.2.1
   have hφ : IsCMType (cmPhi D) := hfd.2.2.2.2.2.2.1
@@ -831,7 +831,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     if h : ∃ P ∈ GlobalTheory.SqTop.twPl G t, P.under (𝓞 D.host.F) = q then h.choose else G.pl.w G.pl.v0
   have hPq : ∀ q ∈ Q, Pq q ∈ GlobalTheory.SqTop.twPl G t ∧ (Pq q).under (𝓞 D.host.F) = q := fun q hq => by
     have h := hex q hq
-    simp only [Pq, dif_pos h]
+    simp only [Pq, dite_eq_left h]
     exact h.choose_spec
   have hov : ∀ q ∈ Q, Over (Pq q) q := fun q hq =>
     (over_under (Pq q)).trans (congrArg HeightOneSpectrum.asIdeal (hPq q hq).2)
@@ -877,7 +877,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     exact G.pl.levelPlace_ne_basePlace t P hP' e
   have hram0 : ¬ (nuH G t i j).UnrAt (G.pl.w G.pl.v0) := by
     have h1 := (hQval.2.2.2 G.pl.v0 (G.pl.w G.pl.v0) ((over_under _).trans (congrArg HeightOneSpectrum.asIdeal (G.pl.w_over _ (Finset.mem_insert_self _ _))))).2 hv0
-    rw [GlobalTheory.FunObj.SqNum.Model.expIn_condF, if_pos (G.pl.mem_S0_of_sum_eq.2 (Or.inl rfl)), condExp, if_pos rfl] at h1
+    rw [GlobalTheory.FunObj.SqNum.Model.expIn_condF, ite_eq_left (G.pl.mem_S0_of_sum_eq.2 (Or.inl rfl)), condExp, ite_eq_left rfl] at h1
     exact h1.not_unrAt one_ne_zero
   have hΛs : Λ s ≠ 0 := GlobalTheory.HeckePartial.IsHeckeL.ne_zero_of_one_le hQval.1
     (GlobalTheory.HeckeOne.not_isNormPow_of_not_unrAt hram0) hΛ (by simpa using (by exact_mod_cast hs1 : (1 : ℝ) ≤ s))
@@ -940,10 +940,10 @@ theorem abs_norm_coeff_zero_pow (K : Type) [Field K] [NumberField K] (σ : K →
     |(Algebra.norm ℚ (p.coeff 0) : ℚ)| ^ (minpoly ℚ β).natDegree =
       |(minpoly ℚ β).coeff 0| ^ (p.natDegree * Module.finrank ℚ K) := by
   obtain ⟨hm, hirr, hev⟩ := h
-  haveI := Fact.mk hirr
+  have := Fact.mk hirr
   let pb := AdjoinRoot.powerBasis hirr.ne_zero
-  haveI : Module.Finite K (AdjoinRoot p) := pb.finite
-  haveI : FiniteDimensional ℚ (AdjoinRoot p) := Module.Finite.trans K (AdjoinRoot p)
+  have : Module.Finite K (AdjoinRoot p) := pb.finite
+  have : FiniteDimensional ℚ (AdjoinRoot p) := Module.Finite.trans K (AdjoinRoot p)
   set r := AdjoinRoot.root p
   have hNK : Algebra.norm K r = (-1) ^ p.natDegree * p.coeff 0 := by
     have := Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly pb
@@ -994,7 +994,7 @@ theorem meanInf_log_norm_embedding (K : Type) [Field K] [NumberField K] [_root_.
   unfold Formalism.PairingDivisionLocalBalance.meanInf
   have hprod := InfinitePlace.prod_eq_abs_norm (K := K) a
   have hmult : ∀ v : InfinitePlace K, v.mult = 2 := fun v => by
-    rw [InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
+    rw [InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex v))]
   have hpos : ∀ v : InfinitePlace K, 0 < v a := fun v => by
     rw [InfinitePlace.pos_iff]; exact ha
   have hsum : Real.log |((Algebra.norm ℚ a : ℚ) : ℝ)| = ∑ v : InfinitePlace K, 2 * Real.log (v a) := by
@@ -1025,10 +1025,10 @@ namespace GlobalTheory.FunObj.SqNum.LowVal
 theorem coeff_zero_mul_pow_mem {K : Type} [Field K] [NumberField K] {σ : K →+* ℂ} {β : ℂ} {p : K[X]}
     (h : IsMinPol σ β p) {c : ℕ} (hc0 : (c : K) ≠ 0) (hc : IsIntegral ℤ ((c : ℂ) * β)) :
     ∃ a : 𝓞 K, p.coeff 0 * (c : K) ^ p.natDegree = (a : K) := by
-  letI : Algebra K ℂ := σ.toAlgebra
-  letI : Algebra (𝓞 K) ℂ := (σ.comp (algebraMap (𝓞 K) K)).toAlgebra
-  haveI : IsScalarTower (𝓞 K) K ℂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower ℤ (𝓞 K) ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra K ℂ := σ.toAlgebra
+  let : Algebra (𝓞 K) ℂ := (σ.comp (algebraMap (𝓞 K) K)).toAlgebra
+  have : IsScalarTower (𝓞 K) K ℂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower ℤ (𝓞 K) ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have hβ : IsIntegral K β := ⟨p, h.1, h.2.2⟩
   have es : (c : K) • β = (c : ℂ) * β := by
     rw [Algebra.smul_def, RingHom.algebraMap_toAlgebra, map_natCast]
@@ -1221,7 +1221,7 @@ theorem htLe_of_real [StarRing K] (g : Formalism.PairingDivisionLocalBalance.Pl 
     simp only [Function.mem_support, ne_eq, not_not] at h ⊢
     linarith
   · calc ∑ᶠ w, lw w * |((vw w z + g w : ℤ) : ℝ)| ≤ ∑ᶠ w, (lw w * |y' w| + lw w * |y w|) :=
-          finsum_le_finsum' (hfin.subset fun w hw => by
+          finsum_le_finsum (hfin.subset fun w hw => by
             intro h; apply hw
             have := hb w
             have h0 : 0 ≤ lw w * |((vw w z + g w : ℤ) : ℝ)| := mul_nonneg (lw_nonneg w) (abs_nonneg _)
@@ -1677,7 +1677,7 @@ theorem fockSum_ne_zero : ∀ (D : D7) (a d : ℕ) (n : D.what₂.Tau → ℕ), 
   have hpos : 0 < (fockSum D a d n).re := by
     unfold fockSum
     rw [Complex.re_sum]
-    haveI : Nonempty (GlobalTheory.NormSum.Tup D a d n) := ⟨fun _ _ => ⟨Fin.castLE had, fun _ _ h => h⟩⟩
+    have : Nonempty (GlobalTheory.NormSum.Tup D a d n) := ⟨fun _ _ => ⟨Fin.castLE had, fun _ _ h => h⟩⟩
     exact Finset.sum_pos (fun T _ => fockIp_self_re_pos (GlobalTheory.NormAdelic.minorPol_ne_zero T)) (by
       classical exact ⟨fun _ _ => ⟨Fin.castLE had, fun _ _ h => h⟩, by simp⟩)
   rw [h0] at hpos
@@ -1701,8 +1701,8 @@ namespace GlobalTheory.NormRatio
 
 theorem std_mass_ne_zero : ∀ (D : D7) (N : ℕ), mass D N ≠ 0 := by
   intro D N
-  haveI := (GlobalTheory.NormSum.cls_finite_card_le D N).1
-  haveI := Fintype.ofFinite (GlobalTheory.NormSum.Cls D N (GlobalTheory.NormSum.intG D N))
+  have := (GlobalTheory.NormSum.cls_finite_card_le D N).1
+  have := Fintype.ofFinite (GlobalTheory.NormSum.Cls D N (GlobalTheory.NormSum.intG D N))
   have hne : (Finset.univ : Finset (GlobalTheory.NormSum.Cls D N (GlobalTheory.NormSum.intG D N))).Nonempty :=
     ⟨DoubleCoset.mk _ _ 1, Finset.mem_univ _⟩
   have hpos : (0 : ℝ) < ∑ x : GlobalTheory.NormSum.Cls D N (GlobalTheory.NormSum.intG D N),

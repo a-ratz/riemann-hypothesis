@@ -116,7 +116,7 @@ private theorem units_map_evalPt_res_pullU_eq_comp (x : Sp R ⟶ Y) (ψ : Y ⟶ 
     Units.map (evalPt x V hV).toMonoidHom (res e (pullU ψ (U₀ ⊓ U₁) s)) =
       Units.map (evalPt (x ≫ ψ) (U₀ ⊓ U₁) (hV.trans (x.preimage_mono e))).toMonoidHom s := by
   ext
-  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
   exact evalPt_appLE x ψ _ rfl (U₀ ⊓ U₁) V e hV _ s.val
 
 private theorem mul_eq_mul_of_eq_mul_zpow_neg_one {M : Type} [CommGroup M] {c c' t₀ t₁ : M}
@@ -139,7 +139,7 @@ theorem evalPt_gen_two (L : LB X) (φ₀ φ₁ : Y ⟶ X)
   simp only [Fin.prod_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one,
     zpow_one] at hh
   have hv := congrArg Units.val (mul_eq_mul_of_eq_mul_zpow_neg_one hh)
-  simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at hv
+  simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at hv
   rw [evalPt_res_eq_evalPt x _ a hab, evalPt_res_eq_evalPt x _ b hab, evalPt_congr h₀ _ _ a₀,
     evalPt_congr h₁ _ _ a₁] at hv
   exact hv

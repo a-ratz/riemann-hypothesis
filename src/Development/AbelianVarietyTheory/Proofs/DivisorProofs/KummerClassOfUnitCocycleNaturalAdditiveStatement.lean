@@ -90,7 +90,7 @@ theorem kum_unique [NeZero q] {X : Scheme.{0}} (hX : IsUnit (q : Γ(X, ⊤))) (u
     obtain rfl : s = 0 := by omega
     exact (h₁ U x).trans (h₁' U x).symm
   | p + 2 =>
-    haveI := sec_subsingleton (tw q 1) U (s := s) (by omega)
+    have := sec_subsingleton (tw q 1) U (s := s) (by omega)
     exact Subsingleton.elim _ _
 
 theorem eq_zero_of_kumT [NeZero q] (ht : kumT q = 0) {X : Scheme.{0}} (hX : IsUnit (q : Γ(X, ⊤))) (u : (Γ(X, ⊤))ˣ)
@@ -152,7 +152,7 @@ theorem kum_mul [NeZero q] {X : Scheme.{0}} (hX : IsUnit (q : Γ(X, ⊤))) (u₁
       rw [key, c₂ (0 + 1) _ _ _ _ one_ne_zero, smap_zero, zero_add, Fin.sum_univ_two, hf, a₁ U x, a₂ U x, a₃ U x]
       simp
     | p + 2 =>
-      haveI := sec_subsingleton (tw q 1) U (s := s) (by omega)
+      have := sec_subsingleton (tw q 1) U (s := s) (by omega)
       exact Subsingleton.elim _ _
   · refine ⟨0, ?_⟩
     rw [δ_zero, Cocycle.coe_sub, Cocycle.coe_add, eq_zero_of_kumT ht hX u₁ a₁ b₁, eq_zero_of_kumT ht hX u₂ a₂ b₂,
@@ -180,7 +180,7 @@ theorem kum_pow_self [NeZero q] {X : Scheme.{0}} (hX : IsUnit (q : Γ(X, ⊤))) 
       rw [key, c₂ (0 + 1) _ _ _ _ one_ne_zero, smap_zero, zero_add, Fin.sum_univ_two, hf, a U x]
       simp
     | p + 2 =>
-      haveI := sec_subsingleton (tw q 1) U (s := s) (by omega)
+      have := sec_subsingleton (tw q 1) U (s := s) (by omega)
       exact Subsingleton.elim _ _
   · exact ⟨0, by rw [δ_zero, eq_zero_of_kumT ht hX _ a b]⟩
 

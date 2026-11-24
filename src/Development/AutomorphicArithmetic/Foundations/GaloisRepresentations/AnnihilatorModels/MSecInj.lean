@@ -51,15 +51,15 @@ attribute [local instance] Ideal.Quotient.field
 open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison.Mod
 
 private theorem reduced_of_finite_etale {K : Type} [Field K] {X : Scheme.{0}} (f : X ⟶ Sp K) [IsFinite f] [Etale f] : IsReduced X := by
-  haveI : IsAffine X := isAffine_of_isAffineHom f
+  have : IsAffine X := isAffine_of_isAffineHom f
   have hE : (Scheme.Hom.appTop f).hom.Etale := HasRingHomProperty.appTop @Etale f inferInstance
   have hF : IsField Γ(Sp K, ⊤) :=
     MulEquiv.isField (Field.toIsField K)
       (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.toMulEquiv
-  letI : Field Γ(Sp K, ⊤) := hF.toField
-  letI := (Scheme.Hom.appTop f).hom.toAlgebra
-  haveI : Algebra.Etale Γ(Sp K, ⊤) Γ(X, ⊤) := hE.toAlgebra
-  haveI : _root_.IsReduced Γ(X, ⊤) := Algebra.FormallyUnramified.isReduced_of_field Γ(Sp K, ⊤) Γ(X, ⊤)
+  let : Field Γ(Sp K, ⊤) := hF.toField
+  let := (Scheme.Hom.appTop f).hom.toAlgebra
+  have : Algebra.Etale Γ(Sp K, ⊤) Γ(X, ⊤) := hE.toAlgebra
+  have : _root_.IsReduced Γ(X, ⊤) := Algebra.FormallyUnramified.isReduced_of_field Γ(Sp K, ⊤) Γ(X, ⊤)
   exact isReduced_of_isAffine_isReduced X
 
 private theorem half_pt (hRead : PulledRead) (hKer : PullKer) {p : ℕ} [Fact p.Prime] {D : Datum p} {O : Type} [CommRing O]
@@ -99,13 +99,13 @@ private theorem half_ker (hRead : PulledRead) (hKer : PullKer) {p : ℕ} [Fact p
   suffices hi : i ≫ P'.ψ = 1 by
     rw [Category.assoc, hi]
     simp
-  haveI : IsFinite Ks.hom := hfin
-  haveI : Etale Ks.hom := het
-  haveI : IsReduced Ks.left := reduced_of_finite_etale Ks.hom
-  haveI : IsProper P'.o'.A.hom := IsAbelianScheme.proper (self := P'.o'.ab)
-  haveI : Smooth P'.o'.A.hom := IsAbelianScheme.smooth (self := P'.o'.ab)
+  have : IsFinite Ks.hom := hfin
+  have : Etale Ks.hom := het
+  have : IsReduced Ks.left := reduced_of_finite_etale Ks.hom
+  have : IsProper P'.o'.A.hom := IsAbelianScheme.proper (self := P'.o'.ab)
+  have : Smooth P'.o'.A.hom := IsAbelianScheme.smooth (self := P'.o'.ab)
   have hw1 : Over.Hom.left (i ≫ P'.ψ) ≫ P'.o'.A.hom = Ks.hom := Over.w _
-  haveI : LocallyOfFiniteType (Over.Hom.left (i ≫ P'.ψ) ≫ P'.o'.A.hom) := by
+  have : LocallyOfFiniteType (Over.Hom.left (i ≫ P'.ψ) ≫ P'.o'.A.hom) := by
     rw [hw1]
     infer_instance
   apply Over.OverMorphism.ext
@@ -129,7 +129,7 @@ private theorem charZero_of_pt {O : Type} [CommRing O] [IsDomain O] [IsDiscreteV
     (hp : (p : O) ∈ IsLocalRing.maximalIdeal O) {K : Type} [Field K] (hK : (p : K) ≠ 0) (s : Sp K ⟶ Sp O) : CharZero K := by
   let φ : O →+* K := (Spec.preimage s).hom
   have hφp : φ p = (p : K) := map_natCast φ p
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   by_cases hb : RingHom.ker φ = ⊥
   · exact charZero_of_injective_ringHom ((RingHom.injective_iff_ker_eq_bot φ).2 hb)
   · exfalso
@@ -142,7 +142,7 @@ private theorem charZero_of_pt {O : Type} [CommRing O] [IsDomain O] [IsDiscreteV
 theorem UpperTheory.Gal.crystallineComparison.Mod.secInj_of :
     PulledEx → PulledRead → PullKer → KerFromU → IsoOfKer → SecInj := by
   intro hEx hRead hKer hKF hIso p _ D O _ _ _ _ f b N r w _ hStd M j hj T K _ _ hp x y y' hy hy' hag
-  haveI : CharZero K := charZero_of_pt hStd.pmem hp (x ≫ M.s)
+  have : CharZero K := charZero_of_pt hStd.pmem hp (x ≫ M.s)
   have hf : 0 < f := by
     rcases Nat.eq_zero_or_pos f with h | h
     · have hcard := hStd.card

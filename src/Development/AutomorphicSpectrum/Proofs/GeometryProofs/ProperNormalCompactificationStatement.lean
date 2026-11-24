@@ -99,7 +99,7 @@ theorem lieMult_pt (Y : Model Xo c β) (τ : E →+* ℂ) (hτ : τ (H.rt : E) =
     (i : c.F →+* Ω) (y : Sp Ω ⟶ Xo.XF c) (hy : y ≫ pullback.snd _ _ = spMap i) :
     LieMult Y.t.act (y ≫ Y.j) (i.comp (tauIn c τ)) D.p ∧
       LieMult Y.t.act (y ≫ Y.j) (i.comp (tauIn c (ComplexEmbedding.conjugate τ))) D.q := by
-  haveI := Y.oF.t.semi.smooth
+  have := Y.oF.t.semi.smooth
   let K := AlgebraicClosure Ω
   let e : Ω →+* K := algebraMap Ω K
   have hx : (spMap e ≫ y) ≫ (pullback.fst Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom) ≫ Xo.s) =
@@ -146,9 +146,9 @@ private theorem normalCpt_of_isNormalScheme_isCptGen {X : Scheme} {Ω : Type} [F
     intro z
     obtain ⟨U, hU, hpU, -⟩ := exists_isAffineOpen_mem_and_subset (x := p.1) (U := ⊤) trivial
     have hgU : GlobalTheory.CompanionTheory.Ar.genPt ξ ∈ U := p.2.mem_open U.2 hpU
-    letI : Algebra Γ(X, U) (X.presheaf.stalk (GlobalTheory.CompanionTheory.Ar.genPt ξ)) :=
+    let : Algebra Γ(X, U) (X.presheaf.stalk (GlobalTheory.CompanionTheory.Ar.genPt ξ)) :=
       (X.presheaf.germ U _ hgU).hom.toAlgebra
-    haveI := hU.isLocalization_stalk ⟨_, hgU⟩
+    have := hU.isLocalization_stalk ⟨_, hgU⟩
     have hφ : ∀ u, GlobalTheory.CompanionTheory.Ar.genMap ξ p (X.presheaf.germ U p.1 hpU u) =
         (Scheme.stalkClosedPointTo ξ).hom (X.presheaf.germ U _ hgU u) := by
       intro u
@@ -168,8 +168,8 @@ private theorem normalCpt_of_isNormalScheme_isCptGen {X : Scheme} {Ω : Type} [F
     · rw [hφ, hφ, ← hs]
       exact (map_mul (Scheme.stalkClosedPointTo ξ).hom _ _).symm.trans
         (congrArg (Scheme.stalkClosedPointTo ξ).hom hrt)
-  letI : Algebra (X.presheaf.stalk p.1) Ω := (GlobalTheory.CompanionTheory.Ar.genMap ξ p).toAlgebra
-  haveI : IsFractionRing (X.presheaf.stalk p.1) Ω := by
+  let : Algebra (X.presheaf.stalk p.1) Ω := (GlobalTheory.CompanionTheory.Ar.genMap ξ p).toAlgebra
+  have : IsFractionRing (X.presheaf.stalk p.1) Ω := by
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨y, hy⟩
       exact IsUnit.mk0 _ (fun h => nonZeroDivisors.ne_zero hy (hinj (by
@@ -233,7 +233,7 @@ private theorem mem_range_pullback_fst_iff_unitAt {X : Scheme} {Ω O F : Type} [
 open PositivityTheory.Xgn.IntegralModelFacts in
 theorem PositivityTheory.Xgn.integral_model_facts : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] [IsDomain O] [IsNoetherianRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ), Function.Injective β → (∀ x : c.F, ∃ a b : O, b ≠ 0 ∧ x * β b = β a) → τ (H.rt : E) = H.rt0 → IsProper Y.s ∧ NormalCpt (Z.ξ₀ ≫ Y.j) ∧ (Z.ξ₀ ≫ Y.j) ≫ Y.s = spMap (Z.inc.comp β) ∧ (∀ x, x ∈ Z.genFib ↔ ∀ o : O, o ≠ 0 → unitAt (Z.ξ₀ ≫ Y.j) x (Z.inc (β o))) ∧ FiniteDimensional Z.Ω Z.V ∧ Module.finrank Z.Ω (eigSp Z.ρ (Z.inc.comp (tauIn c τ))) = D.p ∧ Module.finrank Z.Ω (eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ)))) = D.q := by
   intro E _ _ _ H D l Xo c O _ _ _ β Y U Z τ hβ hfrac hτ
-  haveI := Y.t.semi.smooth
+  have := Y.t.semi.smooth
   have hlie := PositivityTheory.Xgn.IntegralModelFacts.lieMult_pt Y τ hτ Z.inc Z.ξ₀ Z.over_inc
   have hs : (Z.ξ₀ ≫ Y.j) ≫ Y.s = spMap (Z.inc.comp β) := by
     rw [Category.assoc, ReciprocityTheory.ChartRestriction.G.Geo.Tor.Model.j_s, ← Category.assoc, Z.over_inc]

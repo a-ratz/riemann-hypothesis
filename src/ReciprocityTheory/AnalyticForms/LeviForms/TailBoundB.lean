@@ -99,7 +99,7 @@ theorem lintegral_rW_le {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace 
       rw [hμ]
       refine ⟨integrable_finsetSum_measure.2 fun j _ => (hc j).1, ?_⟩
       rw [integral_finsetSum_measure fun j _ => (hc j).1]
-      simp only [mInt, dif_pos hP, integralWith]
+      simp only [mInt, dite_eq_left hP, integralWith]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [(hc j).2]
       exact integral_congr_ae (Filter.Eventually.of_forall fun y => by ring)
@@ -108,7 +108,7 @@ theorem lintegral_rW_le {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace 
   obtain ⟨hI, h2⟩ := hforward hlm hlI
   obtain ⟨hI1, h1⟩ := hforward (g := fun _ => (1 : ℝ)) measurable_const
     (mIntegrableCont A Φ hΦ _ continuous_const)
-  letI : IsFiniteMeasure (maMeasure A Φ) := (integrable_const_iff_isFiniteMeasure one_ne_zero).1 hI1
+  let : IsFiniteMeasure (maMeasure A Φ) := (integrable_const_iff_isFiniteMeasure one_ne_zero).1 hI1
   have hrI : Integrable (rW L s) (maMeasure A Φ) := (integrable_const _).sub (hI.const_mul 2)
   have hr0 : 0 ≤ᵐ[maMeasure A Φ] rW L s := Filter.Eventually.of_forall fun y =>
     le_trans (Real.exp_pos 1).le (rW_ge L s hle y)

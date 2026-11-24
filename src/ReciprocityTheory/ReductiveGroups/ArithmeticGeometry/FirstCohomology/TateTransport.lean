@@ -110,7 +110,7 @@ theorem weil_move (hW : WeilSt) {E : Type} [Field E] [NumberField E] [IsCMField 
 
 theorem tateTransport_holds (hW : WeilSt) : TateTransportStatement := by
   intro E _ _ _ H R _ _ I t P F _ _ Dw
-  letI := H.starRing
+  let := H.starRing
   intro I₀
   have := P.U.gen_hom
   have gpG : IsGrpPullback P.A.A t.G (jK R) (P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R)) := by

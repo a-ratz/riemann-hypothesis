@@ -102,7 +102,7 @@ open GlobalTheory.LiftLevel
 
 theorem isMaximal_map (D : D7) (PP : Formalism.L2.DIV.Pl D.host.E) :
     (PP.asIdeal.map (conjO D : 𝓞 D.host.E →+* 𝓞 D.host.E)).IsMaximal := by
-  haveI := PP.isMaximal
+  have := PP.isMaximal
   exact Ideal.map_isMaximal_of_equiv (conjO D)
 
 theorem liftI_eq (D : D7) (Pg Q : Finset (Formalism.L2.DIV.Pl D.host.E)) :

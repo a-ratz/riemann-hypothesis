@@ -153,7 +153,7 @@ theorem loc_le_sup (P : HeightOneSpectrum (𝓞 E)) {M M₀ : Submodule (𝓞 E)
     (h : ∀ m ∈ M, r • m ∈ M₀) :
     (localization₂ P.asIdeal M).toAddSubgroup ≤ (localization₂ P.asIdeal M₀).toAddSubgroup ⊔ M.toAddSubgroup := by
   rintro x ⟨s, hs, hx⟩
-  haveI : Finite (𝓞 E ⧸ Ideal.span {r}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hr)
+  have : Finite (𝓞 E ⧸ Ideal.span {r}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hr)
   have key : ∃ i j : ℕ, r ∣ s ^ i - s ^ (i + (j + 1)) := by
     obtain ⟨i, j, hij, e⟩ := Finite.exists_ne_map_eq_of_infinite fun i : ℕ => Ideal.Quotient.mk (Ideal.span {r}) (s ^ i)
     wlog hlt : i < j generalizing i j

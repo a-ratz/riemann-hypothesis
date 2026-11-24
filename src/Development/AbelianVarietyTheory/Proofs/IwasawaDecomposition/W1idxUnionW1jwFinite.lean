@@ -146,7 +146,7 @@ theorem lidx_finite {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Mod
     {w : HeightOneSpectrum (𝓞 K) | Formalism.HermitianLatticesTheory.lidx w.asIdeal A B ≠ 0}.Finite := by
   refine ((locLen_finite A (A ⊓ B) hA).union (locLen_finite B (A ⊓ B) hB)).subset fun w hw => ?_
   by_contra hn
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hn
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hn
   apply hw
   unfold Formalism.HermitianLatticesTheory.lidx
   rw [hn.1, hn.2]

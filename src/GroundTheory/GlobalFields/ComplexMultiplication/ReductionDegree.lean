@@ -94,7 +94,7 @@ variable [W.IsElliptic] [W'.IsElliptic] (φ : Isogeny (W.baseChange K) (W'.baseC
 theorem exists_isogeny_coords : ∃ (x y : gaussRing W)
     (h : ((W'.baseChange K).baseChange (W.baseChange K).toAffine.FunctionField).toAffine.Nonsingular
       (algebraMap _ _ x) (algebraMap _ _ y)), φ.1 = Point.some _ _ h := by
-  letI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  let : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
   have hne : reducePoint (W.baseChange K).toAffine.FunctionField (gaussCurve W W')
       (pointCongr (gaussCurve_map_functionField K W W').symm φ.1) ≠ 0 := by
     intro h0
@@ -168,9 +168,9 @@ theorem degree_reduceIsogeny_le : (reduceIsogeny K W W' φ).degree ≤ φ.degree
   have hres : (gaussResidue W).comp (ResidueField.map g) =
       ((reduceIsogeny K W W' φ).comap : _ →+* _).comp (gaussResidue W') := by
     rw [residueField_map_gaussLift, ← RingHom.comp_assoc, hring]
-  haveI := φ.finiteDimensional
-  haveI := (reduceIsogeny K W W' φ).finiteDimensional
-  haveI : Module.Free (reduceIsogeny K W W' φ).comap.fieldRange
+  have := φ.finiteDimensional
+  have := (reduceIsogeny K W W' φ).finiteDimensional
+  have : Module.Free (reduceIsogeny K W W' φ).comap.fieldRange
       (W.map (residue 𝒪)).toAffine.FunctionField := Module.Free.of_divisionRing _ _
   set bb := Module.finBasis (reduceIsogeny K W W' φ).comap.fieldRange
     (W.map (residue 𝒪)).toAffine.FunctionField

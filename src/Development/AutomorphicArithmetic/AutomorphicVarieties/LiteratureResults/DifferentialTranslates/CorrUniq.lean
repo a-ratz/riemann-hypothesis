@@ -57,7 +57,7 @@ private theorem mat_cancel {E : Type} [Field E] {a : ℕ} (Ξ : AlgRep E a) (g :
 private theorem sand_surj {E : Type} [Field E] [NumberField E] {a : ℕ} (g : GL (Fin a) (Cinf E)) (v : HV E a) :
     (2 : ℝ) • sand g (hv (hv.symm ((2 : ℝ)⁻¹ • sand g⁻¹ v))) = v := by
   rw [LinearEquiv.apply_symm_apply, map_smul, smul_smul, mul_inv_cancel₀ two_ne_zero, one_smul,
-    ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
+    ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]
   rfl
 
 theorem corrUniq : CorrUniq := by

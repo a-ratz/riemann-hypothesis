@@ -162,7 +162,7 @@ omit [Group G] [IsTopologicalGroup G] in
 theorem mean_hasSum {ι : Type} [Countable ι] (μ : Measure G) {𝓕 : Set G} (h1 : μ 𝓕 = 1) {f : ι → G → ℂ} (hf : ∀ i, Continuous (f i))
     {b : ι → ℝ} (hb : Summable b) (hfb : ∀ i x, ‖f i x‖ ≤ b i) {s : G → ℂ} (hs : ∀ x, HasSum (fun i => f i x) (s x)) :
     HasSum (fun i => ∫ x in 𝓕, f i x ∂μ) (∫ x in 𝓕, s x ∂μ) := by
-  haveI : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]⟩
+  have : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]⟩
   have hi : ∀ i, Integrable (f i) (μ.restrict 𝓕) := fun i =>
     Integrable.of_bound (hf i).aestronglyMeasurable (b i) (Eventually.of_forall (hfb i))
   have := hasSum_integral_of_summable_integral_norm hi (hb.of_nonneg_of_le (fun i => integral_nonneg fun _ => norm_nonneg _) fun i => by

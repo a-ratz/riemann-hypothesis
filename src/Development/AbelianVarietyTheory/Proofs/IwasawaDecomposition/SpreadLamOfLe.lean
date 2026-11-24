@@ -127,8 +127,8 @@ theorem exists_unitary_mu_zero_characters_of_split_type_primes : ∀ (R : Ranks)
   intro R H P W e j hs hint hev
   choose z hz using hint
   have hmu : UpperTheory.MU (embPsi H) z := hev.mu hz
-  haveI := H.galois
-  haveI : IsGalois H.K H.E := IsGalois.tower_top_of_isGalois ℚ H.K H.E
+  have := H.galois
+  have : IsGalois H.K H.E := IsGalois.tower_top_of_isGalois ℚ H.K H.E
   obtain ⟨c, hc, hcm, -⟩ := GlobalTheory.Mem.HostCM.host_cm R H
   have hce : c.toRingEquiv = H.conj.toRingEquiv := RingEquiv.ext hc
   have hsp := fun k => _root_.GlobalTheory.Mem.Chr.splitsC_main R H (H.g k) (H.g_prime k) (hs k)
@@ -513,7 +513,7 @@ theorem hcW_injective {s : Scale} {C : FC} {cD ch : ℝ} {P : PreCh} {q1 : ℕ} 
   have e2 := h.code u' (placeNo P.H 0) l.1 l.2
   rw [huu, e2] at e1
   change _ - (if c u' l then _ else _) = _ - (if c u l then _ else _) at e1
-  cases h1 : c u l <;> cases h2 : c u' l <;> simp only [h1, h2, if_true, Bool.false_eq_true, if_false] at e1 ⊢ <;> (exfalso; linarith)
+  cases h1 : c u l <;> cases h2 : c u' l <;> simp only [h1, h2, ite_true, Bool.false_eq_true, ite_false] at e1 ⊢ <;> (exfalso; linarith)
 
 
 

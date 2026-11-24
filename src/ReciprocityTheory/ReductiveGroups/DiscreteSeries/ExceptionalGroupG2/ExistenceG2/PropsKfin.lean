@@ -86,7 +86,7 @@ theorem data_kfin_le (hgap : StdGap ε lam) (hσ : IsURepOn (UJset ε) σ) (hD :
     (hVK : ∀ k ∈ Kset ε, ∀ v ∈ V, ∃ w ∈ V, (w : H) = σ k v) (S : Submodule ℂ H) (hS : S ≤ closGen E V) (hSf : FiniteDimensional ℂ S)
     (hSK : ∀ k ∈ Kset ε, ∀ x ∈ S, σ k x ∈ S) : S ≤ (genSub E V).map D.subtype := by
   classical
-  haveI := hSf
+  have := hSf
   have hU := isInfUnitary_of_isDerivedOn hσ hD
   have hfin := kfin_wts_finite hσ S
   choose k hk using fun μ : Fin n → ℝ => khw_mem_layer hD.glRep hU hV hc hgap μ

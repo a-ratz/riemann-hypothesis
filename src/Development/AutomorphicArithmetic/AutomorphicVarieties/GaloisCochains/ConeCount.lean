@@ -78,10 +78,10 @@ private theorem count [Module.Finite k A] [Module.Finite k L] [Module.Finite k S
   let e : LinearMap.range g ≃ₗ[k] L ⧸ LinearMap.range f :=
     g.quotKerEquivRange.symm.trans ((Submodule.quotEquivOfEq _ _ e1.symm).trans
       (LinearMap.quotKerEquivOfSurjective _ hs))
-  haveI : Module.Finite k (LinearMap.range g) := Module.Finite.equiv e.symm
+  have : Module.Finite k (LinearMap.range g) := Module.Finite.equiv e.symm
   have a5 : finrank k (LinearMap.ker h) = finrank k (LinearMap.range g) := by rw [h2]
-  haveI : Module.Finite k (LinearMap.ker h) := by rw [h2]; infer_instance
-  haveI : Module.Finite k O := by
+  have : Module.Finite k (LinearMap.ker h) := by rw [h2]; infer_instance
+  have : Module.Finite k O := by
     apply Module.rank_lt_aleph0_iff.mp
     rw [← LinearMap.rank_range_add_rank_ker h]
     exact Cardinal.add_lt_aleph0 (Module.rank_lt_aleph0 k _) (Module.rank_lt_aleph0 k _)
@@ -413,7 +413,7 @@ theorem UpperTheory.V.GC.coneCount :
   obtain ⟨r, hr⟩ : ∃ r : ∀ v, Q v →ₗ[k] M, ∀ v y, q v (r v y) = y := by
     choose r hr using fun v => (q v).exists_rightInverse_of_surjective (LinearMap.range_eq_top.2 (hqs v))
     exact ⟨r, fun v y => LinearMap.congr_fun (hr v) y⟩
-  haveI : ∀ v, Module.Finite k (Q v) := fun v => Module.Finite.of_surjective (q v) (hqs v)
+  have : ∀ v, Module.Finite k (Q v) := fun v => Module.Finite.of_surjective (q v) (hqs v)
   obtain ⟨fin1, e1⟩ := count (f0 loc ρ σ q hq) LinearMap.id Function.surjective_id (g1 loc ρ σ q hq r hr)
     (h1 loc ρ q) (ker_g1_eq_range_f0 loc ρ σ q hq r hr) (ker_h1_eq_range_g1 loc ρ σ q hq r hr)
   obtain ⟨fin2, e2⟩ := count (f1 loc hloc ρ σ q hq) (pL σ) (pL_surj σ) (g2 loc ρ σ q hq r hr)

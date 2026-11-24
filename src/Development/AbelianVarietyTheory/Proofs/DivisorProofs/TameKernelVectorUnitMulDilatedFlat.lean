@@ -155,7 +155,7 @@ theorem kerDat_xiR_ne : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : 
     rw [← h, map_mul, hv1, hsv, one_mul]
   have ha : a ∉ PP.asIdeal := fun hm =>
     absurd hav (ne_of_lt ((PP.valuation_lt_one_iff_mem (K := D.host.E) a).mpr hm))
-  haveI : PP.asIdeal.IsMaximal := PP.isMaximal
+  have : PP.asIdeal.IsMaximal := PP.isMaximal
   have key : ∀ (b : 𝓞 D.host.E), b ∉ PP.asIdeal → ∀ y : D.host.Eˣ, (y : D.host.E) = b → ξ.locK PP y = 1 := by
     intro b hb y hy
     have hms : (Ideal.Quotient.mk PP.asIdeal b : kP PP) ≠ 0 := by
@@ -183,7 +183,7 @@ theorem kerDat_xiR_ne : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : 
     have hlt : Valued.v (algebraMap D.host.E (PP.adicCompletion D.host.E) k - x) < 1 := hk
     generalize Valued.v (algebraMap D.host.E (PP.adicCompletion D.host.E) k - x) = z at hlt
     rcases eq_or_ne z 0 with rfl | hz
-    · exact zero_le'
+    · exact zero_le
     · rw [← WithZero.exp_log hz] at hlt ⊢
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hlt
       rw [WithZero.exp_le_exp]

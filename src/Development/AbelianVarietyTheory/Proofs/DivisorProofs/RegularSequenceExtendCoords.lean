@@ -68,7 +68,7 @@ theorem linearIndependent_toCotangent {R : Type} [CommRing R] [IsLocalRing R] [I
     LinearIndependent (IsLocalRing.ResidueField R) (fun i =>
       ((IsLocalRing.maximalIdeal R).toCotangent ⟨r i, hr i⟩ : IsLocalRing.CotangentSpace R)) := by
   classical
-  haveI : IsRegularLocalRing R := by
+  have : IsRegularLocalRing R := by
     apply IsRegularLocalRing.of_spanFinrank_maximalIdeal_le
     rw [← hrsp.2, ← hrsp.1]
     have h1 := Submodule.spanFinrank_span_le_ncard_of_finite (R := R) (Set.finite_range r)
@@ -109,12 +109,12 @@ theorem exists_frame_of_rsp : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.
     conv_lhs => rw [← b.sum_repr (dFun (algX p U) (z₀ j))]
     simp only [hb, a]
 
-  letI iΓ : Algebra k Γ(X, U) := (algX p U).toAlgebra
-  letI iA : Algebra k (X.presheaf.stalk y) :=
+  let iΓ : Algebra k Γ(X, U) := (algX p U).toAlgebra
+  let iA : Algebra k (X.presheaf.stalk y) :=
     ((X.presheaf.germ U y hyU).hom.comp (algX p U)).toAlgebra
-  letI iΓA : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hyU).hom.toAlgebra
-  haveI : IsScalarTower k Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI := formallySmooth_residueField (n := n) p hU y hyU rfl
+  let iΓA : Algebra Γ(X, U) (X.presheaf.stalk y) := (X.presheaf.germ U y hyU).hom.toAlgebra
+  have : IsScalarTower k Γ(X, U) (X.presheaf.stalk y) := IsScalarTower.of_algebraMap_eq' rfl
+  have := formallySmooth_residueField (n := n) p hU y hyU rfl
   have hw := linearIndependent_tmul_D (k := k) f hf hli
   let ρ : Γ(X, U) →+* IsLocalRing.ResidueField (X.presheaf.stalk y) :=
     (IsLocalRing.residue (X.presheaf.stalk y)).comp (X.presheaf.germ U y hyU).hom

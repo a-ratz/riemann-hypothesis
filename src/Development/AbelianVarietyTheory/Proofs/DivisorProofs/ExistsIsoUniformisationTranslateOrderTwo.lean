@@ -662,9 +662,9 @@ theorem exists_level [IsLocalRing R] (hG : IsSemiAbelian G) (ha : a ^ 2 = 1)
         rw [hF (hq' t), pG_congr (U'.gt e) (hq' t)] at a
         exact cancel_even a b)
     rw [key Z₀ τ₀ y₀ z₀ jM jM' m m', triv, map_one, _root_.one_mul]
-  haveI := (U'.gt e).q_flat
-  haveI := (U'.gt e).q_surj
-  haveI := (U'.gt e).q_affine
+  have := (U'.gt e).q_flat
+  have := (U'.gt e).q_surj
+  have := (U'.gt e).q_affine
   obtain ⟨v, hv, hv'⟩ := LevelComparison.exists_iso_descend (U'.gt e).q.left (fstG I e D'.toPre.P.A).left be
     (p := (tr ae).left ≫ (U.gt e).pG.left) (p' := (U'.gt e).pG.left) hb rfl u hu (fun Z g₁ g₂ z j j' h a b => by
       let Z' : Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1)))) := Over.mk (g₂ ≫ (thickObj R I e G).hom)

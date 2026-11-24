@@ -111,8 +111,8 @@ theorem exists_isCoverIt_swap (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (p
     LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ) (fun P x => A x (F.ι (sw P)))
       (fun P Q x => by simp only [map_add (f := _)])
       (fun c P x => by simp only [map_smul, RingHom.id_apply])
-      (fun P x x' => by simp only [A, map_add (f := _), ContinuousLinearMap.add_apply])
-      (fun c P x => by simp only [A, map_smul, map_smulₛₗ, ContinuousLinearMap.smul_apply])
+      (fun P x x' => by simp only [A, map_add (f := _), add_apply])
+      (fun c P x => by simp only [A, map_smul, map_smulₛₗ, smul_apply])
   have hB : ∀ P x, B P x = A x (F.ι (sw P)) := fun _ _ => rfl
   obtain ⟨-, hd1, hd2⟩ := _root_.GlobalTheory.FockEmbExp.fock_derived p q r s T₀ T₁ T₂ F
   have hsym := GlobalTheory.FockSwap.swap_symmetry r s p q
@@ -170,7 +170,7 @@ theorem exists_isCoverIt_swap (p q r s : ℕ) (T₀ : GrpData (p * r + q * s) (p
       congr 1
       change _ = (F.π (T₁.expt (t • Z), 1) * F.π (T₁.expt ((-t) • Z), 1)) _
       rw [← map_mul, Prod.mk_mul_mk, ← T₁.expt_add Z hZ, add_neg_cancel, zero_smul, T₁.expt_zero,
-        mul_one, Prod.mk_one_one, map_one, ContinuousLinearMap.one_apply]
+        mul_one, Prod.mk_one_one, map_one, one_apply_eq_self]
     rw [h3, hB, e2]
     simpa [Function.comp_def] using h2
 

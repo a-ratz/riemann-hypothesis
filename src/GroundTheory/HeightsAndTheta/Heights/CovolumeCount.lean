@@ -63,7 +63,7 @@ omit [MeasurableSpace V] [BorelSpace V] in
 theorem finite_lattice_closedBall (r : ℝ) : {x : V | x ∈ L ∧ ‖x‖ ≤ r}.Finite := by
   have h := Metric.finite_isBounded_inter_isClosed (K := closedBall (0 : V) r)
     (s := (L : Set V)) DiscreteTopology.isDiscrete isBounded_closedBall
-    (by rw [← Submodule.coe_toAddSubgroup]; exact AddSubgroup.isClosed_of_discrete)
+    (by rw [← Submodule.coe_toAddSubgroup]; exact AddSubgroup.isClosed_of_discreteTopology)
   refine h.subset ?_
   rintro v ⟨hv, hr⟩
   exact ⟨by simpa using hr, hv⟩

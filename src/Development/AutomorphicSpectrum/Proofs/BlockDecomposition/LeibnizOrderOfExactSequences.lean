@@ -489,7 +489,7 @@ theorem equiv_of_top (ι : P →* G) (hι : Continuous ι) (Q : Subgroup G) (H :
       rw [hE h v]
       exact E.injective.eq_iff
     rw [hset]
-    exact (hσ v).preimage ((hι.comp continuous_subtype_val).subtype_mk _)
+    exact (hσ v).preimage ((hι.comp continuous_subtypeVal).subtype_mk _)
   let L : smoothPart (ind Q σ) ≃ₗ[ℂ] cIndSpace H τ :=
     ((evalTop Q hQ σ hσ).trans E).trans ((evalTop H hH τ hτ).symm.trans (cTop H hH τ).symm)
   refine ⟨Representation.Equiv.mk L fun p => ?_⟩
@@ -586,11 +586,11 @@ theorem isSmooth_sQ {r t N : ℕ} (h : r + t = N) {π₁ : Representation ℂ (G
     · exact h₁
     · exact h₂
   · refine continuous_pi fun b => Units.continuous_iff.2 ⟨?_, ?_⟩
-    · exact (Units.continuous_val.comp continuous_subtype_val).matrix_submatrix
+    · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_submatrix
         (fun i => (two (stdSum h)) ⟨b, i⟩) (fun i => (two (stdSum h)) ⟨b, i⟩)
     · have hinv : Continuous fun p : parab k (two (stdSum h)) =>
           (((p⁻¹ : parab k (two (stdSum h))) : GL (Fin N) k) : Matrix (Fin N) (Fin N) k) :=
-        (Units.continuous_val.comp continuous_subtype_val).comp continuous_inv
+        (Units.continuous_val.comp continuous_subtypeVal).comp continuous_inv
       refine (hinv.matrix_submatrix (fun i => (two (stdSum h)) ⟨b, i⟩)
         (fun i => (two (stdSum h)) ⟨b, i⟩)).congr fun p => ?_
       rw [← Pi.inv_apply, ← map_inv]
@@ -600,7 +600,7 @@ theorem gres_prod_zero_left (j n : ℕ) (π₁ : GRep k 0) (π₂ : GRep k (j + 
     (h₁ : IsSmooth π₁.ρ) (h₂ : IsSmooth π₂.ρ) :
     MIso (gres ((π₁.prod π₂).cast h)) (mcast h' (prodGPn π₁ (gres π₂))) := by
   subst h'
-  exact equiv_of_top (Mir k (0 + j)).subtype continuous_subtype_val
+  exact equiv_of_top (Mir k (0 + j)).subtype continuous_subtypeVal
     (parab k (two (stdSum (rfl : 0 + (j + 1) = 0 + j + 1)))) (MirabolicParabolic k 0 j)
     (fun g => mem_parab_zero g) (fun p => mem_parab_zero (p : GL (Fin (0 + j + 1)) k))
     (sQ (rfl : 0 + (j + 1) = 0 + j + 1) π₁.ρ π₂.ρ)
@@ -791,7 +791,7 @@ theorem miso_gres_prod_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
   obtain ⟨E₁⟩ := nonempty_actFst_equiv_prod2 π₁.ρ π₂.ρ h₁ h₂
   have hs : IsSmooth ((actFst π₁.ρ π₂.ρ : Representation ℂ (GL (Fin (i + 0 + 1)) k) (π₁.V ⊗[ℂ] π₂.V)).comp
       (Mir k (i + 0)).subtype) :=
-    isSmooth_comp (isSmooth_actFst h₁ h₂) _ continuous_subtype_val
+    isSmooth_comp (isSmooth_actFst h₁ h₂) _ continuous_subtypeVal
   obtain ⟨E₂⟩ := nonempty_equiv_cInd (HPG k i 0)
     ((extTensor (mtw (gres π₁) (((0 : ℕ) : ℝ) / 2)).ρ (π₂.tw (-((i + 1 : ℕ) : ℝ) / 2)).ρ).comp (pgProj k i 0)) hs
     (fun g => mem_parab_zero _ _) (LinearEquiv.refl ℂ _) (fun g x => hpg_act π₁.ρ π₂.ρ _ _ (fun a => dpow_eq_one _ _ (by simp) _) g x)
@@ -942,8 +942,8 @@ theorem filt_extend {a b : ℕ} {X Y : GRep k n} (f : Y.V →ₗ[ℂ] X.V)
   classical
   obtain ⟨F, hF1, hF2⟩ : ∃ F : ℕ → Subrepresentation X.ρ, (∀ i, i ≤ a → F i = ⊤) ∧
       (∀ i, a < i → F i = subMap f hf (F' i)) :=
-    ⟨fun i => if i ≤ a then ⊤ else subMap f hf (F' i), fun i h => if_pos h,
-      fun i h => if_neg (by omega)⟩
+    ⟨fun i => if i ≤ a then ⊤ else subMap f hf (F' i), fun i h => ite_eq_left h,
+      fun i h => ite_eq_right (by omega)⟩
   refine ⟨F, ?_, hF1 a le_rfl, ?_, ?_⟩
   · intro i j hij
     by_cases h2 : i ≤ a

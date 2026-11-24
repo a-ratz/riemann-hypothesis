@@ -296,7 +296,7 @@ theorem prod_hv (hL : IsTotallyComplex L) {I : Type} [Fintype I] (φ : I → L �
   have hp := GlobalTheory.TypeValues.productRule χ ∅ (fun v _ => hu v) (GlobalTheory.Mem.ValAlg.uOf a ha)
   have e1 : ∀ v, (∏ᶠ (_ : v ∉ (∅ : Finset (HeightOneSpectrum (𝓞 L)))), χ.val v ^ ordF v (GlobalTheory.Mem.ValAlg.uOf a ha)) =
       χ.val v ^ cnt a v := fun v => by
-    rw [finprod_eq_if, if_pos (Finset.notMem_empty v), ordF_eq, zpow_natCast]
+    rw [finprod_eq_if, ite_eq_left (Finset.notMem_empty v), ordF_eq, zpow_natCast]
   simp_rw [e1] at hp
   rw [Finset.prod_empty, mul_one, finprod_eq_prod_of_mulSupport_subset (s := U) _ (fun v hv' => by
     by_contra h
@@ -338,11 +338,11 @@ theorem hv_mem (hL : IsTotallyComplex L) {I : Type} [Fintype I] (φ : I → L �
   obtain ⟨b, hb1, hb2⟩ : ∃ b ∈ P.asIdeal, b ∉ P.asIdeal ^ 2 := by
     have := Ideal.pow_succ_lt_pow P.ne_bot 1 (P := P.asIdeal)
     rw [pow_one] at this
-    exact SetLike.exists_of_lt this
+    exact IsConcreteLE.exists_of_lt this
   obtain ⟨a, ha⟩ := IsDedekindDomain.exists_forall_sub_mem_ideal (s := S) (fun v => v.asIdeal) (fun _ => 2)
     (fun v _ => v.prime) (fun v _ w _ h h' => h (HeightOneSpectrum.ext h')) (fun v => if v.1 = P then b else 1)
   have haP := ha P hP
-  rw [if_pos rfl] at haP
+  rw [ite_eq_left rfl] at haP
   have ha2 : a ∉ P.asIdeal ^ 2 := fun h => hb2 (by simpa using (P.asIdeal ^ 2).sub_mem h haP)
   have ha1 : a ∈ P.asIdeal := by simpa using P.asIdeal.add_mem (Ideal.pow_le_self two_ne_zero haP) hb1
   have ha0 : a ≠ 0 := by rintro rfl; exact ha2 (zero_mem _)
@@ -353,14 +353,14 @@ theorem hv_mem (hL : IsTotallyComplex L) {I : Type} [Fintype I] (φ : I → L �
   have hfin : {v : HeightOneSpectrum (𝓞 L) | v.asIdeal ∣ Ideal.span {a}}.Finite :=
     Ideal.finite_factors (by simpa using ha0)
   have hU : ∀ v, a ∈ v.asIdeal ↔ v ∈ hfin.toFinset := fun v => by
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   have h := prod_hv hL φ hφ χ hu hinf ha0 hfin.toFinset fun v => (hU v).1
   rw [← Finset.mul_prod_erase _ _ ((hU P).1 ha1), hc, pow_one] at h
   rw [eq_div_of_mul_eq (Finset.prod_ne_zero_iff.2 fun v _ => pow_ne_zero _ (hv_ne_zero χ v)) h]
   refine div_mem (inv_mem (prod_mem fun i _ => hM i _)) (prod_mem fun v hv' => pow_mem (hS v fun hvS => ?_) _)
   obtain ⟨hvP, hva⟩ := Finset.mem_erase.1 hv'
   have h1 := ha v hvS
-  rw [if_neg hvP] at h1
+  rw [ite_eq_right hvP] at h1
   refine v.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 ?_)
   simpa using v.asIdeal.sub_mem ((hU v).2 hva) (Ideal.pow_le_self two_ne_zero h1)
 
@@ -387,7 +387,7 @@ theorem hv_mem_of_inert {F : Type} [Field F] [NumberField F] [Algebra F L] (χ :
     omega
   have hk := (hval _ _).1 (unif_spec (v.under (𝓞 F)))
   have h := hr.1 (v.under (𝓞 F)) (unif (v.under (𝓞 F)))
-  rw [HChar.resFin, etaFin, hab, Finset.prod_singleton, MonoidHom.comp_apply, if_pos (Finset.card_singleton _), hk, zpow_one] at h
+  rw [HChar.resFin, etaFin, hab, Finset.prod_singleton, MonoidHom.comp_apply, ite_eq_left (Finset.card_singleton _), hk, zpow_one] at h
   have h2 : χ.val v = -1 := (χ.val_eq hu _ ((hval _ _).2 ((ho _).trans hk))).symm.trans h
   unfold hv
   rw [h2, hN, Nat.cast_pow, Real.sqrt_sq (Nat.cast_nonneg _), Complex.ofReal_inv, Complex.ofReal_natCast, Units.val_neg,

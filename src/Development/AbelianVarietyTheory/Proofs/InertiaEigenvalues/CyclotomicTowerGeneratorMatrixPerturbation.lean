@@ -218,8 +218,8 @@ theorem mem_inC_iff (F : IntermediateField ℚ_[l] (Om l)) (y : PadicComplex l) 
 
 theorem root_mem_inC (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex l}
     (h : IsPrimitiveRoot ζ l) : ζ ∈ inC (Ks K j) := by
-  haveI : NeZero l := ⟨hl.1.ne_zero⟩
-  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  have : NeZero l := ⟨hl.1.ne_zero⟩
+  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hη' := hη.map_of_injective (algebraMap (Om l) (PadicComplex l)).injective
   obtain ⟨k, -, hk⟩ := hη'.eq_pow_of_pow_eq_one h.pow_eq_one
   refine ⟨η ^ k, ?_, ?_⟩
@@ -317,7 +317,7 @@ theorem exists_factor {F : IntermediateField ℚ_[l] (Om l)} {r : ℕ}
     by_contra hcon
     push_neg at hcon
     exact hz (Matrix.ext hcon)
-  haveI : Nonempty (Fin r × Fin r) := ⟨(a₀, b₀)⟩
+  have : Nonempty (Fin r × Fin r) := ⟨(a₀, b₀)⟩
   obtain ⟨q, hq⟩ := Finite.exists_max fun q : Fin r × Fin r => ‖B q.1 q.2‖
   have hpos : 0 < ‖B q.1 q.2‖ := (norm_pos_iff.2 hne).trans_le (hq (a₀, b₀))
   have hq0 : B q.1 q.2 ≠ 0 := norm_pos_iff.1 hpos
@@ -350,8 +350,8 @@ theorem perturbation : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCompl
   have hX1 : ∀ x ∈ Xj K j, ‖x‖ ≤ 1 := fun x hx => norm_le_one_of_mem_Ohat (hO x hx)
   constructor
   · intro y hy hfix
-    haveI : NeZero l := ⟨hl.1.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicComplex l) l
+    have : NeZero l := ⟨hl.1.ne_zero⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicComplex l) l
     obtain ⟨S, hS, -, hlin⟩ := GlobalTheory.Cyc.exists_tate_operator l act χ hact hχ K j hj g hg ζ hζ
     obtain ⟨B, c, -, hc1, hB, hBO, hBe⟩ := exists_quot hj hg (U g) hU hU1 i hζ
     obtain ⟨π, B', hπO, hπ, hB'O, rfl⟩ := exists_factor B (fun a b => (hB a b).trans_lt hc1) hBO

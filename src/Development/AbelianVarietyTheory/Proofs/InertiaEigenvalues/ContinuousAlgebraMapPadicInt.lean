@@ -175,7 +175,7 @@ theorem card_coprime (l : ℕ) (hl : l.Prime) (h : ∀ k ∈ K, ∃ n, Nat.Copri
     Nat.Coprime (Fintype.card K) l := by
   rw [Nat.coprime_comm, hl.coprime_iff_not_dvd]
   intro hd
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card l hd
   obtain ⟨n, hn, hxn⟩ := h x x.2
   have : orderOf x ∣ n := orderOf_dvd_of_pow_eq_one (Subtype.ext (by simpa using hxn))
@@ -223,9 +223,9 @@ theorem cohomology_vanishes : ∀ (Γ : Type) [Group Γ] [TopologicalSpace Γ] [
     rintro ⟨f, hf, hfc⟩
     obtain ⟨U, F, hF⟩ := exists_level (fun p : Γ × Γ × Γ => ρ p.1 (f (p.1⁻¹ * p.2.1)))
       (hρ.comp (continuous_fst.prodMk (hf.comp (by fun_prop))))
-    haveI : Finite (Γ ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
-    haveI := Fintype.ofFinite (J.map (QuotientGroup.mk' U.toSubgroup))
-    haveI := hJ.map _ (QuotientGroup.mk'_surjective U.toSubgroup)
+    have : Finite (Γ ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
+    have := Fintype.ofFinite (J.map (QuotientGroup.mk' U.toSubgroup))
+    have := hJ.map _ (QuotientGroup.mk'_surjective U.toSubgroup)
     have hF' : ∀ a b : Γ, F a b 1 = ρ a (f (a⁻¹ * b)) := fun a b => hF a b 1
     obtain ⟨m, hm⟩ := two_variables ρ (QuotientGroup.mk' U.toSubgroup) J
       (J.map (QuotientGroup.mk' U.toSubgroup)) (fun j hj => ⟨j, hj, rfl⟩) hinv
@@ -258,10 +258,10 @@ theorem cohomology_vanishes : ∀ (Γ : Type) [Group Γ] [TopologicalSpace Γ] [
     obtain ⟨U, F, hF⟩ := exists_level
       (fun p : Γ × Γ × Γ => ρ p.1 (f (p.1⁻¹ * p.2.1, p.2.1⁻¹ * p.2.2)))
       (hρ.comp (continuous_fst.prodMk (hf.comp (by fun_prop))))
-    haveI : Finite (Γ ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
-    haveI : DiscreteTopology (Γ ⧸ U.toSubgroup) := QuotientGroup.discreteTopology U.isOpen
-    haveI := Fintype.ofFinite (J.map (QuotientGroup.mk' U.toSubgroup))
-    haveI := hJ.map _ (QuotientGroup.mk'_surjective U.toSubgroup)
+    have : Finite (Γ ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
+    have : DiscreteTopology (Γ ⧸ U.toSubgroup) := QuotientGroup.discreteTopology U.isOpen
+    have := Fintype.ofFinite (J.map (QuotientGroup.mk' U.toSubgroup))
+    have := hJ.map _ (QuotientGroup.mk'_surjective U.toSubgroup)
     simp only at hF
     obtain ⟨H, hH⟩ := three_variables ρ (QuotientGroup.mk' U.toSubgroup) J
       (J.map (QuotientGroup.mk' U.toSubgroup)) (fun j hj => ⟨j, hj, rfl⟩) hinv F (by
@@ -333,8 +333,8 @@ theorem valuation_apply_eq {A : ValuationSubring Ω} {σ : G E Ω} (hσ : σ ∈
   have key : ∀ (τ : G E Ω), τ ∈ Dec (F := E) A → ∀ a b : Ω, b ≠ 0 →
       A.valuation a < A.valuation b → A.valuation (τ a) < A.valuation (τ b) := by
     intro τ hτ a b hb hab
-    have hb' : 0 < A.valuation b := zero_lt_iff.2 (by simpa using hb)
-    have hb'' : 0 < A.valuation (τ b) := zero_lt_iff.2 (by simpa using hb)
+    have hb' : 0 < A.valuation b := pos_iff_ne_zero.2 (by simpa using hb)
+    have hb'' : 0 < A.valuation (τ b) := pos_iff_ne_zero.2 (by simpa using hb)
     have h1 : A.valuation (a / b) < 1 := by rw [map_div₀, div_lt_one₀ hb']; exact hab
     rw [← valuation_apply_lt_one_iff hτ, map_div₀, map_div₀, div_lt_one₀ hb''] at h1
     exact h1
@@ -634,7 +634,7 @@ theorem vanishing {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E 
   have : IsGalois E Ω := {}
   have : CompactSpace (Dec (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   refine _root_.GlobalTheory.PrimeToNormalVanishing.cohomology_vanishes (Dec (F := E) A) Λ (Fin r → B) _ l ((primeTo E A l).subgroupOf (Dec (F := E) A)) hl
-    (normal_primeTo A l) ((isClosed_primeTo A l).preimage continuous_subtype_val)
+    (normal_primeTo A l) ((isClosed_primeTo A l).preimage continuous_subtypeVal)
     (fun U _ ho j hj => exists_coprime_pow_mem hA hl hv U ho j hj) ?_ ?_ ?_
   · exact (contAction_repOn hO ρ hρ κ hκ hB).comp
       (f := fun p : Dec (F := E) A × (Fin r → B) => ((p.1 : G E Ω), p.2)) (by fun_prop)

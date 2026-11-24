@@ -73,7 +73,7 @@ theorem isOpen_Hh (TT : ℝ) : IsOpen (Hh TT) := isOpen_lt continuous_const (Com
 theorem convex_Hh (TT : ℝ) : Convex ℝ (Hh TT) := by
 
   intro w1 h1 w2 h2 a b ha hb hab
-  simp only [Hh, Set.mem_setOf_eq, normSq_exp] at h1 h2 ⊢
+  simp only [Hh, mem_ofPred_eq, normSq_exp] at h1 h2 ⊢
   have hre : (a • w1 + b • w2).re = a * w1.re + b * w2.re := by simp
   rw [hre]
   rcases le_total w1.re w2.re with h | h

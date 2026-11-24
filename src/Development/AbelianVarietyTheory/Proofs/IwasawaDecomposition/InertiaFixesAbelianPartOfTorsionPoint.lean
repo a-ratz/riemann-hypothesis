@@ -94,7 +94,7 @@ theorem sigma_fixes_abelianPart : ∀ (R : Type) [CommRing R] [IsDomain R] (D : 
     rw [spMap, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp, hσφ])
   have := D.P.isAb.proper
   have : D.P.A.left.IsSeparated := ⟨by rw [← terminal.comp_from D.P.A.hom]; infer_instance⟩
-  haveI := D.P.isAb.comm
+  have := D.P.isAb.comm
   have hd : IsDominant (spMap O.subtype) := by
     constructor
     exact (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical O.subtype).2
@@ -105,7 +105,7 @@ theorem sigma_fixes_abelianPart : ∀ (R : Type) [CommRing R] [IsDomain R] (D : 
     have e : ρ ≫ b' ^ k = ρ ≫ cP D _ p.y := by
       rw [comp_cP, ← hpk, ← hb']; exact map_pow (preHom ρ) _ _
     apply Over.OverMorphism.ext
-    haveI : IsReduced (Over.mk (spMap φ)).left := (inferInstance : IsReduced (Sp O))
+    have : IsReduced (Over.mk (spMap φ)).left := (inferInstance : IsReduced (Sp O))
     exact ext_of_isDominant (spMap O.subtype) (congrArg CommaMorphism.left e)
   have hpow' : b' ^ k = (σ' ≫ b') ^ k := by
     have e2 : σ' ≫ b' ^ k = (σ' ≫ b') ^ k := map_pow (preHom σ') b' k

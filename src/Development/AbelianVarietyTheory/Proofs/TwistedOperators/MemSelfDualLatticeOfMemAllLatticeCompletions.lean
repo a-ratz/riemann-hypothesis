@@ -220,7 +220,7 @@ theorem mem_of_local {S : HSp D} {L : GlobalTheory.FinPl.Lat S} (hL : IsSelfDual
   have hfull : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
-    haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+    have : Submodule.IsLattice D.host.E Λ := hΛ.1
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hΛ.1.fg
     apply eq_top_iff.mpr
@@ -299,7 +299,7 @@ theorem mem_of_local {S : HSp D} {L : GlobalTheory.FinPl.Lat S} (hL : IsSelfDual
         split_ifs
         · exact zero_mem _
         · exact one_mem _
-      · rw [hβv, if_pos (not_not.1 hw)]
+      · rw [hβv, ite_eq_left (not_not.1 hw)]
   have hall : (fun i => pairA D.host.F 0 1 ⊗ₜ[D.host.F] z i) ∈ GlobalTheory.FinPl.latV S L (fun _ => True) := by
     have e : (fun i => pairA D.host.F 0 1 ⊗ₜ[D.host.F] z i) =
         ∑ v ∈ T, (fun i => pairA D.host.F 0 (GlobalTheory.FinPl.LatMem.indP D.host.F (· = v)) ⊗ₜ[D.host.F] z i) +

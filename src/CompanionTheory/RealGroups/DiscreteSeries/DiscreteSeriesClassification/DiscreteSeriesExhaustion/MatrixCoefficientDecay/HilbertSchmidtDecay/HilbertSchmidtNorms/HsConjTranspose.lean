@@ -93,10 +93,10 @@ theorem hs_mul_K (X : Matrix (Fin n) (Fin n) ℂ) (k : S7.KG ε) : Formalism.REA
 
 theorem continuous_aT (A : Matrix (Fin n) (Fin n) ℂ) : Continuous (fun t : ℝ => aT A t) := by
   have h1 : Continuous fun t : ℝ => (t : ℂ) • A := by fun_prop
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℂ _
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℂ _
   show Continuous fun t : ℝ => NormedSpace.exp ((t : ℂ) • A)
   exact NormedSpace.exp_continuous.comp h1
 

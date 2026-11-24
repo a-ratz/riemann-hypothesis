@@ -262,7 +262,7 @@ theorem isIntegral_cone_iff {p : L[X]} :
         map_zero' := hinj (by rw [hφ, map_zero]; exact map_zero _)
         map_add' := fun a b => hinj (by rw [map_add (f := _), hφ, hφ, hφ]; exact map_add _ _ _)
         map_mul' := fun a b => hinj (by rw [map_mul, hφ, hφ, hφ]; exact map_mul _ _ _) }
-    letI : Algebra (cone o t)[X] L[X][X] := Polynomial.algebra _ _
+    let : Algebra (cone o t)[X] L[X][X] := Polynomial.algebra _ _
     have h2 : IsIntegral (cone o t)[X] (spread L p) :=
       hp.map_of_comp_eq ψ (spread L) (RingHom.ext fun s => hφ s)
     rw [mem_piece, ← coeff_spread]
@@ -284,7 +284,7 @@ theorem piece_zero : piece o t 0 = (integralClosure o L).toSubmodule := by
     have h2 : IsIntegral (⊥ : Subalgebra o L) (evalRingHom 0 (C a)) :=
       h.map_of_comp_eq (RingHom.codRestrict _ _ h1) (evalRingHom 0) rfl
     rw [coe_evalRingHom, eval_C] at h2
-    haveI : Algebra.IsIntegral o (⊥ : Subalgebra o L) := inferInstance
+    have : Algebra.IsIntegral o (⊥ : Subalgebra o L) := inferInstance
     exact isIntegral_trans a h2
   · intro h
     exact (h.map (CAlgHom (R := o) (A := L))).tower_top
@@ -341,9 +341,9 @@ variable (o t) [IsDedekindDomain o] [CharZero L] [Algebra.EssFiniteType o L] [Fi
 
 theorem finite_integralClosure_cone :
     Module.Finite (cone o t) (integralClosure (cone o t) L[X]) := by
-  haveI : Algebra.FiniteType o (cone o t) := .adjoin_of_finite (Set.finite_range _)
-  haveI : Algebra.EssFiniteType o L[X] := .comp o L _
-  haveI : Algebra.EssFiniteType (cone o t) L[X] := .of_comp o _ _
+  have : Algebra.FiniteType o (cone o t) := .adjoin_of_finite (Set.finite_range _)
+  have : Algebra.EssFiniteType o L[X] := .comp o L _
+  have : Algebra.EssFiniteType (cone o t) L[X] := .of_comp o _ _
   exact finite_integralClosure_of_essFiniteType_of_isReduced (R := cone o t) o L[X]
 
 theorem exists_generators : ∃ e : ℕ, 0 < e ∧ ∃ N : ℕ → Submodule o L, (∀ q, (N q).FG) ∧
@@ -378,7 +378,7 @@ theorem exists_generators : ∃ e : ℕ, 0 < e ∧ ∃ N : ℕ → Submodule o L
         change ((s : L[X]) * (x : L[X])).coeff n ∈ _
         rw [coeff_mul]
         refine Submodule.sum_mem _ fun d hd => ?_
-        refine SetLike.le_def.mp ?_ (Submodule.mul_mem_mul (coeff_mem_span_pow s.2 d.1) (hx d.2))
+        refine IsConcreteLE.le_iff.mp ?_ (Submodule.mul_mem_mul (coeff_mem_span_pow s.2 d.1) (hx d.2))
         rw [Submodule.mul_iSup]
         refine iSup_le fun c => ?_
         rw [Submodule.mul_iSup]
@@ -564,7 +564,7 @@ theorem pow_mem_forms (o : Type*) [CommRing o] {L : Type*} [Field L] [Algebra o 
   simp only [τ, hq, AddSubmonoidClass.coe_finsetSum, MulMemClass.coe_mul, SubmonoidClass.coe_pow,
     finsetSum_coeff, mul_pow, ← C_pow, ← pow_mul, ← mul_assoc, coeff_mul_X_pow, coeff_mul_C] at h4
   rw [hn, ← hm, show (d + 1) * e * (N + 2) = n * e + e by rw [mul_right_comm, hn]; ring,
-    coeff_C_mul_X_pow, if_pos rfl] at h4
+    coeff_C_mul_X_pow, ite_eq_left rfl] at h4
   rw [← h4]
   exact Finset.sum_congr rfl fun i _ => mul_comm _ _
 
@@ -966,7 +966,7 @@ theorem genMap_germ_eq (ξ : Sp Ω ⟶ X) (q : Cpt ξ) {U : X.Opens} (hq : q.1 �
     rw [Scheme.germ_stalkClosedPointTo, Iso.trans_hom, ← Category.assoc]
     congr 1
   have e4 := congrArg (fun φ => φ.hom s) (e5.trans e6)
-  simp only [valR, dif_pos hle]
+  simp only [valR, dite_eq_left hle]
   exact e4
 
 theorem exists_point {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} (y : Sp Ω ⟶ PSpace o n)
@@ -976,7 +976,7 @@ theorem exists_point {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} (y : Sp Ω
   have hle : ⊤ ≤ y ⁻¹ᵁ chart o n i := (Scheme.preimage_eq_top_of_closedPoint_mem y hi).ge
   let t : Fin (n + 1) → Ω := fun j => valR y (chart o n i) (ratio o n i j)
   have hti : t i = 1 := by
-    simp only [t, ratio, GlobalTheory.ProjSpace.ratioOn_self, valR, dif_pos hle, map_one]
+    simp only [t, ratio, GlobalTheory.ProjSpace.ratioOn_self, valR, dite_eq_left hle, map_one]
   have ht : t ≠ 0 := fun h0 => one_ne_zero (hti.symm.trans (congrFun h0 i))
   refine ⟨t, ht, GlobalTheory.TuplePoint.eq_point hy (i := i) (by rw [hti]; exact one_ne_zero) hle (fun j => ?_)⟩
   rw [hti, div_one]
@@ -1025,7 +1025,7 @@ private theorem valR_point_chart_aeval_ratio {o : Type} [CommRing o] [Algebra o 
   have htop : ⊤ ≤ point o t ht ⁻¹ᵁ chart o n c := by
     have h1 := valR_point_ratio (L := Ω) (o := o) (t := t) (ht := ht) hc c
     by_contra hne
-    simp only [valR, dif_neg hne] at h1
+    simp only [valR, dite_eq_right hne] at h1
     rw [div_self hc] at h1
     exact zero_ne_one h1
   induction P using MvPolynomial.induction_on with
@@ -1078,10 +1078,10 @@ private theorem exists_valR_eq_iff_forall_inChart_mem_regAt [IsClosedImmersion i
   · rintro ⟨f, rfl⟩ p hp
     exact ⟨_, genMap_germ_eq ξ p ((hinU p).mp hp) f⟩
   · intro hreg
-    haveI hint : AlgebraicGeometry.IsIntegral X := (PositivityTheory.HtPt.Mf.xr_normal X Ω ξ hξ hall).1
+    have hint : AlgebraicGeometry.IsIntegral X := (PositivityTheory.HtPt.Mf.xr_normal X Ω ξ hξ hall).1
     have hU : IsAffineOpen (i ⁻¹ᵁ chart o n c) := (isAffineOpen_chart o n c).preimage i
-    haveI : Nonempty (i ⁻¹ᵁ chart o n c) := ⟨⟨_, hgU⟩⟩
-    haveI := functionField_isFractionRing_of_isAffineOpen X _ hU
+    have : Nonempty (i ⁻¹ᵁ chart o n c) := ⟨⟨_, hgU⟩⟩
+    have := functionField_isFractionRing_of_isAffineOpen X _ hU
     let ψ : X.functionField →+* Ω :=
       (X.presheaf.stalkSpecializes (hall (genericPoint X)) ≫ Scheme.stalkClosedPointTo ξ).hom
     have hgpU : genericPoint X ∈ i ⁻¹ᵁ chart o n c :=
@@ -1122,9 +1122,9 @@ private theorem exists_valR_eq_iff_forall_inChart_mem_regAt [IsClosedImmersion i
         have hr := hU.range_fromSpec
         rw [Set.ext_iff] at hr
         exact (hr _).mp ⟨v, rfl⟩
-      letI : Algebra Γ(X, i ⁻¹ᵁ chart o n c) (X.presheaf.stalk (hU.fromSpec v)) :=
+      let : Algebra Γ(X, i ⁻¹ᵁ chart o n c) (X.presheaf.stalk (hU.fromSpec v)) :=
         TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨hU.fromSpec v, hyU⟩
-      haveI hloc : IsLocalization v.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec v)) :=
+      have hloc : IsLocalization v.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec v)) :=
         hU.isLocalization_stalk' v hyU
       have hp : InChart ξ t c ⟨hU.fromSpec v, hall _⟩ := (hinU _).mpr hyU
       obtain ⟨g, hg⟩ : ∃ g : X.presheaf.stalk (hU.fromSpec v),
@@ -1175,7 +1175,7 @@ private theorem inChart_push_iff {W : Scheme.{0}} (ξ : Sp Ω ⟶ W) (f : W ⟶ 
 theorem coordTie_comp {o : Type} [CommRing o] [Algebra o Ω] {κ : Type} {x : κ → Ω} {W : Scheme.{0}}
     {ξ : Sp Ω ⟶ W} (f : W ⟶ X) [IsOpenImmersion f] (hξ : IsCptGen (ξ ≫ f))
     (hr : ∀ q : Cpt (ξ ≫ f), ∃ p, push ξ f p = q) (h : CoordTie o ξ x) : CoordTie o (ξ ≫ f) x := by
-  haveI : SurjectiveOnStalks f := inferInstance
+  have : SurjectiveOnStalks f := inferInstance
   refine ⟨hξ, fun q => ?_, fun c hc => ?_, fun c hc a => ?_⟩
   · obtain ⟨p, rfl⟩ := hr q
     obtain ⟨c, hc⟩ := h.cover p
@@ -1207,13 +1207,13 @@ theorem coordTie_comp {o : Type} [CommRing o] [Algebra o Ω] {κ : Type} {x : κ
 theorem xr_coords : ∀ (o : Type) [CommRing o] [IsNoetherianRing o] (X : Scheme.{0}) (s : X ⟶ Sp o), IsProjOver s → ∀ (Ω : Type) [Field Ω] [Algebra o Ω] (ξ : Sp Ω ⟶ X), IsCptGen ξ → ξ ≫ s = spMap (algebraMap o Ω) → ∃ (n : ℕ) (x : Fin n → Ω), CoordTie o ξ x := by
   intro o _ _ X s hs Ω _ _ ξ hgen hover
   obtain ⟨N, i, hi, his⟩ := hs
-  haveI := hi
-  haveI hLN : IsLocallyNoetherian X := by
+  have := hi
+  have hLN : IsLocallyNoetherian X := by
     refine isLocallyNoetherian_of_affine_cover
       (S := fun c : Fin (N + 1) => ⟨i ⁻¹ᵁ chart o N c, (isAffineOpen_chart o N c).preimage i⟩) ?_ ?_
     · rw [← Scheme.Hom.preimage_iSup, iSup_chart, Scheme.Hom.preimage_top]
     · intro c
-      haveI : IsNoetherianRing Γ(PSpace o N, chart o N c) :=
+      have : IsNoetherianRing Γ(PSpace o N, chart o N c) :=
         isNoetherianRing_of_ringEquiv _ (chartAlgEquiv o N c).toRingEquiv
       exact isNoetherianRing_of_surjective _ _ (i.app (chart o N c)).hom
         (i.app_surjective _ (isAffineOpen_chart o N c))
@@ -1227,7 +1227,7 @@ theorem xr_coords : ∀ (o : Type) [CommRing o] [IsNoetherianRing o] (X : Scheme
     rfl
   let ξ' : Sp Ω ⟶ W.toScheme := IsOpenImmersion.lift W.ι ξ hrange
   have hfac : ξ' ≫ W.ι = ξ := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsClosedImmersion W.ι :=
+  have : IsClosedImmersion W.ι :=
     IsClosedImmersion.of_isPreimmersion _ (by rw [Scheme.Opens.range_ι]; exact hW.isClosed)
   have hy : (ξ' ≫ W.ι ≫ i) ≫ PSpace.str o N = spMap (algebraMap o Ω) := by
     rw [Category.assoc, Category.assoc, his, ← Category.assoc, hfac, hover]
@@ -1271,13 +1271,13 @@ theorem all_of_isDominant (ξ : Sp Ω ⟶ X) [IsDominant ξ] (q : X) : GlobalThe
 theorem isCptGen_of_isDominant (ξ : Sp Ω ⟶ X) [IsDominant ξ] [IsReduced X]
     (h : Function.Bijective (Scheme.stalkClosedPointTo ξ).hom) : IsCptGen ξ := by
   have hall := all_of_isDominant ξ
-  haveI : IrreducibleSpace X := by
+  have : IrreducibleSpace X := by
     rw [irreducibleSpace_def]
     have hcl : closure {GlobalTheory.CompanionTheory.Ar.genPt ξ} = (Set.univ : Set X) :=
       Set.eq_univ_of_forall fun q => specializes_iff_mem_closure.mp (hall q)
     rw [Set.top_eq_univ, ← hcl]
     exact isIrreducible_singleton.closure
-  haveI : AlgebraicGeometry.IsIntegral X := isIntegral_of_irreducibleSpace_of_isReduced X
+  have : AlgebraicGeometry.IsIntegral X := isIntegral_of_irreducibleSpace_of_isReduced X
   refine ⟨h, fun p => ?_⟩
   have hinj : Function.Injective (X.presheaf.stalkSpecializes p.2).hom := by
     have hc : X.presheaf.stalkSpecializes p.2 ≫
@@ -1307,8 +1307,8 @@ theorem genMap_point_mem {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} {t : F
   rw [GlobalTheory.TupleNorm.ratioField_eq o hti]
   have hU : IsAffineOpen (chart o n i) := GlobalTheory.ProjSpace.isAffineOpen_chart o n i
   let xU : (chart o n i : (PSpace o n).Opens) := ⟨q.1, hi⟩
-  letI := TopCat.Presheaf.algebra_section_stalk (PSpace o n).presheaf xU
-  haveI := hU.isLocalization_stalk xU
+  let := TopCat.Presheaf.algebra_section_stalk (PSpace o n).presheaf xU
+  have := hU.isLocalization_stalk xU
   obtain ⟨⟨a, s⟩, hs⟩ := IsLocalization.surj (hU.primeIdealOf xU).asIdeal.primeCompl g
   have hmem : ∀ b : Γ(PSpace o n, chart o n i),
       genMap (point o t ht) q ((PSpace o n).presheaf.germ _ q.1 hi b) ∈ GlobalTheory.TupleCone.ratioRing o t i := by
@@ -1316,7 +1316,7 @@ theorem genMap_point_mem {o : Type} [CommRing o] [Algebra o Ω] {n : ℕ} {t : F
     rw [genMap_germ_eq _ q hi b]
     have hb : valR (point o t ht) (chart o n i) b ∈
         Set.range (valMap (point o t ht) (chart o n i) hle).hom :=
-      ⟨b, by simp [valR, dif_pos hle, valMap]⟩
+      ⟨b, by simp [valR, dite_eq_left hle, valMap]⟩
     rw [GlobalTheory.TuplePoint.range_valMap_point hle] at hb
     exact hb
   have hunit : IsUnit (algebraMap Γ(PSpace o n, chart o n i) ((PSpace o n).presheaf.stalk q.1) s) :=
@@ -1366,19 +1366,19 @@ theorem xr_norm : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℤ), IsProjOver s → ∀ 
       simp only [Category.id_comp] at h4
       exact h4
     rwa [e3] at hq
-  haveI hFD : FiniteDimensional (GlobalTheory.TupleNorm.ratioField ℤ t) Ω := by
+  have hFD : FiniteDimensional (GlobalTheory.TupleNorm.ratioField ℤ t) Ω := by
     let d' := (Scheme.descResidueField (Scheme.stalkClosedPointTo ξ)).hom.codRestrict
       (GlobalTheory.TupleNorm.ratioField ℤ t) hrange
     have hcomp : (algebraMap (GlobalTheory.TupleNorm.ratioField ℤ t) Ω).comp d' =
         (Scheme.descResidueField (Scheme.stalkClosedPointTo ξ)).hom := rfl
     rw [← hcomp] at hfin
     exact RingHom.finite_algebraMap.mp (RingHom.Finite.of_comp_finite hfin)
-  haveI : Algebra.EssFiniteType ℤ Ω := GlobalTheory.TupleNorm.essFiniteType_of_finiteDimensional ℤ t ht
+  have : Algebra.EssFiniteType ℤ Ω := GlobalTheory.TupleNorm.essFiniteType_of_finiteDimensional ℤ t ht
   let ν := GlobalTheory.TupleNorm.nmPoint ℤ t ht
-  haveI : AlgebraicGeometry.IsIntegral (GlobalTheory.TupleNorm.Nm ℤ t ht) := GlobalTheory.TupleNorm.isIntegral_Nm ℤ t ht
+  have : AlgebraicGeometry.IsIntegral (GlobalTheory.TupleNorm.Nm ℤ t ht) := GlobalTheory.TupleNorm.isIntegral_Nm ℤ t ht
   have hsupp := Scheme.Hom.support_ker ν
   rw [Scheme.Hom.ker_toNormalization, Scheme.IdealSheafData.support_bot] at hsupp
-  haveI hdom : IsDominant ν := ⟨by
+  have hdom : IsDominant ν := ⟨by
     rw [DenseRange, dense_iff_closure_eq, ← hsupp]
     simp⟩
   have hall := all_of_isDominant ν
@@ -1394,12 +1394,12 @@ theorem xr_norm : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℤ), IsProjOver s → ∀ 
     exact Scheme.Hom.le_ker_comp ξ i
   let l := IsClosedImmersion.lift i (GlobalTheory.TupleNorm.clι ℤ t ht) hker
   have hl : l ≫ i = GlobalTheory.TupleNorm.clι ℤ t ht := IsClosedImmersion.lift_fac _ _ _
-  haveI : IsClosedImmersion l := by
-    haveI : IsClosedImmersion (l ≫ i) := by
+  have : IsClosedImmersion l := by
+    have : IsClosedImmersion (l ≫ i) := by
       rw [hl]
       infer_instance
     exact IsClosedImmersion.of_comp_isClosedImmersion l i
-  haveI : IsFinite (GlobalTheory.TupleNorm.toCl ℤ t ht) := GlobalTheory.TupleNorm.isFinite_toCl ℤ t ht
+  have : IsFinite (GlobalTheory.TupleNorm.toCl ℤ t ht) := GlobalTheory.TupleNorm.isFinite_toCl ℤ t ht
   refine ⟨n, x, ⟨_, ν, GlobalTheory.TupleNorm.str ℤ t ht, GlobalTheory.TupleNorm.nmPoint_str ℤ t ht, hall, htie⟩,
     GlobalTheory.TupleNorm.toCl ℤ t ht ≫ l, hnorm, inferInstance, ?_⟩
   show ν ≫ GlobalTheory.TupleNorm.toCl ℤ t ht ≫ l = ξ

@@ -161,7 +161,7 @@ theorem exists_rep (hinj : ∀ x ∈ W, cls h x = 0 → x = 0) (S : Submodule �
   have hTc : ∀ x : S, T x = cls h x.1 := fun x => (cls_mk h (hS x.2)).symm
   let e := LinearEquiv.ofInjective T hT
   have : FiniteDimensional ℂ (LinearMap.range T) := LinearEquiv.finiteDimensional e
-  have : CompleteSpace (LinearMap.range T) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (LinearMap.range T) := FiniteDimensional.completeSpace ℂ _
   let g : LinearMap.range T →ₗ[ℂ] ℂ :=
     { toFun := fun m => conj (f (e.symm m).1)
       map_add' := fun m m' => by
@@ -564,7 +564,7 @@ theorem integrable_pet (hI : IntBnd) {f g : GA E N → ℂ} (hf : GrowP f) (hg :
   refine ⟨?_, ?_⟩
   · rw [aestronglyMeasurable_quotMeasure_iff_lift, hl.lift_descend]
     exact (hf.1.mul (Complex.continuous_conj.comp hg.1)).aestronglyMeasurable
-  · rw [hasFiniteIntegral_iff_enorm, lintegral_quotMeasure (isFundamentalDomain_stdDom _ _)]
+  · rw [hasFiniteIntegral_iff_eNorm, lintegral_quotMeasure (isFundamentalDomain_stdDom _ _)]
     refine lt_of_le_of_lt (lintegral_mono fun y => ?_)
       (lintegral_supP_lt_top hI isCompact_singleton (Set.singleton_nonempty 1) hf hg)
     rw [hl.descend_mk, ← ofReal_norm]
@@ -608,7 +608,7 @@ theorem integrable_descend_supP (hI : IntBnd) {K : Set (GA E N)} (hK : IsCompact
   have hl : LeftInv (latticeGL E N) (supP K f g) := supP_left hf.2.1 hg.2.1
   refine ⟨?_, ?_⟩
   · exact aesm_descend (continuous_supP hK hf.1 hg.1) hl
-  rw [hasFiniteIntegral_iff_enorm, lintegral_quotMeasure (isFundamentalDomain_stdDom _ _)]
+  rw [hasFiniteIntegral_iff_eNorm, lintegral_quotMeasure (isFundamentalDomain_stdDom _ _)]
   refine lt_of_le_of_lt (le_of_eq (lintegral_congr fun y => ?_)) (lintegral_supP_lt_top hI hK hK0 hf hg)
   rw [hl.descend_mk, ← ofReal_norm, Real.norm_of_nonneg (supP_nonneg _ _ _ _)]
 
@@ -1262,7 +1262,7 @@ theorem space_twT (z : ℂ) {N : ℕ} (t : Tr E N) : (twT z t).space = tw t.spac
     by_cases hM : M = 0
     · subst hM
       simp only [twT, Tr.space, tw_zero_dim]
-    · simp only [twT, if_neg hM, Tr.space]
+    · simp only [twT, ite_eq_right hM, Tr.space]
       rw [tw_tw]
   | @node r s t₁ t₂ ih₁ ih₂ =>
     simp only [twT, Tr.space]
@@ -1275,7 +1275,7 @@ theorem good_twT {z : ℂ} (hz : z.re = 0) {N : ℕ} (t : Tr E N) (ht : t.Good) 
     · subst hM
       simp only [twT]
       exact Or.inl ⟨rfl, hV, hw⟩
-    · simp only [twT, if_neg hM.ne']
+    · simp only [twT, ite_eq_right hM.ne']
       exact Or.inr ⟨hM, hV, by rw [Complex.add_re, hw, hz, add_zero]⟩
   | @node r s t₁ t₂ ih₁ ih₂ =>
     exact ⟨ih₁ ht.1, ih₂ ht.2⟩
@@ -1678,8 +1678,8 @@ theorem F_slicesU (V : Submodule ℂ (Sm E (r + s))) (hVs : _root_.GlobalTheory.
     rw [← e, hh']
 
   let S := GlobalTheory.CuspRep.LocEx.orbSpan (T φ)
-  haveI : FiniteDimensional ℂ S := by
-    haveI := hAφ.kfin
+  have : FiniteDimensional ℂ S := by
+    have := hAφ.kfin
     refine Submodule.finiteDimensional_of_le
       (S₂ := (Submodule.span ℂ (Set.range fun κ => cptRep E (r + s) κ φ)).map T) (Submodule.span_le.2 ?_)
     rintro _ ⟨κ, rfl⟩
@@ -1780,7 +1780,7 @@ theorem sliceU_of_noLog2 (hNL : NoLog) : SliceU := by
   choose! Cs Gs hsum hGeig using hdec
   obtain ⟨τs, a, ha⟩ := SliceUB2.lagrange (insert c (S.biUnion Cs)) c
   have ha1 : ∑ t ∈ τs, a t * Complex.exp (c * t) = 1 := by
-    rw [ha c (Finset.mem_insert_self _ _), if_pos rfl]
+    rw [ha c (Finset.mem_insert_self _ _), ite_eq_left rfl]
 
   obtain ⟨T, hT⟩ := exists_strictHenselian_absolutely_closed_local_ring U hU.2 r τs a
   have hTval : ∀ ψ ∈ U, ∀ g, (T ψ).1 g = ∑ t ∈ τs, a t * An.ctn r ψ.1 (aT E (r + s) r t * g) := by

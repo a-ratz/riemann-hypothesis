@@ -106,9 +106,9 @@ theorem cpt_zero (X : Data E r) (x0 : Frame X.Ψ r) : cpt X x0 0 = x0 := by
     ext i j
     simp only [mat, nmat, Matrix.of_apply, Matrix.one_apply]
     by_cases h : j < i
-    · rw [dif_pos h, if_neg (ne_of_gt h)]
+    · rw [dite_eq_left h, ite_eq_right (ne_of_gt h)]
       rfl
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
   show (mat x0 τ * mat (nmat X 0) τ) a b = x0 τ a b
   rw [h1, Matrix.mul_one]
   rfl
@@ -120,9 +120,9 @@ theorem differentiable_cpt (X : Data E r) (x0 : Frame X.Ψ r) : Differentiable �
   simp only [cpt, rmul, mat, Matrix.mul_apply, Matrix.of_apply]
   refine Differentiable.fun_sum fun k _ => Differentiable.const_mul ?_ _
   by_cases h : b < k
-  · simp only [nmat, dif_pos h]
+  · simp only [nmat, dite_eq_left h]
     fun_prop
-  · simp only [nmat, dif_neg h]
+  · simp only [nmat, dite_eq_right h]
     exact differentiable_const _
 
 theorem norm_dmin_of_orth (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (τ : X.Ψ) (i : Fin (r + 1)) :
@@ -619,7 +619,7 @@ theorem GlobalTheory.supPet_principal : GlobalTheory.UCls.MassBound → GlobalTh
     norm_num
     refine lintegral_congr fun q => ?_
     simp only [hΦdef, ptN]
-    rw [pnorm_piecewise_eq _ _ _ (hdom _), Real.enorm_eq_ofReal (pnorm_nonneg₀ _ _ _ _), ← ENNReal.ofReal_pow (pnorm_nonneg₀ _ _ _ _)]
+    rw [pnorm_piecewise_eq _ _ _ (hdom _), Real.eNorm_eq_ofReal (pnorm_nonneg₀ _ _ _ _), ← ENNReal.ofReal_pow (pnorm_nonneg₀ _ _ _ _)]
   set S := ∑ k, muF ((U σ).X k) (x0 k) (FF k) with hSdef
 
   have hpt : ∀ p : Formalism.L2.Pj.FPt (U σ).X, ENNReal.ofReal (((U σ).X p.1).pnorm (la p.1) (P p.1) p.2) ^ 2 ≤

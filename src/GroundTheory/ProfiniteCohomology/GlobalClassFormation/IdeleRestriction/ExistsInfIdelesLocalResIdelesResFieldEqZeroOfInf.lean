@@ -364,7 +364,7 @@ theorem idelesResField_eq_zero (ι : LocalEmbeddings K) (y : cohomology (limitRe
   have Hinf : ∀ w : InfinitePlace E.1, ∃ ιE : ℚ̄ →ₐ[E.1] AlgebraicClosure w.Completion,
       (infIdelesLocalRes ιE 2).hom ((idelesResField K E 2).hom y) = 0 := by
     intro w
-    letI : FaithfulSMul K.1 E.1 :=
+    let : FaithfulSMul K.1 E.1 :=
       (faithfulSMul_iff_algebraMap_injective K.1 E.1).2 (RingHom.injective _)
     let v : InfinitePlace K.1 := w.comap (algebraMap K.1 E.1)
     let w' : v.placesOver E.1 := ⟨w, ⟨rfl⟩⟩

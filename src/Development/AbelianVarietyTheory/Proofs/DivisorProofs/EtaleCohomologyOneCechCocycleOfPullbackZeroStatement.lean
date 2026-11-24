@@ -150,7 +150,7 @@ theorem cech_cocycle_of_pull_eq_zero :
     rw [δ_v 1 2 (by norm_num) ζ.1 (-1) 1 (by norm_num) 0 0 (by norm_num) (by norm_num), hζ01, comp_zero,
       smul_zero, add_zero, Cochain.zero_v] at this
     exact this
-  haveI := hmono
+  have := hmono
   let B : (free R).obj ((cech f).obj (op ⦋1⦌)) ⟶ (res R F).X 0 :=
     (chainsXIso R (cech f) 1).inv ≫ ζ.1.v (-1) 0 (by norm_num)
   have hBd : B ≫ (res R F).d 0 1 = 0 := by simp only [B, Category.assoc, hB, comp_zero]

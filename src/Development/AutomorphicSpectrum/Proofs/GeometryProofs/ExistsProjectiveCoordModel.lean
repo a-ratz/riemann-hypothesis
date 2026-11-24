@@ -78,11 +78,11 @@ theorem mem_of_isIntegral_of_isLocAt {Ω : Type} [Field Ω] [CharZero Ω] (R : S
     (a : Ω) (ha : IsIntegral R a) : a ∈ R := by
   have hAR : ∀ b : A, (b : Ω) ∈ R := fun b =>
     (h b).2 ⟨1, fun h1 => hq.ne_top ((Ideal.eq_top_iff_one q).2 h1), by simp⟩
-  letI : Algebra A R := (RingHom.codRestrict A.val.toRingHom R hAR).toAlgebra
+  let : Algebra A R := (RingHom.codRestrict A.val.toRingHom R hAR).toAlgebra
   have hmap : ∀ b : A, ((algebraMap A R b : R) : Ω) = b := fun _ => rfl
   have hne : ∀ s : A, s ∉ q → (s : Ω) ≠ 0 := fun s hs0 h0 =>
     hs0 (by rw [show s = 0 from Subtype.ext h0]; exact q.zero_mem)
-  haveI : IsLocalization.AtPrime R q :=
+  have : IsLocalization.AtPrime R q :=
     { map_units := by
         rintro ⟨s, hs0⟩
         have hs1 : s ∉ q := hs0
@@ -98,8 +98,8 @@ theorem mem_of_isIntegral_of_isLocAt {Ω : Type} [Field Ω] [CharZero Ω] (R : S
         exact ⟨1, by
           have : (x : Ω) = y := by simpa [hmap] using congrArg (Subtype.val) hxy
           rw [Subtype.ext this]⟩ }
-  haveI : IsIntegrallyClosed A := GlobalTheory.isIntegrallyClosed_of_smooth ℚ A
-  haveI : IsIntegrallyClosed R :=
+  have : IsIntegrallyClosed A := GlobalTheory.isIntegrallyClosed_of_smooth ℚ A
+  have : IsIntegrallyClosed R :=
     isIntegrallyClosed_of_isLocalization R q.primeCompl (Ideal.primeCompl_le_nonZeroDivisors q)
   obtain ⟨r, rfl⟩ := (IsIntegrallyClosed.isIntegral_iff (R := R) (K := Ω)).1 ha
   exact r.2
@@ -116,7 +116,7 @@ theorem GlobalTheory.CompanionTheory.Ar.GeoModel.NormPatch.exists_normal_model :
     intro q hq
     have hc : Char0 ξ q := fun r hr hf => hf (hq r hr.pos)
     obtain ⟨A, z, n, P, hp, hP, hloc⟩ := hsnc q hc
-    haveI := (_root_.GlobalTheory.CompanionTheory.Ar.RegAtRing.regAt_ring X Ω ξ htie.gen q).1
+    have := (_root_.GlobalTheory.CompanionTheory.Ar.RegAtRing.regAt_ring X Ω ξ htie.gen q).1
     exact _root_.GlobalTheory.CompanionTheory.Ar.NormAt.isoAt_of_integrallyClosed X Ω ξ M'.X M'.ξ f q (hat q)
       (fun a ha => mem_of_isIntegral_of_isLocAt _ A hp.smooth P hP hloc a ha)
   obtain ⟨N', x', hx'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.coordTie_int_of_finite M'.X Ω M'.ξ ℤ κ' y M'.tie

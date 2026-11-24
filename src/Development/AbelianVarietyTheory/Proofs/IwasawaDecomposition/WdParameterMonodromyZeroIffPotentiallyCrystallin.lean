@@ -217,7 +217,7 @@ theorem mem_span_invariants {G F D : Type*} [Group G] [Field F] [AddCommGroup D]
     x ∈ Submodule.span F {y | ∀ g, a g y = y} := by
   by_contra hx
   obtain ⟨f, hf, hker⟩ := Submodule.exists_le_ker_of_notMem hx
-  letI := Fintype.ofFinite (G ⧸ S)
+  let := Fintype.ofFinite (G ⧸ S)
   let F₀ : Submonoid F :=
     { carrier := {c | ∀ s ∈ S, σ s c = c}
       one_mem' := fun s _ => map_one _
@@ -358,7 +358,7 @@ theorem isSst_of_ineTriv (hV : IsPst P ρ) (hI : IneTriv P ρ) : IsSst P ρ := b
     {y : DpstUr P ρ | ∀ g, actD P ρ g ((toUr P ρ).symm y) = (toUr P ρ).symm y}
   rw [span_invariants_eq_top P ρ hI] at hsp
   have : Finite ↥s := hli.finite
-  letI : Fintype ↥s := Fintype.ofFinite _
+  let : Fintype ↥s := Fintype.ofFinite _
   let b₀ : Basis ↥s ↥(MaximalUnramifiedExtension l) (DpstUr P ρ) := Basis.mk hli (by rw [Subtype.range_coe, hsp])
   have h1 := GlobalTheory.PstSst.finrank_dst P ρ (b₀.reindex (Fintype.equivFin ↥s)) K le_rfl fun i g _ => by
     rw [Basis.reindex_apply, Basis.mk_apply]
@@ -566,7 +566,7 @@ theorem wdL_laws (hB : GlobalTheory.Published.DeRhamPotSemistable) (l : ℕ) [Fa
       ((wdL P ι pl br r hpl hbr w hw).unr ↔ IsCrysW P pl br r w) ∧
       ((wdL P ι pl br r hpl hbr w hw).mono0 ↔ IsPotCrysW P pl br r w)) := by
   refine ⟨lpDim_wdAt _ _ _ P ι _, fun hc hd => ?_⟩
-  have hp := hB.isPstAt T (br w hw) (resDec pl r w) (hc.comp continuous_subtype_val)
+  have hp := hB.isPstAt T (br w hw) (resDec pl r w) (hc.comp continuous_subtypeVal)
     ((isdRW_iff P pl br r hw).mp hd)
   rw [isCrysW_iff P pl br r hw, isPotCrysW_iff P pl br r hw]
   exact ⟨unr_wdAt_iff _ _ _ P ι _ hp, wdParameterAt_monodromy_zero_iff_potCrystalline _ _ _ P ι _ hp⟩

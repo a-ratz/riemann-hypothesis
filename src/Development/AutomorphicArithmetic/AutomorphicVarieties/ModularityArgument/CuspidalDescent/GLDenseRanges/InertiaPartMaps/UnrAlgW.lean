@@ -128,10 +128,10 @@ private theorem cond_core {Λ B : Type} [CommRing Λ] [IsDomain Λ] [IsIntegrall
     (a : B) (c : Λ) (hc0 : c ≠ 0) (P : Λ[X]) (haP : φ c * a - P.eval₂ φ t ∈ Q)
     (q : Λ[X]) (hqm : q.Monic) (hqa : q.eval₂ φ a ∈ Q) :
     ∃ W : Λ[X], (derivative g).eval₂ φ t * a - W.eval₂ φ t ∈ Q := by
-  haveI := hQ
-  haveI : Fact (Irreducible (g.map (algebraMap Λ (FractionRing Λ)))) := ⟨hi⟩
+  have := hQ
+  have : Fact (Irreducible (g.map (algebraMap Λ (FractionRing Λ)))) := ⟨hi⟩
   have hne : g.map (algebraMap Λ (FractionRing Λ)) ≠ 0 := (hm.map _).ne_zero
-  haveI : FiniteDimensional (FractionRing Λ) (AdjoinRoot (g.map (algebraMap Λ (FractionRing Λ)))) :=
+  have : FiniteDimensional (FractionRing Λ) (AdjoinRoot (g.map (algebraMap Λ (FractionRing Λ)))) :=
     (AdjoinRoot.powerBasis hne).finite
   let ι : Λ →+* FractionRing (B ⧸ Q) :=
     (algebraMap (B ⧸ Q) (FractionRing (B ⧸ Q))).comp ((Ideal.Quotient.mk Q).comp φ)
@@ -141,7 +141,7 @@ private theorem cond_core {Λ B : Type} [CommRing Λ] [IsDomain Λ] [IsIntegrall
     by_contra hx0
     exact hc x hx0 (Ideal.Quotient.eq_zero_iff_mem.1 hx)
   have hι : Function.Injective ι := (IsFractionRing.injective (B ⧸ Q) (FractionRing (B ⧸ Q))).comp h0
-  letI : Algebra Λ (FractionRing (B ⧸ Q)) := ι.toAlgebra
+  let : Algebra Λ (FractionRing (B ⧸ Q)) := ι.toAlgebra
   let tF : FractionRing (B ⧸ Q) := algebraMap (B ⧸ Q) _ (Ideal.Quotient.mk Q t)
   have hevx : ∀ (x : B) (p : Λ[X]), aeval (algebraMap (B ⧸ Q) (FractionRing (B ⧸ Q))
       (Ideal.Quotient.mk Q x)) p =
@@ -163,7 +163,7 @@ private theorem cond_core {Λ B : Type} [CommRing Λ] [IsDomain Λ] [IsIntegrall
     { AdjoinRoot.lift κ tF hroot with
       commutes' := fun c => by
         simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe,
-          MonoidHom.coe_coe]
+          MonoidHom.coe_ofClass]
         rw [IsScalarTower.algebraMap_apply Λ (FractionRing Λ), AdjoinRoot.algebraMap_eq,
           AdjoinRoot.lift_of, hκ]
         rfl }
@@ -560,7 +560,7 @@ end UpperTheory.V.J
 theorem UpperTheory.V.J.muGe :
     UpperTheory.V.J.MuGe := by
   intro O Λ B K _ _ _ _ _ _ _ _ _ lam J M _ _ _ _ _ h x t hsep
-  letI : Algebra Λ K := (x.comp lam).toAlgebra
+  let : Algebra Λ K := (x.comp lam).toAlgebra
   have actAdd : ∀ a b : B, actL lam M h.hs (a + b) = actL lam M h.hs a + actL lam M h.hs b :=
     fun a b => LinearMap.ext fun m => add_smul a b m
   have actMul : ∀ a b : B, actL lam M h.hs (a * b) = actL lam M h.hs a * actL lam M h.hs b :=
@@ -646,12 +646,12 @@ open Polynomial
 private theorem ext_injective {R S K : Type} [CommRing R] [IsDomain R] [CommRing S] [IsDomain S] [Field K]
     [IsAlgClosed K] (f : R →+* S) (hi : Function.Injective f) (hf : f.IsIntegral) (φ : R →+* K)
     (hφ : Function.Injective φ) : ∃ ψ : S →+* K, ψ.comp f = φ := by
-  letI : Algebra R S := f.toAlgebra
-  letI : Algebra R K := φ.toAlgebra
-  haveI : Module.IsTorsionFree R S := Module.isTorsionFree_iff_algebraMap_injective.2 hi
-  haveI : Module.IsTorsionFree R K := Module.isTorsionFree_iff_algebraMap_injective.2 hφ
-  haveI : Algebra.IsIntegral R S := ⟨hf⟩
-  haveI : Algebra.IsAlgebraic R S := Algebra.IsIntegral.isAlgebraic
+  let : Algebra R S := f.toAlgebra
+  let : Algebra R K := φ.toAlgebra
+  have : Module.IsTorsionFree R S := Module.isTorsionFree_iff_algebraMap_injective.2 hi
+  have : Module.IsTorsionFree R K := Module.isTorsionFree_iff_algebraMap_injective.2 hφ
+  have : Algebra.IsIntegral R S := ⟨hf⟩
+  have : Algebra.IsAlgebraic R S := Algebra.IsIntegral.isAlgebraic
   let e : S →ₐ[R] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -662,9 +662,9 @@ private theorem ext_injective {R S K : Type} [CommRing R] [IsDomain R] [CommRing
 private theorem ext_integral {R S K : Type} [CommRing R] [CommRing S] [Field K] [IsAlgClosed K]
     (f : R →+* S) (hf : f.IsIntegral) (φ : R →+* K) (h : RingHom.ker f ≤ RingHom.ker φ) :
     ∃ ψ : S →+* K, ψ.comp f = φ := by
-  letI : Algebra R S := f.toAlgebra
-  haveI : Algebra.IsIntegral R S := ⟨hf⟩
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  let : Algebra R S := f.toAlgebra
+  have : Algebra.IsIntegral R S := ⟨hf⟩
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   obtain ⟨Q, -, hQ, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (RingHom.ker φ) ⊥ (by
     intro r hr
     apply h
@@ -872,7 +872,7 @@ private theorem finite_setOf_roots_of_monic_family {Λ F : Type*} [CommRing Λ] 
     {v : Fin r → F | ∀ i, Polynomial.eval₂ ρ (v i) (f i) = 0}.Finite := by
   refine (Set.Finite.pi (t := fun i => {y : F | Polynomial.eval₂ ρ y (f i) = 0}) fun i => ?_).subset ?_
   · have h0 : (f i).map ρ ≠ 0 := ((hf i).map ρ).ne_zero
-    refine (Polynomial.finite_setOf_isRoot h0).subset ?_
+    refine (finite_setOfPred_isRoot h0).subset ?_
     intro y hy
     simpa [Polynomial.IsRoot, Polynomial.eval_map] using hy
   · intro v hv i _
@@ -893,7 +893,7 @@ private theorem finite_setOf_nat_polynomial_collision {F : Type*} [Field F] [Cha
     rw [Finset.sum_eq_single j]
     · simp
     · intro i _ hij
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h => hij (Fin.ext h).symm
     · simp
   have hsub : {s : ℕ | ∃ v ∈ T, ∃ w ∈ T, v ≠ w ∧
@@ -917,7 +917,7 @@ private theorem finite_setOf_nat_polynomial_collision {F : Type*} [Field F] [Cha
       simp only [Polynomial.coeff_zero, Pi.sub_apply] at this
       exact sub_eq_zero.mp this.symm
     refine (Set.Finite.preimage (Nat.cast_injective.injOn)
-      (Polynomial.finite_setOf_isRoot h0)).subset ?_
+      (finite_setOfPred_isRoot h0)).subset ?_
     intro s hs
     exact hs.2
 
@@ -926,10 +926,10 @@ private theorem adjoin_singleton_eq_whole_of_separates_homs {L A Ω : Type*} [Fi
     (ht : ∀ φ ψ : A →ₐ[L] Ω, φ t = ψ t → φ = ψ) : Algebra.adjoin L {t} = ⊤ := by
   classical
   have hArt : IsArtinianRing A := isArtinian_of_tower L inferInstance
-  letI hF : ∀ m : MaximalSpectrum A, Field (A ⧸ m.asIdeal) :=
+  let hF : ∀ m : MaximalSpectrum A, Field (A ⧸ m.asIdeal) :=
     fun m => @Ideal.Quotient.field _ _ m.asIdeal m.isMaximal
-  haveI : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
-  haveI hfd : ∀ m : MaximalSpectrum A, FiniteDimensional L (A ⧸ m.asIdeal) := fun m =>
+  have : Fintype (MaximalSpectrum A) := Fintype.ofFinite _
+  have hfd : ∀ m : MaximalSpectrum A, FiniteDimensional L (A ⧸ m.asIdeal) := fun m =>
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ L m.asIdeal).toLinearMap
       Ideal.Quotient.mk_surjective
   let e : A ≃ₐ[L] ((m : MaximalSpectrum A) → A ⧸ m.asIdeal) :=
@@ -989,8 +989,8 @@ private theorem finite_span_mod_and_integral_of_j_dat {O Λ B : Type} [CommRing 
     rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
     rintro p ⟨hJp, hp⟩
     exact (h.supp p hp).mpr hJp (Module.mem_annihilator.mpr hb)
-  haveI := h.free
-  haveI := h.fin
+  have := h.free
+  have := h.fin
   let F : B → Module.End Λ M := fun b =>
     { toFun := fun m => b • m
       map_add' := smul_add b
@@ -1020,7 +1020,7 @@ private theorem finite_span_mod_and_integral_of_j_dat {O Λ B : Type} [CommRing 
       smul_mem' := by
         rintro c _ ⟨b, rfl⟩
         exact ⟨lam c * b, hFl c b⟩ }
-  haveI : IsNoetherian Λ (Module.End Λ M) := isNoetherian_of_isNoetherianRing_of_finite Λ _
+  have : IsNoetherian Λ (Module.End Λ M) := isNoetherian_of_isNoetherianRing_of_finite Λ _
   obtain ⟨r, s, hs⟩ := Submodule.fg_iff_exists_fin_generating_family.mp (IsNoetherian.noetherian N)
   have hsN : ∀ i, s i ∈ N := fun i => hs ▸ Submodule.subset_span (Set.mem_range_self i)
   choose b hb using hsN
@@ -1063,8 +1063,8 @@ private theorem finite_setOf_nat_not_primitive_element {Λ R : Type} [CommRing �
   let L := FractionRing Λ
   let A := Localization (Algebra.algebraMapSubmonoid R (nonZeroDivisors Λ))
   let Ω := AlgebraicClosure L
-  haveI : CharZero L := charZero_of_injective_algebraMap (IsFractionRing.injective Λ L)
-  haveI : Module.Finite L A := Module.Finite.of_isLocalization Λ R (nonZeroDivisors Λ)
+  have : CharZero L := charZero_of_injective_algebraMap (IsFractionRing.injective Λ L)
+  have : Module.Finite L A := Module.Finite.of_isLocalization Λ R (nonZeroDivisors Λ)
   let ι : R →+* A := algebraMap R A
   have hιl : ∀ c : Λ, ι (algebraMap Λ R c) = algebraMap L A (algebraMap Λ L c) := by
     intro c
@@ -1105,7 +1105,7 @@ private theorem finite_setOf_nat_not_primitive_element {Λ R : Type} [CommRing �
 
       simp only [map_sum, map_mul, hχl]
       exact Finset.sum_congr rfl fun i _ => by rw [congr_fun htup i]
-    apply AlgHom.coe_ringHom_injective
+    apply AlgHom.toRingHom_injective
     apply IsLocalization.ringHom_ext (Algebra.algebraMapSubmonoid R (nonZeroDivisors Λ))
     ext y
     exact hB y
@@ -1139,9 +1139,9 @@ theorem UpperTheory.V.J.primEx :
   classical
   obtain ⟨⟨r, b, hgen⟩, hmon⟩ := finite_span_mod_and_integral_of_j_dat lam J M h
   choose f hfm hfJ using fun i => hmon (b i)
-  letI : Algebra Λ (B ⧸ J) := ((Ideal.Quotient.mk J).comp (lam : Λ →+* B)).toAlgebra
+  let : Algebra Λ (B ⧸ J) := ((Ideal.Quotient.mk J).comp (lam : Λ →+* B)).toAlgebra
   have hmk : ∀ c : Λ, algebraMap Λ (B ⧸ J) c = Ideal.Quotient.mk J (lam c) := fun c => rfl
-  haveI : IsReduced (B ⧸ J) := (Ideal.isRadical_iff_quotient_reduced J).mp h.rad
+  have : IsReduced (B ⧸ J) := (Ideal.isRadical_iff_quotient_reduced J).mp h.rad
   have hgenR : ∀ y : B ⧸ J, ∃ c : Fin r → Λ,
       y = ∑ i, algebraMap Λ (B ⧸ J) (c i) * Ideal.Quotient.mk J (b i) := by
     intro y
@@ -1151,7 +1151,7 @@ theorem UpperTheory.V.J.primEx :
 
     rw [Ideal.Quotient.eq.mpr hc, map_sum]
     simp only [map_mul, hmk]
-  haveI : Module.Finite Λ (B ⧸ J) := by
+  have : Module.Finite Λ (B ⧸ J) := by
     refine ⟨⟨Finset.univ.image (fun i => Ideal.Quotient.mk J (b i)), ?_⟩⟩
     rw [eq_top_iff]
     rintro y -
@@ -1177,7 +1177,7 @@ theorem UpperTheory.V.J.primEx :
   obtain ⟨s, hs⟩ := ((hbadR.union (finite_setOf_nat_polynomial_collision TK hTK)).infinite_compl).nonempty
   simp only [Set.mem_compl_iff, Set.mem_union, not_or] at hs
   obtain ⟨hs1, hs2⟩ := hs
-  simp only [Set.mem_setOf_eq, not_not] at hs1
+  simp only [Set.mem_ofPred_eq, not_not] at hs1
   refine ⟨∑ i : Fin r, (s : B) ^ (i : ℕ) * b i, ?_, ?_⟩
   · intro a
     obtain ⟨c, hc, P, hP⟩ := hs1 (Ideal.Quotient.mk J a)
@@ -1363,8 +1363,8 @@ end UpperTheory.V.J
 theorem UpperTheory.V.Z.Desc.V0.unrAlgW :
     UpperTheory.V.Z.Desc.V0.UnrAlgW := by
   intro O Λ B K _ _ _ _ _ _ _ _ _ _ _ _ _ lam J M _ _ _ h x hxJ 𝒢 b₀ hb₀ hG0 hG δ hδ hδJ hδl
-  haveI := h.free
-  haveI := h.fin
+  have := h.free
+  have := h.fin
   obtain ⟨t, hP, hS⟩ := UpperTheory.V.J.primEx O Λ B K lam J M h x hxJ
   obtain ⟨s, g, m, hF⟩ :=
     UpperTheory.V.J.factEx Λ (LinearMap.charpoly (UpperTheory.V.J.actL lam M h.hs t)) (LinearMap.charpoly_monic _)

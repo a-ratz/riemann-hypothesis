@@ -77,7 +77,7 @@ theorem measurableEmbedding_levM : MeasurableEmbedding (B2.levM k ρ) := by
     ext y
     constructor
     · rintro ⟨x, rfl⟩
-      simp only [Set.mem_setOf_eq, projM_levM]
+      simp only [Set.mem_ofPred_eq, projM_levM]
     · intro hy
       exact ⟨projM y, hy⟩
   rw [hr]

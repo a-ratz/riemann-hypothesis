@@ -63,7 +63,7 @@ private theorem aux_one {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {m : �
   exact (pow_eq_one_iff_left hm).1 h1
 
 private theorem vg_ne {Γ : Type} [LinearOrderedCommGroupWithZero Γ] : (0 : Γ) < 1 := by
-  refine lt_of_le_of_ne zero_le' fun h => ?_
+  refine lt_of_le_of_ne zero_le fun h => ?_
   obtain ⟨x, y, hxy⟩ := (GroupWithZero.toNontrivial (G₀ := Γ)).exists_pair_ne
   exact hxy (by rw [← mul_one x, ← mul_one y, ← h, mul_zero, mul_zero])
 
@@ -109,10 +109,10 @@ private theorem val_nat_le {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (n :
 
 private theorem act_pow {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {w : ℕ} (hw : w ≠ 0) (n : ℕ) (s : G ℚ Ω) :
     ∃ a : ℕ, ∀ ζ : Ω, ζ ^ w = 1 → (s ^ n) ζ = ζ ^ a ^ n := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero w := ⟨hw⟩
-  haveI : NeZero (w : Ω) := ⟨Nat.cast_ne_zero.2 hw⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω w
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero w := ⟨hw⟩
+  have : NeZero (w : Ω) := ⟨Nat.cast_ne_zero.2 hw⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω w
   obtain ⟨a, -, ha⟩ := hz.eq_pow_of_pow_eq_one (ξ := s z) (by rw [← map_pow, hz.pow_eq_one, map_one])
   have h1 : ∀ ζ : Ω, ζ ^ w = 1 → s ζ = ζ ^ a := fun ζ h => by
     obtain ⟨b, -, rfl⟩ := hz.eq_pow_of_pow_eq_one h
@@ -126,7 +126,7 @@ private theorem pow_mem_Upl {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure �
     {Hb H₀ : Subgroup (G ℚ Ω)} {w : ℕ} (hw : w ≠ 0) (hab : commutator (G ℚ Ω) ≤ Hb) (hidx : ∃ a : ℕ, Hb.index = l ^ a) (m : ℕ) :
     ∃ N : ℕ, ∀ s ∈ H₀, s ^ l ^ N ∈ Upl l Hb H₀ w m := by
   obtain ⟨a, ha⟩ := hidx
-  haveI : Hb.Normal := ⟨fun n hn g => by
+  have : Hb.Normal := ⟨fun n hn g => by
     have : g * n * g⁻¹ = g * n * g⁻¹ * n⁻¹ * n := by group
     rw [this]
     exact Hb.mul_mem (hab (Subgroup.commutator_mem_commutator (Subgroup.mem_top g) (Subgroup.mem_top n))) hn⟩
@@ -141,7 +141,7 @@ private theorem pow_mem_Upl {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure �
     exact Subgroup.pow_mem _ this _
   · have : s ^ l ^ m ∈ Hlay Ω l m := by
       have hl : l.Prime := Fact.out
-      haveI : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+      have : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
       show (cycMod ℚ Ω l (m + 1) ^ (l - 1)) (s ^ l ^ m) = 1
       rw [MonoidHom.pow_apply, map_pow, ← pow_mul, ← Nat.totient_prime_pow_succ hl, ← ZMod.card_units_eq_totient]
       exact pow_card_eq_one
@@ -169,7 +169,7 @@ theorem UpperTheory.V.Fr.l15 :
   intro Ω _ _ _ l hl O _ _ _ η Ψ σ B M Hb hG H₀ w h0 hW m i j
   have hU := pow_mem_Upl l (H₀ := H₀) hW.prime.ne_zero hG.Hb_ab hG.Hb_idx m
   obtain ⟨A, hA, hI⟩ := h0.ram
-  obtain ⟨t, ht, htH⟩ := SetLike.not_le_iff_exists.1 hI
+  obtain ⟨t, ht, htH⟩ := IsConcreteLE.not_le_iff_exists.1 hI
   obtain ⟨a, ka, kb⟩ := hG.cyc
   have hM1 : A.valuation (M : Ω) = 1 := le_antisymm (val_nat_le A M) (not_lt.1 hA)
   have hMa : ¬ A.valuation ((M ^ a : ℕ) : Ω) < 1 := by
@@ -212,7 +212,7 @@ open scoped Pointwise
 
 private theorem uf_pow {Γ : Type} [Group Γ] {H : Subgroup Γ} (h : commutator Γ ≤ H) {l a b : ℕ} (hi : H.index = l ^ a)
     (hab : a ≤ b) (t : Γ) : t ^ l ^ b ∈ H := by
-  haveI : H.Normal := by
+  have : H.Normal := by
     refine ⟨fun n hn g => ?_⟩
     have hc : g * n * g⁻¹ * n⁻¹ ∈ H :=
       h (Subgroup.commutator_mem_commutator (Subgroup.mem_top g) (Subgroup.mem_top n))
@@ -299,7 +299,7 @@ theorem UpperTheory.V.Fr.ufacts :
   have hσb := hG.even
   have hneg : (-1 : (ResidueField O)ˣ) ≠ 1 := uf_neg l hG.odd
   obtain ⟨s', hs'η, hs'om, hs'b⟩ : ∃ s', η s' = 1 ∧ omO Ω l O s' = -1 ∧ barChar O Ψ s' = 1 := by
-    obtain ⟨t, ⟨ht1, ht2⟩, ht3⟩ := SetLike.not_le_iff_exists.1 hG.g4
+    obtain ⟨t, ⟨ht1, ht2⟩, ht3⟩ := IsConcreteLE.not_le_iff_exists.1 hG.g4
     by_cases hησ : η σ = 1
     · exact ⟨σ, hησ, hσom, hσb⟩
     · refine ⟨t * σ, ?_, ?_, ?_⟩
@@ -371,7 +371,7 @@ theorem UpperTheory.V.Fr.ufacts :
     refine ⟨s, ⟨hsI, ⟨⟨⟨hsH0, hsTh⟩, hG.Hb_l B' hB' hsI⟩, hsLay⟩⟩, fun h1 => ?_⟩
     have h2 : s ∈ Hlay Ω l m ⊓ (cycMod ℚ Ω l 1).ker := ⟨hsLay, h1⟩
     rw [lyK, MonoidHom.mem_ker, hs] at h2
-    haveI : Fact (2 < l ^ (m + 1)) := ⟨by
+    have : Fact (2 < l ^ (m + 1)) := ⟨by
       calc 2 < l := lt_of_le_of_ne hl.two_le (Ne.symm hG.odd)
         _ = l ^ 1 := (pow_one l).symm
         _ ≤ l ^ (m + 1) := Nat.pow_le_pow_right hl.pos (by omega)⟩

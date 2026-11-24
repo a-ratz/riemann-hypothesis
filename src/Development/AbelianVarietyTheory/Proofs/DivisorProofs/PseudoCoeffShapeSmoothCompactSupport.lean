@@ -210,7 +210,7 @@ open Formalism.REAL (UJ KG toM)
 namespace GlobalTheory.ShapeSmoothFinite
 
 theorem continuous_matCoord_ujMat {n : ℕ} (ε : Fin n → Bool) : Continuous (matCoord (ujMat ε)) :=
-  (Units.continuous_val (M := Matrix (Fin n) (Fin n) ℂ)).comp continuous_subtype_val
+  (Units.continuous_val (M := Matrix (Fin n) (Fin n) ℂ)).comp continuous_subtypeVal
 
 theorem mem_ccMat_and_isBiFinite {n : ℕ} (ε : Fin n → Bool) (d : ℕ) (φ : Mat n → ℂ) (hφ : φ ∈ ShapeM ε d) :
     (fun g : UJ ε => φ (toM g)) ∈ CcMat (ujMat ε) ∧ IsBiFinite (KG ε) (fun g : UJ ε => φ (toM g)) := by

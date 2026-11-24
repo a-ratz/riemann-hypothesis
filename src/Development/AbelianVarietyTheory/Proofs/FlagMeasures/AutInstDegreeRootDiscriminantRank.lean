@@ -67,7 +67,7 @@ private theorem card_infinitePlace_E_eq_F (I : _root_.Formalism.MainNotions.S.Au
 open MeasureTheory NumberField Matrix Finset in
 private theorem card_infinitePlace_F_eq_finrank (I : _root_.Formalism.MainNotions.S.AutInst) :
     Fintype.card (InfinitePlace I.F) = Module.finrank ℚ I.F := by
-  haveI := I.cm.totReal
+  have := I.cm.totReal
   have h1 := InfinitePlace.card_add_two_mul_card_eq_rank I.F
   rw [InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces,
     IsTotallyReal.nrComplexPlaces_eq_zero] at *

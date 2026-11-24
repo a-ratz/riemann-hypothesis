@@ -178,7 +178,7 @@ theorem normFormGaussBound : NormFormGaussBound.Statement := by
     · simp
     · intro b hb hbn
       have : b < n := lt_of_le_of_ne (Nat.lt_succ_iff.mp (Finset.mem_range.mp hb)) hbn
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     · intro h
       simp at h
 
@@ -230,7 +230,7 @@ theorem normFormGaussBound : NormFormGaussBound.Statement := by
     have hν : (ν₀ - Finsupp.single k 1) + Finsupp.single k 1 = ν₀ :=
       tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr (by simp [ν₀]))
     show monomial (ν₀ - Finsupp.single k 1) 1 * monomial (Finsupp.single k 1) 1 = monomial ν₀ 1
-    rw [monomial_mul, hν, one_mul]
+    rw [monomial_mul_monomial, hν, one_mul]
   have hratio : ∀ i, ∃ r, algebraMap (MvPolynomial σ V) Ω r = l i / l j := by
     intro i
     by_cases h : i = j

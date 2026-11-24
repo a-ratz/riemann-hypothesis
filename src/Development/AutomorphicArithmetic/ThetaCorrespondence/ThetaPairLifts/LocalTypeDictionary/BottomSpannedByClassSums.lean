@@ -363,9 +363,9 @@ theorem eventually_cong_mat (β : GL (Fin n) (E ⊗[F] Af F)) (N : ℕ) (hN : 0 
     {x₀ : X} {φ : X → GL (Fin n) (Af F ⊗[F] E)} (hf : Continuous φ) (h₀ : φ x₀ = 1) :
     ∀ᶠ κ in 𝓝 x₀, Formalism.UG.bc (GlobalTheory.Mass.swapTens F E (Af F) : _ →+* _) (φ κ) ∈
       (congInt (F := F) (E := E) (n := n) N).map (frGL β) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   have ho := (GlobalTheory.Mass.intTens_open_compact F E).1
   set s := GlobalTheory.Mass.swapTens F E (Af F)
   let β' : GL (Fin n) (Af F ⊗[F] E) := Formalism.UG.bc (s.symm : _ →+* _) β
@@ -435,14 +435,14 @@ theorem exists_open_cong : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.E
   intro D V β N hN
   refine ⟨(congFr β N).comap (Formalism.IndefR.Lev.finE V),
     ?_, fun κ hκ => ?_⟩
-  · haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-    haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-    haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-    haveI : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  · have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+    have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+    have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+    have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
     obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj D.sp.cm.sig V.gram
     have hf : Continuous (finHom V) :=
-      (continuous_subtype_val.comp hπ.continuous).congr fun κ => hπ κ
+      (continuous_subtypeVal.comp hπ.continuous).congr fun κ => hπ κ
     exact eventually_cong_mat β N hN hf (map_one _)
   · exact mem_congFr (Subgroup.mem_comap.1 hκ)
 
@@ -933,7 +933,7 @@ theorem stdFst_actO : ∀ (D : D7) (A WW : HSp D) (ν : (AE D)ˣ →* Circle) (e
     · exact absurd (hcond.1 h1) h2
     · exact absurd (hcond.2 h2) h1
     · rfl
-  · rw [if_neg (fun h => hM (hInt.1 h.2.1)), if_neg (fun h => hM h.2.1)]
+  · rw [ite_eq_right (fun h => hM (hInt.1 h.2.1)), ite_eq_right (fun h => hM h.2.1)]
 
 end GlobalTheory.StdFstInv
 
@@ -1277,7 +1277,7 @@ def galFld (E : Type) [Field E] [NumberField E] : IntermediateField ℚ ℂ :=
 
 theorem galFld_fin (E : Type) [Field E] [NumberField E] : FiniteDimensional ℚ (galFld E) := by
   unfold galFld
-  haveI : ∀ σ : E →+* ℂ, FiniteDimensional ℚ (RingHom.toRatAlgHom σ).fieldRange := fun σ =>
+  have : ∀ σ : E →+* ℂ, FiniteDimensional ℚ (RingHom.toRatAlgHom σ).fieldRange := fun σ =>
     (RingHom.toRatAlgHom σ).equivFieldRange.toLinearEquiv.finiteDimensional
   exact IntermediateField.finiteDimensional_iSup_of_finite
 
@@ -1415,12 +1415,12 @@ theorem fockSub_mem {m n : ℕ} {K : IntermediateField ℚ ℂ} (hK : ∀ z ∈ 
   unfold fockSub
   rw [MvPolynomial.aeval_X]
   by_cases h1 : y.1 = τ
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     exact hs _ fun i j => by
       split_ifs
       · exact K.mul_mem (hT _ _) (hS _ _)
       · exact hK _ (K.mul_mem (hT _ _) (hS _ _))
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     exact X_mem K _
 
 theorem one_mem_entry {K : IntermediateField ℚ ℂ} {n : ℕ} (i j : Fin n) : (1 : Matrix (Fin n) (Fin n) ℂ) i j ∈ K := by
@@ -1803,7 +1803,7 @@ theorem classSums_span_bottom : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D 
     · exact mul_mem ((le_sup_left : M₁ ≤ M₁ ⊔ M₂) (hcM b)) ((le_sup_right : M₂ ≤ M₁ ⊔ M₂) hℓM)
     · exact zero_mem _
   rw [e1, Finset.sum_eq_single_of_mem h₀ hh₀ (fun b _ hb => by simp [hb])]
-  simp only [if_true]
+  simp only [ite_true]
   calc ∑ k' ∈ c.support, c k' * ℓ * X.I W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀
       = ∑ k' ∈ c.support ∪ K, c k' * ℓ * X.I W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀ :=
         Finset.sum_subset Finset.subset_union_left fun k' _ hk' => by

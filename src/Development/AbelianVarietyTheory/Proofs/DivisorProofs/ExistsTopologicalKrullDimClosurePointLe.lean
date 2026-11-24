@@ -71,7 +71,7 @@ theorem closure_point_topologicalKrullDim : ∀ (X : Scheme.{0}) (n : ℕ) (z : 
   set S : Set X := closure ({z} : Set X) with hS
   have hle : topologicalKrullDim S ≤ n := hX ▸ topologicalKrullDim_subspace_le X S
   have hzS : z ∈ S := subset_closure rfl
-  haveI : Nonempty S := ⟨⟨z, hzS⟩⟩
+  have : Nonempty S := ⟨⟨z, hzS⟩⟩
   have h0 : (0 : WithBot ℕ∞) ≤ topologicalKrullDim S := Order.krullDim_nonneg_iff.mpr
     ⟨⟨closure {(⟨z, hzS⟩ : S)}, isIrreducible_singleton.closure, isClosed_closure⟩⟩
   obtain ⟨e, he⟩ : ∃ e : ℕ, topologicalKrullDim S = e := by

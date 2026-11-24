@@ -62,7 +62,7 @@ def cosetInd (U : AddSubgroup X) (q : X ⧸ U) : X → ℂ := fun x => if (x : X
 
 theorem cosetInd_mem_SB (U : AddSubgroup X) (hUo : IsOpen (U : Set X)) (hUc : IsCompact (U : Set X)) (q : X ⧸ U) :
     cosetInd U q ∈ SB X := by
-  haveI : DiscreteTopology (X ⧸ U) := QuotientAddGroup.discreteTopology hUo
+  have : DiscreteTopology (X ⧸ U) := QuotientAddGroup.discreteTopology hUo
   refine ⟨?_, ?_⟩
   · exact (IsLocallyConstant.of_discrete (fun q' : X ⧸ U => if q' = q then (1 : ℂ) else 0)).comp_continuous
       QuotientAddGroup.continuous_mk
@@ -116,7 +116,7 @@ theorem apply_eq_of_periodic {C : Set (X → ℂ)} (a : (X → ℂ) →ₗ[ℂ] 
     (hUk : ∀ x₀ ∉ U, ∃ χ ∈ C, (∀ u ∈ U, χ (x₀ + u) = χ x₀) ∧ χ x₀ ≠ 1)
     {g : X → ℂ} (hg : g ∈ SB X) (hper : ∀ x, ∀ u ∈ U, g (x + u) = g x) :
     a g = g 0 * a (cosetInd U 0) := by
-  haveI : DiscreteTopology (X ⧸ U) := QuotientAddGroup.discreteTopology hUo
+  have : DiscreteTopology (X ⧸ U) := QuotientAddGroup.discreteTopology hUo
   have hout : ∀ x : X, g ((x : X ⧸ U).out) = g x := fun x => by
     obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_add U x
     rw [hh]; exact hper x h h.2

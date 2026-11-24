@@ -242,8 +242,8 @@ theorem exists_norm (hσ : IsCMExt F E σ) {w : Fv F v ⊗[F] E} {t n : v.adicCo
     (hn : w * sigR (Fv F v) σ w = algebraMap (Fv F v) (Fv F v ⊗[F] E) n)
     {u : Fv F v} (hu : Valued.v u = 1) :
     ∃ a ∈ SelfDualLatticeActions.OEv E v, a * sigR (Fv F v) σ a = algebraMap (Fv F v) (Fv F v ⊗[F] E) u := by
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
-  haveI := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
   let c : SelfDualLatticeActions.OEv E v →+* SelfDualLatticeActions.OEv E v :=
     (sigR (Fv F v) σ).restrict (SelfDualLatticeActions.OEv E v).toSubring (SelfDualLatticeActions.OEv E v).toSubring
       fun _ => SelfDualLatticeActions.sigR_mem v σ
@@ -298,8 +298,8 @@ theorem exists_coords (hσ : IsCMExt F E σ) (hJ : IsHermND σ J)
         (e X (i, 0) ^ 2 + t * e X (i, 0) * e X (i, 1) + n * e X (i, 1) ^ 2)) ∧
       ∀ Y, (∀ i, Valued.v (e Y i) ≤ WithZero.exp m) ↔
         ∀ X : Fin 1 → Fin M → Fv F v ⊗[F] E, X 0 ∈ L → ψ (BR (Fv F v) σ J X Y) = 1 := by
-  haveI := GlobalTheory.LocalDensityCompare.modTop (E := E) v
-  haveI := GlobalTheory.LocalDensityCompare.topRing (E := E) v
+  have := GlobalTheory.LocalDensityCompare.modTop (E := E) v
+  have := GlobalTheory.LocalDensityCompare.topRing (E := E) v
   obtain ⟨c, hc, h1, h2⟩ := exists_dual v hσ hw hD ht hn
   obtain ⟨g, hg, hh⟩ := exists_frame v hL hb
   let e : (Fin 1 → Fin M → Fv F v ⊗[F] E) ≃ₗ[Fv F v] (Fin M × Fin 2 → Fv F v) :=
@@ -395,7 +395,7 @@ theorem exists_scaling (hσ : IsCMExt F E σ) (hJ : IsHermND σ J)
     ∃ T : (Fin 1 → Fin M → Fv F v ⊗[F] E) ≃+ (Fin 1 → Fin M → Fv F v ⊗[F] E),
       Continuous T ∧ Continuous T.symm ∧ (∀ X, T X 0 ∈ L ↔ X 0 ∈ L) ∧
         ∀ X, qR (Fv F v) σ J (T X 0) = u * qR (Fv F v) σ J (X 0) := by
-  haveI := GlobalTheory.LocalDensityCompare.topRing (E := E) v
+  have := GlobalTheory.LocalDensityCompare.topRing (E := E) v
   have hu0 : u ≠ 0 := by
     rintro rfl
     simp at hu
@@ -441,13 +441,13 @@ theorem addHaar_map_eq_of_preimage_eq {G : Type} [AddCommGroup G] [TopologicalSp
     [MeasurableSpace G] [BorelSpace G] (μ : Measure G) [μ.IsAddHaarMeasure] (T : G ≃+ G)
     (hT : Continuous T) (hT' : Continuous T.symm) {S : Set G} (hS : MeasurableSet S)
     (hpos : μ S ≠ 0) (hfin : μ S ≠ ⊤) (hpre : T ⁻¹' S = S) : Measure.map T μ = μ := by
-  haveI : (Measure.map T μ).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ T hT hT'
+  have : (Measure.map T μ).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ T hT hT'
   have hk := Measure.isAddLeftInvariant_eq_smul (Measure.map T μ) μ
   set k := Measure.addHaarScalarFactor (Measure.map T μ) μ
   have hm : Measure.map T μ S = μ S := by
     rw [Measure.map_apply hT.measurable hS, hpre]
   have hk1 : k = 1 := by
-    rw [hk, Measure.smul_apply] at hm
+    rw [hk, smul_apply] at hm
     have h1 : (k : ENNReal) * μ S = 1 * μ S := by
       rw [one_mul]
       simpa [ENNReal.smul_def] using hm
@@ -585,8 +585,8 @@ theorem fibre_mass_const_of_norm_eq_one {K : Type} [NormedField K] [ProperSpace 
 
 theorem fibre_mass_mul_units_eq : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (V : Type) [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup V] [LocallyCompactSpace V] [SecondCountableTopology V] [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasure] (ν : Measure (Fv F v)) [ν.IsAddHaarMeasure] (q : V → Fv F v), Continuous q → ∀ (fib : Fv F v → Measure V), IsFibreFamily μ q id Set.univ ν {c | c ≠ 0} fib → ∀ (L : AddSubgroup V), IsCompact (L : Set V) → IsOpen (L : Set V) → (∀ u : Fv F v, Valued.v u = 1 → ∃ T : V ≃+ V, Continuous T ∧ Continuous T.symm ∧ (∀ x, T x ∈ L ↔ x ∈ L) ∧ ∀ x, q (T x) = u * q x) → ∀ β : Fv F v, Valued.v β = 1 → fib β (L : Set V) ≠ ⊤ ∧ (fib β).real (L : Set V) * ν.real {u | Valued.v u = 1} = μ.real {x | x ∈ L ∧ Valued.v (q x) = 1} := by
   intro F _ _ v V _ _ _ _ _ _ _ μ _ ν _ q hq fib hfib L hLc hLo hact β hβ
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hn : ∀ u : Fv F v, Valued.v u = 1 ↔ ‖u‖ = 1 := by
     intro u
     rw [le_antisymm_iff, le_antisymm_iff, Valued.toNormedField.norm_le_one_iff,
@@ -626,10 +626,10 @@ theorem card_fibre_eq {t n : k} (hD : t ^ 2 - 4 * n ≠ 0) {c : k} (hc : c ≠ 0
   refine Finset.card_nbij' (fun p => (p.1 * u - n * p.2 * v, p.1 * v + p.2 * u + t * p.2 * v))
     (fun p => ((p.1 * (u + t * v) + n * p.2 * v) / c, (p.2 * u - p.1 * v) / c)) ?_ ?_ ?_ ?_
   · intro p hp
-    simp only [coe_filter, mem_univ, true_and, Set.mem_setOf_eq] at hp ⊢
+    simp only [coe_filter, mem_univ, true_and, Set.mem_ofPred_eq] at hp ⊢
     linear_combination (u ^ 2 + t * u * v + n * v ^ 2) * hp + huv
   · intro p hp
-    simp only [coe_filter, mem_univ, true_and, Set.mem_setOf_eq] at hp ⊢
+    simp only [coe_filter, mem_univ, true_and, Set.mem_ofPred_eq] at hp ⊢
     field_simp
     linear_combination (u ^ 2 + t * u * v + n * v ^ 2) * hp + c * huv
   · intro p _
@@ -709,8 +709,8 @@ theorem card_fibre {t n : k} (hD : t ^ 2 - 4 * n ≠ 0) {η : ℝ}
       = Fintype.card k - η + if c = 0 then η * Fintype.card k else 0 := by
   have hz := card_zero hD h1 h2
   by_cases hc : c = 0
-  · rw [if_pos hc, hc, hz]
-  rw [if_neg hc, card_fibre_eq hD hc, add_zero]
+  · rw [ite_eq_left hc, hc, hz]
+  rw [ite_eq_right hc, card_fibre_eq hD hc, add_zero]
   have tot := Finset.card_eq_sum_card_fiberwise (s := (univ : Finset (k × k))) (t := univ)
     (f := fun p : k × k => p.1 ^ 2 + t * p.1 * p.2 + n * p.2 ^ 2) (fun _ _ => mem_univ _)
   rw [← Finset.add_sum_erase _ _ (mem_univ (0 : k)),
@@ -768,7 +768,7 @@ theorem ncard_sum_binary_form_ne_zero (k : Type) [Field k] [Finite k] (t n : k)
       * (Nat.card k : ℝ)
       = ((Nat.card k : ℝ) - 1) * ((Nat.card k : ℝ) ^ (2 * M) - (η * (Nat.card k : ℝ)) ^ M) := by
   classical
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   have hz := BinaryFormCount.card_sum_zero
     (fun p : k × k => p.1 ^ 2 + t * p.1 * p.2 + n * p.2 ^ 2) (Fintype.card k) η
     (by rw [Fintype.card_prod]; push_cast; ring) (BinaryFormCount.card_fibre hD h1 h2) M
@@ -778,7 +778,7 @@ theorem ncard_sum_binary_form_ne_zero (k : Type) [Field k] [Finite k] (t n : k)
         (x (i, 0) ^ 2 + t * x (i, 0) * x (i, 1) + n * x (i, 1) ^ 2) ≠ 0}.ncard
       = #{x : Fin M → k × k |
         ¬ ∑ i, ((x i).1 ^ 2 + t * (x i).1 * (x i).2 + n * (x i).2 ^ 2) = 0} := by
-    rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+    rw [Set.ncard_eq_toFinset_card', Set.toFinset_ofPred]
     refine Finset.card_nbij' (fun x i => (x (i, 0), x (i, 1)))
       (fun x p => ![(x p.1).1, (x p.1).2] p.2) ?_ ?_ ?_ ?_
     · intro x hx
@@ -975,7 +975,7 @@ theorem vol_box [IsTopologicalAddGroup V] [MeasurableSpace V] [BorelSpace V] (μ
     (χ : V → V → ℂ) (hμ : SelfDual μ χ) (h1 : ∀ x x' y, χ (x + x') y = χ x y * χ x' y)
     (h2 : ∀ y, χ y 0 = 1) (m : ℤ) (hd : ∀ y, y ∈ box v e m ↔ ∀ x ∈ box v e 0, χ x y = 1) :
     μ.real (box v e 0 : Set V) = (SelfDualUnramifiedPlaces.resCard F v ^ m) ^ (-((Fintype.card ι : ℝ) / 2)) := by
-  haveI := hμ.1
+  have := hμ.1
   have a1 := GlobalTheory.selfDual_real_mul_real_dual_eq_one V μ χ hμ h1 h2 _ _ (box_compact_open v e 0).1 (box_compact_open v e 0).2
     (box_compact_open v e m).1 (box_compact_open v e m).2 hd
   have a2 : μ.real (box v e m : Set V) = _ * μ.real (box v e 0 : Set V) := GlobalTheory.HaarLatticeScale.measureReal_valued_le_exp F v V μ ι e m
@@ -1006,8 +1006,8 @@ theorem valued_eq_one_iff (y : v.adicCompletionIntegers F) :
 theorem vol_units (ν : Measure (Fv F v)) [ν.IsAddHaarMeasure] :
     ν.real {u | Valued.v u = 1} * SelfDualUnramifiedPlaces.resCard F v =
       (SelfDualUnramifiedPlaces.resCard F v - 1) * ν.real (v.adicCompletionIntegers F : Set (Fv F v)) := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
   have h := GlobalTheory.ResidueBoxVolume.measureReal_residueBox F v (Fv F v) ν Unit (lineEquiv v) {0}ᶜ
   rw [Set.ncard_compl, Set.ncard_singleton, Nat.card_fun, Nat.cast_sub (by
     exact Nat.one_le_pow _ _ Nat.card_pos)] at h
@@ -1020,7 +1020,7 @@ theorem vol_units (ν : Measure (Fv F v)) [ν.IsAddHaarMeasure] :
       exact (valued_eq_one_iff v ⟨u, le_of_eq hu⟩).1 hu (congrFun h0 ())
     · rintro ⟨y, hy, h0⟩
       have : u = y () := hy ()
-      rw [Set.mem_setOf_eq, this, valued_eq_one_iff]
+      rw [Set.mem_ofPred_eq, this, valued_eq_one_iff]
       exact fun h => h0 (funext fun _ => h)
   · ext u
     exact ⟨fun h _ => h, fun h => h ()⟩
@@ -1029,7 +1029,7 @@ theorem vol_int {ψ : AddChar (Fv F v) ℂ} {m : ℤ} (hm : SelfDualUnramifiedPl
     (ν : Measure (Fv F v)) (hν : SdR (Fv F v) ψ ν) :
     ν.real (v.adicCompletionIntegers F : Set (Fv F v)) =
       (SelfDualUnramifiedPlaces.resCard F v ^ m) ^ (-(1 / 2 : ℝ)) := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have h := vol_box v (lineEquiv v) ν _ hν (fun x x' y => by rw [add_mul, AddChar.map_add_eq_mul])
     (fun y => by simp) m (fun y => by
       constructor
@@ -1069,14 +1069,14 @@ theorem density_arith {q N η f a u m o cnt : ℝ} {M : ℕ} (hq : 1 < q) (hN : 
 theorem localDensity_of_selfDualLatticeLemmas (H : SelfDualLatticeActions.SelfDualLatticeLemmas) :
     SelfDualUnramifiedPlaces.LocalDensity := by
   intro F E _ _ _ _ _ σ hσ M hM J hJ v hu ψ _ m hm L hL μ hμ ν hν
-  haveI := GlobalTheory.LocalDensityCompare.modTop (E := E) v
-  haveI := GlobalTheory.LocalDensityCompare.topRing (E := E) v
+  have := GlobalTheory.LocalDensityCompare.modTop (E := E) v
+  have := GlobalTheory.LocalDensityCompare.topRing (E := E) v
   obtain ⟨_, _, _⟩ := GlobalTheory.LocalDensityCompare.lcs (E := E) v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
-  haveI := hμ.1
-  haveI := hν.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  have := hμ.1
+  have := hν.1
   let L' : Submodule (SelfDualLatticeActions.OEv E v) (SelfDualLatticeActions.Wv E v M) := L
   have hL' : SelfDualLatticeActions.IsSelfDualLat v σ J L' :=
     ⟨hL.1, hL.2.1, fun y => (hL.2.2 y).trans ⟨fun h => ⟨trivial, h⟩, fun h => h.2⟩⟩
@@ -1109,7 +1109,7 @@ theorem localDensity_of_selfDualLatticeLemmas (H : SelfDualLatticeActions.SelfDu
     (by simpa only [map_sub, map_mul, map_pow, map_ofNat] using
       (hD.map (IsLocalRing.residue (v.adicCompletionIntegers F))).ne_zero)
     (SelfDualUnramifiedPlaces.eta F E v)
-    (fun h => if_neg fun hf => hfield.1 hf h) (fun h => if_pos (hfield.2 h)) M
+    (fun h => ite_eq_right fun hf => hfield.1 hf h) (fun h => ite_eq_left (hfield.2 h)) M
   have a4 := GlobalTheory.ResidueBoxVolume.measureReal_residueBox F v _ μ _ e {x | ∑ i : Fin M, (x (i, 0) ^ 2 +
     IsLocalRing.residue _ t * x (i, 0) * x (i, 1) + IsLocalRing.residue _ n * x (i, 1) ^ 2) ≠ 0}
   rw [card_residue] at hcount a4

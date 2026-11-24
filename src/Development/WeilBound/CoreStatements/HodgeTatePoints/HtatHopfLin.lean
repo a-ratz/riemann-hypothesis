@@ -79,8 +79,8 @@ theorem tensor_sep {K B₁ B₂ I J : Type} [Field K] [Algebra R K] [IsFractionR
   classical
   have := Fintype.ofFinite I
   have := Fintype.ofFinite J
-  haveI : Module.Flat R K := IsLocalization.flat K (nonZeroDivisors R)
-  haveI : Module.Flat R (J → K) := Module.Flat.trans R K (J → K)
+  have : Module.Flat R K := IsLocalization.flat K (nonZeroDivisors R)
+  have : Module.Flat R (J → K) := Module.Flat.trans R K (J → K)
   let E : B₁ →ₗ[R] (I → K) := LinearMap.pi fun i => (e i).toLinearMap
   let F : B₂ →ₗ[R] (J → K) := LinearMap.pi fun j => (f j).toLinearMap
   have hE : Function.Injective E :=
@@ -240,14 +240,14 @@ theorem chart_pair [Finite T] (Γ : QFGroup R T) (A₁ A₂ : Type) [CommRing A�
     (hu : ∀ (a b : T) (w : Spec (CommRingCat.of (FractionRing R)) ⟶ pullback (c₁ ≫ Γ.G.hom) (c₂ ≫ Γ.G.hom)),
       w ≫ pullback.fst _ _ ≫ c₁ = (Γ.pt a).left → w ≫ pullback.snd _ _ ≫ c₂ = (Γ.pt b).left → w.appTop u = 0) :
     u = 0 := by
-  letI : Algebra R A₁ := (Spec.preimage (c₁ ≫ Γ.G.hom)).hom.toAlgebra
-  letI : Algebra R A₂ := (Spec.preimage (c₂ ≫ Γ.G.hom)).hom.toAlgebra
+  let : Algebra R A₁ := (Spec.preimage (c₁ ≫ Γ.G.hom)).hom.toAlgebra
+  let : Algebra R A₂ := (Spec.preimage (c₂ ≫ Γ.G.hom)).hom.toAlgebra
   have h₁ : c₁ ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R A₁)) :=
     (Spec.map_preimage (c₁ ≫ Γ.G.hom)).symm
   have h₂ : c₂ ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R A₂)) :=
     (Spec.map_preimage (c₂ ≫ Γ.G.hom)).symm
-  haveI : Flat Γ.G.hom := Γ.flat
-  haveI : Module.Flat R A₁ := by
+  have : Flat Γ.G.hom := Γ.flat
+  have : Module.Flat R A₁ := by
     have : Flat (Spec.map (CommRingCat.ofHom (algebraMap R A₁))) := h₁ ▸ inferInstance
     rw [Flat.SpecMap_iff] at this
     exact (RingHom.flat_algebraMap_iff).1 this

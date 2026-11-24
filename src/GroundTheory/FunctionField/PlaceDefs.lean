@@ -238,7 +238,7 @@ theorem linearIndependent_of_valuation {x : K} (hx0 : x ≠ 0) (hx : v.ring.valu
     LinearIndependent (IntermediateField.adjoin k {x}) a := by
   classical
   set V := v.ring.valuation
-  have hX0 : 0 < V x := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx0)
+  have hX0 : 0 < V x := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx0)
   have aux : ∀ i j (m n : ℤ), m < n → V (a i) * V x ^ m = V (a j) * V x ^ n → False := by
     intro i j m n hmn h
     have h1 : V x ^ n ≤ V x ^ (m + 1) := (zpow_right_strictAnti₀ hX0 hx).antitone (by omega)
@@ -308,7 +308,7 @@ theorem linearIndependent_of_residue {x : K} (hx0 : x ≠ 0) (hx : v.ring.valuat
     have := hmax i₀ (Finset.mem_univ _)
     rw [h, map_zero] at this
     exact hgi₀ ((Valuation.zero_iff _).1 (le_antisymm this zero_le))
-  have hVj : 0 < V (g j : K) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hgj)
+  have hVj : 0 < V (g j : K) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hgj)
   have hle : ∀ i, V ((g i : K) / g j) ≤ 1 := fun i => by
     rw [map_div₀]; exact (div_le_one₀ hVj).2 (hmax i (Finset.mem_univ _))
   have hh : ∀ i, ∃ b : k, V ((g i : K) / g j - algebraMap k K b) < 1 := by
@@ -353,11 +353,11 @@ theorem linearIndependent_of_residue {x : K} (hx0 : x ≠ 0) (hx : v.ring.valuat
   exact lt_irrefl _ this
 
 theorem isNoetherianRing [IsFunctionField k K] : IsNoetherianRing v.ring := by
-  rw [isNoetherianRing_iff, isNoetherian_iff', WellFoundedGT,
+  rw [isNoetherianRing_iff, isNoetherian_iff, WellFoundedGT,
     RelEmbedding.wellFounded_iff_isEmpty]
   refine ⟨fun f => ?_⟩
   have hf : ∀ n, f n < f (n + 1) := fun n => f.map_rel_iff.2 (Nat.lt_succ_self n)
-  choose b hb1 hb2 using fun n => SetLike.exists_of_lt (hf n)
+  choose b hb1 hb2 using fun n => IsConcreteLE.exists_of_lt (hf n)
   set V := v.ring.valuation
   have hstep : ∀ n, V (b n : K) < V (b (n + 1) : K) := by
     intro n
@@ -372,7 +372,7 @@ theorem isNoetherianRing [IsFunctionField k K] : IsNoetherianRing v.ring := by
       exact zero_mem _
     · have hc : (b (n + 1) : K) / b n ∈ v.ring := by
         rw [← v.ring.valuation_le_one_iff, map_div₀]
-        exact (div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h0))).2 hle
+        exact (div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h0))).2 hle
       have heq : b (n + 1) = b n * ⟨_, hc⟩ := Subtype.ext (by
         change (b (n + 1) : K) = b n * ((b (n + 1) : K) / b n)
         rw [mul_div_cancel₀ _ h0])
@@ -443,7 +443,7 @@ theorem valuation_le_one_iff (x : K) : v.valuation x ≤ 1 ↔ x ∈ v.ring := b
     obtain ⟨hr, hrm⟩ := v.ring.mem_nonunits_iff_exists_mem_maximalIdeal.1 hinv
     have hlt : v.valuation x⁻¹ < 1 :=
       (v.heightOneSpectrum.valuation_lt_one_iff_mem (K := K) ⟨x⁻¹, hr⟩).2 hrm
-    rw [map_inv₀, inv_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx0))] at hlt
+    rw [map_inv₀, inv_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx0))] at hlt
     exact absurd h (not_le.2 hlt)
   · intro hx
     exact v.heightOneSpectrum.valuation_le_one (K := K) (⟨x, hx⟩ : v.ring)

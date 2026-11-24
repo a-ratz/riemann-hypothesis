@@ -73,7 +73,7 @@ theorem toOne_spherical : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   intro k _ _ _ _ _ _ n _ _ c P hP hPc ψ hψc hcond ν hν A _ _ σ hσ l hl v hK
   have hne : ψ ≠ 1 := hcond.ne_one
   have hsd : IsSelfDual ψ ν := ((selfDual_measure k ψ hψc hne).2.1 hcond ν).1 hν
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   obtain ⟨m, rfl⟩ : ∃ m, P = m + 1 := ⟨P - 1, by omega⟩
   have key : ∀ m : ℕ, m + 1 ≤ c → ∀ l : A →ₗ[ℂ] ℂ, IsNEquiv ψ (m + 1) σ l →
       (Nat.rec (motive := fun _ => (A → ℂ) → A → ℂ) (fun l => l)

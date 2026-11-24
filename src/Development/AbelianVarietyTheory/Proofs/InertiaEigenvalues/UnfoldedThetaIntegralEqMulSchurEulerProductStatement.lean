@@ -117,14 +117,14 @@ namespace GlobalTheory.CellDec
 theorem exists_isFundamentalDomain_NE : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ) (μ : Measure (GA E a)),
     ∃ 𝓕₀ : Set (GA E a), IsFundamentalDomain (GlobalTheory.CellDec.NE E a) 𝓕₀ μ := by
   intro E _ _ a μ
-  haveI : DiscreteTopology (GlobalTheory.CellDec.NE E a) :=
+  have : DiscreteTopology (GlobalTheory.CellDec.NE E a) :=
     GlobalTheory.MirTower.discrete_of_le_range (Subgroup.map_le_range _ _)
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E)) :=
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E)) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin a → Ad E))
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Ad E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (GA E a) :=
+  have : SecondCountableTopology (GA E a) :=
     Units.isEmbedding_embedProduct.secondCountableTopology
   exact GlobalTheory.FundDomDiscrete.exists_isFundamentalDomain _ μ
 
@@ -209,7 +209,7 @@ theorem lintegral_ne_top : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
     intro g
     rw [ENNReal.ofReal_mul (tsum_nonneg fun _ => norm_nonneg _),
       ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hsum g)]
-    simp only [ofReal_norm_eq_enorm]
+    simp only [ofReal_norm]
   have hlow' : IntegrableOn (fun g : GA E a => (∑' ξ : {ξ : Fin a → E // ξ ≠ 0},
       ‖rsPsi ℓ φ.1 φ.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)‖) *
         (ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ x) (𝓕 ∩ GlobalTheory.RSThetaLow.lowSet E a) μ := by
@@ -282,8 +282,8 @@ theorem rsPsi_self_eq (ℓ : Fin a) (F : GA E a → ℂ) (Φ : (Fin a → Cinf E
 
 theorem tsum_eq_toReal {ι : Type} (f : ι → ℂ) (hf : ∀ i, f i = ((‖f i‖ : ℝ) : ℂ)) :
     ∑' i, f i = (((∑' i, ‖f i‖ₑ).toReal : ℝ) : ℂ) := by
-  rw [ENNReal.tsum_toReal_eq fun _ => enorm_ne_top, Complex.ofReal_tsum]
-  exact tsum_congr fun i => by rw [toReal_enorm, ← hf i]
+  rw [ENNReal.tsum_toReal_eq fun _ => eNorm_ne_top, Complex.ofReal_tsum]
+  exact tsum_congr fun i => by rw [toReal_eNorm, ← hf i]
 
 theorem thetaZ_eq_toReal (ℓ : Fin a) (F : GA E a → ℂ) (hF : Continuous F) (Φ : (Fin a → Cinf E) → ℂ)
     (hΦc : Continuous Φ) (hΦs : tsupport Φ ⊆ GlobalTheory.RSTheta.rowSet E ℓ) (hΦ : ∀ u, 0 ≤ (Φ u).re ∧ (Φ u).im = 0)
@@ -309,11 +309,11 @@ theorem thetaZ_eq_toReal (ℓ : Fin a) (F : GA E a → ℂ) (hF : Continuous F) 
     exact h3
   have hdet : Continuous fun g : GA E a => ((ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ x) := by
     have h : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-      continuous_subtype_val.comp (continuous_ideleModule.comp (GroundTheory.Automorphic.AdelicGLn.continuous_det E a))
+      continuous_subtypeVal.comp (continuous_ideleModule.comp (GroundTheory.Automorphic.AdelicGLn.continuous_det E a))
     exact h.rpow_const fun g => Or.inl (ideleModule E (GeneralLinearGroup.det g)).2.ne'
   have hGm : Measurable G := by
     refine Measurable.mul ?_ (ENNReal.measurable_ofReal.comp hdet.measurable)
-    exact (lowerSemicontinuous_tsum fun ξ => (hcont ξ).enorm.lowerSemicontinuous).measurable
+    exact (lowerSemicontinuous_tsum fun ξ => (hcont ξ).eNorm.lowerSemicontinuous).measurable
 
   have hpt : ∀ g : GA E a, (∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, GlobalTheory.RSTheta.rsPsi ℓ F F Φ J η g
       ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)) *
@@ -377,7 +377,7 @@ theorem exists_pLoc_ite {n : ℕ} (c : ∀ w : HeightOneSpectrum (𝓞 E), GL (F
     rw [map_mul, hh w]
     by_cases hw : w = v
     · subst hw
-      rw [pLoc_locGL, if_neg hvT, if_pos (Finset.mem_insert_self _ _), mul_one]
+      rw [pLoc_locGL, ite_eq_right hvT, ite_eq_left (Finset.mem_insert_self _ _), mul_one]
     · rw [pLoc_locGL_of_ne hw, one_mul]
       simp [Finset.mem_insert, hw]
 
@@ -385,7 +385,7 @@ theorem isCompact_intGL (n : ℕ) :
     IsCompact {κ : GL (Fin n) (Af E) | ∀ w, GeneralLinearGroup.map (pLoc E w) κ ∈ GlobalTheory.LFun.KGL w (n := n)} := by
   convert GlobalTheory.isCompact_KGL E n using 1
   ext κ
-  simp only [Set.mem_setOf_eq, GlobalTheory.LFun.KGL, GlobalTheory.CellDec.mem_GLint_iff_entries_cell, ← map_inv]
+  simp only [Set.mem_ofPred_eq, GlobalTheory.LFun.KGL, GlobalTheory.CellDec.mem_GLint_iff_entries_cell, ← map_inv]
   constructor
   · intro h
     exact ⟨fun i j v => (h v).1 i j, fun i j v => (h v).2 i j⟩
@@ -485,7 +485,7 @@ theorem exists_isCompact_mod_NA : ∀ (E : Type) [Field E] [NumberField E] [_roo
   set yf : Fin (m + 1) → Af E := fun i => pFin E ((k : Matrix (Fin (m + 1)) (Fin (m + 1)) (Ad E)) (Fin.last m) i) with hyf
   set σ := infGL E (m + 1) (GlobalTheory.RSTheta.rowGL (Fin.last m) u) with hσ
   have hB1 := left_ne_zero_of_mul hB
-  rw [enorm_ne_zero] at hB1
+  rw [eNorm_ne_zero] at hB1
   unfold GlobalTheory.RSTheta.rsPsi GlobalTheory.ThetaPoisson.thetaFn at hB1
   rw [hrow] at hB1
   obtain ⟨hB2, hlat⟩ := mul_ne_zero_iff.1 hB1
@@ -512,9 +512,9 @@ theorem exists_isCompact_mod_NA : ∀ (E : Type) [Field E] [NumberField E] [_roo
     rw [hkTd, map_mul, map_inv, hinf_h, inv_mul_cancel]
   have hkT_T : ∀ w ∈ T, GlobalTheory.CellDec.compV E (m + 1) w kT = 1 := by
     intro w hw
-    rw [hkTd, map_mul, map_inv, hcV_h, if_pos hw, inv_mul_cancel]
+    rw [hkTd, map_mul, map_inv, hcV_h, ite_eq_left hw, inv_mul_cancel]
   have hkT_US : kT ∈ GlobalTheory.CellDec.US E (m + 1) T := GlobalTheory.CellDec.mem_US.2 fun w hw => by
-    rw [hkTd, map_mul, map_inv, hcV_h, if_neg hw, inv_one, one_mul]
+    rw [hkTd, map_mul, map_inv, hcV_h, ite_eq_right hw, inv_one, one_mul]
     exact GlobalTheory.CellDec.mem_US.1 hk w hw
   have hkT_fin : kT = finGL E (m + 1) (GeneralLinearGroup.map (pFin E) kT) := by
     conv_lhs => rw [← infGL_mul_finGL kT]
@@ -548,7 +548,7 @@ theorem exists_isCompact_mod_NA : ∀ (E : Type) [Field E] [NumberField E] [_roo
   set p := h * B⁻¹ with hpd
   have hp_sup : ∀ w ∉ T, GlobalTheory.CellDec.compV E (m + 1) w p = 1 := by
     intro w hw
-    rw [hpd, map_mul, map_inv, hcV_h, if_neg hw, hBd, map_mul, GlobalTheory.CellDec.compV_finGL, hκ1 w hw, hσ, hcV_inf,
+    rw [hpd, map_mul, map_inv, hcV_h, ite_eq_right hw, hBd, map_mul, GlobalTheory.CellDec.compV_finGL, hκ1 w hw, hσ, hcV_inf,
       mul_one, inv_one, one_mul]
   have hp_mir : p ∈ (GlobalTheory.JSW.supS (E := E) (a := m + 1) T ∩ GlobalTheory.JSW.mirSet (GlobalTheory.CuspRep.Ad E) m) := by
     refine ⟨fun w hw => hp_sup w hw, fun j => ?_⟩
@@ -556,8 +556,8 @@ theorem exists_isCompact_mod_NA : ∀ (E : Type) [Field E] [NumberField E] [_roo
     rw [← hpd] at e
     rw [e, Matrix.one_apply]
     by_cases hj : j = Fin.last m
-    · rw [if_pos hj.symm, if_pos hj]
-    · rw [if_neg (Ne.symm hj), if_neg hj]
+    · rw [ite_eq_left hj.symm, ite_eq_left hj]
+    · rw [ite_eq_right (Ne.symm hj), ite_eq_right hj]
   have hcomm : kT * σ⁻¹ = σ⁻¹ * kT := by
     rw [hkT_fin, hσ, ← map_inv]
     exact (infGL_comm _ _).symm
@@ -718,7 +718,7 @@ theorem exists_nat_of_mem_nhds {a : ℕ} (ℓ : Fin a) (w : HeightOneSpectrum (�
     have hc : MonoidWithZeroHom.ValueGroup₀.embedding γ.1 ≠ (0 : WithZero (Multiplicative ℤ)) := by simp
     obtain ⟨N, hN⟩ := exists_exp_lt hc
     refine ⟨N, fun z hz => hγ ?_⟩
-    simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+    simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
     exact lt_of_le_of_lt hz hN
   choose N hN using h1
   refine ⟨Finset.univ.sup N, fun y hy => hsub fun j _ => hN j _ ((hy j).trans ?_)⟩
@@ -736,7 +736,7 @@ theorem map_list_prod_locGL {a : ℕ} (g : ∀ w : HeightOneSpectrum (𝓞 E), G
     rw [List.map_cons, List.prod_cons, map_mul, ih (List.nodup_cons.1 hl).2]
     by_cases h : w = v
     · subst h
-      rw [pLoc_locGL, if_neg (List.nodup_cons.1 hl).1, if_pos List.mem_cons_self, mul_one]
+      rw [pLoc_locGL, ite_eq_right (List.nodup_cons.1 hl).1, ite_eq_left List.mem_cons_self, mul_one]
     · rw [pLoc_locGL_of_ne h, one_mul]
       simp [h]
 
@@ -810,7 +810,7 @@ theorem exists_bump_ideal_rowGL : ∀ (E : Type) [Field E] [NumberField E] [_roo
       intro w hw j
       have h1 := val_sub_single_le ℓ hy w j
       rw [hJ, hn] at h1
-      simpa only [hw, if_true] using h1
+      simpa only [hw, ite_true] using h1
     have hmem : ∀ w ∈ T, locGL E a w (rowGL ℓ (fun j => pLoc E w (y j))) ∈ U ∧
         rowGL ℓ (fun j => pLoc E w (y j)) ∈ KGL w (n := a) := by
       intro w hw
@@ -836,9 +836,9 @@ theorem exists_bump_ideal_rowGL : ∀ (E : Type) [Field E] [NumberField E] [_roo
       · exact (hmem w (Finset.mem_toList.1 h)).2
       · exact one_mem _
     · intro w hw
-      rw [key w, if_neg (by simpa using hw)]
+      rw [key w, ite_eq_right (by simpa using hw)]
     · intro w hw j
-      rw [key w, if_pos (Finset.mem_toList.2 hw), val_rowGL (hunit w hw)]
+      rw [key w, ite_eq_left (Finset.mem_toList.2 hw), val_rowGL (hunit w hw)]
       simp [rowMat]
 
 end GlobalTheory.BumpOrbit
@@ -1095,7 +1095,7 @@ theorem exists_sph_whit_tl_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_
   let B : HeightOneSpectrum (𝓞 E) → Multiset ℂˣ := fun w =>
     if h : w ∈ T then 0 else Finset.univ.val.map (α ⟨w, h⟩)
   obtain ⟨φ₀, hφ₀V, hφ₀0, hφ₀K⟩ := _root_.GlobalTheory.JSW.SphVec.exists_sphVec_of_hasSat E (m + 1) π T B (fun w hw => by
-    simp only [B, dif_neg hw]; exact hα ⟨w, hw⟩)
+    simp only [B, dite_eq_right hw]; exact hα ⟨w, hw⟩)
   obtain ⟨g, hg⟩ : ∃ g, whit φ₀.1 g ≠ 0 := by
     by_contra h
     push_neg at h
@@ -1264,7 +1264,7 @@ theorem one_mem_mirS (S : Finset (HeightOneSpectrum (𝓞 E))) (m : ℕ) : (1 : 
   rw [Units.val_one, Matrix.one_apply]
   by_cases h : j = Fin.last m
   · subst h; simp
-  · rw [if_neg (Ne.symm h), if_neg h]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
 
 theorem mem_NA_of_mem {u : GA E n} (hu : u ∈ GlobalTheory.JSW.NA (E := E) (a := n)) : u ∈ GlobalTheory.CellDec.NA E n :=
   (GlobalTheory.SmGL.mem_unipB (Ad E)).2 ⟨fun i j hij => hu.1 i j hij, hu.2⟩
@@ -1423,7 +1423,7 @@ theorem row_mul_of_mem_NA {ℓ : Fin a} (hℓ : (ℓ : ℕ) + 1 = a) {u : GA E a
 theorem det_of_mem_NA {u : GA E a} (hu : u ∈ GlobalTheory.CellDec.NA E a) : GeneralLinearGroup.det u = 1 := by
   obtain ⟨h1, h2⟩ := (GlobalTheory.SmGL.mem_unipB (Ad E)).1 hu
   apply Units.ext
-  rw [GeneralLinearGroup.val_det_apply, Units.val_one, Matrix.det_of_upperTriangular (fun i j h => h1 i j h)]
+  rw [GeneralLinearGroup.val_det_apply, Units.val_one, det_of_isUpperTriangular (fun i j h => h1 i j h)]
   simp [h2]
 
 end GlobalTheory.RSCellB
@@ -1448,20 +1448,20 @@ theorem bInt_continuous_invariant_finite : ∀ (E : Type) [Field E] [NumberField
       ∀ x g, GlobalTheory.RSCell.bInt ℓ F Φ J η x g ≠ ⊤ := by
   intro E _ _ _ a ℓ hℓ F Φ J η hWc hWu hΦc hΦs
   have hdet : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-    continuous_subtype_val.comp (continuous_ideleModule.comp (GroundTheory.Automorphic.AdelicGLn.continuous_det E a))
+    continuous_subtypeVal.comp (continuous_ideleModule.comp (GroundTheory.Automorphic.AdelicGLn.continuous_det E a))
   refine ⟨?_, ?_, ?_⟩
   · have h1 : Continuous fun p : ℝ × GA E a => (p.2, p.2.val ℓ) :=
       continuous_snd.prodMk ((continuous_apply ℓ).comp ((Units.continuous_val (M := Matrix (Fin a) (Fin a) (Ad E))).comp continuous_snd))
     have h2 := (GlobalTheory.RSTheta.continuous_rsPsi hWc hWc hΦc hΦs J η).comp h1
     have h3 : Continuous fun p : ℝ × GA E a => (ideleModule E (GeneralLinearGroup.det p.2) : ℝ) ^ p.1 :=
       (hdet.comp continuous_snd).rpow continuous_fst fun p => Or.inl (ideleModule E (GeneralLinearGroup.det p.2)).2.ne'
-    exact h2.enorm.ennreal_mul (ENNReal.continuous_ofReal.comp h3) (fun _ => Or.inr ENNReal.ofReal_ne_top)
-      (fun _ => Or.inr enorm_ne_top)
+    exact h2.eNorm.ennreal_mul (ENNReal.continuous_ofReal.comp h3) (fun _ => Or.inr ENNReal.ofReal_ne_top)
+      (fun _ => Or.inr eNorm_ne_top)
   · intro x u hu g
     simp only [GlobalTheory.RSCell.bInt, row_mul_of_mem_NA hℓ hu, map_mul, det_of_mem_NA hu, one_mul]
     rw [rsPsi_self_mul ℓ (hWu u hu)]
   · intro x g
-    exact ENNReal.mul_ne_top enorm_ne_top ENNReal.ofReal_ne_top
+    exact ENNReal.mul_ne_top eNorm_ne_top ENNReal.ofReal_ne_top
 
 end GlobalTheory.RSCellB
 
@@ -1513,7 +1513,7 @@ theorem bInt_tl_last_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_root_.
     simp
   rw [bInt, hpsi]
   refine mul_ne_zero ?_ ?_
-  · rw [enorm_ne_zero]
+  · rw [eNorm_ne_zero]
     exact mul_ne_zero (mul_ne_zero hW (by simpa using hW)) hΦ
   · rw [ne_eq, ENNReal.ofReal_eq_zero, not_le]
     exact Real.rpow_pos_of_pos (ideleModule E _).2 x

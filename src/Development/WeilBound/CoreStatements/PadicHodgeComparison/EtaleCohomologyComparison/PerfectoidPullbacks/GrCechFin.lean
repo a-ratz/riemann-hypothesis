@@ -67,7 +67,7 @@ namespace GlobalTheory.CompanionTheory.CupdR
 theorem dividedPowerFiltration_mul {B : Type} [CommRing B] {J : Ideal B} (δ : DividedPowers J) (r s : ℕ) :
     pdP δ r * pdP δ s ≤ pdP δ (r + s) := by
   unfold pdP
-  rw [Ideal.span_mul_span']
+  rw [Ideal.span_mul_span]
   refine Ideal.span_le.2 ?_
   rintro _ ⟨_, ⟨l, hl, hr, rfl⟩, _, ⟨l', hl', hr', rfl⟩, rfl⟩
   refine Ideal.subset_span ⟨l ++ l', ?_, ?_, ?_⟩

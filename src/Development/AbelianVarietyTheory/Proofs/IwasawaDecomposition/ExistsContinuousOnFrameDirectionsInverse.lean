@@ -99,7 +99,7 @@ theorem frame_basis {x : Sp ℂ ⟶ Z.X} (f : EigFrame Z σ x) {n : ℕ}
   have : CharZero c.F := RingHom.charZero c.F.val.toRingHom
   obtain ⟨α, hinj, ⟨p, hp, hps⟩, hN⟩ :=
     exists_sepElt (E := E) (F := c.F) c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hE : ∀ τ m, IsEigV (rho hx) (embK c τ) m ↔ ∀ a : 𝓞 E, vec Z.t x xc m ≫ (Z.t.act.act a).left =
       spMap (epsMul (σ (embK c τ a))) ≫ vec Z.t x xc m := fun τ m => by
     rw [vec_eig_iff hx (fun a => σ (embK c τ a)), ReciprocityTheory.ChartRestriction.G.Chart.mem_eigLat_iff]

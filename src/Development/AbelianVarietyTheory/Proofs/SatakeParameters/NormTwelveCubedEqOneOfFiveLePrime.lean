@@ -76,7 +76,7 @@ theorem lamOf_eq_map (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) :
   rw [AddMonoidHom.map_closure]
   congr 1
   ext w
-  simp only [Set.mem_setOf_eq, Set.mem_image, AddMonoidHom.coe_mulLeft, one_mul]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, AddMonoidHom.coe_mulLeft, one_mul]
   constructor
   · rintro ⟨c, hc, rfl⟩
     exact ⟨_, ⟨c, hc, rfl⟩, rfl⟩

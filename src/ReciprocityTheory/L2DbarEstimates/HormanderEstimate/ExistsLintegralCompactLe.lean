@@ -88,7 +88,7 @@ theorem exists_lintegral_compact_le (n : ℕ) {M : Type*} [TopologicalSpace M] [
         have hψx : ψ x ≤ C := hC ⟨x, hx, rfl⟩
         rw [← ENNReal.ofReal_mul (Real.exp_pos C).le]
         have h1 : ‖g x‖ₑ ^ 2 = ENNReal.ofReal (‖g x‖ ^ 2) := by
-          rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+          rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
         rw [h1]
         apply ENNReal.ofReal_le_ofReal
         have hexp : 1 ≤ Real.exp C * Real.exp (-ψ x) := by

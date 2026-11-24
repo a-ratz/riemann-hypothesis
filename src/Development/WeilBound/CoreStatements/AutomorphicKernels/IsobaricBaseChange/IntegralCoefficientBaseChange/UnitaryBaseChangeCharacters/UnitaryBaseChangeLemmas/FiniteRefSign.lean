@@ -102,7 +102,7 @@ def tensorLift {R A B T : Type} [CommRing R] [CommRing A] [CommRing B] [CommRing
 theorem tensorLift_tmul {R A B T : Type} [CommRing R] [CommRing A] [CommRing B] [CommRing T] [Algebra R A]
     [Algebra R B] (a : A →+* T) (b : B →+* T) (h : ∀ x : R, a (algebraMap R A x) = b (algebraMap R B x))
     (x : A) (y : B) : tensorLift a b h (x ⊗ₜ y) = a x * b y := by
-  letI : Algebra R T := (a.comp (algebraMap R A)).toAlgebra
+  let : Algebra R T := (a.comp (algebraMap R A)).toAlgebra
   exact Algebra.TensorProduct.lift_tmul _ _ _ x y
 
 theorem exists_common {ι A : Type} [Finite ι] [CommRing A] {R : ι → Type} [∀ i, CommRing (R i)]
@@ -573,7 +573,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
     (LinearMap.ker (Matrix.toLin' (aeval γ₀.val P₁)))
   refine (GlobalTheory.QNorm.finite_valuation_ne_one E (Units.mk0 _ hd0)).subset ?_
   rintro w ⟨hw, hs⟩
-  simp only [Set.mem_setOf_eq, Units.val_mk0]
+  simp only [Set.mem_ofPred_eq, Units.val_mk0]
   intro h1
   apply hs
   unfold sgnOn
@@ -1115,8 +1115,8 @@ theorem exists_basis_ker {K : Type} [Field K] (φ : E →+* K) {n : ℕ} (ψ : F
     (hr : LinearMap.range ψ = LinearMap.ker (Matrix.toLin' B₀)) :
     ∃ cB : Module.Basis (Fin r) K (LinearMap.ker (Matrix.toLin' (B₀.map φ))),
       ∀ i, (cB i : Fin n → K) = φ ∘ ψ (B i) := by
-  letI := φ.toAlgebra
-  haveI : FaithfulSMul E K := (faithfulSMul_iff_algebraMap_injective E K).2 φ.injective
+  let := φ.toAlgebra
+  have : FaithfulSMul E K := (faithfulSMul_iff_algebraMap_injective E K).2 φ.injective
   set V' := LinearMap.ker (Matrix.toLin' (B₀.map φ)) with hV'
   have hmem : ∀ i, φ ∘ ψ (B i) ∈ V' := fun i =>
     GlobalTheory.UnitaryClasses.BaseChangeSign.mem_ker_map φ (hr ▸ LinearMap.mem_range_self ψ (B i))
@@ -1127,7 +1127,7 @@ theorem exists_basis_ker {K : Type} [Field K] (φ : E →+* K) {n : ℕ} (ψ : F
     have h1 := Q.2.2.2.1
     have h2 := Irreducible.natDegree_pos Q.2.2.1
     omega
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr0⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr0⟩⟩
   let u : Fin r → V' := fun i => ⟨φ ∘ ψ (B i), hmem i⟩
   have hli : LinearIndependent K u := by
     apply LinearIndependent.of_comp V'.subtype
@@ -1757,7 +1757,7 @@ theorem norm_value_pos {r : ℕ} (Q : SelfRecip E r) (ρ : Fld Q →+* ℂ) (hn 
   let ρF : maximalRealSubfield E →+* ℂ := ρ.comp (algebraMap (maximalRealSubfield E) (Fld Q))
   let w := InfinitePlace.mk ρF
   have hw : w.IsReal := IsTotallyReal.isReal w
-  letI : Algebra (maximalRealSubfield E) ℂ := ρF.toAlgebra
+  let : Algebra (maximalRealSubfield E) ℂ := ρF.toAlgebra
   let g : w.Completion →ₐ[maximalRealSubfield E] ℂ :=
     ⟨InfinitePlace.Completion.extensionEmbedding w, fun a => by
       change InfinitePlace.Completion.extensionEmbedding w (algebraMap (maximalRealSubfield E) w.Completion a) = ρF a
@@ -1787,7 +1787,7 @@ theorem norm_value_pos {r : ℕ} (Q : SelfRecip E r) (ρ : Fld Q →+* ℂ) (hn 
 
 theorem exists_irreducible_factor (P : E[X]) (hP : P.Monic) (τ : E →+* ℂ) (μ : ℂ) (h : eval₂ τ μ P = 0) :
     ∃ R : E[X], R.Monic ∧ Irreducible R ∧ R ∣ P ∧ eval₂ τ μ R = 0 := by
-  letI : Algebra E ℂ := τ.toAlgebra
+  let : Algebra E ℂ := τ.toAlgebra
   have hi : IsIntegral E μ := ⟨P, hP, h⟩
   exact ⟨minpoly E μ, minpoly.monic hi, minpoly.irreducible hi, minpoly.dvd E μ h, minpoly.aeval E μ⟩
 
@@ -1841,7 +1841,7 @@ theorem posDef_aeval {n : ℕ} (U : Matrix (Fin n) (Fin n) ℂ) (hU : Uᴴ * U =
     exact hzero.symm
   rw [hH.posDef_iff_eigenvalues_pos]
   intro i
-  haveI : Nonempty (Fin n) := ⟨i⟩
+  have : Nonempty (Fin n) := ⟨i⟩
   have h1 : ((hH.eigenvalues i : ℝ) : ℂ) ∈ spectrum ℂ (aeval U p) := by
     have := hH.eigenvalues_mem_spectrum_real i
     rw [← spectrum.preimage_algebraMap ℂ] at this

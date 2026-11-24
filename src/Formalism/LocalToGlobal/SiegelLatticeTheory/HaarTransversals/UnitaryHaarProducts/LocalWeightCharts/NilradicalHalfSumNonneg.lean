@@ -70,9 +70,9 @@ theorem hpk_row (i m : Fin (2 * r + k + 1)) :
 theorem hpk_mul_apply (A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
     (i j : Fin (2 * r + k + 1)) : (Hpk k r * A) i j = sgn k r i * A (tau k r i) j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (tau k r i)]
-  · rw [hpk_row, if_pos rfl]
+  · rw [hpk_row, ite_eq_left rfl]
   · intro m _ hm
-    rw [hpk_row, if_neg hm, zero_mul]
+    rw [hpk_row, ite_eq_right hm, zero_mul]
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -95,8 +95,8 @@ theorem hpk_sq : Hpk k r * Hpk k r = 1 := by
   ext i j
   rw [hpk_mul_apply, hpk_row, tau_tau, sgn_tau, Matrix.one_apply]
   by_cases h : j = i
-  · rw [if_pos h, if_pos h.symm, sgn_mul_self]
-  · rw [if_neg h, if_neg (Ne.symm h), mul_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm, sgn_mul_self]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), mul_zero]
 
 theorem gr_left_inv {g : Mat k r} (hg : g ∈ Gr k r) : Hpk k r * gᴴ * Hpk k r * g = 1 := by
   have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
@@ -145,11 +145,11 @@ local instance instAlgCLM (n : ℕ) :
 
 theorem opn_continuous : Continuous (fun M : Mat k r => opn M) := by
   unfold opn
-  letI : SMul ℂ (Mat k r) := (Pi.module _ _ ℂ).toSMul
-  letI : Module ℂ (Mat k r) := Pi.module _ _ ℂ
-  letI : Module ℂ (EuclideanSpace ℂ (Fin (2 * r + k + 1)) →L[ℂ]
+  let : SMul ℂ (Mat k r) := (Pi.module _ _ ℂ).toSMul
+  let : Module ℂ (Mat k r) := Pi.module _ _ ℂ
+  let : Module ℂ (EuclideanSpace ℂ (Fin (2 * r + k + 1)) →L[ℂ]
       EuclideanSpace ℂ (Fin (2 * r + k + 1))) := ContinuousLinearMap.module
-  letI : ContinuousSMul ℂ (Mat k r) := ⟨by
+  let : ContinuousSMul ℂ (Mat k r) := ⟨by
     apply continuous_pi; intro i
     apply continuous_pi; intro j
     exact continuous_fst.mul ((continuous_apply j).comp ((continuous_apply i).comp continuous_snd))⟩
@@ -302,7 +302,7 @@ theorem pt_decay_core (hσ : IsURepOn (Gr k r) σ) {μ : Measure (Mt k r)}
       ≤ (∫⁻ t, ‖α (Matrix.of t) * ⟪u, σ (y * Matrix.of t) w⟫_ℂ‖ₑ ∂μ) *
           ENNReal.ofReal (opn y ^ N1H k r) := by
         gcongr
-        exact enorm_integral_le_lintegral_enorm _
+        exact eNorm_integral_le_lintegral_eNorm _
     _ = ∫⁻ t, ‖α (Matrix.of t) * ⟪u, σ (y * Matrix.of t) w⟫_ℂ‖ₑ *
           ENNReal.ofReal (opn y ^ N1H k r) ∂μ :=
         (lintegral_mul_const' _ _ ENNReal.ofReal_ne_top).symm

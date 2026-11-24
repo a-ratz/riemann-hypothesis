@@ -199,8 +199,8 @@ theorem wt_mul_le (A h : Matrix (Fin n) (Fin n) ℂ) : wt (A * h) ≤ wt A * ‖
 
 theorem norm_exp_smul_le (hn : 0 < n) (X : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) :
     ‖NormedSpace.exp (t • X)‖ ≤ Real.exp (|t| * mnorm X) := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-  haveI : NormOneClass (Matrix (Fin n) (Fin n) ℂ) :=
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : NormOneClass (Matrix (Fin n) (Fin n) ℂ) :=
     ⟨by rw [← l2_opNorm_toEuclideanCLM, map_one]; exact norm_one⟩
   refine (PI.IwaMeasEx.Gauge.ZetaZeros.norm_exp_le' _).trans (Real.exp_le_exp.2 ?_)
   rw [norm_smul, Real.norm_eq_abs]
@@ -217,7 +217,7 @@ theorem wt_mul_exp_le (hn : 0 < n) (A X : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) 
   · rw [wt_eq_hs_sq]; positivity
 
 theorem wt_pos {ε : Fin n → Bool} (hn : 0 < n) (g : UJ ε) : 0 < wt (uMat g) := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   have hne : uMat g ≠ 0 := Units.ne_zero (g : (Matrix (Fin n) (Fin n) ℂ)ˣ)
   obtain ⟨i, j, hij⟩ : ∃ i j, uMat g i j ≠ 0 := by
     by_contra h
@@ -239,7 +239,7 @@ theorem exists_uMat_eq {ε : Fin n → Bool} {c : Matrix (Fin n) (Fin n) ℂ} (h
   exact ⟨⟨⟨c, Jm ε * cᴴ * Jm ε, mul_eq_one_comm.1 hl, hl⟩, hc⟩, rfl⟩
 
 theorem continuous_uMat {ε : Fin n → Bool} : Continuous (uMat : UJ ε → Matrix (Fin n) (Fin n) ℂ) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 end Mat
 

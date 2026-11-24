@@ -73,8 +73,8 @@ theorem length_localizedModule_quot_eq {R T : Type*} [CommRing R] [CommRing T] [
     refine ⟨IsLocalization.mk' (Localization S) r ⟨s, hs⟩, ?_⟩
     rw [IsLocalization.lift_mk'_spec]
     rw [h, mul_comm]
-  letI : Algebra (Localization S) T := φ.toAlgebra
-  haveI : IsScalarTower R (Localization S) T := IsScalarTower.of_algebraMap_eq (fun r => (hφ r).symm)
+  let : Algebra (Localization S) T := φ.toAlgebra
+  have : IsScalarTower R (Localization S) T := IsScalarTower.of_algebraMap_eq (fun r => (hφ r).symm)
   set I := V ⊔ Ideal.span {x}
   set J : Ideal T := Ideal.span {algebraMap R T x}
   have hI : ∀ a ∈ I, (Algebra.ofId R (T ⧸ J)) a = 0 := by
@@ -90,7 +90,7 @@ theorem length_localizedModule_quot_eq {R T : Type*} [CommRing R] [CommRing T] [
   have hg : ∀ r : R, g (Ideal.Quotient.mk I r) = Ideal.Quotient.mk J (algebraMap R T r) := by
     intro r
     simp [g, Ideal.Quotient.liftₐ_apply, Ideal.Quotient.lift_mk]
-  haveI : IsLocalizedModule S g := by
+  have : IsLocalizedModule S g := by
     refine ⟨fun s => ?_, fun y => ?_, fun {x₁ x₂} h => ?_⟩
     · obtain ⟨u, hu⟩ := hS s.1 s.2
       refine (Module.End.isUnit_iff _).2 ⟨fun a b h => ?_, fun m => ⟨(↑u⁻¹ : T) • m, ?_⟩⟩
@@ -271,7 +271,7 @@ theorem lenAt_eq {R : Type*} [CommRing R] (J W : Ideal R) [hW : W.IsPrime] :
 theorem length_quot_ne_top_of_mem_minimalPrimes {A : Type*} [CommRing A] [IsNoetherianRing A]
     [IsLocalRing A] (I : Ideal A) (hm : IsLocalRing.maximalIdeal A ∈ I.minimalPrimes) :
     Module.length A (A ⧸ I) ≠ ⊤ := by
-  haveI := IsLocalRing.quotient_artinian_of_mem_minimalPrimes_of_isLocalRing I hm
+  have := IsLocalRing.quotient_artinian_of_mem_minimalPrimes_of_isLocalRing I hm
   rw [Module.length_eq_of_surjective (S := A) (R := A ⧸ I) (M := A ⧸ I)
     (by rw [Ideal.Quotient.algebraMap_eq]; exact Ideal.Quotient.mk_surjective)]
   exact Module.length_ne_top
@@ -281,8 +281,8 @@ theorem exists_prime_comap_atPrime_quot {R : Type*} [CommRing R] (V Z : Ideal R)
     (hQZ : Q ≤ Z) :
     ∃ p : Ideal (Localization.AtPrime (Z.map (Ideal.Quotient.mk V))), p.IsPrime ∧
       p.comap (algebraMap R _) = Q := by
-  haveI := hQ
-  haveI hQV : (Q.map (Ideal.Quotient.mk V)).IsPrime :=
+  have := hQ
+  have hQV : (Q.map (Ideal.Quotient.mk V)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hVQ)
   have hd : Disjoint ((Z.map (Ideal.Quotient.mk V)).primeCompl : Set (R ⧸ V))
       (Q.map (Ideal.Quotient.mk V) : Set (R ⧸ V)) :=
@@ -348,7 +348,7 @@ theorem IsLocData.height_eq_one_iff [IsDomain A] [IsNoetherianRing A] [V.IsPrime
   have hf0 : algebraMap R A f ≠ 0 := fun e => hfV ((h.map_eq_zero_iff hVZ f).mp e)
   have hpb : ∀ q : Ideal A, q.IsPrime → algebraMap R A f ∈ q → 1 ≤ q.height := by
     intro q hq hfq
-    haveI := hq
+    have := hq
     rw [Order.one_le_iff_ne_zero]
     intro h0
     rw [Ideal.height_eq_zero_iff_eq_bot] at h0
@@ -360,7 +360,7 @@ theorem IsLocData.height_eq_one_iff [IsDomain A] [IsNoetherianRing A] [V.IsPrime
   · rintro ⟨h1, hfp⟩
     refine ⟨⟨Ideal.comap_isPrime _ _, hsup p hfp⟩, fun Q ⟨hQ, hQle⟩ hQp => ?_⟩
     obtain ⟨q, hq, rfl⟩ := hex Q hQ (le_sup_left.trans hQle) (hQp.trans (h.comap_le p))
-    haveI := hq
+    have := hq
     have hqp : q ≤ p := h.le_of_comap_le hQp
     have hfq : algebraMap R A f ∈ q :=
       hQle (Ideal.mem_sup_right (Ideal.mem_span_singleton_self f))
@@ -380,7 +380,7 @@ theorem IsLocData.height_eq_one_iff [IsDomain A] [IsNoetherianRing A] [V.IsPrime
     refine ⟨le_antisymm ?_ (hpb p hp hfp), hfp⟩
     apply Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes (Ideal.span {algebraMap R A f})
     refine ⟨⟨hp, Ideal.span_le.mpr (by simpa using hfp)⟩, fun q ⟨hq, hqle⟩ hqp => ?_⟩
-    haveI := hq
+    have := hq
     have hfq : algebraMap R A f ∈ q := hqle (Ideal.mem_span_singleton_self _)
     have := hmin.2 ⟨Ideal.comap_isPrime _ _, hsup q hfq⟩ (Ideal.comap_mono hqp)
     exact h.le_of_comap_le this
@@ -402,7 +402,7 @@ theorem IsLocData.maximalIdeal_mem_minimalPrimes [IsLocalRing A]
       rw [hc]; exact hfZ
     · show t ∈ (IsLocalRing.maximalIdeal A).comap (algebraMap R A)
       rw [hc]; exact htZ
-  · haveI := hq
+  · have := hq
     have hfq : algebraMap R A f ∈ q := hqle (Ideal.subset_span (Set.mem_insert _ _))
     have htq : algebraMap R A t ∈ q :=
       hqle (Ideal.subset_span (Set.mem_insert_of_mem _ rfl))
@@ -430,7 +430,7 @@ theorem IsLocData.ringKrullDim_eq_two [IsDomain A] [IsNoetherianRing A] [IsLocal
   have hfZ : V ⊔ Ideal.span {f} ≤ Z := le_sup_left.trans hZ.1.2
   obtain ⟨W, hW, hWZ⟩ := Ideal.exists_minimalPrimes_le hfZ
   obtain ⟨p, hp, hpW⟩ := hex W hW.1.1 (le_sup_left.trans hW.1.2) hWZ
-  haveI := hp
+  have := hp
   have hf0 : algebraMap R A f ≠ 0 := fun e => hfV ((h.map_eq_zero_iff hVZ f).mp e)
   have hfp : algebraMap R A f ∈ p := by
     show f ∈ p.comap (algebraMap R A)

@@ -227,15 +227,15 @@ theorem adMat_exp_hasDeriv (X : Matrix (Fin n) (Fin n) ℂ) (x y : Fin n × Fin 
     simp
   unfold adMat adD
   by_cases hx : IsPhys ε x <;> by_cases hy : IsPhys ε y
-  · simp only [hx, hy, if_true, and_self]
+  · simp only [hx, hy, ite_true, and_self]
     have h := (he x.1 y.1).fun_mul (he x.2 y.2).star
     rw [h0, h0] at h
     exact h
-  · simp only [hx, hy, if_true, if_false, and_false]
+  · simp only [hx, hy, ite_true, ite_false, and_false]
     exact hasDerivAt_const _ _
-  · simp only [hx, if_false, false_and]
+  · simp only [hx, ite_false, false_and]
     exact hasDerivAt_const _ _
-  · simp only [hx, if_false, false_and]
+  · simp only [hx, ite_false, false_and]
     exact hasDerivAt_const _ _
 
 theorem adPhys_exp_hasDeriv (X : Matrix (Fin n) (Fin n) ℂ) (w : Fin n × Fin n → ℂ) (x : Fin n × Fin n) :
@@ -253,7 +253,7 @@ theorem sum_adD_eq_LX {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (w : Fin
   obtain ⟨x1, x2⟩ := x
   unfold adD IsPhys
   by_cases hx : ε x1 = true ∧ ε x2 = false
-  · simp only [hx, true_and, if_true]
+  · simp only [hx, true_and, ite_true]
     rw [Fintype.sum_prod_type]
     trans ∑ b, ∑ c, ((if ε b = true ∧ c = x2 then X x1 b * w (b, c) else 0) +
       (if b = x1 ∧ ε c = false then -X c x2 * w (b, c) else 0))
@@ -265,7 +265,7 @@ theorem sum_adD_eq_LX {X : Matrix (Fin n) (Fin n) ℂ} (hX : Xᴴ = -X) (w : Fin
       rw [← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun a _ => ?_
       split_ifs <;> simp
-  · simp only [hx, false_and, if_false, zero_mul, Finset.sum_const_zero]
+  · simp only [hx, false_and, ite_false, zero_mul, Finset.sum_const_zero]
 
 theorem adPhys_one' (w : Fin n × Fin n → ℂ) : adPhys ε 1 w = w := by
   simp [adPhys, adMat_one]
@@ -438,7 +438,7 @@ theorem tco_wK_hasDeriv (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D
     (hc s').fun_smul (hD.deriv X hX.1 (tcoef ((fockBasis n).coord s') y))
   convert h using 1
   have h0 : NormedSpace.exp (((0 : ℝ) : ℂ) • X) = 1 := by simp
-  simp only [h0, ff_one, AlgHom.id_apply, hσ.1.1, ContinuousLinearMap.one_apply, Module.Basis.coord_apply,
+  simp only [h0, ff_one, AlgHom.id_apply, hσ.1.1, one_apply_eq_self, Module.Basis.coord_apply,
     Module.Basis.repr_self, Finsupp.single_apply]
   rw [tco_actDiag, Submodule.coe_add, tcoef_eq_sum ((fockBasis n).coord s ∘ₗ sgX ε X) y, Submodule.coe_sum,
     Finset.sum_add_distrib]
@@ -468,7 +468,7 @@ theorem actDiag_mem_of_wK (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ
     actM (diagE ε (eT E) cpT cmT) X y ∈ S' := by
   let T := S'.map (coordH (D := D) (n := n))
   have : FiniteDimensional ℂ T := Module.Finite.map S' coordH
-  have hTc : IsClosed (T : Set (Finset (Fin (n * n)) → H)) := Submodule.closed_of_finiteDimensional T
+  have hTc : IsClosed (T : Set (Finset (Fin (n * n)) → H)) := Submodule.isClosed_of_finiteDimensional T
   have hder : HasDerivAt (fun t : ℝ => coordH (wK hD (exp_mem_Kset (USum.inK_real_smul hX t)) y))
       (coordH (actM (diagE ε (eT E) cpT cmT) X y)) 0 :=
     hasDerivAt_pi.2 fun s => tco_wK_hasDeriv hσ hD hX y s

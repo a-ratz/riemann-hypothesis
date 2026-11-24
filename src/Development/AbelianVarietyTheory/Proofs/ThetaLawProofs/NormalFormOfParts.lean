@@ -237,7 +237,7 @@ theorem weight_eq {τ : Matrix (Fin g) (Fin g) ℂ} (hp : (τ.map Complex.im).Po
       Real.pi / 2 * ((hermForm (CanTh.imInv τ) z z).re - 2 * (q ⬝ᵥ (τ.map Complex.im).mulVec q)) := by
     rw [h1, ← h2, show (Real.pi : ℂ) / 2 = ((Real.pi / 2 : ℝ) : ℂ) by push_cast; rfl, Complex.re_ofReal_mul]
     simp [sub_eq_add_neg]
-  rw [norm_mul, norm_mul, Complex.norm_exp, h3, mul_pow, mul_pow, ← Real.exp_nat_mul, _root_.mul_assoc,
+  rw [norm_mul, norm_mul, Complex.norm_exp, h3, mul_pow, mul_pow, ← Real.exp_natCast_mul, _root_.mul_assoc,
     mul_right_comm (Real.exp _), ← Real.exp_add, mul_comm (Real.exp _)]
   congr 3
   push_cast
@@ -253,7 +253,7 @@ theorem weight_periodic {Hm : Matrix (Fin g) (Fin g) ℂ} (hH : Hm.IsHermitian) 
     rw [show (Real.pi : ℂ) / 2 = ((Real.pi / 2 : ℝ) : ℂ) by push_cast; rfl, Complex.add_re, Complex.re_ofReal_mul,
       Complex.re_ofReal_mul]
   rw [pow_one, norm_mul, norm_mul, hk, _root_.one_mul, Complex.norm_exp, h3,
-    AppellHumbertTrivial.re_hermForm_add_self hH, mul_pow, ← Real.exp_nat_mul,
+    AppellHumbertTrivial.re_hermForm_add_self hH, mul_pow, ← Real.exp_natCast_mul,
     mul_right_comm (Real.exp _), ← Real.exp_add, mul_comm (Real.exp _)]
   congr 2
   push_cast

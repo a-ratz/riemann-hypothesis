@@ -93,7 +93,7 @@ theorem exists_pairs_sides {Ty Pl : Type} [Fintype Ty] (pl : Ty → Pl) (cj : Pl
     (hne : ∀ t, cj (pl t) ≠ pl t) :
     ∃ (c : Ty → Finset Ty) (s : Ty → Bool), ∀ t t', pl t' = cj (pl t) → c t = c t' ∧ s t ≠ s t' := by
   classical
-  letI : LinearOrder Pl := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder Pl := linearOrderOfSTO WellOrderingRel
   refine ⟨fun t => Finset.univ.filter fun x => pl x = pl t ∨ pl x = cj (pl t),
     fun t => decide (pl t < cj (pl t)), fun t t' h => ⟨?_, ?_⟩⟩
   · ext x
@@ -119,7 +119,7 @@ theorem exists_delta {E : Type} [Field E] [NumberField E] [IsGalois ℚ E] {V : 
     intro h
     rw [h] at hpP
     exact hp0 ((Submodule.mem_bot _).1 hpP)
-  haveI : P.IsMaximal := hPp.isMaximal hP0
+  have : P.IsMaximal := hPp.isMaximal hP0
   have hexp := diffExp E p a m hp hm hd P hPp hpP
   obtain ⟨Q, hQ, hD⟩ := Ideal.eq_prime_pow_mul_coprime (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 E)) P
   obtain ⟨Q', -, hI⟩ := Ideal.eq_prime_pow_mul_coprime
@@ -251,7 +251,7 @@ open GlobalTheory.EigRam ReciprocityTheory.ChartRestriction.G.PullbackSections.P
 theorem GlobalTheory.PlaceInt.exists_ramified_eigenLifts : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), IsGalois ℚ E → ∀ (p a m : ℕ), p.Prime → ¬ IsUnit (p : T.V) → ¬ p ∣ m → (NumberField.discr E).natAbs = p ^ a * m → (∀ 𝔭 : Ideal (𝓞 E), 𝔭.IsPrime → (p : 𝓞 E) ∈ 𝔭 → ∃ x ∈ 𝔭, H.bar x ∉ 𝔭) → ∀ e : ℕ, 0 < e → letI := io.toAlgebra; ∃ (π : Type) (_ : Fintype π) (_ : DecidableEq π) (cc : (E →+* ℂ) → π) (s : (E →+* ℂ) → Bool), (∀ τ, cc (ComplexEmbedding.conjugate τ) = cc τ ∧ s (ComplexEmbedding.conjugate τ) ≠ s τ) ∧ ∃ (φ : Lt1 Dw → Fin (chD C.ch) → T.V) (ψ : Lt1 Dw → Fin (chD C.ch) → T.Fr), (∀ ℓ i, (((-((vV T.V (p : T.Fr) : ℝ) / e * ((a : ℝ) / Module.finrank ℚ E))) : ℝ) : EReal) ≤ nval T.V e (ψ ℓ i)) ∧ (∀ ℓ ℓ' : Lt1 Dw, ℓ'.1 ≠ ComplexEmbedding.conjugate ℓ.1 → ∑ i, (algebraMap T.V T.Fr (φ ℓ' i) + ψ ℓ' i - (TB.sg1 T.Fr C.ch.h).mulVec (C.ch.uvec ℓ') i) * C.ch.uvec ℓ i = 0) ∧ TB.OppositePairVanishing T.Fr (fun ℓ : Lt1 Dw => cc ℓ.1) (fun ℓ => s ℓ.1) (fun ℓ => (C.ch.uvec ℓ, fun i => algebraMap T.V T.Fr (φ ℓ i) - (TB.sg1 T.Fr C.ch.h).mulVec (C.ch.uvec ℓ) i)) (fun ℓ => (C.ch.uvec ℓ, fun i => algebraMap T.V T.Fr (φ ℓ i) - (TB.sg1 T.Fr C.ch.h).mulVec (C.ch.uvec ℓ) i)) ∧ TB.OppositePairVanishing T.Fr (fun ℓ : Lt1 Dw => cc ℓ.1) (fun ℓ => s ℓ.1) (fun ℓ => (0, ψ ℓ)) (fun ℓ => (C.ch.uvec ℓ, fun i => algebraMap T.V T.Fr (φ ℓ i) - (TB.sg1 T.Fr C.ch.h).mulVec (C.ch.uvec ℓ) i)) ∧ TB.OppositePairVanishing T.Fr (fun ℓ : Lt1 Dw => cc ℓ.1) (fun ℓ => s ℓ.1) (fun ℓ => (C.ch.uvec ℓ, fun i => algebraMap T.V T.Fr (φ ℓ i) - (TB.sg1 T.Fr C.ch.h).mulVec (C.ch.uvec ℓ) i)) (fun ℓ => (0, ψ ℓ)) := by
   classical
   intro E _ _ _ H Dw l Xo c _ hstar T io y C hG p a m hp hpV hm hd hmove e _
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨B, hB, hall⟩ := integralBiext_gauge_eig_bound E H Dw l Xo c hstar T io y C
   obtain ⟨hc, -, heig0, -⟩ := hall B hB
   have hinj : Function.Injective (algebraMap T.V T.Fr) := IsFractionRing.injective T.V T.Fr
@@ -345,7 +345,7 @@ theorem GlobalTheory.PlaceInt.exists_ramified_eigenLifts : ∀ (E : Type) [Field
       simp only [hmem]
       exact ⟨fun h' => Ideal.ext fun x => (h' x).symm, fun h' x => by rw [h']⟩
     · refine ⟨0, Fin.elim0, Fin.elim0, fun t => ?_⟩
-      rw [if_neg fun h => hw ⟨t, h⟩]
+      rw [ite_eq_right fun h => hw ⟨t, h⟩]
       simp [ERam.evD]
   choose nP bP aP hP using hplace
   choose δ hδ hδv using fun τ => exists_delta (σ τ) p a m hp hpV hm hd
@@ -649,11 +649,11 @@ theorem value_mem_idem (hRQ : TB.IsRQ (R := R) k)
     by_cases h1 : isX τ
     · have h2 : ¬ isX (cc τ) := fun h2 => hX' τ ⟨h1, h2⟩
       constructor
-      · simp only [c, h1, h2, if_true, if_false, hc]
+      · simp only [c, h1, h2, ite_true, ite_false, hc]
       · simp [s, h1, h2]
     · have h2 : isX (cc τ) := (hX τ).resolve_left h1
       constructor
-      · simp only [c, h1, h2, if_true, if_false]
+      · simp only [c, h1, h2, ite_true, ite_false]
       · simp [s, h1, h2]
   have hnot : ∀ ℓ ℓ' : (Σ τ : T, Fin (rr τ)), ¬ (c ℓ.1 = c ℓ'.1 ∧ s ℓ.1 ≠ s ℓ'.1) → ℓ'.1 ≠ cc ℓ.1 := by
     intro ℓ ℓ' hn he'
@@ -689,7 +689,7 @@ open GlobalTheory.ChartUnram ReciprocityTheory.ChartRestriction.G.PullbackSectio
 theorem GlobalTheory.PlaceInt.chBound_zero_of_isUnit_discr : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), IsUnit ((NumberField.discr E : ℤ) : T.V) → ∀ (e : ℕ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ChBound C e 0 w n := by
   intro E _ _ _ H Dw l Xo c _ hstar T io y C hdisc e w n
   refine GlobalTheory.PlaceInt.chBound_of_columns E H Dw l Xo c hstar T io y C e 0 w n fun k P hP f hf => ?_
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨B, hBT, hB⟩ := GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hstar T io y C
   obtain ⟨hg, -, heig, -⟩ := hB B hBT
   obtain ⟨gF, gA, -, -, -, -, gu⟩ := C.gen.1
@@ -850,7 +850,7 @@ theorem chBound_host : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Ge
   · push Not at hu
     obtain ⟨p, hp, hpu⟩ := hu
     have hpp := (hP p hp).1
-    haveI : Fact p.Prime := ⟨hpp⟩
+    have : Fact p.Prime := ⟨hpp⟩
     have hm : ¬ p ∣ ordCompl[p] (NumberField.discr D.host.E).natAbs := Nat.not_dvd_ordCompl hpp hd0
     have hDa := (Nat.ordProj_mul_ordCompl_eq_self (NumberField.discr D.host.E).natAbs p).symm
     refine chBound_mono (GlobalTheory.T.harmonicValue_bound_integralChart_ramified D.host.E H Dw l Xo c hstar T io y C hG p _ _ hpp hpu hm hDa

@@ -68,7 +68,7 @@ theorem psi_symplOHF_iotaVF_k : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
         Complex.exp (Real.pi * Complex.I * ((star v ⬝ᵥ HMF JS JT ξ₀ (fun w : InfinitePlace F => (B.emb w).1) *ᵥ u).im : ℂ)) := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ θ hθ ι hι u v
   have hσ := hB.cm
-  haveI : IsTotallyReal F := hσ.1
+  have : IsTotallyReal F := hσ.1
   have hψ := _root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB
   have hw : ∀ w : InfinitePlace F, w.embedding = (B.emb w).1.comp (algebraMap F E) := fun w => (B.emb w).2.symm
   set s := symplOHF σ JS JT ξ₀ (iotaVF ι u) (iotaVF ι v) with hs

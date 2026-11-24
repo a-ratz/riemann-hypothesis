@@ -227,7 +227,7 @@ theorem gram_up (m : SABMap t' t f) (hξ : IsCptGen ξ) (hξ' : IsCptGen ξ') (h
     ⟨hq, eA.symm a, congrArg Subtype.val (eA.apply_symm_apply a), rfl⟩
   refine ⟨φ, hφ, fun r b Γ b' P ⟨v, hv, hI⟩ hP => ?_⟩
   let val : Li' → Vz := fun e => if he : e ∈ M'.lat p' then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev
@@ -285,7 +285,7 @@ theorem det_tri {b₀ c : Fin r → V} (hb₀ : LinearIndependent Ω b₀) {t : 
     have hlk' : k < l := hlk
     rw [hd0 k l hlk'.le, Pi.single_eq_of_ne hlk'.ne', add_zero] at h
     exact h
-  rw [Matrix.det_of_upperTriangular h1]
+  rw [det_of_isUpperTriangular h1]
   refine Finset.prod_congr rfl fun k _ => ?_
   have h := congrFun (key k) k
   rwa [hd0 k k le_rfl, Pi.single_eq_same, zero_add] at h
@@ -892,8 +892,8 @@ theorem prod_last {M : Type} [CommMonoid M] (F : CMType H × Fin (D.p + D.q) →
   refine Finset.prod_congr rfl fun τ _ => ?_
   rw [Fin.prod_univ_add]
   simp only [Fin.val_castAdd, Fin.val_natAdd]
-  rw [Finset.prod_eq_one (fun i _ => if_neg (by omega)), one_mul]
-  simp only [le_add_iff_nonneg_right, zero_le, if_true]
+  rw [Finset.prod_eq_one (fun i _ => ite_eq_right (by omega)), one_mul]
+  simp only [le_add_iff_nonneg_right, zero_le, ite_true]
   exact (Fintype.prod_equiv Fin.revPerm (fun a => F (lastRoot D (τ, a))) (fun j => F (τ, Fin.natAdd D.p j))
     (fun a => rfl)).symm
 
@@ -903,8 +903,8 @@ theorem sum_last {M : Type} [AddCommMonoid M] (F : CMType H × Fin (D.p + D.q) �
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [Fin.sum_univ_add]
   simp only [Fin.val_castAdd, Fin.val_natAdd]
-  rw [Finset.sum_eq_zero (fun i _ => if_neg (by omega)), zero_add]
-  simp only [le_add_iff_nonneg_right, zero_le, if_true]
+  rw [Finset.sum_eq_zero (fun i _ => ite_eq_right (by omega)), zero_add]
+  simp only [le_add_iff_nonneg_right, zero_le, ite_true]
   exact (Fintype.sum_equiv Fin.revPerm (fun a => F (lastRoot D (τ, a))) (fun j => F (τ, Fin.natAdd D.p j))
     (fun a => rfl)).symm
 

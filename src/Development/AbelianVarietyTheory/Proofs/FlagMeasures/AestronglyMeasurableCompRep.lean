@@ -142,8 +142,8 @@ theorem lintegral_comp_rep_mul (hD : IsFundamentalDomain Γ D μ) (hDm : Measura
     intro γ y
     change ψ ((γ : G) * y) = ψ y
     by_cases h : Good Γ D y
-    · simp only [ψ, if_pos h, if_pos (h.mul γ), rep_mul hr h]
-    · simp only [ψ, if_neg h, if_neg (mt (good_mul_iff γ).1 h)]
+    · simp only [ψ, ite_eq_left h, ite_eq_left (h.mul γ), rep_mul hr h]
+    · simp only [ψ, ite_eq_right h, ite_eq_right (mt (good_mul_iff γ).1 h)]
   have hD' : IsFundamentalDomain Γ ((fun x => x * g⁻¹) ⁻¹' D) μ :=
     hD.preimage_of_equiv (measurePreserving_mul_right μ g⁻¹).quasiMeasurePreserving
       (e := id) Function.bijective_id fun γ x => by
@@ -154,12 +154,12 @@ theorem lintegral_comp_rep_mul (hD : IsFundamentalDomain Γ D μ) (hDm : Measura
   simp only [inv_mul_cancel_right] at h1
   calc ∫⁻ x in D, φ (r (x * g)) ∂μ = ∫⁻ x in D, ψ (x * g) ∂μ :=
         lintegral_congr_ae (ae_restrict_of_ae ((ae_good_mul hD g).mono fun y hy => by
-          simp only [ψ, if_pos hy]))
+          simp only [ψ, ite_eq_left hy]))
     _ = ∫⁻ x in D, ψ x ∂μ := by rw [← h1]; exact hD'.setLIntegral_eq hD ψ hψ
     _ = ∫⁻ x in D, φ x ∂μ := by
         refine lintegral_congr_ae ?_
         filter_upwards [ae_restrict_of_ae (ae_good hD), ae_rep_eq_self hD hDm hr] with y hy h2
-        simp only [ψ, if_pos hy, h2]
+        simp only [ψ, ite_eq_left hy, h2]
 
 variable {R : G → (Lp ℂ 2 (μ.restrict D) →L[ℂ] Lp ℂ 2 (μ.restrict D))}
 
@@ -181,7 +181,7 @@ theorem map_mul (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableSet D)
     rw [e1, e3, mul_assoc, rep_mul hr e2]
   have h2 := (measurePreserving_mul_right μ g).quasiMeasurePreserving.ae h1
   filter_upwards [hR (g * h) F, hR g (R h F), ae_restrict_of_ae h2] with x e1 e2 e3
-  rw [e1, ContinuousLinearMap.mul_apply, e2, e3, mul_assoc]
+  rw [e1, mul_apply_eq_comp, e2, e3, mul_assoc]
 
 theorem norm_map (hD : IsFundamentalDomain Γ D μ) (hDm : MeasurableSet D)
     (hr : ∀ y, ∃ γ : Γ, r y = (γ : G) * y ∧ r y ∈ D)
@@ -266,7 +266,7 @@ theorem continuous_map [LocallyCompactSpace G] [SecondCountableTopology G]
         (by rw [← Measure.restrict_apply hs]; exact hμs.ne)
     have ht2 := ((ENNReal.continuous_rpow_const (y := 1 / (2 : ℝ≥0∞).toReal)).tendsto 0).comp ht
     rw [ENNReal.zero_rpow_of_pos (by norm_num)] at ht2
-    have ht3 := ENNReal.Tendsto.const_mul (a := ‖c‖ₑ) ht2 (Or.inr enorm_ne_top)
+    have ht3 := ENNReal.Tendsto.const_mul (a := ‖c‖ₑ) ht2 (Or.inr eNorm_ne_top)
     rw [mul_zero] at ht3
     exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds ht3 (fun _ => zero_le)
       fun g => edist_indicator_le hD hDm hr hR c hs hμs.ne g g₀

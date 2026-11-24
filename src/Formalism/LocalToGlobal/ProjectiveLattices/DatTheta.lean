@@ -255,7 +255,7 @@ theorem theta_bijective (hΨ : ∀ σ : E →+* ℂ, σ ∈ Ψ ↔ ComplexEmbedd
       exact mul_left_cancel₀ (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hs) h1
     have hκR : Function.Injective (LinearMap.baseChange ℝ κ) := by
       have := flat_real
-      rw [LinearMap.baseChange_eq_ltensor]
+      rw [LinearMap.baseChange_eq_lTensor]
       exact Module.Flat.lTensor_preserves_injective_linearMap κ hκ
     have E2 : ∀ t τ i, phiI Ψ (LinearMap.baseChange ℝ κ t) τ i =
         (τ : E →+* ℂ) (algebraMap (𝓞 E) E s) * theta b Ψ M t τ i := by

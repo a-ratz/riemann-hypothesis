@@ -153,7 +153,7 @@ theorem algClosed_continuum_ringEquiv_complex_extending :
   obtain ⟨e₀⟩ := IsAlgClosed.ringEquiv_of_equiv_of_charZero (K := C) (L := ℂ)
     (by rw [hC]; exact Cardinal.aleph0_lt_continuum)
     (Cardinal.eq.mp (by rw [hC, Cardinal.mk_complex]))
-  haveI : Countable K :=
+  have : Countable K :=
     Countable.of_equiv _ (Module.finBasis ℚ K).equivFun.symm.toEquiv
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq K (e₀.toRingHom.comp i) s
   exact ⟨e₀.trans τ, fun x => hτ x⟩
@@ -183,7 +183,7 @@ namespace GlobalTheory.ReadingEmb
 theorem exists_ringHom_complex_extending (A : Type) [Field A] (hA : Cardinal.mk A ≤ Cardinal.continuum)
     (K : Type) [Field K] [NumberField K] (i : K →+* A) (s : K →+* ℂ) :
     ∃ ι : A →+* ℂ, ∀ x, ι (i x) = s x := by
-  haveI : CharZero A := (RingHom.charZero_iff i.injective).1 inferInstance
+  have : CharZero A := (RingHom.charZero_iff i.injective).1 inferInstance
   let B := FractionRing (MvPolynomial ℝ A)
   have hB : Cardinal.mk B = Cardinal.continuum := by
     rw [Cardinal.mk_fractionRing, MvPolynomial.cardinalMk_eq_max, Cardinal.mk_real, max_eq_right hA,
@@ -195,7 +195,7 @@ theorem exists_ringHom_complex_extending (A : Type) [Field A] (hA : Cardinal.mk 
     rw [← hB]
     exact Cardinal.mk_le_of_injective (algebraMap B C).injective
   let j : A →+* C := (algebraMap B C).comp ((algebraMap (MvPolynomial ℝ A) B).comp MvPolynomial.C)
-  haveI : CharZero C := (RingHom.charZero_iff j.injective).1 inferInstance
+  have : CharZero C := (RingHom.charZero_iff j.injective).1 inferInstance
   obtain ⟨e, he⟩ := GlobalTheory.algClosed_continuum_ringEquiv_complex_extending C hC K (j.comp i) s
   exact ⟨e.toRingHom.comp j, fun x => he x⟩
 
@@ -211,13 +211,13 @@ theorem mk_le_of_finite (R S : Type) [CommRing R] [AddCommGroup S] [Module R S] 
 
 theorem exists_complex_emb : ∀ (D : D7) (F : TwFrameC D) (i : D.ntw.Tw) (k : ℕ) (b : Bool) (v : D.what₂.places.Pl) (ρ : Reading i k b v), ∃ ι : FractionRing ρ.Oe →+* ℂ, ∀ x, ι (ρ.emb x) = D.what₂.embLL x := by
   intro D F i k b v ρ
-  haveI := D.ntw.lPrime i
+  have := D.ntw.lPrime i
   have h1 : Cardinal.mk (D.ntw.Ok i k) ≤ Cardinal.continuum := by
     have hinj : Function.Injective (fun x : D.ntw.Ok i k => ((F.eOk i k x : _) : ℂ_[D.ntw.l i])) :=
       Subtype.val_injective.comp (F.eOk i k).injective
     refine (Cardinal.mk_le_of_injective hinj).trans ?_
     rw [(GlobalTheory.PadicCard.card_padicAlgCl_padicComplex (D.ntw.l i)).2, Cardinal.mk_complex]
-  haveI := ρ.fin
+  have := ρ.fin
   have h2 : Cardinal.mk ρ.Oe ≤ Cardinal.continuum := mk_le_of_finite (D.ntw.Ok i k) ρ.Oe h1
   exact exists_ringHom_complex_extending (FractionRing ρ.Oe) (by rw [Cardinal.mk_fractionRing]; exact h2)
     D.what₂.LL ρ.emb D.what₂.embLL
@@ -378,7 +378,7 @@ variable {L : Type} [Field L] [NumberField L] [IsCMField L]
 
 theorem le_exp_neg_one_of_lt_one' {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
   rcases eq_or_ne x 0 with rfl | hx0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log hx0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]; omega
@@ -648,7 +648,7 @@ theorem exists_pulls_twOK : ∀ (D : D7) (i : D.ntw.Tw) (k : ℕ) (b : Bool) (v 
   obtain ⟨χ, hv, hχ⟩ := exists_reads (ρ := ρ) ψ₀ hp
   have hfin : IsOfFinOrder (D.ntw.zk i k) := isOfFinOrder_iff_pow_eq_one.2
     ⟨_, pow_pos (D.ntw.lPrime i).out.pos k, (IsPrimitiveRoot.coe_units_iff.mp (D.ntw.zk_prim i k)).pow_eq_one⟩
-  haveI : Finite (Subgroup.zpowers (D.ntw.zk i k)) := finite_zpowers.2 hfin
+  have : Finite (Subgroup.zpowers (D.ntw.zk i k)) := finite_zpowers.2 hfin
   have hker : (χ.ker : Set (G D.host.E D.nd.Om)) = ψ₀.ker := Set.ext fun g => by
     simp only [SetLike.mem_coe, MonoidHom.mem_ker]
     exact one_iff_of_reads hχ g
@@ -738,7 +738,7 @@ theorem lowAll_congr {s s' : Stages} (h : s.B.toPre = s'.B.toPre) : lowAll s.toD
 
 theorem lowAll_eq_lowPre (s : Stages) : lowAll s.toD7 = lowPre s.B.toPre := by
   have h : ∃ X : Stages, X.B.toPre = s.B.toPre := ⟨s, rfl⟩
-  simp only [lowPre, dif_pos h]
+  simp only [lowPre, dite_eq_left h]
   exact lowAll_congr h.choose_spec.symm
 
 theorem prime_of_mem_lowAll (D : D7) {p : ℕ} (hp : p ∈ lowAll D) : p.Prime := by
@@ -1205,8 +1205,8 @@ theorem cellWt_of_sideRead_of_admTw : _root_.GlobalTheory.HeightCounting.Up.Publ
   have h1 := GlobalTheory.T.weightMatrices_match_of_coeffSpace_iso (e.comp (NX.toKk (Dof x) i (T.k v))) (NX.kEmb (Dof x) i b) lamK _ (mtAt l.mt.M v j).wt.ρ TK hTK'
     T' (by rw [hfun]; exact hT'r)
   unfold CellWt
-  letI := (GlobalTheory.LevCmp.cell l.b.Bs.exp b hA j).acg
-  letI := (GlobalTheory.LevCmp.cell l.b.Bs.exp b hA j).mod
+  let := (GlobalTheory.LevCmp.cell l.b.Bs.exp b hA j).acg
+  let := (GlobalTheory.LevCmp.cell l.b.Bs.exp b hA j).mod
   exact GlobalTheory.T.matchingMatrices_of_baseChange_representation (NX.toKk (Dof x) i (T.k v)) e (l.b.Bs.exp.rhoW i (j.1 + 1) b) (GlobalTheory.LevCmp.cell l.b.Bs.exp b hA j).ρ
     (mtAt l.mt.M v j).wt.ρ (GlobalTheory.LevCmp.cell l.b.Bs.exp b hA j).bc h1
 end GlobalTheory.LevCmp
@@ -1412,7 +1412,7 @@ theorem cover (k : Fin 2) (w : PlE D.host) (hw : ((D.host.g k : ℕ) : 𝓞 D.ho
     rw [← finrank_E D]; exact D.nd.g_split k
   have hc : Nat.card T = Nat.card (D.nd.PlG k ⊕ D.nd.PlG k) := by
     rw [Nat.card_coe_set_eq, hT, Nat.card_sum, Nat.card_eq_fintype_card, D.nd.card_PlG k, two_mul]
-  haveI : Finite T := by
+  have : Finite T := by
     refine Nat.finite_of_card_ne_zero ?_
     rw [Nat.card_coe_set_eq, hT]
     have : 0 < D.R.f := by show 0 < 2 * D.R.ord; exact Nat.mul_pos two_pos D.R.ord_pos

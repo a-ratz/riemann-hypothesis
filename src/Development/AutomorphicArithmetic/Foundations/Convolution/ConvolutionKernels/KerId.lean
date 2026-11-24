@@ -131,7 +131,7 @@ theorem UpperTheory.ConvolutionTheory.K.kerId :
       Rop μ f = Rop μ a ∘L M ∘L Rop μ g → ∀ x y : G1 K n,
         ∑ᶠ γ : Gam K n, f (x⁻¹ * (γ : G1 K n) * y) = ⟪kv μ a x, M (kv μ (ccStar g) y)⟫_ℂ := by
   intro K _ _ n μ _ f a g M hf x y
-  haveI := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
+  have := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
   have ext : ∀ u w : RightCosetSpace (Gam K n) → ℂ, Continuous u → Continuous w →
       u =ᵐ[quotientMeasure (Gam K n) μ] w → ∀ z : G1 K n, u (mk _ z) = w (mk _ z) := by
     intro u w hu hw h z

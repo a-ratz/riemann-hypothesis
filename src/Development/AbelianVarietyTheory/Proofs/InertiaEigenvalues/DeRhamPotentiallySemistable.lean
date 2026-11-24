@@ -348,7 +348,7 @@ theorem frame_of_period_matrix : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
   intro l _ P AI T n _ _ K A Q hA0 hAQ
   obtain ⟨S, θ, hS, -, hθ0, hθOm, hθg⟩ := _root_.GlobalTheory.PMon.exists_theta_deRhamFilZero_surjective_alt l P AI T
   obtain ⟨hfield, -, htz, hinv, -, hmul, -, htzact, -, -, -⟩ := _root_.GlobalTheory.PMon.bdR_tied l P AI T
-  haveI : Nontrivial P.R.BdR := ⟨hfield.exists_pair_ne⟩
+  have : Nontrivial P.R.BdR := ⟨hfield.exists_pair_ne⟩
   set Q' : Matrix n n P.R.BdR := (Q : Matrix n n P.R.BdR) with hQ'
   let eK : ↥K.1 →+* P.R.BdR := (algebraMap (Om l) P.R.BdR).comp (K.1.val : ↥K.1 →+* Om l)
   have hE0 : ∀ c, eK c ∈ Fil P 0 := fun c => (hS _).1 (hθOm (c : Om l)).1
@@ -520,7 +520,7 @@ theorem frame_of_period_matrix : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
       · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, show k j = -a by omega, rfl⟩)
       · rw [hc'0 j hj, zero_smul]; exact Submodule.zero_mem _
     have hdisj := hli.disjoint_span_image (s := {j | 1 - a ≤ k j}) (t := {j | k j = -a})
-      (Set.disjoint_left.2 fun j h1 h2 => by simp only [Set.mem_setOf_eq] at h1 h2; omega)
+      (Set.disjoint_left.2 fun j h1 h2 => by simp only [Set.mem_ofPred_eq] at h1 h2; omega)
     rw [hsp] at hxA
     have hx0 : (∑ j, c' j • d j) = 0 := (Submodule.disjoint_def.1 hdisj) _ hxA hxB
     have := Fintype.linearIndependent_iff.1 hli c' hx0
@@ -528,7 +528,7 @@ theorem frame_of_period_matrix : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
     exact congrArg Subtype.val (this j)
   have hliC : LinearIndependent ℂ_[l] (fun j i => M i j) :=
     _root_.GlobalTheory.PMon.linIndep_of_eigen_weights l P n K Aθ n (fun j i => M i j) (fun j => -(k j)) hc1 hc2
-  have hunit : IsUnit M := Matrix.linearIndependent_cols_iff_isUnit.1 hliC
+  have hunit : IsUnit M := linearIndependent_col_iff_isUnit.1 hliC
   have hdet : θ U0S.det ≠ 0 := by
     rw [RingHom.map_det]
     exact ((Matrix.isUnit_iff_isUnit_det _).1 hunit).ne_zero
@@ -748,8 +748,8 @@ theorem char_cont : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf 
   rw [this]
   refine Continuous.div_const (Continuous.mul ?_ ?_) _
   · exact (continuous_algebraMap ℚ_[l] ℂ_[l]).comp
-      ((GlobalTheory.Cyc.IsCyc.continuous P.χQ_cyc).comp continuous_subtype_val)
-  · exact (orbit_cont (θ u)).comp continuous_subtype_val
+      ((GlobalTheory.Cyc.IsCyc.continuous P.χQ_cyc).comp continuous_subtypeVal)
+  · exact (orbit_cont (θ u)).comp continuous_subtypeVal
 
 end GlobalTheory.LTChar
 end -- clump:auto
@@ -873,7 +873,7 @@ theorem GlobalTheory.LTChar.main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l)
     apply h2'
     rw [h0, map_zero]
     exact Fil_zero_mem 2
-  haveI : Nontrivial P.R.B := ⟨⟨x, 0, hx0⟩⟩
+  have : Nontrivial P.R.B := ⟨⟨x, 0, hx0⟩⟩
   have hcancel : ∀ c c' : ↥(MaximalUnramifiedExtension l), algebraMap ↥(MaximalUnramifiedExtension l) P.R.B c * x = algebraMap ↥(MaximalUnramifiedExtension l) P.R.B c' * x → c = c' :=
     fun c c' h => (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B).injective (hu.mul_right_cancel h)
   have hfix : ∀ (g : ↥(GK K')) (h : GQ l), P.actQ (g : GQ l) (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B (a h)) =
@@ -1095,11 +1095,11 @@ theorem framed_twist : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAi
         apply hx2
         refine (hshift 2 (-1) (P.ιB x)).2 ?_
         rwa [show (2 : ℤ) + -1 = 1 by norm_num]
-      · rw [if_pos hm, map_mul, GlobalTheory.PMon.Model.act_tz, hgal g]
+      · rw [ite_eq_left hm, map_mul, GlobalTheory.PMon.Model.act_tz, hgal g]
         ring
     · have hj := hev m (Nat.pos_of_ne_zero hm) m.2
       refine ⟨ev P m x, hj.1, hj.2, fun g => ?_⟩
-      rw [if_neg hm, hgal g, neg_zero, zpow_zero, Units.val_one, map_one, mul_one]
+      rw [ite_eq_right hm, hgal g, neg_zero, zpow_zero, Units.val_one, map_one, mul_one]
   obtain ⟨y, hy0, hey⟩ := hunit e he0 he1
   let u : P.R.BdRˣ := ⟨e, y, hey, by rw [mul_comm]; exact hey⟩
   have hu0 : (u : P.R.BdR) ∈ Fil P 0 := he0
@@ -1156,7 +1156,7 @@ theorem isRat_twist {K K' : FinExt l} (hK : K.1 ≤ K'.1) (r N : ℕ) (hN : 0 < 
     rw [twist_val, Matrix.smul_apply, smul_eq_mul, map_mul, fr_mul_of_fixed r N _ (hρ.rat _ i j),
       Units.val_zpow_eq_zpow_val, map_zpow₀, hfr], fun i j => by
     have h1 : Continuous fun g : ↥(GK K') => (((ρ ⟨g, GK_le hK g.2⟩ : Matrix n n ↥(MaximalUnramifiedExtension l)) i j : ↥(MaximalUnramifiedExtension l)) : Om l) :=
-      (hρ.cont i j).comp (continuous_subtype_val.subtype_mk _)
+      (hρ.cont i j).comp (continuous_subtypeVal.subtype_mk _)
     have h2 : Continuous fun g : ↥(GK K') => (((χ g : (↥(MaximalUnramifiedExtension l))ˣ) : ↥(MaximalUnramifiedExtension l)) : Om l) ^ a :=
       hcont.zpow₀ _ fun g => Or.inl (by
         intro h0
@@ -1230,7 +1230,7 @@ theorem sum_weights (r N : ℕ) (hr : 0 < r) (w : Fin r → n → ℤ) (hN : Fin
     Finset.sum_ite_eq' (Finset.range _) 0]
   rcases Nat.eq_zero_or_pos (Fintype.card n) with h0 | h0
   · simp [h0]
-  · rw [if_pos (Finset.mem_range.mpr (Nat.mul_pos hr h0))]
+  · rw [ite_eq_left (Finset.mem_range.mpr (Nat.mul_pos hr h0))]
     ring
 
 end GlobalTheory.PMon.Twist

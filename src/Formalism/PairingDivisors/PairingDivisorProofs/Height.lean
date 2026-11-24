@@ -154,7 +154,7 @@ theorem height_bound_essential : HeightCore := by
   have s123 : (Function.support fun w : Pl K => (1 / 12 : ℝ) * (lw w * (vw w β : ℝ))
       + (M : ℝ) * (lw w * (vw w (nff : K) : ℝ)) + 2 * (lw w * wt S N0 w)).Finite :=
     (s12.union s3).subset (Function.support_add _ _)
-  refine (finsum_le_finsum' hfin s123 hpt).trans (le_of_eq ?_)
+  refine (finsum_le_finsum hfin s123 hpt).trans (le_of_eq ?_)
   rw [finsum_add_distrib s12 s3, finsum_add_distrib s1 s2, ← mul_finsum, ← mul_finsum,
     ← mul_finsum, ← pf2, n2, w2]
   rfl

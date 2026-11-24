@@ -132,7 +132,7 @@ theorem exists_integral_renum {A A₁ : Type} [Fintype A] [DecidableEq A] [Finty
     ∃ r : ℂ, r ≠ 0 ∧ ∀ f : GL A₁ k → ℂ, ∫ g, f (renum e g) ∂μ = r * ∫ g, f g ∂μ₁ := by
   have hme : MeasurableEmbedding (renum e : GL A k → GL A₁ k) :=
     (renum e).toHomeomorph.toMeasurableEquiv.measurableEmbedding
-  haveI : (μ.map (renum e)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ (renum e)
+  have : (μ.map (renum e)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ (renum e)
   obtain ⟨c, hpos, hmap⟩ : ∃ c : NNReal, 0 < c ∧ μ.map (renum e) = c • μ₁ :=
     ⟨_, Measure.haarScalarFactor_pos_of_isHaarMeasure _ _, Measure.isMulLeftInvariant_eq_smul _ _⟩
   refine ⟨((c : ℝ) : ℂ), ?_, fun f => ?_⟩

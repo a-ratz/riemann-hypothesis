@@ -93,7 +93,7 @@ theorem exists_integral_congr (Ω : Type) [Field Ω] (ι : Type) [Finite ι]
     (hind : ∀ i j, i ≠ j → ¬ (v i).IsEquiv (v j)) (i₀ : ι) (a : Ω) (ha : v i₀ a ≤ 1) :
     ∃ a' : Ω, (∀ i, v i a' ≤ 1) ∧ v i₀ (a - a') < 1 := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
 
   have hn : ∀ i, ∃ n : ℤ, 1 ≤ n ∧
       v i a ≤ ((Multiplicative.ofAdd n : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
@@ -109,7 +109,7 @@ theorem exists_integral_congr (Ω : Type) [Field Ω] (ι : Type) [Finite ι]
   obtain ⟨t, ht⟩ := ReciprocityTheory.ChartRestriction.G.Lift.exists_val_eq v hgen hind
     (fun i => if i = i₀ then -1 else n i)
   have ht0 : v i₀ t < 1 := by
-    rw [ht i₀, if_pos rfl, ← WithZero.coe_one, WithZero.coe_lt_coe, ← ofAdd_zero,
+    rw [ht i₀, ite_eq_left rfl, ← WithZero.coe_one, WithZero.coe_lt_coe, ← ofAdd_zero,
       Multiplicative.ofAdd_lt]
     norm_num
   have h1t : v i₀ (1 + t) = 1 := by
@@ -126,13 +126,13 @@ theorem exists_integral_congr (Ω : Type) [Field Ω] (ι : Type) [Finite ι]
       exact ha
     · have hti : v i t = ((Multiplicative.ofAdd (n i) : Multiplicative ℤ) :
           WithZero (Multiplicative ℤ)) := by
-        rw [ht i, if_neg hi]
+        rw [ht i, ite_eq_right hi]
       have hlt : v i 1 < v i t := by
         rw [hti, (v i).map_one, ← WithZero.coe_one, WithZero.coe_lt_coe, ← ofAdd_zero,
           Multiplicative.ofAdd_lt]
         linarith [hn1 i]
       rw [(v i).map_add_eq_of_lt_right hlt, hti]
-      exact div_le_one_of_le₀ (hn2 i) zero_le'
+      exact div_le_one_of_le₀ (hn2 i) zero_le
   · have hsub : a - a / (1 + t) = a * t / (1 + t) := by
       field_simp
       ring
@@ -165,10 +165,10 @@ theorem exists_subfield_valuation_closure :
             inv_mem' := ?hi }, fun _ => Iff.rfl⟩
   case hz =>
     intro γ hγ
-    exact ⟨0, S.zero_mem, by rw [sub_self, map_zero]; exact zero_lt_iff.2 hγ⟩
+    exact ⟨0, S.zero_mem, by rw [sub_self, map_zero]; exact pos_iff_ne_zero.2 hγ⟩
   case ho =>
     intro γ hγ
-    exact ⟨1, S.one_mem, by rw [sub_self, map_zero]; exact zero_lt_iff.2 hγ⟩
+    exact ⟨1, S.one_mem, by rw [sub_self, map_zero]; exact pos_iff_ne_zero.2 hγ⟩
   case ha =>
 
     intro a b ha hb γ hγ
@@ -208,11 +208,11 @@ theorem exists_subfield_valuation_closure :
     refine v.map_add_lt ?_ ?_
     · rw [v.map_mul]
       calc v a * v (b - t) ≤ M * v (b - t) := mul_le_mul_left haM _
-        _ < M * δ := mul_lt_mul_of_pos_left ht' (zero_lt_iff.2 hM0)
+        _ < M * δ := mul_lt_mul_of_pos_left ht' (pos_iff_ne_zero.2 hM0)
         _ ≤ γ := hMδ
     · rw [v.map_mul]
       calc v (a - s) * v t ≤ v (a - s) * M := mul_le_mul_right hvt _
-        _ < δ * M := mul_lt_mul_of_pos_right hs' (zero_lt_iff.2 hM0)
+        _ < δ * M := mul_lt_mul_of_pos_right hs' (pos_iff_ne_zero.2 hM0)
         _ = M * δ := mul_comm _ _
         _ ≤ γ := hMδ
   case hi =>
@@ -221,7 +221,7 @@ theorem exists_subfield_valuation_closure :
     by_cases h0 : a = 0
     · subst h0
       rw [inv_zero]
-      exact ⟨0, S.zero_mem, by rw [sub_self, map_zero]; exact zero_lt_iff.2 hγ⟩
+      exact ⟨0, S.zero_mem, by rw [sub_self, map_zero]; exact pos_iff_ne_zero.2 hγ⟩
     have hva : v a ≠ 0 := (v.ne_zero_iff).2 h0
     obtain ⟨δ, hδ0, hδa, hδγ⟩ :
         ∃ δ : WithZero (Multiplicative ℤ), δ ≠ 0 ∧ δ ≤ v a ∧ δ ≤ γ * (v a * v a) := by
@@ -242,7 +242,7 @@ theorem exists_subfield_valuation_closure :
         mul_inv_cancel₀ h0, one_mul]
     rw [key, v.map_mul, v.map_mul, v.map_inv, v.map_inv, hvs, v.map_sub_swap]
     have hpos : 0 < (v a)⁻¹ * (v a)⁻¹ :=
-      zero_lt_iff.2 (mul_ne_zero (inv_ne_zero hva) (inv_ne_zero hva))
+      pos_iff_ne_zero.2 (mul_ne_zero (inv_ne_zero hva) (inv_ne_zero hva))
     calc v (a - s) * ((v a)⁻¹ * (v a)⁻¹) < γ * (v a * v a) * ((v a)⁻¹ * (v a)⁻¹) :=
           mul_lt_mul_of_pos_right (lt_of_lt_of_le hs' hδγ) hpos
       _ = γ := by rw [mul_assoc, ← mul_inv, mul_inv_cancel₀ (mul_ne_zero hva hva), mul_one]
@@ -554,7 +554,7 @@ theorem exists_normalise {Ω U σ : Type} [Field Ω] [Field U] (f : Ω →+* U)
     ⟨d, MvPolynomial.mem_support_iff.mpr hd⟩
   have hc : p.coeff α₀ ≠ 0 := MvPolynomial.mem_support_iff.mp hα₀
   have hfc : 0 < v (f (p.coeff α₀)) := by
-    rw [zero_lt_iff, Ne, Valuation.zero_iff, map_eq_zero]
+    rw [pos_iff_ne_zero, Ne, Valuation.zero_iff, map_eq_zero]
     exact hc
   refine ⟨p.coeff α₀, C (p.coeff α₀)⁻¹ * p, hc, ?_, fun α => ?_, α₀, ?_⟩
   · rw [← mul_assoc, ← C_mul, mul_inv_cancel₀ hc, C_1, one_mul]
@@ -669,11 +669,11 @@ theorem integral_elements (K Ω U : Type) [Field K] [Field Ω] [Field U] [Algebr
   have ha₀ : a k₀ ≠ 0 := by
     intro h0
     have h := hk₀ k₁ (Finset.mem_univ _)
-    rw [h0, map_zero, map_zero, le_zero_iff, Valuation.zero_iff, map_eq_zero] at h
+    rw [h0, map_zero, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff, map_eq_zero] at h
     exact hk₁ h
   have hfa : f (a k₀) ≠ 0 := (map_ne_zero f).mpr ha₀
   have hva : 0 < v (f (a k₀)) := by
-    rw [zero_lt_iff, Ne, Valuation.zero_iff]
+    rw [pos_iff_ne_zero, Ne, Valuation.zero_iff]
     exact hfa
   have hsV : ∀ j, s j ∈ v.valuationSubring := hs
   set t : Fin N ⊕ (Fin D × {k : Fin N // k ≠ k₀}) → U :=
@@ -770,8 +770,8 @@ omit [IsDomain O] [IsDiscreteValuationRing O] in
 theorem exists_residue (C : Subalgebra O ↥(As O A)) (ζ : Pts O A) (b c d : ↥(As O A))
     (hc : c ∈ C) (hd : d ∈ C) (hd0 : d ∉ ζ.asIdeal) (h : d * b - c ∈ ζ.asIdeal) :
     ∃ c' ∈ C, b - c' ∈ ζ.asIdeal := by
-  haveI : Algebra.IsIntegral ↥C ↥(As O A) := Algebra.IsIntegral.tower_top O
-  haveI := ζ.isMaximal
+  have : Algebra.IsIntegral ↥C ↥(As O A) := Algebra.IsIntegral.tower_top O
+  have := ζ.isMaximal
   have hmax : (ζ.asIdeal.comap (algebraMap ↥C ↥(As O A))).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal ζ.asIdeal
   obtain ⟨y, z, hz, hyz⟩ := hmax.exists_inv (x := ⟨d, hd⟩) (by simpa [Ideal.mem_comap] using hd0)
@@ -788,7 +788,7 @@ theorem exists_approx [∀ ζ : Pts O A, IsDVRAt ζ] [Finite (Pts O A)] (C : Sub
     (hres : ∀ (ζ : Pts O A) (b : ↥(As O A)), ∃ c ∈ C, b - c ∈ ζ.asIdeal)
     (n : Pts O A → ℕ) (b : ↥(As O A)) : ∃ c ∈ C, ∀ ζ, (n ζ : ℕ∞) ≤ vL ζ (b - c) := by
   classical
-  letI := Fintype.ofFinite (Pts O A)
+  let := Fintype.ofFinite (Pts O A)
   obtain ⟨N, hN⟩ : ∃ N, ∑ ζ, n ζ = N := ⟨_, rfl⟩
   induction N generalizing n with
   | zero =>
@@ -944,7 +944,7 @@ theorem core {O A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] 
     exact lt_irrefl _ this
   refine _root_.GlobalTheory.LocStructNak.as_le_of_val_of_residue O A ϖ hU C hC (fun n => ?_) (fun ζ b hb => ?_)
   · have hex : ∀ Z, ∃ x : Ω Z, ∀ ζ : {ζ // Zc ζ = Z}, w Z ζ x = WithZero.exp (-(n ζ.1 : ℤ)) := fun Z => by
-      haveI := Fintype.ofFinite {ζ // Zc ζ = Z}
+      have := Fintype.ofFinite {ζ // Zc ζ = Z}
       exact ReciprocityTheory.ChartRestriction.G.Lift.exists_val_eq (w Z) (hwgen Z) (hwind Z) (fun ζ => -(n ζ.1 : ℤ))
     choose a ha using hex
     have ha' : ∀ ζ, v ζ (jz ζ (a (Zc ζ))) = WithZero.exp (-(n ζ : ℤ)) := fun ζ =>
@@ -1044,9 +1044,9 @@ theorem nval_nonneg_iff {T : CDVR} {u : T.Fr} : 0 ≤ nval T.V 1 u ↔ valV T.V 
 
 theorem valV_lt_of_nval_lt {T : CDVR} {u u' : T.Fr} (hu' : u' ≠ 0) (h : nval T.V 1 u' < nval T.V 1 u) :
     valV T.V (u / u') < 1 := by
-  rw [map_div₀, div_lt_one₀ (zero_lt_iff.2 (valV_ne_zero hu'))]
+  rw [map_div₀, div_lt_one₀ (pos_iff_ne_zero.2 (valV_ne_zero hu'))]
   by_cases hu : u = 0
-  · subst hu; rw [map_zero]; exact zero_lt_iff.2 (valV_ne_zero hu')
+  · subst hu; rw [map_zero]; exact pos_iff_ne_zero.2 (valV_ne_zero hu')
   · rw [nval_of_ne hu, nval_of_ne hu', EReal.coe_lt_coe_iff, Nat.cast_one, div_one, div_one] at h
     have h' : vV T.V u' < vV T.V u := by exact_mod_cast h
     rw [← WithZero.exp_log (valV_ne_zero (V := T.V) hu), ← WithZero.exp_log (valV_ne_zero (V := T.V) hu'),
@@ -1155,7 +1155,7 @@ theorem liftable_le (hU : IsUnif (OsK (xplus X E hM) la G.w) (unifO (xplus X E h
 theorem isUnit_of_ne (hfd : FiniteDimensional (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w))
     (hU : IsUnif (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM) la G.N)) [∀ ζ : PtsG G la, IsDVRAt ζ] {a : OsK (xplus X E hM) la G.w}
     (ha : ∀ ζ, phiPt (hs ζ) a ≠ 0) : IsUnit a := by
-  haveI : IsArtinianRing (OsK (xplus X E hM) la G.w) := IsArtinianRing.of_finite (Kp (xplus X E hM) la G.N) _
+  have : IsArtinianRing (OsK (xplus X E hM) la G.w) := IsArtinianRing.of_finite (Kp (xplus X E hM) la G.N) _
   refine IsArtinianRing.isUnit_of_mem_nonZeroDivisors ?_
   rw [mem_nonZeroDivisors_iff_right]
   intro c hc
@@ -1345,7 +1345,7 @@ theorem residue_at (hU : IsUnif (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM
   obtain ⟨g1, g2, g3⟩ := _root_.GlobalTheory.GaussVal.gauss_dense_gen D B P j (xplus X E hM) la G.N h.T.Fr (valV h.T.V) ψ hint hϖ
   obtain ⟨S', hS'⟩ := _root_.GlobalTheory.exists_subfield_valuation_closure h.T.Fr (valV h.T.V) (Subfield.closure (Set.range jz ∪ Set.range t))
   have hle : ∀ u ∈ Subfield.closure (Set.range jz ∪ Set.range t), u ∈ S' := fun u hu =>
-    (hS' u).2 fun γ hγ => ⟨u, hu, by rw [sub_self, map_zero]; exact zero_lt_iff.2 hγ⟩
+    (hS' u).2 fun γ hγ => ⟨u, hu, by rw [sub_self, map_zero]; exact pos_iff_ne_zero.2 hγ⟩
   have hK : ∀ c : Kp (xplus X E hM) la G.N, ψ c ∈ S' := by
     refine g3 S' (fun c => (hS' _).2 fun γ hγ => ?_) fun q => hle _ (Subfield.subset_closure (Or.inr ⟨q, by rw [ht']; rfl⟩))
     obtain ⟨a, ha⟩ := g2 c γ hγ
@@ -1397,10 +1397,10 @@ theorem as_le_liftable (hfd : FiniteDimensional (Kp (xplus X E hM) la G.N) (OsK 
     (hC : ∀ Z (u : WeightFamilies.Wt D j) (F : B.Cusp j u), ∃ F' : B.Cusp j u, gF Z (X.inc u F') = gF Z (X.inc u F) ∧
       ∀ Z', Z' ≠ Z → gF Z' (X.inc u F') = 0) :
     As (Op (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) ≤ liftable hs hU := by
-  haveI := kp_charZero' (la := la) (G := G)
-  haveI hfin : Module.Finite (Op (xplus X E hM) la G.N) ↥(As (Op (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w)) :=
+  have := kp_charZero' (la := la) (G := G)
+  have hfin : Module.Finite (Op (xplus X E hM) la G.N) ↥(As (Op (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w)) :=
     (integralClosure_dvr' (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w)).1
-  haveI : Finite (PtsG G la) :=
+  have : Finite (PtsG G la) :=
     (_root_.ramificationDegreeSum (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM) la G.N) hU.irreducible hfin).1
   refine core hU (liftable hs hU) (liftable_le hs hU) Zc (fun ζ => valV (hs ζ).T.V) (fun ζ => phiPt (hs ζ)) jz
     (fun ζ x => ord_cases (ord_phiPt (hs ζ) x)) (fun a ha => ?_) (fun ζ => ?_) (fun ζ ζ' hne hZ => ?_) (fun ζ => ?_)
@@ -1454,13 +1454,13 @@ theorem locStruct_of
   rintro y hw g0 ⟨M⟩ - g hg
   obtain ⟨Zc, jz, h1, h2, h3, h4⟩ := hV y hw
   have hfd : FiniteDimensional (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) := by
-    haveI : FiniteDimensional (Kp (xplus X E hM) la G.N) (↥M.A' ⧸ M.JA) := M.fin
+    have : FiniteDimensional (Kp (xplus X E hM) la G.N) (↥M.A' ⧸ M.JA) := M.fin
     exact LinearEquiv.finiteDimensional M.quotEquiv.toLinearEquiv
   have hred : IsReduced (OsK (xplus X E hM) la G.w) := by
-    haveI : IsReduced (↥M.A' ⧸ M.JA) := M.red
+    have : IsReduced (↥M.A' ⧸ M.JA) := M.red
     exact isReduced_of_injective M.quotEquiv.symm.toRingHom M.quotEquiv.symm.injective
   have hU := isUnif_of_ring (G := G) hfd
-  haveI : ∀ ζ : PtsG G la, IsDVRAt ζ := isDVRAt_of_ring hfd hred
+  have : ∀ ζ : PtsG G la, IsDVRAt ζ := isDVRAt_of_ring hfd hred
   have hmem : toOsK (xplus X E hM) la G.w g ∈ As (Op (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) :=
     (mem_As_iff hU _).2 fun ζ => ord_nonneg_of (hw ζ).toSecPt (nval_nonneg_iff.1 (hg ζ))
   obtain ⟨f, d, hd, he, r, hr, hf⟩ := as_le_liftable (fun ζ => (hw ζ).toSecPt) hfd hred hU Ω gF Zc jz htr h1

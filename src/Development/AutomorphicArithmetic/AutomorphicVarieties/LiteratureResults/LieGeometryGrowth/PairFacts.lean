@@ -263,7 +263,7 @@ theorem UpperTheory.V.Lit.Geo.Pf.ptPos :
     have h3 : α X = ∑ I : Fin q → Fin n, α fun i => trF (e (I i)).1 (X i).1 • e (I i) := by
       conv_lhs => rw [hX]
       exact α.toMultilinearMap.map_sum (fun i j => trF (e j).1 (X i).1 • e j)
-    rw [h3, AlternatingMap.zero_apply]
+    rw [h3, zero_apply]
     refine Finset.sum_eq_zero fun I _ => ?_
     rw [α.map_smul_univ (fun i => trF (e (I i)).1 (X i).1) (fun i => e (I i)), h2, smul_zero]
 end -- clump:auto

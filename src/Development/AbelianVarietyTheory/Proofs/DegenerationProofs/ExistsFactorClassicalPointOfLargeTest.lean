@@ -119,8 +119,8 @@ theorem exists_fac_of_large_test : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Al
     RatModel.norm_val_le_one (y := y) rfl (x := algebraMap o Ω a) ((M.O _).algebraMap_mem a)
   have hat : S.At M y y₀ := fun _ => rfl
   obtain ⟨W, hW, hyW, -⟩ := exists_isAffineOpen_le y (le_preimage_top y)
-  haveI := hA.ft
-  haveI := M.lft
+  have := hA.ft
+  have := M.lft
   obtain ⟨t, ht⟩ := exists_finset_closure_eq_top M.s hW
   refine ⟨y₀, t.image (fun f => (((valMap y W hyW).hom f : OO p) : PadicAlgCl p)), hn, fun u hu => ?_⟩
   have hj : Function.Injective u.j := fun a b h =>

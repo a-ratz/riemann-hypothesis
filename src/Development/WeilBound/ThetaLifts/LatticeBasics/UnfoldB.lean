@@ -151,8 +151,8 @@ theorem detInv_mul (χ : Chr F E) (g h : UA σ Y.J) : detInv χ (g * h) = detInv
 theorem norm_detInv (χ : Chr F E) (g : UA σ Y.J) : ‖detInv χ g‖ = 1 := Circle.norm_coe _
 
 theorem continuous_detInv {χ : Chr F E} (hχ : IsHecke F E χ) : Continuous (detInv χ : UA σ Y.J → ℂ) := by
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  exact continuous_subtype_val.comp ((hχ.1.comp (Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtype_val)).inv)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  exact continuous_subtypeVal.comp ((hχ.1.comp (Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtypeVal)).inv)
 
 theorem absE_det (hJ : Aniso σ Y.J) (h : UA σ Y.J) : absE F E (Matrix.GeneralLinearGroup.det h.1) = 1 := by
   have d0 : Y.J.det ≠ 0 := fun h0 => by

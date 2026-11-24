@@ -100,7 +100,7 @@ theorem isFibreFamily_smul {V X Y : Type} [TopologicalSpace V] [MeasurableSpace 
     IsFibreFamily (c • μ) f ι U (d • ν) B (fun b => (c / d) • fib b) := by
   obtain ⟨h1, h2, h3⟩ := h
   refine ⟨fun b => ?_, fun φ hφ => ?_, fun φ hφ hc hU => ⟨fun b hb => ?_, ?_⟩⟩
-  · rw [Measure.smul_apply, h1 b, smul_zero]
+  · rw [smul_apply, h1 b, smul_zero]
   · simp only [Measure.restrict_smul, lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul]
     rw [lintegral_const_mul' _ _ ENNReal.coe_ne_top, ← mul_assoc, ← ENNReal.coe_mul,
       mul_div_cancel₀ _ hd, h2 φ hφ]
@@ -176,7 +176,7 @@ theorem selfDual_of_lattice {V : Type} [AddCommGroup V] [TopologicalSpace V]
     (hL : ∀ y, (∀ x ∈ L, χ x y = 1) ↔ y ∈ L) (h1 : μ L = 1) : SelfDual μ χ := by
   classical
   have hcl : IsClosed (L : Set V) := AddSubgroup.isClosed_of_isOpen L ho
-  haveI : μ₀.IsAddHaarMeasure := h₀.1
+  have : μ₀.IsAddHaarMeasure := h₀.1
   have hmeas : MeasurableSet (L : Set V) := ho.measurableSet
   have hft := integral_indicator_mul_char_eq_indicator_measure μ₀ L ho hadd hL
   have hfin : μ₀ (L : Set V) ≠ ⊤ := hc.measure_lt_top.ne
@@ -418,8 +418,8 @@ end Alg
 
 theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b) (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, SdR (Fv F v) (psiV F ψ v) (s.nuV v) ∧ SdW F E σ M J (Fv F v) (psiV F ψ v) 1 (tupMeas (s.lamV v) 1 M) := by
   intro F E _ _ _ _ _ σ hCM d b s ψ hψ M J hJ
-  haveI : IsTotallyReal F := hCM.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have : IsTotallyReal F := hCM.1
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   obtain ⟨-, hloc, -⟩ := _root_.GlobalTheory.GaugeEx.CharLoc.char_local F ψ hψ
   have hex := _root_.GlobalTheory.SelfDualFinite.existsUnique_selfDual_finite F E σ hCM ψ hψ
   filter_upwards [hloc, ev_dual b σ J hJ.2] with v hv hdv
@@ -451,8 +451,8 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
         rw [mul_comm]
         exact hvy.2 h t ht
   · obtain ⟨μ0, hμ0, -⟩ := (hex v).2 M J hJ
-    haveI := s.haar_lamV v
-    haveI hsf : SigmaFinite (s.lamV v) := by infer_instance
+    have := s.haar_lamV v
+    have hsf : SigmaFinite (s.lamV v) := by infer_instance
     haveI hH1 : (Measure.pi fun _ : Fin M => s.lamV v).IsAddHaarMeasure := by infer_instance
     haveI : SigmaFinite (Measure.pi fun _ : Fin M => s.lamV v) := by infer_instance
     have hH : (tupMeas (s.lamV v) 1 M).IsAddHaarMeasure := by
@@ -778,7 +778,7 @@ theorem final_prod {ι : Type} (A B r t : ι → ℝ≥0) (a b ri ti : ℝ≥0)
 
 theorem selfDual_const : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b) (M : ℕ), ∃ κ : ℝ≥0, κ ≠ 0 ∧ ∀ (ψ : AddChar (AF F) ℂ) (J : Matrix (Fin M) (Fin M) E), IsCharAF F ψ → IsHermND σ J → ∀ (μi : Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)) (νi : Measure (Ainf F)) (μv : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fin 1 → Fin M → Fv F v ⊗[F] E)) (νv : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), SdW F E σ M J (Ainf F) (psiInf F ψ) 1 μi → SdR (Ainf F) (psiInf F ψ) νi → (∀ v, SdW F E σ M J (Fv F v) (psiV F ψ v) 1 (μv v)) → (∀ v, SdR (Fv F v) (psiV F ψ v) (νv v)) → ∃ (ri ti : ℝ≥0) (r t : HeightOneSpectrum (𝓞 F) → ℝ≥0), μi = ri • tupMeas s.lamI 1 M ∧ νi = ti • s.nuI ∧ (∀ v, μv v = r v • tupMeas (s.lamV v) 1 M) ∧ (∀ v, νv v = t v • s.nuV v) ∧ ri ≠ 0 ∧ ti ≠ 0 ∧ (∀ v, r v ≠ 0) ∧ (∀ v, t v ≠ 0) ∧ (Function.mulSupport fun v => r v / t v).Finite ∧ ri / ti * ∏ᶠ v, r v / t v = κ := by
   intro F E _ _ _ _ _ σ hCM d b s M
-  haveI : IsTotallyReal F := hCM.1
+  have : IsTotallyReal F := hCM.1
   obtain ⟨ψ0, hψ0⟩ := _root_.GlobalTheory.GaugeEx.CharZero.exists_isCharAF F
   have h1 := herm_one σ M
   obtain ⟨⟨ν0i, hν0i, -⟩, hWi⟩ := _root_.GlobalTheory.GaugeEx.SdInf.existsUnique_selfDual_inf F E σ hCM ψ0 hψ0
@@ -871,13 +871,13 @@ theorem continuous_qR {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDime
 theorem units_inf (F : Type) [Field F] [NumberField F] :
     {c : Ainf F | ∀ w, c w ≠ 0} = {c | IsUnit c} := by
   ext c
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine Iff.trans ?_ (Pi.isUnit_iff (x := c)).symm
   simp only [isUnit_iff_ne_zero]
 
 theorem units_fv (K : Type) [Field K] : {c : K | c ≠ 0} = {c | IsUnit c} := by
   ext c
-  simp only [Set.mem_setOf_eq, isUnit_iff_ne_zero]
+  simp only [Set.mem_ofPred_eq, isUnit_iff_ne_zero]
 
 theorem fib_eq_smul {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R]
@@ -989,7 +989,7 @@ theorem isXbetaMeasure_iff_smul_std : ∀ (F E : Type) [Field F] [NumberField F]
             qR (Fv F v) σ J (Y 0) = algebraMap F _ β})} := by
       ext X
       exact not_congr ((GlobalTheory.GaugeEx.q_and_unitary_local_components F E σ M J).1 (X 0) β)
-    rw [Measure.smul_apply, hs, hz, smul_zero]
+    rw [smul_apply, hs, hz, smul_zero]
 
 end GlobalTheory.GaugeEx
 end -- clump:auto

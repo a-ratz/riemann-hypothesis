@@ -128,11 +128,11 @@ theorem UpperTheory.ConvolutionTheory.G3.cptInt :
     have ht' : t * locEl n w δ = locEl n w δ * thL n w t := ht
     generalize locEl n w δ = y at ht' ⊢
     by_cases hsp : IsSplitAt w
-    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hsp]
-      have hn1 : nrmL n w y = y := by unfold nrmL; rw [if_pos hsp]
+    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hsp]
+      have hn1 : nrmL n w y = y := by unfold nrmL; rw [ite_eq_left hsp]
       rw [hn1]; rw [hθ1] at ht'; simpa using ht'
     · have hn1 : nrmL n w y = y * thL n w y := by
-        unfold nrmL; rw [if_neg hsp]; unfold thL; rw [if_neg hsp]
+        unfold nrmL; rw [ite_eq_right hsp]; unfold thL; rw [ite_eq_right hsp]
       rw [hn1]
       calc t * (y * thL n w y) = y * thL n w t * thL n w y := by rw [← mul_assoc, ht']
         _ = y * thL n w (t * y) := by simp only [map_mul, mul_assoc]
@@ -169,14 +169,14 @@ private theorem phi_mul_transpose {R : Type} [CommRing R] (a : ℕ) :
   simp only [Matrix.mul_apply, Matrix.transpose_apply, GlobalTheory.Tw.Phi, Matrix.of_apply, Matrix.one_apply]
   rw [Finset.sum_eq_single i.rev]
   · have h1 : (i : ℕ) + (i.rev : ℕ) + 1 = a := by rw [Fin.val_rev]; omega
-    rw [if_pos h1]
+    rw [ite_eq_left h1]
     by_cases h : i = k
     · subst h
-      rw [if_pos h1, if_pos rfl, ← mul_pow]
+      rw [ite_eq_left h1, ite_eq_left rfl, ← mul_pow]
       simp
-    · rw [if_neg (fun h2 => h (Fin.ext (by rw [Fin.val_rev] at h2; omega))), if_neg h, mul_zero]
+    · rw [ite_eq_right (fun h2 => h (Fin.ext (by rw [Fin.val_rev] at h2; omega))), ite_eq_right h, mul_zero]
   · intro j _ hj
-    rw [if_neg (fun h => hj (Fin.ext (by rw [Fin.val_rev]; omega))), zero_mul]
+    rw [ite_eq_right (fun h => hj (Fin.ext (by rw [Fin.val_rev]; omega))), zero_mul]
   · simp
 
 private theorem exists_scalar (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) :
@@ -239,7 +239,7 @@ theorem UpperTheory.ConvolutionTheory.G3.transl :
     rw [hL, hs, Matrix.transpose_smul, hm, Matrix.smul_mul, Matrix.mul_smul, hΦΦ, smul_smul, smul_smul,
       Units.val_one, mul_comm z, hc, one_smul]
   · intro w hw g
-    have ht : thL n w = thetaGL n (cj w) := by rw [thL, if_neg hw]
+    have ht : thL n w = thetaGL n (cj w) := by rw [thL, ite_eq_right hw]
     have hf : algebraMap E (w.adicCompletion E) z ≠ 0 := (_root_.map_ne_zero _).mpr hz0
     have h1 : (uMat n z hz0).val.map (algebraMap E (w.adicCompletion E)) =
         algebraMap E (w.adicCompletion E) z • GlobalTheory.Tw.Phi n (w.adicCompletion E) := by
@@ -404,7 +404,7 @@ private theorem isGal_cE (c : O →+* O) (hc : ∀ x, c (c x) = x) (ω u : O) (h
     rw [pow_two, AlgEquiv.mul_apply, cE_apply, cE_apply, hc, AlgEquiv.one_apply]
   · refine ⟨2, ![-(c ω) * u, u], ![1, ω], fun j hj => ?_⟩
     interval_cases j
-    · simp only [Fin.sum_univ_two, pow_zero, AlgEquiv.one_apply, Matrix.cons_val_zero, Matrix.cons_val_one, if_true]
+    · simp only [Fin.sum_univ_two, pow_zero, AlgEquiv.one_apply, Matrix.cons_val_zero, Matrix.cons_val_one, ite_true]
       linear_combination hu
     · simp only [Fin.sum_univ_two, pow_one, cE_apply, Matrix.cons_val_zero, Matrix.cons_val_one, map_one]
       simp
@@ -437,7 +437,7 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
 
 private theorem le_iff_mul_inv {x b : L} (hb : b ≠ 0) :
     Valued.v (x * b⁻¹) ≤ 1 ↔ Valued.v x ≤ Valued.v b := by
-  rw [map_mul, map_inv₀, ← div_eq_mul_inv, div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb))]
+  rw [map_mul, map_inv₀, ← div_eq_mul_inv, div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb))]
 
 private theorem sub_le {g : ℕ → L} {a : L} (ha : Valued.v a ≤ 1)
     (hg : ∀ m, Valued.v (g (m + 1) - g m) ≤ Valued.v a ^ m) (m n : ℕ) (hmn : m ≤ n) :
@@ -461,7 +461,7 @@ private theorem exists_limit [CompleteSpace L] {a : L} (ha0 : a ≠ 0) (ha : Val
       fun p r hp hpr => lt_of_le_of_lt ((sub_le ha.le hg p r hpr).trans
         (pow_le_pow_right_of_le_one' ha.le hp)) hN
     refine ⟨N, fun m hm n hn => ?_⟩
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [Valuation.restrict_lt_iff_lt_embedding]
     rcases le_total m n with h | h
     · exact key m n hm h
@@ -521,7 +521,7 @@ private theorem t_lt_one :
 private theorem valuation_lt_one_le_uniformiser {a : WithZero (Multiplicative ℤ)} (h : a < 1) :
     a ≤ ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
   rcases eq_or_ne a 0 with rfl | ha
-  · exact zero_le'
+  · exact zero_le
   · obtain ⟨b, rfl⟩ := WithZero.ne_zero_iff_exists.1 ha
     rw [← WithZero.coe_one, WithZero.coe_lt_coe] at h
     rw [WithZero.coe_le_coe]
@@ -979,7 +979,7 @@ private theorem inv_ex {k R : Type} [CommRing k] [CommRing R] [Algebra k R] (c :
     rw [← eq_neg_of_add_eq_zero_left h1] at h2
     exact isUnit_of_mul_isUnit_left h2
   obtain ⟨y, hy⟩ := hx.exists_right_inv
-  letI : Invertible y := ⟨AdjoinRoot.root P, hy, by rw [mul_comm, hy]⟩
+  let : Invertible y := ⟨AdjoinRoot.root P, hy, by rw [mul_comm, hy]⟩
   have h0 : P.eval₂ ((AdjoinRoot.of P).comp (c : R →+* R)) y = 0 := by
     rw [← eval₂_map, ← eval₂_reflect_eq_zero_iff _ y n _ (natDegree_map_le.trans hn.le), hr, eval₂_mul]
     exact mul_eq_zero_of_right _ (AdjoinRoot.eval₂_root P)
@@ -1013,13 +1013,13 @@ theorem UpperTheory.ConvolutionTheory.D.modelEx :
   obtain ⟨A, _, _, e, he⟩ := desc_alg c hG (AdjoinRoot P) s hs hss
   obtain ⟨-, -, hff, -⟩ := galBase k R k c 2 hG
   obtain ⟨hm, hn, -, -⟩ := hP
-  haveI : Nontrivial R := hG.inj.nontrivial
+  have : Nontrivial R := hG.inj.nontrivial
   let B := (AdjoinRoot.powerBasis' hm).basis.map e.symm.toLinearEquiv
-  haveI : Module.Finite R (R ⊗[k] A) := Module.Finite.of_basis B
-  haveI : Module.Free R (R ⊗[k] A) := Module.Free.of_basis B
-  haveI : Module.Finite k A := Module.Finite.of_finite_tensorProduct_of_faithfullyFlat R
-  haveI : Module.Flat k A := Module.Flat.of_flat_tensorProduct k A R
-  haveI : Module.Free k A := Module.free_of_flat_of_isLocalRing
+  have : Module.Finite R (R ⊗[k] A) := Module.Finite.of_basis B
+  have : Module.Free R (R ⊗[k] A) := Module.Free.of_basis B
+  have : Module.Finite k A := Module.Finite.of_finite_tensorProduct_of_faithfullyFlat R
+  have : Module.Flat k A := Module.Flat.of_flat_tensorProduct k A R
+  have : Module.Free k A := Module.free_of_flat_of_isLocalRing
   have hr : Module.finrank k A = n := by
     rw [← Module.finrank_baseChange (R := R), Module.finrank_eq_card_basis B, Fintype.card_fin, ← hn]
     rfl
@@ -1135,7 +1135,7 @@ open scoped TensorProduct
 theorem UpperTheory.ConvolutionTheory.D.tBase :
     UpperTheory.ConvolutionTheory.D.TBase := by
   intro k R _ _ _ _ A _ _ n b c hc g hg
-  haveI : Module.Finite k A := Module.Finite.of_basis b
+  have : Module.Finite k A := Module.Finite.of_basis b
   let e : A ⊗[k] R ≃ₐ[k] R ⊗[k] A := Algebra.TensorProduct.comm k A R
   let τ : A ⊗[k] R ≃ₐ[A] A ⊗[k] R := Algebra.TensorProduct.congr AlgEquiv.refl c
   have hτ : UpperTheory.ConvolutionTheory.D.IsGal τ 2 := (UpperTheory.ConvolutionTheory.D.galBase k R A c 2 hc).2.2.2
@@ -1408,7 +1408,7 @@ theorem UpperTheory.twistedConj_of_charpoly_mul_galConj_eq_of_separable :
           UpperTheory.ConvolutionTheory.D.cp (d' * UpperTheory.ConvolutionTheory.D.th c d') = UpperTheory.ConvolutionTheory.D.cp (d * UpperTheory.ConvolutionTheory.D.th c d) →
           ∃ t, d' = UpperTheory.ConvolutionTheory.D.thConj c t d := by
   intro k R _ _ _ _ c hG hN n d d' hsep hcp
-  haveI : Nontrivial R := hG.inj.nontrivial
+  have : Nontrivial R := hG.inj.nontrivial
   have hP := (UpperTheory.ConvolutionTheory.D.csrOf k R c hG.pow n).2 d
   obtain ⟨A, _, _, b, g, hg, hgP⟩ := UpperTheory.ConvolutionTheory.D.modelEx k R c hG n _ hP hsep
   obtain ⟨w, hw⟩ := UpperTheory.ConvolutionTheory.D.tBase k R A n b c hG g hg
@@ -1497,13 +1497,13 @@ theorem UpperTheory.unitary_involution_stabilizes_integral_at_nonsplit :
     intro a
     have e : nrmL n w (ι a) = ι a * thL n w (ι a) := by
       unfold nrmL thL
-      rw [if_neg hw, if_neg hw]
+      rw [ite_eq_right hw, ite_eq_right hw]
     rw [e, hthL, UpperTheory.G3.InertCase.th_mul, hu1]
     simp only [map_mul, map_inv, mul_assoc]
   have hloc : locEl n w δ = ι δ₀ := by
     rw [hδ₀]
     unfold locEl
-    rw [if_neg hw]
+    rw [ite_eq_right hw]
   have hcpmap : ∀ a : GL (Fin n) (Ov E w),
       (UpperTheory.ConvolutionTheory.D.cp (a * u₀ * UpperTheory.ConvolutionTheory.D.th c (a * u₀))).map (Ov E w).subtype =
         (nrmL n w (ι a)).val.charpoly := by
@@ -1769,7 +1769,7 @@ theorem _root_.UpperTheory.ConvolutionTheory.G3.unitAe : UnitAe := by
       (thL a w).prodMap (thL b w) k ∈ (GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b)) :=
     fun k hk => Subgroup.mem_prod.2 ⟨hK₁ _ (Subgroup.mem_prod.1 hk).1, hK₂ _ (Subgroup.mem_prod.1 hk).2⟩
   by_cases ht : Tw (thL a w) (locEl a w δ₁) y₁ ∧ Tw (thL b w) (locEl b w δ₂) y₂
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     obtain ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩ := ht
     have e : ((g₁⁻¹ * locEl a w δ₁ * thL a w g₁, g₂⁻¹ * locEl b w δ₂ * thL b w g₂) : GLw a w × GLw b w) =
         (g₁, g₂)⁻¹ * (locEl a w δ₁, locEl b w δ₂) * (thL a w).prodMap (thL b w) (g₁, g₂) := rfl
@@ -1783,7 +1783,7 @@ theorem _root_.UpperTheory.ConvolutionTheory.G3.unitAe : UnitAe := by
       obtain ⟨k₂, hk₂, f₂⟩ := unit_uniq hU b w δ₂ i₂.2 z₂ hz'.2 ⟨x₂, e₂⟩
       exact ⟨(k₁, k₂), Subgroup.mem_prod.2 ⟨hk₁, hk₂⟩, Prod.ext f₁ f₂⟩
     · rw [OrbProd.twCent_prod, KapMul.cptPart_prod, c₁, c₂, OrbProd.prod_inf_prod]
-  · rw [if_neg ht]
+  · rw [ite_eq_right ht]
     refine orbZero _ _ _ _ _ fun z hz => ?_
     refine Set.indicator_of_notMem (fun hzK => ht ?_) _
     have hz' := Subgroup.mem_prod.1 hzK
@@ -1827,16 +1827,16 @@ private theorem UpperTheory.ConvolutionTheory.G2.sum_one {G : Type} [Group G] (�
   rw [finsum_eq_single _ c₀]
   · obtain ⟨g, hg⟩ := hex _ _ ((hrep c₀).trans hc₀).symm
     have hm : c₀.rep ∈ S := hg ▸ hS g
-    rw [if_pos hm, hT _ hm, if_pos ⟨g, hg⟩]
+    rw [ite_eq_left hm, hT _ hm, ite_eq_left ⟨g, hg⟩]
     simp
   · intro c hc
     by_cases hm : c.rep ∈ S
-    · rw [if_pos hm, hT _ hm, if_neg, mul_zero]
+    · rw [ite_eq_left hm, hT _ hm, ite_eq_right, mul_zero]
       rintro ⟨g, hg⟩
       apply hc
       rw [← hrep c, hc₀]
       exact (Quot.sound ⟨g, hg⟩).symm
-    · rw [if_neg hm]
+    · rw [ite_eq_right hm]
 
 private theorem UpperTheory.ConvolutionTheory.G2.lpol_twist {E : Type} [Field E] [NumberField E] [IsCMField E] (hU : Unr E) (n : ℕ)
     (w : Pl E) (g y : GLw n w) :

@@ -194,14 +194,14 @@ theorem exists_obj_level (c : Coeff l) (c₂ : Coeff l₂) (hle : c.F ≤ c₂.F
           · exact (MulEquiv.eq_symm_apply _).2 ((pushEquiv_secPull m.cart _ _).trans (hA a))
           · exact (MulEquiv.eq_symm_apply _).2 ((pushEquiv_secPull m.cart _ _).trans (hM a ha)) }
   have hM : 0 < l₂.M' := Nat.lcm_pos (lt_of_lt_of_le (by norm_num) l₂.three_le) l₂.A_pos
-  haveI := c₂.fin
+  have := c₂.fin
   obtain ⟨F, _, _, _, _⟩ : ∃ (F : Type) (_ : Field F) (_ : Algebra k F), IsAlgClosed F ∧ Algebra.IsAlgebraic k F :=
     ⟨AlgebraicClosure k, inferInstance, inferInstance, inferInstance, inferInstance⟩
-  haveI : CharZero F := charZero_of_injective_ringHom (algebraMap k F).injective
+  have : CharZero F := charZero_of_injective_ringHom (algebraMap k F).injective
   obtain ⟨g, hg⟩ : ∃ g : c₂.F →+* F, ∀ a : c.F, g (IntermediateField.inclusion hle a) = algebraMap k F (io a) := by
-    letI : Algebra c.F c₂.F := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-    letI : Algebra c.F F := ((algebraMap k F).comp io).toAlgebra
-    haveI : Algebra.IsAlgebraic c.F c₂.F := Algebra.IsAlgebraic.tower_top (K := ℚ) c.F
+    let : Algebra c.F c₂.F := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+    let : Algebra c.F F := ((algebraMap k F).comp io).toAlgebra
+    have : Algebra.IsAlgebraic c.F c₂.F := Algebra.IsAlgebraic.tower_top (K := ℚ) c.F
     let τ : c₂.F →ₐ[c.F] F := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -211,9 +211,9 @@ theorem exists_obj_level (c : Coeff l) (c₂ : Coeff l₂) (hle : c.F ≤ c₂.F
   obtain ⟨T, hT, hT'⟩ := LevelRaise.exists_finite_set o hM (K := k) (F := F) (𝟙 _)
   obtain ⟨U, hU⟩ := (Module.Finite.fg_top (R := ℚ) (M := c₂.F))
   let T' : Set F := T ∪ g '' U
-  haveI : Finite T' := (hT.union (U.finite_toSet.image g)).to_subtype
+  have : Finite T' := (hT.union (U.finite_toSet.image g)).to_subtype
   let L := IntermediateField.adjoin k T'
-  haveI : FiniteDimensional k L :=
+  have : FiniteDimensional k L :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
   have hgL : ∀ a, g a ∈ L := fun a => by
     have hc : a ∈ Submodule.span ℚ (U : Set c₂.F) := hU ▸ Submodule.mem_top
@@ -225,7 +225,7 @@ theorem exists_obj_level (c : Coeff l) (c₂ : Coeff l₂) (hle : c.F ≤ c₂.F
       rw [Rat.smul_def, map_mul, map_ratCast]
       exact mul_mem (SubfieldClass.ratCast_mem L q) hx
   let j : c₂.F →+* L := g.codRestrict L hgL
-  haveI : CharZero L := charZero_of_injective_ringHom (algebraMap k L).injective
+  have : CharZero L := charZero_of_injective_ringHom (algebraMap k L).injective
   have hρ : (j.comp (IntermediateField.inclusion c₂.le).toRingHom) (baseKA l₂).ρ =
       ((algebraMap k L).comp (io.comp (IntermediateField.inclusion c.le).toRingHom)) (baseKA l).ρ := by
     have e : IntermediateField.inclusion c₂.le (baseKA l₂).ρ =
@@ -277,7 +277,7 @@ theorem exists_intFr {Xo : Moduli D l} {c : Coeff l} (T : CDVR) (io : c.F →+* 
   let _ := io.toAlgebra
   obtain ⟨y₀, -, h0, -, -⟩ := gfp_frPt_gen (Xo := Xo) (c := c) (L := T.Fr) (L' := T.Fr)
     GlobalTheory.lawsFieldsSeparately.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 (fun _ => rfl) x hx
-    (fun _ i j => if i = j then 1 else 0) (fun _ _ => if_pos rfl) (fun _ _ _ h => if_neg h.ne')
+    (fun _ i j => if i = j then 1 else 0) (fun _ _ => ite_eq_left rfl) (fun _ _ _ h => ite_eq_right h.ne')
   obtain ⟨ub, u, hub, htan, heig, hbas, -⟩ := lieFree Xo c T io G t' x m1 m2 hx y₀.u (h0 ▸ y₀.tan) y₀.eig (h0 ▸ y₀.basis)
   clear h0 y₀
   obtain ⟨w1, g1, r1, -⟩ := m1.lin
@@ -429,7 +429,7 @@ theorem intFrExt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
           · exact (MulEquiv.eq_symm_apply _).2 ((pushEquiv_secPull m.cart _ _).trans (hM a ha)) }
   have hC := ReciprocityTheory.ChartRestriction.G.Out.CubePf.cubePull
   have hT : Out.SecTwistSt := GlobalTheory.lawsFieldsSeparately.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   obtain ⟨l₂, hA, hgood⟩ := GlobalTheory.GlobalModelGuards.exists_good_level H
   obtain ⟨c₂, hle⟩ := GlobalTheory.RaisedAmple.exists_coeff c l₂
   obtain ⟨X₂⟩ := GlobalTheory.Moduli.moduli_scheme_exists E H D l₂ hpq

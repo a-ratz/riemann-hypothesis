@@ -68,7 +68,7 @@ theorem main : ∀ (L : PeriodPair) (β u : ℂ) (V : ValuationSubring ℂ) (N :
     · exact h
   have huΩ : V.valuation u = V.valuation Ω := by
     rw [← hΩ, map_pow] at hu
-    exact (pow_left_inj₀ zero_le' zero_le' (by norm_num)).1 hu
+    exact (pow_left_inj₀ zero_le zero_le (by norm_num)).1 hu
   have h := GlobalTheory.WpFam.LatTorsVal.main L β Ω N hβ hβi (hΩ.trans (latticeCurve_Δ L)) hN0
   exact ⟨mem_of_val V 3 hN huΩ (mem_of_isIntegral V (h.1 z hNz).2),
     mem_of_val V 2 hN huΩ (mem_of_isIntegral V (h.2 z w hz hw hNz hNw))⟩

@@ -97,7 +97,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 
 theorem epi_spMap {K k : Type} [Field K] [Field k] (β : K →+* k) : Epi (spMap β) := by
   have hff : (CommRingCat.ofHom β).hom.FaithfullyFlat := by
-    letI := β.toAlgebra
+    let := β.toAlgebra
     show Module.FaithfullyFlat K k
     infer_instance
   obtain ⟨h1, h2⟩ := (AlgebraicGeometry.flat_and_surjective_SpecMap_iff (CommRingCat.ofHom β)).2 hff
@@ -284,7 +284,7 @@ theorem roots {N : ℕ} (hN : 0 < N) {mk : Dw.La →ₗ[𝓞 E] (Fin r → E)} (
       have hm2 : ((l.M : ℕ) : 𝓞 E) ∈ l.Mb * l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) := by
         rw [l.prod]
         exact Ideal.mem_span_singleton_self _
-      exact SetLike.le_def.1 (Ideal.mul_le_left (I := l.Mb) (J := l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E))) hm2
+      exact IsConcreteLE.le_iff.1 (Ideal.mul_le_left (I := l.Mb) (J := l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E))) hm2
     obtain ⟨u', hu', hsu⟩ := hj _ (Ideal.pow_mem_pow hMb j)
     obtain ⟨t, ht⟩ := (l.odd.pow : Odd (l.M ^ j))
     obtain ⟨k, hk⟩ := hM
@@ -545,8 +545,8 @@ theorem GlobalTheory.Dict.shortValAt_eq_thP : Formalism.MainNotions.ModuliIntegr
     mk hmk hA Λ hΛ N hN Y hY a P hP wq β v0 h0
   subst hrpq
   have hLaws : Laws := firstFiveLaws.1
-  haveI := ShortValue.finite_levelQuotient Dw l
-  haveI := Fintype.ofFinite (LevQ Dw l)
+  have := ShortValue.finite_levelQuotient Dw l
+  have := Fintype.ofFinite (LevQ Dw l)
   obtain ⟨hU, hT⟩ := unimod_trivAt hΛ
   have hodd : Odd N := hN.1
   have hN0 : (N : E) ≠ 0 := Nat.cast_ne_zero.2 hodd.pos.ne'

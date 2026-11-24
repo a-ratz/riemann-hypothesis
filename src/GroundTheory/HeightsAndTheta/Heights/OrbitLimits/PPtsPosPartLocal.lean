@@ -314,7 +314,7 @@ theorem ptsPosDens_eq {P : Ideal (MRing ι)} {L : Fin e → HermLine ι} (hL : �
     have hqN : (y, segre (γ y)) ∈ N := by
       have h := hEN _ hy.2 (by rw [hΨ1]; simp)
       rwa [crd_of_eq hΨ1, nrm_of_eq hΨ1] at h
-    rw [finsum_eq_single _ (segre (γ y)) ?_, finsum_eq_if, if_pos hfib,
+    rw [finsum_eq_single _ (segre (γ y)) ?_, finsum_eq_if, ite_eq_left hfib,
       sheetDensity_eq hL hEg hU hγ hN hNp hqN hfib, Set.indicator_of_mem (show γ y ∈ E from hy.2)]
     intro w hne
     rw [finsum_eq_if]
@@ -386,7 +386,7 @@ theorem PtsPosPartLocal.proof : PtsPosPartLocal.Statement := by
     intro t ht w
     have e1 : ∀ Φ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ), Φ (t • w) 0 ≠ 0 ↔ Φ w 0 ≠ 0 :=
       fun Φ => by simp [map_smul, ht]
-    simp only [hWSdef, Set.mem_setOf_eq, e1, crd_smul ht, nrm_smul ht]
+    simp only [hWSdef, Set.mem_ofPred_eq, e1, crd_smul ht, nrm_smul ht]
   refine ⟨segre ⁻¹' WS, hWS.preimage continuous_segre, ⟨hz0, hz0', hN0, hN0'⟩,
     fun c z' hc => ?_, fun E _ hE hEW => ?_⟩
   · show segre (fun p => c p.1 * z' p) ∈ WS ↔ segre z' ∈ WS

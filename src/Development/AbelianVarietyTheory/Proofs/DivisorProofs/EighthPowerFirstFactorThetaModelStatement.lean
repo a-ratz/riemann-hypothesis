@@ -131,8 +131,8 @@ theorem matUnits_univ_of_idem : ∀ {S : Scheme.{0}} (G H : Over S) [GrpObj G] [
       _ = (E b 0 ≫ r) ≫ i ≫ E 0 b := by rw [← hri]; simp only [Category.assoc]
   refine ⟨∏ a, y a ≫ i ≫ E 0 a, ?_, ?_⟩
   · intro b
-    haveI := hE b 0
-    haveI := hr
+    have := hE b 0
+    have := hr
     have hx : (∏ a, y a ≫ i ≫ E 0 a) ≫ E b 0 = y b ≫ i ≫ E 0 0 := by
       rw [prod_comp', Finset.prod_eq_single b]
       · have h3 : E 0 b ≫ E b 0 = E 0 0 := by rw [hrel]; simp
@@ -197,14 +197,14 @@ theorem eighthPower_inj_exists : ∀ {S : Scheme.{0}} (P C : Over S) [GrpObj P] 
     constructor
     · apply hext
       intro b
-      haveI := hpr b
+      have := hpr b
       rw [Category.assoc, hinj a b, IsMonHom.one_hom (pr b)]
       split_ifs
       · simp
       · rw [MonObj.comp_one, Hom.one_def, toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
     · apply hext
       intro b
-      haveI := hpr b
+      have := hpr b
       simp only [Category.assoc]
       rw [hinj a b, IsMonHom.mul_hom (pr b), tensorHom_comp_tensorHom_assoc, hinj a b]
       split_ifs
@@ -213,7 +213,7 @@ theorem eighthPower_inj_exists : ∀ {S : Scheme.{0}} (P C : Over S) [GrpObj P] 
   refine ⟨inj, hmon, hinj, ?_⟩
   apply hext
   intro b
-  haveI := hpr b
+  have := hpr b
   rw [Fin.prod_univ_eight]
   simp only [MonObj.mul_comp, Category.assoc, hinj, MonObj.comp_one, Category.id_comp, Category.comp_id]
   fin_cases b <;> simp
@@ -408,14 +408,14 @@ theorem exists_matrixUnits_extend : ∀ {S B : Scheme.{0}} [AlgebraicGeometry.Is
       (hψ.1.lift_snd _ _ _)
   have he : ∀ a b, (e a b).left ≫ ψ = ψ ≫ (E' a b).left := fun a b => hψ.1.lift_fst _ _ _
   have heM : ∀ a b, IsMonHom (e a b) := fun a b => by
-    haveI := hE' a b
+    have := hE' a b
     exact ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback hψ hψ (E' a b) (e a b) (he a b)
   have uq : ∀ {x y : G' ⟶ G'} {F : P ⟶ P}, x.left ≫ ψ = ψ ≫ F.left → y.left ≫ ψ = ψ ≫ F.left → x = y :=
     fun hx hy => Over.OverMorphism.ext (hψ.1.hom_ext (hx.trans hy.symm) ((Over.w _).trans (Over.w _).symm))
   have uG : ∀ {F₁ F₂ : G ⟶ G}, φ ≫ F₁.left = φ ≫ F₂.left → F₁ = F₂ :=
     fun h => GlobalTheory.ExtUnique.over_hom_ext_of_isPullback hφ.1 h
   have ext : ∀ a b, ∃ F : G ⟶ G, IsMonHom F ∧ (e a b).left ≫ φ = φ ≫ F.left := fun a b => by
-    haveI := heM a b
+    have := heM a b
     exact (GlobalTheory.Published.SemiAbelianHomExtension.of_isGrpPullback GlobalTheory.semiAbelianHomExtension_holds hS hG hG hφ hφ
       (e a b)).exists
   choose E hE using ext
@@ -424,14 +424,14 @@ theorem exists_matrixUnits_extend : ∀ {S B : Scheme.{0}} [AlgebraicGeometry.Is
     apply uG
     by_cases hbc : b = c
     · subst hbc
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       have h1 := comp_left_comp (he a b) (he b d)
-      rw [hrel, if_pos rfl] at h1
+      rw [hrel, ite_eq_left rfl] at h1
       have h2 : e a b ≫ e b d = e a d := uq h1 (he a d)
       rw [← comp_left_comp (hE a b).2 (hE b d).2, h2, (hE a d).2]
-    · rw [if_neg hbc]
+    · rw [ite_eq_right hbc]
       have h1 := comp_left_comp (he a b) (he c d)
-      rw [hrel, if_neg hbc] at h1
+      rw [hrel, ite_eq_right hbc] at h1
       have h2 : e a b ≫ e c d = 1 := uq h1 (one_left_comp hψ)
       rw [← comp_left_comp (hE a b).2 (hE c d).2, h2, one_left_comp hφ]
   · have key : ∀ s : Finset (Fin 8), ∃ x : G' ⟶ G', x.left ≫ φ = φ ≫ (∏ a ∈ s, E a a).left ∧
@@ -747,8 +747,8 @@ theorem cls_hodge_powObj [Smooth G.hom] [IsSeparated G.hom] [QuasiCompact G.hom]
     ∃ h : IsVB (omega (powObj G (n + 1))) ((n + 1) * g),
       cls _ h.isLB_det = (n + 1) • cls _ hG.isLB_det := by
   have hV : ∀ m, IsVB (omega (powObj G m)) (m * g) := fun m => by
-    haveI := (GlobalFunctionsDvrGeneric.powObj_props G m).2.1
-    haveI := smoothOfRelativeDimension_powObj G g hs m
+    have := (GlobalFunctionsDvrGeneric.powObj_props G m).2.1
+    have := smoothOfRelativeDimension_powObj G g hs m
     exact isVB_omega _ _
   refine ⟨hV (n + 1), ?_⟩
   induction n with
@@ -766,7 +766,7 @@ theorem cls_hodge_powObj [Smooth G.hom] [IsSeparated G.hom] [QuasiCompact G.hom]
       exact (cls_eq_iff _ _).2 this
     exact hh _ rfl (hV 1)
   | succ n ih =>
-    haveI := (GlobalFunctionsDvrGeneric.powObj_props G (n + 1)).2.1
+    have := (GlobalFunctionsDvrGeneric.powObj_props G (n + 1)).2.1
     have key := GlobalTheory.HodgeProd.lbIso_det_conormal_prod G (powObj G (n + 1)) g ((n + 1) * g) hG (hV (n + 1))
       η[G ⊗ powObj G (n + 1)] (by ext1 <;> simp)
     have hT := isLB_tens hG.isLB_det (hV (n + 1)).isLB_det
@@ -779,7 +779,7 @@ theorem cls_hodge_powObj [Smooth G.hom] [IsSeparated G.hom] [QuasiCompact G.hom]
     rw [hh _ (by ring) (hV _), ih, succ_nsmul' _ (n + 1)]
 
 theorem one_powPr {n : ℕ} (i : Fin n) : η[powObj G n] ≫ powPr G i = η[G] := by
-  haveI := powPr.isMonHom G i
+  have := powPr.isMonHom G i
   exact IsMonHom.one_hom _
 
 end Pow
@@ -789,10 +789,10 @@ theorem hodge_eight_mul_iso_hodge_pow_eight : ∀ (S : Scheme.{0}) (G H : Over S
     IsSemiAbelian G → SmoothOfRelativeDimension g G.hom →
     LBIso (GlobalTheory.SiegelTor.hodge H (8 * g)) (lbPow (GlobalTheory.SiegelTor.hodge G g) 8) := by
   intro S G H _ _ g pr hpr hU hG hs
-  haveI := hG.smooth
-  haveI := hG.separated
-  haveI := hG.quasiCompact
-  haveI : SmoothOfRelativeDimension g G.hom := hs
+  have := hG.smooth
+  have := hG.separated
+  have := hG.quasiCompact
+  have : SmoothOfRelativeDimension g G.hom := hs
   have hVG : IsVB (omega G) g := isVB_omega G g
   obtain ⟨hP, hc⟩ := cls_hodge_powObj G g hs hVG 7
   let lim : IsLimit (Fan.mk H pr) := mkFanLimit _ (fun s => (hU s.pt s.proj).exists.choose)
@@ -804,7 +804,7 @@ theorem hodge_eight_mul_iso_hodge_pow_eight : ∀ (S : Scheme.{0}) (G H : Over S
   have hη : η[powObj G 8] ≫ e.inv = η[H] := by
     refine lim.hom_ext fun ⟨i⟩ => ?_
     have h1 : e.inv ≫ pr i = powPr G i := by rw [← he, Iso.inv_hom_id_assoc]
-    haveI := hpr i
+    have := hpr i
     simp only [Fan.mk_π_app, Category.assoc, h1]
     exact (one_powPr G i).trans (IsMonHom.one_hom (pr i)).symm
   obtain ⟨hH, hiso⟩ := lbIso_hodge_of_iso e.symm hη (8 * g) hP
@@ -834,12 +834,12 @@ namespace GlobalTheory
 
 theorem ratModel_isNoetherian_of_arithBase : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω), AlgebraicGeometry.IsNoetherian M.Z := by
   intro o Ω _ _ _ h M
-  haveI := h.ded
-  haveI := M.lft
-  haveI := M.qc
-  haveI : IsNoetherianRing (CommRingCat.of o) := inferInstanceAs (IsNoetherianRing o)
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
-  haveI : CompactSpace M.Z := QuasiCompact.compactSpace_of_compactSpace M.s
+  have := h.ded
+  have := M.lft
+  have := M.qc
+  have : IsNoetherianRing (CommRingCat.of o) := inferInstanceAs (IsNoetherianRing o)
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : CompactSpace M.Z := QuasiCompact.compactSpace_of_compactSpace M.s
   exact {}
 
 end GlobalTheory
@@ -986,8 +986,8 @@ theorem GlobalTheory.FactorOverOpen.factor_over_open : ∀ {S X : Scheme.{0}} [I
   have hη : ∀ W : S.Opens, (W : Set S).Nonempty → genericPoint S ∈ W := fun W hW =>
     ((genericPoint_spec S).mem_open_set_iff W.isOpen).2 (by simpa using hW)
   have hηV : genericPoint S ∈ V := ⟨hη U hU, hη U₀ hU₀⟩
-  haveI : Nonempty V := ⟨⟨_, hηV⟩⟩
-  haveI : Nonempty U := ⟨⟨_, hη U hU⟩⟩
+  have : Nonempty V := ⟨⟨_, hηV⟩⟩
+  have : Nonempty U := ⟨⟨_, hη U hU⟩⟩
   let jU : V.toScheme ⟶ U.toScheme := S.homOfLE inf_le_left
   let j₀ : V.toScheme ⟶ U₀.toScheme := S.homOfLE inf_le_right
   have hjU : jU ≫ U.ι = V.ι := S.homOfLE_ι _
@@ -998,7 +998,7 @@ theorem GlobalTheory.FactorOverOpen.factor_over_open : ∀ {S X : Scheme.{0}} [I
     simpa using hηV
   let z : Sp K ⟶ V.toScheme := IsOpenImmersion.lift V.ι pt hrange
   have hz : z ≫ V.ι = pt := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsDominant z := by
+  have : IsDominant z := by
     refine ⟨?_⟩
     rw [DenseRange, dense_iff_closure_eq,
       V.ι.isOpenEmbedding.isInducing.closure_eq_preimage_closure_image, ← Set.range_comp]
@@ -1020,8 +1020,8 @@ theorem GlobalTheory.FactorOverOpen.factor_over_open : ∀ {S X : Scheme.{0}} [I
   obtain ⟨φ, hφ⟩ := exists_isGrpPullback_cancel pH (isGrpPullback_pullback H U.ι)
   obtain ⟨ψ, hψ⟩ := exists_isGrpPullback_cancel pA (isGrpPullback_pullback A c)
 
-  haveI := isNoetherian_opens U
-  haveI : IsDominant jU := ⟨jU.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)⟩
+  have := isNoetherian_opens U
+  have : IsDominant jU := ⟨jU.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)⟩
   have hG : IsSemiAbelian G := IsSemiAbelian.pullback U.ι H hH
   have hG' : IsSemiAbelian G' := IsSemiAbelian.pullback c A (GlobalTheory.isSemiAbelian_of_isAbelianScheme A hA)
   obtain ⟨E, ⟨hE, -⟩, -⟩ := GlobalTheory.Published.SemiAbelianHomExtension.existsUnique_iso_of_extensions
@@ -1069,11 +1069,11 @@ theorem smoothOfRelativeDimension_of_eighthPower : ∀ {S : Scheme.{0}} [IsInteg
       (fun s m hm => (huniv s.pt s.proj).choose_spec.2 m hm)
   let e : H ≅ powObj G 8 := hlim.conePointUniqueUpToIso (powIsLimit G 8)
   have hw : H.hom = e.hom.left ≫ (powObj G 8).hom := (Over.w e.hom).symm
-  haveI : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget _).map e.hom))
-  haveI : Smooth G.hom := hG.smooth
-  haveI : GeometricallyConnected G.hom := hG.geomConnected
-  haveI : ConnectedSpace S := inferInstance
-  haveI : ConnectedSpace G.left := GeometricallyConnected.connectedSpace G.hom G.hom.isOpenMap
+  have : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget _).map e.hom))
+  have : Smooth G.hom := hG.smooth
+  have : GeometricallyConnected G.hom := hG.geomConnected
+  have : ConnectedSpace S := inferInstance
+  have : ConnectedSpace G.left := GeometricallyConnected.connectedSpace G.hom G.hom.isOpenMap
   obtain ⟨s⟩ : Nonempty S := inferInstance
   obtain ⟨n, hn⟩ := Geo.Tor.exists_dim_of_preconnected G.hom (eSec G s)
   have h8 := smoothOfRelativeDimension_powObj G n hn 8
@@ -1121,29 +1121,29 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.SiegFactor.firstFactor : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (β : cycAway n →+* o) (S : ThetaSys o Ω) (ρ : S.Real) (u : Sp S.R ⟶ F.X), SysAt F W β S ρ u → ∀ (M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Zh : ZHOut ρ M U₀ EE) (U : M.Z.Opens) (c : U.toScheme ⟶ F.X), S.Over₀ M U₀ → OpenAt F β u M U c → ∃ (G : Over M.Z) (_ : GrpObj G) (e : pullback F.univ.A.hom c ⟶ G.left) (_ : IsCommMonObj G), IsSemiAbelian G ∧ SmoothOfRelativeDimension g G.hom ∧ IsGrpPullback ((Over.pullback c).obj F.univ.A) G U.ι e ∧ LBIso (hodge Zh.G S.g) (lbPow (hodge G g) 8) := by
   intro g n hg hn hodd F W hW o Ω _ _ _ _ β S ρ u hsys M U₀ EE Zh U c hO hOpen
   obtain ⟨-, -, hSg, ⟨c', hc'pb, pr, hpr, huniv, -⟩, -⟩ := hsys
-  haveI : IsCommMonObj ρ.P.A := ρ.P.isAb.comm
+  have : IsCommMonObj ρ.P.A := ρ.P.isAb.comm
   obtain ⟨inj, hinj, hinjpr, hsum⟩ := GlobalTheory.T.exists_injections_eighthPower_grpObj ρ.P.A c'.A pr hpr huniv
   let E' : Fin 8 → Fin 8 → (ρ.P.A ⟶ ρ.P.A) := fun a b => pr a ≫ inj b
   have hE' : ∀ a b, IsMonHom (E' a b) := fun a b => by
-    haveI := hpr a; haveI := hinj b; exact inferInstanceAs (IsMonHom (pr a ≫ inj b))
+    have := hpr a; have := hinj b; exact inferInstanceAs (IsMonHom (pr a ≫ inj b))
   have hrel' : ∀ a b c d, E' a b ≫ E' c d = if b = c then E' a d else 1 := by
     intro a b c d
     show (pr a ≫ inj b) ≫ pr c ≫ inj d = if b = c then pr a ≫ inj d else 1
     rw [Category.assoc, ← Category.assoc (inj b), hinjpr]
     split_ifs
     · rw [Category.id_comp]
-    · haveI := hinj d; rw [MonObj.one_comp, MonObj.comp_one]
-  haveI : AlgebraicGeometry.IsNoetherian M.Z := GlobalTheory.T.isNoetherian_functionFieldModel_arithBase M
+    · have := hinj d; rw [MonObj.one_comp, MonObj.comp_one]
+  have : AlgebraicGeometry.IsNoetherian M.Z := GlobalTheory.T.isNoetherian_functionFieldModel_arithBase M
   have hdense : Dense (U₀ : Set M.Z) := U₀.isOpen.dense hO.ne
   obtain ⟨E, hE, hrel, hsumE, hcompat⟩ := GlobalTheory.T.exists_matrixUnits_extend_normal_noetherian hO.normal U₀ hdense Zh.G Zh.semi
     ((Over.pullback Zh.u₀).obj ρ.P.A) ρ.P.A Zh.u₀ Zh.φ (pullback.fst _ _) Zh.cart (isGrpPullback_pullback _ _)
     E' hE' hrel' hsum
   have hidem : E 0 0 ≫ E 0 0 = E 0 0 := by rw [hrel]; simp
   obtain ⟨H, _, i, r, hi, hr, hir, hri, hH⟩ := _root_.GlobalTheory.SiegMin.exists_semiAbelian_idempotent_image M.Z Zh.G Zh.semi (E 0 0) (hE 0 0) hidem
-  haveI : IsCommMonObj H := hH.comm
+  have : IsCommMonObj H := hH.comm
   have huniv8 := GlobalTheory.T.eighthPower_of_matrixUnits_idempotent_split Zh.G H E hE hrel hsumE i r hi hr hir hri
   have hpr8 : ∀ a, IsMonHom (E a 0 ≫ r) := fun a => by
-    haveI := hE a 0; haveI := hr; exact inferInstanceAs (IsMonHom (E a 0 ≫ r))
+    have := hE a 0; have := hr; exact inferInstanceAs (IsMonHom (E a 0 ≫ r))
   have hdimG : SmoothOfRelativeDimension (8 * g) Zh.G.hom := hSg ▸ Zh.dim
   have hdim : SmoothOfRelativeDimension g H.hom := GlobalTheory.T.smoothOfRelativeDimension_of_eighth_power H Zh.G g (fun a => E a 0 ≫ r) huniv8 hH hdimG
   have hhodge := _root_.GlobalTheory.HodgePow.hodge_eight_mul_iso_hodge_pow_eight M.Z H Zh.G g (fun a => E a 0 ≫ r) hpr8 huniv8 hH hdim

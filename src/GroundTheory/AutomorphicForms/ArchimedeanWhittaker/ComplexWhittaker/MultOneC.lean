@@ -77,7 +77,7 @@ theorem transposeU_mul (k l : U2) : transposeU (k * l) = transposeU l * transpos
   Subtype.ext (by simp [Matrix.transpose_mul])
 
 theorem continuous_transposeU : Continuous transposeU :=
-  Continuous.subtype_mk (continuous_subtype_val.matrix_transpose) _
+  Continuous.subtype_mk (continuous_subtypeVal.matrix_transpose) _
 
 def transposeHomeo : U2 ≃ₜ U2 where
   toFun := transposeU
@@ -89,23 +89,23 @@ def transposeHomeo : U2 ≃ₜ U2 where
 
 theorem map_transpose_μK : Measure.map transposeU μK = μK := by
   have hmeas : Measurable transposeU := continuous_transposeU.measurable
-  haveI : μK.IsMulRightInvariant := by
+  have : μK.IsMulRightInvariant := by
     refine ⟨fun g => ?_⟩
-    haveI : (Measure.map (· * g) μK).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right μK g
+    have : (Measure.map (· * g) μK).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right μK g
     exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure _ _
-  haveI : (Measure.map transposeU μK).IsMulLeftInvariant := by
+  have : (Measure.map transposeU μK).IsMulLeftInvariant := by
     refine ⟨fun g => ?_⟩
     rw [Measure.map_map (measurable_const_mul g) hmeas]
     have e : (fun k => g * k) ∘ transposeU = transposeU ∘ (fun k => k * transposeU g) := by
       funext k; simp [transposeU_mul, transposeU_transposeU]
     rw [e, ← Measure.map_map hmeas (measurable_mul_const _), map_mul_right_eq_self]
-  haveI : (Measure.map transposeU μK).IsHaarMeasure :=
+  have : (Measure.map transposeU μK).IsHaarMeasure :=
     { lt_top_of_isCompact := fun K hK => measure_lt_top _ _
       toIsOpenPosMeasure := ⟨fun U hU hne => by
         rw [Measure.map_apply hmeas hU.measurableSet]
         exact (hU.preimage continuous_transposeU).measure_ne_zero μK
           (by obtain ⟨u, hu⟩ := hne; exact ⟨transposeU u, by simpa [transposeU_transposeU] using hu⟩)⟩ }
-  haveI : IsProbabilityMeasure (Measure.map transposeU μK) :=
+  have : IsProbabilityMeasure (Measure.map transposeU μK) :=
     by infer_instance
   exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure _ _
 
@@ -167,7 +167,7 @@ theorem inner_Q_map_dC_eq_zero (n : ℕ) (q : ℤ) {i j : ℕ} (hi : i ≤ n) (h
   have h1 : ⟪σ (kC (tC a 0)) (Q σ n q j y), σ (kC (tC a 0)) (σ (dC d₁ d₂ h₁ h₂) (Q σ n q i x))⟫_ℂ =
       ⟪Q σ n q j y, σ (dC d₁ d₂ h₁ h₂) (Q σ n q i x)⟫_ℂ := by
     rw [UnitaryRep.inner_map_left, ← UnitaryRep.map_mul_apply, inv_mul_cancel, UnitaryRep.map_one,
-      ContinuousLinearMap.one_apply]
+      one_apply_eq_self]
   have h2 : ⟪σ (kC (tC a 0)) (Q σ n q j y), σ (kC (tC a 0)) (σ (dC d₁ d₂ h₁ h₂) (Q σ n q i x))⟫_ℂ =
       -⟪Q σ n q j y, σ (dC d₁ d₂ h₁ h₂) (Q σ n q i x)⟫_ℂ := by
     rw [← UnitaryRep.map_mul_apply, tC_dC_comm, UnitaryRep.map_mul_apply, map_tC_Q σ n q hj,
@@ -258,8 +258,8 @@ theorem compr_comm (n : ℕ) (q : ℤ) (g h : GL2C) :
   ext1 v
   apply ext_inner_left ℂ
   intro w
-  rw [Submodule.coe_inner, Submodule.coe_inner, ContinuousLinearMap.mul_apply,
-    ContinuousLinearMap.mul_apply, inner_compr_compr, ← compr_iotaC σ n q h, ← compr_iotaC σ n q g,
+  rw [Submodule.coe_inner, Submodule.coe_inner, mul_apply_eq_comp,
+    mul_apply_eq_comp, inner_compr_compr, ← compr_iotaC σ n q h, ← compr_iotaC σ n q g,
     inner_compr_compr]
   congr 1
   set F : U2 → ℂ := fun k => conj (psi n q n k) * ⟪(w : H), σ (iotaC h * kC k * iotaC g) v⟫_ℂ with hF

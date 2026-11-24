@@ -105,10 +105,10 @@ theorem connectedSpace_specialFibre_of_morphisms : GlobalTheory.Published.Formal
   open GlobalTheory.SpecialConn GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits in
   have hy₀' : y₀ ∈ Set.range (specialι f) := by rw [hT]; exact hy₀
   obtain ⟨z₀, -⟩ := hy₀'
-  haveI : Nonempty (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialFibre f) := ⟨z₀⟩
-  haveI : IsClosedImmersion (Spec.map (CommRingCat.ofHom (IsLocalRing.residue O))) :=
+  have : Nonempty (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialFibre f) := ⟨z₀⟩
+  have : IsClosedImmersion (Spec.map (CommRingCat.ofHom (IsLocalRing.residue O))) :=
     IsClosedImmersion.spec_of_surjective _ IsLocalRing.residue_surjective
-  haveI : IsClosedImmersion (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f) :=
+  have : IsClosedImmersion (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f) :=
     inferInstanceAs (IsClosedImmersion (pullback.fst f (Spec.map (CommRingCat.ofHom (IsLocalRing.residue O)))))
   have hcl : Topology.IsClosedEmbedding (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f) :=
     (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι f).isClosedEmbedding
@@ -146,8 +146,8 @@ theorem connectedSpace_specialFibre_of_morphisms : GlobalTheory.Published.Formal
       by rw [← isClosed_compl_iff, hAB n]; exact hB.preimage (GlobalTheory.SpecialConn.thickι f n).continuous⟩
   choose h hhp hhU using fun n => _root_.GlobalTheory.exists_hom_spec_prod_self_preimage_eq_clopen O (GlobalTheory.SpecialConn.thickFib f n)
     (GlobalTheory.SpecialConn.thickι f n ≫ f) _ (hclo n)
-  haveI : IsProper (Over.mk f).hom := hP
-  haveI : IsProper (Over.mk (twoπ O)).hom := isProper_twoπ O
+  have : IsProper (Over.mk f).hom := hP
+  have : IsProper (Over.mk (twoπ O)).hom := isProper_twoπ O
   have hc : ∀ n, GlobalTheory.SpecialConn.thickTr f n ≫ h (n + 1) = h n := by
     intro n
     refine _root_.GlobalTheory.AlgConn.hom_ext_of_twoπ_of_basicOpen O _ _ _ ?_ ?_
@@ -221,7 +221,7 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
     let I := Scheme.IdealSheafData.vanishingIdeal (⟨closure (q '' C), hZc⟩ : TopologicalSpace.Closeds P)
     have hrange : Set.range I.subschemeι = closure (q '' C) := by
       rw [Scheme.IdealSheafData.range_subschemeι, Scheme.IdealSheafData.coe_support_vanishingIdeal]; rfl
-    haveI : IsProper (I.subschemeι ≫ s) := inferInstance
+    have : IsProper (I.subschemeι ≫ s) := inferInstance
     have hne : Nonempty I.subscheme := by
       obtain ⟨c, hc⟩ := hC.nonempty
       have : q c ∈ Set.range I.subschemeι := by rw [hrange]; exact subset_closure ⟨c, hc, rfl⟩
@@ -230,8 +230,8 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
     have hpc : _root_.IsPreconnected (Set.univ : Set I.subscheme) := by
       rw [← I.subschemeι.isEmbedding.isInducing.isPreconnected_image, Set.image_univ, hrange]
       exact hZirr.2.isPreconnected
-    haveI : ConnectedSpace I.subscheme := { toPreconnectedSpace := ⟨hpc⟩, toNonempty := hne }
-    haveI hsp := GlobalTheory.AlgConn.connectedSpace_specialFibre_of_morphisms GlobalTheory.T.formalAlgebraisation_morphisms' O _
+    have : ConnectedSpace I.subscheme := { toPreconnectedSpace := ⟨hpc⟩, toNonempty := hne }
+    have hsp := GlobalTheory.AlgConn.connectedSpace_specialFibre_of_morphisms GlobalTheory.T.formalAlgebraisation_morphisms' O _
       (I.subschemeι ≫ s) inferInstance inferInstance
     have hT : Set.range (GlobalTheory.IndefiniteRowSideFullHecke.SpecialFibreUnits.specialι (I.subschemeι ≫ s)) =
         (I.subschemeι ≫ s) ⁻¹' {IsLocalRing.closedPoint O} := by
@@ -249,12 +249,12 @@ theorem isClosed_image_closure : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDis
 
   have hkU : IsClosed ((closure (q '' C) ∩ s ⁻¹' {IsLocalRing.closedPoint O}) ∩ U) := by
     let res := Spec.map (CommRingCat.ofHom (IsLocalRing.residue O))
-    haveI : IsClosedImmersion res :=
+    have : IsClosedImmersion res :=
       IsClosedImmersion.spec_of_surjective _ IsLocalRing.residue_surjective
-    haveI : IsProper (pullback.snd (q ≫ s) res ≫ res) := inferInstance
-    haveI : IsProper ((pullback.fst (q ≫ s) res ≫ q) ≫ s) := by
+    have : IsProper (pullback.snd (q ≫ s) res ≫ res) := inferInstance
+    have : IsProper ((pullback.fst (q ≫ s) res ≫ q) ≫ s) := by
       rw [Category.assoc, pullback.condition]; infer_instance
-    haveI : IsProper (pullback.fst (q ≫ s) res ≫ q) := IsProper.of_comp _ s
+    have : IsProper (pullback.fst (q ≫ s) res ≫ q) := IsProper.of_comp _ s
     have hF : Set.range (pullback.fst (q ≫ s) res) = (q ≫ s) ⁻¹' {IsLocalRing.closedPoint O} := by
       have h := Scheme.Pullback.range_fst (q ≫ s) res
       rw [GlobalTheory.SpecialConn.range_residue] at h
@@ -371,8 +371,8 @@ theorem isProper_of_irreducible_of_isProper_specialFibre : ∀ (O : Type) [CommR
   have hUirr : IsIrreducible (U : Set X) :=
     ⟨hUne, (IrreducibleSpace.isIrreducible_univ X).isPreirreducible.open_subset U.isOpen (Set.subset_univ _)⟩
   have hCirr : IsIrreducible C := by
-    haveI : IrreducibleSpace (U : Set X) := Subtype.irreducibleSpace hUirr
-    haveI : IrreducibleSpace (π ⁻¹ᵁ U).toScheme :=
+    have : IrreducibleSpace (U : Set X) := Subtype.irreducibleSpace hUirr
+    have : IrreducibleSpace (π ⁻¹ᵁ U).toScheme :=
       (Scheme.homeoOfIso (asIso (π ∣_ U))).irreducibleSpace_iff.2 (inferInstanceAs (IrreducibleSpace (U : Set X)))
     have h := (IrreducibleSpace.isIrreducible_univ (π ⁻¹ᵁ U).toScheme).image (fun y => (π ⁻¹ᵁ U).ι y)
       ((π ⁻¹ᵁ U).ι.continuous.continuousOn)
@@ -422,15 +422,15 @@ theorem isProper_of_specialFibre : ∀ (W : Type) [CommRing W] [IsDomain W] [IsD
   intro W _ _ _ X f h1 h2 h3 h4 h5 h6
   obtain ⟨⟨hdom, hdvr⟩, hcpl, -, hloc, -⟩ := ReciprocityTheory.CA.Pt.completionDVR W
   let O := AdicCompletion (maximalIdeal W) W
-  haveI : Module.Flat W O := AdicCompletion.flat_of_isNoetherian _
-  haveI : Module.FaithfullyFlat W O := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have : Module.Flat W O := AdicCompletion.flat_of_isNoetherian _
+  have : Module.FaithfullyFlat W O := Module.FaithfullyFlat.of_flat_of_isLocalHom
   let g : Spec (CommRingCat.of O) ⟶ Spec (CommRingCat.of W) := Spec.map (CommRingCat.ofHom (algebraMap W O))
   have gfl : Flat g := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.flat_algebraMap_iff.2 inferInstance
   have gsurj : Surjective g := ⟨PrimeSpectrum.comap_surjective_of_faithfullyFlat (A := W) (B := O)⟩
-  haveI : IrreducibleSpace (Spec (CommRingCat.of O)) := inferInstance
-  haveI : IrreducibleSpace ↥(pullback f g) := inferInstance
+  have : IrreducibleSpace (Spec (CommRingCat.of O)) := inferInstance
+  have : IrreducibleSpace ↥(pullback f g) := inferInstance
 
   let k := CommRingCat.ofHom (IsLocalRing.residue W)
   let kO := CommRingCat.ofHom (IsLocalRing.residue O)

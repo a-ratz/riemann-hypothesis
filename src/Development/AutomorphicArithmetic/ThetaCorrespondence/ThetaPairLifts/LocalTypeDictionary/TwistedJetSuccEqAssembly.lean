@@ -262,14 +262,14 @@ theorem partCoord_bVV {n : ℕ} (lam : ι → DomWeight n) (τ₀ : ι) (j j' : 
     rw [Finset.sum_eq_single (j' τ₀)]
     · rw [← hj]; simp
     · intro l _ hl
-      rw [if_neg, zero_smul]
+      rw [ite_eq_right, zero_smul]
       intro e
       apply hl
       have := congrFun e τ₀
       simpa using this.symm
     · simp
   · refine Finset.sum_eq_zero fun l _ => ?_
-    rw [if_neg, zero_smul]
+    rw [ite_eq_right, zero_smul]
     intro e
     apply hc
     intro τ h
@@ -319,15 +319,15 @@ theorem partCoord_rhoK {n : ℕ} (lam : ι → DomWeight n) (τ₀ : ι) (j : VV
     have hc : ∀ l, ((∀ τ, τ ≠ τ₀ → Function.update j' τ₀ l τ = j τ) ↔ (∀ τ, τ ≠ τ₀ → j' τ = j τ)) := fun l =>
       forall_congr' fun τ => imp_congr_right fun h => by rw [Function.update_of_ne h]
     by_cases h : ∀ τ, τ ≠ τ₀ → j' τ = j τ
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       have e : ∀ l, (if (∀ τ, τ ≠ τ₀ → Function.update j' τ₀ l τ = j τ) then
           bSq (lam τ₀) (Function.update j' τ₀ l τ₀) else 0) = bSq (lam τ₀) l := fun l => by
-        rw [if_pos ((hc l).2 h), Function.update_self]
+        rw [ite_eq_left ((hc l).2 h), Function.update_self]
       simp only [e]
       exact (bSq (lam τ₀)).sum_repr _
-    · rw [if_neg h, map_zero]
+    · rw [ite_eq_right h, map_zero]
       refine Finset.sum_eq_zero fun l _ => ?_
-      rw [if_neg (fun h' => h ((hc l).1 h')), smul_zero]
+      rw [ite_eq_right (fun h' => h ((hc l).1 h')), smul_zero]
   exact LinearMap.congr_fun key v
 
 def factorIncl {n : ℕ} (lam : ι → DomWeight n) (τ₀ : ι) (i : VVIdx lam) : nablaSq ℂ n (lam τ₀) →ₗ[ℂ] VV ℂ lam :=
@@ -514,7 +514,7 @@ theorem eq_smul_brStd_of_equivariant : ∀ {ι : Type} [Fintype ι] {N n : ℕ} 
         (GlobalTheory.Branching.smallRep (MonoidHom.id (GL (Fin n) ℂ)) (σ τ₀)) := ⟨ψ0, hψ⟩
     have h1 := (GlobalTheory.Branching.comult_id n N hN.symm (Λ τ₀) (σ τ₀)).1
       ((GlobalTheory.IndefiniteRowSideFullHecke.InterlacingEquivariance.interlace_iff hN _ _).1 (hI τ₀))
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ (brOneRep_ne_zero hN (Λ τ₀) (σ τ₀) (hI τ₀) (hS τ₀))).1 h1 ψ
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ (brOneRep_ne_zero hN (Λ τ₀) (σ τ₀) (hI τ₀) (hS τ₀))).1 h1 ψ
     refine ⟨c, fun l k => ?_⟩
     have h2 := congrArg (fun F : (GlobalTheory.Branching.resRep (MonoidHom.id (GL (Fin n) ℂ)) hN.symm (Λ τ₀)).IntertwiningMap
         (GlobalTheory.Branching.smallRep (MonoidHom.id (GL (Fin n) ℂ)) (σ τ₀)) =>
@@ -807,7 +807,7 @@ theorem brPair_unique (hN : N = n + 1) (hn : 1 ≤ n) {Λ : ι → DomWeight N} 
     (hB : ∀ (u : ι → Matrix.unitaryGroup (Fin n) ℂ) (v : VV ℂ Λ) (f : VV ℂ fun τ => (σ τ).dual),
       B (rhoK Λ (diagU hN u) v) (rhoK (fun τ => (σ τ).dual) (uGL u) f) = B v f) :
     ∃ c : ℂ, B = c • GlobalTheory.FunObj.brPair σ hN Λ := by
-  haveI : FiniteDimensional ℂ (VV ℂ σ) := Module.Finite.of_basis (bVV ℂ σ)
+  have : FiniteDimensional ℂ (VV ℂ σ) := Module.Finite.of_basis (bVV ℂ σ)
   have hnd := pairingBNondegenerate_holds ℂ ι n σ
   let φ : VV ℂ Λ →ₗ[ℂ] VV ℂ σ :=
     (LinearMap.BilinForm.toDual (pairBK σ) hnd).symm.toLinearMap ∘ₗ B.compl₂ (GlobalTheory.FunObj.funEquiv σ).toLinearMap
@@ -948,10 +948,10 @@ private theorem isBlock_embGL' {n N : ℕ} (hN : N = n + 1) (g : GL (Fin n) ℂ)
   · rw [GlobalTheory.Branching.embGL_apply, dite_eq_left ⟨a.2, b.2⟩]
     rfl
   · rw [GlobalTheory.Branching.embGL_apply, dite_eq_right (fun h => absurd h.2 (lt_irrefl _)),
-      if_neg (fun h => (ne_of_lt a.2) (congrArg Fin.val h))]
+      ite_eq_right (fun h => (ne_of_lt a.2) (congrArg Fin.val h))]
   · rw [GlobalTheory.Branching.embGL_apply, dite_eq_right (fun h => absurd h.1 (lt_irrefl _)),
-      if_neg (fun h => (ne_of_lt a.2) (congrArg Fin.val h).symm)]
-  · rw [GlobalTheory.Branching.embGL_apply, dite_eq_right (fun h => absurd h.1 (lt_irrefl _)), if_pos rfl]
+      ite_eq_right (fun h => (ne_of_lt a.2) (congrArg Fin.val h).symm)]
+  · rw [GlobalTheory.Branching.embGL_apply, dite_eq_right (fun h => absurd h.1 (lt_irrefl _)), ite_eq_left rfl]
 
 variable {θ : InfFam D} (hθ : IsInfFam θ) (N : Std G U)
 include hθ
@@ -1022,7 +1022,7 @@ theorem real_average (Λ : Module.Dual ℂ (VV ℂ (wt G (.top D.R.m))))
   have hc : ∀ v v', Continuous fun k => Λ (ρ k⁻¹ v) * Λ' (ρ' k⁻¹ v') := by
     intro v v'
     simp_rw [e1', e2']
-    exact (continuous_integrand hθ N Λ Λ' v v').comp continuous_subtype_val
+    exact (continuous_integrand hθ N Λ Λ' v v').comp continuous_subtypeVal
   obtain ⟨β, hβ, hinv⟩ := exists_avg_form κ ρ ρ' Λ Λ' hc
   obtain ⟨c, hc'⟩ := GlobalTheory.BrUnique.brPair_unique G.sp.topDec.rank.symm (one_le_rank_last G)
     (fun τ => (GlobalTheory.WtInterlaceC.weights_top_grid G τ).1) (fun τ => (GlobalTheory.WtInterlaceC.weights_top_grid G τ).2) β (by
@@ -1118,7 +1118,7 @@ theorem exists_real_model_sq (V : HSp D) (θ : InfFam D) (c : CoefA V) (lam : D.
   obtain ⟨e, he⟩ : ∃ e : VV ℂ lam ≃ₗ[ℂ] c.W, ∀ v, e (mapVV D.what₂.embLL lam v) = c0 v :=
     GlobalTheory.CoefReal.exists_scalarExt D.what₂.embLL lam c0 ht.2.1 ht.2.2
   refine ⟨e, he, fun u hu v => ?_⟩
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hlab : ∀ τ x, D.what₂.embLL (labLL D τ x) = tauE D τ x := fun τ x =>
     DFunLike.congr_fun (GlobalTheory.ThetaFiresProbe.labE_fixed τ) x
   have hrat : ∀ (γ : GQ V) (v : VV ℂ lam), c.ρ γ.1 (e v) = e (rhoK lam (realGL θ V γ.1) v) := by
@@ -1439,7 +1439,7 @@ private theorem last_functional_compatible {D : D7} {T : Type} {L : LevCh D T} {
   have hB := hT.2.2.2.1
   have hG := hT.2.2.2.2.1
   have hdef := GlobalTheory.TopIntegral.isDefinite_last G
-  haveI : CompactSpace (GinfC (G.V (.grid D.R.m D.R.m))) := isCompact_iff_compactSpace.1 (Eqv.isCompact_GinfC hdef.1 hdef.2)
+  have : CompactSpace (GinfC (G.V (.grid D.R.m D.R.m))) := isCompact_iff_compactSpace.1 (Eqv.isCompact_GinfC hdef.1 hdef.2)
   obtain ⟨κ₀, k1, k2⟩ := exists_haar _ hdef
   obtain ⟨c, hc⟩ := GlobalTheory.TopIntegral.real_average W.θ_is S.N Λ Λ' κ₀
   obtain ⟨s, h1, h2, h3⟩ := GlobalTheory.TopIntegral.exists_orthogonal_summand_embedding_hom G.sp.topDec
@@ -1447,7 +1447,7 @@ private theorem last_functional_compatible {D : D7} {T : Type} {L : LevCh D T} {
     fun z => (h2 _).symm.trans (GlobalTheory.RealType.Emb_fin _ z), fun k hk => h2 k ▸ GlobalTheory.RealType.Emb_mem_inf _ hk,
     fun u u' => ?_, fun κ a1 a2 u u' => ?_⟩
   · simp only [← h2]
-    exact (GlobalTheory.TopIntegral.continuous_integrand W.θ_is S.N Λ Λ' u u').comp continuous_subtype_val
+    exact (GlobalTheory.TopIntegral.continuous_integrand W.θ_is S.N Λ Λ' u u').comp continuous_subtypeVal
   · obtain rfl : κ = κ₀ := Measure.isHaarMeasure_eq_of_isProbabilityMeasure κ κ₀
     simp only [← h2]
     exact hc u u'

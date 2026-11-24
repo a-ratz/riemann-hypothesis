@@ -101,7 +101,7 @@ theorem hypS_descend {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) {
   refine ⟨w₀, wd₀, (F.2 A₀ A₀ A A φ φ w₀ w h h e).1 hw, (F.2 A₀ A₀ A A φ φ wd₀ wd h h ed).1 hwd, ?_, ?_, ?_⟩
   · let U := pushPt h.1.w (𝟙 A)
     have hU : U.left = φ := Category.id_comp _
-    haveI : Epi U.left := hU ▸ (F.1 _ _ _ _ φ h.1).1
+    have : Epi U.left := hU ▸ (F.1 _ _ _ _ φ h.1).1
     apply preHom_injective U
     have b : pushPt h.1.w (w * wd) = pushPt h.1.w w * pushPt h.1.w wd := map_mul (pushHom h A) _ _
     have c := pa (𝟙 A)
@@ -151,7 +151,7 @@ theorem level_descend {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) 
     (pt₀ : Fin (2 * Q.g) → (Out.baseOver (Sp K₀) ⟶ A₀)) (hpt : ∀ a, (t.pt a).left ≫ φ = spMap i ≫ (pt₀ a).left) :
     Nonempty (Out.Level ⟨A₀, hab, Q.g, hdim, L₀, hL, hr, hs, hamp, hk⟩ k (unitOn z)) := by
   let U : Over.mk ((Out.baseOver (Sp K)).hom ≫ spMap i) ⟶ Out.baseOver (Sp K₀) := Over.homMk (spMap i) (by simp)
-  haveI : Epi U.left := epi_spMap i
+  have : Epi U.left := epi_spMap i
   have hU : ∀ a, pushHom hp _ (t.pt a) = preHom U (pt₀ a) := fun a => Over.OverMorphism.ext (hpt a)
   have key : ∀ (K' : Type) [Field K'] (x : Sp K' ⟶ Sp K₀), ∃ (Ω : Type) (_ : Field Ω) (_ : IsAlgClosed Ω)
       (s : Sp Ω ⟶ Sp K) (N : Type) (_ : Monoid N) (P : (Over.mk s ⟶ Q.A) →* N) (R : (Over.mk x ⟶ A₀) →* N),
@@ -166,7 +166,7 @@ theorem level_descend {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) 
       congr 1
       exact CommRingCat.hom_ext hj.symm
     let V : Over.mk ((Over.mk (spMap j)).hom ≫ spMap i) ⟶ Over.mk (Spec.map x') := Over.homMk (spMap j') hc
-    haveI : Epi V.left := epi_spMap j'
+    have : Epi V.left := epi_spMap j'
     refine ⟨Ω, inferInstance, inferInstance, spMap j, _, inferInstance, pushHom hp (Over.mk (spMap j)), preHom V,
       pushHom_bijective hp _, preHom_injective V, fun a => ?_⟩
     apply Over.OverMorphism.ext
@@ -193,7 +193,7 @@ theorem level_descend {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) 
     unfold Out.linComb at this ⊢
     rw [map_prod_pow] at this ⊢
     simpa only [H] using this
-  · haveI := hab.comm
+  · have := hab.comm
     have h₁ := (GlobalTheory.weilIs_grpPullback_of_comm _ _ A₀ Q.A (spMap i) φ L₀ Q.L hL Q.isLB hp hw _ k (t.pt a) (t.pt a')
       (U ≫ pt₀ a) (U ≫ pt₀ a') _ (hpt a).symm (hpt a').symm).1 (t.pairing a a')
     rw [unitOn_zpow] at h₁ ⊢
@@ -204,7 +204,7 @@ theorem level_descend {K₀ K : Type} [Field K₀] [Field K] (i : K₀ →+* K) 
 theorem exists_fg_subalgebra {o K : Type} [CommRing o] [Field K] (β : o →+* K) (s : Finset K) :
     letI : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
     ∃ R₀ : Subalgebra o (gen β s), R₀.FG ∧ ∀ x : gen β s, ∃ a ∈ R₀, ∃ b ∈ R₀, x = a / b := by
-  letI : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
+  let : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
   let s₀ : Set (gen β s) := (gen β s).subtype ⁻¹' (s : Set K)
   have hfin : s₀.Finite := s.finite_toSet.preimage (gen β s).subtype.injective.injOn
   refine ⟨Algebra.adjoin o s₀, Subalgebra.fg_def.2 ⟨s₀, hfin, rfl⟩, fun x => ?_⟩
@@ -280,7 +280,7 @@ theorem descends_to_fg_field : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebr
   obtain ⟨hr, hs, hk⟩ := _root_.GlobalTheory.PolDescent.rigidified_sym_kTriv_descend _ K (gen β s).subtype A₁ t.A ψ L₁ t.L hab hG hL₁ t.isLB hL
   have hamp := GlobalTheory.AmpleDescent.relAmple_of_fieldExtension _ K (gen β s).subtype A₁ t.A ψ L₁ t.L hab hG hL₁ t.isLB hL
     t.ample
-  letI : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
+  let : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
   obtain ⟨R₀, hfg, hfrac⟩ := exists_fg_subalgebra β s
   refine ⟨gen β s, inferInstance, inferInstance, ⟨(gen β s).subtype, fun _ => rfl⟩, R₀,
     ⟨A₁, hab, t.g, hdim _ t.smoothDim, L₁, hL₁, hr t.rigid, hs t.sym, hamp, hk t.ktriv⟩, ψ, hfg, hfrac, rfl, hG, ?_, ?_⟩

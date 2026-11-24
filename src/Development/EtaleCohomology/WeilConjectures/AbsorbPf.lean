@@ -234,7 +234,7 @@ theorem Sys2_of (hM : Model) (hP : Pair) (hC : Coeq) : LateralTheory.E.AbsorbPf.
       rw [← he, h1, Iso.hom_inv_id, Category.comp_id, hφB]
     · show (φB.comp e.inv.hom).comp e.hom.hom = φB
       rw [RingHom.comp_assoc, ← CommRingCat.hom_comp, e.hom_inv_id, CommRingCat.hom_id, RingHom.comp_id]
-  haveI : IsFilteredOrEmpty (Obj ι M tM) := by
+  have : IsFilteredOrEmpty (Obj ι M tM) := by
     refine ⟨?_, ?_⟩
     · intro X Y
       obtain ⟨E, gE, φE, p, q, hE, hφE, hp, hq, hpφ, hqφ⟩ :=
@@ -257,10 +257,10 @@ theorem Sys2_of (hM : Model) (hP : Pair) (hC : Coeq) : LateralTheory.E.AbsorbPf.
       · apply Subtype.ext
         show (show Hm X Y from f).1 ≫ (w ≫ e.hom) = (show Hm X Y from g).1 ≫ (w ≫ e.hom)
         rw [← Category.assoc, huv, Category.assoc]
-  haveI : Nonempty (Obj ι M tM) := by
+  have : Nonempty (Obj ι M tM) := by
     obtain ⟨X, _, _, _⟩ := into A (𝟙 A) (et_id A) ι (by simp)
     exact ⟨X⟩
-  haveI : IsFiltered (Obj ι M tM) := {}
+  have : IsFiltered (Obj ι M tM) := {}
   let D : Obj ι M tM ⥤ CommRingCat.{0} := Dfun
   let t : (Functor.const (Obj ι M tM)).obj A ⟶ D :=
     { app := fun X => tM X.n

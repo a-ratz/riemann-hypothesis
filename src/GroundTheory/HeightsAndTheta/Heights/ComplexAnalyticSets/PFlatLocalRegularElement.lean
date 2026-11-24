@@ -99,7 +99,7 @@ theorem exists_not_mem_forall_mul_mem {R : Type} [CommRing R] (m J : Ideal R) (h
     apply hJ
     rw [h0, pow_zero, Ideal.one_eq_top] at hkJ
     exact top_le_iff.mp hkJ
-  obtain ⟨a, ha, haJ⟩ := SetLike.not_le_iff_exists.mp
+  obtain ⟨a, ha, haJ⟩ := IsConcreteLE.not_le_iff_exists.mp
     (Nat.find_min h (Nat.sub_lt (Nat.pos_of_ne_zero hk0) one_pos))
   refine ⟨a, haJ, fun r hr => hkJ ?_⟩
   have : r * a ∈ m ^ (1 + (Nat.find h - 1)) := by

@@ -362,13 +362,13 @@ variable {B B' G G' T T' S₀ : Scheme.{0}} {M : LB B} {M' : LB B'} {L : LB G} {
 private theorem sec_res_comp_algebraMap {X : Scheme.{0}} {U V W : X.Opens} (h₁ : U ≤ V) (h₂ : V ≤ W)
     (x : Γ(X, W)ˣ) : res h₁ (res h₂ x) = res (h₁.trans h₂) x := by
   apply Units.ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
 private theorem res_self_lemma {X : Scheme.{0}} {U : X.Opens} (h : U ≤ U) (x : Γ(X, U)ˣ) : res h x = x := by
   apply Units.ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   have e : homOfLE h = 𝟙 U := rfl
   rw [e, op_id, CategoryTheory.Functor.map_id]
   rfl
@@ -399,7 +399,7 @@ private theorem linComb_unit_g_eq {X Y : Scheme.{0}} (N : LB X) (e : Y ⟶ X) (a
 private theorem res_pullU_id_eq_res'' {X : Scheme.{0}} {U V : X.Opens} (x : Γ(X, U)ˣ) (h : V ≤ (𝟙 X) ⁻¹ᵁ U) :
     res h (pullU (𝟙 X) U x) = res (fun y hy => h hy) x := by
   apply Units.ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rfl
 
 private theorem res_congr_of_index_eq {X : Scheme.{0}} {Idx : Type*} {U : Idx → X.Opens} (s : ∀ a, Γ(X, U a)ˣ) {V : X.Opens}
@@ -452,7 +452,7 @@ theorem idIso_rig (hL : L.IsLB) {eG : S₀ ⟶ G} {eG' : S₀ ⟶ G'} (rL : LB.G
 private theorem pullU_res_eq_res_pullU'' {X Y : Scheme.{0}} (r : Y ⟶ X) {U U' : X.Opens} (h' : U' ≤ U)
     (hh : r ⁻¹ᵁ U' ≤ r ⁻¹ᵁ U) (x : Γ(X, U)ˣ) : pullU r U' (res h' x) = res hh (pullU r U x) := by
   apply Units.ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, Scheme.Hom.naturality]
   rfl
 
@@ -477,7 +477,7 @@ private theorem toFld_gm_res {X Y : Scheme.{0}} (r : Y ⟶ X) {U : X.Opens} {V :
   unfold gm
   rw [dite_eq_left hy1, dite_eq_left hy']
   apply Units.ext
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, res, pullU]
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, res, pullU]
   exact TopCat.Presheaf.germ_res_apply Y.presheaf (homOfLE hV) y hy _
 
 private theorem gm_id_res_eq' {Y : Scheme.{0}} {U V : Y.Opens} (hV : V ≤ U) (u : Γ(Y, U)ˣ) (y : Y) (hy : y ∈ V) :
@@ -487,7 +487,7 @@ private theorem gm_id_res_eq' {Y : Scheme.{0}} {U V : Y.Opens} (hV : V ≤ U) (u
   unfold gm
   rw [dite_eq_left hy1, dite_eq_left hy2]
   apply Units.ext
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, res, pullU]
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, res, pullU]
   exact TopCat.Presheaf.germ_res_apply Y.presheaf (homOfLE hV) y hy _
 
 private theorem units_ext_of_gm_id_eq' {Y : Scheme.{0}} {V : Y.Opens} (a b : Γ(Y, V)ˣ)

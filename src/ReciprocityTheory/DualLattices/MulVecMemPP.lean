@@ -89,8 +89,8 @@ lemma mulVec_mem_pP {n n' : ℕ} (M : Matrix (Fin n') (Fin n) R) {w : Fin n → 
 lemma εL_eq_zero_of_r (U : UnramData p g v R O σ cp H) {τ : Fin U.m} (h : U.r τ = 0) :
     U.εL τ = 0 := by
   obtain ⟨e⟩ := U.rank τ
-  haveI : Subsingleton (Fin (U.r τ) → R) := by rw [h]; infer_instance
-  haveI : Subsingleton (LinearMap.range (Matrix.mulVecLin (U.εL τ))) := e.toEquiv.subsingleton
+  have : Subsingleton (Fin (U.r τ) → R) := by rw [h]; infer_instance
+  have : Subsingleton (LinearMap.range (Matrix.mulVecLin (U.εL τ))) := e.toEquiv.subsingleton
   ext i j
   have h1 : (⟨U.εL τ *ᵥ Pi.single j 1, LinearMap.mem_range_self _ _⟩ :
       LinearMap.range (Matrix.mulVecLin (U.εL τ))) = 0 := Subsingleton.elim _ _

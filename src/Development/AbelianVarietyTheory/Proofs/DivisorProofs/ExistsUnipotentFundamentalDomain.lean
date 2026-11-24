@@ -68,10 +68,10 @@ namespace GlobalTheory.AdeleCocompactExt
 theorem exists_compact_adeleE : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E],
     ∃ K : Set (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), IsCompact K ∧ ∀ a : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E), ∃ e : E, a - inclR (F := F) (AF F) e ∈ K := by
   intro F E _ _ _ _ _
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨K₀, hK₀, hK⟩ := GlobalTheory.AdeleCocompact.exists_compact_adele F
-  haveI : IsModuleTopology (AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := ⟨rfl⟩
-  haveI : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := ⟨rfl⟩
+  have : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) _
   let b := Module.finBasis F E
   let B := Algebra.TensorProduct.basis (AF F) b
   have hφ : Continuous B.equivFun.symm :=
@@ -117,11 +117,11 @@ theorem exists_haar_fundDom_mass_one : ∀ (G : Type) [Group G] [TopologicalSpac
   let μ₀ : Measure G := Measure.haar
   obtain ⟨𝓕, h𝓕m, h𝓕⟩ := GlobalTheory.FundDomDiscrete.exists_measurable_section Γ
   have hD : IsFundamentalDomain Γ 𝓕 μ₀ := IsFundamentalDomain.mk' h𝓕m.nullMeasurableSet h𝓕
-  haveI : MeasurableMul G :=
+  have : MeasurableMul G :=
     ⟨fun g => (continuous_const.mul continuous_id).measurable, fun g => (continuous_id.mul continuous_const).measurable⟩
-  haveI : MeasurableConstSMul Γ G :=
+  have : MeasurableConstSMul Γ G :=
     ⟨fun γ => (continuous_const.mul continuous_id : Continuous fun x : G => (γ : G) * x).measurable⟩
-  haveI : SMulInvariantMeasure Γ G μ₀ := ⟨fun γ A _ => measure_preimage_mul μ₀ (γ : G) A⟩
+  have : SMulInvariantMeasure Γ G μ₀ := ⟨fun γ A _ => measure_preimage_mul μ₀ (γ : G) A⟩
   have hKm : MeasurableSet K := hK.isClosed.measurableSet
   have hsub : 𝓕 ⊆ ⋃ γ : Γ, γ • K ∩ 𝓕 := by
     intro x hx
@@ -140,7 +140,7 @@ theorem exists_haar_fundDom_mass_one : ∀ (G : Type) [Group G] [TopologicalSpac
     exact (Measure.measure_univ_pos.2 (NeZero.ne μ₀)).ne' h1
   refine ⟨(μ₀ 𝓕)⁻¹ • μ₀, 𝓕, ?_, hD.mono Measure.smul_absolutelyContinuous, ?_⟩
   · exact Measure.IsHaarMeasure.smul μ₀ (ENNReal.inv_ne_zero.2 hfin.ne) (ENNReal.inv_ne_top.2 hne)
-  · rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hne hfin.ne]
+  · rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hne hfin.ne]
 
 end GlobalTheory.HaarFundDom
 end -- clump:auto
@@ -162,7 +162,7 @@ theorem discreteTopology_subgroupOf : ∀ (F E : Type) [Field F] [NumberField F]
     (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (N : Subgroup (UA σ J)),
     DiscreteTopology ((ratU σ J).subgroupOf N) := by
   intro F E _ _ _ _ _ σ n J N
-  haveI := GlobalTheory.RatUDiscrete.discreteTopology_ratU F E σ n J
+  have := GlobalTheory.RatUDiscrete.discreteTopology_ratU F E σ n J
   let φ : (ratU σ J).subgroupOf N → ratU σ J := fun x => ⟨x.1.1, Subgroup.mem_subgroupOf.1 x.2⟩
   have h2 : Topology.IsEmbedding (fun x : (ratU σ J).subgroupOf N => ((x : N) : UA σ J)) :=
     Topology.IsEmbedding.subtypeVal.comp Topology.IsEmbedding.subtypeVal
@@ -593,12 +593,12 @@ namespace GlobalTheory.UnipClosed
 
 theorem isClosed_unip (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (d d₁ : ℕ) (W : Spc F E d) (H' : Plane E d d₁) (hx : H'.x ≠ 0) :
     IsClosed ((unip σ W H' : Subgroup (UA σ W.J)) : Set (UA σ W.J)) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
   set x : Fin d → AE F E := incV F H'.x with hxdef
   set ι : Matrix (Fin d) (Fin d₁) (AE F E) := incM F H'.ι
 
@@ -618,12 +618,12 @@ theorem isClosed_unip (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
       simp only [add_sub_cancel_left, Pi.smul_apply, smul_eq_mul]
       rw [← hc, mul_assoc, Units.mul_inv, mul_one]
     · intro h; exact ⟨_, h⟩
-  have hm : Continuous fun g : UA σ W.J => mat g := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun g : UA σ W.J => mat g := Units.continuous_val.comp continuous_subtypeVal
   have hSc : IsClosed S := by
     have h1 : IsClosed {u : UA σ W.J | mat u *ᵥ x = x} :=
       isClosed_eq (hm.matrix_mulVec continuous_const) continuous_const
     have h2 : IsClosed {u : UA σ W.J | ∀ z, ∃ a : AE F E, mat u *ᵥ (ι *ᵥ z) = ι *ᵥ z + a • x} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       refine isClosed_iInter fun z => ?_
       simp_rw [hline]
       have hf : Continuous fun u : UA σ W.J => mat u *ᵥ (ι *ᵥ z) := hm.matrix_mulVec continuous_const
@@ -854,27 +854,27 @@ theorem hA_incM_incV (σ : E →ₐ[F] E) {n m : ℕ} (J : Matrix (Fin n) (Fin n
 theorem topUA (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
     IsTopologicalGroup (UA σ J) ∧ LocallyCompactSpace (UA σ J) ∧ SecondCountableTopology (UA σ J) ∧
       T2Space (UA σ J) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E) := e.secondCountableTopology
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → AE F E))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E))ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : LocallyCompactSpace (GL (Fin n) (AE F E)) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (GL (Fin n) (AE F E)) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Fin n) (AE F E)) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : T2Space (GL (Fin n) (AE F E)) := Units.isEmbedding_embedProduct.t2Space
+  have : SecondCountableTopology (GL (Fin n) (AE F E)) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : T2Space (GL (Fin n) (AE F E)) := Units.isEmbedding_embedProduct.t2Space
   have hs : Continuous (cA σ) := IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
   have hc : IsClosed (UG (cA σ) (incM F J) : Set (GL (Fin n) (AE F E))) := by
     have hv : Continuous fun g : GL (Fin n) (AE F E) => (g : Matrix (Fin n) (Fin n) (AE F E)) := Units.continuous_val
@@ -886,11 +886,11 @@ theorem topUA (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
 
 theorem countable_ratU' (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (N : Subgroup (UA σ J)) :
     Countable ((ratU σ J).subgroupOf N) := by
-  haveI : Countable E := Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
-  haveI : Countable (GL (Fin n) E) :=
+  have : Countable E := Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
+  have : Countable (GL (Fin n) E) :=
     Function.Injective.countable (f := fun (g : GL (Fin n) E) (i j : Fin n) => (g : Matrix (Fin n) (Fin n) E) i j)
       fun _ _ h => Units.ext (Matrix.ext fun i j => congrFun (congrFun h i) j)
-  haveI := (Set.countable_range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))).to_subtype
+  have := (Set.countable_range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))).to_subtype
   exact Function.Injective.countable
     (f := fun γ : (ratU σ J).subgroupOf N => (⟨γ.1.1.1, Subgroup.mem_subgroupOf.1 (Subgroup.mem_subgroupOf.1 γ.2)⟩ :
       Set.range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))))
@@ -899,8 +899,8 @@ theorem countable_ratU' (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin 
 theorem continuous_nmat (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (x : Fin n → AE F E) {X : Type}
     [TopologicalSpace X] {u : X → Fin n → AE F E} {c : X → AE F E} (hu : Continuous u) (hc : Continuous c) :
     Continuous fun p => nmat σ J x (u p) (c p) := by
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hs : Continuous (cA σ) := IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
   unfold nmat
   refine (continuous_const.sub ?_).sub ?_
@@ -920,8 +920,8 @@ theorem cocompact (h : Hyp σ W H') (hxx : form σ W.J H'.x H'.x = 0) (hyy : for
     (hspan : ∀ v : Fin d → E, ∃ (s t : E) (u : Fin d₁ → E), v = s • H'.x + H'.ι *ᵥ u + t • H'.y) :
     ∃ K : Set (unip σ W H'), IsCompact K ∧
       ∀ g : unip σ W H', ∃ γ : (ratU σ W.J).subgroupOf (unip σ W H'), γ • g ∈ K := by
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hs : Continuous (cA σ) := IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
   obtain ⟨KE, hKE, hcov⟩ := _root_.GlobalTheory.AdeleCocompactExt.exists_compact_adeleE F E
   set ι := incM F H'.ι with hι
@@ -1050,17 +1050,17 @@ theorem exists_haar_unip_mass_one : ∀ (F E : Type) [Field F] [NumberField F] [
     rw [h0] at h1
     simp [form] at h1
   obtain ⟨hTG, hLC, hSC, hT2⟩ := topUA σ G.W.J
-  haveI := hTG
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
-  haveI : BorelSpace (UA σ G.W.J) := ⟨rfl⟩
+  have := hTG
+  have := hLC
+  have := hSC
+  have := hT2
+  have : BorelSpace (UA σ G.W.J) := ⟨rfl⟩
   have hcl := _root_.GlobalTheory.UnipClosed.isClosed_unip F E σ _ _ G.W H' hx0
-  haveI : LocallyCompactSpace (unip σ G.W H') := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (unip σ G.W H') :=
+  have : LocallyCompactSpace (unip σ G.W H') := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (unip σ G.W H') :=
     hcl.isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
-  haveI := countable_ratU' σ G.W.J (unip σ G.W H')
-  haveI := _root_.GlobalTheory.RatUDiscreteSub.discreteTopology_subgroupOf F E σ _ G.W.J (unip σ G.W H')
+  have := countable_ratU' σ G.W.J (unip σ G.W H')
+  have := _root_.GlobalTheory.RatUDiscreteSub.discreteTopology_subgroupOf F E σ _ G.W.J (unip σ G.W H')
   obtain ⟨K, hK, hcov⟩ := cocompact h hH.xx hH.yy hH.xy hH.orth hspan
   exact _root_.GlobalTheory.HaarFundDom.exists_haar_fundDom_mass_one _ _ K hK hcov
 

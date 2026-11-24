@@ -630,7 +630,7 @@ theorem decDeriv : DecDerivStatement := by
   have hh : 0 < h := by
     have : 0 ≤ 8 * (n : ℝ) * S7.q0 ε := by positivity
     linarith
-  haveI := S7.haar_isHaar ε
+  have := S7.haar_isHaar ε
   obtain ⟨β, hβ, hβc, hrep⟩ := DecDerivA.reproducing_smooth_compact_kernel hstd hP (Measure.haar : Measure (S7.UJ ε))
   have hφ : ContinuousOn (fun y => ⟪v₂, S7.PsiM T μ y v₁⟫_ℂ) (UJset ε) :=
     continuousOn_const.inner (hcont.clm_apply continuousOn_const)

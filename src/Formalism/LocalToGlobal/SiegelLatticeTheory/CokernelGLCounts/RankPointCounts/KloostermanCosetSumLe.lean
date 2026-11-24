@@ -150,7 +150,7 @@ theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 <
           push_cast
           ring
   have h64 : (64:ℝ) ≤ Real.exp (L * 6) := by
-    rw [show L * 6 = ((6 : ℕ) : ℝ) * L by push_cast; ring, Real.exp_nat_mul]
+    rw [show L * 6 = ((6 : ℕ) : ℝ) * L by push_cast; ring, Real.exp_natCast_mul]
     calc (64:ℝ) = 2 ^ 6 := by norm_num
       _ ≤ Real.exp L ^ 6 := pow_le_pow_left₀ (by norm_num) h2 6
   have hA : 64 * (rd ^ (((2 * (r * r) : ℕ)) : ℝ) * (max 1 (2 * Real.exp L ^ (CH * (m : ℝ)))) ^ (2 * r)) ≤
@@ -171,7 +171,7 @@ theorem final_arith {L Cl CH rd : ℝ} {r m f n j : ℕ} (hL : 1 < L) (hCl : 0 <
         have hB := pow_le_pow_left₀ (pow_nonneg hA0 _) (pow_le_pow_left₀ hA0 hA (2 * n)) j
         exact mul_le_mul h2j hB (pow_nonneg (pow_nonneg hA0 _) _) (by positivity)
     _ = Real.exp (L * ((j:ℝ) + (6 + 1 / Cl * (2 * ((r:ℝ) * r)) + (1 + |CH| * m) * (2 * r)) * (2 * n * j))) := by
-        simp only [← Real.exp_nat_mul, ← Real.exp_add]
+        simp only [← Real.exp_natCast_mul, ← Real.exp_add]
         congr 1
         push_cast
         ring
@@ -526,9 +526,9 @@ theorem labFacts_conc (t : GTu Y u) :
     · exact minorInt_conc t l (le_trans hl (Nat.sub_le _ _))
     · exact isIntegral_zero
   · unfold labT
-    rw [if_neg (not_le.mpr (by unfold jT at hl; exact hl))]
+    rw [ite_eq_right (not_le.mpr (by unfold jT at hl; exact hl))]
   · unfold labT
-    rw [if_pos (Nat.zero_le _)]
+    rw [ite_eq_left (Nat.zero_le _)]
     unfold Dl leadMinorE
     first
       | exact Matrix.det_isEmpty

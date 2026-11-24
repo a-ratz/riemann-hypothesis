@@ -182,23 +182,23 @@ theorem _root_.GlobalTheory.CongruenceIndex.exists_finset_cosets (hΛ : Λ.FG) {
   have hI : I ≠ ⊥ := by
     rw [hIdef, Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hM.ne'
-  haveI : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hΛ
-  haveI : Subsingleton (Λ ⧸ (⊤ : Submodule (𝓞 E) Λ)) :=
+  have : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hΛ
+  have : Subsingleton (Λ ⧸ (⊤ : Submodule (𝓞 E) Λ)) :=
     Submodule.Quotient.subsingleton_iff.2 rfl
-  haveI : Finite (Λ ⧸ I • (⊤ : Submodule (𝓞 E) Λ)) :=
+  have : Finite (Λ ⧸ I • (⊤ : Submodule (𝓞 E) Λ)) :=
     Submodule.finite_quotient_smul I (Module.Finite.fg_top)
   let St := {γ : GL (Fin r) E // _root_.ReciprocityTheory.ChartRestriction.G.FD.IsUStab Gm Λ γ}
   let Φ : St → (T → Λ ⧸ I • (⊤ : Submodule (𝓞 E) Λ)) := fun γ t =>
     Submodule.Quotient.mk ⟨(γ.1 : Matrix (Fin r) (Fin r) E) *ᵥ t.1,
       (γ.2.2 t.1).1 (hT ▸ Submodule.subset_span t.2)⟩
-  haveI : Fintype (T → Λ ⧸ I • (⊤ : Submodule (𝓞 E) Λ)) := Fintype.ofFinite _
+  have : Fintype (T → Λ ⧸ I • (⊤ : Submodule (𝓞 E) Λ)) := Fintype.ofFinite _
   let rep : (T → Λ ⧸ I • (⊤ : Submodule (𝓞 E) Λ)) → GL (Fin r) E := fun x =>
     if h : ∃ γ : St, Φ γ = x then h.choose.1 else 1
   refine ⟨Finset.univ.image rep, fun γ hγ =>
     ⟨rep (Φ ⟨γ, hγ⟩), Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩⟩
   have hex : ∃ δ : St, Φ δ = Φ ⟨γ, hγ⟩ := ⟨_, rfl⟩
-  have hrep : rep (Φ ⟨γ, hγ⟩) = hex.choose.1 := dif_pos hex
+  have hrep : rep (Φ ⟨γ, hγ⟩) = hex.choose.1 := dite_eq_left hex
   rw [hrep]
   refine inv_mul_mem_congruenceSubgroup_of_agree_mod hT hex.choose.2 hγ (fun t ht => ?_)
   have hq := congrFun hex.choose_spec ⟨t, ht⟩

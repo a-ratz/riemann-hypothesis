@@ -121,7 +121,7 @@ theorem coarse_eval (C0 CE1 CE2 : ℝ) (X : Loc) (j : Fin (numSeg X.TT)) (μ : B
   rw [Finsupp.sum, Finset.sum_eq_single v0]
   · simp
   · intro v _ hv
-    rw [if_neg fun e => hv (symVar_inj C0 CE1 CE2 X j e)]
+    rw [ite_eq_right fun e => hv (symVar_inj C0 CE1 CE2 X j e)]
   · intro hv
     simp [Finsupp.notMem_support_iff.1 hv]
 
@@ -146,7 +146,7 @@ theorem ioBlock_monomial (C0 CE1 CE2 : ℝ) (X : Loc) (K : Type) [Field K] (j : 
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [monomial_sum_one]
     refine Finset.prod_congr rfl fun c _ => ?_
-    rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul, one_mul]
+    rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul]
   have hs : sTopMon K X.p C0 CE1 CE2 X j b = monomial (∑ i : Fin (segS X.TT j),
       if (i : ℕ) < (X.seg C0 CE1 CE2 j).sigma then
         Finsupp.single ((topOdd X j i, true), (0 : Fin (X.m + 1)))
@@ -157,7 +157,7 @@ theorem ioBlock_monomial (C0 CE1 CE2 : ℝ) (X : Loc) (K : Type) [Field K] (j : 
     rw [monomial_sum_one]
     refine Finset.prod_congr rfl fun i _ => ?_
     split_ifs
-    · rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul, one_mul]
+    · rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul]
     · simp
   have ha : aeval (fun v => (MvPolynomial.X (symVar C0 CE1 CE2 X j v) :
       MvPolynomial ((X.TT × Bool) × Fin (X.m + 1)) K) ^ symLev X.p C0 CE1 CE2 X j v) (monomial μ c) =
@@ -167,7 +167,7 @@ theorem ioBlock_monomial (C0 CE1 CE2 : ℝ) (X : Loc) (K : Type) [Field K] (j : 
     refine Finsupp.prod_congr fun v _ => ?_
     rw [← pow_mul, X_pow_eq_monomial]
   unfold ioBlock ioExp baseExp
-  rw [hd, hs, ha, monomial_mul, monomial_mul, one_mul, one_mul]
+  rw [hd, hs, ha, monomial_mul_monomial, monomial_mul_monomial, one_mul, one_mul]
 
 theorem ioFockAt : IoFockAt := by
   intro C0 CE1 CE2 X K _ hp j b u u'

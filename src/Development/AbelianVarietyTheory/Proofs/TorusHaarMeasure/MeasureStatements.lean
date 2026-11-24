@@ -124,7 +124,7 @@ theorem overlap_ae_eq (h0 : IsOrth X x0) (D0 : LUData X x0) (D1 : LUData X x1) :
     (D1.hΔ.comp (differentiable_cpt x0)).differentiableOn (overlap_nonempty h0 D0 D1)
   rw [ae_eq_set]
   refine ⟨?_, ?_⟩
-  · rw [Set.diff_eq_empty.2 (by exact fun z hz => hz.1)]
+  · rw [Set.sdiff_eq_empty.2 (by exact fun z hz => hz.1)]
     exact measure_empty
   · refine measure_mono_null (fun z hz => ?_) hnull
     refine Set.mem_inter hz.1 ?_
@@ -248,9 +248,9 @@ theorem det_mul_strictLower_eq_one (r : ℕ) (N : Matrix (Fin r) (Fin r) ℂ)
     (h0 : ∀ a c : Fin r, a < c → N a c = 0) (h1 : ∀ a, N a a = 1) :
     (Matrix.of fun p q : {p : Fin r × Fin r // p.2 < p.1} =>
       if p.1.2 = q.1.2 then N p.1.1 q.1.1 else 0).det = 1 := by
-  letI L : LinearOrder {p : Fin r × Fin r // p.2 < p.1} :=
+  let L : LinearOrder {p : Fin r × Fin r // p.2 < p.1} :=
     LinearOrder.lift' (fun p => toLex p.1) (fun p q h => Subtype.ext (toLex.injective h))
-  have key := @Matrix.det_of_lowerTriangular {p : Fin r × Fin r // p.2 < p.1} ℂ _ _ _ L
+  have key := @Matrix.det_of_isLowerTriangular {p : Fin r × Fin r // p.2 < p.1} ℂ _ _ _ L
     (Matrix.of fun p q : {p : Fin r × Fin r // p.2 < p.1} =>
       if p.1.2 = q.1.2 then N p.1.1 q.1.1 else 0) (by
       intro p q hpq
@@ -282,8 +282,8 @@ namespace GlobalTheory
 theorem det_of_blockTriangular_injective {m α R : Type} [Fintype m] [DecidableEq m]
     [LinearOrder α] [CommRing R] (M : Matrix m m R) (f : m → α) (hf : Function.Injective f)
     (h : M.BlockTriangular f) : M.det = ∏ i, M i i := by
-  letI : LinearOrder m := LinearOrder.lift' f hf
-  exact Matrix.det_of_upperTriangular (M := M) (fun i j hij => h hij)
+  let : LinearOrder m := LinearOrder.lift' f hf
+  exact Matrix.det_of_isUpperTriangular (M := M) (fun i j hij => h hij)
 
 theorem prod_lowerPairs_fst {r : ℕ} (d : Fin r → ℂ) :
     ∏ p : {p : Fin r × Fin r // p.2 < p.1}, d p.1.1 = ∏ a, d a ^ (a : ℕ) := by
@@ -312,7 +312,7 @@ theorem prod_lowerPairs_snd {r : ℕ} (d : Fin r → ℂ) :
 theorem det_conj_strictLower : (∀ (r : ℕ) (B : Matrix (Fin r) (Fin r) ℂ), B.det ≠ 0 → (∀ a c : Fin r, c < a → B a c = 0) → (Matrix.of fun p q : {p : Fin r × Fin r // p.2 < p.1} => B p.1.1 q.1.1 * B⁻¹ q.1.2 p.1.2).det = ∏ a : Fin r, B a a ^ (2 * (a : ℤ) - ((r : ℤ) - 1))) := by
   intro r B hdet htri
   have hu : IsUnit B.det := isUnit_iff_ne_zero.mpr hdet
-  letI : Invertible B := Matrix.invertibleOfIsUnitDet B hu
+  let : Invertible B := Matrix.invertibleOfIsUnitDet B hu
   have hB : B.BlockTriangular id := fun a c h => htri a c h
   have hBi : B⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hB
   have hdiag : ∀ a, B a a * B⁻¹ a a = 1 := by
@@ -412,15 +412,15 @@ theorem lowMat_leftM {r : ℕ} {N : Matrix (Fin r) (Fin r) ℂ} (hN : LowU N) (u
     lowMat (leftM N *ᵥ u) = N * lowMat u := by
   ext a c
   by_cases h : c < a
-  · simp only [lowMat, Matrix.of_apply, dif_pos h]
+  · simp only [lowMat, Matrix.of_apply, dite_eq_left h]
     exact leftM_mulVec N u ⟨(a, c), h⟩
   · rw [Matrix.mul_apply]
-    simp only [lowMat, Matrix.of_apply, dif_neg h]
+    simp only [lowMat, Matrix.of_apply, dite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun k _ => ?_
     by_cases hk : c < k
     · rw [hN.1 a k (lt_of_le_of_lt (not_lt.mp h) hk), zero_mul]
-    · rw [dif_neg hk, mul_zero]
+    · rw [dite_eq_right hk, mul_zero]
 
 theorem differentiableAt_det {r : ℕ} (A : ℂ → Matrix (Fin r) (Fin r) ℂ) (t : ℂ)
     (h : ∀ i j, DifferentiableAt ℂ (fun s => A s i j) t) :
@@ -510,10 +510,10 @@ theorem hasDerivAt_nmat {r : ℕ} (X : Data E r) {w : ℂ → V (nd X)} {w' : V 
     HasDerivAt (fun s => mat (nmat X (w s)) τ i j) (lowMat (crd X w' τ) i j) t := by
   simp only [mat, nmat, lowMat, Matrix.of_apply]
   by_cases h : j < i
-  · simp only [dif_pos h, crd]
+  · simp only [dite_eq_left h, crd]
     exact (EuclideanSpace.proj (𝕜 := ℂ)
       ((Fintype.equivFin (Ent X)) ⟨τ, ⟨(i, j), h⟩⟩)).hasFDerivAt.comp_hasDerivAt t hw
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact hasDerivAt_const _ _
 
 theorem fderiv_rel {r : ℕ} (X : Data E r) (x0 x1 : Frame X.Ψ r) (γ : GL (Fin r) E) (U : Set (V (nd X)))
@@ -625,7 +625,7 @@ theorem lintegral_image_le_const {F : Type*} [NormedAddCommGroup F] [NormedSpace
     ∃ K : ℝ≥0∞, K < ⊤ ∧ ∀ G : F → ℝ≥0∞, ∫⁻ x in Θ '' A, G x ∂μ ≤ K * ∫⁻ y in A, G (Θ y) ∂μ := by
   have hc : Continuous fun y => |(fderiv ℝ Θ y).det| :=
     (ContinuousLinearMap.continuous_det.comp (hΘ.continuous_fderiv (by simp))).abs
-  haveI : ProperSpace F := FiniteDimensional.proper ℝ F
+  have : ProperSpace F := FiniteDimensional.proper ℝ F
   obtain ⟨C, hC⟩ := (isCompact_closedBall (0 : F) M).bddAbove_image hc.continuousOn
   refine ⟨ENNReal.ofReal C, ENNReal.ofReal_lt_top, fun G => ?_⟩
   rw [lintegral_image_eq_lintegral_abs_det_fderiv_mul μ hA (f' := fderiv ℝ Θ)
@@ -736,7 +736,7 @@ theorem frame_measure_local :
   set A : Set (Frame X.Ψ r) := {y | ∀ τ a c, ¬ c < a → ‖y τ a c‖ ≤ R} ∩
     (lowPart X ⁻¹' Metric.closedBall 0 ρ ∩ upPart X ⁻¹' Bor X.Ψ r) with hAdef
   have hS : MeasurableSet {y : Frame X.Ψ r | ∀ τ a c, ¬ c < a → ‖y τ a c‖ ≤ R} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine MeasurableSet.iInter fun τ => MeasurableSet.iInter fun a => MeasurableSet.iInter fun c =>
       MeasurableSet.iInter fun _ => ?_
     exact (isClosed_le (by fun_prop) continuous_const).measurableSet
@@ -763,9 +763,9 @@ theorem frame_measure_local :
     obtain ⟨-, e1', e2'⟩ := huniq _ (hball h2') _ h3'
     unfold theta at he
     exact eq_of_parts X (by rw [← e1, he, e1']) (by rw [← e2, he, e2'])
-  haveI : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Frame X.Ψ r)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Frame X.Ψ r)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   obtain ⟨K1, hK1, hG1⟩ := lintegral_image_le_const volume (contDiff_theta X x1) hA hM hinj
   obtain ⟨K2, hK2, hG2⟩ := H r X R
   refine ⟨theta X x1 '' A, ?_, K1 * (K2 * (ENNReal.ofReal (densF X x1 z0))⁻¹), ?_, ?_⟩
@@ -863,7 +863,7 @@ theorem lintegral_le_of_section {A B : Type*} [NormedAddCommGroup A] [NormedAddC
   have happ : ∀ T : Set B, MeasurableSet T → ρ T = μ (L ⁻¹' T ∩ S) := by
     intro T hT
     rw [hρ, Measure.map_apply hLm hT, Measure.restrict_apply (hLm hT)]
-  haveI : IsFiniteMeasureOnCompacts ρ := by
+  have : IsFiniteMeasureOnCompacts ρ := by
     refine ⟨fun T hT => ?_⟩
     obtain ⟨C, hC⟩ := hT.isBounded.exists_norm_le
     obtain ⟨D, hD⟩ := hb C
@@ -872,7 +872,7 @@ theorem lintegral_le_of_section {A B : Type*} [NormedAddCommGroup A] [NormedAddC
       (isCompact_closedBall (0 : A) D).measure_lt_top
     intro x hx
     simpa using hD x hx.2 (hC _ hx.1)
-  haveI : ρ.IsAddLeftInvariant := by
+  have : ρ.IsAddLeftInvariant := by
     refine ⟨fun b => ?_⟩
     ext T hT
     have hm : Measurable fun z : B => b + z := (continuous_const.add continuous_id).measurable
@@ -891,10 +891,10 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem frameSplit : (∀ (r : ℕ) (X : Data E r) (R : ℝ), ∃ K : ℝ≥0∞, K < ⊤ ∧ ∀ g : V (nd X) → ℝ≥0∞, Measurable g → ∫⁻ y in {y : Frame X.Ψ r | ∀ τ a c, ¬ c < a → ‖y τ a c‖ ≤ R}, g (WithLp.toLp 2 fun j => y ((Fintype.equivFin (Ent X)).symm j).1 ((Fintype.equivFin (Ent X)).symm j).2.1.1 ((Fintype.equivFin (Ent X)).symm j).2.1.2) ≤ K * ∫⁻ z, g z) := by
   intro r X R
-  haveI h1 : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := inferInstance
-  haveI h2 : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure :=
+  have h1 : (volume : Measure (Fin r → ℂ)).IsAddHaarMeasure := inferInstance
+  have h2 : (volume : Measure (Fin r → Fin r → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
-  haveI h3 : (volume : Measure (Frame X.Ψ r)).IsAddHaarMeasure :=
+  have h3 : (volume : Measure (Frame X.Ψ r)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
   refine lintegral_le_of_section (volume : Measure (Frame X.Ψ r)) (volume : Measure (V (nd X)))
     (fun y => WithLp.toLp 2 fun j => y ((Fintype.equivFin (Ent X)).symm j).1
@@ -910,15 +910,15 @@ theorem frameSplit : (∀ (r : ℕ) (X : Data E r) (R : ℝ), ∃ K : ℝ≥0∞
   · intro z
     ext j
     have h := ((Fintype.equivFin (Ent X)).symm j).2.2
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     exact congrArg (fun k => z k) ((Fintype.equivFin (Ent X)).apply_symm_apply j)
   · apply IsClosed.measurableSet
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun τ => isClosed_iInter fun a => isClosed_iInter fun c =>
       isClosed_iInter fun _ => isClosed_le ?_ continuous_const
     fun_prop
   · intro z x
-    simp only [Set.mem_setOf_eq, Pi.add_apply]
+    simp only [Set.mem_ofPred_eq, Pi.add_apply]
     refine forall_congr' fun τ => forall_congr' fun a => forall_congr' fun c =>
       forall_congr' fun h => ?_
     rw [dite_eq_right h, zero_add]

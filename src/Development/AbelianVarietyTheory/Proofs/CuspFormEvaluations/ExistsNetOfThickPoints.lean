@@ -333,7 +333,7 @@ theorem norm_det_gram (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (M : Mat
 omit [NumberField E] [IsCMField E] in
 theorem det_basisMat_ne_zero (τ : E →+* ℂ) {v : Fin r → Fin r → E} (hv : LinearIndependent E v) :
     (basisMat τ v).det ≠ 0 := by
-  have hu : IsUnit (Matrix.of v) := Matrix.linearIndependent_rows_iff_isUnit.mp hv
+  have hu : IsUnit (Matrix.of v) := linearIndependent_row_iff_isUnit.mp hv
   have hd : (Matrix.of v).det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
   have e : (basisMat τ v).det = τ ((Matrix.of v)ᵀ).det := by
     unfold basisMat; rw [RingHom.map_det]; rfl

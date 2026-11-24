@@ -80,7 +80,7 @@ theorem SB.exists_periodic {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsT
   · push_neg at h
     have hn : ∀ Z, Z ∈ tsupport f → ∃ Y0 ∈ t, Z - Y0 ∈ L (g Y0) := fun Z hZ => by
       have := ht hZ
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq] at this
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at this
       obtain ⟨Y0, h0, h1⟩ := this
       exact ⟨Y0, h0, h1⟩
     have hY : Y ∉ tsupport f := fun hZ => by

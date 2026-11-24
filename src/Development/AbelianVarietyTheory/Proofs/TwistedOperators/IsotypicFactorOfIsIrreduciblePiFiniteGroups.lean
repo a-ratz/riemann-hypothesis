@@ -63,7 +63,7 @@ theorem nontrivial_of_isIrreducible {K G V : Type} [Field K] [Group G] [AddCommG
     [Module K V] (ρ : Representation K G V) (h : ρ.IsIrreducible) : Nontrivial V := by
   by_contra hV
   rw [not_nontrivial_iff_subsingleton] at hV
-  haveI := h
+  have := h
   exact bot_ne_top (α := Subrepresentation ρ)
     (Subrepresentation.ext (Submodule.eq_bot_of_subsingleton (p := (⊤ : Submodule K V))).symm)
 
@@ -129,7 +129,7 @@ theorem isIrreducible_of_linearEquiv {K G V V' : Type} [Field K] [Group G] [AddC
     [Module K V] [AddCommGroup V'] [Module K V'] (σ : Representation K G V)
     (τ : Representation K G V') (e : V ≃ₗ[K] V') (he : ∀ g v, τ g (e v) = e (σ g v))
     (h : σ.IsIrreducible) : τ.IsIrreducible := by
-  haveI := h
+  have := h
   exact (subrepOrderIso σ τ e he).symm.isSimpleOrder
 
 end GlobalTheory.PiIsotypic
@@ -141,7 +141,7 @@ open Representation
 theorem isotypic_factor_of_isIrreducible_pi : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (G : ι → Type) [∀ i, Group (G i)] [∀ i, Finite (G i)] (W : Type) [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (ρ : Representation ℂ (∀ i, G i) W), ρ.IsIrreducible → ∀ i, ∃ (n : ℕ) (τ : Representation ℂ (G i) (Fin n → ℂ)), τ.IsIrreducible ∧ (∃ φ : (Fin n → ℂ) →ₗ[ℂ] W, Function.Injective φ ∧ ∀ g z, φ (τ g z) = ρ (Pi.mulSingle i g) (φ z)) ∧ Submodule.span ℂ {y | ∃ φ : (Fin n → ℂ) →ₗ[ℂ] W, (∀ g z, φ (τ g z) = ρ (Pi.mulSingle i g) (φ z)) ∧ y ∈ LinearMap.range φ} = ⊤ := by
   intro ι _ _ G _ _ W _ _ _ ρ hρ i
   classical
-  haveI : Nontrivial W := nontrivial_of_isIrreducible ρ hρ
+  have : Nontrivial W := nontrivial_of_isIrreducible ρ hρ
   let ρi : Representation ℂ (G i) W := ρ.comp (MonoidHom.mulSingle G i)
   obtain ⟨S, hS⟩ := exists_irreducible_subrep ρi
   let n := Module.finrank ℂ S.toSubmodule
@@ -187,11 +187,11 @@ theorem isotypic_factor_of_isIrreducible_pi : ∀ (ι : Type) [Fintype ι] [Deci
     have hle : Submodule.span ℂ T ≤ (Submodule.span ℂ T).comap (ρ g) :=
       Submodule.span_le.2 (fun y hy => Submodule.subset_span (hstab g y hy))
     exact hle hv⟩
-  haveI := hρ
+  have := hρ
   rcases eq_bot_or_eq_top U with h | h
   · exfalso
     have hspan : Submodule.span ℂ T = ⊥ := congrArg Subrepresentation.toSubmodule h
-    haveI : Nontrivial (Fin n → ℂ) := nontrivial_of_isIrreducible τ hτ
+    have : Nontrivial (Fin n → ℂ) := nontrivial_of_isIrreducible τ hτ
     obtain ⟨z, hz⟩ := exists_ne (0 : Fin n → ℂ)
     have hmem : φ0 z ∈ Submodule.span ℂ T :=
       Submodule.subset_span ⟨φ0, hφ0, LinearMap.mem_range.2 ⟨z, rfl⟩⟩

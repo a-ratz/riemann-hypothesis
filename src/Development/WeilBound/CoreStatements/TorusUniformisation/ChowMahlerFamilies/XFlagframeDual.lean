@@ -59,7 +59,7 @@ theorem tri_inv {Ω : Type} [Field Ω] {V : Type} [AddCommGroup V] [Module Ω V]
     (∀ i j, i < j → u.repr (w i) j = 0) ∧ ∀ i, u.repr (w i) i = (w.repr (u i) i)⁻¹ := by
   have hM : (w.toMatrix u).BlockTriangular id := fun i j hij => h j i hij
   have hMN : w.toMatrix u * u.toMatrix w = 1 := Module.Basis.toMatrix_mul_toMatrix_flip w u
-  haveI : Invertible (w.toMatrix u) := ⟨u.toMatrix w, Module.Basis.toMatrix_mul_toMatrix_flip u w, hMN⟩
+  have : Invertible (w.toMatrix u) := ⟨u.toMatrix w, Module.Basis.toMatrix_mul_toMatrix_flip u w, hMN⟩
   have hinv : (w.toMatrix u)⁻¹ = u.toMatrix w := Matrix.inv_eq_right_inv hMN
   have hN : (u.toMatrix w).BlockTriangular id := hinv ▸ Matrix.blockTriangular_inv_of_blockTriangular hM
   refine ⟨fun i j hij => hN hij, fun i => ?_⟩
@@ -116,7 +116,7 @@ theorem PositivityTheory.Xgn.t_flagframe_dual : ∀ (O : Type) [CommRing O] (Ω 
   choose e he1 he2 he3 using hex
   have hP : (w.toMatrix e).BlockTriangular id := fun i j hij => he2 j i hij
   have hdet : IsUnit (w.det e) := by
-    rw [Module.Basis.det_apply, Matrix.det_of_upperTriangular hP]
+    rw [Module.Basis.det_apply, Matrix.det_of_isUpperTriangular hP]
     refine (Finset.prod_ne_zero_iff.mpr fun i _ => ?_).isUnit
     rw [Module.Basis.toMatrix_apply, he3]
     exact hm i

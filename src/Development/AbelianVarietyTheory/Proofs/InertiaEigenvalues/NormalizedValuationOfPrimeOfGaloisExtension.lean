@@ -60,7 +60,7 @@ theorem ordIs_of_ordIs_ext : ∀ (F L : Type) [Field F] [ValuativeRel F] [Topolo
   have hne : IsDiscreteValuationRing.addVal 𝒪[F] (p : 𝒪[F]) ≠ ⊤ := by
     intro ht
     rw [ht, ENat.mul_top (by exact_mod_cast (ramificationIndex_pos F L).ne')] at h
-    exact ENat.coe_ne_top E h.symm
+    exact ENat.natCast_ne_top E h.symm
   obtain ⟨e, he⟩ := ENat.ne_top_iff_exists.mp hne
   refine ⟨e, he.symm, ?_, (card_lowerRamificationGroup_zero (K := F) (L := L)).symm⟩
   rw [← he] at h

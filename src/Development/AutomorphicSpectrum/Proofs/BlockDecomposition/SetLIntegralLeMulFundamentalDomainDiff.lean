@@ -89,6 +89,6 @@ theorem setLIntegral_le_mul_fundamentalDomain_diff {G : Type} [Group G] [Measura
     _ = N * ∫⁻ x in F, Tᶜ.indicator h x ∂μ :=
         lintegral_const_mul _ (hh.indicator hT.compl)
     _ = N * ∫⁻ x in F \ T, h x ∂μ := by
-        rw [setLIntegral_indicator hT.compl, Set.inter_comm, Set.diff_eq]
+        rw [setLIntegral_indicator hT.compl, Set.inter_comm, Set.sdiff_eq]
 
 end GlobalTheory.CompanionTheory.Unfolding

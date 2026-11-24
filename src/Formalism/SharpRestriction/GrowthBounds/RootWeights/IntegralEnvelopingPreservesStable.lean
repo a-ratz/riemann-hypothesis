@@ -55,7 +55,7 @@ open Formalism.MainNotions.G Formalism.MainNotions.CovariantDegrees
 
 theorem dvr_fraction_field_charZero {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (S : UniformizedDVR p O) (hp : p.Prime) : CharZero (KK O) := by
-  haveI hc := ringChar.charP O
+  have hc := ringChar.charP O
   have hO : CharZero O := by
     rcases CharP.char_is_prime_or_zero O (ringChar O) with hq | hq
     · exfalso

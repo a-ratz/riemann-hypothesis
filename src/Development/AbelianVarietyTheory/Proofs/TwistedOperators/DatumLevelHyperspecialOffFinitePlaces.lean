@@ -92,10 +92,10 @@ theorem ind_tmul_mul (Sb : Finset (HeightOneSpectrum (𝓞 F))) (z : Af F ⊗[F]
     · rw [Finset.sum_eq_single u (fun v _ hv => GlobalTheory.AdelicU.evalV_singleFin_ne (Ne.symm hv) _)
         (fun h => absurd hu h), GlobalTheory.AdelicU.evalV_singleFin_self]
       show (if u ∈ Sb then (1 : Fv F u) else 0) * _ = _
-      rw [if_pos hu, one_mul]
+      rw [ite_eq_left hu, one_mul]
     · rw [Finset.sum_eq_zero (fun v hv => GlobalTheory.AdelicU.evalV_singleFin_ne (fun e : u = v => hu (e ▸ hv)) _)]
       show (if u ∈ Sb then (1 : Fv F u) else 0) * _ = _
-      rw [if_neg hu, zero_mul]
+      rw [ite_eq_right hu, zero_mul]
   | add x y hx hy => rw [mul_add, hx, hy, ← Finset.sum_add_distrib]; simp only [map_add (f := _)]
 
 theorem ind_tmul_mul_eq_zero (Sb : Finset (HeightOneSpectrum (𝓞 F))) (z : Af F ⊗[F] E)
@@ -224,7 +224,7 @@ theorem level_offS : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ
       rw [e]
       exact mul_mem hxl hk
   · intro g
-    haveI := SelfDual.isLattice_frameLat V
+    have := SelfDual.isLattice_frameLat V
     exact Filter.eventually_cofinite.1 (eventually_proj_mem_stabLoc D.sp.cm.sig V.gram (frameLat V) g)
   · intro k hk
     obtain ⟨n, hn, h⟩ := hsplit.1 k hk

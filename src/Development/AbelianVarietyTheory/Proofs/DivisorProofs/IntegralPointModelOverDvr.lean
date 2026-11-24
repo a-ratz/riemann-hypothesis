@@ -106,7 +106,7 @@ theorem mem_V_of_forall (W : ValuationSubring ℂ) (h : ∀ p : ℕ, p.Prime →
       · rw [h1, Int.cast_neg, Int.cast_natCast, Valuation.map_neg]; exact hv1 _ hn'
     refine (W.valuation_le_one_iff _).1 ?_
     rw [map_inv₀, e, inv_one]
-  haveI := c.fin
+  have := c.fin
   obtain ⟨n, hn, hint⟩ := IsAlgebraic.exists_integral_multiple (R := ℤ) (z := x)
     ((IsFractionRing.isAlgebraic_iff ℤ ℚ c.F).mpr (Algebra.IsAlgebraic.isAlgebraic _))
   let i : c.F →+* ℂ := c.F.val.toRingHom

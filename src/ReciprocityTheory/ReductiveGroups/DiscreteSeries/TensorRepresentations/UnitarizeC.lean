@@ -135,7 +135,7 @@ theorem cf_smul (dual : Bool) (y : H) (ξ : Fin n) (a : ℂ) (F : Fin n → H) :
   simp only [cf, Pi.smul_apply, map_smul, inner_smul_right, smul_eq_mul, Finset.mul_sum]
   exact Finset.sum_congr rfl fun c _ => by ring
 
-theorem continuous_umat : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_umat : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_orbit (hσ : IsURepOn (UJset ε) σ) (v : H) :
     Continuous (fun g : Formalism.REAL.UJ ε => σ (Formalism.MainNotions.S.umat g) v) := (hσ.2.2 v).comp_continuous continuous_umat fun g => g.2
@@ -279,20 +279,20 @@ theorem mx_apply_tensF {M : Type*} [AddCommGroup M] [Module ℂ M] (dual : Bool)
     rw [Finset.sum_eq_single c]
     · simp
     · intro a _ ha
-      rw [if_neg (Ne.symm ha)]
+      rw [ite_eq_right (Ne.symm ha)]
       simp
     · intro h
       exact absurd (Finset.mem_univ c) h
   · simp [mx, tensF, tensVd, actM, coordV, Finset.smul_sum, smul_sub, Finset.sum_sub_distrib, smul_ite,
       Finset.sum_apply, LinearMap.sum_apply, sub_eq_add_neg]
     simp only [Finset.sum_add_distrib, Finset.sum_neg_distrib, ite_apply, LinearMap.proj_apply,
-      LinearMap.zero_apply, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      LinearMap.zero_apply, smul_ite, smul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     congr 2
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [Finset.sum_eq_single c]
     · simp
     · intro b _ hb
-      rw [if_neg (Ne.symm hb)]
+      rw [ite_eq_right (Ne.symm hb)]
       simp
     · intro h
       exact absurd (Finset.mem_univ c) h

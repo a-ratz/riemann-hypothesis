@@ -219,7 +219,7 @@ theorem zeros_finite_sum_eq_degree : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
     ∀ x : F, Transcendental k x → {v : Place k F | v.1 x < 1}.Finite ∧
       ∑ᶠ v ∈ {v : Place k F | v.1 x < 1}, ord v x = Module.finrank k⟮x⟯ F := by
   intro k F _ _ _ _ _ hF x hx
-  haveI : FiniteDimensional k⟮x⟯ F := (_root_.GlobalTheory.Nef.isFF_main k F hF).1 x hx
+  have : FiniteDimensional k⟮x⟯ F := (_root_.GlobalTheory.Nef.isFF_main k F hF).1 x hx
   set t : k⟮x⟯ := ⟨x, IntermediateField.mem_adjoin_simple_self k x⟩ with ht
   have htx : algebraMap k⟮x⟯ F t = x := rfl
   have htr : Transcendental k t := by
@@ -240,7 +240,7 @@ theorem zeros_finite_sum_eq_degree : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
   have hset : {v : Place k F | v.1 x < 1} = {p | ρ p = v0} := by
     ext p
     obtain ⟨e, he, hpow, -⟩ := (_root_.GlobalTheory.Nef.place_res_exists_pow k k⟮x⟯ F).2 ρ hρ p
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     change p.1 (algebraMap k⟮x⟯ F t) < 1 ↔ ρ p = v0
     rw [hpow t]
     constructor
@@ -250,7 +250,7 @@ theorem zeros_finite_sum_eq_degree : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
       exact absurd h (not_lt.2 (one_le_pow₀ (not_lt.1 hn)))
     · intro h
       rw [h]
-      exact pow_lt_one₀ zero_le' (val_lt_one_of_ord_eq_one v0 t hv0) he.ne'
+      exact pow_lt_one₀ zero_le (val_lt_one_of_ord_eq_one v0 t hv0) he.ne'
   rw [hset]
   exact ⟨hfin, by simpa [htx] using hsum⟩
 

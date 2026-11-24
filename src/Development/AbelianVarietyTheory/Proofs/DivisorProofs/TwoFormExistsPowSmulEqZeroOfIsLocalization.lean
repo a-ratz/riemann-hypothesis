@@ -79,10 +79,10 @@ theorem twoForm_exists_pow_smul_eq_zero_of_isLocalization {R A B : Type} [CommRi
     [IsLocalization.Away c B] (x : Om R A 2)
     (hx : (SemiHom.of_algHom (IsScalarTower.toAlgHom R A B)).mOm 2 x = 0) :
     ∃ n : ℕ, c ^ n • x = 0 := by
-  haveI : Algebra.FormallyEtale A B := Algebra.FormallyEtale.of_isLocalization (Submonoid.powers c)
+  have : Algebra.FormallyEtale A B := Algebra.FormallyEtale.of_isLocalization (Submonoid.powers c)
   have hb := GlobalTheory.TopForm.isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale R A B) 2
-  haveI := (isLocalizedModule_iff_isBaseChange (Submonoid.powers c) B _).2 hb
+  have := (isLocalizedModule_iff_isBaseChange (Submonoid.powers c) B _).2 hb
   rw [mOm_two_eq_exteriorPowerMapOver, ← map_zero (GlobalTheory.exteriorPowerMapOver B 2 (KaehlerDifferential.map R R A B))] at hx
   obtain ⟨n, hn⟩ := IsLocalizedModule.Away.exists_of_eq (r := c) hx
   exact ⟨n, hn.trans (smul_zero _)⟩
@@ -91,8 +91,8 @@ theorem twoForm_exists_pow_smul_eq_zero_of_algHom {R A B : Type} [CommRing R] [C
     [Algebra R A] [Algebra R B] (f : A →ₐ[R] B) (c : A)
     (hc : @IsLocalization.Away A _ c B _ f.toRingHom.toAlgebra) (x : Om R A 2)
     (hx : (SemiHom.of_algHom f).mOm 2 x = 0) : ∃ n : ℕ, c ^ n • x = 0 := by
-  letI : Algebra A B := f.toRingHom.toAlgebra
-  haveI : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq' f.comp_algebraMap.symm
+  let : Algebra A B := f.toRingHom.toAlgebra
+  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq' f.comp_algebraMap.symm
   exact twoForm_exists_pow_smul_eq_zero_of_isLocalization c x hx
 
 theorem twoForm_sep_of_basis : ∀ {R' : Type} [CommRing R'] {X' : Scheme.{0}} (s' : X' ⟶ Sp R') {C' : Type} [Category.{0} C'], ∀ (G : C' ⥤ AffOp X'), (∀ T : AffOp X', ∃ (n : ℕ) (b : Fin n → (OAff s').obj T), Ideal.span (Set.range b) = ⊤ ∧ ∀ (i : Fin n) (S : AffOp X') (u : T ⟶ S), IsUnit (mp (OAff s') u (b i)) → ∃ (t : C') (v : T ⟶ G.obj t) (w : G.obj t ⟶ S), v ≫ w = u) → (∀ (T : AffOp X') (η : Om R' ((OAff s').obj T) 2), (∀ t (u : T ⟶ G.obj t), pOm (OAff s') 2 u η = 0) → η = 0) := by

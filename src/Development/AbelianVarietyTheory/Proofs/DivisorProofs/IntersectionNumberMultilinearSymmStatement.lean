@@ -64,7 +64,7 @@ namespace GlobalTheory.AV.AbVar
 theorem diffVanish_chiPic_structureModule {K : Type} [Field K] (A : AbVar K) :
     letI := A.algΓ
     DiffVanish (A.dim + 1) (chiPic K (QCoh.structureModule A.X.left)) := by
-  letI := A.algΓ
+  let := A.algΓ
   refine diffVanish_chiPic_of_isProjOver (f := A.X.hom) (fun r => rfl) _
     (GlobalTheory.AV.AbVarProj.strHom_eq_and_isProjOver K A).2 ?_
   refine (QCoh.suppDim_le _).trans ?_
@@ -73,7 +73,7 @@ theorem diffVanish_chiPic_structureModule {K : Type} [Field K] (A : AbVar K) :
 theorem inter_update_add {K : Type} [Field K] (A : AbVar K) {J : Type} [Fintype J] [DecidableEq J]
     (hJ : Fintype.card J = A.dim) (c : J → Pic A.X.left) (i : J) (a b : Pic A.X.left) :
     inter A (Function.update c i (a + b)) = inter A (Function.update c i a) + inter A (Function.update c i b) := by
-  letI := A.algΓ
+  let := A.algΓ
   exact congrFun ((diffVanish_chiPic_structureModule A).multiDiff_update_add_of_le_card hJ.ge c i a b) 0
 
 def interAdd {K : Type} [Field K] (A : AbVar K) {J : Type} [Fintype J] [DecidableEq J]
@@ -82,7 +82,7 @@ def interAdd {K : Type} [Field K] (A : AbVar K) {J : Type} [Fintype J] [Decidabl
 
 theorem inter_comp_equiv {K : Type} [Field K] (A : AbVar K) {J J' : Type} [Fintype J] [Fintype J']
     (e : J' ≃ J) (c : J → Pic A.X.left) : inter A (c ∘ e) = inter A c := by
-  letI := A.algΓ
+  let := A.algΓ
   exact congrFun (multiDiff_comp_equiv e c _) 0
 
 theorem inter_multilinear_and_symm :

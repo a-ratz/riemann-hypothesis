@@ -85,7 +85,7 @@ theorem isOpen_posW {L : Type} [Field L] [NumberField L] {N : ℕ} (w : Infinite
   intro h0 h0p
   have hm : Continuous fun z : HS L N × (Fin N → ℂ) => mat z.1 w := by
     show Continuous fun z : HS L N × (Fin N → ℂ) => (z.1.1 w : Matrix (Fin N) (Fin N) ℂ)
-    exact (continuous_apply w).comp (continuous_subtype_val.comp continuous_fst)
+    exact (continuous_apply w).comp (continuous_subtypeVal.comp continuous_fst)
   have hg : Continuous fun z : HS L N × (Fin N → ℂ) => (star z.2 ⬝ᵥ (mat z.1 w *ᵥ z.2)).re :=
     Complex.continuous_re.comp ((continuous_snd.star).dotProduct (hm.matrix_mulVec continuous_snd))
   have hK : IsCompact (Metric.sphere (0 : Fin N → ℂ) 1) := isCompact_sphere 0 1

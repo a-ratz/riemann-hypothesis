@@ -173,7 +173,7 @@ open UpperTheory.V.Sd UpperTheory.V.TR in
 private theorem UpperTheory.Reformulated.B.Gr32.aut_zero {F : Type} [Field F] [NumberField F] [NumberField.IsTotallyReal F] :
     IsAutForm (0 : Sm F 2) := by
   refine ⟨fun _ _ => rfl, ?_, ?_, ?_, ?_⟩
-  · simp only [map_zero, Set.setOf_true, isOpen_univ]
+  · simp only [map_zero, Set.ofPred_true, isOpen_univ]
   · refine Submodule.finiteDimensional_of_le (S₂ := ⊥) ?_
     rw [Submodule.span_le]
     rintro _ ⟨k, rfl⟩

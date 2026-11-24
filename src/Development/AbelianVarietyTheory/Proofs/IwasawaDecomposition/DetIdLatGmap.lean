@@ -79,7 +79,7 @@ theorem detId_image (D : D7) {n : ℕ} (L₀ L L' : Submodule (𝓞 D.host.E) (F
 
 theorem norm_one_span (D : D7) (z : D.host.E) (hz : z * D.host.conj z = 1) :
     TaylorLogMetric.N1 D (Submodule.span (𝓞 D.host.E) {z}) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hst : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   rw [← hst] at hz
   have key : ∀ w x : D.host.E, x ∈ Submodule.span (𝓞 D.host.E) {w} → star x ∈ Submodule.span (𝓞 D.host.E) {star w} := by
@@ -134,7 +134,7 @@ theorem chi_lat_gmap (hs : s.Ok) {χ : TaylorLogMetric.IdE D → ℂ} (hχ : Tay
     {N : Submodule (𝓞 X.E) (Sp X.E n)} (hN : IsSdLat N) :
     χ (TaylorLogMetric.detId D (StandardLatticesGL3.stdL D n) (s.lat (gmap γ.1 N))) =
       (∏ τ, X.embC s.σ₀ τ ((LinearEquiv.det γ.1 : X.Eˣ) : X.E))⁻¹ * χ (TaylorLogMetric.detId D (StandardLatticesGL3.stdL D n) (s.lat N)) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hst : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   have h1 : star (s.iE ((LinearEquiv.det γ.1 : X.Eˣ) : X.E)) * s.iE ((LinearEquiv.det γ.1 : X.Eˣ) : X.E) = 1 := by
     rw [hst, ← hs.2, ← map_mul, star_det_mul, map_one]

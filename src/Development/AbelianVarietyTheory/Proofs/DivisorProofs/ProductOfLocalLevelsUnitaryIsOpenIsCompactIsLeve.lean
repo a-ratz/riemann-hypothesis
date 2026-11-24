@@ -134,7 +134,7 @@ def finPart : finU (E := E) (n := n) →* GL (Fin n) (Af E) :=
 
 theorem continuous_finPart : Continuous (finPart E n) :=
   (Continuous.units_map _ (continuous_id.matrix_map (continuous_snd : Continuous (pFin E)))).comp
-    (continuous_subtype_val.comp continuous_subtype_val)
+    (continuous_subtypeVal.comp continuous_subtypeVal)
 
 theorem globLev_KL_eq {S : Set (Pl E)} (hS : IsSection S) :
     globLev S (KL n) = (AdelicGLn.integralFiniteGL E n).comap (finPart E n) := by
@@ -161,20 +161,20 @@ theorem continuous_conj_ad : Continuous (conjAd E) :=
     ((continuous_conjFin _).comp continuous_snd)
 
 theorem isClosedEmbedding_finU : Topology.IsClosedEmbedding (fun x : finU (E := E) (n := n) => ((x : UA E n) : GA E n)) := by
-  haveI : T2Space (FiniteAdeleRing (𝓞 E) E) :=
+  have : T2Space (FiniteAdeleRing (𝓞 E) E) :=
     inferInstanceAs (T2Space (RestrictedProduct (fun v : HeightOneSpectrum (𝓞 E) => v.adicCompletion E)
       (fun v => (v.adicCompletionIntegers E : Set (v.adicCompletion E))) Filter.cofinite))
-  haveI : T2Space (InfiniteAdeleRing E) := inferInstanceAs (T2Space ((v : InfinitePlace E) → v.Completion))
-  haveI : T2Space (Ad E) := inferInstanceAs (T2Space (InfiniteAdeleRing E × FiniteAdeleRing (𝓞 E) E))
+  have : T2Space (InfiniteAdeleRing E) := inferInstanceAs (T2Space ((v : InfinitePlace E) → v.Completion))
+  have : T2Space (Ad E) := inferInstanceAs (T2Space (InfiniteAdeleRing E × FiniteAdeleRing (𝓞 E) E))
   have h1 : IsClosed ((UA E n : Subgroup (GA E n)) : Set (GA E n)) := by
     show IsClosed {g : GA E n | ((g : Matrix (Fin n) (Fin n) (Ad E)).map (conjAd E))ᵀ * 1 *
       (g : Matrix (Fin n) (Fin n) (Ad E)) = 1}
     exact isClosed_eq (((Units.continuous_val.matrix_map continuous_conj_ad).matrix_transpose.matrix_mul
       continuous_const).matrix_mul Units.continuous_val) continuous_const
   have h2 : IsClosed ((finU (E := E) (n := n) : Subgroup (UA E n)) : Set (UA E n)) := by
-    haveI : T2Space (GL (Fin n) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
+    have : T2Space (GL (Fin n) (Cinf E)) := Units.isEmbedding_embedProduct.t2Space
     have hc : Continuous (cInf (E := E) (n := n)) :=
-      (Continuous.units_map _ (continuous_id.matrix_map continuous_pInf_ad)).comp continuous_subtype_val
+      (Continuous.units_map _ (continuous_id.matrix_map continuous_pInf_ad)).comp continuous_subtypeVal
     exact isClosed_eq hc continuous_const
   exact h1.isClosedEmbedding_subtypeVal.comp h2.isClosedEmbedding_subtypeVal
 
@@ -184,7 +184,7 @@ theorem continuous_finGL_ad : Continuous (finGL E n) :=
 
 theorem continuous_cLoc (w : Pl E) : Continuous (cLoc (n := n) w) :=
   (Continuous.units_map _ (continuous_id.matrix_map
-    ((RestrictedProduct.continuous_eval w).comp continuous_snd))).comp continuous_subtype_val
+    ((RestrictedProduct.continuous_eval w).comp continuous_snd))).comp continuous_subtypeVal
 
 theorem globLev_isOpen_isCompact_isLevel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ n : ℕ, 1 ≤ n →
     ∀ (S : Set (Pl E)), IsSection S → ∀ (K' : ∀ w : Pl E, Subgroup (UL n w)),
@@ -218,6 +218,6 @@ theorem globLev_isOpen_isCompact_isLevel : ∀ (E : Type) [Field E] [NumberField
       · exact hk.2 w ⟨hw, h⟩
     rw [e]
     exact hO.inter (hfin.isOpen_biInter fun w _ => (hK.1 w).1.preimage
-      (Continuous.subtype_mk ((continuous_cLoc w).comp continuous_subtype_val) _))
+      (Continuous.subtype_mk ((continuous_cLoc w).comp continuous_subtypeVal) _))
 
 end GlobalTheory.BCT.GlobLev

@@ -363,10 +363,10 @@ namespace GlobalTheory.PrimDescent
 theorem isPrim_of_unif : AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (O : Type) [CommRing O] [StarRing O] [Module O D.toPre.X] (o : D.toPre.OAct O) (oA : A.OAct O) (oG : RingAct G O), U.toUnifPre.OLinear O o oA oG → ∀ w : O, LBIso U.LG.L (cubeLB G ![𝟙 G, oG.act w] U.LG.L) → GlobalTheory.PolDeg.IsPrim D.toPre.P (o.onB.act w) := by
   intro R _ _ _ I hI D A G _ _ hS U O _ _ _ o oA oG hlin w hprim
   have := hI.2.2.2
-  haveI := oG.hom w
-  haveI := oG.hom (1 + w)
-  haveI := o.onB.hom w
-  haveI := o.onB.hom (1 + w)
+  have := oG.hom w
+  have := oG.hom (1 + w)
+  have := o.onB.hom w
+  have := o.onB.hom (1 + w)
   obtain ⟨⟨ρ, hρ, -⟩, -⟩ := GlobalTheory.JetSer.exists_unique_normPrim _ G U.LG (oG.act w) hprim
   have hRig := GlobalTheory.PullGenG.hasGen_one U.LG
   have h0 := (HasGen.of_gen ρ hρ).neg.add hRig
@@ -669,8 +669,8 @@ theorem sign_sym : AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (O : Type) [Com
   have hL := GlobalTheory.firstFiveLaws
   have hGF := hL.1.globalFns
   have := U.gen_hom
-  haveI := oG.hom w
-  haveI := oA.hom w
+  have := oG.hom w
+  have := oA.hom w
   obtain ⟨-, E, eG, eA, -, -, -⟩ := IntEnd.exists_nsmul_and_neg hL R I hI D A G hG U
   have rId : (Over.pullback (jK R)).map (𝟙 G) ≫ U.gen.hom = U.gen.hom ≫ 𝟙 A.A := by
     rw [(Over.pullback (jK R)).map_id, Category.id_comp, Category.comp_id]
@@ -1060,7 +1060,7 @@ theorem exists_act : AllUF fun {R} _ _ {_} {D} {A} {G} _ _ U F _ _ => ∀ (O : T
     (by rw [eG, eG']; exact hadj a)
   obtain ⟨ex, add, -⟩ := GlobalTheory.T.uniformizationEndomorphism_calculus hL R I hI D A G hG U F E E E
   choose f hf _ using ex
-  letI := TorusExt.gtGroup D.toPre F
+  let := TorusExt.gtGroup D.toPre F
   let φ : GtPtF D.toPre F →+ GtPtF D.toPre F := AddMonoidHom.mk' f fun g g' =>
     (TorusExt.isAdd_iff_eq _ _ _).1 (add g g' _ _ _ _ ((TorusExt.isAdd_iff_eq _ _ _).2 rfl) (hf _) (hf _) (hf _))
   obtain ⟨h, hn, hι⟩ := p.eq

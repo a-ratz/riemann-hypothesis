@@ -76,7 +76,7 @@ theorem coe_differentIdeal_ne_zero :
 theorem intValuation_le_of_mem_ideal (v : HeightOneSpectrum (𝓞 K)) {𝔞 : Ideal (𝓞 K)} (h𝔞 : 𝔞 ≠ ⊥)
     {y : 𝓞 K} (hy : y ∈ 𝔞) :
     v.intValuation y ≤ exp (-FractionalIdeal.count K v (𝔞 : FractionalIdeal (𝓞 K)⁰ K)) := by
-  rw [FractionalIdeal.count_coe K v h𝔞]
+  rw [FractionalIdeal.count_coeIdeal K v h𝔞]
   refine (v.intValuation_le_pow_iff_mem y _).mpr ?_
   have hle := (Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.mpr h𝔞)
       v.associates_irreducible (k := (Associates.mk v.asIdeal).count (Associates.mk 𝔞).factors)).mpr
@@ -95,11 +95,11 @@ theorem exists_mem_ideal_intValuation_eq (v : HeightOneSpectrum (𝓞 K)) {𝔞 
       v.associates_irreducible (k := n + 1)).not
     rw [← Associates.mk_pow, Associates.mk_le_mk_iff_dvd, Ideal.dvd_iff_le] at h'
     exact h'.mpr (by omega) h
-  obtain ⟨y, hy, hyn⟩ := SetLike.not_le_iff_exists.mp hnot
+  obtain ⟨y, hy, hyn⟩ := IsConcreteLE.not_le_iff_exists.mp hnot
   refine ⟨y, hy, eq_exp_of_le_of_not_le (intValuation_le_of_mem_ideal v h𝔞 hy) fun h ↦ hyn ?_⟩
   rw [← v.intValuation_le_pow_iff_mem]
   convert h using 2
-  rw [FractionalIdeal.count_coe K v h𝔞, ← hn]
+  rw [FractionalIdeal.count_coeIdeal K v h𝔞, ← hn]
   push_cast
   ring
 
@@ -226,7 +226,7 @@ theorem finiteAdeleMeasure_idealFiniteAdeles_mul_traceDual (I : (FractionalIdeal
   have hN : (FractionalIdeal.absNorm (I : FractionalIdeal (𝓞 K)⁰ K) : ℝ) ≠ 0 := by
     exact_mod_cast (FractionalIdeal.absNorm_eq_zero_iff.not.mpr I.ne_zero)
   have hs : ((NNReal.sqrt ‖discr K‖₊ : ℝ)) ^ 2 = ((discr K).natAbs : ℝ) := by
-    rw [← NNReal.coe_pow, NNReal.sq_sqrt, coe_nnnorm, Int.norm_eq_abs, Nat.cast_natAbs,
+    rw [← NNReal.coe_pow, NNReal.sq_sqrt, coe_nnNorm, Int.norm_eq_abs, Nat.cast_natAbs,
       Int.cast_abs]
   have hs0 : (NNReal.sqrt ‖discr K‖₊ : ℝ) ≠ 0 := by
     exact_mod_cast sqrt_discr_ne_zero K

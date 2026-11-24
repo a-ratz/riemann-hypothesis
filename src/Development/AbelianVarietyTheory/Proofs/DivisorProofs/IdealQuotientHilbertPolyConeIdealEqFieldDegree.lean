@@ -91,7 +91,7 @@ theorem idealHilbertPoly_coneIdeal_eq_C_finrank_adjoin (K : Type) [Field K] (N :
     GlobalTheory.idealHilbertPoly (coneIdeal K y) =
       Polynomial.C (Module.finrank K (IntermediateField.adjoin K (Set.range y)) : ℚ) := by
   have halg : ∀ x ∈ Set.range y, IsAlgebraic K x := fun x _ => Algebra.IsAlgebraic.isAlgebraic x
-  haveI : FiniteDimensional K (IntermediateField.adjoin K (Set.range y)) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K (Set.range y)) :=
     IntermediateField.finiteDimensional_adjoin fun x hx => (halg x hx).isIntegral
   set S : Submodule K (AlgebraicClosure K) :=
     Subalgebra.toSubmodule (IntermediateField.adjoin K (Set.range y)).toSubalgebra with hS

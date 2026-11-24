@@ -351,8 +351,8 @@ namespace GlobalTheory.Poinc.GSum
 
 theorem eq_of_gPt_comp_eq {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) {p : ℕ} [Fact p.Prime]
     {y y' : Sp (OO p) ⟶ M.Z} (h : gPt p ≫ y = gPt p ≫ y') : y = y' := by
-  haveI := M.sep
-  haveI : IsDominant (gPt p) :=
+  have := M.sep
+  have : IsDominant (gPt p) :=
     ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical (OO p).subtype).2 fun x hx => by
       rw [show x = 0 from Subtype.ext hx]
       exact Submodule.zero_mem _⟩
@@ -364,8 +364,8 @@ theorem val_part_eq : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
   obtain ⟨U, hU, hgal⟩ := GlobalTheory.T.galois_permutes_weightParts_up_to_roots g n F W Z i X₁ hg hn ho hi hE hT hP ε₁ hε D z₁ z₂ hz
   refine ⟨U, hU, ?_⟩
   intro p _ c yy₁ hl₁ y h hy yy hl hc y' h' hy' yy' hl' hc' a a' ν ν' κ ha ha' hcong
-  haveI := D.fd
-  haveI := D.gal
+  have := D.fd
+  have := D.gal
   obtain ⟨σ, s, hs, hys, hval⟩ := GlobalTheory.T.exists_galois_aut_conjugate_field_points_cover X₁.o₁ X₁.Ω₁ D.X.o₁ D.X.Ω₁ X₁.M D.X.M D.q (@GlobalTheory.IsNormalScheme.pred _ X₁.normal)
     (@GlobalTheory.IsNormalScheme.pred _ D.X.normal) D.fin D.gen
     (PadicAlgCl p) (gPt p ≫ y) (gPt p ≫ y') (by rw [Category.assoc, Category.assoc, h, h'])
@@ -604,7 +604,7 @@ theorem uSame_self {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : The
     rigid := GlobalTheory.PolBaseChange.rigidified_pull (isGrpPullback_pullback P.A f) P.rigid
     sym := GlobalTheory.PolBaseChange.sym_pull (isGrpPullback_pullback P.A f) P.sym
     ample := by
-      letI := P.isAb.proper
+      let := P.isAb.proper
       exact GlobalTheory.AmpleBaseChange.relAmple_of_isPullback P.isLB P.ample (IsPullback.of_hasPullback P.A.hom f)
     ktriv := by
       obtain ⟨w, hw⟩ := GlobalTheory.PolBaseChange.lbIso_refl (pull_isLB P.isLB (pullback.fst P.A.hom f))
@@ -1016,7 +1016,7 @@ theorem congMod_iff {X J : Type} [AddCommGroup X] (m : ℕ) (u v : J → X) :
 theorem norm_val_root_mul {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {M : RatModel o Ω} (hM : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z)
     {p : ℕ} [Fact p.Prime] {y : Sp (OO p) ⟶ M.Z} {z : M.Z} (hy : y (cPt p) = z) {u x : Ω} {k : ℕ} (hk : 0 < k)
     (hu : u ^ k = 1) (hx : x ∈ M.O z) : ‖M.val (gPt p ≫ y) (u * x)‖ = ‖M.val (gPt p ≫ y) x‖ := by
-  haveI := RatModel.isIntegrallyClosed_O hM z
+  have := RatModel.isIntegrallyClosed_O hM z
   have hint : IsIntegral (M.O z) u := ⟨_, Polynomial.monic_X_pow_sub_C (1 : M.O z) hk.ne', by simp [hu]⟩
   obtain ⟨v, hv⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
   have hmem : u ∈ M.O z := hv ▸ v.2
@@ -1169,7 +1169,7 @@ namespace GlobalTheory.Poinc.GSum
 
 theorem mem_O_of_pow_eq_one {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω)
     (hn : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z) (z : M.Z) {u : Ω} {k : ℕ} (hk : 0 < k) (hu : u ^ k = 1) : u ∈ M.O z := by
-  haveI := RatModel.isIntegrallyClosed_O hn z
+  have := RatModel.isIntegrallyClosed_O hn z
   have hint : IsIntegral (M.O z) u :=
     ⟨_, Polynomial.monic_X_pow_sub_C (1 : M.O z) hk.ne', by simp [hu]⟩
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
@@ -1185,7 +1185,7 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (
   · intro a κ z' hz'
     obtain ⟨k, hk, hUk⟩ := hU κ
     have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme D.X.M.Z := fun z => by
-      haveI := D.X.normal
+      have := D.X.normal
       exact ⟨D.X.normal.isDomain_stalk z, GlobalTheory.IsNormalScheme.isIntegrallyClosed_stalk z⟩
     refine mul_mem (mem_O_of_pow_eq_one D.X.M hN z' hk hUk) ?_
     rw [part, Finset.sum_div]
@@ -1193,7 +1193,7 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (
     rw [mul_div_assoc]
     exact mul_mem (Subalgebra.algebraMap_mem _ _) (GlobalTheory.T.weightParts_over_dividing_thetaConstant_integral g n F W Z i X₁ hg hn ho himm he8 hth hproj ε₁ hε D z₁ _ j z' hz')
   · intro c yy₁ hl
-    simp only [dif_pos hl]
+    simp only [dite_eq_left hl]
     exact (hB c yy₁ hl).choose_spec
 
 end GlobalTheory.Poinc.GSum

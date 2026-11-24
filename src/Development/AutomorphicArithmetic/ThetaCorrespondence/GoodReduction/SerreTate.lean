@@ -116,7 +116,7 @@ theorem exists_section_of_etale {Ω : Type} [Field Ω] [IsSepClosed Ω] {X : Sch
   have hφ : Spec.map φ = eqToHom e.symm ≫ X.affineCover.f i ≫ f := Spec.map_preimage _
   have hg : Etale (Spec.map φ) := by rw [hφ]; infer_instance
   have hr : φ.hom.Etale := (HasRingHomProperty.Spec_iff (P := @Etale)).1 hg
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   have : Algebra.Etale Ω R := hr
   let q : PrimeSpectrum R := (eqToHom e).base y
   obtain ⟨ψ⟩ := GlobalTheory.nonempty_algHom_of_etale_of_isSepClosed (R := Ω) (A := R) (K := Ω) q.asIdeal
@@ -657,7 +657,7 @@ theorem henselianLocalRing_comap_fixedField_inertia (K : Type) {Ω : Type} [Fiel
     [IsSepClosed Ω] (V : ValuationSubring Ω) :
     HenselianLocalRing (V.comap (algebraMap (IntermediateField.fixedField (inertia K V)) Ω)) := by
   classical
-  haveI := henselianLocalRing_of_isSepClosed V
+  have := henselianLocalRing_of_isSepClosed V
   set K' := IntermediateField.fixedField (inertia K V)
   set j := comapToValuationSubring V (algebraMap K' Ω)
   have hjinj : Function.Injective j := fun x y e =>
@@ -716,7 +716,7 @@ theorem henselianLocalRing_fixedField_inertia : ∀ (R K Ω : Type) [CommRing R]
     [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring →
     HenselianLocalRing (V.comap (algebraMap (IntermediateField.fixedField (inertia K V)) Ω)) := by
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V _
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
   exact henselianLocalRing_comap_fixedField_inertia K V
 
 end GlobalTheory
@@ -915,9 +915,9 @@ theorem residue_algebraic (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteV
     [IsFractionRing R K] [Field Ω] [Algebra K Ω] [Algebra.IsAlgebraic K Ω] (V : ValuationSubring Ω)
     (hV : IsAbove R K V.toSubring) (a : ResidueField V) :
     ∃ p : Polynomial (ResidueField R), p ≠ 0 ∧ p.eval₂ (resMap R K Ω V hV) a = 0 := by
-  haveI : IsLocalHom (toV R K Ω V hV) := isLocalHom_toV R K Ω V hV
-  letI := UniqueFactorizationMonoid.normalizationMonoid (α := R)
-  letI := UniqueFactorizationMonoid.toNormalizedGCDMonoid R
+  have : IsLocalHom (toV R K Ω V hV) := isLocalHom_toV R K Ω V hV
+  let := UniqueFactorizationMonoid.normalizationMonoid (α := R)
+  let := UniqueFactorizationMonoid.toNormalizedGCDMonoid R
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   obtain ⟨w, rfl⟩ := residue_surjective a
   obtain ⟨p, hp0, hpw⟩ := Algebra.IsAlgebraic.isAlgebraic (R := K) ((w : V) : Ω)
@@ -973,14 +973,14 @@ theorem eq_of_residue_eq {A : Type} [CommRing A] [IsDomain A] [IsLocalRing A] (q
 
 theorem residueField_inertiaFixed_isAlgClosed : ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [PerfectField (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring → IsAlgClosed (IsLocalRing.ResidueField (V.comap (algebraMap (IntermediateField.fixedField (inertia K V)) Ω))) := by
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V hV
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
-  haveI : Algebra.IsSeparable K Ω := IsSepClosure.separable
-  haveI : IsLocalHom (toV R K Ω V hV) := isLocalHom_toV R K Ω V hV
-  letI : Algebra (ResidueField R) (ResidueField V) := (resMap R K Ω V hV).toAlgebra
-  haveI : Algebra.IsAlgebraic (ResidueField R) (ResidueField V) := ⟨fun a => by
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : Algebra.IsSeparable K Ω := IsSepClosure.separable
+  have : IsLocalHom (toV R K Ω V hV) := isLocalHom_toV R K Ω V hV
+  let : Algebra (ResidueField R) (ResidueField V) := (resMap R K Ω V hV).toAlgebra
+  have : Algebra.IsAlgebraic (ResidueField R) (ResidueField V) := ⟨fun a => by
     obtain ⟨p, hp, h⟩ := residue_algebraic R K Ω V hV a
     exact ⟨p, hp, h⟩⟩
-  haveI : PerfectField (ResidueField V) := Algebra.IsAlgebraic.perfectField (ResidueField R)
+  have : PerfectField (ResidueField V) := Algebra.IsAlgebraic.perfectField (ResidueField R)
 
   have hred : ∀ s : Multiset V, ((s.map fun b => X - C b).prod).map (residue V) =
       ((s.map (residue V)).map fun a => X - C a).prod := by
@@ -991,7 +991,7 @@ theorem residueField_inertiaFixed_isAlgClosed : ∀ (R K Ω : Type) [CommRing R]
     intro b _
     simp
 
-  haveI : IsSepClosed (ResidueField V) := IsSepClosed.of_exists_root _ fun p hm hirr hsep => by
+  have : IsSepClosed (ResidueField V) := IsSepClosed.of_exists_root _ fun p hm hirr hsep => by
     obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic
       ((Polynomial.mem_lifts p).2 (Polynomial.map_surjective _ residue_surjective p)) hm
     obtain ⟨s, hs⟩ := _root_.GlobalTheory.monic_splits_of_separable_residue Ω V q hqm (by rw [hq]; exact hsep)
@@ -1006,12 +1006,12 @@ theorem residueField_inertiaFixed_isAlgClosed : ∀ (R K Ω : Type) [CommRing R]
     have hmem : residue V b ∈ ((s.map (residue V)).map fun a => X - C a).prod.roots := by
       rw [hr]; exact Multiset.mem_map_of_mem _ hb
     exact (Polynomial.mem_roots'.1 hmem).2
-  haveI : IsAlgClosed (ResidueField V) := inferInstance
+  have : IsAlgClosed (ResidueField V) := inferInstance
 
   set K' := IntermediateField.fixedField (inertia K V) with hK'
   set V' := V.comap (algebraMap K' Ω) with hV'
   let jV : V' →+* V := ((algebraMap K' Ω).comp V'.subtype).codRestrict V (fun x => x.2)
-  haveI : IsLocalHom jV := by
+  have : IsLocalHom jV := by
     constructor
     intro x hx
     obtain ⟨u, hu⟩ := hx
@@ -1029,7 +1029,7 @@ theorem residueField_inertiaFixed_isAlgClosed : ∀ (R K Ω : Type) [CommRing R]
     apply Subtype.ext
     simp only [MulMemClass.coe_mul, OneMemClass.coe_one]
     exact mul_inv_cancel₀ hx0
-  haveI : Algebra.IsSeparable (ResidueField R) (ResidueField V) :=
+  have : Algebra.IsSeparable (ResidueField R) (ResidueField V) :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
   have hsurj : Function.Surjective (ResidueField.map jV) := by
     intro a
@@ -1333,13 +1333,13 @@ theorem hasGoodReduction_of_infinite_torsionUnramified : ∀ (R K Ω : Type) [Co
     ∀ (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A →
     {m : ℕ | (m : ResidueField R) ≠ 0 ∧ TorsionUnramified A V m}.Infinite → HasGoodReduction R K A := by
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V hV A _ _ hA hinf
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
   apply UpperTheory.Lit.Nos.C5.hasGoodReduction_of_inertiaFixed R K Ω V hV A hA
   obtain ⟨hSH, f, -, -⟩ := GlobalTheory.T.inertiaFixedField_valuationRing_strictlyHenselian R K Ω V hV
   obtain ⟨g, hg⟩ := GlobalTheory.T.exists_relativeDimension_abelianVariety_field K A hA
   have hA' := isAbelianScheme_pullback_obj (spMap (algebraMap K (IntermediateField.fixedField (inertia K V)))) A hA
-  haveI := hA'.comm
-  have hloc : LocallyOfFiniteType A.hom := by haveI := hA.smooth; infer_instance
+  have := hA'.comm
+  have hloc : LocallyOfFiniteType A.hom := by have := hA.smooth; infer_instance
   refine GlobalTheory.T.hasGoodReduction_of_many_rational_torsion_points _ _ hSH _ hA' g ?_ ?_
   · exact (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback (IsPullback.of_hasPullback _ _) hg
   · refine hinf.mono ?_

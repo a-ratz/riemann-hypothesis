@@ -77,7 +77,7 @@ theorem rhoBarTw_eq (D : D7) (i : D.nd.Loc) (ρ : D.nd.X i → (GE D.nd →* GL 
     intro u n
     have := congrArg Units.val (map_zpow (Units.map (IsLocalRing.residue (D.nd.O i)).toMonoidHom) u n)
     rw [Units.val_zpow_eq_zpow_val] at this
-    simpa only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] using this
+    simpa only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] using this
   have hs : ∀ (c : D.nd.O i) (M : Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)),
       (c • M).map (IsLocalRing.residue (D.nd.O i)) =
         IsLocalRing.residue (D.nd.O i) c • M.map (IsLocalRing.residue (D.nd.O i)) := fun c M => by
@@ -162,8 +162,8 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   · have H := (hc hvS).2 _ hrb a
     obtain ⟨H0z, H1z, H2z⟩ := H
     rw [rhoBarTw_eq]
-    letI : TopologicalSpace (IsLocalRing.ResidueField (D.nd.O i)) := ⊥
-    haveI : DiscreteTopology (IsLocalRing.ResidueField (D.nd.O i)) := ⟨rfl⟩
+    let : TopologicalSpace (IsLocalRing.ResidueField (D.nd.O i)) := ⊥
+    have : DiscreteTopology (IsLocalRing.ResidueField (D.nd.O i)) := ⟨rfl⟩
     refine ⟨?_, ?_, ?_⟩
     · have e : H0 ((twistRep (glRep (redRep D.nd i (X.ρ i π))) (Formalism.MainNotions.SumRepresentations.At.chiEpsBar D.nd i a)).comp (decS D.nd v)) = ⊥ := H0z
       rw [e]

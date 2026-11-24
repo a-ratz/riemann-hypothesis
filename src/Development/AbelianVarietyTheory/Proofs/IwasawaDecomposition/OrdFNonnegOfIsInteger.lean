@@ -76,14 +76,14 @@ theorem ordF_finite (a : Lˣ) : {w : HeightOneSpectrum (𝓞 L) | ordF w a ≠ 0
   refine ((HeightOneSpectrum.Support.finite (𝓞 L) (a : L)).union
     (HeightOneSpectrum.Support.finite (𝓞 L) ((a⁻¹ : Lˣ) : L))).subset fun w hw => ?_
   by_contra hn
-  simp only [Set.mem_union, not_or, HeightOneSpectrum.Support, Set.mem_setOf_eq, not_lt] at hn
+  simp only [Set.mem_union, not_or, HeightOneSpectrum.Support, Set.mem_ofPred_eq, not_lt] at hn
   apply hw
   have h0 : w.valuation L (a : L) ≠ 0 := by simp
   have h1 : w.valuation L (a : L) = 1 := by
     refine le_antisymm hn.1 ?_
     have h2 := hn.2
     rw [Units.val_inv_eq_inv_val, map_inv₀] at h2
-    exact (inv_le_one₀ (zero_lt_iff.2 h0)).1 h2
+    exact (inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 h2
   simp [ordF, h1]
 
 theorem isFractional_detSub {N : ℕ} (M : Submodule (𝓞 L) (Fin N → L)) (hM : M.FG) :
@@ -128,7 +128,7 @@ theorem ordSub_finite {A : Submodule (𝓞 L) L} (h : IsFractional (𝓞 L)⁰ A
   obtain ⟨d, hd⟩ := exists_bound h
   refine ((ordF_finite d).union (ordF_finite k0)).subset fun w hw => ?_
   by_contra hn
-  simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at hn
+  simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at hn
   apply hw
   obtain ⟨⟨k, hk, e⟩, hl⟩ := isLeast_ordSub h k0 hk0 w
   have h1 := hl ⟨k0, hk0, rfl⟩

@@ -68,7 +68,7 @@ theorem idem_restrict_mul (P : LocPrime l) {K K' LL : FinExt l} (h : K.1 ≤ K'.
     haveI := K.2; haveI := K'.2
     idem (K := ↥K.1) P.R.BdR (τ.comp (IntermediateField.inclusion h)) * idem (K := ↥K'.1) P.R.BdR τ =
       idem (K := ↥K'.1) P.R.BdR τ := by
-  haveI := K.2; haveI := K'.2
+  have := K.2; have := K'.2
   obtain ⟨n, a, c, hrep, h1⟩ := idem_repr (K := ↥K.1) P.R.BdR (τ.comp (IntermediateField.inclusion h))
   have e := exists_smul_idem (K := ↥K'.1) (F := P.R.BdR) τ n a (fun i => IntermediateField.inclusion h (c i))
   simp only [algebraMap_inclusion] at e
@@ -78,8 +78,8 @@ theorem idem_restrict_mul (P : LocPrime l) {K K' LL : FinExt l} (h : K.1 ≤ K'.
 
 theorem multV_restrict : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K K' LL : FinExt l) (h : K.1 ≤ K'.1) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V), IsDR (P.PD K) ρ → ∀ (τ : ↥K'.1 →ₐ[ℚ_[l]] ↥LL.1) (a : ℤ), multV (P.PD K') (ρ.comp (Subgroup.inclusion (GK_le h))) τ a = multV (P.PD K) ρ (τ.comp (IntermediateField.inclusion h)) a := by
   intro l _ P AI T K K' LL h V _ _ _ _ _ ρ hdr τ a
-  haveI := K.2; haveI := K'.2; haveI := LL.2
-  haveI := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
+  have := K.2; have := K'.2; have := LL.2
+  have := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
   obtain ⟨m, d, k, hA⟩ := exists_adapted (P.PD K) (isField_dR T) ρ (filSpans T K LL ρ hdr)
     (τ.comp (IntermediateField.inclusion h))
   have hI := idem_restrict_mul P h τ

@@ -143,7 +143,7 @@ theorem l1Norm_mul_le (P Q : MvPolynomial σ K) : l1Norm (P * Q) ≤ l1Norm P * 
   refine (l1Norm_sum_le _ _).trans ?_
   rw [l1Norm, l1Norm, sum_mul_sum]
   refine sum_le_sum fun α _ ↦ (l1Norm_sum_le _ _).trans (sum_le_sum fun β _ ↦ ?_)
-  rw [monomial_mul, l1Norm_monomial]
+  rw [monomial_mul_monomial, l1Norm_monomial]
   exact norm_mul_le _ _
 
 theorem l1Norm_smul_le (c : K) (P : MvPolynomial σ K) : l1Norm (c • P) ≤ ‖c‖ * l1Norm P := by
@@ -209,7 +209,7 @@ theorem l1Norm_linearForm_eq_sum {ι : Type*} (s : Finset ι) {v : ι → σ}
   rw [coeff_sum, sum_eq_single k]
   · simp [C_mul_X_eq_monomial]
   · intro b _ hb
-    rw [C_mul_X_eq_monomial, coeff_monomial, if_neg fun h ↦ hb (hinj h)]
+    rw [C_mul_X_eq_monomial, coeff_monomial, ite_eq_right fun h ↦ hb (hinj h)]
   · exact fun h ↦ (h hk).elim
 
 theorem l1Norm_linearForm_le {ι : Type*} [Fintype ι] (v : ι → σ) (e : ι → K) :
@@ -511,7 +511,7 @@ theorem fockInner_X_mul_left (i : σ) (P Q : MvPolynomial σ 𝕜) :
     fockInner (X i * P) Q = fockInner P (pderiv i Q) := by
   induction P using MvPolynomial.induction_on' with
   | monomial α c =>
-    rw [X, monomial_mul, one_mul, fockInner_monomial_left, fockInner_monomial_left, coeff_pderiv,
+    rw [X, monomial_mul_monomial, one_mul, fockInner_monomial_left, fockInner_monomial_left, coeff_pderiv,
       add_comm _ α, multiFactorial_add_single]
     simp only [Nat.cast_mul, Nat.cast_add, Nat.cast_one, map_mul, map_add (f := _), map_natCast, map_one]
     ring

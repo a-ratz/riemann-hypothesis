@@ -96,7 +96,7 @@ namespace GlobalTheory.FixLev
 variable {D : D7}
 
 theorem continuous_mt (V : HSp D) : Continuous (mt V) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 section Local
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -244,7 +244,7 @@ theorem fixLev_compact_open : ∀ (D : D7) (c : Comm D) (v : VCom c) (n : ℕ) (
       exact ((hmem g.1).trans (and_iff_right g.2))
     rw [hset]
     exact isOpen_iInter_of_finite fun i =>
-      (hJ i).1.preimage ((continuous_locHom _ _ _).comp continuous_subtype_val)
+      (hJ i).1.preimage ((continuous_locHom _ _ _).comp continuous_subtypeVal)
 
 end GlobalTheory.FixLev
 end -- clump:auto

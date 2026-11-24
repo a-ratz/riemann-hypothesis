@@ -92,17 +92,17 @@ theorem vPr_zero (f : Fin D.R.rS → (VS D).V) : vPr D F0 f 0 = 0 := by
 theorem fi_add {I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E} {x y : D.host.E}
     (hx : x ∈ I) (hy : y ∈ I) : x + y ∈ I := by
   have h := Submodule.add_mem (I : Submodule (𝓞 D.host.E) D.host.E)
-    (FractionalIdeal.mem_coe.mpr hx) (FractionalIdeal.mem_coe.mpr hy)
-  exact FractionalIdeal.mem_coe.mp h
+    (FractionalIdeal.mem_coeToSubmodule.mpr hx) (FractionalIdeal.mem_coeToSubmodule.mpr hy)
+  exact FractionalIdeal.mem_coeToSubmodule.mp h
 
 theorem fi_zero (I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) : (0 : D.host.E) ∈ I := by
-  exact FractionalIdeal.mem_coe.mp (Submodule.zero_mem (I : Submodule (𝓞 D.host.E) D.host.E))
+  exact FractionalIdeal.mem_coeToSubmodule.mp (Submodule.zero_mem (I : Submodule (𝓞 D.host.E) D.host.E))
 
 theorem fi_mul {I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E} (o : 𝓞 D.host.E) {x : D.host.E}
     (hx : x ∈ I) : (o : D.host.E) * x ∈ I := by
-  have h := Submodule.smul_mem (I : Submodule (𝓞 D.host.E) D.host.E) o (FractionalIdeal.mem_coe.mpr hx)
+  have h := Submodule.smul_mem (I : Submodule (𝓞 D.host.E) D.host.E) o (FractionalIdeal.mem_coeToSubmodule.mpr hx)
   rw [Algebra.smul_def] at h
-  exact FractionalIdeal.mem_coe.mp h
+  exact FractionalIdeal.mem_coeToSubmodule.mp h
 
 theorem star_int (o : 𝓞 D.host.E) : ∃ o' : 𝓞 D.host.E, (o' : D.host.E) = star (o : D.host.E) := by
   exact ⟨NumberField.RingOfIntegers.mapRingHom (starRingEnd D.host.E) o, rfl⟩

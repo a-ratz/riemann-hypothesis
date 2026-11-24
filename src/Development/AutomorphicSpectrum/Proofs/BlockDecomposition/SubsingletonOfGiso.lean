@@ -226,7 +226,7 @@ theorem ses_psiN {n : ℕ} {A B C : MRep k n} (hA : IsSmooth A.ρ) (hB : IsSmoot
 
 theorem isSmooth_phiN (ψ : AddChar k Circle) {n : ℕ} {A : MRep k (n + 1)} (hA : IsSmooth A.ρ) : IsSmooth (phiN ψ A).ρ :=
   isSmooth_twist (_root_.GlobalTheory.CompanionTheory.BZMirSmooth.smPhiMinus k ψ n _ A.ρ hA)
-    (IsSmoothChar.comp (IsSmoothChar.detChar (GlobalTheory.LocGL.isSmoothChar_absPow _)) _ continuous_subtype_val)
+    (IsSmoothChar.comp (IsSmoothChar.detChar (GlobalTheory.LocGL.isSmoothChar_absPow _)) _ continuous_subtypeVal)
 
 theorem isSmooth_psiN {n : ℕ} {A : MRep k n} (hA : IsSmooth A.ρ) : IsSmooth (psiN A).ρ :=
   isSmooth_twist (GlobalTheory.T.smooth_psi_minus k n _ A.ρ hA) (IsSmoothChar.detChar (GlobalTheory.LocGL.isSmoothChar_absPow _))
@@ -241,7 +241,7 @@ theorem isSmooth_mcast {a b : ℕ} (h : a = b) {τ : MRep k a} (hτ : IsSmooth �
   subst h; exact hτ
 
 theorem isSmooth_gres {n : ℕ} {π : GRep k (n + 1)} (h : IsSmooth π.ρ) : IsSmooth (gres π).ρ :=
-  isSmooth_comp h _ continuous_subtype_val
+  isSmooth_comp h _ continuous_subtypeVal
 
 end
 

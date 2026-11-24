@@ -106,7 +106,7 @@ theorem inh_divCycle_of_supp (P : Ideal (MRingOver F ι)) (s : MRingOver F ι) (
   rw [divCycle, Finsupp.ofSupportFinite_coe, Finsupp.single_apply, hsupp, Set.mem_singleton_iff]
   by_cases h : W = Q
   · subst h; simp
-  · rw [if_neg h, if_neg (Ne.symm h)]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
 
 theorem inh_divCycle_of_supp_empty (P : Ideal (MRingOver F ι)) (s : MRingOver F ι)
     (hsupp : divSupp P s = ∅) : divCycle P s = 0 := by
@@ -159,12 +159,12 @@ theorem inh_homog_X_pow (p : Σ k, ι k) (m : ℕ) :
   · subst hk
     rw [Finset.sum_eq_single i']
     · simp
-    · intro b _ hb; rw [Finsupp.single_apply, if_neg]; intro h; exact hb (sigma_mk_injective h).symm
+    · intro b _ hb; rw [Finsupp.single_apply, ite_eq_right]; intro h; exact hb (sigma_mk_injective h).symm
     · simp
-  · rw [Pi.single_apply, if_neg hk]
+  · rw [Pi.single_apply, ite_eq_right hk]
     apply Finset.sum_eq_zero
     intro b _
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     exact hk (congrArg Sigma.fst h).symm
 
@@ -200,7 +200,7 @@ theorem inh_finrank_quot (I : Ideal (MvPolynomial σ F)) (c : σ → F)
       rw [RingHom.comp_apply, eval_X,
         show algebraMap F _ (c s) = Ideal.Quotient.mk I (C (c s)) from rfl]
       exact Ideal.Quotient.eq.mpr (hX s)
-  rw [finrank_eq_one_iff_of_nonzero' (1 : MvPolynomial σ F ⧸ I) one_ne_zero]
+  rw [finrank_eq_one_iff_of_ne_zero' (1 : MvPolynomial σ F ⧸ I) one_ne_zero]
   intro w
   obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective w
   refine ⟨eval c f, ?_⟩

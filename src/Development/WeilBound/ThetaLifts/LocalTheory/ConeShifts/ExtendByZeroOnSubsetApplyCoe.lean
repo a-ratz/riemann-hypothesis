@@ -107,9 +107,9 @@ theorem Split.fub (h : Split S A B p q) (μ : Measure S) (α : Measure A) (β : 
           ∫ x : S, f (p x) * g (q x) ∂μ = c * ((∫ a : A, f a ∂α) * ∫ b : B, g b ∂β)) ∧
       ∀ U : Set G, MeasurableSet U → (∀ g ∈ S, g ∈ U ↔ p g ∈ U ∧ q g ∈ U) →
         μ {x | x.1 ∈ U} = c * (α {x | x.1 ∈ U} * β {x | x.1 ∈ U}) := by
-  haveI : LocallyCompactSpace A := h.cA.locallyCompactSpace
-  haveI : LocallyCompactSpace B := h.cB.locallyCompactSpace
-  haveI : LocallyCompactSpace S := h.cS.locallyCompactSpace
+  have : LocallyCompactSpace A := h.cA.locallyCompactSpace
+  have : LocallyCompactSpace B := h.cB.locallyCompactSpace
+  have : LocallyCompactSpace S := h.cS.locallyCompactSpace
   have hm : (μ.map h.e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ h.e
   set c := Measure.haarScalarFactor (μ.map h.e) (α.prod β) with hc
   have he : μ.map h.e = c • α.prod β := Measure.isMulLeftInvariant_eq_smul _ _
@@ -125,13 +125,13 @@ theorem Split.fub (h : Split S A B p q) (μ : Measure S) (α : Measure A) (β : 
     · rfl
     · simp [NNReal.smul_def]
   · have h2 : {x : S | x.1 ∈ U} = h.e ⁻¹' ({x : A | x.1 ∈ U} ×ˢ {x : B | x.1 ∈ U}) := Set.ext fun x => hh _ x.2
-    rw [h2, ← hme.map_apply, he, Measure.smul_apply, Measure.prod_prod]
+    rw [h2, ← hme.map_apply, he, smul_apply, Measure.prod_prod]
     rfl
 
 theorem exists_haar (S : Subgroup G) (hS : IsClosed (S : Set G)) (U : Set G) (h1 : (1 : G) ∈ U)
     (hc : IsCompact {x : S | x.1 ∈ U}) (ho : IsOpen {x : S | x.1 ∈ U}) :
     ∃ μ : Measure S, μ.IsHaarMeasure ∧ μ {x | x.1 ∈ U} = 1 := by
-  haveI : LocallyCompactSpace S := hS.locallyCompactSpace
+  have : LocallyCompactSpace S := hS.locallyCompactSpace
   let K : TopologicalSpace.PositiveCompacts S := ⟨⟨_, hc⟩, ⟨1, by simpa [ho.interior_eq] using h1⟩⟩
   exact ⟨Measure.haarMeasure K, inferInstance, Measure.haarMeasure_self⟩
 
@@ -206,12 +206,12 @@ theorem Sys.prod (s : Sys P K U good) {ι : Type} [DecidableEq ι] (e : ι → R
   induction T using Finset.induction_on generalizing b with
   | empty =>
     obtain rfl : b = c := by simpa using hb
-    haveI := hμ.1; haveI := hβ.1
-    haveI : LocallyCompactSpace (part P K b) := (s.closed hc).locallyCompactSpace
+    have := hμ.1; have := hβ.1
+    have : LocallyCompactSpace (part P K b) := (s.closed hc).locallyCompactSpace
     have h1 := Measure.isMulLeftInvariant_eq_smul μ β
     have h2 : Measure.haarScalarFactor μ β = 1 := by
       have := hμ.2
-      rw [h1, Measure.smul_apply, hβ.2] at this
+      rw [h1, smul_apply, hβ.2] at this
       simpa using this
     rw [h2, one_smul] at h1
     have h3 : (fun x : part P K b => (∏ i ∈ (∅ : Finset ι), f i (P (e i) x)) * g (P b x)) = fun x : part P K b => g x := by
@@ -228,7 +228,7 @@ theorem Sys.prod (s : Sys P K U good) {ι : Type} [DecidableEq ι] (e : ι → R
     obtain ⟨μ', hμ'⟩ := exists_haar _ (s.closed hg') U s.one (hCO T (Finset.subset_insert _ _)).1 (hCO T (Finset.subset_insert _ _)).2
     obtain ⟨i1, i2⟩ := ih hT' (fun T' h => hCO T' (h.trans (Finset.subset_insert _ _))) b' rfl μ' hμ'
       (fun j hj => hf j (Finset.mem_insert_of_mem hj))
-    haveI := hμ.1; haveI := hμ'.1; haveI := (hα i).1
+    have := hμ.1; have := hμ'.1; have := (hα i).1
     obtain ⟨k, -, k1, k2⟩ := (s.split (he i) hg' h0).fub μ (α i) μ'
     have hk : k = 1 := by
       have := k2 U s.mU fun x hx => ⟨fun h => ⟨s.pU _ (he i) _ h, s.pU _ hg' _ h⟩, fun h => by
@@ -337,8 +337,8 @@ open PositivityTheory.ThKG.Fub
 theorem ae_ring : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
 theorem ae_smul : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) _
 theorem ae_top : T2Space (AE F E) ∧ LocallyCompactSpace (AE F E) ∧ SecondCountableTopology (AE F E) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
   exact ⟨e.isEmbedding.t2Space, e.isClosedEmbedding.locallyCompactSpace, e.secondCountableTopology⟩
 theorem ae_t2 : T2Space (AE F E) := ae_top.1
@@ -349,13 +349,13 @@ attribute [local instance] ae_ring ae_smul ae_t2 ae_lc ae_sc
 
 theorem units_top {A : Type} [Ring A] [TopologicalSpace A] [IsTopologicalRing A] [T2Space A] [LocallyCompactSpace A]
     [SecondCountableTopology A] : LocallyCompactSpace Aˣ ∧ SecondCountableTopology Aˣ := by
-  haveI : SecondCountableTopology Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : LocallyCompactSpace Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : LocallyCompactSpace Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
   exact ⟨Units.isClosedEmbedding_embedProduct.locallyCompactSpace, Units.isEmbedding_embedProduct.secondCountableTopology⟩
 
 theorem ua_top {n : ℕ} (J : Matrix (Fin n) (Fin n) E) : LocallyCompactSpace (UA σ J) ∧ SecondCountableTopology (UA σ J) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → AE F E))
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → AE F E))
   obtain ⟨h1, h2⟩ := units_top (A := Matrix (Fin n) (Fin n) (AE F E))
   have hc : Continuous (cA σ) := IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
@@ -438,7 +438,7 @@ theorem rest_idem (T : Finset (Pl F)) : rest T * rest T = rest T :=
     rw [map_mul, evFin_rest]; split_ifs <;> simp
 
 theorem idem_rest {T : Finset (Pl F)} {v : Pl F} (h : v ∈ T) : idem F v * rest T = 0 := by
-  rw [mul_comm]; exact mul_idem_zero (by rw [evFin_rest, if_pos h])
+  rw [mul_comm]; exact mul_idem_zero (by rw [evFin_rest, ite_eq_left h])
 
 theorem real_rest (T : Finset (Pl F)) : realAd F 1 * rest T = 0 := by rw [mul_comm]; exact mul_real_zero (rest_fst T)
 
@@ -538,7 +538,7 @@ theorem borelUA (J : Matrix (Fin n) (Fin n) E) : BorelSpace (UA σ J) := ⟨rfl�
 
 theorem sysU {B : Base F E} {X : Spc F E n} {K : Subgroup (UA σ X.J)} (hK : IsStab B K) (hc : IsCompact (K : Set (UA σ X.J))) :
     Sys (PU σ X.J) K Set.univ Gd :=
-  { cont a ha := ((unitInvariant_continuous ha.1).comp continuous_subtype_val).subtype_mk
+  { cont a ha := ((unitInvariant_continuous ha.1).comp continuous_subtypeVal).subtype_mk
       (fun g => (PU σ X.J a g).property)
     comp _ _ ha hb g := Subtype.ext (unitInvariant_comp ha.1 hb.1 g.1)
     zero g := Subtype.ext (unitInvariant_zero g.1)
@@ -561,10 +561,10 @@ theorem kAt_eq {X : Spc F E n} (K : Subgroup (UA σ X.J)) {R : Type} [Zero R] (e
 
 theorem co_U {B : Base F E} {X : Spc F E n} {K : Subgroup (UA σ X.J)} (hK : IsStab B K) (hc : IsCompact (K : Set (UA σ X.J)))
     {a : AF F} (ha : Gd a) : CO (PU σ X.J) K Set.univ a := by
-  haveI := (ua_top (σ := σ) X.J).1
-  haveI := (ua_top (σ := σ) X.J).2
-  haveI := borelUA (σ := σ) X.J
-  haveI : CompactSpace (part (PU σ X.J) K a) :=
+  have := (ua_top (σ := σ) X.J).1
+  have := (ua_top (σ := σ) X.J).2
+  have := borelUA (σ := σ) X.J
+  have : CompactSpace (part (PU σ X.J) K a) :=
     isCompact_iff_compactSpace.1 (hc.of_isClosed_subset ((sysU hK hc).closed ha) fun _ h => h.1)
   exact ⟨isCompact_univ, isOpen_univ⟩
 
@@ -584,9 +584,9 @@ theorem extendByZero_restrict_alt {G : Type} [Group G] {S : Subgroup G} (f : S �
 theorem kFub_of (hS : StabEx) : KFub := by
   classical
   intro F E _ _ _ _ _ σ B n X r s hB hX K m μK hK hm hμ
-  haveI := (ua_top (σ := σ) X.J).1
-  haveI := (ua_top (σ := σ) X.J).2
-  haveI := borelUA (σ := σ) X.J
+  have := (ua_top (σ := σ) X.J).1
+  have := (ua_top (σ := σ) X.J).2
+  have := borelUA (σ := σ) X.J
   have hc := stab_compact hS hB hX hK
   have sy := sysU hK hc
   have ei := kAt_eq K (evI F) real_idem fun _ => at_inf_iff
@@ -599,13 +599,13 @@ theorem kFub_of (hS : StabEx) : KFub := by
   choose γ g1 g2 g3 using fun v => transport (ef v) _ BorelSpace.measurable_eq (m.kf v)
   have hex := fun T => exists_haar _ (sy.closed (gd_rest T)) Set.univ trivial (co_U hK hc (gd_rest T)).1 (co_U hK hc (gd_rest T)).2
   choose β hβ using hex
-  haveI := m1 hμ; haveI := a1 hm.ki; haveI := (hβ ∅).1
+  have := m1 hμ; have := a1 hm.ki; have := (hβ ∅).1
   obtain ⟨c, c0, c1, -⟩ := sp.fub μ' α (β ∅)
   refine ⟨fun k => ⟨PU σ X.J _ k, ei ▸ sp.mA _ (e1 ▸ k.2)⟩, fun v k => ⟨PU σ X.J (idem F v) k, (ef v) ▸
     ⟨sy.mK _ (gd_idem v) _ k.2, by show PU σ X.J _ (PU σ X.J _ _) = _; rw [sy.comp _ _ (gd_idem v) (gd_idem v), idem_idem]; rfl⟩⟩,
     c, by exact_mod_cast c0, fun k => ⟨mat_PU real_idem _, fun v => mat_PU (idem_idem v) _⟩, fun T hi h i1 i2 => ?_⟩
   have hu : β T Set.univ = 1 := (hβ T).2
-  haveI : IsFiniteMeasure (β T) := ⟨hu.trans_lt ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (β T) := ⟨hu.trans_lt ENNReal.one_lt_top⟩
   obtain ⟨p1, p2⟩ := sy.prod (idem F) gd_idem (fun _ _ => idem_orth) (rest T) (gd_rest T) γ
     (fun v => ⟨g1 v (hm.kf v).1, (g2 v Set.univ).trans (hm.kf v).2⟩) (β T) (hβ T) T (fun v => idem_rest)
     (fun T' h => co_U hK hc (sy.good_sum _ gd_idem (fun _ _ => idem_orth) _ (gd_rest T) T' fun v hv => idem_rest (h hv)))

@@ -169,7 +169,7 @@ theorem factor_uniq (μ : ∀ v, Measure (G v)) [∀ v, SigmaFinite (μ v)] (H :
         simpa [g] using hh
       · simp [g, Pi.mulSingle_eq_of_ne hw, (H w).one_mem]
     let μ' : ∀ w, Measure (G w) := fun w => (μ w).map (fun x => g w * x)
-    haveI hσ : ∀ w, SigmaFinite (μ' w) := fun w =>
+    have hσ : ∀ w, SigmaFinite (μ' w) := fun w =>
       (MeasurableEquiv.mulLeft (g w)).sigmaFinite_map (μ := μ w)
     have hpi : Measure.pi μ' = Measure.pi μ := by
       rw [← Measure.pi_map_pi (fun w => (measurable_const_mul (g w)).aemeasurable)]
@@ -213,10 +213,10 @@ theorem sf_smul {β : Type*} [MeasurableSpace β] (μ : Measure β) [SigmaFinite
 theorem ProdExact_holds : Formalism.L2.SG.Pf.NcReal.ProdExact := by
   classical
   intro D X u u' μN μN' μH μH' C hσN hσN' hσH hσH' hC hN hN' hH hH' hDis
-  haveI : ∀ v, SigmaFinite (μN v) := hσN
-  haveI : ∀ v, SigmaFinite (μN' v) := hσN'
-  haveI : ∀ v, SigmaFinite (μH v) := hσH
-  haveI : ∀ v, SigmaFinite (μH' v) := hσH'
+  have : ∀ v, SigmaFinite (μN v) := hσN
+  have : ∀ v, SigmaFinite (μN' v) := hσN'
+  have : ∀ v, SigmaFinite (μH v) := hσH
+  have : ∀ v, SigmaFinite (μH' v) := hσH'
   have hU : UnimodLoc := JL.rightInvS_of JL.setCorr_holds (JL.haarCorr_of JL.setCorr_holds)
   have hep : ∀ v a b, hJ (X.B.I.ε v) (eV X v a) (pV X v b) = if a = b then 1 else 0 := fun v a b =>
     (hJ_X X v _ _).trans (by rw [X.ef]; simp)
@@ -255,7 +255,7 @@ theorem ProdExact_holds : Formalism.L2.SG.Pf.NcReal.ProdExact := by
   choose κH hκH0 hκHT hκH using fH u μH hH
   choose κH' hκH'0 hκH'T hκH' using fH u' μH' hH'
   have hSL : ∀ v, Formalism.L2.SG.Pf.NcReal.muSL (μH v) (μN v) = (κN v * κH v) • muSv X u v := fun v => by
-    haveI : SigmaFinite (muHv X u v) := inferInstance
+    have : SigmaFinite (muHv X u v) := inferInstance
     unfold Formalism.L2.SG.Pf.NcReal.muSL muSv
     rw [hκN v, hκH v, Measure.prod_smul_left, Measure.prod_smul_right, smul_smul, Measure.map_smul]
     all_goals exact measurable_mul.aemeasurable
@@ -263,10 +263,10 @@ theorem ProdExact_holds : Formalism.L2.SG.Pf.NcReal.ProdExact := by
     unfold Formalism.L2.SG.Pf.NcReal.muSL muSv
     rw [hκN' v, hκH' v, Measure.prod_smul_left, Measure.prod_smul_right, smul_smul, Measure.map_smul]
     all_goals exact measurable_mul.aemeasurable
-  haveI : ∀ w v, SigmaFinite (muSv X w v) := fun w v => (hSH w v).1.1
-  haveI hσS : ∀ v, SigmaFinite (Formalism.L2.SG.Pf.NcReal.muSL (μH v) (μN v)) := fun v => by
+  have : ∀ w v, SigmaFinite (muSv X w v) := fun w v => (hSH w v).1.1
+  have hσS : ∀ v, SigmaFinite (Formalism.L2.SG.Pf.NcReal.muSL (μH v) (μN v)) := fun v => by
     rw [hSL v]; exact sf_smul _ _ (ENNReal.mul_ne_top (hκNT v) (hκHT v))
-  haveI hσS' : ∀ v, SigmaFinite (Formalism.L2.SG.Pf.NcReal.muSL (μH' v) (μN' v)) := fun v => by
+  have hσS' : ∀ v, SigmaFinite (Formalism.L2.SG.Pf.NcReal.muSL (μH' v) (μN' v)) := fun v => by
     rw [hSL' v]; exact sf_smul _ _ (ENNReal.mul_ne_top (hκN'T v) (hκH'T v))
 
   have hmS : ∀ (w : D.what₂.Word) (ρN ρH : ∀ v, Measure (Formalism.REAL.UJ (X.B.I.ε v))) [∀ v, SigmaFinite (ρN v)]
@@ -279,7 +279,7 @@ theorem ProdExact_holds : Formalism.L2.SG.Pf.NcReal.ProdExact := by
     have mp := measurePreserving_piProd ρN ρH
     rw [← mp.map_eq, Measure.map_map (measurable_mul : Measurable fun p : X.B.I.Ginf × X.B.I.Ginf => p.1 * p.2)
       mp.measurable]
-    haveI : ∀ v, SigmaFinite (((ρN v).prod (ρH v)).map
+    have : ∀ v, SigmaFinite (((ρN v).prod (ρH v)).map
         (fun q : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) => q.1 * q.2)) := hσ
     exact Measure.pi_map_pi (f := fun v (q : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v)) => q.1 * q.2)
       (fun v => measurable_mul.aemeasurable)
@@ -303,7 +303,7 @@ theorem ProdExact_holds : Formalism.L2.SG.Pf.NcReal.ProdExact := by
       ((dcInf X).restrict (Good X u u')).withDensity
         (fun c => ∏ v, ENNReal.ofReal (C v * wtLoc D.R.k (Tw u) (Tw u') (c v))) := by
     unfold nuLoc
-    haveI : SigmaFinite (dcLoc (r := D.R.rS)) := by unfold dcLoc; infer_instance
+    have : SigmaFinite (dcLoc (r := D.R.rS)) := by unfold dcLoc; infer_instance
     rw [PiM.pi_withDensity _ _ hwm (fun v x => ENNReal.ofReal_ne_top), ← Measure.restrict_pi_pi, good_eq]
     rfl
   set H : (Cinf X) → X.B.I.Ginf := fun c v => hs v (c v) with hHd
@@ -409,7 +409,7 @@ theorem isFrameJ_of {r k : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r
 theorem hLoc_eq {n r : ℕ} (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ) (z : Fin n → ℂ) :
     Formalism.L2.SG.Pf.NcReal.HLoc ε e f z = Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.HLoc ε e f z := by
   ext s
-  simp only [Formalism.L2.SG.Pf.NcReal.HLoc, Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.HLoc, Set.mem_setOf_eq, forall_and,
+  simp only [Formalism.L2.SG.Pf.NcReal.HLoc, Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.HLoc, Set.mem_ofPred_eq, forall_and,
     and_assoc]
 
 theorem compact_HLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ)
@@ -436,21 +436,21 @@ theorem compact_HLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool
 theorem pi_smul_factors {ι : Type*} [Fintype ι] {α : ι → Type*} [∀ i, MeasurableSpace (α i)]
     (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (c : ι → ℝ≥0∞) (hc : ∀ i, c i ≠ ⊤) :
     Measure.pi (fun i => c i • μ i) = (∏ i, c i) • Measure.pi μ := by
-  haveI : ∀ i, SigmaFinite (c i • μ i) := fun i =>
+  have : ∀ i, SigmaFinite (c i • μ i) := fun i =>
     ⟨⟨⟨spanningSets (μ i), fun _ => Set.mem_univ _, fun n => by
-        rw [Measure.smul_apply, smul_eq_mul]
+        rw [smul_apply, smul_eq_mul]
         exact lt_top_iff_ne_top.2 (ENNReal.mul_ne_top (hc i) (measure_spanningSets_lt_top (μ i) n).ne),
       iUnion_spanningSets (μ i)⟩⟩⟩
   refine Measure.pi_eq fun s hs => ?_
-  simp only [Measure.smul_apply, smul_eq_mul, Measure.pi_pi, Finset.prod_mul_distrib]
+  simp only [smul_apply, smul_eq_mul, Measure.pi_pi, Finset.prod_mul_distrib]
 
 theorem isHaarLoc_smul {n : ℕ} {ε : Fin n → Bool} {S : Set (Formalism.REAL.UJ ε)} {μ : Measure (Formalism.REAL.UJ ε)}
     (h : IsHaarLoc S μ) {c : ℝ≥0∞} (hc0 : c ≠ 0) (hc : c ≠ ⊤) : IsHaarLoc S (c • μ) := by
   unfold Formalism.L2.SG.RealObj.IsHaarLoc at h ⊢
   obtain ⟨h1, h2, h3, h4⟩ := h
-  haveI := h1
+  have := h1
   refine ⟨⟨⟨⟨spanningSets μ, fun _ => Set.mem_univ _, fun n => ?_, iUnion_spanningSets μ⟩⟩⟩, ?_, ?_, ?_⟩
-  · rw [Measure.smul_apply, smul_eq_mul]
+  · rw [smul_apply, smul_eq_mul]
     exact lt_top_iff_ne_top.2 (ENNReal.mul_ne_top hc (measure_spanningSets_lt_top μ n).ne)
   · intro h0
     apply h2
@@ -505,7 +505,7 @@ theorem muNv_eq (u w : D.what₂.Word) (v : InfinitePlace X.B.I.F) :
     (fX_fw X u v) (fX_ez X u v) (fX_fz X u v) (frame_real_z_z_eq_neg X u v) (fX_zw X u v) (fX_ez X w v)
   obtain ⟨r1, r2, r3, r4⟩ := hR
   obtain ⟨⟨m1, m2, m3, m4⟩, -⟩ := ProductExactness.muNv_haar X w v
-  haveI : SigmaFinite (refNX X u v) := r1
+  have : SigmaFinite (refNX X u v) := r1
   exact ProductExactness.PiM.uniq_on_closed (ProductExactness.NGv X w v) (NilradicalHermitianFrames.NH.NG_closed _ _ _) _ _ m3 r3 m4 r4 m2 r2
 
 theorem muHv_mass (u : D.what₂.Word) (v : InfinitePlace X.B.I.F) :
@@ -552,7 +552,7 @@ theorem placeSplit_of (hJG : JacGauge) (hC : CovolRef) : PlaceSplit := by
   have hcT' : ∀ v, cN' v ≠ ⊤ := fun v => ENNReal.mul_ne_top (by split_ifs <;> simp [hκN'T]) (hd'T v)
   have hc0 : ∀ v, cN v ≠ 0 := fun v => mul_ne_zero (by split_ifs <;> simp [hκN0]) (hd0 v)
   have hc0' : ∀ v, cN' v ≠ 0 := fun v => mul_ne_zero (by split_ifs <;> simp [hκN'0]) (hd'0 v)
-  haveI : ∀ v, SigmaFinite (refNX X u v) := fun v =>
+  have : ∀ v, SigmaFinite (refNX X u v) := fun v =>
     (refNg_isHaarLoc (nX X) (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v)
       (ProductExactness.zV X u v) (ProductExactness.Tw_pos u) (fX_ee X v) (fX_ff X v) (fX_ef X v) (fX_ww X u v) (fX_ew X u v)
       (fX_fw X u v) (fX_ez X u v) (fX_fz X u v) (frame_real_z_z_eq_neg X u v) (fX_zw X u v) (fX_ez X u v)).1
@@ -562,7 +562,7 @@ theorem placeSplit_of (hJG : JacGauge) (hC : CovolRef) : PlaceSplit := by
     intro κ0 dd hddT hκ0
     rw [pi_smul_factors _ dd hddT, pi_smul_factors _ _ (fun v => ENNReal.mul_ne_top
       (by split_ifs <;> simp [hκ0]) (hddT v)), smul_smul, Finset.prod_mul_distrib]
-    simp only [Finset.prod_ite_eq', Finset.mem_univ, if_true]
+    simp only [Finset.prod_ite_eq', Finset.mem_univ, ite_true]
   have hmuN : X.muN u = Measure.pi (fun v => cN v • refNX X u v) := by
     have he : ProductExactness.muNv X u = fun v => d v • refNX X u v := funext hd
     rw [hN, he]
@@ -597,11 +597,11 @@ theorem placeSplit_of (hJG : JacGauge) (hC : CovolRef) : PlaceSplit := by
     exact isHaarLoc_smul (ProductExactness.muHv_haar X u' v).1 (hsH' v).1 (hsH' v).2
   have hmH : ∀ v, μH v Set.univ ≠ 0 ∧ μH v Set.univ ≠ ⊤ := fun v => by
     obtain ⟨h1, h2⟩ := muHv_mass X u v
-    simp only [hμH, Measure.smul_apply, smul_eq_mul]
+    simp only [hμH, smul_apply, smul_eq_mul]
     exact ⟨mul_ne_zero (hsH v).1 h1, ENNReal.mul_ne_top (hsH v).2 h2⟩
   have hmH' : ∀ v, μH' v Set.univ ≠ 0 ∧ μH' v Set.univ ≠ ⊤ := fun v => by
     obtain ⟨h1, h2⟩ := muHv_mass X u' v
-    simp only [hμH', Measure.smul_apply, smul_eq_mul]
+    simp only [hμH', smul_apply, smul_eq_mul]
     exact ⟨mul_ne_zero (hsH' v).1 h1, ENNReal.mul_ne_top (hsH' v).2 h2⟩
 
   refine ⟨fun v => cN v • refNX X u v, fun v => cN' v • refNX X u v, μH, μH',
@@ -622,8 +622,8 @@ theorem placeSplit_of (hJG : JacGauge) (hC : CovolRef) : PlaceSplit := by
       (cN v).toReal (cN' v).toReal (ENNReal.toReal_pos (hc0 v) (hcT v)) (ENNReal.toReal_pos (hc0' v) (hcT' v)) h hh
     rw [ENNReal.ofReal_toReal (hcT v), ENNReal.ofReal_toReal (hcT' v)] at hP
     exact hP
-  · rw [hmuN, pi_smul_factors _ _ hcT, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_prod]
-  · rw [hmuN', pi_smul_factors _ _ hcT', Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_prod]
+  · rw [hmuN, pi_smul_factors _ _ hcT, smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_prod]
+  · rw [hmuN', pi_smul_factors _ _ hcT', smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_prod]
 
 theorem realBracket_of_jac (hJG : JacGauge) (hC : CovolRef) (hA : AprimeInf)
     (hG : ∀ (n : ℕ) (ε : Fin n → Bool), Formalism.MainNotions.S.Gauge.GaugeDens ε) : RealBracket :=

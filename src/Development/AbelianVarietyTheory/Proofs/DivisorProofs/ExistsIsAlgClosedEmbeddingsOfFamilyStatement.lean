@@ -72,7 +72,7 @@ theorem exists_isAlgClosed_embeddings_of_family :
   let Ω := AlgebraicClosure K
   have key : ∀ i, ∃ g : k i →+* Ω, g.comp (f i) = algebraMap F Ω := by
     intro i
-    letI : Algebra F (k i) := (f i).toAlgebra
+    let : Algebra F (k i) := (f i).toAlgebra
     obtain ⟨s, hs⟩ := exists_isTranscendenceBasis F (k i)
     let x : (Σ i, k i) → Ω := fun j => algebraMap K Ω (algebraMap (MvPolynomial (Σ i, k i) F) K (X j))
     have hx : AlgebraicIndependent F x := by

@@ -438,7 +438,7 @@ theorem joint_lift {ι : Type} [Fintype ι] [DecidableEq ι] (a : ι → Mat p q
       let Ws : Submodule ℂ V := W ⊓ ⨅ w' ∈ s, hwSub (a w') (μ w')
       have mem : ∀ v, v ∈ Ws ↔ v ∈ W ∧ ∀ w' ∈ s, v ∈ hwSub (a w') (μ w') := fun v => by
         simp only [Ws, Submodule.mem_inf, Submodule.mem_iInf]
-      haveI : FiniteDimensional ℂ Ws := Submodule.finiteDimensional_of_le (inf_le_left : Ws ≤ W)
+      have : FiniteDimensional ℂ Ws := Submodule.finiteDimensional_of_le (inf_le_left : Ws ≤ W)
       have sWs : KStable (a w) Ws := fun Z hZ v hv => by
         rw [mem] at hv ⊢
         refine ⟨sW w Z hZ v hv.1, fun w' hw' => hw_of_comm (fun Z' v => ?_) (hv.2 w' hw')⟩
@@ -639,7 +639,7 @@ theorem le_deg_of_hw {μ : Ix R S → ℚ} {f : Formalism.BasicNotions.TH.Pol P 
         have : monomial β z = z • (monomial β (1 : ℂ)) := by rw [smul_monomial, smul_eq_mul, mul_one]
         rw [this, map_smul, cartan2, MvPolynomial.coeff_smul, MvPolynomial.coeff_smul, MvPolynomial.coeff_smul, coeff_monomial]
         by_cases h : β = α
-        · subst h; simp only [if_true, smul_eq_mul]; ring
+        · subst h; simp only [ite_true, smul_eq_mul]; ring
         · simp [h]
       | add p q hp hq => rw [map_add (f := _), MvPolynomial.coeff_add, MvPolynomial.coeff_add, hp, hq, mul_add]
     have h' := hd f

@@ -77,13 +77,13 @@ theorem lowerTri_mul_diag (A B : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < j 
 theorem lowerTri_isUnit_det (A : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < j → A i j = 0)
     (hd : ∀ i, IsUnit (A i i)) : IsUnit A.det := by
   have h : A.BlockTriangular OrderDual.toDual := fun i j hij => hA i j hij
-  rw [Matrix.det_of_lowerTriangular A h]
+  rw [Matrix.det_of_isLowerTriangular A h]
   exact IsUnit.prod_univ_iff.mpr hd
 
 theorem lowerTri_inv (A : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < j → A i j = 0)
     (hd : IsUnit A.det) : ∀ i j, i < j → A⁻¹ i j = 0 := by
   have h : A.BlockTriangular OrderDual.toDual := fun i j hij => hA i j hij
-  letI := Matrix.invertibleOfIsUnitDet A hd
+  let := Matrix.invertibleOfIsUnitDet A hd
   have h' := Matrix.blockTriangular_inv_of_blockTriangular h
   exact fun i j hij => h' hij
 

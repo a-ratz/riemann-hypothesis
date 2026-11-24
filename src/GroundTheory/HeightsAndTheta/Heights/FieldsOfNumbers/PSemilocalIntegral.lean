@@ -93,7 +93,7 @@ theorem exists_relDim_eq_int (Q : Ideal (MRing ι F)) [Q.IsPrime] :
 
 theorem relDim_lt_of_lt {Q Q₂ : Ideal (MRing ι F)} [Q.IsPrime] [Q₂.IsPrime] (h : Q < Q₂) :
     relDim Q₂ < relDim Q := by
-  obtain ⟨x, hx, hxQ⟩ := SetLike.exists_of_lt h
+  obtain ⟨x, hx, hxQ⟩ := IsConcreteLE.exists_of_lt h
   have hle := Inter.krullDim_quot_add_one_le h.le hx hxQ
   obtain ⟨D, hD⟩ := exists_ringKrullDim_eq_nat Q
   obtain ⟨D₂, hD₂⟩ := exists_ringKrullDim_eq_nat Q₂

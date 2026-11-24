@@ -138,7 +138,7 @@ variable [IsAlgClosure ℚ Ω]
 
 private theorem di_lifts_pow {q : ℕ} (hq : q ≠ 0) {c : (ZMod q)ˣ} {t : G ℚ Ω} (h : Lifts q c t) (i : ℕ) :
     Lifts q (c ^ i) (t ^ i) := by
-  haveI : NeZero q := ⟨hq⟩
+  have : NeZero q := ⟨hq⟩
   induction i with
   | zero =>
     intro x hx
@@ -154,7 +154,7 @@ private theorem forall_fixMu_of_mul_closed_of_tau_of_fixMu_mul {N q : ℕ} (τ :
     (hmul : ∀ g h, P g → P h → P (g * h)) (hq : q.Prime) (hNq : N.Coprime q) (hτ : IsTau q τ)
     (hP : P τ) (hbig : ∀ g ∈ fixMu ℚ Ω (N * q), P g) : ∀ g ∈ fixMu ℚ Ω N, P g := by
   intro g hg
-  haveI : NeZero q := ⟨hq.ne_zero⟩
+  have : NeZero q := ⟨hq.ne_zero⟩
   obtain ⟨b0, hgen, hlift⟩ := hτ.2
   have GB := galBasic Ω q hq.ne_zero
   obtain ⟨b, hb⟩ := GB.2.2.2.2.1 g
@@ -234,7 +234,7 @@ private theorem di_step {l M F r : ℕ} (hF : F ≠ 0) (hM : M ∣ F) {x : ℕ �
   have hnormX := hS.norm L.prod q hq hAqd (τ q) hτq hτ.2 φ hφ
   have hfq : τ q ^ (q - 1) ∈ fixMu ℚ Ω q := by
     obtain ⟨b0, -, hb0⟩ := hτ.2
-    haveI : Fact q.Prime := ⟨hq⟩
+    have : Fact q.Prime := ⟨hq⟩
     have hl := di_lifts_pow hq.ne_zero hb0 (q - 1)
     rw [ZMod.units_pow_card_sub_one_eq_one] at hl
     rw [di_mem]
@@ -343,7 +343,7 @@ theorem UpperTheory.V.ML.hasOrdP :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (F r a : ℕ) [NeZero F], r ≠ 0 → ∀ (A₀ : ValuationSubring Ω) (u : Ω) (k : (ZMod F)ˣ → ℤ), HasOrd F r A₀ u k →
     (∀ (d : (ZMod F)ˣ) (δ : G ℚ Ω), Lifts F d δ → HasOrd F r A₀ (opP δ a u) fun t => k (t * d) - a * k t) ∧ ∀ n : ℕ, HasOrd F r A₀ (u ^ n) fun t => n * k t := by
   intro Ω _ _ _ F r a _ hr A₀ u k hk
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hv0 : A₀.valuation (r : Ω) ≠ 0 := (Valuation.ne_zero_iff _).mpr (Nat.cast_ne_zero.mpr hr)
   have hk' : ∀ (t : (ZMod F)ˣ) (σ : G ℚ Ω), Lifts F t σ → A₀.valuation (σ u) = A₀.valuation (r : Ω) ^ k t := hk
   refine ⟨fun d δ hδ t σ hσ => ?_, fun n t σ hσ => ?_⟩
@@ -409,13 +409,13 @@ theorem UpperTheory.V.ML.ineRad :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (r M : ℕ), r.Prime → M.Coprime r → ∀ A : ValuationSubring Ω, Over A r → ∀ ρ ζ : Ω, ρ ^ M = (r : Ω) → ζ ^ M = 1 → ∃ t ∈ Ine (F := ℚ) A, t ρ = ζ * ρ := by
   intro Ω _ _ _ r M hr hM A hA ρ ζ hρ hζ
   have pb := placeBasic Ω
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hr0 : (r : Ω) ≠ 0 := by exact_mod_cast hr.ne_zero
   have hM0 : M ≠ 0 := by
     rintro rfl
     simp [Nat.coprime_zero_left] at hM
     exact hr.ne_one hM
-  haveI : NeZero M := ⟨hM0⟩
+  have : NeZero M := ⟨hM0⟩
   have hρ0 : ρ ≠ 0 := by
     rintro rfl
     rw [zero_pow hM0] at hρ
@@ -448,7 +448,7 @@ theorem UpperTheory.V.ML.ineRad :
     rw [mem_rootsOfUnity]
     ext
     rw [Units.val_pow_eq_pow_val, hχ, hroot, Units.val_one]
-  haveI : Finite χ.range :=
+  have : Finite χ.range :=
     Finite.of_injective (Subgroup.inclusion hle) (Subgroup.inclusion_injective hle)
   have hd0 : 0 < Nat.card χ.range := Nat.card_pos
   have hfixd : ∀ g ∈ Ine (F := ℚ) A, g (ρ ^ Nat.card χ.range) = ρ ^ Nat.card χ.range := by
@@ -507,7 +507,7 @@ theorem UpperTheory.V.ML.kolEx :
     (∀ g ∈ fixMu ℚ Ω F, ∃ z : Ω, (∀ h ∈ fixMu ℚ Ω (F * n), h z = z) ∧ z ^ M = g y / y) → ∃ κ : G ℚ Ω → ZMod M, IsKol M F n ζ δ a y κ := by
   intro Ω _ _ _ M F n a _ hFn ζ hζ δ hδ y hy hfix hz
   have hM : M ≠ 0 := NeZero.ne M
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨Y, hY⟩ := IsAlgClosed.exists_pow_nat_eq y (Nat.pos_of_ne_zero hM)
   have hcomm := (galBasic Ω (F * n) hFn).2.2.2.2.2.1 y hfix
   have hroot : ∀ g ∈ fixMu ℚ Ω F, ∀ z : Ω, z ^ M = g y / y →
@@ -552,7 +552,7 @@ theorem UpperTheory.V.ML.kolInit :
     κ (σ⁻¹ * t * σ) * ZMod.castHom hM (ZMod M) (c : ZMod F) = (k c : ZMod M) := by
   intro Ω _ _ _ M F r a _ _ hM hr hrF ζ hζ δ hδ y hy0 hyfix κ hκ A₀ hA₀ k hk ρ hρ t ht htρ c σ hσ
   have pb := placeBasic Ω
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hM0 : M ≠ 0 := NeZero.ne M
   have hr0 : (r : Ω) ≠ 0 := by exact_mod_cast hr.ne_zero
   have hρ0 : ρ ≠ 0 := by
@@ -620,7 +620,7 @@ theorem UpperTheory.V.ML.kolInit :
     rw [← map_pow, heM, map_div₀, map_zpow₀, hk c σ hσ, div_self (zpow_ne_zero _ hvr0)]
   have hve : A₀.valuation e = 1 := by
     rcases lt_trichotomy (A₀.valuation e) 1 with hlt | heq | hgt
-    · exact absurd hveM (ne_of_lt (pow_lt_one₀ zero_le' hlt hM0))
+    · exact absurd hveM (ne_of_lt (pow_lt_one₀ zero_le hlt hM0))
     · exact heq
     · exact absurd hveM (ne_of_gt (one_lt_pow₀ hgt hM0))
   have he0 : e ≠ 0 := by
@@ -1064,7 +1064,7 @@ private theorem admissible_prime_coprime {l F r q : ℕ} (h : AdmP l F r q) : q.
   have hq := h.1
   rw [Nat.Prime.coprime_iff_not_dvd hq]
   intro hd
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   apply h.2.2.2
   have : (r : ZMod q) = 0 := (ZMod.natCast_eq_zero_iff r q).2 hd
   rw [this, orderOf_zero]
@@ -1209,7 +1209,7 @@ theorem UpperTheory.V.ML.nuIs :
     intro t
     let c : fixMu ℚ Ω F → fixMu ℚ Ω F := fun u => ⟨(σ t)⁻¹ * u * σ t, hcm _ u u.2⟩
     have hc : Continuous c :=
-      Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+      Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
     exact (hlc.comp_continuous hc).comp (fun k : ZMod M => k.val • ((β (σ t) : O) • w))
   · intro g u hu
     obtain ⟨b, hb⟩ := hlift g
@@ -1309,10 +1309,10 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped nonZeroDivisors Pointwise
 
 private theorem exists_cycZ_eq_add_pow_mul_of_pows (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (m k : ℕ) (g : G ℚ Ω) (hg : Pows (l ^ m) k g) : ∃ e : ℤ_[l], (cycZ ℚ Ω l g : ℤ_[l]) = k + (l : ℤ_[l]) ^ m * e := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : l.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
   have h1 := cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (G ℚ Ω) Ω g) ζ hζ.pow_eq_one
   have h2 := hg ζ hζ.pow_eq_one
   have h3 : ζ ^ k = ζ ^ ((PadicInt.toZModPow m (cycZ ℚ Ω l g : ℤ_[l])).val) := h2.symm.trans h1
@@ -1372,13 +1372,13 @@ theorem UpperTheory.V.ML.nuSysEx :
   classical
   obtain ⟨hl2, hcop, hm, hF, htriv, hodd, ⟨g0, hg0⟩⟩ := hD
   have hl : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (l : Ω) := ⟨by exact_mod_cast hl.ne_zero⟩
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (l : Ω) := ⟨by exact_mod_cast hl.ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hMF : l ^ m ∣ F := hF ▸ dvd_mul_left _ _
   have hF0 : F ≠ 0 := NeZero.ne F
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
   obtain ⟨a0, ha0⟩ := (galBasic Ω (l ^ m) (pow_ne_zero _ hl.ne_zero)).2.2.2.2.1 g0
   have hPows : Pows (l ^ m) (a0 : ZMod (l ^ m)).val g0 := ha0
   obtain ⟨e0, he0⟩ := exists_cycZ_eq_add_pow_mul_of_pows Ω l m _ g0 hPows
@@ -1387,7 +1387,7 @@ theorem UpperTheory.V.ML.nuSysEx :
   let τ : ℕ → G ℚ Ω := fun q => if h : q.Prime then Classical.choose (ineTau Ω q h).2 else 1
   have hτ : ∀ q, q.Prime → IsTau q (τ q) := by
     intro q hq
-    simp only [τ, dif_pos hq]
+    simp only [τ, dite_eq_left hq]
     exact Classical.choose_spec (ineTau Ω q hq).2
   have hkol : ∀ L, AdmL l F r L → ∃ κ : G ℚ Ω → ZMod (l ^ m), IsKol (l ^ m) F L.prod ζ g0 (a0 : ZMod (l ^ m)).val (der τ L ((fun d => opP g0 (a0 : ZMod (l ^ m)).val (X d) ^ (2 * N₀ * d)) L.prod)) κ := by
     intro L hL
@@ -1398,7 +1398,7 @@ theorem UpperTheory.V.ML.nuSysEx :
   let κ : List ℕ → G ℚ Ω → ZMod (l ^ m) := fun L => if h : AdmL l F r L then Classical.choose (hkol L h) else 0
   have hκ : ∀ L (h : AdmL l F r L), IsKol (l ^ m) F L.prod ζ g0 (a0 : ZMod (l ^ m)).val (der τ L ((fun d => opP g0 (a0 : ZMod (l ^ m)).val (X d) ^ (2 * N₀ * d)) L.prod)) (κ L) := by
     intro L h
-    simp only [κ, dif_pos h]
+    simp only [κ, dite_eq_left h]
     exact Classical.choose_spec (hkol L h)
   have hchiO : ∀ (g : G ℚ Ω) (k : ℕ), Pows (l ^ m) k g → ∃ e : O, ((chiO ℚ Ω l O g : Oˣ) : O) = k + (l : O) ^ m * e := by
     intro g k hg

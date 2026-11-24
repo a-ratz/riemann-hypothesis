@@ -131,7 +131,7 @@ theorem infChar_of_model {ε : Fin n → Bool} {lam : Fin n → ℝ} {H : Type} 
     ∀ v ∈ PI.PhMeasCore.smoothVecs (Formalism.REAL.Jm ε) σ, ∀ Y : ℂ,
       Formalism.L2.SG.LitS.actU ε σ (Formalism.REAL.qdet (Formalism.L2.SG.LitS.Egl n) (Y + ((n : ℂ) - 1) / 2)) v =
         Formalism.QuantumDeterminants.capP (fun s => (lam s : ℂ)) Y • v := by
-  haveI : CompleteSpace H := hDS.1
+  have : CompleteSpace H := hDS.1
   intro v hv Y
   have hσ : IsURepOn (UJset ε) σ := hDS.2.2.1
   have hm : v ∈ smD ε σ := mem_smD_of_smoothVecs hv
@@ -144,11 +144,11 @@ theorem isPsiFor_compact {ε : Fin n → Bool} {lam : Fin n → ℝ} (hpq : pOf 
     IsPsiFor ε lam T (S7.PsiM T μ) := by
   refine ⟨fun k₁ k₂ g hg => S7.psiM_equiv T μ k₁ k₂ hg, S7.psiM_one T μ, S7.psiM_smooth T μ hμ,
     fun g hg => S7.psiM_casimir T μ hμ hg, fun ν hν => ?_⟩
-  haveI : CompactSpace (S7.UJ ε) := cmpt_compact (cmpt_eps_eq hpq)
-  haveI := hν
-  haveI : IsFiniteMeasure ν := inferInstance
+  have : CompactSpace (S7.UJ ε) := cmpt_compact (cmpt_eps_eq hpq)
+  have := hν
+  have : IsFiniteMeasure ν := inferInstance
   have hc : Continuous (fun g : S7.UJ ε => S7.PsiM T μ (S7.toM g)) :=
-    (S7.psiM_continuousOn T μ hμ).comp_continuous (Units.continuous_val.comp continuous_subtype_val)
+    (S7.psiM_continuousOn T μ hμ).comp_continuous (Units.continuous_val.comp continuous_subtypeVal)
       (fun g => g.2)
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hc.continuousOn
   exact MemLp.of_bound hc.aestronglyMeasurable C (Filter.Eventually.of_forall fun g => hC g (Set.mem_univ _))
@@ -427,11 +427,11 @@ theorem top_cf (hσ : IsURepOn (UJset ε) σ) (hQP : Q * P = 1) (hPQ : P * Q = 1
   unfold Formalism.QuantumDeterminants.Top Formalism.REAL.Tm
   rw [eabH_cf hσ hQP hPQ a T x f hf c d hg, hf g hg]
   by_cases hcd : c = d
-  · rw [if_pos hcd, if_pos hcd, LinearMap.add_apply, Submodule.coe_add, map_add (f := _), inner_add_right, add_smul,
+  · rw [ite_eq_left hcd, ite_eq_left hcd, LinearMap.add_apply, Submodule.coe_add, map_add (f := _), inner_add_right, add_smul,
       Algebra.algebraMap_eq_smul_one, LinearMap.smul_apply, Module.End.one_apply, Submodule.coe_smul, map_smul,
       inner_smul_right, smul_smul]
     rfl
-  · rw [if_neg hcd, if_neg hcd, zero_add, zero_add]
+  · rw [ite_eq_right hcd, ite_eq_right hcd, zero_add, zero_add]
     rfl
 
 theorem foldr_cf (hσ : IsURepOn (UJset ε) σ) (hQP : Q * P = 1) (hPQ : P * Q = 1) (a : H) (T : E) :

@@ -77,7 +77,7 @@ theorem right_of_compact [CompactSpace G] (μ : Measure G) [μ.IsHaarMeasure] : 
   refine ⟨fun g => ?_⟩
   have e := Measure.isMulLeftInvariant_eq_smul (μ.map (· * g)) μ
   have h := congrArg (fun m : Measure G => m univ) e
-  simp only [Measure.smul_apply] at h
+  simp only [smul_apply] at h
   rw [Measure.map_apply (measurable_mul_const g) MeasurableSet.univ, preimage_univ, ENNReal.smul_def, smul_eq_mul] at h
   have h1 : (Measure.haarScalarFactor (μ.map (· * g)) μ : ℝ≥0∞) = 1 :=
     (ENNReal.mul_left_inj (isOpen_univ.measure_ne_zero μ univ_nonempty) (measure_ne_top μ _)).1 (by rw [← h, one_mul])
@@ -110,7 +110,7 @@ theorem conv_eq (hP : ∀ p ∈ P, m.map (p * ·) = m) (hPK : ∀ g, ∃ p ∈ P
 omit [SFinite m] in
 theorem cont_M [IsFiniteMeasureOnCompacts m] {f : G → ℝ} (hf : Continuous f) (hs : HasCompactSupport f) (h0 : 0 ≤ f) :
     Continuous fun g => ∫⁻ x, ENNReal.ofReal (f (x * g)) ∂m := by
-  haveI : IsFiniteMeasureOnCompacts m.inv := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts m.inv := ⟨fun C hC => by
     rw [Measure.inv_apply]; exact hC.inv.measure_lt_top⟩
   have h1 := continuous_integral_apply_inv_mul (μ := m.inv) hf hs
   have e : ∀ g, ∫⁻ x, ENNReal.ofReal (f (x * g)) ∂m = ENNReal.ofReal (∫ y, f (y⁻¹ * g) ∂m.inv) := fun g => by
@@ -141,7 +141,7 @@ theorem cross_le [IsFiniteMeasureOnCompacts m] (hP : ∀ p ∈ P, m.map (p * ·)
       conv_rhs => rw [← hK k hk]
       rw [lintegral_map (by fun_prop) (measurable_mul_const k)]
   obtain ⟨V, hV, hVK⟩ := compact_open_separated_mul_left hKc (isOpen_lt hu hv) fun k hk => by
-    simpa only [u, v, mem_setOf_eq, inv hf k hk, inv hf₀ k hk] using hlt
+    simpa only [u, v, mem_ofPred_eq, inv hf k hk, inv hf₀ k hk] using hlt
   obtain ⟨C, hC, hC1⟩ := exists_compact_mem_nhds (1 : G)
   set W := interior (V ∩ C) * (K : Set G) with hW
   have hWo : IsOpen W := isOpen_interior.mul_right
@@ -243,21 +243,21 @@ theorem haar_eq (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K : 
     (hG : ∀ g, ∃ p u t, ∃ k ∈ K, g = nn p * ι u * mm t * k) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ ∀ φ : G → ℝ≥0∞, Measurable φ →
       c * ∫⁻ g, φ g ∂ν = ∫⁻ k, ∫⁻ t, (∫⁻ u, ∫⁻ p, φ (nn p * ι u * mm t * k.1) ∂μN ∂μH) * χ t ∂μT ∂μK := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : SecondCountableTopology K := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI := right_of_compact μK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : SecondCountableTopology K := TopologicalSpace.Subtype.secondCountableTopology _
+  have := right_of_compact μK
   have cn := h.cn.measurable
   have ci := h.ci.measurable
   have cm := h.cm.measurable
   have hχ : Measurable fun s => (χ s : ℝ≥0∞) := h.cχ.measurable.coe_nnreal_ennreal
   set wd := μT.withDensity fun s => (χ s : ℝ≥0∞) with hwd
-  haveI : IsLocallyFiniteMeasure wd := IsLocallyFiniteMeasure.withDensity_coe h.cχ
+  have : IsLocallyFiniteMeasure wd := IsLocallyFiniteMeasure.withDensity_coe h.cχ
   set ρ := μN.prod (μH.prod wd) with hρ
   have hΨ := h.emb.continuous.measurable
   set l := ρ.map fun z : N × H × T => nn z.1 * ι z.2.1 * mm z.2.2 with hl
   have hmul : Measurable fun z : G × K => z.1 * z.2.1 := by fun_prop
   set m := (l.prod μK).map fun z : G × K => z.1 * z.2.1 with hm
-  haveI : IsFiniteMeasureOnCompacts m := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts m := ⟨fun C hC => by
     rw [hm, Measure.map_apply hmul hC.measurableSet]
     have hc := hC.mul hK.inv
     refine (measure_mono (t := (C * (K : Set G)⁻¹) ×ˢ univ) fun z hz => ⟨⟨_, hz, z.2.1⁻¹, by simp, by simp⟩, trivial⟩).trans_lt ?_
@@ -280,7 +280,7 @@ theorem haar_eq (h : Par μN nn ι mm χ) {K : Subgroup G} (hK : IsCompact (K : 
       exact ⟨_, ⟨p, u, t, rfl⟩, k, hk, rfl⟩
   refine ⟨c, fun h0 => ?_, hc, fun φ hφ => ?_⟩
   · have := congrArg (fun m : Measure G => m univ) e
-    simp only [h0, zero_smul, Measure.coe_zero, Pi.zero_apply] at this
+    simp only [h0, zero_smul, FunLike.coe_zero, Pi.zero_apply] at this
     rw [hm, Measure.map_apply hmul MeasurableSet.univ, preimage_univ, ← univ_prod_univ, Measure.prod_prod, hl,
       Measure.map_apply hΨ MeasurableSet.univ, preimage_univ, ← univ_prod_univ, Measure.prod_prod, ← univ_prod_univ,
       Measure.prod_prod] at this
@@ -315,12 +315,12 @@ theorem fold (h : Par μN nn ι mm χ) {Q ΓN : Subgroup G} [Countable Q] [Discr
       ∫⁻ u, ∫⁻ p, β (nn p * ι u * y) * φ (nn p * ι u * y) ∂μN ∂μH = a * ∫⁻ u in D₁, φ (ι u * y) ∂μH := by
   have cn := h.cn.measurable
   have ci := h.ci.measurable
-  haveI : Countable ΓN := (Subgroup.inclusion_injective hN).countable
-  haveI : DiscreteTopology ΓN := DiscreteTopology.of_continuous_injective
+  have : Countable ΓN := (Subgroup.inclusion_injective hN).countable
+  have : DiscreteTopology ΓN := DiscreteTopology.of_continuous_injective
     (continuous_inclusion hN) (Subgroup.inclusion_injective hN)
   obtain ⟨𝓕, f1, -, f3⟩ := exists_cut ΓN
   set l := μN.map nn with hl
-  haveI : SMulInvariantMeasure ΓN G l := ⟨fun δ s hs => by
+  have : SMulInvariantMeasure ΓN G l := ⟨fun δ s hs => by
     obtain ⟨p, hp⟩ := hNn δ δ.2
     obtain ⟨L, a1, a2⟩ := h.h1 p
     have e : Measurable fun x : G => δ • x := measurable_const_mul δ.1

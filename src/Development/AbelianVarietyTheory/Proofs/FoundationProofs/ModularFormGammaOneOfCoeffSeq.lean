@@ -157,7 +157,7 @@ theorem isBoundedAtImInfty_of_periodic_of_polyBound :
       hT.comp tendsto_comap
     refine squeeze_zero_norm' ?_ hT'
     refine (atImInfty_mem _).2 ⟨1, fun τ hτ ↦ ?_⟩
-    rw [Set.mem_setOf_eq, hnormg]
+    rw [Set.mem_ofPred_eq, hnormg]
     exact mul_le_mul_of_nonneg_right (hbd' τ hτ) (Real.exp_pos _).le
   have hgbdd : IsBoundedAtImInfty g := hgzero.boundedAtFilter
   have hdecay := hgzero.exp_decay_atImInfty hM (periodic_comp_ofComplex_of_vadd' hgper) hgdiff hgbdd
@@ -165,7 +165,7 @@ theorem isBoundedAtImInfty_of_periodic_of_polyBound :
   obtain ⟨B, hB⟩ := (atImInfty_mem _).1 hK
   refine isBoundedAtImInfty_iff.2 ⟨K, B, fun τ hτ ↦ ?_⟩
   have h1 := hB τ hτ
-  simp only [Set.mem_setOf_eq, hnormg, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at h1
+  simp only [Set.mem_ofPred_eq, hnormg, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at h1
   exact le_of_mul_le_mul_right h1 (Real.exp_pos _)
 
 end GlobalTheory
@@ -204,7 +204,7 @@ private lemma qs_term_bound (a : ℕ → ℂ) (C : ℝ) (A : ℕ) (hC : ∀ n : 
     simp [Complex.mul_re, Complex.mul_im]
   rw [hre]
   have hexp : Real.exp (-(2 * π * n * w.im)) ≤ Real.exp (-(2 * π * y0)) ^ n := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     apply Real.exp_le_exp.2
     have hp : (0:ℝ) ≤ 2 * π * n := by positivity
     have := mul_le_mul_of_nonneg_left hw.le hp
@@ -382,7 +382,7 @@ theorem GlobalTheory.EisM.modularForm_gammaOne_of_MF :
     ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (a : ℕ → ℂ), 0 < L → N ∣ L → MF k L (ch ε) a →
       ∃ f : ModularForm (Gamma1 L) (k : ℤ), ⇑f = qs a := by
   intro k L N ε a hL hNL ha
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   have hinv : ∀ γ ∈ Gamma1 L, qs a ∣[(k : ℤ)] γ = qs a := fun γ hγ => slash_inv hNL ha.2 γ hγ
   have hhol := _root_.GlobalTheory.EisM.qs_mdifferentiable a ha.1
   refine ⟨{ toFun := qs a, slash_action_eq' := ?_, holo' := hhol, bdd_at_cusps' := ?_ }, rfl⟩

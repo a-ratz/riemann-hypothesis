@@ -223,7 +223,7 @@ theorem exists_good_moll (hσ : IsURepOn (UJset ε) σ) (S : Submodule ℂ H) [F
     (hasCompactSupport_arbB hδ).comp_isClosedEmbedding (Formalism.REAL.isClosedEmbeddingMatrix n ε).1
   set c : ℝ := ∫ y, arbB δ (Formalism.MainNotions.S.umat y) ∂(Formalism.REAL.muG ε) with hc
   have hcpos : 0 < c :=
-    hbc.integral_pos_of_hasCompactSupport_nonneg_nonzero hbs (fun y => arbB_nonneg δ _)
+    hbc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hbs (fun y => arbB_nonneg δ _)
       (x := (1 : Formalism.REAL.UJ ε)) (arbB_one_pos hδ).ne'
   have hφc : Continuous (fun y : Formalism.REAL.UJ ε => arbB δ (Formalism.MainNotions.S.umat y) / c) := hbc.div_const c
   have hφs : HasCompactSupport (fun y : Formalism.REAL.UJ ε => arbB δ (Formalism.MainNotions.S.umat y) / c) :=

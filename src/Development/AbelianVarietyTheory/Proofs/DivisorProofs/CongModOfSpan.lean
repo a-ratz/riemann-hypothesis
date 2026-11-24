@@ -264,7 +264,7 @@ theorem GlobalTheory.Poinc.approx_of_fpre : ∀ (O : Type) [CommRing O] [Module.
       obtain ⟨-, ε, -⟩ := hk y
       exact ε.toEquiv.subsingleton
     have h0 : ∀ y, φ.evalZ (Φ.β y) = 0 := fun y => by
-      haveI := hsub y
+      have := hsub y
       exact φ.eval_of_subsingleton _
     refine ⟨1, ?_, fun y => Or.inl ?_⟩
     · simp [h0]
@@ -410,7 +410,7 @@ theorem GlobalTheory.Poinc.approx_of_fpre : ∀ (O : Type) [CommRing O] [Module.
         have h4 := mul_le_mul_of_nonneg_left h3 (Φ.sc_pos y).le
         calc Real.exp (-(Φ.sc y * ∑ i, (qW W (Φ.β y) (fun u => μ (i, u)) : ℝ)))
             ≤ Real.exp ((max e n : ℕ) * -(C * (Φ.sc y * (Φ.β y x x : ℝ)))) := Real.exp_le_exp.2 (by nlinarith)
-          _ = Real.exp (-(C * (Φ.sc y * (Φ.β y x x : ℝ)))) ^ (max e n) := Real.exp_nat_mul _ _
+          _ = Real.exp (-(C * (Φ.sc y * (Φ.β y x x : ℝ)))) ^ (max e n) := Real.exp_natCast_mul _ _
           _ ≤ ‖Φ.ev y h₂‖ ^ (max e n) := pow_le_pow_left₀ (Real.exp_pos _).le hC₂ _
     have hfy := (IsUltrametricDist.norm_add_le_max (Φ.ev y f - ∑ μ ∈ S, ∏ i, t y (fun u => μ (i, u)) (c i))
       (∑ μ ∈ S, ∏ i, t y (fun u => μ (i, u)) (c i))).trans (max_le_max hSa hsum)

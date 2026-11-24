@@ -75,7 +75,7 @@ private lemma eq_sum_smul_gs {E : Type*} [NormedAddCommGroup E] [InnerProductSpa
     · subst h1; simp
     · by_cases h2 : b < a <;> simp [h1, h2]
   rw [Finset.sum_congr rfl (fun b _ => hterm b), Finset.sum_add_distrib]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← Finset.sum_filter]
   have hf : Finset.univ.filter (fun b => b < a) = Finset.Iio a := by ext; simp
   rw [hf]
@@ -109,7 +109,7 @@ theorem det_gram_eq {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
       simp [Matrix.diagonal_apply_ne _ hdc]
     · simp
   have hC : C.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular C ?_]
+    rw [det_of_isLowerTriangular C ?_]
     · simp [C]
     · intro i j hij
       have hlt : i < j := OrderDual.toDual_lt_toDual.1 hij

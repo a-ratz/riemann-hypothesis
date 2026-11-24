@@ -72,7 +72,7 @@ theorem exists_fixed_lift {L W W' : Type} [Group L] [AddCommGroup W] [Module ℂ
     (hS : ∀ s ∈ S, ρ s w = w) (hw : ∀ l, ρ' l (f w) = f w) :
     ∃ w₁, f w₁ = f w ∧ ∀ l, ρ l w₁ = w₁ := by
   classical
-  haveI := Fintype.ofFinite (L ⧸ S)
+  have := Fintype.ofFinite (L ⧸ S)
   let φ : L ⧸ S → W := fun x => ρ x.out w
   have key : ∀ (l : L) (x : L ⧸ S), ρ l (φ x) = φ (l • x) := by
     intro l x
@@ -131,7 +131,7 @@ theorem exists_bump (H : Subgroup G) (ρ : Representation ℂ H W) (K : Subgroup
   have hb1 : ∀ (a : H), ∀ x ∈ K, b ((a : G) * c * x) = ρ a w := by
     intro a x hx
     have h : ∃ a' : H, ∃ x' ∈ K, (a : G) * c * x = (a' : G) * c * x' := ⟨a, x, hx, rfl⟩
-    simp only [b, dif_pos h]
+    simp only [b, dite_eq_left h]
     obtain ⟨x', hx', e⟩ := h.choose_spec
     generalize h.choose = a' at e ⊢
     have e2 : ((a'⁻¹ * a : H) : G) = c * (x' * x⁻¹) * c⁻¹ := by
@@ -143,7 +143,7 @@ theorem exists_bump (H : Subgroup G) (ρ : Representation ℂ H W) (K : Subgroup
     rw [map_mul, Module.End.mul_apply] at e4
     calc ρ a' w = ρ a' (ρ a'⁻¹ (ρ a w)) := by rw [e4]
       _ = ρ a w := by rw [← Module.End.mul_apply (ρ a'), ← map_mul]; simp
-  have hb0 : ∀ g, (¬ ∃ a : H, ∃ x ∈ K, g = (a : G) * c * x) → b g = 0 := fun g h => dif_neg h
+  have hb0 : ∀ g, (¬ ∃ a : H, ∃ x ∈ K, g = (a : G) * c * x) → b g = 0 := fun g h => dite_eq_right h
   have hind : b ∈ indSpace H ρ := by
     intro h g
     by_cases hg : ∃ a : H, ∃ x ∈ K, g = (a : G) * c * x
@@ -210,10 +210,10 @@ theorem exists_lift_at (H : Subgroup G) (hH : IsClosed (H : Set G)) (ρ : Repres
       exact ⟨x, hx, e⟩
     · rintro ⟨x, hx, e⟩
       exact ⟨x, hx, e⟩
-  haveI : CompactSpace L := isCompact_iff_compactSpace.1 hLc
+  have : CompactSpace L := isCompact_iff_compactSpace.1 hLc
   let S' : Subgroup L := S.subgroupOf L
-  have hS'o : IsOpen (S' : Set L) := hSo.preimage continuous_subtype_val
-  haveI : Finite (L ⧸ S') := Subgroup.quotient_finite_of_isOpen _ hS'o
+  have hS'o : IsOpen (S' : Set L) := hSo.preimage continuous_subtypeVal
+  have : Finite (L ⧸ S') := Subgroup.quotient_finite_of_isOpen _ hS'o
   have hfix : ∀ l : L, ρ' (l : H) (f w₀) = f w₀ := fun l => by
     obtain ⟨x, hx, e⟩ := hLmem l
     exact hy _ x hx e
@@ -303,22 +303,22 @@ theorem isClosed_Mir (n : ℕ) : IsClosed (Mir k n : Set (GL (Fin (n + 1)) k)) :
     continuous_const
 
 theorem continuous_qProj (n : ℕ) : Continuous (qProj k n) :=
-  Continuous.subtype_mk ((GlobalTheory.CompanionTheory.BZMirFun.continuous_mirProj k (n + 1)).comp continuous_subtype_val) _
+  Continuous.subtype_mk ((GlobalTheory.CompanionTheory.BZMirFun.continuous_mirProj k (n + 1)).comp continuous_subtypeVal) _
 
 theorem exists_compactOpen (n : ℕ) (U : Set (Mir k n)) (hU : U ∈ 𝓝 (1 : Mir k n)) :
     ∃ K : Subgroup (Mir k n), IsOpen (K : Set (Mir k n)) ∧ IsCompact (K : Set (Mir k n)) ∧ (K : Set (Mir k n)) ⊆ U := by
   obtain ⟨_, _⟩ := secondCountable_and_t2_local_field (k := k)
-  haveI : LocallyCompactSpace (Mir k n) := (isClosed_Mir k n).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : LocallyCompactSpace (Mir k n) := (isClosed_Mir k n).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI : TotallyDisconnectedSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have : TotallyDisconnectedSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin (n + 1) → Fin (n + 1) → k))
-  haveI : TotallyDisconnectedSpace (Mir k n) := by
+  have : TotallyDisconnectedSpace (Mir k n) := by
     let φ : Mir k n → Matrix (Fin (n + 1)) (Fin (n + 1)) k := fun g => ((g : GL (Fin (n + 1)) k) : Matrix _ _ k)
-    have hφ : Continuous φ := Units.continuous_val.comp continuous_subtype_val
+    have hφ : Continuous φ := Units.continuous_val.comp continuous_subtypeVal
     have hinj : Function.Injective φ := fun a b h => Subtype.ext (Units.ext h)
     exact ⟨isTotallyDisconnected_of_image hφ.continuousOn hinj (isTotallyDisconnected_of_totallyDisconnectedSpace _)⟩
   obtain ⟨K, hKc, hKU⟩ := GroundTheory.Automorphic.exists_openSubgroup_isCompact_subset hU

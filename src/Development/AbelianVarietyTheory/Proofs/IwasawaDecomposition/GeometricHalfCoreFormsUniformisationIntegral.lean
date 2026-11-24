@@ -656,7 +656,7 @@ theorem isIntegral_w {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Geo
     have h0 : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
     have h1 : zeta l.M' ^ l.M' = 1 := (Complex.isPrimitiveRoot_exp l.M' h0.ne').pow_eq_one
     exact ⟨h0, Subtype.ext (by simpa using h1)⟩
-  haveI : Subsingleton (LaJ Xo c d) := by
+  have : Subsingleton (LaJ Xo c d) := by
     rw [Submodule.Quotient.subsingleton_iff, hI, Ideal.map_top, Submodule.top_smul]
   obtain ⟨-, -, -, h1, -, h2⟩ := h
   have h3 := h2 q
@@ -740,7 +740,7 @@ theorem den_of_large (D : D7) (T : CoreJ D) (h : LawsJ T) (j : ℕ) (hj : InR D 
       T.toCore.σ₀ D.R.r (Formalism.L2.PjFree.Unf.ofPj (T.U j T.toCore.σ₀)) hU a n).1
     refine mem_span_of_map_mem_span_image (Formalism.L2.PjFree.rdU (Formalism.L2.PjFree.Unf.ofPj (T.U j T.toCore.σ₀)))
       (sec (T.Q.Xo j) T.Q.c a n) hind (shortGen (T.Q.Xo j) T.Q.c nab bad 0 a n d) (fun g hg => hg.1) hf'.1 (hsp ?_)
-    exact ⟨hf'.2 _ T.toCore.good_σ₀, fun k x hx => dif_neg hx⟩
+    exact ⟨hf'.2 _ T.toCore.good_σ₀, fun k x hx => dite_eq_right hx⟩
   obtain ⟨st, hnab⟩ := hnab
   have hV : ∀ la, ∀ v ∈ T.toCore.Vs j la, IsVal la v := fun la => isVal_valSet la
   have key : ∀ bad : ℕ, ∀ g ∈ shortGen (T.Q.Xo j) T.Q.c nab bad 0 a n d, ∃ (Λ : GenLat D.host.E n) (N : ℕ),
@@ -786,7 +786,7 @@ set_option synthInstance.maxHeartbeats 400000 in
 set_option maxHeartbeats 1000000 in
 theorem isLattice_latOf (D : D7) (T : CoreJ D) (h : LawsJ T) (j : ℕ) (hj : InR D j) (w : WeightFamilies.Wt D j) (hw : 0 < w.n) :
     Formalism.IndefR.FWT.FullLat (T.toCore.C j w) (T.toCore.Vs j) fun la => isVal_valSet la := by
-  haveI : FiniteDimensional T.Q.c.F (T.toCore.C j w) := h.cuspFD j hj _ _ (dom_wtA w)
+  have : FiniteDimensional T.Q.c.F (T.toCore.C j w) := h.cuspFD j hj _ _ (dom_wtA w)
   obtain ⟨B, hB⟩ := GlobalTheory.IntCuspLat.exists_lowerBound D T.toCore h.toLawsM j hj w
   refine fullLat_of _ _ (T.toCore.Ns j w)
     (fun σ => (isNormOn_supC _ (h.supDef j hj) (dom_wtA w) (goodEmb_goodOf _ σ)).of_goodOf) B hB fun f hf => ?_

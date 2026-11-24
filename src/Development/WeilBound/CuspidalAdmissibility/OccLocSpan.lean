@@ -58,13 +58,13 @@ theorem span_core {ι : Type} {W : ι → Type} [∀ v, AddCommGroup (W v)] [∀
   let Z : Submodule ℂ C :=
     { carrier := {c | inner ℂ (Φ c) u = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_add (f := _), inner_add_left, ha, hb, add_zero]
       zero_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         rw [map_zero, inner_zero_left]
       smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         rw [map_smul, inner_smul_left, hx, mul_zero] }
   have hZ : ∀ c, c ∈ Z ↔ inner ℂ (Φ c) u = 0 := fun c => Iff.rfl
   have h2 : ∀ a (r : restrictedTensor ξ), E.symm (a ⊗ₜ Te.symm r) ∈ Z := by

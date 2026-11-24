@@ -95,14 +95,14 @@ theorem UpperTheory.exists_shift_weightCongruence_lt_torsionOrder :
       rw [zpow_add₀ ((map_ne_zero _).mpr hζ0)]
       split_ifs <;> simp
     simp_rw [hsplit]
-    rw [Finset.prod_mul_distrib, Finset.prod_ite_eq', if_pos (Finset.mem_univ _), hsc,
+    rw [Finset.prod_mul_distrib, Finset.prod_ite_eq', ite_eq_left (Finset.mem_univ _), hsc,
       mul_inv_cancel₀ hc0]
   intro z hz
   obtain ⟨m, hm, hzm⟩ := hz
   have hzw : z ^ (NumberField.Units.torsionOrder E) = 1 := by
     have hpos : 0 < orderOf z :=
       orderOf_pos_iff.mpr (isOfFinOrder_iff_pow_eq_one.mpr ⟨m, hm, hzm⟩)
-    haveI : NeZero (orderOf z) := ⟨hpos.ne'⟩
+    have : NeZero (orderOf z) := ⟨hpos.ne'⟩
     obtain ⟨k, hk⟩ :=
       NumberField.Units.dvd_torsionOrder_of_isPrimitiveRoot (IsPrimitiveRoot.orderOf z)
     rw [hk, pow_mul, pow_orderOf_eq_one, one_pow]
@@ -165,8 +165,8 @@ theorem UpperTheory.prod_cmType_eq_norm_and_weightCongruence_one :
       (∀ x : H.E, ∏ τ, H.sigmaOf ((eT τ : R.Psi) : R.GG) x = algebraMap H.K H.E (Algebra.norm H.K x)) ∧
       UpperTheory.MU (fun τ => H.emb ((eT τ : R.Psi) : R.GG)) (fun _ => 1) := by
   intro R H ι _ eT
-  haveI : IsGalois ℚ H.E := H.galois
-  haveI : IsGalois H.K H.E := IsGalois.tower_top_of_isGalois ℚ H.K H.E
+  have : IsGalois ℚ H.E := H.galois
+  have : IsGalois H.K H.E := IsGalois.tower_top_of_isGalois ℚ H.K H.E
   have hnorm : ∀ x : H.E, ∏ τ, H.sigmaOf ((eT τ : R.Psi) : R.GG) x =
       algebraMap H.K H.E (Algebra.norm H.K x) := by
     intro x

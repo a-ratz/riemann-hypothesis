@@ -76,26 +76,26 @@ private lemma mul_prod_sublevel_add_le_of_fst_sublevel_le {A A' B : Type*} [Meas
         lintegral_const_mul_le _ _
     _ ≤ ∫⁻ y, b * m' ((fun x => (x, y)) ⁻¹' {p : A' × B | n' p.1 + g p.2 < r}) ∂μ := by
         refine lintegral_mono fun y => ?_
-        simp only [Set.preimage_setOf_eq]
+        simp only [Set.preimage_ofPred_eq]
         by_cases hy : r ≤ g y
         · have e1 : {x | n x + g y < r} = ∅ := by
             ext x
-            simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+            simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
             linarith [hn0 x]
           have e2 : {x | n' x + g y < r} = ∅ := by
             ext x
-            simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+            simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
             linarith [hn0' x]
           rw [e1, e2]
           simp
         · push_neg at hy
           have e1 : {x | n x + g y < r} = {x | n x < r - g y} := by
             ext x
-            simp only [Set.mem_setOf_eq]
+            simp only [Set.mem_ofPred_eq]
             constructor <;> intro hx <;> linarith
           have e2 : {x | n' x + g y < r} = {x | n' x < r - g y} := by
             ext x
-            simp only [Set.mem_setOf_eq]
+            simp only [Set.mem_ofPred_eq]
             constructor <;> intro hx <;> linarith
           rw [e1, e2]
           exact h _ (by linarith) (by linarith [hg0 y])
@@ -121,26 +121,26 @@ private lemma mul_prod_sublevel_add_le_of_snd_sublevel_le {A B B' : Type*} [Meas
         lintegral_const_mul_le _ _
     _ ≤ ∫⁻ x, b * m' (Prod.mk x ⁻¹' {p : A × B' | g p.1 + n' p.2 < r}) ∂μ := by
         refine lintegral_mono fun x => ?_
-        simp only [Set.preimage_setOf_eq]
+        simp only [Set.preimage_ofPred_eq]
         by_cases hx : r ≤ g x
         · have e1 : {y | g x + n y < r} = ∅ := by
             ext y
-            simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+            simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
             linarith [hn0 y]
           have e2 : {y | g x + n' y < r} = ∅ := by
             ext y
-            simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+            simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
             linarith [hn0' y]
           rw [e1, e2]
           simp
         · push_neg at hx
           have e1 : {y | g x + n y < r} = {y | n y < r - g x} := by
             ext y
-            simp only [Set.mem_setOf_eq]
+            simp only [Set.mem_ofPred_eq]
             constructor <;> intro hy <;> linarith
           have e2 : {y | g x + n' y < r} = {y | n' y < r - g x} := by
             ext y
-            simp only [Set.mem_setOf_eq]
+            simp only [Set.mem_ofPred_eq]
             constructor <;> intro hy <;> linarith
           rw [e1, e2]
           exact h _ (by linarith) (by linarith [hg0 x])
@@ -160,14 +160,14 @@ theorem _root_.GlobalTheory.SublevelDensity.tendsto_prod_density : ∀ (A₁ E�
     · have hsub : {x | N₁ x < r / 2} ×ˢ {y | N₂ y < r / 2} ⊆
           {p : E₁ × E₂ | N₁ p.1 + N₂ p.2 < r} := by
         rintro ⟨x, y⟩ ⟨hx, hy⟩
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         linarith
       refine ne_of_gt (lt_of_lt_of_le ?_ (measure_mono hsub))
       rw [Measure.prod_prod]
       exact ENNReal.mul_pos (hl₁ _ (half_pos hr)).1 (hl₂ _ (half_pos hr)).1
     · have hsub : {p : E₁ × E₂ | N₁ p.1 + N₂ p.2 < r} ⊆ {x | N₁ x < r} ×ˢ {y | N₂ y < r} := by
         rintro ⟨x, y⟩ hxy
-        simp only [Set.mem_setOf_eq, Set.mem_prod] at hxy ⊢
+        simp only [Set.mem_ofPred_eq, Set.mem_prod] at hxy ⊢
         constructor <;> linarith [hN₁0 x, hN₂0 y]
       refine ne_top_of_le_ne_top ?_ (measure_mono hsub)
       rw [Measure.prod_prod]

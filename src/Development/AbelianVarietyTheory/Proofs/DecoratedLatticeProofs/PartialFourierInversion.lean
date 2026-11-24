@@ -124,7 +124,7 @@ theorem partial_fourier_inversion : ∀ (k : Type) [Field k] [ValuativeRel k] [T
     have hfi : Integrable f (μI.prod μJ) := hf.1.continuous.integrable_of_hasCompactSupport hf.2
     have hi : Integrable (fun x => f x * (ψ (l ⬝ᵥ x.1) : ℂ)) (μI.prod μJ) :=
       hfi.mul_bdd (c := 1)
-        ((continuous_subtype_val.comp (hψ.comp (continuous_const.dotProduct continuous_fst))).aestronglyMeasurable)
+        ((continuous_subtypeVal.comp (hψ.comp (continuous_const.dotProduct continuous_fst))).aestronglyMeasurable)
         (Filter.Eventually.of_forall fun q => (Circle.norm_coe _).le)
     rw [integral_prod _ hi]
     congr 1

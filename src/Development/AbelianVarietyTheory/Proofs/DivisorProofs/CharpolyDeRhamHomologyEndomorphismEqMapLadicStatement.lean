@@ -370,8 +370,8 @@ theorem charpoly_push_of_pullback {K L : Type} [Field K] [Field L] [Algebra K L]
     (e : φ ≫ f₀.hom.left = f.hom.left ≫ φ) [Module.Finite K (HdR B₀.X)] [Module.Finite L (HdR B.X)] :
     LinearMap.charpoly (push (dp0 L) (𝟙 _) f.hom) =
       (LinearMap.charpoly (push (dp0 K) (𝟙 _) f₀.hom)).map (algebraMap K L) := by
-  haveI := finite_prim B₀
-  haveI := finite_prim B
+  have := finite_prim B₀
+  have := finite_prim B
   have m := GlobalTheory.Published.AbelianDeRham.bcMor h
   have hm : m.IsBC := (GlobalTheory.abelianDeRham.2.2.1 K B₀.X B₀.dim B₀.ab B₀.smooth L B.X φ h).1
   have h1 : LinearMap.charpoly (push (dp0 L) (𝟙 _) f.hom) = (primPull (dp0 L) (𝟙 _) f.hom).charpoly :=
@@ -426,8 +426,8 @@ theorem charpoly_push_complex (B : AbVar ℂ) (f : B ⟶ B) [Module.Finite ℂ (
     ht.1 ht.2 f.hom inferInstance
   obtain ⟨ε, hP⟩ := GlobalTheory.PeriodFamily.periodComparison_holds
   obtain ⟨P, hsp, hrk, -, hnat, -⟩ := hP B.X B.dim B.ab B.smooth L hL u
-  haveI := u.discrete
-  haveI : IsZLattice ℝ u.Λ := ⟨u.full⟩
+  have := u.discrete
+  have : IsZLattice ℝ u.Λ := ⟨u.full⟩
   have hr : Module.finrank ℤ u.Λ = 2 * B.dim := by
     rw [ZLattice.rank ℝ u.Λ, Module.finrank_pi_fintype]
     simp [mul_comm]
@@ -497,8 +497,8 @@ theorem exists_countable_model (k : Type) [Field k] [CharZero k] [IsAlgClosed k]
   have hF : Cardinal.mk F ≤ Cardinal.aleph0 :=
     (Subfield.cardinalMk_closure_le_max _).trans (max_le (Cardinal.mk_le_aleph0_iff.2 hSc) le_rfl)
   let K : IntermediateField F k := algebraicClosure F k
-  haveI : IsAlgClosed K := (algebraicClosure.isAlgClosure F k).isAlgClosed
-  haveI : Module.IsTorsionFree F K := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosed K := (algebraicClosure.isAlgClosure F k).isAlgClosed
+  have : Module.IsTorsionFree F K := DivisionSemiring.to_moduleIsTorsionFree
   have hK : Countable K := Cardinal.mk_le_aleph0_iff.1
     ((Algebra.IsAlgebraic.cardinalMk_le_max F K).trans (max_le hF le_rfl))
   let j : S →+* K := S.subtype.codRestrict K fun x => K.algebraMap_mem (⟨x, Subfield.subset_closure x.2⟩ : F)
@@ -523,11 +523,11 @@ theorem charpoly_push : ∀ (k : Type) [Field k] [CharZero k] [IsAlgClosed k]
       (GlobalTheory.AV.AbVar.charpoly (End.of f)).map (Int.castRingHom k) := by
   intro k _ _ _ B f _
   obtain ⟨K, _, _, _, B₀, f₀, φ, hφ, he⟩ := exists_countable_model k B f
-  haveI : CharZero K := (RingHom.charZero_iff (algebraMap K k).injective).2 inferInstance
+  have : CharZero K := (RingHom.charZero_iff (algebraMap K k).injective).2 inferInstance
   obtain ⟨σ⟩ := GlobalTheory.KeyRuleUnique.nonempty_ringHom_complex K
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI := finite_HdR B₀
-  haveI := finite_HdR (AbVar.baseChange ℂ B₀)
+  let : Algebra K ℂ := σ.toAlgebra
+  have := finite_HdR B₀
+  have := finite_HdR (AbVar.baseChange ℂ B₀)
   obtain ⟨q, hq, hq'⟩ := exists_isGrpPullback_baseChange ℂ f₀
   have h3 := charpoly_push_of_pullback B₀ _ hq f₀ _ hq'
   have h4 := charpoly_push_complex (AbVar.baseChange ℂ B₀) (AbVar.bcMap ℂ f₀)
@@ -565,7 +565,7 @@ theorem charpoly_push_eq_map_charpoly (k : Type) [Field k] [IsAlgClosed k]
       (GlobalTheory.AV.AbVar.charpoly (End.of f)).map (Int.castRingHom k) := by
   obtain ⟨p, hp⟩ := CharP.exists k
   rcases CharP.char_is_prime_or_zero k p with h | h
-  · haveI : Fact p.Prime := ⟨h⟩
+  · have : Fact p.Prime := ⟨h⟩
     exact GlobalTheory.T.charpoly_deRhamHomology_abelianVariety_charP p k B f
   · subst h
     have : CharZero k := CharP.charP_to_charZero k

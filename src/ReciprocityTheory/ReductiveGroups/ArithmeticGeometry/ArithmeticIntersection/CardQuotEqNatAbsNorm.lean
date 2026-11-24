@@ -122,7 +122,7 @@ theorem norm_int_eq_norm_rat {K : Type*} [Field K] [NumberField K] (O : Subring 
     exact (LinearIndependent.iff_fractionRing ℤ ℚ).mp h1
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex ℤ O) = Module.finrank ℚ K := by
     rw [← h, Module.finrank_eq_card_chooseBasisIndex]
-  haveI : Nonempty (Module.Free.ChooseBasisIndex ℤ O) := by
+  have : Nonempty (Module.Free.ChooseBasisIndex ℤ O) := by
     apply Fintype.card_pos_iff.mp
     rw [hcard]
     exact Module.finrank_pos
@@ -153,8 +153,8 @@ theorem abs_norm_eq_prod {K : Type*} [Field K] [NumberField K] (x : K) :
 
 theorem index_thm : IndexStatement := by
   intro K _ _ O hfree hfin hrank f hf
-  haveI := hfree
-  haveI := hfin
+  have := hfree
+  have := hfin
   have hc := card_quot_eq_natAbs_norm f hf
   have hn := norm_int_eq_norm_rat O hrank f
   have hprod := abs_norm_eq_prod (f : K)

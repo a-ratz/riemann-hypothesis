@@ -109,7 +109,7 @@ end Forms
 theorem isLattice_ne_bot {K : Type} [Field K] [NumberField K] {V : Type} [AddCommGroup V] [Module K V] [Module (𝓞 K) V]
     [IsScalarTower (𝓞 K) K V] [Nontrivial V] {L : Submodule (𝓞 K) V} (hL : Submodule.IsFullLattice K L) : L ≠ ⊥ := by
   intro h
-  letI := hL
+  let := hL
   have h2 := Submodule.IsFullLattice.span_eq_top (A := K) (M := L)
   rw [h, Submodule.bot_coe, Submodule.span_zero_singleton] at h2
   exact bot_ne_top h2

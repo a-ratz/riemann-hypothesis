@@ -65,12 +65,12 @@ theorem isFiniteLength_of_isTorsion [IsNoetherianRing R] [Ring.KrullDimLE 1 R]
   have hr' : Module.IsTorsionBySet R X (Ideal.span {r}) := by
     rw [Module.isTorsionBySet_span_singleton_iff]
     exact fun x ↦ Submodule.mem_annihilator.mp hr x trivial
-  letI := hr'.module
-  haveI : Module.Finite (R ⧸ Ideal.span {r}) X := Module.Finite.of_restrictScalars_finite R _ _
-  haveI : IsArtinian R (R ⧸ Ideal.span {r}) :=
+  let := hr'.module
+  have : Module.Finite (R ⧸ Ideal.span {r}) X := Module.Finite.of_restrictScalars_finite R _ _
+  have : IsArtinian R (R ⧸ Ideal.span {r}) :=
     (isFiniteLength_iff_isNoetherian_isArtinian.mp
       (isFiniteLength_quotient_span_singleton R hr0)).2
-  haveI : IsArtinianRing (R ⧸ Ideal.span {r}) := isArtinian_of_tower R inferInstance
+  have : IsArtinianRing (R ⧸ Ideal.span {r}) := isArtinian_of_tower R inferInstance
   rw [isFiniteLength_iff_isNoetherian_isArtinian]
   exact ⟨inferInstance,
     isArtinian_of_surjective_algebraMap (R := R ⧸ Ideal.span {r}) Ideal.Quotient.mk_surjective⟩

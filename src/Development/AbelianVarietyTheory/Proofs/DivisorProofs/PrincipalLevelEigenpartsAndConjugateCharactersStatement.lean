@@ -262,9 +262,9 @@ theorem IsPosOn.le_iSup_eigen [FiniteDimensional ℂ Y] (h : IsPosOn Y B) (T : I
     (hT : ∀ i, ∀ x ∈ Y, T i x ∈ Y) (hc : ∀ i k, ∀ x ∈ Y, T i (T k x) = T k (T i x))
     (hadj : ∀ i, ∃ k, ∀ x ∈ Y, ∀ y ∈ Y, B (T i x) y = B x (T k y))
     (Z : Submodule ℂ X) (hZ : ∀ (χ : I → ℂ), ∀ x ∈ Y, (∀ i, T i x = χ i • x) → x ∈ Z) : Y ≤ Z := by
-  letI := h.core
-  letI : NormedAddCommGroup Y := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ Y := InnerProductSpace.ofCore _
+  let := h.core
+  let : NormedAddCommGroup Y := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ Y := InnerProductSpace.ofCore _
   have key := iSup_iInf_eigenspace_eq_top (E := Y) (fun i => (T i).restrict (hT i))
     (fun i k => LinearMap.ext fun x => Subtype.ext (hc i k x x.2))
     (fun i => (hadj i).imp fun k hk x y => hk x x.2 y y.2)
@@ -340,10 +340,10 @@ theorem mult_le_of_parts {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar}
   · intro x T hT hx
     let c : HeightOneSpectrum (𝓞 D.host.E) → List ℤ → ℂ := fun P d =>
       if h : ∃ R, Hecke₂ V (J : Set (GA D V)) χ Sb P d R then x ⟨(P, d, h.choose), h.choose_spec⟩ else 0
-    refine hZ c (fun P d h => dif_neg h) ((mem_partFull ..).2 ⟨hT, fun P d R hR v => ?_⟩)
+    refine hZ c (fun P d h => dite_eq_right h) ((mem_partFull ..).2 ⟨hT, fun P d R hR v => ?_⟩)
     have h : ∃ R, Hecke₂ V (J : Set (GA D V)) χ Sb P d R := ⟨R, hR⟩
     rw [labelUnique (realUnif D) P d R h.choose hR h.choose_spec (T v) (((GlobalTheory.MultMem.mem_mult_iff ..).1 hT).lev v)]
-    simp only [c, dif_pos h]
+    simp only [c, dite_eq_left h]
     exact congrArg (fun U : MMap M => U v) (hx ⟨(P, d, h.choose), h.choose_spec⟩)
 
 end GlobalTheory.PrincipalDecomp

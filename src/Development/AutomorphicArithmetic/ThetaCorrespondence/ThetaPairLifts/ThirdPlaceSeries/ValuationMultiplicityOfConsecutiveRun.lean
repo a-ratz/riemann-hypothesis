@@ -164,12 +164,12 @@ theorem pow_lt_of_mem_span {R Γ : Type} [CommRing R] [LinearOrderedCommGroupWit
   intro x hx
   induction hx using Submodule.span_induction with
   | mem x h => exact hF x h
-  | zero => rw [map_zero, zero_pow hn]; exact zero_lt_iff.2 hc
+  | zero => rw [map_zero, zero_pow hn]; exact pos_iff_ne_zero.2 hc
   | add x y _ _ hx hy =>
     rcases le_max_iff.1 (μ.map_add x y) with h | h
-    exacts [(pow_le_pow_left₀ zero_le' h n).trans_lt hx, (pow_le_pow_left₀ zero_le' h n).trans_lt hy]
+    exacts [(pow_le_pow_left₀ zero_le h n).trans_lt hx, (pow_le_pow_left₀ zero_le h n).trans_lt hy]
   | smul a x _ hx =>
-    refine (pow_le_pow_left₀ zero_le' ?_ n).trans_lt hx
+    refine (pow_le_pow_left₀ zero_le ?_ n).trans_lt hx
     rw [smul_eq_mul, map_mul]
     exact mul_le_of_le_one_left' (h1 a)
 
@@ -183,12 +183,12 @@ theorem exists_le_of_discrete {R : Type} [CommRing R] [IsDomain R] [IsNoetherian
   obtain ⟨μ₀, hμ₀⟩ := GlobalTheory.HSApp.ValCrit.exists_valuation R
   obtain ⟨i₀, hi₀⟩ := h μ₀ hμ₀
   by_cases hu : t ^ a = 0
-  · exact ⟨i₀, by rw [← map_pow, ← map_pow, hu, map_zero, map_zero]; exact zero_le'⟩
+  · exact ⟨i₀, by rw [← map_pow, ← map_pow, hu, map_zero, map_zero]; exact zero_le⟩
   by_cases hf : IsField R
-  · refine ⟨i₀, (pow_le_one₀ zero_le' (h1 t)).trans (one_le_pow₀ ?_)⟩
+  · refine ⟨i₀, (pow_le_one₀ zero_le (h1 t)).trans (one_le_pow₀ ?_)⟩
     have hs : s i₀ ≠ 0 := fun e => by
       rw [e, map_zero, zero_pow hb, ← map_pow] at hi₀
-      exact hu (hμ₀.2.2 _ (le_antisymm hi₀ zero_le'))
+      exact hu (hμ₀.2.2 _ (le_antisymm hi₀ zero_le))
     obtain ⟨v, hv⟩ := hf.mul_inv_cancel hs
     calc (1 : ℝ≥0) = ν (g (s i₀)) * ν (g v) := by rw [← map_mul, ← map_mul, hv, map_one, map_one]
       _ ≤ _ := mul_le_of_le_one_right' (h1 v)
@@ -215,7 +215,7 @@ theorem exists_le_of_discrete {R : Type} [CommRing R] [IsDomain R] [IsNoetherian
       · obtain ⟨i, rfl⟩ := hF hx
         refine hW _ ?_
         rw [map_div₀, hG, hG, map_div₀, map_pow, map_pow, map_pow, map_pow]
-        exact (div_lt_one₀ (zero_le'.trans_lt (hn i))).2 (hn i))
+        exact (div_lt_one₀ (zero_le.trans_lt (hn i))).2 (hn i))
     (by
       by_contra hz
       push Not at hz
@@ -241,7 +241,7 @@ theorem exists_le_of_discrete {R : Type} [CommRing R] [IsDomain R] [IsNoetherian
     have e := hlt _ (hnu _ (Or.inr ⟨x, hx, rfl⟩))
     rw [map_div₀] at e
     rw [← map_pow]
-    exact (div_lt_one₀ (zero_lt_iff.2 hc)).1 e) (s i) (hFs.le (Submodule.subset_span ⟨i, rfl⟩))
+    exact (div_lt_one₀ (pos_iff_ne_zero.2 hc)).1 e) (s i) (hFs.le (Submodule.subset_span ⟨i, rfl⟩))
   rw [map_pow] at this
   exact absurd hi (not_le.2 this)
 
@@ -268,7 +268,7 @@ theorem eq_zero_of_evalPt {Ω : Type} [Field Ω] {Y : Scheme.{0}} [IsIntegral Y]
     (hz : IsGenericPoint (ptOf z) Set.univ) (W : Y.Opens) (h : ⊤ ≤ z ⁻¹ᵁ W) (s : Γ(Y, W)) (hs : evalPt z W h s = 0) :
     s = 0 := by
   have hη : ptOf z ∈ W := (le_iff_ptOf_mem _ _).1 h
-  haveI : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of Ω) z).hom :=
+  have : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of Ω) z).hom :=
     Scheme.isLocalHom_stalkClosedPointTo' (R := Ω) z
   have hu : ¬ IsUnit (ger (ptOf z) hη s) := fun hu => by
     have := hu.map (Scheme.stalkClosedPointTo (R := CommRingCat.of Ω) z).hom
@@ -298,7 +298,7 @@ theorem exists_centre {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] {Y : Sch
     rw [hp, ← Spec.map_comp]; rfl
   obtain ⟨⟨w, hw', -⟩⟩ := (hE { R := V, K := Ω, i₁ := z, i₂ := spMap β, commSq := ⟨hw⟩ }).exists_lift
   have hw'' : spMap (algebraMap V Ω) ≫ w = z := hw'
-  haveI : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of V) w).hom :=
+  have : IsLocalHom (Scheme.stalkClosedPointTo (R := CommRingCat.of V) w).hom :=
     Scheme.isLocalHom_stalkClosedPointTo' (R := V) w
   let g : Y.presheaf.stalk (w (IsLocalRing.closedPoint V)) →+* Ω :=
     (algebraMap V Ω).comp (Scheme.stalkClosedPointTo (R := CommRingCat.of V) w).hom
@@ -346,7 +346,7 @@ theorem exists_centre_genVal (hV : IsVariety₀ X Z) [IsIntegral (Y₀ X Z)] (ν
         restr le_top s = sec₀ X Z _ f → genVal Z f.1 = T la * g (germ (j la) y (memTop y) (hj la) s) := by
   classical
   have h : GenFrEx Xo c := (Reg.genFrEx_and_genFromTest E H Dw l Xo c).1
-  haveI : IsProper (str₀ X Z) := by
+  have : IsProper (str₀ X Z) := by
     obtain ⟨N, i, hi, e⟩ := hV.2.1
     rw [← e]
     have := isProper_str c.F N
@@ -424,10 +424,10 @@ theorem valMult_of_section (hV : IsVariety₀ X Z) (hC : ∀ la, CuspIso X Z U l
         ν (germ j y (memTop y) hj s) ^ 3 ≤ ν (germ j' y (memTop y) hj' w) ^ 8) :
     ValMult U Z (wtOf Dw u 0) (wtOf Dw u' 0) := by
   classical
-  haveI : Smooth (str₀ X Z) := haveI := hV.1; SmoothOfRelativeDimension.smooth (FlagTan.dimFlag Dw) (str₀ X Z)
-  haveI := hV.2.2
-  haveI : IsIntegral (Y₀ X Z) := GlobalTheory.isIntegral_of_smooth_of_geometricallyConnected (str₀ X Z)
-  haveI : IsLocallyNoetherian (Y₀ X Z) := LocallyOfFiniteType.isLocallyNoetherian (str₀ X Z)
+  have : Smooth (str₀ X Z) := haveI := hV.1; SmoothOfRelativeDimension.smooth (FlagTan.dimFlag Dw) (str₀ X Z)
+  have := hV.2.2
+  have : IsIntegral (Y₀ X Z) := GlobalTheory.isIntegral_of_smooth_of_geometricallyConnected (str₀ X Z)
+  have : IsLocallyNoetherian (Y₀ X Z) := LocallyOfFiniteType.isLocallyNoetherian (str₀ X Z)
   obtain ⟨θ, -, hθ⟩ := exists_suppOn_sec₀_eq _ _ _ _ _ _ _ X Z (exOf Dw a 0) (restr le_top s)
   have hpow : ∀ (n : ℕ) (b : AllWt.Weight Dw), ∀ f ∈ Cusp Z U b, θ.1 ^ n * f ∈ Cusp Z U (n • a + b) := by
     intro n b f hf
@@ -476,7 +476,7 @@ theorem valMult_of_section (hV : IsVariety₀ X Z) (hC : ∀ la, CuspIso X Z U l
         have hu' := (isUnit_ger_iff _ (hj u)).2 hu
         rw [ger_toSec] at hu'
         obtain ⟨v, hv⟩ := hu'.exists_right_inv
-        refine ⟨⟨w, hw⟩, (pow_le_one₀ zero_le' (h1 _)).trans (one_le_pow₀ ?_)⟩
+        refine ⟨⟨w, hw⟩, (pow_le_one₀ zero_le (h1 _)).trans (one_le_pow₀ ?_)⟩
         calc (1 : ℝ≥0) = ν (g (germ (j u) y (memTop y) (hj u) w)) * ν (g v) := by
               rw [← map_mul, ← map_mul, hv, map_one, map_one]
           _ ≤ _ := mul_le_of_le_one_right' (h1 v)
@@ -494,9 +494,9 @@ theorem valMult_of_section (hV : IsVariety₀ X Z) (hC : ∀ la, CuspIso X Z U l
       rw [← Units.val_pow_eq_pow_val, ← Units.val_pow_eq_pow_val, ← hTn, ← hTn, ← Units.val_mul, ← hadd, hwk]
     rw [e₁, map_mul (genVal Z), map_pow (genVal Z), hT a θ s hθ.symm, e₂, mul_pow, mul_mul_mul_comm, e₃, map_mul, map_mul,
       map_mul, map_pow, map_pow, mul_pow]
-    refine mul_le_mul_of_nonneg_left ((mul_le_of_le_one_right' (h1 _)).trans ?_) zero_le'
+    refine mul_le_mul_of_nonneg_left ((mul_le_of_le_one_right' (h1 _)).trans ?_) zero_le
     rw [pow_mul, pow_mul]
-    exact pow_le_pow_left₀ zero_le' hw' k
+    exact pow_le_pow_left₀ zero_le hw' k
 
 end Component
 
@@ -552,7 +552,7 @@ theorem exists_theta_multiplication_rule (hP : _root_.GlobalTheory.CovTop.Publis
   obtain ⟨u, f, hf, hfZ⟩ := exists_isGenRule_nonzeroOn (Xo := Xo) (c := c) h5 (by norm_num) hM x₀ Z
   refine ⟨⟨thetaOn h s K f, thetaOn_mem_secZ h s hK (IsTauRule.mem_sec h5 hf)⟩, thetaOn_mem_suppOn h s K f,
     fun h0 => ((nonzeroOn_thetaOn_iff h s K f).2 hfZ).ne_zero (congrArg Subtype.val h0), fun T io y φ hio hZ hφ hne => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hid : evI y (idem Z) = 1 := evR_idem hZ y.2.1
   let ev : Rul Xo c →* T.Fr :=
     ⟨⟨evI y, by rw [← mul_one (evI y 1), ← hid, ← evI_mul, one_mul]⟩, evI_mul y⟩
@@ -599,11 +599,11 @@ theorem exists_section_of_theta_datum (hP : _root_.GlobalTheory.CovTop.Published
           8 * φ / 625 ≤ (m : ℝ) := by
   obtain ⟨f, hfZ, hf0, hf⟩ := _root_.GlobalTheory.ThetaSteep.exists_theta_multiplication_rule hP hL hM Z s
   obtain ⟨hs, -, hc⟩ := GlobalTheory.VarFlag.isVariety₀_flag _ _ _ _ _ _ TF Z hL.geo
-  haveI := hs
-  haveI := hc
-  haveI : Smooth (str₀ TF.X Z) := SmoothOfRelativeDimension.smooth (FlagTan.dimFlag Dw) _
-  haveI := GlobalTheory.isIntegral_of_smooth_of_geometricallyConnected (str₀ TF.X Z)
-  haveI : IsLocallyNoetherian (Y₀ TF.X Z) := LocallyOfFiniteType.isLocallyNoetherian (str₀ TF.X Z)
+  have := hs
+  have := hc
+  have : Smooth (str₀ TF.X Z) := SmoothOfRelativeDimension.smooth (FlagTan.dimFlag Dw) _
+  have := GlobalTheory.isIntegral_of_smooth_of_geometricallyConnected (str₀ TF.X Z)
+  have : IsLocallyNoetherian (Y₀ TF.X Z) := LocallyOfFiniteType.isLocallyNoetherian (str₀ TF.X Z)
   have hN : Geo.Tor.IsNormalScheme (Y₀ TF.X Z) := fun y => by
     obtain ⟨_, _⟩ := TF.X.normal (inc₀ TF.X Z y)
     let e := (asIso ((inc₀ TF.X Z).stalkMap y)).commRingCatIsoToRingEquiv
@@ -1081,7 +1081,7 @@ theorem covers_distinguished_section_valuation_eq_zero : _root_.GlobalTheory.Cov
   have hL := GlobalTheory.LawsDeep.laws_deep _ p.T _ Y _ _ p.fw.laws ⟨Nat.le_add_left _ _, i.2⟩ hY.1
   obtain ⟨t, ht⟩ := twSec_keyRoot_val _ _ _ _ _ _ _ Y.U (xiR (Fm.D x ι)) hY.1.unf hY.1.xiAbs hY.1.geo hL.pos hL.good Z
   refine ⟨t, ht T io y' (fun a => ?_) hZ⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have h1 := ptY_str TF.X y'.1
   rw [hpt, CommRingCat.ofHom_comp, Spec.map_comp, Category.assoc, Category.assoc] at h1
   obtain ⟨b, hb⟩ := Spec.map_surjective
@@ -1197,7 +1197,7 @@ theorem twisted_section_flat_valuation (hP : _root_.GlobalTheory.CovTop.Publishe
       (G + wtOf Dw (parWt Dw w) 0) (Even.add hG (even_wtOf _ _)) f hf
     rw [GlobalTheory.FlatTwisting.wtOf_parWt_neg, add_neg_cancel_right] at h
     exact h
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hLies : LiesOn Z y.1 := by
     by_contra hn
     exact hZ ((idem_mem_suppOn Z) T.Fr y.1 ((liesOff_iff Z y.1).2 hn))
@@ -1297,7 +1297,7 @@ theorem GlobalTheory.FlatValZero.flat_val_zero_at_integral_point_stalk : _root_.
   obtain ⟨t, ht⟩ := _root_.GlobalTheory.FlatValZero.twisted_section_flat_valuation hP hL hFE Z w
   refine ⟨t, ht T io y' (fun a ha => ?_) hZ⟩
   have ho : ∀ a, io a ∈ (algebraMap T.V T.Fr).range := fun a => by
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have h1 := ptY_str TF.X y'.1
     rw [hpt, CommRingCat.ofHom_comp, Spec.map_comp, Category.assoc, Category.assoc] at h1
     obtain ⟨b, hb⟩ := Spec.map_surjective
@@ -1630,7 +1630,7 @@ theorem val_restr'' {k : Type} [CommRing k] {T' : Scheme.{0}} {p : T' ⟶ Sp k} 
 
 theorem evI_ofSpace_eq_prod_mul_val : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y) (Z : Comp Xo c) {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (la : AllWt.Weight Dw) (w : space X Z U la) (T : CDVR) (io : c.F →+* T.Fr), letI := io.toAlgebra; ∀ (y' : IntFr Xo c T io) (x₀ : Sp T.Fr ⟶ Y₀ X Z), (X.ptY y'.1 = x₀ ≫ inc₀ X Z) → ∀ (j' : (L₀ X Z la).ι) (hO : ⊤ ≤ x₀ ⁻¹ᵁ (⊤ : (Y₀ X Z).Opens)) (hj : ⊤ ≤ x₀ ⁻¹ᵁ (L₀ X Z la).U j') (hz : ⊤ ≤ (X.pt y'.1 ≫ X.inc) ⁻¹ᵁ X.F.U (j' PUnit.unit)) (Q : FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), (X.F.ChartFr (j' PUnit.unit) (X.pt y'.1 ≫ X.inc) hz Q) → (FrBor t Q y'.1) → evI y' ((ofSpace X Z U la w : Cusp Z U la) : Rul Xo c) = (∏ ix, t ix ^ GlobalTheory.AllWt.exOf Dw la 0 ix).val * H0.val x₀ j' hO hj w.1 := by
   intro E _ _ _ H Dw l Xo c Y X Z r U la w T io y' x₀ hx j' hO hj hz Q t hQ ht
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let fS : GlobalTheory.AllWt.secZ Xo c (GlobalTheory.AllWt.exOf Dw la 0) := ⟨_, cusp_le_secZ Z U la (ofSpace X Z U la w).2⟩
   have hOf : ⊤ ≤ (X.pt y'.1 ≫ X.inc) ⁻¹ᵁ flagOpen X :=
     GlobalTheory.FlagMod.le_preimage_map (z := X.pt y'.1) X.inc (top_le_inc X) le_top
@@ -1662,7 +1662,7 @@ theorem germ_eq_unit_mul_evI_core {E : Type} [Field E] [NumberField E] [IsCMFiel
     (j' : (L₀ X Z la).ι) (hj' : y ∈ (L₀ X Z la).U j') :
     ∃ u : T.Vˣ, algebraMap T.V T.Fr (g (H0.germ j' y (memTop y) hj' w.1)) =
       algebraMap T.V T.Fr (u : T.V) * evI y' ((ofSpace X Z U la w : Cusp Z U la) : Rul Xo c) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hk : inc₀ X Z y ∈ X.F.U (j' PUnit.unit) := mem_pull.1 hj'
   have he : Spec.map (CommRingCat.ofHom ((algebraMap T.V T.Fr).comp g)) =
       Spec.map (CommRingCat.ofHom (algebraMap T.V T.Fr)) ≫ Spec.map (CommRingCat.ofHom g) := by
@@ -1696,7 +1696,7 @@ theorem germ_eq_unit_mul_evI_core {E : Type} [Field E] [NumberField E] [IsCMFiel
   have hP : Units.map (algebraMap T.V T.Fr : T.V →* T.Fr) (∏ ix, uf ix) = ∏ ix, t ix ^ GlobalTheory.AllWt.exOf Dw la 0 ix := by
     rw [map_prod]; exact Finset.prod_congr rfl fun ix _ => huf ix
   refine ⟨(∏ ix, uf ix)⁻¹, ?_⟩
-  rw [e2, ← hP, e1, Units.coe_map, RingHom.comp_apply, ← mul_assoc, MonoidHom.coe_coe, ← map_mul, Units.inv_mul, map_one,
+  rw [e2, ← hP, e1, Units.coe_map, RingHom.comp_apply, ← mul_assoc, MonoidHom.coe_ofClass, ← map_mul, Units.inv_mul, map_one,
     one_mul]
 
 end GlobalTheory.HSApp
@@ -1776,7 +1776,7 @@ theorem exists_subspace_vanishing_order_le_phi_alt : _root_.GlobalTheory.CovTop.
   obtain ⟨⟨C, hC, x0, hx⟩, ⟨C', hC', x1, hx1⟩⟩ := h
   refine ⟨C, hC, max x0 x1, fun x hx' hle ι p hp i hi Y hY Z TF la hla y hy ν hν φ hφ => ?_⟩
   obtain ⟨T, io, y', g, ρ, φT, hρ, hφT, rfl, hpt, hval⟩ := hφ
-  haveI hg : IsLocalHom g := isLocalHom_of_centred hν T g ρ hρ hval
+  have hg : IsLocalHom g := isLocalHom_of_centred hν T g ρ hρ hval
   obtain ⟨w, hw0, hwb⟩ := hx x hx' ((le_max_left _ _).trans hle) ι p hp i hi Y hY Z TF la hla y hy T io y' g φT hg hφT hpt
   refine ⟨w.1, w.2, fun j' hj' => ?_⟩
   obtain ⟨u, hu⟩ := hx1 x hx' ((le_max_right _ _).trans hle) ι p hp i hi Y hY Z TF la w y T io y' g hg hpt j' hj'
@@ -1895,7 +1895,7 @@ theorem valuation_multiplicity_of_consecutive_run_alt : _root_.GlobalTheory.CovT
   have bw := hwm _ ew
   by_cases h0 : ν (H0.germ j y (memTop y) hj θ) = 0
   · rw [h0, zero_pow three_ne_zero]
-    exact zero_le'
+    exact zero_le
   · obtain ⟨zt, hzt⟩ := WithZero.ne_zero_iff_exists.1 h0
     have et : ν (H0.germ j y (memTop y) hj θ) =
         ((Multiplicative.ofAdd (-(-Multiplicative.toAdd zt)) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by

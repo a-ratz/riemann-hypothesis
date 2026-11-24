@@ -157,7 +157,7 @@ theorem exists_adAt_le (hθ : IsInfFam θ) (V : HSp D) : ∃ C : ℝ≥0, ∀ (h
     calc _ ≤ (C * height V h) * (C * height V h) :=
           mul_le_mul hx' hy' (norm_nonneg _) ((norm_nonneg _).trans hx')
       _ = C ^ 2 * height V h ^ 2 := by ring
-  rw [hcomp, ← ofReal_norm_eq_enorm, norm_mul]
+  rw [hcomp, ← ofReal_norm, norm_mul]
   calc ENNReal.ofReal (‖infMat D.sp.cm.sig V.gram (θ τ) h⁻¹ c a‖ * ‖infMat D.sp.cm.sig V.gram (θ τ) h b d‖)
       ≤ ENNReal.ofReal (C ^ 2 * height V h ^ 2) := ENNReal.ofReal_le_ofReal hreal
     _ = _ := by rw [ENNReal.ofReal_mul (sq_nonneg C), ENNReal.ofReal_pow hht]; rfl

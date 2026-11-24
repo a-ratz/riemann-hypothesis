@@ -266,7 +266,7 @@ theorem exists_series_sum (a : ℕ → LetA O n) :
 
     rw [map_sub, coeff_mk, map_sum, map_sum, sub_eq_zero]
     refine Finset.sum_subset (Finset.range_subset_range.2 hk) fun j _ hj => ?_
-    rw [coeff_X_pow_mul', if_neg]
+    rw [coeff_X_pow_mul', ite_eq_right]
     simpa using hj
   choose b hb using h2
   refine ⟨b, funext fun i => ?_⟩
@@ -502,7 +502,7 @@ theorem tf_RW (LL : FinExt l) (x : RW LL) (hx : (l : RW LL) * x = 0) : x = 0 := 
   have := congrArg (crd (basisO LL) i) hx
   rw [crd_natCast_mul, LinearMap.map_zero] at this
   rw [LinearMap.map_zero]
-  exact (mul_eq_zero.1 this).resolve_left (WittVector.p_nonzero l (Cb l))
+  exact (mul_eq_zero.1 this).resolve_left (WittVector.p_ne_zero l (Cb l))
 
 theorem meet_RW (LL : FinExt l) (s : ℕ) (x : RW LL) (hx : ∀ m, NearPi AI LL s m x) :
     ∃ r, x = (l : RW LL) * r := by
@@ -674,10 +674,10 @@ theorem descent_of_tie (hO : Function.Injective (algebraMap O LL)) {p : ℕ} (hp
     (hc : ∀ i, w i = ∑ j, E.ioE (M i j) * φR (w j) + E.ioE (c i)) (i : I) :
     ∃ e, E.ioE e = w i := by
   subst hp
-  haveI := PD.finK₀
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := PD.finK₀
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
   have hn : 0 < n := by rw [W.n_eq]; exact Module.finrank_pos
-  haveI := W.EE_complete
+  have := W.EE_complete
   let io : W.EE →+* RW := E.ioE
   let a : LetA O n →+* W.EE := algebraMap _ _
   have hσ₀ : ∀ f, io (a f) = (inclR : RA →+* RW) (E.io f) := E.ioE_ext

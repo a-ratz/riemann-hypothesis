@@ -140,9 +140,9 @@ private theorem eq_zero_of_bd {ρ c : ValueGroupWithZero E} (hρ : ρ < 1) {M : 
   have hc : c ≠ 0 := by
     rintro rfl
     exact hv (by simpa using h 0 i j)
-  haveI : MulArchimedean (ValueGroupWithZero E) := ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
+  have : MulArchimedean (ValueGroupWithZero E) := ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
   obtain ⟨k, hk⟩ := exists_pow_lt₀ hρ (Units.mk0 (valuation E (M i j) / c) (div_ne_zero hv hc))
-  rw [Units.val_mk0, lt_div_iff₀ (zero_lt_iff.mpr hc)] at hk
+  rw [Units.val_mk0, lt_div_iff₀ (pos_iff_ne_zero.mpr hc)] at hk
   exact absurd (h k i j) (not_le.mpr hk)
 
 private theorem isCompact_bd (c : ValueGroupWithZero E) : IsCompact {M : Matrix (Fin n) (Fin n) E | Bd c M} := by
@@ -158,9 +158,9 @@ private theorem exists_root (q : ℕ) (r : ValueGroupWithZero E) (hr : r < valua
     intro h
     simp [h] at hq0
   have hr1 : r ≤ 1 := hr.le.trans (val_nat_le_one q)
-  haveI : T2Space E := by
-    letI := IsTopologicalAddGroup.rightUniformSpace E
-    haveI := isUniformAddGroup_of_addCommGroup (G := E)
+  have : T2Space E := by
+    let := IsTopologicalAddGroup.rightUniformSpace E
+    have := isUniformAddGroup_of_addCommGroup (G := E)
     infer_instance
   set ρ := r / valuation E (q : E) with hρ
   have hρ1 : ρ < 1 := (div_lt_one₀ hq0).mpr hr

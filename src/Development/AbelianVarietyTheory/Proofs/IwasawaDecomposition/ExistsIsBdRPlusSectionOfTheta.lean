@@ -62,8 +62,8 @@ theorem exists_lift {K L S C : Type} [Field K] [Field L] [Algebra K L] [Algebra.
       (∀ x, ∃ s, AdicCompletion.evalₐ I 1 (g x) = Ideal.Quotient.mk _ s ∧ T s = f x) ∧
       ∀ k, g (algebraMap K L k) = algebraMap S _ (q k) := by
   subst hI
-  letI : Algebra K S := q.toAlgebra
-  haveI : Algebra.FormallyEtale K L := Algebra.FormallyEtale.of_isSeparable K L
+  let : Algebra K S := q.toAlgebra
+  have : Algebra.FormallyEtale K L := Algebra.FormallyEtale.of_isSeparable K L
   let e := RingHom.quotientKerEquivOfSurjective hT
   have he : ∀ s, e (Ideal.Quotient.mk _ s) = T s := fun s => rfl
   let f' : L →ₐ[K] S ⧸ RingHom.ker T :=

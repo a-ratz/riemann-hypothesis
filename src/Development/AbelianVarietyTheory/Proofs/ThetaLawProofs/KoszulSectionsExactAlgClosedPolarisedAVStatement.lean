@@ -496,12 +496,12 @@ end GlobalTheory.TraceDescent
 theorem GlobalTheory.exactAt_secCube_of_mul_pull : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (m : ℕ) (N : LB P.A.left) (I : Type) [LinearOrder I] [Fintype I] (D : I → P.A.left.Opens) (p : ℕ), (m : K) ≠ 0 → N.IsLB → (cubeComplex (secCube P.A.hom (N.pull (Out.mulA P.A m).left) (fun i => (Out.mulA P.A m).left ⁻¹ᵁ D i))).ExactAt p → (cubeComplex (secCube P.A.hom N D)).ExactAt p := by
   intro L K _ _ P m N I _ _ D p hm _ H
   classical
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   have hm1 : 1 ≤ m := Nat.one_le_iff_ne_zero.mpr fun h => hm (by rw [h, Nat.cast_zero])
   let G : Subgroup (𝟙_ (Over (Sp K)) ⟶ P.A) := (powMonoidHom m).ker
   have hc : Nat.card G = m ^ (2 * P.g) := (L.mulN _ P m hm1).2.2.2.2 K (𝟙 _) hm
-  haveI : Finite G := Nat.finite_of_card_ne_zero (hc ▸ pow_ne_zero _ (by omega))
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Finite G := Nat.finite_of_card_ne_zero (hc ▸ pow_ne_zero _ (by omega))
+  have : Fintype G := Fintype.ofFinite G
   have hgal := GlobalTheory.torsion_invariant_descends (fun S _ P n hn =>
     have h := L.mulN S P n hn
     ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1⟩) K P m hm
@@ -892,7 +892,7 @@ theorem exists_germ_sub_mem : ∀ (K : Type) [Field K] (X : Scheme.{0}) (p : X �
   have : IsJacobsonRing Γ(X, V) :=
     RingHom.FiniteType.isJacobsonRing
       (Scheme.Hom.finiteType_appLE p (isAffineOpen_top (Sp K)) hV (by intro x _; simp))
-  letI alg : ∀ k : Z, Algebra Γ(X, V) (X.presheaf.stalk k.1) :=
+  let alg : ∀ k : Z, Algebra Γ(X, V) (X.presheaf.stalk k.1) :=
     fun k => TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨k.1, k.2.1⟩
   have loc : ∀ k : Z, IsLocalization.AtPrime (X.presheaf.stalk k.1) (P k).asIdeal :=
     fun k => hV.isLocalization_stalk ⟨k.1, k.2.1⟩
@@ -1008,7 +1008,7 @@ theorem ofList_take_ofFn {R : Type} [CommRing R] {g : ℕ} (f : Fin g → R) (i 
   unfold Ideal.ofList
   congr 1
   ext a
-  simp only [Set.mem_setOf_eq, List.mem_take_iff_getElem, List.length_ofFn, List.getElem_ofFn, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, List.mem_take_iff_getElem, List.length_ofFn, List.getElem_ofFn, Set.mem_image]
   constructor
   · rintro ⟨j, hj, rfl⟩
     exact ⟨⟨j, by omega⟩, by simp only; omega, rfl⟩
@@ -1234,7 +1234,7 @@ theorem mulPw_restrict (s : LB.Sec (pw L n)) (h : W ≤ V) (x : SecOn (pw L l) V
     mulPw s l l' W (SecOn.restrict _ h x) = SecOn.restrict _ h (mulPw s l l' V x) := by
   by_cases e : l' = l + n
   · exact co_ext fun k => by simp only [co_mulPw s e, co_restrict, map_mul, rs_rs]
-  · simp only [mulPw, dif_neg e, LinearMap.zero_apply, map_zero]
+  · simp only [mulPw, dite_eq_right e, LinearMap.zero_apply, map_zero]
 
 theorem mulPw_comm (s s' : LB.Sec (pw L n)) {l'' : ℤ} (h : l' = l + n) (h' : l'' = l' + n)
     (x : SecOn (pw L l) V) :
@@ -1439,8 +1439,8 @@ theorem cut_global {K : Type} [Field K] (p : X ⟶ Sp K) [IsSeparated p] (hp : L
         ∀ d : ℤ, d = l - n → ∃ ta : Fin g → LB.Sec (pw L d), ∀ k, sf sg k = ∑ j, sf (s j) k * sf (ta j) k := by
   classical
   obtain ⟨I, _, D, kk, hD, hle, hcov⟩ := exists_finite_affine_refinement hL
-  letI : LinearOrder I := linearOrderOfSTO WellOrderingRel
-  haveI : X.IsSeparated := by
+  let : LinearOrder I := linearOrderOfSTO WellOrderingRel
+  have : X.IsSeparated := by
     rw [Scheme.isSeparated_iff, ← terminal.comp_from p]
     infer_instance
   have haff : ∀ T : Finset I, T.Nonempty → IsAffineOpen (⨅ i ∈ T, D i) := fun T hT =>
@@ -1507,8 +1507,8 @@ namespace GlobalTheory
 open KosField in
 theorem koszul_sections_exact_field : Out.Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (x : KeyIn K) (n l : ℕ) (s : Fin x.P.g → RR x n) (b : ∀ j, Fin ((l - j * n) ^ x.P.g) → RR x (l - j * n)) (m) (c : x.P.A.left → x.P.L.ι), 1 ≤ n → x.P.g * n < l → FinZ x s → (∀ j ≤ x.P.g, IsBasis x (b j)) → IsMul x l s b m → (∀ y, y ∈ x.P.L.U (c y)) → (∀ v : KIx x.P.g 0 (fun j => (l - j * n) ^ x.P.g) → K, (kosD m (fun _ => 0)).mulVec v = 0 → ∃ w, ∀ p, p.1 ≠ ∅ → v (.inl p) = (kosD (d := 0) m (fun _ => 0)).mulVec w (.inl p)) ∧ (∀ a : ∀ y : x.P.A.left, x.P.A.left.presheaf.stalk y, ∃ sg : RR x l, ∀ y, (∀ i, y ∉ Out.nonzeroLocus (s i)) → gs (𝟙 _) y (x.P.L.U (c y)) (sg.f (c y)) - a y ∈ Ideal.span (Set.range fun i => gs (𝟙 _) y (x.P.L.U (c y)) ((s i).f (c y)))) ∧ ∀ sg : RR x l, (∀ y, (∀ i, y ∉ Out.nonzeroLocus (s i)) → gs (𝟙 _) y (x.P.L.U (c y)) (sg.f (c y)) ∈ Ideal.span (Set.range fun i => gs (𝟙 _) y (x.P.L.U (c y)) ((s i).f (c y)))) → ∃ ta : Fin x.P.g → RR x (l - 1 * n), ∀ c', (show Γ(x.P.A.left, x.P.L.U c') from sg.f c') = ∑ i, (show Γ(x.P.A.left, x.P.L.U c') from (s i).f c') * (show Γ(x.P.A.left, x.P.L.U c') from (ta i).f c') := by
   intro hlaw K _ _ x n l s b m c hn hl hZ hb hm hc
-  haveI := x.P.isAb.proper
-  haveI : CompactSpace x.P.A.left := QuasiCompact.compactSpace_of_compactSpace x.P.A.hom
+  have := x.P.isAb.proper
+  have : CompactSpace x.P.A.left := QuasiCompact.compactSpace_of_compactSpace x.P.A.hom
   obtain ⟨H1, H2⟩ := cut_global (n := (n : ℤ)) x.P.A.hom inferInstance x.P.isLB s (by exact_mod_cast hn) hZ
     (fun V k h hV => GlobalTheory.KeyKa.isWeaklyRegular_of_finZ hlaw K x n s V k h hn hZ hV)
     (fun l I _ _ D => GlobalTheory.PolVanishing.exactAt_secCube_pw hlaw K x.P l I D) c hc

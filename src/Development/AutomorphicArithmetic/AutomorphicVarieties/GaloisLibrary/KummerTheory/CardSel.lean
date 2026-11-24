@@ -91,7 +91,7 @@ private theorem mk_finprod_congr {K : Type} [Field K] [NumberField K] (S : Set (
     unfold Function.HasFiniteMulSupport
     apply hf.subset
     intro v hv
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     intro h0
     exact hv (by simp [h0])
   have e1 := (QuotientGroup.mk' (clSub S)).map_finprod (hfm f hf)
@@ -120,7 +120,7 @@ theorem UpperTheory.V.Kum.radClSurj :
   obtain ⟨y, hy⟩ := @Submodule.IsPrincipal.principal _ _ _ _ _ _ hP
   have hx' : ((I ^ n * J⁻¹ : (FractionalIdeal (nonZeroDivisors (𝓞 K)) K)ˣ) :
       FractionalIdeal (nonZeroDivisors (𝓞 K)) K) = FractionalIdeal.spanSingleton _ y :=
-    FractionalIdeal.coeToSubmodule_injective (hy.trans (FractionalIdeal.coe_spanSingleton _ y).symm)
+    FractionalIdeal.coeToSubmodule_injective (hy.trans (FractionalIdeal.coeToSubmodule_spanSingleton _ y).symm)
   have hy0 : y ≠ 0 := by
     intro h0
     apply Units.ne_zero (I ^ n * J⁻¹)
@@ -203,7 +203,7 @@ theorem UpperTheory.V.Kum.cardSel :
         refine (hd.union he).subset ?_
         intro v hv
         by_contra h
-        simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at h
+        simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at h
         exact hv (by rw [h.1, h.2, add_zero])
       have prod_add {d e : HeightOneSpectrum (𝓞 K) → ℤ}
           (hd : {v | d v ≠ 0}.Finite) (he : {v | e v ≠ 0}.Finite) :
@@ -219,10 +219,10 @@ theorem UpperTheory.V.Kum.cardSel :
         | mem x hx =>
           obtain ⟨w, hw, rfl⟩ := hx
           refine ⟨fun v => if v = w then 1 else 0, (Set.finite_singleton w).subset ?_,
-            fun v hv => if_neg fun (h : v = w) => hv (h ▸ hw), ?_⟩
+            fun v hv => ite_eq_right fun (h : v = w) => hv (h ▸ hw), ?_⟩
           · intro v hv
             by_contra h
-            exact hv (if_neg h)
+            exact hv (ite_eq_right h)
           · rw [finprod_eq_single _ w fun v hv => by simp [hv]]
             simp
         | one => exact ⟨fun _ => 0, by simp, by simp, by simp⟩

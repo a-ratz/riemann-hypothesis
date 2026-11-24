@@ -148,7 +148,7 @@ theorem oneParameter_mem_closure {T : ℝ → V →L[ℂ] V} (h0 : T 0 = 1) (hT 
       intro k
       obtain ⟨u, hu, hk⟩ := exists_iteratedDeriv_inner_semigroup_eq hT hd w k v hv
       rw [hk]
-      simp only [h0, ContinuousLinearMap.one_apply]
+      simp only [h0, one_apply_eq_self]
       exact Submodule.inner_left_of_mem_orthogonal hu hw
     have htop : analyticOrderAt (fun s => ⟪w, T s v⟫_ℂ) 0 = ⊤ := by
       by_contra hne
@@ -675,11 +675,11 @@ theorem exists_irr_family (hG : IsLinRed G) (hA : IsAdmOn G π) (m : ℕ) :
       · simp
     · push_neg at hirr
       obtain ⟨S', hle, hS', hne0, hneS⟩ := hirr
-      haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
+      have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
       have hlt : S' < S := lt_of_le_of_ne hle hneS
       have hT : IsKStable G π (S ⊓ S'ᗮ) := fun k hk v hv =>
         ⟨hS k hk v hv.1, orthogonal_kstable hG hA hS' k hk v hv.2⟩
-      haveI : FiniteDimensional ℂ (S ⊓ S'ᗮ : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_left
+      have : FiniteDimensional ℂ (S ⊓ S'ᗮ : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_left
       have hltT : S ⊓ S'ᗮ < S := by
         refine lt_of_le_of_ne inf_le_left fun h => hne0 ?_
         have hSo : S ≤ S'ᗮ := inf_eq_left.1 h
@@ -746,8 +746,8 @@ theorem exists_isotypic_sum : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ
   have hYle : ∀ I ∈ F, iso I ≤ sSup (iso '' F) := fun I hIF => le_sSup ⟨I, hIF, rfl⟩
   refine ⟨sSup (iso '' F), ?_, ?_, ?_, ?_⟩
   · rw [sSup_eq_iSup']
-    haveI : Finite ↥(iso '' F) := (hF.image iso).to_subtype
-    haveI : ∀ a : ↥(iso '' F), FiniteDimensional ℂ (a : Submodule ℂ H) := by
+    have : Finite ↥(iso '' F) := (hF.image iso).to_subtype
+    have : ∀ a : ↥(iso '' F), FiniteDimensional ℂ (a : Submodule ℂ H) := by
       rintro ⟨_, I, hIF, rfl⟩
       exact hisoF I hIF
     exact Submodule.finiteDimensional_iSup _
@@ -1144,7 +1144,7 @@ abbrev toMat {G : Set (Matrix (Fin n) (Fin n) ℂ)} {hG : IsLinRed G} (g : grp h
 
 theorem continuous_toMat {G : Set (Matrix (Fin n) (Fin n) ℂ)} {hG : IsLinRed G} :
     Continuous (toMat : grp hG → Matrix (Fin n) (Fin n) ℂ) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem toMat_injective {G : Set (Matrix (Fin n) (Fin n) ℂ)} {hG : IsLinRed G} :
     Function.Injective (toMat : grp hG → Matrix (Fin n) (Fin n) ℂ) :=
@@ -1244,8 +1244,8 @@ theorem exists_stable [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H 
     ∃ Y : Submodule ℂ H, FiniteDimensional ℂ Y ∧ v ∈ Y ∧
       ∀ T : H →L[ℂ] H, (∀ k ∈ maxCpt G, ∀ u, T (σ k u) = σ k (T u)) → ∀ y ∈ Y, T y ∈ Y := by
   obtain ⟨U, hU, hiwa⟩ := hI
-  letI : MeasurableSpace (kgrp hG) := borel _
-  haveI : BorelSpace (kgrp hG) := ⟨rfl⟩
+  let : MeasurableSpace (kgrp hG) := borel _
+  have : BorelSpace (kgrp hG) := ⟨rfl⟩
   let μ : Measure (kgrp hG) := (Measure.haar : Measure (kgrp hG)).inv
   have hμ : IsFiniteMeasure μ := CompactSpace.isFiniteMeasure
   have hsc : SecondCountableTopology (kgrp hG) := TopologicalSpace.Subtype.secondCountableTopology _
@@ -1254,7 +1254,7 @@ theorem exists_stable [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H 
     (hσ.2.2 u).comp_continuous continuous_toMat fun g => g.2
   have hKm : ∀ k : kgrp hG, toMat k.1 ∈ maxCpt G := fun k => ⟨k.1.2, k.2⟩
   obtain ⟨e, E, he, hfin, hE, hEv⟩ := exists_averaging_operator (kgrp hG) μ H ((homG hG hσ).comp (kgrp hG).subtype)
-    (fun k u => hiso k u) (fun u => (hc u).comp continuous_subtype_val) S (fun k u hu => hS _ (hKm k) u hu) v hv
+    (fun k u => hiso k u) (fun u => (hc u).comp continuous_subtypeVal) S (fun k u hu => hS _ (hKm k) u hu) v hv
   choose st hst using fun g : grp hG => exists_elt hG (hG.star_mem _ g.2)
   let Tr : Set (grp hG) := {s | (stdU hG hU s).BlockTriangular id}
   have hgood : IsGood st Tr (stdU hG hU) := by
@@ -1293,7 +1293,7 @@ theorem exists_stable [CompleteSpace H] {σ : Matrix (Fin n) (Fin n) ℂ → (H 
   · refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
     show e k • σ (toMat k.1) (T u) = T (e k • σ (toMat k.1) u)
     rw [map_smul, hT _ (hKm k)]
-  · exact (he.smul ((hc u).comp continuous_subtype_val)).integrable_of_hasCompactSupport
+  · exact (he.smul ((hc u).comp continuous_subtypeVal)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
 
 end Core
@@ -1304,10 +1304,10 @@ theorem isAdmOn_of_iwasawa {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)} {H :
     (hU : IsURepOn G π) (hirr : IsIrredOn G π) : IsAdmOn G π := by
   refine ⟨hU.1, hU.2.2, fun k hk => hU.2.1 k hk.1, ?_⟩
   intro S hfd hS _
-  haveI := hfd
+  have := hfd
   let b := Module.finBasis ℂ S
   choose Y hYfd hvY hY using fun i => exists_stable hG hI hU hirr S hS (b i) (b i).2
-  haveI := hYfd
+  have := hYfd
   have hsup : FiniteDimensional ℂ (⨆ i, Y i : Submodule ℂ H) := Submodule.finiteDimensional_iSup Y
   refine Submodule.finiteDimensional_of_le (S₂ := ⨆ i, Y i) (sSup_le ?_)
   rintro _ ⟨Θ₀, rfl, hΘ⟩
@@ -1505,7 +1505,7 @@ theorem smooth_of_commutant_stable {H : Type} [NormedAddCommGroup H] [InnerProdu
     (hK : ∀ k ∈ maxCpt G, ∀ v, ‖π k v‖ = ‖v‖) (Y : Submodule ℂ H) [FiniteDimensional ℂ Y]
     (hY : ∀ T : H →L[ℂ] H, (∀ k ∈ maxCpt G, ∀ u, T (π k u) = π k (T u)) → ∀ y ∈ Y, T y ∈ Y) :
     ∀ v ∈ Y, IsSmoothVec G π v := by
-  letI : Inv (Set (GT hG hcl)) := Set.inv
+  let : Inv (Set (GT hG hcl)) := Set.inv
   intro v hv
   let μ : Measure (GT hG hcl) := Measure.haar
   obtain ⟨h1, hm⟩ := hrep

@@ -86,7 +86,7 @@ private lemma mem_conjIdeal_iff' (P : Ideal (𝓞 K)) (r : 𝓞 K) :
   have hS : {r : 𝓞 K | ∃ s ∈ P, algebraMap (𝓞 K) K r = star (algebraMap (𝓞 K) K s)} =
       ((P.comap (conjO K) : Ideal (𝓞 K)) : Set (𝓞 K)) := by
     ext r
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, Ideal.mem_comap]
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, Ideal.mem_comap]
     constructor
     · rintro ⟨s, hs, h⟩
       have : conjO K r = s := by
@@ -231,7 +231,7 @@ theorem cnt_unit (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFi
     have : x = 0 := RingOfIntegers.ext (h2.trans (map_zero (algebraMap (𝓞 F) F)).symm)
     rw [this]
     exact 𝔭.zero_mem
-  haveI := h𝔭
+  have := h𝔭
   obtain ⟨P, hP, hPc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral 𝔭 hinj
   subst hPc
   have hq := one_lt_q h𝔭
@@ -249,9 +249,9 @@ theorem cnt_unit (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFi
       exact hP.isPrime
     have heta : etaF K F (P.comap ι) = -1 := by
       unfold etaF
-      rw [if_pos hpr]
+      rw [ite_eq_left hpr]
     unfold Formalism.HermitianLatticesTheory.eulerFac
-    rw [if_pos hc, inv_inv, heta, ← hN]
+    rw [ite_eq_left hc, inv_inv, heta, ← hN]
     push_cast
     rw [Real.sqrt_sq (by positivity)]
   · have hsplit := extP_split hK hF hP hc
@@ -288,7 +288,7 @@ theorem cnt_unit (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFi
         exact hr
     have heta : etaF K F (P.comap ι) = 1 := by
       unfold etaF
-      rw [if_neg hpr]
+      rw [ite_eq_right hpr]
     have hx : 0 < 1 - (Ideal.absNorm (P.comap ι) : ℝ) ^ (-(M : ℤ)) := by
       have hlt : (Ideal.absNorm (P.comap ι) : ℝ) ^ (-(M : ℤ)) < 1 := by
         rw [zpow_neg, zpow_natCast]
@@ -296,7 +296,7 @@ theorem cnt_unit (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFi
       linarith
     have hh : (-(1 : ℝ) / 2 + -(1 : ℝ) / 2) = -1 := by norm_num
     unfold Formalism.HermitianLatticesTheory.eulerFac
-    rw [if_neg hc, if_neg hc2, hNc, ← hN, heta, ← Real.rpow_add hx, hh, Real.rpow_neg_one, inv_inv,
+    rw [ite_eq_right hc, ite_eq_right hc2, hNc, ← hN, heta, ← Real.rpow_add hx, hh, Real.rpow_neg_one, inv_inv,
       one_pow, one_mul]
 
 theorem exists_norm (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)}

@@ -399,7 +399,7 @@ theorem inUnipRad_iff (I : AutInst) {A : Type} [CommRing A] (ι : I.E →+* A) (
     congr 1
     ext a b
     exact hs _
-  simp only [AutInst.InUnipRad, mem_span_iff, Set.mem_setOf_eq, perp_iff, e, UnipEq]
+  simp only [AutInst.InUnipRad, mem_span_iff, Set.mem_ofPred_eq, perp_iff, e, UnipEq]
   refine and_congr ?_ (and_comm.trans (and_congr ?_ (perp_cond ι hL hR _).1))
   · rw [← forall_mulVec_eq_zero]
     exact ⟨fun h a => by rw [← mulVec_mulVec]; exact h _ ⟨a, rfl⟩, fun h => by
@@ -467,7 +467,7 @@ theorem mem_NA_iff (I : AutInst) (θ : InfinitePlace I.F → (Ainf I.F ⊗[I.F] 
     rw [Matrix.map_sub _ (map_sub _), Matrix.map_one _ (map_zero _) (map_one _), hf]
     rfl
   unfold AutInst.NA
-  rw [Set.mem_setOf_eq, inUnipRad_iff I (inclE (F := I.F) (Af I.F)) _ (fun _ => rfl) hL hR, e2,
+  rw [Set.mem_ofPred_eq, inUnipRad_iff I (inclE (F := I.F) (Af I.F)) _ (fun _ => rfl) hL hR, e2,
     forall_congr' fun v => inUnipRad_iff I (I.φ v) _ (fun y => (hcm.2.2.2 (I.φ v) y).symm) hL hR _]
   simp only [e1]
   refine ⟨fun ⟨h1, h2⟩ => ?_, fun H => ⟨fun v => H.map _ _ (hp v), H.map _ _ hq⟩⟩
@@ -527,7 +527,7 @@ theorem constTerm_iff_inst (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure
   have : (I.muA μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
   obtain ⟨Γ, hΓ, hΓc, hfin, -⟩ := _root_.GlobalTheory.RatDiscrete.rational_points I
   let T' : G' ≃ₜ I.GA := ⟨T.toEquiv, hT.1, hT.2⟩
-  have : IsTopologicalGroup G' := T'.isInducing.topologicalGroup T
+  have : IsTopologicalGroup G' := T'.isInducing.isTopologicalGroup T
   obtain ⟨-, hcl, -, -, K, hK, -, hcov⟩ := _root_.GlobalTheory.UnipApprox.strong_approximation I W hW
   have hcl' : IsClosed (N : Set G') := by
     have e : (N : Set G') = T ⁻¹' I.NA W := Set.ext hm

@@ -56,9 +56,9 @@ theorem _root_.GlobalTheory.T.sections_finite_flat_rank_of_isFinite_flat : ∀ (
   have hflat' : Flat (Spec.map (p.app U)) := MorphismProperty.of_isPullback hpb hflat
   have h1 : (p.app U).hom.Finite := (IsFinite.SpecMap_iff _).1 hfin
   have h2 : (p.app U).hom.Flat := Flat.SpecMap_iff.1 hflat'
-  letI := (p.app U).hom.toAlgebra
-  haveI : Module.Finite Γ(T, U) Γ(X, p ⁻¹ᵁ U) := h1
-  haveI : Module.Flat Γ(T, U) Γ(X, p ⁻¹ᵁ U) := h2
+  let := (p.app U).hom.toAlgebra
+  have : Module.Finite Γ(T, U) Γ(X, p ⁻¹ᵁ U) := h1
+  have : Module.Flat Γ(T, U) Γ(X, p ⁻¹ᵁ U) := h2
   refine ⟨inferInstance, inferInstance, fun q ↦ ?_⟩
   have e := Scheme.Hom.finrank_of_isPullback _ _ _ _ hpb q
   rw [hr] at e

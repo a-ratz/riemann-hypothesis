@@ -82,14 +82,14 @@ theorem cosetSum {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G
     ∃ (s : Finset G) (c : ℝ), ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V] (F : G → V),
       (∀ h, ∀ k ∈ U, F (h * k) = F h) → (∀ h, h ∉ C → F h = 0) → ∫ h, F h ∂m = ∑ h ∈ s, c • F h := by
   classical
-  haveI : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU
+  have : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU
   have hfin : ((QuotientGroup.mk : G → G ⧸ U) '' C).Finite := (hC.image QuotientGroup.continuous_mk).finite_of_discrete
   refine ⟨hfin.toFinset.image Quotient.out, m.real U, fun V _ _ _ F hF h0 => ?_⟩
   rw [Finset.sum_image fun a _ b _ h => Quotient.out_injective h]
   have hpre : ∀ q : G ⧸ U, {h : G | (h : G ⧸ U) = q} = (fun h => (q.out)⁻¹ * h) ⁻¹' (U : Set G) := by
     intro q
     ext h
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
     rw [← QuotientGroup.eq, QuotientGroup.out_eq', eq_comm]
   have hmeas : ∀ q : G ⧸ U, MeasurableSet {h : G | (h : G ⧸ U) = q} := fun q => by
     rw [hpre]; exact hU.measurableSet.preimage (measurable_const_mul _)
@@ -100,7 +100,7 @@ theorem cosetSum {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G
     rw [hk, hF _ _ k.2]
   have hF' : F = fun h => ∑ q ∈ hfin.toFinset, {h : G | (h : G ⧸ U) = q}.indicator (fun _ => F q.out) h := by
     funext h
-    simp only [Set.indicator_apply, Set.mem_setOf_eq, Finset.sum_ite_eq, Set.Finite.mem_toFinset]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq, Finset.sum_ite_eq, Set.Finite.mem_toFinset]
     split_ifs with hh
     · exact (hout h).symm
     · exact h0 h fun hc => hh ⟨h, hc, rfl⟩
@@ -245,9 +245,9 @@ theorem dl_fin (h : GF) : (Set.range fun x : G1 K (2 + 2) => dl x h).Finite := b
       (AdelicGLn.isOpen_integralFiniteGL K (2 + 2)).preimage (continuous_const.mul continuous_id)
     filter_upwards [ho.mem_nhds (show y⁻¹ * y ∈ AdelicGLn.integralFiniteGL K (2 + 2) by rw [inv_mul_cancel]; exact one_mem _)] with z hz
     rw [← dl_right 1 y hz, mul_inv_cancel_left]
-  haveI : CompactSpace (AdelicGLn.integralFiniteGL K (2 + 2)) := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL K _)
+  have : CompactSpace (AdelicGLn.integralFiniteGL K (2 + 2)) := isCompact_iff_compactSpace.1 (AdelicGLn.isCompact_integralFiniteGL K _)
   have h2 := (hlc.comp_continuous (f := fun k : AdelicGLn.integralFiniteGL K (2 + 2) => (k : GF) * h)
-    (continuous_subtype_val.mul continuous_const)).range_finite
+    (continuous_subtypeVal.mul continuous_const)).range_finite
   refine h2.subset ?_
   rintro _ ⟨x, rfl⟩
   obtain ⟨X, m₁, m₂, t, u, hu, rfl⟩ := iwa x
@@ -259,7 +259,7 @@ theorem dl_fin (h : GF) : (Set.range fun x : G1 K (2 + 2) => dl x h).Finite := b
 theorem dl_cont (ω : ℝ → ℂ) (h : GF) : Continuous (fun x : G1 K (2 + 2) => ω (dl x h)) ∧ ∃ C : ℝ, ∀ x : G1 K (2 + 2), ‖ω (dl x h)‖ ≤ C := by
   have hc : Continuous fun x : G1 K (2 + 2) => dl x h :=
     (hpSpec.2.2.2.1.comp (continuous_id.mul continuous_const)).sub hpSpec.2.2.2.1
-  haveI := (dl_fin h).to_subtype
+  have := (dl_fin h).to_subtype
   refine ⟨?_, ?_⟩
   · exact (continuous_of_discreteTopology (f := fun r : Set.range fun x : G1 K (2 + 2) => dl x h => ω r)).comp
       (hc.subtype_mk fun x => ⟨x, rfl⟩)
@@ -310,8 +310,8 @@ theorem lin_fix {D : TypeDat K (2 + 2)} {Kf : Subgroup GF} (hL : D.Level Kf) (hl
     congr 1
     funext h
     rw [he k hk, dl_comm g h ha hcm (hle hk), mul_assoc g (a * _), mul_assoc a, ← map_mul, hcm, ← mul_assoc g]
-  haveI := D.prob
-  haveI : IsFiniteMeasureOnCompacts D.ν := ⟨fun _ _ => measure_lt_top _ _⟩
+  have := D.prob
+  have : IsFiniteMeasureOnCompacts D.ν := ⟨fun _ _ => measure_lt_top _ _⟩
   have hint : ∀ y : G1 K (2 + 2), Integrable (fun u => D.e u * f (y * u)) D.ν := fun y => by
     have := (D.cont.mul (hc.comp (continuous_const.mul continuous_id : Continuous fun u => y * u))).continuousOn.integrableOn_compact
       (μ := D.ν) (typeFin D).1
@@ -385,7 +385,7 @@ theorem regroup (s : Finset GF) (c : GF → ℂ) (T : Finset ℝ) (hT : ∀ h �
   simp only [lin_apply, Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun h hh => ?_
-  rw [Finset.sum_eq_single_of_mem _ (hT h hh x) fun t _ ht => by simp only [if_neg ht.symm, mul_zero, zero_mul], if_pos rfl]
+  rw [Finset.sum_eq_single_of_mem _ (hT h hh x) fun t _ ht => by simp only [ite_eq_right ht.symm, mul_zero, zero_mul], ite_eq_left rfl]
   ring
 
 theorem theta_id {β : ℝ → ℂ} (hβc : HasCompactSupport β) (s : Finset GF) (c : GF → ℂ) (T : Finset ℝ) (hT : ∀ h ∈ s, ∀ x, dl x h ∈ T)
@@ -445,14 +445,14 @@ theorem act_of {H V : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [No
     filter_upwards [this, Lp.coeFn_zero V 2 (volume : Measure ℝ)] with x h1 h2
     rw [h2]
     exact h1.trans (by simp)
-  refine ⟨Finsupp.onFinset T (fun t => if t ∈ T then U t else 0) fun t ht => by_contra fun hn => ht (if_neg hn), 0,
+  refine ⟨Finsupp.onFinset T (fun t => if t ∈ T then U t else 0) fun t ht => by_contra fun hn => ht (ite_eq_right hn), 0,
     ⟨continuous_const, HasCompactSupport.zero⟩, fun x => ?_, fun z => ?_⟩
 
   · rw [Finsupp.onFinset_sum (g := fun (t : ℝ) (c : V →L[ℂ] V) => c.compLpL 2 volume (sh V t x)) _ fun t => h0 _, hc, add_zero, h, map_sum]
-    exact Finset.sum_congr rfl fun t ht => by rw [if_pos ht]
+    exact Finset.sum_congr rfl fun t ht => by rw [ite_eq_left ht]
   · rw [Finsupp.onFinset_sum (g := fun (t : ℝ) (c : V →L[ℂ] V) => Complex.exp (z * t) • c) _ fun t => smul_zero _]
     simp only [symb, Pi.zero_apply, smul_zero, integral_zero, add_zero]
-    exact Finset.sum_congr rfl fun t ht => by rw [if_pos ht]
+    exact Finset.sum_congr rfl fun t ht => by rw [ite_eq_left ht]
 
 theorem ofin_apply {n : ℕ} (μ : Measure (G1 K n)) [μ.IsHaarMeasure] (m : Measure (AdelicGLn.FiniteAdelicGL K n)) [m.IsHaarMeasure]
     (e : TF K n) (w : L2 μ) : Ofin μ m e w = ∫ h, e h • rightRegularRep (Gam K n) μ (MultiplicityOne.finProj K n h) w ∂m :=
@@ -512,25 +512,25 @@ theorem actEx [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 K (2 + 2
         Finset.sum_congr rfl fun _ _ => (one_smul ℂ _).symm
       refine (h1.trans (reps_ext h4 h3)).trans (h5.symm.trans ?_)
       symm
-      exact ContinuousLinearMap.sum_apply _ _ _
+      exact sum_apply _ _ _
     intro x
-    exact (DFunLike.congr_fun this x).trans (ContinuousLinearMap.sum_apply _ _ _)
+    exact (DFunLike.congr_fun this x).trans (sum_apply _ _ _)
   refine ⟨⟨_, act_of A.J _ T U key, fun z v x => ?_⟩, fun u => ⟨_, (key u).trans (map_sum A.J _ _).symm⟩⟩
   have h1 := hr ℂ (fun h => flat z (A.sec v) (x * pf h)) fun h k hk => by
     simp only [flat, map_mul, ← mul_assoc, hHk _ k hk, fix_inv hL hle (hsec v).2 _ hk]
   have hs : A.sec ((∑ t ∈ T, Complex.exp (z * t) • U t) v) = fun x => ∑ t ∈ T, Complex.exp (z * t) * A.sec (U t v) x := by
     funext x
     set_option synthInstance.maxHeartbeats 100000 in
-      rw [ContinuousLinearMap.sum_apply, map_sum, Finset.sum_apply]
-    exact Finset.sum_congr rfl fun t _ => by rw [ContinuousLinearMap.smul_apply, map_smul, Pi.smul_apply, smul_eq_mul]
+      rw [sum_apply, map_sum, Finset.sum_apply]
+    exact Finset.sum_congr rfl fun t _ => by rw [smul_apply, map_smul, Pi.smul_apply, smul_eq_mul]
   refine h1.trans ?_
   rw [flat, hs]
   exact flat_id z s c T hT (A.sec v) (fun t => A.sec (U t v)) (fun t => hU t v) x
 
 theorem ofin_adj {n : ℕ} (μ : Measure (G1 K n)) [μ.IsHaarMeasure] (m : Measure (AdelicGLn.FiniteAdelicGL K n)) [m.IsHaarMeasure]
     (e : TF K n) : ∃ e' : TF K n, (∀ h, e' h = starRingEnd ℂ (e h⁻¹)) ∧ ContinuousLinearMap.adjoint (Ofin μ m e) = Ofin μ m e' := by
-  haveI := Whittaker.isMulRightInvariant_finite K n m
-  haveI := isInvInvariant_of_isMulRightInvariant m
+  have := Whittaker.isMulRightInvariant_finite K n m
+  have := isInvInvariant_of_isMulRightInvariant m
   let e' : TF K n := ⟨⟨fun h => starRingEnd ℂ (e h⁻¹), Complex.continuous_conj.comp (e.continuous.comp continuous_inv)⟩,
     (e.hasCompactSupport.comp_homeomorph (Homeomorph.inv _)).comp_left (g := starRingEnd ℂ) (map_zero _)⟩
   refine ⟨e', fun _ => rfl, ?_⟩

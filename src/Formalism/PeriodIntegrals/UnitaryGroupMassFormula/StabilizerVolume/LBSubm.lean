@@ -125,7 +125,7 @@ private theorem isAddHaarMeasure_map_restrict_slab {n m : ℕ} (μ : Measure (Fi
     have hset : A ⁻¹' ((fun y => t + y) ⁻¹' S) ∩ {x | ‖x - R (A x) - (p - R (A p))‖ < r}
         = (fun x => x + R t) ⁻¹' (A ⁻¹' S ∩ {x | ‖x - R (A x) - (p - R (A p))‖ < r}) := by
       ext x
-      simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_inter_iff, mem_ofPred_eq]
       rw [key x t, map_add (f := _), hAR, add_comm t (A x)]
     rw [hset, measure_preimage_add_right]
   · intro O hO hne

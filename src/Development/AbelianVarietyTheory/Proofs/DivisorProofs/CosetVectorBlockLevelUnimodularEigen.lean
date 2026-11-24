@@ -180,7 +180,7 @@ theorem blockJ_unitBlock : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 𝔪 ≠
       by_cases h : p = l
       · subst h; rw [Matrix.one_apply_eq, Matrix.one_apply_eq]
       · have h' : Fin.natAdd o p ≠ Fin.natAdd o l := fun e => h (Fin.ext (by
-          have := congrArg Fin.val e; simp only [Fin.coe_natAdd] at this; omega))
+          have := congrArg Fin.val e; simp only [Fin.val_natAdd] at this; omega))
         rw [Matrix.one_apply_ne h', Matrix.one_apply_ne h]
     rw [e2] at e1
     have e3 : (Dp * Dt - 1) p l = -∑ m : Fin o, Ji (Fin.natAdd o p) (Fin.castAdd a m) * J (Fin.castAdd a m) (Fin.natAdd o l) := by
@@ -195,31 +195,31 @@ theorem blockJ_unitBlock : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 𝔪 ≠
   have h1 : (J * (unitBlock D o a (o + a)).map (inc D)) i l = J i (Fin.natAdd o l) := by
     rw [Matrix.mul_apply, Finset.sum_eq_single (Fin.natAdd o l)]
     · rw [Matrix.map_apply]; unfold unitBlock
-      rw [Matrix.of_apply, if_pos (by simp only [Fin.coe_natAdd]), map_one, mul_one]
+      rw [Matrix.of_apply, ite_eq_left (by simp only [Fin.val_natAdd]), map_one, mul_one]
     · intro m _ hm
-      have : ¬ (m.1 = o + l.1) := fun h => hm (Fin.ext (by simp only [Fin.coe_natAdd]; exact h))
+      have : ¬ (m.1 = o + l.1) := fun h => hm (Fin.ext (by simp only [Fin.val_natAdd]; exact h))
       rw [Matrix.map_apply]; unfold unitBlock
-      rw [Matrix.of_apply, if_neg this, map_zero, mul_zero]
+      rw [Matrix.of_apply, ite_eq_right this, map_zero, mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   rw [Matrix.sub_apply, h1]
   refine Fin.addCases (fun i' => ?_) (fun p => ?_) i
   · have h2 : ((unitBlock D o a (o + a)).map (inc D) * K) (Fin.castAdd a i') l = 0 := by
       rw [Matrix.mul_apply]
       refine Finset.sum_eq_zero fun m _ => ?_
-      have : ¬ ((Fin.castAdd a i' : Fin (o + a)).1 = o + m.1) := by simp only [Fin.coe_castAdd]; omega
+      have : ¬ ((Fin.castAdd a i' : Fin (o + a)).1 = o + m.1) := by simp only [Fin.val_castAdd]; omega
       rw [Matrix.map_apply]; unfold unitBlock
-      rw [Matrix.of_apply, if_neg this, map_zero, zero_mul]
+      rw [Matrix.of_apply, ite_eq_right this, map_zero, zero_mul]
     rw [h2, sub_zero]
     exact hA _ _ (by simp) (by simp)
   · have h2 : ((unitBlock D o a (o + a)).map (inc D) * K) (Fin.natAdd o p) l = K p l := by
       rw [Matrix.mul_apply, Finset.sum_eq_single p]
       · rw [Matrix.map_apply]; unfold unitBlock
-        rw [Matrix.of_apply, if_pos (by simp only [Fin.coe_natAdd]), map_one, one_mul]
+        rw [Matrix.of_apply, ite_eq_left (by simp only [Fin.val_natAdd]), map_one, one_mul]
       · intro m _ hm
         have : ¬ ((Fin.natAdd o p : Fin (o + a)).1 = o + m.1) := by
-          simp only [Fin.coe_natAdd]; intro h; exact hm (Fin.ext (by omega))
+          simp only [Fin.val_natAdd]; intro h; exact hm (Fin.ext (by omega))
         rw [Matrix.map_apply]; unfold unitBlock
-        rw [Matrix.of_apply, if_neg this, map_zero, zero_mul]
+        rw [Matrix.of_apply, ite_eq_right this, map_zero, zero_mul]
       · intro h; exact absurd (Finset.mem_univ _) h
     rw [h2]
     exact hkc p l

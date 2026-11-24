@@ -335,13 +335,13 @@ private theorem inf_char (P : HypothesesH) (hC : CompatT) (ι : Qbar l ≃+* ℂ
     ∀ v, π.HasInfChar v (infOf ![(e : ℤ), -(e : ℤ)]) := by
   intro v
   obtain ⟨hdet, L, _, _, _, _, _, hirr, ⟨η, σ₀, hσ₀, hησ, hηL⟩, ka, hka, hWit⟩ := hU
-  haveI : Module.IsTorsionFree L Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
+  have : Module.IsTorsionFree L Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
   obtain ⟨K, hK, hKC⟩ := Z.Bc.exists_quad L Ω η σ₀ hσ₀ hησ hηL
-  haveI : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
-  haveI a : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
-  haveI : Group.IsSolvable (L ≃ₐ[K] L) := isSolvable_of_comm a.is_comm.comm
+  have : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have a : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
+  have : Group.IsSolvable (L ≃ₐ[K] L) := Group.isSolvable_of_comm a.is_comm.comm
   have ec : W.comp (galEmb ℚ L Ω) = (W.comp (galEmb ℚ K Ω)).comp (galEmb K L Ω) := MonoidHom.ext fun _ => rfl
   have hirr' : IsIrr ((W.comp (galEmb ℚ K Ω)).comp (galEmb K L Ω)) := ec ▸ hirr
   obtain ⟨P₁, a1, a2, a3⟩ := Z.Bc.upQuadI_of P.toClassicalTheorems (Z.Bc.quadLiftRealToComplex_of_base_change P.bc) ℚ K Ω l ι hK W π hW hreg hatt

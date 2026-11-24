@@ -140,7 +140,7 @@ theorem fjOrth (N a b : ℕ) (hab : a ≠ b) : ∫ z : ℂ, fjChi N z * fjW a b 
     exact_mod_cast h
   obtain ⟨w, hw1, hwab⟩ : ∃ w : ℂ, ‖w‖ = 1 ∧ w ^ a * conj w ^ b = -1 := by
     refine ⟨Complex.exp (θ * Complex.I), Complex.norm_exp_ofReal_mul_I θ, ?_⟩
-    rw [← Complex.exp_conj, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add,
+    rw [← Complex.exp_conj, ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add,
       map_mul, Complex.conj_ofReal, Complex.conj_I, ← Complex.exp_pi_mul_I]
     congr 1
     linear_combination Complex.I * hθπ

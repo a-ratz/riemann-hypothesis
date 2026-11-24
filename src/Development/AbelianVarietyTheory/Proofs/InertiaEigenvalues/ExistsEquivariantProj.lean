@@ -115,15 +115,15 @@ def core (hω : ω.IsUnitary) : InnerProductSpace.Core ℂ (bddSm (a := a) ω) w
 
 theorem exists_orth_of_core {H : Type} [AddCommGroup H] [Module ℂ H] (c : InnerProductSpace.Core ℂ H)
     (D : Submodule ℂ H) [FiniteDimensional ℂ D] (v : H) : ∃ p ∈ D, ∀ x ∈ D, c.inner (v - p) x = 0 := by
-  letI : NormedAddCommGroup H := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ H := InnerProductSpace.ofCore _
+  let : NormedAddCommGroup H := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ H := InnerProductSpace.ofCore _
   obtain ⟨p, hp, h⟩ := Submodule.HasOrthogonalProjection.exists_orthogonal (K := D) v
   exact ⟨p, hp, (Submodule.mem_orthogonal' _ _).1 h⟩
 
 theorem exists_proj_of_finite (hω : ω.IsUnitary) {D : Submodule ℂ (Sm E a)} (hD : D ≤ bddSm ω) [FiniteDimensional ℂ D]
     {ψ : Sm E a} (hψ : ψ ∈ bddSm ω) : ∃ p ∈ D, ∀ x ∈ D, ip μ x ψ = ip μ x p := by
   let D' : Submodule ℂ (bddSm (a := a) ω) := D.comap (bddSm ω).subtype
-  haveI : FiniteDimensional ℂ D' := (Submodule.comapSubtypeEquivOfLe hD).symm.finiteDimensional
+  have : FiniteDimensional ℂ D' := (Submodule.comapSubtypeEquivOfLe hD).symm.finiteDimensional
   obtain ⟨p, hp, h⟩ := exists_orth_of_core (core μ hω) D' ⟨ψ, hψ⟩
   refine ⟨p.1, hp, fun x hx => ?_⟩
   have h1 : ip μ x (ψ - p.1) = 0 := h ⟨x, hD hx⟩ hx
@@ -161,9 +161,9 @@ theorem finRep_cptRep (k : GL (Fin a) (Af E)) (c : Kinf E a) (φ : Sm E a) :
 
 theorem finite_orbit {K : Subgroup (GL (Fin a) (Af E))} (hK : IsCompact (K : Set (GL (Fin a) (Af E)))) {φ : Sm E a}
     (h : IsOpen {k | finRep E a k φ = φ}) : (Set.range fun k : K => finRep E a k.1 φ).Finite := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   refine IsLocallyConstant.range_finite ((IsLocallyConstant.iff_eventually_eq _).2 fun x => ?_)
-  have hc : Continuous fun y : K => x.1⁻¹ * y.1 := continuous_const.mul continuous_subtype_val
+  have hc : Continuous fun y : K => x.1⁻¹ * y.1 := continuous_const.mul continuous_subtypeVal
   filter_upwards [(h.preimage hc).mem_nhds (by simp)] with y hy
   have hy' : finRep E a (x.1⁻¹ * y.1) φ = φ := hy
   conv_rhs => rw [← hy', ← Module.End.mul_apply, ← map_mul, mul_inv_cancel_left]
@@ -184,8 +184,8 @@ theorem exists_hull (π : CuspSub E a) {K : Subgroup (GL (Fin a) (Af E))} (hK : 
     simp only [T, Set.mem_iUnion] at hχ ⊢
     obtain ⟨φ, hφ, k', rfl⟩ := hχ
     exact ⟨φ, hφ, ⟨k * k'.1, mul_mem hk k'.2⟩, by simp only [map_mul, Module.End.mul_apply]⟩
-  haveI := hT.to_subtype
-  haveI : ∀ χ : T, FiniteDimensional ℂ (LocEx.orbSpan χ.1) := fun χ => (π.cusp _ (hTV _ χ.2)).1.kfin
+  have := hT.to_subtype
+  have : ∀ χ : T, FiniteDimensional ℂ (LocEx.orbSpan χ.1) := fun χ => (π.cusp _ (hTV _ χ.2)).1.kfin
   refine ⟨⨆ χ : T, LocEx.orbSpan χ.1, Submodule.span_le.2 fun φ hφ => ?_, iSup_le fun χ => Submodule.span_le.2 ?_,
     inferInstance, fun k hk => ?_, fun c => ?_⟩
   · refine Submodule.mem_iSup_of_mem ⟨φ, ?_⟩ (Submodule.subset_span ⟨1, by simp⟩)
@@ -224,7 +224,7 @@ theorem exists_proj (hω : ω.IsUnitary) {π : CuspSub E a} (hπ : π.HasCentral
   have hKc : IsCompact (K : Set (GL (Fin a) (Af E))) :=
     hUc.of_isClosed_subset (Subgroup.isClosed_of_isOpen _ hKo) inf_le_left
   let O := LocEx.orbSpan ψ
-  haveI : FiniteDimensional ℂ O := hA.kfin
+  have : FiniteDimensional ℂ O := hA.kfin
   have hO : O ≤ bddSm ω := Submodule.span_le.2 (by
     rintro _ ⟨k, rfl⟩
     exact mul_right_mem_bddForms hψ _)
@@ -250,8 +250,8 @@ theorem exists_proj (hω : ω.IsUnitary) {π : CuspSub E a} (hπ : π.HasCentral
       exact (hQ _ x hx).symm.trans (ip_rt_proj μ hω hDb (g := infGL E a (Unitary.toUnits k)) (fun y hy => by
         rw [← map_inv, ← map_inv]; exact h2 _ y hy) (hO w.2) (Q w).2 (hQ w) x hx)
   let F : Submodule ℂ (Sm E a) := π.V ⊓ Submodule.span ℂ (AutFinGL.forms K ρ₀ c)
-  haveI := GlobalTheory.automorphicFormsFiniteGL E a K hKo O ρ₀ hρc c
-  haveI : FiniteDimensional ℂ F := Submodule.finiteDimensional_of_le inf_le_right
+  have := GlobalTheory.automorphicFormsFiniteGL E a K hKo O ρ₀ hρc c
+  have : FiniteDimensional ℂ F := Submodule.finiteDimensional_of_le inf_le_right
   have hFb : F ≤ bddSm ω := inf_le_left.trans hV
   obtain ⟨p, hp, hp'⟩ := exists_proj_of_finite μ hω hFb hψ
   refine ⟨p, hp.1, fun φ hφ => ?_⟩

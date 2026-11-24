@@ -97,7 +97,7 @@ theorem local_mem_principal_congruence {N : ℕ} (w : HeightOneSpectrum (𝓞 �
 theorem mem_KLev_one_of_mem_K1G (N : ℕ) {k : GL (Fin 2) (Af ℚ)} (hk : k ∈ K1G N) : k ∈ KLev ℚ 2 1 := by
   obtain ⟨g, -, rfl⟩ := hk
   refine ⟨g, ?_, rfl⟩
-  haveI : Subsingleton (↥(Ohat ℚ) ⧸ Ideal.span {((1 : ℕ) : ↥(Ohat ℚ))}) := Ideal.Quotient.subsingleton_iff.2 (by simp)
+  have : Subsingleton (↥(Ohat ℚ) ⧸ Ideal.span {((1 : ℕ) : ↥(Ohat ℚ))}) := Ideal.Quotient.subsingleton_iff.2 (by simp)
   exact MonoidHom.mem_ker.2 (Units.ext (Subsingleton.elim _ _))
 
 theorem nat_mem_loc {F : Type} [Field F] [NumberField F] (q : HeightOneSpectrum (𝓞 F)) (c : ℕ) {N : ℕ}

@@ -209,7 +209,7 @@ theorem orbLen_map {G LL LL' : Type} [Group G] [Field LL] [Field LL'] (f : LL �
   unfold Formalism.MainNotions.ElementDenominator.orbLen
   congr 1
   ext k
-  simp only [Set.mem_setOf_eq, MonoidHom.comp_apply]
+  simp only [Set.mem_ofPred_eq, MonoidHom.comp_apply]
   constructor
   · rintro ⟨hk, h⟩
     exact ⟨hk, fun g g' hg => hinj (h g g' hg)⟩
@@ -268,10 +268,10 @@ namespace GlobalTheory.BaseCoef
 
 theorem lattice_basis_exists : ∀ (l : ℕ) [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] (LL : FinExt l) (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)), ∃ (k : ℕ) (b : Module.Basis (Fin k) ↥LL.1 T.V), IsLatBasis T b := by
   intro l _ G _ _ LL T
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI hfr : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
-  haveI := T.L.free
-  haveI : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have hfr : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
+  have := T.L.free
+  have : Module.Finite ↥(OL LL) ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
   let e0 := Module.Free.chooseBasis ↥(OL LL) ↥T.L.T
   let e := e0.reindex (Fintype.equivFin _)
   let v : Fin (Fintype.card (Module.Free.ChooseBasisIndex ↥(OL LL) ↥T.L.T)) → T.V := fun i => (e i : T.V)
@@ -701,7 +701,7 @@ end Maps
 theorem liftF_descends : ∀ (l : ℕ) [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] {K₀ K B BdR : Type} [Field K₀] [Field K] [Algebra ℚ_[l] K₀] [Algebra ℚ_[l] K] [Algebra K₀ K] [IsScalarTower ℚ_[l] K₀ K] [CommRing B] [CommRing BdR] [Algebra ℚ_[l] B] [Algebra K₀ B] [IsScalarTower ℚ_[l] K₀ B] [Algebra ℚ_[l] BdR] [Algebra K₀ BdR] [Algebra K BdR] [IsScalarTower ℚ_[l] K BdR] [IsScalarTower K₀ K BdR] [IsScalarTower ℚ_[l] K₀ BdR] (PD : PeriodData G ℚ_[l] K₀ K B BdR) (LL LL' : FinExt l) (hL : LL.1 ≤ LL'.1) (T₁ T₂ : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) (k₁ k₂ : ℕ) (b₁ : Module.Basis (Fin k₁) ↥LL.1 T₁.V) (b₂ : Module.Basis (Fin k₂) ↥LL.1 T₂.V) (hb₁ : IsLatBasis T₁ b₁) (hb₂ : IsLatBasis T₂ b₂) (F : LatHom T₁.L T₂.L) (r : ↥LL'.1 →ₗ[ℚ_[l]] ↥LL.1), (∀ a x, r (incl hL a * x) = a * r x) → r 1 = 1 → (∀ x ∈ OL LL', r x ∈ OL LL) → Continuous r → ∀ e : ℕ, (extHom hL hb₁ hb₂ F).LiftF PD e → F.LiftF PD e := by
   intro l _ G _ _ K₀ K B BdR _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ PD LL LL' hL T₁ T₂ k₁ k₂ b₁ b₂ hb₁ hb₂ F r hr h1
     hint hrc e h
-  have hincl : Continuous (incl hL) := continuous_subtype_val.subtype_mk _
+  have hincl : Continuous (incl hL) := continuous_subtypeVal.subtype_mk _
   have retT : ∀ {T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)} {k : ℕ} {b : Module.Basis (Fin k) ↥LL.1 T.V},
       IsLatBasis T b → ∀ x ∈ intVec LL' k, ret r b x ∈ T.L.T := by
     intro T k b hb x hx
@@ -752,7 +752,7 @@ theorem thmT_descend : ∀ (l : ℕ) [Fact l.Prime] (Pl : LocPrime l) (K' : FinE
     hU h0U hUc hη hηH
     (_root_.GlobalTheory.BaseCoef.jumpsInV_extLat l Pl K' h hN hF hS LL LL' hL T₁ k₁ b₁ hb₁ _ hJ1) (_root_.GlobalTheory.BaseCoef.jumpsInV_extLat l Pl K' h hN hF hS LL LL' hL T₂ k₂ b₂ hb₂ _ hJ2) hl
   rw [hrP] at key
-  exact ⟨key.1, _root_.GlobalTheory.CoefDescent.liftF_descends l _ LL LL' hL T₁ T₂ k₁ k₂ b₁ b₂ hb₁ hb₂ F r hr1 hr2 hr3 (by haveI : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2; exact LinearMap.continuous_of_finiteDimensional r) _ key.2⟩
+  exact ⟨key.1, _root_.GlobalTheory.CoefDescent.liftF_descends l _ LL LL' hL T₁ T₂ k₁ k₂ b₁ b₂ hb₁ hb₂ F r hr1 hr2 hr3 (by have : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2; exact LinearMap.continuous_of_finiteDimensional r) _ key.2⟩
 
 end GlobalTheory.BaseCoef
 end -- clump:auto
@@ -796,10 +796,10 @@ theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → Global
   have hlp : l.Prime := Fact.out
   have hl2 : 2 ≤ l := hlp.two_le
   obtain ⟨a, ha⟩ : ∃ a, a = (l - 1).factorial := ⟨_, rfl⟩
-  haveI : NeZero a := ⟨by rw [ha]; exact Nat.factorial_ne_zero _⟩
+  have : NeZero a := ⟨by rw [ha]; exact Nat.factorial_ne_zero _⟩
   have hla : 1 < l ^ a := Nat.one_lt_pow (NeZero.ne a) (by omega)
   obtain ⟨e, he⟩ : ∃ e, e + 1 = l ^ a := ⟨l ^ a - 1, by omega⟩
-  haveI : NeZero e := ⟨by
+  have : NeZero e := ⟨by
     intro h0
     rw [h0, zero_add] at he
     omega⟩
@@ -807,8 +807,8 @@ theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → Global
     rw [ha, hlp.dvd_factorial]
     omega
   obtain ⟨⟨LL', hle, hUnr⟩, -⟩ := _root_.GlobalTheory.TameCoeff.main l a e he hnd LL
-  haveI := hUnr
-  haveI : TameDescentExponentData ↥LL'.1 l e a := (_root_.GlobalTheory.TameCoeff.main l a e he hnd LL').2 hUnr
+  have := hUnr
+  have : TameDescentExponentData ↥LL'.1 l e a := (_root_.GlobalTheory.TameCoeff.main l a e he hnd LL').2 hUnr
   refine _root_.GlobalTheory.BaseCoef.thmT_descend l (D.loc l) K' h hN hF hS LL LL' hle C ?_
   have ϖ : PiSys l e := Classical.arbitrary _
   have hStd : IsStd (D.loc l) (D.locA l) := IsStd.of_tied (D.locT l)

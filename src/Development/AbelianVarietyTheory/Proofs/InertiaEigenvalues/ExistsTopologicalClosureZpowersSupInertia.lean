@@ -77,7 +77,7 @@ theorem exists_gen_of_isOpen {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
   refine ⟨⟨φ, hφU⟩, ?_⟩
   have hd : Dense ((Subgroup.zpowers g ⊔ J : Subgroup G) : Set G) := by
     rw [dense_iff_closure_eq, ← Subgroup.topologicalClosure_coe, hg, Subgroup.coe_top]
-  have hd2 := hd.preimage (f := (Subtype.val : U → G)) hU.isOpenMap_subtype_val
+  have hd2 := hd.preimage (f := (Subtype.val : U → G)) hU.isOpenMap_subtypeVal
   apply SetLike.coe_injective
   rw [Subgroup.topologicalClosure_coe, Subgroup.coe_top, ← dense_iff_closure_eq]
   refine hd2.mono fun y hy => ?_
@@ -161,8 +161,8 @@ end GlobalTheory.FrobGen
 theorem GlobalTheory.exists_topologicalClosure_zpowers_sup_inertia (l : ℕ) [Fact l.Prime] (K : FinExt l) :
     ∃ φ : ↥(GK K), (Subgroup.zpowers φ ⊔ IK K).topologicalClosure = ⊤ := by
   obtain ⟨g, hg⟩ := GlobalTheory.FrobGen.exists_gen_top (l := l)
-  haveI := GlobalTheory.FrobGen.normal_fix (l := l)
-  haveI := K.2
+  have := GlobalTheory.FrobGen.normal_fix (l := l)
+  have := K.2
   obtain ⟨φ, hφ⟩ := GlobalTheory.FrobGen.exists_gen_of_isOpen _ g (GK K) K.1.fixingSubgroup_isOpen hg
   refine ⟨φ, eq_top_iff.2 (hφ ▸ ?_)⟩
   refine Subgroup.topologicalClosure_minimal _ ?_ (Subgroup.isClosed_topologicalClosure _)

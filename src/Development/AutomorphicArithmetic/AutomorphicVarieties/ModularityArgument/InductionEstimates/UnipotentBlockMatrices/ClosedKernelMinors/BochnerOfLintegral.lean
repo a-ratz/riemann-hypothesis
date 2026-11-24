@@ -94,12 +94,12 @@ private theorem pt_cont : Continuous (pt : Par K → G1 K (2 + 2)) := by
   exact h.comp (f := fun p : Par K => (p.1, p.2.1, p.2.2.1)) (by fun_prop)
 
 private theorem pt_meas : Measurable (pt : Par K → G1 K (2 + 2)) := by
-  haveI i1 : OpensMeasurableSpace (UPos (2 + 2) 2 → 𝔸[K]) := inferInstance
-  haveI i2 : OpensMeasurableSpace (G1 K 2) := inferInstance
-  haveI i3 : OpensMeasurableSpace (KG K (2 + 2)) := inferInstance
-  haveI i4 : SecondCountableTopology (G1 K 2) := inferInstance
-  haveI i5 : SecondCountableTopology (UPos (2 + 2) 2 → 𝔸[K]) := inferInstance
-  haveI i9 : OpensMeasurableSpace (Par K) := oms5 _ _ _
+  have i1 : OpensMeasurableSpace (UPos (2 + 2) 2 → 𝔸[K]) := inferInstance
+  have i2 : OpensMeasurableSpace (G1 K 2) := inferInstance
+  have i3 : OpensMeasurableSpace (KG K (2 + 2)) := inferInstance
+  have i4 : SecondCountableTopology (G1 K 2) := inferInstance
+  have i5 : SecondCountableTopology (UPos (2 + 2) 2 → 𝔸[K]) := inferInstance
+  have i9 : OpensMeasurableSpace (Par K) := oms5 _ _ _
   exact pt_cont.measurable
 
 private theorem inv_eq (ξ : UPos (2 + 2) 2 → 𝔸[K]) (a b : G1 K 2) :
@@ -160,13 +160,13 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.coordUnf :
         ∫⁻ m₁, ∫⁻ m₂, ∫⁻ t : ℝ, ∫⁻ k : KG K (2 + 2), ∫⁻ X, E.indicator Ψ (nn X * lv m₁ m₂ t * k) * ENNReal.ofReal (Real.exp (-4 * t))
           ∂unipMeasure K (2 + 2) 2 ∂κ ∂volume ∂μ₂ ∂μ₂ = ∫⁻ p, Ψ (pt p) ∂parM μ₂ κ := by
   intro K _ _ μ₂ _ κ _ E hEm hE Ψ hΨm hΨ
-  haveI : CompactSpace (KG K (2 + 2)) :=
+  have : CompactSpace (KG K (2 + 2)) :=
     isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
-  haveI : SFinite κ := inferInstance
-  haveI : SFinite (fd μ₂) := inferInstance
-  haveI : SFinite ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)) := inferInstance
-  haveI : SFinite (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))) := inferInstance
-  haveI : SFinite (((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))).prod
+  have : SFinite κ := inferInstance
+  have : SFinite (fd μ₂) := inferInstance
+  have : SFinite ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)) := inferInstance
+  have : SFinite (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))) := inferInstance
+  have : SFinite (((volume : Measure ℝ).withDensity fun t => ENNReal.ofReal (Real.exp (-4 * t))).prod
     (κ.prod ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)))) := inferInstance
   have hΦ : Measurable (E.indicator Ψ) := hΨm.indicator hEm
   set S : Gam K 2 → Gam K 2 → Par K → ℝ≥0∞ := fun a b p => ∑' ξ : unipLattice K (2 + 2) 2,
@@ -251,7 +251,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.tower :
       ∀ Ψ : G1 K (2 + 2) → ℝ≥0∞, Measurable Ψ → (∀ γ ∈ PK K, ∀ g, Ψ (γ * g) = Ψ g) →
         ∫⁻ y, ∑' q : Cos K, Ψ ((q.out : G1 K (2 + 2)) * y) ∂fd μ = ∫⁻ g in E, Ψ g ∂μ := by
   intro K _ _ μ _ E hEm hE Ψ hΨm hΨ
-  haveI : Countable (Gam K (2 + 2)) := inferInstance
+  have : Countable (Gam K (2 + 2)) := inferInstance
   have hD := isFundamentalDomain_fundamentalDomain (Gam K (2 + 2)) μ
   set_option synthInstance.maxHeartbeats 200000 in
     rw [← lintegral_indicator hEm, hD.lintegral_eq_tsum'', ← lintegral_tsum]
@@ -326,7 +326,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.unf :
     have h3 : Measurable fun p : Par K => (p.1, p.2.1, p.2.2.1) :=
       measurable_fst.prodMk (measurable_snd.fst.prodMk measurable_snd.snd.fst)
     exact ((h2.comp measurable_snd.snd.snd.snd).mul (h1.comp h3)).mul
-      (measurable_subtype_coe.comp measurable_snd.snd.snd.fst)
+      (measurable_subtypeVal.comp measurable_snd.snd.snd.fst)
   have hmk : Measurable (RightCosetSpace.mk (PK K)) := measurable_quotient_mk''
   let h : RightCosetSpace (PK K) → ℂ := Quotient.lift Ψ fun a b hab => by
     obtain ⟨γ, hγ⟩ := MulAction.orbitRel_apply.1 hab

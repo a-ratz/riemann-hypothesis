@@ -73,8 +73,8 @@ theorem closure_hart : ∀ (A R : Type) [CommRing A] [IsDomain A] [CommRing R] [
   intro A R _ _ _ _ _ hHR hinj D _ _ τ hτC a₀ ha₀ n x y hy hid
   set F := GlobalTheory.LocAcyc.GenFib A R
   set C := GlobalTheory.KeyOriginNoeth.closure A R D
-  letI : Algebra R D := (GlobalTheory.KeyOriginNoeth.baseHom A R D).toAlgebra
-  letI := GlobalTheory.KeyOriginNoeth.closureAlg A R D
+  let : Algebra R D := (GlobalTheory.KeyOriginNoeth.baseHom A R D).toAlgebra
+  let := GlobalTheory.KeyOriginNoeth.closureAlg A R D
   have hbase : ∀ r : R, GlobalTheory.KeyOriginNoeth.baseHom A R D r = algebraMap F D (algebraMap R F r) :=
     fun r => rfl
   have hmemC : ∀ z : D, z ∈ C ↔ IsIntegral R z := fun z => Iff.rfl

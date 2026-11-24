@@ -56,8 +56,8 @@ private theorem la_avg {A H C : Type} [CommRing A] [IsLocalRing A] [Group H] [Gr
     (hab : ∀ s, EntIn (maximalIdeal A) ((a s : Matrix (Fin 3) (Fin 3) A) - (b s : Matrix (Fin 3) (Fin 3) A))) :
     ∃ M : GL (Fin 3) A, ∀ s, a s = M * b s * M⁻¹ := by
   classical
-  haveI : Finite (H ⧸ φ.ker) := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange φ).symm.toEquiv
-  letI := Fintype.ofFinite (H ⧸ φ.ker)
+  have : Finite (H ⧸ φ.ker) := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange φ).symm.toEquiv
+  let := Fintype.ofFinite (H ⧸ φ.ker)
   have hQ : IsUnit (Fintype.card (H ⧸ φ.ker) : A) := by
     have h1 : Fintype.card (H ⧸ φ.ker) ∣ Nat.card C := by
       rw [← Nat.card_eq_fintype_card, Nat.card_congr (QuotientGroup.quotientKerEquivRange φ).toEquiv]
@@ -137,7 +137,7 @@ private theorem la_U {O R D : Type} [CommRing O] [IsLocalRing O] [Finite (Residu
     ∃ k : GG (m := 3) (R := R), ∀ s ∈ I, η s = 1 →
       r s = k * GG.ofGL (tor R (Units.map (algebraMap O R).toMonoidHom (Ψ s))) * k⁻¹ := by
   have hu : IsUnit (Nat.card (ResidueField O)ˣ : O) := by
-    letI := Fintype.ofFinite (ResidueField O)
+    let := Fintype.ofFinite (ResidueField O)
     rw [← residue_ne_zero_iff_isUnit, map_natCast, Nat.card_units, Nat.card_eq_fintype_card,
       Nat.cast_pred Fintype.card_pos, FiniteField.cast_card_eq_zero]
     simp
@@ -222,10 +222,10 @@ theorem UpperTheory.V.UnitaryThreeInertia.levelAway_of_pt :
     ∀ (K : Type) [Field K] [NumberField K] [Algebra K Ω] [IsScalarTower ℚ K Ω], IsQi K → ∀ (g₁ : Gam Ω S), F.Marked g₁ → ∀ r : Gam Ω S →* GG (m := 3) (R := PadicAlgCl l), F.IsCharZeroPt g₁ r → ∀ ρ : G K Ω →* GL (Fin 3) (Qbar l), (∀ s : G K Ω, (ρ s : Matrix (Fin 3) (Fin 3) (Qbar l)) = (r (toGS Ω _ (s.restrictScalars ℚ))).mat) → Af.LevelAway l N ρ := by
   intro Ω _ _ _ l _ c N _ e ψ o₁ hD S A F hF K _ _ _ _ hK g₁ _ r hr ρ hρ w hw
   have hok := hostFrame_ok Ω c e ψ o₁ hD S A F hF
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ,
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ,
     haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
     Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
-  haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
   obtain ⟨B, hB⟩ := exists_isPlaceOver Ω w
   refine ⟨B, hB, ?_⟩
   have hρ' : ∀ s, ρ s = (r (toGS Ω _ (galEmb ℚ K Ω s))).left := fun s => Units.ext (hρ s)

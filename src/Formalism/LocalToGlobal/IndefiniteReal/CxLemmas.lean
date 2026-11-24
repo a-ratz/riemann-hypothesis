@@ -268,7 +268,7 @@ theorem partPr_other {p q : Bs.Ix} {x : Fin (Df.dQ t) → K} (hx : x ∈ Df.Qp t
       apply le_iSup_of_le p
       exact le_iSup (fun _ : p ≠ q => Df.Qp t p) (Ne.symm hq)
     exact hle hx
-  have := Submodule.linearProjOfIsCompl_apply_right hc ⟨x, hx'⟩
+  have := Submodule.projectionOnto_apply_right hc ⟨x, hx'⟩
   rw [this]
   rfl
 
@@ -337,7 +337,7 @@ theorem lin_basis {E : Type} [AddCommGroup E] [Module ℂ E] {n : ℕ} (f : (Fin
   apply LinearMap.pi_ext
   intro i x
   simp only [lin, Fintype.linearCombination_apply, Pi.single_apply, ite_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← map_smul]
   congr 1
   ext j

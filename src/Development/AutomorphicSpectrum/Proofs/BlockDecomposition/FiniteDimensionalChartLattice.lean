@@ -69,8 +69,8 @@ theorem finiteDimensional_chartLatQ :
       IsArithVar (mCoordIdeal y) (D + 1) → FiniteDimensional ℚ (chartLatQ y b 1) := by
   intro K _ ι _ Ω _ _ y D b hV
   classical
-  letI : LinearOrder K := LinearOrder.lift' (Fintype.equivFin K) (Fintype.equivFin K).injective
-  letI : ∀ k, LinearOrder (ι k) := fun k =>
+  let : LinearOrder K := LinearOrder.lift' (Fintype.equivFin K) (Fintype.equivFin K).injective
+  let : ∀ k, LinearOrder (ι k) := fun k =>
     LinearOrder.lift' (Fintype.equivFin (ι k)) (Fintype.equivFin (ι k)).injective
   obtain ⟨e⟩ := ChartLatQCech.proof K ι Ω y (D + 1) b hV
   have hQ := isMultiHomogIdeal_map_rat hV.2.1.2.1
@@ -78,7 +78,7 @@ theorem finiteDimensional_chartLatQ :
   have hS := PositivityTheory.HtPt.Ktw.a11 ℚ K ι _
     (ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.quotPart ℚ (Ideal.map (MvPolynomial.map (Int.castRingHom ℚ)) (mCoordIdeal y)))
     inferInstance inferInstance hG
-  haveI := hS.1 b 0
+  have := hS.1 b 0
   exact Module.Finite.equiv e.symm
 
 end GlobalTheory.CompanionTheory.GenericFibre

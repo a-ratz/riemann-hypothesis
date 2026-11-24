@@ -92,7 +92,7 @@ theorem symplO_eq_add (S T : HSp D) (x y : WO S T) : symplO S T x y = symplOH S 
 
 theorem exists_symplO_eq (d : HypDec S S₀ ρ) (T : HSp D) {ξ : Matrix (Fin T.rank) (Fin ρ) D.host.E} (hξ : ξ ≠ 0)
     (t : AF D.host.F) : ∃ a, symplO S T (d.extX T (rat ξ)) (d.extY T a) = t := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   have hv : T.gram * ξ ≠ 0 := fun h => hξ (by
     rw [← Matrix.nonsing_inv_mul_cancel_left T.gram ξ (gram_isUnit_det T), h, Matrix.mul_zero])
   obtain ⟨i, j, hij⟩ : ∃ i j, (T.gram * ξ) i j ≠ 0 := by
@@ -189,10 +189,10 @@ theorem theta_series (hψ : IsStdChar D ψ (-1)) (d : HypDec S S₀ ρ) (T : HSp
       exact hb _ ⟨y, hy, rfl⟩ ξ
   · intro x
     obtain ⟨i1, i2, i3, -⟩ := lattice_Mx D T.rank ρ
-    haveI : BorelSpace (Mx D T.rank ρ) := ⟨rfl⟩
-    haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h.2.2]; exact ENNReal.one_lt_top⟩
-    haveI : Countable D.host.E := Finsupp.Countable.of_moduleFinite (R := ℚ)
-    haveI : Countable (Matrix (Fin T.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (_ → _ → D.host.E))
+    have : BorelSpace (Mx D T.rank ρ) := ⟨rfl⟩
+    have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h.2.2]; exact ENNReal.one_lt_top⟩
+    have : Countable D.host.E := Countable.of_moduleFinite (R := ℚ)
+    have : Countable (Matrix (Fin T.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (_ → _ → D.host.E))
     obtain ⟨b, hs, hb⟩ := hb {x} isCompact_singleton
     have hone : μ.real 𝓕 = 1 := by rw [Measure.real, h.2.2, ENNReal.toReal_one]
     have key : ∀ a, heisO ψ S T (d.extY T a) (heisO ψ S T (d.extX T x) (heisO ψ S T (d.ext0 T 0) f)) 0 =

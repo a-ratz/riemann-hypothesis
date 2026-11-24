@@ -74,7 +74,7 @@ theorem p_ne_zero {E : Type} [Field E] [NumberField E] {p : ℕ} {F : Type} [Fie
     (h : IsSec pq sc) : p ≠ 0 := by
   intro hp
   have hbot : Ideal.span {(p : 𝓞 E)} = ⊥ := by simp [hp]
-  haveI : (Ideal.span {(p : 𝓞 E)}).IsPrime := by rw [hbot]; exact Ideal.isPrime_bot
+  have : (Ideal.span {(p : 𝓞 E)}).IsPrime := by rw [hbot]; exact Ideal.isPrime_bot
   have hinj : Function.Injective pq := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro u hu
@@ -90,7 +90,7 @@ theorem p_ne_zero {E : Type} [Field E] [NumberField E] {p : ℕ} {F : Type} [Fie
   exact Ring.ne_bot_of_isMaximal_of_not_isField hm (RingOfIntegers.not_isField E) rfl
 
 theorem finite_tors {E : Type} [Field E] [NumberField E] (N : ℕ) {p : ℕ} (hp : p ≠ 0) : Finite (TorsT E N p) := by
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
+  have : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hp)
   infer_instance
 
@@ -103,7 +103,7 @@ theorem frac_epi {Ω : Type} [Field Ω] {O : Type} [CommRing O] [Algebra O Ω] (
     have hl : ∀ r : R, fracToField R (algebraMap R (FractionRing R) r) = algebraMap R Ω r := fun r =>
       IsFractionRing.lift_algebraMap (g := algebraMap R Ω) Subtype.val_injective r
     rw [map_div₀, hl, hl]
-  haveI : IsIso (CommRingCat.ofHom (fracToField R)) :=
+  have : IsIso (CommRingCat.ofHom (fracToField R)) :=
     (RingEquiv.ofBijective _ hb).toCommRingCatIso.isIso_hom
   exact inferInstanceAs (IsIso (Spec.map (CommRingCat.ofHom (fracToField R))))
 
@@ -125,7 +125,7 @@ end PositivityTheory.Xgn.FunctionFamilyIdempotent
 open PositivityTheory.Xgn.FunctionFamilyIdempotent in
 theorem PositivityTheory.Xgn.function_family_idempotent : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (p : ℕ) (G : GenTors 𝔐 p) (O : Type) [CommRing O] [Algebra O Ω] (c' : ∀ k, J k) [IsNoetherianRing (CR O y c')] [IsIntegrallyClosed (CR O y c')] [IsFractionRing (CR O y c') Ω] (P : ChartPack G O c') (F : Type) [Field F] (pq : (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) →+* F) (sc : F →+ (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)})), Function.Surjective pq → IsSec pq sc → ∀ a ∈ P.Γ₁.btOrder ⊤, (fun t => a (toN sc (fromN pq t))) ∈ P.Γ₁.btOrder ⊤ := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ J _ y 𝔐 p G O _ _ c' _ _ _ P F _ pq sc _ hsec f hf
-  haveI := finite_tors (E := E) (D.p + D.q) (p_ne_zero pq sc hsec)
+  have := finite_tors (E := E) (D.p + D.q) (p_ne_zero pq sc hsec)
   obtain ⟨e, he⟩ := Ideal.Quotient.mk_surjective (sc 1)
   have hα : ∀ t : TorsT E (D.p + D.q) p, toN sc (fromN pq t) = mulT _ p e t := by
     intro t
@@ -133,8 +133,8 @@ theorem PositivityTheory.Xgn.function_family_idempotent : ∀ (E : Type) [Field 
     change sc (pq (Multiplicative.toAdd t i)) = Ideal.Quotient.mk _ e * Multiplicative.toAdd t i
     rw [he]
     exact sec_eq pq sc hsec.1 hsec.2 _
-  haveI := 𝔐.t.act.hom e
-  haveI := frac_epi (CR O y c')
+  have := 𝔐.t.act.hom e
+  have := frac_epi (CR O y c')
   have h4 := (_root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ _ 𝔐.t.G P.x p P.i₁ P.tors₁
     𝔐.t.semi.smooth).2.2.2.1 (𝔐.t.act.act e) (mulT _ p e) (by
       intro t

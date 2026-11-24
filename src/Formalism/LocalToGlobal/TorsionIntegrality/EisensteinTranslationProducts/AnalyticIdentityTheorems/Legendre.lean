@@ -73,7 +73,7 @@ lemma e2Summand_succ (z : ℍ) (a : ℕ) : e2Summand ((a : ℤ) + 1) z =
   have hq : ∀ n : ℕ+, cexp (2 * π * I * (((a : ℂ) + 1) * (z : ℂ))) ^ (n : ℕ)
       = cexp (2 * π * I * z) ^ ((a + 1) * (n : ℕ)) := by
     intro n
-    rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+    rw [← exp_natCast_mul, ← exp_natCast_mul]
     congr 1
     push_cast
     ring

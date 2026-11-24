@@ -78,27 +78,27 @@ theorem isTypeAt_of_finSum (θ : InfFam D) (V : HSp D) (τ : D.what₂.Tau) {S :
   let CC : ℕ → ℝ := fun i => if hi : i < n then ‖L ⟨i, hi⟩‖ else 0
   have hb : ∀ i w, ‖ll i w‖ ≤ CC i * ‖w‖ := fun i w => by
     by_cases hi : i < n
-    · simp only [ll, CC, dif_pos hi]
+    · simp only [ll, CC, dite_eq_left hi]
       exact (L ⟨i, hi⟩).le_opNorm w
-    · simp [ll, CC, dif_neg hi]
+    · simp [ll, CC, dite_eq_right hi]
   refine ⟨vv, fun i => ?_, ll, fun i => ⟨[[]], CC i, by simp, fun w _ => by simpa using hb i w⟩,
     ⟨[[]], CC, by simp, fun i w _ => by simpa using hb i w, fun S' _ => ?_, fun _ => 1, continuous_const,
       fun g hg w _ => ?_⟩, fun g hg => ?_⟩
   · by_cases hi : i < n
-    · simp only [vv, dif_pos hi]
+    · simp only [vv, dite_eq_left hi]
       exact hv _
-    · simp only [vv, dif_neg hi]
+    · simp only [vv, dite_eq_right hi]
       intro k Xs _
       simpa using contDiff_const
   · refine summable_of_ne_finset_zero (s := Finset.range n) fun i hi => ?_
     have : ¬ i < n := by simpa using hi
-    simp [CC, dif_neg this]
+    simp [CC, dite_eq_right this]
   · simp [hD.2.2.1.2.1 _ (GlobalTheory.TypeAtCompare.conj_mem hP hJ hg) w]
   · rw [hφ g hg]
     convert hasSum_sum_of_ne_finset_zero (s := Finset.range n)
       (f := fun i => ll i (σ (P * g * P⁻¹) (vv i))) (fun i hi => by
         have : ¬ i < n := by simpa using hi
-        simp [ll, dif_neg this]) using 1
+        simp [ll, dite_eq_right this]) using 1
     · rw [Finset.sum_range]
       refine Finset.sum_congr rfl fun i _ => ?_
       simp [ll, vv, i.2]
@@ -149,7 +149,7 @@ theorem conj_finSum {V : HSp D} {S S' : D.what₂.Tau → SPar} {θ : InfFam D} 
       exact e1.symm
     have e2 : M.rep τ g (f τ) = c (M'.rep τ g (c.symm (f τ))) := by
       rw [hc g hg, LinearIsometryEquiv.apply_symm_apply]
-    rw [Fin.sum_univ_one, map_smul, PiTensorProduct.lift.tprod, Pi.smul_apply, ContinuousLinearMap.smul_apply, conjFun_apply,
+    rw [Fin.sum_univ_one, map_smul, PiTensorProduct.lift.tprod, Pi.smul_apply, smul_apply, conjFun_apply,
       smul_eq_mul, smul_eq_mul, star_mul', e3, LinearMap.coe_toContinuousLinearMap', e2]
     rfl
   | add a b ha hb =>
@@ -198,7 +198,7 @@ theorem formX_props (R : RealDat D A Ks) (hθ : R.models_inf) (hc : R.models_cX)
   rw [e]
   refine ⟨isAutFunSm_lift hT _, GlobalTheory.DefiniteEnd.isCuspFun_of_definite D.sp.X'_sig (GlobalTheory.DefiniteEnd.end_definite D) _,
     fun τ => ?_⟩
-  haveI := GlobalTheory.DefiniteEnd.finiteDimensional_model D.sp.X'_sig (GlobalTheory.DefiniteEnd.end_definite D) R.MX τ
+  have := GlobalTheory.DefiniteEnd.finiteDimensional_model D.sp.X'_sig (GlobalTheory.DefiniteEnd.end_definite D) R.MX τ
   obtain ⟨M', c, hc'⟩ := @GlobalTheory.ConjDS.exists_conjModel D D.sp.X' (parB (Ptw D) D.R.m) R.MX
   have hsm := (GlobalTheory.ConjMult.conj_mult R.θ R.MX M' c hc').1 τ
   have hE := M'.enum τ

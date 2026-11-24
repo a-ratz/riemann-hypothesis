@@ -135,8 +135,8 @@ theorem val_det_le_one {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero 
       intro j
       by_cases hj : j = j0
       · simp [a, hj]
-      · simp only [a, hj, if_false, map_div₀]
-        exact div_le_one_of_le₀ (hj0 j (Finset.mem_univ _)) zero_le'
+      · simp only [a, hj, ite_false, map_div₀]
+        exact div_le_one_of_le₀ (hj0 j (Finset.mem_univ _)) zero_le
     let B' : Matrix (Fin (m + 1)) (Fin (m + 1)) K := fun i j => B i j - a j * B i j0
     have hB'0 : ∀ i, B' i j0 = B i j0 := fun i => by simp [B', a]
     have hdet : B.det = B'.det := by
@@ -146,7 +146,7 @@ theorem val_det_le_one {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero 
     have hrow : ∀ l, B' 0 (j0.succAbove l) = 0 := by
       intro l
       have hne : j0.succAbove l ≠ j0 := Fin.succAbove_ne j0 l
-      simp only [B', a, hne, if_false]
+      simp only [B', a, hne, ite_false]
       field_simp
       ring
     have hrow' : ∀ j, j ≠ j0 → B' 0 j = 0 := by
@@ -261,14 +261,14 @@ theorem norm_det_le {m : ℕ} (C : Matrix (Fin m) (Fin m) ℂ) (a : Fin m → �
     rw [hfj] at hdef
     rw [hdef, Matrix.mul_apply]
     simp only [T, Wm, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul, one_mul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     congr 1
     rw [← Finset.sum_filter]
     apply Finset.sum_congr
     · ext k; simp
     · intro k _; rfl
   have hT : T.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular T (by
+    rw [det_of_isLowerTriangular T (by
       intro i k hik
       have hik' : i < k := hik
       simp [T, hik'.ne', hik'.not_gt])]
@@ -593,8 +593,8 @@ theorem sum_log_norm_nonneg (K : Type) [Field K] [NumberField K] (T : K) (hT : I
 open Classical in
 theorem card_ext (L K : Type) [Field L] [NumberField L] [Field K] [NumberField K] [Algebra L K] (σ : L →+* ℂ) :
     Fintype.card {τ : K →+* ℂ // τ.comp (algebraMap L K) = σ} = Module.finrank L K := by
-  letI : Algebra L ℂ := σ.toAlgebra
-  haveI : FiniteDimensional L K := Module.Finite.of_restrictScalars_finite ℚ L K
+  let : Algebra L ℂ := σ.toAlgebra
+  have : FiniteDimensional L K := Module.Finite.of_restrictScalars_finite ℚ L K
   rw [← AlgHom.card_of_splits L K ℂ (fun x => IsAlgClosed.splits _)]
   refine Fintype.card_congr
     { toFun := fun t => { t.1 with commutes' := fun r => congrArg (fun f : L →+* ℂ => f r) t.2 }
@@ -692,7 +692,7 @@ theorem tors_mean (D : PPData H L) (th : Out.H0 D.t.PP.L 1) (f : ∀ σ, D.Frame
       exact absurd h1.symm (pow_pos hp _).ne'
   classical
   let Ix : Type := {i // T i ≠ 0}
-  letI : Fintype Ix := (inferInstance : Fintype {i // T i ≠ 0})
+  let : Fintype Ix := (inferInstance : Fintype {i // T i ≠ 0})
   have hkey : ∀ τ : K →+* ℂ, Nonempty Ix ∧ (Fintype.card Ix : ℝ) * c (res τ) ≤
       ∑ i : Ix, -Real.log ((f (res τ)).nrm 1 (θ (res τ)) (r τ i.1) / b (res τ)) := by
     intro τ
@@ -715,7 +715,7 @@ theorem tors_mean (D : PPData H L) (th : Out.H0 D.t.PP.L 1) (f : ∀ σ, D.Frame
   have hτ : Nonempty (K →+* ℂ) := Fintype.card_pos_iff.1 (by
     rw [NumberField.Embeddings.card]; exact Module.finrank_pos)
   obtain ⟨τ₀⟩ := hτ
-  haveI hIx : Nonempty Ix := (hkey τ₀).1
+  have hIx : Nonempty Ix := (hkey τ₀).1
   have hcard : (0 : ℝ) < Fintype.card Ix := by exact_mod_cast Fintype.card_pos
   have hmr : (0 : ℝ) < (m : ℝ) ^ 2 := by
     have : (0 : ℝ) < m := by exact_mod_cast hm1
@@ -757,7 +757,7 @@ theorem tors_mean (D : PPData H L) (th : Out.H0 D.t.PP.L 1) (f : ∀ σ, D.Frame
   have e2 := sum_comp_algebraMap L K (fun σ => Real.log (b σ))
   have hfin3 : (Module.finrank L K : ℝ) * ∑ σ, c σ ≤ (Module.finrank L K : ℝ) * ∑ σ, Real.log (b σ) := by
     rw [← e1, ← e2]; exact hfin2
-  haveI : FiniteDimensional L K := Module.Finite.of_restrictScalars_finite ℚ L K
+  have : FiniteDimensional L K := Module.Finite.of_restrictScalars_finite ℚ L K
   have hd : (0 : ℝ) < Module.finrank L K := by exact_mod_cast Module.finrank_pos
   exact le_of_mul_le_mul_left hfin3 hd
 
@@ -969,8 +969,8 @@ theorem mean_log_sup : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [Number
     rw [hth']
     refine (hsup σ a w).trans ?_
     exact mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (hle σ a)) (hbpos σ).le
-  · haveI : NeZero D.g := ⟨by omega⟩
-    haveI : Nonempty (L →+* ℂ) := Fintype.card_pos_iff.1 (by
+  · have : NeZero D.g := ⟨by omega⟩
+    have : Nonempty (L →+* ℂ) := Fintype.card_pos_iff.1 (by
       rw [NumberField.Embeddings.card]; exact Module.finrank_pos)
     have hm1 : finMean (fun σ => Real.pi / 96 * (r σ ^ 2)⁻¹ -
         ((D.g : ℝ) * Real.log (1 + 1 / r σ) + C₀ * D.g * Real.log (2 * D.g))) ≤ Φ := by
@@ -1060,7 +1060,7 @@ theorem norm_iteratedDeriv_zero_le_of_gaussian_growth
   have hs2 : (R ^ i) ^ 2 = (i / (n * lam ^ 2)) ^ i := by
     rw [← pow_mul, mul_comm i 2, pow_mul, hR2]
   have hs3 : Real.exp (i / 2) ^ 2 = Real.exp 1 ^ i := by
-    rw [← Real.exp_nat_mul, ← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -1228,7 +1228,7 @@ theorem isTheta_tri {θ : (Fin g → ℂ) → ℂ} (h : a.IsTheta 1 θ) (p q : F
         Complex.exp (Real.pi * a.herm (w + q) l + Real.pi / 2 * a.herm l l) *
         Complex.exp (Real.pi * a.herm (w - p - q) l + Real.pi / 2 * a.herm l l) =
         Complex.exp (Real.pi * a.herm w l + Real.pi / 2 * a.herm l l) ^ 3 := by
-      rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_nat_mul]
+      rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_natCast_mul]
       congr 1
       push_cast
       linear_combination (Real.pi : ℂ) * herm_tri a w p q l

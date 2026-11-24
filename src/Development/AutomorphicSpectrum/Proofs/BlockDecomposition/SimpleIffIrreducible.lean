@@ -90,7 +90,7 @@ private theorem simple_iff_isIrr {Γ : Type} [Group Γ] (τ : FDRep ℂ Γ) :
       rw [basics_lin_id, basics_lin_zero]
       refine LinearMap.ext fun v => ?_
       exact @Subsingleton.elim _ hnt _ _
-    · haveI hmono : Mono (basicsIncl τ W hW) :=
+    · have hmono : Mono (basicsIncl τ W hW) :=
         basics_mono_of_inj _ (fun x y hxy => Subtype.ext hxy)
       rcases eq_or_ne (basicsIncl τ W hW) 0 with h0 | h0
       · left
@@ -102,7 +102,7 @@ private theorem simple_iff_isIrr {Γ : Type} [Group Γ] (τ : FDRep ℂ Γ) :
         rw [← h1]
         exact h2
       · right
-        haveI hiso : IsIso (basicsIncl τ W hW) :=
+        have hiso : IsIso (basicsIncl τ W hW) :=
           (Simple.mono_isIso_iff_nonzero (basicsIncl τ W hW)).mpr h0
         rw [eq_top_iff]
         intro v _

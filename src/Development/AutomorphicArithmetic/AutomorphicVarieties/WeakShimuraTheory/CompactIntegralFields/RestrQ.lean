@@ -61,14 +61,14 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem muIne {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (F : IntermediateField ℚ Ω) [NumberField F]
     (l : ℕ) [hl : Fact l.Prime] (A : ValuationSubring Ω) (hA : A.valuation (l : Ω) < 1) {s : G F Ω}
     (hs : s ∈ muOf l (Dec (F := F) A)) : s ∈ Ine (F := F) A := by
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
   obtain ⟨h1, a, h2⟩ := hs
   exact Rq.powIne F Ω l A hA s h1 _ (pow_pos hl.out.pos a)
     (Subgroup.topologicalClosure_minimal _ (UpperTheory.V.B1.decComm F Ω l A hA) (isClosed_Ine A) h2)
 
 private theorem cont_resQ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (F : IntermediateField ℚ Ω) [NumberField F] :
     Continuous (resQ F) := by
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, inferInstance⟩
   exact (galEmbTop ℚ F Ω).1.continuous
 
 private theorem low_desc {A V : Type} [CommRing A] [CommRing V] [IsLocalRing V] (f : A →+* V) (hf : Function.Injective f)
@@ -116,7 +116,7 @@ theorem UpperTheory.V.Ws.restrQ :
   intro Ω _ _ _ l hl c D hD T₀ T hF hLe 𝔞 P hP hS
   have hOk : T.Ok := (leFit D hD T₀ T hLe).1 hF.1
   obtain ⟨A, _, _, _, f, P₁, hf, hc, rfl⟩ := hP.small
-  haveI := hf.loc
+  have := hf.loc
   choose g hg hgD hgI using fun v : T.ι => Rq.placeMove T.F l hl.out (T.pl v) (D.pl l) (T.ovl v) (hD.pl_over l hl.out)
   have hν : ∀ x, IsUnit (𝔞.a c (D.th x)) := fun x => (D.th x).isUnit.map _
   have hd : ∀ x i, IsUnit ((((P₁.map f).map (residue 𝔞.V)).r x) i i) := fun x i => by

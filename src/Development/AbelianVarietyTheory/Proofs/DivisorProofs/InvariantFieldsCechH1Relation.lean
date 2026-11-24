@@ -296,7 +296,7 @@ theorem exists_subfamily_unique_repr_of_spanning_localRing
       (∀ u : M, ∃ cf : Fin g → R, u = ∑ a, cf a • w a) →
       ∃ e : Fin d → Fin g, ∀ u : M, ∃! cf : Fin d → R, u = ∑ a, cf a • w (e a) := by
   rintro ⟨b⟩ w hw
-  haveI : Module.Finite R M := Module.Finite.of_basis b
+  have : Module.Finite R M := Module.Finite.of_basis b
   let V := IsLocalRing.ResidueField R ⊗[R] M
   let v : Fin g → V := fun a => (1 : IsLocalRing.ResidueField R) ⊗ₜ[R] w a
   have hsp : Submodule.span (IsLocalRing.ResidueField R) (Set.range v) = ⊤ := by
@@ -697,13 +697,13 @@ theorem cech_free : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRin
   intro A _ _ _ B _ _ g I _ U hA hg hcov hU
   classical
   have hinf : ∀ V W : B.left.Opens, IsAffineOpen V → IsAffineOpen W → IsAffineOpen (V ⊓ W) := by
-    haveI := hA.proper
+    have := hA.proper
     have : B.left.IsSeparated := ⟨by rw [← terminal.comp_from B.hom]; infer_instance⟩
     exact fun V W hV hW => hV.inf hW
   obtain ⟨hfin, hproj, hrk⟩ := (GlobalTheory.T.abelianScheme_structureSheafCohomology_noetherian A B g hA hg).1
-  haveI := hfin
-  haveI := hproj
-  haveI : Module.Free A (HO1 B.hom) := Module.free_of_flat_of_isLocalRing
+  have := hfin
+  have := hproj
+  have : Module.Free A (HO1 B.hom) := Module.free_of_flat_of_isLocalRing
   have hr : Module.finrank A (HO1 B.hom) = g := by
     rw [← hrk (IsLocalRing.closedPoint A), Module.rankAtStalk_eq_finrank_tensorProduct, Module.finrank_baseChange]
   let bH := Module.finBasisOfFinrankEq A (HO1 B.hom) hr
@@ -981,7 +981,7 @@ end Main
 open Classical in
 theorem main : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonObj B] (g : ℕ) (L : LB B.left), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → L.IsLB → RelAmple B L → KTriv B L → (∀ i, IsAffineOpen (L.U i)) → Finite L.ι → ∀ (v : Fin g → TanM (𝟙 (Sp A)) B) (dd : Fin g → Fld B.left), (∀ a, IsInv B (v a) (dd a)) → (∀ w : TanM (𝟙 (Sp A)) B, ∃! cf : Fin g → A, w = ∑ a, cf a • v a) → ∀ c : C1 L.U, IsCoc L.U c → ∃! cc : Fin g → A, IsCob L.U (fun i j => c i j - ∑ a, constFn B.hom _ (cc a) * dlg B (𝟙 _) L (dd a) i j (L.U i ⊓ L.U j)) := by
   intro A _ _ _ B _ _ g L hab hsm hL hamp hK haff hfin v dd hinv hbasis c hc
-  haveI := hfin
+  have := hfin
   let φ : Fin g → C1 L.U := fun a i j => dlg B (𝟙 _) L (dd a) i j (L.U i ⊓ L.U j)
   obtain ⟨b, -, hb⟩ := s2 A B g L.ι L.U hab hsm hL.cover haff
   have hφ : ∀ a, IsCoc L.U (φ a) := fun a => s1 A B L hL (dd a) (hinv a).1
@@ -1131,7 +1131,7 @@ theorem sum_reindex {R : Type} [CommRing R] {Y : Scheme.{0}} (q : Y ⟶ Sp R) (O
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (Dd : DegData R (maximalIdeal R)) (g : ℕ) (w : Fin g → TanM (𝟙 (Sp R)) Dd.toPre.P.A) (dd' : Fin g → Fld Dd.toPre.P.A.left), (∀ a, IsInv Dd.toPre.P.A (w a) (dd' a)) → (∀ u : TanM (𝟙 (Sp R)) Dd.toPre.P.A, ∃ cf : Fin g → R, u = ∑ a, cf a • w a) → ∀ (J : Type) (V : J → Dd.toPre.P.A.left.Opens) (j : J → Dd.toPre.P.L.ι), ⨆ i, V i = ⊤ → (∀ i, V i ≤ Dd.toPre.P.L.U (j i)) → ∀ z : C1 V, IsCoc V z → ∃ (c : Fin g → R) (y : ∀ i, Γ(Dd.toPre.P.A.left, V i)), ∀ i i', z i i' = ∑ a, constFn Dd.toPre.P.A.hom _ (c a) * rsT (dlg Dd.toPre.P.A (𝟙 _) Dd.toPre.P.L (dd' a) (j i) (j i') (Dd.toPre.P.L.U (j i) ⊓ Dd.toPre.P.L.U (j i'))) (V i ⊓ V i') + (rsT (y i') (V i ⊓ V i') - rsT (y i) (V i ⊓ V i')) := by
   intro R _ _ _ _ _ _ Dd g w dd' hinv hspan J V j hV hVj z hz
   have hab : IsAbelianScheme Dd.toPre.P.A := Dd.toPre.P.isAb
-  haveI : CompactSpace Dd.toPre.P.A.left := by
+  have : CompactSpace Dd.toPre.P.A.left := by
     have := hab.proper; exact QuasiCompact.compactSpace_of_compactSpace Dd.toPre.P.A.hom
   obtain ⟨κ, hκ, W, c, hWa, hWc, hWcov⟩ :=
     FinAffineCharts.exists_finite_affine_cover Dd.toPre.P.L Dd.toPre.P.isLB

@@ -205,8 +205,8 @@ theorem exact_of_isGeo : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix
   obtain ⟨hdiv, hlab, hmem⟩ := hG
   intro y κ c
   obtain ⟨𝔪, hT⟩ := hmem y
-  haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)⟩
-  haveI : IsDomain X₁.o₁ := X₁.ar.ded.toIsDomain
+  have : NeZero (X₁.S.r * X₁.S.N) := ⟨Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)⟩
+  have : IsDomain X₁.o₁ := X₁.ar.ded.toIsDomain
   obtain ⟨yy1, yy2, yy3, yy4⟩ := GlobalTheory.T.surjective_labelHom_lattice_mod_level_thetaMember g n F W Z i X₁ z₁ act (Φ.V y) (Φ.ev y) (Φ.X y) (Φ.m y) (Φ.t y) (Φ.δ y) 𝔪
   have hH := GlobalTheory.T.dividingThetaConstants_generate_integral_torsion_labels g n F W Z i X₁ z₁ act x₀ hdiv (Φ.V y) (Φ.ev y) (Φ.X y) (Φ.m y) (Φ.t y) (Φ.δ y) 𝔪
   obtain ⟨l, -, hlY, hlC⟩ := labels X₁.S (X₁.S.HH X₁.M z₁) 𝔪.YY yy1 yy2 yy3 yy4 hH
@@ -263,9 +263,9 @@ theorem exact_of_isGeo : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix
       (hhτ τ) (fun mu => w mu τ) (fun a mu hY => by simp only [w, hlY τ τ.2 a mu hY])
   let f : (Fin 8 → Φ.X y) → Φ.V y := fun mu => if ∀ v, CongMod (X₁.S.r * X₁.S.N) (mu v) (κ v) then Φ.term y mu c else 0
   have hf := sumI_fourier (maximalIdeal (Φ.V y)) hω (Φ.ev y d) hd w hw κ (fun mu => Φ.term y mu c) (fun τ => Φ.ev y (hτ τ))
-    hsum f (fun mu h => if_pos ((hwκ mu).1 h)) (fun mu h => if_neg fun h' => h ((hwκ mu).2 h'))
+    hsum f (fun mu h => ite_eq_left ((hwκ mu).1 h)) (fun mu h => ite_eq_right fun h' => h ((hwκ mu).2 h'))
   refine ⟨d * ∑ τ : TT, zt ^ (-(w κ τ)).val * hτ τ, isClassSum_of_sumI Φ y _ κ c (RingHom.id _) _ f
-    (fun mu h => if_pos h) (fun mu h => if_neg h) ?_⟩
+    (fun mu h => ite_eq_left h) (fun mu h => ite_eq_right h) ?_⟩
 
   simpa only [map_mul, map_sum, map_pow] using hf
 

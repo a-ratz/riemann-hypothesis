@@ -58,7 +58,7 @@ namespace GlobalTheory.FieldPointGraph
 theorem epi_spMap {K K' : Type} [Field K] [Field K'] (ι : K →+* K') : Epi (spMap ι) := by
   have : Flat (spMap ι) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := ι.toAlgebra
+    let := ι.toAlgebra
     exact (inferInstance : Module.Flat K K')
   have : Surjective (spMap ι) := ⟨fun y => ⟨IsLocalRing.closedPoint K', Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _

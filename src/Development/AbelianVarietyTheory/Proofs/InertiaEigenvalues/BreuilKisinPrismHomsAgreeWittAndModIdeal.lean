@@ -106,7 +106,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (B : Obj 
     (∀ w, BK.hf f (PowerSeries.C w) = BK.hf g (PowerSeries.C w)) ∧ BK.hf f X - BK.hf g X ∈ B.I ∧
       B.I = Ideal.span {BK.hf f bk.E} := by
   intro l _ K bk B f g
-  haveI := B.complete
+  have := B.complete
   have hlJ : (l : B.A) ∈ Ideal.span {(l : B.A)} ⊔ B.I := Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)
   refine ⟨fun w => ?_, sub_mem_I bk f g X, ?_⟩
   · let φ1 : Wq l bk.a →+* B.A := (BK.hf f).comp C

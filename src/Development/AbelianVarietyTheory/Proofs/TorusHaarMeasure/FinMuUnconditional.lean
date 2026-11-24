@@ -308,7 +308,7 @@ theorem gamDisc : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin 
     exact (hg τ).trans (hg' τ).symm
   have hT : (⋃ γ ∈ S, F γ).Finite := hS.biUnion fun γ _ => hF γ
   have hC : ((⋃ γ ∈ S, F γ) \ {1})ᶜ ∈ 𝓝 (1 : H) :=
-    (hT.subset Set.diff_subset).isClosed.isOpen_compl.mem_nhds (by simp)
+    (hT.subset Set.sdiff_subset).isClosed.isOpen_compl.mem_nhds (by simp)
   have hV : ∀ᶠ g : H in 𝓝 1, ∀ (τ : X.Ψ) (a b : Fin r),
       ‖((((g : H) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) a b‖ < 2 := by
     simp only [Filter.eventually_all]
@@ -316,7 +316,7 @@ theorem gamDisc : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin 
     have hc : Continuous fun g : H =>
         ‖((((g : H) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) a b‖ :=
       ((Units.continuous_val.comp
-        ((continuous_apply τ).comp continuous_subtype_val)).matrix_elem a b).norm
+        ((continuous_apply τ).comp continuous_subtypeVal)).matrix_elem a b).norm
     refine hc.continuousAt.eventually_lt continuousAt_const ?_
     by_cases h : a = b <;> simp [Matrix.one_apply, h]
   refine ⟨_, Filter.inter_mem hC hV, ?_⟩
@@ -355,7 +355,7 @@ theorem exists_finite_measure_cover : (∀ (r : ℕ) (X : Data E r) (H : Subgrou
     rw [← hγu τ]
     simp
   by_cases hp : X.p0 = 0 ∨ X.p0 = r
-  · haveI : CompactSpace H := GlobalTheory.T.compactSpace_realUnitaryGroup_of_definite r X H hH hp
+  · have : CompactSpace H := GlobalTheory.T.compactSpace_realUnitaryGroup_of_definite r X H hH hp
     exact ⟨Set.univ, MeasurableSet.univ, isCompact_univ.measure_lt_top,
       fun g => ⟨1, Γ.one_mem, g, Set.mem_univ _, (one_mul g).symm⟩⟩
   · have hp0 : 0 < X.p0 := Nat.pos_of_ne_zero fun h => hp (Or.inl h)

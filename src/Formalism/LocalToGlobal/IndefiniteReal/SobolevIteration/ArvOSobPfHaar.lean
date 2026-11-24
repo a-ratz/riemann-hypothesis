@@ -112,7 +112,7 @@ theorem isCompact_Kg {G s : Matrix (Fin n) (Fin n) ℂ} (hs : IsCartanInv G s) :
     IsCompact ((Kg hs : Subgroup (Matrix (Fin n) (Fin n) ℂ)ˣ) : Set (Matrix (Fin n) (Fin n) ℂ)ˣ) := by
 
   have hGu : IsUnit G.det := det_G_unit hs
-  haveI : CompactSpace (KAt G s) := isCompact_iff_compactSpace.mp (isCompact_KAt hs)
+  have : CompactSpace (KAt G s) := isCompact_iff_compactSpace.mp (isCompact_KAt hs)
   have hl : ∀ k ∈ KAt G s, (G⁻¹ * kᴴ * G) * k = 1 := fun k hk => by
     have h1 : kᴴ * G * k = G := (show k ∈ Formalism.QuantumDeterminants.UH G ∧ k * s = s * k from hk).1
     calc (G⁻¹ * kᴴ * G) * k = G⁻¹ * (kᴴ * G * k) := by simp only [Matrix.mul_assoc]
@@ -124,8 +124,8 @@ theorem isCompact_Kg {G s : Matrix (Fin n) (Fin n) ℂ} (hs : IsCartanInv G s) :
     ⟨k.1, G⁻¹ * k.1ᴴ * G, hr k.1 k.2, hl k.1 k.2⟩
   have hF : Continuous F := by
     rw [Units.continuous_iff]
-    refine ⟨continuous_subtype_val, ?_⟩
-    exact (continuous_const.matrix_mul continuous_subtype_val.matrix_conjTranspose).matrix_mul
+    refine ⟨continuous_subtypeVal, ?_⟩
+    exact (continuous_const.matrix_mul continuous_subtypeVal.matrix_conjTranspose).matrix_mul
       continuous_const
   have he : ((Kg hs : Subgroup (Matrix (Fin n) (Fin n) ℂ)ˣ) : Set (Matrix (Fin n) (Fin n) ℂ)ˣ) =
       Set.range F := by
@@ -150,11 +150,11 @@ private theorem exists_Kg_coe_eq_of_mem_KAt {G s k : Matrix (Fin n) (Fin n) ℂ}
 
 theorem haarExists_holds : HaarExists := by
   intro n G s hs
-  haveI : CompactSpace (Kg hs) := isCompact_iff_compactSpace.mp (isCompact_Kg hs)
-  letI : MeasurableSpace (Kg hs) := borel (Kg hs)
-  haveI : BorelSpace (Kg hs) := ⟨rfl⟩
+  have : CompactSpace (Kg hs) := isCompact_iff_compactSpace.mp (isCompact_Kg hs)
+  let : MeasurableSpace (Kg hs) := borel (Kg hs)
+  have : BorelSpace (Kg hs) := ⟨rfl⟩
   let ν : Measure (Kg hs) := Measure.haarMeasure ⊤
-  haveI : IsProbabilityMeasure ν := by
+  have : IsProbabilityMeasure ν := by
     refine ⟨?_⟩
     have h := Measure.haarMeasure_self (G := Kg hs) (K₀ := ⊤)
     rwa [TopologicalSpace.PositiveCompacts.coe_top] at h
@@ -162,7 +162,7 @@ theorem haarExists_holds : HaarExists := by
     Matrix.of.symm ((u : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ)
   have hφ : Continuous φ := by
     show Continuous (fun u : Kg hs => ((u : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ))
-    exact Units.continuous_val.comp continuous_subtype_val
+    exact Units.continuous_val.comp continuous_subtypeVal
   have hφm : Measurable φ := hφ.measurable
   have hcl : IsClosed {k : Fin n → Fin n → ℂ | Matrix.of k ∈ KAt G s} := isClosed_KAt G s
   refine ⟨ν.map φ, ?_, ?_, ?_, ?_⟩

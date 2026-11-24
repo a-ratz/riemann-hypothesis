@@ -349,7 +349,7 @@ theorem continuous_setIntegral_of_continuous_uncurry {X Y : Type*} [TopologicalS
   have hb : ‖∫ u in E, (f p u - f q u) ∂ν‖ ≤ ε / (2 * (m + 1)) * m := by
     refine norm_setIntegral_le_of_norm_le_const hν fun u hu ↦ ?_
     have := hvu p hp u (subset_closure hu)
-    rw [Set.mem_setOf_eq, dist_eq_norm] at this
+    rw [Set.mem_ofPred_eq, dist_eq_norm] at this
     exact this.le
   refine hb.trans_lt ?_
   rw [div_mul_eq_mul_div, div_lt_iff₀ (by positivity)]
@@ -400,14 +400,14 @@ theorem continuous_translatedIntegrand (w : InfinitePlace k) {Ψ : (ι → 𝔸[
     (hΨ : Ψ ∈ schwartzBruhatPi (K := k) (ι := ι)) (ω : HeckeCharacter k) :
     Continuous (Function.uncurry (translatedIntegrand w Ψ ω)) := by
   have hu : Continuous fun x : ({r : ℝ // 0 < r} × GL ι 𝔸[k]) × normOneSubgroup k ↦
-      (x.2 : IdeleGroup k) := continuous_subtype_val.comp continuous_snd
+      (x.2 : IdeleGroup k) := continuous_subtypeVal.comp continuous_snd
   have hs : Continuous fun x : ({r : ℝ // 0 < r} × GL ι 𝔸[k]) × normOneSubgroup k ↦
       moduleSection w x.1.1 :=
     (continuous_moduleSection w).comp (continuous_fst.comp continuous_fst)
   have hg : Continuous fun x : ({r : ℝ // 0 < r} × GL ι 𝔸[k]) × normOneSubgroup k ↦
       x.1.2 := continuous_snd.comp continuous_fst
   exact ((continuous_thetaC hΨ).comp (hg.mul (continuous_scalC.comp (hs.mul hu)))).mul
-    (continuous_subtype_val.comp (ω.continuous_toIdele.comp hu))
+    (continuous_subtypeVal.comp (ω.continuous_toIdele.comp hu))
 
 theorem continuous_thetaCInt_ltr {k : Type} [Field k] [NumberField k] {ι : Type} [Fintype ι]
     [DecidableEq ι] (w : InfinitePlace k) {Ψ : (ι → 𝔸[k]) → ℂ}
@@ -568,7 +568,7 @@ theorem scalC_mul (a b : IdeleGroup k) :
 theorem scalC_commute (a : IdeleGroup k) (A : GL ι 𝔸[k]) :
     (scalC a : GL ι 𝔸[k]) * A = A * scalC a := by
   apply Units.ext
-  simp only [Units.val_mul, scalC, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [Units.val_mul, scalC, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   exact (Matrix.scalar_commute _ (fun r ↦ Commute.all _ r) _)
 
 theorem continuous_scalC : Continuous (scalC : IdeleGroup k → GL ι 𝔸[k]) := by
@@ -595,7 +595,7 @@ theorem continuousOn_thetaC {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzB
 
 theorem continuous_char (ω : HeckeCharacter k) :
     Continuous fun u : normOneSubgroup k ↦ (ω.toIdele (u : IdeleGroup k) : ℂ) :=
-  continuous_subtype_val.comp (ω.continuous_toIdele.comp continuous_subtype_val)
+  continuous_subtypeVal.comp (ω.continuous_toIdele.comp continuous_subtypeVal)
 
 theorem integrableOn_thetaCIntegrand {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
     (A : GL ι 𝔸[k]) (ω : HeckeCharacter k) (s : IdeleGroup k) :
@@ -605,7 +605,7 @@ theorem integrableOn_thetaCIntegrand {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ 
   have hE := isCompact_closure_normOneFundamentalDomain k
   have hφ : Continuous fun u : normOneSubgroup k ↦
       A * (scalC (s * (u : IdeleGroup k)) : GL ι 𝔸[k]) :=
-    continuous_const.mul (continuous_scalC.comp (continuous_const.mul continuous_subtype_val))
+    continuous_const.mul (continuous_scalC.comp (continuous_const.mul continuous_subtypeVal))
   have h1 : ContinuousOn (fun u : normOneSubgroup k ↦
       thetaC (ltr A F) (scalC (s * (u : IdeleGroup k))))
       (closure (normOneFundamentalDomain k)) := by
@@ -644,7 +644,7 @@ theorem exists_norm_thetaCInt_sub_le (w : InfinitePlace k) {Ψ : (ι → 𝔸[k]
   have hE := isCompact_closure_normOneFundamentalDomain k
   have hS : Continuous fun p : normOneSubgroup k × GL ι 𝔸[k] ↦
       p.2 * (scalC (p.1 : IdeleGroup k) : GL ι 𝔸[k]) :=
-    continuous_snd.mul (continuous_scalC.comp (continuous_subtype_val.comp continuous_fst))
+    continuous_snd.mul (continuous_scalC.comp (continuous_subtypeVal.comp continuous_fst))
   obtain ⟨M, hM⟩ := _root_.GlobalTheory.CompanionTheory.EisThCDecay.exists_norm_thetaC_sub_le w hΨ ((hE.prod hC).image hS) r
   refine ⟨M * (normOneMeasure k).real (normOneFundamentalDomain k), fun A hA t ht ↦ ?_⟩
   rw [thetaCInt_ltr_sub_thetaCConst w hΨ A ω t, ← mul_assoc]
@@ -740,9 +740,9 @@ namespace GlobalTheory.CompanionTheory.EpsteinVol
 
 theorem volChar_one_eq {k : Type} [Field k] [NumberField k] :
     ∃ V : ℝ, 0 < V ∧ volChar (1 : HeckeCharacter k) = (V : ℂ) := by
-  haveI := GroundTheory.Global.isHaarMeasure_normOneMeasure k
-  haveI : Countable ↥(GroundTheory.Global.diagonalNormOne k).op := by
-    haveI := GroundTheory.Global.countable_diagonalNormOne k
+  have := GroundTheory.Global.isHaarMeasure_normOneMeasure k
+  have : Countable ↥(GroundTheory.Global.diagonalNormOne k).op := by
+    have := GroundTheory.Global.countable_diagonalNormOne k
     refine Function.Injective.countable (f := fun x : ↥(GroundTheory.Global.diagonalNormOne k).op =>
       (⟨x.1.unop, Subgroup.mem_op.mp x.2⟩ : ↥(GroundTheory.Global.diagonalNormOne k))) ?_
     intro x y h
@@ -928,7 +928,7 @@ theorem continuous_det : Continuous (Matrix.GeneralLinearGroup.det : GL ι 𝔸[
     (show Continuous fun A : Matrix ι ι 𝔸[k] ↦ A.det from continuous_id.matrix_det)
 
 theorem continuous_detMod : Continuous (detMod : GL ι 𝔸[k] → ℝ) :=
-  continuous_subtype_val.comp (continuous_ideleModule.comp continuous_det)
+  continuous_subtypeVal.comp (continuous_ideleModule.comp continuous_det)
 
 theorem continuous_tInv : Continuous (tInv : GL ι 𝔸[k] → GL ι 𝔸[k]) := by
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
@@ -938,7 +938,7 @@ theorem continuous_tInv : Continuous (tInv : GL ι 𝔸[k] → GL ι 𝔸[k]) :=
     exact h
 
 theorem thetaCFun_of_pos (w : InfinitePlace k) (F : (ι → 𝔸[k]) → ℂ) (ω : HeckeCharacter k)
-    {x : ℝ} (hx : 0 < x) : thetaCFun w F ω x = thetaCInt w F ω ⟨x, hx⟩ := dif_pos hx
+    {x : ℝ} (hx : 0 < x) : thetaCFun w F ω x = thetaCInt w F ω ⟨x, hx⟩ := dite_eq_left hx
 
 theorem thetaCFun_smul (w : InfinitePlace k) (c : ℂ) (F : (ι → 𝔸[k]) → ℂ)
     (ω : HeckeCharacter k) : thetaCFun w (c • F) ω = c • thetaCFun w F ω := by
@@ -1014,11 +1014,11 @@ theorem continuousOn_thetaCFun_ltr (w : InfinitePlace k) {Ψ : (ι → 𝔸[k]) 
     (hΨ : Ψ ∈ schwartzBruhatPi (K := k) (ι := ι)) (ω : HeckeCharacter k) :
     ContinuousOn (fun q : GL ι 𝔸[k] × ℝ ↦ thetaCFun w (ltr q.1 Ψ) ω q.2) (univ ×ˢ Ioi 0) := by
   have h := GlobalTheory.CompanionTheory.EpsteinThetaC.continuous_thetaCInt_ltr w hΨ ω
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hc : Continuous fun q : ↥(univ ×ˢ Ioi (0 : ℝ) : Set (GL ι 𝔸[k] × ℝ)) ↦
       ((⟨q.1.2, q.2.2⟩ : {r : ℝ // 0 < r}), q.1.1) :=
-    (Continuous.subtype_mk (continuous_snd.comp continuous_subtype_val) _).prodMk
-      (continuous_fst.comp continuous_subtype_val)
+    (Continuous.subtype_mk (continuous_snd.comp continuous_subtypeVal) _).prodMk
+      (continuous_fst.comp continuous_subtypeVal)
   refine (h.comp hc).congr fun q ↦ ?_
   simp only [restrict, Function.comp]
   exact (thetaCFun_of_pos w _ ω q.2.2).symm

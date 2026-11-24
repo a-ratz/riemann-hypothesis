@@ -379,7 +379,7 @@ end GlobalTheory.BKLim.BetaStep
 open GlobalTheory.BKLim.BetaStep in
 theorem GlobalTheory.BKLim.beta_step : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (N d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) ℤ_[l]) (F : Frame bk N d ρ) (g : ↥(GK K)) (w : Ainf l), Per.σA (g : GQ l) (bk.ev bk.E) = bk.ev bk.E * w → ∀ (m k : ℕ) (β : Matrix (Fin d) (Fin d) bk.S), F.IsBeta m k β → ∀ (i n : ℕ), i + 1 ≤ m → ∀ γ : Matrix (Fin d) (Fin d) bk.S, (∀ p q, bk.E ^ i ∣ (β - (l : bk.S) ^ n • γ) p q) → ∃ δ : Matrix (Fin d) (Fin d) bk.S, (∀ p q, bk.E ^ (i + 1) ∣ (β - (l : bk.S) ^ n • γ - bk.E ^ i • δ) p q) ∧ ∀ p q, ∃ y : OC l, Per.θ l (bk.ev (δ p q)) * (Per.θ l w ^ i - 1) = (l : OC l) ^ n * y := by
   intro l _ K bk N d ρ F g w hw m k β hβ i n him γ hγ
-  haveI : IsDomain (Ainf l) := inclW_injective.isDomain (inclW l)
+  have : IsDomain (Ainf l) := inclW_injective.isDomain (inclW l)
   choose δ hδ using hγ
   simp only [Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul] at hδ
   refine ⟨Matrix.of δ, fun p q => ?_, fun p q => ?_⟩
@@ -406,7 +406,7 @@ theorem GlobalTheory.BKLim.beta_step : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt 
     have h := (theta_eq_zero_iff bk _).2 ((dvd_pow_self _ hm.ne').trans (hent a b))
 
     simp only [σ, map_sub, map_sum, map_mul, GlobalTheory.BKLim.BetaBd.θ_σA_ev, hθβ, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     rw [sub_eq_zero] at h
     have hl := pow_ne_zero k hlOC
     apply mul_right_cancel₀ hl
@@ -451,7 +451,7 @@ theorem GlobalTheory.BKLim.beta_step : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt 
   rw [← theta_eq_zero_iff] at hX
 
   simp only [σ, map_add (f := _), map_sub, map_mul, map_pow, map_natCast, map_sum, GlobalTheory.BKLim.BetaBd.θ_σA_ev, hP,
-  ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true] at hX
+  ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at hX
   refine ⟨-Per.θ l (η p q), ?_⟩
   simp only [Matrix.of_apply]
   linear_combination hX
@@ -691,7 +691,7 @@ theorem GlobalTheory.BKLim.beta_bdd_denominators : ∀ (l : ℕ) [Fact l.Prime] 
         exact hβ.1 p q
       · obtain ⟨γ, hγ⟩ := ih hi0 (by omega)
         obtain ⟨δ, hδ1, hδ2⟩ := GlobalTheory.T.breuilKisin_beta_next_coeff_theta_mem l K bk N d ρ F g w hw m k β hβ i (k - S i) him γ hγ
-        have hAi : A i = a ⟨i, hi0⟩ := dif_pos hi0
+        have hAi : A i = a ⟨i, hi0⟩ := dite_eq_left hi0
         have hS1 : S (i + 1) ≤ k := le_trans (hSm _ _ him) hk
         have hle : a ⟨i, hi0⟩ ≤ k - S i := by rw [hSs] at hS1; omega
         have hexp : k - S i - a ⟨i, hi0⟩ = k - S (i + 1) := by rw [hSs, hAi]; omega
@@ -767,14 +767,14 @@ theorem exists_seq {R : Type} [CommRing R] (I : ℕ → Ideal R) (hI : ∀ n, I 
   have step : ∀ n y, Good I Q n y → ∃ y', Good I Q (n + 1) y' ∧ ∀ i, y' i - y i ∈ I n := by
     intro n y hy
     by_contra hne
-    haveI : Finite (ι → R ⧸ I (n + 1)) := by haveI := hfin (n + 1); infer_instance
+    have : Finite (ι → R ⧸ I (n + 1)) := by have := hfin (n + 1); infer_instance
     let rep : (ι → R ⧸ I (n + 1)) → ι → R := fun t i => Classical.choose (Ideal.Quotient.mk_surjective (t i))
     have hrep : ∀ t i, Ideal.Quotient.mk (I (n + 1)) (rep t i) = t i :=
       fun t i => Classical.choose_spec (Ideal.Quotient.mk_surjective (t i))
     let P : (ι → R ⧸ I (n + 1)) → Prop := fun t =>
       ∃ k, n + 1 ≤ k ∧ ¬ ∃ x, Q k x ∧ ∀ i, x i - rep t i ∈ I (n + 1)
     let kf : (ι → R ⧸ I (n + 1)) → ℕ := fun t => if h : P t then h.choose else 0
-    have hkf : ∀ t (h : P t), kf t = h.choose := fun t h => dif_pos h
+    have hkf : ∀ t (h : P t), kf t = h.choose := fun t h => dite_eq_left h
     obtain ⟨t0, ht0⟩ := Finite.exists_max kf
     obtain ⟨x, hx, hxy⟩ := hy (n + kf t0) (Nat.le_add_right _ _)
     let t : ι → R ⧸ I (n + 1) := fun i => Ideal.Quotient.mk _ (x i)
@@ -824,7 +824,7 @@ theorem X_pow_mem (bk : BK K) (n m : ℕ) :
 
 theorem finite_quot (bk : BK K) (n m : ℕ) :
     Finite (bk.S ⧸ (Ideal.span {(l : bk.S) ^ n} ⊔ Ideal.span {bk.E ^ m})) := by
-  haveI := _root_.GlobalTheory.BKFin.finite_quot l K bk n (bk.Ep.natDegree * (n + m))
+  have := _root_.GlobalTheory.BKFin.finite_quot l K bk n (bk.Ep.natDegree * (n + m))
   have H : Ideal.span {(l : bk.S) ^ n} ⊔ Ideal.span {(X : bk.S) ^ (bk.Ep.natDegree * (n + m))} ≤
       Ideal.span {(l : bk.S) ^ n} ⊔ Ideal.span {bk.E ^ m} :=
     sup_le le_sup_left ((Ideal.span_singleton_le_iff_mem _).2 (X_pow_mem bk n m))

@@ -236,22 +236,22 @@ theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD :
   obtain ⟨K, hK, hKc⟩ := hCo D n
   obtain ⟨hψ₀c, hψ₀s, hψ₀F⟩ := hψ₀
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
-  haveI : LocallyCompactSpace (Mx D n n) := i2
-  haveI : SecondCountableTopology (Mx D n n) := i3
-  haveI : T2Space (Mx D n n) := i4
-  haveI : SecondCountableTopology (hermA D n) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (hermA D n) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
-  haveI : Countable D.host.E := GlobalTheory.CompanionTheory.FourierComplete.countable_numberField D.host.E
-  haveI : Countable (Matrix (Fin n) (Fin n) D.host.E) :=
+  have : IsTopologicalAddGroup (Mx D n n) := i1
+  have : LocallyCompactSpace (Mx D n n) := i2
+  have : SecondCountableTopology (Mx D n n) := i3
+  have : T2Space (Mx D n n) := i4
+  have : SecondCountableTopology (hermA D n) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (hermA D n) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : Countable D.host.E := GlobalTheory.CompanionTheory.FourierComplete.countable_numberField D.host.E
+  have : Countable (Matrix (Fin n) (Fin n) D.host.E) :=
     inferInstanceAs (Countable (Fin n → Fin n → D.host.E))
   have hmem : ∀ q : ratHerm D n, q.1.1 ∈ ratMx D n n := fun q => AddSubgroup.mem_comap.1 q.2
-  haveI : Countable (ratHerm D n) := by
+  have : Countable (ratHerm D n) := by
     choose g hg using fun q : ratHerm D n => mem_ratMx.1 (hmem q)
     exact Function.Injective.countable (f := g) fun a b h =>
       Subtype.ext (Subtype.ext (by rw [← hg a, ← hg b, h]))
-  haveI := hlam
+  have := hlam
   have hιc : Continuous ι := hι.1
 
   have hnb'c : Continuous nb' := by
@@ -366,7 +366,7 @@ theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD :
         obtain ⟨k, hk, e⟩ := hper g' c
         rw [e]
         exact hM _ ⟨k, hk, rfl⟩
-      haveI : IsFiniteMeasure (lam.restrict 𝓖) :=
+      have : IsFiniteMeasure (lam.restrict 𝓖) :=
         ⟨by rw [Measure.restrict_apply_univ, hvol]; exact ENNReal.one_lt_top⟩
       have hG : Integrable (fun p : hermA D n × (Fin n → Fin n → ℝ) => F (ι (nb' p.2) * (nb p.1 * g')) * ψ₀ p.2 * χ p.1)
           ((lam.restrict 𝓖).prod volume) := by
@@ -413,17 +413,17 @@ theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD :
     intro g'
     exact congrFun (hFZ D n ψ hψ nb lam 𝓖 ⟨hnb, hlam, hfd, hvol⟩ h hhc hinv hcoef) g'
 
-  have hmRc : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtype_val
+  have hmRc : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtypeVal
   let Fam : G D n → M2 n → ℂ := fun h M => if hM : InG M then F (ι (toGR M hM) * h) else 0
-  have hFam : ∀ h M (hM : InG M), Fam h M = F (ι (toGR M hM) * h) := fun h M hM => dif_pos hM
+  have hFam : ∀ h M (hM : InG M), Fam h M = F (ι (toGR M hM) * h) := fun h M hM => dite_eq_left hM
   let Γ : Set (M2 n) := {M | ∃ hM : InG M, ∃ γ ∈ GF D n, ∃ x : G D n, γ = x * ι (toGR M hM) ∧
     ∀ y'' : GR n, x * ι y'' = ι y'' * x}
   have hFamc : ∀ h, ContinuousOn (Fam h) {M | InG M} := by
     intro h
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hc : Continuous fun M : ({M | InG M} : Set (M2 n)) => toGR M.1 M.2 := by
       apply Continuous.subtype_mk
-      refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+      refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
       have hinv : ∀ M : ({M | InG M} : Set (M2 n)), (((toGR M.1 M.2 : GL (Fin n ⊕ Fin n) ℂ)⁻¹ : GL (Fin n ⊕ Fin n) ℂ) : M2 n) =
           -(JJ n * M.1ᴴ * JJ n) := by
         intro M
@@ -431,7 +431,7 @@ theorem gLsing_core (hFZ : FourierZeroN) (hTS : TwoSided) (hD : DenseTau) (hCD :
         show -(JJ n * M.1ᴴ * JJ n) * M.1 = 1
         have h2 : M.1ᴴ * JJ n * M.1 = JJ n := M.2
         rw [Matrix.neg_mul, Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc M.1ᴴ, h2, JJ_sq, neg_neg]
-      exact (((continuous_const.mul (continuous_subtype_val.matrix_conjTranspose)).mul continuous_const).neg).congr
+      exact (((continuous_const.mul (continuous_subtypeVal.matrix_conjTranspose)).mul continuous_const).neg).congr
         fun M => (hinv M).symm
     exact (hFc.comp ((hιc.comp hc).mul continuous_const)).congr fun M => (hFam h M.1 M.2).symm
   have hΓ2 : {M | InG M} ⊆ closure Γ := by
@@ -616,12 +616,12 @@ theorem continuous_blk (f : hermA D n → Mx D n n) (hf : Continuous f) :
   exact (Continuous.matrix_fromBlocks continuous_const hf continuous_const continuous_const).matrix_submatrix _ _
 
 theorem nb_continuous {nb : hermA D n → G D n} (h : IsNMap nb) : Continuous nb := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
   rw [(isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D n)).continuous_iff]
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · exact (continuous_blk _ continuous_subtype_val).congr fun b => (h b).symm
-  · refine (continuous_blk (fun b => -b.1) continuous_subtype_val.neg).congr fun b => ?_
+  · exact (continuous_blk _ continuous_subtypeVal).congr fun b => (h b).symm
+  · refine (continuous_blk (fun b => -b.1) continuous_subtypeVal.neg).congr fun b => ?_
     have e : (matHom (AF D.host.F) D.sp.cm.sig (Jst D n) (nb b))⁻¹ = matHom (AF D.host.F) D.sp.cm.sig (Jst D n) (nb (-b)) := by
       rw [nb_neg h, map_inv]
     simp only [Function.comp_apply]
@@ -736,12 +736,12 @@ theorem nb_neg {nb : hermA D n → G D n} (h : PositivityTheory.PfSWUS.IsNMap nb
 
 theorem nb_continuous {nb : hermA D n → G D n} (h : PositivityTheory.PfSWUS.IsNMap nb) : Continuous nb := by
   obtain ⟨i1, -⟩ := lattice_Mx D n n
-  haveI : IsTopologicalAddGroup (Mx D n n) := i1
+  have : IsTopologicalAddGroup (Mx D n n) := i1
   have he := GlobalTheory.AdelicU.isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D n)
   rw [he.continuous_iff, Units.continuous_iff]
   have hc : Continuous fun b : hermA D n => blk4 (1 : Mx D n n) b.1 0 1 := by
     unfold blk4
-    exact (continuous_const.matrix_fromBlocks continuous_subtype_val continuous_const continuous_const).matrix_submatrix _ _
+    exact (continuous_const.matrix_fromBlocks continuous_subtypeVal continuous_const continuous_const).matrix_submatrix _ _
   refine ⟨?_, ?_⟩
   · convert hc using 1
     funext b

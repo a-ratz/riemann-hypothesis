@@ -127,7 +127,7 @@ theorem continuous_expChartProd {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X
   unfold expChartProd
   refine Continuous.mul ?_ ?_
   · exact (contDiff_exp ℝ 𝔸 (n := 0)).continuous.comp
-      (continuous_subtype_val.comp ((coordEquiv b).continuous.comp continuous_fst))
+      (continuous_subtypeVal.comp ((coordEquiv b).continuous.comp continuous_fst))
   · exact (contDiff_exp ℝ 𝔸 (n := 0)).continuous.comp (continuous_snd.smul continuous_const)
 
 theorem analyticAt_expChartProd {d : ℕ} (b : Module.Basis (Fin d) ℝ 𝔤) (X : 𝔤)
@@ -165,7 +165,7 @@ theorem exists_ball_coordEquiv_mem_nhd {d : ℕ} (b : Module.Basis (Fin d) ℝ �
     ∃ r > 0, ∀ x ∈ Metric.ball (0 : EuclideanSpace ℝ (Fin d)) r,
       ((coordEquiv b x : 𝔤) : 𝔸) ∈ h.nhd := by
   have hc : Continuous (fun x : EuclideanSpace ℝ (Fin d) => ((coordEquiv b x : 𝔤) : 𝔸)) :=
-    continuous_subtype_val.comp (coordEquiv b).continuous
+    continuous_subtypeVal.comp (coordEquiv b).continuous
   have h0 : h.nhd ∈ 𝓝 ((fun x : EuclideanSpace ℝ (Fin d) => ((coordEquiv b x : 𝔤) : 𝔸)) 0) := by
     simp only [map_zero, ZeroMemClass.coe_zero]
     exact h.isOpen_nhd.mem_nhds h.zero_mem_nhd
@@ -573,7 +573,7 @@ theorem exists_smooth_density_expCoord {d : ℕ} (b : Module.Basis (Fin d) ℝ �
           simp [K, htS, this]
         · simp [K, htS]]
     refine setIntegral_congr_fun hs.measurableSet fun t ht => ?_
-    simp only [K, if_pos ht.1, F, Complex.real_smul, hPΦ t ht.1]
+    simp only [K, ite_eq_left ht.1, F, Complex.real_smul, hPΦ t ht.1]
     ring
 
 end IsExpLieAlgebra

@@ -285,12 +285,12 @@ theorem prodIdeal_shift (G : GAtP p) (VV : Finset (Fin G.P.nV)) (m : ℕ) (Sv : 
   exact key hz
 
 theorem m_finite (G : GAtP p) (h2 : G.FinClasses) (hs2 : G.M ≤ G.Mna) : Module.Finite G.O G.M := by
-  haveI := mna_finite G h2
+  have := mna_finite G h2
   exact Module.Finite.of_injective (Submodule.inclusion hs2) (Submodule.inclusion_injective hs2)
 
 private theorem smul_left_cancel_of_ne_zero (G : GAtP p) (v : Fin G.P.nV) (r : G.O) (hr : r ≠ 0) (x y : G.Fn)
     (h : r • x = r • y) : x = y := by
-  haveI := (G.P.setting v).frac_O
+  have := (G.P.setting v).frac_O
   have hr0 : algebraMap G.O G.Kf r ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective G.O G.Kf)).2 hr
   funext i L
@@ -300,7 +300,7 @@ private theorem smul_left_cancel_of_ne_zero (G : GAtP p) (v : Fin G.P.nV) (r : G
   exact mul_left_cancel₀ hr0 h'
 
 theorem m_free (G : GAtP p) (v : Fin G.P.nV) [Module.Finite G.O G.M] : Module.Free G.O G.M := by
-  haveI : Module.IsTorsionFree G.O G.M := by
+  have : Module.IsTorsionFree G.O G.M := by
     constructor
     intro r hr x y hxy
     exact Subtype.ext (smul_left_cancel_of_ne_zero G v r hr.ne_zero x y (congrArg Subtype.val hxy))
@@ -308,7 +308,7 @@ theorem m_free (G : GAtP p) (v : Fin G.P.nV) [Module.Finite G.O G.M] : Module.Fr
 
 theorem svc_p_ne_zero (G : GAtP p) (v : Fin G.P.nV) : (p : G.O) ≠ 0 := by
   have hS := G.P.setting v
-  haveI := hS.frac_alt
+  have := hS.frac_alt
   have hW : (p : G.P.W v) ≠ 0 := hS.p_unif.ne_zero
   have hQ : (p : G.P.Qq v) ≠ 0 := by
     rw [← map_natCast (algebraMap (G.P.W v) (G.P.Qq v))]
@@ -578,7 +578,7 @@ theorem stmt6G (D : Formalism.BasicNotions.D7) (L : SizeData₂ D) (X : Inst D L
   by_cases hE : Formalism.MainNotions.G.VV X K (aL L) (bL L) (D.what₂.places.resChar w) = ∅
   · have htau : tauP X K (aL L) (bL L) (D.what₂.places.resChar w) = 0 := by
       unfold tauP
-      rw [if_pos hE]
+      rw [ite_eq_left hE]
     have hio : ioP X K (aL L) (bL L) (D.what₂.places.resChar w) = 0 := by
       unfold ioP
       rw [dite_eq_right]
@@ -627,7 +627,7 @@ theorem stmt6G (D : Formalism.BasicNotions.D7) (L : SizeData₂ D) (X : Inst D L
         ((X.ep (D.what₂.places.resChar w) + ∑ t0 ∈ Formalism.MainNotions.G.VV X K (aL L) (bL L) (D.what₂.places.resChar w),
           D.R.m * (⌈tv X K (aL L) (bL L) (D.what₂.places.resChar w) t0⌉₊ + Dp K L (D.what₂.places.resChar w) + 1) : ℕ) : ℝ) := by
       unfold tauP
-      rw [if_neg hE]
+      rw [ite_eq_right hE]
       push_cast
       rfl
     have hτ : ⌈tauP X K (aL L) (bL L) (D.what₂.places.resChar w)⌉.toNat =

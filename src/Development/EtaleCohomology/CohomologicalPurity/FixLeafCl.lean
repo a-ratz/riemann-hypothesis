@@ -841,7 +841,7 @@ theorem fld {d : ℕ} {k : Type} [Field k] (N E N' : Matrix (Fin d) (Fin d) k) (
   have htv : t v = 0 := hv.resolve_left hs
   have hker : v ∈ LinearMap.ker n := hnv
   have hp : Submodule.linearProjOfIsCompl _ _ hK v = ⟨v, hker⟩ :=
-    Submodule.linearProjOfIsCompl_apply_left hK ⟨v, hker⟩
+    Submodule.projectionOnto_apply_left hK ⟨v, hker⟩
   have : e ⟨v, hker⟩ = 0 := by
     apply Subtype.ext
     have := htv
@@ -1646,7 +1646,7 @@ theorem sep {R : Type} [CommRing R] {G : Shv R} {Y : Scheme.{0}} (s : Sec G Y)
     refine (Scheme.ofArrows_mem_precoverage_iff (P := (@Etale : MorphismProperty Scheme.{0}))).2 ⟨fun y => ?_, fun i => ?_⟩
     · obtain ⟨Z, f, hf, hy, hs⟩ := H y
       exact ⟨⟨⟨Z, f⟩, hf, hs⟩, hy⟩
-    · haveI := i.2.1
+    · have := i.2.1
       exact (inferInstance : Etale i.1.2)
   have hS := hG.isSheafFor _ hmem
   rw [← Presieve.isSheafFor_iff_generate, Presieve.isSheafFor_arrows_iff] at hS

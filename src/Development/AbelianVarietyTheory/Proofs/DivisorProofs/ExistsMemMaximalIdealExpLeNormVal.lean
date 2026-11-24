@@ -77,7 +77,7 @@ theorem nonneg_of_tendsto {X : Type} [AddCommGroup X] (q : QuadraticMap ℤ X �
     have e2 := mul_right_cancel₀ h.ne e'
     have e3 := (pow_left_inj₀ (by positivity) (by positivity) two_ne_zero).1 e2
     exact_mod_cast add_right_cancel e3
-  · simp only [Set.mem_setOf_eq, hv, not_le]
+  · simp only [Set.mem_ofPred_eq, hv, not_le]
     exact mul_neg_of_pos_of_neg (by positivity) h
 
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : ThetaSys o Ω} {M : RatModel o Ω}
@@ -116,7 +116,7 @@ theorem norm_th_eq_and_HH_eq {z : M.Z} {p : ℕ} [Fact p.Prime] {y : Sp (OO p) �
   rw [← τ.supp, ThetaSys.HH]
   congr 1
   ext x
-  rw [key x, Set.mem_setOf_eq, hy]
+  rw [key x, Set.mem_ofPred_eq, hy]
 
 theorem exists_open (S : ThetaSys o Ω) (M : RatModel o Ω) (b : Ω) :
     ∃ U : M.Z.Opens, (U : Set M.Z).Nonempty ∧ S.R ≤ M.ringOn U ∧ b ∈ M.ringOn U := by
@@ -144,8 +144,8 @@ theorem exists_mem_maximalIdeal_exp_le_norm_val :
     ∃ h ∈ maximalIdeal (M.Z.presheaf.stalk z₁),
       Real.exp (-(τ.q α / S.N)) ≤ ‖M.val (gPt p ≫ y) (M.stalkHom z₁ h)‖ := by
   intro o Ω _ _ _ hb S M hn hd hT z hz p _ y y₀ hc hR hAt τ α hα hpos
-  haveI := hb.ft
-  haveI := hb.char
+  have := hb.ft
+  have := hb.char
   obtain ⟨j, hj⟩ := hd z
   obtain ⟨hδ, hH⟩ := norm_th_eq_and_HH_eq hc hR hAt τ hj
   obtain ⟨k, hk, he⟩ := τ.eq α hα

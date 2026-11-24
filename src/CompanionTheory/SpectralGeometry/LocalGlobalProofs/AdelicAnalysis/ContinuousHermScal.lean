@@ -165,14 +165,14 @@ section Top
 variable (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R]
 
 theorem continuous_tmul_one : Continuous fun s : R => s ⊗ₜ[F] (1 : E) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
   have h := IsModuleTopology.continuous_of_linearMap (Algebra.linearMap R (R ⊗[F] E))
   convert h using 2 with s
   simp [Algebra.TensorProduct.algebraMap_apply]
 
 theorem continuous_trace : Continuous (Algebra.trace R (R ⊗[F] E)) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   exact IsModuleTopology.continuous_of_linearMap (Algebra.trace R (R ⊗[F] E))
 
 def hermHalf (σ : E →ₐ[F] E) (S : HermR R σ 1) : R :=
@@ -202,7 +202,7 @@ theorem continuous_hermScal (σ : E →ₐ[F] E) : Continuous (hermScal R σ) :=
 
 theorem continuous_hermHalf (σ : E →ₐ[F] E) : Continuous (hermHalf R σ) := by
   refine continuous_const.mul ((continuous_trace R).comp ?_)
-  exact (continuous_apply 0).comp ((continuous_apply 0).comp continuous_subtype_val)
+  exact (continuous_apply 0).comp ((continuous_apply 0).comp continuous_subtypeVal)
 
 def hermHomeo {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) : R ≃ₜ HermR R σ 1 where
   toFun := hermScal R σ
@@ -228,7 +228,7 @@ instance : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
 theorem map_hermScal {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E)
     (lam : Measure R) [lam.IsAddHaarMeasure] :
     lam.map (hermScal R σ) = coordHerm R σ b lam 1 := by
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
   let P := {p : Fin 1 × Fin 1 // p.1 < p.2}
   let x₀ : P → R ⊗[F] E := isEmptyElim
   let ψ : HermR R σ 1 → (Fin 1 → R) × (P → R ⊗[F] E) := fun S =>

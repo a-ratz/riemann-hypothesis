@@ -160,7 +160,7 @@ private lemma inv_mat_mem_bor (X : Data E r) {b : Frame X.Ψ r} (hb : b ∈ Bor 
   refine ⟨?_, fun a d hda => ?_⟩
   · rw [hm]
     exact (Matrix.isUnit_nonsing_inv_det _ hu).ne_zero
-  letI : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ hu
+  let : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ hu
   have h1 : (mat b τ).BlockTriangular id := fun i j h => (hb τ).2 i j h
   exact (Matrix.blockTriangular_inv_of_blockTriangular h1) hda
 

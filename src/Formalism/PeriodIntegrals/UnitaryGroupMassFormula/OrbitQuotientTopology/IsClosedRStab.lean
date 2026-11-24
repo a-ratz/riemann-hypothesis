@@ -76,12 +76,12 @@ theorem nset_iff (a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
       by_cases hj : j.val < r
       · have hle : j.val ≤ i.val := by split_ifs at hij <;> omega
         have := h2 ⟨j.val, hj⟩ i hle
-        rw [hE j hj, if_neg hne] at this
+        rw [hE j hj, ite_eq_right hne] at this
         exact this
       · have hj2 : j.val ≤ r + k := by split_ifs at hij <;> omega
         have hi : r ≤ i.val := by split_ifs at hij <;> omega
         have := h3 i j (by omega) hj2 hi
-        rw [if_neg hne] at this
+        rw [ite_eq_right hne] at this
         exact this
     · intro i j hij hjr
       unfold nβ at hij hjr
@@ -101,20 +101,20 @@ theorem nset_iff (a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
       have hjv : (eI k r b).val = b.val := rfl
       have hb := b.isLt
       by_cases hie : i = eI k r b
-      · rw [if_pos hie, hie]
+      · rw [ite_eq_left hie, hie]
         have := hD (eI k r b) (eI k r b) rfl (by unfold nβ; split_ifs <;> omega)
         rw [this, Matrix.one_apply_eq]
-      · rw [if_neg hie]
+      · rw [ite_eq_right hie]
         have hne : i.val ≠ b.val := fun h => hie (Fin.ext (by rw [h, hjv]))
         apply hB
         unfold nβ
         split_ifs <;> omega
     · intro i j hj1 hj2 hi
       by_cases hij : i = j
-      · rw [if_pos hij, hij]
+      · rw [ite_eq_left hij, hij]
         have := hD j j rfl (by unfold nβ; split_ifs <;> omega)
         rw [this, Matrix.one_apply_eq]
-      · rw [if_neg hij]
+      · rw [ite_eq_right hij]
         have hne : i.val ≠ j.val := fun h => hij (Fin.ext h)
         by_cases hik : i.val ≤ r + k
         · have := hD i j (by unfold nβ; split_ifs <;> omega) (by unfold nβ; split_ifs <;> omega)
@@ -167,7 +167,7 @@ theorem ndiag_mul {a b : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
 theorem ndiag_inv {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hU : a ∈ UH (Hpk k r)) (hA : a.BlockTriangular (nβ k r)) (hDa : NDiag a) : NDiag a⁻¹ := by
   have h1 : a * a⁻¹ = 1 := uh_mul_inv hU
-  letI : Invertible a := ⟨a⁻¹, uh_inv_mul hU, h1⟩
+  let : Invertible a := ⟨a⁻¹, uh_inv_mul hU, h1⟩
   have hB : a⁻¹.BlockTriangular (nβ k r) := Matrix.blockTriangular_inv_of_blockTriangular hA
   intro i j hij hjr
   have := congrFun (congrFun h1 i) j
@@ -193,7 +193,7 @@ theorem nset_inv {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (h
   rw [nset_iff] at ha ⊢
   obtain ⟨h1, h2, h3⟩ := ha
   have hh : a * a⁻¹ = 1 := uh_mul_inv h1
-  letI : Invertible a := ⟨a⁻¹, uh_inv_mul h1, hh⟩
+  let : Invertible a := ⟨a⁻¹, uh_inv_mul h1, hh⟩
   exact ⟨uh_inv h1, Matrix.blockTriangular_inv_of_blockTriangular h2, ndiag_inv h1 h2 h3⟩
 
 theorem nset_uh {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ Nset k r) :
@@ -244,17 +244,17 @@ theorem isClosed_Nset : IsClosed (Nset k r) := by
       g i (eI k r a) = if i = eI k r a then 1 else 0) ∧
     (∀ i j : Fin (2 * r + k + 1), r ≤ j.val → j.val ≤ r + k → r ≤ i.val →
       g i j = if i = j then 1 else 0)}
-  rw [Set.setOf_and, Set.setOf_and, Set.setOf_mem_eq]
+  rw [Set.ofPred_and, Set.ofPred_and, Set.ofPred_mem_eq]
   refine isClosed_UH.inter (IsClosed.inter ?_ ?_)
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isClosed_iInter fun a => isClosed_iInter fun i => isClosed_iInter fun _ => hE _ _ _
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_iInter fun _ => isClosed_iInter fun _ => isClosed_iInter fun _ => hE _ _ _
 
 theorem isClosed_RStab (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) : IsClosed (RStab k r g) := by
   show IsClosed {a | a ∈ Nset k r ∧ g⁻¹ * a * g ∈ Nset k r}
-  rw [Set.setOf_and, Set.setOf_mem_eq]
+  rw [Set.ofPred_and, Set.ofPred_mem_eq]
   exact isClosed_Nset.inter (IsClosed.preimage (f := fun a => g⁻¹ * a * g)
     ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const) isClosed_Nset)
 

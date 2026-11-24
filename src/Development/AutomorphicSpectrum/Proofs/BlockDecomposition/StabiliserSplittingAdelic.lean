@@ -468,7 +468,7 @@ theorem topRow_mul {P Q : Matrix (Fin (M + 2)) (Fin (M + 2)) A} (hP0 : P 0 0 = 1
     fun i j => congrFun (congrFun hQb i) j
   simp only [topRow, Matrix.mul_apply, sum_two, hP0, hQ, hrr, Finset.sum_add_distrib, add_mul,
     mul_zero, zero_add, one_mul, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true]
+    ite_true]
   rw [add_comm]
 
 end Vec
@@ -710,7 +710,7 @@ theorem continuous_dg {A : Type} [CommRing A] [TopologicalSpace A] :
 theorem continuous_matStab :
     Continuous (fun p : stabilizer₂ R σ J => matP R σ J p) ∧
       Continuous (fun p : stabilizer₂ R σ J => matP R σ J p⁻¹) :=
-  (continuous_HA_iff R σ (hypOne J)).1 continuous_subtype_val
+  (continuous_HA_iff R σ (hypOne J)).1 continuous_subtypeVal
 
 theorem continuous_piR : Continuous (piR R σ J) := by
   rw [continuous_HA_iff]
@@ -888,9 +888,9 @@ namespace GlobalTheory.AdeleCocompactExt
 theorem exists_compact_adele_ext : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E], ∃ C : Set (AE F E), IsCompact C ∧ ∀ a : AE F E, ∃ α : E, a - inclR (F := F) (AF F) α ∈ C := by
   intro F E _ _ _ _ _
   classical
-  haveI : IsModuleTopology (AF F) (AE F E) := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.modTop
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
-  haveI : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) (AE F E)
+  have : IsModuleTopology (AF F) (AE F E) := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.modTop
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) (AE F E)
   obtain ⟨K, hK, hK'⟩ := GlobalTheory.AdeleCocompact.exists_compact_adele F
   let b := Module.finBasis F E
   let B : Module.Basis (Fin (Module.finrank F E)) (AF F) (AE F E) := Algebra.TensorProduct.basis (AF F) b
@@ -1145,13 +1145,13 @@ end Surj
 theorem stab_structure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∃ (ι : HA (AF F) σ J →* stabilizer₂ (AF F) σ J) (π : stabilizer₂ (AF F) σ J →* HA (AF F) σ J), Continuous ι ∧ Continuous π ∧ (∀ u, π (ι u) = u) ∧ (∀ u ∈ HFinIn (AF F) σ J, ι u ∈ ratP (AF F) σ J) ∧ (∀ p ∈ ratP (AF F) σ J, π p ∈ HFinIn (AF F) σ J) ∧ (∃ K : Set (stabilizer₂ (AF F) σ J), IsCompact K ∧ ∀ m ∈ π.ker, ∃ γ ∈ ratP (AF F) σ J, π γ = 1 ∧ γ * m ∈ K) ∧ (∀ (k : ℕ) (u : HA (AF F) σ J) (a : Fin 1 → Fin k → AF F ⊗[F] E) (Y : Fin k → Fin M → AF F ⊗[F] E), actW (AF F) σ (hypOne J) (ι u : HA (AF F) σ (hypOne J)) (consA a Y) = consA a (actW (AF F) σ J u Y)) ∧ ∀ (k : ℕ) (Y : Fin k → Fin M → E), LinearIndependent E Y → ∃ l : π.ker → Fin 1 → Fin k → AF F ⊗[F] E, Continuous l ∧ (∀ x y, l (x * y) = l x + l y) ∧ Function.Surjective l ∧ (∀ m : π.ker, (m : stabilizer₂ (AF F) σ J) ∈ ratP (AF F) σ J → l m ∈ ratA (F := F) (E := E) k) ∧ ∀ (m : π.ker) (a : Fin 1 → Fin k → AF F ⊗[F] E), actW (AF F) σ (hypOne J) ((m : stabilizer₂ (AF F) σ J) : HA (AF F) σ (hypOne J)) (consA a (ratTup (AF F) Y)) = consA (a + l m) (ratTup (AF F) Y) := by
   intro F E _ _ _ _ _ σ hσ M J hJ
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨t1, -, -, -, t5, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := t1
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul (AF F) (AF F ⊗[F] E) := IsModuleTopology.toContinuousSMul (AF F) _
+  have := t1
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul (AF F) (AF F ⊗[F] E) := IsModuleTopology.toContinuousSMul (AF F) _
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hσ
   have hinj : Function.Injective (inclR (F := F) (E := E) (AF F)) :=
     Algebra.TensorProduct.includeRight_injective (AdeleRing.algebraMap_injective _ _)
@@ -1164,7 +1164,7 @@ theorem stab_structure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   obtain ⟨D, hD⟩ := exists_left_inv hJ.2 Y hY
   refine ⟨fun m _ j => topRow (matP (AF F) σ J m.1) (ratTup (AF F) Y j), ?_, ?_, ?_, ?_, ?_⟩
   · have hm : Continuous fun m : (piR (AF F) σ J).ker => matP (AF F) σ J m.1 :=
-      (continuous_matStab (AF F) σ J).1.comp continuous_subtype_val
+      (continuous_matStab (AF F) σ J).1.comp continuous_subtypeVal
     refine continuous_pi fun _ => continuous_pi fun j => ?_
     exact continuous_finsetSum _ fun i _ => (hm.matrix_elem _ _).mul continuous_const
   · intro x y

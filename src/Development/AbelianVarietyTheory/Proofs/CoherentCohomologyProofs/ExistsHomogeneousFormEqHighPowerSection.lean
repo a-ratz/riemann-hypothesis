@@ -67,14 +67,14 @@ theorem mem_span_of_saturating_of_le : ∀ (ι : Type) [LinearOrder ι] [Fintype
   have hhom : K.IsHomogeneous ℳ := isHomogeneous_span_gr ℳ (by
     rintro _ ⟨l, rfl⟩
     exact ⟨d l, hg l⟩)
-  letI : Decomposition (grSub ℳ K) := grSubDecomposition ℳ hhom
+  let : Decomposition (grSub ℳ K) := grSubDecomposition ℳ hhom
   have hfin : Module.Finite (MvPolynomial ι R) K :=
     Module.Finite.span_of_finite _ (Set.finite_range g)
   obtain ⟨n₀, hn₀⟩ := _root_.GlobalTheory.cubeComplex_grCube_exactAt_of_finite ι R K (grSub ℳ K) hfin
   refine ⟨n₀, fun n hn y hy => ?_⟩
   have hf := isGradedMap_subtype ℳ K
   have hb := (grAug_bijective_iff (ι := ι) (grSub ℳ K) n).2 ⟨hn₀ n hn 0, hn₀ n hn 1⟩
-  haveI : IsIso (grCechMap hf n) := isIso_grCechMap hf
+  have : IsIso (grCechMap hf n) := isIso_grCechMap hf
     (fun i m hm => ⟨0, by rw [(map_eq_zero_iff _ K.injective_subtype).1 hm, smul_zero]⟩)
     (fun i y => by simpa using hsat i y) n
   have hs : Function.Surjective (grHMap hf n 0).hom :=

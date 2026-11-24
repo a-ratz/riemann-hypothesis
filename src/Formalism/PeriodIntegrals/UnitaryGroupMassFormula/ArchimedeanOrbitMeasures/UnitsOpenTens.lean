@@ -69,7 +69,7 @@ theorem isUnit_det_TI {D : D7} (X : HidaSetting D) (u' : D.what₂.Word)
 
 theorem nearFacts_of (hU : UnitsOpenTens) : NearFacts := by
   intro D X u' ψ hT μinf νinf fibInf hP Ω a hCh
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   obtain ⟨hmr, hcomp, hsmul, hgram, hcTmul, hcT1, -, -⟩ := rmulFacts_holds X
   have hd := detNZ_holds X u' ψ hT μinf νinf fibInf hP
   have hdetc : ContinuousAt (fun T => (a T).det) (TI X u' hT) :=

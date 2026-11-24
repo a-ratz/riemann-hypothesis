@@ -285,7 +285,7 @@ theorem appLE_sec (p0 : P ⟶ X) (g : P ⟶ PSpace O N) {U : X.Opens} (hU : IsAf
     (r : Fin (N + 1)) (z : Sp k ⟶ P) (φ : Γ(X, U) →+* k) (hφ : z ≫ p0 = spMap φ ≫ hU.fromSpec) (b : O →+* k)
     (v : Fin (N + 1) → k) (hv) (hz : z ≫ g = pt b v hv) (h : ⊤ ≤ z ⁻¹ᵁ (p0 ⁻¹ᵁ U ⊓ g ⁻¹ᵁ chart O N r)) :
     v r ≠ 0 ∧ (z.appLE _ ⊤ h).hom (sec p0 g U a r) = fnOn ⊤ ((∑ q, φ (a q) * v q) / v r) := open MvPolynomial GlobalTheory.QCoh.Qcqs GlobalTheory.Cartier GlobalTheory.ProjFrac in by
-  letI := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := O)
+  let := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := O)
   have pre : pt b v hv ⁻¹ᵁ chart O N r = spOpen (v r) := by
     change ProjPoint.ofHom (grading O N) (eval₂Hom b v) (map_irrelevant_eval₂Hom b hv) ⁻¹ᵁ
       Proj.basicOpen (grading O N) (MvPolynomial.X r) = _
@@ -629,7 +629,7 @@ theorem unit_of_eq (hp : ∀ en, ∃ hu, h ≫ p en = pt a (plk (uvec c w) en.2.
       (c : O →+* A) (v : Fin (n + 1) → A) (hv : Ideal.span (Set.range v) = ⊤) (ψ : A →+* B),
       spMap ψ ≫ pt c v hv = pt (ψ.comp c) (ψ ∘ v) (span_range_comp_eq_top v hv ψ) := by
     intro O A B _ _ _ n c v hv ψ
-    letI := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
+    let := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
     refine (ProjPoint.SpecMap_ofHom _ _ _ ψ).trans ?_
     unfold pt
     congr 1
@@ -669,7 +669,7 @@ private theorem mono_cell_lemma (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
       (c : O →+* A) (v : Fin (n + 1) → A) (hv : Ideal.span (Set.range v) = ⊤) (ψ : A →+* B),
       spMap ψ ≫ pt c v hv = pt (ψ.comp c) (ψ ∘ v) (span_range_comp_eq_top v hv ψ) := by
     intro O A B _ _ _ n c v hv ψ
-    letI := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
+    let := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
     refine (ProjPoint.SpecMap_ofHom _ _ _ ψ).trans ?_
     unfold pt
     congr 1
@@ -722,7 +722,7 @@ theorem exists_lift (hD : LeftInv D c) (hb : h ≫ p0 = cbase m U)
       (c : O →+* A) (v : Fin (n + 1) → A) (hv : Ideal.span (Set.range v) = ⊤) (ψ : A →+* B),
       spMap ψ ≫ pt c v hv = pt (ψ.comp c) (ψ ∘ v) (span_range_comp_eq_top v hv ψ) := by
     intro O A B _ _ _ n c v hv ψ
-    letI := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
+    let := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
     refine (ProjPoint.SpecMap_ofHom _ _ _ ψ).trans ?_
     unfold pt
     congr 1
@@ -916,7 +916,7 @@ theorem exists_lower_mul_upper (A : Matrix (Fin n) (Fin n) K)
   refine ⟨Matrix.of fun i k => if h : (k : ℕ) < i then -v i ⟨k, h⟩ else if k = i then 1 else 0, ?_, ?_, ?_⟩
   · intro i k h
     simp only [Matrix.of_apply]
-    rw [dite_eq_right (by have := Fin.lt_def.mp h; omega), if_neg (ne_of_gt h)]
+    rw [dite_eq_right (by have := Fin.lt_def.mp h; omega), ite_eq_right (ne_of_gt h)]
   · intro i
     simp
   · intro i j h
@@ -928,12 +928,12 @@ theorem exists_lower_mul_upper (A : Matrix (Fin n) (Fin n) K)
       simp only [Matrix.of_apply]
       rcases lt_trichotomy k i with h | h | h
       · have hk : (k : ℕ) < i := h
-        rw [dite_eq_left hk, dite_eq_left hk, if_neg (ne_of_lt h), add_zero]
+        rw [dite_eq_left hk, dite_eq_left hk, ite_eq_right (ne_of_lt h), add_zero]
       · subst h; simp
       · have hk : ¬ (k : ℕ) < i := by have := Fin.lt_def.mp h; omega
-        rw [dite_eq_right hk, dite_eq_right hk, if_neg (ne_of_gt h), if_neg (ne_of_gt h), zero_mul, add_zero]
+        rw [dite_eq_right hk, dite_eq_right hk, ite_eq_right (ne_of_gt h), ite_eq_right (ne_of_gt h), zero_mul, add_zero]
     rw [Finset.sum_congr rfl fun k _ => hsplit k, Finset.sum_add_distrib, Finset.sum_ite_eq',
-      if_pos (Finset.mem_univ _)]
+      ite_eq_left (Finset.mem_univ _)]
     have hs : ∑ k : Fin i, -v i k * A (Fin.castLE i.isLt.le k) j =
         ∑ k : Fin n, (if h : (k : ℕ) < i then -v i ⟨k, h⟩ * A k j else 0) := by
       refine Fintype.sum_of_injective (Fin.castLE i.isLt.le) (Fin.castLE_injective _) _ _ (fun k hk => ?_)
@@ -957,10 +957,10 @@ theorem exists_lu (A : Matrix (Fin n) (Fin n) K)
   obtain ⟨L, hup, hd, hz⟩ := exists_lower_mul_upper A hA
   have hLt : L.BlockTriangular OrderDual.toDual := fun i k h => hup i k h
   have hL : L.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular L hLt]
+    rw [det_of_isLowerTriangular L hLt]
     simp [hd]
   have hu : IsUnit L.det := by rw [hL]; exact isUnit_one
-  letI := L.invertibleOfIsUnitDet hu
+  let := L.invertibleOfIsUnitDet hu
   have hN : L⁻¹.BlockTriangular OrderDual.toDual := blockTriangular_inv_of_blockTriangular hLt
   refine ⟨L⁻¹, L * A, fun i k h => hN h, fun i => ?_, hz, fun i => ?_, ?_⟩
   · have h1 : (L * L⁻¹) i i = 1 := by rw [mul_nonsing_inv _ hu]; simp
@@ -974,7 +974,7 @@ theorem exists_lu (A : Matrix (Fin n) (Fin n) K)
   · have h1 : (L * A).det ≠ 0 := by
       rw [det_mul, hL, one_mul]
       simpa using hA n le_rfl
-    rw [Matrix.det_of_upperTriangular (fun i j h => hz i j h)] at h1
+    rw [det_of_isUpperTriangular (fun i j h => hz i j h)] at h1
     exact Finset.prod_ne_zero_iff.1 h1 i (Finset.mem_univ _)
   · rw [← Matrix.mul_assoc, nonsing_inv_mul _ hu, Matrix.one_mul]
 
@@ -1013,7 +1013,7 @@ theorem exists_cell (T : Type) (m : T → ℕ) (K : Type) [Field K] (M : ℕ) (D
           rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun r _ => by ring, h1]
       by_cases hi : i' = i
       · subst hi; simp [wLet]
-      · rw [if_neg hi, if_neg, mul_zero]
+      · rw [ite_eq_right hi, ite_eq_right, mul_zero]
         intro he
         simp only [wLet, Sigma.mk.injEq, heq_eq_eq, true_and] at he
         exact hi ((w τ).injective he).symm
@@ -1031,7 +1031,7 @@ theorem exists_cell (T : Type) (m : T → ℕ) (K : Type) [Field K] (M : ℕ) (D
     intro τ i j
     unfold cell
     rcases lt_trichotomy i j with h | h | h
-    · rw [dite_eq_right (not_lt.2 h.le), if_neg h.ne, hN τ i j h]
+    · rw [dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne, hN τ i j h]
     · subst h; simp [hN1]
     · rw [dite_eq_left h]
   rintro ⟨τ, j⟩
@@ -1111,7 +1111,7 @@ theorem range_inter_cellOpen_subset : ∀ (O K : Type) [CommRing O] [Field K] (�
       (c : O →+* A) (v : Fin (n + 1) → A) (hv : Ideal.span (Set.range v) = ⊤) (ψ : A →+* B),
       spMap ψ ≫ pt c v hv = pt (ψ.comp c) (ψ ∘ v) (span_range_comp_eq_top v hv ψ) := by
     intro O A B _ _ _ n c v hv ψ
-    letI := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
+    let := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
     refine (ProjPoint.SpecMap_ofHom _ _ _ ψ).trans ?_
     unfold pt
     congr 1
@@ -1154,8 +1154,8 @@ theorem GlobalTheory.FlagEmb.cells_glue : ∀ (O K : Type) [CommRing O] [IsNoeth
     intro Y g hg
     obtain ⟨N, ι, _, rfl⟩ := hg
     exact LocallyOfFiniteType.isLocallyNoetherian (ι ≫ PSpace.str O N)
-  haveI : IsLocallyNoetherian X := hLN s hs
-  haveI : IsLocallyNoetherian P := hLN _ hP.proj
+  have : IsLocallyNoetherian X := hLN s hs
+  have : IsLocallyNoetherian P := hLN _ hP.proj
   have hW : ∀ b w, ∃ W, IsCellOpen p0 p (V b) (D b) w W := fun b w =>
     GlobalTheory.FlagEmb.CellOpen.exists_isCellOpen O X P T m M p0 p (V b) (D b) w
   choose W hW using hW
@@ -1164,12 +1164,12 @@ theorem GlobalTheory.FlagEmb.cells_glue : ∀ (O K : Type) [CommRing O] [IsNoeth
   have hred : ∀ b, AlgebraicGeometry.IsReduced (Sp (CR m (V b))) := by
     intro b
     have hn := (GlobalTheory.FlagEmb.cell_smooth_normal X T m (V b) hX).2
-    haveI := fun x => (hn x).1
+    have := fun x => (hn x).1
     exact isReduced_of_isReduced_stalk _
   let ι := B × Pm m
-  haveI : Finite (Pm m) := Pi.finite
-  haveI : ∀ a : ι, IsAffine (Sp (CR m (V a.1))) := fun a => inferInstance
-  haveI : ∀ a : ι, AlgebraicGeometry.IsReduced (Sp (CR m (V a.1))) := fun a => hred a.1
+  have : Finite (Pm m) := Pi.finite
+  have : ∀ a : ι, IsAffine (Sp (CR m (V a.1))) := fun a => inferInstance
+  have : ∀ a : ι, AlgebraicGeometry.IsReduced (Sp (CR m (V a.1))) := fun a => hred a.1
   obtain ⟨F, f, i, hf, hio, hcomp, hcov⟩ := GlobalTheory.MemberGlue.exists_immersion_of_closed_pieces P ι
     (fun a => Sp (CR m (V a.1))) (fun a => h a.1 a.2) (fun a => W a.1 a.2) (fun a => h' a.1 a.2) inferInstance
     (fun a => hh' a.1 a.2) (fun a => hci a.1 a.2)
@@ -1393,8 +1393,8 @@ theorem preimage_opens_eq_range_of_valuative (F Z X : Scheme.{0}) (j : F ⟶ Z) 
   have hj'fac : j' ≫ (π ⁻¹ᵁ U).ι = j := IsOpenImmersion.lift_fac _ _ _
   have hcomp : j' ≫ (π ∣_ U) = g := by
     rw [← cancel_mono U.ι, hgfac, Category.assoc, morphismRestrict_ι, ← Category.assoc, hj'fac]
-  haveI : QuasiCompact g := ⟨fun V _ _ ↦ TopologicalSpace.NoetherianSpace.isCompact _⟩
-  haveI : UniversallyClosed g := by
+  have : QuasiCompact g := ⟨fun V _ _ ↦ TopologicalSpace.NoetherianSpace.isCompact _⟩
+  have : UniversallyClosed g := by
     apply UniversallyClosed.of_valuativeCriterion
     intro S
     obtain ⟨l, hl1, hl2⟩ := hv S.R S.K S.i₁ (S.i₂ ≫ U.ι)
@@ -1407,10 +1407,10 @@ theorem preimage_opens_eq_range_of_valuative (F Z X : Scheme.{0}) (j : F ⟶ Z) 
       rw [← cancel_mono U.ι, Category.assoc, hgfac, hl2]
     exact ⟨⟨{ l := l, fac_left := hl1, fac_right := hl3 }⟩⟩
   haveI : UniversallyClosed (j' ≫ (π ∣_ U)) := by rw [hcomp]; infer_instance
-  haveI : IsSeparated ((π ⁻¹ᵁ U).ι ≫ π) := inferInstance
+  have : IsSeparated ((π ⁻¹ᵁ U).ι ≫ π) := inferInstance
   haveI : IsSeparated ((π ∣_ U) ≫ U.ι) := by rw [morphismRestrict_ι]; infer_instance
   haveI : IsSeparated (π ∣_ U) := IsSeparated.of_comp (π ∣_ U) U.ι
-  haveI : UniversallyClosed j' := UniversallyClosed.of_comp_of_isSeparated j' (π ∣_ U)
+  have : UniversallyClosed j' := UniversallyClosed.of_comp_of_isSeparated j' (π ∣_ U)
   have hclosed : IsClosed (Set.range j'.base) := j'.isClosedMap.isClosed_range
   have hrange : Set.range j' = (π ⁻¹ᵁ U).ι ⁻¹' Set.range j := by
     ext w; constructor
@@ -1465,20 +1465,20 @@ theorem preimage_iUnion_eq_range_cells : ∀ (O K : Type) [CommRing O] [Field K]
     exact hr ▸ Set.mem_range_self _
   · intro A k _ _ _ _ _ _ a x hx hax
     rw [hU] at hx
-    haveI : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))
-    haveI : Nonempty (Sp k) := inferInstanceAs (Nonempty (PrimeSpectrum k))
+    have : Subsingleton (Sp k) := inferInstanceAs (Subsingleton (PrimeSpectrum k))
+    have : Nonempty (Sp k) := inferInstanceAs (Nonempty (PrimeSpectrum k))
     obtain ⟨y⟩ := ‹Nonempty (Sp k)›
     obtain ⟨b', w', hy⟩ := hcov (a y)
     have hra : Set.range a ⊆ Set.range (i b' w') := by
       rintro _ ⟨z, rfl⟩
       rwa [Subsingleton.elim z y]
-    haveI := hi b' w'
+    have := hi b' w'
     let a' := IsOpenImmersion.lift (i b' w') a hra
     have ha' : a' ≫ i b' w' = a := IsOpenImmersion.lift_fac _ _ _
     have h1 : a' ≫ cbase m (V b') = spMap (algebraMap A k) ≫ x := by
       rw [← hcb b' w', ← Category.assoc, ha', ← hax, hjf]
     obtain ⟨b, w, l, hl, hl2⟩ := GlobalTheory.T.flagCell_valuativeExistence_over_union_of_opens O K β X s T m M B V α c D P p0 p h hC hP A k b' w' a' x hx h1
-    haveI : Mono f := inferInstance
+    have : Mono f := inferInstance
     refine ⟨l ≫ i b w, ?_, ?_⟩
     · rw [← cancel_mono f, Category.assoc, Category.assoc, hif, hl2, ← hif b' w', ← Category.assoc, ha']
     · rw [hjf, Category.assoc, hcb b w, hl]

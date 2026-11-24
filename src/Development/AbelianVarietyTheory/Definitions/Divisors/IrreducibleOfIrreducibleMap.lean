@@ -143,7 +143,7 @@ theorem dvd_of_forall_aeval_eq_zero (h : IsChowFormInt I e dl f)
     {p : MvPolynomial (Fin (e + 1) × Fin N) k}
     (hp : ∀ u : Fin (e + 1) × Fin N → AlgebraicClosure k, aeval u f = 0 → aeval u p = 0) :
     f ∣ p := by
-  haveI : (Ideal.span {f}).IsPrime := (Ideal.span_singleton_prime h.ne_zero).2 h.irred.prime
+  have : (Ideal.span {f}).IsPrime := (Ideal.span_singleton_prime h.ne_zero).2 h.irred.prime
   rw [← Ideal.mem_span_singleton,
     ← IsPrime.vanishingIdeal_zeroLocus (K := AlgebraicClosure k) (Ideal.span {f})]
   exact fun u hu => hp u (hu f (Ideal.subset_span rfl))
@@ -276,12 +276,12 @@ theorem eq_of_components (h : IsChowFormCycle Z e dl f)
   let a' : Ideal (MvPolynomial (Fin N) k) → k := fun P => if hP : P ∈ Z.support then a P hP else 1
   refine ⟨c * ∏ P ∈ Z.support, a' P ^ Z P, mul_ne_zero hc
     (Finset.prod_ne_zero_iff.2 fun P hP => pow_ne_zero _ ?_), ?_⟩
-  · simp only [a', dif_pos hP]; exact ha P hP
+  · simp only [a', dite_eq_left hP]; exact ha P hP
   · rw [MvPolynomial.C_mul, mul_assoc, map_prod, Finsupp.prod, Finsupp.prod,
       ← Finset.prod_mul_distrib]
     congr 1
     refine Finset.prod_congr rfl fun P hP => ?_
-    simp only [a', dif_pos hP]
+    simp only [a', dite_eq_left hP]
     rw [hag P hP, mul_pow, map_pow]
 
 theorem unique (h : IsChowFormCycle Z e dl f) (h' : IsChowFormCycle Z e dl' f') :

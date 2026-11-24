@@ -57,7 +57,7 @@ theorem pow_ext {S : Scheme.{0}} {G' G : Over S} [GrpObj G'] [GrpObj G] {j : ℕ
 
 theorem one_pr {S : Scheme.{0}} {G' G : Over S} [GrpObj G'] [GrpObj G] {j : ℕ} (p : IsPowGrp G' G j)
     (l : Fin j) : η[G'] ≫ p.pr l = η[G] := by
-  haveI := p.hom l
+  have := p.hom l
   exact IsMonHom.one_hom (p.pr l)
 
 theorem main : ∀ (S : Scheme.{0}) (T' T G' G B' B : Over S) [GrpObj T'] [GrpObj T] [GrpObj G'] [GrpObj G] [GrpObj B'] [GrpObj B] (j : ℕ) (pT : IsPowGrp T' T j) (p : IsPowGrp G' G j) (pB : IsPowGrp B' B j) (i : T ⟶ G) (q : G ⟶ B) (i' : T' ⟶ G') (q' : G' ⟶ B'), (∀ l, i' ≫ p.pr l = pT.pr l ≫ i) → (∀ l, q' ≫ pB.pr l = p.pr l ≫ q) → IsPullback i (toUnit T) q η[B] → IsPullback i' (toUnit T') q' η[B'] := by

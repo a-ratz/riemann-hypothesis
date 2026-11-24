@@ -213,7 +213,7 @@ theorem UpperTheory.V.ML.shaToShT :
     have hmem' : c' ∈ ShT (QO l O) α δ F (ϖ ^ k) :=
       shT_mono α δ F (Units.mul_left_dvd.mpr dvd_rfl) hmem
     let z' : Z1U (twist₂ l α) T := ⟨fun v => c' v.1,
-      (hc'.1.comp_continuous continuous_subtype_val).continuous, fun v w => hc'.2 v.1 w.1⟩
+      (hc'.1.comp_continuous continuous_subtypeVal).continuous, fun v w => hc'.2 v.1 w.1⟩
     have hq : Q z = Q z' := by
       simp only [Q, Submodule.mkQ_apply]
       rw [UpperTheory.V.Base.mk_eq_mk]

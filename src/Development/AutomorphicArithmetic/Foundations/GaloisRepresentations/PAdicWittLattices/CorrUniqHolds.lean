@@ -276,7 +276,7 @@ theorem redCompat_of_finite_etale (l : ℕ) [Fact l.Prime] {Z X : Scheme.{0}} (f
     (hex : ∀ (R : Type) [CommRing R], ∃! t, IsTransfer R f t) (n i : ℤ) : RedCompat l f n i := by
   intro k x
   have hl : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl⟩
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl⟩
   have hd : l ^ k ∣ l ^ (k + 1) := pow_dvd_pow l (Nat.le_succ k)
   obtain ⟨t0, ht0, -⟩ := hex (ZMod (l ^ (k + 1)))
   have htQ := transfer_spec (ZMod (l ^ (k + 1))) ⟨t0, ht0⟩
@@ -334,7 +334,7 @@ theorem splitBy_of_equiv {Y X V : Scheme.{0}} (f : Y ⟶ X) (y : V ⟶ X) {G : T
       ∐ (fun _ : G => V) ⟶ pullback f y)))
   apply Sigma.hom_ext
   intro j
-  rw [Sigma.ι_desc, reassoc_of% (hw j), Sigma.ι_desc]
+  rw [Sigma.ι_comp_desc, reassoc_of% (hw j), Sigma.ι_comp_desc]
 
 theorem along_sum {X Y : Scheme.{0}} (F : Shv R) (n : ℤ) {ι : Type} (s : Finset ι) (t : ι → (freeSch R X ⟶ freeSch R Y))
     (x : H R (sch.obj Y) F n) : along R F n (∑ j ∈ s, t j) x = ∑ j ∈ s, along R F n (t j) x :=
@@ -428,19 +428,19 @@ theorem pullHQ_galoisCover_inv : ∀ (l : ℕ) [Fact l.Prime] {Y X : Scheme.{0}}
     rw [hF, ← pqc, ha g]
   by_cases hG : Fintype.card G = 0
   ·
-    haveI : IsEmpty G := Fintype.card_eq_zero_iff.mp hG
+    have : IsEmpty G := Fintype.card_eq_zero_iff.mp hG
     have hS : IsEmpty ↥(∐ (fun _ : G => Y)) := by
       constructor
       intro p
       obtain ⟨j, _⟩ := (sigmaOpenCover (fun _ : G => Y)).exists_eq p
       exact isEmptyElim (show G from j)
-    haveI hYe : IsEmpty Y :=
+    have hYe : IsEmpty Y :=
       ⟨fun y => hS.false ((pullback.lift (𝟙 Y) (𝟙 Y) rfl ≫ inv (Sigma.desc (fun g =>
         pullback.lift (a g) (𝟙 Y) (by rw [ha g, Category.id_comp])) : ∐ (fun _ : G => Y) ⟶ pullback f f)).base y)⟩
-    haveI : IsEmpty X := ⟨fun x => by
+    have : IsEmpty X := ⟨fun x => by
       obtain ⟨y, _⟩ := (inferInstance : Surjective f).surj x
       exact hYe.false y⟩
-    haveI : IsIso f := isIso_of_isEmpty f
+    have : IsIso f := isIso_of_isEmpty f
     have e1 : (pullHQ l (sch.map (inv f)) n i).comp F = LinearMap.id := by
       rw [hF, ← pqc, IsIso.inv_hom_id, pqi]
     have e2 : F.comp (pullHQ l (sch.map (inv f)) n i) = LinearMap.id := by
@@ -493,7 +493,7 @@ private theorem prim_isEmpty {k : Type} [Field k] {q : ℕ} (hq : (q : k) = 0) {
   have h1 : ((q : ℕ) : Γ(V, ⊤)) = 0 := by
     rw [← map_natCast f.appTop.hom, h0, map_zero]
   rw [h1] at hu
-  haveI : Nonempty (⊤ : V.Opens) := ⟨⟨v, trivial⟩⟩
+  have : Nonempty (⊤ : V.Opens) := ⟨⟨v, trivial⟩⟩
   exact not_isUnit_zero hu
 
 private theorem sec_subsingleton {k : Type} [Field k] {q : ℕ} (hq : (q : k) = 0) (i : ℤ) {U : Scheme.{0}} (f : U ⟶ sp k) :
@@ -513,7 +513,7 @@ private theorem sec_subsingleton {k : Type} [Field k] {q : ℕ} (hq : (q : k) = 
     obtain ⟨V, j, v, m, -, hj, hv, hm⟩ := (GlobalTheory.ofRings_loc (ZMod q) (twF q i) U).1 x u
     refine ⟨V, j, v, hj, hv, ?_⟩
     refine hm.symm.trans ?_
-    haveI : IsEmpty (Prim q Γ(V, ⊤)) := prim_isEmpty hq v (j ≫ f)
+    have : IsEmpty (Prim q Γ(V, ⊤)) := prim_isEmpty hq v (j ≫ f)
     obtain ⟨g, rfl⟩ := Submodule.Quotient.mk_surjective (twRel q i Γ(V, ⊤)) m
     rw [Subsingleton.elim g 0, Submodule.Quotient.mk_zero]
     exact map_zero _
@@ -528,7 +528,7 @@ private theorem ht_subsingleton {k : Type} [Field k] {q : ℕ} (hq : (q : k) = 0
   have hbij := GlobalTheory.T.etaleCohomology_bijective_of_support_bijective (ZMod q) (sch.obj X) (0 : tw q i ⟶ tw q i) (fun U hU => by
     obtain ⟨g⟩ := hU
     have g' : U ⟶ X := g
-    haveI := sec_subsingleton hq i (g' ≫ p)
+    have := sec_subsingleton hq i (g' ≫ p)
     exact ⟨fun a b _ => Subsingleton.elim a b, fun b => ⟨b, Subsingleton.elim _ _⟩⟩) n
   have hz : HK.post (ZMod q) ((chains (ZMod q)).obj (sch.obj X)) (0 : tw q i ⟶ tw q i) n = 0 := by
     have h := PostFun.post_add ((chains (ZMod q)).obj (sch.obj X)) (0 : tw q i ⟶ tw q i) 0 n
@@ -640,7 +640,7 @@ private theorem isProper_desc {A G U Z : Scheme.{0}} {φ : A ⟶ G} {f : A ⟶ U
   have hP : IsProper (pullback.diagonal g) := IsProper.mk
   have hC : IsClosedImmersion (pullback.diagonal g) :=
     (IsClosedImmersion.iff_isProper_and_mono _).mpr ⟨hP, inferInstance⟩
-  haveI : IsSeparated g := ⟨hC⟩
+  have : IsSeparated g := ⟨hC⟩
   exact IsProper.mk
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -648,7 +648,7 @@ private theorem isFinite_desc_fin (W : Scheme.{0}) (n : ℕ) :
     IsFinite (Sigma.desc (f := fun _ : Fin n => W) fun _ => 𝟙 W) := by
   induction n with
   | zero =>
-    haveI := Function.isEmpty (sigmaMk (fun _ : Fin 0 => W)).symm
+    have := Function.isEmpty (sigmaMk (fun _ : Fin 0 => W)).symm
     infer_instance
   | succ n ih =>
     let t := extendCofanIsColimit (fun _ : Fin (n + 1) => W) (coproductIsCoproduct fun _ : Fin n => W)
@@ -660,7 +660,7 @@ private theorem isFinite_desc_fin (W : Scheme.{0}) (n : ℕ) :
       refine Sigma.hom_ext _ _ fun j => ?_
       have hj := IsColimit.comp_coconePointUniqueUpToIso_hom
         (coproductIsCoproduct (fun _ : Fin (n + 1) => W)) t ⟨j⟩
-      rw [Sigma.ι_desc, ← Category.assoc]
+      rw [Sigma.ι_comp_desc, ← Category.assoc]
       erw [hj]
       refine Fin.cases ?_ (fun i => ?_) j
       · simp only [extendCofan, Cofan.mk_ι_app, Fin.cases_zero]
@@ -668,7 +668,7 @@ private theorem isFinite_desc_fin (W : Scheme.{0}) (n : ℕ) :
       · simp only [extendCofan, Cofan.mk_ι_app, Fin.cases_succ]
         show 𝟙 W = (Sigma.ι (fun _ : Fin n => W) i ≫ coprod.inr) ≫
           coprod.desc (𝟙 W) (Sigma.desc (f := fun _ : Fin n => W) fun _ => 𝟙 W)
-        rw [Category.assoc, coprod.inr_desc, Sigma.ι_desc]
+        rw [Category.assoc, coprod.inr_desc, Sigma.ι_comp_desc]
     rw [key]
     infer_instance
 
@@ -679,13 +679,13 @@ private theorem isFinite_desc (W : Scheme.{0}) (J : Type) [Finite J] :
   have key : (Sigma.desc (f := fun _ : J => W) fun _ => 𝟙 W) =
       (Sigma.reindex e.symm (fun _ : J => W)).inv ≫ (Sigma.desc (f := fun _ : Fin n => W) fun _ => 𝟙 W) := by
     refine Sigma.hom_ext _ _ fun j => ?_
-    rw [Sigma.ι_desc, ← Category.assoc]
+    rw [Sigma.ι_comp_desc, ← Category.assoc]
     have h := Sigma.ι_reindex_inv e.symm (fun _ : J => W) (e j)
     simp only [Equiv.symm_apply_apply] at h
     rw [h]
-    exact (Sigma.ι_desc (f := fun _ : Fin n => W) (fun _ => 𝟙 W) (e j)).symm
+    exact (Sigma.ι_comp_desc (f := fun _ : Fin n => W) (fun _ => 𝟙 W) (e j)).symm
   rw [key]
-  haveI := isFinite_desc_fin W n
+  have := isFinite_desc_fin W n
   infer_instance
 
 private theorem locallyQuasiFinite_of_etale {X Y : Scheme.{0}} (f : X ⟶ Y) [Etale f] : LocallyQuasiFinite f := by
@@ -694,7 +694,7 @@ private theorem locallyQuasiFinite_of_etale {X Y : Scheme.{0}} (f : X ⟶ Y) [Et
     exact ‹Etale f›
   rw [HasRingHomProperty.eq_affineLocally @LocallyQuasiFinite]
   refine affineLocally_le (fun {R S} _ _ {g} hg => ?_) f hf
-  letI : Algebra R S := RingHom.toAlgebra g
+  let : Algebra R S := RingHom.toAlgebra g
   have : Algebra.Etale R S := hg
   show Algebra.QuasiFinite R S
   infer_instance
@@ -704,26 +704,26 @@ theorem UpperTheory.Gal.G3.jSplitDesc :
     SplitDesc := by
   intro Z Y W s c _ _ _ J _ σ hs
   obtain ⟨hσ, hiso⟩ := hs
-  haveI : IsZariskiLocalAtSource @Etale :=
+  have : IsZariskiLocalAtSource @Etale :=
     HasRingHomProperty.instIsZariskiLocalAtSource (Q := RingHom.Etale)
   have key : pullback.snd s c =
       inv (Sigma.desc fun j => pullback.lift (σ j) (𝟙 W) (by rw [hσ j, Category.id_comp])) ≫
         Sigma.desc (f := fun _ : J => W) fun _ => 𝟙 W := by
     rw [IsIso.eq_inv_comp]
     refine Sigma.hom_ext _ _ fun j => ?_
-    rw [Sigma.ι_desc_assoc, pullback.lift_snd, Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc_assoc, pullback.lift_snd, Sigma.ι_comp_desc]
   haveI : IsFinite (Sigma.desc (f := fun _ : J => W) fun _ => 𝟙 W) := isFinite_desc W J
   haveI : Etale (Sigma.desc (f := fun _ : J => W) fun _ => 𝟙 W) :=
     IsZariskiLocalAtSource.sigmaDesc (fun _ => inferInstance)
-  haveI : IsFinite (pullback.snd s c) := by rw [key]; infer_instance
-  haveI : Etale (pullback.snd s c) := by rw [key]; infer_instance
+  have : IsFinite (pullback.snd s c) := by rw [key]; infer_instance
+  have : Etale (pullback.snd s c) := by rw [key]; infer_instance
   have hpb := IsPullback.of_hasPullback s c
   have hQ : (@Surjective ⊓ @Flat ⊓ @QuasiCompact : MorphismProperty Scheme) c :=
     ⟨⟨inferInstance, inferInstance⟩, inferInstance⟩
-  haveI : IsProper s := isProper_desc hpb
+  have : IsProper s := isProper_desc hpb
   have hE : Etale s := of_isPullback_of_descendsAlong hpb.flip hQ (inferInstanceAs (Etale (pullback.snd s c)))
-  haveI := hE
-  haveI := locallyQuasiFinite_of_etale s
+  have := hE
+  have := locallyQuasiFinite_of_etale s
   exact ⟨(IsFinite.iff_isProper_and_locallyQuasiFinite s).mpr ⟨inferInstance, inferInstance⟩, hE⟩
 end -- clump:auto
 end -- clump:auto
@@ -768,17 +768,17 @@ theorem exists_local_subring : ∀ (k K : Type) [Field k] [Field K] [IsAlgClosed
     ∃ T : Subring K, φ.range ≤ T ∧ (∃ _ : IsLocalRing T, AIC T ∧
       ∀ t : T, ∃ c : k, ∃ h : φ c ∈ T, t - ⟨φ c, h⟩ ∈ IsLocalRing.maximalIdeal T) ∧ IsFractionRing T K := by
   intro k K _ _ _ φ R 𝔪 hφ hmax hres hden hic
-  haveI : 𝔪.IsPrime := hmax.isPrime
+  have : 𝔪.IsPrime := hmax.isPrime
   have hRT := le_locAt R 𝔪
-  letI : Algebra R (locAt R 𝔪) := (Subring.inclusion hRT).toAlgebra
-  haveI : IsScalarTower R (locAt R 𝔪) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R (locAt R 𝔪) := (Subring.inclusion hRT).toAlgebra
+  have : IsScalarTower R (locAt R 𝔪) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hunit : ∀ s : R, s ∉ 𝔪 → IsUnit (algebraMap R (locAt R 𝔪) s) := by
     intro s hs
     have hs0 : (s : K) ≠ 0 := fun h => hs (by rw [show s = 0 from Subtype.ext h]; exact zero_mem _)
     refine isUnit_iff_exists_inv.2 ⟨⟨(s : K)⁻¹, 1, s, hs, by simp [hs0]⟩, Subtype.ext ?_⟩
     change (s : K) * (s : K)⁻¹ = 1
     exact mul_inv_cancel₀ hs0
-  haveI hloc : IsLocalization 𝔪.primeCompl (locAt R 𝔪) :=
+  have hloc : IsLocalization 𝔪.primeCompl (locAt R 𝔪) :=
     { map_units := fun s => hunit s s.2
       surj := fun t => by
         obtain ⟨a, s, hs, h⟩ := t.2
@@ -787,7 +787,7 @@ theorem exists_local_subring : ∀ (k K : Type) [Field k] [Field K] [IsAlgClosed
         have h' := congrArg Subtype.val h
         have hxy : x = y := Subtype.ext h'
         exact ⟨1, by rw [hxy]⟩ }
-  haveI : IsLocalRing (locAt R 𝔪) := IsLocalization.AtPrime.isLocalRing (locAt R 𝔪) 𝔪
+  have : IsLocalRing (locAt R 𝔪) := IsLocalization.AtPrime.isLocalRing (locAt R 𝔪) 𝔪
   refine ⟨locAt R 𝔪, fun x hx => hRT (hφ hx), ⟨inferInstance, ?_, ?_⟩, ?_⟩
   · intro p hp hdeg
     have hdeg' : (p.map (algebraMap (locAt R 𝔪) K)).degree ≠ 0 := by
@@ -828,7 +828,7 @@ theorem exists_local_subring : ∀ (k K : Type) [Field k] [Field K] [IsAlgClosed
     rw [← key] at hb'
     exact (Ideal.IsPrime.mem_or_mem inferInstance hb').resolve_right
       fun h => (IsLocalRing.mem_maximalIdeal _).1 h (hunit s hs)
-  · haveI : FaithfulSMul (locAt R 𝔪) K := inferInstance
+  · have : FaithfulSMul (locAt R 𝔪) K := inferInstance
     refine IsFractionRing.of_field _ K fun z => ?_
     obtain ⟨d, hd, hdz⟩ := hden z
     have hd0 : (d : K) ≠ 0 := fun h => hd (Subtype.ext h)
@@ -872,8 +872,8 @@ theorem exists_polySubring_maximal_integral (k K : Type) [Field k] [Field K] (φ
     ∃ (D : Subring K) (m₀ : Ideal D), φ.range ≤ D ∧ m₀.IsMaximal ∧
     (∀ r : D, ∃ c : k, ∃ h : φ c ∈ D, r - ⟨φ c, h⟩ ∈ m₀) ∧
       ∀ x : K, ∃ d : D, d ≠ 0 ∧ IsIntegral D ((d : K) * x) := by
-  letI : Algebra k K := φ.toAlgebra
-  haveI : FaithfulSMul k K := (faithfulSMul_iff_algebraMap_injective k K).2 φ.injective
+  let : Algebra k K := φ.toAlgebra
+  have : FaithfulSMul k K := (faithfulSMul_iff_algebraMap_injective k K).2 φ.injective
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis k K
   set A : Subalgebra k K := Algebra.adjoin k (Set.range ((↑) : s → K)) with hA
   let ε : A →ₐ[k] k := (MvPolynomial.aeval (fun _ : s => (0 : k))).comp hs.1.aevalEquiv.symm.toAlgHom
@@ -890,8 +890,8 @@ theorem exists_polySubring_maximal_integral (k K : Type) [Field k] [Field K] (φ
     have : εD ⟨φ (εD r), A.algebraMap_mem _⟩ = εD r := hε (εD r)
     rw [this, sub_self]
   · intro x
-    haveI : Algebra.IsAlgebraic A K := hs.isAlgebraic
-    haveI : Algebra.IsAlgebraic D K := ‹Algebra.IsAlgebraic A K›
+    have : Algebra.IsAlgebraic A K := hs.isAlgebraic
+    have : Algebra.IsAlgebraic D K := ‹Algebra.IsAlgebraic A K›
     obtain ⟨y, hy, hint⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := D) x).exists_integral_multiple
     exact ⟨y, hy, by rwa [Algebra.smul_def] at hint⟩
 
@@ -941,8 +941,8 @@ theorem integralClosure_maximal_residue_algClosed : ∀ (k K : Type) [Field k] [
     exact Ideal.Quotient.eq.mpr hmem
   have hres' : ∀ r : A, ∃ c : k, r - φA c ∈ 𝔪 := by
     intro r
-    letI : Field (A ⧸ 𝔪) := Ideal.Quotient.field 𝔪
-    letI : Algebra k (A ⧸ 𝔪) := ψ.toAlgebra
+    let : Field (A ⧸ 𝔪) := Ideal.Quotient.field 𝔪
+    let : Algebra k (A ⧸ 𝔪) := ψ.toAlgebra
     have hr : IsIntegral D (Ideal.Quotient.mkₐ D 𝔪 r) :=
       (Algebra.IsIntegral.isIntegral (R := D) r).map (Ideal.Quotient.mkₐ D 𝔪)
     obtain ⟨f, hfm, hf⟩ := hr
@@ -1070,7 +1070,7 @@ theorem eqv_fieldChange (hE2 : E2) (hE3 : E3) (q : ℕ) [NeZero q] (k K : Type) 
     have e : α c - t = -(t - ⟨φ c, h⟩) := by rw [neg_sub]; rfl
     rw [e]
     exact (IsLocalRing.maximalIdeal T).neg_mem hc
-  haveI : IsIso (CommRingCat.ofHom ((IsLocalRing.residue T).comp α)) :=
+  have : IsIso (CommRingCat.ofHom ((IsLocalRing.residue T).comp α)) :=
     (RingEquiv.ofBijective _ hb).toCommRingCatIso.isIso_hom
   let r := Spec.map (CommRingCat.ofHom (IsLocalRing.residue T))
   have hra : r ≫ a = Spec.map (CommRingCat.ofHom ((IsLocalRing.residue T).comp α)) := (spec_comp _ _).symm
@@ -1088,7 +1088,7 @@ theorem eqv_fieldChange (hE2 : E2) (hE3 : E3) (q : ℕ) [NeZero q] (k K : Type) 
     rw [show e.toRingEquiv.toRingHom (algebraMap T (FractionRing T) (α c)) = e (algebraMap T (FractionRing T) (α c)) from rfl,
       AlgEquiv.commutes]
     rfl
-  haveI : IsIso (CommRingCat.ofHom (e.toRingEquiv.toRingHom)) := e.toRingEquiv.toCommRingCatIso.isIso_hom
+  have : IsIso (CommRingCat.ofHom (e.toRingEquiv.toRingHom)) := e.toRingEquiv.toCommRingCatIso.isIso_hom
   have hgen : Eqv (ZMod q) (sch.map (pullback.fst (pullback.snd p a)
       (Spec.map (CommRingCat.ofHom (algebraMap T (FractionRing T)))))) (tw q i) :=
     eqv_genInc hE3 hT q hqT (pullback.snd p a) i
@@ -1113,7 +1113,7 @@ theorem UpperTheory.Gal.G3.jVBcS :
     VBcS := by
   intro l _ k Ω _ _ _ _ φ hl X p _ _ n i
   refine GlobalTheory.GenusTwoPureComparison.Cmp.pullHQ_bijective l _ n i fun m => ?_
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hq : IsUnit ((l ^ m : ℕ) : k) := by
     push_cast
     exact hl.pow m

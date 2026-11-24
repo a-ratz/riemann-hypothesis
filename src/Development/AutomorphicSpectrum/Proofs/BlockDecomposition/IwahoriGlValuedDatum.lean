@@ -237,7 +237,7 @@ theorem diag_unit [IsLocalRing O] {β : O} (hβ : ¬IsUnit β) {n : ℕ}
   have hdet : (g.map (IsLocalRing.residue O)).det ≠ 0 := by
     rw [← hmap]
     exact (hg.map _).ne_zero
-  rw [det_of_upperTriangular htri, Finset.prod_ne_zero_iff] at hdet
+  rw [det_of_isUpperTriangular htri, Finset.prod_ne_zero_iff] at hdet
   have hi := hdet i (Finset.mem_univ _)
   simp only [map_apply] at hi
   by_contra hu
@@ -501,7 +501,7 @@ theorem dvd_inv_of_blockTriangular {ι : Type} [LinearOrder ι] (b : Fin n → �
       (((g⁻¹ : GL (Fin n) O) : Matrix (Fin n) (Fin n) O).map f) = 1 := by
     rw [← Matrix.map_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one,
       Matrix.map_one _ (map_zero f) (map_one f)]
-  letI := invertibleOfRightInverse _ _ h1
+  let := invertibleOfRightInverse _ _ h1
   have h2 : ((g : Matrix (Fin n) (Fin n) O).map f).BlockTriangular b :=
     fun i j h => (hf _).2 (hg i j h)
   have h3 := Matrix.blockTriangular_inv_of_blockTriangular h2
@@ -531,12 +531,12 @@ theorem Shape.diagonal (α β : O) (d : Fin n → O) : Shape α β (Matrix.diago
 
 theorem UpperUnip.det {α : O} {u : Matrix (Fin n) (Fin n) O} (hu : UpperUnip α u) :
     u.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j h => (hu i j).1 h)]
+  rw [Matrix.det_of_isUpperTriangular (fun i j h => (hu i j).1 h)]
   exact Finset.prod_eq_one fun i _ => (hu i i).2.1 rfl
 
 theorem LowerUnip.det {β : O} {l : Matrix (Fin n) (Fin n) O} (hl : LowerUnip β l) :
     l.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular l (fun i j h => (hl i j).1 h)]
+  rw [Matrix.det_of_isLowerTriangular l (fun i j h => (hl i j).1 h)]
   exact Finset.prod_eq_one fun i _ => (hl i i).2.1 rfl
 
 theorem factor_unique {α β α' β' : O} {u u' l l' : Matrix (Fin n) (Fin n) O} {d d' : Fin n → Oˣ}
@@ -546,8 +546,8 @@ theorem factor_unique {α β α' β' : O} {u u' l l' : Matrix (Fin n) (Fin n) O}
     u = u' ∧ d = d' ∧ l = l' := by
   have iu' : IsUnit u'.det := by rw [hu'.det]; exact isUnit_one
   have il : IsUnit l.det := by rw [hl.det]; exact isUnit_one
-  letI := u'.invertibleOfIsUnitDet iu'
-  letI := l.invertibleOfIsUnitDet il
+  let := u'.invertibleOfIsUnitDet iu'
+  let := l.invertibleOfIsUnitDet il
   have tu : u.BlockTriangular id := fun i j h => (hu i j).1 h
   have tu' : u'.BlockTriangular id := fun i j h => (hu' i j).1 h
   have tl : l.BlockTriangular OrderDual.toDual := fun i j h => (hl i j).1 h
@@ -614,7 +614,7 @@ theorem isUnit_diag [IsLocalRing O] {α β : O} (hβ : ¬ IsUnit β) {g : Matrix
   have h1 : (g.map f).BlockTriangular id := fun i j h =>
     (h0 _).2 fun hu => hβ (isUnit_of_dvd_unit ((hg i j).2 h) hu)
   have h2 : f g.det = ∏ k, f (g k k) := by
-    rw [RingHom.map_det, RingHom.mapMatrix_apply, Matrix.det_of_upperTriangular h1]
+    rw [RingHom.map_det, RingHom.mapMatrix_apply, Matrix.det_of_isUpperTriangular h1]
     rfl
   by_contra hi
   have h3 : f g.det = 0 := by
@@ -794,7 +794,7 @@ theorem isClosed_btSub {α : Type} [LinearOrder α] (b : Fin n → α) :
   have : ((btSub b : Subgroup (GL (Fin n) L)) : Set (GL (Fin n) L)) = ⋂ (i : Fin n) (j : Fin n) (_ : b j < b i),
       {g : GL (Fin n) L | (g : Matrix (Fin n) (Fin n) L) i j = 0} := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     exact ⟨fun h i j hij => h hij, fun h i j hij => h i j hij⟩
   rw [this]
   exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
@@ -805,7 +805,7 @@ theorem isClosed_triSub {α : Type} [LinearOrder α] (b : Fin n → α) (hb : Fu
   have : ((triSub b hb : Subgroup (GL (Fin n) L)) : Set (GL (Fin n) L)) = ((btSub b : Subgroup (GL (Fin n) L)) : Set (GL (Fin n) L)) ∩ ⋂ i : Fin n,
       {g : GL (Fin n) L | (g : Matrix (Fin n) (Fin n) L) i i = 1} := by
     ext g
-    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     exact Iff.rfl
   rw [this]
   exact (isClosed_btSub b).inter (isClosed_iInter fun i =>
@@ -849,8 +849,8 @@ theorem isIw_mulVec {m : Matrix (Fin n) (Fin n) L} (hm : IsIw m) {k : ℕ} {x : 
     split_ifs at hj with hjk
     · have hji : j < i := by
         rw [Fin.lt_def]; omega
-      exact mul_lt_one_of_nonneg_of_lt_one_left zero_le' (hm.2 i j hji) hj
-    · exact mul_lt_one_of_nonneg_of_lt_one_right (hm.1 i j) zero_le' hj
+      exact mul_lt_one_of_nonneg_of_lt_one_left zero_le (hm.2 i j hji) hj
+    · exact mul_lt_one_of_nonneg_of_lt_one_right (hm.1 i j) zero_le hj
 
 theorem single_mem_latK {k : ℕ} {j : Fin n} (hj : j.val < k) :
     (Pi.single j 1 : Fin n → L) ∈ latK L n k := by
@@ -968,7 +968,7 @@ theorem le_pi_of_lt_one {x : L} (hx : Valued.v x < 1) : Valued.v x ≤ Valued.v 
   rw [hϖ]
   generalize Valued.v x = a at hx ⊢
   induction a using WithZero.recZeroCoe with
-  | zero => exact zero_le'
+  | zero => exact zero_le
   | coe a =>
     rw [WithZero.coe_le_coe]
     rw [← WithZero.coe_one, WithZero.coe_lt_coe] at hx
@@ -983,14 +983,14 @@ theorem dvd_iff (x : OL L) : piO hϖ ∣ x ↔ Valued.v (x : L) < 1 := by
   · rintro ⟨c, rfl⟩
     show Valued.v (ϖ * (c : L)) < 1
     rw [map_mul]
-    exact mul_lt_one_of_nonneg_of_lt_one_left zero_le' (v_pi_lt hϖ) c.2
+    exact mul_lt_one_of_nonneg_of_lt_one_left zero_le (v_pi_lt hϖ) c.2
   · intro h
     have hv0 := v_pi_ne hϖ
     have h0 : ϖ ≠ 0 := fun e => hv0 (by rw [e, map_zero])
     refine ⟨⟨ϖ⁻¹ * x, ?_⟩, Subtype.ext ?_⟩
     · show Valued.v (ϖ⁻¹ * (x : L)) ≤ 1
       rw [map_mul, map_inv₀]
-      exact (inv_mul_le_one₀ (zero_lt_iff.2 hv0)).2 (le_pi_of_lt_one hϖ h)
+      exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 hv0)).2 (le_pi_of_lt_one hϖ h)
     · show (x : L) = ϖ * (ϖ⁻¹ * x)
       field_simp
 
@@ -1135,10 +1135,10 @@ theorem isOpen_IwGL : IsOpen ((IwGL L n : Subgroup (GL (Fin n) L)) : Set (GL (Fi
 theorem isCompact_le [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ σ q) :
     IsCompact {x : L | Valued.v x ≤ 1} := by
   obtain ⟨-, hv, -, hϖ, -, hq, hcard⟩ := h
-  haveI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
+  have : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
     ⟨ϖ, by rw [hϖ]; exact WithZero.coe_ne_zero,
       by rw [hϖ, ← WithZero.coe_one, ne_eq, WithZero.coe_inj]; decide⟩
-  letI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
+  let : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne _ (e := 2) (by norm_num)
   have hp := (Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField
     (K := L)).2 ⟨(Valued.isClosed_integer L).completeSpace_coe,

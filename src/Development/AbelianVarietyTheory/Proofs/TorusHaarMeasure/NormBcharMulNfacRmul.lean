@@ -82,7 +82,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] in
 private lemma mat_diag_ne_zero_of_mem_bor {r : ℕ} {Ψ : Finset (E →+* ℂ)} {b : _root_.ReciprocityTheory.ChartRestriction.G.FD.Frame Ψ r}
     (hb : b ∈ _root_.ReciprocityTheory.ChartRestriction.G.FD.Bor Ψ r) (τ : Ψ) (j : Fin r) : _root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ j j ≠ 0 := by
   have hdet := (show (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ).det ≠ 0 by unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Bor at hb; exact (hb τ).1)
-  rw [Matrix.det_of_upperTriangular (blockTriangular_id_of_mem_bor hb τ)] at hdet
+  rw [Matrix.det_of_isUpperTriangular (blockTriangular_id_of_mem_bor hb τ)] at hdet
   exact Finset.prod_ne_zero_iff.1 hdet j (Finset.mem_univ j)
 
 open NumberField MeasureTheory Topology in

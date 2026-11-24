@@ -172,7 +172,7 @@ theorem UpperTheory.V.Z.Mult.choiceM :
       (GlobalTheory.Mem.UnrAe.unr_ae_and_level E μ).1).and hK'.2)
   obtain ⟨Bd, hBd⟩ : ∃ Bd : Finset (Pl E), ∀ w, w ∈ Bd ↔
       ¬ (((∃ B, (CG.mk π).HasSat w B) ∧ μ.UnrAt w) ∧ K' w = KL n w) :=
-    ⟨hbad.toFinset, fun w => by simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]⟩
+    ⟨hbad.toFinset, fun w => by simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]⟩
   have hgood : ∀ w, w ∉ Bd → ((∃ B, (CG.mk π).HasSat w B) ∧ μ.UnrAt w) ∧ K' w = KL n w := fun w hw => by
     by_contra h
     exact hw ((hBd w).2 h)
@@ -192,7 +192,7 @@ theorem UpperTheory.V.Z.Mult.choiceM :
     rcases (hm w).2 with e | e
     · rwa [e]
     · rw [e]; exact hcs w hw
-  obtain ⟨w₀, hw₀, hw₀'⟩ := (hInf.diff (Bd ∪ Bd.image cPl).finite_toSet).nonempty
+  obtain ⟨w₀, hw₀, hw₀'⟩ := (hInf.sdiff (Bd ∪ Bd.image cPl).finite_toSet).nonempty
   have hn₀ : w₀ ∉ Bd := fun h => hw₀' (by simp [h])
   have hn₁ : cPl w₀ ∉ Bd := fun h => hw₀' (by
     refine Finset.mem_coe.2 (Finset.mem_union_right _ (Finset.mem_image.2 ⟨_, h, (hc w₀).1⟩)))
@@ -289,7 +289,7 @@ theorem levelU : LevelU := by
   refine ⟨?_, fun f hf => ?_⟩
   · rintro f ⟨K', hop, hle, hH⟩
     refine ⟨K'.subgroupOf (UL n w), ?_, ?_, hecke_restrict n w hw K' f hH⟩
-    · exact hop.preimage continuous_subtype_val
+    · exact hop.preimage continuous_subtypeVal
     · intro x hx
       unfold KL
       exact Subgroup.mem_subgroupOf.mpr (hle (Subgroup.mem_subgroupOf.mp hx))
@@ -334,7 +334,7 @@ theorem trSph : TrSph := by
       ev1 n w e B • LinearMap.id := by
     ext ⟨x, hx⟩
     simp [LinearMap.restrict_apply, hact x hx]
-  haveI : Module.Finite ℂ (fixed τ.ρ (KGL w (n := n))) := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite ℂ (fixed τ.ρ (KGL w (n := n))) := Module.finite_of_finrank_pos (by omega)
   unfold twTr
   rw [dite_eq_left hmaps, hres, map_smul, LinearMap.trace_id, hfr]
   simp
@@ -432,7 +432,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.unramOf :
   have hmem : cLoc w x ∈ UL n w := by
     by_cases hs : IsSplitAt w
     · unfold UL
-      rw [if_pos hs]
+      rw [ite_eq_left hs]
       trivial
     · exact GlobalTheory.LocInj.cLoc_mem_UL hs x
   refine ⟨⟨cLoc w x, hmem⟩, ?_, rfl⟩
@@ -524,7 +524,7 @@ private theorem dite_tr (A B : V →ₗ[ℂ] V) (P Q : Submodule ℂ V) (hPQ : P
   subst hPQ
   by_cases h : ∀ v ∈ P, A v ∈ P
   · have h' : ∀ v ∈ P, B v ∈ P := fun v hv => hop v hv ▸ h v hv
-    rw [dif_pos h, dif_pos h']
+    rw [dite_eq_left h, dite_eq_left h']
     congr 1
     ext x
     exact hop x.1 x.2
@@ -542,7 +542,7 @@ private theorem twTr_tr (e : G ≃* H) (ρ : Representation ℂ H V) (K L : Subg
 private theorem finite_cosets [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G)
     (hK : IsOpen (K : Set G)) (f : G → ℂ) (hc : HasCompactSupport f) :
     (Function.support fun q : G ⧸ K => f q.out).Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have himg : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport f) :=
     IsCompact.image hc continuous_quot_mk
   exact himg.finite_of_discrete.subset fun q hq => ⟨q.out, subset_tsupport _ hq, QuotientGroup.out_eq' q⟩
@@ -573,7 +573,7 @@ section Local
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} {w : Pl E}
 
 private theorem mem_UL (hs : IsSplitAt w) (g : GLw n w) : g ∈ UL n w := by
-  rw [UL, if_pos hs]
+  rw [UL, ite_eq_left hs]
   exact Subgroup.mem_top _
 
 private def eSp (hs : IsSplitAt w) : GLw n w ≃* UL n w where
@@ -616,7 +616,7 @@ private theorem tr_Z (hs : IsSplitAt w) (σ : SmIrr (UL n w)) (K' : Subgroup (UL
   rw [comap_KL hs] at h1
   rw [← h1]
   have hc : HasCompactSupport f := by
-    have h2 : HasCompactSupport ((fun x : UL n w => f x.1) ∘ (⟨(eSp hs).toEquiv, continuous_eSp hs, continuous_subtype_val⟩ : GLw n w ≃ₜ UL n w)) :=
+    have h2 : HasCompactSupport ((fun x : UL n w => f x.1) ∘ (⟨(eSp hs).toEquiv, continuous_eSp hs, continuous_subtypeVal⟩ : GLw n w ≃ₜ UL n w)) :=
       hf.1.comp_homeomorph _
     exact h2
   obtain ⟨ho, hcK⟩ := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL (E := E) w n
@@ -681,11 +681,11 @@ theorem evalD : EvalD := by
   have hB₀ : ∀ i, ∀ w ∈ S, w ∉ Z → ∀ hs : IsSplitAt w, HasSatGL w (toGL hs (σ₀ i w)).ρ (B₀ i w) := fun i w hw hz =>
     Classical.epsilon_spec (p := fun B => ∀ hs : IsSplitAt w, HasSatGL w (toGL hs (σ₀ i w)).ρ B) (hline i w hw hz).2
   let B : ι → Pl E → Multiset ℂˣ := fun i w => if w ∈ S then B₀ i w else inv (B₀ i (cPl w))
-  have hBS : ∀ i, ∀ w ∈ S, B i w = B₀ i w := fun i w hw => if_pos hw
-  have hBN : ∀ i w, w ∉ S → B i w = inv (B₀ i (cPl w)) := fun i w hw => if_neg hw
+  have hBS : ∀ i, ∀ w ∈ S, B i w = B₀ i w := fun i w hw => ite_eq_left hw
+  have hBN : ∀ i w, w ∉ S → B i w = inv (B₀ i (cPl w)) := fun i w hw => ite_eq_right hw
   let t : ι → ∀ w : Pl E, SmIrr (GLw n w) := fun i w =>
     if h : IsSplitAt w then toGL h (σ₀ i w) else Classical.choice smIrr_nonempty
-  have ht : ∀ i w (h : IsSplitAt w), t i w = toGL h (σ₀ i w) := fun i w h => dif_pos h
+  have ht : ∀ i w (h : IsSplitAt w), t i w = toGL h (σ₀ i w) := fun i w h => dite_eq_left h
   refine ⟨t, B, fun i => ⟨fun w hns => ?_, fun w hw => ?_, fun w hoff hs => ?_⟩, fun f hf T hT hd e₁ e₂ k => ?_⟩
   ·
     have hw : w ∈ S := by
@@ -852,7 +852,7 @@ section Split
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} {w : Pl E}
 
 private theorem mem_UL_split (hw : IsSplitAt w) (g : GLw n w) : g ∈ UL n w := by
-  rw [UL, if_pos hw]
+  rw [UL, ite_eq_left hw]
   trivial
 
 private noncomputable def toUL (hw : IsSplitAt w) (τ : SmIrr (GLw n w)) : SmIrr (UL n w) where
@@ -972,7 +972,7 @@ theorem UpperTheory.V.Z.Mult.rMult :
     have hKLo : ∀ w, IsOpen (KL n w : Set (UL n w)) := fun w => (GlobalTheory.BCT.LocCompU.isOpen_isCompact_KL hU n w).1
     obtain ⟨K₀, hK₀o, hK₀le, hK₀⟩ := hLc E n w₀ (hZ w₀ hw₀).2 f₀ hf₀
     obtain ⟨K₁, hK₁Z, hK₁o⟩ : ∃ K₁ : ∀ w : Pl E, Subgroup (UL n w), (∀ w ∈ Z, K₁ w = K' w) ∧ ∀ w, w ∉ Z → K₁ w = KL n w :=
-      ⟨fun w => if w ∈ Z then K' w else KL n w, fun w h => if_pos h, fun w h => if_neg h⟩
+      ⟨fun w => if w ∈ Z then K' w else KL n w, fun w h => ite_eq_left h, fun w h => ite_eq_right h⟩
     have hK₁ : IsLevelFam (fun w : Pl E => MonoidHom.id (UL n w)) (KL n) K₁ := by
       refine ⟨fun w => ?_, ?_⟩
       · by_cases h : w ∈ Z
@@ -1083,11 +1083,11 @@ theorem UpperTheory.V.Z.Mult.lcLev :
     UpperTheory.V.Z.Mult.LcLev := by
   intro E _ _ _ n w hw f hf
   obtain ⟨K', hKo, hKle, hK⟩ := hf
-  have hU : UL n w = ⊤ := if_pos hw
+  have hU : UL n w = ⊤ := ite_eq_left hw
   have hcl : IsClosed ((UL n w : Subgroup (GLw n w)) : Set (GLw n w)) := by
     rw [hU]
     exact isClosed_univ
-  refine ⟨K'.subgroupOf (UL n w), hKo.preimage continuous_subtype_val, ?_, ?_, ?_⟩
+  refine ⟨K'.subgroupOf (UL n w), hKo.preimage continuous_subtypeVal, ?_, ?_, ?_⟩
   · intro x hx
     exact Subgroup.mem_subgroupOf.mpr (hKle (Subgroup.mem_subgroupOf.mp hx))
   · exact hK.1.comp_isClosedEmbedding hcl.isClosedEmbedding_subtypeVal
@@ -1207,7 +1207,7 @@ private theorem map_top_open (U : Subgroup G) (hU : U = ⊤) (K : Subgroup U) (h
     IsOpen ((K.map U.subtype : Subgroup G) : Set G) := by
   subst hU
   rw [Subgroup.coe_map]
-  exact (IsOpen.isOpenMap_subtype_val (by simp)) _ ho
+  exact (IsOpen.isOpenMap_subtypeVal (by simp)) _ ho
 
 private theorem compact_of_map (U : Subgroup G) (K : Subgroup U)
     (hc : IsCompact ((K.map U.subtype : Subgroup G) : Set G)) : IsCompact (K : Set U) := by
@@ -1222,7 +1222,7 @@ theorem UpperTheory.V.Z.Mult.levInd :
     UpperTheory.V.Z.Mult.LevInd := by
   intro E _ _ _ n w hw K hKo hKle
   obtain ⟨ho, hc⟩ := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL (E := E) w n
-  have hU : UL n w = ⊤ := if_pos hw
+  have hU : UL n w = ⊤ := ite_eq_left hw
   let H : Subgroup (GLw n w) := K.map (UL n w).subtype
   have hHo : IsOpen (H : Set (GLw n w)) := map_top_open _ hU K hKo
   have hle : H ≤ GlobalTheory.LFun.KGL w (n := n) := by
@@ -1237,9 +1237,9 @@ theorem UpperTheory.V.Z.Mult.levInd :
       exact this ▸ hu
     · exact fun hx => ⟨x, hx, rfl⟩
   have hi : H.relIndex (GlobalTheory.LFun.KGL w (n := n)) ≠ 0 := by
-    haveI : CompactSpace (GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hc
-    haveI : Finite ((GlobalTheory.LFun.KGL w (n := n)) ⧸ H.subgroupOf (GlobalTheory.LFun.KGL w (n := n))) :=
-      Subgroup.quotient_finite_of_isOpen _ (hHo.preimage continuous_subtype_val)
+    have : CompactSpace (GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hc
+    have : Finite ((GlobalTheory.LFun.KGL w (n := n)) ⧸ H.subgroupOf (GlobalTheory.LFun.KGL w (n := n))) :=
+      Subgroup.quotient_finite_of_isOpen _ (hHo.preimage continuous_subtypeVal)
     exact (Subgroup.finiteIndex_of_finite_quotient (H := H.subgroupOf (GlobalTheory.LFun.KGL w (n := n)))).index_ne_zero
   refine ⟨ind H, ⟨H, hHo, hle, ?_, ?_⟩, ?_, ?_⟩
   · exact HasCompactSupport.intro' hHc (H.isClosed_of_isOpen hHo) fun x hx => ind_notMem hx
@@ -1326,11 +1326,11 @@ theorem UpperTheory.V.Z.Mult.rCountAt :
     have hterm : ∀ i, (∏ w ∈ Z, trc (t i w).ρ (KGL w (n := n)) (f w)) * val1 T e₁ e₂ (Bi i) ^ k =
         (if At π (σ i) then 1 else 0) * ∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) (f w) := fun i => by
       by_cases h : At π (σ i)
-      · rw [if_pos h, hval i h, one_pow, mul_one, one_mul]
+      · rw [ite_eq_left h, hval i h, one_pow, mul_one, one_mul]
         refine Finset.prod_congr rfl fun w hw => ?_
         exact ((hCp E hU n hn1 (σ i) (hdec.1 i).1 w (hZ w hw).2 (τ w) (t i w)
           (hCo i h w (hZ w hw).2 _ (hτ w hw)) ((hi i).2.1 w hw)).2 (f w)).symm
-      · rw [if_neg h, h0 ⟨i, h⟩, zero_pow (by omega), mul_zero, zero_mul]
+      · rw [ite_eq_right h, h0 ⟨i, h⟩, zero_pow (by omega), mul_zero, zero_mul]
     rw [htr, Finset.sum_congr rfl fun i _ => hterm i, ← Finset.sum_mul, Finset.sum_boole, Nat.card_eq_fintype_card,
       Fintype.card_subtype]
 end -- clump:auto
@@ -1446,15 +1446,15 @@ theorem UpperTheory.V.Z.Mult.rIdent :
     have h1 := hid S hS' K' (famU Z T f e₁ e₂ k) (fun a' => if h : a' + (n - a') = n then Φ a' (n - a') h k else 0) hK
       (hU k).1 fun a' ha' => by
         have h := Nat.add_sub_cancel' ha'
-        simp only [dif_pos h]
+        simp only [dite_eq_left h]
         exact ⟨((ht _ _ h T hT hTZ e₁ e₂).2 k).1, fun w hw => (((ht _ _ h T hT hTZ e₁ e₂).2 k).2 w hw).1⟩
-    simp only [dif_pos (hab _)] at h1
+    simp only [dite_eq_left (hab _)] at h1
     rw [← h1]
     refine mul_left_cancel₀ hdim ?_
-    rw [← (hU k).2 hk, hgt _ (hU k).1 ⟨w₀, (hZ w₀ hw₀).1, fun y hy => hr₀ _ (by simpa only [famU, if_pos hw₀] using hy)⟩]
+    rw [← (hU k).2 hk, hgt _ (hU k).1 ⟨w₀, (hZ w₀ hw₀).1, fun y hy => hr₀ _ (by simpa only [famU, ite_eq_left hw₀] using hy)⟩]
   have hlim := tendsto_nhds_unique hsum (tendsto_const_nhds.congr' ((eventually_ge_atTop 1).mono fun k hk => (hzero k hk).symm))
   rw [Finset.sum_ite, Finset.sum_const_zero, zero_add, Finset.sum_const, nsmul_eq_mul] at hlim
-  haveI := Classical.decEq κ
+  have := Classical.decEq κ
   have hne : i₀ ≠ i₁ := fun h => by rw [h, ha₁] at ha₀; omega
   have hfil : (Finset.univ.filter fun i => ¬ (1 ≤ a i ∧ 1 ≤ n - a i)) = {i₀, i₁} := by
     ext i
@@ -1603,7 +1603,7 @@ private theorem finsum_fibre {U₂ U₁ : Subgroup G} (hle : U₂ ≤ U₁) (hN 
     (hc : ∀ u ∈ U₁, ∀ x, c (x * u) = c x) :
     ∑ᶠ q : G ⧸ U₂, c q.out = U₂.relIndex U₁ • ∑ᶠ p : G ⧸ U₁, c p.out := by
   let e := Subgroup.quotientEquivProdOfLE hle
-  haveI : Finite (U₁ ⧸ U₂.subgroupOf U₁) := Nat.finite_of_card_ne_zero hN
+  have : Finite (U₁ ⧸ U₂.subgroupOf U₁) := Nat.finite_of_card_ne_zero hN
   have h1 : ∀ q : G ⧸ U₂, c q.out = c (e q).1.out := by
     intro q
     have : (e q).1 = ((q.out : G) : G ⧸ U₁) := by
@@ -1617,7 +1617,7 @@ private theorem finsum_fibre {U₂ U₁ : Subgroup G} (hle : U₂ ≤ U₁) (hN 
     rw [finsum_curry _ hs]
     have h2 : ∀ p : G ⧸ U₁, ∑ᶠ _ : U₁ ⧸ U₂.subgroupOf U₁, c p.out = U₂.relIndex U₁ • c p.out := by
       intro p
-      haveI := Fintype.ofFinite (U₁ ⧸ U₂.subgroupOf U₁)
+      have := Fintype.ofFinite (U₁ ⧸ U₂.subgroupOf U₁)
       rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ]
       simp [Subgroup.relIndex, Subgroup.index, Nat.card_eq_fintype_card]
     simp only [h2]
@@ -1722,8 +1722,8 @@ theorem UpperTheory.V.Z.Mult.levTr :
     rw [← Subgroup.relIndex_mul_relIndex _ _ _ hUle hK0] at this
     exact left_ne_zero_of_mul this
   have hF := globFn_inv S K' f fun w => (hf.1 w).2
-  haveI := (GlobalTheory.T.unitaryAutForms_weight_level_finite_sum_fixed_vectors E hU n hn S hS lam K' hK').1
-  haveI := (GlobalTheory.T.unitaryAutForms_weight_level_finite_sum_fixed_vectors E hU n hn S hS lam K'' hK'').1
+  have := (GlobalTheory.T.unitaryAutForms_weight_level_finite_sum_fixed_vectors E hU n hn S hS lam K' hK').1
+  have := (GlobalTheory.T.unitaryAutForms_weight_level_finite_sum_fixed_vectors E hU n hn S hS lam K'' hK'').1
   exact trOn_levOp_eq (RF E n) (globLev S (KL n)) (globLev S K'') (globLev S K') (globFn S f) hUle hK0 hN
     (fun k hk x => (hF k hk x).2) (forms S lam K'') (forms S lam K') (forms_mono S lam hle)
     (forms_le_fixed S lam K')
@@ -1796,9 +1796,9 @@ theorem UpperTheory.V.Z.Mult.stableGA :
     PiFin → PiAdm → GrowthPiJ → CmbPiA → CuspReadI → UpperTheory.V.Z.Mult.StableBlockGA := by
   intro hFin hAdm hG hPi hR E _ _ _ hE n hn l₁ l₂
   have hSp := specP _ (cuspReadP_inf hR)
-  haveI : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
-  haveI : BorelSpace (GA E n) := ⟨rfl⟩
-  haveI : BorelSpace (GA E 0) := ⟨rfl⟩
+  have : Nontrivial (InfinitePlace E) := _root_.GlobalTheory.CompanionTheory.UnrCM.nontrivial_infinitePlace E hE
+  have : BorelSpace (GA E n) := ⟨rfl⟩
+  have : BorelSpace (GA E 0) := ⟨rfl⟩
   obtain ⟨μ₁, hμ₁⟩ := haarEx E n
   obtain ⟨μ₂, hμ₂⟩ := haarEx E 0
   obtain ⟨D, -, hD⟩ := hG E n hn μ₁ μ₂
@@ -1818,7 +1818,7 @@ theorem UpperTheory.V.Z.Mult.stableGA :
   obtain ⟨k3, -, -⟩ := kgFacts E 0 S Z L.L₂ hS hZ (fun w => ⟨L.open₂ w, L.le₂ w⟩) (fun w hw => (L.off w hw).2)
   have hT := fun W hW => testsEx hAdm E n hn l₁ l₂ D A π hθ (Kg S L.L₁) W k1 k2 hW
   obtain ⟨kp, ko, -⟩ := hT ⊥ inferInstance
-  haveI : CompleteSpace ((piSp D π A.blk.I)ᗮ : Submodule ℂ A.blk.Hb) := (Submodule.isClosed_orthogonal _).completeSpace_coe
+  have : CompleteSpace ((piSp D π A.blk.I)ᗮ : Submodule ℂ A.blk.Hb) := (Submodule.isClosed_orthogonal _).completeSpace_coe
   obtain ⟨J, hJ, D₁, D₂, B₁, B₂, a1, a2, a3⟩ := hSp E n 0 l₁ l₂ D A S Z L hS hZ {π} Set.subsingleton_singleton
     (fun π' h => by rw [Set.mem_singleton_iff.1 h]; exact hθ.1) (piSp D π A.blk.I)ᗮ ko (fun W hW => (hT W hW).2.2)
   refine ⟨J, hJ, D₁, B₁, fun j => ⟨(a1 j).1 π rfl, fun w hw => ((a1 j).2 w hw).1⟩, fun j => (a2 j).1,

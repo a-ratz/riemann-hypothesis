@@ -283,8 +283,8 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.projection_of_chart_analytic :
     have h2 := (hcfan p.1).differentiableAt.hasFDerivAt.mul hγ'
     have h3 := h2.congr_of_eventuallyEq (hcfeq.mono fun t' h => h p)
     have h4 := DFunLike.congr_fun (h1.unique h3) v
-    simp only [ContinuousLinearMap.comp_apply, hv, map_zero, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.smul_apply, smul_eq_mul, P, ContinuousLinearMap.proj_apply] at h4
+    simp only [ContinuousLinearMap.comp_apply, hv, map_zero, add_apply,
+      smul_apply, smul_eq_mul, P, ContinuousLinearMap.proj_apply] at h4
     have h0 := hcf0 p.1
     have h5 : (0 : ℂ) = cf t p.1 * fderiv ℂ (D.chart a).γ t v p +
         (D.chart a).γ t p * fderiv ℂ (fun t' => cf t' p.1) t v := h4
@@ -354,7 +354,7 @@ theorem contOn_Xo (Hd : HodgeData D) (ref : HermLine J) (ha : (muLine Hd).a = re
   have hγ := ((D.chart a).analytic _ hb).continuousAt
   have hm := (D.chart a).mem _ hb
   have ho : IsOpen {z : (Σ k, J k) → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0} := by
-    simp only [Set.setOf_forall, Set.setOf_exists]
+    simp only [Set.ofPred_forall, Set.ofPred_exists]
     exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i => isOpen_ne_fun (continuous_apply _) continuous_const
   have h2 : ContinuousAt (fun t => Real.log (ref.h ((D.chart a).γ t))) (T z₀) :=
     (ContinuousAt.comp (f := (D.chart a).γ) (hr.continuousOn.continuousAt (ho.mem_nhds hm.1)) hγ).log (ref.pos _ hm.1).ne'
@@ -663,7 +663,7 @@ theorem lv_kappa {X : Scheme.{0}} {Ω : Type} [Field Ω] [CharZero Ω] {ξ : Sp 
 theorem levelFree : LevelFree := by
   intro hF E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 p hpS hpq hfree q hq
   have hp := 𝔐.S_prime p hpS
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   have hmono : Mono (spMap (algebraMap (𝓞 c.F) c.F)) := by
     have := c.fin
@@ -1167,7 +1167,7 @@ theorem term_zero (A : FinHolAtlas e X) (Θ : Fin e → LocPot X) (L : LocPot X)
       have hc j := chartMeasure_integrable_integral A hP.some _ hpot hu2 j hg1.measurable
         (mIntegrableCont A _ hpot _ hg1)
       rw [hμ, integral_finsetSum_measure fun j _ => (hc j).1]
-      simp only [mInt, dif_pos hP, integralWith]
+      simp only [mInt, dite_eq_left hP, integralWith]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [(hc j).2]
       exact integral_congr_ae (Filter.Eventually.of_forall fun y => by ring)
@@ -1592,7 +1592,7 @@ theorem replace_gen {II : IntersectionSystem} (hII : IsFullIntersectionSystem II
       by_cases h1 : i.succAbove k < i
       · simp [h1, hν]
       · by_cases h2 : q (i.succAbove k)
-        · simp only [h1, h2, not_false_eq_true, and_self, if_true, if_false]
+        · simp only [h1, h2, not_false_eq_true, and_self, ite_true, ite_false]
           exact comb_single _ _
         · simp [h1, h2, hν]
     have hterm : ∀ u : Fin e → Option (Option σ), Tendsto (fun t => (∏ k, (μ k (u k) : ℝ)) *
@@ -1626,7 +1626,7 @@ theorem replace_gen {II : IntersectionSystem} (hII : IsFullIntersectionSystem II
         exacts [hc t h1 _, h2, hc t h1 _]
     have hiff : ∀ k : Fin e, i.succAbove k ≤ i ↔ i.succAbove k < i := fun k =>
       ⟨fun h => lt_of_le_of_ne h (Fin.succAbove_ne i k), le_of_lt⟩
-    simp only [lt_irrefl, le_refl, hi, if_true, if_false, hiff, hq i hi, ← hμ] at s₁ s₂
+    simp only [lt_irrefl, le_refl, hi, ite_true, ite_false, hiff, hq i hi, ← hμ] at s₁ s₂
     rw [s₁, s₂]
     have e₁ := ii_comb_snoc hII hP (l t) hl μ (some none)
     have e₂ := ii_comb_snoc hII hP (l t) hl μ none
@@ -1803,7 +1803,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp
 theorem testPoly_eq_slX : PB.AgreementPos → PB.Proportional → Cmp.CmpSt → Top.Given → PtsIntegrableStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (D.p + D.q)) (o : Top.GoodOrigin Y T) (II : IntersectionSystem), Top.IsGlobal Xo l c Y → o.Extra → IsFullIntersectionSystem II → 1 ≤ D.p → 1 ≤ D.q → ∀ (B B₁ : ℕ) (a : T.Comp) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (O Lt : Type) [CommRing O] [AddCommGroup Lt] [Module O Lt] (X : ComponentSetting Dc O Lt) (Or : CptOrigin Y T.bad Dc X.H), 2 ≤ B → B ≤ B₁ → D.q ≤ D.p → Or.bg = Sum.inl → Or.sm = Sum.inr → Or.Good → genPt Or.𝔐.ξ₀ = genPt (o.Fx a).ξf → (∀ r : ℕ, r ∈ Dc.S ↔ r.Prime ∧ r ≤ B₁ ∧ r ∉ T.bad) → 0 < degMu X.H ∧ ArLimExists X.H X.S B ∧ T.PPc II B a (Top.testPoly T.j) = slX X B * (((Top.dimX (CMType H) (D.p + D.q) T.j : ℝ) + 1) * (T.vol a * Top.testDeg (CMType H) (D.p + D.q) T.j)) := by
   intro hAg hPr hCmp hGiv hPts E _ _ _ _ H D Xo l c Y _ T o II hGl hEx hII hp hq B B₁ a K _ J _ Ω _ _ W _ _ Dc O Lt _ _ _ X Or hB hBB hqp hbg hsm hGood hgen hS
   have hIn : PB.Inputs := hGiv.2.2.2.2.2.2.2.2.2.1
-  haveI : Nonempty (CMType H) := GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.cm_nonempty H
+  have : Nonempty (CMType H) := GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.cm_nonempty H
   have hUnif := _root_.GlobalTheory.CompanionTheory.Relay.good_tower_real_agreement hGiv E H D Xo l c Y T o II hGl hEx hII hp hq
   have hProp : T.Proportional :=
     _root_.GlobalTheory.CompanionTheory.Ar.Top.rootTower_proportional_of_unif hPr hIn II hII (CMType H) (D.p + D.q) T (Top.realOf o.toTowerOrigin) hUnif

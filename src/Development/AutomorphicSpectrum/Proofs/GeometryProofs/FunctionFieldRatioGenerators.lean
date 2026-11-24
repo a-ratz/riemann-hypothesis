@@ -102,7 +102,7 @@ theorem exists_eq_div_adjoin (X : Scheme.{0}) (Ω : Type) [Field Ω]
     exact congrArg (fun m => m.hom z) e
   obtain ⟨s0, hs0⟩ : ∃ s0 : X.presheaf.stalk (genPt ξ), (Scheme.stalkClosedPointTo ξ).hom s0 = a :=
     hT.gen.bij.2 a
-  obtain ⟨V, hV, f, rfl⟩ := TopCat.Presheaf.germ_exist X.presheaf s0
+  obtain ⟨V, hV, f, rfl⟩ := TopCat.Presheaf.exists_germ_eq X.presheaf s0
   obtain ⟨t, htV, hgt⟩ := hU.exists_basicOpen_le ⟨genPt ξ, hV⟩ hgU
   have hD : genPt ξ ∈ X.basicOpen t := hgt
   obtain ⟨n, y, hy⟩ := exists_eq_pow_mul_of_isAffineOpen X U hU t

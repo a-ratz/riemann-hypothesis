@@ -139,7 +139,7 @@ theorem integrableOn_fundamentalDomain :
   intro E _ _ _ a r φ hl hU _ _ μ 𝓕 hμ hF
   obtain ⟨C, hC, hcov⟩ := exists_isCompact_sub_mem (E := E) (a := a) (r := r)
   have hφ := continuous_of_isOpen_stab φ hU
-  haveI : Countable (ratN E a r) := by
+  have : Countable (ratN E a r) := by
     have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.countable_iff.2 inferInstance
     exact Function.Surjective.countable
       (f := (AddMonoidHom.compLeft (algebraMap E (Ad E)).toAddMonoidHom (BlockIx a r)).rangeRestrict)

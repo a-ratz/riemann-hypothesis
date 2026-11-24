@@ -88,7 +88,7 @@ theorem card_hom_eq_sum (R : Type) [Ring R] (X M : Type) [AddCommGroup X] [Modul
     [AddCommGroup M] [Module R M] [Finite M] [Fintype (Submodule R X)] :
     Nat.card (X →ₗ[R] M)
       = ∑ Y : Submodule R X, Nat.card {f : X →ₗ[R] M // LinearMap.ker f = Y} := by
-  haveI := finite_hom R X M
+  have := finite_hom R X M
   rw [← Nat.card_sigma]
   exact Nat.card_congr (Equiv.sigmaFiberEquiv (fun f : X →ₗ[R] M => LinearMap.ker f)).symm
 
@@ -102,9 +102,9 @@ theorem card_inj_eq (R : Type) [Ring R] (M N : Type) [AddCommGroup M] [Module R 
   induction n using Nat.strong_induction_on with
   | _ n ih =>
     intro X _ _ _ hX
-    haveI : Finite (Submodule R X) :=
+    have : Finite (Submodule R X) :=
       Finite.of_injective (fun Y : Submodule R X => (Y : Set X)) SetLike.coe_injective
-    letI : Fintype (Submodule R X) := Fintype.ofFinite _
+    let : Fintype (Submodule R X) := Fintype.ofFinite _
     have h1 := h X
     rw [card_hom_eq_sum, card_hom_eq_sum,
       ← Finset.add_sum_erase _ _ (Finset.mem_univ (⊥ : Submodule R X)),
@@ -116,7 +116,7 @@ theorem card_inj_eq (R : Type) [Ring R] (M N : Type) [AddCommGroup M] [Module R 
       refine Finset.sum_congr rfl fun Y hY => ?_
       have hY' : Y ≠ ⊥ := Finset.ne_of_mem_erase hY
       rw [card_ker_eq R X M, card_ker_eq R X N]
-      haveI : Finite (X ⧸ Y) := Finite.of_surjective _ Y.mkQ_surjective
+      have : Finite (X ⧸ Y) := Finite.of_surjective _ Y.mkQ_surjective
       refine ih (Nat.card (X ⧸ Y)) ?_ (X ⧸ Y) rfl
       rw [← hX]
       refine lt_of_le_of_ne (Nat.card_le_card_of_surjective _ Y.mkQ_surjective) fun he => hY' ?_
@@ -129,12 +129,12 @@ theorem card_inj_eq (R : Type) [Ring R] (M N : Type) [AddCommGroup M] [Module R 
 theorem nonempty_equiv_of_card_hom :
     ∀ (R : Type) [Ring R] (M N : Type) [AddCommGroup M] [Module R M] [Finite M] [AddCommGroup N] [Module R N] [Finite N], (∀ (X : Type) [AddCommGroup X] [Module R X] [Finite X], Nat.card (X →ₗ[R] M) = Nat.card (X →ₗ[R] N)) → Nonempty (M ≃ₗ[R] N) := by
   intro R _ M N _ _ _ _ _ _ h
-  haveI := finite_hom R M M
-  haveI := finite_hom R N N
+  have := finite_hom R M M
+  have := finite_hom R N N
   have h1 := card_inj_eq R M N h _ M rfl
   have h2 := card_inj_eq R M N h _ N rfl
-  haveI : Nonempty {f : M →ₗ[R] M // LinearMap.ker f = ⊥} := ⟨⟨LinearMap.id, LinearMap.ker_id⟩⟩
-  haveI : Nonempty {f : N →ₗ[R] N // LinearMap.ker f = ⊥} := ⟨⟨LinearMap.id, LinearMap.ker_id⟩⟩
+  have : Nonempty {f : M →ₗ[R] M // LinearMap.ker f = ⊥} := ⟨⟨LinearMap.id, LinearMap.ker_id⟩⟩
+  have : Nonempty {f : N →ₗ[R] N // LinearMap.ker f = ⊥} := ⟨⟨LinearMap.id, LinearMap.ker_id⟩⟩
   have p1 : 0 < Nat.card {f : M →ₗ[R] N // LinearMap.ker f = ⊥} := h1 ▸ Nat.card_pos
   have p2 : 0 < Nat.card {f : N →ₗ[R] M // LinearMap.ker f = ⊥} := h2 ▸ Nat.card_pos
   obtain ⟨⟨f, hf⟩⟩ := (Nat.card_pos_iff.1 p1).1

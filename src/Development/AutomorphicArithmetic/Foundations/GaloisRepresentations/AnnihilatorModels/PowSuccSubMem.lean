@@ -141,14 +141,14 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.kerU_of :
   let I : ∀ {T : Over S}, (T ⟶ o.A) → Ideal (𝓞 D.F) := fun {T} z =>
     { carrier := {a | z ≫ ρ a = 1}
       add_mem' := fun {a a'} ha ha' => by
-        haveI := ρhom a
+        have := ρhom a
         show z ≫ ρ (a + a') = 1
         rw [ρadd, MonObj.comp_mul, show z ≫ ρ a = 1 from ha, show z ≫ ρ a' = 1 from ha', _root_.mul_one]
       zero_mem' := by
         show z ≫ ρ 0 = 1
         rw [ρ0, MonObj.comp_one]
       smul_mem' := fun c a ha => by
-        haveI := ρhom c
+        have := ρhom c
         show z ≫ ρ (c * a) = 1
         rw [mul_comm, ρmul, ← Category.assoc, show z ≫ ρ a = 1 from ha, MonObj.one_comp] }
   have memI : ∀ {T : Over S} (z : T ⟶ o.A) (a), a ∈ I z ↔ z ≫ ρ a = 1 := fun _ _ => Iff.rfl
@@ -159,15 +159,15 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.kerU_of :
     rw [Ideal.span_singleton_le_iff_mem, memI, ρc, MonObj.comp_pow, Category.comp_id]
     exact kerP z hz
   have cong : ∀ {T : Over S} (z : T ⟶ o.A) (a a'), a - a' ∈ I z → z ≫ ρ a = z ≫ ρ a' := fun z a a' h => by
-    haveI := ρhom a'
-    haveI := ρhom (a - a')
+    have := ρhom a'
+    have := ρhom (a - a')
     have : a = a' + (a - a') := by ring
     rw [this, ρadd, MonObj.comp_mul, show z ≫ ρ (a - a') = 1 from h, _root_.mul_one]
   set β := D.bar α with hβ
   have hβα : β * α ∈ Ideal.span {(p : 𝓞 D.F) ^ e} := hα1 β hα3
   obtain ⟨K, gK, i, -, hmono, hKfin, hKflat, hK⟩ := GlobalTheory.UPel.HT.ES.OrdCount.exists_idem_kernel S o.A o'.A ψ (ρ β) hm (ρhom β)
     hfin hflat (fun T z hz => ⟨by
-      haveI := o'.act.hom (algebraMap (𝓞 D.F) D.O β)
+      have := o'.act.hom (algebraMap (𝓞 D.F) D.O β)
       rw [Category.assoc, hlin, ← Category.assoc, hz, MonObj.one_comp], by
       rw [Category.assoc, ← ρmul]
       exact cong z _ _ (idem_mod hβα hα2 (spanI z hz))⟩)
@@ -179,10 +179,10 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.kerU_of :
     · exact mem_of_pow_le he.ne' hβα hα2 hα3 (spanI g ha) (fun a haI => hk a haI)
   refine ⟨⟨K, i, hmono, hKfin, hKflat, fun T g => (hK T g).trans (key T g)⟩, fun T => ⟨?_, fun g h hg hh => ?_⟩,
     fun T g hg => kerP g hg.1⟩
-  · exact (key T 1).1 ⟨by rw [MonObj.one_comp], by haveI := ρhom β; rw [MonObj.one_comp]⟩
+  · exact (key T 1).1 ⟨by rw [MonObj.one_comp], by have := ρhom β; rw [MonObj.one_comp]⟩
   · obtain ⟨g1, g2⟩ := (key T g).2 hg
     obtain ⟨h1', h2'⟩ := (key T h).2 hh
-    haveI := ρhom β
+    have := ρhom β
     refine (key T _).1 ⟨?_, ?_⟩
     · rw [← div_eq_mul_inv, GrpObj.div_comp, g1, h1', div_one]
     · rw [← div_eq_mul_inv, GrpObj.div_comp, g2, h2', div_one]

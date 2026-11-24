@@ -148,13 +148,13 @@ theorem Cpt.rapid {Y : Spc F E n} (h : Cpt σ Y.J) {f : UA σ Y.J → ℂ} (hc :
 
 theorem Cpt.vol_ne (h : Cpt σ J) {μ : Measure (UA σ J)} {D : Set (UA σ J)} (hμ : μ.IsHaarMeasure)
     (hD : IsFundamentalDomain (ratU σ J) D μ) : μ.real D ≠ 0 := by
-  haveI := h.cnt
+  have := h.cnt
   exact ENNReal.toReal_ne_zero.2 ⟨fd_ne hD, (h.fin μ D hμ hD).ne⟩
 
 theorem Cpt.eq_zero (h : Cpt σ J) {μ : Measure (UA σ J)} {D : Set (UA σ J)} (hμ : μ.IsHaarMeasure)
     (hD : IsFundamentalDomain (ratU σ J) D μ) {f : UA σ J → ℂ} (hc : Continuous f)
     (hi : ∀ γ ∈ ratU σ J, ∀ g, f (γ * g) = f g) (h0 : pet μ D f f = 0) : f = 0 := by
-  haveI := h.cnt
+  have := h.cnt
   obtain ⟨C, hC⟩ := h.bdd hc hi
   have hi2 : IntegrableOn (fun g => ‖f g‖ ^ 2) D μ := Measure.integrableOn_of_bounded (M := C ^ 2) (h.fin μ D hμ hD).ne
     (hc.norm.pow 2).aestronglyMeasurable (Eventually.of_forall fun g => by

@@ -55,7 +55,7 @@ variable {R : Type} [CommRing R]
 
 theorem det_eq_one_of_lower_unitriangular {r : ℕ} (l : Matrix (Fin r) (Fin r) R)
     (h0 : ∀ i j : Fin r, i < j → l i j = 0) (h1 : ∀ i, l i i = 1) : l.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular l (fun i j h => h0 i j h)]
+  rw [det_of_isLowerTriangular l (fun i j h => h0 i j h)]
   simp [h1]
 
 theorem exists_lower_mul_upper_of_leading_minors (r : ℕ) (h : Matrix (Fin r) (Fin r) R)
@@ -141,7 +141,7 @@ theorem eq_one_of_lower_unitriangular_eq_mul {r : ℕ} (l l' c : Matrix (Fin r) 
 
 theorem isUnit_det_of_upper_of_isUnit_diag {r : ℕ} (b : Matrix (Fin r) (Fin r) R)
     (hb : b.BlockTriangular id) (hu : ∀ i, IsUnit (b i i)) : IsUnit b.det := by
-  rw [Matrix.det_of_upperTriangular hb]
+  rw [det_of_isUpperTriangular hb]
   exact IsUnit.prod_iff.2 fun i _ => hu i
 
 end Cell
@@ -162,7 +162,7 @@ theorem cell_coordinates_exists_unique :
       rw [this]; simp [Matrix.mul_apply]
     refine ⟨g * b⁻¹, b, fun i j hij => by rw [hu, hl0 i j hij], fun i => by rw [hu, hl1], hb, ?_, ?_⟩
     · intro i
-      rw [Matrix.det_of_upperTriangular hb] at hbu
+      rw [det_of_isUpperTriangular hb] at hbu
       exact IsUnit.prod_iff.1 hbu i (Finset.mem_univ _)
     · rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hbu, Matrix.mul_one]
   · rintro ⟨u, b, hu0, hu1, hb, hbu, rfl⟩ k hk

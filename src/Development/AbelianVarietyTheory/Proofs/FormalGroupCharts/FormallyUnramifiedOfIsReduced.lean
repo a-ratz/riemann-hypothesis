@@ -67,14 +67,14 @@ theorem formallyUnramified_of_isReduced (K A : Type) [Field K] [PerfectField K] 
     rw [Algebra.FormallyUnramified.pi_iff]
     intro I
     have := I.isMaximal
-    letI := Ideal.Quotient.field I.asIdeal
+    let := Ideal.Quotient.field I.asIdeal
     exact Algebra.FormallyUnramified.of_isSeparable K _
   exact Algebra.FormallyUnramified.of_equiv ((IsArtinianRing.equivPi A).restrictScalars K).symm
 
 theorem exists_smul_kaehler_eq_zero (O : Type) [CommRing O] [Module.Finite ℤ O] [IsReduced O] :
     ∃ N : ℕ, 0 < N ∧ ∀ ω : Ω[O⁄ℤ], (N : O) • ω = 0 := by
   let A := ℚ ⊗[ℤ] O
-  letI : Algebra O A := Algebra.TensorProduct.rightAlgebra
+  let : Algebra O A := Algebra.TensorProduct.rightAlgebra
   have hloc : IsLocalization (Algebra.algebraMapSubmonoid O ℤ⁰) A :=
     IsLocalization.tensorRight ℚ ℤ⁰
   have : IsReduced A := isReduced_localizationPreserves (Algebra.algebraMapSubmonoid O ℤ⁰) A inferInstance

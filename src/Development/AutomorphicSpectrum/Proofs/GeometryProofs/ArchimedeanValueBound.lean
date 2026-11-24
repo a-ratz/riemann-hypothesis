@@ -143,7 +143,7 @@ theorem norm_root_le (p : Polynomial ℂ) (hp : p.Monic) (W : ℂ) (hW : p.eval 
     (hB : ∀ i, ‖p.coeff i‖ ≤ B) : ‖W‖ ≤ 1 + B := by
   have h1 := Polynomial.IsRoot.norm_lt_cauchyBound hp.ne_zero hW
   have h2 : p.cauchyBound ≤ B.toNNReal + 1 := by
-    rw [Polynomial.cauchyBound, hp.leadingCoeff, nnnorm_one, div_one]
+    rw [Polynomial.cauchyBound, hp.leadingCoeff, nnNorm_one, div_one]
     refine add_le_add (Finset.sup_le fun i _ => ?_) le_rfl
     exact NNReal.le_toNNReal_of_coe_le (hB i)
   have h3 : (‖W‖₊ : ℝ) ≤ ((B.toNNReal + 1 : NNReal) : ℝ) := by
@@ -300,7 +300,7 @@ theorem section_bound : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fin
   have hmax : ∀ k, ∃ i, (∀ j, ‖z ⟨k, j⟩‖ ≤ ‖z ⟨k, i⟩‖) ∧ z ⟨k, i⟩ ≠ 0 := by
     intro k
     obtain ⟨i₀, hi₀⟩ := hz.1 k
-    haveI : Nonempty (ι k) := ⟨i₀⟩
+    have : Nonempty (ι k) := ⟨i₀⟩
     obtain ⟨i, hi⟩ := Finite.exists_max fun j => ‖z ⟨k, j⟩‖
     refine ⟨i, hi, fun h0 => hi₀ ?_⟩
     have := hi i₀

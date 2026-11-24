@@ -74,10 +74,10 @@ theorem GlobalTheory.TwInputs.tau_eq_locK : GlobalTheory.Published.GlobalArtinRe
   intro hGAR D cf Rw low Pq S hL eig θ Bs hV τ hτ j kv x u hu0 hxu0
   obtain ⟨k, v⟩ := kv
   have hgp : (D.host.g k).Prime := D.host.g_prime k
-  haveI : Fact (D.host.g k).Prime := ⟨hgp⟩
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : Fact (D.host.g k).Prime := ⟨hgp⟩
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   obtain ⟨p, hpg, hp⟩ := Nat.exists_infinite_primes (D.host.g k + 1)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨⟨w, hw⟩⟩ := Formalism.BasicNotions.Examples₂.PlOver.plNe D p
   obtain ⟨i, hi, -⟩ := Bs.cover w
   have hk : D.ntw.l i ≠ D.host.g k := by rw [hi, hw]; omega
@@ -102,7 +102,7 @@ theorem GlobalTheory.TwInputs.tau_eq_locK : GlobalTheory.Published.GlobalArtinRe
     apply (D.naut.plGw k v).isPrime.ne_top
     rw [Ideal.eq_top_iff_one, ← hac]
     exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ h1) (Ideal.mul_mem_left _ _ hgw)
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq
     (algebraMap D.host.E D.nd.Om (((D.host.g k : ℕ) : 𝓞 D.host.E) : D.host.E))
     (show 0 < normV (D.naut.plGw k v) - 1 by omega)

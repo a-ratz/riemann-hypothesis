@@ -194,7 +194,7 @@ theorem exists_linearIndependent_pow_apply [Infinite E] (f : Module.End E V)
   rw [Module.finrank_fin_fun] at hw
   have hw' : (krylov (M.map φ) w).det ≠ 0 := by
     rw [← isUnit_iff_ne_zero, ← Matrix.isUnit_iff_isUnit_det,
-      ← Matrix.linearIndependent_cols_iff_isUnit]
+      ← linearIndependent_col_iff_isUnit]
     have hcol : (krylov (M.map φ) w).col = fun k : Fin n => (Matrix.toLin' (M.map φ) ^ (k : ℕ)) w := by
       ext1 k
       rw [krylov_col, ← Matrix.toLin'_pow, Matrix.toLin'_apply]
@@ -202,7 +202,7 @@ theorem exists_linearIndependent_pow_apply [Infinite E] (f : Module.End E V)
     exact hw
   obtain ⟨v₀, hv₀⟩ := exists_det_krylov_ne_zero φ M w hw'
   have hli : LinearIndependent E (krylov M v₀).col := by
-    rw [Matrix.linearIndependent_cols_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
+    rw [linearIndependent_col_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
       isUnit_iff_ne_zero]
     exact hv₀
   refine ⟨b.equivFun.symm v₀, ?_⟩

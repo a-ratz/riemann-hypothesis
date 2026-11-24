@@ -340,7 +340,7 @@ open Formalism.BasicNotions Formalism.MainNotions.product_first_zeroth_parts For
 open scoped Matrix
 
 theorem local_ring_is_dvr (D : D7) (w : D.what₂.places.Pl) : IsDiscreteValuationRing (bwA_Ow D w) := by
-  haveI := D.intW_dvr w
+  have := D.intW_dvr w
   let e : intW D.what₂.places w ≃+* bwA_Ow D w :=
     (intW D.what₂.places w).equivMapOfInjective D.what₂.embLL D.what₂.embLL.injective
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (intW D.what₂.places w)
@@ -505,7 +505,7 @@ theorem length_factor_local_basis (A : AtTTied u) (w : D.what₂.places.Pl) (hw 
       (D.R.k : ℚ) * n = (D.what₂.places.ramIdx w : ℚ) *
         (Module.finrank ℤ (delSq ℤ (D.R.N 0) ((D.fm u).lam 0 ((D.fm u).tauOf w v))) : ℚ) *
         ((wsum ((D.fm u).lam 0 ((D.fm u).tauOf w v)) : ℚ) + (D.R.k : ℚ) * ((D.fm u).bTop ((D.fm u).tauOf w v) : ℚ)) := by
-  haveI := local_ring_is_dvr D w
+  have := local_ring_is_dvr D w
   obtain ⟨K₁, K₂, j, ϖ, ε, η, hϖ, h₁, h₂, hKK, hTη, hdec⟩ :=
     local_basis_change_decomp D u A w hw v 0 (Nat.zero_le _) Lv c hLc0 B B' hB hB' hunit
   set lam := (D.fm u).lam 0 ((D.fm u).tauOf w v) with hlam
@@ -628,8 +628,8 @@ theorem linearIndependent_prod_rename_of_card (n : ℕ) : ∀ (ι : Type) [Finty
   induction n with
   | zero =>
     intro ι _ _ hι σ κ b hb
-    haveI : IsEmpty ι := Fintype.card_eq_zero_iff.1 hι
-    haveI : Unique (∀ τ, κ τ) := Pi.uniqueOfIsEmpty κ
+    have : IsEmpty ι := Fintype.card_eq_zero_iff.1 hι
+    have : Unique (∀ τ, κ τ) := Pi.uniqueOfIsEmpty κ
     rw [linearIndependent_unique_iff]
     simp
   | succ n ih =>

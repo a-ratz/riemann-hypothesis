@@ -124,9 +124,9 @@ theorem pi_image_mul (lf : Measure R) [SigmaFinite lf] (u v : ι → R) (huv : �
   have e2 : Measure.pi (fun i => c i • lf) =
       (∏ i, (c i : ℝ≥0∞)) • (Measure.pi fun _ : ι => lf) := by
     refine Measure.pi_eq fun t ht => ?_
-    rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
+    rw [smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
     rfl
-  rw [himg, ← Measure.map_apply hT hs, ← e1, e2, Measure.smul_apply, smul_eq_mul]
+  rw [himg, ← Measure.map_apply hT hs, ← e1, e2, smul_apply, smul_eq_mul]
 
 theorem measurePreserving_transvection (lf : Measure R) [SigmaFinite lf] [lf.IsAddLeftInvariant]
     (i j : ι) (hij : i ≠ j) (c : R) :
@@ -179,10 +179,10 @@ theorem pi_scale : ∀ (F : Type) [Field F] [NumberField F], ∀ [MeasurableSpac
   intro F _ _ _ _ lf hH h1 ι _ _
   obtain ⟨hlc, hsc, ht2, hOc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   obtain ⟨hF, -, hU⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.Scale.lf_scale F lf hH h1
-  haveI := hlc
-  haveI := hsc
-  haveI := ht2
-  haveI : SigmaFinite lf := inferInstance
+  have := hlc
+  have := hsc
+  have := ht2
+  have : SigmaFinite lf := inferInstance
   have hmeas : ∀ (g : Matrix ι ι F), g.det ≠ 0 → ∀ s : Set (ι → A F), MeasurableSet s →
       MeasurableSet ((fun x => Bf g *ᵥ x) '' s) := by
     intro g hg s hs

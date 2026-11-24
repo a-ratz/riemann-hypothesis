@@ -75,7 +75,7 @@ theorem summable_norm_mul_pow_of_polyB {a : ℕ → ℂ} (ha : PolyB a) {q : ℂ
 theorem qs_term_eq (a : ℕ → ℂ) (τ : ℍ) (n : ℕ) :
     a n * cexp (2 * π * Complex.I * n * τ) = a n • (Function.Periodic.qParam 1 (τ : ℂ)) ^ n := by
   simp only [smul_eq_mul, Function.Periodic.qParam]
-  rw [← Complex.exp_nat_mul]
+  rw [← exp_natCast_mul]
   congr 2
   push_cast
   ring
@@ -114,7 +114,7 @@ private theorem mdifferentiable_qs_of_polyB {a : ℕ → ℂ} (ha : PolyB a) :
       hU ?_
     intro n w hw
     rw [norm_mul, norm_mul, Complex.norm_exp, norm_pow, Complex.norm_real, Real.norm_eq_abs,
-      abs_of_pos hr0, hrdef, ← Real.exp_nat_mul]
+      abs_of_pos hr0, hrdef, ← Real.exp_natCast_mul]
     refine mul_le_mul_of_nonneg_left ?_ (norm_nonneg _)
     rw [Real.exp_le_exp]
     have hre : (2 * π * Complex.I * n * w).re = -(2 * π * n * w.im) := by

@@ -164,7 +164,7 @@ private theorem sl_dg_siegel [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Towe
 private theorem gal_siegel_fix [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) {c D : ℕ} (hD : 0 < D) {a b : ℤ}
     (hx : GlobalTheory.Sieg.admitted c ![(a : ℚ) / D, (b : ℚ) / D]) (s : Ω ≃ₐ[ℚ] Ω) (hs : ∀ z : Ω, z ^ D = 1 → s z = z) :
     X.gal s (siegel X c ![(a : ℚ) / D, (b : ℚ) / D]) = siegel X c ![(a : ℚ) / D, (b : ℚ) / D] := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hq : (D : ℚ) ≠ 0 := by exact_mod_cast hD.ne'
   have hz : (D : ℤ) ≠ 0 := by exact_mod_cast hD.ne'
   obtain ⟨a', ha'⟩ := Int.eq_ofNat_of_zero_le (Int.emod_nonneg a hz)

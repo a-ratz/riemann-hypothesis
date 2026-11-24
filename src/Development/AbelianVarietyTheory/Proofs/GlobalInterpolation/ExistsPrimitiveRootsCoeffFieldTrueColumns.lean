@@ -63,7 +63,7 @@ theorem exists_isPrimitiveRoot_of_addChar_ne_one :
   obtain ⟨x, hx⟩ := AddChar.ne_one_iff.mp hψ
   have hpow : ψ x ^ p = 1 := by
     rw [← AddChar.map_nsmul_eq_pow, nsmul_eq_mul, hpR, zero_mul, AddChar.map_zero_eq_one]
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hord : orderOf (ψ x) = p := orderOf_eq_prime hpow hx
   exact ⟨ψ x, hord ▸ IsPrimitiveRoot.orderOf (ψ x)⟩
 
@@ -82,7 +82,7 @@ namespace GlobalTheory
 theorem exists_isPrimitiveRoot_of_injective_character (K : Type) [Field K] (p : ℕ) (hp : p.Prime)
     (om : (ZMod p)ˣ →* Kˣ) (hom : Function.Injective om) :
     ∃ ζ : K, IsPrimitiveRoot ζ (p - 1) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨g, hg⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := (ZMod p)ˣ)
   rw [Nat.card_eq_fintype_card, ZMod.card_units] at hg
   refine ⟨(om g : K), ?_⟩

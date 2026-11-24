@@ -72,7 +72,7 @@ theorem qm_surj {m : ℕ} (hm : 0 < m) {x : ℂ} (h0 : 0 < ‖x‖) (h1 : ‖x�
 
 theorem qm_pow {m : ℕ} (hm : 0 < m) (τ : ℍ) : qm m τ ^ m = qm 1 τ := by
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
-  rw [qm, qm, ← Complex.exp_nat_mul]
+  rw [qm, qm, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -84,7 +84,7 @@ theorem qm_pt {a e : ℕ} (ha : 0 < a) (he : 0 < e) (b : ℕ) (τ : ℍ) :
     qm 1 (pt a b e τ) = zetaC e ^ b * qm (a * e) τ ^ (a ^ 2) := by
   have ha' : (a : ℂ) ≠ 0 := by exact_mod_cast ha.ne'
   have he' : (e : ℂ) ≠ 0 := by exact_mod_cast he.ne'
-  rw [qm, qm, zetaC, pt_coe ha he, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul,
+  rw [qm, qm, zetaC, pt_coe ha he, ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul,
     ← Complex.exp_add]
   congr 1
   push_cast

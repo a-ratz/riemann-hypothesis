@@ -146,8 +146,8 @@ theorem _root_.GlobalTheory.SplitEmbSep.not_dvd_discr_of_split {g : ℕ} (hg : g
   have hgp : Prime (g : ℤ) := Nat.prime_iff_prime_int.mp hg
   set p : Ideal ℤ := Ideal.span {(g : ℤ)} with hp_def
   have hp0 : p ≠ ⊥ := by simpa [hp_def] using hgp.ne_zero
-  haveI hpprime : p.IsPrime := (Ideal.span_singleton_prime hgp.ne_zero).mpr hgp
-  haveI hpmax : p.IsMaximal := hpprime.isMaximal hp0
+  have hpprime : p.IsPrime := (Ideal.span_singleton_prime hgp.ne_zero).mpr hgp
+  have hpmax : p.IsMaximal := hpprime.isMaximal hp0
   have hsum := Ideal.sum_ramification_inertia (𝓞 E) ℚ E hp0
   have hcard : (IsDedekindDomain.primesOverFinset p (𝓞 E)).card = Module.finrank ℚ E := by
     rw [← h, ← IsDedekindDomain.coe_primesOverFinset hp0, Set.ncard_coe_finset]
@@ -160,8 +160,8 @@ theorem _root_.GlobalTheory.SplitEmbSep.not_dvd_discr_of_split {g : ℕ} (hg : g
     have hP' : P ∈ p.primesOver (𝓞 E) := by
       rw [← IsDedekindDomain.coe_primesOverFinset hp0]
       exact hP
-    haveI := hP'.1
-    haveI := hP'.2
+    have := hP'.1
+    have := hP'.2
     have he : p.ramificationIdx' P ≠ 0 :=
       Ideal.IsDedekindDomain.ramificationIdx'_ne_zero hmap hP'.1
         (Ideal.map_le_iff_le_comap.mpr (le_of_eq (Ideal.over_def P p)))
@@ -175,7 +175,7 @@ theorem _root_.GlobalTheory.SplitEmbSep.not_dvd_discr_of_split {g : ℕ} (hg : g
       rw [hp_def, Ideal.span_le, Set.singleton_subset_iff]
       exact Ideal.mem_comap.mpr (by simpa using hgP)
     exact hpmax.eq_of_le (Ideal.IsPrime.ne_top inferInstance) hle
-  haveI : P.LiesOver p := ⟨hunder⟩
+  have : P.LiesOver p := ⟨hunder⟩
   have hPF : P ∈ IsDedekindDomain.primesOverFinset p (𝓞 E) := by
     rw [← Finset.mem_coe, IsDedekindDomain.coe_primesOverFinset hp0]
     exact ⟨hPprime, this⟩

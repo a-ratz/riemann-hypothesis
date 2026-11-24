@@ -77,7 +77,7 @@ theorem isCoveringMapOn_of_proper {n : ℕ} {E : Type*} [TopologicalSpace E] [T2
       hU.isOpenEmbedding_subtypeVal.isLocalHomeomorph hgc
   have hgp : IsProperMap g := by
     refine isProperMap_iff_isCompact_preimage.2 ⟨hgc, fun K hK => ?_⟩
-    have h1 := hp (Subtype.val '' K) (hK.image continuous_subtype_val)
+    have h1 := hp (Subtype.val '' K) (hK.image continuous_subtypeVal)
       (by rintro _ ⟨y, -, rfl⟩; exact y.2)
     have h2 : g ⁻¹' K = z ⁻¹' (Subtype.val '' K) := by
       ext x; simp only [Set.mem_preimage, Set.mem_image]

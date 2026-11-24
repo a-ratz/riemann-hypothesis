@@ -275,7 +275,7 @@ instance isDomain_completed_ring : IsDomain (O0 p) := by
 theorem not_isUnit_p : ¬ IsUnit (p : O0 p) := by
   intro h
   have h2 := h.map (AdicCompletion.evalₐ (pI p) 1)
-  haveI : (pI p ^ 1).IsPrime := by
+  have : (pI p ^ 1).IsPrime := by
     rw [pow_one]; exact (Ideal.span_singleton_prime (prime_lau p).ne_zero).2 (prime_lau p)
   refine h2.ne_zero ?_
   rw [map_natCast, ← map_natCast (Ideal.Quotient.mk (pI p ^ 1)), Ideal.Quotient.eq_zero_iff_mem,
@@ -339,8 +339,8 @@ theorem tw_exists_root_chain {Ω : Type*} [Field Ω] [IsAlgClosed Ω] (a : Ω) :
   rw [Function.iterate_succ_apply', hr]
 
 theorem nonempty_tower (h : IsClo p Ω) : Nonempty (Tower p Ω) := by
-  haveI := h.clo
-  haveI : CharZero Ω := charZero_of_injective_algebraMap h.inj
+  have := h.clo
+  have : CharZero Ω := charZero_of_injective_algebraMap h.inj
   obtain ⟨z, hz⟩ := tw_exists_prim_p (p := p) Ω
   obtain ⟨f, hf0, hf⟩ := tw_exists_root_chain (p := p) z
   obtain ⟨g, hg0, hg⟩ := tw_exists_root_chain (p := p) (algebraMap (O0 p) Ω (qO p))
@@ -445,11 +445,11 @@ theorem cong_natCast {k a b : ℕ} (h : a ≡ b [MOD p ^ k]) : Cong (p := p) k (
 
 theorem not_cong_one_zero (h : IsClo p Ω) (k : ℕ) (hk : k ≠ 0) : ¬ Cong (p := p) k (1 : Ω) 0 := by
   rintro ⟨z, hz, h1⟩
-  haveI : FaithfulSMul (O0 p) (integralClosure (O0 p) Ω) :=
+  have : FaithfulSMul (O0 p) (integralClosure (O0 p) Ω) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 fun a b hab => h.inj (congrArg Subtype.val hab)
   have hu : IsUnit (algebraMap (O0 p) (integralClosure (O0 p) Ω) (p ^ k)) :=
     IsUnit.of_mul_eq_one ⟨z, hz⟩ (Subtype.ext (by simpa using h1.symm))
-  haveI : IsLocalHom (algebraMap (O0 p) (integralClosure (O0 p) Ω)) :=
+  have : IsLocalHom (algebraMap (O0 p) (integralClosure (O0 p) Ω)) :=
     Algebra.IsIntegral.isLocalHom _ _
   exact not_isUnit_p p ((isUnit_pow_iff hk).1 (isUnit_of_map_unit _ _ hu))
 
@@ -461,7 +461,7 @@ theorem zeta_pow_eq_iff (T : Tower p Ω) (k a b : ℕ) :
 theorem exists_isKum (T : Tower p Ω) (n : ℕ) (H : Subgroup (Gal p Ω)) {r : Ω} (hr : r ≠ 0)
     (hH : ∀ g ∈ H, g (r ^ p ^ n) = r ^ p ^ n) : ∃ a, IsKum T n H r a := by
   classical
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
   have : ∀ g : Gal p Ω, ∃ a : ZMod (p ^ n), g ∈ H → g r = T.ζ n ^ a.val * r := by
     intro g
     by_cases hg : g ∈ H
@@ -475,7 +475,7 @@ theorem exists_isKum (T : Tower p Ω) (n : ℕ) (H : Subgroup (Gal p Ω)) {r : �
 
 theorem exists_isCyc (T : Tower p Ω) (k : ℕ) :
     ∃ χ : Gal p Ω → ZMod (p ^ k), ∀ g : Gal p Ω, g (T.ζ k) = T.ζ k ^ (χ g).val := by
-  haveI : NeZero (p ^ k) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
+  have : NeZero (p ^ k) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
   have : ∀ g : Gal p Ω, ∃ a : ZMod (p ^ k), g (T.ζ k) = T.ζ k ^ a.val := by
     intro g
     have : (g (T.ζ k)) ^ (p ^ k) = 1 := by rw [← map_pow, (T.prim k).pow_eq_one, map_one]
@@ -487,7 +487,7 @@ theorem exists_isCyc (T : Tower p Ω) (k : ℕ) :
 theorem isCyc_eq_one_iff {T : Tower p Ω} {k : ℕ} {χ : Gal p Ω → ZMod (p ^ k)}
     (h : ∀ g : Gal p Ω, g (T.ζ k) = T.ζ k ^ (χ g).val)
     (g : Gal p Ω) : χ g = 1 ↔ g (T.ζ k) = T.ζ k := by
-  haveI : NeZero (p ^ k) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
+  have : NeZero (p ^ k) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
   rw [h g]
   conv_rhs => rhs; rw [← pow_one (T.ζ k)]
   rw [zeta_pow_eq_iff, ← ZMod.natCast_eq_natCast_iff]
@@ -502,7 +502,7 @@ theorem isKum_mul {T : Tower p Ω} {n : ℕ} {χ : Gal p Ω → ZMod (p ^ n)}
   rw [AlgEquiv.mul_apply, ha h hh, map_mul, map_pow, hχ g, ha g hg, ← pow_mul, ← mul_assoc,
     ← pow_add] at e
   have e' := mul_right_cancel₀ hr e
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
   rw [zeta_pow_eq_iff, ← ZMod.natCast_eq_natCast_iff] at e'
   simpa [add_comm] using e'.symm
 

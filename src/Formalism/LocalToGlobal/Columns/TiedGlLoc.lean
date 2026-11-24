@@ -166,8 +166,8 @@ theorem gloRho_algMap (r : 𝓞 F) : gloRho v spl halg (oToS F E (algebraMap (�
 
 theorem gloK_bijective : Function.Bijective (gloK v spl halg w hw) := by
   constructor
-  · haveI : w.asIdeal.IsMaximal := w.isMaximal
-    letI := Ideal.Quotient.field w.asIdeal
+  · have : w.asIdeal.IsMaximal := w.isMaximal
+    let := Ideal.Quotient.field w.asIdeal
     exact RingHom.injective (gloK v spl halg w hw)
   · intro z
     obtain ⟨r, rfl⟩ := glo_res_surj v z

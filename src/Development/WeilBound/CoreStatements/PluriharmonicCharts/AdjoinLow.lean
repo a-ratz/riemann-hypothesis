@@ -83,7 +83,7 @@ theorem of_gen [Finite S] {u v : ∀ s, Matrix (Fin (r s)) (Fin (r s)) G} (hu : 
     exact h _ _ _
   refine ⟨h1, h0, ?_, htop⟩
   rw [adjoin_low Ω v h1 h0] at htop
-  haveI : Algebra.IsAlgebraic (Algebra.adjoin Ω (Set.range
+  have : Algebra.IsAlgebraic (Algebra.adjoin Ω (Set.range
       fun q : Σ σ, {lk : Fin (r σ) × Fin (r σ) // lk.2 < lk.1} => v q.1 q.2.1.1 q.2.1.2)) G := by
     refine IntermediateField.isAlgebraic_adjoin_iff_top.1 ⟨fun x => ?_⟩
     exact isAlgebraic_algebraMap (⟨x, by rw [htop]; trivial⟩ : IntermediateField.adjoin Ω _)

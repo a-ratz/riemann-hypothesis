@@ -119,8 +119,8 @@ theorem isOpenMap_orbit {π : G → X} (hc : Continuous π) (hs : Function.Surje
       simp only [Set.mem_iUnion] at this ⊢
       obtain ⟨g, hg, hb⟩ := this
       exact ⟨⟨g, hg⟩, b, hb, rfl⟩
-    haveI : Countable s := hsc.to_subtype
-    haveI : Nonempty X := ⟨π 1⟩
+    have : Countable s := hsc.to_subtype
+    have : Nonempty X := ⟨π 1⟩
     obtain ⟨g, hg⟩ := nonempty_interior_of_iUnion_of_closed hcl hU
     obtain ⟨y, hy⟩ := hg
     obtain ⟨_, ⟨v, hv, rfl⟩, rfl⟩ := interior_subset hy
@@ -210,11 +210,11 @@ theorem map_haar_eq_smul {π : G → X} (hc : Continuous π) (hs : Function.Surj
   have hm : Measurable π := hc.measurable
   have hTm : ∀ a, Measurable (T a) := fun a => (hT a).measurable
   set ν' : Measure X := μ.map π with hν'def
-  haveI : IsFiniteMeasureOnCompacts ν' := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts ν' := ⟨fun C hC => by
     rw [hν'def, Measure.map_apply hm hC.measurableSet]
     exact (isCompact_preimage_orbit hc hs hT hπ hK hf hC).measure_lt_top⟩
-  haveI : SigmaFinite ν' := inferInstance
-  haveI : SigmaFinite ν := inferInstance
+  have : SigmaFinite ν' := inferInstance
+  have : SigmaFinite ν := inferInstance
   have hν' : ∀ a, ν'.map (T a) = ν' := by
     intro a
     rw [hν'def, Measure.map_map (hTm a) hm]
@@ -276,7 +276,7 @@ theorem map_haar_eq_smul {π : G → X} (hc : Continuous π) (hs : Function.Surj
     rw [Measure.map_apply hm hS, hlam, withDensity_apply _ (hm hS), ← hwd, withDensity_apply _ hS,
       hν'def, setLIntegral_map hS hfm hm]
     rfl
-  haveI : IsMulLeftInvariant lam := ⟨fun a => by
+  have : IsMulLeftInvariant lam := ⟨fun a => by
     refine Measure.ext fun B hB => ?_
     rw [Measure.map_apply (measurable_const_mul a) hB, hlam,
       withDensity_apply _ (measurable_const_mul a hB), withDensity_apply _ hB]
@@ -289,7 +289,7 @@ theorem map_haar_eq_smul {π : G → X} (hc : Continuous π) (hs : Function.Surj
       filter_upwards [h2] with y hy
       simpa [hπ] using hy
     exact h1.trans (lintegral_congr_ae (ae_restrict_of_ae hae))⟩
-  haveI : IsFiniteMeasureOnCompacts lam := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts lam := ⟨fun C hC => by
     have hC' : IsCompact (π '' C) := hC.image hc
     calc lam C ≤ lam (π ⁻¹' (π '' C)) := measure_mono (Set.subset_preimage_image π C)
       _ = ν (π '' C) := by rw [← hlamπ, Measure.map_apply hm hC'.measurableSet]
@@ -452,7 +452,7 @@ theorem map_haar_eq (F : UnivFam E Ψ j j' n g Λ) (Δ : GroupDict F)
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ μ.map Δ.π =
       c • (volume.restrict (ballDom F.q)).withDensity fun t => ENNReal.ofReal (ballDens F.q t) := by
   have hD : IsOpen (ballDom F.q) := BallInverse.isOpen_ballDom F.q
-  haveI : LocallyCompactSpace (ballDom F.q) := hD.locallyCompactSpace
+  have : LocallyCompactSpace (ballDom F.q) := hD.locallyCompactSpace
   have hmem : ∀ a, Δ.π a ∈ ballDom F.q := fun a => Δ.π_range ▸ Set.mem_range_self a
   choose A Gf hA hG hπA hpot using Δ.act
   have hAD : ∀ a, ∀ t ∈ ballDom F.q, A a t ∈ ballDom F.q := by
@@ -471,19 +471,19 @@ theorem map_haar_eq (F : UnivFam E Ψ j j' n g Λ) (Δ : GroupDict F)
     rw [← Δ.π_range] at ht'
     obtain ⟨b, rfl⟩ := ht'
     exact ⟨b, rfl⟩
-  have hT : ∀ a, Continuous (T a) := fun a => ((hA a).continuousOn.restrict).subtype_mk _
+  have hT : ∀ a, Continuous (T a) := fun a => ((hA a).continuousOn.domRestrict).subtype_mk _
   have hπ : ∀ a b, π' (a * b) = T a (π' b) := fun a b => Subtype.ext (hπA a b)
   have hK : IsCompact (Δ.M.stab : Set (archUnitary Δ.h (Pi.basisFun E (Fin (j + j'))))) :=
     MajorantStabCompact.proof Δ.h _ Δ.M
   have hf : ∀ a b, π' a = π' b → a⁻¹ * b ∈ (Δ.M.stab : Set (archUnitary Δ.h (Pi.basisFun E (Fin (j + j'))))) :=
     fun a b h => (Δ.π_fibre a b).mp (congrArg Subtype.val h)
   have hemb : MeasurableEmbedding (Subtype.val : ballDom F.q → Fin n → ℂ) :=
-    MeasurableEmbedding.subtype_coe hD.measurableSet
+    MeasurableEmbedding.subtypeVal hD.measurableSet
   let νX : Measure (ballDom F.q) := (ballMeas F.q).comap Subtype.val
   have hνX : ∀ S, νX S = ballMeas F.q (Subtype.val '' S) := fun S => hemb.comap_apply _ S
-  haveI : IsFiniteMeasureOnCompacts νX := ⟨fun C hC => by
+  have : IsFiniteMeasureOnCompacts νX := ⟨fun C hC => by
     rw [hνX]
-    exact ballMeas_compact_lt_top F.q (hC.image continuous_subtype_val) (Subtype.coe_image_subset _ _)⟩
+    exact ballMeas_compact_lt_top F.q (hC.image continuous_subtypeVal) (Subtype.coe_image_subset _ _)⟩
   have hinv : ∀ a, νX.map (T a) = νX := by
     intro a
     refine Measure.ext fun S hS => ?_
@@ -514,10 +514,10 @@ theorem map_haar_eq (F : UnivFam E Ψ j j' n g Λ) (Δ : GroupDict F)
   obtain ⟨c, hc0, hct, h⟩ := map_haar_eq_smul hc hs hT hπ hK hf μ νX hinv h0
   refine ⟨c, hc0, hct, ?_⟩
   have h1 : μ.map Δ.π = (μ.map π').map Subtype.val := by
-    rw [Measure.map_map measurable_subtype_coe hc.measurable]
+    rw [Measure.map_map measurable_subtypeVal hc.measurable]
     rfl
-  rw [h1, h, Measure.map_smul _ measurable_subtype_coe.aemeasurable,
-    map_comap_subtype_coe hD.measurableSet, ballMeas_restrict]
+  rw [h1, h, Measure.map_smul _ measurable_subtypeVal.aemeasurable,
+    map_comap_subtypeVal hD.measurableSet, ballMeas_restrict]
   rfl
 
 end Main

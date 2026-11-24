@@ -157,9 +157,9 @@ theorem descend {D D' : Type} [CommRing D] [Algebra R D] [CommRing D'] [Algebra 
     (hψ : (ψ : D →+* D').FaithfullyFlat) (s : D')
     (hs : ∀ (E : Type) [CommRing E] [Algebra R E] (α β : D' →ₐ[R] E), α.comp ψ = β.comp ψ → α s = β s) :
     ∃ k, ψ k = s := by
-  letI : Algebra D D' := (ψ : D →+* D').toAlgebra
-  haveI : Module.FaithfullyFlat D D' := hψ
-  haveI : IsScalarTower R D D' := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ.commutes r).symm
+  let : Algebra D D' := (ψ : D →+* D').toAlgebra
+  have : Module.FaithfullyFlat D D' := hψ
+  have : IsScalarTower R D D' := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ.commutes r).symm
   refine (Algebra.IsEffective.of_faithfullyFlat D D' s).1 ?_
   have h := hs (D' ⊗[D] D') ((Algebra.TensorProduct.includeLeft : D' →ₐ[D] D' ⊗[D] D').restrictScalars R)
     ((Algebra.TensorProduct.includeRight : D' →ₐ[D] D' ⊗[D] D').restrictScalars R) (by
@@ -172,11 +172,11 @@ theorem exists_square {D D' D₂ : Type} [CommRing D] [Algebra R D] [CommRing D'
     [Algebra R D₂] (ψ : D →ₐ[R] D') (hψ : (ψ : D →+* D').FaithfullyFlat) (ψ₂ : D →ₐ[R] D₂) :
     ∃ (E : Type) (_ : CommRing E) (_ : Algebra R E) (α : D' →ₐ[R] E) (β : D₂ →ₐ[R] E),
       α.comp ψ = β.comp ψ₂ ∧ Function.Injective β := by
-  letI : Algebra D D' := (ψ : D →+* D').toAlgebra
-  haveI : Module.FaithfullyFlat D D' := hψ
-  haveI : IsScalarTower R D D' := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ.commutes r).symm
-  letI : Algebra D D₂ := (ψ₂ : D →+* D₂).toAlgebra
-  haveI : IsScalarTower R D D₂ := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ₂.commutes r).symm
+  let : Algebra D D' := (ψ : D →+* D').toAlgebra
+  have : Module.FaithfullyFlat D D' := hψ
+  have : IsScalarTower R D D' := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ.commutes r).symm
+  let : Algebra D D₂ := (ψ₂ : D →+* D₂).toAlgebra
+  have : IsScalarTower R D D₂ := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ₂.commutes r).symm
   refine ⟨D₂ ⊗[D] D', inferInstance, inferInstance,
     (Algebra.TensorProduct.includeRight : D' →ₐ[D] D₂ ⊗[D] D').restrictScalars R,
     (Algebra.TensorProduct.includeLeft : D₂ →ₐ[D] D₂ ⊗[D] D').restrictScalars R, ?_, ?_⟩

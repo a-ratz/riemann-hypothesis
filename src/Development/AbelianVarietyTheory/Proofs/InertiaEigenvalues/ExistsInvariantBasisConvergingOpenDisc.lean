@@ -544,11 +544,11 @@ open InvCont
 
 theorem exists_invariant_basis_conv : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (s : ℕ) (LL : FinExt l), Good K s LL → ∀ (Γ : GamS P K s LL) (R : WSer Γ), ∀ (r m m' : ℕ) (Gm : Γ.Gam → Matrix (Fin r) (Fin r) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K)))) (Pm Pm' : Matrix (Fin r) (Fin r) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K)))), (∀ g h, Gm (g * h) = Gm g * (Gm h).map (letγ (R.γ₀ g))) → (∀ g i j k, PowerSeries.constantCoeff (Gm g i j k) = if i = j then 1 else 0) → Pm * Pm' = (R.Q ^ m') • (1 : Matrix (Fin r) (Fin r) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K)))) → (∀ g, (letγ (R.γ₀ g) R.Q ^ m) • (Pm * (Gm g).map (letφ R.φ₀)) = (R.Q ^ m) • (Gm g * Pm.map (letγ (R.γ₀ g)))) → ∃ (U V : Matrix (Fin r) (Fin r) (LetA ↥LL.1 (Module.finrank ℚ_[l] ↥(K0 K)))) (w : ℕ), U * V = 1 ∧ (∀ i j k, PowerSeries.constantCoeff (U i j k) = if i = j then 1 else 0) ∧ (∀ i j k, Conv (logS LL ^ w * U i j k) ∧ Conv (logS LL ^ w * V i j k)) ∧ (∀ g, (Gm g).map toLL * U.map (fun a k => PowerSeries.subst (PowerSeries.map (algebraMap ↥(OL LL) ↥LL.1) (R.γ₀ g PowerSeries.X)) (a k)) = U) ∧ ∃ Cm : Matrix (Fin r) (Fin r) (ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → ↥LL.1), Pm.map toLL * U.map (fun a k => PowerSeries.subst ((1 + PowerSeries.X) ^ l - 1 : PowerSeries ↥LL.1) (a (k - 1))) = (toLL R.Q ^ m) • (U * Cm.map (fun c k => PowerSeries.C (c k))) := by
   intro l _ P K s LL hgood Γ R r m m' Gm Pm Pm' hmul h0 hP hGP
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have hle : K0 K ≤ K.1 := inf_le_left
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := FiniteDimensional.of_injective
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := FiniteDimensional.of_injective
     (IntermediateField.inclusion hle).toLinearMap (IntermediateField.inclusion_injective hle)
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨c, hu, hφ, hγ, hQ⟩ := pinned R
   simp only [hγ, hφ] at hmul hGP
   obtain ⟨U, V, h1, h2, h3, h4, h5⟩ := letterwise s r _ m m' hgood.1 hgood.2.1 c Γ.gam hu R.Q hQ Gm Pm Pm'

@@ -120,8 +120,8 @@ theorem exists_isQuotM : ∀ (m : ℕ) (G S : Set (Matrix (Fin m) (Fin m) ℂ)) 
   intro m G S μG μS hG hS hSG hμG hμS hR
   obtain ⟨φ, hφ, hφ1⟩ := _root_.GlobalTheory.exists_normalised_cutoff m G S μS hG hS hSG hμS hR
   have hinv := _root_.GlobalTheory.HaarInversion.lintegral_inv_eq m S μS hS hμS hR
-  haveI := hμG.1
-  haveI := hμS.1
+  have := hμG.1
+  have := hμS.1
   have haeS : ∀ᵐ s ∂μS, Matrix.of s ∈ S := by rw [ae_iff]; exact hμS.2.2.1
   have haeG : ∀ᵐ s ∂μG, Matrix.of s ∈ G := by rw [ae_iff]; exact hμG.2.2.1
   refine ⟨μG.withDensity φ, fun f hf => ?_⟩

@@ -108,7 +108,7 @@ private theorem bumpEx : ∃ β : ℝ → ℂ, Continuous β ∧ HasCompactSuppo
     ring
   simp_rw [h1]
   rw [integral_complex_ofReal, Complex.ofReal_ne_zero]
-  refine ne_of_gt (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero
+  refine ne_of_gt (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero
     (f := fun t : ℝ => (b t) ^ 2) (b.continuous.pow 2) hs (fun t => sq_nonneg _) (x := 0) ?_)
   rw [h0]
   norm_num
@@ -220,7 +220,7 @@ private theorem closed_stable [IsFiniteMeasure (quotientMeasure Γ μ)]
     rw [hy]
     rfl
   refine ⟨hf2.toLp f, ?_, hrepΦ⟩
-  haveI : CompleteSpace τ := hτ.completeSpace_coe
+  have : CompleteSpace τ := hτ.completeSpace_coe
   rw [← Submodule.orthogonal_orthogonal τ, Submodule.mem_orthogonal]
   intro w hw
   rw [inner_eq_setIntegral_of_ae Γ μ w _ hrepΦ]
@@ -258,7 +258,7 @@ theorem UpperTheory.reps_integral_mem_closed_submodule :
         Continuous (fun p : U × G1 K n => Ψ p.1 p.2) → (∃ C : ℝ, ∀ u m, ‖Ψ u m‖ ≤ C) → (∀ u, ∀ γ ∈ Gam K n, ∀ m, Ψ u (γ * m) = Ψ u m) → (∀ u, ∃ v ∈ τ, Reps μ v (Ψ u)) →
         ∃ v ∈ τ, Reps μ v fun m => ∫ u, Ψ u m ∂lam := by
   intro K _ _ n μ _ τ hτ U _ _ _ _ lam _ Ψ hc hb hinv hrep
-  haveI : IsFiniteMeasure (quotientMeasure (Gam K n) μ) :=
+  have : IsFiniteMeasure (quotientMeasure (Gam K n) μ) :=
     isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
   exact closed_stable (Gam K n) μ τ hτ U lam Ψ hc hb hinv hrep
 end -- clump:auto
@@ -350,12 +350,12 @@ private theorem bd (G : G1 K (2 + 2) → ℂ) (B R : ℝ) (hB : ∀ g, ‖G g‖
 
 set_option synthInstance.maxHeartbeats 400000 in
 private theorem fco {n : ℕ} : FirstCountableTopology (G1 K n) := by
-  haveI := secondCountableTopology_normOneGL (K := K) (n := n)
+  have := secondCountableTopology_normOneGL (K := K) (n := n)
   infer_instance
 
 private theorem cont (G : G1 K (2 + 2) → ℂ) (B R : ℝ) (hG : Continuous G) (hB : ∀ g, ‖G g‖ ≤ B) (hR : ∀ g, G g ≠ 0 → |HH g| ≤ R) :
     Continuous fun x : G1 K (2 + 2) => ∫ X, G (w0 K * nn X * x) ∂unipMeasure K (2 + 2) 2 := by
-  haveI : FirstCountableTopology (G1 K (2 + 2)) := fco
+  have : FirstCountableTopology (G1 K (2 + 2)) := fco
   rw [continuous_iff_continuousAt]
   intro x₀
   obtain ⟨V, hV, hV1⟩ := exists_compact_mem_nhds (1 : G1 K (2 + 2))
@@ -422,7 +422,7 @@ private theorem fixL (D : TypeDat K (2 + 2)) (w : ℝ → ℂ) (f : G1 K (2 + 2)
     (x : G1 K (2 + 2)) :
     ∫ k, D.e k * ∫ X, w (HH (w0 K * nn X * (x * k))) * f (w0 K * nn X * (x * k)) ∂unipMeasure K (2 + 2) 2 ∂D.ν =
       ∫ X, w (HH (w0 K * nn X * x)) * f (w0 K * nn X * x) ∂unipMeasure K (2 + 2) 2 := by
-  haveI := D.prob
+  have := D.prob
   obtain ⟨h1, h2, h3, hHc, h5⟩ := hpSpec (K := K)
   obtain ⟨C, hC, hs⟩ := supp x R
   obtain ⟨G, hG⟩ : ∃ G : G1 K (2 + 2) → ℂ, G = fun g => w (HH g) * f g := ⟨_, rfl⟩
@@ -443,7 +443,7 @@ private theorem fixL (D : TypeDat K (2 + 2)) (w : ℝ → ℂ) (f : G1 K (2 + 2)
     have := hz 1 (one_mem _) X hX
     rwa [mul_one] at this
   obtain ⟨lam, hlam⟩ : ∃ lam, lam = (unipMeasure K (2 + 2) 2).restrict C := ⟨_, rfl⟩
-  haveI : IsFiniteMeasure lam := by
+  have : IsFiniteMeasure lam := by
     rw [hlam]
     exact ⟨by simpa using hC.measure_lt_top⟩
   have e1 : ∫ k, D.e k * ∫ X, w (HH (w0 K * nn X * (x * k))) * f (w0 K * nn X * (x * k)) ∂unipMeasure K (2 + 2) 2 ∂D.ν =
@@ -484,7 +484,7 @@ private theorem slice (μ₂ : Measure (G1 K 2)) [μ₂.IsHaarMeasure] (τ : Sub
     (hrep : ∀ y, ∃ v ∈ τ, Reps μ₂ v fun m => G (L m * y)) (x : G1 K (2 + 2)) :
     ∃ v ∈ τ, Reps μ₂ v fun m => ∫ X, G (L m * (w0 K * nn X * x)) ∂unipMeasure K (2 + 2) 2 := by
   obtain ⟨C, hC, hs⟩ := supp x R
-  haveI : IsFiniteMeasure ((unipMeasure K (2 + 2) 2).restrict C) := ⟨by simpa using hC.measure_lt_top⟩
+  have : IsFiniteMeasure ((unipMeasure K (2 + 2) 2).restrict C) := ⟨by simpa using hC.measure_lt_top⟩
   have hz : ∀ m, ∀ X, X ∉ C → G (L m * (w0 K * nn X * x)) = 0 := fun m X hX => by
     by_contra h
     refine hX (hs X ?_)
@@ -797,7 +797,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.ctMem :
     rw [← hin, show lv 1 1 (s - HH g) * g = z g by rw [hzd]]
     rfl
   let S : Submodule ℂ (G1 K (2 + 2) → ℂ) := LinearMap.range A.sec ⊔ LinearMap.range A'.sec
-  have hS : IsClosed (S : Set (G1 K (2 + 2) → ℂ)) := Submodule.closed_of_finiteDimensional S
+  have hS : IsClosed (S : Set (G1 K (2 + 2) → ℂ)) := Submodule.isClosed_of_finiteDimensional S
   let C : Submodule ℂ (L2 μ) := S.comap Tm
   have hC : IsClosed (C : Set (L2 μ)) := hS.preimage hTc
   have hA : ∀ u, A.J u ∈ C := lineIn A.J C hC fun β v u h1 h2 h3 => by
@@ -846,7 +846,7 @@ private theorem ptInv {E X : Type} [AddCommGroup E] [Module ℂ E] [FiniteDimens
   let ev : X → Module.Dual ℂ E := fun x => (LinearMap.proj x : (X → ℂ) →ₗ[ℂ] ℂ) ∘ₗ S
   obtain ⟨b, hb, hsp, hli⟩ := exists_linearIndependent ℂ (Set.range ev)
   have hfin : b.Finite := hli.setFinite
-  haveI := hfin.fintype
+  have := hfin.fintype
   have hch : ∀ y : b, ∃ x, ev x = y := fun y => hb y.2
   choose q hq using hch
   let e := Fintype.equivFin b
@@ -891,8 +891,8 @@ private theorem convPt {V W : Type} [NormedAddCommGroup V] [InnerProductSpace �
       rw [one_mul]
       exact (κ t).le_opNNNorm _)
   rw [eLpNorm_one_eq_lintegral_eNorm hm, hn, ENNReal.coe_one, one_mul] at h1
-  have h2 := (enorm_integral_le_lintegral_enorm (fun t => κ t (u (x + t)))).trans h1
-  rw [← toReal_enorm, Lp.norm_def, ← ENNReal.toReal_mul]
+  have h2 := (eNorm_integral_le_lintegral_eNorm (fun t => κ t (u (x + t)))).trans h1
+  rw [← toReal_eNorm, Lp.norm_def, ← ENNReal.toReal_mul]
   exact ENNReal.toReal_mono (ENNReal.mul_ne_top hr.ne (Lp.memLp u).ne) h2
 
 private theorem inv_map {G : Type} [Group G] [MeasurableSpace G] [MeasurableMul₂ G] [MeasurableInv G]
@@ -915,7 +915,7 @@ private theorem inv_map {G : Type} [Group G] [MeasurableSpace G] [MeasurableMul�
 
 private theorem star_hecke {K : Type} [Field K] [NumberField K] {n : ℕ} (D : TypeDat K n) (f : CC K n)
     (hf : D.Hecke f) : D.Hecke (CuspidalProjection.ccStar f) := by
-  haveI := D.prob
+  have := D.prob
   have hm := inv_map D.ν D.U D.supp D.inv
   have hI : ∀ φ : G1 K n → ℂ, ∫ k, φ k⁻¹ ∂D.ν = ∫ k, φ k ∂D.ν := fun φ => by
     have := integral_map_equiv (μ := D.ν) (MeasurableEquiv.inv (G1 K n)) φ
@@ -996,7 +996,7 @@ private theorem bdAll {E : Type} [NormedAddCommGroup E] (U : ℝ → E) (hU : Co
 
 set_option synthInstance.maxHeartbeats 400000 in
 private theorem exK (K : Type) [Field K] [NumberField K] : ∃ κ : Measure (KG K (2 + 2)), κ.IsHaarMeasure := by
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
   exact ⟨Measure.haar, inferInstance⟩
 
 private theorem continuous_levi_unipotent_path (K : Type) [Field K] [NumberField K] (h : G1 K (2 + 2)) (r : ℝ) :
@@ -1158,13 +1158,13 @@ private theorem ipSec {K : Type} [Field K] [NumberField K] [_root_.NumberField.I
     (hQ : ∀ z, ct 2 Φ z = secF A.sec U z + secF A'.sec U' z) (β : ℝ → ℂ) (v : Eu d) (u : L (Eu d)) (hβ : Continuous β)
     (hβs : HasCompactSupport β) (hu : ∀ᵐ x : ℝ, u x = β x • v) :
     ⟪A.J u, w₀⟫_ℂ = ∫ t, conj (β t) * ⟪v, U t⟫_ℂ := by
-  haveI := isFiniteMeasure_quotientMeasure μ₂
-  haveI : IsFiniteMeasure (fd μ₂) := isFiniteMeasure_restrict.2 (measure_fundamentalDomain_pos_lt_top (Gam K 2) μ₂).2.ne
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
-  haveI : IsFiniteMeasure κ := CompactSpace.isFiniteMeasure
-  haveI : SFinite (fd μ₂) := inferInstance
-  haveI : SFinite κ := inferInstance
-  haveI : SecondCountableTopology (KG K (2 + 2)) := TopologicalSpace.Subtype.secondCountableTopology _
+  have := isFiniteMeasure_quotientMeasure μ₂
+  have : IsFiniteMeasure (fd μ₂) := isFiniteMeasure_restrict.2 (measure_fundamentalDomain_pos_lt_top (Gam K 2) μ₂).2.ne
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
+  have : IsFiniteMeasure κ := CompactSpace.isFiniteMeasure
+  have : SFinite (fd μ₂) := inferInstance
+  have : SFinite κ := inferInstance
+  have : SecondCountableTopology (KG K (2 + 2)) := TopologicalSpace.Subtype.secondCountableTopology _
   have hs : ∀ w, SFun (A.sec w) := fun w =>
     secFun μ₂ τ₁ τ₂ D hp.irr₁ hp.irr₂ _ ((A.onto (A.sec w)).1 ⟨_, rfl⟩).1 ((A.onto (A.sec w)).1 ⟨_, rfl⟩).2
   have hs' : ∀ w, SFun (A'.sec w) := fun w =>
@@ -1192,7 +1192,7 @@ private theorem ipSec {K : Type} [Field K] [NumberField K] [_root_.NumberField.I
   have hlv : Continuous fun p : (G1 K 2 × G1 K 2) × KG K (2 + 2) => (lv p.1.1 p.1.2 0 * p.2.1 : G1 K (2 + 2)) := by
     have h1 : Continuous fun p : (G1 K 2 × G1 K 2) × KG K (2 + 2) => (p.1.1, p.1.2, (0 : ℝ)) := by fun_prop
     exact (Continuous.comp (g := fun p : G1 K 2 × G1 K 2 × ℝ => lv p.1 p.2.1 p.2.2) (blkLaws (K := K)).2.2.2.1 h1).mul
-      (continuous_subtype_val.comp continuous_snd)
+      (continuous_subtypeVal.comp continuous_snd)
   have hbi : ∀ i, StronglyMeasurable fun p : (G1 K 2 × G1 K 2) × KG K (2 + 2) => bi i p.1.1 p.1.2 p.2 := fun i =>
     ((Complex.continuous_conj.comp ((hs v).cont.comp hlv)).mul ((hsv i).cont.comp hlv)).stronglyMeasurable
   obtain ⟨C₀, hC₀⟩ := (hs v).bdd

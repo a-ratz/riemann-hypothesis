@@ -140,7 +140,7 @@ theorem valC_eq_map (G : ι → Matrix (Fin a) (Fin a) ℂ) (lam : ι → DomWei
 
 theorem finiteDimensional_valC (G : ι → Matrix (Fin a) (Fin a) ℂ) (lam : ι → DomWeight a) :
     FiniteDimensional ℂ (ValC G lam) := by
-  haveI := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem ι a lam (nOf lam)).1
+  have := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem ι a lam (nOf lam)).1
   rw [valC_eq_map]
   infer_instance
 
@@ -190,7 +190,7 @@ theorem sum_w_eq (l : DomWeight a) : ∑ i, l.w i = ∑ i, ((l.natW i : ℕ) : �
     intro i
     have hpos : 0 < a := Fin.pos i
     have hle : l.w ⟨a - 1, by omega⟩ ≤ l.w i := l.anti (Fin.le_iff_val_le_val.2 (by simp; omega))
-    simp only [DomWeight.natW, DomWeight.detShift, dif_pos hpos]
+    simp only [DomWeight.natW, DomWeight.detShift, dite_eq_left hpos]
     exact Int.toNat_of_nonneg (by omega)
   simp only [h, Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
   ring
@@ -224,7 +224,7 @@ theorem valC_homog (G : ι → Matrix (Fin a) (Fin a) ℂ) (lam : ι → DomWeig
   have hz : ∀ τ, z τ ≠ 0 := by
     intro τ h0
     have hne := (y'.2 τ).ne_zero
-    haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+    have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
     rw [hy τ, h0, zero_smul, Matrix.det_zero] at hne
     exact hne rfl
   have per : ∀ (zz d : ℂ) (sh : ℤ) (deg : ℕ) (W : ℤ), zz ≠ 0 → W = deg + a * sh →

@@ -95,7 +95,7 @@ private theorem cocycle_coboundary_of_finite_index {k G W : Type} [Field k] [Cha
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → W := fun g => f g - (a g x - x) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
     intro g h
@@ -205,7 +205,7 @@ private theorem rig_above (hP : UpperTheory.V.Loc.LocalPublishedTheorems) (Ω : 
     (fun g => y (F.loc F.vl g)) ∈ UpperTheory.V.Loc.finiteCocycles φ (adRep (r.comp (F.loc F.vl))) := by
   have ok := hostFrame_ok Ω c e ψ o₁ hD S A F hF
   obtain ⟨H, hn, ho, hle, hΨ, g, hg, hu, hg1⟩ := rig_sub Ω c e ψ o₁ hD S A F hF
-  have hl : Continuous (F.loc F.vl) := ok.π_cont.comp continuous_subtype_val
+  have hl : Continuous (F.loc F.vl) := ok.π_cont.comp continuous_subtypeVal
   refine rig_loc hP φ hφ (F.ηv F.vl) (ok.η_cont.comp_continuous hl) (r.comp (F.loc F.vl)) _ (r'.comp (F.loc F.vl)) h
     (fun g => hm _) (hc.comp hl) (hyc.comp hl) (fun g k => ?_) (fun g => hd _) H ho hle hh.tri
     (fun a => (e : ℤ) * wt1 a) ?_ (fun s hs hs' a => ?_) (fun i j hij => ⟨g, hg, ?_⟩)
@@ -319,7 +319,7 @@ private theorem h1f_vanishing_conj_invariant {Ω : Type} [Field Ω] [CharZero Ω
   · have : ⇑(GG.ad (m := 3) _ (GG.ofGL h)) = fun X => (GG.ofGL h).mat * X *
         (((GG.ofGL h).left⁻¹ : GL (Fin 3) (PadicAlgCl l)) : Matrix (Fin 3) (Fin 3) (PadicAlgCl l)) := by
       funext X
-      rw [GG.ad_apply, GG.adFun, if_pos (SemidirectProduct.right_inl _)]
+      rw [GG.ad_apply, GG.adFun, ite_eq_left (SemidirectProduct.right_inl _)]
     rw [this]
     exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
   · rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
@@ -358,12 +358,12 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : _root_.UpperTheory.V.Af.
     (hmu : HasMult F.η r) (hc : Continuous (mats r)) (hB : _root_.UpperTheory.V.Aut.BPrime_s K ι fun s => (r (toGS Ω _ s)).mat) :
     Af.BlochKatoSelmerVanishes l (adRep (r.comp F.π)) := by
   have hN := hH.litN
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
-  haveI : CharP (ResidueField c.O) l := by
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   obtain ⟨σ, hσ, hσc⟩ := hF.cc
   have hv : (A F.vl).valuation (l : Ω) < 1 := by simpa using (hF.isOver F.vl (l : 𝓞 ℚ)).2 hF.vl
   have hfr := Fr.host_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩
@@ -394,8 +394,8 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : _root_.UpperTheory.V.Af.
   have hk : LinkHyp c N e (UnitaryThreeInertia.eta4 Ω) σ (A F.vl) (l * N) :=
     ⟨hd.e_pos, dvd_rfl, mul_ne_zero hl.out.ne_zero (NeZero.ne N), hram, hv, hσ⟩
   obtain ⟨_, _, ρ, hρ, hAut⟩ := hB.aut
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   have hopen : IsOpen ((UnitaryThreeInertia.eta4 Ω).ker : Set (G ℚ Ω)) := by
     rw [← (UnitaryThreeInertia.gaussian_field_range_eq_ker_quartic_char.2 Ω K hK).1, Base.range_galEmb]
     exact (Base.galEmbTop ℚ K Ω).2.1
@@ -455,9 +455,9 @@ theorem UpperTheory.V.Z.J.hostRigidUE_alt :
   have hP : Loc.LocalPublishedTheorems :=
     ⟨hN'.coh.lfK, hN'.coh.ltK, hN'.coh.leK, hN'.coh.lf, hN'.coh.lt, hN'.coh.le, hN'.coh.bk⟩
   have ok := hostFrame_ok Ω c e ψ o₁ hD S A F hF
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI hcl := isClosed_NS Ω (S : Set Pl)
-  haveI : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have hcl := isClosed_NS Ω (S : Set Pl)
+  have : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
   obtain ⟨hm, -, hc, -⟩ := isCharZeroPt_basic F ok g₁ hg r hr
   have hz := selmer_h1_vanishes_at_rigid_point hH hL hU K hK Ω l c N e ψ o₁ hD S A F hF ι g₁ hg r hr hm hc hB
   have hZ : (fun s => y (F.π s)) ∈ Z1 (adRep (r.comp F.π)) := ⟨hyc.comp ok.π_cont, fun g k => by

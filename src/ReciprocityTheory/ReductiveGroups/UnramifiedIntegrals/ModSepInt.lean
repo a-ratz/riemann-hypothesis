@@ -113,7 +113,7 @@ theorem finite_places (E : Type*) [Field E] [NumberField E] {n : ℤ} (hn : n �
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hn
   refine (Ideal.finite_factors hI).subset fun v hv => ?_
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 

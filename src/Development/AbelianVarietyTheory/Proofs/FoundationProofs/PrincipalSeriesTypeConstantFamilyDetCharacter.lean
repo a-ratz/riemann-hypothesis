@@ -78,7 +78,7 @@ theorem const_family (n : ℕ) (χ : kˣ →* ℂˣ) :
       ∀ g ∈ KO k (Fin n), theta (fun _ : Fin n => χ) g = (detChar (Fin n) χ g : ℂ) := by
   refine ⟨?_, ?_⟩
   · ext g
-    simp only [grp, Set.mem_setOf_eq, SetLike.mem_coe, div_self', and_iff_left_iff_imp]
+    simp only [grp, Set.mem_ofPred_eq, SetLike.mem_coe, div_self', and_iff_left_iff_imp]
     intro _ i j _ u _ _
     rfl
   · intro g hg

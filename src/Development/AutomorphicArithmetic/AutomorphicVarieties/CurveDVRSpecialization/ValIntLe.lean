@@ -95,7 +95,7 @@ private theorem algClo (K : Type) [Field K] [NumberField K] [Algebra K Ω] : IsA
 
 private theorem exists_alg (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K Ω] [Algebra L Ω]
     (h : galOf ℚ L Ω ≤ galOf ℚ K Ω) : ∃ _ : Algebra K L, IsScalarTower K L Ω := by
-  haveI := algClo (Ω := Ω) L
+  have := algClo (Ω := Ω) L
   have h1 : ∀ x : K, ∃ y : L, algebraMap L Ω y = algebraMap K Ω x := fun x =>
     (InfiniteGalois.mem_range_algebraMap_iff_fixed (k := L) _).2 fun f => h (galEmb_mem ℚ L Ω f) x
   choose f hf using h1
@@ -106,13 +106,13 @@ private theorem exists_alg (K L : Type) [Field K] [NumberField K] [Field L] [Num
       map_mul' := fun a b => hi (by simp [hf])
       map_zero' := hi (by simp [hf])
       map_add' := fun a b => hi (by simp [hf]) }
-  letI := g.toAlgebra
+  let := g.toAlgebra
   exact ⟨_, IsScalarTower.of_algebraMap_eq fun x => (hf x).symm⟩
 
 private theorem discr_over (K : Type) [Field K] [NumberField K] [Algebra K Ω] [IsGalois ℚ K] (M : ℕ)
     (h : ∀ B : ValuationSubring Ω, ¬ Ine (F := ℚ) B ≤ galOf ℚ K Ω → B.valuation (M : Ω) < 1)
     (A : ValuationSubring Ω) (hA : A.valuation ((discr K : ℤ) : Ω) < 1) : A.valuation (M : Ω) < 1 := by
-  haveI := algClo (Ω := Ω) K
+  have := algClo (Ω := Ω) K
   have hA' : A.valuation (((discr K).natAbs : ℕ) : Ω) < 1 := by
     rcases Int.natAbs_eq (discr K) with e | e
     · rwa [e, Int.cast_natCast] at hA
@@ -160,9 +160,9 @@ theorem UpperTheory.V.Pr.kaOf :
       rw [k.gal, hK]
       exact inf_le_right
     obtain ⟨_, _⟩ := exists_alg K L hle
-    haveI := algClo (Ω := Ω) K
-    haveI := k.ab
-    haveI : IsAbelianGalois ℚ K := IsAbelianGalois.tower_bot ℚ K L
+    have := algClo (Ω := Ω) K
+    have := k.ab
+    have : IsAbelianGalois ℚ K := IsAbelianGalois.tower_bot ℚ K L
     have hI : ∀ (A : ValuationSubring Ω) (s : G L Ω), s ∈ Ine (F := L) A → galEmb K L Ω s ∈ Ine (F := K) A :=
       fun A s hs => ⟨hs.1, hs.2⟩
     refine ⟨κ.comp (galEmb K L Ω), ⟨hR K L Ω l ι κ ⟨hκ.cont, ?_⟩, fun s s' h => ?_, fun A hA s hs => ?_, ?_⟩,

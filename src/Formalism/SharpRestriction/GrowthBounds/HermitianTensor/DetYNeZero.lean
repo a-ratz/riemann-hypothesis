@@ -55,8 +55,8 @@ theorem detY_ne_zero (K : Type) [Field K] (r : ℕ) : detY K r ≠ 0 :=
 
 theorem qPh_of (hTau : TauP) (hSm : SmithP) (hBil : BilinP) (hDet : DetFactsP) (hNum : NumP) (hDD : DetDivP) : QPh := by
   intro p n' R r hr a c N α hαA hαN hc hca
-  letI := R.charZeroO
-  haveI := R.std.1.frac_O
+  let := R.charZeroO
+  have := R.std.1.frac_O
   have hinj : Function.Injective (algebraMap R.O R.Kf) := IsFractionRing.injective R.O R.Kf
   obtain ⟨m, rfl⟩ : ∃ m, r = m + 1 := ⟨r - 1, by omega⟩
   obtain ⟨e, he_def⟩ : ∃ e, α (Fin.last m) = e := ⟨_, rfl⟩
@@ -98,7 +98,7 @@ theorem qPh_of (hTau : TauP) (hSm : SmithP) (hBil : BilinP) (hDet : DetFactsP) (
     have hmem : D * g ∈ LinearMap.range μ := ⟨g, rfl⟩
     show (LinearEquiv.ofInjective μ hμ).symm ((LinearMap.range μ).projectionOnto Cc hCc (D * g)) = g
     rw [show D * g = ((⟨D * g, hmem⟩ : LinearMap.range μ) : MvPolynomial _ _) from rfl,
-      Submodule.linearProjOfIsCompl_apply_left hCc, LinearEquiv.symm_apply_eq]
+      Submodule.projectionOnto_apply_left hCc, LinearEquiv.symm_apply_eq]
     ext1
     rw [LinearEquiv.ofInjective_apply]
     rfl

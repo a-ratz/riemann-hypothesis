@@ -158,8 +158,8 @@ end
 
 theorem aflat_fg : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (AA : HopfOrder (C := C) R (ι → ZMod p)), (afLat p AA.carrier).FG := by
   intro p _ C _ _ _ v R _ _ hv hp ι _ _ AA
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
-  haveI : ValuationRing R :=
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have : ValuationRing R :=
     { cond' := fun a b => by
         rcases le_total (v (algebraMap R C a)) (v (algebraMap R C b)) with h | h
         · obtain ⟨c, hc⟩ := hv.dvd_of_le h
@@ -208,7 +208,7 @@ theorem aflat_fg : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
 
 theorem afquot : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (AA : HopfOrder (C := C) R (ι → ZMod p)), Nonempty (AFQuot p AA.carrier ≃ₗ[R] ((ι → R) ⧸ afLat p AA.carrier)) := by
   intro p _ C _ _ _ v R _ _ hv hp ι _ _ AA
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   let φ := toC (C := C) R (ι → ZMod p) ∘ₗ formR R p ι
   let K := Submodule.comap (linFun (C := C) R p (ι → ZMod p)).subtype (afFun p AA.carrier ⊔ pFun (C := C) R p (ι → ZMod p))
   let ψ : (ι → R) →ₗ[R] linFun (C := C) R p (ι → ZMod p) := LinearMap.codRestrict _ φ (fun l => form_mem_lin p l)

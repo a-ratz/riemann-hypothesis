@@ -366,9 +366,9 @@ namespace GlobalTheory
 
 theorem integralChart_formalBiext : IntFBSt := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y C
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨hF, hA, h1, h2, hs, ha, -⟩ := C.gen.1
   obtain ⟨B', e1, e2, e3, e4, e5, e6, e7⟩ :=
     FBDescent.exists_fb_gauge (IsFractionRing.injective T.V T.Fr) C.ch.B C.ch.h C.ch.gauge

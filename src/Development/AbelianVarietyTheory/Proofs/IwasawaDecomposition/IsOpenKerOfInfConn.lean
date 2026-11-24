@@ -93,8 +93,8 @@ theorem lPow_diagUnits (ι : Qbar l ≃+* ℂ) (n : (E →+* ℂ) → ℤ) (k : 
     have := DFunLike.congr_fun e a
     show ι (j (algebraMap E _ a)) = φ a
     rw [show j (algebraMap E _ a) = ι.symm (φ a) from this, ι.apply_symm_apply]
-  haveI : Fintype (Σ v, J v) := Fintype.ofInjective res hinj
-  haveI : ∀ v, Fintype (J v) := fun v => @Fintype.ofFinite _ (finite_contEmb (l := l) v)
+  have : Fintype (Σ v, J v) := Fintype.ofInjective res hinj
+  have : ∀ v, Fintype (J v) := fun v => @Fintype.ofFinite _ (finite_contEmb (l := l) v)
   let F : (Σ v, J v) → Qbar l := fun p => ι.symm (res p (k : E)) ^ n (res p)
   have h1 : ∏ φ : E →+* ℂ, ι.symm (φ (k : E)) ^ n φ = ∏ p, F p :=
     (Fintype.prod_bijective res ⟨hinj, hsurj⟩ F _ fun _ => rfl).symm

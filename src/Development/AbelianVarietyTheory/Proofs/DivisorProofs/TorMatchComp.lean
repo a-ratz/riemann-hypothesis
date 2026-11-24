@@ -60,7 +60,7 @@ theorem torMatch_comp : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   intro F _ _ _ _ hF k hk τ τ₂ q q₂ a a₂ hτ₂ hττ hqy hqt hq₂y hq₂t ha ha₂
   have hinj : Function.Injective ((algebraMap (FractionRing V₂) F).comp ((algebraMap V₂ (FractionRing V₂)).comp g₂)) :=
     (algebraMap (FractionRing V₂) F).injective.comp ((IsFractionRing.injective V₂ (FractionRing V₂)).comp hg₂)
-  letI : Algebra (FractionRing V) F := (IsFractionRing.lift hinj).toAlgebra
+  let : Algebra (FractionRing V) F := (IsFractionRing.lift hinj).toAlgebra
   have hV : ∀ v, algebraMap (FractionRing V) F (algebraMap V (FractionRing V) v) =
       algebraMap (FractionRing V₂) F (algebraMap V₂ (FractionRing V₂) (g₂ v)) := fun v =>
     IsFractionRing.lift_algebraMap hinj v

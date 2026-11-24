@@ -73,11 +73,11 @@ theorem spMap_comp_of {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f :
 
 theorem epi_spMap_field : ∀ (K L : Type) [Field K] [Field L] (i : K →+* L), Epi (spMap i) := by
   intro K L _ _ i
-  haveI : Flat (spMap i) := by
+  have : Flat (spMap i) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := i.toAlgebra
+    let := i.toAlgebra
     exact RingHom.flat_algebraMap_iff.mpr inferInstance
-  haveI : Surjective (spMap i) := ⟨fun x => ⟨Nonempty.some inferInstance, Subsingleton.elim _ _⟩⟩
+  have : Surjective (spMap i) := ⟨fun x => ⟨Nonempty.some inferInstance, Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
 
 theorem exists_common_closed : ∀ (Ω k K : Type) [Field Ω] [Field k] [Field K] (i : Ω →+* k) (i' : Ω →+* K),
@@ -114,8 +114,8 @@ theorem tors_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     [Group Q] (n : ℕ), 0 < n → ∀ ev : D.La → Q, (∀ a c, ev (a + c) = ev a * ev c) → (∀ a, ev (n • a) = 1) →
     (∀ x : Q, x ^ n = 1 → ∃ a, ev a = x) → Finite {x : Q // x ^ n = 1} := by
   intro E _ _ _ H D Q _ n hn ev hadd hker hon
-  haveI : Module.Finite (𝓞 E) D.La := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have : Module.Finite (𝓞 E) D.La := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
   let φ : D.La →+ Additive Q :=
     { toFun := fun a => Additive.ofMul (ev a)
       map_zero' := by
@@ -131,8 +131,8 @@ theorem tors_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     show Additive.ofMul (ev (n • a)) = 0
     rw [hker]; rfl
   let ψ : D.La ⧸ N →+ Additive Q := QuotientAddGroup.lift N φ hN
-  haveI : AddGroup.FG (D.La ⧸ N) := by
-    haveI : Module.Finite ℤ (D.La ⧸ N.toIntSubmodule) := inferInstance
+  have : AddGroup.FG (D.La ⧸ N) := by
+    have : Module.Finite ℤ (D.La ⧸ N.toIntSubmodule) := inferInstance
     exact (Module.Finite.iff_addGroup_fg).1 this
   have htor : AddMonoid.IsTorsion (D.La ⧸ N) := by
     intro q
@@ -140,7 +140,7 @@ theorem tors_finite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     refine (isOfFinAddOrder_iff_nsmul_eq_zero).2 ⟨n, hn, ?_⟩
     rw [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff]
     exact ⟨a, rfl⟩
-  haveI : Finite (D.La ⧸ N) := AddCommGroup.finite_of_fg_torsion _ htor
+  have : Finite (D.La ⧸ N) := AddCommGroup.finite_of_fg_isAddTorsion _ htor
   refine Finite.of_surjective (fun q : D.La ⧸ N => (⟨Additive.toMul (ψ q), ?_⟩ : {x : Q // x ^ n = 1})) ?_
   · obtain ⟨a, rfl⟩ := QuotientAddGroup.mk_surjective q
     show ev a ^ n = 1
@@ -201,12 +201,12 @@ theorem genWeil_of_obj : Out.WeilSt → ∀ (E : Type) [Field E] [NumberField E]
   obtain ⟨ζ, hζ⟩ := hζ
   classical
   have hn0 : 0 < n := hn
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have hL : t.PP.L.IsLB := t.PP.isLB
   let K := AlgebraicClosure Ω
   let iK : Ω →+* K := algebraMap Ω K
-  haveI : CharZero K := charZero_of_injective_algebraMap iK.injective
-  haveI : Epi (spMap iK) := epi_spMap_field Ω K iK
+  have : CharZero K := charZero_of_injective_algebraMap iK.injective
+  have : Epi (spMap iK) := epi_spMap_field Ω K iK
   have tors : ∀ {k : Type} [Field k] (i : Ω →+* k) (x : Over.mk (ξ₀ ≫ f) ⟶ t.G), x ^ n = 1 →
       (extPt (ξ₀ ≫ f) i ≫ x) ^ n = 1 := fun i x hx => by rw [← MonObj.comp_pow, hx, MonObj.comp_one]
   have inj : ∀ x x' : Over.mk (ξ₀ ≫ f) ⟶ t.G, extPt (ξ₀ ≫ f) iK ≫ x = extPt (ξ₀ ≫ f) iK ≫ x' → x = x' :=
@@ -261,11 +261,11 @@ theorem genWeil_of_obj : Out.WeilSt → ∀ (E : Type) [Field E] [NumberField E]
       (show spMap (j.comp i) ≫ g.left = spMap j' ≫ (spMap iK ≫ g.left) by
         rw [hjj, spMap_comp_of, Category.assoc]) _ cM (he x g hx hg) hcM
     have h3 := congrArg Units.val (e1.symm.trans e2)
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at h3
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at h3
     apply Units.ext
     apply j.injective
     rw [h3]
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     exact (RingHom.congr_fun hjj _).symm
   have hweil : ∀ x g, x ^ n = 1 → g ^ n = 1 → ∀ (k : Type) [Field k] [IsAlgClosed k] (i : Ω →+* k)
       (xk gk : Over.mk (spMap i ≫ ξ₀ ≫ f) ⟶ t.G) (c : kˣ), xk.left = spMap i ≫ x.left →
@@ -349,7 +349,7 @@ theorem genWeil_of_obj : Out.WeilSt → ∀ (E : Type) [Field E] [NumberField E]
   refine ⟨e, hfin, hl, hr, ?_, nondegR, hweil⟩
   intro χ hχ
   let T : Subgroup (Over.mk (ξ₀ ≫ f) ⟶ t.G) := (powMonoidHom n).ker
-  haveI : Finite T := hfin
+  have : Finite T := hfin
   let ch : T → (T →* Kˣ) := fun x => MonoidHom.mk' (fun g => Units.map iK.toMonoidHom (e x g)) fun g g' => by
     show Units.map iK.toMonoidHom (e x (g * g')) = _
     rw [hr _ _ _ x.2 g.2 g'.2, map_mul]
@@ -362,9 +362,9 @@ theorem genWeil_of_obj : Out.WeilSt → ∀ (E : Type) [Field E] [NumberField E]
     Subtype.ext (nondegL x x.2 fun g hg => by
       have h1 : Units.map iK.toMonoidHom (e x g) = 1 := DFunLike.congr_fun hx ⟨g, hg⟩
       exact Units.map_injective (f := iK.toMonoidHom) iK.injective (h1.trans (map_one _).symm))
-  haveI : NeZero ((Monoid.exponent T : ℕ) : K) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero ((Monoid.exponent T : ℕ) : K) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
   have hcard := CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity T K
-  haveI : Finite (T →* Kˣ) := Nat.finite_of_card_ne_zero (hcard ▸ Nat.card_pos.ne')
+  have : Finite (T →* Kˣ) := Nat.finite_of_card_ne_zero (hcard ▸ Nat.card_pos.ne')
   have hbij := hinj.bijective_of_nat_card_le hcard.le
   obtain ⟨x, hx⟩ := hbij.2 (MonoidHom.mk' (fun g : T => Units.map iK.toMonoidHom (χ g)) fun g g' => by
     show Units.map iK.toMonoidHom (χ ((g : Over.mk (ξ₀ ≫ f) ⟶ t.G) * g')) = _

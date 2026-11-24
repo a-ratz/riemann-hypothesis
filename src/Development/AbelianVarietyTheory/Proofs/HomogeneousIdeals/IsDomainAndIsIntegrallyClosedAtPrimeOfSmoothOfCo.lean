@@ -126,7 +126,7 @@ theorem isDomain_and_isIntegrallyClosed_atPrime_of_isIntegrallyClosedIn_pi {B : 
     by_contra! H
     exact hp.ne_top ((Ideal.eq_top_iff_one _).mpr (hsum ▸ p.sum_mem fun i _ ↦ H i))
   let D := (φ i).range
-  letI : Algebra B D := (φ i).rangeRestrict.toAlgebra
+  let : Algebra B D := (φ i).rangeRestrict.toAlgebra
   have hsurj : Function.Surjective (algebraMap B D) := (φ i).rangeRestrict_surjective
   have hidem : IsIdempotentElem (e i) := by
     apply hinj
@@ -143,7 +143,7 @@ theorem isDomain_and_isIntegrallyClosed_atPrime_of_isIntegrallyClosedIn_pi {B : 
   have : IsIntegrallyClosedIn D (K i) := by
     rw [Subring.isIntegrallyClosedIn_iff]
     intro x hx
-    letI : Algebra B (K i) := (φ i).toAlgebra
+    let : Algebra B (K i) := (φ i).toAlgebra
     have : IsScalarTower B D (K i) := .of_algebraMap_eq fun _ ↦ rfl
     have : Algebra.IsIntegral B D := Algebra.isIntegral_of_surjective hsurj
     obtain ⟨b, hb⟩ := key i x (isIntegral_trans x hx)
@@ -196,7 +196,7 @@ theorem isDomain_and_isIntegrallyClosed_atPrime_of_etale (A : Type*) {B : Type*}
   let e := (Algebra.TensorProduct.comm A B L).toRingEquiv
   have : IsArtinianRing (B ⊗[A] L) := e.symm.isArtinianRing
   have : IsReduced (B ⊗[A] L) := isReduced_of_injective e e.injective
-  letI (m : MaximalSpectrum (B ⊗[A] L)) : Field ((B ⊗[A] L) ⧸ m.asIdeal) :=
+  let (m : MaximalSpectrum (B ⊗[A] L)) : Field ((B ⊗[A] L) ⧸ m.asIdeal) :=
     Ideal.Quotient.field m.asIdeal
   have := (((IsArtinianRing.equivPi (B ⊗[A] L)).restrictScalars B).isIntegrallyClosedIn).mp h1
   exact isDomain_and_isIntegrallyClosed_atPrime_of_isIntegrallyClosedIn_pi
@@ -222,7 +222,7 @@ theorem isDomain_and_isIntegrallyClosed_atPrime_of_smooth_of_comap {A B : Type*}
     (Bp : Type*) [CommRing Bp] [Algebra B Bp] [IsLocalization.AtPrime Bp p] :
     IsDomain Bp ∧ IsIntegrallyClosed Bp := by
   let M := (p.comap (algebraMap A B)).primeCompl
-  letI : Algebra B (Ap ⊗[A] B) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B (Ap ⊗[A] B) := Algebra.TensorProduct.rightAlgebra
   have : IsLocalization (Algebra.algebraMapSubmonoid B M) (Ap ⊗[A] B) :=
     IsLocalization.tensorRight _ _
   refine isDomain_and_isIntegrallyClosed_atPrime_of_isLocalization
@@ -263,8 +263,8 @@ theorem isDomain_and_isIntegrallyClosed_stalk_of_smooth {X Y : Scheme.{u}} (f : 
   obtain ⟨U, hU, V, hV, hx, e, -⟩ := Smooth.exists_isStandardSmooth f x
   have hs := f.smooth_appLE hU hV e
   algebraize [(f.appLE U V e).hom]
-  letI := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : V)
-  letI := Y.presheaf.algebra_section_stalk (⟨f x, e hx⟩ : U)
+  let := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : V)
+  let := Y.presheaf.algebra_section_stalk (⟨f x, e hx⟩ : U)
   have h1 := hV.isLocalization_stalk ⟨x, hx⟩
   have h2 := hU.isLocalization_stalk ⟨f x, e hx⟩
   have h3 : (hV.primeIdealOf ⟨x, hx⟩).asIdeal.comap (algebraMap Γ(Y, U) Γ(X, V)) =

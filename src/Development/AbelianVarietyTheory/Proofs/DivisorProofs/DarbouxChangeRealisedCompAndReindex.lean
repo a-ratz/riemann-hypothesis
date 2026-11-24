@@ -74,9 +74,9 @@ theorem isOp_comp {ψ : AddChar (AF F) ℂ} {κ κ' κ'' : Type} [Fintype κ] [F
         exact ⟨c₂ * c₁, mul_ne_zero hc₂ hc₁, fun φ h => by
           simp only [LinearMap.comp_apply]; rw [e₂ _ (hs.pres φ h), e₁ φ h, mul_assoc]⟩
       norm μ μ'' hμ hμ'' := by
-        letI : MeasurableSpace (κ' → AF F) := borel _
-        haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
-        haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+        let : MeasurableSpace (κ' → AF F) := borel _
+        have : BorelSpace (κ' → AF F) := ⟨rfl⟩
+        have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
         obtain ⟨c₁, h1, h1', e₁⟩ := hs.norm μ Measure.addHaar hμ inferInstance
         obtain ⟨c₂, h2, h2', e₂⟩ := ht.norm Measure.addHaar μ'' inferInstance hμ''
         exact ⟨c₂ * c₁, mul_ne_zero h2 h1, ENNReal.mul_ne_top h2' h1', fun φ h => by
@@ -175,16 +175,16 @@ theorem reix_norm (e : κ' ≃ κ) (μ : @Measure (κ → AF F) (borel _)) (μ' 
     (hμ : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ) (hμ' : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ') :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ ∀ φ : (κ → AF F) → ℂ,
       ∫⁻ x, ‖reix e φ x‖ₑ ^ 2 ∂μ' = c * ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ := by
-  letI : MeasurableSpace (κ → AF F) := borel _
-  letI : MeasurableSpace (κ' → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := hμ
-  haveI := hμ'
+  let : MeasurableSpace (κ → AF F) := borel _
+  let : MeasurableSpace (κ' → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : BorelSpace (κ' → AF F) := ⟨rfl⟩
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := hμ
+  have := hμ'
   let L : (κ' → AF F) ≃ₜ+ (κ → AF F) := addRe e
-  haveI : (μ'.map L).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ' L
+  have : (μ'.map L).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ' L
   have heq := Measure.isAddLeftInvariant_eq_smul (μ'.map L) μ
   refine ⟨(Measure.addHaarScalarFactor (μ'.map L) μ : ℝ≥0∞),
     ENNReal.coe_ne_zero.mpr (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne', ENNReal.coe_ne_top,

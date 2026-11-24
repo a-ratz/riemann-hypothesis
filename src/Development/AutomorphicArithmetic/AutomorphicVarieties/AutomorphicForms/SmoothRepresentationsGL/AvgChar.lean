@@ -50,7 +50,7 @@ theorem UpperTheory.V.Af.Smo.avgChar :
   intro A _ L₀ L _ hidx
   classical
   let H : AddSubgroup L := L₀.addSubgroupOf L
-  haveI : Fintype (L ⧸ H) := AddSubgroup.fintypeOfIndexNeZero hidx
+  have : Fintype (L ⧸ H) := AddSubgroup.fintypeOfIndexNeZero hidx
   let r : L ⧸ H → A := fun q => ((Quotient.out q : L) : A)
   have hr : Function.Injective r := Subtype.coe_injective.comp Quotient.out_injective
   refine ⟨Finset.univ.image r, Finset.univ_nonempty.image r, ?_, ?_⟩

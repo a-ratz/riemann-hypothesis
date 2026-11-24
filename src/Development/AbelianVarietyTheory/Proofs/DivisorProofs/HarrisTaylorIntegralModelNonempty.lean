@@ -113,7 +113,7 @@ theorem isStalkMap_atPrime (R : Type) [CommRing R] (𝔭 : Ideal R) [𝔭.IsPrim
     GlobalTheory.UPoinc.LocSpread.IsStalkMap (algebraMap R (Localization.AtPrime 𝔭)) := by
   let x : PrimeSpectrum R := ⟨𝔭, inferInstance⟩
   let T := (Spec.structureSheaf R).presheaf.stalk x
-  haveI : IsLocalization x.asIdeal.primeCompl T := StructureSheaf.IsLocalization.to_stalk R x
+  have : IsLocalization x.asIdeal.primeCompl T := StructureSheaf.IsLocalization.to_stalk R x
   let e : T ≃ₐ[R] Localization.AtPrime 𝔭 := IsLocalization.algEquiv x.asIdeal.primeCompl T _
   refine ⟨x, asIso (Spec.map (e.toRingEquiv.toCommRingCatIso).hom), ?_, fun a ha =>
     IsLocalization.map_units (Localization.AtPrime 𝔭) (⟨a, ha⟩ : 𝔭.primeCompl)⟩
@@ -480,10 +480,10 @@ theorem pullbackMap_comp {S₁ S₀ Y : Scheme.{0}} {A₁ : Over S₁} {D : Over
 theorem isGrpPullback_comp_spread_to_subring :
     ∀ (g n : ℕ) (B : Type) [CommRing B] (ζ : B) (S : Type) [CommRing S] (R₀ : Subring S) (s₀ : Sp R₀ ⟶ Sp B) (d₀ : SiegPre g n ζ s₀) (Y : Scheme.{0}) (sY : Y ⟶ Sp B) (u : SiegPre g n ζ sY) (h₀ : Sp R₀ ⟶ Y) (ψ : d₀.A.left ⟶ u.A.left) (sE : Sp S ⟶ Sp B) (e : SiegPre g n ζ sE) (j : e.A.left ⟶ d₀.A.left), IsPullback ψ d₀.A.hom u.A.hom h₀ → IsGrpPullback e.A d₀.A (spMap R₀.subtype) j → IsGrpPullback e.A u.A (spMap R₀.subtype ≫ h₀) (j ≫ ψ) → ∃ F : Finset S, ∀ (R₁ : Subring S) (hle : R₀ ≤ R₁), (F : Set S) ⊆ R₁ → ∀ (A₁ : Over (Sp R₁)) [GrpObj A₁] (φ₁ : A₁.left ⟶ d₀.A.left), IsGrpPullback A₁ d₀.A (spMap (Subring.inclusion hle)) φ₁ → IsGrpPullback A₁ u.A (spMap (Subring.inclusion hle) ≫ h₀) (φ₁ ≫ ψ) := by
   intro g n B _ ζ S _ R₀ s₀ d₀ Y sY u h₀ ψ sE e j cart hj hjψ
-  haveI := d₀.ab.proper
-  haveI := u.ab.smooth
-  haveI hqc : QuasiCompact (pullback.fst d₀.A.hom d₀.A.hom ≫ d₀.A.hom) := inferInstance
-  haveI hlft : LocallyOfFiniteType (pullback.snd u.A.hom h₀) := inferInstance
+  have := d₀.ab.proper
+  have := u.ab.smooth
+  have hqc : QuasiCompact (pullback.fst d₀.A.hom d₀.A.hom ≫ d₀.A.hom) := inferInstance
+  have hlft : LocallyOfFiniteType (pullback.snd u.A.hom h₀) := inferInstance
   set f₀ : pullback d₀.A.hom d₀.A.hom ⟶ Sp R₀ := pullback.fst d₀.A.hom d₀.A.hom ≫ d₀.A.hom with hf₀
   have hμd : (μ[d₀.A]).left ≫ d₀.A.hom = f₀ := Over.w μ[d₀.A]
   have hμu : (μ[u.A]).left ≫ u.A.hom = pullback.fst u.A.hom u.A.hom ≫ u.A.hom := Over.w μ[u.A]
@@ -550,8 +550,8 @@ theorem lbIso_spread : ∀ (g n : ℕ) (B : Type) [CommRing B] (ζ : B) (S : Typ
   have hcomp : j₂ ≫ ψ₂ = φ₂ := GlobalTheory.SiegDesc.isSquare_comp rfl hj₂ hψ₂ hφ₂
   have hpb : IsPullback j₂ (G2 e.A).hom (G2 d₀.A).hom (spMap R₀.subtype) :=
     GlobalTheory.SiegDesc.isPullback_of_isSquare hj hj₂
-  haveI : IsProper d₀.A.hom := d₀.ab.proper
-  haveI : IsProper (G2 d₀.A).hom := by
+  have : IsProper d₀.A.hom := d₀.ab.proper
+  have : IsProper (G2 d₀.A).hom := by
     change IsProper (pullback.fst d₀.A.hom d₀.A.hom ≫ d₀.A.hom)
     infer_instance
   have hN : (u.P.pull ψ₂).IsLB := pull_isLB u.isLB ψ₂
@@ -593,7 +593,7 @@ namespace GlobalTheory
 theorem siegel_levels_spread_to_subring : ∀ (g n : ℕ) (B : Type) [CommRing B] (ζ : B) (S : Type) [CommRing S] (R₀ : Subring S) (s₀ : Sp R₀ ⟶ Sp B) (d₀ : SiegPre g n ζ s₀) (Y : Scheme.{0}) (sY : Y ⟶ Sp B) (u : SiegPre g n ζ sY) (h₀ : Sp R₀ ⟶ Y) (ψ : d₀.A.left ⟶ u.A.left) (sE : Sp S ⟶ Sp B) (e : SiegPre g n ζ sE) (j : e.A.left ⟶ d₀.A.left), IsPullback ψ d₀.A.hom u.A.hom h₀ → (∀ a, (e.lev a).left ≫ j = spMap R₀.subtype ≫ (d₀.lev a).left) → (∀ a, (e.lev a).left ≫ (j ≫ ψ) = (spMap R₀.subtype ≫ h₀) ≫ (u.lev a).left) → ∃ F : Finset S, ∀ (R₁ : Subring S) (hle : R₀ ≤ R₁), (F : Set S) ⊆ R₁ → ∀ (s₁ : Sp R₁ ⟶ Sp B) (d₁ : SiegPre g n ζ s₁) (φ₁ : d₁.A.left ⟶ d₀.A.left), IsGrpPullback d₁.A u.A (spMap (Subring.inclusion hle) ≫ h₀) (φ₁ ≫ ψ) → (∀ a, (d₁.lev a).left ≫ φ₁ = spMap (Subring.inclusion hle) ≫ (d₀.lev a).left) → ∀ a, (d₁.lev a).left ≫ (φ₁ ≫ ψ) = (spMap (Subring.inclusion hle) ≫ h₀) ≫ (u.lev a).left := by
   intro g n B _ ζ S _ R₀ s₀ d₀ Y sY u h₀ ψ sE e j hψ hj hjψ
   classical
-  haveI : Smooth u.A.hom := u.ab.smooth
+  have : Smooth u.A.hom := u.ab.smooth
   have hsec₀ : ∀ a, (d₀.lev a).left ≫ d₀.A.hom = 𝟙 (Sp R₀) := fun a => Over.w (d₀.lev a)
   have hsecu : ∀ a, (u.lev a).left ≫ u.A.hom = 𝟙 Y := fun a => Over.w (u.lev a)
   have key : ∀ i : Fin g ⊕ Fin g, ∃ F : Finset S, ∀ (R₁ : Subring S) (hle : R₀ ≤ R₁), (F : Set S) ⊆ R₁ →
@@ -690,7 +690,7 @@ theorem siegPB_spread_subring : ∀ (g n : ℕ) (B : Type) [CommRing B] (ζ : B)
   classical
   obtain ⟨φd, φd₂, hφd, hsd, hwd, hld⟩ := hd
   obtain ⟨φu, φu₂, hφu, hsu, hwu, hlu⟩ := hu
-  haveI := d₀.ab.smooth; haveI := d₀.ab.proper; haveI := u.ab.smooth; haveI := u.ab.proper
+  have := d₀.ab.smooth; have := d₀.ab.proper; have := u.ab.smooth; have := u.ab.proper
   have hZ : IsPullback (pullback.lift φu (e.A.hom ≫ spMap R₀.subtype) (by rw [hφu.1.w, Category.assoc]))
       e.A.hom (pullback.snd u.A.hom h₀) (spMap R₀.subtype) := by
     refine IsPullback.of_right ?_ (pullback.lift_snd _ _ _) (IsPullback.of_hasPullback u.A.hom h₀)
@@ -903,9 +903,9 @@ theorem classified_basicOpen : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n �
     (Sp R) (Sp (Localization.AtPrime 𝔭)) (spMap β) (spMap ((algebraMap R (Localization.AtPrime 𝔭)).comp β))
     (spMap (algebraMap R (Localization.AtPrime 𝔭))) rfl (by rw [spMap_comp_eq, spMap_comp_eq, RingHom.comp_id])).1 c
   obtain ⟨f₀, hf₀s, hf₀⟩ := H c₀ hc₀
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
-  haveI : LocallyOfFinitePresentation F.s := inferInstance
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have : LocallyOfFinitePresentation F.s := inferInstance
   obtain ⟨r₀, hr₀, ι₀, f₁, hι₀, hf₁s, hf₁⟩ := spread_point (cycAway n) F.X F.s R β 𝔭 f₀ hf₀s
   obtain ⟨r, hr, κ, d', hκ, hd'c, hd'u⟩ := spread_iso g n (cycAway n) (zetaAway n) R β 𝔭 c F.X F.s F.univ r₀ ι₀ f₁ c₀
     hr₀ hι₀ hf₁s hc₀ (hf₁ ▸ hf₀)
@@ -946,7 +946,7 @@ theorem classify_noetherian : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n →
   refine _root_.GlobalTheory.SiegZar.classified_of_local g n hg hn hodd F (Sp R) (spMap β) c hc ?_
   intro x
   let 𝔭 : Ideal R := x.asIdeal
-  haveI : 𝔭.IsPrime := x.isPrime
+  have : 𝔭.IsPrime := x.isPrime
   have loc : ∀ c' : SiegPre g n (zetaAway n) (spMap ((algebraMap R (Localization.AtPrime 𝔭)).comp β)),
       SiegPB c' c (spMap (algebraMap R (Localization.AtPrime 𝔭))) →
       ∃ f : Sp (Localization.AtPrime 𝔭) ⟶ F.X, f ≫ F.s = spMap ((algebraMap R (Localization.AtPrime 𝔭)).comp β) ∧
@@ -993,7 +993,7 @@ theorem exists_classify_affine {g n : ℕ} (hg : 1 ≤ g) (hn : 3 ≤ n) (hodd :
     ∃ f : Sp R ⟶ F.X, f ≫ F.s = t ∧ SiegPB d F.univ f := by
   obtain ⟨β, rfl⟩ := GlobalTheory.SiegelRingChange.exists_spMap t
   obtain ⟨R₀, β₀, c₀, hft, hβ, hp₀, hpb⟩ := GlobalTheory.T.principalSiegel_descends_finiteType_subring g n hn hodd R β d hd
-  haveI : IsNoetherianRing R₀ := Algebra.FiniteType.isNoetherianRing ℤ R₀
+  have : IsNoetherianRing R₀ := Algebra.FiniteType.isNoetherianRing ℤ R₀
   obtain ⟨f₀, hf₀, hpb₀⟩ := _root_.GlobalTheory.SiegelNoeth.classify_noetherian g n hg hn hodd F R₀ β₀ c₀ hp₀
   refine ⟨spMap R₀.subtype ≫ f₀, ?_, GlobalTheory.TChart.AbLevel.siegPB_trans hpb hpb₀⟩
   rw [Category.assoc, hf₀, ← GlobalTheory.SiegelRingChange.spMap_comp', hβ]
@@ -1131,8 +1131,8 @@ theorem exists_rep : ∀ (h' M : ℕ), 1 ≤ h' → 3 ≤ M → Odd M → ∀ (O
   intro h' M hh hM hodd O _ bar r eO W d₀ hbar hspan hW hd hsum
   have hM0 : M ≠ 0 := by omega
   obtain ⟨F⟩ := exists_sFam_cycAway h' M hh hM hodd
-  haveI : IsDedekindDomain (cycAway M) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway M
-  haveI : IsLocallyNoetherian F.X := GlobalTheory.isLocallyNoetherian_of_isQProjOver_noeth (cycAway M) F.X F.s F.qproj
+  have : IsDedekindDomain (cycAway M) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway M
+  have : IsLocallyNoetherian F.X := GlobalTheory.isLocallyNoetherian_of_isQProjOver_noeth (cycAway M) F.X F.s F.qproj
   obtain ⟨R, hRf, -⟩ := GlobalTheory.T.adjointActions_order_finite_unramified_scheme F.X F.univ.A F.univ.P F.univ.ab F.univ.isLB F.univ.rig₁ F.univ.rig₂
     F.univ.symm F.princ.1 O bar r eO W d₀ hbar hspan hW hd hsum
   have hq : IsQProjOver (R.π ≫ F.s) :=

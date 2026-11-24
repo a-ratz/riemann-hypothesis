@@ -131,7 +131,7 @@ theorem UpperTheory.V.B5.mem_span_orderTwoRelation_iff_coords_eq_zero :
     ∀ {A : Type} [CommRing A] {Γ : Type} [CommGroup Γ] [Finite Γ] (c : Γ) (ε : ℤ), c * c = 1 → c ≠ 1 → ε * ε = 1 → ∀ w : MonoidAlgebra A Γ, w ∈ Ideal.span {rel A c ε} ↔ coord c ε w = 0 := by
   intro A _ Γ _ _ c ε h2 hc hε w
   classical
-  letI := Fintype.ofFinite Γ
+  let := Fintype.ofFinite Γ
   have hε' : (ε : A) * ε = 1 := by
     have := congrArg (fun n : ℤ => (n : A)) hε
     simpa using this
@@ -169,7 +169,7 @@ theorem UpperTheory.V.B5.exists_linearEquiv_quotientByOrderTwo_coords :
     ∀ {A : Type} [CommRing A] {Γ : Type} [CommGroup Γ] [Finite Γ] (c : Γ) (ε : ℤ), c * c = 1 → c ≠ 1 → ε * ε = 1 → ∃ e : Rq A c ε ≃ₗ[A] (Qc c → A), ∀ w : MonoidAlgebra A Γ, e (cls A c ε w) = coord c ε w := by
   intro A _ Γ _ _ c ε hc hc1 hε
   classical
-  haveI : Fintype (Qc c) := Fintype.ofFinite (Qc c)
+  have : Fintype (Qc c) := Fintype.ofFinite (Qc c)
   let f : MonoidAlgebra A Γ →ₗ[A] (Qc c → A) :=
     { toFun := coord c ε
       map_add' := by
@@ -208,9 +208,9 @@ theorem UpperTheory.V.B5.exists_linearEquiv_quotientByOrderTwo_coords :
     rw [Finset.sum_eq_single i0, Finset.sum_eq_zero]
     · simp
     · intro i _
-      rw [if_neg (hcrep i0 i)]
+      rw [ite_eq_right (hcrep i0 i)]
     · intro i _ hi
-      rw [if_neg (fun h => hi (hrepinj i i0 h))]
+      rw [ite_eq_right (fun h => hi (hrepinj i i0 h))]
     · intro h
       exact absurd (Finset.mem_univ i0) h
   let e : Rq A c ε ≃ₗ[A] (Qc c → A) :=
@@ -230,14 +230,14 @@ open Finset UpperTheory.V.Bern UpperTheory.V.B4 UpperTheory.V.B5
 
 private theorem coeff_mul_sum {A : Type} [CommRing A] {Γ : Type} [CommGroup Γ] [Fintype Γ]
     (z w : MonoidAlgebra A Γ) (g : Γ) : (z * w).coeff g = ∑ h, z.coeff (g * h⁻¹) * w.coeff h := by
-  rw [MonoidAlgebra.mul_apply_right, Finsupp.sum_fintype]
+  rw [MonoidAlgebra.coeff_mul_apply_right, Finsupp.sum_fintype]
   intro h
   simp
 
 theorem UpperTheory.V.B5.coords_mul_eq_quotientMatrix_mulVec :
     ∀ {A : Type} [CommRing A] {Γ : Type} [CommGroup Γ] [Finite Γ] (c : Γ) (ε : ℤ), c * c = 1 → c ≠ 1 → ε * ε = 1 → ∀ z w : MonoidAlgebra A Γ, coord c ε (z * w) = (mat c ε z).mulVec (coord c ε w) := by
   intro A _ Γ _ _ c ε hc hc1 hε z w
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   have hci : c⁻¹ = c := inv_eq_of_mul_eq_one_right hc
   have hεA : (ε : A) * ε = 1 := by exact_mod_cast congrArg (Int.cast : ℤ → A) hε
   funext i
@@ -484,7 +484,7 @@ theorem UpperTheory.V.B5.det_mul_quotientByOrderTwo_eq_prod_charEval :
     exact sum_char_mul_quotientMatrix_eq_charEval_mul c ε hc hc1 (e.symm k) z j
   have hind : LinearIndependent Ω (fun k => P k) :=
     (linearIndependent_characters_on_quotientReps (Ω := Ω) c ε hc).comp e.symm e.symm.injective
-  have hP : IsUnit P := Matrix.linearIndependent_rows_iff_isUnit.mp hind
+  have hP : IsUnit P := Matrix.linearIndependent_row_iff_isUnit.mp hind
   have hdet : P.det ≠ 0 := (Matrix.isUnit_iff_isUnit_det P |>.mp hP).ne_zero
   have h2 : P.det * M.det = (∏ k, d k) * P.det := by
     rw [← Matrix.det_mul, hPM, Matrix.det_mul, Matrix.det_diagonal]
@@ -615,7 +615,7 @@ theorem UpperTheory.V.B5.higherStickelberger_det_exists_int_bounded :
     exact hc (by rw [Subsingleton.elim (-1 : (ZMod 1)ˣ) 1, map_one])
   have hcc : π (-1) * π (-1) = 1 := by rw [← map_mul]; simp
   have hε : ((-1 : ℤ) ^ k) * (-1) ^ k = 1 := by rw [← mul_pow]; simp
-  haveI : NeZero (Monoid.exponent Γ : ℂ) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (Monoid.exponent Γ : ℂ) := ⟨Nat.cast_ne_zero.2 Monoid.exponent_ne_zero_of_finite⟩
   obtain ⟨z, hz⟩ := exists_int_higherStickelbergerDenom_smul π a ha k (by omega)
   have hX : ((detR (π (-1)) ((-1) ^ k) z : ℤ) : ℚ) =
       (denY N k : ℚ) ^ (Nat.card Γ / 2) * detR (π (-1)) ((-1) ^ k) (yEl k a ha π) := by
@@ -726,7 +726,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem fib_iff {N M : ℕ} [NeZero N] [NeZero M] (h : N ∣ M) (b' : (ZMod M)ˣ) (b : (ZMod N)ˣ) :
     ZMod.unitsMap h b' = b ↔ (b' : ZMod M).val % N = (b : ZMod N).val := by
   rw [Units.ext_iff, ZMod.unitsMap_def, Units.coe_map]
-  simp only [MonoidHom.coe_coe, ZMod.castHom_apply]
+  simp only [MonoidHom.coe_ofClass, ZMod.castHom_apply]
   rw [ZMod.cast_eq_val, ← (ZMod.val_injective N).eq_iff, ZMod.val_natCast]
 
 private theorem fib_sum {N L M : ℕ} [NeZero N] [NeZero M] (h : N ∣ M) (hM : M = N * L)
@@ -807,7 +807,7 @@ theorem UpperTheory.V.Odd.yLevel :
   congr 1
   apply Units.ext
   rw [ZMod.unitsMap_def, Units.coe_map]
-  simp only [MonoidHom.coe_coe, ZMod.castHom_apply, ZMod.coe_unitOfCoprime]
+  simp only [MonoidHom.coe_ofClass, ZMod.castHom_apply, ZMod.coe_unitOfCoprime]
   exact ZMod.cast_natCast h a
 end -- clump:auto
 end -- clump:auto
@@ -893,7 +893,7 @@ theorem UpperTheory.V.Stk.groupRing_intAt_div_smul_of_padicValNat_le :
   obtain ⟨E, hE⟩ := hdvdD
   have hnd : ¬ l ∣ E := by
     intro hl
-    apply pow_succ_padicValNat_not_dvd (p := l) hD.ne'
+    apply pow_succ_multiplicity_not_dvd (p := l) hD.ne'
     conv_rhs => rw [hE]
     rw [pow_succ]
     simpa only [Nat.padicValNat_def] using Nat.mul_dvd_mul_left (l ^ padicValNat l D) hl
@@ -1119,7 +1119,7 @@ theorem UpperTheory.V.Odd.congr :
   have hy0 : IntAt l 0 y := by
     rw [intAt_iff]
     intro g
-    haveI : NeZero (N * l ^ (ck l (e + 1) + 1)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl0)⟩
+    have : NeZero (N * l ^ (ck l (e + 1) + 1)) := ⟨mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl0)⟩
     have hn := near_level l Γ N φ e a ha ho hl 0 (ck l (e + 1) + 1) (by omega)
       (N * l ^ (ck l (e + 1) + 1)) (dvd_mul_right _ _) rfl g
     have h1 := hn.mem
@@ -1227,7 +1227,7 @@ theorem UpperTheory.V.Odd.resKill :
     AlgEquiv.ofRingEquiv (f := ((σ b).trans (u.1 : Ω ≃ₐ[E] Ω).toRingEquiv).trans (σ b).symm) (by
       intro y
       have h1 := hlift b y
-      simp only [RingEquiv.trans_apply, AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv]
+      simp only [RingEquiv.trans_apply, AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv]
       rw [h1, AlgEquiv.commutes, ← h1, RingEquiv.symm_apply_apply])
   have hw : ∀ b y, w b y = (σ b).symm (u.1 (σ b y)) := fun _ _ => rfl
   have wInf : ∀ b, w b ∈ Uinf E Ω l := by
@@ -1369,7 +1369,7 @@ theorem UpperTheory.V.Odd.zKill :
   have hal : a.Coprime (N * l) := Nat.Coprime.mul_right ha (Nat.Coprime.coprime_dvd_right hlN ha)
   obtain ⟨m₂, hm₂⟩ := resKill E Ω l D e N ρ hcyc a hodd hal x hx
   set m := max m₁ m₂
-  haveI : NeZero (N * l ^ m) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
+  have : NeZero (N * l ^ m) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
   have hNM : N ∣ N * l ^ m := Dvd.intro _ rfl
   obtain ⟨w, hw⟩ := hm₁ m (le_max_left _ _) (N * l ^ m) hNM rfl
   have hres := hm₂ m (le_max_right _ _) (N * l ^ m) hNM rfl
@@ -1400,7 +1400,7 @@ private theorem nat_dvd_pow (l : ℕ) [hl : Fact l.Prime] (X : ℕ) (h0 : X ≠ 
   obtain ⟨m, hm⟩ := hdvd
   have hm0 : ¬ l ∣ m := by
     rintro ⟨k, rfl⟩
-    apply pow_succ_padicValNat_not_dvd (p := l) h0
+    apply pow_succ_multiplicity_not_dvd (p := l) h0
     exact ⟨k, by rw [pow_succ, mul_assoc]; simpa [Nat.padicValNat_def] using hm⟩
   have hu : IsUnit (m : ℤ_[l]) := by
     rw [PadicInt.isUnit_iff]
@@ -1417,10 +1417,10 @@ theorem UpperTheory.V.Odd.killPow :
   obtain ⟨C, hC0, hC⟩ := bdxLog
   refine ⟨C, hC0, ?_⟩
   intro E Ω _ _ _ _ _ _ N hN hcyc l _ D hproc e he
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hl2 : 2 ≤ l := (Fact.out : l.Prime).two_le
   have hM0 : N * l ≠ 0 := Nat.mul_ne_zero hN.ne' (by omega)
-  haveI : NeZero (N * l) := ⟨hM0⟩
+  have : NeZero (N * l) := ⟨hM0⟩
   obtain ⟨ρ0, hρ0⟩ := actEx E Ω N hcyc
   have hNM : N ∣ N * l := dvd_mul_right N l
   have hρ := (actFacts E Ω N ρ0 hρ0).2.2.2.2 (N * l) hNM

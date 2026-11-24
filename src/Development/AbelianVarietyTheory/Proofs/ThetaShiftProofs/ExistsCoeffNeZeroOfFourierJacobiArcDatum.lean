@@ -282,7 +282,7 @@ theorem exists_isometry {σ' : KA l →+* ℂ} {g : ℕ} {ty : Fin g → (E →+
     ∃ gam : (F.Di i).La ≃ₗ[𝓞 E] (F.Di i).La, (∀ a, P' (gam a) = P a) ∧
       (∀ a b, (F.Di i).EF (gam a) (gam b) = (F.Di i).EF a b) ∧ ∀ a, ∃ e, gam a = a + l.M • e := by
   obtain ⟨h, gam, hh, hPh, hiso, hM, -⟩ := GlobalTheory.familyUnif_exp_unique E H Dw l Xo σ' g ty F i i P P' hP hP' hu
-  haveI := hP'.2.2.1
+  have := hP'.2.2.1
   have h1 : ∀ z, h z = z := fun z => sub_eq_zero.1 <|
     GlobalTheory.ExpUniqFamily.linear_eq_zero_of_discrete P'.range (h.toLinearMap - LinearMap.id) (fun z =>
       (F.ex_ker i P' hP' _).1 <| (GlobalTheory.ExpUniqFamily.eq_iff_sub (F.ex i P') (F.ex_add i P' hP') _ _).1
@@ -357,11 +357,11 @@ theorem exists_move (hσ : GoodEmb c σ) (hU : IsUnf U) (hpr : GlobalTheory.Fram
     (fun τ a ha => GlobalTheory.ArcFlow.eq_of_hermC_lattice (U.X k) τ.1 _ _ fun w hw => by
       have h1 := key w hw (idx.symm (τ, a))
       rw [hper, hper] at h1
-      simpa only [Equiv.apply_symm_apply, if_pos ha] using h1)
+      simpa only [Equiv.apply_symm_apply, ite_eq_left ha] using h1)
     (fun τ a ha => row_eq_of_lattice (U.X k) τ.1 _ _ a fun w hw => by
       have h1 := key w hw (idx.symm (τ, a))
       rw [hper, hper] at h1
-      simpa only [Equiv.apply_symm_apply, if_neg ha] using h1)
+      simpa only [Equiv.apply_symm_apply, ite_eq_right ha] using h1)
   refine ⟨gm, hΓ, b, hb, hxb, fun t t' ht => ?_⟩
   rw [← hg, (Uw.period k x').2.1 ((hP t).trans ht)]
 
@@ -408,7 +408,7 @@ theorem exists_inverse_comb {T : Type} {m : T → ℕ} {g : ℕ} (e : Fin g ≃ 
       exact Or.inl ⟨(e j).2, (e.symm_apply_apply j).symm⟩
     · exact Or.inr fun k => by_contra fun h' => h (ht k j h')
   have hA : IsUnit A := by
-    rw [← Matrix.linearIndependent_rows_iff_isUnit, Fintype.linearIndependent_iff]
+    rw [← Matrix.linearIndependent_row_iff_isUnit, Fintype.linearIndependent_iff]
     intro c hc
     refine Fintype.linearIndependent_iff.1 hz c (funext fun j => ?_)
     rcases hcase j with ⟨i, rfl⟩ | h
@@ -476,7 +476,7 @@ theorem exists_cfOf_ne_zero : Known → ∀ (E : Type) [Field E] [NumberField E]
   have hev := hK.ev E H Dw l Xo c
   obtain ⟨hover, ⟨y₀, hy₀, hc⟩, hpush⟩ := hstd
   obtain ⟨aC, p, ξC, hp, hξC, htie⟩ := htie
-  letI : Algebra c.F ℂ⸨X⸩ := (cstL.comp (em.comp (algebraMap c.F K₁))).toAlgebra
+  let : Algebra c.F ℂ⸨X⸩ := (cstL.comp (em.comp (algebraMap c.F K₁))).toAlgebra
   have hth : ThNZ d.th := s.th_nz
   have hp' : InBC em (d.a.restrict (c.V d.Wp).subtype) (aC.restrict (c.V d.Wp).subtype) p := ⟨rfl, hp.2⟩
   obtain ⟨hW, hlet, htan, hthx, hnz⟩ := (GlobalTheory.ArcQBC.baseChanges h1 h2 hK.ubc hK.laws5 E H Dw l Xo c _ _ d.Y K₁ ℂ _

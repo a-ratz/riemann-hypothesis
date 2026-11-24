@@ -109,7 +109,7 @@ theorem exp_torus_mean_le_l2_of_lex {ι : Type} [Fintype ι] [LinearOrder ι]
   have hsQ : s ∉ Q.support := fun h => lt_irrefl _ (hQ s h)
   have hQs : Q.coeff s = 0 := MvPolynomial.notMem_support_iff.mp hsQ
   have hPs : P.coeff s = 1 := by
-    rw [hPdef, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, if_pos rfl, hQs, sub_zero]
+    rw [hPdef, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, ite_eq_left rfl, hQs, sub_zero]
   have hP0 : P ≠ 0 := fun h => by rw [h, MvPolynomial.coeff_zero] at hPs; exact zero_ne_one hPs
   have hsupp : s ∈ P.support := by rw [MvPolynomial.mem_support_iff, hPs]; exact one_ne_zero
   have hlex : Real.log ‖P.coeff s‖ ≤ torusMean P := by
@@ -118,7 +118,7 @@ theorem exp_torus_mean_le_l2_of_lex {ι : Type} [Fintype ι] [LinearOrder ι]
     have htQ : t ∈ Q.support := by
       by_contra h
       have h0 : P.coeff t = 0 := by
-        rw [hPdef, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, if_neg (Ne.symm hts),
+        rw [hPdef, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, ite_eq_right (Ne.symm hts),
           MvPolynomial.notMem_support_iff.mp h, sub_zero]
       exact (MvPolynomial.mem_support_iff.mp ht) h0
     obtain ⟨i, h1, h2⟩ := hQ t htQ
@@ -284,7 +284,7 @@ theorem gram_of_linearOrder {ι : Type} [Fintype ι] [LinearOrder ι]
     (fun _ => (Real.exp_pos _).le) hδ
   rw [hdet]
   refine le_trans (le_of_eq ?_) hprod
-  rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← Real.exp_nat_mul]
+  rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← Real.exp_natCast_mul]
   congr 1
   ring
 
@@ -292,7 +292,7 @@ theorem gram_holds (hBasic : TorusMeanBasicStatement) (hLex : TorusLexStatement)
     (hL2 : TorusL2Cauchy) : GramStatement := by
   unfold GramStatement
   intro ι _ _ F S hF
-  letI : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
+  let : LinearOrder ι := LinearOrder.lift' (Fintype.equivFin ι) (Fintype.equivFin ι).injective
   convert gram_of_linearOrder hBasic hLex hL2 F S hF
 
 end ReciprocityTheory.MultiplicativeHeights
@@ -372,7 +372,7 @@ theorem blockPoly_claim (hSJ : SJStatement) (n : ℕ) : ∀ (k : ℕ) (a : Fin k
     onSpheres F z0 ≠ 0 →
     Integrable (fun z => Real.log ‖onSpheres F z‖) (Measure.pi fun _ : Fin k => sphereProb n) ∧
       Measure.pi (fun _ : Fin k => sphereProb n) {z | onSpheres F z = 0} = 0 := by
-  haveI : IsFiniteMeasure (sphereProb n) := by unfold sphereProb; infer_instance
+  have : IsFiniteMeasure (sphereProb n) := by unfold sphereProb; infer_instance
   intro k
   induction k with
   | zero =>
@@ -498,7 +498,7 @@ theorem blockPoly_claim (hSJ : SJStatement) (n : ℕ) : ∀ (k : ℕ) (a : Fin k
       exact hInt2
     · have h1 : {z | onSpheres F z = 0} = e2 ⁻¹' {q | H q = 0} := by
         ext z
-        simp only [Set.mem_setOf_eq, Set.mem_preimage]
+        simp only [Set.mem_ofPred_eq, Set.mem_preimage]
         rw [hcomp z]
       rw [h1, mp2.measure_preimage_emb e2.measurableEmbedding]
       exact hNull2
@@ -720,8 +720,8 @@ theorem sj_holds (hLin : SphereLinLogStatement) : SJStatement := by
   have hu0 : u ≠ 0 := by
     rintro rfl
     simp at hu
-  haveI : Nontrivial (EuclideanSpace ℂ (Fin n)) := nontrivial_of_ne u 0 hu0
-  haveI hprob : IsProbabilityMeasure (sphereProb n) := by
+  have : Nontrivial (EuclideanSpace ℂ (Fin n)) := nontrivial_of_ne u 0 hu0
+  have hprob : IsProbabilityMeasure (sphereProb n) := by
     unfold sphereProb
     apply ProbabilityTheory.cond_isProbabilityMeasure_of_finite
     · rw [Measure.toSphere_apply_univ]
@@ -1051,7 +1051,7 @@ theorem scaledTorusMean_le_torusMean {ι : Type} [Fintype ι] [DecidableEq ι]
       rw [e] at hle
       exact hle
   have hu := key Finset.univ
-  simp only [Finset.mem_univ, if_true] at hu
+  simp only [Finset.mem_univ, ite_true] at hu
   rwa [scaledTorusMean_one] at hu
 
 end ReciprocityTheory.MultiplicativeHeights
@@ -1072,12 +1072,12 @@ open MeasureTheory
 theorem sphereTorus_holds (hInt : SphereLogIntegrableStatement) (hBasic : TorusMeanBasicStatement) :
     SphereLeTorusStatement := by
   intro B n a f hn hf hhom
-  haveI : IsProbabilityMeasure (sphereProb n) := isProbabilityMeasure_sphereProb hn
-  haveI : IsProbabilityMeasure (blockSphereProb B n) := by
+  have : IsProbabilityMeasure (sphereProb n) := isProbabilityMeasure_sphereProb hn
+  have : IsProbabilityMeasure (blockSphereProb B n) := by
     unfold blockSphereProb; infer_instance
-  haveI : IsProbabilityMeasure ((volume : Measure ℝ).restrict (Set.Ioc (0 : ℝ) 1)) :=
+  have : IsProbabilityMeasure ((volume : Measure ℝ).restrict (Set.Ioc (0 : ℝ) 1)) :=
     ⟨by simp⟩
-  haveI : IsProbabilityMeasure (torusProb (Fin B × Fin n)) := by
+  have : IsProbabilityMeasure (torusProb (Fin B × Fin n)) := by
     unfold torusProb; infer_instance
 
   have hh : Integrable (fun z => Real.log ‖MvPolynomial.eval (blockPoint z) f‖)
@@ -1193,18 +1193,18 @@ theorem coeff_coeffIn {ι : Type} (i : ι) (k : ℕ) (f : MvPolynomial ι ℂ) (
   split_ifs with hu
   · have hsp := (erase_eq_and_apply_eq_iff_eq_add_single i k (u + Finsupp.single i k) u hu).mpr rfl
     rw [Finset.sum_eq_single (u + Finsupp.single i k)]
-    · rw [if_pos hsp.1]
+    · rw [ite_eq_left hsp.1]
     · intro t ht hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hte
       exact hne ((erase_eq_and_apply_eq_iff_eq_add_single i k t u hu).mp ⟨hte, (Finset.mem_filter.mp ht).2⟩)
     · intro hnot
-      rw [if_pos hsp.1]
+      rw [ite_eq_left hsp.1]
       by_contra hc
       exact hnot (Finset.mem_filter.mpr ⟨MvPolynomial.mem_support_iff.mpr hc, hsp.2⟩)
   · apply Finset.sum_eq_zero
     intro t _
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact hu (by simp)
 
@@ -1213,9 +1213,9 @@ private theorem apply_eq_zero_and_add_single_mem_support_of_coeffIn {ι : Type} 
     u i = 0 ∧ u + Finsupp.single i k ∈ f.support := by
   rw [MvPolynomial.mem_support_iff, coeff_coeffIn] at hu
   by_cases h : u i = 0
-  · rw [if_pos h] at hu
+  · rw [ite_eq_left h] at hu
     exact ⟨h, MvPolynomial.mem_support_iff.mpr hu⟩
-  · rw [if_neg h] at hu
+  · rw [ite_eq_right h] at hu
     exact absurd rfl hu
 
 private theorem eq_monomial_of_vars_eq_empty {ι : Type} [LinearOrder ι] (g : MvPolynomial ι ℂ)
@@ -1276,7 +1276,7 @@ theorem torusLex_of (hBasic : TorusMeanBasicStatement) (hCoeff : TorusCoeffState
     have hsplit : s = s.erase i + Finsupp.single i (s i) :=
       (erase_eq_and_apply_eq_iff_eq_add_single i (s i) s (s.erase i) h0).mp ⟨rfl, rfl⟩
     have hcoef : (coeffIn i (s i) g).coeff (s.erase i) = g.coeff s := by
-      rw [coeff_coeffIn, if_pos h0, ← hsplit]
+      rw [coeff_coeffIn, ite_eq_left h0, ← hsplit]
     have hne' : coeffIn i (s i) g ≠ 0 := by
       intro hz
       have h2 := hcoef
@@ -1322,7 +1322,7 @@ theorem torusLex_of (hBasic : TorusMeanBasicStatement) (hCoeff : TorusCoeffState
         rintro rfl
         exact (Finsupp.mem_support_iff.mp hjt) ht0
       refine Finset.mem_erase.mpr ⟨hji, (MvPolynomial.mem_vars_iff_mem_support j).mpr ⟨_, ht, ?_⟩⟩
-      rw [Finsupp.mem_support_iff, Finsupp.add_apply, Finsupp.single_apply, if_neg (Ne.symm hji),
+      rw [Finsupp.mem_support_iff, Finsupp.add_apply, Finsupp.single_apply, ite_eq_right (Ne.symm hji),
         add_zero]
       exact Finsupp.mem_support_iff.mp hjt
     have hcard' : (coeffIn i (s i) g).vars.card ≤ n := by
@@ -1361,7 +1361,7 @@ theorem torus_one_dim (a b : ℕ) :
   have key : ∀ x : ℝ, torusFactor a b x =
       Complex.exp ((2 * Real.pi * Complex.I * ((a : ℂ) - b)) * x) := by
     intro x
-    simp only [torusFactor, ← Complex.exp_conj, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    simp only [torusFactor, ← Complex.exp_conj, ← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     simp only [map_mul, map_ofNat, Complex.conj_ofReal, Complex.conj_I]
     ring
@@ -1410,12 +1410,12 @@ theorem torus_orth {ι : Type} [Fintype ι] (s t : ι →₀ ℕ) :
   · have : ∃ i, t i ≠ s i := by
       by_contra hc; push_neg at hc; exact hts (Finsupp.ext hc)
     obtain ⟨i, hi⟩ := this
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 
 theorem integrable_of_bdd {ι : Type} [Fintype ι] {E : Type*} [NormedAddCommGroup E]
     {g : (ι → ℝ) → E} (hg : Continuous g) (C : ℝ) (hC : ∀ θ, ‖g θ‖ ≤ C) :
     Integrable g (torusProb ι) := by
-  haveI := torusProb_isProb ι
+  have := torusProb_isProb ι
   exact Integrable.of_bound hg.aestronglyMeasurable C (Filter.Eventually.of_forall hC)
 
 theorem eval_torus {ι : Type} [Fintype ι] (f : MvPolynomial ι ℂ) (θ : ι → ℝ) :
@@ -1544,7 +1544,7 @@ theorem exists_torus_max {ι : Type} [Fintype ι] (f : MvPolynomial ι ℂ) :
 
 theorem torus_l2_cauchy_of_basic (hBasic : TorusMeanBasicStatement) : TorusL2Cauchy := by
   intro ι _ f
-  haveI := torusProb_isProb ι
+  have := torusProb_isProb ι
   obtain ⟨hInt, hMul, hMono⟩ := hBasic ι
   constructor
   · intro hf

@@ -161,7 +161,7 @@ theorem rationalMonoid_le_integralMonoid {n : ℕ} {K V : Type*} [Field K] [AddC
   apply Submonoid.closure_le.2
   rintro _ ⟨⟨a, b⟩, rfl⟩
   apply Submonoid.subset_closure
-  simp only [Formalism.MainNotions.G.UZgens, Set.mem_setOf_eq]
+  simp only [Formalism.MainNotions.G.UZgens, Set.mem_ofPred_eq]
   by_cases hab : a = b
   · subst hab
     refine Or.inr ⟨a, 1, ?_⟩

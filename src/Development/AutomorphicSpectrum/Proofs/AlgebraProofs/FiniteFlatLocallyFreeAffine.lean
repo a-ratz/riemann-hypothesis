@@ -67,10 +67,10 @@ theorem exists_finFree_away_of_finitePresentation {A B : Type} [CommRing A] [Com
 theorem finiteFreeHom_comp_isIso {A B C : CommRingCat.{0}} (f : A ⟶ B) (e : B ⟶ C) [IsIso e]
     (h : FinFree f.hom) : FiniteFreeHom (f ≫ e).hom := by
   obtain ⟨hfin, hfree⟩ := h
-  letI : Algebra A B := f.hom.toAlgebra
-  letI : Algebra A C := (f ≫ e).hom.toAlgebra
-  haveI : Module.Finite A B := hfin
-  haveI : Module.Free A B := hfree
+  let : Algebra A B := f.hom.toAlgebra
+  let : Algebra A C := (f ≫ e).hom.toAlgebra
+  have : Module.Finite A B := hfin
+  have : Module.Free A B := hfree
   let eR : B ≃+* C := (asIso e).commRingCatIsoToRingEquiv
   let eA : B ≃ₐ[A] C := AlgEquiv.ofRingEquiv (f := eR) (fun a => rfl)
   exact ⟨Module.Free.of_equiv eA.toLinearEquiv, Module.Finite.equiv eA.toLinearEquiv⟩
@@ -99,7 +99,7 @@ theorem exists_affine_finiteFreeHom {Y S : Scheme.{0}} (g : Y ⟶ S) [IsFinite g
   have hW : IsAffineOpen (S.basicOpen r) := hV.basicOpen r
   have hpush := GlobalTheory.FiniteAmple.isPushout_app g hV hW hWV
   have hu : IsUnit ((S.presheaf.map (homOfLE hWV).op).hom r) := by
-    haveI := hV.isLocalization_basicOpen r
+    have := hV.isLocalization_basicOpen r
     exact IsLocalization.Away.algebraMap_isUnit r
   have key : FinFree (g.app (S.basicOpen r)).hom :=
     F (α := (S.presheaf.map (homOfLE hWV).op).hom) (φ' := (g.app (S.basicOpen r)).hom) hpush hu

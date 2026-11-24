@@ -134,7 +134,7 @@ lemma summable_abs_a (K : ℝ) (hK : ∀ n : ℕ, |a n| ≤ K * vonMangoldt n) {
     simp [Real.zero_rpow (by linarith : -σ ≠ 0)]
   · have hΛ : 0 ≤ ArithmeticFunction.vonMangoldt n := ArithmeticFunction.vonMangoldt_nonneg
     have hnpos : (0 : ℝ) < n := by exact_mod_cast hn
-    rw [LSeries.norm_term_eq, if_neg hn.ne']
+    rw [LSeries.norm_term_eq, ite_eq_right hn.ne']
     simp only [Complex.ofReal_re, Complex.norm_real, Real.norm_of_nonneg hΛ]
     rw [div_eq_mul_inv, ← Real.rpow_neg hnpos.le]
     have hK' : |a n| ≤ |K| * ArithmeticFunction.vonMangoldt n :=

@@ -137,7 +137,7 @@ private theorem jv_eq (M a : ℕ) [NeZero M] (ha : a.Coprime M) (b : ZMod M) :
 theorem UpperTheory.V.Odd.clKill :
     ∀ (M : ℕ) [NeZero M] (K : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] (a : ℕ), Odd a → a.Coprime M → ∀ c : Additive (ClassGroup (𝓞 K)), ∑ b : (ZMod M)ˣ, Eone M a b • Stick.clRep K (Stick.sg M K b)⁻¹ c = 0 := by
   intro M _ K _ _ _ a ha hcop c
-  haveI : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
+  have : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
   have hterm : ∀ b : (ZMod M)ˣ, Eone M a b • Stick.clRep K (Stick.sg M K b)⁻¹ c =
       Additive.ofMul ((clMap ((Stick.sg M K) b)⁻¹.toRingEquiv (Additive.toMul c)) ^ (Eone M a b)) := by
     intro b
@@ -159,7 +159,7 @@ theorem UpperTheory.V.Odd.clKill :
       rw [← ZMod.inv_coe_unit]
       rfl
     simp only [β, sub_mul, Finset.sum_sub_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true, one_mul, Units.val_one]
+      ite_true, one_mul, Units.val_one]
     rw [hy]
   have hj := (Stick.coef M K (Additive.toMul c)).2 β (fun t => jv M a (t : ZMod M)) hβ
   calc ∏ b : (ZMod M)ˣ, clMap ((Stick.sg M K) b)⁻¹.toRingEquiv (Additive.toMul c) ^ Eone M a b
@@ -196,16 +196,16 @@ private theorem cyc_hom_ext {K Ω : Type} [Field K] [CharZero K] [Field Ω] [Cha
 theorem UpperTheory.V.Odd.fixField :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (N : ℕ) [NeZero N] (ρ : (ZMod N)ˣ →* (E ≃ₐ[ℚ] E)), IsCycAct Ω N ρ → ∃ (K : IntermediateField E Ω) (_ : NumberField K) (_ : IsCyclotomicExtension {N} ℚ K), galOf E K Ω = fixMu E Ω N ∧ ∀ (b : (ZMod N)ˣ) (σ : Ω ≃+* Ω), CycLift N b σ → IsLift (Stick.sg N K b).toRingEquiv σ := by
   intro E Ω _ _ _ _ _ N _ ρ hρ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : IsScalarTower ℚ E Ω := IsScalarTower.of_algebraMap_eq fun q => by simp
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
-  haveI : IsGalois ℚ Ω := {}
-  haveI : NeZero (N : Ω) := ⟨Nat.cast_ne_zero.2 (NeZero.ne N)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsScalarTower ℚ E Ω := IsScalarTower.of_algebraMap_eq fun q => by simp
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : IsGalois ℚ Ω := {}
+  have : NeZero (N : Ω) := ⟨Nat.cast_ne_zero.2 (NeZero.ne N)⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   let L : IntermediateField ℚ Ω := IntermediateField.adjoin ℚ {ζ}
   have hζL : ζ ∈ L := IntermediateField.mem_adjoin_simple_self ℚ ζ
   have hE : ∀ e : E, algebraMap E Ω e ∈ L := fun e => by
@@ -221,14 +221,14 @@ theorem UpperTheory.V.Odd.fixField :
     rw [map_one] at this
     exact this
   let K : IntermediateField E Ω := L.toSubfield.toIntermediateField hE
-  haveI hL : IsCyclotomicExtension {N} ℚ L := hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap E K).injective
+  have hL : IsCyclotomicExtension {N} ℚ L := hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap E K).injective
   let φ : L ≃+* K := RingEquiv.refl L
   have hK : @IsCyclotomicExtension {N} ℚ K _ _ DivisionRing.toRatAlgebra :=
     @IsCyclotomicExtension.equiv {N} ℚ L _ _ _ K _ DivisionRing.toRatAlgebra hL
       (@AlgEquiv.ofRingEquiv ℚ L K _ _ _ _ DivisionRing.toRatAlgebra φ fun q => by simp)
-  letI : Algebra ℚ K := DivisionRing.toRatAlgebra
-  haveI : NumberField K := IsCyclotomicExtension.numberField {N} ℚ K
+  let : Algebra ℚ K := DivisionRing.toRatAlgebra
+  have : NumberField K := IsCyclotomicExtension.numberField {N} ℚ K
   have hmu : ∀ x : Ω, x ^ N = 1 → x ∈ K := fun x hx => by
     obtain ⟨i, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hx
     exact (pow_mem hζL i : ζ ^ i ∈ L)

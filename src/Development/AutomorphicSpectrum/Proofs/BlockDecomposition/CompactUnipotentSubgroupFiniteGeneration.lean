@@ -62,13 +62,13 @@ theorem mem_span_openFns_of_mem_twKer : ∀ (k : Type) [Field k] [ValuativeRel k
     refine ⟨p, hp, n * (t : GL (Fin N) k)⁻¹, mul_mem hn (inv_mem (hQ t.2)), ?_⟩
     rw [← mul_assoc, ← e]
     group
-  have hσs : IsSmooth σ := fun v => (isSmooth_parInd (stdBlocks d hd) ρ v).preimage continuous_subtype_val
+  have hσs : IsSmooth σ := fun v => (isSmooth_parInd (stdBlocks d hd) ρ v).preimage continuous_subtypeVal
   let ρ' : Representation ℂ Q (openFns d hd ρ) := GlobalTheory.PRep.sub σ (openFns d hd ρ) hI
   have hρs : IsSmooth ρ' := by
     intro v
     have : {t : Q | ρ' t v = v} = {t : Q | σ t (v : IndSp (stdBlocks d hd) ρ) = v} := by
       ext t
-      simp only [Set.mem_setOf_eq, Subtype.ext_iff]
+      simp only [Set.mem_ofPred_eq, Subtype.ext_iff]
       rfl
     rw [this]
     exact hσs _
@@ -78,7 +78,7 @@ theorem mem_span_openFns_of_mem_twKer : ∀ (k : Type) [Field k] [ValuativeRel k
       GlobalTheory.Whittaker.isSmoothChar_whitChar hψ
     let j : (⊤ : Subgroup Q) → unipB k (Fin N) := fun x => ⟨x.1.1, hQ x.1.2⟩
     have hj : Continuous j :=
-      Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
+      Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
     have hset : (θ'.ker : Set (⊤ : Subgroup Q)) = j ⁻¹' ((whitChar ψ N).ker : Set (unipB k (Fin N))) := by
       ext x
       show θ x.1 = 1 ↔ whitChar ψ N (j x) = 1

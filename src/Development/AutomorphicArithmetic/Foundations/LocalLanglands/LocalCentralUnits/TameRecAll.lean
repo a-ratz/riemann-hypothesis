@@ -241,7 +241,7 @@ private theorem glob_norm {Ω : Type} [Field Ω] [Algebra K Ω] [Algebra L Ω] [
   intro y
   apply GlobalTheory.GabSep.eq_one_of_forall_isOpen_subgroup K Ω
   intro U hU
-  haveI : IsClosed (U : Set (Gab K Ω)) := U.isClosed_of_isOpen hU
+  have : IsClosed (U : Set (Gab K Ω)) := U.isClosed_of_isOpen hU
   let χ : Gab K Ω →* Gab K Ω ⧸ U := QuotientGroup.mk' U
   have hχc : Continuous χ := continuous_quot_mk
   have hart : Continuous art := ha.quot.continuous
@@ -351,12 +351,12 @@ private theorem frob_fix : GlobalTheory.Published.GlobalArtinReciprocity → ∀
     refine ⟨Polynomial.X ^ (normV v - 1) - Polynomial.C (ϖ : E),
       Polynomial.monic_X_pow_sub_C _ (by omega), ?_⟩
     simp [Polynomial.eval₂_sub, Polynomial.eval₂_X_pow, Polynomial.eval₂_C, hπ]
-  haveI hfd : FiniteDimensional E (IntermediateField.adjoin E {π}) :=
+  have hfd : FiniteDimensional E (IntermediateField.adjoin E {π}) :=
     IntermediateField.adjoin.finiteDimensional hint
-  haveI hnf : NumberField (IntermediateField.adjoin E {π}) :=
+  have hnf : NumberField (IntermediateField.adjoin E {π}) :=
     NumberField.of_module_finite E (IntermediateField.adjoin E {π})
-  haveI halg : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI hac : IsAlgClosure (IntermediateField.adjoin E {π}) Ω :=
+  have halg : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have hac : IsAlgClosure (IntermediateField.adjoin E {π}) Ω :=
     ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) _⟩
   obtain ⟨W, hW, hu, hAW, hNW, hunif⟩ := _root_.GlobalTheory.TameRecPlace.main E Ω v A hA ϖ hϖ hϖ2 π hπ
   obtain ⟨artK, haK⟩ := hGAR (IntermediateField.adjoin E {π}) Ω
@@ -385,7 +385,7 @@ private theorem frob_fix : GlobalTheory.Published.GlobalArtinReciprocity → ∀
 private theorem ine_of_unit : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (art : Ideles E →* Gab E Ω), IsGlobalArtin art → ∀ (v : HeightOneSpectrum (𝓞 E)) (A : ValuationSubring Ω), Formalism.ConjugateSelfDual.IsPlaceOver A v → ∀ ϖ : 𝓞 E, ϖ ∈ v.asIdeal → ϖ ∉ v.asIdeal ^ 2 → ∀ π : Ω, π ^ (normV v - 1) = algebraMap E Ω (ϖ : E) → ∀ (x : (v.adicCompletion E)ˣ) (u : 𝓞 E), IsUnitAt v x → Valued.v ((x : v.adicCompletion E) - algebraMap E (v.adicCompletion E) (u : E)) < 1 → ∃ σ ∈ Ine (F := E) A, toAb E Ω σ = art (localIdele E v x) ∧ A.valuation (σ π / π - algebraMap E Ω (u : E)) < 1 := by
   intro hGAR E Ω _ _ _ _ _ art ha v A hA ϖ hϖ hϖ2 π hπ x u hx hxu
   have hq : 1 < normV v := GlobalTheory.WeilDeligne.one_lt_normV v
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hx1 : Valued.v (x : v.adicCompletion E) = 1 := hx
   have hvu : Valued.v (algebraMap E (v.adicCompletion E) (u : E)) = 1 := by
     rw [← hx1]
@@ -506,10 +506,10 @@ private theorem weil_smul_eq_of_local_artin_eq {M Ω : Type} [Field M] [NumberFi
     ext
     simp [κ, hroot s]
   let κ' := κ.codRestrict (rootsOfUnity (normV v - 1) Ω) hκ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap M Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed M
-  haveI : NeZero (normV v - 1) := ⟨hn.ne'⟩
-  haveI : NeZero ((normV v - 1 : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hn.ne'⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap M Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed M
+  have : NeZero (normV v - 1) := ⟨hn.ne'⟩
+  have : NeZero ((normV v - 1 : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hn.ne'⟩
   have hcard : Nat.card (rootsOfUnity (normV v - 1) Ω) = Nat.card (rootsOfUnity (normV v - 1) ℂ) := by
     rw [HasEnoughRootsOfUnity.natCard_rootsOfUnity, Complex.card_rootsOfUnity]
   let e := mulEquivOfCyclicCardEq hcard
@@ -523,12 +523,12 @@ private theorem weil_smul_eq_of_local_artin_eq {M Ω : Type} [Field M] [NumberFi
     simp only [κ, MonoidHom.coe_mk, OneHom.coe_mk, Units.val_mk0, Units.val_one]
     exact div_eq_one_iff_eq hπ0
   have hsm : IsSmooth ξ := by
-    haveI : Algebra.IsAlgebraic M Ω := IsAlgClosure.isAlgebraic
-    haveI : FiniteDimensional M (IntermediateField.adjoin M {π}) :=
+    have : Algebra.IsAlgebraic M Ω := IsAlgClosure.isAlgebraic
+    have : FiniteDimensional M (IntermediateField.adjoin M {π}) :=
       IntermediateField.adjoin.finiteDimensional (Algebra.IsAlgebraic.isAlgebraic π).isIntegral
     have hO : IsOpen (((IntermediateField.adjoin M {π}).fixingSubgroup.comap (Ine (F := M) A).subtype : Subgroup (Ine (F := M) A)) :
         Set (Ine (F := M) A)) :=
-      (IntermediateField.fixingSubgroup_isOpen (IntermediateField.adjoin M {π})).preimage continuous_subtype_val
+      (IntermediateField.fixingSubgroup_isOpen (IntermediateField.adjoin M {π})).preimage continuous_subtypeVal
     show IsOpen (((ξ.comp (ineIncl h)).ker : Subgroup (Ine (F := M) A)) : Set (Ine (F := M) A))
     refine Subgroup.isOpen_mono ?_ hO
     intro τ hτ
@@ -549,7 +549,7 @@ private theorem tame_all : ∀ (M Ω : Type) [Field M] [NumberField M] [Field Ω
     rw [hπ]
     simp
   have hπ0 : π ≠ 0 := by
-    haveI := charZero_of_injective_algebraMap (algebraMap M Ω).injective
+    have := charZero_of_injective_algebraMap (algebraMap M Ω).injective
     have hg0 : ((g : ℕ) : Ω) ≠ 0 := by exact_mod_cast (Fact.out : g.Prime).ne_zero
     rintro rfl
     have hq := one_lt_normV v

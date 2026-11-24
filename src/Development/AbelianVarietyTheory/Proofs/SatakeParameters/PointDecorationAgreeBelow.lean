@@ -290,11 +290,11 @@ theorem mem_localization_of_mem_localLattice : ∀ (F E : Type) [Field F] [Numbe
   have hJ : ∀ s, s ∈ J ↔ s • x ∈ B := fun s => Iff.rfl
   have hJ0 : J.comap (algebraMap (𝓞 F) (𝓞 E)) ≠ ⊥ := by
     intro h
-    have := Ideal.eq_bot_of_comap_eq_bot h
+    have := Ideal.eq_bot_of_under_eq_bot h
     have h2 : ν ∈ J := hνx
     rw [this] at h2
     exact hν h2
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQ, hI⟩ := Ideal.eq_prime_pow_mul_coprime hJ0 v.asIdeal
   obtain ⟨d, hdQ, hdv⟩ : ∃ d ∈ Q, d ∉ v.asIdeal := by
     by_contra h
@@ -311,7 +311,7 @@ theorem mem_localization_of_mem_localLattice : ∀ (F E : Type) [Field F] [Numbe
   · obtain ⟨π, hπ, hπw⟩ : ∃ π ∈ v.asIdeal ^ (UniqueFactorizationMonoid.normalizedFactors (J.comap (algebraMap (𝓞 F) (𝓞 E)))).count v.asIdeal, π ∉ w.asIdeal := by
       by_contra h
       push_neg at h
-      haveI := w.isPrime
+      have := w.isPrime
       have h1 : v.asIdeal ≤ w.asIdeal := Ideal.IsPrime.le_of_pow_le h
       exact hw (HeightOneSpectrum.ext (v.isMaximal.eq_of_le w.isPrime.ne_top h1).symm)
     have h1 : π * d ∈ J.comap (algebraMap (𝓞 F) (𝓞 E)) := by
@@ -375,7 +375,7 @@ theorem globLat_le_localization_globLat (Lb : Submodule (𝓞 E) (Fin n → E)) 
   have hfin : ∀ g, Module.Finite (𝓞 E) (Formalism.UG.CS.globLat g Lb) := fun g => Module.Finite.iff_fg.2 (hlat g).fg
   have hq : Q.under (𝓞 F) = v := HeightOneSpectrum.ext hQ.symm
   intro z hz
-  letI := Formalism.UG.P.csGlob_lattice (F := F) Lb hf hs x₁
+  let := Formalism.UG.P.csGlob_lattice (F := F) Lb hf hs x₁
   refine mem_localization_of_mem_localLattice F E n v _ (hfin x₁) Submodule.IsFullLattice.span_eq_top z ?_ Q hq
   have hz' : (fun i => Formalism.UG.inclE (F := F) (v.adicCompletion F) (z i)) ∈ GlobalTheory.IndefiniteRowSideFullHecke.SplittingProjection.locLat v (Formalism.UG.CS.globLat x Lb) :=
     Submodule.subset_span ⟨z, hz, rfl⟩

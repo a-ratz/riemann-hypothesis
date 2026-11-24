@@ -67,7 +67,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem iotaF_int_mem (p : HeightOneSpectrum (𝓞 F)) (t : 𝓞 F) :
     (A p).ιF (algebraMap (𝓞 F) F t) ∈ (haveI := (A p).lf; 𝒪[(A p).Fp]) := by
-  haveI := (A p).lf
+  have := (A p).lf
   have h := ((A p).val (algebraMap (𝓞 F) F t) 1).2 (by simpa using p.valuation_le_one t)
   rw [map_one] at h
   rw [Valuation.mem_integer_iff]
@@ -75,7 +75,7 @@ theorem iotaF_int_mem (p : HeightOneSpectrum (𝓞 F)) (t : 𝓞 F) :
 
 theorem clear_F (p : HeightOneSpectrum (𝓞 F)) (l : (A p).Fp) :
     ∃ t : 𝓞 F, t ≠ 0 ∧ (A p).ιF (algebraMap (𝓞 F) F t) * l ∈ (haveI := (A p).lf; 𝒪[(A p).Fp]) := by
-  haveI := (A p).lf
+  have := (A p).lf
   by_cases hl : l = 0
   · refine ⟨1, one_ne_zero, ?_⟩
     rw [hl, mul_zero]
@@ -144,7 +144,7 @@ theorem clear_F (p : HeightOneSpectrum (𝓞 F)) (l : (A p).Fp) :
 
 private theorem ιF_mem_O_of_mem_integers (p : HeightOneSpectrum (𝓞 F)) (w : (A p).Fp)
     (hw : w ∈ (haveI := (A p).lf; 𝒪[(A p).Fp])) : algebraMap (A p).Fp (A p).Ep w ∈ (A p).O := by
-  haveI := (A p).lf
+  have := (A p).lf
   rw [(A p).O_def]
   have e : algebraMap (A p).Fp (A p).Ep w = algebraMap (𝒪[(A p).Fp]) (A p).Ep ⟨_, hw⟩ := rfl
   rw [e]
@@ -152,7 +152,7 @@ private theorem ιF_mem_O_of_mem_integers (p : HeightOneSpectrum (𝓞 F)) (w : 
 
 private theorem algebraMap_ιF_mem_O (p : HeightOneSpectrum (𝓞 F)) (t : 𝓞 F) :
     algebraMap (A p).Fp (A p).Ep ((A p).ιF (algebraMap (𝓞 F) F t)) ∈ (A p).O := by
-  haveI := (A p).lf
+  have := (A p).lf
   rw [(A p).O_def]
   have hm := iotaF_int_mem A p t
   have e : algebraMap (A p).Fp (A p).Ep ((A p).ιF (algebraMap (𝓞 F) F t)) =
@@ -162,7 +162,7 @@ private theorem algebraMap_ιF_mem_O (p : HeightOneSpectrum (𝓞 F)) (t : 𝓞 
 
 theorem clear_one (p : HeightOneSpectrum (𝓞 F)) (z : (A p).Ep) :
     ∃ t : 𝓞 F, t ≠ 0 ∧ algebraMap (A p).Fp (A p).Ep ((A p).ιF (algebraMap (𝓞 F) F t)) * z ∈ (A p).O := by
-  haveI := (A p).lf
+  have := (A p).lf
   have hz : z ∈ Submodule.span (A p).Fp (Set.range (A p).ιE) := by
     rw [(A p).span]
     trivial
@@ -240,15 +240,15 @@ theorem approx_lo (S : Finset (HeightOneSpectrum (𝓞 F))) (c : 𝓞 F) (hc : c
     fun p hp a b => ?_, fun p hp a b => ?_⟩
   · simp [not_lt.2 hab.le, hab.ne]
   · by_cases hba : b < a
-    · simp only [hba, if_true]; exact hxS (a, b) p hp
+    · simp only [hba, ite_true]; exact hxS (a, b) p hp
     · refine ⟨0, zero_mem _, ?_⟩
       rcases eq_or_ne a b with rfl | hab
       · simp [hg1 p hp a]
       · have hlt : a < b := lt_of_le_of_ne (not_lt.1 hba) hab
         simp [hba, hab, hg0 p hp a b hlt]
   · by_cases hba : b < a
-    · simp only [hba, if_true]; exact hxO (a, b) p hp
-    · simp only [hba, if_false]
+    · simp only [hba, ite_true]; exact hxO (a, b) p hp
+    · simp only [hba, ite_false]
       split_ifs
       · rw [map_one]; exact one_mem _
       · rw [map_zero]; exact zero_mem _

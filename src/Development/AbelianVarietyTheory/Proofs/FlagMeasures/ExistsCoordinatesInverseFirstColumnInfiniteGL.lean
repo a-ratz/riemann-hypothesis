@@ -267,8 +267,8 @@ theorem lintegral_linear {ι κ : Type} [Fintype ι] [Fintype κ]
   have hdet : LinearMap.det (L.restrictScalars ℝ) = ‖LinearMap.det L‖ ^ 2 := by
     rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply, Complex.normSq_eq_norm_sq]
   have hpos : 0 < ‖LinearMap.det L‖ ^ 2 := pow_pos (norm_pos_iff.2 hL) _
-  haveI : (volume : Measure (ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (κ → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (κ → ι → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure (κ → ι → ℂ))
     (f := L.restrictScalars ℝ) (by rw [hdet]; exact hpos.ne')
   have hm : Measurable (L.restrictScalars ℝ) :=
@@ -378,7 +378,7 @@ theorem lintegral_inv {m : ℕ} (f : (Fin m → Fin m → ℂ) → ℝ≥0∞) (
     intro g hg
     rw [hμ, lintegral_withDensity_eq_lintegral_mul _ measurable_wt hg]
     simp only [Pi.mul_apply, mul_comm]
-  haveI : SigmaFinite μ := SigmaFinite.withDensity_of_ne_top
+  have : SigmaFinite μ := SigmaFinite.withDensity_of_ne_top
     (Filter.Eventually.of_forall fun _ => ENNReal.ofReal_ne_top)
   have hae : ∀ᵐ x ∂μ, (Matrix.of x).det ≠ 0 := by
     rw [hμ, ae_withDensity_iff measurable_wt]
@@ -386,8 +386,8 @@ theorem lintegral_inv {m : ℕ} (f : (Fin m → Fin m → ℂ) → ℝ≥0∞) (
   have hne : μ ≠ 0 := by
     intro h
     rw [hμ, withDensity_eq_zero_iff measurable_wt.aemeasurable] at h
-    haveI : (volume : Measure (Fin m → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-    haveI : (volume : Measure (Fin m → Fin m → ℂ)).IsAddHaarMeasure :=
+    have : (volume : Measure (Fin m → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+    have : (volume : Measure (Fin m → Fin m → ℂ)).IsAddHaarMeasure :=
       Measure.pi.isAddHaarMeasure _
     have ho : IsOpen {x : Fin m → Fin m → ℂ | (Matrix.of x).det ≠ 0} :=
       isOpen_ne_fun continuous_detM continuous_const
@@ -397,7 +397,7 @@ theorem lintegral_inv {m : ℕ} (f : (Fin m → Fin m → ℂ) → ℝ≥0∞) (
     refine hp.ne' (measure_mono_null (fun x hx => ?_) h)
     intro h0
     have := wt_cancel x hx
-    simp only [Set.mem_setOf_eq, Pi.zero_apply] at h0
+    simp only [Set.mem_ofPred_eq, Pi.zero_apply] at h0
     rw [h0, mul_zero] at this
     exact zero_ne_one this
   have left : ∀ a : Fin m → Fin m → ℂ, (Matrix.of a).det ≠ 0 →
@@ -853,7 +853,7 @@ theorem meas_det {j : ℕ} : Measurable fun x : Fin j → Fin j → ℂ => ‖(M
 end Meas
 
 theorem ae_ne_zero (ι : Type) [Fintype ι] (k : ℕ) : ∀ᵐ x : ι → Fin (k + 1) → ℂ, ∀ w, x w ≠ 0 := by
-  haveI : SigmaFinite (volume : Measure (Fin (k + 1) → ℂ)) := inferInstance
+  have : SigmaFinite (volume : Measure (Fin (k + 1) → ℂ)) := inferInstance
   rw [ae_all_iff]
   intro w
   have h : ∀ᵐ y : Fin (k + 1) → ℂ, y ≠ 0 := by

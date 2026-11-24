@@ -63,9 +63,9 @@ theorem isFreeGen_dForm_uniformiser_cons : ∀ (k V : Type) [Field k] [CharZero 
     IsFreeGen V (dForm α (Fin.cons t w : Fin (n + 1) → V)) := by
   intro k V _ _ _ _ _ α n t w hft ht hb₀ hw
   obtain ⟨b₀⟩ := hb₀
-  letI := α.toAlgebra
-  haveI : Algebra.EssFiniteType k V := hft
-  haveI : Algebra.FormallySmooth k V := formallySmooth_of_isRegularLocalRing_of_perfectField k V
+  let := α.toAlgebra
+  have : Algebra.EssFiniteType k V := hft
+  have : Algebra.FormallySmooth k V := formallySmooth_of_isRegularLocalRing_of_perfectField k V
   let κ := ResidueField V
   let wb : Fin n → κ := fun i => algebraMap V κ (w i)
 
@@ -84,8 +84,8 @@ theorem isFreeGen_dForm_uniformiser_cons : ∀ (k V : Type) [Field k] [CharZero 
     have hs : AlgebraicIndepOn k id (Set.range wb) := by
       exact (algebraicIndependent_subtype_range hai.injective).mpr hai
     obtain ⟨s, hsub, hs⟩ := exists_isTranscendenceBasis_superset hs
-    haveI := hs.isAlgebraic_field
-    haveI : Algebra.IsSeparable (IntermediateField.adjoin k (Set.range ((↑) : s → κ))) κ :=
+    have := hs.isAlgebraic_field
+    have : Algebra.IsSeparable (IntermediateField.adjoin k (Set.range ((↑) : s → κ))) κ :=
       Algebra.IsAlgebraic.isSeparable_of_perfectField
     obtain ⟨b, hb⟩ := exists_basis_kaehler_of_algebraicIndependent hs.1
     let ι : Fin n → s := fun i => ⟨wb i, hsub (Set.mem_range_self i)⟩
@@ -118,9 +118,9 @@ theorem isFreeGen_dForm_uniformiser_cons : ∀ (k V : Type) [Field k] [CharZero 
     exact Fin.cases h0 hs i
   have hsp := hli.span_eq_top_of_card_eq_finrank' (by
     rw [Fintype.card_fin, Module.finrank_eq_card_basis (b₀.baseChange κ), Fintype.card_fin])
-  haveI : Module.Free V Ω[V⁄k] := Module.Free.of_basis b₀
-  haveI : Module.Finite V Ω[V⁄k] := Module.Finite.of_basis b₀
-  haveI : Module.FinitePresentation V Ω[V⁄k] := Module.finitePresentation_of_finite V _
+  have : Module.Free V Ω[V⁄k] := Module.Free.of_basis b₀
+  have : Module.Finite V Ω[V⁄k] := Module.Finite.of_basis b₀
+  have : Module.FinitePresentation V Ω[V⁄k] := Module.finitePresentation_of_finite V _
   obtain ⟨b, hb⟩ := Module.exists_basis_of_basis_baseChange (R := V) (fun i => D k V (z i)) hli hsp
     (Module.Flat.rTensor_preserves_injective_linearMap (maximalIdeal V).subtype
       Subtype.val_injective)

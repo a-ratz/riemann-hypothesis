@@ -307,7 +307,7 @@ theorem mem_kerM_iff (B : FB V d O) {n : ℕ} (p : Matrix (Fin n) (Fin n) O) {α
     rw [evV_comp (sm_matV B p hP) hA]
     exact congrArg (fun a => evV a f) (funext fun b => funext fun i => e5 b i)
   unfold kerM
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨-, hk⟩ f
     let c : Fin 0 → Pt V n d := fun b => b.elim0
@@ -352,7 +352,7 @@ theorem GlobalTheory.PlaceInt.shift_kerM : ∀ (V : Type) [CommRing V] [IsDomain
   intro V _ _ _ _ _ d O _ _ B n p
   refine ⟨?_, fun f => shift_zero B f, fun α β hα hβ => ?_⟩
   · unfold kerM
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     refine ⟨fun b i => by simp, ?_⟩
     have e : (fun j => (cpt ((0 : Fin n → Fin d → V) j) : Pt V 0 d)) = 0 := funext fun j => cpt_zero
     rw [e]

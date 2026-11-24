@@ -163,7 +163,7 @@ def PhiFin (l : ℕ) (G : Type) [Group G] [TopologicalSpace G] : Prop :=
 
 theorem PhiFin.of_finite (l : ℕ) [NeZero l] (G : Type) [Group G] [Finite G] [TopologicalSpace G] : PhiFin l G := by
   intro H _
-  haveI : Finite (H →* Multiplicative (ZMod l)) := Finite.of_injective _ DFunLike.coe_injective
+  have : Finite (H →* Multiplicative (ZMod l)) := Finite.of_injective _ DFunLike.coe_injective
   exact Set.toFinite _
 
 def TopGen (B : Type) [CommRing B] [IsLocalRing B] (S : Set B) : Prop :=

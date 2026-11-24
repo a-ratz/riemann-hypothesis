@@ -292,7 +292,7 @@ theorem exists_cell_section : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
     ∃ σ : D.La →ₗ[𝓞 E] D.La, (∀ a, σ a ∈ Z') ∧ (∀ b ∈ Z', σ b = b) ∧ (∀ a, ∃ e, y (σ a) = y a + n • e) ∧
       ∀ a, ∃ b ∈ perp D Z, ∃ e, σ a = a + b + N • e := by
   intro E _ _ _ H D X _ _ _ y n N hn hN Z Z' h hker hsurj
-  haveI := D.proj
+  have := D.proj
   have hN0 : N ≠ 0 := by
     rintro rfl
     rw [zero_dvd_iff] at hN
@@ -662,7 +662,7 @@ theorem exists_ef_eq (D : Datum H) (ψ : D.La →+ ℤ) : ∃ y : D.La, ∀ x, D
   exact ⟨y, fun x => by rw [hy]; rfl⟩
 
 theorem fin_int (D : Datum H) : Module.Finite ℤ D.La := by
-  haveI := D.fin
+  have := D.fin
   exact Module.Finite.trans (𝓞 E) D.La
 
 variable {D : Datum H} {Z : Submodule (𝓞 E) D.La}
@@ -675,11 +675,11 @@ theorem sat_int (hZ : IsIsoSat D Z) (n : ℤ) (hn : n ≠ 0) (y : D.La) (hy : n 
     rw [← natCast_zsmul, this]; exact Z.neg_mem hy
 
 theorem proj_int (hZ : IsIsoSat D Z) : Module.Projective ℤ (D.La ⧸ Z.restrictScalars ℤ) := by
-  haveI := fin_int D
+  have := fin_int D
   exact proj_quot_of_sat _ fun a ha y hy => sat_int hZ a ha y hy
 
 theorem exists_ext (hZ : IsIsoSat D Z) (φ : Z →+ ℤ) : ∃ y : D.La, ∀ z : Z, D.EF z y = φ z := by
-  haveI := proj_int hZ
+  have := proj_int hZ
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property (Z.restrictScalars ℤ).mkQ LinearMap.id
     (Submodule.mkQ_surjective _)
   have hmem : ∀ x : D.La, x - σ ((Z.restrictScalars ℤ).mkQ x) ∈ Z := fun x => by
@@ -694,7 +694,7 @@ theorem exists_ext (hZ : IsIsoSat D Z) (φ : Z →+ ℤ) : ∃ y : D.La, ∀ z :
   simp only [AddMonoidHom.mk'_apply, h0, map_zero, sub_zero]
 
 theorem mem_of_perp_perp (hZ : IsIsoSat D Z) (y : D.La) (hy : ∀ p ∈ perp D Z, D.EF y p = 0) : y ∈ Z := by
-  haveI := proj_int hZ
+  have := proj_int hZ
   by_contra hyZ
   have hu : (Z.restrictScalars ℤ).mkQ y ≠ 0 := fun h => hyZ ((Submodule.Quotient.mk_eq_zero _).1 h)
   obtain ⟨χ, hχ⟩ : ∃ χ : Module.Dual ℤ (D.La ⧸ Z.restrictScalars ℤ), χ ((Z.restrictScalars ℤ).mkQ y) ≠ 0 := by
@@ -712,7 +712,7 @@ theorem mem_of_perp_perp (hZ : IsIsoSat D Z) (y : D.La) (hy : ∀ p ∈ perp D Z
 theorem perp_sat (D : Datum H) (Z : Submodule (𝓞 E) D.La) (a : 𝓞 E) (ha : a ≠ 0) (y : D.La) (hy : a • y ∈ perp D Z) :
     y ∈ perp D Z := by
   have hne : (Ideal.span {a}).comap (algebraMap ℤ (𝓞 E)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
+    Ideal.under_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   obtain ⟨a', ha'⟩ := Ideal.mem_span_singleton'.1 (Ideal.mem_comap.1 hn)
   intro z hz
@@ -722,8 +722,8 @@ theorem perp_sat (D : Datum H) (Z : Submodule (𝓞 E) D.La) (a : 𝓞 E) (ha : 
   exact (mul_eq_zero.1 h).resolve_left hn0
 
 theorem exists_opp (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D Z) : ∃ Z' : Submodule (𝓞 E) D.La, IsOpp D Z Z' := by
-  haveI := D.fin
-  haveI : Module.Projective (𝓞 E) (D.La ⧸ perp D Z) := proj_quot_of_sat _ (perp_sat D Z)
+  have := D.fin
+  have : Module.Projective (𝓞 E) (D.La ⧸ perp D Z) := proj_quot_of_sat _ (perp_sat D Z)
   obtain ⟨s, hs⟩ := Module.projective_lifting_property (perp D Z).mkQ LinearMap.id (Submodule.mkQ_surjective _)
   have hsx : ∀ q, (perp D Z).mkQ (s q) = q := fun q => by rw [← LinearMap.comp_apply, hs, LinearMap.id_apply]
   set C := LinearMap.range s with hC
@@ -1114,10 +1114,10 @@ theorem exists_xfLevel_ext {E : Type} [Field E] [NumberField E] [IsCMField E] {H
   have hLL := GlobalTheory.firstFiveLaws
   have hL : Laws := hLL.1
   have hL₂ : Laws2 := hLL.2.1
-  haveI : CharZero R := hR.2
-  haveI : IsNoetherianRing R := hR.1.1
-  haveI : CharZero (FractionRing R) := charZero_of_injective_ringHom (IsFractionRing.injective R (FractionRing R))
-  haveI : CharZero (AlgebraicClosure (FractionRing R)) :=
+  have : CharZero R := hR.2
+  have : IsNoetherianRing R := hR.1.1
+  have : CharZero (FractionRing R) := charZero_of_injective_ringHom (IsFractionRing.injective R (FractionRing R))
+  have : CharZero (AlgebraicClosure (FractionRing R)) :=
     charZero_of_injective_ringHom (algebraMap (FractionRing R) (AlgebraicClosure (FractionRing R))).injective
   have hB := C.P.D.tau_bimult
   have he := C.P.D.psi_even
@@ -1347,7 +1347,7 @@ theorem exists_genFib {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {t : SA
     ∃ ψ₁ : P.A.A.left ⟶ tK.G.left, ψ₁ ≫ m1.φ = P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R) ∧
       IsGrpPullback P.A.A t₀.G z (ψ₁ ≫ m2.φ) ∧ LBIso P.A.L (t₀.PP.L.pull (ψ₁ ≫ m2.φ)) ∧
       ∀ a : 𝓞 E, (P.oA.act a).left ≫ ψ₁ ≫ m2.φ = (ψ₁ ≫ m2.φ) ≫ (t₀.act.act a).left := by
-  letI := H.starRing
+  let := H.starRing
   have := P.U.gen_hom
   have : IsMonHom P.U.gen.symm.hom := by show IsMonHom P.U.gen.inv; infer_instance
   set k : P.A.A.left ⟶ t.G.left := P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R) with hk
@@ -1409,7 +1409,7 @@ theorem exists_xfLevel : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F],
     ∃ I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F), GlobalTheory.LowDat.XFLevel C tK m1 m2 F I := by
   intro E _ _ _ H Dw l Xo c R _ _ _ hR C tK m1 m2 F _ _ _
-  letI := H.starRing
+  let := H.starRing
   have := hR.2
   have hT := GlobalTheory.FlatTors.torsionIso_holds E H R _ hR.1 C.t C.P
   have hM' : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
@@ -1418,7 +1418,7 @@ theorem exists_xfLevel : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     rw [Category.assoc, Category.assoc, pullback.condition, ← Category.assoc C.y, C.y_over]
     simp only [β, toF, spMap_comp, Category.assoc]
   obtain ⟨-, J0, hζ0, jA, jM⟩ := Xo.univ.geom F (jFK (R := R) F ≫ C.y ≫ pullback.fst _ _) β hx
-  haveI := c.fin
+  have := c.fin
   obtain ⟨w, hw1, hw2, hw3⟩ := GlobalTheory.HostModel.exists_roots c.F F (toF C F)
   have hwA : w l.A = J0.ζ l.A := Units.ext (by
     rw [hw3 l.A l.A_pos ⟨zeta l.A, c.le (IntermediateField.subset_adjoin _ _ (by simp))⟩ rfl, hζ0]
@@ -1512,15 +1512,15 @@ theorem finrank_le_min : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     Module.finrank (𝓞 E) C.P.D.toPre.X ≤ min Dw.p Dw.q := by
   intro E _ _ _ H Dw l Xo c R _ _ _ hB C
   obtain ⟨hadm, hch⟩ := hB
-  haveI : IsNoetherianRing R := hadm.1
-  haveI : CharZero R := hch
+  have : IsNoetherianRing R := hadm.1
+  have : CharZero R := hch
   obtain ⟨tK, ⟨m₁⟩, ⟨m₂⟩⟩ := C.gen
   let K := AlgebraicClosure (FractionRing R)
   let g : FractionRing R →+* K := algebraMap (FractionRing R) K
   let f : R →+* K := g.comp (algebraMap R (FractionRing R))
   have hf : Function.Injective f :=
     (algebraMap (FractionRing R) K).injective.comp (IsFractionRing.injective R (FractionRing R))
-  haveI : CharZero K := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
+  have : CharZero K := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
   let x' : Sp K ⟶ Xo.X := spMap g ≫ C.y ≫ pullback.fst _ _
   obtain ⟨β₀, hβ₀⟩ := Spec.map_surjective (x' ≫ Xo.s)
   have hβ : x' ≫ Xo.s = spMap β₀.hom := hβ₀.symm
@@ -1763,8 +1763,8 @@ theorem tateIsoQ_y_cois : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     ∃ y : ℕ → D.La →ₗ[𝓞 E] D₀.X, (∀ n, 0 < n → ∀ a, ∃ e, y n a = (I.ev n a).y + n • e) ∧
       ∀ n, 0 < n → Cois D (y n) n := by
   intro E _ _ _ H D R _ _ _ _ D₀ _ oa hev hB F _ _ _ _ I
-  letI := H.starRing
-  haveI := D.proj
+  let := H.starRing
+  have := D.proj
   have lift : ∀ n, ∃ y : D.La →ₗ[𝓞 E] D₀.X, 0 < n → ∀ a, ∃ e, y a = (I.ev n a).y + n • e := fun n => by
     by_cases hn : 0 < n
     · have h₁ : ∀ a b, ∃ e, (I.ev n (a + b)).y = (I.ev n a).y + (I.ev n b).y + n • e := fun a b => by
@@ -1897,14 +1897,14 @@ theorem GlobalTheory.LowFilt.exists_filt : ∀ {E : Type} [Field E] [NumberField
           GlobalTheory.LowDat.XFLevel C tK m1 m2 F I ∧ GlobalTheory.LowDat.FiltGraded C Z F I := by
   intro E _ _ _ H Dw l Xo c R _ _ _ hR C hr
   obtain ⟨tK, ⟨m1⟩, ⟨m2⟩⟩ := C.gen
-  haveI : CharZero R := hR.2
-  letI := H.starRing
+  have : CharZero R := hR.2
+  let := H.starRing
   have hB := C.P.D.tau_bimult
   have hT : C.P.TorsionIso := GlobalTheory.FlatTors.torsionIso_holds E H R _ hR.1 C.t C.P
-  haveI : IsNoetherianRing R := hR.1.1
+  have : IsNoetherianRing R := hR.1.1
   let F₀ := AlgebraicClosure (FractionRing R)
-  haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
-  haveI : CharZero F₀ := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F₀).injective
+  have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
+  have : CharZero F₀ := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F₀).injective
   obtain ⟨I₀, hI₀⟩ := GlobalTheory.T.exists_levelIsometry_genericFibre_boundaryChart Xo c R hR C tK m1 m2 F₀
   obtain ⟨y, hy, hcois⟩ := GlobalTheory.T.tateIso_latticePart_surjective_coisotropicKernel Dw R C.P.D.toPre C.P.oD C.P.D.psi_even hB F₀ I₀
   have htow : ∀ n m, 0 < n → 0 < m → ∀ a, ∃ e, y (n * m) a = y n a + n • e := by

@@ -152,7 +152,7 @@ theorem postOn_gaL (c : G → ℂ) (U : MMap M) :
     postOn M (gaL V β L eG c) U = ∑ g, c g • postOn M (actL V β L (eG g)) U := by
   refine MultilinearMap.ext fun v => ?_
   simp only [gaL, postOn, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.compMultilinearMap_apply,
-    LinearMap.sum_apply, LinearMap.smul_apply, MultilinearMap.sum_apply, MultilinearMap.smul_apply]
+    LinearMap.sum_apply, LinearMap.smul_apply, sum_apply, smul_apply]
 
 theorem gaL_act (hl : LiftsExist V β L) {c : G → ℂ} (hc : ∀ g a, c (g * a * g⁻¹) = c a) (g : G) {U : MMap M}
     (hU : U ∈ MultP θ M β L) :

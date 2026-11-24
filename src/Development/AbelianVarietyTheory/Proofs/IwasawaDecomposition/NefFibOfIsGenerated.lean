@@ -183,7 +183,7 @@ variable {K : Type} [Field K] {Y : Var F} (y : Sp K ⟶ Y.X) {τ : F →+* K}
 end Values
 
 theorem injective_emb (σ : 𝓞 F →+* ℂ) : Function.Injective σ :=
-  (RingHom.injective_iff_ker_eq_bot σ).2 (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) (by
+  (RingHom.injective_iff_ker_eq_bot σ).2 (Ideal.eq_bot_of_under_eq_bot (R := ℤ) (by
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     exact RingHom.injective_int _))
 

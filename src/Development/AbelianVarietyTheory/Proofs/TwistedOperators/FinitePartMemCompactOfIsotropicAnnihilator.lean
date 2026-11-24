@@ -214,7 +214,7 @@ theorem repr_eq_trace {F E : Type} [Field F] [Field E] [Algebra F E] [FiniteDime
 
   rw [map_sum] at h
   simp only [map_smul, LinearMap.BilinForm.apply_dualBasis_left, smul_eq_mul, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
   rw [Algebra.traceForm_apply] at h
   exact h.symm
 
@@ -290,8 +290,8 @@ theorem finPart_mem_compact : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix
         r * Algebra.trace (AF D.host.F) (AE D) (incA D (c p.2.2) * y p.1 p.2.1) :=
     fun p => GlobalTheory.T.exists_rational_test_matrix_isolates_entry D V W a b P Q hP hQ p.1 p.2.1 (c p.2.2)
   choose m hm using hm
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
   let φ : (Fin a × Fin b × Fin d) → Af D.host.F → WO V W :=
     fun p t => (pairA D.host.F 0 t) • (m p).map (incA D)
   have hpair : Continuous fun t : Af D.host.F => pairA D.host.F 0 t := continuous_const.prodMk continuous_id
@@ -304,9 +304,9 @@ theorem finPart_mem_compact : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix
     Filter.iInter_mem.2 fun p => (hφ p).continuousAt.preimage_mem_nhds
       (hU.mem_nhds (by rw [hφ0]; exact U.zero_mem))
   obtain ⟨K₀, hK₀, hmem⟩ := GlobalTheory.T.exists_compact_annihilator_finiteAdeles_stdChar D ψ hψ _ hO
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : ContinuousSMul (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.toContinuousSMul _ _
-  haveI : ContinuousAdd (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.toContinuousAdd (Af D.host.F) _
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : ContinuousSMul (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.toContinuousSMul _ _
+  have : ContinuousAdd (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.toContinuousAdd (Af D.host.F) _
   let g : (Fin a × Fin b × Fin d → Af D.host.F) → Matrix (Fin a) (Fin b) (Af D.host.F ⊗[D.host.F] D.host.E) :=
     fun z => Matrix.of fun i j => ∑ l, z (i, j, l) ⊗ₜ[D.host.F] e l
   have hg : Continuous g := by

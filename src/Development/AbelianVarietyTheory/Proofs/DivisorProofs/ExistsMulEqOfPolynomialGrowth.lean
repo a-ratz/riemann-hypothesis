@@ -163,8 +163,8 @@ theorem exists_mul_eq_of_polynomial_growth : ∀ (Y : Scheme.{0}) (p : Y ⟶ Sp 
     (HasRingHomProperty.appLE @LocallyOfFiniteType p inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨V, hV⟩ _).comp
       (RingHom.FiniteType.of_surjective _
         (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv).2)
-  letI : Algebra ℂ Γ(Y, V) := (algX p V).toAlgebra
-  haveI : Algebra.FiniteType ℂ Γ(Y, V) := hc
+  let : Algebra ℂ Γ(Y, V) := (algX p V).toAlgebra
+  have : Algebra.FiniteType ℂ Γ(Y, V) := hc
   obtain ⟨d, j, a, P, q, -, hinj, hfin, hP, -, hdvd, hq, hqP, hr⟩ := noetherNormalization_primitive Γ(Y, V)
   choose r hr using hr
   let α := Polynomial.eval₂RingHom j.toRingHom a
@@ -193,9 +193,9 @@ theorem exists_mul_eq_of_polynomial_growth : ∀ (Y : Scheme.{0}) (p : Y ⟶ Sp 
   let s (z : (Fin d → ℂ) × ℂ) : CxPts p (RingHom.id ℂ) :=
     if hz : z ∈ Z then ofHom hV (χ z hz) (hχc z hz) else y₀
   have hsV (z) (hz : z ∈ Z) : s z ∈ ptsIn p (RingHom.id ℂ) V := by
-    simp only [s, dif_pos hz]; exact ofHom_mem _ _ _
+    simp only [s, dite_eq_left hz]; exact ofHom_mem _ _ _
   have hsv (z) (hz : z ∈ Z) (b) : ev p (RingHom.id ℂ) V b (s z) = χ z hz b := by
-    simp only [s, dif_pos hz]; exact ev_ofHom _ _ _ b
+    simp only [s, dite_eq_left hz]; exact ev_ofHom _ _ _ b
   obtain ⟨K, M, hK⟩ := exists_sum_norm_le j.toRingHom hfin.to_isIntegral u
   obtain ⟨-, t, ht⟩ := FiniteCoverGrowth.integral_and_rational_of_polynomial_growth
     isConnected_and_dense_compl_hypersurface exists_mvPolynomial_of_poly_bound_off_hypersurface

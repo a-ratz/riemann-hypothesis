@@ -77,7 +77,7 @@ theorem UpperTheory.V.AlgebraTools.Det.polarInj :
 
     simp only [u, map_sum, MonoidAlgebra.mapRingHom_single]
     simp only [ev, AlgHom.coe_toRingHom, MvPolynomial.aeval_X]
-    exact y.sum_single
+    exact y.sum_coeff_single
   have hevO : (ev : MvPolynomial F.G₀ R →+* B).comp (algebraMap O (MvPolynomial F.G₀ R)) = algebraMap O B := by
     ext o
     simp [ev, MvPolynomial.algebraMap_eq, IsScalarTower.algebraMap_apply O R B]
@@ -87,7 +87,7 @@ theorem UpperTheory.V.AlgebraTools.Det.polarInj :
     rw [MvPolynomial.coeff_zero]
     apply hf
     intro x
-    letI : Algebra R (MvPolynomial F.G₀ (K x)) := ((algebraMap (K x) (MvPolynomial F.G₀ (K x))).comp (f x : R →+* K x)).toAlgebra
+    let : Algebra R (MvPolynomial F.G₀ (K x)) := ((algebraMap (K x) (MvPolynomial F.G₀ (K x))).comp (f x : R →+* K x)).toAlgebra
     let φ : MvPolynomial F.G₀ R →ₐ[R] MvPolynomial F.G₀ (K x) := MvPolynomial.aeval MvPolynomial.X
     have hφ : (φ : MvPolynomial F.G₀ R →+* MvPolynomial F.G₀ (K x)) = MvPolynomial.map (f x : R →+* K x) := by
       apply MvPolynomial.ringHom_ext

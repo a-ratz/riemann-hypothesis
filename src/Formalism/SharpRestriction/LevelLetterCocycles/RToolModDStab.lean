@@ -131,7 +131,7 @@ theorem rToolMod_dStab [NeZero n] (hP9 : Formalism.MainNotions.DeltaInvariantLat
     rw [hw₁, map_mul, map_pow]
     exact (w₁.isUnit.map _).mul (W.EE_π.pow _)
   have hqU : IsUnit (algebraMap (LetA O n) W.EE (Formalism.MainNotions.LiftingTheory.qp W)) := by
-    haveI := W.EE_complete
+    have := W.EE_complete
     have hI : ((PD.p : ℕ) : W.EE) * Ring.inverse (algebraMap (LetA O n) W.EE W.π₀) ∈
         Ideal.span {((PD.p : ℕ) : W.EE)} := Ideal.mem_span_singleton.mpr (dvd_mul_right _ _)
     have hJ : ((PD.p : ℕ) : W.EE) * Ring.inverse (algebraMap (LetA O n) W.EE W.π₀) ∈

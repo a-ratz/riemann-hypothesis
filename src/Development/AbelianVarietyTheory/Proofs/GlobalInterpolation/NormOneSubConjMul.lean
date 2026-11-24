@@ -87,7 +87,7 @@ theorem exists_factor_order {U : Set ℂ} {g : ℂ → ℂ} (hg : AnalyticOnNhd 
       by_cases hyz : y = z
       · simp [hyz]
       · have hne : (y - z) ^ n ≠ 0 := pow_ne_zero _ (sub_ne_zero.2 hyz)
-        simp only [hyz, if_false]
+        simp only [hyz, ite_false]
         rw [hy, smul_eq_mul, mul_div_cancel_left₀ _ hne]
     · have ha : AnalyticAt ℂ (fun y => g y / (y - w) ^ n) z :=
         (hg z hz).div ((analyticAt_id.sub analyticAt_const).pow n)
@@ -101,7 +101,7 @@ theorem exists_factor_order {U : Set ℂ} {g : ℂ → ℂ} (hg : AnalyticOnNhd 
       have := hev.self_of_nhds
       simpa using this
     · have hne : (z - w) ^ n ≠ 0 := pow_ne_zero _ (sub_ne_zero.2 hzw)
-      simp only [hzw, if_false]
+      simp only [hzw, ite_false]
       field_simp
   · simpa using h0ne
 

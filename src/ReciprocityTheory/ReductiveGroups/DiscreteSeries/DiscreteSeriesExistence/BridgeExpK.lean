@@ -94,7 +94,7 @@ theorem actM_pow_mem_of_isKStableSub_inK {S : Submodule ℂ D} (hS : IsKStableSu
 theorem exists_norm_actM_pow_le_of_isKStableSub {S : Submodule ℂ D} (hS : IsKStableSub ε E S)
     (hSf : FiniteDimensional ℂ S) {Z : Matrix (Fin n) (Fin n) ℂ} (hZ : inK ε Z) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x ∈ S, ∀ m : ℕ, ‖((actM E Z) ^ m) x‖ ≤ C ^ m * ‖x‖ := by
-  haveI : FiniteDimensional ℂ S := hSf
+  have : FiniteDimensional ℂ S := hSf
   let g : S →ₗ[ℂ] S := (actM E Z).restrict (fun x hx => actM_mem_of_isKStableSub_inK hS hZ hx)
   let gL : S →L[ℂ] S := LinearMap.toContinuousLinearMap g
   refine ⟨‖gL‖, norm_nonneg _, ?_⟩
@@ -121,10 +121,10 @@ theorem kStable_of_isKStableSub (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn
     exact ((Real.summable_pow_div_factorial C).mul_right ‖v‖).congr fun m => by ring
   have h := hasSum_orbit_of_bound hσ hD hZ.1 v (fun m => C ^ m * ‖v‖) (fun m => hC v hv m) 0 1 hs
   simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1,
-    ContinuousLinearMap.one_apply, Complex.ofReal_one, one_smul] at h
-  haveI : FiniteDimensional ℂ S := hS
+    one_apply_eq_self, Complex.ofReal_one, one_smul] at h
+  have : FiniteDimensional ℂ S := hS
   have hT : IsClosed ((S.map D.subtype : Submodule ℂ H) : Set H) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   have hmem : σ (NormedSpace.exp Z) (v : H) ∈ S.map D.subtype := by
     refine hT.mem_of_tendsto h.tendsto_sum_nat (Filter.Eventually.of_forall fun N => ?_)
     exact Submodule.sum_mem _ fun m _ =>

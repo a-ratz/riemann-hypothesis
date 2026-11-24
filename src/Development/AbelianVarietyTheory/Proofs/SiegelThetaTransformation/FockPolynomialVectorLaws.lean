@@ -115,7 +115,7 @@ theorem pure_X_mul (hadd : ∀ f f', P f → P f' → P (f + f')) (hsm : ∀ (a 
   | monomial k c =>
     have hk : P (opPow A k f) := foldr_mem hA hf _
     show pureTensorL A f (MvPolynomial.monomial (Finsupp.single v 1) 1 * MvPolynomial.monomial k c) = _
-    rw [MvPolynomial.monomial_mul, one_mul, pure_monomial, pure_monomial,
+    rw [MvPolynomial.monomial_mul_monomial, one_mul, pure_monomial, pure_monomial,
       opPow_single_add hA hc hf, Asm v c _ hk]
   | add p q hp hq =>
     rw [mul_add, map_add (f := _), map_add (f := _), hp, hq,

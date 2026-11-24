@@ -153,7 +153,7 @@ theorem ideleModule_ideleNorm (x : IdeleGroup L) :
   rw [hc, Measure.map_smul, map_smul_adeleMeasure] at h1
   case hf => exact (continuous_const_smul x).measurable.aemeasurable
   have h2 := congrArg (fun μ : Measure 𝔸[L] ↦ μ S) h1
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   rw [mul_left_comm] at h2
   have hne : (c : ℝ≥0∞) * adeleMeasure L S ≠ 0 := mul_ne_zero hc0 hpos
   have hnt : (c : ℝ≥0∞) * adeleMeasure L S ≠ ⊤ := ENNReal.mul_ne_top ENNReal.coe_ne_top htop

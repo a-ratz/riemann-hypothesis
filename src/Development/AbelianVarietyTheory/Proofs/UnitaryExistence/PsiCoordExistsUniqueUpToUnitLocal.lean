@@ -130,7 +130,7 @@ theorem ne_zero_of_coord {r : R} (h : PsiCoord D χ r) : r ≠ 0 := by
   rw [map_zero, map_zero] at e
   have hu := ((D.psi χ).s j).isUnit.map ((TK R).left.presheaf.map (homOfLE h).op).hom
   rw [← e] at hu
-  haveI : Nonempty (jK R ⁻¹ᵁ (⊤ : (Spec (CommRingCat.of R)).Opens)) :=
+  have : Nonempty (jK R ⁻¹ᵁ (⊤ : (Spec (CommRingCat.of R)).Opens)) :=
     ⟨⟨closedPoint (FractionRing R), trivial⟩⟩
   exact not_isUnit_zero hu
 

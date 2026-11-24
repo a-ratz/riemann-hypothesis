@@ -71,8 +71,8 @@ theorem dual_frame_ext {Ω Ω' : Type} [Field Ω] [Field Ω'] (i : Ω →+* Ω')
   classical
   let c := Module.Basis.mk hli hb.ge
   have hc : ∀ k, c k = b k := fun k => by simp [c]
-  haveI : Module.Finite Ω (Module.Dual Ω W) := Module.Finite.of_basis c
-  haveI : Module.Finite Ω W := (Module.finite_dual_iff Ω).1 inferInstance
+  have : Module.Finite Ω (Module.Dual Ω W) := Module.Finite.of_basis c
+  have : Module.Finite Ω W := (Module.finite_dual_iff Ω).1 inferInstance
   let e : Fin r → W := fun l => (Module.evalEquiv Ω W).symm (c.dualBasis l)
   have he : ∀ k l, b k (e l) = if k = l then 1 else 0 := by
     intro k l

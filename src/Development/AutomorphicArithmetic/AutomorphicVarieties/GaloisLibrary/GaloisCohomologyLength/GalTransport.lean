@@ -58,7 +58,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.galTransport :
   have hc : ∀ g : G F' Ω', ∀ x : F,
       ((σ.trans g.toRingEquiv).trans σ.symm) (algebraMap F Ω x) = algebraMap F Ω x := by
     intro g x
-    simp only [RingEquiv.trans_apply, hσ, AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv,
+    simp only [RingEquiv.trans_apply, hσ, AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv,
       AlgEquiv.commutes]
     rw [← hσ, RingEquiv.symm_apply_apply]
   let φ : G F' Ω' →* G F Ω :=
@@ -71,7 +71,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.galTransport :
         ext x
         simp }
   have hφ : ∀ g x, φ g x = σ.symm (g (σ x)) := fun _ _ => rfl
-  haveI : Algebra.IsAlgebraic F' Ω' := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F' Ω' := IsAlgClosure.isAlgebraic
   refine ⟨φ, ?_, fun g x => by rw [hφ, σ.apply_symm_apply], ?_, ?_, ?_⟩
   · apply continuous_of_continuousAt_one
     rw [ContinuousAt, map_one, Filter.tendsto_def]
@@ -97,10 +97,10 @@ theorem UpperTheory.V.LDataCardLeFinrank.galTransport :
     rw [← hs, map_sum]
     simp [map_smul, hb]
   · intro l _ g
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-    haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap F' Ω').injective
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-    haveI : IsAlgClosed Ω' := IsAlgClosure.isAlgClosed F'
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+    have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap F' Ω').injective
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+    have : IsAlgClosed Ω' := IsAlgClosure.isAlgClosed F'
     simp only [cycZ, MonoidHom.comp_apply]
     refine (KStar.TotallyRealRoots.cyclotomicCharacter_conj σ _ _ fun x => ?_).symm
     show g (σ x) = σ (φ g x)

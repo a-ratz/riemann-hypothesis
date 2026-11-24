@@ -267,7 +267,7 @@ theorem eq_one_of_real {N : ℕ} (hN : Even N) (χ : HeckeU D N) (a : D.host.Eˣ
   · exact Units.ext h
   intro τ _
   have h1 : Even (χ.n τ) := by
-    have := (χ.par τ).add (Int.even_coe_nat N |>.2 hN)
+    have := (χ.par τ).add (Int.even_natCast N |>.2 hN)
     simpa using this
   obtain ⟨c, hc⟩ := h1
   have h2 : embT D τ (D.host.conj a) = starRingEnd ℂ (embT D τ a) :=

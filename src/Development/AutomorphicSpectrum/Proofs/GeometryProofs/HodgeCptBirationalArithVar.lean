@@ -67,11 +67,11 @@ theorem flagged_model_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   intro E _ _ _ H D l Xo c O _ β Y S Ω _ K _ J _ y 𝔐 Fl _ hβ
   obtain ⟨-, ⟨x, hx⟩, hchar, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c O β Y S Ω K J y 𝔐 hβ
   have hA := _root_.GlobalTheory.CompanionTheory.Ar.CptTrdeg.trdeg_eq_dim E H D l Xo c O β Y 𝔐.Ω₀ 𝔐.ξ₀ Ω x 𝔐.fn hβ 𝔐.gen₀ (hx ▸ 𝔐.fn_over)
-  letI : Algebra 𝔐.Ω₀ Ω := 𝔐.fn.toAlgebra
+  let : Algebra 𝔐.Ω₀ Ω := 𝔐.fn.toAlgebra
   have hB := _root_.GlobalTheory.CompanionTheory.Ar.FlagTrdeg.trdeg_of_isGenericFlag 𝔐.Ω₀ Ω Fl.Li₀ 𝔐.Li Fl.j (CMType H ⊕ CMType H) (labelRk D) Fl.V₀ Fl.b Fl.deg Fl.generic
-  haveI : CharZero 𝔐.Ω₀ := (RingHom.charZero_iff 𝔐.fn.injective).mpr hchar
-  haveI : FaithfulSMul ℤ 𝔐.Ω₀ := (faithfulSMul_iff_algebraMap_injective ℤ 𝔐.Ω₀).mpr Int.cast_injective
-  haveI : FaithfulSMul 𝔐.Ω₀ Ω := (faithfulSMul_iff_algebraMap_injective 𝔐.Ω₀ Ω).mpr 𝔐.fn.injective
+  have : CharZero 𝔐.Ω₀ := (RingHom.charZero_iff 𝔐.fn.injective).mpr hchar
+  have : FaithfulSMul ℤ 𝔐.Ω₀ := (faithfulSMul_iff_algebraMap_injective ℤ 𝔐.Ω₀).mpr Int.cast_injective
+  have : FaithfulSMul 𝔐.Ω₀ Ω := (faithfulSMul_iff_algebraMap_injective 𝔐.Ω₀ Ω).mpr 𝔐.fn.injective
   have htow := trdeg_add_eq ℤ 𝔐.Ω₀ (A := Ω)
   rw [hA, hB] at htow
   have hcard : Fintype.card (CMType H) = Module.finrank ℚ E / 2 := by

@@ -322,7 +322,7 @@ open GroundTheory.Heights₂.Heights (coordDeg localQuotLength)
 
 theorem length_quot_ringEquiv {A B : Type*} [CommRing A] [CommRing B] (e : A ≃+* B) (a : A) :
     Module.length A (A ⧸ Ideal.span {a}) = Module.length B (B ⧸ Ideal.span {e a}) := by
-  letI : Algebra A B := e.toRingHom.toAlgebra
+  let : Algebra A B := e.toRingHom.toAlgebra
   have hsurj : Function.Surjective (algebraMap A B) := e.surjective
   rw [← Module.length_eq_of_surjective (S := A) (R := B) (M := B ⧸ Ideal.span {e a}) hsurj]
   have hI : (Ideal.span {a}).map (e : A →+* B) = Ideal.span {e a} := by
@@ -358,8 +358,8 @@ theorem length_stalk {Z : Scheme.{0}} (f : Z ⟶ MP ℤ m n) [IsClosedImmersion 
     (Module.length (Z.presheaf.stalk w) (Z.presheaf.stalk w ⧸ Ideal.span {Z.presheaf.germ _ w hw g})).toNat = localQuotLength (ptPrime f c w hw) g := by
   have hU : IsAffineOpen (f ⁻¹ᵁ mchart c) := (GlobalTheory.CompanionTheory.MPDict.Spec.isAffineOpen_mchart c).preimage f
   let x : (f ⁻¹ᵁ mchart c : Z.Opens) := ⟨w, hw⟩
-  letI : Algebra Γ(Z, f ⁻¹ᵁ mchart c) (Z.presheaf.stalk w) := TopCat.Presheaf.algebra_section_stalk Z.presheaf x
-  haveI inst : IsLocalization.AtPrime (Z.presheaf.stalk w) (hU.primeIdealOf x).asIdeal := hU.isLocalization_stalk x
+  let : Algebra Γ(Z, f ⁻¹ᵁ mchart c) (Z.presheaf.stalk w) := TopCat.Presheaf.algebra_section_stalk Z.presheaf x
+  have inst : IsLocalization.AtPrime (Z.presheaf.stalk w) (hU.primeIdealOf x).asIdeal := hU.isLocalization_stalk x
   have hP : (hU.primeIdealOf x).asIdeal = ptPrime f c w hw := by
     rw [← IsLocalization.AtPrime.under_maximalIdeal (Z.presheaf.stalk w) (hU.primeIdealOf x).asIdeal]
     ext a
@@ -369,7 +369,7 @@ theorem length_stalk {Z : Scheme.{0}} (f : Z ⟶ MP ℤ m n) [IsClosedImmersion 
     have h3 : IsUnit (algebraMap Γ(Z, f ⁻¹ᵁ mchart c) (Z.presheaf.stalk w) a) ↔ (Z.evaluation _ w hw).hom a ≠ 0 :=
       h1.symm.trans h2.symm
     exact not_iff_comm.1 h3.symm
-  haveI : IsLocalization.AtPrime (Z.presheaf.stalk w) (ptPrime f c w hw) := atPrime_congr hP
+  have : IsLocalization.AtPrime (Z.presheaf.stalk w) (ptPrime f c w hw) := atPrime_congr hP
   exact congrArg ENat.toNat (length_quot_of_isLocalization (S := Z.presheaf.stalk w) (ptPrime f c w hw) g)
 end GlobalTheory.CompanionTheory.MixZ.DivCyc
 
@@ -389,11 +389,11 @@ theorem mult_eq_multAt (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0}) [IsI
   have hwc : w ∈ f ⁻¹ᵁ mchart c := GlobalTheory.CompanionTheory.MPDict.Spec.mem_mchart_ptChart (f w)
   have hg : genericPoint Z ∈ f ⁻¹ᵁ mchart c := (genericPoint_specializes w).mem_open (f ⁻¹ᵁ mchart c).isOpen hwc
   have hi : w ∈ (pullO (f ≫ prB n k) 1).U (c k) := mchart_le c k hwc
-  haveI : Nonempty (f ⁻¹ᵁ mchart c) := ⟨⟨w, hwc⟩⟩
+  have : Nonempty (f ⁻¹ᵁ mchart c) := ⟨⟨w, hwc⟩⟩
   rw [mult_divOfSec hw hi, germ_sec f c w hwc k l hi, length_stalk f c w hwc]
   have hP : (ptIdeal (f w)).map (eps f c) = ptPrime f c w hwc := map_eps_ptIdeal f c w hwc
-  haveI : ((ptIdeal (f w)).map (eps f c)).IsPrime := hP ▸ inferInstance
-  haveI hVp : (ptIdeal (f w)).IsPrime := (isMultiProjPrime_ptIdeal m n (f w)).1
+  have : ((ptIdeal (f w)).map (eps f c)).IsPrime := hP ▸ inferInstance
+  have hVp : (ptIdeal (f w)).IsPrime := (isMultiProjPrime_ptIdeal m n (f w)).1
   have hVh : Geo.IsMultiHomogIdeal (ptIdeal (f w)) := (isMultiProjPrime_ptIdeal m n (f w)).2.1
   have hXV : ∀ k, (X ⟨k, c k⟩ : Pol n) ∉ ptIdeal (f w) := fun k h =>
     (GlobalTheory.CompanionTheory.MPDict.Spec.ptCoord_ne_zero_iff (f w) k (c k)).2 (mem_ptChart (f w) k)
@@ -446,15 +446,15 @@ theorem no_prime_between {R : Type*} [CommRing R] [IsNoetherianRing R] {V P W : 
   let φ := Ideal.Quotient.mk V
   have hφ : Function.Surjective φ := Ideal.Quotient.mk_surjective
   have hker : RingHom.ker φ = V := Ideal.mk_ker
-  haveI hPq : (P.map φ).IsPrime := Ideal.map_isPrime_of_surjective hφ (hker.le.trans h1.le)
-  haveI hWq : (W.map φ).IsPrime := Ideal.map_isPrime_of_surjective hφ (hker.le.trans hVW)
+  have hPq : (P.map φ).IsPrime := Ideal.map_isPrime_of_surjective hφ (hker.le.trans h1.le)
+  have hWq : (W.map φ).IsPrime := Ideal.map_isPrime_of_surjective hφ (hker.le.trans hVW)
   have cP : (P.map φ).comap φ = P := Ideal.comap_map_mk h1.le
   have cW : (W.map φ).comap φ = W := Ideal.comap_map_mk hVW
   have hmin : W.map φ ∈ (Ideal.span {φ s}).minimalPrimes := by
     refine ⟨⟨hWq, ?_⟩, fun Q hQ hQW => ?_⟩
     · rw [Ideal.span_singleton_le_iff_mem]
       exact Ideal.mem_map_of_mem _ (hW.1.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self s)))
-    · haveI := hQ.1
+    · have := hQ.1
       have hQp : (Q.comap φ).IsPrime := Ideal.comap_isPrime _ _
       have hle : V ⊔ Ideal.span {s} ≤ Q.comap φ := by
         refine sup_le (fun x hx => ?_) ?_
@@ -473,12 +473,12 @@ theorem no_prime_between {R : Type*} [CommRing R] [IsNoetherianRing R] {V P W : 
     refine lt_of_le_of_ne (Ideal.map_mono h2.le) fun e => ?_
     rw [e, cW] at cP
     exact h2.ne cP.symm
-  haveI : IsDomain (R ⧸ V) := Ideal.Quotient.isDomain V
+  have : IsDomain (R ⧸ V) := Ideal.Quotient.isDomain V
   have l1 := Ideal.height_strict_mono_of_isPrime hPW
   have l2 := Ideal.height_strict_mono_of_isPrime hb
   have l3 : (P.map φ).height = 0 := ENat.lt_one_iff_eq_zero.1 (lt_of_lt_of_le l1 hW1)
   rw [l3] at l2
-  exact not_lt_zero' l2
+  exact not_lt_zero l2
 end GlobalTheory.CompanionTheory.MixZ.DivCyc
 
 namespace GlobalTheory.CompanionTheory.MixZ.DivCyc
@@ -494,7 +494,7 @@ theorem isMultiHomog_coord (k : Fin (m + 1)) (l : Bk n k) : IsMultiHomog (X ⟨k
     simp [Finsupp.single_apply]
   · rw [Pi.single_eq_of_ne hj]
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     exact hj (congrArg Sigma.fst h).symm
 
@@ -513,7 +513,7 @@ theorem exists_point_of_mem_divSupp (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Sch
     (k : Fin (m + 1)) (l : Bk n k) (hs : (X ⟨k, l⟩ : Pol n) ∉ ptIdeal (f (genericPoint Z))) (W : Ideal (Pol n)) (hW : W ∈ divSupp (ptIdeal (f (genericPoint Z))) (X ⟨k, l⟩ : Pol n)) :
     ∃ w : Z, Order.coheight w = 1 ∧ (X ⟨k, l⟩ : Pol n) ∈ ptIdeal (f w) ∧ ptIdeal (f w) = W := by
   have hV := isMultiProjPrime_ptIdeal m n (f (genericPoint Z))
-  haveI := hV.1
+  have := hV.1
   have hWp : W.IsPrime := hW.1.1.1
   have hVW : ptIdeal (f (genericPoint Z)) ≤ W := le_sup_left.trans hW.1.1.2
   have hsW : (X ⟨k, l⟩ : Pol n) ∈ W := hW.1.1.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
@@ -531,7 +531,7 @@ theorem exists_point_of_mem_divSupp (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Sch
     have hmono : ∀ {a b : Z}, a < b → ptIdeal (f b) < ptIdeal (f a) := fun {a b} h =>
       lt_of_le_of_ne (GlobalTheory.CompanionTheory.MPDict.Spec.ptIdeal_le_of_specializes ((show b ⤳ a from h.le).map f.continuous))
         fun e => h.ne (hinj e).symm
-    haveI := (isMultiProjPrime_ptIdeal m n (f v)).1
+    have := (isMultiProjPrime_ptIdeal m n (f v)).1
     exact no_prime_between hW.1 (hmono hvg) (hmono hv)
 
 theorem ptIdeal_mem_divSupp (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0}) [IsIntegral Z] (f : Z ⟶ MP ℤ m n) [IsClosedImmersion f]
@@ -539,7 +539,7 @@ theorem ptIdeal_mem_divSupp (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0})
     ptIdeal (f w) ∈ divSupp (ptIdeal (f (genericPoint Z))) (X ⟨k, l⟩ : Pol n) := by
   have hV := isMultiProjPrime_ptIdeal m n (f (genericPoint Z))
   have hW := isMultiProjPrime_ptIdeal m n (f w)
-  haveI := hW.1
+  have := hW.1
   have hVW : ptIdeal (f (genericPoint Z)) ≤ ptIdeal (f w) :=
     GlobalTheory.CompanionTheory.MPDict.Spec.ptIdeal_le_of_specializes ((genericPoint_specializes w).map f.continuous)
   have hle : ptIdeal (f (genericPoint Z)) ⊔ Ideal.span {(X ⟨k, l⟩ : Pol n)} ≤ ptIdeal (f w) :=
@@ -684,8 +684,8 @@ theorem chi_eq_geoNum : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0})
   intro m n Z _ f _ p _ _ hd a
   have hp : p.Prime := Fact.out
   have hA := isAffineOpen_top Z hd
-  haveI : IsAffine (⊤ : Z.Opens) := hA
-  haveI : IsAffine Z := by
+  have : IsAffine (⊤ : Z.Opens) := hA
+  have : IsAffine Z := by
     first
       | exact IsAffine.of_isIso Z.topIso.inv
       | exact isAffine_of_isIso Z.topIso.inv
@@ -698,7 +698,7 @@ theorem chi_eq_geoNum : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0})
   have hRes : CharP (Z.residueField (genericPoint Z)) p :=
     (RingHom.charP_iff_charP (((IsLocalRing.residue (Z.presheaf.stalk (genericPoint Z))).comp
       (algebraMap Γ(Z, ⊤) Z.functionField)).comp (algebraMap (ZMod p) Γ(Z, ⊤))) p).mp inferInstance
-  haveI hΩ : CharP ((MP ℤ m n).residueField (f (genericPoint Z))) p :=
+  have hΩ : CharP ((MP ℤ m n).residueField (f (genericPoint Z))) p :=
     (RingHom.charP_iff_charP (f.residueFieldMap (genericPoint Z)).hom p).mpr hRes
   have hcomap : (ptIdeal (f (genericPoint Z))).comap (C : ℤ →+* MRing (Bk n)) =
       Ideal.span {(p : ℤ)} := by
@@ -733,7 +733,7 @@ theorem chi_eq_geoNum : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0})
         (Module.finrank (ZMod p) Γ(Z, ⊤) : ℝ) := mul_right_cancel₀ hlogp hL
     exact_mod_cast hg.symm
   · rw [Module.finrank_of_not_finite hfin]
-    haveI : Infinite Γ(Z, ⊤) := by
+    have : Infinite Γ(Z, ⊤) := by
       by_contra hinf
       rw [not_infinite_iff_finite] at hinf
       exact hfin Module.Finite.of_finite
@@ -1186,8 +1186,8 @@ theorem key (p : ℕ) [Fact p.Prime] {m : ℕ} {n : Fin (m + 1) → ℕ} (a : Fi
       intro w hw
       let C : Closeds Z := ⟨closure {w}, isClosed_closure⟩
       have hirr : IsIrreducible (C : Set Z) := isIrreducible_singleton.closure
-      haveI := isIntegral_red hirr
-      letI : Algebra (ZMod p) Γ((Scheme.IdealSheafData.vanishingIdeal C).subscheme, ⊤) :=
+      have := isIntegral_red hirr
+      let : Algebra (ZMod p) Γ((Scheme.IdealSheafData.vanishingIdeal C).subscheme, ⊤) :=
         algebraΓOfHom (redι C ≫ strHom (ZMod p) Z)
       have hfZ : ∀ r : ZMod p, (redι C).appTop (algebraMap (ZMod p) Γ(Z, ⊤) r) =
           algebraMap (ZMod p) Γ((Scheme.IdealSheafData.vanishingIdeal C).subscheme, ⊤) r := fun r => by

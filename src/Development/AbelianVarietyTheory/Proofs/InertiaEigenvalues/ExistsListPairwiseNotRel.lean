@@ -182,7 +182,7 @@ theorem exists_list_pairwise_not_rel {α : Type*} {r : α → α → Prop} (hr :
     (m : Multiset α) : ∃ l : List α, (l : Multiset α) = m ∧ l.Pairwise fun a b => ¬ r a b := by
   classical
   let p : α → α → Prop := fun a b => Relation.ReflTransGen r b a
-  haveI : IsPartialOrder α p :=
+  have : IsPartialOrder α p :=
     { refl := fun _ => .refl
       trans := fun _ _ _ h h' => h'.trans h
       antisymm := fun a b h h' => by

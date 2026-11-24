@@ -310,10 +310,10 @@ theorem windows_at {D : D7} (L : SizeData₂ D) (K : Consts) (hK : K.Nonneg) (hS
     (Finset.mem_filter.mp hs).2
   have haw : ∀ s (hs : s ∈ topsPos D p t0), wPos D p t0 (aL L) s = L.aT ⟨_, hmem s hs⟩ := by
     intro s hs
-    simp only [wPos, aL, dif_pos (hmem s hs)]
+    simp only [wPos, aL, dite_eq_left (hmem s hs)]
   have hbw : ∀ s (hs : s ∈ topsPos D p t0), wPos D p t0 (bL L) s = L.bT ⟨_, hmem s hs⟩ := by
     intro s hs
-    simp only [wPos, bL, dif_pos (hmem s hs)]
+    simp only [wPos, bL, dite_eq_left (hmem s hs)]
   refine ⟨fun s hs => ⟨?_, ?_⟩, fun s hs => ⟨?_, ?_, ?_⟩⟩
   · rw [haw s hs]
     obtain ⟨h1, h2⟩ := L.aT_win ⟨_, hmem s hs⟩
@@ -593,8 +593,8 @@ theorem numII_ev (eps : ℝ) (K : Consts) (hK : K.Nonneg) (C31 : ℝ) (h31 : 0 <
     have hab : L.sc.a = L.sc.b' * L.sc.X' := (div_mul_cancel₀ L.sc.a hX'0.ne').symm
     have hX : L.sc.x ^ 70 * E ≤ L.sc.X' := by
       have e1 : L.sc.x ^ 70 = Real.exp ((70 : ℕ) * Real.log L.sc.x) := by
-        rw [Real.exp_nat_mul, Real.exp_log hx0]
-      rw [hE, ← Real.exp_nat_mul, e1, ← Real.exp_add]
+        rw [Real.exp_natCast_mul, Real.exp_log hx0]
+      rw [hE, ← Real.exp_natCast_mul, e1, ← Real.exp_add]
       unfold Scale.X'
       apply Real.exp_le_exp.2
       push_cast
@@ -679,7 +679,7 @@ theorem hypIIAt_ev (eps ez : ℝ) (hez0 : 0 < ez) (K : Consts) (hK : K.Nonneg) (
 
 theorem exists_place' (D : D7) : Nonempty D.what₂.places.Pl := by
 
-  haveI := D.nfLL
+  have := D.nfLL
   obtain ⟨P, hP0, hP⟩ := Ring.not_isField_iff_exists_prime.mp
     (NumberField.RingOfIntegers.not_isField (K := D.what₂.LL))
   exact ⟨D.plEq.symm ⟨P, hP, hP0⟩⟩

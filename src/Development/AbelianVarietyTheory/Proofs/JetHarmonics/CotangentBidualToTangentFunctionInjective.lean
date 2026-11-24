@@ -142,7 +142,7 @@ theorem exists_factor {T : Type} [CommRing T] [IsLocalRing T] [Algebra O T] (w :
 
 theorem toLieG_surjective : Function.Surjective (toLieG (G := G)) := by
   intro x
-  haveI := isLocalRing_dualNumber (O := O)
+  have := isLocalRing_dualNumber (O := O)
   have hx : ptMap (TrivSqZeroExt.fstHom O O O) ≫ x.1 = ptMap (aug G) ≫ locIncl G :=
     x.2.trans ptMap_aug_locIncl.symm
   have hloc : IsLocalHom (TrivSqZeroExt.fstHom O O O).toRingHom :=
@@ -335,7 +335,7 @@ theorem strMap_eq : strMap G =
 theorem finite_projective_of_smooth [Smooth G.hom] :
     Module.Finite O (Cotangent G) ∧ Module.Projective O (Cotangent G) := by
   let q : PrimeSpectrum O := G.hom (origin G)
-  letI : Algebra O ((Spec (CommRingCat.of O)).presheaf.stalk q) := StructureSheaf.stalkAlgebra O q
+  let : Algebra O ((Spec (CommRingCat.of O)).presheaf.stalk q) := StructureSheaf.stalkAlgebra O q
   have := q.isPrime
   have : IsLocalization.AtPrime ((Spec (CommRingCat.of O)).presheaf.stalk q) q.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk O q
@@ -353,8 +353,8 @@ theorem finite_projective_of_smooth [Smooth G.hom] :
       Algebra.EssFiniteType.of_isLocalization _ q.asIdeal.primeCompl
     rw [strMap_eq]
     exact RingHom.EssFiniteType.comp (RingHom.essFiniteType_algebraMap.2 h₀) hs
-  haveI : Algebra.FormallySmooth O (LocRing G) := h₁
-  haveI : Algebra.EssFiniteType O (LocRing G) := h₂
+  have : Algebra.FormallySmooth O (LocRing G) := h₁
+  have : Algebra.EssFiniteType O (LocRing G) := h₂
   exact ⟨AugCot.finite (aug G), AugCot.projective (aug G)⟩
 
 end Cotangent

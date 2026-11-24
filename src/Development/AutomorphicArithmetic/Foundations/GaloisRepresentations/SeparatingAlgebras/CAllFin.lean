@@ -167,7 +167,7 @@ theorem coefLe_C_mul_X {c : ℂ} {R : ℝ} (hR : 1 ≤ R) (hc : ‖ι.symm c‖ 
     CoefLe ι R (MvPolynomial.C c * MvPolynomial.X v) := by
   classical
   intro m
-  rw [MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X']
+  rw [MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X]
   split_ifs
   · simpa using hc
   · simpa using zero_le_one.trans hR
@@ -261,8 +261,8 @@ theorem homog_of_mem {T : Type} [Fintype T] [DecidableEq T] (I : Finset T) (n : 
     (MvPolynomial.mem_weightedHomogeneousSubmodule _ _ _ _).mp (hF τ).1 hm
   rw [Finsupp.weight_apply, Finsupp.sum_mapDomain_index (by simp) (by intros; simp [add_mul])]
   by_cases hτ : τ ∈ I
-  · rw [if_pos hτ, ← hw, Finsupp.weight_apply]
-    simp only [Finsupp.sum, Finset.sum_apply, Pi.smul_apply, Formalism.GradedWeylDivisibility.colW, smul_eq_mul, wI, if_pos hτ]
+  · rw [ite_eq_left hτ, ← hw, Finsupp.weight_apply]
+    simp only [Finsupp.sum, Finset.sum_apply, Pi.smul_apply, Formalism.GradedWeylDivisibility.colW, smul_eq_mul, wI, ite_eq_left hτ]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun v _ => ?_
     simp [Pi.single_apply]
@@ -616,7 +616,7 @@ theorem frame (hD : DenomBdd) (hR : RhoBound) (hL : LatFacts) (hE : LevelEx) {E 
     have hC₃o : IsOpen (C₃ : Set (finU (E := E) (n := a))) := by
       obtain ⟨N, hNo, hN1, hNC⟩ := hC.isOpen
       refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
-        (Filter.mem_of_superset ((hNo.preimage continuous_subtype_val).mem_nhds hN1) ?_)
+        (Filter.mem_of_superset ((hNo.preimage continuous_subtypeVal).mem_nhds hN1) ?_)
       intro x hx
       exact Subgroup.mem_subgroupOf.2 (hNC ⟨hx, x.2⟩)
     obtain ⟨S, hS⟩ := GlobalTheory.DefU.ClassFin.classSet_finite E a C₃ hC₃o

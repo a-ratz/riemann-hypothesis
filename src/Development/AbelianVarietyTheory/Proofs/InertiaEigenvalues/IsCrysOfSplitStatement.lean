@@ -65,7 +65,7 @@ variable {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field 
 theorem finrank_coordInv_of_split (A : G → Matrix (Fin n) (Fin n) Qp) (W : Matrix (Fin n) (Fin n) B)
     (hu : IsUnit W.det) (hW : ∀ g, (A g).map (algebraMap Qp B) * W.map (PD.actB g) = W) :
     finrank K₀ (coordInv PD A) = n := by
-  haveI : Nontrivial B := by
+  have : Nontrivial B := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     apply PD.not_mem_filtration_two

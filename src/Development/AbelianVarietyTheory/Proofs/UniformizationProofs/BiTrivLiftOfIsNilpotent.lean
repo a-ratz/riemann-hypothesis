@@ -989,7 +989,7 @@ theorem unit_eq_one : ∀ (A : Type) [CommRing A] (J : Ideal A), IsNilpotent J �
   let 𝒰 := (splitTorus (Spec (CommRingCat.of A)) X ⊗ Y).left.affineCover
   obtain ⟨i, w, rfl⟩ := 𝒰.exists_eq z
   let W : Over (Spec (CommRingCat.of A)) := Over.mk (𝒰.f i ≫ (splitTorus (Spec (CommRingCat.of A)) X ⊗ Y).hom)
-  haveI : IsAffine W.left := inferInstanceAs (IsAffine (𝒰.X i))
+  have : IsAffine W.left := inferInstanceAs (IsAffine (𝒰.X i))
   let κ : W ⟶ splitTorus (Spec (CommRingCat.of A)) X ⊗ Y := Over.homMk (𝒰.f i) rfl
   have e := eq_one_affine J hJ u.val hm' h₁' (κ ≫ fst _ _) (κ ≫ snd _ _)
   rw [lift_comp_fst_snd] at e

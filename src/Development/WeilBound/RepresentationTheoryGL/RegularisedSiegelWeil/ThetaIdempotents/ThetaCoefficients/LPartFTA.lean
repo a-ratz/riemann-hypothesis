@@ -138,7 +138,7 @@ theorem theta_weyl_w {D : D7} {n : ℕ} {V : HSp D} {ψ χ θ μ ω} (hS : SetW 
         ∑' ξ : Matrix (Fin V.rank) (Fin n) D.host.E, Φ.1 (ξ.map (incA D)) := by
   obtain ⟨hψ, -, hθ, ⟨𝓕, hμ⟩, hω⟩ := hS
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D V.rank n
-  haveI : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
   have hT := isHermND_gram V
   obtain ⟨h1, h2⟩ := GlobalTheory.T.rationalAdelicMatrices_self_annihilator D V.rank n V.gram hT ψ hψ
   have hs := pairing_symm (n := n) hT ψ
@@ -149,7 +149,7 @@ theorem theta_weyl_w {D : D7} {n : ℕ} {V : HSp D} {ψ χ θ μ ω} (hS : SetW 
     rw [hs y x]
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.pairing, GlobalTheory.SiegelWeilLitCompare.gramQ_eq]
     rfl
-  haveI := hμ.1
+  have := hμ.1
   have key := poisson_translates (ratMx D V.rank n) K hK hKc (GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.pairing (n := n) V.gram ψ)
     (fun y => ?_) hs (fun x x' y => ?_) (fun x y => hψ.2.1 _) h1 h2 μ 𝓕 hμ.2.1 hμ.2.2 (f := Φ.1) ?_
     (translates_bound hθ Φ) ?_
@@ -157,8 +157,8 @@ theorem theta_weyl_w {D : D7} {n : ℕ} {V : HSp D} {ψ χ θ μ ω} (hS : SetW 
     rw [tsum_ratMx, tsum_ratMx (fun x => (ω g Φ).1 x)] at key
     exact key.symm
   · simp only [hs _ y]
-    haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-    haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+    have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+    have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
     have ht : Continuous (GlobalTheory.IndefiniteRowSideFullHecke.GramMatrixBlocks.trA (D := D)) :=
       IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
     exact hψ.1.comp (ht.comp (continuous_const.matrix_mul continuous_id).matrix_trace)

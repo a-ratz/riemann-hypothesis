@@ -236,17 +236,17 @@ theorem head_types_of_types_at : PBI.HeadTypesAt → PBI.HeadTypes := by
   · intro y e
     rw [heq (y e)]
     ext v
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.comp_apply, hπ1]
+    simp only [sum_apply, ContinuousLinearMap.comp_apply, hπ1]
 
     rw [← map_sum]
     congr 1
     have := congrArg (fun T : Wq →L[ℂ] Wp => T (Bs.π' h2 v)) (hex0 (y e))
-    simpa only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.comp_apply] using this
+    simpa only [sum_apply, ContinuousLinearMap.comp_apply] using this
   · intro h hh y e
     rw [heq (P5.act _ y e), hd0 h hh y e, heq (y e)]
     ext v
 
-    simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
+    simp only [sum_apply, ContinuousLinearMap.comp_apply, smul_apply,
     map_sum, map_smul, hπ1]
   · intro Ψ
     rw [heq Ψ]

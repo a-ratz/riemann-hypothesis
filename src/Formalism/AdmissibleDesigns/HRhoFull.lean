@@ -116,7 +116,7 @@ theorem first_block_column_condition (l : Col i dc) :
     exact Finset.disjoint_left.mp dc.disj hw hwc
   simp only [FS, QS.Fall, Fin.cases_zero]
   unfold FirstBlockLocalConditions
-  simp only [KHf.Fρ, if_neg hnot]
+  simp only [KHf.Fρ, ite_eq_right hnot]
 
 
 
@@ -754,7 +754,7 @@ def FK (n : ℕ) : Submodule (D.nd.O i) (H1z (rhoM i dc Dd n)) :=
 theorem fK_le (n : ℕ) : FK i dc Dd hK hε hM n ≤ FcolK i dc Dd n := by
   unfold FK Fρ
   split_ifs
-  · haveI : ContinuousMul (FractionRing (D.nd.O i)) := hK
+  · have : ContinuousMul (FractionRing (D.nd.O i)) := hK
     exact frow_le_col i dc _ _ (DatK i dc Dd hK hε hM) n (rhoM i dc Dd n) (uDK i dc Dd hK hε hM n)
       (KLat.huD Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) hK hε hM n)
       (rhoV i dc Dd n) (qB i Dd) (idV (RepresentationBoundsCohomology.blk D.R) Dd.ρk n)
@@ -830,11 +830,11 @@ variable {D : D7} (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV)
 theorem selFS_of_normAt (hN : RepresentationBoundsCohomology.NormAt D.nd r ρ π) :
     TieSel1 i ρ π (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk 0) Dd.r Dd.χ (colIdx i dc) (decs D.host.E (Aw i dc))
       (rowsN i dc) (FS i r π dc g0 eB e₁ s Dd hD hc 0) (QS.Io i) := by
-  letI := fun w => modS i r π dc g0 eB e₁ s Dd hD hc w
-  haveI := fun w => KLat.towerT Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i)
+  let := fun w => modS i r π dc g0 eB e₁ s Dd hD hc w
+  have := fun w => KLat.towerT Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i)
     (hM0 i r π g0 eB e₁ s Dd hD hc) w
-  letI := fun w => modS' i r π dc g0 eB e₁ s Dd hD hc w
-  haveI := fun w => KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i)
+  let := fun w => modS' i r π dc g0 eB e₁ s Dd hD hc w
+  have := fun w => KLat.towerT' Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (Aw i dc) (hKm i) (hEps i)
     (hM0 i r π g0 eB e₁ s Dd hD hc) w
   exact Bk.tieSel1_K i dc Dd (hKm i) (hEps i) (hM0 i r π g0 eB e₁ s Dd hD hc) hD hN
 

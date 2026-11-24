@@ -72,10 +72,10 @@ private theorem reach_step {G A V : Type} [Group G] [CommRing A] [AddCommGroup V
   rcases Nat.lt_succ_iff_lt_or_eq.mp hi with hi | rfl
   · have h1 : i ≤ n := hi.le
     have h2 : i + 1 ≤ n := hi
-    simp only [h1, h2, if_true]
+    simp only [h1, h2, ite_true]
     exact hs i hi
   · have h2 : ¬ (i + 1 ≤ i) := by omega
-    simp only [h2, le_refl, if_true, if_false, hn]
+    simp only [h2, le_refl, ite_true, ite_false, hn]
     exact ⟨le_sup_left, κ, hκ, x, rfl, hx⟩
 
 private theorem reach_fin {G A V : Type} [Group G] [CommRing A] [AddCommGroup V] [Module A V]
@@ -101,7 +101,7 @@ theorem UpperTheory.filtBy_restrictScalars_of_residual_characters :
     ∀ {G E B V : Type} [Group G] [Field E] [CommRing B] [Algebra E B] [Module.Finite E B] [AddCommGroup V] [Module B V] [Module E V] [IsScalarTower E B V] (π : B →ₐ[E] E), (∀ a, π a = 0 → IsNilpotent a) → ∀ (ρ : Representation B G V) (S : Set (G →* Eˣ)) {ι : Type} [Finite ι] (x : ι → V) (κ : ι → G →* Eˣ), Submodule.span B (Set.range x) = ⊤ → (∀ j, κ j ∈ S) → (∀ g j, ρ g (x j) - ((κ j g : Eˣ) : E) • x j ∈ (RingHom.ker (π : B →+* E)) • (⊤ : Submodule B V)) → FiltBy (resCoef E ρ) S := by
   intro G E B V _ _ _ _ _ _ _ _ _ π hπ ρ S ι _ x κ hx hκ hstep
   have hnil : IsNilpotent (RingHom.ker (π : B →+* E)) := by
-    haveI : IsNoetherianRing B := isNoetherian_of_tower E inferInstance
+    have : IsNoetherianRing B := isNoetherian_of_tower E inferInstance
     rw [Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)]
     intro a ha
     exact mem_nilradical.mpr (hπ a ha)

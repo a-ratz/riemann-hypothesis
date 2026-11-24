@@ -166,12 +166,12 @@ theorem UpperTheory.V.GC.local_second_cohomology_surjective_at_place :
     (ρ : Representation k (Dec (F := F) A) M) (σ : Representation k (Dec (F := F) A) Q), ContAction ρ → ∀ (q : M →ₗ[k] Q) (hq : ∀ s m, q (ρ s m) = σ s (q m)), Function.Surjective q →
     Function.Surjective (mapH2 ρ σ q continuous_of_discreteTopology hq) := by
   intro hLF F Ω _ _ _ _ _ l _ v A hA k _ _ _ M _ _ _ _ _ Q _ _ _ _ ρ σ hc q hq hs
-  haveI : Finite M := Module.finite_of_finite k
+  have : Finite M := Module.finite_of_finite k
   have hst : ∀ g, LinearMap.ker q ≤ (LinearMap.ker q).comap (ρ g) := fun g m hm => by
     rw [Submodule.mem_comap, LinearMap.mem_ker, hq, LinearMap.mem_ker.1 hm, map_zero]
   let τ := ρ.subrepresentation (LinearMap.ker q) hst
   have hτ : ContAction τ :=
-    Continuous.subtype_mk (hc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))) _
+    Continuous.subtype_mk (hc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))) _
   refine H2_map_surjective_of_H3_subsingleton ρ σ τ hc q hq hs (LinearMap.ker q).subtype (fun _ _ => rfl) Subtype.val_injective
     (fun m => ⟨fun h => ⟨⟨m, h⟩, rfl⟩, by rintro ⟨n, rfl⟩; exact n.2⟩) ?_
   refine (GlobalTheory.Published.cohDimTwoLocal_of_localFiniteness hLF).of_nsmul l 1 (fun m => ?_) τ hA hτ 3 le_rfl
@@ -195,8 +195,8 @@ private theorem finrank_iInf_ker_add_sum_le_of_surjective {k V : Type} [Field k]
     finrank k (⨅ i, LinearMap.ker (p i) : Submodule k V) + ∑ i, finrank k (U i) ≤
       finrank k (⨅ i, LinearMap.ker (r i) : Submodule k V) + ∑ i, finrank k (W i) := by
   classical
-  haveI := hV
-  haveI := hW
+  have := hV
+  have := hW
   obtain rfl : p = fun i => (f i).comp (r i) := funext hp
   set X : Submodule k V := ⨅ i, LinearMap.ker ((f i).comp (r i)) with hX
   set Y : Submodule k V := ⨅ i, LinearMap.ker (r i) with hY
@@ -240,7 +240,7 @@ theorem UpperTheory.V.GC.H2_galois_quotient_surjective :
   obtain ⟨_, hfin2, hG⟩ := H2_galois_quotient_eq P F Ω l hF S K Γ π h k M ρ hρ c hc A hA
   rw [hdual, finrank_bot, add_zero] at hG
   have hcv : ∀ v : S, Continuous (π.comp (Dec (F := F) (A v)).subtype) :=
-    fun v => h.cont.comp continuous_subtype_val
+    fun v => h.cont.comp continuous_subtypeVal
   have hρv : ∀ v : S, ReciprocityTheory.Gal.ContAction (ρ.comp (π.comp (Dec (F := F) (A v)).subtype)) :=
     fun v => hρ.comp (((hcv v).comp continuous_fst).prodMk continuous_snd)
   have hfinv : ∀ v : S, Module.Finite k (H2 (ρ.comp (π.comp (Dec (F := F) (A v)).subtype))) :=
@@ -252,7 +252,7 @@ theorem UpperTheory.V.GC.H2_galois_quotient_surjective :
     (fun v : S => H2 (ρ.comp (π.comp (Dec (F := F) (A v)).subtype))) (fun v => H2 (σ v)) hfin2 hfinv
     (fun v => resH2 ρ _ (hcv v))
     (fun v => mapH2 _ (σ v) (q v) continuous_of_discreteTopology (hq v)) hontov
-    (fun v => compatiblePairH2 ρ (σ v) (π.comp (Dec (F := F) (A v)).subtype) (h.cont.comp continuous_subtype_val)
+    (fun v => compatiblePairH2 ρ (σ v) (π.comp (Dec (F := F) (A v)).subtype) (h.cont.comp continuous_subtypeVal)
       (q v) continuous_of_discreteTopology (hq v))
     (fun v => Submodule.linearMap_qext _ (LinearMap.ext fun f => rfl))
   unfold Sha2 at hG

@@ -382,8 +382,8 @@ theorem existsUnique_lift_of_etale_of_henselian {X S : Scheme.{u}} (f : X ⟶ S)
     ← Spec.map_comp_assoc, cancel_mono, Spec.map_inj] at w
   have het := f.etale_appLE hU hV hVU
   algebraize [(f.appLE U V hVU).hom]
-  letI : Algebra Γ(S, U) R := α.hom.toAlgebra
-  letI : Algebra Γ(S, U) K := (π.comp α.hom).toAlgebra
+  let : Algebra Γ(S, U) R := α.hom.toAlgebra
+  let : Algebra Γ(S, U) K := (π.comp α.hom).toAlgebra
   obtain ⟨ψ, hψ⟩ := exists_algHom_lift_of_henselian (B := Γ(S, U)) (A := Γ(X, V))
     ⟨π, fun _ ↦ rfl⟩ hπ ⟨φ.hom, fun r ↦ congr($w r)⟩
   have e₁ : f.appLE U V hVU ≫ CommRingCat.ofHom ψ.toRingHom = α :=

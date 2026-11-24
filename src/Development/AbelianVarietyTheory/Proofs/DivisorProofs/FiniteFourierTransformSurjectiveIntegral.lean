@@ -89,11 +89,11 @@ theorem exists_fourier_measI : ∀ (F : Type) [Field F] [NumberField F] (κ : Ty
       ∀ (f : SInf F κ) y, Continuous (fun x => f x * eInf x y) ∧ Integrable (fun x => f x * eInf x y) (measI F κ) := by
   intro F _ _ κ _
   classical
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : (measI F κ).IsAddHaarMeasure := measI_isAddHaar F κ
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := inferInstance
+  have : (measI F κ).IsAddHaarMeasure := measI_isAddHaar F κ
   obtain ⟨ei, hb, he⟩ := GlobalTheory.ArchFourier.exists_fourier_sInf F κ (measI F κ)
   refine ⟨ei, hb.2, fun f y => he f y, fun f y => ⟨f.continuous.mul (eInf_continuous y), ?_⟩⟩
-  haveI : (measI F κ).HasTemperateGrowth := MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
+  have : (measI F κ).HasTemperateGrowth := MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
   have hf : Integrable (fun x => f x) (measI F κ) := f.integrable
   exact hf.mul_bdd (eInf_continuous y).aestronglyMeasurable (Filter.Eventually.of_forall fun x => (norm_eInf x y).le)
 

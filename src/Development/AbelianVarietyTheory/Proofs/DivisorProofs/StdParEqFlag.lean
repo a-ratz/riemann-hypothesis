@@ -125,7 +125,7 @@ theorem leviFlag_le_levi : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   intro hk
   have hm : k.val + 1 ≤ s := (hS k).2 ⟨k, hk, le_rfl⟩
   have hdk : ∀ i j : Fin s, k.val + 1 ≤ i.val → j.val < k.val + 1 → d j < d i := fun i j hi hj =>
-    (depth_lt_iff S s hs d hd i j).2 ⟨k, hk, Fin.le_iff_val_le_val.2 (Nat.lt_succ_iff.1 hj), Fin.lt_iff_val_lt_val.2 hi⟩
+    (depth_lt_iff S s hs d hd i j).2 ⟨k, hk, Fin.le_iff_val_le_val.2 (Nat.lt_succ_iff.1 hj), Fin.lt_def.2 hi⟩
   exact Subgroup.mem_inf.2 ⟨mem_frameStab_of_mem_parFlag σ J hm _ _ hLX d hdk hgX,
     mem_frameStab_of_mem_parFlag σ J hm _ _ hLY d hdk hgY⟩
 
@@ -155,7 +155,7 @@ theorem exists_coeff_of_mem_colSpan {F E : Type} [Field F] [NumberField F] [Fiel
     obtain ⟨i, hi, rfl⟩ := hx
     obtain ⟨j, rfl, hj⟩ := hI i hi
     refine ⟨Pi.single j 1, fun j' hj' => ?_, ?_⟩
-    · rw [Pi.single_apply, if_neg]
+    · rw [Pi.single_apply, ite_eq_right]
       rintro rfl
       exact hj' hj
     · rw [Matrix.mulVec_single_one]

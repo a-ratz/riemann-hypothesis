@@ -88,10 +88,10 @@ theorem card_subspaces_mul :
       ∏ i ∈ Finset.range a, (Nat.card F ^ Module.finrank F V - Nat.card F ^ i) := by
   intro F _ _ V _ _ _ a ha
   classical
-  haveI : Fintype F := Fintype.ofFinite F
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Submodule F V) := Finite.of_injective _ SetLike.coe_injective
-  haveI : Fintype {W : Submodule F V // Module.finrank F W = a} := Fintype.ofFinite _
+  have : Fintype F := Fintype.ofFinite F
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Submodule F V) := Finite.of_injective _ SetLike.coe_injective
+  have : Fintype {W : Submodule F V // Module.finrank F W = a} := Fintype.ofFinite _
   let f : {s : Fin a → V // LinearIndependent F s} →
       {W : Submodule F V // Module.finrank F W = a} := fun s =>
     ⟨Submodule.span F (Set.range s.1), by rw [finrank_span_eq_card s.2, Fintype.card_fin]⟩

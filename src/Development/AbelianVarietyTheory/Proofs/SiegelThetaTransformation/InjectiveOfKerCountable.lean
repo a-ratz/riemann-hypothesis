@@ -168,7 +168,7 @@ theorem exists_const {σ : c.F →+* ℂ} {r : ℕ} {U : Formalism.L2.PjFree.Unf
       y.x = W.F.u (W.ik k) P ∧ Formalism.L2.PjFree.toC (evR Xo c f y) = C k := by
   obtain ⟨-, -, honto, -, hsec, -⟩ := hU
   have hC : ∀ k, ∃ C : ℂ, ∀ x : (U.X k).dom, Formalism.L2.PjFree.toC (evR Xo c f (U.un k x)) = C := fun k => by
-    have hr : ∀ x : (U.X k).dom, Formalism.L2.PjFree.rdU U f k x = Formalism.L2.PjFree.toC (evR Xo c f (U.un k x)) := fun x => dif_pos x.2
+    have hr : ∀ x : (U.X k).dom, Formalism.L2.PjFree.rdU U f k x = Formalism.L2.PjFree.toC (evR Xo c f (U.un k x)) := fun x => dite_eq_left x.2
     obtain ⟨C, -, hC⟩ := const_of_norm_factor (FourierCoefficientDomain.isOpen_dom (U.X k))
       (GlobalTheory.frames_isConnected E r (U.X k)).isPreconnected (J := Unit) (fun _ => Formalism.L2.PjFree.rdU U f k) (fun _ _ => 1) 1 one_pos
       (fun _ => (hsec 0 0 ⟨fun _ => antitone_const, Even.zero⟩ f hf k).1) (fun _ => differentiableOn_const _)
@@ -182,11 +182,11 @@ theorem exists_const {σ : c.F →+* ℂ} {r : ℕ} {U : Formalism.L2.PjFree.Unf
   have hT : ∀ y : FrPt Xo c (CAt σ), FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) y :=
     fun y => by
       by_contra hn
-      have h0 : evR Xo c f y = 0 := dif_neg hn
+      have h0 : evR Xo c f y = 0 := dite_eq_right hn
       have := h1 y
       rw [h0] at this
       exact zero_ne_one ((norm_zero (E := ℂ)).symm.trans this)
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hw := (GlobalTheory.borDesc_and_wtField E H Dw l Xo c).2 0 0 f hf ℂ t (U.un k x) y (hT _) (hT _) hb
   have h0 : wchar (S := ℂ) (ex Dw 0 0) t = 1 := Finset.prod_eq_one fun i _ => by cases i <;> exact pow_zero _
   rw [h0, one_mul] at hw
@@ -199,7 +199,7 @@ theorem evR_eq_of_marked (σ : c.F →+* ℂ) (hσ : GoodEmb c σ) (hA : l.A = 1
     letI : Algebra c.F ℂ := σ.toAlgebra
     ∀ x ∈ X.dom, ∀ x' ∈ X.dom, ∀ (y y' : FrPt Xo c ℂ) (A : AnFib X bas idx e x L y) (A' : AnFib X bas idx e x' L y'),
       A.Marked mk → A'.Marked mk → evR Xo c f y = evR Xo c f y' := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   intro x hx x' hx' y y' A A' hk hk'
   have hD : 1 ≤ Dw.p + Dw.q := by
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
@@ -244,7 +244,7 @@ theorem exists_cvIs : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   intro E _ _ _ H Dw l Xo c n d inst hσ hA hf hu r g X bas idx e L hr hs _
   obtain ⟨σ, rfl⟩ : ∃ σ : d.c₂.F →+* ℂ, inst = σ.toAlgebra :=
     ⟨algebraMap d.c₂.F ℂ, Algebra.algebra_ext _ _ fun _ => rfl⟩
-  letI : Algebra d.c₂.F ℂ := σ.toAlgebra
+  let : Algebra d.c₂.F ℂ := σ.toAlgebra
   have key : ∀ mk : Dw.La →ₗ[𝓞 E] (Fin r → E), ∃ v : ℂ, ‖v‖ = 1 ∧ ∀ x ∈ X.dom, ∀ (y : FrPt d.Xo₂ d.c₂ ℂ)
       (A : AnFib X bas idx e x L y), IsMark d.l₂ L mk → A.Marked mk → evR d.Xo₂ d.c₂ d.cδ y = v := fun mk => by
     by_cases h : ∃ x ∈ X.dom, ∃ (y : FrPt d.Xo₂ d.c₂ ℂ) (A : AnFib X bas idx e x L y), A.Marked mk

@@ -157,7 +157,7 @@ theorem lDiag_box_tens_ne : ∀ (F : Type) [Field F] [NumberField F] (κ : Type)
   refine ⟨φs v, h0, ?_, r, r, fun φ hφ => ⟨hRest φ hφ, hRest φ hφ⟩, ?_⟩
   · have e : boxFun (φs v) (φs v) = Set.indicator {x : κ ⊕ κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F} 1 := by
       funext x
-      simp only [boxFun, φs, Set.indicator_apply, Set.mem_setOf_eq, Function.comp_apply, Sum.forall, Pi.one_apply]
+      simp only [boxFun, φs, Set.indicator_apply, Set.mem_ofPred_eq, Function.comp_apply, Sum.forall, Pi.one_apply]
       split_ifs <;> simp_all
     rw [e]; exact GlobalTheory.StdVacuum.indicator_mem_SB v
   · set V : Set (GlobalTheory.DiagForm.Vf F κ) := Set.univ.pi fun _ => O with hVdef
@@ -211,7 +211,7 @@ theorem lDiag_box_tens_ne : ∀ (F : Type) [Field F] [NumberField F] (κ : Type)
       have hcont : Continuous fun u : GlobalTheory.DiagForm.Vi F κ =>
           b (GlobalTheory.DiagForm.eI F κ u) * b (GlobalTheory.DiagForm.eI F κ u) :=
         (b.continuous.comp (GlobalTheory.DiagForm.eI F κ).continuous).mul (b.continuous.comp (GlobalTheory.DiagForm.eI F κ).continuous)
-      have hpos := hcont.integral_pos_of_hasCompactSupport_nonneg_nonzero
+      have hpos := hcont.integral_pos_of_hasCompactSupport_nonneg_ne_zero
         (μ := (volume : Measure (GlobalTheory.DiagForm.Vi F κ))) (x := 0) hcs (fun u => mul_nonneg b.nonneg b.nonneg) (by
           simp only [map_zero]
           rw [b.one_of_mem_closedBall (Metric.mem_closedBall_self zero_le_one)]
@@ -913,7 +913,7 @@ theorem char_eq_local : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [F
       rw [show G.V.J.map _ = RingHom.mapMatrix _ G.V.J from rfl, ← RingHom.map_det, e, map_zero])
     rw [show G.V.J.map t = (t : E →+* Fv F v).mapMatrix G.V.J from rfl, ← RingHom.map_det]
     exact isUnit_iff_ne_zero.2 ((map_ne_zero _).2 h1)
-  haveI : Nonempty (Fin a) := ⟨⟨0, lt_of_le_of_lt (Nat.zero_le _) hT.geo.lt⟩⟩
+  have : Nonempty (Fin a) := ⟨⟨0, lt_of_le_of_lt (Nat.zero_le _) hT.geo.lt⟩⟩
   obtain ⟨φ, hφ, hφ0⟩ : ∃ φ ∈ SB (Fin a × Fin (a + a') → Fv F v), ι φ 0 ≠ 0 := by
     obtain ⟨Λ, -, f, hf, hne⟩ := GlobalTheory.T.exists_translation_invariant_functional F v a (a + a')
     obtain ⟨Y₀, hY⟩ : ∃ Y₀, f Y₀ ≠ 0 := by

@@ -400,8 +400,8 @@ theorem card_hom_lattice (X U : Type) [AddCommGroup X] [Module.Free ℤ X] [Modu
 
 theorem card_roots (W F : Type) [CommRing W] [Field F] [IsAlgClosed F] (φ : W →+* F) (hφ : Function.Injective φ)
     (N : ℕ) (hN : (N : F) ≠ 0) (h : ∀ z : F, z ^ N = 1 → z ∈ φ.range) : Nat.card (rootsOfUnity N W) = N := by
-  haveI : NeZero (N : F) := ⟨hN⟩
-  haveI : NeZero N := ⟨fun e => hN (by simp [e])⟩
+  have : NeZero (N : F) := ⟨hN⟩
+  have : NeZero N := ⟨fun e => hN (by simp [e])⟩
   refine Eq.trans (Nat.card_congr ?_) (HasEnoughRootsOfUnity.natCard_rootsOfUnity F N)
   refine (Equiv.ofBijective (restrictRootsOfUnity φ N) ⟨fun a b e => ?_, fun z => ?_⟩)
   · have := congrArg (fun u : rootsOfUnity N F => ((u : Fˣ) : F)) e
@@ -466,13 +466,13 @@ theorem GlobalTheory.UU.cubWeil_nondegenerate_generic :
     (∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B] (g n : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → (n : k) ≠ 0 → Nat.card {x : (𝟙_ (Over (Sp k)) ⟶ B) // x ^ n = 1} = n ^ (2 * g)) → Laws → AllSet fun {V} _ _ _ {_} {_} _ _ s => ∀ (t : Tower s) (a : t.Alg) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] [Algebra.IsAlgebraic (FractionRing V) F] (N : ℕ), 1 ≤ N → ∀ x : TF (R := V) F ⟶ a.B, x ^ N = 1 → (∀ y : TF (R := V) F ⟶ a.B, y ^ N = 1 → CubWeil a.M.c N x y 1) → x = 1 := by
   intro hcard hL V _ _ _ A G _ _ s t a F _ _ _ _ N hN x hx horth
   obtain ⟨W, _, _, _, φ, hφ, hcomp, hW, hloc, hroots, hlift⟩ := GlobalTheory.T.torsion_lift_abelianPart_finite_extension hcard V A G s t a F N hN
-  haveI : CharZero V := s.cdvr.2.2
-  haveI : CharZero F := charZero_of_injective_ringHom
+  have : CharZero V := s.cdvr.2.2
+  have : CharZero F := charZero_of_injective_ringHom
     (f := (algebraMap (FractionRing V) F).comp (algebraMap V (FractionRing V)))
     ((algebraMap (FractionRing V) F).injective.comp (IsFractionRing.injective V _))
   have hNF : (N : F) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
-  haveI := s.semi.separated
-  haveI := a.isAb.proper
+  have := s.semi.separated
+  have := a.isAb.proper
   let SW : Over (Spec (CommRingCat.of V)) := Over.mk (Spec.map (CommRingCat.ofHom (algebraMap V W)))
   let σ : TF (R := V) F ⟶ SW := Over.homMk (Spec.map (CommRingCat.ofHom φ)) (by
     show Spec.map (CommRingCat.ofHom φ) ≫ Spec.map (CommRingCat.ofHom (algebraMap V W)) =

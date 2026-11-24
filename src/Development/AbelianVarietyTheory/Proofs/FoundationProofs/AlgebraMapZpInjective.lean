@@ -64,19 +64,19 @@ variable (p Ω) in
 abbrev zpAlg : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
 
 theorem isAlgZp_iff (x : Ω) : IsAlgZp (p := p) x ↔ @IsAlgebraic ℤ_[p] Ω _ _ (zpAlg p Ω) x := by
-  letI := zpAlg p Ω
-  haveI : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := zpAlg p Ω
+  have : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   unfold IsAlgZp IsAlgebraic
   simp only [Polynomial.aeval_map_algebraMap]
 
 theorem isAlgZp_mul {x y : Ω} (hx : IsAlgZp (p := p) x) (hy : IsAlgZp (p := p) y) :
     IsAlgZp (p := p) (x * y) := by
-  letI := zpAlg p Ω
+  let := zpAlg p Ω
   rw [isAlgZp_iff] at hx hy ⊢
   exact hx.mul hy
 
 theorem isAlgZp_one : IsAlgZp (p := p) (1 : Ω) := by
-  letI := zpAlg p Ω
+  let := zpAlg p Ω
   rw [isAlgZp_iff]
   exact isAlgebraic_one
 
@@ -146,8 +146,8 @@ theorem algebraMap_zp_injective : Function.Injective (algebraMap ℤ_[p] (O0 p))
 
 theorem exists_inR_of_isAlgZp (hc : IsClo p Ω) {T : Tower p Ω} {n : ℕ} {ψ : O0 p →+* Ω} (h : IsReb T n ψ) {x : Ω}
     (hx : IsAlgZp (p := p) x) : ∃ D : O0 p, D ≠ 0 ∧ InR ψ (x * ψ D) := by
-  letI := zpAlg p Ω
-  haveI : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := zpAlg p Ω
+  have : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hx' := (isAlgZp_iff x).1 hx
   obtain ⟨y, hy0, hyi⟩ := hx'.exists_integral_multiple
   set c : O0 p := algebraMap ℤ_[p] (O0 p) y with hcdef
@@ -187,7 +187,7 @@ theorem isAlgZp_zp (m : ℤ_[p]) : IsAlgZp (p := p) (zp Ω m) := by
 
 theorem isAlgZp_add {x y : Ω} (hx : IsAlgZp (p := p) x) (hy : IsAlgZp (p := p) y) :
     IsAlgZp (p := p) (x + y) := by
-  letI := zpAlg p Ω
+  let := zpAlg p Ω
   rw [isAlgZp_iff] at hx hy ⊢
   exact hx.add hy
 

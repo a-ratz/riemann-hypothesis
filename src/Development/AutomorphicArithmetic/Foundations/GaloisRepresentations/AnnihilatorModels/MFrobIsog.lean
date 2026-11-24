@@ -59,7 +59,7 @@ private theorem isIso_spMap_pow {K : Type} [Field K] [IsAlgClosed K] (φ : K →
     refine ⟨φ.injective, fun x => ?_⟩
     obtain ⟨z, hz⟩ := IsAlgClosed.exists_pow_nat_eq x hn
     exact ⟨z, by rw [hφ, hz]⟩
-  haveI : IsIso (CommRingCat.ofHom φ) := (RingEquiv.ofBijective φ hbij).toCommRingCatIso.isIso_hom
+  have : IsIso (CommRingCat.ofHom φ) := (RingEquiv.ofBijective φ hbij).toCommRingCatIso.isIso_hom
   unfold spMap
   infer_instance
 
@@ -100,8 +100,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobIsog_of :
   have hA := GlobalTheory.SS.FrobField.cast_zero_of_hom o.A.hom hκ
   obtain ⟨F, hFm, hFφ, hFk⟩ := hHom p f hp κ φ hφ o.A o₁.A m₁.φ m₁.cart hA
   have hn : 0 < p ^ f := pow_pos hp.pos f
-  haveI : IsIso (spMap φ) := isIso_spMap_pow φ hn hφ
-  haveI : IsIso m₁.φ := m₁.cart.1.isIso_fst_of_isIso
+  have : IsIso (spMap φ) := isIso_spMap_pow φ hn hφ
+  have : IsIso m₁.φ := m₁.cart.1.isIso_fst_of_isIso
   have hFsp : GlobalTheory.SS.FrobField.absFrob (Sp κ) p f hp hκ = spMap φ :=
     GlobalTheory.SS.FrobField.absFrob_spec κ p f hp hκ φ hφ
   have hFφ' : ∀ {Z : Scheme} (h : o.A.left ⟶ Z),
@@ -142,8 +142,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobIsog_of :
   have hFl : Over.Hom.left F = GlobalTheory.SS.FrobField.absFrob o.A.left p f hp hA ≫ inv m₁.φ := by
     rw [← hFφ, Category.assoc, IsIso.hom_inv_id, Category.comp_id]
   have hlft : LocallyOfFiniteType o.A.hom := by
-    haveI := o.ab
-    haveI : Smooth o.A.hom := IsAbelianScheme.smooth
+    have := o.ab
+    have : Smooth o.A.hom := IsAbelianScheme.smooth
     infer_instance
   obtain ⟨hfin, hsurj⟩ := hFin p f hp κ o.A.left o.A.hom hlft hA
   have hfin' : IsFinite (Over.Hom.left F) := by
@@ -156,12 +156,12 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.frobIsog_of :
       g ≫ F = 1 → g = 1 := by
     intro K _ _ z g hg
     have hT := GlobalTheory.SS.FrobField.cast_zero_of_hom z hκ
-    haveI : CharP K p := charP_of_injective_ringHom (Spec.preimage z).hom.injective p
-    haveI : ExpChar K p := ExpChar.prime hp
+    have : CharP K p := charP_of_injective_ringHom (Spec.preimage z).hom.injective p
+    have : ExpChar K p := ExpChar.prime hp
     have hτ : ∀ c : K, iterateFrobenius K p f c = c ^ p ^ f := by
       intro c
       simp [iterateFrobenius_def]
-    haveI : IsIso (spMap (iterateFrobenius K p f)) := isIso_spMap_pow _ hn hτ
+    have : IsIso (spMap (iterateFrobenius K p f)) := isIso_spMap_pow _ hn hτ
     have hFK : GlobalTheory.SS.FrobField.absFrob (Over.mk z).left p f hp hT = spMap (iterateFrobenius K p f) :=
       GlobalTheory.SS.FrobField.absFrob_spec K p f hp hT _ hτ
     have hk := (hFk _ g).mp hg hT

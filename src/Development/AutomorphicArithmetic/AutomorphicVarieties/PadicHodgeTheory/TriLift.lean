@@ -182,7 +182,7 @@ theorem UpperTheory.V.Loc.admissible_conjugate :
     ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) {A : Type} [CommRing A] [Algebra ℚ_[l] A] {V : Type} [AddCommGroup V] [Module A V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] A V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul A V] (ρ : Representation A G V) (c : GQ l), (IsCr ((MulAut.conj c).toMonoidHom.comp φ) ρ ↔ IsCr φ ρ) ∧ (IsDr ((MulAut.conj c).toMonoidHom.comp φ) ρ ↔ IsDr φ ρ) ∧ UpperTheory.V.Loc.finiteCocycles ((MulAut.conj c).toMonoidHom.comp φ) ρ = UpperTheory.V.Loc.finiteCocycles φ ρ := by
   intro l _ G _ _ _ φ _ A _ _ V _ _ _ _ _ _ _ _ _ ρ c
   refine ⟨?_, ?_, ?_⟩
-  · haveI := iq_normal l
+  · have := iq_normal l
     have h1 : finrank ℚ_[l] ↥(Dcr ((MulAut.conj c).toMonoidHom.comp φ) (resCoef ℚ_[l] ρ)) =
         finrank ℚ_[l] ↥(Dcr φ (resCoef ℚ_[l] ρ)) := finrank_inv (PP l).actQ c φ (resCoef ℚ_[l] ρ)
     rw [IsCr, IsCr, h1, index_conj]
@@ -356,7 +356,7 @@ private theorem zm_sum {G : Type} [Group G] (H : Subgroup G) [Fintype (G ⧸ H)]
 
 private theorem zm_cont {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (H : Subgroup G)
     (hH : IsOpen (H : Set G)) (q : G ⧸ H) : Continuous fun g : G => (g • q).out := by
-  haveI : DiscreteTopology (G ⧸ H) := QuotientGroup.discreteTopology hH
+  have : DiscreteTopology (G ⧸ H) := QuotientGroup.discreteTopology hH
   have h1 : Continuous fun g : G => g • q := by fun_prop
   exact (continuous_of_discreteTopology (f := fun x : G ⧸ H => x.out)).comp h1
 
@@ -364,7 +364,7 @@ theorem UpperTheory.exists_cocycle_extension_of_conjugation_invariant_restrictio
     ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {A : Type} [CommRing A] [Algebra ℚ_[l] A] {V : Type} [AddCommGroup V] [Module A V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] A V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul A V] (ρ : Representation A G V), ContAction ρ → ∀ (H : Subgroup G) [H.Normal] [H.FiniteIndex], IsOpen (H : Set G) → ∀ (N : Submodule A (H → V)), ∀ c ∈ Z1 (ρ.comp H.subtype : Representation A H V), (∀ (s : G) (c' : H → V), (∀ g g' : H, (g' : G) = s⁻¹ * g * s → c' g = ρ s (c g')) → c' - c ∈ N) → ∃ b ∈ Z1 ρ, (fun g : H => b g) - c ∈ N := by
   intro l _ G _ _ _ A _ _ V _ _ _ _ _ _ _ _ _ ρ hρ H hHN _ hH N c hc hs
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set n : ℕ := Fintype.card (G ⧸ H) with hn
   have hn0 : (n : ℚ_[l]) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
   obtain ⟨a, ha⟩ : ∃ a : A, ∀ x : V, a • (n • x) = x :=
@@ -427,7 +427,7 @@ private theorem gam_cocycle {G B : Type} [Group G] [CommRing B] {η : G →* ℤ
 theorem UpperTheory.exists_continuous_isGam_of_torus_cocycle :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (T : Tor η B), T.Good π Ψ → ∀ (h : B), ∀ β ∈ Z1 T.M1, ∃ γ : GQ l → B, Continuous γ ∧ T.IsGam h β γ := by
   intro hP l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ T hT h β hβ
-  haveI : ContinuousConstSMul E B := contConstSMul_alg E
+  have : ContinuousConstSMul E B := contConstSMul_alg E
   have hχ := Tor.continuous_χ2 hD.ηlc T hT.cont hT.cont_inv
   have hM := Tor.contAction_torus_module hD.ηlc T hT.cont hT.cont_inv
   have hρ : ContAction (resCoef E (chRep T.χ2)) := contAction_chRep hχ
@@ -471,7 +471,7 @@ theorem UpperTheory.exists_continuous_isGam_of_torus_cocycle :
     rw [hχs, ← Algebra.smul_def, map_smul, smul_eq_mul] at h1
     exact (mul_eq_zero.1 (show (_ - _) * f x = 0 by rw [sub_mul, h1, sub_self])).resolve_left (sub_ne_zero.2 hne)
   rw [hbot, finrank_bot] at e2
-  haveI := f2
+  have := f2
   have hsub : Subsingleton (H2 (resCoef E (chRep T.χ2))) := Module.finrank_zero_iff.1 e2
   have hc : Continuous fun p : GQ l × GQ l => -(h * omg (β p.1) (T.M1 p.1 (β p.2))) := by
     have a1 : Continuous fun p : GQ l × GQ l => β p.1 := hβ.1.comp continuous_fst
@@ -538,8 +538,8 @@ private def triHom {G B : Type} [Group G] [CommRing B] (κ : Fin 3 → G →* B�
 theorem UpperTheory.exists_crystalline_triangular_lift_of_mem_finiteCocycles :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) {e : ℕ} {ψ : G →* Eˣ} {κ : Fin 3 → G →* Bˣ}, Chars φ π e ψ κ → ∀ x ∈ UpperTheory.V.Loc.finiteCocycles φ (chRep (κ 0 / κ 1)), ∀ y ∈ UpperTheory.V.Loc.finiteCocycles φ (chRep (κ 1 / κ 2)), (∀ g, π (x g) = 0) → ∃ (z : G → B) (ρ : G →* GL (Fin 3) B), Continuous z ∧ (∀ g, (ρ g : Matrix (Fin 3) (Fin 3) B) = triM (fun i => κ i g) (x g) (y g) (z g)) ∧ IsCr φ (colRep ρ) := by
   intro hP l _ G _ _ _ φ hφ E _ _ _ _ _ B _ _ _ _ _ _ _ _ _ _ π hπ e ψ κ hκ x hx y hy hx0
-  haveI : ContinuousConstSMul E B := contConstSMul_alg E
-  haveI : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
+  have : ContinuousConstSMul E B := contConstSMul_alg E
+  have : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
   have hxc : Continuous x := hx.1.1
   have hyc : Continuous y := hy.1.1
   have hxm : ∀ g h, x (g * h) = x g + ((κ 0 / κ 1) g : Bˣ) * x h := hx.1.2
@@ -766,11 +766,11 @@ theorem UpperTheory.exists_torus_coords_of_unipotent :
     have hg := hab g
     simp only [Tor.χ2_apply, Tor.adjointSuperdiagRep_apply, omg]
     rcases hc with ⟨e, -, rfl, rfl, rfl⟩ | ⟨e, -, rfl, rfl, rfl⟩
-    · simp only [e, if_true]
+    · simp only [e, ite_true]
       rw [hx, hy, hz]
       push_cast
       linear_combination (-(x g * ((t g 1 / t g 2 : Bˣ) : B) * y g')) * h2 - (h * x g' * y g') * hg
-    · simp only [e, hne, if_false]
+    · simp only [e, hne, ite_false]
       rw [hx, hy, hz]
       push_cast
       linear_combination (((t g 1 / t g 2 : Bˣ) : B) * x g * x g' - ((t g 0 / t g 2 : Bˣ) : B) * x g' * y g') * h2 - (h * x g' * y g') * hg
@@ -867,10 +867,10 @@ private theorem tor_inv_apply_eq_ite_rev {G : Type} [Group G] {η : G →* ℤˣ
   have h := T.mul a a⁻¹
   split_ifs with ha
   · have h1 := h i
-    rw [mul_inv_cancel, T.t_one, if_pos ha] at h1
+    rw [mul_inv_cancel, T.t_one, ite_eq_left ha] at h1
     exact eq_inv_of_mul_eq_one_right h1.symm
   · have h1 := h i.rev
-    rw [mul_inv_cancel, T.t_one, if_neg ha, Fin.rev_rev] at h1
+    rw [mul_inv_cancel, T.t_one, ite_eq_right ha, Fin.rev_rev] at h1
     exact (mul_inv_eq_one.mp h1.symm).symm
 
 private theorem tor_ext {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} {B B' : Type} [CommRing B] [CommRing B']
@@ -885,14 +885,14 @@ private theorem tor_ext {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} {B B' : 
         simp only [T.t_one, T'.t_one, map_one]
       mul_mem' := by
         intro a b ha hb i
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [T.mul, T'.mul, map_mul, ha]
         split_ifs
         · rw [hb]
         · rw [map_inv, hb]
       inv_mem' := by
         intro a ha i
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [tor_inv_apply_eq_ite_rev T, tor_inv_apply_eq_ite_rev T']
         split_ifs
         · rw [map_inv, ha]
@@ -903,7 +903,7 @@ private theorem tor_ext {l : ℕ} [Fact l.Prime] {η : GQ l →* ℤˣ} {B B' : 
   have hS : IsClosed (S : Set (GQ l)) := by
     have e : (S : Set (GQ l)) = ⋂ i, {g | p (T.t g i : B) = T'.t g i} := by
       ext g
-      simp only [Set.mem_iInter, Set.mem_setOf_eq, key]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq, key]
       exact Iff.rfl
     rw [e]
     exact isClosed_iInter fun i => isClosed_eq (hT i) (hT' i)
@@ -947,9 +947,9 @@ open UpperTheory.V.Loc.TorusExponentialLift IsNilpotent in
 theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
     ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) {B' : Type} [CommRing B'] [Algebra ℚ_[l] B'] [Module.Finite ℚ_[l] B'] [TopologicalSpace B'] [IsModuleTopology ℚ_[l] B'] [IsTopologicalRing B'] [Algebra ℤ_[l] B'] [IsScalarTower ℤ_[l] ℚ_[l] B'] [Algebra E B'] [IsScalarTower ℚ_[l] E B'] (π' : B' →ₐ[E] E) (hπ' : ∀ a, π' a = 0 → IsNilpotent a) (p : B →ₐ[E] B'), Function.Surjective p → π'.comp p = π → ∀ T' : Tor η B', T'.Good π' Ψ → ∃ T : Tor η B, T.Good π Ψ ∧ ∀ g i, p (T.t g i : B) = (T'.t g i : B') := by
   intro l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ B' _ _ _ _ _ _ _ _ _ _ π' hπ' p hp hpπ T' hT'
-  letI : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  letI : Algebra ℚ B' := ((algebraMap ℚ_[l] B').comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  haveI : T2Space B' := t2Space_of_finite_dim_padic_module (l := l) B'
+  let : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  let : Algebra ℚ B' := ((algebraMap ℚ_[l] B').comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  have : T2Space B' := t2Space_of_finite_dim_padic_module (l := l) B'
   obtain ⟨σ, hσ⟩ := (iqBasic l).2.2.2.1
   obtain ⟨c, hc, hcm, hcI, hcσ⟩ := scal_cocycle hD.ηI hD.ηlc hσ
   obtain ⟨d, hd, hdm, hdI, hdσ⟩ :=
@@ -1000,9 +1000,9 @@ theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
   have ha : ∀ g h i, a (g * h) i = a g i + if η g = 1 then a h i else -a h i.rev := by
     intro g h i
     rcases Int.units_eq_one_or (η g) with h1 | h1
-    · simp only [a, hcm, hdm', h1, if_pos, Units.val_one, Int.cast_one, one_mul, add_smul]
+    · simp only [a, hcm, hdm', h1, ite_eq_left, Units.val_one, Int.cast_one, one_mul, add_smul]
       abel
-    · rw [if_neg (by rw [h1]; decide)]
+    · rw [ite_eq_right (by rw [h1]; decide)]
       simp only [a, hcm, hdm', h1, hs, hu, Units.val_neg, Units.val_one, Int.cast_neg, Int.cast_one,
         neg_one_mul, add_smul, neg_smul, smul_neg]
       abel
@@ -1032,11 +1032,11 @@ theorem UpperTheory.exists_torus_lift_to_nilpotent_thickening :
   have hX1 : ∀ g h i, η g = 1 → XU (g * h) i = XU g i * XU h i := by
     intro g h i h1
     apply Units.ext
-    rw [Units.val_mul, hXU, hXU, hXU, ha, if_pos h1,
+    rw [Units.val_mul, hXU, hXU, hXU, ha, ite_eq_left h1,
       exp_add_of_commute (Commute.all _ _) (han g i) (han h i)]
   have hX2 : ∀ g h i, ¬ η g = 1 → (XU (g * h) i : B) * XU h i.rev = XU g i := by
     intro g h i h1
-    rw [hXU, hXU, hXU, ha, if_neg h1,
+    rw [hXU, hXU, hXU, ha, ite_eq_right h1,
       ← exp_add_of_commute (Commute.all _ _) (nil_add (han g i) (han h i.rev).neg) (han h i.rev),
       neg_add_cancel_right]
   let T : Tor η B := ⟨fun g i => EU g i * XU g i, by
@@ -1199,11 +1199,11 @@ theorem UpperTheory.exists_unipotent_from_torus_coords :
     · simp only [F, SemidirectProduct.mul_left]
       rcases Int.units_eq_one_or (η g) with he | he
       · rw [he, sgnAct_one, triGL_mul]
-        rw [Tor.adjointSuperdiagRep_apply, if_pos he] at hb
-        rw [Tor.adjointSuperdiagRep_apply, if_pos he, Tor.χ2_apply, he] at hc
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_left he] at hb
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_left he, Tor.χ2_apply, he] at hc
         apply triGL_congr
         · funext i
-          rw [T.mul, if_pos he]
+          rw [T.mul, ite_eq_left he]
         · rw [hb]; rfl
         · rw [hb]; rfl
         · rw [hc, hb, hab]
@@ -1211,11 +1211,11 @@ theorem UpperTheory.exists_unipotent_from_torus_coords :
           linear_combination ((β g).1 * ((T.t g 1 / T.t g 2 : Bˣ) : B) * (β g').2) * hh
       · have hne : η g ≠ 1 := by rw [he]; decide
         rw [he, sgnAct_neg_one, theta_triGL, triGL_mul]
-        rw [Tor.adjointSuperdiagRep_apply, if_neg hne] at hb
-        rw [Tor.adjointSuperdiagRep_apply, if_neg hne, Tor.χ2_apply, he] at hc
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_right hne] at hb
+        rw [Tor.adjointSuperdiagRep_apply, ite_eq_right hne, Tor.χ2_apply, he] at hc
         apply triGL_congr
         · funext i
-          rw [T.mul, if_neg hne]
+          rw [T.mul, ite_eq_right hne]
         · rw [hb]
           simp only [Prod.fst_add]
           ring
@@ -1304,13 +1304,13 @@ open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Mod
 theorem UpperTheory.mem_finiteCocycles_iff_restrict_subgroup_mem :
     ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (T : Tor η B), T.Good π Ψ → ∀ β ∈ Z1 T.M1, (β ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) T.M1 ↔ (fun g : H => (β g).1) ∈ UpperTheory.V.Loc.finiteCocycles H.subtype (chRep (T.ch H hD.ηH 0 / T.ch H hD.ηH 1)) ∧ (fun g : H => (β g).2) ∈ UpperTheory.V.Loc.finiteCocycles H.subtype (chRep (T.ch H hD.ηH 1 / T.ch H hD.ηH 2))) := by
   intro l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ T hT β hβ
-  haveI := hD.normal
-  haveI := hD.fin
+  have := hD.normal
+  have := hD.fin
   have hM : ∀ (g : H) (v : B × B), (T.M1.comp H.subtype : Representation B H (B × B)) g v =
       (chRep (T.ch H hD.ηH 0 / T.ch H hD.ηH 1) g v.1, chRep (T.ch H hD.ηH 1 / T.ch H hD.ηH 2) g v.2) := by
     intro g v
     change T.M1 g v = _
-    rw [Tor.adjointSuperdiagRep_apply, if_pos (hD.ηH g g.2)]
+    rw [Tor.adjointSuperdiagRep_apply, ite_eq_left (hD.ηH g g.2)]
     rfl
   rw [z1fDesc (MonoidHom.id (GQ l)) T.M1 H β hβ, MonoidHom.id_comp]
   constructor
@@ -1342,8 +1342,8 @@ private theorem multiplicity_one_positive {l : ℕ} [Fact l.Prime] {E : Type} [F
     [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E)
     (hπ : ∀ a, π a = 0 → IsNilpotent a) (T : Tor η B) (hT : T.Good π Ψ) :
     Positive (MonoidHom.id (GQ l)) (resCoef E T.M1) := by
-  haveI : ContinuousConstSMul E B := contConstSMul_alg E
-  haveI : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
+  have : ContinuousConstSMul E B := contConstSMul_alg E
+  have : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
   have hc : ContAction (resCoef E T.M1) := T.contAction_torus_module hD.ηlc hT.cont hT.cont_inv
   have w0 : wt1 (0 : Fin 3) = 1 := by decide
   have w1 : wt1 (1 : Fin 3) = 0 := by decide
@@ -1360,7 +1360,7 @@ private theorem multiplicity_one_positive {l : ℕ} [Fact l.Prime] {E : Type} [F
     have hu : ∀ i, T.t g i = Units.map (algebraMap E B : E →* B) (Ψ g ^ wt1 i) := fun i =>
       Units.ext (hT.ine g hg' i)
     change T.M1 g x = ((cycA l l E g ^ (e : ℤ) : Eˣ) : E) • x
-    rw [zpow_natCast, ← hD.ΨH g g.2 hg', Tor.adjointSuperdiagRep_apply, if_pos (hD.ηH g g.2)]
+    rw [zpow_natCast, ← hD.ΨH g g.2 hg', Tor.adjointSuperdiagRep_apply, ite_eq_left (hD.ηH g g.2)]
     simp only [hu, w0, w1, w2, ← map_div]
     ext <;> simp [Algebra.smul_def]
   · let ε : GQ l →* Eˣ := (Units.map (Int.castRingHom E : ℤ →* E)).comp η
@@ -1411,8 +1411,8 @@ private theorem multiplicity_one_positive {l : ℕ} [Fact l.Prime] {E : Type} [F
 theorem UpperTheory.torsionDatum_finiteCocycles_baseChange :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) {B' : Type} [CommRing B'] [Algebra ℚ_[l] B'] [Module.Finite ℚ_[l] B'] [TopologicalSpace B'] [IsModuleTopology ℚ_[l] B'] [IsTopologicalRing B'] [Algebra ℤ_[l] B'] [IsScalarTower ℤ_[l] ℚ_[l] B'] [Algebra E B'] [IsScalarTower ℚ_[l] E B'] (π' : B' →ₐ[E] E) (hπ' : ∀ a, π' a = 0 → IsNilpotent a) (p : B →ₐ[E] B'), Function.Surjective p → ∀ (T : Tor η B) (T' : Tor η B'), T.Good π Ψ → T'.Good π' Ψ → (∀ g i, p (T.t g i : B) = (T'.t g i : B')) → ∀ β' ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) T'.M1, ∃ β ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) T.M1, ∀ g, p (β g).1 = (β' g).1 ∧ p (β g).2 = (β' g).2 := by
   intro hP l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ B' _ _ _ _ _ _ _ _ _ _ π' _ p hp T T' hT hT' ht β' hβ'
-  haveI : ContinuousConstSMul E B := contConstSMul_alg E
-  haveI : ContinuousConstSMul E B' := contConstSMul_alg E
+  have : ContinuousConstSMul E B := contConstSMul_alg E
+  have : ContinuousConstSMul E B' := contConstSMul_alg E
   have hc : ContAction (resCoef E T.M1) := T.contAction_torus_module hD.ηlc hT.cont hT.cont_inv
   have hc' : ContAction (resCoef E T'.M1) := T'.contAction_torus_module hD.ηlc hT'.cont hT'.cont_inv
   have hu : ∀ g i j, p ((T.t g i / T.t g j : Bˣ) : B) = ((T'.t g i / T'.t g j : B'ˣ) : B') := fun g i j => by
@@ -1443,9 +1443,9 @@ theorem UpperTheory.torsionDatum_finiteCocycles_compare :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) {B' : Type} [CommRing B'] [Algebra ℚ_[l] B'] [Module.Finite ℚ_[l] B'] [TopologicalSpace B'] [IsModuleTopology ℚ_[l] B'] [IsTopologicalRing B'] [Algebra ℤ_[l] B'] [IsScalarTower ℤ_[l] ℚ_[l] B'] [Algebra E B'] [IsScalarTower ℚ_[l] E B'] (π' : B' →ₐ[E] E) (hπ' : ∀ a, π' a = 0 → IsNilpotent a) (p : B →ₐ[E] B'), Function.Surjective p → ∀ (T : Tor η B) (T' : Tor η B'), T.Good π Ψ → T'.Good π' Ψ → (∀ g i, p (T.t g i : B) = (T'.t g i : B')) → ∀ δ' ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) (chRep T'.χ2), ∃ δ ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) (chRep T.χ2), ∀ g, p (δ g) = δ' g := by
   intro hP l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ B' _ _ _ _ _ _ _ _ _ _ π' hπ' p hp T T' hT hT'
     hTT δ' hδ'
-  haveI : ContinuousConstSMul E B := contConstSMul_alg E
-  haveI : ContinuousConstSMul E B' := contConstSMul_alg E
-  haveI : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
+  have : ContinuousConstSMul E B := contConstSMul_alg E
+  have : ContinuousConstSMul E B' := contConstSMul_alg E
+  have : Module.Finite E B := Module.Finite.of_restrictScalars_finite ℚ_[l] E B
   have hc : ContAction (chRep T.χ2) := contAction_chRep (T.continuous_χ2 hD.ηlc hT.cont hT.cont_inv)
   have hc' : ContAction (chRep T'.χ2) := contAction_chRep (T'.continuous_χ2 hD.ηlc hT'.cont hT'.cont_inv)
   have hcE : ContAction (resCoef E (chRep T.χ2)) := hc
@@ -1471,7 +1471,7 @@ theorem UpperTheory.torsionDatum_finiteCocycles_compare :
     · refine (((isCrys_isDR_restrict_openSubgroup _ hid _ hcE).2 H hD.isOpen).2).2 ?_
       have hH : IsOpenEmbedding ((MonoidHom.id (GQ l)).comp H.subtype) := hD.isOpen.isOpenEmbedding_subtypeVal
       have hcH : ContAction ((resCoef E (chRep T.χ2)).comp H.subtype : Representation E H B) :=
-        (((T.continuous_χ2 hD.ηlc hT.cont hT.cont_inv).comp continuous_subtype_val).comp continuous_fst).mul
+        (((T.continuous_χ2 hD.ηlc hT.cont hT.cont_inv).comp continuous_subtypeVal).comp continuous_fst).mul
           continuous_snd
       refine (isCrys_isDR_restrict_openSubgroup _ hH _ hcH).1 (crUnr _ hH _ hcH ((2 * e : ℕ) : ℤ) fun g hg x => ?_)
       change (T.χ2 g : B) * x = _
@@ -1550,8 +1550,8 @@ private theorem gam_add {G B : Type} [Group G] [CommRing B] [TopologicalSpace G]
 
 private theorem gamDiff : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (T : Tor η B), T.Good π Ψ → ∀ (h : B) (β : GQ l → B × B) (γ γ' : GQ l → B) (u u' : GQ l →* GG (m := 3) (R := B)), Continuous β → Continuous γ → Continuous γ' → (∀ g, π (β g).1 = 0) → T.IsGam h β γ → T.IsGam h β γ' → T.Coord h β γ u → T.Coord h β γ' u' → LCr H u → (LCr H u' ↔ γ' - γ ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) (chRep T.χ2)) := by
   intro hP l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ T hT h β γ γ' u u' cβ cγ cγ' hβ g1 g2 c1 c2 hu
-  haveI := hD.normal
-  haveI := hD.fin
+  have := hD.normal
+  have := hD.fin
   have hφ : IsOpenEmbedding H.subtype := hD.isOpen.isOpenEmbedding_subtypeVal
   have r1 : ∀ g ∈ H, (u g).right = 1 := fun g hg => (c1.right g).trans (hD.ηH g hg)
   have r2 : ∀ g ∈ H, (u' g).right = 1 := fun g hg => (c2.right g).trans (hD.ηH g hg)
@@ -1613,8 +1613,8 @@ private theorem conj_nE {G B : Type} [Group G] [CommRing B] {η : G →* ℤˣ} 
 
 private theorem gamCr : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {η : GQ l →* ℤˣ} {Ψ : GQ l →* Eˣ} {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) {B : Type} [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [TopologicalSpace B] [IsModuleTopology ℚ_[l] B] [IsTopologicalRing B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (T : Tor η B), T.Good π Ψ → ∀ (h : B), 2 * h = 1 → ∀ β ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) T.M1, (∀ g, π (β g).1 = 0) → ∃ (γ : GQ l → B) (u : GQ l →* GG (m := 3) (R := B)), Continuous γ ∧ T.IsGam h β γ ∧ T.Coord h β γ u ∧ LCr H u := by
   intro hP l _ E _ _ _ _ _ η Ψ H e hD B _ _ _ _ _ _ _ _ _ _ π hπ T hT h hh β hβ hβ0
-  haveI := hD.normal
-  haveI := hD.fin
+  have := hD.normal
+  have := hD.fin
   have hφ : IsOpenEmbedding H.subtype := hD.isOpen.isOpenEmbedding_subtypeVal
   have cβ : Continuous β := hβ.1.1
   obtain ⟨γ, cγ, gγ⟩ := UpperTheory.exists_continuous_isGam_of_torus_cocycle hP hD π hπ T hT h β hβ.1
@@ -1714,7 +1714,7 @@ private theorem lcr_map {l : ℕ} [Fact l.Prime] {B : Type} [CommRing B] [Algebr
   have cp : Continuous p := IsModuleTopology.continuous_of_linearMap p.toLinearMap
   have cρ : Continuous fun g => (ρ g : Matrix (Fin 3) (Fin 3) B) := by
     simp only [hρ]
-    exact cu.comp continuous_subtype_val
+    exact cu.comp continuous_subtypeVal
   refine ⟨(Matrix.GeneralLinearGroup.map (p : B →+* B')).comp ρ, fun g => ?_, ?_⟩
   · rw [MonoidHom.comp_apply, hρ]
     rfl
@@ -1731,11 +1731,11 @@ private theorem triDat {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocal
   have hη : IsOpen (D.η.ker : Set (GQ l)) := by
     have : D.η.ker = GK D.Kv := Subgroup.ext fun g => D.η_ker g
     rw [this]
-    haveI := D.Kv.2
+    have := D.Kv.2
     exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
   have ho : IsOpen (D.HL : Set (GQ l)) := hη.inter D.τ_open
   refine ⟨inferInstanceAs (D.η.ker ⊓ D.τ.ker).Normal, ho, ?_, fun g hg => hg.1, D.η_unr, ?_, D.e_pos, fun g hg hi => ?_, hc⟩
-  · haveI := Subgroup.quotient_finite_of_isOpen _ ho
+  · have := Subgroup.quotient_finite_of_isOpen _ ho
     exact Subgroup.finiteIndex_of_finite_quotient
   · refine (IsLocallyConstant.iff_eventually_eq _).2 fun g => ?_
     have : IsOpen {y : GQ l | g⁻¹ * y ∈ D.η.ker} := hη.preimage (by fun_prop)
@@ -1753,15 +1753,15 @@ open UpperTheory.V.Loc.TriangularDeformation in
 theorem UpperTheory.V.Loc.triLift :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing O E] (B : Type) [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra O B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] O B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower O E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (B' : Type) [CommRing B'] [Algebra ℚ_[l] B'] [Module.Finite ℚ_[l] B'] [Algebra O B'] [Algebra ℤ_[l] B'] [IsScalarTower ℤ_[l] O B'] [IsScalarTower ℤ_[l] ℚ_[l] B'] [Algebra E B'] [IsScalarTower O E B'] [IsScalarTower ℚ_[l] E B'] (π' : B' →ₐ[E] E) (hπ' : ∀ a, π' a = 0 → IsNilpotent a) (p : B →ₐ[E] B'), Function.Surjective p → π'.comp p = π → ∀ u' : GQ l →* GG (m := 3) (R := B'), D.InDtri (π' : B' →+* E) u' → ∃ u : GQ l →* GG (m := 3) (R := B), D.InDtri (π : B →+* E) u ∧ (GG.map (p : B →+* B')).comp u = u' := by
   intro hP l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _ _ B _ _ _ _ _ _ _ _ _ _ π hπ B' _ _ _ _ _ _ _ _ _ _ π' hπ' p hp hpπ u' hu'
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
-  letI : TopologicalSpace B' := moduleTopology ℚ_[l] B'
-  haveI : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
-  haveI : IsTopologicalRing B' := IsModuleTopology.isTopologicalRing ℚ_[l] B'
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
+  let : TopologicalSpace B' := moduleTopology ℚ_[l] B'
+  have : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
+  have : IsTopologicalRing B' := IsModuleTopology.isTopologicalRing ℚ_[l] B'
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
   have cp : Continuous p := IsModuleTopology.continuous_of_linearMap (p.restrictScalars ℚ_[l]).toLinearMap
   have cπ' : Continuous π' := IsModuleTopology.continuous_of_linearMap (π'.restrictScalars ℚ_[l]).toLinearMap
   have hππ : ∀ b, π' (p b) = π b := fun b => AlgHom.congr_fun hpπ b
@@ -1780,13 +1780,13 @@ theorem UpperTheory.V.Loc.triLift :
   have cu' : ∀ a b, Continuous fun g => (u' g).mat a b := hu'.cont
   have hD : TriDat D.η Ψ D.HL D.e := triDat D E (by
     have : (fun g => algebraMap O E (D.Ψ g)) = fun g => π' ((u' g).mat 0 0) := funext fun g => by
-      rw [red', if_pos rfl, ← hpow]
+      rw [red', ite_eq_left rfl, ← hpow]
       simp [wt1]
     rw [this]
     exact cπ'.comp (cu' 0 0))
-  haveI := hD.normal
+  have := hD.normal
   set h : B := algebraMap E B 2⁻¹ with hh0
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
   have hh : 2 * h = 1 := by
     rw [hh0, ← map_ofNat (algebraMap E B) 2, ← map_mul, mul_inv_cancel₀ two_ne_zero, map_one]
   have hh' : 2 * p h = 1 := by
@@ -1805,7 +1805,7 @@ theorem UpperTheory.V.Loc.triLift :
       ine := fun g hg i => by
         rw [d', triDiag D E B' π' hπ' u' hu' g hg i, IsScalarTower.algebraMap_apply O E B', ← hpow]
         rfl
-      red := fun g i => by rw [d', red', if_pos rfl] }
+      red := fun g i => by rw [d', red', ite_eq_left rfl] }
   have e1 : ∀ g, (β' g).1 = (u' g).mat 0 1 * ((T'.t g 1)⁻¹ : B'ˣ) := fun g => by
     rw [c'.mat]
     simp [triM]
@@ -1826,7 +1826,7 @@ theorem UpperTheory.V.Loc.triLift :
     rw [funext e3]
     exact ((cu' 0 2).mul (hT'.cont_inv 2)).sub ((continuous_const.mul c1).mul c2)
   have β0' : ∀ g, π' (β' g).1 = 0 := fun g => by
-    rw [e1, map_mul, red', if_neg (by decide), zero_mul]
+    rw [e1, map_mul, red', ite_eq_right (by decide), zero_mul]
   have fβ' : β' ∈ UpperTheory.V.Loc.finiteCocycles (MonoidHom.id (GQ l)) T'.M1 := by
     obtain ⟨ρ, hρ, hcr⟩ := hu'.cr
     refine (UpperTheory.mem_finiteCocycles_iff_restrict_subgroup_mem hD π' hπ' T' hT' β' ⟨cβ', zβ'⟩).2 ?_

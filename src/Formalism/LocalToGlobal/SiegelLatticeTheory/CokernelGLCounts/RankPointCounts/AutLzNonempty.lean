@@ -70,10 +70,10 @@ theorem massRows_pos {D : D7} (X : HidaSetting D) (Y : Formalism.L2.SG.Full.Full
   have hne : (Y.what₂ u).Nonempty := ⟨_, (cls_spec (Y.rowsOK u) (latRowLat X u) 1).1⟩
   unfold Formalism.MainNotions.S.Cnt.massRows
   refine Finset.sum_pos (fun Λ hΛ => ?_) hne
-  haveI := Formalism.L2.SG.Pf.FibreCounting.autLz_finite (Y := Y) (Formalism.L2.SG.Closed.NeatKu_holds X u Y.hK) hΛ
+  have := Formalism.L2.SG.Pf.FibreCounting.autLz_finite (Y := Y) (Formalism.L2.SG.Closed.NeatKu_holds X u Y.hK) hΛ
   have hpos : 0 < Nat.card ↥(autLz D (X.Fu u) Λ) := by
     obtain ⟨φ, hφ⟩ := autLz_nonempty (X.Fu u) Λ
-    haveI : Nonempty ↥(autLz D (X.Fu u) Λ) := ⟨⟨φ, hφ⟩⟩
+    have : Nonempty ↥(autLz D (X.Fu u) Λ) := ⟨⟨φ, hφ⟩⟩
     exact Nat.card_pos
   unfold Formalism.MainNotions.S.wRow
   exact inv_pos.2 (Nat.cast_pos.2 hpos)

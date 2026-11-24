@@ -114,7 +114,7 @@ theorem decomp_integral (μ : Measure (n → k)) [μ.IsAddHaarMeasure] (s : kˣ)
       ∀ F : (n → k) → ℂ, (∀ t ∈ box n s, ∀ x, F (x + t) = F x) →
         ∫ y, φ y * F y ∂μ = (μ.real (box n s) : ℂ) * ∑ x ∈ S, φ x * F x := by
   classical
-  haveI := secondCountable k
+  have := secondCountable k
   obtain ⟨S, hS⟩ := GlobalTheory.WeilM.HaarUniq.exists_decomp (boxSub (n := n) s) hφ.2 hinv
   have hinj : ∀ q ∈ S, ∀ q' ∈ S, Quotient.out q = Quotient.out q' → q = q' := fun q _ q' _ h => by
     simpa using congrArg (QuotientAddGroup.mk (s := (boxSub (n := n) s).toAddSubgroup)) h
@@ -253,7 +253,7 @@ theorem ind_add (s : kˣ) {t : n → k} (ht : t ∈ box n s) (z : n → k) :
 
 omit [MeasurableSpace k] [BorelSpace k] in
 theorem ind_mem (s : kˣ) : (box n s).indicator (fun _ => (1 : ℂ)) ∈ SB (n → k) := by
-  haveI := t2Space k
+  have := t2Space k
   exact GlobalTheory.WeilM.HaarUniq.indicator_mem (boxSub (n := n) s) (isCompact_box s)
 
 def ind (s : kˣ) : SB (n → k) := ⟨_, ind_mem (n := n) s⟩
@@ -281,7 +281,7 @@ theorem ratio_indep (hχ : HasConductor χ c) (μ : Measure (n → k)) [μ.IsAdd
       (∀ η, b'.1 η = (χ (η ⬝ᵥ t) : ℂ) * b.1 η) → B a' b = B a b')
     {s s' : kˣ} (g : SB (n → k)) (hs : admitted χ s g.1) (hss : box n s' ⊆ box n s) :
     (μ.real (box n s) : ℂ)⁻¹ * B (ind s) g = (μ.real (box n s') : ℂ)⁻¹ * B (ind s') g := by
-  haveI := secondCountable k
+  have := secondCountable k
   have key := law_integrated hχ μ B h2 (ind s') g (ind s) ((μ.real (box n s') : ℂ) • ind s)
     ((μ.real (box n s) : ℂ) • g) (fun y => by
       show (μ.real (box n s') : ℂ) * (box n s).indicator (fun _ => (1 : ℂ)) y =
@@ -383,7 +383,7 @@ theorem ell_translate
 theorem form_eq_ell (a b : SB (n → k))
     (hm : (fun η => (∫ y, a.1 y * (χ (η ⬝ᵥ y) : ℂ) ∂μ) * b.1 η) ∈ SB (n → k)) :
     B a b = ell χ μ B ⟨_, hm⟩ := by
-  haveI := secondCountable k
+  have := secondCountable k
   obtain ⟨s, hs⟩ := exists_box_subset (Filter.inter_mem (invariant_nhds a.2) (addChar_dotProduct_trivial_on_tsupport_nhds hχ hm))
   have a1 : admitted χ s (fun η => (∫ y, a.1 y * (χ (η ⬝ᵥ y) : ℂ) ∂μ) * b.1 η) :=
     isAdmissibleBoxForCharacter_of_subset fun t ht => (hs ht).2
@@ -402,9 +402,9 @@ theorem heis_invariant_form : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
   intro k _ _ _ _ _ _ n _ χ hc hne μ _ B hL1 hL2
   classical
   obtain ⟨c, hχ⟩ := exists_hasConductor_of_continuous χ hc hne
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI := nonarch (k := k) (n := n)
+  have := secondCountable k
+  have := t2Space k
+  have := nonarch (k := k) (n := n)
   have hm : ∀ a b : SB (n → k), (fun η => (∫ y, a.1 y * (χ (η ⬝ᵥ y) : ℂ) ∂μ) * b.1 η) ∈ SB (n → k) := by
     intro a b
     have h3 := fourier_mem_SB μ hχ a.2
@@ -1233,8 +1233,8 @@ theorem over_trans (h : Over ψ α β LS LT f₀ Ψ f) {x : WO S T} (hx : IsHalf
       rw [Matrix.add_apply, mul_add, hx i j, add_left_inj]
     unfold extFun
     by_cases ht : IsHalf p.e t
-    · rw [if_pos ht, if_pos (hc.2 ht), he t ht]
-    · rw [if_neg ht, if_neg (fun h' => ht (hc.1 h'))]
+    · rw [ite_eq_left ht, ite_eq_left (hc.2 ht), he t ht]
+    · rw [ite_eq_right ht, ite_eq_right (fun h' => ht (hc.1 h'))]
   refine ⟨hS, hT, hV, hΨ', hex, fun Tm hTm => ?_⟩
   show heisO ψ S T x f = Tm (extFun α β Ψ')
   rw [hall Tm hTm, hfun, hTm.trans _ hsb x hx]
@@ -1249,8 +1249,8 @@ theorem over_modul (h : Over ψ α β LS LT f₀ Ψ f) {y : WO S T} (hy : IsHalf
     funext t
     unfold extFun
     by_cases ht : IsHalf p.e t
-    · rw [if_pos ht, if_pos ht, he t ht]
-    · rw [if_neg ht, if_neg ht, mul_zero]
+    · rw [ite_eq_left ht, ite_eq_left ht, he t ht]
+    · rw [ite_eq_right ht, ite_eq_right ht, mul_zero]
   refine ⟨hS, hT, hV, hΨ', hex, fun Tm hTm => ?_⟩
   show heisO ψ S T y f = Tm (extFun α β Ψ')
   rw [hall Tm hTm, hfun, hTm.modul _ hsb y hy]

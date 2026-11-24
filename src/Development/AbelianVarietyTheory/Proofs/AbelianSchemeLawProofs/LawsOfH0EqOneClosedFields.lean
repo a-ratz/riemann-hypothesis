@@ -127,8 +127,8 @@ theorem heis_irred_of_isField
     (h1 : ∀ x y v, U x (U y v) = (e x y : R) • U y (U x v)) (h2 : Function.Injective e)
     (h3 : Module.finrank R V ^ 2 ≤ Nat.card G) (W : Submodule R V)
     (hW : ∀ x v, v ∈ W → U x v ∈ W) : W = ⊥ ∨ W = ⊤ := by
-  letI := hR.toField
-  haveI : Module.Finite R V := Module.finite_of_finrank_pos hpos
+  let := hR.toField
+  have : Module.Finite R V := Module.finite_of_finrank_pos hpos
   exact H R G V U e h1 h2 h3 W hW
 
 theorem isField_globalFns_spec (K : Type) [Field K] :
@@ -149,7 +149,7 @@ theorem irredSt_of_heis : (∀ (S : Scheme.{0}) (P : PolAV S) (k : ℤ) (T : Ove
   have hG : ∀ x : G, x.1 ^ k = 1 := fun x => x.2
   have hcard : Nat.card G = k ^ (2 * P.g) :=
     (hM _ P k hk1).2.2.2.2 K (𝟙 _) hkK
-  haveI : Finite G := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
+  have : Finite G := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
   choose θ hθ using fun x : G => hlift x.1 (hG x) hsub
   choose c hc hcu using fun x y : G => hex x.1 y.1 (hG x) (hG y)
   have hcmul : ∀ x x' y : G, c (x * x') y = c x y * c x' y := fun x x' y =>
@@ -627,13 +627,13 @@ theorem natCard_eq_of_equiv_pi_field {R : Type} [Field R] {U V : Type} [AddCommG
     (hm : 0 < m) (hU : Module.finrank R U = m) (hV : Module.finrank R V = 1) :
     Nat.card X = m := by
   classical
-  haveI : Module.Finite R U := Module.finite_of_finrank_pos (hU ▸ hm)
-  haveI : Module.Finite R V := Module.finite_of_finrank_pos (hV ▸ Nat.one_pos)
+  have : Module.Finite R U := Module.finite_of_finrank_pos (hU ▸ hm)
+  have : Module.Finite R V := Module.finite_of_finrank_pos (hV ▸ Nat.one_pos)
   have e₁ : V ≃ₗ[R] R := LinearEquiv.ofFinrankEq V R (by rw [hV, Module.finrank_self])
   have e₂ : U ≃ₗ[R] (X → R) := e.trans (LinearEquiv.piCongrRight fun _ => e₁)
-  haveI : Module.Finite R (X → R) := Module.Finite.equiv e₂
-  haveI : Finite X := (Pi.linearIndependent_single_one X R).finite
-  haveI := Fintype.ofFinite X
+  have : Module.Finite R (X → R) := Module.Finite.equiv e₂
+  have : Finite X := (Pi.linearIndependent_single_one X R).finite
+  have := Fintype.ofFinite X
   rw [← hU, e₂.finrank_eq, Module.finrank_fintype_fun_eq_card, Nat.card_eq_fintype_card]
 
 theorem natCard_eq_of_equiv_pi {R : Type} [CommRing R] (hR : IsField R) {U V : Type}
@@ -641,7 +641,7 @@ theorem natCard_eq_of_equiv_pi {R : Type} [CommRing R] (hR : IsField R) {U V : T
     (e : U ≃ₗ[R] (X → V)) {m : ℕ}
     (hm : 0 < m) (hU : Module.finrank R U = m) (hV : Module.finrank R V = 1) :
     Nat.card X = m := by
-  letI := hR.toField
+  let := hR.toField
   exact natCard_eq_of_equiv_pi_field e hm hU hV
 
 noncomputable def basePointsEquiv {S S' : Scheme.{0}} {f : S' ⟶ S} {A : Over S} {A' : Over S'}

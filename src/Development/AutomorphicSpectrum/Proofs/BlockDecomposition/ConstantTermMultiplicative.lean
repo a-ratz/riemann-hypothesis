@@ -208,7 +208,7 @@ theorem isHk_of_isHecke {n : ℕ} {w : Pl E} (hU : UL n w = ⊤) {f : UL n w →
   refine ⟨?_, GlobalTheory.CompanionTheory.IwLevels.isCompact_KGL w n, ?_, ?_⟩
   · rw [GlobalTheory.CompanionTheory.IwLevels.KGL_eq_KO]
     exact GlobalTheory.SplitFlip.isOpen_KO
-  · refine HasCompactSupport.intro (hf.1.isCompact.image continuous_subtype_val) fun y hy => ?_
+  · refine HasCompactSupport.intro (hf.1.isCompact.image continuous_subtypeVal) fun y hy => ?_
     by_contra h0
     exact hy ⟨toSub (UL n w) y, subset_tsupport _ h0, val_toSub hU y⟩
   · intro k₁ hk₁ k₂ hk₂ g
@@ -319,7 +319,7 @@ theorem ct_gconv {n a b : ℕ} (h : a + b = n) (w : Pl E) {f₁ f₂ : GLw n w �
 
 theorem ctMul : CtMul := by
   intro E _ _ _ n a ha w hw μ hμ f g hf hg
-  have hU : UL n w = ⊤ := if_pos hw
+  have hU : UL n w = ⊤ := ite_eq_left hw
   funext m
   set h := Nat.add_sub_cancel' ha with hh
   let c : GLw a w × GLw (n - a) w → ℂ := fun m =>

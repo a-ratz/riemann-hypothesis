@@ -284,10 +284,10 @@ theorem mem_intMat_iff (X : Multiplicative (Matrix (Fin a) (Fin b) (w.adicComple
     { carrier := {X | ∀ i j, Valued.v (Multiplicative.toAdd X i j) ≤ 1}
       one_mem' := fun i j => by simp
       mul_mem' := fun {x y} hx hy i j => by
-        simp only [Set.mem_setOf_eq, toAdd_mul, Matrix.add_apply] at *
+        simp only [Set.mem_ofPred_eq, toAdd_mul, Matrix.add_apply] at *
         exact Valuation.map_add_le _ (hx i j) (hy i j)
       inv_mem' := fun {x} hx i j => by
-        simp only [Set.mem_setOf_eq, toAdd_inv, Matrix.neg_apply, Valuation.map_neg] at *
+        simp only [Set.mem_ofPred_eq, toAdd_inv, Matrix.neg_apply, Valuation.map_neg] at *
         exact hx i j }
   have e : intMat a b w = T :=
     le_antisymm ((Subgroup.closure_le _).2 fun x hx => hx) fun x hx => Subgroup.subset_closure hx
@@ -499,9 +499,9 @@ theorem GlobalTheory.LeviDesc.ConjStab.exists_stab : ∀ (E : Type) [Field E] [N
       exact (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w a).2.prod (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w b).2
     have hC : IsOpen (C : Set (GLw a w × GLw b w)) :=
       (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w n).1.preimage (continuous_conjLevi h w X)
-    haveI : CompactSpace P := isCompact_iff_compactSpace.mp hP
-    haveI : Finite (P ⧸ C.subgroupOf P) :=
-      Subgroup.quotient_finite_of_isOpen _ (hC.preimage continuous_subtype_val)
+    have : CompactSpace P := isCompact_iff_compactSpace.mp hP
+    have : Finite (P ⧸ C.subgroupOf P) :=
+      Subgroup.quotient_finite_of_isOpen _ (hC.preimage continuous_subtypeVal)
     exact Subgroup.index_ne_zero_of_finite
   · have := (Subgroup.mem_inf.1 hk).2
     rw [Subgroup.mem_comap, conjLevi_apply] at this
@@ -566,17 +566,17 @@ theorem exists_isCompact_krylov_units : ∀ (E : Type) [Field E] [NumberField E]
     intro e
     rw [Units.continuous_iff]
     constructor
-    · exact (hkc e).comp continuous_subtype_val
+    · exact (hkc e).comp continuous_subtypeVal
     · have : (fun y : K e => ((f e y)⁻¹ : GLw r w).val) = fun y => (kr e y.1)⁻¹ := by
         funext y
         rw [Matrix.coe_units_inv]
         rfl
       rw [this]
       simp only [Matrix.inv_def, Ring.inverse_eq_inv']
-      exact (((hkc e).comp continuous_subtype_val).matrix_det.inv₀ fun y => hKU e y.2).smul
-        ((hkc e).comp continuous_subtype_val).matrix_adjugate
+      exact (((hkc e).comp continuous_subtypeVal).matrix_det.inv₀ fun y => hKU e y.2).smul
+        ((hkc e).comp continuous_subtypeVal).matrix_adjugate
   refine ⟨⋃ e ∈ t, Set.range (f e), t.isCompact_biUnion fun e _ => ?_, ?_⟩
-  · haveI := isCompact_iff_compactSpace.1 (hKc e)
+  · have := isCompact_iff_compactSpace.1 (hKc e)
     exact isCompact_range (hf e)
   · intro y hy
     rw [hΩK] at hy
@@ -660,7 +660,7 @@ theorem mul_krylov_eq {F : Type} [Field F] {r : ℕ} (y : Matrix (Fin r) (Fin r)
     simp [Matrix.mul_apply, krylov_apply, Matrix.mulVec, dotProduct]
   rw [hl, Matrix.mul_apply]
   by_cases hj : (j : ℕ) + 1 < r
-  · simp only [companion, Matrix.of_apply, hj, if_true]
+  · simp only [companion, Matrix.of_apply, hj, ite_true]
     rw [Finset.sum_eq_single (⟨(j : ℕ) + 1, hj⟩ : Fin r)]
     · simp [krylov_apply]
     · intro k _ hk
@@ -668,7 +668,7 @@ theorem mul_krylov_eq {F : Type} [Field F] {r : ℕ} (y : Matrix (Fin r) (Fin r)
       simp [this]
     · intro h; exact absurd (Finset.mem_univ _) h
   · have hr : (j : ℕ) + 1 = r := by omega
-    simp only [companion, Matrix.of_apply, hj, if_false]
+    simp only [companion, Matrix.of_apply, hj, ite_false]
     rw [hr, pow_dim_eq_neg_sum_charpoly_coeff y, Matrix.neg_mulVec, Matrix.sum_mulVec]
     simp [krylov_apply, Finset.sum_apply]
     refine Finset.sum_congr rfl fun k _ => ?_
@@ -717,13 +717,13 @@ theorem krylov_conj_eq {F : Type} [Field F] {r : ℕ} (y y' : Matrix (Fin r) (Fi
 
 theorem isClosed_charpoly_eq (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ)
     (χ : (w.adicCompletion E)[X]) : IsClosed {y : GLw r w | y.val.charpoly = χ} := by
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
-  haveI : Infinite (w.adicCompletion E) := Infinite.of_injective Nat.cast Nat.cast_injective
+  have : Infinite (w.adicCompletion E) := Infinite.of_injective Nat.cast Nat.cast_injective
   have hset : {y : GLw r w | y.val.charpoly = χ} =
       ⋂ t : w.adicCompletion E, {y : GLw r w | ((Matrix.scalar (Fin r) t) - y.val).det = χ.eval t} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · intro hy t; rw [← Matrix.eval_charpoly, hy]
     · intro hy; exact Polynomial.funext fun t => by rw [Matrix.eval_charpoly]; exact hy t
@@ -796,7 +796,7 @@ theorem charpoly_blk_separable (E : Type) [Field E] [NumberField E] (n a b : ℕ
       Matrix.reindex (finSumFinEquiv.trans (finCongr h)) (finSumFinEquiv.trans (finCongr h))
         (Matrix.fromBlocks m.1.val (m.1.val * (0 : Matrix (Fin a) (Fin b) (w.adicCompletion E))) 0 m.2.val) := by
     simp only [blk]
-    rw [dif_pos hM]
+    rw [dite_eq_left hM]
     rfl
   rw [hval, Matrix.charpoly_reindex, Matrix.mul_zero, Matrix.charpoly_fromBlocks_zero₁₂]
   exact hs
@@ -828,10 +828,10 @@ theorem fin_doubleCosets : ∀ (E : Type) [Field E] [NumberField E] (n a b : ℕ
     rw [← mul_assoc, ← hq, mul_inv_cancel_right]
   refine Set.Finite.of_injOn (f := fun d => if hd : ∃ t, Q d t then hd.choose else 1) (t := T) ?_ ?_ hT
   · intro d hd
-    simp only [dif_pos (hex d hd)]
+    simp only [dite_eq_left (hex d hd)]
     exact (hex d hd).choose_spec.1
   · intro d₁ hd₁ d₂ hd₂ heq
-    simp only [dif_pos (hex d₁ hd₁), dif_pos (hex d₂ hd₂)] at heq
+    simp only [dite_eq_left (hex d₁ hd₁), dite_eq_left (hex d₂ hd₂)] at heq
     obtain ⟨-, z₁, hz₁, k₁, hk₁, hp₁⟩ := (hex d₁ hd₁).choose_spec
     obtain ⟨-, z₂, hz₂, k₂, hk₂, hp₂⟩ := (hex d₂ hd₂).choose_spec
     rw [heq] at hp₁
@@ -1366,7 +1366,7 @@ theorem orbit_count_parabolic_unfold : ∀ (P M N : Type) [Group P] [Group M] [G
   intro P M N _ _ _ s π u hπs hu hker KP KM L hsK hπK huK TM CM TP CP _ hTP _ _ q X
   set S : Subgroup M := TM.map (MulAut.conj q⁻¹).toMonoidHom ⊓ KM with hS
   set C : Subgroup M := KP.comap ((MulAut.conj (u X)⁻¹).toMonoidHom.comp s) with hC
-  letI : MulAction M (P ⧸ KP) := MulAction.compHom (P ⧸ KP) s
+  let : MulAction M (P ⧸ KP) := MulAction.compHom (P ⧸ KP) s
   have hsmul : ∀ (r : M) (p : P), r • (QuotientGroup.mk p : P ⧸ KP) = QuotientGroup.mk (s r * p) := by
     intro r p; rfl
   have memS : ∀ r : M, r ∈ S ↔ (∃ t ∈ TM, q⁻¹ * t * q = r) ∧ r ∈ KM := by
@@ -1760,7 +1760,7 @@ theorem core : ∀ (P M N : Type) [Group P] [Group M] [Group N] (s : M →* P) (
       obtain ⟨X, -, hc⟩ := hfib d
       have h0 := _root_.GlobalTheory.stab_relIndex_ne_zero P M N s π u hs hinj hker KP KM L hsK hπK huK TM hU q0 X
       rw [← hc] at h0
-      haveI := Nat.finite_of_card_ne_zero h0
+      have := Nat.finite_of_card_ne_zero h0
       exact Set.toFinite _
   rw [hR, mul_finsum]
   refine finsum_congr fun d => ?_

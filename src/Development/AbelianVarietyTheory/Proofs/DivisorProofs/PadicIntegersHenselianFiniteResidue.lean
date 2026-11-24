@@ -59,13 +59,13 @@ theorem henselianLocalRing_and_finite_residueField :
       Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers ℚ)) := by
   intro v
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (v.adicCompletionIntegers ℚ)
-  haveI : IsPrecomplete (maximalIdeal (v.adicCompletionIntegers ℚ)) (v.adicCompletionIntegers ℚ) :=
+  have : IsPrecomplete (maximalIdeal (v.adicCompletionIntegers ℚ)) (v.adicCompletionIntegers ℚ) :=
     Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.completion_integers_precomplete v hϖ
-  haveI : IsAdicComplete (maximalIdeal (v.adicCompletionIntegers ℚ)) (v.adicCompletionIntegers ℚ) := {}
-  haveI := IsAdicComplete.henselianRing (v.adicCompletionIntegers ℚ)
+  have : IsAdicComplete (maximalIdeal (v.adicCompletionIntegers ℚ)) (v.adicCompletionIntegers ℚ) := {}
+  have := IsAdicComplete.henselianRing (v.adicCompletionIntegers ℚ)
     (maximalIdeal (v.adicCompletionIntegers ℚ))
   refine ⟨GlobalTheory.henselianLocalRing_of_henselianRing _, ?_⟩
-  haveI : Finite (ℤ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
+  have : Finite (ℤ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
   exact Finite.of_equiv _ (GroundTheory.Global.residueFieldEquiv (K := ℚ) v).toEquiv
 
 end GlobalTheory.IntAdicHensel

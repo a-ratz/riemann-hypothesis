@@ -277,13 +277,13 @@ theorem exists_sq_sub_mul_sq (hU : Unr E) (θ : E) (hθ0 : θ ≠ 0) (hθ : IsCM
       algebraMap _ (v.adicCompletion (maximalRealSubfield E)) a =
         x ^ 2 - algebraMap _ (v.adicCompletion (maximalRealSubfield E)) d * y ^ 2 := by
   set Fv := v.adicCompletion (maximalRealSubfield E)
-  haveI : CharZero Fv :=
+  have : CharZero Fv :=
     charZero_of_injective_algebraMap (algebraMap (maximalRealSubfield E) Fv).injective
   have hd0 : d ≠ 0 := fun h => mul_ne_zero hθ0 hθ0 (hd.symm.trans (by rw [h]; rfl))
   by_cases hsq : IsSquare (algebraMap _ Fv d)
   · exact GlobalTheory.Published.HasseNormSt.of_isSquare ((_root_.map_ne_zero _).2 hd0) hsq _
   obtain ⟨w, hw⟩ := (GlobalTheory.QNorm.places_over (maximalRealSubfield E) E).2.1 v
-  haveI : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw, HeightOneSpectrum.under_asIdeal]⟩
+  have : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw, HeightOneSpectrum.under_asIdeal]⟩
   set ι := completionMap v w with hιdef
   have hι : ∀ x : maximalRealSubfield E,
       ι (algebraMap _ Fv x) = algebraMap E (w.adicCompletion E) (x : E) := by
@@ -319,13 +319,13 @@ theorem exists_sq_sub_mul_sq (hU : Unr E) (θ : E) (hθ0 : θ ≠ 0) (hθ : IsCM
     exact Finset.single_le_sum (f := fun u : PlacesOver E v =>
       Module.finrank Fv (u.1.adicCompletion E)) (fun _ _ => Nat.zero_le _)
       (Finset.mem_univ ⟨w, inferInstance⟩)
-  haveI : Module.Finite Fv (w.adicCompletion E) := Module.finite_of_finrank_pos (finrank_pos v w)
+  have : Module.Finite Fv (w.adicCompletion E) := Module.finite_of_finrank_pos (finrank_pos v w)
   have hge : 2 ≤ Module.finrank Fv (w.adicCompletion E) := by
     simpa using hli.fintype_card_le_finrank
   have h2 : Module.finrank Fv (w.adicCompletion E) = 2 := le_antisymm hle hge
   have hns : ¬ IsSplitAt w := by
     rintro ⟨u, hne, hu⟩
-    haveI : u.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw, ← hu, HeightOneSpectrum.under_asIdeal]⟩
+    have : u.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hw, ← hu, HeightOneSpectrum.under_asIdeal]⟩
     have hpos := finrank_pos v u
     have hne' : (⟨u, inferInstance⟩ : PlacesOver E v) ≠ ⟨w, inferInstance⟩ :=
       fun h => hne (congrArg Subtype.val h)
@@ -1338,11 +1338,11 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (Q : SelfR
 theorem pos_at_embedding {n : ℕ} (γ : Matrix (Fin n) (Fin n) E) (m : E[X])
     (hpos : ∀ τ : E →+* ℂ, ((aeval γ m).map τ).PosDef) (hdvd : Q.1 ∣ γ.charpoly)
     (x : plus Q) (hx : (x : Fld Q) = AdjoinRoot.mk Q.1 m) (φ : plus Q →+* ℂ) : 0 < φ x := by
-  letI : Algebra (plus Q) ℂ := φ.toAlgebra
-  haveI : Module.Finite (plus Q) (Fld Q) :=
+  let : Algebra (plus Q) ℂ := φ.toAlgebra
+  have : Module.Finite (plus Q) (Fld Q) :=
     Module.Finite.of_restrictScalars_finite (maximalRealSubfield E) (plus Q) (Fld Q)
-  haveI : Module.IsTorsionFree (plus Q) ℂ := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : Module.IsTorsionFree (plus Q) (Fld Q) := DivisionSemiring.to_moduleIsTorsionFree
+  have : Module.IsTorsionFree (plus Q) ℂ := DivisionSemiring.to_moduleIsTorsionFree
+  have : Module.IsTorsionFree (plus Q) (Fld Q) := DivisionSemiring.to_moduleIsTorsionFree
   let ρ : Fld Q →ₐ[plus Q] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1547,7 +1547,7 @@ theorem part1 (hU : Unr E) {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {P : E[
   have hγ' : h⁻¹ * γ.1 * h ∈ UE E n := hh ▸ γ'.2
   obtain ⟨c, hc1, hc2⟩ := normHasse E hU n γ.1 h γ.2 (h1 ▸ hP) hγ' (fun w hw => by
     obtain ⟨g, hg⟩ := hloc w (mem_S hS hw)
-    have hUL : UL n w = UJ (cj w) 1 := by unfold UL; rw [if_neg hw]
+    have hUL : UL n w = UJ (cj w) 1 := by unfold UL; rw [ite_eq_right hw]
     refine (unitConj _ (cj w) n _ _).1 ⟨g.1, hUL ▸ g.2, ?_⟩
     have := congrArg Subtype.val hg
     simp only [Subgroup.coe_mul, Subgroup.coe_inv, locPt_val hU] at this
@@ -1562,8 +1562,8 @@ theorem part2 (hU : Unr E) {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) (γ : U
   apply finprod_mem_congr rfl
   intro w _
   by_cases hw : IsSplitAt w
-  · rw [if_pos hw]; unfold kapSign; rw [if_pos hw]
-  · rw [if_neg hw, kapSign_eq w hw, locPt_val hU]
+  · rw [ite_eq_left hw]; unfold kapSign; rw [ite_eq_left hw]
+  · rw [ite_eq_right hw, kapSign_eq w hw, locPt_val hU]
     unfold sgnOn
     have hA := aeval_map_mat w γ.1.val P₁
     have := baseChangeSign E hU w hw n 1 (aeval γ.1.val P₁)
@@ -1585,10 +1585,10 @@ theorem part3 (hU : Unr E) {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {P : E[
   choose k hk using hk
   have hinvol : ∀ w : Pl E, ∀ x, cj w (cj w x) = x := fun w => (GlobalTheory.ConjAtPlace.main E hU w).2.1
   have hval : ∀ w : Pl E, ∀ x, Valued.v (cj w x) = Valued.v x := fun w => (GlobalTheory.ConjAtPlace.main E hU w).2.2.1
-  have hUL : ∀ w : Pl E, ¬ IsSplitAt w → UL n w = UJ (cj w) 1 := fun w hw => by unfold UL; rw [if_neg hw]
+  have hUL : ∀ w : Pl E, ¬ IsSplitAt w → UL n w = UJ (cj w) 1 := fun w hw => by unfold UL; rw [ite_eq_right hw]
   have hyU : ∀ w : Pl E, ¬ IsSplitAt w → cT (cj w) (y w).1.val * 1 * (y w).1.val = 1 := fun w hw => by
     have h3 : ∀ z : GLw n w, z ∈ UL n w → cT (cj w) z.val * 1 * z.val = 1 := by
-      intro z hz; unfold UL at hz; rw [if_neg hw] at hz; exact hz
+      intro z hz; unfold UL at hz; rw [ite_eq_right hw] at hz; exact hz
     exact h3 _ (y w).2
   obtain ⟨H', hH'h, hH'i, hH'p, hH'l⟩ := existForm E hU S hS n γ₀ (hγ₀ ▸ hP)
     (fun w => cT (cj w) ((k w)⁻¹).val * ((k w)⁻¹).val)
@@ -1601,8 +1601,8 @@ theorem part3 (hU : Unr E) {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {P : E[
       apply finprod_mem_congr rfl
       intro w _
       by_cases hw : IsSplitAt w
-      · rw [if_pos hw]; unfold kapSign; rw [if_pos hw]
-      · rw [if_neg hw, kapSign_eq w hw, hk w, sgnConj _ (cj w) (hval w)]
+      · rw [ite_eq_left hw]; unfold kapSign; rw [ite_eq_left hw]
+      · rw [ite_eq_right hw, kapSign_eq w hw, hk w, sgnConj _ (cj w) (hval w)]
         rfl)
   obtain ⟨h, hh⟩ := landherrStd E hU n H' hH'h hH'p (fun w hw => by
     obtain ⟨c, -, hc⟩ := hH'l w hw
@@ -1622,7 +1622,7 @@ theorem part3 (hU : Unr E) {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {P : E[
         rw [Matrix.coe_units_inv]
         exact Matrix.charpoly_units_conj h γ₀.val
       obtain ⟨h', hh'⟩ := conjGL _ n (y w).1 _ hb.symm ((hy w) ▸ hsep w)
-      have hmem : h' ∈ UL n w := by unfold UL; rw [if_pos hw]; trivial
+      have hmem : h' ∈ UL n w := by unfold UL; rw [ite_eq_left hw]; trivial
       exact ⟨⟨h', hmem⟩, Subtype.ext (by simpa using hh')⟩
     · obtain ⟨c, hc1, hc2⟩ := hH'l w hw
       have hg : (k w)⁻¹ * c * (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) h)⁻¹ ∈ UL n w := by

@@ -562,7 +562,7 @@ private theorem finite_heightOneSpectrum_containing_finset_nat (K : Type) [Field
   have : {P : HeightOneSpectrum (𝓞 K) | ∃ ℓ ∈ S, ℓ ≠ 0 ∧ (ℓ : 𝓞 K) ∈ P.asIdeal} ⊆
       ⋃ ℓ ∈ S.filter (· ≠ 0), {P | P.asIdeal ∣ Ideal.span {(ℓ : 𝓞 K)}} := by
     rintro P ⟨ℓ, hS, h0, hP⟩
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_filter]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_filter]
     exact ⟨ℓ, ⟨hS, h0⟩, Ideal.dvd_span_singleton.2 hP⟩
   refine Set.Finite.subset (Set.Finite.biUnion (Finset.finite_toSet _) fun ℓ hℓ => ?_) this
   refine Ideal.finite_factors ?_
@@ -577,17 +577,17 @@ private theorem exists_finset_submodule_eq_add_two_smul {M : Type*} [AddCommGrou
     [Module.Finite ℤ M] (N : Submodule ℤ M) :
     ∃ V : Finset M, (∀ v ∈ V, v ∈ N) ∧ ∀ h ∈ N, ∃ v ∈ V, ∃ w ∈ N, h = v + 2 • w := by
   classical
-  haveI := isNoetherian_of_isNoetherianRing_of_finite ℤ M
-  haveI : Module.Finite ℤ N := Module.IsNoetherian.finite ℤ N
+  have := isNoetherian_of_isNoetherianRing_of_finite ℤ M
+  have : Module.Finite ℤ N := Module.IsNoetherian.finite ℤ N
   let D : Submodule ℤ N := LinearMap.range ((2 : ℤ) • LinearMap.id)
-  haveI : Finite (N ⧸ D) := by
+  have : Finite (N ⧸ D) := by
     refine Module.finite_of_fg_torsion _ fun q => ?_
     refine ⟨⟨2, mem_nonZeroDivisors_of_ne_zero two_ne_zero⟩, ?_⟩
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective D q
     show (2 : ℤ) • (Submodule.Quotient.mk x : N ⧸ D) = 0
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
     exact ⟨x, rfl⟩
-  haveI := Fintype.ofFinite (N ⧸ D)
+  have := Fintype.ofFinite (N ⧸ D)
   refine ⟨(Finset.univ : Finset (N ⧸ D)).image fun q => ((Quotient.out q : N) : M), ?_, ?_⟩
   · intro v hv
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hv
@@ -642,12 +642,12 @@ open NumberField IsDedekindDomain in
 open scoped TensorProduct Classical nonZeroDivisors in
 private theorem exists_nat_prime_mem_heightOneSpectrum (K : Type) [Field K] [NumberField K] (P : HeightOneSpectrum (𝓞 K)) :
     ∃ ℓ : ℕ, ℓ.Prime ∧ (ℓ : 𝓞 K) ∈ P.asIdeal := by
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
-  letI : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  have : P.asIdeal.IsMaximal := P.isMaximal
+  let : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 K ⧸ P.asIdeal)
   have hp0 : p ≠ 0 := CharP.char_ne_zero_of_finite (𝓞 K ⧸ P.asIdeal) p
-  haveI : NeZero p := ⟨hp0⟩
+  have : NeZero p := ⟨hp0⟩
   refine ⟨p, (CharP.char_is_prime_of_pos (𝓞 K ⧸ P.asIdeal) p).out, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   exact CharP.cast_eq_zero _ p
@@ -701,7 +701,7 @@ private theorem ord_nonneg_of_isIntegral' {K : Type} [Field K] [NumberField K]
   obtain ⟨w, rfl⟩ : ∃ w : 𝓞 K, (w : K) = z := ⟨⟨z, hz⟩, rfl⟩
   unfold _root_.GlobalTheory.FixNormCls.ord
   rw [← FractionalIdeal.coeIdeal_span_singleton]
-  exact FractionalIdeal.count_coe_nonneg K P _
+  exact FractionalIdeal.count_coeIdeal_nonneg K P _
 
 open NumberField IsDedekindDomain in
 open scoped Classical nonZeroDivisors in
@@ -767,7 +767,7 @@ theorem _root_.GlobalTheory.FixNormField.fixed_classes_mod_norms : ∀ (K : Type
   intro K _ _ τ hτ S
   classical
   have hσσ := _root_.GlobalTheory.FixNormCls.primeMap_primeMap τ hτ
-  letI : LinearOrder (HeightOneSpectrum (𝓞 K)) := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder (HeightOneSpectrum (𝓞 K)) := IsWellOrder.linearOrder WellOrderingRel
   have hTfin := finite_heightOneSpectrum_containing_finset_nat K S
   set T := hTfin.toFinset with hT
   have hrep : ∀ c : ClassGroup (𝓞 K), ∃ I : (FractionalIdeal (𝓞 K)⁰ K)ˣ, ClassGroup.mk K I = c :=
@@ -808,18 +808,18 @@ theorem _root_.GlobalTheory.FixNormField.fixed_classes_mod_norms : ∀ (K : Type
       (if _root_.GlobalTheory.FixNormCls.primeMap τ P = P then _root_.GlobalTheory.FixNormCls.ord P a % 2 else 0) := by
     intro P
     by_cases hfix : _root_.GlobalTheory.FixNormCls.primeMap τ P = P
-    · simp only [k, hfix, if_true]; omega
+    · simp only [k, hfix, ite_true]; omega
     · have e1 : k P = if P < _root_.GlobalTheory.FixNormCls.primeMap τ P then
           _root_.GlobalTheory.FixNormCls.ord P a else 0 := by
-        simp only [k]; rw [if_neg hfix]
+        simp only [k]; rw [ite_eq_right hfix]
       have e2 : k (_root_.GlobalTheory.FixNormCls.primeMap τ P) = if _root_.GlobalTheory.FixNormCls.primeMap τ P < P then
           _root_.GlobalTheory.FixNormCls.ord P a else 0 := by
-        simp only [k, hσσ, hσa]; rw [if_neg fun h => hfix h.symm]
-      rw [e1, e2, if_neg hfix, sub_zero]
+        simp only [k, hσσ, hσa]; rw [ite_eq_right fun h => hfix h.symm]
+      rw [e1, e2, ite_eq_right hfix, sub_zero]
       rcases lt_trichotomy P (_root_.GlobalTheory.FixNormCls.primeMap τ P) with h | h | h
-      · rw [if_pos h, if_neg (lt_asymm h), add_zero]
+      · rw [ite_eq_left h, ite_eq_right (lt_asymm h), add_zero]
       · exact absurd h.symm hfix
-      · rw [if_neg (lt_asymm h), if_pos h, zero_add]
+      · rw [ite_eq_right (lt_asymm h), ite_eq_left h, zero_add]
   have hkfin : ∀ᶠ P in Filter.cofinite, k P = 0 := by
     filter_upwards [FractionalIdeal.finite_factors (K := K)
       (FractionalIdeal.spanSingleton (𝓞 K)⁰ a)] with P hP
@@ -862,14 +862,14 @@ theorem _root_.GlobalTheory.FixNormField.fixed_classes_mod_norms : ∀ (K : Type
     have hr : (if P ∈ Rset then (1 : ℤ) else 0) =
         (if _root_.GlobalTheory.FixNormCls.primeMap τ P = P then _root_.GlobalTheory.FixNormCls.ord P a % 2 else 0) := by
       by_cases hfix : _root_.GlobalTheory.FixNormCls.primeMap τ P = P
-      · rw [if_pos hfix]
+      · rw [ite_eq_left hfix]
         by_cases hPT : P ∈ T
         · have h2 := Int.emod_two_eq_zero_or_one (_root_.GlobalTheory.FixNormCls.ord P a)
           rcases h2 with h2 | h2
-          · rw [if_neg (by simp [hRset, h2]), h2]
-          · rw [if_pos (by simp [hRset, hPT, hfix, h2]), h2]
-        · rw [if_neg (by simp [hRset, hPT]), hsplit P hPT hfix]
-      · rw [if_neg hfix, if_neg (by simp [hRset, hfix])]
+          · rw [ite_eq_right (by simp [hRset, h2]), h2]
+          · rw [ite_eq_left (by simp [hRset, hPT, hfix, h2]), h2]
+        · rw [ite_eq_right (by simp [hRset, hPT]), hsplit P hPT hfix]
+      · rw [ite_eq_right hfix, ite_eq_right (by simp [hRset, hfix])]
     have h1 := hk P
     show _root_.GlobalTheory.FixNormCls.ord P c = (if P ∈ Rset then 1 else 0) +
       FractionalIdeal.count K P (I : FractionalIdeal (𝓞 K)⁰ K) +
@@ -1148,10 +1148,10 @@ variable {E : Type} [CommRing E] [Algebra ℚ E] [FiniteDimensional ℚ E]
 
 theorem numberField_quot (I : Ideal E) [I.IsMaximal] :
     @NumberField (E ⧸ I) (Ideal.Quotient.field I) := by
-  letI := Ideal.Quotient.field I
+  let := Ideal.Quotient.field I
   have hfin : Module.Finite ℚ (E ⧸ I) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ ℚ I).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : CharZero (E ⧸ I) := charZero_of_injective_ringHom (algebraMap ℚ (E ⧸ I)).injective
+  have : CharZero (E ⧸ I) := charZero_of_injective_ringHom (algebraMap ℚ (E ⧸ I)).injective
   exact @NumberField.mk _ _ _ (by
     convert hfin
     exact congrArg (fun A : Algebra ℚ (E ⧸ I) => A.toModule) (Subsingleton.elim _ (Ideal.Quotient.algebra ℚ)))
@@ -1166,8 +1166,8 @@ theorem stable_factor (H : (∀ (K : Type) [Field K] [NumberField K] (τ : K ≃
     (∀ ℓ : ℕ, ℓ.Prime → ℓ ∉ S → ∃ (b x y : E), IsUnit b ∧ a = x * (b * τ b) ∧ b * τ b = y * a ∧
       ∃ d : ℕ, ¬ ℓ ∣ d ∧ IsIntegral ℤ ((d : E) * x) ∧ IsIntegral ℤ ((d : E) * y)) →
     ∃ m ∈ M, ∃ e : E, e ∉ I ∧ a - e * m * τ e ∈ I := by
-  letI := Ideal.Quotient.field I
-  haveI := numberField_quot I
+  let := Ideal.Quotient.field I
+  have := numberField_quot I
   have hmap : I = I.map (τ : E ≃+* E) := by
     apply le_antisymm
     · intro x hx
@@ -1208,14 +1208,14 @@ theorem stable_factor (H : (∀ (K : Type) [Field K] [NumberField K] (τ : K ≃
 variable [IsReduced E]
 
 theorem crt (c : MaximalSpectrum E → E) : ∃ u : E, ∀ I : MaximalSpectrum E, u - c I ∈ I.asIdeal := by
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite ℚ E
+  have : IsArtinianRing E := IsArtinianRing.of_finite ℚ E
   refine ⟨(IsArtinianRing.equivPi E).symm (fun I => Ideal.Quotient.mk I.asIdeal (c I)), fun I => ?_⟩
   rw [← Ideal.Quotient.eq]
   exact congrFun ((IsArtinianRing.equivPi E).apply_symm_apply
     (fun I => Ideal.Quotient.mk I.asIdeal (c I))) I
 
 theorem eq_zero_of_mem_all (x : E) (h : ∀ I : MaximalSpectrum E, x ∈ I.asIdeal) : x = 0 := by
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite ℚ E
+  have : IsArtinianRing E := IsArtinianRing.of_finite ℚ E
   apply (IsArtinianRing.equivPi E).injective
   rw [map_zero]; funext I; exact Ideal.Quotient.eq_zero_iff_mem.2 (h I)
 
@@ -1234,8 +1234,8 @@ theorem normClassFinite_of_reduced : (∀ (K : Type) [Field K] [NumberField K] (
       ∃ d : ℕ, ¬ ℓ ∣ d ∧ IsIntegral ℤ ((d : E) * x) ∧ IsIntegral ℤ ((d : E) * y)) →
     ∃ a₀ ∈ A, ∃ e : Eˣ, a = (e : E) * a₀ * τ e := by
   intro H E _ _ _ _ τ hτ S
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite ℚ E
-  haveI : Fintype (MaximalSpectrum E) := Fintype.ofFinite _
+  have : IsArtinianRing E := IsArtinianRing.of_finite ℚ E
+  have : Fintype (MaximalSpectrum E) := Fintype.ofFinite _
   let σ : MaximalSpectrum E → MaximalSpectrum E := fun I =>
     ⟨I.asIdeal.comap (τ : E ≃+* E), Ideal.comap_isMaximal_of_surjective _ (τ : E ≃+* E).surjective⟩
   have hσ : ∀ I x, x ∈ (σ I).asIdeal ↔ τ x ∈ I.asIdeal := fun I x => Iff.rfl
@@ -1256,7 +1256,7 @@ theorem normClassFinite_of_reduced : (∀ (K : Type) [Field K] [NumberField K] (
     by_cases h : σ I = I
     · obtain ⟨m, hm, e, he, hae⟩ :=
         Classical.choose_spec (stable_factor H τ hτ S I.asIdeal (hst I h)) a ha hτa hyp
-      refine ⟨m, by simp only [Mset, dif_pos h]; exact hm, e, he, fun _ => hae, fun h' => absurd h h'⟩
+      refine ⟨m, by simp only [Mset, dite_eq_left h]; exact hm, e, he, fun _ => hae, fun h' => absurd h h'⟩
     · refine ⟨1, by simp [Mset, h], if ch I then a else 1, ?_, fun h' => absurd h' h, fun _ => ⟨rfl, rfl⟩⟩
       split_ifs
       · exact fun hmem => I.isMaximal.ne_top (Ideal.eq_top_of_isUnit_mem _ hmem ha)
@@ -1292,11 +1292,11 @@ theorem normClassFinite_of_reduced : (∀ (K : Type) [Field K] [NumberField K] (
     by_cases hc : ch I
     · have hc' : ¬ ch (σ I) := by
         show ¬ n (σ I) < n (σ (σ I)); rw [hσσ]; exact not_lt.2 hc.le
-      rw [if_pos hc, if_neg hc']
+      rw [ite_eq_left hc, ite_eq_right hc']
       simp
     · have hc' : ch (σ I) := by
         show n (σ I) < n (σ (σ I)); rw [hσσ]; exact lt_of_le_of_ne (not_lt.1 hc) hne.symm
-      rw [if_neg hc, if_pos hc', hτa]
+      rw [ite_eq_right hc, ite_eq_left hc', hτa]
       simp
 
 end GlobalTheory
@@ -1471,10 +1471,10 @@ theorem _root_.GlobalTheory.LKCx.ClsReg.finite_fixed_classes_regular : ∀ (p : 
     · intro h g hg; rw [Set.mem_singleton_iff.1 hg]; exact h.eq.symm
   have hcomm : ∀ a b : Ec, a * b = b * a := fun a b => Subtype.ext
     (GlobalTheory.LKCx.ClsReg.commute_of_commute_of_separable G y₀ hsep hdeg a b ((memE a).1 a.2) ((memE b).1 b.2)).eq
-  letI : CommRing Ec := { (inferInstance : Ring Ec) with mul_comm := hcomm }
-  haveI : FiniteDimensional ℚ G.C := Module.Finite.trans G.F G.C
-  haveI : FiniteDimensional ℚ Ec := inferInstance
-  haveI : IsReduced Ec := ⟨fun x ⟨k, hk⟩ => Subtype.ext (GlobalTheory.T.eq_zero_of_nilpotent_commute_separable_minpoly p G y₀ hsep hdeg x ((memE x).1 x.2) k
+  let : CommRing Ec := { (inferInstance : Ring Ec) with mul_comm := hcomm }
+  have : FiniteDimensional ℚ G.C := Module.Finite.trans G.F G.C
+  have : FiniteDimensional ℚ Ec := inferInstance
+  have : IsReduced Ec := ⟨fun x ⟨k, hk⟩ => Subtype.ext (GlobalTheory.T.eq_zero_of_nilpotent_commute_separable_minpoly p G y₀ hsep hdeg x ((memE x).1 x.2) k
     (by simpa using congrArg Subtype.val hk))⟩
 
   have sh_add : ∀ x y : G.C, sh G (x + y) = sh G x + sh G y := fun x y => by simp [sh]
@@ -1580,7 +1580,7 @@ theorem _root_.GlobalTheory.LKCx.ClsReg.finite_fixed_classes_regular : ∀ (p : 
       algebraMap ℚ Ec c * (b * τe b) = y * a' ∧ ∃ d : ℕ, ¬ ℓ ∣ d ∧ IsIntegral ℤ ((d : Ec) * x) ∧
         IsIntegral ℤ ((d : Ec) * y) := by
     intro ℓ hℓ hℓS
-    haveI : Fact ℓ.Prime := ⟨hℓ⟩
+    have : Fact ℓ.Prime := ⟨hℓ⟩
     obtain ⟨u, z, hzc, hz⟩ := hloc ℓ hℓS
     obtain ⟨hinj, hsurj⟩ := GlobalTheory.T.tensor_centralizer_injective_commutant_eq ℚ_[ℓ] G.C (y₀ : G.C)
     set ι := Algebra.TensorProduct.map (AlgHom.id ℚ_[ℓ] ℚ_[ℓ]) Ec.val with hι

@@ -59,8 +59,8 @@ variable {X : Scheme.{0}} [IsIntegral X] {U : X.Opens} (hU : IsAffineOpen U) {y 
 include hU in
 theorem unitAt_fnOf_of_not_mem {s : Γ(X, U)} (hs : s ∉ (hU.primeIdealOf ⟨y, hy⟩).asIdeal) :
     UnitAt y (fnOf U (gen_mem hy) s) := by
-  letI := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨y, hy⟩
+  let := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
+  have := hU.isLocalization_stalk ⟨y, hy⟩
   exact ⟨_, IsLocalization.map_units (X.presheaf.stalk y)
     (⟨s, hs⟩ : (hU.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl), algebraMap_germ hy s⟩
 
@@ -69,8 +69,8 @@ include hU in
 theorem regAt_exists_fraction {f : X.functionField} (hf : RegAt y f) :
     ∃ c s : Γ(X, U), s ∉ (hU.primeIdealOf ⟨y, hy⟩).asIdeal ∧
       f * fnOf U (gen_mem hy) s = fnOf U (gen_mem hy) c := by
-  letI := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨y, hy⟩
+  let := X.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
+  have := hU.isLocalization_stalk ⟨y, hy⟩
   obtain ⟨a, rfl⟩ := hf
   obtain ⟨⟨c, s⟩, e⟩ := IsLocalization.surj (hU.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl a
   refine ⟨c, s, s.2, ?_⟩

@@ -138,7 +138,7 @@ theorem mem_schA_of_level : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (
   refine ⟨hmk.comp fun q' => if q' = q then (1 : ℂ) else 0, ?_⟩
   refine HasCompactSupport.intro' (hK.of_isClosed_subset hCcl hCK) hCcl fun x hx => ?_
   show (if (QuotientAddGroup.mk x : (Fin N → Af F) ⧸ W) = q then (1 : ℂ) else 0) = 0
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hq
   apply hx
   show -q.out + x ∈ W

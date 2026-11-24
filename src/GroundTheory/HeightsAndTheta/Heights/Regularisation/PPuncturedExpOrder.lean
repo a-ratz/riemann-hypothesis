@@ -87,7 +87,7 @@ theorem PuncturedExpOrder.proof : PuncturedExpOrder.Statement := by
     have hx0' : x ≠ 0 := hx0
     rw [hGF x hx0', hFdef] at hx
     exact mul_ne_zero (Complex.exp_ne_zero _) (zpow_ne_zero _ hx0') hx
-  obtain ⟨m, u, hua, hu0, hGu⟩ := hGa.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hnz
+  obtain ⟨m, u, hua, hu0, hGu⟩ := hGa.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hnz
   have hev : ∀ᶠ x in 𝓝 (0 : ℂ),
       AnalyticAt ℂ u x ∧ u x ≠ 0 ∧ G x = x ^ m * u x ∧ x ∈ ball (0 : ℂ) R := by
     filter_upwards [hua.eventually_analyticAt, hua.continuousAt.eventually_ne hu0, hGu,

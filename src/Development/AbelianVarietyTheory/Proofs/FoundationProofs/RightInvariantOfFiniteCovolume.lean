@@ -129,7 +129,7 @@ theorem rightInvariant_of_finite_covolume {G : Type} [Group G] [TopologicalSpace
       Function.bijective_id fun γ x => mul_assoc _ _ _
   have h1 : μ.map (· * g) 𝓕 = μ 𝓕 :=
     ((MeasurableEquiv.mulRight g).map_apply 𝓕).trans (h'.measure_eq h)
-  rw [e, Measure.smul_apply, smul_eq_mul] at h1
+  rw [e, smul_apply, smul_eq_mul] at h1
   have h2 := (ENNReal.mul_left_inj (h.measure_ne_zero (NeZero.ne μ)) hfin).1 (h1.trans (one_mul _).symm)
   rw [e, h2, one_smul]
 
@@ -154,7 +154,7 @@ theorem volMeas_unique (V : HSp D) {P Q : ℕ} {μ μ' : Measure (GA D V)} (h : 
   obtain ⟨A, hA⟩ := (h.2.2 θ hθ).1
   have h1 := (h.2.2 θ hθ).2 A hA (fun _ => U) fun _ => hU.measurableSet
   have h2 := (h'.2.2 θ hθ).2 A hA (fun _ => U) fun _ => hU.measurableSet
-  rw [e, Measure.smul_apply, smul_eq_mul, h1] at h2
+  rw [e, smul_apply, smul_eq_mul, h1] at h2
   have h3 := (ENNReal.mul_left_inj (Finset.prod_ne_zero_iff.2 fun _ _ => hU.measure_ne_zero _ ⟨1, hU1⟩)
     (ENNReal.prod_ne_top fun _ _ => hfin.ne)).1 (h2.trans (one_mul _).symm)
   rw [e, h3, one_smul]

@@ -179,7 +179,7 @@ theorem mem_ratPts_of (σ : E →ₐ[F] E) {N : ℕ} (J : Matrix (Fin N) (Fin N)
   have hg : Formalism.UG.cT (sigR (AF F) σ) (matHom _ σ J g).1 * JR (AF F) J * (matHom _ σ J g).1 = JR (AF F) J :=
     Subtype.prop (p := (· ∈ HR _ _ _)) g
   rw [← e] at hg
-  haveI : Nontrivial (AF F) := ⟨⟨0, 1, fun e => by
+  have : Nontrivial (AF F) := ⟨⟨0, 1, fun e => by
     obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
     exact zero_ne_one ((map_zero (evInf F w)).symm.trans ((congrArg (evInf F w) e).trans (map_one _)))⟩⟩
   have inj : Function.Injective (inclR (F := F) (E := E) (AF F)) := RingHom.injective _

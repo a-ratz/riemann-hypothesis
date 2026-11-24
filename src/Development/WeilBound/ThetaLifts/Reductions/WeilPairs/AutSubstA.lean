@@ -122,7 +122,7 @@ theorem setLIntegral_comp (e : WOF F E nS nT ≃+ WOF F E nS nT) (he : Continuou
     (hΓ : ∀ x, e x ∈ ratLF F E nS nT ↔ x ∈ ratLF F E nS nT) (μ : Measure (WOF F E nS nT)) (hμ : μ.IsAddHaarMeasure)
     {𝓕 : Set (WOF F E nS nT)} (h𝓕 : IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 μ) (φ : WOF F E nS nT → ENNReal)
     (hφ : ∀ γ ∈ ratLF F E nS nT, ∀ x, φ (γ + x) = φ x) : ∫⁻ w in 𝓕, φ (e w) ∂μ = ∫⁻ w in 𝓕, φ w ∂μ := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
   have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
@@ -137,8 +137,8 @@ theorem setLIntegral_comp (e : WOF F E nS nT ≃+ WOF F E nS nT) (he : Continuou
   have : SecondCountableTopology (WOF F E nS nT) :=
     inferInstanceAs (SecondCountableTopology (Fin nT → Fin nS → AF F ⊗[F] E))
   have : T2Space (WOF F E nS nT) := inferInstanceAs (T2Space (Fin nT → Fin nS → AF F ⊗[F] E))
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI tZ : IsTopologicalAddGroup (WOF F E nS nT) := inferInstance
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have tZ : IsTopologicalAddGroup (WOF F E nS nT) := inferInstance
   have hdisc : DiscreteTopology (ratLF F E nS nT) := by
     obtain ⟨U, hU, hx⟩ := GlobalTheory.AdelicMatrixLattice.discrete_tensor (F := F) (E := E) (AF F)
       (GlobalTheory.AdeleDiscrete.exists_nhds_zero_principal_eq_zero F)
@@ -149,7 +149,7 @@ theorem setLIntegral_comp (e : WOF F E nS nT ≃+ WOF F E nS nT) (he : Continuou
     rw [isOpen_singleton_iff_nhds_eq_pure]
     refine le_antisymm (Filter.le_pure_iff.2 ?_) (pure_le_nhds _)
     have hc : ContinuousAt (fun x : ratLF F E nS nT => (x : WOF F E nS nT)) 0 :=
-      continuous_subtype_val.continuousAt
+      continuous_subtypeVal.continuousAt
     refine Filter.mem_of_superset (hc.preimage_mem_nhds hN) ?_
     rintro ⟨_, y, rfl⟩ hy
     have hy0 : y = 0 := by
@@ -157,7 +157,7 @@ theorem setLIntegral_comp (e : WOF F E nS nT ≃+ WOF F E nS nT) (he : Continuou
       exact hx _ (hy i (Set.mem_univ i) j (Set.mem_univ j))
     subst hy0
     exact Subtype.ext (map_zero _)
-  haveI : Countable (ratLF F E nS nT) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (ratLF F E nS nT) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨K, hK, hx⟩ := GlobalTheory.AdelicMatrixLattice.cocompact_tensor (F := F) (E := E) (AF F)
     (GlobalTheory.AdeleCocompact.exists_compact_adele F)
   choose c hc using hx

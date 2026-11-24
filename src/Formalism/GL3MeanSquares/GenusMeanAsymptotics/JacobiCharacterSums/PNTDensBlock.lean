@@ -577,7 +577,7 @@ lemma offdiag_term {M : ℕ} [NeZero M] (σ T : ℝ) (U : ℕ) (hU : 1 ≤ U) (h
   have hB0 : 0 ≤ 4 * ((M : ℝ) + 1) * (2 + 2 * T) := by positivity
   have hq0 : 0 ≤ 4 * (U : ℝ) * (1 / |p.2.im - p'.2.im|) := by positivity
   by_cases h1 : p' = p
-  · rw [if_pos h1, if_pos (by rw [h1])]
+  · rw [ite_eq_left h1, ite_eq_left (by rw [h1])]
     have hdiag : ‖∑ n ∈ Ioc U (2 * U), p.1 (n : ZMod M) * (starRingEnd ℂ) (p'.1 (n : ZMod M)) *
         (n : ℂ) ^ (-w)‖ ≤ U := by
       refine (norm_sum_le _ _).trans ?_
@@ -596,9 +596,9 @@ lemma offdiag_term {M : ℕ} [NeZero M] (σ T : ℝ) (U : ℕ) (hU : 1 ≤ U) (h
       rw [sum_const, Nat.card_Ioc, nsmul_eq_mul, mul_one]
       exact_mod_cast (by omega : 2 * U - U ≤ U)
     linarith
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     by_cases h2 : p'.1 = p.1
-    · rw [if_pos h2]
+    · rw [ite_eq_left h2]
       have hgap : 1 ≤ |p.2.im - p'.2.im| := hsp (fun h => h1 h.symm) h2.symm
       have him : w.im ≠ 0 := by
         rw [hwim]; intro h0; rw [h0, abs_zero] at hgap; linarith
@@ -617,7 +617,7 @@ lemma offdiag_term {M : ℕ} [NeZero M] (σ T : ℝ) (U : ℕ) (hU : 1 ≤ U) (h
         rw [hwim, mul_one_div]
         gcongr
       linarith
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       have hne : p.1 * p'.1⁻¹ ≠ 1 := by
         intro h; exact h2 (mul_inv_eq_one.1 h).symm
       have hcross := pair_cross_bound M (p.1 * p'.1⁻¹) hne w hw0 U hU
@@ -637,7 +637,7 @@ theorem off_diagonal_bound : Offdiag := by
   have hterm := fun p' (hp' : p' ∈ S) =>
     offdiag_term σ T U hU hT hσ p p' (hS p hp) (hS p' hp') (hsp p hp p' hp')
   refine (sum_le_sum hterm).trans ?_
-  rw [sum_add_distrib, sum_add_distrib, sum_const, nsmul_eq_mul, sum_ite_eq' S p, if_pos hp,
+  rw [sum_add_distrib, sum_add_distrib, sum_const, nsmul_eq_mul, sum_ite_eq' S p, ite_eq_left hp,
     ← sum_filter, ← mul_sum]
   set Fib : Finset (DirichletCharacter ℂ M × ℂ) := S.filter (fun p' => p'.1 = p.1) with hFib
   set P : Finset ℝ := Fib.image (fun p' => p'.2.im) with hP

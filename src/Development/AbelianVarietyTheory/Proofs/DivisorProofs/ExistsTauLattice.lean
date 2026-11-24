@@ -123,7 +123,7 @@ def extGroup (θ : X → X → U) (h0 : ∀ a, θ 0 a = 1) (hs : ∀ a b, θ a b
 theorem exists_firstLaw (θ : X → X → U) (h0 : ∀ a, θ 0 a = 1) (hs : ∀ a b, θ a b = θ b a)
     (hc : ∀ a a' a'', θ (a + a') a'' * θ a a' = θ a (a' + a'') * θ a' a'') {I : Type} (b : Module.Basis I ℤ X)
     (m : I → U) : ∃ f : X → U, (∀ a a', f (a + a') * θ a a' = f a * f a') ∧ ∀ i, f (b i) = m i := by
-  letI : AddCommGroup (ExtCar U X) := extGroup θ h0 hs hc
+  let : AddCommGroup (ExtCar U X) := extGroup θ h0 hs hc
   let s : X →ₗ[ℤ] ExtCar U X := b.constr ℤ (fun i => (((m i, b i) : U × X) : ExtCar U X))
   let π : ExtCar U X →+ X := { toFun := fun p => (p : U × X).2, map_zero' := rfl, map_add' := fun _ _ => rfl }
   have hπ : π.toIntLinearMap ∘ₗ s = LinearMap.id := b.ext fun i => by

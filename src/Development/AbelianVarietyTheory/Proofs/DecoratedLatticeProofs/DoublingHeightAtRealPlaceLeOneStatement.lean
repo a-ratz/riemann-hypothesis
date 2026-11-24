@@ -259,7 +259,7 @@ theorem absEw_aH_le_one (hc : IsCMExt F E σ) (hJ : J.det ≠ 0) (h : Q = dblGra
     have h1 := abs_detH (ν := absEw F E w) (absEw_conjUnit σ w) hJ y⁻¹
     rw [absEw_eq_sq hc τ, val_detH, ← hφ] at h1
     have h2 := congrArg (fun x : ℝ≥0 => (x : ℝ)) h1
-    simp only [NNReal.coe_pow, coe_nnnorm, NNReal.coe_one] at h2
+    simp only [NNReal.coe_pow, coe_nnNorm, NNReal.coe_one] at h2
     rw [hmd]
     exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) two_ne_zero).1 h2
   have hcdet : ((b⁻¹).1.map φ).det ≠ 0 := by
@@ -270,7 +270,7 @@ theorem absEw_aH_le_one (hc : IsCMExt F E σ) (hJ : J.det ≠ 0) (h : Q = dblGra
   change ‖φ α.det‖₊ ^ 2 ≤ 1
   rw [← hmd]
   have h3 : ‖(α.map φ).det‖₊ ≤ 1 := by
-    rw [← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]; exact hdet
+    rw [← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]; exact hdet
   exact pow_le_one₀ (by positivity) h3
 
 theorem hgtArch_ioH_le_one (hc : IsCMExt F E σ) (hJ : J.det ≠ 0) (h : Q = dblGram finSumFinEquiv J)

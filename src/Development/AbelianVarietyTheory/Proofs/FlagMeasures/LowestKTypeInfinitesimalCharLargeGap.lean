@@ -515,7 +515,7 @@ theorem lowChar_of_formula (hF : FormulaGap) (n : ℕ) (ε : Fin n → Bool) (la
     (hh : 120 * (n : ℝ) * ((rkR ε : ℕ) : ℝ) ^ ((3 : ℝ) / 2) ≤ h)
     (hS : IsKTypeOf ε σ (lowK ε lam) (lowKSub ε lam σ)) :
     ∀ s ∈ lowKSub ε lam σ, ∀ y : H, IsZEigen ε (fun a => (lam a : ℂ)) (fun g => ⟪y, σ g s⟫_ℂ) := by
-  haveI : CompleteSpace H := hσ.1
+  have : CompleteSpace H := hσ.1
   obtain ⟨-, -, hU, -, -, -, -⟩ := id hσ
   have hKU : IsURepOn (Kset ε) σ := URep_K hU
   obtain ⟨⟨hσ1, -⟩, -, -⟩ := id hU
@@ -538,7 +538,7 @@ theorem lowChar_of_formula (hF : FormulaGap) (n : ℕ) (ε : Fin n → Bool) (la
   have hEC := eigConj n ε _ _ hPE.1 hPE.2
   have hfs : SmoothOnG ε (fun g => ⟪w, σ g w⟫_ℂ) := (hc w hwS w).1
   have hone : ⟪w, σ 1 w⟫_ℂ = 1 := by
-    rw [hσ1, ContinuousLinearMap.one_apply, inner_self_eq_norm_sq_to_K, hwn]
+    rw [hσ1, one_apply_eq_self, inner_self_eq_norm_sq_to_K, hwn]
     simp
   have hcm : ∀ m, c m = gelfVal (fun a => (lam a : ℂ)) (m + 1) := by
     intro m

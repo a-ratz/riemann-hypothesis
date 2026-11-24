@@ -113,7 +113,7 @@ theorem _root_.GlobalTheory.AntiLAdic.continuous_conjHom [Algebra.IsAlgebraic E 
   let b := Module.finBasis E L
   let S : Set Ω := Set.range (fun i => cc.symm (b i : Ω))
   refine (krullTopology_mem_nhds_one_iff E Ω _).mpr ⟨IntermediateField.adjoin E S, ?_, ?_⟩
-  · haveI : Finite S := Set.finite_range _ |>.to_subtype
+  · have : Finite S := Set.finite_range _ |>.to_subtype
     exact IntermediateField.finiteDimensional_adjoin
       (fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral)
   · intro σ hσ
@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.AntiLAdic.val_mul_val_conj {F : Type} [Field F] [Num
   have hmem : ∀ P, P ∈ _root_.Formalism.L2.Host.aboveF (L := E) F u ↔ P = v ∨ P = v' := by
     intro P
     unfold _root_.Formalism.L2.Host.aboveF
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, ← hvu,
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, ← hvu,
       _root_.GlobalTheory.Mem.Chr.under_eq_iff_conjPl c h2 hne v P]
     constructor
     · rintro (hP | hP)
@@ -252,7 +252,7 @@ theorem _root_.GlobalTheory.AntiLAdic.antiHom_of_trivOn : ∀ (F E : Type) [Fiel
   set T := hfin.toFinset with hT
   have hgood : ∀ w ∉ T, χ.UnrAt w ∧ (l : 𝓞 E) ∉ w.asIdeal := by
     intro w hw
-    rw [hT, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hw
+    rw [hT, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not] at hw
     exact hw
   let φ : _root_.Formalism.ConjugateSelfDual.G E Ω →* (_root_.Formalism.ConjugateSelfDual.Qbar l)ˣ := (r.comp (_root_.GlobalTheory.AntiLAdic.conjHom cc hc)) * r
   have hφc : Continuous φ := by

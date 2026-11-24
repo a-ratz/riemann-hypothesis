@@ -71,14 +71,14 @@ theorem exists_valuation_pow_eq (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω
       (∀ x : Ω, v x ≤ 1 ↔ ∀ i, f ((minpoly K x).coeff i) ≤ 1) ∧
       ∀ x : Ω, (v x : ℝ) ^ (minpoly K x).natDegree = f ((minpoly K x).coeff 0) := by
   obtain ⟨a, ha⟩ := hnt.exists_abv_gt_one
-  letI : NontriviallyNormedField (WithAbs f) :=
+  let : NontriviallyNormedField (WithAbs f) :=
     NontriviallyNormedField.ofNormNeOne ⟨WithAbs.toAbs f a, by
       intro h; rw [WithAbs.toAbs_eq_zero] at h; rw [h, map_zero] at ha; linarith, by
       rw [WithAbs.norm_toAbs_eq]; exact ha.ne'⟩
-  haveI : IsUltrametricDist (WithAbs f) :=
+  have : IsUltrametricDist (WithAbs f) :=
     IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm fun x y => hna x.ofAbs y.ofAbs
-  haveI : IsScalarTower K (WithAbs f) Ω := inferInstance
-  haveI : Algebra.IsAlgebraic (WithAbs f) Ω := Algebra.IsAlgebraic.tower_top (K := K) (WithAbs f)
+  have : IsScalarTower K (WithAbs f) Ω := inferInstance
+  have : Algebra.IsAlgebraic (WithAbs f) Ω := Algebra.IsAlgebraic.tower_top (K := K) (WithAbs f)
   have hmin : ∀ x : Ω, minpoly (WithAbs f) x = (minpoly K x).map (algebraMap K (WithAbs f)) := by
     intro x
     have hx : IsIntegral K x := (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
@@ -182,14 +182,14 @@ theorem exists_pow_div_p_zpow_isInt : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [
   obtain ⟨hdom, hdvr, hirr⟩ := completed_laurent_isDVR p
   have hmax : IsLocalRing.maximalIdeal (O0 p) = Ideal.span {(p : O0 p)} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer _).1 hirr
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
     rw [hmax]; exact o0_isAdicComplete_span_p p
-  haveI : FaithfulSMul (O0 p) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hΩ.inj
-  letI : Algebra (FractionRing (O0 p)) Ω := FractionRing.liftAlgebra (O0 p) Ω
-  haveI : IsScalarTower (O0 p) (FractionRing (O0 p)) Ω :=
+  have : FaithfulSMul (O0 p) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hΩ.inj
+  let : Algebra (FractionRing (O0 p)) Ω := FractionRing.liftAlgebra (O0 p) Ω
+  have : IsScalarTower (O0 p) (FractionRing (O0 p)) Ω :=
     FractionRing.isScalarTower_liftAlgebra (O0 p) Ω
-  haveI : Algebra.IsAlgebraic (O0 p) Ω := hΩ.alg
-  haveI : Algebra.IsAlgebraic (FractionRing (O0 p)) Ω :=
+  have : Algebra.IsAlgebraic (O0 p) Ω := hΩ.alg
+  have : Algebra.IsAlgebraic (FractionRing (O0 p)) Ω :=
     Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective (O0 p) (FractionRing (O0 p)))
   have := exists_pow_div_zpow_isIntegral (O0 p) (FractionRing (O0 p)) Ω (p : O0 p) hirr x hx
   rwa [map_natCast] at this

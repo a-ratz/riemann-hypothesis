@@ -87,7 +87,7 @@ lemma modChar_eq_one_of_compact (μ : Measure G) [μ.IsHaarMeasure] [μ.InnerReg
   have h := Measure.map_right_mul_eq_modularCharacterFun_smul μ k
   have h2 := congrArg (fun ν : Measure G => ν E) h
   rw [Measure.map_apply (measurable_mul_const k) hEc.isClosed.measurableSet, hpre,
-    Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+    smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   have h3 : ((Measure.modularCharacterFun k : ℝ≥0) : ℝ≥0∞) * μ E = 1 * μ E := by
     rw [one_mul]; exact h2.symm
   have h4 := (ENNReal.mul_left_inj hpos.ne' hfin).1 h3

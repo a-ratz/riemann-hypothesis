@@ -96,7 +96,7 @@ theorem exists_hasConductor_of_continuous (ψ : AddChar k Circle) (hψ : Continu
     obtain ⟨n, hn⟩ := exists_pow_lt₀ hϖ1
       (Units.mk0 (valuation k (y₀⁻¹ * s)) (by simp [hy0]))
     refine ⟨n, fun y hy => hs y (show valuation k y ≤ valuation k (s : k) from hy.trans ?_)⟩
-    rw [Units.val_mk0, map_mul, map_inv₀, lt_inv_mul_iff₀ (by simp [zero_lt_iff, hy0])] at hn
+    rw [Units.val_mk0, map_mul, map_inv₀, lt_inv_mul_iff₀ (by simp [pos_iff_ne_zero, hy0])] at hn
     rw [map_mul, map_pow]
     exact hn.le
   have hspec := Nat.find_spec hex
@@ -114,7 +114,7 @@ theorem exists_hasConductor_of_continuous (ψ : AddChar k Circle) (hψ : Continu
   have hx0 : x ≠ 0 := by
     rintro rfl
     simp at hx
-  have hxp : 0 < valuation k x := by simp [zero_lt_iff, hx0]
+  have hxp : 0 < valuation k x := by simp [pos_iff_ne_zero, hx0]
   have hxi : valuation k (x⁻¹ * (y₀ * (ϖ : k) ^ (m + 1))) < 1 := by
     rw [map_mul, map_inv₀, inv_mul_lt_iff₀ hxp, mul_one]
     exact hx
@@ -122,7 +122,7 @@ theorem exists_hasConductor_of_continuous (ψ : AddChar k Circle) (hψ : Continu
     (mem_cball_uniformiser hϖ (x := Units.mk0 _ h0) rfl
       ⟨_, (Valuation.mem_integer_iff _ _).mpr hxi.le⟩).mpr ((hlt _).mpr hxi)
   rw [map_mul, map_inv₀, inv_mul_le_iff₀ hxp, pow_succ, ← mul_assoc, map_mul,
-    mul_le_mul_iff_left₀ (by simp [zero_lt_iff, h0])] at h2
+    mul_le_mul_iff_left₀ (by simp [pos_iff_ne_zero, h0])] at h2
   exact hmin fun y hy => h y (hy.trans h2)
 
 theorem conductor_exists :

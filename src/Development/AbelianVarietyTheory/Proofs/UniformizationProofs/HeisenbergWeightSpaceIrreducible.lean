@@ -69,7 +69,7 @@ theorem heisenberg_weightSpace_irreducible : ∀ (F : Type) [Field F] [IsAlgClos
   · exact Or.inl hbot
   right
   obtain ⟨u, huU, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hbot
-  haveI : Nontrivial E := ⟨⟨u, 0, hu0⟩⟩
+  have : Nontrivial E := ⟨⟨u, 0, hu0⟩⟩
 
   have hel : ∀ a b c, e (a * b) c = e a c * e b c := by
     intro a b c
@@ -98,7 +98,7 @@ theorem heisenberg_weightSpace_irreducible : ∀ (F : Type) [Field F] [IsAlgClos
     exact mul_inv_eq_one.mp this
   have hli : LinearIndependent F fun a => (Φ a : E →ₗ[F] E) :=
     linearIndependent_of_comm_smul _ _ (fun a => (Φ a).injective) (fun a b v => hcomm a b v) hinj
-  haveI := Fintype.ofFinite A
+  have := Fintype.ofFinite A
   have hspan : Submodule.span F (Set.range fun a => (Φ a : E →ₗ[F] E)) = ⊤ := by
     apply hli.span_eq_top_of_card_eq_finrank'
     rw [Module.finrank_linearMap, ← sq, hdim, Nat.card_eq_fintype_card]

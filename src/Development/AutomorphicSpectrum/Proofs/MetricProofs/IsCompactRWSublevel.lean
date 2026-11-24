@@ -69,7 +69,7 @@ theorem isCompact_rW_sublevel : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] [C
   have hset : {y | y ∉ bdry s ∧ rW L s y ≤ R} =
       {y | Real.exp ((Real.exp 1 - R) / 2) ≤ ‖s y y‖ * Real.exp (-L.φ y y)} := by
     ext y
-    simp only [Set.mem_setOf_eq, bdry, rW, logNormSec]
+    simp only [Set.mem_ofPred_eq, bdry, rW, logNormSec]
     constructor
     · rintro ⟨h0, h1⟩
       have hpos : 0 < ‖s y y‖ * Real.exp (-L.φ y y) :=

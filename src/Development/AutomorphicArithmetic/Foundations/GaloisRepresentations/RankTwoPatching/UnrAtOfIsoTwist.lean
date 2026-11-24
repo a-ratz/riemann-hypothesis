@@ -129,7 +129,7 @@ theorem good_of_fixed {n : ℕ} (σ : SmIrr (GL (Fin n) (w.adicCompletion E))) (
     Good (IrrGL.of σ.ρ σ.smooth σ.irred) ∧ IsSpherical (IrrGL.of σ.ρ σ.smooth σ.irred).rep := by
   obtain ⟨B, hB⟩ := (GlobalTheory.T.satakeParameters_local E n w σ).1 hf
   obtain ⟨α, -, hα⟩ := hasSatake_of σ hB
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   have q := IrrGL.equivOf σ.ρ σ.smooth σ.irred
   have k := GlobalTheory.LocLanglands.hasSupport_of_isSubquotient_prinSeries (w.adicCompletion E) n (fun i => unrChar _ (α i))
     (fun i => isSmoothChar_of_isUnram (isUnram_unrChar _ (α i))) ⟨σ.V, σ.ρ, σ.smooth, σ.irred⟩ hα.2.2

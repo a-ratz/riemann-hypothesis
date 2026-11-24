@@ -112,11 +112,11 @@ private theorem gal_case (K K' : FinExt l) (h : K.1 ≤ K'.1) {A V : Type} [Comm
       (IsCr (GK K).subtype ρ → IsCr (GK K').subtype (ρ.comp (incl h) : Representation A ↥(GK K') V)) ∧
       (IsDr (GK K).subtype ρ ↔ IsDr (GK K').subtype (ρ.comp (incl h) : Representation A ↥(GK K') V)) := by
   let β : ↥(botExt l).1 ≃ₐ[ℚ_[l]] ℚ_[l] := IntermediateField.botEquiv ℚ_[l] (Om l)
-  letI : Module ↥(botExt l).1 V := Module.compHom V (β : ↥(botExt l).1 →+* ℚ_[l])
+  let : Module ↥(botExt l).1 V := Module.compHom V (β : ↥(botExt l).1 →+* ℚ_[l])
   have hs : ∀ (c : ↥(botExt l).1) (x : V), c • x = β c • x := fun _ _ => rfl
-  haveI : IsScalarTower ℚ_[l] ↥(botExt l).1 V := ⟨fun a c x => by
+  have : IsScalarTower ℚ_[l] ↥(botExt l).1 V := ⟨fun a c x => by
     rw [hs, hs, Algebra.smul_def, map_mul, β.commutes, mul_smul]; rfl⟩
-  haveI : ContinuousConstSMul ↥(botExt l).1 V := ⟨fun c => continuous_const_smul (β c)⟩
+  have : ContinuousConstSMul ↥(botExt l).1 V := ⟨fun c => continuous_const_smul (β c)⟩
   let ρ' : Representation ↥(botExt l).1 ↥(GK K) V :=
     { toFun := fun g =>
         { toFun := ρ g
